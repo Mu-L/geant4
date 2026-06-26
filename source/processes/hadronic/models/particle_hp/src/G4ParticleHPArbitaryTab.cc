@@ -36,23 +36,28 @@
 G4double G4ParticleHPArbitaryTab::Sample(G4double anEnergy)
 {
   G4int i;
-  for (i = 0; i < nDistFunc; i++) {
+  for (i = 0; i < nDistFunc; i++)
+  {
     if (anEnergy < theDistFunc[i].GetLabel()) break;  // that is the energy we need
   }
   G4int low(0), high(0);
-  if (i == nDistFunc) {
+  if (i == nDistFunc)
+  {
     low = i - 2;
     high = i - 1;
   }
-  else if (i == 0) {
-    if (nDistFunc == 0) {
+  else if (i == 0)
+  {
+    if (nDistFunc == 0)
+    {
       G4cerr << "No distribution functions to sample "
              << "from in G4ParticleHPArbitaryTab::Sample" << G4endl;
       throw G4HadronicException(__FILE__, __LINE__, "nDistFunc==0");
     }
     return theDistFunc[0].Sample();
   }
-  else {
+  else
+  {
     low = i - 1;
     high = i;
   }
@@ -73,13 +78,15 @@ G4double G4ParticleHPArbitaryTab::Sample(G4double anEnergy)
     theHighThreshold[low] + rval * (theHighThreshold[high] - theHighThreshold[low]);
   G4double rand = G4UniformRand();
   G4double Eout_1 = 0, Eout_2 = 0;
-  if (rval < rand) {
+  if (rval < rand)
+  {
     Eout_1 = theDistFunc[low].Sample();
     Eout_2 = eoutlow
              + (Eout_1 - theLowThreshold[low]) * (eouthigh - eoutlow)
                  / (theHighThreshold[low] - theLowThreshold[low]);
   }
-  else {
+  else
+  {
     Eout_1 = theDistFunc[high].Sample();
     Eout_2 = eoutlow
              + (Eout_1 - theLowThreshold[high]) * (eouthigh - eoutlow)

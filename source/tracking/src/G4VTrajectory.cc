@@ -45,15 +45,19 @@
 #include "G4VVisManager.hh"
 #include "G4VisAttributes.hh"
 
-G4bool G4VTrajectory::operator==(const G4VTrajectory& right) const { return (this == &right); }
+G4bool G4VTrajectory::operator==(const G4VTrajectory& right) const
+{
+  return (this == &right);
+}
 
 G4VTrajectory* G4VTrajectory::CloneForMaster() const
 {
   // Base-class method must not be invoked.
   // Each concrete class should implement its own method.
-   G4Exception("G4VTrajectory::CloneForMaster()","traj0100",FatalException,
-     "CloneForMaster() of G4VTrajectory base-class is invoked. Each concrete class should implement its own method.");
-   return nullptr;
+  G4Exception("G4VTrajectory::CloneForMaster()", "traj0100", FatalException,
+              "CloneForMaster() of G4VTrajectory base-class is invoked. Each concrete class should "
+              "implement its own method.");
+  return nullptr;
 }
 
 void G4VTrajectory::ShowTrajectory(std::ostream& os) const
@@ -67,13 +71,15 @@ void G4VTrajectory::ShowTrajectory(std::ostream& os) const
 
   // Ensure validity...
   //
-  if (G4AttCheck(attValues, attDefs).Check("G4VTrajectory::ShowTrajectory")) {
+  if (G4AttCheck(attValues, attDefs).Check("G4VTrajectory::ShowTrajectory"))
+  {
     return;
   }
 
   os << "Trajectory:";
 
-  for (const auto& attValue : *attValues) {
+  for (const auto& attValue : *attValues)
+  {
     auto iAttDef = attDefs->find(attValue.GetName());
     os << "\n  " << iAttDef->second.GetDesc() << " (" << attValue.GetName()
        << "): " << attValue.GetValue();
@@ -83,18 +89,21 @@ void G4VTrajectory::ShowTrajectory(std::ostream& os) const
 
   // Now do trajectory points...
 
-  for (G4int i = 0; i < GetPointEntries(); ++i) {
+  for (G4int i = 0; i < GetPointEntries(); ++i)
+  {
     G4VTrajectoryPoint* aTrajectoryPoint = GetPoint(i);
     attValues = aTrajectoryPoint->CreateAttValues();
     attDefs = aTrajectoryPoint->GetAttDefs();
 
     // Ensure validity...
     //
-    if (G4AttCheck(attValues, attDefs).Check("G4VTrajectory::ShowTrajectory")) {
+    if (G4AttCheck(attValues, attDefs).Check("G4VTrajectory::ShowTrajectory"))
+    {
       return;
     }
 
-    for (const auto& attValue : *attValues) {
+    for (const auto& attValue : *attValues)
+    {
       const auto iAttDef = attDefs->find(attValue.GetName());
       os << "\n    " << iAttDef->second.GetDesc() << " (" << attValue.GetName()
          << "): " << attValue.GetValue();
@@ -109,13 +118,16 @@ void G4VTrajectory::DrawTrajectory() const
 {
   G4VVisManager* pVVisManager = G4VVisManager::GetConcreteInstance();
 
-  if (pVVisManager != nullptr) {
+  if (pVVisManager != nullptr)
+  {
     pVVisManager->DispatchToModel(*this);
   }
 }
 
-std::shared_ptr<std::vector<G4AttValue>> G4VTrajectory::GetAttValues() const {
-  if (!fpAttValues) {
+std::shared_ptr<std::vector<G4AttValue>> G4VTrajectory::GetAttValues() const
+{
+  if (!fpAttValues)
+  {
     fpAttValues = std::make_shared<std::vector<G4AttValue>>(*CreateAttValues());
   }
   return fpAttValues;

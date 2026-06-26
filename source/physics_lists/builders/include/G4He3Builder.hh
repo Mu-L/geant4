@@ -34,30 +34,31 @@
 //// 12.04.2017 A.Dotti move to new design with base class
 //----------------------------------------------------------------------------
 //
-#ifndef G4He3Builder_h
-#define G4He3Builder_h 1
-
-#include "G4PhysicsBuilderInterface.hh"
-#include "globals.hh"
+#ifndef G4HE3BUILDER_HH
+#define G4HE3BUILDER_HH
 
 #include "G4HadronInelasticProcess.hh"
+#include "G4PhysicsBuilderInterface.hh"
 #include "G4VHe3Builder.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4He3Builder : public G4PhysicsBuilderInterface
 {
-  public: 
+  public:
+
     G4He3Builder();
     virtual ~G4He3Builder() {}
 
     virtual void Build() final override;
-    virtual void RegisterMe(G4PhysicsBuilderInterface * aB) final override;
+    virtual void RegisterMe(G4PhysicsBuilderInterface* aB) final override;
 
   private:
-    G4HadronInelasticProcess * theHe3Inelastic;
-    
-    std::vector<G4VHe3Builder *> theModelCollections;
+
+    G4HadronInelasticProcess* theHe3Inelastic;
+
+    std::vector<G4VHe3Builder*> theModelCollections;
 };
 
 #endif
-

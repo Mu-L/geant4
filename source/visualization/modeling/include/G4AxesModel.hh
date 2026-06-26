@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  3rd April 2001
 //
 // Class Description:
@@ -41,50 +41,37 @@
 
 #include "G4VModel.hh"
 
-class G4AxesModel: public G4VModel {
+class G4AxesModel : public G4VModel
+{
+  public:  // With description
 
-public: // With description
+    G4AxesModel(G4double x0, G4double y0, G4double z0, G4double length, G4double arrowWidth = 1.,
+                const G4String& colourString = "auto", const G4String& description = "",
+                G4bool withAnnotation = true, G4double textSize = 10.,
+                const G4Transform3D& transform = G4Transform3D());
 
-  G4AxesModel
-  (G4double x0, G4double y0, G4double z0, G4double length,
-   G4double arrowWidth = 1.,
-   const G4String& colourString = "auto",
-   const G4String& description = "",
-   G4bool withAnnotation = true,
-   G4double textSize = 10.,
-   const G4Transform3D& transform = G4Transform3D()
-   );
+    // Alternative short constructor
+    G4AxesModel(G4double x0, G4double y0, G4double z0, G4double length,
+                const G4Transform3D& transform = G4Transform3D());
 
-  // Alternative short constructor
-  G4AxesModel
-  (G4double x0, G4double y0, G4double z0, G4double length,
-   const G4Transform3D& transform = G4Transform3D()
-   );
+    virtual ~G4AxesModel();
 
-  virtual ~G4AxesModel ();
+    void Construct(G4double x0, G4double y0, G4double z0, G4double length, G4double arrowWidth,
+                   const G4String& colourString, const G4String& description, G4bool withAnnotation,
+                   G4double textSize, const G4Transform3D& transform);
 
-  void Construct
-  (G4double x0, G4double y0, G4double z0, G4double length,
-   G4double arrowWidth, const G4String& colourString,
-   const G4String& description,
-   G4bool withAnnotation,
-   G4double textSize,
-   const G4Transform3D& transform);
+    void DescribeYourselfTo(G4VGraphicsScene&) override;
+    // The main task of a model is to describe itself to the graphics scene.
 
-  void DescribeYourselfTo (G4VGraphicsScene&) override;
-  // The main task of a model is to describe itself to the graphics scene.
+  private:
 
-private:
+    // Private copy contructor and assignment to forbid use...
+    G4AxesModel(const G4AxesModel&);
+    G4AxesModel& operator=(const G4AxesModel&);
 
-  // Private copy contructor and assignment to forbid use...
-  G4AxesModel (const G4AxesModel&);
-  G4AxesModel& operator = (const G4AxesModel&);
-
-  G4VModel
-    *fXAxisModel, *fXLabelModel, *fXAnnotationModel,
-    *fYAxisModel, *fYLabelModel, *fYAnnotationModel,
-    *fZAxisModel, *fZLabelModel, *fZAnnotationModel;
-  G4Transform3D fTransform;
+    G4VModel *fXAxisModel, *fXLabelModel, *fXAnnotationModel, *fYAxisModel, *fYLabelModel,
+      *fYAnnotationModel, *fZAxisModel, *fZLabelModel, *fZAnnotationModel;
+    G4Transform3D fTransform;
 };
 
 #endif

@@ -37,8 +37,8 @@
 // 10.10.05 V. Grichine, first version
 //
 
-#ifndef G4XTRRegularRadModel_h
-#define G4XTRRegularRadModel_h 1
+#ifndef G4XTRREGULARRADMODEL_HH
+#define G4XTRREGULARRADMODEL_HH
 
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"
@@ -46,19 +46,18 @@
 
 class G4XTRRegularRadModel : public G4VXTRenergyLoss
 {
- public:
-  explicit G4XTRRegularRadModel(G4LogicalVolume* anEnvelope, G4Material*,
-                                G4Material*, G4double, G4double, G4int,
-                                const G4String& processName = "XTRegularModel");
-  ~G4XTRRegularRadModel();
+  public:
 
-  void ProcessDescription(std::ostream&) const override;
-  void DumpInfo() const override { ProcessDescription(G4cout); };
+    explicit G4XTRRegularRadModel(G4LogicalVolume* anEnvelope, G4Material*, G4Material*, G4double,
+                                  G4double, G4int, const G4String& processName = "XTRegularModel");
+    ~G4XTRRegularRadModel();
 
-  G4double SpectralXTRdEdx(G4double energy) override;
+    void ProcessDescription(std::ostream&) const override;
+    void DumpInfo() const override { ProcessDescription(G4cout); };
 
-  G4double GetStackFactor(G4double energy, G4double gamma,
-                          G4double varAngle) override;
+    G4double SpectralXTRdEdx(G4double energy) override;
+
+    G4double GetStackFactor(G4double energy, G4double gamma, G4double varAngle) override;
 };
 
 #endif

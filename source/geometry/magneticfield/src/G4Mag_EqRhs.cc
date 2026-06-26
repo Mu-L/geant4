@@ -28,26 +28,23 @@
 // Author: John Apostolakis (CERN), 13.01.1997
 // --------------------------------------------------------------------
 
-#include "G4MagneticField.hh"
 #include "G4Mag_EqRhs.hh"
-#include "globals.hh"
+
+#include "G4MagneticField.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
+#include "globals.hh"
 
-const G4double G4Mag_EqRhs::fUnitConstant = 0.299792458 * (GeV/(tesla*m)); 
+const G4double G4Mag_EqRhs::fUnitConstant = 0.299792458 * (GeV / (tesla * m));
 
-G4Mag_EqRhs::G4Mag_EqRhs( G4MagneticField* magField ) 
-  : G4EquationOfMotion(magField)
-{ 
-}
+G4Mag_EqRhs::G4Mag_EqRhs(G4MagneticField* magField) : G4EquationOfMotion(magField) {}
 
-void  
-G4Mag_EqRhs::SetChargeMomentumMass( G4ChargeState particleCharge,
-                                    G4double,                // MomentumXc
-                                    G4double )               // particleMass
+void G4Mag_EqRhs::SetChargeMomentumMass(G4ChargeState particleCharge,
+                                        G4double,  // MomentumXc
+                                        G4double)  // particleMass
 {
-   G4double pcharge = particleCharge.GetCharge();
-   fCof_val = pcharge*eplus*c_light ; //  B must be in Tesla
-   // fCof_val = fUnitConstant*pcharge/MomentumXc; //  B must be in Tesla
-   // fMass = particleMass;
+  G4double pcharge = particleCharge.GetCharge();
+  fCof_val = pcharge * eplus * c_light;  //  B must be in Tesla
+  // fCof_val = fUnitConstant*pcharge/MomentumXc; //  B must be in Tesla
+  // fMass = particleMass;
 }

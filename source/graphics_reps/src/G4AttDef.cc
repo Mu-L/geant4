@@ -32,33 +32,37 @@
 using namespace std;
 
 // Deprecated - see header.
-std::ostream& operator<<
-(std::ostream& os, const std::map<G4String,G4AttDef>* definitions)
+std::ostream& operator<<(std::ostream& os, const std::map<G4String, G4AttDef>* definitions)
 {
   os << "G4AttDef: Deprecated output function.  Use const reference instead." << endl;
-  if (definitions != nullptr) {
+  if (definitions != nullptr)
+  {
     os << *definitions;
-  } else {
+  }
+  else
+  {
     os << "G4AttCheck: ERROR: zero definitions pointer." << endl;
   }
   return os;
 }
 
-std::ostream& operator<<
-(std::ostream& os, const std::map<G4String,G4AttDef>& definitions)
+std::ostream& operator<<(std::ostream& os, const std::map<G4String, G4AttDef>& definitions)
 {
   G4String storeKey;
-  if (G4AttDefStore::GetStoreKey(&definitions, storeKey)) {
+  if (G4AttDefStore::GetStoreKey(&definitions, storeKey))
+  {
     os << storeKey << ":";
   }
-  std::map<G4String,G4AttDef>::const_iterator i;
-  for (i = definitions.begin(); i != definitions.end(); ++i) {
+  std::map<G4String, G4AttDef>::const_iterator i;
+  for (i = definitions.begin(); i != definitions.end(); ++i)
+  {
     const G4String& name = i->first;
     const G4AttDef& attDef = i->second;
-    if (attDef.GetCategory() == "Physics") {
-      os << "\n  " << attDef.GetDesc()
-             << " (" << name << "): ";
-      if (!attDef.GetExtra().empty()) {
+    if (attDef.GetCategory() == "Physics")
+    {
+      os << "\n  " << attDef.GetDesc() << " (" << name << "): ";
+      if (!attDef.GetExtra().empty())
+      {
         if (attDef.GetExtra() != "G4BestUnit") os << "unit: ";
         os << attDef.GetExtra() << " (";
       }

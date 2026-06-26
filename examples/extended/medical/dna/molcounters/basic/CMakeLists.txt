@@ -44,8 +44,8 @@ target_link_libraries(molcounters_basic ${Geant4_LIBRARIES})
 # it relies on these scripts being in the current working directory.
 #
 file(GLOB SCRIPTS
-        ${PROJECT_SOURCE_DIR}/*.in)
-# ${PROJECT_SOURCE_DIR}/*.mac
+        ${PROJECT_SOURCE_DIR}/*.in
+        ${PROJECT_SOURCE_DIR}/*.mac)
 # ${PROJECT_SOURCE_DIR}/*.C)
 
 foreach (_script ${SCRIPTS})

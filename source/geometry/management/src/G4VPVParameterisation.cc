@@ -30,23 +30,20 @@
 // --------------------------------------------------------------------
 
 #include "G4VPVParameterisation.hh"
-#include "G4VPhysicalVolume.hh"
+
 #include "G4LogicalVolume.hh"
+#include "G4VPhysicalVolume.hh"
 #include "G4VVolumeMaterialScanner.hh"
 
 // --------------------------------------------------------------------
-G4VSolid*
-G4VPVParameterisation::ComputeSolid(const G4int,
-                                    G4VPhysicalVolume* pPhysicalVol) 
+G4VSolid* G4VPVParameterisation::ComputeSolid(const G4int, G4VPhysicalVolume* pPhysicalVol)
 {
   return pPhysicalVol->GetLogicalVolume()->GetSolid();
 }
-       
+
 // --------------------------------------------------------------------
-G4Material*
-G4VPVParameterisation::ComputeMaterial(const G4int,
-                                       G4VPhysicalVolume* pPhysicalVol,
-				       const G4VTouchable *) 
+G4Material* G4VPVParameterisation::ComputeMaterial(const G4int, G4VPhysicalVolume* pPhysicalVol,
+                                                   const G4VTouchable*)
 {
   return pPhysicalVol->GetLogicalVolume()->GetMaterial();
 }
@@ -58,8 +55,7 @@ G4bool G4VPVParameterisation::IsNested() const
 }
 
 // --------------------------------------------------------------------
-G4VVolumeMaterialScanner* 
-G4VPVParameterisation::GetMaterialScanner()
+G4VVolumeMaterialScanner* G4VPVParameterisation::GetMaterialScanner()
 {
   return nullptr;
 }

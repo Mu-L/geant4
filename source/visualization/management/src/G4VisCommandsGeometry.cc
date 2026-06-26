@@ -29,15 +29,14 @@
 
 #include "G4VisCommandsGeometry.hh"
 
-#include "G4UIcmdWithAString.hh"
-#include "G4VisManager.hh"
 #include "G4LogicalVolumeStore.hh"
+#include "G4UIcmdWithAString.hh"
 #include "G4UImanager.hh"
+#include "G4VisManager.hh"
 
 #define G4warn G4cout
 
-std::map<G4LogicalVolume*, const G4VisAttributes*>
-G4VVisCommandGeometry::fVisAttsMap;
+std::map<G4LogicalVolume*, const G4VisAttributes*> G4VVisCommandGeometry::fVisAttsMap;
 
 G4VVisCommandGeometry::~G4VVisCommandGeometry()
 {
@@ -51,10 +50,10 @@ G4VisCommandGeometryList::G4VisCommandGeometryList()
 {
   G4bool omitable;
   fpCommand = new G4UIcmdWithAString("/vis/geometry/list", this);
-  fpCommand -> SetGuidance("Lists vis attributes of logical volume(s).");
-  fpCommand -> SetGuidance("\"all\" lists all logical volumes.");
-  fpCommand -> SetParameterName("logical-volume-name", omitable = true);
-  fpCommand -> SetDefaultValue("all");
+  fpCommand->SetGuidance("Lists vis attributes of logical volume(s).");
+  fpCommand->SetGuidance("\"all\" lists all logical volumes.");
+  fpCommand->SetParameterName("logical-volume-name", omitable = true);
+  fpCommand->SetDefaultValue("all");
 }
 
 G4VisCommandGeometryList::~G4VisCommandGeometryList()
@@ -69,26 +68,33 @@ G4String G4VisCommandGeometryList::GetCurrentValue(G4UIcommand*)
 
 void G4VisCommandGeometryList::SetNewValue(G4UIcommand*, G4String newValue)
 {
-  G4LogicalVolumeStore *pLVStore = G4LogicalVolumeStore::GetInstance();
+  G4LogicalVolumeStore* pLVStore = G4LogicalVolumeStore::GetInstance();
   G4bool found = false;
-  for (const auto* pLV : *pLVStore) {
+  for (const auto* pLV : *pLVStore)
+  {
     const G4String& logVolName = pLV->GetName();
-    if (newValue == "all" || logVolName == newValue) {
+    if (newValue == "all" || logVolName == newValue)
+    {
       const G4VisAttributes* visAtts = pLV->GetVisAttributes();
       G4cout << "\nLogical Volume \"" << pLV->GetName() << "\":";
-      if (visAtts) {
+      if (visAtts)
+      {
         G4cout << '\n' << *visAtts;
-      } else {
+      }
+      else
+      {
         G4cout << " no vis attributes";
       }
       G4cout << G4endl;
     }
     if (logVolName == newValue) found = true;
   }
-  if (newValue != "all" && !found) {
-    if (fpVisManager->GetVerbosity() >= G4VisManager::errors) {
-      G4warn << "ERROR: Logical volume \"" << newValue
-	     << "\" not found in logical volume store." << G4endl;
+  if (newValue != "all" && !found)
+  {
+    if (fpVisManager->GetVerbosity() >= G4VisManager::errors)
+    {
+      G4warn << "ERROR: Logical volume \"" << newValue << "\" not found in logical volume store."
+             << G4endl;
     }
     return;
   }
@@ -100,9 +106,9 @@ G4VisCommandGeometryRestore::G4VisCommandGeometryRestore()
 {
   G4bool omitable;
   fpCommand = new G4UIcmdWithAString("/vis/geometry/restore", this);
-  fpCommand -> SetGuidance("Restores vis attributes of logical volume(s).");
-  fpCommand -> SetParameterName("logical-volume-name", omitable = true);
-  fpCommand -> SetDefaultValue("all");
+  fpCommand->SetGuidance("Restores vis attributes of logical volume(s).");
+  fpCommand->SetParameterName("logical-volume-name", omitable = true);
+  fpCommand->SetDefaultValue("all");
 }
 
 G4VisCommandGeometryRestore::~G4VisCommandGeometryRestore()
@@ -118,38 +124,44 @@ G4String G4VisCommandGeometryRestore::GetCurrentValue(G4UIcommand*)
 void G4VisCommandGeometryRestore::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4VisManager::Verbosity verbosity = fpVisManager->GetVerbosity();
-  G4LogicalVolumeStore *pLVStore = G4LogicalVolumeStore::GetInstance();
+  G4LogicalVolumeStore* pLVStore = G4LogicalVolumeStore::GetInstance();
   size_t nLV = pLVStore->size();
   size_t iLV;
   G4LogicalVolume* pLV = 0;
   G4bool found = false;
-  for (iLV = 0; iLV < nLV; iLV++ ) {
+  for (iLV = 0; iLV < nLV; iLV++)
+  {
     pLV = (*pLVStore)[iLV];
     const G4String& logVolName = pLV->GetName();
     if (logVolName == newValue) found = true;
-    if (newValue == "all" || logVolName == newValue) {
+    if (newValue == "all" || logVolName == newValue)
+    {
       VisAttsMapIterator i = fVisAttsMap.find(pLV);
-      if (i != fVisAttsMap.end()) {
-	const G4VisAttributes* newVisAtts = pLV->GetVisAttributes();
-	const G4VisAttributes* oldVisAtts = i->second;
-	pLV->SetVisAttributes(oldVisAtts);
-	if (verbosity >= G4VisManager::confirmations) {
-	  G4cout << "\nLogical Volume \"" << pLV->GetName()
-		 << "\": re-setting vis attributes:\nwas: " << *newVisAtts
-		 << "\nnow: " << *oldVisAtts
-		 << G4endl;
-	}
+      if (i != fVisAttsMap.end())
+      {
+        const G4VisAttributes* newVisAtts = pLV->GetVisAttributes();
+        const G4VisAttributes* oldVisAtts = i->second;
+        pLV->SetVisAttributes(oldVisAtts);
+        if (verbosity >= G4VisManager::confirmations)
+        {
+          G4cout << "\nLogical Volume \"" << pLV->GetName()
+                 << "\": re-setting vis attributes:\nwas: " << *newVisAtts
+                 << "\nnow: " << *oldVisAtts << G4endl;
+        }
       }
     }
   }
-  if (newValue != "all" && !found) {
-    if (verbosity >= G4VisManager::errors) {
-      G4warn << "ERROR: Logical volume \"" << newValue
-	     << "\" not found in logical volume store." << G4endl;
+  if (newValue != "all" && !found)
+  {
+    if (verbosity >= G4VisManager::errors)
+    {
+      G4warn << "ERROR: Logical volume \"" << newValue << "\" not found in logical volume store."
+             << G4endl;
     }
     return;
   }
-  if (fpVisManager->GetCurrentViewer()) {
+  if (fpVisManager->GetCurrentViewer())
+  {
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/rebuild");
   }
 }

@@ -61,11 +61,11 @@ void G4ParallelWorldProcessStore::SetParallelWorld(G4ParallelWorldProcess* proc,
 {
   for (const auto& [process, name] : *fInstance)
   {
-    if(process == proc)
+    if (process == proc)
     {
-      if(name == parallelWorldName)
+      if (name == parallelWorldName)
       {
-        return; // already registered
+        return;  // already registered
       }
 
       // inconsistent !
@@ -73,7 +73,7 @@ void G4ParallelWorldProcessStore::SetParallelWorld(G4ParallelWorldProcess* proc,
       ED << "G4ParallelWorldProcess (" << proc << ") has the world volume (" << name
          << "). It is inconsistent with (" << parallelWorldName << ").";
       G4Exception("G4ParallelWorldProcessStore::SetParallelWorld", "ProcScore0101", FatalException,
-                  ED); 
+                  ED);
     }
   }
   (*fInstance)[proc] = parallelWorldName;
@@ -81,7 +81,7 @@ void G4ParallelWorldProcessStore::SetParallelWorld(G4ParallelWorldProcess* proc,
 
 void G4ParallelWorldProcessStore::UpdateWorlds()
 {
-  for(auto& [process, name] : *fInstance)
+  for (auto& [process, name] : *fInstance)
   {
     process->SetParallelWorld(name);
   }
@@ -89,7 +89,7 @@ void G4ParallelWorldProcessStore::UpdateWorlds()
 
 G4ParallelWorldProcess* G4ParallelWorldProcessStore::GetProcess(const G4String& parallelWorldName)
 {
-  for(const auto& [proc, name] : *fInstance)
+  for (const auto& [proc, name] : *fInstance)
   {
     if (name == parallelWorldName) return proc;
   }

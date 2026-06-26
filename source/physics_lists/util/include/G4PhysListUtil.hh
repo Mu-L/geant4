@@ -27,7 +27,7 @@
 //---------------------------------------------------------------------------
 //
 // ClassName: G4PhyslistUtil:
-//     "Container" for function needed in various places  
+//     "Container" for function needed in various places
 //
 // Author: 2007 Gunter Folger
 //
@@ -35,33 +35,31 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4PhysListUtil_h
-#define G4PhysListUtil_h
+#ifndef G4PHYSLISTUTIL_HH
+#define G4PHYSLISTUTIL_HH
 
-#include "globals.hh"
-
-#include "G4ParticleDefinition.hh"
 #include "G4HadronicProcess.hh"
-#include "G4VProcess.hh"
 #include "G4NeutronGeneralProcess.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4VProcess.hh"
+#include "globals.hh"
 
 class G4PhysListUtil
 {
-public:
+  public:
 
-  static void InitialiseParameters();
+    static void InitialiseParameters();
 
-  static G4VProcess* FindProcess(const G4ParticleDefinition*, G4int subtype);
+    static G4VProcess* FindProcess(const G4ParticleDefinition*, G4int subtype);
 
-  static G4HadronicProcess* FindInelasticProcess(const G4ParticleDefinition*);
+    static G4HadronicProcess* FindInelasticProcess(const G4ParticleDefinition*);
 
-  static G4HadronicProcess* FindElasticProcess(const G4ParticleDefinition*);
+    static G4HadronicProcess* FindElasticProcess(const G4ParticleDefinition*);
 
-  static G4HadronicProcess* FindCaptureProcess(const G4ParticleDefinition*);
+    static G4HadronicProcess* FindCaptureProcess(const G4ParticleDefinition*);
 
-  static G4HadronicProcess* FindFissionProcess(const G4ParticleDefinition*);
+    static G4HadronicProcess* FindFissionProcess(const G4ParticleDefinition*);
 
-  static G4NeutronGeneralProcess* FindNeutronGeneralProcess();
-
+    static G4NeutronGeneralProcess* FindNeutronGeneralProcess();
 };
 #endif

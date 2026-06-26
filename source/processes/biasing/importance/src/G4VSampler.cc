@@ -34,8 +34,6 @@
 
 #include "G4VSampler.hh"
 
-G4VSampler::G4VSampler()
-{}
+G4VSampler::G4VSampler() {}
 
-G4VSampler::~G4VSampler()
-{}
+G4VSampler::~G4VSampler() {}

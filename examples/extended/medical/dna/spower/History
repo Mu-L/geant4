@@ -4,6 +4,12 @@ See `CONTRIBUTING.rst` for details of **required** info/format for each entry,
 which **must** added in reverse chronological order (newest at the top). It must **not**
 be used as a substitute for writing good git commit messages!
 
+## 2026-04-16 Sebastien Incerti (spower-V11-04-01)
+- removed Physics constructors
+
+## 2026-03-08 Sebastien Incerti (spower-V11-04-00)
+- removed references to stationary constructors
+
 ## 2025-07-10 Sebastien Incerti (spower-V11-03-03)
 - spower.in : added inactivation of nuclearStopping (for ions)
 

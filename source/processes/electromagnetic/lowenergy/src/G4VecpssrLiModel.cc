@@ -25,7 +25,7 @@
 //
 //
 // Author: Haifa Ben Abdelouahed
-//         
+//
 //
 // History:
 // -----------
@@ -37,20 +37,10 @@
 // Further documentation available from http://www.ge.infn.it/geant4/lowE
 // -------------------------------------------------------------------
 
-
-
 #include "G4VecpssrLiModel.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-G4VecpssrLiModel::G4VecpssrLiModel()
-{ 
-
-}
+G4VecpssrLiModel::G4VecpssrLiModel() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-G4VecpssrLiModel::~G4VecpssrLiModel()
-{ 
-
-}
-
- 
+G4VecpssrLiModel::~G4VecpssrLiModel() {}

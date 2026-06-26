@@ -25,13 +25,14 @@
 //
 // G4ParticleChangeForLoss class implementation
 //
-// Author: Hisaya Kurashige, 23 March 1998  
+// Author: Hisaya Kurashige, 23 March 1998
 // Revision: Vladimir Ivantchenko, 16 January 2004
 // --------------------------------------------------------------------
 
 #include "G4ParticleChangeForLoss.hh"
-#include "G4SystemOfUnits.hh"
+
 #include "G4ExceptionSeverity.hh"
+#include "G4SystemOfUnits.hh"
 
 // --------------------------------------------------------------------
 G4ParticleChangeForLoss::G4ParticleChangeForLoss()
@@ -50,16 +51,14 @@ void G4ParticleChangeForLoss::DumpInfo() const
   G4long oldprc = G4cout.precision(8);
   G4cout << "      -----------------------------------------------" << G4endl;
   G4cout << "        G4ParticleChangeForLoss proposes: " << G4endl;
-  G4cout << "        Charge (eplus)   : " << std::setw(20)
-         << currentCharge / eplus << G4endl;
-  G4cout << "        Kinetic Energy (MeV): " << std::setw(20)
-         << proposedKinEnergy / MeV << G4endl;
-  G4cout << "        Momentum Direct - x : " << std::setw(20)
-         << proposedMomentumDirection.x() << G4endl;
-  G4cout << "        Momentum Direct - y : " << std::setw(20)
-         << proposedMomentumDirection.y() << G4endl;
-  G4cout << "        Momentum Direct - z : " << std::setw(20)
-         << proposedMomentumDirection.z() << G4endl;
+  G4cout << "        Charge (eplus)   : " << std::setw(20) << currentCharge / eplus << G4endl;
+  G4cout << "        Kinetic Energy (MeV): " << std::setw(20) << proposedKinEnergy / MeV << G4endl;
+  G4cout << "        Momentum Direct - x : " << std::setw(20) << proposedMomentumDirection.x()
+         << G4endl;
+  G4cout << "        Momentum Direct - y : " << std::setw(20) << proposedMomentumDirection.y()
+         << G4endl;
+  G4cout << "        Momentum Direct - z : " << std::setw(20) << proposedMomentumDirection.z()
+         << G4endl;
   G4cout.precision(oldprc);
 }
 
@@ -71,26 +70,25 @@ G4Step* G4ParticleChangeForLoss::UpdateStepForAlongStep(G4Step* pStep)
 
   // accumulate change of the kinetic energy
   G4double preKinEnergy = pPreStepPoint->GetKineticEnergy();
-  G4double kinEnergy =
-    pPostStepPoint->GetKineticEnergy() + (proposedKinEnergy - preKinEnergy);
+  G4double kinEnergy = pPostStepPoint->GetKineticEnergy() + (proposedKinEnergy - preKinEnergy);
 
   pPostStepPoint->SetCharge(currentCharge);
 
   // calculate velocity
-  if(kinEnergy > 0.0)
+  if (kinEnergy > 0.0)
   {
     pPostStepPoint->SetKineticEnergy(kinEnergy);
 
     // assuming that mass>0, zero mass particles do not have energy loss
-    pPostStepPoint->SetVelocity(CLHEP::c_light*ComputeBeta(kinEnergy));
-  } 
-  else 
+    pPostStepPoint->SetVelocity(CLHEP::c_light * ComputeBeta(kinEnergy));
+  }
+  else
   {
     pPostStepPoint->SetKineticEnergy(0.0);
     pPostStepPoint->SetVelocity(0.0);
   }
 
-  if(isParentWeightProposed)
+  if (isParentWeightProposed)
   {
     pPostStepPoint->SetWeight(theParentWeight);
   }
@@ -107,12 +105,12 @@ G4Step* G4ParticleChangeForLoss::UpdateStepForPostStep(G4Step* pStep)
 
   pPostStepPoint->SetCharge(currentCharge);
   pPostStepPoint->SetMomentumDirection(proposedMomentumDirection);
-  if(proposedKinEnergy > 0.0)
+  if (proposedKinEnergy > 0.0)
   {
     pPostStepPoint->SetKineticEnergy(proposedKinEnergy);
 
     // assuming that mass>0, zero mass particles do not have energy loss
-    pPostStepPoint->SetVelocity(CLHEP::c_light*ComputeBeta(proposedKinEnergy));
+    pPostStepPoint->SetVelocity(CLHEP::c_light * ComputeBeta(proposedKinEnergy));
   }
   else
   {
@@ -121,7 +119,7 @@ G4Step* G4ParticleChangeForLoss::UpdateStepForPostStep(G4Step* pStep)
   }
   pPostStepPoint->SetPolarization(proposedPolarization);
 
-  if(isParentWeightProposed)
+  if (isParentWeightProposed)
   {
     pPostStepPoint->SetWeight(theParentWeight);
   }

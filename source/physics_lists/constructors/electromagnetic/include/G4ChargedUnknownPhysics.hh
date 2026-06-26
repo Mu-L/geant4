@@ -25,12 +25,12 @@
 //
 // --------------------------------------------------------------------------
 //
-//      GEANT4 header file 
+//      GEANT4 header file
 //
 //      File name:     G4ChargedUnknownPhysics.hh
 //
 //      Author:        A.Ribon
-// 
+//
 //      Creation date: August 2024
 //
 //      Description:   This physics list constructor class is similar to
@@ -45,21 +45,24 @@
 // --------------------------------------------------------------------------
 //
 
-#ifndef G4ChargedUnknownPhysics_h
-#define G4ChargedUnknownPhysics_h 1
+#ifndef G4CHARGEDUNKNOWNPHYSICS_HH
+#define G4CHARGEDUNKNOWNPHYSICS_HH
 
-#include "globals.hh"
 #include "G4VPhysicsConstructor.hh"
+#include "globals.hh"
 
+class G4ChargedUnknownPhysics : public G4VPhysicsConstructor
+{
+  public:
 
-class G4ChargedUnknownPhysics : public G4VPhysicsConstructor {
-  public: 
-    G4ChargedUnknownPhysics( G4int ver = 1 );
-    G4ChargedUnknownPhysics( const G4String& name, G4int ver = 1 );
+    G4ChargedUnknownPhysics(G4int ver = 1);
+    G4ChargedUnknownPhysics(const G4String& name, G4int ver = 1);
     ~G4ChargedUnknownPhysics() = default;
     void ConstructParticle() override;
     void ConstructProcess() override;
+
   private:
+
     G4int verbose;
 };
 

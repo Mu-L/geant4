@@ -47,15 +47,14 @@ inline G4double G4PhysicsVector::Energy(const std::size_t index) const
 }
 
 // ---------------------------------------------------------------
-inline G4double
-G4PhysicsVector::GetLowEdgeEnergy(const std::size_t index) const
+inline G4double G4PhysicsVector::GetLowEdgeEnergy(const std::size_t index) const
 {
   return binVector[index];
 }
 
 // ---------------------------------------------------------------
 inline G4double G4PhysicsVector::GetMinEnergy() const
-{ 
+{
   return edgeMin;
 }
 
@@ -86,7 +85,7 @@ inline std::size_t G4PhysicsVector::GetVectorLength() const
 // ---------------------------------------------------------------
 inline void G4PhysicsVector::PutValue(std::size_t index, G4double theValue)
 {
-  if(index >= numberOfNodes)
+  if (index >= numberOfNodes)
   {
     PrintPutValueError(index, theValue, "PutValue(..) ");
   }
@@ -115,15 +114,13 @@ inline void G4PhysicsVector::SetVerboseLevel(G4int value)
 }
 
 // ---------------------------------------------------------------
-inline G4double
-G4PhysicsVector::FindLinearEnergy(const G4double rand) const
+inline G4double G4PhysicsVector::FindLinearEnergy(const G4double rand) const
 {
-  return GetEnergy(rand*dataVector[numberOfNodes - 1]);
+  return GetEnergy(rand * dataVector[numberOfNodes - 1]);
 }
 
 // ---------------------------------------------------------------
-inline G4double G4PhysicsVector::Interpolation(const std::size_t idx,
-                                               const G4double e) const
+inline G4double G4PhysicsVector::Interpolation(const std::size_t idx, const G4double e) const
 {
   // perform the interpolation
   const G4double x1 = binVector[idx];
@@ -143,30 +140,30 @@ inline G4double G4PhysicsVector::Interpolation(const std::size_t idx,
   {
     const G4double c0 = (2.0 - b) * secDerivative[idx];
     const G4double c1 = (1.0 + b) * secDerivative[idx + 1];
-    res += (b * (b - 1.0)) * (c0 + c1) * (dl * dl * (1.0/6.0));
+    res += (b * (b - 1.0)) * (c0 + c1) * (dl * dl * (1.0 / 6.0));
   }
 
   return res;
 }
 
 // ---------------------------------------------------------------
-inline std::size_t G4PhysicsVector::ComputeLogVectorBin(
-  const G4double loge) const
+inline std::size_t G4PhysicsVector::ComputeLogVectorBin(const G4double loge) const
 {
-  return static_cast<std::size_t>( std::min( static_cast<G4int>((loge - logemin) * invdBin),
-    static_cast<G4int>(idxmax) ) );
+  return static_cast<std::size_t>(
+    std::min(static_cast<G4int>((loge - logemin) * invdBin), static_cast<G4int>(idxmax)));
 }
 
 // ---------------------------------------------------------------
-inline std::size_t
-G4PhysicsVector::LogBin(const G4double e, const G4double loge) const
+inline std::size_t G4PhysicsVector::LogBin(const G4double e, const G4double loge) const
 {
   std::size_t idx =
-  scale[std::min( static_cast<G4int>((loge - lmin1) * iBin1),
-                  static_cast<G4int>(imax1) )];
+    scale[std::min(static_cast<G4int>((loge - lmin1) * iBin1), static_cast<G4int>(imax1))];
   for (; idx <= idxmax; ++idx)
   {
-    if (e >= binVector[idx] && e <= binVector[idx + 1]) { break; }
+    if (e >= binVector[idx] && e <= binVector[idx + 1])
+    {
+      break;
+    }
   }
   return idx;
 }
@@ -175,23 +172,22 @@ G4PhysicsVector::LogBin(const G4double e, const G4double loge) const
 inline std::size_t G4PhysicsVector::BinaryBin(const G4double e) const
 {
   // Bin location proposed by K.Genser (FNAL)
-  return std::lower_bound(binVector.cbegin(), binVector.cend(), e) -
-    binVector.cbegin() - 1;
+  return std::lower_bound(binVector.cbegin(), binVector.cend(), e) - binVector.cbegin() - 1;
 }
 
 // ---------------------------------------------------------------
 inline std::size_t G4PhysicsVector::GetBin(const G4double e) const
 {
   std::size_t bin;
-  switch(type)
+  switch (type)
   {
     case T_G4PhysicsLogVector:
       bin = ComputeLogVectorBin(G4Log(e));
       break;
 
     case T_G4PhysicsLinearVector:
-      bin = static_cast<std::size_t>( std::min( static_cast<G4int>((e - edgeMin) * invdBin),
-                                                static_cast<G4int>(idxmax) ) );
+      bin = static_cast<std::size_t>(
+        std::min(static_cast<G4int>((e - edgeMin) * invdBin), static_cast<G4int>(idxmax)));
       break;
 
     default:
@@ -201,12 +197,10 @@ inline std::size_t G4PhysicsVector::GetBin(const G4double e) const
 }
 
 // ---------------------------------------------------------------
-inline G4bool
-G4PhysicsVector::CheckIndex(const G4double e, std::size_t& idx) const
+inline G4bool G4PhysicsVector::CheckIndex(const G4double e, std::size_t& idx) const
 {
   G4bool interpolation = false;
-  if (idx + 1 < numberOfNodes &&
-      e >= binVector[idx] && e <= binVector[idx+1])
+  if (idx + 1 < numberOfNodes && e >= binVector[idx] && e <= binVector[idx + 1])
   {
     interpolation = true;
   }
@@ -215,7 +209,7 @@ G4PhysicsVector::CheckIndex(const G4double e, std::size_t& idx) const
     idx = GetBin(e);
     interpolation = true;
   }
-  else if(e <= edgeMin)
+  else if (e <= edgeMin)
   {
     idx = 0;
   }
@@ -227,8 +221,7 @@ G4PhysicsVector::CheckIndex(const G4double e, std::size_t& idx) const
 }
 
 // ---------------------------------------------------------------
-inline G4double
-G4PhysicsVector::Value(const G4double e, std::size_t& idx) const
+inline G4double G4PhysicsVector::Value(const G4double e, std::size_t& idx) const
 {
   G4bool interpolation = CheckIndex(e, idx);
   G4double res = dataVector[idx];
@@ -248,10 +241,10 @@ inline G4double G4PhysicsVector::Value(G4double e) const
     const std::size_t idx = GetBin(e);
     res = Interpolation(idx, e);
   }
-  else if(e <= edgeMin)
+  else if (e <= edgeMin)
   {
     res = dataVector[0];
-  } 
+  }
   else
   {
     res = dataVector[idxmax + 1];
@@ -266,15 +259,14 @@ inline G4double G4PhysicsVector::GetValue(G4double e, G4bool&) const
 }
 
 // ---------------------------------------------------------------
-inline G4double 
-G4PhysicsVector::LogVectorValue(const G4double e, const G4double loge) const
+inline G4double G4PhysicsVector::LogVectorValue(const G4double e, const G4double loge) const
 {
   G4double res;
   if (e > edgeMin && e < edgeMax)
   {
     const std::size_t idx = ComputeLogVectorBin(loge);
     res = Interpolation(idx, e);
-  } 
+  }
   else if (e <= edgeMin)
   {
     res = dataVector[0];
@@ -287,15 +279,14 @@ G4PhysicsVector::LogVectorValue(const G4double e, const G4double loge) const
 }
 
 // ---------------------------------------------------------------
-inline G4double 
-G4PhysicsVector::LogFreeVectorValue(const G4double e, const G4double loge) const
+inline G4double G4PhysicsVector::LogFreeVectorValue(const G4double e, const G4double loge) const
 {
   G4double res;
   if (e > edgeMin && e < edgeMax)
   {
     const std::size_t idx = LogBin(e, loge);
     res = Interpolation(idx, e);
-  } 
+  }
   else if (e <= edgeMin)
   {
     res = dataVector[0];

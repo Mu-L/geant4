@@ -26,7 +26,7 @@
 //
 // Class description:
 //
-// G4BorisDriver is a driver class using the second order Boris 
+// G4BorisDriver is a driver class using the second order Boris
 // method to integrate the equation of motion.
 
 // Author: Divyansh Tiwari (CERN, Google Summer of Code 2022), 05.11.2022
@@ -35,17 +35,17 @@
 #ifndef G4BORIS_DRIVER_HH
 #define G4BORIS_DRIVER_HH
 
-#include "G4VIntegrationDriver.hh"
 #include "G4BorisScheme.hh"
 #include "G4ChordFinderDelegate.hh"
+#include "G4VIntegrationDriver.hh"
 
 /**
- * @brief G4BorisDriver is a driver class using the second order Boris 
+ * @brief G4BorisDriver is a driver class using the second order Boris
  * method to integrate the equation of motion.
+ * @ingroup geometry_magneticfield
  */
 
-class G4BorisDriver : public G4VIntegrationDriver,
-                      public G4ChordFinderDelegate<G4BorisDriver>
+class G4BorisDriver : public G4VIntegrationDriver, public G4ChordFinderDelegate<G4BorisDriver>
 {
   public:
 
@@ -56,11 +56,9 @@ class G4BorisDriver : public G4VIntegrationDriver,
      *  @param[in] numberOfComponents The number of integration variables.
      *  @param[in] verbosity Flag for verbosity.
      */
-    G4BorisDriver( G4double hminimum,
-                   G4BorisScheme* Boris,
-                   G4int numberOfComponents = 6,
-                   G4bool verbosity = false);
-   
+    G4BorisDriver(G4double hminimum, G4BorisScheme* Boris, G4int numberOfComponents = 6,
+                  G4bool verbosity = false);
+
     /**
      * Default Destructor.
      */
@@ -82,9 +80,7 @@ class G4BorisDriver : public G4VIntegrationDriver,
      *  @param[in] beginStep Initial minimum integration step.
      *  @returns true if integration succeeds.
      */
-    G4bool AccurateAdvance(G4FieldTrack& track,
-                           G4double stepLen,
-                           G4double eps,
+    G4bool AccurateAdvance(G4FieldTrack& track, G4double stepLen, G4double eps,
                            G4double beginStep = 0) override;
 
     /**
@@ -97,10 +93,9 @@ class G4BorisDriver : public G4VIntegrationDriver,
      *  @param[out] dyerr Estimated error.
      *  @returns true if integration succeeds.
      */
-    G4bool QuickAdvance(G4FieldTrack& y_val,   // In/Out
-                        const G4double dydx[],    
-                        G4double hstep,
-                        G4double& missDist,    // Out: estimated sagitta
+    G4bool QuickAdvance(G4FieldTrack& y_val,  // In/Out
+                        const G4double dydx[], G4double hstep,
+                        G4double& missDist,  // Out: estimated sagitta
                         G4double& dyerr) override;
     /**
      * Takes one Step that is as large as possible while satisfying the
@@ -116,14 +111,13 @@ class G4BorisDriver : public G4VIntegrationDriver,
      *  @returns true if integration succeeds.
      */
     void OneGoodStep(G4double yCurrentState[],  // In/Out: state ('y')
-                     G4double& curveLength,     // In/Out: 'x'
-                     G4double htry,             // step to attempt
-                     G4double epsilon_rel,      // relative accuracy
-                     G4double restMass,         
-                     G4double charge,
-                     G4double& hdid,            // Out: step achieved
-                     G4double& hnext);          // Out: proposed next step
-   
+                     G4double& curveLength,  // In/Out: 'x'
+                     G4double htry,  // step to attempt
+                     G4double epsilon_rel,  // relative accuracy
+                     G4double restMass, G4double charge,
+                     G4double& hdid,  // Out: step achieved
+                     G4double& hnext);  // Out: proposed next step
+
     // 2. Methods needed to co-work with G4ChordFinder
 
     /**
@@ -134,9 +128,7 @@ class G4BorisDriver : public G4VIntegrationDriver,
      *  @param[in] chordDistance Maximum sagitta distance.
      *  @returns The length of step taken.
      */
-    inline G4double AdvanceChordLimited(G4FieldTrack& track,
-                                        G4double hstep,
-                                        G4double eps,
+    inline G4double AdvanceChordLimited(G4FieldTrack& track, G4double hstep, G4double eps,
                                         G4double chordDistance) override;
     /**
      * Dispatch interface method for initialisation/reset of driver.
@@ -166,8 +158,7 @@ class G4BorisDriver : public G4VIntegrationDriver,
      *  @param[in] hstepCurrent The current proposed step.
      *  @returns The step size for the next step.
      */
-    inline G4double ComputeNewStepSize(G4double errMaxNorm,
-                                       G4double hstepCurrent) override;
+    inline G4double ComputeNewStepSize(G4double errMaxNorm, G4double hstepCurrent) override;
 
     /**
      * Methods to calculate the next step size given the square of the
@@ -175,17 +166,15 @@ class G4BorisDriver : public G4VIntegrationDriver,
      */
     G4double ShrinkStepSize2(G4double h, G4double error2) const;
     G4double GrowStepSize2(G4double h, G4double error2) const;
-   
+
     // 5. Auxiliary Methods ...
 
     /**
      * Getters for derivatives.
      */
-    void GetDerivatives( const G4FieldTrack& track,
-                               G4double dydx[] ) const override;
-    void GetDerivatives( const G4FieldTrack& track,
-                               G4double dydx[],
-                               G4double field[] ) const override;
+    void GetDerivatives(const G4FieldTrack& track, G4double dydx[]) const override;
+    void GetDerivatives(const G4FieldTrack& track, G4double dydx[],
+                        G4double field[]) const override;
 
     /**
      * Setter and getter for verbosity.
@@ -208,8 +197,8 @@ class G4BorisDriver : public G4VIntegrationDriver,
     /**
      * Writes out to stream the parameters/state of the driver.
      */
-    void StreamInfo( std::ostream& os ) const override;
-   
+    void StreamInfo(std::ostream& os) const override;
+
     /**
      * Accessors for stepper. Not relevant for Boris and other non-RK methods.
      */
@@ -220,47 +209,45 @@ class G4BorisDriver : public G4VIntegrationDriver,
 
     inline G4int GetNumberOfVariables() const;
 
-    inline void CheckStep(const G4ThreeVector& posIn,                              
-                          const G4ThreeVector& posOut,
-                                G4double hdid) const;
-   
+    inline void CheckStep(const G4ThreeVector& posIn, const G4ThreeVector& posOut,
+                          G4double hdid) const;
+
   private:
 
-    // INVARIANTS -- remain unchanged during tracking / integration 
+    // INVARIANTS -- remain unchanged during tracking / integration
     // Parameters
     G4double fMinimumStep;
-    G4bool   fVerbosity;
+    G4bool fVerbosity;
 
     // State -- The core stepping algorithm
     G4BorisScheme* boris;
-    
+
     // STATE -- intermediate state (to avoid creation / churn )
-    G4double yIn[G4FieldTrack::ncompSVEC],
-             yMid[G4FieldTrack::ncompSVEC],
-             yOut[G4FieldTrack::ncompSVEC],
-             yError[G4FieldTrack::ncompSVEC];
+    G4double yIn[G4FieldTrack::ncompSVEC], yMid[G4FieldTrack::ncompSVEC],
+      yOut[G4FieldTrack::ncompSVEC], yError[G4FieldTrack::ncompSVEC];
 
     G4double yCurrent[G4FieldTrack::ncompSVEC];
 
-    // - Unused 2022.11.03:   
+    // - Unused 2022.11.03:
     // G4double derivs[2][6][G4FieldTrack::ncompSVEC];
     // const G4int interval_sequence[2];
-   
+
     // INVARIANTS -- Parameters for ensuring that one call has finite number of integration steps
-    static constexpr G4int    fMaxNoSteps = 300; 
-    static constexpr G4double fSmallestFraction= 1e-12; // To avoid FP underflow !  ( 1.e-6 for single prec)
+    static constexpr G4int fMaxNoSteps = 300;
+    static constexpr G4double fSmallestFraction =
+      1e-12;  // To avoid FP underflow !  ( 1.e-6 for single prec)
 
-    static constexpr G4int    fIntegratorOrder= 2; //  2nd order method -- needed for error control
-    static constexpr G4double fSafetyFactor = 0.9; //
+    static constexpr G4int fIntegratorOrder = 2;  //  2nd order method -- needed for error control
+    static constexpr G4double fSafetyFactor = 0.9;  //
 
-    static constexpr G4double fMaxSteppingIncrease= 10.0; //  Increase no more than 10x   
-    static constexpr G4double fMaxSteppingDecrease= 0.1;  //  Reduce   no more than 10x
+    static constexpr G4double fMaxSteppingIncrease = 10.0;  //  Increase no more than 10x
+    static constexpr G4double fMaxSteppingDecrease = 0.1;  //  Reduce   no more than 10x
     static constexpr G4double fPowerShrink = -1.0 / fIntegratorOrder;
-    static constexpr G4double fPowerGrow   = -1.0 / (1.0 + fIntegratorOrder);
+    static constexpr G4double fPowerGrow = -1.0 / (1.0 + fIntegratorOrder);
 
     static const G4double fErrorConstraintShrink;
     static const G4double fErrorConstraintGrow;
-   
+
     using ChordFinderDelegate = G4ChordFinderDelegate<G4BorisDriver>;
 };
 

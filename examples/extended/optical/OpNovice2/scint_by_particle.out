@@ -11,7 +11,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -1873,6 +1873,7 @@ Use built-in Birks saturation                      1
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 1
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            1 MeV
 Linear loss limit                                  0.01
@@ -2615,7 +2616,7 @@ Index : 1     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 100
-  User=6.810000s Real=6.847460s Sys=0.010000s
+  User=6.280000s Real=6.347883s Sys=0.010000s
 
     Run Summary
 ---------------------------------
@@ -2684,7 +2685,7 @@ Index : 1     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 100
-  User=0.090000s Real=0.090641s Sys=0.000000s
+  User=0.090000s Real=0.087471s Sys=0.000000s
 
     Run Summary
 ---------------------------------
@@ -2753,7 +2754,7 @@ Index : 1     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 100
-  User=0.980000s Real=0.980287s Sys=0.000000s
+  User=0.910000s Real=0.916814s Sys=0.000000s
 
     Run Summary
 ---------------------------------
@@ -2822,7 +2823,7 @@ Index : 1     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 100
-  User=0.090000s Real=0.094288s Sys=0.000000s
+  User=0.090000s Real=0.087750s Sys=0.000000s
 
     Run Summary
 ---------------------------------
@@ -2892,7 +2893,7 @@ Index : 1     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 100
-  User=0.160000s Real=0.157689s Sys=0.000000s
+  User=0.090000s Real=0.089916s Sys=0.000000s
 
     Run Summary
 ---------------------------------

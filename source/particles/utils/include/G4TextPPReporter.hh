@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 
-#ifndef G4TextPPReporter_h
-#define G4TextPPReporter_h 1
+#ifndef G4TEXTPPREPORTER_HH
+#define G4TEXTPPREPORTER_HH
 
 #include "G4VParticlePropertyReporter.hh"
 #include "globals.hh"
@@ -32,13 +32,16 @@
 class G4TextPPReporter : public G4VParticlePropertyReporter
 {
   public:
+
     void Print(const G4String& option = "") override;
 
   protected:
+
     void SparseOption(const G4String& option);
     void GeneratePropertyTable(const G4ParticleDefinition*);
 
   protected:
+
     G4String baseDir;
 };
 

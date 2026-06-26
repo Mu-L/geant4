@@ -45,6 +45,7 @@ class G4ElectroMagneticField;
  * @brief G4EqEMFieldWithEDM implements the right-hand side of equation of
  * motion in a combined electric and magnetic field, with spin tracking for
  * both MDM and EDM terms.
+ * @ingroup geometry_magneticfield
  */
 
 class G4EqEMFieldWithEDM : public G4EquationOfMotion
@@ -61,7 +62,7 @@ class G4EqEMFieldWithEDM : public G4EquationOfMotion
      * Default Destructor.
      */
     ~G4EqEMFieldWithEDM() override = default;
-  
+
     /**
      * Sets the charge, momentum and mass of the current particle.
      * Used to set the equation's coefficients.
@@ -69,9 +70,8 @@ class G4EqEMFieldWithEDM : public G4EquationOfMotion
      *  @param[in] MomentumXc Particle momentum.
      *  @param[in] mass Particle mass.
      */
-    void SetChargeMomentumMass(G4ChargeState particleCharge, // in e+ units
-                               G4double MomentumXc,
-                               G4double mass) override;
+    void SetChargeMomentumMass(G4ChargeState particleCharge,  // in e+ units
+                               G4double MomentumXc, G4double mass) override;
 
     /**
      * Calculates the value of the derivative, given the value of the
@@ -80,9 +80,8 @@ class G4EqEMFieldWithEDM : public G4EquationOfMotion
      *  @param[in] Field Field value.
      *  @param[out] dydx Derivatives array.
      */
-    void EvaluateRhsGivenB(const G4double y[],
-                           const G4double Field[],
-                                 G4double dydx[] ) const override;
+    void EvaluateRhsGivenB(const G4double y[], const G4double Field[],
+                           G4double dydx[]) const override;
 
     /**
      * Setter and getter for magnetic anomaly.
@@ -105,7 +104,7 @@ class G4EqEMFieldWithEDM : public G4EquationOfMotion
 
     G4double charge{0.}, mass{0.}, magMoment{0.}, spin{0.};
 
-    G4double fElectroMagCof{0.} ;
+    G4double fElectroMagCof{0.};
     G4double fMassCof{0.};
 
     G4double omegac{0.}, anomaly{0.0011659208}, eta{0.};

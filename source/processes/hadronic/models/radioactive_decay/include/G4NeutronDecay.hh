@@ -35,18 +35,18 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4NeutronDecay_h
-#define G4NeutronDecay_h 1
+#ifndef G4NEUTRONDECAY_HH
+#define G4NEUTRONDECAY_HH
 
 #include "G4NuclearDecay.hh"
-
 
 class G4NeutronDecay : public G4NuclearDecay
 {
   public:
-    G4NeutronDecay(const G4ParticleDefinition* theParentNucleus,
-                  const G4double& theBR, const G4double& Qvalue,
-                  const G4double& excitation, const G4Ions::G4FloatLevelBase& flb);
+
+    G4NeutronDecay(const G4ParticleDefinition* theParentNucleus, const G4double& theBR,
+                   const G4double& Qvalue, const G4double& excitation,
+                   const G4Ions::G4FloatLevelBase& flb);
 
     virtual ~G4NeutronDecay();
 
@@ -55,7 +55,7 @@ class G4NeutronDecay : public G4NuclearDecay
     virtual void DumpNuclearInfo();
 
   private:
+
     const G4double transitionQ;
 };
 #endif
-

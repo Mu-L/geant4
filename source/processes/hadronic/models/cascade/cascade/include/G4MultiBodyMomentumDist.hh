@@ -34,8 +34,8 @@
 // 20130619  Change singleton instance to be thread-local, to avoid collisions.
 // 20130620  Address Coverity warnings about missing copy actions
 
-#ifndef G4MultiBodyMomentumDist_h
-#define G4MultiBodyMomentumDist_h 1
+#ifndef G4MULTIBODYMOMENTUMDIST_HH
+#define G4MULTIBODYMOMENTUMDIST_HH
 
 #include "globals.hh"
 
@@ -45,40 +45,44 @@ class G4NuclNucl4BodyMomDst;
 class G4HadNucl3BodyMomDst;
 class G4HadNucl4BodyMomDst;
 
+class G4MultiBodyMomentumDist
+{
+  public:
 
-class G4MultiBodyMomentumDist {
-public:
-  ~G4MultiBodyMomentumDist();
+    ~G4MultiBodyMomentumDist();
 
-  static const G4MultiBodyMomentumDist* GetInstance();
+    static const G4MultiBodyMomentumDist* GetInstance();
 
-  // Return appropriate generator for initial state and multiplicity
-  static const G4VMultiBodyMomDst* GetDist(G4int is, G4int mult) {
-    return GetInstance()->ChooseDist(is, mult);
-  }
+    // Return appropriate generator for initial state and multiplicity
+    static const G4VMultiBodyMomDst* GetDist(G4int is, G4int mult)
+    {
+      return GetInstance()->ChooseDist(is, mult);
+    }
 
-  // Pass verbosity through to owned objects
-  static void setVerboseLevel(G4int vb=0);
+    // Pass verbosity through to owned objects
+    static void setVerboseLevel(G4int vb = 0);
 
-private:
-  // Constructor is private for singleton
-  G4MultiBodyMomentumDist();
-  const G4VMultiBodyMomDst* ChooseDist(G4int is, G4int mult) const;
+  private:
 
-  void passVerbose(G4int verbose);	// Pass verbosity through instance
+    // Constructor is private for singleton
+    G4MultiBodyMomentumDist();
+    const G4VMultiBodyMomDst* ChooseDist(G4int is, G4int mult) const;
 
-  static G4ThreadLocal G4MultiBodyMomentumDist* theInstance;	// Per thread
+    void passVerbose(G4int verbose);  // Pass verbosity through instance
 
-  // Generators for various initial/final state combinations
-  G4NuclNucl3BodyMomDst* nn3BodyDst;	// N N to X Y Z
-  G4NuclNucl4BodyMomDst* nn4BodyDst;    // N N to X Y Z W ...
-  G4HadNucl3BodyMomDst*  hn3BodyDst;	// pi,K,Y,gamma N to X Y Z
-  G4HadNucl4BodyMomDst*  hn4BodyDst;	// pi,K,Y,gamma N to X Y Z W ...
+    static G4ThreadLocal G4MultiBodyMomentumDist* theInstance;  // Per thread
 
-private:
-  // Copying of modules is forbidden
-  G4MultiBodyMomentumDist(const G4MultiBodyMomentumDist&);
-  G4MultiBodyMomentumDist& operator=(const G4MultiBodyMomentumDist&);
+    // Generators for various initial/final state combinations
+    G4NuclNucl3BodyMomDst* nn3BodyDst;  // N N to X Y Z
+    G4NuclNucl4BodyMomDst* nn4BodyDst;  // N N to X Y Z W ...
+    G4HadNucl3BodyMomDst* hn3BodyDst;  // pi,K,Y,gamma N to X Y Z
+    G4HadNucl4BodyMomDst* hn4BodyDst;  // pi,K,Y,gamma N to X Y Z W ...
+
+  private:
+
+    // Copying of modules is forbidden
+    G4MultiBodyMomentumDist(const G4MultiBodyMomentumDist&);
+    G4MultiBodyMomentumDist& operator=(const G4MultiBodyMomentumDist&);
 };
 
-#endif	/* G4MultiBodyMomentumDist_h */
+#endif /* G4MultiBodyMomentumDist_h */

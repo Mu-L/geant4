@@ -25,8 +25,8 @@
 //
 //
 
-#ifndef G4InteractorMessenger_h
-#define G4InteractorMessenger_h 1
+#ifndef G4INTERACTORMESSENGER_HH
+#define G4INTERACTORMESSENGER_HH
 
 #include "G4UImessenger.hh"
 
@@ -36,22 +36,24 @@ class G4UIcommand;
 
 class G4InteractorMessenger : public G4UImessenger
 {
- public:
-  G4InteractorMessenger(G4VInteractiveSession* session);
-  ~G4InteractorMessenger() override;
-  void SetNewValue(G4UIcommand* command, G4String newValue) override;
+  public:
 
- private:
-  G4VInteractiveSession* session;
-  G4UIdirectory* interactorDirectory;
-  G4UIcommand* addMenu;
-  G4UIcommand* addButton;
-  G4UIcommand* addIcon;
-  G4UIcommand* defaultIcons;
-  G4UIcommand* sys;
-  G4UIcommand* outputStyle;
-  G4UIcommand* nativeMenu;
-  G4UIcommand* clearMenu;
+    G4InteractorMessenger(G4VInteractiveSession* session);
+    ~G4InteractorMessenger() override;
+    void SetNewValue(G4UIcommand* command, G4String newValue) override;
+
+  private:
+
+    G4VInteractiveSession* session;
+    G4UIdirectory* interactorDirectory;
+    G4UIcommand* addMenu;
+    G4UIcommand* addButton;
+    G4UIcommand* addIcon;
+    G4UIcommand* defaultIcons;
+    G4UIcommand* sys;
+    G4UIcommand* outputStyle;
+    G4UIcommand* nativeMenu;
+    G4UIcommand* clearMenu;
 };
 
 #endif

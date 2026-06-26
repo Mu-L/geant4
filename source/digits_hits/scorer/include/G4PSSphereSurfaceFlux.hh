@@ -26,14 +26,13 @@
 //
 //
 
-#ifndef G4PSSphereSurfaceFlux_h
-#define G4PSSphereSurfaceFlux_h 1
+#ifndef G4PSSPHERESURFACEFLUX_HH
+#define G4PSSPHERESURFACEFLUX_HH
 
-#include "G4VPrimitiveScorer.hh"
-#include "G4THitsMap.hh"
-
-#include "G4Sphere.hh"
 #include "G4PSDirectionFlag.hh"
+#include "G4Sphere.hh"
+#include "G4THitsMap.hh"
+#include "G4VPrimitiveScorer.hh"
 ////////////////////////////////////////////////////////////////////////////////
 // (Description)
 //   This is a primitive scorer class for scoring Surface Flux.
@@ -58,35 +57,38 @@
 
 class G4PSSphereSurfaceFlux : public G4VPrimitiveScorer
 {
- public:
-  G4PSSphereSurfaceFlux(const G4String& name, G4int direction, G4int depth = 0);
-  G4PSSphereSurfaceFlux(const G4String& name, G4int direction, const G4String& unit,
-                        G4int depth = 0);
-  ~G4PSSphereSurfaceFlux() override = default;
+  public:
 
-  inline void Weighted(G4bool flg = true) { weighted = flg; }
-  // Multiply track weight
+    G4PSSphereSurfaceFlux(const G4String& name, G4int direction, G4int depth = 0);
+    G4PSSphereSurfaceFlux(const G4String& name, G4int direction, const G4String& unit,
+                          G4int depth = 0);
+    ~G4PSSphereSurfaceFlux() override = default;
 
-  inline void DivideByArea(G4bool flg = true) { divideByArea = flg; }
-  // Divided by Area.
-  
-  void Initialize(G4HCofThisEvent*) override;
-  void clear() override;
-  void PrintAll() override;
+    inline void Weighted(G4bool flg = true) { weighted = flg; }
+    // Multiply track weight
 
-  virtual void SetUnit(const G4String& unit);
+    inline void DivideByArea(G4bool flg = true) { divideByArea = flg; }
+    // Divided by Area.
 
- protected: 
-  G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
-  G4int IsSelectedSurface(G4Step*, G4Sphere*);
-  virtual void DefineUnitAndCategory();
+    void Initialize(G4HCofThisEvent*) override;
+    void clear() override;
+    void PrintAll() override;
 
- private:
-  G4int HCID;
-  G4int fDirection;
-  G4THitsMap<G4double>* EvtMap;
-  G4bool weighted;
-  G4bool divideByArea;
+    virtual void SetUnit(const G4String& unit);
+
+  protected:
+
+    G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+    G4int IsSelectedSurface(G4Step*, G4Sphere*);
+    virtual void DefineUnitAndCategory();
+
+  private:
+
+    G4int HCID;
+    G4int fDirection;
+    G4THitsMap<G4double>* EvtMap;
+    G4bool weighted;
+    G4bool divideByArea;
 };
 
 #endif

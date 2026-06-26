@@ -29,33 +29,31 @@
 // --------------------------------------------------------------------
 
 #include "G4ImportanceProcess.hh"
-#include "G4VImportanceAlgorithm.hh"
-#include "G4GeometryCell.hh"
-#include "G4SamplingPostStepAction.hh"
-#include "G4VTrackTerminator.hh"
-#include "G4VIStore.hh"
 
-#include "G4Step.hh"
+#include "G4FieldTrackUpdator.hh"
+#include "G4GeometryCell.hh"
 #include "G4Navigator.hh"
-#include "G4VTouchable.hh"
-#include "G4VPhysicalVolume.hh"
 #include "G4ParticleChange.hh"
 #include "G4PathFinder.hh"
-#include "G4TransportationManager.hh"
+#include "G4SamplingPostStepAction.hh"
+#include "G4Step.hh"
 #include "G4StepPoint.hh"
-#include "G4FieldTrackUpdator.hh"
+#include "G4TransportationManager.hh"
+#include "G4VIStore.hh"
+#include "G4VImportanceAlgorithm.hh"
+#include "G4VPhysicalVolume.hh"
+#include "G4VTouchable.hh"
+#include "G4VTrackTerminator.hh"
 
-
-G4ImportanceProcess::
-G4ImportanceProcess(const G4VImportanceAlgorithm &aImportanceAlgorithm,
-                    const G4VIStore &aIstore,
-                    const G4VTrackTerminator *TrackTerminator,
-                    const G4String &aName, G4bool para)
- : G4VProcess(aName, fParallel),
-   fParticleChange(new G4ParticleChange),
-   fImportanceAlgorithm(aImportanceAlgorithm),
-   fIStore(aIstore),
-   fParaflag(para)
+G4ImportanceProcess::G4ImportanceProcess(const G4VImportanceAlgorithm& aImportanceAlgorithm,
+                                         const G4VIStore& aIstore,
+                                         const G4VTrackTerminator* TrackTerminator,
+                                         const G4String& aName, G4bool para)
+  : G4VProcess(aName, fParallel),
+    fParticleChange(new G4ParticleChange),
+    fImportanceAlgorithm(aImportanceAlgorithm),
+    fIStore(aIstore),
+    fParaflag(para)
 {
   G4cout << "### G4ImportanceProcess:: Creating " << G4endl;
   if (TrackTerminator != nullptr)
@@ -68,12 +66,10 @@ G4ImportanceProcess(const G4VImportanceAlgorithm &aImportanceAlgorithm,
   }
   if (fParticleChange == nullptr)
   {
-    G4Exception("G4ImportanceProcess::G4ImportanceProcess()",
-                "FatalError", FatalException,
+    G4Exception("G4ImportanceProcess::G4ImportanceProcess()", "FatalError", FatalException,
                 "Failed allocation of G4ParticleChange !");
   }
   G4VProcess::pParticleChange = fParticleChange;
-
 
   fGhostStep = new G4Step();
   fGhostPreStepPoint = fGhostStep->GetPreStepPoint();
@@ -82,13 +78,12 @@ G4ImportanceProcess(const G4VImportanceAlgorithm &aImportanceAlgorithm,
   fTransportationManager = G4TransportationManager::GetTransportationManager();
   fPathFinder = G4PathFinder::GetInstance();
 
-  if (verboseLevel>0)
+  if (verboseLevel > 0)
   {
     G4cout << GetProcessName() << " is created " << G4endl;
   }
 
   G4cout << "G4ImportanceProcess:: importance process paraflag is: " << fParaflag << G4endl;
-
 }
 
 G4ImportanceProcess::~G4ImportanceProcess()
@@ -99,19 +94,19 @@ G4ImportanceProcess::~G4ImportanceProcess()
 
 //------------------------------------------------------
 //
-// SetParallelWorld 
+// SetParallelWorld
 //
 //------------------------------------------------------
 void G4ImportanceProcess::SetParallelWorld(const G4String& parallelWorldName)
 {
   G4cout << G4endl << G4endl << G4endl;
   G4cout << "G4ImportanceProcess:: SetParallelWorld name = " << parallelWorldName << G4endl;
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// Get pointers of the parallel world and its navigator
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  // Get pointers of the parallel world and its navigator
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   fGhostWorldName = parallelWorldName;
   SetParallelWorldNavigator(true);
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 }
 
 //------------------------------------------------------
@@ -123,9 +118,8 @@ void G4ImportanceProcess::SetParallelWorldNavigator(G4bool createIfMissing)
 {
   fGhostWorld = createIfMissing ? fTransportationManager->GetParallelWorld(fGhostWorldName)
                                 : fTransportationManager->IsWorldExisting(fGhostWorldName);
-  fGhostNavigator = (fGhostWorld != nullptr)
-                    ? fTransportationManager->GetNavigator(fGhostWorld)
-                    : nullptr;
+  fGhostNavigator =
+    (fGhostWorld != nullptr) ? fTransportationManager->GetNavigator(fGhostWorld) : nullptr;
 }
 
 //------------------------------------------------------
@@ -135,132 +129,124 @@ void G4ImportanceProcess::SetParallelWorldNavigator(G4bool createIfMissing)
 //------------------------------------------------------
 void G4ImportanceProcess::StartTracking(G4Track* trk)
 {
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// Activate navigator and get the navigator ID
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  // Activate navigator and get the navigator ID
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  if(fParaflag)
+  if (fParaflag)
   {
     SetParallelWorldNavigator();
-    if(fGhostNavigator != nullptr)
+    if (fGhostNavigator != nullptr)
     {
       fNavigatorID = fTransportationManager->ActivateNavigator(fGhostNavigator);
     }
     else
     {
-      G4Exception("G4ImportanceProcess::StartTracking",
-                  "ProcParaWorld000",FatalException,
-                  "G4ImportanceProcess is used for tracking without having a parallel world assigned");
+      G4Exception(
+        "G4ImportanceProcess::StartTracking", "ProcParaWorld000", FatalException,
+        "G4ImportanceProcess is used for tracking without having a parallel world assigned");
     }
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// Let PathFinder initialize
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    fPathFinder->PrepareNewTrack(trk->GetPosition(),trk->GetMomentumDirection());
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // Let PathFinder initialize
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    fPathFinder->PrepareNewTrack(trk->GetPosition(), trk->GetMomentumDirection());
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// Setup initial touchables for the first step
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // Setup initial touchables for the first step
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     fOldGhostTouchable = fPathFinder->CreateTouchableHandle(fNavigatorID);
     fGhostPreStepPoint->SetTouchableHandle(fOldGhostTouchable);
     fNewGhostTouchable = fOldGhostTouchable;
     fGhostPostStepPoint->SetTouchableHandle(fNewGhostTouchable);
 
-  // Initialize 
+    // Initialize
     fGhostSafety = -1.;
     fOnBoundary = false;
   }
 }
 
-G4double G4ImportanceProcess::
-PostStepGetPhysicalInteractionLength(const G4Track&, G4double,
-                                     G4ForceCondition* condition)
+G4double G4ImportanceProcess::PostStepGetPhysicalInteractionLength(const G4Track&, G4double,
+                                                                   G4ForceCondition* condition)
 {
   *condition = Forced;
   return DBL_MAX;
 }
-  
-G4VParticleChange *
-G4ImportanceProcess::PostStepDoIt(const G4Track &aTrack,
-                                      const G4Step &aStep)
+
+G4VParticleChange* G4ImportanceProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 {
   fParticleChange->Initialize(aTrack);
 
-  if(aTrack.GetNextVolume() == nullptr)
+  if (aTrack.GetNextVolume() == nullptr)
   {
     return fParticleChange;
   }
-  
-  if(fParaflag)
+
+  if (fParaflag)
   {
     fOldGhostTouchable = fGhostPostStepPoint->GetTouchableHandle();
-    //xbug?    fOnBoundary = false;
+    // xbug?    fOnBoundary = false;
     CopyStep(aStep);
-    
-    if(fOnBoundary)
+
+    if (fOnBoundary)
     {
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// Locate the point and get new touchable
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  //??  fPathFinder->Locate(step.GetPostStepPoint()->GetPosition(),
-  //??                      step.GetPostStepPoint()->GetMomentumDirection());
-	fNewGhostTouchable = fPathFinder->CreateTouchableHandle(fNavigatorID);
+      //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      // Locate the point and get new touchable
+      //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      //??  fPathFinder->Locate(step.GetPostStepPoint()->GetPosition(),
+      //??                      step.GetPostStepPoint()->GetMomentumDirection());
+      fNewGhostTouchable = fPathFinder->CreateTouchableHandle(fNavigatorID);
     }
     else
     {
       // reuse the touchable
       fNewGhostTouchable = fOldGhostTouchable;
     }
-    
+
     fGhostPreStepPoint->SetTouchableHandle(fOldGhostTouchable);
     fGhostPostStepPoint->SetTouchableHandle(fNewGhostTouchable);
-    
-    if ( (fGhostPostStepPoint->GetStepStatus() == fGeomBoundary)
-	 && (aStep.GetStepLength() > kCarTolerance) )
+
+    if ((fGhostPostStepPoint->GetStepStatus() == fGeomBoundary)
+        && (aStep.GetStepLength() > kCarTolerance))
     {
-      if (aTrack.GetTrackStatus()==fStopAndKill)
+      if (aTrack.GetTrackStatus() == fStopAndKill)
       {
         G4cout << "WARNING - G4ImportanceProcess::PostStepDoIt()"
                << "          StopAndKill track. on boundary" << G4endl;
       }
 
-      G4GeometryCell prekey(*(fGhostPreStepPoint->GetPhysicalVolume()), 
+      G4GeometryCell prekey(*(fGhostPreStepPoint->GetPhysicalVolume()),
                             fGhostPreStepPoint->GetTouchable()->GetReplicaNumber());
-      G4GeometryCell postkey(*(fGhostPostStepPoint->GetPhysicalVolume()), 
+      G4GeometryCell postkey(*(fGhostPostStepPoint->GetPhysicalVolume()),
                              fGhostPostStepPoint->GetTouchable()->GetReplicaNumber());
 
-      G4Nsplit_Weight nw = 
-          fImportanceAlgorithm.Calculate(fIStore.GetImportance(prekey),
-		                         fIStore.GetImportance(postkey), 
-		                         aTrack.GetWeight());
+      G4Nsplit_Weight nw = fImportanceAlgorithm.Calculate(
+        fIStore.GetImportance(prekey), fIStore.GetImportance(postkey), aTrack.GetWeight());
       fPostStepAction->DoIt(aTrack, fParticleChange, nw);
     }
   }
   else
   {
-    if ( (aStep.GetPostStepPoint()->GetStepStatus() == fGeomBoundary)
-         && (aStep.GetStepLength() > kCarTolerance) )
+    if ((aStep.GetPostStepPoint()->GetStepStatus() == fGeomBoundary)
+        && (aStep.GetStepLength() > kCarTolerance))
     {
-      if (aTrack.GetTrackStatus()==fStopAndKill)
+      if (aTrack.GetTrackStatus() == fStopAndKill)
       {
         G4cout << "WARNING - G4ImportanceProcess::PostStepDoIt()"
-               << "          StopAndKill track. on boundary non-parallel"
-               << G4endl;
+               << "          StopAndKill track. on boundary non-parallel" << G4endl;
       }
-	
-      G4StepPoint *prepoint  = aStep.GetPreStepPoint();
-      G4StepPoint *postpoint = aStep.GetPostStepPoint();
 
-      G4GeometryCell prekey(*(prepoint->GetPhysicalVolume()), 
+      G4StepPoint* prepoint = aStep.GetPreStepPoint();
+      G4StepPoint* postpoint = aStep.GetPostStepPoint();
+
+      G4GeometryCell prekey(*(prepoint->GetPhysicalVolume()),
                             prepoint->GetTouchable()->GetReplicaNumber());
-      G4GeometryCell postkey(*(postpoint->GetPhysicalVolume()), 
+      G4GeometryCell postkey(*(postpoint->GetPhysicalVolume()),
                              postpoint->GetTouchable()->GetReplicaNumber());
 
-      G4Nsplit_Weight nw =
-          fImportanceAlgorithm.Calculate(fIStore.GetImportance(prekey),
-                                         fIStore.GetImportance(postkey), 
-                                         aTrack.GetWeight());
-	fPostStepAction->DoIt(aTrack, fParticleChange, nw);
+      G4Nsplit_Weight nw = fImportanceAlgorithm.Calculate(
+        fIStore.GetImportance(prekey), fIStore.GetImportance(postkey), aTrack.GetWeight());
+      fPostStepAction->DoIt(aTrack, fParticleChange, nw);
     }
   }
   return fParticleChange;
@@ -276,23 +262,28 @@ const G4String& G4ImportanceProcess::GetName() const
   return theProcessName;
 }
 
-G4double G4ImportanceProcess::
-AlongStepGetPhysicalInteractionLength(
-                    const G4Track& track, G4double previousStepSize,
-                    G4double currentMinimumStep,
-                    G4double& proposedSafety, G4GPILSelection* selection)
+G4double G4ImportanceProcess::AlongStepGetPhysicalInteractionLength(const G4Track& track,
+                                                                    G4double previousStepSize,
+                                                                    G4double currentMinimumStep,
+                                                                    G4double& proposedSafety,
+                                                                    G4GPILSelection* selection)
 {
-  if(fParaflag)
-  {    
+  if (fParaflag)
+  {
     *selection = NotCandidateForSelection;
     G4double returnedStep = DBL_MAX;
-    
+
     if (previousStepSize > 0.)
-      { fGhostSafety -= previousStepSize; }
+    {
+      fGhostSafety -= previousStepSize;
+    }
     //  else
     //  { fGhostSafety = -1.; }
-    if (fGhostSafety < 0.) { fGhostSafety = 0.0; }
-    
+    if (fGhostSafety < 0.)
+    {
+      fGhostSafety = 0.0;
+    }
+
     // ------------------------------------------
     // Determination of the proposed STEP LENGTH:
     // ------------------------------------------
@@ -303,18 +294,17 @@ AlongStepGetPhysicalInteractionLength(
       fOnBoundary = false;
       proposedSafety = fGhostSafety - currentMinimumStep;
     }
-    else // (currentMinimumStep > fGhostSafety: I may limit the Step)
+    else  // (currentMinimumStep > fGhostSafety: I may limit the Step)
     {
-      G4FieldTrackUpdator::Update(&fFieldTrack,&track);
+      G4FieldTrackUpdator::Update(&fFieldTrack, &track);
       //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       // ComputeStep
       //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      returnedStep
-	  = fPathFinder->ComputeStep(fFieldTrack,currentMinimumStep,fNavigatorID,
-                                     track.GetCurrentStepNumber(),fGhostSafety,feLimited,
-                                     fEndTrack,track.GetVolume());
+      returnedStep = fPathFinder->ComputeStep(fFieldTrack, currentMinimumStep, fNavigatorID,
+                                              track.GetCurrentStepNumber(), fGhostSafety, feLimited,
+                                              fEndTrack, track.GetVolume());
       //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-      if(feLimited == kDoNot)
+      if (feLimited == kDoNot)
       {
         // Track is not on the boundary
         fOnBoundary = false;
@@ -326,13 +316,13 @@ AlongStepGetPhysicalInteractionLength(
         fOnBoundary = true;
       }
       proposedSafety = fGhostSafety;
-      if(feLimited == kUnique || feLimited == kSharedOther)
+      if (feLimited == kUnique || feLimited == kSharedOther)
       {
         *selection = CandidateForSelection;
       }
       else if (feLimited == kSharedTransport)
-      { 
-        returnedStep *= (1.0 + 1.0e-9);  
+      {
+        returnedStep *= (1.0 + 1.0e-9);
         // Expand to disable its selection in Step Manager comparison
       }
     }
@@ -350,26 +340,22 @@ AlongStepGetPhysicalInteractionLength(
   }
 }
 
-G4double G4ImportanceProcess::
-AtRestGetPhysicalInteractionLength(const G4Track& ,
-                                   G4ForceCondition*) 
+G4double G4ImportanceProcess::AtRestGetPhysicalInteractionLength(const G4Track&, G4ForceCondition*)
 {
   return -1.0;
 }
-  
-G4VParticleChange* G4ImportanceProcess::
-AtRestDoIt(const G4Track&, const G4Step&) 
+
+G4VParticleChange* G4ImportanceProcess::AtRestDoIt(const G4Track&, const G4Step&)
 {
   return nullptr;
 }
 
-G4VParticleChange* G4ImportanceProcess::
-AlongStepDoIt(const G4Track& aTrack, const G4Step& )
+G4VParticleChange* G4ImportanceProcess::AlongStepDoIt(const G4Track& aTrack, const G4Step&)
 {
   // Dummy ParticleChange ie: does nothing
   // Expecting G4Transportation to move the track
   pParticleChange->Initialize(aTrack);
-  return pParticleChange; 
+  return pParticleChange;
 }
 
 void G4ImportanceProcess::CopyStep(const G4Step& step)
@@ -382,12 +368,16 @@ void G4ImportanceProcess::CopyStep(const G4Step& step)
   *fGhostPreStepPoint = *(step.GetPreStepPoint());
   *fGhostPostStepPoint = *(step.GetPostStepPoint());
 
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// Set StepStatus for ghost world
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  if(fOnBoundary)
-  { fGhostPostStepPoint->SetStepStatus(fGeomBoundary); }
-  else if(fGhostPostStepPoint->GetStepStatus()==fGeomBoundary)
-  { fGhostPostStepPoint->SetStepStatus(fPostStepDoItProc); }
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  // Set StepStatus for ghost world
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  if (fOnBoundary)
+  {
+    fGhostPostStepPoint->SetStepStatus(fGeomBoundary);
+  }
+  else if (fGhostPostStepPoint->GetStepStatus() == fGeomBoundary)
+  {
+    fGhostPostStepPoint->SetStepStatus(fPostStepDoItProc);
+  }
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 }

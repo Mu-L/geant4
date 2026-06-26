@@ -42,8 +42,8 @@
 // Updated:     Mariele Stockhoff 2017-02-24 add DAVIS model
 ////////////////////////////////////////////////////////////////////////
 
-#ifndef G4SurfaceProperty_h
-#define G4SurfaceProperty_h 1
+#ifndef G4SURFACEPROPERTY_HH
+#define G4SURFACEPROPERTY_HH
 
 #include "G4String.hh"
 #include "G4Types.hh"
@@ -70,34 +70,37 @@ enum G4SurfaceType
 
 class G4SurfaceProperty
 {
- public:
-  // Constructor of a X-ray optical surface object.
-  G4SurfaceProperty();
-  G4SurfaceProperty(const G4String& name, G4SurfaceType type = x_ray);
-  virtual ~G4SurfaceProperty() = default;
+  public:
 
-  // Returns the surface name.
-  const G4String& GetName() const { return theName; }
-  // Sets the surface name.
-  void SetName(const G4String& name) { theName = name; }
+    // Constructor of a X-ray optical surface object.
+    G4SurfaceProperty();
+    G4SurfaceProperty(const G4String& name, G4SurfaceType type = x_ray);
+    virtual ~G4SurfaceProperty() = default;
 
-  // Returns the surface type.
-  const G4SurfaceType& GetType() const { return theType; }
-  // Sets the surface type.
-  virtual void SetType(const G4SurfaceType& type) { theType = type; }
+    // Returns the surface name.
+    const G4String& GetName() const { return theName; }
+    // Sets the surface name.
+    void SetName(const G4String& name) { theName = name; }
 
-  // To handle the table of surface properties.
-  static void CleanSurfacePropertyTable();
-  static const G4SurfacePropertyTable* GetSurfacePropertyTable();
-  static size_t GetNumberOfSurfaceProperties();
-  static void DumpTableInfo();
+    // Returns the surface type.
+    const G4SurfaceType& GetType() const { return theType; }
+    // Sets the surface type.
+    virtual void SetType(const G4SurfaceType& type) { theType = type; }
 
- protected:
-  G4String theName;  // Surface name
+    // To handle the table of surface properties.
+    static void CleanSurfacePropertyTable();
+    static const G4SurfacePropertyTable* GetSurfacePropertyTable();
+    static size_t GetNumberOfSurfaceProperties();
+    static void DumpTableInfo();
 
-  G4SurfaceType theType;  // Surface type
+  protected:
 
-  static G4SurfacePropertyTable theSurfacePropertyTable;  // The static Table of SurfaceProperties.
+    G4String theName;  // Surface name
+
+    G4SurfaceType theType;  // Surface type
+
+    static G4SurfacePropertyTable
+      theSurfacePropertyTable;  // The static Table of SurfaceProperties.
 };
 
 #endif /* G4SurfaceProperty_h */

@@ -6,19 +6,23 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-05-31 Ben Morgan (opengl-V11-03-11)
+## 2026-06-24 Gabriele Cosmo (opengl-V11-04-03)
+- Added "#undef pascal" for WIN32 in G4OpenGL.hh to cure shadowing compilation
+  warnings due to header ordering change after clang-format.
+
+## 2026-05-31 Ben Morgan (opengl-V11-04-02)
 - Fix Alma9/GCC15 bounds check warnings.
   - Triaged to GCC15 false positive due to temporary creation in a loop.
   - Fix by making `G4OpenGLViewerPickMap::getAttributes()` return by reference.
 
-## 2026-02-01 John Allison (opengl-V11-03-10)
+## 2026-02-01 John Allison (opengl-V11-04-01)
 - G4OpenGLViewer.cc:
   - Remove archaic and unnecessary 20th-century #include statements. The first
     raises a warning on some platforms.
     - #include "G4ios.hh"
     - #include <CLHEP/Units/SystemOfUnits.h>
 
-## 2025-12-26 John Allison
+## 2025-12-26 John Allison (opengl-V11-04-00)
 - G4OpenGLQtViewer.cc: Fix bug 2688: 
   - In G4OpenGLQtViewer::G4wheelEvent:
     - Fix for Qt version < 5.14.

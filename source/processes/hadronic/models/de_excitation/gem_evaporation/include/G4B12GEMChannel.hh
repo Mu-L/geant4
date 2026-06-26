@@ -28,29 +28,29 @@
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara (Sept. 2001)
 //
-#ifndef G4B12GEMChannel_h
-#define G4B12GEMChannel_h 1
+#ifndef G4B12GEMCHANNEL_HH
+#define G4B12GEMCHANNEL_HH
 
-#include "G4GEMChannel.hh"
 #include "G4B12GEMProbability.hh"
+#include "G4GEMChannel.hh"
 
 class G4B12GEMChannel : public G4GEMChannel
 {
-public:
-  // only available constructor
-  explicit G4B12GEMChannel() 
-    : G4GEMChannel(12,5,"B12",&theEvaporationProbability) {}
-  
-  // destructor
-  ~G4B12GEMChannel() {};
-  
-private:
-  const G4B12GEMChannel & operator=(const G4B12GEMChannel & right) = delete;  
-  G4B12GEMChannel(const G4B12GEMChannel & right) = delete;
-  G4bool operator==(const G4B12GEMChannel & right) const = delete;
-  G4bool operator!=(const G4B12GEMChannel & right) const = delete;
-    
-  G4B12GEMProbability theEvaporationProbability;
-  
+  public:
+
+    // only available constructor
+    explicit G4B12GEMChannel() : G4GEMChannel(12, 5, "B12", &theEvaporationProbability) {}
+
+    // destructor
+    ~G4B12GEMChannel() {};
+
+  private:
+
+    const G4B12GEMChannel& operator=(const G4B12GEMChannel& right) = delete;
+    G4B12GEMChannel(const G4B12GEMChannel& right) = delete;
+    G4bool operator==(const G4B12GEMChannel& right) const = delete;
+    G4bool operator!=(const G4B12GEMChannel& right) const = delete;
+
+    G4B12GEMProbability theEvaporationProbability;
 };
 #endif

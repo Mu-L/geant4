@@ -50,6 +50,7 @@
 /**
  * @brief G4TwistedTrd is a twisted trapezoid with the X and Y dimensions
  * varying along Z.
+ * @ingroup geometry_solids_specific
  */
 
 class G4TwistedTrd : public G4VTwistedFaceted
@@ -66,13 +67,8 @@ class G4TwistedTrd : public G4VTwistedFaceted
      *  @param[in] pDz Half-length along Z axis.
      *  @param[in] pPhiTwist The twist angle.
      */
-    G4TwistedTrd( const G4String& pName,
-                        G4double  pDx1,
-                        G4double  pDx2,
-                        G4double  pDy1,
-                        G4double  pDy2,
-                        G4double  pDz,
-                        G4double  pPhiTwist );
+    G4TwistedTrd(const G4String& pName, G4double pDx1, G4double pDx2, G4double pDy1, G4double pDy2,
+                 G4double pDz, G4double pPhiTwist);
 
     /**
      * Default destructor.
@@ -82,12 +78,12 @@ class G4TwistedTrd : public G4VTwistedFaceted
     /**
      * Accessors.
      */
-    inline G4double GetX1HalfLength() const { return GetDx1() ; }
-    inline G4double GetX2HalfLength() const { return GetDx3() ; }
-    inline G4double GetY1HalfLength() const { return GetDy1() ; }
-    inline G4double GetY2HalfLength() const { return GetDy2() ; }
-    inline G4double GetZHalfLength()  const { return GetDz()  ; }
-    inline G4double GetPhiTwist()     const { return GetTwistAngle() ; }
+    inline G4double GetX1HalfLength() const { return GetDx1(); }
+    inline G4double GetX2HalfLength() const { return GetDx3(); }
+    inline G4double GetY1HalfLength() const { return GetDy1(); }
+    inline G4double GetY2HalfLength() const { return GetDy2(); }
+    inline G4double GetZHalfLength() const { return GetDz(); }
+    inline G4double GetPhiTwist() const { return GetTwistAngle(); }
 
     /**
      * Returns the type ID, "G4TwistedTrd" of the solid.
@@ -110,7 +106,7 @@ class G4TwistedTrd : public G4VTwistedFaceted
     /**
      * Streams the object contents to an output stream.
      */
-    std::ostream&  StreamInfo(std::ostream& os) const override;
+    std::ostream& StreamInfo(std::ostream& os) const override;
 
     /**
      * Fake default constructor for usage restricted to direct object
@@ -124,6 +120,6 @@ class G4TwistedTrd : public G4VTwistedFaceted
      */
     G4TwistedTrd(const G4TwistedTrd& rhs);
     G4TwistedTrd& operator=(const G4TwistedTrd& rhs);
-} ;
+};
 
 #endif

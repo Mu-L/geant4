@@ -32,14 +32,15 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrPlaceDivRep_hh
-#define G4tgrPlaceDivRep_hh 1
+#ifndef G4TGRPLACEDIVREP_HH
+#define G4TGRPLACEDIVREP_HH
+
+#include "G4tgrPlace.hh"
+#include "globals.hh"
+
+#include "geomdefs.hh"
 
 #include <vector>
-
-#include "globals.hh"
-#include "geomdefs.hh"
-#include "G4tgrPlace.hh"
 
 enum G4DivType
 {
@@ -56,8 +57,8 @@ class G4tgrPlaceDivRep : public G4tgrPlace
     ~G4tgrPlaceDivRep();
 
     G4tgrPlaceDivRep(const std::vector<G4String>& wl);
-      // Creates an object passing the only data that is fixed
-      // (ndiv, width, offset may be have to be recalculated)
+    // Creates an object passing the only data that is fixed
+    // (ndiv, width, offset may be have to be recalculated)
 
     EAxis BuildAxis(const G4String& axisName);
 
@@ -69,15 +70,14 @@ class G4tgrPlaceDivRep : public G4tgrPlace
     G4double GetOffset() const { return theOffset; }
     G4DivType GetDivType() const { return theDivType; }
 
-    void SetParentName(const G4String& parentName) { theParentName=parentName; }
+    void SetParentName(const G4String& parentName) { theParentName = parentName; }
     void SetNDiv(G4int ndiv) { theNDiv = ndiv; }
     void SetWidth(G4double width) { theWidth = width; }
     void SetAxis(EAxis axis) { theAxis = axis; }
     void SetOffset(G4double offset) { theOffset = offset; }
     void SetDivType(G4DivType typ) { theDivType = typ; }
 
-    friend std::ostream& operator<<(std::ostream& os,
-                                    const G4tgrPlaceDivRep& obj);
+    friend std::ostream& operator<<(std::ostream& os, const G4tgrPlaceDivRep& obj);
 
   private:
 

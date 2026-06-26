@@ -28,21 +28,17 @@
 // Author: Michael Dressel (CERN), 2003
 // ----------------------------------------------------------------------
 #include "G4WeightWindowAlgorithm.hh"
+
 #include "Randomize.hh"
 
-G4WeightWindowAlgorithm::
-G4WeightWindowAlgorithm(G4double upperLimitFactor,
-                        G4double survivalFactor,
-                        G4int maxNumberOfSplits)
+G4WeightWindowAlgorithm::G4WeightWindowAlgorithm(G4double upperLimitFactor, G4double survivalFactor,
+                                                 G4int maxNumberOfSplits)
   : fUpperLimitFactor(upperLimitFactor),
     fSurvivalFactor(survivalFactor),
     fMaxNumberOfSplits(maxNumberOfSplits)
-{
-}
+{}
 
-G4Nsplit_Weight 
-G4WeightWindowAlgorithm::Calculate(G4double init_w,
-                                   G4double lowerWeightBound) const
+G4Nsplit_Weight G4WeightWindowAlgorithm::Calculate(G4double init_w, G4double lowerWeightBound) const
 {
   G4double survivalWeight = lowerWeightBound * fSurvivalFactor;
   G4double upperWeight = lowerWeightBound * fUpperLimitFactor;
@@ -57,42 +53,44 @@ G4WeightWindowAlgorithm::Calculate(G4double init_w,
   {
     // splitting
     //
-    G4double temp_wi_ws = init_w/upperWeight;
-    auto  split_i = static_cast<G4int>(temp_wi_ws);
-    if(split_i != temp_wi_ws)  { ++split_i; }
-    G4double wi_ws = init_w/split_i;
+    G4double temp_wi_ws = init_w / upperWeight;
+    auto split_i = static_cast<G4int>(temp_wi_ws);
+    if (split_i != temp_wi_ws)
+    {
+      ++split_i;
+    }
+    G4double wi_ws = init_w / split_i;
 
     // values in case integer mode or in csae of double
     // mode and the lower number of splits will be diced
     //
     nw.fN = split_i;
-    nw.fW = wi_ws;        
+    nw.fW = wi_ws;
 
-//TB     if (wi_ws <= fMaxNumberOfSplits) {
-//TB       if (wi_ws > int_wi_ws) {
-//TB         // double mode
-//TB         G4double p2 =  wi_ws - int_wi_ws;
-//TB         G4double r = G4UniformRand();
-//TB         if (r<p2) {
-//TB           nw.fN = int_wi_ws + 1;
-//TB         }
-//TB       }
-//TB     }
-//TB     else {
-//TB       // fMaxNumberOfSplits < wi_ws
-//TB       nw.fN = fMaxNumberOfSplits;
-//TB       nw.fW = init_w/fMaxNumberOfSplits;
-//TB     }
-
+    // TB     if (wi_ws <= fMaxNumberOfSplits) {
+    // TB       if (wi_ws > int_wi_ws) {
+    // TB         // double mode
+    // TB         G4double p2 =  wi_ws - int_wi_ws;
+    // TB         G4double r = G4UniformRand();
+    // TB         if (r<p2) {
+    // TB           nw.fN = int_wi_ws + 1;
+    // TB         }
+    // TB       }
+    // TB     }
+    // TB     else {
+    // TB       // fMaxNumberOfSplits < wi_ws
+    // TB       nw.fN = fMaxNumberOfSplits;
+    // TB       nw.fW = init_w/fMaxNumberOfSplits;
+    // TB     }
   }
   else if (init_w < lowerWeightBound)  // Russian roulette
   {
-    G4double wi_ws = init_w/survivalWeight;
-    G4double p = std::max(wi_ws,1./fMaxNumberOfSplits);
+    G4double wi_ws = init_w / survivalWeight;
+    G4double p = std::max(wi_ws, 1. / fMaxNumberOfSplits);
     G4double r = G4UniformRand();
-    if (r<p)
+    if (r < p)
     {
-      nw.fW = init_w/p;
+      nw.fW = init_w / p;
       nw.fN = 1;
     }
     else
@@ -100,9 +98,8 @@ G4WeightWindowAlgorithm::Calculate(G4double init_w,
       nw.fW = 0;
       nw.fN = 0;
     }
-  } 
+  }
   // else do nothing
 
   return nw;
 }
-

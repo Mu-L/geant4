@@ -31,7 +31,7 @@
 //
 //
 #ifndef G4VMOLECULECOUNTER_HH
-#define G4VMOLECULECOUNTER_HH 1
+#define G4VMOLECULECOUNTER_HH
 
 #include "G4MoleculeCounterTimeComparer.hh"
 #include "G4VMoleculeCounterInternalBase.hh"
@@ -39,10 +39,23 @@
 #include <map>
 #include <memory>
 
+class G4DNAMesh;
 class G4MolecularConfiguration;
 class G4MoleculeDefinition;
 class G4Track;
 class G4StepPoint;
+
+//------------------------------------------------------------------------------
+
+// This class "interface" is used by `G4MoleculeCounterManager` to check whether a counter
+// provides support to recevie mesh snapshots and thus, should be derived from by any
+// mesh/mesoscopic counter as seen below.
+class G4VMoleculeCounterMeshSupport
+{
+  public:
+
+    virtual void SetMeshSnapshot(const G4DNAMesh* const, G4double) = 0;
+};
 
 //------------------------------------------------------------------------------
 
@@ -52,6 +65,7 @@ class G4VMoleculeCounter : public G4VMoleculeCounterInternalBase
     friend class G4VUserMoleculeCounter;
 
   public:
+
     enum MoleculeCounterType
     {
       Other,
@@ -63,24 +77,27 @@ class G4VMoleculeCounter : public G4VMoleculeCounterInternalBase
         virtual ~G4VMoleculeCounterIndex() = default;
         virtual G4bool operator<(G4VMoleculeCounterIndex const&) const = 0;
         virtual G4bool operator==(G4VMoleculeCounterIndex const&) const = 0;
-        virtual G4String GetInfo() const = 0;
         virtual const G4MolecularConfiguration* GetMolecule() const = 0;
     };
 
   private:
+
     G4VMoleculeCounter();
     G4VMoleculeCounter(const G4String&, MoleculeCounterType = MoleculeCounterType::Other);
     G4VMoleculeCounter(G4VMoleculeCounter const&) = delete;
     void operator=(G4VMoleculeCounter const& x) = delete;
 
   public:
+
     ~G4VMoleculeCounter() override = default;
 
   public:
+
     virtual std::unique_ptr<G4VMoleculeCounterIndex> BuildIndex(const G4Track*) const = 0;
     virtual std::unique_ptr<G4VMoleculeCounterIndex> BuildIndex(const G4Track*,
                                                                 const G4StepPoint*) const = 0;
-    virtual std::unique_ptr<G4VMoleculeCounterIndex> BuildSimpleIndex(const G4MolecularConfiguration*) const = 0;
+    virtual std::unique_ptr<G4VMoleculeCounterIndex>
+    BuildSimpleIndex(const G4MolecularConfiguration*) const = 0;
 
     virtual void AddMolecule(std::unique_ptr<G4VMoleculeCounterIndex>, G4double, G4int = 1) = 0;
     virtual void RemoveMolecule(std::unique_ptr<G4VMoleculeCounterIndex>, G4double, G4int = 1) = 0;
@@ -91,6 +108,7 @@ class G4VMoleculeCounter : public G4VMoleculeCounterInternalBase
     virtual void SchedulerFinalizedTracking() = 0;
 
   protected:
+
     MoleculeCounterType fType{MoleculeCounterType::Other};
 
     G4bool fSensitiveToStepping{false};
@@ -100,6 +118,7 @@ class G4VMoleculeCounter : public G4VMoleculeCounterInternalBase
     std::set<const G4MolecularConfiguration*> fIgnoredReactants{};
 
   public:
+
     MoleculeCounterType GetType() const;
 
     G4bool GetSensitiveToStepping() const;
@@ -116,6 +135,7 @@ class G4VMoleculeCounter : public G4VMoleculeCounterInternalBase
     G4bool IsReactantIgnored(const G4MolecularConfiguration*) const;
 
   protected:
+
     void SetNegativeCountsAreFatal(G4bool);
 };
 

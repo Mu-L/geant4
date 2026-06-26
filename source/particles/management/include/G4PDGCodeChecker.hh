@@ -27,8 +27,8 @@
 
 // Author: Hisaya Kurashige, 17 August 1999
 // --------------------------------------------------------------------
-#ifndef G4PDGCodeChecker_hh
-#define G4PDGCodeChecker_hh 1
+#ifndef G4PDGCODECHECKER_HH
+#define G4PDGCODECHECKER_HH
 
 #include "G4ios.hh"
 #include "globals.hh"
@@ -36,6 +36,7 @@
 class G4PDGCodeChecker
 {
   public:
+
     G4PDGCodeChecker();
     ~G4PDGCodeChecker() = default;
 
@@ -59,12 +60,14 @@ class G4PDGCodeChecker
     inline void SetVerboseLevel(G4int verbose);
 
   protected:
+
     enum
     {
       NumberOfQuarkFlavor = 8
     };
 
   private:
+
     void GetDigits(G4int code);
     G4int CheckForQuarks();
     G4int CheckForDiQuarks();
@@ -73,6 +76,7 @@ class G4PDGCodeChecker
     G4int CheckForNuclei();
 
   private:
+
     G4int verboseLevel = 0;
 
     G4int code = 0;
@@ -102,7 +106,8 @@ class G4PDGCodeChecker
 inline G4int G4PDGCodeChecker::GetQuarkContent(G4int flavor) const
 {
   G4int value = 0;
-  if ((flavor >= 0) && (flavor < NumberOfQuarkFlavor)) {
+  if ((flavor >= 0) && (flavor < NumberOfQuarkFlavor))
+  {
     value = theQuarkContent[flavor];
   }
   return value;
@@ -111,7 +116,8 @@ inline G4int G4PDGCodeChecker::GetQuarkContent(G4int flavor) const
 inline G4int G4PDGCodeChecker::GetAntiQuarkContent(G4int flavor) const
 {
   G4int value = 0;
-  if ((flavor >= 0) && (flavor < NumberOfQuarkFlavor)) {
+  if ((flavor >= 0) && (flavor < NumberOfQuarkFlavor))
+  {
     value = theAntiQuarkContent[flavor];
   }
   return value;

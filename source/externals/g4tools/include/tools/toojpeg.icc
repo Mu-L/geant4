@@ -1,5 +1,6 @@
 
 // G.Barrand: pure header version of toojpeg found at https://github.com/stbrumme/toojpeg
+// clang-format off
 
 // //////////////////////////////////////////////////////////
 // toojpeg.cpp

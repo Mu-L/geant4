@@ -23,56 +23,53 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4Absorber_hh
-#define G4Absorber_hh
+#ifndef G4ABSORBER_HH
+#define G4ABSORBER_HH
 
-#include "globals.hh"
 #include "G4KineticTrackVector.hh"
+#include "globals.hh"
 
 class G4KineticTrack;
 
 class G4Absorber
 {
-public:
-  G4Absorber(G4double cutOnP);
-  ~G4Absorber();
+  public:
 
-  G4bool WillBeAbsorbed(const G4KineticTrack & kt);
-  G4bool Absorb(G4KineticTrack & kt, G4KineticTrackVector & tgt);
-  G4KineticTrackVector * GetAbsorbers();
-  G4KineticTrackVector * GetProducts();
-  G4bool FindAbsorbers(G4KineticTrack & kt, G4KineticTrackVector & tgt);
-  G4bool FindProducts(G4KineticTrack & kt);
+    G4Absorber(G4double cutOnP);
+    ~G4Absorber();
 
-private:
-  // hide copy ctor, =, == and != operators
-  G4Absorber(const  G4Absorber &right);
-  const G4Absorber & operator=(const G4Absorber & right);
-  G4bool operator==(const G4Absorber & right) const;
-  G4bool operator!=(const G4Absorber & right) const;
+    G4bool WillBeAbsorbed(const G4KineticTrack& kt);
+    G4bool Absorb(G4KineticTrack& kt, G4KineticTrackVector& tgt);
+    G4KineticTrackVector* GetAbsorbers();
+    G4KineticTrackVector* GetProducts();
+    G4bool FindAbsorbers(G4KineticTrack& kt, G4KineticTrackVector& tgt);
+    G4bool FindProducts(G4KineticTrack& kt);
 
+  private:
 
-private:
-  G4double theCutOnP;
-  G4KineticTrackVector * theAbsorbers;
-  G4KineticTrackVector * theProducts;
+    // hide copy ctor, =, == and != operators
+    G4Absorber(const G4Absorber& right);
+    const G4Absorber& operator=(const G4Absorber& right);
+    G4bool operator==(const G4Absorber& right) const;
+    G4bool operator!=(const G4Absorber& right) const;
 
-  G4ThreeVector GetRandomDirection();
+  private:
 
+    G4double theCutOnP;
+    G4KineticTrackVector* theAbsorbers;
+    G4KineticTrackVector* theProducts;
 
+    G4ThreeVector GetRandomDirection();
 };
 
-
-inline G4KineticTrackVector * G4Absorber::GetAbsorbers()
+inline G4KineticTrackVector* G4Absorber::GetAbsorbers()
 {
   return theAbsorbers;
 }
 
-inline G4KineticTrackVector * G4Absorber::GetProducts()
+inline G4KineticTrackVector* G4Absorber::GetProducts()
 {
   return theProducts;
 }
 
 #endif
-
-

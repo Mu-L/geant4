@@ -31,19 +31,23 @@
 
 #include "G4VVisCommand.hh"
 
-#define G4VIS_COMMAND_PLOTTER_HEADER(a__cmd)\
-class G4VisCommandPlotter##a__cmd: public G4VVisCommand {\
-public:\
-  G4VisCommandPlotter##a__cmd ();\
-  virtual ~G4VisCommandPlotter##a__cmd ();\
-  G4String GetCurrentValue (G4UIcommand*) {return "";}\
-  void SetNewValue (G4UIcommand* command, G4String newValue);\
-private:\
-  G4VisCommandPlotter##a__cmd (const G4VisCommandPlotter##a__cmd&);\
-  G4VisCommandPlotter##a__cmd& operator = (const G4VisCommandPlotter##a__cmd&);\
-\
-  G4UIcommand* fpCommand;\
-};
+#define G4VIS_COMMAND_PLOTTER_HEADER(a__cmd)                                      \
+  class G4VisCommandPlotter##a__cmd : public G4VVisCommand                        \
+  {                                                                               \
+    public:                                                                       \
+                                                                                  \
+      G4VisCommandPlotter##a__cmd();                                              \
+      virtual ~G4VisCommandPlotter##a__cmd();                                     \
+      G4String GetCurrentValue(G4UIcommand*) { return ""; }                       \
+      void SetNewValue(G4UIcommand* command, G4String newValue);                  \
+                                                                                  \
+    private:                                                                      \
+                                                                                  \
+      G4VisCommandPlotter##a__cmd(const G4VisCommandPlotter##a__cmd&);            \
+      G4VisCommandPlotter##a__cmd& operator=(const G4VisCommandPlotter##a__cmd&); \
+                                                                                  \
+      G4UIcommand* fpCommand;                                                     \
+  };
 
 G4VIS_COMMAND_PLOTTER_HEADER(Create)
 G4VIS_COMMAND_PLOTTER_HEADER(SetLayout)

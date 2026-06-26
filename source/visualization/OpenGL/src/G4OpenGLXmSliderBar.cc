@@ -25,26 +25,21 @@
 //
 //
 //
-//Slider bar class. Inherits from G4OpenGLXmVWidgetComponent
+// Slider bar class. Inherits from G4OpenGLXmVWidgetComponent
+
+#include "G4OpenGLXmSliderBar.hh"
 
 #include "G4OpenGLXmVWidgetComponent.hh"
 #include "G4OpenGLXmVWidgetContainer.hh"
-#include "G4OpenGLXmSliderBar.hh"
-#include <X11/Intrinsic.h>
-#include <Xm/Scale.h>
 #include "globals.hh"
 
-G4OpenGLXmSliderBar::G4OpenGLXmSliderBar (const char* n,
-					  XtCallbackRec* c,
-					  G4bool sh,
-					  short dp,
-					  G4double v,
-					  G4double max,
-					  G4double min,
-					  unsigned char o,
-					  unsigned char d) 
-: sliderbar(0)
-, parent(0)
+#include <X11/Intrinsic.h>
+#include <Xm/Scale.h>
+
+G4OpenGLXmSliderBar::G4OpenGLXmSliderBar(const char* n, XtCallbackRec* c, G4bool sh, short dp,
+                                         G4double v, G4double max, G4double min, unsigned char o,
+                                         unsigned char d)
+  : sliderbar(0), parent(0)
 {
   name = n;
   callback = c;
@@ -57,167 +52,129 @@ G4OpenGLXmSliderBar::G4OpenGLXmSliderBar (const char* n,
   direction = d;
 }
 
-G4OpenGLXmSliderBar::~G4OpenGLXmSliderBar ()
-{}
+G4OpenGLXmSliderBar::~G4OpenGLXmSliderBar() {}
 
-const char* G4OpenGLXmSliderBar::GetName () 
+const char* G4OpenGLXmSliderBar::GetName()
 {
   return name;
 }
 
-G4bool G4OpenGLXmSliderBar::GetShow () 
+G4bool G4OpenGLXmSliderBar::GetShow()
 {
   return show;
 }
 
-short G4OpenGLXmSliderBar::GetDecimalPlaces () 
+short G4OpenGLXmSliderBar::GetDecimalPlaces()
 {
   return decimal_places;
 }
 
-G4double G4OpenGLXmSliderBar::GetInitialValue () 
+G4double G4OpenGLXmSliderBar::GetInitialValue()
 {
   return (G4double)initial_value / std::pow(10.0, (G4double)GetDecimalPlaces());
 }
 
-G4double G4OpenGLXmSliderBar::GetMaxValue () 
+G4double G4OpenGLXmSliderBar::GetMaxValue()
 {
   return (G4double)max_value / std::pow(10.0, (G4double)GetDecimalPlaces());
 }
 
-G4double G4OpenGLXmSliderBar::GetMinValue () 
+G4double G4OpenGLXmSliderBar::GetMinValue()
 {
   return (G4double)min_value / std::pow(10.0, (G4double)GetDecimalPlaces());
 }
 
-unsigned char G4OpenGLXmSliderBar::GetOrientation () 
+unsigned char G4OpenGLXmSliderBar::GetOrientation()
 {
   return orientation;
 }
 
-unsigned char G4OpenGLXmSliderBar::GetDirection () 
+unsigned char G4OpenGLXmSliderBar::GetDirection()
 {
   return direction;
 }
 
-void G4OpenGLXmSliderBar::SetName (const char* n) 
+void G4OpenGLXmSliderBar::SetName(const char* n)
 {
   name = n;
-  XmString sliderbar_string = XmStringCreateLocalized ((char*)name);
-  XtVaSetValues (sliderbar,
-		 XmNlabelString, sliderbar_string,
-		 NULL);
- XmStringFree (sliderbar_string);
+  XmString sliderbar_string = XmStringCreateLocalized((char*)name);
+  XtVaSetValues(sliderbar, XmNlabelString, sliderbar_string, NULL);
+  XmStringFree(sliderbar_string);
 }
 
-void G4OpenGLXmSliderBar::SetShow (G4bool sh) 
+void G4OpenGLXmSliderBar::SetShow(G4bool sh)
 {
   show = sh;
-  XtVaSetValues (sliderbar,
-		 XmNshowValue, show,
-		 NULL);
-  
+  XtVaSetValues(sliderbar, XmNshowValue, show, NULL);
 }
 
-void G4OpenGLXmSliderBar::SetDecimalPlaces (short dp) 
+void G4OpenGLXmSliderBar::SetDecimalPlaces(short dp)
 {
   decimal_places = dp;
-  XtVaSetValues (sliderbar,
-		 XmNdecimalPoints, decimal_places,
-		 NULL);
-  
+  XtVaSetValues(sliderbar, XmNdecimalPoints, decimal_places, NULL);
 }
 
-void G4OpenGLXmSliderBar::SetInitialValue (G4double v) 
+void G4OpenGLXmSliderBar::SetInitialValue(G4double v)
 {
   initial_value = int(v * std::pow(10.0, (G4double)GetDecimalPlaces()));
-  XtVaSetValues (sliderbar,
-		 XmNvalue, initial_value,
-		 NULL);
-  
+  XtVaSetValues(sliderbar, XmNvalue, initial_value, NULL);
 }
 
-void G4OpenGLXmSliderBar::SetMaxValue (G4double v) 
+void G4OpenGLXmSliderBar::SetMaxValue(G4double v)
 {
   max_value = int(v * std::pow(10.0, (G4double)GetDecimalPlaces()));
-  XtVaSetValues (sliderbar,
-		 XmNmaximum, max_value,
-		 NULL);
-  
+  XtVaSetValues(sliderbar, XmNmaximum, max_value, NULL);
 }
 
-void G4OpenGLXmSliderBar::SetMinValue (G4double v) 
+void G4OpenGLXmSliderBar::SetMinValue(G4double v)
 {
   min_value = int(v * std::pow(10.0, (G4double)GetDecimalPlaces()));
-  XtVaSetValues (sliderbar,
-		 XmNminimum, min_value,
-		 NULL);
-  
+  XtVaSetValues(sliderbar, XmNminimum, min_value, NULL);
 }
 
-void G4OpenGLXmSliderBar::SetOrientation (unsigned char o) 
+void G4OpenGLXmSliderBar::SetOrientation(unsigned char o)
 {
   orientation = o;
-  XtVaSetValues (sliderbar,
-		 XmNorientation, orientation,
-		 NULL);
-  
+  XtVaSetValues(sliderbar, XmNorientation, orientation, NULL);
 }
 
-void G4OpenGLXmSliderBar::SetDirection (unsigned char d) 
+void G4OpenGLXmSliderBar::SetDirection(unsigned char d)
 {
   direction = d;
-  XtVaSetValues (sliderbar,
-		 XmNprocessingDirection, direction,
-		 NULL);
-  
+  XtVaSetValues(sliderbar, XmNprocessingDirection, direction, NULL);
 }
 
-void G4OpenGLXmSliderBar::AddYourselfTo (G4OpenGLXmVWidgetContainer* container)
+void G4OpenGLXmSliderBar::AddYourselfTo(G4OpenGLXmVWidgetContainer* container)
 {
+  pView = container->GetView();
+  ProcesspView();
 
-  pView = container->GetView ();
-  ProcesspView ();
+  parent = container->GetPointerToWidget();
+  XmString name_string = XmStringCreateLocalized((char*)name);
+  sliderbar = XtVaCreateManagedWidget(name, xmScaleWidgetClass, *parent,
 
-  parent = container->GetPointerToWidget ();
-  XmString name_string = XmStringCreateLocalized ((char*)name);
-  sliderbar = XtVaCreateManagedWidget (name,
-				       xmScaleWidgetClass,
-				       *parent,
-				       
-				       XmNtitleString, name_string,
-				       XmNmaximum, max_value,
-				       XmNminimum, min_value,
-				       XmNvalue, initial_value,
-				       XmNshowValue, show,
-				       XmNdecimalPoints, decimal_places,
-				       XmNorientation, orientation,
-				       XmNprocessingDirection, direction,
-  
-				       XtNvisual, visual,
-				       XtNdepth, depth,
-				       XtNcolormap, cmap,
-				       XtNborderColor, borcol,
-				       XtNbackground, bgnd,
+                                      XmNtitleString, name_string, XmNmaximum, max_value,
+                                      XmNminimum, min_value, XmNvalue, initial_value, XmNshowValue,
+                                      show, XmNdecimalPoints, decimal_places, XmNorientation,
+                                      orientation, XmNprocessingDirection, direction,
 
-				       NULL);
-				       
-  XtAddCallbacks (sliderbar,
-		  XmNvalueChangedCallback,
-		  callback);
+                                      XtNvisual, visual, XtNdepth, depth, XtNcolormap, cmap,
+                                      XtNborderColor, borcol, XtNbackground, bgnd,
 
-  XtAddCallbacks (sliderbar,
-		  XmNdragCallback,
-		  callback);
-  XmStringFree (name_string);
+                                      NULL);
+
+  XtAddCallbacks(sliderbar, XmNvalueChangedCallback, callback);
+
+  XtAddCallbacks(sliderbar, XmNdragCallback, callback);
+  XmStringFree(name_string);
 }
 
-Widget* G4OpenGLXmSliderBar::GetPointerToParent ()
+Widget* G4OpenGLXmSliderBar::GetPointerToParent()
 {
   return parent;
 }
 
-Widget* G4OpenGLXmSliderBar::GetPointerToWidget () 
+Widget* G4OpenGLXmSliderBar::GetPointerToWidget()
 {
   return &sliderbar;
 }

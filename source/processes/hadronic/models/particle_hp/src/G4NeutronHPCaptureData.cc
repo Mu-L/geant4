@@ -39,62 +39,57 @@
 //
 #include "G4NeutronHPCaptureData.hh"
 
+#include "G4AutoLock.hh"
+#include "G4Element.hh"
 #include "G4ElementTable.hh"
 #include "G4HadronicParameters.hh"
+#include "G4Material.hh"
 #include "G4Neutron.hh"
 #include "G4NucleiProperties.hh"
+#include "G4ParticleDefinition.hh"
 #include "G4ParticleHPData.hh"
 #include "G4ParticleHPManager.hh"
-#include "G4Element.hh"
-#include "G4Material.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4PhysicsTable.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4PhysicsTable.hh"
 #include "G4Pow.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4AutoLock.hh"
 
 G4bool G4NeutronHPCaptureData::fLock = true;
 G4PhysicsTable* G4NeutronHPCaptureData::theCrossSections = nullptr;
 
 namespace
 {
-  G4Mutex theHPCaptureData = G4MUTEX_INITIALIZER;
+G4Mutex theHPCaptureData = G4MUTEX_INITIALIZER;
 }
 
-G4NeutronHPCaptureData::G4NeutronHPCaptureData()
-  : G4VCrossSectionDataSet("NeutronHPCaptureXS")
+G4NeutronHPCaptureData::G4NeutronHPCaptureData() : G4VCrossSectionDataSet("NeutronHPCaptureXS")
 {
-  emax = 20.*CLHEP::MeV;
+  emax = 20. * CLHEP::MeV;
   fManager = G4ParticleHPManager::GetInstance();
 }
 
 G4NeutronHPCaptureData::~G4NeutronHPCaptureData()
 {
-  if (isFirst) {
-    if (nullptr != theCrossSections)
-      theCrossSections->clearAndDestroy();
+  if (isFirst)
+  {
+    if (nullptr != theCrossSections) theCrossSections->clearAndDestroy();
     delete theCrossSections;
     theCrossSections = nullptr;
   }
 }
 
-G4bool G4NeutronHPCaptureData::IsIsoApplicable(const G4DynamicParticle*,
-                                               G4int, G4int,
-                                               const G4Element*,
-                                               const G4Material*)
+G4bool G4NeutronHPCaptureData::IsIsoApplicable(const G4DynamicParticle*, G4int, G4int,
+                                               const G4Element*, const G4Material*)
 {
   return true;
 }
 
-G4double G4NeutronHPCaptureData::GetIsoCrossSection(const G4DynamicParticle* dp,
-                                                    G4int /*Z*/, G4int /*A*/,
-                                                    const G4Isotope* /*iso*/,
+G4double G4NeutronHPCaptureData::GetIsoCrossSection(const G4DynamicParticle* dp, G4int /*Z*/,
+                                                    G4int /*A*/, const G4Isotope* /*iso*/,
                                                     const G4Element* element,
                                                     const G4Material* material)
 {
-  if (dp->GetKineticEnergy() == ke_cache && element == element_cache &&
-      material == material_cache)
+  if (dp->GetKineticEnergy() == ke_cache && element == element_cache && material == material_cache)
     return xs_cache;
 
   ke_cache = dp->GetKineticEnergy();
@@ -108,41 +103,48 @@ G4double G4NeutronHPCaptureData::GetIsoCrossSection(const G4DynamicParticle* dp,
 void G4NeutronHPCaptureData::BuildPhysicsTable(const G4ParticleDefinition& p)
 {
   // the choice of the first instance
-  if (fLock) {
+  if (fLock)
+  {
     G4AutoLock l(&theHPCaptureData);
-    if (fLock) {
+    if (fLock)
+    {
       isFirst = true;
       fLock = false;
     }
     l.unlock();
   }
-  if (!isFirst) { return; }
-  if (p.GetParticleName() != "neutron") { 
+  if (!isFirst)
+  {
+    return;
+  }
+  if (p.GetParticleName() != "neutron")
+  {
     G4ExceptionDescription ed;
     ed << p.GetParticleName() << " is a wrong particle type -"
        << " only neutron is allowed";
-    G4Exception("G4NeutronHPCaptureData::BuildPhysicsTable(..)","had012",
-                FatalException, ed, "");
-    return; 
+    G4Exception("G4NeutronHPCaptureData::BuildPhysicsTable(..)", "had012", FatalException, ed, "");
+    return;
   }
 
   // initialisation for the first instance, others are locked
   G4AutoLock l(&theHPCaptureData);
-  if (theCrossSections != nullptr) {
+  if (theCrossSections != nullptr)
+  {
     theCrossSections->clearAndDestroy();
     delete theCrossSections;
   }
   std::size_t numberOfElements = G4Element::GetNumberOfElements();
   theCrossSections = new G4PhysicsTable(numberOfElements);
-  
+
   // make a PhysicsVector for each element
   auto theElementTable = G4Element::GetElementTable();
-  for (std::size_t i = 0; i < numberOfElements; ++i) {
+  for (std::size_t i = 0; i < numberOfElements; ++i)
+  {
     auto elm = (*theElementTable)[i];
 #ifdef G4VERBOSE
-    if (fManager->GetDEBUG()) {
-      G4cout << "ElementIndex " << elm->GetIndex() << "  " 
-             << elm->GetName() << G4endl;
+    if (fManager->GetDEBUG())
+    {
+      G4cout << "ElementIndex " << elm->GetIndex() << "  " << elm->GetName() << G4endl;
     }
 #endif
     G4PhysicsVector* physVec =
@@ -177,15 +179,15 @@ void G4NeutronHPCaptureData::DumpPhysicsTable(const G4ParticleDefinition&)
   std::size_t numberOfElements = G4Element::GetNumberOfElements();
   auto theElementTable = G4Element::GetElementTable();
 
-  for (std::size_t i = 0; i < numberOfElements; ++i) {
+  for (std::size_t i = 0; i < numberOfElements; ++i)
+  {
     G4cout << (*theElementTable)[i]->GetName() << G4endl;
     G4cout << *((*theCrossSections)(i)) << G4endl;
   }
 #endif
 }
 
-G4double G4NeutronHPCaptureData::GetCrossSection(const G4DynamicParticle* aP,
-                                                 const G4Element* anE,
+G4double G4NeutronHPCaptureData::GetCrossSection(const G4DynamicParticle* aP, const G4Element* anE,
                                                  G4double aT)
 {
   G4double result = 0;
@@ -193,10 +195,14 @@ G4double G4NeutronHPCaptureData::GetCrossSection(const G4DynamicParticle* aP,
 
   // prepare neutron
   G4double eKinetic = aP->GetKineticEnergy();
-  if (eKinetic >= emax) { return 0.0; }
+  if (eKinetic >= emax)
+  {
+    return 0.0;
+  }
 
   // NEGLECT_DOPPLER
-  if (fManager->GetNeglectDoppler()) {
+  if (fManager->GetNeglectDoppler())
+  {
     return (*((*theCrossSections)(idx))).Value(eKinetic);
   }
 
@@ -208,8 +214,7 @@ G4double G4NeutronHPCaptureData::GetCrossSection(const G4DynamicParticle* aP,
   G4Nucleus aNuc;
   G4int theA = anE->GetN();
   G4int theZ = anE->GetZasInt();
-  G4double eleMass = G4NucleiProperties::GetNuclearMass(theA, theZ)
-    / CLHEP::neutron_mass_c2;
+  G4double eleMass = G4NucleiProperties::GetNuclearMass(theA, theZ) / CLHEP::neutron_mass_c2;
 
   G4ReactionProduct boosted;
   G4double aXsection;
@@ -222,8 +227,7 @@ G4double G4NeutronHPCaptureData::GetCrossSection(const G4DynamicParticle* aP,
     1. / G4Neutron::Neutron()->GetPDGMass() * theNeutron.GetMomentum();
   G4double neutronVMag = neutronVelocity.mag();
 
-  while (counter == 0 ||
-         std::abs(buffer - result / std::max(1, counter)) > 0.03 * buffer)
+  while (counter == 0 || std::abs(buffer - result / std::max(1, counter)) > 0.03 * buffer)
   // Loop checking, 11.05.2015, T. Koi
   {
     if (counter != 0) buffer = result / counter;

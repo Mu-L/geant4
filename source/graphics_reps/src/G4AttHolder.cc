@@ -26,11 +26,12 @@
 
 #include "G4AttHolder.hh"
 
-#include "G4AttValue.hh"
 #include "G4AttDef.hh"
 #include "G4AttDefStore.hh"
+#include "G4AttValue.hh"
 
 G4AttHolder::~G4AttHolder()
 {
-  for (auto & fValue : fValues) delete fValue;
+  for (auto& fValue : fValues)
+    delete fValue;
 }

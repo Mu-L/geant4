@@ -37,6 +37,7 @@ class G4Run;
 class ExGflashRunAction : public G4UserRunAction
 {
   public:
+
     ExGflashRunAction();
     ~ExGflashRunAction() override;
 
@@ -44,6 +45,7 @@ class ExGflashRunAction : public G4UserRunAction
     void EndOfRunAction(const G4Run* aRun) override;
 
   private:
+
     G4int fRunID{0};
 };
 

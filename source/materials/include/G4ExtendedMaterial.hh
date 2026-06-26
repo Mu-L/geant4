@@ -36,7 +36,7 @@
 //
 
 #ifndef G4EXTENDEDMATERIAL_HH
-#define G4EXTENDEDMATERIAL_HH 1
+#define G4EXTENDEDMATERIAL_HH
 
 #include "G4Material.hh"
 #include "G4VMaterialExtension.hh"  //Needed for hash defintion
@@ -47,68 +47,70 @@
 // A map for material extensions based on the hash of the name.
 // Extensions are owned by the map
 using G4MaterialExtensionMap = std::unordered_map<G4String,  // KEY
-  std::unique_ptr<G4VMaterialExtension>,  // VALUE
-  G4MaterialExtensionHash>;  // HASHING FUNCTOR
+                                                  std::unique_ptr<G4VMaterialExtension>,  // VALUE
+                                                  G4MaterialExtensionHash>;  // HASHING FUNCTOR
 
 class G4ExtendedMaterial : public G4Material
 {
- public:  // with description
-  // Constructor to create an extended material from the base-class G4Material
-  G4ExtendedMaterial(const G4String& name,  // its name
-    const G4Material* baseMaterial);  // base material
+  public:  // with description
 
-  // Constructor to create an extended material from single element
-  G4ExtendedMaterial(const G4String& name,  // its name
-    G4double z,  // atomic number
-    G4double a,  // mass of mole
-    G4double density,  // density
-    G4State state = kStateUndefined,  // solid,gas
-    G4double temp = NTP_Temperature,  // temperature
-    G4double pressure = CLHEP::STP_Pressure);  // pressure
+    // Constructor to create an extended material from the base-class G4Material
+    G4ExtendedMaterial(const G4String& name,  // its name
+                       const G4Material* baseMaterial);  // base material
 
-  // Constructor to create an extended material from a combination of elements
-  // and/or materials subsequently added via AddElement and/or AddMaterial
-  G4ExtendedMaterial(const G4String& name,  // its name
-    G4double density,  // density
-    G4int nComponents,  // nbOfComponents
-    G4State state = kStateUndefined,  // solid,gas
-    G4double temp = NTP_Temperature,  // temperature
-    G4double pressure = CLHEP::STP_Pressure);  // pressure
+    // Constructor to create an extended material from single element
+    G4ExtendedMaterial(const G4String& name,  // its name
+                       G4double z,  // atomic number
+                       G4double a,  // mass of mole
+                       G4double density,  // density
+                       G4State state = kStateUndefined,  // solid,gas
+                       G4double temp = NTP_Temperature,  // temperature
+                       G4double pressure = CLHEP::STP_Pressure);  // pressure
 
-  // Constructor to create an extended material from the base extended material
-  G4ExtendedMaterial(const G4String& name,  // its name
-    G4double density,  // density
-    const G4ExtendedMaterial* baseMaterial,  // base material
-    G4State state = kStateUndefined,  // solid,gas
-    G4double temp = NTP_Temperature,  // temperature
-    G4double pressure = CLHEP::STP_Pressure);  // pressure
+    // Constructor to create an extended material from a combination of elements
+    // and/or materials subsequently added via AddElement and/or AddMaterial
+    G4ExtendedMaterial(const G4String& name,  // its name
+                       G4double density,  // density
+                       G4int nComponents,  // nbOfComponents
+                       G4State state = kStateUndefined,  // solid,gas
+                       G4double temp = NTP_Temperature,  // temperature
+                       G4double pressure = CLHEP::STP_Pressure);  // pressure
 
-  ~G4ExtendedMaterial() override = default;
+    // Constructor to create an extended material from the base extended material
+    G4ExtendedMaterial(const G4String& name,  // its name
+                       G4double density,  // density
+                       const G4ExtendedMaterial* baseMaterial,  // base material
+                       G4State state = kStateUndefined,  // solid,gas
+                       G4double temp = NTP_Temperature,  // temperature
+                       G4double pressure = CLHEP::STP_Pressure);  // pressure
 
-  // register G4VMaterialExtension
-  // This class owns extensions. Register with:
-  // RegisterExtension(std::unique_ptr<MyExtension>(new MyExtension("name")));
-  // or:
-  // RegisteerExtension(std::make_unique<MyExtension>("name"));
-  void RegisterExtension(std::unique_ptr<G4VMaterialExtension> extension);
+    ~G4ExtendedMaterial() override = default;
 
-  // retrieve G4VMaterialExtension, null pointer is returned if model is not available
-  G4VMaterialExtension* RetrieveExtension(const G4String& name);
+    // register G4VMaterialExtension
+    // This class owns extensions. Register with:
+    // RegisterExtension(std::unique_ptr<MyExtension>(new MyExtension("name")));
+    // or:
+    // RegisteerExtension(std::make_unique<MyExtension>("name"));
+    void RegisterExtension(std::unique_ptr<G4VMaterialExtension> extension);
 
-  inline G4int GetNumberOfExtensions() const { return G4int(fExtensionMap.size()); }
+    // retrieve G4VMaterialExtension, null pointer is returned if model is not available
+    G4VMaterialExtension* RetrieveExtension(const G4String& name);
 
-  // Retrieve iterators, proxyes to c++ methods. These are const for read-only
-  // access. Use Register/RetreiveExtension to modify map
-  G4MaterialExtensionMap::const_iterator begin() const { return fExtensionMap.begin(); }
-  G4MaterialExtensionMap::const_iterator cbegin() const { return fExtensionMap.cbegin(); }
-  G4MaterialExtensionMap::const_iterator end() const { return fExtensionMap.end(); }
-  G4MaterialExtensionMap::const_iterator cend() const { return fExtensionMap.cend(); }
+    inline G4int GetNumberOfExtensions() const { return G4int(fExtensionMap.size()); }
 
-  G4bool IsExtended() const override;
-  void Print(std::ostream& flux) const;
+    // Retrieve iterators, proxyes to c++ methods. These are const for read-only
+    // access. Use Register/RetreiveExtension to modify map
+    G4MaterialExtensionMap::const_iterator begin() const { return fExtensionMap.begin(); }
+    G4MaterialExtensionMap::const_iterator cbegin() const { return fExtensionMap.cbegin(); }
+    G4MaterialExtensionMap::const_iterator end() const { return fExtensionMap.end(); }
+    G4MaterialExtensionMap::const_iterator cend() const { return fExtensionMap.cend(); }
 
- private:
-  G4MaterialExtensionMap fExtensionMap;
+    G4bool IsExtended() const override;
+    void Print(std::ostream& flux) const;
+
+  private:
+
+    G4MaterialExtensionMap fExtensionMap;
 };
 
 #endif

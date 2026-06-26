@@ -30,16 +30,17 @@
 //              in the CM for gamma - nucleon two-body scattering
 //
 
-#ifndef G4GammaNuclAngDst_h
-#define G4GammaNuclAngDst_h 1
+#ifndef G4GAMMANUCLANGDST_HH
+#define G4GAMMANUCLANGDST_HH
 
 #include "G4ParamExpTwoBodyAngDst.hh"
 
+class G4GammaNuclAngDst : public G4ParamExpTwoBodyAngDst<10>
+{
+  public:
 
-class G4GammaNuclAngDst : public G4ParamExpTwoBodyAngDst<10> {
-public:
-  G4GammaNuclAngDst(G4int verbose = 0);
-  virtual ~G4GammaNuclAngDst() {;}
+    G4GammaNuclAngDst(G4int verbose = 0);
+    virtual ~G4GammaNuclAngDst() { ; }
 };
 
 #endif

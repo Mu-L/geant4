@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr) 
+// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr)
 //
 // History:
 // -----------
@@ -101,4 +101,3 @@ void G4AllITFinder::Push(G4Track* track)
 {
   fITSubManager[GetIT(track)->GetITType()]->Push(track);
 }
-

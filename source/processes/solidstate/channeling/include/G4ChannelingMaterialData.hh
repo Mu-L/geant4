@@ -28,42 +28,45 @@
 #ifndef G4CHANNELINGMATERIALDATA_HH
 #define G4CHANNELINGMATERIALDATA_HH
 
+#include "G4ChannelingECHARM.hh"
+#include "G4PhysicsLinearVector.hh"
+#include "G4StepPoint.hh"
+#include "G4Track.hh"
+#include "G4VMaterialExtension.hh"
 #include "G4ios.hh"
 #include "globals.hh"
 
-#include "G4VMaterialExtension.hh"
-#include "G4ChannelingECHARM.hh"
-#include "G4StepPoint.hh"
-#include "G4Track.hh"
 #include <unordered_map>
-#include "G4PhysicsLinearVector.hh"
 
 class G4ChannelingMaterialData : public G4VMaterialExtension
 {
   public:
-    
+
     G4ChannelingMaterialData(const G4String&);
     virtual ~G4ChannelingMaterialData();
-    
+
     void Print() const { G4cout << "Channeling Material Data" << G4endl; }
     void SetFilename(const G4String&);
     void SetFilenameElement(const G4String&, const G4String&);
-    
+
     G4ChannelingECHARM* GetPot() { return fPotential; }
     G4ChannelingECHARM* GetEFX() { return fElectricFieldX; }
     G4ChannelingECHARM* GetEFY() { return fElectricFieldY; }
     G4ChannelingECHARM* GetNuD() { return fNucleiDensity; }
     G4ChannelingECHARM* GetElD() { return fElectronDensity; }
-        
+
     G4ChannelingECHARM* GetPotEl(const G4String& name) { return fPotentialElement[name]; }
     G4ChannelingECHARM* GetEFXEl(const G4String& name) { return fElectricFieldXElement[name]; }
     G4ChannelingECHARM* GetEFYEl(const G4String& name) { return fElectricFieldYElement[name]; }
     G4ChannelingECHARM* GetNuDEl(const G4String& name) { return fNucleiDensityElement[name]; }
     G4ChannelingECHARM* GetElDEl(const G4String& name) { return fElectronDensityElement[name]; }
-    
+
     virtual G4bool IsBent() { return bIsBent; }
-    
-    virtual G4ThreeVector GetBR(const G4ThreeVector& v3) { return G4ThreeVector(fVectorR->Value(v3.z()),0.,0.); }
+
+    virtual G4ThreeVector GetBR(const G4ThreeVector& v3)
+    {
+      return G4ThreeVector(fVectorR->Value(v3.z()), 0., 0.);
+    }
     virtual void SetBR(const G4String&);
     virtual void SetBR(G4double);
 

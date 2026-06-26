@@ -35,45 +35,45 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4NeutrinoPhysicsMessenger_h
-#define G4NeutrinoPhysicsMessenger_h 1
+#ifndef G4NEUTRINOPHYSICSMESSENGER_HH
+#define G4NEUTRINOPHYSICSMESSENGER_HH
 
-#include "G4UImessenger.hh"
-#include "G4UIdirectory.hh"
 #include "G4UIcmdWithABool.hh"
 #include "G4UIcmdWithADouble.hh"
 #include "G4UIcmdWithAString.hh"
+#include "G4UIdirectory.hh"
+#include "G4UImessenger.hh"
 
 class G4NeutrinoPhysics;
 
-class G4NeutrinoPhysicsMessenger: public G4UImessenger
+class G4NeutrinoPhysicsMessenger : public G4UImessenger
 {
-public:
-  explicit G4NeutrinoPhysicsMessenger(G4NeutrinoPhysics* af);
-  ~G4NeutrinoPhysicsMessenger() override;
+  public:
 
-  void SetNewValue(G4UIcommand* aComm, G4String aS) override;
+    explicit G4NeutrinoPhysicsMessenger(G4NeutrinoPhysics* af);
+    ~G4NeutrinoPhysicsMessenger() override;
 
-  G4NeutrinoPhysicsMessenger& operator=
-  (const G4NeutrinoPhysicsMessenger& right) = delete;
-  G4NeutrinoPhysicsMessenger(const G4NeutrinoPhysicsMessenger&) = delete;
+    void SetNewValue(G4UIcommand* aComm, G4String aS) override;
 
-private:
+    G4NeutrinoPhysicsMessenger& operator=(const G4NeutrinoPhysicsMessenger& right) = delete;
+    G4NeutrinoPhysicsMessenger(const G4NeutrinoPhysicsMessenger&) = delete;
 
-  G4NeutrinoPhysics* theB;
+  private:
 
-  G4UIcmdWithABool* theNu;
-  G4UIcmdWithABool* theNuETX;
+    G4NeutrinoPhysics* theB;
 
-  G4UIcmdWithADouble* theNuEleCcBF;
-  G4UIcmdWithADouble* theNuEleNcBF;
-  G4UIcmdWithADouble* theNuNucleusBF;
-  G4UIcmdWithADouble* theNuOscDistanceBF;
+    G4UIcmdWithABool* theNu;
+    G4UIcmdWithABool* theNuETX;
 
-  G4UIcmdWithAString* theNuDN;
-  G4UIcmdWithAString* theNuODN;
+    G4UIcmdWithADouble* theNuEleCcBF;
+    G4UIcmdWithADouble* theNuEleNcBF;
+    G4UIcmdWithADouble* theNuNucleusBF;
+    G4UIcmdWithADouble* theNuOscDistanceBF;
 
-  G4UIdirectory* aDir;
+    G4UIcmdWithAString* theNuDN;
+    G4UIcmdWithAString* theNuODN;
+
+    G4UIdirectory* aDir;
 };
 
 #endif

@@ -28,74 +28,67 @@
 //
 // Author V.Ivanchenko 27.05.2019
 //
-// Collection of parameterisations of nuclear radii selected from 
+// Collection of parameterisations of nuclear radii selected from
 // different classes in cross section and model sub-libraries
 //
 
-#ifndef G4NuclearRadii_h
-#define G4NuclearRadii_h 1
+#ifndef G4NUCLEARRADII_HH
+#define G4NUCLEARRADII_HH
 
 #include "globals.hh"
 
 class G4Pow;
 class G4ParticleDefinition;
 
-class G4NuclearRadii 
+class G4NuclearRadii
 {
-public:
+  public:
 
-  // explicit radii for light nuclei
-  static G4double ExplicitRadius(G4int Z, G4int A);
+    // explicit radii for light nuclei
+    static G4double ExplicitRadius(G4int Z, G4int A);
 
-  // algorithm from diffuse-elastic parameterisation (V.Grichine)
-  static G4double Radius(G4int Z, G4int A);
+    // algorithm from diffuse-elastic parameterisation (V.Grichine)
+    static G4double Radius(G4int Z, G4int A);
 
-  // algorithm from e-A scattering data (V.Grichine)
-  static G4double RadiusRMS(G4int Z, G4int A);
+    // algorithm from e-A scattering data (V.Grichine)
+    static G4double RadiusRMS(G4int Z, G4int A);
 
-  // algorithm from Glauber-Gribov nucluear-nuclear model (V.Grichine)
-  static G4double RadiusNNGG(G4int Z, G4int A);
+    // algorithm from Glauber-Gribov nucluear-nuclear model (V.Grichine)
+    static G4double RadiusNNGG(G4int Z, G4int A);
 
-  // algorithm of Edward Simpsons & Dousatsu Sakata
-  static G4double RadiusECS(G4int Z, G4int A);
+    // algorithm of Edward Simpsons & Dousatsu Sakata
+    static G4double RadiusECS(G4int Z, G4int A);
 
-  // algorithm from Glauber-Gribov hadron-nuclear model (V.Grichine)
-  static G4double RadiusHNGG(G4int A);
+    // algorithm from Glauber-Gribov hadron-nuclear model (V.Grichine)
+    static G4double RadiusHNGG(G4int A);
 
-  // algorithm from Glauber-Gribov kaon-nuclear model (V.Grichine)
-  static G4double RadiusKNGG(G4int A);
+    // algorithm from Glauber-Gribov kaon-nuclear model (V.Grichine)
+    static G4double RadiusKNGG(G4int A);
 
-  // algorithm from nuclear de-excitation module
-  static G4double RadiusND(G4int A);
+    // algorithm from nuclear de-excitation module
+    static G4double RadiusND(G4int A);
 
-  // algorithm from computation of Coulomb barrier in the nuclear 
-  // de-excitation module
-  static G4double RadiusCB(G4int Z, G4int A);
+    // algorithm from computation of Coulomb barrier in the nuclear
+    // de-excitation module
+    static G4double RadiusCB(G4int Z, G4int A);
 
-  // algorithm from computation of Coulomb barrier  
-  static G4double ParticleRadius(const G4ParticleDefinition*);
+    // algorithm from computation of Coulomb barrier
+    static G4double ParticleRadius(const G4ParticleDefinition*);
 
-  // algorithm for hadron-nucleon x-section
-  static G4double CoulombFactor(
-         const G4ParticleDefinition* theParticle, 
-	 const G4ParticleDefinition* nucleon, 
-	 G4double ekin);
+    // algorithm for hadron-nucleon x-section
+    static G4double CoulombFactor(const G4ParticleDefinition* theParticle,
+                                  const G4ParticleDefinition* nucleon, G4double ekin);
 
-  // algorithm for hadron-nucleus x-section
-  static G4double CoulombFactor(
-	 G4int Z, G4int A,
-         const G4ParticleDefinition* theParticle, 
-	 G4double ekin);
+    // algorithm for hadron-nucleus x-section
+    static G4double CoulombFactor(G4int Z, G4int A, const G4ParticleDefinition* theParticle,
+                                  G4double ekin);
 
-  // parameterisation of threshold shape of cross section
-  static G4double NeutronInelasticShape(G4int Z, G4double ekin);
-  static G4double ProtonInelasticShape(G4int Z, G4double ekin);
+    // parameterisation of threshold shape of cross section
+    static G4double NeutronInelasticShape(G4int Z, G4double ekin);
+    static G4double ProtonInelasticShape(G4int Z, G4double ekin);
 
-  static G4Pow* fG4pow;
-  static const G4double r0[93];
-
+    static G4Pow* fG4pow;
+    static const G4double r0[93];
 };
 
 #endif
-
-

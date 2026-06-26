@@ -11,7 +11,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -165,6 +165,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 0
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -888,7 +889,7 @@ G4VoxelisationHelper::ReportVoxelStats -- Voxel Statistics
  Run terminated.
 Run Summary
   Number of events processed : 2000
-  User=2.650000s Real=2.663020s Sys=0.010000s
+  User=2.520000s Real=2.535516s Sys=0.000000s
 /control/doifInteractive /vis/enable
 #
 ########################################
@@ -897,21 +898,37 @@ Run Summary
 #
 /score/dumpQuantityToFile boxMesh_1 nOfStepGamma nOfStepGamma.txt
 #
-#
 ########################################
 #
-# drawing projection
+# drawing projections and slices
 #
-/control/ifInteractive draw.mac
+/control/ifInteractive @@
+G4UImanager::StartRecording [0] tmptmp_0.tmpmac
+/score/drawProjection boxMesh_1 eDep
+/score/drawProjection boxMesh_1 nOfStepGamma
+/score/drawProjection boxMesh_1 nOfStepEMinus
+/score/drawProjection boxMesh_1 nOfStepEPlus
+/score/refreshDrawing
+/score/colorMap/setMinMax ! 0. 400.
+/control/loop @@ iColumn 0 29 7
+G4UImanager::StartRecording [1] tmptmp_1.tmpmac
+/score/drawColumn boxMesh_1 nOfStepGamma 0 {iColumn}
+/control/endRecord
+G4UImanager::EndRecording [1] tmptmp_1.tmpmac
+/control/loop  tmptmp_1.tmpmac  iColumn 0 29 7
+/control/endRecord
+G4UImanager::EndRecording [0] tmptmp_0.tmpmac
+/control/ifInteractive  tmptmp_0.tmpmac 
 #
+########################################
 #
 Graphics systems deleted.
 Visualization Manager deleting...
 G4 kernel has come to Quit state.
 Deleting G4Run (id:0) 
-UserDetectorConstruction deleted 0x1db18a0
-UserPhysicsList deleted 0x1dadbf0
-UserActionInitialization deleted 0x1f74630
+UserDetectorConstruction deleted 0xb3f140
+UserPhysicsList deleted 0xb3b3a0
+UserActionInitialization deleted 0xd03db0
 UserWorkerInitialization deleted 0
 UserWorkerThreadInitialization deleted 0
 UserRunAction deleted.

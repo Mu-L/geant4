@@ -33,16 +33,9 @@
 #include "ExGflashHit.hh"
 
 #include "G4Event.hh"
-#include "G4EventManager.hh"
 #include "G4SDManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4TrajectoryContainer.hh"
-#include "G4UImanager.hh"
-// std
-#include <algorithm>
-#include <iostream>
-// Gflash
-using namespace std;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -98,12 +91,6 @@ void ExGflashEventAction::EndOfEventAction(const G4Event* evt)
     /// Hits in sensitive Detector
     int n_hit = THC->entries();
     G4cout << "  " << n_hit << " hits are stored in ExGflashHitsCollection " << G4endl;
-    G4PrimaryVertex* pvertex = evt->GetPrimaryVertex();
-    /// Computing (x,y,z) of vertex of initial particles
-    G4ThreeVector vtx = pvertex->GetPosition();
-    G4PrimaryParticle* pparticle = pvertex->GetPrimary();
-    // direction of the Shower
-    G4ThreeVector mom = pparticle->GetMomentum() / pparticle->GetMomentum().mag();
 
     //@@@ ExGflashEventAction: Magicnumber
     G4double energyincrystal[100];
@@ -123,19 +110,6 @@ void ExGflashEventAction::EndOfEventAction(const G4Event* evt)
 
         energyincrystal[num] += (*THC)[i]->GetEdep() / GeV;
         hitsincrystal[num]++;
-        // G4cout << num << G4endl;
-        //   G4cout << " Crystal Nummer " <<  (*THC)[i]->GetCrystalNum()  << G4endl;
-        //   G4cout <<  (*THC)[i]->GetCrystalNum() /10 <<
-        //  "  "<<(*THC)[i]->GetCrystalNum()%10 << G4endl;
-
-        G4ThreeVector hitpos = (*THC)[i]->GetPos();
-        G4ThreeVector l(hitpos.x(), hitpos.y(), hitpos.z());
-        // distance from shower start
-        l = l - vtx;
-        // projection on shower axis = longitudinal profile
-        G4ThreeVector longitudinal = l;
-        // shower profiles (Radial)
-        G4ThreeVector radial = vtx.cross(l);
       }
     }
     G4double max = 0;
@@ -178,8 +152,8 @@ void ExGflashEventAction::EndOfEventAction(const G4Event* evt)
                    + hitsincrystal[index + 11] + hitsincrystal[index + 9]
                    + hitsincrystal[index + 12] + hitsincrystal[index + 8];
 
-    G4cout << "   e1  " << energyincrystal[index] << "   e3x3  " << e3x3 << "   GeV  e5x5  " << e5x5
-           << G4endl;
+    G4cout << "   e1  " << energyincrystal[index] << "   e3x3  " << e3x3 << "    e5x5  " << e5x5
+           << " (GeV)" << G4endl;
 
     G4cout << "   num1  " << hitsincrystal[index] << "   num3x3  " << num3x3 << "    num5x5  "
            << num5x5 << G4endl;

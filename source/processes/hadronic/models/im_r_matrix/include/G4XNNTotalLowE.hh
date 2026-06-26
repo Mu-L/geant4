@@ -24,96 +24,52 @@
 // ********************************************************************
 //
 
-#ifndef G4XNNTotalLowE_h
-#define G4XNNTotalLowE_h
+#ifndef G4XNNTOTALLOWE_HH
+#define G4XNNTOTALLOWE_HH
 
-#include <map>
-#include <CLHEP/Units/SystemOfUnits.h>
-
-#include "globals.hh"
-#include "G4VCrossSectionSource.hh"
 #include "G4CrossSectionVector.hh"
 #include "G4LowEXsection.hh"
+#include "G4VCrossSectionSource.hh"
+#include "globals.hh"
+
+#include <CLHEP/Units/SystemOfUnits.h>
+
+#include <map>
 
 class G4KineticTrack;
 
 class G4XNNTotalLowE : public G4VCrossSectionSource
 {
+  public:
 
-public:
+    G4XNNTotalLowE();
 
-  G4XNNTotalLowE();
+    virtual ~G4XNNTotalLowE();
 
-  virtual ~G4XNNTotalLowE();
+    virtual G4double CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
+    virtual const G4CrossSectionVector* GetComponents() const { return 0; }
+    virtual G4bool IsValid(G4double e) const;
 
-  virtual G4double CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
-  virtual const G4CrossSectionVector* GetComponents() const { return 0; }
-  virtual G4bool IsValid(G4double e) const;
-  
-  virtual G4String Name() const;
-  virtual G4double HighLimit() const { return 3.*CLHEP::GeV; }
+    virtual G4String Name() const;
+    virtual G4double HighLimit() const { return 3. * CLHEP::GeV; }
 
+  protected:
 
-protected:
+  private:
 
+    G4XNNTotalLowE(const G4XNNTotalLowE& right);
+    const G4XNNTotalLowE& operator=(const G4XNNTotalLowE& right);
 
-private:  
+    static const G4double ppTot[29];
+    static const G4double ss[29];
+    static const G4double npTot[29];
+    static const G4int tableSize;
 
-  G4XNNTotalLowE(const G4XNNTotalLowE &right);
-  const G4XNNTotalLowE& operator=(const G4XNNTotalLowE &right);
-  
-  static const G4double ppTot[29];
-  static const G4double ss[29];
-  static const G4double npTot[29];
-  static const G4int tableSize;
-
-  std::map <const G4ParticleDefinition *, G4LowEXsection *,
-  std::less<const G4ParticleDefinition *> > theCrossSections;
-  typedef std::map <const G4ParticleDefinition *, G4LowEXsection*, std::less<const G4ParticleDefinition *> > LowEMap;
-
+    std::map<const G4ParticleDefinition*, G4LowEXsection*, std::less<const G4ParticleDefinition*>>
+      theCrossSections;
+    typedef std::map<const G4ParticleDefinition*, G4LowEXsection*,
+                     std::less<const G4ParticleDefinition*>>
+      LowEMap;
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

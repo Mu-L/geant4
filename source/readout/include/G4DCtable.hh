@@ -30,7 +30,7 @@
 // This class is used by G4DigiManager for book keeping the
 // digitizer modules and digits collections. The order of
 // digi collections stored in G4DCofThisEvent is same as the
-// order of DClist. 
+// order of DClist.
 // The order may vary from run to run, if the user adds/changes
 // some of his/her digitizer modules.
 // In case user wants to make G4Run object persistent, this
@@ -39,10 +39,11 @@
 
 // Author: M.Asai
 // --------------------------------------------------------------------
-#ifndef G4DCtable_hh
-#define G4DCtable_hh 1
+#ifndef G4DCTABLE_HH
+#define G4DCTABLE_HH
 
 #include "globals.hh"
+
 #include <vector>
 
 class G4VDigitizerModule;
@@ -50,6 +51,7 @@ class G4VDigitizerModule;
 class G4DCtable
 {
   public:
+
     G4DCtable();
     ~G4DCtable();
 
@@ -57,25 +59,22 @@ class G4DCtable
     G4int GetCollectionID(const G4String& DCname) const;
     G4int GetCollectionID(G4VDigitizerModule* aDM) const;
 
-    inline G4int entries() const
-    {
-      return G4int(DClist.size());
-    }
+    inline G4int entries() const { return G4int(DClist.size()); }
     inline G4String GetDMname(G4int i) const
     {
-      if(i<0||i>entries()) return "***Not Defined***";
+      if (i < 0 || i > entries()) return "***Not Defined***";
       return DMlist[i];
     }
     inline G4String GetDCname(G4int i) const
     {
-      if(i<0||i>entries()) return "***Not Defined***";
+      if (i < 0 || i > entries()) return "***Not Defined***";
       return DClist[i];
     }
 
   private:
+
     std::vector<G4String> DMlist;
     std::vector<G4String> DClist;
 };
 
 #endif
-

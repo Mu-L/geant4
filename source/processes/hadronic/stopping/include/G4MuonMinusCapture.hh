@@ -37,44 +37,37 @@
 //
 // Stopping of mu-
 //
-// Modifications: 
+// Modifications:
 //   20121003 K. Genser - Changed the constructor argument type
 //
 //------------------------------------------------------------------------
 
-#ifndef G4MuonMinusCapture_h
-#define G4MuonMinusCapture_h 1
- 
-#include "globals.hh"
+#ifndef G4MUONMINUSCAPTURE_HH
+#define G4MUONMINUSCAPTURE_HH
+
 #include "G4HadronStoppingProcess.hh"
 #include "G4ParticleDefinition.hh"
+#include "globals.hh"
 
 class G4HadronicInteraction;
 
-class G4MuonMinusCapture : public G4HadronStoppingProcess 
-{ 
-public:
- 
-  explicit G4MuonMinusCapture(G4HadronicInteraction* hiptr=0);
+class G4MuonMinusCapture : public G4HadronStoppingProcess
+{
+  public:
 
-  ~G4MuonMinusCapture();
+    explicit G4MuonMinusCapture(G4HadronicInteraction* hiptr = 0);
 
-  G4bool IsApplicable(const G4ParticleDefinition&);
+    ~G4MuonMinusCapture();
 
-  void ProcessDescription(std::ostream& outFile) const;
+    G4bool IsApplicable(const G4ParticleDefinition&);
 
-private:
+    void ProcessDescription(std::ostream& outFile) const;
 
-  // hide assignment operator as private 
-  G4MuonMinusCapture& operator=(const G4MuonMinusCapture &right);
-  G4MuonMinusCapture(const G4MuonMinusCapture& );
+  private:
 
+    // hide assignment operator as private
+    G4MuonMinusCapture& operator=(const G4MuonMinusCapture& right);
+    G4MuonMinusCapture(const G4MuonMinusCapture&);
 };
 
 #endif
- 
-
-
-
-
-

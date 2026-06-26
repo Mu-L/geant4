@@ -41,12 +41,13 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include "G4OpticalParameters.hh"
+
+#include "G4ApplicationState.hh"
 #include "G4OpticalParametersMessenger.hh"
 #include "G4PhysicalConstants.hh"
-#include "G4UnitsTable.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4ApplicationState.hh"
 #include "G4StateManager.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4UnitsTable.hh"
 
 G4OpticalParameters* G4OpticalParameters::theInstance = nullptr;
 
@@ -58,11 +59,11 @@ G4Mutex G4OpticalParameters::opticalParametersMutex = G4MUTEX_INITIALIZER;
 
 G4OpticalParameters* G4OpticalParameters::Instance()
 {
-  if(nullptr == theInstance)
+  if (nullptr == theInstance)
   {
 #ifdef G4MULTITHREADED
     G4MUTEXLOCK(&opticalParametersMutex);
-    if(nullptr == theInstance)
+    if (nullptr == theInstance)
     {
 #endif
       static G4OpticalParameters manager;
@@ -77,7 +78,10 @@ G4OpticalParameters* G4OpticalParameters::Instance()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-G4OpticalParameters::~G4OpticalParameters() { delete theMessenger; }
+G4OpticalParameters::~G4OpticalParameters()
+{
+  delete theMessenger;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
@@ -91,7 +95,7 @@ G4OpticalParameters::G4OpticalParameters()
 
 void G4OpticalParameters::SetDefaults()
 {
-  if(!IsLocked())
+  if (!IsLocked())
   {
     Initialise();
   }
@@ -101,27 +105,27 @@ void G4OpticalParameters::Initialise()
 {
   verboseLevel = 1;
 
-  cerenkovStackPhotons          = true;
-  cerenkovOffloadPhotons        = false;
+  cerenkovStackPhotons = true;
+  cerenkovOffloadPhotons = false;
   cerenkovTrackSecondariesFirst = true;
-  cerenkovGeneral               = false;
-  cerenkovVerboseLevel          = 1;
-  cerenkovMaxPhotons            = 100;
-  cerenkovMaxBetaChange         = 10.;
+  cerenkovGeneral = false;
+  cerenkovVerboseLevel = 1;
+  cerenkovMaxPhotons = 100;
+  cerenkovMaxBetaChange = 10.;
 
-  scintByParticleType        = false;
-  scintTrackInfo             = false;
-  scintStackPhotons          = true;
-  scintOffloadPhotons        = false;
-  scintFiniteRiseTime        = false;
+  scintByParticleType = false;
+  scintTrackInfo = false;
+  scintStackPhotons = true;
+  scintOffloadPhotons = false;
+  scintFiniteRiseTime = false;
   scintTrackSecondariesFirst = true;
-  scintVerboseLevel          = 1;
+  scintVerboseLevel = 1;
 
   wlsTimeProfileName = "delta";
-  wlsVerboseLevel    = 1;
+  wlsVerboseLevel = 1;
 
   wls2TimeProfileName = "delta";
-  wls2VerboseLevel    = 1;
+  wls2VerboseLevel = 1;
 
   absorptionVerboseLevel = 1;
 
@@ -129,24 +133,24 @@ void G4OpticalParameters::Initialise()
 
   mieVerboseLevel = 1;
 
-  boundaryInvokeSD     = false;
+  boundaryInvokeSD = false;
   boundaryVerboseLevel = 1;
 
-  processActivation["OpRayleigh"]    = true;
-  processActivation["OpBoundary"]    = true;
-  processActivation["OpMieHG"]       = true;
-  processActivation["OpAbsorption"]  = true;
-  processActivation["OpWLS"]         = true;
-  processActivation["OpWLS2"]        = true;
-  processActivation["Cerenkov"]      = true;
+  processActivation["OpRayleigh"] = true;
+  processActivation["OpBoundary"] = true;
+  processActivation["OpMieHG"] = true;
+  processActivation["OpAbsorption"] = true;
+  processActivation["OpWLS"] = true;
+  processActivation["OpWLS2"] = true;
+  processActivation["Cerenkov"] = true;
   processActivation["Scintillation"] = true;
-  processActivation["QuasiCerenkov"]      = true;
+  processActivation["QuasiCerenkov"] = true;
   processActivation["QuasiScintillation"] = true;
 }
 
 void G4OpticalParameters::SetVerboseLevel(G4int val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -161,10 +165,12 @@ void G4OpticalParameters::SetVerboseLevel(G4int val)
   SetWLS2VerboseLevel(verboseLevel);
 }
 
-G4int G4OpticalParameters::GetVerboseLevel() const { return verboseLevel; }
+G4int G4OpticalParameters::GetVerboseLevel() const
+{
+  return verboseLevel;
+}
 
-void G4OpticalParameters::SetProcessActivation(const G4String& process,
-                                               G4bool val)
+void G4OpticalParameters::SetProcessActivation(const G4String& process, G4bool val)
 {
   // Configure the physics constructor to use/not use a selected process.
   // This method can only be called in PreInit> phase (before execution of
@@ -172,15 +178,14 @@ void G4OpticalParameters::SetProcessActivation(const G4String& process,
   // and so it cannot be re-activated later in Idle> phase with the command
   // /process/activate.
 
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
-  if(processActivation[process] == val)
-    return;
+  if (processActivation[process] == val) return;
 
   // processActivation keys defined at initialisation
-  if(processActivation.find(process) != processActivation.end())
+  if (processActivation.find(process) != processActivation.end())
   {
     processActivation[process] = val;
   }
@@ -188,8 +193,7 @@ void G4OpticalParameters::SetProcessActivation(const G4String& process,
   {
     G4ExceptionDescription ed;
     ed << "Process name " << process << " out of bounds.";
-    G4Exception("G4OpticalParameters::SetProcessActivation()", "Optical013",
-                FatalException, ed);
+    G4Exception("G4OpticalParameters::SetProcessActivation()", "Optical013", FatalException, ed);
   }
 }
 
@@ -200,7 +204,7 @@ G4bool G4OpticalParameters::GetProcessActivation(const G4String& process) const
 
 void G4OpticalParameters::SetCerenkovStackPhotons(G4bool val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -214,7 +218,7 @@ G4bool G4OpticalParameters::GetCerenkovStackPhotons() const
 
 void G4OpticalParameters::SetCerenkovOffloadPhotons(G4bool val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -228,7 +232,7 @@ G4bool G4OpticalParameters::GetCerenkovOffloadPhotons() const
 
 void G4OpticalParameters::SetCerenkovVerboseLevel(G4int val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -242,7 +246,7 @@ G4int G4OpticalParameters::GetCerenkovVerboseLevel() const
 
 void G4OpticalParameters::SetCerenkovMaxPhotonsPerStep(G4int val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -256,7 +260,7 @@ G4int G4OpticalParameters::GetCerenkovMaxPhotonsPerStep() const
 
 void G4OpticalParameters::SetCerenkovMaxBetaChange(G4double val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -270,7 +274,7 @@ G4double G4OpticalParameters::GetCerenkovMaxBetaChange() const
 
 void G4OpticalParameters::SetCerenkovTrackSecondariesFirst(G4bool val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -284,7 +288,7 @@ G4bool G4OpticalParameters::GetCerenkovTrackSecondariesFirst() const
 
 void G4OpticalParameters::EnableCerenkovGeneral(G4bool val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -298,7 +302,7 @@ G4bool G4OpticalParameters::CerenkovGeneral() const
 
 void G4OpticalParameters::SetScintByParticleType(G4bool val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -312,18 +316,21 @@ G4bool G4OpticalParameters::GetScintByParticleType() const
 
 void G4OpticalParameters::SetScintTrackInfo(G4bool val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
   scintTrackInfo = val;
 }
 
-G4bool G4OpticalParameters::GetScintTrackInfo() const { return scintTrackInfo; }
+G4bool G4OpticalParameters::GetScintTrackInfo() const
+{
+  return scintTrackInfo;
+}
 
 void G4OpticalParameters::SetScintTrackSecondariesFirst(G4bool val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -337,7 +344,7 @@ G4bool G4OpticalParameters::GetScintTrackSecondariesFirst() const
 
 void G4OpticalParameters::SetScintFiniteRiseTime(G4bool val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -351,7 +358,7 @@ G4bool G4OpticalParameters::GetScintFiniteRiseTime() const
 
 void G4OpticalParameters::SetScintStackPhotons(G4bool val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -365,7 +372,7 @@ G4bool G4OpticalParameters::GetScintStackPhotons() const
 
 void G4OpticalParameters::SetScintOffloadPhotons(G4bool val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -379,7 +386,7 @@ G4bool G4OpticalParameters::GetScintOffloadPhotons() const
 
 void G4OpticalParameters::SetScintVerboseLevel(G4int val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -393,7 +400,7 @@ G4int G4OpticalParameters::GetScintVerboseLevel() const
 
 void G4OpticalParameters::SetWLSTimeProfile(const G4String& val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -407,7 +414,7 @@ G4String G4OpticalParameters::GetWLSTimeProfile() const
 
 void G4OpticalParameters::SetWLSVerboseLevel(G4int val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -421,7 +428,7 @@ G4int G4OpticalParameters::GetWLSVerboseLevel() const
 
 void G4OpticalParameters::SetWLS2TimeProfile(const G4String& val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -435,7 +442,7 @@ G4String G4OpticalParameters::GetWLS2TimeProfile() const
 
 void G4OpticalParameters::SetWLS2VerboseLevel(G4int val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -449,7 +456,7 @@ G4int G4OpticalParameters::GetWLS2VerboseLevel() const
 
 void G4OpticalParameters::SetBoundaryVerboseLevel(G4int val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -463,7 +470,7 @@ G4int G4OpticalParameters::GetBoundaryVerboseLevel() const
 
 void G4OpticalParameters::SetBoundaryInvokeSD(G4bool val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -477,7 +484,7 @@ G4bool G4OpticalParameters::GetBoundaryInvokeSD() const
 
 void G4OpticalParameters::SetAbsorptionVerboseLevel(G4int val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -491,7 +498,7 @@ G4int G4OpticalParameters::GetAbsorptionVerboseLevel() const
 
 void G4OpticalParameters::SetRayleighVerboseLevel(G4int val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -505,7 +512,7 @@ G4int G4OpticalParameters::GetRayleighVerboseLevel() const
 
 void G4OpticalParameters::SetMieVerboseLevel(G4int val)
 {
-  if(IsLocked())
+  if (IsLocked())
   {
     return;
   }
@@ -517,21 +524,20 @@ G4int G4OpticalParameters::GetMieVerboseLevel() const
   return mieVerboseLevel;
 }
 
-const std::vector<std::pair<G4XRayModelType, const G4String> >&
+const std::vector<std::pair<G4XRayModelType, const G4String>>&
 G4OpticalParameters::ActiveVolumes() const
 {
   return xrayVolumes;
 }
 
-void G4OpticalParameters::SetActiveVolume(const G4String& lvname,
-					  G4XRayModelType type)
+void G4OpticalParameters::SetActiveVolume(const G4String& lvname, G4XRayModelType type)
 {
-  if(IsLocked()) {
+  if (IsLocked())
+  {
     return;
   }
   xrayVolumes.push_back(std::make_pair(type, lvname));
 }
-
 
 void G4OpticalParameters::PrintWarning(G4ExceptionDescription& ed) const
 {
@@ -541,56 +547,35 @@ void G4OpticalParameters::PrintWarning(G4ExceptionDescription& ed) const
 void G4OpticalParameters::StreamInfo(std::ostream& os) const
 {
   G4long prec = os.precision(5);
-  os
-    << "======================================================================="
-    << "\n";
-  os
-    << "======                         Optical Physics Parameters      ========"
-    << "\n";
-  os
-    << "======================================================================="
-    << "\n";
+  os << "======================================================================="
+     << "\n";
+  os << "======                         Optical Physics Parameters      ========"
+     << "\n";
+  os << "======================================================================="
+     << "\n";
 
-  os << " Cerenkov process active:               "
-     << GetProcessActivation("Cerenkov") << "\n";
-  os << " Cerenkov maximum photons per step:     " << cerenkovMaxPhotons
-     << "\n";
-  os << " Cerenkov maximum beta change per step: " << cerenkovMaxBetaChange
-     << " %\n";
-  os << " Cerenkov stack photons:                " << cerenkovStackPhotons
-     << "\n";
-  os << " Cerenkov track secondaries first:      "
-     << cerenkovTrackSecondariesFirst << "\n";
-  os << " Scintillation process active:          "
-     << GetProcessActivation("Scintillation") << "\n";
-  os << " Scintillation finite rise time:        " << scintFiniteRiseTime
-     << "\n";
-  os << " Scintillation by particle type:        " << scintByParticleType
-     << "\n";
+  os << " Cerenkov process active:               " << GetProcessActivation("Cerenkov") << "\n";
+  os << " Cerenkov maximum photons per step:     " << cerenkovMaxPhotons << "\n";
+  os << " Cerenkov maximum beta change per step: " << cerenkovMaxBetaChange << " %\n";
+  os << " Cerenkov stack photons:                " << cerenkovStackPhotons << "\n";
+  os << " Cerenkov track secondaries first:      " << cerenkovTrackSecondariesFirst << "\n";
+  os << " Scintillation process active:          " << GetProcessActivation("Scintillation") << "\n";
+  os << " Scintillation finite rise time:        " << scintFiniteRiseTime << "\n";
+  os << " Scintillation by particle type:        " << scintByParticleType << "\n";
   os << " Scintillation record track info:       " << scintTrackInfo << "\n";
   os << " Scintillation stack photons:           " << scintStackPhotons << "\n";
-  os << " Scintillation track secondaries first: " << scintTrackSecondariesFirst
-     << "\n";
-  os << " WLS process active:                    "
-     << GetProcessActivation("OpWLS") << "\n";
-  os << " WLS time profile name:                 " << wlsTimeProfileName
-     << "\n";
-  os << " WLS2 process active:                   "
-     << GetProcessActivation("OpWLS2") << "\n";
-  os << " WLS2 time profile name:                " << wls2TimeProfileName
-     << "\n";
-  os << " Boundary process active:               "
-     << GetProcessActivation("OpBoundary") << "\n";
+  os << " Scintillation track secondaries first: " << scintTrackSecondariesFirst << "\n";
+  os << " WLS process active:                    " << GetProcessActivation("OpWLS") << "\n";
+  os << " WLS time profile name:                 " << wlsTimeProfileName << "\n";
+  os << " WLS2 process active:                   " << GetProcessActivation("OpWLS2") << "\n";
+  os << " WLS2 time profile name:                " << wls2TimeProfileName << "\n";
+  os << " Boundary process active:               " << GetProcessActivation("OpBoundary") << "\n";
   os << " Boundary invoke sensitive detector:    " << boundaryInvokeSD << "\n";
-  os << " Rayleigh process active:               "
-     << GetProcessActivation("OpRayleigh") << "\n";
-  os << " MieHG process active:                  "
-     << GetProcessActivation("OpMieHG") << "\n";
-  os << " Absorption process active:             "
-     << GetProcessActivation("OpAbsorption") << "\n";
-  os
-    << "======================================================================="
-    << "\n";
+  os << " Rayleigh process active:               " << GetProcessActivation("OpRayleigh") << "\n";
+  os << " MieHG process active:                  " << GetProcessActivation("OpMieHG") << "\n";
+  os << " Absorption process active:             " << GetProcessActivation("OpAbsorption") << "\n";
+  os << "======================================================================="
+     << "\n";
   os.precision(prec);
 }
 
@@ -613,8 +598,8 @@ std::ostream& operator<<(std::ostream& os, const G4OpticalParameters& par)
 
 G4bool G4OpticalParameters::IsLocked() const
 {
-  return (!G4Threading::IsMasterThread() ||
-          (fStateManager->GetCurrentState() != G4State_PreInit &&
-           fStateManager->GetCurrentState() != G4State_Init &&
-           fStateManager->GetCurrentState() != G4State_Idle));
+  return (!G4Threading::IsMasterThread()
+          || (fStateManager->GetCurrentState() != G4State_PreInit
+              && fStateManager->GetCurrentState() != G4State_Init
+              && fStateManager->GetCurrentState() != G4State_Idle));
 }

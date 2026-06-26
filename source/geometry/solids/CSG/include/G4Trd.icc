@@ -26,62 +26,52 @@
 // Implementation of inline methods of G4Trd
 // --------------------------------------------------------------------
 
-inline
-G4double G4Trd::GetXHalfLength1() const
+inline G4double G4Trd::GetXHalfLength1() const
 {
   return fDx1;
 }
 
-inline
-G4double G4Trd::GetXHalfLength2() const
+inline G4double G4Trd::GetXHalfLength2() const
 {
   return fDx2;
 }
 
-inline
-G4double G4Trd::GetYHalfLength1() const
+inline G4double G4Trd::GetYHalfLength1() const
 {
   return fDy1;
 }
 
-inline
-G4double G4Trd::GetYHalfLength2() const
+inline G4double G4Trd::GetYHalfLength2() const
 {
   return fDy2;
 }
 
-inline
-G4double G4Trd::GetZHalfLength() const
+inline G4double G4Trd::GetZHalfLength() const
 {
   return fDz;
 }
 
-inline
-void G4Trd::SetXHalfLength1(G4double val)
+inline void G4Trd::SetXHalfLength1(G4double val)
 {
-  SetAllParameters(val,fDx2,fDy1,fDy2,fDz);
+  SetAllParameters(val, fDx2, fDy1, fDy2, fDz);
 }
 
-inline
-void G4Trd::SetXHalfLength2(G4double val)
+inline void G4Trd::SetXHalfLength2(G4double val)
 {
-  SetAllParameters(fDx1,val,fDy1,fDy2,fDz);
+  SetAllParameters(fDx1, val, fDy1, fDy2, fDz);
 }
 
-inline
-void G4Trd::SetYHalfLength1(G4double val)
+inline void G4Trd::SetYHalfLength1(G4double val)
 {
-  SetAllParameters(fDx1,fDx2,val,fDy2,fDz);
+  SetAllParameters(fDx1, fDx2, val, fDy2, fDz);
 }
 
-inline
-void G4Trd::SetYHalfLength2(G4double val)
+inline void G4Trd::SetYHalfLength2(G4double val)
 {
-  SetAllParameters(fDx1,fDx2,fDy1,val,fDz);
+  SetAllParameters(fDx1, fDx2, fDy1, val, fDz);
 }
 
-inline
-void G4Trd::SetZHalfLength(G4double val)
+inline void G4Trd::SetZHalfLength(G4double val)
 {
-  SetAllParameters(fDx1,fDx2,fDy1,fDy2,val);
+  SetAllParameters(fDx1, fDx2, fDy1, fDy2, val);
 }

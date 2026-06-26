@@ -36,33 +36,34 @@
 //----------------------------------------------------------------------------
 //
 #include "G4BinaryPionBuilder.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4BGGPionInelasticXS.hh"
+#include "G4HadronicParameters.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4BGGPionInelasticXS.hh"
-#include "G4HadronicParameters.hh"
+#include "G4SystemOfUnits.hh"
 
-
-G4BinaryPionBuilder::
-G4BinaryPionBuilder()
+G4BinaryPionBuilder::G4BinaryPionBuilder()
 {
   theMin = 0.0;
-  theMax = 1.5*GeV;
+  theMax = 1.5 * GeV;
   theModel = new G4BinaryCascade;
   theModel->SetMinEnergy(theMin);
-  theModel->SetMaxEnergy(theMax); 
+  theModel->SetMaxEnergy(theMax);
 }
 
-void G4BinaryPionBuilder::
-Build(G4HadronInelasticProcess * aP)
+void G4BinaryPionBuilder::Build(G4HadronInelasticProcess* aP)
 {
   theModel->SetMinEnergy(theMin);
   theModel->SetMaxEnergy(theMax);
-  if ( aP->GetParticleDefinition() == G4PionPlus::Definition() ) { 
-    aP->AddDataSet( new G4BGGPionInelasticXS( G4PionPlus::Definition() ) );
-  } else if ( aP->GetParticleDefinition() == G4PionMinus::Definition() ) { 
-    aP->AddDataSet( new G4BGGPionInelasticXS( G4PionMinus::Definition() ) );
+  if (aP->GetParticleDefinition() == G4PionPlus::Definition())
+  {
+    aP->AddDataSet(new G4BGGPionInelasticXS(G4PionPlus::Definition()));
+  }
+  else if (aP->GetParticleDefinition() == G4PionMinus::Definition())
+  {
+    aP->AddDataSet(new G4BGGPionInelasticXS(G4PionMinus::Definition()));
   }
   aP->RegisterMe(theModel);
 }

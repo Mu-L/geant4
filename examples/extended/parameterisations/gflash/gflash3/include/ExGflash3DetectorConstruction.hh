@@ -36,14 +36,10 @@ class G4LogicalVolume;
 class G4VPhysicalVolume;
 class G4Region;
 
-class GFlashHomoShowerParameterisation;
-class GFlashShowerModel;
-class GFlashHitMaker;
-class GFlashParticleBounds;
-
 class ExGflash3DetectorConstruction : public G4VUserDetectorConstruction
 {
   public:
+
     ExGflash3DetectorConstruction();
     ~ExGflash3DetectorConstruction() override;
 
@@ -51,12 +47,8 @@ class ExGflash3DetectorConstruction : public G4VUserDetectorConstruction
     void ConstructSDandField() override;
 
   private:
-    G4Region* fRegion{nullptr};
 
-    inline static G4ThreadLocal GFlashShowerModel* fFastShowerModel = nullptr;
-    inline static G4ThreadLocal GFlashHomoShowerParameterisation* fParameterisation = nullptr;
-    inline static G4ThreadLocal GFlashParticleBounds* fParticleBounds = nullptr;
-    inline static G4ThreadLocal GFlashHitMaker* fHitMaker = nullptr;
+    G4Region* fRegion{nullptr};
 };
 
 #endif

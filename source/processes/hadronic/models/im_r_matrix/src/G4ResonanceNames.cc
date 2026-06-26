@@ -23,51 +23,51 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#include "globals.hh"
 #include "G4ResonanceNames.hh"
-#include "G4VCrossSectionSource.hh"
-#include "G4KineticTrack.hh"
+
 #include "G4CrossSectionVector.hh"
+#include "G4KineticTrack.hh"
 #include "G4ParticleDefinition.hh"
-#include "G4ShortLivedConstructor.hh"
 #include "G4ParticleTable.hh"
 #include "G4PionPlus.hh"
+#include "G4ShortLivedConstructor.hh"
+#include "G4VCrossSectionSource.hh"
+#include "globals.hh"
 
 G4ResonanceNames::G4ResonanceNames()
 {
   // Excited N resonances
 
- nameNstar.push_back("N(1440)+");
- nameNstar.push_back("N(1440)0");
- nameNstar.push_back("N(1520)+");
- nameNstar.push_back("N(1520)0");
- nameNstar.push_back("N(1535)+");
- nameNstar.push_back("N(1535)0");
- nameNstar.push_back("N(1650)+");
- nameNstar.push_back("N(1650)0");
- nameNstar.push_back("N(1675)+");
- nameNstar.push_back("N(1675)0");
- nameNstar.push_back("N(1680)+");
- nameNstar.push_back("N(1680)0");
- nameNstar.push_back("N(1700)+");
- nameNstar.push_back("N(1700)0");
- nameNstar.push_back("N(1710)+");
- nameNstar.push_back("N(1710)0");
- nameNstar.push_back("N(1720)+");
- nameNstar.push_back("N(1720)0");
- nameNstar.push_back("N(1900)+");
- nameNstar.push_back("N(1900)0");
- nameNstar.push_back("N(1990)+");
- nameNstar.push_back("N(1990)0");
- nameNstar.push_back("N(2090)+");
- nameNstar.push_back("N(2090)0");
- nameNstar.push_back("N(2190)+");
- nameNstar.push_back("N(2190)0");
- nameNstar.push_back("N(2220)+");
- nameNstar.push_back("N(2220)0");
- nameNstar.push_back("N(2250)+");
- nameNstar.push_back("N(2250)0");
-
+  nameNstar.push_back("N(1440)+");
+  nameNstar.push_back("N(1440)0");
+  nameNstar.push_back("N(1520)+");
+  nameNstar.push_back("N(1520)0");
+  nameNstar.push_back("N(1535)+");
+  nameNstar.push_back("N(1535)0");
+  nameNstar.push_back("N(1650)+");
+  nameNstar.push_back("N(1650)0");
+  nameNstar.push_back("N(1675)+");
+  nameNstar.push_back("N(1675)0");
+  nameNstar.push_back("N(1680)+");
+  nameNstar.push_back("N(1680)0");
+  nameNstar.push_back("N(1700)+");
+  nameNstar.push_back("N(1700)0");
+  nameNstar.push_back("N(1710)+");
+  nameNstar.push_back("N(1710)0");
+  nameNstar.push_back("N(1720)+");
+  nameNstar.push_back("N(1720)0");
+  nameNstar.push_back("N(1900)+");
+  nameNstar.push_back("N(1900)0");
+  nameNstar.push_back("N(1990)+");
+  nameNstar.push_back("N(1990)0");
+  nameNstar.push_back("N(2090)+");
+  nameNstar.push_back("N(2090)0");
+  nameNstar.push_back("N(2190)+");
+  nameNstar.push_back("N(2190)0");
+  nameNstar.push_back("N(2220)+");
+  nameNstar.push_back("N(2220)0");
+  nameNstar.push_back("N(2250)+");
+  nameNstar.push_back("N(2250)0");
 
   // Delta
 
@@ -79,7 +79,6 @@ G4ResonanceNames::G4ResonanceNames()
   nameDelta.push_back(d1232Zero);
   nameDelta.push_back(d1232Plus);
   nameDelta.push_back(d1232PlusPlus);
-
 
   // Excited Delta resonances
 
@@ -119,9 +118,8 @@ G4ResonanceNames::G4ResonanceNames()
   nameDeltastar.push_back("delta(1950)++");
   nameDeltastar.push_back("delta(1950)-");
   nameDeltastar.push_back("delta(1950)0");
-  
 
-  // Lambda 
+  // Lambda
 
   nameLambda.push_back("lambda");
   nameLambda.push_back("lambda(1405)");
@@ -137,8 +135,7 @@ G4ResonanceNames::G4ResonanceNames()
   nameLambda.push_back("lambda(2100)");
   nameLambda.push_back("lambda(2110)");
 
-
-  // Sigma 
+  // Sigma
 
   nameSigma.push_back("sigma(1385)+");
   nameSigma.push_back("sigma(1385)-");
@@ -164,7 +161,6 @@ G4ResonanceNames::G4ResonanceNames()
   nameSigma.push_back("sigma(2030)+");
   nameSigma.push_back("sigma(2030)-");
   nameSigma.push_back("sigma(2030)0");
-  
 
   // Xi
 
@@ -179,7 +175,6 @@ G4ResonanceNames::G4ResonanceNames()
   nameXi.push_back("xi(2030)-");
   nameXi.push_back("xi(2030)0");
 
-
   G4ShortLivedConstructor ShortLived;
   ShortLived.ConstructParticle();
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
@@ -187,35 +182,36 @@ G4ResonanceNames::G4ResonanceNames()
   size_t i;
 
   // Fill a map with the lowest resonance for each category
-  for (i=0; i<nameNstar.size(); i++)
-    {
-      lowResMap[nameNstar[i]] = particleTable->FindParticle("N(1440)0");
-    }
+  for (i = 0; i < nameNstar.size(); i++)
+  {
+    lowResMap[nameNstar[i]] = particleTable->FindParticle("N(1440)0");
+  }
 
-  for (i=0; i<nameDeltastar.size(); i++)
-    {
-      lowResMap[nameDeltastar[i]] = particleTable->FindParticle("delta0");
-    }
+  for (i = 0; i < nameDeltastar.size(); i++)
+  {
+    lowResMap[nameDeltastar[i]] = particleTable->FindParticle("delta0");
+  }
 
-  for (i=0; i<nameDelta.size(); i++)
-    {
-      lowResMap[nameDelta[i]] = particleTable->FindParticle("delta0");
-    }
+  for (i = 0; i < nameDelta.size(); i++)
+  {
+    lowResMap[nameDelta[i]] = particleTable->FindParticle("delta0");
+  }
 
-  for (i=0; i<nameLambda.size(); i++)
-    {
-      lowResMap[nameLambda[i]] = particleTable->FindParticle("lambda");
-    }
+  for (i = 0; i < nameLambda.size(); i++)
+  {
+    lowResMap[nameLambda[i]] = particleTable->FindParticle("lambda");
+  }
 
-  for (i=0; i<nameSigma.size(); i++)
-    {
-      lowResMap[nameSigma[i]] = particleTable->FindParticle("sigma0");
-    }
+  for (i = 0; i < nameSigma.size(); i++)
+  {
+    lowResMap[nameSigma[i]] = particleTable->FindParticle("sigma0");
+  }
 
   shortMap["N(1440)0"] = "N(1440)";
   shortMap["N(1440)+"] = "N(1440)";
 
-  shortMap["N(1520)0"] = "N(1520)";;
+  shortMap["N(1520)0"] = "N(1520)";
+  ;
   shortMap["N(1520)+"] = "N(1520)";
 
   shortMap["N(1535)0"] = "N(1535)";
@@ -257,8 +253,7 @@ G4ResonanceNames::G4ResonanceNames()
   shortMap["N(2250)0"] = "N(2250)";
   shortMap["N(2250)+"] = "N(2250)";
 
- 
- // Excited Delta
+  // Excited Delta
 
   shortMap["delta(1600)-"] = "delta(1600)";
   shortMap["delta(1600)0"] = "delta(1600)";
@@ -311,64 +306,58 @@ G4ResonanceNames::G4ResonanceNames()
   shortMap["delta0"] = "delta";
   shortMap["delta+"] = "delta";
   shortMap["delta++"] = "delta";
-
 }
 
+G4ResonanceNames::~G4ResonanceNames() {}
 
-G4ResonanceNames::~G4ResonanceNames()
-{ }
-
-
-G4bool G4ResonanceNames::operator==(const G4ResonanceNames &right) const
+G4bool G4ResonanceNames::operator==(const G4ResonanceNames& right) const
 {
-  return(this == (G4ResonanceNames*) &right);
+  return (this == (G4ResonanceNames*)&right);
 }
 
-
-G4bool G4ResonanceNames::operator!=(const G4ResonanceNames &right) const
+G4bool G4ResonanceNames::operator!=(const G4ResonanceNames& right) const
 {
-  return (this != (G4ResonanceNames*) &right);
+  return (this != (G4ResonanceNames*)&right);
 }
 
-
-G4double G4ResonanceNames::MinMass(const G4String& name) 
+G4double G4ResonanceNames::MinMass(const G4String& name)
 {
   // Cut, from UrQMD (reference still to be detailed)
   static const G4double coeff = 0.001;
 
   G4double lowMass = 0.;
-  
+
   G4ParticleDefinition* def = 0;
 
   if (lowResMap.find(name) != lowResMap.end())
-    {
-      def = lowResMap[name];
-    }
+  {
+    def = lowResMap[name];
+  }
   else
-    {
-      G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-      def = particleTable->FindParticle(name);
-    }
+  {
+    G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+    def = particleTable->FindParticle(name);
+  }
   if (def != 0)
-    {
-      G4ParticleDefinition* pion = G4PionPlus::PionPlusDefinition();
-      lowMass = (1. + coeff) * def->GetPDGMass() + pion->GetPDGMass();
-    }
+  {
+    G4ParticleDefinition* pion = G4PionPlus::PionPlusDefinition();
+    lowMass = (1. + coeff) * def->GetPDGMass() + pion->GetPDGMass();
+  }
   else
-    { 
-      G4cout << "G4ResonanceNames::MinMass - " << name << " not found" << G4endl;
-      throw G4HadronicException(__FILE__, __LINE__,  "G4ResonanceNames::MinMass - resonance name not found");
-    }
+  {
+    G4cout << "G4ResonanceNames::MinMass - " << name << " not found" << G4endl;
+    throw G4HadronicException(__FILE__, __LINE__,
+                              "G4ResonanceNames::MinMass - resonance name not found");
+  }
   return lowMass;
 }
 
-
-const G4String G4ResonanceNames::ShortName(const G4String& name) 
+const G4String G4ResonanceNames::ShortName(const G4String& name)
 {
   G4String shortName = "";
   if (shortMap.find(name) != shortMap.end())
-    {
-      shortName = shortMap[name];
-    }
+  {
+    shortName = shortMap[name];
+  }
   return shortName;
 }

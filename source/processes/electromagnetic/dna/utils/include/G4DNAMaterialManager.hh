@@ -26,11 +26,12 @@
 // 1/2/2023: Hoang: this file is used to check avaiable DNA materils,
 // and keeps DNA cross sections.
 
-#ifndef   G4DNAMaterialManager_hh
-#define  G4DNAMaterialManager_hh 1
+#ifndef G4DNAMATERIALMANAGER_HH
+#define G4DNAMATERIALMANAGER_HH
 
-#include "globals.hh"
 #include "G4DNACrossSectionDataSet.hh"
+#include "globals.hh"
+
 #include <map>
 class G4Material;
 class G4ParticleDefinition;
@@ -44,34 +45,37 @@ enum class DNAModelType
   fDNADefault
 };
 
-class G4DNAMaterialManager {
-public:
-  using MaterialMap = std::map<size_t, G4Material*>;
+class G4DNAMaterialManager
+{
+  public:
 
-  static G4DNAMaterialManager *Instance();
+    using MaterialMap = std::map<size_t, G4Material*>;
 
-  G4DNAMaterialManager(const G4DNAMaterialManager &) = delete;
+    static G4DNAMaterialManager* Instance();
 
-  const G4DNAMaterialManager &operator=(const G4DNAMaterialManager &) = delete;
+    G4DNAMaterialManager(const G4DNAMaterialManager&) = delete;
 
-  G4VEmModel* GetModel(const DNAModelType& t);
+    const G4DNAMaterialManager& operator=(const G4DNAMaterialManager&) = delete;
 
-  void SetMasterDataModel(const DNAModelType& t, G4VEmModel* m);
+    G4VEmModel* GetModel(const DNAModelType& t);
 
-  G4bool IsLocked() const;
+    void SetMasterDataModel(const DNAModelType& t, G4VEmModel* m);
 
-private:
-  G4DNAMaterialManager();
+    G4bool IsLocked() const;
 
-  ~G4DNAMaterialManager() = default;
+  private:
 
-  static G4DNAMaterialManager *theInstance;
+    G4DNAMaterialManager();
 
-  MaterialMap fMaterials;
-  G4StateManager*  fStateManager = nullptr;
-  //this data stores only master models.
-  //this data is only to read then non conflits
-  std::map<DNAModelType,G4VEmModel*> fData;
+    ~G4DNAMaterialManager() = default;
+
+    static G4DNAMaterialManager* theInstance;
+
+    MaterialMap fMaterials;
+    G4StateManager* fStateManager = nullptr;
+    // this data stores only master models.
+    // this data is only to read then non conflits
+    std::map<DNAModelType, G4VEmModel*> fData;
 };
 
 #endif

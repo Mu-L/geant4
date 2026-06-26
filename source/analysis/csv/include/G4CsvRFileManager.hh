@@ -28,8 +28,8 @@
 
 // Author: Ivana Hrivnacova, 21/10/2014  (ivana@ipno.in2p3.fr)
 
-#ifndef G4CsvRFileManager_h
-#define G4CsvRFileManager_h 1
+#ifndef G4CSVRFILEMANAGER_HH
+#define G4CSVRFILEMANAGER_HH
 
 #include "G4VRFileManager.hh"
 #include "globals.hh"
@@ -43,6 +43,7 @@ class G4AnalysisManagerState;
 class G4CsvRFileManager : public G4VRFileManager
 {
   public:
+
     explicit G4CsvRFileManager(const G4AnalysisManagerState& state);
     G4CsvRFileManager() = delete;
     ~G4CsvRFileManager() override;
@@ -58,9 +59,10 @@ class G4CsvRFileManager : public G4VRFileManager
     // Specific methods for files per objects
     std::ifstream* GetRFile(const G4String& fileName) const;
 
-   private:
+  private:
+
     // Static data members
-    static constexpr std::string_view fkClass { "G4CsvRFileManager" };
+    static constexpr std::string_view fkClass{"G4CsvRFileManager"};
 
     // data members
     std::map<G4String, std::ifstream*> fRFiles;

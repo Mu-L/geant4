@@ -36,21 +36,22 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedEllipticalTube.h>
+#  include "G4Polyhedron.hh"
 
-#include "G4Polyhedron.hh"
+#  include <VecGeom/volumes/UnplacedEllipticalTube.h>
 
 /**
  * @brief G4UEllipticalTube is a wrapper class for G4EllipticalTube
  * to make use of VecGeom EllipticalTube.
+ * @ingroup geometry_solids_specific
  */
 
 class G4UEllipticalTube : public G4UAdapter<vecgeom::UnplacedEllipticalTube>
 {
-  using Shape_t = vecgeom::UnplacedEllipticalTube;
-  using Base_t  = G4UAdapter<vecgeom::UnplacedEllipticalTube>;
+    using Shape_t = vecgeom::UnplacedEllipticalTube;
+    using Base_t = G4UAdapter<vecgeom::UnplacedEllipticalTube>;
 
   public:
 
@@ -61,10 +62,7 @@ class G4UEllipticalTube : public G4UAdapter<vecgeom::UnplacedEllipticalTube>
      *  @param[in] dy Half length of axis along Y.
      *  @param[in] dz Half length in Z.
      */
-    G4UEllipticalTube(const G4String& name,
-                            G4double dx,
-                            G4double dy,
-                            G4double dz);
+    G4UEllipticalTube(const G4String& name, G4double dx, G4double dy, G4double dz);
 
     /**
      * Default destructor.
@@ -113,10 +111,9 @@ class G4UEllipticalTube : public G4UAdapter<vecgeom::UnplacedEllipticalTube>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                           G4double& pmin, G4double& pmax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pmin,
+                           G4double& pmax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.
@@ -126,9 +123,8 @@ class G4UEllipticalTube : public G4UAdapter<vecgeom::UnplacedEllipticalTube>
     /**
      * Copy constructor and assignment operator.
      */
-    G4UEllipticalTube( const G4UEllipticalTube& source );
-    G4UEllipticalTube &operator=( const G4UEllipticalTube& source );
-
+    G4UEllipticalTube(const G4UEllipticalTube& source);
+    G4UEllipticalTube& operator=(const G4UEllipticalTube& source);
 };
 
 // --------------------------------------------------------------------

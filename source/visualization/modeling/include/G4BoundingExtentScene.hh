@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  15th February 2019
 // An artificial scene to reuse G4VScene code to calculate a bounding extent.
 
@@ -37,33 +37,31 @@
 
 class G4VModel;
 
-class G4BoundingExtentScene: public G4PseudoScene {
+class G4BoundingExtentScene : public G4PseudoScene
+{
+  public:
 
-public:
+    G4BoundingExtentScene(G4VModel* pModel = 0);
 
-  G4BoundingExtentScene (G4VModel* pModel = 0);
+    virtual ~G4BoundingExtentScene();
 
-  virtual ~G4BoundingExtentScene ();
+    const G4VisExtent& GetExtent() const { return fExtent; }
+    const G4VisExtent& GetBoundingExtent() const { return fExtent; }
 
-  const G4VisExtent& GetExtent () const
-  {return fExtent;}
-  const G4VisExtent& GetBoundingExtent () const
-  {return fExtent;}
+    ////////////////////////////////////////////////////////////////
+    // The following 2 functions can be used by any code which wishes to
+    // accrue a bounding sphere.  Just instantiate a
+    // G4BoundingExtentScene and use AccrueBoundingExtent.
 
-  ////////////////////////////////////////////////////////////////
-  // The following 2 functions can be used by any code which wishes to
-  // accrue a bounding sphere.  Just instantiate a
-  // G4BoundingExtentScene and use AccrueBoundingExtent.
+    void ResetBoundingExtent();
+    void AccrueBoundingExtent(const G4VisExtent&);
 
-  void ResetBoundingExtent ();
-  void AccrueBoundingExtent (const G4VisExtent&);
+  private:
 
-private:
+    void ProcessVolume(const G4VSolid& solid);
 
-  void ProcessVolume (const G4VSolid& solid);
-
-  G4VModel* fpModel;
-  G4VisExtent fExtent;
+    G4VModel* fpModel;
+    G4VisExtent fExtent;
 };
 
 #endif

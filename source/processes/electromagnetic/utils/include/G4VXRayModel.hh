@@ -42,10 +42,11 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4VXRayModel_h
-#define G4VXRayModel_h 1
+#ifndef G4VXRAYMODEL_HH
+#define G4VXRAYMODEL_HH
 
 #include "globals.hh"
+
 #include <vector>
 
 class G4LogicalVolume;
@@ -59,63 +60,61 @@ class G4Step;
 
 class G4VXRayModel
 {
+  public:
 
-public:
+    explicit G4VXRayModel(const G4String& nam);
 
-  explicit G4VXRayModel(const G4String& nam);
+    G4VXRayModel(const G4VXRayModel&);
 
-  G4VXRayModel(const G4VXRayModel&);
+    virtual ~G4VXRayModel();
 
-  virtual ~G4VXRayModel();
+    // return minimal beta for Cerenkov in these volumes
+    // the method may be used for other X-Ray models
+    G4double Initialise(std::vector<const G4LogicalVolume*>*);
+    virtual void InitialiseModel();
 
-  // return minimal beta for Cerenkov in these volumes
-  // the method may be used for other X-Ray models
-  G4double Initialise(std::vector<const G4LogicalVolume*>*);
-  virtual void InitialiseModel();
+    // check applicability and propose step limit, which may be DBL_MAX
+    // if these methods return "false", then sampling of X-rays not possible
+    G4bool StepLimit(std::size_t idx, const G4Track&, G4double preStepBeta, G4double& limit);
+    virtual G4bool StepLimitForVolume(G4double& limit);
 
-  // check applicability and propose step limit, which may be DBL_MAX
-  // if these methods return "false", then sampling of X-rays not possible 
-  G4bool StepLimit(std::size_t idx, const G4Track&,
-		   G4double preStepBeta, G4double& limit);
-  virtual G4bool StepLimitForVolume(G4double& limit);
-  
-  // sampling is called if StepLimit(..) returns "true"
-  // produced X-rays are inside vector out
-  // each photon has time, position, and other parameters  within the step
-  virtual void SampleXRays(std::vector<G4Track*>& out, const G4Step&);
+    // sampling is called if StepLimit(..) returns "true"
+    // produced X-rays are inside vector out
+    // each photon has time, position, and other parameters  within the step
+    virtual void SampleXRays(std::vector<G4Track*>& out, const G4Step&);
 
-  // for automatic documentation
-  virtual void ModelDescription(std::ostream& outFile) const;
+    // for automatic documentation
+    virtual void ModelDescription(std::ostream& outFile) const;
 
-  const G4String& GetName() const { return pName; };
+    const G4String& GetName() const { return pName; };
 
-  G4int GetType() const { return pTypeInt; };
+    G4int GetType() const { return pTypeInt; };
 
-  //  hide assignment operator
-  G4VXRayModel& operator=(const G4VXRayModel& right) = delete;
+    //  hide assignment operator
+    G4VXRayModel& operator=(const G4VXRayModel& right) = delete;
 
-private:
+  private:
 
-  void Register();
-  
-protected:
+    void Register();
 
-  std::vector<const G4LogicalVolume*>* pLogicalVolumes{nullptr};
-  G4LossTableManager* pEmManager{nullptr};
-  const G4LogicalVolume* pCurrentLV{nullptr};
-  const G4Track* pCurrentTrack{nullptr};
-  G4double pBetaMin{1.0};
-  G4double pPreStepBeta{0.0};
-  G4double pMaxBetaChange{0.1};
-  
-  G4int pMaxPhotons{100};
-  std::size_t pIndex{0};
-  std::size_t nVolumes{0};
+  protected:
 
-  G4int pTypeInt{0};
-  G4int pVerbose{1};
-  G4bool isMaster{false};
-  const G4String pName;
+    std::vector<const G4LogicalVolume*>* pLogicalVolumes{nullptr};
+    G4LossTableManager* pEmManager{nullptr};
+    const G4LogicalVolume* pCurrentLV{nullptr};
+    const G4Track* pCurrentTrack{nullptr};
+    G4double pBetaMin{1.0};
+    G4double pPreStepBeta{0.0};
+    G4double pMaxBetaChange{0.1};
+
+    G4int pMaxPhotons{100};
+    std::size_t pIndex{0};
+    std::size_t nVolumes{0};
+
+    G4int pTypeInt{0};
+    G4int pVerbose{1};
+    G4bool isMaster{false};
+    const G4String pName;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....

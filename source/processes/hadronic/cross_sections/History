@@ -6,14 +6,21 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-01-21 Vladimir Ivanchenko (hadr-cross-V11-03-10)
+## 2026-04-29 Dmitri Konstantinov (hadr-cross-V11-04-04)
+- G4GammaNuclearXS - protect initialisation of the shared static element data
+    table with G4AutoLock.
+
+## 2026-02-03 L.G. Sarmiento (hadr-cross-V11-04-03)
+- Addressing division by zero. Coverity 106026
+
+## 2026-01-21 Vladimir Ivanchenko (hadr-cross-V11-04-02)
 - G4ChargeExchangeXS - added two different biasing factors for pions and
     kaons (urgent request NA64).
 
-## 2026-01-11 Vladimir Ivanchenko
+## 2026-01-11 Vladimir Ivanchenko (hadr-cross-V11-04-01)
 - G4ChargeExchangeXS - removed debug printout
 
-## 2025-12-30 Vladimir Ivanchenko
+## 2025-12-30 Vladimir Ivanchenko (hadr-cross-V11-04-00)
 - G4ChargeExchangeXS - fixed trivial Coverity warning
 
 ## 2025-11-24 Vladimir Ivanchenko (hadr-cross-V11-03-09)
@@ -2504,4 +2511,3 @@ was derived.
 - new cross section class G4GlauberGribovCrossSection for proton, pion,
   kaon, (and maybe gamma and neutron) total and elastic cross sections
   introduced by V. Grichine.  Effective energies: > 3 GeV.
-

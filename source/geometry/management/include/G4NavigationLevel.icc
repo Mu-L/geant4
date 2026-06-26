@@ -30,66 +30,55 @@
 
 extern G4GEOM_DLL G4Allocator<G4NavigationLevel>*& aNavigationLevelAllocator();
 
-inline
-G4VPhysicalVolume* G4NavigationLevel::GetPhysicalVolume() const 
+inline G4VPhysicalVolume* G4NavigationLevel::GetPhysicalVolume() const
 {
-  return fLevelRep->GetPhysicalVolume(); 
+  return fLevelRep->GetPhysicalVolume();
 }
 
-inline
-const G4AffineTransform& G4NavigationLevel::GetTransform() const 
+inline const G4AffineTransform& G4NavigationLevel::GetTransform() const
 {
-  return fLevelRep->GetTransform() ; 
-} 
-
-inline
-const G4AffineTransform* G4NavigationLevel::GetPtrTransform() const 
-{
-  return fLevelRep->GetTransformPtr() ; 
-} 
-
-inline
-EVolume G4NavigationLevel::GetVolumeType() const 
-{
-  return fLevelRep->GetVolumeType() ; 
+  return fLevelRep->GetTransform();
 }
 
-inline
-G4int G4NavigationLevel::GetReplicaNo() const 
+inline const G4AffineTransform* G4NavigationLevel::GetPtrTransform() const
 {
-  return fLevelRep->GetReplicaNo() ; 
+  return fLevelRep->GetTransformPtr();
+}
+
+inline EVolume G4NavigationLevel::GetVolumeType() const
+{
+  return fLevelRep->GetVolumeType();
+}
+
+inline G4int G4NavigationLevel::GetReplicaNo() const
+{
+  return fLevelRep->GetReplicaNo();
 }
 
 // There is no provision in case this class is subclassed.
 // If it is subclassed, this will fail and may not give errors!
 //
-inline
-void* G4NavigationLevel::operator new(size_t)
+inline void* G4NavigationLevel::operator new(size_t)
 {
   if (aNavigationLevelAllocator() == nullptr)
   {
     aNavigationLevelAllocator() = new G4Allocator<G4NavigationLevel>;
   }
-  return (void *) aNavigationLevelAllocator()->MallocSingle();
+  return (void*)aNavigationLevelAllocator()->MallocSingle();
 }
 
 // Added for use by STL (used for pre-allocation).
 //
-inline
-void* G4NavigationLevel::operator new(size_t, void* a)
+inline void* G4NavigationLevel::operator new(size_t, void* a)
 {
   return a;
 }
 
-inline
-void G4NavigationLevel::operator delete(void* aLevel)
+inline void G4NavigationLevel::operator delete(void* aLevel)
 {
-  aNavigationLevelAllocator()->FreeSingle((G4NavigationLevel *) aLevel);
+  aNavigationLevelAllocator()->FreeSingle((G4NavigationLevel*)aLevel);
 }
 
 // Added for use by STL (used for free-ing pre-allocated?).
 //
-inline
-void G4NavigationLevel::operator delete(void *, void *)
-{
-}
+inline void G4NavigationLevel::operator delete(void*, void*) {}

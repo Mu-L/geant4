@@ -354,14 +354,25 @@ void DNAGeometry::AddNewPlacement(const G4LogicalVolume* lv, std::array<int, 8> 
     // std::array<long long, 8> previousEnd = std::get<2>(previous);//ORG
     start = {{previousEnd[0], previousEnd[1], previousEnd[2], previousEnd[3], previousEnd[4],
               previousEnd[5], previousEnd[6], previousEnd[7]}};
-    end = {{previousEnd[0] + this->GetPVInfo(lv)->GetPairsOnChain(global_chain[0]),
-            previousEnd[1] + this->GetPVInfo(lv)->GetPairsOnChain(global_chain[1]),
-            previousEnd[2] + this->GetPVInfo(lv)->GetPairsOnChain(global_chain[2]),
-            previousEnd[3] + this->GetPVInfo(lv)->GetPairsOnChain(global_chain[3]),
-            previousEnd[4] + this->GetPVInfo(lv)->GetPairsOnChain(global_chain[4]),
-            previousEnd[5] + this->GetPVInfo(lv)->GetPairsOnChain(global_chain[5]),
-            previousEnd[6] + this->GetPVInfo(lv)->GetPairsOnChain(global_chain[6]),
-            previousEnd[7] + this->GetPVInfo(lv)->GetPairsOnChain(global_chain[7])}};
+    if(isPhysicallyPlaced){
+      end = {{previousEnd[0] + this->GetPVInfo(lv)->GetPairsOnChain(global_chain[0]),
+              previousEnd[1] + this->GetPVInfo(lv)->GetPairsOnChain(global_chain[1]),
+              previousEnd[2] + this->GetPVInfo(lv)->GetPairsOnChain(global_chain[2]),
+              previousEnd[3] + this->GetPVInfo(lv)->GetPairsOnChain(global_chain[3]),
+              previousEnd[4] + this->GetPVInfo(lv)->GetPairsOnChain(global_chain[4]),
+              previousEnd[5] + this->GetPVInfo(lv)->GetPairsOnChain(global_chain[5]),
+              previousEnd[6] + this->GetPVInfo(lv)->GetPairsOnChain(global_chain[6]),
+              previousEnd[7] + this->GetPVInfo(lv)->GetPairsOnChain(global_chain[7])}};
+    }else{
+      end = {{previousEnd[0],
+              previousEnd[1],
+              previousEnd[2],
+              previousEnd[3],
+              previousEnd[4],
+              previousEnd[5],
+              previousEnd[6],
+              previousEnd[7]}};
+    }
   }
   pt = std::make_tuple(global_chain, start, end, twist, isPhysicallyPlaced);
   fPlacementTransformations.push_back(pt);

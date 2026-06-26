@@ -33,8 +33,8 @@
 
 // Author: M.Asai, 1996
 // --------------------------------------------------------------------
-#ifndef G4Run_hh
-#define G4Run_hh 1
+#ifndef G4RUN_HH
+#define G4RUN_HH
 
 #include "globals.hh"
 
@@ -47,6 +47,7 @@ class G4DCtable;
 class G4Run
 {
   public:
+
     G4Run();
     virtual ~G4Run();
     G4Run(const G4Run&) = delete;
@@ -98,8 +99,10 @@ class G4Run
 
     // Returns the event vector and related numbers.
     inline std::vector<const G4Event*>* GetEventVector() const { return eventVector; }
-    inline G4int GetEventVectorSize() const 
-    { return (eventVector!=nullptr) ? (G4int)(eventVector->size()) : 0; }
+    inline G4int GetEventVectorSize() const
+    {
+      return (eventVector != nullptr) ? (G4int)(eventVector->size()) : 0;
+    }
     G4int GetNumberOfKeptEvents() const;
 
     inline void SetRunID(G4int id) { runID = id; }
@@ -109,6 +112,7 @@ class G4Run
     inline void SetRandomNumberStatus(G4String& st) { randomNumberStatus = st; }
 
   protected:
+
     G4int runID = 0;
     G4int numberOfEvent = 0;
     G4int numberOfEventToBeProcessed = 0;

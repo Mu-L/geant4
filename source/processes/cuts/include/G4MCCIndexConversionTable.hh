@@ -27,84 +27,80 @@
 //
 // Class description:
 //
-// G4MCCIndexConversionTable is used by G4ProductionTable 
-// when the cut table is retrieved from the file. 
-// An index pointing to a Material-Cut-Couple can be different 
+// G4MCCIndexConversionTable is used by G4ProductionTable
+// when the cut table is retrieved from the file.
+// An index pointing to a Material-Cut-Couple can be different
 // from the index pointing to the same MCC in the file. This class
 // has a map between them.
 
 // Author: H.Kurashige, 20 August 2004 - First implementation
 // --------------------------------------------------------------------
-#ifndef G4MCCIndexConversionTable_hh
-#define G4MCCIndexConversionTable_hh 1
+#ifndef G4MCCINDEXCONVERSIONTABLE_HH
+#define G4MCCINDEXCONVERSIONTABLE_HH
+
+#include "G4ios.hh"
+#include "globals.hh"
 
 #include <vector>
-#include "globals.hh"
-#include "G4ios.hh"
 
 class G4MCCIndexConversionTable
 {
   public:
 
     G4MCCIndexConversionTable();
-      // Default constructor.
+    // Default constructor.
 
     virtual ~G4MCCIndexConversionTable();
-      // Destructor.
+    // Destructor.
 
     void Reset(std::size_t size);
-      // reset conversion table 
- 
+    // reset conversion table
+
     G4bool IsUsed(std::size_t index) const;
-      // returns 'true' if the indicated MCC in the file 
-      // is used in the current production cut table
-  
-    void SetNewIndex(std::size_t index, std::size_t new_value);   
-      // set the index in the current production cut table
-      // for the indicated MCC in the file
+    // returns 'true' if the indicated MCC in the file
+    // is used in the current production cut table
+
+    void SetNewIndex(std::size_t index, std::size_t new_value);
+    // set the index in the current production cut table
+    // for the indicated MCC in the file
 
     G4int GetIndex(std::size_t index) const;
-      // get the index in the current production cut table
-      // for the indicated MCC in the file
- 
+    // get the index in the current production cut table
+    // for the indicated MCC in the file
+
     std::size_t size() const;
 
   protected:
 
-   std::vector<G4int> vecNewIndex;
+    std::vector<G4int> vecNewIndex;
 };
 
 // ------------------
 // Inline methods
 // ------------------
 
-inline
-G4bool G4MCCIndexConversionTable::IsUsed(std::size_t index) const
+inline G4bool G4MCCIndexConversionTable::IsUsed(std::size_t index) const
 {
-  // returns 'true' if the indicated MCC in the file 
+  // returns 'true' if the indicated MCC in the file
   // is used in the current production cut table
-  return ((index < vecNewIndex.size()) && (vecNewIndex[index] >= 0)); 
+  return ((index < vecNewIndex.size()) && (vecNewIndex[index] >= 0));
 }
 
-inline
-void G4MCCIndexConversionTable::SetNewIndex(std::size_t index,
-                                            std::size_t new_value)
+inline void G4MCCIndexConversionTable::SetNewIndex(std::size_t index, std::size_t new_value)
 {
   // set the index in the current production cut table
   // for the indicated MCC in the file
-  if (index < vecNewIndex.size()) vecNewIndex[index] = (G4int)new_value;  
-}  
+  if (index < vecNewIndex.size()) vecNewIndex[index] = (G4int)new_value;
+}
 
-inline
-G4int G4MCCIndexConversionTable::GetIndex(std::size_t index) const
+inline G4int G4MCCIndexConversionTable::GetIndex(std::size_t index) const
 {
   // get the index in the current production cut table
   // for the indicated MCC in the file
-  return (index < vecNewIndex.size()) ? vecNewIndex[index] : -1;  
+  return (index < vecNewIndex.size()) ? vecNewIndex[index] : -1;
 }
 
-inline
-std::size_t G4MCCIndexConversionTable::size() const
+inline std::size_t G4MCCIndexConversionTable::size() const
 {
   return vecNewIndex.size();
 }

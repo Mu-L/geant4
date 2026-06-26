@@ -27,13 +27,14 @@
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
 #include "G4CsvAnalysisManager.hh"
-#include "G4CsvFileManager.hh"
-#include "G4CsvNtupleFileManager.hh"
+
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
-#include "G4UnitsTable.hh"
+#include "G4CsvFileManager.hh"
+#include "G4CsvNtupleFileManager.hh"
 #include "G4ThreadLocalSingleton.hh"
 #include "G4Threading.hh"
+#include "G4UnitsTable.hh"
 
 using namespace G4Analysis;
 
@@ -52,8 +53,7 @@ G4bool G4CsvAnalysisManager::IsInstance()
 }
 
 //_____________________________________________________________________________
-G4CsvAnalysisManager::G4CsvAnalysisManager()
- : G4ToolsAnalysisManager("Csv")
+G4CsvAnalysisManager::G4CsvAnalysisManager() : G4ToolsAnalysisManager("Csv")
 {
   // File Manager
   auto fileManager = std::make_shared<G4CsvFileManager>(fState);

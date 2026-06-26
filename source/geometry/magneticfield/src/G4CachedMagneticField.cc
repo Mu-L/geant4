@@ -30,12 +30,13 @@
 
 #include "G4CachedMagneticField.hh"
 
-G4CachedMagneticField::G4CachedMagneticField(G4MagneticField* pMagField, 
-                                             G4double         distance)
-  : fpMagneticField(pMagField), fDistanceConst(distance),
-    fLastLocation(DBL_MAX,DBL_MAX,DBL_MAX), fLastValue(DBL_MAX,DBL_MAX,DBL_MAX)
+G4CachedMagneticField::G4CachedMagneticField(G4MagneticField* pMagField, G4double distance)
+  : fpMagneticField(pMagField),
+    fDistanceConst(distance),
+    fLastLocation(DBL_MAX, DBL_MAX, DBL_MAX),
+    fLastValue(DBL_MAX, DBL_MAX, DBL_MAX)
 {
-  ClearCounts(); 
+  ClearCounts();
 }
 
 G4Field* G4CachedMagneticField::Clone() const
@@ -50,57 +51,54 @@ G4Field* G4CachedMagneticField::Clone() const
   return cloned;
 }
 
-void
-G4CachedMagneticField::ReportStatistics()
+void G4CachedMagneticField::ReportStatistics()
 {
-  G4cout << " Cached field: " << G4endl
-         << "   Number of calls:        " << fCountCalls << G4endl
-         << "   Number of evaluations : " << fCountEvaluations << G4endl;                     
+  G4cout << " Cached field: " << G4endl << "   Number of calls:        " << fCountCalls << G4endl
+         << "   Number of evaluations : " << fCountEvaluations << G4endl;
 }
 
-G4CachedMagneticField::
-G4CachedMagneticField(const G4CachedMagneticField& rightCMF)
+G4CachedMagneticField::G4CachedMagneticField(const G4CachedMagneticField& rightCMF)
   : G4MagneticField(rightCMF)
 {
-  fpMagneticField= rightCMF.fpMagneticField;  // NOTE: sharing pointer here!
+  fpMagneticField = rightCMF.fpMagneticField;  // NOTE: sharing pointer here!
   fDistanceConst = rightCMF.fDistanceConst;
-  fLastLocation  = rightCMF.fLastLocation;
-  fLastValue     = rightCMF.fLastValue;
-  ClearCounts(); 
+  fLastLocation = rightCMF.fLastLocation;
+  fLastValue = rightCMF.fLastValue;
+  ClearCounts();
 }
 
-G4CachedMagneticField&
-G4CachedMagneticField::operator = (const G4CachedMagneticField& p)
+G4CachedMagneticField& G4CachedMagneticField::operator=(const G4CachedMagneticField& p)
 {
-  if (&p == this) { return *this; }
+  if (&p == this)
+  {
+    return *this;
+  }
   G4MagneticField::operator=(p);
-  fpMagneticField= p.fpMagneticField;  // NOTE: sharing pointer here!
+  fpMagneticField = p.fpMagneticField;  // NOTE: sharing pointer here!
   fDistanceConst = p.fDistanceConst;
-  fLastLocation  = p.fLastLocation;
-  fLastValue     = p.fLastValue;
-  ClearCounts(); 
+  fLastLocation = p.fLastLocation;
+  fLastValue = p.fLastValue;
+  ClearCounts();
   return *this;
 }
 
-void
-G4CachedMagneticField::GetFieldValue( const G4double Point[4],
-                                            G4double* Bfield ) const
+void G4CachedMagneticField::GetFieldValue(const G4double Point[4], G4double* Bfield) const
 {
-  G4ThreeVector newLocation( Point[0], Point[1], Point[2] );
+  G4ThreeVector newLocation(Point[0], Point[1], Point[2]);
 
-  G4double      distSq= (newLocation-fLastLocation).mag2();
+  G4double distSq = (newLocation - fLastLocation).mag2();
   ++fCountCalls;
-  if( distSq < fDistanceConst*fDistanceConst )
-  { 
-     Bfield[0] = fLastValue.x();
-     Bfield[1] = fLastValue.y();
-     Bfield[2] = fLastValue.z();
+  if (distSq < fDistanceConst * fDistanceConst)
+  {
+    Bfield[0] = fLastValue.x();
+    Bfield[1] = fLastValue.y();
+    Bfield[2] = fLastValue.z();
   }
   else
   {
-     fpMagneticField->GetFieldValue( Point, Bfield );
-     ++fCountEvaluations;
-     fLastLocation = G4ThreeVector( Point[0],  Point[1],  Point[2] );
-     fLastValue    = G4ThreeVector( Bfield[0], Bfield[1], Bfield[2] );
+    fpMagneticField->GetFieldValue(Point, Bfield);
+    ++fCountEvaluations;
+    fLastLocation = G4ThreeVector(Point[0], Point[1], Point[2]);
+    fLastValue = G4ThreeVector(Bfield[0], Bfield[1], Bfield[2]);
   }
 }

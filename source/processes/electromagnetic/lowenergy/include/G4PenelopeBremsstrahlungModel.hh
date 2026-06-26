@@ -28,7 +28,7 @@
 //
 // History:
 // -----------
-// 23 Aug 2010   L. Pandola   1st implementation. 
+// 23 Aug 2010   L. Pandola   1st implementation.
 // 24 May 2011   L. Pandola   Renamed (make v2008 as default Penelope)
 // 02 Oct 2013   L. Pandola   Migrated to multi-thread
 //
@@ -40,13 +40,12 @@
 // -------------------------------------------------------------------
 
 #ifndef G4PENELOPEBREMSSTRAHLUNGMODEL_HH
-#define G4PENELOPEBREMSSTRAHLUNGMODEL_HH 1
+#define G4PENELOPEBREMSSTRAHLUNGMODEL_HH
 
-#include "globals.hh"
-#include "G4VEmModel.hh"
 #include "G4DataVector.hh"
 #include "G4ParticleChangeForLoss.hh"
-
+#include "G4VEmModel.hh"
+#include "globals.hh"
 
 class G4PhysicsFreeVector;
 class G4PhysicsLogVector;
@@ -59,89 +58,77 @@ class G4PenelopeCrossSection;
 class G4PenelopeBremsstrahlungFS;
 class G4PenelopeBremsstrahlungAngular;
 
-class G4PenelopeBremsstrahlungModel : public G4VEmModel 
+class G4PenelopeBremsstrahlungModel : public G4VEmModel
 {
-public:
-  explicit G4PenelopeBremsstrahlungModel(const G4ParticleDefinition* p=nullptr,
-			 const G4String& processName ="PenBrem");
-  virtual ~G4PenelopeBremsstrahlungModel();
+  public:
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
-  void InitialiseLocal(const G4ParticleDefinition*,
-		       G4VEmModel*) override;
+    explicit G4PenelopeBremsstrahlungModel(const G4ParticleDefinition* p = nullptr,
+                                           const G4String& processName = "PenBrem");
+    virtual ~G4PenelopeBremsstrahlungModel();
 
-  //DUMMY METHOD
-  G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition* theParticle,
-				      G4double kinEnergy,
-				      G4double Z,
-				      G4double A=0,
-				      G4double cut=0,
-				      G4double emax=DBL_MAX) override;
-  
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel*) override;
 
-  G4double CrossSectionPerVolume(const G4Material* material,
-				 const G4ParticleDefinition* theParticle,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy = DBL_MAX) override;
- 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
-  
-  G4double ComputeDEDXPerVolume(const G4Material*,
-				const G4ParticleDefinition*,
-				G4double kineticEnergy,
-				G4double cutEnergy) override;
+    // DUMMY METHOD
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition* theParticle, G4double kinEnergy,
+                                        G4double Z, G4double A = 0, G4double cut = 0,
+                                        G4double emax = DBL_MAX) override;
 
-  // Min cut in kinetic energy allowed by the model
-  G4double MinEnergyCut(const G4ParticleDefinition*,
-			const G4MaterialCutsCouple*) override;		
+    G4double CrossSectionPerVolume(const G4Material* material,
+                                   const G4ParticleDefinition* theParticle, G4double kineticEnergy,
+                                   G4double cutEnergy, G4double maxEnergy = DBL_MAX) override;
 
-  void SetVerbosityLevel(G4int lev){fVerboseLevel = lev;};
-  G4int GetVerbosityLevel(){return fVerboseLevel;};
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
- G4PenelopeBremsstrahlungModel & operator=
- (const G4PenelopeBremsstrahlungModel &right) = delete;
-  G4PenelopeBremsstrahlungModel(const G4PenelopeBremsstrahlungModel&) = delete;
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                  G4double kineticEnergy, G4double cutEnergy) override;
 
-protected:
-  G4ParticleChangeForLoss* fParticleChange;
-  const G4ParticleDefinition* fParticle;
+    // Min cut in kinetic energy allowed by the model
+    G4double MinEnergyCut(const G4ParticleDefinition*, const G4MaterialCutsCouple*) override;
 
-private:
-  void ClearTables();
-  G4PenelopeCrossSection* GetCrossSectionTableForCouple(const G4ParticleDefinition*,
-  							const G4Material*,G4double cut);
-  void SetParticle(const G4ParticleDefinition*);
-  //
-  //Members to handle and store cross section tables
-  void BuildXSTable(const G4Material* material,G4double cut);
-  G4double GetPositronXSCorrection(const G4Material*,G4double energy);
- 
-  //Helpers
-  G4PenelopeOscillatorManager* fOscManager;
-  G4PenelopeBremsstrahlungFS* fPenelopeFSHelper;
-  G4PenelopeBremsstrahlungAngular* fPenelopeAngular;
+    void SetVerbosityLevel(G4int lev) { fVerboseLevel = lev; };
+    G4int GetVerbosityLevel() { return fVerboseLevel; };
 
-  //This is the main energy grid
-  G4PhysicsLogVector* fEnergyGrid;
-  size_t nBins;
-  //G4PenelopeCrossSection takes care of the logs
-  std::map< std::pair<const G4Material*,G4double>, G4PenelopeCrossSection*> *fXSTableElectron;
-  std::map< std::pair<const G4Material*,G4double>, G4PenelopeCrossSection*> *fXSTablePositron;
+    G4PenelopeBremsstrahlungModel& operator=(const G4PenelopeBremsstrahlungModel& right) = delete;
+    G4PenelopeBremsstrahlungModel(const G4PenelopeBremsstrahlungModel&) = delete;
 
-  //Intrinsic energy limits of the model: cannot be extended by the parent process
-  G4double fIntrinsicLowEnergyLimit;
-  G4double fIntrinsicHighEnergyLimit;
+  protected:
 
-  G4int fVerboseLevel;
-  G4bool fIsInitialised;
-  //Used only for G4EmCalculator and Unit Tests
-  G4bool fLocalTable;
+    G4ParticleChangeForLoss* fParticleChange;
+    const G4ParticleDefinition* fParticle;
+
+  private:
+
+    void ClearTables();
+    G4PenelopeCrossSection* GetCrossSectionTableForCouple(const G4ParticleDefinition*,
+                                                          const G4Material*, G4double cut);
+    void SetParticle(const G4ParticleDefinition*);
+    //
+    // Members to handle and store cross section tables
+    void BuildXSTable(const G4Material* material, G4double cut);
+    G4double GetPositronXSCorrection(const G4Material*, G4double energy);
+
+    // Helpers
+    G4PenelopeOscillatorManager* fOscManager;
+    G4PenelopeBremsstrahlungFS* fPenelopeFSHelper;
+    G4PenelopeBremsstrahlungAngular* fPenelopeAngular;
+
+    // This is the main energy grid
+    G4PhysicsLogVector* fEnergyGrid;
+    size_t nBins;
+    // G4PenelopeCrossSection takes care of the logs
+    std::map<std::pair<const G4Material*, G4double>, G4PenelopeCrossSection*>* fXSTableElectron;
+    std::map<std::pair<const G4Material*, G4double>, G4PenelopeCrossSection*>* fXSTablePositron;
+
+    // Intrinsic energy limits of the model: cannot be extended by the parent process
+    G4double fIntrinsicLowEnergyLimit;
+    G4double fIntrinsicHighEnergyLimit;
+
+    G4int fVerboseLevel;
+    G4bool fIsInitialised;
+    // Used only for G4EmCalculator and Unit Tests
+    G4bool fLocalTable;
 };
 
 #endif
-

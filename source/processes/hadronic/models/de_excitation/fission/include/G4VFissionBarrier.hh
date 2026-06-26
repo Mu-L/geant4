@@ -28,31 +28,30 @@
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara (Oct 1998)
 
-#ifndef G4VFissionBarrier_h
-#define G4VFissionBarrier_h 1
+#ifndef G4VFISSIONBARRIER_HH
+#define G4VFISSIONBARRIER_HH
 
-#include "globals.hh"
 #include "G4HadronicException.hh"
-
+#include "globals.hh"
 
 class G4VFissionBarrier
 {
-public:
-  G4VFissionBarrier();
-  virtual ~G4VFissionBarrier();
+  public:
 
-private:
-  G4VFissionBarrier(const G4VFissionBarrier & right) = delete;
+    G4VFissionBarrier();
+    virtual ~G4VFissionBarrier();
 
-  const G4VFissionBarrier & operator=(const G4VFissionBarrier & right) = delete;
-  G4bool operator==(const G4VFissionBarrier & right) const = delete;
-  G4bool operator!=(const G4VFissionBarrier & right) const = delete;
-  
-public:
+  private:
 
-  virtual G4double FissionBarrier(G4int A, G4int Z, G4double U) const = 0;
-  
+    G4VFissionBarrier(const G4VFissionBarrier& right) = delete;
 
+    const G4VFissionBarrier& operator=(const G4VFissionBarrier& right) = delete;
+    G4bool operator==(const G4VFissionBarrier& right) const = delete;
+    G4bool operator!=(const G4VFissionBarrier& right) const = delete;
+
+  public:
+
+    virtual G4double FissionBarrier(G4int A, G4int Z, G4double U) const = 0;
 };
 
 #endif

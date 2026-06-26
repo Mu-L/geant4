@@ -28,41 +28,39 @@
 // File name:  G4SimplePositronAtRestModel
 //
 // Author:     Vladimir Ivanchenko
-// 
+//
 // Creation date: 14 May 2024
 //
-// Class Description: 
+// Class Description:
 //
 // Simple AtRest positron 2-gamma annihilation model.
 // Electron of media is assumed to have zero kinetic energy.
-// Polarisation of gamma according to M.H.L.Pryce and J.C.Ward, 
+// Polarisation of gamma according to M.H.L.Pryce and J.C.Ward,
 // Nature 4065 (1947) 435.
 //
 // -------------------------------------------------------------------
 //
 
-#ifndef G4SimplePositronAtRestModel_h
-#define G4SimplePositronAtRestModel_h 1
+#ifndef G4SIMPLEPOSITRONATRESTMODEL_HH
+#define G4SIMPLEPOSITRONATRESTMODEL_HH
 
 #include "G4VPositronAtRestModel.hh"
 
 class G4SimplePositronAtRestModel : public G4VPositronAtRestModel
 {
+  public:
 
-public:
+    G4SimplePositronAtRestModel();
 
-  G4SimplePositronAtRestModel();
+    ~G4SimplePositronAtRestModel() override = default;
 
-  ~G4SimplePositronAtRestModel() override = default;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>& secParticles, G4double&,
+                           const G4Material*) const override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>& secParticles,
-			 G4double&, const G4Material*) const override;
-  
-  void PrintGeneratorInformation() const override;
+    void PrintGeneratorInformation() const override;
 
-  G4SimplePositronAtRestModel& operator=
-  (const  G4SimplePositronAtRestModel& right) = delete;
-  G4SimplePositronAtRestModel(const G4SimplePositronAtRestModel&) = delete;
+    G4SimplePositronAtRestModel& operator=(const G4SimplePositronAtRestModel& right) = delete;
+    G4SimplePositronAtRestModel(const G4SimplePositronAtRestModel&) = delete;
 };
 
 #endif

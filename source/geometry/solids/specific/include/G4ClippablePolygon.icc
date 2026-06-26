@@ -26,26 +26,22 @@
 // Implementation of inline methods of G4ClippablePolygon
 // --------------------------------------------------------------------
 
-inline
-void G4ClippablePolygon::SetNormal( const G4ThreeVector& newNormal )
+inline void G4ClippablePolygon::SetNormal(const G4ThreeVector& newNormal)
 {
-   normal = newNormal;
+  normal = newNormal;
 }
 
-inline
-const G4ThreeVector G4ClippablePolygon::GetNormal() const
+inline const G4ThreeVector G4ClippablePolygon::GetNormal() const
 {
-   return normal;
+  return normal;
 }
 
-inline
-std::size_t G4ClippablePolygon::GetNumVertices() const
+inline std::size_t G4ClippablePolygon::GetNumVertices() const
 {
-   return vertices.size();
+  return vertices.size();
 }
 
-inline
-G4bool G4ClippablePolygon::Empty() const
+inline G4bool G4ClippablePolygon::Empty() const
 {
-   return vertices.empty();
+  return vertices.empty();
 }

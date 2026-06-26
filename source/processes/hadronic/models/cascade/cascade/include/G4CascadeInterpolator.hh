@@ -30,7 +30,7 @@
 // G4PhysicsVector.  Templated on number of X-axis (usually energy)
 // bins, constructor takes a C-array of bin edges as input, and an
 // optional flag whether to extrapolate (the default) or truncate values
-// beyond the bin boundaries.  
+// beyond the bin boundaries.
 //
 // The interpolation action returns a simple double: the integer part
 // is the bin index, and the fractional part is, obviously, the
@@ -43,39 +43,46 @@
 #define G4CASCADE_INTERPOLATOR_HH
 
 #include "globals.hh"
+
 #include <cfloat>
 #include <iosfwd>
 
+template<int NBINS>
+class G4CascadeInterpolator
+{
+  public:
 
-template <int NBINS>
-class G4CascadeInterpolator {
-public:
-  enum { nBins=NBINS, last=NBINS-1 };
+    enum
+    {
+      nBins = NBINS,
+      last = NBINS - 1
+    };
 
-  G4CascadeInterpolator(const G4double (&xb)[nBins], G4bool extrapolate=true)
-    : xBins(xb), doExtrapolation(extrapolate),
-      lastX(-DBL_MAX), lastVal(-DBL_MAX) {}
+    G4CascadeInterpolator(const G4double (&xb)[nBins], G4bool extrapolate = true)
+      : xBins(xb), doExtrapolation(extrapolate), lastX(-DBL_MAX), lastVal(-DBL_MAX)
+    {}
 
-  virtual ~G4CascadeInterpolator() {}
+    virtual ~G4CascadeInterpolator() {}
 
-  // Find bin position (index and fraction) from input argument
-  G4double getBin(const G4double x) const;
+    // Find bin position (index and fraction) from input argument
+    G4double getBin(const G4double x) const;
 
-  // Apply bin position from first input to second (array)
-  G4double interpolate(const G4double x, const G4double (&yb)[nBins]) const;
-  G4double interpolate(const G4double (&yb)[nBins]) const;
+    // Apply bin position from first input to second (array)
+    G4double interpolate(const G4double x, const G4double (&yb)[nBins]) const;
+    G4double interpolate(const G4double (&yb)[nBins]) const;
 
-  void printBins(std::ostream& os) const;	// Show bin edges for debugging
+    void printBins(std::ostream& os) const;  // Show bin edges for debugging
 
-private:
-  const G4double (&xBins)[nBins];
-  G4bool doExtrapolation;
+  private:
 
-  mutable G4double lastX;		// Buffers to remember previous call
-  mutable G4double lastVal;
+    const G4double (&xBins)[nBins];
+    G4bool doExtrapolation;
+
+    mutable G4double lastX;  // Buffers to remember previous call
+    mutable G4double lastVal;
 };
 
 // NOTE:  G4 requires template function definitions in .hh file
 #include "G4CascadeInterpolator.icc"
 
-#endif	/* G4CASCADE_INTERPOLATOR_HH */
+#endif /* G4CASCADE_INTERPOLATOR_HH */

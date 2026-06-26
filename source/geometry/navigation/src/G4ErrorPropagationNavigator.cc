@@ -30,58 +30,52 @@
 
 #include "G4ErrorPropagationNavigator.hh"
 
-#include "globals.hh"
-#include "G4ThreeVector.hh"
+#include "G4ErrorCylSurfaceTarget.hh"
+#include "G4ErrorPlaneSurfaceTarget.hh"
 #include "G4ErrorPropagatorData.hh"
 #include "G4ErrorSurfaceTarget.hh"
+#include "G4ThreeVector.hh"
+#include "globals.hh"
 
-#include "G4ErrorPlaneSurfaceTarget.hh"
-#include "G4ErrorCylSurfaceTarget.hh"
-
-G4double G4ErrorPropagationNavigator::
-ComputeStep ( const G4ThreeVector& pGlobalPoint,
-              const G4ThreeVector& pDirection,
-              const G4double pCurrentProposedStepLength,
-                    G4double &pNewSafety )
+G4double G4ErrorPropagationNavigator::ComputeStep(const G4ThreeVector& pGlobalPoint,
+                                                  const G4ThreeVector& pDirection,
+                                                  const G4double pCurrentProposedStepLength,
+                                                  G4double& pNewSafety)
 {
   G4double safetyGeom = DBL_MAX;
-   
-  G4double Step = G4Navigator::ComputeStep(pGlobalPoint, pDirection,
-                                           pCurrentProposedStepLength,
-                                           safetyGeom);
-  
-  G4ErrorPropagatorData* g4edata
-    = G4ErrorPropagatorData::GetErrorPropagatorData();
 
-  if ( g4edata != nullptr )
+  G4double Step =
+    G4Navigator::ComputeStep(pGlobalPoint, pDirection, pCurrentProposedStepLength, safetyGeom);
+
+  G4ErrorPropagatorData* g4edata = G4ErrorPropagatorData::GetErrorPropagatorData();
+
+  if (g4edata != nullptr)
   {
     const G4ErrorTarget* target = g4edata->GetTarget();
-    if( target != nullptr )
+    if (target != nullptr)
     {
-      G4double StepPlane=target->GetDistanceFromPoint(pGlobalPoint,pDirection);
+      G4double StepPlane = target->GetDistanceFromPoint(pGlobalPoint, pDirection);
 
-      if( StepPlane < 0. ) // Negative means target is crossed,
-      {                    // will not be found
-        StepPlane = DBL_MAX; 
+      if (StepPlane < 0.)  // Negative means target is crossed,
+      {  // will not be found
+        StepPlane = DBL_MAX;
       }
 #ifdef G4VERBOSE
-      if( G4ErrorPropagatorData::verbose() >= 4 )
+      if (G4ErrorPropagatorData::verbose() >= 4)
       {
         G4cout << "G4ErrorPropagationNavigator::ComputeStep()" << G4endl
-               << "  Target step: " << StepPlane
-               << ", Transportation step: " << Step << G4endl;
-        target->Dump( "G4ErrorPropagationNavigator::ComputeStep Target " );
+               << "  Target step: " << StepPlane << ", Transportation step: " << Step << G4endl;
+        target->Dump("G4ErrorPropagationNavigator::ComputeStep Target ");
       }
 #endif
 
-      if( StepPlane < Step )
+      if (StepPlane < Step)
       {
 #ifdef G4VERBOSE
-        if( G4ErrorPropagatorData::verbose() >= 2 )
+        if (G4ErrorPropagatorData::verbose() >= 2)
         {
           G4cout << "G4ErrorPropagationNavigator::ComputeStep()" << G4endl
-                 << "  TargetCloserThanBoundary: " << StepPlane << " < "
-                 << Step << G4endl;
+                 << "  TargetCloserThanBoundary: " << StepPlane << " < " << Step << G4endl;
         }
 #endif
         Step = StepPlane;
@@ -97,14 +91,13 @@ ComputeStep ( const G4ThreeVector& pGlobalPoint,
 
   // Avoid call to G4Navigator::ComputeSafety - which could have side effects
   //
-  pNewSafety = std::min(safetyGeom, safetyTarget); 
+  pNewSafety = std::min(safetyGeom, safetyTarget);
 
 #ifdef G4VERBOSE
-  if( G4ErrorPropagatorData::verbose() >= 3 )
+  if (G4ErrorPropagatorData::verbose() >= 3)
   {
-    G4cout << "G4ErrorPropagationNavigator::ComputeStep()" << G4endl
-           << "  Step: " << Step << ", ComputeSafety: " << pNewSafety
-           << G4endl;
+    G4cout << "G4ErrorPropagationNavigator::ComputeStep()" << G4endl << "  Step: " << Step
+           << ", ComputeSafety: " << pNewSafety << G4endl;
   }
 #endif
 
@@ -113,20 +106,18 @@ ComputeStep ( const G4ThreeVector& pGlobalPoint,
 
 //-------------------------------------------------------------------
 
-G4double G4ErrorPropagationNavigator::
-TargetSafetyFromPoint( const G4ThreeVector& pGlobalpoint )
+G4double G4ErrorPropagationNavigator::TargetSafetyFromPoint(const G4ThreeVector& pGlobalpoint)
 {
   G4double safety = DBL_MAX;
 
-  G4ErrorPropagatorData* g4edata
-    = G4ErrorPropagatorData::GetErrorPropagatorData();
+  G4ErrorPropagatorData* g4edata = G4ErrorPropagatorData::GetErrorPropagatorData();
 
-  if ( g4edata != nullptr )
+  if (g4edata != nullptr)
   {
     const G4ErrorTarget* target = g4edata->GetTarget();
-    if( target != nullptr )
+    if (target != nullptr)
     {
-       safety = target->GetDistanceFromPoint(pGlobalpoint);
+      safety = target->GetDistanceFromPoint(pGlobalpoint);
     }
   }
   return safety;
@@ -134,78 +125,73 @@ TargetSafetyFromPoint( const G4ThreeVector& pGlobalpoint )
 
 //-------------------------------------------------------------------
 
-G4double G4ErrorPropagationNavigator::
-ComputeSafety( const G4ThreeVector& pGlobalPoint,
-               const G4double pMaxLength,
-               const G4bool keepState )
+G4double G4ErrorPropagationNavigator::ComputeSafety(const G4ThreeVector& pGlobalPoint,
+                                                    const G4double pMaxLength,
+                                                    const G4bool keepState)
 {
-  G4double safetyGeom = G4Navigator::ComputeSafety(pGlobalPoint,
-                                                  pMaxLength, keepState);
+  G4double safetyGeom = G4Navigator::ComputeSafety(pGlobalPoint, pMaxLength, keepState);
 
-  G4double safetyTarget = TargetSafetyFromPoint( pGlobalPoint ); 
+  G4double safetyTarget = TargetSafetyFromPoint(pGlobalPoint);
 
-  return std::min(safetyGeom, safetyTarget); 
+  return std::min(safetyGeom, safetyTarget);
 }
 
 //-------------------------------------------------------------------
 
-G4ThreeVector G4ErrorPropagationNavigator::
-GetGlobalExitNormal( const G4ThreeVector& point, G4bool* valid )
+G4ThreeVector G4ErrorPropagationNavigator::GetGlobalExitNormal(const G4ThreeVector& point,
+                                                               G4bool* valid)
 {
-  G4ErrorPropagatorData* g4edata
-        = G4ErrorPropagatorData::GetErrorPropagatorData();
+  G4ErrorPropagatorData* g4edata = G4ErrorPropagatorData::GetErrorPropagatorData();
   const G4ErrorTarget* target = nullptr;
 
   G4ThreeVector normal(0.0, 0.0, 0.0);
-  G4double      distance= 0;
-  
+  G4double distance = 0;
+
   // Determine which 'geometry' limited the step
-  if ( g4edata != nullptr )
+  if (g4edata != nullptr)
   {
     target = g4edata->GetTarget();
-    if( target != nullptr )
+    if (target != nullptr)
     {
       distance = target->GetDistanceFromPoint(point);
     }
   }
-  
-  if( distance > kCarTolerance || (target == nullptr) )
-    // Not reached the target or if a target does not exist,
-    // this seems the best we can do
+
+  if (distance > kCarTolerance || (target == nullptr))
+  // Not reached the target or if a target does not exist,
+  // this seems the best we can do
   {
     normal = G4Navigator::GetGlobalExitNormal(point, valid);
   }
   else
   {
-    switch( target->GetType() )
+    switch (target->GetType())
     {
       case G4ErrorTarget_GeomVolume:
         // The volume is in the 'real' mass geometry
         normal = G4Navigator::GetGlobalExitNormal(point, valid);
         break;
       case G4ErrorTarget_TrkL:
-        normal = G4ThreeVector( 0.0, 0.0, 0.0);
+        normal = G4ThreeVector(0.0, 0.0, 0.0);
         *valid = false;
-        G4Exception("G4ErrorPropagationNavigator::GetGlobalExitNormal",
-                    "Geometry1003",
-                    JustWarning, "Unexpected value of Target type");
+        G4Exception("G4ErrorPropagationNavigator::GetGlobalExitNormal", "Geometry1003", JustWarning,
+                    "Unexpected value of Target type");
         break;
       case G4ErrorTarget_PlaneSurface:
       case G4ErrorTarget_CylindricalSurface:
-        const auto surfTarget= static_cast<const G4ErrorSurfaceTarget*>(target);
+        const auto surfTarget = static_cast<const G4ErrorSurfaceTarget*>(target);
         normal = surfTarget->GetTangentPlane(point).normal().unit();
         *valid = true;
         break;
 
-//      default:
-//        normal= G4ThreeVector( 0.0, 0.0, 0.0 );
-//        *valid = false;
-//        G4Exception("G4ErrorPropagationNavigator::GetGlobalExitNormal",
-//                    "Geometry:003",
-//                    FatalException, "Impossible value of Target type");
-//        break;
+        //      default:
+        //        normal= G4ThreeVector( 0.0, 0.0, 0.0 );
+        //        *valid = false;
+        //        G4Exception("G4ErrorPropagationNavigator::GetGlobalExitNormal",
+        //                    "Geometry:003",
+        //                    FatalException, "Impossible value of Target type");
+        //        break;
     }
   }
   return normal;
 }
-

@@ -125,195 +125,222 @@
 // 09.03.06 J.Allison
 // - Added operator<<.
 
-#include "globals.hh"
-#include "HepPolyhedron.h"
 #include "G4Visible.hh"
+#include "globals.hh"
 
-class G4Polyhedron : public HepPolyhedron, public G4Visible {
-public:
-  // Default constructor
-  G4Polyhedron ();
+#include "HepPolyhedron.h"
 
-  // Constructors
-  G4Polyhedron (G4int Nvert, G4int Nface);
-  G4Polyhedron (const HepPolyhedron& from);
+class G4Polyhedron : public HepPolyhedron, public G4Visible
+{
+  public:
 
-  // Copy and move constructors
-  G4Polyhedron (const G4Polyhedron& from) = default;
-  G4Polyhedron (G4Polyhedron&& from) = default;
+    // Default constructor
+    G4Polyhedron();
 
-  // Assignment and move assignment
-  G4Polyhedron & operator=(const G4Polyhedron & from) = default;
-  G4Polyhedron & operator=(G4Polyhedron && from) = default;
+    // Constructors
+    G4Polyhedron(G4int Nvert, G4int Nface);
+    G4Polyhedron(const HepPolyhedron& from);
 
-  // Destructor
-  ~G4Polyhedron () override;
+    // Copy and move constructors
+    G4Polyhedron(const G4Polyhedron& from) = default;
+    G4Polyhedron(G4Polyhedron&& from) = default;
 
-  G4int GetNumberOfRotationStepsAtTimeOfCreation() const {
-    return fNumberOfRotationStepsAtTimeOfCreation;
-  }
-private:
-  G4int fNumberOfRotationStepsAtTimeOfCreation = fNumberOfRotationSteps;
+    // Assignment and move assignment
+    G4Polyhedron& operator=(const G4Polyhedron& from) = default;
+    G4Polyhedron& operator=(G4Polyhedron&& from) = default;
+
+    // Destructor
+    ~G4Polyhedron() override;
+
+    G4int GetNumberOfRotationStepsAtTimeOfCreation() const
+    {
+      return fNumberOfRotationStepsAtTimeOfCreation;
+    }
+
+  private:
+
+    G4int fNumberOfRotationStepsAtTimeOfCreation = fNumberOfRotationSteps;
 };
 
-class G4PolyhedronBox: public G4Polyhedron {
-public:
-  G4PolyhedronBox (G4double dx, G4double dy, G4double dz);
-  ~G4PolyhedronBox () override;
+class G4PolyhedronBox : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronBox(G4double dx, G4double dy, G4double dz);
+    ~G4PolyhedronBox() override;
 };
 
-class G4PolyhedronCone: public G4Polyhedron {
-public:
-  G4PolyhedronCone (G4double Rmn1, G4double Rmx1,
-                    G4double Rmn2, G4double Rmx2, G4double Dz);
-  ~G4PolyhedronCone () override;
+class G4PolyhedronCone : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronCone(G4double Rmn1, G4double Rmx1, G4double Rmn2, G4double Rmx2, G4double Dz);
+    ~G4PolyhedronCone() override;
 };
 
-class G4PolyhedronCons: public G4Polyhedron {
-public:
-  G4PolyhedronCons (G4double Rmn1, G4double Rmx1,
-                    G4double Rmn2, G4double Rmx2, G4double Dz,
-                    G4double Phi1, G4double Dphi);
-  ~G4PolyhedronCons () override;
+class G4PolyhedronCons : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronCons(G4double Rmn1, G4double Rmx1, G4double Rmn2, G4double Rmx2, G4double Dz,
+                     G4double Phi1, G4double Dphi);
+    ~G4PolyhedronCons() override;
 };
 
-class G4PolyhedronPara: public G4Polyhedron {
-public:
-  G4PolyhedronPara (G4double Dx, G4double Dy, G4double Dz,
-                    G4double Alpha, G4double Theta, G4double Phi);
-  ~G4PolyhedronPara () override;
+class G4PolyhedronPara : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronPara(G4double Dx, G4double Dy, G4double Dz, G4double Alpha, G4double Theta,
+                     G4double Phi);
+    ~G4PolyhedronPara() override;
 };
 
-class G4PolyhedronPcon: public G4Polyhedron {
-public:
-  G4PolyhedronPcon (G4double phi, G4double dphi, G4int nz,
-                    const G4double *z,
-                    const G4double *rmin,
-                    const G4double *rmax);
-  G4PolyhedronPcon (G4double phi, G4double dphi,
-                    const std::vector<G4TwoVector> &rz);
-  ~G4PolyhedronPcon () override;
+class G4PolyhedronPcon : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronPcon(G4double phi, G4double dphi, G4int nz, const G4double* z, const G4double* rmin,
+                     const G4double* rmax);
+    G4PolyhedronPcon(G4double phi, G4double dphi, const std::vector<G4TwoVector>& rz);
+    ~G4PolyhedronPcon() override;
 };
 
-class G4PolyhedronPgon: public G4Polyhedron {
-public:
-  G4PolyhedronPgon (G4double phi, G4double dphi, G4int npdv, G4int nz,
-                    const G4double *z,
-                    const G4double *rmin,
-                    const G4double *rmax);
-  G4PolyhedronPgon (G4double phi, G4double dphi, G4int npdv,
-                    const std::vector<G4TwoVector> &rz);
+class G4PolyhedronPgon : public G4Polyhedron
+{
+  public:
 
-  ~G4PolyhedronPgon () override;
+    G4PolyhedronPgon(G4double phi, G4double dphi, G4int npdv, G4int nz, const G4double* z,
+                     const G4double* rmin, const G4double* rmax);
+    G4PolyhedronPgon(G4double phi, G4double dphi, G4int npdv, const std::vector<G4TwoVector>& rz);
+
+    ~G4PolyhedronPgon() override;
 };
 
-class G4PolyhedronSphere: public G4Polyhedron {
-public:
-  G4PolyhedronSphere (G4double rmin, G4double rmax,
-                      G4double phi, G4double dphi,
-                      G4double the, G4double dthe);
-  ~G4PolyhedronSphere () override;
+class G4PolyhedronSphere : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronSphere(G4double rmin, G4double rmax, G4double phi, G4double dphi, G4double the,
+                       G4double dthe);
+    ~G4PolyhedronSphere() override;
 };
 
-class G4PolyhedronTet: public G4Polyhedron {
-public:
-  G4PolyhedronTet (const G4double p0[3],
-                   const G4double p1[3],
-                   const G4double p2[3],
-                   const G4double p3[3]);
-  ~G4PolyhedronTet () override;
+class G4PolyhedronTet : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronTet(const G4double p0[3], const G4double p1[3], const G4double p2[3],
+                    const G4double p3[3]);
+    ~G4PolyhedronTet() override;
 };
 
-class G4PolyhedronTorus: public G4Polyhedron {
-public:
-  G4PolyhedronTorus (G4double rmin, G4double rmax, G4double rtor,
-                    G4double phi, G4double dphi);
-  ~G4PolyhedronTorus () override;
+class G4PolyhedronTorus : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronTorus(G4double rmin, G4double rmax, G4double rtor, G4double phi, G4double dphi);
+    ~G4PolyhedronTorus() override;
 };
 
-class G4PolyhedronTrap: public G4Polyhedron {
-public:
-  G4PolyhedronTrap (G4double Dz, G4double Theta, G4double Phi,
-                    G4double Dy1,
-                    G4double Dx1, G4double Dx2, G4double Alp1,
-                    G4double Dy2,
-                    G4double Dx3, G4double Dx4, G4double Alp2);
-  ~G4PolyhedronTrap () override;
+class G4PolyhedronTrap : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronTrap(G4double Dz, G4double Theta, G4double Phi, G4double Dy1, G4double Dx1,
+                     G4double Dx2, G4double Alp1, G4double Dy2, G4double Dx3, G4double Dx4,
+                     G4double Alp2);
+    ~G4PolyhedronTrap() override;
 };
 
-class G4PolyhedronTrd1: public G4Polyhedron {
-public:
-  G4PolyhedronTrd1 (G4double Dx1, G4double Dx2,
-                    G4double Dy, G4double Dz);
-  ~G4PolyhedronTrd1 () override;
+class G4PolyhedronTrd1 : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronTrd1(G4double Dx1, G4double Dx2, G4double Dy, G4double Dz);
+    ~G4PolyhedronTrd1() override;
 };
 
-class G4PolyhedronTrd2: public G4Polyhedron {
-public:
-  G4PolyhedronTrd2 (G4double Dx1, G4double Dx2,
-                    G4double Dy1, G4double Dy2, G4double Dz);
-  ~G4PolyhedronTrd2 () override;
+class G4PolyhedronTrd2 : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronTrd2(G4double Dx1, G4double Dx2, G4double Dy1, G4double Dy2, G4double Dz);
+    ~G4PolyhedronTrd2() override;
 };
 
-class G4PolyhedronTube: public G4Polyhedron {
-public:
-  G4PolyhedronTube (G4double Rmin, G4double Rmax, G4double Dz);
-  ~G4PolyhedronTube () override;
+class G4PolyhedronTube : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronTube(G4double Rmin, G4double Rmax, G4double Dz);
+    ~G4PolyhedronTube() override;
 };
 
-class G4PolyhedronTubs: public G4Polyhedron {
-public:
-  G4PolyhedronTubs (G4double Rmin, G4double Rmax, G4double Dz,
-                    G4double Phi1, G4double Dphi);
-  ~G4PolyhedronTubs () override;
+class G4PolyhedronTubs : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronTubs(G4double Rmin, G4double Rmax, G4double Dz, G4double Phi1, G4double Dphi);
+    ~G4PolyhedronTubs() override;
 };
 
-class G4PolyhedronParaboloid: public G4Polyhedron {
- public:
-  G4PolyhedronParaboloid(G4double r1, G4double r2, G4double dz,
-                         G4double sPhi, G4double dPhi);
-  ~G4PolyhedronParaboloid () override;
+class G4PolyhedronParaboloid : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronParaboloid(G4double r1, G4double r2, G4double dz, G4double sPhi, G4double dPhi);
+    ~G4PolyhedronParaboloid() override;
 };
 
-class G4PolyhedronHype: public G4Polyhedron {
- public:
-  G4PolyhedronHype(G4double r1, G4double r2, G4double tan1,
-                   G4double tan2, G4double halfZ);
-  ~G4PolyhedronHype () override;
+class G4PolyhedronHype : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronHype(G4double r1, G4double r2, G4double tan1, G4double tan2, G4double halfZ);
+    ~G4PolyhedronHype() override;
 };
 
-class G4PolyhedronEllipsoid : public G4Polyhedron {
- public:
-  G4PolyhedronEllipsoid(G4double dx, G4double dy, G4double dz,
-                        G4double zcut1, G4double zcut2);
-  ~G4PolyhedronEllipsoid () override;
+class G4PolyhedronEllipsoid : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronEllipsoid(G4double dx, G4double dy, G4double dz, G4double zcut1, G4double zcut2);
+    ~G4PolyhedronEllipsoid() override;
 };
 
-class G4PolyhedronEllipticalCone : public G4Polyhedron {
- public:
-  G4PolyhedronEllipticalCone(G4double dx, G4double dy, G4double z,
-                             G4double zcut1);
-  ~G4PolyhedronEllipticalCone () override;
+class G4PolyhedronEllipticalCone : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronEllipticalCone(G4double dx, G4double dy, G4double z, G4double zcut1);
+    ~G4PolyhedronEllipticalCone() override;
 };
 
-class G4PolyhedronHyperbolicMirror : public G4Polyhedron {
- public:
-  G4PolyhedronHyperbolicMirror(G4double a, G4double h, G4double r);
-  ~G4PolyhedronHyperbolicMirror () override;
+class G4PolyhedronHyperbolicMirror : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronHyperbolicMirror(G4double a, G4double h, G4double r);
+    ~G4PolyhedronHyperbolicMirror() override;
 };
 
-class G4PolyhedronTetMesh : public G4Polyhedron {
- public:
-  G4PolyhedronTetMesh(const std::vector<G4ThreeVector>& tetrahedra);
-  ~G4PolyhedronTetMesh () override;
+class G4PolyhedronTetMesh : public G4Polyhedron
+{
+  public:
+
+    G4PolyhedronTetMesh(const std::vector<G4ThreeVector>& tetrahedra);
+    ~G4PolyhedronTetMesh() override;
 };
 
-class G4PolyhedronBoxMesh : public G4Polyhedron {
- public:
-  G4PolyhedronBoxMesh(G4double sizeX, G4double sizeY, G4double sizeZ,
-                      const std::vector<G4ThreeVector>& positions);
+class G4PolyhedronBoxMesh : public G4Polyhedron
+{
+  public:
 
-  ~G4PolyhedronBoxMesh () override;
+    G4PolyhedronBoxMesh(G4double sizeX, G4double sizeY, G4double sizeZ,
+                        const std::vector<G4ThreeVector>& positions);
+
+    ~G4PolyhedronBoxMesh() override;
 };
 
 std::ostream& operator<<(std::ostream& os, const G4Polyhedron&);

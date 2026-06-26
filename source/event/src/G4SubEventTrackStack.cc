@@ -29,11 +29,12 @@
 // --------------------------------------------------------------------
 
 #include "G4SubEventTrackStack.hh"
+
+#include "G4Event.hh"
+#include "G4EventManager.hh"
 #include "G4StackedTrack.hh"
 #include "G4Track.hh"
 #include "G4VTrajectory.hh"
-#include "G4Event.hh"
-#include "G4EventManager.hh"
 
 G4SubEventTrackStack::~G4SubEventTrackStack()
 {
@@ -42,7 +43,7 @@ G4SubEventTrackStack::~G4SubEventTrackStack()
 
 void G4SubEventTrackStack::clearAndDestroy()
 {
-  if(fCurrentSE!=nullptr) 
+  if (fCurrentSE != nullptr)
   {
     fCurrentSE->clearAndDestroy();
     delete fCurrentSE;
@@ -52,47 +53,46 @@ void G4SubEventTrackStack::clearAndDestroy()
 
 void G4SubEventTrackStack::PrepareNewEvent(G4Event* ev)
 {
-  if(fCurrentSE!=nullptr)
+  if (fCurrentSE != nullptr)
   {
     G4ExceptionDescription ed;
     ed << fCurrentSE->size() << " sub-events still remains in the previous event. PANIC!!!";
-    G4Exception("G4SubEventTrackStack::PrepareNewEvent()","SubEvt7001",FatalException,ed);
+    G4Exception("G4SubEventTrackStack::PrepareNewEvent()", "SubEvt7001", FatalException, ed);
   }
   fCurrentSE = nullptr;
   fCurrentEvent = ev;
 }
-    
+
 void G4SubEventTrackStack::PushToStack(const G4StackedTrack& aStackedTrack)
 {
-  if(fCurrentSE==nullptr)
+  if (fCurrentSE == nullptr)
   {
-    fCurrentSE = new G4SubEvent(fSubEventType,fMaxEnt); 
+    fCurrentSE = new G4SubEvent(fSubEventType, fMaxEnt);
     fCurrentSE->SetEvent(fCurrentEvent);
   }
-  else if(fCurrentSE->size()==fMaxEnt)
+  else if (fCurrentSE->size() == fMaxEnt)
   {
     // current sus-event is already full. Transfer it to G4Event and create a new sub-event.
-    auto nSubEv = G4EventManager::GetEventManager()
-                    ->StoreSubEvent(fCurrentEvent,fSubEventType,fCurrentSE);
-    if(verboseLevel>1)
+    auto nSubEv =
+      G4EventManager::GetEventManager()->StoreSubEvent(fCurrentEvent, fSubEventType, fCurrentSE);
+    if (verboseLevel > 1)
     {
-      G4cout << "### event id " << fCurrentEvent->GetEventID()
-             << " -- sub-evnet " << nSubEv << " with " << fCurrentSE->size()
-             << " tracks is stored" << G4endl;
+      G4cout << "### event id " << fCurrentEvent->GetEventID() << " -- sub-evnet " << nSubEv
+             << " with " << fCurrentSE->size() << " tracks is stored" << G4endl;
     }
-    fCurrentSE = new G4SubEvent(fSubEventType,fMaxEnt);
+    fCurrentSE = new G4SubEvent(fSubEventType, fMaxEnt);
     fCurrentSE->SetEvent(fCurrentEvent);
   }
 
   // Sanity check
-  if(fCurrentEvent == nullptr || fCurrentSE->GetEvent() == nullptr
-       || fCurrentEvent != fCurrentSE->GetEvent())
+  if (fCurrentEvent == nullptr || fCurrentSE->GetEvent() == nullptr
+      || fCurrentEvent != fCurrentSE->GetEvent())
   {
     G4ExceptionDescription ed;
     ed << "Event object is broken or storing tracks of more than one events. PANIC!!!";
-    G4Exception("G4SubEventTrackStack::PushToStack()","SubEvt7003",FatalException,ed);
+    G4Exception("G4SubEventTrackStack::PushToStack()", "SubEvt7003", FatalException, ed);
   }
-  
+
   fCurrentSE->PushToStack(aStackedTrack);
 }
 
@@ -101,31 +101,29 @@ void G4SubEventTrackStack::ReleaseSubEvent()
   // This method should be invoked at the end of processing an event.
   // A sub-event that is not yet full is transferred to G4Event for
   // post-event-loop processing.
-  if(fCurrentEvent==nullptr)
+  if (fCurrentEvent == nullptr)
   {
-    G4Exception("G4SubEventTrackStack::ReleaseSubEvent()","SubEvt7002",FatalException,
+    G4Exception("G4SubEventTrackStack::ReleaseSubEvent()", "SubEvt7002", FatalException,
                 "Valid pointer of the current event is not set. PANIC!!");
-    return; // NOLINT: Explicit return required to silence Coverity
+    return;  // NOLINT: Explicit return required to silence Coverity
   }
-  if(fCurrentSE!=nullptr)
+  if (fCurrentSE != nullptr)
   {
-    auto nSubEv = G4EventManager::GetEventManager()
-                    ->StoreSubEvent(fCurrentEvent,fSubEventType,fCurrentSE);
-    if(verboseLevel>1)
+    auto nSubEv =
+      G4EventManager::GetEventManager()->StoreSubEvent(fCurrentEvent, fSubEventType, fCurrentSE);
+    if (verboseLevel > 1)
     {
-      G4cout << "### event id " << fCurrentEvent->GetEventID()
-             << " -- sub-evnet " << nSubEv << " with " << fCurrentSE->size()
-             << " tracks is stored" << G4endl;
+      G4cout << "### event id " << fCurrentEvent->GetEventID() << " -- sub-evnet " << nSubEv
+             << " with " << fCurrentSE->size() << " tracks is stored" << G4endl;
     }
     fCurrentSE = nullptr;
   }
   fCurrentEvent = nullptr;
 }
 
-//G4StackedTrack G4SubEventTrackStack::PopFromStack()
+// G4StackedTrack G4SubEventTrackStack::PopFromStack()
 //{
-//  G4Exception("G4SubEventTrackStack::PopFromStack","SubEvt7000",
-//       FatalException,"This method must not be invoked.");
-//  return G4StackedTrack(nullptr);
-//}
-
+//   G4Exception("G4SubEventTrackStack::PopFromStack","SubEvt7000",
+//        FatalException,"This method must not be invoked.");
+//   return G4StackedTrack(nullptr);
+// }

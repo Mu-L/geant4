@@ -25,8 +25,8 @@
 //
 //
 //
-// 
-// Created:  Mar. 31, 2009  Akinori Kimura  
+//
+// Created:  Mar. 31, 2009  Akinori Kimura
 //
 // Model which knows how to draw GEANT4 scorers.
 //
@@ -34,23 +34,23 @@
 #ifndef G4SCORINGHITSMODEL_HH
 #define G4SCORINGHITSMODEL_HH
 
-#include "G4VModel.hh"
 #include "G4StatDouble.hh"
+#include "G4VModel.hh"
 
-class G4PSHitsModel: public G4VModel {
+class G4PSHitsModel : public G4VModel
+{
+  public:  // With description
 
-public: // With description
+    G4PSHitsModel(const G4String& requestedMapName = "all");
 
-  G4PSHitsModel (const G4String& requestedMapName = "all");
-   
-  virtual ~G4PSHitsModel ();
+    virtual ~G4PSHitsModel();
 
-  virtual void DescribeYourselfTo (G4VGraphicsScene&);
-  // The main task of a model is to describe itself to the graphics scene.
+    virtual void DescribeYourselfTo(G4VGraphicsScene&);
+    // The main task of a model is to describe itself to the graphics scene.
 
-private:
+  private:
 
-  G4String fRequestedMapName;
+    G4String fRequestedMapName;
 };
 
 #endif

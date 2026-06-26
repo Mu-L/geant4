@@ -27,53 +27,39 @@
 //
 // --------------------------------------------------------------------
 
+// --------------------------------------------------------------------
+inline G4SmartVoxelProxy::G4SmartVoxelProxy(G4SmartVoxelHeader* pHeader) : fHeader(pHeader) {}
 
 // --------------------------------------------------------------------
-inline
-G4SmartVoxelProxy::G4SmartVoxelProxy(G4SmartVoxelHeader* pHeader)
-  : fHeader(pHeader)
+inline G4SmartVoxelProxy::G4SmartVoxelProxy(G4SmartVoxelNode* pNode) : fNode(pNode) {}
+
+// --------------------------------------------------------------------
+inline G4bool G4SmartVoxelProxy::operator==(const G4SmartVoxelProxy& right) const
 {
+  return this == &right;
 }
 
 // --------------------------------------------------------------------
-inline
-G4SmartVoxelProxy::G4SmartVoxelProxy(G4SmartVoxelNode* pNode)
-  : fNode(pNode)
-{
-}
-
-// --------------------------------------------------------------------
-inline
-G4bool G4SmartVoxelProxy::operator == (const G4SmartVoxelProxy& right) const
-{
-  return this==&right;
-}
-
-// --------------------------------------------------------------------
-inline
-G4bool G4SmartVoxelProxy::IsHeader() const
+inline G4bool G4SmartVoxelProxy::IsHeader() const
 {
   return (fHeader) != nullptr;
-}   
+}
 
 // --------------------------------------------------------------------
-inline
-G4bool G4SmartVoxelProxy::IsNode() const
+inline G4bool G4SmartVoxelProxy::IsNode() const
 {
   return (fNode) != nullptr;
 }
 
 // --------------------------------------------------------------------
-inline
-G4SmartVoxelNode* G4SmartVoxelProxy::GetNode() const
+inline G4SmartVoxelNode* G4SmartVoxelProxy::GetNode() const
 {
   assert(fNode != nullptr);
   return fNode;
 }
 
 // --------------------------------------------------------------------
-inline
-G4SmartVoxelHeader* G4SmartVoxelProxy::GetHeader() const
+inline G4SmartVoxelHeader* G4SmartVoxelProxy::GetHeader() const
 {
   assert(fHeader != nullptr);
   return fHeader;

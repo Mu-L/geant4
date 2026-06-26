@@ -31,16 +31,17 @@
 //		k+p, k0bp, pi-n, pi0n, gamman, k-n, or k0n
 //
 
-#ifndef G4HadNElastic1AngDst_h
-#define G4HadNElastic1AngDst_h 1
+#ifndef G4HADNELASTIC1ANGDST_HH
+#define G4HADNELASTIC1ANGDST_HH
 
 #include "G4ParamExpTwoBodyAngDst.hh"
 
+class G4HadNElastic1AngDst : public G4ParamExpTwoBodyAngDst<10>
+{
+  public:
 
-class G4HadNElastic1AngDst : public G4ParamExpTwoBodyAngDst<10> {
-public:
-  G4HadNElastic1AngDst(G4int verbose = 0);
-  virtual ~G4HadNElastic1AngDst() {;}
+    G4HadNElastic1AngDst(G4int verbose = 0);
+    virtual ~G4HadNElastic1AngDst() { ; }
 };
 
 #endif

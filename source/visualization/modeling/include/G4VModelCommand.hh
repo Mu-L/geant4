@@ -23,7 +23,7 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// 
+//
 // Jane Tinslay, John Allison, Joseph Perl November 2005
 //
 // Class Description
@@ -35,69 +35,63 @@
 #ifndef G4VMODELCOMMAND_HH
 #define G4VMODELCOMMAND_HH
 
-#include "G4UImessenger.hh"
 #include "G4String.hh"
+#include "G4UImessenger.hh"
 
 class G4UIcommand;
 
-template <typename T>
-class G4VModelCommand : public G4UImessenger {
+template<typename T>
+class G4VModelCommand : public G4UImessenger
+{
+  public:
 
-public: 
+    // Constructor
+    G4VModelCommand(T* model, const G4String& placement = "");
 
-  // Constructor
-  G4VModelCommand(T* model, const G4String& placement="");
+    // Destructor
+    virtual ~G4VModelCommand();
 
-  // Destructor
-  virtual ~G4VModelCommand();
+    // Methods
+    G4String GetCurrentValue(G4UIcommand* command);
+    G4String Placement();
 
-  // Methods
-  G4String GetCurrentValue(G4UIcommand* command);
-  G4String Placement();
+  protected:
 
-protected:
+    // Access to model
+    T* Model();
 
-  // Access to model
-  T* Model();
+  private:
 
-private:
-
-  // Data members
-  T* fpModel;
-  G4String fPlacement;
+    // Data members
+    T* fpModel;
+    G4String fPlacement;
 };
 
-template <typename T>
+template<typename T>
 G4VModelCommand<T>::G4VModelCommand(T* model, const G4String& placement)
-  :fpModel(model)
-  ,fPlacement(placement)
+  : fpModel(model), fPlacement(placement)
 {}
 
-template <typename T>
-G4VModelCommand<T>::~G4VModelCommand() {}
+template<typename T>
+G4VModelCommand<T>::~G4VModelCommand()
+{}
 
-template <typename T>
-G4String 
-G4VModelCommand<T>::GetCurrentValue(G4UIcommand*) 
+template<typename T>
+G4String G4VModelCommand<T>::GetCurrentValue(G4UIcommand*)
 {
   return "";
 }
 
-template <typename T>
-T*
-G4VModelCommand<T>::Model() 
+template<typename T>
+T* G4VModelCommand<T>::Model()
 {
   return fpModel;
 }
 
-template <typename T>
-G4String
-G4VModelCommand<T>::Placement() 
+template<typename T>
+G4String G4VModelCommand<T>::Placement()
 {
   return fPlacement;
 }
 
 #endif
-
-
-

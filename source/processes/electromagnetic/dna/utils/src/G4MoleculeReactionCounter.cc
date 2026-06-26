@@ -29,7 +29,8 @@
 
 //------------------------------------------------------------------------------
 
-G4String G4MoleculeReactionCounterIndex::FormattedReactionString(const G4DNAMolecularReactionData* reactionData) const
+G4String G4MoleculeReactionCounterIndex::FormattedReactionString(
+  const G4DNAMolecularReactionData* reactionData) const
 {
   const G4MolecularConfiguration* reactant1 = reactionData->GetReactant1();
   const G4MolecularConfiguration* reactant2 = reactionData->GetReactant2();
@@ -37,15 +38,18 @@ G4String G4MoleculeReactionCounterIndex::FormattedReactionString(const G4DNAMole
   const std::vector<const G4MolecularConfiguration*>* products = reactionData->GetProducts();
 
   G4String reactionLhs = "";
-  if (reactant1 != nullptr) {
+  if (reactant1 != nullptr)
+  {
     reactionLhs += reactant1->GetUserID();
     if (reactant2 != nullptr) reactionLhs += " + ";
   }
   if (reactant2 != nullptr) reactionLhs += reactant2->GetUserID();
 
   G4String reactionRhs = "";
-  for (auto it = products->cbegin(); it != products->cend(); ++it) {
-    if (*it != nullptr) {
+  for (auto it = products->cbegin(); it != products->cend(); ++it)
+  {
+    if (*it != nullptr)
+    {
       if (it != products->cbegin() && reactionRhs.size() > 0) reactionRhs += " + ";
       reactionRhs += (*it)->GetUserID();
     }

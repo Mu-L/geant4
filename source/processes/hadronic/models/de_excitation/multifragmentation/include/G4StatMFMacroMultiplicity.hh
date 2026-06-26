@@ -28,56 +28,54 @@
 //
 // Modification: 13.08.2025 V.Ivanchenko rewrite
 
-#ifndef G4StatMFMacroMultiplicity_h
-#define G4StatMFMacroMultiplicity_h 1
+#ifndef G4STATMFMACROMULTIPLICITY_HH
+#define G4STATMFMACROMULTIPLICITY_HH
+
+#include "G4FunctionSolver.hh"
+#include "G4VStatMFMacroCluster.hh"
+#include "globals.hh"
 
 #include <vector>
-#include "globals.hh"
-#include "G4VStatMFMacroCluster.hh"
-#include "G4FunctionSolver.hh"
 
-class G4StatMFMacroMultiplicity {
+class G4StatMFMacroMultiplicity
+{
+  public:
 
-public:
+    G4StatMFMacroMultiplicity();
 
-  G4StatMFMacroMultiplicity();
+    ~G4StatMFMacroMultiplicity();
 
-  ~G4StatMFMacroMultiplicity();
+    void Initialise(const G4int anA, const G4double kappa, const G4double temp, const G4double nu,
+                    std::vector<G4VStatMFMacroCluster*>* cVector);
 
-  void Initialise(const G4int anA, const G4double kappa, 
-		  const G4double temp, const G4double nu,
-		  std::vector<G4VStatMFMacroCluster*>* cVector);
+    G4double Function(G4double mu) { return (theA - CalcMeanA(mu)); };
 
-  G4double Function(G4double mu)
-  { return (theA - CalcMeanA(mu)); };
+    G4double CalcChemicalPotentialMu();
 
-  G4double CalcChemicalPotentialMu();
+    G4double GetMeanMultiplicity() const { return fMeanMultiplicity; }
 
-  G4double GetMeanMultiplicity() const { return fMeanMultiplicity; }
+    G4double GetChemicalPotentialMu() const { return fChemPotentialMu; }
 
-  G4double GetChemicalPotentialMu() const { return fChemPotentialMu; }
+    G4StatMFMacroMultiplicity(const G4StatMFMacroMultiplicity&) = delete;
+    G4StatMFMacroMultiplicity& operator=(const G4StatMFMacroMultiplicity& right) = delete;
+    G4bool operator==(const G4StatMFMacroMultiplicity& right) const = delete;
+    G4bool operator!=(const G4StatMFMacroMultiplicity& right) const = delete;
 
-  G4StatMFMacroMultiplicity(const G4StatMFMacroMultiplicity&) = delete;
-  G4StatMFMacroMultiplicity& operator=
-  (const G4StatMFMacroMultiplicity& right) = delete;
-  G4bool operator==(const G4StatMFMacroMultiplicity& right) const = delete;
-  G4bool operator!=(const G4StatMFMacroMultiplicity& right) const = delete;
+  private:
 
-private:
-	
-  G4double CalcMeanA(const G4double mu);
+    G4double CalcMeanA(const G4double mu);
 
-  G4int A{0};
-  G4double theA{0};
-  G4double fKappa{0.0};
-  G4double fMeanTemperature{0.0};
-  G4double fChemPotentialNu{0.0};
+    G4int A{0};
+    G4double theA{0};
+    G4double fKappa{0.0};
+    G4double fMeanTemperature{0.0};
+    G4double fChemPotentialNu{0.0};
 
-  G4double fMeanMultiplicity{0.0};
-  G4double fChemPotentialMu{0.0};
+    G4double fMeanMultiplicity{0.0};
+    G4double fChemPotentialMu{0.0};
 
-  std::vector<G4VStatMFMacroCluster*>* fClusters{nullptr}; 
-  G4FunctionSolver<G4StatMFMacroMultiplicity>* fSolver;
+    std::vector<G4VStatMFMacroCluster*>* fClusters{nullptr};
+    G4FunctionSolver<G4StatMFMacroMultiplicity>* fSolver;
 };
 
 #endif

@@ -33,35 +33,37 @@
 //
 //----------------------------------------------------------------------------
 //
- #include "G4AlphaBuilder.hh"
- #include "G4ParticleDefinition.hh"
- #include "G4ParticleTable.hh"
- #include "G4ProcessManager.hh"
+#include "G4AlphaBuilder.hh"
 
- 
- void G4AlphaBuilder::Build()
- {
-   std::vector<G4VAlphaBuilder *>::iterator i;
-   for(i=theModelCollections.begin(); i!=theModelCollections.end(); i++)
-   {
-     (*i)->Build(theAlphaInelastic);
-   }
-   G4ProcessManager * theProcMan = G4Alpha::Alpha()->GetProcessManager();
-   theProcMan->AddDiscreteProcess(theAlphaInelastic);
- }
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "G4ProcessManager.hh"
 
- G4AlphaBuilder::G4AlphaBuilder()
- {
-   theAlphaInelastic=new G4HadronInelasticProcess( "alphaInelastic", G4Alpha::Definition() );
- }
+void G4AlphaBuilder::Build()
+{
+  std::vector<G4VAlphaBuilder*>::iterator i;
+  for (i = theModelCollections.begin(); i != theModelCollections.end(); i++)
+  {
+    (*i)->Build(theAlphaInelastic);
+  }
+  G4ProcessManager* theProcMan = G4Alpha::Alpha()->GetProcessManager();
+  theProcMan->AddDiscreteProcess(theAlphaInelastic);
+}
 
- void G4AlphaBuilder::RegisterMe(G4PhysicsBuilderInterface* ab) {
-   auto bld = dynamic_cast<G4VAlphaBuilder*>(ab);
-   if ( bld != nullptr ) {
-       theModelCollections.push_back(bld);
-   } else {
-       G4PhysicsBuilderInterface::RegisterMe(ab);
-   }
- }
+G4AlphaBuilder::G4AlphaBuilder()
+{
+  theAlphaInelastic = new G4HadronInelasticProcess("alphaInelastic", G4Alpha::Definition());
+}
 
-
+void G4AlphaBuilder::RegisterMe(G4PhysicsBuilderInterface* ab)
+{
+  auto bld = dynamic_cast<G4VAlphaBuilder*>(ab);
+  if (bld != nullptr)
+  {
+    theModelCollections.push_back(bld);
+  }
+  else
+  {
+    G4PhysicsBuilderInterface::RegisterMe(ab);
+  }
+}

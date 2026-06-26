@@ -47,8 +47,8 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4eeToHadronsModel_h
-#define G4eeToHadronsModel_h 1
+#ifndef G4EETOHADRONSMODEL_HH
+#define G4EETOHADRONSMODEL_HH
 
 #include "G4VEmModel.hh"
 
@@ -57,68 +57,58 @@ class G4Vee2hadrons;
 
 class G4eeToHadronsModel : public G4VEmModel
 {
+  public:
 
-public:
+    explicit G4eeToHadronsModel(G4Vee2hadrons*, G4int ver = 0, const G4String& nam = "eeToHadrons");
 
-  explicit G4eeToHadronsModel(G4Vee2hadrons*, G4int ver=0,
-                              const G4String& nam = "eeToHadrons");
+    ~G4eeToHadronsModel() override;
 
-  ~G4eeToHadronsModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy,
+                                   G4double maxEnergy) override;
 
-  G4double CrossSectionPerVolume(const G4Material*,
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kineticEnergy,
+                                        G4double Z, G4double A, G4double cutEnergy = 0.0,
+                                        G4double maxEnergy = DBL_MAX) override;
 
-  G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
-                                      G4double kineticEnergy,
-                                      G4double Z, G4double A,
-                                      G4double cutEnergy = 0.0,
-                                      G4double maxEnergy = DBL_MAX) override;
+    G4double ComputeCrossSectionPerElectron(const G4ParticleDefinition*, G4double kineticEnergy,
+                                            G4double cutEnergy = 0.0, G4double maxEnergy = DBL_MAX);
 
-  G4double ComputeCrossSectionPerElectron(const G4ParticleDefinition*,
-                                          G4double kineticEnergy,
-                                          G4double cutEnergy = 0.0,
-                                          G4double maxEnergy = DBL_MAX);
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin = 0.0,
+                           G4double maxEnergy = DBL_MAX) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin = 0.0,
-			 G4double maxEnergy = DBL_MAX) override;
+    G4DynamicParticle* GenerateCMPhoton(G4double);
 
-  G4DynamicParticle* GenerateCMPhoton(G4double);
+    inline G4double PeakEnergy() const;
 
-  inline G4double PeakEnergy() const;
+    // hide assignment operator
+    G4eeToHadronsModel& operator=(const G4eeToHadronsModel& right) = delete;
+    G4eeToHadronsModel(const G4eeToHadronsModel&) = delete;
 
-  // hide assignment operator
-  G4eeToHadronsModel & operator=(const  G4eeToHadronsModel &right) = delete;
-  G4eeToHadronsModel(const  G4eeToHadronsModel&) = delete;
+  private:
 
-private:
+    void ComputeCMCrossSectionPerElectron();
 
-  void ComputeCMCrossSectionPerElectron();
+    const G4ParticleDefinition* theGamma;
 
-  const G4ParticleDefinition* theGamma;
+    G4Vee2hadrons* model;
+    G4PhysicsVector* crossPerElectron = nullptr;
+    G4PhysicsVector* crossBornPerElectron = nullptr;
 
-  G4Vee2hadrons*        model;
-  G4PhysicsVector*      crossPerElectron = nullptr;
-  G4PhysicsVector*      crossBornPerElectron = nullptr;
+    G4double lowKinEnergy;
+    G4double peakKinEnergy;
+    G4double highKinEnergy;
 
-  G4double              lowKinEnergy;
-  G4double              peakKinEnergy;
-  G4double              highKinEnergy;
+    G4double emin;
+    G4double epeak;
+    G4double emax;
 
-  G4double              emin;
-  G4double              epeak;
-  G4double              emax;
-
-  G4int                 nbins = 100;
-  G4int                 verbose;
-  G4bool                isInitialised = false;
+    G4int nbins = 100;
+    G4int verbose;
+    G4bool isInitialised = false;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

@@ -57,11 +57,12 @@ using G4UserSteppingActionVector = std::vector<G4UserSteppingActionUPtr>;
 
 class G4MultiSteppingAction : public G4UserSteppingAction, public G4UserSteppingActionVector
 {
- public:
-  G4MultiSteppingAction() = default;
-  ~G4MultiSteppingAction() override = default;
-  void UserSteppingAction(const G4Step*) override;
-  void SetSteppingManagerPointer(G4SteppingManager* pVal) override;
+  public:
+
+    G4MultiSteppingAction() = default;
+    ~G4MultiSteppingAction() override = default;
+    void UserSteppingAction(const G4Step*) override;
+    void SetSteppingManagerPointer(G4SteppingManager* pVal) override;
 };
 
 #endif

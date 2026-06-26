@@ -49,7 +49,7 @@ o Geometry
       slots in the master array contain null pointers, which then propagate
       correctly via CopyMasterContents() to all workers. Addressing potential
       crash in MT mode in setups with relatively complex geometry being re-
-      initialised between runs.
+      initialised between runs. Also addressing problem report #2637.
     o Removed G4Exception in G4VSolid implementation of ComputeDimensions().
       Dispatching for ComputeDimensions() is enabled only for solids where full
       parameterisation is allowed, for all others it is simply disabled and

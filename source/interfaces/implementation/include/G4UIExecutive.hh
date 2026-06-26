@@ -61,53 +61,64 @@ class G4UIsession;
 
 class G4UIExecutive
 {
- public:
-  G4UIExecutive(G4int argc, char** argv, const G4String& type = "");
-  ~G4UIExecutive();
+  public:
 
-  G4UIsession* GetSession() const;
+    G4UIExecutive(G4int argc, char** argv, const G4String& type = "");
+    ~G4UIExecutive();
 
-  G4bool IsGUI() const;
+    G4UIsession* GetSession() const;
 
-  void SetVerbose(G4bool val);
+    G4bool IsGUI() const;
 
-  void SetPrompt(const G4String& prompt);
-  void SetLsColor(TermColorIndex dirColor, TermColorIndex cmdColor);
+    void SetVerbose(G4bool val);
 
-  void SessionStart();
+    void SetPrompt(const G4String& prompt);
+    void SetLsColor(TermColorIndex dirColor, TermColorIndex cmdColor);
 
- private:
-  void SelectSessionByArg(const G4String& stype);
-  void SelectSessionByEnv();
-  void SelectSessionByFile(const G4String& appname);
-  void SelectSessionByBestGuess();
+    void SessionStart();
 
-  enum SessionType
-  {
-    kNone,
-    kQt,
-    kXm,
-    kWin32,
-    kTcsh,
-    kCsh
-  };
-  SessionType selected;
+  private:
 
-  G4UIsession* session;
-  G4VUIshell* shell;
+    void SelectSessionByArg(const G4String& stype);
+    void SelectSessionByEnv();
+    void SelectSessionByFile(const G4String& appname);
+    void SelectSessionByBestGuess();
 
-  G4bool isGUI;
+    enum SessionType
+    {
+      kNone,
+      kQt,
+      kXm,
+      kWin32,
+      kTcsh,
+      kCsh
+    };
+    SessionType selected;
 
-  G4bool verbose;
+    G4UIsession* session;
+    G4VUIshell* shell;
 
-  std::map<G4String, G4String> sessionMap;
+    G4bool isGUI;
+
+    G4bool verbose;
+
+    std::map<G4String, G4String> sessionMap;
 };
 
 // ====================================================================
-inline G4UIsession* G4UIExecutive::GetSession() const { return session; }
+inline G4UIsession* G4UIExecutive::GetSession() const
+{
+  return session;
+}
 
-inline G4bool G4UIExecutive::IsGUI() const { return isGUI; }
+inline G4bool G4UIExecutive::IsGUI() const
+{
+  return isGUI;
+}
 
-inline void G4UIExecutive::SetVerbose(G4bool val) { verbose = val; }
+inline void G4UIExecutive::SetVerbose(G4bool val)
+{
+  verbose = val;
+}
 
 #endif

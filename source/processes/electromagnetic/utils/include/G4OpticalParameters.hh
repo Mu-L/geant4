@@ -48,36 +48,37 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4OpticalParameters_h
-#define G4OpticalParameters_h 1
+#ifndef G4OPTICALPARAMETERS_HH
+#define G4OPTICALPARAMETERS_HH
 
-#include "globals.hh"
-#include "G4ios.hh"
-#include "G4ThreeVector.hh"
 #include "G4Threading.hh"
-#include <vector>
+#include "G4ThreeVector.hh"
+#include "G4ios.hh"
+#include "globals.hh"
+
 #include <memory>
+#include <vector>
 
 class G4OpticalParametersMessenger;
 class G4StateManager;
 
 enum G4OpticalProcessIndex
 {
-  kCerenkov,       ///< Cerenkov process index
+  kCerenkov,  ///< Cerenkov process index
   kScintillation,  ///< Scintillation process index
-  kAbsorption,     ///< Absorption process index
-  kRayleigh,       ///< Rayleigh scattering process index
-  kMieHG,          ///< Mie scattering process index
-  kBoundary,       ///< Boundary process index
-  kWLS,            ///< Wave Length Shifting process index
-  kWLS2,           ///< Second Wave Length Shifting process index
-  kNoProcess       ///< Number of processes, no selected process
+  kAbsorption,  ///< Absorption process index
+  kRayleigh,  ///< Rayleigh scattering process index
+  kMieHG,  ///< Mie scattering process index
+  kBoundary,  ///< Boundary process index
+  kWLS,  ///< Wave Length Shifting process index
+  kWLS2,  ///< Second Wave Length Shifting process index
+  kNoProcess  ///< Number of processes, no selected process
 };
 
 enum G4XRayModelType
 {
   kCerenkovDefault = 0,  // default model
-  kScintillationDefault, // default model
+  kScintillationDefault,  // default model
 };
 
 /// Return the name for a given optical process index
@@ -85,7 +86,7 @@ G4String G4OpticalProcessName(G4int);
 
 inline G4String G4OpticalProcessName(G4int processNumber)
 {
-  switch(processNumber)
+  switch (processNumber)
   {
     case kCerenkov:
       return "Cerenkov";
@@ -110,168 +111,169 @@ inline G4String G4OpticalProcessName(G4int processNumber)
 
 class G4OpticalParameters
 {
- public:
-  static G4OpticalParameters* Instance();
+  public:
 
-  ~G4OpticalParameters();
+    static G4OpticalParameters* Instance();
 
-  void SetDefaults();
+    ~G4OpticalParameters();
 
-  // printing
-  void StreamInfo(std::ostream& os) const;
-  void Dump() const;
-  friend std::ostream& operator<<(std::ostream& os, const G4OpticalParameters&);
+    void SetDefaults();
 
-  void  SetVerboseLevel(G4int);
-  G4int GetVerboseLevel() const;
+    // printing
+    void StreamInfo(std::ostream& os) const;
+    void Dump() const;
+    friend std::ostream& operator<<(std::ostream& os, const G4OpticalParameters&);
 
-  void   SetProcessActivation(const G4String&, G4bool);
-  G4bool GetProcessActivation(const G4String&) const;
+    void SetVerboseLevel(G4int);
+    G4int GetVerboseLevel() const;
 
-  // Cerenkov
-  void  SetCerenkovMaxPhotonsPerStep(G4int);
-  G4int GetCerenkovMaxPhotonsPerStep() const;
-  void  SetCerenkovVerboseLevel(G4int);
-  G4int GetCerenkovVerboseLevel() const;
-  void     SetCerenkovMaxBetaChange(G4double);
-  G4double GetCerenkovMaxBetaChange() const;
-  void   SetCerenkovTrackSecondariesFirst(G4bool);
-  G4bool GetCerenkovTrackSecondariesFirst() const;
-  void   SetCerenkovStackPhotons(G4bool);
-  G4bool GetCerenkovStackPhotons() const;
-  void   SetCerenkovOffloadPhotons(G4bool);
-  G4bool GetCerenkovOffloadPhotons() const;
-  void   EnableCerenkovGeneral(G4bool);
-  G4bool CerenkovGeneral() const;
-  
-  // Scintillation
-  void   SetScintByParticleType(G4bool);
-  G4bool GetScintByParticleType() const;
-  void   SetScintTrackInfo(G4bool);
-  G4bool GetScintTrackInfo() const;
-  void   SetScintTrackSecondariesFirst(G4bool);
-  G4bool GetScintTrackSecondariesFirst() const;
-  void   SetScintFiniteRiseTime(G4bool);
-  G4bool GetScintFiniteRiseTime() const;
-  void   SetScintStackPhotons(G4bool);
-  G4bool GetScintStackPhotons() const;
-  void   SetScintVerboseLevel(G4int);
-  G4int  GetScintVerboseLevel() const;
-  void   SetScintOffloadPhotons(G4bool);
-  G4bool GetScintOffloadPhotons() const;
+    void SetProcessActivation(const G4String&, G4bool);
+    G4bool GetProcessActivation(const G4String&) const;
 
-  // WLS
-  void     SetWLSTimeProfile(const G4String&);
-  G4String GetWLSTimeProfile() const;
-  void  SetWLSVerboseLevel(G4int);
-  G4int GetWLSVerboseLevel() const;
+    // Cerenkov
+    void SetCerenkovMaxPhotonsPerStep(G4int);
+    G4int GetCerenkovMaxPhotonsPerStep() const;
+    void SetCerenkovVerboseLevel(G4int);
+    G4int GetCerenkovVerboseLevel() const;
+    void SetCerenkovMaxBetaChange(G4double);
+    G4double GetCerenkovMaxBetaChange() const;
+    void SetCerenkovTrackSecondariesFirst(G4bool);
+    G4bool GetCerenkovTrackSecondariesFirst() const;
+    void SetCerenkovStackPhotons(G4bool);
+    G4bool GetCerenkovStackPhotons() const;
+    void SetCerenkovOffloadPhotons(G4bool);
+    G4bool GetCerenkovOffloadPhotons() const;
+    void EnableCerenkovGeneral(G4bool);
+    G4bool CerenkovGeneral() const;
 
-  // WLS2
-  void     SetWLS2TimeProfile(const G4String&);
-  G4String GetWLS2TimeProfile() const;
-  void  SetWLS2VerboseLevel(G4int);
-  G4int GetWLS2VerboseLevel() const;
+    // Scintillation
+    void SetScintByParticleType(G4bool);
+    G4bool GetScintByParticleType() const;
+    void SetScintTrackInfo(G4bool);
+    G4bool GetScintTrackInfo() const;
+    void SetScintTrackSecondariesFirst(G4bool);
+    G4bool GetScintTrackSecondariesFirst() const;
+    void SetScintFiniteRiseTime(G4bool);
+    G4bool GetScintFiniteRiseTime() const;
+    void SetScintStackPhotons(G4bool);
+    G4bool GetScintStackPhotons() const;
+    void SetScintVerboseLevel(G4int);
+    G4int GetScintVerboseLevel() const;
+    void SetScintOffloadPhotons(G4bool);
+    G4bool GetScintOffloadPhotons() const;
 
-  // boundary
-  void  SetBoundaryVerboseLevel(G4int);
-  G4int GetBoundaryVerboseLevel() const;
-  void   SetBoundaryInvokeSD(G4bool);
-  G4bool GetBoundaryInvokeSD() const;
+    // WLS
+    void SetWLSTimeProfile(const G4String&);
+    G4String GetWLSTimeProfile() const;
+    void SetWLSVerboseLevel(G4int);
+    G4int GetWLSVerboseLevel() const;
 
-  // absorption
-  void  SetAbsorptionVerboseLevel(G4int);
-  G4int GetAbsorptionVerboseLevel() const;
+    // WLS2
+    void SetWLS2TimeProfile(const G4String&);
+    G4String GetWLS2TimeProfile() const;
+    void SetWLS2VerboseLevel(G4int);
+    G4int GetWLS2VerboseLevel() const;
 
-  // rayleigh
-  void  SetRayleighVerboseLevel(G4int);
-  G4int GetRayleighVerboseLevel() const;
+    // boundary
+    void SetBoundaryVerboseLevel(G4int);
+    G4int GetBoundaryVerboseLevel() const;
+    void SetBoundaryInvokeSD(G4bool);
+    G4bool GetBoundaryInvokeSD() const;
 
-  // mie
-  void  SetMieVerboseLevel(G4int);
-  G4int GetMieVerboseLevel() const;
+    // absorption
+    void SetAbsorptionVerboseLevel(G4int);
+    G4int GetAbsorptionVerboseLevel() const;
 
-  // active volumes
-  const std::vector<std::pair<G4XRayModelType, const G4String> >&
-  ActiveVolumes() const;
-  void SetActiveVolume(const G4String& name, G4XRayModelType type);
+    // rayleigh
+    void SetRayleighVerboseLevel(G4int);
+    G4int GetRayleighVerboseLevel() const;
 
- private:
-  G4OpticalParameters();
-  void Initialise();
-  G4bool IsLocked() const;
-  void PrintWarning(G4ExceptionDescription& ed) const;
+    // mie
+    void SetMieVerboseLevel(G4int);
+    G4int GetMieVerboseLevel() const;
 
-  static G4OpticalParameters* theInstance;
+    // active volumes
+    const std::vector<std::pair<G4XRayModelType, const G4String>>& ActiveVolumes() const;
+    void SetActiveVolume(const G4String& name, G4XRayModelType type);
 
-  G4OpticalParametersMessenger* theMessenger;
-  G4StateManager* fStateManager;
+  private:
 
-  G4int verboseLevel;
+    G4OpticalParameters();
+    void Initialise();
+    G4bool IsLocked() const;
+    void PrintWarning(G4ExceptionDescription& ed) const;
 
-  // Whether to activate each process
-  std::map<G4String, G4bool> processActivation;
+    static G4OpticalParameters* theInstance;
 
-  // cerenkov/////////////////
-  G4bool cerenkovStackPhotons;
-  G4bool cerenkovTrackSecondariesFirst;
-  G4bool cerenkovOffloadPhotons;
-  G4bool cerenkovGeneral;
-  G4int cerenkovVerboseLevel;
-  G4int cerenkovMaxPhotons;
-  G4double cerenkovMaxBetaChange;
+    G4OpticalParametersMessenger* theMessenger;
+    G4StateManager* fStateManager;
 
-  // scintillation /////////////////
+    G4int verboseLevel;
 
-  /// option to set a finite rise-time; Note: the G4Scintillation
-  /// process expects the user to have set the constant material
-  /// property SCINTILLATIONRISETIME{1,2,3}
-  G4bool scintFiniteRiseTime;
+    // Whether to activate each process
+    std::map<G4String, G4bool> processActivation;
 
-  /// option to  allow for the light yield to be a function of
-  /// particle type and deposited energy in case of non-linear
-  /// light emission in scintillators
-  G4bool scintByParticleType;
+    // cerenkov/////////////////
+    G4bool cerenkovStackPhotons;
+    G4bool cerenkovTrackSecondariesFirst;
+    G4bool cerenkovOffloadPhotons;
+    G4bool cerenkovGeneral;
+    G4int cerenkovVerboseLevel;
+    G4int cerenkovMaxPhotons;
+    G4double cerenkovMaxBetaChange;
 
-  /// option to allow for G4ScintillationTrackInformation
-  /// to be attached to a scintillation photon's track
-  G4bool scintTrackInfo;
+    // scintillation /////////////////
 
-  /// option to allow stacking of secondary scintillation photons
-  G4bool scintStackPhotons;
+    /// option to set a finite rise-time; Note: the G4Scintillation
+    /// process expects the user to have set the constant material
+    /// property SCINTILLATIONRISETIME{1,2,3}
+    G4bool scintFiniteRiseTime;
 
-  /// option to enable offloading of secondary scintillation photons
-  G4bool scintOffloadPhotons;
+    /// option to  allow for the light yield to be a function of
+    /// particle type and deposited energy in case of non-linear
+    /// light emission in scintillators
+    G4bool scintByParticleType;
 
-  G4int scintVerboseLevel;
-  G4bool scintTrackSecondariesFirst;
+    /// option to allow for G4ScintillationTrackInformation
+    /// to be attached to a scintillation photon's track
+    G4bool scintTrackInfo;
 
-  ///////////////// WLS
-  G4String wlsTimeProfileName;
-  G4int wlsVerboseLevel;
+    /// option to allow stacking of secondary scintillation photons
+    G4bool scintStackPhotons;
 
-  ///////////////// WLS2
-  G4String wls2TimeProfileName;
-  G4int wls2VerboseLevel;
+    /// option to enable offloading of secondary scintillation photons
+    G4bool scintOffloadPhotons;
 
-  //////////////// absorption
-  G4int absorptionVerboseLevel;
+    G4int scintVerboseLevel;
+    G4bool scintTrackSecondariesFirst;
 
-  //////////////// rayleigh
-  G4int rayleighVerboseLevel;
+    ///////////////// WLS
+    G4String wlsTimeProfileName;
+    G4int wlsVerboseLevel;
 
-  //////////////// mie
-  G4int mieVerboseLevel;
+    ///////////////// WLS2
+    G4String wls2TimeProfileName;
+    G4int wls2VerboseLevel;
 
-  //////////////// boundary
-  /// G4OpBoundaryProcess to call InvokeSD method
-  G4bool boundaryInvokeSD;
-  G4int boundaryVerboseLevel;
+    //////////////// absorption
+    G4int absorptionVerboseLevel;
 
-  //////////////// active volumes
-  std::vector<std::pair<G4XRayModelType, const G4String> > xrayVolumes;
+    //////////////// rayleigh
+    G4int rayleighVerboseLevel;
+
+    //////////////// mie
+    G4int mieVerboseLevel;
+
+    //////////////// boundary
+    /// G4OpBoundaryProcess to call InvokeSD method
+    G4bool boundaryInvokeSD;
+    G4int boundaryVerboseLevel;
+
+    //////////////// active volumes
+    std::vector<std::pair<G4XRayModelType, const G4String>> xrayVolumes;
 
 #ifdef G4MULTITHREADED
-  static G4Mutex opticalParametersMutex;
+    static G4Mutex opticalParametersMutex;
 #endif
 };
 

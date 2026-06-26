@@ -6,6 +6,15 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-06-19 Ben Morgan (tracking-V11-04-02)
+- Apply clang-format to all C++ files.
+
+## 2026-06-08 Ben Morgan (tracking-V11-04-01)
+- Use standard Geant4 header guard without value for definition.
+
+## 2026-01-09 Ben Morgan (tracking-V11-04-00)
+- Update header guards to style/format required by Geant4 coding guidelines.
+
 ## 2025-02-04 John Allison (tracking-V11-03-01)
 - G4RichTrajectoryPoint.hh:
   - Add accessors for Pre and PostStepPointGlobalTime.

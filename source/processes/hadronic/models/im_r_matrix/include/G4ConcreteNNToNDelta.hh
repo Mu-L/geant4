@@ -25,39 +25,40 @@
 //
 //
 
-#ifndef G4ConcreteNNToNDelta_h
-#define G4ConcreteNNToNDelta_h
+#ifndef G4CONCRETENNTONDELTA_HH
+#define G4CONCRETENNTONDELTA_HH
 
-#include "globals.hh"
-#include "G4VScatteringCollision.hh"
-#include "G4VCrossSectionSource.hh"
-#include "G4VAngularDistribution.hh"
-#include "G4KineticTrackVector.hh"
-#include <vector>
-#include "G4XNDeltaTable.hh"
 #include "G4ConcreteNNTwoBodyResonance.hh"
+#include "G4KineticTrackVector.hh"
+#include "G4VAngularDistribution.hh"
+#include "G4VCrossSectionSource.hh"
+#include "G4VScatteringCollision.hh"
+#include "G4XNDeltaTable.hh"
+#include "globals.hh"
 
-//class G4KineticTrack;
+#include <vector>
+
+// class G4KineticTrack;
 
 class G4ConcreteNNToNDelta : public G4ConcreteNNTwoBodyResonance
 {
-public:
-  G4ConcreteNNToNDelta(const G4ParticleDefinition* aPrimary,
-		       const G4ParticleDefinition* bPriamry,
-		       const G4ParticleDefinition* aSecondary,
-		       const G4ParticleDefinition* bSecondary);
+  public:
 
-  virtual ~G4ConcreteNNToNDelta();  
-  virtual G4String GetName() const { return "ConcreteNNToNDelta"; }
+    G4ConcreteNNToNDelta(const G4ParticleDefinition* aPrimary, const G4ParticleDefinition* bPriamry,
+                         const G4ParticleDefinition* aSecondary,
+                         const G4ParticleDefinition* bSecondary);
 
-private:
-  G4ConcreteNNToNDelta(const G4ConcreteNNToNDelta &);
-  G4ConcreteNNToNDelta & operator= (const G4ConcreteNNToNDelta &);
+    virtual ~G4ConcreteNNToNDelta();
+    virtual G4String GetName() const { return "ConcreteNNToNDelta"; }
 
-private:  
+  private:
 
-  static G4ThreadLocal G4XNDeltaTable *theSigmaTable_G4MT_TLS_;
+    G4ConcreteNNToNDelta(const G4ConcreteNNToNDelta&);
+    G4ConcreteNNToNDelta& operator=(const G4ConcreteNNToNDelta&);
 
+  private:
+
+    static G4ThreadLocal G4XNDeltaTable* theSigmaTable_G4MT_TLS_;
 };
 
 #endif

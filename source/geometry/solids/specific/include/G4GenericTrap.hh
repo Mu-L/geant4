@@ -60,23 +60,25 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UGENERICTRAP 1
+#  define G4GEOM_USE_UGENERICTRAP 1
 #endif
 
 #if defined(G4GEOM_USE_UGENERICTRAP)
-  #define G4UGenericTrap G4GenericTrap
-  #include "G4UGenericTrap.hh"
+#  define G4UGenericTrap G4GenericTrap
+#  include "G4UGenericTrap.hh"
 #else
 
-#include <vector>
+#  include "G4TwoVector.hh"
+#  include "G4VSolid.hh"
+#  include "globals.hh"
 
-#include "globals.hh"
-#include "G4TwoVector.hh"
-#include "G4VSolid.hh"
+#  include <vector>
 
 /**
  * @brief G4GenericTrap is a solid which represents an arbitrary trapezoid with
  * up to 8 vertices standing on two parallel planes perpendicular to the Z axis.
+ * @ingroup geometry_solids_specific
+ *
  * Points can be identical in order to create shapes with less than 8 vertices.
  */
 
@@ -90,8 +92,7 @@ class G4GenericTrap : public G4VSolid
      *  @param[in] halfZ Half length in Z.
      *  @param[in] vertices The (x,y) coordinates of the vertices.
      */
-    G4GenericTrap(const G4String& name, G4double halfZ,
-                  const std::vector<G4TwoVector>& vertices);
+    G4GenericTrap(const G4String& name, G4double halfZ, const std::vector<G4TwoVector>& vertices);
 
     /**
      * Fake default constructor for usage restricted to direct object
@@ -114,14 +115,14 @@ class G4GenericTrap : public G4VSolid
     /**
      * Accessors and modifiers.
      */
-    inline G4double    GetZHalfLength() const;
-    inline G4int       GetNofVertices() const;
+    inline G4double GetZHalfLength() const;
+    inline G4int GetNofVertices() const;
     inline G4TwoVector GetVertex(G4int index) const;
     inline const std::vector<G4TwoVector>& GetVertices() const;
-    inline G4double    GetTwistAngle(G4int index) const;
-    inline G4bool      IsTwisted() const;
-    inline G4int       GetVisSubdivisions() const;
-    inline void        SetVisSubdivisions(G4int subdiv);
+    inline G4double GetTwistAngle(G4int index) const;
+    inline G4bool IsTwisted() const;
+    inline G4int GetVisSubdivisions() const;
+    inline void SetVisSubdivisions(G4int subdiv);
 
     /**
      * Concrete implementations of the expected query interfaces for
@@ -129,14 +130,11 @@ class G4GenericTrap : public G4VSolid
      */
     EInside Inside(const G4ThreeVector& p) const override;
     G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
-    G4double DistanceToIn(const G4ThreeVector& p,
-                          const G4ThreeVector& v) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
     G4double DistanceToIn(const G4ThreeVector& p) const override;
-    G4double DistanceToOut(const G4ThreeVector& p,
-                           const G4ThreeVector& v,
-                           const G4bool calcNorm = false,
-                                 G4bool* validNorm = nullptr,
-                                 G4ThreeVector* n = nullptr) const override;
+    G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
     G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
@@ -156,10 +154,9 @@ class G4GenericTrap : public G4VSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pmin, G4double& pmax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pmin,
+                           G4double& pmax) const override;
 
     /**
      * Returns the type ID, "G4GenericTrap" of the solid.
@@ -169,7 +166,7 @@ class G4GenericTrap : public G4VSolid
     /**
      * Returns true if the solid has only planar faces; false if twisted.
      */
-    G4bool IsFaceted () const override;
+    G4bool IsFaceted() const override;
 
     /**
      * Makes a clone of the object for use in multi-treading.
@@ -186,7 +183,7 @@ class G4GenericTrap : public G4VSolid
      * Returns a random point located and uniformly distributed on the
      * surface of the solid.
      */
-    G4ThreeVector GetPointOnSurface() const override ;
+    G4ThreeVector GetPointOnSurface() const override;
 
     /**
      * Returning an estimation of the solid volume (capacity) and
@@ -245,58 +242,55 @@ class G4GenericTrap : public G4VSolid
                       const G4ThreeVector& p, const G4ThreeVector& v) const;
     void WarningSignB(const G4String& method, const G4String& icase, G4double f, G4double B,
                       const G4ThreeVector& p, const G4ThreeVector& v) const;
-    void WarningDistanceToIn(G4int k, const G4ThreeVector& p, const G4ThreeVector& v,
-                             G4double tmin, G4double tmax,
-                             const G4double ttin[2], const G4double ttout[2]) const;
-    void WarningDistanceToOut(const G4ThreeVector& p,
-                              const G4ThreeVector& v,
-                              G4double tout) const;
+    void WarningDistanceToIn(G4int k, const G4ThreeVector& p, const G4ThreeVector& v, G4double tmin,
+                             G4double tmax, const G4double ttin[2], const G4double ttout[2]) const;
+    void WarningDistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v, G4double tout) const;
 
   private:
 
-    struct G4GenericTrapPlane // Ax + By + Cz + D = 0
+    struct G4GenericTrapPlane  // Ax + By + Cz + D = 0
     {
-      G4double A = 0.;
-      G4double B = 0.;
-      G4double C = 0.;
-      G4double D = 0.;
+        G4double A = 0.;
+        G4double B = 0.;
+        G4double C = 0.;
+        G4double D = 0.;
     };
-    struct G4GenericTrapSurface // Axz + Byz + Czz + Dx + Ey + Fz + G = 0
+    struct G4GenericTrapSurface  // Axz + Byz + Czz + Dx + Ey + Fz + G = 0
     {
-      G4double A = 0.;
-      G4double B = 0.;
-      G4double C = 0.;
-      G4double D = 0.;
-      G4double E = 0.;
-      G4double F = 0.;
-      G4double G = 0.;
+        G4double A = 0.;
+        G4double B = 0.;
+        G4double C = 0.;
+        G4double D = 0.;
+        G4double E = 0.;
+        G4double F = 0.;
+        G4double G = 0.;
     };
 
     // Data members
-    G4double                 halfTolerance = 0.;
-    G4double                 fScratch = 0.;
-    G4double                 fDz = 0.;
-    std::vector<G4TwoVector> fVertices = {0.,0.,0.,0.,0.,0.,0.,0.};
-    G4TwoVector              fDelta[4];
-    G4bool                   fIsTwisted = false;
-    G4double                 fTwist[5] = {0.};
-    G4ThreeVector            fMinBBox{0.};
-    G4ThreeVector            fMaxBBox{0.};
-    G4int                    fVisSubdivisions = 0;
-    G4GenericTrapPlane       fPlane[8];
-    G4GenericTrapSurface     fSurf[4];
-    G4double                 f4k[4] = {0.}; // Lipschitz constants * 4
-    mutable G4double         fArea[4] = {0.};
-    mutable G4bool           fRebuildPolyhedron = false;
-    mutable G4Polyhedron*    fpPolyhedron = nullptr;
+    G4double halfTolerance = 0.;
+    G4double fScratch = 0.;
+    G4double fDz = 0.;
+    std::vector<G4TwoVector> fVertices = {0., 0., 0., 0., 0., 0., 0., 0.};
+    G4TwoVector fDelta[4];
+    G4bool fIsTwisted = false;
+    G4double fTwist[5] = {0.};
+    G4ThreeVector fMinBBox{0.};
+    G4ThreeVector fMaxBBox{0.};
+    G4int fVisSubdivisions = 0;
+    G4GenericTrapPlane fPlane[8];
+    G4GenericTrapSurface fSurf[4];
+    G4double f4k[4] = {0.};  // Lipschitz constants * 4
+    mutable G4double fArea[4] = {0.};
+    mutable G4bool fRebuildPolyhedron = false;
+    mutable G4Polyhedron* fpPolyhedron = nullptr;
 
     // Surface and Volume
-    G4double                 fSurfaceArea = 0.;
-    G4double                 fCubicVolume = 0.;
+    G4double fSurfaceArea = 0.;
+    G4double fCubicVolume = 0.;
 };
 
-#include "G4GenericTrap.icc"
+#  include "G4GenericTrap.icc"
 
-#endif // defined(G4GEOM_USE_UGENERICTRAP)
+#endif  // defined(G4GEOM_USE_UGENERICTRAP)
 
-#endif // G4GENERICTRAP_HH
+#endif  // G4GENERICTRAP_HH

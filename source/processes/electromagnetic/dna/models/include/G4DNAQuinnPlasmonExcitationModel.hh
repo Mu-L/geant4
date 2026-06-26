@@ -30,66 +30,58 @@
 // This class perform transmission term of volume plasmon excitation,
 // based on Quinn Model, see Phys. Rev. vol 126, number 4 (1962)
 
-#ifndef G4DNAQuinnPlasmonExcitationModel_h
-#define G4DNAQuinnPlasmonExcitationModel_h 1
+#ifndef G4DNAQUINNPLASMONEXCITATIONMODEL_HH
+#define G4DNAQUINNPLASMONEXCITATIONMODEL_HH
 
-#include "G4VEmModel.hh"
 #include "G4Electron.hh"
 #include "G4ParticleChangeForGamma.hh"
 #include "G4ProductionCutsTable.hh"
+#include "G4VEmModel.hh"
 
-class G4DNAQuinnPlasmonExcitationModel: public G4VEmModel
+class G4DNAQuinnPlasmonExcitationModel : public G4VEmModel
 {
+  public:
 
-public:
+    G4DNAQuinnPlasmonExcitationModel(const G4ParticleDefinition* p = nullptr,
+                                     const G4String& nam = "DNAQuinnPlasmonExcitationModel");
 
-  G4DNAQuinnPlasmonExcitationModel(const G4ParticleDefinition* p = nullptr,
-                              const G4String& nam = "DNAQuinnPlasmonExcitationModel");
+    ~G4DNAQuinnPlasmonExcitationModel() override;
 
-  ~G4DNAQuinnPlasmonExcitationModel() override;
+    G4DNAQuinnPlasmonExcitationModel&
+    operator=(const G4DNAQuinnPlasmonExcitationModel& right) = delete;
+    G4DNAQuinnPlasmonExcitationModel(const G4DNAQuinnPlasmonExcitationModel&) = delete;
 
-  G4DNAQuinnPlasmonExcitationModel & operator=(const  G4DNAQuinnPlasmonExcitationModel &right) = delete;
-  G4DNAQuinnPlasmonExcitationModel(const  G4DNAQuinnPlasmonExcitationModel&) = delete;
+    void Initialise(const G4ParticleDefinition*,
+                    const G4DataVector& = *(new G4DataVector())) override;
 
-  void Initialise(const G4ParticleDefinition*,
-                          const G4DataVector& = *(new G4DataVector())) override;
+    G4double CrossSectionPerVolume(const G4Material* material, const G4ParticleDefinition* p,
+                                   G4double ekin, G4double emin, G4double emax) override;
 
-  G4double CrossSectionPerVolume(const G4Material* material,
-                                         const G4ParticleDefinition* p,
-                                         G4double ekin,
-                                         G4double emin,
-                                         G4double emax) override;
+    virtual G4double GetCrossSection(const G4Material* material, const G4ParticleDefinition*,
+                                     G4double kineticEnergy);
 
-  virtual G4double GetCrossSection(const G4Material* material,
-                                          const G4ParticleDefinition*,
-                                          G4double kineticEnergy);
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-                                 const G4MaterialCutsCouple*,
-                                 const G4DynamicParticle*,
-                                 G4double tmin,
-                                 G4double maxEnergy) override;
-  
-  inline void SelectStationary(G4bool input);
+    inline void SelectStationary(G4bool input);
 
-protected:
+  protected:
 
-  G4ParticleChangeForGamma* fParticleChangeForGamma;
+    G4ParticleChangeForGamma* fParticleChangeForGamma;
 
-private:
+  private:
 
-  G4double fLowEnergyLimit=0.;
-  G4double fHighEnergyLimit=0.;
+    G4double fLowEnergyLimit = 0.;
+    G4double fHighEnergyLimit = 0.;
 
-  G4bool   isInitialised=false;
-  G4bool   statCode=false;
-  G4int    verboseLevel=0;
-  G4int    nValenceElectron[100];
+    G4bool isInitialised = false;
+    G4bool statCode = false;
+    G4int verboseLevel = 0;
+    G4int nValenceElectron[100];
 
-  const  std::vector<G4double>* fpMaterialDensity=nullptr;
+    const std::vector<G4double>* fpMaterialDensity = nullptr;
 
-  G4int GetNValenceElectron(G4int z);
-   
+    G4int GetNValenceElectron(G4int z);
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

@@ -34,10 +34,12 @@ namespace G4Accumulables
 //_____________________________________________________________________________
 G4MergeMode GetMergeMode(const G4String& mergeModeName)
 {
-  if (mergeModeName == "+") {
+  if (mergeModeName == "+")
+  {
     return G4MergeMode::kAddition;
   }
-  if (mergeModeName == "*") {
+  if (mergeModeName == "*")
+  {
     return G4MergeMode::kMultiplication;
   }
 
@@ -48,5 +50,4 @@ G4MergeMode GetMergeMode(const G4String& mergeModeName)
   return G4MergeMode::kAddition;
 }
 
-}
-
+}  // namespace G4Accumulables

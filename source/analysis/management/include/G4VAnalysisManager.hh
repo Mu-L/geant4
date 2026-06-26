@@ -34,19 +34,18 @@
 
 // Author: Ivana Hrivnacova, 09/07/2013  (ivana@ipno.in2P2.fr)
 
-#ifndef G4VAnalysisManager_h
-#define G4VAnalysisManager_h 1
+#ifndef G4VANALYSISMANAGER_HH
+#define G4VANALYSISMANAGER_HH
 
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
+#include "G4VTBaseHnManager.hh"  // make forward declaration if possible
 #include "globals.hh"
 
-#include <vector>
 #include <fstream>
 #include <memory>
 #include <string_view>
-
-#include "G4VTBaseHnManager.hh"  // make forward declaration if possible
+#include <vector>
 
 class G4AnalysisMessenger;
 class G4NtupleBookingManager;
@@ -55,11 +54,13 @@ class G4VNtupleManager;
 class G4VNtupleFileManager;
 class G4VFileManager;
 
-namespace tools {
-namespace histo{
+namespace tools
+{
+namespace histo
+{
 class hmpi;
 }
-}
+}  // namespace tools
 
 using G4Analysis::kDim1;
 using G4Analysis::kDim2;
@@ -67,9 +68,10 @@ using G4Analysis::kDim3;
 
 class G4VAnalysisManager
 {
-  friend class G4AnalysisMessenger;
+    friend class G4AnalysisMessenger;
 
   public:
+
     G4VAnalysisManager() = delete;
 
     // Methods for handling files
@@ -90,122 +92,80 @@ class G4VAnalysisManager
     G4bool SetFileName(const G4String& fileName);
     G4bool SetHistoDirectoryName(const G4String& dirName);
     G4bool SetNtupleDirectoryName(const G4String& dirName);
-    void   SetCompressionLevel(G4int level);
+    void SetCompressionLevel(G4int level);
 
     G4String GetFileName() const;
     G4String GetHistoDirectoryName() const;
     G4String GetNtupleDirectoryName() const;
-    G4int    GetCompressionLevel() const;
+    G4int GetCompressionLevel() const;
 
     // Methods for handling histograms
     //
-    G4int CreateH1(const G4String& name, const G4String& title,
-                   G4int nbins, G4double xmin, G4double xmax,
-                   const G4String& unitName = "none",
-                   const G4String& fcnName = "none",
-                   const G4String& binSchemeName = "linear");
+    G4int CreateH1(const G4String& name, const G4String& title, G4int nbins, G4double xmin,
+                   G4double xmax, const G4String& unitName = "none",
+                   const G4String& fcnName = "none", const G4String& binSchemeName = "linear");
 
-    G4int CreateH1(const G4String& name, const G4String& title,
-                   const std::vector<G4double>& edges,
-                   const G4String& unitName = "none",
-                   const G4String& fcnName = "none");
+    G4int CreateH1(const G4String& name, const G4String& title, const std::vector<G4double>& edges,
+                   const G4String& unitName = "none", const G4String& fcnName = "none");
 
-    G4int CreateH2(const G4String& name, const G4String& title,
-                   G4int nxbins, G4double xmin, G4double xmax,
-                   G4int nybins, G4double ymin, G4double ymax,
-                   const G4String& xunitName = "none",
-                   const G4String& yunitName = "none",
-                   const G4String& xfcnName = "none",
-                   const G4String& yfcnName = "none",
+    G4int CreateH2(const G4String& name, const G4String& title, G4int nxbins, G4double xmin,
+                   G4double xmax, G4int nybins, G4double ymin, G4double ymax,
+                   const G4String& xunitName = "none", const G4String& yunitName = "none",
+                   const G4String& xfcnName = "none", const G4String& yfcnName = "none",
                    const G4String& xbinSchemeName = "linear",
                    const G4String& ybinSchemeName = "linear");
 
-    G4int CreateH2(const G4String& name, const G4String& title,
-                   const std::vector<G4double>& xedges,
-                   const std::vector<G4double>& yedges,
-                   const G4String& xunitName = "none",
-                   const G4String& yunitName = "none",
-                   const G4String& xfcnName = "none",
+    G4int CreateH2(const G4String& name, const G4String& title, const std::vector<G4double>& xedges,
+                   const std::vector<G4double>& yedges, const G4String& xunitName = "none",
+                   const G4String& yunitName = "none", const G4String& xfcnName = "none",
                    const G4String& yfcnName = "none");
 
-    G4int CreateH3(const G4String& name, const G4String& title,
-                   G4int nxbins, G4double xmin, G4double xmax,
-                   G4int nybins, G4double ymin, G4double ymax,
-                   G4int nzbins, G4double zmin, G4double zmax,
-                   const G4String& xunitName = "none",
-                   const G4String& yunitName = "none",
-                   const G4String& zunitName = "none",
-                   const G4String& xfcnName = "none",
-                   const G4String& yfcnName = "none",
-                   const G4String& zfcnName = "none",
-                   const G4String& xbinSchemeName = "linear",
+    G4int CreateH3(const G4String& name, const G4String& title, G4int nxbins, G4double xmin,
+                   G4double xmax, G4int nybins, G4double ymin, G4double ymax, G4int nzbins,
+                   G4double zmin, G4double zmax, const G4String& xunitName = "none",
+                   const G4String& yunitName = "none", const G4String& zunitName = "none",
+                   const G4String& xfcnName = "none", const G4String& yfcnName = "none",
+                   const G4String& zfcnName = "none", const G4String& xbinSchemeName = "linear",
                    const G4String& ybinSchemeName = "linear",
                    const G4String& zbinSchemeName = "linear");
 
-    G4int CreateH3(const G4String& name, const G4String& title,
-                   const std::vector<G4double>& xedges,
-                   const std::vector<G4double>& yedges,
-                   const std::vector<G4double>& zedges,
-                   const G4String& xunitName = "none",
-                   const G4String& yunitName = "none",
-                   const G4String& zunitName = "none",
-                   const G4String& xfcnName = "none",
-                   const G4String& yfcnName = "none",
-                   const G4String& zfcnName = "none");
+    G4int CreateH3(const G4String& name, const G4String& title, const std::vector<G4double>& xedges,
+                   const std::vector<G4double>& yedges, const std::vector<G4double>& zedges,
+                   const G4String& xunitName = "none", const G4String& yunitName = "none",
+                   const G4String& zunitName = "none", const G4String& xfcnName = "none",
+                   const G4String& yfcnName = "none", const G4String& zfcnName = "none");
 
-    G4bool SetH1(G4int id,
-                   G4int nbins, G4double xmin, G4double xmax,
-                   const G4String& unitName = "none",
-                   const G4String& fcnName = "none",
-                   const G4String& binSchemeName = "linear");
+    G4bool SetH1(G4int id, G4int nbins, G4double xmin, G4double xmax,
+                 const G4String& unitName = "none", const G4String& fcnName = "none",
+                 const G4String& binSchemeName = "linear");
 
-    G4bool SetH1(G4int id,
-                   const std::vector<G4double>& edges,
-                   const G4String& unitName = "none",
-                   const G4String& fcnName = "none");
+    G4bool SetH1(G4int id, const std::vector<G4double>& edges, const G4String& unitName = "none",
+                 const G4String& fcnName = "none");
 
-    G4bool SetH2(G4int id,
-                   G4int nxbins, G4double xmin, G4double xmax,
-                   G4int nybins, G4double ymin, G4double ymax,
-                   const G4String& xunitName = "none",
-                   const G4String& yunitName = "none",
-                   const G4String& xfcnName = "none",
-                   const G4String& yfcnName = "none",
-                   const G4String& xbinSchemeName = "linear",
-                   const G4String& ybinSchemeName = "linear");
+    G4bool SetH2(G4int id, G4int nxbins, G4double xmin, G4double xmax, G4int nybins, G4double ymin,
+                 G4double ymax, const G4String& xunitName = "none",
+                 const G4String& yunitName = "none", const G4String& xfcnName = "none",
+                 const G4String& yfcnName = "none", const G4String& xbinSchemeName = "linear",
+                 const G4String& ybinSchemeName = "linear");
 
-    G4bool SetH2(G4int id,
-                   const std::vector<G4double>& xedges,
-                   const std::vector<G4double>& yedges,
-                   const G4String& xunitName = "none",
-                   const G4String& yunitName = "none",
-                   const G4String& xfcnName = "none",
-                   const G4String& yfcnName = "none");
+    G4bool SetH2(G4int id, const std::vector<G4double>& xedges, const std::vector<G4double>& yedges,
+                 const G4String& xunitName = "none", const G4String& yunitName = "none",
+                 const G4String& xfcnName = "none", const G4String& yfcnName = "none");
 
-    G4bool SetH3(G4int id,
-                   G4int nxbins, G4double xmin, G4double xmax,
-                   G4int nzbins, G4double zmin, G4double zmax,
-                   G4int nybins, G4double ymin, G4double ymax,
-                   const G4String& xunitName = "none",
-                   const G4String& yunitName = "none",
-                   const G4String& zunitName = "none",
-                   const G4String& xfcnName = "none",
-                   const G4String& yfcnName = "none",
-                   const G4String& zfcnName = "none",
-                   const G4String& xbinSchemeName = "linear",
-                   const G4String& ybinSchemeName = "linear",
-                   const G4String& zbinSchemeName = "linear");
+    G4bool SetH3(G4int id, G4int nxbins, G4double xmin, G4double xmax, G4int nzbins, G4double zmin,
+                 G4double zmax, G4int nybins, G4double ymin, G4double ymax,
+                 const G4String& xunitName = "none", const G4String& yunitName = "none",
+                 const G4String& zunitName = "none", const G4String& xfcnName = "none",
+                 const G4String& yfcnName = "none", const G4String& zfcnName = "none",
+                 const G4String& xbinSchemeName = "linear",
+                 const G4String& ybinSchemeName = "linear",
+                 const G4String& zbinSchemeName = "linear");
 
-    G4bool SetH3(G4int id,
-                   const std::vector<G4double>& xedges,
-                   const std::vector<G4double>& yedges,
-                   const std::vector<G4double>& zedges,
-                   const G4String& xunitName = "none",
-                   const G4String& yunitName = "none",
-                   const G4String& zunitName = "none",
-                   const G4String& xfcnName = "none",
-                   const G4String& yfcnName = "none",
-                   const G4String& zfcnName = "none");
+    G4bool SetH3(G4int id, const std::vector<G4double>& xedges, const std::vector<G4double>& yedges,
+                 const std::vector<G4double>& zedges, const G4String& xunitName = "none",
+                 const G4String& yunitName = "none", const G4String& zunitName = "none",
+                 const G4String& xfcnName = "none", const G4String& yfcnName = "none",
+                 const G4String& zfcnName = "none");
 
     G4bool ScaleH1(G4int id, G4double factor);
     G4bool ScaleH2(G4int id, G4double factor);
@@ -213,83 +173,49 @@ class G4VAnalysisManager
 
     // Methods for handling profiles
     //
-    G4int CreateP1(const G4String& name, const G4String& title,
-                   G4int nbins, G4double xmin, G4double xmax,
-                   G4double ymin = 0, G4double ymax = 0,
-                   const G4String& xunitName = "none",
-                   const G4String& yunitName = "none",
-                   const G4String& xfcnName = "none",
-                   const G4String& yfcnName = "none",
+    G4int CreateP1(const G4String& name, const G4String& title, G4int nbins, G4double xmin,
+                   G4double xmax, G4double ymin = 0, G4double ymax = 0,
+                   const G4String& xunitName = "none", const G4String& yunitName = "none",
+                   const G4String& xfcnName = "none", const G4String& yfcnName = "none",
                    const G4String& xbinSchemeName = "linear");
-    G4int CreateP1(const G4String& name, const G4String& title,
-                   const std::vector<G4double>& edges,
-                   G4double ymin = 0, G4double ymax = 0,
-                   const G4String& xunitName = "none",
-                   const G4String& yunitName = "none",
-                   const G4String& xfcnName = "none",
+    G4int CreateP1(const G4String& name, const G4String& title, const std::vector<G4double>& edges,
+                   G4double ymin = 0, G4double ymax = 0, const G4String& xunitName = "none",
+                   const G4String& yunitName = "none", const G4String& xfcnName = "none",
                    const G4String& yfcnName = "none");
 
-    G4int CreateP2(const G4String& name, const G4String& title,
-                   G4int nxbins, G4double xmin, G4double xmax,
-                   G4int nybins, G4double ymin, G4double ymax,
-                   G4double zmin = 0, G4double zmax = 0,
-                   const G4String& xunitName = "none",
-                   const G4String& yunitName = "none",
-                   const G4String& zunitName = "none",
-                   const G4String& xfcnName = "none",
-                   const G4String& yfcnName = "none",
-                   const G4String& zfcnName = "none",
-                   const G4String& xbinSchemeName = "linear",
+    G4int CreateP2(const G4String& name, const G4String& title, G4int nxbins, G4double xmin,
+                   G4double xmax, G4int nybins, G4double ymin, G4double ymax, G4double zmin = 0,
+                   G4double zmax = 0, const G4String& xunitName = "none",
+                   const G4String& yunitName = "none", const G4String& zunitName = "none",
+                   const G4String& xfcnName = "none", const G4String& yfcnName = "none",
+                   const G4String& zfcnName = "none", const G4String& xbinSchemeName = "linear",
                    const G4String& ybinSchemeName = "linear");
-    G4int CreateP2(const G4String& name, const G4String& title,
-                   const std::vector<G4double>& xedges,
-                   const std::vector<G4double>& yedges,
-                   G4double zmin = 0, G4double zmax = 0,
-                   const G4String& xunitName = "none",
-                   const G4String& yunitName = "none",
-                   const G4String& zunitName = "none",
-                   const G4String& xfcnName = "none",
-                   const G4String& yfcnName = "none",
-                   const G4String& zfcnName = "none");
+    G4int CreateP2(const G4String& name, const G4String& title, const std::vector<G4double>& xedges,
+                   const std::vector<G4double>& yedges, G4double zmin = 0, G4double zmax = 0,
+                   const G4String& xunitName = "none", const G4String& yunitName = "none",
+                   const G4String& zunitName = "none", const G4String& xfcnName = "none",
+                   const G4String& yfcnName = "none", const G4String& zfcnName = "none");
 
-    G4bool SetP1(G4int id,
-                   G4int nbins, G4double xmin, G4double xmax,
-                   G4double ymin = 0, G4double ymax = 0,
-                   const G4String& xunitName = "none",
-                   const G4String& yunitName = "none",
-                   const G4String& xfcnName = "none",
-                   const G4String& yfcnName = "none",
-                   const G4String& xbinSchemeName = "linear");
-    G4bool SetP1(G4int id,
-                   const std::vector<G4double>& edges,
-                   G4double ymin = 0, G4double ymax = 0,
-                   const G4String& xunitName = "none",
-                   const G4String& yunitName = "none",
-                   const G4String& xfcnName = "none",
-                   const G4String& yfcnName = "none");
+    G4bool SetP1(G4int id, G4int nbins, G4double xmin, G4double xmax, G4double ymin = 0,
+                 G4double ymax = 0, const G4String& xunitName = "none",
+                 const G4String& yunitName = "none", const G4String& xfcnName = "none",
+                 const G4String& yfcnName = "none", const G4String& xbinSchemeName = "linear");
+    G4bool SetP1(G4int id, const std::vector<G4double>& edges, G4double ymin = 0, G4double ymax = 0,
+                 const G4String& xunitName = "none", const G4String& yunitName = "none",
+                 const G4String& xfcnName = "none", const G4String& yfcnName = "none");
 
-    G4bool SetP2(G4int id,
-                   G4int nxbins, G4double xmin, G4double xmax,
-                   G4int nybins, G4double ymin, G4double ymax,
-                   G4double zmin = 0, G4double zmax = 0,
-                   const G4String& xunitName = "none",
-                   const G4String& yunitName = "none",
-                   const G4String& zunitName = "none",
-                   const G4String& xfcnName = "none",
-                   const G4String& yfcnName = "none",
-                   const G4String& zfcnName = "none",
-                   const G4String& xbinSchemeName = "linear",
-                   const G4String& ybinSchemeName = "linear");
-    G4bool SetP2(G4int id,
-                   const std::vector<G4double>& xedges,
-                   const std::vector<G4double>& yedges,
-                   G4double zmin = 0, G4double zmax = 0,
-                   const G4String& xunitName = "none",
-                   const G4String& yunitName = "none",
-                   const G4String& zunitName = "none",
-                   const G4String& xfcnName = "none",
-                   const G4String& yfcnName = "none",
-                   const G4String& zfcnName = "none");
+    G4bool SetP2(G4int id, G4int nxbins, G4double xmin, G4double xmax, G4int nybins, G4double ymin,
+                 G4double ymax, G4double zmin = 0, G4double zmax = 0,
+                 const G4String& xunitName = "none", const G4String& yunitName = "none",
+                 const G4String& zunitName = "none", const G4String& xfcnName = "none",
+                 const G4String& yfcnName = "none", const G4String& zfcnName = "none",
+                 const G4String& xbinSchemeName = "linear",
+                 const G4String& ybinSchemeName = "linear");
+    G4bool SetP2(G4int id, const std::vector<G4double>& xedges, const std::vector<G4double>& yedges,
+                 G4double zmin = 0, G4double zmax = 0, const G4String& xunitName = "none",
+                 const G4String& yunitName = "none", const G4String& zunitName = "none",
+                 const G4String& xfcnName = "none", const G4String& yfcnName = "none",
+                 const G4String& zfcnName = "none");
 
     G4bool ScaleP1(G4int id, G4double factor);
     G4bool ScaleP2(G4int id, G4double factor);
@@ -305,15 +231,11 @@ class G4VAnalysisManager
     G4int CreateNtupleSColumn(const G4String& name);
 
     // Create columns of vector in the last created ntuple
-    G4int CreateNtupleIColumn(
-            const G4String& name, std::vector<int>& vector);
-    G4int CreateNtupleFColumn(
-            const G4String& name, std::vector<float>& vector);
-    G4int CreateNtupleDColumn(
-            const G4String& name, std::vector<double>& vector);
-    G4int CreateNtupleSColumn(
-            const G4String& name, std::vector<std::string>& vector);
-    void  FinishNtuple();
+    G4int CreateNtupleIColumn(const G4String& name, std::vector<int>& vector);
+    G4int CreateNtupleFColumn(const G4String& name, std::vector<float>& vector);
+    G4int CreateNtupleDColumn(const G4String& name, std::vector<double>& vector);
+    G4int CreateNtupleSColumn(const G4String& name, std::vector<std::string>& vector);
+    void FinishNtuple();
 
     // Create columns in the ntuple with given id
     G4int CreateNtupleIColumn(G4int ntupleId, const G4String& name);
@@ -322,20 +244,16 @@ class G4VAnalysisManager
     G4int CreateNtupleSColumn(G4int ntupleId, const G4String& name);
 
     // Create columns of vector in the ntuple with given id
-    G4int CreateNtupleIColumn(G4int ntupleId,
-            const G4String& name, std::vector<int>& vector);
-    G4int CreateNtupleFColumn(G4int ntupleId,
-            const G4String& name, std::vector<float>& vector);
-    G4int CreateNtupleDColumn(G4int ntupleId,
-            const G4String& name, std::vector<double>& vector);
-    G4int CreateNtupleSColumn(G4int ntupleId,
-            const G4String& name, std::vector<std::string>& vector);
+    G4int CreateNtupleIColumn(G4int ntupleId, const G4String& name, std::vector<int>& vector);
+    G4int CreateNtupleFColumn(G4int ntupleId, const G4String& name, std::vector<float>& vector);
+    G4int CreateNtupleDColumn(G4int ntupleId, const G4String& name, std::vector<double>& vector);
+    G4int CreateNtupleSColumn(G4int ntupleId, const G4String& name,
+                              std::vector<std::string>& vector);
 
-    void  FinishNtuple(G4int ntupleId);
+    void FinishNtuple(G4int ntupleId);
 
     // MT/MPI
-    virtual void SetNtupleMerging(G4bool mergeNtuples,
-                   G4int nofReducedNtupleFiles = 0);
+    virtual void SetNtupleMerging(G4bool mergeNtuples, G4int nofReducedNtupleFiles = 0);
     virtual void SetNtupleRowWise(G4bool rowWise, G4bool rowMode = true);
     virtual void SetBasketSize(unsigned int basketSize);
     virtual void SetBasketEntries(unsigned int basketEntries);
@@ -355,16 +273,12 @@ class G4VAnalysisManager
 
     // Methods to fill histograms
     G4bool FillH1(G4int id, G4double value, G4double weight = 1.0);
-    G4bool FillH2(G4int id, G4double xvalue, G4double yvalue,
-                  G4double weight = 1.0);
-    G4bool FillH3(G4int id,
-                  G4double xvalue, G4double yvalue, G4double zvalue,
+    G4bool FillH2(G4int id, G4double xvalue, G4double yvalue, G4double weight = 1.0);
+    G4bool FillH3(G4int id, G4double xvalue, G4double yvalue, G4double zvalue,
                   G4double weight = 1.0);
     // Methods to fill profiles
-    G4bool FillP1(G4int id, G4double xvalue, G4double yvalue,
-                  G4double weight = 1.0);
-    G4bool FillP2(G4int id,
-                  G4double xvalue, G4double yvalue, G4double zvalue,
+    G4bool FillP1(G4int id, G4double xvalue, G4double yvalue, G4double weight = 1.0);
+    G4bool FillP2(G4int id, G4double xvalue, G4double yvalue, G4double zvalue,
                   G4double weight = 1.0);
 
     // Methods to fill ntuples
@@ -386,7 +300,7 @@ class G4VAnalysisManager
     // When this option is enabled, only the histograms/profiles marked as activated
     // are returned, filled or saved on file.
     // No warning is issued when Get or Fill is called on inactive histogram.
-    void   SetActivation(G4bool activation);
+    void SetActivation(G4bool activation);
     G4bool GetActivation() const;
 
     // Return false if activation is enabled and there is no object activated,
@@ -439,83 +353,82 @@ class G4VAnalysisManager
 
     // Methods to manipulate histogram, profiles & ntuples additional information
     //
-    void  SetH1Activation(G4bool activation);
-    void  SetH1Activation(G4int id, G4bool activation);
-    void  SetH1Ascii(G4int id, G4bool ascii);
-    void  SetH1Plotting(G4int id, G4bool plotting);
-    void  SetH1FileName(G4int id, const G4String& fileName);
+    void SetH1Activation(G4bool activation);
+    void SetH1Activation(G4int id, G4bool activation);
+    void SetH1Ascii(G4int id, G4bool ascii);
+    void SetH1Plotting(G4int id, G4bool plotting);
+    void SetH1FileName(G4int id, const G4String& fileName);
     //
-    void  SetH2Activation(G4bool activation);
-    void  SetH2Activation(G4int id, G4bool activation);
-    void  SetH2Ascii(G4int id, G4bool ascii);
-    void  SetH2Plotting(G4int id, G4bool plotting);
-    void  SetH2FileName(G4int id, const G4String& fileName);
+    void SetH2Activation(G4bool activation);
+    void SetH2Activation(G4int id, G4bool activation);
+    void SetH2Ascii(G4int id, G4bool ascii);
+    void SetH2Plotting(G4int id, G4bool plotting);
+    void SetH2FileName(G4int id, const G4String& fileName);
     //
-    void  SetH3Activation(G4bool activation);
-    void  SetH3Activation(G4int id, G4bool activation);
-    void  SetH3Ascii(G4int id, G4bool ascii);
-    void  SetH3Plotting(G4int id, G4bool plotting);
-    void  SetH3FileName(G4int id, const G4String& fileName);
+    void SetH3Activation(G4bool activation);
+    void SetH3Activation(G4int id, G4bool activation);
+    void SetH3Ascii(G4int id, G4bool ascii);
+    void SetH3Plotting(G4int id, G4bool plotting);
+    void SetH3FileName(G4int id, const G4String& fileName);
     //
-    void  SetP1Activation(G4bool activation);
-    void  SetP1Activation(G4int id, G4bool activation);
-    void  SetP1Ascii(G4int id, G4bool ascii);
-    void  SetP1Plotting(G4int id, G4bool plotting);
-    void  SetP1FileName(G4int id, const G4String& fileName);
+    void SetP1Activation(G4bool activation);
+    void SetP1Activation(G4int id, G4bool activation);
+    void SetP1Ascii(G4int id, G4bool ascii);
+    void SetP1Plotting(G4int id, G4bool plotting);
+    void SetP1FileName(G4int id, const G4String& fileName);
     //
-    void  SetP2Activation(G4bool activation);
-    void  SetP2Activation(G4int id, G4bool activation);
-    void  SetP2Ascii(G4int id, G4bool ascii);
-    void  SetP2Plotting(G4int id, G4bool plotting);
-    void  SetP2FileName(G4int id, const G4String& fileName);
+    void SetP2Activation(G4bool activation);
+    void SetP2Activation(G4int id, G4bool activation);
+    void SetP2Ascii(G4int id, G4bool ascii);
+    void SetP2Plotting(G4int id, G4bool plotting);
+    void SetP2FileName(G4int id, const G4String& fileName);
     //
-    void  SetNtupleActivation(G4bool activation);
-    void  SetNtupleActivation(G4int id, G4bool activation);
-    void  SetNtupleFileName(const G4String& fileName);
-    void  SetNtupleFileName(G4int id, const G4String& fileName);
-
+    void SetNtupleActivation(G4bool activation);
+    void SetNtupleActivation(G4int id, G4bool activation);
+    void SetNtupleFileName(const G4String& fileName);
+    void SetNtupleFileName(G4int id, const G4String& fileName);
 
     // Access to histogram & profiles parameters
     //
-    G4int    GetH1Nbins(G4int id) const;
+    G4int GetH1Nbins(G4int id) const;
     G4double GetH1Xmin(G4int id) const;
     G4double GetH1Xmax(G4int id) const;
     G4double GetH1Width(G4int id) const;
     //
-    G4int    GetH2Nxbins(G4int id) const;
+    G4int GetH2Nxbins(G4int id) const;
     G4double GetH2Xmin(G4int id) const;
     G4double GetH2Xmax(G4int id) const;
     G4double GetH2XWidth(G4int id) const;
-    G4int    GetH2Nybins(G4int id) const;
+    G4int GetH2Nybins(G4int id) const;
     G4double GetH2Ymin(G4int id) const;
     G4double GetH2Ymax(G4int id) const;
     G4double GetH2YWidth(G4int id) const;
     //
-    G4int    GetH3Nxbins(G4int id) const;
+    G4int GetH3Nxbins(G4int id) const;
     G4double GetH3Xmin(G4int id) const;
     G4double GetH3Xmax(G4int id) const;
     G4double GetH3XWidth(G4int id) const;
-    G4int    GetH3Nybins(G4int id) const;
+    G4int GetH3Nybins(G4int id) const;
     G4double GetH3Ymin(G4int id) const;
     G4double GetH3Ymax(G4int id) const;
     G4double GetH3YWidth(G4int id) const;
-    G4int    GetH3Nzbins(G4int id) const;
+    G4int GetH3Nzbins(G4int id) const;
     G4double GetH3Zmin(G4int id) const;
     G4double GetH3Zmax(G4int id) const;
     G4double GetH3ZWidth(G4int id) const;
     //
-    G4int    GetP1Nbins(G4int id) const;
+    G4int GetP1Nbins(G4int id) const;
     G4double GetP1Xmin(G4int id) const;
     G4double GetP1Xmax(G4int id) const;
     G4double GetP1XWidth(G4int id) const;
     G4double GetP1Ymin(G4int id) const;
     G4double GetP1Ymax(G4int id) const;
     //
-    G4int    GetP2Nxbins(G4int id) const;
+    G4int GetP2Nxbins(G4int id) const;
     G4double GetP2Xmin(G4int id) const;
     G4double GetP2Xmax(G4int id) const;
     G4double GetP2XWidth(G4int id) const;
-    G4int    GetP2Nybins(G4int id) const;
+    G4int GetP2Nybins(G4int id) const;
     G4double GetP2Ymin(G4int id) const;
     G4double GetP2Ymax(G4int id) const;
     G4double GetP2YWidth(G4int id) const;
@@ -526,42 +439,42 @@ class G4VAnalysisManager
     //
     G4String GetH1Name(G4int id) const;
     G4double GetH1Unit(G4int id) const;
-    G4bool   GetH1Activation(G4int id) const;
-    G4bool   GetH1Ascii(G4int id) const;
-    G4bool   GetH1Plotting(G4int id) const;
+    G4bool GetH1Activation(G4int id) const;
+    G4bool GetH1Ascii(G4int id) const;
+    G4bool GetH1Plotting(G4int id) const;
     G4String GetH1FileName(G4int id) const;
     //
     G4String GetH2Name(G4int id) const;
     G4double GetH2XUnit(G4int id) const;
     G4double GetH2YUnit(G4int id) const;
-    G4bool   GetH2Activation(G4int id) const;
-    G4bool   GetH2Ascii(G4int id) const;
-    G4bool   GetH2Plotting(G4int id) const;
+    G4bool GetH2Activation(G4int id) const;
+    G4bool GetH2Ascii(G4int id) const;
+    G4bool GetH2Plotting(G4int id) const;
     //
     G4String GetH3Name(G4int id) const;
     G4double GetH3XUnit(G4int id) const;
     G4double GetH3YUnit(G4int id) const;
     G4double GetH3ZUnit(G4int id) const;
-    G4bool   GetH3Activation(G4int id) const;
-    G4bool   GetH3Ascii(G4int id) const;
-    G4bool   GetH3Plotting(G4int id) const;
+    G4bool GetH3Activation(G4int id) const;
+    G4bool GetH3Ascii(G4int id) const;
+    G4bool GetH3Plotting(G4int id) const;
     //
     G4String GetP1Name(G4int id) const;
     G4double GetP1XUnit(G4int id) const;
     G4double GetP1YUnit(G4int id) const;
-    G4bool   GetP1Activation(G4int id) const;
-    G4bool   GetP1Ascii(G4int id) const;
-    G4bool   GetP1Plotting(G4int id) const;
+    G4bool GetP1Activation(G4int id) const;
+    G4bool GetP1Ascii(G4int id) const;
+    G4bool GetP1Plotting(G4int id) const;
     //
     G4String GetP2Name(G4int id) const;
     G4double GetP2XUnit(G4int id) const;
     G4double GetP2YUnit(G4int id) const;
     G4double GetP2ZUnit(G4int id) const;
-    G4bool   GetP2Activation(G4int id) const;
-    G4bool   GetP2Ascii(G4int id) const;
-    G4bool   GetP2Plotting(G4int id) const;
+    G4bool GetP2Activation(G4int id) const;
+    G4bool GetP2Ascii(G4int id) const;
+    G4bool GetP2Plotting(G4int id) const;
     //
-    G4bool   GetNtupleActivation(G4int id) const;
+    G4bool GetNtupleActivation(G4int id) const;
     G4String GetNtupleFileName(G4int id) const;
 
     // Setters for histogram & profiles attributes for plotting
@@ -607,50 +520,50 @@ class G4VAnalysisManager
     G4String GetH1Title(G4int id) const;
     G4String GetH1XAxisTitle(G4int id) const;
     G4String GetH1YAxisTitle(G4int id) const;
-    G4bool   GetH1XAxisIsLog(G4int id) const;
-    G4bool   GetH1YAxisIsLog(G4int id) const;
+    G4bool GetH1XAxisIsLog(G4int id) const;
+    G4bool GetH1YAxisIsLog(G4int id) const;
     //
     G4String GetH2Title(G4int id) const;
     G4String GetH2XAxisTitle(G4int id) const;
     G4String GetH2YAxisTitle(G4int id) const;
     G4String GetH2ZAxisTitle(G4int id) const;
-    G4bool   GetH2XAxisIsLog(G4int id) const;
-    G4bool   GetH2YAxisIsLog(G4int id) const;
-    G4bool   GetH2ZAxisIsLog(G4int id) const;
+    G4bool GetH2XAxisIsLog(G4int id) const;
+    G4bool GetH2YAxisIsLog(G4int id) const;
+    G4bool GetH2ZAxisIsLog(G4int id) const;
     //
     G4String GetH3Title(G4int id) const;
     G4String GetH3XAxisTitle(G4int id) const;
     G4String GetH3YAxisTitle(G4int id) const;
     G4String GetH3ZAxisTitle(G4int id) const;
-    G4bool   GetH3XAxisIsLog(G4int id) const;
-    G4bool   GetH3YAxisIsLog(G4int id) const;
-    G4bool   GetH3ZAxisIsLog(G4int id) const;
+    G4bool GetH3XAxisIsLog(G4int id) const;
+    G4bool GetH3YAxisIsLog(G4int id) const;
+    G4bool GetH3ZAxisIsLog(G4int id) const;
     //
     G4String GetP1Title(G4int id) const;
     G4String GetP1XAxisTitle(G4int id) const;
     G4String GetP1YAxisTitle(G4int id) const;
-    G4bool   GetP1XAxisIsLog(G4int id) const;
-    G4bool   GetP1YAxisIsLog(G4int id) const;
+    G4bool GetP1XAxisIsLog(G4int id) const;
+    G4bool GetP1YAxisIsLog(G4int id) const;
     //
     G4String GetP2Title(G4int id) const;
     G4String GetP2XAxisTitle(G4int id) const;
     G4String GetP2YAxisTitle(G4int id) const;
     G4String GetP2ZAxisTitle(G4int id) const;
-    G4bool   GetP2XAxisIsLog(G4int id) const;
-    G4bool   GetP2YAxisIsLog(G4int id) const;
-    G4bool   GetP2ZAxisIsLog(G4int id) const;
+    G4bool GetP2XAxisIsLog(G4int id) const;
+    G4bool GetP2YAxisIsLog(G4int id) const;
+    G4bool GetP2ZAxisIsLog(G4int id) const;
 
     // New methods for deleting selected objects
     //
-    G4bool  DeleteH1(G4int id, G4bool keepSetting = false);
-    G4bool  DeleteH2(G4int id, G4bool keepSetting = false);
-    G4bool  DeleteH3(G4int id, G4bool keepSetting = false);
-    G4bool  DeleteP1(G4int id, G4bool keepSetting = false);
-    G4bool  DeleteP2(G4int id, G4bool keepSetting = false);
-    G4bool  DeleteNtuple(G4int id, G4bool clear = false);
+    G4bool DeleteH1(G4int id, G4bool keepSetting = false);
+    G4bool DeleteH2(G4int id, G4bool keepSetting = false);
+    G4bool DeleteH3(G4int id, G4bool keepSetting = false);
+    G4bool DeleteP1(G4int id, G4bool keepSetting = false);
+    G4bool DeleteP2(G4int id, G4bool keepSetting = false);
+    G4bool DeleteNtuple(G4int id, G4bool clear = false);
 
     // Verbosity
-    void  SetVerboseLevel(G4int verboseLevel);
+    void SetVerboseLevel(G4int verboseLevel);
     G4int GetVerboseLevel() const;
 
     // The manager type (starts with an uppercase letter)
@@ -659,6 +572,7 @@ class G4VAnalysisManager
     G4String GetFileType() const;
 
   protected:
+
     G4VAnalysisManager(const G4String& type);
     virtual ~G4VAnalysisManager();
 
@@ -677,11 +591,8 @@ class G4VAnalysisManager
     virtual G4String GetDefaultFileTypeImpl() const;
 
     // Methods
-    void Message(G4int level,
-                 const G4String& action,
-                 const G4String& objectType,
-                 const G4String& objectName = "",
-                 G4bool success = true) const;
+    void Message(G4int level, const G4String& action, const G4String& objectType,
+                 const G4String& objectName = "", G4bool success = true) const;
 
     // Methods
     void SetH1Manager(G4VTBaseHnManager<kDim1>* h1Manager);
@@ -694,38 +605,39 @@ class G4VAnalysisManager
     void SetFileManager(std::shared_ptr<G4VFileManager> fileManager);
 
     // Methods to manipulate additional information
-    G4bool  WriteAscii(const G4String& fileName);
+    G4bool WriteAscii(const G4String& fileName);
 
     // File manager access
     virtual std::shared_ptr<G4VFileManager> GetFileManager(const G4String& fileName);
 
     // Data members
     G4AnalysisManagerState fState;
-    std::shared_ptr<G4VFileManager>  fVFileManager { nullptr };
-    std::shared_ptr<G4NtupleBookingManager> fNtupleBookingManager { nullptr };
-    std::shared_ptr<G4VNtupleManager> fVNtupleManager { nullptr };
-    std::shared_ptr<G4VNtupleFileManager> fVNtupleFileManager { nullptr };
+    std::shared_ptr<G4VFileManager> fVFileManager{nullptr};
+    std::shared_ptr<G4NtupleBookingManager> fNtupleBookingManager{nullptr};
+    std::shared_ptr<G4VNtupleManager> fVNtupleManager{nullptr};
+    std::shared_ptr<G4VNtupleFileManager> fVNtupleFileManager{nullptr};
 
   private:
+
     // Method invoked from UI commands
     G4bool WriteFromUI();
     G4bool CloseFileFromUI(G4bool reset = true);
     G4bool ResetFromUI();
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4VAnalysisManager" };
+    static constexpr std::string_view fkClass{"G4VAnalysisManager"};
 
     // Static data members
-    inline static G4VAnalysisManager* fgMasterInstance { nullptr };
-       // For registering worker managers needed in "FromUI" functions
+    inline static G4VAnalysisManager* fgMasterInstance{nullptr};
+    // For registering worker managers needed in "FromUI" functions
 
     // Data members
-    std::unique_ptr<G4AnalysisMessenger>  fMessenger;
-    std::shared_ptr<G4HnManager>   fH1HnManager { nullptr };
-    std::shared_ptr<G4HnManager>   fH2HnManager { nullptr };
-    std::shared_ptr<G4HnManager>   fH3HnManager { nullptr };
-    std::shared_ptr<G4HnManager>   fP1HnManager { nullptr };
-    std::shared_ptr<G4HnManager>   fP2HnManager { nullptr };
+    std::unique_ptr<G4AnalysisMessenger> fMessenger;
+    std::shared_ptr<G4HnManager> fH1HnManager{nullptr};
+    std::shared_ptr<G4HnManager> fH2HnManager{nullptr};
+    std::shared_ptr<G4HnManager> fH3HnManager{nullptr};
+    std::shared_ptr<G4HnManager> fP1HnManager{nullptr};
+    std::shared_ptr<G4HnManager> fP2HnManager{nullptr};
     std::unique_ptr<G4VTBaseHnManager<kDim1>> fVH1Manager;
     std::unique_ptr<G4VTBaseHnManager<kDim2>> fVH2Manager;
     std::unique_ptr<G4VTBaseHnManager<kDim3>> fVH3Manager;
@@ -733,7 +645,7 @@ class G4VAnalysisManager
     std::unique_ptr<G4VTBaseHnManager<kDim3>> fVP2Manager;
 
     std::vector<G4VAnalysisManager*> fWorkerManagers;
-       // Used only in "FromUI" functions
+    // Used only in "FromUI" functions
 };
 
 // inline functions

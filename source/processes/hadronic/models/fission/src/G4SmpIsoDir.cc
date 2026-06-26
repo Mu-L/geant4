@@ -55,33 +55,34 @@
 //
 //
 
-#include <cmath>
-#include "G4fissionEvent.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4fissionEvent.hh"
 
-void G4fissionEvent::G4SmpIsoDir(G4double* cosdiru, G4double* cosdirv, G4double* cosdirw) {
+#include <cmath>
 
-/*
-  Description
-    determine the 3 direction cosines of a particle emitted isotropically
-*/
+void G4fissionEvent::G4SmpIsoDir(G4double* cosdiru, G4double* cosdirv, G4double* cosdirw)
+{
+  /*
+    Description
+      determine the 3 direction cosines of a particle emitted isotropically
+  */
 
-/*
-  Input
-  Output
-            - 3 components of the direction cosines
-              (cosdiru, cosdirv, cosdirw)
-*/
+  /*
+    Input
+    Output
+              - 3 components of the direction cosines
+                (cosdiru, cosdirv, cosdirw)
+  */
 
-   G4double cospolang, sinpolang, phi;
+  G4double cospolang, sinpolang, phi;
 
-   // Choose emission angle isotropically, then select polar angle direction cosine
-   cospolang = 1.-2.*fisslibrng();
-   sinpolang = std::sqrt(1. - cospolang*cospolang);
+  // Choose emission angle isotropically, then select polar angle direction cosine
+  cospolang = 1. - 2. * fisslibrng();
+  sinpolang = std::sqrt(1. - cospolang * cospolang);
 
-   // Select an azimuthal angle uniformly on (0,2*pi)
-   phi = twopi*fisslibrng();
-   *cosdiru = sinpolang * std::cos(phi);
-   *cosdirv = sinpolang * std::sin(phi);
-   *cosdirw = cospolang;
+  // Select an azimuthal angle uniformly on (0,2*pi)
+  phi = twopi * fisslibrng();
+  *cosdiru = sinpolang * std::cos(phi);
+  *cosdirv = sinpolang * std::sin(phi);
+  *cosdirw = cospolang;
 }

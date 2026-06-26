@@ -56,9 +56,8 @@
 static const G4double sqrte = std::sqrt(std::exp(1.));
 static const G4double PowSat = -0.88;
 
-G4GammaConversionToMuons::G4GammaConversionToMuons(const G4String& processName,
-						   G4ProcessType type)
-  : G4VDiscreteProcess (processName, type),
+G4GammaConversionToMuons::G4GammaConversionToMuons(const G4String& processName, G4ProcessType type)
+  : G4VDiscreteProcess(processName, type),
     Mmuon(G4MuonPlus::MuonPlus()->GetPDGMass()),
     Rc(CLHEP::elm_coupling / Mmuon),
     LimitEnergy(5. * Mmuon),
@@ -95,13 +94,15 @@ void G4GammaConversionToMuons::BuildPhysicsTable(const G4ParticleDefinition& p)
 
   auto table = G4Material::GetMaterialTable();
   std::size_t nelm = 0;
-  for (auto const& mat : *table) {
+  for (auto const& mat : *table)
+  {
     std::size_t n = mat->GetNumberOfElements();
     nelm = std::max(nelm, n);
   }
   temp.resize(nelm, 0);
 
-  if (Energy5DLimit > 0.0 && nullptr != f5Dmodel) {
+  if (Energy5DLimit > 0.0 && nullptr != f5Dmodel)
+  {
     f5Dmodel = new G4BetheHeitler5DModel();
     f5Dmodel->SetLeptonPair(theMuonPlus, theMuonMinus);
     const std::size_t numElems = G4ProductionCutsTable::GetProductionCutsTable()->GetTableSize();
@@ -125,66 +126,71 @@ G4double G4GammaConversionToMuons::GetMeanFreePath(const G4Track& aTrack, G4doub
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double 
-G4GammaConversionToMuons::ComputeMeanFreePath(G4double GammaEnergy,
-                                              const G4Material* aMaterial)
+G4double G4GammaConversionToMuons::ComputeMeanFreePath(G4double GammaEnergy,
+                                                       const G4Material* aMaterial)
 
 // computes and returns the photon mean free path in GEANT4 internal units
 {
-  if(GammaEnergy <= LowestEnergyLimit) { return DBL_MAX; }
+  if (GammaEnergy <= LowestEnergyLimit)
+  {
+    return DBL_MAX;
+  }
   const G4ElementVector* theElementVector = aMaterial->GetElementVector();
   const G4double* NbOfAtomsPerVolume = aMaterial->GetVecNbOfAtomsPerVolume();
 
   G4double SIGMA = 0.0;
-  G4double fact  = 1.0;
+  G4double fact = 1.0;
   G4double e = GammaEnergy;
   // low energy approximation as in Bethe-Heitler model
-  if(e < LimitEnergy) {
-    G4double y = (e - LowestEnergyLimit)/(LimitEnergy - LowestEnergyLimit);
-    fact = y*y;
-    e = LimitEnergy;
-  } 
-
-  for ( std::size_t i=0 ; i < aMaterial->GetNumberOfElements(); ++i)
+  if (e < LimitEnergy)
   {
-    SIGMA += NbOfAtomsPerVolume[i] * fact *
-      ComputeCrossSectionPerAtom(e, (*theElementVector)[i]->GetZasInt());
+    G4double y = (e - LowestEnergyLimit) / (LimitEnergy - LowestEnergyLimit);
+    fact = y * y;
+    e = LimitEnergy;
   }
-  return (SIGMA > 0.0) ? 1./SIGMA : DBL_MAX;
+
+  for (std::size_t i = 0; i < aMaterial->GetNumberOfElements(); ++i)
+  {
+    SIGMA += NbOfAtomsPerVolume[i] * fact
+             * ComputeCrossSectionPerAtom(e, (*theElementVector)[i]->GetZasInt());
+  }
+  return (SIGMA > 0.0) ? 1. / SIGMA : DBL_MAX;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4GammaConversionToMuons::GetCrossSectionPerAtom(
-                                   const G4DynamicParticle* aDynamicGamma,
-                                   const G4Element* anElement)
+G4double G4GammaConversionToMuons::GetCrossSectionPerAtom(const G4DynamicParticle* aDynamicGamma,
+                                                          const G4Element* anElement)
 
 // gives the total cross section per atom in GEANT4 internal units
 {
-   return ComputeCrossSectionPerAtom(aDynamicGamma->GetKineticEnergy(),
-                                     anElement->GetZasInt());
+  return ComputeCrossSectionPerAtom(aDynamicGamma->GetKineticEnergy(), anElement->GetZasInt());
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-G4double G4GammaConversionToMuons::ComputeCrossSectionPerAtom(
-                         G4double Egam, G4int Z)
-			 
+G4double G4GammaConversionToMuons::ComputeCrossSectionPerAtom(G4double Egam, G4int Z)
+
 // Calculates the microscopic cross section in GEANT4 internal units.
 // Total cross section parametrisation from H.Burkhardt
 // It gives a good description at any energy (from 0 to 10**21 eV)
-{ 
-  if(Egam <= LowestEnergyLimit) { return 0.0; }
+{
+  if (Egam <= LowestEnergyLimit)
+  {
+    return 0.0;
+  }
 
   G4NistManager* nist = G4NistManager::Instance();
 
   G4double PowThres, Ecor, B, Dn, Zthird, Winfty, WMedAppr, Wsatur, sigfac;
 
-  if (Z == 1) {  // special case of Hydrogen
+  if (Z == 1)
+  {  // special case of Hydrogen
     B = 202.4;
     Dn = 1.49;
   }
-  else {
+  else
+  {
     B = 183.;
     Dn = 1.54 * nist->GetA27(Z);
   }
@@ -213,7 +219,8 @@ void G4GammaConversionToMuons::SetCrossSecFactor(G4double fac)
 {
   if (fac < 0.0) return;
   CrossSecFactor = fac;
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "The cross section for GammaConversionToMuons is artificially "
            << "increased by the CrossSecFactor=" << CrossSecFactor << G4endl;
   }
@@ -221,9 +228,8 @@ void G4GammaConversionToMuons::SetCrossSecFactor(G4double fac)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-G4VParticleChange* G4GammaConversionToMuons::PostStepDoIt(
-                                                        const G4Track& aTrack,
-                                                        const G4Step&  aStep)
+G4VParticleChange* G4GammaConversionToMuons::PostStepDoIt(const G4Track& aTrack,
+                                                          const G4Step& aStep)
 //
 // generation of gamma->mu+mu-
 //
@@ -234,23 +240,28 @@ G4VParticleChange* G4GammaConversionToMuons::PostStepDoIt(
   // current Gamma energy and direction, return if energy too low
   const G4DynamicParticle* aDynamicGamma = aTrack.GetDynamicParticle();
   G4double Egam = aDynamicGamma->GetKineticEnergy();
-  if (Egam <= LowestEnergyLimit) {
-    return G4VDiscreteProcess::PostStepDoIt(aTrack,aStep);
+  if (Egam <= LowestEnergyLimit)
+  {
+    return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
   }
   //
   // Kill the incident photon
   //
-  aParticleChange.ProposeMomentumDirection( 0., 0., 0. ) ;
-  aParticleChange.ProposeEnergy( 0. ) ;
-  aParticleChange.ProposeTrackStatus( fStopAndKill ) ;
+  aParticleChange.ProposeMomentumDirection(0., 0., 0.);
+  aParticleChange.ProposeEnergy(0.);
+  aParticleChange.ProposeTrackStatus(fStopAndKill);
 
-  if (Egam <= Energy5DLimit) {
+  if (Egam <= Energy5DLimit)
+  {
     std::vector<G4DynamicParticle*> fvect;
-    f5Dmodel->SampleSecondaries(&fvect, aTrack.GetMaterialCutsCouple(), 
-				aTrack.GetDynamicParticle(), 0.0, DBL_MAX);
-    for(auto dp : fvect) { aParticleChange.AddSecondary(dp); }
-    return G4VDiscreteProcess::PostStepDoIt(aTrack,aStep);
-  }  
+    f5Dmodel->SampleSecondaries(&fvect, aTrack.GetMaterialCutsCouple(), aTrack.GetDynamicParticle(),
+                                0.0, DBL_MAX);
+    for (auto dp : fvect)
+    {
+      aParticleChange.AddSecondary(dp);
+    }
+    return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
+  }
 
   G4ParticleMomentum GammaDirection = aDynamicGamma->GetMomentumDirection();
 
@@ -262,11 +273,13 @@ G4VParticleChange* G4GammaConversionToMuons::PostStepDoIt(
   G4double B, Dn;
   G4double A027 = nist->GetA27(Z);
 
-  if (Z == 1) {  // special case of Hydrogen
+  if (Z == 1)
+  {  // special case of Hydrogen
     B = 202.4;
     Dn = 1.49;
   }
-  else {
+  else
+  {
     B = 183.;
     Dn = 1.54 * A027;
   }
@@ -295,9 +308,11 @@ G4VParticleChange* G4GammaConversionToMuons::PostStepDoIt(
   const G4int nmax = 1000;
 
   // sampling for Egam > LimitEnergy
-  if (xmin < 0.5) {
+  if (xmin < 0.5)
+  {
     G4double result, W;
-    do {
+    do
+    {
       xPlus = xmin + G4UniformRand() * (xmax - xmin);
       xMinus = 1. - xPlus;
       xPM = xPlus * xMinus;
@@ -305,12 +320,16 @@ G4VParticleChange* G4GammaConversionToMuons::PostStepDoIt(
       W = Winfty * (1. + Ds2 * del / Mmuon) / (1. + sBZ * del);
       G4double xxp = 1. - 4. / 3. * xPM;  // the main xPlus dependence
       result = (xxp > 0.) ? xxp * G4Log(W) * LogWmaxInv : 0.0;
-      if (result > 1.) {
+      if (result > 1.)
+      {
         G4cout << "G4GammaConversionToMuons::PostStepDoIt WARNING:"
                << " in dSigxPlusGen, result=" << result << " > 1" << G4endl;
       }
       ++nn;
-      if(nn >= nmax) { break; }
+      if (nn >= nmax)
+      {
+        break;
+      }
     }
     // Loop checking, 07-Aug-2015, Vladimir Ivanchenko
     while (G4UniformRand() > result);
@@ -324,92 +343,114 @@ G4VParticleChange* G4GammaConversionToMuons::PostStepDoIt(
   G4double a3 = (GammaMuonInv / (2. * xPM));
   G4double a33 = a3 * a3;
   G4double f1;
-  G4double b1  = 1./(4.*C1Num2);
-  G4double b3  = b1*b1*b1;
+  G4double b1 = 1. / (4. * C1Num2);
+  G4double b3 = b1 * b1 * b1;
   G4double a21 = a33 + b1;
-  
-  G4double f1_max=-(1.-xPM)*(2.*b1+(a21+a33)*G4Log(a33/a21))/(2*b3);  
 
-  G4double thetaPlus,thetaMinus,phiHalf; // final angular variables
+  G4double f1_max = -(1. - xPM) * (2. * b1 + (a21 + a33) * G4Log(a33 / a21)) / (2 * b3);
+
+  G4double thetaPlus, thetaMinus, phiHalf;  // final angular variables
   nn = 0;
   // t, psi, rho generation start  (while angle < pi)
-  do {
-    //generate t by the rejection method
-    do { 
+  do
+  {
+    // generate t by the rejection method
+    do
+    {
       ++nn;
-      t=G4UniformRand();
-      G4double a34=a33/(t*t);
+      t = G4UniformRand();
+      G4double a34 = a33 / (t * t);
       G4double a22 = a34 + b1;
-      if(std::abs(b1)<0.0001*a34) {
+      if (std::abs(b1) < 0.0001 * a34)
+      {
         // special case of a34=a22 because of logarithm accuracy
-        f1=(1.-2.*xPM+4.*xPM*t*(1.-t))/(12.*a34*a34*a34*a34);
+        f1 = (1. - 2. * xPM + 4. * xPM * t * (1. - t)) / (12. * a34 * a34 * a34 * a34);
       }
-      else {
-        f1=-(1.-2.*xPM+4.*xPM*t*(1.-t))*(2.*b1+(a22+a34)*G4Log(a34/a22))/(2*b3);
+      else
+      {
+        f1 = -(1. - 2. * xPM + 4. * xPM * t * (1. - t)) * (2. * b1 + (a22 + a34) * G4Log(a34 / a22))
+             / (2 * b3);
       }
-      if (f1 < 0.0 || f1 > f1_max) {  // should never happend
+      if (f1 < 0.0 || f1 > f1_max)
+      {  // should never happend
         G4cout << "G4GammaConversionToMuons::PostStepDoIt WARNING:"
-        << "outside allowed range f1=" << f1
-        << " is set to zero, a34 = "<< a34 << " a22 = "<<a22<<"."
-        << G4endl;
+               << "outside allowed range f1=" << f1 << " is set to zero, a34 = " << a34
+               << " a22 = " << a22 << "." << G4endl;
         f1 = 0.0;
       }
-      if(nn > nmax) { break; }
-      // Loop checking, 07-Aug-2015, Vladimir Ivanchenko  
-    } while ( G4UniformRand()*f1_max > f1);
+      if (nn > nmax)
+      {
+        break;
+      }
+      // Loop checking, 07-Aug-2015, Vladimir Ivanchenko
+    } while (G4UniformRand() * f1_max > f1);
     // generate psi by the rejection method
-    G4double f2_max=1.-2.*xPM*(1.-4.*t*(1.-t));
+    G4double f2_max = 1. - 2. * xPM * (1. - 4. * t * (1. - t));
     // long version
     G4double f2;
-    do { 
+    do
+    {
       ++nn;
-      psi=twopi*G4UniformRand();
-      f2=1.-2.*xPM+4.*xPM*t*(1.-t)*(1.+std::cos(2.*psi));
-      if(f2<0 || f2> f2_max) { // should never happend
+      psi = twopi * G4UniformRand();
+      f2 = 1. - 2. * xPM + 4. * xPM * t * (1. - t) * (1. + std::cos(2. * psi));
+      if (f2 < 0 || f2 > f2_max)
+      {  // should never happend
         G4cout << "G4GammaConversionToMuons::PostStepDoIt WARNING:"
                << "outside allowed range f2=" << f2 << " is set to zero" << G4endl;
         f2 = 0.0;
       }
-      if(nn >= nmax) { break; }
+      if (nn >= nmax)
+      {
+        break;
+      }
       // Loop checking, 07-Aug-2015, Vladimir Ivanchenko
-    } while ( G4UniformRand()*f2_max > f2);
+    } while (G4UniformRand() * f2_max > f2);
 
     // generate rho by direct transformation
-    G4double C2Term1=GammaMuonInv/(2.*xPM*t);
-    G4double C22 = C2Term1*C2Term1+C2Term2*C2Term2;
-    G4double C2=4.*C22*C22/std::sqrt(xPM);
-    G4double rhomax=(1./t-1.)*1.9/A027;
-    G4double beta=G4Log( (C2+rhomax*rhomax*rhomax*rhomax)/C2 );
-    rho=G4Exp(G4Log(C2 *( G4Exp(beta*G4UniformRand())-1. ))*0.25);
+    G4double C2Term1 = GammaMuonInv / (2. * xPM * t);
+    G4double C22 = C2Term1 * C2Term1 + C2Term2 * C2Term2;
+    G4double C2 = 4. * C22 * C22 / std::sqrt(xPM);
+    G4double rhomax = (1. / t - 1.) * 1.9 / A027;
+    G4double beta = G4Log((C2 + rhomax * rhomax * rhomax * rhomax) / C2);
+    rho = G4Exp(G4Log(C2 * (G4Exp(beta * G4UniformRand()) - 1.)) * 0.25);
 
-    //now get from t and psi the kinematical variables
-    G4double u=std::sqrt(1./t-1.);
-    G4double xiHalf=0.5*rho*std::cos(psi);
-    phiHalf=0.5*rho/u*std::sin(psi);
+    // now get from t and psi the kinematical variables
+    G4double u = std::sqrt(1. / t - 1.);
+    G4double xiHalf = 0.5 * rho * std::cos(psi);
+    phiHalf = 0.5 * rho / u * std::sin(psi);
 
-    thetaPlus =GammaMuonInv*(u+xiHalf)/xPlus;
-    thetaMinus=GammaMuonInv*(u-xiHalf)/xMinus;
+    thetaPlus = GammaMuonInv * (u + xiHalf) / xPlus;
+    thetaMinus = GammaMuonInv * (u - xiHalf) / xMinus;
 
     // protection against infinite loop
-    if(nn > nmax) {
-      if(std::abs(thetaPlus)>pi) { thetaPlus = 0.0; }
-      if(std::abs(thetaMinus)>pi) { thetaMinus = 0.0; }
+    if (nn > nmax)
+    {
+      if (std::abs(thetaPlus) > pi)
+      {
+        thetaPlus = 0.0;
+      }
+      if (std::abs(thetaMinus) > pi)
+      {
+        thetaMinus = 0.0;
+      }
     }
 
     // Loop checking, 07-Aug-2015, Vladimir Ivanchenko
-  } while ( std::abs(thetaPlus)>pi || std::abs(thetaMinus) >pi);
+  } while (std::abs(thetaPlus) > pi || std::abs(thetaMinus) > pi);
 
   // now construct the vectors
   // azimuthal symmetry, take phi0 at random between 0 and 2 pi
-  G4double phi0=twopi*G4UniformRand(); 
-  G4double EPlus=xPlus*Egam;
-  G4double EMinus=xMinus*Egam;
+  G4double phi0 = twopi * G4UniformRand();
+  G4double EPlus = xPlus * Egam;
+  G4double EMinus = xMinus * Egam;
 
   // mu+ mu- directions for gamma in z-direction
-  G4ThreeVector MuPlusDirection  ( std::sin(thetaPlus) *std::cos(phi0+phiHalf),
-                   std::sin(thetaPlus)  *std::sin(phi0+phiHalf), std::cos(thetaPlus) );
-  G4ThreeVector MuMinusDirection (-std::sin(thetaMinus)*std::cos(phi0-phiHalf),
-                  -std::sin(thetaMinus) *std::sin(phi0-phiHalf), std::cos(thetaMinus) );
+  G4ThreeVector MuPlusDirection(std::sin(thetaPlus) * std::cos(phi0 + phiHalf),
+                                std::sin(thetaPlus) * std::sin(phi0 + phiHalf),
+                                std::cos(thetaPlus));
+  G4ThreeVector MuMinusDirection(-std::sin(thetaMinus) * std::cos(phi0 - phiHalf),
+                                 -std::sin(thetaMinus) * std::sin(phi0 - phiHalf),
+                                 std::cos(thetaMinus));
   // rotate to actual gamma direction
   MuPlusDirection.rotateUz(GammaDirection);
   MuMinusDirection.rotateUz(GammaDirection);
@@ -421,34 +462,37 @@ G4VParticleChange* G4GammaConversionToMuons::PostStepDoIt(
   auto aParticle2 = new G4DynamicParticle(theMuonMinus, MuMinusDirection, EMinus - Mmuon);
   aParticleChange.AddSecondary(aParticle2);
   //  Reset NbOfInteractionLengthLeft and return aParticleChange
-  return G4VDiscreteProcess::PostStepDoIt( aTrack, aStep );
+  return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-const G4Element* G4GammaConversionToMuons::SelectRandomAtom(
-		  const G4DynamicParticle* aDynamicGamma,
-		  const G4Material* aMaterial)
+const G4Element* G4GammaConversionToMuons::SelectRandomAtom(const G4DynamicParticle* aDynamicGamma,
+                                                            const G4Material* aMaterial)
 {
   // select randomly 1 element within the material, invoked by PostStepDoIt
 
-  const std::size_t NumberOfElements      = aMaterial->GetNumberOfElements();
+  const std::size_t NumberOfElements = aMaterial->GetNumberOfElements();
   const G4ElementVector* theElementVector = aMaterial->GetElementVector();
   const G4Element* elm = (*theElementVector)[0];
 
-  if (NumberOfElements > 1) {
+  if (NumberOfElements > 1)
+  {
     G4double e = std::max(aDynamicGamma->GetKineticEnergy(), LimitEnergy);
     const G4double* natom = aMaterial->GetVecNbOfAtomsPerVolume();
 
     G4double sum = 0.;
-    for (std::size_t i=0; i<NumberOfElements; ++i) {
+    for (std::size_t i = 0; i < NumberOfElements; ++i)
+    {
       elm = (*theElementVector)[i];
-      sum += natom[i]*ComputeCrossSectionPerAtom(e, elm->GetZasInt());
+      sum += natom[i] * ComputeCrossSectionPerAtom(e, elm->GetZasInt());
       temp[i] = sum;
     }
     sum *= G4UniformRand();
-    for (std::size_t i=0; i<NumberOfElements; ++i) {
-      if(sum <= temp[i]) {
+    for (std::size_t i = 0; i < NumberOfElements; ++i)
+    {
+      if (sum <= temp[i])
+      {
         elm = (*theElementVector)[i];
         break;
       }

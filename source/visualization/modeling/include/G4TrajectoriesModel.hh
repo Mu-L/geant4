@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  26th August 1998.
 //
 // Class Description:
@@ -41,45 +41,40 @@
 
 #include "G4VModel.hh"
 
-#include <vector>
 #include <map>
+#include <vector>
 
 class G4VTrajectory;
 class G4AttDef;
 class G4AttValue;
 
-class G4TrajectoriesModel: public G4VModel {
+class G4TrajectoriesModel : public G4VModel
+{
+  public:  // With description
 
-public: // With description
+    G4TrajectoriesModel();
 
-  G4TrajectoriesModel ();
+    virtual ~G4TrajectoriesModel();
 
-  virtual ~G4TrajectoriesModel ();
+    virtual void DescribeYourselfTo(G4VGraphicsScene&);
+    // The main task of a model is to describe itself to the graphics scene.
 
-  virtual void DescribeYourselfTo (G4VGraphicsScene&);
-  // The main task of a model is to describe itself to the graphics scene.
+    const G4VTrajectory* GetCurrentTrajectory() const { return fpCurrentTrajectory; }
 
-  const G4VTrajectory* GetCurrentTrajectory() const
-  {return fpCurrentTrajectory;}
+    void SetCurrentTrajectory(const G4VTrajectory* pTraj) { fpCurrentTrajectory = pTraj; }
 
-  void SetCurrentTrajectory(const G4VTrajectory* pTraj)
-  {fpCurrentTrajectory = pTraj;}
+    void SetRunID(G4int runID) { fRunID = runID; }
 
-  void SetRunID(G4int runID)
-  {fRunID = runID;}
+    void SetEventID(G4int eventID) { fEventID = eventID; }
 
-  void SetEventID(G4int eventID)
-  {fEventID = eventID;}
+    const std::map<G4String, G4AttDef>* GetAttDefs() const;
+    std::vector<G4AttValue>* CreateCurrentAttValues() const;
 
-  const std::map<G4String,G4AttDef>* GetAttDefs() const;
-  std::vector<G4AttValue>* CreateCurrentAttValues() const;
-  
-private:
+  private:
 
-  const G4VTrajectory* fpCurrentTrajectory;
-  G4int fRunID;
-  G4int fEventID;
-
+    const G4VTrajectory* fpCurrentTrajectory;
+    G4int fRunID;
+    G4int fEventID;
 };
 
 #endif

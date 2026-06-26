@@ -32,10 +32,11 @@
 #include "G4ModelingParameters.hh"
 #include "G4PhysicalVolumeModel.hh"
 
-namespace G4TouchableUtils {
+namespace G4TouchableUtils
+{
 
-  G4PhysicalVolumeModel::TouchableProperties FindTouchableProperties
-  (G4ModelingParameters::PVNameCopyNoPath path);
-  // If the search is not successful properties.fpTouchablePV will be null.
+G4PhysicalVolumeModel::TouchableProperties
+FindTouchableProperties(G4ModelingParameters::PVNameCopyNoPath path);
+// If the search is not successful properties.fpTouchablePV will be null.
 
-}
+}  // namespace G4TouchableUtils

@@ -25,12 +25,12 @@
 //
 // --------------------------------------------------------------------------
 //
-//      GEANT4 source file 
+//      GEANT4 source file
 //
 //      File name:     G4ChargedUnknownParticle.cc
 //
 //      Author:        A.Ribon
-// 
+//
 //      Creation date: August 2024
 //
 //      Description:   This class is similar to G4UnknownParticle,
@@ -44,25 +44,26 @@
 //                     ionisation and multiple scattering.
 //
 //      Modifications:
-//      
+//
 // --------------------------------------------------------------------------
 //
 
 #include "G4ChargedUnknownParticle.hh"
+
 #include "G4ParticleTable.hh"
 #include "G4String.hh"
 #include "G4SystemOfUnits.hh"
 
-
 G4ChargedUnknownParticle* G4ChargedUnknownParticle::theInstance = nullptr;
 
-
-G4ChargedUnknownParticle* G4ChargedUnknownParticle::Definition() {
-  if ( theInstance != nullptr ) return theInstance;
+G4ChargedUnknownParticle* G4ChargedUnknownParticle::Definition()
+{
+  if (theInstance != nullptr) return theInstance;
   const G4String name = "chargedunknown";
   G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
-  G4ParticleDefinition* anInstance = pTable->FindParticle( name );
-  if ( anInstance == nullptr ) {
+  G4ParticleDefinition* anInstance = pTable->FindParticle(name);
+  if (anInstance == nullptr)
+  {
     //    Arguments for constructor are as follows
     //               name             mass          width         charge
     //             2*spin           parity  C-conjugation
@@ -70,25 +71,20 @@ G4ChargedUnknownParticle* G4ChargedUnknownParticle::Definition() {
     //               type    lepton number  baryon number   PDG encoding
     //             stable         lifetime    decay table
     //             shortlived      subType    anti_encoding
-   anInstance = new G4ParticleDefinition(
-	         name,         0.0*MeV,       0.0*MeV,  +1.0*eplus, 
-		    0,               0,             0,          
-		    0,               0,             0,             
-	   "geantino",               0,             0,           0,
-		 true,            -1.0,          nullptr,
-		false,      "geantino",            0
-		);
+    anInstance =
+      new G4ParticleDefinition(name, 0.0 * MeV, 0.0 * MeV, +1.0 * eplus, 0, 0, 0, 0, 0, 0,
+                               "geantino", 0, 0, 0, true, -1.0, nullptr, false, "geantino", 0);
   }
-  theInstance = static_cast< G4ChargedUnknownParticle* >( anInstance );
+  theInstance = static_cast<G4ChargedUnknownParticle*>(anInstance);
   return theInstance;
 }
 
-
-G4ChargedUnknownParticle* G4ChargedUnknownParticle::ChargedUnknownParticleDefinition() {
+G4ChargedUnknownParticle* G4ChargedUnknownParticle::ChargedUnknownParticleDefinition()
+{
   return Definition();
 }
 
-
-G4ChargedUnknownParticle* G4ChargedUnknownParticle::ChargedUnknownParticle() {
+G4ChargedUnknownParticle* G4ChargedUnknownParticle::ChargedUnknownParticle()
+{
   return Definition();
 }

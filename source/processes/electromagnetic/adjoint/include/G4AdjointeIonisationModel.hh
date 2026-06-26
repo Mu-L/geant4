@@ -32,35 +32,35 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4AdjointeIonisationModel_h
-#define G4AdjointeIonisationModel_h 1
+#ifndef G4ADJOINTEIONISATIONMODEL_HH
+#define G4ADJOINTEIONISATIONMODEL_HH
 
-#include "globals.hh"
 #include "G4VEmAdjointModel.hh"
+#include "globals.hh"
 
 class G4AdjointeIonisationModel : public G4VEmAdjointModel
 {
- public:
-  G4AdjointeIonisationModel();
+  public:
 
-  ~G4AdjointeIonisationModel() override;
+    G4AdjointeIonisationModel();
 
-  void SampleSecondaries(const G4Track& aTrack, G4bool isScatProjToProj,
-                         G4ParticleChange* fParticleChange) override;
+    ~G4AdjointeIonisationModel() override;
 
-  G4double DiffCrossSectionPerAtomPrimToSecond(
-    G4double kinEnergyProj,  // kin energy of particle before interaction
-    G4double kinEnergyProd,  // kinetic energy of the secondary particle
-    G4double Z, G4double A = 0.) override;
+    void SampleSecondaries(const G4Track& aTrack, G4bool isScatProjToProj,
+                           G4ParticleChange* fParticleChange) override;
 
-  G4AdjointeIonisationModel(G4AdjointeIonisationModel&) = delete;
-  G4AdjointeIonisationModel& operator=(const G4AdjointeIonisationModel& right) =
-    delete;
+    G4double DiffCrossSectionPerAtomPrimToSecond(
+      G4double kinEnergyProj,  // kin energy of particle before interaction
+      G4double kinEnergyProd,  // kinetic energy of the secondary particle
+      G4double Z, G4double A = 0.) override;
 
- private:
-  G4double DiffCrossSectionMoller(G4double kinEnergyProj,
-                                  G4double kinEnergyProd);
+    G4AdjointeIonisationModel(G4AdjointeIonisationModel&) = delete;
+    G4AdjointeIonisationModel& operator=(const G4AdjointeIonisationModel& right) = delete;
 
-  G4bool fWithRapidSampling = false;
+  private:
+
+    G4double DiffCrossSectionMoller(G4double kinEnergyProj, G4double kinEnergyProd);
+
+    G4bool fWithRapidSampling = false;
 };
 #endif

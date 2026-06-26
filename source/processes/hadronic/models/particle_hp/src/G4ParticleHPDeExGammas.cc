@@ -41,7 +41,8 @@ G4ParticleHPDeExGammas::G4ParticleHPDeExGammas() = default;
 
 G4ParticleHPDeExGammas::~G4ParticleHPDeExGammas()
 {
-  for (auto& ptr : theLevels) {
+  for (auto& ptr : theLevels)
+  {
     delete ptr;
   }
 }
@@ -57,8 +58,10 @@ void G4ParticleHPDeExGammas::Init(std::istream& aDataFile)
   G4double egamma = 0.0;
   G4double prob = 0.0;
   constexpr G4double eps = 1 * CLHEP::eV;
-  for (;;) {
-    if (aDataFile >> elevel) {
+  for (;;)
+  {
+    if (aDataFile >> elevel)
+    {
       // next line
       aDataFile >> egamma >> prob;
       egamma *= CLHEP::keV;
@@ -68,7 +71,8 @@ void G4ParticleHPDeExGammas::Init(std::istream& aDataFile)
       //  << " Eg=" << egamma << " w=" << prob << G4endl;
 
       // save previous level and start a new level
-      if (std::abs(elevel - elevel0) > eps) {
+      if (std::abs(elevel - elevel0) > eps)
+      {
         level->Normalize();
         theLevels.push_back(level);
         ++nLevels;
@@ -81,21 +85,25 @@ void G4ParticleHPDeExGammas::Init(std::istream& aDataFile)
       G4double e = elevel - egamma;
       G4int next = -1;
       G4double del = DBL_MAX;
-      for (G4int i = 0; i < nLevels; ++i) {
+      for (G4int i = 0; i < nLevels; ++i)
+      {
         G4double de = std::abs(theLevels[i]->GetLevelEnergy() - e);
-        if (de < del) {
+        if (de < del)
+        {
           next = i;
           del = de;
         }
       }
       // save level data
-      if (next >= 0) {
+      if (next >= 0)
+      {
         level->AddGamma(egamma, prob, next);
         // G4cout << "      NLevel=" << nLevels << " Elevel=" << elevel
         //      << " Egamma=" << egamma << " W=" << prob << " next=" << next << G4endl;
       }
     }
-    else {
+    else
+    {
       // end of file - save recent level
       level->Normalize();
       theLevels.push_back(level);
@@ -112,12 +120,15 @@ G4ReactionProductVector* G4ParticleHPDeExGammas::GetDecayGammas(G4int i) const
   if (idx >= nLevels || idx <= 0) return nullptr;
   auto result = new G4ReactionProductVector();
 
-  for (;;) {
-    if (idx <= 0) {
+  for (;;)
+  {
+    if (idx <= 0)
+    {
       break;
     }
     auto ptr = theLevels[idx]->GetDecayGamma(idx);
-    if (nullptr != ptr) {
+    if (nullptr != ptr)
+    {
       result->push_back(ptr);
     }
   }

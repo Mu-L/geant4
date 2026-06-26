@@ -31,8 +31,8 @@
 //   is used,
 //
 
-#ifndef G4RunManagerFactory_hh
-#define G4RunManagerFactory_hh 1
+#ifndef G4RUNMANAGERFACTORY_HH
+#define G4RUNMANAGERFACTORY_HH
 
 #include "G4MTRunManager.hh"
 #include "G4RunManager.hh"
@@ -67,6 +67,7 @@ enum class G4RunManagerType : G4int
 class G4RunManagerFactory
 {
   public:
+
     static G4RunManager* CreateRunManager(G4RunManagerType _type = G4RunManagerType::Default,
                                           G4VUserTaskQueue* _queue = nullptr,
                                           G4bool fail_if_unavail = true, G4int nthreads = 0);

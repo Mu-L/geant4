@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4EnergySplitter_h
-#define G4EnergySplitter_h 1
+#ifndef G4ENERGYSPLITTER_HH
+#define G4ENERGYSPLITTER_HH
 
 ////////////////////////////////////////////////////////////////////////////////
 // (Description)
@@ -49,6 +49,7 @@ class G4Step;
 class G4EnergySplitter
 {
   public:  // with description
+
     G4EnergySplitter();
     virtual ~G4EnergySplitter();
 
@@ -70,6 +71,7 @@ class G4EnergySplitter
     inline G4Material* GetVoxelMaterial(G4int stepNo);
 
   private:
+
     void GetStepLength(G4int stepNo, G4double& stepLength);
 
     G4bool IsPhantomVolume(G4VPhysicalVolume* pv);

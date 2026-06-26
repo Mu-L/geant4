@@ -39,18 +39,19 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4GammaConversionToMuons_h
-#define G4GammaConversionToMuons_h 1
+#ifndef G4GAMMACONVERSIONTOMUONS_HH
+#define G4GAMMACONVERSIONTOMUONS_HH
 
-#include "G4ios.hh"
-#include "globals.hh"
-#include "Randomize.hh"
-#include "G4VDiscreteProcess.hh"
-#include "G4PhysicsTable.hh"
-#include "G4PhysicsLogVector.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4Element.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4PhysicsLogVector.hh"
+#include "G4PhysicsTable.hh"
 #include "G4Step.hh"
+#include "G4VDiscreteProcess.hh"
+#include "G4ios.hh"
+#include "Randomize.hh"
+#include "globals.hh"
+
 #include <vector>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -60,88 +61,82 @@ class G4BetheHeitler5DModel;
 
 class G4GammaConversionToMuons : public G4VDiscreteProcess
 {
-public:  // with description
+  public:  // with description
 
-  explicit G4GammaConversionToMuons(
-                        const G4String& processName ="GammaToMuPair",
-                        G4ProcessType type = fElectromagnetic);
+    explicit G4GammaConversionToMuons(const G4String& processName = "GammaToMuPair",
+                                      G4ProcessType type = fElectromagnetic);
 
-  ~G4GammaConversionToMuons() override;
+    ~G4GammaConversionToMuons() override;
 
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
-       // true for Gamma only.
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
+    // true for Gamma only.
 
-  void BuildPhysicsTable(const G4ParticleDefinition&) override;
-       // here dummy, the total cross section parametrization is used rather
-       // than tables,  just calling PrintInfoDefinition
+    void BuildPhysicsTable(const G4ParticleDefinition&) override;
+    // here dummy, the total cross section parametrization is used rather
+    // than tables,  just calling PrintInfoDefinition
 
-  void PrintInfoDefinition();
-       // Print few lines of informations about the process: validity range,
-       // origine ..etc..
-       // Invoked by BuildThePhysicsTable().
+    void PrintInfoDefinition();
+    // Print few lines of informations about the process: validity range,
+    // origine ..etc..
+    // Invoked by BuildThePhysicsTable().
 
-  void SetCrossSecFactor(G4double fac);
-       // Set the factor to artificially increase the crossSection (default 1)
+    void SetCrossSecFactor(G4double fac);
+    // Set the factor to artificially increase the crossSection (default 1)
 
-  inline G4double GetCrossSecFactor() const { return CrossSecFactor;}
-       // Get the factor to artificially increase the cross section
+    inline G4double GetCrossSecFactor() const { return CrossSecFactor; }
+    // Get the factor to artificially increase the cross section
 
-  G4double GetMeanFreePath(const G4Track& aTrack,
-                           G4double previousStepSize,
-                           G4ForceCondition* condition) override;
-       // It returns the MeanFreePath of the process for the current track :
-       // (energy, material)
-       // The previousStepSize and G4ForceCondition* are not used.
-       // This function overloads a virtual function of the base class.
-       // It is invoked by the ProcessManager of the Particle.
+    G4double GetMeanFreePath(const G4Track& aTrack, G4double previousStepSize,
+                             G4ForceCondition* condition) override;
+    // It returns the MeanFreePath of the process for the current track :
+    // (energy, material)
+    // The previousStepSize and G4ForceCondition* are not used.
+    // This function overloads a virtual function of the base class.
+    // It is invoked by the ProcessManager of the Particle.
 
-  G4double GetCrossSectionPerAtom(const G4DynamicParticle* aDynamicGamma,
-                                  const G4Element* anElement);
-       // It returns the total CrossSectionPerAtom of the process,
-       // for the current DynamicGamma (energy), in anElement.
+    G4double GetCrossSectionPerAtom(const G4DynamicParticle* aDynamicGamma,
+                                    const G4Element* anElement);
+    // It returns the total CrossSectionPerAtom of the process,
+    // for the current DynamicGamma (energy), in anElement.
 
-  G4VParticleChange* PostStepDoIt(const G4Track& aTrack,
-				  const G4Step& aStep) override;
-       // It computes the final state of the process (at end of step),
-       // returned as a ParticleChange object.
-       // This function overloads a virtual function of the base class.
-       // It is invoked by the ProcessManager of the Particle.
+    G4VParticleChange* PostStepDoIt(const G4Track& aTrack, const G4Step& aStep) override;
+    // It computes the final state of the process (at end of step),
+    // returned as a ParticleChange object.
+    // This function overloads a virtual function of the base class.
+    // It is invoked by the ProcessManager of the Particle.
 
-  G4double ComputeCrossSectionPerAtom(G4double GammaEnergy, G4int Z);
+    G4double ComputeCrossSectionPerAtom(G4double GammaEnergy, G4int Z);
 
-  G4double ComputeMeanFreePath (G4double GammaEnergy,
-                                const G4Material* aMaterial);
+    G4double ComputeMeanFreePath(G4double GammaEnergy, const G4Material* aMaterial);
 
-  // hide assignment operator as private
-  G4GammaConversionToMuons& 
-  operator=(const G4GammaConversionToMuons &right) = delete;
-  G4GammaConversionToMuons(const G4GammaConversionToMuons& ) = delete;
+    // hide assignment operator as private
+    G4GammaConversionToMuons& operator=(const G4GammaConversionToMuons& right) = delete;
+    G4GammaConversionToMuons(const G4GammaConversionToMuons&) = delete;
 
-private:
+  private:
 
-  const G4Element* SelectRandomAtom(const G4DynamicParticle* aDynamicGamma,
-                                    const G4Material* aMaterial);
+    const G4Element* SelectRandomAtom(const G4DynamicParticle* aDynamicGamma,
+                                      const G4Material* aMaterial);
 
-  G4double Mmuon;
-  G4double Rc;
-  G4double LimitEnergy;          // energy limit for accurate x-section
-  G4double LowestEnergyLimit;    // low  energy limit of the model
-  G4double HighestEnergyLimit;   // high energy limit of the model
-  G4double Energy5DLimit = 0.0;  // high energy limit for 5D final state sampling
+    G4double Mmuon;
+    G4double Rc;
+    G4double LimitEnergy;  // energy limit for accurate x-section
+    G4double LowestEnergyLimit;  // low  energy limit of the model
+    G4double HighestEnergyLimit;  // high energy limit of the model
+    G4double Energy5DLimit = 0.0;  // high energy limit for 5D final state sampling
 
-  G4double MeanFreePath = DBL_MAX;// actual MeanFreePath (current medium)
-  G4double CrossSecFactor = 1.0;  // factor to artificially increase
-                                  // the cross section
+    G4double MeanFreePath = DBL_MAX;  // actual MeanFreePath (current medium)
+    G4double CrossSecFactor = 1.0;  // factor to artificially increase
+                                    // the cross section
 
-  G4LossTableManager* fManager;
-  G4BetheHeitler5DModel* f5Dmodel = nullptr;
-  const G4ParticleDefinition* theGamma;
-  const G4ParticleDefinition* theMuonPlus;
-  const G4ParticleDefinition* theMuonMinus;
-  std::vector<G4double> temp;
+    G4LossTableManager* fManager;
+    G4BetheHeitler5DModel* f5Dmodel = nullptr;
+    const G4ParticleDefinition* theGamma;
+    const G4ParticleDefinition* theMuonPlus;
+    const G4ParticleDefinition* theMuonMinus;
+    std::vector<G4double> temp;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

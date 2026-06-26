@@ -79,56 +79,53 @@
 //    }
 //  }
 
-#ifndef G4VEntanglementClipBoard_hh
-#define G4VEntanglementClipBoard_hh
+#ifndef G4VENTANGLEMENTCLIPBOARD_HH
+#define G4VENTANGLEMENTCLIPBOARD_HH
 
 #include "globals.hh"
 
 class G4ParticleDefinition;
 class G4Track;
 
-class G4VEntanglementClipBoard {
+class G4VEntanglementClipBoard
+{
+  public:
 
-public:
-  
-  G4VEntanglementClipBoard()
-  : fpParentParticleDefinition(0)
-  , fTrackA(0)
-  , fTrackB(0)
-  , fTrack1Measurement(true)
-  , fTrack2Measurement(true)
-  {}
-  virtual ~G4VEntanglementClipBoard() {}
+    G4VEntanglementClipBoard()
+      : fpParentParticleDefinition(0),
+        fTrackA(0),
+        fTrackB(0),
+        fTrack1Measurement(true),
+        fTrack2Measurement(true)
+    {}
+    virtual ~G4VEntanglementClipBoard() {}
 
-  void SetParentParticleDefinition(G4ParticleDefinition* p)
-  {fpParentParticleDefinition = p;}
-  G4ParticleDefinition* GetParentParticleDefinition() const
-  {return fpParentParticleDefinition;}
+    void SetParentParticleDefinition(G4ParticleDefinition* p) { fpParentParticleDefinition = p; }
+    G4ParticleDefinition* GetParentParticleDefinition() const { return fpParentParticleDefinition; }
 
-  void SetTrackA(const G4Track* track) {fTrackA = track;}
-  void SetTrackB(const G4Track* track) {fTrackB = track;}
-  const G4Track* GetTrackA() const {return fTrackA;}
-  const G4Track* GetTrackB() const {return fTrackB;}
+    void SetTrackA(const G4Track* track) { fTrackA = track; }
+    void SetTrackB(const G4Track* track) { fTrackB = track; }
+    const G4Track* GetTrackA() const { return fTrackA; }
+    const G4Track* GetTrackB() const { return fTrackB; }
 
-  // The entanglement-sensitive process is responsible for setting this.
-  void ResetTrack1Measurement() {fTrack1Measurement = false;}
-  void ResetTrack2Measurement() {fTrack2Measurement = false;}
-  G4bool IsTrack1Measurement() const {return fTrack1Measurement;}
-  G4bool IsTrack2Measurement() const {return fTrack2Measurement;}
-  
-private:
+    // The entanglement-sensitive process is responsible for setting this.
+    void ResetTrack1Measurement() { fTrack1Measurement = false; }
+    void ResetTrack2Measurement() { fTrack2Measurement = false; }
+    G4bool IsTrack1Measurement() const { return fTrack1Measurement; }
+    G4bool IsTrack2Measurement() const { return fTrack2Measurement; }
 
-  G4ParticleDefinition* fpParentParticleDefinition;
+  private:
 
-  // Use pointer values to identify tracks. We don't know in which order the
-  // tracks will be processed so let us call them A & B.
-  const G4Track* fTrackA;
-  const G4Track* fTrackB;
+    G4ParticleDefinition* fpParentParticleDefinition;
 
-  // False until first measurement...
-  G4bool fTrack1Measurement;  // ...of the first encountered track
-  G4bool fTrack2Measurement;  // ...of the second encountered track
-  
+    // Use pointer values to identify tracks. We don't know in which order the
+    // tracks will be processed so let us call them A & B.
+    const G4Track* fTrackA;
+    const G4Track* fTrackB;
+
+    // False until first measurement...
+    G4bool fTrack1Measurement;  // ...of the first encountered track
+    G4bool fTrack2Measurement;  // ...of the second encountered track
 };
 
 #endif

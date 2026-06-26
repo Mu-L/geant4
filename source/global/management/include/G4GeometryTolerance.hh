@@ -43,46 +43,50 @@
 //
 // Author: G.Cosmo (CERN), 30 October 2006
 // --------------------------------------------------------------------
-#ifndef G4GeometryTolerance_hh
-#define G4GeometryTolerance_hh
+#ifndef G4GEOMETRYTOLERANCE_HH
+#define G4GEOMETRYTOLERANCE_HH
 
 #include "G4Types.hh"
 
 class G4GeometryTolerance
 {
-  friend class G4GeometryManager;
+    friend class G4GeometryManager;
 
- public:  // with description
-  static G4GeometryTolerance* GetInstance();
-  // Get a pointer to the unique G4GeometryTolerance,
-  // creating it if necessary and setting the tolerances.
-  G4double GetSurfaceTolerance() const;
-  // Returns the current Cartesian tolerance of a surface.
-  G4double GetAngularTolerance() const;
-  // Returns the current angular tolerance.
-  G4double GetRadialTolerance() const;
-  // Returns the current radial tolerance.
+  public:  // with description
 
- public:  // without description
-  ~G4GeometryTolerance() = default;
-  // Destructor.
+    static G4GeometryTolerance* GetInstance();
+    // Get a pointer to the unique G4GeometryTolerance,
+    // creating it if necessary and setting the tolerances.
+    G4double GetSurfaceTolerance() const;
+    // Returns the current Cartesian tolerance of a surface.
+    G4double GetAngularTolerance() const;
+    // Returns the current angular tolerance.
+    G4double GetRadialTolerance() const;
+    // Returns the current radial tolerance.
 
- protected:
-  void SetSurfaceTolerance(G4double worldExtent);
-  // Sets the Cartesian and Radial surface tolerance to a value computed
-  // from the maximum extent of the world volume. This method
-  // can be called only once, and is done only through the
-  // G4GeometryManager class.
+  public:  // without description
 
-  G4GeometryTolerance();
-  // Protected constructor.
+    ~G4GeometryTolerance() = default;
+    // Destructor.
 
- private:
-  static G4ThreadLocal G4GeometryTolerance* fpInstance;
-  G4double fCarTolerance;
-  G4double fAngTolerance;
-  G4double fRadTolerance;
-  G4bool fInitialised = false;
+  protected:
+
+    void SetSurfaceTolerance(G4double worldExtent);
+    // Sets the Cartesian and Radial surface tolerance to a value computed
+    // from the maximum extent of the world volume. This method
+    // can be called only once, and is done only through the
+    // G4GeometryManager class.
+
+    G4GeometryTolerance();
+    // Protected constructor.
+
+  private:
+
+    static G4ThreadLocal G4GeometryTolerance* fpInstance;
+    G4double fCarTolerance;
+    G4double fAngTolerance;
+    G4double fRadTolerance;
+    G4bool fInitialised = false;
 };
 
 #endif

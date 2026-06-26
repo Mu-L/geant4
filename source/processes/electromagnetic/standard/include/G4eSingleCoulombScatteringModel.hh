@@ -49,12 +49,12 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4eSingleCoulombScatteringModel_h
-#define G4eSingleCoulombScatteringModel_h 1
+#ifndef G4ESINGLECOULOMBSCATTERINGMODEL_HH
+#define G4ESINGLECOULOMBSCATTERINGMODEL_HH
 
+#include "G4ScreeningMottCrossSection.hh"
 #include "G4VEmModel.hh"
 #include "globals.hh"
-#include "G4ScreeningMottCrossSection.hh"
 
 #include <vector>
 
@@ -65,74 +65,63 @@ class G4Nistmanager;
 
 class G4eSingleCoulombScatteringModel : public G4VEmModel
 {
+  public:
 
-public:
+    explicit G4eSingleCoulombScatteringModel(const G4String& nam = "eSingleCoulombScat");
 
-  explicit G4eSingleCoulombScatteringModel(const G4String& nam = "eSingleCoulombScat");
+    ~G4eSingleCoulombScatteringModel() override;
 
-  ~G4eSingleCoulombScatteringModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) final;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) final;
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel* masterModel) final;
 
-  void InitialiseLocal(const G4ParticleDefinition*,
-		       G4VEmModel* masterModel) final;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A, G4double cut, G4double emax) final;
 
-  G4double ComputeCrossSectionPerAtom(
-                                const G4ParticleDefinition*,
-				G4double kinEnergy,
-				G4double Z,
-				G4double A,
-				G4double cut,
-				G4double emax) final;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) final;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) final;
+    inline void SetRecoilThreshold(G4double eth);
 
-  inline void SetRecoilThreshold(G4double eth);
+    void SetXSectionModel(const G4String& model);
 
-  void SetXSectionModel(const G4String& model);
+    // hide assignment operator
+    G4eSingleCoulombScatteringModel&
+    operator=(const G4eSingleCoulombScatteringModel& right) = delete;
+    G4eSingleCoulombScatteringModel(const G4eSingleCoulombScatteringModel&) = delete;
 
-  // hide assignment operator
-  G4eSingleCoulombScatteringModel & operator=
-  (const G4eSingleCoulombScatteringModel &right) = delete;
-  G4eSingleCoulombScatteringModel(const G4eSingleCoulombScatteringModel&) = delete;
+  private:
 
-private:
+    inline void DefineMaterial(const G4MaterialCutsCouple*);
+    inline void SetupParticle(const G4ParticleDefinition*);
 
-  inline void DefineMaterial(const G4MaterialCutsCouple*);
-  inline void SetupParticle(const G4ParticleDefinition*);
+    G4IonTable* theIonTable;
+    G4ParticleChangeForGamma* fParticleChange;
+    G4NistManager* fNistManager;
+    G4ScreeningMottCrossSection* Mottcross;
+    const G4ParticleDefinition* particle;
 
-  G4IonTable*               theIonTable;
-  G4ParticleChangeForGamma* fParticleChange;
-  G4NistManager*            fNistManager;
-  G4ScreeningMottCrossSection* Mottcross;
-  const G4ParticleDefinition* particle;
+    const std::vector<G4double>* pCuts;
+    const G4MaterialCutsCouple* currentCouple;
+    const G4Material* currentMaterial;
+    const G4Element* currentElement;
 
-  const std::vector<G4double>* pCuts;
-  const G4MaterialCutsCouple* currentCouple;
-  const G4Material*           currentMaterial;
-  const G4Element*            currentElement;
+    G4int currentMaterialIndex;
+    G4int FormFactor;
+    G4int XSectionModel;
 
-  G4int                     currentMaterialIndex;
-  G4int                     FormFactor;
-  G4int                     XSectionModel;
-
-  G4double                  cosThetaMin;
-  G4double                  recoilThreshold;
-  G4double                  mass;
-  G4double                  lowEnergyLimit;
-
+    G4double cosThetaMin;
+    G4double recoilThreshold;
+    G4double mass;
+    G4double lowEnergyLimit;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline void
-G4eSingleCoulombScatteringModel::DefineMaterial(const G4MaterialCutsCouple* cup)
+inline void G4eSingleCoulombScatteringModel::DefineMaterial(const G4MaterialCutsCouple* cup)
 {
-  if(cup != currentCouple) {
+  if (cup != currentCouple)
+  {
     currentCouple = cup;
     currentMaterial = cup->GetMaterial();
     currentMaterialIndex = currentCouple->GetIndex();
@@ -141,10 +130,10 @@ G4eSingleCoulombScatteringModel::DefineMaterial(const G4MaterialCutsCouple* cup)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline void
-G4eSingleCoulombScatteringModel::SetupParticle(const G4ParticleDefinition* p)
+inline void G4eSingleCoulombScatteringModel::SetupParticle(const G4ParticleDefinition* p)
 {
-  if(p != particle) {
+  if (p != particle)
+  {
     particle = p;
     mass = particle->GetPDGMass();
     Mottcross->SetupParticle(p);

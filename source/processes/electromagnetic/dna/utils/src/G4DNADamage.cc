@@ -25,15 +25,14 @@
 //
 //
 #include "G4DNADamage.hh"
+
 #include "G4UnitsTable.hh"
 
 G4ThreadLocal G4DNADamage* G4DNADamage::fpInstance(nullptr);
 
-G4DNAIndirectHit::G4DNAIndirectHit(const G4String& baseName,
-                                   const G4Molecule* molecule,
-                                   const G4ThreeVector& position,
-                                   G4double time) :
-     fpMolecule(molecule)
+G4DNAIndirectHit::G4DNAIndirectHit(const G4String& baseName, const G4Molecule* molecule,
+                                   const G4ThreeVector& position, G4double time)
+  : fpMolecule(molecule)
 {
   fBaseName = baseName;
   fPosition = position;
@@ -69,7 +68,7 @@ G4DNADamage::G4DNADamage()
 
 G4DNADamage::~G4DNADamage()
 {
-  for (auto & fIndirectHit : fIndirectHits)
+  for (auto& fIndirectHit : fIndirectHits)
   {
     delete fIndirectHit;
   }
@@ -85,17 +84,15 @@ void G4DNADamage::DeleteInstance()
 void G4DNADamage::Reset()
 {
   fNIndirectDamage = 0;
-  for (auto & fIndirectHit : fIndirectHits)
+  for (auto& fIndirectHit : fIndirectHits)
   {
     delete fIndirectHit;
   }
   fIndirectHits.clear();
 }
 
-void G4DNADamage::AddIndirectDamage(const G4String& baseName,
-                                    const G4Molecule* molecule,
-                                    const G4ThreeVector& position,
-                                    G4double time)
+void G4DNADamage::AddIndirectDamage(const G4String& baseName, const G4Molecule* molecule,
+                                    const G4ThreeVector& position, G4double time)
 {
   if (fJustCountDamage)
   {

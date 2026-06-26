@@ -29,27 +29,22 @@
 // --------------------------------------------------------------------
 
 #include "G4WeightCutOffConfigurator.hh"
+
 #include "G4WeightCutOffProcess.hh"
 
-G4WeightCutOffConfigurator::
-G4WeightCutOffConfigurator(const G4VPhysicalVolume* worldvolume,
-                           const G4String& particlename,
-                                 G4double wsurvival,
-                                 G4double wlimit,
-                                 G4double isource,
-                                 G4VIStore* istore,
-                                 G4bool para)
-  : fWorld(worldvolume),
-    fPlacer(particlename),
-    paraflag(para)
+G4WeightCutOffConfigurator::G4WeightCutOffConfigurator(const G4VPhysicalVolume* worldvolume,
+                                                       const G4String& particlename,
+                                                       G4double wsurvival, G4double wlimit,
+                                                       G4double isource, G4VIStore* istore,
+                                                       G4bool para)
+  : fWorld(worldvolume), fPlacer(particlename), paraflag(para)
 {
   fWeightCutOffProcess =
-    new G4WeightCutOffProcess(wsurvival,wlimit,isource,istore,"WeightCutOffProcess",paraflag);
+    new G4WeightCutOffProcess(wsurvival, wlimit, isource, istore, "WeightCutOffProcess", paraflag);
   if (!fWeightCutOffProcess)
   {
-    G4Exception("G4WeightCutOffConfigurator::G4WeightCutOffConfigurator()",
-                "FatalError", FatalException,
-                "Failed to allocate G4WeightCutOffProcess !");
+    G4Exception("G4WeightCutOffConfigurator::G4WeightCutOffConfigurator()", "FatalError",
+                FatalException, "Failed to allocate G4WeightCutOffProcess !");
   }
 }
 
@@ -62,18 +57,20 @@ G4WeightCutOffConfigurator::~G4WeightCutOffConfigurator()
   }
 }
 
-void G4WeightCutOffConfigurator::Configure(G4VSamplerConfigurator *)
+void G4WeightCutOffConfigurator::Configure(G4VSamplerConfigurator*)
 {
   G4cout << " entering new weight window configure " << G4endl;
 
-  if(paraflag) { fWeightCutOffProcess->SetParallelWorld(fWorld->GetName()); }
+  if (paraflag)
+  {
+    fWeightCutOffProcess->SetParallelWorld(fWorld->GetName());
+  }
 
-  fPlacer.AddProcessAsLastDoIt(fWeightCutOffProcess); 
+  fPlacer.AddProcessAsLastDoIt(fWeightCutOffProcess);
   fPlaced = true;
 }
 
-const G4VTrackTerminator*
-G4WeightCutOffConfigurator::GetTrackTerminator() const
+const G4VTrackTerminator* G4WeightCutOffConfigurator::GetTrackTerminator() const
 {
   return nullptr;
 }

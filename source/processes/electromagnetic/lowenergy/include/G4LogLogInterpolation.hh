@@ -42,41 +42,27 @@
 // -------------------------------------------------------------------
 
 #ifndef G4LOGLOGINTERPOLATION_HH
-#define G4LOGLOGINTERPOLATION_HH 1
+#define G4LOGLOGINTERPOLATION_HH
 
-#include "globals.hh"
-#include "G4VDataSetAlgorithm.hh"
 #include "G4DataVector.hh"
+#include "G4VDataSetAlgorithm.hh"
+#include "globals.hh"
 
-class G4LogLogInterpolation : public G4VDataSetAlgorithm {
- 
-public:
-  explicit G4LogLogInterpolation();
-  ~G4LogLogInterpolation();
- 
-  G4double Calculate(G4double point, G4int bin, 
-		     const G4DataVector& energies, 
-		     const G4DataVector& data) const override;
+class G4LogLogInterpolation : public G4VDataSetAlgorithm
+{
+  public:
 
-  G4double Calculate(G4double point, G4int bin,
-                     const G4DataVector& energies,
-                     const G4DataVector& data, 
-		     const G4DataVector& log_energies, 
-		     const G4DataVector& log_data) const override;
+    explicit G4LogLogInterpolation();
+    ~G4LogLogInterpolation();
 
-  virtual G4VDataSetAlgorithm* Clone() const override; 
+    G4double Calculate(G4double point, G4int bin, const G4DataVector& energies,
+                       const G4DataVector& data) const override;
 
+    G4double Calculate(G4double point, G4int bin, const G4DataVector& energies,
+                       const G4DataVector& data, const G4DataVector& log_energies,
+                       const G4DataVector& log_data) const override;
+
+    virtual G4VDataSetAlgorithm* Clone() const override;
 };
- 
+
 #endif
- 
-
-
-
-
-
-
-
-
-
-

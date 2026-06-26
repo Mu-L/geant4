@@ -27,17 +27,17 @@
 //
 // Class description:
 //
-// This class inherits from G4VSampler. It is used for scoring and 
+// This class inherits from G4VSampler. It is used for scoring and
 // importance sampling in the tracking (mass) geometry.
 // See also the description in G4VSampler.hh.
 //
 // Author: Michael Dressel, CERN
 // --------------------------------------------------------------------
-#ifndef G4GeometrySampler_hh
-#define G4GeometrySampler_hh 1
+#ifndef G4GEOMETRYSAMPLER_HH
+#define G4GEOMETRYSAMPLER_HH
 
-#include "G4Types.hh"
 #include "G4String.hh"
+#include "G4Types.hh"
 #include "G4VSampler.hh"
 #include "G4VSamplerConfigurator.hh"
 
@@ -47,53 +47,47 @@ class G4WeightCutOffConfigurator;
 
 class G4GeometrySampler : public G4VSampler
 {
+  public:
 
- public:
- 
-  explicit G4GeometrySampler(G4VPhysicalVolume *worldvolume, const G4String &particlename);
-  explicit G4GeometrySampler(const G4String& worldvolumeName, const G4String &particlename);
-  virtual ~G4GeometrySampler();
+    explicit G4GeometrySampler(G4VPhysicalVolume* worldvolume, const G4String& particlename);
+    explicit G4GeometrySampler(const G4String& worldvolumeName, const G4String& particlename);
+    virtual ~G4GeometrySampler();
 
-  G4GeometrySampler(const G4GeometrySampler &) = delete;
-  G4GeometrySampler& operator=(const G4GeometrySampler &) = delete;
+    G4GeometrySampler(const G4GeometrySampler&) = delete;
+    G4GeometrySampler& operator=(const G4GeometrySampler&) = delete;
 
-  //  virtual void PrepareScoring(G4VScorer *Scorer);
-  virtual void PrepareImportanceSampling(G4VIStore* istore,
-                                         const G4VImportanceAlgorithm 
-                                         *ialg);
-  virtual void PrepareWeightRoulett(G4double wsurvive, 
-                                    G4double wlimit,
-                                    G4double isource);
-  
-  virtual void PrepareWeightWindow(G4VWeightWindowStore *wwstore,
-                                   G4VWeightWindowAlgorithm *wwAlg,
-                                   G4PlaceOfAction placeOfAction);
+    //  virtual void PrepareScoring(G4VScorer *Scorer);
+    virtual void PrepareImportanceSampling(G4VIStore* istore, const G4VImportanceAlgorithm* ialg);
+    virtual void PrepareWeightRoulett(G4double wsurvive, G4double wlimit, G4double isource);
 
-  virtual void Configure();
-  virtual void AddProcess();
+    virtual void PrepareWeightWindow(G4VWeightWindowStore* wwstore, G4VWeightWindowAlgorithm* wwAlg,
+                                     G4PlaceOfAction placeOfAction);
 
-  virtual void ClearSampling();
-  virtual G4bool IsConfigured() const;
+    virtual void Configure();
+    virtual void AddProcess();
 
-  void SetParallel(G4bool paraflag);
-  void SetWorld(const G4VPhysicalVolume* world);
-  void SetParticle(const G4String &particlename);
+    virtual void ClearSampling();
+    virtual G4bool IsConfigured() const;
 
-  inline const G4String& GetParticleName() { return fParticleName; }
-  
- private:
+    void SetParallel(G4bool paraflag);
+    void SetWorld(const G4VPhysicalVolume* world);
+    void SetParticle(const G4String& particlename);
 
-  G4String fParticleName;
-  const G4VPhysicalVolume* fWorld = nullptr;
-  G4String fWorldName;
-  G4ImportanceConfigurator* fImportanceConfigurator = nullptr;
-  G4WeightCutOffConfigurator* fWeightCutOffConfigurator = nullptr;
-  G4VIStore* fIStore = nullptr;
-  G4WeightWindowConfigurator* fWeightWindowConfigurator = nullptr;
-  G4VWeightWindowStore* fWWStore = nullptr;
-  G4bool fIsConfigured = false;
-  G4Configurators fConfigurators;
-  G4bool paraflag = false;
+    inline const G4String& GetParticleName() { return fParticleName; }
+
+  private:
+
+    G4String fParticleName;
+    const G4VPhysicalVolume* fWorld = nullptr;
+    G4String fWorldName;
+    G4ImportanceConfigurator* fImportanceConfigurator = nullptr;
+    G4WeightCutOffConfigurator* fWeightCutOffConfigurator = nullptr;
+    G4VIStore* fIStore = nullptr;
+    G4WeightWindowConfigurator* fWeightWindowConfigurator = nullptr;
+    G4VWeightWindowStore* fWWStore = nullptr;
+    G4bool fIsConfigured = false;
+    G4Configurators fConfigurators;
+    G4bool paraflag = false;
 };
-  
+
 #endif

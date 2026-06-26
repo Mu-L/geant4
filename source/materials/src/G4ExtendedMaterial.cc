@@ -37,13 +37,14 @@
 
 G4ExtendedMaterial::G4ExtendedMaterial(const G4String& name, const G4Material* baseMaterial)
   : G4Material(name, baseMaterial->GetDensity(), baseMaterial, baseMaterial->GetState(),
-      baseMaterial->GetTemperature(), baseMaterial->GetPressure())
+               baseMaterial->GetTemperature(), baseMaterial->GetPressure())
 {}
 
 // Constructor to create an extended material from single element
 
 G4ExtendedMaterial::G4ExtendedMaterial(const G4String& name, G4double z, G4double a,
-  G4double density, G4State state, G4double temp, G4double pressure)
+                                       G4double density, G4State state, G4double temp,
+                                       G4double pressure)
   : G4Material(name, z, a, density, state, temp, pressure)
 {}
 
@@ -51,14 +52,15 @@ G4ExtendedMaterial::G4ExtendedMaterial(const G4String& name, G4double z, G4doubl
 // (elements and/or materials)  added with AddElement or AddMaterial
 
 G4ExtendedMaterial::G4ExtendedMaterial(const G4String& name, G4double density, G4int nComponents,
-  G4State state, G4double temp, G4double pressure)
+                                       G4State state, G4double temp, G4double pressure)
   : G4Material(name, density, nComponents, state, temp, pressure)
 {}
 
 // Constructor to create an extended material from the base extended material
 
 G4ExtendedMaterial::G4ExtendedMaterial(const G4String& name, G4double density,
-  const G4ExtendedMaterial* bmat, G4State state, G4double temp, G4double pressure)
+                                       const G4ExtendedMaterial* bmat, G4State state, G4double temp,
+                                       G4double pressure)
   : G4Material(name, density, bmat, state, temp, pressure)
 {}
 
@@ -67,7 +69,8 @@ G4ExtendedMaterial::G4ExtendedMaterial(const G4String& name, G4double density,
 void G4ExtendedMaterial::RegisterExtension(std::unique_ptr<G4VMaterialExtension> extension)
 {
   auto iter = fExtensionMap.find(extension->GetName());
-  if (iter != fExtensionMap.end()) {
+  if (iter != fExtensionMap.end())
+  {
     G4ExceptionDescription msg;
     msg << "G4ExtendedMaterial <" << GetName() << "> already has extension for "
         << extension->GetName() << ". Extension is replaced.";
@@ -81,7 +84,8 @@ void G4ExtendedMaterial::RegisterExtension(std::unique_ptr<G4VMaterialExtension>
 G4VMaterialExtension* G4ExtendedMaterial::RetrieveExtension(const G4String& name)
 {
   const auto iter = fExtensionMap.find(name);
-  if (iter != fExtensionMap.end()) {
+  if (iter != fExtensionMap.end())
+  {
     return iter->second.get();
   }
 
@@ -91,13 +95,17 @@ G4VMaterialExtension* G4ExtendedMaterial::RetrieveExtension(const G4String& name
   return nullptr;
 }
 
-G4bool G4ExtendedMaterial::IsExtended() const { return true; }
+G4bool G4ExtendedMaterial::IsExtended() const
+{
+  return true;
+}
 
 void G4ExtendedMaterial::Print(std::ostream& flux) const
 {
   flux << "\n Registered material extensions :\n";
   auto iter = fExtensionMap.begin();
-  for (; iter != fExtensionMap.end(); iter++) {
+  for (; iter != fExtensionMap.end(); iter++)
+  {
     flux << "     " << iter->first << "\n";
   }
 }

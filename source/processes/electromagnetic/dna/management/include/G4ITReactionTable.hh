@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,33 +41,36 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#ifndef G4ITREACTIONTABLE_H
-#define G4ITREACTIONTABLE_H
+#ifndef G4ITREACTIONTABLE_HH
+#define G4ITREACTIONTABLE_HH
 
 /**
-  * Free interface to define reaction information
-  */
+ * Free interface to define reaction information
+ */
 
 class G4ITReactionTable
 {
-    public:
-        /** Default constructor */
-        G4ITReactionTable();
-        /** Default destructor */
-        virtual ~G4ITReactionTable();
-        /** Copy constructor
-         *  \param other Object to copy from
-         */
-        G4ITReactionTable(const G4ITReactionTable& /*other*/);
-        /** Assignment operator
-         *  \param other Object to assign from
-         *  \return A reference to this
-         */
-        G4ITReactionTable& operator=(const G4ITReactionTable& /*other*/);
-    protected:
-    private:
+  public:
+
+    /** Default constructor */
+    G4ITReactionTable();
+    /** Default destructor */
+    virtual ~G4ITReactionTable();
+    /** Copy constructor
+     *  \param other Object to copy from
+     */
+    G4ITReactionTable(const G4ITReactionTable& /*other*/);
+    /** Assignment operator
+     *  \param other Object to assign from
+     *  \return A reference to this
+     */
+    G4ITReactionTable& operator=(const G4ITReactionTable& /*other*/);
+
+  protected:
+
+  private:
 };
 
-#endif // G4ITREACTIONTABLE_H
+#endif  // G4ITREACTIONTABLE_H

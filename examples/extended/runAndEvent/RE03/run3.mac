@@ -14,7 +14,7 @@
 #
 /score/create/boxMesh boxMesh_3b
 #
-/score/mesh/boxSize 100. 100. 20. cm
+/score/mesh/boxSize 100.001 100.001 20. cm
 /score/mesh/nBin 50 50 20
 #
 /score/quantity/nOfStep nOfStepGamma
@@ -26,12 +26,16 @@
 #
 /score/list
 #
-/vis/disable
+/control/doifInteractive /vis/disable
+/gun/particle mu-
 /run/beamOn 2000
-/vis/enable
+/control/doifInteractive /vis/enable
 #
 ########################################
 #
-/score/drawProjection boxMesh_3a nOfStepGamma
-/score/drawProjection boxMesh_3b nOfStepGamma ! 11
+/control/ifInteractive @@
+  /score/drawProjection boxMesh_3a nOfStepGamma
+  /score/drawProjection boxMesh_3b nOfStepGamma ! 11 false 1
+/control/endRecord
+#
 #

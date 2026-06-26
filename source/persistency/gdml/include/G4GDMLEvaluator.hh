@@ -32,11 +32,11 @@
 // Author: Zoltan Torzsok, November 2007
 // --------------------------------------------------------------------
 #ifndef G4GDMLEVALUATOR_HH
-#define G4GDMLEVALUATOR_HH 1
-
-#include <vector>
+#define G4GDMLEVALUATOR_HH
 
 #include "G4Evaluator.hh"
+
+#include <vector>
 
 class G4GDMLEvaluator
 {

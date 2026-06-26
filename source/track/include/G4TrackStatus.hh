@@ -34,27 +34,27 @@
 //   Katsuya Amako  (e-mail: Katsuya.Amako@kek.jp)
 //   Takashi Sasaki (e-mail: Takashi.Sasaki@kek.jp)
 // --------------------------------------------------------------------
-#ifndef G4TrackStatus_hh
-#define G4TrackStatus_hh 1
+#ifndef G4TRACKSTATUS_HH
+#define G4TRACKSTATUS_HH
 
 enum G4TrackStatus
 {
   fAlive,
-    // Continue the tracking
+  // Continue the tracking
   fStopButAlive,
-    // Invoke active rest physics processes and kill the current track afterward
+  // Invoke active rest physics processes and kill the current track afterward
   fStopAndKill,
-    // Kill the current track
+  // Kill the current track
   fKillTrackAndSecondaries,
-    // Kill the current track and also associated secondaries
+  // Kill the current track and also associated secondaries
   fSuspend,
-    // Suspend the current track
+  // Suspend the current track
   fSuspendAndWait,
-    // Suspend the current track and send it to the Waiting stack so that it
-    // won't be resumed until all other tracks in the Urgent stack and their
-    // descendants have been tracked
+  // Suspend the current track and send it to the Waiting stack so that it
+  // won't be resumed until all other tracks in the Urgent stack and their
+  // descendants have been tracked
   fPostponeToNextEvent
-    // Postpone the tracking of the current track to the next event
+  // Postpone the tracking of the current track to the next event
 };
 
 #endif

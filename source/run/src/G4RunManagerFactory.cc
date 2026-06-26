@@ -30,8 +30,8 @@
 #include "G4EnvironmentUtils.hh"
 #include "G4MTRunManager.hh"
 #include "G4RunManager.hh"
-#include "G4TaskRunManager.hh"
 #include "G4SubEvtRunManager.hh"
+#include "G4TaskRunManager.hh"
 #include "G4Threading.hh"
 
 #include "templates.hh"
@@ -75,7 +75,8 @@ G4RunManager* G4RunManagerFactory::CreateRunManager(G4RunManagerType _type,
     // MUST fail if unavail in this case
     fail_if_unavail = true;
   }
-  else {
+  else
+  {
     // - G4RUN_MANAGER_TYPE can be set to override the "default"
     //   - If the requested type isn't available, then it will fall back to the
     //   system default
@@ -86,11 +87,13 @@ G4RunManager* G4RunManagerFactory::CreateRunManager(G4RunManagerType _type,
     auto force_rm =
       G4GetEnv<std::string>("G4FORCE_RUN_MANAGER_TYPE", "", "Forcing G4RunManager type...");
 
-    if (force_rm.length() > 0) {
+    if (force_rm.length() > 0)
+    {
       rm_type = std::move(force_rm);
       fail_if_unavail = true;
     }
-    else if (rm_type.empty()) {
+    else if (rm_type.empty())
+    {
       rm_type = GetDefault();
     }
   }
@@ -99,11 +102,14 @@ G4RunManager* G4RunManagerFactory::CreateRunManager(G4RunManagerType _type,
   // NB: Comparison at present is case sensitive (needs a comparator in
   // GetOptions)
   auto opts = GetOptions();
-  if (opts.find(rm_type) == opts.end()) {
-    if (fail_if_unavail) {
+  if (opts.find(rm_type) == opts.end())
+  {
+    if (fail_if_unavail)
+    {
       fail("Run manager type is not available", rm_type, opts, 1);
     }
-    else {
+    else
+    {
       rm_type = GetDefault();
     }
   }
@@ -112,7 +118,8 @@ G4RunManager* G4RunManagerFactory::CreateRunManager(G4RunManagerType _type,
   _type = GetType(rm_type);
   G4RunManager* rm = nullptr;
 
-  switch (_type) {
+  switch (_type)
+  {
     case G4RunManagerType::Serial:
       rm = new G4RunManager();
       break;
@@ -133,11 +140,11 @@ G4RunManager* G4RunManagerFactory::CreateRunManager(G4RunManagerType _type,
       break;
     case G4RunManagerType::SubEvt:
 #if defined(G4MULTITHREADED)
-#if defined(GEANT4_USE_TBB)
+#  if defined(GEANT4_USE_TBB)
       rm = new G4SubEvtRunManager(_queue, true);
-#else
+#  else
       rm = new G4SubEvtRunManager(_queue, false);
-#endif
+#  endif
 #endif
       break;
     // "Only" types are not handled since they are converted above to main type
@@ -217,7 +224,8 @@ G4RunManagerType G4RunManagerFactory::GetType(const std::string& key)
 
 std::string G4RunManagerFactory::GetName(G4RunManagerType _type)
 {
-  switch (_type) {
+  switch (_type)
+  {
     case G4RunManagerType::Serial:
       return "Serial";
     case G4RunManagerType::SerialOnly:
@@ -256,7 +264,8 @@ G4RunManager* G4RunManagerFactory::GetMasterRunManager()
   if (master_run_manager != nullptr) return master_run_manager;
 
   // if the application did not use G4RunManagerFactory and is MT
-  if (G4Threading::IsMultithreadedApplication()) {
+  if (G4Threading::IsMultithreadedApplication())
+  {
     auto mt_rm = GetMTMasterRunManager();
     if (mt_rm != nullptr) return mt_rm;
   }
@@ -275,7 +284,8 @@ G4MTRunManager* G4RunManagerFactory::GetMTMasterRunManager()
   if (mt_master_run_manager != nullptr) return mt_master_run_manager;
 
   // if the application did not use G4RunManagerFactory
-  if (G4Threading::IsMultithreadedApplication()) {
+  if (G4Threading::IsMultithreadedApplication())
+  {
     auto task_rm = G4TaskRunManager::GetMasterRunManager();
     if (task_rm != nullptr) return task_rm;
     return G4MTRunManager::GetMasterRunManager();
@@ -297,7 +307,8 @@ G4RunManagerKernel* G4RunManagerFactory::GetMasterRunManagerKernel()
   if (master_run_manager_kernel != nullptr) return master_run_manager_kernel;
 
   // if the application did not use G4RunManagerFactory and is MT
-  if (G4Threading::IsMultithreadedApplication()) {
+  if (G4Threading::IsMultithreadedApplication())
+  {
     auto mt_rm = GetMTMasterRunManager();
     if (mt_rm != nullptr) return mt_rm->kernel;
   }

@@ -26,38 +26,40 @@
 //
 //---------------------------------------------------------------------------
 //
-// Description: Create all hadronic (neutron and photon) processes using LEND which is valid up to 20 MeV
+// Description: Create all hadronic (neutron and photon) processes using LEND which is valid up to
+// 20 MeV
 //
 // Author: Douglas M Wright, LLNL 2022-04-25
 //
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4HadronPhysicsLEND_h
-#define G4HadronPhysicsLEND_h 1
+#ifndef G4HADRONPHYSICSLEND_HH
+#define G4HADRONPHYSICSLEND_HH
 
 #include "G4VPhysicsConstructor.hh"
 
-const G4double maxLEND_Energy = 20*CLHEP::MeV;
-const G4double overlapLEND_Energy = 0.1*CLHEP::MeV;
+const G4double maxLEND_Energy = 20 * CLHEP::MeV;
+const G4double overlapLEND_Energy = 0.1 * CLHEP::MeV;
 
 class G4HadronPhysicsLEND : public G4VPhysicsConstructor
 {
-public: 
-    G4HadronPhysicsLEND(G4int verbose =1, const G4String& eval="");
+  public:
+
+    G4HadronPhysicsLEND(G4int verbose = 1, const G4String& eval = "");
     ~G4HadronPhysicsLEND() override = default;
 
     void ConstructProcess() override;
     void ConstructParticle() override;
 
     // copy constructor and hide assignment operator
-    G4HadronPhysicsLEND(G4HadronPhysicsLEND &) = delete;
-    G4HadronPhysicsLEND & operator =
-    (const G4HadronPhysicsLEND &right) = delete;
+    G4HadronPhysicsLEND(G4HadronPhysicsLEND&) = delete;
+    G4HadronPhysicsLEND& operator=(const G4HadronPhysicsLEND& right) = delete;
 
-private:
-  G4String evaluation;
-  G4int verbose;
+  private:
+
+    G4String evaluation;
+    G4int verbose;
 };
 
 #endif

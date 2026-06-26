@@ -36,8 +36,8 @@
 
 // Author: T.Koi, SLAC - 11 November 2015
 // --------------------------------------------------------------------
-#ifndef G4NuclideTableMessenger_hh
-#define G4NuclideTableMessenger_hh 1
+#ifndef G4NUCLIDETABLEMESSENGER_HH
+#define G4NUCLIDETABLEMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -49,6 +49,7 @@ class G4UIcmdWithADoubleAndUnit;
 class G4NuclideTableMessenger : public G4UImessenger
 {
   public:
+
     G4NuclideTableMessenger(G4NuclideTable* nuclideTable = nullptr);
     ~G4NuclideTableMessenger() override;
 
@@ -58,6 +59,7 @@ class G4NuclideTableMessenger : public G4UImessenger
     void SetNewValue(G4UIcommand* command, G4String newValues) override;
 
   private:
+
     G4NuclideTable* theNuclideTable = nullptr;
 
     G4UIdirectory* thisDirectory = nullptr;

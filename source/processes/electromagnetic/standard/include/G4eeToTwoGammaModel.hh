@@ -50,57 +50,48 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4eeToTwoGammaModel_h
-#define G4eeToTwoGammaModel_h 1
+#ifndef G4EETOTWOGAMMAMODEL_HH
+#define G4EETOTWOGAMMAMODEL_HH
 
 #include "G4VEmModel.hh"
+
 #include <vector>
 
 class G4ParticleChangeForGamma;
 
 class G4eeToTwoGammaModel : public G4VEmModel
 {
+  public:
 
-public:
+    explicit G4eeToTwoGammaModel(const G4ParticleDefinition* p = nullptr,
+                                 const G4String& nam = "eplus2gg");
 
-  explicit G4eeToTwoGammaModel(const G4ParticleDefinition* p = nullptr,
-                               const G4String& nam = "eplus2gg");
+    ~G4eeToTwoGammaModel() override;
 
-  ~G4eeToTwoGammaModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
-  
-  virtual G4double ComputeCrossSectionPerElectron(G4double kinEnergy); 
-  
-  G4double ComputeCrossSectionPerAtom(
-                                 const G4ParticleDefinition*,
-                                 G4double kinEnergy, 
-                                 G4double Z, 
-                                 G4double A = 0., 
-                                 G4double cutEnergy = 0.,
-                                 G4double maxEnergy = DBL_MAX) override;
+    virtual G4double ComputeCrossSectionPerElectron(G4double kinEnergy);
 
-  G4double CrossSectionPerVolume(const G4Material*,
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy = 0.0,
-				 G4double maxEnergy = DBL_MAX) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A = 0., G4double cutEnergy = 0.,
+                                        G4double maxEnergy = DBL_MAX) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-				 const G4MaterialCutsCouple*,
-				 const G4DynamicParticle*,
-				 G4double tmin,
-				 G4double maxEnergy) override;
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy = 0.0,
+                                   G4double maxEnergy = DBL_MAX) override;
 
-  // hide assignment operator
-  G4eeToTwoGammaModel & operator=(const  G4eeToTwoGammaModel &right) = delete;
-  G4eeToTwoGammaModel(const  G4eeToTwoGammaModel&) = delete;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-private:
+    // hide assignment operator
+    G4eeToTwoGammaModel& operator=(const G4eeToTwoGammaModel& right) = delete;
+    G4eeToTwoGammaModel(const G4eeToTwoGammaModel&) = delete;
 
-  G4double pi_rcl2;
-  const G4ParticleDefinition* theGamma;
-  G4ParticleChangeForGamma* fParticleChange;
+  private:
+
+    G4double pi_rcl2;
+    const G4ParticleDefinition* theGamma;
+    G4ParticleChangeForGamma* fParticleChange;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

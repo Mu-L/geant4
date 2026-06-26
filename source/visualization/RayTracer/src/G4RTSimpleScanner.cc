@@ -29,13 +29,14 @@
 
 #include "G4RTSimpleScanner.hh"
 
-G4RTSimpleScanner::G4RTSimpleScanner():
-  G4VRTScanner(), theNRow(0), theNColumn(0), theIRow(0), theIColumn(0)
+G4RTSimpleScanner::G4RTSimpleScanner()
+  : G4VRTScanner(), theNRow(0), theNColumn(0), theIRow(0), theIColumn(0)
 {}
 
-G4RTSimpleScanner::~G4RTSimpleScanner(){}
+G4RTSimpleScanner::~G4RTSimpleScanner() {}
 
-void G4RTSimpleScanner::Initialize(G4int nRow, G4int nColumn) {
+void G4RTSimpleScanner::Initialize(G4int nRow, G4int nColumn)
+{
   theNRow = nRow;
   theNColumn = nColumn;
   theIRow = 0;
@@ -46,7 +47,8 @@ G4bool G4RTSimpleScanner::Coords(G4int& iRow, G4int& iColumn)
 {
   // Increment column and, if necessary, increment row...
   ++theIColumn;
-  if (theIColumn >= theNColumn) {
+  if (theIColumn >= theNColumn)
+  {
     theIColumn = 0;
     ++theIRow;
   }

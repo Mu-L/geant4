@@ -22,46 +22,43 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// G4ExceptionSeverity
-//
-// Description:
-//
-// Specifies the severity of G4Exception
-//
-//  FatalException
-//   Error is severe or it happens at the initialization time.
-//   Program should be aborted and core dump will be generated.
-//
-//  FatalErrorInArgument
-//   Fatal error caused by most likely the mis-use of interfaces
-//   by the user's code. Program should be aborted and core dump
-//   will be generated.
-//
-//  RunMustBeAborted
-//   Error happens at initialization of a run (ex. at the
-//   moment of closing geometry), or some unpleasant situation
-//   occurs during the event loop. Current run will be aborted
-//   and the application returns to "Idle" state.
-//
-//  EventMustBeAborted
-//   Error happens during tracking a particle. The event currently
-//   being processed should be aborted, run will not be aborted.
-//
-//  JustWarning
-//   Just display messages.
-//
-//  IgnoreTheIssue
-//   No message generated.
-//
-
+//! @file G4ExceptionSeverity.hh
+// ********************************************************************
 // Author: M.Asai, 19 August 2002
-// 05 September 2023 : IgnoreTheIssue added
-//
 // --------------------------------------------------------------------
-#ifndef G4ExceptionSeverity_hh
-#define G4ExceptionSeverity_hh 1
+#ifndef G4EXCEPTIONSEVERITY_HH
+#define G4EXCEPTIONSEVERITY_HH
 
+/**
+ * @ingroup global_management
+ * @enum G4ExceptionSeverity
+ * @brief Specifies the severity of a G4Exception
+ *
+ * @var FatalException
+ *   Error is severe or it happens at the initialization time.
+ *   Program should be aborted and core dump will be generated.
+ *
+ * @var FatalErrorInArgument
+ *   Fatal error caused by most likely the mis-use of interfaces
+ *   by the user's code. Program should be aborted and core dump
+ *   will be generated.
+ *
+ * @var RunMustBeAborted
+ *   Error happens at initialization of a run. This might be at the
+ *   moment of closing geometry, or some unpleasant situation
+ *   occurs during the event loop. Current run will be aborted
+ *   and the application returns to "Idle" state.
+ *
+ * @var EventMustBeAborted
+ *   Error happens during tracking a particle. The event currently
+ *   being processed should be aborted, run will not be aborted.
+ *
+ * @var JustWarning
+ *   Just display messages.
+ *
+ * @var IgnoreTheIssue
+ *   No message generated.
+ */
 enum G4ExceptionSeverity
 {
   FatalException,

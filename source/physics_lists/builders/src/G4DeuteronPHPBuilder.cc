@@ -24,38 +24,35 @@
 // ********************************************************************
 //
 #include "G4DeuteronPHPBuilder.hh"
+
 #include "G4ParticleDefinition.hh"
+#include "G4ParticleHPInelasticData.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4ParticleHPInelasticData.hh"
 #include "G4SystemOfUnits.hh"
 
-G4DeuteronPHPBuilder::
-G4DeuteronPHPBuilder() 
+G4DeuteronPHPBuilder::G4DeuteronPHPBuilder()
 {
   theMin = 0;
-  theMax=200.*MeV;
+  theMax = 200. * MeV;
   theParticlePHPModel = 0;
 }
 
-void G4DeuteronPHPBuilder::
-Build(G4HadronElasticProcess *)
+void G4DeuteronPHPBuilder::Build(G4HadronElasticProcess*)
 {
   G4cout << "Info - G4DeuteronPHPBuilder::Build() not adding elastic" << G4endl;
 }
 
-void G4DeuteronPHPBuilder::
-Build(G4HadronInelasticProcess * aP)
+void G4DeuteronPHPBuilder::Build(G4HadronInelasticProcess* aP)
 {
-  G4ParticleHPInelasticData* theDeuteronHPInelasticData=new G4ParticleHPInelasticData(G4Deuteron::Deuteron());
+  G4ParticleHPInelasticData* theDeuteronHPInelasticData =
+    new G4ParticleHPInelasticData(G4Deuteron::Deuteron());
   theDeuteronHPInelasticData->SetMinKinEnergy(theMin);
   theDeuteronHPInelasticData->SetMaxKinEnergy(theMax);
   aP->AddDataSet(theDeuteronHPInelasticData);
 
-  theParticlePHPModel = new G4ParticleHPInelastic(G4Deuteron::Deuteron(),"ParticleHPInelastic");
+  theParticlePHPModel = new G4ParticleHPInelastic(G4Deuteron::Deuteron(), "ParticleHPInelastic");
   theParticlePHPModel->SetMinEnergy(theMin);
   theParticlePHPModel->SetMaxEnergy(theMax);
   aP->RegisterMe(theParticlePHPModel);
-
 }
-

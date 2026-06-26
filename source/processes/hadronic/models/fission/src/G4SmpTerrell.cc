@@ -55,38 +55,40 @@
 //
 //
 
-#include <cmath>
 #include "G4Exp.hh"
 #include "G4Log.hh"
 #include "G4fissionEvent.hh"
+
+#include <cmath>
 
 #define TWOPI 6.283185307
 #define SQRT2 1.414213562
 #define BSHIFT -0.43287
 #define WIDTH 1.079
 
-G4double G4fissionEvent::G4SmpTerrell(G4double nubar) {
-/*
-  Description
-    Sample Fission Number from Terrell's modified Gaussian distribution
+G4double G4fissionEvent::G4SmpTerrell(G4double nubar)
+{
+  /*
+    Description
+      Sample Fission Number from Terrell's modified Gaussian distribution
 
-    method uses Red Cullen's algoritm UCRL-TR-222526
-*/
+      method uses Red Cullen's algoritm UCRL-TR-222526
+  */
 
-/*
-  Input
-    nubar    - average number of neutrons per fission
-  Output
-    G4SmpTerrell  - sampled multiplicity
-    
-*/
+  /*
+    Input
+      nubar    - average number of neutrons per fission
+    Output
+      G4SmpTerrell  - sampled multiplicity
+
+  */
 
   G4double width;
   G4double temp1, temp2, expo, cshift;
   G4double rw, theta, sampleg;
 
-
-  if (nubar < WIDTH) {
+  if (nubar < WIDTH)
+  {
     std::ostringstream o;
     o << nubar;
     const std::string& errMsg = "fission nubar out of range, nubar=" + o.str();
@@ -95,20 +97,23 @@ G4double G4fissionEvent::G4SmpTerrell(G4double nubar) {
 
   width = SQRT2 * WIDTH;
   temp1 = nubar + 0.5;
-  temp2 = temp1/width;
+  temp2 = temp1 / width;
   temp2 *= temp2;
   expo = G4Exp(-temp2);
-  cshift = temp1 + BSHIFT * WIDTH * expo/(1. - expo);
+  cshift = temp1 + BSHIFT * WIDTH * expo / (1. - expo);
 
   G4int icounter = 0;
   G4int icounter_max = 1024;
-  do {
+  do
+  {
     rw = std::sqrt(-G4Log(fisslibrng()));
     theta = TWOPI * fisslibrng();
     sampleg = width * rw * std::cos(theta) + cshift;
     icounter++;
-    if ( icounter > icounter_max ) { 
-      G4cout << "Loop-counter exceeded the threshold value at " << __LINE__ << "th line of " << __FILE__ << "." << G4endl;
+    if (icounter > icounter_max)
+    {
+      G4cout << "Loop-counter exceeded the threshold value at " << __LINE__ << "th line of "
+             << __FILE__ << "." << G4endl;
       break;
     }
   } while (sampleg < 0.0);

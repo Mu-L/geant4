@@ -37,41 +37,41 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4QGSPKaonBuilder_h
-#define G4QGSPKaonBuilder_h 1
+#ifndef G4QGSPKAONBUILDER_HH
+#define G4QGSPKAONBUILDER_HH
 
-#include "globals.hh"
-
-#include "G4HadronElasticProcess.hh"
-#include "G4VKaonBuilder.hh"
-
-#include "G4TheoFSGenerator.hh"
+#include "G4ExcitedStringDecay.hh"
 #include "G4GeneratorPrecompoundInterface.hh"
+#include "G4HadronElasticProcess.hh"
+#include "G4QGSMFragmentation.hh"
 #include "G4QGSModel.hh"
 #include "G4QGSParticipants.hh"
-#include "G4QGSMFragmentation.hh"
-#include "G4ExcitedStringDecay.hh"
 #include "G4QuasiElasticChannel.hh"
-
+#include "G4TheoFSGenerator.hh"
+#include "G4VKaonBuilder.hh"
+#include "globals.hh"
 
 class G4QGSPKaonBuilder : public G4VKaonBuilder
 {
-  public: 
-    G4QGSPKaonBuilder(G4bool quasiElastic=false);
+  public:
+
+    G4QGSPKaonBuilder(G4bool quasiElastic = false);
     virtual ~G4QGSPKaonBuilder();
 
-  public: 
-    virtual void Build(G4HadronElasticProcess * aP) final override;
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
+  public:
 
-    using G4VKaonBuilder::Build; //Prevent compiler warning
+    virtual void Build(G4HadronElasticProcess* aP) final override;
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
+
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+
+    using G4VKaonBuilder::Build;  // Prevent compiler warning
+
   private:
-    G4TheoFSGenerator * theModel;
+
+    G4TheoFSGenerator* theModel;
     G4double theMin;
     G4double theMax;
 };
 
 #endif
-

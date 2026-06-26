@@ -35,37 +35,35 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4FTFPProtonBuilder_h
-#define G4FTFPProtonBuilder_h 
-
-#include "globals.hh"
+#ifndef G4FTFPPROTONBUILDER_HH
+#define G4FTFPPROTONBUILDER_HH
 
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
-#include "G4VProtonBuilder.hh"
-
 #include "G4TheoFSGenerator.hh"
+#include "G4VProtonBuilder.hh"
+#include "globals.hh"
 
 class G4FTFPProtonBuilder : public G4VProtonBuilder
 {
-  public: 
-    G4FTFPProtonBuilder(G4bool quasiElastic=false);
+  public:
+
+    G4FTFPProtonBuilder(G4bool quasiElastic = false);
     ~G4FTFPProtonBuilder() override = default;
 
-    void Build(G4HadronElasticProcess *) override {};
-    void Build(G4HadronInelasticProcess * aP) override;
-    
+    void Build(G4HadronElasticProcess*) override {};
+    void Build(G4HadronInelasticProcess* aP) override;
+
     void SetMinEnergy(G4double aM) override { theMin = aM; };
     void SetMaxEnergy(G4double aM) override { theMax = aM; };
 
-    using G4VProtonBuilder::Build; //Prevent compiler warning
+    using G4VProtonBuilder::Build;  // Prevent compiler warning
 
   private:
-    G4TheoFSGenerator * theModel;
+
+    G4TheoFSGenerator* theModel;
     G4double theMin;
     G4double theMax;
-
 };
 
 #endif
-

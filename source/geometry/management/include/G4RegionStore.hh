@@ -45,12 +45,12 @@
 #ifndef G4REGIONSTORE_HH
 #define G4REGIONSTORE_HH
 
-#include <vector>
-#include <map>
-
-#include "G4Types.hh"
 #include "G4String.hh"
+#include "G4Types.hh"
 #include "G4VStoreNotifier.hh"
+
+#include <map>
+#include <vector>
 
 class G4Region;
 class G4VPhysicalVolume;
@@ -64,7 +64,7 @@ class G4VPhysicalVolume;
  * destruction. The underlying container initially has a capacity of 20.
  * A map indexed by volume names is also recorded for fast search; pointers
  * to regions with same name are stored in buckets.
-*/
+ */
 
 class G4RegionStore : public std::vector<G4Region*>
 {
@@ -140,8 +140,7 @@ class G4RegionStore : public std::vector<G4Region*>
     /**
      * Returns the internal map.
      */
-    inline const std::map<G4String,
-            std::vector<G4Region*> >& GetMap() const { return bmap; }
+    inline const std::map<G4String, std::vector<G4Region*>>& GetMap() const { return bmap; }
 
     /**
      * Brings contents of the internal map up to date and resets validity flag.
@@ -172,12 +171,12 @@ class G4RegionStore : public std::vector<G4Region*>
   private:
 
     void CleanStore();
-  
+
     static G4RegionStore* fgInstance;
     static G4ThreadLocal G4VStoreNotifier* fgNotifier;
     static G4ThreadLocal G4bool locked;
 
-    std::map<G4String, std::vector<G4Region*> > bmap;
+    std::map<G4String, std::vector<G4Region*>> bmap;
     G4bool mvalid = false;  // Flag to indicate if map is up to date or not
 };
 

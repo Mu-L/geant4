@@ -26,44 +26,35 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4DNAIonisation_h
-#define G4DNAIonisation_h 1
+#ifndef G4DNAIONISATION_HH
+#define G4DNAIONISATION_HH
 
 #include "G4VEmProcess.hh"
-#include "G4DNAGenericIonsManager.hh"
-#include "G4Electron.hh"
-#include "G4Proton.hh"
-
-// Available models
-#include "G4DNABornIonisationModel.hh"
-#include "G4DNARuddIonisationModel.hh"
-#include "G4DNARuddIonisationExtendedModel.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class G4DNAIonisation : public G4VEmProcess
-
 {
-public: 
+  public:
 
-  G4DNAIonisation(const G4String& processName ="DNAIonisation",
-		     G4ProcessType type = fElectromagnetic);
+    G4DNAIonisation(const G4String& processName = "DNAIonisation",
+                    G4ProcessType type = fElectromagnetic);
 
-  ~G4DNAIonisation() override;
+    ~G4DNAIonisation() override = default;
 
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
-  
-  virtual void PrintInfo();
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
 
-protected:
+    virtual void PrintInfo();
 
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+  protected:
 
-private:
-     
-  G4bool       isInitialised{false};
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool isInitialised{false};
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-  
+
 #endif

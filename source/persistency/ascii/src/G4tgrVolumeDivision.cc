@@ -31,27 +31,23 @@
 #include "G4tgrVolumeDivision.hh"
 
 #include "G4SystemOfUnits.hh"
+#include "G4tgrFileReader.hh"
+#include "G4tgrMessenger.hh"
+#include "G4tgrPlace.hh"
+#include "G4tgrPlaceDivRep.hh"
 #include "G4tgrUtils.hh"
 #include "G4tgrVolumeMgr.hh"
-#include "G4tgrPlace.hh"
-#include "G4tgrFileReader.hh"
-#include "G4tgrPlaceDivRep.hh"
-#include "G4tgrMessenger.hh"
 
 // --------------------------------------------------------------------
-G4tgrVolumeDivision::~G4tgrVolumeDivision()
-{
-}
+G4tgrVolumeDivision::~G4tgrVolumeDivision() {}
 
 // --------------------------------------------------------------------
 G4tgrVolumeDivision::G4tgrVolumeDivision(const std::vector<G4String>& wl)
 {
   // wl: NAME PARENT  MATERIAL AXIS STEP/NDIV OFFSET
 
-  G4tgrUtils::CheckWLsize(wl, 6, WLSIZE_GE,
-                          "G4tgrVolumeDivision::G4tgrVolumeDivision");
-  G4tgrUtils::CheckWLsize(wl, 8, WLSIZE_LE,
-                          "G4tgrVolumeDivision::G4tgrVolumeDivision");
+  G4tgrUtils::CheckWLsize(wl, 6, WLSIZE_GE, "G4tgrVolumeDivision::G4tgrVolumeDivision");
+  G4tgrUtils::CheckWLsize(wl, 8, WLSIZE_LE, "G4tgrVolumeDivision::G4tgrVolumeDivision");
 
   theType = "VOLDivision";
 
@@ -79,7 +75,7 @@ G4tgrVolumeDivision::G4tgrVolumeDivision(const std::vector<G4String>& wl)
   //------ register parent - child
   G4tgrVolumeMgr::GetInstance()->RegisterParentChild(parentName, thePlaceDiv);
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 3)
+  if (G4tgrMessenger::GetVerboseLevel() >= 3)
   {
     G4cout << " G4tgrVolumeDivision::G4tgrVolumeDivision() -"
            << " Replica register parent - child " << G4endl;
@@ -88,35 +84,35 @@ G4tgrVolumeDivision::G4tgrVolumeDivision(const std::vector<G4String>& wl)
 
   //---------- set if division is given by number of divisions of by width
   G4String wl0 = wl[0];
-  for(G4int ii = 0; ii < (G4int)wl0.length(); ++ii)
+  for (G4int ii = 0; ii < (G4int)wl0.length(); ++ii)
   {
     wl0[ii] = (char)std::toupper(wl0[ii]);
   }
 
-  if(wl0 == ":DIV_NDIV")
+  if (wl0 == ":DIV_NDIV")
   {
     thePlaceDiv->SetDivType(DivByNdiv);
     thePlaceDiv->SetNDiv(G4tgrUtils::GetInt(wl[5]));
-    if(wl.size() == 7)
+    if (wl.size() == 7)
     {
       thePlaceDiv->SetOffset(G4tgrUtils::GetDouble(wl[6]) * mm);
     }
   }
-  else if(wl0 == ":DIV_WIDTH")
+  else if (wl0 == ":DIV_WIDTH")
   {
     thePlaceDiv->SetDivType(DivByWidth);
     thePlaceDiv->SetWidth(G4tgrUtils::GetDouble(wl[5]) * mm);
-    if(wl.size() == 7)
+    if (wl.size() == 7)
     {
       thePlaceDiv->SetOffset(G4tgrUtils::GetDouble(wl[6]) * mm);
     }
   }
-  else if(wl0 == ":DIV_NDIV_WIDTH")
+  else if (wl0 == ":DIV_NDIV_WIDTH")
   {
     thePlaceDiv->SetDivType(DivByNdivAndWidth);
     thePlaceDiv->SetNDiv(G4tgrUtils::GetInt(wl[5]));
     thePlaceDiv->SetWidth(G4tgrUtils::GetDouble(wl[6]) * mm);
-    if(wl.size() == 8)
+    if (wl.size() == 8)
     {
       thePlaceDiv->SetOffset(G4tgrUtils::GetDouble(wl[7]) * mm);
     }
@@ -124,19 +120,19 @@ G4tgrVolumeDivision::G4tgrVolumeDivision(const std::vector<G4String>& wl)
   else
   {
     G4String ErrMessage = "Division type not supported, sorry... " + wl[0];
-    G4Exception("G4tgrVolumeDivision::G4tgrVolumeDivision()", "NotImplemented",
-                FatalException, ErrMessage);
+    G4Exception("G4tgrVolumeDivision::G4tgrVolumeDivision()", "NotImplemented", FatalException,
+                ErrMessage);
   }
 
   theVisibility = 1;
-  theRGBColour  = new G4double[3];
-  for(std::size_t ii = 0; ii < 3; ++ii)
+  theRGBColour = new G4double[3];
+  for (std::size_t ii = 0; ii < 3; ++ii)
   {
     theRGBColour[ii] = -1.;
   }
 
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 1)
+  if (G4tgrMessenger::GetVerboseLevel() >= 1)
   {
     G4cout << " Created " << *this << G4endl;
   }
@@ -148,8 +144,7 @@ G4tgrVolumeDivision::G4tgrVolumeDivision(const std::vector<G4String>& wl)
 // --------------------------------------------------------------------
 std::ostream& operator<<(std::ostream& os, const G4tgrVolumeDivision& obj)
 {
-  os << "G4tgrVolumeDivision= " << obj.theName
-     << " Placement= " << *(obj.thePlaceDiv) << G4endl;
+  os << "G4tgrVolumeDivision= " << obj.theName << " Placement= " << *(obj.thePlaceDiv) << G4endl;
 
   return os;
 }

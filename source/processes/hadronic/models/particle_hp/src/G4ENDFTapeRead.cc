@@ -94,10 +94,12 @@ void G4ENDFTapeRead::Initialize(std::istringstream& dataStream)
 
   YieldContainerTable_ = new G4TableTemplate<G4ENDFYieldDataContainer>;
 
-  try {
+  try
+  {
     ReadInData(dataStream);
   }
-  catch (std::exception& e) {
+  catch (std::exception& e)
+  {
     delete YieldContainerTable_;
 
     G4FFG_FUNCTIONLEAVE__
@@ -138,7 +140,8 @@ G4ENDFYieldDataContainer* G4ENDFTapeRead::G4GetYield(G4int WhichYield) const
   G4FFG_DATA_FUNCTIONENTER__
 
   G4ENDFYieldDataContainer* Container = nullptr;
-  if (WhichYield >= 0 && WhichYield < YieldContainerTable_->G4GetNumberOfElements()) {
+  if (WhichYield >= 0 && WhichYield < YieldContainerTable_->G4GetNumberOfElements())
+  {
     Container = YieldContainerTable_->G4GetContainer(WhichYield);
   }
 
@@ -160,7 +163,8 @@ void G4ENDFTapeRead::ReadInData(std::istringstream& dataStream)
   G4FFG_FUNCTIONENTER__
 
   // Check if the file exists
-  if (!dataStream.good()) {
+  if (!dataStream.good())
+  {
     G4Exception("G4ENDFTapeRead::ReadInData()", "Illegal file name", JustWarning,
                 "Fission product data not available");
 
@@ -412,24 +416,29 @@ void G4ENDFTapeRead::ReadInData(std::istringstream& dataStream)
 
     correctMT = MT == YieldType_;
 
-    for (G4int b = 0; b < blockCount; ++b) {
+    for (G4int b = 0; b < blockCount; ++b)
+    {
       dataStream >> incidentEnergy >> itemCount >> interpolation;
       maxSize = maxSize >= itemCount ? maxSize : itemCount;
 
-      if (correctMT) {
+      if (correctMT)
+      {
         // Load in the energy of the projectile
         projectileEnergies.push_back(incidentEnergy);
         currentEnergy = G4int(projectileEnergies.size() - 1);
       }
-      else {
+      else
+      {
         // !!! Do not break since we need to parse through the !!!
         // !!! entire data file for all possible energies      !!!
       }
 
-      for (G4int i = 0; i < itemCount; ++i) {
+      for (G4int i = 0; i < itemCount; ++i)
+      {
         dataStream >> isotope >> metastate >> yield;
 
-        if (correctMT) {
+        if (correctMT)
+        {
           identifier = isotope * 10 + metastate;
 
           dataIterator =
@@ -439,7 +448,8 @@ void G4ENDFTapeRead::ReadInData(std::istringstream& dataStream)
                                            std::vector<G4double>(projectileEnergies.size(), 0.0))))
               .first;
 
-          if (dataIterator->second.first.size() < projectileEnergies.size()) {
+          if (dataIterator->second.first.size() < projectileEnergies.size())
+          {
             dataIterator->second.first.resize(projectileEnergies.size());
             dataIterator->second.second.resize(projectileEnergies.size());
           }
@@ -447,7 +457,8 @@ void G4ENDFTapeRead::ReadInData(std::istringstream& dataStream)
           dataIterator->second.first[currentEnergy] = yield;
           dataIterator->second.second[currentEnergy] = error;
         }
-        else {
+        else
+        {
           // !!! Do not break since we need to parse through the !!!
           // !!! entire data file for all possible energies      !!!
         }
@@ -463,7 +474,8 @@ void G4ENDFTapeRead::ReadInData(std::istringstream& dataStream)
   auto NewYield = new G4double[EnergyGroups_];
   auto NewError = new G4double[EnergyGroups_];
 
-  for (G4int energyGroup = 0; energyGroup < EnergyGroups_; energyGroup++) {
+  for (G4int energyGroup = 0; energyGroup < EnergyGroups_; energyGroup++)
+  {
     // Load the energy values
     EnergyGroupValues_[energyGroup] = projectileEnergies[energyGroup];
   }
@@ -474,7 +486,8 @@ void G4ENDFTapeRead::ReadInData(std::istringstream& dataStream)
   {
     identifier = dataIterator->first;
     metastate = identifier % 10;
-    switch (metastate) {
+    switch (metastate)
+    {
       case 1:
         NewMetaState = G4FFGEnumerations::META_1;
         break;
@@ -494,12 +507,15 @@ void G4ENDFTapeRead::ReadInData(std::istringstream& dataStream)
     }
     NewProduct = (identifier - metastate) / 10;
 
-    for (G4int energyGroup = 0; energyGroup < EnergyGroups_; energyGroup++) {
-      if (energyGroup < (signed)dataIterator->second.first.size()) {
+    for (G4int energyGroup = 0; energyGroup < EnergyGroups_; energyGroup++)
+    {
+      if (energyGroup < (signed)dataIterator->second.first.size())
+      {
         yield = dataIterator->second.first[energyGroup];
         error = dataIterator->second.second[energyGroup];
       }
-      else {
+      else
+      {
         yield = 0.0;
         error = 0.0;
       }

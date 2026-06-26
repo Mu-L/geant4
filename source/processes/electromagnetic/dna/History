@@ -6,12 +6,60 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-06-10 Gabriele Cosmo (emdna-V11-04-10)
+- Fixed compilation warning on Intel/icx compiler for variable defined
+  but not used in G4_NO_VERBOSE mode in G4ITTransportation::AlongStepDoIt().
+
+## 2026-06-08 Ben Morgan (emdna-V11-04-09)
+- Use standard Geant4 header guard without value for definition.
+- Add headers required for used declarations.
+
+## 2026-05-27 Christian Velten (emdna-V11-04-08)
+- Added G4MesoscopicMoleculeCounter and added hooks for G4MoleculeCounterManager
+    into G4DNAEventScheduler to record snapshots.
+
+## 2026-05-24 Christian Velten (emdna-V11-04-07)
+- Update molecule counter dump templates and add counter output method
+
+## 2026-05-17 Vladimir Ivanchenko (emdna-V11-04-06)
+- G4DNARuddIonisationDynamicModel, G4DNARuddIonisationExtendedModel - fix problem
+    Bugzilla problem report 2710 - correction factor should be applied only on
+    cross section of Hydrogen; improved initialisation of static data.
+  
+## 2026-05-13 Hoang Tran (emdna-V11-04-05)
+- fixed fixed the crash of "out of bounds" in Event Molecule Counter
+
+## 2026-05-11 Sebastien Incerti (emdna-V11-04-04)
+- G4DNAEmfietzoglouExcitationModel, G4DNAEmfietzoglouIonisationModel,
+G4DNAUeharaScreenedRutherfordElasticModel modified for extension of DNA option4 to 10 MeV
+- G4EMLOW version 9.0 required
+
+## 2026-04-09 Vladimir Ivanchenko (emdna-V11-04-03)
+- G4DNAIonisation, G4DNARuddIonisationDynamicModel,
+  G4DNARuddIonisationExtendedModel - use updated EM parameters
+
+## 2026-02-22 Vladimir Ivanchenko (emdna-V11-04-02)
+- G4DNARuddIonisationDynamicModel - fixed max energy transfer.
+- G4DNARuddIonisationDynamicModel, G4DNARuddIonisationExtendedModel - at
+  initialisation the order of definition of type of charged particle is
+  change to enable deuteron ionisation in DNA.
+- G4DNAIonisation - use EM parameters to define energy limits for a model
+- G4DNAElastic - use correct type of ions.
+
+## 2026-01-19 Hoang Tran (emdna-V11-04-01)
+- Added verbose for PhyChem processes
+
+## 2026-01-18 Shogo Okada (emdna-V11-04-00)
+Updated G4DNADoubleIonisationModel, G4DNATripleIonisationModel, and
+G4DNAQuadrupleIonisationModel in order to enable the usage of stationary mode
+through G4EmParameters
+
 ## 2025-10-18 Sebastien Incerti, Wook Geun Shin (emdna-V11-03-20)
 - Extended G4DNAELSEPAElasticModel up to 10 MeV for water.
-Requires G4EMLOW8.8 
+Requires G4EMLOW8.8
 
 ## 2025-10-10 Le Tuan Anh (emdna-V11-03-19)
-- Changed the condition in calculateDistanceFromTimeStep     
+- Changed the condition in calculateDistanceFromTimeStep
   (G4ChemReboundTransportation) to allow calculate even with DiffusionCoefficient = 0.
 
 ## 2025-09-30 Vladimir Ivanchenko (emdna-V11-03-18)
@@ -148,7 +196,7 @@ dependency from G4emdna-utils
   G4DNAIonChargeDecreaseModel - new classes implementing general models for
     ions heavier than Helium
 - G4DNAChargeDecrease, G4DNAChargeIncrease - removed obsolete definition of
-    min/max model energy inside processes class, code clean-up 
+    min/max model energy inside processes class, code clean-up
 - G4DNARuddIonisationExtendedModel - updated initialisation to allow be called
     from the general model
 - source.cmake in models sub-directory become using alphabetical order for

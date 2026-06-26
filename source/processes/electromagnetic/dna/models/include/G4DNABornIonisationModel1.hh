@@ -25,167 +25,150 @@
 //
 //
 
-#ifndef G4DNABornIonisationModel1_h
-#define G4DNABornIonisationModel1_h 1
-
-#include "G4VEmModel.hh"
-#include "G4ParticleChangeForGamma.hh"
-#include "G4ProductionCutsTable.hh"
+#ifndef G4DNABORNIONISATIONMODEL1_HH
+#define G4DNABORNIONISATIONMODEL1_HH
 
 #include "G4DNACrossSectionDataSet.hh"
-#include "G4Electron.hh"
-#include "G4Proton.hh"
 #include "G4DNAGenericIonsManager.hh"
-
-#include "G4LogLogInterpolation.hh"
-
 #include "G4DNAWaterIonisationStructure.hh"
-#include "G4VAtomDeexcitation.hh"
+#include "G4Electron.hh"
+#include "G4LogLogInterpolation.hh"
 #include "G4NistManager.hh"
+#include "G4ParticleChangeForGamma.hh"
+#include "G4ProductionCutsTable.hh"
+#include "G4Proton.hh"
+#include "G4VAtomDeexcitation.hh"
+#include "G4VEmModel.hh"
 
 class G4DNAChemistryManager;
 
 class G4DNABornIonisationModel1 : public G4VEmModel
 {
+  public:
 
-public:
+    G4DNABornIonisationModel1(const G4ParticleDefinition* p = nullptr,
+                              const G4String& nam = "DNABornIonisationModel");
 
-  G4DNABornIonisationModel1(const G4ParticleDefinition* p = nullptr,
-		           const G4String& nam = "DNABornIonisationModel");
+    ~G4DNABornIonisationModel1() override;
 
-  ~G4DNABornIonisationModel1() override;
-   
-  G4DNABornIonisationModel1 & operator=(const  G4DNABornIonisationModel1 &right) = delete;
-  G4DNABornIonisationModel1(const  G4DNABornIonisationModel1&) = delete;
+    G4DNABornIonisationModel1& operator=(const G4DNABornIonisationModel1& right) = delete;
+    G4DNABornIonisationModel1(const G4DNABornIonisationModel1&) = delete;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector& = *(new G4DataVector())) override;
+    void Initialise(const G4ParticleDefinition*,
+                    const G4DataVector& = *(new G4DataVector())) override;
 
-  G4double CrossSectionPerVolume(  const G4Material* material,
-					   const G4ParticleDefinition* p,
-					   G4double ekin,
-					   G4double emin,
-					   G4double emax) override;
+    G4double CrossSectionPerVolume(const G4Material* material, const G4ParticleDefinition* p,
+                                   G4double ekin, G4double emin, G4double emax) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-				 const G4MaterialCutsCouple*,
-				 const G4DynamicParticle*,
-				 G4double tmin,
-				 G4double maxEnergy) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  G4double GetPartialCrossSection(const G4Material*,
-                                          G4int /*level*/,
-                                          const G4ParticleDefinition*,
-                                          G4double /*kineticEnergy*/) override;
-  void StartTracking(G4Track*) override;
+    G4double GetPartialCrossSection(const G4Material*, G4int /*level*/, const G4ParticleDefinition*,
+                                    G4double /*kineticEnergy*/) override;
+    void StartTracking(G4Track*) override;
 
-  G4double DifferentialCrossSection(G4ParticleDefinition * aParticleDefinition, G4double k, G4double energyTransfer, G4int shell);
+    G4double DifferentialCrossSection(G4ParticleDefinition* aParticleDefinition, G4double k,
+                                      G4double energyTransfer, G4int shell);
 
-  G4double TransferedEnergy(G4ParticleDefinition * aParticleDefinition,
-                            G4double incomingParticleEnergy, G4int shell, G4double random);
+    G4double TransferedEnergy(G4ParticleDefinition* aParticleDefinition,
+                              G4double incomingParticleEnergy, G4int shell, G4double random);
 
-  inline void SelectFasterComputation(G4bool input); 
+    inline void SelectFasterComputation(G4bool input);
 
-  inline void SelectStationary(G4bool input); 
+    inline void SelectStationary(G4bool input);
 
-  inline void SelectSPScaling(G4bool input); 
+    inline void SelectSPScaling(G4bool input);
 
-protected:
+  protected:
 
-  G4ParticleChangeForGamma* fParticleChangeForGamma;
+    G4ParticleChangeForGamma* fParticleChangeForGamma;
 
-private:
+  private:
 
-  G4bool fasterCode{false};
-  G4bool statCode{false};
-  G4bool spScaling{true};
+    G4bool fasterCode{false};
+    G4bool statCode{false};
+    G4bool spScaling{true};
 
-  // Water density table
-  const std::vector<G4double>* fpMolWaterDensity;
+    // Water density table
+    const std::vector<G4double>* fpMolWaterDensity;
 
-  // Deexcitation manager to produce fluo photons and e-
-  G4VAtomDeexcitation* fAtomDeexcitation;
+    // Deexcitation manager to produce fluo photons and e-
+    G4VAtomDeexcitation* fAtomDeexcitation;
 
-  const G4Track* fTrack{nullptr};
-  G4DNAChemistryManager* fChemistry{nullptr};
-  
+    const G4Track* fTrack{nullptr};
+    G4DNAChemistryManager* fChemistry{nullptr};
 
-  std::map<G4String,G4double,std::less<G4String> > lowEnergyLimit;
-  std::map<G4String,G4double,std::less<G4String> > highEnergyLimit;
+    std::map<G4String, G4double, std::less<G4String>> lowEnergyLimit;
+    std::map<G4String, G4double, std::less<G4String>> highEnergyLimit;
 
-  G4bool isInitialised{false};
-  G4int verboseLevel;
-  
-  // Cross section
-  using MapFile = std::map<G4String, G4String, std::less<G4String>>;
-  MapFile tableFile; // useful ?
+    G4bool isInitialised{false};
+    G4int verboseLevel;
 
-  using MapData = std::map<G4String, G4DNACrossSectionDataSet *, std::less<G4String>>;
-  MapData tableData;
-  
-  // Final state
-  
-  G4DNAWaterIonisationStructure waterStructure;
+    // Cross section
+    using MapFile = std::map<G4String, G4String, std::less<G4String>>;
+    MapFile tableFile;  // useful ?
 
-  G4double RandomizeEjectedElectronEnergy(G4ParticleDefinition * aParticleDefinition, G4double incomingParticleEnergy, G4int shell) ;
+    using MapData = std::map<G4String, G4DNACrossSectionDataSet*, std::less<G4String>>;
+    MapData tableData;
 
-  G4double RandomizeEjectedElectronEnergyFromCumulatedDcs(G4ParticleDefinition * aParticleDefinition, G4double incomingParticleEnergy, G4int shell) ;
-   
-  G4double Interpolate(G4double e1, G4double e2, G4double e, G4double xs1, G4double xs2);
-   
-  G4double QuadInterpolator( G4double e11, 
-			     G4double e12, 
-			     G4double e21, 
-			     G4double e22, 
-			     G4double x11,
-			     G4double x12, 
-			     G4double x21, 
-			     G4double x22, 
-			     G4double t1, 
-			     G4double t2, 
-			     G4double t, 
-			     G4double e);
+    // Final state
 
-  using TriDimensionMap = std::map<G4double, std::map<G4double, G4double>>;
-  
-  TriDimensionMap eDiffCrossSectionData[6];
-  TriDimensionMap eNrjTransfData[6]; // for cumulated dcs
-  
-  TriDimensionMap pDiffCrossSectionData[6];
-  TriDimensionMap pNrjTransfData[6]; // for cumulated dcs
-  
-  std::vector<G4double> eTdummyVec;
-  std::vector<G4double> pTdummyVec;
+    G4DNAWaterIonisationStructure waterStructure;
 
-  using VecMap = std::map<G4double, std::vector<G4double>>;
-  
-  VecMap eVecm;
-  VecMap pVecm;
-  
-  VecMap eProbaShellMap[6]; // for cumulated dcs
-  VecMap pProbaShellMap[6]; // for cumulated dcs
-  
-  // Partial cross section  
-  G4int RandomSelect(G4double energy,const G4String& particle );
+    G4double RandomizeEjectedElectronEnergy(G4ParticleDefinition* aParticleDefinition,
+                                            G4double incomingParticleEnergy, G4int shell);
+
+    G4double
+    RandomizeEjectedElectronEnergyFromCumulatedDcs(G4ParticleDefinition* aParticleDefinition,
+                                                   G4double incomingParticleEnergy, G4int shell);
+
+    G4double Interpolate(G4double e1, G4double e2, G4double e, G4double xs1, G4double xs2);
+
+    G4double QuadInterpolator(G4double e11, G4double e12, G4double e21, G4double e22, G4double x11,
+                              G4double x12, G4double x21, G4double x22, G4double t1, G4double t2,
+                              G4double t, G4double e);
+
+    using TriDimensionMap = std::map<G4double, std::map<G4double, G4double>>;
+
+    TriDimensionMap eDiffCrossSectionData[6];
+    TriDimensionMap eNrjTransfData[6];  // for cumulated dcs
+
+    TriDimensionMap pDiffCrossSectionData[6];
+    TriDimensionMap pNrjTransfData[6];  // for cumulated dcs
+
+    std::vector<G4double> eTdummyVec;
+    std::vector<G4double> pTdummyVec;
+
+    using VecMap = std::map<G4double, std::vector<G4double>>;
+
+    VecMap eVecm;
+    VecMap pVecm;
+
+    VecMap eProbaShellMap[6];  // for cumulated dcs
+    VecMap pProbaShellMap[6];  // for cumulated dcs
+
+    // Partial cross section
+    G4int RandomSelect(G4double energy, const G4String& particle);
 };
 
-inline void G4DNABornIonisationModel1::SelectFasterComputation (G4bool input)
-{ 
+inline void G4DNABornIonisationModel1::SelectFasterComputation(G4bool input)
+{
   fasterCode = input;
-}		 
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline void G4DNABornIonisationModel1::SelectStationary (G4bool input)
-{ 
+inline void G4DNABornIonisationModel1::SelectStationary(G4bool input)
+{
   statCode = input;
-}		 
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline void G4DNABornIonisationModel1::SelectSPScaling (G4bool input)
-{ 
-  spScaling = input; 
-}		 
+inline void G4DNABornIonisationModel1::SelectSPScaling(G4bool input)
+{
+  spScaling = input;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 

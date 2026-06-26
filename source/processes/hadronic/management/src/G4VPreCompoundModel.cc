@@ -34,17 +34,14 @@
 //          Added G4ExcitationHandler pointer to the constructor and cleanup
 // -----------------------------------------------------------------------------
 
-
 #include "G4VPreCompoundModel.hh"
 
-G4VPreCompoundModel::G4VPreCompoundModel(G4ExcitationHandler* ptr,
-                                         const G4String& modelName):
-  G4HadronicInteraction(modelName), theExcitationHandler(ptr)
+G4VPreCompoundModel::G4VPreCompoundModel(G4ExcitationHandler* ptr, const G4String& modelName)
+  : G4HadronicInteraction(modelName), theExcitationHandler(ptr)
 {}
 
-G4VPreCompoundModel::~G4VPreCompoundModel()
-{}
- 
+G4VPreCompoundModel::~G4VPreCompoundModel() {}
+
 void G4VPreCompoundModel::DeExciteModelDescription(std::ostream& outFile) const
 {
   outFile << "description of DeExcite() for model derived from G4VPrecompoundModel missing.\n";

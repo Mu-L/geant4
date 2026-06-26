@@ -25,12 +25,10 @@
 //
 //
 //
-//Base class for all Motif component widgets
+// Base class for all Motif component widgets
 
 #include "G4OpenGLXmVWidgetComponent.hh"
 
-G4OpenGLXmVWidgetComponent::G4OpenGLXmVWidgetComponent ()
-{}
+G4OpenGLXmVWidgetComponent::G4OpenGLXmVWidgetComponent() {}
 
-G4OpenGLXmVWidgetComponent::~G4OpenGLXmVWidgetComponent ()
-{}
+G4OpenGLXmVWidgetComponent::~G4OpenGLXmVWidgetComponent() {}

@@ -29,29 +29,29 @@
 //
 // J. M. Quesada (July 2009) coulomb barrier striclty according to Furihata's paper
 
-#ifndef G4TritonGEMChannel_h
-#define G4TritonGEMChannel_h 1
+#ifndef G4TRITONGEMCHANNEL_HH
+#define G4TRITONGEMCHANNEL_HH
 
 #include "G4GEMChannel.hh"
 #include "G4TritonGEMProbability.hh"
 
 class G4TritonGEMChannel : public G4GEMChannel
 {
-public:
-  // only available constructor
-  explicit G4TritonGEMChannel() 
-  : G4GEMChannel(3,1,"t",&theEvaporationProbability) {}
-    
-  // destructor
-  ~G4TritonGEMChannel() {};
+  public:
 
-private:
-  const G4TritonGEMChannel & operator=(const G4TritonGEMChannel & right) = delete;    
-  G4TritonGEMChannel(const G4TritonGEMChannel & right) = delete;
-  G4bool operator==(const G4TritonGEMChannel & right) const = delete;
-  G4bool operator!=(const G4TritonGEMChannel & right) const = delete;
-    
-  G4TritonGEMProbability theEvaporationProbability;
-    
+    // only available constructor
+    explicit G4TritonGEMChannel() : G4GEMChannel(3, 1, "t", &theEvaporationProbability) {}
+
+    // destructor
+    ~G4TritonGEMChannel() {};
+
+  private:
+
+    const G4TritonGEMChannel& operator=(const G4TritonGEMChannel& right) = delete;
+    G4TritonGEMChannel(const G4TritonGEMChannel& right) = delete;
+    G4bool operator==(const G4TritonGEMChannel& right) const = delete;
+    G4bool operator!=(const G4TritonGEMChannel& right) const = delete;
+
+    G4TritonGEMProbability theEvaporationProbability;
 };
 #endif

@@ -31,7 +31,7 @@
 //
 // File name:     G4eplusTo2or3GammaModel
 //
-// Author:        Vladimir Ivanchenko and Omrane Kadri 
+// Author:        Vladimir Ivanchenko and Omrane Kadri
 //
 // Creation date: 29.03.2018
 //
@@ -53,8 +53,8 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4eplusTo2or3GammaModel_h
-#define G4eplusTo2or3GammaModel_h 1
+#ifndef G4EPLUSTO2OR3GAMMAMODEL_HH
+#define G4EPLUSTO2OR3GAMMAMODEL_HH
 
 #include "G4VEmModel.hh"
 
@@ -65,56 +65,52 @@ class G4DataVector;
 
 class G4eplusTo2or3GammaModel : public G4VEmModel
 {
+  public:
 
-public:
+    G4eplusTo2or3GammaModel();
 
-  G4eplusTo2or3GammaModel();
+    ~G4eplusTo2or3GammaModel() override;
 
-  ~G4eplusTo2or3GammaModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    G4double ComputeCrossSectionPerElectron(G4double kinEnergy);
 
-  G4double ComputeCrossSectionPerElectron(G4double kinEnergy); 
-  
-  G4double ComputeCrossSectionPerAtom(
-                                 const G4ParticleDefinition*,
-                                 G4double kinEnergy, 
-                                 G4double Z, 
-                                 G4double A = 0., 
-                                 G4double cutEnergy = 0.,
-                                 G4double maxEnergy = DBL_MAX) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A = 0., G4double cutEnergy = 0.,
+                                        G4double maxEnergy = DBL_MAX) override;
 
-  G4double CrossSectionPerVolume(const G4Material*,
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy = 0.0,
-				 G4double maxEnergy = DBL_MAX) override;
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy = 0.0,
+                                   G4double maxEnergy = DBL_MAX) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-				 const G4MaterialCutsCouple*,
-				 const G4DynamicParticle*,
-				 G4double tmin = 0.0,
-				 G4double maxEnergy = DBL_MAX) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin = 0.0,
+                           G4double maxEnergy = DBL_MAX) override;
 
-  void SetDelta(G4double val) { if(val > 0.0) { fDeltaMin = val; } };
+    void SetDelta(G4double val)
+    {
+      if (val > 0.0)
+      {
+        fDeltaMin = val;
+      }
+    };
 
-  // hide assignment operator
-  G4eplusTo2or3GammaModel & operator=
-  (const  G4eplusTo2or3GammaModel &right) = delete;
-  G4eplusTo2or3GammaModel(const  G4eplusTo2or3GammaModel&) = delete;
+    // hide assignment operator
+    G4eplusTo2or3GammaModel& operator=(const G4eplusTo2or3GammaModel& right) = delete;
+    G4eplusTo2or3GammaModel(const G4eplusTo2or3GammaModel&) = delete;
 
-private:
+  private:
 
-  const G4ParticleDefinition* theGamma;
-  G4ParticleChangeForGamma* fParticleChange;
-  G4eplusTo3GammaOKVIModel* f3GModel;
+    const G4ParticleDefinition* theGamma;
+    G4ParticleChangeForGamma* fParticleChange;
+    G4eplusTo3GammaOKVIModel* f3GModel;
 
-  G4double fDeltaMin; // fixed minimal relative limit
-  G4double fDelta;    // running limit - function of energy
-  G4double fGammaTh;  // 3-gamma annihilation low-energy limit
+    G4double fDeltaMin;  // fixed minimal relative limit
+    G4double fDelta;  // running limit - function of energy
+    G4double fGammaTh;  // 3-gamma annihilation low-energy limit
 
-  static G4PhysicsVector* fCrossSection;
-  static G4PhysicsVector* f3GProbability;
+    static G4PhysicsVector* fCrossSection;
+    static G4PhysicsVector* f3GProbability;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

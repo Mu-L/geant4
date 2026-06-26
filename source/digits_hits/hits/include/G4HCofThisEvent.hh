@@ -38,8 +38,8 @@
 //
 // Author: Makoto Asai
 // --------------------------------------------------------------------
-#ifndef G4HCofThisEvent_h
-#define G4HCofThisEvent_h 1
+#ifndef G4HCOFTHISEVENT_HH
+#define G4HCOFTHISEVENT_HH
 
 #include "G4Allocator.hh"
 #include "G4VHitsCollection.hh"
@@ -74,7 +74,8 @@ class G4HCofThisEvent
     inline G4int GetNumberOfCollections()
     {
       G4int n = 0;
-      for (const G4VHitsCollection* h : *HC) {
+      for (const G4VHitsCollection* h : *HC)
+      {
         if (h != nullptr) ++n;
       }
       return n;
@@ -95,7 +96,8 @@ extern G4DLLIMPORT G4Allocator<G4HCofThisEvent>*& anHCoTHAllocator_G4MT_TLS_();
 
 inline void* G4HCofThisEvent::operator new(std::size_t)
 {
-  if (anHCoTHAllocator_G4MT_TLS_() == nullptr) {
+  if (anHCoTHAllocator_G4MT_TLS_() == nullptr)
+  {
     anHCoTHAllocator_G4MT_TLS_() = new G4Allocator<G4HCofThisEvent>;
   }
   return (void*)anHCoTHAllocator_G4MT_TLS_()->MallocSingle();

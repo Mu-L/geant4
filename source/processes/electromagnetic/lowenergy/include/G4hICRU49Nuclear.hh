@@ -32,40 +32,38 @@
 // File name:     G4hICRU49Nuclear
 //
 // Author:        V.Ivanchenko (Vladimir.Ivanchenko@cern.ch)
-// 
+//
 // Creation date: 20 July 2000
 //
-// Modifications: 
+// Modifications:
 // 20/07/2000  V.Ivanchenko First implementation
 //
-// Class Description: 
+// Class Description:
 //
 // Nuclear stopping power parametrised according to
 // ICRU Report N49, 1993. Moliere model.
 //
-// Class Description: End 
+// Class Description: End
 //
 // -------------------------------------------------------------------
 //
 
-#ifndef G4hICRU49Nuclear_h
-#define G4hICRU49Nuclear_h 1
+#ifndef G4HICRU49NUCLEAR_HH
+#define G4HICRU49NUCLEAR_HH
 
-#include "globals.hh"
 #include "G4VhNuclearStoppingPower.hh"
+#include "globals.hh"
 
 class G4hICRU49Nuclear : public G4VhNuclearStoppingPower
 {
+  public:
 
-public:
-  explicit G4hICRU49Nuclear() ;
+    explicit G4hICRU49Nuclear();
 
-  ~G4hICRU49Nuclear() ;
+    ~G4hICRU49Nuclear();
 
-  G4double NuclearStoppingPower(G4double kineticEnergy,
-                                G4double z1, G4double z2, 
-                                G4double m1, G4double m2) const override;
- 
+    G4double NuclearStoppingPower(G4double kineticEnergy, G4double z1, G4double z2, G4double m1,
+                                  G4double m2) const override;
 };
 
 #endif

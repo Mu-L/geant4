@@ -45,37 +45,30 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4BetheBlochNoDeltaModel_h
-#define G4BetheBlochNoDeltaModel_h 1
+#ifndef G4BETHEBLOCHNODELTAMODEL_HH
+#define G4BETHEBLOCHNODELTAMODEL_HH
 
 #include "G4BetheBlochModel.hh"
 
 class G4BetheBlochNoDeltaModel : public G4BetheBlochModel
 {
+  public:
 
-public:
+    explicit G4BetheBlochNoDeltaModel(const G4ParticleDefinition* p = nullptr,
+                                      const G4String& nam = "BetheBlochNoD");
 
-  explicit G4BetheBlochNoDeltaModel(const G4ParticleDefinition* p = nullptr,
-    const G4String& nam = "BetheBlochNoD");
+    ~G4BetheBlochNoDeltaModel() override;
 
-  ~G4BetheBlochNoDeltaModel() override;
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                  G4double kineticEnergy, G4double cutEnergy) override;
 
-  G4double ComputeDEDXPerVolume( const G4Material*,
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy) override;
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy,
+                                   G4double maxEnergy) override;
 
-  G4double CrossSectionPerVolume(const G4Material*,
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
-
-  // hide assignment operator
-  G4BetheBlochNoDeltaModel &
-    operator=(const  G4BetheBlochNoDeltaModel &right) = delete;
-  G4BetheBlochNoDeltaModel(const  G4BetheBlochNoDeltaModel&) = delete;
-
+    // hide assignment operator
+    G4BetheBlochNoDeltaModel& operator=(const G4BetheBlochNoDeltaModel& right) = delete;
+    G4BetheBlochNoDeltaModel(const G4BetheBlochNoDeltaModel&) = delete;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

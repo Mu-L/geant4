@@ -25,8 +25,8 @@
 //
 //
 
-#ifndef G4SceneTreeItem_hh
-#define G4SceneTreeItem_hh
+#ifndef G4SCENETREEITEM_HH
+#define G4SCENETREEITEM_HH
 
 #include "G4AttDef.hh"
 #include "G4AttValue.hh"
@@ -40,13 +40,14 @@
 class G4SceneTreeItem
 {
   public:
+
     // A ghost is a touchable we know to be there but know only its path
     enum Type
     {
       unidentified,
       root,
       model,
-      pvmodel,  // Physical Volume model - special case 
+      pvmodel,  // Physical Volume model - special case
       ghost,
       touchable
     };
@@ -58,7 +59,7 @@ class G4SceneTreeItem
     G4SceneTreeItem(const G4SceneTreeItem&) = default;
 
     // Assigns the whole tree, i.e., children and all descendants
-    G4SceneTreeItem& operator= (const G4SceneTreeItem&) = default;
+    G4SceneTreeItem& operator=(const G4SceneTreeItem&) = default;
 
     // Access functions
 
@@ -77,11 +78,12 @@ class G4SceneTreeItem
 
     const G4String& GetModelDescription() const { return fModelDescription; }
     void SetModelDescription(const G4String& modelDescription)
-    { fModelDescription = modelDescription; }
+    {
+      fModelDescription = modelDescription;
+    }
 
     const G4String& GetFurtherInfo() const { return fFurtherInfo; }
-    void SetFurtherInfo(const G4String& furtherInfo)
-    { fFurtherInfo = furtherInfo; }
+    void SetFurtherInfo(const G4String& furtherInfo) { fFurtherInfo = furtherInfo; }
 
     const std::map<G4String, G4AttDef>* GetAttDefs() const { return fpAttDefs; }
     void SetAttDefs(const std::map<G4String, G4AttDef>* pAttDefs) { fpAttDefs = pAttDefs; };
@@ -102,7 +104,7 @@ class G4SceneTreeItem
     }
     std::list<G4SceneTreeItem>& AccessChildren() { return fChildren; }
 
-    G4bool IsExpanded() const         { return fExpanded; }
+    G4bool IsExpanded() const { return fExpanded; }
     void SetExpanded(G4bool expanded) { fExpanded = expanded; }
 
     // Utility functions
@@ -121,6 +123,7 @@ class G4SceneTreeItem
     void DumpTree(std::ostream&, G4int verbosity = 0) const;
 
   private:
+
     Type fType = unidentified;
     static std::map<Type, G4String> fTypeMap;
     G4String fDescription;

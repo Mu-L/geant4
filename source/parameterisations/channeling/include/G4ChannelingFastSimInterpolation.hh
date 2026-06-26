@@ -25,62 +25,54 @@
 //
 // Author:      Alexei Sytov
 
-#ifndef G4ChannelingFastSimInterpolation_h
-#define G4ChannelingFastSimInterpolation_h
+#ifndef G4CHANNELINGFASTSIMINTERPOLATION_HH
+#define G4CHANNELINGFASTSIMINTERPOLATION_HH
 
-#include "globals.hh"
 #include "G4ios.hh"
+#include "globals.hh"
+
 #include <vector>
 
 /** \file G4ChannelingFastSimInterpolation.hh
-* \brief Definition of the G4ChannelingFastSimInterpolation class
-* The class includes spline interpolation coefficients for the important functions
-* needed in Channeling FastSimulation model, i.e. electric fields, nuclear and
-* electron densities and minimum energy of ionization. All the functions have
-* transverse coordinates as arguments (x for crystal planes, x and y for crystal axes).
-* All the functions are calculated in the co-rotating reference system (along crystal
-* planes/axes).
-*/
+ * \brief Definition of the G4ChannelingFastSimInterpolation class
+ * The class includes spline interpolation coefficients for the important functions
+ * needed in Channeling FastSimulation model, i.e. electric fields, nuclear and
+ * electron densities and minimum energy of ionization. All the functions have
+ * transverse coordinates as arguments (x for crystal planes, x and y for crystal axes).
+ * All the functions are calculated in the co-rotating reference system (along crystal
+ * planes/axes).
+ */
 
-class G4ChannelingFastSimInterpolation {
+class G4ChannelingFastSimInterpolation
+{
+  public:
 
-public:
-    G4ChannelingFastSimInterpolation(G4double dx0,
-                                   G4double dy0,
-                                   G4int nPointsx0,
-                                   G4int nPointsy0,
-                                   G4int iModel0);
+    G4ChannelingFastSimInterpolation(G4double dx0, G4double dy0, G4int nPointsx0, G4int nPointsy0,
+                                     G4int iModel0);
     ~G4ChannelingFastSimInterpolation() = default;
 
-    ///Get Spline Function
+    /// Get Spline Function
     G4double GetIF(G4double xx, G4double yy);
 
-    ///Set spline coefficients
-    void SetCoefficients1D(G4double AI0,
-                           G4double BI0,
-                           G4double CI0,
-                           G4double DI0,
-                           G4int i);
-    void SetCoefficients2D(G4double AI3D0,
-                           G4double BI3D0,
-                           G4double CI3D0,
-                           G4int i,
-                           G4int j,
+    /// Set spline coefficients
+    void SetCoefficients1D(G4double AI0, G4double BI0, G4double CI0, G4double DI0, G4int i);
+    void SetCoefficients2D(G4double AI3D0, G4double BI3D0, G4double CI3D0, G4int i, G4int j,
                            G4int k);
 
-private:
+  private:
+
     G4double Spline1D(G4double xx);
-    G4double Spline2D(G4double xx, G4double yy);// cubic spline of 2-variable function
+    G4double Spline2D(G4double xx, G4double yy);  // cubic spline of 2-variable function
 
-    G4double fDx=0., fDy=0.; //channel width and height
-    G4double fStepi=0., fStepj=0.; //interpolation steps in x and y, respectively
-    G4double fStepi2=0.; //=fStepi*fStepi
-    G4int nPointsx=0, nPointsy=0; //number of interpolation nodes in x and y, respectively
+    G4double fDx = 0., fDy = 0.;  // channel width and height
+    G4double fStepi = 0., fStepj = 0.;  // interpolation steps in x and y, respectively
+    G4double fStepi2 = 0.;  //=fStepi*fStepi
+    G4int nPointsx = 0, nPointsy = 0;  // number of interpolation nodes in x and y, respectively
 
-    std::vector <G4double> fAI;
-    std::vector <G4double> fBI;
-    std::vector <G4double> fCI;
-    std::vector <G4double> fDI;
+    std::vector<G4double> fAI;
+    std::vector<G4double> fBI;
+    std::vector<G4double> fCI;
+    std::vector<G4double> fDI;
 
     std::vector<std::vector<G4double>> fAI3D;
     std::vector<std::vector<G4double>> fBI3D;
@@ -89,8 +81,7 @@ private:
     std::vector<std::vector<G4double>> fBI3D3;
     std::vector<std::vector<G4double>> fCI3D3;
 
-    G4int iModel=1;
-
+    G4int iModel = 1;
 };
 
 #endif

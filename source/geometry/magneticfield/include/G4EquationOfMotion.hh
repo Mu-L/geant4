@@ -35,18 +35,18 @@
 #ifndef G4EQUATIONOFMOTION_HH
 #define G4EQUATIONOFMOTION_HH
 
-#include "G4Types.hh"
-#include "G4Field.hh"   // required in inline method implementations
-#include "G4FieldParameters.hh"
-
 #include "G4ChargeState.hh"
+#include "G4Field.hh"  // required in inline method implementations
+#include "G4FieldParameters.hh"
+#include "G4Types.hh"
 
 /**
  * @brief G4EquationOfMotion is the abstract base class for the right
  * hand size of the equation of motion of a particle in a field.
+ * @ingroup geometry_magneticfield
  */
 
-class G4EquationOfMotion 
+class G4EquationOfMotion
 {
   public:
 
@@ -54,7 +54,7 @@ class G4EquationOfMotion
      * Constructor for G4EquationOfMotion.
      *  @param[in] Field Pointer to the field.
      */
-    G4EquationOfMotion( G4Field* Field );
+    G4EquationOfMotion(G4Field* Field);
 
     /**
      * Default virtual Destructor.
@@ -67,9 +67,8 @@ class G4EquationOfMotion
      *  @param[in] Field Field value.
      *  @param[out] dydx Derivatives array.
      */
-    virtual void EvaluateRhsGivenB( const G4double y[],
-                                    const G4double B[3],
-                                          G4double dydx[] ) const = 0;
+    virtual void EvaluateRhsGivenB(const G4double y[], const G4double B[3],
+                                   G4double dydx[]) const = 0;
 
     /**
      * Sets the charge, momentum and mass of the current particle.
@@ -78,8 +77,7 @@ class G4EquationOfMotion
      *  @param[in] MomentumXc Particle momentum.
      *  @param[in] mass Particle mass.
      */
-    virtual void SetChargeMomentumMass(G4ChargeState particleCharge,
-                                       G4double MomentumXc,
+    virtual void SetChargeMomentumMass(G4ChargeState particleCharge, G4double MomentumXc,
                                        G4double MassXc2) = 0;
 
     /**
@@ -93,8 +91,7 @@ class G4EquationOfMotion
      *  @param[in] y Coefficients array.
      *  @param[out] dydx Derivatives array.
      */
-    inline void RightHandSide( const G4double y[],
-                                     G4double dydx[] ) const;
+    inline void RightHandSide(const G4double y[], G4double dydx[]) const;
 
     /**
      * Calculates the value of the derivative 'dydx' at 'y' as above,
@@ -103,17 +100,14 @@ class G4EquationOfMotion
      *  @param[out] dydx Derivatives array.
      *  @param[out] Field Field value.
      */
-    inline void EvaluateRhsReturnB( const G4double y[],
-                                          G4double dydx[],
-                                          G4double Field[] ) const;
+    inline void EvaluateRhsReturnB(const G4double y[], G4double dydx[], G4double Field[]) const;
 
     /**
      * Returns the 'Field' value at the given time 'Point'.
      *  @param[in] Point The time point (x,y,z,t).
      *  @param[out] Field The returned field value.
      */
-    inline void GetFieldValue( const G4double Point[4],
-                                     G4double Field[] ) const;
+    inline void GetFieldValue(const G4double Point[4], G4double Field[]) const;
 
     /**
      * Accessors and modifier for the field.

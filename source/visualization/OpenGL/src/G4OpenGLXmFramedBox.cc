@@ -25,75 +25,56 @@
 //
 //
 //
-//Framed box container class
+// Framed box container class
+
+#include "G4OpenGLXmFramedBox.hh"
 
 #include "G4OpenGLXmBox.hh"
-#include "G4OpenGLXmFramedBox.hh"
 #include "G4OpenGLXmVWidgetComponent.hh"
 #include "G4OpenGLXmVWidgetShell.hh"
-#include <Xm/RowColumn.h>
-#include <Xm/Frame.h>
 
-G4OpenGLXmFramedBox::G4OpenGLXmFramedBox (const char* n, 
-					  G4bool r) :
-G4OpenGLXmBox (n, r)
+#include <Xm/Frame.h>
+#include <Xm/RowColumn.h>
+
+G4OpenGLXmFramedBox::G4OpenGLXmFramedBox(const char* n, G4bool r) : G4OpenGLXmBox(n, r)
 {
   frame = NULL;
 }
 
-G4OpenGLXmFramedBox::~G4OpenGLXmFramedBox () 
-{}
+G4OpenGLXmFramedBox::~G4OpenGLXmFramedBox() {}
 
-void G4OpenGLXmFramedBox::AddChild (G4OpenGLXmVWidgetComponent* component)
+void G4OpenGLXmFramedBox::AddChild(G4OpenGLXmVWidgetComponent* component)
 {
   component->AddYourselfTo(this);
   Cardinal num_children;
-  XtVaGetValues (box_row_col,
-		 XmNnumChildren, &num_children,
-		 NULL);
-//  G4cout << name << " now parents " << num_children << " children." << G4endl;
+  XtVaGetValues(box_row_col, XmNnumChildren, &num_children, NULL);
+  //  G4cout << name << " now parents " << num_children << " children." << G4endl;
 }
 
-void G4OpenGLXmFramedBox::AddYourselfTo (G4OpenGLXmVWidgetShell* window)
+void G4OpenGLXmFramedBox::AddYourselfTo(G4OpenGLXmVWidgetShell* window)
 {
-
-  pView = window->GetView ();
-  ProcesspView ();
+  pView = window->GetView();
+  ProcesspView();
   char framename[50];
-  strcpy (framename, name);
-  strcat (framename, "_frame");
+  strcpy(framename, name);
+  strcat(framename, "_frame");
 
-  parent = window->GetPointerToWidget ();
-  frame = XtVaCreateManagedWidget (framename,
-				    xmFrameWidgetClass,
-				    *parent,
-				    
-				    XtNvisual, visual,
-				    XtNdepth, depth,
-				    XtNcolormap, cmap,
-				    XtNborderColor, borcol,
-				    XtNbackground, bgnd,
-				    
-				    NULL);
-  
-  
-  
-  box_row_col =  XtVaCreateManagedWidget (name,
-					  xmRowColumnWidgetClass,
-					  frame,
-					  
-					  XmNadjustMargin, True,
-					  XmNisHomogeneous, False,
-					  XmNlabelString, (XmString)name,
-					  XmNradioAlwaysOne, radio,
-					  XmNradioBehavior, radio,
-					  
-					  XtNvisual, visual,
-					  XtNdepth, depth,
-					  XtNcolormap, cmap,
-					  XtNborderColor, borcol,
-					  XtNbackground, bgnd,
-					  
-					  NULL);
-  
+  parent = window->GetPointerToWidget();
+  frame = XtVaCreateManagedWidget(framename, xmFrameWidgetClass, *parent,
+
+                                  XtNvisual, visual, XtNdepth, depth, XtNcolormap, cmap,
+                                  XtNborderColor, borcol, XtNbackground, bgnd,
+
+                                  NULL);
+
+  box_row_col =
+    XtVaCreateManagedWidget(name, xmRowColumnWidgetClass, frame,
+
+                            XmNadjustMargin, True, XmNisHomogeneous, False, XmNlabelString,
+                            (XmString)name, XmNradioAlwaysOne, radio, XmNradioBehavior, radio,
+
+                            XtNvisual, visual, XtNdepth, depth, XtNcolormap, cmap, XtNborderColor,
+                            borcol, XtNbackground, bgnd,
+
+                            NULL);
 }

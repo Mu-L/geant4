@@ -45,61 +45,58 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4EmElementSelector_h
-#define G4EmElementSelector_h 1
+#ifndef G4EMELEMENTSELECTOR_HH
+#define G4EMELEMENTSELECTOR_HH
 
-#include "globals.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4Material.hh"
 #include "G4Element.hh"
 #include "G4ElementVector.hh"
+#include "G4Material.hh"
+#include "G4ParticleDefinition.hh"
 #include "G4PhysicsLogVector.hh"
 #include "Randomize.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4VEmModel;
 
 class G4EmElementSelector
 {
+  public:
 
-public:
+    G4EmElementSelector(G4VEmModel*, const G4Material*, G4int bins, G4double emin, G4double emax,
+                        G4bool spline = true);
 
-  G4EmElementSelector(G4VEmModel*, const G4Material*, G4int bins, 
-                      G4double emin, G4double emax, 
-                      G4bool spline = true);
+    ~G4EmElementSelector();
 
-  ~G4EmElementSelector();
+    void Initialise(const G4ParticleDefinition*, G4double cut = 0.0);
 
-  void Initialise(const G4ParticleDefinition*, G4double cut = 0.0);
+    void Dump(const G4ParticleDefinition* p = nullptr);
 
-  void Dump(const G4ParticleDefinition* p = nullptr);
+    const G4Element* SelectRandomAtom(const G4double kineticEnergy, const G4double logEKin) const;
 
-  const G4Element* SelectRandomAtom(const G4double kineticEnergy,
-                                    const G4double logEKin) const;
+    inline const G4Element* SelectRandomAtom(G4double kineticEnergy) const;
 
-  inline const G4Element* SelectRandomAtom(G4double kineticEnergy) const;
+    inline const G4Material* GetMaterial() const;
 
-  inline const G4Material* GetMaterial() const;
+    //  hide assignment operator
+    G4EmElementSelector& operator=(const G4EmElementSelector& right) = delete;
+    G4EmElementSelector(const G4EmElementSelector&) = delete;
 
-  //  hide assignment operator
-  G4EmElementSelector & operator=(const  G4EmElementSelector &right) = delete;
-  G4EmElementSelector(const  G4EmElementSelector&) = delete;
+  private:
 
-private:
+    G4VEmModel* model;
+    const G4Material* material;
+    const G4ElementVector* theElementVector;
 
-  G4VEmModel*       model;
-  const G4Material* material;
-  const G4ElementVector* theElementVector;
+    G4int nElmMinusOne;
+    G4int nbins;
 
-  G4int    nElmMinusOne;
-  G4int    nbins;
+    G4double cutEnergy;
+    G4double lowEnergy;
+    G4double highEnergy;
 
-  G4double cutEnergy;
-  G4double lowEnergy;
-  G4double highEnergy;
-
-  std::vector<G4PhysicsLogVector*> xSections;
-  
+    std::vector<G4PhysicsLogVector*> xSections;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
@@ -108,11 +105,14 @@ private:
 inline const G4Element* G4EmElementSelector::SelectRandomAtom(G4double e) const
 {
   const G4Element* element = (*theElementVector)[nElmMinusOne];
-  if (nElmMinusOne > 0) {
+  if (nElmMinusOne > 0)
+  {
     G4double x = G4UniformRand();
     size_t idx(0);
-    for(G4int i=0; i<nElmMinusOne; ++i) {
-      if (x <= (xSections[i])->Value(e, idx)) {
+    for (G4int i = 0; i < nElmMinusOne; ++i)
+    {
+      if (x <= (xSections[i])->Value(e, idx))
+      {
         element = (*theElementVector)[i];
         break;
       }
@@ -131,4 +131,3 @@ inline const G4Material* G4EmElementSelector::GetMaterial() const
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
 #endif
-

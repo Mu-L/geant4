@@ -35,25 +35,25 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4NeutronCrossSectionXS_h
-#define G4NeutronCrossSectionXS_h
+#ifndef G4NEUTRONCROSSSECTIONXS_HH
+#define G4NEUTRONCROSSSECTIONXS_HH
 
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
 
-class G4NeutronCrossSectionXS : public G4VPhysicsConstructor {
+class G4NeutronCrossSectionXS : public G4VPhysicsConstructor
+{
+  public:
 
-public:
+    G4NeutronCrossSectionXS(G4int ver = 0);
+    virtual ~G4NeutronCrossSectionXS();
 
-  G4NeutronCrossSectionXS(G4int ver = 0);
-  virtual ~G4NeutronCrossSectionXS();
+    virtual void ConstructParticle();
+    virtual void ConstructProcess();
 
-  virtual void ConstructParticle();
-  virtual void ConstructProcess();
+  private:
 
-private:
-  G4int  verbose;
+    G4int verbose;
 };
 
 #endif
-

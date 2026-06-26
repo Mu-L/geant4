@@ -26,11 +26,11 @@
 //
 //
 
-#ifndef G4PSTermination_h
-#define G4PSTermination_h 1
+#ifndef G4PSTERMINATION_HH
+#define G4PSTERMINATION_HH
 
-#include "G4VPrimitiveScorer.hh"
 #include "G4THitsMap.hh"
+#include "G4VPrimitiveScorer.hh"
 
 //////////////////////////////////////////////////////////////////////////////////
 // (Description)
@@ -43,26 +43,29 @@
 
 class G4PSTermination : public G4VPrimitiveScorer
 {
- public:
-  G4PSTermination(const G4String& name, G4int depth = 0);
-  ~G4PSTermination() override = default;
+  public:
 
-  inline void Weighted(G4bool flg = true) { weighted = flg; }
-  // Multiply track weight
-  
-  void Initialize(G4HCofThisEvent*) override;
-  void clear() override;
-  void PrintAll() override;
+    G4PSTermination(const G4String& name, G4int depth = 0);
+    ~G4PSTermination() override = default;
 
-  virtual void SetUnit(const G4String& unit);
+    inline void Weighted(G4bool flg = true) { weighted = flg; }
+    // Multiply track weight
 
- protected:
-  G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+    void Initialize(G4HCofThisEvent*) override;
+    void clear() override;
+    void PrintAll() override;
 
- private:
-  G4int HCID{-1};
-  G4THitsMap<G4double>* EvtMap{nullptr};
-  G4bool weighted{false};
+    virtual void SetUnit(const G4String& unit);
+
+  protected:
+
+    G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+
+  private:
+
+    G4int HCID{-1};
+    G4THitsMap<G4double>* EvtMap{nullptr};
+    G4bool weighted{false};
 };
 
 #endif

@@ -28,7 +28,7 @@
 // Author: G.Cosmo, CERN
 // --------------------------------------------------------------------
 #ifndef G4ICOMSWDEFS_HH
-#define G4ICOMSWDEFS_HH 1
+#define G4ICOMSWDEFS_HH
 
 #include "G4Types.hh"
 

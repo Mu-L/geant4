@@ -28,13 +28,8 @@
 // G4StringModel
 #include "G4StringModel.hh"
 
-G4StringModel::G4StringModel() :  G4VHighEnergyGenerator(),
-the3DNucleus(nullptr), theStringFragmentationModel(nullptr)
-{
-}
+G4StringModel::G4StringModel()
+  : G4VHighEnergyGenerator(), the3DNucleus(nullptr), theStringFragmentationModel(nullptr)
+{}
 
-G4StringModel::~G4StringModel()
-{
-}
-
-
+G4StringModel::~G4StringModel() {}

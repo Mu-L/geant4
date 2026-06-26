@@ -39,13 +39,13 @@
 //
 // Author: Marc Verderi, November 2013.
 // --------------------------------------------------------------------
-#ifndef G4BOptnForceFreeFlight_hh
-#define G4BOptnForceFreeFlight_hh 1
+#ifndef G4BOPTNFORCEFREEFLIGHT_HH
+#define G4BOPTNFORCEFREEFLIGHT_HH
 
-#include "G4VBiasingOperation.hh"
 #include "G4ForceCondition.hh"
-#include "G4ParticleChange.hh" // Should add a dedicated "weight change only"
-                               // particle change
+#include "G4ParticleChange.hh"  // Should add a dedicated "weight change only"
+#include "G4VBiasingOperation.hh"
+// particle change
 class G4ILawForceFreeFlight;
 
 class G4BOptnForceFreeFlight : public G4VBiasingOperation
@@ -56,48 +56,42 @@ class G4BOptnForceFreeFlight : public G4VBiasingOperation
     G4BOptnForceFreeFlight(const G4String& name);
     // -- destructor:
     virtual ~G4BOptnForceFreeFlight();
-  
+
     // -- Methods from G4VBiasingOperation interface:
     // -------------------------------------------
     // -- Used:
     virtual const G4VBiasingInteractionLaw*
-    ProvideOccurenceBiasingInteractionLaw( const G4BiasingProcessInterface*,
-                                           G4ForceCondition& );
-    virtual void AlongMoveBy( const G4BiasingProcessInterface*,
-                              const G4Step*, G4double );
-    virtual G4VParticleChange*
-    ApplyFinalStateBiasing( const G4BiasingProcessInterface*,
-                            const G4Track*, const G4Step*, G4bool& );
+    ProvideOccurenceBiasingInteractionLaw(const G4BiasingProcessInterface*, G4ForceCondition&);
+    virtual void AlongMoveBy(const G4BiasingProcessInterface*, const G4Step*, G4double);
+    virtual G4VParticleChange* ApplyFinalStateBiasing(const G4BiasingProcessInterface*,
+                                                      const G4Track*, const G4Step*, G4bool&);
 
     // -- Unused:
-    virtual G4double DistanceToApplyOperation( const G4Track*,
-                            G4double, G4ForceCondition* ) { return DBL_MAX; }
-    virtual G4VParticleChange* GenerateBiasingFinalState( const G4Track*,
-                            const G4Step* ) { return nullptr; }
+    virtual G4double DistanceToApplyOperation(const G4Track*, G4double, G4ForceCondition*)
+    {
+      return DBL_MAX;
+    }
+    virtual G4VParticleChange* GenerateBiasingFinalState(const G4Track*, const G4Step*)
+    {
+      return nullptr;
+    }
 
     // -- Additional methods, specific to this class:
     // ----------------------------------------------
     // -- return concrete type of interaction law:
-    G4ILawForceFreeFlight* GetForceFreeFlightLaw()
-    {
-      return fForceFreeFlightInteractionLaw;
-    }
+    G4ILawForceFreeFlight* GetForceFreeFlightLaw() { return fForceFreeFlightInteractionLaw; }
     // -- initialization for weight:
     void ResetInitialTrackWeight(G4double w)
     {
       fInitialTrackWeight = w;
       fCumulatedWeightChange = 1.0;
     }
-    G4bool OperationComplete() const
-    {
-      return fOperationComplete;
-    }
+    G4bool OperationComplete() const { return fOperationComplete; }
 
   private:
 
     G4ILawForceFreeFlight* fForceFreeFlightInteractionLaw = nullptr;
-    G4double  fCumulatedWeightChange = -1.0,
-              fInitialTrackWeight = -1.0;
+    G4double fCumulatedWeightChange = -1.0, fInitialTrackWeight = -1.0;
     G4ParticleChange fParticleChange;
     G4bool fOperationComplete = true;
 };

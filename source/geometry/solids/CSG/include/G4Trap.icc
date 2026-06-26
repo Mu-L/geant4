@@ -26,84 +26,71 @@
 // Implementation of inline methods of G4Trap
 // --------------------------------------------------------------------
 
-inline
-G4double G4Trap::GetZHalfLength() const
+inline G4double G4Trap::GetZHalfLength() const
 {
-  return fDz ;
+  return fDz;
 }
 
-inline
-G4ThreeVector G4Trap::GetSymAxis() const
+inline G4ThreeVector G4Trap::GetSymAxis() const
 {
-  G4double cosTheta = 1.0/std::sqrt(1+fTthetaCphi*fTthetaCphi +
-                               fTthetaSphi*fTthetaSphi) ;
+  G4double cosTheta = 1.0 / std::sqrt(1 + fTthetaCphi * fTthetaCphi + fTthetaSphi * fTthetaSphi);
 
-  return { fTthetaCphi*cosTheta, fTthetaSphi*cosTheta, cosTheta } ;
+  return {fTthetaCphi * cosTheta, fTthetaSphi * cosTheta, cosTheta};
 }
 
-inline
-G4double G4Trap::GetYHalfLength1() const
+inline G4double G4Trap::GetYHalfLength1() const
 {
-  return fDy1 ;
+  return fDy1;
 }
 
-inline
-G4double G4Trap::GetXHalfLength1() const
+inline G4double G4Trap::GetXHalfLength1() const
 {
-  return fDx1 ;
+  return fDx1;
 }
 
-inline
-G4double G4Trap::GetXHalfLength2() const
+inline G4double G4Trap::GetXHalfLength2() const
 {
-  return fDx2 ;
+  return fDx2;
 }
 
-inline
-G4double G4Trap::GetTanAlpha1() const
+inline G4double G4Trap::GetTanAlpha1() const
 {
-  return fTalpha1 ;
+  return fTalpha1;
 }
 
-inline
-G4double G4Trap::GetYHalfLength2() const
+inline G4double G4Trap::GetYHalfLength2() const
 {
-  return fDy2 ;
+  return fDy2;
 }
 
-inline
-G4double G4Trap::GetXHalfLength3() const
+inline G4double G4Trap::GetXHalfLength3() const
 {
-  return fDx3 ;
+  return fDx3;
 }
 
-inline
-G4double G4Trap::GetXHalfLength4() const
+inline G4double G4Trap::GetXHalfLength4() const
 {
-  return fDx4 ;
+  return fDx4;
 }
 
-inline
-G4double G4Trap::GetTanAlpha2() const
+inline G4double G4Trap::GetTanAlpha2() const
 {
-  return fTalpha2 ;
+  return fTalpha2;
 }
 
-inline
-TrapSidePlane G4Trap::GetSidePlane( G4int n ) const
+inline TrapSidePlane G4Trap::GetSidePlane(G4int n) const
 {
-  return fPlanes[n] ;
+  return fPlanes[n];
 }
 
-inline G4double G4Trap::GetPhi() const       
+inline G4double G4Trap::GetPhi() const
 {
-   return std::atan2(fTthetaSphi,fTthetaCphi);
+  return std::atan2(fTthetaSphi, fTthetaCphi);
 }
 
 inline G4double G4Trap::GetTheta() const
 {
-   return std::atan(std::sqrt(fTthetaCphi*fTthetaCphi
-                              +fTthetaSphi*fTthetaSphi));
+  return std::atan(std::sqrt(fTthetaCphi * fTthetaCphi + fTthetaSphi * fTthetaSphi));
 }
 
 inline G4double G4Trap::GetAlpha1() const

@@ -35,8 +35,8 @@
 // 04-03-08: add fBirks constant (mma)
 // 16-01-19, add exact computation of the density effect (M. Strait)
 
-#ifndef G4IonisParamMat_HH
-#define G4IonisParamMat_HH
+#ifndef G4IONISPARAMMAT_HH
+#define G4IONISPARAMMAT_HH
 
 #include "G4DensityEffectCalculator.hh"
 #include "G4ios.hh"
@@ -47,155 +47,156 @@ class G4DensityEffectData;
 
 class G4IonisParamMat
 {
- public:
-  G4IonisParamMat(const G4Material*);
-  ~G4IonisParamMat();
-  G4IonisParamMat& operator=(const G4IonisParamMat&) = delete;
-  G4IonisParamMat(const G4IonisParamMat&) = delete;
+  public:
 
-  // parameters for mean energy loss calculation:
-  inline G4double GetMeanExcitationEnergy() const { return fMeanExcitationEnergy; };
+    G4IonisParamMat(const G4Material*);
+    ~G4IonisParamMat();
+    G4IonisParamMat& operator=(const G4IonisParamMat&) = delete;
+    G4IonisParamMat(const G4IonisParamMat&) = delete;
 
-  void SetMeanExcitationEnergy(G4double value);
-  G4double FindMeanExcitationEnergy(const G4Material*) const;
+    // parameters for mean energy loss calculation:
+    inline G4double GetMeanExcitationEnergy() const { return fMeanExcitationEnergy; };
 
-  inline G4double GetLogMeanExcEnergy() const { return fLogMeanExcEnergy; };
-  inline G4double* GetShellCorrectionVector() const { return fShellCorrectionVector; };
-  inline G4double GetTaul() const { return fTaul; };
+    void SetMeanExcitationEnergy(G4double value);
+    G4double FindMeanExcitationEnergy(const G4Material*) const;
 
-  // parameters of the density correction:
-  inline G4double GetPlasmaEnergy() const { return fPlasmaEnergy; };
-  inline G4double GetAdjustmentFactor() const { return fAdjustmentFactor; };
-  inline G4double GetCdensity() const { return fCdensity; };
-  inline G4double GetMdensity() const { return fMdensity; };
-  inline G4double GetAdensity() const { return fAdensity; };
-  inline G4double GetX0density() const { return fX0density; };
-  inline G4double GetX1density() const { return fX1density; };
-  inline G4double GetD0density() const { return fD0density; };
+    inline G4double GetLogMeanExcEnergy() const { return fLogMeanExcEnergy; };
+    inline G4double* GetShellCorrectionVector() const { return fShellCorrectionVector; };
+    inline G4double GetTaul() const { return fTaul; };
 
-  // user defined density correction parameterisation
-  void SetDensityEffectParameters(
-    G4double cd, G4double md, G4double ad, G4double x0, G4double x1, G4double d0);
+    // parameters of the density correction:
+    inline G4double GetPlasmaEnergy() const { return fPlasmaEnergy; };
+    inline G4double GetAdjustmentFactor() const { return fAdjustmentFactor; };
+    inline G4double GetCdensity() const { return fCdensity; };
+    inline G4double GetMdensity() const { return fMdensity; };
+    inline G4double GetAdensity() const { return fAdensity; };
+    inline G4double GetX0density() const { return fX0density; };
+    inline G4double GetX1density() const { return fX1density; };
+    inline G4double GetD0density() const { return fD0density; };
 
-  // defined density correction parameterisation via base material
-  void SetDensityEffectParameters(const G4Material* bmat);
+    // user defined density correction parameterisation
+    void SetDensityEffectParameters(G4double cd, G4double md, G4double ad, G4double x0, G4double x1,
+                                    G4double d0);
 
-  void ComputeDensityEffectOnFly(G4bool);
+    // defined density correction parameterisation via base material
+    void SetDensityEffectParameters(const G4Material* bmat);
 
-  inline G4DensityEffectCalculator* GetDensityEffectCalculator() const
-  {
-    return fDensityEffectCalc;
-  }
+    void ComputeDensityEffectOnFly(G4bool);
 
-  // compute density correction as a function of the kinematic variable
-  // x = log10(beta*gamma) using parameterisation of calculator
-  inline G4double DensityCorrection(G4double x) const
-  {
-    return (nullptr == fDensityEffectCalc) ? GetDensityCorrection(x)
-                                           : fDensityEffectCalc->ComputeDensityCorrection(x);
-  }
+    inline G4DensityEffectCalculator* GetDensityEffectCalculator() const
+    {
+      return fDensityEffectCalc;
+    }
 
-  // use parameterisation
-  G4double GetDensityCorrection(G4double x) const;
+    // compute density correction as a function of the kinematic variable
+    // x = log10(beta*gamma) using parameterisation of calculator
+    inline G4double DensityCorrection(G4double x) const
+    {
+      return (nullptr == fDensityEffectCalc) ? GetDensityCorrection(x)
+                                             : fDensityEffectCalc->ComputeDensityCorrection(x);
+    }
 
-  static G4DensityEffectData* GetDensityEffectData();
+    // use parameterisation
+    G4double GetDensityCorrection(G4double x) const;
 
-  // parameters of the energy loss fluctuation model:
-  inline G4double GetF1fluct() const { return fF1fluct; };
-  inline G4double GetF2fluct() const { return fF2fluct; };
-  inline G4double GetEnergy1fluct() const { return fEnergy1fluct; };
-  inline G4double GetLogEnergy1fluct() const { return fLogEnergy1fluct; };
-  inline G4double GetEnergy2fluct() const { return fEnergy2fluct; };
-  inline G4double GetLogEnergy2fluct() const { return fLogEnergy2fluct; };
-  inline G4double GetEnergy0fluct() const { return fEnergy0fluct; };
-  inline G4double GetRateionexcfluct() const { return fRateionexcfluct; };
+    static G4DensityEffectData* GetDensityEffectData();
 
-  // parameters for ion corrections computations
-  inline G4double GetZeffective() const { return fZeff; };
-  inline G4double GetFermiEnergy() const { return fFermiEnergy; };
-  inline G4double GetLFactor() const { return fLfactor; };
-  inline G4double GetInvA23() const { return fInvA23; };
+    // parameters of the energy loss fluctuation model:
+    inline G4double GetF1fluct() const { return fF1fluct; };
+    inline G4double GetF2fluct() const { return fF2fluct; };
+    inline G4double GetEnergy1fluct() const { return fEnergy1fluct; };
+    inline G4double GetLogEnergy1fluct() const { return fLogEnergy1fluct; };
+    inline G4double GetEnergy2fluct() const { return fEnergy2fluct; };
+    inline G4double GetLogEnergy2fluct() const { return fLogEnergy2fluct; };
+    inline G4double GetEnergy0fluct() const { return fEnergy0fluct; };
+    inline G4double GetRateionexcfluct() const { return fRateionexcfluct; };
 
-  // parameters for Birks attenuation:
-  inline void SetBirksConstant(G4double value) { fBirks = value; };
-  inline G4double GetBirksConstant() const { return fBirks; };
+    // parameters for ion corrections computations
+    inline G4double GetZeffective() const { return fZeff; };
+    inline G4double GetFermiEnergy() const { return fFermiEnergy; };
+    inline G4double GetLFactor() const { return fLfactor; };
+    inline G4double GetInvA23() const { return fInvA23; };
 
-  // parameters for average energy per ion
-  inline void SetMeanEnergyPerIonPair(G4double value) { fMeanEnergyPerIon = value; };
-  inline G4double GetMeanEnergyPerIonPair() const { return fMeanEnergyPerIon; };
+    // parameters for Birks attenuation:
+    inline void SetBirksConstant(G4double value) { fBirks = value; };
+    inline G4double GetBirksConstant() const { return fBirks; };
 
-  // parameter for sampling of positron annihilation at rest
-  inline void SetOrtoPositroniumFraction(G4double value) { fOrtoPositroniumFraction = value; };
-  inline G4double GetOrtoPositroniumFraction() const { return fOrtoPositroniumFraction; };
+    // parameters for average energy per ion
+    inline void SetMeanEnergyPerIonPair(G4double value) { fMeanEnergyPerIon = value; };
+    inline G4double GetMeanEnergyPerIonPair() const { return fMeanEnergyPerIon; };
 
-  
-  // operators
-  G4bool operator==(const G4IonisParamMat&) const = delete;
-  G4bool operator!=(const G4IonisParamMat&) const = delete;
+    // parameter for sampling of positron annihilation at rest
+    inline void SetOrtoPositroniumFraction(G4double value) { fOrtoPositroniumFraction = value; };
+    inline G4double GetOrtoPositroniumFraction() const { return fOrtoPositroniumFraction; };
 
- private:
-  // Compute mean parameters : ExcitationEnergy,Shell corretion vector ...
-  void ComputeMeanParameters();
+    // operators
+    G4bool operator==(const G4IonisParamMat&) const = delete;
+    G4bool operator!=(const G4IonisParamMat&) const = delete;
 
-  // Compute parameters for the density effect
-  void ComputeDensityEffectParameters();
+  private:
 
-  // Compute parameters for the energy fluctuation model
-  void ComputeFluctModel();
+    // Compute mean parameters : ExcitationEnergy,Shell corretion vector ...
+    void ComputeMeanParameters();
 
-  // Compute parameters for ion parameterizations
-  void ComputeIonParameters();
+    // Compute parameters for the density effect
+    void ComputeDensityEffectParameters();
 
-  //
-  // data members
-  //
-  const G4Material* fMaterial;  // this material
+    // Compute parameters for the energy fluctuation model
+    void ComputeFluctModel();
 
-  G4DensityEffectCalculator* fDensityEffectCalc;  // online calculator
-  G4double* fShellCorrectionVector;  // shell correction coefficients
+    // Compute parameters for ion parameterizations
+    void ComputeIonParameters();
 
-  // parameters for mean energy loss calculation
-  G4double fMeanExcitationEnergy;  //
-  G4double fLogMeanExcEnergy;  //
-  G4double fTaul;  // lower limit of Bethe-Bloch formula
+    //
+    // data members
+    //
+    const G4Material* fMaterial;  // this material
 
-  // parameters of the density correction
-  G4double fCdensity;  // mat.constant
-  G4double fMdensity;  // exponent
-  G4double fAdensity;  //
-  G4double fX0density;  //
-  G4double fX1density;  //
-  G4double fD0density;
+    G4DensityEffectCalculator* fDensityEffectCalc;  // online calculator
+    G4double* fShellCorrectionVector;  // shell correction coefficients
 
-  G4double fPlasmaEnergy;
-  G4double fAdjustmentFactor;
+    // parameters for mean energy loss calculation
+    G4double fMeanExcitationEnergy;  //
+    G4double fLogMeanExcEnergy;  //
+    G4double fTaul;  // lower limit of Bethe-Bloch formula
 
-  // parameters of the energy loss fluctuation model
-  G4double fF1fluct;
-  G4double fF2fluct;
-  G4double fEnergy1fluct;
-  G4double fLogEnergy1fluct;
-  G4double fEnergy2fluct;
-  G4double fLogEnergy2fluct;
-  G4double fEnergy0fluct;
-  G4double fRateionexcfluct;
+    // parameters of the density correction
+    G4double fCdensity;  // mat.constant
+    G4double fMdensity;  // exponent
+    G4double fAdensity;  //
+    G4double fX0density;  //
+    G4double fX1density;  //
+    G4double fD0density;
 
-  // parameters for ion corrections computations
-  G4double fZeff;
-  G4double fFermiEnergy;
-  G4double fLfactor;
-  G4double fInvA23;
+    G4double fPlasmaEnergy;
+    G4double fAdjustmentFactor;
 
-  // parameter for Birks attenuation
-  G4double fBirks;
-  // average energy per ion pair
-  G4double fMeanEnergyPerIon;
-  G4double twoln10;
-  // parameter for sampling of positron annihilation at rest
-  G4double fOrtoPositroniumFraction{0.035};
+    // parameters of the energy loss fluctuation model
+    G4double fF1fluct;
+    G4double fF2fluct;
+    G4double fEnergy1fluct;
+    G4double fLogEnergy1fluct;
+    G4double fEnergy2fluct;
+    G4double fLogEnergy2fluct;
+    G4double fEnergy0fluct;
+    G4double fRateionexcfluct;
 
-  // static data created only once
-  static G4DensityEffectData* fDensityData;
+    // parameters for ion corrections computations
+    G4double fZeff;
+    G4double fFermiEnergy;
+    G4double fLfactor;
+    G4double fInvA23;
+
+    // parameter for Birks attenuation
+    G4double fBirks;
+    // average energy per ion pair
+    G4double fMeanEnergyPerIon;
+    G4double twoln10;
+    // parameter for sampling of positron annihilation at rest
+    G4double fOrtoPositroniumFraction{0.035};
+
+    // static data created only once
+    static G4DensityEffectData* fDensityData;
 };
 
 #endif

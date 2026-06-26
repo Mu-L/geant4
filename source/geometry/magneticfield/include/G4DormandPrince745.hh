@@ -39,13 +39,14 @@
 #ifndef G4DORMAND_PRINCE_745_HH
 #define G4DORMAND_PRINCE_745_HH
 
-#include "G4MagIntegratorStepper.hh"
 #include "G4FieldUtils.hh"
+#include "G4MagIntegratorStepper.hh"
 
 /**
  * @brief G4DormandPrince745 implements the 5th order embedded Runge-Kutta
  * method, non-FSAL definition of the stepper() method that evaluates one step
  * in field propagation.
+ * @ingroup geometry_magneticfield
  */
 
 class G4DormandPrince745 : public G4MagIntegratorStepper
@@ -57,8 +58,7 @@ class G4DormandPrince745 : public G4MagIntegratorStepper
      *  @param[in] equation Pointer to the provided equation of motion.
      *  @param[in] numberOfVariables The number of integration variables.
      */
-    G4DormandPrince745(G4EquationOfMotion* equation,
-                       G4int numberOfVariables = 6);
+    G4DormandPrince745(G4EquationOfMotion* equation, G4int numberOfVariables = 6);
 
     /**
      * Default Destructor.
@@ -70,7 +70,7 @@ class G4DormandPrince745 : public G4MagIntegratorStepper
      */
     G4DormandPrince745(const G4DormandPrince745&) = delete;
     G4DormandPrince745& operator=(const G4DormandPrince745&) = delete;
- 
+
     /**
      * The stepper for the Runge Kutta integration.
      * The stepsize is fixed, with the step size given by 'hstep'.
@@ -82,11 +82,8 @@ class G4DormandPrince745 : public G4MagIntegratorStepper
      *  @param[out] yOutput Integration output.
      *  @param[out] yError The estimated error.
      */
-    void Stepper(const G4double yInput[],
-                 const G4double dydx[],
-                       G4double hstep,
-                       G4double yOutput[],
-                       G4double yError[]) override;
+    void Stepper(const G4double yInput[], const G4double dydx[], G4double hstep, G4double yOutput[],
+                 G4double yError[]) override;
 
     /**
      * Same as the Stepper() function above, with dydx also in ouput.
@@ -97,13 +94,8 @@ class G4DormandPrince745 : public G4MagIntegratorStepper
      *  @param[out] yError The estimated error.
      *  @param[out] dydxOutput dysx in output.
      */
-    void Stepper(const G4double yInput[],
-                 const G4double dydx[],
-                       G4double hstep,
-                       G4double yOutput[],
-                       G4double yError[],
-                       G4double dydxOutput[]);
-
+    void Stepper(const G4double yInput[], const G4double dydx[], G4double hstep, G4double yOutput[],
+                 G4double yError[], G4double dydxOutput[]);
 
     /**
      * Interface method for interpolation setup. Does nothing here.
@@ -119,10 +111,7 @@ class G4DormandPrince745 : public G4MagIntegratorStepper
     /**
      * Wrapper for Interpolate4thOrder() function above.
      */
-    inline void Interpolate(G4double tau, G4double yOut[]) const
-    {
-      Interpolate4thOrder(yOut, tau);
-    }
+    inline void Interpolate(G4double tau, G4double yOut[]) const { Interpolate4thOrder(yOut, tau); }
 
     /**
      * Sets up the extra stages for the 5th order interpolant.
@@ -155,7 +144,7 @@ class G4DormandPrince745 : public G4MagIntegratorStepper
      */
     const G4String& StepperTypeName() const;
     const G4String& StepperDescription() const;
-   
+
     /**
      * Returns the field state in output.
      */

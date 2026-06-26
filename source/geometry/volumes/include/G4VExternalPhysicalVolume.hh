@@ -27,9 +27,9 @@
 //
 // Class description:
 //
-// Base class to represent a physical volume managed by an external 
+// Base class to represent a physical volume managed by an external
 // sub-navigator.
-// 
+//
 // Intial assumptions:
 //   * volume type is similar to G4PVPlacement -- not replicated
 //   * external navigator may provide 'many'/Boolean operation
@@ -39,12 +39,13 @@
 #ifndef G4VEXTERNALPHYSICSVOLUME_HH
 #define G4VEXTERNALPHYSICSVOLUME_HH
 
-#include "G4VPhysicalVolume.hh"
 #include "G4Transform3D.hh"
+#include "G4VPhysicalVolume.hh"
 
 /**
  * @brief G4VExternalPhysicalVolume is a base class to represent a physical
  * volume managed by an external sub-navigator.
+ * @ingroup geometry_volumes
  */
 
 class G4VExternalPhysicalVolume : public G4VPhysicalVolume
@@ -59,12 +60,10 @@ class G4VExternalPhysicalVolume : public G4VPhysicalVolume
      *  @param[in] pName The volume name.
      *  @param[in] pMotherLogical Pointer to the logical volume of the mother.
      */
-    G4VExternalPhysicalVolume( G4RotationMatrix* pRot,
-                               const G4ThreeVector& tlate,
-                               G4LogicalVolume* pCurrentLogical,                            
-                               const G4String& pName,
-                               G4VPhysicalVolume* pMother );
-       
+    G4VExternalPhysicalVolume(G4RotationMatrix* pRot, const G4ThreeVector& tlate,
+                              G4LogicalVolume* pCurrentLogical, const G4String& pName,
+                              G4VPhysicalVolume* pMother);
+
     /**
      * Fake default constructor for usage restricted to direct object
      * persistency for clients requiring preallocation of memory for
@@ -97,8 +96,8 @@ class G4VExternalPhysicalVolume : public G4VPhysicalVolume
      *  @param[in] maxErr Maximum of overlaps errors to report (default is 1).
      *  @returns True if an overlap occurs.
      */
-    G4bool CheckOverlaps(G4int res=1000, G4double tol=0.,
-                         G4bool verbose=true, G4int maxErr=1) override = 0;
+    G4bool CheckOverlaps(G4int res = 1000, G4double tol = 0., G4bool verbose = true,
+                         G4int maxErr = 1) override = 0;
 
     /**
      * Returns the volume type characterisation, i.e. kExternal.
@@ -113,17 +112,14 @@ class G4VExternalPhysicalVolume : public G4VPhysicalVolume
     G4bool IsReplicated() const final;
     G4bool IsParameterised() const final;
     G4VPVParameterisation* GetParameterisation() const final;
-    void GetReplicationData(EAxis& axis,
-                            G4int& nReplicas,
-                            G4double& width,
-                            G4double& offset,
+    void GetReplicationData(EAxis& axis, G4int& nReplicas, G4double& width, G4double& offset,
                             G4bool& consuming) const final;
 
     /**
      * Used only for specialised repeated volumes. Always false with Id 0.
      */
-    G4bool IsRegularStructure() const final; 
-    G4int GetRegularStructureId() const final; 
+    G4bool IsRegularStructure() const final;
+    G4int GetRegularStructureId() const final;
 
   private:
 

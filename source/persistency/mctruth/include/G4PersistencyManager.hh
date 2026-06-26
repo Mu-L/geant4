@@ -92,89 +92,88 @@
 // Author: Youhei Morita, 17.07.2001
 // --------------------------------------------------------------------
 #ifndef G4PERSISTENCYMANAGER_HH
-#define G4PERSISTENCYMANAGER_HH 1
+#define G4PERSISTENCYMANAGER_HH
 
-#include "G4Event.hh"
-
-#include "G4VMCTruthIO.hh"
-#include "G4HCIOcatalog.hh"
 #include "G4DCIOcatalog.hh"
+#include "G4Event.hh"
+#include "G4HCIOcatalog.hh"
+#include "G4VMCTruthIO.hh"
+#include "G4VPDigitIO.hh"
 #include "G4VPEventIO.hh"
 #include "G4VPHitIO.hh"
-#include "G4VPDigitIO.hh"
-#include "G4VTransactionManager.hh"
 #include "G4VPersistencyManager.hh"
+#include "G4VTransactionManager.hh"
 
 class G4PersistencyCenter;
 
 class G4PersistencyManager : public G4VPersistencyManager
 {
-  friend class G4PersistencyCenter;
+    friend class G4PersistencyCenter;
 
   public:
 
     G4PersistencyManager(G4PersistencyCenter* pc, const G4String& n);
-      // Constructor
+    // Constructor
 
     virtual ~G4PersistencyManager();
-      // Destructor
+    // Destructor
 
     virtual G4PersistencyManager* Create() { return nullptr; }
-      // Create a new persistency manager.
-      // To be used by G4PersistencyManagerT<>
+    // Create a new persistency manager.
+    // To be used by G4PersistencyManagerT<>
 
     const G4String& GetName() { return nameMgr; }
-      // Get the name of persistency manager
+    // Get the name of persistency manager
 
     virtual G4VPEventIO* EventIO() { return nullptr; }
-      // Returns the current event I/O handling manager
-      // Each derived class should return the pointer of actual manager
+    // Returns the current event I/O handling manager
+    // Each derived class should return the pointer of actual manager
 
     virtual G4VPHitIO* HitIO() { return nullptr; }
-      // Returns the current hit I/O handling manager
-      // Each derived class should return the pointer of actual manager
+    // Returns the current hit I/O handling manager
+    // Each derived class should return the pointer of actual manager
 
     virtual G4VPDigitIO* DigitIO() { return nullptr; }
-      // Returns the current digit I/O handling manager
-      // Each derived class should return the pointer of actual manager
+    // Returns the current digit I/O handling manager
+    // Each derived class should return the pointer of actual manager
 
     virtual G4VMCTruthIO* MCTruthIO() { return nullptr; }
-      // Returns the current MCTruth I/O handling manager
-      // Each derived class should return the pointer of actual manager
+    // Returns the current MCTruth I/O handling manager
+    // Each derived class should return the pointer of actual manager
 
     virtual G4VTransactionManager* TransactionManager() { return nullptr; }
-      // Returns the current transaction manager
-      // Each derived class should return the pointer of actual manager
+    // Returns the current transaction manager
+    // Each derived class should return the pointer of actual manager
 
     virtual void Initialize() {}
-      // Initialize the persistency package.
-      // Each derived class should implement the acutal initialization sequence
+    // Initialize the persistency package.
+    // Each derived class should implement the acutal initialization sequence
 
     void SetVerboseLevel(G4int v);
-      // Set verbose level
+    // Set verbose level
 
     G4bool Store(const G4Event* evt);
-      // Store the G4Event and its associated objects
+    // Store the G4Event and its associated objects
 
     G4bool Retrieve(G4Event*& evt);
-      // Retrieve the G4Event and its associated objects
+    // Retrieve the G4Event and its associated objects
 
     G4bool Store(const G4Run*) { return false; }
-      // Not used
+    // Not used
 
     G4bool Retrieve(G4Run*&) { return false; }
-      // Not used
+    // Not used
 
     G4bool Store(const G4VPhysicalVolume*) { return false; }
-      // Not used
+    // Not used
 
     G4bool Retrieve(G4VPhysicalVolume*&) { return false; }
-      // Not used
+    // Not used
 
   protected:
 
     static G4PersistencyManager* GetPersistencyManager();
-      // Get the instance of persistency manager
+    // Get the instance of persistency manager
 
   protected:
 

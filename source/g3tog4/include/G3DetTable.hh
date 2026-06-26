@@ -28,25 +28,30 @@
 // G3DetTable class
 
 #ifndef G3DETTABLE_HH
-#define G3DETTABLE_HH 1
+#define G3DETTABLE_HH
+
+#include "globals.hh"
+
+#include "G3DetTableEntry.hh"
+#include "G3toG4Defs.hh"
 
 #include <map>
-#include "G3toG4Defs.hh"
-#include "globals.hh"
-#include "G3DetTableEntry.hh"
 
-class G3DetTable {
-private:
-  std::map<G4String, G3DetTableEntry*, std::less<G4String> > DTD;
-  G4String MakeHash(G4String& set, G4String& det);
+class G3DetTable
+{
+  private:
 
-public:
-  G3DetTable();
-  virtual ~G3DetTable();
-  G4int GetID(G4String& set, G4String& det);
-  void Put(G4String& set, G4String& det, G4int id, G4VSensitiveDetector* D);
-  G4VSensitiveDetector* GetSD(G4String& set, G4String& det); 
-  void PrintAll();
+    std::map<G4String, G3DetTableEntry*, std::less<G4String>> DTD;
+    G4String MakeHash(G4String& set, G4String& det);
+
+  public:
+
+    G3DetTable();
+    virtual ~G3DetTable();
+    G4int GetID(G4String& set, G4String& det);
+    void Put(G4String& set, G4String& det, G4int id, G4VSensitiveDetector* D);
+    G4VSensitiveDetector* GetSD(G4String& set, G4String& det);
+    void PrintAll();
 };
 
 extern G3G4DLL_API G3DetTable G3Det;

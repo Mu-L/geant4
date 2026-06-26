@@ -54,6 +54,7 @@ constexpr const G4int indexpart = 300;
 class G4Mexp
 {
   public:
+
     G4Mexp() {};
 
     ~G4Mexp() = default;
@@ -66,6 +67,7 @@ class G4Mexp
 class G4Ec2sub
 {
   public:
+
     G4Ec2sub() {};
 
     ~G4Ec2sub() = default;
@@ -76,6 +78,7 @@ class G4Ec2sub
 class G4Ald
 {
   public:
+
     G4Ald() : av(0.0), as(0.0), ak(0.0), optafan(0.0) {};
 
     ~G4Ald() = default;
@@ -90,6 +93,7 @@ class G4Ald
 class G4Ecld
 {
   public:
+
     G4Ecld() {};
     ~G4Ecld() = default;
 
@@ -137,6 +141,7 @@ class G4Fiss
      */
 
   public:
+
     G4Fiss()
       : bet(0.0),
         bethyp(0.0),
@@ -163,6 +168,7 @@ class G4Fiss
 class G4Fb
 {
   public:
+
     G4Fb() {};
     ~G4Fb() = default;
 
@@ -176,6 +182,7 @@ class G4Fb
 class G4Opt
 {
   public:
+
     G4Opt() : optemd(0), optcha(0), optshpimf(0), optimfallowed(0), nblan0(0) {};
 
     ~G4Opt() = default;
@@ -186,6 +193,7 @@ class G4Opt
 class G4VarNtp
 {
   public:
+
     G4VarNtp() { clear(); };
 
     ~G4VarNtp() = default;

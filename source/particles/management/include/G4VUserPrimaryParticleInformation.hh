@@ -37,12 +37,13 @@
 
 // Author: M.Asai (SLAC)
 // --------------------------------------------------------------------
-#ifndef G4VUserPrimaryParticleInformation_hh
-#define G4VUserPrimaryParticleInformation_hh 1
+#ifndef G4VUSERPRIMARYPARTICLEINFORMATION_HH
+#define G4VUSERPRIMARYPARTICLEINFORMATION_HH
 
 class G4VUserPrimaryParticleInformation
 {
   public:
+
     G4VUserPrimaryParticleInformation() = default;
     virtual ~G4VUserPrimaryParticleInformation() = default;
 

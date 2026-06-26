@@ -61,12 +61,12 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4PhotoElectricEffect_h
-#define G4PhotoElectricEffect_h 1
+#ifndef G4PHOTOELECTRICEFFECT_HH
+#define G4PHOTOELECTRICEFFECT_HH
 
-#include "globals.hh"
-#include "G4VEmProcess.hh"
 #include "G4Gamma.hh"
+#include "G4VEmProcess.hh"
+#include "globals.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -78,32 +78,31 @@ class G4DynamicParticle;
 class G4PhotoElectricEffect : public G4VEmProcess
 
 {
-public:  // with description
+  public:  // with description
 
-  explicit G4PhotoElectricEffect(const G4String& processName ="phot",
-				 G4ProcessType type = fElectromagnetic);
+    explicit G4PhotoElectricEffect(const G4String& processName = "phot",
+                                   G4ProcessType type = fElectromagnetic);
 
-  ~G4PhotoElectricEffect() override;
+    ~G4PhotoElectricEffect() override;
 
-  // true for Gamma only.
-  G4bool IsApplicable(const G4ParticleDefinition&) final;
+    // true for Gamma only.
+    G4bool IsApplicable(const G4ParticleDefinition&) final;
 
-  // print documentation in html format
-  void ProcessDescription(std::ostream&) const override;
+    // print documentation in html format
+    void ProcessDescription(std::ostream&) const override;
 
-  G4PhotoElectricEffect & operator=(const G4PhotoElectricEffect &right) = delete;
-  G4PhotoElectricEffect(const G4PhotoElectricEffect&) = delete;
+    G4PhotoElectricEffect& operator=(const G4PhotoElectricEffect& right) = delete;
+    G4PhotoElectricEffect(const G4PhotoElectricEffect&) = delete;
 
-protected:
+  protected:
 
-  virtual void InitialiseProcess(const G4ParticleDefinition*) override;
+    virtual void InitialiseProcess(const G4ParticleDefinition*) override;
 
-private:
+  private:
 
-  G4bool isInitialised = false;
+    G4bool isInitialised = false;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

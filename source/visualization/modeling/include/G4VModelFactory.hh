@@ -32,61 +32,58 @@
 // and associated messengers.
 // Class Description - End:
 
-#ifndef G4VMODELFACTORY
-#define G4VMODELFACTORY
+#ifndef G4VMODELFACTORY_HH
+#define G4VMODELFACTORY_HH
 
 #include "G4String.hh"
+
 #include <iostream>
 #include <utility>
 #include <vector>
 
 class G4UImessenger;
 
-template <class T>
-class G4VModelFactory {
+template<class T>
+class G4VModelFactory
+{
+  public:  // With description
 
-public: // With description
+    typedef std::vector<G4UImessenger*> Messengers;
+    typedef std::pair<T*, Messengers> ModelAndMessengers;
 
-  typedef std::vector<G4UImessenger*> Messengers;
-  typedef std::pair<T*, Messengers> ModelAndMessengers;
-  
-  G4VModelFactory(const G4String& name);
+    G4VModelFactory(const G4String& name);
 
-  virtual ~G4VModelFactory();
+    virtual ~G4VModelFactory();
 
-  G4String Name();
+    G4String Name();
 
-  virtual ModelAndMessengers Create(const G4String& placement, const G4String& modelName) = 0;
+    virtual ModelAndMessengers Create(const G4String& placement, const G4String& modelName) = 0;
 
-  void Print(std::ostream& ostr) const;
+    void Print(std::ostream& ostr) const;
 
-private:
+  private:
 
-  G4String fName;
-
+    G4String fName;
 };
 
-template <typename T>
-G4VModelFactory<T>::G4VModelFactory(const G4String& name)
-  :fName(name) 
+template<typename T>
+G4VModelFactory<T>::G4VModelFactory(const G4String& name) : fName(name)
 {}
 
-template <typename T>
-G4VModelFactory<T>::~G4VModelFactory() {}
+template<typename T>
+G4VModelFactory<T>::~G4VModelFactory()
+{}
 
-template <typename T>
-G4String 
-G4VModelFactory<T>::Name() 
+template<typename T>
+G4String G4VModelFactory<T>::Name()
 {
   return fName;
 }
 
-template <typename T>
-void 
-G4VModelFactory<T>::Print(std::ostream& ostr) const
+template<typename T>
+void G4VModelFactory<T>::Print(std::ostream& ostr) const
 {
-  ostr<<"  "<<fName<<std::endl; 
-} 
+  ostr << "  " << fName << std::endl;
+}
 
 #endif
-

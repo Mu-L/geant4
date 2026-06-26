@@ -25,65 +25,43 @@
 //
 //
 
-#ifndef G4XAqmTotal_hh
-#define G4XAqmTotal_hh
+#ifndef G4XAQMTOTAL_HH
+#define G4XAQMTOTAL_HH
 
-#include "globals.hh"
-#include "G4VCrossSectionSource.hh"
 #include "G4CrossSectionVector.hh"
+#include "G4VCrossSectionSource.hh"
+#include "globals.hh"
 
 class G4KineticTrack;
 
 class G4XAqmTotal : public G4VCrossSectionSource
 {
+  public:
 
-public:
+    G4XAqmTotal();
 
-  G4XAqmTotal();
+    virtual ~G4XAqmTotal();
 
-  virtual ~G4XAqmTotal();
+    G4bool operator==(const G4XAqmTotal& right) const;
+    G4bool operator!=(const G4XAqmTotal& right) const;
 
-  G4bool operator==(const G4XAqmTotal &right) const;
-  G4bool operator!=(const G4XAqmTotal &right) const;
+    virtual G4double CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
 
-  virtual G4double CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
- 
-  virtual const G4CrossSectionVector* GetComponents() const { return 0; }
+    virtual const G4CrossSectionVector* GetComponents() const { return 0; }
 
-  virtual G4bool IsValid(G4double e) const;
+    virtual G4bool IsValid(G4double e) const;
 
-  virtual G4String Name() const;
+    virtual G4String Name() const;
 
+  protected:
 
-protected:
+  private:
 
+    G4XAqmTotal(const G4XAqmTotal& right);
+    const G4XAqmTotal& operator=(const G4XAqmTotal& right);
 
-private:  
-
-  G4XAqmTotal(const G4XAqmTotal &right);
-  const G4XAqmTotal& operator=(const G4XAqmTotal &right);
-  
-  static const G4double _lowLimit;
-  static const G4double _highLimit;
-  
+    static const G4double _lowLimit;
+    static const G4double _highLimit;
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

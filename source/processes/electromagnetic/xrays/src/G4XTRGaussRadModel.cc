@@ -27,11 +27,11 @@
 //
 
 #include "G4XTRGaussRadModel.hh"
-#include "G4PhysicalConstants.hh"
 
-#include "G4Material.hh"
 #include "G4Element.hh"
+#include "G4Material.hh"
 #include "G4NistManager.hh"
+#include "G4PhysicalConstants.hh"
 
 using namespace std;
 using namespace CLHEP;
@@ -39,18 +39,17 @@ using namespace CLHEP;
 ////////////////////////////////////////////////////////////////////////////
 // Constructor, destructor
 
-G4XTRGaussRadModel::G4XTRGaussRadModel(
-  G4LogicalVolume* anEnvelope,   G4double alphaPlate, G4double alphaGas, G4Material* foilMat, G4Material* gasMat,
-  G4double aa, G4double b, G4int n, const G4String& processName)
+G4XTRGaussRadModel::G4XTRGaussRadModel(G4LogicalVolume* anEnvelope, G4double alphaPlate,
+                                       G4double alphaGas, G4Material* foilMat, G4Material* gasMat,
+                                       G4double aa, G4double b, G4int n,
+                                       const G4String& processName)
   : G4VXTRenergyLoss(anEnvelope, foilMat, gasMat, aa, b, n, processName)
 {
-  if( verboseLevel > 0 )
-    G4cout << "G4XTRGaussRadModel EM process is called"
-           << G4endl;
+  if (verboseLevel > 0) G4cout << "G4XTRGaussRadModel EM process is called" << G4endl;
 
-  fAlphaPlate = alphaPlate; // ~40
-  fAlphaGas   = alphaGas;   // ~10 
-  fExitFlux   = true;       // XTR photons are moved to the end of radiator
+  fAlphaPlate = alphaPlate;  // ~40
+  fAlphaGas = alphaGas;  // ~10
+  fExitFlux = true;  // XTR photons are moved to the end of radiator
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -75,13 +74,12 @@ G4double G4XTRGaussRadModel::SpectralXTRdEdx(G4double energy)
   G4double aMa, bMb, sigma, dump;
   G4int k, kMax, kMin;
 
-  aMa   = fPlateThick * GetPlateLinearPhotoAbs(energy);
-  bMb   = fGasThick * GetGasLinearPhotoAbs(energy);
+  aMa = fPlateThick * GetPlateLinearPhotoAbs(energy);
+  bMb = fGasThick * GetGasLinearPhotoAbs(energy);
   sigma = 0.5 * (aMa + bMb);
-  dump  = std::exp(-fPlateNumber * sigma);
-  if(verboseLevel > 2)
-    G4cout << " dump = " << dump << G4endl;
-  tmp  = (fSigma1 - fSigma2) / cofPHC / energy;
+  dump = std::exp(-fPlateNumber * sigma);
+  if (verboseLevel > 2) G4cout << " dump = " << dump << G4endl;
+  tmp = (fSigma1 - fSigma2) / cofPHC / energy;
   cof1 = fPlateThick * tmp;
   cof2 = fGasThick * tmp;
 
@@ -92,24 +90,22 @@ G4double G4XTRGaussRadModel::SpectralXTRdEdx(G4double energy)
   theta2 = cofPHC / (energy * (fPlateThick + fGasThick));
 
   kMin = G4int(cofMin);
-  if(cofMin > kMin)
-    kMin++;
+  if (cofMin > kMin) kMin++;
 
-  kMax = kMin + 200; // 99; // 49; //
+  kMax = kMin + 200;  // 99; // 49; //
 
-  if(verboseLevel > 2)
+  if (verboseLevel > 2)
   {
     G4cout << cof1 << "     " << cof2 << "        " << cofMin << G4endl;
     G4cout << "kMin = " << kMin << ";    kMax = " << kMax << G4endl;
   }
-  for(k = kMin; k <= kMax; ++k)
+  for (k = kMin; k <= kMax; ++k)
   {
-    tmp    = pi * fPlateThick * (k + cof2) / (fPlateThick + fGasThick);
+    tmp = pi * fPlateThick * (k + cof2) / (fPlateThick + fGasThick);
     result = (k - cof1) * (k - cof1) * (k + cof2) * (k + cof2);
-    if(k == kMin && kMin == G4int(cofMin))
+    if (k == kMin && kMin == G4int(cofMin))
     {
-      sum +=
-        0.5 * std::sin(tmp) * std::sin(tmp) * std::abs(k - cofMin) / result;
+      sum += 0.5 * std::sin(tmp) * std::sin(tmp) * std::abs(k - cofMin) / result;
     }
     else
     {
@@ -117,11 +113,11 @@ G4double G4XTRGaussRadModel::SpectralXTRdEdx(G4double energy)
     }
     theta2k = std::sqrt(theta2 * std::abs(k - cofMin));
 
-    if(verboseLevel > 2)
+    if (verboseLevel > 2)
     {
       G4cout << k << "   " << theta2k << "     "
-             << std::sin(tmp) * std::sin(tmp) * std::abs(k - cofMin) / result
-             << "      " << sum << G4endl;
+             << std::sin(tmp) * std::sin(tmp) * std::abs(k - cofMin) / result << "      " << sum
+             << G4endl;
     }
   }
   result = 2 * (cof1 + cof2) * (cof1 + cof2) * sum / energy;
@@ -139,53 +135,50 @@ G4double G4XTRGaussRadModel::SpectralXTRdEdx(G4double energy)
 // are supposed to be about XTR formation zones.
 // The XTR photons are moved to the end of radiator
 
-
-G4double G4XTRGaussRadModel::GetStackFactor(G4double energy,
-                                                    G4double gamma,
-                                                    G4double varAngle)
+G4double G4XTRGaussRadModel::GetStackFactor(G4double energy, G4double gamma, G4double varAngle)
 {
-  G4double result(0.); 
+  G4double result(0.);
 
   G4double Ma, Mb, aMa, bMb, sigma;
 
-  G4double sa = fPlateThick/fAlphaPlate;
-  G4double sb = fGasThick/fAlphaGas;
+  G4double sa = fPlateThick / fAlphaPlate;
+  G4double sb = fGasThick / fAlphaGas;
 
-  Ma =  GetPlateLinearPhotoAbs(energy);  
+  Ma = GetPlateLinearPhotoAbs(energy);
   aMa = fPlateThick * Ma;
-  Mb = GetGasLinearPhotoAbs(energy);  
-  bMb   = fGasThick * Mb; 
-  sigma = aMa + bMb; // m1*t1+m2*t2 dimensionless
-  G4double nn = G4double( fPlateNumber );
+  Mb = GetGasLinearPhotoAbs(energy);
+  bMb = fGasThick * Mb;
+  sigma = aMa + bMb;  // m1*t1+m2*t2 dimensionless
+  G4double nn = G4double(fPlateNumber);
 
   // Gauss fluctuation of foil and gas gaps according to
   // RMS = sa = a/fAlphaPlate and RMS = sb = b/fAlphaGas
 
-  G4complex med(0.,1.);
-  G4complex Z1   = GetPlateComplexFZ( energy, gamma, varAngle);
-  G4complex por1 = -0.5*med*fPlateThick/Z1 - 0.125*sa*sa/Z1/Z1;
-  
-  G4complex Z2   = GetGasComplexFZ( energy, gamma, varAngle);
-  G4complex por2 = -0.5*med*fGasThick/Z2 - 0.125*sb*sb/Z2/Z2;
-  
-  G4complex npor = (por1+por2)*nn;
-  
-  G4complex Ha = exp(por1); 
+  G4complex med(0., 1.);
+  G4complex Z1 = GetPlateComplexFZ(energy, gamma, varAngle);
+  G4complex por1 = -0.5 * med * fPlateThick / Z1 - 0.125 * sa * sa / Z1 / Z1;
+
+  G4complex Z2 = GetGasComplexFZ(energy, gamma, varAngle);
+  G4complex por2 = -0.5 * med * fGasThick / Z2 - 0.125 * sb * sb / Z2 / Z2;
+
+  G4complex npor = (por1 + por2) * nn;
+
+  G4complex Ha = exp(por1);
   G4complex Hb = exp(por2);
-  
-  G4complex H  = Ha*Hb;
-  G4complex Hn = exp(npor); 
 
-  G4complex A  = ( 1.0 - Ha ) * ( 1.0 - Hb ) / ( 1. - H );
-  G4complex B1 = ( 1.0 - Ha ) * ( 1.0 - Ha ) * Hb / ( 1. - H );
-  
-  G4complex R  = B1*( exp(-sigma*nn) - Hn )/( exp(-sigma) - H );
+  G4complex H = Ha * Hb;
+  G4complex Hn = exp(npor);
 
-  R += A * ( 1 - exp(-sigma*nn) ) / ( 1. - exp(-sigma) ); // -> A*nn
-  
+  G4complex A = (1.0 - Ha) * (1.0 - Hb) / (1. - H);
+  G4complex B1 = (1.0 - Ha) * (1.0 - Ha) * Hb / (1. - H);
+
+  G4complex R = B1 * (exp(-sigma * nn) - Hn) / (exp(-sigma) - H);
+
+  R += A * (1 - exp(-sigma * nn)) / (1. - exp(-sigma));  // -> A*nn
+
   R *= OneInterfaceXTRdEdx(energy, gamma, varAngle);
-  
-  result      = 2.0 * std::real(R);
+
+  result = 2.0 * std::real(R);
 
   return result;
 }

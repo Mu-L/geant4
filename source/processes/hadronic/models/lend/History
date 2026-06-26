@@ -6,6 +6,30 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-06-04 Caleb Mattoon (hadr-lend-V11-04-02)
+- Update to GIDI+ 3.34.0-42 and pugixml v1.15
+  - Fix various warnings from Coverity and from gcc-16.1.0
+  - Add LUPI_HOST_DEVICE_INLINE macro and shared memory placement options for GPU performance improvements
+	- Fix a bug in thermal upscatter models B and DBRC: angular distribution was sampled
+    at the wrong projectile energy
+
+## 2026-05-24 Ben Morgan (hadr-lend-V11-04-01)
+- Add .clang-format file to explicitly exclude G4Lend/GIDI+ code from formatting.
+  - As GIDI+ code comes from upstream, we do not want to change its
+	  formatting so updates are clear.
+	- To be reviewed once Geant4 interface/GIDI+ import are better separated.
+
+## 2026-05-23 Ben Morgan (hadr-lend-V11-04-00)
+- Refactor G4LEND to make GIDI+ an implementation detail.
+  - G4LEND currently holds a copy of all the GIDI+ code needed to implement
+    it, leading to some confusion in what is Geant4 code, and what is GIDI+.
+  = Make all GIDI+ headers private to G4LEND so they are not exposed to
+    toolkit code or when installed. Hide use of GIDI+ types in G4GIDI.hh
+    classes behind a Pimpl pattern so that clients are not exposed directly
+    to GIDI+. As G4GIDI provides the core interface(s) needed to GIDI+, no
+    further changes are needed.
+	- No changes to GIDI+ code. G4LEND code changes are pure interface changes.
+
 ## 2025-11-21 Gabriele Cosmo (hadr-lend-V11-03-07)
 - Fixed implicit type conversions from size_t to int (reported on macOS/XCode)
   in G4GIDI_target.cc.

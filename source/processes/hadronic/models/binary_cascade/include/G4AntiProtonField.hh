@@ -25,47 +25,48 @@
 //
 //
 // -------------------------------------------------------------------
-//      GEANT 4 class header file 
+//      GEANT 4 class header file
 //
 //      CERN, Geneva, Switzerland
 //
 //      File name:     G4AntiProtonField.hh
 //
 //      Author:        Alessandro Brunengo (Alessandro.Brunengo@ge.infn.it)
-// 
+//
 //      Creation date: 5 June 2000
 // -------------------------------------------------------------------
 
-#ifndef G4AntiProtonField_h
-#define  G4AntiProtonField_h 1
+#ifndef G4ANTIPROTONFIELD_HH
+#define G4ANTIPROTONFIELD_HH
+
+#include "G4V3DNucleus.hh"
+#include "G4VNuclearField.hh"
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
-#include "G4VNuclearField.hh"
-#include "G4V3DNucleus.hh"
-
-class G4AntiProtonField: public G4VNuclearField
+class G4AntiProtonField : public G4VNuclearField
 {
-public:
-  G4AntiProtonField(G4V3DNucleus * nucleus, G4double coeff = 1.53*CLHEP::fermi);
-  virtual ~G4AntiProtonField();
+  public:
 
-private:
-  G4AntiProtonField(const  G4AntiProtonField &right);
-  const G4AntiProtonField & operator=(const G4AntiProtonField & right);
-  G4bool operator==(const G4AntiProtonField & right) const;
-  G4bool operator!=(const G4AntiProtonField & right) const;
+    G4AntiProtonField(G4V3DNucleus* nucleus, G4double coeff = 1.53 * CLHEP::fermi);
+    virtual ~G4AntiProtonField();
 
-public:
-  virtual G4double GetField(const G4ThreeVector & aPosition);
-  virtual G4double GetBarrier();
-  virtual G4double GetCoeff() { return theCoeff; }
+  private:
 
-private:
-  G4double theCoeff;
+    G4AntiProtonField(const G4AntiProtonField& right);
+    const G4AntiProtonField& operator=(const G4AntiProtonField& right);
+    G4bool operator==(const G4AntiProtonField& right) const;
+    G4bool operator!=(const G4AntiProtonField& right) const;
+
+  public:
+
+    virtual G4double GetField(const G4ThreeVector& aPosition);
+    virtual G4double GetBarrier();
+    virtual G4double GetCoeff() { return theCoeff; }
+
+  private:
+
+    G4double theCoeff;
 };
 
 #endif
-
-
-

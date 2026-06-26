@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPThermalScatteringNames_h
-#define G4ParticleHPThermalScatteringNames_h 1
+#ifndef G4PARTICLEHPTHERMALSCATTERINGNAMES_HH
+#define G4PARTICLEHPTHERMALSCATTERINGNAMES_HH
 
 // Class Description
 // Name list of Elements for a high precision (based on evaluated data
@@ -61,8 +61,7 @@ class G4ParticleHPThermalScatteringNames
       auto p = names.find(nameG4Element);
       return (p != names.end()) ? p->second : sss;
     }
-    inline const G4String& GetTS_NDL_Name(const G4String& material,
-                                          const G4String& element) const
+    inline const G4String& GetTS_NDL_Name(const G4String& material, const G4String& element) const
     {
       auto p = nist_names.find(std::pair<G4String, G4String>(material, element));
       return (p != nist_names.end()) ? p->second : sss;

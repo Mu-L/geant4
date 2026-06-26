@@ -33,13 +33,9 @@
 #include "ExGflashHit.hh"
 
 #include "G4Event.hh"
-#include "G4EventManager.hh"
 #include "G4SDManager.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4UImanager.hh"
-// std
-#include <algorithm>
-#include <iostream>
+
 #include <vector>
 
 using MyVector = std::vector<G4double>;
@@ -67,7 +63,8 @@ void ExGflashEventAction::EndOfEventAction(const G4Event* evt)
   G4String colNam;
   fCalorimeterCollectionId = SDman->GetCollectionID(colNam = "ExGflashCollection");
 
-  if (fCalorimeterCollectionId < 0) {
+  if (fCalorimeterCollectionId < 0)
+  {
     return;
   }
 
@@ -78,7 +75,8 @@ void ExGflashEventAction::EndOfEventAction(const G4Event* evt)
   // Read out of the crysta ECAL
   THC = (ExGflashHitsCollection*)(HCE->GetHC(fCalorimeterCollectionId));
 
-  if (THC != nullptr) {
+  if (THC != nullptr)
+  {
     /// Hits in sensitive Detector
     int n_hit = THC->entries();
 
@@ -109,12 +107,14 @@ void ExGflashEventAction::EndOfEventAction(const G4Event* evt)
 
     fAnalysisManager->FillH1(1, n_hit + 0.5);
     /// For all Hits in sensitive detector
-    for (int i = 0; i < n_hit; i++) {
+    for (int i = 0; i < n_hit; i++)
+    {
       G4double estep = (*THC)[i]->GetEdep();
       fAnalysisManager->FillH1(2, estep / MeV);
       estep /= MeV;
 
-      if (estep > 0.0) {
+      if (estep > 0.0)
+      {
         totE += estep;
 
         G4ThreeVector hitpos = (*THC)[i]->GetPos();
@@ -129,7 +129,8 @@ void ExGflashEventAction::EndOfEventAction(const G4Event* evt)
         auto SlideNb = G4int((longitudinal.mag() / SDRadl) / dLradl);
         auto RingNb = G4int((radial.mag() / SDRm) / dRradl);
 
-        if ((SlideNb >= 0 && SlideNb < nLbin) && (RingNb >= 0 && RingNb < nRbin)) {
+        if ((SlideNb >= 0 && SlideNb < nLbin) && (RingNb >= 0 && RingNb < nRbin))
+        {
           dEdL[SlideNb] += estep;
           dEdR[RingNb] += estep;
         }
@@ -138,14 +139,16 @@ void ExGflashEventAction::EndOfEventAction(const G4Event* evt)
 
     G4double Lnorm = 100. / dLradl / Etot;
     G4double Lsum = 0.0;
-    for (int i = 0; i < nLbin; i++) {  // Slide
+    for (int i = 0; i < nLbin; i++)
+    {  // Slide
       fAnalysisManager->FillP1(0, (i + 0.5) * dLradl, dEdL[i] * Lnorm);
       Lsum += dEdL[i];
       fAnalysisManager->FillP1(2, (i + 0.5) * dLradl, Lsum * Lnorm);
     }
     G4double Rnorm = 100. / dRradl / Etot;
     G4double Rsum = 0.0;
-    for (int i = 0; i < nRbin; i++) {  // Ring
+    for (int i = 0; i < nRbin; i++)
+    {  // Ring
       fAnalysisManager->FillP1(1, (i + 0.5) * dRradl, dEdR[i] * Rnorm);
       Rsum += dEdR[i];
       fAnalysisManager->FillP1(3, (i + 0.5) * dRradl, Rsum * Rnorm);

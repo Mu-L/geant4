@@ -28,22 +28,26 @@
 //
 // Author:	Michael Kelsey (SLAC) <kelsey@slac.stanford.edu>
 
-#ifndef G4HadPhaseSpaceNBodyAsai_HH
-#define G4HadPhaseSpaceNBodyAsai_HH 1
+#ifndef G4HADPHASESPACENBODYASAI_HH
+#define G4HADPHASESPACENBODYASAI_HH
 
 #include "G4VHadPhaseSpaceAlgorithm.hh"
 
+class G4HadPhaseSpaceNBodyAsai : public G4VHadPhaseSpaceAlgorithm
+{
+  public:
 
-class G4HadPhaseSpaceNBodyAsai : public G4VHadPhaseSpaceAlgorithm {
-public:
-  G4HadPhaseSpaceNBodyAsai(G4int verbose=0)
-    : G4VHadPhaseSpaceAlgorithm("G4HadPhaseSpaceNBodyAsai",verbose) {;}
-  virtual ~G4HadPhaseSpaceNBodyAsai() {;}
+    G4HadPhaseSpaceNBodyAsai(G4int verbose = 0)
+      : G4VHadPhaseSpaceAlgorithm("G4HadPhaseSpaceNBodyAsai", verbose)
+    {
+      ;
+    }
+    virtual ~G4HadPhaseSpaceNBodyAsai() { ; }
 
-protected:
-  virtual void GenerateMultiBody(G4double initialMass,
-				 const std::vector<G4double>& masses,
-				 std::vector<G4LorentzVector>& finalState);
+  protected:
+
+    virtual void GenerateMultiBody(G4double initialMass, const std::vector<G4double>& masses,
+                                   std::vector<G4LorentzVector>& finalState);
 };
 
-#endif	/* G4HadPhaseSpaceNBody_HH */
+#endif /* G4HadPhaseSpaceNBody_HH */

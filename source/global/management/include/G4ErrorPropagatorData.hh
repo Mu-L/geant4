@@ -33,8 +33,8 @@
 // Author: P.Arce, 2004
 // --------------------------------------------------------------------
 
-#ifndef G4ErrorPropagatorData_hh
-#define G4ErrorPropagatorData_hh
+#ifndef G4ERRORPROPAGATORDATA_HH
+#define G4ERRORPROPAGATORDATA_HH
 
 #include "globals.hh"
 
@@ -64,42 +64,45 @@ class G4ErrorTarget;
 
 class G4ErrorPropagatorData
 {
- public:
-  static G4ErrorPropagatorData* GetErrorPropagatorData();
-  // Singleton instance
+  public:
 
-  inline G4ErrorMode GetMode() const;
-  inline void SetMode(G4ErrorMode mode);
+    static G4ErrorPropagatorData* GetErrorPropagatorData();
+    // Singleton instance
 
-  inline G4ErrorState GetState() const;
-  inline void SetState(G4ErrorState sta);
+    inline G4ErrorMode GetMode() const;
+    inline void SetMode(G4ErrorMode mode);
 
-  inline G4ErrorStage GetStage() const;
-  inline void SetStage(G4ErrorStage sta);
+    inline G4ErrorState GetState() const;
+    inline void SetState(G4ErrorState sta);
 
-  inline const G4ErrorTarget* GetTarget(G4bool mustExist = false) const;
-  inline void SetTarget(const G4ErrorTarget* target);
+    inline G4ErrorStage GetStage() const;
+    inline void SetStage(G4ErrorStage sta);
 
-  static G4int verbose();
-  static void SetVerbose(G4int ver);
+    inline const G4ErrorTarget* GetTarget(G4bool mustExist = false) const;
+    inline void SetTarget(const G4ErrorTarget* target);
 
- private:
-  G4ErrorPropagatorData() = default;
-  ~G4ErrorPropagatorData();
-  // constructor and destructor are private
+    static G4int verbose();
+    static void SetVerbose(G4int ver);
 
- private:
-  static G4ThreadLocal G4ErrorPropagatorData* fpInstance;
+  private:
 
-  G4ErrorMode theMode{G4ErrorMode_PropTest};
+    G4ErrorPropagatorData() = default;
+    ~G4ErrorPropagatorData();
+    // constructor and destructor are private
 
-  G4ErrorState theState{G4ErrorState_PreInit};
+  private:
 
-  G4ErrorStage theStage{G4ErrorStage_Inflation};
+    static G4ThreadLocal G4ErrorPropagatorData* fpInstance;
 
-  G4ErrorTarget* theTarget = nullptr;
+    G4ErrorMode theMode{G4ErrorMode_PropTest};
 
-  static G4ThreadLocal G4int theVerbosity;
+    G4ErrorState theState{G4ErrorState_PreInit};
+
+    G4ErrorStage theStage{G4ErrorStage_Inflation};
+
+    G4ErrorTarget* theTarget = nullptr;
+
+    static G4ThreadLocal G4int theVerbosity;
 };
 
 #include "G4ErrorPropagatorData.icc"

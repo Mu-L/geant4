@@ -29,77 +29,70 @@
 //         on base of G4LowEnergyPolarizedRayleigh developed by R. Capra
 //
 
-#ifndef G4LivermorePolarizedRayleighModel_h
-#define G4LivermorePolarizedRayleighModel_h 1
+#ifndef G4LIVERMOREPOLARIZEDRAYLEIGHMODEL_HH
+#define G4LIVERMOREPOLARIZEDRAYLEIGHMODEL_HH
 
-#include "G4VEmModel.hh"
 #include "G4ParticleChangeForGamma.hh"
 #include "G4PhysicsFreeVector.hh"
 #include "G4ProductionCutsTable.hh"
+#include "G4VEmModel.hh"
 
 class G4LivermorePolarizedRayleighModel : public G4VEmModel
 {
-public:
+  public:
 
-  explicit G4LivermorePolarizedRayleighModel(
-                      const G4ParticleDefinition* p = nullptr, 
-		      const G4String& nam = "LivermorePolarizedRayleigh");
+    explicit G4LivermorePolarizedRayleighModel(const G4ParticleDefinition* p = nullptr,
+                                               const G4String& nam = "LivermorePolarizedRayleigh");
 
-  virtual ~G4LivermorePolarizedRayleighModel();
+    virtual ~G4LivermorePolarizedRayleighModel();
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
-  void InitialiseLocal(const G4ParticleDefinition*, 
-			       G4VEmModel* masterModel) override;
-  void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
-  
-  G4double ComputeCrossSectionPerAtom(
-				      const G4ParticleDefinition*,
-				      G4double kinEnergy, 
-				      G4double Z, 
-				      G4double A=0, 
-				      G4double cut=0,
-				      G4double emax=DBL_MAX) override;
-  
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel* masterModel) override;
+    void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
 
-  G4LivermorePolarizedRayleighModel & operator=
-  (const  G4LivermorePolarizedRayleighModel &right) = delete;
-  G4LivermorePolarizedRayleighModel(const  G4LivermorePolarizedRayleighModel&) = delete;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A = 0, G4double cut = 0,
+                                        G4double emax = DBL_MAX) override;
 
-private:
-  //cross sections
-  void ReadData(size_t Z, const char* path = nullptr);
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  // Polarization   
-  //   Generates \f$cos \left ( \theta\right )\f$ of the scattered photon
-  //   incomingPhotonEnergy The energy of the incoming photon
-  //   zAtom Atomic number
-  //   \f$cos \left ( \theta\right )\f$
-  G4double GenerateCosTheta(G4double incomingPhotonEnergy, G4int zAtom) const;
-   
-  //   Generates \f$\phi\f$ of the scattered photon
-  //   cosTheta \f$cos \left ( \theta\right )\f$ of the scattered photon
-  //    \f$\phi\f$
-  G4double GeneratePhi(G4double cosTheta) const;
+    G4LivermorePolarizedRayleighModel&
+    operator=(const G4LivermorePolarizedRayleighModel& right) = delete;
+    G4LivermorePolarizedRayleighModel(const G4LivermorePolarizedRayleighModel&) = delete;
 
-  //   Generates the polarization direction \f$\beta\f$ in the plane x, y relative to the x direction
-  //   \f$\beta\f$
-  G4double GeneratePolarizationAngle(void) const;
-  G4ThreeVector GetPhotonPolarization(const G4DynamicParticle&  photon);
+  private:
 
-  G4ParticleChangeForGamma* fParticleChange;
+    // cross sections
+    void ReadData(size_t Z, const char* path = nullptr);
 
-  const G4int maxZ = 100;
-  static G4PhysicsFreeVector* dataCS[101];
-  static G4PhysicsFreeVector* formFactorData[101];
+    // Polarization
+    //   Generates \f$cos \left ( \theta\right )\f$ of the scattered photon
+    //   incomingPhotonEnergy The energy of the incoming photon
+    //   zAtom Atomic number
+    //   \f$cos \left ( \theta\right )\f$
+    G4double GenerateCosTheta(G4double incomingPhotonEnergy, G4int zAtom) const;
 
-  G4double lowEnergyLimit;  
-  G4int verboseLevel;
-  G4bool isInitialised;
+    //   Generates \f$\phi\f$ of the scattered photon
+    //   cosTheta \f$cos \left ( \theta\right )\f$ of the scattered photon
+    //    \f$\phi\f$
+    G4double GeneratePhi(G4double cosTheta) const;
+
+    //   Generates the polarization direction \f$\beta\f$ in the plane x, y relative to the x
+    //   direction
+    //   \f$\beta\f$
+    G4double GeneratePolarizationAngle(void) const;
+    G4ThreeVector GetPhotonPolarization(const G4DynamicParticle& photon);
+
+    G4ParticleChangeForGamma* fParticleChange;
+
+    const G4int maxZ = 100;
+    static G4PhysicsFreeVector* dataCS[101];
+    static G4PhysicsFreeVector* formFactorData[101];
+
+    G4double lowEnergyLimit;
+    G4int verboseLevel;
+    G4bool isInitialised;
 };
 
 #endif

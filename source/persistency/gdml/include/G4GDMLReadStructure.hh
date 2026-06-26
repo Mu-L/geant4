@@ -32,14 +32,15 @@
 // Author: Zoltan Torzsok, November 2007
 // --------------------------------------------------------------------
 #ifndef G4GDMLREADSTRUCTURE_HH
-#define G4GDMLREADSTRUCTURE_HH 1
+#define G4GDMLREADSTRUCTURE_HH
 
+#include "G4GDMLReadParamvol.hh"
 #include "G4Types.hh"
+
 #include "geomdefs.hh"
 
-#include <vector>
 #include <map>
-#include "G4GDMLReadParamvol.hh"
+#include <vector>
 
 class G4AssemblyVolume;
 class G4LogicalVolume;
@@ -72,11 +73,10 @@ class G4GDMLReadStructure : public G4GDMLReadParamvol
     void AssemblyRead(const xercesc::DOMElement* const);
     void DivisionvolRead(const xercesc::DOMElement* const);
     G4LogicalVolume* FileRead(const xercesc::DOMElement* const);
-    void PhysvolRead(const xercesc::DOMElement* const,
-                     G4AssemblyVolume* assembly = 0);
+    void PhysvolRead(const xercesc::DOMElement* const, G4AssemblyVolume* assembly = 0);
     void ReplicavolRead(const xercesc::DOMElement* const, G4int number);
-    void ReplicaRead(const xercesc::DOMElement* const replicaElement,
-                     G4LogicalVolume* logvol, G4int number);
+    void ReplicaRead(const xercesc::DOMElement* const replicaElement, G4LogicalVolume* logvol,
+                     G4int number);
     EAxis AxisRead(const xercesc::DOMElement* const axisElement);
     G4double QuantityRead(const xercesc::DOMElement* const readElement);
     void BorderSurfaceRead(const xercesc::DOMElement* const);

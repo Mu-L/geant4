@@ -55,7 +55,8 @@ void G4DNAModelInterface::Initialise(const G4ParticleDefinition* particle, const
   fpParticleChangeForGamma = GetParticleChangeForGamma();
 
   // Loop on all the registered models to initialise them
-  for (auto & fRegisteredModel : fRegisteredModels) {
+  for (auto& fRegisteredModel : fRegisteredModels)
+  {
     fRegisteredModel->SetParticleChange(fpParticleChangeForGamma);
     fRegisteredModel->Initialise(particle, cuts);
   }
@@ -65,7 +66,6 @@ void G4DNAModelInterface::Initialise(const G4ParticleDefinition* particle, const
   BuildMaterialMolPerVolTable();
 
   StreamInfo(G4cout);
-
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -108,9 +108,10 @@ G4double G4DNAModelInterface::CrossSectionPerVolume(const G4Material* material,
   // Material is not a composite
   // *****************************
   //
-  if (material->GetMatComponents().empty()) {
+  if (material->GetMatComponents().empty())
+  {
     // Get the material name
-    const size_t & materialID = material->GetIndex();
+    const size_t& materialID = material->GetIndex();
 
     // Use the table to get the  model
     auto model = SelectModel(materialID, p, ekin);
@@ -118,12 +119,15 @@ G4double G4DNAModelInterface::CrossSectionPerVolume(const G4Material* material,
     // Get the nunber of molecules per volume unit for that material
 
     // Calculate the cross section times the number of molecules
-    if (model != nullptr) {
-      if (dynamic_cast<G4VDNAModel*>(model) == nullptr) {
+    if (model != nullptr)
+    {
+      if (dynamic_cast<G4VDNAModel*>(model) == nullptr)
+      {
         // water material models only
         crossSectionTimesNbMolPerVol = model->CrossSectionPerVolume(material, p, ekin, emin, emax);
       }
-      else {
+      else
+      {
         crossSectionTimesNbMolPerVol = model->CrossSectionPerVolume(material, p, ekin, emin, emax);
       }
     }
@@ -135,7 +139,8 @@ G4double G4DNAModelInterface::CrossSectionPerVolume(const G4Material* material,
   // Material is a composite
   // ********************************
   //
-  else {
+  else
+  {
     // Copy the map in a local variable
     // Otherwise we get segmentation fault and iterator pointing to nowhere: do not know why...
     // Maybe MatComponents map is overrided by something somewhere ?
@@ -144,7 +149,8 @@ G4double G4DNAModelInterface::CrossSectionPerVolume(const G4Material* material,
     G4cout << material->GetName() << G4endl;
 
     // Loop on all the components
-    for (const auto& it : componentsMap) {
+    for (const auto& it : componentsMap)
+    {
       // Get the current component
       auto component = it.first;
       // Get the current component mass fraction
@@ -158,7 +164,7 @@ G4double G4DNAModelInterface::CrossSectionPerVolume(const G4Material* material,
              << G4endl;
 
       // Get the current component name
-      const std::size_t & componentID = component->GetIndex();
+      const std::size_t& componentID = component->GetIndex();
 
       // Retrieve the model corresponding to the current component (ie material)
       auto model = SelectModel(componentID, p, ekin);
@@ -167,14 +173,16 @@ G4double G4DNAModelInterface::CrossSectionPerVolume(const G4Material* material,
       // The component cross section is multiplied by the total molecule number in the composite
       // scaled by the mass fraction.
       G4double crossSection;
-      if (model != nullptr) {
-        if (dynamic_cast<G4VDNAModel*>(model) == nullptr) {
+      if (model != nullptr)
+      {
+        if (dynamic_cast<G4VDNAModel*>(model) == nullptr)
+        {
           // water models
-          crossSection =
-            model->CrossSectionPerVolume(component, p, ekin, emin, emax)
-            / GetNumMoleculePerVolumeUnitForMaterial(fpG4_WATER);
+          crossSection = model->CrossSectionPerVolume(component, p, ekin, emin, emax)
+                         / GetNumMoleculePerVolumeUnitForMaterial(fpG4_WATER);
         }
-        else {
+        else
+        {
           crossSection = model->CrossSectionPerVolume(component, p, ekin, emin, emax)
                          / GetNumMoleculePerVolumeUnitForMaterial(component);
         }
@@ -220,7 +228,8 @@ void G4DNAModelInterface::SampleSecondaries(std::vector<G4DynamicParticle*>* fVe
   // Material is not a composite
   // *******************************
   //
-  if (couple->GetMaterial()->GetMatComponents().empty()) {
+  if (couple->GetMaterial()->GetMatComponents().empty())
+  {
     materialID = couple->GetMaterial()->GetIndex();
   }
 
@@ -228,7 +237,8 @@ void G4DNAModelInterface::SampleSecondaries(std::vector<G4DynamicParticle*>* fVe
   // Material is a composite
   // ****************************
   //
-  else {
+  else
+  {
     // Material is a composite
     // We need to select a component
 
@@ -245,9 +255,11 @@ void G4DNAModelInterface::SampleSecondaries(std::vector<G4DynamicParticle*>* fVe
     auto it = fMaterialCS.begin();
     auto ite = fMaterialCS.end();
     // While this is true we do not have found our component.
-    while (rand > cumulCS) {
+    while (rand > cumulCS)
+    {
       // Check if the sampling is ok
-      if (it == ite) {
+      if (it == ite)
+      {
         G4Exception(
           "G4DNAModelManager::SampleSecondaries", "em0003", FatalException,
           "The random component selection has failed: we ran into the end of the map without "
@@ -262,7 +274,8 @@ void G4DNAModelInterface::SampleSecondaries(std::vector<G4DynamicParticle*>* fVe
       // The DBL_MAX is here to take into account a return DBL_MAX in CSPerVol for the elastic model
       // to force elastic sampleSecondaries where the particle can be killed.
       // Used when paticle energy is lower than limit.
-      if (rand < cumulCS || cumulCS >= DBL_MAX) {
+      if (rand < cumulCS || cumulCS >= DBL_MAX)
+      {
         // we have our selected material
         materialID = it->first;
         result = true;
@@ -274,7 +287,8 @@ void G4DNAModelInterface::SampleSecondaries(std::vector<G4DynamicParticle*>* fVe
     }
 
     // Check that we get a result
-    if (!result) {
+    if (!result)
+    {
       // it is possible to end up here if the return DBL_MAX of CSPerVol in the elastic model is not
       // taken into account
 
@@ -316,25 +330,30 @@ void G4DNAModelInterface::BuildMaterialParticleModelTable(const G4ParticleDefini
   // The map is used to retrieve the correct model for the current particle/material couple.
 
   // Loop on all materials registered in the simulation
-  for (auto it : *G4Material::GetMaterialTable()) {
+  for (auto it : *G4Material::GetMaterialTable())
+  {
     // Get the material pointer
     G4Material* mat = it;
     // Get the map
     // Check that the material is not a composite material
     auto componentMap = mat->GetMatComponents();
-    if (componentMap.empty()) {
+    if (componentMap.empty())
+    {
       // Get the material name
-      const std::size_t & matID = mat->GetIndex();
+      const std::size_t& matID = mat->GetIndex();
       InsertModelInTable(matID, p);
     }
     // if the material is a composite material then we need to loop on all its components to
     // register them
-    else {
+    else
+    {
       // Loop on all the components of the material
-      for (const auto& itComp : componentMap) {
+      for (const auto& itComp : componentMap)
+      {
         G4Material* component = itComp.first;
         // Check that the component is not itself a composite
-        if (!component->GetMatComponents().empty()) {
+        if (!component->GetMatComponents().empty())
+        {
           std::ostringstream oss;
           oss << "Material " << mat->GetName() << " is a composite and its component";
           oss << " " << component->GetName();
@@ -343,7 +362,7 @@ void G4DNAModelInterface::BuildMaterialParticleModelTable(const G4ParticleDefini
           return;  // to make some compilers happy
         }
         // Get the current component name
-        const std::size_t & compID = component->GetIndex();
+        const std::size_t& compID = component->GetIndex();
         // If there is a model then insert the model corresponding to the component in the table
         // contains a if statement to check we have not registered the material as a component or a
         // normal material before.
@@ -364,19 +383,22 @@ void G4DNAModelInterface::BuildMaterialMolPerVolTable()
   G4MaterialTable* materialTable = G4Material::GetMaterialTable();
 
   // Loop on all the materials inside the "materialTable"
-  for (auto currentMaterial : *materialTable) {
+  for (auto currentMaterial : *materialTable)
+  {
     // Current material
     // Current material name
-    const std::size_t & currentMatID = currentMaterial->GetIndex();
+    const std::size_t& currentMatID = currentMaterial->GetIndex();
 
     // Will the material be used in this interface instance ?
     // Loop on all the materials that can be dealt with in this class
     auto it = fMaterialParticleModelTable.begin();
     auto ite = fMaterialParticleModelTable.end();
-    for (; it != ite; it++) {
-      const std::size_t & materialID = it->first;
+    for (; it != ite; it++)
+    {
+      const std::size_t& materialID = it->first;
 
-      if (materialID == currentMatID) {
+      if (materialID == currentMatID)
+      {
         const std::vector<G4double>* numMolPerVolForMat =
           G4DNAMolecularMaterial::Instance()->GetNumMolPerVolTableFor(currentMaterial);
         fMaterialMolPerVol[materialID] = numMolPerVolForMat;
@@ -387,7 +409,8 @@ void G4DNAModelInterface::BuildMaterialMolPerVolTable()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4DNAModelInterface::InsertModelInTable(const std::size_t& matID, const G4ParticleDefinition* p)
+void G4DNAModelInterface::InsertModelInTable(const std::size_t& matID,
+                                             const G4ParticleDefinition* p)
 {
   // To insert the model(s) in the table Material Particule -> Model(s)
 
@@ -401,26 +424,33 @@ void G4DNAModelInterface::InsertModelInTable(const std::size_t& matID, const G4P
   // If they are not: add the model(s)
   //
   // Check for the material
-  if (fMaterialParticleModelTable.find(matID) == fMaterialParticleModelTable.end()) {
+  if (fMaterialParticleModelTable.find(matID) == fMaterialParticleModelTable.end())
+  {
     // Check for the particle
-    if (fMaterialParticleModelTable[matID].find(p) == fMaterialParticleModelTable[matID].end()) {
+    if (fMaterialParticleModelTable[matID].find(p) == fMaterialParticleModelTable[matID].end())
+    {
       G4int modelNbForMaterial = 0;
-      for (const auto& it : fRegisteredModels) {
+      for (const auto& it : fRegisteredModels)
+      {
         auto model = dynamic_cast<G4VDNAModel*>(it);
-        if (model != nullptr) {
-          if (model->IsParticleExistingInModelForMaterial(p, matID)) {
+        if (model != nullptr)
+        {
+          if (model->IsParticleExistingInModelForMaterial(p, matID))
+          {
             fMaterialParticleModelTable[matID][p] = it;
             // and add one to the "there is a model" material flag
             ++modelNbForMaterial;
           }
         }
-        else {
+        else
+        {
           auto index = fpG4_WATER->GetIndex();
           fMaterialParticleModelTable[index][p] = it;
           ++modelNbForMaterial;
         }
       }
-      if (modelNbForMaterial == 0) {
+      if (modelNbForMaterial == 0)
+      {
         std::ostringstream oss;
         oss << "The material " << (*G4Material::GetMaterialTable())[matID]->GetName()
             << " and the particle " << p->GetParticleName();
@@ -449,11 +479,13 @@ G4VEmModel* G4DNAModelInterface::SelectModel(const std::size_t& materialID,
   // Loop on all the models within the models vector and check if ekin is within the energy range.
   auto DNAModel = dynamic_cast<G4VDNAModel*>(modelData);
   G4double lowL, highL;
-  if (DNAModel == nullptr) {
+  if (DNAModel == nullptr)
+  {
     // ekin is in the energy range: we select the model and stop the loop.
     lowL = modelData->LowEnergyLimit();
     highL = modelData->HighEnergyLimit();
-    if (ekin >= lowL && ekin < highL) {
+    if (ekin >= lowL && ekin < highL)
+    {
       // Select the model
 
       model = modelData;
@@ -463,11 +495,13 @@ G4VEmModel* G4DNAModelInterface::SelectModel(const std::size_t& materialID,
     }
     // ekin is not in the energy range: we continue the loop.
   }
-  else {
+  else
+  {
     // ekin is in the energy range: we select the model and stop the loop.
     lowL = DNAModel->GetLowELimit(materialID, particle);
     highL = DNAModel->GetHighELimit(materialID, particle);
-    if (ekin >= lowL && ekin < highL) {
+    if (ekin >= lowL && ekin < highL)
+    {
       // Select the model
       model = modelData;
       // return model;
@@ -505,17 +539,21 @@ void G4DNAModelInterface::StreamInfo(std::ostream& os) const
   os << std::setw(15) << "Material#" << std::setw(13) << "Particle" << std::setw(35) << "Model"
      << std::setw(17) << "LowLimit(MeV)" << std::setw(17) << "HighLimit(MeV)" << std::setw(13)
      << "Fast" << std::setw(13) << "Stationary" << std::setw(13) << "Chemistry" << G4endl;
-  for (const auto& it1 : fMaterialParticleModelTable) {
+  for (const auto& it1 : fMaterialParticleModelTable)
+  {
     os << std::setw(15) << (*G4Material::GetMaterialTable())[it1.first]->GetName();
-    for (const auto& it2 : it1.second) {
+    for (const auto& it2 : it1.second)
+    {
       os << std::setw(13) << it2.first->GetParticleName();
       os << std::setw(35) << it2.second->GetName();
       auto DNAModel = dynamic_cast<G4VDNAModel*>(it2.second);
-      if (DNAModel == nullptr) {
+      if (DNAModel == nullptr)
+      {
         os << std::setw(17) << it2.second->LowEnergyLimit();
         os << std::setw(17) << it2.second->HighEnergyLimit();
       }
-      else {
+      else
+      {
         auto lowL = DNAModel->GetLowELimit(it1.first, it2.first);
         auto highL = DNAModel->GetHighELimit(it1.first, it2.first);
         os << std::setw(17) << lowL;

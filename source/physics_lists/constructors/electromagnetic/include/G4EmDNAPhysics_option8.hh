@@ -26,8 +26,8 @@
 // S. Incerti (incerti@cenbg.in2p3.fr)
 //
 
-#ifndef G4EmDNAPhysics_option8_h
-#define G4EmDNAPhysics_option8_h 1
+#ifndef G4EMDNAPHYSICS_OPTION8_HH
+#define G4EMDNAPHYSICS_OPTION8_HH
 
 #include "G4EmDNAPhysics.hh"
 #include "globals.hh"
@@ -36,21 +36,15 @@
 
 class G4EmDNAPhysics_option8 : public G4EmDNAPhysics
 {
-public:
+  public:
 
-  explicit G4EmDNAPhysics_option8(G4int ver=1, const G4String& name="G4EmDNAPhysics_option8");
+    explicit G4EmDNAPhysics_option8(G4int ver = 1, const G4String& name = "G4EmDNAPhysics_option8");
 
-  ~G4EmDNAPhysics_option8() override = default;
+    ~G4EmDNAPhysics_option8() override = default;
 
-  void ConstructProcess() override;
+    void ConstructProcess() override;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-
-
-
-
-

@@ -30,32 +30,32 @@
 //
 // File name:     G4VEmAngularDistribution
 //
-// Author:        V. Ivanchenko using design of existing 
+// Author:        V. Ivanchenko using design of existing
 //                interface G4VBremAngularDistribution
-// 
+//
 // Creation date: 13 October 2010
 //
-// Modifications: 
+// Modifications:
 //
-// Class Description: 
+// Class Description:
 //
 // Abstract base class for polar angle sampling
 //
-// Class Description: End 
+// Class Description: End
 
 // -------------------------------------------------------------------
 //
-//    
+//
 
 #include "G4VEmAngularDistribution.hh"
+
 #include "G4EmParameters.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4VEmAngularDistribution::G4VEmAngularDistribution(const G4String& name) 
-  : fName(name)
+G4VEmAngularDistribution::G4VEmAngularDistribution(const G4String& name) : fName(name)
 {
-  fLocalDirection.set(0.0,0.0,1.0);
+  fLocalDirection.set(0.0, 0.0, 1.0);
   fPolarisation = G4EmParameters::Instance()->EnablePolarisation();
 }
 
@@ -65,22 +65,19 @@ G4VEmAngularDistribution::~G4VEmAngularDistribution() = default;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4ThreeVector& G4VEmAngularDistribution::SampleDirectionForShell(
-                                         const G4DynamicParticle* dp,
-                                         G4double finalTotalEnergy,
-                                         G4int Z, G4int,
-                                         const G4Material* mat)
+G4ThreeVector& G4VEmAngularDistribution::SampleDirectionForShell(const G4DynamicParticle* dp,
+                                                                 G4double finalTotalEnergy, G4int Z,
+                                                                 G4int, const G4Material* mat)
 {
-  return SampleDirection(dp, finalTotalEnergy, Z, mat); 
+  return SampleDirection(dp, finalTotalEnergy, Z, mat);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4VEmAngularDistribution::SamplePairDirections(const G4DynamicParticle* dp,
-				                    G4double, G4double,
-				                    G4ThreeVector& dirElectron,
-				                    G4ThreeVector& dirPositron,
-				                    G4int, const G4Material*)
+void G4VEmAngularDistribution::SamplePairDirections(const G4DynamicParticle* dp, G4double, G4double,
+                                                    G4ThreeVector& dirElectron,
+                                                    G4ThreeVector& dirPositron, G4int,
+                                                    const G4Material*)
 {
   dirElectron = dp->GetMomentumDirection();
   dirPositron = dp->GetMomentumDirection();
@@ -88,7 +85,6 @@ void G4VEmAngularDistribution::SamplePairDirections(const G4DynamicParticle* dp,
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4VEmAngularDistribution::PrintGeneratorInformation() const
-{}
+void G4VEmAngularDistribution::PrintGeneratorInformation() const {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

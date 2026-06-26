@@ -103,34 +103,40 @@ GFlashShowerModelMessenger::~GFlashShowerModelMessenger()
 
 void GFlashShowerModelMessenger::SetNewValue(G4UIcommand* command, G4String newValues)
 {
-  if (command == FlagCmd) {
+  if (command == FlagCmd)
+  {
     myModel->SetFlagParamType(FlagCmd->GetNewIntValue(newValues));
     this->GetCurrentValue(command);
   }
-  if (command == ContCmd) {
+  if (command == ContCmd)
+  {
     myModel->SetFlagParticleContainment(ContCmd->GetNewIntValue(newValues));
     this->GetCurrentValue(command);
   }
-  if (command == StepInX0Cmd) {
+  if (command == StepInX0Cmd)
+  {
     myModel->SetStepInX0(StepInX0Cmd->GetNewDoubleValue(newValues));
     this->GetCurrentValue(command);
   }
 
-  else if (command == EminCmd) {
-    myModel->PBound->SetMinEneToParametrise(*G4Electron::ElectronDefinition(),
-                                            EminCmd->GetNewDoubleValue(newValues));
+  else if (command == EminCmd)
+  {
+    myModel->GetPBound()->SetMinEneToParametrise(*G4Electron::ElectronDefinition(),
+                                                 EminCmd->GetNewDoubleValue(newValues));
     this->GetCurrentValue(command);
   }
 
-  else if (command == EmaxCmd) {
-    myModel->PBound->SetMaxEneToParametrise(*G4Electron::ElectronDefinition(),
-                                            EmaxCmd->GetNewDoubleValue(newValues));
+  else if (command == EmaxCmd)
+  {
+    myModel->GetPBound()->SetMaxEneToParametrise(*G4Electron::ElectronDefinition(),
+                                                 EmaxCmd->GetNewDoubleValue(newValues));
     this->GetCurrentValue(command);
   }
 
-  else if (command == EkillCmd) {
-    myModel->PBound->SetEneToKill(*G4Electron::ElectronDefinition(),
-                                  EkillCmd->GetNewDoubleValue(newValues));
+  else if (command == EkillCmd)
+  {
+    myModel->GetPBound()->SetEneToKill(*G4Electron::ElectronDefinition(),
+                                       EkillCmd->GetNewDoubleValue(newValues));
     this->GetCurrentValue(command);
   }
 }
@@ -140,28 +146,33 @@ G4String GFlashShowerModelMessenger::GetCurrentValue(G4UIcommand* command)
   G4String returnValue(1, '\0');
   std::ostringstream os;
 
-  if (command == FlagCmd) {
+  if (command == FlagCmd)
+  {
     os << "/GFlash/flag " << myModel->GetFlagParamType() << '\0';
     returnValue = G4String(os.str());
   }
 
-  else if (command == EkillCmd) {
-    os << "/GFlash/Ekill " << myModel->PBound->GetEneToKill(*G4Electron::ElectronDefinition()) / GeV
+  else if (command == EkillCmd)
+  {
+    os << "/GFlash/Ekill "
+       << myModel->GetPBound()->GetEneToKill(*G4Electron::ElectronDefinition()) / GeV << " GeV"
+       << '\0';
+    returnValue = G4String(os.str());
+  }
+
+  else if (command == EminCmd)
+  {
+    os << "/GFlash/Emin "
+       << myModel->GetPBound()->GetMinEneToParametrise(*G4Electron::ElectronDefinition()) / GeV
        << " GeV" << '\0';
     returnValue = G4String(os.str());
   }
 
-  else if (command == EminCmd) {
-    os << "/GFlash/Emin "
-       << myModel->PBound->GetMinEneToParametrise(*G4Electron::ElectronDefinition()) / GeV << " GeV"
-       << '\0';
-    returnValue = G4String(os.str());
-  }
-
-  else if (command == EmaxCmd) {
+  else if (command == EmaxCmd)
+  {
     os << "/GFlash/Emax "
-       << myModel->PBound->GetMaxEneToParametrise(*G4Electron::ElectronDefinition()) / GeV << " GeV"
-       << '\0';
+       << myModel->GetPBound()->GetMaxEneToParametrise(*G4Electron::ElectronDefinition()) / GeV
+       << " GeV" << '\0';
     returnValue = G4String(os.str());
   }
 

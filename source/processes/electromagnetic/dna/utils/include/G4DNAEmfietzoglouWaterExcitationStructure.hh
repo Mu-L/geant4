@@ -26,38 +26,37 @@
 // Based on the work described in
 // Rad Res 163, 98-111 (2005)
 // D. Emfietzoglou, H. Nikjoo
-// 
+//
 // Authors of the class (2014):
 // I. Kyriakou (kyriak@cc.uoi.gr)
 // D. Emfietzoglou (demfietz@cc.uoi.gr)
 // S. Incerti (incerti@cenbg.in2p3.fr)
 //
 
-#ifndef G4DNAEmfietzoglouWaterExcitationStructure_h
-#define G4DNAEmfietzoglouWaterExcitationStructure_h 1
- 
+#ifndef G4DNAEMFIETZOGLOUWATEREXCITATIONSTRUCTURE_HH
+#define G4DNAEMFIETZOGLOUWATEREXCITATIONSTRUCTURE_HH
+
 #include "globals.hh"
+
 #include <vector>
 
 class G4DNAEmfietzoglouWaterExcitationStructure
 {
+  public:
 
-public:
-  
-  G4DNAEmfietzoglouWaterExcitationStructure();
-  
-  virtual ~G4DNAEmfietzoglouWaterExcitationStructure();
-  
-  G4double ExcitationEnergy(G4int level);
+    G4DNAEmfietzoglouWaterExcitationStructure();
 
-  G4int NumberOfLevels() { return nLevels; }
-      
-private:
-   
-  G4int nLevels{5};
+    virtual ~G4DNAEmfietzoglouWaterExcitationStructure();
 
-  std::vector<G4double> energyConstant;
-  
+    G4double ExcitationEnergy(G4int level);
+
+    G4int NumberOfLevels() { return nLevels; }
+
+  private:
+
+    G4int nLevels{5};
+
+    std::vector<G4double> energyConstant;
 };
 
 #endif

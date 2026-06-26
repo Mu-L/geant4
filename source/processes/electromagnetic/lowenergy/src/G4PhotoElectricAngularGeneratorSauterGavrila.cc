@@ -33,74 +33,77 @@
 //
 // Creation date: 10 May 2004
 //
-// Modifications: 
+// Modifications:
 // 10 May 2003     P. Rodrigues    First implementation acording with new design
 //
-// Class Description: 
+// Class Description:
 //
-// Concrete class for PhotoElectric Electron Angular Distribution Generation 
+// Concrete class for PhotoElectric Electron Angular Distribution Generation
 // This model is a re-implementation of the Photolectric angular distribution
-// developed my M. Maire for the Standard EM Physics G4PhotoElectricEffect 
+// developed my M. Maire for the Standard EM Physics G4PhotoElectricEffect
 //
-// Class Description: End 
+// Class Description: End
 //
 // -------------------------------------------------------------------
 //
 
 #include "G4PhotoElectricAngularGeneratorSauterGavrila.hh"
+
 #include "G4PhysicalConstants.hh"
 #include "Randomize.hh"
 
 // -------------------------------------------------------------------
-G4PhotoElectricAngularGeneratorSauterGavrila::G4PhotoElectricAngularGeneratorSauterGavrila():
-  G4VEmAngularDistribution("AngularGenSauterGavrilaLowE")
+G4PhotoElectricAngularGeneratorSauterGavrila::G4PhotoElectricAngularGeneratorSauterGavrila()
+  : G4VEmAngularDistribution("AngularGenSauterGavrilaLowE")
 {}
 
 // -------------------------------------------------------------------
 
-G4PhotoElectricAngularGeneratorSauterGavrila::~G4PhotoElectricAngularGeneratorSauterGavrila() 
-{}
+G4PhotoElectricAngularGeneratorSauterGavrila::~G4PhotoElectricAngularGeneratorSauterGavrila() {}
 
 // -------------------------------------------------------------------
 
-G4ThreeVector& 
-G4PhotoElectricAngularGeneratorSauterGavrila::SampleDirection(
-                         const G4DynamicParticle* dp,
-                         G4double, G4int, const G4Material*)
+G4ThreeVector&
+G4PhotoElectricAngularGeneratorSauterGavrila::SampleDirection(const G4DynamicParticle* dp, G4double,
+                                                              G4int, const G4Material*)
 {
-
   // Compute Theta distribution of the emitted electron, with respect to the
   // incident Gamma.
-  // The Sauter-Gavrila distribution for the K-shell is used. 
+  // The Sauter-Gavrila distribution for the K-shell is used.
   G4double costeta = 1.;
-  G4double Phi     = twopi * G4UniformRand();
+  G4double Phi = twopi * G4UniformRand();
   G4double cosphi = std::cos(Phi);
   G4double sinphi = std::sin(Phi);
   G4double sinteta = 0;
-  G4double gamma   = 1. + dp->GetKineticEnergy()/electron_mass_c2;
+  G4double gamma = 1. + dp->GetKineticEnergy() / electron_mass_c2;
 
-  if (gamma > 5.) {
-    fLocalDirection = dp->GetMomentumDirection(); 
-    return fLocalDirection; 
+  if (gamma > 5.)
+  {
+    fLocalDirection = dp->GetMomentumDirection();
+    return fLocalDirection;
     // Bugzilla 1120
-    // SI on 05/09/2010 as suggested by JG 04/09/10 
+    // SI on 05/09/2010 as suggested by JG 04/09/10
   }
 
-  G4double beta  = std::sqrt((gamma - 1)*(gamma + 1))/gamma;
-  G4double b     = 0.5*gamma*(gamma - 1)*(gamma - 2);
-    
-  G4double rndm,term,greject,grejsup;
-  if (gamma < 2.) grejsup = gamma*gamma*(1.+b-beta*b);
-  else            grejsup = gamma*gamma*(1.+b+beta*b);
-  
-  do { rndm = 1.-2*G4UniformRand();
-       costeta = (rndm+beta)/(rndm*beta+1.);
-       term = 1.-beta*costeta;
-       greject = (1.-costeta*costeta)*(1.+b*term)/(term*term);
-  } while(greject < G4UniformRand()*grejsup);
-       
-  sinteta = std::sqrt((1 - costeta)*(1 + costeta));
-  fLocalDirection.set(sinteta*cosphi, sinteta*sinphi, costeta);
+  G4double beta = std::sqrt((gamma - 1) * (gamma + 1)) / gamma;
+  G4double b = 0.5 * gamma * (gamma - 1) * (gamma - 2);
+
+  G4double rndm, term, greject, grejsup;
+  if (gamma < 2.)
+    grejsup = gamma * gamma * (1. + b - beta * b);
+  else
+    grejsup = gamma * gamma * (1. + b + beta * b);
+
+  do
+  {
+    rndm = 1. - 2 * G4UniformRand();
+    costeta = (rndm + beta) / (rndm * beta + 1.);
+    term = 1. - beta * costeta;
+    greject = (1. - costeta * costeta) * (1. + b * term) / (term * term);
+  } while (greject < G4UniformRand() * grejsup);
+
+  sinteta = std::sqrt((1 - costeta) * (1 + costeta));
+  fLocalDirection.set(sinteta * cosphi, sinteta * sinphi, costeta);
   fLocalDirection.rotateUz(dp->GetMomentumDirection());
   return fLocalDirection;
 }
@@ -113,6 +116,7 @@ void G4PhotoElectricAngularGeneratorSauterGavrila::PrintGeneratorInformation() c
   G4cout << "" << G4endl;
   G4cout << "Re-implementation of the photolectric angular distribution" << G4endl;
   G4cout << "developed my M. Maire for the Standard EM Physics G4PhotoElectricEffect" << G4endl;
-  G4cout << "It computes the theta distribution of the emitted electron, with respect to the" << G4endl;
+  G4cout << "It computes the theta distribution of the emitted electron, with respect to the"
+         << G4endl;
   G4cout << "incident Gamma, using the Sauter-Gavrila distribution for the K-shell\n" << G4endl;
-} 
+}

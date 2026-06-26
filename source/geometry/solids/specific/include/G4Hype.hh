@@ -46,25 +46,27 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UHYPE 1
+#  define G4GEOM_USE_UHYPE 1
 #endif
 
 #if (defined(G4GEOM_USE_UHYPE) && defined(G4GEOM_USE_SYS_USOLIDS))
-  #define G4UHype G4Hype
-  #include "G4UHype.hh"
+#  define G4UHype G4Hype
+#  include "G4UHype.hh"
 #else
 
-#include "G4VSolid.hh"
-#include "G4ThreeVector.hh"
-#include "G4Polyhedron.hh"
+#  include "G4Polyhedron.hh"
+#  include "G4ThreeVector.hh"
+#  include "G4VSolid.hh"
 
 class G4SolidExtentList;
 class G4ClippablePolygon;
 
 /**
  * @brief G4Hype is a tube with hyperbolic profile; it describes an hyperbolic
- * volume with curved sides parallel to the Z axis. The solid has a specified
- * half-length along the Z axis, about which it is centered, and a given
+ * volume with curved sides parallel to the Z axis.
+ * @ingroup geometry_solids_specific
+ *
+ * The solid has a specified half-length along the Z axis, about which it is centered, and a given
  * minimum and maximum radii.
  */
 
@@ -81,12 +83,8 @@ class G4Hype : public G4VSolid
      *  @param[in] newOuterStereo Outer stereo angle in radians.
      *  @param[in] newHalfLenZ Half length in Z.
      */
-    G4Hype(const G4String& pName,
-                 G4double newInnerRadius,
-                 G4double newOuterRadius,
-                 G4double newInnerStereo,
-                 G4double newOuterStereo,
-                 G4double newHalfLenZ);
+    G4Hype(const G4String& pName, G4double newInnerRadius, G4double newOuterRadius,
+           G4double newInnerStereo, G4double newOuterStereo, G4double newHalfLenZ);
 
     /**
      * Destructor.
@@ -96,27 +94,26 @@ class G4Hype : public G4VSolid
     /**
      * Accessors.
      */
-    inline G4double GetInnerRadius () const;
-    inline G4double GetOuterRadius () const;
-    inline G4double GetZHalfLength () const;
-    inline G4double GetInnerStereo () const;
-    inline G4double GetOuterStereo () const;
+    inline G4double GetInnerRadius() const;
+    inline G4double GetOuterRadius() const;
+    inline G4double GetZHalfLength() const;
+    inline G4double GetInnerStereo() const;
+    inline G4double GetOuterStereo() const;
 
     /**
      * Modifiers.
      */
-    void SetInnerRadius (G4double newIRad);
-    void SetOuterRadius (G4double newORad);
-    void SetZHalfLength (G4double newHLZ);
-    void SetInnerStereo (G4double newISte);
-    void SetOuterStereo (G4double newOSte);
+    void SetInnerRadius(G4double newIRad);
+    void SetOuterRadius(G4double newORad);
+    void SetZHalfLength(G4double newHLZ);
+    void SetInnerStereo(G4double newISte);
+    void SetOuterStereo(G4double newOSte);
 
     /**
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -136,10 +133,9 @@ class G4Hype : public G4VSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Concrete implementations of the expected query interfaces for
@@ -147,19 +143,17 @@ class G4Hype : public G4VSolid
      */
     EInside Inside(const G4ThreeVector& p) const override;
     G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
-    G4double DistanceToIn(const G4ThreeVector& p,
-                          const G4ThreeVector& v) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
     G4double DistanceToIn(const G4ThreeVector& p) const override;
     G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
-                           const G4bool calcNorm = false,
-                                 G4bool* validNorm = nullptr,
-                                 G4ThreeVector* n = nullptr) const override;
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
     G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
      * Returns the type ID, "G4Hype" of the solid.
      */
-    G4GeometryType  GetEntityType() const override;
+    G4GeometryType GetEntityType() const override;
 
     /**
      * Makes a clone of the object for use in multi-treading.
@@ -216,10 +210,8 @@ class G4Hype : public G4VSolid
     /**
      * Returns the approximate isotropic distance to the hyperbolic surface.
      */
-    G4double ApproxDistOutside( G4double pr, G4double pz,
-                                G4double r0, G4double tanPhi ) const;
-    G4double ApproxDistInside( G4double pr, G4double pz,
-                               G4double r0, G4double tan2Phi ) const;
+    G4double ApproxDistOutside(G4double pr, G4double pz, G4double r0, G4double tanPhi) const;
+    G4double ApproxDistInside(G4double pr, G4double pz, G4double r0, G4double tan2Phi) const;
 
     /**
      * Returns the values of the hype radii at a given Z.
@@ -232,8 +224,8 @@ class G4Hype : public G4VSolid
      * (of infinite extent).
      *  @returns The number of intersections. If 0, the trajectory misses.
      */
-    G4int IntersectHype( const G4ThreeVector& p, const G4ThreeVector& v,
-                         G4double r2, G4double tan2Phi, G4double s[2] ) const;
+    G4int IntersectHype(const G4ThreeVector& p, const G4ThreeVector& v, G4double r2,
+                        G4double tan2Phi, G4double s[2]) const;
 
   private:
 
@@ -246,17 +238,23 @@ class G4Hype : public G4VSolid
     /** Precalculated parameters, squared quantities. */
     G4double tanInnerStereo;  // tan of Inner Stereo angle
     G4double tanOuterStereo;  // tan of Outer Stereo angle
-    G4double tanInnerStereo2; // squared tan of Inner Stereo angle
-    G4double tanOuterStereo2; // squared tan of Outer Stereo angle
-    G4double innerRadius2;    // squared Inner Radius
-    G4double outerRadius2;    // squared Outer Radius
-    G4double endInnerRadius2; // squared endcap Inner Radius
-    G4double endOuterRadius2; // squared endcap Outer Radius
+    G4double tanInnerStereo2;  // squared tan of Inner Stereo angle
+    G4double tanOuterStereo2;  // squared tan of Outer Stereo angle
+    G4double innerRadius2;  // squared Inner Radius
+    G4double outerRadius2;  // squared Outer Radius
+    G4double endInnerRadius2;  // squared endcap Inner Radius
+    G4double endOuterRadius2;  // squared endcap Outer Radius
     G4double endInnerRadius;  // endcap Inner Radius
     G4double endOuterRadius;  // endcap Outer Radius
 
     /** Used by DistanceToOut(). */
-    enum ESide { outerFace, innerFace, leftCap, rightCap };
+    enum ESide
+    {
+      outerFace,
+      innerFace,
+      leftCap,
+      rightCap
+    };
 
     G4double fCubicVolume = 0.0;
     G4double fSurfaceArea = 0.0;
@@ -269,8 +267,8 @@ class G4Hype : public G4VSolid
     mutable G4Polyhedron* fpPolyhedron = nullptr;
 };
 
-#include "G4Hype.icc"
+#  include "G4Hype.icc"
 
 #endif  // defined(G4GEOM_USE_UHYPE) && defined(G4GEOM_USE_SYS_USOLIDS)
 
-#endif // G4HYPE_HH
+#endif  // G4HYPE_HH

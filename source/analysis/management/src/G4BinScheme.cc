@@ -27,6 +27,7 @@
 // Author: Ivana Hrivnacova, 22/08/2013  (ivana@ipno.in2p3.fr)
 
 #include "G4BinScheme.hh"
+
 #include "G4AnalysisUtilities.hh"
 
 namespace G4Analysis
@@ -36,8 +37,8 @@ namespace G4Analysis
 G4BinScheme GetBinScheme(const G4String& binSchemeName)
 {
   if (binSchemeName == "linear") return G4BinScheme::kLinear;
-  if (binSchemeName == "log")    return G4BinScheme::kLog;
-  if (binSchemeName == "user")   return G4BinScheme::kUser;
+  if (binSchemeName == "log") return G4BinScheme::kLog;
+  if (binSchemeName == "user") return G4BinScheme::kUser;
 
   // No other name is supported
   Warn("\"" + binSchemeName + "\" binning scheme is not supported.\n"
@@ -47,53 +48,59 @@ G4BinScheme GetBinScheme(const G4String& binSchemeName)
 }
 
 //_____________________________________________________________________________
-void ComputeEdges(G4int nbins, G4double xmin, G4double xmax,
-                  G4double unit, G4Fcn fcn, G4BinScheme binScheme,
-                  std::vector<G4double>& edges)
+void ComputeEdges(G4int nbins, G4double xmin, G4double xmax, G4double unit, G4Fcn fcn,
+                  G4BinScheme binScheme, std::vector<G4double>& edges)
 {
-// Compute edges from parameters
+  // Compute edges from parameters
 
-  if ( binScheme == G4BinScheme::kUser ) {
+  if (binScheme == G4BinScheme::kUser)
+  {
     // This call should never happen for user bin scheme
-    Warn("There is no need to compute edges for G4BinScheme::kUser\n"
-         "Call is ignored.", kNamespaceName, "GetBinScheme");
+    Warn(
+      "There is no need to compute edges for G4BinScheme::kUser\n"
+      "Call is ignored.",
+      kNamespaceName, "GetBinScheme");
     return;
   }
 
-  if (unit == 0.) {
+  if (unit == 0.)
+  {
     // Should never happen
-    Warn("Illegal unit value (0), 1. will be used instead",
-      kNamespaceName, "ComputeEdges");
+    Warn("Illegal unit value (0), 1. will be used instead", kNamespaceName, "ComputeEdges");
     unit = 1.;
   }
 
-  if (nbins == 0) {
+  if (nbins == 0)
+  {
     // Should never happen
-    Warn("Illegal number of nbins value (0), call will be ignored",
-      kNamespaceName, "ComputeEdges");
+    Warn("Illegal number of nbins value (0), call will be ignored", kNamespaceName, "ComputeEdges");
     return;
   }
 
   // Apply units
-  auto xumin = xmin/unit;
-  auto xumax = xmax/unit;
+  auto xumin = xmin / unit;
+  auto xumax = xmax / unit;
 
-  if ( binScheme == G4BinScheme::kLinear ) {
-    auto dx = (fcn(xumax) - fcn(xumin) ) / nbins;
+  if (binScheme == G4BinScheme::kLinear)
+  {
+    auto dx = (fcn(xumax) - fcn(xumin)) / nbins;
     auto binValue = fcn(xumin);
-    while ( G4int(edges.size()) <= nbins ) {  // Loop checking, 23.06.2015, I. Hrivnacova
+    while (G4int(edges.size()) <= nbins)
+    {  // Loop checking, 23.06.2015, I. Hrivnacova
       edges.push_back(binValue);
       binValue += dx;
     }
     return;
   }
 
-  if ( binScheme == G4BinScheme::kLog ) {
+  if (binScheme == G4BinScheme::kLog)
+  {
     // do not apply fcn
-    auto dlog = (std::log10(xumax) - std::log10(xumin))/ nbins;
+    auto dlog = (std::log10(xumax) - std::log10(xumin)) / nbins;
     auto dx = std::pow(10, dlog);
     auto binValue = xumin;
-    while ( G4int(edges.size()) <= nbins ) { // Loop checking, 23.06.2015, I. Hrivnacova
+    while (G4int(edges.size()) <= nbins)
+    {  // Loop checking, 23.06.2015, I. Hrivnacova
       edges.push_back(binValue);
       binValue *= dx;
     }
@@ -102,22 +109,22 @@ void ComputeEdges(G4int nbins, G4double xmin, G4double xmax,
 }
 
 //_____________________________________________________________________________
-void ComputeEdges(const std::vector<G4double>& edges,
-                  G4double unit, G4Fcn fcn,
+void ComputeEdges(const std::vector<G4double>& edges, G4double unit, G4Fcn fcn,
                   std::vector<G4double>& newBins)
 {
-// Apply function & unit to defined edges
+  // Apply function & unit to defined edges
 
-  if (unit == 0.) {
+  if (unit == 0.)
+  {
     // Should never happen
-    Warn("Illegal unit value (0), 1. will be used instead",
-      kNamespaceName, "ComputeEdges");
+    Warn("Illegal unit value (0), 1. will be used instead", kNamespaceName, "ComputeEdges");
     unit = 1.;
   }
 
-  for (auto element : edges) {
-    newBins.push_back(fcn(element/unit));
+  for (auto element : edges)
+  {
+    newBins.push_back(fcn(element / unit));
   }
 }
 
-}
+}  // namespace G4Analysis

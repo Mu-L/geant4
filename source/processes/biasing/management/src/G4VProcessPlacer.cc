@@ -34,7 +34,5 @@
 
 #include "G4VProcessPlacer.hh"
 
-G4VProcessPlacer::G4VProcessPlacer()
-{}
-G4VProcessPlacer::~G4VProcessPlacer()
-{}
+G4VProcessPlacer::G4VProcessPlacer() {}
+G4VProcessPlacer::~G4VProcessPlacer() {}

@@ -32,50 +32,55 @@
 //
 // Modified:
 // 16.11.2005 G.Folger: don't  keep processes as data members, but new these
-// 13.06.2006 G.Folger: (re)move elastic scatterring 
+// 13.06.2006 G.Folger: (re)move elastic scatterring
 // 12.04.2017 A.Dotti move to new design with base class
 //
 //----------------------------------------------------------------------------
 //
 #include "G4NeutronBuilder.hh"
+
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
 
-G4NeutronBuilder::
-G4NeutronBuilder(G4bool fissionFlag)
+G4NeutronBuilder::G4NeutronBuilder(G4bool fissionFlag)
 {
-  theNeutronInelastic = new G4HadronInelasticProcess( "neutronInelastic", G4Neutron::Definition() );
+  theNeutronInelastic = new G4HadronInelasticProcess("neutronInelastic", G4Neutron::Definition());
   theNeutronCapture = new G4NeutronCaptureProcess;
-  if ( fissionFlag ) {
+  if (fissionFlag)
+  {
     theNeutronFission = new G4NeutronFissionProcess;
-  } else {
+  }
+  else
+  {
     theNeutronFission = nullptr;
-  } 
+  }
 }
 
-void G4NeutronBuilder::
-Build()
+void G4NeutronBuilder::Build()
 {
-  std::vector<G4VNeutronBuilder *>::iterator i;
-  for(i=theModelCollections.begin(); i!=theModelCollections.end(); i++)
+  std::vector<G4VNeutronBuilder*>::iterator i;
+  for (i = theModelCollections.begin(); i != theModelCollections.end(); i++)
   {
     (*i)->Build(theNeutronInelastic);
     (*i)->Build(theNeutronCapture);
-    if ( theNeutronFission ) (*i)->Build(theNeutronFission);
+    if (theNeutronFission) (*i)->Build(theNeutronFission);
   }
-  G4ProcessManager * theProcMan = G4Neutron::Neutron()->GetProcessManager();
+  G4ProcessManager* theProcMan = G4Neutron::Neutron()->GetProcessManager();
   theProcMan->AddDiscreteProcess(theNeutronInelastic);
   theProcMan->AddDiscreteProcess(theNeutronCapture);
-  if ( theNeutronFission ) theProcMan->AddDiscreteProcess(theNeutronFission);
+  if (theNeutronFission) theProcMan->AddDiscreteProcess(theNeutronFission);
 }
 
-void G4NeutronBuilder::RegisterMe(G4PhysicsBuilderInterface* aB) {
+void G4NeutronBuilder::RegisterMe(G4PhysicsBuilderInterface* aB)
+{
   auto bld = dynamic_cast<G4VNeutronBuilder*>(aB);
-  if ( bld != nullptr ) {
-      theModelCollections.push_back(bld);
-  } else {
-      G4PhysicsBuilderInterface::RegisterMe(aB);
+  if (bld != nullptr)
+  {
+    theModelCollections.push_back(bld);
+  }
+  else
+  {
+    G4PhysicsBuilderInterface::RegisterMe(aB);
   }
 }
-

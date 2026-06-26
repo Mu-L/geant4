@@ -40,147 +40,131 @@
 //
 // Class Description:
 //
-// Quantum Harmonic Oscillator Model for energy loss using atomic shell 
-// structure of atoms taking into account Q^2 (main for projectile charge Q), 
-// Q^3 and Q^4 terms for computation of energy loss due to binary collisions. 
-// Can be applied on heavy negatively charged particles for the energy interval 
+// Quantum Harmonic Oscillator Model for energy loss using atomic shell
+// structure of atoms taking into account Q^2 (main for projectile charge Q),
+// Q^3 and Q^4 terms for computation of energy loss due to binary collisions.
+// Can be applied on heavy negatively charged particles for the energy interval
 // 10 keV - 10 MeV scaled to the proton mass.
 //
-// Used data and formula of 
-// 1. G4QAOLowEnergyLoss class, S.Chauvie, P.Nieminen, M.G.Pia. IEEE Trans. 
+// Used data and formula of
+// 1. G4QAOLowEnergyLoss class, S.Chauvie, P.Nieminen, M.G.Pia. IEEE Trans.
 //    Nucl. Sci. 54 (2007) 578.
 // 2. ShellStrength and ShellEnergy from ICRU'73 Report 2005,
-// 3. Data for Ta (Z=73) from P.Sigmund, A.Shinner. Eur. Phys. J. D15 (2001) 
+// 3. Data for Ta (Z=73) from P.Sigmund, A.Shinner. Eur. Phys. J. D15 (2001)
 //    165-172
 //
 // -------------------------------------------------------------------
 //
 
-#ifndef G4ICRU73QOModel_h
-#define G4ICRU73QOModel_h 1
+#ifndef G4ICRU73QOMODEL_HH
+#define G4ICRU73QOMODEL_HH
 
-#include <CLHEP/Units/PhysicalConstants.h>
-
-#include "G4VEmModel.hh"
 #include "G4AtomicShells.hh"
 #include "G4DensityEffectData.hh"
+#include "G4VEmModel.hh"
+
+#include <CLHEP/Units/PhysicalConstants.h>
 
 class G4ParticleChangeForLoss;
 
 class G4ICRU73QOModel : public G4VEmModel
 {
+  public:
 
-public:
+    explicit G4ICRU73QOModel(const G4ParticleDefinition* p = nullptr,
+                             const G4String& nam = "ICRU73QO");
 
-  explicit G4ICRU73QOModel(const G4ParticleDefinition* p = nullptr,
-                           const G4String& nam = "ICRU73QO");
+    ~G4ICRU73QOModel() = default;
 
-  ~G4ICRU73QOModel() = default;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    G4double ComputeCrossSectionPerElectron(const G4ParticleDefinition*, G4double kineticEnergy,
+                                            G4double cutEnergy, G4double maxEnergy);
 
-  G4double ComputeCrossSectionPerElectron(
-                                 const G4ParticleDefinition*,
-                                 G4double kineticEnergy,
-                                 G4double cutEnergy,
-                                 G4double maxEnergy);
-                                 
-  G4double ComputeCrossSectionPerAtom(
-                                 const G4ParticleDefinition*,
-                                 G4double kineticEnergy,
-                                 G4double Z, G4double A,
-                                 G4double cutEnergy,
-                                 G4double maxEnergy) override;
-                                                                  
-  G4double CrossSectionPerVolume(const G4Material*,
-                                 const G4ParticleDefinition*,
-                                 G4double kineticEnergy,
-                                 G4double cutEnergy,
-                                 G4double maxEnergy) override;
-                                 
-  G4double ComputeDEDXPerVolume(const G4Material*,
-				const G4ParticleDefinition*,
-				G4double kineticEnergy,
-				G4double) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kineticEnergy,
+                                        G4double Z, G4double A, G4double cutEnergy,
+                                        G4double maxEnergy) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy,
+                                   G4double maxEnergy) override;
 
-  // hide assignment operator
-  G4ICRU73QOModel & operator=(const  G4ICRU73QOModel &right) = delete;
-  G4ICRU73QOModel(const  G4ICRU73QOModel&) = delete;
- 
-protected:
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                  G4double kineticEnergy, G4double) override;
 
-  G4double MaxSecondaryEnergy(const G4ParticleDefinition*,
-			      G4double kinEnergy) final;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-private:
+    // hide assignment operator
+    G4ICRU73QOModel& operator=(const G4ICRU73QOModel& right) = delete;
+    G4ICRU73QOModel(const G4ICRU73QOModel&) = delete;
 
-  inline void SetParticle(const G4ParticleDefinition* p);
-  inline void SetLowestKinEnergy(G4double val);
+  protected:
 
-  G4double DEDX(const G4Material* material, G4double kineticEnergy);
+    G4double MaxSecondaryEnergy(const G4ParticleDefinition*, G4double kinEnergy) final;
 
-  G4double DEDXPerElement(G4int Z, G4double kineticEnergy);
+  private:
 
-  // get number of shell, energy and oscillator strengths for material
-  G4int GetNumberOfShells(G4int Z) const;
+    inline void SetParticle(const G4ParticleDefinition* p);
+    inline void SetLowestKinEnergy(G4double val);
 
-  G4double GetShellEnergy(G4int Z, G4int nbOfTheShell) const; 
-  G4double GetOscillatorEnergy(G4int Z, G4int nbOfTheShell) const; 
-  G4double GetShellStrength(G4int Z, G4int nbOfTheShell) const;
+    G4double DEDX(const G4Material* material, G4double kineticEnergy);
 
-  // calculate stopping number for L's term
-  G4double GetL0(G4double normEnergy) const;
-  // terms in Z^2
-  G4double GetL1(G4double normEnergy) const;
-  // terms in Z^3
-  G4double GetL2(G4double normEnergy) const;
-  // terms in Z^4
-  
-  const G4ParticleDefinition* particle;
-  G4ParticleDefinition*       theElectron;   
-  G4ParticleChangeForLoss*    fParticleChange;
-  G4DensityEffectData*        denEffData;
+    G4double DEDXPerElement(G4int Z, G4double kineticEnergy);
 
-  G4double mass;
-  G4double charge;
-  G4double chargeSquare;
-  G4double massRate;
-  G4double ratio;
-  G4double lowestKinEnergy;
+    // get number of shell, energy and oscillator strengths for material
+    G4int GetNumberOfShells(G4int Z) const;
 
-  G4bool   isInitialised;
+    G4double GetShellEnergy(G4int Z, G4int nbOfTheShell) const;
+    G4double GetOscillatorEnergy(G4int Z, G4int nbOfTheShell) const;
+    G4double GetShellStrength(G4int Z, G4int nbOfTheShell) const;
 
-  // Z of element at now avaliable for the model
-  static const G4int NQOELEM  = 26;
-  static const G4int NQODATA  = 130;
-  static const G4int ZElementAvailable[NQOELEM];
-  
-  // number, energy and oscillator strengths
-  // for an harmonic oscillator model of material
-  static const G4int startElemIndex[NQOELEM];
-  static const G4int nbofShellsForElement[NQOELEM];
-  static const G4double ShellEnergy[NQODATA];
-  static const G4double SubShellOccupation[NQODATA];  // Z * ShellStrength
+    // calculate stopping number for L's term
+    G4double GetL0(G4double normEnergy) const;
+    // terms in Z^2
+    G4double GetL1(G4double normEnergy) const;
+    // terms in Z^3
+    G4double GetL2(G4double normEnergy) const;
+    // terms in Z^4
 
-  G4int indexZ[100];
+    const G4ParticleDefinition* particle;
+    G4ParticleDefinition* theElectron;
+    G4ParticleChangeForLoss* fParticleChange;
+    G4DensityEffectData* denEffData;
 
-  //  variable for calculation of stopping number of L's term
-  static const G4double L0[67][2];
-  static const G4double L1[22][2];
-  static const G4double L2[14][2];
-  
-  G4int sizeL0;
-  G4int sizeL1;
-  G4int sizeL2;
+    G4double mass;
+    G4double charge;
+    G4double chargeSquare;
+    G4double massRate;
+    G4double ratio;
+    G4double lowestKinEnergy;
 
-  static const G4double factorBethe[99];
-  
+    G4bool isInitialised;
+
+    // Z of element at now avaliable for the model
+    static const G4int NQOELEM = 26;
+    static const G4int NQODATA = 130;
+    static const G4int ZElementAvailable[NQOELEM];
+
+    // number, energy and oscillator strengths
+    // for an harmonic oscillator model of material
+    static const G4int startElemIndex[NQOELEM];
+    static const G4int nbofShellsForElement[NQOELEM];
+    static const G4double ShellEnergy[NQODATA];
+    static const G4double SubShellOccupation[NQODATA];  // Z * ShellStrength
+
+    G4int indexZ[100];
+
+    //  variable for calculation of stopping number of L's term
+    static const G4double L0[67][2];
+    static const G4double L1[22][2];
+    static const G4double L2[14][2];
+
+    G4int sizeL0;
+    G4int sizeL1;
+    G4int sizeL2;
+
+    static const G4double factorBethe[99];
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -189,10 +173,10 @@ inline void G4ICRU73QOModel::SetParticle(const G4ParticleDefinition* p)
 {
   particle = p;
   mass = particle->GetPDGMass();
-  charge = particle->GetPDGCharge()/CLHEP::eplus;
-  chargeSquare = charge*charge;
-  massRate     = mass/CLHEP::proton_mass_c2;
-  ratio = CLHEP::electron_mass_c2/mass;
+  charge = particle->GetPDGCharge() / CLHEP::eplus;
+  chargeSquare = charge * charge;
+  massRate = mass / CLHEP::proton_mass_c2;
+  ratio = CLHEP::electron_mass_c2 / mass;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

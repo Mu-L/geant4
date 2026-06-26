@@ -31,8 +31,8 @@
 
 // Author: M.Asai, 28 April 2006
 // --------------------------------------------------------------------
-#ifndef G4FieldTrackUpdator_hh
-#define G4FieldTrackUpdator_hh 1
+#ifndef G4FIELDTRACKUPDATOR_HH
+#define G4FIELDTRACKUPDATOR_HH
 
 class G4FieldTrack;
 class G4Track;
@@ -47,7 +47,7 @@ class G4FieldTrackUpdator
   private:
 
     G4FieldTrackUpdator() = default;
-   ~G4FieldTrackUpdator() = default;
+    ~G4FieldTrackUpdator() = default;
 };
 
 #endif

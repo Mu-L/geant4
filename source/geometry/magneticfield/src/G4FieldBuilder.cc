@@ -28,16 +28,16 @@
 // -------------------------------------------------------------------
 
 #include "G4FieldBuilder.hh"
-#include "G4FieldBuilderMessenger.hh"
 
 #include "G4Exception.hh"
 #include "G4Field.hh"
+#include "G4FieldBuilderMessenger.hh"
 #include "G4FieldParameters.hh"
 #include "G4FieldSetup.hh"
 #include "G4LogicalVolume.hh"
 #include "G4ios.hh"
 
-G4ThreadLocal G4Field*  G4FieldBuilder::fGlobalField = nullptr;
+G4ThreadLocal G4Field* G4FieldBuilder::fGlobalField = nullptr;
 G4ThreadLocal G4bool G4FieldBuilder::fIsConstructed = false;
 
 //_____________________________________________________________________________
@@ -52,7 +52,7 @@ G4FieldBuilder* G4FieldBuilder::Instance()
 G4FieldBuilder::G4FieldBuilder()
 {
   // Default constructor
- 
+
   fMessenger = new G4FieldBuilderMessenger(this);
 
   // Field parameters for global field
@@ -102,8 +102,7 @@ void G4FieldBuilder::SetVerboseLevel(G4int value)
 }
 
 //_____________________________________________________________________________
-G4FieldParameters* G4FieldBuilder::GetOrCreateFieldParameters(
-  const G4String& volumeName)
+G4FieldParameters* G4FieldBuilder::GetOrCreateFieldParameters(const G4String& volumeName)
 {
   // Get field parameters with the given volumeName or create them if they
   // do not exist yet
@@ -141,8 +140,8 @@ G4FieldSetup* G4FieldBuilder::GetFieldSetup(G4LogicalVolume* lv)
 }
 
 //_____________________________________________________________________________
-void G4FieldBuilder::CreateFieldSetup(G4Field* field,
-  G4FieldParameters* fieldParameters, G4LogicalVolume* lv)
+void G4FieldBuilder::CreateFieldSetup(G4Field* field, G4FieldParameters* fieldParameters,
+                                      G4LogicalVolume* lv)
 {
   // Create magnetic, electromagnetic or gravity field setup
 
@@ -176,7 +175,10 @@ void G4FieldBuilder::ConstructLocalFields()
 {
   // Construct Geant4 local magnetic field setups from the local fields map
 
-  if (fLocalFields.Get() == nullptr) { return; }
+  if (fLocalFields.Get() == nullptr)
+  {
+    return;
+  }
 
   if (fVerboseLevel > 1)
   {
@@ -190,8 +192,7 @@ void G4FieldBuilder::ConstructLocalFields()
     const auto& volumeName = lv->GetName();
 
     // Get or create user field parameters
-    G4FieldParameters* fieldParameters =
-      GetOrCreateFieldParameters(volumeName);
+    G4FieldParameters* fieldParameters = GetOrCreateFieldParameters(volumeName);
 
     if (fVerboseLevel > 1)
     {
@@ -229,8 +230,7 @@ void G4FieldBuilder::UpdateFieldSetups()
 //
 
 //_____________________________________________________________________________
-G4FieldParameters* G4FieldBuilder::CreateFieldParameters(
-  const G4String& fieldVolName)
+G4FieldParameters* G4FieldBuilder::CreateFieldParameters(const G4String& fieldVolName)
 {
   // Create local magnetic field parameters (configuration) which can be then
   // configured by the user via UI commands.
@@ -255,9 +255,8 @@ void G4FieldBuilder::ConstructFieldSetup()
 
   if (fIsConstructed)
   {
-    G4Exception(
-      "G4FieldBuilder::ConstructField:", "GeomFieldParameters0001",
-      JustWarning, "Field was already constructed.");
+    G4Exception("G4FieldBuilder::ConstructField:", "GeomFieldParameters0001", JustWarning,
+                "Field was already constructed.");
     return;
   }
 
@@ -278,9 +277,8 @@ void G4FieldBuilder::UpdateField()
 
   if (fFieldSetups.Get() == nullptr)
   {
-    G4Exception(
-      "G4FieldBuilder::UpdateField", "GeomFieldParameters0001",
-      JustWarning, "No field setup is defined.");
+    G4Exception("G4FieldBuilder::UpdateField", "GeomFieldParameters0001", JustWarning,
+                "No field setup is defined.");
     return;
   }
 
@@ -303,7 +301,7 @@ void G4FieldBuilder::Reinitialize()
   {
     G4cout << "G4FieldBuilder::Reinitialize" << G4endl;
   }
-  
+
   // Delete global field
   delete fGlobalField;
   fGlobalField = nullptr;
@@ -340,15 +338,14 @@ void G4FieldBuilder::Reinitialize()
 //_____________________________________________________________________________
 void G4FieldBuilder::SetFieldType(G4FieldType fieldType)
 {
-// Default field type is set to kMagnetic;
-// this function should be called for other than magnetic field
-// in order to update the default equation and stepper types.
+  // Default field type is set to kMagnetic;
+  // this function should be called for other than magnetic field
+  // in order to update the default equation and stepper types.
 
   if (fIsConstructed)
   {
-    G4Exception(
-      "G4FieldBuilder::SetFieldType:", "GeomFieldParameters0001",
-      JustWarning, "Field was already constructed.");
+    G4Exception("G4FieldBuilder::SetFieldType:", "GeomFieldParameters0001", JustWarning,
+                "Field was already constructed.");
     return;
   }
 
@@ -371,9 +368,8 @@ void G4FieldBuilder::SetGlobalField(G4Field* field, G4bool warn)
 
   if (fGlobalField != nullptr && warn)
   {
-    G4Exception(
-      "G4FieldBuilder::SetGlobalField:", "GeomFieldParameters0001",
-      JustWarning, "The global field already exists, it will be deleted.");
+    G4Exception("G4FieldBuilder::SetGlobalField:", "GeomFieldParameters0001", JustWarning,
+                "The global field already exists, it will be deleted.");
   }
   delete fGlobalField;
   fGlobalField = field;
@@ -387,8 +383,7 @@ void G4FieldBuilder::SetGlobalField(G4Field* field, G4bool warn)
 }
 
 //_____________________________________________________________________________
-void G4FieldBuilder::SetLocalField(
-  G4Field* field, G4LogicalVolume* lv, G4bool warn)
+void G4FieldBuilder::SetLocalField(G4Field* field, G4LogicalVolume* lv, G4bool warn)
 {
   // Register the local field in the map.
   // Update field objects, if the field was already constructed.
@@ -409,7 +404,10 @@ void G4FieldBuilder::SetLocalField(
   auto it = GetLocalFields().begin();
   for (it = GetLocalFields().begin(); it != GetLocalFields().end(); ++it)
   {
-    if (it->first == lv) { break; }
+    if (it->first == lv)
+    {
+      break;
+    }
   }
 
   if (it != GetLocalFields().end())
@@ -418,11 +416,10 @@ void G4FieldBuilder::SetLocalField(
     if (warn)
     {
       G4ExceptionDescription descr;
-      descr << "Logical volume " << lv->GetName() << " has already field."
-        " It will be deleted.";
-      G4Exception(
-        "G4FieldBuilder::SetLocalField:", "GeomFieldParameters0001",
-        JustWarning, descr);
+      descr << "Logical volume " << lv->GetName()
+            << " has already field."
+               " It will be deleted.";
+      G4Exception("G4FieldBuilder::SetLocalField:", "GeomFieldParameters0001", JustWarning, descr);
     }
     delete it->second;
     it->second = field;
@@ -430,17 +427,17 @@ void G4FieldBuilder::SetLocalField(
   else
   {
     // register field in the map
-    GetLocalFields().emplace_back(lv,field);
+    GetLocalFields().emplace_back(lv, field);
   }
 
-  if (fIsConstructed) {
+  if (fIsConstructed)
+  {
     // update this local field objects if already constructed
     auto fieldSetup = GetFieldSetup(lv);
     if (fieldSetup == nullptr)
     {
-      G4Exception(
-        "G4FieldBuilder::SetLocalField:", "GeomFieldParameters0001",
-        JustWarning, "Cannot get field setup for a local field.");
+      G4Exception("G4FieldBuilder::SetLocalField:", "GeomFieldParameters0001", JustWarning,
+                  "Cannot get field setup for a local field.");
       return;
     }
     fieldSetup->SetG4Field(field);
@@ -449,8 +446,8 @@ void G4FieldBuilder::SetLocalField(
 }
 
 //_____________________________________________________________________________
-void G4FieldBuilder::SetUserEquationOfMotion(
-  G4EquationOfMotion* equation, const G4String& volumeName)
+void G4FieldBuilder::SetUserEquationOfMotion(G4EquationOfMotion* equation,
+                                             const G4String& volumeName)
 {
   // Set user equation of motion
 
@@ -463,15 +460,13 @@ void G4FieldBuilder::SetUserEquationOfMotion(
   {
     // local field
     // Get or create user field parameters
-    G4FieldParameters* fieldParameters =
-      GetOrCreateFieldParameters(volumeName);
+    G4FieldParameters* fieldParameters = GetOrCreateFieldParameters(volumeName);
     fieldParameters->SetUserEquationOfMotion(equation);
   }
 }
 
 //_____________________________________________________________________________
-void G4FieldBuilder::SetUserStepper(
-  G4MagIntegratorStepper* stepper, const G4String& volumeName)
+void G4FieldBuilder::SetUserStepper(G4MagIntegratorStepper* stepper, const G4String& volumeName)
 {
   // Set user stepper
 
@@ -484,15 +479,13 @@ void G4FieldBuilder::SetUserStepper(
   {
     // local field
     // Get or create user field parameters
-    G4FieldParameters* fieldParameters =
-      GetOrCreateFieldParameters(volumeName);
+    G4FieldParameters* fieldParameters = GetOrCreateFieldParameters(volumeName);
     fieldParameters->SetUserStepper(stepper);
   }
 }
 
 //_____________________________________________________________________________
-G4FieldParameters* G4FieldBuilder::GetFieldParameters(
-  const G4String& volumeName) const
+G4FieldParameters* G4FieldBuilder::GetFieldParameters(const G4String& volumeName) const
 {
   // Get field parameters with the given volumeName.
   // Return global field parameters, if volume name is empty.
@@ -506,8 +499,7 @@ G4FieldParameters* G4FieldBuilder::GetFieldParameters(
     }
   }
 
-  G4Exception(
-    "G4FieldBuilder::GetFieldParameters:", "GeomFieldParameters0001",
-    JustWarning, "Field parameters not found.");
+  G4Exception("G4FieldBuilder::GetFieldParameters:", "GeomFieldParameters0001", JustWarning,
+              "Field parameters not found.");
   return nullptr;
 }

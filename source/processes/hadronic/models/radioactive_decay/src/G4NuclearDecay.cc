@@ -32,18 +32,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "G4NuclearDecay.hh"
+
 #include "G4SystemOfUnits.hh"
 
-G4NuclearDecay::G4NuclearDecay(const G4String& channelName,
-                               const G4RadioactiveDecayMode& aMode,
-                               const G4double& excitationE,
-                               const G4Ions::G4FloatLevelBase& flb)
- : G4VDecayChannel(channelName), theMode(aMode), daughterEx(excitationE),
-   floatingLevel(flb) 
+G4NuclearDecay::G4NuclearDecay(const G4String& channelName, const G4RadioactiveDecayMode& aMode,
+                               const G4double& excitationE, const G4Ions::G4FloatLevelBase& flb)
+  : G4VDecayChannel(channelName), theMode(aMode), daughterEx(excitationE), floatingLevel(flb)
 {}
 
 G4bool G4NuclearDecay::IsOKWithParentMass(G4double)
 {
   return true;
 }
-

@@ -29,34 +29,33 @@
 //
 // Author: 23-Nov-2012 A. Ribon
 //
-// Description: Modified version of the physics list FTFP_BERT 
+// Description: Modified version of the physics list FTFP_BERT
 //              to include neutron HP
 //
 // Modified:
 //
 //----------------------------------------------------------------------------
 //
-#ifndef FTFP_BERT_HP_h
-#define FTFP_BERT_HP_h 1
+#ifndef FTFP_BERT_HP_HH
+#define FTFP_BERT_HP_HH
+
+#include "G4VModularPhysicsList.hh"
+#include "globals.hh"
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
-#include "globals.hh"
-#include "G4VModularPhysicsList.hh"
-
-
-class FTFP_BERT_HP: public G4VModularPhysicsList
+class FTFP_BERT_HP : public G4VModularPhysicsList
 {
-public:
-  FTFP_BERT_HP(G4int ver = 1);
-  virtual ~FTFP_BERT_HP()=default;
-  
-  FTFP_BERT_HP(const FTFP_BERT_HP &) = delete;
-  FTFP_BERT_HP & operator=(const FTFP_BERT_HP &)=delete;
+  public:
 
-  // SetCuts() 
-  virtual void SetCuts();
-  
+    FTFP_BERT_HP(G4int ver = 1);
+    virtual ~FTFP_BERT_HP() = default;
+
+    FTFP_BERT_HP(const FTFP_BERT_HP&) = delete;
+    FTFP_BERT_HP& operator=(const FTFP_BERT_HP&) = delete;
+
+    // SetCuts()
+    virtual void SetCuts();
 };
 
 #endif

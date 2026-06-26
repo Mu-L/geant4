@@ -11,7 +11,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -161,6 +161,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 1
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            1 MeV
 Linear loss limit                                  0.01
@@ -201,11 +202,16 @@ Type of PIXE cross section for e+-                 Livermore
 =======================================================================
 ======                 DNA Physics Parameters                  ========
 =======================================================================
+Min DNA electron energy                            7.4 eV
+Min DNA proton energy                              100 eV
+Min DNA ion energy                                 1000 eV
 Max DNA electron energy                            1 MeV
-Max DNA ion energy                                 300 MeV
+Max DNA proton energy                              3e+08 MeV
+Max DNA ion energy                                 100 MeV/u
 Use fast sampling in DNA models                    0
 Use Stationary option in DNA models                0
 Use DNA with multiple scattering of e-             0
+Use DNA multiple ionisation                        0
 Use DNA e- solvation model type                    11003
 =======================================================================
 
@@ -625,12 +631,12 @@ Physics stage ends
   Primary particle               = C12
   Kinetic energy of beam         = 3480 A*MeV
   Particle traversals the neuron = 1 of 2
-  Full LET of beam as formulas   = 12.827 keV/um
+  Full LET of beam as formulas   = 12.828 keV/um
   Mean LET of beam as simulation = 11.42 +- 0.45547 keV/um
   Mean track length of beam      = 406.78 +- 0.010536 um
   Particle fluence               = 383.66 particles/cm^2
-  Fluence dose (full)            = 7.8848e-06 Gy
-  Fluence dose ber beam          = 3.9424e-06 Gy
+  Fluence dose (full)            = 7.8852e-06 Gy
+  Fluence dose ber beam          = 3.9426e-06 Gy
 
  List of generated physical process:
                 eIoni=   4366
@@ -666,7 +672,7 @@ Physics stage ends
  Dend3DEdep.out, Axon3DEdep.out, Soma3DEdep.out
  Outputs of energy deposition per event written in data file:
  OutputPerEvent.out
- Calculation time                      = 1.3197 s 
+ Calculation time                      = 1.12631 s 
 
 Graphics systems deleted.
 Visualization Manager deleting...

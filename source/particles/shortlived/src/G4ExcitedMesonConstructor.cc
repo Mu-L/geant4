@@ -48,19 +48,24 @@ G4ExcitedMesonConstructor::G4ExcitedMesonConstructor(G4int, G4int) : type("meson
 void G4ExcitedMesonConstructor::Construct(G4int idx)
 {
   G4int iType;
-  if (idx < 0) {
-    for (G4int state = 0; state < NMultiplets; state += 1) {
+  if (idx < 0)
+  {
+    for (G4int state = 0; state < NMultiplets; state += 1)
+    {
       for (iType = 0; iType < NMesonTypes; iType++)
         ConstructMesons(state, iType);
     }
   }
-  else if (idx < NMultiplets) {
+  else if (idx < NMultiplets)
+  {
     for (iType = 0; iType < NMesonTypes; iType++)
       ConstructMesons(idx, iType);
   }
-  else {
+  else
+  {
 #ifdef G4VERBOSE
-    if (G4ParticleTable::GetParticleTable()->GetVerboseLevel() > 1) {
+    if (G4ParticleTable::GetParticleTable()->GetVerboseLevel() > 1)
+    {
       G4cerr << "G4ExcitedMesonConstructor::Construct()";
       G4cerr << "   illegal index os state = " << idx << G4endl;
     }
@@ -71,11 +76,13 @@ void G4ExcitedMesonConstructor::Construct(G4int idx)
 G4bool G4ExcitedMesonConstructor::Exist(G4int idxState, G4int idxType)
 {
   G4bool value = true;
-  if (idxType == TEtaPrime) {
+  if (idxType == TEtaPrime)
+  {
     if (idxState == N13P0) value = false;
     if (idxState == N13D1) value = false;
   }
-  else if (idxType == TPi) {
+  else if (idxType == TPi)
+  {
     if (idxState == N23P2) value = false;
   }
   return value;
@@ -99,12 +106,15 @@ void G4ExcitedMesonConstructor::ConstructMesons(G4int iState, G4int iType)
   G4String aName;
   G4ExcitedMesons* particle;
 
-  for (G4int iIso3 = (-1) * iIsoSpin[iType]; iIso3 <= iIsoSpin[iType]; iIso3 += 2) {
+  for (G4int iIso3 = (-1) * iIsoSpin[iType]; iIso3 <= iIsoSpin[iType]; iIso3 += 2)
+  {
     aName = GetName(iIso3, iState, iType);
     G4double fmass = mass[iState][iType];
     G4double fwidth = width[iState][iType];
-    if ((iType == TK) || (iType == TAntiK)) {
-      if (GetCharge(iIso3, iType) == 0.0) {
+    if ((iType == TK) || (iType == TAntiK))
+    {
+      if (GetCharge(iIso3, iType) == 0.0)
+      {
         fmass += massKdiff[iState];
         fwidth += widthKdiff[iState];
       }
@@ -123,7 +133,8 @@ void G4ExcitedMesonConstructor::ConstructMesons(G4int iState, G4int iType)
 				    );
     // clang-format on
 
-    if ((iType == TEta) || (iType == TEtaPrime) || ((iType == TPi) && (iIso3 == 0))) {
+    if ((iType == TEta) || (iType == TEtaPrime) || ((iType == TPi) && (iIso3 == 0)))
+    {
       // set same encoding for AntiParticle
       particle->SetAntiPDGEncoding(GetEncoding(iIso3, iState, iType));
     }
@@ -137,65 +148,89 @@ G4int G4ExcitedMesonConstructor::GetQuarkContents(G4int iQ, G4int iIso3, G4int i
   // Quark contents
 
   G4int quark = 0;
-  if (iType == TPi) {
-    if (iIso3 == 2) {
-      if (iQ == 0) {
+  if (iType == TPi)
+  {
+    if (iIso3 == 2)
+    {
+      if (iQ == 0)
+      {
         quark = 2;
       }
-      else {
+      else
+      {
         quark = 1;
       }
     }
-    else if (iIso3 == 0) {
+    else if (iIso3 == 0)
+    {
       quark = 1;
     }
-    else if (iIso3 == -2) {
-      if (iQ == 0) {
+    else if (iIso3 == -2)
+    {
+      if (iQ == 0)
+      {
         quark = 1;
       }
-      else {
+      else
+      {
         quark = 2;
       }
     }
   }
-  else if (iType == TEta) {
+  else if (iType == TEta)
+  {
     quark = 2;
   }
-  else if (iType == TEtaPrime) {
+  else if (iType == TEtaPrime)
+  {
     quark = 3;
   }
-  else if (iType == TAntiK) {
-    if (iIso3 == 1) {
-      if (iQ == 0) {
+  else if (iType == TAntiK)
+  {
+    if (iIso3 == 1)
+    {
+      if (iQ == 0)
+      {
         quark = 3;
       }
-      else {
+      else
+      {
         quark = 1;
       }
     }
-    else if (iIso3 == -1) {
-      if (iQ == 0) {
+    else if (iIso3 == -1)
+    {
+      if (iQ == 0)
+      {
         quark = 3;
       }
-      else {
+      else
+      {
         quark = 2;
       }
     }
   }
-  else if (iType == TK) {
-    if (iIso3 == 1) {
-      if (iQ == 0) {
+  else if (iType == TK)
+  {
+    if (iIso3 == 1)
+    {
+      if (iQ == 0)
+      {
         quark = 2;
       }
-      else {
+      else
+      {
         quark = 3;
       }
     }
-    else if (iIso3 == -1) {
-      if (iQ == 0) {
+    else if (iIso3 == -1)
+    {
+      if (iQ == 0)
+      {
         quark = 1;
       }
-      else {
+      else
+      {
         quark = 3;
       }
     }
@@ -224,44 +259,55 @@ G4int G4ExcitedMesonConstructor::GetEncoding(G4int iIsoSpin3, G4int idxState, G4
   G4int iQ = 0;
   G4int iQbar = 1;
 
-  if (idxType == TPi) {
-    if (iIsoSpin3 < 0) {
+  if (idxType == TPi)
+  {
+    if (iIsoSpin3 < 0)
+    {
       iQ = 1;
       iQbar = 0;
     }
   }
-  else if (idxType == TK) {
+  else if (idxType == TK)
+  {
     iQ = 1;
     iQbar = 0;
   }
 
   encoding += 100 * GetQuarkContents(iQ, iIsoSpin3, idxType);
   encoding += 10 * GetQuarkContents(iQbar, iIsoSpin3, idxType);
-  if (idxType == TPi) {
-    if (iIsoSpin3 < 0) {
+  if (idxType == TPi)
+  {
+    if (iIsoSpin3 < 0)
+    {
       encoding *= -1;
     }
   }
-  else if (idxType == TAntiK) {
+  else if (idxType == TAntiK)
+  {
     encoding *= -1;
   }
 
   // PDG2005
   //
-  if (idxState == 9) {
-    if (idxType == TEta) {
+  if (idxState == 9)
+  {
+    if (idxType == TEta)
+    {
       //   f2(1810)  9030225
       encoding = 9030225;
     }
-    else if (idxType == TEtaPrime) {
+    else if (idxType == TEtaPrime)
+    {
       //   f2(2010)  9060225
       encoding = 9060225;
     }
   }
 
   // PDG2013
-  if (idxState == 1) {
-    if (idxType == TEta) {
+  if (idxState == 1)
+  {
+    if (idxType == TEta)
+    {
       //   f0(1370)  30221
       encoding = 30221;
     }
@@ -276,85 +322,113 @@ G4DecayTable* G4ExcitedMesonConstructor::CreateDecayTable(const G4String& parent
   auto decayTable = new G4DecayTable();
   G4double br;
 
-  if ((iType == TK) || (iType == TAntiK)) {
-    if ((br = bRatio[iState][iType][MKPi]) > 0.0) {
+  if ((iType == TK) || (iType == TAntiK))
+  {
+    if ((br = bRatio[iState][iType][MKPi]) > 0.0)
+    {
       AddKPiMode(decayTable, parentName, br, iIso3, iType);
     }
-    if ((br = bRatio[iState][iType][MKStarPi]) > 0.0) {
+    if ((br = bRatio[iState][iType][MKStarPi]) > 0.0)
+    {
       AddKStarPiMode(decayTable, parentName, br, iIso3, iType);
     }
-    if ((br = bRatio[iState][iType][MKRho]) > 0.0) {
+    if ((br = bRatio[iState][iType][MKRho]) > 0.0)
+    {
       AddKRhoMode(decayTable, parentName, br, iIso3, iType);
     }
-    if ((br = bRatio[iState][iType][MKOmega]) > 0.0) {
+    if ((br = bRatio[iState][iType][MKOmega]) > 0.0)
+    {
       AddKOmegaMode(decayTable, parentName, br, iIso3, iType);
     }
-    if ((br = bRatio[iState][iType][MKStar2Pi]) > 0.0) {
+    if ((br = bRatio[iState][iType][MKStar2Pi]) > 0.0)
+    {
       AddKStar2PiMode(decayTable, parentName, br, iIso3, iType);
     }
-    if ((br = bRatio[iState][iType][MKTwoPi]) > 0.0) {
+    if ((br = bRatio[iState][iType][MKTwoPi]) > 0.0)
+    {
       AddKTwoPiMode(decayTable, parentName, br, iIso3, iType);
     }
-    if ((br = bRatio[iState][iType][MKEta]) > 0.0) {
+    if ((br = bRatio[iState][iType][MKEta]) > 0.0)
+    {
       AddKEtaMode(decayTable, parentName, br, iIso3, iType);
     }
   }
-  else {
-    if ((br = bRatio[iState][iType][MPiGamma]) > 0.0) {
+  else
+  {
+    if ((br = bRatio[iState][iType][MPiGamma]) > 0.0)
+    {
       AddPiGammaMode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
-    if ((br = bRatio[iState][iType][MRhoGamma]) > 0.0) {
+    if ((br = bRatio[iState][iType][MRhoGamma]) > 0.0)
+    {
       AddRhoGammaMode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
-    if ((br = bRatio[iState][iType][M2Pi]) > 0.0) {
+    if ((br = bRatio[iState][iType][M2Pi]) > 0.0)
+    {
       Add2PiMode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
-    if ((br = bRatio[iState][iType][MPiRho]) > 0.0) {
+    if ((br = bRatio[iState][iType][MPiRho]) > 0.0)
+    {
       AddPiRhoMode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
-    if ((br = bRatio[iState][iType][MPiEta]) > 0.0) {
+    if ((br = bRatio[iState][iType][MPiEta]) > 0.0)
+    {
       AddPiEtaMode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
-    if ((br = bRatio[iState][iType][M3Pi]) > 0.0) {
+    if ((br = bRatio[iState][iType][M3Pi]) > 0.0)
+    {
       Add3PiMode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
-    if ((br = bRatio[iState][iType][M4Pi]) > 0.0) {
+    if ((br = bRatio[iState][iType][M4Pi]) > 0.0)
+    {
       Add4PiMode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
-    if ((br = bRatio[iState][iType][MKKStar]) > 0.0) {
+    if ((br = bRatio[iState][iType][MKKStar]) > 0.0)
+    {
       AddKKStarMode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
-    if ((br = bRatio[iState][iType][M2PiEta]) > 0.0) {
+    if ((br = bRatio[iState][iType][M2PiEta]) > 0.0)
+    {
       Add2PiEtaMode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
-    if ((br = bRatio[iState][iType][MRhoEta]) > 0.0) {
+    if ((br = bRatio[iState][iType][MRhoEta]) > 0.0)
+    {
       AddRhoEtaMode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
-    if ((br = bRatio[iState][iType][M2PiRho]) > 0.0) {
+    if ((br = bRatio[iState][iType][M2PiRho]) > 0.0)
+    {
       Add2PiRhoMode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
-    if ((br = bRatio[iState][iType][M2PiOmega]) > 0.0) {
+    if ((br = bRatio[iState][iType][M2PiOmega]) > 0.0)
+    {
       Add2PiOmegaMode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
-    if ((br = bRatio[iState][iType][M2Eta]) > 0.0) {
+    if ((br = bRatio[iState][iType][M2Eta]) > 0.0)
+    {
       Add2EtaMode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
-    if ((br = bRatio[iState][iType][M2K]) > 0.0) {
+    if ((br = bRatio[iState][iType][M2K]) > 0.0)
+    {
       Add2KMode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
-    if ((br = bRatio[iState][iType][M2KPi]) > 0.0) {
+    if ((br = bRatio[iState][iType][M2KPi]) > 0.0)
+    {
       Add2KPiMode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
-    if ((br = bRatio[iState][iType][MPiOmega]) > 0.0) {
+    if ((br = bRatio[iState][iType][MPiOmega]) > 0.0)
+    {
       AddPiOmegaMode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
-    if ((br = bRatio[iState][iType][MPiF2]) > 0.0) {
+    if ((br = bRatio[iState][iType][MPiF2]) > 0.0)
+    {
       AddPiF2Mode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
-    if ((br = bRatio[iState][iType][MPiF0]) > 0.0) {
+    if ((br = bRatio[iState][iType][MPiF0]) > 0.0)
+    {
       AddPiF0Mode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
-    if ((br = bRatio[iState][iType][MPiA2]) > 0.0) {
+    if ((br = bRatio[iState][iType][MPiA2]) > 0.0)
+    {
       AddPiA2Mode(decayTable, parentName, br, iIso3, iIsoSpin[iType]);
     }
   }
@@ -368,28 +442,34 @@ G4DecayTable* G4ExcitedMesonConstructor::AddKPiMode(G4DecayTable* decayTable,
 {
   G4VDecayChannel* mode;
   //
-  if (iIso3 == +1) {
-    if (iType == TK) {
+  if (iIso3 == +1)
+  {
+    if (iType == TK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 2, "kaon+", "pi0");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 2, "kaon0", "pi+");
       decayTable->Insert(mode);
     }
-    else if (iType == TAntiK) {
+    else if (iType == TAntiK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 2, "anti_kaon0", "pi0");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 2, "kaon-", "pi+");
       decayTable->Insert(mode);
     }
   }
-  else if (iIso3 == -1) {
-    if (iType == TK) {
+  else if (iIso3 == -1)
+  {
+    if (iType == TK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 2, "kaon0", "pi0");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 2, "kaon+", "pi-");
       decayTable->Insert(mode);
     }
-    else if (iType == TAntiK) {
+    else if (iType == TAntiK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 2, "kaon-", "pi0");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 2, "anti_kaon0", "pi-");
@@ -405,28 +485,34 @@ G4DecayTable* G4ExcitedMesonConstructor::AddKTwoPiMode(G4DecayTable* decayTable,
 {
   G4VDecayChannel* mode;
   //
-  if (iIso3 == +1) {
-    if (iType == TK) {
+  if (iIso3 == +1)
+  {
+    if (iType == TK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 2, "k2_star(1430)+", "pi0");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 2, "k2_star(1430)0", "pi+");
       decayTable->Insert(mode);
     }
-    else if (iType == TAntiK) {
+    else if (iType == TAntiK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 2, "anti_k2_star(1430)0", "pi0");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 2, "k2_star(1430)-", "pi+");
       decayTable->Insert(mode);
     }
   }
-  else if (iIso3 == -1) {
-    if (iType == TK) {
+  else if (iIso3 == -1)
+  {
+    if (iType == TK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 2, "k2_star(1430)0", "pi0");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 2, "k2_star(1430)+", "pi-");
       decayTable->Insert(mode);
     }
-    else if (iType == TAntiK) {
+    else if (iType == TAntiK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 2, "k2_star(1430)-", "pi0");
       decayTable->Insert(mode);
       mode =
@@ -444,22 +530,28 @@ G4DecayTable* G4ExcitedMesonConstructor::AddKOmegaMode(G4DecayTable* decayTable,
 {
   G4VDecayChannel* mode;
   //
-  if (iIso3 == +1) {
-    if (iType == TK) {
+  if (iIso3 == +1)
+  {
+    if (iType == TK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br, 2, "kaon+", "omega");
       decayTable->Insert(mode);
     }
-    else if (iType == TAntiK) {
+    else if (iType == TAntiK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br, 2, "anti_kaon0", "omega");
       decayTable->Insert(mode);
     }
   }
-  else if (iIso3 == -1) {
-    if (iType == TK) {
+  else if (iIso3 == -1)
+  {
+    if (iType == TK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br, 2, "kaon0", "omega");
       decayTable->Insert(mode);
     }
-    else if (iType == TAntiK) {
+    else if (iType == TAntiK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br, 2, "kaon-", "omega");
       decayTable->Insert(mode);
     }
@@ -474,22 +566,28 @@ G4DecayTable* G4ExcitedMesonConstructor::AddKEtaMode(G4DecayTable* decayTable,
 {
   G4VDecayChannel* mode;
   //
-  if (iIso3 == +1) {
-    if (iType == TK) {
+  if (iIso3 == +1)
+  {
+    if (iType == TK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br, 2, "kaon+", "eta");
       decayTable->Insert(mode);
     }
-    else if (iType == TAntiK) {
+    else if (iType == TAntiK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br, 2, "anti_kaon0", "eta");
       decayTable->Insert(mode);
     }
   }
-  else if (iIso3 == -1) {
-    if (iType == TK) {
+  else if (iIso3 == -1)
+  {
+    if (iType == TK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br, 2, "kaon0", "eta");
       decayTable->Insert(mode);
     }
-    else if (iType == TAntiK) {
+    else if (iType == TAntiK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br, 2, "kaon-", "eta");
       decayTable->Insert(mode);
     }
@@ -504,28 +602,34 @@ G4DecayTable* G4ExcitedMesonConstructor::AddKRhoMode(G4DecayTable* decayTable,
 {
   G4VDecayChannel* mode;
   //
-  if (iIso3 == +1) {
-    if (iType == TK) {
+  if (iIso3 == +1)
+  {
+    if (iType == TK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 2, "kaon+", "rho0");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 2, "kaon0", "rho+");
       decayTable->Insert(mode);
     }
-    else if (iType == TAntiK) {
+    else if (iType == TAntiK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 2, "anti_kaon0", "rho0");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 2, "kaon-", "rho+");
       decayTable->Insert(mode);
     }
   }
-  else if (iIso3 == -1) {
-    if (iType == TK) {
+  else if (iIso3 == -1)
+  {
+    if (iType == TK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 2, "kaon0", "rho0");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 2, "kaon+", "rho-");
       decayTable->Insert(mode);
     }
-    else if (iType == TAntiK) {
+    else if (iType == TAntiK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 2, "kaon-", "rho0");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 2, "anti_kaon0", "rho-");
@@ -542,28 +646,34 @@ G4DecayTable* G4ExcitedMesonConstructor::AddKStarPiMode(G4DecayTable* decayTable
 {
   G4VDecayChannel* mode;
   //
-  if (iIso3 == +1) {
-    if (iType == TK) {
+  if (iIso3 == +1)
+  {
+    if (iType == TK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 2, "k_star+", "pi0");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 2, "k_star0", "pi+");
       decayTable->Insert(mode);
     }
-    else if (iType == TAntiK) {
+    else if (iType == TAntiK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 2, "anti_k_star0", "pi0");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 2, "k_star-", "pi+");
       decayTable->Insert(mode);
     }
   }
-  else if (iIso3 == -1) {
-    if (iType == TK) {
+  else if (iIso3 == -1)
+  {
+    if (iType == TK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 2, "k_star0", "pi0");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 2, "k_star+", "pi-");
       decayTable->Insert(mode);
     }
-    else if (iType == TAntiK) {
+    else if (iType == TAntiK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 2, "k_star-", "pi0");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 2, "anti_k_star0", "pi-");
@@ -581,28 +691,34 @@ G4DecayTable* G4ExcitedMesonConstructor::AddKStar2PiMode(G4DecayTable* decayTabl
   // K* --> K pipi(I=1)
   G4VDecayChannel* mode;
   //
-  if (iIso3 == +1) {
-    if (iType == TK) {
+  if (iIso3 == +1)
+  {
+    if (iType == TK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 3, "k_star+", "pi+", "pi-");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 3, "k_star0", "pi+", "pi0");
       decayTable->Insert(mode);
     }
-    else if (iType == TAntiK) {
+    else if (iType == TAntiK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 3, "anti_k_star0", "pi+", "pi-");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 3, "k_star-", "pi+", "pi0");
       decayTable->Insert(mode);
     }
   }
-  else if (iIso3 == -1) {
-    if (iType == TK) {
+  else if (iIso3 == -1)
+  {
+    if (iType == TK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 3, "k_star0", "pi+", "pi-");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 3, "k_star+", "pi-", "pi0");
       decayTable->Insert(mode);
     }
-    else if (iType == TAntiK) {
+    else if (iType == TAntiK)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 3, "k_star-", "pi+", "pi-");
       decayTable->Insert(mode);
       mode =
@@ -623,16 +739,20 @@ G4DecayTable* G4ExcitedMesonConstructor::AddPiGammaMode(G4DecayTable* decayTable
   G4VDecayChannel* mode;
   //
   G4String daughter;
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     daughter = "pi+";
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughter = "pi0";
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     daughter = "pi-";
   }
-  else {
+  else
+  {
     return decayTable;
   }
   // create decay channel  [parent    BR     #daughters]
@@ -652,16 +772,20 @@ G4DecayTable* G4ExcitedMesonConstructor::AddPiOmegaMode(G4DecayTable* decayTable
   G4VDecayChannel* mode;
   //
   G4String daughter;
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     daughter = "pi+";
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughter = "pi0";
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     daughter = "pi-";
   }
-  else {
+  else
+  {
     return decayTable;
   }
   // create decay channel  [parent    BR     #daughters]
@@ -681,16 +805,20 @@ G4DecayTable* G4ExcitedMesonConstructor::AddRhoGammaMode(G4DecayTable* decayTabl
   G4VDecayChannel* mode;
   //
   G4String daughter;
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     daughter = "rho+";
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughter = "rho0";
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     daughter = "rho-";
   }
-  else {
+  else
+  {
     return decayTable;
   }
   // create decay channel  [parent    BR     #daughters]
@@ -710,16 +838,20 @@ G4DecayTable* G4ExcitedMesonConstructor::AddPiEtaMode(G4DecayTable* decayTable,
   G4VDecayChannel* mode;
   //
   G4String daughter;
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     daughter = "pi+";
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughter = "pi0";
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     daughter = "pi-";
   }
-  else {
+  else
+  {
     return decayTable;
   }
   // create decay channel  [parent    BR     #daughters]
@@ -739,16 +871,20 @@ G4DecayTable* G4ExcitedMesonConstructor::AddRhoEtaMode(G4DecayTable* decayTable,
   G4VDecayChannel* mode;
   //
   G4String daughter;
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     daughter = "rho+";
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughter = "rho0";
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     daughter = "rho-";
   }
-  else {
+  else
+  {
     return decayTable;
   }
   // create decay channel  [parent    BR     #daughters]
@@ -768,16 +904,20 @@ G4DecayTable* G4ExcitedMesonConstructor::AddPiF2Mode(G4DecayTable* decayTable,
   G4VDecayChannel* mode;
   //
   G4String daughter;
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     daughter = "pi+";
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughter = "pi0";
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     daughter = "pi-";
   }
-  else {
+  else
+  {
     return decayTable;
   }
   // create decay channel  [parent    BR     #daughters]
@@ -797,16 +937,20 @@ G4DecayTable* G4ExcitedMesonConstructor::AddPiF0Mode(G4DecayTable* decayTable,
   G4VDecayChannel* mode;
   //
   G4String daughter;
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     daughter = "pi+";
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughter = "pi0";
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     daughter = "pi-";
   }
-  else {
+  else
+  {
     return decayTable;
   }
   // create decay channel  [parent    BR     #daughters]
@@ -827,8 +971,10 @@ G4DecayTable* G4ExcitedMesonConstructor::Add2PiMode(G4DecayTable* decayTable,
   G4double r;
 
   // I = 0 states
-  if (iIso == 0) {
-    if (iIso3 == 0) {
+  if (iIso == 0)
+  {
+    if (iIso3 == 0)
+    {
       // pi+ + pi-
       daughterPi1 = "pi+";
       daughterPi2 = "pi-";
@@ -844,8 +990,10 @@ G4DecayTable* G4ExcitedMesonConstructor::Add2PiMode(G4DecayTable* decayTable,
       decayTable->Insert(mode);
     }
   }
-  else if (iIso == 2) {
-    if (iIso3 == +2) {
+  else if (iIso == 2)
+  {
+    if (iIso3 == +2)
+    {
       // pi+ + pi0
       daughterPi1 = "pi+";
       daughterPi2 = "pi0";
@@ -854,7 +1002,8 @@ G4DecayTable* G4ExcitedMesonConstructor::Add2PiMode(G4DecayTable* decayTable,
       // add decay table
       decayTable->Insert(mode);
     }
-    else if (iIso3 == 0) {
+    else if (iIso3 == 0)
+    {
       // pi+ + pi-
       daughterPi1 = "pi+";
       daughterPi2 = "pi-";
@@ -862,7 +1011,8 @@ G4DecayTable* G4ExcitedMesonConstructor::Add2PiMode(G4DecayTable* decayTable,
       mode = new G4PhaseSpaceDecayChannel(nameParent, r, 2, daughterPi1, daughterPi2);
       decayTable->Insert(mode);
     }
-    else if (iIso3 == -2) {
+    else if (iIso3 == -2)
+    {
       // pi- + pi0
       daughterPi1 = "pi-";
       daughterPi2 = "pi0";
@@ -885,8 +1035,10 @@ G4DecayTable* G4ExcitedMesonConstructor::AddPiRhoMode(G4DecayTable* decayTable,
   G4double r;
 
   // I = 0 states
-  if (iIso == 0) {
-    if (iIso3 == 0) {
+  if (iIso == 0)
+  {
+    if (iIso3 == 0)
+    {
       // pi+ + rho-
       daughterPi = "pi+";
       daughterRho = "rho-";
@@ -909,8 +1061,10 @@ G4DecayTable* G4ExcitedMesonConstructor::AddPiRhoMode(G4DecayTable* decayTable,
       decayTable->Insert(mode);
     }
   }
-  else if (iIso == 2) {
-    if (iIso3 == +2) {
+  else if (iIso == 2)
+  {
+    if (iIso3 == +2)
+    {
       // pi+ + rho0
       daughterPi = "pi+";
       daughterRho = "rho0";
@@ -925,7 +1079,8 @@ G4DecayTable* G4ExcitedMesonConstructor::AddPiRhoMode(G4DecayTable* decayTable,
       mode = new G4PhaseSpaceDecayChannel(nameParent, r, 2, daughterPi, daughterRho);
       decayTable->Insert(mode);
     }
-    else if (iIso3 == 0) {
+    else if (iIso3 == 0)
+    {
       // pi+ + rho-
       daughterPi = "pi+";
       daughterRho = "rho-";
@@ -940,7 +1095,8 @@ G4DecayTable* G4ExcitedMesonConstructor::AddPiRhoMode(G4DecayTable* decayTable,
       mode = new G4PhaseSpaceDecayChannel(nameParent, r, 2, daughterPi, daughterRho);
       decayTable->Insert(mode);
     }
-    else if (iIso3 == -2) {
+    else if (iIso3 == -2)
+    {
       // pi- + rho0
       daughterPi = "pi-";
       daughterRho = "rho0";
@@ -970,8 +1126,10 @@ G4DecayTable* G4ExcitedMesonConstructor::AddPiA2Mode(G4DecayTable* decayTable,
   G4double r;
 
   // I = 0 states
-  if (iIso == 0) {
-    if (iIso3 == 0) {
+  if (iIso == 0)
+  {
+    if (iIso3 == 0)
+    {
       // pi+ + a2(1320)-
       daughterPi = "pi+";
       daughterA2 = "a2(1320)-";
@@ -994,8 +1152,10 @@ G4DecayTable* G4ExcitedMesonConstructor::AddPiA2Mode(G4DecayTable* decayTable,
       decayTable->Insert(mode);
     }
   }
-  else if (iIso == 2) {
-    if (iIso3 == +2) {
+  else if (iIso == 2)
+  {
+    if (iIso3 == +2)
+    {
       // pi+ + a2(1320)0
       daughterPi = "pi+";
       daughterA2 = "a2(1320)0";
@@ -1010,7 +1170,8 @@ G4DecayTable* G4ExcitedMesonConstructor::AddPiA2Mode(G4DecayTable* decayTable,
       mode = new G4PhaseSpaceDecayChannel(nameParent, r, 2, daughterPi, daughterA2);
       decayTable->Insert(mode);
     }
-    else if (iIso3 == 0) {
+    else if (iIso3 == 0)
+    {
       // pi+ + a2(1320)-
       daughterPi = "pi+";
       daughterA2 = "a2(1320)-";
@@ -1025,7 +1186,8 @@ G4DecayTable* G4ExcitedMesonConstructor::AddPiA2Mode(G4DecayTable* decayTable,
       mode = new G4PhaseSpaceDecayChannel(nameParent, r, 2, daughterPi, daughterA2);
       decayTable->Insert(mode);
     }
-    else if (iIso3 == -2) {
+    else if (iIso3 == -2)
+    {
       // pi- + a2(1320)0
       daughterPi = "pi-";
       daughterA2 = "a2(1320)0";
@@ -1052,26 +1214,31 @@ G4DecayTable* G4ExcitedMesonConstructor::Add3PiMode(G4DecayTable* decayTable,
 
   // I =0 state
   // This mode is X(I=0,J=1) --> pi+,pi-,pi0 mode
-  if (iIso == 0) {
+  if (iIso == 0)
+  {
     // pi+ + pi-
     mode = new G4PhaseSpaceDecayChannel(nameParent, br, 3, "pi+", "pi-", "pi0");
     decayTable->Insert(mode);
   }
-  else if (iIso == 2) {
+  else if (iIso == 2)
+  {
     // This mode is X(I=1) --> pi + pipi(I=0) mode
-    if (iIso3 == +2) {
+    if (iIso3 == +2)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 3, "pi+", "pi0", "pi0");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 3, "pi+", "pi+", "pi-");
       decayTable->Insert(mode);
     }
-    else if (iIso3 == 0) {
+    else if (iIso3 == 0)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 3, "pi0", "pi0", "pi0");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 3, "pi0", "pi+", "pi-");
       decayTable->Insert(mode);
     }
-    else if (iIso3 == -2) {
+    else if (iIso3 == -2)
+    {
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 3, "pi-", "pi0", "pi0");
       decayTable->Insert(mode);
       mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 3, "pi-", "pi+", "pi-");
@@ -1087,7 +1254,8 @@ G4DecayTable* G4ExcitedMesonConstructor::Add4PiMode(G4DecayTable* decayTable,
 {
   G4VDecayChannel* mode;
 
-  if (iIso3 == 0) {
+  if (iIso3 == 0)
+  {
     // 2pi+ + 2pi-
     mode = new G4PhaseSpaceDecayChannel(nameParent, br / 2., 4, "pi+", "pi-", "pi+", "pi-");
     decayTable->Insert(mode);
@@ -1095,7 +1263,8 @@ G4DecayTable* G4ExcitedMesonConstructor::Add4PiMode(G4DecayTable* decayTable,
     mode = new G4PhaseSpaceDecayChannel(nameParent, br / 2., 4, "pi+", "pi-", "pi0", "pi0");
     decayTable->Insert(mode);
   }
-  else if (iIso3 == +2) {
+  else if (iIso3 == +2)
+  {
     // pi+ + 3pi0
     mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 4, "pi+", "pi0", "pi0", "pi0");
     decayTable->Insert(mode);
@@ -1103,7 +1272,8 @@ G4DecayTable* G4ExcitedMesonConstructor::Add4PiMode(G4DecayTable* decayTable,
     mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 4, "pi+", "pi+", "pi-", "pi0");
     decayTable->Insert(mode);
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     // pi- + 3pi0
     mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 4, "pi-", "pi0", "pi0", "pi0");
     decayTable->Insert(mode);
@@ -1153,7 +1323,8 @@ G4DecayTable* G4ExcitedMesonConstructor::Add2PiOmegaMode(G4DecayTable* decayTabl
                                                          G4int iIso3, G4int iIso)
 {
   G4VDecayChannel* mode;
-  if (iIso == 0) {
+  if (iIso == 0)
+  {
     // omega pi+ pi-
     mode = new G4PhaseSpaceDecayChannel(nameParent, br * 2. / 3., 3, "omega", "pi+", "pi-");
     decayTable->Insert(mode);
@@ -1162,13 +1333,16 @@ G4DecayTable* G4ExcitedMesonConstructor::Add2PiOmegaMode(G4DecayTable* decayTabl
     mode = new G4PhaseSpaceDecayChannel(nameParent, br / 3., 3, "omega", "pi0", "pi0");
     decayTable->Insert(mode);
   }
-  else if (iIso == 2) {
-    if (iIso3 == +2) {
+  else if (iIso == 2)
+  {
+    if (iIso3 == +2)
+    {
       // omega pi+ pi0
       mode = new G4PhaseSpaceDecayChannel(nameParent, br, 3, "omega", "pi+", "pi0");
       decayTable->Insert(mode);
     }
-    else if (iIso3 == 0) {
+    else if (iIso3 == 0)
+    {
       // omega pi+ pi-
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 2., 3, "omega", "pi-", "pi+");
       decayTable->Insert(mode);
@@ -1176,7 +1350,8 @@ G4DecayTable* G4ExcitedMesonConstructor::Add2PiOmegaMode(G4DecayTable* decayTabl
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 2., 3, "omega", "pi0", "pi0");
       decayTable->Insert(mode);
     }
-    else if (iIso3 == -2) {
+    else if (iIso3 == -2)
+    {
       // omega pi- pi0
       mode = new G4PhaseSpaceDecayChannel(nameParent, br, 3, "omega", "pi-", "pi0");
       decayTable->Insert(mode);
@@ -1191,14 +1366,17 @@ G4DecayTable* G4ExcitedMesonConstructor::Add2PiRhoMode(G4DecayTable* decayTable,
 {
   G4VDecayChannel* mode;
 
-  if (iIso == 0) {
+  if (iIso == 0)
+  {
     // f1 --> rho0 + pi+ pi-
     // rho0 pi+ pi-
     mode = new G4PhaseSpaceDecayChannel(nameParent, br / 5., 3, "rho0", "pi+", "pi-");
     decayTable->Insert(mode);
   }
-  else if (iIso == 2) {
-    if (iIso3 == +2) {
+  else if (iIso == 2)
+  {
+    if (iIso3 == +2)
+    {
       // rho+ pi0 pi0
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 5., 3, "rho+", "pi0", "pi0");
       decayTable->Insert(mode);
@@ -1212,7 +1390,8 @@ G4DecayTable* G4ExcitedMesonConstructor::Add2PiRhoMode(G4DecayTable* decayTable,
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 5., 3, "rho-", "pi+", "pi+");
       decayTable->Insert(mode);
     }
-    else if (iIso3 == -2) {
+    else if (iIso3 == -2)
+    {
       // rho- pi0 pi0
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 5., 3, "rho-", "pi0", "pi0");
       decayTable->Insert(mode);
@@ -1226,7 +1405,8 @@ G4DecayTable* G4ExcitedMesonConstructor::Add2PiRhoMode(G4DecayTable* decayTable,
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 5., 3, "rho+", "pi-", "pi-");
       decayTable->Insert(mode);
     }
-    else if (iIso3 == 0) {
+    else if (iIso3 == 0)
+    {
       // rho+ pi- pi0
       mode = new G4PhaseSpaceDecayChannel(nameParent, br / 5., 3, "rho+", "pi-", "pi0");
       decayTable->Insert(mode);
@@ -1250,7 +1430,8 @@ G4DecayTable* G4ExcitedMesonConstructor::AddKKStarMode(G4DecayTable* decayTable,
 {
   G4VDecayChannel* mode;
 
-  if (iIso3 == 0) {
+  if (iIso3 == 0)
+  {
     // X(I=0,J=1)-->K + Anti-K*, Anti_K + K* mode
     // K+ + K*-
     mode = new G4PhaseSpaceDecayChannel(nameParent, br / 4., 2, "kaon+", "k_star-");
@@ -1268,7 +1449,8 @@ G4DecayTable* G4ExcitedMesonConstructor::AddKKStarMode(G4DecayTable* decayTable,
     mode = new G4PhaseSpaceDecayChannel(nameParent, br / 4., 2, "anti_kaon0", "k_star0");
     decayTable->Insert(mode);
   }
-  else if (iIso3 == 2) {
+  else if (iIso3 == 2)
+  {
     // K+ + Anti_K*0
     mode = new G4PhaseSpaceDecayChannel(nameParent, br / 2., 2, "kaon+", "anti_k_star0");
     decayTable->Insert(mode);
@@ -1277,7 +1459,8 @@ G4DecayTable* G4ExcitedMesonConstructor::AddKKStarMode(G4DecayTable* decayTable,
     mode = new G4PhaseSpaceDecayChannel(nameParent, br / 2., 2, "anti_kaon0", "k_star+");
     decayTable->Insert(mode);
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     // K- + K*0
     mode = new G4PhaseSpaceDecayChannel(nameParent, br / 2., 2, "kaon-", "k_star0");
     decayTable->Insert(mode);
@@ -1296,7 +1479,8 @@ G4DecayTable* G4ExcitedMesonConstructor::Add2KMode(G4DecayTable* decayTable,
 {
   G4VDecayChannel* mode;
 
-  if (iIso3 == 0) {
+  if (iIso3 == 0)
+  {
     // K+ + K-
     mode = new G4PhaseSpaceDecayChannel(nameParent, br / 2., 2, "kaon+", "kaon-");
     decayTable->Insert(mode);
@@ -1305,12 +1489,14 @@ G4DecayTable* G4ExcitedMesonConstructor::Add2KMode(G4DecayTable* decayTable,
     mode = new G4PhaseSpaceDecayChannel(nameParent, br / 2., 2, "kaon0", "anti_kaon0");
     decayTable->Insert(mode);
   }
-  else if (iIso3 == +2) {
+  else if (iIso3 == +2)
+  {
     // K+ + anti_K0
     mode = new G4PhaseSpaceDecayChannel(nameParent, br, 2, "kaon+", "anti_kaon0");
     decayTable->Insert(mode);
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     // K- + K0
     mode = new G4PhaseSpaceDecayChannel(nameParent, br, 2, "kaon-", "kaon0");
     decayTable->Insert(mode);

@@ -98,11 +98,13 @@ void G4VtkPolydataPolyline2DPipeline::SetPolydata(const G4Polyline& polyline)
   // Data data
   const size_t nLines = polyline.size();
 
-  for (size_t i = 0; i < nLines; ++i) {
+  for (size_t i = 0; i < nLines; ++i)
+  {
     auto id =
       polydataPoints->InsertNextPoint((polyline[i].x() + 1) / 2.0, (polyline[i].y() + 1) / 2.0, 0);
 
-    if (i < nLines - 1) {
+    if (i < nLines - 1)
+    {
       vtkSmartPointer<vtkLine> line = vtkSmartPointer<vtkLine>::New();
       line->GetPointIds()->SetId(0, id);
       line->GetPointIds()->SetId(1, id + 1);

@@ -26,8 +26,8 @@
 //
 //
 
-#ifndef G4Parton_h
-#define G4Parton_h 1
+#ifndef G4PARTON_HH
+#define G4PARTON_HH
 
 // ------------------------------------------------------------
 //      GEANT 4 class header file
@@ -37,137 +37,136 @@
 //       class for Parton (inside a string) used by Parton String Models
 // ------------------------------------------------------------
 
-#include "globals.hh"
-#include "G4ThreeVector.hh"
 #include "G4LorentzVector.hh"
-#include <iostream>
 #include "G4ParticleTable.hh"
+#include "G4ThreeVector.hh"
 #include "Randomize.hh"
+#include "globals.hh"
+
+#include <iostream>
 
 class G4Parton
 {
-   public:
-      G4Parton()
-      {
-        // CAUTION: 
-        // this is a preliminary definition yielding u and d quarks only!
-        //
-        PDGencoding=(G4int)(2.*G4UniformRand()); 
-        theColour = (G4int)(3.*G4UniformRand())+1;
-        theIsoSpinZ = ((G4int)(G4UniformRand()))-0.5;
-        theSpinZ = ((G4int)(G4UniformRand()))-0.5;
-      }
-      
-      G4Parton(G4int PDGencoding);
-      G4Parton(const G4Parton &right);
+  public:
 
-      ~G4Parton();
+    G4Parton()
+    {
+      // CAUTION:
+      // this is a preliminary definition yielding u and d quarks only!
+      //
+      PDGencoding = (G4int)(2. * G4UniformRand());
+      theColour = (G4int)(3. * G4UniformRand()) + 1;
+      theIsoSpinZ = ((G4int)(G4UniformRand())) - 0.5;
+      theSpinZ = ((G4int)(G4UniformRand())) - 0.5;
+    }
 
-      G4Parton & operator=(const G4Parton &right);
+    G4Parton(G4int PDGencoding);
+    G4Parton(const G4Parton& right);
 
-      G4bool operator==(const G4Parton &right) const;
+    ~G4Parton();
 
-      G4bool operator!=(const G4Parton &right) const;
-      
-      G4int GetPDGcode() const;
-    
-      G4ParticleDefinition * GetDefinition();
-      void SetDefinition(G4ParticleDefinition * aDefinition);  // Uzhi
+    G4Parton& operator=(const G4Parton& right);
 
-      void DefineMomentumInZ(G4double aLightConeMomentum, G4bool aDirection);      
-      void DefineMomentumInZ(G4double aLightConeMomentum,G4double aLightConeE, G4bool aDirection);      
-      
-      const G4ThreeVector & GetPosition()const;
-      void SetPosition(const G4ThreeVector &aPosition);
+    G4bool operator==(const G4Parton& right) const;
 
-      const G4LorentzVector & Get4Momentum() const; 
-      void Set4Momentum(const G4LorentzVector & aMomentum);
-      
-      void SetX(G4double anX) { theX = anX; }
-      G4double GetX() {return theX;}
-      
-      void SetColour(G4int aColour) {theColour = aColour;}
-      G4int GetColour() {return theColour;}
-      
-      void SetIsoSpinZ(G4double anIsoSpinZ) {theIsoSpinZ = anIsoSpinZ;}
-      G4double GetIsoSpinZ() {return theIsoSpinZ;}
+    G4bool operator!=(const G4Parton& right) const;
 
-      void SetSpinZ(G4double aSpinZ) {theSpinZ = aSpinZ;}
-      G4double GetSpinZ() {return theSpinZ;}
-      
-   private:
-      G4double GetMass();
-      
-   public:  
-      G4int PDGencoding;
-      G4ParticleDefinition * theDefinition;
+    G4int GetPDGcode() const;
 
-   private:  
-      G4LorentzVector theMomentum;
-      G4ThreeVector   thePosition;
-      
-      G4int theColour;
-      G4double theIsoSpinZ;
-      G4double theSpinZ;
-      
-      G4double theX;
-      
+    G4ParticleDefinition* GetDefinition();
+    void SetDefinition(G4ParticleDefinition* aDefinition);  // Uzhi
+
+    void DefineMomentumInZ(G4double aLightConeMomentum, G4bool aDirection);
+    void DefineMomentumInZ(G4double aLightConeMomentum, G4double aLightConeE, G4bool aDirection);
+
+    const G4ThreeVector& GetPosition() const;
+    void SetPosition(const G4ThreeVector& aPosition);
+
+    const G4LorentzVector& Get4Momentum() const;
+    void Set4Momentum(const G4LorentzVector& aMomentum);
+
+    void SetX(G4double anX) { theX = anX; }
+    G4double GetX() { return theX; }
+
+    void SetColour(G4int aColour) { theColour = aColour; }
+    G4int GetColour() { return theColour; }
+
+    void SetIsoSpinZ(G4double anIsoSpinZ) { theIsoSpinZ = anIsoSpinZ; }
+    G4double GetIsoSpinZ() { return theIsoSpinZ; }
+
+    void SetSpinZ(G4double aSpinZ) { theSpinZ = aSpinZ; }
+    G4double GetSpinZ() { return theSpinZ; }
+
+  private:
+
+    G4double GetMass();
+
+  public:
+
+    G4int PDGencoding;
+    G4ParticleDefinition* theDefinition;
+
+  private:
+
+    G4LorentzVector theMomentum;
+    G4ThreeVector thePosition;
+
+    G4int theColour;
+    G4double theIsoSpinZ;
+    G4double theSpinZ;
+
+    G4double theX;
 };
 
-inline G4bool G4Parton::operator==(const G4Parton &right) const
+inline G4bool G4Parton::operator==(const G4Parton& right) const
 {
-	return this==&right;
-}	
+  return this == &right;
+}
 
-inline G4bool G4Parton::operator!=(const G4Parton &right) const
+inline G4bool G4Parton::operator!=(const G4Parton& right) const
 {
-	return this!=&right;
+  return this != &right;
 }
 
 inline G4int G4Parton::GetPDGcode() const
 {
-	return PDGencoding;
+  return PDGencoding;
 }
-	
-inline const G4ThreeVector & G4Parton::GetPosition() const
+
+inline const G4ThreeVector& G4Parton::GetPosition() const
 {
-	return thePosition;
+  return thePosition;
 }
 
-inline void G4Parton::SetPosition(const G4ThreeVector &aPosition)
+inline void G4Parton::SetPosition(const G4ThreeVector& aPosition)
 {
-	thePosition=aPosition;
+  thePosition = aPosition;
 }
 
-
-inline const G4LorentzVector & G4Parton::Get4Momentum() const
+inline const G4LorentzVector& G4Parton::Get4Momentum() const
 {
-	return theMomentum;
+  return theMomentum;
 }
 
-inline void G4Parton::Set4Momentum(const G4LorentzVector & aMomentum)
+inline void G4Parton::Set4Momentum(const G4LorentzVector& aMomentum)
 {
-	theMomentum=aMomentum;
+  theMomentum = aMomentum;
 }
 
-
-inline
-G4double G4Parton::GetMass()
+inline G4double G4Parton::GetMass()
 {
-	return theDefinition->GetPDGMass();
+  return theDefinition->GetPDGMass();
 }
 
-inline
-G4ParticleDefinition * G4Parton::GetDefinition()
+inline G4ParticleDefinition* G4Parton::GetDefinition()
 {
-	return theDefinition;
+  return theDefinition;
 }
 
-inline void G4Parton::SetDefinition(G4ParticleDefinition * aDefinition) // Uzhi
+inline void G4Parton::SetDefinition(G4ParticleDefinition* aDefinition)  // Uzhi
 {
-	theDefinition = aDefinition;
-	PDGencoding = theDefinition->GetPDGEncoding();
+  theDefinition = aDefinition;
+  PDGencoding = theDefinition->GetPDGEncoding();
 }
-
 
 #endif

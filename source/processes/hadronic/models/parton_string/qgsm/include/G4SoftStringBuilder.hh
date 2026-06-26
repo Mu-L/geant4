@@ -23,28 +23,28 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4SoftStringBuilder_h
-#define G4SoftStringBuilder_h 1
+#ifndef G4SOFTSTRINGBUILDER_HH
+#define G4SOFTSTRINGBUILDER_HH
 
-#include "globals.hh"
-#include "G4KineticTrackVector.hh"
 #include "G4ExcitedStringVector.hh"
+#include "G4KineticTrackVector.hh"
 #include "G4PartonPair.hh"
+#include "globals.hh"
 
-
-class G4SoftStringBuilder 
+class G4SoftStringBuilder
 {
   public:
+
     G4SoftStringBuilder();
     ~G4SoftStringBuilder();
 
-    G4ExcitedString* BuildString(G4PartonPair * aPair);        
+    G4ExcitedString* BuildString(G4PartonPair* aPair);
 
-  private:     
-    G4SoftStringBuilder(const G4SoftStringBuilder &right);
-    G4bool operator==(const G4SoftStringBuilder &right) const;
-    G4bool operator!=(const G4SoftStringBuilder &right) const;
+  private:
+
+    G4SoftStringBuilder(const G4SoftStringBuilder& right);
+    G4bool operator==(const G4SoftStringBuilder& right) const;
+    G4bool operator!=(const G4SoftStringBuilder& right) const;
 };
 
 #endif
-

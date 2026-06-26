@@ -36,16 +36,17 @@
 #ifndef G4TCLASSICALRK4_HH
 #define G4TCLASSICALRK4_HH
 
-#include "G4ThreeVector.hh"
 #include "G4MagIntegratorStepper.hh"
 #include "G4TMagErrorStepper.hh"
+#include "G4ThreeVector.hh"
 
 /**
  * @brief G4TClassicalRK4 is a templated version of G4ClassicalRK4
  * 4th order Runge-Kutta stepper.
+ * @ingroup geometry_magneticfield
  */
 
-template <class T_Equation, unsigned int N>
+template<class T_Equation, unsigned int N>
 class G4TClassicalRK4 : public G4TMagErrorStepper<G4TClassicalRK4<T_Equation, N>, T_Equation, N>
 {
   public:
@@ -67,9 +68,7 @@ class G4TClassicalRK4 : public G4TMagErrorStepper<G4TClassicalRK4<T_Equation, N>
     // A stepper that does not know about errors.
     // It is used by the MagErrorStepper stepper.
 
-    inline void DumbStepper(const G4double yIn[],
-                            const G4double dydx[],
-                            G4double h,
+    inline void DumbStepper(const G4double yIn[], const G4double dydx[], G4double h,
                             G4double yOut[]);
 
     G4int IntegratorOrder() const { return 4; }
@@ -84,27 +83,23 @@ class G4TClassicalRK4 : public G4TMagErrorStepper<G4TClassicalRK4<T_Equation, N>
     T_Equation* fEquation_Rhs;
 };
 
-template <class T_Equation, unsigned int N >
-G4TClassicalRK4<T_Equation,N>::
-G4TClassicalRK4(T_Equation* EqRhs, G4int numberOfVariables)
-   : G4TMagErrorStepper<G4TClassicalRK4<T_Equation, N>, T_Equation, N>(
-      EqRhs, numberOfVariables > 8 ? numberOfVariables : 8 )
-   , fEquation_Rhs(EqRhs)
+template<class T_Equation, unsigned int N>
+G4TClassicalRK4<T_Equation, N>::G4TClassicalRK4(T_Equation* EqRhs, G4int numberOfVariables)
+  : G4TMagErrorStepper<G4TClassicalRK4<T_Equation, N>, T_Equation, N>(
+      EqRhs, numberOfVariables > 8 ? numberOfVariables : 8),
+    fEquation_Rhs(EqRhs)
 {
   // unsigned int noVariables = std::max(numberOfVariables, 8);  // For Time .. 7+1
-  if( dynamic_cast<G4EquationOfMotion*>(EqRhs) == nullptr )
+  if (dynamic_cast<G4EquationOfMotion*>(EqRhs) == nullptr)
   {
-    G4Exception("G4TClassicalRK4: constructor", "GeomField0001",
-                FatalException, "Equation is not an G4EquationOfMotion.");      
+    G4Exception("G4TClassicalRK4: constructor", "GeomField0001", FatalException,
+                "Equation is not an G4EquationOfMotion.");
   }
 }
 
-template <class T_Equation, unsigned int N >
-void
-G4TClassicalRK4<T_Equation,N>::DumbStepper(const G4double yIn[],
-                                           const G4double dydx[],
-                                           G4double h,
-                                           G4double yOut[]) 
+template<class T_Equation, unsigned int N>
+void G4TClassicalRK4<T_Equation, N>::DumbStepper(const G4double yIn[], const G4double dydx[],
+                                                 G4double h, G4double yOut[])
 // Given values for the variables y[0,..,n-1] and their derivatives
 // dydx[0,...,n-1] known at x, use the classical 4th Runge-Kutta
 // method to advance the solution over an interval h and return the
@@ -114,40 +109,39 @@ G4TClassicalRK4<T_Equation,N>::DumbStepper(const G4double yIn[],
 // NRC p. 712-713 .
 {
   G4double hh = h * 0.5, h6 = h / 6.0;
-  
+
   // Initialise time to t0, needed when it is not updated by the integration.
   //        [ Note: Only for time dependent fields (usually electric)
   //                  is it neccessary to integrate the time.]
-  yt[7]   = yIn[7];
+  yt[7] = yIn[7];
   yOut[7] = yIn[7];
-  
-  for(unsigned int i = 0; i < N; ++i)
+
+  for (unsigned int i = 0; i < N; ++i)
   {
-     yt[i] = yIn[i] + hh * dydx[i];  // 1st Step K1=h*dydx
+    yt[i] = yIn[i] + hh * dydx[i];  // 1st Step K1=h*dydx
   }
   this->RightHandSideInl(yt, dydxt);  // 2nd Step K2=h*dydxt
-  
-  for(unsigned int i = 0; i < N; ++i)
+
+  for (unsigned int i = 0; i < N; ++i)
   {
-     yt[i] = yIn[i] + hh * dydxt[i];
+    yt[i] = yIn[i] + hh * dydxt[i];
   }
   this->RightHandSideInl(yt, dydxm);  // 3rd Step K3=h*dydxm
-  
-  for(unsigned int i = 0; i < N; ++i)
+
+  for (unsigned int i = 0; i < N; ++i)
   {
-     yt[i] = yIn[i] + h * dydxm[i];
-     dydxm[i] += dydxt[i];  // now dydxm=(K2+K3)/h
+    yt[i] = yIn[i] + h * dydxm[i];
+    dydxm[i] += dydxt[i];  // now dydxm=(K2+K3)/h
   }
   this->RightHandSideInl(yt, dydxt);  // 4th Step K4=h*dydxt
-  
-  for(unsigned int i = 0; i < N; ++i)  // Final RK4 output
+
+  for (unsigned int i = 0; i < N; ++i)  // Final RK4 output
   {
-     yOut[i] = yIn[i] + h6 * (dydx[i] + dydxt[i] +
-                              2.0 * dydxm[i]);  //+K1/6+K4/6+(K2+K3)/3
+    yOut[i] = yIn[i] + h6 * (dydx[i] + dydxt[i] + 2.0 * dydxm[i]);  //+K1/6+K4/6+(K2+K3)/3
   }
-  if(N == 12)
+  if (N == 12)
   {
-     this->NormalisePolarizationVector(yOut);
+    this->NormalisePolarizationVector(yOut);
   }
 }
 

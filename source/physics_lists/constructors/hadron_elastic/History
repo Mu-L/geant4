@@ -6,7 +6,7 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-01-21 Vladimir Ivanchenko (phys-ctor-helastic-V11-03-01)
+## 2026-01-21 Vladimir Ivanchenko (phys-ctor-helastic-V11-04-00)
 - G4ChargeExchangePhysics, G4ChargeExchangemessenger - added two
     different biasing factors for pions and kaons (urgent request of NA64).
 

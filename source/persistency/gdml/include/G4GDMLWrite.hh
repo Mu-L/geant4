@@ -32,32 +32,30 @@
 // Author: Zoltan Torzsok, November 2007
 // --------------------------------------------------------------------
 #ifndef G4GDMLWRITE_HH
-#define G4GDMLWRITE_HH 1
-
-#include <map>
-
-#include <xercesc/dom/DOM.hpp>
-#include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/framework/LocalFileFormatTarget.hpp>
-
-#include "G4Transform3D.hh"
+#define G4GDMLWRITE_HH
 
 #include "G4GDMLAuxStructType.hh"
+#include "G4Transform3D.hh"
+
+#include <xercesc/dom/DOM.hpp>
+#include <xercesc/framework/LocalFileFormatTarget.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLString.hpp>
+
+#include <map>
 
 class G4LogicalVolume;
 class G4VPhysicalVolume;
 
 class G4GDMLWrite
 {
-  using VolumeMapType = std::map<const G4LogicalVolume*, G4Transform3D>;
-  using PhysVolumeMapType = std::map<const G4VPhysicalVolume*, G4String>;
-  using DepthMapType = std::map<G4int, G4int>;
+    using VolumeMapType = std::map<const G4LogicalVolume*, G4Transform3D>;
+    using PhysVolumeMapType = std::map<const G4VPhysicalVolume*, G4String>;
+    using DepthMapType = std::map<G4int, G4int>;
 
   public:
 
-    G4Transform3D Write(const G4String& filename,
-                        const G4LogicalVolume* const topLog,
+    G4Transform3D Write(const G4String& filename, const G4LogicalVolume* const topLog,
                         const G4String& schemaPath, const G4int depth,
                         G4bool storeReferences = true);
     //
@@ -80,22 +78,19 @@ class G4GDMLWrite
     //
     // Specify if to add or not memory addresses to IDs.
 
-    virtual void DefineWrite(xercesc::DOMElement*)        = 0;
-    virtual void MaterialsWrite(xercesc::DOMElement*)     = 0;
-    virtual void SolidsWrite(xercesc::DOMElement*)        = 0;
-    virtual void StructureWrite(xercesc::DOMElement*)     = 0;
-    virtual G4Transform3D TraverseVolumeTree(const G4LogicalVolume* const,
-                                             const G4int) = 0;
-    virtual void SurfacesWrite()                          = 0;
-    virtual void SetupWrite(xercesc::DOMElement*,
-                            const G4LogicalVolume* const) = 0;
+    virtual void DefineWrite(xercesc::DOMElement*) = 0;
+    virtual void MaterialsWrite(xercesc::DOMElement*) = 0;
+    virtual void SolidsWrite(xercesc::DOMElement*) = 0;
+    virtual void StructureWrite(xercesc::DOMElement*) = 0;
+    virtual G4Transform3D TraverseVolumeTree(const G4LogicalVolume* const, const G4int) = 0;
+    virtual void SurfacesWrite() = 0;
+    virtual void SetupWrite(xercesc::DOMElement*, const G4LogicalVolume* const) = 0;
     //
     // Pure virtual methods implemented in concrete writer plugin's classes.
 
     virtual void ExtensionWrite(xercesc::DOMElement*);
     virtual void UserinfoWrite(xercesc::DOMElement*);
-    virtual void AddExtension(xercesc::DOMElement*,
-                              const G4LogicalVolume* const);
+    virtual void AddExtension(xercesc::DOMElement*, const G4LogicalVolume* const);
     //
     // To be implemented in the client code for handling extensions
     // to the GDML schema, identified with the tag "extension".
@@ -115,11 +110,9 @@ class G4GDMLWrite
     xercesc::DOMAttr* NewAttribute(const G4String&, const G4String&);
     xercesc::DOMAttr* NewAttribute(const G4String&, const G4double&);
     xercesc::DOMElement* NewElement(const G4String&);
-    G4String Modularize(const G4VPhysicalVolume* const topvol,
-                        const G4int depth);
+    G4String Modularize(const G4VPhysicalVolume* const topvol, const G4int depth);
 
-    void AddAuxInfo(G4GDMLAuxListType* auxInfoList,
-                    xercesc::DOMElement* element);
+    void AddAuxInfo(G4GDMLAuxListType* auxInfoList, xercesc::DOMElement* element);
 
     G4bool FileExists(const G4String&) const;
     PhysVolumeMapType& PvolumeMap();

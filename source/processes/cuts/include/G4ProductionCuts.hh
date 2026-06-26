@@ -33,14 +33,14 @@
 
 // Author: H.Kurashige, 17 September 2002 - First implementation
 // --------------------------------------------------------------------
-#ifndef G4ProductionCuts_hh
-#define G4ProductionCuts_hh 1
+#ifndef G4PRODUCTIONCUTS_HH
+#define G4PRODUCTIONCUTS_HH
+
+#include "G4ParticleDefinition.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 #include <vector>
-
-#include "globals.hh"
-#include "G4ios.hh"
-#include "G4ParticleDefinition.hh"
 
 enum G4ProductionCutsIndex
 {
@@ -52,55 +52,55 @@ enum G4ProductionCutsIndex
   NumberOfG4CutIndex
 };
 
-class G4ProductionCuts  
+class G4ProductionCuts
 {
   public:
 
     G4ProductionCuts();
-      // Constructor 
+    // Constructor
 
     G4ProductionCuts(const G4ProductionCuts& right);
-      // Copy constructor 
+    // Copy constructor
 
     virtual ~G4ProductionCuts();
-      // Destructor 
+    // Destructor
 
     G4ProductionCuts& operator=(const G4ProductionCuts& right);
-      // Assignment operator
+    // Assignment operator
 
     G4bool operator==(const G4ProductionCuts& right) const;
     G4bool operator!=(const G4ProductionCuts& right) const;
-      // Equality operators
+    // Equality operators
 
     void SetProductionCut(G4double cut, G4int index);
     void SetProductionCut(G4double cut, G4ParticleDefinition* ptcl);
     void SetProductionCut(G4double cut, const G4String& pName);
-      // Set the production cut in range for a specific particle from
-      // and index, G4ParticleDefinition* or particle name. If the
-      // particle is not a photon, e-, e+ or proton, the function has
-      // no effect.
+    // Set the production cut in range for a specific particle from
+    // and index, G4ParticleDefinition* or particle name. If the
+    // particle is not a photon, e-, e+ or proton, the function has
+    // no effect.
     void SetProductionCut(G4double cut);
-      // Set the production cut in range for photons, e-, e+ and protons.
+    // Set the production cut in range for photons, e-, e+ and protons.
 
     G4double GetProductionCut(G4int index) const;
-      // Get the production cut in range with an index to particle type
+    // Get the production cut in range with an index to particle type
 
     G4double GetProductionCut(const G4String& name) const;
-      // Get the production cut in range with a name of particle type
-  
+    // Get the production cut in range with a name of particle type
+
     void SetProductionCuts(std::vector<G4double>&);
-      // Set the vector of production cuts in range for all particles
+    // Set the vector of production cuts in range for all particles
 
     const std::vector<G4double>& GetProductionCuts() const;
-      // Get the vector of production cuts in range for all particles
+    // Get the vector of production cuts in range for all particles
 
     G4bool IsModified() const;
-      // Return true if any cut value has been modified 
-      // after last calculation of Physics Table          
+    // Return true if any cut value has been modified
+    // after last calculation of Physics Table
 
     void PhysicsTableUpdated();
-      // Inform end of calculation of Physics Table to production cut 
- 
+    // Inform end of calculation of Physics Table to production cut
+
     static G4int GetIndex(const G4String& name);
     static G4int GetIndex(const G4ParticleDefinition* ptcl);
 

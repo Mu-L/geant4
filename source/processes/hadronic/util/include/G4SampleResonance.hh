@@ -24,8 +24,8 @@
 // ********************************************************************
 //
 
-#ifndef G4SampleResonance_h
-#define G4SampleResonance_h 1
+#ifndef G4SAMPLERESONANCE_HH
+#define G4SAMPLERESONANCE_HH
 
 // ------------------------------------------------------------
 //      GEANT 4 class header file
@@ -35,49 +35,49 @@
 //      helper class for sampling resonance masses
 // ------------------------------------------------------------
 
-#include "globals.hh"
-#include <map>
-#include "G4ParticleDefinition.hh"
 #include "G4Log.hh"
+#include "G4ParticleDefinition.hh"
+#include "globals.hh"
+
+#include <map>
 
 class G4SampleResonance
 {
-public:
+  public:
 
-  G4double GetMinimumMass(const G4ParticleDefinition* p) const;
-  G4double SampleMass(const G4double poleMass, 
-		      const G4double gamma,
-		      const G4double minMass,
-		      const G4double maxMass) const;
-  G4double SampleMass(const G4ParticleDefinition* p, const G4double maxMass) const;
+    G4double GetMinimumMass(const G4ParticleDefinition* p) const;
+    G4double SampleMass(const G4double poleMass, const G4double gamma, const G4double minMass,
+                        const G4double maxMass) const;
+    G4double SampleMass(const G4ParticleDefinition* p, const G4double maxMass) const;
 
-private:  
+  private:
 
-  G4double BrWigInt0(const G4double x, const G4double gamma, const G4double m0) const
-    { return 2.0*gamma*std::atan( 2.0 * (x-m0)/ gamma  ); }
+    G4double BrWigInt0(const G4double x, const G4double gamma, const G4double m0) const
+    {
+      return 2.0 * gamma * std::atan(2.0 * (x - m0) / gamma);
+    }
 
-  G4double BrWigInt1(const G4double x, const G4double gamma, const G4double m0) const
-    { return 0.5*gamma*gamma*G4Log( (x-m0)*(x-m0)+gamma*gamma/4.0 ) + m0*BrWigInt0(x,gamma,m0); }
+    G4double BrWigInt1(const G4double x, const G4double gamma, const G4double m0) const
+    {
+      return 0.5 * gamma * gamma * G4Log((x - m0) * (x - m0) + gamma * gamma / 4.0)
+             + m0 * BrWigInt0(x, gamma, m0);
+    }
 
-  G4double BrWigInv(const G4double x, const G4double gamma, const G4double m0) const
-    { return 0.5*gamma*std::tan( 0.5*x/gamma )+m0; }
+    G4double BrWigInv(const G4double x, const G4double gamma, const G4double m0) const
+    {
+      return 0.5 * gamma * std::tan(0.5 * x / gamma) + m0;
+    }
 
-public:  
+  public:
 
-  typedef std::map<const G4ParticleDefinition*, G4double, std::less<const G4ParticleDefinition*> >::const_iterator minMassMapIterator; 
-  typedef std::map<const G4ParticleDefinition*, G4double, std::less<const G4ParticleDefinition*> > minMassMapType;
+    typedef std::map<const G4ParticleDefinition*, G4double,
+                     std::less<const G4ParticleDefinition*>>::const_iterator minMassMapIterator;
+    typedef std::map<const G4ParticleDefinition*, G4double, std::less<const G4ParticleDefinition*>>
+      minMassMapType;
 
-private:
+  private:
 
-  static G4ThreadLocal minMassMapType *minMassCache_G4MT_TLS_;
-
+    static G4ThreadLocal minMassMapType* minMassCache_G4MT_TLS_;
 };
 
-
 #endif
-
-
-
-
-
-

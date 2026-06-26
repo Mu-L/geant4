@@ -45,82 +45,73 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4AtimaFluctuations_h
-#define G4AtimaFluctuations_h 1
+#ifndef G4ATIMAFLUCTUATIONS_HH
+#define G4ATIMAFLUCTUATIONS_HH
 
-
-#include "G4VEmFluctuationModel.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4UniversalFluctuation.hh"
+#include "G4VEmFluctuationModel.hh"
 
 class G4Pow;
 
 class G4AtimaFluctuations : public G4VEmFluctuationModel
 {
+  public:
 
-public:
+    explicit G4AtimaFluctuations(const G4String& nam = "IonFlucAtima");
 
-  explicit G4AtimaFluctuations(const G4String& nam = "IonFlucAtima");
+    ~G4AtimaFluctuations() override;
 
-  ~G4AtimaFluctuations() override;
+    // Sample fluctuations
+    G4double SampleFluctuations(const G4MaterialCutsCouple*, const G4DynamicParticle*,
+                                const G4double tcut, const G4double tmax, const G4double length,
+                                const G4double meanLoss) override;
 
-  // Sample fluctuations
-  G4double SampleFluctuations(const G4MaterialCutsCouple*,
-			      const G4DynamicParticle*,
-			      const G4double tcut,
-			      const G4double tmax,
-			      const G4double length,
-			      const G4double meanLoss) override;
+    // Compute dispertion
+    G4double Dispersion(const G4Material*, const G4DynamicParticle*, const G4double tcut,
+                        const G4double tmax, const G4double length) override;
 
-  // Compute dispertion 
-  G4double Dispersion(const G4Material*,
-		      const G4DynamicParticle*,
-		      const G4double tcut,
-		      const G4double tmax,
-		      const G4double length) override;
+    // Initialisation prerun
+    void InitialiseMe(const G4ParticleDefinition*) override;
 
-  // Initialisation prerun
-  void InitialiseMe(const G4ParticleDefinition*) override;
+    // Initialisation prestep
+    void SetParticleAndCharge(const G4ParticleDefinition*, G4double q2) override;
 
-  // Initialisation prestep
-  void SetParticleAndCharge(const G4ParticleDefinition*, 
-			    G4double q2) override;
+    // hide assignment operator
+    G4AtimaFluctuations& operator=(const G4AtimaFluctuations& right) = delete;
+    G4AtimaFluctuations(const G4AtimaFluctuations&) = delete;
 
-  // hide assignment operator
-  G4AtimaFluctuations & operator=(const  G4AtimaFluctuations &right) = delete;
-  G4AtimaFluctuations(const  G4AtimaFluctuations&) = delete;
+  private:
 
-private:
+    G4double EnergyTable_interpolate(const G4double* table, G4double xval, const G4double* y);
 
-  G4double EnergyTable_interpolate(const G4double* table,G4double xval, const G4double* y);
+    const G4ParticleDefinition* particle;
 
-  const G4ParticleDefinition* particle;
+    G4Pow* g4calc;
 
-  G4Pow*   g4calc; 
+    G4double particleMass;
+    G4double charge;
+    G4double chargeSquare;
+    G4double effChargeSquare;
 
-  G4double particleMass;
-  G4double charge;
-  G4double chargeSquare;
-  G4double effChargeSquare;
+    G4double MLN10;
+    G4double atomic_mass_unit;
+    G4double dedx_constant;
+    G4double electron_mass;
+    G4double fine_structure;
+    G4double domega2dx_constant;
 
-  G4double MLN10;
-  G4double atomic_mass_unit;
-  G4double dedx_constant;
-  G4double electron_mass;
-  G4double fine_structure;
-  G4double domega2dx_constant;
+    static G4double stepE;
+    static G4double tableE[200];
+    static const G4double ls_X_coefficients_a[110][200];
+    static const G4double ls_X_coefficients_ahi[110][200];
+    static const G4double element_atomic_weights[110];
 
-  static G4double stepE;
-  static G4double tableE[200];
-  static const G4double ls_X_coefficients_a[110][200];
-  static const G4double ls_X_coefficients_ahi[110][200];
-  static const G4double element_atomic_weights[110];
-
-  // data members to speed up the fluctuation calculation
-  G4double minLoss;
-  // cash
-  G4double kineticEnergy;
-  G4double beta2;
+    // data members to speed up the fluctuation calculation
+    G4double minLoss;
+    // cash
+    G4double kineticEnergy;
+    G4double beta2;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

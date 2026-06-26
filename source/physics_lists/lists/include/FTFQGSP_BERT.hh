@@ -36,28 +36,25 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef FTFQGSP_BERT_h
-#define FTFQGSP_BERT_h 1
+#ifndef FTFQGSP_BERT_HH
+#define FTFQGSP_BERT_HH
+
+#include "G4VModularPhysicsList.hh"
+#include "globals.hh"
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
-#include "globals.hh"
-#include "G4VModularPhysicsList.hh"
-
-
-class FTFQGSP_BERT: public G4VModularPhysicsList
+class FTFQGSP_BERT : public G4VModularPhysicsList
 {
-public:
-  FTFQGSP_BERT(G4int ver = 1);
-  virtual ~FTFQGSP_BERT()=default;
+  public:
 
-  FTFQGSP_BERT(const FTFQGSP_BERT &) = delete;
-  FTFQGSP_BERT & operator=(const FTFQGSP_BERT &)=delete;
+    FTFQGSP_BERT(G4int ver = 1);
+    virtual ~FTFQGSP_BERT() = default;
 
-private:
+    FTFQGSP_BERT(const FTFQGSP_BERT&) = delete;
+    FTFQGSP_BERT& operator=(const FTFQGSP_BERT&) = delete;
+
+  private:
 };
 
 #endif
-
-
-

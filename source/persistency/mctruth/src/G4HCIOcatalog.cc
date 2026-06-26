@@ -29,32 +29,29 @@
 // --------------------------------------------------------------------
 
 #include "G4HCIOcatalog.hh"
+
 #include "G4VHCIOentry.hh"
 
 G4ThreadLocal G4HCIOcatalog* G4HCIOcatalog::f_thePointer = 0;
 
 // --------------------------------------------------------------------
-G4HCIOcatalog::G4HCIOcatalog()
-{
-}
+G4HCIOcatalog::G4HCIOcatalog() {}
 
 // --------------------------------------------------------------------
 G4HCIOcatalog* G4HCIOcatalog::GetHCIOcatalog()
 {
-  if(f_thePointer == nullptr)
-    f_thePointer = new G4HCIOcatalog;
+  if (f_thePointer == nullptr) f_thePointer = new G4HCIOcatalog;
   return f_thePointer;
 }
 
 // --------------------------------------------------------------------
 void G4HCIOcatalog::RegisterEntry(G4VHCIOentry* d)
 {
-  if(m_verbose > 0)
+  if (m_verbose > 0)
   {
-    G4cout << "registering I/O manager entry \"" << d->GetName() << "\" " << d
-           << "." << G4endl;
+    G4cout << "registering I/O manager entry \"" << d->GetName() << "\" " << d << "." << G4endl;
   }
-  if(theCatalog.find(d->GetName()) != theCatalog.cend())
+  if (theCatalog.find(d->GetName()) != theCatalog.cend())
   {
     G4cout << "Redefining I/O Managers list " << d->GetName() << G4endl;
   }
@@ -67,12 +64,11 @@ void G4HCIOcatalog::RegisterEntry(G4VHCIOentry* d)
 // --------------------------------------------------------------------
 void G4HCIOcatalog::RegisterHCIOmanager(G4VPHitsCollectionIO* d)
 {
-  if(m_verbose > 0)
+  if (m_verbose > 0)
   {
-    G4cout << "registering I/O manager \"" << d->SDname() << "\" " << d << "."
-           << G4endl;
+    G4cout << "registering I/O manager \"" << d->SDname() << "\" " << d << "." << G4endl;
   }
-  if(theStore.find(d->SDname()) != theStore.cend())
+  if (theStore.find(d->SDname()) != theStore.cend())
   {
     G4cout << "Redefining I/O Manager " << d->SDname() << G4endl;
   }
@@ -85,10 +81,9 @@ void G4HCIOcatalog::RegisterHCIOmanager(G4VPHitsCollectionIO* d)
 // --------------------------------------------------------------------
 G4VHCIOentry* G4HCIOcatalog::GetEntry(const G4String& name)
 {
-  if(theCatalog.find(name) == theCatalog.end())
+  if (theCatalog.find(name) == theCatalog.end())
   {
-    G4cout << "Hit Collection I/O manager entry \"" << name << "\" not found!"
-           << std::endl;
+    G4cout << "Hit Collection I/O manager entry \"" << name << "\" not found!" << std::endl;
     return nullptr;
   }
   else
@@ -101,10 +96,9 @@ G4VHCIOentry* G4HCIOcatalog::GetEntry(const G4String& name)
 // --------------------------------------------------------------------
 G4VPHitsCollectionIO* G4HCIOcatalog::GetHCIOmanager(const G4String& name)
 {
-  if(theStore.find(name) == theStore.cend())
+  if (theStore.find(name) == theStore.cend())
   {
-    G4cout << "Hit Collection I/O manager \"" << name << "\" not found!"
-           << G4endl;
+    G4cout << "Hit Collection I/O manager \"" << name << "\" not found!" << G4endl;
     return nullptr;
   }
   else
@@ -119,7 +113,7 @@ void G4HCIOcatalog::PrintEntries()
 {
   G4cout << "I/O manager entries: ";
   G4cout << theCatalog.size() << G4endl;
-  for(auto it = theCatalog.cbegin(); it != theCatalog.cend(); ++it)
+  for (auto it = theCatalog.cbegin(); it != theCatalog.cend(); ++it)
   {
     G4cout << "  --- " << (*it).first << G4endl;
   }
@@ -129,7 +123,7 @@ void G4HCIOcatalog::PrintEntries()
 G4String G4HCIOcatalog::CurrentHCIOmanager()
 {
   G4String list = "";
-  for(auto it = theStore.cbegin(); it != theStore.cend(); ++it)
+  for (auto it = theStore.cbegin(); it != theStore.cend(); ++it)
   {
     list += (*it).first + " ";
   }
@@ -141,7 +135,7 @@ void G4HCIOcatalog::PrintHCIOmanager()
 {
   G4cout << "I/O managers: ";
   G4cout << theStore.size() << G4endl;
-  for(auto it = theStore.cbegin(); it != theStore.cend(); ++it)
+  for (auto it = theStore.cbegin(); it != theStore.cend(); ++it)
   {
     G4cout << "  --- " << (*it).first << ", " << (*it).second << "." << G4endl;
   }
@@ -151,10 +145,9 @@ void G4HCIOcatalog::PrintHCIOmanager()
 G4VPHitsCollectionIO* G4HCIOcatalog::GetHCIOmanager(G4int n)
 {
   G4int i = 0;
-  for(auto it = theStore.cbegin(); it != theStore.cend(); ++it)
+  for (auto it = theStore.cbegin(); it != theStore.cend(); ++it)
   {
-    if(i++ == n)
-      return (*it).second;
+    if (i++ == n) return (*it).second;
   }
   return nullptr;
 }

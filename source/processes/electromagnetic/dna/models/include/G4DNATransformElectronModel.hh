@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,54 +41,47 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-
-#ifndef G4DNATransformElectronModel_h
-#define G4DNATransformElectronModel_h 1
+#ifndef G4DNATRANSFORMELECTRONMODEL_HH
+#define G4DNATRANSFORMELECTRONMODEL_HH
 
 #include "G4VEmModel.hh"
 
-
 /**
-  * When an electron reaches the highest energy domain of G4DNATransformElectronModel,
-  * it is then automatically converted into a solvated electron without thermalization
-  * displacement (assumed to be already thermalized).
-  */
+ * When an electron reaches the highest energy domain of G4DNATransformElectronModel,
+ * it is then automatically converted into a solvated electron without thermalization
+ * displacement (assumed to be already thermalized).
+ */
 
-class G4DNATransformElectronModel: public G4VEmModel
+class G4DNATransformElectronModel : public G4VEmModel
 {
-public :
+  public:
+
     G4DNATransformElectronModel(const G4ParticleDefinition* p = nullptr,
                                 const G4String& nam = "DNATransformElectronModel");
     ~G4DNATransformElectronModel() override;
 
-    G4DNATransformElectronModel & operator=(const  G4DNATransformElectronModel &right) = delete;
-    G4DNATransformElectronModel(const  G4DNATransformElectronModel&) = delete;
+    G4DNATransformElectronModel& operator=(const G4DNATransformElectronModel& right) = delete;
+    G4DNATransformElectronModel(const G4DNATransformElectronModel&) = delete;
 
     void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-    G4double CrossSectionPerVolume(  const G4Material* material,
-            const G4ParticleDefinition* p,
-            G4double ekin,
-            G4double emin,
-            G4double emax) override;
+    G4double CrossSectionPerVolume(const G4Material* material, const G4ParticleDefinition* p,
+                                   G4double ekin, G4double emin, G4double emax) override;
 
-    void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-                                   const G4MaterialCutsCouple*,
-                                   const G4DynamicParticle*,
-                                   G4double tmin,
-                                   G4double maxEnergy) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
     inline void SetVerbose(int);
 
     inline void SetEpsilonEnergy(G4double);
 
-protected:
+  protected:
 
     G4ParticleChangeForGamma* fParticleChangeForGamma;
 
-private:
+  private:
 
     // Water density table
     const std::vector<G4double>* fpWaterDensity;
@@ -96,17 +89,16 @@ private:
     G4bool fIsInitialised{false};
     G4int fVerboseLevel;
     G4double fEpsilon;
-
 };
 
 inline void G4DNATransformElectronModel::SetVerbose(int flag)
 {
-    fVerboseLevel = flag ;
+  fVerboseLevel = flag;
 }
 
 inline void G4DNATransformElectronModel::SetEpsilonEnergy(G4double eps)
 {
-    fEpsilon = eps ;
+  fEpsilon = eps;
 }
 
 #endif

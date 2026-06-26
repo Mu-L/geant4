@@ -40,7 +40,8 @@ inline G4int G4ParticlePropertyData::GetVerboseLevel() const
 
 inline G4int G4ParticlePropertyData::GetQuarkContent(G4int flavor) const
 {
-  if ((flavor > 0) && (flavor <= NumberOfQuarkFlavor)) {
+  if ((flavor > 0) && (flavor <= NumberOfQuarkFlavor))
+  {
     return theQuarkContent[flavor - 1];
   }
 
@@ -49,7 +50,8 @@ inline G4int G4ParticlePropertyData::GetQuarkContent(G4int flavor) const
 
 inline G4int G4ParticlePropertyData::GetAntiQuarkContent(G4int flavor) const
 {
-  if ((flavor > 0) && (flavor < NumberOfQuarkFlavor)) {
+  if ((flavor > 0) && (flavor < NumberOfQuarkFlavor))
+  {
     return theAntiQuarkContent[flavor - 1];
   }
 
@@ -144,7 +146,8 @@ inline void G4ParticlePropertyData::SetBaryonNumber(G4int newBaryonNumber)
 
 inline void G4ParticlePropertyData::SetQuarkContent(G4int flavor, G4int newContent)
 {
-  if ((flavor > 0) && (flavor <= NumberOfQuarkFlavor)) {
+  if ((flavor > 0) && (flavor <= NumberOfQuarkFlavor))
+  {
     theQuarkContent[flavor - 1] = newContent;
     fQuarkContentModified = true;
   }
@@ -152,7 +155,8 @@ inline void G4ParticlePropertyData::SetQuarkContent(G4int flavor, G4int newConte
 
 inline void G4ParticlePropertyData::SetAntiQuarkContent(G4int flavor, G4int newContent)
 {
-  if ((flavor > 0) && (flavor <= NumberOfQuarkFlavor)) {
+  if ((flavor > 0) && (flavor <= NumberOfQuarkFlavor))
+  {
     theAntiQuarkContent[flavor - 1] = newContent;
     fAntiQuarkContentModified = true;
   }

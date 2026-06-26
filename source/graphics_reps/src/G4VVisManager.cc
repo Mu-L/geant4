@@ -25,34 +25,33 @@
 //
 //
 //
-// 
+//
 // Abstract interface for GEANT4 Visualization Manager.
 // John Allison 19/Oct/1996.
 
 #include "G4VVisManager.hh"
 
-G4VVisManager::G4VVisManager ()
-= default;
+G4VVisManager::G4VVisManager() = default;
 
-G4VVisManager::~G4VVisManager () = default;
+G4VVisManager::~G4VVisManager() = default;
 
 G4VVisManager* G4VVisManager::fpConcreteInstance = nullptr;
 
-G4VVisManager* G4VVisManager::GetConcreteInstance ()
+G4VVisManager* G4VVisManager::GetConcreteInstance()
 {
   return fpConcreteInstance;
 }
 
-void G4VVisManager::SetConcreteInstance (G4VVisManager* man)
+void G4VVisManager::SetConcreteInstance(G4VVisManager* man)
 {
   fpConcreteInstance = man;
 }
 
-void G4VVisManager::DrawGeometry
-(G4VPhysicalVolume*, const G4Transform3D&)
+void G4VVisManager::DrawGeometry(G4VPhysicalVolume*, const G4Transform3D&)
 // Draws a geometry tree starting at the specified physical volume.
 {}
 
-void G4VVisManager::IgnoreStateChanges (G4bool)
-{;}
-
+void G4VVisManager::IgnoreStateChanges(G4bool)
+{
+  ;
+}

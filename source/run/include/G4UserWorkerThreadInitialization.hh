@@ -32,15 +32,15 @@
 
 // Author: M.Asai, A.Dotti (SLAC), 16 September 2013
 // --------------------------------------------------------------------
-#ifndef G4UserWorkerThreadInitialization_hh
-#define G4UserWorkerThreadInitialization_hh 1
+#ifndef G4USERWORKERTHREADINITIALIZATION_HH
+#define G4USERWORKERTHREADINITIALIZATION_HH
 
-//class G4VUserPrimaryGeneratorAction;
-//class G4UserRunAction;
-//class G4UserEventAction;
-//class G4UserStackingAction;
-//class G4UserTrackingAction;
-//class G4UserSteppingAction;
+// class G4VUserPrimaryGeneratorAction;
+// class G4UserRunAction;
+// class G4UserEventAction;
+// class G4UserStackingAction;
+// class G4UserTrackingAction;
+// class G4UserSteppingAction;
 class G4WorkerThread;
 class G4WorkerRunManager;
 
@@ -50,6 +50,7 @@ class G4WorkerRunManager;
 class G4UserWorkerThreadInitialization
 {
   public:
+
     G4UserWorkerThreadInitialization() = default;
     virtual ~G4UserWorkerThreadInitialization() = default;
 

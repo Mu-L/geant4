@@ -63,10 +63,7 @@ ExGflash2ParallelWorld::ExGflash2ParallelWorld(G4String aWorldName)
 
 ExGflash2ParallelWorld::~ExGflash2ParallelWorld()
 {
-  delete fFastShowerModel;
-  delete fParameterisation;
-  delete fParticleBounds;
-  delete fHitMaker;
+  //  delete fFastShowerModel;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -95,8 +92,8 @@ void ExGflash2ParallelWorld::Construct()
   G4double crystalWidth = 3 * cm;
   G4double crystalLength = 24 * cm;
 
-  calo_xside = (crystalWidth * nbOfCrystals) + 1 * cm;
-  calo_yside = (crystalWidth * nbOfCrystals) + 1 * cm;
+  calo_xside = (crystalWidth * nbOfCrystals);
+  calo_yside = (crystalWidth * nbOfCrystals);
   calo_zside = crystalLength;
 
   auto calo_box = new G4Box("CMS calorimeter",  // its name
@@ -120,7 +117,6 @@ void ExGflash2ParallelWorld::Construct()
 
   // define the fParameterisation region
   fRegion = new G4Region("crystals");
-  calo_log->SetRegion(fRegion);
   fRegion->AddRootLogicalVolume(calo_log);
 }
 
@@ -136,15 +132,15 @@ void ExGflash2ParallelWorld::ConstructSD()
   // * Initializing shower modell
   // ***********************************************
   G4cout << "Creating shower parameterization models" << G4endl;
-  fFastShowerModel = new GFlashShowerModel("fFastShowerModel", fRegion);
-  fParameterisation = new GFlashHomoShowerParameterisation(pbWO4);
-  fFastShowerModel->SetParameterisation(*fParameterisation);
+  auto fFastShowerModel = new GFlashShowerModel("fFastShowerModel", fRegion);
+  auto fParameterisation = new GFlashHomoShowerParameterisation(pbWO4);
+  fFastShowerModel->SetParameterisation(fParameterisation);
   // Energy Cuts to kill particles:
-  fParticleBounds = new GFlashParticleBounds();
-  fFastShowerModel->SetParticleBounds(*fParticleBounds);
+  auto fParticleBounds = new GFlashParticleBounds();
+  fFastShowerModel->SetParticleBounds(fParticleBounds);
   // Makes the EnergieSpots
-  fHitMaker = new GFlashHitMaker();
-  fFastShowerModel->SetHitMaker(*fHitMaker);
+  auto fHitMaker = new GFlashHitMaker();
+  fFastShowerModel->SetHitMaker(fHitMaker);
   G4cout << "end shower parameterization." << G4endl;
   // **********************************************
 }

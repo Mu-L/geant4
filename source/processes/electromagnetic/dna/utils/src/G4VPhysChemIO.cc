@@ -34,10 +34,8 @@
 
 //------------------------------------------------------------------------------
 
-G4VPhysChemIO::G4VPhysChemIO()
-= default;
+G4VPhysChemIO::G4VPhysChemIO() = default;
 
 //------------------------------------------------------------------------------
 
-G4VPhysChemIO::~G4VPhysChemIO()
-= default;
+G4VPhysChemIO::~G4VPhysChemIO() = default;

@@ -29,20 +29,21 @@
 // --------------------------------------------------------------------
 
 #include "G4tgrSolidScaled.hh"
+
+#include "G4tgrMessenger.hh"
 #include "G4tgrUtils.hh"
 #include "G4tgrVolume.hh"
 #include "G4tgrVolumeMgr.hh"
-#include "G4tgrMessenger.hh"
 
 // --------------------------------------------------------------------
 G4tgrSolidScaled::G4tgrSolidScaled(const std::vector<G4String>& wl)
 {
   // :SOLID/:VOLU SOL1 SCALED SOL0 SCLAEX SCALEY SCALEZ
-  if(wl.size() != 7)
+  if (wl.size() != 7)
   {
     G4tgrUtils::DumpVS(wl, "G4tgrSolidScaled::G4tgrSolidScaled()");
-    G4Exception("G4tgrSolidScaled::G4tgrSolidScaled()", "InvalidInput",
-                FatalException, "Line read with less or more than 7 words.");
+    G4Exception("G4tgrSolidScaled::G4tgrSolidScaled()", "InvalidInput", FatalException,
+                "Line read with less or more than 7 words.");
   }
 
   //---------- Set name
@@ -50,25 +51,25 @@ G4tgrSolidScaled::G4tgrSolidScaled(const std::vector<G4String>& wl)
 
   G4tgrVolumeMgr* volmgr = G4tgrVolumeMgr::GetInstance();
   origSolid = volmgr->FindSolid(G4tgrUtils::GetString(wl[3]));
-  if(origSolid == nullptr)
+  if (origSolid == nullptr)
   {
     origSolid = volmgr->FindVolume(G4tgrUtils::GetString(wl[3]), 1)->GetSolid();
   }
 
   //---------- Set scale vector
-  scale3d = G4Scale3D(G4tgrUtils::GetDouble(wl[4]), G4tgrUtils::GetDouble(wl[5]), 
-    G4tgrUtils::GetDouble(wl[6]));
+  scale3d = G4Scale3D(G4tgrUtils::GetDouble(wl[4]), G4tgrUtils::GetDouble(wl[5]),
+                      G4tgrUtils::GetDouble(wl[6]));
 
   //---------- Set solid type
   G4String wl2 = wl[2];
-  for(G4int ii = 0; ii < (G4int)wl2.length(); ++ii)
+  for (G4int ii = 0; ii < (G4int)wl2.length(); ++ii)
   {
     wl2[ii] = (char)std::toupper(wl2[ii]);
   }
   theType = std::move(wl2);
 
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 1)
+  if (G4tgrMessenger::GetVerboseLevel() >= 1)
   {
     G4cout << " Created " << *this << G4endl;
   }
@@ -78,17 +79,14 @@ G4tgrSolidScaled::G4tgrSolidScaled(const std::vector<G4String>& wl)
 }
 
 // --------------------------------------------------------------------
-G4tgrSolidScaled::~G4tgrSolidScaled()
-{
-}
+G4tgrSolidScaled::~G4tgrSolidScaled() {}
 
 // --------------------------------------------------------------------
 std::ostream& operator<<(std::ostream& os, const G4tgrSolidScaled& sol)
 {
   os << "G4tgrSolidScaled= " << sol.theName << " of type " << sol.theType
-     << " original solid: " << sol.origSolid->GetName() << " Scale x: " << 
-     sol.scale3d.xx() << " Scale y: "     << sol.scale3d.yy() << 
-     " Scale z: " << sol.scale3d.zz() << G4endl;
+     << " original solid: " << sol.origSolid->GetName() << " Scale x: " << sol.scale3d.xx()
+     << " Scale y: " << sol.scale3d.yy() << " Scale z: " << sol.scale3d.zz() << G4endl;
 
   return os;
 }

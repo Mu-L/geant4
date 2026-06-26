@@ -47,7 +47,6 @@
 //
 G4AdjointPrimaryGeneratorAction::G4AdjointPrimaryGeneratorAction()
 {
-  
   PrimariesConsideredInAdjointSim[G4String("e-")] = false;
   PrimariesConsideredInAdjointSim[G4String("gamma")] = false;
   PrimariesConsideredInAdjointSim[G4String("proton")] = false;
@@ -59,9 +58,7 @@ G4AdjointPrimaryGeneratorAction::G4AdjointPrimaryGeneratorAction()
 
 // --------------------------------------------------------------------
 //
-G4AdjointPrimaryGeneratorAction::~G4AdjointPrimaryGeneratorAction()
-{
-}
+G4AdjointPrimaryGeneratorAction::~G4AdjointPrimaryGeneratorAction() {}
 
 // --------------------------------------------------------------------
 //
@@ -76,17 +73,20 @@ void G4AdjointPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   if (ListOfPrimaryAdjParticles[index_particle] == nullptr)
     UpdateListOfPrimaryParticles();  // ion has not been created yet
 
-  if (ListOfPrimaryAdjParticles[index_particle]->GetParticleName() == "adj_proton") {
+  if (ListOfPrimaryAdjParticles[index_particle]->GetParticleName() == "adj_proton")
+  {
     E1 = EminIon;
     E2 = EmaxIon;
   }
-  if (ListOfPrimaryAdjParticles[index_particle]->GetParticleType() == "adjoint_nucleus") {
+  if (ListOfPrimaryAdjParticles[index_particle]->GetParticleType() == "adjoint_nucleus")
+  {
     G4int A = ListOfPrimaryAdjParticles[index_particle]->GetAtomicMass();
     E1 = EminIon * A;
     E2 = EmaxIon * A;
   }
   // Generate first the forwrad primaries
-    G4AdjointPrimaryGenerator::GetInstance()->GenerateFwdPrimaryVertex(anEvent, ListOfPrimaryFwdParticles[index_particle], E1, E2);
+  G4AdjointPrimaryGenerator::GetInstance()->GenerateFwdPrimaryVertex(
+    anEvent, ListOfPrimaryFwdParticles[index_particle], E1, E2);
 
   G4PrimaryVertex* fwdPrimVertex = anEvent->GetPrimaryVertex();
 
@@ -106,7 +106,8 @@ void G4AdjointPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   {
     G4double weight = (1. / nb_fwd_gammas_per_event);
     fwdPrimVertex->SetWeight(weight);
-    for (G4int i = 0; i < nb_fwd_gammas_per_event - 1; ++i) {
+    for (G4int i = 0; i < nb_fwd_gammas_per_event - 1; ++i)
+    {
       auto newFwdPrimVertex = new G4PrimaryVertex();
       newFwdPrimVertex->SetPosition(pos.x(), pos.y(), pos.z());
       newFwdPrimVertex->SetT0(0.);
@@ -132,11 +133,13 @@ void G4AdjointPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   G4double adjoint_source_area = G4AdjointSimManager::GetInstance()->GetAdjointSourceArea();
   G4double adjoint_weight =
     weight_correction * ComputeEnergyDistWeight(ekin, E1, E2) * adjoint_source_area * pi;
-  if (ListOfPrimaryAdjParticles[index_particle]->GetParticleName() == "adj_gamma") {
+  if (ListOfPrimaryAdjParticles[index_particle]->GetParticleName() == "adj_gamma")
+  {
     // The weight will be corrected at the end of the track if splitted tracks
     // are used
     adjoint_weight = adjoint_weight / nb_adj_primary_gammas_per_event;
-    for (G4int i = 0; i < nb_adj_primary_gammas_per_event - 1; ++i) {
+    for (G4int i = 0; i < nb_adj_primary_gammas_per_event - 1; ++i)
+    {
       auto newAdjPrimVertex = new G4PrimaryVertex();
       newAdjPrimVertex->SetPosition(pos.x(), pos.y(), pos.z());
       newAdjPrimVertex->SetT0(0.);
@@ -147,11 +150,13 @@ void G4AdjointPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
       anEvent->AddPrimaryVertex(newAdjPrimVertex);
     }
   }
-  else if (ListOfPrimaryAdjParticles[index_particle]->GetParticleName() == "adj_electron") {
+  else if (ListOfPrimaryAdjParticles[index_particle]->GetParticleName() == "adj_electron")
+  {
     // The weight will be corrected at the end of the track if splitted tracks
     // are used
     adjoint_weight = adjoint_weight / nb_adj_primary_electrons_per_event;
-    for (G4int i = 0; i < nb_adj_primary_electrons_per_event - 1; ++i) {
+    for (G4int i = 0; i < nb_adj_primary_electrons_per_event - 1; ++i)
+    {
       auto newAdjPrimVertex = new G4PrimaryVertex();
       newAdjPrimVertex->SetPosition(pos.x(), pos.y(), pos.z());
       newAdjPrimVertex->SetT0(0.);
@@ -229,7 +234,7 @@ void G4AdjointPrimaryGeneratorAction::SetSphericalAdjointPrimarySource(G4double 
   radius_spherical_source = radius;
   center_spherical_source = center_pos;
   type_of_adjoint_source = "Spherical";
-   G4AdjointPrimaryGenerator::GetInstance()->SetSphericalAdjointPrimarySource(radius, center_pos);
+  G4AdjointPrimaryGenerator::GetInstance()->SetSphericalAdjointPrimarySource(radius, center_pos);
 }
 
 // --------------------------------------------------------------------
@@ -238,7 +243,8 @@ void G4AdjointPrimaryGeneratorAction::SetAdjointPrimarySourceOnAnExtSurfaceOfAVo
   const G4String& volume_name)
 {
   type_of_adjoint_source = "ExternalSurfaceOfAVolume";
-   G4AdjointPrimaryGenerator::GetInstance()->SetAdjointPrimarySourceOnAnExtSurfaceOfAVolume(volume_name);
+  G4AdjointPrimaryGenerator::GetInstance()->SetAdjointPrimarySourceOnAnExtSurfaceOfAVolume(
+    volume_name);
 }
 
 // --------------------------------------------------------------------
@@ -270,22 +276,28 @@ void G4AdjointPrimaryGeneratorAction::UpdateListOfPrimaryParticles()
   G4ParticleTable* theParticleTable = G4ParticleTable::GetParticleTable();
   ListOfPrimaryFwdParticles.clear();
   ListOfPrimaryAdjParticles.clear();
-  for (const auto& iter : PrimariesConsideredInAdjointSim) {
-    if (iter.second) {
+  for (const auto& iter : PrimariesConsideredInAdjointSim)
+  {
+    if (iter.second)
+    {
       G4String fwd_particle_name = iter.first;
-      if (fwd_particle_name != "ion") {
+      if (fwd_particle_name != "ion")
+      {
         G4String adj_particle_name = G4String("adj_") + fwd_particle_name;
         ListOfPrimaryFwdParticles.push_back(theParticleTable->FindParticle(fwd_particle_name));
         ListOfPrimaryAdjParticles.push_back(theParticleTable->FindParticle(adj_particle_name));
       }
-      else {
-        if (fwd_ion != nullptr) {
+      else
+      {
+        if (fwd_ion != nullptr)
+        {
           ion_name = fwd_ion->GetParticleName();
           G4String adj_ion_name = G4String("adj_") + ion_name;
           ListOfPrimaryFwdParticles.push_back(fwd_ion);
           ListOfPrimaryAdjParticles.push_back(adj_ion);
         }
-        else {
+        else
+        {
           ListOfPrimaryFwdParticles.push_back(nullptr);
           ListOfPrimaryAdjParticles.push_back(nullptr);
         }

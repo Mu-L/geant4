@@ -33,48 +33,50 @@
 // 20130924  M. Kelsey -- Replace std::pow with G4Pow::powN() for CPU speed
 
 #include "G4InuclParamMomDst.hh"
-#include "G4InuclSpecialFunctions.hh"
+
 #include "G4InuclParticleNames.hh"
+#include "G4InuclSpecialFunctions.hh"
 #include "G4Pow.hh"
 #include "Randomize.hh"
 
 using namespace G4InuclSpecialFunctions;
 using namespace G4InuclParticleNames;
 
-
 // Use coefficients in power expansion of random fraction
 
-G4double 
-G4InuclParamMomDst::GetMomentum(G4int ptype, const G4double& ekin) const {
-  if (verboseLevel>3) {
-    G4cout << theName << "::GetMomentum: ptype " << ptype << " ekin " << ekin
-	   << G4endl;
+G4double G4InuclParamMomDst::GetMomentum(G4int ptype, const G4double& ekin) const
+{
+  if (verboseLevel > 3)
+  {
+    G4cout << theName << "::GetMomentum: ptype " << ptype << " ekin " << ekin << G4endl;
   }
 
-  G4int JK = (ptype==pro || ptype==neu) ? 0 : 1;	// nucleon vs. other
+  G4int JK = (ptype == pro || ptype == neu) ? 0 : 1;  // nucleon vs. other
 
   if (verboseLevel > 3) G4cout << " JK " << JK << G4endl;
 
-  G4Pow* theG4Pow = G4Pow::GetInstance();	// For convenience
+  G4Pow* theG4Pow = G4Pow::GetInstance();  // For convenience
 
   G4double Spow = randomInuclPowers(ekin, coeffPR[JK]);
 
-  G4double C=0., PS=0.;
-  for(G4int im = 0; im < 3; im++) {
+  G4double C = 0., PS = 0.;
+  for (G4int im = 0; im < 3; im++)
+  {
     C = coeffPS[JK][im];
     PS += C * theG4Pow->powN(ekin, im);
 
-    if (verboseLevel >3) {
-      G4cout << " im " << im << " : coeffPS[JK][im] " << C
-	     << " ekin^im " << theG4Pow->powN(ekin, im) << G4endl;
+    if (verboseLevel > 3)
+    {
+      G4cout << " im " << im << " : coeffPS[JK][im] " << C << " ekin^im "
+             << theG4Pow->powN(ekin, im) << G4endl;
     }
   }
-  
+
   G4double PRA = PS * Spow;
 
-  if (verboseLevel > 3) 
-    G4cout << " PS " << PS << " Spow = sqrt(S)*(PR+(1-PQ)*S^4) " << Spow
-	   << " PRA = PS*Spow " << PRA << G4endl;
+  if (verboseLevel > 3)
+    G4cout << " PS " << PS << " Spow = sqrt(S)*(PR+(1-PQ)*S^4) " << Spow << " PRA = PS*Spow " << PRA
+           << G4endl;
 
   return std::fabs(PRA);
 }

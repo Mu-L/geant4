@@ -35,8 +35,8 @@
 // Authors: G.Cosmo, 2 December 1995 - Design, based on object model
 //          M.Asai, 29 January 1996 - First implementation
 // --------------------------------------------------------------------
-#ifndef G4PrimaryVertex_hh
-#define G4PrimaryVertex_hh 1
+#ifndef G4PRIMARYVERTEX_HH
+#define G4PRIMARYVERTEX_HH
 
 #include "G4Allocator.hh"
 #include "G4PrimaryParticle.hh"
@@ -50,6 +50,7 @@ class G4VUserPrimaryVertexInformation;
 class G4PrimaryVertex
 {
   public:
+
     // Constructors
     G4PrimaryVertex() = default;
     G4PrimaryVertex(G4double x0, G4double y0, G4double z0, G4double t0);
@@ -93,6 +94,7 @@ class G4PrimaryVertex
     void Print() const;
 
   private:
+
     G4double X0 = 0.0;
     G4double Y0 = 0.0;
     G4double Z0 = 0.0;
@@ -114,7 +116,8 @@ extern G4PART_DLL G4Allocator<G4PrimaryVertex>*& aPrimaryVertexAllocator();
 
 inline void* G4PrimaryVertex::operator new(std::size_t)
 {
-  if (aPrimaryVertexAllocator() == nullptr) {
+  if (aPrimaryVertexAllocator() == nullptr)
+  {
     aPrimaryVertexAllocator() = new G4Allocator<G4PrimaryVertex>;
   }
   return (void*)aPrimaryVertexAllocator()->MallocSingle();
@@ -169,10 +172,12 @@ inline G4int G4PrimaryVertex::GetNumberOfParticle() const
 
 inline void G4PrimaryVertex::SetPrimary(G4PrimaryParticle* pp)
 {
-  if (theParticle == nullptr) {
+  if (theParticle == nullptr)
+  {
     theParticle = pp;
   }
-  else {
+  else
+  {
     theTail->SetNext(pp);
   }
   theTail = pp;
@@ -181,10 +186,12 @@ inline void G4PrimaryVertex::SetPrimary(G4PrimaryParticle* pp)
 
 inline void G4PrimaryVertex::SetNext(G4PrimaryVertex* nv)
 {
-  if (nextVertex == nullptr) {
+  if (nextVertex == nullptr)
+  {
     nextVertex = nv;
   }
-  else {
+  else
+  {
     tailVertex->SetNext(nv);
   }
   tailVertex = nv;

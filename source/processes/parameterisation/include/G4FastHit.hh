@@ -47,6 +47,7 @@
 class G4FastHit
 {
   public:
+
     G4FastHit() = default;
     G4FastHit(const G4ThreeVector& aPosition, G4double aEnergy)
       : fEnergy(aEnergy), fPosition(aPosition)
@@ -63,6 +64,7 @@ class G4FastHit
     inline G4ThreeVector GetPosition() const { return fPosition; }
 
   private:
+
     /// energy
     G4double fEnergy = 0;
     /// position

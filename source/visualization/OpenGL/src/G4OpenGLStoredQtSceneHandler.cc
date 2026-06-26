@@ -25,48 +25,47 @@
 //
 //
 //
-// 
+//
 // Laurent Garnier  27th October 2011
 
 #include "G4OpenGLStoredQtSceneHandler.hh"
 
-#include "G4PhysicalVolumeModel.hh"
 #include "G4LogicalVolumeModel.hh"
+#include "G4OpenGLQtViewer.hh"
+#include "G4PhysicalVolumeModel.hh"
 #include "G4Text.hh"
 #include "G4VPhysicalVolume.hh"
-#include "G4OpenGLQtViewer.hh"
-#include <typeinfo>
+
 #include <sstream>
+#include <typeinfo>
 
-G4OpenGLStoredQtSceneHandler::G4OpenGLStoredQtSceneHandler
-(G4VGraphicsSystem& system,
- const G4String& name):
-G4OpenGLStoredSceneHandler (system, name)
+G4OpenGLStoredQtSceneHandler::G4OpenGLStoredQtSceneHandler(G4VGraphicsSystem& system,
+                                                           const G4String& name)
+  : G4OpenGLStoredSceneHandler(system, name)
 {}
 
-G4OpenGLStoredQtSceneHandler::~G4OpenGLStoredQtSceneHandler ()
-{}
+G4OpenGLStoredQtSceneHandler::~G4OpenGLStoredQtSceneHandler() {}
 
-G4bool G4OpenGLStoredQtSceneHandler::ExtraPOProcessing
-(const G4Visible& visible, size_t currentPOListIndex)
+G4bool G4OpenGLStoredQtSceneHandler::ExtraPOProcessing(const G4Visible& visible,
+                                                       size_t currentPOListIndex)
 {
   G4bool usesGLCommands = true;
 
-  try {
+  try
+  {
     const G4Text& g4Text = dynamic_cast<const G4Text&>(visible);
     G4TextPlus* pG4TextPlus = new G4TextPlus(g4Text);
     pG4TextPlus->fProcessing2D = fProcessing2D;
     fPOList[currentPOListIndex].fpG4TextPlus = pG4TextPlus;
     usesGLCommands = false;
   }
-  catch (const std::bad_cast&) {}  // No special action if not text.  Just carry on.
+  catch (const std::bad_cast&)
+  {}  // No special action if not text.  Just carry on.
 
-  G4PhysicalVolumeModel* pPVModel =
-    dynamic_cast<G4PhysicalVolumeModel*>(fpModel);
-  G4LogicalVolumeModel* pLVModel =
-    dynamic_cast<G4LogicalVolumeModel*>(pPVModel);
-  if (pPVModel && !pLVModel) {
-
+  G4PhysicalVolumeModel* pPVModel = dynamic_cast<G4PhysicalVolumeModel*>(fpModel);
+  G4LogicalVolumeModel* pLVModel = dynamic_cast<G4LogicalVolumeModel*>(pPVModel);
+  if (pPVModel && !pLVModel)
+  {
     // This call comes from a G4PhysicalVolumeModel.  drawnPVPath is
     // the path of the current drawn (non-culled) volume in terms of
     // drawn (non-culled) ancestors.  Each node is identified by a
@@ -92,19 +91,23 @@ G4bool G4OpenGLStoredQtSceneHandler::ExtraPOProcessing
 
     // build a path for tree viewer
     G4OpenGLQtViewer* pGLViewer = dynamic_cast<G4OpenGLQtViewer*>(fpViewer);
-    if ( pGLViewer ) {
-      pGLViewer->addPVSceneTreeElement(fpModel->GetCurrentDescription(),pPVModel,(G4int)currentPOListIndex);
+    if (pGLViewer)
+    {
+      pGLViewer->addPVSceneTreeElement(fpModel->GetCurrentDescription(), pPVModel,
+                                       (G4int)currentPOListIndex);
     }
+  }
+  else
+  {  // Not from a G4PhysicalVolumeModel.
 
-  } else {  // Not from a G4PhysicalVolumeModel.
-
-    if (fpModel) {
-
-      
+    if (fpModel)
+    {
       // build a path for tree viewer
       G4OpenGLQtViewer* pGLViewer = dynamic_cast<G4OpenGLQtViewer*>(fpViewer);
-      if ( pGLViewer ) {
-        pGLViewer->addNonPVSceneTreeElement(fpModel->GetType(),(G4int)currentPOListIndex,fpModel->GetCurrentDescription().data(),visible);
+      if (pGLViewer)
+      {
+        pGLViewer->addNonPVSceneTreeElement(fpModel->GetType(), (G4int)currentPOListIndex,
+                                            fpModel->GetCurrentDescription().data(), visible);
       }
     }
   }
@@ -112,62 +115,66 @@ G4bool G4OpenGLStoredQtSceneHandler::ExtraPOProcessing
   return usesGLCommands;
 }
 
-G4bool G4OpenGLStoredQtSceneHandler::ExtraTOProcessing
-(const G4Visible& visible, size_t currentTOListIndex)
+G4bool G4OpenGLStoredQtSceneHandler::ExtraTOProcessing(const G4Visible& visible,
+                                                       size_t currentTOListIndex)
 {
-
   G4bool usesGLCommands = true;
 
-  try {
+  try
+  {
     const G4Text& g4Text = dynamic_cast<const G4Text&>(visible);
     G4TextPlus* pG4TextPlus = new G4TextPlus(g4Text);
     pG4TextPlus->fProcessing2D = fProcessing2D;
     fTOList[currentTOListIndex].fpG4TextPlus = pG4TextPlus;
     usesGLCommands = false;
   }
-  catch (const std::bad_cast&) {}  // Do nothing if not text.
+  catch (const std::bad_cast&)
+  {}  // Do nothing if not text.
 
   return usesGLCommands;
 }
 
-void G4OpenGLStoredQtSceneHandler::ClearStore () {
+void G4OpenGLStoredQtSceneHandler::ClearStore()
+{
+  // G4cout << "G4OpenGLStoredQtSceneHandler::ClearStore" << G4endl;
 
-  //G4cout << "G4OpenGLStoredQtSceneHandler::ClearStore" << G4endl;
-
-  G4OpenGLStoredSceneHandler::ClearStore ();
+  G4OpenGLStoredSceneHandler::ClearStore();
 
   // Not needed - the old scene tree is currently (partially) disabled - but
   // this code somehow affects the view in rare cases, e.g., after twinkling
   // the volume does not return to its original colour. So I have disabled
   // this, pending a review of the old scene tree. JA 31/10/24
-//  // Should recreate the tree
-//  G4OpenGLQtViewer* pGLQtViewer = dynamic_cast<G4OpenGLQtViewer*>(fpViewer);
-//  if ( pGLQtViewer ) {
-//    pGLQtViewer->clearTreeWidget();
-//  }
+  //  // Should recreate the tree
+  //  G4OpenGLQtViewer* pGLQtViewer = dynamic_cast<G4OpenGLQtViewer*>(fpViewer);
+  //  if ( pGLQtViewer ) {
+  //    pGLQtViewer->clearTreeWidget();
+  //  }
 }
 
-void G4OpenGLStoredQtSceneHandler::ClearTransientStore () {
+void G4OpenGLStoredQtSceneHandler::ClearTransientStore()
+{
+  // G4cout << "G4OpenGLStoredQtSceneHandler::ClearTransientStore" << G4endl;
 
-  //G4cout << "G4OpenGLStoredQtSceneHandler::ClearTransientStore" << G4endl;
-
-  G4OpenGLStoredSceneHandler::ClearTransientStore ();
+  G4OpenGLStoredSceneHandler::ClearTransientStore();
 
   // Should recreate the tree
   // Make sure screen corresponds to graphical database...
   // FIXME : L.Garnier April 2012 : Could cause a infinite loop ?
-  if (fpViewer) {
-    fpViewer -> SetView ();
-    fpViewer -> ClearView ();
-    fpViewer -> DrawView ();
+  if (fpViewer)
+  {
+    fpViewer->SetView();
+    fpViewer->ClearView();
+    fpViewer->DrawView();
   }
 }
 
-void G4OpenGLStoredQtSceneHandler::SetScene(G4Scene* pScene){
-
-  if (pScene != fpScene) {
+void G4OpenGLStoredQtSceneHandler::SetScene(G4Scene* pScene)
+{
+  if (pScene != fpScene)
+  {
     G4OpenGLQtViewer* pGLQtViewer = dynamic_cast<G4OpenGLQtViewer*>(fpViewer);
-    if ( pGLQtViewer ) {
+    if (pGLQtViewer)
+    {
       pGLQtViewer->clearTreeWidget();
     }
   }

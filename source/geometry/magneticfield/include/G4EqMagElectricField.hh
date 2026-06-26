@@ -36,12 +36,13 @@
 #define G4EQMAGELECTRICFIELD_HH
 
 #include "G4ChargeState.hh"
-#include "G4EquationOfMotion.hh"
 #include "G4ElectroMagneticField.hh"
+#include "G4EquationOfMotion.hh"
 
 /**
  * @brief G4EqMagElectricField implements the right-hand side of equation of
  * motion in a combined electric and magnetic field.
+ * @ingroup geometry_magneticfield
  */
 
 class G4EqMagElectricField : public G4EquationOfMotion
@@ -52,7 +53,7 @@ class G4EqMagElectricField : public G4EquationOfMotion
      * Constructor for G4EqMagElectricField.
      *  @param[in] emField Pointer to the electromagnetic field.
      */
-    G4EqMagElectricField(G4ElectroMagneticField* emField );
+    G4EqMagElectricField(G4ElectroMagneticField* emField);
 
     /**
      * Default Destructor.
@@ -66,9 +67,8 @@ class G4EqMagElectricField : public G4EquationOfMotion
      *  @param[in] MomentumXc Particle momentum.
      *  @param[in] mass Particle mass.
      */
-    void  SetChargeMomentumMass(G4ChargeState particleCharge, // in e+ units
-                                G4double MomentumXc,
-                                G4double mass) override;
+    void SetChargeMomentumMass(G4ChargeState particleCharge,  // in e+ units
+                               G4double MomentumXc, G4double mass) override;
 
     /**
      * Calculates the value of the derivative, given the value of the
@@ -77,9 +77,8 @@ class G4EqMagElectricField : public G4EquationOfMotion
      *  @param[in] Field Field value.
      *  @param[out] dydx Derivatives array.
      */
-    void EvaluateRhsGivenB(const G4double y[],
-                           const G4double Field[],
-                                 G4double dydx[] ) const override;
+    void EvaluateRhsGivenB(const G4double y[], const G4double Field[],
+                           G4double dydx[]) const override;
 
     /**
      * Returns the equation type-ID, "kEqElectroMagnetic".

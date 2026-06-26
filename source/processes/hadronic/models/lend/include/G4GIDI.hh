@@ -26,16 +26,14 @@
 
 #include <vector>
 #include <list>
+#include <memory>
 
 #include <G4Types.hh>
-#include <MCGIDI.hpp>
 
 #ifndef G4GIDI_hh_included
 #define G4GIDI_hh_included 1
 
 #define channelID std::string
-
-extern PoPI::Database G4GIDI_pops;
 
 class G4GIDI_Product {
 
@@ -48,34 +46,23 @@ class G4GIDI_Product {
 class G4GIDI_target {
 
     private:
-        MCGIDI::Protare *m_MCGIDI_protare;
-        std::string m_target;
-        std::string m_fileName;
-        std::string m_evaluation;
-        int m_targetZ;
-        int m_targetA;
-        int m_targetM;
-        double m_targetMass;
-        MCGIDI::DomainHash m_domainHash;
-        MCGIDI::URR_protareInfos m_URR_protareInfos;
-        std::vector<int> m_elasticIndices;
-        std::vector<int> m_captureIndices;
-        std::vector<int> m_fissionIndices;
-        std::vector<int> m_othersIndices;
-        MCGIDI::Probabilities::ProbabilityBase2d const *m_elasticAngular;
+        struct Impl;
+        std::unique_ptr<Impl> m_impl;
+
+        G4GIDI_target( std::unique_ptr<Impl> a_impl );
+
+        friend class G4GIDI;
 
     public:
-        G4GIDI_target( PoPI::Database const &a_pops, MCGIDI::DomainHash const &a_domainHash, GIDI::Protare const &a_GIDI_protare, 
-                        MCGIDI::Protare *a_MCGIDI_protare );
         ~G4GIDI_target( );
 
-        std::string const *getName( ) const { return( &m_target ); }
-        std::string const *getFilename( ) const { return( &m_fileName ); }
-        std::string const *getEvaluation( ) const { return( &m_evaluation ); }
-        int getZ( ) const { return( m_targetZ ); }
-        int getA( ) const { return( m_targetA ); }
-        int getM( ) const { return( m_targetM ); }
-        double getMass( ) const { return( m_targetMass ); }
+        std::string const *getName( ) const ;
+        std::string const *getFilename( ) const ;
+        std::string const *getEvaluation( ) const ;
+        int getZ( ) const ;
+        int getA( ) const ;
+        int getM( ) const ;
+        double getMass( ) const ;
 
 //        int getTemperatures( double *a_temperatures ) const ;
 //        int readTemperature( int index );
@@ -83,10 +70,10 @@ class G4GIDI_target {
 //        std::string getEqualProbableBinSampleMethod( );
 //        int setEqualProbableBinSampleMethod( std::string const &a_method );
 
-        std::vector<int> const &elasticIndices( ) { return( m_elasticIndices ); }
-        std::vector<int> const &captureIndices( ) { return( m_captureIndices ); }
-        std::vector<int> const &fissionIndices( ) { return( m_fissionIndices ); }
-        std::vector<int> const &othersIndices( ) { return( m_othersIndices ); }
+        std::vector<int> const &elasticIndices( ) ;
+        std::vector<int> const &captureIndices( ) ;
+        std::vector<int> const &fissionIndices( ) ;
+        std::vector<int> const &othersIndices( ) ;
 
         int getNumberOfChannels( ) const ;
         int getNumberOfProductionChannels( ) const ;
@@ -124,19 +111,18 @@ class G4GIDI_target {
 class G4GIDI {
 
     private:
-        G4int m_projectileIP;
-        std::string m_projectile;
-        std::vector<GIDI::Map::Map *> m_maps;
-        std::vector<G4GIDI_target *> m_protares;
+        struct Impl;
+
+        std::unique_ptr<Impl> m_impl;
 
     public:
         G4GIDI( G4int a_ip, std::string const &a_dataDirectory );
         G4GIDI( G4int a_ip, std::list<std::string> const &a_dataDirectory );
         ~G4GIDI( );
 
-        G4int projectileIP( ) const { return( m_projectileIP ); }
+        G4int projectileIP( ) const ;
 
-        G4int numberOfDataDirectories( ) const { return( static_cast<G4int>( m_maps.size( ) ) ); }
+        G4int numberOfDataDirectories( ) const ;
         G4int addDataDirectory( std::string const &a_dataDirectory );
         G4int removeDataDirectory( std::string const &a_dataDirectory );
         std::string const getDataDirectoryAtIndex( G4int a_index ) const ;

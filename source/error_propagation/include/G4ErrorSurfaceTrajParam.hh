@@ -37,71 +37,63 @@
 // - Created:  P. Arce
 // --------------------------------------------------------------------
 
-#ifndef G4ErrorSurfaceTrajParam_hh
-#define G4ErrorSurfaceTrajParam_hh
+#ifndef G4ERRORSURFACETRAJPARAM_HH
+#define G4ERRORSURFACETRAJPARAM_HH
 
-#include "G4Point3D.hh"
-#include "G4Vector3D.hh"
 #include "G4Plane3D.hh"
+#include "G4Point3D.hh"
 #include "G4ThreeVector.hh"
-
-#include "globals.hh"
 #include "G4Track.hh"
+#include "G4Vector3D.hh"
+#include "globals.hh"
 
 class G4ErrorSurfaceTrajParam
 {
- public:  // with description
-  G4ErrorSurfaceTrajParam()
-    : fInvP(0.)
-    , fPV(0.)
-    , fPW(0.)
-    , fV(0.)
-    , fW(0.)
-  {}
-  G4ErrorSurfaceTrajParam(const G4Point3D& pos, const G4Vector3D& mom,
-                          const G4Vector3D& vecV, const G4Vector3D& vecW);
-  G4ErrorSurfaceTrajParam(const G4Point3D& pos, const G4Vector3D& mom,
-                          const G4Plane3D& plane);
+  public:  // with description
 
-  G4ErrorSurfaceTrajParam(const G4ErrorSurfaceTrajParam&) = default;
-  G4ErrorSurfaceTrajParam(G4ErrorSurfaceTrajParam&&)      = default;
-  // The copy and move constructors
+    G4ErrorSurfaceTrajParam() : fInvP(0.), fPV(0.), fPW(0.), fV(0.), fW(0.) {}
+    G4ErrorSurfaceTrajParam(const G4Point3D& pos, const G4Vector3D& mom, const G4Vector3D& vecV,
+                            const G4Vector3D& vecW);
+    G4ErrorSurfaceTrajParam(const G4Point3D& pos, const G4Vector3D& mom, const G4Plane3D& plane);
 
-  virtual ~G4ErrorSurfaceTrajParam() {}
+    G4ErrorSurfaceTrajParam(const G4ErrorSurfaceTrajParam&) = default;
+    G4ErrorSurfaceTrajParam(G4ErrorSurfaceTrajParam&&) = default;
+    // The copy and move constructors
 
-  G4ErrorSurfaceTrajParam& operator=(const G4ErrorSurfaceTrajParam&) = default;
-  G4ErrorSurfaceTrajParam& operator=(G4ErrorSurfaceTrajParam&&) = default;
-  // The copy and move assignment operators
+    virtual ~G4ErrorSurfaceTrajParam() {}
 
-  friend std::ostream& operator<<(std::ostream&,
-                                  const G4ErrorSurfaceTrajParam& ts);
+    G4ErrorSurfaceTrajParam& operator=(const G4ErrorSurfaceTrajParam&) = default;
+    G4ErrorSurfaceTrajParam& operator=(G4ErrorSurfaceTrajParam&&) = default;
+    // The copy and move assignment operators
 
-  // Get and Set methods
+    friend std::ostream& operator<<(std::ostream&, const G4ErrorSurfaceTrajParam& ts);
 
-  void SetParameters(const G4Point3D& pos, const G4Vector3D& mom,
-                     const G4Vector3D& vecV, const G4Vector3D& vecW);
-  void SetParameters(const G4Point3D& pos, const G4Vector3D& mom,
-                     const G4Plane3D& plane);
+    // Get and Set methods
 
-  G4Vector3D GetDirection() const { return fDir; }
-  G4Vector3D GetPlaneNormal() const { return fVectorV.cross(fVectorW); }
-  G4Vector3D GetVectorV() const { return fVectorV; }
-  G4Vector3D GetVectorW() const { return fVectorW; }
-  G4double GetPV() const { return fPV; }
-  G4double GetPW() const { return fPW; }
-  G4double GetV() const { return fV; }
-  G4double GetW() const { return fW; }
-  G4double GetInvP() const { return fInvP; }
+    void SetParameters(const G4Point3D& pos, const G4Vector3D& mom, const G4Vector3D& vecV,
+                       const G4Vector3D& vecW);
+    void SetParameters(const G4Point3D& pos, const G4Vector3D& mom, const G4Plane3D& plane);
 
- private:
-  G4ThreeVector fDir;
-  G4Vector3D fVectorV;  // one of the vectors defining the plane
-  G4Vector3D fVectorW;  // one of the vectors defining the plane
-  G4double fInvP;       // inverse of momentum
-  G4double fPV;         // projection of momentum in one direction
-  G4double fPW;         // projection of momentum in one direction
-  G4double fV;          // projection of position in one direction
-  G4double fW;          // projection of position in one direction
+    G4Vector3D GetDirection() const { return fDir; }
+    G4Vector3D GetPlaneNormal() const { return fVectorV.cross(fVectorW); }
+    G4Vector3D GetVectorV() const { return fVectorV; }
+    G4Vector3D GetVectorW() const { return fVectorW; }
+    G4double GetPV() const { return fPV; }
+    G4double GetPW() const { return fPW; }
+    G4double GetV() const { return fV; }
+    G4double GetW() const { return fW; }
+    G4double GetInvP() const { return fInvP; }
+
+  private:
+
+    G4ThreeVector fDir;
+    G4Vector3D fVectorV;  // one of the vectors defining the plane
+    G4Vector3D fVectorW;  // one of the vectors defining the plane
+    G4double fInvP;  // inverse of momentum
+    G4double fPV;  // projection of momentum in one direction
+    G4double fPW;  // projection of momentum in one direction
+    G4double fV;  // projection of position in one direction
+    G4double fW;  // projection of position in one direction
 };
 
 #endif

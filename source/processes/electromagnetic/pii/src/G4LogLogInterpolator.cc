@@ -38,50 +38,49 @@
 
 // Constructor
 
-G4LogLogInterpolator::G4LogLogInterpolator()
-{ }
+G4LogLogInterpolator::G4LogLogInterpolator() {}
 
 // Destructor
 
-G4LogLogInterpolator::~G4LogLogInterpolator()
-{ }
+G4LogLogInterpolator::~G4LogLogInterpolator() {}
 
-G4IInterpolator* G4LogLogInterpolator::Clone() const 
-{ return new G4LogLogInterpolator; }
+G4IInterpolator* G4LogLogInterpolator::Clone() const
+{
+  return new G4LogLogInterpolator;
+}
 
-
-G4double G4LogLogInterpolator::Calculate(G4double x, G4int bin, 
-					 const G4DataVector& points, 
-					 const G4DataVector& data) const
+G4double G4LogLogInterpolator::Calculate(G4double x, G4int bin, const G4DataVector& points,
+                                         const G4DataVector& data) const
 {
   G4int nBins = G4int(data.size() - 1);
   // ---- MGP ---- To be verified; value = 0. is redundant here
   G4double value = 0.;
   if (x < points[0] || x == 0.)
-    {
-      value = 0;
-    }
+  {
+    value = 0;
+  }
   else if (bin < nBins)
+  {
+    G4double e1 = points[bin];
+    G4double e2 = points[bin + 1];
+    G4double d1 = data[bin];
+    G4double d2 = data[bin + 1];
+
+    if (d1 != 0. && d2 != 0.)
     {
-      G4double e1 = points[bin];
-      G4double e2 = points[bin+1];
-      G4double d1 = data[bin];     
-      G4double d2 = data[bin+1];
-      
-      if (d1 != 0. && d2 != 0.)
-	{
-	  value = (std::log10(d1)*std::log10(e2/x) + std::log10(d2)*std::log10(x/e1)) / std::log10(e2/e1);
-	  value = std::pow(10.,value);
-	}
-      else
-	{
-	  value = 0.;
-	}
+      value = (std::log10(d1) * std::log10(e2 / x) + std::log10(d2) * std::log10(x / e1))
+              / std::log10(e2 / e1);
+      value = std::pow(10., value);
     }
+    else
+    {
+      value = 0.;
+    }
+  }
   else
-    {
-      value = data[nBins];
-    }
+  {
+    value = data[nBins];
+  }
 
   return value;
 }

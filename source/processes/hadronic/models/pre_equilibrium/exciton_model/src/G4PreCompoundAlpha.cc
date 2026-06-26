@@ -33,16 +33,17 @@
 //
 // Author:         V.Lara
 //
-// Modified:  
-// 21.08.2008 J. M. Quesada add choice of options  
+// Modified:
+// 21.08.2008 J. M. Quesada add choice of options
 // 20.08.2010 V.Ivanchenko added G4Pow and G4PreCompoundParameters pointers
 //                         use int Z and A and cleanup
 // 05.07.2013 J.M. Quesada FactorialFactor fixed
 //
 
 #include "G4PreCompoundAlpha.hh"
-#include "G4CoulombBarrier.hh"
+
 #include "G4Alpha.hh"
+#include "G4CoulombBarrier.hh"
 #include "G4DeexPrecoUtility.hh"
 
 G4PreCompoundAlpha::G4PreCompoundAlpha()
@@ -51,14 +52,14 @@ G4PreCompoundAlpha::G4PreCompoundAlpha()
 
 G4double G4PreCompoundAlpha::FactorialFactor(G4int N, G4int P) const
 {
-  return G4double((N - 4) * (P - 3) * (N - 3) * (P - 2)) *
-         G4double((N - 2) * (P - 1) * (N - 1) * P) / 12.0;
+  return G4double((N - 4) * (P - 3) * (N - 3) * (P - 2)) * G4double((N - 2) * (P - 1) * (N - 1) * P)
+         / 12.0;
 }
-  
+
 G4double G4PreCompoundAlpha::CoalescenceFactor(G4int A) const
 {
-  return 4096.0/static_cast<G4double>(A*A*A);
-}    
+  return 4096.0 / static_cast<G4double>(A * A * A);
+}
 
 G4double G4PreCompoundAlpha::GetAlpha() const
 {
@@ -68,12 +69,12 @@ G4double G4PreCompoundAlpha::GetAlpha() const
 G4double G4PreCompoundAlpha::GetRj(G4int nParticles, G4int nCharged) const
 {
   G4double rj = 0.0;
-  if(nCharged >=2 && (nParticles-nCharged) >=2 ) {
-    G4double denominator = (G4double)
-      (nParticles*(nParticles-1))*((nParticles-2)*(nParticles-3));
-    rj = (6.0*nCharged*(nCharged-1))*
-      ((nParticles-nCharged)*(nParticles-nCharged-1))/denominator;
+  if (nCharged >= 2 && (nParticles - nCharged) >= 2)
+  {
+    G4double denominator =
+      (G4double)(nParticles * (nParticles - 1)) * ((nParticles - 2) * (nParticles - 3));
+    rj = (6.0 * nCharged * (nCharged - 1)) * ((nParticles - nCharged) * (nParticles - nCharged - 1))
+         / denominator;
   }
   return rj;
 }
-

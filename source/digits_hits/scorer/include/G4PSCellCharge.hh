@@ -26,11 +26,11 @@
 //
 //
 
-#ifndef G4PSCellCharge_h
-#define G4PSCellCharge_h 1
+#ifndef G4PSCELLCHARGE_HH
+#define G4PSCELLCHARGE_HH
 
-#include "G4VPrimitiveScorer.hh"
 #include "G4THitsMap.hh"
+#include "G4VPrimitiveScorer.hh"
 ///////////////////////////////////////////////////////////////////////////////
 // (Description)
 //   This is a primitive scorer class for scoring cell charge.
@@ -43,22 +43,25 @@
 
 class G4PSCellCharge : public G4VPrimitiveScorer
 {
- public:
-  G4PSCellCharge(const G4String& name, G4int depth = 0);
-  G4PSCellCharge(const G4String& name, const G4String& unit, G4int depth = 0);
-  ~G4PSCellCharge() override = default;
+  public:
 
-  void Initialize(G4HCofThisEvent*) override;
-  void clear() override;
-  void PrintAll() override;
+    G4PSCellCharge(const G4String& name, G4int depth = 0);
+    G4PSCellCharge(const G4String& name, const G4String& unit, G4int depth = 0);
+    ~G4PSCellCharge() override = default;
 
-  virtual void SetUnit(const G4String& unit);
+    void Initialize(G4HCofThisEvent*) override;
+    void clear() override;
+    void PrintAll() override;
 
- protected:
-  G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+    virtual void SetUnit(const G4String& unit);
 
- private:
-  G4int HCID;
-  G4THitsMap<G4double>* EvtMap;
+  protected:
+
+    G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+
+  private:
+
+    G4int HCID;
+    G4THitsMap<G4double>* EvtMap;
 };
 #endif

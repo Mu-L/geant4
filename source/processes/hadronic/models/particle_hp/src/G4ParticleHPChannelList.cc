@@ -38,10 +38,10 @@
 #include "G4Element.hh"
 #include "G4HadFinalState.hh"
 #include "G4HadProjectile.hh"
+#include "G4Neutron.hh"
 #include "G4ParticleHPFinalState.hh"
 #include "G4ParticleHPManager.hh"
 #include "G4ParticleHPThermalBoost.hh"
-#include "G4Neutron.hh"
 
 G4ParticleHPChannelList::G4ParticleHPChannelList(G4int n, G4ParticleDefinition* p)
 {
@@ -52,8 +52,10 @@ G4ParticleHPChannelList::G4ParticleHPChannelList(G4int n, G4ParticleDefinition* 
 
 G4ParticleHPChannelList::~G4ParticleHPChannelList()
 {
-  if (theChannels != nullptr) {
-    for (G4int i = 0; i < nChannels; ++i) {
+  if (theChannels != nullptr)
+  {
+    for (G4int i = 0; i < nChannels; ++i)
+    {
       delete theChannels[i];
     }
     delete[] theChannels;
@@ -68,25 +70,31 @@ G4HadFinalState* G4ParticleHPChannelList::ApplyYourself(const G4Element*,
 
   // decide on the isotope
   G4int numberOfIsos(0);
-  for (ii = 0; ii < nChannels; ++ii) {
+  for (ii = 0; ii < nChannels; ++ii)
+  {
     numberOfIsos = theChannels[ii]->GetNiso();
     if (numberOfIsos != 0) break;
   }
   auto running = new G4double[numberOfIsos];
   running[0] = 0;
-  for (i = 0; i < numberOfIsos; i++) {
+  for (i = 0; i < numberOfIsos; i++)
+  {
     if (i != 0) running[i] = running[i - 1];
-    for (ii = 0; ii < nChannels; ii++) {
-      if (theChannels[ii]->HasAnyData(i)) {
+    for (ii = 0; ii < nChannels; ii++)
+    {
+      if (theChannels[ii]->HasAnyData(i))
+      {
         running[i] += theChannels[ii]->GetWeightedXsec(
           aThermalE.GetThermalEnergy(aTrack, theChannels[ii]->GetN(i), theChannels[ii]->GetZ(i),
-                                     aTrack.GetMaterial()->GetTemperature()), i);
+                                     aTrack.GetMaterial()->GetTemperature()),
+          i);
       }
     }
   }
   G4int isotope = nChannels - 1;
   G4double random = G4UniformRand();
-  for (i = 0; i < numberOfIsos; ++i) {
+  for (i = 0; i < numberOfIsos; ++i)
+  {
     isotope = i;
     if (running[numberOfIsos - 1] != 0)
       if (random < running[i] / running[numberOfIsos - 1]) break;
@@ -98,9 +106,11 @@ G4HadFinalState* G4ParticleHPChannelList::ApplyYourself(const G4Element*,
   running[0] = 0;
   G4int targA = -1;  // For production of unChanged
   G4int targZ = -1;
-  for (i = 0; i < nChannels; i++) {
+  for (i = 0; i < nChannels; i++)
+  {
     if (i != 0) running[i] = running[i - 1];
-    if (theChannels[i]->HasAnyData(isotope)) {
+    if (theChannels[i]->HasAnyData(isotope))
+    {
       targA = (G4int)theChannels[i]->GetN(isotope);  // Will be simply used the last valid value
       targZ = (G4int)theChannels[i]->GetZ(isotope);
       running[i] += theChannels[i]->GetFSCrossSection(
@@ -114,9 +124,11 @@ G4HadFinalState* G4ParticleHPChannelList::ApplyYourself(const G4Element*,
   }
 
   // TK120607
-  if (running[nChannels - 1] == 0) {
+  if (running[nChannels - 1] == 0)
+  {
     // This happened usually by the miss match between the cross section data and model
-    if (targA == -1 && targZ == -1) {
+    if (targA == -1 && targZ == -1)
+    {
       throw G4HadronicException(
         __FILE__, __LINE__,
         "ParticleHP model encounter lethal discrepancy with cross section data");
@@ -144,7 +156,8 @@ G4HadFinalState* G4ParticleHPChannelList::ApplyYourself(const G4Element*,
 
   G4int lChan = 0;
   random = G4UniformRand();
-  for (i = 0; i < nChannels; i++) {
+  for (i = 0; i < nChannels; i++)
+  {
     lChan = i;
     if (running[nChannels - 1] != 0)
       if (random < running[i] / running[nChannels - 1]) break;
@@ -158,7 +171,9 @@ G4HadFinalState* G4ParticleHPChannelList::ApplyYourself(const G4Element*,
   return theChannels[lChan]->ApplyYourself(aTrack, isotope);
 }
 
-G4HadFinalState* G4ParticleHPChannelList::ApplyYourself( G4int isotope, G4int anZ, G4int anA, const G4HadProjectile & aTrack ) {
+G4HadFinalState* G4ParticleHPChannelList::ApplyYourself(G4int isotope, G4int anZ, G4int anA,
+                                                        const G4HadProjectile& aTrack)
+{
   // do not choose Z and A again and go to selection of channel
   G4ParticleHPThermalBoost aThermalE;
   G4int i;
@@ -169,47 +184,57 @@ G4HadFinalState* G4ParticleHPChannelList::ApplyYourself( G4int isotope, G4int an
   // targA and targZ does not set to -1
   G4int targA = anA;
   G4int targZ = anZ;
-  G4double energy = aThermalE.GetThermalEnergy( aTrack, targA, targZ, aTrack.GetMaterial()->GetTemperature() );
-  for ( i = 0; i < nChannels; i++ ) {
-    if ( i != 0 ) running[i] = running[i-1];
-    if ( theChannels[i]->HasAnyData( isotope ) ) {
-      targA = (G4int) theChannels[i]->GetN( isotope );  // Will be simply used the last valid value
-      targZ = (G4int) theChannels[i]->GetZ( isotope );
-      running[i] += theChannels[i]->GetFSCrossSection( energy, isotope );
+  G4double energy =
+    aThermalE.GetThermalEnergy(aTrack, targA, targZ, aTrack.GetMaterial()->GetTemperature());
+  for (i = 0; i < nChannels; i++)
+  {
+    if (i != 0) running[i] = running[i - 1];
+    if (theChannels[i]->HasAnyData(isotope))
+    {
+      targA = (G4int)theChannels[i]->GetN(isotope);  // Will be simply used the last valid value
+      targZ = (G4int)theChannels[i]->GetZ(isotope);
+      running[i] += theChannels[i]->GetFSCrossSection(energy, isotope);
     }
   }
-  if ( running[nChannels-1] == 0 ) {
+  if (running[nChannels - 1] == 0)
+  {
     // This happened usually by the miss match between the cross section data and model
-    if ( targA == -1  &&  targZ == -1 ) {
-      throw G4HadronicException( __FILE__, __LINE__, "ParticleHP model encounter lethal discrepancy with cross section data" );
+    if (targA == -1 && targZ == -1)
+    {
+      throw G4HadronicException(
+        __FILE__, __LINE__,
+        "ParticleHP model encounter lethal discrepancy with cross section data");
     }
     G4cout << "Warning from NeutronHP: could not find proper reaction channel. "
            << "This may be caused by inconsistency between cross section and model. "
            << "Unchanged final states are returned." << G4endl;
     unChanged.Clear();
     // For Ep Check create unchanged final state including rest target
-    G4ParticleDefinition* targ_pd = G4IonTable::GetIonTable()->GetIon( targZ, targA, 0.0 );
-    G4DynamicParticle* targ_dp = new G4DynamicParticle( targ_pd, G4ThreeVector(1.0, 0.0, 0.0), 0.0 );
-    unChanged.SetEnergyChange( aTrack.GetKineticEnergy() );
-    unChanged.SetMomentumChange( aTrack.Get4Momentum().vect().unit() );
-    unChanged.AddSecondary( targ_dp );
-    G4ParticleHPManager::GetInstance()->GetReactionWhiteBoard()->SetTargA( targA );
-    G4ParticleHPManager::GetInstance()->GetReactionWhiteBoard()->SetTargZ( targZ );
-    delete [] running;
+    G4ParticleDefinition* targ_pd = G4IonTable::GetIonTable()->GetIon(targZ, targA, 0.0);
+    G4DynamicParticle* targ_dp = new G4DynamicParticle(targ_pd, G4ThreeVector(1.0, 0.0, 0.0), 0.0);
+    unChanged.SetEnergyChange(aTrack.GetKineticEnergy());
+    unChanged.SetMomentumChange(aTrack.Get4Momentum().vect().unit());
+    unChanged.AddSecondary(targ_dp);
+    G4ParticleHPManager::GetInstance()->GetReactionWhiteBoard()->SetTargA(targA);
+    G4ParticleHPManager::GetInstance()->GetReactionWhiteBoard()->SetTargZ(targZ);
+    delete[] running;
     return &unChanged;
   }
   G4int lChan = 0;
   random = G4UniformRand();
-  for ( i = 0; i < nChannels; i++ ) {
+  for (i = 0; i < nChannels; i++)
+  {
     lChan = i;
-    if ( running[nChannels-1] != 0 ) if ( random < running[i]/running[nChannels-1] ) break;
+    if (running[nChannels - 1] != 0)
+      if (random < running[i] / running[nChannels - 1]) break;
   }
-  delete [] running;
-  #ifdef G4PHPDEBUG
-  if ( G4FindDataDir( "G4ParticleHPDebug" ) != nullptr ) G4cout << " G4ParticleHPChannelList SELECTED ISOTOPE " << isotope 
-								<< " SELECTED CHANNEL " << lChan << G4endl;
-  #endif
-  return theChannels[lChan]->ApplyYourself( aTrack, isotope );
+  delete[] running;
+#ifdef G4PHPDEBUG
+  if (G4FindDataDir("G4ParticleHPDebug") != nullptr)
+    G4cout << " G4ParticleHPChannelList SELECTED ISOTOPE " << isotope << " SELECTED CHANNEL "
+           << lChan << G4endl;
+#endif
+  return theChannels[lChan]->ApplyYourself(aTrack, isotope);
 }
 
 void G4ParticleHPChannelList::Init(G4Element* anElement, const G4String& dirName,
@@ -237,8 +262,10 @@ void G4ParticleHPChannelList::DumpInfo()
   G4cout << " Number of channels: " << nChannels << G4endl;
   G4cout << " Projectile: " << theProjectile->GetParticleName() << G4endl;
   G4cout << " Directory name: " << theDir << G4endl;
-  for (G4int i = 0; i < nChannels; ++i) {
-    if (theChannels[i]->HasDataInAnyFinalState()) {
+  for (G4int i = 0; i < nChannels; ++i)
+  {
+    if (theChannels[i]->HasDataInAnyFinalState())
+    {
       G4cout << "----------------------------------------------------------------" << G4endl;
       theChannels[i]->DumpInfo();
       G4cout << "----------------------------------------------------------------" << G4endl;

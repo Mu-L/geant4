@@ -24,31 +24,32 @@
 // ********************************************************************
 //
 #include "G4INCLXXProtonBuilder.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4ParticleTable.hh"
-#include "G4ProcessManager.hh"
+
 #include "G4BGGNucleonInelasticXS.hh"
-#include "G4PreCompoundModel.hh"
 #include "G4HadronicInteraction.hh"
 #include "G4HadronicInteractionRegistry.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "G4PreCompoundModel.hh"
+#include "G4ProcessManager.hh"
+#include "G4SystemOfUnits.hh"
 
-G4INCLXXProtonBuilder::
-G4INCLXXProtonBuilder() 
+G4INCLXXProtonBuilder::G4INCLXXProtonBuilder()
 {
   thePreCompoundMin = 0;
-  thePreCompoundMax = 2*MeV;
-  theMin = 1.0*MeV;
-  theMax = 3.0*GeV;
-  G4HadronicInteraction* p =
-    G4HadronicInteractionRegistry::Instance()->FindModel("PRECO");
+  thePreCompoundMax = 2 * MeV;
+  theMin = 1.0 * MeV;
+  theMax = 3.0 * GeV;
+  G4HadronicInteraction* p = G4HadronicInteractionRegistry::Instance()->FindModel("PRECO");
   thePreCompoundModel = static_cast<G4VPreCompoundModel*>(p);
-  if(!thePreCompoundModel) { thePreCompoundModel = new G4PreCompoundModel(); }
+  if (!thePreCompoundModel)
+  {
+    thePreCompoundModel = new G4PreCompoundModel();
+  }
   theModel = new G4INCLXXInterface(thePreCompoundModel);
 }
 
-void G4INCLXXProtonBuilder::
-Build(G4HadronInelasticProcess * aP)
+void G4INCLXXProtonBuilder::Build(G4HadronInelasticProcess* aP)
 {
   thePreCompoundModel->SetMinEnergy(thePreCompoundMin);
   thePreCompoundModel->SetMaxEnergy(thePreCompoundMax);
@@ -58,4 +59,3 @@ Build(G4HadronInelasticProcess * aP)
   aP->RegisterMe(theModel);
   aP->AddDataSet(new G4BGGNucleonInelasticXS(G4Proton::Proton()));
 }
-

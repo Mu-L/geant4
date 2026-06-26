@@ -53,7 +53,7 @@ G4PolarizedOrePowellAtRestModel::G4PolarizedOrePowellAtRestModel()
   : G4VPositronAtRestModel("OrePowellPolarized")
 {
   // DEBUG
-  //G4cout << "G4PolarizedOrePowellAtRestModel in contractor" << G4endl;
+  // G4cout << "G4PolarizedOrePowellAtRestModel in contractor" << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -70,25 +70,28 @@ void G4PolarizedOrePowellAtRestModel::SampleSecondaries(
   // OrthoPositronium polarization
 
   // Random mState in 1:1:1 proportion, must be a user parameter
-  G4int  mPos = static_cast<G4int>(std::floor(3.0 * rndmEngine->flat()) - 1.0);
+  G4int mPos = static_cast<G4int>(std::floor(3.0 * rndmEngine->flat()) - 1.0);
 
   const G4complex iComplex(0., 1.);
 
   // The u vector defined in global coordinate system
-  //quantization along z - axis, must be a user parameter
+  // quantization along z - axis, must be a user parameter
   G4complex ux, uy, uz;
 
-  if (mPos == 0) {
+  if (mPos == 0)
+  {
     uz = 1.;
     uy = 0.;
     ux = 0.;
   }
-  else if (mPos == 1) {
+  else if (mPos == 1)
+  {
     uz = 0.;
     uy = iComplex / sq2;
     ux = 1. / sq2;
   }
-  else if (mPos == -1) {
+  else if (mPos == -1)
+  {
     uz = 0.;
     uy = -iComplex / sq2;
     ux = 1. / sq2;
@@ -107,10 +110,12 @@ void G4PolarizedOrePowellAtRestModel::SampleSecondaries(
   // rotate from local to world coordinate;
   G4RotationMatrix LtoW;
 
-  do {
+  do
+  {
     rndmv1 = rndmEngine->flat();
 
-    do {
+    do
+    {
       rndmEngine->flatArray(2, rndmv2);
       // energies of photon1 and photon2 normalized to electron rest mass
       r1 = rndmv2[0];
@@ -124,8 +129,8 @@ void G4PolarizedOrePowellAtRestModel::SampleSecondaries(
       // request both cosines < 1.
     } while (std::abs(cos12) > 1 || std::abs(cos13) > 1);
 
-    G4double sin12 =  std::sqrt((1 + cos12)*(1 - cos12));
-    G4double sin13 = -std::sqrt((1 + cos13)*(1 - cos13));
+    G4double sin12 = std::sqrt((1 + cos12) * (1 - cos12));
+    G4double sin13 = -std::sqrt((1 + cos13) * (1 - cos13));
 
     // Photon directions in the decay plane (y-z), photon 1 along z
     PhotonDir1 = {0., 0., 1.};
@@ -182,7 +187,7 @@ void G4PolarizedOrePowellAtRestModel::SampleSecondaries(
     // G4cout << x << y << z << G4endl;
 
     G4ThreeVector t = t1 + t2 + t3;
-    t.transform(LtoW); // t in World coordinate system 
+    t.transform(LtoW);  // t in World coordinate system
 
     G4complex H = t(0) * ux + t(1) * uy + t(2) * uz;
     pdf = std::abs(conj(H) * H);

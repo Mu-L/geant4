@@ -104,6 +104,7 @@ geant4_module_link_libraries(G4phys_lists
     G4hadronic_stop
     G4hadronic_util
     G4hadronic_xsect
+    G4biasing_mgt
     G4ions
     G4mesons
     G4muons

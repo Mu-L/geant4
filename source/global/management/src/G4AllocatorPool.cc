@@ -35,8 +35,8 @@
 // ************************************************************
 //
 G4AllocatorPool::G4AllocatorPool(unsigned int sz)
-  : esize(sz < sizeof(G4PoolLink) ? sizeof(G4PoolLink) : sz)
-  , csize(sz < 1024 / 2 - 16 ? 1024 - 16 : sz * 10 - 16)
+  : esize(sz < sizeof(G4PoolLink) ? sizeof(G4PoolLink) : sz),
+    csize(sz < 1024 / 2 - 16 ? 1024 - 16 : sz * 10 - 16)
 {}
 
 // ************************************************************
@@ -45,12 +45,12 @@ G4AllocatorPool::G4AllocatorPool(unsigned int sz)
 //
 G4AllocatorPool& G4AllocatorPool::operator=(const G4AllocatorPool& right)
 {
-  if(&right == this)
+  if (&right == this)
   {
     return *this;
   }
-  chunks  = right.chunks;
-  head    = right.head;
+  chunks = right.chunks;
+  head = right.head;
   nchunks = right.nchunks;
   return *this;
 }
@@ -59,7 +59,10 @@ G4AllocatorPool& G4AllocatorPool::operator=(const G4AllocatorPool& right)
 // G4AllocatorPool destructor
 // ************************************************************
 //
-G4AllocatorPool::~G4AllocatorPool() { Reset(); }
+G4AllocatorPool::~G4AllocatorPool()
+{
+  Reset();
+}
 
 // ************************************************************
 // Reset
@@ -71,14 +74,14 @@ void G4AllocatorPool::Reset()
   //
   G4PoolChunk* n = chunks;
   G4PoolChunk* p = nullptr;
-  while(n != nullptr)
+  while (n != nullptr)
   {
     p = n;
     n = n->next;
     delete p;
   }
-  head    = nullptr;
-  chunks  = nullptr;
+  head = nullptr;
+  chunks = nullptr;
   nchunks = 0;
 }
 
@@ -91,18 +94,17 @@ void G4AllocatorPool::Grow()
   // Allocate new chunk, organize it as a linked list of
   // elements of size 'esize'
   //
-  auto* n        = new G4PoolChunk(csize);
-  n->next        = chunks;
-  chunks         = n;
+  auto* n = new G4PoolChunk(csize);
+  n->next = chunks;
+  chunks = n;
   ++nchunks;
 
   const int nelem = csize / esize;
-  char* start     = n->mem;
-  char* last      = &start[(nelem - 1) * esize];
-  for(char* p = start; p < last; p += esize)
+  char* start = n->mem;
+  char* last = &start[(nelem - 1) * esize];
+  for (char* p = start; p < last; p += esize)
   {
-    reinterpret_cast<G4PoolLink*>(p)->next =
-      reinterpret_cast<G4PoolLink*>(p + esize);
+    reinterpret_cast<G4PoolLink*>(p)->next = reinterpret_cast<G4PoolLink*>(p + esize);
   }
   reinterpret_cast<G4PoolLink*>(last)->next = nullptr;
   head = reinterpret_cast<G4PoolLink*>(start);

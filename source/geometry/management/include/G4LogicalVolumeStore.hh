@@ -46,11 +46,11 @@
 #ifndef G4LOGICALVOLUMESTORE_HH
 #define G4LOGICALVOLUMESTORE_HH
 
-#include <vector>
-#include <map>
-
 #include "G4LogicalVolume.hh"
 #include "G4VStoreNotifier.hh"
+
+#include <map>
+#include <vector>
 
 /**
  * @brief G4LogicalVolumeStore is a singleton class, acting as container
@@ -61,7 +61,7 @@
  * and removed on their destruction. The underlying container initially has
  * a capacity of 100. A map indexed by volume names is also recorded for fast
  * search; pointers to volumes with same name are stored in buckets.
-*/
+ */
 
 class G4LogicalVolumeStore : public std::vector<G4LogicalVolume*>
 {
@@ -112,8 +112,8 @@ class G4LogicalVolumeStore : public std::vector<G4LogicalVolume*>
      *  @param[in] verbose Flag for enabling verbosity (default true).
      *  @param[in] reverseSearch Flag to enable inverse search (default false).
      */
-    G4LogicalVolume* GetVolume(const G4String& name, G4bool verbose=true,
-                               G4bool reverseSearch=false) const;
+    G4LogicalVolume* GetVolume(const G4String& name, G4bool verbose = true,
+                               G4bool reverseSearch = false) const;
 
     /**
      * Accessor and modifier to assess validity of the internal map.
@@ -124,8 +124,7 @@ class G4LogicalVolumeStore : public std::vector<G4LogicalVolume*>
     /**
      * Returns the internal map.
      */
-    inline const std::map<G4String,
-            std::vector<G4LogicalVolume*> >& GetMap() const { return bmap; }
+    inline const std::map<G4String, std::vector<G4LogicalVolume*>>& GetMap() const { return bmap; }
 
     /**
      * Brings contents of the internal map up to date and resets validity flag.
@@ -147,7 +146,7 @@ class G4LogicalVolumeStore : public std::vector<G4LogicalVolume*>
     static G4ThreadLocal G4VStoreNotifier* fgNotifier;
     static G4ThreadLocal G4bool locked;
 
-    std::map<G4String, std::vector<G4LogicalVolume*> > bmap;
+    std::map<G4String, std::vector<G4LogicalVolume*>> bmap;
     G4bool mvalid = false;  // Flag to indicate if map is up to date or not
 };
 

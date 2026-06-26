@@ -34,11 +34,11 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4FTFBuilder_h
-#define G4FTFBuilder_h 1
+#ifndef G4FTFBUILDER_HH
+#define G4FTFBUILDER_HH
 
-#include "globals.hh"
 #include "G4VHadronModelBuilder.hh"
+#include "globals.hh"
 
 class G4FTFModel;
 class G4ExcitedStringDecay;
@@ -48,25 +48,23 @@ class G4LundStringFragmentation;
 
 class G4FTFBuilder : public G4VHadronModelBuilder
 {
-public: 
+  public:
 
-  G4FTFBuilder(const G4String& name ="FTF",
-	       G4PreCompoundModel* p = 0); 
+    G4FTFBuilder(const G4String& name = "FTF", G4PreCompoundModel* p = 0);
 
-  virtual ~G4FTFBuilder();
+    virtual ~G4FTFBuilder();
 
-protected:
+  protected:
 
-  virtual G4HadronicInteraction* BuildModel();
+    virtual G4HadronicInteraction* BuildModel();
 
-private:
+  private:
 
-  // copy constructor and hide assignment operator
-  G4FTFBuilder(G4FTFBuilder &);
-  G4FTFBuilder & operator=(const G4FTFBuilder &right);
+    // copy constructor and hide assignment operator
+    G4FTFBuilder(G4FTFBuilder&);
+    G4FTFBuilder& operator=(const G4FTFBuilder& right);
 
-  G4PreCompoundModel*    fPreCompound;
+    G4PreCompoundModel* fPreCompound;
 };
 
 #endif
-

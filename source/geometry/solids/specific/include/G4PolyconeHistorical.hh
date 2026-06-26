@@ -38,6 +38,7 @@
 
 /**
  * @brief G4PolyconeHistorical is a data structure for use in G4Polycone.
+ * @ingroup geometry_solids_specific
  */
 
 class G4PolyconeHistorical
@@ -45,14 +46,14 @@ class G4PolyconeHistorical
   public:
 
     G4PolyconeHistorical() = default;
-    G4PolyconeHistorical( G4int z_planes );
+    G4PolyconeHistorical(G4int z_planes);
     ~G4PolyconeHistorical();
-    G4PolyconeHistorical( const G4PolyconeHistorical& source );
-    G4PolyconeHistorical& operator=( const G4PolyconeHistorical& right );
+    G4PolyconeHistorical(const G4PolyconeHistorical& source);
+    G4PolyconeHistorical& operator=(const G4PolyconeHistorical& right);
 
     G4double Start_angle = 0.0;
     G4double Opening_angle = 0.0;
-    G4int    Num_z_planes = 0;
+    G4int Num_z_planes = 0;
     G4double* Z_values = nullptr;
     G4double* Rmin = nullptr;
     G4double* Rmax = nullptr;

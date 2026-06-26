@@ -29,83 +29,81 @@
 //
 // Concrete class for ParticleChange for EnergyLoss.
 
-// Author: Hisaya Kurashige, 23 March 1998  
+// Author: Hisaya Kurashige, 23 March 1998
 // Revision: Vladimir Ivantchenko, 16 January 2004
 //                                 24 August 2022
 // --------------------------------------------------------------------
-#ifndef G4ParticleChangeForLoss_hh
-#define G4ParticleChangeForLoss_hh 1
+#ifndef G4PARTICLECHANGEFORLOSS_HH
+#define G4PARTICLECHANGEFORLOSS_HH
 
-#include "G4VParticleChange.hh"
 #include "G4DynamicParticle.hh"
+#include "G4VParticleChange.hh"
 
 class G4ParticleChangeForLoss final : public G4VParticleChange
 {
-public:
+  public:
 
-  G4ParticleChangeForLoss();
+    G4ParticleChangeForLoss();
 
-  ~G4ParticleChangeForLoss() override = default;
+    ~G4ParticleChangeForLoss() override = default;
 
-  G4ParticleChangeForLoss(const G4ParticleChangeForLoss& right) = delete;
-  G4ParticleChangeForLoss& operator=(const G4ParticleChangeForLoss& right) = delete;
+    G4ParticleChangeForLoss(const G4ParticleChangeForLoss& right) = delete;
+    G4ParticleChangeForLoss& operator=(const G4ParticleChangeForLoss& right) = delete;
 
-  // --- the following methods are for updating G4Step -----
+    // --- the following methods are for updating G4Step -----
 
-  G4Step* UpdateStepForAlongStep(G4Step* step) final;
-  G4Step* UpdateStepForPostStep(G4Step* step) final;
+    G4Step* UpdateStepForAlongStep(G4Step* step) final;
+    G4Step* UpdateStepForPostStep(G4Step* step) final;
 
-  // Initialize all used properties 
-  inline void InitializeForAlongStep(const G4Track&);
-  inline void InitializeForPostStep(const G4Track&);
+    // Initialize all used properties
+    inline void InitializeForAlongStep(const G4Track&);
+    inline void InitializeForPostStep(const G4Track&);
 
-  // Get/Set dynamic charge
-  inline G4double GetProposedCharge() const;
-  inline void SetProposedCharge(G4double theCharge);
+    // Get/Set dynamic charge
+    inline G4double GetProposedCharge() const;
+    inline void SetProposedCharge(G4double theCharge);
 
-  // Get/Set the final kinetic energy of the current particle
-  inline G4double GetProposedKineticEnergy() const;
-  inline void SetProposedKineticEnergy(G4double proposedKinEnergy);
+    // Get/Set the final kinetic energy of the current particle
+    inline G4double GetProposedKineticEnergy() const;
+    inline void SetProposedKineticEnergy(G4double proposedKinEnergy);
 
-  // Get/Propose the MomentumDirection vector: it is the final momentum
-  // direction
-  inline const G4ThreeVector& GetProposedMomentumDirection() const;
-  inline void SetProposedMomentumDirection(const G4ThreeVector& dir);
-  inline void ProposeMomentumDirection(const G4ThreeVector& Pfinal);
+    // Get/Propose the MomentumDirection vector: it is the final momentum
+    // direction
+    inline const G4ThreeVector& GetProposedMomentumDirection() const;
+    inline void SetProposedMomentumDirection(const G4ThreeVector& dir);
+    inline void ProposeMomentumDirection(const G4ThreeVector& Pfinal);
 
-  inline const G4ThreeVector& GetProposedPolarization() const;
-  inline void ProposePolarization(const G4ThreeVector& dir);
-  inline void ProposePolarization(G4double Px, G4double Py, G4double Pz);
+    inline const G4ThreeVector& GetProposedPolarization() const;
+    inline void ProposePolarization(const G4ThreeVector& dir);
+    inline void ProposePolarization(G4double Px, G4double Py, G4double Pz);
 
-  void DumpInfo() const final;
+    void DumpInfo() const final;
 
-private:
+  private:
 
-  G4double proposedKinEnergy = 0.0;
-  // The final kinetic energy of the current particle
+    G4double proposedKinEnergy = 0.0;
+    // The final kinetic energy of the current particle
 
-  G4double currentCharge = 0.0;
-      // The final charge of the current particle
+    G4double currentCharge = 0.0;
+    // The final charge of the current particle
 
-  G4ThreeVector proposedMomentumDirection;
-  // The final momentum direction of the current particle
+    G4ThreeVector proposedMomentumDirection;
+    // The final momentum direction of the current particle
 
-  G4ThreeVector proposedPolarization;
-  // The final polarization of the current particle
+    G4ThreeVector proposedPolarization;
+    // The final polarization of the current particle
 };
 
 // ----------------------
 // Inline methods
 // ----------------------
 
-inline
-G4double G4ParticleChangeForLoss::GetProposedKineticEnergy() const
+inline G4double G4ParticleChangeForLoss::GetProposedKineticEnergy() const
 {
   return proposedKinEnergy;
 }
 
-inline
-void G4ParticleChangeForLoss::SetProposedKineticEnergy(G4double energy)
+inline void G4ParticleChangeForLoss::SetProposedKineticEnergy(G4double energy)
 {
   proposedKinEnergy = energy;
 }
@@ -115,53 +113,42 @@ inline G4double G4ParticleChangeForLoss::GetProposedCharge() const
   return currentCharge;
 }
 
-inline
-void G4ParticleChangeForLoss::SetProposedCharge(G4double theCharge)
+inline void G4ParticleChangeForLoss::SetProposedCharge(G4double theCharge)
 {
   currentCharge = theCharge;
 }
 
-inline
-const G4ThreeVector&
-G4ParticleChangeForLoss::GetProposedMomentumDirection() const
+inline const G4ThreeVector& G4ParticleChangeForLoss::GetProposedMomentumDirection() const
 {
   return proposedMomentumDirection;
 }
 
-inline
-void G4ParticleChangeForLoss::ProposeMomentumDirection(const G4ThreeVector& dir)
+inline void G4ParticleChangeForLoss::ProposeMomentumDirection(const G4ThreeVector& dir)
 {
   proposedMomentumDirection = dir;
 }
 
-inline
-void
-G4ParticleChangeForLoss::SetProposedMomentumDirection(const G4ThreeVector& dir)
+inline void G4ParticleChangeForLoss::SetProposedMomentumDirection(const G4ThreeVector& dir)
 {
   proposedMomentumDirection = dir;
 }
 
-inline
-const G4ThreeVector& G4ParticleChangeForLoss::GetProposedPolarization() const
+inline const G4ThreeVector& G4ParticleChangeForLoss::GetProposedPolarization() const
 {
   return proposedPolarization;
 }
 
-inline
-void G4ParticleChangeForLoss::ProposePolarization(const G4ThreeVector& dir)
+inline void G4ParticleChangeForLoss::ProposePolarization(const G4ThreeVector& dir)
 {
   proposedPolarization = dir;
 }
 
-inline void G4ParticleChangeForLoss::ProposePolarization(G4double Px,
-                                                         G4double Py,
-                                                         G4double Pz)
+inline void G4ParticleChangeForLoss::ProposePolarization(G4double Px, G4double Py, G4double Pz)
 {
   proposedPolarization.set(Px, Py, Pz);
 }
 
-inline
-void G4ParticleChangeForLoss::InitializeForAlongStep(const G4Track& track)
+inline void G4ParticleChangeForLoss::InitializeForAlongStep(const G4Track& track)
 {
   InitializeSecondaries();
   InitializeLocalEnergyDeposit();
@@ -171,8 +158,7 @@ void G4ParticleChangeForLoss::InitializeForAlongStep(const G4Track& track)
   currentCharge = track.GetDynamicParticle()->GetCharge();
 }
 
-inline
-void G4ParticleChangeForLoss::InitializeForPostStep(const G4Track& track)
+inline void G4ParticleChangeForLoss::InitializeForPostStep(const G4Track& track)
 {
   InitializeForAlongStep(track);
   proposedMomentumDirection = track.GetMomentumDirection();

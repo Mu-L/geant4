@@ -27,16 +27,16 @@
 // Author: Ivana Hrivnacova, 21/10/2014  (ivana@ipno.in2p3.fr)
 
 #include "G4CsvRFileManager.hh"
-#include "G4CsvHnRFileManager.hh"
+
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
+#include "G4CsvHnRFileManager.hh"
 
 using namespace G4Analysis;
 using namespace tools;
 
 //_____________________________________________________________________________
-G4CsvRFileManager::G4CsvRFileManager(const G4AnalysisManagerState& state)
- : G4VRFileManager(state)
+G4CsvRFileManager::G4CsvRFileManager(const G4AnalysisManagerState& state) : G4VRFileManager(state)
 {
   // Create helpers defined in the base class
   fH1RFileManager = std::make_shared<G4CsvHnRFileManager<histo::h1d>>(this);
@@ -49,7 +49,8 @@ G4CsvRFileManager::G4CsvRFileManager(const G4AnalysisManagerState& state)
 //_____________________________________________________________________________
 G4CsvRFileManager::~G4CsvRFileManager()
 {
-  for ( auto& rfile : fRFiles ) {
+  for (auto& rfile : fRFiles)
+  {
     delete rfile.second;
   }
 }
@@ -65,18 +66,21 @@ G4bool G4CsvRFileManager::OpenRFile(const G4String& fileName)
 
   // create new file
   auto newFile = new std::ifstream(fileName);
-  if ( ! newFile->is_open() ) {
+  if (!newFile->is_open())
+  {
     Warn("Cannot open file " + fileName, fkClass, "OpenRFile");
     return false;
   }
 
   // add file in a map and delete the previous file if it exists
   auto it = fRFiles.find(fileName);
-  if ( it != fRFiles.end() ) {
+  if (it != fRFiles.end())
+  {
     delete it->second;
     it->second = newFile;
   }
-  else {
+  else
+  {
     fRFiles[fileName] = newFile;
   }
 
@@ -89,7 +93,8 @@ G4bool G4CsvRFileManager::OpenRFile(const G4String& fileName)
 std::ifstream* G4CsvRFileManager::GetRFile(const G4String& fileName) const
 {
   auto it = fRFiles.find(fileName);
-  if (it != fRFiles.end()) {
+  if (it != fRFiles.end())
+  {
     return it->second;
   }
   return nullptr;

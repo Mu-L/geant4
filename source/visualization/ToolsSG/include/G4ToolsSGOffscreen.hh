@@ -30,23 +30,40 @@
 
 #include "G4VGraphicsSystem.hh"
 
-namespace tools {namespace offscreen {class session;}}
+namespace tools
+{
+namespace offscreen
+{
+class session;
+}
+}  // namespace tools
 
-class G4ToolsSGOffscreen: public G4VGraphicsSystem {
-  typedef G4VGraphicsSystem parent;
-public:
-  G4ToolsSGOffscreen();
-  virtual ~G4ToolsSGOffscreen();
-protected:  
-  G4ToolsSGOffscreen(const G4ToolsSGOffscreen& a_from):parent(a_from){}
-  G4ToolsSGOffscreen& operator=(const G4ToolsSGOffscreen&) {return *this;}
-public:
-  G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
-  G4VViewer* CreateViewer (G4VSceneHandler&, const G4String& name = "");
-protected:  
-  void Initialise();
-protected:
-  tools::offscreen::session* fSGSession;
+class G4ToolsSGOffscreen : public G4VGraphicsSystem
+{
+    typedef G4VGraphicsSystem parent;
+
+  public:
+
+    G4ToolsSGOffscreen();
+    virtual ~G4ToolsSGOffscreen();
+
+  protected:
+
+    G4ToolsSGOffscreen(const G4ToolsSGOffscreen& a_from) : parent(a_from) {}
+    G4ToolsSGOffscreen& operator=(const G4ToolsSGOffscreen&) { return *this; }
+
+  public:
+
+    G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
+    G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "");
+
+  protected:
+
+    void Initialise();
+
+  protected:
+
+    tools::offscreen::session* fSGSession;
 };
 
 #endif

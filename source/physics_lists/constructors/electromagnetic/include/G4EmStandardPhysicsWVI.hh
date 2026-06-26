@@ -36,13 +36,13 @@
 //----------------------------------------------------------------------------
 //
 // This class provides construction of EM standard physics
-// with combined WentzelVI multiple scattering and CoulombScattering 
+// with combined WentzelVI multiple scattering and CoulombScattering
 // single scattering for e+-
 // It is an experimental EM physics configuration
 //
 
-#ifndef G4EmStandardPhysicsWVI_h
-#define G4EmStandardPhysicsWVI_h 1
+#ifndef G4EMSTANDARDPHYSICSWVI_HH
+#define G4EMSTANDARDPHYSICSWVI_HH
 
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
@@ -51,18 +51,16 @@
 
 class G4EmStandardPhysicsWVI : public G4VPhysicsConstructor
 {
-public:
+  public:
 
-  explicit G4EmStandardPhysicsWVI(G4int ver = 1);
+    explicit G4EmStandardPhysicsWVI(G4int ver = 1);
 
-  ~G4EmStandardPhysicsWVI() override;
+    ~G4EmStandardPhysicsWVI() override;
 
-  void ConstructParticle() override;
-  void ConstructProcess() override;
+    void ConstructParticle() override;
+    void ConstructProcess() override;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-

@@ -35,87 +35,79 @@
 // -------------------------------------------------------------------
 
 // Class description:
-// Leaf data set 
+// Leaf data set
 // Applies a Composite design pattern for data library management
 
 // -------------------------------------------------------------------
 
-#ifndef  G4DATASET_HH
-#define  G4DATASET_HH 1
+#ifndef G4DATASET_HH
+#define G4DATASET_HH
+
+#include "G4IDataSet.hh"
+#include "globals.hh"
 
 #include <CLHEP/Units/SystemOfUnits.h>
-
-#include "globals.hh"
-#include "G4IDataSet.hh"
 
 class G4IInterpolator;
 
 class G4DataSet : public G4IDataSet
 {
-public:
-  G4DataSet(G4int argZ, 
-	    G4IInterpolator* algo, 
-	    G4double xUnit=CLHEP::MeV, 
-	    G4double yUnit=CLHEP::barn,
-	    G4bool random=false);
+  public:
 
-  G4DataSet(G4int argZ, 
-	    G4DataVector* xData, 
-	    G4DataVector* data, 
-	    G4IInterpolator* algo, 
-	    G4double xUnit=CLHEP::MeV, 
-	    G4double yUnit=CLHEP::barn,
-	    G4bool random=false);
+    G4DataSet(G4int argZ, G4IInterpolator* algo, G4double xUnit = CLHEP::MeV,
+              G4double yUnit = CLHEP::barn, G4bool random = false);
 
-  virtual ~G4DataSet();
- 
-  virtual G4double FindValue(G4double x, G4int componentId=0) const;
-  
-  virtual void PrintData(void) const;
+    G4DataSet(G4int argZ, G4DataVector* xData, G4DataVector* data, G4IInterpolator* algo,
+              G4double xUnit = CLHEP::MeV, G4double yUnit = CLHEP::barn, G4bool random = false);
 
-  virtual const G4IDataSet* GetComponent(G4int /* componentId */) const { return 0; }
+    virtual ~G4DataSet();
 
-  virtual void AddComponent(G4IDataSet* /* dataSet */) {}
+    virtual G4double FindValue(G4double x, G4int componentId = 0) const;
 
-  virtual size_t NumberOfComponents(void) const { return 0; }
+    virtual void PrintData(void) const;
 
-  virtual const G4DataVector& GetEnergies(G4int /* componentId */) const { return *energies; }
-  virtual const G4DataVector& GetData(G4int /* componentId */) const { return *data; }
-  virtual void SetEnergiesData(G4DataVector* xData, G4DataVector* data, G4int componentId);
+    virtual const G4IDataSet* GetComponent(G4int /* componentId */) const { return 0; }
 
-  virtual G4bool LoadData(const G4String& fileName);
-  virtual G4bool SaveData(const G4String& fileName) const;
+    virtual void AddComponent(G4IDataSet* /* dataSet */) {}
 
-  virtual G4double RandomSelect(G4int componentId = 0) const;
-    
+    virtual size_t NumberOfComponents(void) const { return 0; }
 
-private:
+    virtual const G4DataVector& GetEnergies(G4int /* componentId */) const { return *energies; }
+    virtual const G4DataVector& GetData(G4int /* componentId */) const { return *data; }
+    virtual void SetEnergiesData(G4DataVector* xData, G4DataVector* data, G4int componentId);
 
-  size_t FindLowerBound(G4double energy) const;
-  size_t FindLowerBound(G4double x, G4DataVector* values) const;
+    virtual G4bool LoadData(const G4String& fileName);
+    virtual G4bool SaveData(const G4String& fileName) const;
 
-  G4double IntegrationFunction(G4double x);
+    virtual G4double RandomSelect(G4int componentId = 0) const;
 
-  virtual void BuildPdf();
-  
-  G4String FullFileName(const G4String& fileName) const;
+  private:
 
-  // Hide copy constructor and assignment operator 
-  G4DataSet();
-  G4DataSet(const G4DataSet& copy);
-  G4DataSet& operator=(const G4DataSet& right);
+    size_t FindLowerBound(G4double energy) const;
+    size_t FindLowerBound(G4double x, G4DataVector* values) const;
 
-  G4int z;
+    G4double IntegrationFunction(G4double x);
 
-  G4DataVector* energies;            // Owned pointer
-  G4DataVector* data;                // Owned pointer
+    virtual void BuildPdf();
 
-  G4IInterpolator* algorithm;    // Owned pointer 
-  
-  G4double unitEnergies;
-  G4double unitData;
+    G4String FullFileName(const G4String& fileName) const;
 
-  G4DataVector* pdf;
-  G4bool randomSet;
+    // Hide copy constructor and assignment operator
+    G4DataSet();
+    G4DataSet(const G4DataSet& copy);
+    G4DataSet& operator=(const G4DataSet& right);
+
+    G4int z;
+
+    G4DataVector* energies;  // Owned pointer
+    G4DataVector* data;  // Owned pointer
+
+    G4IInterpolator* algorithm;  // Owned pointer
+
+    G4double unitEnergies;
+    G4double unitData;
+
+    G4DataVector* pdf;
+    G4bool randomSet;
 };
 #endif /* G4DATASET_HH */

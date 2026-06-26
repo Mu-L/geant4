@@ -26,7 +26,7 @@
 // Based on the work described in
 // Rad Res 163, 98-111 (2005)
 // D. Emfietzoglou, H. Nikjoo
-// 
+//
 // Authors of the class (2014):
 // I. Kyriakou (kyriak@cc.uoi.gr)
 // D. Emfietzoglou (demfietz@cc.uoi.gr)
@@ -34,25 +34,25 @@
 //
 
 #include "G4DNAEmfietzoglouWaterIonisationStructure.hh"
+
 #include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4DNAEmfietzoglouWaterIonisationStructure::G4DNAEmfietzoglouWaterIonisationStructure() 
+G4DNAEmfietzoglouWaterIonisationStructure::G4DNAEmfietzoglouWaterIonisationStructure()
 {
-  energyConstant.push_back(10.*eV);
-  energyConstant.push_back(13.*eV);
-  energyConstant.push_back(17.*eV);
-  energyConstant.push_back(32.2*eV);
-  energyConstant.push_back(539.7*eV);
+  energyConstant.push_back(10. * eV);
+  energyConstant.push_back(13. * eV);
+  energyConstant.push_back(17. * eV);
+  energyConstant.push_back(32.2 * eV);
+  energyConstant.push_back(539.7 * eV);
 
   nLevels = (G4int)energyConstant.size();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4DNAEmfietzoglouWaterIonisationStructure::~G4DNAEmfietzoglouWaterIonisationStructure()
-= default;
+G4DNAEmfietzoglouWaterIonisationStructure::~G4DNAEmfietzoglouWaterIonisationStructure() = default;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -60,7 +60,7 @@ G4double G4DNAEmfietzoglouWaterIonisationStructure::IonisationEnergy(G4int level
 {
   G4double ionisation = 0.;
 
-  if (level >=0 && level < nLevels) ionisation = energyConstant[level];
+  if (level >= 0 && level < nLevels) ionisation = energyConstant[level];
 
   return ionisation;
 }

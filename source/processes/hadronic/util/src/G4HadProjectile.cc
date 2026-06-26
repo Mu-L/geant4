@@ -24,41 +24,40 @@
 // ********************************************************************
 //
 #include "G4HadProjectile.hh"
-#include "G4Track.hh"
-#include "G4DynamicParticle.hh"
 
-G4HadProjectile::G4HadProjectile() 
-  : theMat(nullptr),theTime(0.0),theBoundEnergy(0.0)
+#include "G4DynamicParticle.hh"
+#include "G4Track.hh"
+
+G4HadProjectile::G4HadProjectile() : theMat(nullptr), theTime(0.0), theBoundEnergy(0.0)
 {
   theDef = nullptr;
   theMass = 0.0;
   theKinEnergy = 0.0;
-  theDirection.set(0.,0.,0.);
-  theMom.set(0.,0.,0.,0.);
+  theDirection.set(0., 0., 0.);
+  theMom.set(0., 0., 0., 0.);
 }
 
-G4HadProjectile::G4HadProjectile(const G4Track &aT) 
+G4HadProjectile::G4HadProjectile(const G4Track& aT)
 {
   Initialise(aT);
 }
 
-G4HadProjectile::G4HadProjectile(const G4DynamicParticle & dp) 
-  : theMat(nullptr),theTime(0.0),theBoundEnergy(0.0)
+G4HadProjectile::G4HadProjectile(const G4DynamicParticle& dp)
+  : theMat(nullptr), theTime(0.0), theBoundEnergy(0.0)
 {
   InitialiseLocal(&dp);
 }
 
-G4HadProjectile::~G4HadProjectile()
-{}
+G4HadProjectile::~G4HadProjectile() {}
 
-void G4HadProjectile::Initialise(const G4Track &aT)
+void G4HadProjectile::Initialise(const G4Track& aT)
 {
   theMat = aT.GetMaterial();
-  //VI time of interaction starts from zero
-  //   not global time of a track
+  // VI time of interaction starts from zero
+  //    not global time of a track
   theTime = 0.0;
   theBoundEnergy = 0.0;
-  
+
   InitialiseLocal(aT.GetDynamicParticle());
 }
 
@@ -75,7 +74,6 @@ void G4HadProjectile::InitialiseLocal(const G4DynamicParticle* dp)
   toZ.rotateY(-theOrgMom.theta());
   toLabFrame = toZ.inverse();
 
-  theMom.set(0.,0.,std::sqrt(theKinEnergy*(theKinEnergy + 2.0*theMass)),
-             theMass+theKinEnergy);
+  theMom.set(0., 0., std::sqrt(theKinEnergy * (theKinEnergy + 2.0 * theMass)),
+             theMass + theKinEnergy);
 }
-

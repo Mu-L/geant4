@@ -38,8 +38,8 @@
 //
 // Author: Makoto Asai
 // --------------------------------------------------------------------
-#ifndef G4DCofThisEvent_h
-#define G4DCofThisEvent_h 1
+#ifndef G4DCOFTHISEVENT_HH
+#define G4DCOFTHISEVENT_HH
 
 #include "G4Allocator.hh"
 #include "G4VDigiCollection.hh"
@@ -73,7 +73,8 @@ class G4DCofThisEvent
     inline G4int GetNumberOfCollections() const
     {
       G4int n = 0;
-      for (const G4VDigiCollection* dc : *DC) {
+      for (const G4VDigiCollection* dc : *DC)
+      {
         if (dc != nullptr) ++n;
       }
       return n;
@@ -94,7 +95,8 @@ extern G4DLLIMPORT G4Allocator<G4DCofThisEvent>*& anDCoTHAllocator_G4MT_TLS_();
 
 inline void* G4DCofThisEvent::operator new(std::size_t)
 {
-  if (anDCoTHAllocator_G4MT_TLS_() == nullptr) {
+  if (anDCoTHAllocator_G4MT_TLS_() == nullptr)
+  {
     anDCoTHAllocator_G4MT_TLS_() = new G4Allocator<G4DCofThisEvent>;
   }
   return (void*)anDCoTHAllocator_G4MT_TLS_()->MallocSingle();

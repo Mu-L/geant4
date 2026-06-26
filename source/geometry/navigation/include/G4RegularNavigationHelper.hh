@@ -32,26 +32,26 @@
 
 // Author: Pedro Arce (CIEMAT), November 2008
 // --------------------------------------------------------------------
-#ifndef G4RegularNavigationHelper_HH
-#define G4RegularNavigationHelper_HH 1
+#ifndef G4REGULARNAVIGATIONHELPER_HH
+#define G4REGULARNAVIGATIONHELPER_HH
+
+#include "G4ThreadLocalSingleton.hh"
+#include "globals.hh"
 
 #include <vector>
 
-#include "globals.hh"
-#include "G4ThreadLocalSingleton.hh"
-
-using G4RegularNavigationHelper_theStepLengths_t = 
-      std::vector< std::pair<G4int,G4double> >;
+using G4RegularNavigationHelper_theStepLengths_t = std::vector<std::pair<G4int, G4double>>;
 
 /**
  * @brief G4RegularNavigationHelper is a singleton utility class for navigation
  * on regular structures, providing step lengths counting for each regular voxel
  * of the structure.
+ * @ingroup geometry_navigation
  */
 
 class G4RegularNavigationHelper
 {
-  friend class G4ThreadLocalSingleton<G4RegularNavigationHelper>;
+    friend class G4ThreadLocalSingleton<G4RegularNavigationHelper>;
 
   public:
 
@@ -63,8 +63,8 @@ class G4RegularNavigationHelper
     /**
      * Default Destructor.
      */
-   ~G4RegularNavigationHelper() = default;
-  
+    ~G4RegularNavigationHelper() = default;
+
     /**
      * Resets the state.
      */
@@ -75,12 +75,12 @@ class G4RegularNavigationHelper
      *  @param[in] copyNo Voxel number.
      *  @param[in] slen Value of step length to store.
      */
-    void AddStepLength( G4int copyNo, G4double slen );
+    void AddStepLength(G4int copyNo, G4double slen);
 
     /**
      * Returns the collection of stored steps per voxels.
      */
-    const std::vector< std::pair<G4int,G4double> > & GetStepLengths();
+    const std::vector<std::pair<G4int, G4double>>& GetStepLengths();
 
   private:
 
@@ -92,7 +92,7 @@ class G4RegularNavigationHelper
   private:
 
     /** The collection of steps associated to voxels. */
-    std::vector< std::pair<G4int,G4double> > theStepLengths;
+    std::vector<std::pair<G4int, G4double>> theStepLengths;
 };
 
 #endif

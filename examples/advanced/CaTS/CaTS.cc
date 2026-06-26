@@ -53,7 +53,7 @@
 //
 // History
 //   October 18th, 2021 : first implementation
-//
+//   March 28th , 2026  : Modified by Ilker Parmaksiz
 // ********************************************************************
 //
 /// \file CaTS.cc
@@ -75,7 +75,9 @@
 #include "G4VisExecutive.hh"
 #include <G4Threading.hh>
 #ifdef WITH_G4OPTICKS
-#  include "OPTICKS_LOG.hh"
+#include "OPTICKS_LOG.hh"
+#include <cuda_runtime.h>
+#include "SEventConfig.hh"
 #endif
 #include "TROOT.h"
 #include <thread>
@@ -176,7 +178,11 @@ int main(int argc, char** argv)
   G4Timer* eventTimer = new G4Timer;
   eventTimer->Start();
 #ifdef WITH_G4OPTICKS
+  //SEventConfig::SetMaxPhoton(1000000);
+  // SEventConfig::SetStandardFullDebug();  // controls which and dimensions of SEvt arrays
   OPTICKS_LOG(argc, argv);
+  cudaDeviceSynchronize();
+  SEventConfig::Initialize();
 #endif
   G4VModularPhysicsList* phys =
     PhysicsConfigurator::getInstance()->Construct(physicsconf);

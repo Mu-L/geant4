@@ -23,28 +23,32 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4HadronicException_h
-#define G4HadronicException_h
+#ifndef G4HADRONICEXCEPTION_HH
+#define G4HADRONICEXCEPTION_HH
 
-#include <exception>
 #include "globals.hh"
 
-class G4HadronicException : public std::exception {
-public:
-  G4HadronicException(const G4String& in, G4int at, const G4String& mess);
+#include <exception>
 
-  virtual ~G4HadronicException() throw();
+class G4HadronicException : public std::exception
+{
+  public:
 
-  const char *what() const noexcept override;
+    G4HadronicException(const G4String& in, G4int at, const G4String& mess);
 
-  void Report(std::ostream &aS) const;
+    virtual ~G4HadronicException() throw();
 
-private:
-  const G4String theMessage;
-  const G4String theName;
-  const G4int theLine;
+    const char* what() const noexcept override;
 
-  G4String whatString;
+    void Report(std::ostream& aS) const;
+
+  private:
+
+    const G4String theMessage;
+    const G4String theName;
+    const G4int theLine;
+
+    G4String whatString;
 };
 
 #endif

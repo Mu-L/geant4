@@ -31,11 +31,11 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrEvaluator_hh
-#define G4tgrEvaluator_hh 1
+#ifndef G4TGREVALUATOR_HH
+#define G4TGREVALUATOR_HH
 
-#include "G4ThreeVector.hh"
 #include "G4Evaluator.hh"
+#include "G4ThreeVector.hh"
 
 class G4tgrEvaluator : public G4Evaluator
 {
@@ -43,10 +43,10 @@ class G4tgrEvaluator : public G4Evaluator
 
     G4tgrEvaluator();
     ~G4tgrEvaluator();
-      // Constructor & destructor.
+    // Constructor & destructor.
 
     void print_error(G4int status) const;
-      // Overwritten ERROR_SYNTAX_ERROR message
+    // Overwritten ERROR_SYNTAX_ERROR message
 
   private:
 

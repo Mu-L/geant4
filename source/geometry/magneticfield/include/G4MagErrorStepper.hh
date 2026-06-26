@@ -35,15 +35,16 @@
 #ifndef G4MAGERRORSTEPPER_HH
 #define G4MAGERRORSTEPPER_HH
 
-#include "G4Types.hh"
 #include "G4MagIntegratorStepper.hh"
 #include "G4Mag_EqRhs.hh"
 #include "G4ThreeVector.hh"
+#include "G4Types.hh"
 
 /**
  * @brief G4MagErrorStepper is an abstract base class for integrator of
  * particle's equation of motion, used in tracking in space dependent
  * magnetic field.
+ * @ingroup geometry_magneticfield
  */
 
 class G4MagErrorStepper : public G4MagIntegratorStepper
@@ -56,15 +57,14 @@ class G4MagErrorStepper : public G4MagIntegratorStepper
      *  @param[in] numberOfVariables The number of integration variables.
      *  @param[in] numberOfVariables The number of state variables.
      */
-    G4MagErrorStepper(G4EquationOfMotion*EqRhs,
-                      G4int numberOfVariables,
+    G4MagErrorStepper(G4EquationOfMotion* EqRhs, G4int numberOfVariables,
                       G4int numStateVariables = 12);
 
     /**
      * Destructor.
      */
     ~G4MagErrorStepper() override;
-  
+
     /**
      * Copy constructor and assignment operator not allowed.
      */
@@ -82,20 +82,15 @@ class G4MagErrorStepper : public G4MagIntegratorStepper
      *  @param[out] yout Integration output.
      *  @param[out] yerr The estimated error.
      */
-    void Stepper( const G4double y[],
-                  const G4double dydx[],
-                        G4double h,
-                        G4double yout[],
-                        G4double yerr[] ) override;
+    void Stepper(const G4double y[], const G4double dydx[], G4double h, G4double yout[],
+                 G4double yerr[]) override;
 
     /**
      * Same as Stepper() function above, but should perform a 'dump' step
      * without error calculation. To be implemented in concrete derived classes.
      */
-    virtual void DumbStepper( const G4double y[],
-                              const G4double dydx[],
-                                    G4double h,
-                                    G4double yout[] ) = 0;
+    virtual void DumbStepper(const G4double y[], const G4double dydx[], G4double h,
+                             G4double yout[]) = 0;
 
     /**
      * Estimates the maximum distance of curved solution and chord.
@@ -106,13 +101,13 @@ class G4MagErrorStepper : public G4MagIntegratorStepper
 
     /** Data stored in order to find the chord. */
     G4ThreeVector fInitialPoint, fMidPoint, fFinalPoint;
- 
+
     /** Arrays used only for temporary storage; they are allocated at the
         class level only for efficiency, so that calls to new and delete are
         not made in Stepper(). */
     G4double *yInitial, *yMiddle, *dydxMid, *yOneStep;
 };
 
-#include  "G4MagErrorStepper.icc"
+#include "G4MagErrorStepper.icc"
 
 #endif

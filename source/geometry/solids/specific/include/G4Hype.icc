@@ -26,50 +26,42 @@
 // Implementation of inline methods of G4Hype
 // --------------------------------------------------------------------
 
-inline
-G4double G4Hype::GetInnerRadius () const
+inline G4double G4Hype::GetInnerRadius() const
 {
   return innerRadius;
 }
 
-inline
-G4double G4Hype::GetOuterRadius() const
+inline G4double G4Hype::GetOuterRadius() const
 {
   return outerRadius;
 }
 
-inline
-G4double G4Hype::GetZHalfLength() const
+inline G4double G4Hype::GetZHalfLength() const
 {
   return halfLenZ;
 }
 
-inline
-G4double G4Hype::GetInnerStereo() const
+inline G4double G4Hype::GetInnerStereo() const
 {
   return innerStereo;
 }
 
-inline
-G4double G4Hype::GetOuterStereo() const
+inline G4double G4Hype::GetOuterStereo() const
 {
   return outerStereo;
 }
 
-inline
-G4bool G4Hype::InnerSurfaceExists() const
+inline G4bool G4Hype::InnerSurfaceExists() const
 {
   return (endInnerRadius2 > 0.);
 }
 
-inline
-G4double G4Hype::HypeInnerRadius2(G4double zVal) const
+inline G4double G4Hype::HypeInnerRadius2(G4double zVal) const
 {
-  return (tanInnerStereo2*zVal*zVal + innerRadius2);
+  return (tanInnerStereo2 * zVal * zVal + innerRadius2);
 }
 
-inline
-G4double G4Hype::HypeOuterRadius2(G4double zVal) const
+inline G4double G4Hype::HypeOuterRadius2(G4double zVal) const
 {
-  return (tanOuterStereo2*zVal*zVal + outerRadius2);
+  return (tanOuterStereo2 * zVal * zVal + outerRadius2);
 }

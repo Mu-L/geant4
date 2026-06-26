@@ -10,7 +10,7 @@
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -171,6 +171,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 1
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            1 MeV
 Linear loss limit                                  0.01
@@ -602,11 +603,11 @@ Run 0 starts ...
  Run terminated.
 Run Summary
   Number of events processed : 2000
-  User=5.120000s Real=5.231192s Sys=0.100000s
+  User=4.610000s Real=4.930272s Sys=0.110000s
 /score/dumpQuantityToFile boxMesh_1 dose dose.out
 Graphics systems deleted.
 Visualization Manager deleting...
 ================== Deleting memory pools ===================
 Number of memory pools allocated: 10 of which, static: 0
-Dynamic pools deleted: 10 / Total memory freed: 0.17 MB
+Dynamic pools deleted: 10 / Total memory freed: 0.16 MB
 ============================================================

@@ -37,7 +37,8 @@
 //
 // Modifications:
 //
-// 04.10.13 V. Grichine add cut of dE/dx, redirect <dE/dx> to   std::vector<G4PhysicsLogVector*>  fdEdxTable;
+// 04.10.13 V. Grichine add cut of dE/dx, redirect <dE/dx> to   std::vector<G4PhysicsLogVector*>
+// fdEdxTable;
 //
 //
 // Class Description:
@@ -46,72 +47,66 @@
 // This class is extracted from G4PAIModel in order to provide sharing
 // of these data between threads.
 //
-// Internal data tables are computed for proton. 
+// Internal data tables are computed for proton.
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4PAIModelData_h
-#define G4PAIModelData_h 1
+#ifndef G4PAIMODELDATA_HH
+#define G4PAIMODELDATA_HH
 
-#include <vector>
-#include "globals.hh"
 #include "G4PAIySection.hh"
 #include "G4SandiaTable.hh"
+#include "globals.hh"
+
+#include <vector>
 
 class G4PhysicsLogVector;
 class G4PhysicsTable;
 class G4MaterialCutsCouple;
 class G4PAIModel;
 
-class G4PAIModelData 
+class G4PAIModelData
 {
+  public:
 
-public:
+    explicit G4PAIModelData(G4double tmin, G4double tmax, G4int verbose);
 
-  explicit G4PAIModelData(G4double tmin, G4double tmax, G4int verbose);
+    ~G4PAIModelData();
 
-  ~G4PAIModelData();
+    void Initialise(const G4MaterialCutsCouple*, G4PAIModel*);
 
-  void Initialise(const G4MaterialCutsCouple*, G4PAIModel*);
+    G4double DEDXPerVolume(G4int coupleIndex, G4double scaledTkin, G4double cut) const;
 
-  G4double DEDXPerVolume(G4int coupleIndex, G4double scaledTkin,
-			 G4double cut) const;
+    G4double CrossSectionPerVolume(G4int coupleIndex, G4double scaledTkin, G4double tcut,
+                                   G4double tmax) const;
 
-  G4double CrossSectionPerVolume(G4int coupleIndex, G4double scaledTkin,
-				 G4double tcut, G4double tmax) const;
+    G4double SampleAlongStepTransfer(G4int coupleIndex, G4double kinEnergy, G4double scaledTkin,
+                                     G4double tmax, G4double stepFactor) const;
 
-  G4double SampleAlongStepTransfer(G4int coupleIndex, G4double kinEnergy,
-				   G4double scaledTkin,
-				   G4double tmax,
-				   G4double stepFactor) const;
+    G4double SamplePostStepTransfer(G4int coupleIndex, G4double scaledTkin, G4double tmin,
+                                    G4double tmax) const;
 
-  G4double SamplePostStepTransfer(G4int coupleIndex, 
-				  G4double scaledTkin, 
-				  G4double tmin, G4double tmax) const;
+    // hide assignment operator
+    G4PAIModelData& operator=(const G4PAIModelData& right) = delete;
+    G4PAIModelData(const G4PAIModelData&) = delete;
 
-  // hide assignment operator 
-  G4PAIModelData & operator=(const  G4PAIModelData &right) = delete;
-  G4PAIModelData(const  G4PAIModelData&) = delete;
+  private:
 
-private:
+    G4double GetEnergyTransfer(G4int coupleIndex, size_t iPlace, G4double position) const;
 
-  G4double GetEnergyTransfer(G4int coupleIndex, size_t iPlace, 
-			     G4double position) const;
+    G4int fTotBin;
+    G4double fLowestKineticEnergy;
+    G4double fHighestKineticEnergy;
 
-  G4int                fTotBin;
-  G4double             fLowestKineticEnergy;
-  G4double             fHighestKineticEnergy;
+    G4PhysicsLogVector* fParticleEnergyVector;
 
-  G4PhysicsLogVector*  fParticleEnergyVector;
+    G4PAIySection fPAIySection;
+    G4SandiaTable fSandia;
 
-  G4PAIySection        fPAIySection;
-  G4SandiaTable        fSandia;
-
-  std::vector<G4PhysicsTable*>      fPAIxscBank;
-  std::vector<G4PhysicsTable*>      fPAIdEdxBank;
-  std::vector<G4PhysicsLogVector*>  fdEdxTable;
+    std::vector<G4PhysicsTable*> fPAIxscBank;
+    std::vector<G4PhysicsTable*> fPAIdEdxBank;
+    std::vector<G4PhysicsLogVector*> fdEdxTable;
 };
 
 #endif
-

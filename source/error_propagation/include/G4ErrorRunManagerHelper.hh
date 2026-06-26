@@ -37,8 +37,8 @@
 // - Created:  Pedro Arce, January 2005
 // --------------------------------------------------------------------
 
-#ifndef G4ErrorRunManagerHelper_hh
-#define G4ErrorRunManagerHelper_hh
+#ifndef G4ERRORRUNMANAGERHELPER_HH
+#define G4ERRORRUNMANAGERHELPER_HH
 
 #include "tls.hh"
 
@@ -51,47 +51,49 @@ class G4UserSteppingAction;
 
 class G4ErrorRunManagerHelper
 {
- public:  // with description
-  G4ErrorRunManagerHelper();
-  virtual ~G4ErrorRunManagerHelper();
+  public:  // with description
 
-  static G4ErrorRunManagerHelper* GetRunManagerKernel();
-  // Static method which returns the singleton pointer of
-  // G4ErrorRunManagerHelper
+    G4ErrorRunManagerHelper();
+    virtual ~G4ErrorRunManagerHelper();
 
-  void SetUserInitialization(G4VUserDetectorConstruction* userInit);
-  // Initialize geometry by passing a G4VUserDetectorConstruction
-  void SetUserInitialization(G4VPhysicalVolume* userInit);
-  // Initialize geometry by passing a G4VPhysicalVolume
+    static G4ErrorRunManagerHelper* GetRunManagerKernel();
+    // Static method which returns the singleton pointer of
+    // G4ErrorRunManagerHelper
 
-  void SetUserInitialization(G4VUserPhysicsList* userInit);
-  // Initializes physics
+    void SetUserInitialization(G4VUserDetectorConstruction* userInit);
+    // Initialize geometry by passing a G4VUserDetectorConstruction
+    void SetUserInitialization(G4VPhysicalVolume* userInit);
+    // Initialize geometry by passing a G4VPhysicalVolume
 
-  void SetUserAction(G4UserTrackingAction* userAction);
-  // Set the user tracking action
-  void SetUserAction(G4UserSteppingAction* userAction);
-  // Set the user stepping action
+    void SetUserInitialization(G4VUserPhysicsList* userInit);
+    // Initializes physics
 
-  void RunInitialization();
-  // Invokes G4RunManagerKernel RunInitialization();
+    void SetUserAction(G4UserTrackingAction* userAction);
+    // Set the user tracking action
+    void SetUserAction(G4UserSteppingAction* userAction);
+    // Set the user stepping action
 
-  void InitializeGeometry();
-  // Initializes GEANT4 geometry
-  void InitializePhysics();
-  // Initializes GEANT4 physics
+    void RunInitialization();
+    // Invokes G4RunManagerKernel RunInitialization();
 
-  void RunTermination();
-  // Invokes G4RunManagerKernel RunTermination();
+    void InitializeGeometry();
+    // Initializes GEANT4 geometry
+    void InitializePhysics();
+    // Initializes GEANT4 physics
 
-  G4VUserPhysicsList* GetUserPhysicsList() const { return theUserPhysicsList; }
+    void RunTermination();
+    // Invokes G4RunManagerKernel RunTermination();
 
- private:
-  static G4ThreadLocal G4ErrorRunManagerHelper* fRunManagerKernel;
+    G4VUserPhysicsList* GetUserPhysicsList() const { return theUserPhysicsList; }
 
-  G4VUserPhysicsList* theUserPhysicsList;
-  G4VPhysicalVolume* theUserWorld;
+  private:
 
-  G4RunManagerKernel* theG4RunManagerKernel;
+    static G4ThreadLocal G4ErrorRunManagerHelper* fRunManagerKernel;
+
+    G4VUserPhysicsList* theUserPhysicsList;
+    G4VPhysicalVolume* theUserWorld;
+
+    G4RunManagerKernel* theG4RunManagerKernel;
 };
 
 #endif

@@ -36,13 +36,13 @@
 //
 // -------------------------------------------------------------------
 
-#ifndef G4PolarizedIonisationModel_h
-#define G4PolarizedIonisationModel_h 1
+#ifndef G4POLARIZEDIONISATIONMODEL_HH
+#define G4POLARIZEDIONISATIONMODEL_HH
 
-#include "globals.hh"
 #include "G4MollerBhabhaModel.hh"
 #include "G4StokesVector.hh"
 #include "G4ThreeVector.hh"
+#include "globals.hh"
 
 class G4DynamicParticle;
 class G4MaterialCutsCouple;
@@ -51,54 +51,45 @@ class G4VPolarizedXS;
 
 class G4PolarizedIonisationModel : public G4MollerBhabhaModel
 {
- public:
-  explicit G4PolarizedIonisationModel(
-    const G4ParticleDefinition* p = nullptr,
-    const G4String& nam           = "PolarizedMollerBhabha");
+  public:
 
-  virtual ~G4PolarizedIonisationModel() override;
+    explicit G4PolarizedIonisationModel(const G4ParticleDefinition* p = nullptr,
+                                        const G4String& nam = "PolarizedMollerBhabha");
 
-  virtual G4double ComputeCrossSectionPerElectron(const G4ParticleDefinition*,
-                                                  G4double kinEnergy,
-                                                  G4double cut,
-                                                  G4double emax) override;
+    virtual ~G4PolarizedIonisationModel() override;
 
-  virtual void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-                                 const G4MaterialCutsCouple*,
-                                 const G4DynamicParticle*, G4double tmin,
-                                 G4double maxEnergy) override;
+    virtual G4double ComputeCrossSectionPerElectron(const G4ParticleDefinition*, G4double kinEnergy,
+                                                    G4double cut, G4double emax) override;
 
-  G4PolarizedIonisationModel(G4PolarizedIonisationModel&) = delete;
-  G4PolarizedIonisationModel& operator=(
-    const G4PolarizedIonisationModel& right) = delete;
+    virtual void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                                   const G4DynamicParticle*, G4double tmin,
+                                   G4double maxEnergy) override;
 
-  void SetTargetPolarization(const G4ThreeVector& pTarget)
-  {
-    fTargetPolarization = G4StokesVector(pTarget);
-  }
-  void SetBeamPolarization(const G4ThreeVector& pBeam)
-  {
-    fBeamPolarization = G4StokesVector(pBeam);
-  }
-  const G4StokesVector& GetTargetPolarization() { return fTargetPolarization; }
-  const G4StokesVector& GetBeamPolarization() { return fBeamPolarization; }
-  const G4StokesVector& GetFinalElectronPolarization()
-  {
-    return fElectronPolarization;
-  }
-  const G4StokesVector& GetFinalPositronPolarization()
-  {
-    return fPositronPolarization;
-  }
+    G4PolarizedIonisationModel(G4PolarizedIonisationModel&) = delete;
+    G4PolarizedIonisationModel& operator=(const G4PolarizedIonisationModel& right) = delete;
 
- private:
-  G4VPolarizedXS* fCrossSectionCalculator;
+    void SetTargetPolarization(const G4ThreeVector& pTarget)
+    {
+      fTargetPolarization = G4StokesVector(pTarget);
+    }
+    void SetBeamPolarization(const G4ThreeVector& pBeam)
+    {
+      fBeamPolarization = G4StokesVector(pBeam);
+    }
+    const G4StokesVector& GetTargetPolarization() { return fTargetPolarization; }
+    const G4StokesVector& GetBeamPolarization() { return fBeamPolarization; }
+    const G4StokesVector& GetFinalElectronPolarization() { return fElectronPolarization; }
+    const G4StokesVector& GetFinalPositronPolarization() { return fPositronPolarization; }
 
-  G4StokesVector fBeamPolarization;
-  G4StokesVector fTargetPolarization;
+  private:
 
-  G4StokesVector fPositronPolarization;
-  G4StokesVector fElectronPolarization;
+    G4VPolarizedXS* fCrossSectionCalculator;
+
+    G4StokesVector fBeamPolarization;
+    G4StokesVector fTargetPolarization;
+
+    G4StokesVector fPositronPolarization;
+    G4StokesVector fElectronPolarization;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

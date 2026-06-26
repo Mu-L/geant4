@@ -37,37 +37,35 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4BertiniPionBuilder_h
-#define G4BertiniPionBuilder_h 1
+#ifndef G4BERTINIPIONBUILDER_HH
+#define G4BERTINIPIONBUILDER_HH
 
-#include "globals.hh"
-
+#include "G4CascadeInterface.hh"
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
 #include "G4VPionBuilder.hh"
-
-#include "G4CascadeInterface.hh"
-
+#include "globals.hh"
 
 class G4BertiniPionBuilder : public G4VPionBuilder
 {
-  public: 
+  public:
+
     G4BertiniPionBuilder();
     virtual ~G4BertiniPionBuilder() {}
 
-    virtual void Build(G4HadronElasticProcess *) final override {}
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
-    virtual void SetMaxEnergy(G4double aM) final override {theMax = aM;}
+    virtual void Build(G4HadronElasticProcess*) final override {}
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
-    using G4VPionBuilder::Build; //Prevent compiler warning
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+    virtual void SetMaxEnergy(G4double aM) final override { theMax = aM; }
+
+    using G4VPionBuilder::Build;  // Prevent compiler warning
+
   private:
-    G4CascadeInterface * theModel;    
+
+    G4CascadeInterface* theModel;
     G4double theMin;
     G4double theMax;
-
 };
 
 #endif
-

@@ -31,68 +31,65 @@
 
 // Author: H.Kurashige, 2 December 1997
 // --------------------------------------------------------------------
-#ifndef G4ProcessAttribute_hh
-#define G4ProcessAttribute_hh 1
-
-#include "globals.hh"
-#include "G4ios.hh"
+#ifndef G4PROCESSATTRIBUTE_HH
+#define G4PROCESSATTRIBUTE_HH
 
 #include "G4ProcessManager.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 class G4VProcess;
 
 class G4ProcessAttribute
 {
-  friend class G4ProcessManager;
+    friend class G4ProcessManager;
 
   public:
 
     G4ProcessAttribute();
     G4ProcessAttribute(const G4VProcess* aProcess);
     G4ProcessAttribute(const G4ProcessAttribute& right);
-      // Constructors
+    // Constructors
 
     ~G4ProcessAttribute();
-      // Destructor
+    // Destructor
 
     G4ProcessAttribute& operator=(const G4ProcessAttribute& right);
-      // Assignment operator
+    // Assignment operator
 
-    inline G4bool operator==(const G4ProcessAttribute &right) const;
-    inline G4bool operator!=(const G4ProcessAttribute &right) const;
-      // Equality operators
+    inline G4bool operator==(const G4ProcessAttribute& right) const;
+    inline G4bool operator!=(const G4ProcessAttribute& right) const;
+    // Equality operators
 
   protected:
 
     G4VProcess* pProcess = nullptr;
-      // Pointer to G4VProcess
+    // Pointer to G4VProcess
 
     G4bool isActive = true;
-      // Flag for activation/inactivation
+    // Flag for activation/inactivation
 
     G4int idxProcessList = -1;
-      // Index to a ProcessVector for theProcessList
+    // Index to a ProcessVector for theProcessList
 
     G4int idxProcVector[G4ProcessManager::SizeOfProcVectorArray];
-      // Index to ProcessVectors for Doit() and GetPhysicalInteractionLength()
-      // methods. A value of -1 means "not applicable"
+    // Index to ProcessVectors for Doit() and GetPhysicalInteractionLength()
+    // methods. A value of -1 means "not applicable"
 
     G4int ordProcVector[G4ProcessManager::SizeOfProcVectorArray];
-      // Ordering parameter 
+    // Ordering parameter
 };
 
 // ------------------------
 // Inline methods
 // ------------------------
 
-inline 
-G4bool G4ProcessAttribute::operator==(const G4ProcessAttribute& right) const
+inline G4bool G4ProcessAttribute::operator==(const G4ProcessAttribute& right) const
 {
   return this->pProcess == right.pProcess;
 }
 
-inline 
-G4bool G4ProcessAttribute::operator!=(const G4ProcessAttribute& right) const
+inline G4bool G4ProcessAttribute::operator!=(const G4ProcessAttribute& right) const
 {
   return this->pProcess != right.pProcess;
 }

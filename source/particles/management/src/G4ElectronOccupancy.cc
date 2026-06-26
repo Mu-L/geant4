@@ -41,13 +41,15 @@ G4Allocator<G4ElectronOccupancy>*& aElectronOccupancyAllocator()
 G4ElectronOccupancy::G4ElectronOccupancy(G4int sizeOrbit) : theSizeOfOrbit(sizeOrbit)
 {
   // check size
-  if ((theSizeOfOrbit < 1) || (theSizeOfOrbit > MaxSizeOfOrbit)) {
+  if ((theSizeOfOrbit < 1) || (theSizeOfOrbit > MaxSizeOfOrbit))
+  {
     theSizeOfOrbit = MaxSizeOfOrbit;
   }
 
   // allocate and clear the array of theOccupancies
   theOccupancies = new G4int[theSizeOfOrbit];
-  for (G4int index = 0; index < theSizeOfOrbit; ++index) {
+  for (G4int index = 0; index < theSizeOfOrbit; ++index)
+  {
     theOccupancies[index] = 0;
   }
 
@@ -69,7 +71,8 @@ G4ElectronOccupancy::G4ElectronOccupancy(const G4ElectronOccupancy& right)
 
   // allocate and clear the array of theOccupancies
   theOccupancies = new G4int[theSizeOfOrbit];
-  for (G4int index = 0; index < theSizeOfOrbit; ++index) {
+  for (G4int index = 0; index < theSizeOfOrbit; ++index)
+  {
     theOccupancies[index] = right.theOccupancies[index];
   }
 
@@ -78,13 +81,15 @@ G4ElectronOccupancy::G4ElectronOccupancy(const G4ElectronOccupancy& right)
 
 G4ElectronOccupancy& G4ElectronOccupancy::operator=(const G4ElectronOccupancy& right)
 {
-  if (this != &right) {
+  if (this != &right)
+  {
     theSizeOfOrbit = right.theSizeOfOrbit;
 
     // allocate and clear the array of theOccupancies
     delete[] theOccupancies;
     theOccupancies = new G4int[theSizeOfOrbit];
-    for (G4int index = 0; index < theSizeOfOrbit; ++index) {
+    for (G4int index = 0; index < theSizeOfOrbit; ++index)
+    {
       theOccupancies[index] = right.theOccupancies[index];
     }
 
@@ -96,14 +101,18 @@ G4ElectronOccupancy& G4ElectronOccupancy::operator=(const G4ElectronOccupancy& r
 G4bool G4ElectronOccupancy::operator==(const G4ElectronOccupancy& right) const
 {
   G4bool value = true;
-  for (G4int index = 0; index < MaxSizeOfOrbit; ++index) {
-    if ((index < theSizeOfOrbit) && (index < right.theSizeOfOrbit)) {
+  for (G4int index = 0; index < MaxSizeOfOrbit; ++index)
+  {
+    if ((index < theSizeOfOrbit) && (index < right.theSizeOfOrbit))
+    {
       value = value && (theOccupancies[index] == right.theOccupancies[index]);
     }
-    else if ((index < theSizeOfOrbit) && (index >= right.theSizeOfOrbit)) {
+    else if ((index < theSizeOfOrbit) && (index >= right.theSizeOfOrbit))
+    {
       value = value && (!static_cast<G4bool>(theOccupancies[index]));
     }
-    else if ((index >= theSizeOfOrbit) && (index < right.theSizeOfOrbit)) {
+    else if ((index >= theSizeOfOrbit) && (index < right.theSizeOfOrbit))
+    {
       value = value && (!static_cast<G4bool>(right.theOccupancies[index]));
     }
   }
@@ -118,7 +127,8 @@ G4bool G4ElectronOccupancy::operator!=(const G4ElectronOccupancy& right) const
 void G4ElectronOccupancy::DumpInfo() const
 {
   G4cout << "  -- Electron Occupancy -- " << G4endl;
-  for (G4int index = 0; index < theSizeOfOrbit; ++index) {
+  for (G4int index = 0; index < theSizeOfOrbit; ++index)
+  {
     G4cout << "   " << index << "-th orbit       " << theOccupancies[index] << G4endl;
   }
 }
@@ -126,13 +136,15 @@ void G4ElectronOccupancy::DumpInfo() const
 G4int G4ElectronOccupancy::AddElectron(G4int orbit, G4int number)
 {
   G4int value = 0;
-  if (orbit >= theSizeOfOrbit) {
+  if (orbit >= theSizeOfOrbit)
+  {
     std::ostringstream smsg;
     smsg << "Orbit (" << orbit << ") exceeds the maximum(" << theSizeOfOrbit - 1 << ")  ";
     G4String msg = smsg.str();
     G4Exception("G4ElectronOccupancy::AddElectron()", "PART131", JustWarning, msg);
   }
-  else if (orbit >= 0) {
+  else if (orbit >= 0)
+  {
     theOccupancies[orbit] += number;
     theTotalOccupancy += number;
     value = number;
@@ -143,13 +155,15 @@ G4int G4ElectronOccupancy::AddElectron(G4int orbit, G4int number)
 G4int G4ElectronOccupancy::RemoveElectron(G4int orbit, G4int number)
 {
   G4int value = 0;
-  if (orbit >= theSizeOfOrbit) {
+  if (orbit >= theSizeOfOrbit)
+  {
     std::ostringstream smsg;
     smsg << "Orbit (" << orbit << ") exceeds the maximum(" << theSizeOfOrbit - 1 << ") ";
     G4String msg = smsg.str();
     G4Exception("G4ElectronOccupancy::RemoveElectron()", "PART131", JustWarning, msg);
   }
-  else if (orbit >= 0) {
+  else if (orbit >= 0)
+  {
     if (theOccupancies[orbit] < number) number = theOccupancies[orbit];
     theOccupancies[orbit] -= number;
     theTotalOccupancy -= number;

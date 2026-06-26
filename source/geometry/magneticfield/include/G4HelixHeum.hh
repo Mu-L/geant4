@@ -30,7 +30,7 @@
 // Simple Heum stepper for magnetic field:
 //     x_1 = x_0 +
 //           h * 1/4 * dx(t0,x0)  +
-//               3/4 * dx(t0+2/3*h, x0+2/3*h*(dx(t0+h/3,x0+h/3*dx(t0,x0)))) 
+//               3/4 * dx(t0+2/3*h, x0+2/3*h*(dx(t0+h/3,x0+h/3*dx(t0,x0))))
 // Third order solver.
 
 // Author: W.Wander (MIT), 03.11.1998
@@ -43,6 +43,7 @@
 /**
  * @brief G4HelixHeum implements a simple Heum stepper for magnetic field
  * with 3rd order solver.
+ * @ingroup geometry_magneticfield
  */
 
 class G4HelixHeum : public G4MagHelicalStepper
@@ -59,7 +60,7 @@ class G4HelixHeum : public G4MagHelicalStepper
      * Default Destructor.
      */
     ~G4HelixHeum() override = default;
-  
+
     /**
      * The stepper function for the integration.
      *  @param[in] y Starting values array of integration variables.
@@ -67,10 +68,7 @@ class G4HelixHeum : public G4MagHelicalStepper
      *  @param[in] h The given step size.
      *  @param[out] yout Integration output.
      */
-    void DumbStepper( const G4double y[],
-                            G4ThreeVector Bfld,
-                            G4double h,
-                            G4double yout[] ) override;
+    void DumbStepper(const G4double y[], G4ThreeVector Bfld, G4double h, G4double yout[]) override;
 
     /**
      * Returns the order, 2, of integration.

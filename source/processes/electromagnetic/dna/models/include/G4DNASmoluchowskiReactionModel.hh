@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,46 +41,49 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#pragma once
+#ifndef G4DNASMOLUCHOWSKIREACTIONMODEL_HH
+#define G4DNASMOLUCHOWSKIREACTIONMODEL_HH
 
 #include "G4VDNAReactionModel.hh"
+
 #include <vector>
 
 class G4DNAMolecularReactionData;
 
 /**
-  * G4DNASmoluchowskiReactionModel should be used
-  * for very fast reactions (high reaction rate) : the reactions between
-  * reactants occuring at encounter.
-  * When the time step is constrained this model
-  * uses brownian bridge : "Absorbing (Smoluchowski) boundary condition"
-  * Reference : On the simulation of diffusion processes close to boundaries,
-  * N. J. B. Green, Molecular Physics, 65: 6, 1399 — 1408(1988)
-  */
+ * G4DNASmoluchowskiReactionModel should be used
+ * for very fast reactions (high reaction rate) : the reactions between
+ * reactants occuring at encounter.
+ * When the time step is constrained this model
+ * uses brownian bridge : "Absorbing (Smoluchowski) boundary condition"
+ * Reference : On the simulation of diffusion processes close to boundaries,
+ * N. J. B. Green, Molecular Physics, 65: 6, 1399 — 1408(1988)
+ */
 
 class G4DNASmoluchowskiReactionModel : public G4VDNAReactionModel
 {
-public :
+  public:
+
     G4DNASmoluchowskiReactionModel();
     ~G4DNASmoluchowskiReactionModel() override;
 
     G4DNASmoluchowskiReactionModel(const G4DNASmoluchowskiReactionModel&) = delete;
     G4DNASmoluchowskiReactionModel& operator=(const G4DNASmoluchowskiReactionModel&) = delete;
 
-    void Initialise(const G4MolecularConfiguration*, const G4Track&) override ;
-    void InitialiseToPrint(const G4MolecularConfiguration*) override ;
+    void Initialise(const G4MolecularConfiguration*, const G4Track&) override;
+    void InitialiseToPrint(const G4MolecularConfiguration*) override;
     G4double GetReactionRadius(const G4MolecularConfiguration*,
-                                       const G4MolecularConfiguration*) override;
+                               const G4MolecularConfiguration*) override;
     G4double GetReactionRadius(const G4int&) override;
 
-    G4bool FindReaction(const G4Track&,
-                                const G4Track&,
-                                G4double /*reactionRadius*/,
-                                G4double& /*separationDistance*/,
-                                G4bool /*alongStepInteraction*/) override ;
+    G4bool FindReaction(const G4Track&, const G4Track&, G4double /*reactionRadius*/,
+                        G4double& /*separationDistance*/, G4bool /*alongStepInteraction*/) override;
 
-private :
-    const std::vector<const G4DNAMolecularReactionData*>* fpReactionData{nullptr} ;
+  private:
+
+    const std::vector<const G4DNAMolecularReactionData*>* fpReactionData{nullptr};
 };
+
+#endif

@@ -23,117 +23,107 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4CrossSectionFactory_h
-#define G4CrossSectionFactory_h 1
+#ifndef G4CROSSSECTIONFACTORY_HH
+#define G4CROSSSECTIONFACTORY_HH
 
-
-#include "globals.hh"
-#include "G4VCrossSectionDataSet.hh"
 #include "G4CrossSectionFactoryRegistry.hh"
 #include "G4Threading.hh"
+#include "G4VCrossSectionDataSet.hh"
+#include "globals.hh"
 
 class G4VBaseXSFactory
 {
-public:
+  public:
 
-  G4VBaseXSFactory()
-  {
-    fRegistry = G4CrossSectionFactoryRegistry::Instance();
-  }
-   
-  virtual ~G4VBaseXSFactory() = default;
+    G4VBaseXSFactory() { fRegistry = G4CrossSectionFactoryRegistry::Instance(); }
 
-  virtual G4VCrossSectionDataSet* Instantiate() = 0;
+    virtual ~G4VBaseXSFactory() = default;
 
-protected:
-  G4CrossSectionFactoryRegistry* fRegistry;
+    virtual G4VCrossSectionDataSet* Instantiate() = 0;
+
+  protected:
+
+    G4CrossSectionFactoryRegistry* fRegistry;
 };
 
-//Generic template XS-factory
-template <typename T, int mode> class G4CrossSectionFactory : public G4VBaseXSFactory
+// Generic template XS-factory
+template<typename T, int mode>
+class G4CrossSectionFactory : public G4VBaseXSFactory
 {
-public:
-  G4CrossSectionFactory(const G4String& name)
-  {
-    fRegistry->Register(name, this);
-  }
+  public:
 
-  G4VCrossSectionDataSet* Instantiate() override
-  {
+    G4CrossSectionFactory(const G4String& name) { fRegistry->Register(name, this); }
+
+    G4VCrossSectionDataSet* Instantiate() override
+    {
       G4ExceptionDescription msg;
-      msg<<"Factory mode: "<<mode<<" not supported!";
-      G4Exception("G4CrossSectionFactory::Instantiate","CrossSectionFactory001",FatalException,msg);
-    return static_cast<T*>(0);
-  }
+      msg << "Factory mode: " << mode << " not supported!";
+      G4Exception("G4CrossSectionFactory::Instantiate", "CrossSectionFactory001", FatalException,
+                  msg);
+      return static_cast<T*>(0);
+    }
 };
 
-//Partial specialized template for non-singleton non-shared factory
-// each call to Instantiate creates a new XS
-template <typename T> class G4CrossSectionFactory<T,0> : public G4VBaseXSFactory
+// Partial specialized template for non-singleton non-shared factory
+//  each call to Instantiate creates a new XS
+template<typename T>
+class G4CrossSectionFactory<T, 0> : public G4VBaseXSFactory
 {
-public:
-    
-  G4CrossSectionFactory(const G4String& name)
-  {
-    fRegistry->Register(name, this);
-  }
+  public:
 
-  G4VCrossSectionDataSet* Instantiate() override
-  {
-    return new T();
-  }
+    G4CrossSectionFactory(const G4String& name) { fRegistry->Register(name, this); }
+
+    G4VCrossSectionDataSet* Instantiate() override { return new T(); }
 };
 
-//Partial specialized template for singleton, shared factory
-// each call to Instantiate returns pointer to static object
-template <typename T> class G4CrossSectionFactory<T,1> : public G4VBaseXSFactory
+// Partial specialized template for singleton, shared factory
+//  each call to Instantiate returns pointer to static object
+template<typename T>
+class G4CrossSectionFactory<T, 1> : public G4VBaseXSFactory
 {
-public:
-  G4CrossSectionFactory(const G4String& name)
-  {
-    fRegistry->Register(name,this);
-  }
+  public:
 
-  G4VCrossSectionDataSet* Instantiate() override
-  {
-    static T* shared = new T();
-    return shared;
-  }
+    G4CrossSectionFactory(const G4String& name) { fRegistry->Register(name, this); }
+
+    G4VCrossSectionDataSet* Instantiate() override
+    {
+      static T* shared = new T();
+      return shared;
+    }
 };
 
-//Partial specialized template for singleton, shared factory
-// each call to Instantiate returns pointer to static thread-local object
-template <typename T> class G4CrossSectionFactory<T,2> : public G4VBaseXSFactory
+// Partial specialized template for singleton, shared factory
+//  each call to Instantiate returns pointer to static thread-local object
+template<typename T>
+class G4CrossSectionFactory<T, 2> : public G4VBaseXSFactory
 {
-  G4CrossSectionFactory(const G4String& name)
-  {
-    fRegistry->Register(name,this);
-  }
+    G4CrossSectionFactory(const G4String& name) { fRegistry->Register(name, this); }
 
-  G4VCrossSectionDataSet* Instantiate() override
-  {
-    static G4ThreadLocal T* shared = new T();
-    return shared;
-  }
+    G4VCrossSectionDataSet* Instantiate() override
+    {
+      static G4ThreadLocal T* shared = new T();
+      return shared;
+    }
 };
 
+#define G4_BASE_DECLARE_XS_FACTORY(cross_section, flag)                      \
+  const G4CrossSectionFactory<cross_section, flag>& cross_section##Factory = \
+    G4CrossSectionFactory<cross_section, flag>(cross_section::Default_Name())
 
-#define G4_BASE_DECLARE_XS_FACTORY(cross_section, flag) \
-  const G4CrossSectionFactory<cross_section,flag>& cross_section##Factory = G4CrossSectionFactory<cross_section,flag>(cross_section::Default_Name())
+#define G4_BASE_REFERENCE_XS_FACTORY(cross_section, flag)                          \
+  class cross_section;                                                             \
+  extern const G4CrossSectionFactory<cross_section, flag>& cross_section##Factory; \
+  const G4CrossSectionFactory<cross_section, flag>& cross_section##FactoryRef =    \
+    cross_section##Factory
 
-#define G4_BASE_REFERENCE_XS_FACTORY(cross_section,flag) \
-  class cross_section; \
-  extern const G4CrossSectionFactory<cross_section,flag>& cross_section##Factory; \
-  const G4CrossSectionFactory<cross_section,flag>& cross_section##FactoryRef = cross_section##Factory
+// Macros to help define and reference factories
+#define G4_DECLARE_XS_FACTORY(cross_section) G4_BASE_DECLARE_XS_FACTORY(cross_section, 0)
+#define G4_DECLARE_SHAREDXS_FACTORY(cross_section) G4_BASE_DECLARE_XS_FACTORY(cross_section, 1)
+#define G4_DECLARE_SHAREDTLSXS_FACTORY(cross_section) G4_BASE_DECLARE_XS_FACTORY(cross_section, 2)
 
-//Macros to help define and reference factories
-#define G4_DECLARE_XS_FACTORY(cross_section) G4_BASE_DECLARE_XS_FACTORY(cross_section,0)
-#define G4_DECLARE_SHAREDXS_FACTORY(cross_section) G4_BASE_DECLARE_XS_FACTORY(cross_section,1)
-#define G4_DECLARE_SHAREDTLSXS_FACTORY(cross_section) G4_BASE_DECLARE_XS_FACTORY(cross_section,2)
-
-
-#define G4_REFERENCE_XS_FACTORY(cross_section) G4_BASE_REFERENCE_XS_FACTORY(cross_section,0)
-#define G4_REFERENCE_SHAREDXS_FACTORY(cross_section) G4_BASE_REFERENCE_XS_FACTORY(cross_section,1)
-#define G4_REFERENCE_SHAREDTLSXS_FACTORY(cross_section) G4_BASE_REFERENCE_XS_FACTORY(cross_section,2)
+#define G4_REFERENCE_XS_FACTORY(cross_section) G4_BASE_REFERENCE_XS_FACTORY(cross_section, 0)
+#define G4_REFERENCE_SHAREDXS_FACTORY(cross_section) G4_BASE_REFERENCE_XS_FACTORY(cross_section, 1)
+#define G4_REFERENCE_SHAREDTLSXS_FACTORY(cross_section) \
+  G4_BASE_REFERENCE_XS_FACTORY(cross_section, 2)
 
 #endif

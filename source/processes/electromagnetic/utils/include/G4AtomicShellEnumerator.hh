@@ -31,7 +31,7 @@
 //
 // File name:     G4AtomicShellEnumerator.hh
 //
-// Author:        Alfonso Mantero 
+// Author:        Alfonso Mantero
 //
 // Creation date: 15.03.2011
 //
@@ -43,20 +43,20 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4AtomicShellEnumerator_h
-#define G4AtomicShellEnumerator_h 1
+#ifndef G4ATOMICSHELLENUMERATOR_HH
+#define G4ATOMICSHELLENUMERATOR_HH
 
-enum G4AtomicShellEnumerator // not following EADL syntax
+enum G4AtomicShellEnumerator  // not following EADL syntax
 {
-  //***********EADL shell Id              
+  //***********EADL shell Id
   fKShell = 0,  //  1
-  fL1Shell = 1, //  3
-  fL2Shell = 2,	//  5
-  fL3Shell = 3,	//  6
-  fM1Shell = 4,	//  8
-  fM2Shell = 5,	//  10
-  fM3Shell = 6,	//  11
-  fM4Shell = 7,	//  13
+  fL1Shell = 1,  //  3
+  fL2Shell = 2,  //  5
+  fL3Shell = 3,  //  6
+  fM1Shell = 4,  //  8
+  fM2Shell = 5,  //  10
+  fM3Shell = 6,  //  11
+  fM4Shell = 7,  //  13
   fM5Shell = 8  //  14
 };
 

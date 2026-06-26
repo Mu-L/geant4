@@ -32,34 +32,33 @@
 
 // Author: John Apostolakis (CERN), 16.06.1997
 // --------------------------------------------------------------------
-#ifndef G4LogicalSkinSurface_hh
-#define G4LogicalSkinSurface_hh
-
-#include <map>
+#ifndef G4LOGICALSKINSURFACE_HH
+#define G4LOGICALSKINSURFACE_HH
 
 #include "G4LogicalSurface.hh"
+
+#include <map>
 
 class G4LogicalVolume;
 class G4LogicalSkinSurface;
 
-using G4LogicalSkinSurfaceTable
-      = std::map<const G4LogicalVolume*, G4LogicalSkinSurface*>;
+using G4LogicalSkinSurfaceTable = std::map<const G4LogicalVolume*, G4LogicalSkinSurface*>;
 
 /**
  * @brief G4LogicalSkinSurface is a Logical Surface class for the surface
  * surrounding a single logical volume.
+ * @ingroup geometry_volumes
  */
 
-class G4LogicalSkinSurface : public G4LogicalSurface 
+class G4LogicalSkinSurface : public G4LogicalSurface
 {
   public:
 
     /**
      * Constructor and Destructor.
      */
-    G4LogicalSkinSurface( const G4String& name,
-                                G4LogicalVolume* vol,
-                                G4SurfaceProperty* surfaceProperty );
+    G4LogicalSkinSurface(const G4String& name, G4LogicalVolume* vol,
+                         G4SurfaceProperty* surfaceProperty);
     ~G4LogicalSkinSurface() override = default;
 
     /**
@@ -71,8 +70,8 @@ class G4LogicalSkinSurface : public G4LogicalSurface
     /**
      * Equality operators.
      */
-    G4bool operator==(const G4LogicalSkinSurface &right) const;
-    G4bool operator!=(const G4LogicalSkinSurface &right) const;
+    G4bool operator==(const G4LogicalSkinSurface& right) const;
+    G4bool operator!=(const G4LogicalSkinSurface& right) const;
 
     /**
      * Generic accessors and setters.
@@ -95,7 +94,7 @@ class G4LogicalSkinSurface : public G4LogicalSurface
     G4LogicalVolume* LogVolume;
 
     /** The static Table of SkinSurfaces. */
-    static G4LogicalSkinSurfaceTable *theSkinSurfaceTable;
+    static G4LogicalSkinSurfaceTable* theSkinSurfaceTable;
 };
 
 // ********************************************************************
@@ -105,4 +104,3 @@ class G4LogicalSkinSurface : public G4LogicalSurface
 #include "G4LogicalSkinSurface.icc"
 
 #endif
-

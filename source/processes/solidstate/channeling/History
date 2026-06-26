@@ -6,7 +6,7 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-02-04 Gabriele Cosmo (channeling-V11-03-00)
+## 2026-02-04 Gabriele Cosmo (channeling-V11-04-00)
 - In G4ChannelingMaterialData, fixed reported Coverity defects for
   string parameters copying. Use consistently G4 types and minor
   code formatting.

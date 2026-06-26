@@ -52,47 +52,56 @@
 // 20150626  Fix logical condition for report relative or absolute violations.
 
 #include "G4CascadeCheckBalance.hh"
-#include "globals.hh"
+
 #include "G4CascadParticle.hh"
+#include "G4CollisionOutput.hh"
+#include "G4Electron.hh"
 #include "G4InuclElementaryParticle.hh"
 #include "G4InuclNuclei.hh"
 #include "G4InuclParticle.hh"
-#include "G4CollisionOutput.hh"
 #include "G4LorentzVector.hh"
-#include "G4Electron.hh"
 #include "G4SystemOfUnits.hh"
-#include <vector>
+#include "globals.hh"
 
+#include <vector>
 
 // Constructor sets acceptance limits
 
- const G4double G4CascadeCheckBalance::tolerance = 1e-6;	// How small is zero?
+const G4double G4CascadeCheckBalance::tolerance = 1e-6;  // How small is zero?
 
 G4CascadeCheckBalance::G4CascadeCheckBalance(const G4String& owner)
-  : G4VCascadeCollider(owner), relativeLimit(G4CascadeCheckBalance::tolerance),
-    absoluteLimit(G4CascadeCheckBalance::tolerance), initialBaryon(0),
-    finalBaryon(0), initialCharge(0), finalCharge(0), initialStrange(0),
-    finalStrange(0) {}
+  : G4VCascadeCollider(owner),
+    relativeLimit(G4CascadeCheckBalance::tolerance),
+    absoluteLimit(G4CascadeCheckBalance::tolerance),
+    initialBaryon(0),
+    finalBaryon(0),
+    initialCharge(0),
+    finalCharge(0),
+    initialStrange(0),
+    finalStrange(0)
+{}
 
-G4CascadeCheckBalance::G4CascadeCheckBalance(G4double relative,
-					     G4double absolute,
-					     const G4String& owner)
-  : G4VCascadeCollider(owner), relativeLimit(relative),
-    absoluteLimit(absolute), initialBaryon(0), finalBaryon(0),
-    initialCharge(0), finalCharge(0), initialStrange(0),
-    finalStrange(0) {}
-
+G4CascadeCheckBalance::G4CascadeCheckBalance(G4double relative, G4double absolute,
+                                             const G4String& owner)
+  : G4VCascadeCollider(owner),
+    relativeLimit(relative),
+    absoluteLimit(absolute),
+    initialBaryon(0),
+    finalBaryon(0),
+    initialCharge(0),
+    finalCharge(0),
+    initialStrange(0),
+    finalStrange(0)
+{}
 
 // Pseudo-collision just computes input and output four-vectors
 
-void G4CascadeCheckBalance::collide(G4InuclParticle* bullet,
-				    G4InuclParticle* target,
-				    G4CollisionOutput& output) {
-  if (verboseLevel)
-    G4cout << " >>> G4CascadeCheckBalance(" << theName << ")::collide"
-	   << G4endl;
+void G4CascadeCheckBalance::collide(G4InuclParticle* bullet, G4InuclParticle* target,
+                                    G4CollisionOutput& output)
+{
+  if (verboseLevel) G4cout << " >>> G4CascadeCheckBalance(" << theName << ")::collide" << G4endl;
 
-  initial *= 0.;	// Fast reset; some colliders only have one pointer
+  initial *= 0.;  // Fast reset; some colliders only have one pointer
   if (bullet) initial += bullet->getMomentum();
   if (target) initial += target->getMomentum();
 
@@ -101,17 +110,18 @@ void G4CascadeCheckBalance::collide(G4InuclParticle* bullet,
   if (bullet) initialCharge += G4int(bullet->getCharge());
   if (target) initialCharge += G4int(target->getCharge());
 
-  G4InuclElementaryParticle* pbullet =
-    dynamic_cast<G4InuclElementaryParticle*>(bullet);
-  G4InuclElementaryParticle* ptarget =
-    dynamic_cast<G4InuclElementaryParticle*>(target);
+  G4InuclElementaryParticle* pbullet = dynamic_cast<G4InuclElementaryParticle*>(bullet);
+  G4InuclElementaryParticle* ptarget = dynamic_cast<G4InuclElementaryParticle*>(target);
 
   G4InuclNuclei* nbullet = dynamic_cast<G4InuclNuclei*>(bullet);
   G4InuclNuclei* ntarget = dynamic_cast<G4InuclNuclei*>(target);
 
-  initialBaryon =
-    ((pbullet ? pbullet->baryon() : nbullet ? nbullet->getA() : 0) +
-     (ptarget ? ptarget->baryon() : ntarget ? ntarget->getA() : 0) );
+  initialBaryon = ((pbullet   ? pbullet->baryon()
+                    : nbullet ? nbullet->getA()
+                              : 0)
+                   + (ptarget   ? ptarget->baryon()
+                      : ntarget ? ntarget->getA()
+                                : 0));
 
   // NOTE:  Currently we ignore possibility of hypernucleus target
   initialStrange = 0;
@@ -120,16 +130,18 @@ void G4CascadeCheckBalance::collide(G4InuclParticle* bullet,
 
   G4int nelec = 0;
   G4double elMass = 0.;
-  std::vector<G4InuclElementaryParticle>& outParts = 
-    output.getOutgoingParticles();
-  for (G4int i = 0; i < output.numberOfOutgoingParticles(); i++) {
-    if (outParts[i].getDefinition() == G4Electron::Electron() ) {
+  std::vector<G4InuclElementaryParticle>& outParts = output.getOutgoingParticles();
+  for (G4int i = 0; i < output.numberOfOutgoingParticles(); i++)
+  {
+    if (outParts[i].getDefinition() == G4Electron::Electron())
+    {
       elMass += outParts[i].getDefinition()->GetPDGMass();
       ++nelec;
     }
   }
-  if(nelec > 0) {
-    initial += G4LorentzVector(0.,0.,0.,elMass/GeV);
+  if (nelec > 0)
+  {
+    initial += G4LorentzVector(0., 0., 0., elMass / GeV);
     initialCharge -= nelec;
   }
 
@@ -140,47 +152,46 @@ void G4CascadeCheckBalance::collide(G4InuclParticle* bullet,
   finalStrange = output.getTotalStrangeness();
 
   // Report results
-  if (verboseLevel) {
-    G4cout << " initial px " << initial.px() << " py " << initial.py()
-	   << " pz " << initial.pz() << " E " << initial.e()
-	   << " baryon " << initialBaryon << " charge " << initialCharge
-	   << " strange " << initialStrange << G4endl
-	   << "   final px " << final.px() << " py " << final.py()
-	   << " pz " << final.pz() << " E " << final.e()
-	   << " baryon " << finalBaryon << " charge " << finalCharge
-	   << " strange " << finalStrange << G4endl;
+  if (verboseLevel)
+  {
+    G4cout << " initial px " << initial.px() << " py " << initial.py() << " pz " << initial.pz()
+           << " E " << initial.e() << " baryon " << initialBaryon << " charge " << initialCharge
+           << " strange " << initialStrange << G4endl << "   final px " << final.px() << " py "
+           << final.py() << " pz " << final.pz() << " E " << final.e() << " baryon " << finalBaryon
+           << " charge " << finalCharge << " strange " << finalStrange << G4endl;
   }
 }
 
 // For de-excitation, take G4Fragment as initial state
-void G4CascadeCheckBalance::collide(const G4Fragment& fragment,
-				    G4CollisionOutput& output) {
+void G4CascadeCheckBalance::collide(const G4Fragment& fragment, G4CollisionOutput& output)
+{
   if (verboseLevel)
-    G4cout << " >>> G4CascadeCheckBalance(" << theName << ")::collide(<FRAG>)"
-	   << G4endl;
+    G4cout << " >>> G4CascadeCheckBalance(" << theName << ")::collide(<FRAG>)" << G4endl;
 
   // Copy initial state directly from fragment (no bullet/target sums)
-  initial = fragment.GetMomentum()/GeV;         // G4Fragment returns MeV
+  initial = fragment.GetMomentum() / GeV;  // G4Fragment returns MeV
   initialCharge = fragment.GetZ_asInt();
   initialBaryon = fragment.GetA_asInt();
-  initialStrange = 0;                           // No hypernuclei at present
+  initialStrange = 0;  // No hypernuclei at present
 
   // Final state totals are computed for us
   final = output.getTotalOutputMomentum();
-  
+
   // Remove electron masses when internal conversion occurs
   G4double elMass = 0.;
-  std::vector<G4InuclElementaryParticle>& outParts = 
-    output.getOutgoingParticles();
+  std::vector<G4InuclElementaryParticle>& outParts = output.getOutgoingParticles();
   G4int nelec = 0;
-  for (G4int i = 0; i < output.numberOfOutgoingParticles(); i++) {
-    if (outParts[i].getDefinition() == G4Electron::Electron() ) {
+  for (G4int i = 0; i < output.numberOfOutgoingParticles(); i++)
+  {
+    if (outParts[i].getDefinition() == G4Electron::Electron())
+    {
       elMass += outParts[i].getDefinition()->GetPDGMass();
       ++nelec;
     }
   }
-  if(nelec > 0) {
-    initial += G4LorentzVector(0.,0.,0.,elMass/GeV);
+  if (nelec > 0)
+  {
+    initial += G4LorentzVector(0., 0., 0., elMass / GeV);
     initialCharge -= nelec;
   }
 
@@ -189,82 +200,73 @@ void G4CascadeCheckBalance::collide(const G4Fragment& fragment,
   finalStrange = output.getTotalStrangeness();
 
   // Report results
-  if (verboseLevel) {
-    G4cout << " initial px " << initial.px() << " py " << initial.py()
-	   << " pz " << initial.pz() << " E " << initial.e()
-	   << " baryon " << initialBaryon << " charge " << initialCharge
-	   << " strange " << initialStrange << G4endl
-	   << "   final px " << final.px() << " py " << final.py()
-	   << " pz " << final.pz() << " E " << final.e()
-	   << " baryon " << finalBaryon << " charge " << finalCharge
-	   << " strange " << finalStrange << G4endl;
+  if (verboseLevel)
+  {
+    G4cout << " initial px " << initial.px() << " py " << initial.py() << " pz " << initial.pz()
+           << " E " << initial.e() << " baryon " << initialBaryon << " charge " << initialCharge
+           << " strange " << initialStrange << G4endl << "   final px " << final.px() << " py "
+           << final.py() << " pz " << final.pz() << " E " << final.e() << " baryon " << finalBaryon
+           << " charge " << finalCharge << " strange " << finalStrange << G4endl;
   }
 }
 
-
 // Take list of output particles directly (e.g., from G4EPCollider internals)
 
-void G4CascadeCheckBalance::collide(G4InuclParticle* bullet, 
-				    G4InuclParticle* target,
-    const std::vector<G4InuclElementaryParticle>& particles) {
+void G4CascadeCheckBalance::collide(G4InuclParticle* bullet, G4InuclParticle* target,
+                                    const std::vector<G4InuclElementaryParticle>& particles)
+{
   if (verboseLevel)
-    G4cout << " >>> G4CascadeCheckBalance(" << theName << ")::collide(<vector>)"
-	   << G4endl;
+    G4cout << " >>> G4CascadeCheckBalance(" << theName << ")::collide(<vector>)" << G4endl;
 
-  tempOutput.reset();			// Buffer for processing
+  tempOutput.reset();  // Buffer for processing
   tempOutput.addOutgoingParticles(particles);
   collide(bullet, target, tempOutput);
 }
 
 void G4CascadeCheckBalance::collide(const G4Fragment& target,
-    const std::vector<G4InuclElementaryParticle>& particles) {
+                                    const std::vector<G4InuclElementaryParticle>& particles)
+{
   if (verboseLevel)
-    G4cout << " >>> G4CascadeCheckBalance(" << theName
-	   << ")::collide(<FRAG>,<vector>)" << G4endl;
+    G4cout << " >>> G4CascadeCheckBalance(" << theName << ")::collide(<FRAG>,<vector>)" << G4endl;
 
-  tempOutput.reset();			// Buffer for processing
+  tempOutput.reset();  // Buffer for processing
   tempOutput.addOutgoingParticles(particles);
   collide(target, tempOutput);
 }
 
-
 // Take list of nuclear fragments directly (e.g., from G4Fissioner internals)
 void G4CascadeCheckBalance::collide(const G4Fragment& target,
-    const std::vector<G4InuclNuclei>& fragments) {
+                                    const std::vector<G4InuclNuclei>& fragments)
+{
   if (verboseLevel)
-    G4cout << " >>> G4CascadeCheckBalance(" << theName << ")::collide(<vector>)"
-	   << G4endl;
+    G4cout << " >>> G4CascadeCheckBalance(" << theName << ")::collide(<vector>)" << G4endl;
 
-  tempOutput.reset();			// Buffer for processing
+  tempOutput.reset();  // Buffer for processing
   tempOutput.addOutgoingNuclei(fragments);
   collide(target, tempOutput);
 }
 
-
 // Take list of "cparticles" (e.g., from G4NucleiModel internals)
-void G4CascadeCheckBalance::collide(G4InuclParticle* bullet,
-				    G4InuclParticle* target,
-		    const std::vector<G4CascadParticle>& particles) {
+void G4CascadeCheckBalance::collide(G4InuclParticle* bullet, G4InuclParticle* target,
+                                    const std::vector<G4CascadParticle>& particles)
+{
   if (verboseLevel)
-    G4cout << " >>> G4CascadeCheckBalance(" << theName
-	   << ")::collide(<cparticles>)" << G4endl;
+    G4cout << " >>> G4CascadeCheckBalance(" << theName << ")::collide(<cparticles>)" << G4endl;
 
-  tempOutput.reset();			// Buffer for processing
+  tempOutput.reset();  // Buffer for processing
   tempOutput.addOutgoingParticles(particles);
   collide(bullet, target, tempOutput);
 }
 
-
 // Take lists of both G4InuclEP & G4CP (e.g., from G4IntraNucleiCascader)
-void G4CascadeCheckBalance::collide(G4InuclParticle* bullet,
-				   G4InuclParticle* target,
-				    G4CollisionOutput& output,
-	     const std::vector<G4CascadParticle>& cparticles) {
+void G4CascadeCheckBalance::collide(G4InuclParticle* bullet, G4InuclParticle* target,
+                                    G4CollisionOutput& output,
+                                    const std::vector<G4CascadParticle>& cparticles)
+{
   if (verboseLevel)
-    G4cout << " >>> G4CascadeCheckBalance(" << theName
-	   << ")::collide(<EP>,<CP>)" << G4endl;
+    G4cout << " >>> G4CascadeCheckBalance(" << theName << ")::collide(<EP>,<CP>)" << G4endl;
 
-  tempOutput.reset();			// Buffer for processing
+  tempOutput.reset();  // Buffer for processing
   tempOutput.add(output);
   tempOutput.addOutgoingParticles(cparticles);
   collide(bullet, target, tempOutput);
@@ -272,84 +274,90 @@ void G4CascadeCheckBalance::collide(G4InuclParticle* bullet,
 
 // Compare relative and absolute violations to limits, and report
 
-G4bool G4CascadeCheckBalance::energyOkay() const {
+G4bool G4CascadeCheckBalance::energyOkay() const
+{
   G4bool relokay = (std::abs(relativeE()) < relativeLimit);
   G4bool absokay = (std::abs(deltaE()) < absoluteLimit);
 
-  if (verboseLevel && (!relokay || !absokay)) {
+  if (verboseLevel && (!relokay || !absokay))
+  {
     G4cerr << theName << ": Energy conservation: relative " << relativeE()
-	   << (relokay ? " conserved" : " VIOLATED")
-	   << " absolute " << deltaE()
-	   << (absokay ? " conserved" : " VIOLATED") << G4endl;
-  } else if (verboseLevel > 1) {
-    G4cout << theName << ": Energy conservation: relative " << relativeE()
-	   << " conserved absolute " << deltaE() << " conserved" << G4endl;
+           << (relokay ? " conserved" : " VIOLATED") << " absolute " << deltaE()
+           << (absokay ? " conserved" : " VIOLATED") << G4endl;
+  }
+  else if (verboseLevel > 1)
+  {
+    G4cout << theName << ": Energy conservation: relative " << relativeE() << " conserved absolute "
+           << deltaE() << " conserved" << G4endl;
   }
 
   return (relokay && absokay);
 }
 
-
-G4bool G4CascadeCheckBalance::ekinOkay() const {
+G4bool G4CascadeCheckBalance::ekinOkay() const
+{
   G4bool relokay = (std::abs(relativeKE()) < relativeLimit);
   G4bool absokay = (std::abs(deltaKE()) < absoluteLimit);
 
-  if (verboseLevel && (!relokay || !absokay)) {
-    G4cerr << theName << ": Kinetic energy balance: relative "
-	   << relativeKE() << (relokay ? " conserved" : " VIOLATED")
-	   << " absolute " << deltaKE()
-	   << (absokay ? " conserved" : " VIOLATED") << G4endl;
-  } else if (verboseLevel > 1) {
-    G4cout << theName << ": Kinetic energy balance: relative "
-	   << relativeKE() << " conserved absolute " << deltaKE()
-	   << " conserved" << G4endl;
+  if (verboseLevel && (!relokay || !absokay))
+  {
+    G4cerr << theName << ": Kinetic energy balance: relative " << relativeKE()
+           << (relokay ? " conserved" : " VIOLATED") << " absolute " << deltaKE()
+           << (absokay ? " conserved" : " VIOLATED") << G4endl;
+  }
+  else if (verboseLevel > 1)
+  {
+    G4cout << theName << ": Kinetic energy balance: relative " << relativeKE()
+           << " conserved absolute " << deltaKE() << " conserved" << G4endl;
   }
 
   return (relokay && absokay);
 }
 
+G4bool G4CascadeCheckBalance::momentumOkay() const
+{
+  G4bool relokay = (std::abs(relativeP()) < 10. * relativeLimit);
+  G4bool absokay = (std::abs(deltaP()) < 10. * absoluteLimit);
 
-G4bool G4CascadeCheckBalance::momentumOkay() const {
-  G4bool relokay = (std::abs(relativeP()) < 10.*relativeLimit);
-  G4bool absokay = (std::abs(deltaP()) < 10.*absoluteLimit);
-
-  if (verboseLevel && (!relokay || !absokay)) {
+  if (verboseLevel && (!relokay || !absokay))
+  {
     G4cerr << theName << ": Momentum conservation: relative " << relativeP()
-	   << (relokay ? " conserved" : " VIOLATED")
-	   << " absolute " << deltaP()
-	   << (absokay ? " conserved" : " VIOLATED") << G4endl;
-  } else if (verboseLevel > 1) {
+           << (relokay ? " conserved" : " VIOLATED") << " absolute " << deltaP()
+           << (absokay ? " conserved" : " VIOLATED") << G4endl;
+  }
+  else if (verboseLevel > 1)
+  {
     G4cout << theName << ": Momentum conservation: relative " << relativeP()
-	   << " conserved absolute " << deltaP() << " conserved" << G4endl;
+           << " conserved absolute " << deltaP() << " conserved" << G4endl;
   }
 
   return (relokay && absokay);
 }
 
-
-G4bool G4CascadeCheckBalance::baryonOkay() const {
-  G4bool bokay = (deltaB() == 0);	// Must be perfect!
+G4bool G4CascadeCheckBalance::baryonOkay() const
+{
+  G4bool bokay = (deltaB() == 0);  // Must be perfect!
 
   if (verboseLevel && !bokay)
     G4cerr << theName << ": Baryon number VIOLATED " << deltaB() << G4endl;
   return bokay;
 }
 
-G4bool G4CascadeCheckBalance::chargeOkay() const {
-  G4bool qokay = (deltaQ() == 0);	// Must be perfect!
+G4bool G4CascadeCheckBalance::chargeOkay() const
+{
+  G4bool qokay = (deltaQ() == 0);  // Must be perfect!
 
   if (verboseLevel && !qokay)
-    G4cerr << theName << ": Charge conservation VIOLATED " << deltaQ()
-	   << G4endl;
+    G4cerr << theName << ": Charge conservation VIOLATED " << deltaQ() << G4endl;
   return qokay;
 }
 
-G4bool G4CascadeCheckBalance::strangeOkay() const {
-  G4bool sokay = (deltaS() == 0);	// Must be perfect!
+G4bool G4CascadeCheckBalance::strangeOkay() const
+{
+  G4bool sokay = (deltaS() == 0);  // Must be perfect!
 
   if (verboseLevel && !sokay)
-    G4cerr << theName << ": Strangeness conservation VIOLATED " << deltaS()
-	   << G4endl;
+    G4cerr << theName << ": Strangeness conservation VIOLATED " << deltaS() << G4endl;
 
   return sokay;
 }

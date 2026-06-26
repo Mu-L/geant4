@@ -27,24 +27,26 @@
 // Author: Ivana Hrivnacova, 20/07/2017 (ivana@ipno.in2p3.fr)
 
 #include "G4Hdf5AnalysisManager.hh"
-#include "G4Hdf5FileManager.hh"
-#include "G4Hdf5NtupleFileManager.hh"
+
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
+#include "G4AutoLock.hh"
+#include "G4Hdf5FileManager.hh"
+#include "G4Hdf5NtupleFileManager.hh"
 #include "G4ThreadLocalSingleton.hh"
 #include "G4Threading.hh"
-#include "G4AutoLock.hh"
 
 using namespace G4Analysis;
 
 // mutex in a file scope
 
-namespace {
-  //Mutex to lock master manager when opening a file
-  G4Mutex openFileMutex = G4MUTEX_INITIALIZER;
-  //Mutex to lock master manager when closing a file
-  G4Mutex closeFileMutex = G4MUTEX_INITIALIZER;
-}
+namespace
+{
+// Mutex to lock master manager when opening a file
+G4Mutex openFileMutex = G4MUTEX_INITIALIZER;
+// Mutex to lock master manager when closing a file
+G4Mutex closeFileMutex = G4MUTEX_INITIALIZER;
+}  // namespace
 
 // G4Hdf5AnalysisManager* G4Hdf5AnalysisManager::fgMasterInstance = nullptr;
 // G4ThreadLocal G4bool G4Hdf5AnalysisManager::fgIsInstance = false;
@@ -64,15 +66,13 @@ G4bool G4Hdf5AnalysisManager::IsInstance()
 }
 
 //_____________________________________________________________________________
-G4Hdf5AnalysisManager::G4Hdf5AnalysisManager()
- : G4ToolsAnalysisManager("Hdf5")
+G4Hdf5AnalysisManager::G4Hdf5AnalysisManager() : G4ToolsAnalysisManager("Hdf5")
 {
 #ifdef G4MULTITHREADED
-#ifndef H5_HAVE_THREADSAFE
-    G4Exception("G4Hdf5AnalysisManager::G4Hdf5AnalysisManager",
-                "Analysis_F001", FatalException,
-                "Your HDF5 lib is not built with H5_HAVE_THREADSAFE.");
-#endif
+#  ifndef H5_HAVE_THREADSAFE
+  G4Exception("G4Hdf5AnalysisManager::G4Hdf5AnalysisManager", "Analysis_F001", FatalException,
+              "Your HDF5 lib is not built with H5_HAVE_THREADSAFE.");
+#  endif
 #endif
 
   // File manager

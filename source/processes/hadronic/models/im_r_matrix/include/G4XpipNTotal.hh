@@ -23,25 +23,29 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4XpipNTotal_h
-#define G4XpipNTotal_h
+#ifndef G4XPIPNTOTAL_HH
+#define G4XPIPNTOTAL_HH
 
-#include "G4XPDGTotal.hh"
-#include "G4VCrossSectionSource.hh"
 #include "G4KineticTrack.hh"
+#include "G4VCrossSectionSource.hh"
+#include "G4XPDGTotal.hh"
+
 #include <utility>
 #include <vector>
 
 class G4XpipNTotal : public G4VCrossSectionSource
 {
-public:
-  G4XpipNTotal();
-  virtual ~G4XpipNTotal() {}
-  virtual G4double CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
-  virtual const G4CrossSectionVector* GetComponents() const { return 0; }
-  virtual G4String Name() const {return "G4XpipNTotal";}
-private:
-  G4XPDGTotal thePDGData;
-  std::vector<std::pair<double,double> > theLowEData;
+  public:
+
+    G4XpipNTotal();
+    virtual ~G4XpipNTotal() {}
+    virtual G4double CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
+    virtual const G4CrossSectionVector* GetComponents() const { return 0; }
+    virtual G4String Name() const { return "G4XpipNTotal"; }
+
+  private:
+
+    G4XPDGTotal thePDGData;
+    std::vector<std::pair<double, double>> theLowEData;
 };
 #endif

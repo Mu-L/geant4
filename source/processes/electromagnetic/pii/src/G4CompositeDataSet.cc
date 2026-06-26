@@ -36,31 +36,21 @@
 // -------------------------------------------------------------------
 
 #include "G4CompositeDataSet.hh"
+
 #include "G4DataSet.hh"
 #include "G4IInterpolator.hh"
+
 #include <fstream>
 #include <sstream>
 
-G4CompositeDataSet::G4CompositeDataSet(G4IInterpolator* algo, 
-				       G4double eUnit, 
-				       G4double dataUnit, 
-				       G4int zMin, 
-				       G4int zMax)
-  :
-  algorithm(algo),
-  unitEnergies(eUnit),
-  unitData(dataUnit),
-  minZ(zMin),
-  maxZ(zMax)
+G4CompositeDataSet::G4CompositeDataSet(G4IInterpolator* algo, G4double eUnit, G4double dataUnit,
+                                       G4int zMin, G4int zMax)
+  : algorithm(algo), unitEnergies(eUnit), unitData(dataUnit), minZ(zMin), maxZ(zMax)
 {
-  if (algorithm == 0) 
-    G4Exception("G4CompositeDataSet::G4CompositeDataSet",
-		"pii00000001",
-                FatalException,
-		"Interpolation == 0");
+  if (algorithm == 0)
+    G4Exception("G4CompositeDataSet::G4CompositeDataSet", "pii00000001", FatalException,
+                "Interpolation == 0");
 }
-
-
 
 G4CompositeDataSet::~G4CompositeDataSet()
 {
@@ -68,21 +58,18 @@ G4CompositeDataSet::~G4CompositeDataSet()
   if (algorithm) delete algorithm;
 }
 
-
 G4double G4CompositeDataSet::FindValue(G4double energy, G4int componentId) const
 {
   const G4IDataSet* component(GetComponent(componentId));
- 
+
   if (component) return component->FindValue(energy);
 
   std::ostringstream message;
   message << "G4CompositeDataSet::FindValue - component " << componentId << " not found";
- 
-   G4Exception("G4CompositeDataSet::FindValue",
-	      "pii00000010",
-	      FatalException,
-	      message.str().c_str());
- 
+
+  G4Exception("G4CompositeDataSet::FindValue", "pii00000010", FatalException,
+              message.str().c_str());
+
   return 0.;
 }
 
@@ -92,97 +79,88 @@ void G4CompositeDataSet::PrintData(void) const
 
   G4cout << "The data set has " << n << " components" << G4endl;
   G4cout << G4endl;
- 
+
   G4int i(0);
- 
-  while (i<n)
-    {
-      G4cout << "--- Component " << i << " ---" << G4endl;
-      GetComponent(i)->PrintData();
-      ++i;
-    }
+
+  while (i < n)
+  {
+    G4cout << "--- Component " << i << " ---" << G4endl;
+    GetComponent(i)->PrintData();
+    ++i;
+  }
 }
 
-void G4CompositeDataSet::SetEnergiesData(G4DataVector* energies, G4DataVector* data, G4int componentId)
+void G4CompositeDataSet::SetEnergiesData(G4DataVector* energies, G4DataVector* data,
+                                         G4int componentId)
 {
-  G4IDataSet * component(components[componentId]);
- 
+  G4IDataSet* component(components[componentId]);
+
   if (component)
-    {
-      component->SetEnergiesData(energies, data, 0);
-      return;
-    }
+  {
+    component->SetEnergiesData(energies, data, 0);
+    return;
+  }
 
   std::ostringstream message;
   message << "G4CompositeDataSet::SetEnergiesData - component " << componentId << " not found";
- 
-  G4Exception("G4CompositeDataSet::SetEnergiesData",
-	      "pii00000020",
-	      FatalException,
-	      message.str().c_str());
 
+  G4Exception("G4CompositeDataSet::SetEnergiesData", "pii00000020", FatalException,
+              message.str().c_str());
 }
 
 G4bool G4CompositeDataSet::LoadData(const G4String& argFileName)
 {
-  CleanUpComponents(); 
+  CleanUpComponents();
 
-  for (G4int z(minZ); z<maxZ; ++z)
+  for (G4int z(minZ); z < maxZ; ++z)
+  {
+    G4IDataSet* component = new G4DataSet(z, algorithm->Clone(), unitEnergies, unitData);
+    if (!component->LoadData(argFileName))
     {
-      G4IDataSet* component = new G4DataSet(z, algorithm->Clone(), unitEnergies, unitData);
-      if (!component->LoadData(argFileName))
-	{
-	  delete component;
-	  return false;
-	}
-      AddComponent(component);
+      delete component;
+      return false;
     }
+    AddComponent(component);
+  }
   return true;
 }
 
-
-
 G4bool G4CompositeDataSet::SaveData(const G4String& argFileName) const
 {
-  for (G4int z=minZ; z<maxZ; ++z)
-    {
-      const G4IDataSet* component(GetComponent(z-minZ));
-  
-      if (!component)
-	{
-	  std::ostringstream message;
-	  message << "G4CompositeDataSet::SaveData - component " << (z-minZ) << " not found";
-	  G4Exception("G4CompositeDataSet::SaveData",
-		      "pii00000030",
-		      FatalException,
-		      message.str().c_str());
-	}
+  for (G4int z = minZ; z < maxZ; ++z)
+  {
+    const G4IDataSet* component(GetComponent(z - minZ));
 
-      if (!component->SaveData(argFileName))
-	return false;
+    if (!component)
+    {
+      std::ostringstream message;
+      message << "G4CompositeDataSet::SaveData - component " << (z - minZ) << " not found";
+      G4Exception("G4CompositeDataSet::SaveData", "pii00000030", FatalException,
+                  message.str().c_str());
     }
- 
+
+    if (!component->SaveData(argFileName)) return false;
+  }
+
   return true;
 }
 
 void G4CompositeDataSet::CleanUpComponents(void)
 {
   while (!components.empty())
-    {
-      if (components.back())
-	delete components.back();
-      components.pop_back();
-    }
+  {
+    if (components.back()) delete components.back();
+    components.pop_back();
+  }
 }
-
 
 G4double G4CompositeDataSet::RandomSelect(G4int componentId) const
 {
   G4double value = 0.;
   if (componentId >= 0 && componentId < (G4int)components.size())
-    {
-      const G4IDataSet* dataSet = GetComponent(componentId);
-      value = dataSet->RandomSelect();
-    }
+  {
+    const G4IDataSet* dataSet = GetComponent(componentId);
+    value = dataSet->RandomSelect();
+  }
   return value;
 }

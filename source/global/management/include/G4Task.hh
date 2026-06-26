@@ -36,9 +36,12 @@
 // Author: Jonathan Madsen (May 28th 2020)
 // ---------------------------------------------------------------
 
-#pragma once
+#ifndef G4TASK_HH
+#define G4TASK_HH
 
 #include "PTL/Task.hh"
 
-template <typename _Ret, typename _Arg, typename... _Args>
+template<typename _Ret, typename _Arg, typename... _Args>
 using G4Task = PTL::Task<_Ret, _Arg, _Args...>;
+
+#endif

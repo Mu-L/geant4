@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,15 +41,16 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
+#ifndef G4VMOLECULARDISSOCIATIONDISPLACER_HH
+#define G4VMOLECULARDISSOCIATIONDISPLACER_HH
 
-#pragma once
+#include "G4CTCounter.hh"
+#include "G4ThreeVector.hh"
+#include "globals.hh"
 
 #include <vector>
-#include "globals.hh"
-#include "G4ThreeVector.hh"
-#include "G4CTCounter.hh"
 
 class G4Molecule;
 class G4MolecularDissociationChannel;
@@ -60,7 +61,8 @@ using DisplacementType = int;
 
 class G4VMolecularDissociationDisplacer
 {
-public:
+  public:
+
     virtual ~G4VMolecularDissociationDisplacer() = default;
 
     virtual std::vector<G4ThreeVector>
@@ -69,18 +71,18 @@ public:
     virtual G4ThreeVector
     GetMotherMoleculeDisplacement(const G4MolecularDissociationChannel*) const = 0;
 
-    inline void SetVerbose(G4int verbose)
-    {
-        fVerbose = verbose;
-    }
+    inline void SetVerbose(G4int verbose) { fVerbose = verbose; }
 
-public:
+  public:
+
     G4CT_COUNT_INIT_DEF(0)
     G4CT_COUNT_DEF(NoDisplacement)
 
-protected :
+  protected:
+
     G4VMolecularDissociationDisplacer() = default;
 
     G4int fVerbose{0};
 };
 
+#endif

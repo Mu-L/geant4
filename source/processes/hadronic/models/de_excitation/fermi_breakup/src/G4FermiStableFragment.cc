@@ -30,8 +30,9 @@
 
 #include "G4FermiStableFragment.hh"
 
-G4FermiStableFragment::G4FermiStableFragment(G4FermiAtomicMass atomicMass, G4FermiChargeNumber chargeNumber,
-                                             G4int polarization, G4double excitationEnergy)
+G4FermiStableFragment::G4FermiStableFragment(G4FermiAtomicMass atomicMass,
+                                             G4FermiChargeNumber chargeNumber, G4int polarization,
+                                             G4double excitationEnergy)
   : G4VFermiFragmentAN(atomicMass, chargeNumber, polarization, excitationEnergy)
 {}
 

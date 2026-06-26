@@ -29,12 +29,11 @@
 // --------------------------------------------------------------------
 
 #include "G4VGaussianQuadrature.hh"
+
 #include "G4ios.hh"
 #include "globals.hh"
 
-G4VGaussianQuadrature::G4VGaussianQuadrature(function pFunction)
-  : fFunction(pFunction)
-{}
+G4VGaussianQuadrature::G4VGaussianQuadrature(function pFunction) : fFunction(pFunction) {}
 
 // -------------------------------------------------------------------
 //
@@ -60,7 +59,10 @@ G4double G4VGaussianQuadrature::GetWeight(G4int index) const
   return fWeight[index];
 }
 
-G4int G4VGaussianQuadrature::GetNumber() const { return fNumber; }
+G4int G4VGaussianQuadrature::GetNumber() const
+{
+  return fNumber;
+}
 
 // ----------------------------------------------------------------------------
 //
@@ -73,15 +75,14 @@ G4double G4VGaussianQuadrature::GammaLogarithm(G4double xx)
   // xx > 1. For 0 < xx < 1. the reflection formula (6.1.4) can be used first.
   // (Adapted from Numerical Recipes in C)
 
-  static const G4double cof[6] = { 76.18009172947146,     -86.50532032941677,
-                                   24.01409824083091,     -1.231739572450155,
-                                   0.1208650973866179e-2, -0.5395239384953e-5 };
-  G4double x                   = xx - 1.0;
-  G4double tmp                 = x + 5.5;
+  static const G4double cof[6] = {76.18009172947146,  -86.50532032941677,    24.01409824083091,
+                                  -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5};
+  G4double x = xx - 1.0;
+  G4double tmp = x + 5.5;
   tmp -= (x + 0.5) * std::log(tmp);
   G4double ser = 1.000000000190015;
 
-  for(size_t j = 0; j <= 5; ++j)
+  for (size_t j = 0; j <= 5; ++j)
   {
     x += 1.0;
     ser += cof[j] / x;

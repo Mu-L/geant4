@@ -29,16 +29,16 @@
 // --------------------------------------------------------------------
 
 #include "G4ClonedTrajectory.hh"
-#include "G4Trajectory.hh"
 
 #include "G4AttDef.hh"
 #include "G4AttDefStore.hh"
 #include "G4AttValue.hh"
-#include "G4ParticleTable.hh"
+#include "G4AutoLock.hh"
 #include "G4ClonedTrajectoryPoint.hh"
+#include "G4ParticleTable.hh"
+#include "G4Trajectory.hh"
 #include "G4UIcommand.hh"
 #include "G4UnitsTable.hh"
-#include "G4AutoLock.hh"
 
 // #define G4ATTDEBUG
 #ifdef G4ATTDEBUG
@@ -62,7 +62,8 @@ G4ClonedTrajectory::G4ClonedTrajectory(const G4Trajectory& right)
   initialMomentum = right.initialMomentum;
   positionRecord = new G4ClonedTrajectoryPointContainer();
 
-  for (auto& i : *right.positionRecord) {
+  for (auto& i : *right.positionRecord)
+  {
     auto rightPoint = (G4ClonedTrajectoryPoint*)i;
     positionRecord->push_back(new G4ClonedTrajectoryPoint(*rightPoint));
   }
@@ -70,8 +71,10 @@ G4ClonedTrajectory::G4ClonedTrajectory(const G4Trajectory& right)
 
 G4ClonedTrajectory::~G4ClonedTrajectory()
 {
-  if (positionRecord != nullptr) {
-    for (auto& i : *positionRecord) {
+  if (positionRecord != nullptr)
+  {
+    for (auto& i : *positionRecord)
+    {
       delete i;
     }
     positionRecord->clear();
@@ -99,7 +102,8 @@ const std::map<G4String, G4AttDef>* G4ClonedTrajectory::GetAttDefs() const
 {
   G4bool isNew;
   std::map<G4String, G4AttDef>* store = G4AttDefStore::GetInstance("G4Trajectory", isNew);
-  if (isNew) {
+  if (isNew)
+  {
     G4String ID("ID");
     (*store)[ID] = G4AttDef(ID, "Track ID", "Physics", "", "G4int");
 

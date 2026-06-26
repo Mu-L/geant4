@@ -28,14 +28,14 @@
 // G4PSPassageCellFlux
 #include "G4PSPassageCellFlux.hh"
 
-#include "G4SystemOfUnits.hh"
 #include "G4StepStatus.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4Track.hh"
-#include "G4VSolid.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4VPVParameterisation.hh"
 #include "G4UnitsTable.hh"
+#include "G4VPVParameterisation.hh"
+#include "G4VPhysicalVolume.hh"
 #include "G4VScoreHistFiller.hh"
+#include "G4VSolid.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // (Description)
@@ -59,14 +59,13 @@ G4PSPassageCellFlux::G4PSPassageCellFlux(const G4String& name, G4int depth)
   : G4PSPassageCellFlux(name, "percm2", depth)
 {}
 
-G4PSPassageCellFlux::G4PSPassageCellFlux(const G4String& name, const G4String& unit,
-                                         G4int depth)
-  : G4VPrimitivePlotter(name, depth)
-  , HCID(-1)
-  , fCurrentTrkID(-1)
-  , fCellFlux(0)
-  , EvtMap(nullptr)
-  , weighted(true)
+G4PSPassageCellFlux::G4PSPassageCellFlux(const G4String& name, const G4String& unit, G4int depth)
+  : G4VPrimitivePlotter(name, depth),
+    HCID(-1),
+    fCurrentTrkID(-1),
+    fCellFlux(0),
+    EvtMap(nullptr),
+    weighted(true)
 {
   DefineUnitAndCategory();
   SetUnit(unit);
@@ -74,30 +73,27 @@ G4PSPassageCellFlux::G4PSPassageCellFlux(const G4String& name, const G4String& u
 
 G4bool G4PSPassageCellFlux::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
-  if(IsPassed(aStep))
+  if (IsPassed(aStep))
   {
-    G4int idx =
-      ((G4TouchableHistory*) (aStep->GetPreStepPoint()->GetTouchable()))
-        ->GetReplicaNumber(indexDepth);
+    G4int idx = ((G4TouchableHistory*)(aStep->GetPreStepPoint()->GetTouchable()))
+                  ->GetReplicaNumber(indexDepth);
     G4double cubicVolume = ComputeVolume(aStep, idx);
 
     fCellFlux /= cubicVolume;
     G4int index = GetIndex(aStep);
     EvtMap->add(index, fCellFlux);
 
-    if(!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
+    if (!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
     {
       auto filler = G4VScoreHistFiller::Instance();
-      if(filler == nullptr)
+      if (filler == nullptr)
       {
-        G4Exception(
-          "G4PSPassageCellFlux::ProcessHits", "SCORER0123", JustWarning,
-          "G4TScoreHistFiller is not instantiated!! Histogram is not filled.");
+        G4Exception("G4PSPassageCellFlux::ProcessHits", "SCORER0123", JustWarning,
+                    "G4TScoreHistFiller is not instantiated!! Histogram is not filled.");
       }
       else
       {
-        filler->FillH1(hitIDMap[index],
-                       aStep->GetPreStepPoint()->GetKineticEnergy(), fCellFlux);
+        filler->FillH1(hitIDMap[index], aStep->GetPreStepPoint()->GetKineticEnergy(), fCellFlux);
       }
     }
   }
@@ -110,35 +106,34 @@ G4bool G4PSPassageCellFlux::IsPassed(G4Step* aStep)
   G4bool Passed = false;
 
   G4bool IsEnter = aStep->GetPreStepPoint()->GetStepStatus() == fGeomBoundary;
-  G4bool IsExit  = aStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary;
+  G4bool IsExit = aStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary;
 
-  G4int trkid        = aStep->GetTrack()->GetTrackID();
+  G4int trkid = aStep->GetTrack()->GetTrackID();
   G4double trklength = aStep->GetStepLength();
-  if(weighted)
-    trklength *= aStep->GetPreStepPoint()->GetWeight();
+  if (weighted) trklength *= aStep->GetPreStepPoint()->GetWeight();
 
-  if(IsEnter && IsExit)
-  {                         // Passed at one step
+  if (IsEnter && IsExit)
+  {  // Passed at one step
     fCellFlux = trklength;  // Track length is absolutely given.
-    Passed    = true;
+    Passed = true;
   }
-  else if(IsEnter)
-  {                         // Enter a new geometry
+  else if (IsEnter)
+  {  // Enter a new geometry
     fCurrentTrkID = trkid;  // Resetting the current track.
-    fCellFlux     = trklength;
+    fCellFlux = trklength;
   }
-  else if(IsExit)
+  else if (IsExit)
   {  // Exit a current geometry
-    if(fCurrentTrkID == trkid)
-    {                          // if the track is same as entered,
+    if (fCurrentTrkID == trkid)
+    {  // if the track is same as entered,
       fCellFlux += trklength;  // add the track length to current one.
       Passed = true;
     }
   }
   else
   {  // Inside geometry
-    if(fCurrentTrkID == trkid)
-    {                          // if the track is same as entered,
+    if (fCurrentTrkID == trkid)
+    {  // if the track is same as entered,
       fCellFlux += trklength;  // adding the track length to current one.
     }
   }
@@ -151,22 +146,23 @@ void G4PSPassageCellFlux::Initialize(G4HCofThisEvent* HCE)
   fCurrentTrkID = -1;
 
   EvtMap = new G4THitsMap<G4double>(detector->GetName(), GetName());
-  if(HCID < 0)
-    HCID = GetCollectionID(0);
+  if (HCID < 0) HCID = GetCollectionID(0);
   HCE->AddHitsCollection(HCID, EvtMap);
 }
 
-void G4PSPassageCellFlux::clear() { EvtMap->clear(); }
+void G4PSPassageCellFlux::clear()
+{
+  EvtMap->clear();
+}
 
 void G4PSPassageCellFlux::PrintAll()
 {
   G4cout << " MultiFunctionalDet  " << detector->GetName() << G4endl;
   G4cout << " PrimitiveScorer " << GetName() << G4endl;
   G4cout << " Number of entries " << EvtMap->entries() << G4endl;
-  for(const auto& [copy, flux] : *(EvtMap->GetMap()))
+  for (const auto& [copy, flux] : *(EvtMap->GetMap()))
   {
-    G4cout << "  copy no.: " << copy
-           << "  cell flux : " << *(flux) / GetUnitValue() << " ["
+    G4cout << "  copy no.: " << copy << "  cell flux : " << *(flux) / GetUnitValue() << " ["
            << GetUnit() << G4endl;
   }
 }
@@ -179,10 +175,8 @@ void G4PSPassageCellFlux::SetUnit(const G4String& unit)
 void G4PSPassageCellFlux::DefineUnitAndCategory()
 {
   // Per Unit Surface
-  new G4UnitDefinition("percentimeter2", "percm2", "Per Unit Surface",
-                       (1. / cm2));
-  new G4UnitDefinition("permillimeter2", "permm2", "Per Unit Surface",
-                       (1. / mm2));
+  new G4UnitDefinition("percentimeter2", "percm2", "Per Unit Surface", (1. / cm2));
+  new G4UnitDefinition("permillimeter2", "permm2", "Per Unit Surface", (1. / mm2));
   new G4UnitDefinition("permeter2", "perm2", "Per Unit Surface", (1. / m2));
 }
 

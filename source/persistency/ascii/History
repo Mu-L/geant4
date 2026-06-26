@@ -6,7 +6,7 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-04-28 Gabriele Cosmo (ascii-V11-03-00)
+## 2026-04-28 Gabriele Cosmo (ascii-V11-04-00)
 - Fix in G4tgbVolume::FindOrConstructG4Solid() to close tessellated solid
   at construction. Addressing problem report #2718.
 

@@ -28,8 +28,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPThermalBoost_h
-#define G4ParticleHPThermalBoost_h
+#ifndef G4PARTICLEHPTHERMALBOOST_HH
+#define G4PARTICLEHPTHERMALBOOST_HH
 
 #include "G4Electron.hh"
 #include "G4Element.hh"
@@ -42,6 +42,7 @@
 class G4ParticleHPThermalBoost
 {
   public:
+
     G4double GetThermalEnergy(const G4HadProjectile& aP, const G4Element* anE, G4double aT)
     {
       G4double theA = anE->GetN();

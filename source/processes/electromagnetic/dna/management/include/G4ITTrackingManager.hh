@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,8 +41,7 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
-
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
 #ifndef G4ITTRACKINGMANAGER_HH
 #define G4ITTRACKINGMANAGER_HH
@@ -58,25 +57,24 @@ class G4ITTrackingInteractivity;
 
 class G4ITTrackingManager
 {
-protected:
-  G4ITTrackingInteractivity* fpTrackingInteractivity;
+  protected:
 
-public:
-  G4ITTrackingManager();
-  ~G4ITTrackingManager();
+    G4ITTrackingInteractivity* fpTrackingInteractivity;
 
-  //void Initialize();
+  public:
 
-  void StartTracking(G4Track*);
-  void AppendStep(G4Track* track, G4Step* step);
-  void EndTracking(G4Track*);
-  void EndTrackingWOKill(G4Track*);
+    G4ITTrackingManager();
+    ~G4ITTrackingManager();
 
-  void SetInteractivity(G4ITTrackingInteractivity*);
-  inline G4ITTrackingInteractivity* GetInteractivity()
-  {
-    return fpTrackingInteractivity;
-  }
+    // void Initialize();
+
+    void StartTracking(G4Track*);
+    void AppendStep(G4Track* track, G4Step* step);
+    void EndTracking(G4Track*);
+    void EndTrackingWOKill(G4Track*);
+
+    void SetInteractivity(G4ITTrackingInteractivity*);
+    inline G4ITTrackingInteractivity* GetInteractivity() { return fpTrackingInteractivity; }
 };
 
-#endif // G4ITTRACKINGMANAGER_HH
+#endif  // G4ITTRACKINGMANAGER_HH

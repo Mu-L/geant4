@@ -24,30 +24,28 @@
 // ********************************************************************
 //
 
-
 #include "G4NeutrinoElectronCcXsc.hh"
+
+#include "G4DynamicParticle.hh"
+#include "G4HadTmpUtil.hh"
+#include "G4IonTable.hh"
+#include "G4MuonMinus.hh"
+#include "G4NistManager.hh"
+#include "G4ParticleTable.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4DynamicParticle.hh"
-#include "G4ParticleTable.hh"
-#include "G4IonTable.hh"
-#include "G4HadTmpUtil.hh"
-#include "G4NistManager.hh"
-
-#include "G4MuonMinus.hh"
 #include "G4TauMinus.hh"
 
 using namespace std;
 using namespace CLHEP;
 
-G4NeutrinoElectronCcXsc::G4NeutrinoElectronCcXsc()
- : G4VCrossSectionDataSet("NuElectronCcXsc")
+G4NeutrinoElectronCcXsc::G4NeutrinoElectronCcXsc() : G4VCrossSectionDataSet("NuElectronCcXsc")
 {
   // PDG2016: Gf=1.1663787(6)e-5*(hc)^3/GeV^2
   // fCofXsc  = Gf*Gf*MeC2*2/pi
 
-  fCofXsc  = 1.36044e-22;
-  fCofXsc *= hbarc*hbarc*electron_mass_c2;
+  fCofXsc = 1.36044e-22;
+  fCofXsc *= hbarc * hbarc * electron_mass_c2;
   fCofXsc /= halfpi;
 
   // G4cout<<"fCofXsc = "<<fCofXsc*GeV/cm2<<" cm2/GeV"<<G4endl;
@@ -56,38 +54,39 @@ G4NeutrinoElectronCcXsc::G4NeutrinoElectronCcXsc()
 
   // PDG2016: sin^2 theta Weinberg
 
-  fSin2tW = 0.23129; // 0.2312;
+  fSin2tW = 0.23129;  // 0.2312;
 
-  fCutEnergy = 0.; // default value
+  fCutEnergy = 0.;  // default value
 
-  fBiasingFactor = 1.; // default as physics
+  fBiasingFactor = 1.;  // default as physics
 
-  theMuonMinus = G4MuonMinus::MuonMinus(); 
-  theTauMinus  = G4TauMinus::TauMinus(); 
+  theMuonMinus = G4MuonMinus::MuonMinus();
+  theTauMinus = G4TauMinus::TauMinus();
 }
 
-G4NeutrinoElectronCcXsc::~G4NeutrinoElectronCcXsc() 
-{}
+G4NeutrinoElectronCcXsc::~G4NeutrinoElectronCcXsc() {}
 
 //////////////////////////////////////////////////////
 
-G4bool 
-G4NeutrinoElectronCcXsc::IsElementApplicable( const G4DynamicParticle* aPart, G4int, const G4Material*)
+G4bool G4NeutrinoElectronCcXsc::IsElementApplicable(const G4DynamicParticle* aPart, G4int,
+                                                    const G4Material*)
 {
-  G4bool result  = false;
+  G4bool result = false;
   G4String pName = aPart->GetDefinition()->GetParticleName();
   G4double minEnergy = 0., energy = aPart->GetTotalEnergy();
   G4double fmass, emass = electron_mass_c2;
 
-  if(    pName == "anti_nu_e" ||   pName == "nu_mu"   || pName == "anti_nu_mu"  ) fmass = theMuonMinus->GetPDGMass(); 
-  else if( pName == "nu_tau"  || pName == "anti_nu_tau" ) fmass = theTauMinus->GetPDGMass(); 
-  else fmass = emass;
+  if (pName == "anti_nu_e" || pName == "nu_mu" || pName == "anti_nu_mu")
+    fmass = theMuonMinus->GetPDGMass();
+  else if (pName == "nu_tau" || pName == "anti_nu_tau")
+    fmass = theTauMinus->GetPDGMass();
+  else
+    fmass = emass;
 
-  minEnergy = (fmass-emass)*(fmass+emass)/emass;
-  
-  if( ( pName == "nu_mu"  || pName == "anti_nu_mu"  || 
-        pName == "nu_tau" || pName == "anti_nu_tau"   ) &&
-        energy > minEnergy                                 )
+  minEnergy = (fmass - emass) * (fmass + emass) / emass;
+
+  if ((pName == "nu_mu" || pName == "anti_nu_mu" || pName == "nu_tau" || pName == "anti_nu_tau")
+      && energy > minEnergy)
   {
     result = true;
   }
@@ -96,47 +95,46 @@ G4NeutrinoElectronCcXsc::IsElementApplicable( const G4DynamicParticle* aPart, G4
 
 ////////////////////////////////////////////////////
 
-G4double G4NeutrinoElectronCcXsc::
-GetElementCrossSection(const G4DynamicParticle* aPart, G4int ZZ,  
-		       const G4Material*) 
+G4double G4NeutrinoElectronCcXsc::GetElementCrossSection(const G4DynamicParticle* aPart, G4int ZZ,
+                                                         const G4Material*)
 {
-  G4double result = 0., totS, fmass, fmass2, emass=electron_mass_c2, emass2;
+  G4double result = 0., totS, fmass, fmass2, emass = electron_mass_c2, emass2;
 
   G4double energy = aPart->GetTotalEnergy();
-  G4String pName   = aPart->GetDefinition()->GetParticleName();
+  G4String pName = aPart->GetDefinition()->GetParticleName();
 
-  emass2 = emass*emass;
-  totS   = 2.*energy*emass + emass2;
+  emass2 = emass * emass;
+  totS = 2. * energy * emass + emass2;
 
-  if( pName == "anti_nu_e" || pName == "nu_mu")
+  if (pName == "anti_nu_e" || pName == "nu_mu")
   {
-    fmass  = theMuonMinus->GetPDGMass();
-    fmass2 = fmass*fmass;
-    result = (1. - fmass2/totS)*(1. - fmass2/totS);
+    fmass = theMuonMinus->GetPDGMass();
+    fmass2 = fmass * fmass;
+    result = (1. - fmass2 / totS) * (1. - fmass2 / totS);
   }
-  else if( pName == "anti_nu_mu")
+  else if (pName == "anti_nu_mu")
   {
-    fmass  = theMuonMinus->GetPDGMass();
-    fmass2 = fmass*fmass;
+    fmass = theMuonMinus->GetPDGMass();
+    fmass2 = fmass * fmass;
 
-    result  = (1.+ emass2/totS)*(1.+ fmass2/totS);
-    result += (1.- emass2/totS)*(1.- fmass2/totS)/3.;
-    result *= 0.25*(1. - fmass2/totS)*(1. - fmass2/totS);
+    result = (1. + emass2 / totS) * (1. + fmass2 / totS);
+    result += (1. - emass2 / totS) * (1. - fmass2 / totS) / 3.;
+    result *= 0.25 * (1. - fmass2 / totS) * (1. - fmass2 / totS);
   }
-  else if( pName == "nu_tau") 
+  else if (pName == "nu_tau")
   {
-    fmass  = theTauMinus->GetPDGMass();
-    fmass2 = fmass*fmass;
-    result = (1. - fmass2/totS)*(1. - fmass2/totS);
+    fmass = theTauMinus->GetPDGMass();
+    fmass2 = fmass * fmass;
+    result = (1. - fmass2 / totS) * (1. - fmass2 / totS);
   }
-  else if( pName == "anti_nu_tau")
+  else if (pName == "anti_nu_tau")
   {
-    fmass  = theTauMinus->GetPDGMass();
-    fmass2 = fmass*fmass;
+    fmass = theTauMinus->GetPDGMass();
+    fmass2 = fmass * fmass;
 
-    result  = (1.+ emass2/totS)*(1.+ fmass2/totS);
-    result += (1.- emass2/totS)*(1.- fmass2/totS)/3.;
-    result *= 0.25*(1. - fmass2/totS)*(1. - fmass2/totS);
+    result = (1. + emass2 / totS) * (1. + fmass2 / totS);
+    result += (1. - emass2 / totS) * (1. - fmass2 / totS) / 3.;
+    result *= 0.25 * (1. - fmass2 / totS) * (1. - fmass2 / totS);
   }
   else
   {
@@ -146,26 +144,26 @@ GetElementCrossSection(const G4DynamicParticle* aPart, G4int ZZ,
 
   G4double aa = 1.;
   G4double bb = 1.7;
-  G4double gw = 2.141*GeV;
+  G4double gw = 2.141 * GeV;
   G4double dd = 5000.;
-  G4double mw = 80.385*GeV;
+  G4double mw = 80.385 * GeV;
 
-  if( energy > 50.*GeV )
+  if (energy > 50. * GeV)
   {
     result *= bb;
-    result /= 1.+ aa*totS/mw/mw;
+    result /= 1. + aa * totS / mw / mw;
 
-    if( pName == "anti_nu_e")
+    if (pName == "anti_nu_e")
     {
-      result *= 1. + dd*gw*gw*totS/( (totS-mw*mw)*(totS-mw*mw)+gw*gw*mw*mw );
+      result *=
+        1. + dd * gw * gw * totS / ((totS - mw * mw) * (totS - mw * mw) + gw * gw * mw * mw);
     }
   }
-  result *= fCofXsc; //*energy;
-  result *= energy + 0.5*emass;
+  result *= fCofXsc;  //*energy;
+  result *= energy + 0.5 * emass;
   result *= ZZ;  // incoherent sum over  all element electrons
 
-  result *= fBiasingFactor; // biasing up, if set >1
+  result *= fBiasingFactor;  // biasing up, if set >1
 
   return result;
 }
-

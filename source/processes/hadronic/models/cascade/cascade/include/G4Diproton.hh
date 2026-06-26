@@ -43,16 +43,19 @@
 // ###                        DIPROTON                                ###
 // ######################################################################
 
-class G4Diproton : public G4VShortLivedParticle {
-private:
-  static G4Diproton* theInstance;
-  G4Diproton();
-  ~G4Diproton() { theInstance = 0; }
-  
-public:
-  static G4Diproton* Definition();
-  static G4Diproton* DiprotonDefinition();
-  static G4Diproton* Diproton();
+class G4Diproton : public G4VShortLivedParticle
+{
+  private:
+
+    static G4Diproton* theInstance;
+    G4Diproton();
+    ~G4Diproton() { theInstance = 0; }
+
+  public:
+
+    static G4Diproton* Definition();
+    static G4Diproton* DiprotonDefinition();
+    static G4Diproton* Diproton();
 };
 
-#endif	/* G4DIPROTON_HH */
+#endif /* G4DIPROTON_HH */

@@ -24,6 +24,4 @@
 // ********************************************************************
 //
 #include "G4VDNAHitModel.hh"
-G4VDNAHitModel::G4VDNAHitModel(const G4String& name)
-  : fName(name)
-{}
+G4VDNAHitModel::G4VDNAHitModel(const G4String& name) : fName(name) {}

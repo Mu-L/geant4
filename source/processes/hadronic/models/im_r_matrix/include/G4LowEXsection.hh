@@ -23,20 +23,22 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4LowEXsection_h
-#define G4LowEXsection_h
+#ifndef G4LOWEXSECTION_HH
+#define G4LOWEXSECTION_HH
+
+#include "globals.hh"
 
 #include <utility>
 #include <vector>
-#include "globals.hh"
 
-class G4LowEXsection : public std::vector<std::pair<double,double> >
+class G4LowEXsection : public std::vector<std::pair<double, double>>
 {
-public:
-  G4LowEXsection() {}
-  virtual ~G4LowEXsection() {}
-  G4double CrossSection(G4double s) const;
-private:
+  public:
 
+    G4LowEXsection() {}
+    virtual ~G4LowEXsection() {}
+    G4double CrossSection(G4double s) const;
+
+  private:
 };
 #endif

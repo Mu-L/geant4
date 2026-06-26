@@ -27,8 +27,8 @@
 //
 // Utilities for parsing/checking inputs in G4UIparameter/G4UIcommand
 
-#ifndef G4UIparsing_hh
-#define G4UIparsing_hh 1
+#ifndef G4UIPARSING_HH
+#define G4UIPARSING_HH
 
 #include "G4UItokenNum.hh"
 #include "globals.hh"
@@ -62,17 +62,23 @@ inline G4String TtoS(T value)
 // Check if the value is within the range of (long) int
 inline G4bool ChkMax(const char* str, short maxDigits)
 {
-  if(maxDigits > 10) {
-  // long int assumed
+  if (maxDigits > 10)
+  {
+    // long int assumed
     auto tmpval = std::stoll(str);
-    if(tmpval > LONG_MAX || tmpval < LONG_MIN) {
-      G4cerr << "input string '" << str << "' out-of-range for conversion to 'long int' value" << G4endl;
+    if (tmpval > LONG_MAX || tmpval < LONG_MIN)
+    {
+      G4cerr << "input string '" << str << "' out-of-range for conversion to 'long int' value"
+             << G4endl;
       return false;
     }
-  } else {
-  // int assumed
+  }
+  else
+  {
+    // int assumed
     auto tmpval = std::stol(str);
-    if(tmpval > INT_MAX || tmpval < INT_MIN) {
+    if (tmpval > INT_MAX || tmpval < INT_MIN)
+    {
       G4cerr << "input string '" << str << "' out-of-range for conversion to 'int' value" << G4endl;
       return false;
     }
@@ -85,20 +91,25 @@ inline G4bool IsInt(const char* str, short maxDigits)
 {
   const char* p = str;
   G4int length = 0;
-  if (*p == '+' || *p == '-') {
+  if (*p == '+' || *p == '-')
+  {
     ++p;
   }
-  if (isdigit((G4int)(*p)) != 0) {
-    while (isdigit((G4int)(*p)) != 0) {
+  if (isdigit((G4int)(*p)) != 0)
+  {
+    while (isdigit((G4int)(*p)) != 0)
+    {
       ++p;
       ++length;
     }
-    if (*p == '\0') {
-      if (length > maxDigits) {
+    if (*p == '\0')
+    {
+      if (length > maxDigits)
+      {
         G4cerr << "digit length exceeds" << G4endl;
         return false;
       }
-      return ChkMax(str,maxDigits);
+      return ChkMax(str, maxDigits);
     }
   }
   return false;
@@ -115,15 +126,19 @@ inline G4bool ExpectExponent(const char* str)
 inline G4bool IsDouble(const char* str)
 {
   const char* p = str;
-  switch (*p) {
+  switch (*p)
+  {
     case '+':
     case '-':
       ++p;
-      if (isdigit(*p) != 0) {
-        while (isdigit((G4int)(*p)) != 0) {
+      if (isdigit(*p) != 0)
+      {
+        while (isdigit((G4int)(*p)) != 0)
+        {
           ++p;
         }
-        switch (*p) {
+        switch (*p)
+        {
           case '\0':
             return true;  // break;
           case 'E':
@@ -131,24 +146,31 @@ inline G4bool IsDouble(const char* str)
             return ExpectExponent(++p);  // break;
           case '.':
             ++p;
-            if (*p == '\0') {
+            if (*p == '\0')
+            {
               return true;
             }
-            if (*p == 'e' || *p == 'E') {
+            if (*p == 'e' || *p == 'E')
+            {
               return ExpectExponent(++p);
             }
-            if (isdigit(*p) != 0) {
-              while (isdigit((G4int)(*p)) != 0) {
+            if (isdigit(*p) != 0)
+            {
+              while (isdigit((G4int)(*p)) != 0)
+              {
                 ++p;
               }
-              if (*p == '\0') {
+              if (*p == '\0')
+              {
                 return true;
               }
-              if (*p == 'e' || *p == 'E') {
+              if (*p == 'e' || *p == 'E')
+              {
                 return ExpectExponent(++p);
               }
             }
-            else {
+            else
+            {
               return false;
             }
             break;
@@ -156,16 +178,21 @@ inline G4bool IsDouble(const char* str)
             return false;
         }
       }
-      if (*p == '.') {
+      if (*p == '.')
+      {
         ++p;
-        if (isdigit(*p) != 0) {
-          while (isdigit((G4int)(*p)) != 0) {
+        if (isdigit(*p) != 0)
+        {
+          while (isdigit((G4int)(*p)) != 0)
+          {
             ++p;
           }
-          if (*p == '\0') {
+          if (*p == '\0')
+          {
             return true;
           }
-          if (*p == 'e' || *p == 'E') {
+          if (*p == 'e' || *p == 'E')
+          {
             return ExpectExponent(++p);
           }
         }
@@ -173,45 +200,60 @@ inline G4bool IsDouble(const char* str)
       break;
     case '.':
       ++p;
-      if (isdigit(*p) != 0) {
-        while (isdigit((G4int)(*p)) != 0) {
+      if (isdigit(*p) != 0)
+      {
+        while (isdigit((G4int)(*p)) != 0)
+        {
           ++p;
         }
-        if (*p == '\0') {
+        if (*p == '\0')
+        {
           return true;
         }
-        if (*p == 'e' || *p == 'E') {
+        if (*p == 'e' || *p == 'E')
+        {
           return ExpectExponent(++p);
         }
       }
       break;
     default:  // digit is expected
-      if (isdigit(*p) != 0) {
-        while (isdigit((G4int)(*p)) != 0) {
+      if (isdigit(*p) != 0)
+      {
+        while (isdigit((G4int)(*p)) != 0)
+        {
           ++p;
         }
-        if (*p == '\0') {
+        if (*p == '\0')
+        {
           return true;
         }
-        if (*p == 'e' || *p == 'E') {
+        if (*p == 'e' || *p == 'E')
+        {
           return ExpectExponent(++p);
         }
-        if (*p == '.') {
+        if (*p == '.')
+        {
           ++p;
-          if (*p == '\0') {
+          if (*p == '\0')
+          {
             return true;
           }
-          if (*p == 'e' || *p == 'E') {
+          if (*p == 'e' || *p == 'E')
+          {
             return ExpectExponent(++p);
           }
-          if (isdigit(*p) != 0) {
-            while (isdigit((G4int)(*p)) != 0) {
+          if (isdigit(*p) != 0)
+          {
+            while (isdigit((G4int)(*p)) != 0)
+            {
               ++p;
             }
-            if (*p == '\0') {
+            if (*p == '\0')
+            {
               return true;
             }
-            if (*p == 'e' || *p == 'E') {
+            if (*p == 'e' || *p == 'E')
+            {
               return ExpectExponent(++p);
             }
           }
@@ -225,7 +267,8 @@ inline G4bool IsDouble(const char* str)
 inline G4int CompareInt(G4int arg1, G4int op, G4int arg2, G4int& errCode)
 {
   G4int result = -1;
-  switch (op) {
+  switch (op)
+  {
     case G4UItokenNum::GT:
       result = static_cast<G4int>(arg1 > arg2);
       break;
@@ -255,7 +298,8 @@ inline G4int CompareInt(G4int arg1, G4int op, G4int arg2, G4int& errCode)
 inline G4int CompareLong(G4long arg1, G4int op, G4long arg2, G4int& errCode)
 {
   G4int result = -1;
-  switch (op) {
+  switch (op)
+  {
     case G4UItokenNum::GT:
       result = static_cast<G4int>(arg1 > arg2);
       break;
@@ -285,7 +329,8 @@ inline G4int CompareLong(G4long arg1, G4int op, G4long arg2, G4int& errCode)
 inline G4int CompareDouble(G4double arg1, G4int op, G4double arg2, G4int& errCode)
 {
   G4int result = -1;
-  switch (op) {
+  switch (op)
+  {
     case G4UItokenNum::GT:
       result = static_cast<G4int>(arg1 > arg2);
       break;

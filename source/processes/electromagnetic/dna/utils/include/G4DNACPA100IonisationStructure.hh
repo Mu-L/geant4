@@ -39,8 +39,8 @@
 // Based on the study by S. Zein et. al. Nucl. Inst. Meth. B 488 (2021) 70-82
 // 1/2/2023 : Hoang added modification for DNA cross sections
 
-#ifndef G4DNACPA100IonisationStructure_hh
-#define G4DNACPA100IonisationStructure_hh
+#ifndef G4DNACPA100IONISATIONSTRUCTURE_HH
+#define G4DNACPA100IONISATIONSTRUCTURE_HH
 
 #include "globals.hh"
 
@@ -51,6 +51,7 @@ class G4Material;
 class G4DNACPA100IonisationStructure
 {
   public:
+
     G4DNACPA100IonisationStructure();
 
     ~G4DNACPA100IonisationStructure() = default;
@@ -59,12 +60,10 @@ class G4DNACPA100IonisationStructure
 
     G4double UEnergy(const std::size_t& level, const std::size_t& MatID);
 
-    inline std::size_t NumberOfLevels(const std::size_t& MatID)
-    {
-      return fnLevels[MatID];
-    }
+    inline std::size_t NumberOfLevels(const std::size_t& MatID) { return fnLevels[MatID]; }
 
   private:
+
     void InitialiseGuanine();
     void InitialiseWater();
     void InitialiseDeoxyribose();

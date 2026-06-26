@@ -42,7 +42,6 @@ G4PSStepChecker::G4PSStepChecker(const G4String& name, G4int depth)
 
 G4bool G4PSStepChecker::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
-  G4cout << "G4PSStepChecker:: Step identified index= " << GetIndex(aStep)
-         << G4endl;
+  G4cout << "G4PSStepChecker:: Step identified index= " << GetIndex(aStep) << G4endl;
   return true;
 }

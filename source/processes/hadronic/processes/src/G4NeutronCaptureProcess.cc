@@ -25,7 +25,7 @@
 //
 // G4 Process: Low-energy Neutron Capture
 // F.W. Jones, TRIUMF, 03-DEC-96
-// 
+//
 // This is a prototype of a low-energy neutron capture process.
 // Currently it is based on the GHEISHA routine CAPTUR,
 // and conforms fairly closely to the original Fortran.
@@ -40,19 +40,18 @@
 // 01-SEP-2008 V.Ivanchenko: use methods from the base class
 // 14-Sep-12 M.Kelsey -- Pass subType code to base ctor
 
-
 #include "G4NeutronCaptureProcess.hh"
+
 #include "G4Neutron.hh"
 #include "G4NeutronCaptureXS.hh"
 
-G4NeutronCaptureProcess::G4NeutronCaptureProcess(const G4String& processName) : 
-  G4HadronicProcess(processName, fCapture)
+G4NeutronCaptureProcess::G4NeutronCaptureProcess(const G4String& processName)
+  : G4HadronicProcess(processName, fCapture)
 {
   AddDataSet(new G4NeutronCaptureXS());
 }
 
-G4bool
-G4NeutronCaptureProcess::IsApplicable(const G4ParticleDefinition& aParticleType)
+G4bool G4NeutronCaptureProcess::IsApplicable(const G4ParticleDefinition& aParticleType)
 {
   return (&aParticleType == G4Neutron::Neutron());
 }
@@ -60,7 +59,6 @@ G4NeutronCaptureProcess::IsApplicable(const G4ParticleDefinition& aParticleType)
 void G4NeutronCaptureProcess::ProcessDescription(std::ostream& outFile) const
 {
   outFile << "G4NeutronCaptureProcess handles the capture of neutrons by nuclei\n"
-	  << "following by gamma/electron de-excitation cascade. One or more\n"
+          << "following by gamma/electron de-excitation cascade. One or more\n"
           << "hadronic models and hadronic cross section sets may be invoked.\n";
 }
-

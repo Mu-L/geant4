@@ -33,19 +33,20 @@
 // --------------------------------------------------------------------
 
 #include "G4SmoothTrajectory.hh"
-#include "G4ClonedSmoothTrajectory.hh"
 
 #include "G4AttDef.hh"
 #include "G4AttDefStore.hh"
 #include "G4AttValue.hh"
+#include "G4AutoLock.hh"
+#include "G4ClonedSmoothTrajectory.hh"
 #include "G4ParticleTable.hh"
 #include "G4SmoothTrajectoryPoint.hh"
 #include "G4UIcommand.hh"
 #include "G4UnitsTable.hh"
-#include "G4AutoLock.hh"
 
-namespace {
- G4Mutex CloneSmoothTrajectoryMutex = G4MUTEX_INITIALIZER;
+namespace
+{
+G4Mutex CloneSmoothTrajectoryMutex = G4MUTEX_INITIALIZER;
 }
 
 // #define G4ATTDEBUG
@@ -81,8 +82,7 @@ G4SmoothTrajectory::G4SmoothTrajectory(const G4Track* aTrack)
   positionRecord->push_back(new G4SmoothTrajectoryPoint(aTrack->GetPosition(), nullptr));
 }
 
-G4SmoothTrajectory::G4SmoothTrajectory(G4SmoothTrajectory& right)
-: G4VTrajectory()
+G4SmoothTrajectory::G4SmoothTrajectory(G4SmoothTrajectory& right) : G4VTrajectory()
 {
   ParticleName = right.ParticleName;
   PDGCharge = right.PDGCharge;
@@ -93,7 +93,8 @@ G4SmoothTrajectory::G4SmoothTrajectory(G4SmoothTrajectory& right)
   initialMomentum = right.initialMomentum;
   positionRecord = new G4TrajectoryPointContainer();
 
-  for (auto& i : *right.positionRecord) {
+  for (auto& i : *right.positionRecord)
+  {
     auto rightPoint = (G4SmoothTrajectoryPoint*)i;
     positionRecord->push_back(new G4SmoothTrajectoryPoint(*rightPoint));
   }
@@ -108,8 +109,10 @@ G4VTrajectory* G4SmoothTrajectory::CloneForMaster() const
 
 G4SmoothTrajectory::~G4SmoothTrajectory()
 {
-  if (positionRecord != nullptr) {
-    for (auto& i : *positionRecord) {
+  if (positionRecord != nullptr)
+  {
+    for (auto& i : *positionRecord)
+    {
       delete i;
     }
     positionRecord->clear();
@@ -139,7 +142,8 @@ const std::map<G4String, G4AttDef>* G4SmoothTrajectory::GetAttDefs() const
 {
   G4bool isNew;
   std::map<G4String, G4AttDef>* store = G4AttDefStore::GetInstance("G4SmoothTrajectory", isNew);
-  if (isNew) {
+  if (isNew)
+  {
     G4String ID("ID");
     (*store)[ID] = G4AttDef(ID, "Track ID", "Physics", "", "G4int");
 
@@ -220,7 +224,8 @@ void G4SmoothTrajectory::MergeTrajectory(G4VTrajectory* secondTrajectory)
 
   // initial point of the second trajectory should not be merged
   //
-  for (G4int i = 1; i < ent; ++i) {
+  for (G4int i = 1; i < ent; ++i)
+  {
     positionRecord->push_back((*(seco->positionRecord))[i]);
   }
   delete (*seco->positionRecord)[0];

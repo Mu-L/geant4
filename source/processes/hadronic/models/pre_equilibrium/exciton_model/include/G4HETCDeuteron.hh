@@ -27,36 +27,34 @@
 // by V. Lara
 //
 // Modified:
-// 23.08.2010 V.Ivanchenko general cleanup, move constructor and destructor 
+// 23.08.2010 V.Ivanchenko general cleanup, move constructor and destructor
 //            the source, use G4Pow
 //
 
-#ifndef G4HETCDeuteron_h
-#define G4HETCDeuteron_h 1
+#ifndef G4HETCDEUTERON_HH
+#define G4HETCDEUTERON_HH
 
 #include "G4HETCChargedFragment.hh"
 #include "G4ReactionProduct.hh"
 
 class G4HETCDeuteron : public G4HETCChargedFragment
 {
-public:
+  public:
 
-  G4HETCDeuteron();
+    G4HETCDeuteron();
 
-  ~G4HETCDeuteron() override = default;
+    ~G4HETCDeuteron() override = default;
 
-  G4HETCDeuteron(const G4HETCDeuteron &right) = delete;
-  const G4HETCDeuteron & operator=(const G4HETCDeuteron &right) = delete; 
-  G4bool operator==(const G4HETCDeuteron &right) const = delete;
-  G4bool operator!=(const G4HETCDeuteron &right) const = delete;
-  
-protected:
+    G4HETCDeuteron(const G4HETCDeuteron& right) = delete;
+    const G4HETCDeuteron& operator=(const G4HETCDeuteron& right) = delete;
+    G4bool operator==(const G4HETCDeuteron& right) const = delete;
+    G4bool operator!=(const G4HETCDeuteron& right) const = delete;
 
-  G4double GetAlpha() const override;
-  G4double GetSpinFactor() const override;
-  G4double K(const G4Fragment& aFragment) const override;
+  protected:
+
+    G4double GetAlpha() const override;
+    G4double GetSpinFactor() const override;
+    G4double K(const G4Fragment& aFragment) const override;
 };
 
 #endif
- 
-

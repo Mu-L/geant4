@@ -26,10 +26,10 @@
 // Author: Christian Velten (2025)
 
 #ifndef G4VUSERMOLECULECOUNTER_HH
-#define G4VUSERMOLECULECOUNTER_HH 1
+#define G4VUSERMOLECULECOUNTER_HH
 
-#include "G4MoleculeCounterManager.hh"
 #include "G4MolecularConfiguration.hh"
+#include "G4MoleculeCounterManager.hh"
 #include "G4MoleculeCounterTemplates.hh"
 #include "G4Scheduler.hh"
 #include "G4UnitsTable.hh"
@@ -45,14 +45,17 @@ class G4VUserMoleculeCounter : public G4VMoleculeCounter
                   "No forward declaration is allowed.");
 
   protected:
+
     struct Search;
 
   public:
+
     G4VUserMoleculeCounter();
     G4VUserMoleculeCounter(G4String, MoleculeCounterType = MoleculeCounterType::Other);
     ~G4VUserMoleculeCounter() override = default;
 
   public:
+
     void Initialize() final;
     void InitializeUser() override = 0;
     void ResetCounter() override;
@@ -61,12 +64,17 @@ class G4VUserMoleculeCounter : public G4VMoleculeCounter
 
     void AbsorbCounter(const G4VMoleculeCounterInternalBase*) override;
 
-    std::unique_ptr<G4VMoleculeCounter::G4VMoleculeCounterIndex> BuildIndex(const G4Track*) const override = 0;
-    std::unique_ptr<G4VMoleculeCounter::G4VMoleculeCounterIndex> BuildIndex(const G4Track*, const G4StepPoint*) const override = 0;
-    std::unique_ptr<G4VMoleculeCounter::G4VMoleculeCounterIndex> BuildSimpleIndex(const G4MolecularConfiguration*) const override = 0;
+    std::unique_ptr<G4VMoleculeCounter::G4VMoleculeCounterIndex>
+    BuildIndex(const G4Track*) const override = 0;
+    std::unique_ptr<G4VMoleculeCounter::G4VMoleculeCounterIndex>
+    BuildIndex(const G4Track*, const G4StepPoint*) const override = 0;
+    std::unique_ptr<G4VMoleculeCounter::G4VMoleculeCounterIndex>
+    BuildSimpleIndex(const G4MolecularConfiguration*) const override = 0;
 
-    void AddMolecule(std::unique_ptr<G4VMoleculeCounter::G4VMoleculeCounterIndex>, G4double, G4int = 1) override;
-    void RemoveMolecule(std::unique_ptr<G4VMoleculeCounter::G4VMoleculeCounterIndex>, G4double, G4int = 1) override;
+    void AddMolecule(std::unique_ptr<G4VMoleculeCounter::G4VMoleculeCounterIndex>, G4double,
+                     G4int = 1) override;
+    void RemoveMolecule(std::unique_ptr<G4VMoleculeCounter::G4VMoleculeCounterIndex>, G4double,
+                        G4int = 1) override;
 
     std::set<const G4MolecularConfiguration*> GetRecordedMolecules() const override;
     std::set<G4double> GetRecordedTimes() const override;
@@ -74,19 +82,27 @@ class G4VUserMoleculeCounter : public G4VMoleculeCounter
     void SchedulerFinalizedTracking() override;
 
   protected:
+
     std::map<TIndex, InnerCounterMapType> fCounterMap{};
     std::map<TIndex, G4int> fShadowCounterMap{};
 
   public:
+
     const std::map<TIndex, InnerCounterMapType>& GetCounterMap() const { return fCounterMap; }
     std::vector<TIndex> GetMapIndices() const;
 
     virtual G4int GetNbMoleculesAtTime(const TIndex&, G4double) const;
     virtual G4int GetNbMoleculesAtTime(Search&, const TIndex&, G4double) const;
-    virtual std::vector<G4int> GetNbMoleculesAtTimes(const TIndex&, const std::vector<G4double>&) const;
+    virtual std::vector<G4int> GetNbMoleculesAtTimes(const TIndex&,
+                                                     const std::vector<G4double>&) const;
+
+    G4int GetCountAtIndexAndTime(const G4VMoleculeCounterIndexInterface*,
+                                 G4double) const override final;
 
     //-SEARCH-----------------------------------------------------------------------
+
   protected:
+
     struct Search
     {
         Search() : fLowerBoundSet(false) {}
@@ -160,19 +176,44 @@ G4VUserMoleculeCounter<TIndex>::GetNbMoleculesAtTimes(const TIndex& index,
 //------------------------------------------------------------------------------
 
 template<typename TIndex>
+G4int G4VUserMoleculeCounter<TIndex>::GetCountAtIndexAndTime(
+  const G4VMoleculeCounterIndexInterface* index, G4double time) const
+{
+  if (index == nullptr)
+  {
+    G4String origin = "G4VUserMoleculeCounter<" + G4::MoleculeCounter::GetTemplateTypeName<TIndex>()
+                      + ">(" + GetName() + ")::GetCountAtIndexAndTime";
+    G4Exception(origin, "BAD_REFERENCE", FatalException, "The index is null!");
+  }
+  auto pIndex = dynamic_cast<const TIndex*>(index);
+  if (pIndex == nullptr)
+  {
+    G4String origin = "G4VUserMoleculeCounter<" + G4::MoleculeCounter::GetTemplateTypeName<TIndex>()
+                      + ">(" + GetName() + ")::GetCountAtIndexAndTime";
+    G4Exception(origin, "BAD_REFERENCE", FatalException,
+                "Could not convert index to expected type!");
+  }
+  return GetNbMoleculesAtTime(*pIndex, time);
+}
+
+//------------------------------------------------------------------------------
+
+template<typename TIndex>
 void G4VUserMoleculeCounter<TIndex>::AddMolecule(
   std::unique_ptr<G4VMoleculeCounter::G4VMoleculeCounterIndex> pIndex, G4double time, G4int number)
 {
   const TIndex* mapIndex = dynamic_cast<TIndex*>(pIndex.get());
 
-  if(mapIndex == nullptr)
+  if (mapIndex == nullptr)
   {
     G4ExceptionDescription errMsg;
-    errMsg << "mapIndex is not found "<< G4endl;
+    errMsg << "mapIndex is not found " << G4endl;
     G4Exception(G4String("G4VUserMoleculeCounter<"
                          + G4::MoleculeCounter::GetTemplateTypeName<TIndex>() + ">::AddMolecule"),
                 "mapIndex == nullptr", FatalException, errMsg);
-  }else{
+  }
+  else
+  {
     if (G4::MoleculeCounter::Contains(fIgnoredMolecules, mapIndex->GetMolecule()->GetDefinition())
         || G4::MoleculeCounter::Contains(fIgnoredReactants, mapIndex->GetMolecule()))
     {
@@ -192,8 +233,10 @@ void G4VUserMoleculeCounter<TIndex>::AddMolecule(
                   "TIME_DONT_MATCH", FatalException, errMsg);
     }
 
-    if (IsTimeAboveUpperBound(time)) {
-      if (fVerbose > 3) {
+    if (IsTimeAboveUpperBound(time))
+    {
+      if (fVerbose > 3)
+      {
         G4cout << "G4VUserMoleculeCounter<" << G4::MoleculeCounter::GetTemplateTypeName<TIndex>()
                << ">(" << GetName() << ")::AddMolecule : " << mapIndex->GetMolecule()->GetName()
                << " at time : " << G4BestUnit(time, "Time") << G4endl;
@@ -202,18 +245,21 @@ void G4VUserMoleculeCounter<TIndex>::AddMolecule(
       }
       return;
     }
-    else if (IsTimeBelowLowerBound(time)) {
+    else if (IsTimeBelowLowerBound(time))
+    {
       // put into shadow counter
       auto [it, indexIsNew] = fShadowCounterMap.emplace(*mapIndex, number);
       if (!indexIsNew) it->second += number;
-      if (fVerbose > 3) {
+      if (fVerbose > 3)
+      {
         G4cout << ":: [IsTimeBelowLowerBound] Adding " << mapIndex->GetInfo()
                << " shadow count: " << it->second - number << " + " << number << G4endl;
       }
       return;
     }
 
-    if (fVerbose > 1) {
+    if (fVerbose > 1)
+    {
       G4cout << "G4VUserMoleculeCounter<" << G4::MoleculeCounter::GetTemplateTypeName<TIndex>()
              << ">(" << GetName() << ")::AddMolecule : " << mapIndex->GetMolecule()->GetName()
              << " at time : " << G4BestUnit(time, "Time") << G4endl;
@@ -225,20 +271,24 @@ void G4VUserMoleculeCounter<TIndex>::AddMolecule(
     auto it_shadow = fShadowCounterMap.find(*mapIndex);
     auto [it, indexIsNew] = fCounterMap.emplace(*mapIndex, InnerCounterMapType{fTimeComparer});
 
-    if (it_shadow != fShadowCounterMap.end()) {
+    if (it_shadow != fShadowCounterMap.end())
+    {
       // entry found in shadow counter
-      if (indexIsNew) {
+      if (indexIsNew)
+      {
         // mapIndex is new, initialize with shadow counter
         it->second[fActiveLowerBound] = it_shadow->second;
       }
-      else {
+      else
+      {
         // mapIndex existed, we need to add the shadow count to it
         // this happens if we are in a subsequent event and have just crossed over the lower
         // activity bound the counter has then already entries from the previous event
         InnerCounterMapType::iterator it_time;
         G4bool timeIsNew;
         std::tie(it_time, timeIsNew) = it->second.emplace(fActiveLowerBound, 0);
-        do {
+        do
+        {
           it_time->second += it_shadow->second;
         } while (++it_time != it->second.end());
       }
@@ -280,13 +330,16 @@ void G4VUserMoleculeCounter<TIndex>::AddMolecule(
       // (1) find the closest time
       // (2) emplace entry using closest value as init + number
       // (3) add number to all "future" entries as well
-      if (it->second.empty()) {
+      if (it->second.empty())
+      {
         it->second.emplace(time, number);
       }
-      else {  // at least one element exists, so we can try to find the closest key
+      else
+      {  // at least one element exists, so we can try to find the closest key
         auto it_closest = G4::MoleculeCounter::FindClosestEntryForKey(it->second, time);
         auto [it_time, _] = it->second.emplace(time, it_closest->second);
-        do {
+        do
+        {
           it_time->second += number;
         } while (++it_time != it->second.end());
       }
@@ -302,14 +355,16 @@ void G4VUserMoleculeCounter<TIndex>::RemoveMolecule(
 {
   const TIndex* mapIndex = dynamic_cast<TIndex*>(pIndex.get());
 
-  if(mapIndex == nullptr)
+  if (mapIndex == nullptr)
   {
     G4ExceptionDescription errMsg;
-    errMsg << "mapIndex is not found "<< G4endl;
+    errMsg << "mapIndex is not found " << G4endl;
     G4Exception(G4String("G4VUserMoleculeCounter<"
                          + G4::MoleculeCounter::GetTemplateTypeName<TIndex>() + ">::AddMolecule"),
                 "mapIndex == nullptr", FatalException, errMsg);
-  }else{
+  }
+  else
+  {
     if (G4::MoleculeCounter::Contains(fIgnoredMolecules, mapIndex->GetMolecule()->GetDefinition())
         || G4::MoleculeCounter::Contains(fIgnoredReactants, mapIndex->GetMolecule()))
     {
@@ -330,9 +385,11 @@ void G4VUserMoleculeCounter<TIndex>::RemoveMolecule(
                   "TIME_DONT_MATCH", FatalException, errMsg);
     }
 
-    if (IsTimeBelowLowerBound(time)) {
+    if (IsTimeBelowLowerBound(time))
+    {
       auto it = fShadowCounterMap.find(*mapIndex);
-      if (it == fShadowCounterMap.end()) {
+      if (it == fShadowCounterMap.end())
+      {
         G4ExceptionDescription errMsg;
         errMsg << "There was no " << mapIndex->GetMolecule()->GetName()
                << " recorded at the time or even before the time asked" << G4endl;
@@ -341,8 +398,10 @@ void G4VUserMoleculeCounter<TIndex>::RemoveMolecule(
                              + ">::RemoveMolecule"),
                     "", FatalErrorInArgument, errMsg);
       }
-      else {
-        if (fVerbose > 3) {
+      else
+      {
+        if (fVerbose > 3)
+        {
           G4cout << ":: [IsTimeBelowLowerBound] Removing " << mapIndex->GetInfo()
                  << " shadow count: " << it->second << " - " << number << G4endl;
         }
@@ -350,28 +409,34 @@ void G4VUserMoleculeCounter<TIndex>::RemoveMolecule(
         return;
       }
     }
-    else if (IsTimeAboveUpperBound(time)) {
+    else if (IsTimeAboveUpperBound(time))
+    {
       // if the "active" counter was not filled, add the shadow counter to it at the lower bound
       // only needed for remove since remove will always be called at the end when the molecule is
       // destroyed
       auto [it, indexIsNew] = fCounterMap.emplace(*mapIndex, InnerCounterMapType{fTimeComparer});
-      if (indexIsNew || it->second.empty()) {
+      if (indexIsNew || it->second.empty())
+      {
         auto it_shadow = fShadowCounterMap.find(*mapIndex);
-        if (it_shadow != fShadowCounterMap.end()) {
+        if (it_shadow != fShadowCounterMap.end())
+        {
           it->second[fActiveLowerBound] = it_shadow->second;
-          if (fVerbose > 3) {
+          if (fVerbose > 3)
+          {
             G4cout << ":: [IsTimeAboveUpperBound] Set " << mapIndex->GetInfo()
                    << " Map[ActiveLowerBound] with shadow count:" << it_shadow->second << G4endl;
           }
           fShadowCounterMap.erase(it_shadow);
         }
-        else if (fVerbose > 3) {
+        else if (fVerbose > 3)
+        {
           G4cout << ":: [IsTimeAboveUpperBound] Not updating with shadow count since"
                     " no shadow count was found!"
                  << G4endl;
         }
       }
-      else if (fVerbose > 3) {
+      else if (fVerbose > 3)
+      {
         G4cout << ":: [IsTimeAboveUpperBound] Not updating with shadow count"
                   " since it already exists "
                << G4endl;
@@ -379,7 +444,8 @@ void G4VUserMoleculeCounter<TIndex>::RemoveMolecule(
       return;
     }
 
-    if (fVerbose > 2) {
+    if (fVerbose > 2)
+    {
       G4cout << "G4VUserMoleculeCounter<" << G4::MoleculeCounter::GetTemplateTypeName<TIndex>()
              << ">(" << GetName() << ")::RemoveMolecule : " << mapIndex->GetMolecule()->GetName()
              << " at time : " << G4BestUnit(time, "Time") << G4endl;
@@ -391,14 +457,17 @@ void G4VUserMoleculeCounter<TIndex>::RemoveMolecule(
     auto it_shadow = fShadowCounterMap.find(*mapIndex);
     auto it = fCounterMap.find(*mapIndex);
 
-    if (it_shadow != fShadowCounterMap.end()) {
+    if (it_shadow != fShadowCounterMap.end())
+    {
       // entry found in shadow counter
-      if (it == fCounterMap.end()) {
+      if (it == fCounterMap.end())
+      {
         // no mapIndex found, initialize with shadow counter
         G4bool indexIsNew = false;
         std::tie(it, indexIsNew) =
           fCounterMap.emplace(*mapIndex, InnerCounterMapType{fTimeComparer});
-        if (!indexIsNew) {
+        if (!indexIsNew)
+        {
           G4ExceptionDescription errMsg;
           errMsg << "We tried to emplace the index after it was found to not exist, but now it "
                     "says it existed!?"
@@ -410,12 +479,14 @@ void G4VUserMoleculeCounter<TIndex>::RemoveMolecule(
         }
         it->second[fActiveLowerBound] = it_shadow->second;
       }
-      else {  // it != fCounterMap.end()
+      else
+      {  // it != fCounterMap.end()
         // mapIndex exists, we need to add the shadow count to it
         // this happens if we are in a subsequent event and have just crossed over the lower
         // activity bound the counter has then already entries from the previous event
         auto [it_time, _] = it->second.emplace(fActiveLowerBound, 0);
-        do {
+        do
+        {
           it_time->second += it_shadow->second;
         } while (++it_time != it->second.end());
       }
@@ -455,13 +526,16 @@ void G4VUserMoleculeCounter<TIndex>::RemoveMolecule(
     G4bool isNewTime = false;
     G4double oldTime = 0;
 
-    if (G4MoleculeCounterManager::Instance()->GetResetCountersBeforeEvent()) {
+    if (G4MoleculeCounterManager::Instance()->GetResetCountersBeforeEvent())
+    {
       auto end = nbMolPerTime.rbegin();  // get last entry
       oldTime = end->first;
 
       // CHECK: no molecules have been recorded for this index
-      if (end == nbMolPerTime.rend()) {
-        if (fVerbose > 2) {
+      if (end == nbMolPerTime.rend())
+      {
+        if (fVerbose > 2)
+        {
           mapIndex->GetMolecule()->PrintState();
           Dump();
         }
@@ -475,7 +549,8 @@ void G4VUserMoleculeCounter<TIndex>::RemoveMolecule(
       if (fCheckRecordedTimesAreConsistent
           && time - end->first < -fTimeComparer.GetPrecisionAtTime(time))
       {
-        if (fVerbose > 2) {
+        if (fVerbose > 2)
+        {
           mapIndex->GetMolecule()->PrintState();
           Dump();
         }
@@ -494,7 +569,8 @@ void G4VUserMoleculeCounter<TIndex>::RemoveMolecule(
       //          << ") = " << oldNumber << " | timeIsNew=" << isNewTime
       //          << " | new_it(t=" << it_time->first << ") = " << it_time->second << G4endl;
     }
-    else {
+    else
+    {
       // since counters are not cleared after chemical run (i.e., after event)
       // there will already be numbers in the map, so...
       // (1) find the closest time
@@ -503,7 +579,8 @@ void G4VUserMoleculeCounter<TIndex>::RemoveMolecule(
       auto it_closest = G4::MoleculeCounter::FindClosestEntryForKey(nbMolPerTime, time);
       std::tie(it_time, isNewTime) = nbMolPerTime.emplace(time, it_closest->second);
       auto _it = it_time;
-      do {
+      do
+      {
         _it->second -= number;
       } while (++_it != it->second.end());
     }
@@ -511,7 +588,8 @@ void G4VUserMoleculeCounter<TIndex>::RemoveMolecule(
     // Check that count at new time is >= 0
     // This currently throws tons of errors for non-basic counters.
     //    auto it_time = nbMolPerTime.find(time);
-    if (it_time == nbMolPerTime.end() || it_time->second < 0) {
+    if (it_time == nbMolPerTime.end() || it_time->second < 0)
+    {
       if (fVerbose > 2) Dump();
       G4ExceptionDescription errMsg;
       errMsg << "After removal of " << number << " species of "
@@ -520,13 +598,15 @@ void G4VUserMoleculeCounter<TIndex>::RemoveMolecule(
              << "\nIndex was :" << mapIndex->GetInfo() << "\nGlobal time is "
              << G4BestUnit(G4Scheduler::Instance()->GetGlobalTime(), "Time")
              << "\nPrevious selected time is " << G4BestUnit(oldTime, "Time") << G4endl;
-      if (fNegativeCountsAreFatal) {
+      if (fNegativeCountsAreFatal)
+      {
         G4Exception(G4String("G4VUserMoleculeCounter<"
                              + G4::MoleculeCounter::GetTemplateTypeName<TIndex>()
                              + ">::RemoveMolecule"),
                     "N_INF_0", FatalException, errMsg);
       }
-      else if (fVerbose > 0) {
+      else if (fVerbose > 0)
+      {
         G4Exception(G4String("G4VUserMoleculeCounter<"
                              + G4::MoleculeCounter::GetTemplateTypeName<TIndex>()
                              + ">::RemoveMolecule"),
@@ -541,20 +621,30 @@ void G4VUserMoleculeCounter<TIndex>::RemoveMolecule(
 template<typename TIndex>
 void G4VUserMoleculeCounter<TIndex>::SchedulerFinalizedTracking()
 {
+  if (fVerbose > 1)
+  {
+    G4cout << "G4VUserMoleculeCounter<" << G4::MoleculeCounter::GetTemplateTypeName<TIndex>()
+           << ">(" << GetName() << ")::SchedulerFinalizedTracking" << G4endl;
+  }
+
   // Add record to fCounterMap for each fShadowCounterMap index unless they exist already
-  for (auto& it_shadow : fShadowCounterMap) {
+  for (auto& it_shadow : fShadowCounterMap)
+  {
     auto [it, indexIsNew] =
       fCounterMap.emplace(it_shadow.first, InnerCounterMapType{fTimeComparer});
-    if (indexIsNew || it->second.empty()) {
+    if (indexIsNew || it->second.empty())
+    {
       it->second[fActiveLowerBound] = it_shadow.second;
-      if (fVerbose > 3) {
+      if (fVerbose > 3)
+      {
         G4cout << "G4VUserMoleculeCounter<" << G4::MoleculeCounter::GetTemplateTypeName<TIndex>()
                << ">(" << GetName() << ")::SchedulerEndedTracking : " << "setting map index '"
                << it_shadow.first.GetInfo() << "' from shadow counter to n = " << it_shadow.second
                << G4endl;
       }
     }
-    else if (fVerbose > 2) {
+    else if (fVerbose > 2)
+    {
       G4cout << "G4VUserMoleculeCounter<" << G4::MoleculeCounter::GetTemplateTypeName<TIndex>()
              << ">(" << GetName() << ")::SchedulerEndedTracking : "
              << "encountered dangling shadow counter iterator for index '"
@@ -569,7 +659,8 @@ void G4VUserMoleculeCounter<TIndex>::SchedulerFinalizedTracking()
 template<typename TIndex>
 std::vector<TIndex> G4VUserMoleculeCounter<TIndex>::GetMapIndices() const
 {
-  if (fVerbose > 2) {
+  if (fVerbose > 2)
+  {
     G4cout << "Entering in G4VUserMoleculeCounter::GetMapIndices" << G4endl;
   }
   return G4::MoleculeCounter::GetMapIndices(fCounterMap);
@@ -580,11 +671,13 @@ std::vector<TIndex> G4VUserMoleculeCounter<TIndex>::GetMapIndices() const
 template<typename T>
 std::set<const G4MolecularConfiguration*> G4VUserMoleculeCounter<T>::GetRecordedMolecules() const
 {
-  if (fVerbose > 2) {
+  if (fVerbose > 2)
+  {
     G4cout << "Entering in G4MoleculeCounter::RecordMolecules" << G4endl;
   }
   std::set<const G4MolecularConfiguration*> output{};
-  for (const auto& it : fCounterMap) {
+  for (const auto& it : fCounterMap)
+  {
     output.insert(it.first.GetMolecule());
   }
   return output;
@@ -618,7 +711,8 @@ void G4VUserMoleculeCounter<T>::DumpCounterMapIndices() const
 template<typename T>
 void G4VUserMoleculeCounter<T>::ResetCounter()
 {
-  if (fVerbose > 1) {
+  if (fVerbose > 1)
+  {
     G4cout << "G4VUserMoleculeCounter<" << G4::MoleculeCounter::GetTemplateTypeName<T>() << ">("
            << GetName() << ")::ResetCounter" << G4endl;
   }
@@ -639,11 +733,13 @@ G4bool G4VUserMoleculeCounter<TIndex>::SearchIndexUpdated(Search& search, const 
   auto mol_it = fCounterMap.find(index);
   search.fLastIndexSearched = mol_it;
 
-  if (mol_it != fCounterMap.end()) {
+  if (mol_it != fCounterMap.end())
+  {
     search.fLowerBoundTime = search.fLastIndexSearched->second.end();
     search.fLowerBoundSet = true;
   }
-  else {
+  else
+  {
     search.fLowerBoundSet = false;
   }
 
@@ -657,26 +753,33 @@ G4int G4VUserMoleculeCounter<T>::SearchUpperBoundTime(Search& search, G4double t
                                                       G4bool sameIndex) const
 {
   auto mol_it = search.fLastIndexSearched;
-  if (mol_it == fCounterMap.end()) {
+  if (mol_it == fCounterMap.end())
+  {
     return 0;
   }
 
   InnerCounterMapType const& timeMap = mol_it->second;
-  if (timeMap.empty()) {
+  if (timeMap.empty())
+  {
     return 0;
   }
 
-  if (sameIndex) {
-    if (search.fLowerBoundSet && search.fLowerBoundTime != timeMap.end()) {
-      if (search.fLowerBoundTime->first < time) {
+  if (sameIndex)
+  {
+    if (search.fLowerBoundSet && search.fLowerBoundTime != timeMap.end())
+    {
+      if (search.fLowerBoundTime->first < time)
+      {
         auto upperToLast = search.fLowerBoundTime;
         upperToLast++;
 
-        if (upperToLast == timeMap.end()) {
+        if (upperToLast == timeMap.end())
+        {
           return search.fLowerBoundTime->second;
         }
 
-        if (upperToLast->first > time) {
+        if (upperToLast->first > time)
+        {
           return search.fLowerBoundTime->second;
         }
       }
@@ -685,11 +788,13 @@ G4int G4VUserMoleculeCounter<T>::SearchUpperBoundTime(Search& search, G4double t
 
   auto up_time_it = timeMap.upper_bound(time);
 
-  if (up_time_it == timeMap.end()) {
+  if (up_time_it == timeMap.end())
+  {
     auto last_time = timeMap.rbegin();
     return last_time->second;
   }
-  if (up_time_it == timeMap.begin()) {
+  if (up_time_it == timeMap.begin())
+  {
     return 0;
   }
 
@@ -704,9 +809,17 @@ G4int G4VUserMoleculeCounter<T>::SearchUpperBoundTime(Search& search, G4double t
 //------------------------------------------------------------------------------
 
 template<typename TIndex>
-void G4VUserMoleculeCounter<TIndex>::AbsorbCounter(const G4VMoleculeCounterInternalBase* pCounterBase)
+void G4VUserMoleculeCounter<TIndex>::AbsorbCounter(
+  const G4VMoleculeCounterInternalBase* pCounterBase)
 {
-  if (pCounterBase == nullptr) {
+  if (fVerbose > 1)
+  {
+    G4cout << "G4VUserMoleculeCounter<" << G4::MoleculeCounter::GetTemplateTypeName<TIndex>()
+           << ">(" << GetName() << ")::AbsorbCounter" << G4endl;
+  }
+
+  if (pCounterBase == nullptr)
+  {
     G4ExceptionDescription errMsg;
     errMsg << "Could not cast the pointer to type G4VUserMoleculeCounter<"
            << G4::MoleculeCounter::GetTemplateTypeName<TIndex>() << ">!\n"
@@ -718,7 +831,8 @@ void G4VUserMoleculeCounter<TIndex>::AbsorbCounter(const G4VMoleculeCounterInter
 
   auto pCounter = dynamic_cast<G4VUserMoleculeCounter<TIndex> const*>(pCounterBase);
 
-  if (pCounter == nullptr) {
+  if (pCounter == nullptr)
+  {
     G4ExceptionDescription errMsg;
     errMsg << "Could not cast the pointer to type G4VUserMoleculeCounter<"
            << G4::MoleculeCounter::GetTemplateTypeName<TIndex>() << ">!\n"
@@ -728,7 +842,8 @@ void G4VUserMoleculeCounter<TIndex>::AbsorbCounter(const G4VMoleculeCounterInter
                 "BAD_REFERENCE", FatalException, errMsg);
   }
 
-  if (pCounter->GetType() != GetType()) {
+  if (pCounter->GetType() != GetType())
+  {
     G4ExceptionDescription errMsg;
     errMsg << "You are trying to absorb a counter with different type!" << G4endl;
     G4Exception(G4String("G4VUserMoleculeCounter<"
@@ -736,22 +851,27 @@ void G4VUserMoleculeCounter<TIndex>::AbsorbCounter(const G4VMoleculeCounterInter
                 "TYPE_DIFF", JustWarning, errMsg);
   }
 
-  for (auto const& worker_it : pCounter->GetCounterMap()) {
+  for (auto const& worker_it : pCounter->GetCounterMap())
+  {
     auto [master_it, indexIsNew] =
       fCounterMap.emplace(worker_it.first, InnerCounterMapType{fTimeComparer});
 
     G4int currentNumber = 0, previousNumber = 0;
-    for (auto const& [time, number] : worker_it.second) {
+    for (auto const& [time, number] : worker_it.second)
+    {
       currentNumber = number - previousNumber;
       previousNumber = number;
 
-      if (master_it->second.empty()) {
+      if (master_it->second.empty())
+      {
         master_it->second.emplace(time, currentNumber);
       }
-      else {  // at least one element exists, so we can try to find the closest key
+      else
+      {  // at least one element exists, so we can try to find the closest key
         auto it_closest = G4::MoleculeCounter::FindClosestEntryForKey(master_it->second, time);
         auto [it, _] = master_it->second.emplace(time, it_closest->second);
-        do {
+        do
+        {
           it->second += currentNumber;
         } while (++it != master_it->second.end());
       }

@@ -37,12 +37,14 @@
 #include "G4MagIntegratorStepper.hh"
 #include "G4QSSubstepStruct.hh"
 
-#include <cmath>
 #include <CLHEP/Units/PhysicalConstants.h>
+
+#include <cmath>
 
 /**
  * @brief G4QSStepper is an integrator of particle's equation of
  * motion based on the QSS implementation.
+ * @ingroup geometry_magneticfield
  */
 
 class G4QSStepper : public G4MagIntegratorStepper
@@ -56,9 +58,9 @@ class G4QSStepper : public G4MagIntegratorStepper
      *  @param[in] qssOrder The QSS order (2 or 3 expected; if <= 0 , use value
      *             from Messenger.
      */
-    G4QSStepper( G4EquationOfMotion* equation,
-                 G4int num_integration_vars = 6,  // always 6 -- ignore
-                 G4int qssOrder= -1 ); 
+    G4QSStepper(G4EquationOfMotion* equation,
+                G4int num_integration_vars = 6,  // always 6 -- ignore
+                G4int qssOrder = -1);
 
     /**
      * Default Destructor. Freeing of memory is done in susbsteps destructor.
@@ -68,12 +70,12 @@ class G4QSStepper : public G4MagIntegratorStepper
     /**
      * Utility methods.
      */
-    inline constexpr G4double Cubic_Function(const QSStateVector* states,
-                                             G4int index, G4double delta_t);
-    inline constexpr G4double Parabolic_Function(const QSStateVector* states,
-                                                 G4int index, G4double delta_t);
-    inline constexpr G4double Linear_Function(const QSStateVector* states,
-                                              G4int index, G4double delta_t);
+    inline constexpr G4double Cubic_Function(const QSStateVector* states, G4int index,
+                                             G4double delta_t);
+    inline constexpr G4double Parabolic_Function(const QSStateVector* states, G4int index,
+                                                 G4double delta_t);
+    inline constexpr G4double Linear_Function(const QSStateVector* states, G4int index,
+                                              G4double delta_t);
 
     /**
      * 0 means position type, 1 means velocity type.
@@ -85,7 +87,7 @@ class G4QSStepper : public G4MagIntegratorStepper
      */
     inline void momentum_to_velocity(const G4double* momentum, G4double* out);
     void set_relativistic_coeff(const G4double* momentum);
-    inline void velocity_to_momentum(G4double *y);
+    inline void velocity_to_momentum(G4double* y);
 
     /**
      * Key methods.
@@ -94,10 +96,9 @@ class G4QSStepper : public G4MagIntegratorStepper
     inline void compare_time_and_update(G4int& index, G4int i);
     inline G4int get_next_sync_index();
     inline void update_field();
-    inline G4double extrapolate_polynomial(QSStateVector* states,
-                                    G4int index, G4double delta_t, G4int order);
-    inline void extrapolate_all_states_to_t(Substep* substep,
-                                            G4double t, G4double* yOut);
+    inline G4double extrapolate_polynomial(QSStateVector* states, G4int index, G4double delta_t,
+                                           G4int order);
+    inline void extrapolate_all_states_to_t(Substep* substep, G4double t, G4double* yOut);
 
     /**
      * Moves all the x states of variable index to the current time t.
@@ -133,11 +134,8 @@ class G4QSStepper : public G4MagIntegratorStepper
      *  @param[out] yout Integration output.
      *  @param[out] yError The estimated error - Not used.
      */
-    void Stepper( const G4double y[],
-                  const G4double /*dydx*/ [],
-                  G4double h,
-                  G4double yout[],
-                  G4double /* yerr */ [] ) override;
+    void Stepper(const G4double y[], const G4double /*dydx*/[], G4double h, G4double yout[],
+                 G4double /* yerr */[]) override;
 
     /**
      * Returns the QSS order of integration.
@@ -174,12 +172,8 @@ class G4QSStepper : public G4MagIntegratorStepper
     /**
      * Wrapper for the Stepper() function above.
      */
-    inline void Stepper(const G4double yInput[],
-                        const G4double dydx[],
-                        G4double hstep,
-                        G4double yOutput[],
-                        G4double yError[],
-                        G4double /*dydxOutput*/ []);
+    inline void Stepper(const G4double yInput[], const G4double dydx[], G4double hstep,
+                        G4double yOutput[], G4double yError[], G4double /*dydxOutput*/[]);
 
     /**
      * Sets up interpolation. Does nothing.
@@ -196,7 +190,7 @@ class G4QSStepper : public G4MagIntegratorStepper
     /*
      * Sets the mass at rest. Checking/ensuring that it is positive.
      */
-    inline void setRestMass(G4double restMass); 
+    inline void setRestMass(G4double restMass);
 
   private:
 
@@ -206,7 +200,7 @@ class G4QSStepper : public G4MagIntegratorStepper
     static constexpr int DERIVATIVE_1{1};
     static constexpr int DERIVATIVE_2{2};
     static constexpr int DERIVATIVE_3{3};
-   
+
     static constexpr int VX{3};
     static constexpr int VY{4};
     static constexpr int VZ{5};
@@ -221,7 +215,7 @@ class G4QSStepper : public G4MagIntegratorStepper
     G4bool fTrack_changed{true};
 
     const G4int qss_order{2};
-   
+
     Substeps substeps;
     Substep current_substep;
     const G4FieldTrack* fCurrent_track{nullptr};
@@ -232,18 +226,18 @@ class G4QSStepper : public G4MagIntegratorStepper
     G4double fCharge_c2;
     G4double fRestMass{CLHEP::electron_mass_c2};
     G4double fGamma{1.0};
-    G4double fCoeff; // coeff;
+    G4double fCoeff;  // coeff;
 
     /** Cached values -- for tiny speed up. */
-    G4double fMassOverC ; // was mass_times_gamma_over_speed_of_light;
+    G4double fMassOverC;  // was mass_times_gamma_over_speed_of_light;
     G4double fInv_mass_over_c;
 
     /** Used by interpolation driver, need to copy state here when stepper finished. */
     G4double fYout[12];
 
     /** QSS parameters separated into velocity and position. */
-    G4double dqrel[2] = {0.0,0.0};
-    G4double dqmin[2] = {0.001,0.001};
+    G4double dqrel[2] = {0.0, 0.0};
+    G4double dqmin[2] = {0.001, 0.001};
 
     G4double fVelocity{0.0};
     G4double fFinal_t{0.0};

@@ -33,19 +33,21 @@
 // **********************************************************************
 //
 
-#ifndef G4Etac_h
-#define G4Etac_h 1
+#ifndef G4ETAC_HH
+#define G4ETAC_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4Etac : public G4ParticleDefinition
 {
   public:
+
     static G4Etac* Definition();
     static G4Etac* EtacDefinition();
     static G4Etac* Etac();
 
   private:
+
     G4Etac() {}
     ~G4Etac() override = default;
 

@@ -29,8 +29,8 @@
 //
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
-#ifndef G4HnMessenger_h
-#define G4HnMessenger_h 1
+#ifndef G4HNMESSENGER_HH
+#define G4HNMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -45,6 +45,7 @@ class G4UIcmdWithAString;
 class G4HnMessenger : public G4UImessenger
 {
   public:
+
     explicit G4HnMessenger(G4HnManager& manager);
     G4HnMessenger() = delete;
     ~G4HnMessenger() override;
@@ -53,9 +54,10 @@ class G4HnMessenger : public G4UImessenger
     void SetNewValue(G4UIcommand* command, G4String value) final;
 
   private:
+
     // Helper functions
     G4String GetObjectType() const;
-    template <typename CMD>
+    template<typename CMD>
     std::unique_ptr<CMD> CreateCommand(G4String name, G4String guidance);
     void AddIdParameter(G4UIcommand& command);
     void AddOptionParameter(G4UIcommand& command, G4String optionName);
@@ -70,26 +72,25 @@ class G4HnMessenger : public G4UImessenger
     std::unique_ptr<G4UIcommand> CreateSetAxisLogCommand(unsigned int ibin);
 
     // constants
-    static constexpr std::string_view fkClass { "G4HnMessenger" };
+    static constexpr std::string_view fkClass{"G4HnMessenger"};
 
     // Data members
-    G4HnManager& fManager; ///< Associated class
+    G4HnManager& fManager;  ///< Associated class
     G4String fHnType;
     unsigned int fHnDimension;
-    std::unique_ptr<G4UIcommand>        fSetAsciiCmd;
-    std::unique_ptr<G4UIcommand>        fSetActivationCmd;
-    std::unique_ptr<G4UIcmdWithABool>   fSetActivationAllCmd;
-    std::unique_ptr<G4UIcommand>        fSetPlottingCmd;
-    std::unique_ptr<G4UIcmdWithABool>   fSetPlottingAllCmd;
-    std::unique_ptr<G4UIcommand>        fSetFileNameCmd;
+    std::unique_ptr<G4UIcommand> fSetAsciiCmd;
+    std::unique_ptr<G4UIcommand> fSetActivationCmd;
+    std::unique_ptr<G4UIcmdWithABool> fSetActivationAllCmd;
+    std::unique_ptr<G4UIcommand> fSetPlottingCmd;
+    std::unique_ptr<G4UIcmdWithABool> fSetPlottingAllCmd;
+    std::unique_ptr<G4UIcommand> fSetFileNameCmd;
     std::unique_ptr<G4UIcmdWithAString> fSetFileNameAllCmd;
     std::vector<std::unique_ptr<G4UIcommand>> fSetAxisLogCmd;
 };
 
 //_____________________________________________________________________________
-template <typename CMD>
-std::unique_ptr<CMD> G4HnMessenger::CreateCommand(
-  G4String name, G4String guidance)
+template<typename CMD>
+std::unique_ptr<CMD> G4HnMessenger::CreateCommand(G4String name, G4String guidance)
 {
   G4String fullName = "/analysis/" + fHnType + "/" + name;
   G4String fullGuidance = guidance + GetObjectType();

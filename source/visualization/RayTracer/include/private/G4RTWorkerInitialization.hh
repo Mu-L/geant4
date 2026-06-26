@@ -24,8 +24,8 @@
 // ********************************************************************
 //
 
-#ifndef G4RTWorkerInitialization_hh
-#define G4RTWorkerInitialization_hh
+#ifndef G4RTWORKERINITIALIZATION_HH
+#define G4RTWORKERINITIALIZATION_HH
 
 class G4UserRunAction;
 class G4VUserPrimaryGeneratorAction;
@@ -41,9 +41,10 @@ class G4RTSteppingAction;
 #include "G4Threading.hh"
 #include "G4UserWorkerInitialization.hh"
 
-class G4RTWorkerInitialization  : public G4UserWorkerInitialization
+class G4RTWorkerInitialization : public G4UserWorkerInitialization
 {
-public: // with description
+  public:  // with description
+
     G4RTWorkerInitialization();
     virtual ~G4RTWorkerInitialization();
 
@@ -57,20 +58,19 @@ public: // with description
     // This method is called for each thread, when the local event loop has
     // finished but before the synchronization over threads.
 
-private:
-    static G4ThreadLocal const G4UserRunAction * theUserRunAction;
-    static G4ThreadLocal const G4VUserPrimaryGeneratorAction * theUserPrimaryGeneratorAction;
-    static G4ThreadLocal const G4UserEventAction * theUserEventAction;
-    static G4ThreadLocal const G4UserStackingAction * theUserStackingAction;
-    static G4ThreadLocal const G4UserTrackingAction * theUserTrackingAction;
-    static G4ThreadLocal const G4UserSteppingAction * theUserSteppingAction;
+  private:
 
-    static G4ThreadLocal G4RTRunAction * theRTRunAction;
-    static G4ThreadLocal G4RTPrimaryGeneratorAction * theRTPrimaryGeneratorAction;
-    static G4ThreadLocal G4RTTrackingAction * theRTTrackingAction;
-    static G4ThreadLocal G4RTSteppingAction * theRTSteppingAction;
+    static G4ThreadLocal const G4UserRunAction* theUserRunAction;
+    static G4ThreadLocal const G4VUserPrimaryGeneratorAction* theUserPrimaryGeneratorAction;
+    static G4ThreadLocal const G4UserEventAction* theUserEventAction;
+    static G4ThreadLocal const G4UserStackingAction* theUserStackingAction;
+    static G4ThreadLocal const G4UserTrackingAction* theUserTrackingAction;
+    static G4ThreadLocal const G4UserSteppingAction* theUserSteppingAction;
 
+    static G4ThreadLocal G4RTRunAction* theRTRunAction;
+    static G4ThreadLocal G4RTPrimaryGeneratorAction* theRTPrimaryGeneratorAction;
+    static G4ThreadLocal G4RTTrackingAction* theRTTrackingAction;
+    static G4ThreadLocal G4RTSteppingAction* theRTSteppingAction;
 };
-    
-#endif //G4RTWorkerInitialization_hh
 
+#endif  // G4RTWorkerInitialization_hh

@@ -24,83 +24,82 @@
 // ********************************************************************
 //
 //
-// Filter trajectories according to encountered volume name. Only registered 
+// Filter trajectories according to encountered volume name. Only registered
 // volumes will pass the filter.
 //
 // John Allison, Feb 2016
 //
 #include "G4TrajectoryEncounteredVolumeFilter.hh"
-#include "G4TransportationManager.hh"
-#include "G4VTrajectoryPoint.hh"
+
 #include "G4AttDef.hh"
 #include "G4AttValue.hh"
+#include "G4TransportationManager.hh"
+#include "G4VTrajectoryPoint.hh"
 
 G4TrajectoryEncounteredVolumeFilter::G4TrajectoryEncounteredVolumeFilter(const G4String& name)
-  :G4SmartFilter<G4VTrajectory>(name)
+  : G4SmartFilter<G4VTrajectory>(name)
 {}
 
 G4TrajectoryEncounteredVolumeFilter::~G4TrajectoryEncounteredVolumeFilter() {}
 
-bool
-G4TrajectoryEncounteredVolumeFilter::Evaluate(const G4VTrajectory& traj) const
+bool G4TrajectoryEncounteredVolumeFilter::Evaluate(const G4VTrajectory& traj) const
 {
   // Check the required G4Att exists
   const auto& aPointAttDefs = traj.GetPoint(0)->GetAttDefs();
-  if (aPointAttDefs->find("PostVPath") != aPointAttDefs->end()) {
-    
+  if (aPointAttDefs->find("PostVPath") != aPointAttDefs->end())
+  {
     // Must be a rich trajectory
     const auto& richTrajectory = traj;
-    
-    for (const auto& pvname: fVolumes) {
-      for (G4int iPoint = 0; iPoint < richTrajectory.GetPointEntries(); iPoint++) {
+
+    for (const auto& pvname : fVolumes)
+    {
+      for (G4int iPoint = 0; iPoint < richTrajectory.GetPointEntries(); iPoint++)
+      {
         G4VTrajectoryPoint* point = richTrajectory.GetPoint(iPoint);
         if (!point) continue;
         const auto attValues = point->GetAttValues();
         std::vector<G4AttValue>::const_iterator iAtt;
-        for (iAtt = attValues->begin(); iAtt != attValues->end(); ++iAtt) {
-          if (iAtt->GetName() == "PostVPath" &&
-              G4StrUtil::contains(iAtt->GetValue(),pvname)) break;
+        for (iAtt = attValues->begin(); iAtt != attValues->end(); ++iAtt)
+        {
+          if (iAtt->GetName() == "PostVPath" && G4StrUtil::contains(iAtt->GetValue(), pvname))
+            break;
         }
-        if (iAtt != attValues->end()) {  // Required value found
+        if (iAtt != attValues->end())
+        {  // Required value found
           return true;  // First found pvname determines selection.
         }
       }
     }
     return false;
-    
-  } else {
-    
+  }
+  else
+  {
     G4ExceptionDescription ed;
     ed << "Requires G4RichTrajectory - \"/vis/scene/add/trajectories rich\"";
-    G4Exception
-    ("G4TrajectoryEncounteredVolumeFilter::Evaluate(const G4VTrajectory& traj)",
-     "modeling0126",
-     JustWarning, ed);
+    G4Exception("G4TrajectoryEncounteredVolumeFilter::Evaluate(const G4VTrajectory& traj)",
+                "modeling0126", JustWarning, ed);
     return false;
-    
   }
 }
 
-void
-G4TrajectoryEncounteredVolumeFilter::Add(const G4String& volume)
+void G4TrajectoryEncounteredVolumeFilter::Add(const G4String& volume)
 {
   fVolumes.push_back(volume);
 }
 
-void
-G4TrajectoryEncounteredVolumeFilter::Print(std::ostream& ostr) const
+void G4TrajectoryEncounteredVolumeFilter::Print(std::ostream& ostr) const
 {
-  ostr<<"Volume names registered: "<<G4endl;
+  ostr << "Volume names registered: " << G4endl;
   std::vector<G4String>::const_iterator iter = fVolumes.begin();
-  
-  while (iter != fVolumes.end()) {
-    ostr<<*iter<<G4endl;    
+
+  while (iter != fVolumes.end())
+  {
+    ostr << *iter << G4endl;
     iter++;
   }
 }
 
-void 
-G4TrajectoryEncounteredVolumeFilter::Clear()
+void G4TrajectoryEncounteredVolumeFilter::Clear()
 {
   // Clear volume vector
   fVolumes.clear();

@@ -33,16 +33,17 @@
 //              GeV, pi- p charge exchange scattering data are used.
 //
 
-#ifndef G4PimP2Pi0NAngDst_h
-#define G4PimP2Pi0NAngDst_h 1
+#ifndef G4PIMP2PI0NANGDST_HH
+#define G4PIMP2PI0NANGDST_HH
 
 #include "G4NumIntTwoBodyAngDst.hh"
 
+class G4PimP2Pi0NAngDst : public G4NumIntTwoBodyAngDst<11, 19>
+{
+  public:
 
-class G4PimP2Pi0NAngDst : public G4NumIntTwoBodyAngDst<11,19> {
-public:
-  G4PimP2Pi0NAngDst(G4int verbose = 0);
-  virtual ~G4PimP2Pi0NAngDst() {;}
+    G4PimP2Pi0NAngDst(G4int verbose = 0);
+    virtual ~G4PimP2Pi0NAngDst() { ; }
 };
 
 #endif

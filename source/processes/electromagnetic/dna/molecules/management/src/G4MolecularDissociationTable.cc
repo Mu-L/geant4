@@ -35,16 +35,16 @@
 // ----------------------------------------------------------------
 
 #include "G4MolecularDissociationTable.hh"
-#include "G4MolecularDissociationChannel.hh"
+
 #include "G4MolecularConfiguration.hh"
+#include "G4MolecularDissociationChannel.hh"
 
 using namespace std;
 using namespace G4DNA;
 
 //______________________________________________________________________________
 
-G4MolecularDissociationTable::G4MolecularDissociationTable()
-= default;
+G4MolecularDissociationTable::G4MolecularDissociationTable() = default;
 
 //______________________________________________________________________________
 
@@ -54,11 +54,10 @@ G4MolecularDissociationTable::~G4MolecularDissociationTable()
 
   for (; it_map != fDissociationChannels.end(); it_map++)
   {
-    vector<const G4MolecularDissociationChannel*>& decayChannels = it_map
-        ->second;
+    vector<const G4MolecularDissociationChannel*>& decayChannels = it_map->second;
     if (!decayChannels.empty())
     {
-      for (auto & decayChannel : decayChannels)
+      for (auto& decayChannel : decayChannels)
       {
         if (decayChannel != nullptr)
         {
@@ -74,8 +73,8 @@ G4MolecularDissociationTable::~G4MolecularDissociationTable()
 
 //______________________________________________________________________________
 
-G4MolecularDissociationTable::
-  G4MolecularDissociationTable(const G4MolecularDissociationTable& right)
+G4MolecularDissociationTable::G4MolecularDissociationTable(
+  const G4MolecularDissociationTable& right)
 {
   *this = right;
 }
@@ -85,7 +84,7 @@ G4MolecularDissociationTable::
 G4MolecularDissociationTable&
 G4MolecularDissociationTable::operator=(const G4MolecularDissociationTable& right)
 {
-  if(this == &right) return *this;
+  if (this == &right) return *this;
   fDissociationChannels = right.fDissociationChannels;
   return *this;
 }
@@ -93,8 +92,7 @@ G4MolecularDissociationTable::operator=(const G4MolecularDissociationTable& righ
 //______________________________________________________________________________
 
 const vector<const G4MolecularDissociationChannel*>*
-G4MolecularDissociationTable::
-  GetDecayChannels(const G4MolecularConfiguration* conf) const
+G4MolecularDissociationTable::GetDecayChannels(const G4MolecularConfiguration* conf) const
 {
   auto it_exstates = fDissociationChannels.find(conf);
   if (it_exstates == fDissociationChannels.end()) return nullptr;
@@ -106,27 +104,26 @@ G4MolecularDissociationTable::
 const vector<const G4MolecularDissociationChannel*>*
 G4MolecularDissociationTable::GetDecayChannels(const G4String& exState) const
 {
-  for(const auto & fDissociationChannel : fDissociationChannels)
+  for (const auto& fDissociationChannel : fDissociationChannels)
   {
-    if(fDissociationChannel.first->GetLabel() == exState) return &(fDissociationChannel.second);
+    if (fDissociationChannel.first->GetLabel() == exState) return &(fDissociationChannel.second);
   }
   return nullptr;
 }
 
 //______________________________________________________________________________
 
-//void G4MolecularDissociationTable::
-//  AddExcitedState(const G4String& label,
-//                  const G4MolecularConfiguration* molConf);
+// void G4MolecularDissociationTable::
+//   AddExcitedState(const G4String& label,
+//                   const G4MolecularConfiguration* molConf);
 //{
 //
-//}
+// }
 
 //______________________________________________________________________________
 
-void G4MolecularDissociationTable::
-  AddChannel(const G4MolecularConfiguration* molConf,
-             const G4MolecularDissociationChannel* channel)
+void G4MolecularDissociationTable::AddChannel(const G4MolecularConfiguration* molConf,
+                                              const G4MolecularDissociationChannel* channel)
 {
   fDissociationChannels[molConf].push_back(channel);
 }
@@ -137,34 +134,29 @@ void G4MolecularDissociationTable::CheckDataConsistency() const
 {
   ChannelMap::const_iterator channelsIter;
 
-  for(channelsIter = fDissociationChannels.begin();
-      channelsIter != fDissociationChannels.end(); ++channelsIter)
+  for (channelsIter = fDissociationChannels.begin(); channelsIter != fDissociationChannels.end();
+       ++channelsIter)
   {
-
-    const vector<const G4MolecularDissociationChannel*>& decayVect =
-        channelsIter->second;
+    const vector<const G4MolecularDissociationChannel*>& decayVect = channelsIter->second;
     G4double sum = 0;
 
     G4double max = decayVect.size();
 
-    for(size_t i = 0; i < max; i++)
+    for (size_t i = 0; i < max; i++)
     {
       const G4MolecularDissociationChannel* decay = decayVect[i];
       const G4double prob = decay->GetProbability();
       sum += prob;
     }
 
-    if(sum != 1)
+    if (sum != 1)
     {
       G4ExceptionDescription errMsg;
       errMsg << "The probabilities for deecitation of molecular configuration "
-             << channelsIter->first->GetName()
-             << " with label :" <<  channelsIter->first->GetLabel()
+             << channelsIter->first->GetName() << " with label :" << channelsIter->first->GetLabel()
              << " don't sum up to 1";
       G4Exception("G4MolecularDissociationTable::CheckDataConsistency",
-                  "BRANCHING_RATIOS_CONSISTENCY",
-                  FatalErrorInArgument,
-                  errMsg);
+                  "BRANCHING_RATIOS_CONSISTENCY", FatalErrorInArgument, errMsg);
     }
   }
 }

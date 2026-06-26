@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr) 
+// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr)
 //
 // History:
 // -----------
@@ -33,14 +33,15 @@
 // -------------------------------------------------------------------
 
 #include "G4VITReactionProcess.hh"
+
 #include "G4ITType.hh"
 
 void G4VITReactionProcess::SetReactionTable(const G4ITReactionTable* pReactionTable)
 {
-    fpReactionTable = pReactionTable;
+  fpReactionTable = pReactionTable;
 }
 
 G4bool G4VITReactionProcess::IsApplicable(const G4ITType&, const G4ITType&) const
 {
-    return true;
+  return true;
 }

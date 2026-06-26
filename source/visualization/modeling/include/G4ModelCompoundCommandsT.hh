@@ -38,102 +38,106 @@
 
 ////////////////////////////////////////////////////////////////////////
 // Set interval context
-template <typename M>
-class G4ModelCmdAddIntervalContext: public G4ModelCmdApplyString<M> {
+template<typename M>
+class G4ModelCmdAddIntervalContext : public G4ModelCmdApplyString<M>
+{
+  public:  // With description
 
-public: // With description
-
-  G4ModelCmdAddIntervalContext(M* model, const G4String& placement, 
-			    const G4String& cmdName="addInterval")
-    :G4ModelCmdApplyString<M>(model, placement, cmdName) 
-  {
-    G4UIcmdWithAString* cmd = G4ModelCmdApplyString<M>::Command();
-    cmd->SetGuidance("Add interval.");
-  }
-  
-  virtual ~G4ModelCmdAddIntervalContext() {
-    std::vector<G4UImessenger*>::iterator iter = fMessengers.begin();
-    
-    while (iter != fMessengers.end()) {
-      delete *iter;
-      iter++;
+    G4ModelCmdAddIntervalContext(M* model, const G4String& placement,
+                                 const G4String& cmdName = "addInterval")
+      : G4ModelCmdApplyString<M>(model, placement, cmdName)
+    {
+      G4UIcmdWithAString* cmd = G4ModelCmdApplyString<M>::Command();
+      cmd->SetGuidance("Add interval.");
     }
-  }
-  
-protected:
-  
-  virtual void Apply(const G4String& param) {
-    G4String myString(param);
 
-    G4String name;
-    std::istringstream is(param);
-    
-    is >> name;
+    virtual ~G4ModelCmdAddIntervalContext()
+    {
+      std::vector<G4UImessenger*>::iterator iter = fMessengers.begin();
 
-    myString.erase(0, name.size());
+      while (iter != fMessengers.end())
+      {
+        delete *iter;
+        iter++;
+      }
+    }
 
-    G4String dir = G4VModelCommand<M>::Placement()+"/"+G4VModelCommand<M>::Model()->Name();
-    
-    G4VisTrajContext* context = new G4VisTrajContext(name);
-    
-    G4ModelCommandUtils::AddContextMsgrs(context, fMessengers, dir);
-    G4VModelCommand<M>::Model()->AddIntervalContext(myString, context);
-  }
+  protected:
 
-private:
-  
-  std::vector<G4UImessenger*> fMessengers;
+    virtual void Apply(const G4String& param)
+    {
+      G4String myString(param);
 
+      G4String name;
+      std::istringstream is(param);
+
+      is >> name;
+
+      myString.erase(0, name.size());
+
+      G4String dir = G4VModelCommand<M>::Placement() + "/" + G4VModelCommand<M>::Model()->Name();
+
+      G4VisTrajContext* context = new G4VisTrajContext(name);
+
+      G4ModelCommandUtils::AddContextMsgrs(context, fMessengers, dir);
+      G4VModelCommand<M>::Model()->AddIntervalContext(myString, context);
+    }
+
+  private:
+
+    std::vector<G4UImessenger*> fMessengers;
 };
 
 ////////////////////////////////////////////////////////////////////////
 // Set value context
-template <typename M>
-class G4ModelCmdAddValueContext: public G4ModelCmdApplyString<M> {
+template<typename M>
+class G4ModelCmdAddValueContext : public G4ModelCmdApplyString<M>
+{
+  public:  // With description
 
-public: // With description
-
-  G4ModelCmdAddValueContext(M* model, const G4String& placement, 
-			    const G4String& cmdName="addValue")
-    :G4ModelCmdApplyString<M>(model, placement, cmdName) 
-  {
-    G4UIcmdWithAString* cmd = G4ModelCmdApplyString<M>::Command();
-    cmd->SetGuidance("Add value.");
-  }
-  
-  virtual ~G4ModelCmdAddValueContext() {
-    std::vector<G4UImessenger*>::iterator iter = fMessengers.begin();
-    
-    while (iter != fMessengers.end()) {
-      delete *iter;
-      iter++;
+    G4ModelCmdAddValueContext(M* model, const G4String& placement,
+                              const G4String& cmdName = "addValue")
+      : G4ModelCmdApplyString<M>(model, placement, cmdName)
+    {
+      G4UIcmdWithAString* cmd = G4ModelCmdApplyString<M>::Command();
+      cmd->SetGuidance("Add value.");
     }
-  }
 
-protected:
+    virtual ~G4ModelCmdAddValueContext()
+    {
+      std::vector<G4UImessenger*>::iterator iter = fMessengers.begin();
 
-  virtual void Apply(const G4String& param) {
-    G4String myString(param);
+      while (iter != fMessengers.end())
+      {
+        delete *iter;
+        iter++;
+      }
+    }
 
-    G4String name;
-    std::istringstream is(param);
-    
-    is >> name;
+  protected:
 
-    myString.erase(0, name.size());
+    virtual void Apply(const G4String& param)
+    {
+      G4String myString(param);
 
-    G4String dir = G4VModelCommand<M>::Placement()+"/"+G4VModelCommand<M>::Model()->Name();
-    
-    G4VisTrajContext* context = new G4VisTrajContext(name);
-    
-    G4ModelCommandUtils::AddContextMsgrs(context, fMessengers, dir);
-    G4VModelCommand<M>::Model()->AddValueContext(myString, context);
-  }
+      G4String name;
+      std::istringstream is(param);
 
-private:
-  
-  std::vector<G4UImessenger*> fMessengers;
+      is >> name;
 
+      myString.erase(0, name.size());
+
+      G4String dir = G4VModelCommand<M>::Placement() + "/" + G4VModelCommand<M>::Model()->Name();
+
+      G4VisTrajContext* context = new G4VisTrajContext(name);
+
+      G4ModelCommandUtils::AddContextMsgrs(context, fMessengers, dir);
+      G4VModelCommand<M>::Model()->AddValueContext(myString, context);
+    }
+
+  private:
+
+    std::vector<G4UImessenger*> fMessengers;
 };
 
 #endif

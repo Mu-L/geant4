@@ -37,13 +37,13 @@
 // Author: M.Maire, 17.05.1998 - First version
 // Revisions: G.Cosmo, 06.03.2001 - Migrated to STL vectors
 // --------------------------------------------------------------------
-#ifndef G4UnitsTable_hh
-#define G4UnitsTable_hh 1
-
-#include <vector>
+#ifndef G4UNITSTABLE_HH
+#define G4UNITSTABLE_HH
 
 #include "G4ThreeVector.hh"
 #include "globals.hh"
+
+#include <vector>
 
 class G4UnitsCategory;
 class G4UnitDefinition;
@@ -54,14 +54,16 @@ class G4UnitDefinition;
 
 class G4UnitsTable : public std::vector<G4UnitsCategory*>
 {
- public:
-  using std::vector<G4UnitsCategory*>::vector;
-  G4UnitsTable() = default;
-  ~G4UnitsTable();
+  public:
 
- public:
-  void Synchronize();
-  G4bool Contains(const G4UnitDefinition*, const G4String&);
+    using std::vector<G4UnitsCategory*>::vector;
+    G4UnitsTable() = default;
+    ~G4UnitsTable();
+
+  public:
+
+    void Synchronize();
+    G4bool Contains(const G4UnitDefinition*, const G4String&);
 };
 #else
 
@@ -73,52 +75,53 @@ using G4UnitsTable = std::vector<G4UnitsCategory*>;
 
 class G4UnitDefinition
 {
- public:
-  G4UnitDefinition(const G4String& name, const G4String& symbol,
-                   const G4String& category, G4double value);
+  public:
 
-  ~G4UnitDefinition() = default;
-  G4bool operator==(const G4UnitDefinition&) const;
-  G4bool operator!=(const G4UnitDefinition&) const;
+    G4UnitDefinition(const G4String& name, const G4String& symbol, const G4String& category,
+                     G4double value);
 
-  inline const G4String& GetName() const;
-  inline const G4String& GetSymbol() const;
-  inline G4double GetValue() const;
+    ~G4UnitDefinition() = default;
+    G4bool operator==(const G4UnitDefinition&) const;
+    G4bool operator!=(const G4UnitDefinition&) const;
 
-  void PrintDefinition();
+    inline const G4String& GetName() const;
+    inline const G4String& GetSymbol() const;
+    inline G4double GetValue() const;
 
-  static void BuildUnitsTable();
-  static void PrintUnitsTable();
-  static void ClearUnitsTable();
+    void PrintDefinition();
 
-  static G4UnitsTable& GetUnitsTable();
+    static void BuildUnitsTable();
+    static void PrintUnitsTable();
+    static void ClearUnitsTable();
 
-  static G4bool IsUnitDefined(const G4String&);
-  static G4double GetValueOf(const G4String&);
-  static G4String GetCategory(const G4String&);
+    static G4UnitsTable& GetUnitsTable();
 
- private:
-  G4UnitDefinition(const G4UnitDefinition&);
-  G4UnitDefinition& operator=(const G4UnitDefinition&);
+    static G4bool IsUnitDefined(const G4String&);
+    static G4double GetValueOf(const G4String&);
+    static G4String GetCategory(const G4String&);
 
- private:
-  G4String Name;         // SI name
-  G4String SymbolName;   // SI symbol
-  G4double Value = 0.0;  // value in the internal system of units
+  private:
 
-  static G4ThreadLocal G4UnitsTable* pUnitsTable;  // table of Units
-  static G4ThreadLocal G4bool unitsTableDestroyed;
+    G4UnitDefinition(const G4UnitDefinition&);
+    G4UnitDefinition& operator=(const G4UnitDefinition&);
 
-  std::size_t CategoryIndex = 0;  // category index of this unit
+  private:
+
+    G4String Name;  // SI name
+    G4String SymbolName;  // SI symbol
+    G4double Value = 0.0;  // value in the internal system of units
+
+    static G4ThreadLocal G4UnitsTable* pUnitsTable;  // table of Units
+    static G4ThreadLocal G4bool unitsTableDestroyed;
+
+    std::size_t CategoryIndex = 0;  // category index of this unit
 
 #ifdef G4MULTITHREADED
-  static G4UnitsTable* pUnitsTableShadow;  // shadow of table of Units
+    static G4UnitsTable* pUnitsTableShadow;  // shadow of table of Units
 
- public:
-  inline static G4UnitsTable& GetUnitsTableShadow()
-  {
-    return *pUnitsTableShadow;
-  }
+  public:
+
+    inline static G4UnitsTable& GetUnitsTableShadow() { return *pUnitsTableShadow; }
 #endif
 };
 
@@ -128,57 +131,62 @@ using G4UnitsContainer = std::vector<G4UnitDefinition*>;
 
 class G4UnitsCategory
 {
- public:
-  explicit G4UnitsCategory(const G4String& name);
-  ~G4UnitsCategory();
-  G4bool operator==(const G4UnitsCategory&) const;
-  G4bool operator!=(const G4UnitsCategory&) const;
+  public:
 
-  inline const G4String& GetName() const;
-  inline G4UnitsContainer& GetUnitsList();
-  inline G4int GetNameMxLen() const;
-  inline G4int GetSymbMxLen() const;
-  inline void UpdateNameMxLen(G4int len);
-  inline void UpdateSymbMxLen(G4int len);
-  void PrintCategory();
+    explicit G4UnitsCategory(const G4String& name);
+    ~G4UnitsCategory();
+    G4bool operator==(const G4UnitsCategory&) const;
+    G4bool operator!=(const G4UnitsCategory&) const;
 
- private:
-  G4UnitsCategory(const G4UnitsCategory&);
-  G4UnitsCategory& operator=(const G4UnitsCategory&);
+    inline const G4String& GetName() const;
+    inline G4UnitsContainer& GetUnitsList();
+    inline G4int GetNameMxLen() const;
+    inline G4int GetSymbMxLen() const;
+    inline void UpdateNameMxLen(G4int len);
+    inline void UpdateSymbMxLen(G4int len);
+    void PrintCategory();
 
- private:
-  G4String Name;               // dimensional family: Length,Volume,Energy
-  G4UnitsContainer UnitsList;  // List of units in this family
-  G4int NameMxLen = 0;         // max length of the units name
-  G4int SymbMxLen = 0;         // max length of the units symbol
+  private:
+
+    G4UnitsCategory(const G4UnitsCategory&);
+    G4UnitsCategory& operator=(const G4UnitsCategory&);
+
+  private:
+
+    G4String Name;  // dimensional family: Length,Volume,Energy
+    G4UnitsContainer UnitsList;  // List of units in this family
+    G4int NameMxLen = 0;  // max length of the units name
+    G4int SymbMxLen = 0;  // max length of the units symbol
 };
 
 // --------------------------------------------------------------------
 
 class G4BestUnit
 {
- public:
-  G4BestUnit(G4double internalValue, const G4String& category);
-  G4BestUnit(const G4ThreeVector& internalValue, const G4String& category);
-  // These constructors convert a physical quantity from its internalValue
-  // into the most appropriate unit of the same category.
-  // In practice it builds an object VU = (newValue, newUnit)
+  public:
 
-  ~G4BestUnit() = default;
+    G4BestUnit(G4double internalValue, const G4String& category);
+    G4BestUnit(const G4ThreeVector& internalValue, const G4String& category);
+    // These constructors convert a physical quantity from its internalValue
+    // into the most appropriate unit of the same category.
+    // In practice it builds an object VU = (newValue, newUnit)
 
-  inline G4double* GetValue();
-  inline const G4String& GetCategory() const;
-  inline std::size_t GetIndexOfCategory() const;
-  operator G4String() const;  // Conversion to best string.
+    ~G4BestUnit() = default;
 
-  friend std::ostream& operator<<(std::ostream&, const G4BestUnit& VU);
-  // Default format to print the objet VU above.
+    inline G4double* GetValue();
+    inline const G4String& GetCategory() const;
+    inline std::size_t GetIndexOfCategory() const;
+    operator G4String() const;  // Conversion to best string.
 
- private:
-  G4double Value[3];   // value in the internal system of units
-  G4int nbOfVals = 0;  // G4double=1; G4ThreeVector=3
-  G4String Category;   // dimensional family: Length,Volume,Energy ...
-  std::size_t IndexOfCategory = 0;  // position of Category in UnitsTable
+    friend std::ostream& operator<<(std::ostream&, const G4BestUnit& VU);
+    // Default format to print the objet VU above.
+
+  private:
+
+    G4double Value[3];  // value in the internal system of units
+    G4int nbOfVals = 0;  // G4double=1; G4ThreeVector=3
+    G4String Category;  // dimensional family: Length,Volume,Energy ...
+    std::size_t IndexOfCategory = 0;  // position of Category in UnitsTable
 };
 
 #include "G4UnitsTable.icc"

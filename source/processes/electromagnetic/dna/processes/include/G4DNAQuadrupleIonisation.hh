@@ -29,29 +29,32 @@
 //  Author: Shogo OKADA @KEK-CRC (shogo.okada@kek.jp)
 //
 
-#ifndef G4DNA_QUADRUPLE_IONISATION_HH_
-#define G4DNA_QUADRUPLE_IONISATION_HH_
+#ifndef G4DNA_QUADRUPLE_IONISATION_HH
+#define G4DNA_QUADRUPLE_IONISATION_HH
 
-#include "G4VEmProcess.hh"
 #include "G4DNAGenericIonsManager.hh"
+#include "G4VEmProcess.hh"
 
-class G4DNAQuadrupleIonisation : public G4VEmProcess {
-public:
-  G4DNAQuadrupleIonisation(const G4String& pname ="DNAQuadrupleIonisation",
-                           G4ProcessType type = fElectromagnetic);
+class G4DNAQuadrupleIonisation : public G4VEmProcess
+{
+  public:
 
-  virtual ~G4DNAQuadrupleIonisation() = default;
+    G4DNAQuadrupleIonisation(const G4String& pname = "DNAQuadrupleIonisation",
+                             G4ProcessType type = fElectromagnetic);
 
-  virtual G4bool IsApplicable(const G4ParticleDefinition&);
+    virtual ~G4DNAQuadrupleIonisation() = default;
 
-  virtual void PrintInfo();
+    virtual G4bool IsApplicable(const G4ParticleDefinition&);
 
-protected:
+    virtual void PrintInfo();
 
-  virtual void InitialiseProcess(const G4ParticleDefinition*);
+  protected:
 
-private:
-  G4bool is_initialized_;
+    virtual void InitialiseProcess(const G4ParticleDefinition*);
+
+  private:
+
+    G4bool is_initialized_;
 };
 
-#endif // G4DNA_QUADRUPLE_IONISATION_HH_
+#endif  // G4DNA_QUADRUPLE_IONISATION_HH_

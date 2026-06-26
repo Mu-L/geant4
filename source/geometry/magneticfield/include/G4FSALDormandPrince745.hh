@@ -40,6 +40,7 @@
 /**
  * @brief G4FSALDormandPrince745 is an integrator of particle's equation of
  * motion based on the DormandPrince7 - 5(4) FSAL implementation.
+ * @ingroup geometry_magneticfield
  */
 
 class G4FSALDormandPrince745 : public G4VFSALIntegrationStepper
@@ -52,8 +53,7 @@ class G4FSALDormandPrince745 : public G4VFSALIntegrationStepper
      *  @param[in] numberOfVariables The number of integration variables.
      *  @param[in] primary Flag for initialisation of the auxiliary stepper.
      */
-    G4FSALDormandPrince745(G4EquationOfMotion* EqRhs,
-                           G4int numberOfVariables = 6,
+    G4FSALDormandPrince745(G4EquationOfMotion* EqRhs, G4int numberOfVariables = 6,
                            G4bool primary = true);
 
     /**
@@ -79,12 +79,8 @@ class G4FSALDormandPrince745 : public G4VFSALIntegrationStepper
      *  @param[out] yerr The estimated error.
      *  @param[out] nextDydx Last derivatives array for the next step.
      */
-    void Stepper( const G4double y[],
-                  const G4double dydx[],
-                        G4double h,
-                        G4double yout[],
-                        G4double yerr[],
-                        G4double nextDydx[]) override ;
+    void Stepper(const G4double y[], const G4double dydx[], G4double h, G4double yout[],
+                 G4double yerr[], G4double nextDydx[]) override;
 
     /**
      * Calculates the output at the tau fraction of step.
@@ -94,31 +90,23 @@ class G4FSALDormandPrince745 : public G4VFSALIntegrationStepper
      *  @param[in] Step The given step size.
      *  @param[in] tau The tau fraction of the step.
      */
-    void interpolate( const G4double yInput[],
-                      const G4double dydx[],
-                            G4double yOut[],
-                            G4double Step,
-                            G4double tau ) ;
+    void interpolate(const G4double yInput[], const G4double dydx[], G4double yOut[], G4double Step,
+                     G4double tau);
 
     /**
      * Calculates the output at the tau fraction of step. Same as above
      * for higher order interpolant.
      */
-    void Interpolate( const G4double yInput[],
-                      const G4double dydx[],
-                      const G4double Step,
-                            G4double yOut[],
-                            G4double tau );
-    
+    void Interpolate(const G4double yInput[], const G4double dydx[], const G4double Step,
+                     G4double yOut[], G4double tau);
+
     /**
      * Setup method for higher order interpolant.
      *  @param[in] yInput Starting values array of integration variables.
      *  @param[in] dydx Derivatives array.
      *  @param[in] Step The given step size.
      */
-    void SetupInterpolate( const G4double yInput[],
-                           const G4double dydx[],
-                           const G4double Step );
+    void SetupInterpolate(const G4double yInput[], const G4double dydx[], const G4double Step);
 
     /**
      * Returns the distance from chord line.
@@ -134,22 +122,21 @@ class G4FSALDormandPrince745 : public G4VFSALIntegrationStepper
      * Returns true as this is a FSAL integrator.
      */
     inline G4bool isFSAL() const { return true; }
-    
+
   private:
-    
+
     /** Working arrays -- used during stepping. */
-    G4double *ak2, *ak3, *ak4, *ak5, *ak6, *ak7,
-             *ak8, *ak9,         // For additional stages in the interpolant
-             *yTemp, *yIn;
-    
+    G4double *ak2, *ak3, *ak4, *ak5, *ak6, *ak7, *ak8,
+      *ak9,  // For additional stages in the interpolant
+      *yTemp, *yIn;
+
     /** Only for use with DistChord(). */
     G4double* pseudoDydx_for_DistChord;
-    
+
     G4double fLastStepLength = -1.0;
-    G4double *fLastInitialVector, *fLastFinalVector,
-             *fInitialDyDx, *fLastDyDx,
-             *fMidVector, *fMidError;   // For DistChord() calculations
-    
+    G4double *fLastInitialVector, *fLastFinalVector, *fInitialDyDx, *fLastDyDx, *fMidVector,
+      *fMidError;  // For DistChord() calculations
+
     G4FSALDormandPrince745* fAuxStepper = nullptr;
 };
 

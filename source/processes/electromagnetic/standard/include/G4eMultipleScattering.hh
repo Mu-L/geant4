@@ -33,7 +33,7 @@
 // Author:        Vladimir Ivanchenko
 //
 // Creation date: 10 March 2001
-// 
+//
 // Modifications:
 //
 //
@@ -49,8 +49,8 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4eMultipleScattering_h
-#define G4eMultipleScattering_h 1
+#ifndef G4EMULTIPLESCATTERING_HH
+#define G4EMULTIPLESCATTERING_HH
 
 #include "G4VMultipleScattering.hh"
 
@@ -58,34 +58,32 @@
 
 class G4eMultipleScattering : public G4VMultipleScattering
 {
-public: 
+  public:
 
-  explicit G4eMultipleScattering(const G4String& processName = "msc");
+    explicit G4eMultipleScattering(const G4String& processName = "msc");
 
-  ~G4eMultipleScattering() override;
+    ~G4eMultipleScattering() override;
 
-  // returns true for charged particles, false otherwise
-  G4bool IsApplicable (const G4ParticleDefinition& p) final;
+    // returns true for charged particles, false otherwise
+    G4bool IsApplicable(const G4ParticleDefinition& p) final;
 
-  // print documentation in html format
-  void ProcessDescription(std::ostream&) const override;
+    // print documentation in html format
+    void ProcessDescription(std::ostream&) const override;
 
-  G4eMultipleScattering & operator=
-  (const G4eMultipleScattering &right) = delete;
-  G4eMultipleScattering(const G4eMultipleScattering&) = delete;
+    G4eMultipleScattering& operator=(const G4eMultipleScattering& right) = delete;
+    G4eMultipleScattering(const G4eMultipleScattering&) = delete;
 
-protected:
+  protected:
 
-  // Print out of the class parameters
-  void StreamProcessInfo(std::ostream& outFile) const override;
+    // Print out of the class parameters
+    void StreamProcessInfo(std::ostream& outFile) const override;
 
-  // This function initialise models
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+    // This function initialise models
+    void InitialiseProcess(const G4ParticleDefinition*) override;
 
-private:
+  private:
 
-  G4bool isInitialized;
-
+    G4bool isInitialized;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

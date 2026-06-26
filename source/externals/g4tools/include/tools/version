@@ -10,8 +10,12 @@
 #define TOOLS_VERSION "8.0.0"
 #define TOOLS_VERSION_VRP "v8r0p0"
 
-namespace tools {
-inline unsigned int version() {return 80000;}
+namespace tools
+{
+inline unsigned int version()
+{
+  return 80000;
 }
+}  // namespace tools
 
 #endif

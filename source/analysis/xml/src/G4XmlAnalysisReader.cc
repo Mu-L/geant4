@@ -27,11 +27,12 @@
 // Author: Ivana Hrivnacova, 25/07/2014 (ivana@ipno.in2p3.fr)
 
 #include "G4XmlAnalysisReader.hh"
-#include "G4XmlRFileManager.hh"
-#include "G4XmlRNtupleManager.hh"
+
 #include "G4AnalysisUtilities.hh"
 #include "G4ThreadLocalSingleton.hh"
 #include "G4Threading.hh"
+#include "G4XmlRFileManager.hh"
+#include "G4XmlRNtupleManager.hh"
 
 using namespace G4Analysis;
 
@@ -43,10 +44,9 @@ G4XmlAnalysisReader* G4XmlAnalysisReader::Instance()
 }
 
 //_____________________________________________________________________________
-G4XmlAnalysisReader::G4XmlAnalysisReader()
- : G4ToolsAnalysisReader("Xml")
+G4XmlAnalysisReader::G4XmlAnalysisReader() : G4ToolsAnalysisReader("Xml")
 {
-  if ( ! G4Threading::IsWorkerThread() ) fgMasterInstance = this;
+  if (!G4Threading::IsWorkerThread()) fgMasterInstance = this;
 
   // Create managers
   fNtupleManager = std::make_shared<G4XmlRNtupleManager>(fState);
@@ -61,7 +61,7 @@ G4XmlAnalysisReader::G4XmlAnalysisReader()
 //_____________________________________________________________________________
 G4XmlAnalysisReader::~G4XmlAnalysisReader()
 {
-  if ( fState.GetIsMaster() ) fgMasterInstance = nullptr;
+  if (fState.GetIsMaster()) fgMasterInstance = nullptr;
 }
 
 //
@@ -71,7 +71,7 @@ G4XmlAnalysisReader::~G4XmlAnalysisReader()
 //_____________________________________________________________________________
 G4bool G4XmlAnalysisReader::Reset()
 {
-// Reset histograms and ntuple
+  // Reset histograms and ntuple
 
   auto result = true;
 
@@ -86,13 +86,14 @@ G4bool G4XmlAnalysisReader::Reset()
 //
 
 //_____________________________________________________________________________
-G4bool  G4XmlAnalysisReader::CloseFilesImpl(G4bool reset)
+G4bool G4XmlAnalysisReader::CloseFilesImpl(G4bool reset)
 {
   Message(kVL4, "close", "files");
 
   auto result = true;
 
-  if (reset) {
+  if (reset)
+  {
     result &= Reset();
   }
 

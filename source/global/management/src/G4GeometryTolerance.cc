@@ -29,6 +29,7 @@
 // --------------------------------------------------------------------
 
 #include "G4GeometryTolerance.hh"
+
 #include "G4AutoDelete.hh"
 #include "G4SystemOfUnits.hh"
 #include "globals.hh"
@@ -57,7 +58,7 @@ G4GeometryTolerance::G4GeometryTolerance()
 //
 G4GeometryTolerance* G4GeometryTolerance::GetInstance()
 {
-  if(fpInstance == nullptr)
+  if (fpInstance == nullptr)
   {
     fpInstance = new G4GeometryTolerance;
     G4AutoDelete::Register(fpInstance);
@@ -91,17 +92,17 @@ G4double G4GeometryTolerance::GetRadialTolerance() const
 //
 void G4GeometryTolerance::SetSurfaceTolerance(G4double worldExtent)
 {
-  if(!fInitialised)
+  if (!fInitialised)
   {
     fCarTolerance = fRadTolerance = worldExtent * 1E-11;
-    fInitialised                  = true;
+    fInitialised = true;
   }
   else
   {
     G4cout << "WARNING - G4GeometryTolerance::SetSurfaceTolerance()" << G4endl
-           << "          Tolerance can only be set once. Currently set to: "
-           << fCarTolerance / mm << " mm." << G4endl;
-    G4Exception("G4GeometryTolerance::SetSurfaceTolerance()", "NotApplicable",
-                JustWarning, "The tolerance has been already set!");
+           << "          Tolerance can only be set once. Currently set to: " << fCarTolerance / mm
+           << " mm." << G4endl;
+    G4Exception("G4GeometryTolerance::SetSurfaceTolerance()", "NotApplicable", JustWarning,
+                "The tolerance has been already set!");
   }
 }

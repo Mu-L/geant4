@@ -55,10 +55,13 @@ int main(int argc, char** argv)
   // Creating run manager
   auto runManager = G4RunManagerFactory::CreateRunManager();
 
+  G4int nThreads = 4;
   if (argc == 3) {
-    G4int nThreads = G4UIcommand::ConvertToInt(argv[2]);
-    runManager->SetNumberOfThreads(nThreads);
+    nThreads = G4UIcommand::ConvertToInt(argv[2]);
   }
+  runManager->SetNumberOfThreads(nThreads);
+  G4cout << "### TestEm3 is started with "
+	 << nThreads << " threads" << G4endl; 
 
   // set mandatory initialization classes
   DetectorConstruction* detector = new DetectorConstruction;

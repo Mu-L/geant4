@@ -29,6 +29,7 @@
 #define G4VECTOR3D_HH
 
 #include "globals.hh"
+
 #include <CLHEP/Geometry/Vector3D.h>
 
 using G4Vector3D = HepGeom::Vector3D<G4double>;

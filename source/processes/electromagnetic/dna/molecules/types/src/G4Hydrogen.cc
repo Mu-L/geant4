@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Author: Mathieu Karamitors 
+// Author: Mathieu Karamitors
 //
 // History:
 // -----------
@@ -33,9 +33,10 @@
 // -------------------------------------------------------------------
 
 #include "G4Hydrogen.hh"
+
+#include "G4ParticleTable.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4ParticleTable.hh"
 
 // ######################################################################
 // ###                         Hydrogen                               ###
@@ -66,12 +67,12 @@ G4Hydrogen* G4Hydrogen::Definition()
     //      );
 
     G4double mass = 1.0079 * g / Avogadro * c_squared;
-    anInstance = new G4MoleculeDefinition(name, mass, 7e-9 * (m * m / s), 0, // charge
-                                          1, // number of occupancies
-                                          0.5 * angstrom); //radius has to be checked
+    anInstance = new G4MoleculeDefinition(name, mass, 7e-9 * (m * m / s), 0,  // charge
+                                          1,  // number of occupancies
+                                          0.5 * angstrom);  // radius has to be checked
 
-    ((G4MoleculeDefinition*) anInstance)->SetLevelOccupation(0, 1);
-    ((G4MoleculeDefinition*) anInstance)->SetFormatedName("H");
+    ((G4MoleculeDefinition*)anInstance)->SetLevelOccupation(0, 1);
+    ((G4MoleculeDefinition*)anInstance)->SetFormatedName("H");
   }
   theInstance = static_cast<G4Hydrogen*>(anInstance);
   return theInstance;

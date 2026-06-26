@@ -42,29 +42,29 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include "G4hIonisation.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4Electron.hh"
-#include "G4Proton.hh"
+
 #include "G4AntiProton.hh"
-#include "G4BraggModel.hh"
 #include "G4BetheBlochModel.hh"
-#include "G4EmStandUtil.hh"
-#include "G4PionPlus.hh"
-#include "G4PionMinus.hh"
-#include "G4KaonPlus.hh"
-#include "G4KaonMinus.hh"
-#include "G4ICRU73QOModel.hh"
+#include "G4BraggModel.hh"
+#include "G4Electron.hh"
 #include "G4EmParameters.hh"
+#include "G4EmStandUtil.hh"
+#include "G4ICRU73QOModel.hh"
+#include "G4KaonMinus.hh"
+#include "G4KaonPlus.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4PionMinus.hh"
+#include "G4PionPlus.hh"
+#include "G4Proton.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4hIonisation::G4hIonisation(const G4String& name)
-  : G4VEnergyLossProcess(name)
+G4hIonisation::G4hIonisation(const G4String& name) : G4VEnergyLossProcess(name)
 {
   SetProcessSubType(fIonisation);
   SetSecondaryParticle(G4Electron::Electron());
-  eth = 2*CLHEP::MeV;
+  eth = 2 * CLHEP::MeV;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -76,73 +76,97 @@ G4bool G4hIonisation::IsApplicable(const G4ParticleDefinition&)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double G4hIonisation::MinPrimaryEnergy(const G4ParticleDefinition*,
-					 const G4Material*,
-					 G4double cut)
+G4double G4hIonisation::MinPrimaryEnergy(const G4ParticleDefinition*, const G4Material*,
+                                         G4double cut)
 {
-  G4double x = 0.5*cut/electron_mass_c2;
-  G4double gam = x*ratio + std::sqrt((1. + x)*(1. + x*ratio*ratio));
-  return mass*(gam - 1.0);
+  G4double x = 0.5 * cut / electron_mass_c2;
+  G4double gam = x * ratio + std::sqrt((1. + x) * (1. + x * ratio * ratio));
+  return mass * (gam - 1.0);
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....  
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4hIonisation::InitialiseEnergyLossProcess(
-		    const G4ParticleDefinition* part,
-		    const G4ParticleDefinition* bpart)
+void G4hIonisation::InitialiseEnergyLossProcess(const G4ParticleDefinition* part,
+                                                const G4ParticleDefinition* bpart)
 {
-  if(!isInitialised) {
-
+  if (!isInitialised)
+  {
     const G4ParticleDefinition* theBaseParticle = nullptr;
     G4String pname = part->GetParticleName();
     G4double q = part->GetPDGCharge();
 
-    //G4cout << " G4hIonisation::InitialiseEnergyLossProcess " << pname 
-    //   << "  " << bpart << G4endl;
+    // G4cout << " G4hIonisation::InitialiseEnergyLossProcess " << pname
+    //    << "  " << bpart << G4endl;
 
     // define base particle
-    if(part == bpart) { 
+    if (part == bpart)
+    {
       theBaseParticle = nullptr;
-    } else if(nullptr != bpart) { 
+    }
+    else if (nullptr != bpart)
+    {
       theBaseParticle = bpart;
-
-    } else if(pname == "proton" || pname == "anti_proton" || 
-	      pname == "pi+" || pname == "pi-" || 
-	      pname == "kaon+" || pname == "kaon-" || 
-	      pname == "GenericIon" || pname == "alpha") { 
+    }
+    else if (pname == "proton" || pname == "anti_proton" || pname == "pi+" || pname == "pi-"
+             || pname == "kaon+" || pname == "kaon-" || pname == "GenericIon" || pname == "alpha")
+    {
       // no base particles
       theBaseParticle = nullptr;
-
-    } else {
-      // select base particle 
-      if(part->GetPDGSpin() == 0.0) {
-	if(q > 0.0) { theBaseParticle = G4KaonPlus::KaonPlus(); }
-	else { theBaseParticle = G4KaonMinus::KaonMinus(); }
-      } else {
-	if(q > 0.0) { theBaseParticle = G4Proton::Proton(); } 
-	else { theBaseParticle = G4AntiProton::AntiProton(); }
+    }
+    else
+    {
+      // select base particle
+      if (part->GetPDGSpin() == 0.0)
+      {
+        if (q > 0.0)
+        {
+          theBaseParticle = G4KaonPlus::KaonPlus();
+        }
+        else
+        {
+          theBaseParticle = G4KaonMinus::KaonMinus();
+        }
+      }
+      else
+      {
+        if (q > 0.0)
+        {
+          theBaseParticle = G4Proton::Proton();
+        }
+        else
+        {
+          theBaseParticle = G4AntiProton::AntiProton();
+        }
       }
     }
     SetBaseParticle(theBaseParticle);
 
     // model limit defined for protons
-    mass  = part->GetPDGMass();
-    ratio = electron_mass_c2/mass;
-    eth   = 2.0*MeV*mass/proton_mass_c2;
+    mass = part->GetPDGMass();
+    ratio = electron_mass_c2 / mass;
+    eth = 2.0 * MeV * mass / proton_mass_c2;
 
     G4EmParameters* param = G4EmParameters::Instance();
     G4double emin = param->MinKinEnergy();
     G4double emax = param->MaxKinEnergy();
 
     // define model of energy loss fluctuations
-    if (nullptr == FluctModel()) {
-      G4bool ion = (pname == "GenericIon" || pname == "alpha"); 
+    if (nullptr == FluctModel())
+    {
+      G4bool ion = (pname == "GenericIon" || pname == "alpha");
       SetFluctModel(G4EmStandUtil::ModelOfFluctuations(ion));
     }
 
-    if (nullptr == EmModel(0)) { 
-      if(q > 0.0) { SetEmModel(new G4BraggModel()); }
-      else        { SetEmModel(new G4ICRU73QOModel()); }
+    if (nullptr == EmModel(0))
+    {
+      if (q > 0.0)
+      {
+        SetEmModel(new G4BraggModel());
+      }
+      else
+      {
+        SetEmModel(new G4ICRU73QOModel());
+      }
     }
     // to compute ranges correctly we have to use low-energy
     // model even if activation limit is high
@@ -152,17 +176,21 @@ void G4hIonisation::InitialiseEnergyLossProcess(
     G4double emax1 = (EmModel(0)->HighEnergyLimit() < emax) ? eth : emax;
     EmModel(0)->SetHighEnergyLimit(emax1);
     AddEmModel(1, EmModel(0), FluctModel());
-    
+
     // second model is used if the first does not cover energy range
-    if(emax1 < emax) {
-      if (nullptr == EmModel(1)) { SetEmModel(new G4BetheBlochModel()); }
+    if (emax1 < emax)
+    {
+      if (nullptr == EmModel(1))
+      {
+        SetEmModel(new G4BetheBlochModel());
+      }
       EmModel(1)->SetLowEnergyLimit(emax1);
 
       // for extremely heavy particles upper limit of the model
       // should be increased
-      emax = std::max(emax, eth*10); 
+      emax = std::max(emax, eth * 10);
       EmModel(1)->SetHighEnergyLimit(emax);
-      AddEmModel(2, EmModel(1), FluctModel());  
+      AddEmModel(2, EmModel(1), FluctModel());
     }
     isInitialised = true;
   }
@@ -176,4 +204,4 @@ void G4hIonisation::ProcessDescription(std::ostream& out) const
   G4VEnergyLossProcess::ProcessDescription(out);
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.... 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

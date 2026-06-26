@@ -34,58 +34,54 @@
 //
 // History:
 // -----------
-//  
-//  16 Sept 2001 Modified according to a design iteration in the 
+//
+//  16 Sept 2001 Modified according to a design iteration in the
 //              LowEnergy category
-//  24 July 2009 Moved to utils subdirectory and make inline methods (VI) 
+//  24 July 2009 Moved to utils subdirectory and make inline methods (VI)
 //
 // -------------------------------------------------------------------
 
 // Class description:
-// A container of atomic shell data   
+// A container of atomic shell data
 
 // -------------------------------------------------------------------
 
-
-#ifndef G4AtomicShell_h 
-#define G4AtomicShell_h 1
+#ifndef G4ATOMICSHELL_H
+#define G4ATOMICSHELL_H
 #include "globals.hh"
 
-class G4AtomicShell {
+class G4AtomicShell
+{
+  public:
 
-public:
+    // The data and the methods of this class are relative to
+    // a given shell
 
-  // The data and the methods of this class are relative to
-  // a given shell
- 
-  explicit G4AtomicShell(G4int id, G4double e):identifier(id),bindingEnergy(e){};
- 
-  // Returns the binding energy of the shell
-  inline G4double BindingEnergy() const; 
+    explicit G4AtomicShell(G4int id, G4double e) : identifier(id), bindingEnergy(e) {};
 
-  // Returns the id of the shell
-  inline G4int ShellId() const;
-  
-  G4AtomicShell & operator=(const  G4AtomicShell &right) = delete;
-  G4AtomicShell(const  G4AtomicShell&) = delete;
+    // Returns the binding energy of the shell
+    inline G4double BindingEnergy() const;
 
-private:
+    // Returns the id of the shell
+    inline G4int ShellId() const;
 
-  G4int identifier;
-  G4double bindingEnergy;
+    G4AtomicShell& operator=(const G4AtomicShell& right) = delete;
+    G4AtomicShell(const G4AtomicShell&) = delete;
 
+  private:
+
+    G4int identifier;
+    G4double bindingEnergy;
 };
 
-inline G4double G4AtomicShell::BindingEnergy() const {
-
+inline G4double G4AtomicShell::BindingEnergy() const
+{
   return bindingEnergy;
 }
 
-inline G4int G4AtomicShell::ShellId() const{
-
+inline G4int G4AtomicShell::ShellId() const
+{
   return identifier;
 }
 
 #endif
-
-

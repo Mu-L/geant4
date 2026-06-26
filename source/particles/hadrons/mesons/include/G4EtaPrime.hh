@@ -31,19 +31,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4EtaPrime_h
-#define G4EtaPrime_h 1
+#ifndef G4ETAPRIME_HH
+#define G4ETAPRIME_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4EtaPrime : public G4ParticleDefinition
 {
   public:
+
     static G4EtaPrime* Definition();
     static G4EtaPrime* EtaPrimeDefinition();
     static G4EtaPrime* EtaPrime();
 
   private:
+
     G4EtaPrime() {}
     ~G4EtaPrime() override = default;
 

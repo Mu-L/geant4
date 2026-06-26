@@ -31,7 +31,7 @@
 inline G4double G4VIntersectionLocator::GetDeltaIntersectionFor()
 {
   return fiDeltaIntersection;
-} 
+}
 
 inline G4double G4VIntersectionLocator::GetEpsilonStepFor()
 {
@@ -58,34 +58,32 @@ inline G4bool G4VIntersectionLocator::GetAdjustementOfFoundIntersection()
   return fUseNormalCorrection;
 }
 
-inline void G4VIntersectionLocator::
-AddAdjustementOfFoundIntersection(G4bool UseCorrection )
+inline void G4VIntersectionLocator::AddAdjustementOfFoundIntersection(G4bool UseCorrection)
 {
   fUseNormalCorrection = UseCorrection;
 }
 
-inline void G4VIntersectionLocator::SetEpsilonStepFor( G4double EpsilonStep )
+inline void G4VIntersectionLocator::SetEpsilonStepFor(G4double EpsilonStep)
 {
   fiEpsilonStep = EpsilonStep;
 }
 
-inline void G4VIntersectionLocator::
-SetDeltaIntersectionFor( G4double deltaIntersection )
+inline void G4VIntersectionLocator::SetDeltaIntersectionFor(G4double deltaIntersection)
 {
   fiDeltaIntersection = deltaIntersection;
 }
 
-inline void G4VIntersectionLocator::SetNavigatorFor( G4Navigator* fNavigator )
+inline void G4VIntersectionLocator::SetNavigatorFor(G4Navigator* fNavigator)
 {
   fiNavigator = fNavigator;
 }
 
-inline void G4VIntersectionLocator::SetChordFinderFor(G4ChordFinder* fCFinder )
+inline void G4VIntersectionLocator::SetChordFinderFor(G4ChordFinder* fCFinder)
 {
   fiChordFinder = fCFinder;
 }
 
-inline void G4VIntersectionLocator::SetSafetyParametersFor(G4bool UseSafety )
+inline void G4VIntersectionLocator::SetSafetyParametersFor(G4bool UseSafety)
 {
   fiUseSafety = UseSafety;
 }
@@ -95,38 +93,33 @@ inline void G4VIntersectionLocator::SetVerboseFor(G4int fVerbose)
   fVerboseLevel = fVerbose;
 }
 
-inline G4bool
-G4VIntersectionLocator::IntersectChord( const G4ThreeVector&  StartPointA,
-                                        const G4ThreeVector&  EndPointB,
-                                        G4double&      NewSafety,
-                                        G4double&      PreviousSafety,
-                                        G4ThreeVector& PreviousSftOrigin,
-                                        G4double&      LinearStepLength,
-                                        G4ThreeVector& IntersectionPoint,
-                                        G4bool*        ptrCalledNavigator )
+inline G4bool G4VIntersectionLocator::IntersectChord(
+  const G4ThreeVector& StartPointA, const G4ThreeVector& EndPointB, G4double& NewSafety,
+  G4double& PreviousSafety, G4ThreeVector& PreviousSftOrigin, G4double& LinearStepLength,
+  G4ThreeVector& IntersectionPoint, G4bool* ptrCalledNavigator)
 {
-  G4bool CalledNavigator = false; 
+  G4bool CalledNavigator = false;
 
   // Calculate the direction and length of the chord AB
 
-  G4ThreeVector  ChordAB_Vector = EndPointB - StartPointA;
-  G4double       ChordAB_Length = ChordAB_Vector.mag();  // Magnitude (norm)
-  G4ThreeVector  ChordAB_Dir = ChordAB_Vector.unit();
+  G4ThreeVector ChordAB_Vector = EndPointB - StartPointA;
+  G4double ChordAB_Length = ChordAB_Vector.mag();  // Magnitude (norm)
+  G4ThreeVector ChordAB_Dir = ChordAB_Vector.unit();
   G4bool intersects;
-  G4ThreeVector OriginShift = StartPointA - PreviousSftOrigin ;
-  G4double MagSqShift  = OriginShift.mag2() ;
+  G4ThreeVector OriginShift = StartPointA - PreviousSftOrigin;
+  G4double MagSqShift = OriginShift.mag2();
   G4double currentSafety;
 
-  if( MagSqShift >= sqr(PreviousSafety) )
+  if (MagSqShift >= sqr(PreviousSafety))
   {
-    currentSafety = 0.0 ;
+    currentSafety = 0.0;
   }
   else
   {
-    currentSafety = PreviousSafety - std::sqrt(MagSqShift) ;
+    currentSafety = PreviousSafety - std::sqrt(MagSqShift);
   }
 
-  if( fiUseSafety && (ChordAB_Length <= currentSafety) )
+  if (fiUseSafety && (ChordAB_Length <= currentSafety))
   {
     // The Step is guaranteed to be taken
 
@@ -139,30 +132,30 @@ G4VIntersectionLocator::IntersectChord( const G4ThreeVector&  StartPointA,
   {
     // Check whether any volumes are encountered by the chord AB
 
-    LinearStepLength = GetNavigatorFor()->ComputeStep( StartPointA,
-                                 ChordAB_Dir, ChordAB_Length, NewSafety );
-    intersects = (LinearStepLength <= ChordAB_Length); 
-       // G4Navigator contracts to return k_infinity if len==asked
-       // and it did not find a surface boundary at that length
-    
-    LinearStepLength = std::min( LinearStepLength, ChordAB_Length);
-    CalledNavigator = true; 
+    LinearStepLength =
+      GetNavigatorFor()->ComputeStep(StartPointA, ChordAB_Dir, ChordAB_Length, NewSafety);
+    intersects = (LinearStepLength <= ChordAB_Length);
+    // G4Navigator contracts to return k_infinity if len==asked
+    // and it did not find a surface boundary at that length
+
+    LinearStepLength = std::min(LinearStepLength, ChordAB_Length);
+    CalledNavigator = true;
 
     // Save the last calculated safety!
 
     PreviousSftOrigin = StartPointA;
-    PreviousSafety    = NewSafety;
+    PreviousSafety = NewSafety;
 
-    if( intersects )
+    if (intersects)
     {
-       // Intersection Point of chord AB and either volume A's surface 
-       //                                or a daughter volume's surface ..
-       IntersectionPoint = StartPointA + LinearStepLength * ChordAB_Dir;
+      // Intersection Point of chord AB and either volume A's surface
+      //                                or a daughter volume's surface ..
+      IntersectionPoint = StartPointA + LinearStepLength * ChordAB_Dir;
     }
   }
-  if( ptrCalledNavigator != nullptr )
-  { 
-    *ptrCalledNavigator = CalledNavigator; 
+  if (ptrCalledNavigator != nullptr)
+  {
+    *ptrCalledNavigator = CalledNavigator;
   }
 
   return intersects;

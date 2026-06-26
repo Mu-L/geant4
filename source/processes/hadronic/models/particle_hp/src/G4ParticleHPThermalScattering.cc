@@ -73,10 +73,14 @@ G4ParticleHPThermalScattering::~G4ParticleHPThermalScattering()
 
 void G4ParticleHPThermalScattering::clearCurrentFSData()
 {
-  if (incoherentFSs != nullptr) {
-    for (auto it = incoherentFSs->cbegin(); it != incoherentFSs->cend(); ++it) {
-      for (auto itt = it->second->cbegin(); itt != it->second->cend(); ++itt) {
-        for (auto ittt = itt->second->cbegin(); ittt != itt->second->cend(); ++ittt) {
+  if (incoherentFSs != nullptr)
+  {
+    for (auto it = incoherentFSs->cbegin(); it != incoherentFSs->cend(); ++it)
+    {
+      for (auto itt = it->second->cbegin(); itt != it->second->cend(); ++itt)
+      {
+        for (auto ittt = itt->second->cbegin(); ittt != itt->second->cend(); ++ittt)
+        {
           delete *ittt;
         }
         delete itt->second;
@@ -85,10 +89,14 @@ void G4ParticleHPThermalScattering::clearCurrentFSData()
     }
   }
 
-  if (coherentFSs != nullptr) {
-    for (auto it = coherentFSs->cbegin(); it != coherentFSs->cend(); ++it) {
-      for (auto itt = it->second->cbegin(); itt != it->second->cend(); ++itt) {
-        for (auto ittt = itt->second->cbegin(); ittt != itt->second->cend(); ++ittt) {
+  if (coherentFSs != nullptr)
+  {
+    for (auto it = coherentFSs->cbegin(); it != coherentFSs->cend(); ++it)
+    {
+      for (auto itt = it->second->cbegin(); itt != it->second->cend(); ++itt)
+      {
+        for (auto ittt = itt->second->cbegin(); ittt != itt->second->cend(); ++ittt)
+        {
           delete *ittt;
         }
         delete itt->second;
@@ -97,10 +105,14 @@ void G4ParticleHPThermalScattering::clearCurrentFSData()
     }
   }
 
-  if (inelasticFSs != nullptr) {
-    for (auto it = inelasticFSs->cbegin(); it != inelasticFSs->cend(); ++it) {
-      for (auto itt = it->second->cbegin(); itt != it->second->cend(); ++itt) {
-        for (auto ittt = itt->second->cbegin(); ittt != itt->second->cend(); ++ittt) {
+  if (inelasticFSs != nullptr)
+  {
+    for (auto it = inelasticFSs->cbegin(); it != inelasticFSs->cend(); ++it)
+    {
+      for (auto itt = it->second->cbegin(); itt != it->second->cend(); ++itt)
+      {
+        for (auto ittt = itt->second->cbegin(); ittt != itt->second->cend(); ++ittt)
+        {
           for (auto it4 = (*ittt)->vE_isoAngle.cbegin(); it4 != (*ittt)->vE_isoAngle.cend(); ++it4)
           {
             delete *it4;
@@ -144,14 +156,17 @@ G4ParticleHPThermalScattering::readACoherentFSDATA(const G4String& name)
 
     G4int n;
     theChannel >> n;
-    for (G4int i = 0; i < n; ++i) {
+    for (G4int i = 0; i < n; ++i)
+    {
       G4double Ei;
       G4double Pi;
-      if (aCoherentFSDATA->empty()) {
+      if (aCoherentFSDATA->empty())
+      {
         theChannel >> Ei;
         vBraggE.push_back(Ei);
       }
-      else {
+      else
+      {
         Ei = vBraggE[i];
       }
       theChannel >> Pi;
@@ -180,7 +195,8 @@ G4ParticleHPThermalScattering::readAnInelasticFSDATA(const G4String& name)
     auto vE_P_E_isoAng = new std::vector<E_P_E_isoAng*>;
     G4int n;
     theChannel >> n;
-    for (G4int i = 0; i < n; ++i) {
+    for (G4int i = 0; i < n; ++i)
+    {
       vE_P_E_isoAng->push_back(readAnE_P_E_isoAng(&theChannel));
     }
     anT_E_P_E_isoAng->insert(std::pair<G4double, std::vector<E_P_E_isoAng*>*>(temp, vE_P_E_isoAng));
@@ -205,7 +221,8 @@ G4ParticleHPThermalScattering::readAnE_P_E_isoAng(std::istream* file)  // for in
   *file >> nep;
   *file >> nl;
   aData->n = nep / nl;
-  for (G4int i = 0; i < aData->n; ++i) {
+  for (G4int i = 0; i < aData->n; ++i)
+  {
     G4double prob;
     auto anE_isoAng = new E_isoAng;
     aData->vE_isoAngle.push_back(anE_isoAng);
@@ -217,7 +234,8 @@ G4ParticleHPThermalScattering::readAnE_P_E_isoAng(std::istream* file)  // for in
     aData->prob.push_back(prob);
     // G4cout << "G4ParticleHPThermalScattering inelastic " << energy/eV << " " <<  i << " " << prob
     // << " " << aData->prob[ i ] << G4endl;
-    for (G4int j = 0; j < anE_isoAng->n; ++j) {
+    for (G4int j = 0; j < anE_isoAng->n; ++j)
+    {
       G4double x;
       *file >> x;
       anE_isoAng->isoAngle[j] = x;
@@ -227,7 +245,8 @@ G4ParticleHPThermalScattering::readAnE_P_E_isoAng(std::istream* file)  // for in
   // Calcuate sum_of_provXdEs
   G4double total = 0;
   aData->secondary_energy_cdf.push_back(0.);
-  for (G4int i = 0; i < aData->n - 1; ++i) {
+  for (G4int i = 0; i < aData->n - 1; ++i)
+  {
     G4double E_L = aData->vE_isoAngle[i]->energy / eV;
     G4double E_H = aData->vE_isoAngle[i + 1]->energy / eV;
     G4double dE = E_H - E_L;
@@ -239,11 +258,12 @@ G4ParticleHPThermalScattering::readAnE_P_E_isoAng(std::istream* file)  // for in
   }
 
   aData->sum_of_probXdEs = total;
-  G4double norm = (total > 0.0) ? 1.0/total : 0.0;
+  G4double norm = (total > 0.0) ? 1.0 / total : 0.0;
 
   // Normalize CDF
   aData->secondary_energy_cdf_size = (G4int)aData->secondary_energy_cdf.size();
-  for (G4int i = 0; i < aData->secondary_energy_cdf_size; ++i) {
+  for (G4int i = 0; i < aData->secondary_energy_cdf_size; ++i)
+  {
     aData->secondary_energy_cdf[i] *= norm;
   }
 
@@ -314,17 +334,21 @@ G4HadFinalState* G4ParticleHPThermalScattering::ApplyYourself(const G4HadProject
   G4bool findThermalElement = false;
   G4int ielement;
   const G4Element* theElement = nullptr;
-  for (G4int i = 0; i < n; ++i) {
+  for (G4int i = 0; i < n; ++i)
+  {
     theElement = theMaterial->GetElement(i);
     // Select target element
-    if (aNucleus.GetZ_asInt() == (G4int)(theElement->GetZ() + 0.5)) {
+    if (aNucleus.GetZ_asInt() == (G4int)(theElement->GetZ() + 0.5))
+    {
       // Check Applicability of Thermal Scattering
-      if (getTS_ID(nullptr, theElement) != -1) {
+      if (getTS_ID(nullptr, theElement) != -1)
+      {
         ielement = getTS_ID(nullptr, theElement);
         findThermalElement = true;
         break;
       }
-      if (getTS_ID(theMaterial, theElement) != -1) {
+      if (getTS_ID(theMaterial, theElement) != -1)
+      {
         ielement = getTS_ID(theMaterial, theElement);
         findThermalElement = true;
         break;
@@ -332,7 +356,8 @@ G4HadFinalState* G4ParticleHPThermalScattering::ApplyYourself(const G4HadProject
     }
   }
 
-  if (findThermalElement) {
+  if (findThermalElement)
+  {
     // Select Reaction  (Inelastic, coherent, incoherent)
     const G4ParticleDefinition* pd = aTrack.GetDefinition();
     auto dp = new G4DynamicParticle(pd, aTrack.Get4Momentum());
@@ -345,9 +370,10 @@ G4HadFinalState* G4ParticleHPThermalScattering::ApplyYourself(const G4HadProject
     G4bool mayBeCohe = (coheELM != coherentFSs->end());
     auto incoELM = incoherentFSs->find(ielement);
     G4bool mayBeInco = (incoELM != incoherentFSs->end());
-   
+
     G4double random = G4UniformRand();
-    if ((total*random <= inelastic && mayBeInel) || (!mayBeCohe && !mayBeInco)) {
+    if ((total * random <= inelastic && mayBeInel) || (!mayBeCohe && !mayBeInco))
+    {
       // Inelastic
 
       std::vector<G4double> v_temp;
@@ -364,11 +390,13 @@ G4HadFinalState* G4ParticleHPThermalScattering::ApplyYourself(const G4HadProject
       std::vector<E_P_E_isoAng*>* vNEP_EPM_TL = nullptr;
       std::vector<E_P_E_isoAng*>* vNEP_EPM_TH = nullptr;
 
-      if (tempLH.first != 0.0 && tempLH.second != 0.0) {
+      if (tempLH.first != 0.0 && tempLH.second != 0.0)
+      {
         vNEP_EPM_TL = inelELM->second->find(tempLH.first / kelvin)->second;
         vNEP_EPM_TH = inelELM->second->find(tempLH.second / kelvin)->second;
       }
-      else if (tempLH.first == 0.0) {
+      else if (tempLH.first == 0.0)
+      {
         auto itm = inelELM->second->begin();
         vNEP_EPM_TL = itm->second;
         ++itm;
@@ -376,7 +404,8 @@ G4HadFinalState* G4ParticleHPThermalScattering::ApplyYourself(const G4HadProject
         tempLH.first = tempLH.second;
         tempLH.second = itm->first;
       }
-      else if (tempLH.second == 0.0) {
+      else if (tempLH.second == 0.0)
+      {
         auto itm = inelELM->second->end();
         --itm;
         vNEP_EPM_TH = itm->second;
@@ -406,9 +435,11 @@ G4HadFinalState* G4ParticleHPThermalScattering::ApplyYourself(const G4HadProject
       G4double sint = std::sqrt(1 - mu * mu);
       theParticleChange.SetMomentumChange(sint * std::cos(phi), sint * std::sin(phi), mu);
     }
-    else if (mayBeCohe &&
-	     (!mayBeInco || random*total
-	      <= (inelastic + theXSection->GetCoherentCrossSection(dp, theElement, theMaterial))))
+    else if (mayBeCohe
+             && (!mayBeInco
+                 || random * total
+                      <= (inelastic
+                          + theXSection->GetCoherentCrossSection(dp, theElement, theMaterial))))
     {
       // Coherent Elastic
 
@@ -431,17 +462,20 @@ G4HadFinalState* G4ParticleHPThermalScattering::ApplyYourself(const G4HadProject
       std::vector<std::pair<G4double, G4double>*>* pvE_p_TL = nullptr;
       std::vector<std::pair<G4double, G4double>*>* pvE_p_TH = nullptr;
 
-      if (tempLH.first != 0.0 && tempLH.second != 0.0) {
+      if (tempLH.first != 0.0 && tempLH.second != 0.0)
+      {
         pvE_p_TL = coheELM->second->find(tempLH.first / kelvin)->second;
         pvE_p_TH = coheELM->second->find(tempLH.first / kelvin)->second;
       }
-      else if (tempLH.first == 0.0) {
+      else if (tempLH.first == 0.0)
+      {
         pvE_p_TL = coheELM->second->find(v_temp[0])->second;
         pvE_p_TH = coheELM->second->find(v_temp[1])->second;
         tempLH.first = tempLH.second;
         tempLH.second = v_temp[1];
       }
-      else if (tempLH.second == 0.0) {
+      else if (tempLH.second == 0.0)
+      {
         pvE_p_TH = coheELM->second->find(v_temp.back())->second;
         auto itv = v_temp.cend();
         --itv;
@@ -450,7 +484,8 @@ G4HadFinalState* G4ParticleHPThermalScattering::ApplyYourself(const G4HadProject
         tempLH.second = tempLH.first;
         tempLH.first = *itv;
       }
-      else {
+      else
+      {
         // tempLH.first == 0.0 && tempLH.second
         throw G4HadronicException(
           __FILE__, __LINE__,
@@ -471,14 +506,17 @@ G4HadFinalState* G4ParticleHPThermalScattering::ApplyYourself(const G4HadProject
         pvE_p_T_sampled = pvE_p_TL;
 
       // 171005 fix bug, contribution from H.N. TRAN@CEA
-      for (G4int i = 0; i < n1; ++i) {
+      for (G4int i = 0; i < n1; ++i)
+      {
         vE_T.push_back((*pvE_p_T_sampled)[i]->first);
         vp_T.push_back((*pvE_p_T_sampled)[i]->second);
       }
 
       G4int j = 0;
-      for (G4int i = 1; i < n1; ++i) {
-        if (E / eV < vE_T[i]) {
+      for (G4int i = 1; i < n1; ++i)
+      {
+        if (E / eV < vE_T[i])
+        {
           j = i - 1;
           break;
         }
@@ -487,9 +525,11 @@ G4HadFinalState* G4ParticleHPThermalScattering::ApplyYourself(const G4HadProject
       G4double rand_for_mu = G4UniformRand();
 
       G4int k = 0;
-      for (G4int i = 0; i <= j; ++i) {
+      for (G4int i = 0; i <= j; ++i)
+      {
         G4double Pi = vp_T[i] / vp_T[j];
-        if (rand_for_mu < Pi) {
+        if (rand_for_mu < Pi)
+        {
           k = i;
           break;
         }
@@ -506,7 +546,8 @@ G4HadFinalState* G4ParticleHPThermalScattering::ApplyYourself(const G4HadProject
       G4double sint = std::sqrt(1 - mu * mu);
       theParticleChange.SetMomentumChange(sint * std::cos(phi), sint * std::sin(phi), mu);
     }
-    else if (mayBeInco) {
+    else if (mayBeInco)
+    {
       // InCoherent Elastic
 
       // T_L and T_H
@@ -527,36 +568,36 @@ G4HadFinalState* G4ParticleHPThermalScattering::ApplyYourself(const G4HadProject
       E_isoAng anEPM_TL_E;
       E_isoAng anEPM_TH_E;
 
-      if (tempLH.first != 0.0 && tempLH.second != 0.0) {
+      if (tempLH.first != 0.0 && tempLH.second != 0.0)
+      {
         // Interpolate TL and TH
         anEPM_TL_E = create_E_isoAng_from_energy(
-          aTrack.GetKineticEnergy(),
-          incoELM->second->find(tempLH.first / kelvin)->second);
+          aTrack.GetKineticEnergy(), incoELM->second->find(tempLH.first / kelvin)->second);
         anEPM_TH_E = create_E_isoAng_from_energy(
-          aTrack.GetKineticEnergy(),
-          incoELM->second->find(tempLH.second / kelvin)->second);
+          aTrack.GetKineticEnergy(), incoELM->second->find(tempLH.second / kelvin)->second);
       }
-      else if (tempLH.first == 0.0) {
+      else if (tempLH.first == 0.0)
+      {
         // Extrapolate T0 and T1
-        anEPM_TL_E = create_E_isoAng_from_energy(
-          aTrack.GetKineticEnergy(),
-          incoELM->second->find(v_temp[0])->second);
-        anEPM_TH_E = create_E_isoAng_from_energy(
-          aTrack.GetKineticEnergy(),
-          incoELM->second->find(v_temp[1])->second);
+        anEPM_TL_E = create_E_isoAng_from_energy(aTrack.GetKineticEnergy(),
+                                                 incoELM->second->find(v_temp[0])->second);
+        anEPM_TH_E = create_E_isoAng_from_energy(aTrack.GetKineticEnergy(),
+                                                 incoELM->second->find(v_temp[1])->second);
         tempLH.first = tempLH.second;
         tempLH.second = v_temp[1];
       }
-      else if (tempLH.second == 0.0) {
+      else if (tempLH.second == 0.0)
+      {
         // Extrapolate Tmax-1 and Tmax
-	std::size_t nn = v_temp.size();
-	if (nn < 2) { return &theParticleChange; }
-        anEPM_TL_E = create_E_isoAng_from_energy(
-          aTrack.GetKineticEnergy(),
-          incoELM->second->find(v_temp[nn - 2])->second);
-        anEPM_TH_E = create_E_isoAng_from_energy(
-          aTrack.GetKineticEnergy(),
-          incoELM->second->find(v_temp.back())->second);
+        std::size_t nn = v_temp.size();
+        if (nn < 2)
+        {
+          return &theParticleChange;
+        }
+        anEPM_TL_E = create_E_isoAng_from_energy(aTrack.GetKineticEnergy(),
+                                                 incoELM->second->find(v_temp[nn - 2])->second);
+        anEPM_TH_E = create_E_isoAng_from_energy(aTrack.GetKineticEnergy(),
+                                                 incoELM->second->find(v_temp.back())->second);
       }
 
       // E_isoAng for aTemp and aTrack.GetKineticEnergy()
@@ -602,7 +643,8 @@ G4ParticleHPThermalScattering::sample_inelastic_E(G4double rndm1, G4double rndm2
   G4int i = 0;
   G4double sE_value = 0;
 
-  for (; i < anE_P_E_isoAng->secondary_energy_cdf_size - 1; ++i) {
+  for (; i < anE_P_E_isoAng->secondary_energy_cdf_size - 1; ++i)
+  {
     if (rndm1 >= anE_P_E_isoAng->secondary_energy_cdf[i]
         && rndm1 < anE_P_E_isoAng->secondary_energy_cdf[i + 1])
     {
@@ -615,10 +657,12 @@ G4ParticleHPThermalScattering::sample_inelastic_E(G4double rndm1, G4double rndm2
       G4double alpha = (sE_pdf_i1 - sE_pdf_i) / (sE_pdf_i1 + sE_pdf_i);
       G4double rndm = rndm1;
 
-      if (std::fabs(alpha) < 1E-8) {
+      if (std::fabs(alpha) < 1E-8)
+      {
         lambda = rndm2;
       }
-      else {
+      else
+      {
         G4double beta = 2 * sE_pdf_i / (sE_pdf_i1 + sE_pdf_i);
         rndm = rndm2;
         G4double gamma = -rndm;
@@ -657,7 +701,8 @@ G4ParticleHPThermalScattering::sample_inelastic_E_mu(G4double pE,
   std::vector<G4double> v_energy;
   v_energy.clear();
   G4int i = 0;
-  for (auto itv = vNEP_EPM->cbegin(); itv != vNEP_EPM->cend(); ++itv) {
+  for (auto itv = vNEP_EPM->cbegin(); itv != vNEP_EPM->cend(); ++itv)
+  {
     v_energy.push_back((*itv)->energy);
     map_energy.insert(std::pair<G4double, G4int>((*itv)->energy, i));
     i++;
@@ -667,19 +712,20 @@ G4ParticleHPThermalScattering::sample_inelastic_E_mu(G4double pE,
 
   std::vector<E_P_E_isoAng*> pE_P_E_isoAng_limit(2, nullptr);
 
-  if (energyLH.first != 0.0 && energyLH.second != 0.0) {
+  if (energyLH.first != 0.0 && energyLH.second != 0.0)
+  {
     auto u = map_energy.find(energyLH.first);
-    if (u != map_energy.end())
-      pE_P_E_isoAng_limit[0] = (*vNEP_EPM)[u->second];
+    if (u != map_energy.end()) pE_P_E_isoAng_limit[0] = (*vNEP_EPM)[u->second];
     auto w = map_energy.find(energyLH.second);
-    if (w != map_energy.end())
-      pE_P_E_isoAng_limit[1] = (*vNEP_EPM)[w->second];
+    if (w != map_energy.end()) pE_P_E_isoAng_limit[1] = (*vNEP_EPM)[w->second];
   }
-  else if (energyLH.first == 0.0) {
+  else if (energyLH.first == 0.0)
+  {
     pE_P_E_isoAng_limit[0] = (*vNEP_EPM)[0];
     pE_P_E_isoAng_limit[1] = (*vNEP_EPM)[1];
   }
-  if (energyLH.second == 0.0) {
+  if (energyLH.second == 0.0)
+  {
     pE_P_E_isoAng_limit[1] = (*vNEP_EPM).back();
     auto itv = vNEP_EPM->cend();
     --itv;
@@ -688,10 +734,10 @@ G4ParticleHPThermalScattering::sample_inelastic_E_mu(G4double pE,
   }
 
   // Compute interpolation factor of the incident neutron energy
-  const G4double deltalim = 1.e-6*CLHEP::eV;
+  const G4double deltalim = 1.e-6 * CLHEP::eV;
   G4double e1 = energyLH.first;
   G4double e2 = energyLH.second;
-  G4double factor = (std::abs(e2 - e1) > deltalim) ? (e2 - pE)/(e2 - e1) : 0.0;
+  G4double factor = (std::abs(e2 - e1) > deltalim) ? (e2 - pE) / (e2 - e1) : 0.0;
   factor = std::min(factor, 1.0);
 
   G4double rndm1 = G4UniformRand();
@@ -722,20 +768,24 @@ G4double G4ParticleHPThermalScattering::getMu(G4double rndm1, G4double rndm2, E_
 
   auto in = G4int(rndm1 * ((*anEPM).n));
 
-  if (in != 0) {
+  if (in != 0)
+  {
     G4double mu_l = (*anEPM).isoAngle[in - 1];
     G4double mu_h = (*anEPM).isoAngle[in];
     result = (mu_h - mu_l) * (rndm1 * ((*anEPM).n) - in) + mu_l;
   }
-  else {
+  else
+  {
     G4double x = rndm1 * (*anEPM).n;
     G4double ratio = 0.5;
-    if (x <= ratio) {
+    if (x <= ratio)
+    {
       G4double mu_l = -1;
       G4double mu_h = (*anEPM).isoAngle[0];
       result = (mu_h - mu_l) * rndm2 + mu_l;
     }
-    else {
+    else
+    {
       G4double mu_l = (*anEPM).isoAngle[(*anEPM).n - 1];
       G4double mu_h = 1;
       result = (mu_h - mu_l) * rndm2 + mu_l;
@@ -756,22 +806,26 @@ G4double G4ParticleHPThermalScattering::getMu(E_isoAng* anEPM)
 
   auto in = G4int(random * ((*anEPM).n));
 
-  if (in != 0) {
+  if (in != 0)
+  {
     G4double mu_l = (*anEPM).isoAngle[in - 1];
     G4double mu_h = (*anEPM).isoAngle[in];
     result = (mu_h - mu_l) * (random * ((*anEPM).n) - in) + mu_l;
   }
-  else {
+  else
+  {
     G4double x = random * (*anEPM).n;
     // Bugzilla 1971
     G4double ratio = 0.5;
     G4double xx = G4UniformRand();
-    if (x <= ratio) {
+    if (x <= ratio)
+    {
       G4double mu_l = -1;
       G4double mu_h = (*anEPM).isoAngle[0];
       result = (mu_h - mu_l) * xx + mu_l;
     }
-    else {
+    else
+    {
       G4double mu_l = (*anEPM).isoAngle[(*anEPM).n - 1];
       G4double mu_h = 1;
       result = (mu_h - mu_l) * xx + mu_l;
@@ -787,23 +841,29 @@ std::pair<G4double, G4double> G4ParticleHPThermalScattering::find_LH(G4double x,
   G4double H = 0.0;
 
   // v->size() == 1 --> LL=H=v(0)
-  if (aVector->size() == 1) {
+  if (aVector->size() == 1)
+  {
     LL = aVector->front();
     H = aVector->front();
   }
-  else {
+  else
+  {
     // 1) temp < v(0) -> LL=0.0 H=v(0)
     // 2) v(i-1) < temp <= v(i) -> LL=v(i-1) H=v(i)
     // 3) v(imax) < temp -> LL=v(imax) H=0.0
-    for (auto it = aVector->cbegin(); it != aVector->cend(); ++it) {
-      if (x <= *it) {
+    for (auto it = aVector->cbegin(); it != aVector->cend(); ++it)
+    {
+      if (x <= *it)
+      {
         H = *it;
-        if (it != aVector->cbegin()) {
+        if (it != aVector->cbegin())
+        {
           // 2)
           it--;
           LL = *it;
         }
-        else {
+        else
+        {
           // 1)
           LL = 0.0;
         }
@@ -822,14 +882,18 @@ G4double G4ParticleHPThermalScattering::get_linear_interpolated(G4double x,
                                                                 std::pair<G4double, G4double> High)
 {
   G4double y = 0.0;
-  if (High.first - Low.first != 0) {
+  if (High.first - Low.first != 0)
+  {
     y = (High.second - Low.second) / (High.first - Low.first) * (x - Low.first) + Low.second;
   }
-  else {
-    if (High.second == Low.second) {
+  else
+  {
+    if (High.second == Low.second)
+    {
       y = High.second;
     }
-    else {
+    else
+    {
       G4cout << "G4ParticleHPThermalScattering liner interpolation err!!" << G4endl;
     }
   }
@@ -853,9 +917,12 @@ E_isoAng G4ParticleHPThermalScattering::create_E_isoAng_from_energy(G4double ene
   E_isoAng* panEPM_T_EL = nullptr;
   E_isoAng* panEPM_T_EH = nullptr;
 
-  if (energyLH.first != 0.0 && energyLH.second != 0.0) {
-    for (auto iv = vEPM->begin(); iv != vEPM->end(); ++iv) {
-      if (energyLH.first == (*iv)->energy) {
+  if (energyLH.first != 0.0 && energyLH.second != 0.0)
+  {
+    for (auto iv = vEPM->begin(); iv != vEPM->end(); ++iv)
+    {
+      if (energyLH.first == (*iv)->energy)
+      {
         panEPM_T_EL = *iv;
         ++iv;
         panEPM_T_EH = *iv;
@@ -863,11 +930,13 @@ E_isoAng G4ParticleHPThermalScattering::create_E_isoAng_from_energy(G4double ene
       }
     }
   }
-  else if (energyLH.first == 0.0) {
+  else if (energyLH.first == 0.0)
+  {
     panEPM_T_EL = (*vEPM)[0];
     panEPM_T_EH = (*vEPM)[1];
   }
-  else if (energyLH.second == 0.0) {
+  else if (energyLH.second == 0.0)
+  {
     panEPM_T_EH = (*vEPM).back();
     auto iv = vEPM->cend();
     --iv;
@@ -875,17 +944,20 @@ E_isoAng G4ParticleHPThermalScattering::create_E_isoAng_from_energy(G4double ene
     panEPM_T_EL = *iv;
   }
 
-  if (panEPM_T_EL != nullptr && panEPM_T_EH != nullptr) {
+  if (panEPM_T_EL != nullptr && panEPM_T_EH != nullptr)
+  {
     // checking isoAng has proper values or not
     //  Inelastic/FS, the first and last entries of *vEPM has all zero values.
     if (!(check_E_isoAng(panEPM_T_EL))) panEPM_T_EL = panEPM_T_EH;
     if (!(check_E_isoAng(panEPM_T_EH))) panEPM_T_EH = panEPM_T_EL;
 
-    if (panEPM_T_EL->n == panEPM_T_EH->n) {
+    if (panEPM_T_EL->n == panEPM_T_EH->n)
+    {
       anEPM_T_E.energy = energy;
       anEPM_T_E.n = panEPM_T_EL->n;
 
-      for (G4int i = 0; i < panEPM_T_EL->n; ++i) {
+      for (G4int i = 0; i < panEPM_T_EL->n; ++i)
+      {
         G4double angle;
         angle = get_linear_interpolated(
           energy, std::pair<G4double, G4double>(energyLH.first, panEPM_T_EL->isoAngle[i]),
@@ -893,13 +965,15 @@ E_isoAng G4ParticleHPThermalScattering::create_E_isoAng_from_energy(G4double ene
         anEPM_T_E.isoAngle.push_back(angle);
       }
     }
-    else {
+    else
+    {
       G4Exception("G4ParticleHPThermalScattering::create_E_isoAng_from_energy", "NotSupported",
                   JustWarning,
                   "G4ParticleHPThermalScattering does not support yet EL->n != EH->n.");
     }
   }
-  else {
+  else
+  {
     G4Exception("G4ParticleHPThermalScattering::create_E_isoAng_from_energy", "HAD_THERM_000",
                 FatalException, "Pointer panEPM_T_EL or panEPM_T_EH is zero");
   }
@@ -934,13 +1008,15 @@ G4ParticleHPThermalScattering::get_secondary_energy_from_E_P_E_isoAng(G4double r
   */
   total = anE_P_E_isoAng->sum_of_probXdEs;
 
-  for (G4int i = 0; i < n - 1; ++i) {
+  for (G4int i = 0; i < n - 1; ++i)
+  {
     G4double E_L = anE_P_E_isoAng->vE_isoAngle[i]->energy / eV;
     G4double E_H = anE_P_E_isoAng->vE_isoAngle[i + 1]->energy / eV;
     G4double dE = E_H - E_L;
     sum_p += ((anE_P_E_isoAng->prob[i]) * dE);
 
-    if (random <= sum_p / total) {
+    if (random <= sum_p / total)
+    {
       secondary_energy =
         get_linear_interpolated(random, std::pair<G4double, G4double>(sum_p_L / total, E_L),
                                 std::pair<G4double, G4double>(sum_p / total, E_H));
@@ -962,7 +1038,8 @@ G4ParticleHPThermalScattering::create_sE_and_EPM_from_pE_and_vE_P_E_isoAng(
   std::vector<G4double> v_energy;
   v_energy.clear();
   G4int i = 0;
-  for (auto itv = vNEP_EPM->begin(); itv != vNEP_EPM->end(); ++itv) {
+  for (auto itv = vNEP_EPM->begin(); itv != vNEP_EPM->end(); ++itv)
+  {
     v_energy.push_back((*itv)->energy);
     map_energy.insert(std::pair<G4double, G4int>((*itv)->energy, i));
     i++;
@@ -973,19 +1050,20 @@ G4ParticleHPThermalScattering::create_sE_and_EPM_from_pE_and_vE_P_E_isoAng(
   E_P_E_isoAng* pE_P_E_isoAng_EL = nullptr;
   E_P_E_isoAng* pE_P_E_isoAng_EH = nullptr;
 
-  if (energyLH.first != 0.0 && energyLH.second != 0.0) {
+  if (energyLH.first != 0.0 && energyLH.second != 0.0)
+  {
     auto u = map_energy.find(energyLH.first);
-    if (u != map_energy.end())
-      pE_P_E_isoAng_EL = (*vNEP_EPM)[u->second];
+    if (u != map_energy.end()) pE_P_E_isoAng_EL = (*vNEP_EPM)[u->second];
     auto w = map_energy.find(energyLH.second);
-    if (w != map_energy.end())
-      pE_P_E_isoAng_EH = (*vNEP_EPM)[w->second];
+    if (w != map_energy.end()) pE_P_E_isoAng_EH = (*vNEP_EPM)[w->second];
   }
-  else if (energyLH.first == 0.0) {
+  else if (energyLH.first == 0.0)
+  {
     pE_P_E_isoAng_EL = (*vNEP_EPM)[0];
     pE_P_E_isoAng_EH = (*vNEP_EPM)[1];
   }
-  else if (energyLH.second == 0.0 && i >= 2) {
+  else if (energyLH.second == 0.0 && i >= 2)
+  {
     pE_P_E_isoAng_EL = (*vNEP_EPM)[i - 2];
     pE_P_E_isoAng_EH = (*vNEP_EPM).back();
   }
@@ -996,12 +1074,13 @@ G4ParticleHPThermalScattering::create_sE_and_EPM_from_pE_and_vE_P_E_isoAng(
 
   E_isoAng anE_isoAng;
   // extreme case - there is no possibility to sample
-  if (nullptr == pE_P_E_isoAng_EL || nullptr == pE_P_E_isoAng_EH) {
+  if (nullptr == pE_P_E_isoAng_EL || nullptr == pE_P_E_isoAng_EH)
+  {
     anE_isoAng.n = 1;
     anE_isoAng.isoAngle.push_back(0.0);
     return std::pair<G4double, E_isoAng>(pE, anE_isoAng);
   }
-  
+
   sE_L = get_secondary_energy_from_E_P_E_isoAng(rand_for_sE, pE_P_E_isoAng_EL);
   sE_H = get_secondary_energy_from_E_P_E_isoAng(rand_for_sE, pE_P_E_isoAng_EH);
 
@@ -1014,9 +1093,11 @@ G4ParticleHPThermalScattering::create_sE_and_EPM_from_pE_and_vE_P_E_isoAng(
   // For defeating warning message from compiler
   anE_isoAng.n = 1;
   anE_isoAng.energy = sE;  // never used
-  if (E_isoAng_L.n == E_isoAng_H.n) {
+  if (E_isoAng_L.n == E_isoAng_H.n)
+  {
     anE_isoAng.n = E_isoAng_L.n;
-    for (G4int j = 0; j < anE_isoAng.n; ++j) {
+    for (G4int j = 0; j < anE_isoAng.n; ++j)
+    {
       G4double angle;
       angle =
         get_linear_interpolated(sE, std::pair<G4double, G4double>(sE_L, E_isoAng_L.isoAngle[j]),
@@ -1024,7 +1105,8 @@ G4ParticleHPThermalScattering::create_sE_and_EPM_from_pE_and_vE_P_E_isoAng(
       anE_isoAng.isoAngle.push_back(angle);
     }
   }
-  else {
+  else
+  {
     throw G4HadronicException(__FILE__, __LINE__, "Unexpected values!");
   }
 
@@ -1049,18 +1131,23 @@ void G4ParticleHPThermalScattering::buildPhysicsTable()
   std::map<G4String, G4int> co_dic;
 
   // Searching Nist Materials
-  for (std::size_t i = 0; i < numberOfMaterials; ++i) {
+  for (std::size_t i = 0; i < numberOfMaterials; ++i)
+  {
     G4Material* material = (*theMaterialTable)[i];
     auto nelm = (G4int)material->GetNumberOfElements();
-    for (G4int j = 0; j < nelm; ++j) {
+    for (G4int j = 0; j < nelm; ++j)
+    {
       const G4Element* element = material->GetElement(j);
-      if (names.IsThisThermalElement(material->GetName(), element->GetName())) {
+      if (names.IsThisThermalElement(material->GetName(), element->GetName()))
+      {
         G4int ts_ID_of_this_geometry;
         G4String ts_ndl_name = names.GetTS_NDL_Name(material->GetName(), element->GetName());
-        if (co_dic.find(ts_ndl_name) != co_dic.cend()) {
+        if (co_dic.find(ts_ndl_name) != co_dic.cend())
+        {
           ts_ID_of_this_geometry = co_dic.find(ts_ndl_name)->second;
         }
-        else {
+        else
+        {
           ts_ID_of_this_geometry = (G4int)co_dic.size();
           co_dic.insert(std::pair<G4String, G4int>(ts_ndl_name, ts_ID_of_this_geometry));
         }
@@ -1077,16 +1164,21 @@ void G4ParticleHPThermalScattering::buildPhysicsTable()
   }
 
   // Searching TS Elements
-  for (std::size_t i = 0; i < numberOfElements; ++i) {
+  for (std::size_t i = 0; i < numberOfElements; ++i)
+  {
     const G4Element* element = (*theElementTable)[i];
-    if (names.IsThisThermalElement(element->GetName())) {
-      if (names.IsThisThermalElement(element->GetName())) {
+    if (names.IsThisThermalElement(element->GetName()))
+    {
+      if (names.IsThisThermalElement(element->GetName()))
+      {
         G4int ts_ID_of_this_geometry;
         G4String ts_ndl_name = names.GetTS_NDL_Name(element->GetName());
-        if (co_dic.find(ts_ndl_name) != co_dic.cend()) {
+        if (co_dic.find(ts_ndl_name) != co_dic.cend())
+        {
           ts_ID_of_this_geometry = co_dic.find(ts_ndl_name)->second;
         }
-        else {
+        else
+        {
           ts_ID_of_this_geometry = (G4int)co_dic.size();
           co_dic.insert(std::pair<G4String, G4int>(ts_ndl_name, ts_ID_of_this_geometry));
         }
@@ -1101,13 +1193,16 @@ void G4ParticleHPThermalScattering::buildPhysicsTable()
   G4cout
     << "Neutron HP Thermal Scattering: Following material-element pairs or elements are registered."
     << G4endl;
-  for (const auto& it : dic) {
-    if (it.first.first != nullptr) {
+  for (const auto& it : dic)
+  {
+    if (it.first.first != nullptr)
+    {
       G4cout << "Material " << it.first.first->GetName() << " - Element "
              << it.first.second->GetName() << ",  internal thermal scattering id " << it.second
              << G4endl;
     }
-    else {
+    else
+    {
       G4cout << "Element " << it.first.second->GetName() << ",  internal thermal scattering id "
              << it.second << G4endl;
     }
@@ -1121,7 +1216,8 @@ void G4ParticleHPThermalScattering::buildPhysicsTable()
   incoherentFSs = hpmanager->GetThermalScatteringIncoherentFinalStates();
   inelasticFSs = hpmanager->GetThermalScatteringInelasticFinalStates();
 
-  if (G4Threading::IsMasterThread()) {
+  if (G4Threading::IsMasterThread())
+  {
     clearCurrentFSData();
 
     if (coherentFSs == nullptr)
@@ -1139,7 +1235,8 @@ void G4ParticleHPThermalScattering::buildPhysicsTable()
         "Please setenv G4NEUTRONHPDATA to point to the neutron cross-section files.");
     dirName = G4FindDataDir("G4NEUTRONHPDATA");
 
-    for (const auto& it : co_dic) {
+    for (const auto& it : co_dic)
+    {
       G4String tsndlName = it.first;
       G4int ts_ID = it.second;
 
@@ -1199,7 +1296,8 @@ G4bool G4ParticleHPThermalScattering::check_E_isoAng(E_isoAng* anE_IsoAng)
 
   G4int n = anE_IsoAng->n;
   G4double sum = 0.0;
-  for (G4int i = 0; i < n; ++i) {
+  for (G4int i = 0; i < n; ++i)
+  {
     sum += anE_IsoAng->isoAngle[i];
   }
   if (sum != 0.0) result = true;

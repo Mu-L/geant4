@@ -31,23 +31,23 @@
 // based on Quinn Model, see Phys. Rev. vol 126, number 4 (1962)
 
 #include "G4DNAPlasmonExcitation.hh"
-#include "G4SystemOfUnits.hh"
+
 #include "G4LowEnergyEmProcessSubType.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 using namespace std;
 
-G4DNAPlasmonExcitation::G4DNAPlasmonExcitation(const G4String& processName,
-  G4ProcessType type):G4VEmProcess (processName, type)
+G4DNAPlasmonExcitation::G4DNAPlasmonExcitation(const G4String& processName, G4ProcessType type)
+  : G4VEmProcess(processName, type)
 {
-  //SetProcessSubType(fLowEnergyChargeDecrease); //dousatsu temp
+  // SetProcessSubType(fLowEnergyChargeDecrease); //dousatsu temp
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
- 
-G4DNAPlasmonExcitation::~G4DNAPlasmonExcitation()
-= default;
+
+G4DNAPlasmonExcitation::~G4DNAPlasmonExcitation() = default;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -60,36 +60,34 @@ G4bool G4DNAPlasmonExcitation::IsApplicable(const G4ParticleDefinition& p)
 
 void G4DNAPlasmonExcitation::InitialiseProcess(const G4ParticleDefinition* p)
 {
-  if(!isInitialised) 
+  if (!isInitialised)
   {
     isInitialised = true;
     SetBuildTableFlag(false);
-    
+
     G4String name = p->GetParticleName();
 
-    if(name == "e-" )
-    { 
-      if(EmModel() == nullptr)
+    if (name == "e-")
+    {
+      if (EmModel() == nullptr)
       {
         SetEmModel(new G4DNAQuinnPlasmonExcitationModel);
-        EmModel()->SetLowEnergyLimit (10*eV);
-        EmModel()->SetHighEnergyLimit(1*GeV);
+        EmModel()->SetLowEnergyLimit(10 * eV);
+        EmModel()->SetHighEnergyLimit(1 * GeV);
       }
-      else{
-        EmModel()->SetLowEnergyLimit (10*eV);
-        EmModel()->SetHighEnergyLimit(1*GeV);
+      else
+      {
+        EmModel()->SetLowEnergyLimit(10 * eV);
+        EmModel()->SetHighEnergyLimit(1 * GeV);
       }
       AddEmModel(1, EmModel());
     }
-  } 
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void G4DNAPlasmonExcitation::PrintInfo()
 {
-     G4cout
-      << " Total cross sections computed from " 
-      << EmModel()->GetName() 
-      << G4endl;
+  G4cout << " Total cross sections computed from " << EmModel()->GetName() << G4endl;
 }

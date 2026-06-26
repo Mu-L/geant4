@@ -32,11 +32,11 @@
 //  Tested only for protons.
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4AdjointhIonisationModel_h
-#define G4AdjointhIonisationModel_h 1
+#ifndef G4ADJOINTHIONISATIONMODEL_HH
+#define G4ADJOINTHIONISATIONMODEL_HH
 
-#include "globals.hh"
 #include "G4VEmAdjointModel.hh"
+#include "globals.hh"
 
 class G4MaterialCutsCouple;
 class G4ParticleChange;
@@ -46,53 +46,52 @@ class G4VEmModel;
 
 class G4AdjointhIonisationModel : public G4VEmAdjointModel
 {
- public:
-  explicit G4AdjointhIonisationModel(G4ParticleDefinition* pDef);
+  public:
 
-  ~G4AdjointhIonisationModel() override;
+    explicit G4AdjointhIonisationModel(G4ParticleDefinition* pDef);
 
-  void SampleSecondaries(const G4Track& aTrack, G4bool isScatProjToProj,
-                         G4ParticleChange* fParticleChange) override;
+    ~G4AdjointhIonisationModel() override;
 
-  void RapidSampleSecondaries(const G4Track& aTrack, G4bool isScatProjToProj,
-                              G4ParticleChange* fParticleChange);
+    void SampleSecondaries(const G4Track& aTrack, G4bool isScatProjToProj,
+                           G4ParticleChange* fParticleChange) override;
 
-  G4double DiffCrossSectionPerAtomPrimToSecond(
-    G4double kinEnergyProj,  // kin energy of primary before interaction
-    G4double kinEnergyProd,  // kinetic energy of the secondary particle
-    G4double Z, G4double A = 0.) override;
+    void RapidSampleSecondaries(const G4Track& aTrack, G4bool isScatProjToProj,
+                                G4ParticleChange* fParticleChange);
 
-  G4double AdjointCrossSection(const G4MaterialCutsCouple* aCouple,
-                               G4double primEnergy,
-                               G4bool isScatProjToProj) override;
+    G4double DiffCrossSectionPerAtomPrimToSecond(
+      G4double kinEnergyProj,  // kin energy of primary before interaction
+      G4double kinEnergyProd,  // kinetic energy of the secondary particle
+      G4double Z, G4double A = 0.) override;
 
-  G4double GetSecondAdjEnergyMaxForScatProjToProj(
-    G4double primAdjEnergy) override;
+    G4double AdjointCrossSection(const G4MaterialCutsCouple* aCouple, G4double primEnergy,
+                                 G4bool isScatProjToProj) override;
 
-  G4double GetSecondAdjEnergyMinForScatProjToProj(G4double primAdjEnergy,
-                                                  G4double tcut = 0.) override;
+    G4double GetSecondAdjEnergyMaxForScatProjToProj(G4double primAdjEnergy) override;
 
-  G4double GetSecondAdjEnergyMaxForProdToProj(G4double primAdjEnergy) override;
+    G4double GetSecondAdjEnergyMinForScatProjToProj(G4double primAdjEnergy,
+                                                    G4double tcut = 0.) override;
 
-  G4double GetSecondAdjEnergyMinForProdToProj(G4double primAdjEnergy) override;
+    G4double GetSecondAdjEnergyMaxForProdToProj(G4double primAdjEnergy) override;
 
-  G4AdjointhIonisationModel(G4AdjointhIonisationModel&) = delete;
-  G4AdjointhIonisationModel& operator=(const G4AdjointhIonisationModel& right) =
-    delete;
+    G4double GetSecondAdjEnergyMinForProdToProj(G4double primAdjEnergy) override;
 
- private:
-  void DefineProjectileProperty();
+    G4AdjointhIonisationModel(G4AdjointhIonisationModel&) = delete;
+    G4AdjointhIonisationModel& operator=(const G4AdjointhIonisationModel& right) = delete;
 
-  G4VEmModel* fBraggDirectEMModel;
+  private:
 
-  // projectile properties
-  G4double fMass           = 0.;
-  G4double fSpin           = 0.;
-  G4double fMagMoment2     = 0.;
-  G4double fMassRatio      = 0.;
-  G4double fFormFact       = 0.;
-  G4double fOnePlusRatio2  = 0.;
-  G4double fOneMinusRatio2 = 0.;
+    void DefineProjectileProperty();
+
+    G4VEmModel* fBraggDirectEMModel;
+
+    // projectile properties
+    G4double fMass = 0.;
+    G4double fSpin = 0.;
+    G4double fMagMoment2 = 0.;
+    G4double fMassRatio = 0.;
+    G4double fFormFact = 0.;
+    G4double fOnePlusRatio2 = 0.;
+    G4double fOneMinusRatio2 = 0.;
 };
 
 #endif

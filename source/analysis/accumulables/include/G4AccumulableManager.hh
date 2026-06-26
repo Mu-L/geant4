@@ -28,11 +28,11 @@
 
 // Author: Ivana Hrivnacova, IJCLab IN2P3/CNRS, 07/09/2015
 
-#ifndef G4AccumulableManager_h
-#define G4AccumulableManager_h 1
+#ifndef G4ACCUMULABLEMANAGER_HH
+#define G4ACCUMULABLEMANAGER_HH
 
-#include "G4AccValue.hh"
 #include "G4AccType.hh"
+#include "G4AccValue.hh"
 #include "globals.hh"
 
 #include <map>
@@ -40,22 +40,23 @@
 
 class G4AccumulableManager;
 class G4VAccumulable;
-template <class T>
+template<class T>
 class G4ThreadLocalSingleton;
-template <class T, std::size_t N>
+template<class T, std::size_t N>
 class G4AccArray;
-template <class Key, class T, class Compare, class Allocator>
+template<class Key, class T, class Compare, class Allocator>
 class G4AccMap;
-template <class Key, class T, class Hash, class KeyEqual, class Allocator>
+template<class Key, class T, class Hash, class KeyEqual, class Allocator>
 class G4AccUnorderedMap;
-template <class T, class Allocator>
+template<class T, class Allocator>
 class G4AccVector;
 
 class G4AccumulableManager
 {
-  friend class G4ThreadLocalSingleton<G4AccumulableManager>;
+    friend class G4ThreadLocalSingleton<G4AccumulableManager>;
 
   public:
+
     virtual ~G4AccumulableManager();
 
     // Static methods
@@ -65,46 +66,40 @@ class G4AccumulableManager
 
     // Create accumulables
     //
-    template <typename T>
-    G4AccValue<T>*
-    CreateAccValue(const G4String& name, T value,
-                   G4MergeMode mergeMode = G4MergeMode::kAddition);
+    template<typename T>
+    G4AccValue<T>* CreateAccValue(const G4String& name, T value,
+                                  G4MergeMode mergeMode = G4MergeMode::kAddition);
 
-    template <typename T>
-    G4AccValue<T>*
-    CreateAccValue(T value,
-                   G4MergeMode mergeMode = G4MergeMode::kAddition);
+    template<typename T>
+    G4AccValue<T>* CreateAccValue(T value, G4MergeMode mergeMode = G4MergeMode::kAddition);
 
     // Deprecated function using the old accumulable value name
     //
 
-    template <typename T>
+    template<typename T>
     [[deprecated("Use `G4AccumulableManager::CreateAccValue<T>` instead")]]
-    G4AccValue<T>*
-    CreateAccumulable(const G4String& name, T value,
-                      G4MergeMode mergeMode = G4MergeMode::kAddition);
+    G4AccValue<T>* CreateAccumulable(const G4String& name, T value,
+                                     G4MergeMode mergeMode = G4MergeMode::kAddition);
 
-    template <typename T>
+    template<typename T>
     [[deprecated("Use `G4AccumulableManager::CreateAccValue<T>` instead")]]
-    G4AccValue<T>*
-    CreateAccumulable(T value,
-                      G4MergeMode mergeMode = G4MergeMode::kAddition);
+    G4AccValue<T>* CreateAccumulable(T value, G4MergeMode mergeMode = G4MergeMode::kAddition);
 
     // Register existing accumulables
     //
-    template <typename T>
+    template<typename T>
     G4bool Register(G4AccValue<T>& accumulable);
 
-    template <class T, std::size_t N>
+    template<class T, std::size_t N>
     G4bool Register(G4AccArray<T, N>& accumulableArray);
 
-    template <class Key, class T, class Compare, class Allocator>
+    template<class Key, class T, class Compare, class Allocator>
     G4bool Register(G4AccMap<Key, T, Compare, Allocator>& accumulableMap);
 
-    template <class Key, class T, class Hash, class KeyEqual, class Allocator>
+    template<class Key, class T, class Hash, class KeyEqual, class Allocator>
     G4bool Register(G4AccUnorderedMap<Key, T, Hash, KeyEqual, Allocator>& accumulableUnorderedMap);
 
-    template <class T, class Allocator>
+    template<class T, class Allocator>
     G4bool Register(G4AccVector<T, Allocator>& accumulableVector);
 
     // user defined accumulable
@@ -112,7 +107,7 @@ class G4AccumulableManager
 
     // Deprecated functions with long name
     //
-    template <typename T>
+    template<typename T>
     [[deprecated("Use `G4AccumulableManager::Register` instead")]]
     G4bool RegisterAccumulable(G4AccValue<T>& accumulable);
     // user defined accumulable
@@ -124,65 +119,60 @@ class G4AccumulableManager
     // Via name
     // templated accumulable
     //
-    template <typename T>
+    template<typename T>
     G4AccValue<T>* GetAccValue(const G4String& name, G4bool warn = true) const;
 
-    template <class T, std::size_t N>
-    G4AccArray<T, N>*
-    GetAccArray(const G4String& name, G4bool warn = true) const;
+    template<class T, std::size_t N>
+    G4AccArray<T, N>* GetAccArray(const G4String& name, G4bool warn = true) const;
 
-    template <class Key, class T, class Compare = std::less<Key>,
-              class Allocator  = std::allocator<std::pair<const Key, T>>>
-    G4AccMap<Key, T, Compare, Allocator>*
-    GetAccMap(const G4String& name, G4bool warn = true) const;
+    template<class Key, class T, class Compare = std::less<Key>,
+             class Allocator = std::allocator<std::pair<const Key, T>>>
+    G4AccMap<Key, T, Compare, Allocator>* GetAccMap(const G4String& name, G4bool warn = true) const;
 
-    template <class Key, class T, class Hash = std::hash<Key>, class KeyEqual = std::equal_to<Key>,
-              class Allocator  = std::allocator<std::pair<const Key, T>>>
+    template<class Key, class T, class Hash = std::hash<Key>, class KeyEqual = std::equal_to<Key>,
+             class Allocator = std::allocator<std::pair<const Key, T>>>
     G4AccUnorderedMap<Key, T, Hash, KeyEqual, Allocator>*
     GetAccUnorderedMap(const G4String& name, G4bool warn = true) const;
 
-    template <class T, class Allocator = std::allocator<T>>
-    G4AccVector<T, Allocator>*
-    GetAccVector(const G4String& name, G4bool warn = true) const;
+    template<class T, class Allocator = std::allocator<T>>
+    G4AccVector<T, Allocator>* GetAccVector(const G4String& name, G4bool warn = true) const;
 
     // user defined accumulable
-    G4VAccumulable*  GetAccumulable(const G4String& name, G4bool warn = true) const;
+    G4VAccumulable* GetAccumulable(const G4String& name, G4bool warn = true) const;
 
     // Deprecated function using the old accumulable value name
-    template <typename T>
+    template<typename T>
     [[deprecated("Use `G4AccumulableManager::GetAccValue<T>` instead")]]
     G4AccValue<T>* GetAccumulable(const G4String& name, G4bool warn = true) const;
 
     // Via id (in the order of registering)
     // templated accumulable
     //
-    template <typename T>
-    G4AccValue<T>*  GetAccValue(G4int id, G4bool warn = true) const;
+    template<typename T>
+    G4AccValue<T>* GetAccValue(G4int id, G4bool warn = true) const;
 
-    template <class T, std::size_t N>
+    template<class T, std::size_t N>
     G4AccArray<T, N>* GetAccArray(G4int id, G4bool warn = true) const;
 
-    template <class Key, class T, class Compare = std::less<Key>,
-              class Allocator = std::allocator<std::pair<const Key, T>>>
-    G4AccMap<Key, T, Compare, Allocator>*
-    GetAccMap(G4int id, G4bool warn = true) const;
+    template<class Key, class T, class Compare = std::less<Key>,
+             class Allocator = std::allocator<std::pair<const Key, T>>>
+    G4AccMap<Key, T, Compare, Allocator>* GetAccMap(G4int id, G4bool warn = true) const;
 
-    template <class Key, class T, class Hash = std::hash<Key>, class KeyEqual = std::equal_to<Key>,
-              class Allocator = std::allocator<std::pair<const Key, T>>>
+    template<class Key, class T, class Hash = std::hash<Key>, class KeyEqual = std::equal_to<Key>,
+             class Allocator = std::allocator<std::pair<const Key, T>>>
     G4AccUnorderedMap<Key, T, Hash, KeyEqual, Allocator>*
     GetAccUnorderedMap(G4int id, G4bool warn = true) const;
 
-    template <class T, class Allocator = std::allocator<T>>
-    G4AccVector<T, Allocator>*
-    GetAccVector(G4int id, G4bool warn = true) const;
+    template<class T, class Allocator = std::allocator<T>>
+    G4AccVector<T, Allocator>* GetAccVector(G4int id, G4bool warn = true) const;
 
     // user defined accumulable
-    G4VAccumulable*  GetAccumulable(G4int id, G4bool warn = true) const;
+    G4VAccumulable* GetAccumulable(G4int id, G4bool warn = true) const;
 
     // Deprecated function using the old accumulable value name
-    template <typename T>
+    template<typename T>
     [[deprecated("Use `G4AccumulableManager::GetAccValue<T>` instead")]]
-    G4AccValue<T>*  GetAccumulable(G4int id, G4bool warn = true) const;
+    G4AccValue<T>* GetAccumulable(G4int id, G4bool warn = true) const;
 
     G4int GetNofAccumulables() const;
 
@@ -198,8 +188,7 @@ class G4AccumulableManager
     void Print(G4PrintOptions options = G4PrintOptions()) const;
 
     // Print a selected range
-    void Print(G4int startId, G4int count,
-               G4PrintOptions options = G4PrintOptions()) const;
+    void Print(G4int startId, G4int count, G4PrintOptions options = G4PrintOptions()) const;
     void Print(std::vector<G4VAccumulable*>::iterator startIt, std::size_t count,
                G4PrintOptions options = G4PrintOptions()) const;
     void Print(std::vector<G4VAccumulable*>::iterator startIt,
@@ -211,6 +200,7 @@ class G4AccumulableManager
     G4int GetVerboseLevel() const;
 
   private:
+
     // Hide singleton ctor
     G4AccumulableManager();
 
@@ -221,39 +211,38 @@ class G4AccumulableManager
     G4bool CheckName(const G4String& name, const G4String& where) const;
     G4bool CheckType(G4VAccumulable* accumulable, G4AccType type, G4bool warn) const;
 
-    template <typename T>
-    G4AccValue<T>*  GetAccumulable(G4VAccumulable* accumulable, G4bool warn) const;
+    template<typename T>
+    G4AccValue<T>* GetAccumulable(G4VAccumulable* accumulable, G4bool warn) const;
 
-    template <typename T, std::size_t N>
+    template<typename T, std::size_t N>
     G4AccArray<T, N>* GetAccArray(G4VAccumulable* accumulable, G4bool warn) const;
 
-    template <typename Key, typename T, typename Compare = std::less<Key>,
-              typename Allocator = std::allocator<std::pair<const Key, T>>>
-    G4AccMap<Key, T, Compare, Allocator>*
-    GetAccMap(G4VAccumulable* accumulable, G4bool warn = true) const;
+    template<typename Key, typename T, typename Compare = std::less<Key>,
+             typename Allocator = std::allocator<std::pair<const Key, T>>>
+    G4AccMap<Key, T, Compare, Allocator>* GetAccMap(G4VAccumulable* accumulable,
+                                                    G4bool warn = true) const;
 
-    template <typename Key, typename T, typename Hash = std::hash<Key>, typename KeyEqual = std::equal_to<Key>,
-              typename Allocator = std::allocator<std::pair<const Key, T>>>
+    template<typename Key, typename T, typename Hash = std::hash<Key>,
+             typename KeyEqual = std::equal_to<Key>,
+             typename Allocator = std::allocator<std::pair<const Key, T>>>
     G4AccUnorderedMap<Key, T, Hash, KeyEqual, Allocator>*
     GetAccUnorderedMap(G4VAccumulable* accumulable, G4bool warn = true) const;
 
-    template <typename T, typename Allocator = std::allocator<T>>
-    G4AccVector<T, Allocator>*
-    GetAccVector(G4VAccumulable* accumulable, G4bool warn) const;
+    template<typename T, typename Allocator = std::allocator<T>>
+    G4AccVector<T, Allocator>* GetAccVector(G4VAccumulable* accumulable, G4bool warn) const;
 
     // Constants
     const G4String kBaseName = "accumulable";
 
     // Static data members
-    inline static G4AccumulableManager* fgMasterInstance { nullptr };
+    inline static G4AccumulableManager* fgMasterInstance{nullptr};
 
     // Data members
-    std::vector<G4VAccumulable*>        fVector;
+    std::vector<G4VAccumulable*> fVector;
     std::map<G4String, G4VAccumulable*> fMap;
-    std::vector<G4VAccumulable*>        fAccumulablesToDelete;
- };
+    std::vector<G4VAccumulable*> fAccumulablesToDelete;
+};
 
 #include "G4AccumulableManager.icc"
 
 #endif
-

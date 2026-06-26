@@ -4,14 +4,16 @@
 #ifndef toolx_Qt_s2q
 #define toolx_Qt_s2q
 
-#include <QtCore/qglobal.h> //For QT_VERSION.
-
+#include <QtCore/qglobal.h>  //For QT_VERSION.
 #include <QtCore/qstring.h>
 
-namespace toolx {
-namespace Qt {
+namespace toolx
+{
+namespace Qt
+{
 
-inline QString s2q(const std::string& a_s) {
+inline QString s2q(const std::string& a_s)
+{
 #if QT_VERSION < 0x050000
   return QString::fromAscii(a_s.c_str());
 #else
@@ -19,7 +21,7 @@ inline QString s2q(const std::string& a_s) {
 #endif
 }
 
-}}
-
+}  // namespace Qt
+}  // namespace toolx
 
 #endif

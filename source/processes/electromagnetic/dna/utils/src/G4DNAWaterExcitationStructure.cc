@@ -24,29 +24,27 @@
 // ********************************************************************
 
 #include "G4DNAWaterExcitationStructure.hh"
+
 #include "G4SystemOfUnits.hh"
 
-G4DNAWaterExcitationStructure::G4DNAWaterExcitationStructure() 
+G4DNAWaterExcitationStructure::G4DNAWaterExcitationStructure()
 {
-  energyConstant.push_back(8.22*eV);
-  energyConstant.push_back(10.00*eV);
-  energyConstant.push_back(11.24*eV);
-  energyConstant.push_back(12.61*eV);
-  energyConstant.push_back(13.77*eV);
+  energyConstant.push_back(8.22 * eV);
+  energyConstant.push_back(10.00 * eV);
+  energyConstant.push_back(11.24 * eV);
+  energyConstant.push_back(12.61 * eV);
+  energyConstant.push_back(13.77 * eV);
 
   nLevels = (G4int)energyConstant.size();
 }
 
-
-G4DNAWaterExcitationStructure::~G4DNAWaterExcitationStructure()
-= default;
- 
+G4DNAWaterExcitationStructure::~G4DNAWaterExcitationStructure() = default;
 
 G4double G4DNAWaterExcitationStructure::ExcitationEnergy(G4int level)
 {
   G4double excitation = 0.;
 
-  if (level >=0 && level < nLevels) excitation = energyConstant[level];
+  if (level >= 0 && level < nLevels) excitation = energyConstant[level];
 
   return excitation;
 }

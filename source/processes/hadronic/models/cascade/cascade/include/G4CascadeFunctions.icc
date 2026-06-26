@@ -41,38 +41,39 @@
 #include "G4CascadeChannelTables.hh"
 #include "globals.hh"
 
-
 // Constructor registers table in lookup
 
-template <class DATA, class SAMP>
-G4CascadeFunctions<DATA,SAMP>::G4CascadeFunctions() : SAMP() {}
-
+template<class DATA, class SAMP>
+G4CascadeFunctions<DATA, SAMP>::G4CascadeFunctions() : SAMP()
+{}
 
 // Compare summed partial cross section with total cross section
 // Truncate multiplicity at maximum if summed < total
 
-template <class DATA, class SAMP>
-G4int G4CascadeFunctions<DATA,SAMP>::getMultiplicity(G4double ke) const {
+template<class DATA, class SAMP>
+G4int G4CascadeFunctions<DATA, SAMP>::getMultiplicity(G4double ke) const
+{
   // Use pointer comparison to see whether tot is just a ref to sum)
-  if (&DATA::data.sum != &DATA::data.tot) {
-    G4double summed = this->findCrossSection(ke, DATA::data.sum); 
-    G4double total  = this->findCrossSection(ke, DATA::data.tot);
-    if (G4UniformRand() > summed/total) return DATA::data.maxMultiplicity();
+  if (&DATA::data.sum != &DATA::data.tot)
+  {
+    G4double summed = this->findCrossSection(ke, DATA::data.sum);
+    G4double total = this->findCrossSection(ke, DATA::data.tot);
+    if (G4UniformRand() > summed / total) return DATA::data.maxMultiplicity();
   }
 
   return this->findMultiplicity(ke, DATA::data.multiplicities);
 }
 
-
 // Generate list of final state particles
 
-template <class DATA, class SAMP>
-void G4CascadeFunctions<DATA,SAMP>::
-getOutgoingParticleTypes(std::vector<G4int>& kinds, 
-			 G4int mult, G4double ke) const {
+template<class DATA, class SAMP>
+void G4CascadeFunctions<DATA, SAMP>::getOutgoingParticleTypes(std::vector<G4int>& kinds, G4int mult,
+                                                              G4double ke) const
+{
   const G4int maxMult = DATA::data.maxMultiplicity();
 
-  if (mult > maxMult) {
+  if (mult > maxMult)
+  {
     G4cerr << " Illegal multiplicity " << mult << " > " << maxMult << G4endl;
     mult = maxMult;
   }
@@ -80,11 +81,10 @@ getOutgoingParticleTypes(std::vector<G4int>& kinds,
   kinds.clear();
   kinds.reserve(mult);
 
-  G4int channel = this->findFinalStateIndex(mult, ke, DATA::data.index,
-				            DATA::data.crossSections);
+  G4int channel = this->findFinalStateIndex(mult, ke, DATA::data.index, DATA::data.crossSections);
 #ifdef G4CASCADE_DEBUG_SAMPLER
-  G4cout << " getOutgoingParticleTypes: mult=" << mult << " KE=" << ke
-	 << ": channel=" << channel << G4endl;
+  G4cout << " getOutgoingParticleTypes: mult=" << mult << " KE=" << ke << ": channel=" << channel
+         << G4endl;
 #endif
 
   // Identify final-state array to be copied
@@ -98,25 +98,25 @@ getOutgoingParticleTypes(std::vector<G4int>& kinds,
   if (mult == 8) chan = DATA::data.x8bfs[channel];
   if (mult == 9) chan = DATA::data.x9bfs[channel];
 
-  if (!chan) {
-    G4cerr << " getOutgoingParticleTypes: invalid multiplicity " << mult
-	   << G4endl;
+  if (!chan)
+  {
+    G4cerr << " getOutgoingParticleTypes: invalid multiplicity " << mult << G4endl;
     return;
   }
 
-  kinds.insert(kinds.begin(), chan, chan+mult);	// Transfer data into vector
+  kinds.insert(kinds.begin(), chan, chan + mult);  // Transfer data into vector
   return;
 }
 
-
 // Dump lookup tables, including interpolation bins, to log file
 
-template <class DATA, class SAMP>
-void G4CascadeFunctions<DATA,SAMP>::printTable(std::ostream& os) const {
+template<class DATA, class SAMP>
+void G4CascadeFunctions<DATA, SAMP>::printTable(std::ostream& os) const
+{
   os << " ---------- " << DATA::data.name << " ----------" << G4endl;
   SAMP::print(os);
   DATA::data.print(os);
   os << " ------------------------------" << G4endl;
 }
 
-#endif	/* G4_CASCADE_FUNCTIONS_ICC */
+#endif /* G4_CASCADE_FUNCTIONS_ICC */

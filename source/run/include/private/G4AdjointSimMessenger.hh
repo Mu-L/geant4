@@ -102,8 +102,8 @@
 //   Contract:     ESA contract 21435/08/NL/AT
 //   Customer:     ESA/ESTEC
 // --------------------------------------------------------------------
-#ifndef G4AdjointSimMessenger_hh
-#define G4AdjointSimMessenger_hh 1
+#ifndef G4ADJOINTSIMMESSENGER_HH
+#define G4ADJOINTSIMMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -123,12 +123,14 @@ class G4UIcmdWithADouble;
 class G4AdjointSimMessenger : public G4UImessenger
 {
   public:
+
     G4AdjointSimMessenger(G4AdjointSimManager*);
     ~G4AdjointSimMessenger() override;
 
     void SetNewValue(G4UIcommand*, G4String) override;
 
   private:
+
     G4AdjointSimManager* theAdjointRunManager;
 
     G4UIdirectory* AdjointSimDir = nullptr;

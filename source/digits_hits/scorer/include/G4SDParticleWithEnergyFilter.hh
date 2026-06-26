@@ -26,15 +26,15 @@
 //
 //
 
-#ifndef G4SDParticleWithEnergyFilter_h
-#define G4SDParticleWithEnergyFilter_h 1
+#ifndef G4SDPARTICLEWITHENERGYFILTER_HH
+#define G4SDPARTICLEWITHENERGYFILTER_HH
 
 class G4Step;
 class G4ParticleDefinition;
-#include "globals.hh"
-#include "G4VSDFilter.hh"
-#include "G4SDParticleFilter.hh"
 #include "G4SDKineticEnergyFilter.hh"
+#include "G4SDParticleFilter.hh"
+#include "G4VSDFilter.hh"
+#include "globals.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // class description:
@@ -49,26 +49,28 @@ class G4ParticleDefinition;
 
 class G4SDParticleWithEnergyFilter : public G4VSDFilter
 {
- public:
-  G4SDParticleWithEnergyFilter(const G4String& name, G4double elow = 0.0,
-                               G4double ehigh = DBL_MAX);
-  G4SDParticleWithEnergyFilter(const G4SDParticleWithEnergyFilter&);
-  G4SDParticleWithEnergyFilter& operator=(const G4SDParticleWithEnergyFilter&);
-  ~G4SDParticleWithEnergyFilter() override;
+  public:
 
-  G4bool Accept(const G4Step*) const override;
+    G4SDParticleWithEnergyFilter(const G4String& name, G4double elow = 0.0,
+                                 G4double ehigh = DBL_MAX);
+    G4SDParticleWithEnergyFilter(const G4SDParticleWithEnergyFilter&);
+    G4SDParticleWithEnergyFilter& operator=(const G4SDParticleWithEnergyFilter&);
+    ~G4SDParticleWithEnergyFilter() override;
 
-  void add(const G4String& particleName);
-  // add the particle into accepatable particle list.
-  //
-  void SetKineticEnergy(G4double elow, G4double ehigh);
-  // Set acceptable kinetic energy range.
-  //
-  void show();
+    G4bool Accept(const G4Step*) const override;
 
- private:
-  G4SDParticleFilter* fParticleFilter;
-  G4SDKineticEnergyFilter* fKineticFilter;
+    void add(const G4String& particleName);
+    // add the particle into accepatable particle list.
+    //
+    void SetKineticEnergy(G4double elow, G4double ehigh);
+    // Set acceptable kinetic energy range.
+    //
+    void show();
+
+  private:
+
+    G4SDParticleFilter* fParticleFilter;
+    G4SDKineticEnergyFilter* fKineticFilter;
 };
 
 #endif

@@ -29,56 +29,56 @@
 // Supervision: John Apostolakis (CERN)
 // --------------------------------------------------------------------
 
-inline
-G4EquationOfMotion* G4VFSALIntegrationStepper::GetEquationOfMotion()
+inline G4EquationOfMotion* G4VFSALIntegrationStepper::GetEquationOfMotion()
 {
   return fEquation_Rhs;
-} 
+}
 
-inline void
- G4VFSALIntegrationStepper::SetEquationOfMotion(G4EquationOfMotion* newEquation)
+inline void G4VFSALIntegrationStepper::SetEquationOfMotion(G4EquationOfMotion* newEquation)
 {
-  if( newEquation != nullptr )
+  if (newEquation != nullptr)
   {
     fEquation_Rhs = newEquation;
   }
-} 
+}
 
-inline
-G4int G4VFSALIntegrationStepper::GetNumberOfVariables() const
+inline G4int G4VFSALIntegrationStepper::GetNumberOfVariables() const
 {
   return fNoIntegrationVariables;
 }
 
-inline
-G4int G4VFSALIntegrationStepper::GetNumberOfStateVariables() const
+inline G4int G4VFSALIntegrationStepper::GetNumberOfStateVariables() const
 {
   return fNoStateVariables;
 }
 
-inline
-void G4VFSALIntegrationStepper::NormaliseTangentVector( G4double vec[6] )
+inline void G4VFSALIntegrationStepper::NormaliseTangentVector(G4double vec[6])
 {
-  G4double drds2 = vec[3]*vec[3]+vec[4]*vec[4]+vec[5]*vec[5];
+  G4double drds2 = vec[3] * vec[3] + vec[4] * vec[4] + vec[5] * vec[5];
 
-  if( std::fabs(drds2 - 1.0) > 1.e-14 )
+  if (std::fabs(drds2 - 1.0) > 1.e-14)
   {
     G4double normx = 1.0 / std::sqrt(drds2);
-    for(auto i=3; i<6; ++i) { vec[i] *= normx; }
+    for (auto i = 3; i < 6; ++i)
+    {
+      vec[i] *= normx;
+    }
   }
 }
 
-inline
-void G4VFSALIntegrationStepper::NormalisePolarizationVector( G4double vec[12] )
+inline void G4VFSALIntegrationStepper::NormalisePolarizationVector(G4double vec[12])
 {
-  G4double drds2 = vec[9]*vec[9]+vec[10]*vec[10]+vec[11]*vec[11];
+  G4double drds2 = vec[9] * vec[9] + vec[10] * vec[10] + vec[11] * vec[11];
 
-  if( drds2 > 0. )
+  if (drds2 > 0.)
   {
-    if( std::fabs(drds2 - 1.0) > 1.e-14 )
+    if (std::fabs(drds2 - 1.0) > 1.e-14)
     {
       G4double normx = 1.0 / std::sqrt(drds2);
-      for(auto i=9; i<12; ++i)  { vec[i] *= normx; }
+      for (auto i = 9; i < 12; ++i)
+      {
+        vec[i] *= normx;
+      }
     }
   }
 }

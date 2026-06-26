@@ -44,51 +44,50 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4AdjointPhotoElectricModel_h
-#define G4AdjointPhotoElectricModel_h 1
+#ifndef G4ADJOINTPHOTOELECTRICMODEL_HH
+#define G4ADJOINTPHOTOELECTRICMODEL_HH
 
-#include "globals.hh"
 #include "G4VEmAdjointModel.hh"
+#include "globals.hh"
 
 class G4AdjointPhotoElectricModel : public G4VEmAdjointModel
 {
- public:
-  G4AdjointPhotoElectricModel();
-  ~G4AdjointPhotoElectricModel() override;
+  public:
 
-  void SampleSecondaries(const G4Track& aTrack, G4bool isScatProjToProj,
-                         G4ParticleChange* fParticleChange) override;
+    G4AdjointPhotoElectricModel();
+    ~G4AdjointPhotoElectricModel() override;
 
-  G4double AdjointCrossSection(const G4MaterialCutsCouple* aCouple,
-                               G4double primEnergy,
+    void SampleSecondaries(const G4Track& aTrack, G4bool isScatProjToProj,
+                           G4ParticleChange* fParticleChange) override;
+
+    G4double AdjointCrossSection(const G4MaterialCutsCouple* aCouple, G4double primEnergy,
+                                 G4bool isScatProjToProj) override;
+
+    G4double AdjointCrossSectionPerAtom(const G4Element* anElement, G4double electronEnergy);
+
+    G4AdjointPhotoElectricModel(G4AdjointPhotoElectricModel&) = delete;
+    G4AdjointPhotoElectricModel& operator=(const G4AdjointPhotoElectricModel& right) = delete;
+
+  protected:
+
+    void CorrectPostStepWeight(G4ParticleChange* fParticleChange, G4double old_weight,
+                               G4double adjointPrimKinEnergy, G4double projectileKinEnergy,
                                G4bool isScatProjToProj) override;
 
-  G4double AdjointCrossSectionPerAtom(const G4Element* anElement,
-                                      G4double electronEnergy);
+  private:
 
-  G4AdjointPhotoElectricModel(G4AdjointPhotoElectricModel&) = delete;
-  G4AdjointPhotoElectricModel& operator=(
-    const G4AdjointPhotoElectricModel& right) = delete;
+    void DefineCurrentMaterialAndElectronEnergy(const G4MaterialCutsCouple* aCouple,
+                                                G4double eEnergy);
 
- protected:
-  void CorrectPostStepWeight(G4ParticleChange* fParticleChange,
-                             G4double old_weight, G4double adjointPrimKinEnergy,
-                             G4double projectileKinEnergy,
-                             G4bool isScatProjToProj) override;
+    G4double fShellProb[40][40];
+    G4double fXsec[40];
+    G4double fTotAdjointCS = 0.;
+    G4double fFactorCSBiasing = 1.;
+    G4double fPreStepAdjointCS = 0.;
+    G4double fPostStepAdjointCS = 0.;
+    G4double fCurrenteEnergy = 0.;
 
- private:
-  void DefineCurrentMaterialAndElectronEnergy(
-    const G4MaterialCutsCouple* aCouple, G4double eEnergy);
-
-  G4double fShellProb[40][40];
-  G4double fXsec[40];
-  G4double fTotAdjointCS      = 0.;
-  G4double fFactorCSBiasing   = 1.;
-  G4double fPreStepAdjointCS  = 0.;
-  G4double fPostStepAdjointCS = 0.;
-  G4double fCurrenteEnergy    = 0.;
-
-  size_t fIndexElement = 0;
+    size_t fIndexElement = 0;
 };
 
 #endif

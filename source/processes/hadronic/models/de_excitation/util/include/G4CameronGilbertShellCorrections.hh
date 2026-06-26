@@ -30,44 +30,44 @@
 // Modified:
 // 21.03.2013 V.Ivanchenko redesigned and cleaned up
 
-#ifndef G4CameronGilbertShellCorrections_h
-#define G4CameronGilbertShellCorrections_h 1
+#ifndef G4CAMERONGILBERTSHELLCORRECTIONS_HH
+#define G4CAMERONGILBERTSHELLCORRECTIONS_HH
 
 #include "globals.hh"
 
 class G4CameronGilbertShellCorrections
 {
-public:
+  public:
 
-  G4CameronGilbertShellCorrections();
+    G4CameronGilbertShellCorrections();
 
-  ~G4CameronGilbertShellCorrections() = default;
+    ~G4CameronGilbertShellCorrections() = default;
 
-  G4bool GetShellCorrection(G4int N, G4int Z, G4double& result) const
-  {
-    G4bool res = false;
-    if (Z >= TableMin && Z <= ZTableMax && N >= TableMin && N <= NTableMax) { 
-      result = ShellZTable[Z - TableMin] + ShellNTable[N - TableMin];
-      res = true; 
+    G4bool GetShellCorrection(G4int N, G4int Z, G4double& result) const
+    {
+      G4bool res = false;
+      if (Z >= TableMin && Z <= ZTableMax && N >= TableMin && N <= NTableMax)
+      {
+        result = ShellZTable[Z - TableMin] + ShellNTable[N - TableMin];
+        res = true;
+      }
+      return res;
     }
-    return res;
-  }
 
-  G4CameronGilbertShellCorrections(const G4CameronGilbertShellCorrections & right) = delete;
-  const G4CameronGilbertShellCorrections & operator=
-  (const G4CameronGilbertShellCorrections & right) = delete;
+    G4CameronGilbertShellCorrections(const G4CameronGilbertShellCorrections& right) = delete;
+    const G4CameronGilbertShellCorrections&
+    operator=(const G4CameronGilbertShellCorrections& right) = delete;
 
-private:
+  private:
 
-  const G4int TableMin{11};
-  const G4int ZTableMax{98};
-  const G4int NTableMax{150};
+    const G4int TableMin{11};
+    const G4int ZTableMax{98};
+    const G4int NTableMax{150};
 
-  static const G4int ZTableSize{88};
-  static const G4int NTableSize{140};
+    static const G4int ZTableSize{88};
+    static const G4int NTableSize{140};
 
-  static G4double ShellZTable[ZTableSize];  
-  static G4double ShellNTable[NTableSize];
-	
+    static G4double ShellZTable[ZTableSize];
+    static G4double ShellNTable[NTableSize];
 };
 #endif

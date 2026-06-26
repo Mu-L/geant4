@@ -27,17 +27,17 @@
 //
 // Users are requested to cite the following papers:
 // - M. Terrissol, A. Baudre, Radiat. Prot. Dosim. 31 (1990) 175-177
-// - M.C. Bordage, J. Bordes, S. Edel, M. Terrissol, X. Franceries, 
+// - M.C. Bordage, J. Bordes, S. Edel, M. Terrissol, X. Franceries,
 //   M. Bardies, N. Lampe, S. Incerti, Phys. Med. 32 (2016) 1833-1840
 //
-// Authors of this class: 
+// Authors of this class:
 // M.C. Bordage, M. Terrissol, S. Edel, J. Bordes, S. Incerti
 //
 // 15.01.2014: creation
 //
 
-#ifndef G4EmDNAPhysics_option6_h
-#define G4EmDNAPhysics_option6_h 1
+#ifndef G4EMDNAPHYSICS_OPTION6_HH
+#define G4EMDNAPHYSICS_OPTION6_HH
 
 #include "G4EmDNAPhysics.hh"
 #include "globals.hh"
@@ -46,21 +46,15 @@
 
 class G4EmDNAPhysics_option6 : public G4EmDNAPhysics
 {
-public:
+  public:
 
-  explicit G4EmDNAPhysics_option6(G4int ver=1, const G4String& name="G4EmDNAPhysics_option6");
+    explicit G4EmDNAPhysics_option6(G4int ver = 1, const G4String& name = "G4EmDNAPhysics_option6");
 
-  ~G4EmDNAPhysics_option6() override = default;
+    ~G4EmDNAPhysics_option6() override = default;
 
-  void ConstructProcess() override;
+    void ConstructProcess() override;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-
-
-
-
-

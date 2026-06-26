@@ -24,31 +24,33 @@
 // ********************************************************************
 //
 
-#ifndef G4ChannelingECHARM_h
-#define G4ChannelingECHARM_h
+#ifndef G4CHANNELINGECHARM_HH
+#define G4CHANNELINGECHARM_HH
 
-#include "G4PhysicsVector.hh"
 #include "G4Physics2DVector.hh"
+#include "G4PhysicsVector.hh"
 #include "G4ThreeVector.hh"
 
-class G4ChannelingECHARM {
+class G4ChannelingECHARM
+{
+  public:
 
-public:
-    G4ChannelingECHARM(const G4String&,G4double);
+    G4ChannelingECHARM(const G4String&, G4double);
     ~G4ChannelingECHARM();
 
-    //virtual function of XVCrystalCharacteristic
+    // virtual function of XVCrystalCharacteristic
     G4double GetEC(G4ThreeVector&);
-    
-    virtual void ReadFromECHARM(const G4String&,G4double);
-    
-    G4double GetMax() {return fMaximum;};
-    G4double GetMin() {return fMinimum;};
-    G4double GetMaxMin() {return std::fabs(fMaximum-fMinimum);};
-    
-    G4double GetIntSp(G4int index) {return fDistances[index];};
-    
-private:
+
+    virtual void ReadFromECHARM(const G4String&, G4double);
+
+    G4double GetMax() { return fMaximum; };
+    G4double GetMin() { return fMinimum; };
+    G4double GetMaxMin() { return std::fabs(fMaximum - fMinimum); };
+
+    G4double GetIntSp(G4int index) { return fDistances[index]; };
+
+  private:
+
     G4PhysicsVector* fVectorEC;
     G4Physics2DVector* fVectorEC2D;
 

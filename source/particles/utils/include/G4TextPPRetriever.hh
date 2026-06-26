@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 
-#ifndef G4TextPPRetriever_h
-#define G4TextPPRetriever_h 1
+#ifndef G4TEXTPPRETRIEVER_HH
+#define G4TEXTPPRETRIEVER_HH
 
 #include "G4VParticlePropertyRetriever.hh"
 #include "globals.hh"
@@ -32,13 +32,16 @@
 class G4TextPPRetriever : public G4VParticlePropertyRetriever
 {
   public:
+
     void Retrieve(const G4String& option = "") override;
 
   protected:
+
     void SparseOption(const G4String& option);
     G4bool ModifyPropertyTable(const G4ParticleDefinition*);
 
   protected:
+
     G4String baseDir;
 };
 

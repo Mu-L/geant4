@@ -32,25 +32,25 @@
 // Class Description:
 //   Provides some basic polarization transformation routines.
 
-#ifndef G4PolarizationHelper_h
-#define G4PolarizationHelper_h 1
+#ifndef G4POLARIZATIONHELPER_HH
+#define G4POLARIZATIONHELPER_HH
 
-#include "globals.hh"
 #include "G4ThreeVector.hh"
+#include "globals.hh"
 
 class G4PolarizationHelper
 {
- public:
-  static G4ThreeVector GetFrame(const G4ThreeVector&, const G4ThreeVector&);
-  static G4ThreeVector GetParticleFrameX(const G4ThreeVector&);
-  static G4ThreeVector GetParticleFrameY(const G4ThreeVector&);
-  static G4ThreeVector GetRandomFrame(const G4ThreeVector&);
+  public:
 
-  static G4ThreeVector GetSpinInPRF(const G4ThreeVector& uZ,
-                                    const G4ThreeVector& spin);
+    static G4ThreeVector GetFrame(const G4ThreeVector&, const G4ThreeVector&);
+    static G4ThreeVector GetParticleFrameX(const G4ThreeVector&);
+    static G4ThreeVector GetParticleFrameY(const G4ThreeVector&);
+    static G4ThreeVector GetRandomFrame(const G4ThreeVector&);
 
-  static void TestPolarizationTransformations();
-  static void TestInteractionFrame();
+    static G4ThreeVector GetSpinInPRF(const G4ThreeVector& uZ, const G4ThreeVector& spin);
+
+    static void TestPolarizationTransformations();
+    static void TestInteractionFrame();
 };
 
 #endif

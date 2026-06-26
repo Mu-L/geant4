@@ -27,8 +27,8 @@
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 // V. Ivanchenko, July-2023 Basic revision of particle HP classes
 //
-#ifndef G4ParticleHPEnAngCorrelation_h
-#define G4ParticleHPEnAngCorrelation_h 1
+#ifndef G4PARTICLEHPENANGCORRELATION_HH
+#define G4PARTICLEHPENANGCORRELATION_HH
 
 #include "G4Cache.hh"
 #include "G4ParticleHPManager.hh"
@@ -47,13 +47,14 @@ class G4ParticleHPEnAngCorrelation
 {
     struct toBeCached
     {
-      G4ReactionProduct* theProjectileRP{nullptr};
-      G4ReactionProduct* theTarget{nullptr};
-      G4double theTotalMeanEnergy{-1.0};
-      toBeCached() = default;
+        G4ReactionProduct* theProjectileRP{nullptr};
+        G4ReactionProduct* theTarget{nullptr};
+        G4double theTotalMeanEnergy{-1.0};
+        toBeCached() = default;
     };
 
   public:
+
     explicit G4ParticleHPEnAngCorrelation(const G4ParticleDefinition* proj = nullptr);
     ~G4ParticleHPEnAngCorrelation();
 
@@ -89,10 +90,10 @@ class G4ParticleHPEnAngCorrelation
     }
 
     G4ParticleHPEnAngCorrelation(G4ParticleHPEnAngCorrelation&) = delete;
-    G4ParticleHPEnAngCorrelation& operator=
-    (const G4ParticleHPEnAngCorrelation &right) = delete;
+    G4ParticleHPEnAngCorrelation& operator=(const G4ParticleHPEnAngCorrelation& right) = delete;
 
   private:
+
     const G4ParticleDefinition* theProjectile;
     G4ParticleHPProduct* theProducts{nullptr};
 

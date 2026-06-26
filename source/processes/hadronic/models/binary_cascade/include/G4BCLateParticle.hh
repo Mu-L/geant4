@@ -23,49 +23,48 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4BCLateParticle_h
-#define G4BCLateParticle_h 1
-
-#include <vector>
+#ifndef G4BCLATEPARTICLE_HH
+#define G4BCLATEPARTICLE_HH
 
 #include "G4BCAction.hh"
 #include "G4CollisionInitialState.hh"
 #include "G4KineticTrack.hh"
 #include "G4KineticTrackVector.hh"
 
+#include <vector>
+
 class G4BCLateParticle : public G4BCAction
 {
   public:
-  
-  G4BCLateParticle(){}
-  virtual ~G4BCLateParticle(){}
-  virtual const std::vector<G4CollisionInitialState *> &
-         GetCollisions(G4KineticTrack * aProjectile, 
-	               std::vector<G4KineticTrack *> & ,
-		       G4double theCurrentTime)
-  {
-    theColl.clear();
-    G4double ctime=std::max(0.,aProjectile->GetFormationTime()) + theCurrentTime;
 
-    G4KineticTrackVector noTarget;
-    G4CollisionInitialState * aLate = 
-            new G4CollisionInitialState(ctime,
-	    				 aProjectile, noTarget, this);
-    theColl.push_back(aLate);    
-    return theColl;
-  }
+    G4BCLateParticle() {}
+    virtual ~G4BCLateParticle() {}
+    virtual const std::vector<G4CollisionInitialState*>&
+    GetCollisions(G4KineticTrack* aProjectile, std::vector<G4KineticTrack*>&,
+                  G4double theCurrentTime)
+    {
+      theColl.clear();
+      G4double ctime = std::max(0., aProjectile->GetFormationTime()) + theCurrentTime;
 
-  virtual G4KineticTrackVector * GetFinalState(G4KineticTrack * aProjectile, 
-	                           std::vector<G4KineticTrack *> & )
-  {
-    G4KineticTrackVector * result = new G4KineticTrackVector;
-    G4KineticTrack * lateParticle=new G4KineticTrack(*aProjectile);
-    result->push_back(lateParticle);
-    return result;
-  }
-  
+      G4KineticTrackVector noTarget;
+      G4CollisionInitialState* aLate =
+        new G4CollisionInitialState(ctime, aProjectile, noTarget, this);
+      theColl.push_back(aLate);
+      return theColl;
+    }
+
+    virtual G4KineticTrackVector* GetFinalState(G4KineticTrack* aProjectile,
+                                                std::vector<G4KineticTrack*>&)
+    {
+      G4KineticTrackVector* result = new G4KineticTrackVector;
+      G4KineticTrack* lateParticle = new G4KineticTrack(*aProjectile);
+      result->push_back(lateParticle);
+      return result;
+    }
+
   private:
-  std::vector<G4CollisionInitialState *> theColl;
+
+    std::vector<G4CollisionInitialState*> theColl;
 };
 
 #endif

@@ -25,25 +25,25 @@
 //
 //
 //
-#include "G3toG4.hh"
 #include "G3VolTable.hh"
+#include "G3toG4.hh"
 
-void PG4gstpar(G4String *tokens)
+void PG4gstpar(G4String* tokens)
 {
-    // fill the parameter containers
-    G3fillParams(tokens,PTgstpar);
+  // fill the parameter containers
+  G3fillParams(tokens, PTgstpar);
 
-    // interpret the parameters
-    G4String chpar = Spar[0];
-    G4int itmed = Ipar[0];
-    G4double parval = Rpar[0];
+  // interpret the parameters
+  G4String chpar = Spar[0];
+  G4int itmed = Ipar[0];
+  G4double parval = Rpar[0];
 
-    G4gstpar(itmed,chpar,parval);
+  G4gstpar(itmed, chpar, parval);
 }
 
 void G4gstpar(G4int, G4String, G4double)
 {
-    // set special tracking medium parameter. Apply to all logical
-    // volumes making use of the specified tracking medium.
+  // set special tracking medium parameter. Apply to all logical
+  // volumes making use of the specified tracking medium.
   G4cerr << "G4gstpar: not implemented." << G4endl;
 }

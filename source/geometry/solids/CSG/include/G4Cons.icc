@@ -26,92 +26,79 @@
 // Implementation of inline methods of G4Cons
 // --------------------------------------------------------------------
 
-inline
-G4double G4Cons::GetInnerRadiusMinusZ() const
+inline G4double G4Cons::GetInnerRadiusMinusZ() const
 {
-  return fRmin1 ;
+  return fRmin1;
 }
 
-inline
-G4double G4Cons::GetOuterRadiusMinusZ() const
+inline G4double G4Cons::GetOuterRadiusMinusZ() const
 {
-  return fRmax1 ;
+  return fRmax1;
 }
 
-inline
-G4double G4Cons::GetInnerRadiusPlusZ() const
+inline G4double G4Cons::GetInnerRadiusPlusZ() const
 {
-  return fRmin2 ;
+  return fRmin2;
 }
 
-inline
-G4double G4Cons::GetOuterRadiusPlusZ() const
+inline G4double G4Cons::GetOuterRadiusPlusZ() const
 {
-  return fRmax2 ;
+  return fRmax2;
 }
 
-inline
-G4double G4Cons::GetZHalfLength() const
+inline G4double G4Cons::GetZHalfLength() const
 {
-  return fDz ;
+  return fDz;
 }
 
-inline
-G4double G4Cons::GetStartPhiAngle() const
+inline G4double G4Cons::GetStartPhiAngle() const
 {
-  return fSPhi ;
+  return fSPhi;
 }
 
-inline
-G4double G4Cons::GetDeltaPhiAngle() const
+inline G4double G4Cons::GetDeltaPhiAngle() const
 {
   return fDPhi;
 }
 
-inline
-G4double G4Cons::GetSinStartPhi() const
+inline G4double G4Cons::GetSinStartPhi() const
 {
   return sinSPhi;
 }
 
-inline
-G4double G4Cons::GetCosStartPhi() const
+inline G4double G4Cons::GetCosStartPhi() const
 {
   return cosSPhi;
 }
 
-inline
-G4double G4Cons::GetSinEndPhi() const
+inline G4double G4Cons::GetSinEndPhi() const
 {
   return sinEPhi;
 }
 
-inline
-G4double G4Cons::GetCosEndPhi() const
+inline G4double G4Cons::GetCosEndPhi() const
 {
   return cosEPhi;
 }
 
-inline
-void G4Cons::Initialize()
+inline void G4Cons::Initialize()
 {
   fCubicVolume = 0.;
   fSurfaceArea = 0.;
   fRebuildPolyhedron = true;
 }
 
-inline
-void G4Cons::InitializeTrigonometry()
+inline void G4Cons::InitializeTrigonometry()
 {
-  G4double hDPhi = 0.5*fDPhi;                       // half delta phi
-  G4double cPhi  = fSPhi + hDPhi;
-  G4double ePhi  = fSPhi + fDPhi;
+  G4double hDPhi = 0.5 * fDPhi;  // half delta phi
+  G4double cPhi = fSPhi + hDPhi;
+  G4double ePhi = fSPhi + fDPhi;
 
-  sinCPhi    = std::sin(cPhi);
-  cosCPhi    = std::cos(cPhi);
-  cosHDPhi   = std::cos(hDPhi);
-  cosHDPhiIT = std::cos(hDPhi - 0.5*kAngTolerance); // inner/outer tol half dphi
-  cosHDPhiOT = std::cos(hDPhi + 0.5*kAngTolerance);
+  sinCPhi = std::sin(cPhi);
+  cosCPhi = std::cos(cPhi);
+  cosHDPhi = std::cos(hDPhi);
+  cosHDPhiIT = std::cos(hDPhi - 0.5 * kAngTolerance);  // inner/outer tol half dphi
+  cosHDPhiOT = std::cos(hDPhi + 0.5 * kAngTolerance);
   sinSPhi = std::sin(fSPhi);
   cosSPhi = std::cos(fSPhi);
   sinEPhi = std::sin(ePhi);
@@ -122,43 +109,41 @@ inline void G4Cons::CheckSPhiAngle(G4double sPhi)
 {
   // Ensure fSphi in 0-2PI or -2PI-0 range if shape crosses 0
 
-  if ( sPhi < 0 )
+  if (sPhi < 0)
   {
-    fSPhi = CLHEP::twopi - std::fmod(std::fabs(sPhi),CLHEP::twopi);
+    fSPhi = CLHEP::twopi - std::fmod(std::fabs(sPhi), CLHEP::twopi);
   }
   else
   {
-    fSPhi = std::fmod(sPhi,CLHEP::twopi) ;
+    fSPhi = std::fmod(sPhi, CLHEP::twopi);
   }
-  if ( fSPhi+fDPhi > CLHEP::twopi )
+  if (fSPhi + fDPhi > CLHEP::twopi)
   {
-    fSPhi -= CLHEP::twopi ;
+    fSPhi -= CLHEP::twopi;
   }
 }
 
 inline void G4Cons::CheckDPhiAngle(G4double dPhi)
 {
   fPhiFullCone = true;
-  if ( dPhi >= CLHEP::twopi-kAngTolerance*0.5 )
+  if (dPhi >= CLHEP::twopi - kAngTolerance * 0.5)
   {
-    fDPhi=CLHEP::twopi;
-    fSPhi=0;
+    fDPhi = CLHEP::twopi;
+    fSPhi = 0;
   }
   else
   {
     fPhiFullCone = false;
-    if ( dPhi > 0 )
+    if (dPhi > 0)
     {
       fDPhi = dPhi;
     }
     else
     {
       std::ostringstream message;
-      message << "Invalid dphi." << G4endl
-              << "Negative or zero delta-Phi (" << dPhi << ") in solid: "
-              << GetName();
-      G4Exception("G4Cons::CheckDPhiAngle()", "GeomSolids0002",
-                  FatalException, message);
+      message << "Invalid dphi." << G4endl << "Negative or zero delta-Phi (" << dPhi
+              << ") in solid: " << GetName();
+      G4Exception("G4Cons::CheckDPhiAngle()", "GeomSolids0002", FatalException, message);
     }
   }
 }
@@ -166,58 +151,58 @@ inline void G4Cons::CheckDPhiAngle(G4double dPhi)
 inline void G4Cons::CheckPhiAngles(G4double sPhi, G4double dPhi)
 {
   CheckDPhiAngle(dPhi);
-  if ( (fDPhi<CLHEP::twopi) && ((sPhi) != 0.0) ) { CheckSPhiAngle(sPhi); }
+  if ((fDPhi < CLHEP::twopi) && ((sPhi) != 0.0))
+  {
+    CheckSPhiAngle(sPhi);
+  }
   InitializeTrigonometry();
 }
 
-inline
-void G4Cons::SetInnerRadiusMinusZ( G4double Rmin1 )
+inline void G4Cons::SetInnerRadiusMinusZ(G4double Rmin1)
 {
-  fRmin1= Rmin1 ;
+  fRmin1 = Rmin1;
   Initialize();
 }
 
-inline
-void G4Cons::SetOuterRadiusMinusZ( G4double Rmax1 )
+inline void G4Cons::SetOuterRadiusMinusZ(G4double Rmax1)
 {
-  fRmax1= Rmax1 ;
+  fRmax1 = Rmax1;
   Initialize();
 }
 
-inline
-void G4Cons::SetInnerRadiusPlusZ ( G4double Rmin2 )
+inline void G4Cons::SetInnerRadiusPlusZ(G4double Rmin2)
 {
-  fRmin2= Rmin2 ;
+  fRmin2 = Rmin2;
   Initialize();
 }
 
-inline
-void G4Cons::SetOuterRadiusPlusZ ( G4double Rmax2 )
+inline void G4Cons::SetOuterRadiusPlusZ(G4double Rmax2)
 {
-  fRmax2= Rmax2 ;
+  fRmax2 = Rmax2;
   Initialize();
 }
 
-inline
-void G4Cons::SetZHalfLength ( G4double newDz )
+inline void G4Cons::SetZHalfLength(G4double newDz)
 {
-  fDz= newDz ;
+  fDz = newDz;
   Initialize();
 }
 
-inline
-void G4Cons::SetStartPhiAngle ( G4double newSPhi, G4bool compute )
+inline void G4Cons::SetStartPhiAngle(G4double newSPhi, G4bool compute)
 {
   // Flag 'compute' can be used to explicitely avoid recomputation of
   // trigonometry in case SetDeltaPhiAngle() is invoked afterwards
 
   CheckSPhiAngle(newSPhi);
   fPhiFullCone = false;
-  if (compute)  { InitializeTrigonometry(); }
+  if (compute)
+  {
+    InitializeTrigonometry();
+  }
   Initialize();
 }
 
-void G4Cons::SetDeltaPhiAngle ( G4double newDPhi )
+void G4Cons::SetDeltaPhiAngle(G4double newDPhi)
 {
   CheckPhiAngles(fSPhi, newDPhi);
   Initialize();

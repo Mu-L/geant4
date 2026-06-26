@@ -42,28 +42,26 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4OrePowellAtRestModel_h
-#define G4OrePowellAtRestModel_h 1
+#ifndef G4OREPOWELLATRESTMODEL_HH
+#define G4OREPOWELLATRESTMODEL_HH
 
 #include "G4VPositronAtRestModel.hh"
 
 class G4OrePowellAtRestModel : public G4VPositronAtRestModel
 {
+  public:
 
-public:
+    G4OrePowellAtRestModel();
 
-  G4OrePowellAtRestModel();
+    ~G4OrePowellAtRestModel() override = default;
 
-  ~G4OrePowellAtRestModel() override = default;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>& secParticles, G4double&,
+                           const G4Material*) const override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>& secParticles,
-			 G4double&, const G4Material*) const override;
+    void PrintGeneratorInformation() const override;
 
-  void PrintGeneratorInformation() const override;
-
-  G4OrePowellAtRestModel& operator=
-  (const  G4OrePowellAtRestModel& right) = delete;
-  G4OrePowellAtRestModel(const G4OrePowellAtRestModel&) = delete;
+    G4OrePowellAtRestModel& operator=(const G4OrePowellAtRestModel& right) = delete;
+    G4OrePowellAtRestModel(const G4OrePowellAtRestModel&) = delete;
 };
 
 #endif

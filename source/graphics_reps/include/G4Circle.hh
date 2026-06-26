@@ -25,11 +25,11 @@
 //
 //
 //
-// 
+//
 // John Allison  17/11/96.
 
 // Class Description:
-// G4Circle is a kind of 3D-position marker. 
+// G4Circle is a kind of 3D-position marker.
 // Its shape is 2-dimensional circle.
 // It inherits G4VMarker.  See G4VMarker.hh for more details.
 // Class Description - End:
@@ -39,17 +39,16 @@
 
 #include "G4VMarker.hh"
 
-class G4Circle: public G4VMarker {
+class G4Circle : public G4VMarker
+{
+  public:  // With description
 
-public: // With description
+    G4Circle();
+    G4Circle(const G4VMarker&);
+    G4Circle(const G4Point3D& position);
+    ~G4Circle() override;
+};
 
-  G4Circle ();
-  G4Circle (const G4VMarker&);
-  G4Circle (const G4Point3D& position);
-  ~G4Circle () override;
-
- };
-
-std::ostream& operator<< (std::ostream& os, const G4Circle&);
+std::ostream& operator<<(std::ostream& os, const G4Circle&);
 
 #endif

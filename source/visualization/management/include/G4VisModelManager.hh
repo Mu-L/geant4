@@ -33,76 +33,77 @@
 #define G4VISMODELMANAGER_HH
 
 #include "G4UImessenger.hh"
+#include "G4VModelFactory.hh"
 #include "G4VisCommandModelCreate.hh"
 #include "G4VisListManager.hh"
-#include "G4VModelFactory.hh"
+
 #include <vector>
 
-template <typename Model>
-class G4VisModelManager {
+template<typename Model>
+class G4VisModelManager
+{
+  public:  // With description
 
-public: // With description
+    // Useful typedef's
+    typedef G4VisListManager<Model> List;
+    typedef G4VModelFactory<Model> Factory;
 
-  // Useful typedef's
-  typedef G4VisListManager<Model> List;
-  typedef G4VModelFactory<Model> Factory;
+    G4VisModelManager(const G4String&);
+    virtual ~G4VisModelManager();
 
-  G4VisModelManager(const G4String&);
-  virtual ~G4VisModelManager();
+    // Registration methods
+    void Register(Model*);
+    void Register(Factory*);
 
-  // Registration methods
-  void Register(Model*);
-  void Register(Factory*); 
+    // Change/Retrieve "Current" object
+    void SetCurrent(const G4String&);
+    const Model* Current() const;
 
-  // Change/Retrieve "Current" object
-  void SetCurrent(const G4String&);
-  const Model* Current() const;
+    // Command placement
+    G4String Placement() const;
 
-  // Command placement
-  G4String Placement() const;
+    // Print factory and model data
+    void Print(std::ostream& ostr, const G4String& name = "") const;
 
-  // Print factory and model data
-  void Print(std::ostream& ostr, const G4String& name="") const;
+    // Accessors
+    const List* ListManager() const;
+    const std::vector<Factory*>& FactoryList() const;
 
-  // Accessors
-  const List* ListManager() const;
-  const std::vector<Factory*>& FactoryList() const;
+  private:
 
-private:
+    // Private copy constructor and assigment operator - copying and
+    // assignment not allowed.  Keeps Coverity happy.
+    G4VisModelManager(const G4VisModelManager&);
+    G4VisModelManager& operator=(const G4VisModelManager&);
 
-  // Private copy constructor and assigment operator - copying and
-  // assignment not allowed.  Keeps Coverity happy.
-  G4VisModelManager (const G4VisModelManager&);
-  G4VisModelManager& operator = (const G4VisModelManager&);
-
-  // Data members
-  G4String fPlacement;
-  List* fpModelList;  
-  std::vector<Factory*> fFactoryList;
-  std::vector<G4UImessenger*> fMessengerList;
-
+    // Data members
+    G4String fPlacement;
+    List* fpModelList;
+    std::vector<Factory*> fFactoryList;
+    std::vector<G4UImessenger*> fMessengerList;
 };
 
-template <typename Model>
+template<typename Model>
 G4VisModelManager<Model>::G4VisModelManager(const G4String& placement)
-  :fPlacement(placement)
-  ,fpModelList(new List)
+  : fPlacement(placement), fpModelList(new List)
 {}
 
-template <typename Model>
-G4VisModelManager<Model>::~G4VisModelManager() 
+template<typename Model>
+G4VisModelManager<Model>::~G4VisModelManager()
 {
   // Cleanup
   std::vector<G4UImessenger*>::iterator iterMsgr = fMessengerList.begin();
-  
-  while (iterMsgr != fMessengerList.end()) {
+
+  while (iterMsgr != fMessengerList.end())
+  {
     delete *iterMsgr;
     iterMsgr++;
   }
 
   typename std::vector<Factory*>::iterator iterFactory = fFactoryList.begin();
-  
-  while (iterFactory != fFactoryList.end()) {
+
+  while (iterFactory != fFactoryList.end())
+  {
     delete *iterFactory;
     iterFactory++;
   }
@@ -110,16 +111,14 @@ G4VisModelManager<Model>::~G4VisModelManager()
   delete fpModelList;
 }
 
-template <typename Model>
-void
-G4VisModelManager<Model>::Register(Model* model)
+template<typename Model>
+void G4VisModelManager<Model>::Register(Model* model)
 {
   fpModelList->Register(model);
 }
 
-template <typename Model>
-void
-G4VisModelManager<Model>::Register(Factory* factory)
+template<typename Model>
+void G4VisModelManager<Model>::Register(Factory* factory)
 {
   // Assume ownership
   fFactoryList.push_back(factory);
@@ -128,58 +127,53 @@ G4VisModelManager<Model>::Register(Factory* factory)
   fMessengerList.push_back(new G4VisCommandModelCreate<Factory>(factory, fPlacement));
 }
 
-template <typename Model>
-void
-G4VisModelManager<Model>::SetCurrent(const G4String& model) 
+template<typename Model>
+void G4VisModelManager<Model>::SetCurrent(const G4String& model)
 {
   fpModelList->SetCurrent(model);
 }
 
-template <typename Model>
-const Model*
-G4VisModelManager<Model>::Current() const
+template<typename Model>
+const Model* G4VisModelManager<Model>::Current() const
 {
   return fpModelList->Current();
 }
 
-template <typename Model>
-G4String
-G4VisModelManager<Model>::Placement() const
+template<typename Model>
+G4String G4VisModelManager<Model>::Placement() const
 {
   return fPlacement;
 }
 
-template <typename Model>
-void
-G4VisModelManager<Model>::Print(std::ostream& ostr, const G4String& name) const
+template<typename Model>
+void G4VisModelManager<Model>::Print(std::ostream& ostr, const G4String& name) const
 {
-  ostr<<"Registered model factories:"<<std::endl;
+  ostr << "Registered model factories:" << std::endl;
 
   typename std::vector<Factory*>::const_iterator iter = fFactoryList.begin();
 
-  while (iter != fFactoryList.end()) {
+  while (iter != fFactoryList.end())
+  {
     (*iter)->Print(ostr);
     iter++;
   }
 
-  if (0 == fFactoryList.size()) ostr<<"  None"<<std::endl;
+  if (0 == fFactoryList.size()) ostr << "  None" << std::endl;
 
-  ostr<<std::endl;
-  ostr<<"Registered models: "<<std::endl;
+  ostr << std::endl;
+  ostr << "Registered models: " << std::endl;
 
   fpModelList->Print(ostr, name);
 }
 
-template <typename Model>
-const G4VisListManager<Model>*
-G4VisModelManager<Model>::ListManager() const
+template<typename Model>
+const G4VisListManager<Model>* G4VisModelManager<Model>::ListManager() const
 {
   return fpModelList;
 }
 
-template <typename Model>
-const std::vector<G4VModelFactory<Model>*>&
-G4VisModelManager<Model>::FactoryList() const
+template<typename Model>
+const std::vector<G4VModelFactory<Model>*>& G4VisModelManager<Model>::FactoryList() const
 {
   return fFactoryList;
 }

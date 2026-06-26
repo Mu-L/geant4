@@ -28,59 +28,51 @@
 // Author: Paul Kent (CERN), 24.07.1995 - First non-stub version
 // --------------------------------------------------------------------
 
-inline
-G4bool G4VPhysicalVolume::operator == (const G4VPhysicalVolume& right) const
+inline G4bool G4VPhysicalVolume::operator==(const G4VPhysicalVolume& right) const
 {
-  return this==&right;
+  return this == &right;
 }
 
-inline
-G4int G4VPhysicalVolume::GetInstanceID() const
+inline G4int G4VPhysicalVolume::GetInstanceID() const
 {
   return instanceID;
 }
 
-inline
-G4LogicalVolume* G4VPhysicalVolume::GetLogicalVolume() const
+inline G4LogicalVolume* G4VPhysicalVolume::GetLogicalVolume() const
 {
   return flogical;
 }
 
-inline
-void G4VPhysicalVolume::SetLogicalVolume(G4LogicalVolume* pLogical)
+inline void G4VPhysicalVolume::SetLogicalVolume(G4LogicalVolume* pLogical)
 {
   flogical = pLogical;
 }
 
-inline
-G4LogicalVolume* G4VPhysicalVolume::GetMotherLogical() const
+inline G4LogicalVolume* G4VPhysicalVolume::GetMotherLogical() const
 {
   return flmother;
 }
 
-inline
-void G4VPhysicalVolume::SetMotherLogical(G4LogicalVolume* pMother)
+inline void G4VPhysicalVolume::SetMotherLogical(G4LogicalVolume* pMother)
 {
   flmother = pMother;
 }
 
-inline
-const G4String& G4VPhysicalVolume::GetName() const
+inline const G4String& G4VPhysicalVolume::GetName() const
 {
   return fname;
 }
 
-inline
-EVolume G4VPhysicalVolume::DeduceVolumeType() const
+inline EVolume G4VPhysicalVolume::DeduceVolumeType() const
 {
   EVolume type;
   EAxis axis;
   G4int nReplicas;
-  G4double width,offset;
+  G4double width, offset;
   G4bool consuming;
-  if ( IsReplicated() )
+  if (IsReplicated())
   {
-    GetReplicationData(axis,nReplicas,width,offset,consuming);
+    GetReplicationData(axis, nReplicas, width, offset, consuming);
     type = (consuming) ? kReplica : kParameterised;
   }
   else

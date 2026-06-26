@@ -27,30 +27,26 @@
 // by V. Lara
 //
 // Modified:
-// 23.08.2010 V.Ivanchenko general cleanup, move constructor and destructor 
+// 23.08.2010 V.Ivanchenko general cleanup, move constructor and destructor
 //            the source
 //
 
 #include "G4HETCEmissionFactory.hh"
 
+#include "G4HETCAlpha.hh"
+#include "G4HETCDeuteron.hh"
+#include "G4HETCHe3.hh"
 #include "G4HETCNeutron.hh"
 #include "G4HETCProton.hh"
-#include "G4HETCDeuteron.hh"
 #include "G4HETCTriton.hh"
-#include "G4HETCHe3.hh"
-#include "G4HETCAlpha.hh"
 
-G4HETCEmissionFactory::G4HETCEmissionFactory()
-{}
+G4HETCEmissionFactory::G4HETCEmissionFactory() {}
 
-G4HETCEmissionFactory::~G4HETCEmissionFactory()
-{}
+G4HETCEmissionFactory::~G4HETCEmissionFactory() {}
 
-std::vector<G4VPreCompoundFragment*> *  G4HETCEmissionFactory::
-CreateFragmentVector()
+std::vector<G4VPreCompoundFragment*>* G4HETCEmissionFactory::CreateFragmentVector()
 {
-  std::vector<G4VPreCompoundFragment*> * theFragVector = 
-    new std::vector<G4VPreCompoundFragment*>;
+  std::vector<G4VPreCompoundFragment*>* theFragVector = new std::vector<G4VPreCompoundFragment*>;
   theFragVector->reserve(6);
 
   // neutron

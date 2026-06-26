@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  5th April 2001
 // A base class for a scene handler to dump geometry hierarchy.
 // In the derived class, override G4VScenehandler::RequestPrimitives
@@ -34,47 +34,46 @@
 #ifndef G4VTREESCENEHANDLER_HH
 #define G4VTREESCENEHANDLER_HH
 
+#include "G4PhysicalVolumeModel.hh"
 #include "G4VSceneHandler.hh"
 
-#include "G4PhysicalVolumeModel.hh"
-#include <vector>
 #include <set>
+#include <vector>
 
 class G4VPhysicalVolume;
 class G4LogicalVolume;
 class G4ModelingParameters;
 
-class G4VTreeSceneHandler: public G4VSceneHandler {
+class G4VTreeSceneHandler : public G4VSceneHandler
+{
+  public:
 
-public:
-  G4VTreeSceneHandler(G4VGraphicsSystem& system,
-		      const G4String& name);
-  virtual ~G4VTreeSceneHandler ();
-  void PreAddSolid (const G4Transform3D& objectTransformation,
-		   const G4VisAttributes&);
-  void PostAddSolid ();
+    G4VTreeSceneHandler(G4VGraphicsSystem& system, const G4String& name);
+    virtual ~G4VTreeSceneHandler();
+    void PreAddSolid(const G4Transform3D& objectTransformation, const G4VisAttributes&);
+    void PostAddSolid();
 
-  ////////////////////////////////////////////////////////////////
-  // Functions not used but required by the abstract interface.
+    ////////////////////////////////////////////////////////////////
+    // Functions not used but required by the abstract interface.
 
-  using G4VSceneHandler::AddPrimitive;
-  virtual void AddPrimitive (const G4Polyline&)   {}
-  virtual void AddPrimitive (const G4Text&)       {}
-  virtual void AddPrimitive (const G4Circle&)     {}
-  virtual void AddPrimitive (const G4Square&)     {}
-  virtual void AddPrimitive (const G4Polyhedron&) {}
-  virtual void AddPrimitive (const G4Polymarker&) {}
+    using G4VSceneHandler::AddPrimitive;
+    virtual void AddPrimitive(const G4Polyline&) {}
+    virtual void AddPrimitive(const G4Text&) {}
+    virtual void AddPrimitive(const G4Circle&) {}
+    virtual void AddPrimitive(const G4Square&) {}
+    virtual void AddPrimitive(const G4Polyhedron&) {}
+    virtual void AddPrimitive(const G4Polymarker&) {}
 
-  virtual void BeginModeling();
-  virtual void EndModeling();
+    virtual void BeginModeling();
+    virtual void EndModeling();
 
-protected:
+  protected:
 
-  // In the derived class, override G4VScenehandler::RequestPrimitives
-  // to implement dump of the geometry hierarchy.
-  static G4int         fSceneIdCount;  // Counter for Tree scene handlers.
-  const G4Transform3D* fpCurrentObjectTransformation;
-  std::set<G4LogicalVolume*> fDrawnLVStore;  // Stores encountered LVs.
+    // In the derived class, override G4VScenehandler::RequestPrimitives
+    // to implement dump of the geometry hierarchy.
+    static G4int fSceneIdCount;  // Counter for Tree scene handlers.
+    const G4Transform3D* fpCurrentObjectTransformation;
+    std::set<G4LogicalVolume*> fDrawnLVStore;  // Stores encountered LVs.
 };
 
 #include "G4VTreeSceneHandler.icc"

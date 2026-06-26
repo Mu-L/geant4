@@ -27,98 +27,98 @@
 //      GEANT4 Class file
 //
 //
-//      File name:    G4LightIonQMDParameters.hh 
+//      File name:    G4LightIonQMDParameters.hh
 //
-//      Author: Koi, Tatsumi (tkoi@slac.stanford.edu)       
-// 
+//      Author: Koi, Tatsumi (tkoi@slac.stanford.edu)
+//
 //      Creation date: 12 May 2007
 // -----------------------------------------------------------------------------
 // 230307 Skyrme-QMD parameters added by Y-H. Sato and A. Haga
 
-#ifndef G4LightIonQMDParameters_hh
-#define G4LightIonQMDParameters_hh
+#ifndef G4LIGHTIONQMDPARAMETERS_HH
+#define G4LIGHTIONQMDPARAMETERS_HH
 
 #include "globals.hh"
 
-class G4LightIonQMDParameters 
+class G4LightIonQMDParameters
 {
-      static G4ThreadLocal G4LightIonQMDParameters* parameters;
-     
-      G4LightIonQMDParameters();
-   public:
-      ~G4LightIonQMDParameters();
-      static G4LightIonQMDParameters* GetInstance()
-      {
-         if ( parameters == NULL ) parameters = new G4LightIonQMDParameters(); 
-         return parameters;
-      }
+    static G4ThreadLocal G4LightIonQMDParameters* parameters;
 
+    G4LightIonQMDParameters();
 
-      // GroundStateNucleus
-      G4double Get_wl() { return wl; };
-      G4double Get_cl() { return cl; };
-      G4double Get_hbc() { return hbc; };
-      G4double Get_rho0() { return rho0; };
-      G4double Get_gamm() { return gamm; };
-      G4double Get_cpw() { return cpw; };
-      G4double Get_cph() { return cph; };
-      G4double Get_epsx() { return epsx; };
-      G4double Get_cpc() { return cpc; };
-      G4double Get_cs() { return cs; };
-      G4double Get_c0() { return c0; };
-      G4double Get_c0p() { return c0p; };
-      G4double Get_clp() { return clp; };
-      G4double Get_c3() { return c3; };
-      G4double Get_c3p() { return c3p; };
-      G4double Get_csp() { return csp; };
-      G4double Get_cdp() { return cdp; };
+  public:
 
-      G4double Get_g0p() { return g0p; }; // Skyrme-QMD
-      G4double Get_g0isop() { return g0isop; }; // Skyrme-QMD
-      G4double Get_gtau0p() { return gtau0p; };// Skyrme-QMD
-    
-      G4double Get_eta() { return eta; }; // Skyrme-QMD
-      G4double Get_kappas() { return kappas; }; // Skyrme-QMD
-      G4double Get_g0() { return g0; }; // Skyrme-QMD
-      G4double Get_g0iso() { return g0iso; }; // Skyrme-QMD
-      G4double Get_gtau0() { return gtau0; }; // Skyrme-QMD
+    ~G4LightIonQMDParameters();
+    static G4LightIonQMDParameters* GetInstance()
+    {
+      if (parameters == NULL) parameters = new G4LightIonQMDParameters();
+      return parameters;
+    }
 
-    
-   protected:
-      G4double wl;
-      G4double cl;
-      G4double hbc; 
-      G4double rho0;
-      G4double gamm; 
+    // GroundStateNucleus
+    G4double Get_wl() { return wl; };
+    G4double Get_cl() { return cl; };
+    G4double Get_hbc() { return hbc; };
+    G4double Get_rho0() { return rho0; };
+    G4double Get_gamm() { return gamm; };
+    G4double Get_cpw() { return cpw; };
+    G4double Get_cph() { return cph; };
+    G4double Get_epsx() { return epsx; };
+    G4double Get_cpc() { return cpc; };
+    G4double Get_cs() { return cs; };
+    G4double Get_c0() { return c0; };
+    G4double Get_c0p() { return c0p; };
+    G4double Get_clp() { return clp; };
+    G4double Get_c3() { return c3; };
+    G4double Get_c3p() { return c3p; };
+    G4double Get_csp() { return csp; };
+    G4double Get_cdp() { return cdp; };
 
-/*
-      G4double rho0;
-      G4double t0;
+    G4double Get_g0p() { return g0p; };  // Skyrme-QMD
+    G4double Get_g0isop() { return g0isop; };  // Skyrme-QMD
+    G4double Get_gtau0p() { return gtau0p; };  // Skyrme-QMD
 
-      G4double aaa;
+    G4double Get_eta() { return eta; };  // Skyrme-QMD
+    G4double Get_kappas() { return kappas; };  // Skyrme-QMD
+    G4double Get_g0() { return g0; };  // Skyrme-QMD
+    G4double Get_g0iso() { return g0iso; };  // Skyrme-QMD
+    G4double Get_gtau0() { return gtau0; };  // Skyrme-QMD
 
-*/
-    
-      // Skyrme-QMD
-      G4double gtau0;
-      G4double g0;
-      G4double g0iso;
-      G4double eta;
-      G4double kappas;
-    
-      G4double g0p;
-      G4double g0isop;
-      G4double gtau0p;
-      // MeanField
-      G4double c0, c3, cs;
+  protected:
 
-      // GroundStateNucleus
-      G4double cpw; 
-      G4double cph; 
-      G4double epsx;
-      G4double cpc;
-      G4double c0p , clp , c3p , csp , cdp;
+    G4double wl;
+    G4double cl;
+    G4double hbc;
+    G4double rho0;
+    G4double gamm;
 
+    /*
+          G4double rho0;
+          G4double t0;
+
+          G4double aaa;
+
+    */
+
+    // Skyrme-QMD
+    G4double gtau0;
+    G4double g0;
+    G4double g0iso;
+    G4double eta;
+    G4double kappas;
+
+    G4double g0p;
+    G4double g0isop;
+    G4double gtau0p;
+    // MeanField
+    G4double c0, c3, cs;
+
+    // GroundStateNucleus
+    G4double cpw;
+    G4double cph;
+    G4double epsx;
+    G4double cpc;
+    G4double c0p, clp, c3p, csp, cdp;
 };
 
 #endif

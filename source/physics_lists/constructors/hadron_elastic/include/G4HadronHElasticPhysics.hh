@@ -35,36 +35,27 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4HadronHElasticPhysics_h
-#define G4HadronHElasticPhysics_h 1
+#ifndef G4HADRONHELASTICPHYSICS_HH
+#define G4HADRONHELASTICPHYSICS_HH
 
 #include "G4HadronElasticPhysics.hh"
 
 class G4HadronHElasticPhysics : public G4HadronElasticPhysics
 {
-public: 
+  public:
 
-  G4HadronHElasticPhysics(G4int ver = 1, G4bool diffraction = false); 
+    G4HadronHElasticPhysics(G4int ver = 1, G4bool diffraction = false);
 
-  virtual ~G4HadronHElasticPhysics();
+    virtual ~G4HadronHElasticPhysics();
 
-  void ConstructProcess() override;
+    void ConstructProcess() override;
 
-  inline void SetDiffraction(G4bool val) { fDiffraction = val; };
+    inline void SetDiffraction(G4bool val) { fDiffraction = val; };
 
-  G4HadronHElasticPhysics(G4HadronHElasticPhysics &) = delete;
-  G4HadronHElasticPhysics & operator=
-  (const G4HadronHElasticPhysics &right) = delete;
+    G4HadronHElasticPhysics(G4HadronHElasticPhysics&) = delete;
+    G4HadronHElasticPhysics& operator=(const G4HadronHElasticPhysics& right) = delete;
 
-  G4bool fDiffraction;
+    G4bool fDiffraction;
 };
 
 #endif
-
-
-
-
-
-
-
-

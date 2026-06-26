@@ -11,7 +11,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -95,6 +95,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           1
 Use cut as a final range enabled                   0
 Enable angular generator interface                 0
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -177,6 +178,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           1
 Use cut as a final range enabled                   0
 Enable angular generator interface                 0
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -636,7 +638,7 @@ N=17 V[N]={906770732717044781, 629165745432651234, 1235682547346241386, 68420008
  Run terminated.
 Run Summary
   Number of events processed : 2000
-  User=0.680000s Real=0.677448s Sys=0.000000s
+  User=0.610000s Real=0.614073s Sys=0.000000s
 
  ======================== run summary ======================
 
@@ -708,7 +710,7 @@ N=17 V[N]={580208979041827235, 1332645398352364613, 193075699479058046, 62679130
  Run terminated.
 Run Summary
   Number of events processed : 2000
-  User=0.040000s Real=0.037121s Sys=0.000000s
+  User=0.030000s Real=0.034233s Sys=0.000000s
 
  ======================== run summary ======================
 

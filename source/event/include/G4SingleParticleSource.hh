@@ -53,80 +53,74 @@
 // - 06/06/2014, Andrea Dotti
 //     Added a mutex to protect access to shared resources (data members)
 // --------------------------------------------------------------------
-#ifndef G4SingleParticleSource_hh
-#define G4SingleParticleSource_hh 1
+#ifndef G4SINGLEPARTICLESOURCE_HH
+#define G4SINGLEPARTICLESOURCE_HH
 
-#include "G4VPrimaryGenerator.hh"
-#include "G4ParticleMomentum.hh"
+#include "G4Cache.hh"
 #include "G4ParticleDefinition.hh"
-
-#include "G4SPSPosDistribution.hh"
+#include "G4ParticleMomentum.hh"
 #include "G4SPSAngDistribution.hh"
 #include "G4SPSEneDistribution.hh"
+#include "G4SPSPosDistribution.hh"
 #include "G4SPSRandomGenerator.hh"
 #include "G4Threading.hh"
-#include "G4Cache.hh"
+#include "G4VPrimaryGenerator.hh"
 
 class G4SingleParticleSource : public G4VPrimaryGenerator
 {
   public:
 
     G4SingleParticleSource();
-      // Constructor: initializes variables and instantiates the 
-      // messenger and navigator classes
+    // Constructor: initializes variables and instantiates the
+    // messenger and navigator classes
 
-   ~G4SingleParticleSource() override;
-      // Destructor: deletes messenger and prints out run information
+    ~G4SingleParticleSource() override;
+    // Destructor: deletes messenger and prints out run information
 
-    void GeneratePrimaryVertex(G4Event *evt) override;
-      // Generate the particles initial parameters
+    void GeneratePrimaryVertex(G4Event* evt) override;
+    // Generate the particles initial parameters
 
     inline G4SPSPosDistribution* GetPosDist() const { return posGenerator; }
-      // Return a pointer to the position distribution generator
+    // Return a pointer to the position distribution generator
 
     inline G4SPSAngDistribution* GetAngDist() const { return angGenerator; }
-      // Return a pointer to the angular distribution generator
+    // Return a pointer to the angular distribution generator
 
     inline G4SPSEneDistribution* GetEneDist() const { return eneGenerator; }
-      // Return a pointer to the energy distribution generator
+    // Return a pointer to the energy distribution generator
 
     inline G4SPSRandomGenerator* GetBiasRndm() const { return biasRndm; }
-      // Return a pointer to the biased random number generator
+    // Return a pointer to the biased random number generator
 
     void SetVerbosity(G4int);
-      // Set the verbosity level
+    // Set the verbosity level
 
     void SetParticleDefinition(G4ParticleDefinition* aParticleDefinition);
-    inline G4ParticleDefinition* GetParticleDefinition() const
-           { return definition; }
-      // Get/Set the particle definition of the primary track
+    inline G4ParticleDefinition* GetParticleDefinition() const { return definition; }
+    // Get/Set the particle definition of the primary track
 
     inline void SetParticleCharge(G4double aCharge) { charge = aCharge; }
-      // Set the charge state of the primary track
+    // Set the charge state of the primary track
 
-    inline void SetParticlePolarization(const G4ThreeVector& aVal)
-           { polarization = aVal; }
-    inline const G4ThreeVector& GetParticlePolarization() const
-           { return polarization; }
-      // Set/Get the polarization state of the primary track
+    inline void SetParticlePolarization(const G4ThreeVector& aVal) { polarization = aVal; }
+    inline const G4ThreeVector& GetParticlePolarization() const { return polarization; }
+    // Set/Get the polarization state of the primary track
 
     inline void SetParticleTime(G4double aTime) { time = aTime; }
     inline G4double GetParticleTime() const { return time; }
-      // Set/Get the Time
+    // Set/Get the Time
 
-    inline void SetNumberOfParticles(G4int i)
-           { NumberOfParticlesToBeGenerated = i; }
-    inline G4int GetNumberOfParticles() const
-           { return NumberOfParticlesToBeGenerated; }
-      // Set/get the number of particles to be generated in the primary track
+    inline void SetNumberOfParticles(G4int i) { NumberOfParticlesToBeGenerated = i; }
+    inline G4int GetNumberOfParticles() const { return NumberOfParticlesToBeGenerated; }
+    // Set/get the number of particles to be generated in the primary track
 
-    inline G4ThreeVector GetParticlePosition() const
-           { return ParticleProperties.Get().position; }
+    inline G4ThreeVector GetParticlePosition() const { return ParticleProperties.Get().position; }
     inline G4ThreeVector GetParticleMomentumDirection() const
-           { return ParticleProperties.Get().momentum_direction; }
-    inline G4double GetParticleEnergy() const
-           { return ParticleProperties.Get().energy; }
-      // Get the position, direction, and energy of the current particle 
+    {
+      return ParticleProperties.Get().momentum_direction;
+    }
+    inline G4double GetParticleEnergy() const { return ParticleProperties.Get().energy; }
+    // Get the position, direction, and energy of the current particle
 
   private:
 
@@ -140,10 +134,10 @@ class G4SingleParticleSource : public G4VPrimaryGenerator
     //
     struct part_prop_t
     {
-      G4ParticleMomentum momentum_direction;
-      G4double energy;
-      G4ThreeVector position;
-      part_prop_t();
+        G4ParticleMomentum momentum_direction;
+        G4double energy;
+        G4ThreeVector position;
+        part_prop_t();
     };
 
     G4Cache<part_prop_t> ParticleProperties;
@@ -154,11 +148,11 @@ class G4SingleParticleSource : public G4VPrimaryGenerator
     G4ThreeVector polarization;
 
     G4int verbosityLevel;
-      // Verbosity
+    // Verbosity
 
     G4Mutex mutex;
-      // This can be a shared resource.
-      // This mutex is uses in GeneratePrimaryVertex
+    // This can be a shared resource.
+    // This mutex is uses in GeneratePrimaryVertex
 };
 
 #endif

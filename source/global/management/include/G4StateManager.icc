@@ -38,7 +38,10 @@ inline G4int G4StateManager::GetSuppressAbortion() const
   return suppressAbortion;
 }
 
-inline const char* G4StateManager::GetMessage() const { return msgptr; }
+inline const char* G4StateManager::GetMessage() const
+{
+  return msgptr;
+}
 
 inline void G4StateManager::SetExceptionHandler(G4VExceptionHandler* eh)
 {

@@ -23,11 +23,10 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4NoModelFound_h
-#define G4NoModelFound_h
+#ifndef G4NOMODELFOUND_HH
+#define G4NOMODELFOUND_HH
 
 class G4NoModelFound
-{
-};
+{};
 
 #endif

@@ -36,113 +36,108 @@
 #ifndef G4VRANGETOENERGYCONVERTER_HH
 #define G4VRANGETOENERGYCONVERTER_HH
 
-#include <vector>
-
-#include "globals.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4Material.hh"
+#include "G4ParticleDefinition.hh"
+#include "globals.hh"
+
+#include <vector>
 
 class G4VRangeToEnergyConverter
 {
-public:
+  public:
 
-  G4VRangeToEnergyConverter();
+    G4VRangeToEnergyConverter();
 
-  virtual ~G4VRangeToEnergyConverter();
+    virtual ~G4VRangeToEnergyConverter();
 
-  // operators are not used
-  G4VRangeToEnergyConverter(const G4VRangeToEnergyConverter& r) = delete;
-  G4VRangeToEnergyConverter& operator=
-  (const G4VRangeToEnergyConverter &r) = delete;
-  G4bool operator==(const G4VRangeToEnergyConverter& r) const = delete;
-  G4bool operator!=(const G4VRangeToEnergyConverter& r) const = delete;
+    // operators are not used
+    G4VRangeToEnergyConverter(const G4VRangeToEnergyConverter& r) = delete;
+    G4VRangeToEnergyConverter& operator=(const G4VRangeToEnergyConverter& r) = delete;
+    G4bool operator==(const G4VRangeToEnergyConverter& r) const = delete;
+    G4bool operator!=(const G4VRangeToEnergyConverter& r) const = delete;
 
-  // Calculate energy cut from given range cut for the material
-  virtual G4double Convert(const G4double rangeCut, const G4Material* material);
+    // Calculate energy cut from given range cut for the material
+    virtual G4double Convert(const G4double rangeCut, const G4Material* material);
 
-  // Set energy range for all particle type
-  // if highedge > 10 GeV, highedge value is not changed
-  static void SetEnergyRange(const G4double lowedge, const G4double highedge);
+    // Set energy range for all particle type
+    // if highedge > 10 GeV, highedge value is not changed
+    static void SetEnergyRange(const G4double lowedge, const G4double highedge);
 
-  // Get energy range for all particle type
-  static G4double GetLowEdgeEnergy();
-  static G4double GetHighEdgeEnergy();
+    // Get energy range for all particle type
+    static G4double GetLowEdgeEnergy();
+    static G4double GetHighEdgeEnergy();
 
-  // Get/set max cut energy for all particle type
-  // No check on the value
-  static G4double GetMaxEnergyCut();
-  static void SetMaxEnergyCut(const G4double value);
-  
-  // Return pointer to the particle type which this converter takes care of
-  inline const G4ParticleDefinition* GetParticleType() const;
+    // Get/set max cut energy for all particle type
+    // No check on the value
+    static G4double GetMaxEnergyCut();
+    static void SetMaxEnergyCut(const G4double value);
 
-  inline void SetVerboseLevel(G4int value);
-  inline G4int GetVerboseLevel() const;
-      // control flag for output message
-      //  0: Silent
-      //  1: Warning message
-      //  2: More
+    // Return pointer to the particle type which this converter takes care of
+    inline const G4ParticleDefinition* GetParticleType() const;
 
-protected:
+    inline void SetVerboseLevel(G4int value);
+    inline G4int GetVerboseLevel() const;
+    // control flag for output message
+    //  0: Silent
+    //  1: Warning message
+    //  2: More
 
-  virtual G4double ComputeValue(const G4int Z, const G4double kinEnergy) = 0;
+  protected:
 
-private:
+    virtual G4double ComputeValue(const G4int Z, const G4double kinEnergy) = 0;
 
-  static void FillEnergyVector(const G4double emin, const G4double emax);
+  private:
 
-  G4double ConvertForGamma(const G4double rangeCut, const G4Material* material);
+    static void FillEnergyVector(const G4double emin, const G4double emax);
 
-  G4double ConvertForElectron(const G4double rangeCut, 
-                              const G4Material* material);
+    G4double ConvertForGamma(const G4double rangeCut, const G4Material* material);
 
-  inline G4double LiniearInterpolation(const G4double e1, const G4double e2, 
-                                       const G4double r1, const G4double r2, 
-                                       const G4double r);
+    G4double ConvertForElectron(const G4double rangeCut, const G4Material* material);
 
-protected:
+    inline G4double LiniearInterpolation(const G4double e1, const G4double e2, const G4double r1,
+                                         const G4double r2, const G4double r);
 
-  const G4ParticleDefinition* theParticle = nullptr;
-  G4int fPDG = 0;
+  protected:
 
-private:
+    const G4ParticleDefinition* theParticle = nullptr;
+    G4int fPDG = 0;
 
-  static G4double sEmin;
-  static G4double sEmax; 
-  static std::vector<G4double>* sEnergy;
-  static G4int sNbinPerDecade;
-  static G4int sNbin;
+  private:
 
-  G4int verboseLevel = 1;
+    static G4double sEmin;
+    static G4double sEmax;
+    static std::vector<G4double>* sEnergy;
+    static G4int sNbinPerDecade;
+    static G4int sNbin;
+
+    G4int verboseLevel = 1;
 };
 
 // ------------------
 // Inline methods
 // ------------------
 
-inline 
-void G4VRangeToEnergyConverter::SetVerboseLevel(G4int value)
+inline void G4VRangeToEnergyConverter::SetVerboseLevel(G4int value)
 {
   verboseLevel = value;
 }
 
-inline 
-G4int G4VRangeToEnergyConverter::GetVerboseLevel() const
+inline G4int G4VRangeToEnergyConverter::GetVerboseLevel() const
 {
   return verboseLevel;
 }
 
-inline 
-const G4ParticleDefinition* G4VRangeToEnergyConverter::GetParticleType() const
+inline const G4ParticleDefinition* G4VRangeToEnergyConverter::GetParticleType() const
 {
   return theParticle;
 }
 
-inline G4double G4VRangeToEnergyConverter::LiniearInterpolation(
-                const G4double e1, const G4double e2, 
-                const G4double r1, const G4double r2, const G4double r)
+inline G4double G4VRangeToEnergyConverter::LiniearInterpolation(const G4double e1,
+                                                                const G4double e2,
+                                                                const G4double r1,
+                                                                const G4double r2, const G4double r)
 {
-  return (r1 == r2) ? e1 : e1 + (e2 - e1)*(r - r1)/(r2 - r1);
+  return (r1 == r2) ? e1 : e1 + (e2 - e1) * (r - r1) / (r2 - r1);
 }
 
 #endif

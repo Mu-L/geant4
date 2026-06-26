@@ -48,11 +48,13 @@ G4VMoleculeCounter::G4VMoleculeCounter(const G4String& name, MoleculeCounterType
 
 void G4VMoleculeCounter::SetSensitiveToStepping(G4bool flag)
 {
-  if (fType == MoleculeCounterType::Basic && flag) {
+  if (fType == MoleculeCounterType::Basic && flag)
+  {
     G4ExceptionDescription errMsg;
     errMsg << "Cannot set a molecule counter of type 'Basic' to be sensitive to stepping!"
            << G4endl;
-    G4Exception("G4VMoleculeCounter::SetSensitiveToStepping", "NOT_ALLOWED", FatalException, errMsg);
+    G4Exception("G4VMoleculeCounter::SetSensitiveToStepping", "NOT_ALLOWED", FatalException,
+                errMsg);
   }
   fSensitiveToStepping = flag;
 }

@@ -31,17 +31,16 @@
 #include "G4BlockingList.hh"
 
 G4BlockingList::G4BlockingList(G4int maxDefault, G4int stride)
-  : fStride(stride), fBlockingList(maxDefault,0)
-{
-}
+  : fStride(stride), fBlockingList(maxDefault, 0)
+{}
 
 // Clear List and reset tag
 //
 void G4BlockingList::FullyReset()
 {
   fBlockTagNo = 1;
-  for ( auto  i=G4long(fBlockingList.size()-1); i>=0; --i )
+  for (auto i = G4long(fBlockingList.size() - 1); i >= 0; --i)
   {
     fBlockingList[i] = 0;
-  }  
+  }
 }

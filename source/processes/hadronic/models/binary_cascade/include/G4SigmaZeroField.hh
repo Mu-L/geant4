@@ -25,46 +25,47 @@
 //
 //
 // -------------------------------------------------------------------
-//      GEANT 4 class header file 
+//      GEANT 4 class header file
 //
 //      CERN, Geneva, Switzerland
 //
 //      File name:     G4SigmaZeroField.hh
 //
 //      Author:        Alessandro Brunengo (Alessandro.Brunengo@ge.infn.it)
-// 
+//
 //      Creation date: 5 June 2000
 // -------------------------------------------------------------------
 
-#ifndef G4SigmaZeroField_h
-#define  G4SigmaZeroField_h 1
-
-#include <CLHEP/Units/SystemOfUnits.h>
+#ifndef G4SIGMAZEROFIELD_HH
+#define G4SIGMAZEROFIELD_HH
 
 #include "G4VNuclearField.hh"
 
-class G4SigmaZeroField: public G4VNuclearField
+#include <CLHEP/Units/SystemOfUnits.h>
+
+class G4SigmaZeroField : public G4VNuclearField
 {
-public:
-  G4SigmaZeroField(G4V3DNucleus * nucleus, G4double coeff = 0.36*CLHEP::fermi);
-  virtual ~G4SigmaZeroField();
+  public:
 
-private:
-  G4SigmaZeroField(const  G4SigmaZeroField &right);
-  const G4SigmaZeroField & operator=(const G4SigmaZeroField & right);
-  G4bool operator==(const G4SigmaZeroField & right) const;
-  G4bool operator!=(const G4SigmaZeroField & right) const;
+    G4SigmaZeroField(G4V3DNucleus* nucleus, G4double coeff = 0.36 * CLHEP::fermi);
+    virtual ~G4SigmaZeroField();
 
-public:
-  virtual G4double GetField(const G4ThreeVector & aPosition);
-  virtual G4double GetBarrier();
-  virtual G4double GetCoeff() { return theCoeff; }
+  private:
 
-private:
-  G4double theCoeff;
+    G4SigmaZeroField(const G4SigmaZeroField& right);
+    const G4SigmaZeroField& operator=(const G4SigmaZeroField& right);
+    G4bool operator==(const G4SigmaZeroField& right) const;
+    G4bool operator!=(const G4SigmaZeroField& right) const;
+
+  public:
+
+    virtual G4double GetField(const G4ThreeVector& aPosition);
+    virtual G4double GetBarrier();
+    virtual G4double GetCoeff() { return theCoeff; }
+
+  private:
+
+    G4double theCoeff;
 };
 
 #endif
-
-
-

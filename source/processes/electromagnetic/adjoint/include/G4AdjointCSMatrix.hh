@@ -38,63 +38,58 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4AdjointCSMatrix_h
-#define G4AdjointCSMatrix_h 1
+#ifndef G4ADJOINTCSMATRIX_HH
+#define G4ADJOINTCSMATRIX_HH
 
-#include "globals.hh"
 #include "G4ParticleDefinition.hh"
+#include "globals.hh"
 
 #include <vector>
 
 class G4AdjointCSMatrix
 {
- public:
-  G4AdjointCSMatrix(G4bool aBool);
-  ~G4AdjointCSMatrix();
+  public:
 
-  void Clear();
+    G4AdjointCSMatrix(G4bool aBool);
+    ~G4AdjointCSMatrix();
 
-  void AddData(G4double aPrimEnergy, G4double aCS,
-               std::vector<G4double>* aLogSecondEnergyVector,
-               std::vector<G4double>* aLogProbVector, std::size_t n_pro_decade = 0);
+    void Clear();
 
-  G4bool GetData(unsigned int i, G4double& aPrimEnergy, G4double& aCS,
-                 G4double& log0, std::vector<G4double>*& aLogSecondEnergyVector,
-                 std::vector<G4double>*& aLogProbVector,
-                 std::vector<std::size_t>*& aLogProbVectorIndex);
+    void AddData(G4double aPrimEnergy, G4double aCS, std::vector<G4double>* aLogSecondEnergyVector,
+                 std::vector<G4double>* aLogProbVector, std::size_t n_pro_decade = 0);
 
-  inline std::vector<G4double>* GetLogPrimEnergyVector()
-  {
-    return &fLogPrimEnergyVector;
-  }
+    G4bool GetData(unsigned int i, G4double& aPrimEnergy, G4double& aCS, G4double& log0,
+                   std::vector<G4double>*& aLogSecondEnergyVector,
+                   std::vector<G4double>*& aLogProbVector,
+                   std::vector<std::size_t>*& aLogProbVectorIndex);
 
-  inline std::vector<G4double>* GetLogCrossSectionvector()
-  {
-    return &fLogCrossSectionVector;
-  }
+    inline std::vector<G4double>* GetLogPrimEnergyVector() { return &fLogPrimEnergyVector; }
 
-  inline G4bool IsScatProjToProj() { return fScatProjToProj; }
+    inline std::vector<G4double>* GetLogCrossSectionvector() { return &fLogCrossSectionVector; }
 
-  void Write(const G4String& file_name);
+    inline G4bool IsScatProjToProj() { return fScatProjToProj; }
 
-  void Read(const G4String& file_name);
+    void Write(const G4String& file_name);
 
- private:
-  std::vector<G4double> fLogPrimEnergyVector;
-  // Adjoint Cross sections as functions of primary energy
-  std::vector<G4double> fLogCrossSectionVector;
+    void Read(const G4String& file_name);
 
-  std::vector<std::vector<G4double>*> fLogSecondEnergyMatrix;
-  std::vector<std::vector<G4double>*> fLogProbMatrix;
-  // Each column represents the integrated probability of
-  // getting a secondary
+  private:
 
-  // index of equidistant LogProb
-  std::vector<std::vector<std::size_t>*> fLogProbMatrixIndex;
-  std::vector<G4double> fLog0Vector;
+    std::vector<G4double> fLogPrimEnergyVector;
+    // Adjoint Cross sections as functions of primary energy
+    std::vector<G4double> fLogCrossSectionVector;
 
-  std::size_t fNbPrimEnergy = 0;
+    std::vector<std::vector<G4double>*> fLogSecondEnergyMatrix;
+    std::vector<std::vector<G4double>*> fLogProbMatrix;
+    // Each column represents the integrated probability of
+    // getting a secondary
 
-  G4bool fScatProjToProj;
+    // index of equidistant LogProb
+    std::vector<std::vector<std::size_t>*> fLogProbMatrixIndex;
+    std::vector<G4double> fLog0Vector;
+
+    std::size_t fNbPrimEnergy = 0;
+
+    G4bool fScatProjToProj;
 };
 #endif

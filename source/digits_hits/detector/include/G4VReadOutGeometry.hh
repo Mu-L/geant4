@@ -27,8 +27,8 @@
 //
 // Author: Makoto Asai
 // --------------------------------------------------------------------
-#ifndef G4VReadOutGeometry_h
-#define G4VReadOutGeometry_h 1
+#ifndef G4VREADOUTGEOMETRY_HH
+#define G4VREADOUTGEOMETRY_HH
 
 #include "G4SensitiveVolumeList.hh"
 #include "G4Step.hh"
@@ -38,45 +38,48 @@ class G4Navigator;
 
 class G4VReadOutGeometry
 {
- public:
-  G4VReadOutGeometry();
-  G4VReadOutGeometry(const G4String&);
-  virtual ~G4VReadOutGeometry();
+  public:
 
-  G4bool operator==(const G4VReadOutGeometry& right) const;
-  G4bool operator!=(const G4VReadOutGeometry& right) const;
+    G4VReadOutGeometry();
+    G4VReadOutGeometry(const G4String&);
+    virtual ~G4VReadOutGeometry();
 
-  // buildROGeomety must be invoked to Build (ie Build() method)
-  // the ROGeometry. It sets up in addition the needed
-  // the G4Navigator used to navigate inside this ROGeometry.
-  void BuildROGeometry();
-  virtual G4bool CheckROVolume(G4Step*, G4TouchableHistory*&);
+    G4bool operator==(const G4VReadOutGeometry& right) const;
+    G4bool operator!=(const G4VReadOutGeometry& right) const;
 
-  inline const G4SensitiveVolumeList* GetIncludeList() const { return fincludeList; }
-  inline void SetIncludeList(G4SensitiveVolumeList* value) { fincludeList = value; }
-  inline const G4SensitiveVolumeList* GetExcludeList() const { return fexcludeList; }
-  inline void SetExcludeList(G4SensitiveVolumeList* value) { fexcludeList = value; }
-  inline const G4String& GetName() const { return name; }
-  inline void SetName(const G4String& value) { name = value; }
-  // ADDED:
-  inline G4VPhysicalVolume* GetROWorld() const { return ROworld; }
+    // buildROGeomety must be invoked to Build (ie Build() method)
+    // the ROGeometry. It sets up in addition the needed
+    // the G4Navigator used to navigate inside this ROGeometry.
+    void BuildROGeometry();
+    virtual G4bool CheckROVolume(G4Step*, G4TouchableHistory*&);
 
- protected:
-  virtual G4VPhysicalVolume* Build() = 0;  // must return the world of the ROGeometry;
+    inline const G4SensitiveVolumeList* GetIncludeList() const { return fincludeList; }
+    inline void SetIncludeList(G4SensitiveVolumeList* value) { fincludeList = value; }
+    inline const G4SensitiveVolumeList* GetExcludeList() const { return fexcludeList; }
+    inline void SetExcludeList(G4SensitiveVolumeList* value) { fexcludeList = value; }
+    inline const G4String& GetName() const { return name; }
+    inline void SetName(const G4String& value) { name = value; }
+    // ADDED:
+    inline G4VPhysicalVolume* GetROWorld() const { return ROworld; }
 
-  G4VReadOutGeometry(const G4VReadOutGeometry& right);
-  G4VReadOutGeometry& operator=(const G4VReadOutGeometry& right);
+  protected:
 
-  virtual G4bool FindROTouchable(G4Step*);
+    virtual G4VPhysicalVolume* Build() = 0;  // must return the world of the ROGeometry;
 
- protected:
-  G4VPhysicalVolume* ROworld;
-  G4SensitiveVolumeList* fincludeList;
-  G4SensitiveVolumeList* fexcludeList;
-  G4String name;
+    G4VReadOutGeometry(const G4VReadOutGeometry& right);
+    G4VReadOutGeometry& operator=(const G4VReadOutGeometry& right);
 
-  G4Navigator* ROnavigator;
-  G4TouchableHistory* touchableHistory;
+    virtual G4bool FindROTouchable(G4Step*);
+
+  protected:
+
+    G4VPhysicalVolume* ROworld;
+    G4SensitiveVolumeList* fincludeList;
+    G4SensitiveVolumeList* fexcludeList;
+    G4String name;
+
+    G4Navigator* ROnavigator;
+    G4TouchableHistory* touchableHistory;
 };
 
 #endif

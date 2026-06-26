@@ -132,9 +132,10 @@ namespace G4INCL {
   }
 
   G4double momentumInCM(Particle const * const p1, Particle const * const p2) {
-    const G4double m1sq = std::pow(p1->getMass(),2);
-    const G4double m2sq = std::pow(p2->getMass(),2);
-    const G4double z = p1->getEnergy()*p2->getEnergy() - p1->getMomentum().dot(p2->getMomentum());
+    const G4double m1sq = sqr(p1->getMass());
+    const G4double m2sq = sqr(p2->getMass());
+    const G4double z = p1->getEnergy()*p2->getEnergy()
+                     - p1->getMomentum().dot(p2->getMomentum());
     G4double pcm2 = (z*z-m1sq*m2sq)/(2*z+m1sq+m2sq);
     if(pcm2 < 0.0) {
       INCL_ERROR("momentumInCM: pcm2 == " << pcm2 << " < 0.0" << '\n');
@@ -144,8 +145,15 @@ namespace G4INCL {
   }
 
   G4double momentumInCM(const G4double E, const G4double M1, const G4double M2) {
-    return 0.5*std::sqrt((E*E - std::pow(M1 + M2, 2))
-			 *(E*E - std::pow(M1 - M2, 2)))/E;
+    if(E <= M1 + M2) { return 0.0; }
+
+    const G4double e2 = E*E;
+    const G4double p2Term1 = e2 - sqr(M1 + M2);
+    const G4double p2Term2 = e2 - sqr(M1 - M2);
+    G4double p2Product = p2Term1*p2Term2;
+    if(p2Product < 0.0) { return 0.0; }
+
+    return 0.5*std::sqrt(p2Product)/E;
   }
 
   G4double momentumInLab(const G4double s, const G4double m1, const G4double m2) {

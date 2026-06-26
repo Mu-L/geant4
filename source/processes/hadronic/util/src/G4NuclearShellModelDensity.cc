@@ -25,36 +25,37 @@
 //
 
 #include "G4NuclearShellModelDensity.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
+
 #include "G4Exp.hh"
 #include "G4Log.hh"
+#include "G4PhysicalConstants.hh"
 #include "G4Pow.hh"
+#include "G4SystemOfUnits.hh"
 
-G4NuclearShellModelDensity::G4NuclearShellModelDensity(G4int anA, G4int /*aZ*/) 
-: theA(anA)//, theZ(aZ)
+G4NuclearShellModelDensity::G4NuclearShellModelDensity(G4int anA, G4int /*aZ*/)
+  : theA(anA)  //, theZ(aZ)
 {
-        const G4double r0sq=0.8133*fermi*fermi;
-	theRsquare= r0sq * G4Pow::GetInstance()->Z23(theA);
-	G4double x = 1./(pi*theRsquare);
-	Setrho0(x*std::sqrt(x));
+  const G4double r0sq = 0.8133 * fermi * fermi;
+  theRsquare = r0sq * G4Pow::GetInstance()->Z23(theA);
+  G4double x = 1. / (pi * theRsquare);
+  Setrho0(x * std::sqrt(x));
 }
 
 G4NuclearShellModelDensity::~G4NuclearShellModelDensity() {}
-    
-G4double G4NuclearShellModelDensity::GetRelativeDensity(const G4ThreeVector & aPosition) const
+
+G4double G4NuclearShellModelDensity::GetRelativeDensity(const G4ThreeVector& aPosition) const
 {
-	return G4Exp(-1*aPosition.mag2()/theRsquare);
+  return G4Exp(-1 * aPosition.mag2() / theRsquare);
 }
-    
+
 G4double G4NuclearShellModelDensity::GetRadius(const G4double maxRelativeDensity) const
 {
-
-     return (maxRelativeDensity>0 && maxRelativeDensity <= 1 ) ?
-             std::sqrt(theRsquare * G4Log(1/maxRelativeDensity) ) : DBL_MAX;
+  return (maxRelativeDensity > 0 && maxRelativeDensity <= 1)
+           ? std::sqrt(theRsquare * G4Log(1 / maxRelativeDensity))
+           : DBL_MAX;
 }
-   
-G4double   G4NuclearShellModelDensity::GetDeriv(const G4ThreeVector & aPosition) const
+
+G4double G4NuclearShellModelDensity::GetDeriv(const G4ThreeVector& aPosition) const
 {
-     return -2* aPosition.mag() / theRsquare * GetDensity(aPosition);
+  return -2 * aPosition.mag() / theRsquare * GetDensity(aPosition);
 }

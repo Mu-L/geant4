@@ -36,51 +36,51 @@
 //
 
 #include "G4NeutrinoPhysicsMessenger.hh"
+
 #include "G4NeutrinoPhysics.hh"
 
-G4NeutrinoPhysicsMessenger::G4NeutrinoPhysicsMessenger(G4NeutrinoPhysics* ab)
-  : theB(ab)
+G4NeutrinoPhysicsMessenger::G4NeutrinoPhysicsMessenger(G4NeutrinoPhysics* ab) : theB(ab)
 {
   // general stuff.
   aDir = new G4UIdirectory("/physics_lists/nu/", false);
   aDir->SetGuidance("tailoring the neutrino processes.");
 
-  theNu = new G4UIcmdWithABool("/physics_lists/nu/NeutrinoActivation",this);
+  theNu = new G4UIcmdWithABool("/physics_lists/nu/NeutrinoActivation", this);
   theNu->SetGuidance("Activation of neutrino-nucleus processes");
   theNu->AvailableForStates(G4State_PreInit);
   theNu->SetToBeBroadcasted(false);
 
-  theNuETX = new G4UIcmdWithABool("/physics_lists/nu/NuETotXscActivation",this);
+  theNuETX = new G4UIcmdWithABool("/physics_lists/nu/NuETotXscActivation", this);
   theNuETX->SetGuidance("Activation of neutrino-electron processes");
   theNuETX->AvailableForStates(G4State_PreInit);
   theNuETX->SetToBeBroadcasted(false);
 
-  theNuEleCcBF = new G4UIcmdWithADouble("/physics_lists/nu/NuEleCcBias",this);
+  theNuEleCcBF = new G4UIcmdWithADouble("/physics_lists/nu/NuEleCcBias", this);
   theNuEleCcBF->SetGuidance("Neutrino-electron charge current bias factor");
   theNuEleCcBF->AvailableForStates(G4State_PreInit);
   theNuEleCcBF->SetToBeBroadcasted(false);
 
-  theNuEleNcBF = new G4UIcmdWithADouble("/physics_lists/nu/NuEleNcBias",this);
+  theNuEleNcBF = new G4UIcmdWithADouble("/physics_lists/nu/NuEleNcBias", this);
   theNuEleNcBF->SetGuidance("Neutrino-electron neutral current bias factor");
   theNuEleNcBF->AvailableForStates(G4State_PreInit);
   theNuEleNcBF->SetToBeBroadcasted(false);
 
-  theNuNucleusBF = new G4UIcmdWithADouble("/physics_lists/nu/NuNucleusBias",this);
+  theNuNucleusBF = new G4UIcmdWithADouble("/physics_lists/nu/NuNucleusBias", this);
   theNuNucleusBF->SetGuidance("Neutrino-nucleus cross section bias factor");
   theNuNucleusBF->AvailableForStates(G4State_PreInit);
   theNuNucleusBF->SetToBeBroadcasted(false);
 
-  theNuOscDistanceBF = new G4UIcmdWithADouble("/physics_lists/nu/NuOscDistanceBias",this);
+  theNuOscDistanceBF = new G4UIcmdWithADouble("/physics_lists/nu/NuOscDistanceBias", this);
   theNuOscDistanceBF->SetGuidance("Neutrino-oscillation distance bias factor");
   theNuOscDistanceBF->AvailableForStates(G4State_PreInit);
   theNuOscDistanceBF->SetToBeBroadcasted(false);
 
-  theNuDN = new G4UIcmdWithAString("/physics_lists/nu/NuDetectorName",this);  
+  theNuDN = new G4UIcmdWithAString("/physics_lists/nu/NuDetectorName", this);
   theNuDN->SetGuidance("Set neutrino detector name");
   theNuDN->AvailableForStates(G4State_PreInit);
   theNuDN->SetToBeBroadcasted(false);
 
-  theNuODN = new G4UIcmdWithAString("/physics_lists/nu/NuOscDistanceName",this);  
+  theNuODN = new G4UIcmdWithAString("/physics_lists/nu/NuOscDistanceName", this);
   theNuODN->SetGuidance("Set neutrino oscillation distance region name");
   theNuODN->AvailableForStates(G4State_PreInit);
   theNuODN->SetToBeBroadcasted(false);
@@ -104,18 +104,18 @@ G4NeutrinoPhysicsMessenger::~G4NeutrinoPhysicsMessenger()
 
 void G4NeutrinoPhysicsMessenger::SetNewValue(G4UIcommand* aComm, G4String aS)
 {
-  if (aComm==theNuETX)
+  if (aComm == theNuETX)
     theB->NuETotXscActivated(theNuETX->GetNewBoolValue(aS));
-  else if (aComm==theNuEleCcBF)
+  else if (aComm == theNuEleCcBF)
     theB->SetNuEleCcBias(theNuEleCcBF->GetNewDoubleValue(aS));
-  else if (aComm==theNuEleNcBF)
+  else if (aComm == theNuEleNcBF)
     theB->SetNuEleNcBias(theNuEleNcBF->GetNewDoubleValue(aS));
-  else if (aComm==theNuNucleusBF)
+  else if (aComm == theNuNucleusBF)
     theB->SetNuNucleusBias(theNuNucleusBF->GetNewDoubleValue(aS));
-  else if (aComm==theNuOscDistanceBF)
+  else if (aComm == theNuOscDistanceBF)
     theB->SetNuOscDistanceBias(theNuOscDistanceBF->GetNewDoubleValue(aS));
-  else if(aComm==theNuDN)
+  else if (aComm == theNuDN)
     theB->SetNuDetectorName(aS);
-  else if(aComm==theNuODN)
+  else if (aComm == theNuODN)
     theB->SetNuOscDistanceName(aS);
 }

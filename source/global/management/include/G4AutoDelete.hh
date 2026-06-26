@@ -61,12 +61,12 @@
 
 namespace G4AutoDelete
 {
-  template <class T>
-  void Register(T* inst)
-  {
-    static G4ThreadLocalSingleton<T> container;
-    container.Register(inst);
-  }
+template<class T>
+void Register(T* inst)
+{
+  static G4ThreadLocalSingleton<T> container;
+  container.Register(inst);
+}
 }  // namespace G4AutoDelete
 
 #endif

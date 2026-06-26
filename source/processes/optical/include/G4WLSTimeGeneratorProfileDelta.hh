@@ -42,30 +42,31 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4WLSTimeGeneratorProfileDelta_h
-#define G4WLSTimeGeneratorProfileDelta_h 1
+#ifndef G4WLSTIMEGENERATORPROFILEDELTA_HH
+#define G4WLSTIMEGENERATORPROFILEDELTA_HH
 
 #include "G4VWLSTimeGeneratorProfile.hh"
 
 class G4WLSTimeGeneratorProfileDelta : public G4VWLSTimeGeneratorProfile
 {
- public:
-  explicit G4WLSTimeGeneratorProfileDelta(const G4String& name);
+  public:
 
-  virtual ~G4WLSTimeGeneratorProfileDelta();
+    explicit G4WLSTimeGeneratorProfileDelta(const G4String& name);
 
-  virtual G4double GenerateTime(const G4double time_constant) override;
+    virtual ~G4WLSTimeGeneratorProfileDelta();
 
-  virtual G4double GenerateTime(const G4MaterialPropertiesTable*) override;
+    virtual G4double GenerateTime(const G4double time_constant) override;
 
- protected:
- private:
-  // hide assignment operator
+    virtual G4double GenerateTime(const G4MaterialPropertiesTable*) override;
 
-  G4WLSTimeGeneratorProfileDelta& operator=
-    (const G4WLSTimeGeneratorProfileDelta& right) = delete;
-  G4WLSTimeGeneratorProfileDelta(const G4WLSTimeGeneratorProfileDelta&) =
-    delete;
+  protected:
+
+  private:
+
+    // hide assignment operator
+
+    G4WLSTimeGeneratorProfileDelta& operator=(const G4WLSTimeGeneratorProfileDelta& right) = delete;
+    G4WLSTimeGeneratorProfileDelta(const G4WLSTimeGeneratorProfileDelta&) = delete;
 };
 
 #endif

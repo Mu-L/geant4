@@ -45,11 +45,11 @@
 #ifndef G4PHYSICALVOLUMESTORE_HH
 #define G4PHYSICALVOLUMESTORE_HH
 
-#include <vector>
-#include <map>
-
 #include "G4VPhysicalVolume.hh"
 #include "G4VStoreNotifier.hh"
+
+#include <map>
+#include <vector>
 
 /**
  * @brief G4PhysicalVolumeStore is a singleton class, acting as container
@@ -60,7 +60,7 @@
  * removed on their destruction. The underlying container initially has a
  * capacity of 100. A map indexed by volume names is also recorded for fast
  * search; pointers to volumes with same name are stored in buckets.
-*/
+ */
 
 class G4PhysicalVolumeStore : public std::vector<G4VPhysicalVolume*>
 {
@@ -112,21 +112,22 @@ class G4PhysicalVolumeStore : public std::vector<G4VPhysicalVolume*>
      *  @param[in] verbose Flag for enabling verbosity (default true).
      *  @param[in] reverseSearch Flag to enable inverse search (default false).
      */
-    G4VPhysicalVolume* GetVolume(const G4String& name,
-                                 G4bool verbose = true,
+    G4VPhysicalVolume* GetVolume(const G4String& name, G4bool verbose = true,
                                  G4bool reverseSearch = false) const;
 
     /**
      * Accessor and modifier to assess validity of the internal map.
      */
-    inline G4bool IsMapValid() const  { return mvalid; }
-    inline void SetMapValid(G4bool val)  { mvalid = val; }
+    inline G4bool IsMapValid() const { return mvalid; }
+    inline void SetMapValid(G4bool val) { mvalid = val; }
 
     /**
      * Return the internal map.
      */
-    inline const std::map<G4String,
-            std::vector<G4VPhysicalVolume*> >& GetMap() const { return bmap; }
+    inline const std::map<G4String, std::vector<G4VPhysicalVolume*>>& GetMap() const
+    {
+      return bmap;
+    }
 
     /**
      * Brings contents of the internal map up to date and resets validity flag.
@@ -148,7 +149,7 @@ class G4PhysicalVolumeStore : public std::vector<G4VPhysicalVolume*>
     static G4ThreadLocal G4VStoreNotifier* fgNotifier;
     static G4ThreadLocal G4bool locked;
 
-    std::map<G4String, std::vector<G4VPhysicalVolume*> > bmap;
+    std::map<G4String, std::vector<G4VPhysicalVolume*>> bmap;
     G4bool mvalid = false;  // Flag to indicate if map is up to date or not
 };
 

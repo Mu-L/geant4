@@ -27,21 +27,22 @@
 //
 // by I.Hrivnacova, 27 Sep 99
 
-#include <cmath>
-
+#include "G4Isotope.hh"
+#include "G4Material.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
-#include "G3toG4.hh"
-#include "G3MatTable.hh"
-#include "G3EleTable.hh"
-#include "G4Material.hh"
-#include "G4Isotope.hh"
 #include "G4UnitsTable.hh"
 
-void PG4gsmate(G4String *tokens)
+#include "G3EleTable.hh"
+#include "G3MatTable.hh"
+#include "G3toG4.hh"
+
+#include <cmath>
+
+void PG4gsmate(G4String* tokens)
 {
   // fill the parameter containers
-  G3fillParams(tokens,PTgsmate);
+  G3fillParams(tokens, PTgsmate);
   G4String name = Spar[0];
   G4int imate = Ipar[0];
   G4int nwbf = Ipar[1];
@@ -50,60 +51,56 @@ void PG4gsmate(G4String *tokens)
   G4double dens = Rpar[2];
   G4double radl = Rpar[3];
   // G4double absl = Rpar[4];
-  G4double *ubuf = &Rpar[5];
+  G4double* ubuf = &Rpar[5];
 
   G4gsmate(imate, name, a, z, dens, radl, nwbf, ubuf);
 }
 
-void G4gsmate(G4int imate, G4String name, G4double ain, G4double zin,
-              G4double densin, G4double, G4int, G4double*)
+void G4gsmate(G4int imate, G4String name, G4double ain, G4double zin, G4double densin, G4double,
+              G4int, G4double*)
 {
-  G4double G3_minimum_density = 1.e-10*g/cm3;
+  G4double G3_minimum_density = 1.e-10 * g / cm3;
 
   // add units
-  G4double z = zin;    
-  G4double a = ain*g/mole;
-  G4double dens = densin*g/cm3;
+  G4double z = zin;
+  G4double a = ain * g / mole;
+  G4double dens = densin * g / cm3;
 
-  G4Material* material=0;
-  
+  G4Material* material = 0;
+
   G4String sname = G4StrUtil::strip_copy(name);
-  if (sname == "AIR") {
+  if (sname == "AIR")
+  {
     // handle the built in AIR mixture
     G4double aa[2], zz[2], wmat[2];
-    aa[0] = 14.01*g/mole;
-    aa[1] = 16.00*g/mole;
+    aa[0] = 14.01 * g / mole;
+    aa[1] = 16.00 * g / mole;
     zz[0] = 7;
     zz[1] = 8;
     wmat[0] = 0.7;
     wmat[1] = 0.3;
     // G4double theDensity = 1.2931*mg/cm3;
     G4double theDensity = 0.0012931;
-    G4int n=2;
+    G4int n = 2;
     G4gsmixt(imate, sname, aa, zz, theDensity, n, wmat);
-  } 
-  else if ( z<1 || dens < G3_minimum_density ) {
-    // define vacuum according to definition from N03 example
-    G4double density     = universe_mean_density;    //from PhysicalConstants.h
-    G4double pressure    = 3.e-18*pascal;
-    G4double temperature = 2.73*kelvin;
-    material = new G4Material(name, z=1., a=1.01*g/mole, density,
-                    kStateGas,temperature,pressure);
   }
-  else {
-    //G4Element* element = CreateElement(z, a, name);
+  else if (z < 1 || dens < G3_minimum_density)
+  {
+    // define vacuum according to definition from N03 example
+    G4double density = universe_mean_density;  // from PhysicalConstants.h
+    G4double pressure = 3.e-18 * pascal;
+    G4double temperature = 2.73 * kelvin;
+    material =
+      new G4Material(name, z = 1., a = 1.01 * g / mole, density, kStateGas, temperature, pressure);
+  }
+  else
+  {
+    // G4Element* element = CreateElement(z, a, name);
     G4Element* element = G3Ele.GetEle(z);
     material = new G4Material(name, dens, 1);
-    material->AddElement(element, 1.);    
-  }  
+    material->AddElement(element, 1.);
+  }
 
   // add the material to the List
   G3Mat.put(imate, material);
 }
-
-
-
-
-
-
-

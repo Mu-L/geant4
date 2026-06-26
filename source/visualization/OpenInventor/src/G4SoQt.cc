@@ -26,23 +26,23 @@
 //
 // F.W. Jones 05012018
 
-#include <stdlib.h>
-#include <string.h>
+#include "G4SoQt.hh"
 
 #include "G4ios.hh"
 
-#include "G4SoQt.hh"
-//#include "G4Qt.hh"
-//#include "G4UImanager.hh"
+#include <stdlib.h>
+#include <string.h>
+// #include "G4Qt.hh"
+// #include "G4UImanager.hh"
 
 #include <Inventor/Qt/SoQt.h>
+#include <qapplication.h>
+#include <qwidget.h>
+
 #include <QMainWindow>
 
-#include <qwidget.h>
-#include <qapplication.h>
-
 #ifndef G4GMAKE
-#include "moc_G4SoQt.cpp"
+#  include "moc_G4SoQt.cpp"
 #endif
 
 #define G4warn G4cout
@@ -51,21 +51,20 @@ G4SoQt* G4SoQt::instance = NULL;
 
 static G4bool QtInited = FALSE;
 
-
 /***************************************************************************/
 G4SoQt* G4SoQt::getInstance()
 {
-  if (instance==NULL) {
-     instance = new G4SoQt();
+  if (instance == NULL)
+  {
+    instance = new G4SoQt();
   }
   return instance;
 }
 
-
 /***************************************************************************/
 G4SoQt::G4SoQt()
 // FWJ command-line arguments omitted for time being
-//G4SoQt* G4SoQt(int a_argn, char** a_args, char*)
+// G4SoQt* G4SoQt(int a_argn, char** a_args, char*)
 {
   externalApp = false;
 
@@ -86,25 +85,24 @@ G4SoQt::G4SoQt()
   //  G4cout << "G4SoQt: mainWin=" << mainWin << G4endl;
   //  G4cout << "G4SoQt: toplevelwidget=" << SoQt::getTopLevelWidget() << G4endl;
 
-// FWJ CAN'T GET MENUBAR THIS WAY OR BY CAST
+  // FWJ CAN'T GET MENUBAR THIS WAY OR BY CAST
   //  QWidget* toplevel = SoQt::getTopLevelWidget();
   //  QMenuBar* menubar = QMainWindow::menuBar();
   //  G4cout << "G4OpenInventorQtExaminerViewer menubar=" << menubar << G4endl;
-
 
   // FWJ will this work?
   SetMainInteractor(mainWin);
   //  SetMainInteractor(qApp);
   //  AddDispatcher     ((G4DispatchFunction)XtDispatchEvent);
 
-// FWJ no locale for now (see G4Qt.cc)
-
+  // FWJ no locale for now (see G4Qt.cc)
 }
 
 /***************************************************************************/
 G4SoQt::~G4SoQt()
 {
-  if(this==instance) {
+  if (this == instance)
+  {
     instance = NULL;
   }
 }
@@ -120,46 +118,42 @@ void* G4SoQt::GetEvent()
   return 0;
 }
 
-
 /***************************************************************************/
 void G4SoQt::FlushAndWaitExecution()
 {
-   // FWJ the following is used in G4Qt:
-   //  if(!qApp) return;
-   // This starts the Qt main loop:
-   //  qApp->processEvents();
+  // FWJ the following is used in G4Qt:
+  //  if(!qApp) return;
+  // This starts the Qt main loop:
+  //  qApp->processEvents();
 
-   // FWJ no, should be done in secondaryLoop()!
-   //   SoQt::mainLoop();
+  // FWJ no, should be done in secondaryLoop()!
+  //   SoQt::mainLoop();
 }
-
 
 /***************************************************************************/
 void G4SoQt::SecondaryLoop()
 {
-   if (externalApp) return;
+  if (externalApp) return;
 
-   // FWJ DEBUG
-   //      G4cout <<
-   //     "ENTERING OIQT VIEWER SECONDARY LOOP" << G4endl;
-   //   else
+  // FWJ DEBUG
+  //      G4cout <<
+  //     "ENTERING OIQT VIEWER SECONDARY LOOP" << G4endl;
+  //   else
 
-   G4warn <<
-      "ENTERING OIQT VIEWER SECONDARY LOOP... PRESS E KEY TO EXIT" << G4endl;
+  G4warn << "ENTERING OIQT VIEWER SECONDARY LOOP... PRESS E KEY TO EXIT" << G4endl;
 
-   SoQt::mainLoop();
+  SoQt::mainLoop();
 }
-
 
 /***************************************************************************/
 void G4SoQt::ExitSecondaryLoop()
 {
-   // FWJ DEBUG
-   //   G4cout << "G4SoQt: EXIT SECONDARY LOOP externalApp=" <<
-   //      externalApp << G4endl;
+  // FWJ DEBUG
+  //   G4cout << "G4SoQt: EXIT SECONDARY LOOP externalApp=" <<
+  //      externalApp << G4endl;
 
-   if (externalApp) return;   
-   SoQt::exitMainLoop();
+  if (externalApp) return;
+  SoQt::exitMainLoop();
 }
 /***************************************************************************/
 bool G4SoQt::IsExternalApp()

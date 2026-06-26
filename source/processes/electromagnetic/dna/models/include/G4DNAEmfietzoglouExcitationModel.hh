@@ -26,99 +26,90 @@
 // Based on the work described in
 // Rad Res 163, 98-111 (2005)
 // D. Emfietzoglou, H. Nikjoo
-// 
+//
 // Authors of the class (2014):
 // I. Kyriakou (kyriak@cc.uoi.gr)
 // D. Emfietzoglou (demfietz@cc.uoi.gr)
 // S. Incerti (incerti@cenbg.in2p3.fr)
 //
 
-#ifndef G4DNAEmfietzoglouExcitationModel_h
-#define G4DNAEmfietzoglouExcitationModel_h 1
-
-#include "G4VEmModel.hh"
-#include "G4ParticleChangeForGamma.hh"
-#include "G4ProductionCutsTable.hh"
+#ifndef G4DNAEMFIETZOGLOUEXCITATIONMODEL_HH
+#define G4DNAEMFIETZOGLOUEXCITATIONMODEL_HH
 
 #include "G4DNACrossSectionDataSet.hh"
-#include "G4LogLogInterpolation.hh"
-#include "G4Electron.hh"
-#include "G4Proton.hh"
 #include "G4DNAEmfietzoglouWaterExcitationStructure.hh"
+#include "G4Electron.hh"
+#include "G4LogLogInterpolation.hh"
 #include "G4NistManager.hh"
+#include "G4ParticleChangeForGamma.hh"
+#include "G4ProductionCutsTable.hh"
+#include "G4Proton.hh"
+#include "G4VEmModel.hh"
 
 class G4DNAEmfietzoglouExcitationModel : public G4VEmModel
 {
+  public:
 
-public:
+    G4DNAEmfietzoglouExcitationModel(const G4ParticleDefinition* p = nullptr,
+                                     const G4String& nam = "DNAEmfietzoglouExcitationModel");
 
-  G4DNAEmfietzoglouExcitationModel(const G4ParticleDefinition* p = nullptr,
-                                   const G4String& nam =
-                                       "DNAEmfietzoglouExcitationModel");
+    ~G4DNAEmfietzoglouExcitationModel() override;
 
-  ~G4DNAEmfietzoglouExcitationModel() override;
+    G4DNAEmfietzoglouExcitationModel&
+    operator=(const G4DNAEmfietzoglouExcitationModel& right) = delete;
+    G4DNAEmfietzoglouExcitationModel(const G4DNAEmfietzoglouExcitationModel&) = delete;
 
-  G4DNAEmfietzoglouExcitationModel & operator=(const G4DNAEmfietzoglouExcitationModel &right) = delete;
-  G4DNAEmfietzoglouExcitationModel(const G4DNAEmfietzoglouExcitationModel&) = delete;
+    void Initialise(const G4ParticleDefinition*,
+                    const G4DataVector& = *(new G4DataVector())) override;
 
-  void Initialise(const G4ParticleDefinition*,
-                          const G4DataVector& = *(new G4DataVector())) override;
+    G4double CrossSectionPerVolume(const G4Material* material, const G4ParticleDefinition* p,
+                                   G4double ekin, G4double emin, G4double emax) override;
 
-  G4double CrossSectionPerVolume(const G4Material* material,
-                                         const G4ParticleDefinition* p,
-                                         G4double ekin,
-                                         G4double emin,
-                                         G4double emax) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-                                 const G4MaterialCutsCouple*,
-                                 const G4DynamicParticle*,
-                                 G4double tmin,
-                                 G4double maxEnergy) override;
+    inline void SelectStationary(G4bool input);
 
-  inline void SelectStationary(G4bool input); 
+  protected:
 
-protected:
+    G4ParticleChangeForGamma* fParticleChangeForGamma;
 
-  G4ParticleChangeForGamma* fParticleChangeForGamma;
+  private:
 
-private:
+    G4bool statCode;
 
-  G4bool statCode;
+    // Water density table
+    const std::vector<G4double>* fpMolWaterDensity;
 
-  // Water density table
-  const std::vector<G4double>* fpMolWaterDensity;
+    std::map<G4String, G4double, std::less<G4String>> lowEnergyLimit;
+    std::map<G4String, G4double, std::less<G4String>> highEnergyLimit;
 
-  std::map<G4String, G4double, std::less<G4String> > lowEnergyLimit;
-  std::map<G4String, G4double, std::less<G4String> > highEnergyLimit;
+    G4bool isInitialised{false};
+    G4int verboseLevel;
 
-  G4bool isInitialised{false};
-  G4int verboseLevel;
+    // Cross section
 
-  // Cross section
+    using MapFile = std::map<G4String, G4String, std::less<G4String>>;
+    MapFile tableFile;
 
-  using MapFile = std::map<G4String, G4String, std::less<G4String>>;
-  MapFile tableFile;
+    using MapData = std::map<G4String, G4DNACrossSectionDataSet*, std::less<G4String>>;
+    MapData tableData;
 
-  using MapData = std::map<G4String, G4DNACrossSectionDataSet *, std::less<G4String>>;
-  MapData tableData;
+    // Partial cross section
 
-  // Partial cross section
+    G4int RandomSelect(G4double energy, const G4String& particle);
 
-  G4int RandomSelect(G4double energy, const G4String& particle);
+    // Final state
 
-  // Final state
-
-  G4DNAEmfietzoglouWaterExcitationStructure waterStructure;
-
+    G4DNAEmfietzoglouWaterExcitationStructure waterStructure;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline void G4DNAEmfietzoglouExcitationModel::SelectStationary (G4bool input)
-{ 
-    statCode = input; 
-}		 
+inline void G4DNAEmfietzoglouExcitationModel::SelectStationary(G4bool input)
+{
+  statCode = input;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 

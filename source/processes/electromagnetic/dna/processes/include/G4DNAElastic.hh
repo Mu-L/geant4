@@ -26,42 +26,41 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4DNAElastic_h
-#define G4DNAElastic_h 1
+#ifndef G4DNAELASTIC_HH
+#define G4DNAELASTIC_HH
 
-#include "G4VEmProcess.hh"
 #include "G4Electron.hh"
+#include "G4VEmProcess.hh"
 
 // Available models
 #include "G4DNAChampionElasticModel.hh"
-#include "G4DNAScreenedRutherfordElasticModel.hh"
 #include "G4DNAIonElasticModel.hh"
+#include "G4DNAScreenedRutherfordElasticModel.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class G4DNAElastic : public G4VEmProcess
 
 {
-public: 
+  public:
 
-  G4DNAElastic(const G4String& processName ="DNAElastic",
-		     G4ProcessType type = fElectromagnetic);
+    G4DNAElastic(const G4String& processName = "DNAElastic", G4ProcessType type = fElectromagnetic);
 
-  ~G4DNAElastic() override;
+    ~G4DNAElastic() override;
 
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
-  
-  virtual void PrintInfo();
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
 
-protected:
+    virtual void PrintInfo();
 
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+  protected:
 
-private:
-     
-  G4bool       isInitialised{false};
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool isInitialised{false};
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-  
+
 #endif

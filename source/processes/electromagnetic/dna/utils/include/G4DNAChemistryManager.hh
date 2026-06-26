@@ -32,8 +32,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -44,16 +44,17 @@
 // J. Comput. Phys. 274 (2014) 841-882
 // Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#pragma once
-
-#include "globals.hh"
-#include "G4ThreeVector.hh"
-#include <fstream>
-#include <memory>
-#include "G4UImessenger.hh"
-#include "G4VStateDependent.hh"
+#ifndef G4DNACHEMISTRYMANAGER_HH
+#define G4DNACHEMISTRYMANAGER_HH
 
 #include "G4MoleculeCounterManager.hh"
+#include "G4ThreeVector.hh"
+#include "G4UImessenger.hh"
+#include "G4VStateDependent.hh"
+#include "globals.hh"
+
+#include <fstream>
+#include <memory>
 
 class G4Track;
 class G4Run;
@@ -70,9 +71,9 @@ class G4VPhysChemIO;
 
 enum ElectronicModification
 {
-    eIonizedMolecule,
-    eExcitedMolecule,
-    eDissociativeAttachment
+  eIonizedMolecule,
+  eExcitedMolecule,
+  eDissociativeAttachment
 };
 
 /**
@@ -87,13 +88,14 @@ enum ElectronicModification
  * The user can also ask to create a file containing a information about the
  * creation of water molecules and solvated electrons.
  */
-class G4DNAChemistryManager: public G4UImessenger,
-                             public G4VStateDependent
+class G4DNAChemistryManager : public G4UImessenger, public G4VStateDependent
 {
-protected:
+  protected:
+
     ~G4DNAChemistryManager() override;
 
-public:
+  public:
+
     //============================================================================
     // STATIC METHODS
     //============================================================================
@@ -167,8 +169,7 @@ public:
      * the position and electronic state of the water molecule
      * and the position thermalized or not of the solvated electron
      */
-    void WriteInto(const G4String&, std::ios_base::openmode mode =
-                   std::ios_base::out);
+    void WriteInto(const G4String&, std::ios_base::openmode mode = std::ios_base::out);
     void AddEmptyLineInOutputFile();
 
     /**
@@ -186,8 +187,7 @@ public:
      * model and the IncomingTrack is the track responsible for the creation
      * of this molecule (electron, proton...).
      */
-    void CreateWaterMolecule(ElectronicModification,
-                             G4int /*electronicLevel*/,
+    void CreateWaterMolecule(ElectronicModification, G4int /*electronicLevel*/,
                              const G4Track* /*pIncomingTrack*/);
 
     /**
@@ -197,11 +197,9 @@ public:
     void CreateSolvatedElectron(const G4Track* /*pIncomingTrack*/,
                                 G4ThreeVector* pFinalPosition = nullptr);
 
-    void PushMolecule(std::unique_ptr<G4Molecule> pMolecule,
-                      G4double time,
-                      const G4ThreeVector &position,
-                      G4int parentID,
-                      const G4Track *parentTrack = nullptr);
+    void PushMolecule(std::unique_ptr<G4Molecule> pMolecule, G4double time,
+                      const G4ThreeVector& position, G4int parentID,
+                      const G4Track* parentTrack = nullptr);
 
     //============================================================================
     // Methods called by RunManagers to notify of Runs & Events
@@ -211,7 +209,8 @@ public:
     void EndOfEventAction(const G4Event*);
     void EndOfRunAction(const G4Run*);
 
-protected:
+  protected:
+
     void HandleStandaloneInitialization();
     void PushTrack(G4Track*);
     void SetGlobalTemperature(G4double temperatureKelvin);
@@ -225,7 +224,8 @@ protected:
 
     G4DNAChemistryManager();
 
-private:
+  private:
+
     std::unique_ptr<G4UIdirectory> fpChemDNADirectory;
     std::unique_ptr<G4UIcmdWithABool> fpActivateChem;
     std::unique_ptr<G4UIcmdWithAnInteger> fpRunChem;
@@ -236,7 +236,8 @@ private:
     static G4DNAChemistryManager* fgInstance;
     G4bool fActiveChemistry{false};
 
-    struct ThreadLocalData{
+    struct ThreadLocalData
+    {
         ThreadLocalData();
         ~ThreadLocalData();
         std::unique_ptr<G4VPhysChemIO> fpPhysChemIO;
@@ -261,3 +262,5 @@ private:
 
     G4int fVerbose{0};
 };
+
+#endif

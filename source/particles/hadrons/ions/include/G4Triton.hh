@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4Triton_h
-#define G4Triton_h 1
+#ifndef G4TRITON_HH
+#define G4TRITON_HH
 
 #include "G4Ions.hh"
 
 class G4Triton : public G4Ions
 {
   public:
+
     static G4Triton* Definition();
     static G4Triton* TritonDefinition();
     static G4Triton* Triton();
 
   private:
+
     G4Triton() {}
     ~G4Triton() override = default;
 

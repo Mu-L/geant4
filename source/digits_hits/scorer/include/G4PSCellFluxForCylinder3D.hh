@@ -26,8 +26,8 @@
 //
 //
 
-#ifndef G3PSCellFluxForCylinder3D_h
-#define G3PSCellFluxForCylinder3D_h 1
+#ifndef G4PSCELLFLUXFORCYLINDER3D_HH
+#define G4PSCELLFLUXFORCYLINDER3D_HH
 
 #include "G4PSCellFlux3D.hh"
 ///////////////////////////////////////////////////////////////////////////////
@@ -50,25 +50,27 @@
 
 class G4PSCellFluxForCylinder3D : public G4PSCellFlux3D
 {
- public:
-  G4PSCellFluxForCylinder3D(const G4String& name, G4int ni = 1, G4int nj = 1,
-                            G4int nk = 1, G4int depi = 2, G4int depj = 1,
-                            G4int depk = 0);
-  G4PSCellFluxForCylinder3D(const G4String& name, const G4String& unit, G4int ni = 1,
-                            G4int nj = 1, G4int nk = 1, G4int depi = 2,
-                            G4int depj = 1, G4int depk = 0);
-  ~G4PSCellFluxForCylinder3D() override = default;
+  public:
 
-  void SetCylinderSize(G4ThreeVector cylSize, G4double startAng, G4double angSpan);
-  void SetNumberOfSegments(G4int nSeg[3]);
+    G4PSCellFluxForCylinder3D(const G4String& name, G4int ni = 1, G4int nj = 1, G4int nk = 1,
+                              G4int depi = 2, G4int depj = 1, G4int depk = 0);
+    G4PSCellFluxForCylinder3D(const G4String& name, const G4String& unit, G4int ni = 1,
+                              G4int nj = 1, G4int nk = 1, G4int depi = 2, G4int depj = 1,
+                              G4int depk = 0);
+    ~G4PSCellFluxForCylinder3D() override = default;
 
- protected:
-  G4double ComputeVolume(G4Step*, G4int idx) override;
+    void SetCylinderSize(G4ThreeVector cylSize, G4double startAng, G4double angSpan);
+    void SetNumberOfSegments(G4int nSeg[3]);
 
- private:
-  // Order of segmentation (Z PHI R) in CylinderMesh
-  G4ThreeVector cylinderSize;
-  G4double fAngle[2];
-  G4int nSegment[3];
+  protected:
+
+    G4double ComputeVolume(G4Step*, G4int idx) override;
+
+  private:
+
+    // Order of segmentation (Z PHI R) in CylinderMesh
+    G4ThreeVector cylinderSize;
+    G4double fAngle[2];
+    G4int nSegment[3];
 };
 #endif

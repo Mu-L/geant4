@@ -53,12 +53,12 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4ComptonScattering_h
-#define G4ComptonScattering_h 1
+#ifndef G4COMPTONSCATTERING_HH
+#define G4COMPTONSCATTERING_HH
 
-#include "globals.hh"
-#include "G4VEmProcess.hh"
 #include "G4Gamma.hh"
+#include "G4VEmProcess.hh"
+#include "globals.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -70,32 +70,31 @@ class G4DynamicParticle;
 class G4ComptonScattering : public G4VEmProcess
 
 {
-public:  // with description
+  public:  // with description
 
-  explicit G4ComptonScattering(const G4String& processName ="compt",
-			       G4ProcessType type = fElectromagnetic);
+    explicit G4ComptonScattering(const G4String& processName = "compt",
+                                 G4ProcessType type = fElectromagnetic);
 
-  ~G4ComptonScattering() override;
+    ~G4ComptonScattering() override;
 
-  // true for Gamma only.  
-  G4bool IsApplicable(const G4ParticleDefinition&) final;
-  
-  // print description in html
-  void ProcessDescription(std::ostream&) const override;
+    // true for Gamma only.
+    G4bool IsApplicable(const G4ParticleDefinition&) final;
 
-  G4ComptonScattering & operator=(const  G4ComptonScattering &right) = delete;
-  G4ComptonScattering(const  G4ComptonScattering&) = delete;
+    // print description in html
+    void ProcessDescription(std::ostream&) const override;
 
-protected:
+    G4ComptonScattering& operator=(const G4ComptonScattering& right) = delete;
+    G4ComptonScattering(const G4ComptonScattering&) = delete;
 
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+  protected:
 
-private:
-     
-  G4bool isInitialised = false;
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool isInitialised = false;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-  
+
 #endif
- 

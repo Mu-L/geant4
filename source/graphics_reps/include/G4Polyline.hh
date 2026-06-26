@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  July 1995
 
 // Class Description:
@@ -34,26 +34,24 @@
 // etc.
 // Class Description - End:
 
-
 #ifndef G4POLYLINE_HH
 #define G4POLYLINE_HH
 
-#include "G4Visible.hh"
 #include "G4Point3DList.hh"
-
 #include "G4Transform3D.hh"
+#include "G4Visible.hh"
 
-class G4Polyline: public G4Visible, public G4Point3DList {
+class G4Polyline : public G4Visible, public G4Point3DList
+{
+    friend std::ostream& operator<<(std::ostream& os, const G4Polyline&);
 
-  friend std::ostream& operator << (std::ostream& os, const G4Polyline&);
+  public:  // With description
 
-public: // With description
+    using iterator = G4Point3DList::iterator;
 
-  using iterator = G4Point3DList::iterator;
-
-  G4Polyline ();
-  ~G4Polyline () override;
-  G4Polyline& transform (const G4Transform3D&);
+    G4Polyline();
+    ~G4Polyline() override;
+    G4Polyline& transform(const G4Transform3D&);
 };
 
 #endif

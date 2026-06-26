@@ -30,16 +30,17 @@
 //              in the CM for nucleon/hyperon - nucleon two-body scattering
 //
 
-#ifndef G4NuclNuclAngDst_h
-#define G4NuclNuclAngDst_h 1
+#ifndef G4NUCLNUCLANGDST_HH
+#define G4NUCLNUCLANGDST_HH
 
 #include "G4ParamExpTwoBodyAngDst.hh"
 
+class G4NuclNuclAngDst : public G4ParamExpTwoBodyAngDst<9>
+{
+  public:
 
-class G4NuclNuclAngDst : public G4ParamExpTwoBodyAngDst<9> {
-public:
-  G4NuclNuclAngDst(G4int verbose = 0);
-  virtual ~G4NuclNuclAngDst() {;}
+    G4NuclNuclAngDst(G4int verbose = 0);
+    virtual ~G4NuclNuclAngDst() { ; }
 };
 
 #endif

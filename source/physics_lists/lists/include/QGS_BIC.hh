@@ -26,7 +26,7 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   
+// ClassName:
 //
 // Author: 2007 Gunter Folger
 //     created from QGSP_BIC  by H.P.Wellisch
@@ -35,25 +35,21 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef QGS_BIC_h
-#define QGS_BIC_h 1
+#ifndef QGS_BIC_HH
+#define QGS_BIC_HH
 
-#include "globals.hh"
 #include "G4VModularPhysicsList.hh"
+#include "globals.hh"
 
-
-class QGS_BIC: public G4VModularPhysicsList
+class QGS_BIC : public G4VModularPhysicsList
 {
-public:
-  QGS_BIC(G4int ver = 1);
-  virtual ~QGS_BIC()=default;
-  
-  QGS_BIC(const QGS_BIC &) = delete;
-  QGS_BIC & operator=(const QGS_BIC &)=delete;
-  
+  public:
+
+    QGS_BIC(G4int ver = 1);
+    virtual ~QGS_BIC() = default;
+
+    QGS_BIC(const QGS_BIC&) = delete;
+    QGS_BIC& operator=(const QGS_BIC&) = delete;
 };
 
 #endif
-
-
-

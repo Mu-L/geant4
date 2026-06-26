@@ -26,13 +26,13 @@
 //
 //
 
-#ifndef G4SDChargedFilter_h
-#define G4SDChargedFilter_h 1
+#ifndef G4SDCHARGEDFILTER_HH
+#define G4SDCHARGEDFILTER_HH
 
 class G4Step;
 class G4ChargedDefinition;
-#include "globals.hh"
 #include "G4VSDFilter.hh"
+#include "globals.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // class description:
@@ -47,10 +47,11 @@ class G4ChargedDefinition;
 
 class G4SDChargedFilter : public G4VSDFilter
 {
- public:
-  G4SDChargedFilter(const G4String& name);
-  ~G4SDChargedFilter() override = default;
+  public:
 
-  G4bool Accept(const G4Step*) const override;
+    G4SDChargedFilter(const G4String& name);
+    ~G4SDChargedFilter() override = default;
+
+    G4bool Accept(const G4Step*) const override;
 };
 #endif

@@ -32,11 +32,11 @@
 // History:
 // --------
 
-#ifndef G4LivermoreComptonModel_h
-#define G4LivermoreComptonModel_h 1
+#ifndef G4LIVERMORECOMPTONMODEL_HH
+#define G4LIVERMORECOMPTONMODEL_HH
 
-#include "G4VEmModel.hh"
 #include "G4PhysicsFreeVector.hh"
+#include "G4VEmModel.hh"
 
 class G4ParticleChangeForGamma;
 class G4VAtomDeexcitation;
@@ -45,55 +45,47 @@ class G4DopplerProfile;
 
 class G4LivermoreComptonModel : public G4VEmModel
 {
-public:
+  public:
 
-  explicit G4LivermoreComptonModel(const G4ParticleDefinition* p = nullptr, 
-		          const G4String& nam = "LivermoreCompton");
-  ~G4LivermoreComptonModel() override;
+    explicit G4LivermoreComptonModel(const G4ParticleDefinition* p = nullptr,
+                                     const G4String& nam = "LivermoreCompton");
+    ~G4LivermoreComptonModel() override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void InitialiseLocal(const G4ParticleDefinition*,
-		       G4VEmModel* masterModel) override;
-  
-  void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel* masterModel) override;
 
-  G4double ComputeCrossSectionPerAtom( const G4ParticleDefinition*,
-				       G4double kinEnergy, 
-				       G4double Z, 
-				       G4double A=0, 
-				       G4double cut=0,
-				       G4double emax=DBL_MAX ) override;
+    void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
-  
-  G4LivermoreComptonModel & operator=(const  G4LivermoreComptonModel &right) = delete;
-  G4LivermoreComptonModel(const  G4LivermoreComptonModel&) = delete;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A = 0, G4double cut = 0,
+                                        G4double emax = DBL_MAX) override;
 
-private:
-  void ReadData(const G4int ZZ);
-  const G4String& FindDirectoryPath();
-  G4double ComputeScatteringFunction(G4double x, G4int Z);
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  G4ParticleChangeForGamma* fParticleChange;
-  G4VAtomDeexcitation*      fAtomDeexcitation;
+    G4LivermoreComptonModel& operator=(const G4LivermoreComptonModel& right) = delete;
+    G4LivermoreComptonModel(const G4LivermoreComptonModel&) = delete;
 
-  static G4ShellData*       shellData;
-  static G4DopplerProfile*  profileData;
+  private:
 
+    void ReadData(const G4int ZZ);
+    const G4String& FindDirectoryPath();
+    G4double ComputeScatteringFunction(G4double x, G4int Z);
 
-  static G4PhysicsFreeVector* data[101]; // 101 because Z range is 1-100
-  static const G4double ScatFuncFitParam[101][16];
-  static G4String gDataDirectory;
+    G4ParticleChangeForGamma* fParticleChange;
+    G4VAtomDeexcitation* fAtomDeexcitation;
 
-  G4int verboseLevel;
-  G4int maxZ = 100;
-  G4bool isInitialised = false;
+    static G4ShellData* shellData;
+    static G4DopplerProfile* profileData;
 
+    static G4PhysicsFreeVector* data[101];  // 101 because Z range is 1-100
+    static const G4double ScatFuncFitParam[101][16];
+    static G4String gDataDirectory;
+
+    G4int verboseLevel;
+    G4int maxZ = 100;
+    G4bool isInitialised = false;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

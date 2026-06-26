@@ -26,22 +26,22 @@
 //
 //
 // Geant4 muon neutrino nucleus scattering Process -- header file
-// 
+//
 // Created  from G4HadronElasticProcess 1.3.19 V. Grichine
-//  
+//
 // Modified:
 //
 // 2.3.19 V.Grichine PostStepDoIt implementation
 
 // Class Description
-// General process for neutrino nucleus 2->X scattering  
+// General process for neutrino nucleus 2->X scattering
 // Class Description - End
 
-#ifndef G4ElNeutrinoNucleusProcess_h
-#define G4ElNeutrinoNucleusProcess_h 1
- 
-#include "globals.hh"
+#ifndef G4ELNEUTRINONUCLEUSPROCESS_HH
+#define G4ELNEUTRINONUCLEUSPROCESS_HH
+
 #include "G4HadronicProcess.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 class G4CrossSectionDataStore;
@@ -50,46 +50,40 @@ class G4SafetyHelper;
 
 class G4ElNeutrinoNucleusProcess : public G4HadronicProcess
 {
-public:
+  public:
 
-  G4ElNeutrinoNucleusProcess(const G4String& anEnvelopeName,
-                             const G4String& procName = "elNuNucleus");
+    G4ElNeutrinoNucleusProcess(const G4String& anEnvelopeName,
+                               const G4String& procName = "elNuNucleus");
 
-  ~G4ElNeutrinoNucleusProcess() override = default;
+    ~G4ElNeutrinoNucleusProcess() override = default;
 
-  G4double PostStepGetPhysicalInteractionLength(
-                             const G4Track& track,
-                             G4double previousStepSize,
-                             G4ForceCondition* condition
-                            ) override;
+    G4double PostStepGetPhysicalInteractionLength(const G4Track& track, G4double previousStepSize,
+                                                  G4ForceCondition* condition) override;
 
-  G4double GetMeanFreePath(const G4Track &aTrack,
-                           G4double, G4ForceCondition*) override;
-  
-  G4VParticleChange* PostStepDoIt(const G4Track& aTrack, 
-                                  const G4Step& aStep) override;
+    G4double GetMeanFreePath(const G4Track& aTrack, G4double, G4ForceCondition*) override;
 
-  void ProcessDescription(std::ostream& outFile) const override;
+    G4VParticleChange* PostStepDoIt(const G4Track& aTrack, const G4Step& aStep) override;
 
-  // set internal parameters
-  void SetLowestEnergy(G4double);
-  void SetBiasingFactors(G4double bfCc, G4double bfNc);
-  void SetBiasingFactor(G4double bf);
+    void ProcessDescription(std::ostream& outFile) const override;
 
-  // hide assignment operator as private 
-  G4ElNeutrinoNucleusProcess& operator=
-  (const G4ElNeutrinoNucleusProcess &right) = delete;
-  G4ElNeutrinoNucleusProcess(const G4ElNeutrinoNucleusProcess&) = delete;
+    // set internal parameters
+    void SetLowestEnergy(G4double);
+    void SetBiasingFactors(G4double bfCc, G4double bfNc);
+    void SetBiasingFactor(G4double bf);
 
-private:
+    // hide assignment operator as private
+    G4ElNeutrinoNucleusProcess& operator=(const G4ElNeutrinoNucleusProcess& right) = delete;
+    G4ElNeutrinoNucleusProcess(const G4ElNeutrinoNucleusProcess&) = delete;
 
-  G4ElNeutrinoNucleusTotXsc* fTotXsc;
-  G4SafetyHelper* safetyHelper;
-  G4double lowestEnergy;
-  G4double fNuNuclCcBias{1.0};
-  G4double fNuNuclNcBias{1.0};
-  G4double fNuNuclTotXscBias{1.0};
-  G4String fEnvelopeName;
+  private:
+
+    G4ElNeutrinoNucleusTotXsc* fTotXsc;
+    G4SafetyHelper* safetyHelper;
+    G4double lowestEnergy;
+    G4double fNuNuclCcBias{1.0};
+    G4double fNuNuclNcBias{1.0};
+    G4double fNuNuclTotXscBias{1.0};
+    G4String fEnvelopeName;
 };
 
 #endif

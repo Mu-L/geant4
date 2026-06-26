@@ -27,8 +27,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPArbitaryTab_h
-#define G4ParticleHPArbitaryTab_h 1
+#ifndef G4PARTICLEHPARBITARYTAB_HH
+#define G4PARTICLEHPARBITARYTAB_HH
 
 #include "G4InterpolationManager.hh"
 #include "G4ParticleHPVector.hh"
@@ -46,6 +46,7 @@
 class G4ParticleHPArbitaryTab : public G4VParticleHPEDis
 {
   public:
+
     G4ParticleHPArbitaryTab()
     {
       theDistFunc = nullptr;
@@ -62,7 +63,8 @@ class G4ParticleHPArbitaryTab : public G4VParticleHPEDis
       theDistFunc = new G4ParticleHPVector[dsize];
       theManager.Init(theData);
       G4double currentEnergy;
-      for (i = 0; i < dsize; ++i) {
+      for (i = 0; i < dsize; ++i)
+      {
         theData >> currentEnergy;
         theDistFunc[i].SetLabel(currentEnergy * CLHEP::eV);
         theDistFunc[i].Init(theData, CLHEP::eV);
@@ -77,18 +79,23 @@ class G4ParticleHPArbitaryTab : public G4VParticleHPEDis
       //************************************************************************
       // EMendoza:
       // Here we calculate the thresholds for the 2D sampling:
-      for (i = 0; i < dsize; ++i) {
+      for (i = 0; i < dsize; ++i)
+      {
         G4int np = theDistFunc[i].GetVectorLength();
         theLowThreshold[i] = theDistFunc[i].GetEnergy(0);
         theHighThreshold[i] = theDistFunc[i].GetEnergy(np - 1);
-        for (G4int j = 0; j < np - 1; ++j) {
-          if (theDistFunc[i].GetXsec(j + 1) > 1.e-20) {
+        for (G4int j = 0; j < np - 1; ++j)
+        {
+          if (theDistFunc[i].GetXsec(j + 1) > 1.e-20)
+          {
             theLowThreshold[i] = theDistFunc[i].GetEnergy(j);
             break;
           }
         }
-        for (G4int j = 1; j < np; ++j) {
-          if (theDistFunc[i].GetXsec(j - 1) > 1.e-20) {
+        for (G4int j = 1; j < np; ++j)
+        {
+          if (theDistFunc[i].GetXsec(j - 1) > 1.e-20)
+          {
             theHighThreshold[i] = theDistFunc[i].GetEnergy(j);
           }
         }
@@ -104,6 +111,7 @@ class G4ParticleHPArbitaryTab : public G4VParticleHPEDis
     G4double Sample(G4double anEnergy) override;
 
   private:
+
     G4ParticleHPVector theFractionalProb;
     G4int nDistFunc;
     G4InterpolationManager theManager;  // knows the interpolation between stores

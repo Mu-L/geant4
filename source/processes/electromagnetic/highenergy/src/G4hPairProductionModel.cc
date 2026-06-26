@@ -49,8 +49,7 @@
 
 #include "G4hPairProductionModel.hh"
 
-G4hPairProductionModel::G4hPairProductionModel(const G4ParticleDefinition* p,
-					       const G4String& nam)
+G4hPairProductionModel::G4hPairProductionModel(const G4ParticleDefinition* p, const G4String& nam)
   : G4MuPairProductionModel(p, nam)
 {}
 

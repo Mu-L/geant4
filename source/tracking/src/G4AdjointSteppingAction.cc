@@ -49,13 +49,15 @@ G4AdjointSteppingAction::G4AdjointSteppingAction()
 void G4AdjointSteppingAction::UserSteppingAction(const G4Step* aStep)
 {
   G4Track* aTrack = aStep->GetTrack();
-  if (! is_adjoint_tracking_mode)  // forward tracking mode
+  if (!is_adjoint_tracking_mode)  // forward tracking mode
   {
-    if (! did_one_adj_part_reach_ext_source_during_event) {
+    if (!did_one_adj_part_reach_ext_source_during_event)
+    {
       aTrack->SetTrackStatus(fStopAndKill);
       return;
     }
-    if (theUserFwdSteppingAction != nullptr) {
+    if (theUserFwdSteppingAction != nullptr)
+    {
       theUserFwdSteppingAction->UserSteppingAction(aStep);
     }
     return;
@@ -65,21 +67,24 @@ void G4AdjointSteppingAction::UserSteppingAction(const G4Step* aStep)
   // --------------------------------------------
 
   did_adj_part_reach_ext_source = false;
-  if (theUserAdjointSteppingAction != nullptr) {
+  if (theUserAdjointSteppingAction != nullptr)
+  {
     theUserAdjointSteppingAction->UserSteppingAction(aStep);
   }
 
   G4double nb_nuc = 1.;
   G4ParticleDefinition* thePartDef = aTrack->GetDefinition();
 
-  if (thePartDef->GetParticleType() == "adjoint_nucleus") {
+  if (thePartDef->GetParticleType() == "adjoint_nucleus")
+  {
     nb_nuc = G4double(thePartDef->GetBaryonNumber());
   }
 
   // Kill conditions for adjoint particles reaching the maximum energy
   // -----------------------------------------------------------------
 
-  if (aTrack->GetKineticEnergy() >= ext_sourceEMax * nb_nuc) {
+  if (aTrack->GetKineticEnergy() >= ext_sourceEMax * nb_nuc)
+  {
     aTrack->SetTrackStatus(fStopAndKill);
     did_adj_part_reach_ext_source = false;
     return;
@@ -95,7 +100,8 @@ void G4AdjointSteppingAction::UserSteppingAction(const G4Step* aStep)
   if (theG4AdjointCrossSurfChecker->CrossingOneOfTheRegisteredSurface(
         aStep, surface_name, crossing_pos, cos_to_surface, GoingIn))
   {
-    if (surface_name == "ExternalSource") {
+    if (surface_name == "ExternalSource")
+    {
       // Registering still needed
       did_adj_part_reach_ext_source = true;
       did_one_adj_part_reach_ext_source_during_event = true;
@@ -109,7 +115,8 @@ void G4AdjointSteppingAction::UserSteppingAction(const G4Step* aStep)
       last_pos = crossing_pos;
       return;
     }
-    if (surface_name == "AdjointSource" && GoingIn) {
+    if (surface_name == "AdjointSource" && GoingIn)
+    {
       did_adj_part_reach_ext_source = false;
       aTrack->SetTrackStatus(fStopAndKill);
       return;
@@ -118,7 +125,8 @@ void G4AdjointSteppingAction::UserSteppingAction(const G4Step* aStep)
 
   // Check for reaching out of world
   //
-  if (aStep->GetPostStepPoint()->GetStepStatus() == fWorldBoundary) {
+  if (aStep->GetPostStepPoint()->GetStepStatus() == fWorldBoundary)
+  {
     did_adj_part_reach_ext_source = true;
     did_one_adj_part_reach_ext_source_during_event = true;
     last_momentum = aTrack->GetMomentum();

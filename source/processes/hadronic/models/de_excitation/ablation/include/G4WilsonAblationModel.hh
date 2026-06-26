@@ -33,8 +33,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4WilsonAblationModel_h
-#define G4WilsonAblationModel_h 1
+#ifndef G4WILSONABLATIONMODEL_HH
+#define G4WILSONABLATIONMODEL_HH
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //
 // MODULE:              G4WilsonAblationModel.hh
@@ -71,63 +71,72 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ////////////////////////////////////////////////////////////////////////////////
 //
-#include "G4VEvaporation.hh"
+#include "G4EvaporationFactory.hh"
 #include "G4Fragment.hh"
 #include "G4FragmentVector.hh"
 #include "G4ParticleDefinition.hh"
+#include "G4VEvaporation.hh"
 #include "globals.hh"
-#include "G4EvaporationFactory.hh"
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 class G4WilsonAblationModel : public G4VEvaporation
 {
   public:
+
     G4WilsonAblationModel();
     virtual ~G4WilsonAblationModel();
-    
+
     typedef std::vector<G4ParticleDefinition*> VectorOfFragmentTypes;
 
-    G4FragmentVector * BreakItUp (const G4Fragment &theNucleus);
-    void SetProduceSecondaries (G4bool);
-    G4bool GetProduceSecondaries ();
-    void SetVerboseLevel (G4int);
-    G4int GetVerboseLevel ();
+    G4FragmentVector* BreakItUp(const G4Fragment& theNucleus);
+    void SetProduceSecondaries(G4bool);
+    G4bool GetProduceSecondaries();
+    void SetVerboseLevel(G4int);
+    G4int GetVerboseLevel();
 
   private:
-    void SelectSecondariesByEvaporation (G4Fragment*);
-    void SelectSecondariesByDefault (G4ThreeVector);
-    void PrintWelcomeMessage ();
+
+    void SelectSecondariesByEvaporation(G4Fragment*);
+    void SelectSecondariesByDefault(G4ThreeVector);
+    void PrintWelcomeMessage();
 
   private:
-    G4bool                 produceSecondaries;
-    G4int                  verboseLevel;
-    G4double               B;
-    G4int                  nFragTypes;
-    G4ParticleDefinition  *fragType[6];
-    G4FragmentVector      *fragmentVector;
-    VectorOfFragmentTypes  evapType;
-    G4double               fSig[200];
-    G4int                  secID;  // Creator model ID for the secondaries created by this model
+
+    G4bool produceSecondaries;
+    G4int verboseLevel;
+    G4double B;
+    G4int nFragTypes;
+    G4ParticleDefinition* fragType[6];
+    G4FragmentVector* fragmentVector;
+    VectorOfFragmentTypes evapType;
+    G4double fSig[200];
+    G4int secID;  // Creator model ID for the secondaries created by this model
 };
 ////////////////////////////////////////////////////////////////////////////////
 //
-inline void G4WilsonAblationModel::SetProduceSecondaries 
-  (G4bool produceSecondaries1)
-  {produceSecondaries = produceSecondaries1;}
+inline void G4WilsonAblationModel::SetProduceSecondaries(G4bool produceSecondaries1)
+{
+  produceSecondaries = produceSecondaries1;
+}
 ////////////////////////////////////////////////////////////////////////////////
 //
-inline G4bool G4WilsonAblationModel::GetProduceSecondaries ()
-  {return produceSecondaries;}
+inline G4bool G4WilsonAblationModel::GetProduceSecondaries()
+{
+  return produceSecondaries;
+}
 ////////////////////////////////////////////////////////////////////////////////
 //
-inline void G4WilsonAblationModel::SetVerboseLevel (G4int verboseLevel1)
-  {verboseLevel = verboseLevel1;}
+inline void G4WilsonAblationModel::SetVerboseLevel(G4int verboseLevel1)
+{
+  verboseLevel = verboseLevel1;
+}
 ////////////////////////////////////////////////////////////////////////////////
 //
-inline G4int G4WilsonAblationModel::GetVerboseLevel ()
-  {return verboseLevel;}
+inline G4int G4WilsonAblationModel::GetVerboseLevel()
+{
+  return verboseLevel;
+}
 ////////////////////////////////////////////////////////////////////////////////
 //
 #endif

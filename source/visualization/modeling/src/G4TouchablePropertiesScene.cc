@@ -31,47 +31,44 @@
 
 #include "G4TouchablePropertiesScene.hh"
 
-//#include "G4PhysicalVolumeModel.hh"
+// #include "G4PhysicalVolumeModel.hh"
 
-G4TouchablePropertiesScene::G4TouchablePropertiesScene
-(G4PhysicalVolumeModel* pSearchPVModel,
- const G4ModelingParameters::PVNameCopyNoPath& requiredTouchable)
-:fpSearchPVModel(pSearchPVModel)
-,fRequiredTouchable(requiredTouchable)
+G4TouchablePropertiesScene::G4TouchablePropertiesScene(
+  G4PhysicalVolumeModel* pSearchPVModel,
+  const G4ModelingParameters::PVNameCopyNoPath& requiredTouchable)
+  : fpSearchPVModel(pSearchPVModel), fRequiredTouchable(requiredTouchable)
 {}
 
-G4TouchablePropertiesScene::~G4TouchablePropertiesScene () {}
+G4TouchablePropertiesScene::~G4TouchablePropertiesScene() {}
 
-void G4TouchablePropertiesScene::ProcessVolume (const G4VSolid& /*solid*/) {
+void G4TouchablePropertiesScene::ProcessVolume(const G4VSolid& /*solid*/)
+{
+  const std::vector<G4PhysicalVolumeModel::G4PhysicalVolumeNodeID>& fullPVPath =
+    fpSearchPVModel->GetFullPVPath();
 
-  const std::vector<G4PhysicalVolumeModel::G4PhysicalVolumeNodeID>&
-  fullPVPath = fpSearchPVModel->GetFullPVPath();
-
-  if (fRequiredTouchable.size() == fullPVPath.size()) {
+  if (fRequiredTouchable.size() == fullPVPath.size())
+  {
     G4ModelingParameters::PVNameCopyNoPathConstIterator iNameCopyNo;
-    std::vector<G4PhysicalVolumeModel::G4PhysicalVolumeNodeID>::const_iterator
-    iPVNodeId;
+    std::vector<G4PhysicalVolumeModel::G4PhysicalVolumeNodeID>::const_iterator iPVNodeId;
     for (iNameCopyNo = fRequiredTouchable.begin(), iPVNodeId = fullPVPath.begin();
-         iNameCopyNo != fRequiredTouchable.end();
-         ++iNameCopyNo, ++iPVNodeId) {
-      if (!(
-            iNameCopyNo->GetName() ==
-            iPVNodeId->GetPhysicalVolume()->GetName() &&
-            iNameCopyNo->GetCopyNo() ==
-            iPVNodeId->GetPhysicalVolume()->GetCopyNo()
-            )) {
+         iNameCopyNo != fRequiredTouchable.end(); ++iNameCopyNo, ++iPVNodeId)
+    {
+      if (!(iNameCopyNo->GetName() == iPVNodeId->GetPhysicalVolume()->GetName()
+            && iNameCopyNo->GetCopyNo() == iPVNodeId->GetPhysicalVolume()->GetCopyNo()))
+      {
         break;
       }
     }
-    if (iNameCopyNo == fRequiredTouchable.end()) {
-      fFoundTouchableProperties.fTouchablePath            = fRequiredTouchable;
-      fFoundTouchableProperties.fpTouchablePV             = fpSearchPVModel->GetCurrentPV();
-      fFoundTouchableProperties.fCopyNo                   = fpSearchPVModel->GetCurrentPVCopyNo();
+    if (iNameCopyNo == fRequiredTouchable.end())
+    {
+      fFoundTouchableProperties.fTouchablePath = fRequiredTouchable;
+      fFoundTouchableProperties.fpTouchablePV = fpSearchPVModel->GetCurrentPV();
+      fFoundTouchableProperties.fCopyNo = fpSearchPVModel->GetCurrentPVCopyNo();
       fFoundTouchableProperties.fTouchableGlobalTransform = fpSearchPVModel->GetCurrentTransform();
-      fFoundTouchableProperties.fTouchableBaseFullPVPath  = fpSearchPVModel->GetFullPVPath();
+      fFoundTouchableProperties.fTouchableBaseFullPVPath = fpSearchPVModel->GetFullPVPath();
       // Base path is one down from found PV
       fFoundTouchableProperties.fTouchableBaseFullPVPath.pop_back();
-      fFoundTouchableProperties.fTouchableFullPVPath      = fpSearchPVModel->GetFullPVPath();
+      fFoundTouchableProperties.fTouchableFullPVPath = fpSearchPVModel->GetFullPVPath();
       fpSearchPVModel->Abort();  // No need to look further.
     }
   }

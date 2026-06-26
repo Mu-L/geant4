@@ -32,56 +32,51 @@
 // File name:  G4DNABornAngle
 //
 // Author:     Vladimir Ivantchenko
-// 
+//
 // Creation date: 12 May 2014
 //
-// Modifications: 
+// Modifications:
 //
-// Class Description: 
+// Class Description:
 //
-// Delta-electron Angular Distribution Generation 
+// Delta-electron Angular Distribution Generation
 //
 // -------------------------------------------------------------------
 //
 
-#ifndef G4DNABornAngle_h
-#define G4DNABornAngle_h 1
+#ifndef G4DNABORNANGLE_HH
+#define G4DNABORNANGLE_HH
 
+#include "G4VEmAngularDistribution.hh"
 #include "G4ios.hh"
 #include "globals.hh"
-#include "G4VEmAngularDistribution.hh"
 
 class G4ParticleDefinition;
 
 class G4DNABornAngle : public G4VEmAngularDistribution
 {
+  public:
 
-public:
+    G4DNABornAngle(const G4String& name = "");
 
-  G4DNABornAngle(const G4String& name = "");
+    ~G4DNABornAngle() override;
 
-  ~G4DNABornAngle() override;
+    G4ThreeVector& SampleDirection(const G4DynamicParticle* dp, G4double kinEnergyFinal, G4int Z,
+                                   const G4Material* mat = nullptr) override;
 
-  G4ThreeVector& SampleDirection(const G4DynamicParticle* dp,
-				 G4double kinEnergyFinal,
-				 G4int Z,
-				 const G4Material* mat = nullptr) override;
+    G4ThreeVector& SampleDirectionForShell(const G4DynamicParticle* dp, G4double kinEnergyFinal,
+                                           G4int Z, G4int shellIdx,
+                                           const G4Material* mat = nullptr) override;
 
-  G4ThreeVector& SampleDirectionForShell(const G4DynamicParticle* dp,
-                                         G4double kinEnergyFinal,
-                                         G4int Z, G4int shellIdx,
-                                         const G4Material* mat = nullptr) override;
+    void PrintGeneratorInformation() const override;
 
-  void PrintGeneratorInformation() const override;
+    // hide assignment operator
+    G4DNABornAngle& operator=(const G4DNABornAngle& right) = delete;
+    G4DNABornAngle(const G4DNABornAngle&) = delete;
 
-  // hide assignment operator 
-  G4DNABornAngle & operator=(const  G4DNABornAngle &right) = delete;
-  G4DNABornAngle(const  G4DNABornAngle&) = delete;
+  private:
 
-private:
-
-  const G4ParticleDefinition* fElectron;
+    const G4ParticleDefinition* fElectron;
 };
 
 #endif
-

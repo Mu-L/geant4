@@ -28,55 +28,49 @@
 // by V. Ivanchenko (July 2016)
 //
 
-#ifndef G4FermiFragment_h
-#define G4FermiFragment_h 1
+#ifndef G4FERMIFRAGMENT_HH
+#define G4FERMIFRAGMENT_HH
 
 #include "globals.hh"
 
-class G4FermiFragment 
+class G4FermiFragment
 {
-public:
+  public:
 
-  explicit G4FermiFragment(G4int anA, G4int aZ, G4int sp,
-                           G4double exc, G4double time);
+    explicit G4FermiFragment(G4int anA, G4int aZ, G4int sp, G4double exc, G4double time);
 
-  ~G4FermiFragment() = default;
+    ~G4FermiFragment() = default;
 
-  G4int GetA() const { return A; }
-  
-  G4int GetZ() const { return Z; }
-  
-  G4int TwoSpinParity() const { return spin; }
+    G4int GetA() const { return A; }
 
-  G4double GetExcitationEnergy() const { return excitEnergy; }
+    G4int GetZ() const { return Z; }
 
-  G4double GetFragmentMass() const { return fragmentMass; }
+    G4int TwoSpinParity() const { return spin; }
 
-  G4double GetLifeTime() const { return lifeTime; }
+    G4double GetExcitationEnergy() const { return excitEnergy; }
 
-  G4double GetTotalEnergy(void) const {
-    return (fragmentMass + excitEnergy);
-  }
+    G4double GetFragmentMass() const { return fragmentMass; }
 
-  G4bool operator==(const G4FermiFragment &right) const {
-    return (A == right.A && Z == right.Z &&
-	    std::abs(excitEnergy - right.excitEnergy) < 0.0001);
-  }
-  
-  G4FermiFragment(const G4FermiFragment &right) = delete;
-  const G4FermiFragment & operator=(const G4FermiFragment &right) = delete;
+    G4double GetLifeTime() const { return lifeTime; }
 
-private:
+    G4double GetTotalEnergy(void) const { return (fragmentMass + excitEnergy); }
 
-  G4double excitEnergy;
-  G4double fragmentMass;
-  G4double lifeTime;
-  G4int A;
-  G4int Z;
-  G4int spin;
+    G4bool operator==(const G4FermiFragment& right) const
+    {
+      return (A == right.A && Z == right.Z && std::abs(excitEnergy - right.excitEnergy) < 0.0001);
+    }
+
+    G4FermiFragment(const G4FermiFragment& right) = delete;
+    const G4FermiFragment& operator=(const G4FermiFragment& right) = delete;
+
+  private:
+
+    G4double excitEnergy;
+    G4double fragmentMass;
+    G4double lifeTime;
+    G4int A;
+    G4int Z;
+    G4int spin;
 };
 
-
 #endif
-
-

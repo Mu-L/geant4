@@ -45,17 +45,19 @@
 
 class G4Win32 : public G4VInteractorManager
 {
- public:
-  static G4Win32* getInstance();
-  G4bool Inited();
-  void* GetEvent();
-  void FlushAndWaitExecution();
-  static G4bool DispatchWin32Event(void*);
-  virtual ~G4Win32();
+  public:
 
- private:
-  G4Win32();
-  static G4Win32* instance;  // Pointer to single instance.
+    static G4Win32* getInstance();
+    G4bool Inited();
+    void* GetEvent();
+    void FlushAndWaitExecution();
+    static G4bool DispatchWin32Event(void*);
+    virtual ~G4Win32();
+
+  private:
+
+    G4Win32();
+    static G4Win32* instance;  // Pointer to single instance.
 };
 
 #endif

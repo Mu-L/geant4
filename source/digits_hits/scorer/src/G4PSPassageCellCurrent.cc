@@ -27,11 +27,12 @@
 //
 // G4PSPassageCellCurrent
 #include "G4PSPassageCellCurrent.hh"
+
 #include "G4StepStatus.hh"
 #include "G4Track.hh"
-#include "G4VSolid.hh"
 #include "G4UnitsTable.hh"
 #include "G4VScoreHistFiller.hh"
+#include "G4VSolid.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // (Description)
@@ -55,27 +56,24 @@ G4PSPassageCellCurrent::G4PSPassageCellCurrent(const G4String& name, G4int depth
 
 G4bool G4PSPassageCellCurrent::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
-  if(IsPassed(aStep))
+  if (IsPassed(aStep))
   {
     fCurrent = 1.;
-    if(weighted)
-      fCurrent = aStep->GetPreStepPoint()->GetWeight();
+    if (weighted) fCurrent = aStep->GetPreStepPoint()->GetWeight();
     G4int index = GetIndex(aStep);
     EvtMap->add(index, fCurrent);
 
-    if(!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
+    if (!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
     {
       auto filler = G4VScoreHistFiller::Instance();
-      if(filler == nullptr)
+      if (filler == nullptr)
       {
-        G4Exception(
-          "G4PSVolumeFlux::ProcessHits", "SCORER0123", JustWarning,
-          "G4TScoreHistFiller is not instantiated!! Histogram is not filled.");
+        G4Exception("G4PSVolumeFlux::ProcessHits", "SCORER0123", JustWarning,
+                    "G4TScoreHistFiller is not instantiated!! Histogram is not filled.");
       }
       else
       {
-        filler->FillH1(hitIDMap[index],
-                       aStep->GetPreStepPoint()->GetKineticEnergy(), fCurrent);
+        filler->FillH1(hitIDMap[index], aStep->GetPreStepPoint()->GetKineticEnergy(), fCurrent);
       }
     }
   }
@@ -88,28 +86,28 @@ G4bool G4PSPassageCellCurrent::IsPassed(G4Step* aStep)
   G4bool Passed = false;
 
   G4bool IsEnter = aStep->GetPreStepPoint()->GetStepStatus() == fGeomBoundary;
-  G4bool IsExit  = aStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary;
+  G4bool IsExit = aStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary;
 
   G4int trkid = aStep->GetTrack()->GetTrackID();
 
-  if(IsEnter && IsExit)
+  if (IsEnter && IsExit)
   {  // Passed at one step
     Passed = true;
   }
-  else if(IsEnter)
-  {                         // Enter a new geometry
+  else if (IsEnter)
+  {  // Enter a new geometry
     fCurrentTrkID = trkid;  // Resetting the current track.
   }
-  else if(IsExit)
+  else if (IsExit)
   {  // Exit a current geometry
-    if(fCurrentTrkID == trkid)
+    if (fCurrentTrkID == trkid)
     {
       Passed = true;  // if the track is same as entered.
     }
   }
   else
   {  // Inside geometry
-    if(fCurrentTrkID == trkid)
+    if (fCurrentTrkID == trkid)
     {  // Adding the track length to current one ,
     }
   }
@@ -121,37 +119,37 @@ void G4PSPassageCellCurrent::Initialize(G4HCofThisEvent* HCE)
   fCurrentTrkID = -1;
 
   EvtMap = new G4THitsMap<G4double>(detector->GetName(), GetName());
-  if(HCID < 0)
-    HCID = GetCollectionID(0);
+  if (HCID < 0) HCID = GetCollectionID(0);
   HCE->AddHitsCollection(HCID, EvtMap);
 }
 
-void G4PSPassageCellCurrent::clear() { EvtMap->clear(); }
+void G4PSPassageCellCurrent::clear()
+{
+  EvtMap->clear();
+}
 
 void G4PSPassageCellCurrent::PrintAll()
 {
   G4cout << " MultiFunctionalDet  " << detector->GetName() << G4endl;
   G4cout << " PrimitiveScorer " << GetName() << G4endl;
   G4cout << " Number of entries " << EvtMap->entries() << G4endl;
-  for(const auto& [copy, current] : *(EvtMap->GetMap()))
+  for (const auto& [copy, current] : *(EvtMap->GetMap()))
   {
-    G4cout << "  copy no.: " << copy
-           << "  cell current : " << *(current) << " [tracks] " << G4endl;
+    G4cout << "  copy no.: " << copy << "  cell current : " << *(current) << " [tracks] " << G4endl;
   }
 }
 
 void G4PSPassageCellCurrent::SetUnit(const G4String& unit)
 {
-  if(unit.empty())
+  if (unit.empty())
   {
-    unitName  = unit;
+    unitName = unit;
     unitValue = 1.0;
   }
   else
   {
-    G4String msg = "Invalid unit [" + unit + "] (Current  unit is [" +
-                   GetUnit() + "] ) for " + GetName();
-    G4Exception("G4PSPassageCellCurrent::SetUnit", "DetPS0012", JustWarning,
-                msg);
+    G4String msg =
+      "Invalid unit [" + unit + "] (Current  unit is [" + GetUnit() + "] ) for " + GetName();
+    G4Exception("G4PSPassageCellCurrent::SetUnit", "DetPS0012", JustWarning, msg);
   }
 }

@@ -26,8 +26,8 @@
 //
 //
 
-#ifndef G4VBasicShell_H
-#define G4VBasicShell_H 1
+#ifndef G4VBASICSHELL_HH
+#define G4VBASICSHELL_HH
 
 class G4UIcommandTree;
 class G4UIcommand;
@@ -50,57 +50,60 @@ class G4UIcommand;
 
 class G4VBasicShell : public G4UIsession
 {
- public:
-  G4VBasicShell();
-  ~G4VBasicShell() override;
+  public:
 
-  G4UIsession* SessionStart() override = 0;
-  // null should be returned for interactive session
+    G4VBasicShell();
+    ~G4VBasicShell() override;
 
-  void PauseSessionStart(const G4String& Prompt) override = 0;
-  // Prompt string can be ignored
+    G4UIsession* SessionStart() override = 0;
+    // null should be returned for interactive session
 
- protected:
-  // convert "BeamOn 10" to "/run/BeamOn 10" if the
-  // current working directory is "/run/"
-  G4String ModifyToFullPathCommand(const char* aCommandLine) const;
+    void PauseSessionStart(const G4String& Prompt) override = 0;
+    // Prompt string can be ignored
 
-  // directory string starts with '/' and ends with '/'
-  G4String GetCurrentWorkingDirectory() const;
+  protected:
 
-  // change directory to newDir
-  // false will be returned if the target directory doesn't exist
-  G4bool ChangeDirectory(const char* newDir);
+    // convert "BeamOn 10" to "/run/BeamOn 10" if the
+    // current working directory is "/run/"
+    G4String ModifyToFullPathCommand(const char* aCommandLine) const;
 
-  // find G4UIcommandTree object
-  // null returned if the taregt does not exist
-  G4UIcommandTree* FindDirectory(const char* dirName) const;
+    // directory string starts with '/' and ends with '/'
+    G4String GetCurrentWorkingDirectory() const;
 
-  // find G4UIcommand object
-  // null returned if the target does not exist
-  G4UIcommand* FindCommand(const char* commandName) const;
+    // change directory to newDir
+    // false will be returned if the target directory doesn't exist
+    G4bool ChangeDirectory(const char* newDir);
 
-  // command completion
-  G4String Complete(const G4String&);
+    // find G4UIcommandTree object
+    // null returned if the taregt does not exist
+    G4UIcommandTree* FindDirectory(const char* dirName) const;
 
-  G4String FindMatchingPath(G4UIcommandTree*, const G4String&);
+    // find G4UIcommand object
+    // null returned if the target does not exist
+    G4UIcommand* FindCommand(const char* commandName) const;
 
-  /////////////////////////////////////////////
-  // Methods involving an interactive G4cout //
-  /////////////////////////////////////////////
-  virtual void ExecuteCommand(const G4String&);
-  virtual G4bool GetHelpChoice(G4int&) = 0;
-  virtual void ExitHelp() const = 0;
-  void ApplyShellCommand(const G4String&, G4bool&, G4bool&);
-  void ShowCurrent(const G4String&) const;
-  void ChangeDirectoryCommand(const G4String&);
-  void ListDirectory(const G4String&) const;
-  void TerminalHelp(const G4String&);
+    // command completion
+    G4String Complete(const G4String&);
 
- private:
-  G4String ModifyPath(const G4String& tempPath) const;
+    G4String FindMatchingPath(G4UIcommandTree*, const G4String&);
 
-  G4String currentDirectory;
+    /////////////////////////////////////////////
+    // Methods involving an interactive G4cout //
+    /////////////////////////////////////////////
+    virtual void ExecuteCommand(const G4String&);
+    virtual G4bool GetHelpChoice(G4int&) = 0;
+    virtual void ExitHelp() const = 0;
+    void ApplyShellCommand(const G4String&, G4bool&, G4bool&);
+    void ShowCurrent(const G4String&) const;
+    void ChangeDirectoryCommand(const G4String&);
+    void ListDirectory(const G4String&) const;
+    void TerminalHelp(const G4String&);
+
+  private:
+
+    G4String ModifyPath(const G4String& tempPath) const;
+
+    G4String currentDirectory;
 };
 
 #endif

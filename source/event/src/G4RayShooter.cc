@@ -29,21 +29,22 @@
 // --------------------------------------------------------------------
 
 #include "G4RayShooter.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4PrimaryParticle.hh"
+
 #include "G4Event.hh"
-#include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "G4PrimaryParticle.hh"
+#include "G4SystemOfUnits.hh"
 #include "globals.hh"
 
 void G4RayShooter::Shoot(G4Event* evt, G4ThreeVector vtx, G4ThreeVector direc)
 {
-  if(particle_definition == nullptr)
+  if (particle_definition == nullptr)
   {
     G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
     G4String particleName;
-    particle_definition = particleTable->FindParticle(particleName="geantino");
-    if(particle_definition == nullptr)
+    particle_definition = particleTable->FindParticle(particleName = "geantino");
+    if (particle_definition == nullptr)
     {
       G4String msg;
       msg = "G4RayTracer uses geantino to trace the ray, but your physics list does not\n";
@@ -54,19 +55,18 @@ void G4RayShooter::Shoot(G4Event* evt, G4ThreeVector vtx, G4ThreeVector direc)
 
   // Create a new vertex
   //
-  auto* vertex = new G4PrimaryVertex(vtx,particle_time);
+  auto* vertex = new G4PrimaryVertex(vtx, particle_time);
 
   // Create new primaries and set them to the vertex
   //
   G4double mass = particle_definition->GetPDGMass();
   auto* particle = new G4PrimaryParticle(particle_definition);
-  particle->SetKineticEnergy( particle_energy );
-  particle->SetMass( mass );
-  particle->SetMomentumDirection( direc );
-  particle->SetPolarization(particle_polarization.x(),
-                            particle_polarization.y(),
+  particle->SetKineticEnergy(particle_energy);
+  particle->SetMass(mass);
+  particle->SetMomentumDirection(direc);
+  particle->SetPolarization(particle_polarization.x(), particle_polarization.y(),
                             particle_polarization.z());
-  vertex->SetPrimary( particle );
+  vertex->SetPrimary(particle);
 
-  evt->AddPrimaryVertex( vertex );
+  evt->AddPrimaryVertex(vertex);
 }

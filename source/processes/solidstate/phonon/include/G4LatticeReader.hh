@@ -31,47 +31,52 @@
 //
 // 20131115  Move ctor, dtor implementations to .cc file.
 
-#ifndef G4LatticeReader_h
-#define G4LatticeReader_h 1
+#ifndef G4LATTICEREADER_HH
+#define G4LATTICEREADER_HH
 
 #include "globals.hh"
+
 #include <iosfwd>
 
 class G4LatticeLogical;
 
-class G4LatticeReader {
-public:
-  G4LatticeReader(G4int vb=0);
-  ~G4LatticeReader();
+class G4LatticeReader
+{
+  public:
 
-  void SetVerboseLevel(G4int vb) { verboseLevel = vb; }
+    G4LatticeReader(G4int vb = 0);
+    ~G4LatticeReader();
 
-  G4LatticeLogical* MakeLattice(const G4String& filepath);
+    void SetVerboseLevel(G4int vb) { verboseLevel = vb; }
 
-protected:
-  G4bool OpenFile(const G4String& filepath);
-  G4bool ProcessToken();
-  G4bool ProcessValue(const G4String& name);	// Numerical parameters
-  G4bool ProcessConstants();			// Four dynamical constants
-  G4bool ProcessMap();				// Velocity magnitudes file
-  G4bool ProcessNMap();				// Direction vectors file
-  G4bool ReadMapInfo();				// Get map file parameters
-  G4bool SkipComments();				// Everything after '#'
-  void CloseFile();
+    G4LatticeLogical* MakeLattice(const G4String& filepath);
 
-private:
-  G4int verboseLevel;		// For reporting progress, also use G4VERBOSE
+  protected:
 
-  std::ifstream* psLatfile;	// Configuration file being read
-  G4LatticeLogical* pLattice;	// Lattice under construction (not owned)
+    G4bool OpenFile(const G4String& filepath);
+    G4bool ProcessToken();
+    G4bool ProcessValue(const G4String& name);  // Numerical parameters
+    G4bool ProcessConstants();  // Four dynamical constants
+    G4bool ProcessMap();  // Velocity magnitudes file
+    G4bool ProcessNMap();  // Direction vectors file
+    G4bool ReadMapInfo();  // Get map file parameters
+    G4bool SkipComments();  // Everything after '#'
+    void CloseFile();
 
-  G4String fMapPath;		// Path to config file to find velocity maps
-  G4String fToken;		// Reusable buffers for reading file
-  G4double fValue;		// ... floating point data values
-  G4String fMap, fsPol;		// ... map filename and polarization code
-  G4int    fPol, fNX, fNY;	// ... map binning in each direction
+  private:
 
-  static const G4String fDataDir;	// Directory path ($G4LATTICEDATA)
+    G4int verboseLevel;  // For reporting progress, also use G4VERBOSE
+
+    std::ifstream* psLatfile;  // Configuration file being read
+    G4LatticeLogical* pLattice;  // Lattice under construction (not owned)
+
+    G4String fMapPath;  // Path to config file to find velocity maps
+    G4String fToken;  // Reusable buffers for reading file
+    G4double fValue;  // ... floating point data values
+    G4String fMap, fsPol;  // ... map filename and polarization code
+    G4int fPol, fNX, fNY;  // ... map binning in each direction
+
+    static const G4String fDataDir;  // Directory path ($G4LATTICEDATA)
 };
 
-#endif	/* G4LatticeReader_h */
+#endif /* G4LatticeReader_h */

@@ -27,8 +27,8 @@
 // by V. Ivanchenko (July 2019)
 //
 
-#ifndef G4GEMChannelVI_h
-#define G4GEMChannelVI_h 1
+#ifndef G4GEMCHANNELVI_HH
+#define G4GEMCHANNELVI_HH
 
 #include "G4VEvaporationChannel.hh"
 #include "G4VSIntegration.hh"
@@ -43,82 +43,82 @@ class G4Pow;
 
 class G4GEMChannelVI : public G4VEvaporationChannel, public G4VSIntegration
 {
-public:
+  public:
 
-  explicit G4GEMChannelVI(G4int theA, G4int theZ);
+    explicit G4GEMChannelVI(G4int theA, G4int theZ);
 
-  ~G4GEMChannelVI() override;
+    ~G4GEMChannelVI() override;
 
-  void Initialise() override;
+    void Initialise() override;
 
-  G4double ProbabilityDensityFunction(G4double ekin) override;
+    G4double ProbabilityDensityFunction(G4double ekin) override;
 
-  G4double GetEmissionProbability(G4Fragment* theNucleus) override;
+    G4double GetEmissionProbability(G4Fragment* theNucleus) override;
 
-  G4Fragment* EmittedFragment(G4Fragment* theNucleus) override;
+    G4Fragment* EmittedFragment(G4Fragment* theNucleus) override;
 
-  const G4String& ModelName() const override;
+    const G4String& ModelName() const override;
 
-  G4double GetCurrentXS() { return recentXS; };
+    G4double GetCurrentXS() { return recentXS; };
 
-  void Dump() const override;
+    void Dump() const override;
 
-  G4GEMChannelVI(const G4GEMChannelVI & right) = delete;
-  const G4GEMChannelVI & operator=(const G4GEMChannelVI & right) = delete;
-  G4bool operator==(const G4GEMChannelVI & right) const = delete;
-  G4bool operator!=(const G4GEMChannelVI & right) const = delete;
+    G4GEMChannelVI(const G4GEMChannelVI& right) = delete;
+    const G4GEMChannelVI& operator=(const G4GEMChannelVI& right) = delete;
+    G4bool operator==(const G4GEMChannelVI& right) const = delete;
+    G4bool operator!=(const G4GEMChannelVI& right) const = delete;
 
-private: 
+  private:
 
-  G4double CrossSection(G4double ekin);
+    G4double CrossSection(G4double ekin);
 
-  G4double CorrectExcitation(G4double energy, const G4LevelManager*);
+    G4double CorrectExcitation(G4double energy, const G4LevelManager*);
 
-  G4NuclearLevelData* nData;
-  const G4VCoulombBarrier* cBarrier;
-  const G4PairingCorrection* pairingCorrection;
-  const G4LevelManager* lManagerEvap{nullptr};
-  const G4LevelManager* lManagerRes{nullptr};
-  G4InterfaceToXS* fXSection{nullptr};
-  G4Pow* g4pow;
-  const G4ParticleDefinition* fProton;
-  const G4ParticleDefinition* fNeutron;
-  
-  G4double fEvapMass;     // ground state mass of the evaporated fragment 
-  G4double fEvapMass2;    // ground state mass of the evaporated fragment square
-  G4double fMass{0.0};    // mass of the initial fragment
-  G4double fResMass{0.0}; // ground state mass of the residual fragment
-  G4double fResA13{0.0};  //
-  G4double fFragExc{0.0}; // excitation energy of the evaporated fragment
-  G4double fEvapExc{0.0}; // excitation energy of the evaporated fragment
-  G4double fResExc{0.0};  // excitation energy of the residual fragment
-  G4double bCoulomb{0.0};
-  G4double fDeltaEvap{0.0};
-  G4double fE0{0.0};
-  G4double fE1{0.0};
-  G4double a0{0.0};
-  G4double a1{0.0};
-  G4double delta0{0.0};
-  G4double delta1{0.0};
-  G4double recentXS{0.0};
-  G4double fEnergyLimitXS{0.0};
-  G4double xsfactor{1.0};
-  G4double fTolerance;
-  G4double fCoeff;
+    G4NuclearLevelData* nData;
+    const G4VCoulombBarrier* cBarrier;
+    const G4PairingCorrection* pairingCorrection;
+    const G4LevelManager* lManagerEvap{nullptr};
+    const G4LevelManager* lManagerRes{nullptr};
+    G4InterfaceToXS* fXSection{nullptr};
+    G4Pow* g4pow;
+    const G4ParticleDefinition* fProton;
+    const G4ParticleDefinition* fNeutron;
 
-  G4int evapA;
-  G4int evapZ;
-  G4int resA{0};
-  G4int resZ{0};
-  G4int fragA{0};
-  G4int fragZ{0};
-  G4int fVerbose{1};
-  G4int nProbEvap{1};
-  G4int nProbRes{1};
-  G4int indexC{7};
-  G4int secID;
+    G4double fEvapMass;  // ground state mass of the evaporated fragment
+    G4double fEvapMass2;  // ground state mass of the evaporated fragment square
+    G4double fMass{0.0};  // mass of the initial fragment
+    G4double fResMass{0.0};  // ground state mass of the residual fragment
+    G4double fResA13{0.0};  //
+    G4double fFragExc{0.0};  // excitation energy of the evaporated fragment
+    G4double fEvapExc{0.0};  // excitation energy of the evaporated fragment
+    G4double fResExc{0.0};  // excitation energy of the residual fragment
+    G4double bCoulomb{0.0};
+    G4double fDeltaEvap{0.0};
+    G4double fE0{0.0};
+    G4double fE1{0.0};
+    G4double a0{0.0};
+    G4double a1{0.0};
+    G4double delta0{0.0};
+    G4double delta1{0.0};
+    G4double recentXS{0.0};
+    G4double fEnergyLimitXS{0.0};
+    G4double xsfactor{1.0};
+    G4double fTolerance;
+    G4double fCoeff;
 
-  G4String fModelName;
+    G4int evapA;
+    G4int evapZ;
+    G4int resA{0};
+    G4int resZ{0};
+    G4int fragA{0};
+    G4int fragZ{0};
+    G4int fVerbose{1};
+    G4int nProbEvap{1};
+    G4int nProbRes{1};
+    G4int indexC{7};
+    G4int secID;
+
+    G4String fModelName;
 };
 
 #endif

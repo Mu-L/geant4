@@ -36,7 +36,8 @@
 // --------------------------------------------------------------------
 G4UserRunAction::G4UserRunAction()
 {
-  if (!(G4ParticleTable::GetParticleTable()->GetReadiness())) {
+  if (!(G4ParticleTable::GetParticleTable()->GetReadiness()))
+  {
     G4String msg;
     msg =
       " You are instantiating G4UserRunAction BEFORE your "

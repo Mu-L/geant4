@@ -31,8 +31,8 @@
 
 // Author: H.Kurashige, 29 April 2011
 // --------------------------------------------------------------------
-#ifndef G4PhysicsListOrderingParameter_hh
-#define G4PhysicsListOrderingParameter_hh 1
+#ifndef G4PHYSICSLISTORDERINGPARAMETER_HH
+#define G4PHYSICSLISTORDERINGPARAMETER_HH
 
 #include "G4ios.hh"
 #include "globals.hh"
@@ -43,6 +43,7 @@ class G4PhysicsListOrderingParameter
     friend class G4PhysicsListHelper;
 
   public:
+
     G4PhysicsListOrderingParameter() = default;
     virtual ~G4PhysicsListOrderingParameter() = default;
 
@@ -56,6 +57,7 @@ class G4PhysicsListOrderingParameter
     inline G4bool GetDuplicable() const { return isDuplicable; }
 
   private:
+
     G4String processTypeName = "NONE";
     G4int processType = -1;
     G4int processSubType = -1;

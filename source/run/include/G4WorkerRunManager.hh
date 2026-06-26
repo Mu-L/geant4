@@ -48,6 +48,7 @@ class G4WorkerRunManagerKernel;
 class G4WorkerRunManager : public G4RunManager
 {
   public:
+
     static G4WorkerRunManager* GetWorkerRunManager();
     static G4WorkerRunManagerKernel* GetWorkerRunManagerKernel();
 
@@ -86,6 +87,7 @@ class G4WorkerRunManager : public G4RunManager
     void RestoreRndmEachEvent(G4bool flag) override { readStatusFromFile = flag; }
 
   protected:
+
     void ConstructScoringWorlds() override;
     void StoreRNGStatus(const G4String& filenamePrefix) override;
     void rndmSaveThisRun() override;
@@ -96,6 +98,7 @@ class G4WorkerRunManager : public G4RunManager
     virtual void MergePartialResults(G4bool mergeEvents = true);
 
   protected:
+
     G4WorkerThread* workerContext = nullptr;
 #ifdef G4MULTITHREADED
     G4bool visIsSetUp = false;
@@ -110,6 +113,7 @@ class G4WorkerRunManager : public G4RunManager
     G4bool readStatusFromFile = false;
 
   protected:
+
     virtual void SetupDefaultRNGEngine();
 };
 

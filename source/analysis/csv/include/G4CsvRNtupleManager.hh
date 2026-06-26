@@ -29,8 +29,8 @@
 //
 // Author: Ivana Hrivnacova, 25/07/2014 (ivana@ipno.in2p3.fr)
 
-#ifndef G4CsvRNtupleManager_h
-#define G4CsvRNtupleManager_h 1
+#ifndef G4CSVRNTUPLEMANAGER_HH
+#define G4CSVRNTUPLEMANAGER_HH
 
 #include "G4TRNtupleManager.hh"
 #include "globals.hh"
@@ -44,34 +44,34 @@ class G4CsvRFileManager;
 
 class G4CsvRNtupleManager : public G4TRNtupleManager<tools::rcsv::ntuple>
 {
-  friend class G4CsvAnalysisReader;
+    friend class G4CsvAnalysisReader;
 
   public:
+
     explicit G4CsvRNtupleManager(const G4AnalysisManagerState& state);
     G4CsvRNtupleManager() = delete;
     ~G4CsvRNtupleManager() override = default;
 
   private:
+
     // Set methods
     void SetFileManager(std::shared_ptr<G4CsvRFileManager> fileManager);
 
     // Methods from the base class
     G4int ReadNtupleImpl(const G4String& ntupleName, const G4String& fileName,
-      const G4String& dirName, G4bool isUserFileName) final;
+                         const G4String& dirName, G4bool isUserFileName) final;
     G4bool GetTNtupleRow(G4TRNtupleDescription<tools::rcsv::ntuple>* ntupleDescription) final;
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4CsvRNtupleManager" };
+    static constexpr std::string_view fkClass{"G4CsvRNtupleManager"};
 
     // Data members
-    std::shared_ptr<G4CsvRFileManager>  fFileManager { nullptr };
+    std::shared_ptr<G4CsvRFileManager> fFileManager{nullptr};
 };
 
-inline void
-G4CsvRNtupleManager::SetFileManager(std::shared_ptr<G4CsvRFileManager> fileManager)
+inline void G4CsvRNtupleManager::SetFileManager(std::shared_ptr<G4CsvRFileManager> fileManager)
 {
   fFileManager = std::move(fileManager);
 }
 
 #endif
-

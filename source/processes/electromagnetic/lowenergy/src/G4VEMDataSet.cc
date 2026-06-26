@@ -35,6 +35,5 @@
 
 #include "G4VEMDataSet.hh"
 
-G4VEMDataSet::G4VEMDataSet() { }
-G4VEMDataSet::~G4VEMDataSet() { }
-  
+G4VEMDataSet::G4VEMDataSet() {}
+G4VEMDataSet::~G4VEMDataSet() {}

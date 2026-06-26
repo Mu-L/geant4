@@ -44,21 +44,24 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include "G4mplIonisation.hh"
+
+#include "G4Electron.hh"
+#include "G4EmParameters.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4Electron.hh"
 #include "G4mplIonisationModel.hh"
 #include "G4mplIonisationWithDeltaModel.hh"
-#include "G4EmParameters.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4mplIonisation::G4mplIonisation(G4double mCharge, const G4String& name)
-  : G4VEnergyLossProcess(name),
-    magneticCharge(mCharge)
+  : G4VEnergyLossProcess(name), magneticCharge(mCharge)
 {
   // By default classical magnetic charge is used
-  if(magneticCharge == 0.0) { magneticCharge = CLHEP::eplus*0.5/CLHEP::fine_structure_const; }
+  if (magneticCharge == 0.0)
+  {
+    magneticCharge = CLHEP::eplus * 0.5 / CLHEP::fine_structure_const;
+  }
 
   SetVerboseLevel(0);
   SetProcessSubType(fIonisation);
@@ -67,8 +70,7 @@ G4mplIonisation::G4mplIonisation(G4double mCharge, const G4String& name)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4mplIonisation::~G4mplIonisation()
-{}
+G4mplIonisation::~G4mplIonisation() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -79,15 +81,14 @@ G4bool G4mplIonisation::IsApplicable(const G4ParticleDefinition&)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double G4mplIonisation::MinPrimaryEnergy(const G4ParticleDefinition* mpl,
-                                           const G4Material*,
+G4double G4mplIonisation::MinPrimaryEnergy(const G4ParticleDefinition* mpl, const G4Material*,
                                            G4double cut)
 {
-  G4double x = 0.5*cut/electron_mass_c2;
-  G4double mass  = mpl->GetPDGMass();
-  G4double ratio = electron_mass_c2/mass;
-  G4double gam   = x*ratio + std::sqrt((1. + x)*(1. + x*ratio*ratio));
-  return mass*(gam - 1.0);
+  G4double x = 0.5 * cut / electron_mass_c2;
+  G4double mass = mpl->GetPDGMass();
+  G4double ratio = electron_mass_c2 / mass;
+  G4double gam = x * ratio + std::sqrt((1. + x) * (1. + x * ratio * ratio));
+  return mass * (gam - 1.0);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -95,18 +96,20 @@ G4double G4mplIonisation::MinPrimaryEnergy(const G4ParticleDefinition* mpl,
 void G4mplIonisation::InitialiseEnergyLossProcess(const G4ParticleDefinition* p,
                                                   const G4ParticleDefinition*)
 {
-  if(isInitialised) { return; }
+  if (isInitialised)
+  {
+    return;
+  }
 
   // monopole model is responsible both for energy loss and fluctuations
-  G4mplIonisationWithDeltaModel* ion =
-    new G4mplIonisationWithDeltaModel(magneticCharge,"PAI");
+  G4mplIonisationWithDeltaModel* ion = new G4mplIonisationWithDeltaModel(magneticCharge, "PAI");
   ion->SetParticle(p);
 
   // define size of dedx and range tables
   G4EmParameters* param = G4EmParameters::Instance();
-  G4double emin  = std::min(param->MinKinEnergy(),ion->LowEnergyLimit());
-  G4double emax  = std::max(param->MaxKinEnergy(),ion->HighEnergyLimit());
-  G4int bin = G4lrint(param->NumberOfBinsPerDecade()*std::log10(emax/emin));
+  G4double emin = std::min(param->MinKinEnergy(), ion->LowEnergyLimit());
+  G4double emax = std::max(param->MaxKinEnergy(), ion->HighEnergyLimit());
+  G4int bin = G4lrint(param->NumberOfBinsPerDecade() * std::log10(emax / emin));
   ion->SetLowEnergyLimit(emin);
   ion->SetHighEnergyLimit(emax);
   SetMinKinEnergy(emin);
@@ -114,7 +117,7 @@ void G4mplIonisation::InitialiseEnergyLossProcess(const G4ParticleDefinition* p,
   SetDEDXBinning(bin);
 
   SetEmModel(ion);
-  AddEmModel(1,ion,ion);
+  AddEmModel(1, ion, ion);
 
   isInitialised = true;
 }
@@ -128,4 +131,3 @@ void G4mplIonisation::ProcessDescription(std::ostream& out) const
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-

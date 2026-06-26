@@ -35,34 +35,32 @@
 
 // Author: Michael Dressel (Michael.Dressel@cern.ch)
 // ----------------------------------------------------------------------
-#ifndef G4VProcessPlacer_hh
-#define G4VProcessPlacer_hh G4VProcessPlacer_hh
+#ifndef G4VPROCESSPLACER_HH
+#define G4VPROCESSPLACER_HH
 
 #include "G4Types.hh"
 
 class G4VProcess;
- 
+
 class G4VProcessPlacer
 {
+  public:  // with description
 
-public:  // with description
+    G4VProcessPlacer();
+    virtual ~G4VProcessPlacer();
 
-  G4VProcessPlacer();
-  virtual ~G4VProcessPlacer();
-
-  virtual void AddProcessAsLastDoIt(G4VProcess *process) = 0;
-    // place a post step do it process such that the 
+    virtual void AddProcessAsLastDoIt(G4VProcess* process) = 0;
+    // place a post step do it process such that the
     // PostStepDoIt function is called last
-    // THE ORDER CHANGES BY SUBSEQUENT CALLS     
+    // THE ORDER CHANGES BY SUBSEQUENT CALLS
 
-  virtual void AddProcessAsSecondDoIt(G4VProcess *process) = 0;
-    // place a post step do it process such that the 
+    virtual void AddProcessAsSecondDoIt(G4VProcess* process) = 0;
+    // place a post step do it process such that the
     // PostStepDoIt function is called second
-    // THE ORDER CHANGES BY SUBSEQUENT CALLS         
+    // THE ORDER CHANGES BY SUBSEQUENT CALLS
 
-  virtual void RemoveProcess(G4VProcess *process) = 0;
-    // removes a given process 
-
+    virtual void RemoveProcess(G4VProcess* process) = 0;
+    // removes a given process
 };
 
 #endif

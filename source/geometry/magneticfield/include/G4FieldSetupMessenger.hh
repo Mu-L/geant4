@@ -50,6 +50,7 @@ class G4UIcmdWithAnInteger;
 /**
  * @brief G4FieldSetupMessenger is a messenger class that defines
  * commands for G4FieldSetup.
+ * @ingroup geometry_magneticfield
  */
 
 class G4FieldSetupMessenger : public G4UImessenger
@@ -82,7 +83,7 @@ class G4FieldSetupMessenger : public G4UImessenger
     // Commands data members
 
     /** Command: update. */
-    G4UIcmdWithoutParameter* fUpdateCmd = nullptr; 
+    G4UIcmdWithoutParameter* fUpdateCmd = nullptr;
 };
 
 #endif

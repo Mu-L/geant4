@@ -34,13 +34,13 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4VHadronPhysics_h
-#define G4VHadronPhysics_h 1
+#ifndef G4VHADRONPHYSICS_HH
+#define G4VHADRONPHYSICS_HH
 
-#include "G4VPhysicsConstructor.hh"
 #include "G4CrossSectionInelastic.hh"
 #include "G4HadronicInteraction.hh"
 #include "G4HadronicProcess.hh"
+#include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
 
 class G4ParticleDefinition;
@@ -48,28 +48,21 @@ class G4VHadronModelBuilder;
 
 class G4VHadronPhysics : public G4VPhysicsConstructor
 {
-public: 
+  public:
 
-  G4VHadronPhysics(const G4String& name ="hInelastic", 
-		   G4int verbose = 0);
+    G4VHadronPhysics(const G4String& name = "hInelastic", G4int verbose = 0);
 
-  virtual ~G4VHadronPhysics();
+    virtual ~G4VHadronPhysics();
 
-  void ConstructParticle() override;
+    void ConstructParticle() override;
 
-  G4HadronicInteraction* BuildModel(G4VHadronModelBuilder*,
-				    G4double emin, 
-				    G4double emax);
+    G4HadronicInteraction* BuildModel(G4VHadronModelBuilder*, G4double emin, G4double emax);
 
-  G4HadronicInteraction* NewModel(G4HadronicInteraction*,
-				  G4double emin, 
-				  G4double emax);
+    G4HadronicInteraction* NewModel(G4HadronicInteraction*, G4double emin, G4double emax);
 
-  // copy constructor and hide assignment operator
-  G4VHadronPhysics(G4VHadronPhysics &) = delete;
-  G4VHadronPhysics & operator=(const G4VHadronPhysics &right) = delete;
-
+    // copy constructor and hide assignment operator
+    G4VHadronPhysics(G4VHadronPhysics&) = delete;
+    G4VHadronPhysics& operator=(const G4VHadronPhysics& right) = delete;
 };
 
 #endif
-

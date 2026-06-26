@@ -23,28 +23,29 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// Implementation of the base class for solids created by Boolean 
+// Implementation of the base class for solids created by Boolean
 // operations between other solids
 //
 // 1998.09.10 V.Grichine - created
 // --------------------------------------------------------------------
 
 #include "G4BooleanSolid.hh"
-#include "G4VSolid.hh"
-#include "G4DisplacedSolid.hh"
-#include "G4ReflectedSolid.hh"
-#include "G4ScaledSolid.hh"
-#include "G4Polyhedron.hh"
-#include "HepPolyhedronProcessor.h"
-#include "G4QuickRand.hh"
 
 #include "G4AutoLock.hh"
+#include "G4DisplacedSolid.hh"
+#include "G4Polyhedron.hh"
+#include "G4QuickRand.hh"
+#include "G4ReflectedSolid.hh"
+#include "G4ScaledSolid.hh"
+#include "G4VSolid.hh"
+
+#include "HepPolyhedronProcessor.h"
 
 namespace
 {
-  G4RecursiveMutex polyhedronMutex = G4MUTEX_INITIALIZER;
-  G4Mutex boolMutex = G4MUTEX_INITIALIZER;
-}
+G4RecursiveMutex polyhedronMutex = G4MUTEX_INITIALIZER;
+G4Mutex boolMutex = G4MUTEX_INITIALIZER;
+}  // namespace
 
 G4VBooleanProcessor* G4BooleanSolid::fExternalBoolProcessor = nullptr;
 
@@ -52,40 +53,32 @@ G4VBooleanProcessor* G4BooleanSolid::fExternalBoolProcessor = nullptr;
 //
 // Constructor
 
-G4BooleanSolid::G4BooleanSolid( const G4String& pName,
-                                G4VSolid* pSolidA ,
-                                G4VSolid* pSolidB )
+G4BooleanSolid::G4BooleanSolid(const G4String& pName, G4VSolid* pSolidA, G4VSolid* pSolidB)
   : G4VSolid(pName), fPtrSolidA(pSolidA), fPtrSolidB(pSolidB)
+{}
+
+//////////////////////////////////////////////////////////////////
+//
+// Constructor
+
+G4BooleanSolid::G4BooleanSolid(const G4String& pName, G4VSolid* pSolidA, G4VSolid* pSolidB,
+                               G4RotationMatrix* rotMatrix, const G4ThreeVector& transVector)
+  : G4VSolid(pName), createdDisplacedSolid(true)
 {
+  fPtrSolidA = pSolidA;
+  fPtrSolidB = new G4DisplacedSolid("placedB", pSolidB, rotMatrix, transVector);
 }
 
 //////////////////////////////////////////////////////////////////
 //
 // Constructor
 
-G4BooleanSolid::G4BooleanSolid( const G4String& pName,
-                                      G4VSolid* pSolidA ,
-                                      G4VSolid* pSolidB ,
-                                      G4RotationMatrix* rotMatrix,
-                                const G4ThreeVector& transVector )
+G4BooleanSolid::G4BooleanSolid(const G4String& pName, G4VSolid* pSolidA, G4VSolid* pSolidB,
+                               const G4Transform3D& transform)
   : G4VSolid(pName), createdDisplacedSolid(true)
 {
-  fPtrSolidA = pSolidA ;
-  fPtrSolidB = new G4DisplacedSolid("placedB",pSolidB,rotMatrix,transVector) ;
-}
-
-//////////////////////////////////////////////////////////////////
-//
-// Constructor
-
-G4BooleanSolid::G4BooleanSolid( const G4String& pName,
-                                      G4VSolid* pSolidA ,
-                                      G4VSolid* pSolidB ,
-                                const G4Transform3D& transform )
-  : G4VSolid(pName), createdDisplacedSolid(true)
-{
-  fPtrSolidA = pSolidA ;
-  fPtrSolidB = new G4DisplacedSolid("placedB",pSolidB,transform) ;
+  fPtrSolidA = pSolidA;
+  fPtrSolidB = new G4DisplacedSolid("placedB", pSolidB, transform);
 }
 
 ///////////////////////////////////////////////////////////////
@@ -93,22 +86,20 @@ G4BooleanSolid::G4BooleanSolid( const G4String& pName,
 // Fake default constructor - sets only member data and allocates memory
 //                            for usage restricted to object persistency.
 
-G4BooleanSolid::G4BooleanSolid( __void__& a )
-  : G4VSolid(a)
-{
-}
+G4BooleanSolid::G4BooleanSolid(__void__& a) : G4VSolid(a) {}
 
 ///////////////////////////////////////////////////////////////
 //
 // Destructor deletes transformation contents of the created displaced solid
 
-G4BooleanSolid::~G4BooleanSolid() 
+G4BooleanSolid::~G4BooleanSolid()
 {
-  if(createdDisplacedSolid)
+  if (createdDisplacedSolid)
   {
     ((G4DisplacedSolid*)fPtrSolidB)->CleanTransformations();
   }
-  delete fpPolyhedron; fpPolyhedron = nullptr;
+  delete fpPolyhedron;
+  fpPolyhedron = nullptr;
 }
 
 ///////////////////////////////////////////////////////////////
@@ -116,26 +107,33 @@ G4BooleanSolid::~G4BooleanSolid()
 // Copy constructor
 
 G4BooleanSolid::G4BooleanSolid(const G4BooleanSolid& rhs)
-  : G4VSolid (rhs), fPtrSolidA(rhs.fPtrSolidA), fPtrSolidB(rhs.fPtrSolidB),
-    fCubicVolume(rhs.fCubicVolume), fSurfaceArea(rhs.fSurfaceArea),
+  : G4VSolid(rhs),
+    fPtrSolidA(rhs.fPtrSolidA),
+    fPtrSolidB(rhs.fPtrSolidB),
+    fCubicVolume(rhs.fCubicVolume),
+    fSurfaceArea(rhs.fSurfaceArea),
     fCubVolStatistics(rhs.fCubVolStatistics),
     fAreaStatistics(rhs.fAreaStatistics),
     fCubVolEpsilon(rhs.fCubVolEpsilon),
     fAreaAccuracy(rhs.fAreaAccuracy),
     createdDisplacedSolid(rhs.createdDisplacedSolid)
 {
-  fPrimitives.resize(0); fPrimitivesSurfaceArea = 0.;
+  fPrimitives.resize(0);
+  fPrimitivesSurfaceArea = 0.;
 }
 
 ///////////////////////////////////////////////////////////////
 //
 // Assignment operator
 
-G4BooleanSolid& G4BooleanSolid::operator = (const G4BooleanSolid& rhs) 
+G4BooleanSolid& G4BooleanSolid::operator=(const G4BooleanSolid& rhs)
 {
   // Check assignment to self
   //
-  if (this == &rhs)  { return *this; }
+  if (this == &rhs)
+  {
+    return *this;
+  }
 
   // Copy base class data
   //
@@ -143,18 +141,24 @@ G4BooleanSolid& G4BooleanSolid::operator = (const G4BooleanSolid& rhs)
 
   // Copy data
   //
-  fPtrSolidA= rhs.fPtrSolidA; fPtrSolidB= rhs.fPtrSolidB;
-  fCubicVolume= rhs.fCubicVolume; fSurfaceArea= rhs.fSurfaceArea;
-  fCubVolStatistics = rhs.fCubVolStatistics; fCubVolEpsilon = rhs.fCubVolEpsilon;
-  fAreaStatistics = rhs.fAreaStatistics; fAreaAccuracy = rhs.fAreaAccuracy;
-  createdDisplacedSolid= rhs.createdDisplacedSolid;
+  fPtrSolidA = rhs.fPtrSolidA;
+  fPtrSolidB = rhs.fPtrSolidB;
+  fCubicVolume = rhs.fCubicVolume;
+  fSurfaceArea = rhs.fSurfaceArea;
+  fCubVolStatistics = rhs.fCubVolStatistics;
+  fCubVolEpsilon = rhs.fCubVolEpsilon;
+  fAreaStatistics = rhs.fAreaStatistics;
+  fAreaAccuracy = rhs.fAreaAccuracy;
+  createdDisplacedSolid = rhs.createdDisplacedSolid;
 
   fRebuildPolyhedron = false;
-  delete fpPolyhedron; fpPolyhedron = nullptr;
-  fPrimitives.resize(0); fPrimitivesSurfaceArea = 0.;
+  delete fpPolyhedron;
+  fpPolyhedron = nullptr;
+  fPrimitives.resize(0);
+  fPrimitivesSurfaceArea = 0.;
 
   return *this;
-}  
+}
 
 ///////////////////////////////////////////////////////////////
 //
@@ -165,19 +169,19 @@ G4BooleanSolid& G4BooleanSolid::operator = (const G4BooleanSolid& rhs)
 const G4VSolid* G4BooleanSolid::GetConstituentSolid(G4int no) const
 {
   const G4VSolid* subSolid = nullptr;
-  if( no == 0 )
-  {  
+  if (no == 0)
+  {
     subSolid = fPtrSolidA;
   }
-  else if( no == 1 )
-  { 
+  else if (no == 1)
+  {
     subSolid = fPtrSolidB;
   }
   else
   {
     DumpInfo();
-    G4Exception("G4BooleanSolid::GetConstituentSolid()",
-                "GeomSolids0002", FatalException, "Invalid solid index.");
+    G4Exception("G4BooleanSolid::GetConstituentSolid()", "GeomSolids0002", FatalException,
+                "Invalid solid index.");
   }
   return subSolid;
 }
@@ -191,19 +195,19 @@ const G4VSolid* G4BooleanSolid::GetConstituentSolid(G4int no) const
 G4VSolid* G4BooleanSolid::GetConstituentSolid(G4int no)
 {
   G4VSolid* subSolid = nullptr;
-  if( no == 0 )
-  {  
+  if (no == 0)
+  {
     subSolid = fPtrSolidA;
   }
-  else if( no == 1 )
-  { 
+  else if (no == 1)
+  {
     subSolid = fPtrSolidB;
   }
   else
   {
     DumpInfo();
-    G4Exception("G4BooleanSolid::GetConstituentSolid()",
-                "GeomSolids0002", FatalException, "Invalid solid index.");
+    G4Exception("G4BooleanSolid::GetConstituentSolid()", "GeomSolids0002", FatalException,
+                "Invalid solid index.");
   }
   return subSolid;
 }
@@ -212,7 +216,7 @@ G4VSolid* G4BooleanSolid::GetConstituentSolid(G4int no)
 //
 // Returns entity type
 
-G4GeometryType G4BooleanSolid::GetEntityType() const 
+G4GeometryType G4BooleanSolid::GetEntityType() const
 {
   return {"G4BooleanSolid"};
 }
@@ -223,14 +227,17 @@ G4GeometryType G4BooleanSolid::GetEntityType() const
 
 void G4BooleanSolid::SetCubVolStatistics(G4int st)
 {
-  if (st != fCubVolStatistics) { fCubicVolume = -1.; }
+  if (st != fCubVolStatistics)
+  {
+    fCubicVolume = -1.;
+  }
   fCubVolStatistics = st;
 
   // Propagate st to all components of the 1st solid
   if (fPtrSolidA->GetNumOfConstituents() > 1)
   {
     G4VSolid* ptr = fPtrSolidA;
-    while(true)
+    while (true)
     {
       G4String type = ptr->GetEntityType();
       if (type == "G4DisplacedSolid")
@@ -248,9 +255,9 @@ void G4BooleanSolid::SetCubVolStatistics(G4int st)
         ptr = ((G4ScaledSolid*)ptr)->GetUnscaledSolid();
         continue;
       }
-      if (type != "G4MultiUnion") // G4MultiUnion doesn't have SetCubVolStatistics()
+      if (type != "G4MultiUnion")  // G4MultiUnion doesn't have SetCubVolStatistics()
       {
-	((G4BooleanSolid*)ptr)->SetCubVolStatistics(st);
+        ((G4BooleanSolid*)ptr)->SetCubVolStatistics(st);
       }
       break;
     }
@@ -260,7 +267,7 @@ void G4BooleanSolid::SetCubVolStatistics(G4int st)
   if (fPtrSolidB->GetNumOfConstituents() > 1)
   {
     G4VSolid* ptr = fPtrSolidB;
-    while(true)
+    while (true)
     {
       G4String type = ptr->GetEntityType();
       if (type == "G4DisplacedSolid")
@@ -278,9 +285,9 @@ void G4BooleanSolid::SetCubVolStatistics(G4int st)
         ptr = ((G4ScaledSolid*)ptr)->GetUnscaledSolid();
         continue;
       }
-      if (type != "G4MultiUnion") // G4MultiUnion doesn't have SetCubVolStatistics()
+      if (type != "G4MultiUnion")  // G4MultiUnion doesn't have SetCubVolStatistics()
       {
-	((G4BooleanSolid*)ptr)->SetCubVolStatistics(st);
+        ((G4BooleanSolid*)ptr)->SetCubVolStatistics(st);
       }
       break;
     }
@@ -293,14 +300,17 @@ void G4BooleanSolid::SetCubVolStatistics(G4int st)
 
 void G4BooleanSolid::SetCubVolEpsilon(G4double ep)
 {
-  if (ep != fCubVolEpsilon) { fCubicVolume = -1.; }
+  if (ep != fCubVolEpsilon)
+  {
+    fCubicVolume = -1.;
+  }
   fCubVolEpsilon = ep;
 
   // Propagate ep to all components of the 1st solid
   if (fPtrSolidA->GetNumOfConstituents() > 1)
   {
     G4VSolid* ptr = fPtrSolidA;
-    while(true)
+    while (true)
     {
       G4String type = ptr->GetEntityType();
       if (type == "G4DisplacedSolid")
@@ -318,9 +328,9 @@ void G4BooleanSolid::SetCubVolEpsilon(G4double ep)
         ptr = ((G4ScaledSolid*)ptr)->GetUnscaledSolid();
         continue;
       }
-      if (type != "G4MultiUnion") // G4MultiUnion doesn't have SetCubVolEpsilon()
+      if (type != "G4MultiUnion")  // G4MultiUnion doesn't have SetCubVolEpsilon()
       {
-	((G4BooleanSolid*)ptr)->SetCubVolEpsilon(ep);
+        ((G4BooleanSolid*)ptr)->SetCubVolEpsilon(ep);
       }
       break;
     }
@@ -330,7 +340,7 @@ void G4BooleanSolid::SetCubVolEpsilon(G4double ep)
   if (fPtrSolidB->GetNumOfConstituents() > 1)
   {
     G4VSolid* ptr = fPtrSolidB;
-    while(true)
+    while (true)
     {
       G4String type = ptr->GetEntityType();
       if (type == "G4DisplacedSolid")
@@ -348,9 +358,9 @@ void G4BooleanSolid::SetCubVolEpsilon(G4double ep)
         ptr = ((G4ScaledSolid*)ptr)->GetUnscaledSolid();
         continue;
       }
-      if (type != "G4MultiUnion") // G4MultiUnion doesn't have SetCubVolEpsilon()
+      if (type != "G4MultiUnion")  // G4MultiUnion doesn't have SetCubVolEpsilon()
       {
-	((G4BooleanSolid*)ptr)->SetCubVolEpsilon(ep);
+        ((G4BooleanSolid*)ptr)->SetCubVolEpsilon(ep);
       }
       break;
     }
@@ -381,8 +391,8 @@ std::ostream& G4BooleanSolid::StreamInfo(std::ostream& os) const
 // Creates list of constituent primitives of and their placements
 
 void G4BooleanSolid::GetListOfPrimitives(
-       std::vector<std::pair<G4VSolid*,G4Transform3D>>& primitives,
-       const G4Transform3D& curPlacement) const
+  std::vector<std::pair<G4VSolid*, G4Transform3D>>& primitives,
+  const G4Transform3D& curPlacement) const
 {
   G4Transform3D transform;
   G4VSolid* solid;
@@ -390,51 +400,47 @@ void G4BooleanSolid::GetListOfPrimitives(
 
   // Repeat two times, first time for fPtrSolidA and then for fPtrSolidB
   //
-  for (auto i=0; i<2; ++i)
+  for (auto i = 0; i < 2; ++i)
   {
     transform = curPlacement;
-    solid     = (i == 0) ? fPtrSolidA : fPtrSolidB;
-    type      = solid->GetEntityType();
+    solid = (i == 0) ? fPtrSolidA : fPtrSolidB;
+    type = solid->GetEntityType();
 
     // While current solid is a trasformed solid just modify transform
     //
-    while (type == "G4DisplacedSolid" ||
-           type == "G4ReflectedSolid" ||
-           type == "G4ScaledSolid")
+    while (type == "G4DisplacedSolid" || type == "G4ReflectedSolid" || type == "G4ScaledSolid")
     {
       if (type == "G4DisplacedSolid")
       {
-        transform = transform * G4Transform3D(
-                    ((G4DisplacedSolid*)solid)->GetObjectRotation(),
-                    ((G4DisplacedSolid*)solid)->GetObjectTranslation());
-        solid     = ((G4DisplacedSolid*)solid)->GetConstituentMovedSolid();
+        transform = transform
+                    * G4Transform3D(((G4DisplacedSolid*)solid)->GetObjectRotation(),
+                                    ((G4DisplacedSolid*)solid)->GetObjectTranslation());
+        solid = ((G4DisplacedSolid*)solid)->GetConstituentMovedSolid();
       }
       else if (type == "G4ReflectedSolid")
       {
-        transform= transform*((G4ReflectedSolid*)solid)->GetDirectTransform3D();
-        solid    = ((G4ReflectedSolid*)solid)->GetConstituentMovedSolid();
+        transform = transform * ((G4ReflectedSolid*)solid)->GetDirectTransform3D();
+        solid = ((G4ReflectedSolid*)solid)->GetConstituentMovedSolid();
       }
       else if (type == "G4ScaledSolid")
       {
         transform = transform * ((G4ScaledSolid*)solid)->GetScaleTransform();
-        solid     = ((G4ScaledSolid*)solid)->GetUnscaledSolid();
+        solid = ((G4ScaledSolid*)solid)->GetUnscaledSolid();
       }
-      type  = solid->GetEntityType();
+      type = solid->GetEntityType();
     }
 
     // If current solid is a Boolean solid then continue recursion,
     // otherwise add it to the list of primitives
     //
-    if (type == "G4UnionSolid"        ||
-        type == "G4SubtractionSolid"  ||
-        type == "G4IntersectionSolid" ||
-        type == "G4BooleanSolid")
+    if (type == "G4UnionSolid" || type == "G4SubtractionSolid" || type == "G4IntersectionSolid"
+        || type == "G4BooleanSolid")
     {
-      ((G4BooleanSolid *)solid)->GetListOfPrimitives(primitives,transform);
+      ((G4BooleanSolid*)solid)->GetListOfPrimitives(primitives, transform);
     }
     else
     {
-      primitives.emplace_back(solid,transform);
+      primitives.emplace_back(solid, transform);
     }
   }
 }
@@ -447,7 +453,7 @@ void G4BooleanSolid::GetListOfPrimitives(
 G4ThreeVector G4BooleanSolid::GetPointOnSurface() const
 {
   std::size_t nprims = fPrimitives.size();
-  std::pair<G4VSolid *, G4Transform3D> prim;
+  std::pair<G4VSolid*, G4Transform3D> prim;
 
   // Get list of primitives and find the total area of their surfaces
   //
@@ -456,7 +462,7 @@ G4ThreeVector G4BooleanSolid::GetPointOnSurface() const
     GetListOfPrimitives(fPrimitives, G4Transform3D());
     nprims = fPrimitives.size();
     fPrimitivesSurfaceArea = 0.;
-    for (std::size_t i=0; i<nprims; ++i)
+    for (std::size_t i = 0; i < nprims; ++i)
     {
       fPrimitivesSurfaceArea += fPrimitives[i].first->GetSurfaceArea();
     }
@@ -466,26 +472,31 @@ G4ThreeVector G4BooleanSolid::GetPointOnSurface() const
   // check that the point belongs to the surface of the solid
   //
   G4ThreeVector p;
-  for (std::size_t k=0; k<100000; ++k) // try 100k times
+  for (std::size_t k = 0; k < 100000; ++k)  // try 100k times
   {
-     G4double rand = fPrimitivesSurfaceArea * G4QuickRand();
-     G4double area = 0.;
-     for (std::size_t i=0; i<nprims; ++i)
-     {
-       prim  = fPrimitives[i];
-       area += prim.first->GetSurfaceArea();
-       if (rand < area) { break; }
-     }
-     p = prim.first->GetPointOnSurface();
-     p = prim.second * G4Point3D(p);
-     if (Inside(p) == kSurface) { return p; }
+    G4double rand = fPrimitivesSurfaceArea * G4QuickRand();
+    G4double area = 0.;
+    for (std::size_t i = 0; i < nprims; ++i)
+    {
+      prim = fPrimitives[i];
+      area += prim.first->GetSurfaceArea();
+      if (rand < area)
+      {
+        break;
+      }
+    }
+    p = prim.first->GetPointOnSurface();
+    p = prim.second * G4Point3D(p);
+    if (Inside(p) == kSurface)
+    {
+      return p;
+    }
   }
   std::ostringstream message;
   message << "Solid - " << GetName() << "\n"
           << "All 100k attempts to generate a point on the surface have failed!\n"
           << "The solid created may be an invalid Boolean construct!";
-  G4Exception("G4BooleanSolid::GetPointOnSurface()",
-              "GeomSolids1001", JustWarning, message);
+  G4Exception("G4BooleanSolid::GetPointOnSurface()", "GeomSolids1001", JustWarning, message);
   return p;
 }
 
@@ -504,26 +515,25 @@ G4int G4BooleanSolid::GetNumOfConstituents() const
 
 G4bool G4BooleanSolid::IsFaceted() const
 {
-  return (fPtrSolidA->IsFaceted() && fPtrSolidB->IsFaceted());  
+  return (fPtrSolidA->IsFaceted() && fPtrSolidB->IsFaceted());
 }
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Returns polyhedron for visualization
 
-G4Polyhedron* G4BooleanSolid::GetPolyhedron () const
+G4Polyhedron* G4BooleanSolid::GetPolyhedron() const
 {
-  if (fpPolyhedron == nullptr ||
-      fRebuildPolyhedron ||
-      fpPolyhedron->GetNumberOfRotationStepsAtTimeOfCreation() !=
-      fpPolyhedron->GetNumberOfRotationSteps())
-    {
-      G4RecursiveAutoLock l(&polyhedronMutex);
-      delete fpPolyhedron;
-      fpPolyhedron = CreatePolyhedron();
-      fRebuildPolyhedron = false;
-      l.unlock();
-    }
+  if (fpPolyhedron == nullptr || fRebuildPolyhedron
+      || fpPolyhedron->GetNumberOfRotationStepsAtTimeOfCreation()
+           != fpPolyhedron->GetNumberOfRotationSteps())
+  {
+    G4RecursiveAutoLock l(&polyhedronMutex);
+    delete fpPolyhedron;
+    fpPolyhedron = CreatePolyhedron();
+    fRebuildPolyhedron = false;
+    l.unlock();
+  }
   return fpPolyhedron;
 }
 
@@ -531,23 +541,27 @@ G4Polyhedron* G4BooleanSolid::GetPolyhedron () const
 //
 // Stacks polyhedra for processing. Returns top polyhedron.
 
-G4Polyhedron*
-G4BooleanSolid::StackPolyhedron(HepPolyhedronProcessor& processor,
-                                const G4VSolid* solid) const
+G4Polyhedron* G4BooleanSolid::StackPolyhedron(HepPolyhedronProcessor& processor,
+                                              const G4VSolid* solid) const
 {
   HepPolyhedronProcessor::Operation operation;
   const G4String& type = solid->GetEntityType();
   if (type == "G4UnionSolid")
-    { operation = HepPolyhedronProcessor::UNION; }
+  {
+    operation = HepPolyhedronProcessor::UNION;
+  }
   else if (type == "G4IntersectionSolid")
-    { operation = HepPolyhedronProcessor::INTERSECTION; }
+  {
+    operation = HepPolyhedronProcessor::INTERSECTION;
+  }
   else if (type == "G4SubtractionSolid")
-    { operation = HepPolyhedronProcessor::SUBTRACTION; }
+  {
+    operation = HepPolyhedronProcessor::SUBTRACTION;
+  }
   else
   {
     std::ostringstream message;
-    message << "Solid - " << solid->GetName()
-            << " - Unrecognised composite solid" << G4endl
+    message << "Solid - " << solid->GetName() << " - Unrecognised composite solid" << G4endl
             << " Returning NULL !";
     G4Exception("StackPolyhedron()", "GeomSolids1001", JustWarning, message);
     return nullptr;
@@ -568,20 +582,17 @@ G4BooleanSolid::StackPolyhedron(HepPolyhedronProcessor& processor,
   G4Polyhedron* operand = solidB->GetPolyhedron();
   if (operand != nullptr)
   {
-    processor.push_back (operation, *operand);
+    processor.push_back(operation, *operand);
   }
   else
   {
     std::ostringstream message;
-    message << "Solid - " << solid->GetName()
-            << " - No G4Polyhedron for Boolean component";
-    G4Exception("G4BooleanSolid::StackPolyhedron()",
-                "GeomSolids2001", JustWarning, message);
+    message << "Solid - " << solid->GetName() << " - No G4Polyhedron for Boolean component";
+    G4Exception("G4BooleanSolid::StackPolyhedron()", "GeomSolids2001", JustWarning, message);
   }
 
   return top;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -589,7 +600,7 @@ G4BooleanSolid::StackPolyhedron(HepPolyhedronProcessor& processor,
 
 G4double G4BooleanSolid::GetCubicVolume()
 {
-  if(fCubicVolume < 0.)
+  if (fCubicVolume < 0.)
   {
     G4AutoLock l(&boolMutex);
     fCubicVolume = EstimateCubicVolume(fCubVolStatistics, fCubVolEpsilon);
@@ -604,7 +615,7 @@ G4double G4BooleanSolid::GetCubicVolume()
 
 G4double G4BooleanSolid::GetSurfaceArea()
 {
-  if(fSurfaceArea < 0.)
+  if (fSurfaceArea < 0.)
   {
     G4AutoLock l(&boolMutex);
     fSurfaceArea = EstimateSurfaceArea(fAreaStatistics, fAreaAccuracy);
@@ -617,8 +628,7 @@ G4double G4BooleanSolid::GetSurfaceArea()
 //
 // Set external Boolean processor.
 
-void
-G4BooleanSolid::SetExternalBooleanProcessor(G4VBooleanProcessor* extProcessor)
+void G4BooleanSolid::SetExternalBooleanProcessor(G4VBooleanProcessor* extProcessor)
 {
   fExternalBoolProcessor = extProcessor;
 }

@@ -32,16 +32,16 @@
 //
 // Date:       27 July 2012
 //
-// Modified:  
+// Modified:
 // 20120921  M. Kelsey -- Move MuonMinusCapture.hh here; replace G4MMCAtRest
 //		with new G4MuonMinusCapture.
-// 16-Oct-2012 A. Ribon: renamed G4BertiniAndFritiofStoppingPhysics as 
+// 16-Oct-2012 A. Ribon: renamed G4BertiniAndFritiofStoppingPhysics as
 //                       G4StoppingPhysics.
 //
 // Class Description:
 //
 // This class provides the nuclear capture at rest of negatively charged
-// particles, using: Bertini for pi-, K-, Sigma-, Xi-, and Omega-. 
+// particles, using: Bertini for pi-, K-, Sigma-, Xi-, and Omega-.
 //                   Fritiof/Precompound for anti-proton and anti-Sigma+;
 //                   another model for mu-.
 // Use Fritiof/Precompound also for the annihilation at rest of neutral
@@ -49,40 +49,37 @@
 //
 //----------------------------------------------------------------------------
 
-#ifndef G4StoppingPhysics_h
-#define G4StoppingPhysics_h 1
+#ifndef G4STOPPINGPHYSICS_HH
+#define G4STOPPINGPHYSICS_HH
 
-#include "globals.hh"
 #include "G4VPhysicsConstructor.hh"
+#include "globals.hh"
 
-class G4StoppingPhysics : public G4VPhysicsConstructor {
+class G4StoppingPhysics : public G4VPhysicsConstructor
+{
+  public:
 
-public: 
+    G4StoppingPhysics(G4int ver = 1);
 
-  G4StoppingPhysics( G4int ver = 1 );
+    G4StoppingPhysics(const G4String& name, G4int ver = 1, G4bool UseMuonMinusCapture = true);
 
-  G4StoppingPhysics( const G4String& name,
-		     G4int ver = 1,
-		     G4bool UseMuonMinusCapture=true );
+    ~G4StoppingPhysics() override;
 
-  ~G4StoppingPhysics() override;
+    // This method will be invoked in the Construct() method.
+    // each particle type will be instantiated
+    virtual void ConstructParticle() override;
 
-  // This method will be invoked in the Construct() method. 
-  // each particle type will be instantiated
-  virtual void ConstructParticle() override;
- 
-  // This method will be invoked in the Construct() method.
-  // each physics process will be instantiated and
-  // registered to the process manager of each particle type 
-  virtual void ConstructProcess() override;
+    // This method will be invoked in the Construct() method.
+    // each physics process will be instantiated and
+    // registered to the process manager of each particle type
+    virtual void ConstructProcess() override;
 
-  void SetMuonMinusCapture(G4bool val) 
-  { useMuonMinusCapture = val; };
+    void SetMuonMinusCapture(G4bool val) { useMuonMinusCapture = val; };
 
-private:
+  private:
 
-  G4int  verbose;
-  G4bool useMuonMinusCapture;
+    G4int verbose;
+    G4bool useMuonMinusCapture;
 };
 
 #endif

@@ -28,58 +28,53 @@
 
 #include "G4AnalysisUtilities.hh"
 
-#include "tools/wcsv_histo"
 #include "tools/histo/h1d"
 #include "tools/histo/h2d"
 #include "tools/histo/h3d"
 #include "tools/histo/p1d"
 #include "tools/histo/p2d"
+#include "tools/wcsv_histo"
 
 //_____________________________________________________________________________
-template <>
-inline
-G4bool G4CsvHnFileManager<tools::histo::p1d>::Write(
-  std::ofstream& hnfile, tools::histo::p1d* ht)
+template<>
+inline G4bool G4CsvHnFileManager<tools::histo::p1d>::Write(std::ofstream& hnfile,
+                                                           tools::histo::p1d* ht)
 {
   return tools::wcsv::pto(hnfile, ht->s_cls(), *ht);
 }
 
 //_____________________________________________________________________________
-template <>
-inline
-G4bool G4CsvHnFileManager<tools::histo::p2d>::Write(
-  std::ofstream& hnfile, tools::histo::p2d* ht)
+template<>
+inline G4bool G4CsvHnFileManager<tools::histo::p2d>::Write(std::ofstream& hnfile,
+                                                           tools::histo::p2d* ht)
 {
   return tools::wcsv::pto(hnfile, ht->s_cls(), *ht);
 }
 
 //_____________________________________________________________________________
-template <typename HT>
-inline
-G4bool G4CsvHnFileManager<HT>::Write(
-  std::ofstream& hnfile, HT* ht)
+template<typename HT>
+inline G4bool G4CsvHnFileManager<HT>::Write(std::ofstream& hnfile, HT* ht)
 {
   return tools::wcsv::hto(hnfile, ht->s_cls(), *ht);
 }
 
 //_____________________________________________________________________________
-template <typename HT>
-inline
-G4bool G4CsvHnFileManager<HT>::WriteExtra(
-  HT* ht, const G4String& htName, const G4String& fileName)
+template<typename HT>
+inline G4bool G4CsvHnFileManager<HT>::WriteExtra(HT* ht, const G4String& htName,
+                                                 const G4String& fileName)
 {
   // create a new file
   std::ofstream hnFile(fileName);
 
   // Do nothing if there is no file
-  if ( ! hnFile.is_open() ) return false;
+  if (!hnFile.is_open()) return false;
 
   auto result = Write(hnFile, ht);
 
-  if ( ! result ) {
-    G4Analysis::Warn(
-      "Saving " + G4Analysis::GetHnType<HT>() + " " + htName + " failed",
-      fkClass, "WriteExtra");
+  if (!result)
+  {
+    G4Analysis::Warn("Saving " + G4Analysis::GetHnType<HT>() + " " + htName + " failed", fkClass,
+                     "WriteExtra");
     return false;
   }
   hnFile.close();
@@ -87,12 +82,11 @@ G4bool G4CsvHnFileManager<HT>::WriteExtra(
 }
 
 //_____________________________________________________________________________
-template <typename HT>
-inline
-G4bool G4CsvHnFileManager<HT>::Write(
-  HT* ht, const G4String& htName, G4String& fileName)
+template<typename HT>
+inline G4bool G4CsvHnFileManager<HT>::Write(HT* ht, const G4String& htName, G4String& fileName)
 {
-  if ( fileName.empty() ) {
+  if (fileName.empty())
+  {
     // should not happen
     G4cerr << "!!! Csv file name not defined." << G4endl;
     G4cerr << "!!! Write " << htName << " failed." << G4endl;
@@ -103,22 +97,26 @@ G4bool G4CsvHnFileManager<HT>::Write(
   fileName = fFileManager->GetHnFileName(fileName, fFileManager->GetCycle());
 
   auto hnFile = fFileManager->GetTFile(fileName, false);
-  if ( ! hnFile ) {
+  if (!hnFile)
+  {
     // If histogram file name was not defined per object
     // a file should be created from the provided default file name
     auto hnFileName = fFileManager->GetHnFileName(G4Analysis::GetHnType<HT>(), htName);
 
     // If histo directory name is set and if this directory exists
     // add directory path to hnFileName
-    if ( fFileManager->IsHistoDirectory() ) {
+    if (fFileManager->IsHistoDirectory())
+    {
       hnFileName = "./" + fFileManager->GetHistoDirectoryName() + "/" + hnFileName;
     }
 
-    if ( ! hnFileName.empty() ) {
+    if (!hnFileName.empty())
+    {
       hnFile = fFileManager->CreateTFile(hnFileName);
     }
 
-    if ( ! hnFile ) {
+    if (!hnFile)
+    {
       G4Analysis::Warn("Failed to get Csv file " + fileName, fkClass, "Write");
       return false;
     }

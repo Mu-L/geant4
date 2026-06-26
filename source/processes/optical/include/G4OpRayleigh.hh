@@ -43,77 +43,74 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-#ifndef G4OpRayleigh_h
-#define G4OpRayleigh_h 1
+#ifndef G4OPRAYLEIGH_HH
+#define G4OPRAYLEIGH_HH
 
-#include "G4VDiscreteProcess.hh"
 #include "G4OpticalPhoton.hh"
 #include "G4PhysicsTable.hh"
+#include "G4VDiscreteProcess.hh"
 
 class G4OpRayleigh : public G4VDiscreteProcess
 {
- public:
-  explicit G4OpRayleigh(const G4String& processName = "OpRayleigh",
-                        G4ProcessType type          = fOptical);
-  virtual ~G4OpRayleigh();
+  public:
 
-  virtual G4bool IsApplicable(
-    const G4ParticleDefinition& aParticleType) override;
-  // Returns true -> 'is applicable' only for an optical photon.
+    explicit G4OpRayleigh(const G4String& processName = "OpRayleigh",
+                          G4ProcessType type = fOptical);
+    virtual ~G4OpRayleigh();
 
-  virtual void BuildPhysicsTable(
-    const G4ParticleDefinition& aParticleType) override;
-  // Build thePhysicsTable at a right time
+    virtual G4bool IsApplicable(const G4ParticleDefinition& aParticleType) override;
+    // Returns true -> 'is applicable' only for an optical photon.
 
-  virtual G4double GetMeanFreePath(const G4Track& aTrack, G4double,
-                                   G4ForceCondition*) override;
-  // Returns the mean free path for Rayleigh scattering
+    virtual void BuildPhysicsTable(const G4ParticleDefinition& aParticleType) override;
+    // Build thePhysicsTable at a right time
 
-  virtual G4VParticleChange* PostStepDoIt(const G4Track& aTrack,
-                                          const G4Step& aStep) override;
-  // This is the method implementing Rayleigh scattering.
+    virtual G4double GetMeanFreePath(const G4Track& aTrack, G4double, G4ForceCondition*) override;
+    // Returns the mean free path for Rayleigh scattering
 
-  virtual G4PhysicsTable* GetPhysicsTable() const;
-  // Returns the address of the physics table.
+    virtual G4VParticleChange* PostStepDoIt(const G4Track& aTrack, const G4Step& aStep) override;
+    // This is the method implementing Rayleigh scattering.
 
-  virtual void DumpPhysicsTable() const;
-  // Prints the physics table.
+    virtual G4PhysicsTable* GetPhysicsTable() const;
+    // Returns the address of the physics table.
 
-  virtual void PreparePhysicsTable(const G4ParticleDefinition&) override;
-  virtual void Initialise();
+    virtual void DumpPhysicsTable() const;
+    // Prints the physics table.
 
-  void SetVerboseLevel(G4int);
+    virtual void PreparePhysicsTable(const G4ParticleDefinition&) override;
+    virtual void Initialise();
 
- protected:
-  G4PhysicsTable* thePhysicsTable;
+    void SetVerboseLevel(G4int);
 
- private:
-  G4OpRayleigh(const G4OpRayleigh& right) = delete;
-  G4OpRayleigh& operator=(const G4OpRayleigh& right) = delete;
+  protected:
 
-  /// Calculates the mean free paths for a material as a function of
-  /// photon energy
-  G4PhysicsFreeVector* CalculateRayleighMeanFreePaths(
-    const G4Material* material) const;
+    G4PhysicsTable* thePhysicsTable;
 
-  size_t idx_rslength = 0;
+  private:
+
+    G4OpRayleigh(const G4OpRayleigh& right) = delete;
+    G4OpRayleigh& operator=(const G4OpRayleigh& right) = delete;
+
+    /// Calculates the mean free paths for a material as a function of
+    /// photon energy
+    G4PhysicsFreeVector* CalculateRayleighMeanFreePaths(const G4Material* material) const;
+
+    size_t idx_rslength = 0;
 };
 
 ////////////////////
 // Inline methods
 ////////////////////
 
-inline G4bool G4OpRayleigh::IsApplicable(
-  const G4ParticleDefinition& aParticleType)
+inline G4bool G4OpRayleigh::IsApplicable(const G4ParticleDefinition& aParticleType)
 {
   return (&aParticleType == G4OpticalPhoton::OpticalPhoton());
 }
 
 inline void G4OpRayleigh::DumpPhysicsTable() const
 {
-  for(size_t i = 0; i < thePhysicsTable->entries(); ++i)
+  for (size_t i = 0; i < thePhysicsTable->entries(); ++i)
   {
-    ((G4PhysicsFreeVector*) (*thePhysicsTable)[i])->DumpValues();
+    ((G4PhysicsFreeVector*)(*thePhysicsTable)[i])->DumpValues();
   }
 }
 

@@ -31,23 +31,21 @@
 //      History: first implementation, A. Feliciello, 20th May 1998
 // -----------------------------------------------------------------------------
 
-#ifndef G4KineticTrack_h
-#define G4KineticTrack_h 1
+#ifndef G4KINETICTRACK_HH
+#define G4KINETICTRACK_HH
 
-#include <CLHEP/Units/PhysicalConstants.h>
-
-#include "globals.hh"
-#include "G4ios.hh"
-
-
-#include "Randomize.hh"
-#include "G4ThreeVector.hh"
+#include "G4Log.hh"
 #include "G4LorentzVector.hh"
-#include "G4VKineticNucleon.hh"
 #include "G4Nucleon.hh"
 #include "G4ParticleDefinition.hh"
+#include "G4ThreeVector.hh"
 #include "G4VDecayChannel.hh"
-#include "G4Log.hh"
+#include "G4VKineticNucleon.hh"
+#include "G4ios.hh"
+#include "Randomize.hh"
+#include "globals.hh"
+
+#include <CLHEP/Units/PhysicalConstants.h>
 
 // #include "G4Allocator.hh"
 
@@ -56,154 +54,158 @@ class G4KineticTrackVector;
 class G4KineticTrack : public G4VKineticNucleon
 {
   public:
-      
-      G4KineticTrack();
 
-      G4KineticTrack(const G4KineticTrack& right);
+    G4KineticTrack();
 
-      G4KineticTrack(const G4ParticleDefinition* aDefinition,
-                     G4double aFormationTime,
-                     const G4ThreeVector& aPosition,
-                     const G4LorentzVector& a4Momentum);
-      G4KineticTrack(G4Nucleon * nucleon,
-                     const G4ThreeVector& aPosition,
-                     const G4LorentzVector& a4Momentum);
+    G4KineticTrack(const G4KineticTrack& right);
 
-      ~G4KineticTrack();
+    G4KineticTrack(const G4ParticleDefinition* aDefinition, G4double aFormationTime,
+                   const G4ThreeVector& aPosition, const G4LorentzVector& a4Momentum);
+    G4KineticTrack(G4Nucleon* nucleon, const G4ThreeVector& aPosition,
+                   const G4LorentzVector& a4Momentum);
 
-      G4KineticTrack& operator=(const G4KineticTrack& right);
+    ~G4KineticTrack();
 
-      G4bool operator==(const G4KineticTrack& right) const;
+    G4KineticTrack& operator=(const G4KineticTrack& right);
 
-      G4bool operator!=(const G4KineticTrack& right) const;
-/*
-      inline void *operator new(size_t);
-      inline void operator delete(void *aTrack);
-*/
-      const G4ParticleDefinition* GetDefinition() const;
-      void SetDefinition(const G4ParticleDefinition* aDefinition);
+    G4bool operator==(const G4KineticTrack& right) const;
 
-      G4double GetFormationTime() const;
-      void SetFormationTime(G4double aFormationTime);
+    G4bool operator!=(const G4KineticTrack& right) const;
+    /*
+          inline void *operator new(size_t);
+          inline void operator delete(void *aTrack);
+    */
+    const G4ParticleDefinition* GetDefinition() const;
+    void SetDefinition(const G4ParticleDefinition* aDefinition);
 
-      const G4ThreeVector& GetPosition() const;
-      void SetPosition(const G4ThreeVector aPosition);
-      
-      const G4LorentzVector& Get4Momentum() const;
-      void Set4Momentum(const G4LorentzVector& a4Momentum);
-      void Update4Momentum(G4double aEnergy);			// update E and p, not changing mass
-      void Update4Momentum(const G4ThreeVector & aMomentum);	// idem
-      void SetTrackingMomentum(const G4LorentzVector& a4Momentum);
-      void UpdateTrackingMomentum(G4double aEnergy);			// update E and p, not changing mass
-      void UpdateTrackingMomentum(const G4ThreeVector & aMomentum);	// idem
+    G4double GetFormationTime() const;
+    void SetFormationTime(G4double aFormationTime);
 
-      const G4LorentzVector& GetTrackingMomentum() const;
-      
-      G4double SampleResidualLifetime();
-      
-      void Hit(); 
-      void SetNucleon(G4Nucleon * aN) {theNucleon = aN;}
-            
-      G4bool IsParticipant() const; 
+    const G4ThreeVector& GetPosition() const;
+    void SetPosition(const G4ThreeVector aPosition);
 
-      G4KineticTrackVector* Decay();
-     
-  // LB move to public (before was private) LB
-      G4double* GetActualWidth() const;
+    const G4LorentzVector& Get4Momentum() const;
+    void Set4Momentum(const G4LorentzVector& a4Momentum);
+    void Update4Momentum(G4double aEnergy);  // update E and p, not changing mass
+    void Update4Momentum(const G4ThreeVector& aMomentum);  // idem
+    void SetTrackingMomentum(const G4LorentzVector& a4Momentum);
+    void UpdateTrackingMomentum(G4double aEnergy);  // update E and p, not changing mass
+    void UpdateTrackingMomentum(const G4ThreeVector& aMomentum);  // idem
 
-      G4double GetActualMass() const;
-      G4int GetnChannels() const;
-      
-//   position relativ to nucleus "state"
-      enum CascadeState {undefined, outside, going_in, inside, 
-                         going_out, gone_out, captured, miss_nucleus };
-      
-      CascadeState SetState(const CascadeState new_state);
-      CascadeState GetState() const;
-      void SetProjectilePotential(const G4double aPotential);
-      G4double GetProjectilePotential() const;
+    const G4LorentzVector& GetTrackingMomentum() const;
 
-      void SetCreatorModelID(G4int id);
-      G4int GetCreatorModelID() const;
+    G4double SampleResidualLifetime();
 
-      const G4ParticleDefinition* GetParentResonanceDef() const;
-      void SetParentResonanceDef(const G4ParticleDefinition* parent);      
-      G4int GetParentResonanceID() const;
-      void SetParentResonanceID(const G4int parentID);
-   
+    void Hit();
+    void SetNucleon(G4Nucleon* aN) { theNucleon = aN; }
+
+    G4bool IsParticipant() const;
+
+    G4KineticTrackVector* Decay();
+
+    // LB move to public (before was private) LB
+    G4double* GetActualWidth() const;
+
+    G4double GetActualMass() const;
+    G4int GetnChannels() const;
+
+    //   position relativ to nucleus "state"
+    enum CascadeState
+    {
+      undefined,
+      outside,
+      going_in,
+      inside,
+      going_out,
+      gone_out,
+      captured,
+      miss_nucleus
+    };
+
+    CascadeState SetState(const CascadeState new_state);
+    CascadeState GetState() const;
+    void SetProjectilePotential(const G4double aPotential);
+    G4double GetProjectilePotential() const;
+
+    void SetCreatorModelID(G4int id);
+    G4int GetCreatorModelID() const;
+
+    const G4ParticleDefinition* GetParentResonanceDef() const;
+    void SetParentResonanceDef(const G4ParticleDefinition* parent);
+    G4int GetParentResonanceID() const;
+    void SetParentResonanceID(const G4int parentID);
+
   private:
 
+    void SetnChannels(const G4int aChannel);
 
-      void SetnChannels(const G4int aChannel);
+    void SetActualWidth(G4double* anActualWidth);
 
-      void SetActualWidth(G4double* anActualWidth); 
-      
-      G4double EvaluateTotalActualWidth();
+    G4double EvaluateTotalActualWidth();
 
-      G4double EvaluateCMMomentum (const G4double mass,
-                                   const G4double* m_ij) const;                                 
-      
-      G4double IntegrateCMMomentum(const G4double lowerLimit) const;
+    G4double EvaluateCMMomentum(const G4double mass, const G4double* m_ij) const;
 
-      G4double IntegrateCMMomentum(const G4double lowerLimit ,const G4double polemass) const;
+    G4double IntegrateCMMomentum(const G4double lowerLimit) const;
 
-      G4double IntegrateCMMomentum2() const;
-      
+    G4double IntegrateCMMomentum(const G4double lowerLimit, const G4double polemass) const;
+
+    G4double IntegrateCMMomentum2() const;
+
   public:
-      
-      G4double BrWig(const G4double Gamma, 
-                     const G4double rmass, 
-                     const G4double mass) const;
 
-private:
-      G4double IntegrandFunction1 (G4double xmass) const;
-      G4double IntegrandFunction2 (G4double xmass) const;
-      G4double IntegrandFunction3 (G4double xmass) const;
-      G4double IntegrandFunction4 (G4double xmass) const;
-public:
-  //   friend G4double IntegrandFunction3 (G4double xmass);
+    G4double BrWig(const G4double Gamma, const G4double rmass, const G4double mass) const;
 
-  //   friend G4double IntegrandFunction4 (G4double xmass);
-      
   private:
- 
-      const G4ParticleDefinition* theDefinition;
 
-      G4double theFormationTime;
+    G4double IntegrandFunction1(G4double xmass) const;
+    G4double IntegrandFunction2(G4double xmass) const;
+    G4double IntegrandFunction3(G4double xmass) const;
+    G4double IntegrandFunction4(G4double xmass) const;
 
-      G4ThreeVector thePosition;
+  public:
 
-      G4LorentzVector the4Momentum;
-      G4LorentzVector theFermi3Momentum;
-      G4LorentzVector theTotal4Momentum;
-      
-      G4Nucleon * theNucleon;
-      
-      G4int nChannels;
-      
-      G4double theActualMass;
-            
-      G4double* theActualWidth;
+    //   friend G4double IntegrandFunction3 (G4double xmass);
 
-     // Temporary storage for daughter masses and widths
-      // (needed because Integrand Function cannot take > 1 argument)
-      G4double* theDaughterMass;
-      G4double* theDaughterWidth;
+    //   friend G4double IntegrandFunction4 (G4double xmass);
 
-      CascadeState theStateToNucleus;
+  private:
 
-      G4double theProjectilePotential;
+    const G4ParticleDefinition* theDefinition;
 
-      G4int theCreatorModel;
+    G4double theFormationTime;
 
-      const G4ParticleDefinition* theParentResonanceDef = nullptr;
-      G4int theParentResonanceID;
+    G4ThreeVector thePosition;
+
+    G4LorentzVector the4Momentum;
+    G4LorentzVector theFermi3Momentum;
+    G4LorentzVector theTotal4Momentum;
+
+    G4Nucleon* theNucleon;
+
+    G4int nChannels;
+
+    G4double theActualMass;
+
+    G4double* theActualWidth;
+
+    // Temporary storage for daughter masses and widths
+    // (needed because Integrand Function cannot take > 1 argument)
+    G4double* theDaughterMass;
+    G4double* theDaughterWidth;
+
+    CascadeState theStateToNucleus;
+
+    G4double theProjectilePotential;
+
+    G4int theCreatorModel;
+
+    const G4ParticleDefinition* theParentResonanceDef = nullptr;
+    G4int theParentResonanceID;
 };
 
 // extern G4Allocator<G4KineticTrack> theKTAllocator;
 
-
-// Class G4KineticTrack 
+// Class G4KineticTrack
 /*
 inline void * G4KineticTrack::operator new(size_t)
 {
@@ -255,75 +257,77 @@ inline const G4LorentzVector& G4KineticTrack::Get4Momentum() const
 
 inline const G4LorentzVector& G4KineticTrack::GetTrackingMomentum() const
 {
-   return the4Momentum;
+  return the4Momentum;
 }
 
 inline void G4KineticTrack::Set4Momentum(const G4LorentzVector& a4Momentum)
 {
-//  set the4Momentum and update theTotal4Momentum
+  //  set the4Momentum and update theTotal4Momentum
 
-  theTotal4Momentum=a4Momentum;
+  theTotal4Momentum = a4Momentum;
   the4Momentum = theTotal4Momentum;
-  theFermi3Momentum=G4LorentzVector(0);
+  theFermi3Momentum = G4LorentzVector(0);
 }
 
 inline void G4KineticTrack::Update4Momentum(G4double aEnergy)
 {
-// update the4Momentum with aEnergy at constant mass (the4Momentum.mag()  
-//   updates theTotal4Momentum as well.
+  // update the4Momentum with aEnergy at constant mass (the4Momentum.mag()
+  //   updates theTotal4Momentum as well.
   G4double newP(0);
-  G4double mass2=theTotal4Momentum.mag2();
-  if ( sqr(aEnergy) > mass2 )
+  G4double mass2 = theTotal4Momentum.mag2();
+  if (sqr(aEnergy) > mass2)
   {
-      newP = std::sqrt(sqr(aEnergy) - mass2 );
-  } else
-  {
-      aEnergy=std::sqrt(mass2);
+    newP = std::sqrt(sqr(aEnergy) - mass2);
   }
-  Set4Momentum(G4LorentzVector(newP*the4Momentum.vect().unit(), aEnergy));
+  else
+  {
+    aEnergy = std::sqrt(mass2);
+  }
+  Set4Momentum(G4LorentzVector(newP * the4Momentum.vect().unit(), aEnergy));
 }
 
-inline void G4KineticTrack::Update4Momentum(const G4ThreeVector & aMomentum)
+inline void G4KineticTrack::Update4Momentum(const G4ThreeVector& aMomentum)
 {
-// update the4Momentum with aMomentum at constant mass (the4Momentum.mag()  
-//   updates theTotal4Momentum as well.
-  G4double newE=std::sqrt(theTotal4Momentum.mag2() + aMomentum.mag2());
+  // update the4Momentum with aMomentum at constant mass (the4Momentum.mag()
+  //   updates theTotal4Momentum as well.
+  G4double newE = std::sqrt(theTotal4Momentum.mag2() + aMomentum.mag2());
   Set4Momentum(G4LorentzVector(aMomentum, newE));
 }
 
 inline void G4KineticTrack::SetTrackingMomentum(const G4LorentzVector& aMomentum)
 {
-//  set the4Momentum and update theTotal4Momentum, keep the mass of aMomentum
+  //  set the4Momentum and update theTotal4Momentum, keep the mass of aMomentum
 
   the4Momentum = aMomentum;
-  theTotal4Momentum=the4Momentum+theFermi3Momentum;
-//     keep mass of aMomentum for the total momentum
+  theTotal4Momentum = the4Momentum + theFermi3Momentum;
+  //     keep mass of aMomentum for the total momentum
   G4double mass2 = aMomentum.mag2();
-  G4double p2=theTotal4Momentum.vect().mag2();
-  theTotal4Momentum.setE(std::sqrt(mass2+p2));
+  G4double p2 = theTotal4Momentum.vect().mag2();
+  theTotal4Momentum.setE(std::sqrt(mass2 + p2));
 }
 
 inline void G4KineticTrack::UpdateTrackingMomentum(G4double aEnergy)
 {
-// update the4Momentum with aEnergy at constant mass (the4Momentum.mag()  
-//   updates theTotal4Momentum as well.
+  // update the4Momentum with aEnergy at constant mass (the4Momentum.mag()
+  //   updates theTotal4Momentum as well.
   G4double newP(0);
-  G4double mass2=theTotal4Momentum.mag2();
-  if ( sqr(aEnergy) > mass2 )
+  G4double mass2 = theTotal4Momentum.mag2();
+  if (sqr(aEnergy) > mass2)
   {
-      newP = std::sqrt(sqr(aEnergy) - mass2 );
-  } else
-  {
-      aEnergy=std::sqrt(mass2);
+    newP = std::sqrt(sqr(aEnergy) - mass2);
   }
-  SetTrackingMomentum(G4LorentzVector(newP*the4Momentum.vect().unit(), aEnergy));
+  else
+  {
+    aEnergy = std::sqrt(mass2);
+  }
+  SetTrackingMomentum(G4LorentzVector(newP * the4Momentum.vect().unit(), aEnergy));
 }
 
-inline void G4KineticTrack::UpdateTrackingMomentum(const G4ThreeVector & aMomentum)
+inline void G4KineticTrack::UpdateTrackingMomentum(const G4ThreeVector& aMomentum)
 {
-// update the4Momentum with aMomentum at constant mass (the4Momentum.mag()  
-//   updates theTotal4Momentum as well.
-  G4double newE=std::sqrt(theTotal4Momentum.mag2() + aMomentum.mag2());
+  // update the4Momentum with aMomentum at constant mass (the4Momentum.mag()
+  //   updates theTotal4Momentum as well.
+  G4double newE = std::sqrt(theTotal4Momentum.mag2() + aMomentum.mag2());
   SetTrackingMomentum(G4LorentzVector(aMomentum, newE));
 }
 
@@ -352,121 +356,107 @@ inline void G4KineticTrack::SetActualWidth(G4double* anActualWidth)
   theActualWidth = anActualWidth;
 }
 
-
-
 inline G4double G4KineticTrack::EvaluateTotalActualWidth()
 {
- G4int index;
- G4double theTotalActualWidth = 0.0;
- for (index = nChannels - 1; index >= 0; index--)
-    {
-     theTotalActualWidth += theActualWidth[index];
-    }
- return theTotalActualWidth;
+  G4int index;
+  G4double theTotalActualWidth = 0.0;
+  for (index = nChannels - 1; index >= 0; index--)
+  {
+    theTotalActualWidth += theActualWidth[index];
+  }
+  return theTotalActualWidth;
 }
 
 inline G4double G4KineticTrack::SampleResidualLifetime()
 {
- G4double theTotalActualWidth = this->EvaluateTotalActualWidth();
- G4double tau = CLHEP::hbar_Planck * (-1.0 / theTotalActualWidth);
- G4double theResidualLifetime = tau * G4Log(G4UniformRand());
- return theResidualLifetime*the4Momentum.gamma();
+  G4double theTotalActualWidth = this->EvaluateTotalActualWidth();
+  G4double tau = CLHEP::hbar_Planck * (-1.0 / theTotalActualWidth);
+  G4double theResidualLifetime = tau * G4Log(G4UniformRand());
+  return theResidualLifetime * the4Momentum.gamma();
 }
 
-inline G4double G4KineticTrack::EvaluateCMMomentum(const G4double mass, 
-                                                 const G4double* m_ij) const
+inline G4double G4KineticTrack::EvaluateCMMomentum(const G4double mass, const G4double* m_ij) const
 {
   G4double theCMMomentum;
-  if((m_ij[0]+m_ij[1])<mass)
-   theCMMomentum = 1 / (2 * mass) * 
-          std::sqrt (((mass * mass) - (m_ij[0] + m_ij[1]) * (m_ij[0] + m_ij[1])) *
-                ((mass * mass) - (m_ij[0] - m_ij[1]) * (m_ij[0] - m_ij[1])));
+  if ((m_ij[0] + m_ij[1]) < mass)
+    theCMMomentum = 1 / (2 * mass)
+                    * std::sqrt(((mass * mass) - (m_ij[0] + m_ij[1]) * (m_ij[0] + m_ij[1]))
+                                * ((mass * mass) - (m_ij[0] - m_ij[1]) * (m_ij[0] - m_ij[1])));
   else
-   theCMMomentum=0.;
+    theCMMomentum = 0.;
 
- return theCMMomentum;
-}     
-
-inline G4double G4KineticTrack::BrWig(const G4double Gamma, const G4double rmass, const G4double mass) const 
-{                
-  G4double Norm = CLHEP::twopi;
-  return (Gamma/((mass-rmass)*(mass-rmass)+Gamma*Gamma/4.))/Norm;
+  return theCMMomentum;
 }
-      
-inline      
-void G4KineticTrack::Hit() 
+
+inline G4double G4KineticTrack::BrWig(const G4double Gamma, const G4double rmass,
+                                      const G4double mass) const
 {
-  if(theNucleon) 
+  G4double Norm = CLHEP::twopi;
+  return (Gamma / ((mass - rmass) * (mass - rmass) + Gamma * Gamma / 4.)) / Norm;
+}
+
+inline void G4KineticTrack::Hit()
+{
+  if (theNucleon)
   {
     theNucleon->Hit(1);
   }
 }
 
-inline
-G4bool G4KineticTrack::IsParticipant() const 
-{ 
-  if(!theNucleon) return true;
-  return theNucleon->AreYouHit(); 
+inline G4bool G4KineticTrack::IsParticipant() const
+{
+  if (!theNucleon) return true;
+  return theNucleon->AreYouHit();
 }
 
-inline 
-G4KineticTrack::CascadeState G4KineticTrack::GetState() const
+inline G4KineticTrack::CascadeState G4KineticTrack::GetState() const
 {
-	return theStateToNucleus;
+  return theStateToNucleus;
 }
 
-inline
-G4KineticTrack::CascadeState G4KineticTrack::SetState(const CascadeState new_state)
+inline G4KineticTrack::CascadeState G4KineticTrack::SetState(const CascadeState new_state)
 {
-	CascadeState old_state=theStateToNucleus;
-	theStateToNucleus=new_state;
-	return old_state;
+  CascadeState old_state = theStateToNucleus;
+  theStateToNucleus = new_state;
+  return old_state;
 }
 
-inline
-void G4KineticTrack::SetProjectilePotential(G4double aPotential)
+inline void G4KineticTrack::SetProjectilePotential(G4double aPotential)
 {
-	theProjectilePotential = aPotential;
+  theProjectilePotential = aPotential;
 }
-inline
-G4double G4KineticTrack::GetProjectilePotential() const
+inline G4double G4KineticTrack::GetProjectilePotential() const
 {
-	return theProjectilePotential;
+  return theProjectilePotential;
 }
 
-inline
-void G4KineticTrack::SetCreatorModelID(G4int id)
+inline void G4KineticTrack::SetCreatorModelID(G4int id)
 {
-        theCreatorModel = id;
+  theCreatorModel = id;
 }
-inline
-G4int G4KineticTrack::GetCreatorModelID() const
+inline G4int G4KineticTrack::GetCreatorModelID() const
 {
-       return theCreatorModel;
+  return theCreatorModel;
 }
 
-inline
-const G4ParticleDefinition* G4KineticTrack::GetParentResonanceDef() const
+inline const G4ParticleDefinition* G4KineticTrack::GetParentResonanceDef() const
 {
-        return theParentResonanceDef;
+  return theParentResonanceDef;
 }
 
-inline
-void G4KineticTrack::SetParentResonanceDef(const G4ParticleDefinition* parentDef)
+inline void G4KineticTrack::SetParentResonanceDef(const G4ParticleDefinition* parentDef)
 {
-        theParentResonanceDef = parentDef;
+  theParentResonanceDef = parentDef;
 }
 
-inline
-G4int G4KineticTrack::GetParentResonanceID() const
+inline G4int G4KineticTrack::GetParentResonanceID() const
 {
-        return theParentResonanceID;
+  return theParentResonanceID;
 }
 
-inline
-void G4KineticTrack::SetParentResonanceID(const G4int parentID)
+inline void G4KineticTrack::SetParentResonanceID(const G4int parentID)
 {
-        theParentResonanceID = parentID;
+  theParentResonanceID = parentID;
 }
 
 #endif

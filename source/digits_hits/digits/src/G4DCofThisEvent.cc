@@ -36,7 +36,10 @@ G4Allocator<G4DCofThisEvent>*& anDCoTHAllocator_G4MT_TLS_()
   return _instance;
 }
 
-G4DCofThisEvent::G4DCofThisEvent() { DC = new std::vector<G4VDigiCollection*>; }
+G4DCofThisEvent::G4DCofThisEvent()
+{
+  DC = new std::vector<G4VDigiCollection*>;
+}
 
 G4DCofThisEvent::G4DCofThisEvent(G4int cap)
 {
@@ -45,7 +48,8 @@ G4DCofThisEvent::G4DCofThisEvent(G4int cap)
 
 G4DCofThisEvent::~G4DCofThisEvent()
 {
-  for (const G4VDigiCollection* d : *DC) {
+  for (const G4VDigiCollection* d : *DC)
+  {
     delete d;
   }
   delete DC;
@@ -53,7 +57,8 @@ G4DCofThisEvent::~G4DCofThisEvent()
 
 void G4DCofThisEvent::AddDigiCollection(G4int DCID, G4VDigiCollection* aDC)
 {
-  if (DCID >= 0 && DCID < G4int(DC->size())) {
+  if (DCID >= 0 && DCID < G4int(DC->size()))
+  {
     (*DC)[DCID] = aDC;
   }
 }
@@ -69,7 +74,8 @@ G4DCofThisEvent& G4DCofThisEvent::operator=(const G4DCofThisEvent& rhs)
 {
   if (this == &rhs) return *this;
 
-  for (const G4VDigiCollection* d : *DC) {
+  for (const G4VDigiCollection* d : *DC)
+  {
     delete d;
   }
   DC->resize(rhs.DC->size());

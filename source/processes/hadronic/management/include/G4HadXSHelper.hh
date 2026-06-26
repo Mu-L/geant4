@@ -31,30 +31,30 @@
 // Utilities used at initialisation of hadronic physics
 //
 
-#ifndef G4HadXSHelper_h
-#define G4HadXSHelper_h 1
+#ifndef G4HADXSHELPER_HH
+#define G4HADXSHELPER_HH
 
-#include "globals.hh"
 #include "G4HadXSTypes.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4HadronicProcess.hh"
+#include "G4ParticleDefinition.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4HadXSHelper
 {
-public:
+  public:
 
-  // find energy of cross section maximum for all couples
-  static std::vector<G4double>* 
-  FindCrossSectionMax(G4HadronicProcess*, const G4ParticleDefinition*,
-                      const G4double tmin, const G4double tmax);
+    // find energy of cross section maximum for all couples
+    static std::vector<G4double>* FindCrossSectionMax(G4HadronicProcess*,
+                                                      const G4ParticleDefinition*,
+                                                      const G4double tmin, const G4double tmax);
 
-  // fill structure describing more than one peak in cross sections
-  static std::vector<G4TwoPeaksHadXS*>*
-  FillPeaksStructure(G4HadronicProcess*, const G4ParticleDefinition*,
-                     const G4double tmin, const G4double tmax);
+    // fill structure describing more than one peak in cross sections
+    static std::vector<G4TwoPeaksHadXS*>* FillPeaksStructure(G4HadronicProcess*,
+                                                             const G4ParticleDefinition*,
+                                                             const G4double tmin,
+                                                             const G4double tmax);
 };
 
 #endif
-
-

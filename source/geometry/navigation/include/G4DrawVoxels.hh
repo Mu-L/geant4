@@ -22,7 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // G4DrawVoxels
 //
 // Class description:
@@ -31,12 +31,12 @@
 
 // Original author: L.G., 29 July 1999
 // --------------------------------------------------------------------
-#ifndef G4DrawVoxels_HH
-#define G4DrawVoxels_HH 1
+#ifndef G4DRAWVOXELS_HH
+#define G4DRAWVOXELS_HH
 
+#include "G4PlacedPolyhedron.hh"
 #include "G4VisAttributes.hh"
 #include "G4VoxelLimits.hh"
-#include "G4PlacedPolyhedron.hh"
 
 class G4SmartVoxelHeader;
 class G4LogicalVolume;
@@ -44,6 +44,7 @@ class G4LogicalVolume;
 /**
  * @brief G4DrawVoxels is a utility class for the visualization of voxels
  * in the detector geometry.
+ * @ingroup geometry_navigation
  */
 
 class G4DrawVoxels
@@ -58,14 +59,14 @@ class G4DrawVoxels
     /**
      * Copy constructor and assignment operator not allowed.
      */
-    G4DrawVoxels(const G4DrawVoxels&) = delete;	
-    G4DrawVoxels operator=(const G4DrawVoxels&) = delete;	
+    G4DrawVoxels(const G4DrawVoxels&) = delete;
+    G4DrawVoxels operator=(const G4DrawVoxels&) = delete;
 
     /**
      * Default Destructor.
      */
     ~G4DrawVoxels() = default;
-    
+
     /**
      * Draws voxels for the specified logical volume.
      */
@@ -79,20 +80,16 @@ class G4DrawVoxels
     /**
      * Visualisation attributes control. Allow changing colors of the drawing.
      */
-    void SetVoxelsVisAttributes(G4VisAttributes&,
-                                G4VisAttributes&,
-                                G4VisAttributes&);
+    void SetVoxelsVisAttributes(G4VisAttributes&, G4VisAttributes&, G4VisAttributes&);
     void SetBoundingBoxVisAttributes(G4VisAttributes&);
 
   private:
 
-    void ComputeVoxelPolyhedra(const G4LogicalVolume*,
-                               const G4SmartVoxelHeader*,
-                                     G4VoxelLimits&,
-                                     G4PlacedPolyhedronList*) const;
-    
+    void ComputeVoxelPolyhedra(const G4LogicalVolume*, const G4SmartVoxelHeader*, G4VoxelLimits&,
+                               G4PlacedPolyhedronList*) const;
+
   private:
-  
+
     G4VisAttributes fVoxelsVisAttributes[3];
     G4VisAttributes fBoundingBoxVisAttributes;
 };

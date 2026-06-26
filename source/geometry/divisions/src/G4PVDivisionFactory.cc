@@ -29,6 +29,7 @@
 // --------------------------------------------------------------------
 
 #include "G4PVDivisionFactory.hh"
+
 #include "G4PVDivision.hh"
 #include "G4VDivisionParameterisation.hh"
 
@@ -38,71 +39,58 @@ G4PVDivisionFactory* G4PVDivisionFactory::GetInstance()
 {
   if (fgInstance == nullptr)
   {
-    fgInstance =  new G4PVDivisionFactory;
+    fgInstance = new G4PVDivisionFactory;
   }
   return dynamic_cast<G4PVDivisionFactory*>(fgInstance);
-} 
+}
 
 //_____________________________________________________________________________
 
-G4VPhysicalVolume* 
-G4PVDivisionFactory::CreatePVDivision(const G4String& pName,
-                             G4LogicalVolume* pLogical,
-                             G4LogicalVolume* pMotherLogical,
-                             const EAxis pAxis,
-                             const G4int nReplicas,
-                             const G4double width,
-                             const G4double offset )
-{     
+G4VPhysicalVolume* G4PVDivisionFactory::CreatePVDivision(
+  const G4String& pName, G4LogicalVolume* pLogical, G4LogicalVolume* pMotherLogical,
+  const EAxis pAxis, const G4int nReplicas, const G4double width, const G4double offset)
+{
   // Create division - with number of divisions and width
   // ---
 
-  return new G4PVDivision(pName, pLogical, pMotherLogical, 
-                          pAxis, nReplicas, width, offset);
-}    
+  return new G4PVDivision(pName, pLogical, pMotherLogical, pAxis, nReplicas, width, offset);
+}
 
 //_____________________________________________________________________________
 
-G4VPhysicalVolume* 
-G4PVDivisionFactory::CreatePVDivision(const G4String& pName,
-                             G4LogicalVolume* pLogical,
-                             G4LogicalVolume* pMotherLogical,
-                             const EAxis pAxis,
-                             const G4int nReplicas,
-                             const G4double offset )
-{     
-  // Create division - with number of divisions 
+G4VPhysicalVolume* G4PVDivisionFactory::CreatePVDivision(const G4String& pName,
+                                                         G4LogicalVolume* pLogical,
+                                                         G4LogicalVolume* pMotherLogical,
+                                                         const EAxis pAxis, const G4int nReplicas,
+                                                         const G4double offset)
+{
+  // Create division - with number of divisions
   // ---
 
-  return new G4PVDivision(pName, pLogical, pMotherLogical, 
-                          pAxis, nReplicas, offset);
-}    
+  return new G4PVDivision(pName, pLogical, pMotherLogical, pAxis, nReplicas, offset);
+}
 
 //_____________________________________________________________________________
 
-G4VPhysicalVolume* 
-G4PVDivisionFactory::CreatePVDivision(const G4String& pName,
-                             G4LogicalVolume* pLogical,
-                             G4LogicalVolume* pMotherLogical,
-                             const EAxis pAxis,
-                             const G4double width,
-                             const G4double offset )
-{     
+G4VPhysicalVolume* G4PVDivisionFactory::CreatePVDivision(const G4String& pName,
+                                                         G4LogicalVolume* pLogical,
+                                                         G4LogicalVolume* pMotherLogical,
+                                                         const EAxis pAxis, const G4double width,
+                                                         const G4double offset)
+{
   // Create division - with width
   // ---
 
-  return new G4PVDivision(pName, pLogical, pMotherLogical, 
-                          pAxis, width, offset);
-}    
+  return new G4PVDivision(pName, pLogical, pMotherLogical, pAxis, width, offset);
+}
 
 //_____________________________________________________________________________
 
-G4VPhysicalVolume* 
-G4PVDivisionFactory::CreatePVDivision(const G4String& pName,
-                             G4LogicalVolume* pLogical,
-                             G4LogicalVolume* pMotherLogical,
-                             const G4VPVParameterisation* param)
-{     
+G4VPhysicalVolume* G4PVDivisionFactory::CreatePVDivision(const G4String& pName,
+                                                         G4LogicalVolume* pLogical,
+                                                         G4LogicalVolume* pMotherLogical,
+                                                         const G4VPVParameterisation* param)
+{
   // Create division - with parameterisation
   // ---
 
@@ -112,28 +100,25 @@ G4PVDivisionFactory::CreatePVDivision(const G4String& pName,
 
   if (divParam == nullptr)
   {
-    G4Exception("G4PVDivisionFactory::CreatePVDivision()",
-                "GeomDiv0001", FatalException,
+    G4Exception("G4PVDivisionFactory::CreatePVDivision()", "GeomDiv0001", FatalException,
                 "Unexpected parameterisation type!");
     return nullptr;
   }
-  
+
   EAxis axis = divParam->GetAxis();
   G4int nofDivisions = divParam->GetNoDiv();
   G4double width = divParam->GetWidth();
   G4double offset = divParam->GetOffset();
 
-  return new G4PVDivision(pName, pLogical, pMotherLogical, 
-                          axis, nofDivisions, width, offset);
-}    
+  return new G4PVDivision(pName, pLogical, pMotherLogical, axis, nofDivisions, width, offset);
+}
 
 //_____________________________________________________________________________
 
 G4bool G4PVDivisionFactory::IsPVDivision(const G4VPhysicalVolume* pv) const
-{ 
+{
   // Returns true if pv is division
   // ---
 
   return dynamic_cast<const G4PVDivision*>(pv) != nullptr;
 }
-

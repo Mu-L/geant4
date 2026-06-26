@@ -38,26 +38,30 @@ class G4UIcmdWithADouble;
 class G4UIcmdWithAnInteger;
 class G4UIcmdWithAString;
 
-class G4VisCommandsTouchableSet: public G4VVisCommand {
-public:
-  G4VisCommandsTouchableSet ();
-  virtual ~G4VisCommandsTouchableSet ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandsTouchableSet (const G4VisCommandsTouchableSet&);
-  G4VisCommandsTouchableSet& operator = (const G4VisCommandsTouchableSet&);
-  G4UIcommand*          fpCommandSetColour;
-  G4UIcmdWithABool*     fpCommandSetDaughtersInvisible;
-  G4UIcmdWithABool*     fpCommandSetForceAuxEdgeVisible;
-  G4UIcmdWithAnInteger* fpCommandSetLineSegmentsPerCircle;
-  G4UIcmdWithABool*     fpCommandSetForceCloud;
-  G4UIcmdWithABool*     fpCommandSetForceSolid;
-  G4UIcmdWithABool*     fpCommandSetForceWireframe;
-  G4UIcmdWithAString*   fpCommandSetLineStyle;
-  G4UIcmdWithADouble*   fpCommandSetLineWidth;
-  G4UIcmdWithAnInteger* fpCommandSetNumberOfCloudPoints;
-  G4UIcmdWithABool*     fpCommandSetVisibility;
+class G4VisCommandsTouchableSet : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandsTouchableSet();
+    virtual ~G4VisCommandsTouchableSet();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandsTouchableSet(const G4VisCommandsTouchableSet&);
+    G4VisCommandsTouchableSet& operator=(const G4VisCommandsTouchableSet&);
+    G4UIcommand* fpCommandSetColour;
+    G4UIcmdWithABool* fpCommandSetDaughtersInvisible;
+    G4UIcmdWithABool* fpCommandSetForceAuxEdgeVisible;
+    G4UIcmdWithAnInteger* fpCommandSetLineSegmentsPerCircle;
+    G4UIcmdWithABool* fpCommandSetForceCloud;
+    G4UIcmdWithABool* fpCommandSetForceSolid;
+    G4UIcmdWithABool* fpCommandSetForceWireframe;
+    G4UIcmdWithAString* fpCommandSetLineStyle;
+    G4UIcmdWithADouble* fpCommandSetLineWidth;
+    G4UIcmdWithAnInteger* fpCommandSetNumberOfCloudPoints;
+    G4UIcmdWithABool* fpCommandSetVisibility;
 };
 
 #endif

@@ -28,11 +28,11 @@
 //
 // GEANT4 Class header file G4ChargeExchangeXS
 //
-// Author V.Ivanchenko 
+// Author V.Ivanchenko
 //
-// Modified: 09.08.2023 Tim Lok Chau, CERN summer student program 
+// Modified: 09.08.2023 Tim Lok Chau, CERN summer student program
 //
- 
+
 // This is a class for charge exchange hadronic cross sections:
 // pi- + N(Z, A) -> X + N(Z-1, A)
 // pi+ + N(Z, A) -> X + N(Z+1, A)
@@ -46,13 +46,14 @@
 // KL + N(Z, A) -> K- + N(Z+1, A)
 //
 // where Y = KS, KL
-// 
+//
 
 #ifndef G4CHARGEEXCHANGEXS_HH
 #define G4CHARGEEXCHANGEXS_HH
 
 #include "G4VCrossSectionDataSet.hh"
 #include "globals.hh"
+
 #include <vector>
 
 class G4DynamicParticle;
@@ -64,58 +65,54 @@ class G4Pow;
 
 class G4ChargeExchangeXS final : public G4VCrossSectionDataSet
 {
-public: 
+  public:
 
-  G4ChargeExchangeXS();
+    G4ChargeExchangeXS();
 
-  ~G4ChargeExchangeXS() override = default;
+    ~G4ChargeExchangeXS() override = default;
 
-  G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z, 
-                             const G4Material*) final;
+    G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z, const G4Material*) final;
 
-  G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z,
-                                  const G4Material*) final;
+    G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z, const G4Material*) final;
 
-  void CrossSectionDescription(std::ostream&) const final;
+    void CrossSectionDescription(std::ostream&) const final;
 
-  const G4ParticleDefinition*
-  SampleSecondaryType(const G4ParticleDefinition*, const G4Material*,
-		      G4int Z, G4int A, G4double etot);
+    const G4ParticleDefinition* SampleSecondaryType(const G4ParticleDefinition*, const G4Material*,
+                                                    G4int Z, G4int A, G4double etot);
 
-  G4double GetPartialPionXS(G4int idx) const;
-  
-  void SetEnergyLimit(G4double val) { fEnergyLimit = val; };
+    G4double GetPartialPionXS(G4int idx) const;
 
-  void SetPionCrossSectionFactor(G4double val) { fFactorPi = val; };
+    void SetEnergyLimit(G4double val) { fEnergyLimit = val; };
 
-  void SetKaonCrossSectionFactor(G4double val) { fFactorK = val; };
-  
-  G4double GetCrossSectionFactor() const { return fFactor; };
-  
-  G4bool isPion() const { return findex >= 0; };
+    void SetPionCrossSectionFactor(G4double val) { fFactorPi = val; };
 
-  G4double SampleTforPion(const G4double etot,
-			  const G4double tmax) const;
+    void SetKaonCrossSectionFactor(G4double val) { fFactorK = val; };
 
-  G4ChargeExchangeXS & operator=(const G4ChargeExchangeXS &right) = delete;
-  G4ChargeExchangeXS(const G4ChargeExchangeXS&) = delete;
-  
-private:
+    G4double GetCrossSectionFactor() const { return fFactor; };
 
-  G4double GetCrossSection(const G4ParticleDefinition*, const G4Material*,
-			   G4int Z, G4double etot);
+    G4bool isPion() const { return findex >= 0; };
 
-  G4double ComputeDeuteronFraction(const G4Material*) const;
+    G4double SampleTforPion(const G4double etot, const G4double tmax) const;
 
-  G4Pow* g4calc;
-  G4int findex{-1};
-  const G4ParticleDefinition* fPionSecPD[5];
-  G4double fXSecPion[5] = {0.0, 0.0, 0.0, 0.0, 0.0};
-  G4double fEnergyLimit{0.0};
-  G4double fFactorPi{1.0};
-  G4double fFactorK{1.0};
-  G4double fFactor{1.0};
-  G4double fMassPi;
+    G4ChargeExchangeXS& operator=(const G4ChargeExchangeXS& right) = delete;
+    G4ChargeExchangeXS(const G4ChargeExchangeXS&) = delete;
+
+  private:
+
+    G4double GetCrossSection(const G4ParticleDefinition*, const G4Material*, G4int Z,
+                             G4double etot);
+
+    G4double ComputeDeuteronFraction(const G4Material*) const;
+
+    G4Pow* g4calc;
+    G4int findex{-1};
+    const G4ParticleDefinition* fPionSecPD[5];
+    G4double fXSecPion[5] = {0.0, 0.0, 0.0, 0.0, 0.0};
+    G4double fEnergyLimit{0.0};
+    G4double fFactorPi{1.0};
+    G4double fFactorK{1.0};
+    G4double fFactor{1.0};
+    G4double fMassPi;
 };
 
 #endif

@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  12th September 2004
 
 // Class Description:
@@ -61,34 +61,35 @@ class G4LogicalVolume;
 class G4PhysicalVolumeModel;
 class G4Material;
 
-class G4PhysicalVolumeMassScene: public G4PseudoScene
+class G4PhysicalVolumeMassScene : public G4PseudoScene
 {
+  public:
 
-public:
-  G4PhysicalVolumeMassScene (G4PhysicalVolumeModel*);
-  virtual ~G4PhysicalVolumeMassScene ();
+    G4PhysicalVolumeMassScene(G4PhysicalVolumeModel*);
+    virtual ~G4PhysicalVolumeMassScene();
 
-public: // With description
+  public:  // With description
 
-  G4double GetVolume () const {return fVolume;}
-  // Overall volume.
+    G4double GetVolume() const { return fVolume; }
+    // Overall volume.
 
-  G4double GetMass () const {return fMass;}
-  // Mass of whole tree, i.e., accounting for all daughters.
+    G4double GetMass() const { return fMass; }
+    // Mass of whole tree, i.e., accounting for all daughters.
 
-  void Reset ();
-  // Reset for subsequent re-use.
+    void Reset();
+    // Reset for subsequent re-use.
 
-private:
-  void ProcessVolume (const G4VSolid&);
-  G4PhysicalVolumeModel* fpPVModel;
-  G4double fVolume;
-  G4double fMass;
-  G4VPhysicalVolume* fpLastPV;
-  G4int fPVPCount;
-  G4int fLastDepth;
-  G4double fLastDensity;
-  std::deque<G4double> fDensityStack;
+  private:
+
+    void ProcessVolume(const G4VSolid&);
+    G4PhysicalVolumeModel* fpPVModel;
+    G4double fVolume;
+    G4double fMass;
+    G4VPhysicalVolume* fpLastPV;
+    G4int fPVPCount;
+    G4int fLastDepth;
+    G4double fLastDensity;
+    std::deque<G4double> fDensityStack;
 };
 
 #endif

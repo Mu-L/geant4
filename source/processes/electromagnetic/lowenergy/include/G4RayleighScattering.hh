@@ -27,20 +27,20 @@
 //
 //------------------ G4RayleighScattering physics process -----------------------
 //
-// 19-12-2008, first implementation, Luciano Pandola 
+// 19-12-2008, first implementation, Luciano Pandola
 // 18-03-2009, clean up according to Vladimir's suggestions, Luciano Pandola
 // -----------------------------------------------------------------------------
 
 // class description
 //
-// Class to implement Rayleigh scattering as a physics process. The default model 
+// Class to implement Rayleigh scattering as a physics process. The default model
 // used for the process is G4LivermoreRayleighModel
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4RayleighScattering_h
-#define G4RayleighScattering_h 1
+#ifndef G4RAYLEIGHSCATTERING_HH
+#define G4RAYLEIGHSCATTERING_HH
 
 #include "G4VEmProcess.hh"
 
@@ -48,31 +48,32 @@
 
 class G4RayleighScattering : public G4VEmProcess
 {
-public:  // with description
+  public:  // with description
 
-  explicit G4RayleighScattering(const G4String& processName ="Rayl",
-		                G4ProcessType type = fElectromagnetic);
+    explicit G4RayleighScattering(const G4String& processName = "Rayl",
+                                  G4ProcessType type = fElectromagnetic);
 
-  virtual ~G4RayleighScattering();
+    virtual ~G4RayleighScattering();
 
-  // true for Gamma only.  
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
-  
-  // print description in html
-  void ProcessDescription(std::ostream&) const override;
+    // true for Gamma only.
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
 
-  // hide assignment operator
-  G4RayleighScattering & operator=(const G4RayleighScattering &right) = delete;
-  G4RayleighScattering(const G4RayleighScattering&) = delete;
+    // print description in html
+    void ProcessDescription(std::ostream&) const override;
 
-protected:
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+    // hide assignment operator
+    G4RayleighScattering& operator=(const G4RayleighScattering& right) = delete;
+    G4RayleighScattering(const G4RayleighScattering&) = delete;
 
-private:    
-  G4bool       isInitialised;
+  protected:
+
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool isInitialised;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-  
+
 #endif
- 

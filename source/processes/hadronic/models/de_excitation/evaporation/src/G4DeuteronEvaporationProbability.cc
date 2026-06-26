@@ -33,19 +33,19 @@
 // 17-11-2010 V.Ivanchenko integer Z and A
 
 #include "G4DeuteronEvaporationProbability.hh"
+
 #include "G4DeexPrecoUtility.hh"
 
-G4DeuteronEvaporationProbability::G4DeuteronEvaporationProbability() :
-    G4EvaporationProbability(2,1,3.0)
+G4DeuteronEvaporationProbability::G4DeuteronEvaporationProbability()
+  : G4EvaporationProbability(2, 1, 3.0)
 {}
 
 G4double G4DeuteronEvaporationProbability::CalcAlphaParam(const G4Fragment& fr)
 {
-  return 1.0 + G4DeexPrecoUtility::ProtonCValue(fr.GetZ_asInt() - 1)*0.5;
+  return 1.0 + G4DeexPrecoUtility::ProtonCValue(fr.GetZ_asInt() - 1) * 0.5;
 }
 
-G4double G4DeuteronEvaporationProbability::CalcBetaParam(const G4Fragment&) 
+G4double G4DeuteronEvaporationProbability::CalcBetaParam(const G4Fragment&)
 {
   return 0.0;
 }
-

@@ -45,7 +45,7 @@
 // |                                                                   |
 // | The author acknowledges the work of the Geant4 collaboration      |
 // | in developing the following algorithms that have been employed    |
-// | or adapeted for the present software:                             |    
+// | or adapeted for the present software:                             |
 // |                                                                   |
 // |  # sampling of photon scattering angle,                           |
 // |  # target element selection in composite materials,               |
@@ -67,11 +67,11 @@
 // |                                                                   |
 // *********************************************************************
 
-#ifndef G4LowEPComptonModel_h
-#define G4LowEPComptonModel_h 1
+#ifndef G4LOWEPCOMPTONMODEL_HH
+#define G4LOWEPCOMPTONMODEL_HH
 
-#include "G4VEmModel.hh"
 #include "G4PhysicsFreeVector.hh"
+#include "G4VEmModel.hh"
 
 class G4ParticleChangeForGamma;
 class G4VAtomDeexcitation;
@@ -80,50 +80,43 @@ class G4DopplerProfile;
 
 class G4LowEPComptonModel : public G4VEmModel
 {
+  public:
 
-public:
-
-  explicit G4LowEPComptonModel(const G4ParticleDefinition* p = nullptr, 
-		          const G4String& nam = "LowEPComptonModel");
+    explicit G4LowEPComptonModel(const G4ParticleDefinition* p = nullptr,
+                                 const G4String& nam = "LowEPComptonModel");
     virtual ~G4LowEPComptonModel();
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
-  void InitialiseLocal(const G4ParticleDefinition*,
-                               G4VEmModel* masterModel) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel* masterModel) override;
 
-  void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
+    void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
 
-  G4double ComputeCrossSectionPerAtom( const G4ParticleDefinition*,
-				       G4double kinEnergy,
-				       G4double Z,
-				       G4double A=0,
-				       G4double cut=0,
-				       G4double emax=DBL_MAX ) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A = 0, G4double cut = 0,
+                                        G4double emax = DBL_MAX) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  G4LowEPComptonModel & operator=(const  G4LowEPComptonModel &right) = delete;
-  G4LowEPComptonModel(const  G4LowEPComptonModel&) = delete;
+    G4LowEPComptonModel& operator=(const G4LowEPComptonModel& right) = delete;
+    G4LowEPComptonModel(const G4LowEPComptonModel&) = delete;
 
-private:
-  void ReadData(size_t Z, const char* path = 0);
-  G4double ComputeScatteringFunction(G4double x, G4int Z);
+  private:
 
-  G4ParticleChangeForGamma* fParticleChange;
-  G4VAtomDeexcitation*      fAtomDeexcitation;
-  static G4ShellData*       shellData;
-  static G4DopplerProfile*  profileData;
+    void ReadData(size_t Z, const char* path = 0);
+    G4double ComputeScatteringFunction(G4double x, G4int Z);
 
-  static const G4int maxZ = 99;
-  static G4PhysicsFreeVector* data[100];
-  static const G4double ScatFuncFitParam[101][9];
- 
-  G4int verboseLevel;
-  G4bool isInitialised;
+    G4ParticleChangeForGamma* fParticleChange;
+    G4VAtomDeexcitation* fAtomDeexcitation;
+    static G4ShellData* shellData;
+    static G4DopplerProfile* profileData;
+
+    static const G4int maxZ = 99;
+    static G4PhysicsFreeVector* data[100];
+    static const G4double ScatFuncFitParam[101][9];
+
+    G4int verboseLevel;
+    G4bool isInitialised;
 };
 
 //****************************************************************************

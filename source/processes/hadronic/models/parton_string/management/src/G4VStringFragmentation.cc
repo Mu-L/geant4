@@ -28,9 +28,7 @@
 // G4VStringFragmentation
 #include "G4VStringFragmentation.hh"
 
-G4VStringFragmentation::G4VStringFragmentation(const G4String& name)
-  : G4HadronicInteraction(name)
+G4VStringFragmentation::G4VStringFragmentation(const G4String& name) : G4HadronicInteraction(name)
 {}
 
-G4VStringFragmentation::~G4VStringFragmentation()
-{}
+G4VStringFragmentation::~G4VStringFragmentation() {}

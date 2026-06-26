@@ -25,38 +25,36 @@
 //
 //
 // -------------------------------------------------------------------
-//      GEANT 4 class header file 
+//      GEANT 4 class header file
 //
 //      CERN, Geneva, Switzerland
 //
 //      File name:     G4VKM_NuclearDensity.hh
 //
 //      Author:        Alessandro Brunengo (Alessandro.Brunengo@ge.infn.it)
-// 
+//
 //      Creation date: 5 June 2000
 // -------------------------------------------------------------------
 
-#ifndef G4VKM_NuclearDensity_hh
-#define G4VKM_NuclearDensity_hh
+#ifndef G4VKM_NUCLEARDENSITY_HH
+#define G4VKM_NUCLEARDENSITY_HH
 
-#include "globals.hh"
 #include "G4ThreeVector.hh"
+#include "globals.hh"
 
 class G4VKM_NuclearDensity
 {
+  public:
 
-public:
-  G4VKM_NuclearDensity();
-  virtual ~G4VKM_NuclearDensity();
+    G4VKM_NuclearDensity();
+    virtual ~G4VKM_NuclearDensity();
 
-  virtual G4double GetDensity(const G4ThreeVector & point) = 0;
-  virtual G4double GetDeriv(const G4ThreeVector & point) = 0;
+    virtual G4double GetDensity(const G4ThreeVector& point) = 0;
+    virtual G4double GetDeriv(const G4ThreeVector& point) = 0;
 };
 
-inline G4VKM_NuclearDensity::G4VKM_NuclearDensity()
-{ }
+inline G4VKM_NuclearDensity::G4VKM_NuclearDensity() {}
 
-inline G4VKM_NuclearDensity::~G4VKM_NuclearDensity()
-{ }
+inline G4VKM_NuclearDensity::~G4VKM_NuclearDensity() {}
 
 #endif

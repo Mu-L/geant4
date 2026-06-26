@@ -29,52 +29,50 @@
 //
 // Modifications:
 //
-// 23 January 2012 V.Ivanchenko added pointer of G4VPhotonEvaporation 
+// 23 January 2012 V.Ivanchenko added pointer of G4VPhotonEvaporation
 
 #include "G4VEvaporation.hh"
+
 #include "G4VEvaporationChannel.hh"
 
-G4VEvaporation::G4VEvaporation()
-{}
+G4VEvaporation::G4VEvaporation() {}
 
-G4VEvaporation::~G4VEvaporation() 
+G4VEvaporation::~G4VEvaporation()
 {
   CleanChannels();
   delete thePhotonEvaporation;
-  delete theChannelFactory; 
+  delete theChannelFactory;
 }
 
 void G4VEvaporation::CleanChannels()
 {
   // clean all except photon evaporation
-  if(nullptr != theChannels) { 
-    for (std::size_t i=1; i<theChannels->size(); ++i) { 
-      delete (*theChannels)[i]; 
+  if (nullptr != theChannels)
+  {
+    for (std::size_t i = 1; i < theChannels->size(); ++i)
+    {
+      delete (*theChannels)[i];
     }
     delete theChannels;
     theChannels = nullptr;
   }
 }
 
-void G4VEvaporation::InitialiseChannels()
-{}
+void G4VEvaporation::InitialiseChannels() {}
 
 void G4VEvaporation::SetPhotonEvaporation(G4VEvaporationChannel* ptr)
 {
   // photon evaporation channel is the first
   // G4VEvaporation is responsible for its deletion
-  if (thePhotonEvaporation != ptr) {
+  if (thePhotonEvaporation != ptr)
+  {
     delete thePhotonEvaporation;
     thePhotonEvaporation = ptr;
-    if (nullptr != theChannels && 0 < theChannels->size()) {
+    if (nullptr != theChannels && 0 < theChannels->size())
+    {
       (*theChannels)[0] = ptr;
     }
   }
 }
 
-void G4VEvaporation::BreakFragment(G4FragmentVector*, G4Fragment*)
-{}
-
-
-
-
+void G4VEvaporation::BreakFragment(G4FragmentVector*, G4Fragment*) {}

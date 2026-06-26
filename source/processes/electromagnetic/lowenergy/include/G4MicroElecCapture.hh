@@ -32,33 +32,34 @@
 //
 // Description: The process to kill e- to save CPU
 //
-// Author:      V.Ivanchenko 31 August 2010 modified and adapted to MicorElec by C. Inguimbert 321/01/2022
+// Author:      V.Ivanchenko 31 August 2010 modified and adapted to MicorElec by C. Inguimbert
+// 321/01/2022
 //
 //----------------------------------------------------------------------------
 //
 // Class description:
 //
-// G4ElectronCapture allows to remove unwanted e- from simulation in 
+// G4ElectronCapture allows to remove unwanted e- from simulation in
 // order to improve CPU performance. There are two parameters:
-//                 
+//
 // 1) low energy threshold for e- kinetic energy (default 0)
 // 2) the name of G4Region where process is active
-// 
 //
-// If an electron track is killed then energy deposition is added to the step 
+//
+// If an electron track is killed then energy deposition is added to the step
 //
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef MicroElecCapture_h
-#define MicroElecCapture_h 1
+#ifndef G4MICROELECCAPTURE_HH
+#define G4MICROELECCAPTURE_HH
 
-#include "G4VDiscreteProcess.hh"
 #include "G4MicroElecMaterialStructure.hh"
-#include "globals.hh"
-#include "G4ProductionCutsTable.hh"
 #include "G4ParticleChangeForGamma.hh"
+#include "G4ProductionCutsTable.hh"
+#include "G4VDiscreteProcess.hh"
+#include "globals.hh"
 
 class G4Region;
 
@@ -66,45 +67,44 @@ class G4Region;
 
 class G4MicroElecCapture : public G4VDiscreteProcess
 {
-public:
+  public:
 
-  G4MicroElecCapture(const G4String& regName, G4double ekinlimit);
+    G4MicroElecCapture(const G4String& regName, G4double ekinlimit);
 
-  virtual ~G4MicroElecCapture();
+    virtual ~G4MicroElecCapture();
 
-  void SetKinEnergyLimit(G4double);
+    void SetKinEnergyLimit(G4double);
 
-  void BuildPhysicsTable(const G4ParticleDefinition&) override;
+    void BuildPhysicsTable(const G4ParticleDefinition&) override;
 
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
 
-  void Initialise();
-  
-  G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&) override;
+    void Initialise();
 
-  G4MicroElecCapture(const G4MicroElecCapture&) = delete;
-  G4MicroElecCapture& operator = (const G4MicroElecCapture &right) = delete;
+    G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&) override;
 
+    G4MicroElecCapture(const G4MicroElecCapture&) = delete;
+    G4MicroElecCapture& operator=(const G4MicroElecCapture& right) = delete;
 
-protected:
+  protected:
 
-  G4double GetMeanFreePath(const G4Track&, G4double,G4ForceCondition*) override;
+    G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*) override;
 
-private:
+  private:
 
-  G4double G_Lindhard_Rob(G4double , G4int , G4int , G4int , G4int );
-  
-  typedef std::map<G4String, G4MicroElecMaterialStructure*, std::less<G4String> > WorkFunctionTable;
-  WorkFunctionTable tableWF; //Table of all materials simulated
+    G4double G_Lindhard_Rob(G4double, G4int, G4int, G4int, G4int);
 
-  G4bool isInitialised;
-  G4double kinEnergyThreshold;
-  G4String regionName;
-  G4Region* region;
-  G4ParticleChangeForGamma fParticleChange;
+    typedef std::map<G4String, G4MicroElecMaterialStructure*, std::less<G4String>>
+      WorkFunctionTable;
+    WorkFunctionTable tableWF;  // Table of all materials simulated
+
+    G4bool isInitialised;
+    G4double kinEnergyThreshold;
+    G4String regionName;
+    G4Region* region;
+    G4ParticleChangeForGamma fParticleChange;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

@@ -23,36 +23,50 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4HadTmpUtil_hh
-#define G4HadTmpUtil_hh 1
+#ifndef G4HADTMPUTIL_HH
+#define G4HADTMPUTIL_HH
 
 #include "globals.hh"
+
 #include <vector>
 
 // Waiting for permission to use namespaces in geant4.....
 // namespace G4Had_Tmp_Util
 // {
 G4String G4inttostring(int ai);
-  template <class A> class G4SortHelperPtr
-  {
-    public:
-    G4SortHelperPtr(A * aA){theA = aA;}
-    G4bool operator<(G4SortHelperPtr<A> right) const
-    { return *theA < (*right); }
-    A & operator * () {return *theA;}
-    private:
-    A * theA;
-  };
-#include <algorithm>
-template<class A> void G4PtrSort(std::vector<A *> * aList)
+template<class A>
+class G4SortHelperPtr
 {
-  std::vector<G4SortHelperPtr<A> > helper;
-  for(size_t i=0; i<aList->size(); i++) helper.push_back(aList->operator[](i));
+  public:
+
+    G4SortHelperPtr(A* aA) { theA = aA; }
+    G4bool operator<(G4SortHelperPtr<A> right) const { return *theA < (*right); }
+    A& operator*() { return *theA; }
+
+  private:
+
+    A* theA;
+};
+#include <algorithm>
+template<class A>
+void G4PtrSort(std::vector<A*>* aList)
+{
+  std::vector<G4SortHelperPtr<A>> helper;
+  for (size_t i = 0; i < aList->size(); i++)
+    helper.push_back(aList->operator[](i));
   std::sort(helper.begin(), helper.end());
-  for(size_t j=0; j<helper.size(); j++) aList->operator[](j)=&(*helper[j]);
+  for (size_t j = 0; j < helper.size(); j++)
+    aList->operator[](j) = &(*helper[j]);
 }
 
-struct G4Delete { template<class T> void operator() (T * aT) {delete aT;} };
+struct G4Delete
+{
+    template<class T>
+    void operator()(T* aT)
+    {
+      delete aT;
+    }
+};
 
 // }
 

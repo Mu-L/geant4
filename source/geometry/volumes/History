@@ -6,6 +6,13 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-06-12 Gabriele Cosmo (geomvol-V11-04-00)
+- Refactored G4PVPlacement overlap checking to separate computation from
+  reporting without retaining results in the physical volume, enabling
+  concurrent checks with ordered diagnostic output.
+- Added optional task-local random streams for deterministic surface sampling
+  without changing the random stream used by serial overlap checks.
+
 ## 2025-10-28 Gabriele Cosmo (geomvol-V11-03-04)
 - Moved default destructor definitions to headers.
 - Minor code formatting in headers.

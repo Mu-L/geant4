@@ -39,18 +39,18 @@
 //
 // Class Description:
 //
-// Wrapper of proton and neutron elastic cross-sections using Barashenkov 
+// Wrapper of proton and neutron elastic cross-sections using Barashenkov
 // parametersation below 100 GeV and Glauber-Gribov model above
 //
 // -------------------------------------------------------------------
 //
 
-#ifndef G4BGGNucleonElasticXS_h
-#define G4BGGNucleonElasticXS_h 1
+#ifndef G4BGGNUCLEONELASTICXS_HH
+#define G4BGGNUCLEONELASTICXS_HH
 
-#include "globals.hh"
-#include "G4VCrossSectionDataSet.hh"
 #include "G4ParticleDefinition.hh"
+#include "G4VCrossSectionDataSet.hh"
+#include "globals.hh"
 
 class G4ComponentGGHadronNucleusXsc;
 class G4NucleonNuclearCrossSection;
@@ -61,55 +61,50 @@ class G4Isotope;
 
 class G4BGGNucleonElasticXS final : public G4VCrossSectionDataSet
 {
-public:
+  public:
 
-  explicit G4BGGNucleonElasticXS(const G4ParticleDefinition*);
+    explicit G4BGGNucleonElasticXS(const G4ParticleDefinition*);
 
-  ~G4BGGNucleonElasticXS() final;
-   
-  G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z, 
-			     const G4Material* mat) final;
+    ~G4BGGNucleonElasticXS() final;
 
-  G4bool IsIsoApplicable(const G4DynamicParticle*, G4int Z, G4int A,  
-			 const G4Element* elm,
-			 const G4Material* mat) final;
+    G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z, const G4Material* mat) final;
 
-  G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z,
-				  const G4Material* mat) final;
+    G4bool IsIsoApplicable(const G4DynamicParticle*, G4int Z, G4int A, const G4Element* elm,
+                           const G4Material* mat) final;
 
-  G4double GetIsoCrossSection(const G4DynamicParticle*, G4int Z, G4int A,  
-			      const G4Isotope* iso=nullptr,
-			      const G4Element* elm=nullptr,
-			      const G4Material* mat=nullptr) final;
+    G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z, const G4Material* mat) final;
 
-  void BuildPhysicsTable(const G4ParticleDefinition&) final;
+    G4double GetIsoCrossSection(const G4DynamicParticle*, G4int Z, G4int A,
+                                const G4Isotope* iso = nullptr, const G4Element* elm = nullptr,
+                                const G4Material* mat = nullptr) final;
 
-  void CrossSectionDescription(std::ostream&) const final;
+    void BuildPhysicsTable(const G4ParticleDefinition&) final;
 
-  G4BGGNucleonElasticXS & operator=
-  (const G4BGGNucleonElasticXS &right) = delete;
-  G4BGGNucleonElasticXS(const G4BGGNucleonElasticXS&) = delete;
+    void CrossSectionDescription(std::ostream&) const final;
 
-private:
+    G4BGGNucleonElasticXS& operator=(const G4BGGNucleonElasticXS& right) = delete;
+    G4BGGNucleonElasticXS(const G4BGGNucleonElasticXS&) = delete;
 
-  void Initialise();
-  
-  G4double CoulombFactor(G4double kinEnergy, G4int Z);
+  private:
 
-  G4double fGlauberEnergy;  
-  G4double fLowEnergy;  
+    void Initialise();
 
-  static G4double theGlauberFacP[93];
-  static G4double theCoulombFacP[93];
-  static G4double theGlauberFacN[93];
-  static G4double theCoulombFacN[93];
-  static G4int    theA[93];
+    G4double CoulombFactor(G4double kinEnergy, G4int Z);
 
-  const G4ParticleDefinition* theProton;
-  G4ComponentGGHadronNucleusXsc* fGlauber;
-  G4NucleonNuclearCrossSection* fNucleon;
-  G4HadronNucleonXsc* fHadron;
-  G4bool isProton;
+    G4double fGlauberEnergy;
+    G4double fLowEnergy;
+
+    static G4double theGlauberFacP[93];
+    static G4double theCoulombFacP[93];
+    static G4double theGlauberFacN[93];
+    static G4double theCoulombFacN[93];
+    static G4int theA[93];
+
+    const G4ParticleDefinition* theProton;
+    G4ComponentGGHadronNucleusXsc* fGlauber;
+    G4NucleonNuclearCrossSection* fNucleon;
+    G4HadronNucleonXsc* fHadron;
+    G4bool isProton;
 };
 
 #endif

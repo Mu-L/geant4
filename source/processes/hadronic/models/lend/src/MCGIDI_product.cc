@@ -59,7 +59,7 @@ LUPI_HOST Product::Product( GIDI::Product const *a_product, SetupInfo &a_setupIn
         m_distribution( nullptr ),
         m_outputChannel( nullptr ) {
 
-    a_setupInfo.m_product1Mass = mass( );                           // Includes nuclear excitation energy.
+    a_setupInfo.m_productMass = mass( );                            // Includes nuclear excitation energy.
     a_setupInfo.m_initialStateIndex = -1;
     m_distribution = Distributions::parseGIDI( a_product->distribution( ), a_setupInfo, a_settings );
     m_initialStateIndex = a_setupInfo.m_initialStateIndex;
@@ -94,6 +94,9 @@ LUPI_HOST Product::Product( PoPI::Database const &a_pops, std::string const &a_I
         m_distribution( nullptr ),
         m_outputChannel( nullptr ) {
 
+    if( a_pops.exists( a_ID ) ) {
+        m_mass = a_pops.massValue( a_ID, "MeV/c**2" );
+    }
 }
 
 /* *********************************************************************************************************//**
@@ -102,56 +105,7 @@ LUPI_HOST Product::Product( PoPI::Database const &a_pops, std::string const &a_I
 LUPI_HOST_DEVICE Product::~Product( ) {
 
     delete m_multiplicity;
-
-    Distributions::Type type = Distributions::Type::none;
-    if( m_distribution != nullptr ) type = m_distribution->type( );
-    switch( type ) {
-    case Distributions::Type::none:
-        break;
-    case Distributions::Type::unspecified:
-        delete static_cast<Distributions::Unspecified *>( m_distribution );
-        break;
-    case Distributions::Type::angularTwoBody:
-        delete static_cast<Distributions::AngularTwoBody *>( m_distribution );
-        break;
-    case Distributions::Type::KalbachMann:
-        delete static_cast<Distributions::KalbachMann *>( m_distribution );
-        break;
-    case Distributions::Type::uncorrelated:
-        delete static_cast<Distributions::Uncorrelated *>( m_distribution );
-        break;
-    case Distributions::Type::branching3d:
-        delete static_cast<Distributions::Branching3d *>( m_distribution );
-        break;
-    case Distributions::Type::energyAngularMC:
-        delete static_cast<Distributions::EnergyAngularMC *>( m_distribution );
-        break;
-    case Distributions::Type::angularEnergyMC:
-        delete static_cast<Distributions::AngularEnergyMC *>( m_distribution );
-        break;
-    case Distributions::Type::coherentPhotoAtomicScattering:
-        delete static_cast<Distributions::CoherentPhotoAtomicScattering *>( m_distribution );
-        break;
-    case Distributions::Type::incoherentPhotoAtomicScattering:
-        delete static_cast<Distributions::IncoherentPhotoAtomicScattering *>( m_distribution );
-        break;
-    case Distributions::Type::incoherentBoundToFreePhotoAtomicScattering:
-        delete static_cast<Distributions::IncoherentBoundToFreePhotoAtomicScattering *>( m_distribution );
-        break;
-    case Distributions::Type::incoherentPhotoAtomicScatteringElectron:
-        delete static_cast<Distributions::IncoherentPhotoAtomicScatteringElectron *>( m_distribution );
-        break;
-    case Distributions::Type::pairProductionGamma:
-        delete static_cast<Distributions::PairProductionGamma *>( m_distribution );
-        break;
-    case Distributions::Type::coherentElasticTNSL:
-        delete static_cast<Distributions::CoherentElasticTNSL *>( m_distribution );
-        break;
-    case Distributions::Type::incoherentElasticTNSL:
-        delete static_cast<Distributions::IncoherentElasticTNSL *>( m_distribution );
-        break;
-    }
-
+    m_distribution = deleteDistribution( m_distribution );
     delete m_outputChannel;
 }
 

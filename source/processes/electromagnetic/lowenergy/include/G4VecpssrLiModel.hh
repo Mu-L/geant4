@@ -25,7 +25,7 @@
 //
 //
 // Author: Haifa Ben Abdelouahed
-//         
+//
 //
 // History:
 // -----------
@@ -41,28 +41,28 @@
 
 // -------------------------------------------------------------------
 
-
 #ifndef G4VECPSSRLIMODEL_HH
-#define G4VECPSSRLIMODEL_HH 1
+#define G4VECPSSRLIMODEL_HH
 
 #include "globals.hh"
 
-class G4VecpssrLiModel 
+class G4VecpssrLiModel
 {
-public:
-  explicit G4VecpssrLiModel();
-  virtual ~G4VecpssrLiModel();
+  public:
 
-  virtual G4double CalculateL1CrossSection(G4int zTarget,G4double massIncident, 
-					   G4double energyIncident) = 0;
+    explicit G4VecpssrLiModel();
+    virtual ~G4VecpssrLiModel();
 
-  virtual G4double CalculateL2CrossSection(G4int zTarget,G4double massIncident, 
-					   G4double energyIncident) = 0;
-  virtual G4double CalculateL3CrossSection(G4int zTarget,G4double massIncident, 
-					   G4double energyIncident) = 0;
+    virtual G4double CalculateL1CrossSection(G4int zTarget, G4double massIncident,
+                                             G4double energyIncident) = 0;
 
-  G4VecpssrLiModel(const G4VecpssrLiModel&) = delete;
-  G4VecpssrLiModel & operator = (const G4VecpssrLiModel &right) = delete;
+    virtual G4double CalculateL2CrossSection(G4int zTarget, G4double massIncident,
+                                             G4double energyIncident) = 0;
+    virtual G4double CalculateL3CrossSection(G4int zTarget, G4double massIncident,
+                                             G4double energyIncident) = 0;
+
+    G4VecpssrLiModel(const G4VecpssrLiModel&) = delete;
+    G4VecpssrLiModel& operator=(const G4VecpssrLiModel& right) = delete;
 };
 
 #endif

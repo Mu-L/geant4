@@ -27,25 +27,28 @@
 //
 // Class description:
 //
-// This interface is used internally by importance sampling. 
-// It delivers G4Nsplit_Weight according to a track weight. 
-// An implementation of the interface decides how to obtain 
+// This interface is used internally by importance sampling.
+// It delivers G4Nsplit_Weight according to a track weight.
+// An implementation of the interface decides how to obtain
 // remaining necessary information about the ratio of importances
-// in the pre and post "cell". 
+// in the pre and post "cell".
 
 // Author: Michael Dressel (CERN), 2002
 // ----------------------------------------------------------------------
 #ifndef G4VIMPORTANCESPLITEXAMINER_HH
 #define G4VIMPORTANCESPLITEXAMINER_HH
 
-#include "globals.hh"
 #include "G4Nsplit_Weight.hh"
+#include "globals.hh"
 
 /**
  * @brief G4VImportanceSplitExaminer is an interface used internally by
- * importance sampling. It delivers G4Nsplit_Weight according to a track weight.
+ * importance sampling.
+ * @ingroup geometry_biasing
+ *
+ * It delivers G4Nsplit_Weight according to a track weight.
  * An implementation of the interface decides how to obtain remaining necessary
- * information about the ratio of importances in the pre and post "cell". 
+ * information about the ratio of importances in the pre and post "cell".
  */
 
 class G4VImportanceSplitExaminer
@@ -61,7 +64,7 @@ class G4VImportanceSplitExaminer
     /**
      * Gets G4Nsplit_Weight for a given mother track weight.
      */
-    virtual G4Nsplit_Weight Examine(G4double w) const = 0; 
+    virtual G4Nsplit_Weight Examine(G4double w) const = 0;
 };
 
 #endif

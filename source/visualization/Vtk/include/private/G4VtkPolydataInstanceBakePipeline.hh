@@ -34,6 +34,7 @@ class G4VtkVisContext;
 class G4VtkPolydataInstanceBakePipeline : public G4VtkPolydataInstancePipeline
 {
   public:
+
     G4VtkPolydataInstanceBakePipeline(G4String name, const G4VtkVisContext& vc);
     ~G4VtkPolydataInstanceBakePipeline() override = default;
 
@@ -51,6 +52,7 @@ class G4VtkPolydataInstanceBakePipeline : public G4VtkPolydataInstancePipeline
     static std::size_t MakeHash(const G4Polyhedron& p, const G4VtkVisContext& vc);
 
   protected:
+
     // point colour data
     vtkSmartPointer<vtkDoubleArray> polydataPointData;
 

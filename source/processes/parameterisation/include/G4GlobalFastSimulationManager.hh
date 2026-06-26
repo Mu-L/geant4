@@ -53,7 +53,7 @@
 #include "globals.hh"
 
 class G4FastSimulationMessenger;
-template <class T>
+template<class T>
 class G4ThreadLocalSingleton;
 
 enum listType
@@ -83,9 +83,10 @@ enum listType
 
 class G4GlobalFastSimulationManager
 {
-  friend class G4ThreadLocalSingleton<G4GlobalFastSimulationManager>;
+    friend class G4ThreadLocalSingleton<G4GlobalFastSimulationManager>;
 
   public:
+
     // Destructor
     ~G4GlobalFastSimulationManager();
 
@@ -141,6 +142,7 @@ class G4GlobalFastSimulationManager
     void Flush();
 
   private:
+
     // Private construtor insures singleton class
     G4GlobalFastSimulationManager();
 

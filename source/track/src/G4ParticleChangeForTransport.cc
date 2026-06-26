@@ -29,14 +29,15 @@
 // --------------------------------------------------------------------
 
 #include "G4ParticleChangeForTransport.hh"
+
+#include "G4DynamicParticle.hh"
+#include "G4Step.hh"
 #include "G4TouchableHandle.hh"
 #include "G4Track.hh"
-#include "G4Step.hh"
 #include "G4TrackFastVector.hh"
-#include "G4DynamicParticle.hh"
 
 // --------------------------------------------------------------------
-G4ParticleChangeForTransport::G4ParticleChangeForTransport() 
+G4ParticleChangeForTransport::G4ParticleChangeForTransport()
 {
   // Disable flag that is enabled in G4VParticleChange if G4VERBOSE.
   debugFlag = false;
@@ -58,17 +59,16 @@ G4Step* G4ParticleChangeForTransport::UpdateStepForAlongStep(G4Step* pStep)
 
   // Most of the code assumes that transportation is always the first process,
   // so the pre- and post-step point are still equal.
-  G4StepPoint* pPreStepPoint  = pStep->GetPreStepPoint();
+  G4StepPoint* pPreStepPoint = pStep->GetPreStepPoint();
   G4StepPoint* pPostStepPoint = pStep->GetPostStepPoint();
 
   // update momentum direction and energy
-  if(isMomentumChanged)
+  if (isMomentumChanged)
   {
     pPostStepPoint->SetMomentumDirection(theMomentumDirectionChange);
     pPostStepPoint->SetKineticEnergy(theEnergyChange);
   }
-  if(isVelocityChanged)
-    pPostStepPoint->SetVelocity(theVelocityChange);
+  if (isVelocityChanged) pPostStepPoint->SetVelocity(theVelocityChange);
 
   // update polarization
   pPostStepPoint->SetPolarization(thePolarizationChange);
@@ -80,11 +80,14 @@ G4Step* G4ParticleChangeForTransport::UpdateStepForAlongStep(G4Step* pStep)
   pPostStepPoint->SetProperTime(theProperTimeChange);
 
 #ifdef G4VERBOSE
-  if(debugFlag) { CheckIt(*theCurrentTrack); }
+  if (debugFlag)
+  {
+    CheckIt(*theCurrentTrack);
+  }
 #endif
 
   // Update the G4Step specific attributes
-  pStep->SetStepLength( theTrueStepLength );
+  pStep->SetStepLength(theTrueStepLength);
   pStep->SetControlFlag(theSteppingControlFlag);
 
   return pStep;
@@ -97,7 +100,7 @@ G4Step* G4ParticleChangeForTransport::UpdateStepForPostStep(G4Step* pStep)
 
   // Change volume only if some kinetic energy remains
   G4StepPoint* pPostStepPoint = pStep->GetPostStepPoint();
-  if(pPostStepPoint->GetKineticEnergy() > 0.0)
+  if (pPostStepPoint->GetKineticEnergy() > 0.0)
   {
     // update next touchable
     // (touchable can be changed only at PostStepDoIt)
@@ -107,7 +110,7 @@ G4Step* G4ParticleChangeForTransport::UpdateStepForPostStep(G4Step* pStep)
     pPostStepPoint->SetMaterialCutsCouple(theMaterialCutsCoupleChange);
     pPostStepPoint->SetSensitiveDetector(theSensitiveDetectorChange);
   }
-  if(this->GetFirstStepInVolume())
+  if (this->GetFirstStepInVolume())
   {
     pStep->SetFirstStepFlag();
   }
@@ -115,7 +118,7 @@ G4Step* G4ParticleChangeForTransport::UpdateStepForPostStep(G4Step* pStep)
   {
     pStep->ClearFirstStepFlag();
   }
-  if(this->GetLastStepInVolume())
+  if (this->GetLastStepInVolume())
   {
     pStep->SetLastStepFlag();
   }
@@ -139,6 +142,5 @@ void G4ParticleChangeForTransport::DumpInfo() const
 {
   // use base-class DumpInfo
   G4ParticleChange::DumpInfo();
-  G4cout << "        Touchable (pointer) : " << std::setw(20)
-         << theTouchableHandle() << G4endl;
+  G4cout << "        Touchable (pointer) : " << std::setw(20) << theTouchableHandle() << G4endl;
 }

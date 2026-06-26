@@ -43,25 +43,29 @@
 
 class G4Pow;
 
-class G4NonEquilibriumEvaporator : public G4CascadeDeexciteBase {
-public:
-  G4NonEquilibriumEvaporator();
-  virtual ~G4NonEquilibriumEvaporator() {}
+class G4NonEquilibriumEvaporator : public G4CascadeDeexciteBase
+{
+  public:
 
-  virtual void deExcite(const G4Fragment& target, G4CollisionOutput& output);
+    G4NonEquilibriumEvaporator();
+    virtual ~G4NonEquilibriumEvaporator() {}
 
-private:
-  G4InuclSpecialFunctions::paraMaker theParaMaker;
-  G4Pow* theG4Pow;			// Convenient reference to singleton
+    virtual void deExcite(const G4Fragment& target, G4CollisionOutput& output);
 
-  G4double getMatrixElement(G4int A) const;
-  G4double getE0(G4int A) const; 
-  G4double getParLev(G4int A, G4int Z) const;
+  private:
 
-private:
-  // Copying of modules is forbidden
-  G4NonEquilibriumEvaporator(const G4NonEquilibriumEvaporator&);
-  G4NonEquilibriumEvaporator& operator=(const G4NonEquilibriumEvaporator&);
+    G4InuclSpecialFunctions::paraMaker theParaMaker;
+    G4Pow* theG4Pow;  // Convenient reference to singleton
+
+    G4double getMatrixElement(G4int A) const;
+    G4double getE0(G4int A) const;
+    G4double getParLev(G4int A, G4int Z) const;
+
+  private:
+
+    // Copying of modules is forbidden
+    G4NonEquilibriumEvaporator(const G4NonEquilibriumEvaporator&);
+    G4NonEquilibriumEvaporator& operator=(const G4NonEquilibriumEvaporator&);
 };
 
 #endif /* G4NON_EQUILIBRIUM_EVAPORATOR_HH */

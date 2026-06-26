@@ -30,15 +30,15 @@
  *  Created on: Jul 23, 2019
  *      Author: W. G. Shin
  *              J. Ramos-Mendez and B. Faddegon
-*/
+ */
 
-#ifndef G4FakeMolecule_h
-#define G4FakeMolecule_h 1
+#ifndef G4FAKEMOLECULE_HH
+#define G4FAKEMOLECULE_HH
 
-#include "globals.hh"
-#include "G4ios.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4MoleculeDefinition.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 // ######################################################################
 // ###                         FakeMolecule                           ###
@@ -46,12 +46,14 @@
 
 class G4FakeMolecule : public G4MoleculeDefinition
 {
-private:
+  private:
+
     static /*G4ThreadLocal*/ G4FakeMolecule* theInstance;
     G4FakeMolecule() {}
     ~G4FakeMolecule() override = default;
 
-public:
+  public:
+
     static G4FakeMolecule* Definition();
 };
 

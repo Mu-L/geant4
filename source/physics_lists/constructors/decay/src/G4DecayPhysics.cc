@@ -33,25 +33,23 @@
 // Modified:
 // 10.11.2005 V.Ivanchenko edit to provide a standard
 // 05.12.2005 V.Ivanchenko add controlled verbosity
-// 25.04.2006 V.Ivanchenko fix problem of destructor 
+// 25.04.2006 V.Ivanchenko fix problem of destructor
 //
 //----------------------------------------------------------------------------
 //
 
 #include "G4DecayPhysics.hh"
 
-#include "G4ParticleDefinition.hh"
-#include "G4ProcessManager.hh"
-
+#include "G4BaryonConstructor.hh"
 #include "G4BosonConstructor.hh"
+#include "G4BuilderType.hh"
+#include "G4IonConstructor.hh"
 #include "G4LeptonConstructor.hh"
 #include "G4MesonConstructor.hh"
-#include "G4BosonConstructor.hh"
-#include "G4BaryonConstructor.hh"
-#include "G4IonConstructor.hh"
-#include "G4ShortLivedConstructor.hh"
-#include "G4BuilderType.hh"
+#include "G4ParticleDefinition.hh"
 #include "G4PhysListUtil.hh"
+#include "G4ProcessManager.hh"
+#include "G4ShortLivedConstructor.hh"
 
 // factory
 #include "G4PhysicsConstructorFactory.hh"
@@ -59,24 +57,20 @@
 G4_DECLARE_PHYSCONSTR_FACTORY(G4DecayPhysics);
 
 G4DecayPhysics::G4DecayPhysics(const G4String& name, G4int ver)
-  :  G4VPhysicsConstructor(name), verbose(ver)
+  : G4VPhysicsConstructor(name), verbose(ver)
 {
   SetPhysicsType(bDecay);
   G4PhysListUtil::InitialiseParameters();
 }
 
-G4DecayPhysics::G4DecayPhysics(G4int ver)
-  :  G4DecayPhysics("Decay", ver)
-{}
+G4DecayPhysics::G4DecayPhysics(G4int ver) : G4DecayPhysics("Decay", ver) {}
 
-G4DecayPhysics::~G4DecayPhysics()
-{}
+G4DecayPhysics::~G4DecayPhysics() {}
 
 void G4DecayPhysics::ConstructParticle()
 {
-
-// G4cout << "G4DecayPhysics::ConstructParticle" << G4endl;
-  G4BosonConstructor  pBosonConstructor;
+  // G4cout << "G4DecayPhysics::ConstructParticle" << G4endl;
+  G4BosonConstructor pBosonConstructor;
   pBosonConstructor.ConstructParticle();
 
   G4LeptonConstructor pLeptonConstructor;
@@ -92,7 +86,7 @@ void G4DecayPhysics::ConstructParticle()
   pIonConstructor.ConstructParticle();
 
   G4ShortLivedConstructor pShortLivedConstructor;
-  pShortLivedConstructor.ConstructParticle();  
+  pShortLivedConstructor.ConstructParticle();
 }
 
 void G4DecayPhysics::ConstructProcess()
@@ -101,16 +95,17 @@ void G4DecayPhysics::ConstructProcess()
 
   // Add Decay Process
   G4Decay* fDecayProcess = new G4Decay();
-  auto myParticleIterator=GetParticleIterator();
+  auto myParticleIterator = GetParticleIterator();
   myParticleIterator->reset();
-  G4ParticleDefinition* particle=0;
+  G4ParticleDefinition* particle = 0;
 
-  while( (*myParticleIterator)() )
+  while ((*myParticleIterator)())
   {
     particle = myParticleIterator->value();
-    if( fDecayProcess->IsApplicable(*particle) ) 
-    { 
-      if(verbose > 1) {
+    if (fDecayProcess->IsApplicable(*particle))
+    {
+      if (verbose > 1)
+      {
         G4cout << "### Decays for " << particle->GetParticleName() << G4endl;
       }
       ph->RegisterProcess(fDecayProcess, particle);

@@ -38,20 +38,22 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UBOX 1
+#  define G4GEOM_USE_UBOX 1
 #endif
 
 #if defined(G4GEOM_USE_UBOX)
-  #define G4UBox G4Box
-  #include "G4UBox.hh"
+#  define G4UBox G4Box
+#  include "G4UBox.hh"
 #else
 
-#include "G4CSGSolid.hh"
-#include "G4Polyhedron.hh"
+#  include "G4CSGSolid.hh"
+#  include "G4Polyhedron.hh"
 
 /**
- * @brief G4Box is a cuboid of given half lengths dx,dy,dz. The Box is
- * centred on the origin with sides parallel to the x/y/z axes.
+ * @brief G4Box is a cuboid of given half lengths dx,dy,dz.
+ * @ingroup geometry_solids_csg
+ *
+ * The Box is centred on the origin with sides parallel to the x/y/z axes.
  */
 
 class G4Box : public G4CSGSolid
@@ -76,8 +78,7 @@ class G4Box : public G4CSGSolid
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -97,10 +98,9 @@ class G4Box : public G4CSGSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Accessors and modifiers.
@@ -108,9 +108,9 @@ class G4Box : public G4CSGSolid
     inline G4double GetXHalfLength() const;
     inline G4double GetYHalfLength() const;
     inline G4double GetZHalfLength() const;
-    void SetXHalfLength(G4double dx) ;
-    void SetYHalfLength(G4double dy) ;
-    void SetZHalfLength(G4double dz) ;
+    void SetXHalfLength(G4double dx);
+    void SetYHalfLength(G4double dy);
+    void SetZHalfLength(G4double dz);
 
     /**
      * Returning an estimation of the solid volume (capacity) and
@@ -125,13 +125,11 @@ class G4Box : public G4CSGSolid
      */
     EInside Inside(const G4ThreeVector& p) const override;
     G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
-    G4double DistanceToIn(const G4ThreeVector& p,
-                          const G4ThreeVector& v) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
     G4double DistanceToIn(const G4ThreeVector& p) const override;
     G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
-                           const G4bool calcNorm = false,
-                                 G4bool* validNorm = nullptr,
-                                 G4ThreeVector* n = nullptr) const override;
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
     G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
@@ -164,7 +162,7 @@ class G4Box : public G4CSGSolid
     /**
      * Methods for creating graphical representations (i.e. for visualisation).
      */
-    void DescribeYourselfTo (G4VGraphicsScene& scene) const override;
+    void DescribeYourselfTo(G4VGraphicsScene& scene) const override;
     G4VisExtent GetExtent() const override;
     G4Polyhedron* CreatePolyhedron() const override;
 
@@ -195,7 +193,7 @@ class G4Box : public G4CSGSolid
     G4double delta;  // Cached half Cartesian tolerance
 };
 
-#include "G4Box.icc"
+#  include "G4Box.icc"
 
 #endif
 

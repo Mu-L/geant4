@@ -25,83 +25,88 @@
 //
 // Author:      Alexei Sytov
 
-#ifndef G4CoherentPairProductionPhysics_h
-#define G4CoherentPairProductionPhysics_h 1
+#ifndef G4COHERENTPAIRPRODUCTIONPHYSICS_HH
+#define G4COHERENTPAIRPRODUCTIONPHYSICS_HH
 
-#include "G4VPhysicsConstructor.hh"
 #include "G4CoherentPairProduction.hh"
+#include "G4VPhysicsConstructor.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class G4CoherentPairProductionPhysics : public G4VPhysicsConstructor
 {
-public:
-    G4CoherentPairProductionPhysics(const G4String& name =
-                                    "Coherent Pair Production Physics");
+  public:
+
+    G4CoherentPairProductionPhysics(const G4String& name = "Coherent Pair Production Physics");
 
     ~G4CoherentPairProductionPhysics() = default;
 
     void ConstructParticle() override;
     void ConstructProcess() override;
 
-    ///activate incoherent scattering
+    /// activate incoherent scattering
     ///(standard gamma conversion should be switched off in physics list)
-    void ActivateIncoherentScattering(){fIncoherentScattering = true;}
+    void ActivateIncoherentScattering() { fIncoherentScattering = true; }
 
-    ///set functions
+    /// set functions
 
-    ///set name of G4ChannelingFastSimModel from which an auto input should be performed
+    /// set name of G4ChannelingFastSimModel from which an auto input should be performed
     void SetNameChannelingModel(const G4String& nameChannelingModel)
-    {fNameChannelingModel=nameChannelingModel;}
+    {
+      fNameChannelingModel = nameChannelingModel;
+    }
 
-    ///set name of G4Region to where the G4ChannelingFastSimModel is active
-    void SetNameG4Region(const G4String& nameG4Region)
-    {fNameRegion=nameG4Region;}
+    /// set name of G4Region to where the G4ChannelingFastSimModel is active
+    void SetNameG4Region(const G4String& nameG4Region) { fNameRegion = nameG4Region; }
 
-    void SetLowEnergyLimit(G4double energy){fLowEnergyLimit=energy;}
-    void SetHighAngleLimit(G4double angle) {fHighAngleLimit=angle;}
-    void SetPPKineticEnergyCut(G4double kineticEnergyCut) {fPPKineticEnergyCut=kineticEnergyCut;}
+    void SetLowEnergyLimit(G4double energy) { fLowEnergyLimit = energy; }
+    void SetHighAngleLimit(G4double angle) { fHighAngleLimit = angle; }
+    void SetPPKineticEnergyCut(G4double kineticEnergyCut)
+    {
+      fPPKineticEnergyCut = kineticEnergyCut;
+    }
 
     /// set the number of pairs in sampling of Baier-Katkov Integral
     /// (MC integration by e+- energy and angles <=> e+- momentum)
-    void SetSamplingPairsNumber(G4int nPairs){fNMCPairs = nPairs;}
+    void SetSamplingPairsNumber(G4int nPairs) { fNMCPairs = nPairs; }
 
     /// set the number of particle angles 1/gamma in pair production
     /// defining the width of the angular distribution of pair sampling
     /// in the Baier-Katkov Integral
     void SetChargeParticleAngleFactor(G4double chargeParticleAngleFactor)
-    {fChargeParticleAngleFactor = chargeParticleAngleFactor;}
+    {
+      fChargeParticleAngleFactor = chargeParticleAngleFactor;
+    }
 
     /// set number of trajectory steps of a single particle (e- or e+)
-    void SetNTrajectorySteps(G4int nTrajectorySteps)
-    {fNTrajectorySteps = nTrajectorySteps;}
+    void SetNTrajectorySteps(G4int nTrajectorySteps) { fNTrajectorySteps = nTrajectorySteps; }
 
-private:
+  private:
 
-    ///flag of simulation of incoherent scattering
+    /// flag of simulation of incoherent scattering
     G4bool fIncoherentScattering = false;
 
-    ///name of G4ChannelingFastSimModel from which an auto input should be performed
+    /// name of G4ChannelingFastSimModel from which an auto input should be performed
     G4String fNameChannelingModel = "ChannelingModel";
 
-    ///name of G4Region to where the G4ChannelingFastSimModel is active
+    /// name of G4Region to where the G4ChannelingFastSimModel is active
     G4String fNameRegion = "Crystal";
 
-    G4double fLowEnergyLimit = 1*CLHEP::GeV;
-    G4double fHighAngleLimit = 50*CLHEP::mrad;
+    G4double fLowEnergyLimit = 1 * CLHEP::GeV;
+    G4double fHighAngleLimit = 50 * CLHEP::mrad;
 
-    ///minimal kinetic energy of a charged particle produced
-    G4double fPPKineticEnergyCut = 1*CLHEP::MeV;
+    /// minimal kinetic energy of a charged particle produced
+    G4double fPPKineticEnergyCut = 1 * CLHEP::MeV;
 
-    ///Monte Carlo statistics of e+- pair sampling in Baier-Katkov for 1 photon
+    /// Monte Carlo statistics of e+- pair sampling in Baier-Katkov for 1 photon
     G4int fNMCPairs = 150;
 
-    G4double fChargeParticleAngleFactor = 4; // number of particle angles 1/gamma:
-        // more fChargeParticleAngleFactor => higher paramParticleAngle
+    G4double fChargeParticleAngleFactor =
+      4;  // number of particle angles 1/gamma:
+          // more fChargeParticleAngleFactor => higher paramParticleAngle
 
-    ///number of trajectory steps of a single particle (e- or e+)
-    G4int fNTrajectorySteps=250;
-
+    /// number of trajectory steps of a single particle (e- or e+)
+    G4int fNTrajectorySteps = 250;
 };
 
 #endif

@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,10 +41,10 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#ifndef G4DNAElectronSolvation_h
-#define G4DNAElectronSolvation_h 1
+#ifndef G4DNAELECTRONSOLVATION_HH
+#define G4DNAELECTRONSOLVATION_HH
 
 #include "G4VEmProcess.hh"
 
@@ -54,30 +54,26 @@
 
 class G4DNAElectronSolvation : public G4VEmProcess
 {
-public:
-  G4DNAElectronSolvation(const G4String& processName =
-                            "DNAElectronSolvation",
+  public:
+
+    G4DNAElectronSolvation(const G4String& processName = "DNAElectronSolvation",
                            G4ProcessType type = fElectromagnetic);
-  ~G4DNAElectronSolvation() override;
+    ~G4DNAElectronSolvation() override;
 
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
-  virtual void PrintInfo();
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
+    virtual void PrintInfo();
 
-  static G4String GetDefaultName()
-  {
-    return "DNAElectronSolvatation";
-  }
+    static G4String GetDefaultName() { return "DNAElectronSolvatation"; }
 
-  static int ProcessSubType()
-  {
-    return 58;
-  }
+    static int ProcessSubType() { return 58; }
 
-protected:
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+  protected:
 
-private:
-  G4bool isInitialised{false};
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool isInitialised{false};
 };
 
 #endif

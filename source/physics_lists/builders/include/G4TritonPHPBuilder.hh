@@ -35,43 +35,36 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4TritonPHPBuilder_h
-#define G4TritonPHPBuilder_h 1
-
-#include "globals.hh"
+#ifndef G4TRITONPHPBUILDER_HH
+#define G4TRITONPHPBUILDER_HH
 
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
-#include "G4VTritonBuilder.hh"
-
 #include "G4ParticleHPInelastic.hh"
+#include "G4VTritonBuilder.hh"
+#include "globals.hh"
 
 class G4TritonPHPBuilder : public G4VTritonBuilder
 {
-public: 
-  G4TritonPHPBuilder();
-  virtual ~G4TritonPHPBuilder() {}
-  
-public: 
-  virtual void Build(G4HadronInelasticProcess * aP) final override;
-  virtual void Build(G4HadronElasticProcess * aP) final override;
-  
-  virtual void SetMinEnergy(G4double aM) final override
-  {
-    theMin=aM;
-  }
-  virtual void SetMaxEnergy(G4double aM) final override
-  {
-    theMax=aM;
-  }
-  
-  using G4VTritonBuilder::Build; //Prevent compiler warning
+  public:
 
-private:
-  G4double theMin;
-  G4double theMax;
+    G4TritonPHPBuilder();
+    virtual ~G4TritonPHPBuilder() {}
+
+  public:
+
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
+    virtual void Build(G4HadronElasticProcess* aP) final override;
+
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+    virtual void SetMaxEnergy(G4double aM) final override { theMax = aM; }
+
+    using G4VTritonBuilder::Build;  // Prevent compiler warning
+
+  private:
+
+    G4double theMin;
+    G4double theMax;
 };
 
-
 #endif
-

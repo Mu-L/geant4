@@ -43,7 +43,8 @@ G4ParticleHPFieldPoint::G4ParticleHPFieldPoint(G4int n)
 
 void G4ParticleHPFieldPoint::operator=(const G4ParticleHPFieldPoint& aSet)
 {
-  if (&aSet != this) {
+  if (&aSet != this)
+  {
     X = aSet.GetX();
     delete[] Y;
     Y = new G4double[aSet.GetDepth()];

@@ -40,8 +40,8 @@
 // Author: P.Gumplinger - Triumf, 25 July 2007
 // Revision: D. Mingming - Center for HEP, Tsinghua Univ., 10 August 2011
 // --------------------------------------------------------------------
-#ifndef G4MuonRadiativeDecayChannelWithSpin_hh
-#define G4MuonRadiativeDecayChannelWithSpin_hh 1
+#ifndef G4MUONRADIATIVEDECAYCHANNELWITHSPIN_HH
+#define G4MUONRADIATIVEDECAYCHANNELWITHSPIN_HH
 
 #include "G4ThreeVector.hh"
 #include "G4VDecayChannel.hh"
@@ -53,17 +53,20 @@
 class G4MuonRadiativeDecayChannelWithSpin : public G4VDecayChannel
 {
   public:
+
     G4MuonRadiativeDecayChannelWithSpin(const G4String& theParentName, G4double theBR);
     ~G4MuonRadiativeDecayChannelWithSpin() override = default;
 
     G4DecayProducts* DecayIt(G4double) override;
 
   protected:
+
     // Copy constructor and assignment operator
     G4MuonRadiativeDecayChannelWithSpin(const G4MuonRadiativeDecayChannelWithSpin&) = default;
     G4MuonRadiativeDecayChannelWithSpin& operator=(const G4MuonRadiativeDecayChannelWithSpin&);
 
   private:
+
     G4MuonRadiativeDecayChannelWithSpin() = default;
 
     G4double fron(G4double Pmu, G4double x, G4double y, G4double cthetaE, G4double cthetaG,
@@ -88,7 +91,8 @@ inline void G4MuonRadiativeDecayChannelWithSpin::rn3dim(G4double& x, G4double& y
   G4double c = 0.;
   G4double r = 0.;
 
-  do {
+  do
+  {
     a = G4UniformRand() - 0.5;
     b = G4UniformRand() - 0.5;
     c = G4UniformRand() - 0.5;
@@ -107,22 +111,28 @@ inline G4double G4MuonRadiativeDecayChannelWithSpin::atan4(G4double x, G4double 
 {
   G4double phi = 0.;
 
-  if (x == 0. && y > 0.) {
+  if (x == 0. && y > 0.)
+  {
     phi = 0.5 * CLHEP::pi;
   }
-  else if (x == 0. && y < 0.) {
+  else if (x == 0. && y < 0.)
+  {
     phi = 1.5 * CLHEP::pi;
   }
-  else if (y == 0. && x > 0.) {
+  else if (y == 0. && x > 0.)
+  {
     phi = 0.;
   }
-  else if (y == 0. && x < 0.) {
+  else if (y == 0. && x < 0.)
+  {
     phi = CLHEP::pi;
   }
-  else if (x > 0.) {
+  else if (x > 0.)
+  {
     phi = std::atan(y / x);
   }
-  else if (x < 0.) {
+  else if (x < 0.)
+  {
     phi = std::atan(y / x) + CLHEP::pi;
   }
 

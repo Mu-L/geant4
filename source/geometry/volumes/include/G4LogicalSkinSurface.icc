@@ -22,20 +22,18 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // Class G4LogicalSkinSurface inline implementation
 //
 // Author: John Apostolakis (CERN), 16.06.1997
 // ----------------------------------------------------------------------
 
-inline
-const G4LogicalVolume* G4LogicalSkinSurface::GetLogicalVolume() const
+inline const G4LogicalVolume* G4LogicalSkinSurface::GetLogicalVolume() const
 {
   return LogVolume;
 }
 
-inline
-void G4LogicalSkinSurface::SetLogicalVolume(G4LogicalVolume* vol)
+inline void G4LogicalSkinSurface::SetLogicalVolume(G4LogicalVolume* vol)
 {
   LogVolume = vol;
 }

@@ -36,79 +36,78 @@
 //      V.Ivanchenko 03.01.2012
 //          Added G4VPreCompoundModel pointer to the constructor and cleanup
 //      V. Uzhinsky Nov. 2012
-//          Added method PropagateNuclNucl for simulation of nucleus-nucleus inter. 
+//          Added method PropagateNuclNucl for simulation of nucleus-nucleus inter.
 // -----------------------------------------------------------------------------
 
-#ifndef G4VIntraNuclearTransportModel_h
-#define G4VIntraNuclearTransportModel_h 1
+#ifndef G4VINTRANUCLEARTRANSPORTMODEL_HH
+#define G4VINTRANUCLEARTRANSPORTMODEL_HH
 
 // Class Description
-// Base class for intra-nuclear transport models in geant4. By merit 
-// of inheriting from this class a intra-nuclear transport model can 
-// be used in conjunction with any precompound, string parton model 
-// or other high energy generator in the generation of final states 
+// Base class for intra-nuclear transport models in geant4. By merit
+// of inheriting from this class a intra-nuclear transport model can
+// be used in conjunction with any precompound, string parton model
+// or other high energy generator in the generation of final states
 // for inelastic scattering.
 // Class Description - End
 
+#include "G4HadFinalState.hh"
+#include "G4HadProjectile.hh"
+#include "G4HadronicInteraction.hh"
+#include "G4ReactionProduct.hh"
+#include "G4ReactionProductVector.hh"
 #include "G4V3DNucleus.hh"
 #include "G4VPreCompoundModel.hh"
-#include "G4HadronicInteraction.hh"
-#include "G4ReactionProductVector.hh"
-#include "G4ReactionProduct.hh"
-#include "G4HadProjectile.hh"
-#include "G4HadFinalState.hh"
 
 class G4KineticTrackVector;
 
 class G4VIntraNuclearTransportModel : public G4HadronicInteraction
 {
-public:
+  public:
 
-  explicit G4VIntraNuclearTransportModel(const G4String& mName = "CascadeModel",
-					 G4VPreCompoundModel* ptr = nullptr);
+    explicit G4VIntraNuclearTransportModel(const G4String& mName = "CascadeModel",
+                                           G4VPreCompoundModel* ptr = nullptr);
 
-  virtual ~G4VIntraNuclearTransportModel();
+    virtual ~G4VIntraNuclearTransportModel();
 
-  virtual 
-  G4ReactionProductVector* Propagate(G4KineticTrackVector* theSecondaries,
-				     G4V3DNucleus* theNucleus) = 0;
+    virtual G4ReactionProductVector* Propagate(G4KineticTrackVector* theSecondaries,
+                                               G4V3DNucleus* theNucleus) = 0;
 
-  virtual 
-  G4ReactionProductVector* PropagateNuclNucl(G4KineticTrackVector* theSecondaries,
-				     G4V3DNucleus* theNucleus,
-                                     G4V3DNucleus* theProjectileNucleus);    // Uzhi Nov. 2012
+    virtual G4ReactionProductVector*
+    PropagateNuclNucl(G4KineticTrackVector* theSecondaries, G4V3DNucleus* theNucleus,
+                      G4V3DNucleus* theProjectileNucleus);  // Uzhi Nov. 2012
 
-  inline void SetDeExcitation(G4VPreCompoundModel* ptr);
+    inline void SetDeExcitation(G4VPreCompoundModel* ptr);
 
-  inline void Set3DNucleus(G4V3DNucleus* const value);
+    inline void Set3DNucleus(G4V3DNucleus* const value);
 
-  inline void SetPrimaryProjectile(const G4HadProjectile &aPrimary);
+    inline void SetPrimaryProjectile(const G4HadProjectile& aPrimary);
 
-  inline const G4String& GetModelName() const;
+    inline const G4String& GetModelName() const;
 
-  virtual void ModelDescription(std::ostream& outFile) const ;
-  virtual void PropagateModelDescription(std::ostream& outFile) const ;
+    virtual void ModelDescription(std::ostream& outFile) const;
+    virtual void PropagateModelDescription(std::ostream& outFile) const;
 
-  G4VIntraNuclearTransportModel(const G4VIntraNuclearTransportModel& right) = delete;
-  const G4VIntraNuclearTransportModel& operator=(const G4VIntraNuclearTransportModel &right) = delete;
-  G4bool operator==(const G4VIntraNuclearTransportModel& right) const = delete;
-  G4bool operator!=(const G4VIntraNuclearTransportModel& right) const = delete;
+    G4VIntraNuclearTransportModel(const G4VIntraNuclearTransportModel& right) = delete;
+    const G4VIntraNuclearTransportModel&
+    operator=(const G4VIntraNuclearTransportModel& right) = delete;
+    G4bool operator==(const G4VIntraNuclearTransportModel& right) const = delete;
+    G4bool operator!=(const G4VIntraNuclearTransportModel& right) const = delete;
 
-protected:
+  protected:
 
-  inline G4V3DNucleus* Get3DNucleus() const;
+    inline G4V3DNucleus* Get3DNucleus() const;
 
-  inline G4VPreCompoundModel* GetDeExcitation() const;
+    inline G4VPreCompoundModel* GetDeExcitation() const;
 
-  inline const G4HadProjectile* GetPrimaryProjectile() const;
+    inline const G4HadProjectile* GetPrimaryProjectile() const;
 
-  G4String theTransportModelName;
+    G4String theTransportModelName;
 
-  G4V3DNucleus* the3DNucleus;
+    G4V3DNucleus* the3DNucleus;
 
-  G4VPreCompoundModel* theDeExcitation;
+    G4VPreCompoundModel* theDeExcitation;
 
-  const G4HadProjectile* thePrimaryProjectile;
+    const G4HadProjectile* thePrimaryProjectile;
 };
 
 inline const G4String& G4VIntraNuclearTransportModel::GetModelName() const
@@ -123,7 +122,8 @@ inline G4V3DNucleus* G4VIntraNuclearTransportModel::Get3DNucleus() const
 
 inline void G4VIntraNuclearTransportModel::Set3DNucleus(G4V3DNucleus* const value)
 {
-  delete the3DNucleus;  the3DNucleus = value;
+  delete the3DNucleus;
+  the3DNucleus = value;
 }
 
 inline G4VPreCompoundModel* G4VIntraNuclearTransportModel::GetDeExcitation() const
@@ -131,26 +131,21 @@ inline G4VPreCompoundModel* G4VIntraNuclearTransportModel::GetDeExcitation() con
   return theDeExcitation;
 }
 
-inline void 
-G4VIntraNuclearTransportModel::SetDeExcitation(G4VPreCompoundModel* value)
+inline void G4VIntraNuclearTransportModel::SetDeExcitation(G4VPreCompoundModel* value)
 {
-  // previous pre-compound model will be deleted at the end of job 
+  // previous pre-compound model will be deleted at the end of job
   theDeExcitation = value;
 }
 
-inline const G4HadProjectile* 
-G4VIntraNuclearTransportModel::GetPrimaryProjectile() const
+inline const G4HadProjectile* G4VIntraNuclearTransportModel::GetPrimaryProjectile() const
 {
   return thePrimaryProjectile;
 }
 
-inline void  
-G4VIntraNuclearTransportModel::SetPrimaryProjectile(const G4HadProjectile &aPrimary)
+inline void G4VIntraNuclearTransportModel::SetPrimaryProjectile(const G4HadProjectile& aPrimary)
 {
   // NOTE:  Previous pointer is NOT deleted: passed by reference, no ownership
   thePrimaryProjectile = &aPrimary;
 }
 
 #endif
-
-

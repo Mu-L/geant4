@@ -23,30 +23,29 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
- // Hadronic Process: Ion Inelastic Process
- // J.P. Wellisch, CERN, Apr. 14 2000
- // Last modified: 03-Apr-1997
+// Hadronic Process: Ion Inelastic Process
+// J.P. Wellisch, CERN, Apr. 14 2000
+// Last modified: 03-Apr-1997
 
-#ifndef G4PositronNuclearProcess_h
-#define G4PositronNuclearProcess_h 1
- 
+#ifndef G4POSITRONNUCLEARPROCESS_HH
+#define G4POSITRONNUCLEARPROCESS_HH
+
 // Class Description
-// Process for positron nuclear inelastic scattering; 
+// Process for positron nuclear inelastic scattering;
 // to be used in your physics list in case you need this physics.
 // Class Description - End
 
-#include "G4HadronInelasticProcess.hh" 
+#include "G4HadronInelasticProcess.hh"
 
 class G4PositronNuclearProcess : public G4HadronInelasticProcess
 {
-public:
-    
-  G4PositronNuclearProcess(const G4String& processName = "positronNuclear");
+  public:
 
-  virtual ~G4PositronNuclearProcess();
+    G4PositronNuclearProcess(const G4String& processName = "positronNuclear");
 
-  virtual void ProcessDescription(std::ostream& outFile) const;
+    virtual ~G4PositronNuclearProcess();
 
+    virtual void ProcessDescription(std::ostream& outFile) const;
 };
 
 #endif

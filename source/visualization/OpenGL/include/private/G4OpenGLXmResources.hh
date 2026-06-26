@@ -31,13 +31,16 @@
 #ifndef G4OPENGLXMRESOURCES_HH
 #define G4OPENGLXMRESOURCES_HH
 
-static String fallbackResources[] = {
-  "*glxarea*width: 500", "*glxarea*height: 500",
-  "*frame*x: 10", "*frame*y: 10",
-  "*frame*topOffset: 10", "*frame*bottomOffset: 10",
-  "*frame*rightOffset: 10", "*frame*leftOffset: 10",
-  "*frame*shadowType: SHADOW_IN", "*useColorObj: False", 
-  NULL
-  };
+static String fallbackResources[] = {"*glxarea*width: 500",
+                                     "*glxarea*height: 500",
+                                     "*frame*x: 10",
+                                     "*frame*y: 10",
+                                     "*frame*topOffset: 10",
+                                     "*frame*bottomOffset: 10",
+                                     "*frame*rightOffset: 10",
+                                     "*frame*leftOffset: 10",
+                                     "*frame*shadowType: SHADOW_IN",
+                                     "*useColorObj: False",
+                                     NULL};
 
 #endif

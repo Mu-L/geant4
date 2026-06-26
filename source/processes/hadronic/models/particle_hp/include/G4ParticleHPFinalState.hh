@@ -31,15 +31,15 @@
 // V. Ivanchenko, July-2023 Basic revision of particle HP classes
 //
 
-#ifndef G4ParticleHPFinalState_h
-#define G4ParticleHPFinalState_h
+#ifndef G4PARTICLEHPFINALSTATE_HH
+#define G4PARTICLEHPFINALSTATE_HH
 
 #include "G4Cache.hh"
 #include "G4HadFinalState.hh"
 #include "G4HadProjectile.hh"
+#include "G4IonTable.hh"
 #include "G4Material.hh"
 #include "G4Neutron.hh"
-#include "G4IonTable.hh"
 #include "G4ParticleHPManager.hh"
 #include "G4ParticleHPNames.hh"
 #include "G4ParticleHPVector.hh"
@@ -53,8 +53,8 @@ class G4ParticleHPFinalState
     G4ParticleHPFinalState();
     virtual ~G4ParticleHPFinalState();
 
-    inline void Init(G4double A, G4double Z, const G4String& dirName,
-                     const G4String& aFSType, G4ParticleDefinition* p)
+    inline void Init(G4double A, G4double Z, const G4String& dirName, const G4String& aFSType,
+                     G4ParticleDefinition* p)
     {
       theProjectile = p;
       Init(A, Z, 0, dirName, aFSType, p);
@@ -64,9 +64,8 @@ class G4ParticleHPFinalState
 
     virtual G4HadFinalState* ApplyYourself(const G4HadProjectile&)
     {
-      throw G4HadronicException(
-        __FILE__, __LINE__,
-        "G4ParticleHPFinalState::ApplyYourself(..) needs implementation");
+      throw G4HadronicException(__FILE__, __LINE__,
+                                "G4ParticleHPFinalState::ApplyYourself(..) needs implementation");
       return nullptr;
     }
 
@@ -109,10 +108,7 @@ class G4ParticleHPFinalState
       theNDLDataM = used.GetM();
     }
 
-    inline void SetProjectile(G4ParticleDefinition* projectile)
-    {
-      theProjectile = projectile;
-    }
+    inline void SetProjectile(G4ParticleDefinition* projectile) { theProjectile = projectile; }
 
     G4ParticleHPFinalState& operator=(const G4ParticleHPFinalState& right) = delete;
     G4ParticleHPFinalState(const G4ParticleHPFinalState&) = delete;
@@ -141,7 +137,6 @@ class G4ParticleHPFinalState
     G4ParticleHPNames theNames;
 
     G4Cache<G4HadFinalState*> theResult;
-
 };
 
 #endif

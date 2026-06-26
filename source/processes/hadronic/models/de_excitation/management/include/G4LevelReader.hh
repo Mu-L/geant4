@@ -26,114 +26,112 @@
 //
 // -------------------------------------------------------------------
 //
-//      GEANT4 header file 
+//      GEANT4 header file
 //
 //      File name:     G4LevelReader
 //
 //      Author:        V.Ivanchenko
-// 
+//
 //      Creation date: 4 January 2012
 //
 //      Modifications:
-//      
+//
 // -------------------------------------------------------------------
 //
-// Helper class to read Geant4 nuclear level data  
-// 
+// Helper class to read Geant4 nuclear level data
+//
 
 #ifndef G4LEVELREADER_HH
-#define G4LEVELREADER_HH 1
+#define G4LEVELREADER_HH
 
-#include "globals.hh"
 #include "G4LevelManager.hh"
+#include "globals.hh"
+
 #include <iosfwd>
 #include <vector>
 
 class G4NuclearLevelData;
 
-class G4LevelReader 
+class G4LevelReader
 {
+  public:
 
-public:
+    explicit G4LevelReader(G4NuclearLevelData*);
 
-  explicit G4LevelReader(G4NuclearLevelData*);
+    // create run manager using G4LEVELGAMMADATA data for Z and A
+    const G4LevelManager* CreateLevelManager(G4int Z, G4int A);
 
-  // create run manager using G4LEVELGAMMADATA data for Z and A
-  const G4LevelManager* CreateLevelManager(G4int Z, G4int A);
+    // create run manager using whatever data
+    const G4LevelManager* MakeLevelManager(G4int Z, G4int A, const G4String& filename);
 
-  // create run manager using whatever data
-  const G4LevelManager* MakeLevelManager(G4int Z, G4int A,
-					 const G4String& filename);
+    inline void SetVerbose(G4int val);
 
-  inline void SetVerbose(G4int val);
+    G4LevelReader(const G4LevelReader& right) = delete;
+    const G4LevelReader& operator=(const G4LevelReader& right) = delete;
+    G4bool operator==(const G4LevelReader& right) const = delete;
+    G4bool operator!=(const G4LevelReader& right) const = delete;
 
-  G4LevelReader(const G4LevelReader & right) = delete;  
-  const G4LevelReader& operator=(const G4LevelReader &right) = delete;
-  G4bool operator==(const G4LevelReader &right) const = delete;
-  G4bool operator!=(const G4LevelReader &right) const = delete;
-  
-private:
+  private:
 
-  G4bool ReadData(std::istringstream& dataFile, G4double& x);
+    G4bool ReadData(std::istringstream& dataFile, G4double& x);
 
-  G4bool ReadDataItem(std::istream& dataFile, G4double& x);
+    G4bool ReadDataItem(std::istream& dataFile, G4double& x);
 
-  G4bool ReadDataItem(std::istream& dataFile, G4float& x);
+    G4bool ReadDataItem(std::istream& dataFile, G4float& x);
 
-  G4bool ReadDataItem(std::istream& dataFile, G4int& x);
-  
-  const std::vector<G4float>* NormalizedICCProbability(G4int Z);
+    G4bool ReadDataItem(std::istream& dataFile, G4int& x);
 
-  const G4LevelManager* LevelManager(G4int Z, G4int A,
-				     std::ifstream& infile);
+    const std::vector<G4float>* NormalizedICCProbability(G4int Z);
 
-  G4NuclearLevelData* fData;
+    const G4LevelManager* LevelManager(G4int Z, G4int A, std::ifstream& infile);
 
-  G4double fEnergy = 0.;
-  G4double fTransEnergy = 0.;
-  G4double fTime = 0.;
-  G4double fTimeFactor;
-  G4double fSpin = 0.;
+    G4NuclearLevelData* fData;
 
-  G4float fProb = 0.f;
-  G4float fAlpha = 0.f;
-  G4float fAlphaMax;
-  G4float fRatio = 0.f;
-  G4float fNorm1 = 0.f;
-  G4float fICC[10] = {0.f};
+    G4double fEnergy = 0.;
+    G4double fTransEnergy = 0.;
+    G4double fTime = 0.;
+    G4double fTimeFactor;
+    G4double fSpin = 0.;
 
-  G4int nbufmax = 20;
-  G4int nbuf1 = 14;
-  G4int nbuf2 = 8;
-  G4int count1 = 0;
-  G4int count2 = 0;
+    G4float fProb = 0.f;
+    G4float fAlpha = 0.f;
+    G4float fAlphaMax;
+    G4float fRatio = 0.f;
+    G4float fNorm1 = 0.f;
+    G4float fICC[10] = {0.f};
 
-  G4int fVerbose = 1;
-  G4int fLevelMax = 632;
-  G4int fTransMax = 145;
-  G4int ntrans = 0;
-  G4int i1 = 0;
-  G4int i2 = 0;
-  G4int k = 0;
-  G4int kk = 0;
-  G4int tnum = 0;
+    G4int nbufmax = 20;
+    G4int nbuf1 = 14;
+    G4int nbuf2 = 8;
+    G4int count1 = 0;
+    G4int count2 = 0;
 
-  char buffer[20] = {' '};
-  char buff1[14] = {' '};
-  char buff2[8] = {' '};
+    G4int fVerbose = 1;
+    G4int fLevelMax = 632;
+    G4int fTransMax = 145;
+    G4int ntrans = 0;
+    G4int i1 = 0;
+    G4int i2 = 0;
+    G4int k = 0;
+    G4int kk = 0;
+    G4int tnum = 0;
 
-  std::vector<G4double> vEnergy;
-  std::vector<G4int> vSpin;
-  std::vector<const G4NucLevel*> vLevel;
+    char buffer[20] = {' '};
+    char buff1[14] = {' '};
+    char buff2[8] = {' '};
 
-  std::vector<G4int> vTrans;
-  std::vector<G4float> vRatio;
-  std::vector<G4float> vGammaCumProbability;
-  std::vector<G4float> vGammaProbability;
-  std::vector<const std::vector<G4float>*> vShellProbability;
+    std::vector<G4double> vEnergy;
+    std::vector<G4int> vSpin;
+    std::vector<const G4NucLevel*> vLevel;
 
-  G4String fPol = "  ";
-  G4String fDirectory;
+    std::vector<G4int> vTrans;
+    std::vector<G4float> vRatio;
+    std::vector<G4float> vGammaCumProbability;
+    std::vector<G4float> vGammaProbability;
+    std::vector<const std::vector<G4float>*> vShellProbability;
+
+    G4String fPol = "  ";
+    G4String fDirectory;
 };
 
 inline void G4LevelReader::SetVerbose(G4int val)

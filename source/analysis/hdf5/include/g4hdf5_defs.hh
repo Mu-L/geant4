@@ -29,8 +29,9 @@
 #ifndef g4hdf5_defs_h
 #define g4hdf5_defs_h
 
-#include "toolx/hdf5/ntuple"
 #include "g4hntools_defs.hh"
+
+#include "toolx/hdf5/ntuple"
 
 // Hdf5 output specific types
 using G4Hdf5Ntuple = toolx::hdf5::ntuple;

@@ -28,12 +28,12 @@
 //
 // GEANT4 Class file
 //
-// File name:     G4eMultipleScattering 
+// File name:     G4eMultipleScattering
 //
 // Author:        Vladimir Ivanchenko
 //
 // Creation date: 10 March 2008
-// 
+//
 // Modifications:
 //
 // -----------------------------------------------------------------------------
@@ -42,10 +42,11 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "G4eMultipleScattering.hh"
-#include "G4UrbanMscModel.hh"
-#include "G4MscStepLimitType.hh"
+
 #include "G4Electron.hh"
+#include "G4MscStepLimitType.hh"
 #include "G4Positron.hh"
+#include "G4UrbanMscModel.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -54,7 +55,7 @@ using namespace std;
 G4eMultipleScattering::G4eMultipleScattering(const G4String& processName)
   : G4VMultipleScattering(processName)
 {
-  isInitialized = false;  
+  isInitialized = false;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -63,7 +64,7 @@ G4eMultipleScattering::~G4eMultipleScattering() = default;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4bool G4eMultipleScattering::IsApplicable (const G4ParticleDefinition& p)
+G4bool G4eMultipleScattering::IsApplicable(const G4ParticleDefinition& p)
 {
   return (p.GetPDGCharge() != 0.0);
 }
@@ -72,10 +73,19 @@ G4bool G4eMultipleScattering::IsApplicable (const G4ParticleDefinition& p)
 
 void G4eMultipleScattering::InitialiseProcess(const G4ParticleDefinition*)
 {
-  if(isInitialized) { return; }
-  if(nullptr == EmModel(0)) { SetEmModel(new G4UrbanMscModel()); }
+  if (isInitialized)
+  {
+    return;
+  }
+  if (nullptr == EmModel(0))
+  {
+    SetEmModel(new G4UrbanMscModel());
+  }
   AddEmModel(1, EmModel(0));
-  if(nullptr != EmModel(1))  { AddEmModel(1, EmModel(1)); }
+  if (nullptr != EmModel(1))
+  {
+    AddEmModel(1, EmModel(1));
+  }
   isInitialized = true;
 }
 
@@ -83,12 +93,12 @@ void G4eMultipleScattering::InitialiseProcess(const G4ParticleDefinition*)
 
 void G4eMultipleScattering::StreamProcessInfo(std::ostream& out) const
 {
-  out << "      RangeFactor= " << RangeFactor()
-      << ", stepLimType: " << StepLimitType()
+  out << "      RangeFactor= " << RangeFactor() << ", stepLimType: " << StepLimitType()
       << ", latDisp: " << LateralDisplasmentFlag();
-  if(StepLimitType() == fUseDistanceToBoundary) {
-    out  << ", skin= " << Skin() << ", geomFactor= " << GeomFactor();
-  }  
+  if (StepLimitType() == fUseDistanceToBoundary)
+  {
+    out << ", skin= " << Skin() << ", geomFactor= " << GeomFactor();
+  }
   out << G4endl;
 }
 
@@ -96,10 +106,9 @@ void G4eMultipleScattering::StreamProcessInfo(std::ostream& out) const
 
 void G4eMultipleScattering::ProcessDescription(std::ostream& out) const
 {
-  out << 
-  "  Multiple scattering. Simulates combined effects of elastic scattering\n"<< 
-  "    at the end of the step, to save computing time. May be combined with\n"<<
-  "    Coulomb scattering in a 'mixed' scattering algorithm.";
+  out << "  Multiple scattering. Simulates combined effects of elastic scattering\n"
+      << "    at the end of the step, to save computing time. May be combined with\n"
+      << "    Coulomb scattering in a 'mixed' scattering algorithm.";
   G4VMultipleScattering::ProcessDescription(out);
 }
 

@@ -30,76 +30,82 @@
 #ifndef G4CASCADE_HISTORY_HH
 #define G4CASCADE_HISTORY_HH
 
-#include "globals.hh"
 #include "G4CascadParticle.hh"
+#include "globals.hh"
+
 #include <iosfwd>
 #include <set>
 #include <vector>
 
+class G4CascadeHistory
+{
+  public:
 
-class G4CascadeHistory {
-public:
-  G4CascadeHistory(G4int verbose=0) : verboseLevel(verbose) {;}
-  ~G4CascadeHistory() {;}		// *** Do not want subclasses ***
+    G4CascadeHistory(G4int verbose = 0) : verboseLevel(verbose) { ; }
+    ~G4CascadeHistory() { ; }  // *** Do not want subclasses ***
 
-  void setVerboseLevel(G4int verbose=0) { verboseLevel = verbose; }
+    void setVerboseLevel(G4int verbose = 0) { verboseLevel = verbose; }
 
-  // Reset buffers for new event
-  void Clear();
+    // Reset buffers for new event
+    void Clear();
 
-  // Add particle to history list, assigning ID number (non-const input)
-  G4int AddEntry(G4CascadParticle& cpart);
+    // Add particle to history list, assigning ID number (non-const input)
+    G4int AddEntry(G4CascadParticle& cpart);
 
-  // Record full interaction vertex (non-const input)
-  G4int AddVertex(G4CascadParticle& cpart, std::vector<G4CascadParticle>& daug);
+    // Record full interaction vertex (non-const input)
+    G4int AddVertex(G4CascadParticle& cpart, std::vector<G4CascadParticle>& daug);
 
-  // Discard particle reabsorbed during cascade
-  void DropEntry(const G4CascadParticle& cpart);
+    // Discard particle reabsorbed during cascade
+    void DropEntry(const G4CascadParticle& cpart);
 
-  // Report cascade structure hierarchically
-  void Print(std::ostream& os) const;
+    // Report cascade structure hierarchically
+    void Print(std::ostream& os) const;
 
-protected:
-  struct HistoryEntry {
-    G4CascadParticle cpart;
-    G4int n;
-    G4int dId[10];		// Must be fixed size for allocation in vector
+  protected:
 
-    HistoryEntry() { clear(); };
-    HistoryEntry(const G4CascadParticle& cp) : cpart(cp) { clear(); }
-    void clear();
-  };
+    struct HistoryEntry
+    {
+        G4CascadParticle cpart;
+        G4int n;
+        G4int dId[10];  // Must be fixed size for allocation in vector
 
-  // Assign ID number to particle (non-const input)
-  void AssignHistoryID(G4CascadParticle& cpart);
+        HistoryEntry() { clear(); };
+        HistoryEntry(const G4CascadParticle& cp) : cpart(cp) { clear(); }
+        void clear();
+    };
 
-  // Populate list of daughters in interaction, adding them to history list
-  void FillDaughters(G4int iEntry, std::vector<G4CascadParticle>& daug);
+    // Assign ID number to particle (non-const input)
+    void AssignHistoryID(G4CascadParticle& cpart);
 
-  // Add single-line report for particle, along with daughters
-  void PrintEntry(std::ostream& os, G4int iEntry) const;
-  void PrintParticle(std::ostream& os, const G4CascadParticle& cpart) const;
-  G4bool PrintingDone(G4int iEntry) const {
-    return (entryPrinted.find(iEntry) != entryPrinted.end());
-  }
+    // Populate list of daughters in interaction, adding them to history list
+    void FillDaughters(G4int iEntry, std::vector<G4CascadParticle>& daug);
 
-  // Derive target of cascade step from particle and daughters
-  const char* GuessTarget(const HistoryEntry& entry) const;
+    // Add single-line report for particle, along with daughters
+    void PrintEntry(std::ostream& os, G4int iEntry) const;
+    void PrintParticle(std::ostream& os, const G4CascadParticle& cpart) const;
+    G4bool PrintingDone(G4int iEntry) const
+    {
+      return (entryPrinted.find(iEntry) != entryPrinted.end());
+    }
 
-  G4int size() const { return (G4int)theHistory.size(); }
+    // Derive target of cascade step from particle and daughters
+    const char* GuessTarget(const HistoryEntry& entry) const;
 
-private:
-  G4int verboseLevel;
+    G4int size() const { return (G4int)theHistory.size(); }
 
-  std::vector<HistoryEntry> theHistory;		// List of particles and daughters
-  mutable std::set<G4int> entryPrinted;		// Particle indices already reported
+  private:
 
-  // No copying allowed
-  G4CascadeHistory(const G4CascadeHistory& rhs);
-  G4CascadeHistory& operator=(const G4CascadeHistory& rhs);
+    G4int verboseLevel;
+
+    std::vector<HistoryEntry> theHistory;  // List of particles and daughters
+    mutable std::set<G4int> entryPrinted;  // Particle indices already reported
+
+    // No copying allowed
+    G4CascadeHistory(const G4CascadeHistory& rhs);
+    G4CascadeHistory& operator=(const G4CascadeHistory& rhs);
 };
 
 // Inline reporting
 std::ostream& operator<<(std::ostream& os, const G4CascadeHistory& history);
 
-#endif	/* G4CASCADE_HISTORY_HH */
+#endif /* G4CASCADE_HISTORY_HH */

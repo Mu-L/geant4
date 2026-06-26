@@ -31,87 +31,81 @@
 // 05.03.07 V.Ivanchenko - add IfZAApplicable
 //
 
-#ifndef G4UPiNuclearCrossSection_h
-#define G4UPiNuclearCrossSection_h
+#ifndef G4UPINUCLEARCROSSSECTION_HH
+#define G4UPINUCLEARCROSSSECTION_HH
 
-#include "G4VCrossSectionDataSet.hh"
 #include "G4DynamicParticle.hh"
 #include "G4ParticleDefinition.hh"
+#include "G4VCrossSectionDataSet.hh"
 #include "globals.hh"
 
 class G4PhysicsTable;
 
 class G4UPiNuclearCrossSection : public G4VCrossSectionDataSet
 {
-public:
-  
-  explicit G4UPiNuclearCrossSection();
+  public:
 
-  ~G4UPiNuclearCrossSection() override = default;
+    explicit G4UPiNuclearCrossSection();
 
-  G4bool IsElementApplicable(const G4DynamicParticle* aParticle, 
-			     G4int Z, const G4Material*) final;
+    ~G4UPiNuclearCrossSection() override = default;
 
-  inline
-  G4double GetElasticCrossSection(const G4DynamicParticle* aParticle, 
-				  G4int Z, G4int A) const;
+    G4bool IsElementApplicable(const G4DynamicParticle* aParticle, G4int Z,
+                               const G4Material*) final;
 
-  inline
-  G4double GetInelasticCrossSection(const G4DynamicParticle* aParticle, 
-				    G4int Z, G4int A) const;
+    inline G4double GetElasticCrossSection(const G4DynamicParticle* aParticle, G4int Z,
+                                           G4int A) const;
 
-  void BuildPhysicsTable(const G4ParticleDefinition&) final;
+    inline G4double GetInelasticCrossSection(const G4DynamicParticle* aParticle, G4int Z,
+                                             G4int A) const;
 
-  void DumpPhysicsTable(const G4ParticleDefinition&) final;
+    void BuildPhysicsTable(const G4ParticleDefinition&) final;
 
-  void CrossSectionDescription(std::ostream&) const final;
-  
-private:
+    void DumpPhysicsTable(const G4ParticleDefinition&) final;
 
-  G4double Interpolate(G4int Z, G4int A, G4double ekin, 
-                       const G4PhysicsTable*) const;
+    void CrossSectionDescription(std::ostream&) const final;
 
-  void AddDataSet(const G4String& p, const G4double* tot, 
-		  const G4double* in, const G4double* e, G4int n); 
+  private:
 
-  void LoadData();
+    G4double Interpolate(G4int Z, G4int A, G4double ekin, const G4PhysicsTable*) const;
 
-  const G4ParticleDefinition* piPlus;
-  const G4ParticleDefinition* piMinus;
+    void AddDataSet(const G4String& p, const G4double* tot, const G4double* in, const G4double* e,
+                    G4int n);
 
-  static const G4int NZ = 16;
-  static G4int theZ[NZ];
-  static G4int idxZ[93];
+    void LoadData();
 
-  static G4double theA[NZ];
-  static G4double APower[93];
+    const G4ParticleDefinition* piPlus;
+    const G4ParticleDefinition* piMinus;
 
-  static G4PhysicsTable* piPlusElastic;
-  static G4PhysicsTable* piPlusInelastic;
-  static G4PhysicsTable* piMinusElastic;
-  static G4PhysicsTable* piMinusInelastic;
+    static const G4int NZ = 16;
+    static G4int theZ[NZ];
+    static G4int idxZ[93];
 
-  G4double aPower{0.75};
-  G4double elow;
+    static G4double theA[NZ];
+    static G4double APower[93];
 
-  G4bool spline{false};
+    static G4PhysicsTable* piPlusElastic;
+    static G4PhysicsTable* piPlusInelastic;
+    static G4PhysicsTable* piMinusElastic;
+    static G4PhysicsTable* piMinusInelastic;
+
+    G4double aPower{0.75};
+    G4double elow;
+
+    G4bool spline{false};
 };
 
-inline G4double 
-G4UPiNuclearCrossSection::GetElasticCrossSection(
-       const G4DynamicParticle* dp, G4int Z, G4int A) const
+inline G4double G4UPiNuclearCrossSection::GetElasticCrossSection(const G4DynamicParticle* dp,
+                                                                 G4int Z, G4int A) const
 {
-  const G4PhysicsTable* table = 
-    (dp->GetDefinition() == piPlus) ? piPlusElastic : piMinusElastic; 
+  const G4PhysicsTable* table = (dp->GetDefinition() == piPlus) ? piPlusElastic : piMinusElastic;
   return Interpolate(Z, A, dp->GetKineticEnergy(), table);
 }
 
-inline G4double 
-G4UPiNuclearCrossSection::GetInelasticCrossSection(
-       const G4DynamicParticle* dp, G4int Z, G4int A) const
+inline G4double G4UPiNuclearCrossSection::GetInelasticCrossSection(const G4DynamicParticle* dp,
+                                                                   G4int Z, G4int A) const
 {
-  const G4PhysicsTable* table = 
-    (dp->GetDefinition() == piPlus) ? piPlusInelastic : piMinusInelastic; 
+  const G4PhysicsTable* table =
+    (dp->GetDefinition() == piPlus) ? piPlusInelastic : piMinusInelastic;
   return Interpolate(Z, A, dp->GetKineticEnergy(), table);
 }
 

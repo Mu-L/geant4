@@ -28,29 +28,29 @@
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara (Sept. 2001)
 //
-#ifndef G4Li7GEMChannel_h
-#define G4Li7GEMChannel_h 1
+#ifndef G4LI7GEMCHANNEL_HH
+#define G4LI7GEMCHANNEL_HH
 
 #include "G4GEMChannel.hh"
 #include "G4Li7GEMProbability.hh"
 
 class G4Li7GEMChannel : public G4GEMChannel
 {
-public:
-  // only available constructor
-  explicit G4Li7GEMChannel() 
-    : G4GEMChannel(7,3,"Li7",&theEvaporationProbability) {}
-  
-  // destructor
-  ~G4Li7GEMChannel() {};
-  
-private:
-  const G4Li7GEMChannel & operator=(const G4Li7GEMChannel & right) = delete;  
-  G4Li7GEMChannel(const G4Li7GEMChannel & right) = delete;
-  G4bool operator==(const G4Li7GEMChannel & right) const = delete;
-  G4bool operator!=(const G4Li7GEMChannel & right) const = delete;
-    
-  G4Li7GEMProbability theEvaporationProbability;
-  
+  public:
+
+    // only available constructor
+    explicit G4Li7GEMChannel() : G4GEMChannel(7, 3, "Li7", &theEvaporationProbability) {}
+
+    // destructor
+    ~G4Li7GEMChannel() {};
+
+  private:
+
+    const G4Li7GEMChannel& operator=(const G4Li7GEMChannel& right) = delete;
+    G4Li7GEMChannel(const G4Li7GEMChannel& right) = delete;
+    G4bool operator==(const G4Li7GEMChannel& right) const = delete;
+    G4bool operator!=(const G4Li7GEMChannel& right) const = delete;
+
+    G4Li7GEMProbability theEvaporationProbability;
 };
 #endif

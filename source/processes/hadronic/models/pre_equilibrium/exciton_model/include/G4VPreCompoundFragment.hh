@@ -24,30 +24,31 @@
 // ********************************************************************
 //
 //
-// J. M. Quesada (August 2008).  
+// J. M. Quesada (August 2008).
 // Based  on previous work by V. Lara
 //
-// Modif (03 September 2008) by J. M. Quesada for external choice of inverse 
-// cross section option 
+// Modif (03 September 2008) by J. M. Quesada for external choice of inverse
+// cross section option
 // JMQ (06 September 2008) Also external choice has been added for:
-//                      - superimposed Coulomb barrier (if useSICB=true) 
-// 20.08.2010 V.Ivanchenko added int Z and A and cleanup; added 
-//                        G4ParticleDefinition to constructor, 
-//                        inline method to build G4ReactionProduct; 
+//                      - superimposed Coulomb barrier (if useSICB=true)
+// 20.08.2010 V.Ivanchenko added int Z and A and cleanup; added
+//                        G4ParticleDefinition to constructor,
+//                        inline method to build G4ReactionProduct;
 //                        remove string name
-//                        
+//
 
-#ifndef G4VPreCompoundFragment_h
-#define G4VPreCompoundFragment_h 1
+#ifndef G4VPRECOMPOUNDFRAGMENT_HH
+#define G4VPRECOMPOUNDFRAGMENT_HH
 
-#include "G4ios.hh"
-#include <iomanip>
-#include "G4ParticleDefinition.hh"
-#include "G4IonTable.hh"
 #include "G4Fragment.hh"
-#include "G4ReactionProduct.hh"
+#include "G4IonTable.hh"
+#include "G4ParticleDefinition.hh"
 #include "G4Pow.hh"
+#include "G4ReactionProduct.hh"
 #include "G4VSIntegration.hh"
+#include "G4ios.hh"
+
+#include <iomanip>
 
 class G4NuclearLevelData;
 class G4DeexPrecoParameters;
@@ -56,113 +57,104 @@ class G4InterfaceToXS;
 
 class G4VPreCompoundFragment : G4VSIntegration
 {
-public:  
+  public:
 
-  explicit G4VPreCompoundFragment(const G4ParticleDefinition*,
-				  G4VCoulombBarrier*);
-  
-  ~G4VPreCompoundFragment() override;
-    
-  // Run time initialization method
-  G4bool Initialize(const G4Fragment& aFragment);
-    
-  // Calculates the total (integrated over kinetic energy) emission
-  // probability of a fragment
-  virtual G4double CalcEmissionProbability(const G4Fragment&);
-  
-  // sample kinetic energy of emitted fragment
-  virtual G4double SampleKineticEnergy(const G4Fragment&);
+    explicit G4VPreCompoundFragment(const G4ParticleDefinition*, G4VCoulombBarrier*);
 
-  G4double ProbabilityDensityFunction(G4double energy) override;  
-  
-  inline G4ReactionProduct* GetReactionProduct() const; 	
-  
-  G4int GetA() const { return theA; }
-  
-  G4int GetZ() const { return theZ; }
-  
-  G4int GetRestA() const { return theResA; }
-  
-  G4int GetRestZ() const { return theResZ; }
+    ~G4VPreCompoundFragment() override;
 
-  G4double GetBindingEnergy() const { return theBindingEnergy; }
-  
-  G4double GetEnergyThreshold() const
-  {
-    return theMaxKinEnergy - theCoulombBarrier;
-  }
+    // Run time initialization method
+    G4bool Initialize(const G4Fragment& aFragment);
 
-  G4double GetEmissionProbability() const { return theEmissionProbability; }
-    
-  G4double GetNuclearMass() const { return theMass; }
-  
-  G4double GetRestNuclearMass() const { return theResMass; }
+    // Calculates the total (integrated over kinetic energy) emission
+    // probability of a fragment
+    virtual G4double CalcEmissionProbability(const G4Fragment&);
 
-  const G4LorentzVector& GetMomentum() const { return theMomentum; }
-  
-  void SetMomentum(const G4LorentzVector& lv) { theMomentum = lv; }
-  
-  //for inverse cross section choice
-  void SetOPTxs(G4int) {}
-  //for superimposed Coulomb Barrier for inverse cross sections
-  void UseSICB(G4bool use) { useSICB = use; } 
+    // sample kinetic energy of emitted fragment
+    virtual G4double SampleKineticEnergy(const G4Fragment&);
 
-  friend std::ostream& 
-  operator<<(std::ostream&, const G4VPreCompoundFragment*);
-  friend std::ostream& 
-  operator<<(std::ostream&, const G4VPreCompoundFragment&);
+    G4double ProbabilityDensityFunction(G4double energy) override;
 
-  G4VPreCompoundFragment(const G4VPreCompoundFragment &right) = delete;
-  const G4VPreCompoundFragment& 
-  operator= (const G4VPreCompoundFragment &right) = delete;  
-  G4bool operator==(const G4VPreCompoundFragment &right) const = delete;
-  G4bool operator!=(const G4VPreCompoundFragment &right) const = delete;
+    inline G4ReactionProduct* GetReactionProduct() const;
 
-protected:
+    G4int GetA() const { return theA; }
 
-  virtual G4double
-  ProbabilityDistributionFunction(G4double, const G4Fragment&)
-  { return 0.0; }; 
+    G4int GetZ() const { return theZ; }
 
-  virtual G4double GetAlpha() const = 0;
+    G4int GetRestA() const { return theResA; }
 
-  virtual G4double GetBeta() const { return -theCoulombBarrier; }
+    G4int GetRestZ() const { return theResZ; }
 
-  G4NuclearLevelData* fNucData;
-  G4DeexPrecoParameters* theParameters;
-  G4Pow* g4calc;
-  G4InterfaceToXS* fXSection{nullptr};
-  const G4Fragment* pFragment{nullptr};
+    G4double GetBindingEnergy() const { return theBindingEnergy; }
 
-  G4int theA;
-  G4int theZ;
-  G4int theResA{0};
-  G4int theResZ{0};
-  G4int theFragA{0};
-  G4int theFragZ{0};
-  //for inverse cross section choice
-  G4int OPTxs;
-  G4int index{0};
+    G4double GetEnergyThreshold() const { return theMaxKinEnergy - theCoulombBarrier; }
 
-  G4double theResA13{0.0};
-  G4double theBindingEnergy{0.0};
-  G4double theMinKinEnergy{0.0};
-  G4double theMaxKinEnergy{0.0};
-  G4double theResMass{0.0};
-  G4double theReducedMass{0.0};
-  G4double theMass;
+    G4double GetEmissionProbability() const { return theEmissionProbability; }
 
-  G4double theEmissionProbability{0.0};
-  G4double theCoulombBarrier{0.0};
+    G4double GetNuclearMass() const { return theMass; }
 
-  //for superimposed Coulomb Barrier for inverse cross sections
-  G4bool useSICB{true};
+    G4double GetRestNuclearMass() const { return theResMass; }
 
-private:
+    const G4LorentzVector& GetMomentum() const { return theMomentum; }
 
-  const G4ParticleDefinition* particle;
-  G4VCoulombBarrier* theCoulombBarrierPtr;
-  G4LorentzVector theMomentum{0., 0., 0., 0.};
+    void SetMomentum(const G4LorentzVector& lv) { theMomentum = lv; }
+
+    // for inverse cross section choice
+    void SetOPTxs(G4int) {}
+    // for superimposed Coulomb Barrier for inverse cross sections
+    void UseSICB(G4bool use) { useSICB = use; }
+
+    friend std::ostream& operator<<(std::ostream&, const G4VPreCompoundFragment*);
+    friend std::ostream& operator<<(std::ostream&, const G4VPreCompoundFragment&);
+
+    G4VPreCompoundFragment(const G4VPreCompoundFragment& right) = delete;
+    const G4VPreCompoundFragment& operator=(const G4VPreCompoundFragment& right) = delete;
+    G4bool operator==(const G4VPreCompoundFragment& right) const = delete;
+    G4bool operator!=(const G4VPreCompoundFragment& right) const = delete;
+
+  protected:
+
+    virtual G4double ProbabilityDistributionFunction(G4double, const G4Fragment&) { return 0.0; };
+
+    virtual G4double GetAlpha() const = 0;
+
+    virtual G4double GetBeta() const { return -theCoulombBarrier; }
+
+    G4NuclearLevelData* fNucData;
+    G4DeexPrecoParameters* theParameters;
+    G4Pow* g4calc;
+    G4InterfaceToXS* fXSection{nullptr};
+    const G4Fragment* pFragment{nullptr};
+
+    G4int theA;
+    G4int theZ;
+    G4int theResA{0};
+    G4int theResZ{0};
+    G4int theFragA{0};
+    G4int theFragZ{0};
+    // for inverse cross section choice
+    G4int OPTxs;
+    G4int index{0};
+
+    G4double theResA13{0.0};
+    G4double theBindingEnergy{0.0};
+    G4double theMinKinEnergy{0.0};
+    G4double theMaxKinEnergy{0.0};
+    G4double theResMass{0.0};
+    G4double theReducedMass{0.0};
+    G4double theMass;
+
+    G4double theEmissionProbability{0.0};
+    G4double theCoulombBarrier{0.0};
+
+    // for superimposed Coulomb Barrier for inverse cross sections
+    G4bool useSICB{true};
+
+  private:
+
+    const G4ParticleDefinition* particle;
+    G4VCoulombBarrier* theCoulombBarrierPtr;
+    G4LorentzVector theMomentum{0., 0., 0., 0.};
 };
 
 inline G4ReactionProduct* G4VPreCompoundFragment::GetReactionProduct() const

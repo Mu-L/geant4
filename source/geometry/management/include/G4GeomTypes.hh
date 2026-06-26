@@ -31,7 +31,7 @@
 
 // Fundamental definitions
 #ifndef G4GMAKE
-#include "G4GeomConfig.hh"
+#  include "G4GeomConfig.hh"
 #endif
 
 #endif

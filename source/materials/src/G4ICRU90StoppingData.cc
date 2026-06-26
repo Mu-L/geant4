@@ -49,7 +49,8 @@
 G4ICRU90StoppingData::G4ICRU90StoppingData()
 {
   // 1st initialisation
-  for (std::size_t i = 0; i < nvectors; ++i) {
+  for (std::size_t i = 0; i < nvectors; ++i)
+  {
     materials[i] = nullptr;
     sdata_proton[i] = nullptr;
     sdata_alpha[i] = nullptr;
@@ -63,7 +64,8 @@ G4ICRU90StoppingData::G4ICRU90StoppingData()
 
 G4ICRU90StoppingData::~G4ICRU90StoppingData()
 {
-  for (std::size_t i = 0; i < nvectors; ++i) {
+  for (std::size_t i = 0; i < nvectors; ++i)
+  {
     delete sdata_proton[i];
     delete sdata_alpha[i];
   }
@@ -73,7 +75,8 @@ G4ICRU90StoppingData::~G4ICRU90StoppingData()
 
 void G4ICRU90StoppingData::Initialise()
 {
-  if (isInitialized) {
+  if (isInitialized)
+  {
     return;
   }
   // this method may be called several times during initialisation
@@ -82,21 +85,27 @@ void G4ICRU90StoppingData::Initialise()
   static const G4String nameNIST_ICRU90[3] = {"G4_AIR", "G4_WATER", "G4_GRAPHITE"};
 
   // loop via material list to add extra data
-  for (G4int i = 0; i < nmat; ++i) {
+  for (G4int i = 0; i < nmat; ++i)
+  {
     const G4Material* mat = (*(G4Material::GetMaterialTable()))[i];
 
     G4bool isThere = false;
-    for (auto const & material : materials) {
-      if (mat == material) {
+    for (auto const& material : materials)
+    {
+      if (mat == material)
+      {
         isThere = true;
         break;
       }
     }
-    if (! isThere) {
+    if (!isThere)
+    {
       // check list of NIST materials
       G4String mname = mat->GetName();
-      for (G4int j = 0; j < nvectors; ++j) {
-        if (mname == nameNIST_ICRU90[j]) {
+      for (G4int j = 0; j < nvectors; ++j)
+      {
+        if (mname == nameNIST_ICRU90[j])
+        {
           materials[j] = mat;
           break;
         }
@@ -104,7 +113,8 @@ void G4ICRU90StoppingData::Initialise()
     }
     isInitialized =
       ((materials[0] != nullptr) && (materials[1] != nullptr) && (materials[2] != nullptr));
-    if (isInitialized) {
+    if (isInitialized)
+    {
       return;
     }
   }
@@ -112,8 +122,8 @@ void G4ICRU90StoppingData::Initialise()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4ICRU90StoppingData::GetElectronicDEDXforProton(
-  const G4Material* mat, G4double kinEnergy) const
+G4double G4ICRU90StoppingData::GetElectronicDEDXforProton(const G4Material* mat,
+                                                          G4double kinEnergy) const
 {
   const G4int idx = GetIndex(mat);
   return (idx >= 0) ? GetDEDX(sdata_proton[idx], kinEnergy) : 0.0;
@@ -121,8 +131,8 @@ G4double G4ICRU90StoppingData::GetElectronicDEDXforProton(
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4ICRU90StoppingData::GetElectronicDEDXforAlpha(
-  const G4Material* mat, G4double scaledKinEnergy) const
+G4double G4ICRU90StoppingData::GetElectronicDEDXforAlpha(const G4Material* mat,
+                                                         G4double scaledKinEnergy) const
 {
   const G4int idx = GetIndex(mat);
   return (idx >= 0) ? GetDEDX(sdata_alpha[idx], scaledKinEnergy) : 0.0;
@@ -161,13 +171,13 @@ void G4ICRU90StoppingData::FillData()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4PhysicsFreeVector* G4ICRU90StoppingData::AddData(G4int n, const G4float* e,
-                                                   const G4float* dedx)
+G4PhysicsFreeVector* G4ICRU90StoppingData::AddData(G4int n, const G4float* e, const G4float* dedx)
 {
   static const G4double fac = CLHEP::MeV * CLHEP::cm2 / CLHEP::g;
 
   auto* data = new G4PhysicsFreeVector(n, e[0], e[n - 1], true);
-  for (G4int i = 0; i < n; ++i) {
+  for (G4int i = 0; i < n; ++i)
+  {
     data->PutValues(i, ((G4double)e[i]) * CLHEP::MeV, ((G4double)dedx[i]) * fac);
   }
   data->FillSecondDerivatives();

@@ -29,22 +29,21 @@
 // --------------------------------------------------------------------
 
 #include "G4LogicalBorderSurface.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4GeometryManager.hh"
 
-G4LogicalBorderSurfaceTable*
-G4LogicalBorderSurface::theBorderSurfaceTable = nullptr;
+#include "G4GeometryManager.hh"
+#include "G4VPhysicalVolume.hh"
+
+G4LogicalBorderSurfaceTable* G4LogicalBorderSurface::theBorderSurfaceTable = nullptr;
 
 // --------------------------------------------------------------------
 // Constructor
 //
-G4LogicalBorderSurface::
-G4LogicalBorderSurface(const G4String& name,
-                             G4VPhysicalVolume* vol1, 
-                             G4VPhysicalVolume* vol2,
-                             G4SurfaceProperty* surfaceProperty)
+G4LogicalBorderSurface::G4LogicalBorderSurface(const G4String& name, G4VPhysicalVolume* vol1,
+                                               G4VPhysicalVolume* vol2,
+                                               G4SurfaceProperty* surfaceProperty)
   : G4LogicalSurface(name, surfaceProperty),
-    Volume1(vol1), Volume2(vol2),
+    Volume1(vol1),
+    Volume2(vol2),
     Index(theBorderSurfaceTable != nullptr ? theBorderSurfaceTable->size() : 0)
 {
   if (theBorderSurfaceTable == nullptr)
@@ -54,21 +53,19 @@ G4LogicalBorderSurface(const G4String& name,
 
   // Store in the table of Surfaces
   //
-  theBorderSurfaceTable->insert(std::make_pair(std::make_pair(vol1,vol2),this));
+  theBorderSurfaceTable->insert(std::make_pair(std::make_pair(vol1, vol2), this));
 }
 
 // --------------------------------------------------------------------
-G4bool
-G4LogicalBorderSurface::operator==(const G4LogicalBorderSurface &right) const
+G4bool G4LogicalBorderSurface::operator==(const G4LogicalBorderSurface& right) const
 {
-  return (this == (G4LogicalBorderSurface *) &right);
+  return (this == (G4LogicalBorderSurface*)&right);
 }
 
 // --------------------------------------------------------------------
-G4bool
-G4LogicalBorderSurface::operator!=(const G4LogicalBorderSurface &right) const
+G4bool G4LogicalBorderSurface::operator!=(const G4LogicalBorderSurface& right) const
 {
-  return (this != (G4LogicalBorderSurface *) &right);
+  return (this != (G4LogicalBorderSurface*)&right);
 }
 
 // --------------------------------------------------------------------
@@ -92,14 +89,16 @@ std::size_t G4LogicalBorderSurface::GetNumberOfBorderSurfaces()
 }
 
 // --------------------------------------------------------------------
-G4LogicalBorderSurface*
-G4LogicalBorderSurface::GetSurface(const G4VPhysicalVolume* vol1,
-                                   const G4VPhysicalVolume* vol2)
+G4LogicalBorderSurface* G4LogicalBorderSurface::GetSurface(const G4VPhysicalVolume* vol1,
+                                                           const G4VPhysicalVolume* vol2)
 {
   if (theBorderSurfaceTable != nullptr)
   {
-    auto pos = theBorderSurfaceTable->find(std::make_pair(vol1,vol2));
-    if(pos != theBorderSurfaceTable->cend()) { return pos->second; }
+    auto pos = theBorderSurfaceTable->find(std::make_pair(vol1, vol2));
+    if (pos != theBorderSurfaceTable->cend())
+    {
+      return pos->second;
+    }
   }
   return nullptr;
 }
@@ -109,18 +108,17 @@ G4LogicalBorderSurface::GetSurface(const G4VPhysicalVolume* vol1,
 //
 void G4LogicalBorderSurface::DumpInfo()
 {
-  G4cout << "***** Surface Table : Nb of Surfaces = "
-         << GetNumberOfBorderSurfaces() << " *****" << G4endl;
+  G4cout << "***** Surface Table : Nb of Surfaces = " << GetNumberOfBorderSurfaces() << " *****"
+         << G4endl;
 
   if (theBorderSurfaceTable != nullptr)
   {
-    for(const auto & pos : *theBorderSurfaceTable)
+    for (const auto& pos : *theBorderSurfaceTable)
     {
       G4LogicalBorderSurface* pSurf = pos.second;
-      G4cout << pSurf->GetName() << " : " << G4endl
-             << " Border of volumes "
-             << pSurf->GetVolume1()->GetName() << " and " 
-             << pSurf->GetVolume2()->GetName() << G4endl;
+      G4cout << pSurf->GetName() << " : " << G4endl << " Border of volumes "
+             << pSurf->GetVolume1()->GetName() << " and " << pSurf->GetVolume2()->GetName()
+             << G4endl;
     }
   }
   G4cout << G4endl;
@@ -129,7 +127,10 @@ void G4LogicalBorderSurface::DumpInfo()
 // --------------------------------------------------------------------
 void G4LogicalBorderSurface::CleanSurfaceTable()
 {
-  if (theBorderSurfaceTable == nullptr) { return; }
+  if (theBorderSurfaceTable == nullptr)
+  {
+    return;
+  }
 
   // Do nothing if geometry is closed
   if (G4GeometryManager::GetInstance()->IsGeometryClosed())

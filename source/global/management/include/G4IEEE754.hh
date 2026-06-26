@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4IEEE754_hh
-#define G4IEEE754_hh 1
+#ifndef G4IEEE754_HH
+#define G4IEEE754_HH
 
 #include "G4Types.hh"
 

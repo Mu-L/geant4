@@ -25,51 +25,52 @@
 //
 //
 //
-// 
+//
 // OpenGLImmediateWin32 graphics system factory.
 
-#include "G4VisFeaturesOfOpenGL.hh"
-#include "G4VSceneHandler.hh"
+#include "G4OpenGLImmediateWin32.hh"
+
+#include "G4OpenGLImmediateSceneHandler.hh"
+#include "G4OpenGLImmediateWin32Viewer.hh"
 #include "G4OpenGLSceneHandler.hh"
 #include "G4OpenGLViewer.hh"
-#include "G4OpenGLImmediateWin32.hh"
-#include "G4OpenGLImmediateWin32Viewer.hh"
 #include "G4OpenGLViewerMessenger.hh"
-#include "G4OpenGLImmediateSceneHandler.hh"
+#include "G4VSceneHandler.hh"
+#include "G4VisFeaturesOfOpenGL.hh"
 
-G4OpenGLImmediateWin32::G4OpenGLImmediateWin32 ():
-  G4VGraphicsSystem ("OpenGLImmediateWin32",
-		     "OGLIWin32",
-		     G4VisFeaturesOfOpenGLIWin32 (),
-		     G4VGraphicsSystem::threeD)
+G4OpenGLImmediateWin32::G4OpenGLImmediateWin32()
+  : G4VGraphicsSystem("OpenGLImmediateWin32", "OGLIWin32", G4VisFeaturesOfOpenGLIWin32(),
+                      G4VGraphicsSystem::threeD)
 {
   G4OpenGLViewerMessenger::GetInstance();
 }
 
-G4VSceneHandler* G4OpenGLImmediateWin32::CreateSceneHandler
-(const G4String& name) {
-  G4VSceneHandler* pScene = new G4OpenGLImmediateSceneHandler (*this, name);
-  return    pScene;
+G4VSceneHandler* G4OpenGLImmediateWin32::CreateSceneHandler(const G4String& name)
+{
+  G4VSceneHandler* pScene = new G4OpenGLImmediateSceneHandler(*this, name);
+  return pScene;
 }
 
-G4VViewer* G4OpenGLImmediateWin32::CreateViewer
-(G4VSceneHandler& scene, const G4String& name) {
-  G4VViewer* pView =
-    new G4OpenGLImmediateWin32Viewer
-    ((G4OpenGLImmediateSceneHandler&) scene, name);
-  if (pView) {
-    if (pView -> GetViewId () < 0) {
+G4VViewer* G4OpenGLImmediateWin32::CreateViewer(G4VSceneHandler& scene, const G4String& name)
+{
+  G4VViewer* pView = new G4OpenGLImmediateWin32Viewer((G4OpenGLImmediateSceneHandler&)scene, name);
+  if (pView)
+  {
+    if (pView->GetViewId() < 0)
+    {
       G4cerr << "G4OpenGLImmediateWin32::CreateViewer: error flagged by negative"
-	" view id in G4OpenGLImmediateWin32Viewer creation."
-	"\n Destroying view and returning null pointer."
-	   << G4endl;
+                " view id in G4OpenGLImmediateWin32Viewer creation."
+                "\n Destroying view and returning null pointer."
+             << G4endl;
       delete pView;
       pView = 0;
     }
   }
-  else {
+  else
+  {
     G4cerr << "G4OpenGLImmediateWin32::CreateViewer: null pointer on"
-      " new G4OpenGLImmediateWin32Viewer." << G4endl;
+              " new G4OpenGLImmediateWin32Viewer."
+           << G4endl;
   }
   return pView;
 }

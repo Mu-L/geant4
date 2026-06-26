@@ -25,10 +25,10 @@
 //
 //
 // J. M. Quesada (July 2009) based on G4GEMCoulombBarrierHE
-// Coded strictly according to Furihata's GEM paper 
+// Coded strictly according to Furihata's GEM paper
 //
-#ifndef G4GEMCoulombBarrier_h
-#define G4GEMCoulombBarrier_h 1
+#ifndef G4GEMCOULOMBBARRIER_HH
+#define G4GEMCOULOMBBARRIER_HH
 
 #include "G4CoulombBarrier.hh"
 #include "globals.hh"
@@ -37,23 +37,22 @@ class G4Pow;
 
 class G4GEMCoulombBarrier : public G4CoulombBarrier
 {
-public:
-  explicit G4GEMCoulombBarrier(G4int anA, G4int aZ);
+  public:
 
-  ~G4GEMCoulombBarrier() override = default;
+    explicit G4GEMCoulombBarrier(G4int anA, G4int aZ);
 
-  G4double GetCoulombBarrier(G4int ARes, G4int ZRes, G4double U) const override;
+    ~G4GEMCoulombBarrier() override = default;
 
-  G4GEMCoulombBarrier(const G4GEMCoulombBarrier & right) = delete;
-  const G4GEMCoulombBarrier & operator=
-  (const G4GEMCoulombBarrier & right) = delete;
+    G4double GetCoulombBarrier(G4int ARes, G4int ZRes, G4double U) const override;
 
-private:
-  
-  G4double CalcCompoundRadius(G4int ARes) const;
+    G4GEMCoulombBarrier(const G4GEMCoulombBarrier& right) = delete;
+    const G4GEMCoulombBarrier& operator=(const G4GEMCoulombBarrier& right) = delete;
 
-  G4Pow* g4calc;
-  G4double AejectOneThird;
+  private:
+
+    G4double CalcCompoundRadius(G4int ARes) const;
+
+    G4Pow* g4calc;
+    G4double AejectOneThird;
 };
 #endif
-

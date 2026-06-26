@@ -35,4 +35,7 @@ G4VSDFilter::G4VSDFilter(const G4String& name) : filterName(name)
   G4SDManager::GetSDMpointer()->RegisterSDFilter(this);
 }
 
-G4VSDFilter::~G4VSDFilter() { G4SDManager::GetSDMpointer()->DeRegisterSDFilter(this); }
+G4VSDFilter::~G4VSDFilter()
+{
+  G4SDManager::GetSDMpointer()->DeRegisterSDFilter(this);
+}

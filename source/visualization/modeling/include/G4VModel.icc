@@ -25,46 +25,56 @@
 //
 //
 //
-// 
+//
 // John Allison  31st December 1997.
 // Base class for models.
 
-inline const G4ModelingParameters* G4VModel::GetModelingParameters () const {
+inline const G4ModelingParameters* G4VModel::GetModelingParameters() const
+{
   return fpMP;
 }
 
-inline const G4String& G4VModel::GetType () const {
+inline const G4String& G4VModel::GetType() const
+{
   return fType;
 }
 
-inline const G4String& G4VModel::GetGlobalTag () const {
+inline const G4String& G4VModel::GetGlobalTag() const
+{
   return fGlobalTag;
 }
 
-inline const G4String& G4VModel::GetGlobalDescription () const {
+inline const G4String& G4VModel::GetGlobalDescription() const
+{
   return fGlobalDescription;
 }
 
-inline const G4VisExtent& G4VModel::GetExtent () const {
+inline const G4VisExtent& G4VModel::GetExtent() const
+{
   return fExtent;
 }
 
-inline void G4VModel::SetModelingParameters (const G4ModelingParameters* pMP) {
+inline void G4VModel::SetModelingParameters(const G4ModelingParameters* pMP)
+{
   fpMP = pMP;
 }
 
-inline void G4VModel::SetExtent (const G4VisExtent& extent) {
+inline void G4VModel::SetExtent(const G4VisExtent& extent)
+{
   fExtent = extent;
 }
 
-inline void G4VModel::SetGlobalDescription (const G4String& desc) {
+inline void G4VModel::SetGlobalDescription(const G4String& desc)
+{
   fGlobalDescription = desc;
 }
 
-inline void G4VModel::SetType (const G4String& type) {
+inline void G4VModel::SetType(const G4String& type)
+{
   fType = type;
 }
 
-inline void G4VModel::SetGlobalTag (const G4String& tag) {
+inline void G4VModel::SetGlobalTag(const G4String& tag)
+{
   fGlobalTag = tag;
 }

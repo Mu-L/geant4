@@ -25,9 +25,9 @@
 //
 //
 //
-// 
-//Framed box container class
-//Inherits from G4OpenGLXmBox
+//
+// Framed box container class
+// Inherits from G4OpenGLXmBox
 
 #ifndef G4OPENGLXMFRAMEDBOX_HH
 #define G4OPENGLXMFRAMEDBOX_HH
@@ -40,19 +40,20 @@ class G4OpenGLXmVWidgetShell;
 
 class G4OpenGLXmFramedBox : public G4OpenGLXmBox
 {
+  public:
 
-public:
-  G4OpenGLXmFramedBox (const char* = NULL, 
-		       G4bool = False);   //constructor
-  virtual ~G4OpenGLXmFramedBox ();               //destructor
+    G4OpenGLXmFramedBox(const char* = NULL,
+                        G4bool = False);  // constructor
+    virtual ~G4OpenGLXmFramedBox();  // destructor
 
-  void AddChild (G4OpenGLXmVWidgetComponent*);
-  void AddYourselfTo (G4OpenGLXmVWidgetShell*);
+    void AddChild(G4OpenGLXmVWidgetComponent*);
+    void AddYourselfTo(G4OpenGLXmVWidgetShell*);
 
-private:
-  G4OpenGLXmFramedBox (const G4OpenGLXmFramedBox&);
-  G4OpenGLXmFramedBox& operator = (const G4OpenGLXmFramedBox&);
-  Widget frame;
+  private:
+
+    G4OpenGLXmFramedBox(const G4OpenGLXmFramedBox&);
+    G4OpenGLXmFramedBox& operator=(const G4OpenGLXmFramedBox&);
+    Widget frame;
 };
 
 #endif

@@ -25,97 +25,72 @@
 //
 //
 //
-//Top level shell class
+// Top level shell class
 
-#include "G4OpenGLXmViewer.hh"
 #include "G4OpenGLXmTopLevelShell.hh"
+
 #include "G4OpenGLXmVWidgetContainer.hh"
+#include "G4OpenGLXmViewer.hh"
 
 #include <Xm/Frame.h>
 #include <Xm/RowColumn.h>
 
-G4OpenGLXmTopLevelShell::G4OpenGLXmTopLevelShell (G4OpenGLXmViewer* v,
-						  char* n) 
+G4OpenGLXmTopLevelShell::G4OpenGLXmTopLevelShell(G4OpenGLXmViewer* v, char* n)
 {
   pView = v;
-  ProcesspView ();
+  ProcesspView();
   name = n;
-  toplevel = XtVaCreatePopupShell 
-    (name,
-     topLevelShellWidgetClass,
-     top,
-     
-     XtNiconName, name,
-     XtNtitle, name,
-     XmNdeleteResponse, XmDO_NOTHING,
-     XmNisHomogeneous, False,
-     
-     XtNvisual, visual, 
-     XtNdepth, depth, 
-     XtNcolormap, cmap, 
-     XtNborderColor, borcol,
-     XtNbackground, bgnd,
-     NULL);
+  toplevel = XtVaCreatePopupShell(name, topLevelShellWidgetClass, top,
 
-  frame = XtVaCreateManagedWidget (name,
-				   xmFrameWidgetClass,
-				   toplevel,
-				   
-				   XtNvisual, visual,
-				   XtNdepth, depth,
-				   XtNcolormap, cmap,
-				   XtNborderColor, borcol,
-				   XtNbackground, bgnd,
-				   
-				   NULL);
-  
-  
-  
-  top_box =  XtVaCreateManagedWidget (name,
-				      xmRowColumnWidgetClass,
-				      frame,
-				      
-				      XmNadjustMargin, True,
-				      XmNisHomogeneous, False,
-				      
-				      XtNvisual, visual,
-				      XtNdepth, depth,
-				      XtNcolormap, cmap,
-				      XtNborderColor, borcol,
-				      XtNbackground, bgnd,
-				      
-				      NULL);  
+                                  XtNiconName, name, XtNtitle, name, XmNdeleteResponse,
+                                  XmDO_NOTHING, XmNisHomogeneous, False,
 
+                                  XtNvisual, visual, XtNdepth, depth, XtNcolormap, cmap,
+                                  XtNborderColor, borcol, XtNbackground, bgnd, NULL);
+
+  frame = XtVaCreateManagedWidget(name, xmFrameWidgetClass, toplevel,
+
+                                  XtNvisual, visual, XtNdepth, depth, XtNcolormap, cmap,
+                                  XtNborderColor, borcol, XtNbackground, bgnd,
+
+                                  NULL);
+
+  top_box = XtVaCreateManagedWidget(name, xmRowColumnWidgetClass, frame,
+
+                                    XmNadjustMargin, True, XmNisHomogeneous, False,
+
+                                    XtNvisual, visual, XtNdepth, depth, XtNcolormap, cmap,
+                                    XtNborderColor, borcol, XtNbackground, bgnd,
+
+                                    NULL);
 }
 
-G4OpenGLXmTopLevelShell::~G4OpenGLXmTopLevelShell ()
+G4OpenGLXmTopLevelShell::~G4OpenGLXmTopLevelShell()
 {
-  XtDestroyWidget (toplevel);
+  XtDestroyWidget(toplevel);
 }
 
-void G4OpenGLXmTopLevelShell::AddChild (G4OpenGLXmVWidgetContainer* container)
+void G4OpenGLXmTopLevelShell::AddChild(G4OpenGLXmVWidgetContainer* container)
 {
-  container->AddYourselfTo (this);
+  container->AddYourselfTo(this);
 }
 
-void G4OpenGLXmTopLevelShell::Realize () 
+void G4OpenGLXmTopLevelShell::Realize()
 {
   Cardinal num_children;
-  XtVaGetValues (toplevel,
-		 XmNnumChildren, &num_children,
-		 NULL);
-//  G4cout << name << " now parents " << num_children << " children." << G4endl;
-  XtManageChild (toplevel);
-  XtRealizeWidget (toplevel);
-  XtPopup (toplevel, XtGrabNonexclusive);
+  XtVaGetValues(toplevel, XmNnumChildren, &num_children, NULL);
+  //  G4cout << name << " now parents " << num_children << " children." << G4endl;
+  XtManageChild(toplevel);
+  XtRealizeWidget(toplevel);
+  XtPopup(toplevel, XtGrabNonexclusive);
 }
 
-Widget* G4OpenGLXmTopLevelShell::GetPointerToWidget ()
+Widget* G4OpenGLXmTopLevelShell::GetPointerToWidget()
 {
   return &top_box;
 }
 
-char* G4OpenGLXmTopLevelShell::GetName ()
+char* G4OpenGLXmTopLevelShell::GetName()
 {
   return name;
 }

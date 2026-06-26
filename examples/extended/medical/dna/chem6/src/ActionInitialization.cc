@@ -74,6 +74,7 @@ void ActionInitialization::BuildMoleculeCounters() {
   G4MoleculeCounterManager::Instance()->SetAccumulateCounterIntoMaster(false);
 
   auto counter = std::make_unique<G4MoleculeCounter>();
+  //counter->SetVerbose(3);
   counter->SetTimeComparer(G4MoleculeCounterTimeComparer::CreateWithFixedPrecision(1 * ps));
   counter->IgnoreMolecule(G4H2O::Definition());
   G4MoleculeCounterManager::Instance()->RegisterCounter(std::move(counter));

@@ -40,13 +40,13 @@
 // Author: Makoto Asai (SLAC)
 // Adding MergeSubEvent - Sep/11/2023 Makoto Asai (JLab)
 // --------------------------------------------------------------------
-#ifndef G4UserEventAction_hh
-#define G4UserEventAction_hh 1
+#ifndef G4USEREVENTACTION_HH
+#define G4USEREVENTACTION_HH
 
 class G4EventManager;
 class G4Event;
 
-class G4UserEventAction 
+class G4UserEventAction
 {
   public:
 
@@ -56,21 +56,21 @@ class G4UserEventAction
 
     virtual void BeginOfEventAction(const G4Event* anEvent);
     virtual void EndOfEventAction(const G4Event* anEvent);
-      // Two virtual method the user can override.
+    // Two virtual method the user can override.
 
     virtual void MergeSubEvent(G4Event* masterEvent, const G4Event* subEvent);
-      // A virtual method to merge the results of a sub-event into the master
-      // event. The ownership of "subEvent" and its contents blong to the
-      // worker thread. 
-      // Merging trajectories and scores are taken care by G4Event and
-      // G4ScoringManager so the user does not need to take care of them.
-      // But merging hits collections and UserEventInformation must be taken 
-      // care by this method.
-      // This method is invoked only for the case of sub-event parallelism.
+    // A virtual method to merge the results of a sub-event into the master
+    // event. The ownership of "subEvent" and its contents blong to the
+    // worker thread.
+    // Merging trajectories and scores are taken care by G4Event and
+    // G4ScoringManager so the user does not need to take care of them.
+    // But merging hits collections and UserEventInformation must be taken
+    // care by this method.
+    // This method is invoked only for the case of sub-event parallelism.
 
   protected:
 
-      G4EventManager* fpEventManager = nullptr; // not owned
+    G4EventManager* fpEventManager = nullptr;  // not owned
 };
 
 #endif

@@ -32,13 +32,13 @@
 // File name:     G4hBetheBlochModel
 //
 // Author:        V.Ivanchenko (Vladimir.Ivanchenko@cern.ch)
-// 
+//
 // Creation date: 20 July 2000
 //
-// Modifications: 
+// Modifications:
 // 20/07/2000  V.Ivanchenko First implementation
 //
-// Class Description: 
+// Class Description:
 //
 // Bethe-Bloch ionisation model
 // Further documentation available from http://www.ge.infn.it/geant4/lowE
@@ -46,11 +46,11 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4hBetheBlochModel_h
-#define G4hBetheBlochModel_h 1
+#ifndef G4HBETHEBLOCHMODEL_HH
+#define G4HBETHEBLOCHMODEL_HH
 
-#include "globals.hh"
 #include "G4VLowEnergyModel.hh"
+#include "globals.hh"
 
 class G4Material;
 class G4ParticleDefinition;
@@ -58,53 +58,46 @@ class G4DynamicParticle;
 
 class G4hBetheBlochModel : public G4VLowEnergyModel
 {
+  public:
 
-public:
+    explicit G4hBetheBlochModel(const G4String& name);
 
-  explicit G4hBetheBlochModel(const G4String& name) ;
+    ~G4hBetheBlochModel();
 
-  ~G4hBetheBlochModel() ;
+    G4double TheValue(const G4DynamicParticle* particle, const G4Material* material);
 
-  G4double TheValue(const G4DynamicParticle* particle,
-	       	          const G4Material* material);
+    G4double TheValue(const G4ParticleDefinition* aParticle, const G4Material* material,
+                      G4double kineticEnergy);
 
-  G4double TheValue(const G4ParticleDefinition* aParticle,
-       		          const G4Material* material,
-                                G4double kineticEnergy);
+    G4double HighEnergyLimit(const G4ParticleDefinition* aParticle,
+                             const G4Material* material) const;
 
-  G4double HighEnergyLimit(const G4ParticleDefinition* aParticle,
-                           const G4Material* material) const;
+    G4double LowEnergyLimit(const G4ParticleDefinition* aParticle,
+                            const G4Material* material) const;
 
-  G4double LowEnergyLimit(const G4ParticleDefinition* aParticle,
-                          const G4Material* material) const;
+    G4double HighEnergyLimit(const G4ParticleDefinition* aParticle) const;
 
-  G4double HighEnergyLimit(const G4ParticleDefinition* aParticle) const;
+    G4double LowEnergyLimit(const G4ParticleDefinition* aParticle) const;
 
-  G4double LowEnergyLimit(const G4ParticleDefinition* aParticle) const;
- 
-  G4bool IsInCharge(const G4DynamicParticle* particle,
-		    const G4Material* material) const;
+    G4bool IsInCharge(const G4DynamicParticle* particle, const G4Material* material) const;
 
-  G4bool IsInCharge(const G4ParticleDefinition* aParticle,
-		    const G4Material* material) const;
+    G4bool IsInCharge(const G4ParticleDefinition* aParticle, const G4Material* material) const;
 
-protected:
+  protected:
 
-private:
+  private:
 
-  G4double BetheBlochFormula(const G4Material* material,
-                                   G4double kineticEnergy,
-                                   G4double particleMass) const;
+    G4double BetheBlochFormula(const G4Material* material, G4double kineticEnergy,
+                               G4double particleMass) const;
 
-  // constants needed for the energy loss calculation  
-  const G4double twoln10;
-  const G4double bg2lim;
-  const G4double taulim;    // energy to start to switch off shell corrections
+    // constants needed for the energy loss calculation
+    const G4double twoln10;
+    const G4double bg2lim;
+    const G4double taulim;  // energy to start to switch off shell corrections
 
-  // Low energy limit of the model
-  G4double lowEnergyLimit;
-  G4double highEnergyLimit;
-
+    // Low energy limit of the model
+    G4double lowEnergyLimit;
+    G4double highEnergyLimit;
 };
 
 #endif

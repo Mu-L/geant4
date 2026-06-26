@@ -25,22 +25,24 @@
 //
 //
 //
-// 
+//
 // John Allison  May 1996
 
 #ifndef G4SCENEHANDLERLIST_HH
 #define G4SCENEHANDLERLIST_HH
 
-#include <vector>
 #include "G4VSceneHandler.hh"
 
-class G4SceneHandlerList: public std::vector<G4VSceneHandler*> {
-public:
-  void remove(G4VSceneHandler*);
+#include <vector>
+
+class G4SceneHandlerList : public std::vector<G4VSceneHandler*>
+{
+  public:
+
+    void remove(G4VSceneHandler*);
 };
 
 typedef std::vector<G4VSceneHandler*>::iterator G4SceneHandlerListIterator;
-typedef std::vector<G4VSceneHandler*>::const_iterator
-        G4SceneHandlerListConstIterator;
+typedef std::vector<G4VSceneHandler*>::const_iterator G4SceneHandlerListConstIterator;
 
 #endif

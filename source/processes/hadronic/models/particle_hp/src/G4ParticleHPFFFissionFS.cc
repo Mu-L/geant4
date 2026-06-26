@@ -37,11 +37,14 @@
 G4ParticleHPFFFissionFS::~G4ParticleHPFFFissionFS()
 {
   auto it = FissionProductYieldData.begin();
-  while (it != FissionProductYieldData.end()) {  // Loop checking, 11.05.2015, T. Koi
+  while (it != FissionProductYieldData.end())
+  {  // Loop checking, 11.05.2015, T. Koi
     std::map<G4double, std::map<G4int, G4double>*>* firstLevel = it->second;
-    if (firstLevel != nullptr) {
+    if (firstLevel != nullptr)
+    {
       auto it2 = firstLevel->begin();
-      while (it2 != firstLevel->end()) {  // Loop checking, 11.05.2015, T. Koi
+      while (it2 != firstLevel->end())
+      {  // Loop checking, 11.05.2015, T. Koi
         delete it2->second;
         it2->second = 0;
         firstLevel->erase(it2);
@@ -55,7 +58,8 @@ G4ParticleHPFFFissionFS::~G4ParticleHPFFFissionFS()
   }
 
   auto ii = mMTInterpolation.begin();
-  while (ii != mMTInterpolation.end()) {  // Loop checking, 11.05.2015, T. Koi
+  while (ii != mMTInterpolation.end())
+  {  // Loop checking, 11.05.2015, T. Koi
     delete ii->second;
     mMTInterpolation.erase(ii);
     ii = mMTInterpolation.begin();
@@ -77,7 +81,8 @@ void G4ParticleHPFFFissionFS::Init(G4double A, G4double Z, G4int M, const G4Stri
   theBaseZ = aFile.GetZ();
 
   // 3456
-  if (!dbool || (Z < 2.5 && (std::abs(theBaseZ - Z) > 0.0001 || std::abs(theBaseA - A) > 0.0001))) {
+  if (!dbool || (Z < 2.5 && (std::abs(theBaseZ - Z) > 0.0001 || std::abs(theBaseA - A) > 0.0001)))
+  {
     hasAnyData = false;
     hasFSData = false;
     hasXsec = false;
@@ -87,7 +92,8 @@ void G4ParticleHPFFFissionFS::Init(G4double A, G4double Z, G4int M, const G4Stri
   std::istringstream theData(std::ios::in);
   G4ParticleHPManager::GetInstance()->GetDataStream(filename, theData);
   G4double dummy;
-  if (!theData) {
+  if (!theData)
+  {
     // theData.close();
     hasFSData = false;
     hasXsec = false;
@@ -112,7 +118,8 @@ void G4ParticleHPFFFissionFS::Init(G4double A, G4double Z, G4int M, const G4Stri
     auto mEnergyFSPData = new std::map<G4double, std::map<G4int, G4double>*>;
 
     auto mInterporation = new std::map<G4double, G4int>;
-    for (G4int i = 0; i <= imax; i++) {
+    for (G4int i = 0; i <= imax; i++)
+    {
       G4double YY = 0.0;
       G4double Ei;
       G4int jmax;
@@ -126,7 +133,8 @@ void G4ParticleHPFFFissionFS::Init(G4double A, G4double Z, G4int M, const G4Stri
       mInterporation->insert(std::pair<G4double, G4int>(Ei * eV, ip));
       //         nNumber  nIP
       auto mFSPYieldData = new std::map<G4int, G4double>;
-      for (G4int j = 0; j < jmax; j++) {
+      for (G4int j = 0; j < jmax; j++)
+      {
         G4int FSP;
         G4int mFSP;
         G4double Y;
@@ -165,8 +173,7 @@ void G4ParticleHPFFFissionFS::GetAFissionFragment(G4double energy, G4int& fragZ,
   // G4cout << rand << G4endl;
 
   auto ptr = FissionProductYieldData.find(454);
-  if (ptr == FissionProductYieldData.end())
-    return;
+  if (ptr == FissionProductYieldData.end()) return;
 
   auto mEnergyFSPData = ptr->second;
 
@@ -174,16 +181,20 @@ void G4ParticleHPFFFissionFS::GetAFissionFragment(G4double energy, G4int& fragZ,
   // So, here just use the closest energy point array of yield data.
   // TK120531
   G4double key_energy = DBL_MAX;
-  if (mEnergyFSPData->size() == 1) {
+  if (mEnergyFSPData->size() == 1)
+  {
     key_energy = mEnergyFSPData->cbegin()->first;
   }
-  else {
+  else
+  {
     // Find closest energy point
     G4double Dmin = DBL_MAX;
-    for (auto it = mEnergyFSPData->cbegin(); it != mEnergyFSPData->cend(); ++it) {
+    for (auto it = mEnergyFSPData->cbegin(); it != mEnergyFSPData->cend(); ++it)
+    {
       G4double e = (it->first);
       G4double d = std::fabs(energy - e);
-      if (d < Dmin) {
+      if (d < Dmin)
+      {
         Dmin = d;
         key_energy = e;
       }
@@ -195,10 +206,12 @@ void G4ParticleHPFFFissionFS::GetAFissionFragment(G4double energy, G4int& fragZ,
   G4int ifrag = 0;
   G4double ceilling =
     mFSPYieldData->rbegin()->second;  // Because of numerical accuracy, this is not always 2
-  for (auto it = mFSPYieldData->cbegin(); it != mFSPYieldData->cend(); ++it) {
+  for (auto it = mFSPYieldData->cbegin(); it != mFSPYieldData->cend(); ++it)
+  {
     // if ( ( rand - it->second/ceilling ) < 1.0e-6 ) std::cout << rand - it->second/ceilling <<
     // std::endl;
-    if (rand <= it->second / ceilling) {
+    if (rand <= it->second / ceilling)
+    {
       // G4cout << it->first << " " << it->second/ceilling << G4endl;
       ifrag = it->first;
       break;

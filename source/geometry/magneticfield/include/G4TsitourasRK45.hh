@@ -45,6 +45,7 @@
 /**
  * @brief G4TsitourasRK45 is an implementation of the 5(4) Runge-Kutta
  * stepper (non-FSAL version).
+ * @ingroup geometry_magneticfield
  */
 
 class G4TsitourasRK45 : public G4MagIntegratorStepper
@@ -57,9 +58,7 @@ class G4TsitourasRK45 : public G4MagIntegratorStepper
      *  @param[in] numberOfVariables The number of integration variables.
      *  @param[in] primary Flag for initialisation of the auxiliary stepper.
      */
-    G4TsitourasRK45(G4EquationOfMotion* EqRhs,
-                    G4int numberOfVariables = 6,
-                    G4bool primary = true);
+    G4TsitourasRK45(G4EquationOfMotion* EqRhs, G4int numberOfVariables = 6, G4bool primary = true);
     /**
      * Destructor.
      */
@@ -70,7 +69,7 @@ class G4TsitourasRK45 : public G4MagIntegratorStepper
      */
     G4TsitourasRK45(const G4TsitourasRK45&) = delete;
     G4TsitourasRK45& operator=(const G4TsitourasRK45&) = delete;
-    
+
     /**
      * The stepper for the Runge Kutta integration.
      * The stepsize is fixed, with the step size given by 'h'.
@@ -82,19 +81,16 @@ class G4TsitourasRK45 : public G4MagIntegratorStepper
      *  @param[out] yout Integration output.
      *  @param[out] yerr The estimated error.
      */
-    void Stepper( const G4double y[],
-                  const G4double dydx[],
-                        G4double h,
-                        G4double yout[],
-                        G4double yerr[] ) override;
-    
+    void Stepper(const G4double y[], const G4double dydx[], G4double h, G4double yout[],
+                 G4double yerr[]) override;
+
     /**
      * Setup all coefficients for interpolation.
      */
     void SetupInterpolation( /* const G4double yInput[],
                               const G4double dydx[],
                               const G4double Step */  );
-    
+
     /**
      * Calculates the output at the tau fraction of step.
      *  @param[in] yInput Starting values array of integration variables.
@@ -103,16 +99,10 @@ class G4TsitourasRK45 : public G4MagIntegratorStepper
      *  @param[out] yOut Interpolation output.
      *  @param[in] tau The tau fraction of the step.
      */
-    void Interpolate( const G4double yInput[],
-                      const G4double dydx[],
-                      const G4double Step,
-                            G4double yOut[],
-                            G4double tau );
-    void interpolate( const G4double yInput[],
-                      const G4double dydx[],
-                            G4double yOut[],
-                            G4double Step,
-                            G4double tau);
+    void Interpolate(const G4double yInput[], const G4double dydx[], const G4double Step,
+                     G4double yOut[], G4double tau);
+    void interpolate(const G4double yInput[], const G4double dydx[], G4double yOut[], G4double Step,
+                     G4double tau);
 
     /**
      * Returns the distance from chord line.
@@ -128,16 +118,15 @@ class G4TsitourasRK45 : public G4MagIntegratorStepper
      * Returns the stepper type-ID, "kTsitourasRK45".
      */
     inline G4StepperType StepperType() const override { return kTsitourasRK45; }
-    
-  private :
-    
+
+  private:
+
     G4double *ak2, *ak3, *ak4, *ak5, *ak6, *ak7, *ak8, *yTemp, *yIn;
-    
+
     G4double fLastStepLength = 0.0;
-    G4double *fLastInitialVector, *fLastFinalVector,
-             *fLastDyDx, *fMidVector, *fMidError;
-      // For DistChord calculations
-    
+    G4double *fLastInitialVector, *fLastFinalVector, *fLastDyDx, *fMidVector, *fMidError;
+    // For DistChord calculations
+
     G4TsitourasRK45* fAuxStepper = nullptr;
 };
 

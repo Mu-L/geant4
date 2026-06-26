@@ -26,8 +26,8 @@
 //
 //
 
-#ifndef G4PSFlatSurfaceFlux3D_h
-#define G4PSFlatSurfaceFlux3D_h 1
+#ifndef G4PSFLATSURFACEFLUX3D_HH
+#define G4PSFLATSURFACEFLUX3D_HH
 
 #include "G4PSFlatSurfaceFlux.hh"
 ///////////////////////////////////////////////////////////////////////////////
@@ -53,19 +53,21 @@
 
 class G4PSFlatSurfaceFlux3D : public G4PSFlatSurfaceFlux
 {
- public:
-  G4PSFlatSurfaceFlux3D(const G4String& name, G4int direction, G4int ni = 1,
-                        G4int nj = 1, G4int nk = 1, G4int depi = 2,
-                        G4int depj = 1, G4int depk = 0);
-  G4PSFlatSurfaceFlux3D(const G4String& name, G4int direction, const G4String& unit,
-                        G4int ni = 1, G4int nj = 1, G4int nk = 1,
-                        G4int depi = 2, G4int depj = 1, G4int depk = 0);
-  ~G4PSFlatSurfaceFlux3D() override = default;
+  public:
 
- protected:
-  G4int GetIndex(G4Step*) override;
+    G4PSFlatSurfaceFlux3D(const G4String& name, G4int direction, G4int ni = 1, G4int nj = 1,
+                          G4int nk = 1, G4int depi = 2, G4int depj = 1, G4int depk = 0);
+    G4PSFlatSurfaceFlux3D(const G4String& name, G4int direction, const G4String& unit, G4int ni = 1,
+                          G4int nj = 1, G4int nk = 1, G4int depi = 2, G4int depj = 1,
+                          G4int depk = 0);
+    ~G4PSFlatSurfaceFlux3D() override = default;
 
- private:
-  G4int fDepthi, fDepthj, fDepthk;
+  protected:
+
+    G4int GetIndex(G4Step*) override;
+
+  private:
+
+    G4int fDepthi, fDepthj, fDepthk;
 };
 #endif

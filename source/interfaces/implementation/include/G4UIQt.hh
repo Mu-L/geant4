@@ -28,9 +28,9 @@
 #ifndef G4UIQT_HH
 #define G4UIQT_HH
 
+#include "G4SceneTreeItem.hh"
 #include "G4VBasicShell.hh"
 #include "G4VInteractiveSession.hh"
-#include "G4SceneTreeItem.hh"
 
 #include <qdialog.h>
 #include <qdockwidget.h>
@@ -84,371 +84,378 @@ class QRadioButton;
 #if QT_VERSION < 0x060000
 class G4QTabWidget : public QTabWidget
 {
- public:
-  G4QTabWidget();
-  G4QTabWidget(QWidget* aParent, G4int sizeX, G4int sizeY);
-  void paintEvent(QPaintEvent* event) override;
-  inline void setTabSelected(G4bool a) { fTabSelected = a; };
-  inline void setLastTabCreated(G4int a) { fLastCreated = a; };
-  inline bool isTabSelected() { return fTabSelected; };
-  G4bool fTabSelected;
-  G4int fLastCreated;
-  G4int fPreferedSizeX;
-  G4int fPreferedSizeY;
-  inline void setPreferredSize(QSize size)
-  {
-    fPreferedSizeX = size.width() + 6;  // tab label height + margin left+right
-    fPreferedSizeY = size.height() + 58;  // margin left+right
-  }
-  inline QSize sizeHint() const override { return QSize(fPreferedSizeX, fPreferedSizeY); }
+  public:
+
+    G4QTabWidget();
+    G4QTabWidget(QWidget* aParent, G4int sizeX, G4int sizeY);
+    void paintEvent(QPaintEvent* event) override;
+    inline void setTabSelected(G4bool a) { fTabSelected = a; };
+    inline void setLastTabCreated(G4int a) { fLastCreated = a; };
+    inline bool isTabSelected() { return fTabSelected; };
+    G4bool fTabSelected;
+    G4int fLastCreated;
+    G4int fPreferedSizeX;
+    G4int fPreferedSizeY;
+    inline void setPreferredSize(QSize size)
+    {
+      fPreferedSizeX = size.width() + 6;  // tab label height + margin left+right
+      fPreferedSizeY = size.height() + 58;  // margin left+right
+    }
+    inline QSize sizeHint() const override { return QSize(fPreferedSizeX, fPreferedSizeY); }
 };
 #endif
 
 class G4UIOutputString
 {
- public:
-  G4UIOutputString(const QString& text, const G4String& thread = "", const G4String& outputstream = "info");
-  inline QString GetOutputList() { return " all info warning error "; };
-  QString fText;
-  G4String fThread;
-  G4String fOutputStream;  // Error, Warning, Info
+  public:
+
+    G4UIOutputString(const QString& text, const G4String& thread = "",
+                     const G4String& outputstream = "info");
+    inline QString GetOutputList() { return " all info warning error "; };
+    QString fText;
+    G4String fThread;
+    G4String fOutputStream;  // Error, Warning, Info
 };
 
 class G4UIDockWidget : public QDockWidget
 {
- public:
-  G4UIDockWidget(const QString& txt);
-  void closeEvent(QCloseEvent*) override;
+  public:
+
+    G4UIDockWidget(const QString& txt);
+    void closeEvent(QCloseEvent*) override;
 };
 
 class G4UIQt : public QObject, public G4VBasicShell, public G4VInteractiveSession
 {
-  Q_OBJECT
+    Q_OBJECT
 
- public:  // With description
-  // (argv, argc) or (0, NULL) had to be given.
-  G4UIQt(G4int, char**);
+  public:  // With description
 
-  // To enter interactive X loop ; waiting/executing command,...
-  G4UIsession* SessionStart() override;
+    // (argv, argc) or (0, NULL) had to be given.
+    G4UIQt(G4int, char**);
 
-  // To add a pulldown menu in the menu bar.
-  // First argument is the name of the menu.
-  // Second argument is the label of the cascade button.
-  // Ex : AddMenu("my_menu","My menu")
-  void AddMenu(const char*, const char*) override;
+    // To enter interactive X loop ; waiting/executing command,...
+    G4UIsession* SessionStart() override;
 
-  // To add a push button in a pulldown menu.
-  // First argument is the name of the menu.
-  // Second argument is the label of the button.
-  // Third argument is the Geant4 command executed when the button is fired.
-  // Ex : AddButton("my_menu","Run","/run/beamOn 1");
-  void AddButton(const char*, const char*, const char*) override;
+    // To add a pulldown menu in the menu bar.
+    // First argument is the name of the menu.
+    // Second argument is the label of the cascade button.
+    // Ex : AddMenu("my_menu","My menu")
+    void AddMenu(const char*, const char*) override;
 
-  // To add a icon in the toolbar
-  // First argument is the label of the icon.
-  // Second argument is the selected icon type (open save move rotate pick zoom_in zoom_out
-  // wireframe solid hidden_line_removal hidden_line_and_surface_removal perspective ortho
-  // user_icon). Third argument is the Geant4 command executed when the button is fired. Fourth
-  // argument is the path to the icon file if "user_icon" selected Ex : AddButton("change background
-  // color","../background.xpm"," /vis/viewer/set/background");
-  void AddIcon(const char* userLabel, const char* iconFile, const char* command,
-    const char* file_name = "") override;
+    // To add a push button in a pulldown menu.
+    // First argument is the name of the menu.
+    // Second argument is the label of the button.
+    // Third argument is the Geant4 command executed when the button is fired.
+    // Ex : AddButton("my_menu","Run","/run/beamOn 1");
+    void AddButton(const char*, const char*, const char*) override;
 
-  // Specify an output style - used by /gui/outputStyle
-  // First argument destination ("cout" etc or "all")
-  // Second argument is the required style - see guidance
-  void SetOutputStyle(const char* destination, const char* style) override;
+    // To add a icon in the toolbar
+    // First argument is the label of the icon.
+    // Second argument is the selected icon type (open save move rotate pick zoom_in zoom_out
+    // wireframe solid hidden_line_removal hidden_line_and_surface_removal perspective ortho
+    // user_icon). Third argument is the Geant4 command executed when the button is fired. Fourth
+    // argument is the path to the icon file if "user_icon" selected Ex : AddButton("change
+    // background color","../background.xpm"," /vis/viewer/set/background");
+    void AddIcon(const char* userLabel, const char* iconFile, const char* command,
+                 const char* file_name = "") override;
 
-  // Enable/Disable the native Menu Bar in Qt
-  void NativeMenu(G4bool aVal) override;
+    // Specify an output style - used by /gui/outputStyle
+    // First argument destination ("cout" etc or "all")
+    // Second argument is the required style - see guidance
+    void SetOutputStyle(const char* destination, const char* style) override;
 
-  // Clear Menu Bar, remove all actions
-  void ClearMenu() override;
+    // Enable/Disable the native Menu Bar in Qt
+    void NativeMenu(G4bool aVal) override;
 
-  // Enable/Disable the default icon ToolBar in Qt
-  void DefaultIcons(G4bool aVal) override;
+    // Clear Menu Bar, remove all actions
+    void ClearMenu() override;
 
-  // To add a tab for vis openGL Qt driver
-  G4bool AddTabWidget(QWidget*, QString);
+    // Enable/Disable the default icon ToolBar in Qt
+    void DefaultIcons(G4bool aVal) override;
 
-  inline QTabWidget* GetViewerTabWidget() { return fViewerTabWidget; };
+    // To add a tab for vis openGL Qt driver
+    G4bool AddTabWidget(QWidget*, QString);
 
-  // Get the "old" scene tree component
-  QWidget* GetSceneTreeWidget();
+    inline QTabWidget* GetViewerTabWidget() { return fViewerTabWidget; };
 
-  // Get the Viewer Properties Widget
-  QWidget* GetViewerPropertiesWidget();
+    // Get the "old" scene tree component
+    QWidget* GetSceneTreeWidget();
 
-  // Get the Pick Widget
-  QWidget* GetPickInfosWidget();
+    // Get the Viewer Properties Widget
+    QWidget* GetViewerPropertiesWidget();
 
-  G4bool IsSplitterReleased();
+    // Get the Pick Widget
+    QWidget* GetPickInfosWidget();
 
-  inline G4bool IsIconMoveSelected() { return fMoveSelected; };
-  inline G4bool IsIconRotateSelected() { return fRotateSelected; };
-  inline G4bool IsIconPickSelected() { return fPickSelected; };
-  inline G4bool IsIconZoomInSelected() { return fZoomInSelected; };
-  inline G4bool IsIconZoomOutSelected() { return fZoomOutSelected; };
+    G4bool IsSplitterReleased();
 
-  void SetIconMoveSelected();
-  void SetIconRotateSelected();
-  void TogglePickSelection();
-  void SetIconZoomInSelected();
-  void SetIconZoomOutSelected();
-  void SetIconHLHSRSelected();
-  void SetIconHLRSelected();
-  void SetIconSolidSelected();
-  void SetIconWireframeSelected();
-  void SetIconCoudPointSelected();
-  void SetIconPerspectiveSelected();
-  void SetIconOrthoSelected();
+    inline G4bool IsIconMoveSelected() { return fMoveSelected; };
+    inline G4bool IsIconRotateSelected() { return fRotateSelected; };
+    inline G4bool IsIconPickSelected() { return fPickSelected; };
+    inline G4bool IsIconZoomInSelected() { return fZoomInSelected; };
+    inline G4bool IsIconZoomOutSelected() { return fZoomOutSelected; };
 
-  // Return the main window
-  inline QMainWindow* GetMainWindow() { return fMainWindow; };
+    void SetIconMoveSelected();
+    void SetIconRotateSelected();
+    void TogglePickSelection();
+    void SetIconZoomInSelected();
+    void SetIconZoomOutSelected();
+    void SetIconHLHSRSelected();
+    void SetIconHLRSelected();
+    void SetIconSolidSelected();
+    void SetIconWireframeSelected();
+    void SetIconCoudPointSelected();
+    void SetIconPerspectiveSelected();
+    void SetIconOrthoSelected();
 
-  // return the "search" icon pixmap
-  inline QPixmap* getSearchIcon() { return fSearchIcon; };
+    // Return the main window
+    inline QMainWindow* GetMainWindow() { return fMainWindow; };
 
-  // return the "clear" icon pixmap
-  inline QPixmap* getClearIcon() { return fClearIcon; };
+    // return the "search" icon pixmap
+    inline QPixmap* getSearchIcon() { return fSearchIcon; };
 
-  // Set the text on the first page of the viewer. If "", will take the last value as default
-  // Note: Qt Rich text format could be used, see link for example :
-  // https://qt-project.org/doc/qt-4.8/richtext-html-subset.html#table-cell-attributes
-  void SetStartPage(const std::string&);
+    // return the "clear" icon pixmap
+    inline QPixmap* getClearIcon() { return fClearIcon; };
 
-  // Return the G4cout widget with filters
-  inline QWidget* GetCoutWidget() { return fCoutDockWidget->widget(); };
+    // Set the text on the first page of the viewer. If "", will take the last value as default
+    // Note: Qt Rich text format could be used, see link for example :
+    // https://qt-project.org/doc/qt-4.8/richtext-html-subset.html#table-cell-attributes
+    void SetStartPage(const std::string&);
 
-  // Return the cout dockable widget as a QDockWidget
-  inline G4UIDockWidget* GetCoutDockWidget() { return fCoutDockWidget; };
+    // Return the G4cout widget with filters
+    inline QWidget* GetCoutWidget() { return fCoutDockWidget->widget(); };
 
-  // Return the UserInterface widget (including scene tree, help and History widgets)
-  inline G4UIDockWidget* GetUserInterfaceWidget() { return fUIDockWidget; };
+    // Return the cout dockable widget as a QDockWidget
+    inline G4UIDockWidget* GetCoutDockWidget() { return fCoutDockWidget; };
 
-  // return the viewer widget including all viewers
-  inline QTabWidget* GetUITabWidget() { return fUITabWidget; }
+    // Return the UserInterface widget (including scene tree, help and History widgets)
+    inline G4UIDockWidget* GetUserInterfaceWidget() { return fUIDockWidget; };
 
-  // return the history widget
-  inline QWidget* GetHistoryWidget() { return fHistoryTBWidget; }
+    // return the viewer widget including all viewers
+    inline QTabWidget* GetUITabWidget() { return fUITabWidget; }
 
-  // return the help widget
-  inline QWidget* GetHelpWidget() { return fHelpTBWidget; }
+    // return the history widget
+    inline QWidget* GetHistoryWidget() { return fHistoryTBWidget; }
 
-  // Add a new tab in the viewer, could be used to add your own component
-  G4bool AddViewerTab(QWidget* w, std::string title);
+    // return the help widget
+    inline QWidget* GetHelpWidget() { return fHelpTBWidget; }
 
-  // Add a new tab in the viewer containing the content of the file in a QLabel
-  G4bool AddViewerTabFromFile(std::string fileName, std::string title);
+    // Add a new tab in the viewer, could be used to add your own component
+    G4bool AddViewerTab(QWidget* w, std::string title);
 
-  // Update "new" scene tree
-  void UpdateSceneTree(const G4SceneTreeItem&) override;
+    // Add a new tab in the viewer containing the content of the file in a QLabel
+    G4bool AddViewerTabFromFile(std::string fileName, std::string title);
 
-  // Update control widgets
-  void UpdateDrawingStyle(G4int style) override;
-  void UpdateProjectionStyle(G4int style) override;
-  void UpdateTransparencySlider(G4double depth, G4int option) override;
+    // Update "new" scene tree
+    void UpdateSceneTree(const G4SceneTreeItem&) override;
 
+    // Update control widgets
+    void UpdateDrawingStyle(G4int style) override;
+    void UpdateProjectionStyle(G4int style) override;
+    void UpdateTransparencySlider(G4double depth, G4int option) override;
 
-public:
-  ~G4UIQt() override;
-  void Prompt(const G4String&);
-  void SessionTerminate();
-  void PauseSessionStart(const G4String&) override;
-  G4int ReceiveG4debug(const G4String&) override;
-  G4int ReceiveG4cout(const G4String&) override;
-  G4int ReceiveG4cerr(const G4String&) override;
-  //   G4String GetCommand(Widget);
+  public:
 
-private:
-  void SecondaryLoop(const G4String&);  // a VIRER
-  void CreateHelpWidget();
-  void InitHelpTreeAndVisParametersWidget();
-  void FillHelpTree();
-  void UpdateCommandCompleter();
-  void CreateIcons();
-  void ExitHelp() const override;
-  void SetDefaultIconsToolbar();
+    ~G4UIQt() override;
+    void Prompt(const G4String&);
+    void SessionTerminate();
+    void PauseSessionStart(const G4String&) override;
+    G4int ReceiveG4debug(const G4String&) override;
+    G4int ReceiveG4cout(const G4String&) override;
+    G4int ReceiveG4cerr(const G4String&) override;
+    //   G4String GetCommand(Widget);
 
-  void CreateHelpTree(QTreeWidgetItem*, G4UIcommandTree*);
-  QTreeWidgetItem* FindTreeItem(QTreeWidgetItem*, const QString&);
+  private:
 
-  // Create the "mother" widget
-  QWidget* CreateSceneTreeWidget();
+    void SecondaryLoop(const G4String&);  // a VIRER
+    void CreateHelpWidget();
+    void InitHelpTreeAndVisParametersWidget();
+    void FillHelpTree();
+    void UpdateCommandCompleter();
+    void CreateIcons();
+    void ExitHelp() const override;
+    void SetDefaultIconsToolbar();
 
-  // Classes/structs and functions for the "new" scene tree
-  // UpdateSceneTree is in "public" section above.
-  // Create and connect the new tree widget
-  void CreateNewSceneTreeWidget();
-  // Build Physical Volume tree of touchables
-  void BuildPVQTree(const G4SceneTreeItem& g4stItem, QTreeWidgetItem* qtwItem);
-  // Callbacks on new scene tree items
-  void SceneTreeItemClicked(QTreeWidgetItem*);
-  void SceneTreeItemDoubleClicked(QTreeWidgetItem*);
-  void SceneTreeItemExpanded(QTreeWidgetItem*);
-  void SceneTreeItemCollapsed(QTreeWidgetItem*);
-  void SliderValueChanged(G4int value);
-  void SliderReleased();
-  void SliderRadioButtonClicked(G4int buttonNo);
-  // Class for trapping special mouse events on new scene tree
-  struct NewSceneTreeItemTreeWidget: public QTreeWidget {
-    void mousePressEvent(QMouseEvent*) override;
-    void ActWithoutParameter(const G4String& action, G4SceneTreeItem*);
-    void ActWithABool(const G4String& action, G4SceneTreeItem*, G4bool);
-    void ActWithAnInteger(const G4String& action, G4SceneTreeItem*);
-    void ActWithADouble(const G4String& action, G4SceneTreeItem*);
-    void ActWithAString(const G4String& action, G4SceneTreeItem*);
-  };
+    void CreateHelpTree(QTreeWidgetItem*, G4UIcommandTree*);
+    QTreeWidgetItem* FindTreeItem(QTreeWidgetItem*, const QString&);
 
-  QString GetCommandList(const G4UIcommand*);
-  void updateHelpArea(const G4UIcommand*);
-  G4bool GetHelpChoice(
-    G4int&) override;  // have to be implemeted because we heritate from G4VBasicShell
-  bool eventFilter(QObject*, QEvent*) override;
-  void ActivateCommand(G4String);
+    // Create the "mother" widget
+    QWidget* CreateSceneTreeWidget();
 
-  QMultiMap<G4double, QString> LookForHelpStringInChildTree(G4UIcommandTree*, const QString&);
-  G4double ComputeStringMatchScore(const QString&, const QString&);
-  QWidget* CreateVisParametersTBWidget();
-  QWidget* CreateHelpTBWidget();
-  QWidget* CreateTimeWindowWidget();
-  G4UIDockWidget* CreateCoutTBWidget();
-  QWidget* CreateHistoryTBWidget();
-  G4UIDockWidget* CreateUITabWidget();
-  void CreateViewerWidget();
-  void OpenHelpTreeOnCommand(const QString&);
-  QString GetShortCommandPath(QString&);
-  QString GetLongCommandPath(QTreeWidgetItem*);
-  G4bool IsGUICommand(const G4UIcommand*);
-  G4bool CreateVisCommandGroupAndToolBox(G4UIcommand*, QWidget*, G4int, G4bool isDialog);
-  G4bool CreateCommandWidget(G4UIcommand* command, QWidget* parent, G4bool isDialog);
-  void CreateViewerPropertiesDialog();
-  void CreatePickInfosDialog();
+    // Classes/structs and functions for the "new" scene tree
+    // UpdateSceneTree is in "public" section above.
+    // Create and connect the new tree widget
+    void CreateNewSceneTreeWidget();
+    // Build Physical Volume tree of touchables
+    void BuildPVQTree(const G4SceneTreeItem& g4stItem, QTreeWidgetItem* qtwItem);
+    // Callbacks on new scene tree items
+    void SceneTreeItemClicked(QTreeWidgetItem*);
+    void SceneTreeItemDoubleClicked(QTreeWidgetItem*);
+    void SceneTreeItemExpanded(QTreeWidgetItem*);
+    void SceneTreeItemCollapsed(QTreeWidgetItem*);
+    void SliderValueChanged(G4int value);
+    void SliderReleased();
+    void SliderRadioButtonClicked(G4int buttonNo);
+    // Class for trapping special mouse events on new scene tree
+    struct NewSceneTreeItemTreeWidget : public QTreeWidget
+    {
+        void mousePressEvent(QMouseEvent*) override;
+        void ActWithoutParameter(const G4String& action, G4SceneTreeItem*);
+        void ActWithABool(const G4String& action, G4SceneTreeItem*, G4bool);
+        void ActWithAnInteger(const G4String& action, G4SceneTreeItem*);
+        void ActWithADouble(const G4String& action, G4SceneTreeItem*);
+        void ActWithAString(const G4String& action, G4SceneTreeItem*);
+    };
+
+    QString GetCommandList(const G4UIcommand*);
+    void updateHelpArea(const G4UIcommand*);
+    G4bool
+    GetHelpChoice(G4int&) override;  // have to be implemeted because we heritate from G4VBasicShell
+    bool eventFilter(QObject*, QEvent*) override;
+    void ActivateCommand(G4String);
+
+    QMultiMap<G4double, QString> LookForHelpStringInChildTree(G4UIcommandTree*, const QString&);
+    G4double ComputeStringMatchScore(const QString&, const QString&);
+    QWidget* CreateVisParametersTBWidget();
+    QWidget* CreateHelpTBWidget();
+    QWidget* CreateTimeWindowWidget();
+    G4UIDockWidget* CreateCoutTBWidget();
+    QWidget* CreateHistoryTBWidget();
+    G4UIDockWidget* CreateUITabWidget();
+    void CreateViewerWidget();
+    void OpenHelpTreeOnCommand(const QString&);
+    QString GetShortCommandPath(QString&);
+    QString GetLongCommandPath(QTreeWidgetItem*);
+    G4bool IsGUICommand(const G4UIcommand*);
+    G4bool CreateVisCommandGroupAndToolBox(G4UIcommand*, QWidget*, G4int, G4bool isDialog);
+    G4bool CreateCommandWidget(G4UIcommand* command, QWidget* parent, G4bool isDialog);
+    void CreateViewerPropertiesDialog();
+    void CreatePickInfosDialog();
 #ifdef G4MULTITHREADED
-  void UpdateCoutThreadFilter();
+    void UpdateCoutThreadFilter();
 #endif
-  void FilterAllOutputTextArea();
-  QString FilterOutput(const G4UIOutputString&, const QString&, const QString&);
-  G4String GetThreadPrefix();
-  G4bool CheckG4EnvironmentVariable(char* txt, char* version);
-  QStandardItemModel* CreateCompleterModel(const G4String& aCmd);
-  void CreateEmptyViewerPropertiesWidget();
-  void CreateEmptyPickInfosWidget();
+    void FilterAllOutputTextArea();
+    QString FilterOutput(const G4UIOutputString&, const QString&, const QString&);
+    G4String GetThreadPrefix();
+    G4bool CheckG4EnvironmentVariable(char* txt, char* version);
+    QStandardItemModel* CreateCompleterModel(const G4String& aCmd);
+    void CreateEmptyViewerPropertiesWidget();
+    void CreateEmptyPickInfosWidget();
 
- private:
-  QMainWindow* fMainWindow;
-  QLabel* fCommandLabel;
-  QLineEdit* fCommandArea;
-  QTextEdit* fCoutTBTextArea;
-  QTabWidget* fUITabWidget;
-  std::vector<G4UIOutputString> fG4OutputString;
-  QLineEdit* fCoutFilter;
-  QCompleter* fCompleter;
-  G4bool fDefaultIcons;
+  private:
 
-  QListWidget* fHistoryTBTableList;
-  QTreeWidget* fHelpTreeWidget;
-  QWidget* fHelpTBWidget;
-  QWidget* fTimeWindowWidget;
-  QWidget* fHistoryTBWidget;
-  G4UIDockWidget* fCoutDockWidget;
-  G4UIDockWidget* fUIDockWidget;
-  QWidget* fSceneTreeWidget;
-  QWidget* fNewSceneTreeWidget;
-  NewSceneTreeItemTreeWidget* fNewSceneTreeItemTreeWidget;
-  G4int fMaxPVDepth;
-  QSlider* fNewSceneTreeSlider;
-  QRadioButton* fUnwrapButtonWidget;
-  QRadioButton* fFadeButtonWidget;
-  QRadioButton* fXrayButtonWidget;
-  QWidget* fViewerPropertiesWidget;
-  QWidget* fPickInfosWidget;
-  QLineEdit* fHelpLine;
+    QMainWindow* fMainWindow;
+    QLabel* fCommandLabel;
+    QLineEdit* fCommandArea;
+    QTextEdit* fCoutTBTextArea;
+    QTabWidget* fUITabWidget;
+    std::vector<G4UIOutputString> fG4OutputString;
+    QLineEdit* fCoutFilter;
+    QCompleter* fCompleter;
+    G4bool fDefaultIcons;
+
+    QListWidget* fHistoryTBTableList;
+    QTreeWidget* fHelpTreeWidget;
+    QWidget* fHelpTBWidget;
+    QWidget* fTimeWindowWidget;
+    QWidget* fHistoryTBWidget;
+    G4UIDockWidget* fCoutDockWidget;
+    G4UIDockWidget* fUIDockWidget;
+    QWidget* fSceneTreeWidget;
+    QWidget* fNewSceneTreeWidget;
+    NewSceneTreeItemTreeWidget* fNewSceneTreeItemTreeWidget;
+    G4int fMaxPVDepth;
+    QSlider* fNewSceneTreeSlider;
+    QRadioButton* fUnwrapButtonWidget;
+    QRadioButton* fFadeButtonWidget;
+    QRadioButton* fXrayButtonWidget;
+    QWidget* fViewerPropertiesWidget;
+    QWidget* fPickInfosWidget;
+    QLineEdit* fHelpLine;
 #if QT_VERSION < 0x060000
-  G4QTabWidget* fViewerTabWidget;
+    G4QTabWidget* fViewerTabWidget;
 #else
-  QTabWidget* fViewerTabWidget;
+    QTabWidget* fViewerTabWidget;
 #endif
-  QString fCoutText;
-  QTextBrowser* fStartPage;
-  QSplitter* fHelpVSplitter;
-  QTextEdit* fParameterHelpLabel;
-  QTableWidget* fParameterHelpTable;
+    QString fCoutText;
+    QTextBrowser* fStartPage;
+    QSplitter* fHelpVSplitter;
+    QTextEdit* fParameterHelpLabel;
+    QTableWidget* fParameterHelpTable;
 
-  QToolBar* fToolbarApp;
-  QToolBar* fToolbarUser;
-  QString fStringSeparator;
-  G4String fLastErrMessage;
-  QString fLastOpenPath;
+    QToolBar* fToolbarApp;
+    QToolBar* fToolbarUser;
+    QString fStringSeparator;
+    G4String fLastErrMessage;
+    QString fLastOpenPath;
 
-  QPixmap* fSearchIcon;
-  QPixmap* fClearIcon;
-  QPixmap* fSaveIcon;
-  QPixmap* fOpenIcon;
-  QPixmap* fMoveIcon;
-  QPixmap* fRotateIcon;
-  QPixmap* fPickIcon;
-  QPixmap* fZoomInIcon;
-  QPixmap* fZoomOutIcon;
-  QPixmap* fWireframeIcon;
-  QPixmap* fSolidIcon;
-  QPixmap* fPointCloudIcon;
-  QPixmap* fHiddenLineRemovalIcon;
-  QPixmap* fHiddenLineAndSurfaceRemovalIcon;
-  QPixmap* fPerspectiveIcon;
-  QPixmap* fOrthoIcon;
-  QPixmap* fCommandIcon;
-  QPixmap* fDirIcon;
-  QPixmap* fRunIcon;
-  QPixmap* fParamIcon;
-  QPixmap* fPickTargetIcon;
-  QPixmap* fExitIcon;
-  QPixmap* fResetCameraIcon;
-  QPixmap* fResetTargetPointIcon;
+    QPixmap* fSearchIcon;
+    QPixmap* fClearIcon;
+    QPixmap* fSaveIcon;
+    QPixmap* fOpenIcon;
+    QPixmap* fMoveIcon;
+    QPixmap* fRotateIcon;
+    QPixmap* fPickIcon;
+    QPixmap* fZoomInIcon;
+    QPixmap* fZoomOutIcon;
+    QPixmap* fWireframeIcon;
+    QPixmap* fSolidIcon;
+    QPixmap* fPointCloudIcon;
+    QPixmap* fHiddenLineRemovalIcon;
+    QPixmap* fHiddenLineAndSurfaceRemovalIcon;
+    QPixmap* fPerspectiveIcon;
+    QPixmap* fOrthoIcon;
+    QPixmap* fCommandIcon;
+    QPixmap* fDirIcon;
+    QPixmap* fRunIcon;
+    QPixmap* fParamIcon;
+    QPixmap* fPickTargetIcon;
+    QPixmap* fExitIcon;
+    QPixmap* fResetCameraIcon;
+    QPixmap* fResetTargetPointIcon;
 
 #ifdef G4MULTITHREADED
-  QComboBox* fThreadsFilterComboBox;
+    QComboBox* fThreadsFilterComboBox;
 #endif
-  std::string fDefaultViewerFirstPageHTMLText;
+    std::string fDefaultViewerFirstPageHTMLText;
 
-  QDialog* fViewerPropertiesDialog;
-  QDialog* fPickInfosDialog;
-  QString fLastCompleteCommand;
-  G4bool fMoveSelected;
-  G4bool fRotateSelected;
-  G4bool fPickSelected;
-  G4bool fZoomInSelected;
-  G4bool fZoomOutSelected;
+    QDialog* fViewerPropertiesDialog;
+    QDialog* fPickInfosDialog;
+    QString fLastCompleteCommand;
+    G4bool fMoveSelected;
+    G4bool fRotateSelected;
+    G4bool fPickSelected;
+    G4bool fZoomInSelected;
+    G4bool fZoomOutSelected;
 
- private Q_SLOTS:
-  void ExitSession();
-  void ClearButtonCallback();
-  void SaveOutputCallback();
-  void CommandEnteredCallback();
-  void CommandEditedCallback(const QString& text);
-  void ButtonCallback(const QString&);
-  void HelpTreeClicCallback();
-  void HelpTreeDoubleClicCallback();
-  void ShowHelpCallback();
-  void CommandHistoryCallback();
-  void LookForHelpStringCallback();
-  void UpdateTabWidget(int);
-  void ResizeTabWidget(QResizeEvent*);
-  void CoutFilterCallback(const QString&);
-  void ThreadComboBoxCallback(int);
-  void TabCloseCallback(int);
-  void ToolBoxActivated(int);
-  void VisParameterCallback(QWidget*);
-  void ChangeColorCallback(QWidget*);
-  void ChangeCursorAction(const QString&);
-  void ChangeSurfaceStyle(const QString&);
-  void OpenIconCallback(const QString&);
-  void SaveIconCallback(const QString&);
-  void ViewerPropertiesIconCallback(int);
-  void ChangePerspectiveOrtho(const QString&);
-  void ResetCameraCallback();
-
+  private Q_SLOTS:
+    void ExitSession();
+    void ClearButtonCallback();
+    void SaveOutputCallback();
+    void CommandEnteredCallback();
+    void CommandEditedCallback(const QString& text);
+    void ButtonCallback(const QString&);
+    void HelpTreeClicCallback();
+    void HelpTreeDoubleClicCallback();
+    void ShowHelpCallback();
+    void CommandHistoryCallback();
+    void LookForHelpStringCallback();
+    void UpdateTabWidget(int);
+    void ResizeTabWidget(QResizeEvent*);
+    void CoutFilterCallback(const QString&);
+    void ThreadComboBoxCallback(int);
+    void TabCloseCallback(int);
+    void ToolBoxActivated(int);
+    void VisParameterCallback(QWidget*);
+    void ChangeColorCallback(QWidget*);
+    void ChangeCursorAction(const QString&);
+    void ChangeSurfaceStyle(const QString&);
+    void OpenIconCallback(const QString&);
+    void SaveIconCallback(const QString&);
+    void ViewerPropertiesIconCallback(int);
+    void ChangePerspectiveOrtho(const QString&);
+    void ResetCameraCallback();
 };
 
 #endif

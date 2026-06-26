@@ -54,6 +54,7 @@
 class G4VFastSimSensitiveDetector
 {
   public:
+
     virtual ~G4VFastSimSensitiveDetector() = default;
 
     /// Create a hit.
@@ -71,17 +72,20 @@ class G4VFastSimSensitiveDetector
     {
       G4bool result = true;
       auto sensDet = dynamic_cast<G4VSensitiveDetector*>(this);
-      if (sensDet == nullptr) {
+      if (sensDet == nullptr)
+      {
         G4Exception("G4VFastSimSensitiveDetector::Hit()", "InvalidSetup", FatalException,
                     "Sensitive detector needs also to inherit also from "
                     "G4VSensitiveDetector if full "
                     "simulation is used instead!");
       }
-      if (sensDet->isActive()) {
+      if (sensDet->isActive())
+      {
         G4VReadOutGeometry* ROgeometry = sensDet->GetROgeometry();
         G4TouchableHistory* ROhistory = nullptr;
 
-        if (ROgeometry != nullptr) {
+        if (ROgeometry != nullptr)
+        {
           // create fake pre-step point updating the touchable from read-out
           // geometry.
           G4Step fakeStep;
@@ -92,18 +96,21 @@ class G4VFastSimSensitiveDetector
           tmpPoint->SetMomentumDirection(currentTrack->GetMomentumDirection());
           result = ROgeometry->CheckROVolume(&fakeStep, ROhistory);
         }
-        else {
+        else
+        {
           ROhistory = static_cast<G4TouchableHistory*>((*aTouchable)());
         }
         if (result) result = ProcessHits(aHit, aTrack, ROhistory);
       }
-      else {
+      else
+      {
         result = false;
       }
       return result;
     }
 
   private:
+
     /// Describes how energy and position of deposits are inserted into the hits
     /// collection. It is a private method and it will be invoked by Hit() method
     /// of the base class once the readout geometry that may be associated to the

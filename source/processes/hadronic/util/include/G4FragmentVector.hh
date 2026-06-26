@@ -28,8 +28,8 @@
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara (May 1998)
 
-#ifndef G4FragmentVector_h
-#define G4FragmentVector_h 1
+#ifndef G4FRAGMENTVECTOR_HH
+#define G4FRAGMENTVECTOR_HH
 
 #include "G4Fragment.hh"
 

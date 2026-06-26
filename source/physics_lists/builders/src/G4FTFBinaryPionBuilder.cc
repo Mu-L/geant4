@@ -38,15 +38,15 @@
 //----------------------------------------------------------------------------
 //
 #include "G4FTFBinaryPionBuilder.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4BGGPionInelasticXS.hh"
+#include "G4HadronicParameters.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4BGGPionInelasticXS.hh"
-#include "G4HadronicParameters.hh"
+#include "G4SystemOfUnits.hh"
 
-G4FTFBinaryPionBuilder::
-G4FTFBinaryPionBuilder(G4bool quasiElastic)
+G4FTFBinaryPionBuilder::G4FTFBinaryPionBuilder(G4bool quasiElastic)
 {
   theMin = G4HadronicParameters::Instance()->GetMinEnergyTransitionFTF_Cascade();
   theMax = G4HadronicParameters::Instance()->GetMaxEnergy();
@@ -62,24 +62,25 @@ G4FTFBinaryPionBuilder(G4bool quasiElastic)
   theModel->SetMinEnergy(theMin);
   theModel->SetMaxEnergy(theMax);
 
-  if (quasiElastic) {
-     theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
-  } 
+  if (quasiElastic)
+  {
+    theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
+  }
 }
 
-G4FTFBinaryPionBuilder:: ~G4FTFBinaryPionBuilder()
-{
-}
+G4FTFBinaryPionBuilder::~G4FTFBinaryPionBuilder() {}
 
-void G4FTFBinaryPionBuilder::
-Build(G4HadronInelasticProcess * aP)
+void G4FTFBinaryPionBuilder::Build(G4HadronInelasticProcess* aP)
 {
   theModel->SetMinEnergy(theMin);
   theModel->SetMaxEnergy(theMax);
-  if ( aP->GetParticleDefinition() == G4PionPlus::Definition() ) { 
-    aP->AddDataSet( new G4BGGPionInelasticXS( G4PionPlus::Definition() ) );
-  } else if ( aP->GetParticleDefinition() == G4PionMinus::Definition() ) { 
-    aP->AddDataSet( new G4BGGPionInelasticXS( G4PionMinus::Definition() ) );
+  if (aP->GetParticleDefinition() == G4PionPlus::Definition())
+  {
+    aP->AddDataSet(new G4BGGPionInelasticXS(G4PionPlus::Definition()));
+  }
+  else if (aP->GetParticleDefinition() == G4PionMinus::Definition())
+  {
+    aP->AddDataSet(new G4BGGPionInelasticXS(G4PionMinus::Definition()));
   }
   aP->RegisterMe(theModel);
 }

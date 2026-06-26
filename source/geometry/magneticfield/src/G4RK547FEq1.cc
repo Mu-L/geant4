@@ -43,146 +43,122 @@
 // --------------------------------------------------------------------
 
 #include "G4RK547FEq1.hh"
-#include "G4LineSection.hh"
+
 #include "G4FieldUtils.hh"
+#include "G4LineSection.hh"
 
 using namespace field_utils;
 
 G4RK547FEq1::G4RK547FEq1(G4EquationOfMotion* EqRhs, G4int integrationVariables)
   : G4MagIntegratorStepper(EqRhs, integrationVariables)
+{}
+
+void G4RK547FEq1::makeStep(const G4double yInput[], const G4double dydx[], const G4double hstep,
+                           G4double yOutput[], G4double* dydxOutput, G4double* yError) const
 {
+  G4double yTemp[G4FieldTrack::ncompSVEC];
+  for (G4int i = GetNumberOfVariables(); i < GetNumberOfStateVariables(); ++i)
+  {
+    yOutput[i] = yTemp[i] = yInput[i];
+  }
+
+  G4double ak2[G4FieldTrack::ncompSVEC], ak3[G4FieldTrack::ncompSVEC], ak4[G4FieldTrack::ncompSVEC],
+    ak5[G4FieldTrack::ncompSVEC], ak6[G4FieldTrack::ncompSVEC];
+
+  const G4double b21 = 2. / 9., b31 = 1. / 12., b32 = 1. / 4., b41 = 1. / 8., b42 = 0.,
+                 b43 = 3. / 8., b51 = 91. / 500., b52 = -27. / 100., b53 = 78. / 125.,
+                 b54 = 8. / 125., b61 = -11. / 20., b62 = 27. / 20., b63 = 12. / 5.,
+                 b64 = -36. / 5., b65 = 5., b71 = 1. / 12., b72 = 0., b73 = 27. / 32.,
+                 b74 = -4. / 3., b75 = 125. / 96., b76 = 5. / 48.;
+
+  const G4double dc1 = b71 - 2. / 15., dc2 = b72 - 0., dc3 = b73 - 27. / 80., dc4 = b74 + 2. / 15.,
+                 dc5 = b75 - 25. / 48., dc6 = b76 - 1. / 24., dc7 = 0. - 1. / 10.;
+
+  // RightHandSide(yInput, dydx);
+  for (G4int i = 0; i < GetNumberOfVariables(); ++i)
+  {
+    yTemp[i] = yInput[i] + hstep * b21 * dydx[i];
+  }
+
+  RightHandSide(yTemp, ak2);
+  for (G4int i = 0; i < GetNumberOfVariables(); ++i)
+  {
+    yTemp[i] = yInput[i] + hstep * (b31 * dydx[i] + b32 * ak2[i]);
+  }
+
+  RightHandSide(yTemp, ak3);
+  for (G4int i = 0; i < GetNumberOfVariables(); ++i)
+  {
+    yTemp[i] = yInput[i] + hstep * (b41 * dydx[i] + b42 * ak2[i] + b43 * ak3[i]);
+  }
+
+  RightHandSide(yTemp, ak4);
+  for (G4int i = 0; i < GetNumberOfVariables(); ++i)
+  {
+    yTemp[i] = yInput[i] + hstep * (b51 * dydx[i] + b52 * ak2[i] + b53 * ak3[i] + b54 * ak4[i]);
+  }
+
+  RightHandSide(yTemp, ak5);
+  for (G4int i = 0; i < GetNumberOfVariables(); ++i)
+  {
+    yTemp[i] =
+      yInput[i]
+      + hstep * (b61 * dydx[i] + b62 * ak2[i] + b63 * ak3[i] + b64 * ak4[i] + b65 * ak5[i]);
+  }
+
+  RightHandSide(yTemp, ak6);
+  for (G4int i = 0; i < GetNumberOfVariables(); ++i)
+  {
+    yOutput[i] = yInput[i]
+                 + hstep
+                     * (b71 * dydx[i] + b72 * ak2[i] + b73 * ak3[i] + b74 * ak4[i] + b75 * ak5[i]
+                        + b76 * ak6[i]);
+  }
+  if ((dydxOutput != nullptr) && (yError != nullptr))
+  {
+    RightHandSide(yOutput, dydxOutput);
+    for (G4int i = 0; i < GetNumberOfVariables(); ++i)
+    {
+      yError[i] = hstep
+                  * (dc1 * dydx[i] + dc2 * ak2[i] + dc3 * ak3[i] + dc4 * ak4[i] + dc5 * ak5[i]
+                     + dc6 * ak6[i] + dc7 * dydxOutput[i]);
+    }
+  }
 }
 
-void G4RK547FEq1::makeStep( const G4double yInput[],
-                            const G4double dydx[],
-                            const G4double hstep,
-                                  G4double yOutput[],
-                                  G4double* dydxOutput,
-                                  G4double* yError ) const
+void G4RK547FEq1::Stepper(const G4double yInput[], const G4double dydx[], G4double hstep,
+                          G4double yOutput[], G4double yError[])
 {
-    G4double yTemp[G4FieldTrack::ncompSVEC];
-    for (G4int i=GetNumberOfVariables(); i<GetNumberOfStateVariables(); ++i)
-    {
-        yOutput[i] = yTemp[i] = yInput[i];
-    }
+  copy(fyIn, yInput);
+  copy(fdydx, dydx);
+  fhstep = hstep;
 
-    G4double ak2[G4FieldTrack::ncompSVEC],
-             ak3[G4FieldTrack::ncompSVEC],
-             ak4[G4FieldTrack::ncompSVEC],
-             ak5[G4FieldTrack::ncompSVEC],
-             ak6[G4FieldTrack::ncompSVEC];
+  makeStep(fyIn, fdydx, fhstep, fyOut, fdydxOut, yError);
 
-    const G4double b21 = 2./9.,
-                   b31 = 1./12., b32 = 1./4.,
-                   b41 = 1./8., b42 = 0., b43 = 3./8.,
-                   b51 = 91./500., b52 = -27./100.,
-                     b53 = 78./125., b54 = 8./125.,
-                   b61 = -11./20., b62 = 27./20., b63 = 12./5.,
-                     b64 = -36./5., b65 = 5.,
-                   b71 = 1./12.,    b72 = 0., b73 = 27./32.,
-                     b74 = -4./3., b75 = 125./96., b76 = 5./48.;
-
-    const G4double dc1 = b71 - 2./15.,
-                   dc2 = b72 - 0.,
-                   dc3 = b73 - 27./80.,
-                   dc4 = b74 + 2./15.,
-                   dc5 = b75 - 25./48.,
-                   dc6 = b76 - 1./24.,
-                   dc7 = 0. - 1./10.;
-
-    // RightHandSide(yInput, dydx);
-    for(G4int i = 0; i < GetNumberOfVariables(); ++i)
-    {
-      yTemp[i] = yInput[i] + hstep * b21 * dydx[i];
-    }
-
-    RightHandSide(yTemp, ak2);
-    for(G4int i = 0; i < GetNumberOfVariables(); ++i)
-    {
-      yTemp[i] = yInput[i] + hstep * (b31 * dydx[i] + b32 * ak2[i]);
-    }
-
-    RightHandSide(yTemp, ak3);
-    for(G4int i = 0;i < GetNumberOfVariables(); ++i)
-    {
-      yTemp[i] = yInput[i] + hstep * (b41 * dydx[i] + b42 * ak2[i] +
-                                      b43 * ak3[i]);
-    }
-
-    RightHandSide(yTemp, ak4);
-    for(G4int i = 0; i < GetNumberOfVariables(); ++i)
-    {
-      yTemp[i] = yInput[i] + hstep * (b51 * dydx[i] + b52 * ak2[i] +
-                                      b53 * ak3[i] + b54 * ak4[i]);
-    }
-
-    RightHandSide(yTemp, ak5);
-    for(G4int i = 0; i < GetNumberOfVariables(); ++i)
-    {
-      yTemp[i] = yInput[i] + hstep * (b61 * dydx[i] + b62 * ak2[i] +
-                                      b63 * ak3[i] + b64 * ak4[i] +
-                                      b65 * ak5[i]);
-    }
-
-    RightHandSide(yTemp, ak6);
-    for(G4int i = 0; i < GetNumberOfVariables(); ++i)
-    {
-      yOutput[i] = yInput[i] + hstep * (b71 * dydx[i] + b72 * ak2[i] +
-                                        b73 * ak3[i] + b74 * ak4[i] +
-                                        b75 * ak5[i] + b76 * ak6[i]);
-    }
-    if ((dydxOutput != nullptr) && (yError != nullptr))
-    {
-        RightHandSide(yOutput, dydxOutput);
-        for(G4int i = 0; i < GetNumberOfVariables(); ++i)
-        {
-          yError[i] = hstep * (dc1 * dydx[i] + dc2 * ak2[i] + dc3 * ak3[i] +
-                               dc4 * ak4[i] + dc5 * ak5[i] + dc6 * ak6[i] +
-                               dc7 * dydxOutput[i]);
-        }
-    }
+  copy(yOutput, fyOut);
 }
 
-void G4RK547FEq1::Stepper( const G4double yInput[],
-                           const G4double dydx[],
-                                 G4double hstep,
-                                 G4double yOutput[],
-                                 G4double yError[] )
+void G4RK547FEq1::Stepper(const G4double yInput[], const G4double dydx[], G4double hstep,
+                          G4double yOutput[], G4double yError[], G4double dydxOutput[])
 {
-    copy(fyIn, yInput);
-    copy(fdydx, dydx);
-    fhstep = hstep;
+  copy(fyIn, yInput);
+  copy(fdydx, dydx);
+  fhstep = hstep;
 
-    makeStep(fyIn, fdydx, fhstep, fyOut, fdydxOut, yError);
+  makeStep(fyIn, fdydx, fhstep, fyOut, fdydxOut, yError);
 
-    copy(yOutput, fyOut);
-}
-
-void G4RK547FEq1::Stepper( const G4double yInput[],
-                           const G4double dydx[],
-                                 G4double hstep,
-                                 G4double yOutput[],
-                                 G4double yError[],
-                                 G4double dydxOutput[] )
-{
-    copy(fyIn, yInput);
-    copy(fdydx, dydx);
-    fhstep = hstep;
-
-    makeStep(fyIn,fdydx, fhstep, fyOut, fdydxOut, yError);
-
-    copy(yOutput, fyOut);
-    copy(dydxOutput, fdydxOut);
+  copy(yOutput, fyOut);
+  copy(dydxOutput, fdydxOut);
 }
 
 G4double G4RK547FEq1::DistChord() const
 {
-    G4double yMid[G4FieldTrack::ncompSVEC];
-    makeStep(fyIn, fdydx, fhstep / 2., yMid);
+  G4double yMid[G4FieldTrack::ncompSVEC];
+  makeStep(fyIn, fdydx, fhstep / 2., yMid);
 
-    const G4ThreeVector begin = makeVector(fyIn, Value3D::Position);
-    const G4ThreeVector mid = makeVector(yMid, Value3D::Position);
-    const G4ThreeVector end = makeVector(fyOut, Value3D::Position);
+  const G4ThreeVector begin = makeVector(fyIn, Value3D::Position);
+  const G4ThreeVector mid = makeVector(yMid, Value3D::Position);
+  const G4ThreeVector end = makeVector(fyOut, Value3D::Position);
 
-    return G4LineSection::Distline(mid, begin, end);
+  return G4LineSection::Distline(mid, begin, end);
 }

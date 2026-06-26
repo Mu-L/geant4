@@ -29,45 +29,51 @@
 //
 // 20131111  Move implementation of Clear() to .cc file
 
-#ifndef G4PhononTrackMap_h
-#define G4PhononTrackMap_h 1
+#ifndef G4PHONONTRACKMAP_HH
+#define G4PHONONTRACKMAP_HH
 
 #include "G4ThreeVector.hh"
+
 #include <map>
 
 class G4Track;
 
-class G4PhononTrackMap {
-public:
-  typedef std::map<const G4Track*, G4ThreeVector> TrkIDKmap;
-  static G4ThreadLocal G4PhononTrackMap* theTrackMap;
+class G4PhononTrackMap
+{
+  public:
 
-public:
-  static G4PhononTrackMap* GetPhononTrackMap();	// Synonyms for access
-  static G4PhononTrackMap* GetInstance() { return GetPhononTrackMap(); }
+    typedef std::map<const G4Track*, G4ThreeVector> TrkIDKmap;
+    static G4ThreadLocal G4PhononTrackMap* theTrackMap;
 
-  // Update the wavevector for specified track, add track if not found
-  void SetK(const G4Track* track, const G4ThreeVector& K);
-  void SetK(const G4Track& track, const G4ThreeVector& K) { SetK(&track, K); }
+  public:
 
-  // Access current wavevector for specified track (NULL if doesn't exist)
-  const G4ThreeVector& GetK(const G4Track* track) const;
-  const G4ThreeVector& GetK(const G4Track& track) const { return GetK(&track); }
+    static G4PhononTrackMap* GetPhononTrackMap();  // Synonyms for access
+    static G4PhononTrackMap* GetInstance() { return GetPhononTrackMap(); }
 
-  // Check if specified track is already loaded
-  G4bool Find(const G4Track* track) const;
-  G4bool Find(const G4Track& track) const { return Find(&track); }
+    // Update the wavevector for specified track, add track if not found
+    void SetK(const G4Track* track, const G4ThreeVector& K);
+    void SetK(const G4Track& track, const G4ThreeVector& K) { SetK(&track, K); }
 
-  // Remove specified track from map (used by EndTracking)
-  void RemoveTrack(const G4Track* track);
+    // Access current wavevector for specified track (NULL if doesn't exist)
+    const G4ThreeVector& GetK(const G4Track* track) const;
+    const G4ThreeVector& GetK(const G4Track& track) const { return GetK(&track); }
 
-  void Clear();			// Remove all entries from map
+    // Check if specified track is already loaded
+    G4bool Find(const G4Track* track) const;
+    G4bool Find(const G4Track& track) const { return Find(&track); }
 
-private:
-  TrkIDKmap theMap;		// Associate track ID numbers with vectors
+    // Remove specified track from map (used by EndTracking)
+    void RemoveTrack(const G4Track* track);
 
-private:
-  G4PhononTrackMap() { Clear(); }		// Ensure map is empty
-  ~G4PhononTrackMap() {;}
+    void Clear();  // Remove all entries from map
+
+  private:
+
+    TrkIDKmap theMap;  // Associate track ID numbers with vectors
+
+  private:
+
+    G4PhononTrackMap() { Clear(); }  // Ensure map is empty
+    ~G4PhononTrackMap() { ; }
 };
-#endif	/* G4PhononTrackMap_h */
+#endif /* G4PhononTrackMap_h */

@@ -26,18 +26,18 @@
 //
 //---------------------------------------------------------------------
 //
-// GEANT4 Class 
+// GEANT4 Class
 //
 // File name:     G4MuonMinusCapture
 //
-// Author V.Ivanchenko 25 April 2012 
+// Author V.Ivanchenko 25 April 2012
 //
 //
 // Class Description:
 //
 // Base process class for stopping of mu-
 //
-// Modifications: 
+// Modifications:
 //
 //  20121003  K. Genser -- Changed the constructor argument type
 //                         Used two argument base constructor
@@ -47,28 +47,29 @@
 //------------------------------------------------------------------------
 
 #include "G4MuonMinusCapture.hh"
-#include "G4HadronicProcessType.hh"
-#include "G4MuonMinusBoundDecay.hh"
-#include "G4HadronicInteraction.hh"
-#include "G4MuonMinus.hh"
+
 #include "G4CascadeInterface.hh"
+#include "G4HadronicInteraction.hh"
+#include "G4HadronicProcessType.hh"
+#include "G4MuonMinus.hh"
+#include "G4MuonMinusBoundDecay.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4MuonMinusCapture::G4MuonMinusCapture(G4HadronicInteraction* hiptr)
-  : G4HadronStoppingProcess ("muMinusCaptureAtRest")
+  : G4HadronStoppingProcess("muMinusCaptureAtRest")
 {
-  SetBoundDecay(new G4MuonMinusBoundDecay()); // Owned by InteractionRegistry
-  if (!hiptr) {
-    hiptr = new G4CascadeInterface(); // Owned by InteractionRegistry
+  SetBoundDecay(new G4MuonMinusBoundDecay());  // Owned by InteractionRegistry
+  if (!hiptr)
+  {
+    hiptr = new G4CascadeInterface();  // Owned by InteractionRegistry
   }
   RegisterMe(hiptr);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4MuonMinusCapture::~G4MuonMinusCapture()
-{}
+G4MuonMinusCapture::~G4MuonMinusCapture() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -83,7 +84,7 @@ void G4MuonMinusCapture::ProcessDescription(std::ostream& outFile) const
 {
   outFile << "Stopping of mu- using default element selector, EM cascade"
           << " sampling and bound decay sampling.\n"
-	  << "Bertini model is used for nuclear capture\n"; 
+          << "Bertini model is used for nuclear capture\n";
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

@@ -27,20 +27,20 @@
 //
 
 #include "G4RTPrimaryGeneratorAction.hh"
+
+#include "G4Event.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
-#include "G4TransportationManager.hh"
-#include "G4Event.hh"
-#include "G4PrimaryVertex.hh"
 #include "G4PrimaryParticle.hh"
-
+#include "G4PrimaryVertex.hh"
 #include "G4TheMTRayTracer.hh"
+#include "G4TransportationManager.hh"
 
 G4RTPrimaryGeneratorAction::G4RTPrimaryGeneratorAction()
 {
   G4ThreeVector zero;
   particle_definition = 0;
-  particle_energy = 1.0*CLHEP::GeV;
+  particle_energy = 1.0 * CLHEP::GeV;
   particle_time = 0.0;
   particle_polarization = zero;
 
@@ -49,10 +49,10 @@ G4RTPrimaryGeneratorAction::G4RTPrimaryGeneratorAction()
 
   nRow = 0;
   nColumn = 0;
-  
+
   eyePosition = zero;
   eyeDirection = zero;
-  up = G4ThreeVector(0,1,0);
+  up = G4ThreeVector(0, 1, 0);
   headAngle = 0.0;
   viewSpan = 0.0;
   stepAngle = 0.0;
@@ -63,7 +63,9 @@ G4RTPrimaryGeneratorAction::G4RTPrimaryGeneratorAction()
 }
 
 G4RTPrimaryGeneratorAction::~G4RTPrimaryGeneratorAction()
-{;}
+{
+  ;
+}
 
 void G4RTPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
@@ -72,32 +74,41 @@ void G4RTPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   //  that interfare with normal G4ParticleGun UI commands.
 
   // evId = iRow * nColumn + iColumn
-  G4int evId = anEvent->GetEventID(); 
+  G4int evId = anEvent->GetEventID();
   G4int iRow = evId / nColumn;
   G4int iColumn = evId % nColumn;
-  G4double angleX = -(viewSpanX/2. - G4double(iColumn)*stepAngle);
-  G4double angleY = viewSpanY/2. - G4double(iRow)*stepAngle;
+  G4double angleX = -(viewSpanX / 2. - G4double(iColumn) * stepAngle);
+  G4double angleY = viewSpanY / 2. - G4double(iRow) * stepAngle;
   G4ThreeVector rayDirection;
-  if(distortionOn)
-  { rayDirection = G4ThreeVector(-std::tan(angleX)/std::cos(angleY),std::tan(angleY)/std::cos(angleX),1.0); }
+  if (distortionOn)
+  {
+    rayDirection =
+      G4ThreeVector(-std::tan(angleX) / std::cos(angleY), std::tan(angleY) / std::cos(angleX), 1.0);
+  }
   else
-  { rayDirection = G4ThreeVector(-std::tan(angleX),std::tan(angleY),1.0); }
+  {
+    rayDirection = G4ThreeVector(-std::tan(angleX), std::tan(angleY), 1.0);
+  }
   G4double cp = std::cos(eyeDirection.phi());
-  G4double sp = std::sqrt(1.-cp*cp);
+  G4double sp = std::sqrt(1. - cp * cp);
   G4double ct = std::cos(eyeDirection.theta());
-  G4double st = std::sqrt(1.-ct*ct);
-  G4double gam = std::atan2(ct*cp*up.x()+ct*sp*up.y()-st*up.z(), -sp*up.x()+cp*up.y());
+  G4double st = std::sqrt(1. - ct * ct);
+  G4double gam =
+    std::atan2(ct * cp * up.x() + ct * sp * up.y() - st * up.z(), -sp * up.x() + cp * up.y());
   rayDirection.rotateZ(-gam);
   rayDirection.rotateZ(headAngle);
   rayDirection.rotateUz(eyeDirection);
 
   G4ThreeVector rayPosition(eyePosition);
-  if (whereisit != kInside) {
+  if (whereisit != kInside)
+  {
     // Eye position is outside the world, so move it inside.
-    G4double outsideDistance = pWorld->GetLogicalVolume()->GetSolid()->
-       DistanceToIn(rayPosition,rayDirection);
-    if(outsideDistance != kInfinity)
-    { rayPosition = rayPosition + (outsideDistance+0.001)*rayDirection; }
+    G4double outsideDistance =
+      pWorld->GetLogicalVolume()->GetSolid()->DistanceToIn(rayPosition, rayDirection);
+    if (outsideDistance != kInfinity)
+    {
+      rayPosition = rayPosition + (outsideDistance + 0.001) * rayDirection;
+    }
     else
     {
       // Ray does not intercept world at all.
@@ -105,34 +116,33 @@ void G4RTPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
       return;
     }
   }
-  
+
   // create a new vertex
-  G4PrimaryVertex* vertex = new G4PrimaryVertex(rayPosition,particle_time);
+  G4PrimaryVertex* vertex = new G4PrimaryVertex(rayPosition, particle_time);
 
   // create new primaries and set them to the vertex
   G4double mass = particle_definition->GetPDGMass();
   G4PrimaryParticle* particle = new G4PrimaryParticle(particle_definition);
-  particle->SetKineticEnergy( particle_energy );
-  particle->SetMass( mass );
-  particle->SetMomentumDirection( rayDirection.unit() );
-  particle->SetPolarization(particle_polarization.x(),
-                            particle_polarization.y(),
+  particle->SetKineticEnergy(particle_energy);
+  particle->SetMass(mass);
+  particle->SetMomentumDirection(rayDirection.unit());
+  particle->SetPolarization(particle_polarization.x(), particle_polarization.y(),
                             particle_polarization.z());
-  vertex->SetPrimary( particle );
+  vertex->SetPrimary(particle);
 
-  anEvent->AddPrimaryVertex( vertex );
+  anEvent->AddPrimaryVertex(vertex);
 }
 
 void G4RTPrimaryGeneratorAction::SetUp()
 {
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
   particle_definition = particleTable->FindParticle("geantino");
-  if(!particle_definition)
+  if (!particle_definition)
   {
     G4String msg;
-    msg =  " G4RayTracer uses geantino to trace the ray, but your physics list does not\n";
+    msg = " G4RayTracer uses geantino to trace the ray, but your physics list does not\n";
     msg += "define G4Geantino. Please add G4Geantino in your physics list.";
-    G4Exception("G4RTPrimaryGeneratorAction::SetUp","VisRayTracer00101",FatalException,msg);
+    G4Exception("G4RTPrimaryGeneratorAction::SetUp", "VisRayTracer00101", FatalException, msg);
   }
 
   G4TheMTRayTracer* rt = G4TheMTRayTracer::theInstance;
@@ -141,13 +151,13 @@ void G4RTPrimaryGeneratorAction::SetUp()
   eyePosition = rt->eyePosition;
   eyeDirection = rt->eyeDirection;
   viewSpan = rt->viewSpan;
-  stepAngle = viewSpan/100.;
-  viewSpanX = stepAngle*nColumn;
-  viewSpanY = stepAngle*nRow;
+  stepAngle = viewSpan / 100.;
+  viewSpanX = stepAngle * nColumn;
+  viewSpanY = stepAngle * nRow;
   distortionOn = rt->distortionOn;
 
-  pWorld = G4TransportationManager::GetTransportationManager()->
-        GetNavigatorForTracking()->GetWorldVolume();
+  pWorld = G4TransportationManager::GetTransportationManager()
+             ->GetNavigatorForTracking()
+             ->GetWorldVolume();
   whereisit = pWorld->GetLogicalVolume()->GetSolid()->Inside(eyePosition);
 }
-

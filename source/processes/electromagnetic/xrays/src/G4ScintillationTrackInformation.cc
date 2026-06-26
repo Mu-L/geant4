@@ -30,18 +30,14 @@
 
 G4Allocator<G4ScintillationTrackInformation>*& aScintillationTIAllocator()
 {
-  G4ThreadLocalStatic G4Allocator<G4ScintillationTrackInformation>* _instance =
-    nullptr;
+  G4ThreadLocalStatic G4Allocator<G4ScintillationTrackInformation>* _instance = nullptr;
   return _instance;
 }
 
-const G4String G4ScintillationTrackInformation::BaseType =
-  "G4ScintillationTrackInformation";
+const G4String G4ScintillationTrackInformation::BaseType = "G4ScintillationTrackInformation";
 
-G4ScintillationTrackInformation::G4ScintillationTrackInformation(
-  const G4ScintillationType& aType)
-  : G4VUserTrackInformation(BaseType)
-  , scintillationType(aType)
+G4ScintillationTrackInformation::G4ScintillationTrackInformation(const G4ScintillationType& aType)
+  : G4VUserTrackInformation(BaseType), scintillationType(aType)
 {}
 
 G4ScintillationTrackInformation::~G4ScintillationTrackInformation() = default;
@@ -49,8 +45,8 @@ G4ScintillationTrackInformation::~G4ScintillationTrackInformation() = default;
 G4ScintillationTrackInformation::G4ScintillationTrackInformation(
   const G4ScintillationTrackInformation& right) = default;
 
-G4ScintillationTrackInformation& G4ScintillationTrackInformation::operator=(
-  const G4ScintillationTrackInformation& right) = default;
+G4ScintillationTrackInformation&
+G4ScintillationTrackInformation::operator=(const G4ScintillationTrackInformation& right) = default;
 
 void G4ScintillationTrackInformation::Print() const
 {
@@ -64,11 +60,11 @@ G4bool G4ScintillationTrackInformation::IsScintillationTrackInformation(
   return isSTI;
 }
 
-G4ScintillationTrackInformation* G4ScintillationTrackInformation::Cast(
-  const G4VUserTrackInformation* const aTI)
+G4ScintillationTrackInformation*
+G4ScintillationTrackInformation::Cast(const G4VUserTrackInformation* const aTI)
 {
   G4ScintillationTrackInformation* STI = nullptr;
-  if(IsScintillationTrackInformation(aTI))
+  if (IsScintillationTrackInformation(aTI))
   {
     // No change will be done to the pointer and to the pointed data
     auto temp = const_cast<G4VUserTrackInformation*>(aTI);

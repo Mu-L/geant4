@@ -36,43 +36,42 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4FTFPPiKBuilder_h
-#define G4FTFPPiKBuilder_h 1
+#ifndef G4FTFPPIKBUILDER_HH
+#define G4FTFPPIKBUILDER_HH
 
-#include "globals.hh"
-
+#include "G4ExcitedStringDecay.hh"
+#include "G4FTFModel.hh"
+#include "G4GeneratorPrecompoundInterface.hh"
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
-#include "G4VPiKBuilder.hh"
-
-#include "G4TheoFSGenerator.hh"
-#include "G4GeneratorPrecompoundInterface.hh"
-#include "G4FTFModel.hh"
 #include "G4LundStringFragmentation.hh"
-#include "G4ExcitedStringDecay.hh"
 #include "G4QuasiElasticChannel.hh"
-
+#include "G4TheoFSGenerator.hh"
+#include "G4VPiKBuilder.hh"
+#include "globals.hh"
 
 class G4FTFPPiKBuilder : public G4VPiKBuilder
 {
-  public: 
-    G4FTFPPiKBuilder(G4bool quasiElastic=false);
+  public:
+
+    G4FTFPPiKBuilder(G4bool quasiElastic = false);
     virtual ~G4FTFPPiKBuilder();
 
-  public: 
-    virtual void Build(G4HadronElasticProcess *) final override {}
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
-    virtual void SetMaxEnergy(G4double aM) final override {theMax = aM;}
+  public:
 
-    using G4VPiKBuilder::Build; //Prevent compiler warning
+    virtual void Build(G4HadronElasticProcess*) final override {}
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
+
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+    virtual void SetMaxEnergy(G4double aM) final override { theMax = aM; }
+
+    using G4VPiKBuilder::Build;  // Prevent compiler warning
 
   private:
-    G4TheoFSGenerator * theModel;
+
+    G4TheoFSGenerator* theModel;
     G4double theMin;
     G4double theMax;
 };
 
 #endif
-

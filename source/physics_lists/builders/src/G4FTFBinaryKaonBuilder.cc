@@ -38,16 +38,15 @@
 //----------------------------------------------------------------------------
 //
 #include "G4FTFBinaryKaonBuilder.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4HadronicParameters.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4HadronicParameters.hh"
+#include "G4SystemOfUnits.hh"
 
-
-G4FTFBinaryKaonBuilder::
-G4FTFBinaryKaonBuilder(G4bool quasiElastic)
-{    
+G4FTFBinaryKaonBuilder::G4FTFBinaryKaonBuilder(G4bool quasiElastic)
+{
   theMin = G4HadronicParameters::Instance()->GetMinEnergyTransitionFTF_Cascade();
   theMax = G4HadronicParameters::Instance()->GetMaxEnergy();
   theModel = new G4TheoFSGenerator("FTFB");
@@ -62,20 +61,17 @@ G4FTFBinaryKaonBuilder(G4bool quasiElastic)
   theModel->SetMinEnergy(theMin);
   theModel->SetMaxEnergy(theMax);
 
-  if (quasiElastic) {
-     theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
-  } 
+  if (quasiElastic)
+  {
+    theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
+  }
 }
 
-G4FTFBinaryKaonBuilder:: ~G4FTFBinaryKaonBuilder()
-{
-}
+G4FTFBinaryKaonBuilder::~G4FTFBinaryKaonBuilder() {}
 
-void G4FTFBinaryKaonBuilder::
-Build(G4HadronElasticProcess * ) {}
+void G4FTFBinaryKaonBuilder::Build(G4HadronElasticProcess*) {}
 
-void G4FTFBinaryKaonBuilder::
-Build(G4HadronInelasticProcess * aP)
+void G4FTFBinaryKaonBuilder::Build(G4HadronInelasticProcess* aP)
 {
   theModel->SetMinEnergy(theMin);
   theModel->SetMaxEnergy(theMax);

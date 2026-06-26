@@ -31,13 +31,13 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgbMaterialSimple_hh
-#define G4tgbMaterialSimple_hh 1
+#ifndef G4TGBMATERIALSIMPLE_HH
+#define G4TGBMATERIALSIMPLE_HH
+
+#include "G4tgbMaterial.hh"
+#include "globals.hh"
 
 #include <iostream>
-
-#include "globals.hh"
-#include "G4tgbMaterial.hh"
 
 class G4tgbMaterialSimple : public G4tgbMaterial
 {
@@ -47,12 +47,12 @@ class G4tgbMaterialSimple : public G4tgbMaterial
     ~G4tgbMaterialSimple();
 
     G4tgbMaterialSimple(G4tgrMaterial* tgr);
-      // Fill the data interpreting the list of words read 'wl'
+    // Fill the data interpreting the list of words read 'wl'
 
     friend std::ostream& operator<<(std::ostream&, const G4tgbMaterialSimple&);
 
     G4Material* BuildG4Material();
-      // Return the associated G4Material and if does not exist build it
+    // Return the associated G4Material and if does not exist build it
 
     G4double GetZ() const { return theZ; }
     G4double GetA() const { return theA; }

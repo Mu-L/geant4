@@ -43,10 +43,10 @@
 // 20130622  Move fragment-handling functions to G4CascadeDeexciteBase
 // 20140930  Change name from "const char*" to "const G4String"
 
-#include "G4VCascadeCollider.hh"
-
-#include "globals.hh"
 #include "G4InteractionCase.hh"
+#include "G4VCascadeCollider.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4InuclElementaryParticle;
@@ -58,53 +58,52 @@ class G4Fragment;
 class G4KineticTrackVector;
 class G4V3DNucleus;
 
+class G4CascadeColliderBase : public G4VCascadeCollider
+{
+  public:
 
-class G4CascadeColliderBase : public G4VCascadeCollider {
-public:
-  G4CascadeColliderBase(const G4String& name, G4int verbose=0);
-  virtual ~G4CascadeColliderBase();
+    G4CascadeColliderBase(const G4String& name, G4int verbose = 0);
+    virtual ~G4CascadeColliderBase();
 
-  // For use with top-level Propagate to preload a set of secondaries
-  virtual void rescatter(G4InuclParticle* /*bullet*/,
-			 G4KineticTrackVector* /*theSecondaries*/,
-			 G4V3DNucleus* /*theNucleus*/,
-			 G4CollisionOutput& /*globalOutput*/) { ; }
+    // For use with top-level Propagate to preload a set of secondaries
+    virtual void rescatter(G4InuclParticle* /*bullet*/, G4KineticTrackVector* /*theSecondaries*/,
+                           G4V3DNucleus* /*theNucleus*/, G4CollisionOutput& /*globalOutput*/)
+    {
+      ;
+    }
 
-  virtual void setVerboseLevel(G4int verbose=0);
+    virtual void setVerboseLevel(G4int verbose = 0);
 
-protected:
-  G4InteractionCase interCase;		// Determine bullet vs. target
+  protected:
 
-  // Decide whether to use G4ElementaryParticleCollider or not
-  virtual G4bool useEPCollider(G4InuclParticle* bullet, 
-			       G4InuclParticle* target) const;
+    G4InteractionCase interCase;  // Determine bullet vs. target
 
-  // Decide whether to use G4IntraNuclearCascader or not
-  virtual G4bool inelasticInteractionPossible(G4InuclParticle* bullet,
-					      G4InuclParticle* target, 
-					      G4double ekin) const;
+    // Decide whether to use G4ElementaryParticleCollider or not
+    virtual G4bool useEPCollider(G4InuclParticle* bullet, G4InuclParticle* target) const;
 
-  // ==> Provide same interfaces as G4CascadeCheckBalance itself
-  G4CascadeCheckBalance* balance;
+    // Decide whether to use G4IntraNuclearCascader or not
+    virtual G4bool inelasticInteractionPossible(G4InuclParticle* bullet, G4InuclParticle* target,
+                                                G4double ekin) const;
 
-  // Validate output for energy, momentum conservation, etc.
-  virtual G4bool validateOutput(G4InuclParticle* bullet,
-				G4InuclParticle* target,
-				G4CollisionOutput& output);
+    // ==> Provide same interfaces as G4CascadeCheckBalance itself
+    G4CascadeCheckBalance* balance;
 
-  // This is for use after de-excitation
-  virtual G4bool validateOutput(const G4Fragment& fragment,
-				G4CollisionOutput& output);
+    // Validate output for energy, momentum conservation, etc.
+    virtual G4bool validateOutput(G4InuclParticle* bullet, G4InuclParticle* target,
+                                  G4CollisionOutput& output);
 
-  // This is for use with G4EPCollider
-  virtual G4bool validateOutput(G4InuclParticle* bullet,
-				G4InuclParticle* target,
-		const std::vector<G4InuclElementaryParticle>& particles);
+    // This is for use after de-excitation
+    virtual G4bool validateOutput(const G4Fragment& fragment, G4CollisionOutput& output);
 
-private:
-  // Copying of modules is forbidden
-  G4CascadeColliderBase(const G4CascadeColliderBase&);
-  G4CascadeColliderBase& operator=(const G4CascadeColliderBase&);
-};        
+    // This is for use with G4EPCollider
+    virtual G4bool validateOutput(G4InuclParticle* bullet, G4InuclParticle* target,
+                                  const std::vector<G4InuclElementaryParticle>& particles);
 
-#endif	/* G4CASCADE_COLLIDER_BASE_HH */
+  private:
+
+    // Copying of modules is forbidden
+    G4CascadeColliderBase(const G4CascadeColliderBase&);
+    G4CascadeColliderBase& operator=(const G4CascadeColliderBase&);
+};
+
+#endif /* G4CASCADE_COLLIDER_BASE_HH */

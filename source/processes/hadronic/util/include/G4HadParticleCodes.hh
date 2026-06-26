@@ -23,34 +23,34 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4HadParticleCodes_hh
-#define G4HadParticleCodes_hh
+#ifndef G4HADPARTICLECODES_HH
+#define G4HADPARTICLECODES_HH
 
 enum
 {
   NeutronPC = 2112,
   ProtonPC = 2212,
-  
+
   DeltamPC = 1114,
   Delta0PC = 2114,
   DeltapPC = 2214,
   DeltappPC = 2224,
-  
+
   Dm_1600PC = 31114,
   D0_1600PC = 32114,
   Dp_1600PC = 32214,
   Dpp_1600PC = 32224,
-  
+
   Dm_1620PC = 1112,
   D0_1620PC = 1212,
   Dp_1620PC = 2122,
   Dpp_1620PC = 2222,
-  
+
   Dm_1700PC = 11114,
   D0_1700PC = 12114,
   Dp_1700PC = 12214,
   Dpp_1700PC = 12224,
-  
+
   Dm_1900PC = 11112,
   D0_1900PC = 11212,
   Dp_1900PC = 12122,
@@ -83,7 +83,7 @@ enum
 
   N1400pPC = 12212,
   N1400nPC = 12112,
-  
+
   N1520pPC = 2124,
   N1520nPC = 1214,
 
@@ -130,13 +130,13 @@ enum
 
 struct D1232
 {
-  enum
-  {
-    Dm=DeltamPC,
-    D0=Delta0PC,
-    Dp=DeltapPC,
-    Dpp=DeltappPC
-  };
+    enum
+    {
+      Dm = DeltamPC,
+      D0 = Delta0PC,
+      Dp = DeltapPC,
+      Dpp = DeltappPC
+    };
 };
 
 #endif

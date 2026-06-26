@@ -33,39 +33,36 @@
 // ----------------------------------------------------------------------
 
 #include "G4SamplingPostStepAction.hh"
-#include "G4Track.hh"
-#include "G4ParticleChange.hh"
-#include "G4VImportanceSplitExaminer.hh"
+
 #include "G4Nsplit_Weight.hh"
+#include "G4ParticleChange.hh"
+#include "G4Track.hh"
+#include "G4VImportanceSplitExaminer.hh"
 #include "G4VTrackTerminator.hh"
+
 #include <sstream>
 
-G4SamplingPostStepAction::
-G4SamplingPostStepAction(const G4VTrackTerminator &TrackTerminator)
+G4SamplingPostStepAction::G4SamplingPostStepAction(const G4VTrackTerminator& TrackTerminator)
   : fTrackTerminator(TrackTerminator)
-{
-}
+{}
 
-G4SamplingPostStepAction::~G4SamplingPostStepAction()
-{
-}
+G4SamplingPostStepAction::~G4SamplingPostStepAction() {}
 
-void G4SamplingPostStepAction::DoIt(const G4Track& aTrack, 
-                                          G4ParticleChange *aParticleChange,
-                                    const G4Nsplit_Weight &nw)
-{  
+void G4SamplingPostStepAction::DoIt(const G4Track& aTrack, G4ParticleChange* aParticleChange,
+                                    const G4Nsplit_Weight& nw)
+{
   // evaluate results from sampler
-  if (nw.fN>1)
+  if (nw.fN > 1)
   {
-    // split track 
+    // split track
     Split(aTrack, nw, aParticleChange);
   }
-  else if (nw.fN==1)
+  else if (nw.fN == 1)
   {
-    // don't split, but weight may be changed ! 
+    // don't split, but weight may be changed !
     aParticleChange->ProposeWeight(nw.fW);
   }
-  else if (nw.fN==0)
+  else if (nw.fN == 0)
   {
     // kill track
     fTrackTerminator.KillTrack();
@@ -74,36 +71,32 @@ void G4SamplingPostStepAction::DoIt(const G4Track& aTrack,
   {
     // wrong answer
     std::ostringstream os;
-    os << "Sampler returned nw = "
-       << nw
-       << "\n";
+    os << "Sampler returned nw = " << nw << "\n";
     G4String msg = os.str();
-    
-    G4Exception("G4SamplingPostStepAction::DoIt()",
-                "InvalidCondition", FatalException, msg);
+
+    G4Exception("G4SamplingPostStepAction::DoIt()", "InvalidCondition", FatalException, msg);
   }
 }
 
-void G4SamplingPostStepAction::Split(const G4Track &aTrack,
-                                     const G4Nsplit_Weight &nw,
-                                           G4ParticleChange *aParticleChange)
+void G4SamplingPostStepAction::Split(const G4Track& aTrack, const G4Nsplit_Weight& nw,
+                                     G4ParticleChange* aParticleChange)
 {
   aParticleChange->ProposeWeight(nw.fW);
-  aParticleChange->SetNumberOfSecondaries(nw.fN-1);
-  
-  for (G4int i=1;i<nw.fN;i++)
+  aParticleChange->SetNumberOfSecondaries(nw.fN - 1);
+
+  for (G4int i = 1; i < nw.fN; i++)
   {
-    G4Track *ptrack = new G4Track(aTrack);
-    
+    G4Track* ptrack = new G4Track(aTrack);
+
     //    ptrack->SetCreatorProcess(aTrack.GetCreatorProcess());
     ptrack->SetWeight(nw.fW);
-    
+
     if (ptrack->GetMomentumDirection() != aTrack.GetMomentumDirection())
     {
-      G4Exception("G4SamplingPostStepAction::Split()", "InvalidCondition",
-                  FatalException, "Track with same momentum !");
+      G4Exception("G4SamplingPostStepAction::Split()", "InvalidCondition", FatalException,
+                  "Track with same momentum !");
     }
     aParticleChange->AddSecondary(ptrack);
   }
   return;
-}  
+}

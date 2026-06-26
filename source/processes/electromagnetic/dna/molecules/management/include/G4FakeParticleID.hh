@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,53 +41,54 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
+#ifndef G4FAKEPARTICLEID_HH
+#define G4FAKEPARTICLEID_HH
 
-#ifndef  G4FakeParticleID_h
-#define  G4FakeParticleID_h 1
-
-#include "G4Types.hh" 
+#include "G4Types.hh"
 
 class G4FakeParticleID
 {
-private :
-    friend G4FakeParticleID operator +(const G4FakeParticleID& left,const int& right);
-    friend G4FakeParticleID operator -(const G4FakeParticleID& left,const int& right);
+  private:
+
+    friend G4FakeParticleID operator+(const G4FakeParticleID& left, const int& right);
+    friend G4FakeParticleID operator-(const G4FakeParticleID& left, const int& right);
     int fValue;
 
     inline static G4ThreadLocal int fLastValue = 999666999;
 
-public :
+  public:
 
-    static int Last()
-    {
-        return fLastValue ;
-    }
+    static int Last() { return fLastValue; }
 
     static G4FakeParticleID Create()
     {
-        fLastValue ++;
-        return G4FakeParticleID(fLastValue);
+      fLastValue++;
+      return G4FakeParticleID(fLastValue);
     }
 
     static G4FakeParticleID Initialize(int i)
     {
-        fLastValue = i;
-        return G4FakeParticleID(i);
+      fLastValue = i;
+      return G4FakeParticleID(i);
     }
 
-    G4FakeParticleID(const int d_) : fValue(d_){}
+    G4FakeParticleID(const int d_) : fValue(d_) {}
 
-    G4FakeParticleID(){fValue=0;}
-    G4FakeParticleID(const G4FakeParticleID & d_)  = default;
-    inline G4FakeParticleID & operator=(const G4FakeParticleID & rhs) = default;
-    G4FakeParticleID & operator=(const int & rhs) { this->fValue = rhs; return *this;}
-    inline operator int & () { return fValue; }
-    inline operator const int & () const { return fValue; }
-    inline G4bool operator==(const G4FakeParticleID & rhs) const { return fValue == rhs.fValue; }
-    inline G4bool operator==(const int & rhs) const { return fValue == rhs; }
-    inline G4bool operator<(const G4FakeParticleID & rhs) const { return fValue < rhs.fValue; }
+    G4FakeParticleID() { fValue = 0; }
+    G4FakeParticleID(const G4FakeParticleID& d_) = default;
+    inline G4FakeParticleID& operator=(const G4FakeParticleID& rhs) = default;
+    G4FakeParticleID& operator=(const int& rhs)
+    {
+      this->fValue = rhs;
+      return *this;
+    }
+    inline operator int&() { return fValue; }
+    inline operator const int&() const { return fValue; }
+    inline G4bool operator==(const G4FakeParticleID& rhs) const { return fValue == rhs.fValue; }
+    inline G4bool operator==(const int& rhs) const { return fValue == rhs; }
+    inline G4bool operator<(const G4FakeParticleID& rhs) const { return fValue < rhs.fValue; }
 };
 
 extern G4FakeParticleID gStartCounter;

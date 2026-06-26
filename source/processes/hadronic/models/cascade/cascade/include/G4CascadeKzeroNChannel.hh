@@ -32,11 +32,12 @@
 #include "G4CascadeFunctions.hh"
 #include "G4KaonSampler.hh"
 
-struct G4CascadeKzeroNChannelData {
-  typedef G4CascadeData<30,1,6,16,29,42,54,41,47> data_t;
-  static const data_t data;
+struct G4CascadeKzeroNChannelData
+{
+    typedef G4CascadeData<30, 1, 6, 16, 29, 42, 54, 41, 47> data_t;
+    static const data_t data;
 };
 
-typedef G4CascadeFunctions<G4CascadeKzeroNChannelData,G4KaonSampler> G4CascadeKzeroNChannel;
+typedef G4CascadeFunctions<G4CascadeKzeroNChannelData, G4KaonSampler> G4CascadeKzeroNChannel;
 
 #endif

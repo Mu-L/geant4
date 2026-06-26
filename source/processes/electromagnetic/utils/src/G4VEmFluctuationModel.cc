@@ -38,7 +38,7 @@
 // Modifications:
 //
 //
-// Class Description: 
+// Class Description:
 //
 // Abstract class for interface to simualtion of energy loss fluctuations
 
@@ -46,28 +46,24 @@
 //
 
 #include "G4VEmFluctuationModel.hh"
+
 #include "G4LossTableManager.hh"
 #include "Randomize.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4VEmFluctuationModel::G4VEmFluctuationModel(const G4String& nam)
-  : name(nam) 
+G4VEmFluctuationModel::G4VEmFluctuationModel(const G4String& nam) : name(nam)
 {
   fManager = G4LossTableManager::Instance();
   fManager->Register(this);
 }
 
-G4VEmFluctuationModel::~G4VEmFluctuationModel() 
+G4VEmFluctuationModel::~G4VEmFluctuationModel()
 {
   fManager->DeRegister(this);
 }
 
-void G4VEmFluctuationModel::InitialiseMe(const G4ParticleDefinition*)
-{}
+void G4VEmFluctuationModel::InitialiseMe(const G4ParticleDefinition*) {}
 
-void G4VEmFluctuationModel::SetParticleAndCharge(const G4ParticleDefinition*, 
-                                                 G4double)
-{}
-
+void G4VEmFluctuationModel::SetParticleAndCharge(const G4ParticleDefinition*, G4double) {}

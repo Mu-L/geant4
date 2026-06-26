@@ -134,8 +134,8 @@
 //        Contract:        ESA contract 21435/08/NL/AT
 //         Customer:             ESA/ESTEC
 // --------------------------------------------------------------------
-#ifndef G4AdjointSimManager_hh
-#define G4AdjointSimManager_hh 1
+#ifndef G4ADJOINTSIMMANAGER_HH
+#define G4ADJOINTSIMMANAGER_HH
 
 #include "G4ThreeVector.hh"
 #include "G4UserRunAction.hh"
@@ -162,6 +162,7 @@ class G4Run;
 class G4AdjointSimManager : public G4UserRunAction
 {
   public:
+
     static G4AdjointSimManager* GetInstance();
 
     void BeginOfRunAction(const G4Run* aRun) override;
@@ -268,6 +269,7 @@ class G4AdjointSimManager : public G4UserRunAction
     void BackToFwdSimulationMode();
 
   private:  // methods
+
     static G4ThreadLocal G4AdjointSimManager* instance;
 
     void SetRestOfAdjointActions();
@@ -283,6 +285,7 @@ class G4AdjointSimManager : public G4UserRunAction
     ~G4AdjointSimManager() override;
 
   private:  // attributes
+
     // Messenger
     //----------
     G4AdjointSimMessenger* theMessenger = nullptr;

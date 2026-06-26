@@ -37,14 +37,15 @@
 
 // Author: M.Asai, 1998
 // --------------------------------------------------------------------
-#ifndef G4UIcmdWithABool_hh
-#define G4UIcmdWithABool_hh 1
+#ifndef G4UICMDWITHABOOL_HH
+#define G4UICMDWITHABOOL_HH
 
 #include "G4UIcommand.hh"
 
 class G4UIcmdWithABool : public G4UIcommand
 {
   public:
+
     // Constructor. The command string with full path directory
     // and the pointer to the messenger must be given
     G4UIcmdWithABool(const char* theCommandPath, G4UImessenger* theMessenger);

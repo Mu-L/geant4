@@ -31,9 +31,6 @@
 
 #include "G4NeutronEvaporationChannel.hh"
 
-G4NeutronEvaporationChannel::G4NeutronEvaporationChannel() 
-  : G4EvaporationChannel(1,0,&pr) 
-{}
+G4NeutronEvaporationChannel::G4NeutronEvaporationChannel() : G4EvaporationChannel(1, 0, &pr) {}
 
-G4NeutronEvaporationChannel::~G4NeutronEvaporationChannel() 
-{}
+G4NeutronEvaporationChannel::~G4NeutronEvaporationChannel() {}

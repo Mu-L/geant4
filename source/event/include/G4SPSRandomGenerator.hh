@@ -27,7 +27,7 @@
 //
 // Class Description:
 //
-// Special random number generator used by G4GeneralParticleSource to allow 
+// Special random number generator used by G4GeneralParticleSource to allow
 // biasing applied at the lowest level for all distributions.
 // This is a shared class between threads.
 // Only one thread should use the set-methods here.
@@ -48,96 +48,96 @@
 //     because it is assumed these are called only during the event loop
 //     during which the status of this class is invariant
 // --------------------------------------------------------------------
-#ifndef G4SPSRandomGenerator_hh
-#define G4SPSRandomGenerator_hh 1
+#ifndef G4SPSRANDOMGENERATOR_HH
+#define G4SPSRANDOMGENERATOR_HH
 
-#include "G4PhysicsFreeVector.hh"
-#include "G4DataInterpolation.hh"
-#include "G4ThreeVector.hh"
-#include "G4Threading.hh"
 #include "G4Cache.hh"
+#include "G4DataInterpolation.hh"
+#include "G4PhysicsFreeVector.hh"
+#include "G4Threading.hh"
+#include "G4ThreeVector.hh"
 
 class G4SPSRandomGenerator
 {
   public:
 
     G4SPSRandomGenerator();
-      // Constructor: initializes variables
+    // Constructor: initializes variables
 
-   ~G4SPSRandomGenerator();
-      // Destructor
+    ~G4SPSRandomGenerator();
+    // Destructor
 
     // Biasing Methods
 
     void SetXBias(const G4ThreeVector&);
-      // Allows the user to re-distribute the random
-      // numbers used to generate x co-ordinates
+    // Allows the user to re-distribute the random
+    // numbers used to generate x co-ordinates
 
     void SetYBias(const G4ThreeVector&);
-      // Allows the user to re-distribute the random
-      // numbers used to generate y co-ordinates
+    // Allows the user to re-distribute the random
+    // numbers used to generate y co-ordinates
 
     void SetZBias(const G4ThreeVector&);
-      // Allows the user to re-distribute the random
-      // numbers used to generate z co-ordinates
+    // Allows the user to re-distribute the random
+    // numbers used to generate z co-ordinates
 
     void SetThetaBias(const G4ThreeVector&);
-      // Allows the user to re-distribute the random
-      // numbers used to generate values of theta
+    // Allows the user to re-distribute the random
+    // numbers used to generate values of theta
 
     void SetPhiBias(const G4ThreeVector&);
-      // Allows the user to re-distribute the random
-      // numbers used to generate values of phi
+    // Allows the user to re-distribute the random
+    // numbers used to generate values of phi
 
     void SetEnergyBias(const G4ThreeVector&);
     // Allows the user to re-distribute the random
     // numbers used to generate the energies
 
     void SetPosThetaBias(const G4ThreeVector&);
-      // Allows the user to re-distribute the random
-      // numbers used to generate values of theta for position distribution
+    // Allows the user to re-distribute the random
+    // numbers used to generate values of theta for position distribution
 
     void SetPosPhiBias(const G4ThreeVector&);
-      // Allows the user to re-distribute the random
-      // numbers used to generate values of phi for position distribution
+    // Allows the user to re-distribute the random
+    // numbers used to generate values of phi for position distribution
 
     G4double GenRandX();
-      // Generates the random number for x, with or without biasing
+    // Generates the random number for x, with or without biasing
 
     G4double GenRandY();
-      // Generates the random number for y, with or without biasing
+    // Generates the random number for y, with or without biasing
 
     G4double GenRandZ();
-      // Generates the random number for z, with or without biasing
+    // Generates the random number for z, with or without biasing
 
     G4double GenRandTheta();
-      // Generates the random number for theta, with or without biasing
+    // Generates the random number for theta, with or without biasing
 
     G4double GenRandPhi();
-      // Generates the random number for phi, with or without biasing
+    // Generates the random number for phi, with or without biasing
 
     G4double GenRandEnergy();
-      // Generates the random number for energy, with or without biasing
+    // Generates the random number for energy, with or without biasing
 
     G4double GenRandPosTheta();
-      // Generates the random number for theta, with or without biasing
-      // for position distribution
+    // Generates the random number for theta, with or without biasing
+    // for position distribution
 
     G4double GenRandPosPhi();
-      // Generates the random number for phi, with or without biasing
-      // for position distribution
+    // Generates the random number for phi, with or without biasing
+    // for position distribution
 
     void SetIntensityWeight(G4double weight);
 
-    G4double GetBiasWeight() const ;
-      // Returns the weight change after biasing
+    G4double GetBiasWeight() const;
+    // Returns the weight change after biasing
 
-        // method to re-set the histograms
+    // method to re-set the histograms
     void ReSetHist(const G4String&);
-      // Resets the histogram for user defined distribution
+    // Resets the histogram for user defined distribution
 
     void SetVerbosity(G4int a);
-      // Sets the verbosity level
+    // Sets the verbosity level
 
   private:
 
@@ -146,10 +146,10 @@ class G4SPSRandomGenerator
     //
     struct a_check
     {
-      G4bool val;
-      a_check() { val = false; }
+        G4bool val;
+        a_check() { val = false; }
     };
-    
+
     // See .cc for an explanation of this in method GenRandX()
     //
     G4Cache<a_check> local_IPDFXBias;
@@ -187,18 +187,18 @@ class G4SPSRandomGenerator
 
     struct bweights_t
     {
-      G4double w[9];
-      bweights_t();
-      G4double& operator[] (const int i);
+        G4double w[9];
+        bweights_t();
+        G4double& operator[](const int i);
     };
     G4Cache<bweights_t> bweights;
-      // record x,y,z,theta,phi,energy,posThet,posPhi,intensity weights
+    // record x,y,z,theta,phi,energy,posThet,posPhi,intensity weights
 
     G4int verbosityLevel;
-      // Verbosity
- 
+    // Verbosity
+
     G4Mutex mutex;
-      // Protect shared resources
+    // Protect shared resources
 };
 
 #endif

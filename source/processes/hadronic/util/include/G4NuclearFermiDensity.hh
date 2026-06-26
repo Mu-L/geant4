@@ -25,47 +25,54 @@
 //
 //
 
-#ifndef G4NuclearFermiDensity_h
-#define G4NuclearFermiDensity_h 1
+#ifndef G4NUCLEARFERMIDENSITY_HH
+#define G4NUCLEARFERMIDENSITY_HH
 
-#include "globals.hh"
-#include "G4ThreeVector.hh"
-#include "G4VNuclearDensity.hh"
-
-#include <CLHEP/Units/PhysicalConstants.h>	// pi, fermi,..
 #include "G4Exp.hh"
 #include "G4Log.hh"
-//#include <cmath>				// pow
+#include "G4ThreeVector.hh"
+#include "G4VNuclearDensity.hh"
+#include "globals.hh"
+
+#include <CLHEP/Units/PhysicalConstants.h>  // pi, fermi,..
+// #include <cmath>				// pow
 
 class G4NuclearFermiDensity : public G4VNuclearDensity
 {
   public:
+
     G4NuclearFermiDensity(G4int anA, G4int aZ);
     ~G4NuclearFermiDensity();
-    
-    G4double GetRelativeDensity(const G4ThreeVector & aPosition) const
+
+    G4double GetRelativeDensity(const G4ThreeVector& aPosition) const
     {
-      return 1./(1.+G4Exp((aPosition.mag()-theR)/a));
+      return 1. / (1. + G4Exp((aPosition.mag() - theR) / a));
     }
-    
+
     G4double GetRadius(const G4double maxRelativeDenisty) const
     {
-      return (maxRelativeDenisty>0 && maxRelativeDenisty <= 1 ) ?
-             (theR + a*G4Log((1-maxRelativeDenisty+G4Exp(-1*theR/a))/maxRelativeDenisty))  : DBL_MAX;
+      return (maxRelativeDenisty > 0 && maxRelativeDenisty <= 1)
+               ? (theR
+                  + a * G4Log((1 - maxRelativeDenisty + G4Exp(-1 * theR / a)) / maxRelativeDenisty))
+               : DBL_MAX;
     }
-    
-    G4double GetDeriv(const G4ThreeVector & aPosition) const
+
+    G4double GetDeriv(const G4ThreeVector& aPosition) const
     {
-      G4double currentR=aPosition.mag();
-      if (currentR > 40*theR  ) {return 0;}
-      else return -G4Exp((currentR-theR)/a) * sqr(GetDensity(aPosition)) / (a*Getrho0());
-    }   
-   
+      G4double currentR = aPosition.mag();
+      if (currentR > 40 * theR)
+      {
+        return 0;
+      }
+      else
+        return -G4Exp((currentR - theR) / a) * sqr(GetDensity(aPosition)) / (a * Getrho0());
+    }
+
   private:
+
     G4int theA;
-    G4double theR;      // Nuclear Radius 
-    const G4double a;	// Determines the nuclear surface thickness
+    G4double theR;  // Nuclear Radius
+    const G4double a;  // Determines the nuclear surface thickness
 };
 
 #endif
-

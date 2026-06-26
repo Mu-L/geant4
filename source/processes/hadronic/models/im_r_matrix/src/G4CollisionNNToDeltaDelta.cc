@@ -25,37 +25,37 @@
 //
 //
 
-#include "globals.hh"
 #include "G4CollisionNNToDeltaDelta.hh"
-#include "G4KineticTrack.hh"
-#include "G4VCrossSectionSource.hh"
-#include "G4Proton.hh"
-#include "G4Neutron.hh"
-#include "G4XAqmElastic.hh"
+
 #include "G4AngularDistribution.hh"
-#include "G4ThreeVector.hh"
-#include "G4LorentzVector.hh"
-#include "G4LorentzRotation.hh"
-#include "G4KineticTrackVector.hh"
-#include "G4ParticleTable.hh"
 #include "G4CollisionVector.hh"
 #include "G4ConcreteNNToDeltaDelta.hh"
-#include "G4Pair.hh"
 #include "G4HadParticleCodes.hh"
+#include "G4KineticTrack.hh"
+#include "G4KineticTrackVector.hh"
+#include "G4LorentzRotation.hh"
+#include "G4LorentzVector.hh"
+#include "G4Neutron.hh"
+#include "G4Pair.hh"
+#include "G4ParticleTable.hh"
+#include "G4Proton.hh"
+#include "G4ThreeVector.hh"
+#include "G4VCrossSectionSource.hh"
+#include "G4XAqmElastic.hh"
+#include "globals.hh"
 
 typedef G4ConcreteNNToDeltaDelta channelType;
-typedef INT4<channelType, NeutronPC, NeutronPC, Delta0PC, Delta0PC>  theC1;
-typedef INT4<channelType, NeutronPC, NeutronPC, DeltamPC, DeltapPC>  theC2;
-typedef INT4<channelType, NeutronPC, ProtonPC,  Delta0PC, DeltapPC>  theC3;
-typedef INT4<channelType, NeutronPC, ProtonPC,  DeltamPC, DeltappPC> theC4;
-typedef INT4<channelType, ProtonPC,  ProtonPC,  DeltapPC, DeltapPC>  theC5;
-typedef INT4<channelType, ProtonPC,  ProtonPC,  Delta0PC, DeltappPC> theC6;
+typedef INT4<channelType, NeutronPC, NeutronPC, Delta0PC, Delta0PC> theC1;
+typedef INT4<channelType, NeutronPC, NeutronPC, DeltamPC, DeltapPC> theC2;
+typedef INT4<channelType, NeutronPC, ProtonPC, Delta0PC, DeltapPC> theC3;
+typedef INT4<channelType, NeutronPC, ProtonPC, DeltamPC, DeltappPC> theC4;
+typedef INT4<channelType, ProtonPC, ProtonPC, DeltapPC, DeltapPC> theC5;
+typedef INT4<channelType, ProtonPC, ProtonPC, Delta0PC, DeltappPC> theC6;
 
 typedef GROUP6(theC1, theC2, theC3, theC4, theC5, theC6) theChannels;
 
 G4CollisionNNToDeltaDelta::G4CollisionNNToDeltaDelta()
-{ 
+{
   Resolve aR;
   G4ForEach<theChannels>::Apply(&aR, this);
 }
-

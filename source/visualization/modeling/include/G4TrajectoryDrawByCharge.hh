@@ -27,8 +27,8 @@
 // Jane Tinslay, John Allison, Joseph Perl November 2005
 //
 // Class Description:
-// Trajectory model which colours a trajectory according to  
-// charge. 
+// Trajectory model which colours a trajectory according to
+// charge.
 // Class Description - End:
 
 #ifndef G4TRAJECTORYDRAWBYCHARGE_HH
@@ -37,44 +37,46 @@
 #include "G4Colour.hh"
 #include "G4ModelColourMap.hh"
 #include "G4VTrajectoryModel.hh"
+
 #include <map>
 
-class G4TrajectoryDrawByCharge : public G4VTrajectoryModel {
+class G4TrajectoryDrawByCharge : public G4VTrajectoryModel
+{
+  public:  // With description
 
-public: // With description
- 
-  enum Charge {Negative=-1, Neutral=0, Positive=1}; 
+    enum Charge
+    {
+      Negative = -1,
+      Neutral = 0,
+      Positive = 1
+    };
 
-  G4TrajectoryDrawByCharge(const G4String& name = "Unspecified", G4VisTrajContext* context=0);
+    G4TrajectoryDrawByCharge(const G4String& name = "Unspecified", G4VisTrajContext* context = 0);
 
-  G4TrajectoryDrawByCharge(const G4String& name,
-			   const G4Colour& positive,
-			   const G4Colour& negative,
-			   const G4Colour& neutral);
-  
-  virtual ~G4TrajectoryDrawByCharge();
+    G4TrajectoryDrawByCharge(const G4String& name, const G4Colour& positive,
+                             const G4Colour& negative, const G4Colour& neutral);
 
-  // Draw method
-  virtual void Draw(const G4VTrajectory& trajectory, 
-		    const G4bool& visible = true) const;
+    virtual ~G4TrajectoryDrawByCharge();
 
-  // Print configuration
-  virtual void Print(std::ostream& ostr) const;
+    // Draw method
+    virtual void Draw(const G4VTrajectory& trajectory, const G4bool& visible = true) const;
 
-  void Set(const Charge& charge, const G4Colour& colour);
-  void Set(const Charge& charge, const G4String& colour);
+    // Print configuration
+    virtual void Print(std::ostream& ostr) const;
 
-  void Set(const G4String& charge, const G4Colour& colour);
-  void Set(const G4String& charge, const G4String& colour);
-  // Configuration functions 
+    void Set(const Charge& charge, const G4Colour& colour);
+    void Set(const Charge& charge, const G4String& colour);
 
-private:
-  
-  G4bool ConvertToCharge(const G4String&, Charge&);
+    void Set(const G4String& charge, const G4Colour& colour);
+    void Set(const G4String& charge, const G4String& colour);
+    // Configuration functions
 
-  // Data member
-  G4ModelColourMap<Charge> fMap;
-  
+  private:
+
+    G4bool ConvertToCharge(const G4String&, Charge&);
+
+    // Data member
+    G4ModelColourMap<Charge> fMap;
 };
 
 #endif

@@ -25,7 +25,7 @@
 //
 //
 // Author: Alfonso Mantero
-//         
+//
 //
 // History:
 // -----------
@@ -37,18 +37,8 @@
 // Further documentation available from http://www.ge.infn.it/geant4/lowE
 // -------------------------------------------------------------------
 
-
-
 #include "G4VecpssrMiModel.hh"
 
+G4VecpssrMiModel::G4VecpssrMiModel() {}
 
-G4VecpssrMiModel::G4VecpssrMiModel()
-{ 
-
-}
-
-G4VecpssrMiModel::~G4VecpssrMiModel()
-{ 
-
-}
-
+G4VecpssrMiModel::~G4VecpssrMiModel() {}

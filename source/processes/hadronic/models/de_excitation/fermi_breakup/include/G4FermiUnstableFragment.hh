@@ -36,6 +36,7 @@
 class G4FermiUnstableFragment : public G4VFermiFragmentAN
 {
   public:
+
     G4FermiUnstableFragment(G4FermiAtomicMass atomicMass, G4FermiChargeNumber chargeNumber,
                             G4int polarization, G4double excitationEnergy,
                             std::vector<G4FermiNucleiData>&& decayData);
@@ -44,6 +45,7 @@ class G4FermiUnstableFragment : public G4VFermiFragmentAN
                               std::vector<G4FermiParticle>& particles) const override;
 
   private:
+
     void DoInitialize() override;
 
     std::vector<G4FermiNucleiData> decayData_;

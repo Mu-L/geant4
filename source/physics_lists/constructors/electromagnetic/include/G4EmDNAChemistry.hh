@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4EmDNAChemistry_hh
-#define G4EmDNAChemistry_hh 1
+#ifndef G4EMDNACHEMISTRY_HH
+#define G4EMDNACHEMISTRY_HH
 
 #include "G4VPhysicsConstructor.hh"
 #include "G4VUserChemistryList.hh"
@@ -35,6 +35,7 @@ class G4DNAMolecularReactionTable;
 class G4EmDNAChemistry : public G4VUserChemistryList, public G4VPhysicsConstructor
 {
   public:
+
     G4EmDNAChemistry();
     ~G4EmDNAChemistry() override = default;
 

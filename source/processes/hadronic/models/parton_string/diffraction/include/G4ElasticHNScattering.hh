@@ -25,8 +25,8 @@
 //
 //
 
-#ifndef G4ElasticHNScattering_h
-#define G4ElasticHNScattering_h 1
+#ifndef G4ELASTICHNSCATTERING_HH
+#define G4ELASTICHNSCATTERING_HH
 
 // ------------------------------------------------------------
 //                    GEANT 4 class header file
@@ -38,29 +38,30 @@
 //                 scatter the projectile and target
 // ------------------------------------------------------------
 
-#include "globals.hh"
 #include "G4FTFParameters.hh"
-#include "G4ThreeVector.hh"
 #include "G4SampleResonance.hh"
+#include "G4ThreeVector.hh"
+#include "globals.hh"
 
 class G4VSplitableHadron;
 class G4ExcitedString;
 
-
-class G4ElasticHNScattering {
+class G4ElasticHNScattering
+{
   public:
+
     G4ElasticHNScattering();
     virtual ~G4ElasticHNScattering();
-    virtual G4bool ElasticScattering( G4VSplitableHadron* aPartner, G4VSplitableHadron* bPartner,
-                                      G4FTFParameters* theParameters ) const;
+    virtual G4bool ElasticScattering(G4VSplitableHadron* aPartner, G4VSplitableHadron* bPartner,
+                                     G4FTFParameters* theParameters) const;
 
   private:
-    G4ElasticHNScattering( const G4ElasticHNScattering& right );
-    G4ThreeVector GaussianPt( G4double AveragePt2, G4double maxPtSquare ) const;
-    const G4ElasticHNScattering& operator=( const G4ElasticHNScattering& right );
-    G4bool operator==( const G4ElasticHNScattering& right ) const;
-    G4bool operator!=( const G4ElasticHNScattering& right ) const;
+
+    G4ElasticHNScattering(const G4ElasticHNScattering& right);
+    G4ThreeVector GaussianPt(G4double AveragePt2, G4double maxPtSquare) const;
+    const G4ElasticHNScattering& operator=(const G4ElasticHNScattering& right);
+    G4bool operator==(const G4ElasticHNScattering& right) const;
+    G4bool operator!=(const G4ElasticHNScattering& right) const;
 };
 
 #endif
-

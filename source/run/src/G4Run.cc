@@ -44,9 +44,9 @@ G4Run::G4Run()
 // --------------------------------------------------------------------
 G4Run::~G4Run()
 {
-  if(G4RunManager::GetRunManager()->GetRunManagerType()!=G4RunManager::masterRM)
+  if (G4RunManager::GetRunManager()->GetRunManagerType() != G4RunManager::masterRM)
   {
-    for(auto& itr : *eventVector)
+    for (auto& itr : *eventVector)
     {
       G4RunManager::GetRunManager()->ReportEventDeletion(itr);
       delete itr;
@@ -65,8 +65,10 @@ void G4Run::RecordEvent(const G4Event*)
 void G4Run::Merge(const G4Run* right)
 {
   numberOfEvent += right->numberOfEvent;
-  for(auto& itr : *(right->eventVector))
-  { eventVector->push_back(itr); }
+  for (auto& itr : *(right->eventVector))
+  {
+    eventVector->push_back(itr);
+  }
 }
 
 // --------------------------------------------------------------------
@@ -79,10 +81,12 @@ void G4Run::StoreEvent(G4Event* evt)
 G4int G4Run::GetNumberOfKeptEvents() const
 {
   G4int n = 0;
-  if(eventVector!=nullptr && eventVector->size()>0)
+  if (eventVector != nullptr && eventVector->size() > 0)
   {
-    for(auto& ev : *eventVector)
-    { if(ev->KeepTheEventFlag()) n++; }
+    for (auto& ev : *eventVector)
+    {
+      if (ev->KeepTheEventFlag()) n++;
+    }
   }
   return n;
 }
@@ -90,7 +94,6 @@ G4int G4Run::GetNumberOfKeptEvents() const
 // --------------------------------------------------------------------
 void G4Run::MergeSubEvent(G4Event* /*masterEv*/, const G4Event* /*subEv*/)
 {
- // trajectories are merged here.......
- ;
+  // trajectories are merged here.......
+  ;
 }
-

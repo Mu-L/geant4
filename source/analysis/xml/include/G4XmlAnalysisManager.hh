@@ -29,8 +29,8 @@
 
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
-#ifndef G4XmlAnalysisManager_h
-#define G4XmlAnalysisManager_h 1
+#ifndef G4XMLANALYSISMANAGER_HH
+#define G4XMLANALYSISMANAGER_HH
 
 #include "G4ToolsAnalysisManager.hh"
 #include "globals.hh"
@@ -42,14 +42,15 @@
 
 class G4XmlAnalysisManager;
 class G4XmlNtupleFileManager;
-template <class T>
+template<class T>
 class G4ThreadLocalSingleton;
 
 class G4XmlAnalysisManager : public G4ToolsAnalysisManager
 {
-  friend class G4ThreadLocalSingleton<G4XmlAnalysisManager>;
+    friend class G4ThreadLocalSingleton<G4XmlAnalysisManager>;
 
   public:
+
     ~G4XmlAnalysisManager() override;
 
     // Static methods
@@ -67,17 +68,17 @@ class G4XmlAnalysisManager : public G4ToolsAnalysisManager
     std::vector<tools::waxml::ntuple*>::const_iterator EndConstNtuple() const;
 
   private:
+
     G4XmlAnalysisManager();
 
     // Static data members
-    inline static G4ThreadLocal G4bool fgIsInstance { false };
-    static constexpr std::string_view fkClass { "G4XmlAnalysisManager" };
+    inline static G4ThreadLocal G4bool fgIsInstance{false};
+    static constexpr std::string_view fkClass{"G4XmlAnalysisManager"};
 
     // Data members
-    std::shared_ptr<G4XmlNtupleFileManager>  fNtupleFileManager { nullptr };
+    std::shared_ptr<G4XmlNtupleFileManager> fNtupleFileManager{nullptr};
 };
 
 #include "G4XmlAnalysisManager.icc"
 
 #endif
-

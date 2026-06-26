@@ -36,8 +36,8 @@
 //
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4SteppingVerboseWithUnits_hh
-#define G4SteppingVerboseWithUnits_hh 1
+#ifndef G4STEPPINGVERBOSEWITHUNITS_HH
+#define G4STEPPINGVERBOSEWITHUNITS_HH
 
 #include "G4SteppingVerbose.hh"
 
@@ -47,33 +47,35 @@ class G4GenericMessenger;
 
 class G4SteppingVerboseWithUnits : public G4SteppingVerbose
 {
- public:
-  G4SteppingVerboseWithUnits(G4int precision = 4);
-  ~G4SteppingVerboseWithUnits() override;
+  public:
 
-  G4VSteppingVerbose* Clone() override { return new G4SteppingVerboseWithUnits; }
+    G4SteppingVerboseWithUnits(G4int precision = 4);
+    ~G4SteppingVerboseWithUnits() override;
 
-  void SetManager(G4SteppingManager* const) override;
+    G4VSteppingVerbose* Clone() override { return new G4SteppingVerboseWithUnits; }
 
-  void TrackingStarted() override;
-  void StepInfo() override;
+    void SetManager(G4SteppingManager* const) override;
 
-  void AtRestDoItInvoked() override;
-  void AlongStepDoItAllDone() override;
-  void PostStepDoItAllDone() override;
-  void AlongStepDoItOneByOne() override;
-  void PostStepDoItOneByOne() override;
-  void DPSLStarted() override;
-  void DPSLUserLimit() override;
-  void DPSLPostStep() override;
-  void DPSLAlongStep() override;
-  void VerboseTrack() override;
-  void VerboseParticleChange() override;
-  void ShowStep() const override;
+    void TrackingStarted() override;
+    void StepInfo() override;
 
- private:
-  G4int fprec;
-  G4GenericMessenger* fmessenger = nullptr;
+    void AtRestDoItInvoked() override;
+    void AlongStepDoItAllDone() override;
+    void PostStepDoItAllDone() override;
+    void AlongStepDoItOneByOne() override;
+    void PostStepDoItOneByOne() override;
+    void DPSLStarted() override;
+    void DPSLUserLimit() override;
+    void DPSLPostStep() override;
+    void DPSLAlongStep() override;
+    void VerboseTrack() override;
+    void VerboseParticleChange() override;
+    void ShowStep() const override;
+
+  private:
+
+    G4int fprec;
+    G4GenericMessenger* fmessenger = nullptr;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

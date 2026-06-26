@@ -48,6 +48,7 @@ class vtkActor;
 class G4VtkPolydataPipeline : public G4VVtkPipeline
 {
   public:
+
     G4VtkPolydataPipeline(G4String name, const G4VtkVisContext& vc);
     ~G4VtkPolydataPipeline() override = default;
 
@@ -67,7 +68,7 @@ class G4VtkPolydataPipeline : public G4VVtkPipeline
 
     virtual void SetPolydata(const G4Polyhedron& polyhedron);
     virtual void SetPolydata(const G4Polyline& polyline);
-    virtual void SetPolydata(vtkPolyData *polydata);
+    virtual void SetPolydata(vtkPolyData* polydata);
     virtual void SetPolydataData(const G4Point3D& p);
     virtual void SetPolydataData(double x, double y, double z);
 
@@ -83,6 +84,7 @@ class G4VtkPolydataPipeline : public G4VVtkPipeline
     static std::size_t MakeHash(const G4Polyhedron& p, const G4VtkVisContext& vc);
 
   protected:
+
     vtkSmartPointer<vtkPoints> polydataPoints;
     vtkSmartPointer<vtkCellArray> polydataCells;
     vtkSmartPointer<vtkPolyData> polydata;

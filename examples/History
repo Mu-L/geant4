@@ -6,6 +6,49 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-06-26 Gabriele Cosmo (examples-V11-04-06)
+- Updated reference outputs according to reference tag geant4-11-04-ref-06.
+- Includes tags: exGeometry-V11-04-00, exGeomVolumeTreeVisitors-V11-04-00,
+                 chem4-V11-04-01, exgflash1-V11-04-01, exgflash2-V11-04-01,
+                 exgflash3-V11-04-01, exgflasha-V11-04-02, expar04-V11-04-02.
+
+## 2026-05-29 Gabriele Cosmo (examples-V11-04-05)
+- Updated reference outputs according to reference tag geant4-11-04-ref-05.
+- Includes tags: CaTS-V11-04-00, molecularDNA-V11-04-04, chem6-V11-04-04,
+                 microyz-V11-04-01, molcounters-V11-04-00, UHDR-V11-04-00.
+                 expar04-V11-04-01, exampleRE03-V11-04-00.
+
+## 2026-04-30 Gabriele Cosmo (examples-V11-04-04)
+- Updated reference outputs according to reference tag geant4-11-04-ref-04.
+- Includes tags: dsbandrepair-V11-04-00, molecularDNA-V11-04-02, chem1-V11-04-00,
+                 testem2-V11-04-00, testem3-V11-04-01, testem5-V11-04-00,
+                 testem12-V11-04-00, chem2-V11-04-00, chem3-V11-04-00,
+                 chem4-V11-04-00, chem5-V11-04-00, chem6-V11-04-03,
+                 clustering-V11-04-00, dnadamage1-V11-04-00, mfp-V11-04-00,
+                 dnadamage2-V11-04-01, dnaphysics-V11-04-00, range-V11-04-00,
+                 jetcounter-V11-04-00, microdosimetry-V11-04-00,
+                 microprox-V11-04-00, microtrack-V11-04-00, microyz-V11-04-00,
+                 neuron-V11-04-00, pdb4dna-V11-04-00, radial-V11-04-00,
+                 scavenger-V11-04-00, slowing-V11-04-00, spower-V11-04-01,
+                 svalue-V11-04-00, wholeNuclearDNA-V11-04-00, wvalue-V11-04-00,
+                 exgflasha-V11-04-01.
+
+## 2026-03-31 Gabriele Cosmo (examples-V11-04-03)
+- Updated reference outputs according to reference tag geant4-11-04-ref-03.
+- Includes tags: eFLASH_radiotherapy-V11-04-00, ICRP110Phantoms-V11-04-00,
+                 ICRP110_HumanPhantoms, spower-V11-04-00, expar04-V11-04-00,
+                 exgflasha-V11-04-00, exgflash1-V11-04-00, exgflash2-V11-04-00,
+                 exgflash3-V11-04-00.
+
+## 2026-02-28 Gabriele Cosmo (examples-V11-04-02)
+- Updated reference outputs according to reference tag geant4-11-04-ref-02.
+- Includes tags: molecularDNA-V11-04-00, exampleB5-V11-04-00, ch2-V11-04-00,
+                 chem6-V11-04-02.
+
+## 2026-01-31 Gabriele Cosmo (examples-V11-04-01)
+- Updated reference outputs according to reference tag geant4-11-04-ref-01.
+- Includes tags: chem6-V11-04-01, dnadamage2-V11-04-00.
+
 ## 2025-12-05 Gabriele Cosmo (examples-V11-04-00)
 - Updated reference outputs according to reference tag geant4-11-04-ref-00.
 - Includes tags: doxygen-V11-03-09, exadvanced-V11-03-01, IAEAphsp-V11-03-01,

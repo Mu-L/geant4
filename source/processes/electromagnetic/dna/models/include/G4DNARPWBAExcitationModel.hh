@@ -36,64 +36,62 @@
 //
 //
 
-#ifndef G4DNARPWBAExcitationModel_h
-#define G4DNARPWBAExcitationModel_h 1
+#ifndef G4DNARPWBAEXCITATIONMODEL_HH
+#define G4DNARPWBAEXCITATIONMODEL_HH
 
-#include "G4VEmModel.hh"
+#include "G4DNACrossSectionDataSet.hh"
+#include "G4DNAWaterExcitationStructure.hh"
+#include "G4Electron.hh"
+#include "G4LogLogInterpolation.hh"
+#include "G4NistManager.hh"
 #include "G4ParticleChangeForGamma.hh"
 #include "G4ProductionCutsTable.hh"
-#include "G4DNACrossSectionDataSet.hh"
-#include "G4LogLogInterpolation.hh"
-#include "G4Electron.hh"
 #include "G4Proton.hh"
-#include "G4DNAWaterExcitationStructure.hh"
-#include "G4NistManager.hh"
+#include "G4VEmModel.hh"
 
 class G4DNARPWBAExcitationModel : public G4VEmModel
 {
- public:
-  explicit G4DNARPWBAExcitationModel(
-    const G4ParticleDefinition* p = nullptr,
-    const G4String& nam           = "DNARPWBAExcitationModel");
+  public:
 
-  ~G4DNARPWBAExcitationModel() override;
-  G4DNARPWBAExcitationModel& operator=(const G4DNARPWBAExcitationModel& right) =
-    delete;
-  G4DNARPWBAExcitationModel(const G4DNARPWBAExcitationModel&) = delete;
-  void Initialise(const G4ParticleDefinition*,
-                  const G4DataVector& = *(new G4DataVector())) override;
+    explicit G4DNARPWBAExcitationModel(const G4ParticleDefinition* p = nullptr,
+                                       const G4String& nam = "DNARPWBAExcitationModel");
 
-  G4double CrossSectionPerVolume(const G4Material* material,
-                                 const G4ParticleDefinition* p, G4double ekin,
-                                 G4double emin, G4double emax) override;
+    ~G4DNARPWBAExcitationModel() override;
+    G4DNARPWBAExcitationModel& operator=(const G4DNARPWBAExcitationModel& right) = delete;
+    G4DNARPWBAExcitationModel(const G4DNARPWBAExcitationModel&) = delete;
+    void Initialise(const G4ParticleDefinition*,
+                    const G4DataVector& = *(new G4DataVector())) override;
 
-  G4double GetPartialCrossSection(const G4Material*, G4int level,
-                                  const G4ParticleDefinition*,
-                                  G4double kineticEnergy) override;
+    G4double CrossSectionPerVolume(const G4Material* material, const G4ParticleDefinition* p,
+                                   G4double ekin, G4double emin, G4double emax) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-                         const G4MaterialCutsCouple*, const G4DynamicParticle*,
-                         G4double tmin, G4double maxEnergy) override;
+    G4double GetPartialCrossSection(const G4Material*, G4int level, const G4ParticleDefinition*,
+                                    G4double kineticEnergy) override;
 
-  inline void SelectStationary(const G4bool& input);
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
- protected:
-  G4ParticleChangeForGamma* fParticleChangeForGamma = nullptr;
+    inline void SelectStationary(const G4bool& input);
 
- private:
-  // Partial cross section
-  G4int RandomSelect(G4double energy);
-  G4DNAWaterExcitationStructure waterStructure;
-  G4bool statCode = false;
-  // Water density table
-  const std::vector<G4double>* fpMolWaterDensity  = nullptr;
-  G4bool isInitialised                            = false;
-  G4int verboseLevel                              = 0;
-  const G4ParticleDefinition* fParticleDefinition = G4Proton::ProtonDefinition();
-  G4double fLowEnergy                             = 0;
-  G4double fHighEnergy                            = 0;
-  G4String fTableFile;
-  std::unique_ptr<G4DNACrossSectionDataSet> fTableData;
+  protected:
+
+    G4ParticleChangeForGamma* fParticleChangeForGamma = nullptr;
+
+  private:
+
+    // Partial cross section
+    G4int RandomSelect(G4double energy);
+    G4DNAWaterExcitationStructure waterStructure;
+    G4bool statCode = false;
+    // Water density table
+    const std::vector<G4double>* fpMolWaterDensity = nullptr;
+    G4bool isInitialised = false;
+    G4int verboseLevel = 0;
+    const G4ParticleDefinition* fParticleDefinition = G4Proton::ProtonDefinition();
+    G4double fLowEnergy = 0;
+    G4double fHighEnergy = 0;
+    G4String fTableFile;
+    std::unique_ptr<G4DNACrossSectionDataSet> fTableData;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

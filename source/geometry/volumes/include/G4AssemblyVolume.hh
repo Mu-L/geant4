@@ -41,16 +41,19 @@
 #ifndef G4ASSEMBLYVOLUME_HH
 #define G4ASSEMBLYVOLUME_HH
 
-#include <vector>
-
-#include "G4Transform3D.hh"
 #include "G4AssemblyTriplet.hh"
+#include "G4Transform3D.hh"
+
+#include <vector>
 
 class G4VPhysicalVolume;
 
 /**
  * @brief G4AssemblyVolume is a helper class to make the build process of
- * geometry easier. It allows one to combine several volumes together in an
+ * geometry easier.
+ * @ingroup geometry_volumes
+ *
+ * It allows one to combine several volumes together in an
  * arbitrary way in 3D space and then work with the result as with a single
  * logical volume for placement.
  * The resulting objects are independent copies of each of the assembled
@@ -66,7 +69,7 @@ class G4AssemblyVolume
     /**
      * Default Constructor.
      */
-    G4AssemblyVolume();    
+    G4AssemblyVolume();
 
     /**
      * Constructor.
@@ -80,10 +83,9 @@ class G4AssemblyVolume
      *  @param[in] translation Translation vector of the assembly.
      *  @param[in] rotation Pointer to the rotation matrix of the assembly.
      */
-    G4AssemblyVolume( G4LogicalVolume* volume,
-                      G4ThreeVector& translation,
-                      G4RotationMatrix* rotation);
-    
+    G4AssemblyVolume(G4LogicalVolume* volume, G4ThreeVector& translation,
+                     G4RotationMatrix* rotation);
+
     /**
      * Destructor.
      * At destruction all the generated physical volumes and associated
@@ -124,9 +126,8 @@ class G4AssemblyVolume
      *  @param[in] translation Translation vector of the volume.
      *  @param[in] rotation Pointer to the rotation matrix of the volume.
      */
-    void AddPlacedVolume( G4LogicalVolume* pPlacedVolume,
-                          G4ThreeVector& translation,
-                          G4RotationMatrix* rotation);
+    void AddPlacedVolume(G4LogicalVolume* pPlacedVolume, G4ThreeVector& translation,
+                         G4RotationMatrix* rotation);
 
     /**
      * The same as previous method, except that it takes the complete 3D
@@ -135,8 +136,7 @@ class G4AssemblyVolume
      *             to be added to the assembly.
      *  @param[in] transformation The 3D transformation in space.
      */
-    void AddPlacedVolume( G4LogicalVolume* pPlacedVolume,
-                          G4Transform3D&   transformation);
+    void AddPlacedVolume(G4LogicalVolume* pPlacedVolume, G4Transform3D& transformation);
 
     /**
      * The same as previous method, but takes an assembly volume as argument.
@@ -144,20 +144,18 @@ class G4AssemblyVolume
      *             to the assembly.
      *  @param[in] transformation The 3D transformation in space.
      */
-    void AddPlacedAssembly( G4AssemblyVolume* pAssembly,
-                            G4Transform3D&    transformation);
+    void AddPlacedAssembly(G4AssemblyVolume* pAssembly, G4Transform3D& transformation);
 
     /**
-     * The same as previous method, but takes an assembly volume 
+     * The same as previous method, but takes an assembly volume
      * as its argument with translation and rotation.
      *  @param[in] pAssembly Pointer to the assembly volume to be added
      *             to the assembly.
      *  @param[in] translation Translation vector of the volume.
      *  @param[in] rotation Pointer to the rotation matrix of the volume.
      */
-    void AddPlacedAssembly( G4AssemblyVolume* pAssembly,
-                            G4ThreeVector& translation,
-                            G4RotationMatrix* rotation);
+    void AddPlacedAssembly(G4AssemblyVolume* pAssembly, G4ThreeVector& translation,
+                           G4RotationMatrix* rotation);
 
     /**
      * Creates instance of an assembly volume inside the given mother volume.
@@ -167,11 +165,9 @@ class G4AssemblyVolume
      *  @param[in] copyNumBase Optional index to assign to the imprint.
      *  @param[in] surfCheck Flag to enable overlaps checking while imprinting.
      */
-    void MakeImprint( G4LogicalVolume* pMotherLV,
-                      G4ThreeVector& translationInMother,
-                      G4RotationMatrix* pRotationInMother,
-                      G4int copyNumBase = 0,
-                      G4bool surfCheck = false );
+    void MakeImprint(G4LogicalVolume* pMotherLV, G4ThreeVector& translationInMother,
+                     G4RotationMatrix* pRotationInMother, G4int copyNumBase = 0,
+                     G4bool surfCheck = false);
 
     /**
      * The same as previous Imprint() method, but takes a complete 3D
@@ -181,10 +177,8 @@ class G4AssemblyVolume
      *  @param[in] copyNumBase Optional index to assign to the imprint.
      *  @param[in] surfCheck Flag to enable overlaps checking while imprinting.
      */
-    void MakeImprint( G4LogicalVolume* pMotherLV,
-                      G4Transform3D&   transformation,
-                      G4int copyNumBase = 0,
-                      G4bool surfCheck = false );
+    void MakeImprint(G4LogicalVolume* pMotherLV, G4Transform3D& transformation,
+                     G4int copyNumBase = 0, G4bool surfCheck = false);
 
     /**
      * To access the physical volumes imprinted through an iterator.
@@ -210,7 +204,7 @@ class G4AssemblyVolume
      * Returns the total number of triplets in the assembly.
      */
     inline std::size_t TotalTriplets() const;
-  
+
     /**
      * Returns the number of currently made imprints.
      */
@@ -224,34 +218,32 @@ class G4AssemblyVolume
     /**
      * Returns the instance number of the assembly.
      */
-    inline unsigned int GetAssemblyID()    const;
-  
+    inline unsigned int GetAssemblyID() const;
+
   protected:
 
-    inline void SetInstanceCount( unsigned int value );
-    inline void SetAssemblyID( unsigned int value );
- 
+    inline void SetInstanceCount(unsigned int value);
+    inline void SetAssemblyID(unsigned int value);
+
     void InstanceCountPlus();
     void InstanceCountMinus();
 
     // Internal counting mechanism, used to compute unique the names of
     // physical volumes created by MakeImprint() methods.
     //
-    inline void SetImprintsCount( unsigned int value );
+    inline void SetImprintsCount(unsigned int value);
     inline void ImprintsCountPlus();
     inline void ImprintsCountMinus();
 
-  private:    
+  private:
 
     /**
      * Function for placement of the given assembly in the given mother
      * (called recursively if the assembly contains an assembly).
      */
-    void MakeImprint( G4AssemblyVolume* pAssembly,
-                      G4LogicalVolume*  pMotherLV,
-                      G4Transform3D&    transformation,
-                      G4int copyNumBase = 0,
-                      G4bool surfCheck = false );
+    void MakeImprint(G4AssemblyVolume* pAssembly, G4LogicalVolume* pMotherLV,
+                     G4Transform3D& transformation, G4int copyNumBase = 0,
+                     G4bool surfCheck = false);
 
   private:
 

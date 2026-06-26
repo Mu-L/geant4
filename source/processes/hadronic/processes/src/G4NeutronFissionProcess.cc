@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 // F.W. Jones, TRIUMF, 03-DEC-96
-// 
+//
 // This is a prototype of a low-energy fission process.
 // Currently it is based on the GHEISHA routine FISSIO,
 // and conforms fairly closely to the original Fortran.
@@ -41,26 +41,22 @@
 //
 
 #include "G4NeutronFissionProcess.hh"
-#include "G4ZeroXS.hh"
+
 #include "G4Neutron.hh"
+#include "G4ZeroXS.hh"
 
-
-G4NeutronFissionProcess::G4NeutronFissionProcess(const G4String& processName) : 
-  G4HadronicProcess(processName,fFission)
+G4NeutronFissionProcess::G4NeutronFissionProcess(const G4String& processName)
+  : G4HadronicProcess(processName, fFission)
 {
   AddDataSet(new G4ZeroXS);
 }
 
-
-G4NeutronFissionProcess::~G4NeutronFissionProcess()
-{}
-
+G4NeutronFissionProcess::~G4NeutronFissionProcess() {}
 
 G4bool G4NeutronFissionProcess::IsApplicable(const G4ParticleDefinition& p)
-{ 
+{
   return (&p == G4Neutron::Neutron());
 }
-
 
 void G4NeutronFissionProcess::ProcessDescription(std::ostream& outFile) const
 {

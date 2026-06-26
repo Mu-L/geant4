@@ -32,23 +32,25 @@
 //
 
 #include "G4WatcherGun.hh"
+
 #include "G4ios.hh"
 
-G4WatcherGun::G4WatcherGun()
-  : verboseLevel(0) {
-
-  if (verboseLevel > 3) {
+G4WatcherGun::G4WatcherGun() : verboseLevel(0)
+{
+  if (verboseLevel > 3)
+  {
     G4cout << " >>> G4WatcherGun::G4WatcherGun" << G4endl;
   }
 }
 
-void G4WatcherGun::setWatchers() {
-
-  if (verboseLevel > 3) {
+void G4WatcherGun::setWatchers()
+{
+  if (verboseLevel > 3)
+  {
     G4cout << " >>> G4WatcherGun::setWatchers" << G4endl;
   }
 
-  std::vector<G4double> as(27);		// Reserve maximum number of entries
+  std::vector<G4double> as(27);  // Reserve maximum number of entries
   std::vector<G4double> cs(27);
   std::vector<G4double> errs(27);
 
@@ -92,7 +94,7 @@ void G4WatcherGun::setWatchers() {
   cs.push_back(338.6);
   errs.push_back(3.1);
   watchers.push_back(G4NuclWatcher(1, as, cs, errs, false, true));
-  
+
   // Z = -1
   as.clear();
   cs.clear();
@@ -1551,18 +1553,5 @@ void G4WatcherGun::setWatchers() {
   errs.push_back(0.1);
 
   watchers.push_back(G4NuclWatcher(65, as, cs, errs, true, true));
-#endif  
-
+#endif
 }
-
-
-
-
-
-
-
-
-
-
-
-

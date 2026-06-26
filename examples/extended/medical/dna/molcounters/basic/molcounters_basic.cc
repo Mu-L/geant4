@@ -49,11 +49,21 @@
 #include "G4UImanager.hh"
 #include "G4VisExecutive.hh"
 
+bool ArgumentsContain(int, char**, const char*);
+char* FirstNonOptionArgument(int, char**);
+
 int main(int argc, char** argv)
 {
-  G4UIExecutive* ui = 0;
-  if (argc == 1) {
-    ui = new G4UIExecutive(argc, argv);
+  // Detect interactive mode (if no arguments) and define UI session
+  G4UIExecutive* ui = nullptr;
+
+  auto uiRequested = ArgumentsContain(argc, argv, "-ui") || ArgumentsContain(argc, argv, "-gui");
+
+  if (argc == 1 || uiRequested) {
+    if (ArgumentsContain(argc, argv, "-gui")) // must be Qt
+      ui = new G4UIExecutive(argc, argv, "qt");
+    else
+      ui = new G4UIExecutive(argc, argv);
   }
 
   auto* runManager = G4RunManagerFactory::CreateRunManager();
@@ -63,23 +73,49 @@ int main(int argc, char** argv)
   runManager->SetUserInitialization(new DetectorConstruction);
   runManager->SetUserInitialization(new ActionInitialization);
 
+  G4VisManager* visManager = new G4VisExecutive;
+  visManager->Initialize();
+
   // get the pointer to the User Interface manager
-  auto UI = G4UImanager::GetUIpointer();
+  auto UImanager = G4UImanager::GetUIpointer();
 
-  if (argc > 1)  // batch mode
-  {
-    G4String command = "/control/execute ";
-    G4String fileName = argv[1];
-    UI->ApplyCommand(command + fileName);
+  G4String command = "/control/execute ";
+  char* fileName = FirstNonOptionArgument(argc, argv);
+  if (fileName != nullptr && fileName[0] != '\0') {
+    UImanager->ApplyCommand(command + fileName);
   }
-  else  // define visualization and UI terminal for interactive mode
-  {
-    UI->ApplyCommand("/control/execute simple_sbs.in");
-    delete ui;
+  else {
+    UImanager->ApplyCommand(command + "simple_sbs.in");
+  }
+  if (ui != nullptr) {
+    ui->SessionStart();
   }
 
+  delete visManager;
   delete runManager;
+  delete ui;
+
   return 0;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
+
+bool ArgumentsContain(int argc, char** argv, const char* pattern)
+{
+  for (auto i = 1; i < argc; ++i) {
+    if (strcmp(argv[i], pattern) == 0) return true;
+  }
+  return false;
+}
+
+char* FirstNonOptionArgument(int argc, char** argv)
+{
+  for (auto i = 1; i < argc; ++i) {
+    if (argv[i] == nullptr || argv[i][0] == '\0') continue;
+    if (argv[i][0] == '-' || argv[i][0] == '/') continue;
+    return argv[i];
+  }
+  return nullptr;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....

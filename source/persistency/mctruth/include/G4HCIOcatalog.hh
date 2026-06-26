@@ -32,12 +32,13 @@
 // Author: Youhei Morita, 12.09.2001
 // --------------------------------------------------------------------
 #ifndef G4HCIOCATALOG_HH
-#define G4HCIOCATALOG_HH 1
+#define G4HCIOCATALOG_HH
+
+#include "G4String.hh"
+#include "G4Types.hh"
+#include "G4VPHitsCollectionIO.hh"
 
 #include <map>
-#include "G4Types.hh"
-#include "G4String.hh"
-#include "G4VPHitsCollectionIO.hh"
 
 class G4VHCIOentry;
 
@@ -49,43 +50,43 @@ class G4HCIOcatalog
   public:
 
     G4HCIOcatalog();
-      // Constructor
+    // Constructor
 
     virtual ~G4HCIOcatalog() {}
-      // Destructor
+    // Destructor
 
     static G4HCIOcatalog* GetHCIOcatalog();
-      // Construct G4HCIOcatalog and returns the pointer
+    // Construct G4HCIOcatalog and returns the pointer
 
     void SetVerboseLevel(G4int v) { m_verbose = v; }
-      // Set verbose level
+    // Set verbose level
 
     void RegisterEntry(G4VHCIOentry* d);
-      // Register I/O manager entry
+    // Register I/O manager entry
 
     void RegisterHCIOmanager(G4VPHitsCollectionIO* d);
-      // Register I/O manager
+    // Register I/O manager
 
     G4VHCIOentry* GetEntry(const G4String& name);
-      // Returns the I/O manager entry
+    // Returns the I/O manager entry
 
     G4VPHitsCollectionIO* GetHCIOmanager(const G4String& name);
-      // Returns the registered I/O manager entry
+    // Returns the registered I/O manager entry
 
     void PrintEntries();
-      // Prints the list of I/O manager entries
+    // Prints the list of I/O manager entries
 
     G4String CurrentHCIOmanager();
-      // Returns the list of I/O managers
+    // Returns the list of I/O managers
 
     void PrintHCIOmanager();
-      // Prints the list of I/O managers
+    // Prints the list of I/O managers
 
     std::size_t NumberOfHCIOmanager() { return theStore.size(); }
-      // Returns the number of registered I/O managers.
+    // Returns the number of registered I/O managers.
 
     G4VPHitsCollectionIO* GetHCIOmanager(G4int n);
-      // Returns the n-th registered I/O manager entry
+    // Returns the n-th registered I/O manager entry
 
   private:
 

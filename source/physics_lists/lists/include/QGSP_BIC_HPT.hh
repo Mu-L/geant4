@@ -40,19 +40,20 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef QGSP_BIC_HPT_h
-#define QGSP_BIC_HPT_h 1
+#ifndef QGSP_BIC_HPT_HH
+#define QGSP_BIC_HPT_HH
 
-#include "globals.hh"
 #include "G4VModularPhysicsList.hh"
+#include "globals.hh"
 
-
-class QGSP_BIC_HPT : public G4VModularPhysicsList {
+class QGSP_BIC_HPT : public G4VModularPhysicsList
+{
   public:
-    QGSP_BIC_HPT( G4int ver = 1 );
+
+    QGSP_BIC_HPT(G4int ver = 1);
     virtual ~QGSP_BIC_HPT() = default;
-    QGSP_BIC_HPT( const QGSP_BIC_HPT &) = delete;
-    QGSP_BIC_HPT & operator=( const QGSP_BIC_HPT &right ) = delete;
+    QGSP_BIC_HPT(const QGSP_BIC_HPT&) = delete;
+    QGSP_BIC_HPT& operator=(const QGSP_BIC_HPT& right) = delete;
 };
 
 #endif

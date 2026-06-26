@@ -27,41 +27,44 @@
 // by V. Lara
 //
 
-#ifndef G4VPreCompoundEmissionFactory_hh
-#define G4VPreCompoundEmissionFactory_hh
+#ifndef G4VPRECOMPOUNDEMISSIONFACTORY_HH
+#define G4VPRECOMPOUNDEMISSIONFACTORY_HH
 
 #include "G4VPreCompoundFragment.hh"
+
 #include <vector>
 
 class G4VPreCompoundEmissionFactory
 {
-public:
+  public:
 
-  G4VPreCompoundEmissionFactory();
+    G4VPreCompoundEmissionFactory();
 
-  virtual ~G4VPreCompoundEmissionFactory();
-  
-  inline std::vector<G4VPreCompoundFragment*> * GetFragmentVector();
+    virtual ~G4VPreCompoundEmissionFactory();
 
-  G4VPreCompoundEmissionFactory(const G4VPreCompoundEmissionFactory&) = delete;
-  const G4VPreCompoundEmissionFactory & operator=
-  (const G4VPreCompoundEmissionFactory & val) = delete;
-  G4bool operator==(const G4VPreCompoundEmissionFactory & val) const = delete;
-  G4bool operator!=(const G4VPreCompoundEmissionFactory & val) const = delete;
+    inline std::vector<G4VPreCompoundFragment*>* GetFragmentVector();
 
-protected:
+    G4VPreCompoundEmissionFactory(const G4VPreCompoundEmissionFactory&) = delete;
+    const G4VPreCompoundEmissionFactory&
+    operator=(const G4VPreCompoundEmissionFactory& val) = delete;
+    G4bool operator==(const G4VPreCompoundEmissionFactory& val) const = delete;
+    G4bool operator!=(const G4VPreCompoundEmissionFactory& val) const = delete;
 
-  virtual std::vector<G4VPreCompoundFragment*> * CreateFragmentVector() = 0;
+  protected:
 
-private:
+    virtual std::vector<G4VPreCompoundFragment*>* CreateFragmentVector() = 0;
 
-  std::vector<G4VPreCompoundFragment*> * fragvector = nullptr;
+  private:
+
+    std::vector<G4VPreCompoundFragment*>* fragvector = nullptr;
 };
 
-inline std::vector<G4VPreCompoundFragment*> * 
-G4VPreCompoundEmissionFactory::GetFragmentVector()
+inline std::vector<G4VPreCompoundFragment*>* G4VPreCompoundEmissionFactory::GetFragmentVector()
 {
-  if (fragvector == nullptr) { fragvector = CreateFragmentVector(); }
+  if (fragvector == nullptr)
+  {
+    fragvector = CreateFragmentVector();
+  }
   return fragvector;
 }
 

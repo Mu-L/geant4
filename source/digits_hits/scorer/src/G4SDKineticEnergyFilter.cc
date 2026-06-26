@@ -27,6 +27,7 @@
 //
 // G4VSensitiveDetector
 #include "G4SDKineticEnergyFilter.hh"
+
 #include "G4Step.hh"
 #include "G4UnitsTable.hh"
 ////////////////////////////////////////////////////////////////////////////////
@@ -42,30 +43,26 @@
 
 G4SDKineticEnergyFilter::G4SDKineticEnergyFilter(const G4String& name, G4double elow,
                                                  G4double ehigh)
-  : G4VSDFilter(name)
-  , fLowEnergy(elow)
-  , fHighEnergy(ehigh)
+  : G4VSDFilter(name), fLowEnergy(elow), fHighEnergy(ehigh)
 {}
 
 G4bool G4SDKineticEnergyFilter::Accept(const G4Step* aStep) const
 {
   G4double kinetic = aStep->GetPreStepPoint()->GetKineticEnergy();
-  if(kinetic < fLowEnergy)
-    return false;
-  if(kinetic >= fHighEnergy)
-    return false;
+  if (kinetic < fLowEnergy) return false;
+  if (kinetic >= fHighEnergy) return false;
   return true;
 }
 
 void G4SDKineticEnergyFilter::SetKineticEnergy(G4double elow, G4double ehigh)
 {
-  fLowEnergy  = elow;
+  fLowEnergy = elow;
   fHighEnergy = ehigh;
 }
 
 void G4SDKineticEnergyFilter::show()
 {
   G4cout << " G4SDKineticEnergyFilter:: " << GetName() << " LowE  "
-         << G4BestUnit(fLowEnergy, "Energy") << " HighE "
-         << G4BestUnit(fHighEnergy, "Energy") << G4endl;
+         << G4BestUnit(fLowEnergy, "Energy") << " HighE " << G4BestUnit(fHighEnergy, "Energy")
+         << G4endl;
 }

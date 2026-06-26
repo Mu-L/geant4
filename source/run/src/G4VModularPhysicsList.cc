@@ -55,8 +55,10 @@ G4VModularPhysicsList::G4VModularPhysicsList()
 // --------------------------------------------------------------------
 G4VModularPhysicsList::~G4VModularPhysicsList()
 {
-  if (G4MT_physicsVector != nullptr) {
-    for (auto& ptr : *G4MT_physicsVector) {
+  if (G4MT_physicsVector != nullptr)
+  {
+    for (auto& ptr : *G4MT_physicsVector)
+    {
       delete ptr;
     }
     delete G4MT_physicsVector;
@@ -75,7 +77,8 @@ G4VModularPhysicsList::G4VModularPhysicsList(const G4VModularPhysicsList& right)
 // --------------------------------------------------------------------
 G4VModularPhysicsList& G4VModularPhysicsList::operator=(const G4VModularPhysicsList& right)
 {
-  if (this != &right) {
+  if (this != &right)
+  {
     defaultCutValue = right.defaultCutValue;
     isSetDefaultCutValue = right.isSetDefaultCutValue;
     fRetrievePhysicsTable = right.fRetrievePhysicsTable;
@@ -96,8 +99,10 @@ G4VModularPhysicsList& G4VModularPhysicsList::operator=(const G4VModularPhysicsL
     fDisableCheckParticleList = right.fDisableCheckParticleList;
     verboseLevel = right.verboseLevel;
 
-    if (G4MT_physicsVector != nullptr) {
-      for (auto& ptr : *G4MT_physicsVector) {
+    if (G4MT_physicsVector != nullptr)
+    {
+      for (auto& ptr : *G4MT_physicsVector)
+      {
         delete ptr;
       }
       delete G4MT_physicsVector;
@@ -112,7 +117,8 @@ G4VModularPhysicsList& G4VModularPhysicsList::operator=(const G4VModularPhysicsL
 void G4VModularPhysicsList::ConstructParticle()
 {
   // create particles
-  for (auto itr = G4MT_physicsVector->cbegin(); itr != G4MT_physicsVector->cend(); ++itr) {
+  for (auto itr = G4MT_physicsVector->cbegin(); itr != G4MT_physicsVector->cend(); ++itr)
+  {
     (*itr)->ConstructParticle();
   }
 }
@@ -136,7 +142,8 @@ void G4VModularPhysicsList::ConstructProcess()
   G4AutoLock l(&constructProcessMutex);  // Protection to be removed (A.Dotti)
   AddTransportation();
 
-  for (auto itr = G4MT_physicsVector->cbegin(); itr != G4MT_physicsVector->cend(); ++itr) {
+  for (auto itr = G4MT_physicsVector->cbegin(); itr != G4MT_physicsVector->cend(); ++itr)
+  {
     (*itr)->ConstructProcess();
   }
 }
@@ -146,7 +153,8 @@ void G4VModularPhysicsList::RegisterPhysics(G4VPhysicsConstructor* fPhysics)
 {
   G4StateManager* stateManager = G4StateManager::GetStateManager();
   G4ApplicationState currentState = stateManager->GetCurrentState();
-  if (!(currentState == G4State_PreInit)) {
+  if (!(currentState == G4State_PreInit))
+  {
     G4Exception("G4VModularPhysicsList::RegisterPhysics", "Run0201", JustWarning,
                 "Geant4 kernel is not PreInit state : Method ignored.");
     return;
@@ -157,10 +165,12 @@ void G4VModularPhysicsList::RegisterPhysics(G4VPhysicsConstructor* fPhysics)
   // If physics_type is equal to 0,
   // following duplication check is omitted
   // This is TEMPORAL treatment.
-  if (pType == 0) {
+  if (pType == 0)
+  {
     G4MT_physicsVector->push_back(fPhysics);
 #ifdef G4VERBOSE
-    if (verboseLevel > 1) {
+    if (verboseLevel > 1)
+    {
       G4cout << "G4VModularPhysicsList::RegisterPhysics: " << pName << " with type : " << pType
              << " is added" << G4endl;
     }
@@ -170,12 +180,15 @@ void G4VModularPhysicsList::RegisterPhysics(G4VPhysicsConstructor* fPhysics)
 
   // Check if physics with the physics_type same as one of given physics
   auto itr = G4MT_physicsVector->cbegin();
-  for (; itr != G4MT_physicsVector->cend(); ++itr) {
+  for (; itr != G4MT_physicsVector->cend(); ++itr)
+  {
     if (pType == (*itr)->GetPhysicsType()) break;
   }
-  if (itr != G4MT_physicsVector->cend()) {
+  if (itr != G4MT_physicsVector->cend())
+  {
 #ifdef G4VERBOSE
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       G4cout << "G4VModularPhysicsList::RegisterPhysics: "
              << "a physics with given type already exists " << G4endl;
       G4cout << " Type = " << pType << " : "
@@ -198,7 +211,8 @@ void G4VModularPhysicsList::ReplacePhysics(G4VPhysicsConstructor* fPhysics)
 {
   G4StateManager* stateManager = G4StateManager::GetStateManager();
   G4ApplicationState currentState = stateManager->GetCurrentState();
-  if (!(currentState == G4State_PreInit)) {
+  if (!(currentState == G4State_PreInit))
+  {
     G4Exception("G4VModularPhysicsList::ReplacePhysics", "Run0203", JustWarning,
                 "Geant4 kernel is not PreInit state : Method ignored.");
     return;
@@ -209,11 +223,13 @@ void G4VModularPhysicsList::ReplacePhysics(G4VPhysicsConstructor* fPhysics)
   // If physics_type is equal to 0,
   // duplication check is omitted and just added.
   // This is TEMPORAL treatment.
-  if (pType == 0) {
+  if (pType == 0)
+  {
     // register
     G4MT_physicsVector->push_back(fPhysics);
 #ifdef G4VERBOSE
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       G4cout << "G4VModularPhysicsList::ReplacePhysics: " << pName << " with type : " << pType
              << " is added" << G4endl;
     }
@@ -224,21 +240,26 @@ void G4VModularPhysicsList::ReplacePhysics(G4VPhysicsConstructor* fPhysics)
   // Check if physics with the physics_type same as one of given physics
   G4String pName0;
   auto itr = G4MT_physicsVector->begin();
-  for (; itr != G4MT_physicsVector->end(); ++itr) {
-    if (pType == (*itr)->GetPhysicsType()) {
+  for (; itr != G4MT_physicsVector->end(); ++itr)
+  {
+    if (pType == (*itr)->GetPhysicsType())
+    {
       pName0 = (*itr)->GetPhysicsName();
       break;
     }
   }
-  if (itr == G4MT_physicsVector->end()) {
+  if (itr == G4MT_physicsVector->end())
+  {
     // register new at the end of the vector
     G4MT_physicsVector->push_back(fPhysics);
   }
-  else {
+  else
+  {
 #ifdef G4VERBOSE
     // it is not needed to print on replacement if the same physics configuration
     // replaces the previous one - the previous will be silently deleted
-    if (verboseLevel > 0 && pName != pName0) {
+    if (verboseLevel > 0 && pName != pName0)
+    {
       G4cout << "G4VModularPhysicsList::ReplacePhysics: " << (*itr)->GetPhysicsName()
              << " with type : " << pType << " is replaced with " << pName << G4endl;
     }
@@ -257,17 +278,21 @@ void G4VModularPhysicsList::RemovePhysics(G4int pType)
 {
   G4StateManager* stateManager = G4StateManager::GetStateManager();
   G4ApplicationState currentState = stateManager->GetCurrentState();
-  if (!(currentState == G4State_PreInit)) {
+  if (!(currentState == G4State_PreInit))
+  {
     G4Exception("G4VModularPhysicsList::RemovePhysics", "Run0204", JustWarning,
                 "Geant4 kernel is not PreInit state : Method ignored.");
     return;
   }
 
-  for (auto itr = G4MT_physicsVector->cbegin(); itr != G4MT_physicsVector->cend();) {
-    if (pType == (*itr)->GetPhysicsType()) {
+  for (auto itr = G4MT_physicsVector->cbegin(); itr != G4MT_physicsVector->cend();)
+  {
+    if (pType == (*itr)->GetPhysicsType())
+    {
       G4String pName = (*itr)->GetPhysicsName();
 #ifdef G4VERBOSE
-      if (verboseLevel > 0) {
+      if (verboseLevel > 0)
+      {
         G4cout << "G4VModularPhysicsList::RemovePhysics: " << pName << " is removed" << G4endl;
       }
 #endif
@@ -284,17 +309,21 @@ void G4VModularPhysicsList::RemovePhysics(G4VPhysicsConstructor* fPhysics)
 {
   G4StateManager* stateManager = G4StateManager::GetStateManager();
   G4ApplicationState currentState = stateManager->GetCurrentState();
-  if (!(currentState == G4State_PreInit)) {
+  if (!(currentState == G4State_PreInit))
+  {
     G4Exception("G4VModularPhysicsList::RemovePhysics", "Run0205", JustWarning,
                 "Geant4 kernel is not PreInit state : Method ignored.");
     return;
   }
 
-  for (auto itr = G4MT_physicsVector->cbegin(); itr != G4MT_physicsVector->cend();) {
-    if (fPhysics == (*itr)) {
+  for (auto itr = G4MT_physicsVector->cbegin(); itr != G4MT_physicsVector->cend();)
+  {
+    if (fPhysics == (*itr))
+    {
       G4String pName = (*itr)->GetPhysicsName();
 #ifdef G4VERBOSE
-      if (verboseLevel > 0) {
+      if (verboseLevel > 0)
+      {
         G4cout << "G4VModularPhysicsList::RemovePhysics: " << pName << " is removed" << G4endl;
       }
 #endif
@@ -311,17 +340,21 @@ void G4VModularPhysicsList::RemovePhysics(const G4String& name)
 {
   G4StateManager* stateManager = G4StateManager::GetStateManager();
   G4ApplicationState currentState = stateManager->GetCurrentState();
-  if (!(currentState == G4State_PreInit)) {
+  if (!(currentState == G4State_PreInit))
+  {
     G4Exception("G4VModularPhysicsList::RemovePhysics", "Run0206", JustWarning,
                 "Geant4 kernel is not PreInit state : Method ignored.");
     return;
   }
 
-  for (auto itr = G4MT_physicsVector->cbegin(); itr != G4MT_physicsVector->cend();) {
+  for (auto itr = G4MT_physicsVector->cbegin(); itr != G4MT_physicsVector->cend();)
+  {
     G4String pName = (*itr)->GetPhysicsName();
-    if (name == pName) {
+    if (name == pName)
+    {
 #ifdef G4VERBOSE
-      if (verboseLevel > 0) {
+      if (verboseLevel > 0)
+      {
         G4cout << "G4VModularPhysicsList::RemovePhysics: " << pName << " is removed" << G4endl;
       }
 #endif
@@ -347,7 +380,8 @@ const G4VPhysicsConstructor* G4VModularPhysicsList::GetPhysics(G4int idx) const
 const G4VPhysicsConstructor* G4VModularPhysicsList::GetPhysics(const G4String& name) const
 {
   auto itr = G4MT_physicsVector->cbegin();
-  for (; itr != G4MT_physicsVector->cend(); ++itr) {
+  for (; itr != G4MT_physicsVector->cend(); ++itr)
+  {
     if (name == (*itr)->GetPhysicsName()) break;
   }
   if (itr != G4MT_physicsVector->cend()) return (*itr);
@@ -358,7 +392,8 @@ const G4VPhysicsConstructor* G4VModularPhysicsList::GetPhysics(const G4String& n
 const G4VPhysicsConstructor* G4VModularPhysicsList::GetPhysicsWithType(G4int pType) const
 {
   auto itr = G4MT_physicsVector->cbegin();
-  for (; itr != G4MT_physicsVector->cend(); ++itr) {
+  for (; itr != G4MT_physicsVector->cend(); ++itr)
+  {
     if (pType == (*itr)->GetPhysicsType()) break;
   }
   if (itr != G4MT_physicsVector->cend()) return (*itr);
@@ -370,7 +405,8 @@ void G4VModularPhysicsList::SetVerboseLevel(G4int value)
 {
   verboseLevel = value;
   // Loop over constructors
-  for (auto itr = G4MT_physicsVector->cbegin(); itr != G4MT_physicsVector->cend(); ++itr) {
+  for (auto itr = G4MT_physicsVector->cbegin(); itr != G4MT_physicsVector->cend(); ++itr)
+  {
     (*itr)->SetVerboseLevel(verboseLevel);
   }
 }

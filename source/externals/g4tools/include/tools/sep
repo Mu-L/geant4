@@ -6,9 +6,11 @@
 
 #include <string>
 
-namespace tools {
+namespace tools
+{
 
-inline const std::string& sep() {
+inline const std::string& sep()
+{
 #ifdef _WIN32
   static const std::string s_v("\\");
 #else
@@ -17,7 +19,8 @@ inline const std::string& sep() {
   return s_v;
 }
 
-inline const std::string& psep() {
+inline const std::string& psep()
+{
 #ifdef _WIN32
   static const std::string s_v(";");
 #else
@@ -26,6 +29,6 @@ inline const std::string& psep() {
   return s_v;
 }
 
-}
+}  // namespace tools
 
 #endif

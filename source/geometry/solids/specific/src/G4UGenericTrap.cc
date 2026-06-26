@@ -28,16 +28,18 @@
 // 30.10.13 G.Cosmo, CERN
 // --------------------------------------------------------------------
 
+// Geant4/VecGeom headers must be included in order
+// clang-format off
 #include "G4GenericTrap.hh"
 #include "G4UGenericTrap.hh"
+// clang-format on
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include "G4AffineTransform.hh"
-#include "G4VPVParameterisation.hh"
-#include "G4BoundingEnvelope.hh"
-
-#include "G4Polyhedron.hh"
+#  include "G4AffineTransform.hh"
+#  include "G4BoundingEnvelope.hh"
+#  include "G4Polyhedron.hh"
+#  include "G4VPVParameterisation.hh"
 
 using namespace CLHEP;
 
@@ -53,31 +55,26 @@ G4UGenericTrap::G4UGenericTrap(const G4String& name, G4double halfZ,
   Initialise(vertices);
 }
 
-
 //////////////////////////////////////////////////////////////////////////
 //
 // Copy constructor
 //
 G4UGenericTrap::G4UGenericTrap(const G4UGenericTrap& source)
-  : Base_t(source), fVisSubdivisions(source.fVisSubdivisions),
-    fVertices(source.fVertices)
-{
-}
-
+  : Base_t(source), fVisSubdivisions(source.fVisSubdivisions), fVertices(source.fVertices)
+{}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Assignment operator
 //
-G4UGenericTrap&
-G4UGenericTrap::operator=(const G4UGenericTrap& source)
+G4UGenericTrap& G4UGenericTrap::operator=(const G4UGenericTrap& source)
 {
   if (this == &source) return *this;
-  
-  Base_t::operator=( source );
+
+  Base_t::operator=(source);
   fVertices = source.fVertices;
   fVisSubdivisions = source.fVisSubdivisions;
-  
+
   return *this;
 }
 
@@ -95,7 +92,8 @@ G4int G4UGenericTrap::GetNofVertices() const
 }
 G4TwoVector G4UGenericTrap::GetVertex(G4int index) const
 {
-  return { vecgeom::UnplacedGenTrap::GetVertex(index).x(), vecgeom::UnplacedGenTrap::GetVertex(index).y() };
+  return {vecgeom::UnplacedGenTrap::GetVertex(index).x(),
+          vecgeom::UnplacedGenTrap::GetVertex(index).y()};
 }
 const std::vector<G4TwoVector>& G4UGenericTrap::GetVertices() const
 {
@@ -127,7 +125,7 @@ void G4UGenericTrap::SetZHalfLength(G4double halfZ)
 void G4UGenericTrap::Initialise(const std::vector<G4TwoVector>& v)
 {
   G4double verticesx[8], verticesy[8];
-  for (G4int i=0; i<8; ++i)
+  for (G4int i = 0; i < 8; ++i)
   {
     fVertices.push_back(v[i]);
     verticesx[i] = v[i].x();
@@ -140,25 +138,21 @@ void G4UGenericTrap::Initialise(const std::vector<G4TwoVector>& v)
 //
 // Get bounding box
 
-void G4UGenericTrap::BoundingLimits(G4ThreeVector& pMin,
-                                    G4ThreeVector& pMax) const
+void G4UGenericTrap::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
 {
   U3Vector vmin, vmax;
-  Extent(vmin,vmax);
-  pMin.set(vmin.x(),vmin.y(),vmin.z());
-  pMax.set(vmax.x(),vmax.y(),vmax.z());
+  Extent(vmin, vmax);
+  pMin.set(vmin.x(), vmin.y(), vmin.z());
+  pMax.set(vmax.x(), vmax.y(), vmax.z());
 
   // Check correctness of the bounding box
   //
   if (pMin.x() >= pMax.x() || pMin.y() >= pMax.y() || pMin.z() >= pMax.z())
   {
     std::ostringstream message;
-    message << "Bad bounding box (min >= max) for solid: "
-            << GetName() << " !"
-            << "\npMin = " << pMin
-            << "\npMax = " << pMax;
-    G4Exception("G4UGenericTrap::BoundingLimits()", "GeomMgt0001",
-                JustWarning, message);
+    message << "Bad bounding box (min >= max) for solid: " << GetName() << " !"
+            << "\npMin = " << pMin << "\npMax = " << pMax;
+    G4Exception("G4UGenericTrap::BoundingLimits()", "GeomMgt0001", JustWarning, message);
     StreamInfo(G4cout);
   }
 }
@@ -167,23 +161,21 @@ void G4UGenericTrap::BoundingLimits(G4ThreeVector& pMin,
 //
 // Calculate extent under transform and specified limit
 
-G4bool
-G4UGenericTrap::CalculateExtent(const EAxis pAxis,
-                                const G4VoxelLimits& pVoxelLimit,
-                                const G4AffineTransform& pTransform,
-                                      G4double& pMin, G4double& pMax) const
+G4bool G4UGenericTrap::CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                                       const G4AffineTransform& pTransform, G4double& pMin,
+                                       G4double& pMax) const
 {
   G4ThreeVector bmin, bmax;
   G4bool exist;
 
   // Check bounding box (bbox)
   //
-  BoundingLimits(bmin,bmax);
-  G4BoundingEnvelope bbox(bmin,bmax);
-#ifdef G4BBOX_EXTENT
-  return bbox.CalculateExtent(pAxis,pVoxelLimit,pTransform,pMin,pMax);
-#endif
-  if (bbox.BoundingBoxVsVoxelLimits(pAxis,pVoxelLimit,pTransform,pMin,pMax))
+  BoundingLimits(bmin, bmax);
+  G4BoundingEnvelope bbox(bmin, bmax);
+#  ifdef G4BBOX_EXTENT
+  return bbox.CalculateExtent(pAxis, pVoxelLimit, pTransform, pMin, pMax);
+#  endif
+  if (bbox.BoundingBoxVsVoxelLimits(pAxis, pVoxelLimit, pTransform, pMin, pMax))
   {
     return exist = pMin < pMax;
   }
@@ -197,31 +189,31 @@ G4UGenericTrap::CalculateExtent(const EAxis pAxis,
   //
   G4double dz = GetZHalfLength();
   G4ThreeVectorList baseA(8), baseB(8);
-  for (G4int i=0; i<4; ++i)
+  for (G4int i = 0; i < 4; ++i)
   {
     G4TwoVector va = GetVertex(i);
-    G4TwoVector vb = GetVertex(i+4);
-    baseA[2*i].set(va.x(),va.y(),-dz);
-    baseB[2*i].set(vb.x(),vb.y(), dz);
+    G4TwoVector vb = GetVertex(i + 4);
+    baseA[2 * i].set(va.x(), va.y(), -dz);
+    baseB[2 * i].set(vb.x(), vb.y(), dz);
   }
-  for (G4int i=0; i<4; ++i)
+  for (G4int i = 0; i < 4; ++i)
   {
-    G4int k1=2*i, k2=(2*i+2)%8;
-    G4double ax = (baseA[k2].x()-baseA[k1].x());
-    G4double ay = (baseA[k2].y()-baseA[k1].y());
-    G4double bx = (baseB[k2].x()-baseB[k1].x());
-    G4double by = (baseB[k2].y()-baseB[k1].y());
-    G4double znorm = ax*by - ay*bx;
-    baseA[k1+1] = (znorm < 0.0) ? baseA[k2] : baseA[k1];
-    baseB[k1+1] = (znorm < 0.0) ? baseB[k1] : baseB[k2];
+    G4int k1 = 2 * i, k2 = (2 * i + 2) % 8;
+    G4double ax = (baseA[k2].x() - baseA[k1].x());
+    G4double ay = (baseA[k2].y() - baseA[k1].y());
+    G4double bx = (baseB[k2].x() - baseB[k1].x());
+    G4double by = (baseB[k2].y() - baseB[k1].y());
+    G4double znorm = ax * by - ay * bx;
+    baseA[k1 + 1] = (znorm < 0.0) ? baseA[k2] : baseA[k1];
+    baseB[k1 + 1] = (znorm < 0.0) ? baseB[k1] : baseB[k2];
   }
 
-  std::vector<const G4ThreeVectorList *> polygons(2);
+  std::vector<const G4ThreeVectorList*> polygons(2);
   polygons[0] = &baseA;
   polygons[1] = &baseB;
 
-  G4BoundingEnvelope benv(bmin,bmax,polygons);
-  exist = benv.CalculateExtent(pAxis,pVoxelLimit,pTransform,pMin,pMax);
+  G4BoundingEnvelope benv(bmin, bmax, polygons);
+  exist = benv.CalculateExtent(pAxis, pVoxelLimit, pTransform, pMin, pMax);
   return exist;
 }
 
@@ -250,9 +242,12 @@ G4Polyhedron* G4UGenericTrap::CreatePolyhedron() const
       // Estimation of Number of Subdivisions for smooth visualisation
       //
       G4double maxTwist = 0.;
-      for(G4int i = 0; i < 4; ++i)
+      for (G4int i = 0; i < 4; ++i)
       {
-        if (GetTwistAngle(i) > maxTwist) { maxTwist = GetTwistAngle(i); }
+        if (GetTwistAngle(i) > maxTwist)
+        {
+          maxTwist = GetTwistAngle(i);
+        }
       }
 
       // Computes bounding vectors for the shape
@@ -260,19 +255,28 @@ G4Polyhedron* G4UGenericTrap::CreatePolyhedron() const
       G4double Dx, Dy;
       G4ThreeVector minVec, maxVec;
       BoundingLimits(minVec, maxVec);
-      Dx = 0.5*(maxVec.x() - minVec.y());
-      Dy = 0.5*(maxVec.y() - minVec.y());
-      if (Dy > Dx) { Dx = Dy; }
+      Dx = 0.5 * (maxVec.x() - minVec.y());
+      Dy = 0.5 * (maxVec.y() - minVec.y());
+      if (Dy > Dx)
+      {
+        Dx = Dy;
+      }
 
-      subdivisions = 8*G4int(maxTwist/(Dx*Dx*Dx)*fDz);
-      if (subdivisions < 4)  { subdivisions = 4; }
-      if (subdivisions > 30) { subdivisions = 30; }
+      subdivisions = 8 * G4int(maxTwist / (Dx * Dx * Dx) * fDz);
+      if (subdivisions < 4)
+      {
+        subdivisions = 4;
+      }
+      if (subdivisions > 30)
+      {
+        subdivisions = 30;
+      }
     }
   }
-  G4int sub4 = 4*subdivisions;
-  nVertices = 8 + subdivisions*4;
-  nFacets = 6 + subdivisions*4;
-  G4double cf = 1./(subdivisions + 1);
+  G4int sub4 = 4 * subdivisions;
+  nVertices = 8 + subdivisions * 4;
+  nFacets = 6 + subdivisions * 4;
+  G4double cf = 1. / (subdivisions + 1);
   polyhedron = new G4Polyhedron(nVertices, nFacets);
 
   // Set vertices
@@ -280,37 +284,37 @@ G4Polyhedron* G4UGenericTrap::CreatePolyhedron() const
   G4int icur = 0;
   for (G4int i = 0; i < 4; ++i)
   {
-    G4ThreeVector v(GetVertex(i).x(),GetVertex(i).y(),-fDz);
+    G4ThreeVector v(GetVertex(i).x(), GetVertex(i).y(), -fDz);
     polyhedron->SetVertex(++icur, v);
   }
   for (G4int i = 0; i < subdivisions; ++i)
   {
     for (G4int j = 0; j < 4; ++j)
     {
-      G4TwoVector u = GetVertex(j)+cf*(i+1)*( GetVertex(j+4)-GetVertex(j));
-      G4ThreeVector v(u.x(),u.y(),-fDz+cf*2*fDz*(i+1));
+      G4TwoVector u = GetVertex(j) + cf * (i + 1) * (GetVertex(j + 4) - GetVertex(j));
+      G4ThreeVector v(u.x(), u.y(), -fDz + cf * 2 * fDz * (i + 1));
       polyhedron->SetVertex(++icur, v);
     }
   }
   for (G4int i = 4; i < 8; ++i)
   {
-    G4ThreeVector v(GetVertex(i).x(),GetVertex(i).y(),fDz);
+    G4ThreeVector v(GetVertex(i).x(), GetVertex(i).y(), fDz);
     polyhedron->SetVertex(++icur, v);
   }
 
   // Set facets
   //
   icur = 0;
-  polyhedron->SetFacet(++icur, 1, 4, 3, 2); // Z-plane
+  polyhedron->SetFacet(++icur, 1, 4, 3, 2);  // Z-plane
   for (G4int i = 0; i < subdivisions + 1; ++i)
   {
-    G4int is = i*4;
-    polyhedron->SetFacet(++icur, 5+is, 8+is, 4+is, 1+is);
-    polyhedron->SetFacet(++icur, 8+is, 7+is, 3+is, 4+is);
-    polyhedron->SetFacet(++icur, 7+is, 6+is, 2+is, 3+is);
-    polyhedron->SetFacet(++icur, 6+is, 5+is, 1+is, 2+is);
+    G4int is = i * 4;
+    polyhedron->SetFacet(++icur, 5 + is, 8 + is, 4 + is, 1 + is);
+    polyhedron->SetFacet(++icur, 8 + is, 7 + is, 3 + is, 4 + is);
+    polyhedron->SetFacet(++icur, 7 + is, 6 + is, 2 + is, 3 + is);
+    polyhedron->SetFacet(++icur, 6 + is, 5 + is, 1 + is, 2 + is);
   }
-  polyhedron->SetFacet(++icur, 5+sub4, 6+sub4, 7+sub4, 8+sub4); // Z-plane
+  polyhedron->SetFacet(++icur, 5 + sub4, 6 + sub4, 7 + sub4, 8 + sub4);  // Z-plane
 
   polyhedron->SetReferences();
   polyhedron->InvertFacets();

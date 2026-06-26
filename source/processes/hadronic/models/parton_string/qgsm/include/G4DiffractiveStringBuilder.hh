@@ -23,27 +23,28 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4DiffractiveStringBuilder_h
-#define G4DiffractiveStringBuilder_h 1
+#ifndef G4DIFFRACTIVESTRINGBUILDER_HH
+#define G4DIFFRACTIVESTRINGBUILDER_HH
 
-#include "globals.hh"
-#include "G4KineticTrackVector.hh"
 #include "G4ExcitedStringVector.hh"
+#include "G4KineticTrackVector.hh"
 #include "G4PartonPair.hh"
+#include "globals.hh"
 
-class G4DiffractiveStringBuilder 
+class G4DiffractiveStringBuilder
 {
   public:
+
     G4DiffractiveStringBuilder();
     ~G4DiffractiveStringBuilder();
 
     G4ExcitedString* BuildString(G4PartonPair* aParton);
 
   private:
-    G4DiffractiveStringBuilder(const G4DiffractiveStringBuilder &right);
-    G4bool operator==(const G4DiffractiveStringBuilder &right) const;
-    G4bool operator!=(const G4DiffractiveStringBuilder &right) const;
+
+    G4DiffractiveStringBuilder(const G4DiffractiveStringBuilder& right);
+    G4bool operator==(const G4DiffractiveStringBuilder& right) const;
+    G4bool operator!=(const G4DiffractiveStringBuilder& right) const;
 };
 
 #endif
-

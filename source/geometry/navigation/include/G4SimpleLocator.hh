@@ -23,10 +23,10 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// G4SimpleLocator 
+// G4SimpleLocator
 //
 // Class description:
-// 
+//
 // Implementing the calculation of the intersection point with a boundary when
 // PropagationInField is used. Derived from method LocateIntersectionPoint()
 // from G4PropagatorInField, it is based on a linear method for finding the
@@ -37,32 +37,34 @@
 // Author: Tatiana Nikitina (CERN), 27 October 20008.
 // ---------------------------------------------------------------------------
 #ifndef G4SIMPLELOCATOR_HH
-#define G4SIMPLELOCATOR_HH 1
+#define G4SIMPLELOCATOR_HH
 
 #include "G4VIntersectionLocator.hh"
 
 /**
  * @brief G4SimpleLocator implements the calculation of the intersection point
- * with a boundary when G4PropagationInField is used. It is based on a linear
- * method for finding the intersection point; the difference compared to
+ * with a boundary when G4PropagationInField is used.
+ * @ingroup geometry_navigation
+ *
+ * It is based on a linear method for finding the intersection point; the difference compared to
  * G4MultiLevelLocator is that no 'depth' algorithm is used in case of slow
  * progress for finding the intersection point.
  */
 
 class G4SimpleLocator : public G4VIntersectionLocator
 {
-   public:
- 
+  public:
+
     /**
      * Constructor and default Destructor.
      */
-     G4SimpleLocator(G4Navigator* aNavigator);
-     ~G4SimpleLocator() override;
+    G4SimpleLocator(G4Navigator* aNavigator);
+    ~G4SimpleLocator() override;
 
     /**
      * If such an intersection exists, this function calculates the
      * intersection point of the true path of the particle with the surface
-     * of the current volume (or of one of its daughters). 
+     * of the current volume (or of one of its daughters).
      *  @note Should use lateral displacement as measure of convergence.
      *  @param[in] curveStartPointTangent Start point tangent track.
      *  @param[in] curveEndPointTangent End point tangent track.
@@ -71,16 +73,15 @@ class G4SimpleLocator : public G4VIntersectionLocator
      *  @param[out] recalculatedEndPoint Flagging if end point was recomputed.
      *  @param[in,out] fPreviousSafety Previous safety distance.
      *  @param[in,out] fPreviousSftOrigin Previous safety point origin.
-     *  @returns Whether intersection exists or not. 
+     *  @returns Whether intersection exists or not.
      */
-     G4bool EstimateIntersectionPoint( 
-         const  G4FieldTrack&       curveStartPointTangent,           // A
-         const  G4FieldTrack&       curveEndPointTangent,             // B
-         const  G4ThreeVector&      trialPoint,                       // E
-                G4FieldTrack&       intersectPointTangent,            // Output
-	        G4bool&             recalculatedEndPoint,             // Out
-                G4double&           fPreviousSafety,                  // In/Out
-                G4ThreeVector&      fPreviousSftOrigin) override;     // In/Out
+    G4bool EstimateIntersectionPoint(const G4FieldTrack& curveStartPointTangent,  // A
+                                     const G4FieldTrack& curveEndPointTangent,  // B
+                                     const G4ThreeVector& trialPoint,  // E
+                                     G4FieldTrack& intersectPointTangent,  // Output
+                                     G4bool& recalculatedEndPoint,  // Out
+                                     G4double& fPreviousSafety,  // In/Out
+                                     G4ThreeVector& fPreviousSftOrigin) override;  // In/Out
 };
 
 #endif

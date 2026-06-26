@@ -58,7 +58,8 @@ void G4ParticleHPFissionFS::Init(G4double A, G4double Z, G4int M, const G4String
   theLC.Init(A, Z, M, dirName, aFSType, projectile);
 
   theFF.Init(A, Z, M, dirName, aFSType, projectile);
-  if (G4ParticleHPManager::GetInstance()->GetProduceFissionFragments() && theFF.HasFSData()) {
+  if (G4ParticleHPManager::GetInstance()->GetProduceFissionFragments() && theFF.HasFSData())
+  {
     G4cout << "Fission fragment production is now activated in HP package for "
            << "Z = " << (G4int)Z << ", A = " << (G4int)A << G4endl;
     G4cout << "As currently modeled this option precludes production of delayed neutrons from "
@@ -127,11 +128,14 @@ G4HadFinalState* G4ParticleHPFissionFS::ApplyYourself(const G4HadProjectile& the
   G4int it;
   unsigned int i = 0;
   G4double random = G4UniformRand();
-  if (xSec[3] == 0) {
+  if (xSec[3] == 0)
+  {
     it = -1;
   }
-  else {
-    for (i = 0; i < 4; i++) {
+  else
+  {
+    for (i = 0; i < 4; i++)
+    {
       it = i;
       if (random < xSec[i] / xSec[3]) break;
     }
@@ -178,16 +182,19 @@ G4HadFinalState* G4ParticleHPFissionFS::ApplyYourself(const G4HadProjectile& the
 
   G4double* theDecayConstants;
 
-  if (theNeutrons != nullptr) {
+  if (theNeutrons != nullptr)
+  {
     theDecayConstants = new G4double[delayed];
-    for (i = 0; i < theNeutrons->size(); ++i) {
+    for (i = 0; i < theNeutrons->size(); ++i)
+    {
       theResult.Get()->AddSecondary(theNeutrons->operator[](i), secID);
     }
     delete theNeutrons;
 
     G4DynamicParticleVector* theDelayed = nullptr;
     theDelayed = theFS.ApplyYourself(0, delayed, theDecayConstants);
-    for (i = 0; i < theDelayed->size(); i++) {
+    for (i = 0; i < theDelayed->size(); i++)
+    {
       G4double time = -G4Log(G4UniformRand()) / theDecayConstants[i];
       time += theTrack.GetGlobalTime();
       theResult.Get()->AddSecondary(theDelayed->operator[](i), secID);
@@ -195,23 +202,28 @@ G4HadFinalState* G4ParticleHPFissionFS::ApplyYourself(const G4HadProjectile& the
     }
     delete theDelayed;
   }
-  else {
+  else
+  {
     theFS.SampleNeutronMult(all, Prompt, delayed, eKinetic, 0);
     theDecayConstants = new G4double[delayed];
     if (Prompt == 0 && delayed == 0) Prompt = all;
     theNeutrons = theFS.ApplyYourself(Prompt, delayed, theDecayConstants);
     G4int i0;
-    for (i0 = 0; i0 < Prompt; ++i0) {
+    for (i0 = 0; i0 < Prompt; ++i0)
+    {
       theResult.Get()->AddSecondary(theNeutrons->operator[](i0), secID);
     }
 
-    for (i0 = Prompt; i0 < Prompt + delayed; ++i0) {
+    for (i0 = Prompt; i0 < Prompt + delayed; ++i0)
+    {
       // Protect against the very rare case of division by zero
       G4double time = 0.0;
-      if (theDecayConstants[i0 - Prompt] > 1.0e-30) {
+      if (theDecayConstants[i0 - Prompt] > 1.0e-30)
+      {
         time = -G4Log(G4UniformRand()) / theDecayConstants[i0 - Prompt];
       }
-      else {
+      else
+      {
         G4ExceptionDescription ed;
         ed << " theDecayConstants[i0-Prompt]=" << theDecayConstants[i0 - Prompt]
            << "   -> cannot sample the time : set it to 0.0 !" << G4endl;
@@ -227,9 +239,11 @@ G4HadFinalState* G4ParticleHPFissionFS::ApplyYourself(const G4HadProjectile& the
   delete[] theDecayConstants;
 
   std::size_t nPhotons = 0;
-  if (thePhotons != nullptr) {
+  if (thePhotons != nullptr)
+  {
     nPhotons = thePhotons->size();
-    for (i = 0; i < nPhotons; ++i) {
+    for (i = 0; i < nPhotons; ++i)
+    {
       theResult.Get()->AddSecondary(thePhotons->operator[](i), secID);
     }
     delete thePhotons;
@@ -244,13 +258,17 @@ G4HadFinalState* G4ParticleHPFissionFS::ApplyYourself(const G4HadProjectile& the
   // clean up the primary neutron
   theResult.Get()->SetStatusChange(stopAndKill);
 
-  if (produceFissionFragments) {
+  if (produceFissionFragments)
+  {
     G4int fragA_Z = 0;
     G4int fragA_A = 0;
     G4int fragA_M = 0;
     // System is traget rest!
     theFF.GetAFissionFragment(eKinetic, fragA_Z, fragA_A, fragA_M);
-    if (0 == fragA_A) { return theResult.Get(); }
+    if (0 == fragA_A)
+    {
+      return theResult.Get();
+    }
     G4int fragB_Z = (G4int)theBaseZ - fragA_Z;
     G4int fragB_A = (G4int)theBaseA - fragA_A - Prompt;
 

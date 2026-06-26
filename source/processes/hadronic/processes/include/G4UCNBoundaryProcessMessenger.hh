@@ -42,11 +42,11 @@
 ////////////////////////////////////////////////////////////////////////
 
 #ifndef G4UCNBOUNDARYPROCESSMESSENGER_HH
-#define G4UCNBOUNDARYPROCESSMESSENGER_HH 1
+#define G4UCNBOUNDARYPROCESSMESSENGER_HH
 
-#include "globals.hh"
 #include "G4UImessenger.hh"
 #include "G4ios.hh"
+#include "globals.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -63,16 +63,16 @@ class G4UCNBoundaryProcessMessenger : public G4UImessenger
 {
   public:
 
-    G4UCNBoundaryProcessMessenger(G4UCNBoundaryProcess* );
+    G4UCNBoundaryProcessMessenger(G4UCNBoundaryProcess*);
     virtual ~G4UCNBoundaryProcessMessenger();
 
-    void SetNewValue(G4UIcommand* ,G4String );
+    void SetNewValue(G4UIcommand*, G4String);
 
   private:
 
     G4UCNBoundaryProcess* theUCNBoundaryProcess;
 
-    G4UIdirectory*     boundaryDir;
+    G4UIdirectory* boundaryDir;
 
     G4UIcmdWithAnInteger* VerboseCmd;
     G4UIcmdWithABool* MicroRoughnessCmd;

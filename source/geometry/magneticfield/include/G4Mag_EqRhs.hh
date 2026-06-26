@@ -37,15 +37,16 @@
 #ifndef G4MAG_EQRHS_HH
 #define G4MAG_EQRHS_HH
 
-#include "G4Types.hh"
 #include "G4ChargeState.hh"
 #include "G4EquationOfMotion.hh"
+#include "G4Types.hh"
 
 class G4MagneticField;
 
 /**
  * @brief G4Mag_EqRhs is the "standard" equation of motion of a particle
  * in a pure magnetic field.
+ * @ingroup geometry_magneticfield
  */
 
 class G4Mag_EqRhs : public G4EquationOfMotion
@@ -69,27 +70,26 @@ class G4Mag_EqRhs : public G4EquationOfMotion
      *  @param[in] B Field value.
      *  @param[out] dydx Derivatives array.
      */
-    void EvaluateRhsGivenB( const G4double y[],
-                            const G4double B[3],
-                                  G4double dydx[] ) const override = 0;
+    void EvaluateRhsGivenB(const G4double y[], const G4double B[3],
+                           G4double dydx[]) const override = 0;
 
     /**
      * Returns and sets the charge momentum mass value.
      */
     inline G4double FCof() const { return fCof_val; }
-    void SetChargeMomentumMass( G4ChargeState particleCharge,
-                                G4double MomentumXc,
-                                G4double mass ) override;
+    void SetChargeMomentumMass(G4ChargeState particleCharge, G4double MomentumXc,
+                               G4double mass) override;
+
   private:
 
     /** Charge momentum mass. */
     G4double fCof_val = 0.0;
 
     /** Coefficient in the Lorentz motion equation (Lorentz force), if the
-        magnetic field B is in Tesla, the particle charge in units of the 
+        magnetic field B is in Tesla, the particle charge in units of the
         elementary charge, the momentum P in MeV/c, and the space coordinates
         and path along the trajectory in mm. */
-    static const G4double fUnitConstant;     // Set to 0.299792458
+    static const G4double fUnitConstant;  // Set to 0.299792458
 };
 
 #endif

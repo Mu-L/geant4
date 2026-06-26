@@ -25,25 +25,28 @@
 //
 //
 
-#include "globals.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4ConcreteNStarNToNN.hh"
-#include "G4NNstarBuilder.hh"
 
-G4ThreadLocal G4XNNstarTable *G4ConcreteNStarNToNN::theSigmaTable_G4MT_TLS_ = 0;
+#include "G4NNstarBuilder.hh"
+#include "G4ParticleDefinition.hh"
+#include "globals.hh"
+
+G4ThreadLocal G4XNNstarTable* G4ConcreteNStarNToNN::theSigmaTable_G4MT_TLS_ = 0;
 
 G4ConcreteNStarNToNN::G4ConcreteNStarNToNN(const G4ParticleDefinition* aPrimary,
-					   const G4ParticleDefinition* bPrimary,
-					   const G4ParticleDefinition* aSecondary,
-					   const G4ParticleDefinition* bSecondary)  :
-		G4ConcreteNNTwoBodyResonance(NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+                                           const G4ParticleDefinition* bPrimary,
+                                           const G4ParticleDefinition* aSecondary,
+                                           const G4ParticleDefinition* bSecondary)
+  : G4ConcreteNNTwoBodyResonance(NULL, NULL, NULL, NULL, NULL, NULL, NULL)
 {
-   if (!theSigmaTable_G4MT_TLS_) theSigmaTable_G4MT_TLS_ = new G4XNNstarTable;
-   G4XNNstarTable &theSigmaTable = *theSigmaTable_G4MT_TLS_;
-   establish_G4MT_TLS_G4ConcreteNNTwoBodyResonance(aPrimary,bPrimary,aSecondary,bSecondary,
-		                                           G4NNstarBuilder(aPrimary->GetParticleName(),theSigmaTable));
+  if (!theSigmaTable_G4MT_TLS_) theSigmaTable_G4MT_TLS_ = new G4XNNstarTable;
+  G4XNNstarTable& theSigmaTable = *theSigmaTable_G4MT_TLS_;
+  establish_G4MT_TLS_G4ConcreteNNTwoBodyResonance(
+    aPrimary, bPrimary, aSecondary, bSecondary,
+    G4NNstarBuilder(aPrimary->GetParticleName(), theSigmaTable));
 }
 
 G4ConcreteNStarNToNN::~G4ConcreteNStarNToNN()
-{ if (theSigmaTable_G4MT_TLS_) delete theSigmaTable_G4MT_TLS_;
+{
+  if (theSigmaTable_G4MT_TLS_) delete theSigmaTable_G4MT_TLS_;
 }

@@ -61,5 +61,3 @@ using G4P2Iterator = std::vector<tools::histo::p2d*>::iterator;
 using G4P2ConstIterator = std::vector<tools::histo::p2d*>::const_iterator;
 
 #endif
-
-

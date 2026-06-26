@@ -28,10 +28,11 @@
 // Author: Zoltan Torzsok, November 2007
 // --------------------------------------------------------------------
 
-#include <sstream>
-
 #include "G4GDMLEvaluator.hh"
+
 #include "G4SystemOfUnits.hh"
+
+#include <sstream>
 
 // --------------------------------------------------------------------
 G4GDMLEvaluator::G4GDMLEvaluator()
@@ -54,11 +55,11 @@ void G4GDMLEvaluator::Clear()
 // --------------------------------------------------------------------
 void G4GDMLEvaluator::DefineConstant(const G4String& name, G4double value)
 {
-  if(eval.findVariable(name))
+  if (eval.findVariable(name))
   {
     G4String error_msg = "Redefinition of constant or variable: " + name;
-    G4Exception("G4GDMLEvaluator::DefineConstant()", "InvalidExpression",
-                FatalException, error_msg);
+    G4Exception("G4GDMLEvaluator::DefineConstant()", "InvalidExpression", FatalException,
+                error_msg);
   }
   eval.setVariable(name.c_str(), value);
 }
@@ -66,11 +67,11 @@ void G4GDMLEvaluator::DefineConstant(const G4String& name, G4double value)
 // --------------------------------------------------------------------
 void G4GDMLEvaluator::DefineVariable(const G4String& name, G4double value)
 {
-  if(eval.findVariable(name))
+  if (eval.findVariable(name))
   {
     G4String error_msg = "Redefinition of constant or variable: " + name;
-    G4Exception("G4GDMLEvaluator::DefineVariable()", "InvalidExpression",
-                FatalException, error_msg);
+    G4Exception("G4GDMLEvaluator::DefineVariable()", "InvalidExpression", FatalException,
+                error_msg);
   }
   eval.setVariable(name.c_str(), value);
   variableList.push_back(name);
@@ -82,11 +83,10 @@ void G4GDMLEvaluator::DefineMatrix(const G4String& name, G4int coldim,
 {
   const G4int size = (G4int)valueList.size();
 
-  if(size == 0)
+  if (size == 0)
   {
     G4String error_msg = "Matrix '" + name + "' is empty!";
-    G4Exception("G4GDMLEvaluator::DefineMatrix()", "InvalidSize",
-                FatalException, error_msg);
+    G4Exception("G4GDMLEvaluator::DefineMatrix()", "InvalidSize", FatalException, error_msg);
   }
   /*
   if (size == 1)
@@ -99,16 +99,15 @@ void G4GDMLEvaluator::DefineMatrix(const G4String& name, G4int coldim,
   }
   */
 
-  if(size % coldim != 0)
+  if (size % coldim != 0)
   {
     G4String error_msg = "Matrix '" + name + "' is not filled correctly!";
-    G4Exception("G4GDMLEvaluator::DefineMatrix()", "InvalidSize",
-                FatalException, error_msg);
+    G4Exception("G4GDMLEvaluator::DefineMatrix()", "InvalidSize", FatalException, error_msg);
   }
 
-  if((size == coldim) || (coldim == 1))  // Row- or column matrix
+  if ((size == coldim) || (coldim == 1))  // Row- or column matrix
   {
-    for(G4int i = 0; i < size; ++i)
+    for (G4int i = 0; i < size; ++i)
     {
       std::stringstream MatrixElementNameStream;
       MatrixElementNameStream << name << "_" << i;
@@ -119,14 +118,13 @@ void G4GDMLEvaluator::DefineMatrix(const G4String& name, G4int coldim,
   {
     const G4int rowdim = size / coldim;
 
-    for(G4int i = 0; i < rowdim; ++i)
+    for (G4int i = 0; i < rowdim; ++i)
     {
-      for(G4int j = 0; j < coldim; ++j)
+      for (G4int j = 0; j < coldim; ++j)
       {
         std::stringstream MatrixElementNameStream;
         MatrixElementNameStream << name << "_" << i << "_" << j;
-        DefineConstant(MatrixElementNameStream.str(),
-                       valueList[coldim * i + j]);
+        DefineConstant(MatrixElementNameStream.str(), valueList[coldim * i + j]);
       }
     }
   }
@@ -135,11 +133,10 @@ void G4GDMLEvaluator::DefineMatrix(const G4String& name, G4int coldim,
 // --------------------------------------------------------------------
 void G4GDMLEvaluator::SetVariable(const G4String& name, G4double value)
 {
-  if(!IsVariable(name))
+  if (!IsVariable(name))
   {
     G4String error_msg = "Variable '" + name + "' is not defined!";
-    G4Exception("G4GDMLEvaluator::SetVariable()", "InvalidSetup",
-                FatalException, error_msg);
+    G4Exception("G4GDMLEvaluator::SetVariable()", "InvalidSetup", FatalException, error_msg);
   }
   eval.setVariable(name.c_str(), value);
 }
@@ -149,9 +146,9 @@ G4bool G4GDMLEvaluator::IsVariable(const G4String& name) const
 {
   const std::size_t variableCount = variableList.size();
 
-  for(std::size_t i = 0; i < variableCount; ++i)
+  for (std::size_t i = 0; i < variableCount; ++i)
   {
-    if(variableList[i] == name)
+    if (variableList[i] == name)
     {
       return true;
     }
@@ -163,27 +160,25 @@ G4bool G4GDMLEvaluator::IsVariable(const G4String& name) const
 // --------------------------------------------------------------------
 G4String G4GDMLEvaluator::SolveBrackets(const G4String& in)
 {
-  std::string::size_type full  = in.size();
-  std::string::size_type open  = in.find("[", 0);
+  std::string::size_type full = in.size();
+  std::string::size_type open = in.find("[", 0);
   std::string::size_type close = in.find("]", 0);
 
-  if(open == close)
+  if (open == close)
   {
     return in;
   }
 
-  if((open > close) || (open == std::string::npos) ||
-     (close == std::string::npos))
+  if ((open > close) || (open == std::string::npos) || (close == std::string::npos))
   {
     G4String error_msg = "Bracket mismatch: " + in;
-    G4Exception("G4GDMLEvaluator::SolveBrackets()", "InvalidExpression",
-                FatalException, error_msg);
+    G4Exception("G4GDMLEvaluator::SolveBrackets()", "InvalidExpression", FatalException, error_msg);
     return in;
   }
 
   std::string::size_type begin = open;
-  std::string::size_type end   = 0;
-  std::string::size_type end1  = 0;
+  std::string::size_type end = 0;
+  std::string::size_type end1 = 0;
   std::string out;
   out.append(in, 0, open);
 
@@ -191,36 +186,35 @@ G4String G4GDMLEvaluator::SolveBrackets(const G4String& in)
   {
     do  // SolveBrackets for one matrix element
     {
-      end  = in.find(",", begin + 1);
+      end = in.find(",", begin + 1);
       end1 = in.find("]", begin + 1);
-      if(end > end1)
+      if (end > end1)
       {
         end = end1;
       }
-      if(end == std::string::npos)
+      if (end == std::string::npos)
       {
         end = close;
       }
 
       std::stringstream indexStream;
-      indexStream << "_"
-                  << EvaluateInteger(in.substr(begin + 1, end - begin - 1)) - 1;
+      indexStream << "_" << EvaluateInteger(in.substr(begin + 1, end - begin - 1)) - 1;
 
       out.append(indexStream.str());
 
       begin = end;
 
-    } while(end < close);
+    } while (end < close);
 
-    if(full == close)
+    if (full == close)
     {
       return out;
     }
 
-    open  = in.find("[", begin);
+    open = in.find("[", begin);
     close = in.find("]", begin + 1);
 
-    if(open == close)
+    if (open == close)
     {
       out.append(in.substr(end + 1, full - end - 1));
       return out;
@@ -229,7 +223,7 @@ G4String G4GDMLEvaluator::SolveBrackets(const G4String& in)
 
     begin = open;
 
-  } while(close < full);
+  } while (close < full);
 
   return out;
 }
@@ -241,16 +235,15 @@ G4double G4GDMLEvaluator::Evaluate(const G4String& in)
 
   G4double value = 0.0;
 
-  if(!expression.empty())
+  if (!expression.empty())
   {
     value = eval.evaluate(expression.c_str());
 
-    if(eval.status() != G4Evaluator::OK)
+    if (eval.status() != G4Evaluator::OK)
     {
       eval.print_error();
       G4String error_msg = "Error in expression: " + expression;
-      G4Exception("G4GDMLEvaluator::Evaluate()", "InvalidExpression",
-                  FatalException, error_msg);
+      G4Exception("G4GDMLEvaluator::Evaluate()", "InvalidExpression", FatalException, error_msg);
     }
   }
   return value;
@@ -266,15 +259,14 @@ G4int G4GDMLEvaluator::EvaluateInteger(const G4String& expression)
 
   G4double value = Evaluate(expression);
 
-  G4int whole   = (G4int) value;
-  G4double frac = value - (G4double) whole;
+  G4int whole = (G4int)value;
+  G4double frac = value - (G4double)whole;
 
-  if(frac != 0.0)
+  if (frac != 0.0)
   {
-    G4String error_msg =
-      "Expression '" + expression + "' is expected to have an integer value!";
-    G4Exception("G4GDMLEvaluator::EvaluateInteger()", "InvalidExpression",
-                FatalException, error_msg);
+    G4String error_msg = "Expression '" + expression + "' is expected to have an integer value!";
+    G4Exception("G4GDMLEvaluator::EvaluateInteger()", "InvalidExpression", FatalException,
+                error_msg);
   }
   return whole;
 }
@@ -282,18 +274,15 @@ G4int G4GDMLEvaluator::EvaluateInteger(const G4String& expression)
 // --------------------------------------------------------------------
 G4double G4GDMLEvaluator::GetConstant(const G4String& name)
 {
-  if(IsVariable(name))
+  if (IsVariable(name))
   {
-    G4String error_msg =
-      "Constant '" + name + "' is not defined! It is a variable!";
-    G4Exception("G4GDMLEvaluator::GetConstant()", "InvalidSetup",
-                FatalException, error_msg);
+    G4String error_msg = "Constant '" + name + "' is not defined! It is a variable!";
+    G4Exception("G4GDMLEvaluator::GetConstant()", "InvalidSetup", FatalException, error_msg);
   }
-  if(!eval.findVariable(name))
+  if (!eval.findVariable(name))
   {
     G4String error_msg = "Constant '" + name + "' is not defined!";
-    G4Exception("G4GDMLEvaluator::GetConstant()", "InvalidSetup",
-                FatalException, error_msg);
+    G4Exception("G4GDMLEvaluator::GetConstant()", "InvalidSetup", FatalException, error_msg);
   }
   return Evaluate(name);
 }
@@ -301,11 +290,10 @@ G4double G4GDMLEvaluator::GetConstant(const G4String& name)
 // --------------------------------------------------------------------
 G4double G4GDMLEvaluator::GetVariable(const G4String& name)
 {
-  if(!IsVariable(name))
+  if (!IsVariable(name))
   {
     G4String error_msg = "Variable '" + name + "' is not a defined!";
-    G4Exception("G4GDMLEvaluator::GetVariable()", "InvalidSetup",
-                FatalException, error_msg);
+    G4Exception("G4GDMLEvaluator::GetVariable()", "InvalidSetup", FatalException, error_msg);
   }
   return Evaluate(name);
 }

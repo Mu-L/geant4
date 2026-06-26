@@ -25,91 +25,84 @@
 //
 //
 
-#ifndef G4DNABornExcitationModel2_h
-#define G4DNABornExcitationModel2_h 1
+#ifndef G4DNABORNEXCITATIONMODEL2_HH
+#define G4DNABORNEXCITATIONMODEL2_HH
 
-#include "G4VEmModel.hh"
 #include "G4ParticleChangeForGamma.hh"
 #include "G4ProductionCutsTable.hh"
+#include "G4VEmModel.hh"
 
-//#include "G4DNACrossSectionDataSet.hh"
-#include "G4LogLogInterpolation.hh"
-#include "G4Electron.hh"
-#include "G4Proton.hh"
+// #include "G4DNACrossSectionDataSet.hh"
 #include "G4DNAWaterExcitationStructure.hh"
+#include "G4Electron.hh"
+#include "G4LogLogInterpolation.hh"
 #include "G4NistManager.hh"
+#include "G4Proton.hh"
 
 class G4PhysicsVector;
 
-class G4DNABornExcitationModel2: public G4VEmModel
+class G4DNABornExcitationModel2 : public G4VEmModel
 {
-public:
-  G4DNABornExcitationModel2(const G4ParticleDefinition* p = nullptr,
-                           const G4String& nam = "DNABornExcitationModel");
+  public:
 
-  ~G4DNABornExcitationModel2() override;
+    G4DNABornExcitationModel2(const G4ParticleDefinition* p = nullptr,
+                              const G4String& nam = "DNABornExcitationModel");
 
-  G4DNABornExcitationModel2 & operator=(const  G4DNABornExcitationModel2 &right) = delete;
-  G4DNABornExcitationModel2(const  G4DNABornExcitationModel2&) = delete;
+    ~G4DNABornExcitationModel2() override;
 
-  void Initialise(const G4ParticleDefinition*,
-                          const G4DataVector& = *(new G4DataVector())) override;
+    G4DNABornExcitationModel2& operator=(const G4DNABornExcitationModel2& right) = delete;
+    G4DNABornExcitationModel2(const G4DNABornExcitationModel2&) = delete;
 
-  G4double CrossSectionPerVolume(const G4Material* material,
-                                         const G4ParticleDefinition* p,
-                                         G4double ekin,
-                                         G4double emin,
-                                         G4double emax) override;
+    void Initialise(const G4ParticleDefinition*,
+                    const G4DataVector& = *(new G4DataVector())) override;
 
-  G4double GetPartialCrossSection(const G4Material*,
-                                          G4int level,
-                                          const G4ParticleDefinition*,
-                                          G4double kineticEnergy) override;
+    G4double CrossSectionPerVolume(const G4Material* material, const G4ParticleDefinition* p,
+                                   G4double ekin, G4double emin, G4double emax) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-                                 const G4MaterialCutsCouple*,
-                                 const G4DynamicParticle*,
-                                 G4double tmin,
-                                 G4double maxEnergy) override;
+    G4double GetPartialCrossSection(const G4Material*, G4int level, const G4ParticleDefinition*,
+                                    G4double kineticEnergy) override;
 
-  inline void SelectStationary(G4bool input); 
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-protected:
+    inline void SelectStationary(G4bool input);
 
-  G4ParticleChangeForGamma* fParticleChangeForGamma;
+  protected:
 
-private:
+    G4ParticleChangeForGamma* fParticleChangeForGamma;
 
-  G4bool statCode;
+  private:
 
-  // Water density table
-  const std::vector<G4double>* fpMolWaterDensity;
+    G4bool statCode;
 
-  G4bool isInitialised{false};
-  G4int verboseLevel;
-  const G4ParticleDefinition* fParticleDefinition;
+    // Water density table
+    const std::vector<G4double>* fpMolWaterDensity;
 
-  G4double fLowEnergy;
-  G4double fHighEnergy;
+    G4bool isInitialised{false};
+    G4int verboseLevel;
+    const G4ParticleDefinition* fParticleDefinition;
 
-  G4PhysicsTable* fTableData{nullptr};
-  G4PhysicsVector* fTotalXS;
-  size_t fLastBinCallForFinalXS;
+    G4double fLowEnergy;
+    G4double fHighEnergy;
 
-  // Partial cross section
-  G4int RandomSelect(G4double energy);
-  
-  G4DNAWaterExcitationStructure waterStructure;
-   
-  //
+    G4PhysicsTable* fTableData{nullptr};
+    G4PhysicsVector* fTotalXS;
+    size_t fLastBinCallForFinalXS;
+
+    // Partial cross section
+    G4int RandomSelect(G4double energy);
+
+    G4DNAWaterExcitationStructure waterStructure;
+
+    //
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline void G4DNABornExcitationModel2::SelectStationary (G4bool input)
-{ 
-    statCode = input; 
-}		 
+inline void G4DNABornExcitationModel2::SelectStationary(G4bool input)
+{
+  statCode = input;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 

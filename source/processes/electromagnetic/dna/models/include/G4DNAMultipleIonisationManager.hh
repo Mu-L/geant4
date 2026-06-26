@@ -29,42 +29,45 @@
 //  Author: Shogo OKADA @KEK-CRC (shogo.okada@kek.jp)
 //
 
-#ifndef G4DNA_MULTIPLE_IONISATION_MANAGER_HH_
-#define G4DNA_MULTIPLE_IONISATION_MANAGER_HH_
+#ifndef G4DNA_MULTIPLE_IONISATION_MANAGER_HH
+#define G4DNA_MULTIPLE_IONISATION_MANAGER_HH
 
 #include "globals.hh"
+
 #include <vector>
 
 class G4Track;
 
-enum MultipleIonisedModification {
-  eDoubleIonisedMolecule    = 3,
-  eTripleIonisedMolecule    = 4,
+enum MultipleIonisedModification
+{
+  eDoubleIonisedMolecule = 3,
+  eTripleIonisedMolecule = 4,
   eQuadrupleIonisedMolecule = 5
 };
 
-class G4DNAMultipleIonisationManager {
-public:
-  G4DNAMultipleIonisationManager() = default;
+class G4DNAMultipleIonisationManager
+{
+  public:
 
-  ~G4DNAMultipleIonisationManager() = default;
+    G4DNAMultipleIonisationManager() = default;
 
-  void CreateMultipleIonisedWaterMolecule(
-    MultipleIonisedModification mod, G4int* shell_level,
-    const G4Track* incoming_track);
+    ~G4DNAMultipleIonisationManager() = default;
 
-  G4bool CheckShellEnergy(
-    MultipleIonisedModification mod, G4double* shell_energy);
+    static void CreateMultipleIonisedWaterMolecule(MultipleIonisedModification mod,
+                                                   G4int* shell_level,
+                                                   const G4Track* incoming_track);
 
-  void LoadAlphaParam(const G4String& filepath, G4double Z, G4double A);
+    static G4bool CheckShellEnergy(MultipleIonisedModification mod, const G4double* shell_energy);
 
-  G4double GetAlphaParam(G4double energy);
+    void LoadAlphaParam(const G4String& filepath, G4double Z, G4double A);
 
-private:
-  G4int num_node_{0};
-  std::vector<G4double> Eion_;
-  std::vector<G4double> alpha_;
+    G4double GetAlphaParam(G4double energy) const;
 
+  private:
+
+    G4int num_node_{0};
+    std::vector<G4double> Eion_;
+    std::vector<G4double> alpha_;
 };
 
-#endif // G4DNA_MULTIPLE_IONISATION_MANAGER_HH_
+#endif  // G4DNA_MULTIPLE_IONISATION_MANAGER_HH_

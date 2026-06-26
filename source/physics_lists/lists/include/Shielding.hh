@@ -26,7 +26,7 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   
+// ClassName:
 //
 // Author: 2010  Tatsumi Koi, Gunter Folger
 //   created from FTFP_BERT
@@ -37,25 +37,23 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef Shielding_h
-#define Shielding_h 1
+#ifndef SHIELDING_HH
+#define SHIELDING_HH
 
-#include "globals.hh"
 #include "G4VModularPhysicsList.hh"
+#include "globals.hh"
 
 class Shielding : public G4VModularPhysicsList
 {
-public:
-  explicit Shielding(G4int verb = 1 , const G4String& n_model = "HP", 
-                     const G4String& HadrPhysVariant = "", G4bool useLightIonQMD = false);
-  virtual ~Shielding()=default;  
+  public:
 
-  //delete copy constructor and assignment operator
-  Shielding(const Shielding &)=delete;
-  Shielding & operator=(const Shielding &right)=delete;
+    explicit Shielding(G4int verb = 1, const G4String& n_model = "HP",
+                       const G4String& HadrPhysVariant = "", G4bool useLightIonQMD = false);
+    virtual ~Shielding() = default;
+
+    // delete copy constructor and assignment operator
+    Shielding(const Shielding&) = delete;
+    Shielding& operator=(const Shielding& right) = delete;
 };
 
 #endif
-
-
-

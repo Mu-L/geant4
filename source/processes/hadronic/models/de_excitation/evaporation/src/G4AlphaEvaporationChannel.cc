@@ -30,10 +30,6 @@
 
 #include "G4AlphaEvaporationChannel.hh"
 
-G4AlphaEvaporationChannel::G4AlphaEvaporationChannel() 
-  : G4EvaporationChannel(4,2,&pr) 
-{}
+G4AlphaEvaporationChannel::G4AlphaEvaporationChannel() : G4EvaporationChannel(4, 2, &pr) {}
 
-G4AlphaEvaporationChannel::~G4AlphaEvaporationChannel() 
-{}
-
+G4AlphaEvaporationChannel::~G4AlphaEvaporationChannel() {}

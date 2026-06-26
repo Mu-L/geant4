@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 // GEANT4 tag $ Name:  $
-// 
+//
 // class G4ITSafetyHelper Implementation
 //
 // Original author: John Apostolakis, 2006
@@ -32,15 +32,16 @@
 // --------------------------------------------------------------------
 
 #include "G4ITSafetyHelper.hh"
+
+#include "G4ITNavigator.hh"
 #include "G4ITPathFinder.hh"
 #include "G4ITTransportationManager.hh"
-#include "G4ITNavigator.hh"
 #include "G4PathFinder.hh"
 #include "globals.hh"
 
 G4ITSafetyHelper::G4ITSafetyHelper()
 {
-  fpPathFinder = nullptr; //  Cannot initialise this yet - a loop results
+  fpPathFinder = nullptr;  //  Cannot initialise this yet - a loop results
 
   // Initialization of the Navigator pointer is postponed, and must
   // be undertaken by another class calling InitialiseHelper()
@@ -53,20 +54,18 @@ void G4ITSafetyHelper::InitialiseNavigator()
 {
   fpPathFinder = G4PathFinder::GetInstance();
 
-  G4ITTransportationManager* pTransportMgr =
-      G4ITTransportationManager::GetTransportationManager();
+  G4ITTransportationManager* pTransportMgr = G4ITTransportationManager::GetTransportationManager();
 
   fpMassNavigator = pTransportMgr->GetNavigatorForTracking();
 
-  if(fpMassNavigator == nullptr) abort();
+  if (fpMassNavigator == nullptr) abort();
 
   // Check
   //
   G4VPhysicalVolume* worldPV = fpMassNavigator->GetWorldVolume();
   if (worldPV == nullptr)
   {
-    G4Exception("G4ITSafetyHelper::InitialiseNavigator",
-                "InvalidNavigatorWorld", FatalException,
+    G4Exception("G4ITSafetyHelper::InitialiseNavigator", "InvalidNavigatorWorld", FatalException,
                 "Found that existing tracking Navigator has NULL world");
   }
 
@@ -83,18 +82,15 @@ void G4ITSafetyHelper::InitialiseHelper()
   fFirstCall = false;
 }
 
-G4ITSafetyHelper::~G4ITSafetyHelper()
-= default;
+G4ITSafetyHelper::~G4ITSafetyHelper() = default;
 
-G4double G4ITSafetyHelper::CheckNextStep(const G4ThreeVector &position,
-                                         const G4ThreeVector &direction,
-                                         const G4double currentMaxStep,
-                                         G4double& newSafety)
+G4double G4ITSafetyHelper::CheckNextStep(const G4ThreeVector& position,
+                                         const G4ThreeVector& direction,
+                                         const G4double currentMaxStep, G4double& newSafety)
 {
   // Distance in the Mass geometry
   //
-  G4double linstep = fpMassNavigator->CheckNextStep(position, direction,
-                                                    currentMaxStep, newSafety);
+  G4double linstep = fpMassNavigator->CheckNextStep(position, direction, currentMaxStep, newSafety);
   fpTrackState->fLastSafetyPosition = position;
   fpTrackState->fLastSafety = newSafety;
 
@@ -104,8 +100,7 @@ G4double G4ITSafetyHelper::CheckNextStep(const G4ThreeVector &position,
   return linstep;
 }
 
-G4double G4ITSafetyHelper::ComputeSafety(const G4ThreeVector& position,
-                                         G4double maxLength)
+G4double G4ITSafetyHelper::ComputeSafety(const G4ThreeVector& position, G4double maxLength)
 {
   G4double newSafety;
 
@@ -139,12 +134,12 @@ G4double G4ITSafetyHelper::ComputeSafety(const G4ThreeVector& position,
     //
     // G4double moveLength = 0;
     // if( moveLengthSq > 0.0 ) { moveLength= std::sqrt(moveLengthSq); }
-    newSafety = fpTrackState->fLastSafety; // -moveLength;
+    newSafety = fpTrackState->fLastSafety;  // -moveLength;
   }
   return newSafety;
 }
 
-void G4ITSafetyHelper::ReLocateWithinVolume(const G4ThreeVector &newPosition)
+void G4ITSafetyHelper::ReLocateWithinVolume(const G4ThreeVector& newPosition)
 {
 #ifdef G4VERBOSE
   if (fVerbose > 0)
@@ -159,8 +154,7 @@ void G4ITSafetyHelper::ReLocateWithinVolume(const G4ThreeVector &newPosition)
       ed << " Center   = " << fpTrackState->fLastSafetyPosition << G4endl;
       ed << " New Location :  Move   = " << moveVec.mag2();
       ed << " Position = " << newPosition << G4endl;
-      G4Exception("G4ITSafetyHelper::ReLocateWithinVolume", "GeomNav999",
-                  JustWarning,
+      G4Exception("G4ITSafetyHelper::ReLocateWithinVolume", "GeomNav999", JustWarning,
                   "Unsafe Move> Asked to relocate beyond 'Safety sphere'.");
     }
   }
@@ -176,13 +170,11 @@ void G4ITSafetyHelper::ReLocateWithinVolume(const G4ThreeVector &newPosition)
   }
 }
 
-void G4ITSafetyHelper::Locate(const G4ThreeVector& newPosition,
-                              const G4ThreeVector& newDirection)
+void G4ITSafetyHelper::Locate(const G4ThreeVector& newPosition, const G4ThreeVector& newDirection)
 {
   if (!fUseParallelGeometries)
   {
-    fpMassNavigator->LocateGlobalPointAndSetup(newPosition, &newDirection, true,
-                                               false);
+    fpMassNavigator->LocateGlobalPointAndSetup(newPosition, &newDirection, true, false);
   }
   else
   {

@@ -61,14 +61,14 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4MuBremsstrahlung_h
-#define G4MuBremsstrahlung_h 1
+#ifndef G4MUBREMSSTRAHLUNG_HH
+#define G4MUBREMSSTRAHLUNG_HH
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "globals.hh"
-#include "G4VEnergyLossProcess.hh"
 #include "G4VEmModel.hh"
+#include "G4VEnergyLossProcess.hh"
+#include "globals.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -77,38 +77,37 @@ class G4ParticleDefinition;
 class G4MuBremsstrahlung : public G4VEnergyLossProcess
 
 {
-public:
+  public:
 
-  explicit G4MuBremsstrahlung(const G4String& processName = "muBrems");
+    explicit G4MuBremsstrahlung(const G4String& processName = "muBrems");
 
-  ~G4MuBremsstrahlung() override = default;
+    ~G4MuBremsstrahlung() override = default;
 
-  G4bool IsApplicable(const G4ParticleDefinition& p) override;
+    G4bool IsApplicable(const G4ParticleDefinition& p) override;
 
-  G4double MinPrimaryEnergy(const G4ParticleDefinition* p,
-			    const G4Material*, G4double cut) override;
+    G4double MinPrimaryEnergy(const G4ParticleDefinition* p, const G4Material*,
+                              G4double cut) override;
 
-  inline void SetLowestKineticEnergy(G4double e);
+    inline void SetLowestKineticEnergy(G4double e);
 
-  // print description in html
-  void ProcessDescription(std::ostream&) const override;
+    // print description in html
+    void ProcessDescription(std::ostream&) const override;
 
-  G4MuBremsstrahlung & operator=(const G4MuBremsstrahlung &right) = delete;
-  G4MuBremsstrahlung(const G4MuBremsstrahlung&) = delete;
+    G4MuBremsstrahlung& operator=(const G4MuBremsstrahlung& right) = delete;
+    G4MuBremsstrahlung(const G4MuBremsstrahlung&) = delete;
 
-protected:
+  protected:
 
-  void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
-                                   const G4ParticleDefinition*) override;
+    void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
+                                     const G4ParticleDefinition*) override;
 
-  G4double  lowestKinEnergy;
-  G4bool    isInitialised = false;
-
+    G4double lowestKinEnergy;
+    G4bool isInitialised = false;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline void G4MuBremsstrahlung::SetLowestKineticEnergy(G4double e) 
+inline void G4MuBremsstrahlung::SetLowestKineticEnergy(G4double e)
 {
   lowestKinEnergy = e;
 }

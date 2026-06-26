@@ -38,21 +38,22 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UORB 1
+#  define G4GEOM_USE_UORB 1
 #endif
 
 #if defined(G4GEOM_USE_UORB)
-  #define G4UOrb G4Orb
-  #include "G4UOrb.hh"
+#  define G4UOrb G4Orb
+#  include "G4UOrb.hh"
 #else
 
-#include <CLHEP/Units/PhysicalConstants.h>
+#  include "G4CSGSolid.hh"
+#  include "G4Polyhedron.hh"
 
-#include "G4CSGSolid.hh"
-#include "G4Polyhedron.hh"
+#  include <CLHEP/Units/PhysicalConstants.h>
 
 /**
  * @brief G4Orb represents a full sphere.
+ * @ingroup geometry_solids_csg
  */
 
 class G4Orb : public G4CSGSolid
@@ -89,8 +90,7 @@ class G4Orb : public G4CSGSolid
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -110,25 +110,21 @@ class G4Orb : public G4CSGSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pmin, G4double& pmax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pmin,
+                           G4double& pmax) const override;
 
     /**
      * Concrete implementations of the expected query interfaces for
      * solids, as defined in the base class G4VSolid.
      */
     EInside Inside(const G4ThreeVector& p) const override;
-    G4ThreeVector SurfaceNormal( const G4ThreeVector& p) const override;
-    G4double DistanceToIn(const G4ThreeVector& p,
-                          const G4ThreeVector& v) const override;
+    G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
     G4double DistanceToIn(const G4ThreeVector& p) const override;
-    G4double DistanceToOut(const G4ThreeVector& p,
-                           const G4ThreeVector& v,
-                           const G4bool calcNorm = false,
-                                 G4bool* validNorm = nullptr,
-                                 G4ThreeVector* n = nullptr) const override;
+    G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
     G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
@@ -156,7 +152,7 @@ class G4Orb : public G4CSGSolid
     /**
      * Methods for creating graphical representations (i.e. for visualisation).
      */
-    void DescribeYourselfTo (G4VGraphicsScene& scene) const override;
+    void DescribeYourselfTo(G4VGraphicsScene& scene) const override;
     G4VisExtent GetExtent() const override;
     G4Polyhedron* CreatePolyhedron() const override;
 
@@ -187,7 +183,7 @@ class G4Orb : public G4CSGSolid
     G4double sqrRmaxPlusTol = 0.0, sqrRmaxMinusTol = 0.0;
 };
 
-#include "G4Orb.icc"
+#  include "G4Orb.icc"
 
 #endif
 

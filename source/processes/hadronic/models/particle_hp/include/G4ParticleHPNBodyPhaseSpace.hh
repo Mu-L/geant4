@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPNBodyPhaseSpace_h
-#define G4ParticleHPNBodyPhaseSpace_h 1
+#ifndef G4PARTICLEHPNBODYPHASESPACE_HH
+#define G4PARTICLEHPNBODYPHASESPACE_HH
 
 #include "G4Neutron.hh"
 #include "G4Pow.hh"
@@ -43,6 +43,7 @@
 class G4ParticleHPNBodyPhaseSpace : public G4VParticleHPEnergyAngular
 {
   public:
+
     G4ParticleHPNBodyPhaseSpace()
     {
       theTotalMass = 0.0;
@@ -51,6 +52,7 @@ class G4ParticleHPNBodyPhaseSpace : public G4VParticleHPEnergyAngular
     ~G4ParticleHPNBodyPhaseSpace() override = default;
 
   public:
+
     void Init(G4double aMass, G4int aCount)
     {
       theTotalMass = aMass;
@@ -66,6 +68,7 @@ class G4ParticleHPNBodyPhaseSpace : public G4VParticleHPEnergyAngular
     G4ReactionProduct* Sample(G4double anEnergy, G4double massCode, G4double mass) override;
 
   private:
+
     inline G4double Prob(G4double anEnergy, G4double eMax, G4int n)
     {
       G4double result;
@@ -100,6 +103,7 @@ class G4ParticleHPNBodyPhaseSpace : public G4VParticleHPEnergyAngular
     G4double MeanEnergyOfThisInteraction() override { return -1; }
 
   private:
+
     G4double theTotalMass;
     G4int theTotalCount;
 };

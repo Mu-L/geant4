@@ -25,8 +25,8 @@
 //
 //
 //
-#ifndef G4InterpolationScheme_h
-#define G4InterpolationScheme_h 1
+#ifndef G4INTERPOLATIONSCHEME_HH
+#define G4INTERPOLATIONSCHEME_HH
 
 #include "globals.hh"
 

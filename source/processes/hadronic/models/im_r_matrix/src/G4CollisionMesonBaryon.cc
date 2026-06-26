@@ -25,27 +25,25 @@
 //
 //
 
-#include "globals.hh"
 #include "G4CollisionMesonBaryon.hh"
-#include "G4CollisionMesonBaryonElastic.hh"
+
 #include "G4CollisionComposite.hh"
-#include "G4VCollision.hh"
+#include "G4CollisionMesonBaryonElastic.hh"
+#include "G4CollisionMesonBaryonToResonance.hh"
 #include "G4CollisionVector.hh"
 #include "G4KineticTrack.hh"
-#include "G4VCrossSectionSource.hh"
-#include "G4XNNTotal.hh"
-#include "G4Proton.hh"
 #include "G4Neutron.hh"
-#include "G4PionZero.hh"
 #include "G4PionMinus.hh"
 #include "G4PionPlus.hh"
-
-#include "G4CollisionMesonBaryonToResonance.hh"
-#include "G4CollisionMesonBaryonElastic.hh"
+#include "G4PionZero.hh"
+#include "G4Proton.hh"
+#include "G4VCollision.hh"
+#include "G4VCrossSectionSource.hh"
+#include "G4XNNTotal.hh"
+#include "globals.hh"
 
 G4CollisionMesonBaryon::G4CollisionMesonBaryon()
-{ 
-  G4CollisionComposite::AddComponent(new G4CollisionMesonBaryonToResonance()); 
-  G4CollisionComposite::AddComponent(new G4CollisionMesonBaryonElastic()); 
+{
+  G4CollisionComposite::AddComponent(new G4CollisionMesonBaryonToResonance());
+  G4CollisionComposite::AddComponent(new G4CollisionMesonBaryonElastic());
 }
-

@@ -40,26 +40,24 @@
 // - Zero step protections                     J.A. / G.C.,   Nov  2004
 // --------------------------------------------------------------------
 #ifndef G4NAVIGATOR_HH
-#define G4NAVIGATOR_HH 1
+#  define G4NAVIGATOR_HH
 
-#include "geomdefs.hh"
+#  include "G4AffineTransform.hh"
+#  include "G4LogicalVolume.hh"  // Used in inline methods
+#  include "G4NavigationHistory.hh"
+#  include "G4NormalNavigation.hh"
+#  include "G4ParameterisedNavigation.hh"
+#  include "G4RegularNavigation.hh"
+#  include "G4ReplicaNavigation.hh"
+#  include "G4RotationMatrix.hh"
+#  include "G4ThreeVector.hh"
+#  include "G4TouchableHandle.hh"  //    "         "
+#  include "G4VExternalNavigation.hh"
+#  include "G4VoxelNavigation.hh"
 
-#include "G4ThreeVector.hh"
-#include "G4AffineTransform.hh"
-#include "G4RotationMatrix.hh"
+#  include "geomdefs.hh"
 
-#include "G4LogicalVolume.hh"             // Used in inline methods
-#include "G4TouchableHandle.hh"           //    "         "
-
-#include "G4NavigationHistory.hh"
-#include "G4NormalNavigation.hh"
-#include "G4VoxelNavigation.hh"
-#include "G4ParameterisedNavigation.hh"
-#include "G4ReplicaNavigation.hh"
-#include "G4RegularNavigation.hh"
-#include "G4VExternalNavigation.hh"
-
-#include <iostream>
+#  include <iostream>
 
 class G4VPhysicalVolume;
 class G4SafetyCalculator;
@@ -70,13 +68,14 @@ class G4SafetyCalculator;
  * the next volume, or to find the physical volume containing a given point in
  * the world reference system. The navigator maintains a transformation history
  * and other information to optimise the tracking time performance.
+ * @ingroup geometry_navigation
  */
 
 class G4Navigator
 {
   public:
 
-    friend std::ostream& operator << (std::ostream &os, const G4Navigator &n);
+    friend std::ostream& operator<<(std::ostream& os, const G4Navigator& n);
 
     /**
      * Constructor - initialisers and setup.
@@ -113,19 +112,15 @@ class G4Navigator
      *  @returns Length from current point to next boundary surface along
      *           @p pDirection.
      */
-    virtual G4double ComputeStep(const G4ThreeVector& pGlobalPoint,
-                                 const G4ThreeVector& pDirection,
-                                 const G4double pCurrentProposedStepLength,
-                                       G4double& pNewSafety);
+    virtual G4double ComputeStep(const G4ThreeVector& pGlobalPoint, const G4ThreeVector& pDirection,
+                                 const G4double pCurrentProposedStepLength, G4double& pNewSafety);
 
     /**
      * Same as ComputeStep() above, but does not affect/modify the state
      * of the Navigator.
      */
-    G4double CheckNextStep(const G4ThreeVector& pGlobalPoint,
-                           const G4ThreeVector& pDirection,
-                           const G4double pCurrentProposedStepLength,
-                                 G4double& pNewSafety); 
+    G4double CheckNextStep(const G4ThreeVector& pGlobalPoint, const G4ThreeVector& pDirection,
+                           const G4double pCurrentProposedStepLength, G4double& pNewSafety);
 
     /**
      * Resets the geometrical hierarchy and searches for the volumes deepest
@@ -140,17 +135,16 @@ class G4Navigator
      *  @param[in] h The touchable history to be used for initialisation.
      *  @returns The pointer to the physical volume where point is located.
      */
-    virtual
-    G4VPhysicalVolume* ResetHierarchyAndLocate(const G4ThreeVector& point,
-                                               const G4ThreeVector& direction,
-                                               const G4TouchableHistory& h);
+    virtual G4VPhysicalVolume* ResetHierarchyAndLocate(const G4ThreeVector& point,
+                                                       const G4ThreeVector& direction,
+                                                       const G4TouchableHistory& h);
 
     /**
      * Searches the geometrical hierarchy for the volumes deepest in hierarchy
      * containing the point in the global coordinate space. Two main cases
      * are:
      *  i) If pRelativeSearch=false it makes use of no previous/state
-     *     information. Returns the physical volume containing the point, 
+     *     information. Returns the physical volume containing the point,
      *     with all previous mothers correctly set up.
      * ii) If pRelativeSearch is set to true, the search begin is the
      *     geometrical hierarchy at the location of the last located point,
@@ -167,24 +161,22 @@ class G4Navigator
      *  @param[in] ignoreDirection Flag to specify if to use direction or not.
      *  @returns The pointer to the physical volume where point is located.
      */
-    virtual
-    G4VPhysicalVolume* LocateGlobalPointAndSetup(const G4ThreeVector& point,
-                                       const G4ThreeVector* direction = nullptr,
-                                       const G4bool pRelativeSearch = true,
-                                       const G4bool ignoreDirection = true);
+    virtual G4VPhysicalVolume* LocateGlobalPointAndSetup(const G4ThreeVector& point,
+                                                         const G4ThreeVector* direction = nullptr,
+                                                         const G4bool pRelativeSearch = true,
+                                                         const G4bool ignoreDirection = true);
 
     /**
      * Notifies the Navigator that a track has moved to the new Global point
      * 'position', that is known to be within the current safety.
-     * No check is performed to ensure that it is within  the volume. 
+     * No check is performed to ensure that it is within  the volume.
      * This method can be called instead of LocateGlobalPointAndSetup() ONLY
      * if the caller is certain that the new global point (position) is inside
      * the same volume as the previous position. Usually this can be guaranteed
      * only if the point is within safety.
      *  @param[in] position The position point in global coordinates system.
      */
-    virtual
-    void LocateGlobalPointWithinVolume(const G4ThreeVector& position);
+    virtual void LocateGlobalPointWithinVolume(const G4ThreeVector& position);
 
     /**
      * It first searches the geometrical hierarchy like the above method
@@ -195,29 +187,26 @@ class G4Navigator
      *  @param[in,out] oldTouchableToUpdate Touchable handle to update.
      *  @param[in] RelativeSearch Flag to specify where search starts from.
      */
-    inline void LocateGlobalPointAndUpdateTouchableHandle(
-                  const G4ThreeVector&       position,
-                  const G4ThreeVector&       direction,
-                        G4TouchableHandle&   oldTouchableToUpdate,
-                  const G4bool               RelativeSearch = true);
+    inline void LocateGlobalPointAndUpdateTouchableHandle(const G4ThreeVector& position,
+                                                          const G4ThreeVector& direction,
+                                                          G4TouchableHandle& oldTouchableToUpdate,
+                                                          const G4bool RelativeSearch = true);
     /**
      * Same as the method above LocateGlobalPointAndUpdateTouchableHandle(),
      * except that a pointer to G4VTouchable is used for updating the touchable.
      */
-    inline void LocateGlobalPointAndUpdateTouchable(
-                  const G4ThreeVector&       position,
-                  const G4ThreeVector&       direction,
-                        G4VTouchable*        touchableToUpdate,
-                  const G4bool               RelativeSearch = true);
+    inline void LocateGlobalPointAndUpdateTouchable(const G4ThreeVector& position,
+                                                    const G4ThreeVector& direction,
+                                                    G4VTouchable* touchableToUpdate,
+                                                    const G4bool RelativeSearch = true);
 
     /**
      * Same as the method above LocateGlobalPointAndUpdateTouchable(),
      * except that direction is not specified.
      */
-    inline void LocateGlobalPointAndUpdateTouchable(
-                  const G4ThreeVector&       position,
-                        G4VTouchable*        touchableToUpdate,
-                  const G4bool               RelativeSearch = true);
+    inline void LocateGlobalPointAndUpdateTouchable(const G4ThreeVector& position,
+                                                    G4VTouchable* touchableToUpdate,
+                                                    const G4bool RelativeSearch = true);
 
     /**
      * Informs the navigator that the previous Step calculated by the
@@ -227,7 +216,7 @@ class G4Navigator
 
     /**
      * Calculates the isotropic distance to the nearest boundary from the
-     * specified point in the global coordinate system. 
+     * specified point in the global coordinate system.
      *  @note The geometry must be closed.
      *  @param[in] globalpoint The point in global coordinates system.
      *             The point must be within the current volume.
@@ -236,7 +225,7 @@ class G4Navigator
      *  @param[in] keepState Flag to instruct keeping the state (default true)
      *             to ensure minimum side effects from the call.
      *  @returns Length from current point to closest boundary surface.
-     *           The value returned is usually an underestimate.  
+     *           The value returned is usually an underestimate.
      */
     virtual G4double ComputeSafety(const G4ThreeVector& globalpoint,
                                    const G4double pProposedMaxLength = DBL_MAX,
@@ -303,8 +292,7 @@ class G4Navigator
      *  @param[in,out] valid Flag indicating if normal is valid.
      *  @returns A Exit Surface Normal vector and validity too.
      */
-    virtual G4ThreeVector GetLocalExitNormalAndCheck(const G4ThreeVector& point,
-                                                           G4bool* valid);
+    virtual G4ThreeVector GetLocalExitNormalAndCheck(const G4ThreeVector& point, G4bool* valid);
     /**
      * Obtains the Normal vector to a surface (in global coordinates)
      * pointing out of previous volume and into current volume
@@ -317,15 +305,14 @@ class G4Navigator
      *  @param[in,out] valid Flag indicating if normal is valid.
      *  @returns A Exit Surface Normal vector and validity too.
      */
-    virtual G4ThreeVector GetGlobalExitNormal(const G4ThreeVector& point,
-                                                    G4bool* valid);
+    virtual G4ThreeVector GetGlobalExitNormal(const G4ThreeVector& point, G4bool* valid);
 
     /**
      * Verbosity control.
      *  @note If level>0 && G4VERBOSE, printout can occur.
      */
     inline G4int GetVerboseLevel() const;
-    inline void  SetVerboseLevel(G4int level);
+    inline void SetVerboseLevel(G4int level);
 
     /**
      * Verify if the navigator is active.
@@ -335,7 +322,7 @@ class G4Navigator
     /**
      * Activate/inactivate the navigator.
      */
-    inline void  Activate(G4bool flag);
+    inline void Activate(G4bool flag);
 
     /**
      * The purpose of this function is to inform the caller if the track is
@@ -377,14 +364,13 @@ class G4Navigator
      *        if they need to keep it.
      */
     inline const G4AffineTransform& GetGlobalToLocalTransform() const;
-    inline const G4AffineTransform  GetLocalToGlobalTransform() const;
+    inline const G4AffineTransform GetLocalToGlobalTransform() const;
 
     /**
      * Obtains mother to daughter transformation.
      */
-    G4AffineTransform GetMotherToDaughterTransform(G4VPhysicalVolume* dVolume, 
-                                                   G4int dReplicaNo,
-                                                   EVolume dVolumeType );
+    G4AffineTransform GetMotherToDaughterTransform(G4VPhysicalVolume* dVolume, G4int dReplicaNo,
+                                                   EVolume dVolumeType);
 
     /**
      * Resets stack and minimum or navigator state machine necessary for reset
@@ -396,13 +382,13 @@ class G4Navigator
     /**
      * Reports on severity of error and number of zero steps,
      * in case Navigator is stuck and is returning zero steps.
-     * Values: 1 (small problem),  5 (correcting), 
+     * Values: 1 (small problem),  5 (correcting),
      *         9 (ready to abandon), 10 (abandoned)
      *  @param[in,out] noZeroSteps Returns the number of zero steps in case
      *                 pointer is not null.
      *  @returns The error severity.
      */
-    inline G4int SeverityOfZeroStepping( G4int* noZeroSteps ) const; 
+    inline G4int SeverityOfZeroStepping(G4int* noZeroSteps) const;
 
     /**
      * Returns the local coordinate of the point in the reference system
@@ -421,14 +407,14 @@ class G4Navigator
     /**
      * Enables best-possible evaluation of isotropic safety.
      */
-    inline void EnableBestSafety( G4bool value = false );
+    inline void EnableBestSafety(G4bool value = false);
 
     /**
      * Accessor & modifier for custom external navigation.
      */
     inline G4VExternalNavigation* GetExternalNavigation() const;
     void SetExternalNavigation(G4VExternalNavigation* externalNav);
-   
+
     /**
      * Gets/sets alternative navigator for voxel volumes.
      */
@@ -456,9 +442,7 @@ class G4Navigator
      * Required in order to cope with multiple trials at boundaries
      * => Locate with use direction rather than simple, fast logic.
      */
-    void InformLastStep(G4double lastStep,
-                        G4bool entersDaughtVol,
-                        G4bool exitsMotherVol );
+    void InformLastStep(G4double lastStep, G4bool entersDaughtVol, G4bool exitsMotherVol);
 
   protected:
 
@@ -475,7 +459,7 @@ class G4Navigator
      * call to ComputeStep().
      */
     void RestoreSavedState();
-  
+
     /**
      * Utility method to reset the navigator state machine.
      */
@@ -497,17 +481,17 @@ class G4Navigator
     /**
      * Characterises the type of volume - normal/replicated/parameterised.
      */
-    inline EVolume VolumeType(const G4VPhysicalVolume *pVol) const;
+    inline EVolume VolumeType(const G4VPhysicalVolume* pVol) const;
 
     /**
      * Characterises the daughters of given logical volume.
      */
-    inline EVolume CharacteriseDaughters(const G4LogicalVolume *pLog) const;
+    inline EVolume CharacteriseDaughters(const G4LogicalVolume* pLog) const;
 
     /**
      * Gets regular structure ID of first daughter.
      */
-    inline G4int GetDaughtersRegularStructureId(const G4LogicalVolume *pLv) const;
+    inline G4int GetDaughtersRegularStructureId(const G4LogicalVolume* pLv) const;
 
     /**
      * Renavigates & resets hierarchy described by the current history:
@@ -528,8 +512,7 @@ class G4Navigator
     /**
      * Logs and checks for steps larger than the tolerance.
      */
-    void ComputeStepLog(const G4ThreeVector& pGlobalpoint,
-                              G4double moveLenSq) const;
+    void ComputeStepLog(const G4ThreeVector& pGlobalpoint, G4double moveLenSq) const;
 
   protected:
 
@@ -548,12 +531,12 @@ class G4Navigator
 
     /** Position of the end-point of the last call to ComputeStep()
         in last local coordinates. */
-    G4ThreeVector fLastStepEndPointLocal; 
+    G4ThreeVector fLastStepEndPointLocal;
 
     /** Verbosity level  [if > 0, printout can occur]. */
     G4int fVerbose = 0;
-   
-    /** A memory of whether in this Step a daughter volume is entered 
+
+    /** A memory of whether in this Step a daughter volume is entered
         (set in Compute & Locate).
         After Compute: it expects to enter a daughter
         After Locate:  it has entered a daughter. */
@@ -577,7 +560,7 @@ class G4Navigator
         This is closely coupled with 'fValidExitNormal', which signals whether
         we have a (valid) normal for volume we're leaving. */
     G4ThreeVector fExitNormal;
-   
+
     /** Leaving volume normal, in its own coordinate system. */
     G4ThreeVector fGrandMotherExitNormal;
 
@@ -588,18 +571,18 @@ class G4Navigator
         that origin of current Step is in the same volume as the point of the
         last relocation. */
     G4ThreeVector fPreviousSftOrigin;
-    G4double fPreviousSafety; 
+    G4double fPreviousSafety;
 
     /** Memory of the mother volume during previous step.
         Intended use: inform user in case of stuck track. */
     G4VPhysicalVolume* fLastMotherPhys = nullptr;
-   
+
     /** Identifies the volume and copy / replica number that is blocked
         (after exiting -- because the exit direction is along the exit normal)
         or a candidate for entry (after compute step). */
     G4VPhysicalVolume* fBlockedPhysicalVolume;
     G4int fBlockedReplicaNo;
-   
+
     /** Count zero steps, as one or two can occur due to changing momentum at
         a boundary or at an edge common between volumes; several zero steps
         are likely a problem in the geometry description or in the navigation.
@@ -608,10 +591,10 @@ class G4Navigator
     G4int fNumberZeroSteps;
 
     /** After this many failed/zero steps, act (push etc). */
-    G4int fActionThreshold_NoZeroSteps = 10;  
+    G4int fActionThreshold_NoZeroSteps = 10;
 
     /** After this many failed/zero steps, abandon track. */
-    G4int fAbandonThreshold_NoZeroSteps = 25; 
+    G4int fAbandonThreshold_NoZeroSteps = 25;
 
     /** States if the navigator is activated or not. */
     G4bool fActive = false;
@@ -620,7 +603,7 @@ class G4Navigator
         Uses: distinguish parts of state which differ before/after calls
         to ComputeStep() or one of the Locate() methods; avoid two consecutive
         calls to compute-step (illegal). */
-    G4bool fLastTriedStepComputation = false; 
+    G4bool fLastTriedStepComputation = false;
 
     /** Entering/Exiting volumes blocking/setup.
         o If exiting, volume ptr & replica number (set & used by Locate..())
@@ -628,7 +611,7 @@ class G4Navigator
         o If entering, volume ptr & replica number (set by ComputeStep(),
           used by Locate..()) of volume for 'automatic' entry. */
     G4bool fEntering, fExiting;
-   
+
     /** Set true if have leaving volume normal. */
     G4bool fValidExitNormal;
 
@@ -636,44 +619,44 @@ class G4Navigator
     G4bool fLastStepWasZero;
 
     /** Whether the Navigator has detected an edge. */
-    G4bool fLocatedOnEdge;       
+    G4bool fLocatedOnEdge;
 
     /** Whether the last call to Locate methods left the world. */
     G4bool fLocatedOutsideWorld;
-   
+
     /** Whether frame is changed. */
-    G4bool  fChangedGrandMotherRefFrame;
+    G4bool fChangedGrandMotherRefFrame;
 
     /** Has it been computed since the last call to ComputeStep().
         Covers both Global and GrandMother. */
-    G4bool  fCalculatedExitNormal;
+    G4bool fCalculatedExitNormal;
 
     //
     // END State information --------------------------------------------------
 
     // Optional State information (created/used as needed)
-    // 
-   
+    //
+
     // Save key state information (NOT the navigation history stack)
     //
     struct G4SaveNavigatorState
-    { 
-       G4ThreeVector sExitNormal;  
-       G4bool sValidExitNormal;    
-       G4bool sEntering, sExiting;
-       G4VPhysicalVolume* spBlockedPhysicalVolume;
-       G4int sBlockedReplicaNo;  
-       G4int sLastStepWasZero; 
-       G4bool sWasLimitedByGeometry;
+    {
+        G4ThreeVector sExitNormal;
+        G4bool sValidExitNormal;
+        G4bool sEntering, sExiting;
+        G4VPhysicalVolume* spBlockedPhysicalVolume;
+        G4int sBlockedReplicaNo;
+        G4int sLastStepWasZero;
+        G4bool sWasLimitedByGeometry;
 
-       //  Potentially relevant
-       //
-       G4bool sLocatedOutsideWorld;
-       G4ThreeVector sLastLocatedPointLocal; 
-       G4bool sEnteredDaughter, sExitedMother;
-       G4ThreeVector sPreviousSftOrigin;
-       G4double sPreviousSafety; 
-    } fSaveState; 
+        //  Potentially relevant
+        //
+        G4bool sLocatedOutsideWorld;
+        G4ThreeVector sLastLocatedPointLocal;
+        G4bool sEnteredDaughter, sExitedMother;
+        G4ThreeVector sPreviousSftOrigin;
+        G4double sPreviousSafety;
+    } fSaveState;
 
     // ========================================================================
     // BEGIN -- Tracking Invariants
@@ -705,10 +688,9 @@ class G4Navigator
     // ========================================================================
 };
 
-#include "G4Navigator.icc"
+#  include "G4Navigator.icc"
 
 #endif
-
 
 // NOTES:
 //
@@ -721,7 +703,7 @@ class G4Navigator
 // 1) The particle has reached a boundary of a daughter of the current volume:
 //     (this could cause the relocation to enter the daughter itself
 //     or a potential granddaughter or further descendant)
-//     
+//
 // 2) The particle has reached a boundary of the current
 //     volume, exiting into a mother (regardless the level
 //     at which it is located in the tree):
@@ -744,10 +726,10 @@ class G4Navigator
 // possibilities are to obtain the normal from:
 //
 //   i) the solid associated with the volume of the initial point of the Step.
-//      This is valid for cases 2 and 3.  
+//      This is valid for cases 2 and 3.
 //      (Note that the initial point is generally the PreStepPoint of a Step).
 //   or
-// 
+//
 //  ii) the solid of the final point, ie of the volume after the relocation.
 //      This is valid for case 1.
 //      (Note that the final point is generally the PreStepPoint of a Step).

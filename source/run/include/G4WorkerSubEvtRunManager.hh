@@ -36,8 +36,8 @@
 //  G4MTRunManager. There exists one instance of this class for each
 //  worker in a MT application.
 
-#ifndef G4WorkerSubEvtRunManager_h
-#define G4WorkerSubEvtRunManager_h 1
+#ifndef G4WORKERSUBEVTRUNMANAGER_HH
+#define G4WORKERSUBEVTRUNMANAGER_HH
 
 #include "G4WorkerTaskRunManager.hh"
 
@@ -48,13 +48,14 @@ class G4WorkerTaskRunManagerKernel;
 //  without any modification. -- future work for phase-II developments
 using G4WorkerSubEvtRunManagerKernel = G4WorkerTaskRunManagerKernel;
 
-class G4WorkerSubEvtRunManager : public G4WorkerTaskRunManager 
+class G4WorkerSubEvtRunManager : public G4WorkerTaskRunManager
 {
   public:
+
     static G4WorkerSubEvtRunManager* GetWorkerRunManager();
     static G4WorkerSubEvtRunManagerKernel* GetWorkerRunManagerKernel();
     G4WorkerSubEvtRunManager(G4int subEventType = 0);
-    //G4WorkerSubEvtRunManager() = delete;
+    // G4WorkerSubEvtRunManager() = delete;
 
     // Modified for worker behavior
     void RunInitialization() override;
@@ -82,15 +83,17 @@ class G4WorkerSubEvtRunManager : public G4WorkerTaskRunManager
     void SetUserAction(G4UserSteppingAction* userAction) override;
 
   protected:
+
     void StoreRNGStatus(const G4String& filenamePrefix) override;
     void SetupDefaultRNGEngine() override;
 
   private:
+
     G4int fSubEventType = -1;
 
   public:
-    G4int GetSubEventType() const override
-    { return fSubEventType; }
+
+    G4int GetSubEventType() const override { return fSubEventType; }
     void SetSubEventType(G4int) override;
 };
 

@@ -26,6 +26,7 @@
 // Author: Christian Velten (2025)
 
 #include "G4VMoleculeCounterInternalBase.hh"
+
 #include "G4SystemOfUnits.hh"
 
 namespace G4
@@ -35,7 +36,8 @@ namespace MoleculeCounter
 
 G4bool FixedTimeComparer::operator()(const G4double& a, const G4double& b) const
 {
-  if (std::fabs(a - b) < fPrecision) {
+  if (std::fabs(a - b) < fPrecision)
+  {
     return false;
   }
   return a < b;

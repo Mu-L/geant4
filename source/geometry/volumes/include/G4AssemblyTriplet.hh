@@ -27,13 +27,13 @@
 //
 // Class description:
 //
-// A class to help place logical or assembly volumes inside a generic 
-// container (like STL vector) together with information about its rotation, 
+// A class to help place logical or assembly volumes inside a generic
+// container (like STL vector) together with information about its rotation,
 // placement and eventually reflection.
 // How to interpret the rotation and translation depends on the class which
 // uses a container of these triplets. The first class using G4AssemblyTriplet
 // is G4AssemblyVolume.
-// The pointer to the logical or assembly volume is copied so this class 
+// The pointer to the logical or assembly volume is copied so this class
 // does not take its ownership and does not delete the object behind.
 
 // Author: Radovan Chytracek (CERN), November 2000
@@ -41,8 +41,8 @@
 #ifndef G4_ASSEMBLYTRIPLET_HH
 #define G4_ASSEMBLYTRIPLET_HH
 
-#include "G4ThreeVector.hh"
 #include "G4RotationMatrix.hh"
+#include "G4ThreeVector.hh"
 
 class G4LogicalVolume;
 class G4AssemblyVolume;
@@ -51,10 +51,12 @@ class G4AssemblyVolume;
  * @brief G4AssemblyTriplet is a helper class for placing logical or assembly
  * volumes inside a generic container together with information about its
  * rotation, placement and eventually reflection.
+ * @ingroup geometry_volumes
+ *
  * How to interpret the rotation and translation depends on the class which
  * uses a container of these triplets. The first class using G4AssemblyTriplet
  * is G4AssemblyVolume.
- * The pointer to the logical or assembly volume is copied so this class 
+ * The pointer to the logical or assembly volume is copied so this class
  * does not take its ownership and does not delete the object behind.
  */
 
@@ -74,11 +76,9 @@ class G4AssemblyTriplet
      *  @param[in] pRotation Pointer to the rotation matrix.
      *  @param[in] isReflection Flag to specify if volume is reflected.
      */
-    G4AssemblyTriplet( G4LogicalVolume* pVolume,
-                       G4ThreeVector& translation,
-                       G4RotationMatrix* pRotation,
-                       G4bool isReflection = false );
-    
+    G4AssemblyTriplet(G4LogicalVolume* pVolume, G4ThreeVector& translation,
+                      G4RotationMatrix* pRotation, G4bool isReflection = false);
+
     /**
      * An explicit constructor for an assembly volume.
      *  @param[in] pAssembly Pointer to the assembly volume.
@@ -86,25 +86,23 @@ class G4AssemblyTriplet
      *  @param[in] pRotation Pointer to the rotation matrix.
      *  @param[in] isReflection Flag to specify if volume is reflected.
      */
-    G4AssemblyTriplet( G4AssemblyVolume* pAssembly,
-                       G4ThreeVector& translation,
-                       G4RotationMatrix* pRotation,
-                       G4bool isReflection = false );
-    
+    G4AssemblyTriplet(G4AssemblyVolume* pAssembly, G4ThreeVector& translation,
+                      G4RotationMatrix* pRotation, G4bool isReflection = false);
+
     /**
        Copy constructor.
      */
-    G4AssemblyTriplet( const G4AssemblyTriplet& second );
+    G4AssemblyTriplet(const G4AssemblyTriplet& second);
 
     /**
        Destructor.
      */
-    ~G4AssemblyTriplet();    
+    ~G4AssemblyTriplet();
 
     /**
        Assignment operator.
      */
-    G4AssemblyTriplet& operator=( const G4AssemblyTriplet& second );
+    G4AssemblyTriplet& operator=(const G4AssemblyTriplet& second);
 
     /**
        Retrieves the logical volume reference.
@@ -114,7 +112,7 @@ class G4AssemblyTriplet
     /**
        Updates the logical volume reference.
      */
-    inline void SetVolume( G4LogicalVolume* pVolume );
+    inline void SetVolume(G4LogicalVolume* pVolume);
 
     /**
        Retrieves the assembly volume reference.
@@ -124,7 +122,7 @@ class G4AssemblyTriplet
     /**
        Updates the assembly volume reference.
      */
-    inline void SetAssembly( G4AssemblyVolume* pAssembly );
+    inline void SetAssembly(G4AssemblyVolume* pAssembly);
 
     /**
        Retrieves the logical volume translation.
@@ -134,7 +132,7 @@ class G4AssemblyTriplet
     /**
        Updates the logical volume translation.
      */
-    inline void SetTranslation( G4ThreeVector& pVolume );
+    inline void SetTranslation(G4ThreeVector& pVolume);
 
     /**
        Retrieves the logical volume rotation.
@@ -144,7 +142,7 @@ class G4AssemblyTriplet
     /**
        Updates the logical volume rotation.
      */
-    inline void SetRotation( G4RotationMatrix* pVolume );
+    inline void SetRotation(G4RotationMatrix* pVolume);
 
     /**
        Returns true if the logical or assembly volume has reflection.

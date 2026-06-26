@@ -26,8 +26,8 @@
 // --------------------------------------------------------------
 //	GEANT 4 class implementation file
 //
-#ifndef G4ShortLivedConstructor_h
-#define G4ShortLivedConstructor_h 1
+#ifndef G4SHORTLIVEDCONSTRUCTOR_HH
+#define G4SHORTLIVEDCONSTRUCTOR_HH
 
 #include "G4Types.hh"
 
@@ -37,9 +37,11 @@ class G4ShortLivedConstructor
     // short lived particles
 
   public:
+
     static void ConstructParticle();
 
   protected:
+
     static void ConstructResonances();
     static void ConstructBaryons();
     static void ConstructMesons();
@@ -47,6 +49,7 @@ class G4ShortLivedConstructor
     static void ConstructAntiNuclei();
 
   private:
+
     // flag for checking whether resonces exist or not
     static G4bool isConstructed;
 };

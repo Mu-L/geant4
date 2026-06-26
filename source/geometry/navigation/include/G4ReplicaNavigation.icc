@@ -22,7 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // Class G4ReplicaNavigation inline implementations
 //
 // Author: Paul Kent (CERN), August 1996
@@ -32,24 +32,21 @@
 // VoxelLocate
 // ********************************************************************
 //
-inline
-G4int
-G4ReplicaNavigation::VoxelLocate( const G4SmartVoxelHeader* pHead,
-                                  const G4ThreeVector& localPoint,
-                                  const G4int blocked ) const
+inline G4int G4ReplicaNavigation::VoxelLocate(const G4SmartVoxelHeader* pHead,
+                                              const G4ThreeVector& localPoint,
+                                              const G4int blocked) const
 {
   EAxis targetHeaderAxis;
   G4double coord = 0.;
   G4double targetHeaderMin, targetHeaderMax;
   G4double targetHeaderNodeWidth, targetNodePos;
   G4int targetHeaderNoSlices, targetNodeNo;
-  
+
   targetHeaderAxis = pHead->GetAxis();
   targetHeaderNoSlices = G4int(pHead->GetNoSlices());
   targetHeaderMin = pHead->GetMinExtent();
   targetHeaderMax = pHead->GetMaxExtent();
-  targetHeaderNodeWidth = ( targetHeaderMax-targetHeaderMin )
-                          / targetHeaderNoSlices;
+  targetHeaderNodeWidth = (targetHeaderMax - targetHeaderMin) / targetHeaderNoSlices;
 
   switch (targetHeaderAxis)
   {
@@ -67,63 +64,61 @@ G4ReplicaNavigation::VoxelLocate( const G4SmartVoxelHeader* pHead,
       break;
     case kPhi:
       coord = localPoint.phi();
-      if ( (coord<0) && (coord<targetHeaderMin) ) { coord += CLHEP::twopi; }
+      if ((coord < 0) && (coord < targetHeaderMin))
+      {
+        coord += CLHEP::twopi;
+      }
       break;
     case kRadial3D:
     default:
       break;
   }
-  targetNodePos = (coord-targetHeaderMin)/targetHeaderNodeWidth;
-  targetNodeNo = (G4int) targetNodePos;
+  targetNodePos = (coord - targetHeaderMin) / targetHeaderNodeWidth;
+  targetNodeNo = (G4int)targetNodePos;
 
-  if ( targetNodeNo==blocked )
+  if (targetNodeNo == blocked)
   {
-    targetNodeNo = (targetNodePos-targetNodeNo<0.5)
-                   ? targetNodeNo-1 : targetNodeNo+1;
-      
+    targetNodeNo = (targetNodePos - targetNodeNo < 0.5) ? targetNodeNo - 1 : targetNodeNo + 1;
+
     // Do not need to check range: If on outer edge of zeroth
     // voxel & it is blocked => should have exited mother
     // (or similar)       P.Kent
     // assert(targetNodeNo>=0&&targetNodeNo<targetHeaderNoSlices);
 
-    if( (targetNodeNo<0) || (targetNodeNo>=targetHeaderNoSlices) )
+    if ((targetNodeNo < 0) || (targetNodeNo >= targetHeaderNoSlices))
     {
-
 #ifdef G4DEBUG_NAVIGATION
-      std::ostringstream message; 
+      std::ostringstream message;
       message << "Voxel location failed:" << G4endl
-              << " (targetNodeNo>=0&&targetNodeNo<targetHeaderNoSlices) "
-              << G4endl
+              << " (targetNodeNo>=0&&targetNodeNo<targetHeaderNoSlices) " << G4endl
               << " - targetNodeNo= " << targetNodeNo << G4endl
               << " - Number of Slices =  " << targetHeaderNoSlices;
-      G4Exception("G4ReplicaNavigation::VoxelLocate()",
-                  "GeomNav1002", JustWarning, message);
+      G4Exception("G4ReplicaNavigation::VoxelLocate()", "GeomNav1002", JustWarning, message);
 #endif
       // In the case of rotational symmetry and an extent over the
       // whole 360 degrees, the above is not true and you can go from
       // the last voxel to the zeroth and vice versa
-      //                                        H.Boie, April 30, 2001  
-      if ( (targetHeaderAxis==kPhi)
-           && (targetHeaderMin==0) && (targetHeaderMax==CLHEP::twopi) )
+      //                                        H.Boie, April 30, 2001
+      if ((targetHeaderAxis == kPhi) && (targetHeaderMin == 0) && (targetHeaderMax == CLHEP::twopi))
       {
-        if ( targetNodeNo<0 )
-        { 
-          targetNodeNo = targetHeaderNoSlices-1;
+        if (targetNodeNo < 0)
+        {
+          targetNodeNo = targetHeaderNoSlices - 1;
         }
-        else if ( targetNodeNo>=targetHeaderNoSlices )
+        else if (targetNodeNo >= targetHeaderNoSlices)
         {
           targetNodeNo = 0;
         }
       }
-      else 
+      else
       {
-        if( targetNodeNo<0 )
+        if (targetNodeNo < 0)
         {
           targetNodeNo = 0;
         }
-        else if ( targetNodeNo>=targetHeaderNoSlices )
+        else if (targetNodeNo >= targetHeaderNoSlices)
         {
-          targetNodeNo = targetHeaderNoSlices-1;
+          targetNodeNo = targetHeaderNoSlices - 1;
         }
       }
     }
@@ -132,13 +127,13 @@ G4ReplicaNavigation::VoxelLocate( const G4SmartVoxelHeader* pHead,
   {
     // Rounding protection
     //
-    if ( targetNodeNo<0 )
+    if (targetNodeNo < 0)
     {
       targetNodeNo = 0;
     }
-    else if ( targetNodeNo>=targetHeaderNoSlices )
+    else if (targetNodeNo >= targetHeaderNoSlices)
     {
-      targetNodeNo = targetHeaderNoSlices-1;
+      targetNodeNo = targetHeaderNoSlices - 1;
     }
   }
   return targetNodeNo;
@@ -148,19 +143,17 @@ G4ReplicaNavigation::VoxelLocate( const G4SmartVoxelHeader* pHead,
 // LevelLocate
 // ********************************************************************
 //
-inline
-G4bool
-G4ReplicaNavigation::LevelLocate( G4NavigationHistory& history,
-                            const G4VPhysicalVolume* blockedVol,
-                            const G4int              blockedNum,
-                            const G4ThreeVector&,     // globalPoint
-                            const G4ThreeVector*,     // globalDirection
-                            const G4bool,             // pLocatedOnEdge
-                                  G4ThreeVector& localPoint )
+inline G4bool G4ReplicaNavigation::LevelLocate(G4NavigationHistory& history,
+                                               const G4VPhysicalVolume* blockedVol,
+                                               const G4int blockedNum,
+                                               const G4ThreeVector&,  // globalPoint
+                                               const G4ThreeVector*,  // globalDirection
+                                               const G4bool,  // pLocatedOnEdge
+                                               G4ThreeVector& localPoint)
 {
   G4VPhysicalVolume *motherPhysical, *pPhysical;
-  G4LogicalVolume *motherLogical;
-  G4SmartVoxelHeader *motherVoxelHeader;
+  G4LogicalVolume* motherLogical;
+  G4SmartVoxelHeader* motherVoxelHeader;
   G4int nodeNo;
 
   motherPhysical = history.GetTopVolume();
@@ -168,7 +161,7 @@ G4ReplicaNavigation::LevelLocate( G4NavigationHistory& history,
   motherVoxelHeader = motherLogical->GetVoxelHeader();
   pPhysical = motherLogical->GetDaughter(0);
 
-  if ( blockedVol==pPhysical )
+  if (blockedVol == pPhysical)
   {
     nodeNo = VoxelLocate(motherVoxelHeader, localPoint, blockedNum);
   }
@@ -179,7 +172,7 @@ G4ReplicaNavigation::LevelLocate( G4NavigationHistory& history,
 
   ComputeTransformation(nodeNo, pPhysical, localPoint);
   history.NewLevel(pPhysical, kReplica, nodeNo);
-  pPhysical->SetCopyNo(nodeNo); 
+  pPhysical->SetCopyNo(nodeNo);
 
   return true;
 }
@@ -188,14 +181,12 @@ G4ReplicaNavigation::LevelLocate( G4NavigationHistory& history,
 // SetPhiTransformation
 // ********************************************************************
 //
-inline
-void
-G4ReplicaNavigation::SetPhiTransformation( const G4double ang,
-                                                 G4VPhysicalVolume* pVol ) const
+inline void G4ReplicaNavigation::SetPhiTransformation(const G4double ang,
+                                                      G4VPhysicalVolume* pVol) const
 {
   G4RotationMatrix rm;
   rm.rotateZ(ang);
-  if ( pVol != nullptr )
+  if (pVol != nullptr)
   {
     *pVol->GetRotation() = rm;
   }
@@ -205,8 +196,7 @@ G4ReplicaNavigation::SetPhiTransformation( const G4double ang,
 // GetVerboseLevel
 // ********************************************************************
 //
-inline
-G4int G4ReplicaNavigation::GetVerboseLevel() const
+inline G4int G4ReplicaNavigation::GetVerboseLevel() const
 {
   return fVerbose;
 }
@@ -215,8 +205,7 @@ G4int G4ReplicaNavigation::GetVerboseLevel() const
 // SetVerboseLevel
 // ********************************************************************
 //
-inline
-void G4ReplicaNavigation::SetVerboseLevel(G4int level)
+inline void G4ReplicaNavigation::SetVerboseLevel(G4int level)
 {
   fVerbose = level;
 }
@@ -225,8 +214,7 @@ void G4ReplicaNavigation::SetVerboseLevel(G4int level)
 // CheckMode
 // ********************************************************************
 //
-inline
-void G4ReplicaNavigation::CheckMode(G4bool mode)
+inline void G4ReplicaNavigation::CheckMode(G4bool mode)
 {
   fCheck = mode;
 }

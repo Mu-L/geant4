@@ -33,8 +33,8 @@
 
 #include "G4FermiDataTypes.hh"
 #include "G4FermiParticle.hh"
-
 #include "globals.hh"
+
 #include <vector>
 
 class G4VFermiFragmentAN;
@@ -44,6 +44,7 @@ using G4FermiFragmentVector = std::vector<const G4VFermiFragmentAN*>;
 class G4VFermiFragmentAN
 {
   public:
+
     G4VFermiFragmentAN(G4FermiAtomicMass atomicMass, G4FermiChargeNumber chargeNumber,
                        G4int polarization, G4double excitationEnergy);
 
@@ -52,7 +53,7 @@ class G4VFermiFragmentAN
     G4VFermiFragmentAN& operator=(const G4VFermiFragmentAN&) = delete;
 
     ~G4VFermiFragmentAN() = default;
-  
+
     void Initialize();
 
     std::vector<G4FermiParticle> GetDecayFragments(const G4LorentzVector& momentum) const;
@@ -73,6 +74,7 @@ class G4VFermiFragmentAN
     G4double GetTotalEnergy() const;
 
   protected:
+
     virtual void DoInitialize() = 0;
 
     G4FermiAtomicMass atomicMass_;  // A

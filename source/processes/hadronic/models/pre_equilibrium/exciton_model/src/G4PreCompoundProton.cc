@@ -33,18 +33,19 @@
 //
 // Author:         V.Lara
 //
-// Modified:  
-// 21.08.2008 J. M. Quesada added external choice of inverse cross section 
-// 21.08.2008 J. M. Quesada added external choice for superimposed Coulomb 
-//                          barrier (if useSICB=true) 
+// Modified:
+// 21.08.2008 J. M. Quesada added external choice of inverse cross section
+// 21.08.2008 J. M. Quesada added external choice for superimposed Coulomb
+//                          barrier (if useSICB=true)
 // 20.08.2010 V.Ivanchenko added G4Pow and G4PreCompoundParameters pointers
 //                         use int Z and A and cleanup
 //
 
 #include "G4PreCompoundProton.hh"
+
 #include "G4CoulombBarrier.hh"
-#include "G4Proton.hh"
 #include "G4DeexPrecoUtility.hh"
+#include "G4Proton.hh"
 
 G4PreCompoundProton::G4PreCompoundProton()
   : G4PreCompoundNucleon(G4Proton::Proton(), new G4CoulombBarrier(1, 1))
@@ -53,8 +54,9 @@ G4PreCompoundProton::G4PreCompoundProton()
 G4double G4PreCompoundProton::GetRj(G4int nParticles, G4int nCharged) const
 {
   G4double rj = 0.0;
-  if(nParticles > 0) { 
-    rj = static_cast<G4double>(nCharged)/static_cast<G4double>(nParticles);
+  if (nParticles > 0)
+  {
+    rj = static_cast<G4double>(nCharged) / static_cast<G4double>(nParticles);
   }
   return rj;
 }
@@ -63,4 +65,3 @@ G4double G4PreCompoundProton::GetAlpha() const
 {
   return 1.0 + G4DeexPrecoUtility::ProtonCValue(theResZ);
 }
-  

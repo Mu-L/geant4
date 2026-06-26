@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  26th August 1998.
 //
 // Class Description:
@@ -43,23 +43,22 @@
 
 class G4VDigi;
 
-class G4DigiModel: public G4VModel {
+class G4DigiModel : public G4VModel
+{
+  public:  // With description
 
-public: // With description
+    G4DigiModel();
 
-  G4DigiModel ();
+    virtual ~G4DigiModel();
 
-  virtual ~G4DigiModel ();
+    virtual void DescribeYourselfTo(G4VGraphicsScene&);
+    // The main task of a model is to describe itself to the graphics scene.
 
-  virtual void DescribeYourselfTo (G4VGraphicsScene&);
-  // The main task of a model is to describe itself to the graphics scene.
+    const G4VDigi* GetCurrentDigi() const { return fpCurrentDigi; }
 
-  const G4VDigi* GetCurrentDigi() const
-  {return fpCurrentDigi;}
+  private:
 
-private:
-
-  const G4VDigi* fpCurrentDigi;
+    const G4VDigi* fpCurrentDigi;
 };
 
 #endif

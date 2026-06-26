@@ -29,10 +29,10 @@
 //      File name:     G4PolarizationTransition
 //
 //      Author:        Jason Detwiler (jasondet@gmail.com)
-// 
+//
 //      Creation date: Aug 2012
 //
-//      Description:   
+//      Description:
 //      Stores and manipulates the statistical tensor describing the nuclear
 //      polarization (see Alder and Winther, "Electromagnetic Excitation" (1975),
 //      Appendix F). Functions are implemented for generating angular correlations
@@ -48,31 +48,29 @@
 #ifndef G4POLARIZATIONTRANSITION_HH
 #define G4POLARIZATIONTRANSITION_HH
 
-#include "globals.hh"
 #include "G4LegendrePolynomial.hh"
 #include "G4PolynomialPDF.hh"
 #include "G4Pow.hh"
+#include "globals.hh"
 
 class G4NuclearPolarization;
 
 class G4PolarizationTransition
 {
-  typedef std::vector< std::vector<G4complex> > POLAR;
+    typedef std::vector<std::vector<G4complex>> POLAR;
 
   public:
+
     G4PolarizationTransition();
     ~G4PolarizationTransition() = default;
 
-    void SampleGammaTransition(G4NuclearPolarization* np, 
-			       G4int twoJ1, G4int twoJ2, 
-                               G4int L0, G4int Lp, G4double mpRatio, 
-			       G4double& cosTheta, G4double& phi);
+    void SampleGammaTransition(G4NuclearPolarization* np, G4int twoJ1, G4int twoJ2, G4int L0,
+                               G4int Lp, G4double mpRatio, G4double& cosTheta, G4double& phi);
 
     // generic static functions
-    G4double FCoefficient(G4int K, G4int L, G4int Lprime, 
-			  G4int twoJ2, G4int twoJ1) const;
-    G4double F3Coefficient(G4int K, G4int K2, G4int K1, G4int L, 
-			   G4int Lprime, G4int twoJ2, G4int twoJ1) const;
+    G4double FCoefficient(G4int K, G4int L, G4int Lprime, G4int twoJ2, G4int twoJ1) const;
+    G4double F3Coefficient(G4int K, G4int K2, G4int K1, G4int L, G4int Lprime, G4int twoJ2,
+                           G4int twoJ1) const;
 
     // transition-specific functions
     G4double GammaTransFCoefficient(G4int K) const;
@@ -84,8 +82,8 @@ class G4PolarizationTransition
 
   private:
 
-    G4PolarizationTransition(const G4PolarizationTransition &right) = delete;
-    const G4PolarizationTransition& operator=(const G4PolarizationTransition &right) = delete;
+    G4PolarizationTransition(const G4PolarizationTransition& right) = delete;
+    const G4PolarizationTransition& operator=(const G4PolarizationTransition& right) = delete;
 
     // Gamma angle generation and decay: call these functions in this order!
     // All angles are in the same coordinate system: user may choose any axis
@@ -102,6 +100,5 @@ class G4PolarizationTransition
     G4PolynomialPDF kPolyPDF;
     G4LegendrePolynomial fgLegendrePolys;
 };
-
 
 #endif

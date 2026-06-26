@@ -22,7 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // G4PVReplica
 //
 // Class description:
@@ -38,17 +38,20 @@
 #ifndef G4PVREPLICA_HH
 #define G4PVREPLICA_HH
 
-#include "G4VPhysicalVolume.hh"
 #include "G4GeomSplitter.hh"
+#include "G4VPhysicalVolume.hh"
 
 class G4ReplicaData
 {
-  /**
-   * @brief G4ReplicaData encapsulates the fields of the class G4PVReplica that
-   * may not be read-only. G4PVReplica inherits from the class G4VPhysicalVolume.
-   * The fields from the ancestor that may not be read-only are handled
-   * by the ancestor class.
-   */
+    /**
+     * @brief G4ReplicaData encapsulates the fields of the class G4PVReplica that
+     * may not be read-only.
+     * @ingroup geometry_volumes
+     *
+     * G4PVReplica inherits from the class G4VPhysicalVolume.
+     * The fields from the ancestor that may not be read-only are handled
+     * by the ancestor class.
+     */
 
   public:
 
@@ -62,10 +65,12 @@ using G4PVRManager = G4GeomSplitter<G4ReplicaData>;
 
 /**
  * @brief G4PVReplica represents many touchable detector elements differing
- * only in their positioning. The elements' positions are calculated by means
- * of a simple linear formula, and the elements completely fill the containing
- * mother volume.
- * 
+ * only in their positioning.
+ * @ingroup geometry_volumes
+ *
+ * The elements' positions are calculated by means of a simple linear formula,
+ * and the elements completely fill the containing mother volume.
+ *
  * Replication may occur along:
  *
  * o Cartesian axes (kXAxis,kYAxis,kZAxis)
@@ -102,12 +107,8 @@ class G4PVReplica : public G4VPhysicalVolume
      *  @param[in] width The witdh of the replicated object along the axis.
      *  @param[in] offset The optional offset distance from mother's border.
      */
-    G4PVReplica(const G4String& pName,
-                      G4LogicalVolume* pLogical,
-                      G4LogicalVolume* pMother,
-                const EAxis pAxis,
-                const G4int nReplicas,
-                const G4double width,
+    G4PVReplica(const G4String& pName, G4LogicalVolume* pLogical, G4LogicalVolume* pMother,
+                const EAxis pAxis, const G4int nReplicas, const G4double width,
                 const G4double offset = 0.);
 
     /**
@@ -121,12 +122,8 @@ class G4PVReplica : public G4VPhysicalVolume
      *  @param[in] width The witdh of the replicated object along the axis.
      *  @param[in] offset The optional offset distance from mother's border.
      */
-    G4PVReplica(const G4String& pName,
-                      G4LogicalVolume* pLogical,
-                      G4VPhysicalVolume* pMother,
-                const EAxis pAxis,
-                const G4int nReplicas,
-                const G4double width,
+    G4PVReplica(const G4String& pName, G4LogicalVolume* pLogical, G4VPhysicalVolume* pMother,
+                const EAxis pAxis, const G4int nReplicas, const G4double width,
                 const G4double offset = 0.);
 
     /**
@@ -139,7 +136,7 @@ class G4PVReplica : public G4VPhysicalVolume
     /**
      * Copy constructor and assignment operator not allowed.
      */
-    G4PVReplica(const G4PVReplica&) =  delete;
+    G4PVReplica(const G4PVReplica&) = delete;
     G4PVReplica& operator=(const G4PVReplica&) = delete;
 
     /**
@@ -166,7 +163,7 @@ class G4PVReplica : public G4VPhysicalVolume
      * Accessor/modifier for optional handling of the copy-number.
      */
     G4int GetCopyNo() const override;
-    void  SetCopyNo(G4int CopyNo) override;
+    void SetCopyNo(G4int CopyNo) override;
 
     /**
      * Returns false and nullptr.
@@ -188,10 +185,7 @@ class G4PVReplica : public G4VPhysicalVolume
      * @param[in,out] consuming Flag of replica characterisation (always true
      *                for pure replicas).
      */
-    void GetReplicationData(EAxis& axis,
-                            G4int& nReplicas,
-                            G4double& width,
-                            G4double& offset,
+    void GetReplicationData(EAxis& axis, G4int& nReplicas, G4double& width, G4double& offset,
                             G4bool& consuming) const override;
 
     /**
@@ -200,12 +194,12 @@ class G4PVReplica : public G4VPhysicalVolume
      *        It can also be used to prepare any corresponding special
      *        navigation 'conditions'.
      */
-    virtual void SetRegularStructureId( G4int code ); 
+    virtual void SetRegularStructureId(G4int code);
 
     /**
      * Accessors for specialised geometries.
      */
-    G4bool IsRegularStructure() const override; 
+    G4bool IsRegularStructure() const override;
     G4int GetRegularStructureId() const override;
 
     // Methods for handling of MT instances
@@ -213,7 +207,7 @@ class G4PVReplica : public G4VPhysicalVolume
     /**
      * Returns the MT instance ID.
      */
-    inline G4int GetInstanceID() const  { return instanceID; }
+    inline G4int GetInstanceID() const { return instanceID; }
 
     /**
      * Returns the private data instance manager.
@@ -239,38 +233,35 @@ class G4PVReplica : public G4VPhysicalVolume
      * Does not set mother or register in mother volume -- leaves it to
      * derived type.
      */
-    G4PVReplica(const G4String& pName,
-                      G4int nReplicas,
-                      EAxis pAxis,
-                      G4LogicalVolume*  pLogical,
-                      G4LogicalVolume*  pMotherLogical);
+    G4PVReplica(const G4String& pName, G4int nReplicas, EAxis pAxis, G4LogicalVolume* pLogical,
+                G4LogicalVolume* pMotherLogical);
 
   private:
 
     /**
      * Performs sanity checks on parameters and initialises data.
      */
-    void CheckAndSetParameters(const EAxis pAxis, const G4int nReplicas,
-                               const G4double width, const G4double offset);
+    void CheckAndSetParameters(const EAxis pAxis, const G4int nReplicas, const G4double width,
+                               const G4double offset);
 
     /**
      * Checks that this volume is the only daughter of its proposed mother
      * volume.
      */
     void CheckOnlyDaughter(G4LogicalVolume* pMotherLogical);
-   
+
   protected:
 
     EAxis faxis;
     G4int fnReplicas;
     G4double fwidth, foffset;
- 
+
   private:
 
     G4int fRegularVolsId = 0;
 
     G4int instanceID;  // Used as instance ID
-    G4GEOM_DLL static G4PVRManager subInstanceManager; // Uses G4PVRManager
+    G4GEOM_DLL static G4PVRManager subInstanceManager;  // Uses G4PVRManager
 };
 
 /**

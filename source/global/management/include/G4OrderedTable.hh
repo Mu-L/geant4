@@ -32,37 +32,38 @@
 // Author: M.Maire (LAPP), September 1996
 // Revisions: H.Kurashige (Kobe Univ.), January-September 2001
 // --------------------------------------------------------------------
-#ifndef G4OrderedTable_hh
-#define G4OrderedTable_hh 1
-
-#include <vector>
+#ifndef G4ORDEREDTABLE_HH
+#define G4ORDEREDTABLE_HH
 
 #include "G4DataVector.hh"
 #include "globals.hh"
 
+#include <vector>
+
 class G4OrderedTable : public std::vector<G4DataVector*>
 {
- public:
-  G4OrderedTable() = default;
-  // Default constructor
+  public:
 
-  explicit G4OrderedTable(std::size_t cap);
-  // Constructor given a 'capacity' defining the initial
-  // number of elements (NULL pointers are filled up)
+    G4OrderedTable() = default;
+    // Default constructor
 
-  virtual ~G4OrderedTable() = default;
-  // Empty Destructor
+    explicit G4OrderedTable(std::size_t cap);
+    // Constructor given a 'capacity' defining the initial
+    // number of elements (NULL pointers are filled up)
 
-  void clearAndDestroy();
-  // Removes all elements and deletes all non-NULL pointers
+    virtual ~G4OrderedTable() = default;
+    // Empty Destructor
 
-  G4bool Store(const G4String& filename, G4bool ascii = false);
-  // Stores OrderedTable in a file (returns false in case of failure)
+    void clearAndDestroy();
+    // Removes all elements and deletes all non-NULL pointers
 
-  G4bool Retrieve(const G4String& filename, G4bool ascii = false);
-  // Retrieves OrderedTable from a file (returns false in case of failure)
+    G4bool Store(const G4String& filename, G4bool ascii = false);
+    // Stores OrderedTable in a file (returns false in case of failure)
 
-  friend std::ostream& operator<<(std::ostream& out, G4OrderedTable& table);
+    G4bool Retrieve(const G4String& filename, G4bool ascii = false);
+    // Retrieves OrderedTable from a file (returns false in case of failure)
+
+    friend std::ostream& operator<<(std::ostream& out, G4OrderedTable& table);
 };
 
 #endif

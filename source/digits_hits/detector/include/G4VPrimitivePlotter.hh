@@ -27,8 +27,8 @@
 //
 // Author: Makoto Asai
 // --------------------------------------------------------------------
-#ifndef G4VPrimitivePlotter_H
-#define G4VPrimitivePlotter_H 1
+#ifndef G4VPRIMITIVEPLOTTER_HH
+#define G4VPRIMITIVEPLOTTER_HH
 
 #include "G4VPrimitiveScorer.hh"
 
@@ -36,16 +36,18 @@
 
 class G4VPrimitivePlotter : public G4VPrimitiveScorer
 {
- public:
-  using G4VPrimitiveScorer::G4VPrimitiveScorer;
-  ~G4VPrimitivePlotter() override = default;
+  public:
 
-  void Plot(G4int copyNo, G4int histID) { hitIDMap[copyNo] = histID; }
+    using G4VPrimitiveScorer::G4VPrimitiveScorer;
+    ~G4VPrimitivePlotter() override = default;
 
-  G4int GetNumberOfHist() const { return (G4int)hitIDMap.size(); }
+    void Plot(G4int copyNo, G4int histID) { hitIDMap[copyNo] = histID; }
 
- protected:
-  std::map<G4int, G4int> hitIDMap;
+    G4int GetNumberOfHist() const { return (G4int)hitIDMap.size(); }
+
+  protected:
+
+    std::map<G4int, G4int> hitIDMap;
 };
 
 #endif

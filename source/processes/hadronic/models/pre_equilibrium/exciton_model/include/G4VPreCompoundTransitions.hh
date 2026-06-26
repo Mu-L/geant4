@@ -24,66 +24,65 @@
 // ********************************************************************
 //
 //
-// J. M. Quesada (May 08). New virtual classes have been added Prob1,2,3 
+// J. M. Quesada (May 08). New virtual classes have been added Prob1,2,3
 // JMQ (06 September 2008) Also external choices have been added for:
-//                      - "never go back"  hipothesis (useNGB=true) 
-//                      - CEM transition probabilities (useCEMtr=true)  
+//                      - "never go back"  hipothesis (useNGB=true)
+//                      - CEM transition probabilities (useCEMtr=true)
 // 20.08.2010 V.Ivanchenko move constructor and destructor to the source
 
-#ifndef G4VPreCompoundTransitions_hh
-#define G4VPreCompoundTransitions_hh 1
+#ifndef G4VPRECOMPOUNDTRANSITIONS_HH
+#define G4VPRECOMPOUNDTRANSITIONS_HH
 
 #include "G4Fragment.hh"
 
 class G4VPreCompoundTransitions
 {
-public:
+  public:
 
-  G4VPreCompoundTransitions();
-  virtual ~G4VPreCompoundTransitions();
+    G4VPreCompoundTransitions();
+    virtual ~G4VPreCompoundTransitions();
 
-  virtual G4double CalculateProbability(const G4Fragment& aFragment) = 0;
-  virtual void PerformTransition(G4Fragment&  aFragment) = 0;
+    virtual G4double CalculateProbability(const G4Fragment& aFragment) = 0;
+    virtual void PerformTransition(G4Fragment& aFragment) = 0;
 
-  inline G4double GetTransitionProb1() const;
+    inline G4double GetTransitionProb1() const;
 
-  inline G4double GetTransitionProb2() const;
+    inline G4double GetTransitionProb2() const;
 
-  inline G4double GetTransitionProb3() const;
+    inline G4double GetTransitionProb3() const;
 
-  // for never go back hypothesis (if useNGB=true, default=false)
-  inline void UseNGB(G4bool use){useNGB=use;}
-  //for use of CEM transition probabilities (if useCEMtr=true, defaut false)
-  inline void UseCEMtr(G4bool use){useCEMtr=use;}
+    // for never go back hypothesis (if useNGB=true, default=false)
+    inline void UseNGB(G4bool use) { useNGB = use; }
+    // for use of CEM transition probabilities (if useCEMtr=true, defaut false)
+    inline void UseCEMtr(G4bool use) { useCEMtr = use; }
 
-  G4VPreCompoundTransitions(const G4VPreCompoundTransitions &) = delete;
-  const G4VPreCompoundTransitions& operator=
-  (const G4VPreCompoundTransitions &right) = delete;
-  G4bool operator==(const G4VPreCompoundTransitions &right) const = delete;
-  G4bool operator!=(const G4VPreCompoundTransitions &right) const = delete;
+    G4VPreCompoundTransitions(const G4VPreCompoundTransitions&) = delete;
+    const G4VPreCompoundTransitions& operator=(const G4VPreCompoundTransitions& right) = delete;
+    G4bool operator==(const G4VPreCompoundTransitions& right) const = delete;
+    G4bool operator!=(const G4VPreCompoundTransitions& right) const = delete;
 
-protected:
+  protected:
 
-  G4bool useNGB;
-  G4bool useCEMtr;
+    G4bool useNGB;
+    G4bool useCEMtr;
 
-  G4double TransitionProb1;
-  G4double TransitionProb2;
-  G4double TransitionProb3;
+    G4double TransitionProb1;
+    G4double TransitionProb2;
+    G4double TransitionProb3;
 };
 
-  //J. M.Quesada (May. 08)
-  inline G4double G4VPreCompoundTransitions::GetTransitionProb1() const
-  {
-    return TransitionProb1;
-  }
-  inline G4double G4VPreCompoundTransitions::GetTransitionProb2() const
-  {
-    return TransitionProb2;
-  }
-  inline G4double G4VPreCompoundTransitions::GetTransitionProb3() const
-  {
-    return TransitionProb3;
-  }
+// J. M.Quesada (May. 08)
+inline G4double G4VPreCompoundTransitions::GetTransitionProb1() const
+{
+  return TransitionProb1;
+}
+inline G4double G4VPreCompoundTransitions::GetTransitionProb2() const
+{
+  return TransitionProb2;
+}
+inline G4double G4VPreCompoundTransitions::GetTransitionProb3() const
+{
+  return TransitionProb3;
+}
 
 #endif

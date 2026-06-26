@@ -6,6 +6,13 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-03-26 Makoto Asai (phys-ctor-limiters-V11-04-00)
+- Remove G4UserSpecialCuts process from G4StepLimiterPhysics.
+- Relocate G4UserSpecialCuts, G4SpecialCuts, G4MaxTimeCuts and G4MinEkineCuts
+  processes to /processes/biasing/management.
+- Update sources.cmake accordingly.
+- Co-working with proc-biasmng-V11-04-00.
+
 ## 2025-01-24 Igor Semeniouk (phys-ctor-limiters-V11-03-00)
 - Fix adding AddBiasingProcessLimiter when parallel word for all not use
 - Ignore G4GenericBiasingPhysics::XXXAddPDGRange if PDGlow > PDGhigh.

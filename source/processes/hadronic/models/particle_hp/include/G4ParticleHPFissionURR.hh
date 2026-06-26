@@ -26,13 +26,13 @@
 //
 // -------------------------------------------------------------------
 //
-//      Geant4 header file 
+//      Geant4 header file
 //
 //      File name: G4ParticleHPFissionURR.hh
 //
 //      Authors: Marek Zmeskal (CTU, Czech Technical University in Prague, Czech Republic)
 //	         Loic Thulliez (CEA France)
-// 
+//
 //      Creation date: 4 June 2024
 //
 //      Description: Final state production model for a high precision
@@ -44,35 +44,38 @@
 //                   class with the corresponding process.
 //
 //      Modifications:
-//      
+//
 // -------------------------------------------------------------------
 //
 //
-#ifndef G4ParticleHPFissionURR_h
-#define G4ParticleHPFissionURR_h 1
+#ifndef G4PARTICLEHPFISSIONURR_HH
+#define G4PARTICLEHPFISSIONURR_HH
 
-#include "globals.hh"
 #include "G4HadronicInteraction.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4ParticleHPFission;
 
-
-class G4ParticleHPFissionURR : public G4HadronicInteraction {
+class G4ParticleHPFissionURR : public G4HadronicInteraction
+{
   public:
+
     G4ParticleHPFissionURR();
     ~G4ParticleHPFissionURR();
-    G4HadFinalState* ApplyYourself( const G4HadProjectile& aTrack, G4Nucleus& aTargetNucleus );
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& aTargetNucleus);
 
-    virtual const std::pair< G4double, G4double > GetFatalEnergyCheckLevels() const;
+    virtual const std::pair<G4double, G4double> GetFatalEnergyCheckLevels() const;
     G4int GetVerboseLevel() const;
-    void SetVerboseLevel( G4int );
-    void BuildPhysicsTable( const G4ParticleDefinition& );
-    virtual void ModelDescription( std::ostream& outFile ) const;
-  
+    void SetVerboseLevel(G4int);
+    void BuildPhysicsTable(const G4ParticleDefinition&);
+    virtual void ModelDescription(std::ostream& outFile) const;
+
   private:
+
     G4ParticleHPFission* particleHPfission;
-    std::vector< std::pair< G4double, G4double > >* URRlimits{ nullptr };
+    std::vector<std::pair<G4double, G4double>>* URRlimits{nullptr};
 };
 
 #endif

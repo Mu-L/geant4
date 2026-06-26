@@ -25,21 +25,21 @@
 //
 //
 //
-// 
+//
 
 #include "G4Circle.hh"
 
 #include "G4VisAttributes.hh"
 
-G4Circle::G4Circle () = default;
+G4Circle::G4Circle() = default;
 
-G4Circle::G4Circle (const G4VMarker& marker): G4VMarker (marker) {}
+G4Circle::G4Circle(const G4VMarker& marker) : G4VMarker(marker) {}
 
-G4Circle::G4Circle (const G4Point3D& pos): G4VMarker (pos) {}
+G4Circle::G4Circle(const G4Point3D& pos) : G4VMarker(pos) {}
 
-G4Circle::~G4Circle () = default;
+G4Circle::~G4Circle() = default;
 
-std::ostream& operator<< (std::ostream& os, const G4Circle& circle)
+std::ostream& operator<<(std::ostream& os, const G4Circle& circle)
 {
   os << "G4Circle: " << (const G4VMarker&)circle;
   return os;

@@ -35,14 +35,14 @@
 // Spline type:
 //   G4SplineType::Simple     - 2d derivative continues
 //   G4SplineType::Base       - 3d derivative continues
-//   G4SplineType::FixedEdges - 3d derivatives continues, 1st and last 
-//                              derivatives are fixed 
+//   G4SplineType::FixedEdges - 3d derivatives continues, 1st and last
+//                              derivatives are fixed
 //
 // Author: H.Kurashige, 9 March 2001
 //
 // --------------------------------------------------------------------
-#ifndef G4PhysicsVectorType_hh
-#define G4PhysicsVectorType_hh 1
+#ifndef G4PHYSICSVECTORTYPE_HH
+#define G4PHYSICSVECTORTYPE_HH
 
 enum G4PhysicsVectorType
 {

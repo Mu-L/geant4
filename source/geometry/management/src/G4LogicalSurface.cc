@@ -30,8 +30,6 @@
 
 #include "G4LogicalSurface.hh"
 
-G4LogicalSurface::G4LogicalSurface(const G4String& name,
-                                   G4SurfaceProperty* surfaceProperty) 
+G4LogicalSurface::G4LogicalSurface(const G4String& name, G4SurfaceProperty* surfaceProperty)
   : theName(name), theSurfaceProperty(surfaceProperty)
-{
-}
+{}

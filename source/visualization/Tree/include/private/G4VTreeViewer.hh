@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  5th April 2001
 // A base class for a dummy viewer to dump geometry hierarchy.
 
@@ -34,13 +34,15 @@
 
 #include "G4VViewer.hh"
 
-class G4VTreeViewer: public G4VViewer {
-public:
-  G4VTreeViewer(G4VSceneHandler&,const G4String& name);
-  virtual ~G4VTreeViewer();
-  void SetView();
-  void ClearView();
-  void DrawView();
+class G4VTreeViewer : public G4VViewer
+{
+  public:
+
+    G4VTreeViewer(G4VSceneHandler&, const G4String& name);
+    virtual ~G4VTreeViewer();
+    void SetView();
+    void ClearView();
+    void DrawView();
 };
 
 #endif

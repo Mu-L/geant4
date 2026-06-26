@@ -28,22 +28,23 @@
 
 // Author: Ivana Hrivnacova, 02/06/2015  (ivana@ipno.in2p3.fr)
 
-#ifndef G4PlotManager_h
-#define G4PlotManager_h 1
+#ifndef G4PLOTMANAGER_HH
+#define G4PLOTMANAGER_HH
 
 #include "G4AnalysisManagerState.hh"
-#include "G4PlotParameters.hh"
 #include "G4HnInformation.hh"
+#include "G4PlotParameters.hh"
 
 #include "tools/viewplot"
 
-#include <vector>
 #include <memory>
 #include <string_view>
+#include <vector>
 
 class G4PlotManager
 {
   public:
+
     explicit G4PlotManager(const G4AnalysisManagerState& state);
     ~G4PlotManager() = default;
 
@@ -53,59 +54,62 @@ class G4PlotManager
     G4PlotManager& operator=(const G4PlotManager& rhs) = delete;
 
   public:
+
     // Methods
     G4bool OpenFile(const G4String& fileName);
-    template <typename HT>
+    template<typename HT>
     G4bool PlotAndWrite(const std::vector<std::pair<HT*, G4HnInformation*>>& hnVector);
     G4bool CloseFile();
 
   private:
+
     // Methods
-    G4int  GetNofPlotsPerPage() const;
+    G4int GetNofPlotsPerPage() const;
     G4bool WritePage();
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4PlotManager" };
+    static constexpr std::string_view fkClass{"G4PlotManager"};
 
     // Data members
     const G4AnalysisManagerState& fState;
     G4PlotParameters fPlotParameters;
-    std::unique_ptr<tools::viewplot>  fViewer;
-    G4String  fFileName;
+    std::unique_ptr<tools::viewplot> fViewer;
+    G4String fFileName;
 };
 
 // inline functions
 
 //_____________________________________________________________________________
-inline G4int  G4PlotManager::GetNofPlotsPerPage() const
-{ return fPlotParameters.GetColumns()*fPlotParameters.GetRows(); }
-
+inline G4int G4PlotManager::GetNofPlotsPerPage() const
+{
+  return fPlotParameters.GetColumns() * fPlotParameters.GetRows();
+}
 
 //_____________________________________________________________________________
-template <typename HT>
-inline G4bool G4PlotManager::PlotAndWrite(
-  const std::vector<std::pair<HT*, G4HnInformation*>>& hnVector)
+template<typename HT>
+inline G4bool
+G4PlotManager::PlotAndWrite(const std::vector<std::pair<HT*, G4HnInformation*>>& hnVector)
 {
-  if ( ! hnVector.size() ) return true;
+  if (!hnVector.size()) return true;
 
   fViewer->plots().init_sg();
-    //it will recreate the sg::plotters and then reset the styles on new ones.
+  // it will recreate the sg::plotters and then reset the styles on new ones.
   fViewer->set_cols_rows(fPlotParameters.GetColumns(), fPlotParameters.GetRows());
   fViewer->plots().set_current_plotter(0);
 
   auto result = true;
   auto isWriteNeeded = false;
 
-  for (const auto& [ht, info] : hnVector) {
+  for (const auto& [ht, info] : hnVector)
+  {
     G4bool plotting = info->GetPlotting();
     G4bool activation = info->GetActivation();
     G4String name = info->GetName();
     // skip plotting if not selected for plotting or
     // if activation is enabled and HT is inactivated
     // or HT is delted
-    if ( ( ! plotting ) ||
-         ( fState.GetIsActivation() && ( ! activation ) ) ||
-         ( info->GetDeleted() ) ) continue;
+    if ((!plotting) || (fState.GetIsActivation() && (!activation)) || (info->GetDeleted()))
+      continue;
 
     // plot this object
     fViewer->plot(*ht);
@@ -118,13 +122,16 @@ inline G4bool G4PlotManager::PlotAndWrite(
 
     // get axis titles from base_histo (base of all T)
     G4String title;
-    if ( ht->annotation(tools::histo::key_axis_x_title(), title) ) {
+    if (ht->annotation(tools::histo::key_axis_x_title(), title))
+    {
       plotter.x_axis().title = title;
     }
-    if ( ht->annotation(tools::histo::key_axis_y_title(), title) ) {
+    if (ht->annotation(tools::histo::key_axis_y_title(), title))
+    {
       plotter.y_axis().title = title;
     }
-    if ( ht->annotation(tools::histo::key_axis_z_title(), title) ) {
+    if (ht->annotation(tools::histo::key_axis_z_title(), title))
+    {
       plotter.z_axis().title = title;
     }
 
@@ -133,15 +140,18 @@ inline G4bool G4PlotManager::PlotAndWrite(
 #endif
 
     // get log axis parameters from G4HnInformation
-    if ( info->GetIsLogAxis(G4Analysis::kX) ) {
+    if (info->GetIsLogAxis(G4Analysis::kX))
+    {
       plotter.x_axis().labels_style().encoding = "PAW";
       plotter.x_axis_is_log = true;
     }
-    if ( info->GetIsLogAxis(G4Analysis::kY) ) {
+    if (info->GetIsLogAxis(G4Analysis::kY))
+    {
       plotter.y_axis().labels_style().encoding = "PAW";
       plotter.y_axis_is_log = true;
     }
-    if ( info->GetIsLogAxis(G4Analysis::kZ) ) {
+    if (info->GetIsLogAxis(G4Analysis::kZ))
+    {
       plotter.z_axis().labels_style().encoding = "PAW";
       plotter.z_axis_is_log = true;
     }
@@ -150,7 +160,8 @@ inline G4bool G4PlotManager::PlotAndWrite(
     fState.Message(G4Analysis::kVL3, "plotting", "hd|pd", name);
 
     // write a page if number of plots per page is achieved
-    if ( G4int(fViewer->plots().current_index()) == (GetNofPlotsPerPage() - 1) ) {
+    if (G4int(fViewer->plots().current_index()) == (GetNofPlotsPerPage() - 1))
+    {
       result &= WritePage();
       isWriteNeeded = false;
     }
@@ -160,7 +171,8 @@ inline G4bool G4PlotManager::PlotAndWrite(
   }
 
   // write a page if loop is finished and there are plots to be written
-  if ( isWriteNeeded ) {
+  if (isWriteNeeded)
+  {
     result &= WritePage();
   }
 

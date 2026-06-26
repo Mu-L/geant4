@@ -43,7 +43,8 @@
 // J. Comput. Phys. 274 (2014) 841-882
 // Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#pragma once
+#ifndef G4MOLECULECOUNTER_HH
+#define G4MOLECULECOUNTER_HH
 
 #include "G4MolecularConfiguration.hh"
 #include "G4VUserMoleculeCounter.hh"
@@ -57,8 +58,7 @@ struct G4MoleculeCounterIndex : public G4VMoleculeCounter::G4VMoleculeCounterInd
 {
     const G4MolecularConfiguration* Molecule;
     G4MoleculeCounterIndex() : Molecule(nullptr) {}
-    explicit G4MoleculeCounterIndex(const G4MolecularConfiguration* molecule) : Molecule(molecule)
-    {}
+    explicit G4MoleculeCounterIndex(const G4MolecularConfiguration* mol) : Molecule(mol) {}
     ~G4MoleculeCounterIndex() override = default;
     G4bool operator<(G4VMoleculeCounterIndex const& other) const override
     {
@@ -70,15 +70,8 @@ struct G4MoleculeCounterIndex : public G4VMoleculeCounter::G4VMoleculeCounterInd
     }
     G4String GetInfo() const override
     {
-      G4String null = "null";
-      if (Molecule == nullptr) {
-        return null;
-      }
-      else {
-        G4String name = Molecule->GetName();
-        G4String info = "Molecule: " + name;
-        return info;
-      }
+      return Molecule == nullptr ? G4String("Molecule: null")
+                                 : G4String("Molecule: " + Molecule->GetName());
     }
     const G4MolecularConfiguration* GetMolecule() const override { return Molecule; }
 };
@@ -86,7 +79,9 @@ struct G4MoleculeCounterIndex : public G4VMoleculeCounter::G4VMoleculeCounterInd
 class G4MoleculeCounter : public G4VUserMoleculeCounter<G4MoleculeCounterIndex>
 {
     //----------------------------------------------------------------------------
+
   public:
+
     G4MoleculeCounter();
     G4MoleculeCounter(G4String);
     ~G4MoleculeCounter() override = default;
@@ -94,9 +89,12 @@ class G4MoleculeCounter : public G4VUserMoleculeCounter<G4MoleculeCounterIndex>
     void InitializeUser() override;
 
   public:
+
     std::unique_ptr<G4VMoleculeCounterIndex> BuildIndex(const G4Track*) const override;
     std::unique_ptr<G4VMoleculeCounterIndex> BuildIndex(const G4Track*,
                                                         const G4StepPoint*) const override;
     std::unique_ptr<G4VMoleculeCounterIndex>
     BuildSimpleIndex(const G4MolecularConfiguration*) const override;
 };
+
+#endif

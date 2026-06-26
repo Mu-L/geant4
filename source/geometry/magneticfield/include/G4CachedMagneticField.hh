@@ -34,14 +34,15 @@
 #ifndef G4CACHED_MAGNETIC_FIELD_HH
 #define G4CACHED_MAGNETIC_FIELD_HH
 
-#include "G4Types.hh"
-#include "G4ThreeVector.hh"
 #include "G4MagneticField.hh"
+#include "G4ThreeVector.hh"
+#include "G4Types.hh"
 
 /**
  * @brief G4CachedMagneticField is a specialisation of G4MagneticField and
  * is used to cache the Magnetic Field value, for fields whose evaluation is
  * expensive.
+ * @ingroup geometry_magneticfield
  */
 
 class G4CachedMagneticField : public G4MagneticField
@@ -65,38 +66,41 @@ class G4CachedMagneticField : public G4MagneticField
      * Copy constructor and assignment operator.
      */
     G4CachedMagneticField(const G4CachedMagneticField& r);
-    G4CachedMagneticField& operator = (const G4CachedMagneticField& p);
+    G4CachedMagneticField& operator=(const G4CachedMagneticField& p);
 
     /**
      * Returns the value of the field at the give 'Point'.
      *  @param[in] Point The given position time vector (x,y,z,t).
      *  @param[out] Bfield The returned field array.
      */
-    void GetFieldValue( const G4double Point[4],
-                              G4double* Bfield ) const override;
-     
+    void GetFieldValue(const G4double Point[4], G4double* Bfield) const override;
+
     /**
      * Getter and setter for the distance within which field is constant.
      */
-    inline G4double GetConstDistance() const { return fDistanceConst; } 
-    inline void SetConstDistance( G4double dist ) { fDistanceConst = dist;}
+    inline G4double GetConstDistance() const { return fDistanceConst; }
+    inline void SetConstDistance(G4double dist) { fDistanceConst = dist; }
 
     /**
      * Accessors.
      */
     inline G4int GetCountCalls() const { return fCountCalls; }
-    inline G4int GetCountEvaluations() const { return fCountEvaluations; } 
+    inline G4int GetCountEvaluations() const { return fCountEvaluations; }
 
     /**
      * Resets counters.
      */
-    inline void ClearCounts() { fCountCalls = 0; fCountEvaluations=0; }
+    inline void ClearCounts()
+    {
+      fCountCalls = 0;
+      fCountEvaluations = 0;
+    }
 
     /**
      * Streams on standard output the values of counters.
      */
     void ReportStatistics();
-    
+
     /**
      * Returns a pointer of an allocated clone of the field.
      */
@@ -104,7 +108,7 @@ class G4CachedMagneticField : public G4MagneticField
 
   protected:
 
-    mutable G4int fCountCalls = 0, fCountEvaluations = 0;  
+    mutable G4int fCountCalls = 0, fCountEvaluations = 0;
 
   private:
 

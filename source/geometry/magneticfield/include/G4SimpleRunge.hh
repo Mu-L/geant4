@@ -45,6 +45,7 @@
 /**
  * @brief G4SimpleRunge implements a simple Runge stepper for magnetic field
  * with 2nd order solver.
+ * @ingroup geometry_magneticfield
  */
 
 class G4SimpleRunge : public G4MagErrorStepper
@@ -56,8 +57,7 @@ class G4SimpleRunge : public G4MagErrorStepper
      *  @param[in] EquationRhs Pointer to the provided equation of motion.
      *  @param[in] numberOfVariables The number of integration variables.
      */
-    G4SimpleRunge(G4EquationOfMotion* EquationRhs,
-                  G4int numberOfVariables = 6);
+    G4SimpleRunge(G4EquationOfMotion* EquationRhs, G4int numberOfVariables = 6);
 
     /**
      * Destructor.
@@ -78,10 +78,8 @@ class G4SimpleRunge : public G4MagErrorStepper
      *  @param[in] h The given step size.
      *  @param[out] yout Integration output.
      */
-    void DumbStepper( const G4double y[],
-                      const G4double dydx[],
-                            G4double h,
-                            G4double yout[] ) override;
+    void DumbStepper(const G4double y[], const G4double dydx[], G4double h,
+                     G4double yout[]) override;
 
     /**
      * Returns the order, 2, of integration.

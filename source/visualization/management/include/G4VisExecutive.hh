@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison 2nd February 2005 (based on MyVisManager, 24th January 1998).
 //
 // Class description
@@ -116,30 +116,29 @@
 
 #include "G4VisManager.hh"
 
-class G4VisExecutive: public G4VisManager {
+class G4VisExecutive : public G4VisManager
+{
+  public:  // With description
 
-public: // With description
+    G4VisExecutive(const G4String& verbosityString = "warnings");
+    G4VisExecutive(int argc, char** argv, const G4String& system = "",
+                   const G4String& verbosityString = "warnings");
 
-  G4VisExecutive(const G4String& verbosityString = "warnings");
-  G4VisExecutive(int argc, char** argv, const G4String& system = "",
-                 const G4String& verbosityString = "warnings");
+  private:
 
-private:
+    const G4String& GetDefaultGraphicsSystemName() override;
+    void SetDefaultsByArgument(const G4String& system);
+    void SetDefaultsByEnvironment();
+    void SetDefaultsByFile(int argc, char** argv);
+    void SetDefaultsByBatch();
+    void SetDefaultsByBuildFlags();
+    int fUserArgc;
+    char** fUserArgv;
+    G4String fUserSpecifiedSystem;
+    G4bool fSelected;
 
-  const G4String& GetDefaultGraphicsSystemName() override;
-  void SetDefaultsByArgument(const G4String& system);
-  void SetDefaultsByEnvironment();
-  void SetDefaultsByFile(int argc, char** argv);
-  void SetDefaultsByBatch();
-  void SetDefaultsByBuildFlags();
-  int      fUserArgc;
-  char**   fUserArgv;
-  G4String fUserSpecifiedSystem;
-  G4bool   fSelected;
-
-  void RegisterGraphicsSystems() override;
-  void RegisterModelFactories() override;
-
+    void RegisterGraphicsSystems() override;
+    void RegisterModelFactories() override;
 };
 
 #include "G4VisExecutive.icc"

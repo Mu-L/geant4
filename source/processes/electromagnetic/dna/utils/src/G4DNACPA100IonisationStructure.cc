@@ -54,31 +54,38 @@ G4DNACPA100IonisationStructure::G4DNACPA100IonisationStructure()
   fpAdenine = G4Material::GetMaterial("G4_ADENINE", false);
   fpPhosphate = G4Material::GetMaterial("G4_PHOSPHORIC_ACID", false);
 
-  if (fpGuanine != nullptr) {
+  if (fpGuanine != nullptr)
+  {
     InitialiseGuanine();
   }
 
-  if (fpG4_WATER != nullptr) {
+  if (fpG4_WATER != nullptr)
+  {
     InitialiseWater();
   }
 
-  if (fpDeoxyribose != nullptr) {
+  if (fpDeoxyribose != nullptr)
+  {
     InitialiseDeoxyribose();
   }
 
-  if (fpCytosine != nullptr) {
+  if (fpCytosine != nullptr)
+  {
     InitialiseCytosine();
   }
 
-  if (fpThymine != nullptr) {
+  if (fpThymine != nullptr)
+  {
     InitialiseThymine();
   }
 
-  if (fpAdenine != nullptr) {
+  if (fpAdenine != nullptr)
+  {
     InitialiseAdenine();
   }
 
-  if (fpPhosphate != nullptr) {
+  if (fpPhosphate != nullptr)
+  {
     InitialisePhosphate();
   }
 }
@@ -355,10 +362,12 @@ G4double G4DNACPA100IonisationStructure::IonisationEnergy(const std::size_t& lev
 {
   G4double ionisation = 0.;
 
-  if (level < fnLevels[MatID]) {
+  if (level < fnLevels[MatID])
+  {
     ionisation = fEnergyConstant[MatID][level];
   }
-  else {
+  else
+  {
     std::ostringstream oss;
     oss << " material was not found. ";
     G4Exception("G4DNACPA100IonisationStructure::IonisationEnergy", "CPA013", FatalException,
@@ -373,10 +382,12 @@ G4double G4DNACPA100IonisationStructure::IonisationEnergy(const std::size_t& lev
 G4double G4DNACPA100IonisationStructure::UEnergy(const std::size_t& level, const std::size_t& MatID)
 {
   G4double UEnergy = 0.;
-  if (level < fnLevels[MatID]) {
+  if (level < fnLevels[MatID])
+  {
     UEnergy = fUConstant[MatID][level];
   }
-  else {
+  else
+  {
     std::ostringstream oss;
     oss << " material was not found. ";
     G4Exception("G4DNACPA100IonisationStructure::IonisationEnergy", "CPA001", FatalException,

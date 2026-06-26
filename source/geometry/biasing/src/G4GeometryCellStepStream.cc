@@ -29,8 +29,9 @@
 // ----------------------------------------------------------------------
 
 #include "G4GeometryCellStepStream.hh"
-#include "G4VPhysicalVolume.hh"
+
 #include "G4GeometryCellStep.hh"
+#include "G4VPhysicalVolume.hh"
 
 std::ostream& operator<<(std::ostream& out, const G4GeometryCell& tk)
 {
@@ -41,8 +42,8 @@ std::ostream& operator<<(std::ostream& out, const G4GeometryCell& tk)
 
 std::ostream& operator<<(std::ostream& out, const G4GeometryCellStep& ps)
 {
-  out << "PreGeometryCell : " <<  ps.GetPreGeometryCell() << " ";
-  out << "PostGeometryCell: " <<  ps.GetPostGeometryCell() << " ";
-  out << "CrossBoundary   : " <<  ps.GetCrossBoundary() << "\n";
+  out << "PreGeometryCell : " << ps.GetPreGeometryCell() << " ";
+  out << "PostGeometryCell: " << ps.GetPostGeometryCell() << " ";
+  out << "CrossBoundary   : " << ps.GetCrossBoundary() << "\n";
   return out;
 }

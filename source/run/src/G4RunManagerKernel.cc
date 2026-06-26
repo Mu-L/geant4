@@ -90,7 +90,7 @@ namespace
 {
 G4Mutex initphysicsmutex = G4MUTEX_INITIALIZER;
 G4Mutex propGenericIonMutex = G4MUTEX_INITIALIZER;
-}
+}  // namespace
 
 // --------------------------------------------------------------------
 G4ThreadLocal G4RunManagerKernel* G4RunManagerKernel::fRunManagerKernel = nullptr;
@@ -110,10 +110,12 @@ G4RunManagerKernel::G4RunManagerKernel()
 
 #ifdef G4BT_DEBUG
   auto _signals = G4GetEnv<std::string>("G4BACKTRACE", "");
-  if (_signals.empty()) {
+  if (_signals.empty())
+  {
     G4Backtrace::Enable();
   }
-  else {
+  else
+  {
     G4Backtrace::Enable(_signals);
   }
 #endif
@@ -121,24 +123,28 @@ G4RunManagerKernel::G4RunManagerKernel()
   G4AllocatorList* allocList = G4AllocatorList::GetAllocatorListIfExist();
   if (allocList != nullptr) numberOfStaticAllocators = (G4int)allocList->Size();
 
-  if (G4StateManager::GetStateManager()->GetExceptionHandler() == nullptr) {
+  if (G4StateManager::GetStateManager()->GetExceptionHandler() == nullptr)
+  {
     defaultExceptionHandler = new G4ExceptionHandler();
   }
-  if (fRunManagerKernel != nullptr) {
+  if (fRunManagerKernel != nullptr)
+  {
     G4Exception("G4RunManagerKernel::G4RunManagerKernel()", "Run0001", FatalException,
                 "More than one G4RunManagerKernel is constructed.");
   }
   fRunManagerKernel = this;
 
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-  if (particleTable->entries() > 0) {
+  if (particleTable->entries() > 0)
+  {
     // No particle should be registered beforehand
     G4ExceptionDescription ED;
     ED << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << G4endl;
     ED << " G4RunManagerKernel fatal exception" << G4endl;
     ED << "  -- Following particles have already been registered" << G4endl;
     ED << "     before G4RunManagerKernel is instantiated." << G4endl;
-    for (G4int i = 0; i < particleTable->entries(); ++i) {
+    for (G4int i = 0; i < particleTable->entries(); ++i)
+    {
       ED << "     " << particleTable->GetParticle(i)->GetParticleName() << G4endl;
     }
     ED << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << G4endl;
@@ -190,26 +196,31 @@ G4RunManagerKernel::G4RunManagerKernel(RMKType rmkType)
 #endif
 
 #ifdef G4FPE_DEBUG
-  if (G4Threading::IsMasterThread()) {
+  if (G4Threading::IsMasterThread())
+  {
     InvalidOperationDetection();
   }
 #endif
 
 #ifdef G4BT_DEBUG
   auto _signals = G4GetEnv<std::string>("G4BACKTRACE", "");
-  if (_signals.empty()) {
+  if (_signals.empty())
+  {
     G4Backtrace::Enable();
   }
-  else {
+  else
+  {
     G4Backtrace::Enable(_signals);
   }
 #endif
 
-  if (G4StateManager::GetStateManager()->GetExceptionHandler() == nullptr) {
+  if (G4StateManager::GetStateManager()->GetExceptionHandler() == nullptr)
+  {
     defaultExceptionHandler = new G4ExceptionHandler();
   }
 
-  if (fRunManagerKernel != nullptr) {
+  if (fRunManagerKernel != nullptr)
+  {
     G4Exception("G4RunManagerKernel::G4RunManagerKernel()", "Run0001", FatalException,
                 "More than one G4RunManagerKernel is constructed.");
   }
@@ -217,7 +228,8 @@ G4RunManagerKernel::G4RunManagerKernel(RMKType rmkType)
   // construction of Geant4 kernel classes
   eventManager = new G4EventManager();
 
-  switch (rmkType) {
+  switch (rmkType)
+  {
     case masterRMK:
       // Master thread behvior
       defaultRegion = new G4Region("DefaultRegionForTheWorld");  // deleted by store
@@ -251,7 +263,8 @@ G4RunManagerKernel::G4RunManagerKernel(RMKType rmkType)
   // version banner
   G4String vs = G4Version;
   vs = vs.substr(1, vs.size() - 2);
-  switch (rmkType) {
+  switch (rmkType)
+  {
     case masterRMK:
       versionString = " Geant4 version ";
       versionString += vs;
@@ -268,7 +281,8 @@ G4RunManagerKernel::G4RunManagerKernel(RMKType rmkType)
              << G4endl;
       break;
     default:
-      if (verboseLevel != 0) {
+      if (verboseLevel != 0)
+      {
         versionString = " Local thread RunManagerKernel version ";
         versionString += vs;
         G4cout << G4endl
@@ -292,8 +306,10 @@ void G4RunManagerKernel::SetupDefaultRegion()
   if (runManagerKernelType == workerRMK) return;
 
   // Remove old world logical volume from the default region, if exist
-  if (defaultRegion->GetNumberOfRootVolumes() != 0u) {
-    if (defaultRegion->GetNumberOfRootVolumes() > size_t(1)) {
+  if (defaultRegion->GetNumberOfRootVolumes() != 0u)
+  {
+    if (defaultRegion->GetNumberOfRootVolumes() > size_t(1))
+    {
       G4Exception("G4RunManager::SetupDefaultRegion", "Run0005", FatalException,
                   "Default world region should have a unique logical volume.");
     }
@@ -309,7 +325,8 @@ G4RunManagerKernel::~G4RunManagerKernel()
 {
   G4StateManager* pStateManager = G4StateManager::GetStateManager();
   // set the application state to the quite state
-  if (pStateManager->GetCurrentState() != G4State_Quit) {
+  if (pStateManager->GetCurrentState() != G4State_Quit)
+  {
     if (verboseLevel > 1) G4cout << "G4 kernel has come to Quit state." << G4endl;
     pStateManager->SetNewState(G4State_Quit);
   }
@@ -340,21 +357,24 @@ G4RunManagerKernel::~G4RunManagerKernel()
   delete G4NavigationHistoryPool::GetInstance();
 
   // deletion of G4RNGHelper singleton
-  if (runManagerKernelType != workerRMK) {
+  if (runManagerKernelType != workerRMK)
+  {
     delete G4RNGHelper::GetInstanceIfExist();
     if (verboseLevel > 1) G4cout << "G4RNGHelper object is deleted." << G4endl;
   }
 
   // deletion of allocators
   G4AllocatorList* allocList = G4AllocatorList::GetAllocatorListIfExist();
-  if (allocList != nullptr) {
+  if (allocList != nullptr)
+  {
     allocList->Destroy(numberOfStaticAllocators, verboseLevel);
     delete allocList;
     if (verboseLevel > 1) G4cout << "G4Allocator objects are deleted." << G4endl;
   }
 
   G4UImanager* pUImanager = G4UImanager::GetUIpointer();
-  if ((runManagerKernelType == workerRMK) && (verboseLevel > 1)) {
+  if ((runManagerKernelType == workerRMK) && (verboseLevel > 1))
+  {
     G4cout << "Thread-local UImanager is to be deleted." << G4endl
            << "There should not be any thread-local G4cout/G4cerr hereafter." << G4endl;
   }
@@ -374,11 +394,13 @@ void G4RunManagerKernel::WorkerUpdateWorldVolume()
   G4MTRunManager* masterRM = G4MTRunManager::GetMasterRunManager();
   G4TransportationManager* transM = G4TransportationManager::GetTransportationManager();
   G4MTRunManager::masterWorlds_t masterWorlds = masterRM->GetMasterWorlds();
-  for (const auto& masterWorld : masterWorlds) {
+  for (const auto& masterWorld : masterWorlds)
+  {
     G4VPhysicalVolume* wv = masterWorld.second;
     G4VPhysicalVolume* pWorld =
       G4TransportationManager::GetTransportationManager()->IsWorldExisting(wv->GetName());
-    if (pWorld == nullptr) {
+    if (pWorld == nullptr)
+    {
       transM->RegisterWorld(wv);
     }
   }
@@ -390,8 +412,10 @@ void G4RunManagerKernel::WorkerDefineWorldVolume(G4VPhysicalVolume* worldVol,
 {
   G4StateManager* stateManager = G4StateManager::GetStateManager();
   G4ApplicationState currentState = stateManager->GetCurrentState();
-  if (currentState != G4State_Init) {
-    if (currentState != G4State_Idle && currentState != G4State_PreInit) {
+  if (currentState != G4State_Init)
+  {
+    if (currentState != G4State_Idle && currentState != G4State_PreInit)
+    {
       G4cout << "Current application state is " << stateManager->GetStateString(currentState)
              << G4endl;
       G4Exception("G4RunManagerKernel::DefineWorldVolume", "DefineWorldVolumeAtIncorrectState",
@@ -406,15 +430,19 @@ void G4RunManagerKernel::WorkerDefineWorldVolume(G4VPhysicalVolume* worldVol,
   G4MTRunManager* masterRM = G4MTRunManager::GetMasterRunManager();
   G4TransportationManager* transM = G4TransportationManager::GetTransportationManager();
   G4MTRunManager::masterWorlds_t masterWorlds = masterRM->GetMasterWorlds();
-  for (const auto& masterWorld : masterWorlds) {
-    if (masterWorld.first == 0) {
-      if (masterWorld.second != currentWorld) {
+  for (const auto& masterWorld : masterWorlds)
+  {
+    if (masterWorld.first == 0)
+    {
+      if (masterWorld.second != currentWorld)
+      {
         G4Exception("G4RunManagerKernel::WorkerDefineWorldVolume", "RUN3091", FatalException,
                     "Mass world is inconsistent");
       }
       transM->SetWorldForTracking(masterWorld.second);
     }
-    else {
+    else
+    {
       transM->RegisterWorld(masterWorld.second);
     }
   }
@@ -422,14 +450,16 @@ void G4RunManagerKernel::WorkerDefineWorldVolume(G4VPhysicalVolume* worldVol,
   if (topologyIsChanged) geometryNeedsToBeClosed = true;
 
   // Notify the VisManager as well
-  if (G4Threading::IsMasterThread()) {
+  if (G4Threading::IsMasterThread())
+  {
     G4VVisManager* pVVisManager = G4VVisManager::GetConcreteInstance();
     if (pVVisManager != nullptr) pVVisManager->GeometryHasChanged();
   }
 
   geometryInitialized = true;
   stateManager->SetNewState(currentState);
-  if (physicsInitialized && currentState != G4State_Idle) {
+  if (physicsInitialized && currentState != G4State_Idle)
+  {
     stateManager->SetNewState(G4State_Idle);
   }
 }
@@ -440,8 +470,10 @@ void G4RunManagerKernel::DefineWorldVolume(G4VPhysicalVolume* worldVol, G4bool t
   G4StateManager* stateManager = G4StateManager::GetStateManager();
   G4ApplicationState currentState = stateManager->GetCurrentState();
 
-  if (currentState != G4State_Init) {
-    if (currentState != G4State_Idle && currentState != G4State_PreInit) {
+  if (currentState != G4State_Init)
+  {
+    if (currentState != G4State_Idle && currentState != G4State_PreInit)
+    {
       G4cout << "Current application state is " << stateManager->GetStateString(currentState)
              << G4endl;
       G4Exception("G4RunManagerKernel::DefineWorldVolume", "DefineWorldVolumeAtIncorrectState",
@@ -453,8 +485,10 @@ void G4RunManagerKernel::DefineWorldVolume(G4VPhysicalVolume* worldVol, G4bool t
   }
 
   // The world volume MUST NOT have a region defined by the user
-  if (worldVol->GetLogicalVolume()->GetRegion() != nullptr) {
-    if (worldVol->GetLogicalVolume()->GetRegion() != defaultRegion) {
+  if (worldVol->GetLogicalVolume()->GetRegion() != nullptr)
+  {
+    if (worldVol->GetLogicalVolume()->GetRegion() != defaultRegion)
+    {
       G4ExceptionDescription ED;
       ED << "The world volume has a user-defined region <"
          << worldVol->GetLogicalVolume()->GetRegion()->GetName() << ">." << G4endl;
@@ -481,14 +515,16 @@ void G4RunManagerKernel::DefineWorldVolume(G4VPhysicalVolume* worldVol, G4bool t
   if (topologyIsChanged) geometryNeedsToBeClosed = true;
 
   // Notify the VisManager as well
-  if (G4Threading::IsMasterThread()) {
+  if (G4Threading::IsMasterThread())
+  {
     G4VVisManager* pVVisManager = G4VVisManager::GetConcreteInstance();
     if (pVVisManager != nullptr) pVVisManager->GeometryHasChanged();
   }
 
   geometryInitialized = true;
   stateManager->SetNewState(currentState);
-  if (physicsInitialized && currentState != G4State_Idle) {
+  if (physicsInitialized && currentState != G4State_Idle)
+  {
     stateManager->SetNewState(G4State_Idle);
   }
 }
@@ -502,12 +538,14 @@ void G4RunManagerKernel::SetPhysics(G4VUserPhysicsList* uPhys)
 
   SetupPhysics();
   if (verboseLevel > 2) G4ParticleTable::GetParticleTable()->DumpTable();
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "List of instantiated particles "
               "============================================"
            << G4endl;
     G4int nPtcl = G4ParticleTable::GetParticleTable()->entries();
-    for (G4int i = 0; i < nPtcl; ++i) {
+    for (G4int i = 0; i < nPtcl; ++i)
+    {
       G4ParticleDefinition* pd = G4ParticleTable::GetParticleTable()->GetParticle(i);
       G4cout << pd->GetParticleName() << " ";
       if (i % 10 == 9) G4cout << G4endl;
@@ -526,22 +564,26 @@ void G4RunManagerKernel::SetupPhysics()
   // For sanity reason
   G4Geantino::GeantinoDefinition();
   G4ParticleDefinition* gion = G4ParticleTable::GetParticleTable()->GetGenericIon();
-  if (gion != nullptr) {
+  if (gion != nullptr)
+  {
     G4IonConstructor::ConstructParticle();
   }
   G4ParticleTable::GetParticleTable()->GetIonTable()->InitializeLightIons();
 
   auto pItr = G4ParticleTable::GetParticleTable()->GetIterator();
   pItr->reset();
-  while ((*pItr)()) {
+  while ((*pItr)())
+  {
     G4ParticleDefinition* particle = pItr->value();
     if (!(particle->IsGeneralIon())) particle->SetParticleDefinitionID();
   }
 
-  if (gion != nullptr) {
+  if (gion != nullptr)
+  {
     G4int gionId = gion->GetParticleDefinitionID();
     pItr->reset(false);
-    while ((*pItr)()) {
+    while ((*pItr)())
+    {
       G4ParticleDefinition* particle = pItr->value();
       if (particle->IsGeneralIon()) particle->SetParticleDefinitionID(gionId);
     }
@@ -556,10 +598,12 @@ void G4RunManagerKernel::InitializePhysics()
 {
   G4StateManager* stateManager = G4StateManager::GetStateManager();
   G4ApplicationState currentState = stateManager->GetCurrentState();
-  if (currentState != G4State_Init) {
+  if (currentState != G4State_Init)
+  {
     G4cout << "Current application state is " << stateManager->GetStateString(currentState)
            << G4endl;
-    if (currentState != G4State_Idle && currentState != G4State_PreInit) {
+    if (currentState != G4State_Idle && currentState != G4State_PreInit)
+    {
       G4Exception("G4RunManagerKernel::InitializePhysics", "InitializePhysicsIncorrectState",
                   FatalException, "Geant4 kernel is not Init state : Method ignored.");
       return;
@@ -569,7 +613,8 @@ void G4RunManagerKernel::InitializePhysics()
     stateManager->SetNewState(G4State_Init);
   }
 
-  if (physicsList == nullptr) {
+  if (physicsList == nullptr)
+  {
     G4Exception("G4RunManagerKernel::InitializePhysics", "Run0012", FatalException,
                 "G4VUserPhysicsList is not defined");
     return;
@@ -585,7 +630,8 @@ void G4RunManagerKernel::InitializePhysics()
   // Cannot assume that SetCuts() and CheckRegions() are thread safe.
   // We need to mutex (report from valgrind --tool=drd)
   G4AutoLock l(&initphysicsmutex);
-  if (G4Threading::IsMasterThread()) {
+  if (G4Threading::IsMasterThread())
+  {
     if (verboseLevel > 1) G4cout << "physicsList->setCut() start." << G4endl;
     physicsList->SetCuts();
   }
@@ -599,7 +645,8 @@ void G4RunManagerKernel::InitializePhysics()
 #endif
 
   stateManager->SetNewState(currentState);
-  if (geometryInitialized && currentState != G4State_Idle) {
+  if (geometryInitialized && currentState != G4State_Idle)
+  {
     stateManager->SetNewState(G4State_Idle);
   }
 }
@@ -610,19 +657,22 @@ G4bool G4RunManagerKernel::RunInitialization(G4bool fakeRun)
   G4StateManager* stateManager = G4StateManager::GetStateManager();
   G4ApplicationState currentState = stateManager->GetCurrentState();
 
-  if (!geometryInitialized) {
+  if (!geometryInitialized)
+  {
     G4Exception("G4RunManagerKernel::RunInitialization", "Run0021", JustWarning,
                 "Geometry has not yet initialized : method ignored.");
     return false;
   }
 
-  if (!physicsInitialized) {
+  if (!physicsInitialized)
+  {
     G4Exception("G4RunManagerKernel::RunInitialization", "Run0022", JustWarning,
                 "Physics has not yet initialized : method ignored.");
     return false;
   }
 
-  if (currentState != G4State_Idle) {
+  if (currentState != G4State_Idle)
+  {
     G4Exception("G4RunManagerKernel::RunInitialization", "Run0023", JustWarning,
                 "Geant4 kernel not in Idle state : method ignored.");
     return false;
@@ -636,11 +686,13 @@ G4bool G4RunManagerKernel::RunInitialization(G4bool fakeRun)
   UpdateRegion();
   BuildPhysicsTables(fakeRun);
 
-  if (geometryNeedsToBeClosed) {
-    if(!fakeRun || resetNavigatorAtInitialization) ResetNavigator();
+  if (geometryNeedsToBeClosed)
+  {
+    if (!fakeRun || resetNavigatorAtInitialization) ResetNavigator();
     // CheckRegularGeometry();
     // Notify the VisManager as well
-    if (G4Threading::IsMasterThread()) {
+    if (G4Threading::IsMasterThread())
+    {
       G4VVisManager* pVVisManager = G4VVisManager::GetConcreteInstance();
       if (pVVisManager != nullptr) pVVisManager->GeometryHasChanged();
     }
@@ -662,11 +714,13 @@ void G4RunManagerKernel::PropagateGenericIonID()
 {
   G4AutoLock l(&propGenericIonMutex);
   G4ParticleDefinition* gion = G4ParticleTable::GetParticleTable()->GetGenericIon();
-  if (gion != nullptr) {
+  if (gion != nullptr)
+  {
     G4int gionId = gion->GetParticleDefinitionID();
     auto pItr = G4ParticleTable::GetParticleTable()->GetIterator();
     pItr->reset(false);
-    while ((*pItr)()) {
+    while ((*pItr)())
+    {
       G4ParticleDefinition* particle = pItr->value();
       if (particle->IsGeneralIon()) particle->SetParticleDefinitionID(gionId);
     }
@@ -677,7 +731,9 @@ void G4RunManagerKernel::PropagateGenericIonID()
 void G4RunManagerKernel::RunTermination()
 {
   if (runManagerKernelType != workerRMK)
-  { G4ProductionCutsTable::GetProductionCutsTable()->PhysicsTableUpdated(); } 
+  {
+    G4ProductionCutsTable::GetProductionCutsTable()->PhysicsTableUpdated();
+  }
   G4StateManager::GetStateManager()->SetNewState(G4State_Idle);
 }
 
@@ -685,10 +741,11 @@ void G4RunManagerKernel::RunTermination()
 void G4RunManagerKernel::ResetNavigator()
 {
   G4GeometryManager* geomManager = G4GeometryManager::GetInstance();
-  if (runManagerKernelType == workerRMK) {
+  if (runManagerKernelType == workerRMK)
+  {
     // To ensure that it is called when using G4TaskRunManagerKernel
-    if( geomManager->IsParallelOptimisationConfigured() &&
-       !geomManager->IsParallelOptimisationFinished() )
+    if (geomManager->IsParallelOptimisationConfigured()
+        && !geomManager->IsParallelOptimisationFinished())
     {
       geomManager->UndertakeOptimisation();
     }
@@ -714,7 +771,8 @@ void G4RunManagerKernel::UpdateRegion()
 {
   G4StateManager* stateManager = G4StateManager::GetStateManager();
   G4ApplicationState currentState = stateManager->GetCurrentState();
-  if (currentState != G4State_Init) {
+  if (currentState != G4State_Init)
+  {
     G4Exception("G4RunManagerKernel::UpdateRegion", "Run0024", JustWarning,
                 "Geant4 kernel not in Init state : method ignored.");
     return;
@@ -732,9 +790,11 @@ void G4RunManagerKernel::UpdateRegion()
 // --------------------------------------------------------------------
 void G4RunManagerKernel::BuildPhysicsTables(G4bool fakeRun)
 {
-  if (G4ProductionCutsTable::GetProductionCutsTable()->IsModified() || physicsNeedsToBeReBuilt) {
+  if (G4ProductionCutsTable::GetProductionCutsTable()->IsModified() || physicsNeedsToBeReBuilt)
+  {
 #ifdef G4MULTITHREADED
-    if (runManagerKernelType == masterRMK) {
+    if (runManagerKernelType == masterRMK)
+    {
       // make sure workers also rebuild physics tables
       G4UImanager* pUImanager = G4UImanager::GetUIpointer();
       pUImanager->ApplyCommand("/run/physicsModified");
@@ -755,7 +815,8 @@ void G4RunManagerKernel::CheckRegions()
   G4TransportationManager* transM = G4TransportationManager::GetTransportationManager();
   std::size_t nWorlds = transM->GetNoWorlds();
   std::vector<G4VPhysicalVolume*>::iterator wItr;
-  for (auto region : *G4RegionStore::GetInstance()) {
+  for (auto region : *G4RegionStore::GetInstance())
+  {
     // Let each region have a pointer to the world volume where it belongs to.
     // G4Region::SetWorld() checks if the region belongs to the given world and
     // set it only if it does. Thus, here we go through all the registered world
@@ -764,12 +825,16 @@ void G4RunManagerKernel::CheckRegions()
     region->UsedInMassGeometry(false);
     region->UsedInParallelGeometry(false);
     wItr = transM->GetWorldsIterator();
-    for (std::size_t iw = 0; iw < nWorlds; ++iw) {
-      if (region->BelongsTo(*wItr)) {
-        if (*wItr == currentWorld) {
+    for (std::size_t iw = 0; iw < nWorlds; ++iw)
+    {
+      if (region->BelongsTo(*wItr))
+      {
+        if (*wItr == currentWorld)
+        {
           region->UsedInMassGeometry(true);
         }
-        else {
+        else
+        {
           region->UsedInParallelGeometry(true);
         }
       }
@@ -778,15 +843,18 @@ void G4RunManagerKernel::CheckRegions()
     }
 
     G4ProductionCuts* cuts = region->GetProductionCuts();
-    if (cuts == nullptr) {
-      if (region->IsInMassGeometry() && verboseLevel > 0) {
+    if (cuts == nullptr)
+    {
+      if (region->IsInMassGeometry() && verboseLevel > 0)
+      {
         G4cout << "Warning : Region <" << region->GetName()
                << "> does not have specific production cuts," << G4endl
                << "even though it appears in the current tracking world." << G4endl;
         G4cout << "Default cuts are used for this region." << G4endl;
       }
 
-      if (region->IsInMassGeometry() || region->IsInParallelGeometry()) {
+      if (region->IsInMassGeometry() || region->IsInParallelGeometry())
+      {
         region->SetProductionCuts(
           G4ProductionCutsTable::GetProductionCutsTable()->GetDefaultProductionCuts());
       }
@@ -798,10 +866,13 @@ void G4RunManagerKernel::CheckRegions()
   //
 
   wItr = transM->GetWorldsIterator();
-  for (std::size_t iw = 0; iw < nWorlds; ++iw) {
-    if (*wItr != currentWorld) {
+  for (std::size_t iw = 0; iw < nWorlds; ++iw)
+  {
+    if (*wItr != currentWorld)
+    {
       G4LogicalVolume* pwLogical = (*wItr)->GetLogicalVolume();
-      if (pwLogical->GetRegion() == nullptr) {
+      if (pwLogical->GetRegion() == nullptr)
+      {
         pwLogical->SetRegion(defaultRegionForParallelWorld);
         defaultRegionForParallelWorld->AddRootLogicalVolume(pwLogical);
       }
@@ -820,33 +891,41 @@ void G4RunManagerKernel::DumpRegion(const G4String& rname) const
 // --------------------------------------------------------------------
 void G4RunManagerKernel::DumpRegion(G4Region* region) const
 {
-  if (region == nullptr) {
-    for (const auto& i : *G4RegionStore::GetInstance()) {
+  if (region == nullptr)
+  {
+    for (const auto& i : *G4RegionStore::GetInstance())
+    {
       DumpRegion(i);
     }
   }
-  else {
+  else
+  {
     if (G4Threading::IsWorkerThread()) return;
     G4cout << G4endl;
     G4cout << "Region <" << region->GetName() << "> -- ";
-    if (region->GetWorldPhysical() != nullptr) {
+    if (region->GetWorldPhysical() != nullptr)
+    {
       G4cout << " -- appears in <" << region->GetWorldPhysical()->GetName() << "> world volume";
     }
-    else {
+    else
+    {
       G4cout << " -- is not associated to any world.";
     }
     G4cout << G4endl;
-    if (region->IsInMassGeometry()) {
+    if (region->IsInMassGeometry())
+    {
       G4cout << " This region is in the mass world." << G4endl;
     }
-    if (region->IsInParallelGeometry()) {
+    if (region->IsInParallelGeometry())
+    {
       G4cout << " This region is in the parallel world." << G4endl;
     }
 
     G4cout << " Root logical volume(s) : ";
     std::size_t nRootLV = region->GetNumberOfRootVolumes();
     auto lvItr = region->GetRootLogicalVolumeIterator();
-    for (std::size_t j = 0; j < nRootLV; ++j) {
+    for (std::size_t j = 0; j < nRootLV; ++j)
+    {
       G4cout << (*lvItr)->GetName() << " ";
       ++lvItr;
     }
@@ -860,20 +939,23 @@ void G4RunManagerKernel::DumpRegion(G4Region* region) const
     G4cout << " Materials : ";
     auto mItr = region->GetMaterialIterator();
     std::size_t nMaterial = region->GetNumberOfMaterials();
-    for (std::size_t iMate = 0; iMate < nMaterial; ++iMate) {
+    for (std::size_t iMate = 0; iMate < nMaterial; ++iMate)
+    {
       G4cout << (*mItr)->GetName() << " ";
       ++mItr;
     }
     G4cout << G4endl;
     G4ProductionCuts* cuts = region->GetProductionCuts();
-    if ((cuts == nullptr) && region->IsInMassGeometry()) {
+    if ((cuts == nullptr) && region->IsInMassGeometry())
+    {
       G4cerr << "Warning : Region <" << region->GetName()
              << "> does not have specific production cuts." << G4endl;
       G4cerr << "Default cuts are used for this region." << G4endl;
       region->SetProductionCuts(
         G4ProductionCutsTable::GetProductionCutsTable()->GetDefaultProductionCuts());
     }
-    else if (cuts != nullptr) {
+    else if (cuts != nullptr)
+    {
       G4cout << " Production cuts : "
              << "  gamma " << G4BestUnit(cuts->GetProductionCut("gamma"), "Length") << "     e- "
              << G4BestUnit(cuts->GetProductionCut("e-"), "Length") << "     e+ "
@@ -887,9 +969,12 @@ void G4RunManagerKernel::DumpRegion(G4Region* region) const
 void G4RunManagerKernel::CheckRegularGeometry()
 {
   G4LogicalVolumeStore* store = G4LogicalVolumeStore::GetInstance();
-  for (const auto& pos : *store) {
-    if ((pos != nullptr) && (pos->GetNoDaughters() == 1)) {
-      if (pos->GetDaughter(0)->IsRegularStructure()) {
+  for (const auto& pos : *store)
+  {
+    if ((pos != nullptr) && (pos->GetNoDaughters() == 1))
+    {
+      if (pos->GetDaughter(0)->IsRegularStructure())
+      {
         SetScoreSplitter();
         return;
       }
@@ -903,10 +988,12 @@ G4bool G4RunManagerKernel::ConfirmCoupledTransportation()
   G4ParticleTable* theParticleTable = G4ParticleTable::GetParticleTable();
   auto theParticleIterator = theParticleTable->GetIterator();
   theParticleIterator->reset();
-  while ((*theParticleIterator)()) {
+  while ((*theParticleIterator)())
+  {
     G4ParticleDefinition* pd = theParticleIterator->value();
     G4ProcessManager* pm = pd->GetProcessManager();
-    if (pm != nullptr) {
+    if (pm != nullptr)
+    {
       G4ProcessVector* pv = pm->GetAlongStepProcessVector(typeDoIt);
       G4VProcess* p = (*pv)[0];
       return ((p->GetProcessName()) == "CoupledTransportation");
@@ -924,19 +1011,23 @@ void G4RunManagerKernel::SetScoreSplitter()
 
   // Ensure that Process is added only once to the particles' process managers
   static G4ThreadLocal G4bool InitSplitter = false;
-  if (!InitSplitter) {
+  if (!InitSplitter)
+  {
     InitSplitter = true;
 
     theParticleIterator->reset();
-    while ((*theParticleIterator)()) {
+    while ((*theParticleIterator)())
+    {
       G4ParticleDefinition* particle = theParticleIterator->value();
       G4ProcessManager* pmanager = particle->GetProcessManager();
-      if (pmanager != nullptr) {
+      if (pmanager != nullptr)
+      {
         pmanager->AddDiscreteProcess(pSplitter);
       }
     }
 
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       G4cout << "G4RunManagerKernel -- G4ScoreSplittingProcess is appended to all "
                 "particles."
              << G4endl;
@@ -951,14 +1042,18 @@ void G4RunManagerKernel::SetupShadowProcess() const
   auto theParticleIterator = theParticleTable->GetIterator();
   theParticleIterator->reset();
   // loop on particles and get process manager from there list of processes
-  while ((*theParticleIterator)()) {
+  while ((*theParticleIterator)())
+  {
     G4ParticleDefinition* pd = theParticleIterator->value();
     G4ProcessManager* pm = pd->GetProcessManager();
-    if (pm != nullptr) {
+    if (pm != nullptr)
+    {
       G4ProcessVector& procs = *(pm->GetProcessList());
-      for (G4int idx = 0; idx < (G4int)procs.size(); ++idx) {
+      for (G4int idx = 0; idx < (G4int)procs.size(); ++idx)
+      {
         const G4VProcess* masterP = procs[idx]->GetMasterProcess();
-        if (masterP == nullptr) {
+        if (masterP == nullptr)
+        {
           // Process does not have an associated shadow master process
           // We are in master mode or sequential
           procs[idx]->SetMasterProcess(const_cast<G4VProcess*>(procs[idx]));

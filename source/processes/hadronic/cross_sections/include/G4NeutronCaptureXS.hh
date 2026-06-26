@@ -37,18 +37,19 @@
 
 // Class Description:
 // This is a base class for neutron radiative capture cross section based on
-// data files from G4PARTICLEXSDATA data set 
+// data files from G4PARTICLEXSDATA data set
 // Class Description - End
- 
-#ifndef G4NeutronCaptureXS_h
-#define G4NeutronCaptureXS_h 1
 
-#include "G4VCrossSectionDataSet.hh"
-#include "globals.hh"
+#ifndef G4NEUTRONCAPTUREXS_HH
+#define G4NEUTRONCAPTUREXS_HH
+
 #include "G4ElementData.hh"
 #include "G4PhysicsVector.hh"
-#include <vector>
+#include "G4VCrossSectionDataSet.hh"
+#include "globals.hh"
+
 #include <iostream>
+#include <vector>
 
 class G4DynamicParticle;
 class G4ParticleDefinition;
@@ -56,98 +57,89 @@ class G4Element;
 
 class G4NeutronCaptureXS final : public G4VCrossSectionDataSet
 {
-public: 
+  public:
 
-  G4NeutronCaptureXS();
+    G4NeutronCaptureXS();
 
-  ~G4NeutronCaptureXS() override = default;
-    
-  static const char* Default_Name() {return "G4NeutronCaptureXS";}
+    ~G4NeutronCaptureXS() override = default;
 
-  G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z,
-			     const G4Material*) final;
+    static const char* Default_Name() { return "G4NeutronCaptureXS"; }
 
-  G4bool IsIsoApplicable(const G4DynamicParticle*, G4int Z, G4int A,
-			 const G4Element*, const G4Material*) final;
+    G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z, const G4Material*) final;
 
-  G4double GetElementCrossSection(const G4DynamicParticle*, 
-				  G4int Z, const G4Material*) final;
+    G4bool IsIsoApplicable(const G4DynamicParticle*, G4int Z, G4int A, const G4Element*,
+                           const G4Material*) final;
 
-  G4double ComputeCrossSectionPerElement(G4double kinEnergy, G4double loge,
-                                         const G4ParticleDefinition*,
-                                         const G4Element*,
-                                         const G4Material*) final;
-  
-  G4double ComputeIsoCrossSection(G4double kinEnergy, G4double loge,
-                                  const G4ParticleDefinition*,
-                                  G4int Z, G4int A,
-                                  const G4Isotope* iso,
-                                  const G4Element* elm,
-                                  const G4Material* mat) final;
+    G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z, const G4Material*) final;
 
-  G4double GetIsoCrossSection(const G4DynamicParticle*, G4int Z, G4int A,
-                              const G4Isotope* iso,
-                              const G4Element* elm,
-                              const G4Material* mat) final;
+    G4double ComputeCrossSectionPerElement(G4double kinEnergy, G4double loge,
+                                           const G4ParticleDefinition*, const G4Element*,
+                                           const G4Material*) final;
 
-  const G4Isotope* SelectIsotope(const G4Element*, G4double kinEnergy,
-                                 G4double logE) final;
+    G4double ComputeIsoCrossSection(G4double kinEnergy, G4double loge, const G4ParticleDefinition*,
+                                    G4int Z, G4int A, const G4Isotope* iso, const G4Element* elm,
+                                    const G4Material* mat) final;
 
-  void BuildPhysicsTable(const G4ParticleDefinition&) final;
+    G4double GetIsoCrossSection(const G4DynamicParticle*, G4int Z, G4int A, const G4Isotope* iso,
+                                const G4Element* elm, const G4Material* mat) final;
 
-  void CrossSectionDescription(std::ostream&) const final;
+    const G4Isotope* SelectIsotope(const G4Element*, G4double kinEnergy, G4double logE) final;
 
-  G4double ElementCrossSection(G4double kinEnergy, G4double loge, G4int Z);
+    void BuildPhysicsTable(const G4ParticleDefinition&) final;
 
-  G4double IsoCrossSection(G4double ekin, G4double logekin, G4int Z, G4int A);
+    void CrossSectionDescription(std::ostream&) const final;
 
-  G4NeutronCaptureXS & operator=(const G4NeutronCaptureXS &right) = delete;
-  G4NeutronCaptureXS(const G4NeutronCaptureXS&) = delete;
+    G4double ElementCrossSection(G4double kinEnergy, G4double loge, G4int Z);
 
-private: 
+    G4double IsoCrossSection(G4double ekin, G4double logekin, G4int Z, G4int A);
 
-  void Initialise(G4int Z);
+    G4NeutronCaptureXS& operator=(const G4NeutronCaptureXS& right) = delete;
+    G4NeutronCaptureXS(const G4NeutronCaptureXS&) = delete;
 
-  void InitialiseOnFly(G4int Z);
+  private:
 
-  const G4String& FindDirectoryPath();
+    void Initialise(G4int Z);
 
-  inline const G4PhysicsVector* GetPhysicsVector(G4int Z);
+    void InitialiseOnFly(G4int Z);
 
-  inline const G4PhysicsVector* GetPhysicsVectorR(G4int Z);
+    const G4String& FindDirectoryPath();
 
-  G4PhysicsVector* RetrieveVector(std::ostringstream& in, G4bool warn);
+    inline const G4PhysicsVector* GetPhysicsVector(G4int Z);
 
-  G4double emax;
-  G4double elimit;
-  G4double logElimit;
+    inline const G4PhysicsVector* GetPhysicsVectorR(G4int Z);
 
-  std::vector<G4double> temp;
+    G4PhysicsVector* RetrieveVector(std::ostringstream& in, G4bool warn);
 
-  G4bool isInitializer{false};
-  G4bool fRfilesEnabled{false};
+    G4double emax;
+    G4double elimit;
+    G4double logElimit;
 
-  static G4ElementData* data;
-  static G4ElementData* dataR;
-  static G4String gDataDirectory;
+    std::vector<G4double> temp;
+
+    G4bool isInitializer{false};
+    G4bool fRfilesEnabled{false};
+
+    static G4ElementData* data;
+    static G4ElementData* dataR;
+    static G4String gDataDirectory;
 };
 
-inline
-const G4PhysicsVector* G4NeutronCaptureXS::GetPhysicsVector(G4int Z)
+inline const G4PhysicsVector* G4NeutronCaptureXS::GetPhysicsVector(G4int Z)
 {
   const G4PhysicsVector* pv = data->GetElementData(Z);
-  if (pv == nullptr) {
+  if (pv == nullptr)
+  {
     InitialiseOnFly(Z);
     pv = data->GetElementData(Z);
   }
   return pv;
 }
 
-inline
-const G4PhysicsVector* G4NeutronCaptureXS::GetPhysicsVectorR(G4int Z)
+inline const G4PhysicsVector* G4NeutronCaptureXS::GetPhysicsVectorR(G4int Z)
 {
   const G4PhysicsVector* pv = dataR->GetElementData(Z);
-  if (pv == nullptr) { 
+  if (pv == nullptr)
+  {
     InitialiseOnFly(Z);
     pv = dataR->GetElementData(Z);
   }

@@ -33,19 +33,21 @@
 // **********************************************************************
 //
 
-#ifndef G4XibMinus_h
-#define G4XibMinus_h 1
+#ifndef G4XIBMINUS_HH
+#define G4XIBMINUS_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4XibMinus : public G4ParticleDefinition
 {
   public:
+
     static G4XibMinus* Definition();
     static G4XibMinus* XibMinusDefinition();
     static G4XibMinus* XibMinus();
 
   private:
+
     G4XibMinus() {}
     ~G4XibMinus() override = default;
 

@@ -40,54 +40,48 @@
 // -------------------------------------------------------------------
 
 #ifndef G4DOPPLERPROFILE_HH
-#define G4DOPPLERPROFILE_HH 1
+#define G4DOPPLERPROFILE_HH
 
 #include "globals.hh"
-#include <vector>
+
 #include <map>
+#include <vector>
 
 class G4VEMDataSet;
 
-class G4DopplerProfile 
-{ 
-public:
-  explicit G4DopplerProfile(G4int minZ = 1, G4int maxZ = 100);
-  ~G4DopplerProfile();
- 
-  size_t NumberOfProfiles(G4int Z) const;
+class G4DopplerProfile
+{
+  public:
 
-  const G4VEMDataSet* Profiles(G4int Z) const;
-  const G4VEMDataSet* Profile(G4int Z, G4int ShellIndex) const;
+    explicit G4DopplerProfile(G4int minZ = 1, G4int maxZ = 100);
+    ~G4DopplerProfile();
 
-  void PrintData() const;
+    size_t NumberOfProfiles(G4int Z) const;
 
-  // Random select a momentum value based on Doppler profiles
-  G4double RandomSelectMomentum(G4int Z, G4int shellIndex) const;
- 
-private:
-  // Hide copy constructor and assignment operator 
-  G4DopplerProfile& operator=(const G4DopplerProfile& right) = delete;
-  G4DopplerProfile(const G4DopplerProfile&) = delete;
-  void LoadBiggsP(const G4String& fileName);
-  void LoadProfile(const G4String& fileName, G4int Z);
+    const G4VEMDataSet* Profiles(G4int Z) const;
+    const G4VEMDataSet* Profile(G4int Z, G4int ShellIndex) const;
 
-  std::map<G4int,G4VEMDataSet*,std::less<G4int> > profileMap;
-  std::vector<G4int> nShells;
-  std::vector<G4double> biggsP;
+    void PrintData() const;
 
-  G4int zMin;
-  G4int zMax; 
-  
-  size_t nBiggs = 31;  
+    // Random select a momentum value based on Doppler profiles
+    G4double RandomSelectMomentum(G4int Z, G4int shellIndex) const;
+
+  private:
+
+    // Hide copy constructor and assignment operator
+    G4DopplerProfile& operator=(const G4DopplerProfile& right) = delete;
+    G4DopplerProfile(const G4DopplerProfile&) = delete;
+    void LoadBiggsP(const G4String& fileName);
+    void LoadProfile(const G4String& fileName, G4int Z);
+
+    std::map<G4int, G4VEMDataSet*, std::less<G4int>> profileMap;
+    std::vector<G4int> nShells;
+    std::vector<G4double> biggsP;
+
+    G4int zMin;
+    G4int zMax;
+
+    size_t nBiggs = 31;
 };
- 
+
 #endif
-
-
-
-
-
-
-
-
-

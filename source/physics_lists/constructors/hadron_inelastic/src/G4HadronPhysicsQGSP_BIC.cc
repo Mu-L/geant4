@@ -43,13 +43,14 @@
 //
 
 #include "G4HadronPhysicsQGSP_BIC.hh"
-#include "G4PhysicsConstructorFactory.hh"
+
 #include "G4HadronicParameters.hh"
+#include "G4PhysicsConstructorFactory.hh"
 
 G4_DECLARE_PHYSCONSTR_FACTORY(G4HadronPhysicsQGSP_BIC);
 
 G4HadronPhysicsQGSP_BIC::G4HadronPhysicsQGSP_BIC(G4int verb)
-  : G4HadronPhysicsQGSP_BIC("hInelastic QGSP_BIC", true) 
+  : G4HadronPhysicsQGSP_BIC("hInelastic QGSP_BIC", true)
 {
   G4HadronicParameters::Instance()->SetVerboseLevel(verb);
 }
@@ -57,9 +58,8 @@ G4HadronPhysicsQGSP_BIC::G4HadronPhysicsQGSP_BIC(G4int verb)
 G4HadronPhysicsQGSP_BIC::G4HadronPhysicsQGSP_BIC(const G4String& name, G4bool b)
   : G4HadronPhysicsQGSP_BERT(name, b)
 {
-  maxBIC_proton = maxBIC_neutron = 1.5*CLHEP::GeV;
-  minBERT_proton = minBERT_neutron = 1.0*CLHEP::GeV;
+  maxBIC_proton = maxBIC_neutron = 1.5 * CLHEP::GeV;
+  minBERT_proton = minBERT_neutron = 1.0 * CLHEP::GeV;
   G4HadronicParameters::Instance()->SetEnableBCParticles(false);
   G4HadronicParameters::Instance()->SetUseRFilesForXS(true);
 }
-

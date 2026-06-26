@@ -24,15 +24,16 @@
 // ********************************************************************
 //
 
-#ifndef G4NoProcess_h
-#define G4NoProcess_h 1
+#ifndef G4NOPROCESS_HH
+#define G4NOPROCESS_HH
 
 #include "G4VProcess.hh"
 
-class G4NoProcess : public G4VProcess {
+class G4NoProcess : public G4VProcess
+{
   public:
 
-    G4NoProcess() : G4VProcess( "NoProcess", fGeneral ) {};
+    G4NoProcess() : G4VProcess("NoProcess", fGeneral) {};
 
     virtual ~G4NoProcess() {};
 
@@ -40,46 +41,43 @@ class G4NoProcess : public G4VProcess {
     virtual G4bool IsApplicable(const G4ParticleDefinition&) override { return false; }
 
     //  no operations in any GPIL or DoIt
-    virtual G4double PostStepGetPhysicalInteractionLength(
-                             const G4Track&,
-                             G4double,
-                             G4ForceCondition*
-                            ) override { return -1.0; };
+    virtual G4double PostStepGetPhysicalInteractionLength(const G4Track&, G4double,
+                                                          G4ForceCondition*) override
+    {
+      return -1.0;
+    };
 
-    virtual G4VParticleChange* PostStepDoIt(
-                             const G4Track& ,
-                             const G4Step&
-                            ) override {return nullptr;};
+    virtual G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&) override
+    {
+      return nullptr;
+    };
 
-    virtual G4double AtRestGetPhysicalInteractionLength(
-                             const G4Track& ,
-                             G4ForceCondition*
-                            ) override { return -1.0; };
+    virtual G4double AtRestGetPhysicalInteractionLength(const G4Track&, G4ForceCondition*) override
+    {
+      return -1.0;
+    };
 
-    virtual G4VParticleChange* AtRestDoIt(
-                             const G4Track& ,
-                             const G4Step&
-                            ) override {return nullptr;};
+    virtual G4VParticleChange* AtRestDoIt(const G4Track&, const G4Step&) override
+    {
+      return nullptr;
+    };
 
-    virtual G4double AlongStepGetPhysicalInteractionLength(
-                             const G4Track&,
-                             G4double  ,
-                             G4double  ,
-                             G4double& ,
-                             G4GPILSelection*
-                            ) override { return -1.0; };
+    virtual G4double AlongStepGetPhysicalInteractionLength(const G4Track&, G4double, G4double,
+                                                           G4double&, G4GPILSelection*) override
+    {
+      return -1.0;
+    };
 
-    virtual G4VParticleChange* AlongStepDoIt(
-                             const G4Track& ,
-                             const G4Step&
-                            ) override {return nullptr;};
+    virtual G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&) override
+    {
+      return nullptr;
+    };
 
   private:
 
     // hide copy constr and assignment operator as private
     G4NoProcess(G4NoProcess&);
     G4NoProcess& operator=(const G4NoProcess& right);
-
 };
 
 #endif

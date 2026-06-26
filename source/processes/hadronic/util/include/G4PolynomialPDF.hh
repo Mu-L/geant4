@@ -31,7 +31,7 @@
 //      File name:     G4PolynomialPDF
 //
 //      Author:        Jason Detwiler (jasondet@gmail.com)
-// 
+//
 //      Creation date: Aug 2012
 //
 //      Description:   Evaluates, generates random numbers from, and evaluates
@@ -44,20 +44,28 @@
 #define G4POLYNOMIALPDF_HH
 
 #include "globals.hh"
+
 #include <vector>
 
 class G4PolynomialPDF
 {
   public:
-    G4PolynomialPDF(size_t n = 0, const double* coeffs = nullptr, 
-		    G4double x1=0, G4double x2=1);
+
+    G4PolynomialPDF(size_t n = 0, const double* coeffs = nullptr, G4double x1 = 0, G4double x2 = 1);
 
     ~G4PolynomialPDF();
     // Setters and Getters for coefficients
-    inline void SetNCoefficients(size_t n) { fCoefficients.resize(n); fChanged = true; }
+    inline void SetNCoefficients(size_t n)
+    {
+      fCoefficients.resize(n);
+      fChanged = true;
+    }
     inline size_t GetNCoefficients() const { return fCoefficients.size(); }
-    inline void SetCoefficients(const std::vector<G4double>& v) { 
-      fCoefficients = v; fChanged = true; Simplify(); 
+    inline void SetCoefficients(const std::vector<G4double>& v)
+    {
+      fCoefficients = v;
+      fChanged = true;
+      Simplify();
     }
     inline G4double GetCoefficient(size_t i) const { return fCoefficients[i]; }
     void SetCoefficient(size_t i, G4double value, bool doSimplify);
@@ -74,7 +82,7 @@ class G4PolynomialPDF
     void Normalize();
 
     // Evaluate (d/dx)^ddxPower f(x) (-1 <= ddxPower <= 2)
-    // ddxPower = -1 -> CDF; 
+    // ddxPower = -1 -> CDF;
     // ddxPower = 0 -> PDF
     // ddxPower = 1 -> PDF'
     // ddxPower = 2 -> PDF''
@@ -87,7 +95,7 @@ class G4PolynomialPDF
     inline void SetTolerance(G4double tolerance) { fTolerance = tolerance; }
 
     // Find a value x between x1 and x2 at which ddxPower[PDF](x) = p.
-    // ddxPower = -1 -> CDF; 
+    // ddxPower = -1 -> CDF;
     // ddxPower = 0 -> PDF
     // ddxPower = 1 -> PDF'
     // (ddxPower = 2 not implemented)
@@ -97,23 +105,27 @@ class G4PolynomialPDF
     // Beware that if x1 and x2 are not set carefully there may be multiple
     // solutions, and care is not taken to select a particular one among them.
     // Returns x2 on error
-    G4double GetX( G4double p, G4double x1, G4double x2, G4int ddxPower = 0, 
-                   G4double guess = 1.e99, G4bool bisect = true );
-    inline G4double EvalInverseCDF(G4double p) { return GetX(p, fX1, fX2, -1, fX1 + p*(fX2-fX1)); }
-    G4double Bisect( G4double p, G4double x1, G4double x2 );
+    G4double GetX(G4double p, G4double x1, G4double x2, G4int ddxPower = 0, G4double guess = 1.e99,
+                  G4bool bisect = true);
+    inline G4double EvalInverseCDF(G4double p)
+    {
+      return GetX(p, fX1, fX2, -1, fX1 + p * (fX2 - fX1));
+    }
+    G4double Bisect(G4double p, G4double x1, G4double x2);
 
     void Dump();
 
   protected:
+
     // Checks for negative values between x1 and x2. Used by GetRandomX()
     G4bool HasNegativeMinimum(G4double x1, G4double x2);
 
     G4double fX1;
     G4double fX2;
     std::vector<G4double> fCoefficients;
-    G4bool   fChanged;
+    G4bool fChanged;
     G4double fTolerance;
-    G4int    fVerbose;
+    G4int fVerbose;
 };
 
 #endif

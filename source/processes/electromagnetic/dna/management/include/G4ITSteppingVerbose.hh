@@ -36,50 +36,49 @@
 
 class G4SteppingVerbose;
 
-#ifndef G4SteppingVerose_h
-#define G4SteppingVerose_h 1
+#ifndef G4ITSTEPPINGVERBOSE_HH
+#define G4ITSTEPPINGVERBOSE_HH
 
 #include "G4VITSteppingVerbose.hh"
 
 class G4ITSteppingVerbose : public G4VITSteppingVerbose
 {
-public:
-  G4ITSteppingVerbose();
-  ~G4ITSteppingVerbose() override;
+  public:
 
-  // methods to be invoked in the SteppingManager
-  void NewStep() override;
-  void StepInfoForLeadingTrack() override;
+    G4ITSteppingVerbose();
+    ~G4ITSteppingVerbose() override;
 
-  void AtRestDoItInvoked() override;
-  void AtRestDoItOneByOne() override;
+    // methods to be invoked in the SteppingManager
+    void NewStep() override;
+    void StepInfoForLeadingTrack() override;
 
-  void AlongStepDoItAllDone() override;
-  void AlongStepDoItOneByOne() override;
+    void AtRestDoItInvoked() override;
+    void AtRestDoItOneByOne() override;
 
-  void PostStepDoItAllDone() override;
-  void PostStepDoItOneByOne() override;
+    void AlongStepDoItAllDone() override;
+    void AlongStepDoItOneByOne() override;
 
-  void StepInfo() override;
-  void TrackingStarted(G4Track*) override;
-  void TrackingEnded(G4Track*) override;
+    void PostStepDoItAllDone() override;
+    void PostStepDoItOneByOne() override;
 
-  void DoItStarted() override;
-  void PreStepVerbose(G4Track* track) override;
-  void PostStepVerbose(G4Track* track) override;
+    void StepInfo() override;
+    void TrackingStarted(G4Track*) override;
+    void TrackingEnded(G4Track*) override;
 
-  void DPSLStarted() override;
-  void DPSLUserLimit() override;
-  void DPSLPostStep() override;
-  void DPSLAlongStep() override;
-//  void DPSLAlongStepDoItOneByOne();
-//  void DPSLPostStepDoItOneByOne();
-  void VerboseTrack() override;
-  void VerboseParticleChange() override;
-  void ShowStep() const;
-//
+    void DoItStarted() override;
+    void PreStepVerbose(G4Track* track) override;
+    void PostStepVerbose(G4Track* track) override;
 
+    void DPSLStarted() override;
+    void DPSLUserLimit() override;
+    void DPSLPostStep() override;
+    void DPSLAlongStep() override;
+    //  void DPSLAlongStepDoItOneByOne();
+    //  void DPSLPostStepDoItOneByOne();
+    void VerboseTrack() override;
+    void VerboseParticleChange() override;
+    void ShowStep() const;
+    //
 };
 
 #endif
-

@@ -34,11 +34,10 @@
 #include "G4PolarizedGammaConversionXS.hh"
 
 G4double G4PolarizedGammaConversionXS::SCRN[2][19] = {
-  { 0.5, 1.0, 2.0, 4.0, 8.0, 15.0, 20.0, 25.0, 30.0, 35.0, 40.0, 45.0, 50.0,
-    60.0, 70.0, 80.0, 90.0, 100.0, 120.0 },
-  { 0.0145, 0.0490, 0.1400, 0.3312, 0.6758, 1.126, 1.367, 1.564, 1.731, 1.875,
-    2.001, 2.114, 2.216, 2.393, 2.545, 2.676, 2.793, 2.897, 3.078 }
-};
+  {0.5, 1.0, 2.0, 4.0, 8.0, 15.0, 20.0, 25.0, 30.0, 35.0, 40.0, 45.0, 50.0, 60.0, 70.0, 80.0, 90.0,
+   100.0, 120.0},
+  {0.0145, 0.0490, 0.1400, 0.3312, 0.6758, 1.126, 1.367, 1.564, 1.731, 1.875, 2.001, 2.114, 2.216,
+   2.393, 2.545, 2.676, 2.793, 2.897, 3.078}};
 
 G4PolarizedGammaConversionXS::G4PolarizedGammaConversionXS()
 {
@@ -48,45 +47,44 @@ G4PolarizedGammaConversionXS::G4PolarizedGammaConversionXS()
 
 G4PolarizedGammaConversionXS::~G4PolarizedGammaConversionXS() {}
 
-void G4PolarizedGammaConversionXS::Initialize(
-  G4double aGammaE, G4double aLept0E, G4double sintheta,
-  const G4StokesVector& beamPol, const G4StokesVector& /*p1*/, G4int /*flag*/)
+void G4PolarizedGammaConversionXS::Initialize(G4double aGammaE, G4double aLept0E, G4double sintheta,
+                                              const G4StokesVector& beamPol,
+                                              const G4StokesVector& /*p1*/, G4int /*flag*/)
 {
   G4double aLept1E = aGammaE - aLept0E;
 
   G4double Stokes_P3 = beamPol.z();
 
-  G4double Lept0E  = aLept0E / CLHEP::electron_mass_c2 + 1.;
+  G4double Lept0E = aLept0E / CLHEP::electron_mass_c2 + 1.;
   G4double Lept0E2 = Lept0E * Lept0E;
-  G4double GammaE  = aGammaE / CLHEP::electron_mass_c2;
-  G4double Lept1E  = aLept1E / CLHEP::electron_mass_c2 - 1.;
+  G4double GammaE = aGammaE / CLHEP::electron_mass_c2;
+  G4double Lept1E = aLept1E / CLHEP::electron_mass_c2 - 1.;
   G4double Lept1E2 = Lept1E * Lept1E;
 
   // *******  Gamma Transvers Momentum
   G4double TMom = std::sqrt(Lept0E2 - 1.) * sintheta;
-  G4double u    = TMom;
-  G4double u2   = u * u;
-  G4double Xsi  = 1. / (1. + u2);
+  G4double u = TMom;
+  G4double u2 = u * u;
+  G4double Xsi = 1. / (1. + u2);
   G4double Xsi2 = Xsi * Xsi;
 
-  G4double delta =
-    12. * std::pow(fZ, 1. / 3.) * Lept0E * Lept1E * Xsi / (121. * GammaE);
+  G4double delta = 12. * std::pow(fZ, 1. / 3.) * Lept0E * Lept1E * Xsi / (121. * GammaE);
   G4double GG = 0.;
 
-  if(delta < 0.5)
+  if (delta < 0.5)
   {
     GG = std::log(2. * Lept0E * Lept1E / GammaE) - 2. - fCoul;
   }
-  else if(delta < 120.)
+  else if (delta < 120.)
   {
-    for(G4int j = 1; j < 19; ++j)
+    for (G4int j = 1; j < 19; ++j)
     {
-      if(SCRN[0][j] >= delta)
+      if (SCRN[0][j] >= delta)
       {
-        GG = std::log(2. * Lept0E * Lept1E / GammaE) - 2. - fCoul -
-             (SCRN[1][j - 1] + (delta - SCRN[0][j - 1]) *
-                                 (SCRN[1][j] - SCRN[1][j - 1]) /
-                                 (SCRN[0][j] - SCRN[0][j - 1]));
+        GG = std::log(2. * Lept0E * Lept1E / GammaE) - 2. - fCoul
+             - (SCRN[1][j - 1]
+                + (delta - SCRN[0][j - 1]) * (SCRN[1][j] - SCRN[1][j - 1])
+                    / (SCRN[0][j] - SCRN[0][j - 1]));
         break;
       }
     }
@@ -94,22 +92,19 @@ void G4PolarizedGammaConversionXS::Initialize(
   else
   {
     G4double alpha_sc = (111. * std::pow(fZ, -1. / 3.)) / Xsi;
-    GG                = std::log(alpha_sc) - 2. - fCoul;
+    GG = std::log(alpha_sc) - 2. - fCoul;
   }
 
-  if(GG < -1.)
-    GG = -1.;
+  if (GG < -1.) GG = -1.;
 
-  G4double I_Lepton = (Lept0E2 + Lept1E2) * (3 + 2 * GG) +
-                      2. * Lept0E * Lept1E * (1. + 4. * u2 * Xsi2 * GG);
+  G4double I_Lepton =
+    (Lept0E2 + Lept1E2) * (3 + 2 * GG) + 2. * Lept0E * Lept1E * (1. + 4. * u2 * Xsi2 * GG);
 
-  G4double L_Lepton1 = GammaE *
-                       ((Lept0E - Lept1E) * (3. + 2. * GG) +
-                        2 * Lept1E * (1. + 4. * u2 * Xsi2 * GG)) /
-                       I_Lepton;
+  G4double L_Lepton1 =
+    GammaE * ((Lept0E - Lept1E) * (3. + 2. * GG) + 2 * Lept1E * (1. + 4. * u2 * Xsi2 * GG))
+    / I_Lepton;
 
-  G4double T_Lepton1 =
-    4. * GammaE * Lept1E * Xsi * u * (1. - 2. * Xsi) * GG / I_Lepton;
+  G4double T_Lepton1 = 4. * GammaE * Lept1E * Xsi * u * (1. - 2. * Xsi) * GG / I_Lepton;
 
   G4double Stokes_S1 = (Stokes_P3 * T_Lepton1);
   G4double Stokes_S2 = 0.;
@@ -119,27 +114,22 @@ void G4PolarizedGammaConversionXS::Initialize(
   fFinalElectronPolarization.setY(Stokes_S2);
   fFinalElectronPolarization.setZ(Stokes_S3);
 
-  if(fFinalElectronPolarization.mag2() > 1.)
+  if (fFinalElectronPolarization.mag2() > 1.)
   {
     G4ExceptionDescription ed;
-    ed << "\t" << fFinalElectronPolarization << "\t GG\t" << GG << "\t delta\t"
-       << delta << "\n";
-    G4Exception("G4PolarizedGammaConversionXS::Initialize", "pol022",
-                JustWarning, ed);
+    ed << "\t" << fFinalElectronPolarization << "\t GG\t" << GG << "\t delta\t" << delta << "\n";
+    G4Exception("G4PolarizedGammaConversionXS::Initialize", "pol022", JustWarning, ed);
     fFinalElectronPolarization.setX(0.);
     fFinalElectronPolarization.setY(0.);
     fFinalElectronPolarization.setZ(Stokes_S3);
-    if(Stokes_S3 > 1.)
-      fFinalElectronPolarization.setZ(1.);
+    if (Stokes_S3 > 1.) fFinalElectronPolarization.setZ(1.);
   }
 
-  G4double L_Lepton2 = GammaE *
-                       ((Lept1E - Lept0E) * (3. + 2. * GG) +
-                        2 * Lept0E * (1. + 4. * u2 * Xsi2 * GG)) /
-                       I_Lepton;
+  G4double L_Lepton2 =
+    GammaE * ((Lept1E - Lept0E) * (3. + 2. * GG) + 2 * Lept0E * (1. + 4. * u2 * Xsi2 * GG))
+    / I_Lepton;
 
-  G4double T_Lepton2 =
-    4. * GammaE * Lept0E * Xsi * u * (1. - 2. * Xsi) * GG / I_Lepton;
+  G4double T_Lepton2 = 4. * GammaE * Lept0E * Xsi * u * (1. - 2. * Xsi) * GG / I_Lepton;
 
   G4double Stokes_SS1 = (Stokes_P3 * T_Lepton2);
   G4double Stokes_SS2 = 0.;
@@ -151,13 +141,11 @@ void G4PolarizedGammaConversionXS::Initialize(
   fFinalPositronPolarization.setY(Stokes_SS2);
   fFinalPositronPolarization.setZ(Stokes_SS3);
 
-  if(fFinalPositronPolarization.mag2() > 1.)
+  if (fFinalPositronPolarization.mag2() > 1.)
   {
     G4ExceptionDescription ed;
-    ed << "\t" << fFinalPositronPolarization << "\t GG\t" << GG << "\t delta\t"
-       << delta << "\n";
-    G4Exception("G4PolarizedGammaConversionXS::Initialize", "pol023",
-                JustWarning, ed);
+    ed << "\t" << fFinalPositronPolarization << "\t GG\t" << GG << "\t delta\t" << delta << "\n";
+    G4Exception("G4PolarizedGammaConversionXS::Initialize", "pol023", JustWarning, ed);
   }
 }
 
@@ -167,8 +155,7 @@ G4double G4PolarizedGammaConversionXS::XSection(const G4StokesVector& /*pol2*/,
   G4ExceptionDescription ed;
   ed << "ERROR dummy routine G4PolarizedGammaConversionXS::XSection "
         "called \n";
-  G4Exception("G4PolarizedGammaConversionXS::Initialize", "pol024",
-              FatalException, ed);
+  G4Exception("G4PolarizedGammaConversionXS::Initialize", "pol024", FatalException, ed);
   return 0.;
 }
 

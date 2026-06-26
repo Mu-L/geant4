@@ -29,41 +29,43 @@
 
 #include "G4VisCommandsCompound.hh"
 
-#include "G4VisManager.hh"
-#include "G4UImanager.hh"
-#include "G4UIcommandTree.hh"
 #include "G4UIcmdWithAString.hh"
+#include "G4UIcommandTree.hh"
+#include "G4UImanager.hh"
+#include "G4VisManager.hh"
 
-#include <sstream>
 #include <set>
+#include <sstream>
 
 #define G4warn G4cout
 
 ////////////// /vis/drawTree ///////////////////////////////////////
 
-G4VisCommandDrawTree::G4VisCommandDrawTree() {
+G4VisCommandDrawTree::G4VisCommandDrawTree()
+{
   G4bool omitable;
   fpCommand = new G4UIcommand("/vis/drawTree", this);
-  fpCommand->SetGuidance
-    ("Produces a representation of the geometry hierarchy. Further"
-     "\nguidance is given on running the command. Or look at the guidance"
-     "\nfor \"/vis/ASCIITree/verbose\".");
+  fpCommand->SetGuidance(
+    "Produces a representation of the geometry hierarchy. Further"
+    "\nguidance is given on running the command. Or look at the guidance"
+    "\nfor \"/vis/ASCIITree/verbose\".");
   fpCommand->SetGuidance("The pre-existing scene and view are preserved.");
   G4UIparameter* parameter;
   parameter = new G4UIparameter("physical-volume-name", 's', omitable = true);
-  parameter -> SetDefaultValue("world");
-  fpCommand -> SetParameter (parameter);
+  parameter->SetDefaultValue("world");
+  fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("system", 's', omitable = true);
-  parameter -> SetDefaultValue("ATree");
-  fpCommand -> SetParameter (parameter);
+  parameter->SetDefaultValue("ATree");
+  fpCommand->SetParameter(parameter);
 }
 
-G4VisCommandDrawTree::~G4VisCommandDrawTree() {
+G4VisCommandDrawTree::~G4VisCommandDrawTree()
+{
   delete fpCommand;
 }
 
-void G4VisCommandDrawTree::SetNewValue(G4UIcommand*, G4String newValue) {
-
+void G4VisCommandDrawTree::SetNewValue(G4UIcommand*, G4String newValue)
+{
   G4String pvname, system;
   std::istringstream is(newValue);
   is >> pvname >> system;
@@ -78,7 +80,8 @@ void G4VisCommandDrawTree::SetNewValue(G4UIcommand*, G4String newValue) {
   // built-in.  The HepRApp offline browser also has a tree browser
   // built in.
 
-  if (!G4StrUtil::contains(system, "Tree")) {
+  if (!G4StrUtil::contains(system, "Tree"))
+  {
     system = "ATree";
   }
 
@@ -87,19 +90,20 @@ void G4VisCommandDrawTree::SetNewValue(G4UIcommand*, G4String newValue) {
   G4VSceneHandler* keepSceneHandler = fpVisManager->GetCurrentSceneHandler();
   G4VViewer* keepViewer = fpVisManager->GetCurrentViewer();
   G4VisManager::Verbosity keepVisVerbosity = fpVisManager->GetVerbosity();
-  G4bool keepAbleness = fpVisManager->GetConcreteInstance()? true: false;
+  G4bool keepAbleness = fpVisManager->GetConcreteInstance() ? true : false;
 
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
   G4int keepUIVerbose = UImanager->GetVerboseLevel();
   G4int newVerbose(0);
-  if (keepUIVerbose >= 2 ||
-      fpVisManager->GetVerbosity() >= G4VisManager::confirmations)
+  if (keepUIVerbose >= 2 || fpVisManager->GetVerbosity() >= G4VisManager::confirmations)
     newVerbose = 2;
   UImanager->SetVerboseLevel(newVerbose);
 
   auto errorCode = UImanager->ApplyCommand(G4String("/vis/open " + system));
-  if (errorCode == 0) {
-    if (!keepAbleness) {  // Enable temporarily
+  if (errorCode == 0)
+  {
+    if (!keepAbleness)
+    {  // Enable temporarily
       fpVisManager->SetVerboseLevel("Quiet");
       UImanager->ApplyCommand("/vis/enable");
       fpVisManager->SetVerboseLevel(keepVisVerbosity);
@@ -107,13 +111,16 @@ void G4VisCommandDrawTree::SetNewValue(G4UIcommand*, G4String newValue) {
     UImanager->ApplyCommand("/vis/viewer/reset");
     UImanager->ApplyCommand(G4String("/vis/drawVolume " + pvname));
     UImanager->ApplyCommand("/vis/viewer/flush");
-    if (!keepAbleness) {  // Disable again
+    if (!keepAbleness)
+    {  // Disable again
       fpVisManager->SetVerboseLevel("Quiet");
       UImanager->ApplyCommand("/vis/disable");
       fpVisManager->SetVerboseLevel(keepVisVerbosity);
     }
-    if (keepViewer) {
-      if (fpVisManager->GetVerbosity() >= G4VisManager::warnings) {
+    if (keepViewer)
+    {
+      if (fpVisManager->GetVerbosity() >= G4VisManager::warnings)
+      {
         G4warn << "Reverting to " << keepViewer->GetName() << G4endl;
       }
       fpVisManager->SetCurrentGraphicsSystem(keepSystem);
@@ -127,52 +134,53 @@ void G4VisCommandDrawTree::SetNewValue(G4UIcommand*, G4String newValue) {
 
 ////////////// /vis/drawView ///////////////////////////////////////
 
-G4VisCommandDrawView::G4VisCommandDrawView() {
+G4VisCommandDrawView::G4VisCommandDrawView()
+{
   G4bool omitable;
   fpCommand = new G4UIcommand("/vis/drawView", this);
-  fpCommand->SetGuidance
-    ("Draw view from this angle, etc.");
+  fpCommand->SetGuidance("Draw view from this angle, etc.");
   G4UIparameter* parameter;
   parameter = new G4UIparameter("theta-degrees", 'd', omitable = true);
-  parameter -> SetDefaultValue(0.);
-  fpCommand -> SetParameter (parameter);
+  parameter->SetDefaultValue(0.);
+  fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("phi-degrees", 'd', omitable = true);
-  parameter -> SetDefaultValue(0.);
-  fpCommand -> SetParameter (parameter);
+  parameter->SetDefaultValue(0.);
+  fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("pan-right", 'd', omitable = true);
-  parameter -> SetDefaultValue(0.);
-  fpCommand -> SetParameter (parameter);
+  parameter->SetDefaultValue(0.);
+  fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("pan-up", 'd', omitable = true);
-  parameter -> SetDefaultValue(0.);
-  fpCommand -> SetParameter (parameter);
+  parameter->SetDefaultValue(0.);
+  fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("pan-unit", 's', omitable = true);
-  parameter -> SetDefaultValue("cm");
-  fpCommand -> SetParameter (parameter);
+  parameter->SetDefaultValue("cm");
+  fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("zoom-factor", 'd', omitable = true);
-  parameter -> SetDefaultValue(1.);
-  fpCommand -> SetParameter (parameter);
+  parameter->SetDefaultValue(1.);
+  fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("dolly", 'd', omitable = true);
-  parameter -> SetDefaultValue(0.);
-  fpCommand -> SetParameter (parameter);
+  parameter->SetDefaultValue(0.);
+  fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("dolly-unit", 's', omitable = true);
-  parameter -> SetDefaultValue("cm");
-  fpCommand -> SetParameter (parameter);
+  parameter->SetDefaultValue("cm");
+  fpCommand->SetParameter(parameter);
 }
 
-G4VisCommandDrawView::~G4VisCommandDrawView() {
+G4VisCommandDrawView::~G4VisCommandDrawView()
+{
   delete fpCommand;
 }
 
-void G4VisCommandDrawView::SetNewValue(G4UIcommand*, G4String newValue) {
-
+void G4VisCommandDrawView::SetNewValue(G4UIcommand*, G4String newValue)
+{
   G4VisManager::Verbosity verbosity = fpVisManager->GetVerbosity();
 
   G4VViewer* currentViewer = fpVisManager->GetCurrentViewer();
-  if (!currentViewer) {
-    if (verbosity >= G4VisManager::warnings) {
-      G4warn <<
-	"WARNING: G4VisCommandsDrawView::SetNewValue: no current viewer."
-	     << G4endl;
+  if (!currentViewer)
+  {
+    if (verbosity >= G4VisManager::warnings)
+    {
+      G4warn << "WARNING: G4VisCommandsDrawView::SetNewValue: no current viewer." << G4endl;
     }
     return;
   }
@@ -186,9 +194,8 @@ void G4VisCommandDrawView::SetNewValue(G4UIcommand*, G4String newValue) {
   G4String dolly;
   G4String dollyUnit;
   std::istringstream is(newValue);
-  is >> thetaDeg >> phiDeg >> panRight >> panUp >> panUnit
-     >> zoomFactor >> dolly >> dollyUnit;
-  
+  is >> thetaDeg >> phiDeg >> panRight >> panUp >> panUnit >> zoomFactor >> dolly >> dollyUnit;
+
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
   G4ViewParameters vp = currentViewer->GetViewParameters();
   G4bool keepAutoRefresh = vp.IsAutoRefresh();
@@ -196,41 +203,39 @@ void G4VisCommandDrawView::SetNewValue(G4UIcommand*, G4String newValue) {
   currentViewer->SetViewParameters(vp);
   UImanager->ApplyCommand(
     G4String("/vis/viewer/set/viewpointThetaPhi " + thetaDeg + " " + phiDeg + " deg"));
-  UImanager->ApplyCommand(
-    G4String("/vis/viewer/panTo " + panRight + " " + panUp + " " + panUnit));
-  UImanager->ApplyCommand(
-    G4String("/vis/viewer/zoomTo " + zoomFactor));
+  UImanager->ApplyCommand(G4String("/vis/viewer/panTo " + panRight + " " + panUp + " " + panUnit));
+  UImanager->ApplyCommand(G4String("/vis/viewer/zoomTo " + zoomFactor));
   vp = currentViewer->GetViewParameters();
   vp.SetAutoRefresh(keepAutoRefresh);
   currentViewer->SetViewParameters(vp);
-  UImanager->ApplyCommand(
-    G4String("/vis/viewer/dollyTo " + dolly + " " + dollyUnit));
+  UImanager->ApplyCommand(G4String("/vis/viewer/dollyTo " + dolly + " " + dollyUnit));
 }
 
 ////////////// /vis/drawLogicalVolume ///////////////////////////////////////
 
-G4VisCommandDrawLogicalVolume::G4VisCommandDrawLogicalVolume() {
+G4VisCommandDrawLogicalVolume::G4VisCommandDrawLogicalVolume()
+{
   fpCommand = new G4UIcommand("/vis/drawLogicalVolume", this);
-  fpCommand->SetGuidance
-  ("Draws logical volume with additional components.");
-  fpCommand->SetGuidance
-  ("Synonymous with \"/vis/specify\".");
-  fpCommand->SetGuidance
-  ("Creates a scene consisting of this logical volume and asks the"
-   "\n  current viewer to draw it. The scene becomes current.");
+  fpCommand->SetGuidance("Draws logical volume with additional components.");
+  fpCommand->SetGuidance("Synonymous with \"/vis/specify\".");
+  fpCommand->SetGuidance(
+    "Creates a scene consisting of this logical volume and asks the"
+    "\n  current viewer to draw it. The scene becomes current.");
   const G4UIcommandTree* tree = G4UImanager::GetUIpointer()->GetTree();
   const G4UIcommand* addLogVolCmd = tree->FindPath("/vis/scene/add/logicalVolume");
   // Pick up guidance from /vis/scene/add/logicalVolume
-  CopyGuidanceFrom(addLogVolCmd,fpCommand);
+  CopyGuidanceFrom(addLogVolCmd, fpCommand);
   // Pick up parameters from /vis/scene/add/logicalVolume
-  CopyParametersFrom(addLogVolCmd,fpCommand);
+  CopyParametersFrom(addLogVolCmd, fpCommand);
 }
 
-G4VisCommandDrawLogicalVolume::~G4VisCommandDrawLogicalVolume() {
+G4VisCommandDrawLogicalVolume::~G4VisCommandDrawLogicalVolume()
+{
   delete fpCommand;
 }
 
-void G4VisCommandDrawLogicalVolume::SetNewValue(G4UIcommand*, G4String newValue) {
+void G4VisCommandDrawLogicalVolume::SetNewValue(G4UIcommand*, G4String newValue)
+{
   G4VisManager::Verbosity verbosity = fpVisManager->GetVerbosity();
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
   G4VViewer* currentViewer = fpVisManager->GetCurrentViewer();
@@ -241,110 +246,124 @@ void G4VisCommandDrawLogicalVolume::SetNewValue(G4UIcommand*, G4String newValue)
   UImanager->ApplyCommand(G4String("/vis/scene/add/logicalVolume " + newValue));
   UImanager->ApplyCommand("/vis/sceneHandler/attach");
   G4ViewParameters::DrawingStyle keepDrawingStyle = currentViewParams.GetDrawingStyle();
-  if(keepDrawingStyle != G4ViewParameters::wireframe)
+  if (keepDrawingStyle != G4ViewParameters::wireframe)
     UImanager->ApplyCommand("/vis/viewer/set/style wireframe");
   G4bool keepMarkerNotHidden = currentViewParams.IsMarkerNotHidden();
   if (!keepMarkerNotHidden) UImanager->ApplyCommand("/vis/viewer/set/hiddenMarker false");
   if (keepAutoRefresh) UImanager->ApplyCommand("/vis/viewer/set/autoRefresh true");
-  if (verbosity >= G4VisManager::warnings) {
-    if (keepDrawingStyle != currentViewParams.GetDrawingStyle()) {
-      G4warn
-      << "Drawing style changed to wireframe. To restore previous style:";
+  if (verbosity >= G4VisManager::warnings)
+  {
+    if (keepDrawingStyle != currentViewParams.GetDrawingStyle())
+    {
+      G4warn << "Drawing style changed to wireframe. To restore previous style:";
       G4String style, edge;
-      switch (keepDrawingStyle) {
+      switch (keepDrawingStyle)
+      {
         case G4ViewParameters::wireframe:
-          style = "wireframe"; edge = "false"; break;
+          style = "wireframe";
+          edge = "false";
+          break;
         case G4ViewParameters::hlr:
-          style = "wireframe"; edge = "true"; break;
+          style = "wireframe";
+          edge = "true";
+          break;
         case G4ViewParameters::hsr:
-          style = "surface"; edge = "false"; break;
+          style = "surface";
+          edge = "false";
+          break;
         case G4ViewParameters::hlhsr:
-          style = "surface"; edge = "true"; break;
+          style = "surface";
+          edge = "true";
+          break;
         case G4ViewParameters::cloud:
-          style = "cloud"; edge = ""; break;
+          style = "cloud";
+          edge = "";
+          break;
       }
       G4warn << "\n  /vis/viewer/set/style " + style;
       if (!edge.empty()) G4warn << "\n  /vis/viewer/set/hiddenEdge " + edge;
       G4warn << G4endl;
     }
-    if (keepMarkerNotHidden != currentViewParams.IsMarkerNotHidden()) {
-      G4warn
-      << "Markers changed to \"not hidden\". To restore previous condition:"
-      << "\n  /vis/viewer/set/hiddenmarker true"
-      << G4endl;
+    if (keepMarkerNotHidden != currentViewParams.IsMarkerNotHidden())
+    {
+      G4warn << "Markers changed to \"not hidden\". To restore previous condition:"
+             << "\n  /vis/viewer/set/hiddenmarker true" << G4endl;
     }
   }
   static G4bool warned = false;
-  if (verbosity >= G4VisManager::confirmations && !warned) {
-    G4cout <<
-    "NOTE: For systems which are not \"auto-refresh\" you will need to"
-    "\n  issue \"/vis/viewer/refresh\" or \"/vis/viewer/flush\"."
-    << G4endl;
+  if (verbosity >= G4VisManager::confirmations && !warned)
+  {
+    G4cout << "NOTE: For systems which are not \"auto-refresh\" you will need to"
+              "\n  issue \"/vis/viewer/refresh\" or \"/vis/viewer/flush\"."
+           << G4endl;
     warned = true;
   }
 }
 
 ////////////// /vis/drawVolume ///////////////////////////////////////
 
-G4VisCommandDrawVolume::G4VisCommandDrawVolume() {
+G4VisCommandDrawVolume::G4VisCommandDrawVolume()
+{
   fpCommand = new G4UIcommand("/vis/drawVolume", this);
-  fpCommand->SetGuidance
-  ("Creates a scene containing this physical volume and asks the"
-   "\ncurrent viewer to draw it.  The scene becomes current.");
+  fpCommand->SetGuidance(
+    "Creates a scene containing this physical volume and asks the"
+    "\ncurrent viewer to draw it.  The scene becomes current.");
   const G4UIcommandTree* tree = G4UImanager::GetUIpointer()->GetTree();
   const G4UIcommand* addVolCmd = tree->FindPath("/vis/scene/add/volume");
   // Pick up guidance from /vis/scene/add/volume
-  CopyGuidanceFrom(addVolCmd,fpCommand);
+  CopyGuidanceFrom(addVolCmd, fpCommand);
   // Pick up parameters from /vis/scene/add/volume
-  CopyParametersFrom(addVolCmd,fpCommand);
+  CopyParametersFrom(addVolCmd, fpCommand);
 }
 
-G4VisCommandDrawVolume::~G4VisCommandDrawVolume() {
+G4VisCommandDrawVolume::~G4VisCommandDrawVolume()
+{
   delete fpCommand;
 }
 
-void G4VisCommandDrawVolume::SetNewValue(G4UIcommand*, G4String newValue) {
+void G4VisCommandDrawVolume::SetNewValue(G4UIcommand*, G4String newValue)
+{
   G4VisManager::Verbosity verbosity = fpVisManager->GetVerbosity();
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
   UImanager->ApplyCommand("/vis/scene/create");
   UImanager->ApplyCommand(G4String("/vis/scene/add/volume " + newValue));
   UImanager->ApplyCommand("/vis/sceneHandler/attach");
   static G4bool warned = false;
-  if (verbosity >= G4VisManager::confirmations && !warned) {
-    G4cout <<
-      "NOTE: For systems which are not \"auto-refresh\" you will need to"
-      "\n  issue \"/vis/viewer/refresh\" or \"/vis/viewer/flush\"."
-	   << G4endl;
+  if (verbosity >= G4VisManager::confirmations && !warned)
+  {
+    G4cout << "NOTE: For systems which are not \"auto-refresh\" you will need to"
+              "\n  issue \"/vis/viewer/refresh\" or \"/vis/viewer/flush\"."
+           << G4endl;
     warned = true;
   }
 }
 
 ////////////// /vis/open ///////////////////////////////////////
 
-G4VisCommandOpen::G4VisCommandOpen() {
+G4VisCommandOpen::G4VisCommandOpen()
+{
   G4bool omitable;
   fpCommand = new G4UIcommand("/vis/open", this);
-  fpCommand->SetGuidance
-    ("Creates a scene handler and viewer ready for drawing.");
-  fpCommand->SetGuidance
-    ("The scene handler and viewer names are auto-generated.");
+  fpCommand->SetGuidance("Creates a scene handler and viewer ready for drawing.");
+  fpCommand->SetGuidance("The scene handler and viewer names are auto-generated.");
   // Pick up guidance from /vis/viewer/create
   const G4UIcommandTree* tree = G4UImanager::GetUIpointer()->GetTree();
   const G4UIcommand* viewerCreateCmd = tree->FindPath("/vis/viewer/create");
-  CopyGuidanceFrom(viewerCreateCmd,fpCommand,2);
+  CopyGuidanceFrom(viewerCreateCmd, fpCommand, 2);
   G4UIparameter* parameter;
   parameter = new G4UIparameter("graphics-system-name", 's', omitable = true);
   parameter->SetCurrentAsDefault(true);
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("window-size-hint", 's', omitable = true);
-  parameter->SetGuidance
-    ("integer (pixels) for square window placed by window manager or"
-     " X-Windows-type geometry string, e.g. 600x600-100+100");
+  parameter->SetGuidance(
+    "integer (pixels) for square window placed by window manager or"
+    " X-Windows-type geometry string, e.g. 600x600-100+100");
   parameter->SetCurrentAsDefault(true);
   fpCommand->SetParameter(parameter);
 }
 
-G4VisCommandOpen::~G4VisCommandOpen() {
+G4VisCommandOpen::~G4VisCommandOpen()
+{
   delete fpCommand;
 }
 
@@ -352,25 +371,29 @@ G4String G4VisCommandOpen::GetCurrentValue(G4UIcommand*)
 {
   G4String graphicsSystemName, windowSizeHint;
   auto graphicsSystem = fpVisManager->GetCurrentGraphicsSystem();
-  if (graphicsSystem) {
+  if (graphicsSystem)
+  {
     // Take name and hint from latest graphics system and viewer
     graphicsSystemName = graphicsSystem->GetName();
     auto viewer = fpVisManager->GetCurrentViewer();
-    if (viewer) {
+    if (viewer)
+    {
       windowSizeHint = viewer->GetViewParameters().GetXGeometryString();
     }
-    else {  // Viewer not yet created?
+    else
+    {  // Viewer not yet created?
       windowSizeHint = fpVisManager->GetDefaultXGeometryString();
     }
   }
-  else {  // No graphics system yet - must be first time
+  else
+  {  // No graphics system yet - must be first time
     graphicsSystemName = fpVisManager->GetDefaultGraphicsSystemName();
     windowSizeHint = fpVisManager->GetDefaultXGeometryString();
   }
   return graphicsSystemName + ' ' + windowSizeHint;
 }
 
-void G4VisCommandOpen::SetNewValue (G4UIcommand* command, G4String newValue)
+void G4VisCommandOpen::SetNewValue(G4UIcommand* command, G4String newValue)
 {
   G4String systemName, windowSizeHint;
   std::istringstream is(newValue);
@@ -378,72 +401,76 @@ void G4VisCommandOpen::SetNewValue (G4UIcommand* command, G4String newValue)
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
   auto errorCode = UImanager->ApplyCommand(G4String("/vis/sceneHandler/create " + systemName));
-  if (errorCode) {
+  if (errorCode)
+  {
     G4warn << "sub-command \"/vis/sceneHandler/create\" failed." << G4endl;
     goto finish;
   }
 
   errorCode = UImanager->ApplyCommand(G4String("/vis/viewer/create ! ! " + windowSizeHint));
-  if (errorCode) {
+  if (errorCode)
+  {
     G4warn << "sub-command \"/vis/viewer/create\" failed." << G4endl;
     goto finish;
   }
 
 finish:
-  if (errorCode) {
-    fpVisManager->PrintAvailableGraphicsSystems(G4VisManager::warnings,G4warn);
-    if (errorCode != JustWarning) {
+  if (errorCode)
+  {
+    fpVisManager->PrintAvailableGraphicsSystems(G4VisManager::warnings, G4warn);
+    if (errorCode != JustWarning)
+    {
       G4ExceptionDescription ed;
       ed << "Invoked command has failed - see above.";
-      command->CommandFailed(errorCode,ed);
+      command->CommandFailed(errorCode, ed);
     }
   }
 }
 
 ////////////// /vis/plot ///////////////////////////////////////
 
-G4VisCommandPlot::G4VisCommandPlot ()
+G4VisCommandPlot::G4VisCommandPlot()
 {
   G4bool omitable;
   G4UIparameter* parameter;
 
   fpCommand = new G4UIcommand("/vis/plot", this);
-  fpCommand -> SetGuidance("Draws plots.");
-  parameter = new G4UIparameter ("type", 's', omitable = false);
-  parameter -> SetParameterCandidates("h1 h2");
-  fpCommand -> SetParameter (parameter);
-  parameter = new G4UIparameter ("id", 'i', omitable = false);
-  fpCommand -> SetParameter (parameter);
+  fpCommand->SetGuidance("Draws plots.");
+  parameter = new G4UIparameter("type", 's', omitable = false);
+  parameter->SetParameterCandidates("h1 h2");
+  fpCommand->SetParameter(parameter);
+  parameter = new G4UIparameter("id", 'i', omitable = false);
+  fpCommand->SetParameter(parameter);
 #ifdef TOOLS_USE_FREETYPE
-  parameter = new G4UIparameter ("style", 's', omitable = true);
-  parameter -> SetParameterCandidates("none ROOT_default hippodraw");
-  parameter -> SetDefaultValue("ROOT_default");
-  fpCommand -> SetParameter (parameter);
+  parameter = new G4UIparameter("style", 's', omitable = true);
+  parameter->SetParameterCandidates("none ROOT_default hippodraw");
+  parameter->SetDefaultValue("ROOT_default");
+  fpCommand->SetParameter(parameter);
 #endif
 }
 
-G4VisCommandPlot::~G4VisCommandPlot ()
+G4VisCommandPlot::~G4VisCommandPlot()
 {
   delete fpCommand;
 }
 
-G4String G4VisCommandPlot::GetCurrentValue (G4UIcommand*)
+G4String G4VisCommandPlot::GetCurrentValue(G4UIcommand*)
 {
   return "";
 }
 
-void G4VisCommandPlot::SetNewValue (G4UIcommand*, G4String newValue)
+void G4VisCommandPlot::SetNewValue(G4UIcommand*, G4String newValue)
 {
   auto currentViewer = fpVisManager->GetCurrentViewer();
-  if (currentViewer->GetName().find("TOOLSSG") == std::string::npos) {
-    G4warn <<
-    "WARNING: Current viewer not able to draw plots."
-    "\n  Try \"/vis/open TSG\", then \"/vis/plot " << newValue << "\" again."
-    << G4endl;
+  if (currentViewer->GetName().find("TOOLSSG") == std::string::npos)
+  {
+    G4warn << "WARNING: Current viewer not able to draw plots."
+              "\n  Try \"/vis/open TSG\", then \"/vis/plot "
+           << newValue << "\" again." << G4endl;
     return;
   }
 
-  std::istringstream is (newValue);
+  std::istringstream is(newValue);
   G4String type, id;
   is >> type >> id;
 #ifdef TOOLS_USE_FREETYPE
@@ -466,38 +493,39 @@ void G4VisCommandPlot::SetNewValue (G4UIcommand*, G4String newValue)
   ui->ApplyCommand("/vis/scene/add/plotter " + plotterName);
   ui->ApplyCommand("/vis/plotter/add/" + type + ' ' + id + ' ' + plotterName);
 #ifdef TOOLS_USE_FREETYPE
-  if (style != "none") {
+  if (style != "none")
+  {
     ui->ApplyCommand("/vis/plotter/addStyle " + plotterName + ' ' + style);
   }
 #endif
   ui->ApplyCommand("/vis/sceneHandler/attach");
 
-  if (!keepEnable) {
+  if (!keepEnable)
+  {
     fpVisManager->Disable();
-    G4warn <<
-    "WARNING: drawing was enabled for plotting but is now restored to disabled mode."
-    << G4endl;
+    G4warn << "WARNING: drawing was enabled for plotting but is now restored to disabled mode."
+           << G4endl;
   }
 }
 
 ////////////// /vis/specify ///////////////////////////////////////
 
-G4VisCommandSpecify::G4VisCommandSpecify() {
+G4VisCommandSpecify::G4VisCommandSpecify()
+{
   G4bool omitable;
   fpCommand = new G4UIcommand("/vis/specify", this);
-  fpCommand->SetGuidance
-    ("Draws logical volume with Boolean components, voxels and readout geometry.");
-  fpCommand->SetGuidance
-    ("Synonymous with \"/vis/drawLogicalVolume\".");
-  fpCommand->SetGuidance
-    ("Creates a scene consisting of this logical volume and asks the"
-     "\n  current viewer to draw it to the specified depth of descent"
-     "\n  showing boolean components (if any), voxels (if any),"
-     "\n  readout geometry (if any), local axes and overlaps (if any),"
-     "\n  under control of the appropriate flag.");
-  fpCommand->SetGuidance
-  ("Note: voxels are not constructed until start of run - /run/beamOn."
-   "\n  (For voxels without a run, \"/run/beamOn 0\".)");
+  fpCommand->SetGuidance(
+    "Draws logical volume with Boolean components, voxels and readout geometry.");
+  fpCommand->SetGuidance("Synonymous with \"/vis/drawLogicalVolume\".");
+  fpCommand->SetGuidance(
+    "Creates a scene consisting of this logical volume and asks the"
+    "\n  current viewer to draw it to the specified depth of descent"
+    "\n  showing boolean components (if any), voxels (if any),"
+    "\n  readout geometry (if any), local axes and overlaps (if any),"
+    "\n  under control of the appropriate flag.");
+  fpCommand->SetGuidance(
+    "Note: voxels are not constructed until start of run - /run/beamOn."
+    "\n  (For voxels without a run, \"/run/beamOn 0\".)");
   fpCommand->SetGuidance("The scene becomes current.");
   G4UIparameter* parameter;
   parameter = new G4UIparameter("logical-volume-name", 's', omitable = false);
@@ -516,19 +544,21 @@ G4VisCommandSpecify::G4VisCommandSpecify() {
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("axes-flag", 'b', omitable = true);
   parameter->SetDefaultValue(true);
-  parameter -> SetGuidance ("Set \"false\" to suppress axes.");
+  parameter->SetGuidance("Set \"false\" to suppress axes.");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("check-overlap-flag", 'b', omitable = true);
   parameter->SetDefaultValue(true);
-  parameter -> SetGuidance ("Set \"false\" to suppress overlap check.");
+  parameter->SetGuidance("Set \"false\" to suppress overlap check.");
   fpCommand->SetParameter(parameter);
 }
 
-G4VisCommandSpecify::~G4VisCommandSpecify() {
+G4VisCommandSpecify::~G4VisCommandSpecify()
+{
   delete fpCommand;
 }
 
-void G4VisCommandSpecify::SetNewValue(G4UIcommand*, G4String newValue) {
+void G4VisCommandSpecify::SetNewValue(G4UIcommand*, G4String newValue)
+{
   G4VisManager::Verbosity verbosity = fpVisManager->GetVerbosity();
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
   // UImanager->ApplyCommand(G4String("/geometry/print " + newValue));
@@ -536,11 +566,11 @@ void G4VisCommandSpecify::SetNewValue(G4UIcommand*, G4String newValue) {
   UImanager->ApplyCommand(G4String("/vis/scene/add/logicalVolume " + newValue));
   UImanager->ApplyCommand("/vis/sceneHandler/attach");
   static G4bool warned = false;
-  if (verbosity >= G4VisManager::confirmations && !warned) {
-    G4cout <<
-      "NOTE: For systems which are not \"auto-refresh\" you will need to"
-      "\n  issue \"/vis/viewer/refresh\" or \"/vis/viewer/flush\"."
-	   << G4endl;
+  if (verbosity >= G4VisManager::confirmations && !warned)
+  {
+    G4cout << "NOTE: For systems which are not \"auto-refresh\" you will need to"
+              "\n  issue \"/vis/viewer/refresh\" or \"/vis/viewer/flush\"."
+           << G4endl;
     warned = true;
   }
 }

@@ -226,61 +226,74 @@ G4UserPhysicsListMessenger::~G4UserPhysicsListMessenger()
 void G4UserPhysicsListMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
   G4ExceptionDescription ed;
-  if (command == setCutCmd) {
+  if (command == setCutCmd)
+  {
     G4double newCut = setCutCmd->GetNewDoubleValue(newValue);
     thePhysicsList->SetDefaultCutValue(newCut);
     thePhysicsList->SetCuts();
   }
-  else if (command == setCutForAGivenParticleCmd) {
+  else if (command == setCutForAGivenParticleCmd)
+  {
     G4String particleName, unit;
     G4double cut;
     std::istringstream str(newValue);
     str >> particleName >> cut >> unit;
     thePhysicsList->SetCutValue(cut * G4UIcommand::ValueOf(unit), particleName);
   }
-  else if (command == getCutForAGivenParticleCmd) {
+  else if (command == getCutForAGivenParticleCmd)
+  {
     G4cout << thePhysicsList->GetCutValue(newValue) / mm << "[mm]" << G4endl;
   }
-  else if (command == setCutRCmd) {
+  else if (command == setCutRCmd)
+  {
     std::istringstream is(newValue);
     G4String regName;
     G4String uniName;
     G4double cVal = -1.0;
     is >> regName >> cVal >> uniName;
-    if (is.fail()) {
+    if (is.fail())
+    {
       ed << "illegal arguments : " << newValue;
       command->CommandFailed(ed);
       return;
     }
     thePhysicsList->SetCutsForRegion(cVal * (setCutRCmd->ValueOf(uniName)), regName);
   }
-  else if (command == verboseCmd) {
+  else if (command == verboseCmd)
+  {
     thePhysicsList->SetVerboseLevel(verboseCmd->GetNewIntValue(newValue));
   }
-  else if (command == dumpListCmd) {
+  else if (command == dumpListCmd)
+  {
     thePhysicsList->DumpList();
   }
-  else if (command == dumpOrdParamCmd) {
+  else if (command == dumpOrdParamCmd)
+  {
     G4int stype = dumpOrdParamCmd->GetNewIntValue(newValue);
     G4PhysicsListHelper::GetPhysicsListHelper()->DumpOrdingParameterTable(stype);
   }
-  else if (command == addProcManCmd) {
+  else if (command == addProcManCmd)
+  {
     G4ParticleDefinition* particle = (G4ParticleTable::GetParticleTable())->FindParticle(newValue);
-    if (particle == nullptr) {
+    if (particle == nullptr)
+    {
       ed << " Particle is not found : " << newValue;
       command->CommandFailed(ed);
       return;
     }
-    if (particle->GetProcessManager() != nullptr) {
+    if (particle->GetProcessManager() != nullptr)
+    {
       ed << " Particle is not initialized : " << newValue;
       command->CommandFailed(ed);
       return;
     }
     thePhysicsList->AddProcessManager(particle);
   }
-  else if (command == buildPTCmd) {
+  else if (command == buildPTCmd)
+  {
     G4ParticleDefinition* particle = (G4ParticleTable::GetParticleTable())->FindParticle(newValue);
-    if (particle == nullptr) {
+    if (particle == nullptr)
+    {
       ed << " Particle is not found : " << newValue;
       command->CommandFailed(ed);
       return;
@@ -288,26 +301,34 @@ void G4UserPhysicsListMessenger::SetNewValue(G4UIcommand* command, G4String newV
     thePhysicsList->PreparePhysicsTable(particle);
     thePhysicsList->BuildPhysicsTable(particle);
   }
-  else if (command == storeCmd) {
+  else if (command == storeCmd)
+  {
     thePhysicsList->StorePhysicsTable(newValue);
   }
-  else if (command == retrieveCmd) {
-    if ((newValue == "OFF") || (newValue == "off")) {
+  else if (command == retrieveCmd)
+  {
+    if ((newValue == "OFF") || (newValue == "off"))
+    {
       thePhysicsList->ResetPhysicsTableRetrieved();
     }
-    else {
+    else
+    {
       thePhysicsList->SetPhysicsTableRetrieved(newValue);
     }
   }
-  else if (command == asciiCmd) {
-    if (asciiCmd->GetNewIntValue(newValue) == 0) {
+  else if (command == asciiCmd)
+  {
+    if (asciiCmd->GetNewIntValue(newValue) == 0)
+    {
       thePhysicsList->ResetStoredInAscii();
     }
-    else {
+    else
+    {
       thePhysicsList->SetStoredInAscii();
     }
   }
-  else if (command == applyCutsCmd) {
+  else if (command == applyCutsCmd)
+  {
     G4Tokenizer next(newValue);
 
     // check 1st argument
@@ -319,7 +340,8 @@ void G4UserPhysicsListMessenger::SetNewValue(G4UIcommand* command, G4String newV
 
     thePhysicsList->SetApplyCuts(flag, name);
   }
-  else if (command == dumpCutValuesCmd) {
+  else if (command == dumpCutValuesCmd)
+  {
     thePhysicsList->DumpCutValuesTable(1);
   }
 }
@@ -331,48 +353,61 @@ G4String G4UserPhysicsListMessenger::GetCurrentValue(G4UIcommand* command)
   G4String candidates("none");
   auto piter = G4ParticleTable::GetParticleTable()->GetIterator();
 
-  if (command == setCutCmd) {
+  if (command == setCutCmd)
+  {
     cv = setCutCmd->ConvertToString(thePhysicsList->GetDefaultCutValue(), "mm");
   }
-  else if (command == verboseCmd) {
+  else if (command == verboseCmd)
+  {
     cv = verboseCmd->ConvertToString(thePhysicsList->GetVerboseLevel());
   }
-  else if (command == addProcManCmd) {
+  else if (command == addProcManCmd)
+  {
     // set candidate list
     piter->reset();
-    while ((*piter)()) {
+    while ((*piter)())
+    {
       G4ParticleDefinition* particle = piter->value();
       candidates += " " + particle->GetParticleName();
     }
     addProcManCmd->SetCandidates(candidates);
     cv = "";
   }
-  else if (command == buildPTCmd) {
+  else if (command == buildPTCmd)
+  {
     // set candidate list
     piter->reset();
-    while ((*piter)()) {
+    while ((*piter)())
+    {
       G4ParticleDefinition* particle = piter->value();
       candidates += " " + particle->GetParticleName();
     }
     addProcManCmd->SetCandidates(candidates);
     cv = "";
   }
-  else if (command == storeCmd) {
+  else if (command == storeCmd)
+  {
     cv = thePhysicsList->GetPhysicsTableDirectory();
   }
-  else if (command == retrieveCmd) {
-    if (thePhysicsList->IsPhysicsTableRetrieved()) {
+  else if (command == retrieveCmd)
+  {
+    if (thePhysicsList->IsPhysicsTableRetrieved())
+    {
       cv = thePhysicsList->GetPhysicsTableDirectory();
     }
-    else {
+    else
+    {
       cv = "OFF";
     }
   }
-  else if (command == asciiCmd) {
-    if (thePhysicsList->IsStoredInAscii()) {
+  else if (command == asciiCmd)
+  {
+    if (thePhysicsList->IsStoredInAscii())
+    {
       cv = "1";
     }
-    else {
+    else
+    {
       cv = "0";
     }
   }

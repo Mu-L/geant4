@@ -30,8 +30,8 @@
 //      Hisaya Kurashige, 27 June 1998
 // ----------------------------------------------------------------
 
-#ifndef G4Quarks_h
-#define G4Quarks_h 1
+#ifndef G4QUARKS_HH
+#define G4QUARKS_HH
 
 #include "G4VShortLivedParticle.hh"
 #include "globals.hh"
@@ -39,6 +39,7 @@
 class G4Quarks : public G4VShortLivedParticle
 {
   public:
+
     // clang-format off
    G4Quarks(
        const G4String&     aName,        G4double            mass,

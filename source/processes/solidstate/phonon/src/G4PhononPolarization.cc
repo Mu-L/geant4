@@ -29,25 +29,34 @@
 //
 
 #include "G4PhononPolarization.hh"
+
 #include "G4ParticleDefinition.hh"
 #include "G4PhononLong.hh"
 #include "G4PhononTransFast.hh"
 #include "G4PhononTransSlow.hh"
 
-
-G4int G4PhononPolarization::Get(const G4ParticleDefinition* aPD) {
-  if (aPD == G4PhononLong::Definition())      return Long;
+G4int G4PhononPolarization::Get(const G4ParticleDefinition* aPD)
+{
+  if (aPD == G4PhononLong::Definition()) return Long;
   if (aPD == G4PhononTransSlow::Definition()) return TransSlow;
   if (aPD == G4PhononTransFast::Definition()) return TransFast;
   return UNKNOWN;
 }
 
-G4ParticleDefinition* G4PhononPolarization::Get(G4int pol) {
-  switch (pol) {
-  case Long:      return G4PhononLong::Definition(); break;
-  case TransSlow: return G4PhononTransSlow::Definition(); break;
-  case TransFast: return G4PhononTransFast::Definition(); break;
-  default: ;
+G4ParticleDefinition* G4PhononPolarization::Get(G4int pol)
+{
+  switch (pol)
+  {
+    case Long:
+      return G4PhononLong::Definition();
+      break;
+    case TransSlow:
+      return G4PhononTransSlow::Definition();
+      break;
+    case TransFast:
+      return G4PhononTransFast::Definition();
+      break;
+    default:;
   }
 
   return 0;

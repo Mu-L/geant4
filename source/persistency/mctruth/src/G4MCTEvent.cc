@@ -28,11 +28,12 @@
 // Author: Youhei Morita, 12.09.2001
 // --------------------------------------------------------------------
 
-#include "G4ios.hh"
 #include "G4MCTEvent.hh"
+
 #include "G4MCTGenEvent.hh"
 #include "G4MCTSimEvent.hh"
 #include "G4MCTSimParticle.hh"
+#include "G4ios.hh"
 
 // --------------------------------------------------------------------
 G4MCTEvent::G4MCTEvent()
@@ -49,11 +50,10 @@ G4MCTEvent::~G4MCTEvent()
 }
 
 // --------------------------------------------------------------------
-G4MCTSimParticle* G4MCTEvent::GetSimParticle(
-  const G4MCTGenParticle& genpart) const
+G4MCTSimParticle* G4MCTEvent::GetSimParticle(const G4MCTGenParticle& genpart) const
 {
   auto pos = gen2simParticleMap.find(genpart);
-  if(pos != gen2simParticleMap.cend())
+  if (pos != gen2simParticleMap.cend())
   {
     return pos->second;
   }
@@ -64,28 +64,26 @@ G4MCTSimParticle* G4MCTEvent::GetSimParticle(
 }
 
 // --------------------------------------------------------------------
-G4MCTGenParticle G4MCTEvent::GetGenParticle(
-  const G4MCTSimParticle* simpart) const
+G4MCTGenParticle G4MCTEvent::GetGenParticle(const G4MCTSimParticle* simpart) const
 {
   auto pos = sim2genParticleMap.find(const_cast<G4MCTSimParticle*>(simpart));
-  if(pos != sim2genParticleMap.cend())
+  if (pos != sim2genParticleMap.cend())
   {
     return pos->second;
   }
   else
   {
-    return G4MCTGenParticle((void*) 0, (void*) 0);
+    return G4MCTGenParticle((void*)0, (void*)0);
   }
 }
 
 // --------------------------------------------------------------------
-G4int G4MCTEvent::AddPrimaryPair(const G4MCTGenParticle& genp,
-                                 const G4MCTSimParticle* simp)
+G4int G4MCTEvent::AddPrimaryPair(const G4MCTGenParticle& genp, const G4MCTSimParticle* simp)
 {
-  gen2simParticleMap.insert(std::make_pair(
-    const_cast<G4MCTGenParticle&>(genp), const_cast<G4MCTSimParticle*>(simp)));
-  sim2genParticleMap.insert(std::make_pair(
-    const_cast<G4MCTSimParticle*>(simp), const_cast<G4MCTGenParticle&>(genp)));
+  gen2simParticleMap.insert(
+    std::make_pair(const_cast<G4MCTGenParticle&>(genp), const_cast<G4MCTSimParticle*>(simp)));
+  sim2genParticleMap.insert(
+    std::make_pair(const_cast<G4MCTSimParticle*>(simp), const_cast<G4MCTGenParticle&>(genp)));
 
   return (G4int)gen2simParticleMap.size();
 }

@@ -28,23 +28,23 @@
 // Author: M.Asai, 28 April 2006
 // --------------------------------------------------------------------
 
-#include "globals.hh"
 #include "G4FieldTrackUpdator.hh"
+
+#include "G4DynamicParticle.hh"
+#include "G4FieldTrack.hh"
 #include "G4ThreeVector.hh"
 #include "G4Track.hh"
-#include "G4DynamicParticle.hh"
 #include "G4TrackStatus.hh"
-#include "G4FieldTrack.hh"
+#include "globals.hh"
 
 //---------------------------------------------------------------------
 G4FieldTrack* G4FieldTrackUpdator::CreateFieldTrack(const G4Track* trk)
 {
-  return new G4FieldTrack(
-    trk->GetPosition(), trk->GetGlobalTime(), trk->GetMomentumDirection(),
-    trk->GetKineticEnergy(), trk->GetDynamicParticle()->GetMass(),
-    trk->GetDynamicParticle()->GetCharge(),
-    trk->GetDynamicParticle()->GetPolarization(),
-    0.0  // magnetic dipole moment to be implemented
+  return new G4FieldTrack(trk->GetPosition(), trk->GetGlobalTime(), trk->GetMomentumDirection(),
+                          trk->GetKineticEnergy(), trk->GetDynamicParticle()->GetMass(),
+                          trk->GetDynamicParticle()->GetCharge(),
+                          trk->GetDynamicParticle()->GetPolarization(),
+                          0.0  // magnetic dipole moment to be implemented
   );
 }
 
@@ -57,28 +57,23 @@ void G4FieldTrackUpdator::Update(G4FieldTrack* ftrk, const G4Track* trk)
   ftrk->SetRestMass(ptDynamicParticle->GetMass());
   // 2) Since ion can lose/gain electrons, this must be done at every step
 
-  ftrk->UpdateState(trk->GetPosition(), trk->GetGlobalTime(),
-                    trk->GetMomentumDirection(), trk->GetKineticEnergy());
+  ftrk->UpdateState(trk->GetPosition(), trk->GetGlobalTime(), trk->GetMomentumDirection(),
+                    trk->GetKineticEnergy());
 
 #ifdef G4CHECK
-  if((trk->GetMomentum() - ftrk->GetMomentum()).mag2() >
-     1.e-16 * trk->GetMomentum().mag2())
+  if ((trk->GetMomentum() - ftrk->GetMomentum()).mag2() > 1.e-16 * trk->GetMomentum().mag2())
   {
-    G4cerr << "ERROR> G4FieldTrackUpdator sees *Disagreement* in momentum "
+    G4cerr << "ERROR> G4FieldTrackUpdator sees *Disagreement* in momentum " << G4endl;
+    G4cout << "  FTupdator: Tracking Momentum= " << trk->GetMomentum() << G4endl;
+    G4cout << "  FTupdator: FldTrack Momentum= " << ftrk->GetMomentum() << G4endl;
+    G4cout << "  FTupdator: FldTrack-Tracking= " << ftrk->GetMomentum() - trk->GetMomentum()
            << G4endl;
-    G4cout << "  FTupdator: Tracking Momentum= " << trk->GetMomentum()
-           << G4endl;
-    G4cout << "  FTupdator: FldTrack Momentum= " << ftrk->GetMomentum()
-           << G4endl;
-    G4cout << "  FTupdator: FldTrack-Tracking= "
-           << ftrk->GetMomentum() - trk->GetMomentum() << G4endl;
   }
 #endif
 
   ftrk->SetProperTimeOfFlight(trk->GetProperTime());
 
-  ftrk->SetChargeAndMoments(ptDynamicParticle->GetCharge(),
-                            ptDynamicParticle->GetMagneticMoment());
+  ftrk->SetChargeAndMoments(ptDynamicParticle->GetCharge(), ptDynamicParticle->GetMagneticMoment());
   ftrk->SetPDGSpin(ptDynamicParticle->GetParticleDefinition()->GetPDGSpin());
   // The charge can change during tracking
   ftrk->SetSpin(ptDynamicParticle->GetPolarization());

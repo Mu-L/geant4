@@ -41,11 +41,12 @@ class G4VSceneHandler;
 //----------------------------//
 class G4DAWNFILE : public G4VGraphicsSystem
 {
- public:
-  G4DAWNFILE();
-  virtual ~G4DAWNFILE();
-  G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
-  G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "");
+  public:
+
+    G4DAWNFILE();
+    virtual ~G4DAWNFILE();
+    G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
+    G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "");
 };
 
 #endif

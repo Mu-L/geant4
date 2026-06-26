@@ -32,69 +32,59 @@
 // File name:     G4VEnergySpectrum
 //
 // Author:        V.Ivanchenko (Vladimir.Ivantchenko@cern.ch)
-// 
+//
 // Creation date: 29 September 2001
 //
-// Modifications: 
+// Modifications:
 //
 // -------------------------------------------------------------------
 
-// Class Description: 
+// Class Description:
 //
 // Abstract interface for the energy spectrum of secondary particles in
-// electromagnetic processes. 
+// electromagnetic processes.
 //
-// Class Description: End 
+// Class Description: End
 
 // -------------------------------------------------------------------
 //
 
 #ifndef G4VENERGYSPECTRUM_HH
-#define G4VENERGYSPECTRUM_HH 1
+#define G4VENERGYSPECTRUM_HH
 
 #include "globals.hh"
 
 class G4ParticleDefinition;
 
-class G4VEnergySpectrum 
+class G4VEnergySpectrum
 {
-public:
-  explicit G4VEnergySpectrum() {};
+  public:
 
-  virtual ~G4VEnergySpectrum() {};
+    explicit G4VEnergySpectrum() {};
 
-  virtual G4double Probability(G4int Z,
-			       G4double minKineticEnergy,
-			       G4double maxKineticEnergy,
-                               G4double kineticEnergy,
-                               G4int shell = 0,
-			       const G4ParticleDefinition* pd = nullptr) const = 0;
+    virtual ~G4VEnergySpectrum() {};
 
-  virtual G4double AverageEnergy(G4int Z,
-				 G4double minKineticEnergy,
-				 G4double maxKineticEnergy,
-				 G4double kineticEnergy,
-				 G4int shell = 0,
-				 const G4ParticleDefinition* pd = nullptr) const = 0;
+    virtual G4double Probability(G4int Z, G4double minKineticEnergy, G4double maxKineticEnergy,
+                                 G4double kineticEnergy, G4int shell = 0,
+                                 const G4ParticleDefinition* pd = nullptr) const = 0;
 
-  virtual G4double SampleEnergy(G4int Z,
-				G4double minKineticEnergy,
-				G4double maxKineticEnergy,
-				G4double kineticEnergy,
-				G4int shell = 0,
-				const G4ParticleDefinition* pd = nullptr) const = 0;
+    virtual G4double AverageEnergy(G4int Z, G4double minKineticEnergy, G4double maxKineticEnergy,
+                                   G4double kineticEnergy, G4int shell = 0,
+                                   const G4ParticleDefinition* pd = nullptr) const = 0;
 
-  virtual G4double MaxEnergyOfSecondaries(G4double kineticEnergy,
-					  G4int Z = 0,
-					  const G4ParticleDefinition* pd = nullptr) const = 0;
-  
-  virtual G4double Excitation(G4int Z, G4double kineticEnergy) const = 0; 
+    virtual G4double SampleEnergy(G4int Z, G4double minKineticEnergy, G4double maxKineticEnergy,
+                                  G4double kineticEnergy, G4int shell = 0,
+                                  const G4ParticleDefinition* pd = nullptr) const = 0;
 
-  virtual void PrintData() const = 0;
+    virtual G4double MaxEnergyOfSecondaries(G4double kineticEnergy, G4int Z = 0,
+                                            const G4ParticleDefinition* pd = nullptr) const = 0;
 
-  G4VEnergySpectrum(const G4VEnergySpectrum&) = delete;
-  G4VEnergySpectrum& operator=(const G4VEnergySpectrum &right) = delete;
+    virtual G4double Excitation(G4int Z, G4double kineticEnergy) const = 0;
+
+    virtual void PrintData() const = 0;
+
+    G4VEnergySpectrum(const G4VEnergySpectrum&) = delete;
+    G4VEnergySpectrum& operator=(const G4VEnergySpectrum& right) = delete;
 };
 
 #endif
-

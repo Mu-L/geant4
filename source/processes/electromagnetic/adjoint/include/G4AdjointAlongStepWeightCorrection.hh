@@ -43,11 +43,11 @@
 //
 //-------------------------------------------------------------
 
-#ifndef G4AdjointAlongStepWeightCorrection_h
-#define G4AdjointAlongStepWeightCorrection_h 1
+#ifndef G4ADJOINTALONGSTEPWEIGHTCORRECTION_HH
+#define G4ADJOINTALONGSTEPWEIGHTCORRECTION_HH
 
-#include "globals.hh"
 #include "G4VContinuousProcess.hh"
+#include "globals.hh"
 
 class G4AdjointCSManager;
 class G4MaterialCutsCouple;
@@ -58,43 +58,41 @@ class G4Track;
 
 class G4AdjointAlongStepWeightCorrection : public G4VContinuousProcess
 {
- public:
-  explicit G4AdjointAlongStepWeightCorrection(
-    const G4String& name = "ContinuousWeightCorrection",
-    G4ProcessType type   = fElectromagnetic);
+  public:
 
-  ~G4AdjointAlongStepWeightCorrection() override;
+    explicit G4AdjointAlongStepWeightCorrection(const G4String& name = "ContinuousWeightCorrection",
+                                                G4ProcessType type = fElectromagnetic);
 
-  G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&) override;
+    ~G4AdjointAlongStepWeightCorrection() override;
 
-  void ProcessDescription(std::ostream&) const override;
-  void DumpInfo() const override { ProcessDescription(G4cout); };
+    G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&) override;
 
-  G4AdjointAlongStepWeightCorrection(G4AdjointAlongStepWeightCorrection&) =
-    delete;
-  G4AdjointAlongStepWeightCorrection& operator=(
-    const G4AdjointAlongStepWeightCorrection& right) = delete;
+    void ProcessDescription(std::ostream&) const override;
+    void DumpInfo() const override { ProcessDescription(G4cout); };
 
- protected:
-  G4double GetContinuousStepLimit(const G4Track& track,
-                                  G4double previousStepSize,
-                                  G4double currentMinimumStep,
-                                  G4double& currentSafety) override;
+    G4AdjointAlongStepWeightCorrection(G4AdjointAlongStepWeightCorrection&) = delete;
+    G4AdjointAlongStepWeightCorrection&
+    operator=(const G4AdjointAlongStepWeightCorrection& right) = delete;
 
- private:
-  void DefineMaterial(const G4MaterialCutsCouple* couple);
+  protected:
 
-  const G4MaterialCutsCouple* fCurrentCouple = nullptr;
-  G4AdjointCSManager* fCSManager = nullptr;
-  G4ParticleChange* fParticleChange;
+    G4double GetContinuousStepLimit(const G4Track& track, G4double previousStepSize,
+                                    G4double currentMinimumStep, G4double& currentSafety) override;
 
-  G4double fPreStepKinEnergy = 1.;
+  private:
+
+    void DefineMaterial(const G4MaterialCutsCouple* couple);
+
+    const G4MaterialCutsCouple* fCurrentCouple = nullptr;
+    G4AdjointCSManager* fCSManager = nullptr;
+    G4ParticleChange* fParticleChange;
+
+    G4double fPreStepKinEnergy = 1.;
 };
 
-inline void G4AdjointAlongStepWeightCorrection::DefineMaterial(
-  const G4MaterialCutsCouple* couple)
+inline void G4AdjointAlongStepWeightCorrection::DefineMaterial(const G4MaterialCutsCouple* couple)
 {
-  if(couple != fCurrentCouple)
+  if (couple != fCurrentCouple)
   {
     fCurrentCouple = couple;
   }

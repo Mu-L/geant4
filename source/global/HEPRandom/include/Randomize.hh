@@ -26,7 +26,7 @@
 //
 //
 #ifndef randomize_h
-#define randomize_h 1
+#define randomize_h
 
 #include <CLHEP/Random/Randomize.h>
 

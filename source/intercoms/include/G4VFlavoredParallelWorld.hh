@@ -32,13 +32,14 @@
 // Authors: P. Mora de Freitas & M. Verderi,  14 April 1999
 // --------------------------------------------------------------------
 #ifndef G4VFLAVOREDPARALLELWORLD_HH
-#define G4VFLAVOREDPARALLELWORLD_HH 1
+#define G4VFLAVOREDPARALLELWORLD_HH
 
 class G4VPhysicalVolume;
 
 class G4VFlavoredParallelWorld
 {
   public:
+
     virtual ~G4VFlavoredParallelWorld() = default;
 
     // Interface for visualisation

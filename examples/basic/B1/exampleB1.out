@@ -11,7 +11,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -143,6 +143,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 0
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -863,10 +864,10 @@ Max 2J for sampling of angular correlations         10
 --------------------End of Global Run-----------------------
  The run is 10000 proton of 210 MeV
 
-  --> cumulated edep per run in scoring volume = 534.24 GeV = 8.55946e-08 joule
+  --> cumulated edep per run in scoring volume = 542.066 GeV = 8.68485e-08 joule
   --> mass of scoring volume = 1.7316 kg
 
- Absorbed dose per run in scoring volume = edep/mass = 49.431 nanoGy  rms = 463.452 picoGy 
+ Absorbed dose per run in scoring volume = edep/mass = 50.1551 nanoGy  rms = 462.26 picoGy 
 ------------------------------------------------------------
 
 Graphics systems deleted.

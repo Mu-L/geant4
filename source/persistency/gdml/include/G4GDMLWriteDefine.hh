@@ -32,31 +32,27 @@
 // Author: Zoltan Torzsok, November 2007
 // --------------------------------------------------------------------
 #ifndef G4GDMLWRITEDEFINE_HH
-#define G4GDMLWRITEDEFINE_HH 1
-
-#include "G4Types.hh"
-#include "G4ThreeVector.hh"
-#include "G4RotationMatrix.hh"
+#define G4GDMLWRITEDEFINE_HH
 
 #include "G4GDMLWrite.hh"
+#include "G4RotationMatrix.hh"
+#include "G4ThreeVector.hh"
+#include "G4Types.hh"
 
 class G4GDMLWriteDefine : public G4GDMLWrite
 {
   public:
 
     G4ThreeVector GetAngles(const G4RotationMatrix&);
-    void ScaleWrite(xercesc::DOMElement* element, const G4String& name,
-                    const G4ThreeVector& scl)
+    void ScaleWrite(xercesc::DOMElement* element, const G4String& name, const G4ThreeVector& scl)
     {
       Scale_vectorWrite(element, "scale", name, scl);
     }
-    void RotationWrite(xercesc::DOMElement* element, const G4String& name,
-                       const G4ThreeVector& rot)
+    void RotationWrite(xercesc::DOMElement* element, const G4String& name, const G4ThreeVector& rot)
     {
       Rotation_vectorWrite(element, "rotation", name, rot);
     }
-    void PositionWrite(xercesc::DOMElement* element, const G4String& name,
-                       const G4ThreeVector& pos)
+    void PositionWrite(xercesc::DOMElement* element, const G4String& name, const G4ThreeVector& pos)
     {
       Position_vectorWrite(element, "position", name, pos);
     }
@@ -82,12 +78,12 @@ class G4GDMLWriteDefine : public G4GDMLWrite
     G4GDMLWriteDefine();
     virtual ~G4GDMLWriteDefine();
 
-    void Scale_vectorWrite(xercesc::DOMElement*, const G4String&,
-                           const G4String&, const G4ThreeVector&);
-    void Rotation_vectorWrite(xercesc::DOMElement*, const G4String&,
-                              const G4String&, const G4ThreeVector&);
-    void Position_vectorWrite(xercesc::DOMElement*, const G4String&,
-                              const G4String&, const G4ThreeVector&);
+    void Scale_vectorWrite(xercesc::DOMElement*, const G4String&, const G4String&,
+                           const G4ThreeVector&);
+    void Rotation_vectorWrite(xercesc::DOMElement*, const G4String&, const G4String&,
+                              const G4ThreeVector&);
+    void Position_vectorWrite(xercesc::DOMElement*, const G4String&, const G4String&,
+                              const G4ThreeVector&);
 
   protected:
 

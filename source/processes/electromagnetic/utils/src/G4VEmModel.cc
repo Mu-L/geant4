@@ -48,58 +48,66 @@
 //
 
 #include "G4VEmModel.hh"
+
 #include "G4ElementData.hh"
-#include "G4LossTableManager.hh"
-#include "G4LossTableBuilder.hh"
-#include "G4ProductionCutsTable.hh"
-#include "G4ParticleChangeForLoss.hh"
-#include "G4ParticleChangeForGamma.hh"
+#include "G4EmDataRegistry.hh"
 #include "G4EmParameters.hh"
-#include "G4SystemOfUnits.hh"
 #include "G4EmUtility.hh"
 #include "G4Log.hh"
+#include "G4LossTableManager.hh"
+#include "G4ParticleChangeForGamma.hh"
+#include "G4ParticleChangeForLoss.hh"
+#include "G4ProductionCutsTable.hh"
+#include "G4SystemOfUnits.hh"
 #include "Randomize.hh"
+
 #include <iostream>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4VEmModel::G4VEmModel(const G4String& nam):
-  inveplus(1.0/CLHEP::eplus),
-  lowLimit(0.1*CLHEP::keV), 
-  highLimit(100.0*CLHEP::TeV),
-  polarAngleLimit(CLHEP::pi),
-  name(nam)
+G4VEmModel::G4VEmModel(const G4String& nam)
+  : inveplus(1.0 / CLHEP::eplus),
+    lowLimit(0.1 * CLHEP::keV),
+    highLimit(100.0 * CLHEP::TeV),
+    polarAngleLimit(CLHEP::pi),
+    name(nam)
 {
   xsec.resize(nsec);
   fEmManager = G4LossTableManager::Instance();
   fEmManager->Register(this);
   isMaster = fEmManager->IsMaster();
-  
-  G4LossTableBuilder* bld = fEmManager->GetTableBuilder();
-  theDensityFactor = bld->GetDensityFactors();
-  theDensityIdx = bld->GetCoupleIndexes();
+
+  auto reg = G4EmDataRegistry::Instance();
+  theDensityFactor = reg->GetDensityFactors();
+  theDensityIdx = reg->GetCoupleIndexes();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4VEmModel::~G4VEmModel()
 {
-  if(localElmSelectors) { 
-    for(G4int i=0; i<nSelectors; ++i) { 
-      delete (*elmSelectors)[i]; 
+  if (localElmSelectors)
+  {
+    for (G4int i = 0; i < nSelectors; ++i)
+    {
+      delete (*elmSelectors)[i];
     }
-    delete elmSelectors; 
+    delete elmSelectors;
   }
   delete anglModel;
-  
-  if(localTable && xSectionTable != nullptr) { 
+
+  if (localTable && xSectionTable != nullptr)
+  {
     xSectionTable->clearAndDestroy();
     delete xSectionTable;
-    xSectionTable = nullptr; 
+    xSectionTable = nullptr;
   }
   fEmManager->DeRegister(this);
-  if (localChange) { delete pParticleChange; }
+  if (localChange)
+  {
+    delete pParticleChange;
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -107,12 +115,16 @@ G4VEmModel::~G4VEmModel()
 G4ParticleChangeForLoss* G4VEmModel::GetParticleChangeForLoss()
 {
   auto p = dynamic_cast<G4ParticleChangeForLoss*>(pParticleChange);
-  if (p == nullptr) {
+  if (p == nullptr)
+  {
     p = new G4ParticleChangeForLoss();
     localChange = true;
   }
   pParticleChange = p;
-  if(fTripletModel != nullptr) { fTripletModel->SetParticleChange(p); }
+  if (fTripletModel != nullptr)
+  {
+    fTripletModel->SetParticleChange(p);
+  }
   return p;
 }
 
@@ -121,38 +133,45 @@ G4ParticleChangeForLoss* G4VEmModel::GetParticleChangeForLoss()
 G4ParticleChangeForGamma* G4VEmModel::GetParticleChangeForGamma()
 {
   auto p = dynamic_cast<G4ParticleChangeForGamma*>(pParticleChange);
-  if (p == nullptr) {
+  if (p == nullptr)
+  {
     p = new G4ParticleChangeForGamma();
     localChange = true;
   }
   pParticleChange = p;
-  if(fTripletModel != nullptr) { fTripletModel->SetParticleChange(p); }
+  if (fTripletModel != nullptr)
+  {
+    fTripletModel->SetParticleChange(p);
+  }
   return p;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void G4VEmModel::InitialiseElementSelectors(const G4ParticleDefinition* part, 
+void G4VEmModel::InitialiseElementSelectors(const G4ParticleDefinition* part,
                                             const G4DataVector& cuts)
 {
-  if(highLimit <= lowLimit) { return; }
-  G4EmUtility::InitialiseElementSelectors(this,part,cuts,lowLimit,highLimit);
+  if (highLimit <= lowLimit)
+  {
+    return;
+  }
+  G4EmUtility::InitialiseElementSelectors(this, part, cuts, lowLimit, highLimit);
   localElmSelectors = true;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void G4VEmModel::InitialiseLocal(const G4ParticleDefinition*, G4VEmModel*)
-{}
+void G4VEmModel::InitialiseLocal(const G4ParticleDefinition*, G4VEmModel*) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void G4VEmModel::InitialiseForMaterial(const G4ParticleDefinition* part,
-                                       const G4Material* material)
+void G4VEmModel::InitialiseForMaterial(const G4ParticleDefinition* part, const G4Material* material)
 {
-  if(material != nullptr) {
+  if (material != nullptr)
+  {
     G4int n = (G4int)material->GetNumberOfElements();
-    for(G4int i=0; i<n; ++i) {
+    for (G4int i = 0; i < n; ++i)
+    {
       G4int Z = material->GetElement(i)->GetZasInt();
       InitialiseForElement(part, Z);
     }
@@ -161,37 +180,34 @@ void G4VEmModel::InitialiseForMaterial(const G4ParticleDefinition* part,
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void G4VEmModel::InitialiseForElement(const G4ParticleDefinition*, G4int)
-{}
+void G4VEmModel::InitialiseForElement(const G4ParticleDefinition*, G4int) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4VEmModel::ComputeDEDXPerVolume(const G4Material*,
-                                          const G4ParticleDefinition*,
-                                          G4double,G4double)
+G4double G4VEmModel::ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*, G4double,
+                                          G4double)
 {
   return 0.0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4VEmModel::CrossSectionPerVolume(const G4Material* mat,
-                                           const G4ParticleDefinition* p,
-                                           G4double ekin,
-                                           G4double emin,
-                                           G4double emax)
+G4double G4VEmModel::CrossSectionPerVolume(const G4Material* mat, const G4ParticleDefinition* p,
+                                           G4double ekin, G4double emin, G4double emax)
 {
   SetupForMaterial(p, mat, ekin);
   const G4double* theAtomNumDensityVector = mat->GetVecNbOfAtomsPerVolume();
-  G4int nelm = (G4int)mat->GetNumberOfElements(); 
-  if(nelm > nsec) {
+  G4int nelm = (G4int)mat->GetNumberOfElements();
+  if (nelm > nsec)
+  {
     xsec.resize(nelm);
     nsec = nelm;
   }
   G4double cross = 0.0;
-  for (G4int i=0; i<nelm; ++i) {
-    cross += theAtomNumDensityVector[i]*
-      ComputeCrossSectionPerAtom(p,mat->GetElement(i),ekin,emin,emax);
+  for (G4int i = 0; i < nelm; ++i)
+  {
+    cross += theAtomNumDensityVector[i]
+             * ComputeCrossSectionPerAtom(p, mat->GetElement(i), ekin, emin, emax);
     xsec[i] = cross;
   }
   return cross;
@@ -199,33 +215,31 @@ G4double G4VEmModel::CrossSectionPerVolume(const G4Material* mat,
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4VEmModel::GetPartialCrossSection(const G4Material*, G4int,
-                                            const G4ParticleDefinition*,
+G4double G4VEmModel::GetPartialCrossSection(const G4Material*, G4int, const G4ParticleDefinition*,
                                             G4double)
-{ 
+{
   return 0.0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void G4VEmModel::StartTracking(G4Track*)
-{}
+void G4VEmModel::StartTracking(G4Track*) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-const G4Element* G4VEmModel::SelectRandomAtom(const G4Material* mat,
-                                              const G4ParticleDefinition* pd,
-                                              G4double kinEnergy,
-                                              G4double tcut,
-                                              G4double tmax)
+const G4Element* G4VEmModel::SelectRandomAtom(const G4Material* mat, const G4ParticleDefinition* pd,
+                                              G4double kinEnergy, G4double tcut, G4double tmax)
 {
   G4int n = (G4int)mat->GetNumberOfElements();
   fCurrentElement = mat->GetElement(0);
-  if (n > 1) {
-    const G4double x = G4UniformRand()*
-      G4VEmModel::CrossSectionPerVolume(mat,pd,kinEnergy,tcut,tmax);
-    for(G4int i=0; i<n; ++i) {
-      if (x <= xsec[i]) {
+  if (n > 1)
+  {
+    const G4double x =
+      G4UniformRand() * G4VEmModel::CrossSectionPerVolume(mat, pd, kinEnergy, tcut, tmax);
+    for (G4int i = 0; i < n; ++i)
+    {
+      if (x <= xsec[i])
+      {
         fCurrentElement = mat->GetElement(i);
         break;
       }
@@ -239,7 +253,8 @@ const G4Element* G4VEmModel::SelectRandomAtom(const G4Material* mat,
 const G4Element* G4VEmModel::GetCurrentElement(const G4Material* mat) const
 {
   const G4Element* elm = fCurrentElement;
-  if(nullptr == elm && nullptr != mat) {
+  if (nullptr == elm && nullptr != mat)
+  {
     elm = G4EmUtility::SampleRandomElement(mat);
   }
   return elm;
@@ -259,10 +274,12 @@ const G4Isotope* G4VEmModel::GetCurrentIsotope(const G4Element* elm) const
 {
   const G4Isotope* iso = nullptr;
   const G4Element* el = elm;
-  if(nullptr == el && nullptr != fCurrentCouple) { 
+  if (nullptr == el && nullptr != fCurrentCouple)
+  {
     el = GetCurrentElement(fCurrentCouple->GetMaterial());
   }
-  if(nullptr != el) {
+  if (nullptr != el)
+  {
     iso = G4EmUtility::SampleRandomIsotope(el);
   }
   return iso;
@@ -278,32 +295,27 @@ G4int G4VEmModel::SelectIsotopeNumber(const G4Element* elm) const
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4VEmModel::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
-                                                G4double, G4double, G4double,
-                                                G4double, G4double)
+G4double G4VEmModel::ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double, G4double,
+                                                G4double, G4double, G4double)
 {
   return 0.0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double 
-G4VEmModel::ComputeCrossSectionPerShell(const G4ParticleDefinition*,
-                                        G4int, G4int, 
-                                        G4double, G4double, G4double)
+G4double G4VEmModel::ComputeCrossSectionPerShell(const G4ParticleDefinition*, G4int, G4int,
+                                                 G4double, G4double, G4double)
 {
   return 0.0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void G4VEmModel::DefineForRegion(const G4Region*) 
-{}
+void G4VEmModel::DefineForRegion(const G4Region*) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void G4VEmModel::FillNumberOfSecondaries(G4int& numberOfTriplets,
-                                         G4int& numberOfRecoil)
+void G4VEmModel::FillNumberOfSecondaries(G4int& numberOfTriplets, G4int& numberOfRecoil)
 {
   numberOfTriplets = 0;
   numberOfRecoil = 0;
@@ -313,23 +325,22 @@ void G4VEmModel::FillNumberOfSecondaries(G4int& numberOfTriplets,
 
 G4double G4VEmModel::ChargeSquareRatio(const G4Track& track)
 {
-  return GetChargeSquareRatio(track.GetParticleDefinition(), 
-                              track.GetMaterial(), track.GetKineticEnergy());
+  return GetChargeSquareRatio(track.GetParticleDefinition(), track.GetMaterial(),
+                              track.GetKineticEnergy());
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4VEmModel::GetChargeSquareRatio(const G4ParticleDefinition* p,
-                                          const G4Material*, G4double)
+G4double G4VEmModel::GetChargeSquareRatio(const G4ParticleDefinition* p, const G4Material*,
+                                          G4double)
 {
-  const G4double q = p->GetPDGCharge()*inveplus;
-  return q*q;
+  const G4double q = p->GetPDGCharge() * inveplus;
+  return q * q;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4VEmModel::GetParticleCharge(const G4ParticleDefinition* p,
-                                       const G4Material*, G4double)
+G4double G4VEmModel::GetParticleCharge(const G4ParticleDefinition* p, const G4Material*, G4double)
 {
   return p->GetPDGCharge();
 }
@@ -337,59 +348,59 @@ G4double G4VEmModel::GetParticleCharge(const G4ParticleDefinition* p,
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void G4VEmModel::CorrectionsAlongStep(const G4Material*, const G4ParticleDefinition*,
-				      const G4double, const G4double, const G4double&,
-                                      G4double&)
+                                      const G4double, const G4double, const G4double&, G4double&)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4VEmModel::Value(const G4MaterialCutsCouple* couple,
-                           const G4ParticleDefinition* p, G4double e)
+G4double G4VEmModel::Value(const G4MaterialCutsCouple* couple, const G4ParticleDefinition* p,
+                           G4double e)
 {
   SetCurrentCouple(couple);
-  return pFactor*e*e*CrossSectionPerVolume(pBaseMaterial,p,e,0.0,DBL_MAX);
+  return pFactor * e * e * CrossSectionPerVolume(pBaseMaterial, p, e, 0.0, DBL_MAX);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4VEmModel::MinPrimaryEnergy(const G4Material*,
-                                      const G4ParticleDefinition*,
-                                      G4double)
+G4double G4VEmModel::MinPrimaryEnergy(const G4Material*, const G4ParticleDefinition*, G4double)
 {
   return 0.0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4VEmModel::MinEnergyCut(const G4ParticleDefinition*, 
-                                  const G4MaterialCutsCouple*)
+G4double G4VEmModel::MinEnergyCut(const G4ParticleDefinition*, const G4MaterialCutsCouple*)
 {
   return 0.0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4VEmModel::MaxSecondaryEnergy(const G4ParticleDefinition*,
-                                        G4double kineticEnergy)
+G4double G4VEmModel::MaxSecondaryEnergy(const G4ParticleDefinition*, G4double kineticEnergy)
 {
   return kineticEnergy;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void G4VEmModel::SetupForMaterial(const G4ParticleDefinition* p,
-                                  const G4Material* mat, G4double ekin)
+void G4VEmModel::SetupForMaterial(const G4ParticleDefinition* p, const G4Material* mat,
+                                  G4double ekin)
 {
   GetChargeSquareRatio(p, mat, ekin);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void 
-G4VEmModel::SetParticleChange(G4VParticleChange* p, G4VEmFluctuationModel* f)
+void G4VEmModel::SetParticleChange(G4VParticleChange* p, G4VEmFluctuationModel* f)
 {
-  if(p != nullptr && pParticleChange != p) { pParticleChange = p; }
-  if(flucModel != f) { flucModel = f; }
+  if (p != nullptr && pParticleChange != p)
+  {
+    pParticleChange = p;
+  }
+  if (flucModel != f)
+  {
+    flucModel = f;
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -404,9 +415,10 @@ void G4VEmModel::SetCrossSectionTable(G4PhysicsTable* p, G4bool isLocal)
 
 void G4VEmModel::SetLPMFlag(G4bool)
 {
-  if (G4EmParameters::Instance()->Verbose() > 0) {
+  if (G4EmParameters::Instance()->Verbose() > 0)
+  {
     G4ExceptionDescription ed;
-    ed << "The obsolete method SetLPMFlag(..) of the model class " << GetName() 
+    ed << "The obsolete method SetLPMFlag(..) of the model class " << GetName()
        << " is called. Please, use G4EmParameters::Instance()->SetLPM(..)"
        << " instead";
     G4Exception("G4VEmModel::SetLPMFlag", "em0001", JustWarning, ed);
@@ -415,12 +427,11 @@ void G4VEmModel::SetLPMFlag(G4bool)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4VEmModel::SetMasterThread(G4bool)
-{}
+void G4VEmModel::SetMasterThread(G4bool) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void  G4VEmModel::ModelDescription(std::ostream& outFile) const
+void G4VEmModel::ModelDescription(std::ostream& outFile) const
 {
   outFile << "The description for this model has not been written yet.\n";
 }

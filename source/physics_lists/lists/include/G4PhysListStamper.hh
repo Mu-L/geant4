@@ -23,51 +23,48 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4PhysListStamper_h
-#define G4PhysListStamper_h 1
+#ifndef G4PHYSLISTSTAMPER_HH
+#define G4PHYSLISTSTAMPER_HH
 
-
-#include "globals.hh"
 #include "G4PhysListRegistry.hh"
 #include "G4VModularPhysicsList.hh"
+#include "globals.hh"
 
 class G4VBasePhysListStamper
 {
+  public:
 
-public:
-
-  virtual G4VModularPhysicsList* Instantiate(G4int /* verbose */) = 0;
-
+    virtual G4VModularPhysicsList* Instantiate(G4int /* verbose */) = 0;
 };
 
-
-template <typename T> class G4PhysListStamper : public G4VBasePhysListStamper
+template<typename T>
+class G4PhysListStamper : public G4VBasePhysListStamper
 {
-public:
-  
-  G4PhysListStamper(const G4String& name)
-  {
-    G4PhysListRegistry::Instance()->AddFactory(name, this);
-  }
-  
-  virtual G4VModularPhysicsList* Instantiate(G4int verbose) 
-  {
-    return new T(verbose);
-  }
+  public:
+
+    G4PhysListStamper(const G4String& name)
+    {
+      G4PhysListRegistry::Instance()->AddFactory(name, this);
+    }
+
+    virtual G4VModularPhysicsList* Instantiate(G4int verbose) { return new T(verbose); }
 };
 
-#define G4_DECLARE_PHYSLIST_FACTORY(physics_list) \
-  const G4PhysListStamper<physics_list>& physics_list##Factory = G4PhysListStamper<physics_list>(#physics_list)
+#define G4_DECLARE_PHYSLIST_FACTORY(physics_list)                \
+  const G4PhysListStamper<physics_list>& physics_list##Factory = \
+    G4PhysListStamper<physics_list>(#physics_list)
 
 // support for physics list defined within a namespace
 // a bit tricky because cpp macro expansion doesn't like "::"
 // ala  G4_DECLARE_PHYSLIST_FACTORY_NS(myns::MyPL,myns,MyPL);
-#define G4_DECLARE_PHYSLIST_FACTORY_NS( physics_list , nsname , plbase )    \
-  namespace nsname {                                                    \
-    const G4PhysListStamper<physics_list>& plbase##Factory = G4PhysListStamper<physics_list>(#physics_list); \
-  } \
+#define G4_DECLARE_PHYSLIST_FACTORY_NS(physics_list, nsname, plbase) \
+  namespace nsname                                                   \
+  {                                                                  \
+  const G4PhysListStamper<physics_list>& plbase##Factory =           \
+    G4PhysListStamper<physics_list>(#physics_list);                  \
+  }                                                                  \
   typedef int xyzzy__LINE__
-  // eat trailing semicolon using silly typedef
+// eat trailing semicolon using silly typedef
 
 // REFERENCE (rather than DECLARE) when the physics list if it is part
 // of a static library.  No need to include the header (DECLARE needs this
@@ -77,23 +74,25 @@ public:
 
 // this is _very_ much complicated because of the templating of these lists
 
-#define G4_REFERENCE_PHYSLIST_FACTORY(physics_list)	\
-  class G4VModularPhysicsList;			        \
-  template <class T> class T##physics_list;	\
-  typedef T##physics_list<G4VModularPhysicsList> physics_list;	       \
+#define G4_REFERENCE_PHYSLIST_FACTORY(physics_list)                    \
+  class G4VModularPhysicsList;                                         \
+  template<class T>                                                    \
+  class T##physics_list;                                               \
+  typedef T##physics_list<G4VModularPhysicsList> physics_list;         \
   extern const G4PhysListStamper<physics_list>& physics_list##Factory; \
   const G4PhysListStamper<physics_list>& physics_list##FactoryRef = physics_list##Factory
 
-#define G4_REFERENCE_PHYSLIST_FACTORY_NS(physics_list, nsname, plbase )	\
-  class G4VModularPhysicsList;    \
-  namespace nsname { \
-    template <class T> class T##plbase;	\
-    typedef T##plbase<G4VModularPhysicsList> plbase; \
-    extern const G4PhysListStamper<plbase>& plbase##Factory; \
-    const G4PhysListStamper<plbase>& plbase##FactoryRef = plbase##Factory; \
-  } \
+#define G4_REFERENCE_PHYSLIST_FACTORY_NS(physics_list, nsname, plbase)   \
+  class G4VModularPhysicsList;                                           \
+  namespace nsname                                                       \
+  {                                                                      \
+  template<class T>                                                      \
+  class T##plbase;                                                       \
+  typedef T##plbase<G4VModularPhysicsList> plbase;                       \
+  extern const G4PhysListStamper<plbase>& plbase##Factory;               \
+  const G4PhysListStamper<plbase>& plbase##FactoryRef = plbase##Factory; \
+  }                                                                      \
   typedef int xyzzy__LINE__
-  // eat trailing semicolon using silly typedef
+// eat trailing semicolon using silly typedef
 
 #endif
-

@@ -34,18 +34,17 @@
 
 // Author: Ivana Hrivnacova, 09/04/2014 (ivana@ipno.in2p3.fr)
 
-#ifndef G4VAnalysisReader_h
-#define G4VAnalysisReader_h 1
+#ifndef G4VANALYSISREADER_HH
+#define G4VANALYSISREADER_HH
 
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
+#include "G4VTBaseHnManager.hh"  // make forward declaration if possible
 #include "globals.hh"
 
-#include "G4VTBaseHnManager.hh"  // make forward declaration if possible
-
-#include <vector>
 #include <memory>
 #include <string_view>
+#include <vector>
 
 class G4HnManager;
 class G4VRNtupleManager;
@@ -58,6 +57,7 @@ using G4Analysis::kDim3;
 class G4VAnalysisReader
 {
   public:
+
     virtual ~G4VAnalysisReader();
 
     // Methods for handling files
@@ -69,11 +69,16 @@ class G4VAnalysisReader
     G4String GetFileName() const;
 
     // Methods to read histograms from a file
-    G4int ReadH1(const G4String& h1Name, const G4String& fileName = "", const G4String& dirName = "");
-    G4int ReadH2(const G4String& h2Name, const G4String& fileName = "", const G4String& dirName = "");
-    G4int ReadH3(const G4String& h3Name, const G4String& fileName = "", const G4String& dirName = "");
-    G4int ReadP1(const G4String& h1Name, const G4String& fileName = "", const G4String& dirName = "");
-    G4int ReadP2(const G4String& h2Name, const G4String& fileName = "", const G4String& dirName = "");
+    G4int ReadH1(const G4String& h1Name, const G4String& fileName = "",
+                 const G4String& dirName = "");
+    G4int ReadH2(const G4String& h2Name, const G4String& fileName = "",
+                 const G4String& dirName = "");
+    G4int ReadH3(const G4String& h3Name, const G4String& fileName = "",
+                 const G4String& dirName = "");
+    G4int ReadP1(const G4String& h1Name, const G4String& fileName = "",
+                 const G4String& dirName = "");
+    G4int ReadP2(const G4String& h2Name, const G4String& fileName = "",
+                 const G4String& dirName = "");
 
     // The ids of histograms and ntuples are generated automatically
     // starting from 0; with following functions it is possible to
@@ -88,7 +93,8 @@ class G4VAnalysisReader
     G4bool SetFirstNtupleId(G4int firstId);
 
     // Methods to read ntuple from a file
-    G4int GetNtuple(const G4String& ntupleName, const G4String& fileName = "", const G4String& dirName = "");
+    G4int GetNtuple(const G4String& ntupleName, const G4String& fileName = "",
+                    const G4String& dirName = "");
 
     // Methods for ntuple with id = FirstNtupleId
     G4bool SetNtupleIColumn(const G4String& columnName, G4int& value);
@@ -96,28 +102,18 @@ class G4VAnalysisReader
     G4bool SetNtupleDColumn(const G4String& columnName, G4double& value);
     G4bool SetNtupleSColumn(const G4String& columnName, G4String& value);
     // Bind the ntuple colums of vector type
-    G4bool SetNtupleIColumn(const G4String& columnName,
-                            std::vector<int>& vector);
-    G4bool SetNtupleFColumn(const G4String& columnName,
-                            std::vector<float>& vector);
-    G4bool SetNtupleDColumn(const G4String& columnName,
-                            std::vector<double>& vector);
-    G4bool SetNtupleSColumn(const G4String& columnName,
-                            std::vector<std::string>& vector);
+    G4bool SetNtupleIColumn(const G4String& columnName, std::vector<int>& vector);
+    G4bool SetNtupleFColumn(const G4String& columnName, std::vector<float>& vector);
+    G4bool SetNtupleDColumn(const G4String& columnName, std::vector<double>& vector);
+    G4bool SetNtupleSColumn(const G4String& columnName, std::vector<std::string>& vector);
     // Methods for ntuple with id > FirstNtupleId
-    G4bool SetNtupleIColumn(G4int ntupleId, const G4String& columnName,
-                            G4int& value);
-    G4bool SetNtupleFColumn(G4int ntupleId, const G4String& columnName,
-                            G4float& value);
-    G4bool SetNtupleDColumn(G4int ntupleId, const G4String& columnName,
-                            G4double& value);
-    G4bool SetNtupleSColumn(G4int ntupleId, const G4String& columnName,
-                            G4String& value);
+    G4bool SetNtupleIColumn(G4int ntupleId, const G4String& columnName, G4int& value);
+    G4bool SetNtupleFColumn(G4int ntupleId, const G4String& columnName, G4float& value);
+    G4bool SetNtupleDColumn(G4int ntupleId, const G4String& columnName, G4double& value);
+    G4bool SetNtupleSColumn(G4int ntupleId, const G4String& columnName, G4String& value);
     // Bind the ntuple colums of vector type
-    G4bool SetNtupleIColumn(G4int ntupleId, const G4String& columnName,
-                            std::vector<int>& vector);
-    G4bool SetNtupleFColumn(G4int ntupleId, const G4String& columnName,
-                            std::vector<float>& vector);
+    G4bool SetNtupleIColumn(G4int ntupleId, const G4String& columnName, std::vector<int>& vector);
+    G4bool SetNtupleFColumn(G4int ntupleId, const G4String& columnName, std::vector<float>& vector);
     G4bool SetNtupleDColumn(G4int ntupleId, const G4String& columnName,
                             std::vector<double>& vector);
     G4bool SetNtupleSColumn(G4int ntupleId, const G4String& columnName,
@@ -149,45 +145,45 @@ class G4VAnalysisReader
 
     // Access to histogram & profiles parameters
     //
-    G4int    GetH1Nbins(G4int id) const;
+    G4int GetH1Nbins(G4int id) const;
     G4double GetH1Xmin(G4int id) const;
     G4double GetH1Xmax(G4int id) const;
     G4double GetH1Width(G4int id) const;
     //
-    G4int    GetH2Nxbins(G4int id) const;
+    G4int GetH2Nxbins(G4int id) const;
     G4double GetH2Xmin(G4int id) const;
     G4double GetH2Xmax(G4int id) const;
     G4double GetH2XWidth(G4int id) const;
-    G4int    GetH2Nybins(G4int id) const;
+    G4int GetH2Nybins(G4int id) const;
     G4double GetH2Ymin(G4int id) const;
     G4double GetH2Ymax(G4int id) const;
     G4double GetH2YWidth(G4int id) const;
     //
-    G4int    GetH3Nxbins(G4int id) const;
+    G4int GetH3Nxbins(G4int id) const;
     G4double GetH3Xmin(G4int id) const;
     G4double GetH3Xmax(G4int id) const;
     G4double GetH3XWidth(G4int id) const;
-    G4int    GetH3Nybins(G4int id) const;
+    G4int GetH3Nybins(G4int id) const;
     G4double GetH3Ymin(G4int id) const;
     G4double GetH3Ymax(G4int id) const;
     G4double GetH3YWidth(G4int id) const;
-    G4int    GetH3Nzbins(G4int id) const;
+    G4int GetH3Nzbins(G4int id) const;
     G4double GetH3Zmin(G4int id) const;
     G4double GetH3Zmax(G4int id) const;
     G4double GetH3ZWidth(G4int id) const;
     //
-    G4int    GetP1Nbins(G4int id) const;
+    G4int GetP1Nbins(G4int id) const;
     G4double GetP1Xmin(G4int id) const;
     G4double GetP1Xmax(G4int id) const;
     G4double GetP1XWidth(G4int id) const;
     G4double GetP1Ymin(G4int id) const;
     G4double GetP1Ymax(G4int id) const;
     //
-    G4int    GetP2Nxbins(G4int id) const;
+    G4int GetP2Nxbins(G4int id) const;
     G4double GetP2Xmin(G4int id) const;
     G4double GetP2Xmax(G4int id) const;
     G4double GetP2XWidth(G4int id) const;
-    G4int    GetP2Nybins(G4int id) const;
+    G4int GetP2Nybins(G4int id) const;
     G4double GetP2Ymin(G4int id) const;
     G4double GetP2Ymax(G4int id) const;
     G4double GetP2YWidth(G4int id) const;
@@ -221,7 +217,7 @@ class G4VAnalysisReader
     G4String GetP2ZAxisTitle(G4int id) const;
 
     // Verbosity
-    void  SetVerboseLevel(G4int verboseLevel);
+    void SetVerboseLevel(G4int verboseLevel);
     G4int GetVerboseLevel() const;
 
     // The manager type (starts with an uppercase letter)
@@ -230,26 +226,24 @@ class G4VAnalysisReader
     G4String GetFileType() const;
 
   protected:
+
     explicit G4VAnalysisReader(const G4String& type);
 
     // Virtual methods
-    virtual G4int  ReadH1Impl(const G4String& h1Name, const G4String& fileName,
-                              const G4String& dirName, G4bool isUserFileName) = 0;
-    virtual G4int  ReadH2Impl(const G4String& h2Name, const G4String& fileName,
-                              const G4String& dirName, G4bool isUserFileName) = 0;
-    virtual G4int  ReadH3Impl(const G4String& h3Name, const G4String& fileName,
-                              const G4String& dirName, G4bool isUserFileName) = 0;
-    virtual G4int  ReadP1Impl(const G4String& p1Name, const G4String& fileName,
-                              const G4String& dirName, G4bool isUserFileName) = 0;
-    virtual G4int  ReadP2Impl(const G4String& p2Name, const G4String& fileName,
-                              const G4String& dirName, G4bool isUserFileName) = 0;
+    virtual G4int ReadH1Impl(const G4String& h1Name, const G4String& fileName,
+                             const G4String& dirName, G4bool isUserFileName) = 0;
+    virtual G4int ReadH2Impl(const G4String& h2Name, const G4String& fileName,
+                             const G4String& dirName, G4bool isUserFileName) = 0;
+    virtual G4int ReadH3Impl(const G4String& h3Name, const G4String& fileName,
+                             const G4String& dirName, G4bool isUserFileName) = 0;
+    virtual G4int ReadP1Impl(const G4String& p1Name, const G4String& fileName,
+                             const G4String& dirName, G4bool isUserFileName) = 0;
+    virtual G4int ReadP2Impl(const G4String& p2Name, const G4String& fileName,
+                             const G4String& dirName, G4bool isUserFileName) = 0;
     virtual G4bool CloseFilesImpl(G4bool reset) = 0;
 
-    void Message(G4int level,
-                 const G4String& action,
-                 const G4String& objectType,
-                 const G4String& objectName = "",
-                 G4bool success = true) const;
+    void Message(G4int level, const G4String& action, const G4String& objectType,
+                 const G4String& objectName = "", G4bool success = true) const;
 
     // Methods
     void SetH1Manager(G4VTBaseHnManager<kDim1>* h1Manager);
@@ -264,11 +258,13 @@ class G4VAnalysisReader
     G4AnalysisManagerState fState;
 
   protected:
-    std::shared_ptr<G4VRFileManager>  fVFileManager { nullptr };
+
+    std::shared_ptr<G4VRFileManager> fVFileManager{nullptr};
 
   private:
+
     // Static data members
-    static constexpr std::string_view fkClass { "G4VAnalysisReader" };
+    static constexpr std::string_view fkClass{"G4VAnalysisReader"};
 
     // Data members
     std::unique_ptr<G4VTBaseHnManager<kDim1>> fVH1Manager;
@@ -276,7 +272,7 @@ class G4VAnalysisReader
     std::unique_ptr<G4VTBaseHnManager<kDim3>> fVH3Manager;
     std::unique_ptr<G4VTBaseHnManager<kDim2>> fVP1Manager;
     std::unique_ptr<G4VTBaseHnManager<kDim3>> fVP2Manager;
-    std::shared_ptr<G4VRNtupleManager> fVNtupleManager { nullptr };
+    std::shared_ptr<G4VRNtupleManager> fVNtupleManager{nullptr};
 };
 
 // inline functions

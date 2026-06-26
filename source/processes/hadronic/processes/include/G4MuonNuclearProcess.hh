@@ -28,25 +28,24 @@
 // Date:        2 February 2011
 //
 // Description: muon interacts with nucleus by exchange of virtual
-//              gamma, which then interacts hadronically    
+//              gamma, which then interacts hadronically
 
+#ifndef G4MUONNUCLEARPROCESS_HH
+#define G4MUONNUCLEARPROCESS_HH
 
-#ifndef G4MuonNuclearProcess_h
-#define G4MuonNuclearProcess_h 1
- 
-#include "globals.hh"
 #include "G4HadronicProcess.hh"
+#include "globals.hh"
 
 class G4MuonNuclearProcess : public G4HadronicProcess
 {
-public:
+  public:
 
-  G4MuonNuclearProcess(const G4String& processName ="muonNuclear");
-  
-  virtual ~G4MuonNuclearProcess();
- 
-  virtual G4bool IsApplicable(const G4ParticleDefinition& aParticleType);
+    G4MuonNuclearProcess(const G4String& processName = "muonNuclear");
 
-  virtual void ProcessDescription(std::ostream& outFile) const;
+    virtual ~G4MuonNuclearProcess();
+
+    virtual G4bool IsApplicable(const G4ParticleDefinition& aParticleType);
+
+    virtual void ProcessDescription(std::ostream& outFile) const;
 };
 #endif

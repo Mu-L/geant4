@@ -30,14 +30,14 @@
 // 04.10.05, V.Grichine move from pure virtual and new class name
 // 29.02.04, V.Ivanchenko created
 
-#ifndef G4VTRModel_h
-#define G4VTRModel_h
+#ifndef G4VTRMODEL_HH
+#define G4VTRMODEL_HH
 
-#include "globals.hh"
 #include "G4Material.hh"
 #include "G4ThreeVector.hh"
 #include "G4Track.hh"
 #include "G4VParticleChange.hh"
+#include "globals.hh"
 
 #include <vector>
 
@@ -45,30 +45,32 @@ class G4Track;
 
 class G4VTRModel
 {
- public:
-  // Constructors
-  explicit G4VTRModel(const G4String& modelName) { fName = modelName; };
+  public:
 
-  // Destructor
-  virtual ~G4VTRModel() = default;
+    // Constructors
+    explicit G4VTRModel(const G4String& modelName) { fName = modelName; };
 
-  const G4String& GetName() const { return fName; };
+    // Destructor
+    virtual ~G4VTRModel() = default;
 
-  virtual void GenerateSecondaries(  G4VParticleChange& /* pChange */,
-                                   std::vector<const G4Material*>& /* materials */,
-                                   std::vector<G4double>& /* steps */,
-                                   std::vector<G4ThreeVector>& /* normals */,
-                                   G4ThreeVector& /* startingPosition */,
-                                   const G4Track& /* track */ ) {};
+    const G4String& GetName() const { return fName; };
 
-  // disable assignment operator & copy constructor
-  G4VTRModel& operator=(const G4VTRModel& right) = delete;
-  G4VTRModel(const G4VTRModel&)                  = delete;
+    virtual void GenerateSecondaries(G4VParticleChange& /* pChange */,
+                                     std::vector<const G4Material*>& /* materials */,
+                                     std::vector<G4double>& /* steps */,
+                                     std::vector<G4ThreeVector>& /* normals */,
+                                     G4ThreeVector& /* startingPosition */,
+                                     const G4Track& /* track */) {};
 
-  virtual void PrintInfo() { return; };
+    // disable assignment operator & copy constructor
+    G4VTRModel& operator=(const G4VTRModel& right) = delete;
+    G4VTRModel(const G4VTRModel&) = delete;
 
- protected:
-  G4String fName;
+    virtual void PrintInfo() { return; };
+
+  protected:
+
+    G4String fName;
 };
 
 #endif  // G4VTRModel_h

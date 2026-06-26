@@ -30,8 +30,8 @@
 //      Hisaya Kurashige, 27 June 1998
 // ----------------------------------------------------------------
 
-#ifndef G4VShortLivedParticle_h
-#define G4VShortLivedParticle_h 1
+#ifndef G4VSHORTLIVEDPARTICLE_HH
+#define G4VSHORTLIVEDPARTICLE_HH
 
 #include "G4ParticleDefinition.hh"
 #include "globals.hh"
@@ -41,7 +41,9 @@ class G4VShortLivedParticle : public G4ParticleDefinition
     //  A virtual class for short lived particles.
     //  ShortLivedParticle particles will not be tracked by the TrackingManager
     //  So, G4VShortLivedParticle is not derived from G4ParticleWIthCuts
+
   public:
+
     // clang-format off
    G4VShortLivedParticle(const G4String&  aName,  
                G4double         mass,     
@@ -68,6 +70,7 @@ class G4VShortLivedParticle : public G4ParticleDefinition
     G4bool operator!=(const G4VShortLivedParticle& right) const;
 
   private:
+
     const G4VShortLivedParticle& operator=(const G4VShortLivedParticle& right);
 };
 

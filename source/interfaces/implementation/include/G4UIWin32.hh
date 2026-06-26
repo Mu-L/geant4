@@ -46,8 +46,8 @@
 // Original author: G.Barrand, 1998
 // Revised: O.Pena-Rodriguez, March 2021
 // -------------------------------------------------------------------
-#ifndef G4UIWin32_h
-#define G4UIWin32_h
+#ifndef G4UIWIN32_HH
+#define G4UIWIN32_HH
 
 #define ID_EXIT_APP 40001
 #define ID_OPEN_MACRO 40002
@@ -90,93 +90,96 @@ class G4VInteractorManager;
 
 class G4UIWin32 : public G4VBasicShell, public G4VInteractiveSession
 {
- public:
-  G4UIWin32();
-  ~G4UIWin32() override;
+  public:
 
-  // To enter interactive Win32 loop ; waiting/executing command,...
-  G4UIsession* SessionStart() override;
+    G4UIWin32();
+    ~G4UIWin32() override;
 
-  // To add a pulldown menu in the menu bar.
-  // First argument is the name of the menu.
-  // Second argument is the label of the cascade button.
-  // Ex : AddMenu("my_menu","My menu")
-  void AddMenu(const char*, const char*) override;
+    // To enter interactive Win32 loop ; waiting/executing command,...
+    G4UIsession* SessionStart() override;
 
-  // To add a push button in a pulldown menu.
-  // First argument is the name of the menu.
-  // Second argument is the label of the button.
-  // Third argument is the Geant4 command executed when the button is fired.
-  // Ex : AddButton("my_menu","Run","/run/beamOn 1");
-  void AddButton(const char*, const char*, const char*) override;
+    // To add a pulldown menu in the menu bar.
+    // First argument is the name of the menu.
+    // Second argument is the label of the cascade button.
+    // Ex : AddMenu("my_menu","My menu")
+    void AddMenu(const char*, const char*) override;
 
-  void Prompt(const G4String&);
-  void SessionTerminate();
-  void PauseSessionStart(const G4String&) override;
+    // To add a push button in a pulldown menu.
+    // First argument is the name of the menu.
+    // Second argument is the label of the button.
+    // Third argument is the Geant4 command executed when the button is fired.
+    // Ex : AddButton("my_menu","Run","/run/beamOn 1");
+    void AddButton(const char*, const char*, const char*) override;
 
-  G4int ReceiveG4debug(const G4String&) override;
-  G4int ReceiveG4cout(const G4String&) override;
-  G4int ReceiveG4cerr(const G4String&) override;
+    void Prompt(const G4String&);
+    void SessionTerminate();
+    void PauseSessionStart(const G4String&) override;
 
-  G4String GetCommand(G4int);
-  // void TextAppendString(char*);
+    G4int ReceiveG4debug(const G4String&) override;
+    G4int ReceiveG4cout(const G4String&) override;
+    G4int ReceiveG4cerr(const G4String&) override;
 
- private:
-  void SecondaryLoop(const G4String&);
-  G4bool GetHelpChoice(G4int&) override;
-  void ExitHelp() const override;
+    G4String GetCommand(G4int);
+    // void TextAppendString(char*);
 
-  G4bool CreateComponents(HWND);
-  G4bool ResizeComponents(HWND);
-  void ProcessTabKey();
-  void ProcessEscKey();
-  void ProcessEnterKey();
-  void ProcessUpKey();
-  void ProcessDownKey();
+  private:
 
-  G4bool ProcessDefaultCommands(G4int);
-  static G4String GetToolTips(G4int);
-  G4String GetHelpTreeToolTips(HTREEITEM);
+    void SecondaryLoop(const G4String&);
+    G4bool GetHelpChoice(G4int&) override;
+    void ExitHelp() const override;
 
-  static G4String ConvertNewLines(const G4String&);
+    G4bool CreateComponents(HWND);
+    G4bool ResizeComponents(HWND);
+    void ProcessTabKey();
+    void ProcessEscKey();
+    void ProcessEnterKey();
+    void ProcessUpKey();
+    void ProcessDownKey();
 
-  void HelpTreeDoubleClick(HTREEITEM);
+    G4bool ProcessDefaultCommands(G4int);
+    static G4String GetToolTips(G4int);
+    G4String GetHelpTreeToolTips(HTREEITEM);
 
-  G4bool SaveLogFile(LPCTSTR);
-  void AddText(LPSTR);
+    static G4String ConvertNewLines(const G4String&);
 
-  void DoOpenMacro(HWND);
-  void DoSaveViewer(HWND);
-  void DoSaveLog(HWND);
+    void HelpTreeDoubleClick(HTREEITEM);
 
-  G4bool InitHelpTreeItems();
-  HTREEITEM AddItemToHelpTree(LPTSTR, HTREEITEM = TVI_ROOT);
-  static G4String GetShortCommandPath(const G4String&);
-  LPSTR GetItemPath(HTREEITEM);
+    G4bool SaveLogFile(LPCTSTR);
+    void AddText(LPSTR);
 
-  void CreateHelpTree(HTREEITEM, G4UIcommandTree*);
+    void DoOpenMacro(HWND);
+    void DoSaveViewer(HWND);
+    void DoSaveLog(HWND);
 
- private:
-  HWND fHWndMainWindow;
-  HWND fHWndEditor;
-  HWND fHWndToolBar;
-  HWND fHWndComboBox;
-  HWND fHWndComboEditor;
-  HWND fHWndHelpTree;
-  HWND fHWndStatus;
+    G4bool InitHelpTreeItems();
+    HTREEITEM AddItemToHelpTree(LPTSTR, HTREEITEM = TVI_ROOT);
+    static G4String GetShortCommandPath(const G4String&);
+    LPSTR GetItemPath(HTREEITEM);
 
-  G4VInteractorManager* interactorManager;
-  HMENU menuBar;
-  std::map<G4int, G4String, std::less<G4int>> commands;
+    void CreateHelpTree(HTREEITEM, G4UIcommandTree*);
 
-  static LRESULT CALLBACK MainWindowProc(HWND, UINT, WPARAM, LPARAM);
-  // New wndproc for the combo box
-  static LRESULT CALLBACK ComboEditorWindowProc(HWND, UINT, WPARAM, LPARAM);
+  private:
 
-  G4bool fHelp;
-  G4int fHelpChoice;
-  std::vector<G4String> fHistory;
-  G4int fHistoryPos;
+    HWND fHWndMainWindow;
+    HWND fHWndEditor;
+    HWND fHWndToolBar;
+    HWND fHWndComboBox;
+    HWND fHWndComboEditor;
+    HWND fHWndHelpTree;
+    HWND fHWndStatus;
+
+    G4VInteractorManager* interactorManager;
+    HMENU menuBar;
+    std::map<G4int, G4String, std::less<G4int>> commands;
+
+    static LRESULT CALLBACK MainWindowProc(HWND, UINT, WPARAM, LPARAM);
+    // New wndproc for the combo box
+    static LRESULT CALLBACK ComboEditorWindowProc(HWND, UINT, WPARAM, LPARAM);
+
+    G4bool fHelp;
+    G4int fHelpChoice;
+    std::vector<G4String> fHistory;
+    G4int fHistoryPos;
 };
 
 #endif

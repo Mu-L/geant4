@@ -26,7 +26,7 @@
 //
 // Class description:
 //
-// Implementation of the Boris algorithm for advancing 
+// Implementation of the Boris algorithm for advancing
 // charged particles in an electromagnetic field.
 
 // Author: Divyansh Tiwari (CERN, Google Summer of Code 2022), 05.11.2022
@@ -44,6 +44,7 @@ class G4EquationOfMotion;
 /**
  * @brief The G4BorisScheme class implements of the Boris algorithm for
  * advancing charged particles in an electromagnetic field.
+ * @ingroup geometry_magneticfield
  */
 
 class G4BorisScheme
@@ -60,7 +61,7 @@ class G4BorisScheme
      *  @param[in] equation Pointer to the equation of motion algorithm.
      *  @param[in] nvar The number of integration variables.
      */
-    G4BorisScheme( G4EquationOfMotion* equation, G4int nvar = 6 );
+    G4BorisScheme(G4EquationOfMotion* equation, G4int nvar = 6);
 
     /**
      * Default Destructor.
@@ -75,8 +76,8 @@ class G4BorisScheme
      *  @param[out] yOut Updated position.
      *  @param[in] hstep Proposed step.
      */
-    void DoStep(G4double restMass, G4double charge, const G4double yIn[], 
-                G4double yOut[], G4double hstep) const;
+    void DoStep(G4double restMass, G4double charge, const G4double yIn[], G4double yOut[],
+                G4double hstep) const;
 
     /**
      * Adopts the Boris Scheme Stepping to estimate the integration error.
@@ -89,9 +90,8 @@ class G4BorisScheme
      *  @param[out] yOut Updated position.
      *  @param[out] yErr The estimated error.
      */
-    void StepWithErrorEstimate(const G4double yIn[], G4double restMass,
-                               G4double charge, G4double hstep,
-                               G4double yOut[], G4double yErr[]) const;
+    void StepWithErrorEstimate(const G4double yIn[], G4double restMass, G4double charge,
+                               G4double hstep, G4double yOut[], G4double yErr[]) const;
 
     /**
      * Adopts the Boris Scheme Stepping to estimate the integration error.
@@ -105,9 +105,9 @@ class G4BorisScheme
      *  @param[out] yOut Updated position.
      *  @param[out] yErr The estimated error.
      */
-    void StepWithMidAndErrorEstimate(const G4double yIn[], G4double restMass,
-                                     G4double charge, G4double hstep,
-                    G4double yMid[], G4double yOut[], G4double yErr[]) const;
+    void StepWithMidAndErrorEstimate(const G4double yIn[], G4double restMass, G4double charge,
+                                     G4double hstep, G4double yMid[], G4double yOut[],
+                                     G4double yErr[]) const;
 
     /**
      * Auxiliary methods returning a pointer to the equation of motion
@@ -115,16 +115,16 @@ class G4BorisScheme
      */
     inline G4EquationOfMotion* GetEquationOfMotion() const;
     inline G4int GetNumberOfVariables() const;
-   
+
   private:
 
     /**
      * Internal methods for updating position and velocity, used in DoStep().
      */
-    void UpdatePosition(const G4double restMass, const G4double charge,
-                        const G4double yIn[], G4double yOut[], G4double hstep) const;
-    void UpdateVelocity(const G4double restMass, const G4double charge,
-                        const G4double yIn[], G4double yOut[], G4double hstep) const;
+    void UpdatePosition(const G4double restMass, const G4double charge, const G4double yIn[],
+                        G4double yOut[], G4double hstep) const;
+    void UpdateVelocity(const G4double restMass, const G4double charge, const G4double yIn[],
+                        G4double yOut[], G4double hstep) const;
 
     /**
      * Utility to mem-copy 'src' array data to 'dst'.
@@ -135,7 +135,7 @@ class G4BorisScheme
 
     G4EquationOfMotion* fEquation = nullptr;
     G4int fnvar = 8;
-    static constexpr G4double c_l = CLHEP::c_light/CLHEP::m*CLHEP::second;
+    static constexpr G4double c_l = CLHEP::c_light / CLHEP::m * CLHEP::second;
 };
 
 #include "G4BorisScheme.icc"

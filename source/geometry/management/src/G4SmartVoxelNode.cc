@@ -38,12 +38,12 @@
 //
 // Node contents were entered in the same order
 //
-G4bool G4SmartVoxelNode::operator == (const G4SmartVoxelNode& v) const
+G4bool G4SmartVoxelNode::operator==(const G4SmartVoxelNode& v) const
 {
   std::size_t maxNode = GetNoContained();
   if (maxNode == v.GetNoContained())
   {
-    for (std::size_t node=0; node<maxNode; ++node)
+    for (std::size_t node = 0; node < maxNode; ++node)
     {
       if (GetVolume((G4int)node) != v.GetVolume((G4int)node))
       {

@@ -27,19 +27,25 @@
 /// \brief Definition of the G4PhononPolarization enum
 //
 //
-#ifndef G4PhononPolarization_h
-#define G4PhononPolarization_h 1
+#ifndef G4PHONONPOLARIZATION_HH
+#define G4PHONONPOLARIZATION_HH
 
 #include "globals.hh"
 
 class G4ParticleDefinition;
 
+namespace G4PhononPolarization
+{
+enum
+{
+  Long = 0,
+  TransSlow = 1,
+  TransFast = 2,
+  UNKNOWN = -1
+};
 
-namespace G4PhononPolarization {
-  enum { Long=0, TransSlow=1, TransFast=2, UNKNOWN=-1 };
+G4int Get(const G4ParticleDefinition* aPD);
+G4ParticleDefinition* Get(G4int pol);
+}  // namespace G4PhononPolarization
 
-  G4int Get(const G4ParticleDefinition* aPD);
-  G4ParticleDefinition* Get(G4int pol);
-}
-
-#endif	/* G4PhononPolarization_h */
+#endif /* G4PhononPolarization_h */

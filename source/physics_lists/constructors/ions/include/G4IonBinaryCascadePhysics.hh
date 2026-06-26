@@ -35,19 +35,19 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4IonBinaryCascadePhysics_h
-#define G4IonBinaryCascadePhysics_h 1
+#ifndef G4IONBINARYCASCADEPHYSICS_HH
+#define G4IONBINARYCASCADEPHYSICS_HH
 
-#include "globals.hh"
 #include "G4IonPhysics.hh"
+#include "globals.hh"
 
 class G4IonBinaryCascadePhysics : public G4IonPhysics
 {
-public:
-  G4IonBinaryCascadePhysics(G4int ver = 0);
-  G4IonBinaryCascadePhysics(const G4String& name, G4int ver = 0);
-  ~G4IonBinaryCascadePhysics() override;
+  public:
+
+    G4IonBinaryCascadePhysics(G4int ver = 0);
+    G4IonBinaryCascadePhysics(const G4String& name, G4int ver = 0);
+    ~G4IonBinaryCascadePhysics() override;
 };
 
 #endif
-

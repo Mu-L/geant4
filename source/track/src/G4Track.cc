@@ -30,11 +30,12 @@
 // --------------------------------------------------------------------
 
 #include "G4Track.hh"
+
 #include "G4PhysicalConstants.hh"
 #include "G4VAuxiliaryTrackInformation.hh"
 
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 
 // --------------------------------------------------------------------
 G4Allocator<G4Track>*& aTrackAllocator()
@@ -44,29 +45,21 @@ G4Allocator<G4Track>*& aTrackAllocator()
 }
 
 // --------------------------------------------------------------------
-G4Track::G4Track(G4DynamicParticle* apValueDynamicParticle,
-                 G4double aValueTime,
+G4Track::G4Track(G4DynamicParticle* apValueDynamicParticle, G4double aValueTime,
                  const G4ThreeVector& aValuePosition)
-  : fPosition(aValuePosition)
-  , fGlobalTime(aValueTime)
-  , fVelocity(c_light)
+  : fPosition(aValuePosition), fGlobalTime(aValueTime), fVelocity(c_light)
 {
-  fpDynamicParticle = (apValueDynamicParticle) != nullptr
-                    ? apValueDynamicParticle : new G4DynamicParticle();
+  fpDynamicParticle =
+    (apValueDynamicParticle) != nullptr ? apValueDynamicParticle : new G4DynamicParticle();
   // check if the particle type is Optical Photon
-  is_OpticalPhoton =
-    (fpDynamicParticle->GetDefinition()->GetPDGEncoding() == -22);
+  is_OpticalPhoton = (fpDynamicParticle->GetDefinition()->GetPDGEncoding() == -22);
 }
 
 // --------------------------------------------------------------------
-G4Track::G4Track()
-  : fVelocity(c_light)
-  , fpDynamicParticle(new G4DynamicParticle())
-{}
+G4Track::G4Track() : fVelocity(c_light), fpDynamicParticle(new G4DynamicParticle()) {}
 
 // --------------------------------------------------------------------
-G4Track::G4Track(const G4Track& right,G4bool copyTouchables)
-  : fVelocity(c_light)
+G4Track::G4Track(const G4Track& right, G4bool copyTouchables) : fVelocity(c_light)
 {
   fCopyTouchables = copyTouchables;
   *this = right;
@@ -84,24 +77,25 @@ G4Track::~G4Track()
 // --------------------------------------------------------------------
 G4Track& G4Track::operator=(const G4Track& right)
 {
-  if(this != &right)
+  if (this != &right)
   {
-    fPosition    = right.fPosition;
-    fGlobalTime  = right.fGlobalTime;
-    fLocalTime   = right.fLocalTime;
+    fPosition = right.fPosition;
+    fGlobalTime = right.fGlobalTime;
+    fLocalTime = right.fLocalTime;
     fTrackLength = right.fTrackLength;
-    fWeight      = right.fWeight;
-    fStepLength  = right.fStepLength;
+    fWeight = right.fWeight;
+    fStepLength = right.fStepLength;
 
     // additional fields required for geometrical splitting
-    if(fCopyTouchables) {
+    if (fCopyTouchables)
+    {
       fpTouchable = right.fpTouchable;
       fpNextTouchable = right.fpNextTouchable;
       fpOriginTouchable = right.fpOriginTouchable;
     }
 
     // Track ID (and Parent ID) is not copied and set to zero for new track
-    fTrackID  = 0;
+    fTrackID = 0;
     fParentID = 0;
 
     // CurrentStepNumber is set to be 0
@@ -112,8 +106,8 @@ G4Track& G4Track::operator=(const G4Track& right)
 
     // Parent resonance
     fParentResonanceDef = right.fParentResonanceDef;
-    fParentResonanceID  = right.fParentResonanceID;
-   
+    fParentResonanceID = right.fParentResonanceID;
+
     // velocity information
     fVelocity = right.fVelocity;
 
@@ -122,8 +116,8 @@ G4Track& G4Track::operator=(const G4Track& right)
     fpDynamicParticle = new G4DynamicParticle(*(right.fpDynamicParticle));
 
     // track status and flags for tracking
-    fTrackStatus     = right.fTrackStatus;
-    fBelowThreshold  = right.fBelowThreshold;
+    fTrackStatus = right.fTrackStatus;
+    fBelowThreshold = right.fBelowThreshold;
     fGoodForTracking = right.fGoodForTracking;
 
     // Step information (Step Length, Step Number, pointer to the Step,)
@@ -131,9 +125,9 @@ G4Track& G4Track::operator=(const G4Track& right)
     fpStep = nullptr;
 
     // vertex information
-    fVtxPosition          = right.fVtxPosition;
-    fpLVAtVertex          = right.fpLVAtVertex;
-    fVtxKineticEnergy     = right.fVtxKineticEnergy;
+    fVtxPosition = right.fVtxPosition;
+    fpLVAtVertex = right.fpLVAtVertex;
+    fVtxKineticEnergy = right.fVtxKineticEnergy;
     fVtxMomentumDirection = right.fVtxMomentumDirection;
 
     // CreatorProcess and UserInformation are not copied
@@ -141,8 +135,8 @@ G4Track& G4Track::operator=(const G4Track& right)
     delete fpUserInformation;
     fpUserInformation = nullptr;
 
-    prev_mat      = right.prev_mat;
-    groupvel      = right.groupvel;
+    prev_mat = right.prev_mat;
+    groupvel = right.groupvel;
     prev_velocity = right.prev_velocity;
     prev_momentum = right.prev_momentum;
 
@@ -150,6 +144,19 @@ G4Track& G4Track::operator=(const G4Track& right)
     useGivenVelocity = right.useGivenVelocity;
 
     ClearAuxiliaryTrackInformation();
+
+    std::map<G4int, G4VAuxiliaryTrackInformation*>* orgMap = right.fpAuxiliaryTrackInformationMap;
+    if (orgMap != nullptr)
+    {
+      for (auto atInfo : *orgMap)
+      {
+        auto* clonedInfo = atInfo.second->Clone();
+        if (clonedInfo != nullptr)
+        {
+          SetAuxiliaryTrackInformation(atInfo.first, clonedInfo);
+        }
+      }
+    }
   }
   return *this;
 }
@@ -167,31 +174,31 @@ G4double G4Track::CalculateVelocityForOpticalPhoton() const
 {
   G4double velocity = c_light;
 
-  G4Material* mat        = nullptr;
+  G4Material* mat = nullptr;
   G4bool update_groupvel = false;
-  if(fpStep != nullptr)
+  if (fpStep != nullptr)
   {
     mat = this->GetMaterial();  //   Fix for repeated volumes
   }
   else
   {
-    if(fpTouchable)
+    if (fpTouchable)
     {
       mat = fpTouchable->GetVolume()->GetLogicalVolume()->GetMaterial();
     }
   }
   // check if previous step is in the same volume
   //  and get new GROUPVELOCITY table if necessary
-  if((mat != nullptr) && ((mat != prev_mat) || (groupvel == nullptr)))
+  if ((mat != nullptr) && ((mat != prev_mat) || (groupvel == nullptr)))
   {
     groupvel = nullptr;
-    if(mat->GetMaterialPropertiesTable() != nullptr)
+    if (mat->GetMaterialPropertiesTable() != nullptr)
       groupvel = mat->GetMaterialPropertiesTable()->GetProperty(kGROUPVEL);
     update_groupvel = true;
   }
   prev_mat = mat;
 
-  if(groupvel != nullptr)
+  if (groupvel != nullptr)
   {
     // light velocity = c/(rindex+d(rindex)/d(log(E_phot)))
     // values stored in GROUPVEL material properties vector
@@ -200,9 +207,9 @@ G4double G4Track::CalculateVelocityForOpticalPhoton() const
     // check if momentum is same as in the previous step
     //  and calculate group velocity if necessary
     G4double current_momentum = fpDynamicParticle->GetTotalMomentum();
-    if(update_groupvel || (current_momentum != prev_momentum))
+    if (update_groupvel || (current_momentum != prev_momentum))
     {
-      velocity      = groupvel->Value(current_momentum);
+      velocity = groupvel->Value(current_momentum);
       prev_velocity = velocity;
       prev_momentum = current_momentum;
     }
@@ -212,42 +219,37 @@ G4double G4Track::CalculateVelocityForOpticalPhoton() const
 }
 
 // --------------------------------------------------------------------
-void G4Track::SetAuxiliaryTrackInformation(G4int id,
-              G4VAuxiliaryTrackInformation* info) const
+void G4Track::SetAuxiliaryTrackInformation(G4int id, G4VAuxiliaryTrackInformation* info) const
 {
-  if(fpAuxiliaryTrackInformationMap == nullptr)
+  if (fpAuxiliaryTrackInformationMap == nullptr)
   {
-    fpAuxiliaryTrackInformationMap =
-      new std::map<G4int, G4VAuxiliaryTrackInformation*>;
+    fpAuxiliaryTrackInformationMap = new std::map<G4int, G4VAuxiliaryTrackInformation*>;
   }
-  if(G4PhysicsModelCatalog::GetModelIndex(id) < 0)
+  if (G4PhysicsModelCatalog::GetModelIndex(id) < 0)
   {
     G4ExceptionDescription ED;
     ED << "Process/model ID <" << id << "> is invalid.";
-    G4Exception("G4VAuxiliaryTrackInformation::G4VAuxiliaryTrackInformation()",
-                "TRACK0982", FatalException, ED);
+    G4Exception("G4VAuxiliaryTrackInformation::G4VAuxiliaryTrackInformation()", "TRACK0982",
+                FatalException, ED);
   }
   (*fpAuxiliaryTrackInformationMap)[id] = info;
 }
 
 // --------------------------------------------------------------------
-G4VAuxiliaryTrackInformation*
-G4Track::GetAuxiliaryTrackInformation(G4int id) const
+G4VAuxiliaryTrackInformation* G4Track::GetAuxiliaryTrackInformation(G4int id) const
 {
-  if(fpAuxiliaryTrackInformationMap == nullptr)
-    return nullptr;
-  
+  if (fpAuxiliaryTrackInformationMap == nullptr) return nullptr;
+
   auto itr = fpAuxiliaryTrackInformationMap->find(id);
-  if(itr == fpAuxiliaryTrackInformationMap->cend())
-    return nullptr;
+  if (itr == fpAuxiliaryTrackInformationMap->cend()) return nullptr;
   return (*itr).second;
 }
 
 // --------------------------------------------------------------------
 void G4Track::RemoveAuxiliaryTrackInformation(G4int id)
 {
-  if(fpAuxiliaryTrackInformationMap != nullptr  &&
-     fpAuxiliaryTrackInformationMap->find(id) != fpAuxiliaryTrackInformationMap->cend())
+  if (fpAuxiliaryTrackInformationMap != nullptr
+      && fpAuxiliaryTrackInformationMap->find(id) != fpAuxiliaryTrackInformationMap->cend())
   {
     fpAuxiliaryTrackInformationMap->erase(id);
   }
@@ -256,7 +258,7 @@ void G4Track::RemoveAuxiliaryTrackInformation(G4int id)
 // --------------------------------------------------------------------
 void G4Track::RemoveAuxiliaryTrackInformation(G4String& name)
 {
-  if(fpAuxiliaryTrackInformationMap != nullptr)
+  if (fpAuxiliaryTrackInformationMap != nullptr)
   {
     G4int id = G4PhysicsModelCatalog::GetModelID(name);
     RemoveAuxiliaryTrackInformation(id);
@@ -266,9 +268,8 @@ void G4Track::RemoveAuxiliaryTrackInformation(G4String& name)
 // --------------------------------------------------------------------
 void G4Track::ClearAuxiliaryTrackInformation()
 {
-  if(fpAuxiliaryTrackInformationMap == nullptr)
-    return;
-  for(const auto& itr : *fpAuxiliaryTrackInformationMap)
+  if (fpAuxiliaryTrackInformationMap == nullptr) return;
+  for (const auto& itr : *fpAuxiliaryTrackInformationMap)
   {
     delete itr.second;
   }

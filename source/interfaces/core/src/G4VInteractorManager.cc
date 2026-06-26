@@ -55,8 +55,10 @@ G4VInteractorManager::~G4VInteractorManager()
 /***************************************************************************/
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 {
-  if (argv != nullptr) {
-    for (G4int argi = 0; argi < argc; ++argi) {
+  if (argv != nullptr)
+  {
+    for (G4int argi = 0; argi < argc; ++argi)
+    {
       if (argv[argi] != nullptr) free(argv[argi]);
     }
     free(argv);
@@ -77,8 +79,10 @@ void G4VInteractorManager::SetArguments(G4int a_argc, char** a_argv)
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 {
   // Free previous values.
-  if (argv != nullptr) {
-    for (G4int argi = 0; argi < argc; ++argi) {
+  if (argv != nullptr)
+  {
+    for (G4int argi = 0; argi < argc; ++argi)
+    {
       if (argv[argi] != nullptr) free(argv[argi]);
     }
     free(argv);
@@ -86,11 +90,14 @@ void G4VInteractorManager::SetArguments(G4int a_argc, char** a_argv)
   argv = nullptr;
   argc = 0;
   // Set new values.
-  if (a_argc != 0) {
+  if (a_argc != 0)
+  {
     argv = (char**)malloc(a_argc * sizeof(char*));
-    if (argv != nullptr) {
+    if (argv != nullptr)
+    {
       argc = a_argc;
-      for (G4int argi = 0; argi < a_argc; ++argi) {
+      for (G4int argi = 0; argi < a_argc; ++argi)
+      {
         argv[argi] = (char*)NewString(a_argv[argi]);
       }
     }
@@ -148,8 +155,10 @@ void G4VInteractorManager::RemoveDispatcher(G4DispatchFunction a_dispatcher)
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 {
   std::vector<G4DispatchFunction>::iterator it;
-  for (it = dispatchers.begin(); it != dispatchers.end(); ++it) {
-    if (*it == a_dispatcher) {
+  for (it = dispatchers.begin(); it != dispatchers.end(); ++it)
+  {
+    if (*it == a_dispatcher)
+    {
       dispatchers.erase(it);
       break;
     }
@@ -162,9 +171,11 @@ void G4VInteractorManager::DispatchEvent(void* a_event)
 {
   std::size_t dispatchern = dispatchers.size();
   G4DispatchFunction func;
-  for (std::size_t count = 0; count < dispatchern; ++count) {
+  for (std::size_t count = 0; count < dispatchern; ++count)
+  {
     func = dispatchers[count];
-    if (func != nullptr) {
+    if (func != nullptr)
+    {
       if (func(a_event)) return;
     }
   }
@@ -184,7 +195,8 @@ void G4VInteractorManager::SecondaryLoopPreActions()
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 {
   std::size_t preActionn = preActions.size();
-  for (std::size_t count = 0; count < preActionn; ++count) {
+  for (std::size_t count = 0; count < preActionn; ++count)
+  {
     if (preActions[count] != nullptr) preActions[count]();
   }
 }
@@ -204,7 +216,8 @@ void G4VInteractorManager::SecondaryLoopPostActions()
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 {
   std::size_t postActionn = postActions.size();
-  for (std::size_t count = 0; count < postActionn; ++count) {
+  for (std::size_t count = 0; count < postActionn; ++count)
+  {
     if (postActions[count] != nullptr) postActions[count]();
   }
 }
@@ -213,11 +226,12 @@ void G4VInteractorManager::SecondaryLoop()
 /***************************************************************************/
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 {
-  if (! Inited()) return;
+  if (!Inited()) return;
 
-  if (! secondaryLoopEnabled) return;
+  if (!secondaryLoopEnabled) return;
 
-  if (! alreadyInSecondaryLoop) {
+  if (!alreadyInSecondaryLoop)
+  {
     G4cout << "------------------------------------------" << G4endl;
     G4cout << "You have entered a viewer secondary X event loop." << G4endl;
     G4cout << "Quit it with an 'Escape' viewer button" << G4endl;
@@ -226,7 +240,8 @@ void G4VInteractorManager::SecondaryLoop()
     SecondaryLoopPreActions();
     // for(G4int count=0;count<shelln;count++) XWidgetUniconify(shells[count]);
     void* event;
-    while (true) {
+    while (true)
+    {
       event = GetEvent();
       if (event == nullptr) break;
       DispatchEvent(event);
@@ -241,7 +256,7 @@ void G4VInteractorManager::RequireExitSecondaryLoop(G4int a_code)
 /***************************************************************************/
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 {
-  if (! secondaryLoopEnabled) return;
+  if (!secondaryLoopEnabled) return;
   if (a_code == 0) a_code = 1;
   exitSecondaryLoop = a_code;
   alreadyInSecondaryLoop = false;
@@ -268,8 +283,10 @@ void G4VInteractorManager::RemoveShell(G4Interactor a_shell)
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 {
   std::vector<G4Interactor>::iterator it;
-  for (it = shells.begin(); it != shells.end(); ++it) {
-    if (*it == a_shell) {
+  for (it = shells.begin(); it != shells.end(); ++it)
+  {
+    if (*it == a_shell)
+    {
       shells.erase(it);
       break;
     }

@@ -30,45 +30,37 @@
 // --------------------------------------------------------------------
 
 #include "G4VCSGfaceted.hh"
-#include "G4VCSGface.hh"
-#include "G4SolidExtentList.hh"
 
-#include "G4VoxelLimits.hh"
 #include "G4AffineTransform.hh"
-
+#include "G4AutoLock.hh"
+#include "G4Polyhedron.hh"
 #include "G4QuickRand.hh"
-
-#include "G4Polyhedron.hh"   
+#include "G4SolidExtentList.hh"
+#include "G4VCSGface.hh"
 #include "G4VGraphicsScene.hh"
 #include "G4VisExtent.hh"
-
-#include "G4AutoLock.hh"
+#include "G4VoxelLimits.hh"
 
 namespace
 {
-  G4Mutex polyhedronMutex = G4MUTEX_INITIALIZER;
-  G4Mutex vcsgMutex = G4MUTEX_INITIALIZER;
-}
+G4Mutex polyhedronMutex = G4MUTEX_INITIALIZER;
+G4Mutex vcsgMutex = G4MUTEX_INITIALIZER;
+}  // namespace
 
 //
 // Constructor
 //
-G4VCSGfaceted::G4VCSGfaceted( const G4String& name )
-  : G4VSolid(name),
-    fStatistics(1000000), fCubVolEpsilon(0.001), fAreaAccuracy(-1.)
-{
-}
-
+G4VCSGfaceted::G4VCSGfaceted(const G4String& name)
+  : G4VSolid(name), fStatistics(1000000), fCubVolEpsilon(0.001), fAreaAccuracy(-1.)
+{}
 
 //
 // Fake default constructor - sets only member data and allocates memory
 //                            for usage restricted to object persistency.
 //
-G4VCSGfaceted::G4VCSGfaceted( __void__& a )
-  : G4VSolid(a),
-    fStatistics(1000000), fCubVolEpsilon(0.001), fAreaAccuracy(-1.)
-{
-}
+G4VCSGfaceted::G4VCSGfaceted(__void__& a)
+  : G4VSolid(a), fStatistics(1000000), fCubVolEpsilon(0.001), fAreaAccuracy(-1.)
+{}
 
 //
 // Destructor
@@ -76,31 +68,32 @@ G4VCSGfaceted::G4VCSGfaceted( __void__& a )
 G4VCSGfaceted::~G4VCSGfaceted()
 {
   DeleteStuff();
-  delete fpPolyhedron; fpPolyhedron = nullptr;
+  delete fpPolyhedron;
+  fpPolyhedron = nullptr;
 }
-
 
 //
 // Copy constructor
 //
-G4VCSGfaceted::G4VCSGfaceted( const G4VCSGfaceted& source )
-  : G4VSolid( source )
+G4VCSGfaceted::G4VCSGfaceted(const G4VCSGfaceted& source) : G4VSolid(source)
 {
   fStatistics = source.fStatistics;
   fCubVolEpsilon = source.fCubVolEpsilon;
   fAreaAccuracy = source.fAreaAccuracy;
 
-  CopyStuff( source );
+  CopyStuff(source);
 }
-
 
 //
 // Assignment operator
 //
-G4VCSGfaceted& G4VCSGfaceted::operator=( const G4VCSGfaceted& source )
+G4VCSGfaceted& G4VCSGfaceted::operator=(const G4VCSGfaceted& source)
 {
-  if (&source == this) { return *this; }
-  
+  if (&source == this)
+  {
+    return *this;
+  }
+
   // Copy base class data
   //
   G4VSolid::operator=(source);
@@ -112,36 +105,36 @@ G4VCSGfaceted& G4VCSGfaceted::operator=( const G4VCSGfaceted& source )
   fAreaAccuracy = source.fAreaAccuracy;
 
   DeleteStuff();
-  CopyStuff( source );
-  
+  CopyStuff(source);
+
   return *this;
 }
-
 
 //
 // CopyStuff (protected)
 //
 // Copy the contents of source
 //
-void G4VCSGfaceted::CopyStuff( const G4VCSGfaceted& source )
+void G4VCSGfaceted::CopyStuff(const G4VCSGfaceted& source)
 {
   numFace = source.numFace;
-  if (numFace == 0) { return; }    // odd, but permissable?
-  
+  if (numFace == 0)
+  {
+    return;
+  }  // odd, but permissable?
+
   faces = new G4VCSGface*[numFace];
-  
-  G4VCSGface **face = faces,
-       **sourceFace = source.faces;
-  do    // Loop checking, 13.08.2015, G.Cosmo
+
+  G4VCSGface **face = faces, **sourceFace = source.faces;
+  do  // Loop checking, 13.08.2015, G.Cosmo
   {
     *face = (*sourceFace)->Clone();
-  } while( ++sourceFace, ++face < faces+numFace );
+  } while (++sourceFace, ++face < faces + numFace);
   fCubicVolume = source.fCubicVolume;
   fSurfaceArea = source.fSurfaceArea;
   fRebuildPolyhedron = false;
   fpPolyhedron = nullptr;
 }
-
 
 //
 // DeleteStuff (protected)
@@ -152,44 +145,41 @@ void G4VCSGfaceted::DeleteStuff()
 {
   if (numFace != 0)
   {
-    G4VCSGface **face = faces;
-    do    // Loop checking, 13.08.2015, G.Cosmo
+    G4VCSGface** face = faces;
+    do  // Loop checking, 13.08.2015, G.Cosmo
     {
       delete *face;
-    } while( ++face < faces + numFace );
+    } while (++face < faces + numFace);
 
-    delete [] faces;
+    delete[] faces;
   }
-  delete fpPolyhedron; fpPolyhedron = nullptr;
+  delete fpPolyhedron;
+  fpPolyhedron = nullptr;
 }
-
 
 //
 // CalculateExtent
 //
-G4bool G4VCSGfaceted::CalculateExtent( const EAxis axis,
-                                       const G4VoxelLimits& voxelLimit,
-                                       const G4AffineTransform& transform,
-                                             G4double& min,
-                                             G4double& max ) const
+G4bool G4VCSGfaceted::CalculateExtent(const EAxis axis, const G4VoxelLimits& voxelLimit,
+                                      const G4AffineTransform& transform, G4double& min,
+                                      G4double& max) const
 {
-  G4SolidExtentList  extentList( axis, voxelLimit );
+  G4SolidExtentList extentList(axis, voxelLimit);
 
   //
   // Loop over all faces, checking min/max extent as we go.
   //
-  G4VCSGface **face = faces;
-  do    // Loop checking, 13.08.2015, G.Cosmo
+  G4VCSGface** face = faces;
+  do  // Loop checking, 13.08.2015, G.Cosmo
   {
-    (*face)->CalculateExtent( axis, voxelLimit, transform, extentList );
-  } while( ++face < faces + numFace );
-  
+    (*face)->CalculateExtent(axis, voxelLimit, transform, extentList);
+  } while (++face < faces + numFace);
+
   //
   // Return min/max value
   //
-  return extentList.GetExtent( min, max );
+  return extentList.GetExtent(min, max);
 }
-
 
 //
 // Inside
@@ -199,69 +189,67 @@ G4bool G4VCSGfaceted::CalculateExtent( const EAxis axis,
 // test or whatnot) and to call this version only if
 // the simplier test fails.
 //
-EInside G4VCSGfaceted::Inside( const G4ThreeVector& p ) const
+EInside G4VCSGfaceted::Inside(const G4ThreeVector& p) const
 {
-  EInside answer=kOutside;
-  G4VCSGface **face = faces;
+  EInside answer = kOutside;
+  G4VCSGface** face = faces;
   G4double best = kInfinity;
-  do    // Loop checking, 13.08.2015, G.Cosmo
+  do  // Loop checking, 13.08.2015, G.Cosmo
   {
     G4double distance;
-    EInside result = (*face)->Inside( p, kCarTolerance/2, &distance );
-    if (result == kSurface) { return kSurface; }
+    EInside result = (*face)->Inside(p, kCarTolerance / 2, &distance);
+    if (result == kSurface)
+    {
+      return kSurface;
+    }
     if (distance < best)
     {
       best = distance;
       answer = result;
     }
-  } while( ++face < faces + numFace );
+  } while (++face < faces + numFace);
 
   return answer;
 }
 
-
 //
 // SurfaceNormal
 //
-G4ThreeVector G4VCSGfaceted::SurfaceNormal( const G4ThreeVector& p ) const
+G4ThreeVector G4VCSGfaceted::SurfaceNormal(const G4ThreeVector& p) const
 {
   G4ThreeVector answer;
-  G4VCSGface **face = faces;
+  G4VCSGface** face = faces;
   G4double best = kInfinity;
-  do    // Loop checking, 13.08.2015, G.Cosmo
+  do  // Loop checking, 13.08.2015, G.Cosmo
   {
     G4double distance = kInfinity;
-    G4ThreeVector normal = (*face)->Normal( p, &distance );
+    G4ThreeVector normal = (*face)->Normal(p, &distance);
     if (distance < best)
     {
       best = distance;
       answer = normal;
     }
-  } while( ++face < faces + numFace );
+  } while (++face < faces + numFace);
 
   return answer;
 }
 
-
 //
 // DistanceToIn(p,v)
 //
-G4double G4VCSGfaceted::DistanceToIn( const G4ThreeVector& p,
-                                      const G4ThreeVector& v ) const
+G4double G4VCSGfaceted::DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const
 {
   G4double distance = kInfinity;
   G4double distFromSurface = kInfinity;
-  G4VCSGface **face = faces;
-  G4VCSGface *bestFace = *face;
-  do    // Loop checking, 13.08.2015, G.Cosmo
+  G4VCSGface** face = faces;
+  G4VCSGface* bestFace = *face;
+  do  // Loop checking, 13.08.2015, G.Cosmo
   {
-    G4double   faceDistance,
-               faceDistFromSurface;
-    G4ThreeVector   faceNormal;
-    G4bool    faceAllBehind;
-    if ((*face)->Intersect( p, v, false, kCarTolerance/2,
-                faceDistance, faceDistFromSurface,
-                faceNormal, faceAllBehind ) )
+    G4double faceDistance, faceDistFromSurface;
+    G4ThreeVector faceNormal;
+    G4bool faceAllBehind;
+    if ((*face)->Intersect(p, v, false, kCarTolerance / 2, faceDistance, faceDistFromSurface,
+                           faceNormal, faceAllBehind))
     {
       //
       // Intersecting face
@@ -271,79 +259,88 @@ G4double G4VCSGfaceted::DistanceToIn( const G4ThreeVector& p,
         distance = faceDistance;
         distFromSurface = faceDistFromSurface;
         bestFace = *face;
-        if (distFromSurface <= 0) { return 0; }
+        if (distFromSurface <= 0)
+        {
+          return 0;
+        }
       }
     }
-  } while( ++face < faces + numFace );
-  
-  if (distance < kInfinity && distFromSurface<kCarTolerance/2)
+  } while (++face < faces + numFace);
+
+  if (distance < kInfinity && distFromSurface < kCarTolerance / 2)
   {
-    if (bestFace->Distance(p,false) < kCarTolerance/2)  { distance = 0; }
+    if (bestFace->Distance(p, false) < kCarTolerance / 2)
+    {
+      distance = 0;
+    }
   }
 
   return distance;
 }
 
-
 //
 // DistanceToIn(p)
 //
-G4double G4VCSGfaceted::DistanceToIn( const G4ThreeVector& p ) const
+G4double G4VCSGfaceted::DistanceToIn(const G4ThreeVector& p) const
 {
-  return DistanceTo( p, false );
+  return DistanceTo(p, false);
 }
-
 
 //
 // DistanceToOut(p,v)
 //
-G4double G4VCSGfaceted::DistanceToOut( const G4ThreeVector& p,
-                                       const G4ThreeVector& v,
-                                       const G4bool calcNorm,
-                                             G4bool* validNorm,
-                                             G4ThreeVector* n ) const
+G4double G4VCSGfaceted::DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                                      const G4bool calcNorm, G4bool* validNorm,
+                                      G4ThreeVector* n) const
 {
   G4bool allBehind = true;
   G4double distance = kInfinity;
   G4double distFromSurface = kInfinity;
   G4ThreeVector normal;
-  
-  G4VCSGface **face = faces;
-  G4VCSGface *bestFace = *face;
-  do    // Loop checking, 13.08.2015, G.Cosmo
+
+  G4VCSGface** face = faces;
+  G4VCSGface* bestFace = *face;
+  do  // Loop checking, 13.08.2015, G.Cosmo
   {
-    G4double  faceDistance,
-              faceDistFromSurface;
-    G4ThreeVector  faceNormal;
-    G4bool    faceAllBehind;
-    if ((*face)->Intersect( p, v, true, kCarTolerance/2,
-                faceDistance, faceDistFromSurface,
-                faceNormal, faceAllBehind ) )
+    G4double faceDistance, faceDistFromSurface;
+    G4ThreeVector faceNormal;
+    G4bool faceAllBehind;
+    if ((*face)->Intersect(p, v, true, kCarTolerance / 2, faceDistance, faceDistFromSurface,
+                           faceNormal, faceAllBehind))
     {
       //
       // Intersecting face
       //
-      if ( (distance < kInfinity) || (!faceAllBehind) )  { allBehind = false; }
+      if ((distance < kInfinity) || (!faceAllBehind))
+      {
+        allBehind = false;
+      }
       if (faceDistance < distance)
       {
         distance = faceDistance;
         distFromSurface = faceDistFromSurface;
         normal = faceNormal;
         bestFace = *face;
-        if (distFromSurface <= 0.)  { break; }
+        if (distFromSurface <= 0.)
+        {
+          break;
+        }
       }
     }
-  } while( ++face < faces + numFace );
-  
+  } while (++face < faces + numFace);
+
   if (distance < kInfinity)
   {
     if (distFromSurface <= 0.)
     {
       distance = 0.;
     }
-    else if (distFromSurface<kCarTolerance/2)
+    else if (distFromSurface < kCarTolerance / 2)
     {
-      if (bestFace->Distance(p,true) < kCarTolerance/2)  { distance = 0.; }
+      if (bestFace->Distance(p, true) < kCarTolerance / 2)
+      {
+        distance = 0.;
+      }
     }
 
     if (calcNorm)
@@ -353,88 +350,88 @@ G4double G4VCSGfaceted::DistanceToOut( const G4ThreeVector& p,
     }
   }
   else
-  { 
-    if (Inside(p) == kSurface)  { distance = 0.; }
-    if (calcNorm)  { *validNorm = false; }
+  {
+    if (Inside(p) == kSurface)
+    {
+      distance = 0.;
+    }
+    if (calcNorm)
+    {
+      *validNorm = false;
+    }
   }
 
   return distance;
 }
 
-
 //
 // DistanceToOut(p)
 //
-G4double G4VCSGfaceted::DistanceToOut( const G4ThreeVector& p ) const
+G4double G4VCSGfaceted::DistanceToOut(const G4ThreeVector& p) const
 {
-  return DistanceTo( p, true );
+  return DistanceTo(p, true);
 }
-
 
 //
 // DistanceTo
 //
 // Protected routine called by DistanceToIn and DistanceToOut
 //
-G4double G4VCSGfaceted::DistanceTo( const G4ThreeVector& p,
-                                    const G4bool outgoing ) const
+G4double G4VCSGfaceted::DistanceTo(const G4ThreeVector& p, const G4bool outgoing) const
 {
-  G4VCSGface **face = faces;
+  G4VCSGface** face = faces;
   G4double best = kInfinity;
-  do    // Loop checking, 13.08.2015, G.Cosmo
+  do  // Loop checking, 13.08.2015, G.Cosmo
   {
-    G4double distance = (*face)->Distance( p, outgoing );
-    if (distance < best)  { best = distance; }
-  } while( ++face < faces + numFace );
+    G4double distance = (*face)->Distance(p, outgoing);
+    if (distance < best)
+    {
+      best = distance;
+    }
+  } while (++face < faces + numFace);
 
-  return (best < 0.5*kCarTolerance) ? 0. : best;
+  return (best < 0.5 * kCarTolerance) ? 0. : best;
 }
-
 
 //
 // DescribeYourselfTo
 //
-void G4VCSGfaceted::DescribeYourselfTo( G4VGraphicsScene& scene ) const
+void G4VCSGfaceted::DescribeYourselfTo(G4VGraphicsScene& scene) const
 {
-   scene.AddSolid( *this );
+  scene.AddSolid(*this);
 }
-
 
 //
 // GetExtent
 //
 // Define the sides of the box into which our solid instance would fit.
 //
-G4VisExtent G4VCSGfaceted::GetExtent() const 
+G4VisExtent G4VCSGfaceted::GetExtent() const
 {
-  static const G4ThreeVector xMax(1,0,0), xMin(-1,0,0),
-                             yMax(0,1,0), yMin(0,-1,0),
-                             zMax(0,0,1), zMin(0,0,-1);
-  static const G4ThreeVector *axes[6] =
-     { &xMin, &xMax, &yMin, &yMax, &zMin, &zMax };
-  
-  G4double answers[6] =
-     {-kInfinity, -kInfinity, -kInfinity, -kInfinity, -kInfinity, -kInfinity};
+  static const G4ThreeVector xMax(1, 0, 0), xMin(-1, 0, 0), yMax(0, 1, 0), yMin(0, -1, 0),
+    zMax(0, 0, 1), zMin(0, 0, -1);
+  static const G4ThreeVector* axes[6] = {&xMin, &xMax, &yMin, &yMax, &zMin, &zMax};
 
-  G4VCSGface **face = faces;
-  do    // Loop checking, 13.08.2015, G.Cosmo
-  {    
-    const G4ThreeVector **axis = axes+5 ;
-    G4double* answer = answers+5;
-    do    // Loop checking, 13.08.2015, G.Cosmo
+  G4double answers[6] = {-kInfinity, -kInfinity, -kInfinity, -kInfinity, -kInfinity, -kInfinity};
+
+  G4VCSGface** face = faces;
+  do  // Loop checking, 13.08.2015, G.Cosmo
+  {
+    const G4ThreeVector** axis = axes + 5;
+    G4double* answer = answers + 5;
+    do  // Loop checking, 13.08.2015, G.Cosmo
     {
-      G4double testFace = (*face)->Extent( **axis );
-      if (testFace > *answer)  { *answer = testFace; }
-    }
-    while( --axis, --answer >= answers );
-    
-  } while( ++face < faces + numFace );
-  
-  return { -answers[0], answers[1], 
-           -answers[2], answers[3],
-           -answers[4], answers[5]  };
-}
+      G4double testFace = (*face)->Extent(**axis);
+      if (testFace > *answer)
+      {
+        *answer = testFace;
+      }
+    } while (--axis, --answer >= answers);
 
+  } while (++face < faces + numFace);
+
+  return {-answers[0], answers[1], -answers[2], answers[3], -answers[4], answers[5]};
+}
 
 //
 // GetEntityType
@@ -444,11 +441,10 @@ G4GeometryType G4VCSGfaceted::GetEntityType() const
   return {"G4CSGfaceted"};
 }
 
-
 //
 // Stream object contents to an output stream
 //
-std::ostream& G4VCSGfaceted::StreamInfo( std::ostream& os ) const
+std::ostream& G4VCSGfaceted::StreamInfo(std::ostream& os) const
 {
   os << "-----------------------------------------------------------\n"
      << "    *** Dump for solid - " << GetName() << " ***\n"
@@ -461,7 +457,6 @@ std::ostream& G4VCSGfaceted::StreamInfo( std::ostream& os ) const
   return os;
 }
 
-
 //
 // GetCubVolStatistics
 //
@@ -469,7 +464,6 @@ G4int G4VCSGfaceted::GetCubVolStatistics() const
 {
   return fStatistics;
 }
-
 
 //
 // GetCubVolEpsilon
@@ -479,26 +473,23 @@ G4double G4VCSGfaceted::GetCubVolEpsilon() const
   return fCubVolEpsilon;
 }
 
-
 //
 // SetCubVolStatistics
 //
 void G4VCSGfaceted::SetCubVolStatistics(G4int st)
 {
-  fCubicVolume=0.;
-  fStatistics=st;
+  fCubicVolume = 0.;
+  fStatistics = st;
 }
-
 
 //
 // SetCubVolEpsilon
 //
 void G4VCSGfaceted::SetCubVolEpsilon(G4double ep)
 {
-  fCubicVolume=0.;
-  fCubVolEpsilon=ep;
+  fCubicVolume = 0.;
+  fCubVolEpsilon = ep;
 }
-
 
 //
 // GetAreaStatistics
@@ -508,7 +499,6 @@ G4int G4VCSGfaceted::GetAreaStatistics() const
   return fStatistics;
 }
 
-
 //
 // GetAreaAccuracy
 //
@@ -517,26 +507,23 @@ G4double G4VCSGfaceted::GetAreaAccuracy() const
   return fAreaAccuracy;
 }
 
-
 //
 // SetAreaStatistics
 //
 void G4VCSGfaceted::SetAreaStatistics(G4int st)
 {
-  fSurfaceArea=0.;
-  fStatistics=st;
+  fSurfaceArea = 0.;
+  fStatistics = st;
 }
-
 
 //
 // SetAreaAccuracy
 //
 void G4VCSGfaceted::SetAreaAccuracy(G4double ep)
 {
-  fSurfaceArea=0.;
-  fAreaAccuracy=ep;
+  fSurfaceArea = 0.;
+  fAreaAccuracy = ep;
 }
-
 
 //
 // GetCubicVolume
@@ -546,12 +533,11 @@ G4double G4VCSGfaceted::GetCubicVolume()
   if (fCubicVolume == 0)
   {
     G4AutoLock l(&vcsgMutex);
-    fCubicVolume = EstimateCubicVolume(fStatistics,fCubVolEpsilon);
+    fCubicVolume = EstimateCubicVolume(fStatistics, fCubVolEpsilon);
     l.unlock();
   }
   return fCubicVolume;
 }
-
 
 //
 // GetSurfaceArea
@@ -561,22 +547,20 @@ G4double G4VCSGfaceted::GetSurfaceArea()
   if (fSurfaceArea == 0)
   {
     G4AutoLock l(&vcsgMutex);
-    fSurfaceArea = EstimateSurfaceArea(fStatistics,fAreaAccuracy);
+    fSurfaceArea = EstimateSurfaceArea(fStatistics, fAreaAccuracy);
     l.unlock();
   }
   return fSurfaceArea;
 }
 
-
 //
 // GetPolyhedron
 //
-G4Polyhedron* G4VCSGfaceted::GetPolyhedron () const
+G4Polyhedron* G4VCSGfaceted::GetPolyhedron() const
 {
-  if (fpPolyhedron == nullptr ||
-      fRebuildPolyhedron ||
-      fpPolyhedron->GetNumberOfRotationStepsAtTimeOfCreation() !=
-      fpPolyhedron->GetNumberOfRotationSteps())
+  if (fpPolyhedron == nullptr || fRebuildPolyhedron
+      || fpPolyhedron->GetNumberOfRotationStepsAtTimeOfCreation()
+           != fpPolyhedron->GetNumberOfRotationSteps())
   {
     G4AutoLock l(&polyhedronMutex);
     delete fpPolyhedron;
@@ -587,50 +571,50 @@ G4Polyhedron* G4VCSGfaceted::GetPolyhedron () const
   return fpPolyhedron;
 }
 
-
 //
 // GetPointOnSurfaceGeneric proportional to Areas of faces
 // in case of GenericPolycone or GenericPolyhedra
 //
-G4ThreeVector G4VCSGfaceted::GetPointOnSurfaceGeneric( ) const
+G4ThreeVector G4VCSGfaceted::GetPointOnSurfaceGeneric() const
 {
   // Preparing variables
   //
-  G4ThreeVector answer=G4ThreeVector(0.,0.,0.);
-  G4VCSGface **face = faces;
+  G4ThreeVector answer = G4ThreeVector(0., 0., 0.);
+  G4VCSGface** face = faces;
   G4double area = 0.;
   G4int i;
-  std::vector<G4double> areas; 
+  std::vector<G4double> areas;
 
   // First step: calculate surface areas
   //
-  do    // Loop checking, 13.08.2015, G.Cosmo
+  do  // Loop checking, 13.08.2015, G.Cosmo
   {
-    G4double result = (*face)->SurfaceArea( );
+    G4double result = (*face)->SurfaceArea();
     areas.push_back(result);
-    area=area+result;
-  } while( ++face < faces + numFace );
+    area = area + result;
+  } while (++face < faces + numFace);
 
   // Second Step: choose randomly one surface
   //
-  G4VCSGface **face1 = faces;
-  G4double chose = area*G4QuickRand();
+  G4VCSGface** face1 = faces;
+  G4double chose = area * G4QuickRand();
   G4double Achose1, Achose2;
-  Achose1=0.; Achose2=0.; 
-  i=0;
+  Achose1 = 0.;
+  Achose2 = 0.;
+  i = 0;
 
   do
   {
-    Achose2+=areas[i];
-    if(chose>=Achose1 && chose<Achose2)
+    Achose2 += areas[i];
+    if (chose >= Achose1 && chose < Achose2)
     {
       G4ThreeVector point;
-      point= (*face1)->GetPointOnFace();
+      point = (*face1)->GetPointOnFace();
       return point;
     }
     ++i;
-    Achose1=Achose2;
-  } while( ++face1 < faces + numFace );
+    Achose1 = Achose2;
+  } while (++face1 < faces + numFace);
 
   return answer;
 }

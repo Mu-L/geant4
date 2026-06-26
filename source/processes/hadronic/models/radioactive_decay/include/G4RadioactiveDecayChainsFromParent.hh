@@ -23,12 +23,12 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4RadioactiveDecayChainsFromParent_h
-#define G4RadioactiveDecayChainsFromParent_h 1
+#ifndef G4RADIOACTIVEDECAYCHAINSFROMPARENT_HH
+#define G4RADIOACTIVEDECAYCHAINSFROMPARENT_HH
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //
 // MODULE:              RadioactiveDecayRateVector.hh
-//   renamed as         G4RadioactiveDecayChainsFromParent.hh  (D.H. wright  6 Oct 2017) 
+//   renamed as         G4RadioactiveDecayChainsFromParent.hh  (D.H. wright  6 Oct 2017)
 // Version:             0.b.4
 // Date:                14/04/00
 // Author:              F Lei & P R Truscott
@@ -45,7 +45,7 @@
 // 0.b.3 release.
 //
 // 13 April 2000, F Lei, DERA UK
-// 0.b.4 release. No change to this file     
+// 0.b.4 release. No change to this file
 //
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
@@ -55,9 +55,10 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "G4RadioactiveDecayRatesToDaughter.hh"
 #include "G4ios.hh"
 #include "globals.hh"
-#include "G4RadioactiveDecayRatesToDaughter.hh"
+
 #include <vector>
 
 typedef std::vector<G4RadioactiveDecayRatesToDaughter> G4RadioactiveDecayRates;
@@ -68,23 +69,29 @@ class G4RadioactiveDecayChainsFromParent
 
     G4RadioactiveDecayChainsFromParent();
     virtual ~G4RadioactiveDecayChainsFromParent();
-  
+
     G4RadioactiveDecayChainsFromParent(const G4RadioactiveDecayChainsFromParent&);
     G4RadioactiveDecayChainsFromParent& operator=(const G4RadioactiveDecayChainsFromParent&);
-  
+
     // equality operators
-    G4bool operator==(const G4RadioactiveDecayChainsFromParent& right) const {return (this == &right);}
-    G4bool operator!=(const G4RadioactiveDecayChainsFromParent& right) const {return (this != &right);}
-  
-    inline const G4String& GetIonName() const {return ionName;}
-    inline void SetIonName(const G4String& name) {ionName = name;}
+    G4bool operator==(const G4RadioactiveDecayChainsFromParent& right) const
+    {
+      return (this == &right);
+    }
+    G4bool operator!=(const G4RadioactiveDecayChainsFromParent& right) const
+    {
+      return (this != &right);
+    }
+
+    inline const G4String& GetIonName() const { return ionName; }
+    inline void SetIonName(const G4String& name) { ionName = name; }
 
     // Retrieve the coefficients and decays of all descendants along the
     // decay chains
-    inline const G4RadioactiveDecayRates& GetItsRates() const {return itsRates;}
+    inline const G4RadioactiveDecayRates& GetItsRates() const { return itsRates; }
 
     // Fill in the coefficients and decay times in the chains
-    inline void SetItsRates(const G4RadioactiveDecayRates& arate) {itsRates = arate;}
+    inline void SetItsRates(const G4RadioactiveDecayRates& arate) { itsRates = arate; }
 
   protected:
 
@@ -93,4 +100,3 @@ class G4RadioactiveDecayChainsFromParent
 };
 
 #endif
-

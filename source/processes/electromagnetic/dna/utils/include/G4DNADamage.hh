@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,35 +41,38 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
 #ifndef G4DNADAMAGE_HH
-#define G4DNADAMAGE_HH 1
+#define G4DNADAMAGE_HH
 
 #include "G4Molecule.hh"
 
 class G4VDNAHit
 {
-public :
-    G4VDNAHit()= default;
-    virtual ~G4VDNAHit()= default;
+  public:
+
+    G4VDNAHit() = default;
+    virtual ~G4VDNAHit() = default;
 };
 
 class G4DNAIndirectHit : public G4VDNAHit
 {
-public :
+  public:
+
     G4DNAIndirectHit(const G4String& baseName, const G4Molecule* molecule,
                      const G4ThreeVector& position, G4double time);
     ~G4DNAIndirectHit() override;
 
-    inline const G4Molecule* GetMolecule() {return fpMolecule;}
-    inline const G4ThreeVector& GetPosition() {return fPosition;}
-    inline const G4String& GetBaseName() {return fBaseName;}
-    inline double GetTime() {return fTime;}
+    inline const G4Molecule* GetMolecule() { return fpMolecule; }
+    inline const G4ThreeVector& GetPosition() { return fPosition; }
+    inline const G4String& GetBaseName() { return fBaseName; }
+    inline double GetTime() { return fTime; }
 
     void Print();
 
-protected :
+  protected:
+
     const G4Molecule* fpMolecule;
     G4ThreeVector fPosition;
     G4double fTime;
@@ -78,38 +81,31 @@ protected :
 
 class G4DNADamage
 {
-public:
+  public:
+
     static G4DNADamage* Instance();
     static void DeleteInstance();
 
     virtual void Reset();
 
-    //void AddDirectDamage();
-    virtual void AddIndirectDamage(const G4String& baseName,
-                                   const G4Molecule* molecule,
-                                   const G4ThreeVector& position, 
-                                   G4double time);
+    // void AddDirectDamage();
+    virtual void AddIndirectDamage(const G4String& baseName, const G4Molecule* molecule,
+                                   const G4ThreeVector& position, G4double time);
 
     inline const std::vector<G4DNAIndirectHit*>* GetIndirectHits();
     inline virtual G4int GetNIndirectHits() const
     {
-        if(fJustCountDamage)
-            return fNIndirectDamage;
+      if (fJustCountDamage) return fNIndirectDamage;
 
-        return (G4int)fIndirectHits.size();
+      return (G4int)fIndirectHits.size();
     }
 
-    inline virtual void SetOnlyCountDamage(G4bool flag = true)
-    {
-        fJustCountDamage = flag;
-    }
+    inline virtual void SetOnlyCountDamage(G4bool flag = true) { fJustCountDamage = flag; }
 
-    inline virtual G4bool OnlyCountDamage() const
-    {
-        return fJustCountDamage;
-    }
+    inline virtual G4bool OnlyCountDamage() const { return fJustCountDamage; }
 
-protected :
+  protected:
+
     G4DNADamage();
     static G4ThreadLocal G4DNADamage* fpInstance;
     virtual ~G4DNADamage();
@@ -122,7 +118,7 @@ protected :
 
 inline const std::vector<G4DNAIndirectHit*>* G4DNADamage::GetIndirectHits()
 {
-    return &fIndirectHits;
+  return &fIndirectHits;
 }
 
-#endif // G4DNADAMAGES_HH
+#endif  // G4DNADAMAGES_HH

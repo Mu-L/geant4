@@ -8,9 +8,12 @@
 /gps/energy    50 GeV
 /gps/direction  0. 0. 1.0
 
-# Paramatrisation on 
-/GFlash/flag 1
-
 /tracking/verbose 0
 
+# Paramatrisation on
+/GFlash/flag 1
+/run/beamOn 10
+
+# Paramatrisation off
+/GFlash/flag 0
 /run/beamOn 10

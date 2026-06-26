@@ -26,13 +26,13 @@
 //
 // -------------------------------------------------------------------
 //
-//      Geant4 header file 
+//      Geant4 header file
 //
 //      File name: G4ParticleHPIsoProbabilityTable_NJOY.hh
 //
 //      Authors: Marek Zmeskal (CTU, Czech Technical University in Prague, Czech Republic)
 //	         Loic Thulliez (CEA France)
-// 
+//
 //      Creation date: 4 June 2024
 //
 //      Description: Class for the probability table of the given isotope
@@ -41,40 +41,41 @@
 //                   finds the correct cross-section.
 //
 //      Modifications:
-//      
+//
 // -------------------------------------------------------------------
 //
 //
-#ifndef G4ParticleHPIsoProbabilityTable_NJOY_h
-#define G4ParticleHPIsoProbabilityTable_NJOY_h 1
+#ifndef G4PARTICLEHPISOPROBABILITYTABLE_NJOY_HH
+#define G4PARTICLEHPISOPROBABILITYTABLE_NJOY_HH
 
-#include "globals.hh"
 #include "G4ParticleHPInterpolator.hh"
 #include "G4ParticleHPIsoProbabilityTable.hh"
+#include "globals.hh"
 
-#include <vector>
-#include <thread>
 #include <map>
+#include <thread>
+#include <vector>
 
 class G4DynamicParticle;
 class G4Element;
 
 class G4ParticleHPIsoProbabilityTable_NJOY : public G4ParticleHPIsoProbabilityTable
 {
- public:
+  public:
 
-  G4ParticleHPIsoProbabilityTable_NJOY();
-  ~G4ParticleHPIsoProbabilityTable_NJOY();
-  void Init( G4int, G4int, G4int, G4double, const G4String& ) override;
-  G4double GetCorrelatedIsoCrossSectionPT( const G4DynamicParticle*, G4int, const G4Element*, G4double&, G4double&, 
-                                           std::thread::id& ) override;
-  G4double GetIsoCrossSectionPT( const G4DynamicParticle*, G4int, const G4Element*, G4double&, 
-                                 std::map< std::thread::id, G4double >&, std::thread::id& ) override;
- private:
+    G4ParticleHPIsoProbabilityTable_NJOY();
+    ~G4ParticleHPIsoProbabilityTable_NJOY();
+    void Init(G4int, G4int, G4int, G4double, const G4String&) override;
+    G4double GetCorrelatedIsoCrossSectionPT(const G4DynamicParticle*, G4int, const G4Element*,
+                                            G4double&, G4double&, std::thread::id&) override;
+    G4double GetIsoCrossSectionPT(const G4DynamicParticle*, G4int, const G4Element*, G4double&,
+                                  std::map<std::thread::id, G4double>&, std::thread::id&) override;
 
-  G4int tableOrder;
-  G4int lssf_flag;
-  G4ParticleHPInterpolator theInt;
+  private:
+
+    G4int tableOrder;
+    G4int lssf_flag;
+    G4ParticleHPInterpolator theInt;
 };
 
 #endif

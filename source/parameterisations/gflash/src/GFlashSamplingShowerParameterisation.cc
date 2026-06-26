@@ -33,15 +33,17 @@
 // Authors: E.Barberio & Joanna Weng - 11.2005
 // ------------------------------------------------------------
 
-#include <cmath>
-
 #include "GFlashSamplingShowerParameterisation.hh"
-#include "GVFlashShowerParameterisation.hh"
-#include "G4SystemOfUnits.hh"
-#include "Randomize.hh"
-#include "G4ios.hh"
+
 #include "G4Material.hh"
 #include "G4MaterialTable.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4ios.hh"
+#include "Randomize.hh"
+
+#include "GVFlashShowerParameterisation.hh"
+
+#include <cmath>
 
 GFlashSamplingShowerParameterisation::GFlashSamplingShowerParameterisation(
   G4Material* aMat1, G4Material* aMat2, G4double dd1, G4double dd2,
@@ -72,10 +74,12 @@ GFlashSamplingShowerParameterisation::GFlashSamplingShowerParameterisation(
     Tmax(0.),
     Beta(0.)
 {
-  if (!aPar) {
+  if (!aPar)
+  {
     thePar = new GFlashSamplingShowerTuning;
   }
-  else {
+  else
+  {
     thePar = aPar;
   }
 
@@ -179,7 +183,7 @@ GFlashSamplingShowerParameterisation::GFlashSamplingShowerParameterisation(
 
 GFlashSamplingShowerParameterisation::~GFlashSamplingShowerParameterisation()
 {
-   delete thePar;
+  delete thePar;
 }
 
 // ------------------------------------------------------------
@@ -188,23 +192,22 @@ void GFlashSamplingShowerParameterisation::SetMaterial(G4Material* mat1, G4Mater
 {
   const G4double Es = 21.2 * MeV;
   material1 = mat1;
+  G4double ZoA1 = GetEffZoA(material1);
   Z1 = GetEffZ(material1);
   A1 = GetEffA(material1);
   density1 = material1->GetDensity();
   X01 = material1->GetRadlen();
-  Ec1 = 2.66 * std::pow((X01 * Z1 / A1), 1.1);
-  // Ec1 = 610.0 * MeV / (Z1 + 1.24);
+  Ec1 = 2.66 * std::pow((X01 / cm * density1 / (g / cm3) * ZoA1), 1.1) * MeV;
   Rm1 = X01 * Es / Ec1;
 
   material2 = mat2;
+  G4double ZoA2 = GetEffZoA(material2);
   Z2 = GetEffZ(material2);
   A2 = GetEffA(material2);
   density2 = material2->GetDensity();
   X02 = material2->GetRadlen();
-  Ec2 = 2.66 * std::pow((X02 * Z2 / A2), 1.1);
-  // Ec2 = 610.0 * MeV / (Z2 + 1.24);
+  Ec2 = 2.66 * std::pow((X02 / cm * density2 / (g / cm3) * ZoA2), 1.1) * MeV;
   Rm2 = X02 * Es / Ec2;
-  // PrintMaterial();
 }
 
 // ------------------------------------------------------------
@@ -231,17 +234,9 @@ void GFlashSamplingShowerParameterisation::ComputeZAX0EFFetc()
                            // mm makes sense... looks weird.
   ehat = (1. / (1 + 0.007 * (Z1 - Z2)));
 
-  G4cout << "W1= " << W1 << G4endl;
-  G4cout << "W2= " << W2 << G4endl;
-  G4cout << "effective quantities Zeff = " << Zeff << G4endl;
-  G4cout << "effective quantities Aeff = " << Aeff << G4endl;
-  G4cout << "effective quantities Rhoeff = " << Rhoeff / g * cm3 << " g/cm3" << G4endl;
+  G4cout << "effective quantities Rhoeff = " << Rhoeff << " g/cm3" << G4endl;
   G4cout << "effective quantities X0eff = " << X0eff / cm << " cm" << G4endl;
 
-  X0eff = X0eff * Rhoeff;
-
-  G4cout << "effective quantities X0eff = " << X0eff / g * cm2 << " g/cm2" << G4endl;
-  X0eff = X0eff / Rhoeff;
   G4cout << "effective quantities RMeff = " << Rmeff / cm << "  cm" << G4endl;
   Rmeff = Rmeff * Rhoeff;
   G4cout << "effective quantities RMeff = " << Rmeff / g * cm2 << " g/cm2" << G4endl;
@@ -256,7 +251,8 @@ void GFlashSamplingShowerParameterisation::ComputeZAX0EFFetc()
 
 void GFlashSamplingShowerParameterisation::GenerateLongitudinalProfile(G4double Energy)
 {
-  if ((material1 == 0) || (material2 == 0)) {
+  if ((material1 == 0) || (material2 == 0))
+  {
     G4Exception("GFlashSamplingShowerParameterisation::GenerateLongitudinalProfile()",
                 "InvalidSetup", FatalException, "No material initialized!");
   }
@@ -286,7 +282,8 @@ void GFlashSamplingShowerParameterisation::ComputeLongitudinalParameters(G4doubl
   SigmaLogAlpha = std::min(0.5, 1.00 / (ParsSigLogA1 + ParsSigLogA2 * std::log(y)));  // ok
   Rho = ParsRho1 + ParsRho2 * std::log(y);  // ok
 
-  if (0) {
+  if (0)
+  {
     G4cout << " y            = " << y << G4endl;
     G4cout << " std::log(std::exp(AveLogTmaxh)  + ParsAveT1/Fs + ParsAveT2*(1-ehat)) = "
            << " std::log(" << std::exp(AveLogTmaxh) << " + " << ParsAveT1 / Fs << " + "
@@ -359,7 +356,8 @@ G4double GFlashSamplingShowerParameterisation::ApplySampling(const G4double DEne
   //                         pow(ConstantResolution,2)*
   //                          Energy/(1.*MeV);
 
-  if (Resolution > 0.0 && DEne > 0.00) {
+  if (Resolution > 0.0 && DEne > 0.00)
+  {
     // G4float x1 = DEne / Resolution;
     // G4float x2 = G4RandGamma::shoot(x1, 1.0) * Resolution;
     // DEneFluctuated = x2;
@@ -372,14 +370,13 @@ G4double GFlashSamplingShowerParameterisation::ApplySampling(const G4double DEne
 
 // ------------------------------------------------------------
 
-G4double GFlashSamplingShowerParameterisation::
-IntegrateEneLongitudinal(G4double LongitudinalStep)
+G4double GFlashSamplingShowerParameterisation::IntegrateEneLongitudinal(G4double LongitudinalStep)
 {
   G4double LongitudinalStepInX0 = LongitudinalStep / X0eff;
-  G4float x1= Betah*LongitudinalStepInX0;
-  G4float x2= Alphah;
-  float x3 =  gam(x1,x2);
-  G4double DEne=x3;
+  G4float x1 = Betah * LongitudinalStepInX0;
+  G4float x2 = Alphah;
+  float x3 = gam(x1, x2);
+  G4double DEne = x3;
   return DEne;
 }
 
@@ -400,7 +397,8 @@ G4double GFlashSamplingShowerParameterisation::IntegrateNspLongitudinal(G4double
 G4double GFlashSamplingShowerParameterisation::GenerateRadius(G4int ispot, G4double Energy,
                                                               G4double LongitudinalPosition)
 {
-  if (ispot < 1) {
+  if (ispot < 1)
+  {
     // Determine lateral parameters in the middle of the step.
     // They depend on energy & position along step
     //
@@ -415,7 +413,8 @@ G4double GFlashSamplingShowerParameterisation::GenerateRadius(G4int ispot, G4dou
   {
     Radius = Rmeff * RadiusCore * std::sqrt(Random2 / (1. - Random2));
   }
-  else {
+  else
+  {
     Radius = Rmeff * RadiusTail * std::sqrt(Random2 / (1. - Random2));
   }
   Radius = std::min(Radius, DBL_MAX);
@@ -461,10 +460,9 @@ void GFlashSamplingShowerParameterisation::ComputeRadialParameters(G4double Ener
 
 // ------------------------------------------------------------
 
-G4double GFlashSamplingShowerParameterisation::
-GenerateExponential(const G4double /* Energy */ )
+G4double GFlashSamplingShowerParameterisation::GenerateExponential(const G4double /* Energy */)
 {
-  G4double ParExp1 =  9./7.*X0eff;
-  G4double random  = -ParExp1*G4RandExponential::shoot() ;
+  G4double ParExp1 = 9. / 7. * X0eff;
+  G4double random = -ParExp1 * G4RandExponential::shoot();
   return random;
 }

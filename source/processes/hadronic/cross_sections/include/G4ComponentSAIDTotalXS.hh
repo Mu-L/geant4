@@ -35,7 +35,7 @@
 //
 // Modifications:
 //
- 
+
 //
 // Class Description
 // Total, elastic and inelastic hadron/nucleon cross sections
@@ -43,22 +43,22 @@
 // should be defined
 // Class Description - End
 
-#ifndef G4ComponentSAIDTotalXS_h
-#define G4ComponentSAIDTotalXS_h 1
+#ifndef G4COMPONENTSAIDTOTALXS_HH
+#define G4COMPONENTSAIDTOTALXS_HH
 
-#include "G4VComponentCrossSection.hh"
 #include "G4ParticleDefinition.hh"
-#include "globals.hh"
 #include "G4Threading.hh"
+#include "G4VComponentCrossSection.hh"
+#include "globals.hh"
 
-enum G4SAIDCrossSectionType 
-{ 
-  saidUnknown = 0, 
-  saidPP = 1, 
-  saidNP = 2, 
+enum G4SAIDCrossSectionType
+{
+  saidUnknown = 0,
+  saidPP = 1,
+  saidNP = 2,
   saidPIPP = 3,
   saidPINP = 4,
-  saidPINP_PI0N = 5, 
+  saidPINP_PI0N = 5,
   saidPINP_ETAN = 6,
   saidGP_PI0P = 7,
   saidGP_PIPN = 8,
@@ -73,76 +73,59 @@ class G4PhysicsVector;
 
 class G4ComponentSAIDTotalXS : public G4VComponentCrossSection
 {
-public: //with description
+  public:  // with description
 
-  G4ComponentSAIDTotalXS();
+    G4ComponentSAIDTotalXS();
 
-  virtual ~G4ComponentSAIDTotalXS();
+    virtual ~G4ComponentSAIDTotalXS();
 
-  virtual
-  G4double GetTotalElementCrossSection(const G4ParticleDefinition*,
-				       G4double kinEnergy, 
-				       G4int /*Z*/, G4double /*N*/);
+    virtual G4double GetTotalElementCrossSection(const G4ParticleDefinition*, G4double kinEnergy,
+                                                 G4int /*Z*/, G4double /*N*/);
 
-  virtual
-  G4double GetTotalIsotopeCrossSection(const G4ParticleDefinition*,
-				       G4double kinEnergy,
-				       G4int /*Z*/, G4int /*N*/);
+    virtual G4double GetTotalIsotopeCrossSection(const G4ParticleDefinition*, G4double kinEnergy,
+                                                 G4int /*Z*/, G4int /*N*/);
 
-  virtual
-  G4double GetInelasticElementCrossSection(const G4ParticleDefinition*,
-					   G4double kinEnergy, 
-					   G4int /*Z*/, G4double /*N*/);
+    virtual G4double GetInelasticElementCrossSection(const G4ParticleDefinition*,
+                                                     G4double kinEnergy, G4int /*Z*/,
+                                                     G4double /*N*/);
 
-  virtual
-  G4double GetInelasticIsotopeCrossSection(const G4ParticleDefinition*,
-					   G4double kinEnergy, 
-					   G4int /*Z*/, G4int /*N*/);
+    virtual G4double GetInelasticIsotopeCrossSection(const G4ParticleDefinition*,
+                                                     G4double kinEnergy, G4int /*Z*/, G4int /*N*/);
 
-  virtual
-  G4double GetElasticElementCrossSection(const G4ParticleDefinition*,
-					 G4double kinEnergy, 
-					 G4int /*Z*/, G4double /*N*/);
+    virtual G4double GetElasticElementCrossSection(const G4ParticleDefinition*, G4double kinEnergy,
+                                                   G4int /*Z*/, G4double /*N*/);
 
-  virtual
-  G4double GetElasticIsotopeCrossSection(const G4ParticleDefinition*,
-					 G4double kinEnergy, 
-					 G4int /*Z*/, G4int /*N*/);
+    virtual G4double GetElasticIsotopeCrossSection(const G4ParticleDefinition*, G4double kinEnergy,
+                                                   G4int /*Z*/, G4int /*N*/);
 
-  G4double GetChargeExchangeCrossSection(const G4ParticleDefinition* prim,
-					 const G4ParticleDefinition* sec,
-					 G4double kinEnergy, 
-					 G4int /*Z*/, G4int /*N*/);
+    G4double GetChargeExchangeCrossSection(const G4ParticleDefinition* prim,
+                                           const G4ParticleDefinition* sec, G4double kinEnergy,
+                                           G4int /*Z*/, G4int /*N*/);
 
-  virtual void Description(std::ostream&) const final;
+    virtual void Description(std::ostream&) const final;
 
-private:
+  private:
 
-  G4SAIDCrossSectionType GetType(const G4ParticleDefinition* prim,
-				 const G4ParticleDefinition* sec,
-				 G4int Z, G4int N);
+    G4SAIDCrossSectionType GetType(const G4ParticleDefinition* prim,
+                                   const G4ParticleDefinition* sec, G4int Z, G4int N);
 
-  void Initialise(G4SAIDCrossSectionType tp);
+    void Initialise(G4SAIDCrossSectionType tp);
 
-  void ReadData(G4int index, G4PhysicsVector*,
-		const G4String&, const G4String&);
+    void ReadData(G4int index, G4PhysicsVector*, const G4String&, const G4String&);
 
-  void PrintWarning(const G4ParticleDefinition* prim,
-		    const G4ParticleDefinition* sec,
-		    G4int /*Z*/, G4int /*N*/,
-		    const G4String&, const G4String&);
+    void PrintWarning(const G4ParticleDefinition* prim, const G4ParticleDefinition* sec,
+                      G4int /*Z*/, G4int /*N*/, const G4String&, const G4String&);
 
-  G4ComponentSAIDTotalXS & operator=(const G4ComponentSAIDTotalXS &right);
-  G4ComponentSAIDTotalXS(const G4ComponentSAIDTotalXS&);
+    G4ComponentSAIDTotalXS& operator=(const G4ComponentSAIDTotalXS& right);
+    G4ComponentSAIDTotalXS(const G4ComponentSAIDTotalXS&);
 
-  static const G4String fnames[numberOfSaidXS];
-  G4PhysicsVector* elastdata[numberOfSaidXS];
-  G4PhysicsVector* inelastdata[numberOfSaidXS];
+    static const G4String fnames[numberOfSaidXS];
+    G4PhysicsVector* elastdata[numberOfSaidXS];
+    G4PhysicsVector* inelastdata[numberOfSaidXS];
 
 #ifdef G4MULTITHREADED
-  static G4Mutex saidXSMutex;
+    static G4Mutex saidXSMutex;
 #endif
-
 };
 
 #endif

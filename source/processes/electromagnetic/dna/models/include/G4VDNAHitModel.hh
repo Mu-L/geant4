@@ -23,32 +23,33 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4VDNAHitModel_hh
-#define G4VDNAHitModel_hh
+#ifndef G4VDNAHITMODEL_HH
+#define G4VDNAHITMODEL_HH
 #include "globals.hh"
-#include <vector>
+
 #include <variant>
+#include <vector>
 class G4DNAComponentNode;
 class G4VPhysicalVolume;
 class G4Track;
 
 class G4VDNAHitModel
 {
-  using DNANode =
-    std::variant<const G4DNAComponentNode*, /*for dnadamage chain*/
-                 const G4VPhysicalVolume* /*for molecularDNA chain*/>;
+    using DNANode = std::variant<const G4DNAComponentNode*, /*for dnadamage chain*/
+                                 const G4VPhysicalVolume* /*for molecularDNA chain*/>;
 
- public:
-  explicit G4VDNAHitModel(const G4String& name);
-  virtual ~G4VDNAHitModel() = default;
-  //  delete assignment operator
-  G4VDNAHitModel& operator=(const G4VDNAHitModel& right) = delete;
-  G4VDNAHitModel(const G4VDNAHitModel&)                  = delete;
-  virtual G4double CalculateReactionTime(const G4Track& trackA, DNANode&) = 0;
-  virtual G4bool DoReaction(const G4Track& track, const G4double&,
-                            const DNANode&)                               = 0;
+  public:
 
- private:
-  const G4String fName;
+    explicit G4VDNAHitModel(const G4String& name);
+    virtual ~G4VDNAHitModel() = default;
+    //  delete assignment operator
+    G4VDNAHitModel& operator=(const G4VDNAHitModel& right) = delete;
+    G4VDNAHitModel(const G4VDNAHitModel&) = delete;
+    virtual G4double CalculateReactionTime(const G4Track& trackA, DNANode&) = 0;
+    virtual G4bool DoReaction(const G4Track& track, const G4double&, const DNANode&) = 0;
+
+  private:
+
+    const G4String fName;
 };
 #endif

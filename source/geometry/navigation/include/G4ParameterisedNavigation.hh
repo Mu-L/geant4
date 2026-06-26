@@ -34,27 +34,27 @@
 // Author: Paul Kent (CERN), August 1996
 // --------------------------------------------------------------------
 #ifndef G4PARAMETERISEDNAVIGATION_HH
-#define G4PARAMETERISEDNAVIGATION_HH 1
+#define G4PARAMETERISEDNAVIGATION_HH
 
+#include "G4AffineTransform.hh"
+#include "G4BlockingList.hh"
+#include "G4LogicalVolume.hh"
+#include "G4NavigationHistory.hh"
+#include "G4ThreeVector.hh"
 #include "G4Types.hh"
+#include "G4VPVParameterisation.hh"
+#include "G4VPhysicalVolume.hh"
+#include "G4VSolid.hh"
+#include "G4VoxelNavigation.hh"
 
 #include <vector>
-
-#include "G4VoxelNavigation.hh"
-#include "G4NavigationHistory.hh"
-#include "G4AffineTransform.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4VPVParameterisation.hh"
-#include "G4LogicalVolume.hh"
-#include "G4VSolid.hh"
-#include "G4ThreeVector.hh"
-#include "G4BlockingList.hh"
 
 /**
  * @brief G4ParameterisedNavigation is a concrete utility class for navigation
  * in volumes containing a single G4PVParameterised volume for which voxels for
  * the replicated volumes have been constructed.
  * @note Voxels MUST be along one axis only: NOT refined.
+ * @ingroup geometry_navigation
  */
 
 class G4ParameterisedNavigation : public G4VoxelNavigation
@@ -74,8 +74,8 @@ class G4ParameterisedNavigation : public G4VoxelNavigation
      *  @param[in] localPoint Local point
      *  @returns Pointer to the node where the given point is located.
      */
-    inline G4SmartVoxelNode* ParamVoxelLocate( G4SmartVoxelHeader* pHead,
-                                         const G4ThreeVector& localPoint );
+    inline G4SmartVoxelNode* ParamVoxelLocate(G4SmartVoxelHeader* pHead,
+                                              const G4ThreeVector& localPoint);
 
     /**
      * Searches positioned volumes in mother at current top level of @p history
@@ -90,13 +90,10 @@ class G4ParameterisedNavigation : public G4VoxelNavigation
      *  @param[in,out] localPoint Point in local coordinates system.
      *  @returns Whether a containing volume has been found.
      */
-    G4bool LevelLocate( G4NavigationHistory& history,
-                  const G4VPhysicalVolume* blockedVol,
-                  const G4int blockedNum,
-                  const G4ThreeVector& globalPoint,
-                  const G4ThreeVector* globalDirection,
-                  const G4bool pLocatedOnEdge, 
-                        G4ThreeVector& localPoint ) override;
+    G4bool LevelLocate(G4NavigationHistory& history, const G4VPhysicalVolume* blockedVol,
+                       const G4int blockedNum, const G4ThreeVector& globalPoint,
+                       const G4ThreeVector* globalDirection, const G4bool pLocatedOnEdge,
+                       G4ThreeVector& localPoint) override;
 
     /**
      * Computes the length of a step to the next boundary.
@@ -119,21 +116,15 @@ class G4ParameterisedNavigation : public G4VoxelNavigation
      *  @returns Length from current point to next boundary surface along
      *           @p localDirection.
      */
-    G4double ComputeStep( const G4ThreeVector& localPoint,
-                          const G4ThreeVector& localDirection,
-                          const G4double currentProposedStepLength,
-                                G4double& newSafety,
-                                G4NavigationHistory& history,
-                                G4bool& validExitNormal,
-                                G4ThreeVector& exitNormal,
-                                G4bool& exiting,
-                                G4bool& entering,
-                                G4VPhysicalVolume *(*pBlockedPhysical),
-                                G4int& blockedReplicaNo ) override;
+    G4double ComputeStep(const G4ThreeVector& localPoint, const G4ThreeVector& localDirection,
+                         const G4double currentProposedStepLength, G4double& newSafety,
+                         G4NavigationHistory& history, G4bool& validExitNormal,
+                         G4ThreeVector& exitNormal, G4bool& exiting, G4bool& entering,
+                         G4VPhysicalVolume*(*pBlockedPhysical), G4int& blockedReplicaNo) override;
 
     /**
      * Calculates the isotropic distance to the nearest boundary from the
-     * specified point in the local coordinate system. 
+     * specified point in the local coordinate system.
      * The localpoint utilised must be within the current volume.
      *  @param[in] localPoint Local point.
      *  @param[in] history Navigation history.
@@ -141,9 +132,8 @@ class G4ParameterisedNavigation : public G4VoxelNavigation
      *             need not be checked.
      *  @returns Length from current point to closest surface.
      */
-    G4double ComputeSafety( const G4ThreeVector& localPoint,
-                            const G4NavigationHistory& history,
-                            const G4double pProposedMaxLength=DBL_MAX ) override;
+    G4double ComputeSafety(const G4ThreeVector& localPoint, const G4NavigationHistory& history,
+                           const G4double pProposedMaxLength = DBL_MAX) override;
 
     /**
      * Updates internal navigation state to take into account that location
@@ -151,8 +141,8 @@ class G4ParameterisedNavigation : public G4VoxelNavigation
      *  @param[in] motherPhysical Current physical volume.
      *  @param[in] localPoint Local point.
      */
-    void RelocateWithinVolume( G4VPhysicalVolume* motherPhysical,
-                               const G4ThreeVector& localPoint ) override;
+    void RelocateWithinVolume(G4VPhysicalVolume* motherPhysical,
+                              const G4ThreeVector& localPoint) override;
 
   private:
 
@@ -163,8 +153,7 @@ class G4ParameterisedNavigation : public G4VoxelNavigation
      *  @param[in] pAxis Axis of parameterisation.
      *  @returns Safety length from current point to voxel boundary.
      */
-    G4double ComputeVoxelSafety( const G4ThreeVector& localPoint,
-                                 const EAxis pAxis ) const;
+    G4double ComputeVoxelSafety(const G4ThreeVector& localPoint, const EAxis pAxis) const;
 
     /**
      * Finds the next voxel from the current voxel and point in the specified
@@ -178,10 +167,8 @@ class G4ParameterisedNavigation : public G4VoxelNavigation
      *           true  otherwise
      *           [the information on the next voxel is saved].
      */
-    G4bool LocateNextVoxel( const G4ThreeVector& localPoint,
-                            const G4ThreeVector& localDirection,
-                            const G4double currentStep,
-                            const EAxis pAxis );
+    G4bool LocateNextVoxel(const G4ThreeVector& localPoint, const G4ThreeVector& localDirection,
+                           const G4double currentStep, const EAxis pAxis);
 
     /**
      * Calls virtual 'Compute' methods, and copies information if nested.
@@ -191,9 +178,8 @@ class G4ParameterisedNavigation : public G4VoxelNavigation
      *  @param[in] curParam Pointer to the parameterisation algorithm.
      *  @returns A pointer to the computed parameterised solid.
      */
-    inline G4VSolid* IdentifyAndPlaceSolid( G4int num,
-                                     G4VPhysicalVolume* apparentPhys, 
-                                     G4VPVParameterisation* curParam );
+    inline G4VSolid* IdentifyAndPlaceSolid(G4int num, G4VPhysicalVolume* apparentPhys,
+                                           G4VPVParameterisation* curParam);
 
   private:
 
@@ -201,8 +187,8 @@ class G4ParameterisedNavigation : public G4VoxelNavigation
     //
     EAxis fVoxelAxis = kUndefined;
     G4int fVoxelNoSlices = 0;
-    G4double fVoxelSliceWidth = 0.0; 
-    std::size_t fVoxelNodeNo = 0;  
+    G4double fVoxelSliceWidth = 0.0;
+    std::size_t fVoxelNodeNo = 0;
     G4SmartVoxelHeader* fVoxelHeader = nullptr;
 };
 

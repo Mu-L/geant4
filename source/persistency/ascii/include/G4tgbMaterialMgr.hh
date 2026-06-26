@@ -32,23 +32,19 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgbMaterialMgr_hh
-#define G4tgbMaterialMgr_hh 1
+#ifndef G4TGBMATERIALMGR_HH
+#define G4TGBMATERIALMGR_HH
 
-#include "globals.hh"
-
-#include "G4tgbIsotope.hh"
-#include "G4tgbElement.hh"
-#include "G4tgbMaterial.hh"
-
-#include "G4tgrIsotope.hh"
-#include "G4tgrElement.hh"
-#include "G4tgrElement.hh"
-#include "G4tgrMaterial.hh"
-
-#include "G4Isotope.hh"
 #include "G4Element.hh"
+#include "G4Isotope.hh"
 #include "G4Material.hh"
+#include "G4tgbElement.hh"
+#include "G4tgbIsotope.hh"
+#include "G4tgbMaterial.hh"
+#include "G4tgrElement.hh"
+#include "G4tgrIsotope.hh"
+#include "G4tgrMaterial.hh"
+#include "globals.hh"
 
 using G4mstgbisot = std::map<G4String, G4tgbIsotope*>;
 using G4mstgbelem = std::map<G4String, G4tgbElement*>;
@@ -64,43 +60,38 @@ class G4tgbMaterialMgr
     ~G4tgbMaterialMgr();
 
     static G4tgbMaterialMgr* GetInstance();
-      // Get only instance (it it does not exists, create it)
+    // Get only instance (it it does not exists, create it)
 
     void CopyIsotopes();
-      // Copy the G4tgrIsotopes into G4tgbIsotopes
+    // Copy the G4tgrIsotopes into G4tgbIsotopes
     void CopyElements();
-      // Copy the G4tgrElements into G4tgbElements
+    // Copy the G4tgrElements into G4tgbElements
     void CopyMaterials();
-      // Copy the G4tgrMaterials into G4tgbMaterials
+    // Copy the G4tgrMaterials into G4tgbMaterials
 
     G4Isotope* FindOrBuildG4Isotope(const G4String& name);
-      // Look for a G4Isotope that has to exists
-      // (if not found create it from the corresponding G4tgbIsotope)
+    // Look for a G4Isotope that has to exists
+    // (if not found create it from the corresponding G4tgbIsotope)
     G4Isotope* FindBuiltG4Isotope(const G4String& name) const;
-      // Look for a G4Isotope and if not found return nullptr
-    G4tgbIsotope* FindG4tgbIsotope(const G4String& name,
-                                   G4bool bMustExist = false) const;
-      // Look for a G4Isotope and if not found return nullptr
+    // Look for a G4Isotope and if not found return nullptr
+    G4tgbIsotope* FindG4tgbIsotope(const G4String& name, G4bool bMustExist = false) const;
+    // Look for a G4Isotope and if not found return nullptr
 
-    G4Element* FindOrBuildG4Element(const G4String& name,
-                                    G4bool bMustExist = true);
-      // Look for a G4Element that has to exists by default
-      // (if not found create it from the corresponding G4tgbElement)
+    G4Element* FindOrBuildG4Element(const G4String& name, G4bool bMustExist = true);
+    // Look for a G4Element that has to exists by default
+    // (if not found create it from the corresponding G4tgbElement)
     G4Element* FindBuiltG4Element(const G4String& name) const;
-      // Look for a G4Element and if not found return nullptr
-    G4tgbElement* FindG4tgbElement(const G4String& name,
-                                   G4bool bMustExist = false) const;
-      // Look for a G4Element and if not found return nullptr
+    // Look for a G4Element and if not found return nullptr
+    G4tgbElement* FindG4tgbElement(const G4String& name, G4bool bMustExist = false) const;
+    // Look for a G4Element and if not found return nullptr
 
-    G4Material* FindOrBuildG4Material(const G4String& name,
-                                      G4bool bMustExist = true);
-      // Look for a G4Material that has to exists by default
-      // (if not found create it from the corresponding G4tgbMaterial)
+    G4Material* FindOrBuildG4Material(const G4String& name, G4bool bMustExist = true);
+    // Look for a G4Material that has to exists by default
+    // (if not found create it from the corresponding G4tgbMaterial)
     G4Material* FindBuiltG4Material(const G4String& name) const;
-      // Look for a G4Material and if not found return nullptr
-    G4tgbMaterial* FindG4tgbMaterial(const G4String& name,
-                                     G4bool bMustExist = false) const;
-      // Look for a G4tgbMaterial and if not found return nullptr
+    // Look for a G4Material and if not found return nullptr
+    G4tgbMaterial* FindG4tgbMaterial(const G4String& name, G4bool bMustExist = false) const;
+    // Look for a G4tgbMaterial and if not found return nullptr
 
     const G4msg4isot GetG4IsotopeList() const { return theG4Isotopes; }
     const G4msg4elem GetG4ElementList() const { return theG4Elements; }
@@ -109,24 +100,24 @@ class G4tgbMaterialMgr
   private:
 
     G4tgbMaterialMgr();
-      // Private Constructor
+    // Private Constructor
 
   private:
 
     static G4ThreadLocal G4tgbMaterialMgr* theInstance;
 
     G4mstgbisot theG4tgbIsotopes;
-      // List of all tgbIsotopes created
+    // List of all tgbIsotopes created
     G4mstgbelem theG4tgbElements;
-      // List of all tgbElements created
+    // List of all tgbElements created
     G4mstgbmate theG4tgbMaterials;
-      // List of all G4tgbMaterials created
+    // List of all G4tgbMaterials created
     G4msg4isot theG4Isotopes;
-      // Container of all G4Isotopes created
+    // Container of all G4Isotopes created
     G4msg4elem theG4Elements;
-      // Container of all G4Elements created
+    // Container of all G4Elements created
     G4msg4mate theG4Materials;
-      // Container of all G4Materials created
+    // Container of all G4Materials created
 };
 
 #endif

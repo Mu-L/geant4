@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4NeutrinoE_h
-#define G4NeutrinoE_h 1
+#ifndef G4NEUTRINOE_HH
+#define G4NEUTRINOE_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4NeutrinoE : public G4ParticleDefinition
 {
   public:
+
     static G4NeutrinoE* Definition();
     static G4NeutrinoE* NeutrinoEDefinition();
     static G4NeutrinoE* NeutrinoE();
 
   private:
+
     G4NeutrinoE() {}
     ~G4NeutrinoE() override = default;
 

@@ -49,7 +49,8 @@ G4MuonRadiativeDecayChannelWithSpin::G4MuonRadiativeDecayChannelWithSpin(
   : G4VDecayChannel("Radiative Muon Decay", 1)
 {
   // set names for daughter particles
-  if (theParentName == "mu+") {
+  if (theParentName == "mu+")
+  {
     SetBR(theBR);
     SetParent("mu+");
     SetNumberOfDaughters(4);
@@ -58,7 +59,8 @@ G4MuonRadiativeDecayChannelWithSpin::G4MuonRadiativeDecayChannelWithSpin(
     SetDaughter(2, "nu_e");
     SetDaughter(3, "anti_nu_mu");
   }
-  else if (theParentName == "mu-") {
+  else if (theParentName == "mu-")
+  {
     SetBR(theBR);
     SetParent("mu-");
     SetNumberOfDaughters(4);
@@ -67,9 +69,11 @@ G4MuonRadiativeDecayChannelWithSpin::G4MuonRadiativeDecayChannelWithSpin(
     SetDaughter(2, "anti_nu_e");
     SetDaughter(3, "nu_mu");
   }
-  else {
+  else
+  {
 #ifdef G4VERBOSE
-    if (GetVerboseLevel() > 0) {
+    if (GetVerboseLevel() > 0)
+    {
       G4cout << "G4RadiativeMuonDecayChannel::G4RadiativeMuonDecayChannel():";
       G4cout << " parent particle is not muon but ";
       G4cout << theParentName << G4endl;
@@ -81,7 +85,8 @@ G4MuonRadiativeDecayChannelWithSpin::G4MuonRadiativeDecayChannelWithSpin(
 G4MuonRadiativeDecayChannelWithSpin&
 G4MuonRadiativeDecayChannelWithSpin::operator=(const G4MuonRadiativeDecayChannelWithSpin& right)
 {
-  if (this != &right) {
+  if (this != &right)
+  {
     kinematics_name = right.kinematics_name;
     verboseLevel = right.verboseLevel;
     rbranch = right.rbranch;
@@ -94,11 +99,13 @@ G4MuonRadiativeDecayChannelWithSpin::operator=(const G4MuonRadiativeDecayChannel
 
     // recreate array
     numberOfDaughters = right.numberOfDaughters;
-    if (numberOfDaughters > 0) {
+    if (numberOfDaughters > 0)
+    {
       if (daughters_name != nullptr) ClearDaughtersName();
       daughters_name = new G4String*[numberOfDaughters];
       // copy daughters name
-      for (G4int index = 0; index < numberOfDaughters; ++index) {
+      for (G4int index = 0; index < numberOfDaughters; ++index)
+      {
         daughters_name[index] = new G4String(*right.daughters_name[index]);
       }
     }
@@ -124,7 +131,8 @@ G4DecayProducts* G4MuonRadiativeDecayChannelWithSpin::DecayIt(G4double)
   // daughters'mass
   G4double daughtermass[4];
   // G4double sumofdaughtermass = 0.0;
-  for (G4int index = 0; index < 4; ++index) {
+  for (G4int index = 0; index < 4; ++index)
+  {
     daughtermass[index] = G4MT_daughters[index]->GetPDGMass();
     // sumofdaughtermass += daughtermass[index];
   }
@@ -145,8 +153,10 @@ G4DecayProducts* G4MuonRadiativeDecayChannelWithSpin::DecayIt(G4double)
   G4double cthetaE, cthetaG, cthetaGE, phiE, phiG;
   const std::size_t MAX_LOOP = 10000;
 
-  for (std::size_t loop_counter1 = 0; loop_counter1 < MAX_LOOP; ++loop_counter1) {
-    for (std::size_t loop_counter2 = 0; loop_counter2 < MAX_LOOP; ++loop_counter2) {
+  for (std::size_t loop_counter1 = 0; loop_counter1 < MAX_LOOP; ++loop_counter1)
+  {
+    for (std::size_t loop_counter2 = 0; loop_counter2 < MAX_LOOP; ++loop_counter2)
+    {
       // -------------------------------------------------------------------
       // Build two vectors of random length and random direction, for the
       // positron and the photon.
@@ -160,7 +170,8 @@ G4DecayProducts* G4MuonRadiativeDecayChannelWithSpin::DecayIt(G4double)
 
       rn3dim(xx, yy, zz, x);
 
-      if (std::fabs((xx * xx) + (yy * yy) + (zz * zz) - (x * x)) > 0.001) {
+      if (std::fabs((xx * xx) + (yy * yy) + (zz * zz) - (x * x)) > 0.001)
+      {
         G4cout << "Norm of x not correct" << G4endl;
       }
 
@@ -187,7 +198,8 @@ G4DecayProducts* G4MuonRadiativeDecayChannelWithSpin::DecayIt(G4double)
 
       rn3dim(xx, yy, zz, y);
 
-      if (std::fabs((xx * xx) + (yy * yy) + (zz * zz) - (y * y)) > 0.001) {
+      if (std::fabs((xx * xx) + (yy * yy) + (zz * zz) - (y * y)) > 0.001)
+      {
         G4cout << " Norm of y not correct " << G4endl;
       }
 
@@ -237,7 +249,8 @@ G4DecayProducts* G4MuonRadiativeDecayChannelWithSpin::DecayIt(G4double)
     // Do the calculation for -1 muon polarization (i.e. mu+)
     //
     G4double Pmu = -1.0;
-    if (GetParentName() == "mu-") {
+    if (GetParentName() == "mu-")
+    {
       Pmu = +1.0;
     }
 
@@ -339,7 +352,8 @@ G4DecayProducts* G4MuonRadiativeDecayChannelWithSpin::DecayIt(G4double)
 
   // output message
 #ifdef G4VERBOSE
-  if (GetVerboseLevel() > 1) {
+  if (GetVerboseLevel() > 1)
+  {
     G4cout << "G4MuonRadiativeDecayChannelWithSpin::DecayIt() -";
     G4cout << " create decay products in rest frame " << G4endl;
     G4double TT = daughterparticle0->GetTotalEnergy() + daughterparticle1->GetTotalEnergy()
@@ -349,7 +363,8 @@ G4DecayProducts* G4MuonRadiativeDecayChannelWithSpin::DecayIt(G4double)
     G4cout << "nu2  :" << daughterparticle2->GetTotalEnergy() / MeV << G4endl;
     G4cout << "nu2  :" << daughterparticle3->GetTotalEnergy() / MeV << G4endl;
     G4cout << "total:" << (TT - parentmass) / keV << G4endl;
-    if (GetVerboseLevel() > 1) {
+    if (GetVerboseLevel() > 1)
+    {
       products->DumpInfo();
     }
   }

@@ -6,12 +6,15 @@
 
 #include <ostream>
 
-namespace tools {
+namespace tools
+{
 
-typedef bool (*compress_func)(std::ostream&,unsigned int,unsigned int,const char*,unsigned int,char*,unsigned int&);
+typedef bool (*compress_func)(std::ostream&, unsigned int, unsigned int, const char*, unsigned int,
+                              char*, unsigned int&);
 
-typedef bool (*decompress_func)(std::ostream&,unsigned int,const char*,unsigned int,char*,unsigned int&);
+typedef bool (*decompress_func)(std::ostream&, unsigned int, const char*, unsigned int, char*,
+                                unsigned int&);
 
-}
+}  // namespace tools
 
 #endif

@@ -24,15 +24,15 @@
 // ********************************************************************
 //
 //
-//J.M. Quesada (August2008). Based on:
+// J.M. Quesada (August2008). Based on:
 //
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara (Oct 1998)
 //
 // V.Ivanchenko general clean-up since 2010
 //
-#ifndef G4EvaporationProbability_h
-#define G4EvaporationProbability_h 1
+#ifndef G4EVAPORATIONPROBABILITY_HH
+#define G4EVAPORATIONPROBABILITY_HH
 
 #include "G4VEmissionProbability.hh"
 
@@ -41,58 +41,54 @@ class G4InterfaceToXS;
 
 class G4EvaporationProbability : public G4VEmissionProbability
 {
-public:
+  public:
 
-  explicit G4EvaporationProbability(G4int anA, G4int aZ, 
-                                    G4double aGamma); 
+    explicit G4EvaporationProbability(G4int anA, G4int aZ, G4double aGamma);
 
-  ~G4EvaporationProbability() override;
+    ~G4EvaporationProbability() override;
 
-  // general method used for evaporation
-  virtual G4double TotalProbability(const G4Fragment& fragment,
-                                    G4double minKinEnergy,
-			            G4double maxKinEnergy,
-			            G4double CB, G4double exEnergy);
+    // general method used for evaporation
+    virtual G4double TotalProbability(const G4Fragment& fragment, G4double minKinEnergy,
+                                      G4double maxKinEnergy, G4double CB, G4double exEnergy);
 
-  // main method to compute full probability for OPTx > 2
-  G4double ComputeProbability(G4double K, G4double CB) override;
+    // main method to compute full probability for OPTx > 2
+    G4double ComputeProbability(G4double K, G4double CB) override;
 
-  G4double CrossSection(G4double K, G4double CB);
+    G4double CrossSection(G4double K, G4double CB);
 
-  G4double RecentXS() const { return recentXS; };
-  
-  // Copy constructor
-  G4EvaporationProbability(const G4EvaporationProbability &right) = delete;
-  const G4EvaporationProbability & operator=
-  (const G4EvaporationProbability &right) = delete;
-  G4bool operator==(const G4EvaporationProbability &right) const = delete;
-  G4bool operator!=(const G4EvaporationProbability &right) const = delete;
+    G4double RecentXS() const { return recentXS; };
 
-protected:
+    // Copy constructor
+    G4EvaporationProbability(const G4EvaporationProbability& right) = delete;
+    const G4EvaporationProbability& operator=(const G4EvaporationProbability& right) = delete;
+    G4bool operator==(const G4EvaporationProbability& right) const = delete;
+    G4bool operator!=(const G4EvaporationProbability& right) const = delete;
 
-  virtual G4double CalcAlphaParam(const G4Fragment& fragment);
- 
-  virtual G4double CalcBetaParam(const G4Fragment& fragment);
+  protected:
 
-private:
+    virtual G4double CalcAlphaParam(const G4Fragment& fragment);
 
-  G4double resA13;
-  G4double lastA;
-  G4double muu;
-  G4double freeU;
-  G4double a0;
-  G4double a1;
-  G4double delta0;
-  G4double delta1;
+    virtual G4double CalcBetaParam(const G4Fragment& fragment);
 
-  // Gamma is A_f(2S_f+1) factor, where A_f is fragment atomic 
-  // number and S_f is fragment spin
-  G4double fGamma;
-  G4double pcoeff;
-  G4double recentXS{0.0};
+  private:
 
-  G4InterfaceToXS* fXSection{nullptr};
-  G4int index{0};
+    G4double resA13;
+    G4double lastA;
+    G4double muu;
+    G4double freeU;
+    G4double a0;
+    G4double a1;
+    G4double delta0;
+    G4double delta1;
+
+    // Gamma is A_f(2S_f+1) factor, where A_f is fragment atomic
+    // number and S_f is fragment spin
+    G4double fGamma;
+    G4double pcoeff;
+    G4double recentXS{0.0};
+
+    G4InterfaceToXS* fXSection{nullptr};
+    G4int index{0};
 };
 
 #endif

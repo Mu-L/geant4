@@ -49,8 +49,8 @@
 // Author: Xin Dong, 25 January 2009 - First implementation from
 //                                     automatic MT conversion.
 // --------------------------------------------------------------------
-#ifndef G4VUPLSplitter_hh
-#define G4VUPLSplitter_hh 1
+#ifndef G4VUPLSPLITTER_HH
+#define G4VUPLSPLITTER_HH
 
 #include "G4AutoLock.hh"
 #include "globals.hh"
@@ -62,6 +62,7 @@ template<class T>  // T is the private data from the object to be split
 class G4VUPLSplitter
 {
   public:
+
     G4VUPLSplitter() { G4MUTEXINIT(mutex); }
 
     // Invoked by the master thread to create a new subinstance
@@ -75,7 +76,8 @@ class G4VUPLSplitter
       ++totalobj;
       // If the number of objects is larger than the available spaces,
       // a re-allocation is needed
-      if (totalobj > workertotalspace) {
+      if (totalobj > workertotalspace)
+      {
         l.unlock();
         NewSubInstances();
         l.lock();
@@ -92,7 +94,8 @@ class G4VUPLSplitter
     void NewSubInstances()
     {
       G4AutoLock l(&mutex);
-      if (workertotalspace >= totalobj) {
+      if (workertotalspace >= totalobj)
+      {
         return;
       }
       // Remember current large size
@@ -101,13 +104,15 @@ class G4VUPLSplitter
       workertotalspace = totalobj + 512;
       // Now re-allocate new space
       offset = (T*)realloc(offset, workertotalspace * sizeof(T));
-      if (offset == nullptr) {
+      if (offset == nullptr)
+      {
         G4Exception("G4VUPLSplitter::NewSubInstances()", "OutOfMemory", FatalException,
                     "Cannot malloc space!");
         return;
       }
       // The newly created objects need to be initialized
-      for (G4int i = originaltotalspace; i < workertotalspace; ++i) {
+      for (G4int i = originaltotalspace; i < workertotalspace; ++i)
+      {
         offset[i].initialize();
       }
     }
@@ -115,7 +120,8 @@ class G4VUPLSplitter
     // Invoked by all threads to free the subinstance array.
     void FreeWorker()
     {
-      if (offset == nullptr) {
+      if (offset == nullptr)
+      {
         return;
       }
       free(offset);
@@ -127,7 +133,8 @@ class G4VUPLSplitter
     void UseWorkArea(T* newOffset)
     {
       // Use recycled work area - which was created previously
-      if (offset != nullptr && offset != newOffset) {
+      if (offset != nullptr && offset != newOffset)
+      {
         G4Exception("G4VUPLSplitter::UseWorkspace()", "TwoWorkspaces", FatalException,
                     "Thread already has workspace - cannot use another.");
       }
@@ -156,7 +163,8 @@ class G4VUPLSplitter
       // from master. We are sure that it has valid data
       G4AutoLock l(&mutex);
       offset = (T*)realloc(offset, totalspace * sizeof(T));
-      if (offset == nullptr) {
+      if (offset == nullptr)
+      {
         G4Exception("G4VUPLSplitter::WorkerCopySubInstanceArray()", "OutOfMemory", FatalException,
                     "Cannot malloc space!");
         return;
@@ -166,12 +174,14 @@ class G4VUPLSplitter
     }
 
   public:
+
     // Per-thread available number of slots
     G4RUN_DLL G4ThreadLocalStatic G4int workertotalspace;
     // Pointer to first instance of an array
     G4RUN_DLL G4ThreadLocalStatic T* offset;
 
   private:
+
     G4int totalobj = 0;  // Total number of instances from master thread
     G4int totalspace = 0;  // Available number of "slots"
     T* sharedOffset = nullptr;

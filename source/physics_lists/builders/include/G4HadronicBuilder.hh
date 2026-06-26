@@ -28,82 +28,80 @@
 //
 // Author V.Ivanchenko 14.05.2020
 //
-// Build hadronic physics 
+// Build hadronic physics
 //
 
-#ifndef G4HadronicBuilder_h
-#define G4HadronicBuilder_h 1
-
-#include "globals.hh"
-#include <vector>
+#ifndef G4HADRONICBUILDER_HH
+#define G4HADRONICBUILDER_HH
 
 #include "G4VComponentCrossSection.hh"
 #include "G4VCrossSectionDataSet.hh"
+#include "globals.hh"
+
+#include <vector>
 
 class G4HadronicBuilder
 {
-private:
+  private:
 
-  // generic methods, Glauber-Gribov cross sections are used.
-  // if the boolean "bert" is true (false) then Bertini cascade is (not) built;
-  // when "bert" is false, then FTFP is used down to zero kinetic energy.
-  
-  static void BuildFTFP_BERT(const std::vector<G4int>& particleList, 
-                             G4bool bert, const G4String& xsName);
+    // generic methods, Glauber-Gribov cross sections are used.
+    // if the boolean "bert" is true (false) then Bertini cascade is (not) built;
+    // when "bert" is false, then FTFP is used down to zero kinetic energy.
 
-  static void BuildFTFQGSP_BERT(const std::vector<G4int>& particleList, 
-                                G4bool bert, const G4String& xsName);
+    static void BuildFTFP_BERT(const std::vector<G4int>& particleList, G4bool bert,
+                               const G4String& xsName);
 
-  static void BuildQGSP_FTFP_BERT(const std::vector<G4int>& particleList, 
-                                  G4bool bert, G4bool quasiElastic,
+    static void BuildFTFQGSP_BERT(const std::vector<G4int>& particleList, G4bool bert,
                                   const G4String& xsName);
 
-  static void BuildINCLXX(const std::vector<G4int>& particleList, 
-                             G4bool bert, const G4String& xsName);
+    static void BuildQGSP_FTFP_BERT(const std::vector<G4int>& particleList, G4bool bert,
+                                    G4bool quasiElastic, const G4String& xsName);
 
+    static void BuildINCLXX(const std::vector<G4int>& particleList, G4bool bert,
+                            const G4String& xsName);
 
-public:
+  public:
 
-  // methods to build elastic and inelastic physics per particle category
-  static void BuildElastic(const std::vector<G4int>& particleList);
+    // methods to build elastic and inelastic physics per particle category
+    static void BuildElastic(const std::vector<G4int>& particleList);
 
-  static void BuildHyperonsFTFP_BERT();
+    static void BuildHyperonsFTFP_BERT();
 
-  static void BuildHyperonsFTFQGSP_BERT();
+    static void BuildHyperonsFTFQGSP_BERT();
 
-  static void BuildHyperonsQGSP_FTFP_BERT(G4bool quasiElastic);
+    static void BuildHyperonsQGSP_FTFP_BERT(G4bool quasiElastic);
 
-  static void BuildKaonsFTFP_BERT();
+    static void BuildKaonsFTFP_BERT();
 
-  static void BuildKaonsFTFQGSP_BERT();
+    static void BuildKaonsFTFQGSP_BERT();
 
-  static void BuildKaonsQGSP_FTFP_BERT(G4bool quasiElastic);
+    static void BuildKaonsQGSP_FTFP_BERT(G4bool quasiElastic);
 
-  static void BuildAntiLightIonsFTFP();
+    static void BuildAntiLightIonsFTFP();
 
-  static void BuildAntiLightIonsINCLXX();
+    static void BuildAntiLightIonsINCLXX();
 
-  //static void BuildAntiLightIonsQGSP_FTFP(G4bool quasiElastic);
+    // static void BuildAntiLightIonsQGSP_FTFP(G4bool quasiElastic);
 
-  static void BuildBCHadronsFTFP_BERT();
+    static void BuildBCHadronsFTFP_BERT();
 
-  static void BuildBCHadronsFTFQGSP_BERT();
+    static void BuildBCHadronsFTFQGSP_BERT();
 
-  static void BuildBCHadronsQGSP_FTFP_BERT(G4bool quasiElastic);
+    static void BuildBCHadronsQGSP_FTFP_BERT(G4bool quasiElastic);
 
-  // method to create some decays for heavy hadrons
-  static void BuildDecayTableForBCHadrons();
+    // method to create some decays for heavy hadrons
+    static void BuildDecayTableForBCHadrons();
 
-  // methods for nuclear interactions of light hypernuclei and anti-hypernuclei projectiles
-  // (note that: QGS cannot handle nuclei projectiles of any kind; INCLXX is currently
-  // the only intra-nuclear cascade model capable of handling light hypernuclei - but not
-  // light anti-hypernuclei - so only the two reference physics lists FTFP_BERT and 
-  // FTFP_INCLXX are able to simulate nuclear interactions of light hypernuclei and
-  //  anti-hypernuclei).
-  static void BuildHyperNucleiFTFP_BERT();
-  static void BuildHyperAntiNucleiFTFP_BERT();
-  static void BuildHyperNucleiFTFP_INCLXX();
-  static void BuildFTFP_INCLXX( const std::vector< G4int >& partList, const G4String& xsName );
+    // methods for nuclear interactions of light hypernuclei and anti-hypernuclei projectiles
+    // (note that: QGS cannot handle nuclei projectiles of any kind; INCLXX is currently
+    // the only intra-nuclear cascade model capable of handling light hypernuclei - but not
+    // light anti-hypernuclei - so only the two reference physics lists FTFP_BERT and
+    // FTFP_INCLXX are able to simulate nuclear interactions of light hypernuclei and
+    //  anti-hypernuclei).
+    static void BuildHyperNucleiFTFP_BERT();
+    static void BuildHyperAntiNucleiFTFP_BERT();
+    static void BuildHyperNucleiFTFP_INCLXX();
+    static void BuildFTFP_INCLXX(const std::vector<G4int>& partList, const G4String& xsName);
 };
 
 #endif

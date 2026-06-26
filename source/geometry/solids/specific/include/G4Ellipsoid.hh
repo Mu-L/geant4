@@ -46,21 +46,22 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UELLIPSOID 1
+#  define G4GEOM_USE_UELLIPSOID 1
 #endif
 
 #if (defined(G4GEOM_USE_UELLIPSOID) && defined(G4GEOM_USE_SYS_USOLIDS))
-  #define G4UEllipsoid G4Ellipsoid
-  #include "G4UEllipsoid.hh"
+#  define G4UEllipsoid G4Ellipsoid
+#  include "G4UEllipsoid.hh"
 #else
 
-#include <CLHEP/Units/PhysicalConstants.h>
+#  include "G4Polyhedron.hh"
+#  include "G4VSolid.hh"
 
-#include "G4VSolid.hh"
-#include "G4Polyhedron.hh"
+#  include <CLHEP/Units/PhysicalConstants.h>
 
 /**
  * @brief G4Ellipsoid is an ellipsoidal solid, optionally cut at a given Z.
+ * @ingroup geometry_solids_specific
  */
 
 class G4Ellipsoid : public G4VSolid
@@ -76,12 +77,8 @@ class G4Ellipsoid : public G4VSolid
      *  @param[in] zBottomCut Optional lower cut plane level in Z.
      *  @param[in] zTopCut Optional upper cut plane level in Z.
      */
-    G4Ellipsoid(const G4String& name,
-                      G4double xSemiAxis,
-                      G4double ySemiAxis,
-                      G4double zSemiAxis,
-                      G4double zBottomCut = 0.,
-                      G4double zTopCut = 0.);
+    G4Ellipsoid(const G4String& name, G4double xSemiAxis, G4double ySemiAxis, G4double zSemiAxis,
+                G4double zBottomCut = 0., G4double zTopCut = 0.);
 
     /**
      * Destructor.
@@ -94,22 +91,21 @@ class G4Ellipsoid : public G4VSolid
     inline G4double GetDx() const;
     inline G4double GetDy() const;
     inline G4double GetDz() const;
-    inline G4double GetSemiAxisMax (G4int i) const;
+    inline G4double GetSemiAxisMax(G4int i) const;
     inline G4double GetZBottomCut() const;
     inline G4double GetZTopCut() const;
 
     /**
      * Modifiers.
      */
-    inline void SetSemiAxis (G4double x, G4double y, G4double z);
-    inline void SetZCuts (G4double newzBottomCut, G4double newzTopCut);
+    inline void SetSemiAxis(G4double x, G4double y, G4double z);
+    inline void SetZCuts(G4double newzBottomCut, G4double newzTopCut);
 
     /**
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -129,10 +125,9 @@ class G4Ellipsoid : public G4VSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pmin, G4double& pmax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pmin,
+                           G4double& pmax) const override;
 
     /**
      * Concrete implementations of the expected query interfaces for
@@ -140,14 +135,11 @@ class G4Ellipsoid : public G4VSolid
      */
     EInside Inside(const G4ThreeVector& p) const override;
     G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
-    G4double DistanceToIn(const G4ThreeVector& p,
-                          const G4ThreeVector& v) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
     G4double DistanceToIn(const G4ThreeVector& p) const override;
-    G4double DistanceToOut(const G4ThreeVector& p,
-                           const G4ThreeVector& v,
-                           const G4bool calcNorm = false,
-                                 G4bool* validNorm = nullptr,
-                                 G4ThreeVector* n = nullptr) const override;
+    G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
     G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
@@ -221,35 +213,35 @@ class G4Ellipsoid : public G4VSolid
   private:
 
     /** Ellipsoid parameters. */
-    G4double fDx;         // X semi-axis
-    G4double fDy;         // Y semi-axis
-    G4double fDz;         // Z semi-axis
-    G4double fZBottomCut; // Bottom cut in Z
-    G4double fZTopCut;    // Top cut in Z
+    G4double fDx;  // X semi-axis
+    G4double fDy;  // Y semi-axis
+    G4double fDz;  // Z semi-axis
+    G4double fZBottomCut;  // Bottom cut in Z
+    G4double fZTopCut;  // Top cut in Z
 
     /** Precalculated cached values. */
-    G4double halfTolerance; // Surface tolerance
-    G4double fXmax;         // X extent
-    G4double fYmax;         // Y extent
-    G4double fRsph;         // Radius of bounding sphere
-    G4double fR;            // Radius of sphere after scaling
-    G4double fSx;           // X scale factor
-    G4double fSy;           // Y scale factor
-    G4double fSz;           // Z scale factor
-    G4double fZMidCut;      // Middle position between cuts after scaling
-    G4double fZDimCut;      // Half distance between cut after scaling
-    G4double fQ1; // 1st coefficient in approximation of dist = Q1*(x^2+y^2+z^2) - Q2
-    G4double fQ2; // 2nd coefficient in approximation of dist = Q1*(x^2+y^2+z^2) - Q2
+    G4double halfTolerance;  // Surface tolerance
+    G4double fXmax;  // X extent
+    G4double fYmax;  // Y extent
+    G4double fRsph;  // Radius of bounding sphere
+    G4double fR;  // Radius of sphere after scaling
+    G4double fSx;  // X scale factor
+    G4double fSy;  // Y scale factor
+    G4double fSz;  // Z scale factor
+    G4double fZMidCut;  // Middle position between cuts after scaling
+    G4double fZDimCut;  // Half distance between cut after scaling
+    G4double fQ1;  // 1st coefficient in approximation of dist = Q1*(x^2+y^2+z^2) - Q2
+    G4double fQ2;  // 2nd coefficient in approximation of dist = Q1*(x^2+y^2+z^2) - Q2
 
-    G4double fCubicVolume = 0.0; // Volume
-    G4double fSurfaceArea = 0.0; // Surface area
-    mutable G4double fLateralArea = 0.0; // Lateral surface area
+    G4double fCubicVolume = 0.0;  // Volume
+    G4double fSurfaceArea = 0.0;  // Surface area
+    mutable G4double fLateralArea = 0.0;  // Lateral surface area
     mutable G4bool fRebuildPolyhedron = false;
     mutable G4Polyhedron* fpPolyhedron = nullptr;
 };
 
-#include "G4Ellipsoid.icc"
+#  include "G4Ellipsoid.icc"
 
 #endif  // defined(G4GEOM_USE_UELLIPSOID) && defined(G4GEOM_USE_SYS_USOLIDS)
 
-#endif // G4ELLIPSOID_HH
+#endif  // G4ELLIPSOID_HH

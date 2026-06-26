@@ -36,8 +36,8 @@
 
 // Author: Makoto Asai, 1996
 // --------------------------------------------------------------------
-#ifndef G4StackingMessenger_hh
-#define G4StackingMessenger_hh 1
+#ifndef G4STACKINGMESSENGER_HH
+#define G4STACKINGMESSENGER_HH
 
 #include "G4UImessenger.hh"
 
@@ -51,12 +51,12 @@ class G4StackingMessenger : public G4UImessenger
   public:
 
     G4StackingMessenger(G4StackManager* fCont);
-   ~G4StackingMessenger() override;
+    ~G4StackingMessenger() override;
     void SetNewValue(G4UIcommand* command, G4String newValues) override;
 
   private:
 
-    G4StackManager* fContainer = nullptr; // Cannot be null after construction
+    G4StackManager* fContainer = nullptr;  // Cannot be null after construction
     G4UIdirectory* stackDir;
     G4UIcmdWithoutParameter* statusCmd;
     G4UIcmdWithAnInteger* clearCmd;
@@ -64,4 +64,3 @@ class G4StackingMessenger : public G4UImessenger
 };
 
 #endif
-

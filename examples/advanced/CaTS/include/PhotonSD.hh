@@ -35,7 +35,6 @@
 //
 // History
 //   October 18th, 2021 : first implementation
-//
 // ********************************************************************
 //
 /// \file PhotonSD.hh

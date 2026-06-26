@@ -24,34 +24,33 @@
 // ********************************************************************
 //
 //
-// 
-// 19-12-2008, first implementation, Luciano Pandola 
+//
+// 19-12-2008, first implementation, Luciano Pandola
 // 18-03-2009, clean up according to Vladimir's suggestions, Luciano Pandola
 //
 // -----------------------------------------------------------------------------
 
 #include "G4RayleighScattering.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4LivermoreRayleighModel.hh"
+
 #include "G4Gamma.hh"
+#include "G4LivermoreRayleighModel.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4RayleighScattering::G4RayleighScattering(const G4String& processName,
-  G4ProcessType type):G4VEmProcess (processName, type),
-    isInitialised(false)
+G4RayleighScattering::G4RayleighScattering(const G4String& processName, G4ProcessType type)
+  : G4VEmProcess(processName, type), isInitialised(false)
 {
   SetStartFromNullFlag(false);
   SetBuildTableFlag(true);
   SetProcessSubType(fRayleigh);
-  SetMinKinEnergyPrim(150*CLHEP::keV);
+  SetMinKinEnergyPrim(150 * CLHEP::keV);
   SetSplineFlag(false);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
- 
-G4RayleighScattering::~G4RayleighScattering()
-{}
+
+G4RayleighScattering::~G4RayleighScattering() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -64,11 +63,15 @@ G4bool G4RayleighScattering::IsApplicable(const G4ParticleDefinition& p)
 
 void G4RayleighScattering::InitialiseProcess(const G4ParticleDefinition*)
 {
-  if(!isInitialised) {
+  if (!isInitialised)
+  {
     isInitialised = true;
-    if(!EmModel()) { SetEmModel(new G4LivermoreRayleighModel); }
+    if (!EmModel())
+    {
+      SetEmModel(new G4LivermoreRayleighModel);
+    }
     AddEmModel(1, EmModel());
-  } 
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

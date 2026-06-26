@@ -32,13 +32,13 @@
 // File name:     G4hICRU49He
 //
 // Author:        V.Ivanchenko (Vladimir.Ivanchenko@cern.ch)
-// 
+//
 // Creation date: 20 July 2000
 //
-// Modifications: 
+// Modifications:
 // 20/07/2000  V.Ivanchenko First implementation
 //
-// Class Description: 
+// Class Description:
 //
 // Electronic stopping power parameterised according to
 // ICRU Report N49, 1993. J.F. Ziegler model for He ion.
@@ -47,36 +47,34 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4hICRU49He_h
-#define G4hICRU49He_h 1
+#ifndef G4HICRU49HE_HH
+#define G4HICRU49HE_HH
 
-#include "globals.hh"
 #include "G4VhElectronicStoppingPower.hh"
+#include "globals.hh"
 
 class G4Material;
 
 class G4hICRU49He : public G4VhElectronicStoppingPower
 {
-public:
-  explicit G4hICRU49He();
+  public:
 
-  ~G4hICRU49He();
+    explicit G4hICRU49He();
 
-  G4bool HasMaterial(const G4Material* material) override;
+    ~G4hICRU49He();
 
-  G4double StoppingPower(const G4Material* material,
-                               G4double kineticEnergy) override;
+    G4bool HasMaterial(const G4Material* material) override;
 
-  G4double ElectronicStoppingPower(G4double z,
-                                   G4double kineticEnergy) const override;
- 
-private:
+    G4double StoppingPower(const G4Material* material, G4double kineticEnergy) override;
 
-  void SetMoleculaNumber(G4int number) {iMolecula = number;};
+    G4double ElectronicStoppingPower(G4double z, G4double kineticEnergy) const override;
 
-  G4double rateMass;         // HeMassAMU/ProtonMassAMU
-  G4int iMolecula;           // index in the molecula's table
- 
+  private:
+
+    void SetMoleculaNumber(G4int number) { iMolecula = number; };
+
+    G4double rateMass;  // HeMassAMU/ProtonMassAMU
+    G4int iMolecula;  // index in the molecula's table
 };
 
 #endif

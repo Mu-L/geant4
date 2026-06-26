@@ -31,51 +31,52 @@
 // This is a singleton class to store all hadronic interactions
 // Class Description - End
 
-#ifndef G4HadronicInteractionRegistry_h
-#define G4HadronicInteractionRegistry_h 1
+#ifndef G4HADRONICINTERACTIONREGISTRY_HH
+#define G4HADRONICINTERACTIONREGISTRY_HH
+
+#include "G4ThreadLocalSingleton.hh"
+#include "globals.hh"
 
 #include <vector>
-#include "globals.hh"
-#include "G4ThreadLocalSingleton.hh"
 
 class G4HadronicInteraction;
 
 class G4HadronicInteractionRegistry
 {
-friend class G4ThreadLocalSingleton<G4HadronicInteractionRegistry>;
+    friend class G4ThreadLocalSingleton<G4HadronicInteractionRegistry>;
 
-public:
+  public:
 
-  static G4HadronicInteractionRegistry* Instance();
-  // access 
-  
-  ~G4HadronicInteractionRegistry();
+    static G4HadronicInteractionRegistry* Instance();
+    // access
 
-  void RegisterMe(G4HadronicInteraction * aModel);
-  // register new model
+    ~G4HadronicInteractionRegistry();
 
-  void RemoveMe(G4HadronicInteraction * aModel);
-  // deregister model
+    void RegisterMe(G4HadronicInteraction* aModel);
+    // register new model
 
-  void Clean();
-  // delete all models
+    void RemoveMe(G4HadronicInteraction* aModel);
+    // deregister model
 
-  void InitialiseModels();
-  // initialise all models before the run
+    void Clean();
+    // delete all models
 
-  G4HadronicInteraction* FindModel(const G4String& name);
-  // find existing hadronic interaction by name
+    void InitialiseModels();
+    // initialise all models before the run
 
-  std::vector<G4HadronicInteraction*> FindAllModels(const G4String& name);
-  // find all existing hadronic interactions by name
+    G4HadronicInteraction* FindModel(const G4String& name);
+    // find existing hadronic interaction by name
 
-private:
+    std::vector<G4HadronicInteraction*> FindAllModels(const G4String& name);
+    // find all existing hadronic interactions by name
 
-  G4HadronicInteractionRegistry();
+  private:
 
-  static G4ThreadLocal G4HadronicInteractionRegistry* instance;
+    G4HadronicInteractionRegistry();
 
-  std::vector<G4HadronicInteraction*> allModels;
+    static G4ThreadLocal G4HadronicInteractionRegistry* instance;
+
+    std::vector<G4HadronicInteraction*> allModels;
 };
 
 #endif

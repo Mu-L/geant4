@@ -27,6 +27,7 @@
 //
 // G4PSCellFluxForCylinder3D
 #include "G4PSCellFluxForCylinder3D.hh"
+
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 
@@ -48,28 +49,25 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-G4PSCellFluxForCylinder3D::G4PSCellFluxForCylinder3D(const G4String& name, G4int ni,
-                                                     G4int nj, G4int nk,
-                                                     G4int depi, G4int depj,
-                                                     G4int depk)
+G4PSCellFluxForCylinder3D::G4PSCellFluxForCylinder3D(const G4String& name, G4int ni, G4int nj,
+                                                     G4int nk, G4int depi, G4int depj, G4int depk)
   : G4PSCellFlux3D(name, ni, nj, nk, depi, depj, depk)
 {
   nSegment[0] = nSegment[1] = nSegment[2] = 0;
 }
 
-G4PSCellFluxForCylinder3D::G4PSCellFluxForCylinder3D(const G4String& name,
-                                                     const G4String& unit,
-                                                     G4int ni, G4int nj,
-                                                     G4int nk, G4int depi,
+G4PSCellFluxForCylinder3D::G4PSCellFluxForCylinder3D(const G4String& name, const G4String& unit,
+                                                     G4int ni, G4int nj, G4int nk, G4int depi,
                                                      G4int depj, G4int depk)
   : G4PSCellFlux3D(name, unit, ni, nj, nk, depi, depj, depk)
 {
   nSegment[0] = nSegment[1] = nSegment[2] = 0;
 }
 
-void G4PSCellFluxForCylinder3D::SetCylinderSize(G4ThreeVector cylSize, G4double StartAng, G4double AngSpan)
+void G4PSCellFluxForCylinder3D::SetCylinderSize(G4ThreeVector cylSize, G4double StartAng,
+                                                G4double AngSpan)
 {
-  cylinderSize = cylSize;   // rMin, rMax, halfZ
+  cylinderSize = cylSize;  // rMin, rMax, halfZ
   fAngle[0] = StartAng;
   fAngle[1] = AngSpan;
 }
@@ -88,14 +86,13 @@ G4double G4PSCellFluxForCylinder3D::ComputeVolume(G4Step*, G4int idx)
   G4double dRArea = (r1 * r1 - r0 * r0) * pi;
 
   // cylinderSize is given in Half Size
-  G4double fullz    = cylinderSize[2] / nSegment[0] * 2.;
-  G4double phiRatio = (fAngle[1] / (CLHEP::twopi*rad)) / nSegment[1];
-  G4double v        = dRArea * fullz * phiRatio;
+  G4double fullz = cylinderSize[2] / nSegment[0] * 2.;
+  G4double phiRatio = (fAngle[1] / (CLHEP::twopi * rad)) / nSegment[1];
+  G4double v = dRArea * fullz * phiRatio;
 
-  if(verboseLevel > 9)
+  if (verboseLevel > 9)
   {
-    G4cout << " r0= " << r0 / cm << "  r1= " << r1 / cm
-           << " fullz=" << fullz / cm << G4endl;
+    G4cout << " r0= " << r0 / cm << "  r1= " << r1 / cm << " fullz=" << fullz / cm << G4endl;
     G4cout << " idx= " << idx << "  v(cm3)= " << v / cm3 << G4endl;
   }
 

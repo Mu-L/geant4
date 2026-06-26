@@ -47,28 +47,30 @@
 // Modeling Radiation Chemistry in the Geant4 Toolkit, M. Karamitros et al.,
 // Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#ifndef G4VITTimeStepper_H
-#define G4VITTimeStepper_H
+#ifndef G4VITTIMESTEPPER_HH
+#define G4VITTIMESTEPPER_HH
 
-#include "G4Track.hh"
 #include "G4ITReactionTable.hh"
 #include "G4ReferenceCountedHandle.hh"
-#include "AddClone_def.hh"
+#include "G4Track.hh"
 #include "G4memory.hh"
 
-//typedef G4ReferenceCountedHandle< std::vector<G4Track*> > G4TrackVectorHandle;
-using G4TrackVectorHandle = std::shared_ptr<std::vector<G4Track *>>;
+#include "AddClone_def.hh"
+
+// typedef G4ReferenceCountedHandle< std::vector<G4Track*> > G4TrackVectorHandle;
+using G4TrackVectorHandle = std::shared_ptr<std::vector<G4Track*>>;
 
 /**
-  * Before stepping all tracks G4Scheduler calls all the G4VITModel
-  * which may contain a G4VITTimeStepper (optionnal).
-  * G4VITTimeStepper returns what should be the next global time step.
-  * Time step that will be used to step all tracks.
-  */
+ * Before stepping all tracks G4Scheduler calls all the G4VITModel
+ * which may contain a G4VITTimeStepper (optionnal).
+ * G4VITTimeStepper returns what should be the next global time step.
+ * Time step that will be used to step all tracks.
+ */
 
 class G4VITTimeStepComputer
 {
-public:
+  public:
+
     G4VITTimeStepComputer();
     virtual ~G4VITTimeStepComputer();
 
@@ -80,64 +82,67 @@ public:
 
     // First initialization (done once for all at the begin of the run)
     // eg. check if the reaction table is given ...
-    inline virtual void Initialize(){;}
+    inline virtual void Initialize() { ; }
 
     // Preparation part
     static void SetTimes(const G4double&, const G4double&);
-//    inline virtual void PrepareForAllProcessors(){;}
-    inline virtual void Prepare() ;
+    //    inline virtual void PrepareForAllProcessors(){;}
+    inline virtual void Prepare();
 
     virtual G4double CalculateStep(const G4Track&, const G4double&) = 0;
     virtual G4double CalculateMinTimeStep(G4double, G4double) = 0;
 
     inline G4TrackVectorHandle GetReactants();
     inline virtual void ResetReactants()
-//    {fReactants = 0;}
-    {fReactants.reset();}
+    //    {fReactants = 0;}
+    {
+      fReactants.reset();
+    }
 
     //
-    inline G4double GetSampledMinTimeStep() ;
-    
+    inline G4double GetSampledMinTimeStep();
+
     inline void SetReactionTable(const G4ITReactionTable*);
     inline const G4ITReactionTable* GetReactionTable();
 
+  protected:
 
-protected :
-    static G4ThreadLocal G4double fCurrentGlobalTime ;
-    static G4ThreadLocal G4double fUserMinTimeStep   ;
+    static G4ThreadLocal G4double fCurrentGlobalTime;
+    static G4ThreadLocal G4double fUserMinTimeStep;
 
-    G4double fSampledMinTimeStep ;
+    G4double fSampledMinTimeStep;
     G4TrackVectorHandle fReactants;
 
     const G4ITReactionTable* fpReactionTable;
 
-private:
-    G4int fVerbose ;
+  private:
+
+    G4int fVerbose;
 };
 
 inline void G4VITTimeStepComputer::SetReactionTable(const G4ITReactionTable* table)
 {
-    fpReactionTable = table;
+  fpReactionTable = table;
 }
 
 inline const G4ITReactionTable* G4VITTimeStepComputer::GetReactionTable()
 {
-    return fpReactionTable ;
+  return fpReactionTable;
 }
 
 inline void G4VITTimeStepComputer::Prepare()
 {
-//    fReactants = 0 ;
-	fReactants.reset() ;
+  //    fReactants = 0 ;
+  fReactants.reset();
 }
 
 inline G4double G4VITTimeStepComputer::GetSampledMinTimeStep()
 {
-    return fSampledMinTimeStep ;
+  return fSampledMinTimeStep;
 }
 
 inline G4TrackVectorHandle G4VITTimeStepComputer::GetReactants()
 {
-    return  fReactants ;
+  return fReactants;
 }
-#endif // G4VITTimeStepper_H
+#endif  // G4VITTimeStepper_H

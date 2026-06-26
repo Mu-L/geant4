@@ -31,17 +31,17 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrVolumeMgr_hh
-#define G4tgrVolumeMgr_hh 1
+#ifndef G4TGRVOLUMEMGR_HH
+#define G4TGRVOLUMEMGR_HH
 
-#include "globals.hh"
+#include "G4tgrElement.hh"
+#include "G4tgrIsotope.hh"
+#include "G4tgrMaterial.hh"
+#include "G4tgrPlace.hh"
+#include "G4tgrRotationMatrix.hh"
 #include "G4tgrSolid.hh"
 #include "G4tgrVolume.hh"
-#include "G4tgrPlace.hh"
-#include "G4tgrIsotope.hh"
-#include "G4tgrElement.hh"
-#include "G4tgrMaterial.hh"
-#include "G4tgrRotationMatrix.hh"
+#include "globals.hh"
 
 #include <map>
 
@@ -54,42 +54,39 @@ class G4tgrVolumeMgr
   public:
 
     static G4tgrVolumeMgr* GetInstance();
-      // Get the only instance
+    // Get the only instance
 
     G4tgrSolid* CreateSolid(const std::vector<G4String>& wl, G4bool bVOLUtag);
 
     void RegisterParentChild(const G4String& parentName, const G4tgrPlace* pl);
-      // Add to theG4tgrVolumeTree
+    // Add to theG4tgrVolumeTree
 
     G4tgrSolid* FindSolid(const G4String& name, G4bool exists = false);
-      // Find a G4tgrSolid with name 'name'. If it is not found:
-      // if exists is true, exit; if exists is false, return nullptr
+    // Find a G4tgrSolid with name 'name'. If it is not found:
+    // if exists is true, exit; if exists is false, return nullptr
 
     G4tgrVolume* FindVolume(const G4String& volname, G4bool exists = false);
-      // Find a G4tgrVolume with name 'volname'. If it is not found:
-      // if exists is true, exit; if exists is false, return nullptr
+    // Find a G4tgrVolume with name 'volname'. If it is not found:
+    // if exists is true, exit; if exists is false, return nullptr
 
-    std::vector<G4tgrVolume*> FindVolumes(const G4String& volname,
-                                          G4bool exists);
-      // Find all G4tgrVolume's with name 'volname'. '*' can be used in the
-      // name to mean 'any character' or 'any substring'. If it is not found:
-      // if exists is true, exit; if exists is false, return nullptr
+    std::vector<G4tgrVolume*> FindVolumes(const G4String& volname, G4bool exists);
+    // Find all G4tgrVolume's with name 'volname'. '*' can be used in the
+    // name to mean 'any character' or 'any substring'. If it is not found:
+    // if exists is true, exit; if exists is false, return nullptr
 
     const G4tgrVolume* GetTopVolume();
-      // Find the top of the volume tree
+    // Find the top of the volume tree
 
-    std::pair<G4mmapspl::iterator, G4mmapspl::iterator>
-    GetChildren(const G4String& name);
-      // Find the list of G4tgrPlace children of G4tgrVolume 'name'
+    std::pair<G4mmapspl::iterator, G4mmapspl::iterator> GetChildren(const G4String& name);
+    // Find the list of G4tgrPlace children of G4tgrVolume 'name'
 
     void DumpSummary();
-      // Dump summary
+    // Dump summary
     void DumpVolumeTree();
-      // Dump to cout the tree of G4tgrVolume's
-    void DumpVolumeLeaf(const G4tgrVolume* vol, unsigned int copyNo,
-                        unsigned int leafDepth);
-      // Dump a G4tgrVolume indicating its copy no
-      // and its depth (number of ancestors)
+    // Dump to cout the tree of G4tgrVolume's
+    void DumpVolumeLeaf(const G4tgrVolume* vol, unsigned int copyNo, unsigned int leafDepth);
+    // Dump a G4tgrVolume indicating its copy no
+    // and its depth (number of ancestors)
 
     void RegisterMe(G4tgrSolid* vol);
     void UnRegisterMe(G4tgrSolid* vol);
@@ -121,16 +118,16 @@ class G4tgrVolumeMgr
   private:
 
     G4mapssol theG4tgrSolidMap;
-      // Map of G4tgrSolid's: G4String is the G4tgrSolid name,
-      // G4tgrSolid* the pointer to it
+    // Map of G4tgrSolid's: G4String is the G4tgrSolid name,
+    // G4tgrSolid* the pointer to it
 
     G4mapsvol theG4tgrVolumeMap;
-      // Map of G4tgrVolume's: G4String is the G4tgrVolume name,
-      // G4tgrVolume* the pointer to it
+    // Map of G4tgrVolume's: G4String is the G4tgrVolume name,
+    // G4tgrVolume* the pointer to it
 
     G4mmapspl theG4tgrVolumeTree;
-      // Hierarchy tree of G4tgrVolume's: G4String is the name
-      // of the parent G4tgrVolume, G4tgrPlace* the pointers to children
+    // Hierarchy tree of G4tgrVolume's: G4String is the name
+    // of the parent G4tgrVolume, G4tgrPlace* the pointers to children
 
     static G4ThreadLocal G4tgrVolumeMgr* theInstance;
 

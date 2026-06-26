@@ -30,8 +30,8 @@
 
 // Author: Makoto Asai - 02/Feb/96
 // --------------------------------------------------------------------
-#ifndef G4StackedTrack_hh
-#define G4StackedTrack_hh 1
+#ifndef G4STACKEDTRACK_HH
+#define G4STACKEDTRACK_HH
 
 class G4VTrajectory;
 class G4Track;
@@ -42,8 +42,9 @@ class G4StackedTrack
 
     G4StackedTrack() = default;
     G4StackedTrack(G4Track* aTrack, G4VTrajectory* aTraj = nullptr)
-      : track(aTrack), trajectory(aTraj) {}
-   ~G4StackedTrack() = default;
+      : track(aTrack), trajectory(aTraj)
+    {}
+    ~G4StackedTrack() = default;
 
     inline G4Track* GetTrack() const { return track; }
     inline G4VTrajectory* GetTrajectory() const { return trajectory; }

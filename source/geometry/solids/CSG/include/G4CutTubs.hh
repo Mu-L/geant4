@@ -43,19 +43,20 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UCTUBS 1
+#  define G4GEOM_USE_UCTUBS 1
 #endif
 
 #if defined(G4GEOM_USE_UCTUBS)
-  #define G4UCutTubs G4CutTubs
-  #include "G4UCutTubs.hh"
+#  define G4UCutTubs G4CutTubs
+#  include "G4UCutTubs.hh"
 #else
 
-#include "G4CSGSolid.hh"
-#include "G4Polyhedron.hh"
+#  include "G4CSGSolid.hh"
+#  include "G4Polyhedron.hh"
 
 /**
  * @brief G4CutTubs is a tube with possible cuts in +-Z.
+ * @ingroup geometry_solids_csg
  */
 
 class G4CutTubs : public G4CSGSolid
@@ -73,14 +74,8 @@ class G4CutTubs : public G4CSGSolid
      *  @param[in] pLowNorm Outside normal vector at -Z.
      *  @param[in] pHighNorm Outside normal vector at +Z.
      */
-    G4CutTubs( const G4String& pName,
-                     G4double pRMin,
-                     G4double pRMax,
-                     G4double pDz,
-                     G4double pSPhi,
-                     G4double pDPhi,
-                     G4ThreeVector pLowNorm,
-                     G4ThreeVector pHighNorm );
+    G4CutTubs(const G4String& pName, G4double pRMin, G4double pRMax, G4double pDz, G4double pSPhi,
+              G4double pDPhi, G4ThreeVector pLowNorm, G4ThreeVector pHighNorm);
 
     /**
      * Default destructor.
@@ -90,26 +85,26 @@ class G4CutTubs : public G4CSGSolid
     /**
      * Accessors.
      */
-    inline G4double GetInnerRadius   () const;
-    inline G4double GetOuterRadius   () const;
-    inline G4double GetZHalfLength   () const;
-    inline G4double GetStartPhiAngle () const;
-    inline G4double GetDeltaPhiAngle () const;
-    inline G4double GetSinStartPhi   () const;
-    inline G4double GetCosStartPhi   () const;
-    inline G4double GetSinEndPhi     () const;
-    inline G4double GetCosEndPhi     () const;
-    inline G4ThreeVector GetLowNorm  () const;
-    inline G4ThreeVector GetHighNorm () const;
+    inline G4double GetInnerRadius() const;
+    inline G4double GetOuterRadius() const;
+    inline G4double GetZHalfLength() const;
+    inline G4double GetStartPhiAngle() const;
+    inline G4double GetDeltaPhiAngle() const;
+    inline G4double GetSinStartPhi() const;
+    inline G4double GetCosStartPhi() const;
+    inline G4double GetSinEndPhi() const;
+    inline G4double GetCosEndPhi() const;
+    inline G4ThreeVector GetLowNorm() const;
+    inline G4ThreeVector GetHighNorm() const;
 
     /**
      * Modifiers.
      */
-    inline void SetInnerRadius   (G4double newRMin);
-    inline void SetOuterRadius   (G4double newRMax);
-    inline void SetZHalfLength   (G4double newDz);
-    inline void SetStartPhiAngle (G4double newSPhi, G4bool trig=true);
-    inline void SetDeltaPhiAngle (G4double newDPhi);
+    inline void SetInnerRadius(G4double newRMin);
+    inline void SetOuterRadius(G4double newRMax);
+    inline void SetZHalfLength(G4double newDz);
+    inline void SetStartPhiAngle(G4double newSPhi, G4bool trig = true);
+    inline void SetDeltaPhiAngle(G4double newDPhi);
 
     /**
      * Returning an estimation of the solid volume (capacity) and
@@ -135,24 +130,21 @@ class G4CutTubs : public G4CSGSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pmin, G4double& pmax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pmin,
+                           G4double& pmax) const override;
 
     /**
      * Concrete implementations of the expected query interfaces for
      * solids, as defined in the base class G4VSolid.
      */
-    EInside Inside( const G4ThreeVector& p ) const override;
-    G4ThreeVector SurfaceNormal( const G4ThreeVector& p ) const override;
-    G4double DistanceToIn(const G4ThreeVector& p,
-                          const G4ThreeVector& v) const override;
+    EInside Inside(const G4ThreeVector& p) const override;
+    G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
     G4double DistanceToIn(const G4ThreeVector& p) const override;
     G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
-                           const G4bool calcNorm = false,
-                                 G4bool* validNorm = nullptr,
-                                 G4ThreeVector* n = nullptr) const override;
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
     G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
@@ -175,13 +167,13 @@ class G4CutTubs : public G4CSGSolid
     /**
      * Streams the object contents to an output stream.
      */
-    std::ostream& StreamInfo( std::ostream& os ) const override;
+    std::ostream& StreamInfo(std::ostream& os) const override;
 
     /**
      * Methods for creating graphical representations (i.e. for visualisation).
      */
-    void DescribeYourselfTo ( G4VGraphicsScene& scene ) const override;
-    G4Polyhedron* CreatePolyhedron () const override;
+    void DescribeYourselfTo(G4VGraphicsScene& scene) const override;
+    G4Polyhedron* CreatePolyhedron() const override;
 
     /**
      * Fake default constructor for usage restricted to direct object
@@ -219,7 +211,7 @@ class G4CutTubs : public G4CSGSolid
      * Algorithm for SurfaceNormal() following the original specification
      * for points not on the surface.
      */
-    G4ThreeVector ApproxSurfaceNormal( const G4ThreeVector& p ) const;
+    G4ThreeVector ApproxSurfaceNormal(const G4ThreeVector& p) const;
 
     /**
      * Checks if the cutted planes are crossing.
@@ -242,8 +234,7 @@ class G4CutTubs : public G4CSGSolid
     mutable G4double fZMin, fZMax;
 
     /** Cached trigonometric values. */
-    G4double sinCPhi, cosCPhi, cosHDPhi, cosHDPhiOT, cosHDPhiIT,
-             sinSPhi, cosSPhi, sinEPhi, cosEPhi;
+    G4double sinCPhi, cosCPhi, cosHDPhi, cosHDPhiOT, cosHDPhiIT, sinSPhi, cosSPhi, sinEPhi, cosEPhi;
 
     /** Flag for identification of section or full tube. */
     G4bool fPhiFullCutTube = false;
@@ -255,7 +246,7 @@ class G4CutTubs : public G4CSGSolid
     G4ThreeVector fLowNorm, fHighNorm;
 };
 
-#include "G4CutTubs.icc"
+#  include "G4CutTubs.icc"
 
 #endif
 

@@ -37,76 +37,76 @@
 
 #include "G4IonINCLXXPhysics.hh"
 
-#include "G4SystemOfUnits.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4ProcessManager.hh"
-#include "G4Deuteron.hh"
-#include "G4Triton.hh"
-#include "G4He3.hh"
 #include "G4Alpha.hh"
-#include "G4GenericIon.hh"
-#include "G4IonConstructor.hh"
-
-#include "G4HadronInelasticProcess.hh"
+#include "G4BuilderType.hh"
 #include "G4ComponentGGNuclNuclXsc.hh"
 #include "G4CrossSectionInelastic.hh"
-
-#include "G4INCLXXInterface.hh"
-#include "G4PreCompoundModel.hh"
+#include "G4DeexPrecoParameters.hh"
+#include "G4Deuteron.hh"
 #include "G4ExcitationHandler.hh"
 #include "G4FTFBuilder.hh"
+#include "G4GenericIon.hh"
+#include "G4HadronInelasticProcess.hh"
 #include "G4HadronicInteraction.hh"
 #include "G4HadronicInteractionRegistry.hh"
 #include "G4HadronicParameters.hh"
-#include "G4DeexPrecoParameters.hh"
+#include "G4He3.hh"
+#include "G4INCLXXInterface.hh"
+#include "G4IonConstructor.hh"
 #include "G4NuclearLevelData.hh"
-#include "G4BuilderType.hh"
-#include "G4HadronicParameters.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4PreCompoundModel.hh"
+#include "G4ProcessManager.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4Triton.hh"
 
 // factory
 #include "G4PhysicsConstructorFactory.hh"
 //
 G4_DECLARE_PHYSCONSTR_FACTORY(G4IonINCLXXPhysics);
 
-G4IonINCLXXPhysics::G4IonINCLXXPhysics(G4int ver) :
-  G4IonINCLXXPhysics("IonINCLXX", ver)
-{}
+G4IonINCLXXPhysics::G4IonINCLXXPhysics(G4int ver) : G4IonINCLXXPhysics("IonINCLXX", ver) {}
 
 G4IonINCLXXPhysics::G4IonINCLXXPhysics(const G4String& nname, G4int ver)
   : G4VPhysicsConstructor(nname), verbose(ver)
 {
   // INCLXX light ion maximum energy is 3.0 GeV/nucleon
   emaxINCLXX = 3.0 * GeV;
-  deltaE     = 100.*MeV;
+  deltaE = 100. * MeV;
   SetPhysicsType(bIons);
   G4DeexPrecoParameters* param = G4NuclearLevelData::GetInstance()->GetParameters();
   param->SetDeexChannelsType(fCombined);
-  if(verbose > 1) { G4cout << "### IonPhysics: " << nname << G4endl; }
+  if (verbose > 1)
+  {
+    G4cout << "### IonPhysics: " << nname << G4endl;
+  }
 }
 
-G4IonINCLXXPhysics::~G4IonINCLXXPhysics()
-{}
+G4IonINCLXXPhysics::~G4IonINCLXXPhysics() {}
 
 void G4IonINCLXXPhysics::ConstructProcess()
 {
-  G4INCLXXInterface* theINCLXXDeuteron= new G4INCLXXInterface();
-  G4INCLXXInterface* theINCLXXTriton= new G4INCLXXInterface();
-  G4INCLXXInterface* theINCLXXHe3= new G4INCLXXInterface();
-  G4INCLXXInterface* theINCLXXAlpha= new G4INCLXXInterface();
-  G4INCLXXInterface* theINCLXXIons= new G4INCLXXInterface();
+  G4INCLXXInterface* theINCLXXDeuteron = new G4INCLXXInterface();
+  G4INCLXXInterface* theINCLXXTriton = new G4INCLXXInterface();
+  G4INCLXXInterface* theINCLXXHe3 = new G4INCLXXInterface();
+  G4INCLXXInterface* theINCLXXAlpha = new G4INCLXXInterface();
+  G4INCLXXInterface* theINCLXXIons = new G4INCLXXInterface();
 
-  G4HadronicInteraction* p =
-    G4HadronicInteractionRegistry::Instance()->FindModel("PRECO");
-  G4PreCompoundModel* thePreCompound = static_cast<G4PreCompoundModel*>(p); 
-  if(!thePreCompound) { thePreCompound = new G4PreCompoundModel; }
+  G4HadronicInteraction* p = G4HadronicInteractionRegistry::Instance()->FindModel("PRECO");
+  G4PreCompoundModel* thePreCompound = static_cast<G4PreCompoundModel*>(p);
+  if (!thePreCompound)
+  {
+    thePreCompound = new G4PreCompoundModel;
+  }
 
-  G4CrossSectionInelastic* theNuclNuclData = 
-    new G4CrossSectionInelastic( new G4ComponentGGNuclNuclXsc() );
+  G4CrossSectionInelastic* theNuclNuclData =
+    new G4CrossSectionInelastic(new G4ComponentGGNuclNuclXsc());
 
   G4double emax = G4HadronicParameters::Instance()->GetMaxEnergy();
   G4HadronicInteraction* theFTFP = nullptr;
-  if(emax > emaxINCLXX) {
-    G4FTFBuilder theFTFPBuilder("FTFP",thePreCompound);
+  if (emax > emaxINCLXX)
+  {
+    G4FTFBuilder theFTFPBuilder("FTFP", thePreCompound);
     theFTFP = theFTFPBuilder.GetModel();
     theFTFP->SetMinEnergy(emaxINCLXX - deltaE);
     theFTFP->SetMaxEnergy(emax);
@@ -119,27 +119,28 @@ void G4IonINCLXXPhysics::ConstructProcess()
   AddProcess("ionInelastic", G4GenericIon::GenericIon(), theINCLXXIons, theFTFP, theNuclNuclData);
 }
 
-void G4IonINCLXXPhysics::AddProcess(const G4String& name,
-				    G4ParticleDefinition* p, 
-				    G4HadronicInteraction* model1,
-				    G4HadronicInteraction* model2,
-				    G4VCrossSectionDataSet* xs)
+void G4IonINCLXXPhysics::AddProcess(const G4String& name, G4ParticleDefinition* p,
+                                    G4HadronicInteraction* model1, G4HadronicInteraction* model2,
+                                    G4VCrossSectionDataSet* xs)
 {
   G4HadronInelasticProcess* hadi = new G4HadronInelasticProcess(name, p);
   G4ProcessManager* pManager = p->GetProcessManager();
   pManager->AddDiscreteProcess(hadi);
-  hadi->AddDataSet(xs);    
+  hadi->AddDataSet(xs);
   model1->SetMaxEnergy(emaxINCLXX);
   hadi->RegisterMe(model1);
-  if(model2) { hadi->RegisterMe(model2); }
+  if (model2)
+  {
+    hadi->RegisterMe(model2);
+  }
 
-  if(verbose > 1) {
-    G4cout << "Register " << hadi->GetProcessName()
-	   << " for " << p->GetParticleName()
-	   << " INCLXX/G4DeexcitationHandler for E(MeV)= 0" << " - " << emaxINCLXX;
-    if(model2) {
-      G4cout  << " FTFP for E(MeV)= " << emaxINCLXX - deltaE << " - " 
-	      << model2->GetMaxEnergy();
+  if (verbose > 1)
+  {
+    G4cout << "Register " << hadi->GetProcessName() << " for " << p->GetParticleName()
+           << " INCLXX/G4DeexcitationHandler for E(MeV)= 0" << " - " << emaxINCLXX;
+    if (model2)
+    {
+      G4cout << " FTFP for E(MeV)= " << emaxINCLXX - deltaE << " - " << model2->GetMaxEnergy();
     }
     G4cout << G4endl;
   }
@@ -149,5 +150,5 @@ void G4IonINCLXXPhysics::ConstructParticle()
 {
   //  Construct light ions
   G4IonConstructor pConstructor;
-  pConstructor.ConstructParticle();  
+  pConstructor.ConstructParticle();
 }

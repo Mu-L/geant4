@@ -30,48 +30,48 @@
 
 #include "G4ImportanceConfigurator.hh"
 
+#include "G4AutoLock.hh"
+#include "G4ImportanceAlgorithm.hh"
 #include "G4ImportanceProcess.hh"
 #include "G4ProcessPlacer.hh"
-#include "G4ImportanceAlgorithm.hh"
-
 #include "G4TransportationManager.hh"
-#include "G4AutoLock.hh"
 
 #ifdef G4MULTITHREADED
 namespace
 {
-  G4Mutex BiasConfigMutex = G4MUTEX_INITIALIZER;
+G4Mutex BiasConfigMutex = G4MUTEX_INITIALIZER;
 }
 #endif
 
-G4ImportanceConfigurator::
-G4ImportanceConfigurator(const G4VPhysicalVolume* worldvolume, 
-			 const G4String& particlename,
-                               G4VIStore& istore,
-                         const G4VImportanceAlgorithm* ialg, G4bool para)
+G4ImportanceConfigurator::G4ImportanceConfigurator(const G4VPhysicalVolume* worldvolume,
+                                                   const G4String& particlename, G4VIStore& istore,
+                                                   const G4VImportanceAlgorithm* ialg, G4bool para)
   : fWorld(worldvolume),
     fWorldName(worldvolume->GetName()),
     fPlacer(particlename),
     fIStore(istore),
-    fDeleteIalg( ( ! ialg) ),
-    fIalgorithm(( (fDeleteIalg == true) ? new G4ImportanceAlgorithm : ialg )),
+    fDeleteIalg((!ialg)),
+    fIalgorithm(((fDeleteIalg == true) ? new G4ImportanceAlgorithm : ialg)),
     paraflag(para)
-{;}
-
-G4ImportanceConfigurator::
-G4ImportanceConfigurator(const G4String& worldvolumeName, 
-			 const G4String& particlename,
-                               G4VIStore& istore,
-                         const G4VImportanceAlgorithm* ialg, G4bool para)
-: fWorldName(worldvolumeName),
-  fPlacer(particlename),
-  fIStore(istore),
-  fDeleteIalg( ( ! ialg) ),
-  fIalgorithm(( (fDeleteIalg == true) ? new G4ImportanceAlgorithm : ialg )),
-  paraflag(para)
 {
-  fWorld = G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking()->GetWorldVolume();
-  if(paraflag) fWorld = G4TransportationManager::GetTransportationManager()->GetParallelWorld(fWorldName);
+  ;
+}
+
+G4ImportanceConfigurator::G4ImportanceConfigurator(const G4String& worldvolumeName,
+                                                   const G4String& particlename, G4VIStore& istore,
+                                                   const G4VImportanceAlgorithm* ialg, G4bool para)
+  : fWorldName(worldvolumeName),
+    fPlacer(particlename),
+    fIStore(istore),
+    fDeleteIalg((!ialg)),
+    fIalgorithm(((fDeleteIalg == true) ? new G4ImportanceAlgorithm : ialg)),
+    paraflag(para)
+{
+  fWorld = G4TransportationManager::GetTransportationManager()
+             ->GetNavigatorForTracking()
+             ->GetWorldVolume();
+  if (paraflag)
+    fWorld = G4TransportationManager::GetTransportationManager()->GetParallelWorld(fWorldName);
 }
 
 G4ImportanceConfigurator::~G4ImportanceConfigurator()
@@ -87,11 +87,11 @@ G4ImportanceConfigurator::~G4ImportanceConfigurator()
   }
 }
 
-void  
-G4ImportanceConfigurator::Configure(G4VSamplerConfigurator* preConf)
+void G4ImportanceConfigurator::Configure(G4VSamplerConfigurator* preConf)
 {
-  G4cout << "G4ImportanceConfigurator:: entering importance configure, paraflag " << paraflag << G4endl;
-  const G4VTrackTerminator *terminator = 0;
+  G4cout << "G4ImportanceConfigurator:: entering importance configure, paraflag " << paraflag
+         << G4endl;
+  const G4VTrackTerminator* terminator = 0;
   if (preConf)
   {
     terminator = preConf->GetTrackTerminator();
@@ -100,27 +100,23 @@ G4ImportanceConfigurator::Configure(G4VSamplerConfigurator* preConf)
 #ifdef G4MULTITHREADED
   G4AutoLock l(&BiasConfigMutex);
 #endif
-  fImportanceProcess = 
-    new G4ImportanceProcess(*fIalgorithm, 
-                                fIStore, 
-                                terminator,"ImportanceProcess",paraflag);
+  fImportanceProcess =
+    new G4ImportanceProcess(*fIalgorithm, fIStore, terminator, "ImportanceProcess", paraflag);
 
   if (!fImportanceProcess)
   {
-    G4Exception("G4ImportanceConfigurator::Configure()",
-                "FatalError", FatalException,
+    G4Exception("G4ImportanceConfigurator::Configure()", "FatalError", FatalException,
                 "Failed allocation of G4ImportanceProcess !");
   }
-  
-  if(paraflag) fImportanceProcess->SetParallelWorld(fWorld->GetName());
+
+  if (paraflag) fImportanceProcess->SetParallelWorld(fWorld->GetName());
 #ifdef G4MULTITHREADED
   l.unlock();
 #endif
   fPlacer.AddProcessAsSecondDoIt(fImportanceProcess);
 }
 
-const G4VTrackTerminator*
-G4ImportanceConfigurator::GetTrackTerminator() const
+const G4VTrackTerminator* G4ImportanceConfigurator::GetTrackTerminator() const
 {
   return fImportanceProcess;
 }

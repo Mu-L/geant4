@@ -29,13 +29,12 @@
 #ifndef g4xml_defs_h
 #define g4xml_defs_h
 
-#include "tools/waxml/ntuple"
 #include "g4hntools_defs.hh"
+
+#include "tools/waxml/ntuple"
 
 // Xml output specific types
 using G4XmlNtuple = tools::waxml::ntuple;
 using G4XmlRNtuple = tools::aida::ntuple;
 
 #endif
-
-

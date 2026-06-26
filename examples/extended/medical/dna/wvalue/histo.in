@@ -11,7 +11,10 @@
 /w/det/setTrackingCut 7.4 eV
 #
 # Geant4-DNA Physics constructor
-/w/phys/addPhysics dna
+#/w/phys/addPhysics dna_opt2
+/w/phys/addPhysics dna_opt4
+#/w/phys/addPhysics dna_opt6
+#/w/phys/addPhysics dna_opt8
 #
 # Run initialization
 /run/initialize

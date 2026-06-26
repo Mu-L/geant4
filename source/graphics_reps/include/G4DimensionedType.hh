@@ -31,139 +31,130 @@
 #ifndef G4DIMENSIONEDTYPE_HH
 #define G4DIMENSIONEDTYPE_HH
 
-#include "globals.hh"
 #include "G4ConversionFatalError.hh"
 #include "G4String.hh"
 #include "G4UnitsTable.hh"
+#include "globals.hh"
+
 #include <ostream>
 
 namespace G4DimensionedTypeUtils
 {
-  G4bool GetUnitValue(const G4String& unit, G4double& value);
+G4bool GetUnitValue(const G4String& unit, G4double& value);
 }
 
 // Default error handling done through G4ConversionFatalError
-template <typename T, typename ConversionErrorPolicy = G4ConversionFatalError>
-class G4DimensionedType : public ConversionErrorPolicy {
+template<typename T, typename ConversionErrorPolicy = G4ConversionFatalError>
+class G4DimensionedType : public ConversionErrorPolicy
+{
+  public:
 
-public:
+    // Constructors
+    G4DimensionedType();
+    G4DimensionedType(const T& value, const G4String& unit);
 
-  // Constructors
-  G4DimensionedType();
-  G4DimensionedType(const T& value, const G4String& unit);
+    // Destructor
+    virtual ~G4DimensionedType();
 
-  // Destructor
-  virtual ~G4DimensionedType();
+    // Accessors
 
-  // Accessors
+    // Raw, undimensioned value
+    T RawValue() const;
 
-  // Raw, undimensioned value
-  T RawValue() const;
-  
-  // Unit string
-  G4String Unit() const;
-  
-  // Dimensioned value - rawValue*converted unit
-  T DimensionedValue() const;
+    // Unit string
+    G4String Unit() const;
 
-  // Operators
-  T operator()() const;
-  bool operator == (const G4DimensionedType<T>& rhs) const;
-  bool operator != (const G4DimensionedType<T>& rhs) const;
-  bool operator < (const G4DimensionedType<T>& rhs) const;
-  bool operator > (const G4DimensionedType<T>& rhs) const;
+    // Dimensioned value - rawValue*converted unit
+    T DimensionedValue() const;
 
-private:
+    // Operators
+    T operator()() const;
+    bool operator==(const G4DimensionedType<T>& rhs) const;
+    bool operator!=(const G4DimensionedType<T>& rhs) const;
+    bool operator<(const G4DimensionedType<T>& rhs) const;
+    bool operator>(const G4DimensionedType<T>& rhs) const;
 
-  // Data members
-  T fValue;
-  G4String fUnit;
-  T fDimensionedValue;
+  private:
 
+    // Data members
+    T fValue;
+    G4String fUnit;
+    T fDimensionedValue;
 };
 
-template <typename T, typename ConversionErrorPolicy>
+template<typename T, typename ConversionErrorPolicy>
 G4DimensionedType<T, ConversionErrorPolicy>::G4DimensionedType()
-  :fValue(0)
-  ,fUnit("Undefined")
-  ,fDimensionedValue(0) 
+  : fValue(0), fUnit("Undefined"), fDimensionedValue(0)
 {}
 
-template <typename T, typename ConversionErrorPolicy>
+template<typename T, typename ConversionErrorPolicy>
 G4DimensionedType<T, ConversionErrorPolicy>::G4DimensionedType(const T& value, const G4String& unit)
-  :fValue(value)
-  ,fUnit(unit)
+  : fValue(value), fUnit(unit)
 {
   G4double unitValue(0);
 
   // Convert unit string to unit value
-  if (!G4DimensionedTypeUtils::GetUnitValue(unit, unitValue)) ConversionErrorPolicy::ReportError(unit, "Invalid unit");
+  if (!G4DimensionedTypeUtils::GetUnitValue(unit, unitValue))
+    ConversionErrorPolicy::ReportError(unit, "Invalid unit");
 
-  fDimensionedValue = value*unitValue;
+  fDimensionedValue = value * unitValue;
 }
 
-template <typename T, typename ConversionErrorPolicy>
+template<typename T, typename ConversionErrorPolicy>
 G4DimensionedType<T, ConversionErrorPolicy>::~G4DimensionedType() = default;
 
-template <typename T, typename ConversionErrorPolicy>
-T
-G4DimensionedType<T, ConversionErrorPolicy>::RawValue() const
+template<typename T, typename ConversionErrorPolicy>
+T G4DimensionedType<T, ConversionErrorPolicy>::RawValue() const
 {
   return fValue;
 }
 
-template <typename T, typename ConversionErrorPolicy>
-G4String
-G4DimensionedType<T, ConversionErrorPolicy>::Unit() const
+template<typename T, typename ConversionErrorPolicy>
+G4String G4DimensionedType<T, ConversionErrorPolicy>::Unit() const
 {
   return fUnit;
 }
 
-template <typename T, typename ConversionErrorPolicy>
-T
-G4DimensionedType<T, ConversionErrorPolicy>::DimensionedValue() const
+template<typename T, typename ConversionErrorPolicy>
+T G4DimensionedType<T, ConversionErrorPolicy>::DimensionedValue() const
 {
   return fDimensionedValue;
 }
 
-template <typename T, typename ConversionErrorPolicy>
-T 
-G4DimensionedType<T, ConversionErrorPolicy>::operator()() const 
+template<typename T, typename ConversionErrorPolicy>
+T G4DimensionedType<T, ConversionErrorPolicy>::operator()() const
 {
   return fDimensionedValue;
 }
 
-template <typename T, typename ConversionErrorPolicy>
-bool
-G4DimensionedType<T, ConversionErrorPolicy>::operator == (const G4DimensionedType<T>& rhs) const 
+template<typename T, typename ConversionErrorPolicy>
+bool G4DimensionedType<T, ConversionErrorPolicy>::operator==(const G4DimensionedType<T>& rhs) const
 {
   return fDimensionedValue == rhs.fDimensionedValue;
 }
 
-template <typename T, typename ConversionErrorPolicy>
-bool
-G4DimensionedType<T, ConversionErrorPolicy>::operator != (const G4DimensionedType<T>& rhs) const 
+template<typename T, typename ConversionErrorPolicy>
+bool G4DimensionedType<T, ConversionErrorPolicy>::operator!=(const G4DimensionedType<T>& rhs) const
 {
   return fDimensionedValue != rhs.fDimensionedValue;
 }
 
-template <typename T, typename ConversionErrorPolicy>
-bool
-G4DimensionedType<T, ConversionErrorPolicy>::operator < (const G4DimensionedType<T>& rhs) const 
+template<typename T, typename ConversionErrorPolicy>
+bool G4DimensionedType<T, ConversionErrorPolicy>::operator<(const G4DimensionedType<T>& rhs) const
 {
   return fDimensionedValue < rhs.fDimensionedValue;
 }
 
-template <typename T, typename ConversionErrorPolicy>
-bool
-G4DimensionedType<T, ConversionErrorPolicy>::operator > (const G4DimensionedType<T>& rhs) const 
+template<typename T, typename ConversionErrorPolicy>
+bool G4DimensionedType<T, ConversionErrorPolicy>::operator>(const G4DimensionedType<T>& rhs) const
 {
   return fDimensionedValue > rhs.fDimensionedValue;
 }
 
-template <typename M>
-std::ostream& operator << (std::ostream& os, const G4DimensionedType<M>& obj) {
-  os << obj.RawValue()<<" "<<obj.Unit();
+template<typename M>
+std::ostream& operator<<(std::ostream& os, const G4DimensionedType<M>& obj)
+{
+  os << obj.RawValue() << " " << obj.Unit();
   return os;
 }
 

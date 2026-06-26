@@ -73,7 +73,10 @@ class G4UIcmdWithABool;
 
 /**
  * @brief G4FieldParametersMessenger is a messenger class that defines
- * commands for field configuration. Only equation type and stepper type
+ * commands for field configuration.
+ * @ingroup geometry_magneticfield
+ *
+ * Only equation type and stepper type
  * values that are handled by G4FieldBuilder are accepted by the commands.
  */
 
@@ -115,37 +118,37 @@ class G4FieldParametersMessenger : public G4UImessenger
     // Commands data members
 
     /** Command: fieldType. */
-    G4UIcmdWithAString* fFieldTypeCmd = nullptr; 
+    G4UIcmdWithAString* fFieldTypeCmd = nullptr;
 
     /** Command: equationType. */
-    G4UIcmdWithAString* fEquationTypeCmd = nullptr; 
+    G4UIcmdWithAString* fEquationTypeCmd = nullptr;
 
     /** Command: stepperType. */
-    G4UIcmdWithAString* fStepperTypeCmd = nullptr; 
+    G4UIcmdWithAString* fStepperTypeCmd = nullptr;
 
     /** Command: setMinimumStep. */
-    G4UIcmdWithADoubleAndUnit* fSetMinimumStepCmd = nullptr; 
+    G4UIcmdWithADoubleAndUnit* fSetMinimumStepCmd = nullptr;
 
     /** Command: setDeltaChord. */
-    G4UIcmdWithADoubleAndUnit* fSetDeltaChordCmd = nullptr; 
+    G4UIcmdWithADoubleAndUnit* fSetDeltaChordCmd = nullptr;
 
     /** Command: setDeltaOneStep. */
-    G4UIcmdWithADoubleAndUnit* fSetDeltaOneStepCmd = nullptr; 
+    G4UIcmdWithADoubleAndUnit* fSetDeltaOneStepCmd = nullptr;
 
     /** Command: setDeltaIntersection. */
-    G4UIcmdWithADoubleAndUnit* fSetDeltaIntersectionCmd = nullptr; 
+    G4UIcmdWithADoubleAndUnit* fSetDeltaIntersectionCmd = nullptr;
 
     /** Command: setMinimumEpsilon. */
-    G4UIcmdWithADouble* fSetMinimumEpsilonStepCmd = nullptr; 
+    G4UIcmdWithADouble* fSetMinimumEpsilonStepCmd = nullptr;
 
     /** Command: setMaximumEpsilon. */
-    G4UIcmdWithADouble* fSetMaximumEpsilonStepCmd = nullptr; 
+    G4UIcmdWithADouble* fSetMaximumEpsilonStepCmd = nullptr;
 
     /** Command: setConstDistance. */
-    G4UIcmdWithADoubleAndUnit* fSetConstDistanceCmd = nullptr; 
+    G4UIcmdWithADoubleAndUnit* fSetConstDistanceCmd = nullptr;
 
     /** Command: printParameters. */
-    G4UIcmdWithoutParameter* fPrintParametersCmd = nullptr; 
+    G4UIcmdWithoutParameter* fPrintParametersCmd = nullptr;
 };
 
 #endif

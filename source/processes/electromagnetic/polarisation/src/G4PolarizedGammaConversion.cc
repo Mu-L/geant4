@@ -44,10 +44,9 @@
 #include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-G4PolarizedGammaConversion::G4PolarizedGammaConversion(
-  const G4String& processName, G4ProcessType type)
-  : G4VEmProcess(processName, type)
-  , fIsInitialised(false)
+G4PolarizedGammaConversion::G4PolarizedGammaConversion(const G4String& processName,
+                                                       G4ProcessType type)
+  : G4VEmProcess(processName, type), fIsInitialised(false)
 {
   SetMinKinEnergy(2.0 * electron_mass_c2);
   SetLambdaBinning(220);
@@ -76,13 +75,13 @@ G4bool G4PolarizedGammaConversion::IsApplicable(const G4ParticleDefinition& p)
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 void G4PolarizedGammaConversion::InitialiseProcess(const G4ParticleDefinition*)
 {
-  if(!fIsInitialised)
+  if (!fIsInitialised)
   {
-    fIsInitialised        = true;
+    fIsInitialised = true;
     G4EmParameters* param = G4EmParameters::Instance();
     G4double emin = std::max(param->MinKinEnergy(), 2. * electron_mass_c2);
     G4double emax = param->MaxKinEnergy();
-    if(!EmModel(0))
+    if (!EmModel(0))
     {
       SetEmModel(new G4PolarizedGammaConversionModel());
     }

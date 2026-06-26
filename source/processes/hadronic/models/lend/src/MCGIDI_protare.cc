@@ -1022,6 +1022,31 @@ LUPI_HOST_DEVICE void Protare::crossSectionVector( double a_temperature, double 
 }
 
 /* *********************************************************************************************************//**
+ * Adds the energy dependent, total cross section corresponding to the temperature *a_temperature* multiplied by *a_userFact
+ *
+ * @param   a_temperature               [in]        Specifies the temperature of the material.
+ * @param   a_userFactor                [in]        User factor which all cross sections are multiplied by.
+ * @param   a_numberAllocated           [in]        The length of memory allocated for *a_crossSectionVector*.
+ * @param   a_crossSectionVector        [in/out]    The energy dependent, total cross section to add cross section data to.
+ ***********************************************************************************************************/
+
+LUPI_HOST_DEVICE void Protare::crossSectionVector( double a_temperature, double a_userFactor, std::size_t a_numberAllocated,
+                float *a_crossSectionVector ) const {
+
+    switch( protareType( ) ) {
+    case ProtareType::single:
+        static_cast<ProtareSingle const *>( this )->crossSectionVector( a_temperature, a_userFactor, a_numberAllocated, a_crossSectionVector );
+        break;
+    case ProtareType::composite:
+        static_cast<ProtareComposite const *>( this )->crossSectionVector( a_temperature, a_userFactor, a_numberAllocated, a_crossSectionVector );
+        break;
+    case ProtareType::TNSL:
+        static_cast<ProtareTNSL const *>( this )->crossSectionVector( a_temperature, a_userFactor, a_numberAllocated, a_crossSectionVector );
+        break;
+    }
+}
+
+/* *********************************************************************************************************//**
  * Returns the cross section for reaction at index *a_reactionIndex*.
  *
  * @param   a_reactionIndex     [in]    The index of the reaction.
@@ -1279,7 +1304,10 @@ LUPI_HOST_DEVICE ProtareSingle::ProtareSingle( ) :
         m_projectileMultiGroupBoundaries( 0 ),
         m_projectileMultiGroupBoundariesCollapsed( 0 ),
         m_reactions( 0 ),
-        m_orphanProducts( 0 ) {
+        m_orphanProducts( 0 ),
+        m_isPhotoAtomic( false ),
+        m_continuousEnergy( false ),
+        m_fixedGrid( false ) {
 
 }
 
@@ -1833,6 +1861,26 @@ LUPI_HOST_DEVICE double ProtareSingle::crossSection( URR_protareInfos const &a_U
  
 LUPI_HOST_DEVICE void ProtareSingle::crossSectionVector( double a_temperature, double a_userFactor, std::size_t a_numberAllocated, 
                 double *a_crossSectionVector ) const {
+
+    if( m_continuousEnergy ) {
+        if( !m_fixedGrid ) LUPI_THROW( "ProtareSingle::crossSectionVector: continuous energy cannot be supported." );
+        m_heatedCrossSections.crossSectionVector( a_temperature, a_userFactor, a_numberAllocated, a_crossSectionVector ); }
+    else {
+        m_heatedMultigroupCrossSections.crossSectionVector( a_temperature, a_userFactor, a_numberAllocated, a_crossSectionVector );
+    }
+}
+
+/* *********************************************************************************************************//**
+ * Adds the energy dependent, total cross section corresponding to the temperature *a_temperature* multiplied by *a_userFact
+ *
+ * @param   a_temperature               [in]        Specifies the temperature of the material.
+ * @param   a_userFactor                [in]        User factor which all cross sections are multiplied by.
+ * @param   a_numberAllocated           [in]        The length of memory allocated for *a_crossSectionVector*.
+ * @param   a_crossSectionVector        [in/out]   The energy dependent, total cross section to add cross section data to.
+ ***********************************************************************************************************/
+
+LUPI_HOST_DEVICE void ProtareSingle::crossSectionVector( double a_temperature, double a_userFactor, std::size_t a_numberAllocated,
+                float *a_crossSectionVector ) const {
 
     if( m_continuousEnergy ) {
         if( !m_fixedGrid ) LUPI_THROW( "ProtareSingle::crossSectionVector: continuous energy cannot be supported." );

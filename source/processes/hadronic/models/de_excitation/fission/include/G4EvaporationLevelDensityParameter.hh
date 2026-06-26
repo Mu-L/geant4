@@ -25,13 +25,13 @@
 //
 //
 // Hadronic Process: Nuclear De-excitations
-// by V. Lara (Oct 1998) 
+// by V. Lara (Oct 1998)
 //
 // Modified:
 // 21.03.2013 V.Ivanchenko redesigned and commented out unused part
 
-#ifndef G4EvaporationLevelDensityParameter_h
-#define G4EvaporationLevelDensityParameter_h 1
+#ifndef G4EVAPORATIONLEVELDENSITYPARAMETER_HH
+#define G4EVAPORATIONLEVELDENSITYPARAMETER_HH
 
 #include "G4VLevelDensityParameter.hh"
 
@@ -39,24 +39,23 @@ class G4NuclearLevelData;
 
 class G4EvaporationLevelDensityParameter : public G4VLevelDensityParameter
 {
-public:
+  public:
 
-  explicit G4EvaporationLevelDensityParameter();
+    explicit G4EvaporationLevelDensityParameter();
 
-  virtual ~G4EvaporationLevelDensityParameter();
+    virtual ~G4EvaporationLevelDensityParameter();
 
-  G4double LevelDensityParameter(G4int A, G4int Z, G4double U) const final;
+    G4double LevelDensityParameter(G4int A, G4int Z, G4double U) const final;
 
-private:  
-	
-  G4EvaporationLevelDensityParameter(const G4EvaporationLevelDensityParameter &right);
-  const G4EvaporationLevelDensityParameter & operator=
-  (const G4EvaporationLevelDensityParameter &right);
-  G4bool operator==(const G4EvaporationLevelDensityParameter &right) const;
-  G4bool operator!=(const G4EvaporationLevelDensityParameter &right) const;
-  
-  G4NuclearLevelData* fNucData;
+  private:
 
+    G4EvaporationLevelDensityParameter(const G4EvaporationLevelDensityParameter& right);
+    const G4EvaporationLevelDensityParameter&
+    operator=(const G4EvaporationLevelDensityParameter& right);
+    G4bool operator==(const G4EvaporationLevelDensityParameter& right) const;
+    G4bool operator!=(const G4EvaporationLevelDensityParameter& right) const;
+
+    G4NuclearLevelData* fNucData;
 };
 
 #endif

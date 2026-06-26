@@ -31,73 +31,69 @@
 //
 //      File name:     G4XnpElastic
 //
-//      Author:        
-// 
+//      Author:
+//
 //      Creation date: 15 April 1999
 //
-//      Modifications: 
-//      
+//      Modifications:
+//
 // -------------------------------------------------------------------
 
-#include "globals.hh"
 #include "G4XnpElastic.hh"
-#include "G4XnpElasticLowE.hh"
-#include "G4XPDGElastic.hh"
-#include "G4VCrossSectionSource.hh"
-#include "G4KineticTrack.hh"
-#include "G4ParticleDefinition.hh"
+
 #include "G4CrossSectionVector.hh"
-#include "G4Proton.hh"
+#include "G4KineticTrack.hh"
 #include "G4Neutron.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4Proton.hh"
+#include "G4VCrossSectionSource.hh"
+#include "G4XPDGElastic.hh"
+#include "G4XnpElasticLowE.hh"
+#include "globals.hh"
 
 G4XnpElastic::G4XnpElastic()
-{ 
+{
   components = new G4CrossSectionVector;
 
   G4VCrossSectionSource* xnpElasticLowE = new G4XnpElasticLowE;
   components->push_back(xnpElasticLowE);
 
-//  G4ParticleDefinition* proton = G4Proton::ProtonDefinition();
-//  G4ParticleDefinition* neutron = G4Neutron::NeutronDefinition();
+  //  G4ParticleDefinition* proton = G4Proton::ProtonDefinition();
+  //  G4ParticleDefinition* neutron = G4Neutron::NeutronDefinition();
   G4VCrossSectionSource* xnpElasticHighE = new G4XPDGElastic;
   components->push_back(xnpElasticHighE);
 }
 
-
 G4XnpElastic::~G4XnpElastic()
-{ 
-  if (components != nullptr) 
+{
+  if (components != nullptr)
+  {
+    std::size_t nComponents = GetComponents()->size();
+    for (std::size_t i = 0; i < nComponents; ++i)
     {
-      std::size_t nComponents = GetComponents()->size();
-      for (std::size_t i=0; i<nComponents; ++i)
-	{
-          G4CrossSectionSourcePtr componentPtr = (*components)[i];
-	  G4VCrossSectionSource* component = componentPtr();
-	  delete component;
-	  component = nullptr;
-	  componentPtr = nullptr;
-	}
+      G4CrossSectionSourcePtr componentPtr = (*components)[i];
+      G4VCrossSectionSource* component = componentPtr();
+      delete component;
+      component = nullptr;
+      componentPtr = nullptr;
     }
+  }
   delete components;
   components = nullptr;
 }
 
-
-G4bool G4XnpElastic::operator==(const G4XnpElastic &right) const
+G4bool G4XnpElastic::operator==(const G4XnpElastic& right) const
 {
-  return (this == (G4XnpElastic*) &right);
+  return (this == (G4XnpElastic*)&right);
 }
 
-
-G4bool G4XnpElastic::operator!=(const G4XnpElastic &right) const
+G4bool G4XnpElastic::operator!=(const G4XnpElastic& right) const
 {
-  return (this != (G4XnpElastic*) &right);
+  return (this != (G4XnpElastic*)&right);
 }
-
 
 G4String G4XnpElastic::Name() const
 {
   G4String name("npElastic");
   return name;
 }
-

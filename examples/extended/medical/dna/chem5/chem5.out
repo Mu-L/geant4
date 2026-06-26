@@ -1,4 +1,4 @@
-Seed used : 1781370086
+Seed used : 1782352002
 Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Forcing G4RunManager type...
 
         ############################################
@@ -12,7 +12,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -71,6 +71,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 1
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -111,11 +112,16 @@ Type of PIXE cross section for e+-                 Livermore
 =======================================================================
 ======                 DNA Physics Parameters                  ========
 =======================================================================
+Min DNA electron energy                            7.4 eV
+Min DNA proton energy                              50 eV
+Min DNA ion energy                                 50 eV
 Max DNA electron energy                            1 MeV
-Max DNA ion energy                                 300 MeV
+Max DNA proton energy                              3e+08 MeV
+Max DNA ion energy                                 100 MeV/u
 Use fast sampling in DNA models                    1
 Use Stationary option in DNA models                0
 Use DNA with multiple scattering of e-             0
+Use DNA multiple ionisation                        0
 Use DNA e- solvation model type                    11001
 =======================================================================
 G4SDManager::AddNewCollection : the collection <mfDetector/PrimaryKiller> is registered at 1
@@ -234,6 +240,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 1
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -274,11 +281,16 @@ Type of PIXE cross section for e+-                 Livermore
 =======================================================================
 ======                 DNA Physics Parameters                  ========
 =======================================================================
+Min DNA electron energy                            7.4 eV
+Min DNA proton energy                              50 eV
+Min DNA ion energy                                 50 eV
 Max DNA electron energy                            1 MeV
-Max DNA ion energy                                 300 MeV
+Max DNA proton energy                              3e+08 MeV
+Max DNA ion energy                                 100 MeV/u
 Use fast sampling in DNA models                    1
 Use Stationary option in DNA models                0
 Use DNA with multiple scattering of e-             0
+Use DNA multiple ionisation                        0
 Use DNA e- solvation model type                    11001
 =======================================================================
 
@@ -331,8 +343,8 @@ eBrem:  for e-  XStype:4  SubType=3
 
 e-_G4DNAElectronSolvation:  for e- SubType=58 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNAOneStepThermalizationModel_Ritchie1994 : Emin=    0 eV  Emax=   11 eV 
-          DummyModel : Emin=   11 eV  Emax=  600 MeV
+DNAOneStepThermalizationModel_Ritchie1994 : Emin=    0 eV  Emax=  7.4 eV 
+          DummyModel : Emin=  7.4 eV  Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 e-_G4DNAElastic:  for e- SubType=51 BuildTable=0
@@ -409,7 +421,8 @@ proton_G4DNAElastic:  for proton SubType=51 BuildTable=0
 
 proton_G4DNAExcitation:  for proton SubType=52 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=  100 MeV
+DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=  500 keV
+DNABornExcitationModel : Emin=  500 keV Emax=  100 MeV
 DNARPWBAExcitationModel : Emin=  100 MeV Emax=  300 MeV
           DummyModel : Emin=  300 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
@@ -429,7 +442,7 @@ DNADingfelderChargeDecreaseModel : Emin=    0 eV  Emax=  100 MeV
 
 msc:  for GenericIon  SubType= 10
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-            UrbanMsc : Emin=    1 MeV Emax=  600 MeV
+            UrbanMsc : Emin=    0 eV  Emax=  600 MeV
           StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:0 Skin=3 Llim=1 mm
 
 ionIoni:  for GenericIon  XStype:3  SubType=2
@@ -437,12 +450,12 @@ ionIoni:  for GenericIon  XStype:3  SubType=2
       Lambda tables from threshold to 600 MeV, 20 bins/decade, spline: 1
       StepFunction=(0.1, 0.001 mm), integ: 3, fluct: 1, linLossLim= 0.02
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-          BetheBloch : Emin=  300 MeV Emax=  600 MeV  deltaVI
+    LindhardSorensen : Emin=  100 MeV Emax=  600 MeV  deltaVI
 
 GenericIon_G4DNAIonisation:  for GenericIon SubType=53 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNAIonIonisationModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNAIonIonisationModel : Emin=    0 eV  Emax=  100 MeV
+          DummyModel : Emin=  100 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 nuclearStopping:  for GenericIon SubType=8 BuildTable=0
@@ -459,7 +472,7 @@ ionIoni:  for alpha  XStype:3  SubType=2
       Lambda tables from threshold to 600 MeV, 20 bins/decade, spline: 1
       StepFunction=(0.1, 0.02 mm), integ: 3, fluct: 1, linLossLim= 0.02
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-          BetheBloch : Emin=  300 MeV Emax=  600 MeV  deltaVI
+          BetheBloch : Emin=397.26 MeV Emax=  600 MeV  deltaVI
 
 alpha_G4DNAElastic:  for alpha SubType=51 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
@@ -469,20 +482,20 @@ alpha_G4DNAElastic:  for alpha SubType=51 BuildTable=0
 
 alpha_G4DNAExcitation:  for alpha SubType=52 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=397.26 MeV
+          DummyModel : Emin=397.26 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 alpha_G4DNAIonisation:  for alpha SubType=53 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNARuddIonisationDynamicModel : Emin=    0 eV  Emax=  300 MeV  deltaRudd Fluo
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNARuddIonisationDynamicModel : Emin=    0 eV  Emax=397.26 MeV  deltaRudd Fluo
+          DummyModel : Emin=397.26 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 alpha_G4DNAChargeDecrease:  for alpha SubType=56 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNADingfelderChargeDecreaseModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNADingfelderChargeDecreaseModel : Emin=    0 eV  Emax=  100 MeV
+          DummyModel : Emin=  100 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 msc:  for alpha+  SubType= 10
@@ -495,7 +508,7 @@ hIoni:  for alpha+  XStype:3  SubType=2
       Lambda tables from threshold to 600 MeV, 20 bins/decade, spline: 1
       StepFunction=(0.1, 0.05 mm), integ: 3, fluct: 1, linLossLim= 0.01
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-          BetheBloch : Emin=  300 MeV Emax=  600 MeV  deltaVI
+          BetheBloch : Emin=397.264 MeV Emax=  600 MeV  deltaVI
 
 alpha+_G4DNAElastic:  for alpha+ SubType=51 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
@@ -505,26 +518,26 @@ alpha+_G4DNAElastic:  for alpha+ SubType=51 BuildTable=0
 
 alpha+_G4DNAExcitation:  for alpha+ SubType=52 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=397.264 MeV
+          DummyModel : Emin=397.264 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 alpha+_G4DNAIonisation:  for alpha+ SubType=53 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNARuddIonisationDynamicModel : Emin=    0 eV  Emax=  300 MeV  deltaRudd Fluo
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNARuddIonisationDynamicModel : Emin=    0 eV  Emax=397.264 MeV  deltaRudd Fluo
+          DummyModel : Emin=397.264 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 alpha+_G4DNAChargeIncrease:  for alpha+ SubType=57 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNADingfelderChargeIncreaseModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNADingfelderChargeIncreaseModel : Emin=    0 eV  Emax=  100 MeV
+          DummyModel : Emin=  100 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 alpha+_G4DNAChargeDecrease:  for alpha+ SubType=56 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNADingfelderChargeDecreaseModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNADingfelderChargeDecreaseModel : Emin=    0 eV  Emax=  100 MeV
+          DummyModel : Emin=  100 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 msc:  for anti_proton  SubType= 10
@@ -548,20 +561,20 @@ helium_G4DNAElastic:  for helium SubType=51 BuildTable=0
 
 helium_G4DNAExcitation:  for helium SubType=52 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=397.264 MeV
+          DummyModel : Emin=397.264 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 helium_G4DNAIonisation:  for helium SubType=53 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNARuddIonisationDynamicModel : Emin=    0 eV  Emax=  300 MeV  deltaRudd Fluo
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNARuddIonisationDynamicModel : Emin=    0 eV  Emax=397.264 MeV  deltaRudd Fluo
+          DummyModel : Emin=397.264 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 helium_G4DNAChargeIncrease:  for helium SubType=57 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNADingfelderChargeIncreaseModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNADingfelderChargeIncreaseModel : Emin=    0 eV  Emax=  100 MeV
+          DummyModel : Emin=  100 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 hydrogen_G4DNAElastic:  for hydrogen SubType=51 BuildTable=0

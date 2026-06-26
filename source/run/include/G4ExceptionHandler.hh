@@ -34,12 +34,14 @@
 
 // Author: M.Asai - August 2002
 // --------------------------------------------------------------------
-#ifndef G4ExceptionHandler_hh
-#define G4ExceptionHandler_hh 1
+#ifndef G4EXCEPTIONHANDLER_HH
+#define G4EXCEPTIONHANDLER_HH
 
 #include "G4ExceptionSeverity.hh"
 #include "G4VExceptionHandler.hh"
 #include "globals.hh"
+
+#include <memory>
 #include <unordered_map>
 
 class G4ExceptionHandlerMessenger;
@@ -47,6 +49,7 @@ class G4ExceptionHandlerMessenger;
 class G4ExceptionHandler : public G4VExceptionHandler
 {
   public:
+
     G4ExceptionHandler();
     ~G4ExceptionHandler() override;
     G4bool operator==(const G4ExceptionHandler& right) const;
@@ -62,19 +65,27 @@ class G4ExceptionHandler : public G4VExceptionHandler
                   G4ExceptionSeverity severity, const char* description) override;
 
     // Set methods for maximum number of warning messages
-    void SetMaxTotalWarning(G4int mx)
-    { fTotalWarnCount = mx; }
-    void SetMaxWarning(const char* errCode,G4int mx)
-    { fWarnCount[errCode] = mx; }
+    void SetMaxTotalWarning(G4int mx) { fTotalWarnCount = mx; }
+    void SetMaxWarning(const char* errCode, G4int mx) { fWarnCount[errCode] = mx; }
+
+    // Set output file name for warning messages
+    void SetAllWarningFile(const G4String&);
+    void SetWarningFile(const char*, const G4String&);
 
   private:
+
     void DumpTrackInfo();
     G4bool IfPrint(const char* errCode);
 
   private:
+
+    G4String ModifyFileName(const G4String&);
     G4ExceptionHandlerMessenger* messenger;
     G4int fTotalWarnCount = INT_MAX;
-    std::unordered_map<std::string,G4int> fWarnCount;
+    std::unordered_map<std::string, G4int> fWarnCount;
+    std::ostream* allWarningFile = nullptr;
+    G4bool writingToFile = false;
+    std::unordered_map<std::string, std::unique_ptr<std::ostream>> oFileMap;
 };
 
 #endif

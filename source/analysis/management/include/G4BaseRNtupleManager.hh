@@ -29,8 +29,8 @@
 //
 // Author: Ivana Hrivnacova, 20/07/2017 (ivana@ipno.in2p3.fr)
 
-#ifndef G4BaseRNtupleManager_h
-#define G4BaseRNtupleManager_h 1
+#ifndef G4BASERNTUPLEMANAGER_HH
+#define G4BASERNTUPLEMANAGER_HH
 
 #include "G4VRNtupleManager.hh"
 #include "globals.hh"
@@ -39,11 +39,12 @@
 
 class G4BaseRNtupleManager : public G4VRNtupleManager
 {
-  // Disable using the object managers outside G4VAnalysisManager and
-  // its messenger
-  friend class G4VAnalysisReader;
+    // Disable using the object managers outside G4VAnalysisManager and
+    // its messenger
+    friend class G4VAnalysisReader;
 
   public:
+
     explicit G4BaseRNtupleManager(const G4AnalysisManagerState& state);
     ~G4BaseRNtupleManager() override = default;
 
@@ -53,6 +54,7 @@ class G4BaseRNtupleManager : public G4VRNtupleManager
     G4BaseRNtupleManager& operator=(const G4BaseRNtupleManager& rhs) = delete;
 
   protected:
+
     // Methods to read ntuple from a file
     // Methods for ntuple with id = FirstNtupleId
     G4bool SetNtupleIColumn(const G4String& columnName, G4int& value) final;
@@ -61,12 +63,12 @@ class G4BaseRNtupleManager : public G4VRNtupleManager
     G4bool SetNtupleSColumn(const G4String& columnName, G4String& value) final;
     // Methods for ntuple with id > FirstNtupleId
     G4bool SetNtupleIColumn(G4int ntupleId, const G4String& columnName, G4int& value) override = 0;
-    G4bool SetNtupleFColumn(
-      G4int ntupleId, const G4String& columnName, G4float& value) override = 0;
-    G4bool SetNtupleDColumn(
-      G4int ntupleId, const G4String& columnName, G4double& value) override = 0;
-    G4bool SetNtupleSColumn(
-      G4int ntupleId, const G4String& columnName, G4String& value) override = 0;
+    G4bool SetNtupleFColumn(G4int ntupleId, const G4String& columnName,
+                            G4float& value) override = 0;
+    G4bool SetNtupleDColumn(G4int ntupleId, const G4String& columnName,
+                            G4double& value) override = 0;
+    G4bool SetNtupleSColumn(G4int ntupleId, const G4String& columnName,
+                            G4String& value) override = 0;
     // Bind the ntuple columns of vector type
     // Methods for ntuple with id = FirstNtupleId
     G4bool SetNtupleIColumn(const G4String& columnName, std::vector<G4int>& vector) final;
@@ -74,14 +76,14 @@ class G4BaseRNtupleManager : public G4VRNtupleManager
     G4bool SetNtupleDColumn(const G4String& columnName, std::vector<G4double>& vector) final;
     G4bool SetNtupleSColumn(const G4String& columnName, std::vector<std::string>& vector) final;
     // Methods for ntuple with id > FirstNtupleId
-    G4bool SetNtupleIColumn(
-      G4int ntupleId, const G4String& columnName, std::vector<G4int>& vector) override = 0;
-    G4bool SetNtupleFColumn(
-      G4int ntupleId, const G4String& columnName, std::vector<G4float>& vector) override = 0;
-    G4bool SetNtupleDColumn(
-      G4int ntupleId, const G4String& columnName, std::vector<G4double>& vector) override = 0;
-    G4bool SetNtupleSColumn(
-      G4int ntupleId, const G4String& columnName, std::vector<std::string>& vector) override = 0;
+    G4bool SetNtupleIColumn(G4int ntupleId, const G4String& columnName,
+                            std::vector<G4int>& vector) override = 0;
+    G4bool SetNtupleFColumn(G4int ntupleId, const G4String& columnName,
+                            std::vector<G4float>& vector) override = 0;
+    G4bool SetNtupleDColumn(G4int ntupleId, const G4String& columnName,
+                            std::vector<G4double>& vector) override = 0;
+    G4bool SetNtupleSColumn(G4int ntupleId, const G4String& columnName,
+                            std::vector<std::string>& vector) override = 0;
     G4bool GetNtupleRow() final;
     G4bool GetNtupleRow(G4int ntupleId) override = 0;
 
@@ -89,6 +91,7 @@ class G4BaseRNtupleManager : public G4VRNtupleManager
     G4int GetNofNtuples() const override = 0;
 
   private:
+
     // Methods
     G4int GetCurrentNtupleId() const;
 };

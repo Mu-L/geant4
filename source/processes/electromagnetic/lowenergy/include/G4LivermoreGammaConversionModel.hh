@@ -30,14 +30,14 @@
 //
 // Modifications: Zhuxin Li@CENBG
 //                11 March 2020
-//                derives from G4PairProductionRelModel             
+//                derives from G4PairProductionRelModel
 // -------------------------------------------------------------------
 
-#ifndef G4LivermoreGammaConversionModel_h
-#define G4LivermoreGammaConversionModel_h 1
+#ifndef G4LIVERMOREGAMMACONVERSIONMODEL_HH
+#define G4LIVERMOREGAMMACONVERSIONMODEL_HH
 
-#include "G4PairProductionRelModel.hh"
 #include "G4Log.hh"
+#include "G4PairProductionRelModel.hh"
 
 class G4ParticleChangeForGamma;
 class G4PhysicsFreeVector;
@@ -45,43 +45,36 @@ class G4PhysicsLogVector;
 
 class G4LivermoreGammaConversionModel : public G4PairProductionRelModel
 {
-public:
-  
-  explicit G4LivermoreGammaConversionModel(
-					   const G4ParticleDefinition* p = nullptr, 
-					   const G4String& nam = "LivermoreConversion");
-  ~G4LivermoreGammaConversionModel() override;
-  
-  void Initialise(const G4ParticleDefinition*, 
-                  const G4DataVector&) override;	
-  void InitialiseForElement(const G4ParticleDefinition*, 
-                                  G4int Z) override;
-  G4double ComputeCrossSectionPerAtom(
-                                const G4ParticleDefinition*,
-                                      G4double kinEnergy, 
-                                      G4double Z, 
-                                      G4double A=0.0, 
-                                      G4double cut=0.0,
-                                      G4double emax=DBL_MAX) override;
-  G4LivermoreGammaConversionModel & operator=
-  (const  G4LivermoreGammaConversionModel &right) = delete;
-  G4LivermoreGammaConversionModel(const  G4LivermoreGammaConversionModel&) = delete;
+  public:
 
-private:
-  void ReadData(const G4int ZZ);
-  const G4String& FindDirectoryPath();
+    explicit G4LivermoreGammaConversionModel(const G4ParticleDefinition* p = nullptr,
+                                             const G4String& nam = "LivermoreConversion");
+    ~G4LivermoreGammaConversionModel() override;
 
-  G4ParticleChangeForGamma* fParticleChange;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A = 0.0, G4double cut = 0.0,
+                                        G4double emax = DBL_MAX) override;
+    G4LivermoreGammaConversionModel&
+    operator=(const G4LivermoreGammaConversionModel& right) = delete;
+    G4LivermoreGammaConversionModel(const G4LivermoreGammaConversionModel&) = delete;
 
-  static G4PhysicsFreeVector* data[101]; // 101 because Z range is 1-100
-  static G4String gDataDirectory;
+  private:
 
-  G4double lowEnergyLimit;
-  G4int verboseLevel;
-  G4int maxZ = 100;
-  G4bool useSpline = false;
-  G4bool isInitialised = false;
+    void ReadData(const G4int ZZ);
+    const G4String& FindDirectoryPath();
+
+    G4ParticleChangeForGamma* fParticleChange;
+
+    static G4PhysicsFreeVector* data[101];  // 101 because Z range is 1-100
+    static G4String gDataDirectory;
+
+    G4double lowEnergyLimit;
+    G4int verboseLevel;
+    G4int maxZ = 100;
+    G4bool useSpline = false;
+    G4bool isInitialised = false;
 };
-
 
 #endif

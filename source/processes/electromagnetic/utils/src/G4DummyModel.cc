@@ -32,10 +32,10 @@
 // File name:   G4DummyModel
 //
 // Author:        Vladimir Ivanchenko
-// 
+//
 // Creation date: 07.03.2006
 //
-// Modifications: 
+// Modifications:
 //
 
 // -------------------------------------------------------------------
@@ -48,8 +48,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4DummyModel::G4DummyModel(const G4String& nam)
-  : G4VMscModel(nam)
+G4DummyModel::G4DummyModel(const G4String& nam) : G4VMscModel(nam)
 {
   // Dummy model by default cover all energies
   SetLowEnergyLimit(0.0);
@@ -61,23 +60,17 @@ G4DummyModel::~G4DummyModel() = default;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4DummyModel::Initialise(const G4ParticleDefinition*, 
-			      const G4DataVector&)
+void G4DummyModel::Initialise(const G4ParticleDefinition*, const G4DataVector&) {}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
+
+void G4DummyModel::SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                                     const G4DynamicParticle*, G4double, G4double)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4DummyModel::SampleSecondaries(std::vector<G4DynamicParticle*>*,
-				     const G4MaterialCutsCouple*,
-				     const G4DynamicParticle*,
-				     G4double,
-				     G4double)
-{}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-G4ThreeVector& 
-G4DummyModel::SampleScattering(const G4ThreeVector&, G4double)
+G4ThreeVector& G4DummyModel::SampleScattering(const G4ThreeVector&, G4double)
 {
   return fDisplacement;
 }
@@ -104,4 +97,3 @@ G4double G4DummyModel::ComputeTrueStepLength(G4double geomPathLength)
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-

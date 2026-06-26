@@ -34,36 +34,32 @@
 //
 // -------------------------------------------------------------------
 
-#include <G4ITSteppingVerbose.hh>
 #include "G4ITTrackingInteractivity.hh"
-#include "G4Track.hh"
+
 #include "G4String.hh"
+#include "G4Track.hh"
+
+#include <G4ITSteppingVerbose.hh>
 
 void G4ITTrackingInteractivity::TrackBanner(G4Track* track, const G4String& message)
 {
   G4cout << G4endl;
   G4cout << "*******************************************************"
-         << "**************************************************"
-         << G4endl;
-  if(!message.empty())
-      G4cout << message ;
+         << "**************************************************" << G4endl;
+  if (!message.empty()) G4cout << message;
   G4cout << " * G4Track Information: "
-         << "   Particle : " << track->GetDefinition()->GetParticleName()
-         << ","
-         << "   Track ID : " << track->GetTrackID()
-         << ","
-         << "   Parent ID : " << track->GetParentID()
-         << G4endl;
+         << "   Particle : " << track->GetDefinition()->GetParticleName() << ","
+         << "   Track ID : " << track->GetTrackID() << ","
+         << "   Parent ID : " << track->GetParentID() << G4endl;
   G4cout << "*******************************************************"
-         << "**************************************************"
-         << G4endl;
+         << "**************************************************" << G4endl;
   G4cout << G4endl;
 }
 
 G4ITTrackingInteractivity::G4ITTrackingInteractivity(G4VITSteppingVerbose* verbose)
 {
   fVerboseLevel = 0;
-  if(verbose != nullptr)
+  if (verbose != nullptr)
   {
     fpVerbose = verbose;
   }
@@ -78,15 +74,15 @@ void G4ITTrackingInteractivity::SetSteppingVerboseLevel(G4int level)
   fpVerbose->SetVerbose(level);
 }
 
-//void G4ITTrackingInteractivity::StartTracking(G4Track* track)
+// void G4ITTrackingInteractivity::StartTracking(G4Track* track)
 //{
-//  fpVerbose->TrackingStarted(track);
-//}
+//   fpVerbose->TrackingStarted(track);
+// }
 //
-//void G4ITTrackingInteractivity::EndTracking(G4Track* track)
+// void G4ITTrackingInteractivity::EndTracking(G4Track* track)
 //{
-//  fpVerbose->TrackingEnded(track);
-//}
+//   fpVerbose->TrackingEnded(track);
+// }
 
 G4int G4ITTrackingInteractivity::GetSteppingVerboseLevel() const
 {

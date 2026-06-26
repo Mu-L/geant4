@@ -35,47 +35,47 @@
 // energy region [9, 12] GeV.
 //---------------------------------------------------------------------------
 //
-#include <iomanip>   
-
 #include "G4HadronPhysicsFTFP_BERT_ATL.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4HadronicParameters.hh"
 
+#include "G4HadronicParameters.hh"
 #include "G4PhysicsConstructorFactory.hh"
+#include "G4SystemOfUnits.hh"
+
+#include <iomanip>
 //
 G4_DECLARE_PHYSCONSTR_FACTORY(G4HadronPhysicsFTFP_BERT_ATL);
 
-G4HadronPhysicsFTFP_BERT_ATL::G4HadronPhysicsFTFP_BERT_ATL(G4int verb) :
-    G4HadronPhysicsFTFP_BERT_ATL("hInelastic FTFP_BERT_ATL",false)
+G4HadronPhysicsFTFP_BERT_ATL::G4HadronPhysicsFTFP_BERT_ATL(G4int verb)
+  : G4HadronPhysicsFTFP_BERT_ATL("hInelastic FTFP_BERT_ATL", false)
 {
   G4HadronicParameters::Instance()->SetVerboseLevel(verb);
 }
 
-G4HadronPhysicsFTFP_BERT_ATL::G4HadronPhysicsFTFP_BERT_ATL(const G4String& name, G4bool quasiElastic)
-    : G4HadronPhysicsFTFP_BERT(name,quasiElastic)
+G4HadronPhysicsFTFP_BERT_ATL::G4HadronPhysicsFTFP_BERT_ATL(const G4String& name,
+                                                           G4bool quasiElastic)
+  : G4HadronPhysicsFTFP_BERT(name, quasiElastic)
 {
-  // Change configuration parameters of FTFP_BERT 
+  // Change configuration parameters of FTFP_BERT
   // for n, p, pions, and kaons
-  G4double emin = 9.0*CLHEP::GeV; 
-  G4double emax = 12.0*CLHEP::GeV; 
-  minFTFP_pion    = emin;
-  maxBERT_pion    = emax;
-  minFTFP_kaon    = emin;
-  maxBERT_kaon    = emax;
-  minFTFP_proton  = emin;
-  maxBERT_proton  = emax;
+  G4double emin = 9.0 * CLHEP::GeV;
+  G4double emax = 12.0 * CLHEP::GeV;
+  minFTFP_pion = emin;
+  maxBERT_pion = emax;
+  minFTFP_kaon = emin;
+  maxBERT_kaon = emax;
+  minFTFP_proton = emin;
+  maxBERT_proton = emax;
   minFTFP_neutron = emin;
   maxBERT_neutron = emax;
 }
 
-G4HadronPhysicsFTFP_BERT_ATL::~G4HadronPhysicsFTFP_BERT_ATL()
-{}
+G4HadronPhysicsFTFP_BERT_ATL::~G4HadronPhysicsFTFP_BERT_ATL() {}
 
 void G4HadronPhysicsFTFP_BERT_ATL::ConstructProcess()
 {
-  if(G4Threading::IsMasterThread() &&
-     G4HadronicParameters::Instance()->GetVerboseLevel() > 0) {
-      DumpBanner();
+  if (G4Threading::IsMasterThread() && G4HadronicParameters::Instance()->GetVerboseLevel() > 0)
+  {
+    DumpBanner();
   }
   CreateModels();
 }

@@ -28,9 +28,10 @@
 // Author: J.Apostolakis, 07.12.2007 - Adapted from G4LogicalVolumeStore
 // --------------------------------------------------------------------
 
-#include "G4Types.hh"
 #include "G4FieldManagerStore.hh"
-#include "G4ChordFinder.hh" 
+
+#include "G4ChordFinder.hh"
+#include "G4Types.hh"
 
 // ***************************************************************************
 // Static class variables
@@ -90,13 +91,13 @@ void G4FieldManagerStore::Clean()
   // Locks store for deletion of field managers. De-registration will be
   // performed at this stage. G4FieldManagers will not de-register themselves.
   //
-  locked = true;  
+  locked = true;
 
   G4FieldManagerStore* store = GetInstance();
 
-  for(const auto & pos : *store)
+  for (const auto& pos : *store)
   {
-    delete pos; 
+    delete pos;
   }
 
   locked = false;
@@ -118,11 +119,11 @@ void G4FieldManagerStore::Register(G4FieldManager* pFieldManager)
 //
 void G4FieldManagerStore::DeRegister(G4FieldManager* pFieldMgr)
 {
-  if (!locked)    // Do not de-register if locked !
+  if (!locked)  // Do not de-register if locked !
   {
-    for (auto i=GetInstance()->cbegin(); i!=GetInstance()->cend(); ++i)
+    for (auto i = GetInstance()->cbegin(); i != GetInstance()->cend(); ++i)
     {
-      if (*i==pFieldMgr)  //   For LogVol was **i == *pLogVolume ... Reason?
+      if (*i == pFieldMgr)  //   For LogVol was **i == *pLogVolume ... Reason?
       {
         GetInstance()->erase(i);
         break;
@@ -135,15 +136,14 @@ void G4FieldManagerStore::DeRegister(G4FieldManager* pFieldMgr)
 // Globally reset the state
 // ***************************************************************************
 //
-void
-G4FieldManagerStore::ClearAllChordFindersState()
+void G4FieldManagerStore::ClearAllChordFindersState()
 {
   G4ChordFinder* pChordFnd;
-   
-  for (const auto & mgr : *GetInstance())
+
+  for (const auto& mgr : *GetInstance())
   {
     pChordFnd = mgr->GetChordFinder();
-    if( pChordFnd != nullptr )
+    if (pChordFnd != nullptr)
     {
       pChordFnd->ResetStepEstimate();
     }

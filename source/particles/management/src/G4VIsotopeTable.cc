@@ -36,7 +36,8 @@ G4VIsotopeTable::G4VIsotopeTable(const G4String& name) : fName(name) {}
 
 G4VIsotopeTable& G4VIsotopeTable::operator=(const G4VIsotopeTable& right)
 {
-  if (this != &right) {
+  if (this != &right)
+  {
     fName = right.fName;
     verboseLevel = right.verboseLevel;
   }
@@ -55,9 +56,12 @@ void G4VIsotopeTable::DumpTable(G4int Zmin, G4int Zmax)
   G4int Z, A;
   G4int lvl;
   const G4int MAX_LVL = 9;
-  for (Z = Zmin; Z <= Zmax; ++Z) {
-    for (A = Z; A <= 3 * Z; ++A) {
-      for (lvl = 0; lvl <= MAX_LVL; ++lvl) {
+  for (Z = Zmin; Z <= Zmax; ++Z)
+  {
+    for (A = Z; A <= 3 * Z; ++A)
+    {
+      for (lvl = 0; lvl <= MAX_LVL; ++lvl)
+      {
         G4IsotopeProperty* ptr = GetIsotope(Z, A, lvl);
         if (ptr != nullptr) ptr->DumpInfo();
       }

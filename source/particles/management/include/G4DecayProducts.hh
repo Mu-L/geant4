@@ -31,8 +31,8 @@
 
 // Author: H.Kurashige, 12 July 1996
 // --------------------------------------------------------------------
-#ifndef G4DecayProducts_hh
-#define G4DecayProducts_hh 1
+#ifndef G4DECAYPRODUCTS_HH
+#define G4DECAYPRODUCTS_HH
 
 #include "G4DynamicParticle.hh"
 #include "G4ios.hh"
@@ -43,6 +43,7 @@
 class G4DecayProducts
 {
   public:
+
     // Constructors
     G4DecayProducts();
     G4DecayProducts(const G4DynamicParticle& aParticle);
@@ -85,6 +86,7 @@ class G4DecayProducts
     using G4DecayProductVector = std::vector<G4DynamicParticle*>;
 
   private:
+
     G4int numberOfProducts = 0;
     G4DynamicParticle* theParentParticle = nullptr;
     G4DecayProductVector* theProductVector = nullptr;

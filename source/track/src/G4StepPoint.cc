@@ -33,29 +33,29 @@
 // --------------------------------------------------------------------
 G4StepPoint& G4StepPoint::operator=(const G4StepPoint& right)
 {
-  // NOTE: this can be removed and operator= made =default if we only expect 
+  // NOTE: this can be removed and operator= made =default if we only expect
   // rare self-assignment
-  if(this != &right)
+  if (this != &right)
   {
-    fPosition            = right.fPosition;
-    fGlobalTime          = right.fGlobalTime;
-    fLocalTime           = right.fLocalTime;
-    fProperTime          = right.fProperTime;
-    fMomentumDirection   = right.fMomentumDirection;
-    fKineticEnergy       = right.fKineticEnergy;
-    fVelocity            = right.fVelocity;
-    fpTouchable          = right.fpTouchable;
-    fpMaterial           = right.fpMaterial;
+    fPosition = right.fPosition;
+    fGlobalTime = right.fGlobalTime;
+    fLocalTime = right.fLocalTime;
+    fProperTime = right.fProperTime;
+    fMomentumDirection = right.fMomentumDirection;
+    fKineticEnergy = right.fKineticEnergy;
+    fVelocity = right.fVelocity;
+    fpTouchable = right.fpTouchable;
+    fpMaterial = right.fpMaterial;
     fpMaterialCutsCouple = right.fpMaterialCutsCouple;
-    fpSensitiveDetector  = right.fpSensitiveDetector;
-    fSafety              = right.fSafety;
-    fPolarization        = right.fPolarization;
-    fStepStatus          = right.fStepStatus;
+    fpSensitiveDetector = right.fpSensitiveDetector;
+    fSafety = right.fSafety;
+    fPolarization = right.fPolarization;
+    fStepStatus = right.fStepStatus;
     fpProcessDefinedStep = right.fpProcessDefinedStep;
-    fMass                = right.fMass;
-    fCharge              = right.fCharge;
-    fMagneticMoment      = right.fMagneticMoment;
-    fWeight              = right.fWeight;
+    fMass = right.fMass;
+    fCharge = right.fCharge;
+    fMagneticMoment = right.fMagneticMoment;
+    fWeight = right.fWeight;
   }
   return *this;
 }

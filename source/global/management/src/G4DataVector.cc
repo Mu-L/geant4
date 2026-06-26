@@ -29,23 +29,20 @@
 // --------------------------------------------------------------------
 
 #include "G4DataVector.hh"
+
 #include <iomanip>
 
 // --------------------------------------------------------------------
-G4DataVector::G4DataVector(std::size_t cap)
-  : std::vector<G4double>(cap, 0.0)
-{}
+G4DataVector::G4DataVector(std::size_t cap) : std::vector<G4double>(cap, 0.0) {}
 
 // --------------------------------------------------------------------
-G4DataVector::G4DataVector(std::size_t cap, G4double value)
-  : std::vector<G4double>(cap, value)
-{}
+G4DataVector::G4DataVector(std::size_t cap, G4double value) : std::vector<G4double>(cap, value) {}
 
 // --------------------------------------------------------------------
 G4bool G4DataVector::Store(std::ofstream& fOut, G4bool ascii)
 {
   // Ascii mode
-  if(ascii)
+  if (ascii)
   {
     fOut << *this;
     return true;
@@ -53,15 +50,15 @@ G4bool G4DataVector::Store(std::ofstream& fOut, G4bool ascii)
 
   // Binary Mode
   auto sizeV = G4int(size());
-  fOut.write((char*) (&sizeV), sizeof sizeV);
+  fOut.write((char*)(&sizeV), sizeof sizeV);
 
   auto value = new G4double[sizeV];
-  std::size_t i   = 0;
-  for(auto itr = cbegin(); itr != cend(); ++itr, ++i)
+  std::size_t i = 0;
+  for (auto itr = cbegin(); itr != cend(); ++itr, ++i)
   {
     value[i] = *itr;
   }
-  fOut.write((char*) (value), sizeV * (sizeof(G4double)));
+  fOut.write((char*)(value), sizeV * (sizeof(G4double)));
   delete[] value;
 
   return true;
@@ -74,15 +71,15 @@ G4bool G4DataVector::Retrieve(std::ifstream& fIn, G4bool ascii)
   G4int sizeV = 0;
 
   // retrieve in ascii mode
-  if(ascii)
+  if (ascii)
   {
     // contents
     fIn >> sizeV;
-    if(fIn.fail())
+    if (fIn.fail())
     {
       return false;
     }
-    if(sizeV <= 0)
+    if (sizeV <= 0)
     {
 #ifdef G4VERBOSE
       G4cerr << "G4DataVector::Retrieve():";
@@ -92,11 +89,11 @@ G4bool G4DataVector::Retrieve(std::ifstream& fIn, G4bool ascii)
     }
 
     reserve(sizeV);
-    for(G4int i = 0; i < sizeV; ++i)
+    for (G4int i = 0; i < sizeV; ++i)
     {
       G4double vData = 0.0;
       fIn >> vData;
-      if(fIn.fail())
+      if (fIn.fail())
       {
         return false;
       }
@@ -106,18 +103,18 @@ G4bool G4DataVector::Retrieve(std::ifstream& fIn, G4bool ascii)
   }
 
   // retrieve in binary mode
-  fIn.read((char*) (&sizeV), sizeof sizeV);
+  fIn.read((char*)(&sizeV), sizeof sizeV);
 
   auto value = new G4double[sizeV];
-  fIn.read((char*) (value), sizeV * (sizeof(G4double)));
-  if(G4int(fIn.gcount()) != G4int(sizeV * (sizeof(G4double))))
+  fIn.read((char*)(value), sizeV * (sizeof(G4double)));
+  if (G4int(fIn.gcount()) != G4int(sizeV * (sizeof(G4double))))
   {
     delete[] value;
     return false;
   }
 
   reserve(sizeV);
-  for(G4int i = 0; i < sizeV; ++i)
+  for (G4int i = 0; i < sizeV; ++i)
   {
     push_back(value[i]);
   }
@@ -129,7 +126,7 @@ G4bool G4DataVector::Retrieve(std::ifstream& fIn, G4bool ascii)
 std::ostream& operator<<(std::ostream& out, const G4DataVector& pv)
 {
   out << pv.size() << std::setprecision(12) << G4endl;
-  for(std::size_t i = 0; i < pv.size(); ++i)
+  for (std::size_t i = 0; i < pv.size(); ++i)
   {
     out << pv[i] << G4endl;
   }

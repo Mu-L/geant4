@@ -32,30 +32,30 @@
 // -------------------------------------------------------------------
 
 #include "G4ios.hh"
+
 #include <iomanip>
 
 // force REFERENCE macros _not_ to be expanded here
 // but wherever the class is used (w/ that .hh use)
-#define   G4PhysicsConstructorRegistry_cc 1
+#define G4PhysicsConstructorRegistry_cc 1
 
-#include "G4PhysicsConstructorRegistry.hh"
-
-#include "G4VPhysicsConstructor.hh"
 #include "G4PhysicsConstructorFactory.hh"
+#include "G4PhysicsConstructorRegistry.hh"
+#include "G4VPhysicsConstructor.hh"
 
 G4ThreadLocal G4PhysicsConstructorRegistry* G4PhysicsConstructorRegistry::theInstance = nullptr;
 
 G4PhysicsConstructorRegistry* G4PhysicsConstructorRegistry::Instance()
 {
-  if (nullptr == theInstance) {
+  if (nullptr == theInstance)
+  {
     static G4ThreadLocalSingleton<G4PhysicsConstructorRegistry> inst;
     theInstance = inst.Instance();
   }
   return theInstance;
 }
 
-G4PhysicsConstructorRegistry::G4PhysicsConstructorRegistry()
-{}
+G4PhysicsConstructorRegistry::G4PhysicsConstructorRegistry() {}
 
 G4PhysicsConstructorRegistry::~G4PhysicsConstructorRegistry()
 {
@@ -64,23 +64,40 @@ G4PhysicsConstructorRegistry::~G4PhysicsConstructorRegistry()
 
 void G4PhysicsConstructorRegistry::Clean()
 {
-  for (auto const & ptr : physConstr) { delete ptr; }
+  for (auto const& ptr : physConstr)
+  {
+    delete ptr;
+  }
   physConstr.clear();
 }
 
 void G4PhysicsConstructorRegistry::Register(G4VPhysicsConstructor* p)
 {
-  if (nullptr == p) { return; }
-  for (auto const & ptr : physConstr) { if (p == ptr) { return; } }
+  if (nullptr == p)
+  {
+    return;
+  }
+  for (auto const& ptr : physConstr)
+  {
+    if (p == ptr)
+    {
+      return;
+    }
+  }
   physConstr.push_back(p);
 }
 
 void G4PhysicsConstructorRegistry::DeRegister(G4VPhysicsConstructor* p)
 {
-  if (nullptr == p || physConstr.empty()) { return; }
+  if (nullptr == p || physConstr.empty())
+  {
+    return;
+  }
   std::size_t n = physConstr.size();
-  for (std::size_t i=0; i<n; ++i) {
-    if ( physConstr[i] == p ) {
+  for (std::size_t i = 0; i < n; ++i)
+  {
+    if (physConstr[i] == p)
+    {
       physConstr[i] = nullptr;
       return;
     }
@@ -96,34 +113,36 @@ G4VPhysicsConstructor* G4PhysicsConstructorRegistry::GetPhysicsConstructor(const
 {
   // check if factory exists...
   //
-  if (factories.find(name)!=factories.end())
-    {
-        // we could store the list of called factories in some vector and
-        // before returning we can could first check if this physics constructor was already instantiated
-        // if yes, we can throw an exception saying that this physics can been already registered
+  if (factories.find(name) != factories.end())
+  {
+    // we could store the list of called factories in some vector and
+    // before returning we can could first check if this physics constructor was already
+    // instantiated if yes, we can throw an exception saying that this physics can been already
+    // registered
 
-      return factories[name]->Instantiate();
-    }
+    return factories[name]->Instantiate();
+  }
   else
-    {
-      G4ExceptionDescription ED;
-      ED << "The factory for the physics constructor ["<< name << "] does not exist!" << G4endl;
-      G4Exception("G4PhysicsConstructorRegistry::GetPhysicsConstructor", "PhysicsList001", FatalException, ED);
-      return nullptr;
-    }
+  {
+    G4ExceptionDescription ED;
+    ED << "The factory for the physics constructor [" << name << "] does not exist!" << G4endl;
+    G4Exception("G4PhysicsConstructorRegistry::GetPhysicsConstructor", "PhysicsList001",
+                FatalException, ED);
+    return nullptr;
+  }
 }
 
 G4bool G4PhysicsConstructorRegistry::IsKnownPhysicsConstructor(const G4String& name)
 {
-  return ( factories.find(name) != factories.end() );
+  return (factories.find(name) != factories.end());
 }
-
 
 std::vector<G4String> G4PhysicsConstructorRegistry::AvailablePhysicsConstructors() const
 {
   std::vector<G4String> avail;
-  std::map<G4String,G4VBasePhysConstrFactory*>::const_iterator itr;
-  for ( itr = factories.begin(); itr != factories.end(); ++itr ) {
+  std::map<G4String, G4VBasePhysConstrFactory*>::const_iterator itr;
+  for (itr = factories.begin(); itr != factories.end(); ++itr)
+  {
     avail.push_back(itr->first);
   }
 
@@ -133,12 +152,14 @@ std::vector<G4String> G4PhysicsConstructorRegistry::AvailablePhysicsConstructors
 void G4PhysicsConstructorRegistry::PrintAvailablePhysicsConstructors() const
 {
   std::vector<G4String> avail = AvailablePhysicsConstructors();
-  G4cout << "G4VPhysicsConstructors in G4PhysicsConstructorRegistry are:"
-         << G4endl;
-  if ( avail.empty() ) G4cout << "... no registered processes" << G4endl;
-  else {
+  G4cout << "G4VPhysicsConstructors in G4PhysicsConstructorRegistry are:" << G4endl;
+  if (avail.empty())
+    G4cout << "... no registered processes" << G4endl;
+  else
+  {
     std::size_t n = avail.size();
-    for (std::size_t i=0; i<n; ++i ) {
+    for (std::size_t i = 0; i < n; ++i)
+    {
       G4cout << " [" << std::setw(3) << i << "] "
              << " \"" << avail[i] << "\"" << G4endl;
     }
@@ -157,4 +178,4 @@ void G4PhysicsConstructorRegistry::PrintAvailablePhysicsConstructors() const
 // Instead we'll make the references in the location(s) where the
 // G4PhysicsConstructorRegistry is _used_ :
 //
-//#include "G4RegisterPhysicsConstructors.icc"
+// #include "G4RegisterPhysicsConstructors.icc"

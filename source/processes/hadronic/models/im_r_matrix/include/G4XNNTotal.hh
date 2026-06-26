@@ -25,57 +25,37 @@
 //
 //
 
-#ifndef G4XNNTotal_h
-#define G4XNNTotal_h
+#ifndef G4XNNTOTAL_HH
+#define G4XNNTOTAL_HH
 
-#include "globals.hh"
 #include "G4CrossSectionPatch.hh"
 #include "G4CrossSectionVector.hh"
+#include "globals.hh"
 
 class G4KineticTrack;
 
 class G4XNNTotal : public G4CrossSectionPatch
 {
+  public:
 
-public:
+    G4XNNTotal();
 
-  G4XNNTotal();
+    virtual ~G4XNNTotal();
 
-  virtual ~G4XNNTotal();
+    G4bool operator==(const G4XNNTotal& right) const;
+    G4bool operator!=(const G4XNNTotal& right) const;
+    virtual const G4CrossSectionVector* GetComponents() const { return components; }
 
-  G4bool operator==(const G4XNNTotal &right) const;
-  G4bool operator!=(const G4XNNTotal &right) const;
-  virtual const G4CrossSectionVector* GetComponents() const { return components; } 
- 
-  virtual G4String Name() const;
+    virtual G4String Name() const;
 
+  protected:
 
-protected:
+  private:
 
+    G4XNNTotal(const G4XNNTotal& right);
+    const G4XNNTotal& operator=(const G4XNNTotal& right);
 
-private:  
-
-  G4XNNTotal(const G4XNNTotal &right);
-  const G4XNNTotal& operator=(const G4XNNTotal &right);
-
-  G4CrossSectionVector* components;
-
+    G4CrossSectionVector* components;
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

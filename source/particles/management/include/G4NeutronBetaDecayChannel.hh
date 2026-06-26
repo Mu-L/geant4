@@ -32,8 +32,8 @@
 
 // Author: H.Kurashige, 18 September 2001
 // --------------------------------------------------------------------
-#ifndef G4NeutronBetaDecayChannel_hh
-#define G4NeutronBetaDecayChannel_hh 1
+#ifndef G4NEUTRONBETADECAYCHANNEL_HH
+#define G4NEUTRONBETADECAYCHANNEL_HH
 
 #include "G4VDecayChannel.hh"
 #include "G4ios.hh"
@@ -42,12 +42,14 @@
 class G4NeutronBetaDecayChannel : public G4VDecayChannel
 {
   public:
+
     G4NeutronBetaDecayChannel(const G4String& theParentName, G4double theBR);
     ~G4NeutronBetaDecayChannel() override = default;
 
     G4DecayProducts* DecayIt(G4double) override;
 
   protected:
+
     G4NeutronBetaDecayChannel() = default;
 
     // Copy constructor and assignment operator

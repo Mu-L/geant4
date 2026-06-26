@@ -40,9 +40,10 @@
 /**
  * @brief G4ClassicalRK4 integrates the equations of the motion of a particle
  * in a magnetic field using the classical 4th Runge-Kutta method.
+ * @ingroup geometry_magneticfield
  */
 
-class G4ClassicalRK4 : public G4MagErrorStepper 
+class G4ClassicalRK4 : public G4MagErrorStepper
 {
   public:
 
@@ -51,13 +52,12 @@ class G4ClassicalRK4 : public G4MagErrorStepper
      *  @param[in] EquationMotion Pointer to the provided equation of motion.
      *  @param[in] numberOfVariables The number of integration variables.
      */
-    G4ClassicalRK4(G4EquationOfMotion* EquationMotion,
-                   G4int numberOfVariables = 6) ;
+    G4ClassicalRK4(G4EquationOfMotion* EquationMotion, G4int numberOfVariables = 6);
 
     /**
      * Destructor.
      */
-    ~G4ClassicalRK4() override ;
+    ~G4ClassicalRK4() override;
 
     /**
      * Copy constructor and assignment operator not allowed.
@@ -67,7 +67,7 @@ class G4ClassicalRK4 : public G4MagErrorStepper
 
     // A stepper that does not know about errors.
     // It is used by the MagErrorStepper stepper.
-   
+
     /**
      * Given values for the variables y[0,..,n-1] and their derivatives
      * dydx[0,...,n-1] known at x, uses the classical 4th Runge-Kutta
@@ -80,10 +80,8 @@ class G4ClassicalRK4 : public G4MagErrorStepper
      *  @param[in] h The given step size.
      *  @param[out] yOut Integration output.
      */
-    void DumbStepper( const G4double yIn[],
-                      const G4double dydx[],
-                            G4double h,
-                            G4double yOut[] ) override ;
+    void DumbStepper(const G4double yIn[], const G4double dydx[], G4double h,
+                     G4double yOut[]) override;
 
     /**
      * Returns the order, 4, of integration.
@@ -97,7 +95,7 @@ class G4ClassicalRK4 : public G4MagErrorStepper
 
   private:
 
-    G4double *dydxm, *dydxt, *yt; // scratch space - not state 
+    G4double *dydxm, *dydxt, *yt;  // scratch space - not state
 };
 
 #endif

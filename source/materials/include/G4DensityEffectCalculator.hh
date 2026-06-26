@@ -43,8 +43,8 @@
  * Author: Matthew Strait <straitm@umn.edu> 2019
  */
 
-#ifndef G4DensityEffectCalculator_HH
-#define G4DensityEffectCalculator_HH
+#ifndef G4DENSITYEFFECTCALCULATOR_HH
+#define G4DENSITYEFFECTCALCULATOR_HH
 
 #include "globals.hh"
 
@@ -52,87 +52,89 @@ class G4Material;
 
 class G4DensityEffectCalculator
 {
- public:
-  G4DensityEffectCalculator(const G4Material*, G4int);
-  ~G4DensityEffectCalculator();
+  public:
 
-  // The Sternheimer 'x' defined as log10(p/m) == log10(beta*gamma).
-  G4double ComputeDensityCorrection(G4double x);
+    G4DensityEffectCalculator(const G4Material*, G4int);
+    ~G4DensityEffectCalculator();
 
- private:
-  /*
-   * Given a material defined in 'par' with a plasma energy, mean excitation
-   * energy, and set of atomic energy levels ("oscillator frequencies") with
-   * occupation fractions ("oscillation strengths"), solve for the Sternheimer
-   * adjustment factor (Sternheimer 1984 eq 8) and record (into 'par') the values
-   * of the adjusted oscillator frequencies and Sternheimer constants l_i.
-   * After doing this, 'par' is ready for a calculation of delta for an
-   * arbitrary particle energy.  Returns true on success, false on failure.
-   */
-  G4double FermiDeltaCalculation(G4double x);
+    // The Sternheimer 'x' defined as log10(p/m) == log10(beta*gamma).
+    G4double ComputeDensityCorrection(G4double x);
 
-  G4double Newton(G4double x0, G4bool first);
+  private:
 
-  G4double DFRho(G4double);
+    /*
+     * Given a material defined in 'par' with a plasma energy, mean excitation
+     * energy, and set of atomic energy levels ("oscillator frequencies") with
+     * occupation fractions ("oscillation strengths"), solve for the Sternheimer
+     * adjustment factor (Sternheimer 1984 eq 8) and record (into 'par') the values
+     * of the adjusted oscillator frequencies and Sternheimer constants l_i.
+     * After doing this, 'par' is ready for a calculation of delta for an
+     * arbitrary particle energy.  Returns true on success, false on failure.
+     */
+    G4double FermiDeltaCalculation(G4double x);
 
-  G4double FRho(G4double);
+    G4double Newton(G4double x0, G4bool first);
 
-  G4double DEll(G4double);
+    G4double DFRho(G4double);
 
-  G4double Ell(G4double);
+    G4double FRho(G4double);
 
-  G4double DeltaOnceSolved(G4double);
+    G4double DEll(G4double);
 
-  const G4Material* fMaterial;
-  G4int fVerbose{0};
-  G4int fWarnings{0};
+    G4double Ell(G4double);
 
-  // Number of energy levels.  If a single element, this is the number
-  // of subshells.  If several elements, this is the sum of the number
-  // of subshells.  In principle, could include levels for molecular
-  // orbitals or other non-atomic states.  The last level is always
-  // the conduction band.  If the material is an insulator, set the
-  // oscillator strength for that level to zero and the energy to
-  // any value.
-  const G4int nlev;
+    G4double DeltaOnceSolved(G4double);
 
-  G4double fConductivity;
+    const G4Material* fMaterial;
+    G4int fVerbose{0};
+    G4int fWarnings{0};
 
-  // Current Sternheimer 'x' defined as log10(p/m) == log10(beta*gamma).
-  G4double sternx;
+    // Number of energy levels.  If a single element, this is the number
+    // of subshells.  If several elements, this is the sum of the number
+    // of subshells.  In principle, could include levels for molecular
+    // orbitals or other non-atomic states.  The last level is always
+    // the conduction band.  If the material is an insulator, set the
+    // oscillator strength for that level to zero and the energy to
+    // any value.
+    const G4int nlev;
 
-  // The plasma energy of the material in eV, which is simply
-  // 28.816 sqrt(density Z/A), with density in g/cc.
-  G4double plasmaE;
+    G4double fConductivity;
 
-  // The mean excitation energy of the material in eV, i.e. the 'I' in the
-  // Bethe energy loss formula.
-  G4double meanexcite;
+    // Current Sternheimer 'x' defined as log10(p/m) == log10(beta*gamma).
+    G4double sternx;
 
-  // Sternheimer's "oscillator strengths", which are simply the fraction
-  // of electrons in a given energy level.  For a single element, this is
-  // the fraction of electrons in a subshell.  For a compound or mixture,
-  // it is weighted by the number fraction of electrons contributed by
-  // each element, e.g. for water, oxygen's electrons are given 8/10 of the
-  // weight.
-  G4double* sternf;
+    // The plasma energy of the material in eV, which is simply
+    // 28.816 sqrt(density Z/A), with density in g/cc.
+    G4double plasmaE;
 
-  // Energy levels.  Can be found for free atoms in, e.g., T. A. Carlson.
-  // Photoelectron and Auger Spectroscopy. Plenum Press, New York and London,
-  // 1985. Available in a convenient form in G4AtomicShells.cc.
-  //
-  // Sternheimer 1984 implies that the energy level for conduction electrons
-  // (the final element of this array) should be set to zero, although the
-  // computation could be run with other values.
-  G4double* levE;
+    // The mean excitation energy of the material in eV, i.e. the 'I' in the
+    // Bethe energy loss formula.
+    G4double meanexcite;
 
-  /***** Results of intermediate calculations *****/
+    // Sternheimer's "oscillator strengths", which are simply the fraction
+    // of electrons in a given energy level.  For a single element, this is
+    // the fraction of electrons in a subshell.  For a compound or mixture,
+    // it is weighted by the number fraction of electrons contributed by
+    // each element, e.g. for water, oxygen's electrons are given 8/10 of the
+    // weight.
+    G4double* sternf;
 
-  // The Sternheimer parameters l_i which appear in Sternheimer 1984 eq(1).
-  G4double* sternl;
+    // Energy levels.  Can be found for free atoms in, e.g., T. A. Carlson.
+    // Photoelectron and Auger Spectroscopy. Plenum Press, New York and London,
+    // 1985. Available in a convenient form in G4AtomicShells.cc.
+    //
+    // Sternheimer 1984 implies that the energy level for conduction electrons
+    // (the final element of this array) should be set to zero, although the
+    // computation could be run with other values.
+    G4double* levE;
 
-  // The adjusted energy levels, as found using Sternheimer 1984 eq(8).
-  G4double* sternEbar;
+    /***** Results of intermediate calculations *****/
+
+    // The Sternheimer parameters l_i which appear in Sternheimer 1984 eq(1).
+    G4double* sternl;
+
+    // The adjusted energy levels, as found using Sternheimer 1984 eq(8).
+    G4double* sternEbar;
 };
 
 #endif

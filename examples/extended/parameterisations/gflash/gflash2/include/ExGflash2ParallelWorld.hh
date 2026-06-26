@@ -36,11 +36,6 @@ class G4LogicalVolume;
 class G4VPhysicalVolume;
 class G4Region;
 
-class GFlashHomoShowerParameterisation;
-class GFlashShowerModel;
-class GFlashHitMaker;
-class GFlashParticleBounds;
-
 class ExGflash2ParallelWorld : public G4VUserParallelWorld
 {
   public:
@@ -52,11 +47,6 @@ class ExGflash2ParallelWorld : public G4VUserParallelWorld
 
   private:
     G4Region* fRegion{nullptr};
-
-    inline static G4ThreadLocal GFlashShowerModel* fFastShowerModel = nullptr;
-    inline static G4ThreadLocal GFlashHomoShowerParameterisation* fParameterisation = nullptr;
-    inline static G4ThreadLocal GFlashParticleBounds* fParticleBounds = nullptr;
-    inline static G4ThreadLocal GFlashHitMaker* fHitMaker = nullptr;
 };
 
 #endif

@@ -31,89 +31,85 @@
 //      History: first implementation, Maxim Komogorov, 10-Jul-1998
 // -----------------------------------------------------------------------------
 
-#ifndef G4LundStringFragmentation_h
-#define G4LundStringFragmentation_h 1
+#ifndef G4LUNDSTRINGFRAGMENTATION_HH
+#define G4LUNDSTRINGFRAGMENTATION_HH
 
 #include "G4VLongitudinalStringDecay.hh"
 
 //******************************************************************************
 
-class G4LundStringFragmentation: public G4VLongitudinalStringDecay
+class G4LundStringFragmentation : public G4VLongitudinalStringDecay
 {
   public:
+
     G4LundStringFragmentation();
     virtual ~G4LundStringFragmentation();
 
     virtual G4KineticTrackVector* FragmentString(const G4ExcitedString& theString);
 
   private:
+
     // not implemented to protect/forbid use
-    G4LundStringFragmentation(const G4LundStringFragmentation &right);
-    const G4LundStringFragmentation & operator=(const G4LundStringFragmentation &right);
-    G4bool operator==(const G4LundStringFragmentation &right) const;
-    G4bool operator!=(const G4LundStringFragmentation &right) const;
+    G4LundStringFragmentation(const G4LundStringFragmentation& right);
+    const G4LundStringFragmentation& operator=(const G4LundStringFragmentation& right);
+    G4bool operator==(const G4LundStringFragmentation& right) const;
+    G4bool operator!=(const G4LundStringFragmentation& right) const;
 
   private:
-    virtual G4bool StopFragmenting(const G4FragmentingString  * const string);
-    virtual G4bool IsItFragmentable(const G4FragmentingString * const string);
 
-    virtual G4bool SplitLast(G4FragmentingString * string, 
-	 	             G4KineticTrackVector * LeftVector,
-	 	             G4KineticTrackVector * RightVector);
+    virtual G4bool StopFragmenting(const G4FragmentingString* const string);
+    virtual G4bool IsItFragmentable(const G4FragmentingString* const string);
 
-    virtual void Sample4Momentum(G4LorentzVector* Mom,     G4double Mass, 
-                                 G4LorentzVector* AntiMom, G4double AntiMass, 
-                                 G4double InitialMass); 
+    virtual G4bool SplitLast(G4FragmentingString* string, G4KineticTrackVector* LeftVector,
+                             G4KineticTrackVector* RightVector);
 
-    virtual G4KineticTrack * Splitup(G4FragmentingString *string,
-                                     G4FragmentingString *&newString);
+    virtual void Sample4Momentum(G4LorentzVector* Mom, G4double Mass, G4LorentzVector* AntiMom,
+                                 G4double AntiMass, G4double InitialMass);
 
-    virtual G4LorentzVector * SplitEandP(G4ParticleDefinition * pHadron, 
-                                         G4FragmentingString * string,
-                                         G4FragmentingString * newString);
+    virtual G4KineticTrack* Splitup(G4FragmentingString* string, G4FragmentingString*& newString);
 
-    virtual G4double GetLightConeZ(G4double zmin, G4double zmax, 
-                                   G4int PartonEncoding,  
-                                   G4ParticleDefinition* pHadron,
-                                   G4double Px, G4double Py);      
+    virtual G4LorentzVector* SplitEandP(G4ParticleDefinition* pHadron, G4FragmentingString* string,
+                                        G4FragmentingString* newString);
+
+    virtual G4double GetLightConeZ(G4double zmin, G4double zmax, G4int PartonEncoding,
+                                   G4ParticleDefinition* pHadron, G4double Px, G4double Py);
 
     G4double lambda(G4double s, G4double m1_Sqr, G4double m2_Sqr);
 
-    // virtual G4ParticleDefinition * QuarkSplitup(G4ParticleDefinition* decay, 
+    // virtual G4ParticleDefinition * QuarkSplitup(G4ParticleDefinition* decay,
     //                                             G4ParticleDefinition *&created);
 
-    virtual G4ParticleDefinition * DiQuarkSplitup(G4ParticleDefinition* decay, 
-                                                  G4ParticleDefinition *&created);
+    virtual G4ParticleDefinition* DiQuarkSplitup(G4ParticleDefinition* decay,
+                                                 G4ParticleDefinition*& created);
 
   private:
-    G4bool Loop_toFragmentString(const G4ExcitedString & theStringInCMS,
-                                 G4KineticTrackVector * & LeftVector, 
-                                 G4KineticTrackVector * & RightVector);
 
-    G4bool Diquark_AntiDiquark_belowThreshold_lastSplitting(G4FragmentingString * & string,
-                                                            G4ParticleDefinition * & LeftHadron,
-                                                            G4ParticleDefinition * & RightHadron);
+    G4bool Loop_toFragmentString(const G4ExcitedString& theStringInCMS,
+                                 G4KineticTrackVector*& LeftVector,
+                                 G4KineticTrackVector*& RightVector);
 
-    G4bool Diquark_AntiDiquark_aboveThreshold_lastSplitting(G4FragmentingString * & string,
-                                                            G4ParticleDefinition * & LeftHadron,
-                                                            G4ParticleDefinition * & RightHadron);
+    G4bool Diquark_AntiDiquark_belowThreshold_lastSplitting(G4FragmentingString*& string,
+                                                            G4ParticleDefinition*& LeftHadron,
+                                                            G4ParticleDefinition*& RightHadron);
 
-    G4bool Quark_AntiQuark_lastSplitting(G4FragmentingString * & string,
-                                         G4ParticleDefinition * & LeftHadron,
-                                         G4ParticleDefinition * & RightHadron);
+    G4bool Diquark_AntiDiquark_aboveThreshold_lastSplitting(G4FragmentingString*& string,
+                                                            G4ParticleDefinition*& LeftHadron,
+                                                            G4ParticleDefinition*& RightHadron);
 
-    G4bool Quark_Diquark_lastSplitting(G4FragmentingString * & string,
-                                       G4ParticleDefinition * & LeftHadron,
-                                       G4ParticleDefinition * & RightHadron );
+    G4bool Quark_AntiQuark_lastSplitting(G4FragmentingString*& string,
+                                         G4ParticleDefinition*& LeftHadron,
+                                         G4ParticleDefinition*& RightHadron);
+
+    G4bool Quark_Diquark_lastSplitting(G4FragmentingString*& string,
+                                       G4ParticleDefinition*& LeftHadron,
+                                       G4ParticleDefinition*& RightHadron);
 
     G4int SampleState(void);
 
     G4double Tmt;  // "Temperature" for sampling Pt of hadrons
-
 };
 
 //******************************************************************************
-// Class G4LundStringFragmentation 
+// Class G4LundStringFragmentation
 
 #endif
-

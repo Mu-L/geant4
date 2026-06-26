@@ -41,25 +41,25 @@
 #ifndef G4POISSON_HH
 #define G4POISSON_HH
 
-#include <CLHEP/Units/PhysicalConstants.h>
-
 #include "G4Exp.hh"
 #include "G4Types.hh"
 #include "Randomize.hh"
 
+#include <CLHEP/Units/PhysicalConstants.h>
+
 inline G4long G4Poisson(G4double mean)
 {
-  G4long number        = 0;
-  const G4int border   = 16;
+  G4long number = 0;
+  const G4int border = 16;
   const G4double limit = 2e9;
 
-  if(mean <= border)
+  if (mean <= border)
   {
-    G4double position     = G4UniformRand();
+    G4double position = G4UniformRand();
     G4double poissonValue = G4Exp(-mean);
-    G4double poissonSum   = poissonValue;
+    G4double poissonSum = poissonValue;
 
-    while(poissonSum <= position)
+    while (poissonSum <= position)
     {
       ++number;
       poissonValue *= mean / number;
@@ -68,10 +68,10 @@ inline G4long G4Poisson(G4double mean)
     return number;
   }  // the case of mean <= 16
 
-  G4double t = std::sqrt(-2. * std::log(G4UniformRand())) *
-               std::cos(2. * CLHEP::pi * G4UniformRand());
+  G4double t =
+    std::sqrt(-2. * std::log(G4UniformRand())) * std::cos(2. * CLHEP::pi * G4UniformRand());
   G4double value = mean + t * std::sqrt(mean) + 0.5;
-  if(value < 0.)
+  if (value < 0.)
   {
     return 0;
   }

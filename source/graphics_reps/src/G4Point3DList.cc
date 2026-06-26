@@ -25,18 +25,19 @@
 //
 //
 //
-// 
+//
 // John Allison  July 1995
 
 #include "G4Point3DList.hh"
 
 #include "G4ios.hh"
 
-G4Point3DList::~G4Point3DList () = default;
+G4Point3DList::~G4Point3DList() = default;
 
-std::ostream& operator << (std::ostream& os, const G4Point3DList& points)
+std::ostream& operator<<(std::ostream& os, const G4Point3DList& points)
 {
   os << "G4Point3DList[" << points.size() << "]: ";
-  for (size_t i = 0; i < points.size(); i++) os << points[i];
+  for (size_t i = 0; i < points.size(); i++)
+    os << points[i];
   return os;
 }

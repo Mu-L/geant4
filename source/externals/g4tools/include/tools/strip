@@ -4,58 +4,64 @@
 #ifndef tools_strip
 #define tools_strip
 
-#include <vector>
 #include <string>
+#include <vector>
 
-namespace tools {
+namespace tools
+{
 
-enum what { leading, trailing, both };
+enum what
+{
+  leading,
+  trailing,
+  both
+};
 
-inline bool strip(std::string& a_string,what a_type = both,char a_char = ' '){
-  //return true = some stripping had been done.
+inline void leading_strip(std::string& str, char ch)
+{
+  auto startIndex = str.find_first_not_of(ch);
+  str.erase(0, startIndex);
+}
 
-  std::string::size_type l = a_string.length();
-  if(l==0) return false;
-
-  switch ( a_type ) {
-  case leading:{
-    char* pos = (char*)a_string.c_str();
-    for(std::string::size_type i=0;i<l;i++,pos++) {
-      if(*pos!=a_char) {
-        a_string = a_string.substr(i,l-i);
-        return (i?true:false); //i=0 : same string.
-      }
-    }
-    // all chars are a_char :
-    a_string.clear();
-    return true;
-    }break;
-  case trailing:{
-    char* pos = (char*)a_string.c_str();
-    pos += (l-1);
-    std::string::size_type i = l-1;
-    std::string::const_reverse_iterator it;
-    for(it=a_string.rbegin();it!=a_string.rend();++it,i--,pos--) {
-      if(*pos!=a_char) {
-        a_string = a_string.substr(0,i+1);
-        return (i==(l-1)?false:true); //i==l-1 : same string.
-      }
-    }
-    // all chars are a_char :
-    a_string.clear();
-    return true;
-    }break;
-  case both:{
-    bool stat_lead = strip(a_string,leading,a_char);
-    bool stat_trail = strip(a_string,trailing,a_char);
-    if(stat_lead) return true;
-    if(stat_trail) return true;
-    }break;
-  //default:break;
+inline void trailing_strip(std::string& str, char ch)
+{
+  auto endIndex = str.find_last_not_of(ch);
+  if (endIndex == std::string::npos)
+  {
+    str = "";
   }
-  return false; //nothing done.
+  else
+  {
+    str.erase(endIndex + 1);
+  }
 }
 
+inline bool strip(std::string& a_string, what a_type = both, char a_char = ' ')
+{
+  // return true = some stripping had been done.
+  if (a_string.empty())
+  {
+    return false;
+  }
+
+  std::string original = a_string;
+
+  switch (a_type)
+  {
+    case leading:
+      leading_strip(a_string, a_char);
+      break;
+    case trailing:
+      trailing_strip(a_string, a_char);
+      break;
+    case both:
+      leading_strip(a_string, a_char);
+      trailing_strip(a_string, a_char);
+      break;
+  }
+  return a_string != original;
 }
+
+}  // namespace tools
 
 #endif

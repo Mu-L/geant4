@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  31st December 1997.
 //
 // Class Description:
@@ -45,76 +45,76 @@
 #ifndef G4VMODEL_HH
 #define G4VMODEL_HH
 
-#include "globals.hh"
 #include "G4VisExtent.hh"
+#include "globals.hh"
 
 class G4VGraphicsScene;
 class G4ModelingParameters;
 
-class G4VModel {
+class G4VModel
+{
+  public:  // With description
 
-public: // With description
+    friend std::ostream& operator<<(std::ostream& os, const G4VModel&);
 
-  friend std::ostream& operator << (std::ostream& os, const G4VModel&);
+    G4VModel(const G4ModelingParameters* = 0);
 
-  G4VModel(const G4ModelingParameters* = 0);
-   
-  virtual ~G4VModel ();
+    virtual ~G4VModel();
 
-  virtual void DescribeYourselfTo (G4VGraphicsScene&) = 0;
-  // The main task of a model is to describe itself to the graphics scene.
+    virtual void DescribeYourselfTo(G4VGraphicsScene&) = 0;
+    // The main task of a model is to describe itself to the graphics scene.
 
-  const G4ModelingParameters* GetModelingParameters () const;
-  static const G4ModelingParameters* GetCurrentModelingParameters ();
-  // The latter for static access
+    const G4ModelingParameters* GetModelingParameters() const;
+    static const G4ModelingParameters* GetCurrentModelingParameters();
+    // The latter for static access
 
-  const G4String& GetType() const;
-  // The sub-class should set its type, which could be the class
-  // name, or, in the case of G4CallBackModel, it could be the type of
-  // object it is coding.
+    const G4String& GetType() const;
+    // The sub-class should set its type, which could be the class
+    // name, or, in the case of G4CallBackModel, it could be the type of
+    // object it is coding.
 
-  virtual G4String GetCurrentDescription () const;
-  // A description which depends on the current state of the model.
+    virtual G4String GetCurrentDescription() const;
+    // A description which depends on the current state of the model.
 
-  virtual G4String GetCurrentTag () const;
-  // A tag which depends on the current state of the model.
+    virtual G4String GetCurrentTag() const;
+    // A tag which depends on the current state of the model.
 
-  const G4VisExtent& GetExtent () const;
-  // Extent of visible objects in local coordinate system.
+    const G4VisExtent& GetExtent() const;
+    // Extent of visible objects in local coordinate system.
 
-  const G4String& GetGlobalDescription () const;
-  // A description which does not change and lasts the life of the model.
+    const G4String& GetGlobalDescription() const;
+    // A description which does not change and lasts the life of the model.
 
-  const G4String& GetGlobalTag () const;
-  // A tag which does not change and lasts the life of the model.
+    const G4String& GetGlobalTag() const;
+    // A tag which does not change and lasts the life of the model.
 
-  // Set methods for above...
-  void SetModelingParameters (const G4ModelingParameters*);
-  static void SetCurrentModelingParameters (const G4ModelingParameters*);
-  void SetExtent (const G4VisExtent&);
-  void SetType (const G4String&);
-  void SetGlobalDescription (const G4String&);
-  void SetGlobalTag (const G4String&);
+    // Set methods for above...
+    void SetModelingParameters(const G4ModelingParameters*);
+    static void SetCurrentModelingParameters(const G4ModelingParameters*);
+    void SetExtent(const G4VisExtent&);
+    void SetType(const G4String&);
+    void SetGlobalDescription(const G4String&);
+    void SetGlobalTag(const G4String&);
 
-  virtual G4bool Validate (G4bool warn = true);
-  // Validate, but allow internal changes (hence non-const function).
+    virtual G4bool Validate(G4bool warn = true);
+    // Validate, but allow internal changes (hence non-const function).
 
-protected:
+  protected:
 
-  G4String                    fType;
-  G4String                    fGlobalTag;
-  G4String                    fGlobalDescription;
-  G4VisExtent                 fExtent;
-  const G4ModelingParameters* fpMP;
+    G4String fType;
+    G4String fGlobalTag;
+    G4String fGlobalDescription;
+    G4VisExtent fExtent;
+    const G4ModelingParameters* fpMP;
 
-private:
+  private:
 
-  // Private copy constructor and assigment operator - copying and
-  // assignment not allowed.  Keeps CodeWizard happy.
-  G4VModel (const G4VModel&);
-  G4VModel& operator = (const G4VModel&);
+    // Private copy constructor and assigment operator - copying and
+    // assignment not allowed.  Keeps CodeWizard happy.
+    G4VModel(const G4VModel&);
+    G4VModel& operator=(const G4VModel&);
 
-  static const G4ModelingParameters* fpCurrentMP;
+    static const G4ModelingParameters* fpCurrentMP;
 };
 
 #include "G4VModel.icc"

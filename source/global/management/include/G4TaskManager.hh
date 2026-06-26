@@ -37,8 +37,11 @@
 // Author: Jonathan Madsen (May 28th 2020)
 // ---------------------------------------------------------------
 
-#pragma once
+#ifndef G4TASKMANAGER_HH
+#define G4TASKMANAGER_HH
 
 #include "PTL/TaskManager.hh"
 
 using G4TaskManager = PTL::TaskManager;
+
+#endif

@@ -29,34 +29,35 @@
 // -------------------------------------------------------------------
 
 #include "G4LineCurrentMagField.hh"
+
 #include "globals.hh"
 
 G4LineCurrentMagField::G4LineCurrentMagField(G4double pFieldConstant)
 {
-   fFieldConstant = pFieldConstant ;
+  fFieldConstant = pFieldConstant;
 }
 
 // -----------------------------------------------------------------
 
 G4Field* G4LineCurrentMagField::Clone() const
 {
-   return new G4LineCurrentMagField( fFieldConstant );
+  return new G4LineCurrentMagField(fFieldConstant);
 }
 
 // -----------------------------------------------------------------
 
-void G4LineCurrentMagField::GetFieldValue(const G4double yTrack[],       // [7]
-                                                G4double B[]     ) const // [3]
+void G4LineCurrentMagField::GetFieldValue(const G4double yTrack[],  // [7]
+                                          G4double B[]) const  // [3]
 {
-   //   G4double fFieldConstant = 100 ;
-   G4double a = 1.00 ;   // mm
-   G4double x = a*yTrack[0], y = a*yTrack[1] ;
-   G4double x2 = x*x, y2 = y*y, r2 = x2 + y2 ;
-   G4double r = std::sqrt(r2+a*a) ;
-   G4double Br = fFieldConstant/r;
-   B[0] = -Br*y/r ;
-   B[1] = Br*x/r ;
-   B[2] = 0.0 ;
+  //   G4double fFieldConstant = 100 ;
+  G4double a = 1.00;  // mm
+  G4double x = a * yTrack[0], y = a * yTrack[1];
+  G4double x2 = x * x, y2 = y * y, r2 = x2 + y2;
+  G4double r = std::sqrt(r2 + a * a);
+  G4double Br = fFieldConstant / r;
+  B[0] = -Br * y / r;
+  B[1] = Br * x / r;
+  B[2] = 0.0;
 }
 
 // -----------------------------------------------------------------

@@ -33,13 +33,13 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrSolidBoolean_hh
-#define G4tgrSolidBoolean_hh 1
+#ifndef G4TGRSOLIDBOOLEAN_HH
+#define G4TGRSOLIDBOOLEAN_HH
+
+#include "G4tgrSolid.hh"
+#include "globals.hh"
 
 #include <vector>
-
-#include "globals.hh"
-#include "G4tgrSolid.hh"
 
 class G4tgrSolidBoolean : public G4tgrSolid
 {
@@ -61,24 +61,23 @@ class G4tgrSolidBoolean : public G4tgrSolid
     // Solid types (Box, Tube, etc) of the solids composing the Boolean solid
 
     std::vector<std::vector<G4double>*> theSolidParams;
-      // Vectors of parameters.
+    // Vectors of parameters.
 
     G4String theRelativeRotMatName;
     G4ThreeVector theRelativePlace;
-      // Relative placement and rotation of solid 2 w.r.t. solid 1
+    // Relative placement and rotation of solid 2 w.r.t. solid 1
 
     std::vector<const G4tgrSolid*> theSolids;
-      // The two G4tgrSolid's that combine to make this one
+    // The two G4tgrSolid's that combine to make this one
 };
 
 inline const G4tgrSolid* G4tgrSolidBoolean::GetSolid(G4int ii) const
 {
-  if((ii != 0) && (ii != 1))
+  if ((ii != 0) && (ii != 1))
   {
     std::ostringstream message;
     message << "Only two G4tgrSolids (0,1) possible ! Asking for... " << ii;
-    G4Exception("G4tgrSolidBoolean::GetSolid()", "InvalidInput", FatalException,
-                message);
+    G4Exception("G4tgrSolidBoolean::GetSolid()", "InvalidInput", FatalException, message);
   }
   return theSolids[ii];
 }

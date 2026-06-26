@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4Fancy3DNucleusHelper_h
-#define G4Fancy3DNucleusHelper_h 1
+#ifndef G4FANCY3DNUCLEUSHELPER_HH
+#define G4FANCY3DNUCLEUSHELPER_HH
 
 // ------------------------------------------------------------
 //      GEANT 4 class header file
@@ -35,39 +35,36 @@
 // ------------------------------------------------------------
 // 20110805  M. Kelsey -- Extracted from G4Fancy3DNucleus.cc
 
-#include "globals.hh"
 #include "G4ThreeVector.hh"
+#include "globals.hh"
 
-class G4Fancy3DNucleusHelper {
-public:
-  G4Fancy3DNucleusHelper(): Vector(0,0,0), Size(0), Index(0) {}
+class G4Fancy3DNucleusHelper
+{
+  public:
 
-  G4Fancy3DNucleusHelper(const G4ThreeVector &vec, G4double size,
-			 G4int index)
-    : Vector(vec), Size(size), Index(index) {}
+    G4Fancy3DNucleusHelper() : Vector(0, 0, 0), Size(0), Index(0) {}
 
-  void Fill(const G4ThreeVector &vec, G4double size, G4int index) {
-    Vector = vec;
-    Size = size;
-    Index = index;
-  }
+    G4Fancy3DNucleusHelper(const G4ThreeVector& vec, G4double size, G4int index)
+      : Vector(vec), Size(size), Index(index)
+    {}
 
-  // Equality only true for same object (tests by address)
-  G4bool operator==(const G4Fancy3DNucleusHelper &right) const
-  {
-    return (this == &right);
-  }
+    void Fill(const G4ThreeVector& vec, G4double size, G4int index)
+    {
+      Vector = vec;
+      Size = size;
+      Index = index;
+    }
 
-  // Sorting on size value
-  G4bool operator<(const G4Fancy3DNucleusHelper &right) const
-  {
-    return (Size < right.Size);
-  }
+    // Equality only true for same object (tests by address)
+    G4bool operator==(const G4Fancy3DNucleusHelper& right) const { return (this == &right); }
 
-  // Data members are public for simplicity of sorting
-  G4ThreeVector Vector;
-  G4double Size;
-  G4int Index;
+    // Sorting on size value
+    G4bool operator<(const G4Fancy3DNucleusHelper& right) const { return (Size < right.Size); }
+
+    // Data members are public for simplicity of sorting
+    G4ThreeVector Vector;
+    G4double Size;
+    G4int Index;
 };
 
-#endif	/* G4Fancy3DNucleusHelper_h */
+#endif /* G4Fancy3DNucleusHelper_h */

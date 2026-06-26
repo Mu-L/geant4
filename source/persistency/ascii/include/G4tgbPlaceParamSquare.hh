@@ -31,12 +31,12 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgbPlaceParamSquare_hh
-#define G4tgbPlaceParamSquare_hh 1
+#ifndef G4TGBPLACEPARAMSQUARE_HH
+#define G4TGBPLACEPARAMSQUARE_HH
 
-#include "globals.hh"
-#include "G4tgbPlaceParameterisation.hh"
 #include "G4ThreeVector.hh"
+#include "G4tgbPlaceParameterisation.hh"
+#include "globals.hh"
 
 class G4VPhysicalVolume;
 
@@ -47,8 +47,7 @@ class G4tgbPlaceParamSquare : public G4tgbPlaceParameterisation
     G4tgbPlaceParamSquare(G4tgrPlaceParameterisation*);
     ~G4tgbPlaceParamSquare();
 
-   void ComputeTransformation(const G4int copyNo,
-                              G4VPhysicalVolume* physVol) const;
+    void ComputeTransformation(const G4int copyNo, G4VPhysicalVolume* physVol) const;
 
   private:
 

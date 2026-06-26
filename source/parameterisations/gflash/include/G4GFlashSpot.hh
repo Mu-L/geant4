@@ -36,17 +36,19 @@
 //  Definition of energy spot for GFlash parameterisation.
 
 //---------------------------------------------------------------
-#ifndef G4GFlashSpot_h
-#define G4GFlashSpot_h
+#ifndef G4GFLASHSPOT_HH
+#define G4GFLASHSPOT_HH
 
-#include "G4ThreeVector.hh"
 #include "G4FastTrack.hh"
-#include "GFlashEnergySpot.hh"
+#include "G4ThreeVector.hh"
 #include "G4TouchableHandle.hh"
+
+#include "GFlashEnergySpot.hh"
 
 class G4GFlashSpot
 {
   public:
+
     G4GFlashSpot(const GFlashEnergySpot* aSpot, const G4FastTrack* aTrack, G4TouchableHandle aH)
       : theSpot(aSpot), theTrack(aTrack), theHandle(aH)
     {}
@@ -65,6 +67,7 @@ class G4GFlashSpot
     }
 
   private:
+
     const GFlashEnergySpot* theSpot;
     const G4FastTrack* theTrack;
     G4TouchableHandle theHandle;

@@ -30,17 +30,16 @@
 //
 
 #include "G4DNAQuadrupleIonisation.hh"
+
 #include "G4DNAQuadrupleIonisationModel.hh"
-#include "G4LowEnergyEmProcessSubType.hh"
-#include "G4SystemOfUnits.hh"
 #include "G4GenericIon.hh"
+#include "G4LowEnergyEmProcessSubType.hh"
 #include "G4Positron.hh"
+#include "G4SystemOfUnits.hh"
 
 //------------------------------------------------------------------------------
-G4DNAQuadrupleIonisation::G4DNAQuadrupleIonisation(
-  const G4String& pname, G4ProcessType type)
-    : G4VEmProcess(pname, type),
-      is_initialized_(false)
+G4DNAQuadrupleIonisation::G4DNAQuadrupleIonisation(const G4String& pname, G4ProcessType type)
+  : G4VEmProcess(pname, type), is_initialized_(false)
 {
   SetProcessSubType(fLowEnergyQuadrupleIonisation);
 }
@@ -48,26 +47,27 @@ G4DNAQuadrupleIonisation::G4DNAQuadrupleIonisation(
 //------------------------------------------------------------------------------
 G4bool G4DNAQuadrupleIonisation::IsApplicable(const G4ParticleDefinition& p)
 {
-  return (
-    &p == G4Proton::Proton() ||
-    &p == G4DNAGenericIonsManager::Instance()->GetIon("alpha++") ||
-    &p == G4GenericIon::GenericIonDefinition()
-  );
+  return (&p == G4Proton::Proton() || &p == G4DNAGenericIonsManager::Instance()->GetIon("alpha++")
+          || &p == G4GenericIon::GenericIonDefinition());
 }
 
 //------------------------------------------------------------------------------
 void G4DNAQuadrupleIonisation::InitialiseProcess(const G4ParticleDefinition* p)
 {
-  if (is_initialized_) { return; }
+  if (is_initialized_)
+  {
+    return;
+  }
 
   is_initialized_ = true;
   SetBuildTableFlag(false);
 
   const auto& name = p->GetParticleName();
 
-  if (name == "proton") {
-
-    if (!EmModel()) {
+  if (name == "proton")
+  {
+    if (!EmModel())
+    {
       auto ptr = new G4DNAQuadrupleIonisationModel();
       SetEmModel(ptr);
       ptr->SetLowEnergyLimit(0.0 * keV);
@@ -75,10 +75,11 @@ void G4DNAQuadrupleIonisation::InitialiseProcess(const G4ParticleDefinition* p)
     }
 
     AddEmModel(1, EmModel());
-
-  } else if (name == "alpha") {
-
-    if (!EmModel()) {
+  }
+  else if (name == "alpha")
+  {
+    if (!EmModel())
+    {
       auto ptr = new G4DNAQuadrupleIonisationModel();
       SetEmModel(ptr);
       ptr->SetLowEnergyLimit(0.0 * keV);
@@ -86,11 +87,12 @@ void G4DNAQuadrupleIonisation::InitialiseProcess(const G4ParticleDefinition* p)
     }
 
     AddEmModel(1, EmModel());
-
-  } else if (name == "GenericIon") {
-
+  }
+  else if (name == "GenericIon")
+  {
     // for carbon ions (12C6+)
-    if (!EmModel()) {
+    if (!EmModel())
+    {
       auto ptr = new G4DNAQuadrupleIonisationModel();
       SetEmModel(ptr);
       ptr->SetLowEnergyLimit(0.0 * keV);
@@ -99,17 +101,18 @@ void G4DNAQuadrupleIonisation::InitialiseProcess(const G4ParticleDefinition* p)
 
     AddEmModel(1, EmModel());
   }
-
 }
 
 //------------------------------------------------------------------------------
 void G4DNAQuadrupleIonisation::PrintInfo()
 {
-  if (EmModel(1)) {
-    G4cout << " Total cross sections computed from " << EmModel(0)->GetName()
-           << " and " << EmModel(1)->GetName() << " models" << G4endl;
-  } else {
-    G4cout << " Total cross sections computed from "
-           << EmModel()->GetName() << G4endl;
+  if (EmModel(1))
+  {
+    G4cout << " Total cross sections computed from " << EmModel(0)->GetName() << " and "
+           << EmModel(1)->GetName() << " models" << G4endl;
+  }
+  else
+  {
+    G4cout << " Total cross sections computed from " << EmModel()->GetName() << G4endl;
   }
 }

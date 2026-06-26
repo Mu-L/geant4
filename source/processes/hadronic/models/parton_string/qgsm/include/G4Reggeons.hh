@@ -23,86 +23,90 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4Reggeons_h
-#define G4Reggeons_h 1
+#ifndef G4REGGEONS_HH
+#define G4REGGEONS_HH
 //
 //
-#include "G4Proton.hh"
-#include "G4Neutron.hh"
-
-#include "G4PionPlus.hh"
-#include "G4PionMinus.hh"
-#include "G4PionZero.hh"
-
-#include "G4KaonPlus.hh"
-#include "G4KaonMinus.hh"
-#include "G4KaonZero.hh"
-#include "G4KaonZeroShort.hh"
-#include "G4KaonZeroLong.hh"
 #include "G4Gamma.hh"
-
+#include "G4KaonMinus.hh"
+#include "G4KaonPlus.hh"
+#include "G4KaonZero.hh"
+#include "G4KaonZeroLong.hh"
+#include "G4KaonZeroShort.hh"
+#include "G4Neutron.hh"
+#include "G4PionMinus.hh"
+#include "G4PionPlus.hh"
+#include "G4PionZero.hh"
+#include "G4Proton.hh"
 #include "Randomize.hh"
 
 class G4Reggeons
 {
   public:
-  	G4Reggeons(const G4ParticleDefinition * );
 
-        G4double Get_Cprojectile();
+    G4Reggeons(const G4ParticleDefinition*);
 
-        G4double Get_Ctarget();
+    G4double Get_Cprojectile();
 
-	~G4Reggeons();
+    G4double Get_Ctarget();
 
-        void SetS(G4double S);
-	void CalculateXs();
+    ~G4Reggeons();
 
-        G4double Chi_pomeron(G4double Mult, G4double B);
-        G4double Chi_reggeon(G4double Mult, G4double B);
+    void SetS(G4double S);
+    void CalculateXs();
 
-        G4double GetTotalX();
-        G4double GetTotalXp();        
-        G4double GetTotalXr();
+    G4double Chi_pomeron(G4double Mult, G4double B);
+    G4double Chi_reggeon(G4double Mult, G4double B);
 
-        G4double GetElasticX();
-        G4double GetPrDiffX();
-        G4double GetTrDiffX();
-        G4double GetDDiffX();
+    G4double GetTotalX();
+    G4double GetTotalXp();
+    G4double GetTotalXr();
 
-        G4double GetInelX();
-        G4double GetND_X();
-        G4double GetNDp_X();
-        G4double GetNDr_X();
+    G4double GetElasticX();
+    G4double GetPrDiffX();
+    G4double GetTrDiffX();
+    G4double GetDDiffX();
 
-        void GetProbabilities(G4double B, G4int Mode,
-			      G4double & Pint,
-			      G4double & Pprd, G4double & Ptrd, G4double & Pdd, 
-			      G4double & Pnd, G4double & Pnvr);
+    G4double GetInelX();
+    G4double GetND_X();
+    G4double GetNDp_X();
+    G4double GetNDr_X();
 
-	G4int ncPomerons();
+    void GetProbabilities(G4double B, G4int Mode, G4double& Pint, G4double& Pprd, G4double& Ptrd,
+                          G4double& Pdd, G4double& Pnd, G4double& Pnvr);
 
-  private:         
-	enum  { ALL, WITHOUT_R, NON_DIFF };
+    G4int ncPomerons();
 
-        G4ParticleDefinition * Target=G4Proton::Proton();
+  private:
 
-	G4double Alpha_pomeron, Alphaprime_pomeron, Gamma_pomeron,    Rsquare_pomeron, S0_pomeron;
-        G4double Alpha_pomeronHard,                 Gamma_pomeronHard;
+    enum
+    {
+      ALL,
+      WITHOUT_R,
+      NON_DIFF
+    };
 
-        G4double Freggeon_Alpha, Freggeon_Alphaprime, Freggeon_Gamma, Freggeon_Rsquare, Freggeon_C, FParity;
-        G4double Wreggeon_Alpha, Wreggeon_Alphaprime, Wreggeon_Gamma, Wreggeon_Rsquare, Wreggeon_C, WParity;
+    G4ParticleDefinition* Target = G4Proton::Proton();
 
-	G4double C_pomeron;                              // = pomeron_Cpr * pomeron_Ctr
-	G4double Cpr_pomeron;                            // shower enhancement in projectile vertex
-	G4double Ctr_pomeron;                            // shower enhancement in target     vertex
+    G4double Alpha_pomeron, Alphaprime_pomeron, Gamma_pomeron, Rsquare_pomeron, S0_pomeron;
+    G4double Alpha_pomeronHard, Gamma_pomeronHard;
 
-	G4double Sint=0.;
+    G4double Freggeon_Alpha, Freggeon_Alphaprime, Freggeon_Gamma, Freggeon_Rsquare, Freggeon_C,
+      FParity;
+    G4double Wreggeon_Alpha, Wreggeon_Alphaprime, Wreggeon_Gamma, Wreggeon_Rsquare, Wreggeon_C,
+      WParity;
 
-        G4double chiPin;                                 // Pomeron inelastic phase needed for NcutPomeron
-                 					 // calculations.
-	G4double Xtotal  , XtotalP, XtotalR;
-	G4double Xelastic, Xpr_Diff, Xtr_Diff, XDDiff; 
-        G4double Xinel   , Xnd, XndP, XndR;
+    G4double C_pomeron;  // = pomeron_Cpr * pomeron_Ctr
+    G4double Cpr_pomeron;  // shower enhancement in projectile vertex
+    G4double Ctr_pomeron;  // shower enhancement in target     vertex
+
+    G4double Sint = 0.;
+
+    G4double chiPin;  // Pomeron inelastic phase needed for NcutPomeron
+                      // calculations.
+    G4double Xtotal, XtotalP, XtotalR;
+    G4double Xelastic, Xpr_Diff, Xtr_Diff, XDDiff;
+    G4double Xinel, Xnd, XndP, XndR;
 };
 
 #endif

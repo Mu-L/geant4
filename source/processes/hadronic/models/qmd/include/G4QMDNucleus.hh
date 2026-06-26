@@ -27,58 +27,59 @@
 //      GEANT4 Class file
 //
 //
-//      File name: G4QMDNucleus.hh 
+//      File name: G4QMDNucleus.hh
 //
-//      Author: Koi, Tatsumi (tkoi@slac.stanford.edu)       
-// 
+//      Author: Koi, Tatsumi (tkoi@slac.stanford.edu)
+//
 //      Creation date: 3 April 2007
 // -------------------------------------------------------------------
 
-#ifndef G4QMDNucleus_hh
-#define G4QMDNucleus_hh
+#ifndef G4QMDNUCLEUS_HH
+#define G4QMDNUCLEUS_HH
 
-#include "G4QMDSystem.hh"
 #include "G4QMDParameters.hh"
+#include "G4QMDSystem.hh"
 
 class G4QMDNucleus : public G4QMDSystem
 {
-   public:
-      G4QMDNucleus();
-      //virtual ~G4QMDNucleus();
+  public:
 
-      G4LorentzVector Get4Momentum();
+    G4QMDNucleus();
+    // virtual ~G4QMDNucleus();
 
-      // Number of Nucleons (Proton or Neutron)
-      G4int GetMassNumber();
+    G4LorentzVector Get4Momentum();
 
-      // Number of Protons
-      G4int GetAtomicNumber();
+    // Number of Nucleons (Proton or Neutron)
+    G4int GetMassNumber();
 
-      void CalEnergyAndAngularMomentumInCM();
+    // Number of Protons
+    G4int GetAtomicNumber();
 
-      // rest mass from G4NucleiPropertiesTable
-      G4double GetNuclearMass();
+    void CalEnergyAndAngularMomentumInCM();
 
-      void SetTotalPotential( G4double x ){ potentialEnergy = x; };
-      G4double GetExcitationEnergy(){ return excitationEnergy; };
+    // rest mass from G4NucleiPropertiesTable
+    G4double GetNuclearMass();
 
-      G4int GetAngularMomentum(){ return jj; };
+    void SetTotalPotential(G4double x) { potentialEnergy = x; };
+    G4double GetExcitationEnergy() { return excitationEnergy; };
 
-   private:
+    G4int GetAngularMomentum() { return jj; };
 
-      G4double hbc;
+  private:
 
-      std::vector < G4ThreeVector > rcm, pcm;
-      std::vector < G4double > es;
-      G4int jj;
+    G4double hbc;
 
-      G4double potentialEnergy;
-      G4double excitationEnergy;
-      //G4double bindingEnergy;
+    std::vector<G4ThreeVector> rcm, pcm;
+    std::vector<G4double> es;
+    G4int jj;
 
-      //G4double kineticEnergyPerNucleon;
-      //G4double bindingEnergyPerNucleon;
-      //G4double potentialEnergyPerNucleon;
+    G4double potentialEnergy;
+    G4double excitationEnergy;
+    // G4double bindingEnergy;
+
+    // G4double kineticEnergyPerNucleon;
+    // G4double bindingEnergyPerNucleon;
+    // G4double potentialEnergyPerNucleon;
 };
 
 #endif

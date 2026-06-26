@@ -29,13 +29,14 @@
 // --------------------------------------------------------------------
 
 #include "G4GDMLParameterisation.hh"
+
 #include "G4PolyconeHistorical.hh"
 #include "G4PolyhedraHistorical.hh"
 
 // --------------------------------------------------------------------
 G4int G4GDMLParameterisation::GetSize() const
 {
-  return (G4int) parameterList.size();
+  return (G4int)parameterList.size();
 }
 
 // --------------------------------------------------------------------
@@ -45,8 +46,8 @@ void G4GDMLParameterisation::AddParameter(const PARAMETER& newParameter)
 }
 
 // --------------------------------------------------------------------
-void G4GDMLParameterisation::ComputeTransformation(
-  const G4int index, G4VPhysicalVolume* physvol) const
+void G4GDMLParameterisation::ComputeTransformation(const G4int index,
+                                                   G4VPhysicalVolume* physvol) const
 {
   physvol->SetTranslation(parameterList[index].position);
   physvol->SetRotation(parameterList[index].pRot);
@@ -76,16 +77,16 @@ void G4GDMLParameterisation::ComputeDimensions(G4Trd& trd, const G4int index,
 void G4GDMLParameterisation::ComputeDimensions(G4Trap& trap, const G4int index,
                                                const G4VPhysicalVolume*) const
 {
-  trap.SetAllParameters(parameterList[index].dimension[0],    // Dz
-                        parameterList[index].dimension[1],    // Theta
-                        parameterList[index].dimension[2],    // Phi
-                        parameterList[index].dimension[3],    // Dy1
-                        parameterList[index].dimension[4],    // Dx1
-                        parameterList[index].dimension[5],    // Dx2
-                        parameterList[index].dimension[6],    // pAlp1,
-                        parameterList[index].dimension[7],    // pDy2,
-                        parameterList[index].dimension[8],    // pDx3,
-                        parameterList[index].dimension[9],    // pDx4,
+  trap.SetAllParameters(parameterList[index].dimension[0],  // Dz
+                        parameterList[index].dimension[1],  // Theta
+                        parameterList[index].dimension[2],  // Phi
+                        parameterList[index].dimension[3],  // Dy1
+                        parameterList[index].dimension[4],  // Dx1
+                        parameterList[index].dimension[5],  // Dx2
+                        parameterList[index].dimension[6],  // pAlp1,
+                        parameterList[index].dimension[7],  // pDy2,
+                        parameterList[index].dimension[8],  // pDx3,
+                        parameterList[index].dimension[9],  // pDx4,
                         parameterList[index].dimension[10]);  // pAlp2
 }
 
@@ -114,8 +115,7 @@ void G4GDMLParameterisation::ComputeDimensions(G4Cons& cons, const G4int index,
 }
 
 // --------------------------------------------------------------------
-void G4GDMLParameterisation::ComputeDimensions(G4Sphere& sphere,
-                                               const G4int index,
+void G4GDMLParameterisation::ComputeDimensions(G4Sphere& sphere, const G4int index,
                                                const G4VPhysicalVolume*) const
 {
   sphere.SetInnerRadius(parameterList[index].dimension[0]);
@@ -134,26 +134,22 @@ void G4GDMLParameterisation::ComputeDimensions(G4Orb& orb, const G4int index,
 }
 
 // --------------------------------------------------------------------
-void G4GDMLParameterisation::ComputeDimensions(G4Ellipsoid& ellipsoid,
-                                               const G4int index,
+void G4GDMLParameterisation::ComputeDimensions(G4Ellipsoid& ellipsoid, const G4int index,
                                                const G4VPhysicalVolume*) const
 {
-  ellipsoid.SetSemiAxis(parameterList[index].dimension[0],
-                        parameterList[index].dimension[1],
+  ellipsoid.SetSemiAxis(parameterList[index].dimension[0], parameterList[index].dimension[1],
                         parameterList[index].dimension[2]);
-  ellipsoid.SetZCuts(parameterList[index].dimension[3],
-                     parameterList[index].dimension[4]);
+  ellipsoid.SetZCuts(parameterList[index].dimension[3], parameterList[index].dimension[4]);
 }
 
 // --------------------------------------------------------------------
-void G4GDMLParameterisation::ComputeDimensions(G4Torus& torus,
-                                               const G4int index,
+void G4GDMLParameterisation::ComputeDimensions(G4Torus& torus, const G4int index,
                                                const G4VPhysicalVolume*) const
 {
-  torus.SetAllParameters(parameterList[index].dimension[0],   // pRmin
-                         parameterList[index].dimension[1],   // pRmax
-                         parameterList[index].dimension[2],   // pRtor
-                         parameterList[index].dimension[3],   // pSPhi
+  torus.SetAllParameters(parameterList[index].dimension[0],  // pRmin
+                         parameterList[index].dimension[1],  // pRmax
+                         parameterList[index].dimension[2],  // pRtor
+                         parameterList[index].dimension[3],  // pSPhi
                          parameterList[index].dimension[4]);  // pDPhi
 }
 
@@ -166,8 +162,7 @@ void G4GDMLParameterisation::ComputeDimensions(G4Para& para, const G4int index,
   para.SetZHalfLength(parameterList[index].dimension[2]);
   para.SetAlpha(parameterList[index].dimension[3]);
   para.SetTanAlpha(std::tan(parameterList[index].dimension[3]));
-  para.SetThetaAndPhi(parameterList[index].dimension[4],
-                      parameterList[index].dimension[5]);
+  para.SetThetaAndPhi(parameterList[index].dimension[4], parameterList[index].dimension[5]);
 }
 
 // --------------------------------------------------------------------
@@ -182,47 +177,44 @@ void G4GDMLParameterisation::ComputeDimensions(G4Hype& hype, const G4int index,
 }
 
 // --------------------------------------------------------------------
-void G4GDMLParameterisation::ComputeDimensions(G4Polycone& pcone,
-                                               const G4int index,
+void G4GDMLParameterisation::ComputeDimensions(G4Polycone& pcone, const G4int index,
                                                const G4VPhysicalVolume*) const
 {
   G4PolyconeHistorical origparam(*(pcone.GetOriginalParameters()));
-  origparam.Start_angle   = parameterList[index].dimension[0];
+  origparam.Start_angle = parameterList[index].dimension[0];
   origparam.Opening_angle = parameterList[index].dimension[1];
-  origparam.Num_z_planes  = (G4int) parameterList[index].dimension[2];
-  G4int nZplanes          = origparam.Num_z_planes;
+  origparam.Num_z_planes = (G4int)parameterList[index].dimension[2];
+  G4int nZplanes = origparam.Num_z_planes;
 
-  for(G4int ii = 0; ii < nZplanes; ++ii)
+  for (G4int ii = 0; ii < nZplanes; ++ii)
   {
-    origparam.Rmin[ii]     = parameterList[index].dimension[3 + ii * 3];
-    origparam.Rmax[ii]     = parameterList[index].dimension[4 + ii * 3];
+    origparam.Rmin[ii] = parameterList[index].dimension[3 + ii * 3];
+    origparam.Rmax[ii] = parameterList[index].dimension[4 + ii * 3];
     origparam.Z_values[ii] = parameterList[index].dimension[5 + ii * 3];
   }
 
   pcone.SetOriginalParameters(&origparam);  // copy values & transfer pointers
-  pcone.Reset();                            // reset to new solid parameters
+  pcone.Reset();  // reset to new solid parameters
 }
 
 // --------------------------------------------------------------------
-void G4GDMLParameterisation::ComputeDimensions(G4Polyhedra& polyhedra,
-                                               const G4int index,
+void G4GDMLParameterisation::ComputeDimensions(G4Polyhedra& polyhedra, const G4int index,
                                                const G4VPhysicalVolume*) const
 {
   G4PolyhedraHistorical origparam(*(polyhedra.GetOriginalParameters()));
-  origparam.Start_angle   = parameterList[index].dimension[0];
+  origparam.Start_angle = parameterList[index].dimension[0];
   origparam.Opening_angle = parameterList[index].dimension[1];
-  origparam.Num_z_planes  = (G4int) parameterList[index].dimension[2];
-  origparam.numSide       = (G4int) parameterList[index].dimension[3];
+  origparam.Num_z_planes = (G4int)parameterList[index].dimension[2];
+  origparam.numSide = (G4int)parameterList[index].dimension[3];
 
   G4int nZplanes = origparam.Num_z_planes;
 
-  for(G4int ii = 0; ii < nZplanes; ++ii)
+  for (G4int ii = 0; ii < nZplanes; ++ii)
   {
-    origparam.Rmin[ii]     = parameterList[index].dimension[4 + ii * 3];
-    origparam.Rmax[ii]     = parameterList[index].dimension[5 + ii * 3];
+    origparam.Rmin[ii] = parameterList[index].dimension[4 + ii * 3];
+    origparam.Rmax[ii] = parameterList[index].dimension[5 + ii * 3];
     origparam.Z_values[ii] = parameterList[index].dimension[6 + ii * 3];
   }
-  polyhedra.SetOriginalParameters(
-    &origparam);      // copy values & transfer pointers
+  polyhedra.SetOriginalParameters(&origparam);  // copy values & transfer pointers
   polyhedra.Reset();  // reset to new solid parameters
 }

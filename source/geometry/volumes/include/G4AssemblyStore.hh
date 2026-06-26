@@ -43,17 +43,20 @@
 #ifndef G4ASSEMBLYSTORE_HH
 #define G4ASSEMBLYSTORE_HH
 
-#include <vector>
-
-#include "G4Types.hh"
 #include "G4String.hh"
+#include "G4Types.hh"
 #include "G4VStoreNotifier.hh"
+
+#include <vector>
 
 class G4AssemblyVolume;
 
 /**
  * @brief G4AssemblyStore is a container for all assemblies, with functionality
- * derived from std::vector<T>. The class is a singleton.
+ * derived from std::vector<T>.
+ * @ingroup geometry_volumes
+ *
+ * The class is a singleton.
  * All assemblies are registered with G4AssemblyStore, and removed on their
  * destruction.
  */
@@ -90,7 +93,7 @@ class G4AssemblyStore : public std::vector<G4AssemblyVolume*>
     /**
        Returns an assembly through its Id number specification.
      */
-    G4AssemblyVolume* GetAssembly(unsigned int id, G4bool verbose=true) const;
+    G4AssemblyVolume* GetAssembly(unsigned int id, G4bool verbose = true) const;
 
   private:
 

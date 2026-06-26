@@ -27,81 +27,78 @@
 //
 // 20110805  M. Kelsey -- Change nucleon vector to use objects, not pointers
 
-#ifndef G4V3DNucleus_h
-#define G4V3DNucleus_h 1
+#ifndef G4V3DNUCLEUS_HH
+#define G4V3DNUCLEUS_HH
 
 class G4Nucleon;
 class G4VNuclearDensity;
 #include "G4DynamicParticle.hh"
 #include "Randomize.hh"
-#include <utility>  
+
+#include <utility>
 #include <vector>
 
-class G4V3DNucleus 
+class G4V3DNucleus
 {
-
   public:
-      G4V3DNucleus();
-      virtual ~G4V3DNucleus();
+
+    G4V3DNucleus();
+    virtual ~G4V3DNucleus();
 
   private:
-      G4V3DNucleus(const G4V3DNucleus &right);
-      const G4V3DNucleus & operator=(const G4V3DNucleus &right);
-      G4bool operator==(const G4V3DNucleus &right) const;
-      G4bool operator!=(const G4V3DNucleus &right) const;
+
+    G4V3DNucleus(const G4V3DNucleus& right);
+    const G4V3DNucleus& operator=(const G4V3DNucleus& right);
+    G4bool operator==(const G4V3DNucleus& right) const;
+    G4bool operator!=(const G4V3DNucleus& right) const;
 
   public:
-      virtual void Init(G4int theA, G4int theZ, G4int numberOfLambdas = 0) = 0;
-      virtual G4bool StartLoop() = 0;
-      virtual G4Nucleon * GetNextNucleon() = 0;
-      virtual const std::vector<G4Nucleon> & GetNucleons() = 0;
-      virtual G4int GetMassNumber() = 0;
-      virtual G4double GetMass() = 0;
-      virtual G4int GetCharge() = 0;
-      virtual G4int GetNumberOfLambdas() = 0;
-      virtual G4double GetNuclearRadius() = 0;
-      virtual G4double GetNuclearRadius(const G4double maxRelativeDensity) = 0;
-      virtual G4double GetOuterRadius() = 0;
-      virtual G4double CoulombBarrier() = 0;
-      virtual void DoLorentzBoost(const G4LorentzVector & theBoost) = 0;
-      virtual void DoLorentzBoost(const G4ThreeVector & theBeta) = 0;
-      virtual void DoLorentzContraction(const G4LorentzVector & theBoost) = 0;
-      virtual void DoLorentzContraction(const G4ThreeVector & theBeta) = 0;
-      virtual void DoTranslation(const G4ThreeVector & theShift) = 0;
-      virtual const G4VNuclearDensity * GetNuclearDensity() const = 0;
-      virtual void SortNucleonsIncZ() = 0;
-      virtual void SortNucleonsDecZ() = 0;
+
+    virtual void Init(G4int theA, G4int theZ, G4int numberOfLambdas = 0) = 0;
+    virtual G4bool StartLoop() = 0;
+    virtual G4Nucleon* GetNextNucleon() = 0;
+    virtual const std::vector<G4Nucleon>& GetNucleons() = 0;
+    virtual G4int GetMassNumber() = 0;
+    virtual G4double GetMass() = 0;
+    virtual G4int GetCharge() = 0;
+    virtual G4int GetNumberOfLambdas() = 0;
+    virtual G4double GetNuclearRadius() = 0;
+    virtual G4double GetNuclearRadius(const G4double maxRelativeDensity) = 0;
+    virtual G4double GetOuterRadius() = 0;
+    virtual G4double CoulombBarrier() = 0;
+    virtual void DoLorentzBoost(const G4LorentzVector& theBoost) = 0;
+    virtual void DoLorentzBoost(const G4ThreeVector& theBeta) = 0;
+    virtual void DoLorentzContraction(const G4LorentzVector& theBoost) = 0;
+    virtual void DoLorentzContraction(const G4ThreeVector& theBeta) = 0;
+    virtual void DoTranslation(const G4ThreeVector& theShift) = 0;
+    virtual const G4VNuclearDensity* GetNuclearDensity() const = 0;
+    virtual void SortNucleonsIncZ() = 0;
+    virtual void SortNucleonsDecZ() = 0;
 
   public:
-      std::pair<G4double, G4double> ChooseImpactXandY(G4double maxImpact);
-      std::pair<G4double, G4double> RefetchImpactXandY(){return theImpactParameter;}
+
+    std::pair<G4double, G4double> ChooseImpactXandY(G4double maxImpact);
+    std::pair<G4double, G4double> RefetchImpactXandY() { return theImpactParameter; }
 
   private:
-  
+
     std::pair<G4double, G4double> theImpactParameter;
-
 };
 
-inline
-std::pair<G4double, G4double> G4V3DNucleus::
-ChooseImpactXandY(G4double maxImpact)
+inline std::pair<G4double, G4double> G4V3DNucleus::ChooseImpactXandY(G4double maxImpact)
 {
-  G4double x,y;
+  G4double x, y;
   do
   {
-    x = 2*G4UniformRand() - 1;
-    y = 2*G4UniformRand() - 1;
-  }
-  while(x*x + y*y > 1);  /* Loop checking, 30-Oct-2015, G.Folger */
+    x = 2 * G4UniformRand() - 1;
+    y = 2 * G4UniformRand() - 1;
+  } while (x * x + y * y > 1); /* Loop checking, 30-Oct-2015, G.Folger */
 
-  G4double impactX = x*(maxImpact); 
-  G4double impactY = y*(maxImpact);
+  G4double impactX = x * (maxImpact);
+  G4double impactY = y * (maxImpact);
   theImpactParameter.first = impactX;
   theImpactParameter.second = impactY;
   return theImpactParameter;
 }
 
-
 #endif
-
-

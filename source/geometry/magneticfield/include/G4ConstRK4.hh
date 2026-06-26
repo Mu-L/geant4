@@ -38,40 +38,42 @@
 #ifndef G4CONSTRK4_HH
 #define G4CONSTRK4_HH
 
-#include "G4MagErrorStepper.hh"
 #include "G4EquationOfMotion.hh"
+#include "G4MagErrorStepper.hh"
 #include "G4Mag_EqRhs.hh"
 
 /**
  * @brief G4ConstRK4 performs the integration of one step with error
- * calculation in constant magnetic field. The integration method is the
- * same as in ClassicalRK4. The field value is assumed constant for the step.
+ * calculation in constant magnetic field.
+ * @ingroup geometry_magneticfield
+ *
+ * The integration method is the same as in ClassicalRK4.
+ * The field value is assumed constant for the step.
  * This field evaluation is called only once per step.
  * G4ConstRK4 can be used only for magnetic fields.
  */
 
-class G4ConstRK4 : public G4MagErrorStepper 
+class G4ConstRK4 : public G4MagErrorStepper
 {
-   public:
+  public:
 
     /**
      * Constructor for G4ConstRK4.
      *  @param[in] EqRhs Pointer to the provided equation of motion.
      *  @param[in] numberOfVariables The number of integration variables.
      */
-     G4ConstRK4(G4Mag_EqRhs* EquationMotion,
-                G4int numberOfStateVariables=8);
+    G4ConstRK4(G4Mag_EqRhs* EquationMotion, G4int numberOfStateVariables = 8);
 
     /**
      * Destructor.
      */
-     ~G4ConstRK4() override;
+    ~G4ConstRK4() override;
 
     /**
      * Copy constructor and assignment operator not allowed.
      */
-     G4ConstRK4(const G4ConstRK4&) = delete;
-     G4ConstRK4& operator=(const G4ConstRK4&) = delete;
+    G4ConstRK4(const G4ConstRK4&) = delete;
+    G4ConstRK4& operator=(const G4ConstRK4&) = delete;
 
     /**
      * The stepper for the Runge Kutta integration.
@@ -84,11 +86,8 @@ class G4ConstRK4 : public G4MagErrorStepper
      *  @param[out] yout Integration output.
      *  @param[out] yerr The estimated error.
      */
-     void Stepper( const G4double y[],
-                   const G4double dydx[],
-                         G4double h,
-                         G4double yout[],
-                         G4double yerr[]  ) override;
+    void Stepper(const G4double y[], const G4double dydx[], G4double h, G4double yout[],
+                 G4double yerr[]) override;
 
     /**
      * Given values for the variables y[0,..,n-1] and their derivatives
@@ -102,68 +101,64 @@ class G4ConstRK4 : public G4MagErrorStepper
      *  @param[in] h The given step size.
      *  @param[out] yout Integration output.
      */
-     void DumbStepper( const G4double yIn[],
-                       const G4double dydx[],
-                             G4double h,
-                             G4double yOut[] ) override ;
+    void DumbStepper(const G4double yIn[], const G4double dydx[], G4double h,
+                     G4double yOut[]) override;
 
     /**
      * Returns the distance from chord line.
      */
-     G4double DistChord() const override;   
- 
+    G4double DistChord() const override;
+
     /**
      * Returns the derivatives value, at position and time 'y'.
      *  @param[in] y The position vector plus time (x,y,z,t).
      *  @param[out] dydx The derivatives array.
      */
-     inline void RightHandSideConst(const G4double y[], G4double dydx[] ) const;
+    inline void RightHandSideConst(const G4double y[], G4double dydx[]) const;
 
     /**
      * Returns the field values, at position and time 'y'.
      *  @param[in] y The position vector plus time (x,y,z,t).
      *  @param[out] Field The field value in output.
      */
-     inline void GetConstField(const G4double y[], G4double Field[]);
+    inline void GetConstField(const G4double y[], G4double Field[]);
 
     /**
      * Returns the order, 4, of integration.
      */
-     inline G4int IntegratorOrder() const override { return 4; }
+    inline G4int IntegratorOrder() const override { return 4; }
 
     /**
      * Returns the stepper type-ID, "kConstRK4".
      */
-     inline G4StepperType StepperType() const override { return kConstRK4; }
+    inline G4StepperType StepperType() const override { return kConstRK4; }
 
-   private:
+  private:
 
-     G4ThreeVector fInitialPoint, fMidPoint, fFinalPoint;
-     // Data stored in order to find the chord
-     G4double *dydxm, *dydxt, *yt; // scratch space - not state 
-     G4double *yInitial, *yMiddle, *dydxMid, *yOneStep;
-     G4Mag_EqRhs* fEq = nullptr;
-     G4double Field[3];
+    G4ThreeVector fInitialPoint, fMidPoint, fFinalPoint;
+    // Data stored in order to find the chord
+    G4double *dydxm, *dydxt, *yt;  // scratch space - not state
+    G4double *yInitial, *yMiddle, *dydxMid, *yOneStep;
+    G4Mag_EqRhs* fEq = nullptr;
+    G4double Field[3];
 };
 
 // Inline methods
 
-inline void G4ConstRK4::RightHandSideConst(const G4double y[],
-                                                 G4double dydx[] ) const
+inline void G4ConstRK4::RightHandSideConst(const G4double y[], G4double dydx[]) const
 {
-  
-  G4double momentum_mag_square = y[3]*y[3] + y[4]*y[4] + y[5]*y[5];
-  G4double inv_momentum_magnitude = 1.0 / std::sqrt( momentum_mag_square );
-    
-  G4double cof = fEq->FCof()*inv_momentum_magnitude;
+  G4double momentum_mag_square = y[3] * y[3] + y[4] * y[4] + y[5] * y[5];
+  G4double inv_momentum_magnitude = 1.0 / std::sqrt(momentum_mag_square);
 
-  dydx[0] = y[3]*inv_momentum_magnitude;       //  (d/ds)x = Vx/V
-  dydx[1] = y[4]*inv_momentum_magnitude;       //  (d/ds)y = Vy/V
-  dydx[2] = y[5]*inv_momentum_magnitude;       //  (d/ds)z = Vz/V
- 
-  dydx[3] = cof*(y[4]*Field[2] - y[5]*Field[1]) ;   // Ax = a*(Vy*Bz - Vz*By)
-  dydx[4] = cof*(y[5]*Field[0] - y[3]*Field[2]) ;   // Ay = a*(Vz*Bx - Vx*Bz)
-  dydx[5] = cof*(y[3]*Field[1] - y[4]*Field[0]) ;   // Az = a*(Vx*By - Vy*Bx)
+  G4double cof = fEq->FCof() * inv_momentum_magnitude;
+
+  dydx[0] = y[3] * inv_momentum_magnitude;  //  (d/ds)x = Vx/V
+  dydx[1] = y[4] * inv_momentum_magnitude;  //  (d/ds)y = Vy/V
+  dydx[2] = y[5] * inv_momentum_magnitude;  //  (d/ds)z = Vz/V
+
+  dydx[3] = cof * (y[4] * Field[2] - y[5] * Field[1]);  // Ax = a*(Vy*Bz - Vz*By)
+  dydx[4] = cof * (y[5] * Field[0] - y[3] * Field[2]);  // Ay = a*(Vz*Bx - Vx*Bz)
+  dydx[5] = cof * (y[3] * Field[1] - y[4] * Field[0]);  // Az = a*(Vx*By - Vy*Bx)
 }
 
 inline void G4ConstRK4::GetConstField(const G4double y[], G4double B[])
@@ -175,7 +170,7 @@ inline void G4ConstRK4::GetConstField(const G4double y[], G4double B[])
   PositionAndTime[2] = y[2];
   // Global Time
   PositionAndTime[3] = y[7];
-  fEq -> GetFieldValue(PositionAndTime, B);
+  fEq->GetFieldValue(PositionAndTime, B);
 }
 
 #endif

@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4RadioactivityTable_h
-#define G4RadioactivityTable_h 1
+#ifndef G4RADIOACTIVITYTABLE_HH
+#define G4RADIOACTIVITYTABLE_HH
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //
 // MODULE:              G4RadioactivityTable.hh
@@ -42,61 +42,57 @@
 // --------------.
 //
 // 29 October 2010, F Lei, QinetiQ, UK
-// First created     
+// First created
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "globals.hh"
-#include <map>
 #include "G4ThreeVector.hh"
 #include "G4TwoVector.hh"
+#include "globals.hh"
+
+#include <map>
 
 using std::map;
 
-
 class G4RadioactivityTable
 {
-  // class description
-  // G4RadioactivityTable is the table of the radioactive isotopes and their
-  // activities.  It is used in the variance reduction mode to recorde the 
-  // induced radioactivity in the RDM sensitive volumes.
-  // class description - end
+    // class description
+    // G4RadioactivityTable is the table of the radioactive isotopes and their
+    // activities.  It is used in the variance reduction mode to recorde the
+    // induced radioactivity in the RDM sensitive volumes.
+    // class description - end
 
-public:
-  // constructor
-  //
-  G4RadioactivityTable ();
+  public:
 
-  // destructor
-  virtual ~G4RadioactivityTable();
+    // constructor
+    //
+    G4RadioactivityTable();
 
-  //  G4RadioactivityTable(const  G4RadioactivityTable &right);
-  
-public:
-  // with description
-  //
-  void AddIsotope( G4int, G4int, G4double, G4double, G4double);
-  // Add an isotope (Z,A,E) of rate to the table.
-  //
-  G4TwoVector GetRate(G4int, G4int, G4double);
-  // Get the rate of isotoe (Z,A,E)
-  //
-  G4int Entries() const;
-  // Get the total number of isotope spieces in the table
-  //
-  map<G4ThreeVector,G4TwoVector>*  GetTheMap();
-  // Return the stl map! Mainly for printing.
-  //
-private:
-  
-  map<G4ThreeVector,G4TwoVector> fRadioactivity;
-  
+    // destructor
+    virtual ~G4RadioactivityTable();
+
+    //  G4RadioactivityTable(const  G4RadioactivityTable &right);
+
+  public:
+
+    // with description
+    //
+    void AddIsotope(G4int, G4int, G4double, G4double, G4double);
+    // Add an isotope (Z,A,E) of rate to the table.
+    //
+    G4TwoVector GetRate(G4int, G4int, G4double);
+    // Get the rate of isotoe (Z,A,E)
+    //
+    G4int Entries() const;
+    // Get the total number of isotope spieces in the table
+    //
+    map<G4ThreeVector, G4TwoVector>* GetTheMap();
+    // Return the stl map! Mainly for printing.
+    //
+
+  private:
+
+    map<G4ThreeVector, G4TwoVector> fRadioactivity;
 };
 
 #endif
-
-
-
-
-
-

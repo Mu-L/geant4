@@ -43,8 +43,8 @@
 // J. Comput. Phys. 274 (2014) 841-882
 // Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#ifndef G4MoleculeFinder_hh
-#define G4MoleculeFinder_hh 1
+#ifndef G4MOLECULEFINDER_HH
+#define G4MOLECULEFINDER_HH
 #include "G4ITFinder.hh"
 #include "G4Molecule.hh"
 using G4MoleculeFinder = G4ITFinder<G4Molecule>;

@@ -44,7 +44,6 @@
 
 G4ParticleHPThermalScatteringNames::G4ParticleHPThermalScatteringNames()
 {
-
   // --------------------------------------------------------------------------------------------
   // New Geant4 naming - after 23/03/2022 - TSL linked to JEFF-3.3 nuclear cross-section G4NDL4.6
   // --------------------------------------------------------------------------------------------
@@ -180,16 +179,15 @@ G4ParticleHPThermalScatteringNames::G4ParticleHPThermalScatteringNames()
   // "G4_BENZENE" , "C" ) , "benzen" ) );
 }
 
-G4bool G4ParticleHPThermalScatteringNames::
-IsThisThermalElement(const G4String& aname) const
+G4bool G4ParticleHPThermalScatteringNames::IsThisThermalElement(const G4String& aname) const
 {
   G4bool result = false;
   if (names.find(aname) != names.end()) result = true;
   return result;
 }
 
-G4bool G4ParticleHPThermalScatteringNames::
-IsThisThermalElement(const G4String& material, const G4String& element) const
+G4bool G4ParticleHPThermalScatteringNames::IsThisThermalElement(const G4String& material,
+                                                                const G4String& element) const
 {
   G4bool result = false;
   if (nist_names.find(std::pair<G4String, G4String>(material, element)) != nist_names.end())

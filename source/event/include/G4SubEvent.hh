@@ -29,55 +29,54 @@
 
 // Author: Makoto Asai (JLAB) - 23/Aug/23
 // --------------------------------------------------------------------
-#ifndef G4SubEvent_hh
-#define G4SubEvent_hh 1
+#ifndef G4SUBEVENT_HH
+#define G4SUBEVENT_HH
 
 #include <vector>
 
 class G4Event;
 
-#include "globals.hh"
-#include "evtdefs.hh"
 #include "G4Allocator.hh"
 #include "G4StackedTrack.hh"
 #include "G4Types.hh"
+#include "globals.hh"
+
+#include "evtdefs.hh"
 
 class G4SubEvent : public std::vector<G4StackedTrack>
 {
   public:
 
     G4SubEvent() = default;
-    explicit G4SubEvent(G4int ty, std::size_t maxEnt)
-      : fSubEventType(ty), fMaxEnt(maxEnt) {;}
-   ~G4SubEvent();
-  
+    explicit G4SubEvent(G4int ty, std::size_t maxEnt) : fSubEventType(ty), fMaxEnt(maxEnt) { ; }
+    ~G4SubEvent();
+
     G4SubEvent& operator=(const G4SubEvent&) = delete;
 
-    inline void *operator new(std::size_t);
+    inline void* operator new(std::size_t);
     inline void operator delete(void* anEvent);
 
     G4bool operator==(const G4SubEvent&) const = delete;
     G4bool operator!=(const G4SubEvent&) const = delete;
-  
-    inline void PushToStack(const G4StackedTrack& aStackedTrack)
-    { push_back(aStackedTrack); }
+
+    inline void PushToStack(const G4StackedTrack& aStackedTrack) { push_back(aStackedTrack); }
     G4StackedTrack PopFromStack();
-  
+
     void clearAndDestroy();
 
     inline G4int GetSubEventType() const { return fSubEventType; }
     inline std::size_t GetNTrack() const { return size(); }
     inline std::size_t GetMaxNTrack() const { return fMaxEnt; }
-  
+
     G4double getTotalEnergy() const;
 
     // pointer to G4Event where this sub-event belongs to
     inline void SetEvent(G4Event* evt) { fpEvent = evt; }
     inline G4Event* GetEvent() const { return fpEvent; }
-  
+
     // flag if all tracks of this sub-event have been tracked
     // and thus ready to be merged to the corresponding event
-    inline void SetCompleted(G4bool val=true) const { fCompleted = val; }
+    inline void SetCompleted(G4bool val = true) const { fCompleted = val; }
     inline G4bool IsCompleted() const { return fCompleted; }
 
   private:
@@ -86,7 +85,6 @@ class G4SubEvent : public std::vector<G4StackedTrack>
     std::size_t fMaxEnt = 1000;
     G4Event* fpEvent = nullptr;
     mutable G4bool fCompleted = false;
-
 };
 
 extern G4EVENT_DLL G4Allocator<G4SubEvent>*& aSubEventAllocator();

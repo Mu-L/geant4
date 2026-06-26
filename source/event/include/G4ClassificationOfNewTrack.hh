@@ -33,31 +33,50 @@
 // Author: M.Asai, SLAC
 
 // Adding sub-event parallel options : M.Asai, JLab
-//        
+//
 // --------------------------------------------------------------------
-#ifndef G4ClassificationOfNewTrack_hh
-#define G4ClassificationOfNewTrack_hh 1
+#ifndef G4CLASSIFICATIONOFNEWTRACK_HH
+#define G4CLASSIFICATIONOFNEWTRACK_HH
 
 enum G4ClassificationOfNewTrack
-{ 
-  fUrgent=0,     // put into the urgent stack
-  fWaiting=1,    // put into the waiting stack
-  fPostpone=-1,  // postpone to the next event
-  fKill=-9,      // kill
+{
+  fUrgent = 0,  // put into the urgent stack
+  fWaiting = 1,  // put into the waiting stack
+  fPostpone = -1,  // postpone to the next event
+  fKill = -9,  // kill
   //----------------------------------------------------------------
   // following ENUM are available only if the user increases the
   // number of waiting stacks
   //----------------------------------------------------------------
-  fWaiting_1=11, fWaiting_2=12, fWaiting_3=13, fWaiting_4=14, fWaiting_5=15,
-  fWaiting_6=16, fWaiting_7=17, fWaiting_8=18, fWaiting_9=19, fWaiting_10=20,
+  fWaiting_1 = 11,
+  fWaiting_2 = 12,
+  fWaiting_3 = 13,
+  fWaiting_4 = 14,
+  fWaiting_5 = 15,
+  fWaiting_6 = 16,
+  fWaiting_7 = 17,
+  fWaiting_8 = 18,
+  fWaiting_9 = 19,
+  fWaiting_10 = 20,
   //----------------------------------------------------------------
   // following ENUM are available only for the sub-event parallelism
   //----------------------------------------------------------------
-  fSubEvent_0=100,
-  fSubEvent_1=101, fSubEvent_2=102, fSubEvent_3=103, fSubEvent_4=104,
-  fSubEvent_5=105, fSubEvent_6=106, fSubEvent_7=107, fSubEvent_8=108,
-  fSubEvent_9=109, fSubEvent_A=110, fSubEvent_B=111, fSubEvent_C=112,
-  fSubEvent_D=113, fSubEvent_E=114, fSubEvent_F=115
+  fSubEvent_0 = 100,
+  fSubEvent_1 = 101,
+  fSubEvent_2 = 102,
+  fSubEvent_3 = 103,
+  fSubEvent_4 = 104,
+  fSubEvent_5 = 105,
+  fSubEvent_6 = 106,
+  fSubEvent_7 = 107,
+  fSubEvent_8 = 108,
+  fSubEvent_9 = 109,
+  fSubEvent_A = 110,
+  fSubEvent_B = 111,
+  fSubEvent_C = 112,
+  fSubEvent_D = 113,
+  fSubEvent_E = 114,
+  fSubEvent_F = 115
 };
 
 #endif

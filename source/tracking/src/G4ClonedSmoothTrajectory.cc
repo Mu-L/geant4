@@ -29,16 +29,16 @@
 // --------------------------------------------------------------------
 
 #include "G4ClonedSmoothTrajectory.hh"
-#include "G4SmoothTrajectory.hh"
 
 #include "G4AttDef.hh"
 #include "G4AttDefStore.hh"
 #include "G4AttValue.hh"
-#include "G4ParticleTable.hh"
+#include "G4AutoLock.hh"
 #include "G4ClonedSmoothTrajectoryPoint.hh"
+#include "G4ParticleTable.hh"
+#include "G4SmoothTrajectory.hh"
 #include "G4UIcommand.hh"
 #include "G4UnitsTable.hh"
-#include "G4AutoLock.hh"
 
 // #define G4ATTDEBUG
 #ifdef G4ATTDEBUG
@@ -62,7 +62,8 @@ G4ClonedSmoothTrajectory::G4ClonedSmoothTrajectory(const G4SmoothTrajectory& rig
   initialMomentum = right.initialMomentum;
   positionRecord = new G4TrajectoryPointContainer();
 
-  for (auto& i : *right.positionRecord) {
+  for (auto& i : *right.positionRecord)
+  {
     auto rightPoint = (G4ClonedSmoothTrajectoryPoint*)i;
     positionRecord->push_back(new G4ClonedSmoothTrajectoryPoint(*rightPoint));
   }
@@ -70,8 +71,10 @@ G4ClonedSmoothTrajectory::G4ClonedSmoothTrajectory(const G4SmoothTrajectory& rig
 
 G4ClonedSmoothTrajectory::~G4ClonedSmoothTrajectory()
 {
-  if (positionRecord != nullptr) {
-    for (auto& i : *positionRecord) {
+  if (positionRecord != nullptr)
+  {
+    for (auto& i : *positionRecord)
+    {
       delete i;
     }
     positionRecord->clear();
@@ -100,8 +103,10 @@ void G4ClonedSmoothTrajectory::DrawTrajectory() const
 const std::map<G4String, G4AttDef>* G4ClonedSmoothTrajectory::GetAttDefs() const
 {
   G4bool isNew;
-  std::map<G4String, G4AttDef>* store = G4AttDefStore::GetInstance("G4ClonedSmoothTrajectory", isNew);
-  if (isNew) {
+  std::map<G4String, G4AttDef>* store =
+    G4AttDefStore::GetInstance("G4ClonedSmoothTrajectory", isNew);
+  if (isNew)
+  {
     G4String ID("ID");
     (*store)[ID] = G4AttDef(ID, "Track ID", "Physics", "", "G4int");
 
@@ -182,7 +187,8 @@ void G4ClonedSmoothTrajectory::MergeTrajectory(G4VTrajectory* secondTrajectory)
 
   // initial point of the second trajectory should not be merged
   //
-  for (G4int i = 1; i < ent; ++i) {
+  for (G4int i = 1; i < ent; ++i)
+  {
     positionRecord->push_back((*(seco->positionRecord))[i]);
   }
   delete (*seco->positionRecord)[0];

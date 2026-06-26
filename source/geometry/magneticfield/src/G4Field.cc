@@ -30,26 +30,26 @@
 
 #include "G4Field.hh"
 
-G4Field::G4Field( G4bool gravityOn )
-  : fGravityActive( gravityOn )
+G4Field::G4Field(G4bool gravityOn) : fGravityActive(gravityOn) {}
+
+G4Field& G4Field::operator=(const G4Field& p)
 {
-}
- 
-G4Field& G4Field::operator = (const G4Field& p)
-{
-   if (&p == this) { return *this; }
-   fGravityActive= p.fGravityActive;
-   return *this;
+  if (&p == this)
+  {
+    return *this;
+  }
+  fGravityActive = p.fGravityActive;
+  return *this;
 }
 
 G4Field* G4Field::Clone() const
 {
-    G4ExceptionDescription msg;
-    msg << "Derived class does not implement cloning,\n"
-        << "but Clone method called.\n"
-        << "Cannot continue;";
-    G4Exception("G4Field::Clone", "GeomField004", FatalException, msg );
-    return nullptr;
+  G4ExceptionDescription msg;
+  msg << "Derived class does not implement cloning,\n"
+      << "but Clone method called.\n"
+      << "Cannot continue;";
+  G4Exception("G4Field::Clone", "GeomField004", FatalException, msg);
+  return nullptr;
 }
 
 // ------------------------------------------------------------------------

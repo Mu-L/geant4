@@ -68,10 +68,7 @@ ExGflash3DetectorConstruction::ExGflash3DetectorConstruction()
 
 ExGflash3DetectorConstruction::~ExGflash3DetectorConstruction()
 {
-  delete fFastShowerModel;
-  delete fParameterisation;
-  delete fParticleBounds;
-  delete fHitMaker;
+  //  delete fFastShowerModel;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -126,8 +123,8 @@ G4VPhysicalVolume* ExGflash3DetectorConstruction::Construct()
   G4double crystalWidth = 3 * cm;
   G4double crystalLength = 24 * cm;
 
-  calo_xside = (crystalWidth * nbOfCrystals) + 1 * cm;
-  calo_yside = (crystalWidth * nbOfCrystals) + 1 * cm;
+  calo_xside = (crystalWidth * nbOfCrystals);
+  calo_yside = (crystalWidth * nbOfCrystals);
   calo_zside = crystalLength;
 
   auto calo_box = new G4Box("CMS calorimeter",  // its name
@@ -154,7 +151,6 @@ G4VPhysicalVolume* ExGflash3DetectorConstruction::Construct()
 
   // define the fParameterisation region
   fRegion = new G4Region("crystals");
-  caloLog->SetRegion(fRegion);
   fRegion->AddRootLogicalVolume(caloLog);
 
   return experimentalHall_phys;
@@ -171,17 +167,17 @@ void ExGflash3DetectorConstruction::ConstructSDandField()
   // * Initializing shower modell
   // ***********************************************
   G4cout << "Creating shower parameterization models" << G4endl;
-  fFastShowerModel = new GFlashShowerModel("fFastShowerModel", fRegion);
-  fParameterisation = new GFlashHomoShowerParameterisation(fRegion->GetMaterialIterator()[0]);
-  fFastShowerModel->SetParameterisation(*fParameterisation);
+  auto fFastShowerModel = new GFlashShowerModel("fFastShowerModel", fRegion);
+  auto fParameterisation = new GFlashHomoShowerParameterisation(fRegion->GetMaterialIterator()[0]);
+  fFastShowerModel->SetParameterisation(fParameterisation);
   // Energy Cuts to kill particles:
-  fParticleBounds = new GFlashParticleBounds();
-  fFastShowerModel->SetParticleBounds(*fParticleBounds);
+  auto fParticleBounds = new GFlashParticleBounds();
+  fFastShowerModel->SetParticleBounds(fParticleBounds);
   // Makes the EnergieSpots
-  fHitMaker = new GFlashHitMaker();
+  auto fHitMaker = new GFlashHitMaker();
   // Important: use SD defined in different geometry
   fHitMaker->SetNameOfWorldWithSD("parallelWorld");
-  fFastShowerModel->SetHitMaker(*fHitMaker);
+  fFastShowerModel->SetHitMaker(fHitMaker);
   G4cout << "end shower parameterization." << G4endl;
   // **********************************************
 }

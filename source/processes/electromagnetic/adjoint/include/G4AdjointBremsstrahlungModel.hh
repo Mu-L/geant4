@@ -39,11 +39,11 @@
 //
 //-------------------------------------------------------------
 
-#ifndef G4AdjointBremsstrahlungModel_h
-#define G4AdjointBremsstrahlungModel_h 1
+#ifndef G4ADJOINTBREMSSTRAHLUNGMODEL_HH
+#define G4ADJOINTBREMSSTRAHLUNGMODEL_HH
 
-#include "globals.hh"
 #include "G4VEmAdjointModel.hh"
+#include "globals.hh"
 
 class G4AdjointCSManager;
 class G4EmModelManager;
@@ -51,45 +51,45 @@ class G4ParticleDefinition;
 
 class G4AdjointBremsstrahlungModel : public G4VEmAdjointModel
 {
- public:
-  explicit G4AdjointBremsstrahlungModel(G4VEmModel* aModel);
+  public:
 
-  G4AdjointBremsstrahlungModel();
+    explicit G4AdjointBremsstrahlungModel(G4VEmModel* aModel);
 
-  ~G4AdjointBremsstrahlungModel() override;
+    G4AdjointBremsstrahlungModel();
 
-  void SampleSecondaries(const G4Track& aTrack, G4bool isScatProjToProj,
-                         G4ParticleChange* fParticleChange) override;
+    ~G4AdjointBremsstrahlungModel() override;
 
-  void RapidSampleSecondaries(const G4Track& aTrack, G4bool isScatProjToProj,
-                              G4ParticleChange* fParticleChange);
+    void SampleSecondaries(const G4Track& aTrack, G4bool isScatProjToProj,
+                           G4ParticleChange* fParticleChange) override;
 
-  G4double DiffCrossSectionPerVolumePrimToSecond(
-    const G4Material* aMaterial,
-    G4double kinEnergyProj,  // kinetic energy of the primary particle before
-                             // the interaction
-    G4double kinEnergyProd   // kinetic energy of the secondary particle
-    ) override;
+    void RapidSampleSecondaries(const G4Track& aTrack, G4bool isScatProjToProj,
+                                G4ParticleChange* fParticleChange);
 
-  G4double AdjointCrossSection(const G4MaterialCutsCouple* aCouple,
-                               G4double primEnergy,
-                               G4bool isScatProjToProj) override;
+    G4double DiffCrossSectionPerVolumePrimToSecond(
+      const G4Material* aMaterial,
+      G4double kinEnergyProj,  // kinetic energy of the primary particle before
+                               // the interaction
+      G4double kinEnergyProd  // kinetic energy of the secondary particle
+      ) override;
 
-  G4AdjointBremsstrahlungModel(G4AdjointBremsstrahlungModel&) = delete;
-  G4AdjointBremsstrahlungModel& operator=(
-    const G4AdjointBremsstrahlungModel& right) = delete;
+    G4double AdjointCrossSection(const G4MaterialCutsCouple* aCouple, G4double primEnergy,
+                                 G4bool isScatProjToProj) override;
 
- private:
-  void Initialize();
+    G4AdjointBremsstrahlungModel(G4AdjointBremsstrahlungModel&) = delete;
+    G4AdjointBremsstrahlungModel& operator=(const G4AdjointBremsstrahlungModel& right) = delete;
 
-  G4EmModelManager* fEmModelManagerForFwdModels;
-  G4AdjointCSManager* fCSManager;
-  G4ParticleDefinition* fElectron;
-  G4ParticleDefinition* fGamma;
+  private:
 
-  G4double fLastCZ = 0.;
+    void Initialize();
 
-  G4bool fIsDirectModelInitialised = false;
+    G4EmModelManager* fEmModelManagerForFwdModels;
+    G4AdjointCSManager* fCSManager;
+    G4ParticleDefinition* fElectron;
+    G4ParticleDefinition* fGamma;
+
+    G4double fLastCZ = 0.;
+
+    G4bool fIsDirectModelInitialised = false;
 };
 
 #endif

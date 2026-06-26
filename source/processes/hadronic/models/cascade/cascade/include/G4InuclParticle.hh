@@ -42,130 +42,150 @@
 #ifndef G4INUCL_PARTICLE_HH
 #define G4INUCL_PARTICLE_HH
 
-#include <iosfwd>
+#include "G4DynamicParticle.hh"
+#include "G4LorentzVector.hh"
+#include "globals.hh"
+
 #include <CLHEP/Units/SystemOfUnits.h>
 
-#include "globals.hh"
-#include "G4LorentzVector.hh"
-#include "G4DynamicParticle.hh"
+#include <iosfwd>
 
-class G4InuclParticle {
-public:
-  // used to indicate model that created instance of G4InuclParticle
-  // 0 default
-  // 1 bullet
-  // 2 target
-  // 3 G4ElementaryParticleCollider
-  // 4 G4IntraNucleiCascader
-  // 5 G4NonEquilibriumEvaporator
-  // 6 G4EquilibriumEvaporator
-  // 7 G4Fissioner
-  // 8 G4BigBanger
-  // 9 G4PreCompound
-  // 10 G4CascadeCoalescence
-  enum Model { DefaultModel, bullet, target, EPCollider, INCascader,
-	       NonEquilib, Equilib, Fissioner, BigBanger, PreCompound,
-	       Coalescence };
+class G4InuclParticle
+{
+  public:
 
-public:
-  G4InuclParticle() : modelId(DefaultModel) {}
+    // used to indicate model that created instance of G4InuclParticle
+    // 0 default
+    // 1 bullet
+    // 2 target
+    // 3 G4ElementaryParticleCollider
+    // 4 G4IntraNucleiCascader
+    // 5 G4NonEquilibriumEvaporator
+    // 6 G4EquilibriumEvaporator
+    // 7 G4Fissioner
+    // 8 G4BigBanger
+    // 9 G4PreCompound
+    // 10 G4CascadeCoalescence
+    enum Model
+    {
+      DefaultModel,
+      bullet,
+      target,
+      EPCollider,
+      INCascader,
+      NonEquilib,
+      Equilib,
+      Fissioner,
+      BigBanger,
+      PreCompound,
+      Coalescence
+    };
 
-  G4InuclParticle(const G4DynamicParticle& dynPart, Model model=DefaultModel)
-    : pDP(dynPart), modelId(model) {}
+  public:
 
-  G4InuclParticle(const G4LorentzVector& mom, Model model=DefaultModel)
-    : modelId(model) { pDP.Set4Momentum(mom*CLHEP::GeV/CLHEP::MeV); }	// Bertini to G4 units
+    G4InuclParticle() : modelId(DefaultModel) {}
 
-  virtual ~G4InuclParticle() {}
+    G4InuclParticle(const G4DynamicParticle& dynPart, Model model = DefaultModel)
+      : pDP(dynPart), modelId(model)
+    {}
 
-  // Copy and assignment constructors for use with std::vector<>
-  G4InuclParticle(const G4InuclParticle& right)
-    : pDP(right.pDP), modelId(right.modelId) {}
+    G4InuclParticle(const G4LorentzVector& mom, Model model = DefaultModel) : modelId(model)
+    {
+      pDP.Set4Momentum(mom * CLHEP::GeV / CLHEP::MeV);
+    }  // Bertini to G4 units
 
-  G4InuclParticle& operator=(const G4InuclParticle& right);
+    virtual ~G4InuclParticle() {}
 
-  // Equality (comparison) operator -- NOT SORTING
-  G4bool operator==(const G4InuclParticle& right) {
-    return ( (&right == this) || (pDP == right.pDP) );	// Ignore model code
-  }
+    // Copy and assignment constructors for use with std::vector<>
+    G4InuclParticle(const G4InuclParticle& right) : pDP(right.pDP), modelId(right.modelId) {}
 
-  G4bool operator!=(const G4InuclParticle& right) {
-    return !operator==(right);
-  }
+    G4InuclParticle& operator=(const G4InuclParticle& right);
 
-  // This is no longer required, as setMomentum() handles mass adjustment
-  void setEnergy() { ; }
+    // Equality (comparison) operator -- NOT SORTING
+    G4bool operator==(const G4InuclParticle& right)
+    {
+      return ((&right == this) || (pDP == right.pDP));  // Ignore model code
+    }
 
-  // These are call-throughs to G4DynamicParticle
-  void setMomentum(const G4LorentzVector& mom);
+    G4bool operator!=(const G4InuclParticle& right) { return !operator==(right); }
 
-  void setKineticEnergy(G4double ekin) { pDP.SetKineticEnergy(ekin*CLHEP::GeV/CLHEP::MeV); }
+    // This is no longer required, as setMomentum() handles mass adjustment
+    void setEnergy() { ; }
 
-  void setMass(G4double mass) { pDP.SetMass(mass*CLHEP::GeV/CLHEP::MeV); }
+    // These are call-throughs to G4DynamicParticle
+    void setMomentum(const G4LorentzVector& mom);
 
-  G4double getMass() const {
-    return pDP.GetMass()*CLHEP::MeV/CLHEP::GeV;	// From G4 to Bertini units
-  }
+    void setKineticEnergy(G4double ekin) { pDP.SetKineticEnergy(ekin * CLHEP::GeV / CLHEP::MeV); }
 
-  G4double getCharge() const {
-    return pDP.GetCharge();
-  }
+    void setMass(G4double mass) { pDP.SetMass(mass * CLHEP::GeV / CLHEP::MeV); }
 
-  G4double getKineticEnergy() const {
-    return pDP.GetKineticEnergy()*CLHEP::MeV/CLHEP::GeV; // From G4 to Bertini units
-  }
+    G4double getMass() const
+    {
+      return pDP.GetMass() * CLHEP::MeV / CLHEP::GeV;  // From G4 to Bertini units
+    }
 
-  G4double getEnergy() const {
-    return pDP.GetTotalEnergy()*CLHEP::MeV/CLHEP::GeV; // From G4 to Bertini units
-  }
+    G4double getCharge() const { return pDP.GetCharge(); }
 
-  G4double getMomModule() const {
-    return pDP.GetTotalMomentum()*CLHEP::MeV/CLHEP::GeV; // From G4 to Bertini units
-  }
+    G4double getKineticEnergy() const
+    {
+      return pDP.GetKineticEnergy() * CLHEP::MeV / CLHEP::GeV;  // From G4 to Bertini units
+    }
 
-  G4LorentzVector getMomentum() const {
-    return pDP.Get4Momentum()*CLHEP::MeV/CLHEP::GeV; // From G4 to Bertini units
-  }
+    G4double getEnergy() const
+    {
+      return pDP.GetTotalEnergy() * CLHEP::MeV / CLHEP::GeV;  // From G4 to Bertini units
+    }
 
-  virtual void print(std::ostream& os) const;
+    G4double getMomModule() const
+    {
+      return pDP.GetTotalMomentum() * CLHEP::MeV / CLHEP::GeV;  // From G4 to Bertini units
+    }
 
-  const G4ParticleDefinition* getDefinition() const {
-    return pDP.GetDefinition();
-  }
+    G4LorentzVector getMomentum() const
+    {
+      return pDP.Get4Momentum() * CLHEP::MeV / CLHEP::GeV;  // From G4 to Bertini units
+    }
 
-  const G4DynamicParticle& getDynamicParticle() const {
-    return pDP;
-  }
+    virtual void print(std::ostream& os) const;
 
-public:
-  void setModel(Model model) { modelId = model; }
-  Model getModel() const { return modelId; }
+    const G4ParticleDefinition* getDefinition() const { return pDP.GetDefinition(); }
 
-protected: 
-  //  Special constructors for subclasses to set particle type correctly
-  explicit G4InuclParticle(const G4ParticleDefinition* pd,
-			   Model model=DefaultModel)
-    : modelId(model) { setDefinition(pd); }
+    const G4DynamicParticle& getDynamicParticle() const { return pDP; }
 
-  // FIXME: Bertini code doesn't pass valid 4-vectors, so force mass value
-  //	    from supplied PartDefn, with required unit conversions
-  G4InuclParticle(const G4ParticleDefinition* pd, const G4LorentzVector& mom,
-		  Model model=DefaultModel);
+  public:
 
-  // NOTE:  Momentum forced along Z direction
-  G4InuclParticle(const G4ParticleDefinition* pd, G4double ekin,
-		  Model model=DefaultModel)
-    : pDP(pd,G4ThreeVector(0.,0.,1.),ekin*CLHEP::GeV/CLHEP::MeV), modelId(model) {}
+    void setModel(Model model) { modelId = model; }
+    Model getModel() const { return modelId; }
 
-  void setDefinition(const G4ParticleDefinition* pd);
+  protected:
 
-private:
-  G4DynamicParticle pDP;		// Carries all the kinematics and info
-  Model modelId;
-};        
+    //  Special constructors for subclasses to set particle type correctly
+    explicit G4InuclParticle(const G4ParticleDefinition* pd, Model model = DefaultModel)
+      : modelId(model)
+    {
+      setDefinition(pd);
+    }
+
+    // FIXME: Bertini code doesn't pass valid 4-vectors, so force mass value
+    //	    from supplied PartDefn, with required unit conversions
+    G4InuclParticle(const G4ParticleDefinition* pd, const G4LorentzVector& mom,
+                    Model model = DefaultModel);
+
+    // NOTE:  Momentum forced along Z direction
+    G4InuclParticle(const G4ParticleDefinition* pd, G4double ekin, Model model = DefaultModel)
+      : pDP(pd, G4ThreeVector(0., 0., 1.), ekin * CLHEP::GeV / CLHEP::MeV), modelId(model)
+    {}
+
+    void setDefinition(const G4ParticleDefinition* pd);
+
+  private:
+
+    G4DynamicParticle pDP;  // Carries all the kinematics and info
+    Model modelId;
+};
 
 // Proper stream output (just calls print())
 
 std::ostream& operator<<(std::ostream& os, const G4InuclParticle& part);
 
-#endif // G4INUCL_PARTICLE_HH 
+#endif  // G4INUCL_PARTICLE_HH

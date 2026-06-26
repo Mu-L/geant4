@@ -45,6 +45,7 @@
 /**
  * @brief G4ImplicitEuler implements a Euler stepper for magnetic field
  * with 2nd order solver.
+ * @ingroup geometry_magneticfield
  */
 
 class G4ImplicitEuler : public G4MagErrorStepper
@@ -56,8 +57,7 @@ class G4ImplicitEuler : public G4MagErrorStepper
      *  @param[in] EqRhs Pointer to the provided equation of motion.
      *  @param[in] numberOfVariables The number of integration variables.
      */
-    G4ImplicitEuler(G4EquationOfMotion* EqRhs,
-                    G4int numberOfVariables = 6);
+    G4ImplicitEuler(G4EquationOfMotion* EqRhs, G4int numberOfVariables = 6);
 
     /**
      * Destructor.
@@ -71,10 +71,8 @@ class G4ImplicitEuler : public G4MagErrorStepper
      *  @param[in] h The given step size.
      *  @param[out] yout Integration output.
      */
-    void DumbStepper( const G4double y[] ,
-                      const G4double dydx[] ,
-                            G4double h ,
-                            G4double yout[] ) override;
+    void DumbStepper(const G4double y[], const G4double dydx[], G4double h,
+                     G4double yout[]) override;
 
     /**
      * Returns the order, 2, of integration.
@@ -89,7 +87,7 @@ class G4ImplicitEuler : public G4MagErrorStepper
 
     /** Temporaries, created to avoid new/delete on every call. */
     G4double* dydxTemp = nullptr;
-    G4double* yTemp = nullptr;    
+    G4double* yTemp = nullptr;
 };
 
 #endif

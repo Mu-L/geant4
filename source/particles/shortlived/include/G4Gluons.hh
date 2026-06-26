@@ -30,8 +30,8 @@
 //      Hisaya Kurashige, 27 June 1998
 // ----------------------------------------------------------------
 
-#ifndef G4Gluons_h
-#define G4Gluons_h 1
+#ifndef G4GLUONS_HH
+#define G4GLUONS_HH
 
 #include "G4VShortLivedParticle.hh"
 #include "globals.hh"
@@ -39,6 +39,7 @@
 class G4Gluons : public G4VShortLivedParticle
 {
   public:
+
     // clang-format off
    G4Gluons(
        const G4String&     aName,        G4double            mass,

@@ -29,28 +29,26 @@
 //
 
 #include "G4N12GEMProbability.hh"
+
 #include "G4SystemOfUnits.hh"
 
-G4N12GEMProbability::G4N12GEMProbability() :
-  G4GEMProbability(12,7,1.0) // A,Z,Spin
+G4N12GEMProbability::G4N12GEMProbability() : G4GEMProbability(12, 7, 1.0)  // A,Z,Spin
 {
-
-  ExcitEnergies.push_back(960.0*keV);
+  ExcitEnergies.push_back(960.0 * keV);
   ExcitSpins.push_back(2.0);
-  ExcitLifetimes.push_back(fPlanck/(20*keV));
+  ExcitLifetimes.push_back(fPlanck / (20 * keV));
 
-  ExcitEnergies.push_back(1189*keV);
+  ExcitEnergies.push_back(1189 * keV);
   ExcitSpins.push_back(2.0);
-  ExcitLifetimes.push_back(fPlanck/(100*keV));
+  ExcitLifetimes.push_back(fPlanck / (100 * keV));
 
-  ExcitEnergies.push_back(2415*keV);
+  ExcitEnergies.push_back(2415 * keV);
   ExcitSpins.push_back(0.0);
-  ExcitLifetimes.push_back(fPlanck/(45*keV));
+  ExcitLifetimes.push_back(fPlanck / (45 * keV));
 
-  ExcitEnergies.push_back(3118*keV);
+  ExcitEnergies.push_back(3118 * keV);
   ExcitSpins.push_back(2.0);
-  ExcitLifetimes.push_back(fPlanck/(210*keV));
+  ExcitLifetimes.push_back(fPlanck / (210 * keV));
 }
 
-G4N12GEMProbability::~G4N12GEMProbability() 
-{}
+G4N12GEMProbability::~G4N12GEMProbability() {}

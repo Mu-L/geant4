@@ -33,50 +33,61 @@
 //		dimensions (c.f. G4CascadeSampler)
 // 20130620	Address Coverity #51342; initialize angDist[] buffer in ctor
 
-#ifndef G4NumIntTwoBodyAngDst_h
-#define G4NumIntTwoBodyAngDst_h 1
+#ifndef G4NUMINTTWOBODYANGDST_HH
+#define G4NUMINTTWOBODYANGDST_HH
 
 #include "G4VTwoBodyAngDst.hh"
+
 #include <algorithm>
 
-template <G4int NKEBINS, G4int NANGLES>
-class G4NumIntTwoBodyAngDst : public G4VTwoBodyAngDst {
-public:
-  enum { nDists=NKEBINS, nAngles=NANGLES };	// For use in function arguments
+template<G4int NKEBINS, G4int NANGLES>
+class G4NumIntTwoBodyAngDst : public G4VTwoBodyAngDst
+{
+  public:
 
-  G4NumIntTwoBodyAngDst(const G4String& name, 
-			const G4double (&kebins)[nDists],
-			const G4double (&angles)[nAngles],
-			const G4double (&dists)[nDists][nAngles],
-			const G4double highKEscale, G4int verbose = 0)
-    : G4VTwoBodyAngDst(name, verbose), tcoeff(highKEscale),
-      labKE(kebins), cosBins(angles), angDists(dists) {
-    std::fill(angDist, angDist+nAngles, 0.);	// Initialize working buffer
-  }
+    enum
+    {
+      nDists = NKEBINS,
+      nAngles = NANGLES
+    };  // For use in function arguments
 
-  virtual ~G4NumIntTwoBodyAngDst() {;}
-  
-  virtual G4double GetCosTheta(const G4double& ekin, const G4double& pcm) const;
-  
-protected:
-  G4double tcoeff;	// Fall-off of exponential for high energy ang. dist.
+    G4NumIntTwoBodyAngDst(const G4String& name, const G4double (&kebins)[nDists],
+                          const G4double (&angles)[nAngles],
+                          const G4double (&dists)[nDists][nAngles], const G4double highKEscale,
+                          G4int verbose = 0)
+      : G4VTwoBodyAngDst(name, verbose),
+        tcoeff(highKEscale),
+        labKE(kebins),
+        cosBins(angles),
+        angDists(dists)
+    {
+      std::fill(angDist, angDist + nAngles, 0.);  // Initialize working buffer
+    }
 
-  // Kinetic energies at which angular distributions are taken
-  const G4double (&labKE)[nDists];
+    virtual ~G4NumIntTwoBodyAngDst() { ; }
 
-  // Bins of the angular distributions in cos(theta)
-  const G4double (&cosBins)[nAngles];
+    virtual G4double GetCosTheta(const G4double& ekin, const G4double& pcm) const;
 
-  // table of numerical normalized indefinite integrals of
-  // angular distributions vs. KE and angle 
-  const G4double (&angDists)[nDists][nAngles];
+  protected:
 
-  // Compute interpolated angular distribution between energy bins
-  void Interpolate(const G4double& ekin) const;
-  mutable G4double angDist[nAngles];		// Reusable buffer
+    G4double tcoeff;  // Fall-off of exponential for high energy ang. dist.
+
+    // Kinetic energies at which angular distributions are taken
+    const G4double (&labKE)[nDists];
+
+    // Bins of the angular distributions in cos(theta)
+    const G4double (&cosBins)[nAngles];
+
+    // table of numerical normalized indefinite integrals of
+    // angular distributions vs. KE and angle
+    const G4double (&angDists)[nDists][nAngles];
+
+    // Compute interpolated angular distribution between energy bins
+    void Interpolate(const G4double& ekin) const;
+    mutable G4double angDist[nAngles];  // Reusable buffer
 };
 
 // Implementations must be included for templated classes
 #include "G4NumIntTwoBodyAngDst.icc"
 
-#endif	/* G4NumIntTwoBodyAngDst_h */
+#endif /* G4NumIntTwoBodyAngDst_h */

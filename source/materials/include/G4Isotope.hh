@@ -60,63 +60,65 @@ using G4IsotopeTable = std::vector<G4Isotope*>;
 
 class G4Isotope
 {
- public:  // with description
-  // Make an isotope
-  G4Isotope(const G4String& name,  // its name
-    G4int z,  // atomic number
-    G4int n,  // number of nucleons
-    G4double a = 0.,  // mass of mole
-    G4int mlevel = 0);  // isomer level
+  public:  // with description
 
-  ~G4Isotope();
+    // Make an isotope
+    G4Isotope(const G4String& name,  // its name
+              G4int z,  // atomic number
+              G4int n,  // number of nucleons
+              G4double a = 0.,  // mass of mole
+              G4int mlevel = 0);  // isomer level
 
-  G4Isotope(const G4Isotope&) = delete;
-  G4Isotope& operator=(const G4Isotope&) = delete;
+    ~G4Isotope();
 
-  // Retrieval methods
-  const G4String& GetName() const { return fName; }
+    G4Isotope(const G4Isotope&) = delete;
+    G4Isotope& operator=(const G4Isotope&) = delete;
 
-  // Atomic number
-  G4int GetZ() const { return fZ; }
+    // Retrieval methods
+    const G4String& GetName() const { return fName; }
 
-  // Number of nucleous
-  G4int GetN() const { return fN; }
+    // Atomic number
+    G4int GetZ() const { return fZ; }
 
-  // Atomic mass of mole in Geant4 units with electron shell
-  G4double GetA() const { return fA; }
+    // Number of nucleous
+    G4int GetN() const { return fN; }
 
-  // Isomer level
-  G4int Getm() const { return fm; }
+    // Atomic mass of mole in Geant4 units with electron shell
+    G4double GetA() const { return fA; }
 
-  static G4Isotope* GetIsotope(const G4String& name, G4bool warning = false);
+    // Isomer level
+    G4int Getm() const { return fm; }
 
-  static const G4IsotopeTable* GetIsotopeTable();
+    static G4Isotope* GetIsotope(const G4String& name, G4bool warning = false);
 
-  static std::size_t GetNumberOfIsotopes();
+    static const G4IsotopeTable* GetIsotopeTable();
 
-  std::size_t GetIndex() const { return fIndexInTable; }
+    static std::size_t GetNumberOfIsotopes();
 
-  friend std::ostream& operator<<(std::ostream&, const G4Isotope*);
+    std::size_t GetIndex() const { return fIndexInTable; }
 
-  friend std::ostream& operator<<(std::ostream&, const G4Isotope&);
+    friend std::ostream& operator<<(std::ostream&, const G4Isotope*);
 
-  friend std::ostream& operator<<(std::ostream&, const G4IsotopeTable&);
+    friend std::ostream& operator<<(std::ostream&, const G4Isotope&);
 
-  G4bool operator==(const G4Isotope&) const;
-  G4bool operator!=(const G4Isotope&) const;
+    friend std::ostream& operator<<(std::ostream&, const G4IsotopeTable&);
 
-  void SetName(const G4String& name) { fName = name; }
+    G4bool operator==(const G4Isotope&) const;
+    G4bool operator!=(const G4Isotope&) const;
 
- private:
-  G4String fName;  // name of the Isotope
-  G4int fZ;  // atomic number
-  G4int fN;  // number of nucleons
-  G4double fA;  // atomic mass of a mole
-  G4int fm;  // isomer level
+    void SetName(const G4String& name) { fName = name; }
 
-  static G4IsotopeTable& GetIsotopeTableRef();
+  private:
 
-  std::size_t fIndexInTable;  // index in the Isotope table
+    G4String fName;  // name of the Isotope
+    G4int fZ;  // atomic number
+    G4int fN;  // number of nucleons
+    G4double fA;  // atomic mass of a mole
+    G4int fm;  // isomer level
+
+    static G4IsotopeTable& GetIsotopeTableRef();
+
+    std::size_t fIndexInTable;  // index in the Isotope table
 };
 
 #endif

@@ -11,7 +11,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -169,6 +169,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 0
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -13764,7 +13765,7 @@ Step#    X(mm)    Y(mm)    Z(mm) KinE(MeV)  dE(MeV) StepLeng TrackLeng  NextVolu
  Run terminated.
 Run Summary
   Number of events processed : 10
-  User=0.830000s Real=0.846260s Sys=0.020000s
+  User=0.810000s Real=0.837748s Sys=0.020000s
 
 --------------------End of Global Run-----------------------
  The run consists of 10 proton of 50 MeV
@@ -13778,9 +13779,9 @@ Graphics systems deleted.
 Visualization Manager deleting...
 G4 kernel has come to Quit state.
 Deleting G4Run (id:0) 
-UserDetectorConstruction deleted 0xd8bcc0
-UserPhysicsList deleted 0xd88010
-UserActionInitialization deleted 0xf51660
+UserDetectorConstruction deleted 0x1729560
+UserPhysicsList deleted 0x17257c0
+UserActionInitialization deleted 0x18f09c0
 UserWorkerInitialization deleted 0
 UserWorkerThreadInitialization deleted 0
 UserRunAction deleted.

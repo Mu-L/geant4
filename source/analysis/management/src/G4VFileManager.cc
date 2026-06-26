@@ -27,15 +27,14 @@
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
 #include "G4VFileManager.hh"
+
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
 
 using namespace G4Analysis;
 
 //_____________________________________________________________________________
-G4VFileManager::G4VFileManager(const G4AnalysisManagerState& state)
-  : G4BaseFileManager(state)
-{}
+G4VFileManager::G4VFileManager(const G4AnalysisManagerState& state) : G4BaseFileManager(state) {}
 
 //
 // public methods
@@ -47,11 +46,13 @@ G4bool G4VFileManager::SetFileName(const G4String& fileName)
   // Check extension
   auto name = fileName;
   auto extension = G4Analysis::GetExtension(fileName);
-  if ((extension.size() != 0u) && (GetFileType().size() != 0u) && extension != GetFileType()) {
+  if ((extension.size() != 0u) && (GetFileType().size() != 0u) && extension != GetFileType())
+  {
     // replace extension
     name = G4Analysis::GetBaseName(fileName) + "." + GetFileType();
-    Warn(fileName + " file extension is not valid for " + GetFileType() + " output.\n" +
-         name + " will be used.", fkClass, "SetFileName");
+    Warn(fileName + " file extension is not valid for " + GetFileType() + " output.\n" + name
+           + " will be used.",
+         fkClass, "SetFileName");
   }
 
   return G4BaseFileManager::SetFileName(name);
@@ -60,9 +61,10 @@ G4bool G4VFileManager::SetFileName(const G4String& fileName)
 //_____________________________________________________________________________
 G4bool G4VFileManager::SetHistoDirectoryName(const G4String& dirName)
 {
-  if ( fLockDirectoryNames ) {
-    Warn("Cannot set Histo directory name as its value was already used.",
-         fkClass, "SetHistoDirectoryName");
+  if (fLockDirectoryNames)
+  {
+    Warn("Cannot set Histo directory name as its value was already used.", fkClass,
+         "SetHistoDirectoryName");
     return false;
   }
 
@@ -73,9 +75,10 @@ G4bool G4VFileManager::SetHistoDirectoryName(const G4String& dirName)
 //_____________________________________________________________________________
 G4bool G4VFileManager::SetNtupleDirectoryName(const G4String& dirName)
 {
-  if ( fLockDirectoryNames ) {
-    Warn("Cannot set Ntuple directory name as its value was already used.",
-         fkClass, "SetNtupleDirectoryName");
+  if (fLockDirectoryNames)
+  {
+    Warn("Cannot set Ntuple directory name as its value was already used.", fkClass,
+         "SetNtupleDirectoryName");
     return false;
   }
 

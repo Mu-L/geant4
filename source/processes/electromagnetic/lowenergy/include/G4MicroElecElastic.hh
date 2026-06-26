@@ -31,13 +31,13 @@
 //	    very low energy electromagnetic models for electrons in Si,
 //	    NIM B, vol. 288, pp. 66 - 73, 2012.
 //
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo...... 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4MicroElecElastic_h
-#define G4MicroElecElastic_h 1
+#ifndef G4MICROELECELASTIC_HH
+#define G4MICROELECELASTIC_HH
 
-#include "G4VEmProcess.hh"
 #include "G4Electron.hh"
+#include "G4VEmProcess.hh"
 
 // Available models
 #include "G4MicroElecElasticModel.hh"
@@ -46,21 +46,23 @@
 
 class G4MicroElecElastic : public G4VEmProcess
 {
-public: 
+  public:
 
-  G4MicroElecElastic(const G4String& processName ="MicroElecElastic",
-		     G4ProcessType type = fElectromagnetic);
-  virtual ~G4MicroElecElastic();
+    G4MicroElecElastic(const G4String& processName = "MicroElecElastic",
+                       G4ProcessType type = fElectromagnetic);
+    virtual ~G4MicroElecElastic();
 
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
 
-protected:
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+  protected:
 
-private:
-  G4bool       isInitialised;
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool isInitialised;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-  
+
 #endif

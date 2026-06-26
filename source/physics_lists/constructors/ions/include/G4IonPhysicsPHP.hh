@@ -33,14 +33,14 @@
 // Ion physics with ParticleHP, used below 200 MeV/n for d, t, He3, alpha;
 // Binary Cascade used above to 190 MeV/n and then FTFP at higher energies.
 // This is as G4IonPhysics, except that ParticleHP is used below 200 MeV/n
-// for d, t, He3, alpha. 
-// 
+// for d, t, He3, alpha.
+//
 // Modified:
 //
 //---------------------------------------------------------------------------
 
-#ifndef G4IonPhysicsPHP_h
-#define G4IonPhysicsPHP_h 1
+#ifndef G4IONPHYSICSPHP_HH
+#define G4IONPHYSICSPHP_HH
 
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
@@ -50,11 +50,12 @@ class G4VCrossSectionDataSet;
 class G4FTFBuilder;
 class G4ParticleHPInelasticData;
 
-class G4IonPhysicsPHP : public G4VPhysicsConstructor {
+class G4IonPhysicsPHP : public G4VPhysicsConstructor
+{
   public:
 
-    G4IonPhysicsPHP( G4int ver = 0 );
-    G4IonPhysicsPHP( const G4String& nname, G4int ver = 0 );
+    G4IonPhysicsPHP(G4int ver = 0);
+    G4IonPhysicsPHP(const G4String& nname, G4int ver = 0);
     ~G4IonPhysicsPHP() override;
 
     // This method will be invoked in the Construct() method.
@@ -65,12 +66,11 @@ class G4IonPhysicsPHP : public G4VPhysicsConstructor {
 
   private:
 
-    void AddProcess( const G4String&, G4ParticleDefinition*, 
-                     G4ParticleHPInelasticData*, G4HadronicInteraction*, 
-                     G4HadronicInteraction*, G4HadronicInteraction*,
-		     G4VCrossSectionDataSet*);
+    void AddProcess(const G4String&, G4ParticleDefinition*, G4ParticleHPInelasticData*,
+                    G4HadronicInteraction*, G4HadronicInteraction*, G4HadronicInteraction*,
+                    G4VCrossSectionDataSet*);
 
-    G4int  verbose;
+    G4int verbose;
 };
 
 #endif

@@ -37,8 +37,10 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4HadXSType_h
-#define G4HadXSType_h 1
+#ifndef G4HADXSTYPE_HH
+#define G4HADXSTYPE_HH
+
+#include "G4Types.hh"
 
 enum G4HadXSType
 {
@@ -49,14 +51,13 @@ enum G4HadXSType
   fHadTwoPeaks
 };
 
-struct G4TwoPeaksHadXS {
-  G4double e1peak;
-  G4double e1deep;
-  G4double e2peak;
-  G4double e2deep;
-  G4double e3peak;
+struct G4TwoPeaksHadXS
+{
+    G4double e1peak;
+    G4double e1deep;
+    G4double e2peak;
+    G4double e2deep;
+    G4double e3peak;
 };
 
 #endif
-
-

@@ -41,34 +41,35 @@ class G4Colour;
 class G4Text;
 class G4Circle;
 
-class G4OpenGLStoredViewer: virtual public G4OpenGLViewer {
-  
-public:
-  G4OpenGLStoredViewer (G4OpenGLStoredSceneHandler& scene);
-  virtual ~G4OpenGLStoredViewer ();
-  
-protected:
-  void KernelVisitDecision ();
-  virtual G4bool CompareForKernelVisit(G4ViewParameters&);
-  
-  void DrawDisplayLists ();
+class G4OpenGLStoredViewer : virtual public G4OpenGLViewer
+{
+  public:
 
-  virtual void DisplayTimePOColourModification
-  (G4Colour&, size_t /*currentPOListIndex*/) {}
+    G4OpenGLStoredViewer(G4OpenGLStoredSceneHandler& scene);
+    virtual ~G4OpenGLStoredViewer();
 
-  void AddPrimitiveForASingleFrame(const G4Text& text);
-  void AddPrimitiveForASingleFrame(const G4Circle& circle);
+  protected:
 
-  G4OpenGLStoredSceneHandler& fG4OpenGLStoredSceneHandler;
+    void KernelVisitDecision();
+    virtual G4bool CompareForKernelVisit(G4ViewParameters&);
 
-  G4ViewParameters fLastVP;  // Memory for making kernel visit decisions.
-  
-  // Two virtual functions to return sub-class selection.
-  virtual G4bool POSelected(size_t) {return true;}
-  virtual G4bool TOSelected(size_t) {return true;}
-  
-  G4bool fDepthTestEnable;
-  G4Colour fOldDisplayListColor;
+    void DrawDisplayLists();
+
+    virtual void DisplayTimePOColourModification(G4Colour&, size_t /*currentPOListIndex*/) {}
+
+    void AddPrimitiveForASingleFrame(const G4Text& text);
+    void AddPrimitiveForASingleFrame(const G4Circle& circle);
+
+    G4OpenGLStoredSceneHandler& fG4OpenGLStoredSceneHandler;
+
+    G4ViewParameters fLastVP;  // Memory for making kernel visit decisions.
+
+    // Two virtual functions to return sub-class selection.
+    virtual G4bool POSelected(size_t) { return true; }
+    virtual G4bool TOSelected(size_t) { return true; }
+
+    G4bool fDepthTestEnable;
+    G4Colour fOldDisplayListColor;
 };
 
 #endif

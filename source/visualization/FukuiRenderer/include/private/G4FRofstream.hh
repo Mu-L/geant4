@@ -29,45 +29,48 @@
 #ifndef G4_FR_OFSTREAM_HH
 #define G4_FR_OFSTREAM_HH
 
-#include <fstream>
-
 #include "globals.hh"
+
+#include <fstream>
 
 class G4FRofstream
 {
- public:
-  enum
-  {
-    SEND_BUFMAX = 1024
-  };
+  public:
 
- public:
-  // constructors
-  G4FRofstream() { flag_file_open = false; }
-  G4FRofstream(const char* filename);
+    enum
+    {
+      SEND_BUFMAX = 1024
+    };
 
-  // destructor
-  virtual ~G4FRofstream();
+  public:
 
-  // open and close
-  void Open(const char* filename);
-  void Close();
-  G4bool IsOpen() { return flag_file_open; }
+    // constructors
+    G4FRofstream() { flag_file_open = false; }
+    G4FRofstream(const char* filename);
 
-  // utilities
-  void SendLine(const char* string);  // save string with new line
+    // destructor
+    virtual ~G4FRofstream();
 
-  // static functions
-  static G4bool DoesFileExist(const char* filename);
+    // open and close
+    void Open(const char* filename);
+    void Close();
+    G4bool IsOpen() { return flag_file_open; }
 
- protected:
-  G4bool flag_file_open;
-  std::ofstream fout;
+    // utilities
+    void SendLine(const char* string);  // save string with new line
+
+    // static functions
+    static G4bool DoesFileExist(const char* filename);
+
+  protected:
+
+    G4bool flag_file_open;
+    std::ofstream fout;
 };
 
 inline void G4FRofstream::Open(const char* filename)
 {
-  if(!IsOpen())
+  if (!IsOpen())
   {
     fout.open(filename);
     flag_file_open = true;
@@ -76,7 +79,7 @@ inline void G4FRofstream::Open(const char* filename)
 
 inline void G4FRofstream::Close()
 {
-  if(IsOpen())
+  if (IsOpen())
   {
     fout.close();
     flag_file_open = false;
@@ -85,7 +88,7 @@ inline void G4FRofstream::Close()
 
 inline void G4FRofstream::SendLine(const char* message)
 {
-  if(IsOpen())
+  if (IsOpen())
   {
     fout << message << G4endl;
   }
@@ -96,7 +99,7 @@ inline G4bool G4FRofstream::DoesFileExist(const char* filename)
   G4bool status = false;
 
   std::ifstream fout_tmp(filename);
-  if(fout_tmp)
+  if (fout_tmp)
   {
     status = true;
   }
@@ -111,6 +114,9 @@ inline G4FRofstream::G4FRofstream(const char* filename)
   Open(filename);
 }
 
-inline G4FRofstream::~G4FRofstream() { Close(); }
+inline G4FRofstream::~G4FRofstream()
+{
+  Close();
+}
 
 #endif

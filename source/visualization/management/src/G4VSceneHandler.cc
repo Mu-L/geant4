@@ -25,111 +25,112 @@
 //
 //
 //
-// 
+//
 // John Allison  19th July 1996
 // Abstract interface class for graphics scenes.
 
 #include "G4VSceneHandler.hh"
 
-#include "G4ios.hh"
-#include <sstream>
-
-#include "G4VisManager.hh"
-#include "G4VGraphicsSystem.hh"
-#include "G4VViewer.hh"
-#include "G4VSolid.hh"
-#include "G4RotationMatrix.hh"
-#include "G4ThreeVector.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4Material.hh"
-#include "G4Polyline.hh"
-#include "G4Text.hh"
-#include "G4Circle.hh"
-#include "G4Square.hh"
-#include "G4Polymarker.hh"
-#include "G4Polyhedron.hh"
-#include "G4Visible.hh"
-#include "G4VisAttributes.hh"
-#include "G4VModel.hh"
-#include "G4TrajectoriesModel.hh"
+#include "G4AttDef.hh"
+#include "G4AttHolder.hh"
 #include "G4Box.hh"
+#include "G4Circle.hh"
 #include "G4Cons.hh"
+#include "G4DefaultLinearColorMap.hh"
+#include "G4DisplacedSolid.hh"
+#include "G4Ellipsoid.hh"
+#include "G4HitsModel.hh"
+#include "G4IntersectionSolid.hh"
+#include "G4LogicalVolume.hh"
+#include "G4Material.hh"
+#include "G4Mesh.hh"
+#include "G4ModelingParameters.hh"
 #include "G4Orb.hh"
 #include "G4Para.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4PhysicalVolumeModel.hh"
+#include "G4Polycone.hh"
+#include "G4Polyhedra.hh"
+#include "G4Polyhedron.hh"
+#include "G4Polyline.hh"
+#include "G4Polymarker.hh"
+#include "G4QuickRand.hh"
+#include "G4RotationMatrix.hh"
+#include "G4Run.hh"
+#include "G4RunManager.hh"
+#include "G4RunManagerFactory.hh"
+#include "G4SceneTreeItem.hh"
+#include "G4ScoringManager.hh"
 #include "G4Sphere.hh"
+#include "G4Square.hh"
+#include "G4StateManager.hh"
+#include "G4SubtractionSolid.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4Tet.hh"
+#include "G4Text.hh"
+#include "G4ThreeVector.hh"
 #include "G4Torus.hh"
+#include "G4TrajectoriesModel.hh"
+#include "G4Transform3D.hh"
 #include "G4Trap.hh"
 #include "G4Trd.hh"
 #include "G4Tubs.hh"
-#include "G4Ellipsoid.hh"
-#include "G4Polycone.hh"
-#include "G4Polyhedra.hh"
-#include "G4Tet.hh"
-#include "G4DisplacedSolid.hh"
 #include "G4UnionSolid.hh"
-#include "G4IntersectionSolid.hh"
-#include "G4SubtractionSolid.hh"
-#include "G4LogicalVolume.hh"
-#include "G4PhysicalVolumeModel.hh"
-#include "G4ModelingParameters.hh"
+#include "G4VDigi.hh"
+#include "G4VGraphicsSystem.hh"
+#include "G4VHit.hh"
+#include "G4VModel.hh"
+#include "G4VPhysicalVolume.hh"
+#include "G4VScoringMesh.hh"
+#include "G4VSolid.hh"
 #include "G4VTrajectory.hh"
 #include "G4VTrajectoryPoint.hh"
-#include "G4HitsModel.hh"
-#include "G4VHit.hh"
-#include "G4VDigi.hh"
-#include "G4ScoringManager.hh"
-#include "G4VScoringMesh.hh"
-#include "G4Mesh.hh"
-#include "G4DefaultLinearColorMap.hh"
-#include "G4QuickRand.hh"
-#include "G4StateManager.hh"
-#include "G4RunManager.hh"
-#include "G4RunManagerFactory.hh"
-#include "G4Run.hh"
-#include "G4Transform3D.hh"
-#include "G4AttHolder.hh"
-#include "G4AttDef.hh"
-#include "G4SceneTreeItem.hh"
+#include "G4VViewer.hh"
 #include "G4VVisCommand.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
+#include "G4VisAttributes.hh"
+#include "G4VisManager.hh"
+#include "G4Visible.hh"
+#include "G4ios.hh"
+
+#include <sstream>
 
 #define G4warn G4cout
 
-G4VSceneHandler::G4VSceneHandler (G4VGraphicsSystem& system, G4int id, const G4String& name):
-  fSystem                (system),
-  fSceneHandlerId        (id),
-  fViewCount             (0),
-  fpViewer               (0),
-  fpScene                (0),
-  fMarkForClearingTransientStore (true),  // Ready for first
-					  // ClearTransientStoreIfMarked(),
-					  // e.g., at end of run (see
-					  // G4VisManager.cc).
-  fReadyForTransients    (true),  // Only false while processing scene.
-  fProcessingSolid       (false),
-  fProcessing2D          (false),
-  fpModel                (0),
-  fNestingDepth          (0),
-  fpVisAttribs           (0)
+G4VSceneHandler::G4VSceneHandler(G4VGraphicsSystem& system, G4int id, const G4String& name)
+  : fSystem(system),
+    fSceneHandlerId(id),
+    fViewCount(0),
+    fpViewer(0),
+    fpScene(0),
+    fMarkForClearingTransientStore(true),
+    fReadyForTransients(true),
+    fProcessingSolid(false),
+    fProcessing2D(false),
+    fpModel(0),
+    fNestingDepth(0),
+    fpVisAttribs(0)
 {
-  G4VisManager* pVMan = G4VisManager::GetInstance ();
-  fpScene = pVMan -> GetCurrentScene ();
-  if (name == "") {
+  G4VisManager* pVMan = G4VisManager::GetInstance();
+  fpScene = pVMan->GetCurrentScene();
+  if (name == "")
+  {
     std::ostringstream ost;
-    ost << fSystem.GetName () << '-' << fSceneHandlerId;
+    ost << fSystem.GetName() << '-' << fSceneHandlerId;
     fName = ost.str();
   }
-  else {
+  else
+  {
     fName = name;
   }
   fTransientsDrawnThisEvent = pVMan->GetTransientsDrawnThisEvent();
   fTransientsDrawnThisRun = pVMan->GetTransientsDrawnThisRun();
 }
 
-G4VSceneHandler::~G4VSceneHandler () {
+G4VSceneHandler::~G4VSceneHandler()
+{
   G4VViewer* last;
-  while( ! fViewerList.empty() ) {
+  while (!fViewerList.empty())
+  {
     last = fViewerList.back();
     fViewerList.pop_back();
     delete last;
@@ -138,105 +139,109 @@ G4VSceneHandler::~G4VSceneHandler () {
 
 const G4VisExtent& G4VSceneHandler::GetExtent() const
 {
-  if (fpScene) {
+  if (fpScene)
+  {
     return fpScene->GetExtent();
-  } else {
+  }
+  else
+  {
     static const G4VisExtent defaultExtent = G4VisExtent();
     return defaultExtent;
   }
 }
 
-void G4VSceneHandler::PreAddSolid (const G4Transform3D& objectTransformation,
-				   const G4VisAttributes& visAttribs) {
+void G4VSceneHandler::PreAddSolid(const G4Transform3D& objectTransformation,
+                                  const G4VisAttributes& visAttribs)
+{
   fObjectTransformation = objectTransformation;
   fpVisAttribs = &visAttribs;
   fProcessingSolid = true;
 }
 
-void G4VSceneHandler::PostAddSolid () {
+void G4VSceneHandler::PostAddSolid()
+{
   fpVisAttribs = 0;
   fProcessingSolid = false;
-  if (fReadyForTransients) {
+  if (fReadyForTransients)
+  {
     fTransientsDrawnThisEvent = true;
     fTransientsDrawnThisRun = true;
   }
 }
 
-void G4VSceneHandler::BeginPrimitives
-(const G4Transform3D& objectTransformation) {
-  //static G4int count = 0;
-  //G4cout << "G4VSceneHandler::BeginPrimitives: " << count++ << G4endl;
+void G4VSceneHandler::BeginPrimitives(const G4Transform3D& objectTransformation)
+{
+  // static G4int count = 0;
+  // G4cout << "G4VSceneHandler::BeginPrimitives: " << count++ << G4endl;
   fNestingDepth++;
   if (fNestingDepth > 1)
-    G4Exception
-      ("G4VSceneHandler::BeginPrimitives",
-       "visman0101", FatalException,
-       "Nesting detected. It is illegal to nest Begin/EndPrimitives.");
+    G4Exception("G4VSceneHandler::BeginPrimitives", "visman0101", FatalException,
+                "Nesting detected. It is illegal to nest Begin/EndPrimitives.");
   fObjectTransformation = objectTransformation;
 }
 
-void G4VSceneHandler::EndPrimitives () {
+void G4VSceneHandler::EndPrimitives()
+{
   if (fNestingDepth <= 0)
-    G4Exception("G4VSceneHandler::EndPrimitives",
-		"visman0102", FatalException, "Nesting error.");
+    G4Exception("G4VSceneHandler::EndPrimitives", "visman0102", FatalException, "Nesting error.");
   fNestingDepth--;
-  if (fReadyForTransients) {
+  if (fReadyForTransients)
+  {
     fTransientsDrawnThisEvent = true;
     fTransientsDrawnThisRun = true;
   }
 }
 
-void G4VSceneHandler::BeginPrimitives2D
-(const G4Transform3D& objectTransformation) {
+void G4VSceneHandler::BeginPrimitives2D(const G4Transform3D& objectTransformation)
+{
   fNestingDepth++;
   if (fNestingDepth > 1)
-    G4Exception
-      ("G4VSceneHandler::BeginPrimitives2D",
-       "visman0103", FatalException,
-       "Nesting detected. It is illegal to nest Begin/EndPrimitives.");
+    G4Exception("G4VSceneHandler::BeginPrimitives2D", "visman0103", FatalException,
+                "Nesting detected. It is illegal to nest Begin/EndPrimitives.");
   fObjectTransformation = objectTransformation;
   fProcessing2D = true;
 }
 
-void G4VSceneHandler::EndPrimitives2D () {
+void G4VSceneHandler::EndPrimitives2D()
+{
   if (fNestingDepth <= 0)
-    G4Exception("G4VSceneHandler::EndPrimitives2D",
-		"visman0104", FatalException, "Nesting error.");
+    G4Exception("G4VSceneHandler::EndPrimitives2D", "visman0104", FatalException, "Nesting error.");
   fNestingDepth--;
-  if (fReadyForTransients) {
+  if (fReadyForTransients)
+  {
     fTransientsDrawnThisEvent = true;
     fTransientsDrawnThisRun = true;
   }
   fProcessing2D = false;
 }
 
-void G4VSceneHandler::BeginModeling () {
-}
+void G4VSceneHandler::BeginModeling() {}
 
-void G4VSceneHandler::EndModeling ()
+void G4VSceneHandler::EndModeling()
 {
   fpModel = 0;
 }
 
-void G4VSceneHandler::ClearStore () {}
+void G4VSceneHandler::ClearStore() {}
 
-void G4VSceneHandler::ClearTransientStore () {}
+void G4VSceneHandler::ClearTransientStore() {}
 
-template <class T> void G4VSceneHandler::AddSolidT
-(const T& solid)
+template<class T>
+void G4VSceneHandler::AddSolidT(const T& solid)
 {
   // Get and check applicable vis attributes.
   fpVisAttribs = fpViewer->GetApplicableVisAttributes(fpVisAttribs);
-  RequestPrimitives (solid);
+  RequestPrimitives(solid);
 }
 
-template <class T> void G4VSceneHandler::AddSolidWithAuxiliaryEdges
-(const T& solid)
+template<class T>
+void G4VSceneHandler::AddSolidWithAuxiliaryEdges(const T& solid)
 {
   // Get and check applicable vis attributes.
   fpVisAttribs = fpViewer->GetApplicableVisAttributes(fpVisAttribs);
   // Draw with auxiliary edges unless otherwise specified.
-  if (!fpVisAttribs->IsForceAuxEdgeVisible()) {
+  if (!fpVisAttribs->IsForceAuxEdgeVisible())
+  {
     // Create a vis atts object for the modified vis atts.
     // It is static so that we may return a reliable pointer to it.
     static G4VisAttributes visAttsWithAuxEdges;
@@ -246,11 +251,12 @@ template <class T> void G4VSceneHandler::AddSolidWithAuxiliaryEdges
     visAttsWithAuxEdges.SetForceAuxEdgeVisible();
     fpVisAttribs = &visAttsWithAuxEdges;
   }
-  RequestPrimitives (solid);
+  RequestPrimitives(solid);
 }
 
-void G4VSceneHandler::AddSolid (const G4Box& box) {
-  AddSolidT (box);
+void G4VSceneHandler::AddSolid(const G4Box& box)
+{
+  AddSolidT(box);
   // If your graphics system is sophisticated enough to handle a
   //  particular solid shape as a primitive, in your derived class write a
   //  function to override this.
@@ -268,159 +274,192 @@ void G4VSceneHandler::AddSolid (const G4Box& box) {
   //     and Draw or Store in your display List.
 }
 
-void G4VSceneHandler::AddSolid (const G4Cons& cons) {
-  AddSolidT (cons);
+void G4VSceneHandler::AddSolid(const G4Cons& cons)
+{
+  AddSolidT(cons);
 }
 
-void G4VSceneHandler::AddSolid (const G4Orb& orb) {
-  AddSolidWithAuxiliaryEdges (orb);
+void G4VSceneHandler::AddSolid(const G4Orb& orb)
+{
+  AddSolidWithAuxiliaryEdges(orb);
 }
 
-void G4VSceneHandler::AddSolid (const G4Para& para) {
-  AddSolidT (para);
+void G4VSceneHandler::AddSolid(const G4Para& para)
+{
+  AddSolidT(para);
 }
 
-void G4VSceneHandler::AddSolid (const G4Sphere& sphere) {
-  AddSolidWithAuxiliaryEdges (sphere);
+void G4VSceneHandler::AddSolid(const G4Sphere& sphere)
+{
+  AddSolidWithAuxiliaryEdges(sphere);
 }
 
-void G4VSceneHandler::AddSolid (const G4Torus& torus) {
-  AddSolidWithAuxiliaryEdges (torus);
+void G4VSceneHandler::AddSolid(const G4Torus& torus)
+{
+  AddSolidWithAuxiliaryEdges(torus);
 }
 
-void G4VSceneHandler::AddSolid (const G4Trap& trap) {
-  AddSolidT (trap);
+void G4VSceneHandler::AddSolid(const G4Trap& trap)
+{
+  AddSolidT(trap);
 }
 
-void G4VSceneHandler::AddSolid (const G4Trd& trd) {
-  AddSolidT (trd);
+void G4VSceneHandler::AddSolid(const G4Trd& trd)
+{
+  AddSolidT(trd);
 }
 
-void G4VSceneHandler::AddSolid (const G4Tubs& tubs) {
-  AddSolidT (tubs);
+void G4VSceneHandler::AddSolid(const G4Tubs& tubs)
+{
+  AddSolidT(tubs);
 }
 
-void G4VSceneHandler::AddSolid (const G4Ellipsoid& ellipsoid) {
-  AddSolidWithAuxiliaryEdges (ellipsoid);
+void G4VSceneHandler::AddSolid(const G4Ellipsoid& ellipsoid)
+{
+  AddSolidWithAuxiliaryEdges(ellipsoid);
 }
 
-void G4VSceneHandler::AddSolid (const G4Polycone& polycone) {
-  AddSolidT (polycone);
+void G4VSceneHandler::AddSolid(const G4Polycone& polycone)
+{
+  AddSolidT(polycone);
 }
 
-void G4VSceneHandler::AddSolid (const G4Polyhedra& polyhedra) {
-  AddSolidT (polyhedra);
+void G4VSceneHandler::AddSolid(const G4Polyhedra& polyhedra)
+{
+  AddSolidT(polyhedra);
 }
 
-void G4VSceneHandler::AddSolid (const G4TessellatedSolid& tess) {
-  AddSolidT (tess);
+void G4VSceneHandler::AddSolid(const G4TessellatedSolid& tess)
+{
+  AddSolidT(tess);
 }
 
-void G4VSceneHandler::AddSolid (const G4VSolid& solid) {
-  AddSolidT (solid);
+void G4VSceneHandler::AddSolid(const G4VSolid& solid)
+{
+  AddSolidT(solid);
 }
 
-void G4VSceneHandler::AddCompound (const G4VTrajectory& traj) {
-  G4TrajectoriesModel* trajectoriesModel =
-    dynamic_cast<G4TrajectoriesModel*>(fpModel);
+void G4VSceneHandler::AddCompound(const G4VTrajectory& traj)
+{
+  G4TrajectoriesModel* trajectoriesModel = dynamic_cast<G4TrajectoriesModel*>(fpModel);
   if (trajectoriesModel)
     traj.DrawTrajectory();
-  else {
-    G4Exception
-    ("G4VSceneHandler::AddCompound(const G4VTrajectory&)",
-     "visman0105", FatalException, "Not a G4TrajectoriesModel.");
+  else
+  {
+    G4Exception("G4VSceneHandler::AddCompound(const G4VTrajectory&)", "visman0105", FatalException,
+                "Not a G4TrajectoriesModel.");
   }
 }
 
-void G4VSceneHandler::AddCompound (const G4VHit& hit) {
+void G4VSceneHandler::AddCompound(const G4VHit& hit)
+{
   // Cast away const because Draw is non-const!!!!
   const_cast<G4VHit&>(hit).Draw();
 }
 
-void G4VSceneHandler::AddCompound (const G4VDigi& digi) {
+void G4VSceneHandler::AddCompound(const G4VDigi& digi)
+{
   // Cast away const because Draw is non-const!!!!
   const_cast<G4VDigi&>(digi).Draw();
 }
 
-void G4VSceneHandler::AddCompound (const G4THitsMap<G4double>& hits) {
+void G4VSceneHandler::AddCompound(const G4THitsMap<G4double>& hits)
+{
   using MeshScoreMap = G4VScoringMesh::MeshScoreMap;
-  //G4cout << "AddCompound: hits: " << &hits << G4endl;
+  // G4cout << "AddCompound: hits: " << &hits << G4endl;
   G4bool scoreMapHits = false;
   G4ScoringManager* scoringManager = G4ScoringManager::GetScoringManagerIfExist();
-  if (scoringManager) {
+  if (scoringManager)
+  {
     std::size_t nMeshes = scoringManager->GetNumberOfMesh();
-    for (std::size_t iMesh = 0; iMesh < nMeshes; ++iMesh) {
+    for (std::size_t iMesh = 0; iMesh < nMeshes; ++iMesh)
+    {
       G4VScoringMesh* mesh = scoringManager->GetMesh((G4int)iMesh);
-      if (mesh && mesh->IsActive()) {
-	MeshScoreMap scoreMap = mesh->GetScoreMap();
+      if (mesh && mesh->IsActive())
+      {
+        MeshScoreMap scoreMap = mesh->GetScoreMap();
         const G4String& mapNam = const_cast<G4THitsMap<G4double>&>(hits).GetName();
-	for(const auto& i : scoreMap) {
-	  const G4String& scoreMapName = i.first;
-	  if (scoreMapName == mapNam) {
-	    G4DefaultLinearColorMap colorMap("G4VSceneHandlerColorMap");
-	    scoreMapHits = true;
-	    mesh->DrawMesh(scoreMapName, &colorMap);
-	  }
-	}
+        for (const auto& i : scoreMap)
+        {
+          const G4String& scoreMapName = i.first;
+          if (scoreMapName == mapNam)
+          {
+            G4DefaultLinearColorMap colorMap("G4VSceneHandlerColorMap");
+            scoreMapHits = true;
+            mesh->DrawMesh(scoreMapName, &colorMap);
+          }
+        }
       }
     }
   }
-  if (scoreMapHits) {
+  if (scoreMapHits)
+  {
     static G4bool first = true;
-    if (first) {
+    if (first)
+    {
       first = false;
-      G4cout <<
-	"Scoring map drawn with default parameters."
-	"\n  To get gMocren file for gMocren browser:"
-	"\n    /vis/open gMocrenFile"
-	"\n    /vis/viewer/flush"
-	"\n  Many other options available with /score/draw... commands."
-	"\n  You might want to \"/vis/viewer/set/autoRefresh false\"."
-	     << G4endl;
+      G4cout << "Scoring map drawn with default parameters."
+                "\n  To get gMocren file for gMocren browser:"
+                "\n    /vis/open gMocrenFile"
+                "\n    /vis/viewer/flush"
+                "\n  Many other options available with /score/draw... commands."
+                "\n  You might want to \"/vis/viewer/set/autoRefresh false\"."
+             << G4endl;
     }
-  } else {  // Not score map hits.  Just call DrawAllHits.
+  }
+  else
+  {  // Not score map hits.  Just call DrawAllHits.
     // Cast away const because DrawAllHits is non-const!!!!
     const_cast<G4THitsMap<G4double>&>(hits).DrawAllHits();
   }
 }
 
-void G4VSceneHandler::AddCompound (const G4THitsMap<G4StatDouble>& hits) {
+void G4VSceneHandler::AddCompound(const G4THitsMap<G4StatDouble>& hits)
+{
   using MeshScoreMap = G4VScoringMesh::MeshScoreMap;
-  //G4cout << "AddCompound: hits: " << &hits << G4endl;
+  // G4cout << "AddCompound: hits: " << &hits << G4endl;
   G4bool scoreMapHits = false;
   G4ScoringManager* scoringManager = G4ScoringManager::GetScoringManagerIfExist();
-  if (scoringManager) {
+  if (scoringManager)
+  {
     std::size_t nMeshes = scoringManager->GetNumberOfMesh();
-    for (std::size_t iMesh = 0; iMesh < nMeshes; ++iMesh) {
+    for (std::size_t iMesh = 0; iMesh < nMeshes; ++iMesh)
+    {
       G4VScoringMesh* mesh = scoringManager->GetMesh((G4int)iMesh);
-      if (mesh && mesh->IsActive()) {
-	MeshScoreMap scoreMap = mesh->GetScoreMap();
-	for(const auto& i : scoreMap) {
-	  const G4String& scoreMapName = i.first;
-	  const G4THitsMap<G4StatDouble>* foundHits = i.second;
-	  if (foundHits == &hits) {
-	    G4DefaultLinearColorMap colorMap("G4VSceneHandlerColorMap");
-	    scoreMapHits = true;
-	    mesh->DrawMesh(scoreMapName, &colorMap);
-	  }
-	}
+      if (mesh && mesh->IsActive())
+      {
+        MeshScoreMap scoreMap = mesh->GetScoreMap();
+        for (const auto& i : scoreMap)
+        {
+          const G4String& scoreMapName = i.first;
+          const G4THitsMap<G4StatDouble>* foundHits = i.second;
+          if (foundHits == &hits)
+          {
+            G4DefaultLinearColorMap colorMap("G4VSceneHandlerColorMap");
+            scoreMapHits = true;
+            mesh->DrawMesh(scoreMapName, &colorMap);
+          }
+        }
       }
     }
   }
-  if (scoreMapHits) {
+  if (scoreMapHits)
+  {
     static G4bool first = true;
-    if (first) {
+    if (first)
+    {
       first = false;
-      G4cout <<
-	"Scoring map drawn with default parameters."
-	"\n  To get gMocren file for gMocren browser:"
-	"\n    /vis/open gMocrenFile"
-	"\n    /vis/viewer/flush"
-	"\n  Many other options available with /score/draw... commands."
-	"\n  You might want to \"/vis/viewer/set/autoRefresh false\"."
-	     << G4endl;
+      G4cout << "Scoring map drawn with default parameters."
+                "\n  To get gMocren file for gMocren browser:"
+                "\n    /vis/open gMocrenFile"
+                "\n    /vis/viewer/flush"
+                "\n  Many other options available with /score/draw... commands."
+                "\n  You might want to \"/vis/viewer/set/autoRefresh false\"."
+             << G4endl;
     }
-  } else {  // Not score map hits.  Just call DrawAllHits.
+  }
+  else
+  {  // Not score map hits.  Just call DrawAllHits.
     // Cast away const because DrawAllHits is non-const!!!!
     const_cast<G4THitsMap<G4StatDouble>&>(hits).DrawAllHits();
   }
@@ -428,14 +467,13 @@ void G4VSceneHandler::AddCompound (const G4THitsMap<G4StatDouble>& hits) {
 
 void G4VSceneHandler::AddCompound(const G4Mesh& mesh)
 {
-  G4warn <<
-  "There has been an attempt to draw a mesh with option \""
-  << fpViewer->GetViewParameters().GetSpecialMeshRenderingOption()
-  << "\":\n" << mesh
-  << "but it is not of a recognised type or is not implemented"
-  "\nby the current graphics driver. Instead we draw its"
-  "\ncontainer \"" << mesh.GetContainerVolume()->GetName() << "\"."
-  << G4endl;
+  G4warn << "There has been an attempt to draw a mesh with option \""
+         << fpViewer->GetViewParameters().GetSpecialMeshRenderingOption() << "\":\n"
+         << mesh
+         << "but it is not of a recognised type or is not implemented"
+            "\nby the current graphics driver. Instead we draw its"
+            "\ncontainer \""
+         << mesh.GetContainerVolume()->GetName() << "\"." << G4endl;
   const auto& pv = mesh.GetContainerVolume();
   const auto& lv = pv->GetLogicalVolume();
   const auto& solid = lv->GetSolid();
@@ -443,7 +481,8 @@ void G4VSceneHandler::AddCompound(const G4Mesh& mesh)
   // Make sure container is visible
   G4VisAttributes tmpVisAtts;  // Visible, white, not forced.
   const auto& saveVisAtts = lv->GetVisAttributes();
-  if (saveVisAtts) {
+  if (saveVisAtts)
+  {
     tmpVisAtts = *saveVisAtts;
     tmpVisAtts.SetVisibility(true);
     auto colour = saveVisAtts->GetColour();
@@ -451,76 +490,82 @@ void G4VSceneHandler::AddCompound(const G4Mesh& mesh)
     tmpVisAtts.SetColour(colour);
   }
   // Draw container
-  PreAddSolid(transform,tmpVisAtts);
+  PreAddSolid(transform, tmpVisAtts);
   solid->DescribeYourselfTo(*this);
   PostAddSolid();
   // Restore vis attributes
   lv->SetVisAttributes(saveVisAtts);
 }
 
-void G4VSceneHandler::AddViewerToList (G4VViewer* pViewer) {
-  fViewerList.push_back (pViewer);
+void G4VSceneHandler::AddViewerToList(G4VViewer* pViewer)
+{
+  fViewerList.push_back(pViewer);
 }
 
-void G4VSceneHandler::AddPrimitive (const G4Polymarker& polymarker) {
-  switch (polymarker.GetMarkerType()) {
+void G4VSceneHandler::AddPrimitive(const G4Polymarker& polymarker)
+{
+  switch (polymarker.GetMarkerType())
+  {
     default:
-    case G4Polymarker::dots:
-    {
-      G4Circle dot (polymarker);
-      dot.SetWorldSize  (0.);
-      dot.SetScreenSize (0.1);  // Very small circle.
-      for (const auto& iPoint : polymarker) {
-        dot.SetPosition (iPoint);
-        AddPrimitive (dot);
+    case G4Polymarker::dots: {
+      G4Circle dot(polymarker);
+      dot.SetWorldSize(0.);
+      dot.SetScreenSize(0.1);  // Very small circle.
+      for (const auto& iPoint : polymarker)
+      {
+        dot.SetPosition(iPoint);
+        AddPrimitive(dot);
       }
     }
-      break;
-    case G4Polymarker::circles:
-    {
-      G4Circle circle (polymarker);  // Default circle
-      for (const auto& iPoint : polymarker) {
-        circle.SetPosition (iPoint);
-        AddPrimitive (circle);
+    break;
+    case G4Polymarker::circles: {
+      G4Circle circle(polymarker);  // Default circle
+      for (const auto& iPoint : polymarker)
+      {
+        circle.SetPosition(iPoint);
+        AddPrimitive(circle);
       }
     }
-      break;
-    case G4Polymarker::squares:
-    {
-      G4Square square (polymarker);  // Default square
-      for (const auto& iPoint : polymarker) {
-        square.SetPosition (iPoint);
-        AddPrimitive (square);
+    break;
+    case G4Polymarker::squares: {
+      G4Square square(polymarker);  // Default square
+      for (const auto& iPoint : polymarker)
+      {
+        square.SetPosition(iPoint);
+        AddPrimitive(square);
       }
     }
-      break;
+    break;
   }
 }
 
-void G4VSceneHandler::RemoveViewerFromList (G4VViewer* pViewer) {
+void G4VSceneHandler::RemoveViewerFromList(G4VViewer* pViewer)
+{
   fViewerList.remove(pViewer);  // Does nothing if already removed
   // And reset current viewer
   auto visManager = G4VisManager::GetInstance();
   visManager->SetCurrentViewer(nullptr);
 }
 
-
-void G4VSceneHandler::AddPrimitive (const G4Plotter&) {
+void G4VSceneHandler::AddPrimitive(const G4Plotter&)
+{
   G4warn << "WARNING: Plotter not implemented for " << fSystem.GetName() << G4endl;
   G4warn << "  Open a plotter-aware graphics system or remove plotter with" << G4endl;
   G4warn << "  /vis/scene/removeModel Plotter" << G4endl;
 }
 
-void G4VSceneHandler::SetScene (G4Scene* pScene) {
+void G4VSceneHandler::SetScene(G4Scene* pScene)
+{
   fpScene = pScene;
   // Notify all viewers that a kernel visit is required.
   G4ViewerListIterator i;
-  for (i = fViewerList.begin(); i != fViewerList.end(); i++) {
-    (*i) -> SetNeedKernelVisit (true);
+  for (i = fViewerList.begin(); i != fViewerList.end(); i++)
+  {
+    (*i)->SetNeedKernelVisit(true);
   }
 }
 
-void G4VSceneHandler::RequestPrimitives (const G4VSolid& solid)
+void G4VSceneHandler::RequestPrimitives(const G4VSolid& solid)
 {
   // Sometimes solids that have no substance get requested. They may
   // be part of the geometry tree but have been "spirited away", for
@@ -533,44 +578,59 @@ void G4VSceneHandler::RequestPrimitives (const G4VSolid& solid)
   // Algorithm by Evgueni Tcherniaev
   auto pSolid = &solid;
   auto pBooleanSolid = dynamic_cast<const G4BooleanSolid*>(pSolid);
-  if (pBooleanSolid) {
+  if (pBooleanSolid)
+  {
     G4ThreeVector bmin, bmax;
     pBooleanSolid->BoundingLimits(bmin, bmax);
     G4bool isGood = false;
-    if (dynamic_cast<const G4SubtractionSolid*>(pBooleanSolid)) {
+    if (dynamic_cast<const G4SubtractionSolid*>(pBooleanSolid))
+    {
       auto ptrB = pBooleanSolid->GetConstituentSolid(1);
-      for (G4int i=0; i<10; ++i) {
-        G4double x = bmin.x() + (bmax.x() - bmin.x())*G4QuickRand();
-        G4double y = bmin.y() + (bmax.y() - bmin.y())*G4QuickRand();
-        G4double z = bmin.z() + (bmax.z() - bmin.z())*G4QuickRand();
+      for (G4int i = 0; i < 10; ++i)
+      {
+        G4double x = bmin.x() + (bmax.x() - bmin.x()) * G4QuickRand();
+        G4double y = bmin.y() + (bmax.y() - bmin.y()) * G4QuickRand();
+        G4double z = bmin.z() + (bmax.z() - bmin.z()) * G4QuickRand();
+        // clang-format off
         if (ptrB->Inside(G4ThreeVector(x,y,bmin.z())) != kInside) { isGood = true; break; }
         if (ptrB->Inside(G4ThreeVector(x,y,bmax.z())) != kInside) { isGood = true; break; }
         if (ptrB->Inside(G4ThreeVector(x,bmin.y(),z)) != kInside) { isGood = true; break; }
         if (ptrB->Inside(G4ThreeVector(x,bmax.y(),z)) != kInside) { isGood = true; break; }
         if (ptrB->Inside(G4ThreeVector(bmin.x(),y,z)) != kInside) { isGood = true; break; }
         if (ptrB->Inside(G4ThreeVector(bmax.x(),y,z)) != kInside) { isGood = true; break; }
+        // clang-format on
       }
-    } else if (dynamic_cast<const G4IntersectionSolid*>(pBooleanSolid)) {
+    }
+    else if (dynamic_cast<const G4IntersectionSolid*>(pBooleanSolid))
+    {
       auto ptrB = pBooleanSolid->GetConstituentSolid(1);
-      for (G4int i=0; i<10; ++i) {
-        G4double x = bmin.x() + (bmax.x() - bmin.x())*G4QuickRand();
-        G4double y = bmin.y() + (bmax.y() - bmin.y())*G4QuickRand();
-        G4double z = bmin.z() + (bmax.z() - bmin.z())*G4QuickRand();
+      for (G4int i = 0; i < 10; ++i)
+      {
+        G4double x = bmin.x() + (bmax.x() - bmin.x()) * G4QuickRand();
+        G4double y = bmin.y() + (bmax.y() - bmin.y()) * G4QuickRand();
+        G4double z = bmin.z() + (bmax.z() - bmin.z()) * G4QuickRand();
+        // clang-format off
         if (ptrB->Inside(G4ThreeVector(x,y,bmin.z())) == kInside) { isGood = true; break; }
         if (ptrB->Inside(G4ThreeVector(x,y,bmax.z())) == kInside) { isGood = true; break; }
         if (ptrB->Inside(G4ThreeVector(x,bmin.y(),z)) == kInside) { isGood = true; break; }
         if (ptrB->Inside(G4ThreeVector(x,bmax.y(),z)) == kInside) { isGood = true; break; }
         if (ptrB->Inside(G4ThreeVector(bmin.x(),y,z)) == kInside) { isGood = true; break; }
         if (ptrB->Inside(G4ThreeVector(bmax.x(),y,z)) == kInside) { isGood = true; break; }
+        // clang-format on
       }
     }
     if (!isGood)
     {
-      for (G4int i=0; i<10000; ++i) {
-        G4double x = bmin.x() + (bmax.x() - bmin.x())*G4QuickRand();
-        G4double y = bmin.y() + (bmax.y() - bmin.y())*G4QuickRand();
-        G4double z = bmin.z() + (bmax.z() - bmin.z())*G4QuickRand();
-        if (pBooleanSolid->Inside(G4ThreeVector(x,y,z)) == kInside) { isGood = true; break; }
+      for (G4int i = 0; i < 10000; ++i)
+      {
+        G4double x = bmin.x() + (bmax.x() - bmin.x()) * G4QuickRand();
+        G4double y = bmin.y() + (bmax.y() - bmin.y()) * G4QuickRand();
+        G4double z = bmin.z() + (bmax.z() - bmin.z()) * G4QuickRand();
+        if (pBooleanSolid->Inside(G4ThreeVector(x, y, z)) == kInside)
+        {
+          isGood = true;
+          break;
+        }
       }
     }
     if (!isGood) return;
@@ -579,44 +639,51 @@ void G4VSceneHandler::RequestPrimitives (const G4VSolid& solid)
   const G4ViewParameters::DrawingStyle style = GetDrawingStyle(fpVisAttribs);
   const G4ViewParameters& vp = fpViewer->GetViewParameters();
 
-  switch (style) {
+  switch (style)
+  {
     default:
     case G4ViewParameters::wireframe:
     case G4ViewParameters::hlr:
     case G4ViewParameters::hsr:
-    case G4ViewParameters::hlhsr:
-    {
+    case G4ViewParameters::hlhsr: {
       // Use polyhedral representation
-      G4Polyhedron::SetNumberOfRotationSteps (GetNoOfSides (fpVisAttribs));
-      G4Polyhedron* pPolyhedron = solid.GetPolyhedron ();
-      G4Polyhedron::ResetNumberOfRotationSteps ();
-      if (pPolyhedron) {
-        pPolyhedron -> SetVisAttributes (fpVisAttribs);
-        BeginPrimitives (fObjectTransformation);
-        AddPrimitive (*pPolyhedron);
-        EndPrimitives ();
+      G4Polyhedron::SetNumberOfRotationSteps(GetNoOfSides(fpVisAttribs));
+      G4Polyhedron* pPolyhedron = solid.GetPolyhedron();
+      G4Polyhedron::ResetNumberOfRotationSteps();
+      if (pPolyhedron)
+      {
+        pPolyhedron->SetVisAttributes(fpVisAttribs);
+        BeginPrimitives(fObjectTransformation);
+        AddPrimitive(*pPolyhedron);
+        EndPrimitives();
         break;
-      } else {  // Print warnings and drop through to cloud
+      }
+      else
+      {  // Print warnings and drop through to cloud
         G4VisManager::Verbosity verbosity = G4VisManager::GetVerbosity();
         auto pPVModel = dynamic_cast<G4PhysicalVolumeModel*>(fpModel);
-        if (pPVModel) {
+        if (pPVModel)
+        {
           auto problematicVolume = pPVModel->GetCurrentPV();
-          if (fProblematicVolumes.find(problematicVolume) == fProblematicVolumes.end()) {
+          if (fProblematicVolumes.find(problematicVolume) == fProblematicVolumes.end())
+          {
             fProblematicVolumes[problematicVolume] = "Null polyhedron";
-            if (verbosity >= G4VisManager::errors) {
-              G4warn <<
-              "ERROR: G4VSceneHandler::RequestPrimitives"
-              "\n  Polyhedron not available for " << solid.GetName ();
+            if (verbosity >= G4VisManager::errors)
+            {
+              G4warn << "ERROR: G4VSceneHandler::RequestPrimitives"
+                        "\n  Polyhedron not available for "
+                     << solid.GetName();
               G4warn << "\n  Touchable path: " << pPVModel->GetFullPVPath();
               static G4bool explanation = false;
-              if (!explanation) {
+              if (!explanation)
+              {
                 explanation = true;
-                G4warn <<
-                "\n  This means it cannot be visualized in the usual way on most systems."
-                "\n  1) The solid may not have implemented the CreatePolyhedron method."
-                "\n  2) For Boolean solids, the BooleanProcessor, which attempts to create"
-                "\n     the resultant polyhedron, may have failed."
-                "\n  Try RayTracer. It uses Geant4's tracking algorithms instead.";
+                G4warn
+                  << "\n  This means it cannot be visualized in the usual way on most systems."
+                     "\n  1) The solid may not have implemented the CreatePolyhedron method."
+                     "\n  2) For Boolean solids, the BooleanProcessor, which attempts to create"
+                     "\n     the resultant polyhedron, may have failed."
+                     "\n  Try RayTracer. It uses Geant4's tracking algorithms instead.";
               }
             }
             G4warn << "\n  Drawing solid with cloud of points.";
@@ -627,8 +694,7 @@ void G4VSceneHandler::RequestPrimitives (const G4VSolid& solid)
     }
       [[fallthrough]];
 
-    case G4ViewParameters::cloud:
-    {
+    case G4ViewParameters::cloud: {
       // Form solid out of cloud of dots on surface of solid
       G4Polymarker dots;
       // Note: OpenGL has a fast implementation of polymarker so it's better
@@ -639,55 +705,54 @@ void G4VSceneHandler::RequestPrimitives (const G4VSolid& solid)
       dots.SetMarkerType(G4Polymarker::dots);
       G4int numberOfCloudPoints = GetNumberOfCloudPoints(fpVisAttribs);
       if (numberOfCloudPoints <= 0) numberOfCloudPoints = vp.GetNumberOfCloudPoints();
-      for (G4int i = 0; i < numberOfCloudPoints; ++i) {
-	G4ThreeVector p = solid.GetPointOnSurface();
-	dots.push_back(p);
+      for (G4int i = 0; i < numberOfCloudPoints; ++i)
+      {
+        G4ThreeVector p = solid.GetPointOnSurface();
+        dots.push_back(p);
       }
-      BeginPrimitives (fObjectTransformation);
+      BeginPrimitives(fObjectTransformation);
       AddPrimitive(dots);
-      EndPrimitives ();
+      EndPrimitives();
       break;
     }
   }
 }
 
-//namespace {
-//  void DrawExtent(const G4VModel* pModel)
-//  {
-//    // Show extent boxes - debug only, OGLSX only (OGLSQt problem?)
-//    if (pModel->GetExtent() != G4VisExtent::GetNullExtent()) {
-//      const auto& extent = pModel->GetExtent();
-//      const auto& centre = extent.GetExtentCenter();
-//      const auto& position = G4Translate3D(centre);
-//      const auto& dx = (extent.GetXmax()-extent.GetXmin())/2.;
-//      const auto& dy = (extent.GetYmax()-extent.GetYmin())/2.;
-//      const auto& dz = (extent.GetZmax()-extent.GetZmin())/2.;
-//      auto visAtts = G4VisAttributes();
-//      visAtts.SetForceWireframe();
-//      G4Box extentBox("Extent",dx,dy,dz);
-//      G4VisManager::GetInstance()->Draw(extentBox,visAtts,position);
-//    }
-//  }
-//}
+// namespace {
+//   void DrawExtent(const G4VModel* pModel)
+//   {
+//     // Show extent boxes - debug only, OGLSX only (OGLSQt problem?)
+//     if (pModel->GetExtent() != G4VisExtent::GetNullExtent()) {
+//       const auto& extent = pModel->GetExtent();
+//       const auto& centre = extent.GetExtentCenter();
+//       const auto& position = G4Translate3D(centre);
+//       const auto& dx = (extent.GetXmax()-extent.GetXmin())/2.;
+//       const auto& dy = (extent.GetYmax()-extent.GetYmin())/2.;
+//       const auto& dz = (extent.GetZmax()-extent.GetZmin())/2.;
+//       auto visAtts = G4VisAttributes();
+//       visAtts.SetForceWireframe();
+//       G4Box extentBox("Extent",dx,dy,dz);
+//       G4VisManager::GetInstance()->Draw(extentBox,visAtts,position);
+//     }
+//   }
+// }
 
 void G4VSceneHandler::ProcessScene()
 {
   // Assumes graphics database store has already been cleared if
   // relevant for the particular scene handler.
 
-  if(!fpScene)
-    return;
+  if (!fpScene) return;
 
-  if(fpScene->GetExtent() == G4VisExtent::GetNullExtent())
-    {
+  if (fpScene->GetExtent() == G4VisExtent::GetNullExtent())
+  {
     G4Exception("G4VSceneHandler::ProcessScene", "visman0106", JustWarning,
                 "The scene has no extent.");
-    }
+  }
 
   G4VisManager* visManager = G4VisManager::GetInstance();
 
-  if(!visManager->GetConcreteInstance())
-    return;
+  if (!visManager->GetConcreteInstance()) return;
 
   G4VisManager::Verbosity verbosity = visManager->GetVerbosity();
 
@@ -695,19 +760,20 @@ void G4VSceneHandler::ProcessScene()
 
   // Traverse geometry tree and send drawing primitives to window(s).
 
-  const std::vector<G4Scene::Model>& runDurationModelList =
-  fpScene->GetRunDurationModelList();
+  const std::vector<G4Scene::Model>& runDurationModelList = fpScene->GetRunDurationModelList();
 
-  if(runDurationModelList.size()) {
-    if(verbosity >= G4VisManager::confirmations) {
+  if (runDurationModelList.size())
+  {
+    if (verbosity >= G4VisManager::confirmations)
+    {
       G4cout << "Traversing scene data..." << G4endl;
       static G4int first = true;
-      if (first) {
+      if (first)
+      {
         first = false;
-        G4cout <<
-        "(This could happen more than once - in fact, up to three times"
-        "\nper rebuild, for opaque, transparent and non-hidden markers.)"
-        << G4endl;
+        G4cout << "(This could happen more than once - in fact, up to three times"
+                  "\nper rebuild, for opaque, transparent and non-hidden markers.)"
+               << G4endl;
       }
     }
 
@@ -719,8 +785,10 @@ void G4VSceneHandler::ProcessScene()
     // Create modeling parameters from view parameters...
     G4ModelingParameters* pMP = CreateModelingParameters();
 
-    for(const auto& i : runDurationModelList) {
-      if(i.fActive) {
+    for (const auto& i : runDurationModelList)
+    {
+      if (i.fActive)
+      {
         fpModel = i.fpModel;
         fpModel->SetModelingParameters(pMP);
 
@@ -735,11 +803,15 @@ void G4VSceneHandler::ProcessScene()
         // the model to the scene tree, i.e., enter all the touchables.
         fpViewer->InsertModelInSceneTree(fpModel);
         auto pPVModel = dynamic_cast<G4PhysicalVolumeModel*>(fpModel);
-        if (pPVModel) {
+        if (pPVModel)
+        {
           G4VViewer::SceneTreeScene sceneTreeScene(fpViewer, pPVModel);
           fpModel->DescribeYourselfTo(sceneTreeScene);
           const auto& maxDepth = pPVModel->GetMaxFullDepth();
-          if (fMaxGeometryDepth < maxDepth) {fMaxGeometryDepth = maxDepth;}
+          if (fMaxGeometryDepth < maxDepth)
+          {
+            fMaxGeometryDepth = maxDepth;
+          }
           // This will be the maximum geometry depth for this scene handler
         }
 
@@ -755,35 +827,43 @@ void G4VSceneHandler::ProcessScene()
   }
 
   // Some printing
-  if(verbosity >= G4VisManager::parameters) {
-    for (const auto& model: runDurationModelList) {
-      if (model.fActive) {
+  if (verbosity >= G4VisManager::parameters)
+  {
+    for (const auto& model : runDurationModelList)
+    {
+      if (model.fActive)
+      {
         auto pvModel = dynamic_cast<G4PhysicalVolumeModel*>(model.fpModel);
-        if (pvModel) {
-
-          G4cout << "Numbers of all touchables by depth \""
-          << pvModel->GetGlobalDescription() << "\":";
-          for (const auto& dn : pvModel->GetMapOfAllTouchables()) {
+        if (pvModel)
+        {
+          G4cout << "Numbers of all touchables by depth \"" << pvModel->GetGlobalDescription()
+                 << "\":";
+          for (const auto& dn : pvModel->GetMapOfAllTouchables())
+          {
             G4cout << "\n  Depth " << dn.first << ": " << dn.second;
           }
-          G4cout << "\n  Total number of all touchables: "
-          << pvModel->GetTotalAllTouchables() << G4endl;
+          G4cout << "\n  Total number of all touchables: " << pvModel->GetTotalAllTouchables()
+                 << G4endl;
 
-          G4cout << "Numbers of touchables drawn by depth \""
-          << pvModel->GetGlobalDescription() << "\":";
-          for (const auto& dn : pvModel->GetMapOfDrawnTouchables()) {
+          G4cout << "Numbers of touchables drawn by depth \"" << pvModel->GetGlobalDescription()
+                 << "\":";
+          for (const auto& dn : pvModel->GetMapOfDrawnTouchables())
+          {
             G4cout << "\n  Depth " << dn.first << ": " << dn.second;
           }
-          G4cout << "\n  Total number of drawn touchables: "
-          << pvModel->GetTotalDrawnTouchables() << G4endl;
+          G4cout << "\n  Total number of drawn touchables: " << pvModel->GetTotalDrawnTouchables()
+                 << G4endl;
         }
       }
     }
   }
-  if(verbosity >= G4VisManager::warnings) {
-    if (fProblematicVolumes.size() > 0) {
+  if (verbosity >= G4VisManager::warnings)
+  {
+    if (fProblematicVolumes.size() > 0)
+    {
       G4cout << "Problematic volumes:";
-      for (const auto& prob: fProblematicVolumes) {
+      for (const auto& prob : fProblematicVolumes)
+      {
         G4cout << "\n  " << prob.first->GetName() << " (" << prob.second << ')';
       }
       G4cout << G4endl;
@@ -801,7 +881,7 @@ void G4VSceneHandler::ProcessTransients()
   // fMarkForClearingTransientStore true causes problems with
   // recomputing transients below.)  Restore it again at end...
   G4bool tmpMarkForClearingTransientStore = fMarkForClearingTransientStore;
-  fMarkForClearingTransientStore          = false;
+  fMarkForClearingTransientStore = false;
 
   G4VisManager* visManager = G4VisManager::GetInstance();
   G4VisManager::Verbosity verbosity = visManager->GetVerbosity();
@@ -811,103 +891,100 @@ void G4VSceneHandler::ProcessTransients()
   // Refresh event from end-of-event model list.
   // Allow only in Idle or GeomClosed state...
   G4StateManager* stateManager = G4StateManager::GetStateManager();
-  G4ApplicationState state     = stateManager->GetCurrentState();
-  if(state == G4State_Idle || state == G4State_GeomClosed)
-    {
+  G4ApplicationState state = stateManager->GetCurrentState();
+  if (state == G4State_Idle || state == G4State_GeomClosed)
+  {
     visManager->SetEventRefreshing(true);
 
-    if(visManager->GetRequestedEvent())
-      {
+    if (visManager->GetRequestedEvent())
+    {
       DrawEvent(visManager->GetRequestedEvent());
-      }
+    }
     else
-      {
+    {
       G4RunManager* runManager = G4RunManagerFactory::GetMasterRunManager();
-      if(runManager)
-        {
+      if (runManager)
+      {
         const G4Run* run = runManager->GetCurrentRun();
         // Draw a null event in order to pick up models for the scene tree even before a run
         if (run == nullptr) DrawEvent(0);
-        const std::vector<const G4Event*>* events =
-        run ? run->GetEventVector() : 0;
+        const std::vector<const G4Event*>* events = run ? run->GetEventVector() : 0;
         std::size_t nKeptEvents = 0;
-        if(events)
-          nKeptEvents = events->size();
-        if(nKeptEvents)
+        if (events) nKeptEvents = events->size();
+        if (nKeptEvents)
+        {
+          if (fpScene->GetRefreshAtEndOfEvent())
           {
-          if(fpScene->GetRefreshAtEndOfEvent())
+            if (verbosity >= G4VisManager::confirmations)
             {
-            if(verbosity >= G4VisManager::confirmations)
-              {
               G4cout << "Refreshing event..." << G4endl;
-              }
-            const G4Event* event = 0;
-            if(events && events->size())
-              event = events->back();
-            if(event)
-              DrawEvent(event);
             }
+            const G4Event* event = 0;
+            if (events && events->size()) event = events->back();
+            if (event) DrawEvent(event);
+          }
           else
-            {  // Accumulating events.
+          {  // Accumulating events.
 
-              if(verbosity >= G4VisManager::confirmations)
-                {
-                G4cout << "Refreshing events in run..." << G4endl;
-                }
-              for(const auto& event : *events)
-                {
-                if(event)
-                  DrawEvent(event);
-                }
+            if (verbosity >= G4VisManager::confirmations)
+            {
+              G4cout << "Refreshing events in run..." << G4endl;
+            }
+            for (const auto& event : *events)
+            {
+              if (event) DrawEvent(event);
+            }
 
-              if(!fpScene->GetRefreshAtEndOfRun())
-                {
-                if(verbosity >= G4VisManager::warnings)
-                  {
-                  G4warn << "WARNING: Cannot refresh events accumulated over more"
-                  "\n  than one runs.  Refreshed just the last run."
-                  << G4endl;
-                  }
-                }
+            if (!fpScene->GetRefreshAtEndOfRun())
+            {
+              if (verbosity >= G4VisManager::warnings)
+              {
+                G4warn << "WARNING: Cannot refresh events accumulated over more"
+                          "\n  than one runs.  Refreshed just the last run."
+                       << G4endl;
+              }
             }
           }
         }
       }
-    visManager->SetEventRefreshing(false);
     }
+    visManager->SetEventRefreshing(false);
+  }
 
   // Refresh end-of-run model list.
   // Allow only in Idle or GeomClosed state...
-  if(state == G4State_Idle || state == G4State_GeomClosed)
-    {
+  if (state == G4State_Idle || state == G4State_GeomClosed)
+  {
     DrawEndOfRunModels();
-    }
+  }
 
   fMarkForClearingTransientStore = tmpMarkForClearingTransientStore;
 }
 
 void G4VSceneHandler::DrawEvent(const G4Event* event)
 {
-  if(!fpViewer->ReadyToDraw()) return;
-  const std::vector<G4Scene::Model>& EOEModelList =
-    fpScene -> GetEndOfEventModelList ();
+  if (!fpViewer->ReadyToDraw()) return;
+  const std::vector<G4Scene::Model>& EOEModelList = fpScene->GetEndOfEventModelList();
   std::size_t nModels = EOEModelList.size();
-  if (nModels) {
+  if (nModels)
+  {
     G4ModelingParameters* pMP = CreateModelingParameters();
     pMP->SetEvent(event);
-    for (std::size_t i = 0; i < nModels; ++i) {
-      if (EOEModelList[i].fActive) {
+    for (std::size_t i = 0; i < nModels; ++i)
+    {
+      if (EOEModelList[i].fActive)
+      {
         fpModel = EOEModelList[i].fpModel;
-        fpModel -> SetModelingParameters(pMP);
+        fpModel->SetModelingParameters(pMP);
 
         // Describe to the current scene handler
-        fpModel -> DescribeYourselfTo (*this);
+        fpModel->DescribeYourselfTo(*this);
 
         // Enter models in the scene tree
         fpViewer->InsertModelInSceneTree(fpModel);
 
         // Reset modeling parameters pointer
-        fpModel -> SetModelingParameters(0);
+        fpModel->SetModelingParameters(0);
       }
     }
     fpModel = 0;
@@ -917,26 +994,28 @@ void G4VSceneHandler::DrawEvent(const G4Event* event)
 
 void G4VSceneHandler::DrawEndOfRunModels()
 {
-  if(!fpViewer->ReadyToDraw()) return;
-  const std::vector<G4Scene::Model>& EORModelList =
-    fpScene -> GetEndOfRunModelList ();
+  if (!fpViewer->ReadyToDraw()) return;
+  const std::vector<G4Scene::Model>& EORModelList = fpScene->GetEndOfRunModelList();
   std::size_t nModels = EORModelList.size();
-  if (nModels) {
+  if (nModels)
+  {
     G4ModelingParameters* pMP = CreateModelingParameters();
     pMP->SetEvent(0);
-    for (std::size_t i = 0; i < nModels; ++i) {
-      if (EORModelList[i].fActive) {
+    for (std::size_t i = 0; i < nModels; ++i)
+    {
+      if (EORModelList[i].fActive)
+      {
         fpModel = EORModelList[i].fpModel;
-        fpModel -> SetModelingParameters(pMP);
+        fpModel->SetModelingParameters(pMP);
 
         // Describe to the current scene handler
-        fpModel -> DescribeYourselfTo (*this);
+        fpModel->DescribeYourselfTo(*this);
 
         // Enter models in the scene tree
         fpViewer->InsertModelInSceneTree(fpModel);
 
         // Reset modeling parameters pointer
-        fpModel -> SetModelingParameters(0);
+        fpModel->SetModelingParameters(0);
       }
     }
     fpModel = 0;
@@ -944,17 +1023,17 @@ void G4VSceneHandler::DrawEndOfRunModels()
   }
 }
 
-G4ModelingParameters* G4VSceneHandler::CreateModelingParameters ()
+G4ModelingParameters* G4VSceneHandler::CreateModelingParameters()
 {
   // Create modeling parameters from View Parameters...
   if (!fpViewer) return NULL;
 
-  const G4ViewParameters& vp = fpViewer -> GetViewParameters ();
+  const G4ViewParameters& vp = fpViewer->GetViewParameters();
 
   // Convert drawing styles...
-  G4ModelingParameters::DrawingStyle modelDrawingStyle =
-  G4ModelingParameters::wf;
-  switch (vp.GetDrawingStyle ()) {
+  G4ModelingParameters::DrawingStyle modelDrawingStyle = G4ModelingParameters::wf;
+  switch (vp.GetDrawingStyle())
+  {
     default:
     case G4ViewParameters::wireframe:
       modelDrawingStyle = G4ModelingParameters::wf;
@@ -973,27 +1052,28 @@ G4ModelingParameters* G4VSceneHandler::CreateModelingParameters ()
       break;
   }
 
+  // clang-format off
   // Decide if covered daughters are really to be culled...
   G4bool reallyCullCovered =
     vp.IsCullingCovered()   // Culling daughters depends also on...
-    && !vp.IsSection ()     // Sections (DCUT) not requested.
-    && !vp.IsCutaway ()     // Cutaways not requested.
+    && !vp.IsSection()     // Sections (DCUT) not requested.
+    && !vp.IsCutaway()     // Cutaways not requested.
     ;
 
-  G4ModelingParameters* pModelingParams = new G4ModelingParameters
-    (vp.GetDefaultVisAttributes (),
+  auto* pModelingParams = new G4ModelingParameters
+    (vp.GetDefaultVisAttributes(),
      modelDrawingStyle,
-     vp.IsCulling (),
-     vp.IsCullingInvisible (),
-     vp.IsDensityCulling (),
-     vp.GetVisibleDensity (),
+     vp.IsCulling(),
+     vp.IsCullingInvisible(),
+     vp.IsDensityCulling(),
+     vp.GetVisibleDensity(),
      reallyCullCovered,
-     vp.GetNoOfSides ()
+     vp.GetNoOfSides()
      );
+  // clang-format on
 
   pModelingParams->SetNumberOfCloudPoints(vp.GetNumberOfCloudPoints());
-  pModelingParams->SetWarning
-    (G4VisManager::GetVerbosity() >= G4VisManager::warnings);
+  pModelingParams->SetWarning(G4VisManager::GetVerbosity() >= G4VisManager::warnings);
 
   pModelingParams->SetCBDAlgorithmNumber(vp.GetCBDAlgorithmNumber());
   pModelingParams->SetCBDParameters(vp.GetCBDParameters());
@@ -1003,15 +1083,18 @@ G4ModelingParameters* G4VSceneHandler::CreateModelingParameters ()
 
   pModelingParams->SetSectionSolid(CreateSectionSolid());
 
-  if (vp.GetCutawayMode() == G4ViewParameters::cutawayUnion) {
+  if (vp.GetCutawayMode() == G4ViewParameters::cutawayUnion)
+  {
     pModelingParams->SetCutawayMode(G4ModelingParameters::cutawayUnion);
-  } else if (vp.GetCutawayMode() == G4ViewParameters::cutawayIntersection) {
+  }
+  else if (vp.GetCutawayMode() == G4ViewParameters::cutawayIntersection)
+  {
     pModelingParams->SetCutawayMode(G4ModelingParameters::cutawayIntersection);
   }
 
   pModelingParams->SetCutawaySolid(CreateCutawaySolid());
   // The polyhedron objects are deleted in the modeling parameters destructor.
-  
+
   pModelingParams->SetVisAttributesModifiers(vp.GetVisAttributesModifiers());
 
   pModelingParams->SetTimeParameters(vp.GetTimeParameters());
@@ -1030,22 +1113,22 @@ G4DisplacedSolid* G4VSceneHandler::CreateSectionSolid()
   G4DisplacedSolid* sectioner = 0;
 
   const G4ViewParameters& vp = fpViewer->GetViewParameters();
-  if (vp.IsSection () ) {
-
+  if (vp.IsSection())
+  {
     G4double radius = fpScene->GetExtent().GetExtentRadius();
     G4double safe = radius + fpScene->GetExtent().GetExtentCentre().mag();
     G4VSolid* sectionBox =
       new G4Box("_sectioner", safe, safe, 1.e-5 * radius);  // Thin in z-plane...
 
-    const G4Plane3D& sp = vp.GetSectionPlane ();
+    const G4Plane3D& sp = vp.GetSectionPlane();
     G4ThreeVector normal = sp.normal();
-    G4Transform3D requiredTransform = G4Translate3D(normal*(-sp.d())) *
-    G4Rotate3D(G4ThreeVector(0,0,1), G4ThreeVector(0,1,0), normal, normal.orthogonal());
+    G4Transform3D requiredTransform =
+      G4Translate3D(normal * (-sp.d()))
+      * G4Rotate3D(G4ThreeVector(0, 0, 1), G4ThreeVector(0, 1, 0), normal, normal.orthogonal());
 
-    sectioner = new G4DisplacedSolid
-    ("_displaced_sectioning_box", sectionBox, requiredTransform);
+    sectioner = new G4DisplacedSolid("_displaced_sectioning_box", sectionBox, requiredTransform);
   }
-  
+
   return sectioner;
 }
 
@@ -1079,33 +1162,38 @@ G4DisplacedSolid* G4VSceneHandler::CreateCutawaySolid()
     const G4Plane3D& sp = vp.GetCutawayPlanes()[plane_no];
     G4Transform3D requiredTransform;
     G4ThreeVector normal;
-    switch (vp.GetCutawayMode()) {
+    switch (vp.GetCutawayMode())
+    {
       case G4ViewParameters::cutawayUnion:
         normal = -sp.normal();  // Invert normal - we want a subtractor
-        requiredTransform = G4Translate3D(normal*(safe + sp.d())) *
-        G4Rotate3D(G4ThreeVector(0,0,1), G4ThreeVector(0,1,0), normal, normal.orthogonal());
+        requiredTransform =
+          G4Translate3D(normal * (safe + sp.d()))
+          * G4Rotate3D(G4ThreeVector(0, 0, 1), G4ThreeVector(0, 1, 0), normal, normal.orthogonal());
         break;
       case G4ViewParameters::cutawayIntersection:
         normal = sp.normal();
-        requiredTransform = G4Translate3D(normal*(safe - sp.d())) *
-        G4Rotate3D(G4ThreeVector(0,0,1), G4ThreeVector(0,1,0), normal, normal.orthogonal());
+        requiredTransform =
+          G4Translate3D(normal * (safe - sp.d()))
+          * G4Rotate3D(G4ThreeVector(0, 0, 1), G4ThreeVector(0, 1, 0), normal, normal.orthogonal());
         break;
     }
-    cutaway_solids.push_back
-    (new G4DisplacedSolid("_displaced_cutaway_box", cutawayBox, requiredTransform));
+    cutaway_solids.push_back(
+      new G4DisplacedSolid("_displaced_cutaway_box", cutawayBox, requiredTransform));
   }
 
-  if (nPlanes == 1) return (G4DisplacedSolid*) cutaway_solids[0];
+  if (nPlanes == 1) return (G4DisplacedSolid*)cutaway_solids[0];
 
   G4IntersectionSolid *union2 = nullptr, *union3 = nullptr;
   G4IntersectionSolid *intersection2 = nullptr, *intersection3 = nullptr;
-  switch (vp.GetCutawayMode()) {
-
+  switch (vp.GetCutawayMode())
+  {
     case G4ViewParameters::cutawayUnion:
       // Here we make a subtractor of intersections of inverted cutaway planes.
       union2 = new G4IntersectionSolid("_union_2", cutaway_solids[0], cutaway_solids[1]);
-      if (nPlanes == 2) return (G4DisplacedSolid*)union2;
-      else if (nPlanes == 3) {
+      if (nPlanes == 2)
+        return (G4DisplacedSolid*)union2;
+      else if (nPlanes == 3)
+      {
         union3 = new G4IntersectionSolid("_union_3", union2, cutaway_solids[2]);
         return (G4DisplacedSolid*)union3;
       }
@@ -1113,12 +1201,14 @@ G4DisplacedSolid* G4VSceneHandler::CreateCutawaySolid()
 
     case G4ViewParameters::cutawayIntersection:
       // And here we make an intersector of intersections of non-inverted cutaway planes.
-      intersection2
-      = new G4IntersectionSolid("_intersection_2", cutaway_solids[0], cutaway_solids[1]);
-      if (nPlanes == 2) return (G4DisplacedSolid*)intersection2;
-      else if (nPlanes == 3) {
-        intersection3
-        = new G4IntersectionSolid("_intersection_3", intersection2, cutaway_solids[2]);
+      intersection2 =
+        new G4IntersectionSolid("_intersection_2", cutaway_solids[0], cutaway_solids[1]);
+      if (nPlanes == 2)
+        return (G4DisplacedSolid*)intersection2;
+      else if (nPlanes == 3)
+      {
+        intersection3 =
+          new G4IntersectionSolid("_intersection_3", intersection2, cutaway_solids[2]);
         return (G4DisplacedSolid*)intersection3;
       }
       break;
@@ -1133,44 +1223,53 @@ void G4VSceneHandler::LoadAtts(const G4Visible& visible, G4AttHolder* holder)
 {
   // Load G4Atts from G4VisAttributes, if any...
   const G4VisAttributes* va = visible.GetVisAttributes();
-  if (va) {
-    const std::map<G4String,G4AttDef>* vaDefs =
-      va->GetAttDefs();
-    if (vaDefs) {
+  if (va)
+  {
+    const std::map<G4String, G4AttDef>* vaDefs = va->GetAttDefs();
+    if (vaDefs)
+    {
       holder->AddAtts(visible.GetVisAttributes()->CreateAttValues(), vaDefs);
     }
   }
 
-  G4PhysicalVolumeModel* pPVModel =
-    dynamic_cast<G4PhysicalVolumeModel*>(fpModel);
-  if (pPVModel) {
+  G4PhysicalVolumeModel* pPVModel = dynamic_cast<G4PhysicalVolumeModel*>(fpModel);
+  if (pPVModel)
+  {
     // Load G4Atts from G4PhysicalVolumeModel...
-    const std::map<G4String,G4AttDef>* pvDefs = pPVModel->GetAttDefs();
-    if (pvDefs) {
+    const std::map<G4String, G4AttDef>* pvDefs = pPVModel->GetAttDefs();
+    if (pvDefs)
+    {
       holder->AddAtts(pPVModel->CreateCurrentAttValues(), pvDefs);
     }
   }
 
   G4TrajectoriesModel* trajModel = dynamic_cast<G4TrajectoriesModel*>(fpModel);
-  if (trajModel) {
+  if (trajModel)
+  {
     // Load G4Atts from trajectory model...
-    const std::map<G4String,G4AttDef>* trajModelDefs = trajModel->GetAttDefs();
-    if (trajModelDefs) {
+    const std::map<G4String, G4AttDef>* trajModelDefs = trajModel->GetAttDefs();
+    if (trajModelDefs)
+    {
       holder->AddAtts(trajModel->CreateCurrentAttValues(), trajModelDefs);
     }
     // Load G4Atts from trajectory...
     const G4VTrajectory* traj = trajModel->GetCurrentTrajectory();
-    if (traj) {
-      const std::map<G4String,G4AttDef>* trajDefs = traj->GetAttDefs();
-      if (trajDefs) {
+    if (traj)
+    {
+      const std::map<G4String, G4AttDef>* trajDefs = traj->GetAttDefs();
+      if (trajDefs)
+      {
         holder->AddAtts(traj->CreateAttValues(), trajDefs);
       }
       G4int nPoints = traj->GetPointEntries();
-      for (G4int i = 0; i < nPoints; ++i) {
+      for (G4int i = 0; i < nPoints; ++i)
+      {
         G4VTrajectoryPoint* trajPoint = traj->GetPoint(i);
-        if (trajPoint) {
-          const std::map<G4String,G4AttDef>* pointDefs = trajPoint->GetAttDefs();
-          if (pointDefs) {
+        if (trajPoint)
+        {
+          const std::map<G4String, G4AttDef>* pointDefs = trajPoint->GetAttDefs();
+          if (pointDefs)
+          {
             holder->AddAtts(trajPoint->CreateAttValues(), pointDefs);
           }
         }
@@ -1179,29 +1278,34 @@ void G4VSceneHandler::LoadAtts(const G4Visible& visible, G4AttHolder* holder)
   }
 
   G4HitsModel* hitsModel = dynamic_cast<G4HitsModel*>(fpModel);
-  if (hitsModel) {
+  if (hitsModel)
+  {
     // Load G4Atts from hit...
     const G4VHit* hit = hitsModel->GetCurrentHit();
-    const std::map<G4String,G4AttDef>* hitsDefs = hit->GetAttDefs();
-    if (hitsDefs) {
+    const std::map<G4String, G4AttDef>* hitsDefs = hit->GetAttDefs();
+    if (hitsDefs)
+    {
       holder->AddAtts(hit->CreateAttValues(), hitsDefs);
     }
   }
 }
 
-const G4Colour& G4VSceneHandler::GetColour () {
+const G4Colour& G4VSceneHandler::GetColour()
+{
   fpVisAttribs = fpViewer->GetApplicableVisAttributes(fpVisAttribs);
-  const G4Colour& colour = fpVisAttribs -> GetColour ();
+  const G4Colour& colour = fpVisAttribs->GetColour();
   return colour;
 }
 
-const G4Colour& G4VSceneHandler::GetColour (const G4Visible& visible) {
+const G4Colour& G4VSceneHandler::GetColour(const G4Visible& visible)
+{
   auto pVA = visible.GetVisAttributes();
   if (!pVA) pVA = fpViewer->GetViewParameters().GetDefaultVisAttributes();
   return pVA->GetColour();
 }
 
-const G4Colour& G4VSceneHandler::GetTextColour (const G4Text& text) {
+const G4Colour& G4VSceneHandler::GetTextColour(const G4Text& text)
+{
   auto pVA = text.GetVisAttributes();
   if (!pVA) pVA = fpViewer->GetViewParameters().GetDefaultTextVisAttributes();
   return pVA->GetColour();
@@ -1211,27 +1315,29 @@ G4double G4VSceneHandler::GetLineWidth(const G4VisAttributes* pVisAttribs)
 {
   G4double lineWidth = pVisAttribs->GetLineWidth();
   if (lineWidth < 1.) lineWidth = 1.;
-  lineWidth *= fpViewer -> GetViewParameters().GetGlobalLineWidthScale();
+  lineWidth *= fpViewer->GetViewParameters().GetGlobalLineWidthScale();
   if (lineWidth < 1.) lineWidth = 1.;
   return lineWidth;
 }
 
-G4ViewParameters::DrawingStyle G4VSceneHandler::GetDrawingStyle
-(const G4VisAttributes* pVisAttribs) {
+G4ViewParameters::DrawingStyle G4VSceneHandler::GetDrawingStyle(const G4VisAttributes* pVisAttribs)
+{
   // Drawing style is normally determined by the view parameters, but
   // it can be overriddden by the ForceDrawingStyle flag in the vis
   // attributes.
   const G4ViewParameters& vp = fpViewer->GetViewParameters();
   const G4ViewParameters::DrawingStyle viewerStyle = vp.GetDrawingStyle();
   G4ViewParameters::DrawingStyle resultantStyle = viewerStyle;
-  if (pVisAttribs -> IsForceDrawingStyle ()) {
-    G4VisAttributes::ForcedDrawingStyle forcedStyle =
-    pVisAttribs -> GetForcedDrawingStyle ();
+  if (pVisAttribs->IsForceDrawingStyle())
+  {
+    G4VisAttributes::ForcedDrawingStyle forcedStyle = pVisAttribs->GetForcedDrawingStyle();
     // This is complicated because if hidden line and surface removal
     // has been requested we wish to preserve this sometimes.
-    switch (forcedStyle) {
+    switch (forcedStyle)
+    {
       case (G4VisAttributes::solid):
-        switch (viewerStyle) {
+        switch (viewerStyle)
+        {
           case (G4ViewParameters::hlr):
             resultantStyle = G4ViewParameters::hlhsr;
             break;
@@ -1262,59 +1368,64 @@ G4ViewParameters::DrawingStyle G4VSceneHandler::GetDrawingStyle
   return resultantStyle;
 }
 
-G4int G4VSceneHandler::GetNumberOfCloudPoints
-(const G4VisAttributes* pVisAttribs) const {
+G4int G4VSceneHandler::GetNumberOfCloudPoints(const G4VisAttributes* pVisAttribs) const
+{
   // Returns no of cloud points from current view parameters, unless the user
   // has forced through the vis attributes, thereby over-riding the
   // current view parameter.
   G4int numberOfCloudPoints = fpViewer->GetViewParameters().GetNumberOfCloudPoints();
-  if (pVisAttribs -> IsForceDrawingStyle() &&
-      pVisAttribs -> GetForcedDrawingStyle() == G4VisAttributes::cloud &&
-      pVisAttribs -> GetForcedNumberOfCloudPoints() > 0) {
-    numberOfCloudPoints = pVisAttribs -> GetForcedNumberOfCloudPoints();
+  if (pVisAttribs->IsForceDrawingStyle()
+      && pVisAttribs->GetForcedDrawingStyle() == G4VisAttributes::cloud
+      && pVisAttribs->GetForcedNumberOfCloudPoints() > 0)
+  {
+    numberOfCloudPoints = pVisAttribs->GetForcedNumberOfCloudPoints();
   }
   return numberOfCloudPoints;
 }
 
-G4bool G4VSceneHandler::GetAuxEdgeVisible (const G4VisAttributes* pVisAttribs) {
-  G4bool isAuxEdgeVisible = fpViewer->GetViewParameters().IsAuxEdgeVisible ();
-  if (pVisAttribs -> IsForceAuxEdgeVisible()) {
+G4bool G4VSceneHandler::GetAuxEdgeVisible(const G4VisAttributes* pVisAttribs)
+{
+  G4bool isAuxEdgeVisible = fpViewer->GetViewParameters().IsAuxEdgeVisible();
+  if (pVisAttribs->IsForceAuxEdgeVisible())
+  {
     isAuxEdgeVisible = pVisAttribs->IsForcedAuxEdgeVisible();
   }
   return isAuxEdgeVisible;
 }
 
-G4double G4VSceneHandler::GetMarkerSize
-(const G4VMarker& marker, 
- G4VSceneHandler::MarkerSizeType& markerSizeType)
+G4double G4VSceneHandler::GetMarkerSize(const G4VMarker& marker,
+                                        G4VSceneHandler::MarkerSizeType& markerSizeType)
 {
   // Deal with G4Polymarker::dots
   const auto& vp = fpViewer->GetViewParameters();
-  try {
+  try
+  {
     const auto& polymarker = dynamic_cast<const G4Polymarker&>(marker);
-    if (polymarker.GetMarkerType() == G4Polymarker::dots) {
+    if (polymarker.GetMarkerType() == G4Polymarker::dots)
+    {
+      markerSizeType = screen;
       return vp.GetDotsSize();
     }
   }
-  catch (const std::bad_cast&) {}  // Continue
+  catch (const std::bad_cast&)
+  {}  // Continue
 
   // Other markers
   G4bool userSpecified = marker.GetWorldSize() || marker.GetScreenSize();
-  const G4VMarker& defaultMarker =
-    fpViewer -> GetViewParameters().GetDefaultMarker();
-  G4double size = userSpecified ?
-    marker.GetWorldSize() : defaultMarker.GetWorldSize();
-  if (size) {
+  const G4VMarker& defaultMarker = fpViewer->GetViewParameters().GetDefaultMarker();
+  G4double size = userSpecified ? marker.GetWorldSize() : defaultMarker.GetWorldSize();
+  if (size)
+  {
     // Draw in world coordinates.
     markerSizeType = world;
   }
-  else {
-    size = userSpecified ?
-      marker.GetScreenSize() : defaultMarker.GetScreenSize();
+  else
+  {
+    size = userSpecified ? marker.GetScreenSize() : defaultMarker.GetScreenSize();
     // Draw in screen coordinates.
     markerSizeType = screen;
   }
-  size *= fpViewer -> GetViewParameters().GetGlobalMarkerScale();
+  size *= fpViewer->GetViewParameters().GetGlobalMarkerScale();
   if (markerSizeType == screen && size < 1.) size = 1.;
   return size;
 }
@@ -1325,83 +1436,96 @@ G4int G4VSceneHandler::GetNoOfSides(const G4VisAttributes* pVisAttribs)
   // by the view parameters, but it can be overriddden by the
   // ForceLineSegmentsPerCircle in the vis attributes.
   G4int lineSegmentsPerCircle = fpViewer->GetViewParameters().GetNoOfSides();
-  if (pVisAttribs) {
+  if (pVisAttribs)
+  {
     if (pVisAttribs->IsForceLineSegmentsPerCircle())
       lineSegmentsPerCircle = pVisAttribs->GetForcedLineSegmentsPerCircle();
-    if (lineSegmentsPerCircle < pVisAttribs->GetMinLineSegmentsPerCircle()) {
+    if (lineSegmentsPerCircle < pVisAttribs->GetMinLineSegmentsPerCircle())
+    {
       lineSegmentsPerCircle = pVisAttribs->GetMinLineSegmentsPerCircle();
-      G4warn <<
-	"G4VSceneHandler::GetNoOfSides: attempt to set the"
-	"\nnumber of line segments per circle < " << lineSegmentsPerCircle
-	     << "; forced to " << pVisAttribs->GetMinLineSegmentsPerCircle() << G4endl;
+      G4warn << "G4VSceneHandler::GetNoOfSides: attempt to set the"
+                "\nnumber of line segments per circle < "
+             << lineSegmentsPerCircle << "; forced to "
+             << pVisAttribs->GetMinLineSegmentsPerCircle() << G4endl;
     }
   }
   return lineSegmentsPerCircle;
 }
 
-std::ostream& operator << (std::ostream& os, const G4VSceneHandler& sh) {
-
-  os << "Scene handler " << sh.fName << " has "
-     << sh.fViewerList.size () << " viewer(s):";
-  for (const auto* i : sh.fViewerList) {
+std::ostream& operator<<(std::ostream& os, const G4VSceneHandler& sh)
+{
+  os << "Scene handler " << sh.fName << " has " << sh.fViewerList.size() << " viewer(s):";
+  for (const auto* i : sh.fViewerList)
+  {
     os << "\n  " << *i;
   }
 
-  if (sh.fpScene) {
+  if (sh.fpScene)
+  {
     os << "\n  " << *sh.fpScene;
   }
-  else {
+  else
+  {
     os << "\n  This scene handler currently has no scene.";
   }
 
   return os;
 }
 
-void G4VSceneHandler::PseudoSceneFor3DRectMeshPositions::AddSolid(const G4Box&) {
-  if (fpPVModel->GetCurrentDepth() == fpMesh->GetMeshDepth()) {  // Leaf-level cells only
+void G4VSceneHandler::PseudoSceneFor3DRectMeshPositions::AddSolid(const G4Box&)
+{
+  if (fpPVModel->GetCurrentDepth() == fpMesh->GetMeshDepth())
+  {  // Leaf-level cells only
     const auto& material = fpPVModel->GetCurrentLV()->GetMaterial();
-    const auto& name = material? material->GetName(): fpMesh->GetContainerVolume()->GetName();
+    const auto& name = material ? material->GetName() : fpMesh->GetContainerVolume()->GetName();
     const auto& pVisAtts = fpPVModel->GetCurrentLV()->GetVisAttributes();
     // Get position in world coordinates
     // As a parameterisation the box is transformed by the current transformation
     // and its centre, originally by definition at (0,0,0), is now translated.
     const G4ThreeVector& position = fpCurrentObjectTransformation->getTranslation();
-    fPositionByMaterial.insert(std::make_pair(material,position));
+    fPositionByMaterial.insert(std::make_pair(material, position));
     if (fNameAndVisAttsByMaterial.find(material) == fNameAndVisAttsByMaterial.end())
       // Store name and vis attributes of first encounter with this material
-      fNameAndVisAttsByMaterial[material] = NameAndVisAtts(name,*pVisAtts);
+      fNameAndVisAttsByMaterial[material] = NameAndVisAtts(name, *pVisAtts);
   }
 }
 
-void G4VSceneHandler::PseudoSceneForTetVertices::AddSolid(const G4VSolid& solid) {
-  if (fpPVModel->GetCurrentDepth() == fpMesh->GetMeshDepth()) {  // Leaf-level cells only
+void G4VSceneHandler::PseudoSceneForTetVertices::AddSolid(const G4VSolid& solid)
+{
+  if (fpPVModel->GetCurrentDepth() == fpMesh->GetMeshDepth())
+  {  // Leaf-level cells only
     // Need to know it's a tet !!!! or implement G4VSceneHandler::AddSolid (const G4Tet&) !!!!
-    try {
+    try
+    {
       const auto& tet = dynamic_cast<const G4Tet&>(solid);
       const auto& material = fpPVModel->GetCurrentLV()->GetMaterial();
-      const auto& name = material? material->GetName(): fpMesh->GetContainerVolume()->GetName();
+      const auto& name = material ? material->GetName() : fpMesh->GetContainerVolume()->GetName();
       const auto& pVisAtts = fpPVModel->GetCurrentLV()->GetVisAttributes();
       // Transform into world coordinates if necessary
-      if (fpCurrentObjectTransformation->xx() == 1. &&
-          fpCurrentObjectTransformation->yy() == 1. &&
-          fpCurrentObjectTransformation->zz() == 1.) { // No transformation necessary
+      if (fpCurrentObjectTransformation->xx() == 1. && fpCurrentObjectTransformation->yy() == 1.
+          && fpCurrentObjectTransformation->zz() == 1.)
+      {  // No transformation necessary
         const auto& vertices = tet.GetVertices();
-        fVerticesByMaterial.insert(std::make_pair(material,vertices));
-      } else {
+        fVerticesByMaterial.insert(std::make_pair(material, vertices));
+      }
+      else
+      {
         auto vertices = tet.GetVertices();
-        for (auto&& vertex: vertices) {
+        for (auto&& vertex : vertices)
+        {
           vertex = G4Point3D(vertex).transform(*fpCurrentObjectTransformation);
         }
-        fVerticesByMaterial.insert(std::make_pair(material,vertices));
+        fVerticesByMaterial.insert(std::make_pair(material, vertices));
       }
       if (fNameAndVisAttsByMaterial.find(material) == fNameAndVisAttsByMaterial.end())
         // Store name and vis attributes of first encounter with this material
-        fNameAndVisAttsByMaterial[material] = NameAndVisAtts(name,*pVisAtts);
+        fNameAndVisAttsByMaterial[material] = NameAndVisAtts(name, *pVisAtts);
     }
-    catch (const std::bad_cast&) {
+    catch (const std::bad_cast&)
+    {
       G4ExceptionDescription ed;
       ed << "Called for a mesh that is not a tetrahedron mesh: " << solid.GetName();
-      G4Exception("PseudoSceneForTetVertices","visman0108",JustWarning,ed);
+      G4Exception("PseudoSceneForTetVertices", "visman0108", JustWarning, ed);
     }
   }
 }
@@ -1412,10 +1536,13 @@ void G4VSceneHandler::StandardSpecialMeshRendering(const G4Mesh& mesh)
 // appropriate or implement its own special mesh rendereing.
 {
   G4bool implemented = false;
-  switch (mesh.GetMeshType()) {
-    case G4Mesh::rectangle: [[fallthrough]];
+  switch (mesh.GetMeshType())
+  {
+    case G4Mesh::rectangle:
+      [[fallthrough]];
     case G4Mesh::nested3DRectangular:
-      switch (fpViewer->GetViewParameters().GetSpecialMeshRenderingOption()) {
+      switch (fpViewer->GetViewParameters().GetSpecialMeshRenderingOption())
+      {
         case G4ViewParameters::meshAsDefault:
           [[fallthrough]];
         case G4ViewParameters::meshAsDots:
@@ -1429,7 +1556,8 @@ void G4VSceneHandler::StandardSpecialMeshRendering(const G4Mesh& mesh)
       }
       break;
     case G4Mesh::tetrahedron:
-      switch (fpViewer->GetViewParameters().GetSpecialMeshRenderingOption()) {
+      switch (fpViewer->GetViewParameters().GetSpecialMeshRenderingOption())
+      {
         case G4ViewParameters::meshAsDefault:
           [[fallthrough]];
         case G4ViewParameters::meshAsDots:
@@ -1442,16 +1570,21 @@ void G4VSceneHandler::StandardSpecialMeshRendering(const G4Mesh& mesh)
           break;
       }
       break;
-    case G4Mesh::cylinder: [[fallthrough]];
-    case G4Mesh::sphere: [[fallthrough]];
-    case G4Mesh::invalid: break;
+    case G4Mesh::cylinder:
+      [[fallthrough]];
+    case G4Mesh::sphere:
+      [[fallthrough]];
+    case G4Mesh::invalid:
+      break;
   }
-  if (implemented) {
+  if (implemented)
+  {
     // Draw container if not marked invisible...
     auto container = mesh.GetContainerVolume();
     auto containerLogical = container->GetLogicalVolume();
     auto containerVisAtts = containerLogical->GetVisAttributes();
-    if (containerVisAtts == nullptr || containerVisAtts->IsVisible()) {
+    if (containerVisAtts == nullptr || containerVisAtts->IsVisible())
+    {
       auto solid = containerLogical->GetSolid();
       auto polyhedron = solid->GetPolyhedron();
       // Always draw as wireframe
@@ -1463,7 +1596,9 @@ void G4VSceneHandler::StandardSpecialMeshRendering(const G4Mesh& mesh)
       AddPrimitive(*polyhedron);
       EndPrimitives();
     }
-  } else {
+  }
+  else
+  {
     // Invoke base class function
     G4VSceneHandler::AddCompound(mesh);
   }
@@ -1475,33 +1610,32 @@ void G4VSceneHandler::Draw3DRectMeshAsDots(const G4Mesh& mesh)
 // one dot randomly placed in each visible mesh cell.
 {
   // Check
-  if (mesh.GetMeshType() != G4Mesh::rectangle &&
-      mesh.GetMeshType() != G4Mesh::nested3DRectangular) {
+  if (mesh.GetMeshType() != G4Mesh::rectangle && mesh.GetMeshType() != G4Mesh::nested3DRectangular)
+  {
     G4ExceptionDescription ed;
     ed << "Called with a mesh that is not rectangular:" << mesh;
-    G4Exception("G4VSceneHandler::Draw3DRectMeshAsDots","visman0108",JustWarning,ed);
+    G4Exception("G4VSceneHandler::Draw3DRectMeshAsDots", "visman0108", JustWarning, ed);
     return;
   }
 
   static G4bool firstPrint = true;
   const auto& verbosity = G4VisManager::GetVerbosity();
   G4bool print = firstPrint && verbosity >= G4VisManager::errors;
-  if (print) {
-    G4cout
-    << "Special case drawing of 3D rectangular G4VNestedParameterisation as dots:"
-    << '\n' << mesh
-    << G4endl;
+  if (print)
+  {
+    G4cout << "Special case drawing of 3D rectangular G4VNestedParameterisation as dots:" << '\n'
+           << mesh << G4endl;
   }
 
   const auto& container = mesh.GetContainerVolume();
 
   // This map is static so that once filled it stays filled.
-  static std::map<G4String,std::map<const G4Material*,G4Polymarker>> dotsByMaterialAndMesh;
+  static std::map<G4String, std::map<const G4Material*, G4Polymarker>> dotsByMaterialAndMesh;
   auto& dotsByMaterial = dotsByMaterialAndMesh[mesh.GetContainerVolume()->GetName()];
 
   // Fill map if not already filled
-  if (dotsByMaterial.empty()) {
-
+  if (dotsByMaterial.empty())
+  {
     // Get positions and material one cell at a time (using PseudoSceneFor3DRectMeshPositions).
     // The pseudo scene allows a "private" descent into the parameterisation.
     // Instantiate a temporary G4PhysicalVolumeModel
@@ -1509,18 +1643,15 @@ void G4VSceneHandler::Draw3DRectMeshAsDots(const G4Mesh& mesh)
     tmpMP.SetCulling(true);  // This avoids drawing transparent...
     tmpMP.SetCullingInvisible(true);  // ... or invisble volumes.
     const G4bool useFullExtent = true;  // To avoid calculating the extent
-    G4PhysicalVolumeModel tmpPVModel
-    (container,
-     G4PhysicalVolumeModel::UNLIMITED,
-     G4Transform3D(),  // so that positions are in local coordinates
-     &tmpMP,
-     useFullExtent);
+    G4PhysicalVolumeModel tmpPVModel(container, G4PhysicalVolumeModel::UNLIMITED,
+                                     G4Transform3D(),  // so that positions are in local coordinates
+                                     &tmpMP, useFullExtent);
     // Accumulate information in temporary maps by material
-    std::multimap<const G4Material*,const G4ThreeVector> positionByMaterial;
-    std::map<const G4Material*,G4VSceneHandler::NameAndVisAtts> nameAndVisAttsByMaterial;
+    std::multimap<const G4Material*, const G4ThreeVector> positionByMaterial;
+    std::map<const G4Material*, G4VSceneHandler::NameAndVisAtts> nameAndVisAttsByMaterial;
     // Instantiate the pseudo scene
-    PseudoSceneFor3DRectMeshPositions pseudoScene
-    (&tmpPVModel,&mesh,positionByMaterial,nameAndVisAttsByMaterial);
+    PseudoSceneFor3DRectMeshPositions pseudoScene(&tmpPVModel, &mesh, positionByMaterial,
+                                                  nameAndVisAttsByMaterial);
     // Make private descent into the parameterisation
     tmpPVModel.DescribeYourselfTo(pseudoScene);
     // Now we have a map of positions by material.
@@ -1533,7 +1664,8 @@ void G4VSceneHandler::Draw3DRectMeshAsDots(const G4Mesh& mesh)
 
     // Fill the permanent (static) map of dots by material
     G4int nDotsTotal = 0;
-    for (const auto& entry: nameAndVisAttsByMaterial) {
+    for (const auto& entry : nameAndVisAttsByMaterial)
+    {
       G4int nDots = 0;
       const auto& material = entry.first;
       const auto& nameAndVisAtts = nameAndVisAttsByMaterial[material];
@@ -1548,24 +1680,25 @@ void G4VSceneHandler::Draw3DRectMeshAsDots(const G4Mesh& mesh)
       // Now fill it in situ
       auto& dotsInMap = dotsByMaterial[material];
       const auto& range = positionByMaterial.equal_range(material);
-      for (auto posByMat = range.first; posByMat != range.second; ++posByMat) {
+      for (auto posByMat = range.first; posByMat != range.second; ++posByMat)
+      {
         dotsInMap.push_back(GetPointInBox(posByMat->second, halfX, halfY, halfZ));
         ++nDots;
       }
 
-      if (print) {
-        G4cout
-        << std::setw(30) << std::left << name.substr(0,30) << std::right
-        << ": " << std::setw(7) << nDots << " dots"
-        << ": colour " << std::fixed << std::setprecision(2)
-        << visAtts.GetColour() << std::defaultfloat
-        << G4endl;
+      if (print)
+      {
+        G4cout << std::setw(30) << std::left << name.substr(0, 30) << std::right << ": "
+               << std::setw(7) << nDots << " dots"
+               << ": colour " << std::fixed << std::setprecision(2) << visAtts.GetColour()
+               << std::defaultfloat << G4endl;
       }
 
       nDotsTotal += nDots;
     }
 
-    if (print) {
+    if (print)
+    {
       G4cout << "Total number of dots: " << nDotsTotal << G4endl;
     }
   }
@@ -1574,7 +1707,8 @@ void G4VSceneHandler::Draw3DRectMeshAsDots(const G4Mesh& mesh)
   auto pPVModel = dynamic_cast<G4PhysicalVolumeModel*>(fpModel);
 
   G4String parameterisationName;
-  if (pPVModel) {
+  if (pPVModel)
+  {
     parameterisationName = pPVModel->GetFullPVPath().back().GetPhysicalVolume()->GetName();
   }
 
@@ -1585,15 +1719,17 @@ void G4VSceneHandler::Draw3DRectMeshAsDots(const G4Mesh& mesh)
   vp.SetMarkerHidden();
   fpViewer->SetViewParameters(vp);
   // Now we transform to world coordinates
-  BeginPrimitives (mesh.GetTransform());
-  for (const auto& entry: dotsByMaterial) {
+  BeginPrimitives(mesh.GetTransform());
+  for (const auto& entry : dotsByMaterial)
+  {
     const auto& dots = entry.second;
     // The current "leaf" node in the PVPath is the parameterisation. Here it has
     // been converted into polymarkers by material. So...temporarily...change
     // its name to that of the material (whose name has been stored in Info)
     // so that its appearance in the scene tree of, e.g., G4OpenGLQtViewer, has
     // an appropriate name and its visibility and colour may be changed.
-    if (pPVModel) {
+    if (pPVModel)
+    {
       const auto& fullPVPath = pPVModel->GetFullPVPath();
       auto leafPV = fullPVPath.back().GetPhysicalVolume();
       leafPV->SetName(dots.GetInfo());
@@ -1601,11 +1737,12 @@ void G4VSceneHandler::Draw3DRectMeshAsDots(const G4Mesh& mesh)
     // Add dots to the scene
     AddPrimitive(dots);
   }
-  EndPrimitives ();
+  EndPrimitives();
   // Restore view parameters
   fpViewer->SetViewParameters(keepVP);
   // Restore parameterisation name
-  if (pPVModel) {
+  if (pPVModel)
+  {
     pPVModel->GetFullPVPath().back().GetPhysicalVolume()->SetName(parameterisationName);
   }
 
@@ -1618,33 +1755,33 @@ void G4VSceneHandler::Draw3DRectMeshAsSurfaces(const G4Mesh& mesh)
 // with inner shared faces removed.
 {
   // Check
-  if (mesh.GetMeshType() != G4Mesh::rectangle &&
-      mesh.GetMeshType() != G4Mesh::nested3DRectangular) {
+  if (mesh.GetMeshType() != G4Mesh::rectangle && mesh.GetMeshType() != G4Mesh::nested3DRectangular)
+  {
     G4ExceptionDescription ed;
     ed << "Called with a mesh that is not rectangular:" << mesh;
-    G4Exception("G4VSceneHandler::Draw3DRectMeshAsSurfaces","visman0108",JustWarning,ed);
+    G4Exception("G4VSceneHandler::Draw3DRectMeshAsSurfaces", "visman0108", JustWarning, ed);
     return;
   }
 
   static G4bool firstPrint = true;
   const auto& verbosity = G4VisManager::GetVerbosity();
   G4bool print = firstPrint && verbosity >= G4VisManager::errors;
-  if (print) {
-    G4cout
-    << "Special case drawing of 3D rectangular G4VNestedParameterisation as surfaces:"
-    << '\n' << mesh
-    << G4endl;
+  if (print)
+  {
+    G4cout << "Special case drawing of 3D rectangular G4VNestedParameterisation as surfaces:"
+           << '\n'
+           << mesh << G4endl;
   }
 
   const auto& container = mesh.GetContainerVolume();
 
   // This map is static so that once filled it stays filled.
-  static std::map<G4String,std::map<const G4Material*,G4Polyhedron>> boxesByMaterialAndMesh;
+  static std::map<G4String, std::map<const G4Material*, G4Polyhedron>> boxesByMaterialAndMesh;
   auto& boxesByMaterial = boxesByMaterialAndMesh[mesh.GetContainerVolume()->GetName()];
 
   // Fill map if not already filled
-  if (boxesByMaterial.empty()) {
-
+  if (boxesByMaterial.empty())
+  {
     // Get positions and material one cell at a time (using PseudoSceneFor3DRectMeshPositions).
     // The pseudo scene allows a "private" descent into the parameterisation.
     // Instantiate a temporary G4PhysicalVolumeModel
@@ -1652,31 +1789,29 @@ void G4VSceneHandler::Draw3DRectMeshAsSurfaces(const G4Mesh& mesh)
     tmpMP.SetCulling(true);  // This avoids drawing transparent...
     tmpMP.SetCullingInvisible(true);  // ... or invisble volumes.
     const G4bool useFullExtent = true;  // To avoid calculating the extent
-    G4PhysicalVolumeModel tmpPVModel
-    (container,
-     G4PhysicalVolumeModel::UNLIMITED,
-     G4Transform3D(),  // so that positions are in local coordinates
-     &tmpMP,
-     useFullExtent);
+    G4PhysicalVolumeModel tmpPVModel(container, G4PhysicalVolumeModel::UNLIMITED,
+                                     G4Transform3D(),  // so that positions are in local coordinates
+                                     &tmpMP, useFullExtent);
     // Accumulate information in temporary maps by material
-    std::multimap<const G4Material*,const G4ThreeVector> positionByMaterial;
-    std::map<const G4Material*,G4VSceneHandler::NameAndVisAtts> nameAndVisAttsByMaterial;
+    std::multimap<const G4Material*, const G4ThreeVector> positionByMaterial;
+    std::map<const G4Material*, G4VSceneHandler::NameAndVisAtts> nameAndVisAttsByMaterial;
     // Instantiate the pseudo scene
-    PseudoSceneFor3DRectMeshPositions pseudoScene
-    (&tmpPVModel,&mesh,positionByMaterial,nameAndVisAttsByMaterial);
+    PseudoSceneFor3DRectMeshPositions pseudoScene(&tmpPVModel, &mesh, positionByMaterial,
+                                                  nameAndVisAttsByMaterial);
     // Make private descent into the parameterisation
     tmpPVModel.DescribeYourselfTo(pseudoScene);
     // Now we have a map of positions by material.
     // Also a map of name and colour by material.
 
     const auto& prms = mesh.GetThreeDRectParameters();
-    const auto& sizeX = 2.*prms.fHalfX;
-    const auto& sizeY = 2.*prms.fHalfY;
-    const auto& sizeZ = 2.*prms.fHalfZ;
+    const auto& sizeX = 2. * prms.fHalfX;
+    const auto& sizeY = 2. * prms.fHalfY;
+    const auto& sizeZ = 2. * prms.fHalfZ;
 
     // Fill the permanent (static) map of boxes by material
     G4int nBoxesTotal = 0, nFacetsTotal = 0;
-    for (const auto& entry: nameAndVisAttsByMaterial) {
+    for (const auto& entry : nameAndVisAttsByMaterial)
+    {
       G4int nBoxes = 0;
       const auto& material = entry.first;
       const auto& nameAndVisAtts = nameAndVisAttsByMaterial[material];
@@ -1685,7 +1820,8 @@ void G4VSceneHandler::Draw3DRectMeshAsSurfaces(const G4Mesh& mesh)
       // Transfer positions into a vector ready for creating polyhedral surface
       std::vector<G4ThreeVector> positionsForPolyhedron;
       const auto& range = positionByMaterial.equal_range(material);
-      for (auto posByMat = range.first; posByMat != range.second; ++posByMat) {
+      for (auto posByMat = range.first; posByMat != range.second; ++posByMat)
+      {
         const auto& position = posByMat->second;
         positionsForPolyhedron.push_back(position);
         ++nBoxes;
@@ -1694,31 +1830,30 @@ void G4VSceneHandler::Draw3DRectMeshAsSurfaces(const G4Mesh& mesh)
       // Add an empty place-holder to the map and get a reference to it
       auto& polyhedron = boxesByMaterial[material];
       // Replace with the desired polyhedron (uses efficient "move assignment")
-      polyhedron = G4PolyhedronBoxMesh(sizeX,sizeY,sizeZ,positionsForPolyhedron);
+      polyhedron = G4PolyhedronBoxMesh(sizeX, sizeY, sizeZ, positionsForPolyhedron);
       polyhedron.SetVisAttributes(visAtts);
       polyhedron.SetInfo(name);
 
-      if (print) {
-        G4cout
-        << std::setw(30) << std::left << name.substr(0,30) << std::right
-        << ": " << std::setw(7) << nBoxes << " boxes"
-        << " (" << std::setw(7) << 6*nBoxes << " faces)"
-        << ": reduced to " << std::setw(7) << polyhedron.GetNoFacets() << " facets ("
-        << std::setw(2) << std::fixed << std::setprecision(2) << 100*polyhedron.GetNoFacets()/(6*nBoxes)
-        << "%): colour " << std::fixed << std::setprecision(2)
-        << visAtts.GetColour() << std::defaultfloat
-        << G4endl;
+      if (print)
+      {
+        G4cout << std::setw(30) << std::left << name.substr(0, 30) << std::right << ": "
+               << std::setw(7) << nBoxes << " boxes"
+               << " (" << std::setw(7) << 6 * nBoxes << " faces)"
+               << ": reduced to " << std::setw(7) << polyhedron.GetNoFacets() << " facets ("
+               << std::setw(2) << std::fixed << std::setprecision(2)
+               << 100 * polyhedron.GetNoFacets() / (6 * nBoxes) << "%): colour " << std::fixed
+               << std::setprecision(2) << visAtts.GetColour() << std::defaultfloat << G4endl;
       }
 
       nBoxesTotal += nBoxes;
       nFacetsTotal += polyhedron.GetNoFacets();
     }
 
-    if (print) {
-      G4cout << "Total number of boxes: " << nBoxesTotal << " (" << 6*nBoxesTotal << " faces)"
-      << ": reduced to " << nFacetsTotal << " facets ("
-      << std::setw(2) << std::fixed << std::setprecision(2) << 100*nFacetsTotal/(6*nBoxesTotal) << "%)"
-      << G4endl;
+    if (print)
+    {
+      G4cout << "Total number of boxes: " << nBoxesTotal << " (" << 6 * nBoxesTotal << " faces)"
+             << ": reduced to " << nFacetsTotal << " facets (" << std::setw(2) << std::fixed
+             << std::setprecision(2) << 100 * nFacetsTotal / (6 * nBoxesTotal) << "%)" << G4endl;
     }
   }
 
@@ -1726,30 +1861,34 @@ void G4VSceneHandler::Draw3DRectMeshAsSurfaces(const G4Mesh& mesh)
   auto pPVModel = dynamic_cast<G4PhysicalVolumeModel*>(fpModel);
 
   G4String parameterisationName;
-  if (pPVModel) {
+  if (pPVModel)
+  {
     parameterisationName = pPVModel->GetFullPVPath().back().GetPhysicalVolume()->GetName();
   }
 
   // Draw the boxes by material
   // Now we transform to world coordinates
-  BeginPrimitives (mesh.GetTransform());
-  for (const auto& entry: boxesByMaterial) {
+  BeginPrimitives(mesh.GetTransform());
+  for (const auto& entry : boxesByMaterial)
+  {
     const auto& poly = entry.second;
     // The current "leaf" node in the PVPath is the parameterisation. Here it has
     // been converted into polyhedra by material. So...temporarily...change
     // its name to that of the material (whose name has been stored in Info)
     // so that its appearance in the scene tree of, e.g., G4OpenGLQtViewer, has
     // an appropriate name and its visibility and colour may be changed.
-    if (pPVModel) {
+    if (pPVModel)
+    {
       const auto& fullPVPath = pPVModel->GetFullPVPath();
       auto leafPV = fullPVPath.back().GetPhysicalVolume();
       leafPV->SetName(poly.GetInfo());
     }
     AddPrimitive(poly);
   }
-  EndPrimitives ();
+  EndPrimitives();
   // Restore parameterisation name
-  if (pPVModel) {
+  if (pPVModel)
+  {
     pPVModel->GetFullPVPath().back().GetPhysicalVolume()->SetName(parameterisationName);
   }
 
@@ -1762,10 +1901,11 @@ void G4VSceneHandler::DrawTetMeshAsDots(const G4Mesh& mesh)
 // one dot randomly placed in each visible mesh cell.
 {
   // Check
-  if (mesh.GetMeshType() != G4Mesh::tetrahedron) {
+  if (mesh.GetMeshType() != G4Mesh::tetrahedron)
+  {
     G4ExceptionDescription ed;
     ed << "Called with mesh that is not a tetrahedron mesh:" << mesh;
-    G4Exception("G4VSceneHandler::DrawTetMeshAsDots","visman0108",JustWarning,ed);
+    G4Exception("G4VSceneHandler::DrawTetMeshAsDots", "visman0108", JustWarning, ed);
     return;
   }
 
@@ -1773,22 +1913,20 @@ void G4VSceneHandler::DrawTetMeshAsDots(const G4Mesh& mesh)
   const auto& verbosity = G4VisManager::GetVerbosity();
   G4bool print = firstPrint && verbosity >= G4VisManager::errors;
 
-  if (print) {
-    G4cout
-    << "Special case drawing of tetrahedron mesh as dots"
-    << '\n' << mesh
-    << G4endl;
+  if (print)
+  {
+    G4cout << "Special case drawing of tetrahedron mesh as dots" << '\n' << mesh << G4endl;
   }
 
   const auto& container = mesh.GetContainerVolume();
 
   // This map is static so that once filled it stays filled.
-  static std::map<G4String,std::map<const G4Material*,G4Polymarker>> dotsByMaterialAndMesh;
+  static std::map<G4String, std::map<const G4Material*, G4Polymarker>> dotsByMaterialAndMesh;
   auto& dotsByMaterial = dotsByMaterialAndMesh[mesh.GetContainerVolume()->GetName()];
 
   // Fill map if not already filled
-  if (dotsByMaterial.empty()) {
-
+  if (dotsByMaterial.empty())
+  {
     // Get vertices and colour one cell at a time (using PseudoSceneForTetVertices).
     // The pseudo scene allows a "private" descent into the parameterisation.
     // Instantiate a temporary G4PhysicalVolumeModel
@@ -1796,18 +1934,15 @@ void G4VSceneHandler::DrawTetMeshAsDots(const G4Mesh& mesh)
     tmpMP.SetCulling(true);  // This avoids drawing transparent...
     tmpMP.SetCullingInvisible(true);  // ... or invisble volumes.
     const G4bool useFullExtent = true;  // To avoid calculating the extent
-    G4PhysicalVolumeModel tmpPVModel
-    (container,
-     G4PhysicalVolumeModel::UNLIMITED,
-     G4Transform3D(),  // so that positions are in local coordinates
-     &tmpMP,
-     useFullExtent);
+    G4PhysicalVolumeModel tmpPVModel(container, G4PhysicalVolumeModel::UNLIMITED,
+                                     G4Transform3D(),  // so that positions are in local coordinates
+                                     &tmpMP, useFullExtent);
     // Accumulate information in temporary maps by material
-    std::multimap<const G4Material*,std::vector<G4ThreeVector>> verticesByMaterial;
-    std::map<const G4Material*,G4VSceneHandler::NameAndVisAtts> nameAndVisAttsByMaterial;
+    std::multimap<const G4Material*, std::vector<G4ThreeVector>> verticesByMaterial;
+    std::map<const G4Material*, G4VSceneHandler::NameAndVisAtts> nameAndVisAttsByMaterial;
     // Instantiate a pseudo scene
-    PseudoSceneForTetVertices pseudoScene
-    (&tmpPVModel,&mesh,verticesByMaterial,nameAndVisAttsByMaterial);
+    PseudoSceneForTetVertices pseudoScene(&tmpPVModel, &mesh, verticesByMaterial,
+                                          nameAndVisAttsByMaterial);
     // Make private descent into the parameterisation
     tmpPVModel.DescribeYourselfTo(pseudoScene);
     // Now we have a map of vertices by material.
@@ -1815,7 +1950,8 @@ void G4VSceneHandler::DrawTetMeshAsDots(const G4Mesh& mesh)
 
     // Fill the permanent (static) map of dots by material
     G4int nDotsTotal = 0;
-    for (const auto& entry: nameAndVisAttsByMaterial) {
+    for (const auto& entry : nameAndVisAttsByMaterial)
+    {
       G4int nDots = 0;
       const auto& material = entry.first;
       const auto& nameAndVisAtts = nameAndVisAttsByMaterial[material];
@@ -1830,24 +1966,25 @@ void G4VSceneHandler::DrawTetMeshAsDots(const G4Mesh& mesh)
       // Now fill it in situ
       auto& dotsInMap = dotsByMaterial[material];
       const auto& range = verticesByMaterial.equal_range(material);
-      for (auto vByMat = range.first; vByMat != range.second; ++vByMat) {
+      for (auto vByMat = range.first; vByMat != range.second; ++vByMat)
+      {
         dotsInMap.push_back(GetPointInTet(vByMat->second));
         ++nDots;
       }
 
-      if (print) {
-        G4cout
-        << std::setw(30) << std::left << name.substr(0,30) << std::right
-        << ": " << std::setw(7) << nDots << " dots"
-        << ": colour " << std::fixed << std::setprecision(2)
-        << visAtts.GetColour() << std::defaultfloat
-        << G4endl;
+      if (print)
+      {
+        G4cout << std::setw(30) << std::left << name.substr(0, 30) << std::right << ": "
+               << std::setw(7) << nDots << " dots"
+               << ": colour " << std::fixed << std::setprecision(2) << visAtts.GetColour()
+               << std::defaultfloat << G4endl;
       }
 
       nDotsTotal += nDots;
     }
 
-    if (print) {
+    if (print)
+    {
       G4cout << "Total number of dots: " << nDotsTotal << G4endl;
     }
   }
@@ -1856,7 +1993,8 @@ void G4VSceneHandler::DrawTetMeshAsDots(const G4Mesh& mesh)
   auto pPVModel = dynamic_cast<G4PhysicalVolumeModel*>(fpModel);
 
   G4String parameterisationName;
-  if (pPVModel) {
+  if (pPVModel)
+  {
     parameterisationName = pPVModel->GetFullPVPath().back().GetPhysicalVolume()->GetName();
   }
 
@@ -1868,27 +2006,30 @@ void G4VSceneHandler::DrawTetMeshAsDots(const G4Mesh& mesh)
   fpViewer->SetViewParameters(vp);
 
   // Now we transform to world coordinates
-  BeginPrimitives (mesh.GetTransform());
-  for (const auto& entry: dotsByMaterial) {
+  BeginPrimitives(mesh.GetTransform());
+  for (const auto& entry : dotsByMaterial)
+  {
     const auto& dots = entry.second;
     // The current "leaf" node in the PVPath is the parameterisation. Here it has
     // been converted into polymarkers by material. So...temporarily...change
     // its name to that of the material (whose name has been stored in Info)
     // so that its appearance in the scene tree of, e.g., G4OpenGLQtViewer, has
     // an appropriate name and its visibility and colour may be changed.
-    if (pPVModel) {
+    if (pPVModel)
+    {
       const auto& fullPVPath = pPVModel->GetFullPVPath();
       auto leafPV = fullPVPath.back().GetPhysicalVolume();
       leafPV->SetName(dots.GetInfo());
     }
     AddPrimitive(dots);
   }
-  EndPrimitives ();
+  EndPrimitives();
 
   // Restore view parameters
   fpViewer->SetViewParameters(keepVP);
   // Restore parameterisation name
-  if (pPVModel) {
+  if (pPVModel)
+  {
     pPVModel->GetFullPVPath().back().GetPhysicalVolume()->SetName(parameterisationName);
   }
 
@@ -1901,10 +2042,11 @@ void G4VSceneHandler::DrawTetMeshAsSurfaces(const G4Mesh& mesh)
 // with inner shared faces removed.
 {
   // Check
-  if (mesh.GetMeshType() != G4Mesh::tetrahedron) {
+  if (mesh.GetMeshType() != G4Mesh::tetrahedron)
+  {
     G4ExceptionDescription ed;
     ed << "Called with mesh that is not a tetrahedron mesh:" << mesh;
-    G4Exception("G4VSceneHandler::DrawTetMeshAsSurfaces","visman0108",JustWarning,ed);
+    G4Exception("G4VSceneHandler::DrawTetMeshAsSurfaces", "visman0108", JustWarning, ed);
     return;
   }
 
@@ -1912,20 +2054,18 @@ void G4VSceneHandler::DrawTetMeshAsSurfaces(const G4Mesh& mesh)
   const auto& verbosity = G4VisManager::GetVerbosity();
   G4bool print = firstPrint && verbosity >= G4VisManager::errors;
 
-  if (print) {
-    G4cout
-    << "Special case drawing of tetrahedron mesh as surfaces"
-    << '\n' << mesh
-    << G4endl;
+  if (print)
+  {
+    G4cout << "Special case drawing of tetrahedron mesh as surfaces" << '\n' << mesh << G4endl;
   }
 
   // This map is static so that once filled it stays filled.
-  static std::map<G4String,std::map<const G4Material*,G4Polyhedron>> surfacesByMaterialAndMesh;
+  static std::map<G4String, std::map<const G4Material*, G4Polyhedron>> surfacesByMaterialAndMesh;
   auto& surfacesByMaterial = surfacesByMaterialAndMesh[mesh.GetContainerVolume()->GetName()];
 
   // Fill map if not already filled
-  if (surfacesByMaterial.empty()) {
-
+  if (surfacesByMaterial.empty())
+  {
     // Get vertices and colour one cell at a time (using PseudoSceneForTetVertices).
     // The pseudo scene allows a "private" descent into the parameterisation.
     // Instantiate a temporary G4PhysicalVolumeModel
@@ -1933,18 +2073,15 @@ void G4VSceneHandler::DrawTetMeshAsSurfaces(const G4Mesh& mesh)
     tmpMP.SetCulling(true);  // This avoids drawing transparent...
     tmpMP.SetCullingInvisible(true);  // ... or invisble volumes.
     const G4bool useFullExtent = true;  // To avoid calculating the extent
-    G4PhysicalVolumeModel tmpPVModel
-    (mesh.GetContainerVolume(),
-     G4PhysicalVolumeModel::UNLIMITED,
-     G4Transform3D(),  // so that positions are in local coordinates
-     &tmpMP,
-     useFullExtent);
+    G4PhysicalVolumeModel tmpPVModel(mesh.GetContainerVolume(), G4PhysicalVolumeModel::UNLIMITED,
+                                     G4Transform3D(),  // so that positions are in local coordinates
+                                     &tmpMP, useFullExtent);
     // Accumulate information in temporary maps by material
-    std::multimap<const G4Material*,std::vector<G4ThreeVector>> verticesByMaterial;
-    std::map<const G4Material*,G4VSceneHandler::NameAndVisAtts> nameAndVisAttsByMaterial;
+    std::multimap<const G4Material*, std::vector<G4ThreeVector>> verticesByMaterial;
+    std::map<const G4Material*, G4VSceneHandler::NameAndVisAtts> nameAndVisAttsByMaterial;
     // Instantiate a pseudo scene
-    PseudoSceneForTetVertices pseudoScene
-    (&tmpPVModel,&mesh,verticesByMaterial,nameAndVisAttsByMaterial);
+    PseudoSceneForTetVertices pseudoScene(&tmpPVModel, &mesh, verticesByMaterial,
+                                          nameAndVisAttsByMaterial);
     // Make private descent into the parameterisation
     tmpPVModel.DescribeYourselfTo(pseudoScene);
     // Now we have a map of vertices by material.
@@ -1952,7 +2089,8 @@ void G4VSceneHandler::DrawTetMeshAsSurfaces(const G4Mesh& mesh)
 
     // Fill the permanent (static) map of surfaces by material
     G4int nTetsTotal = 0, nFacetsTotal = 0;
-    for (const auto& entry: nameAndVisAttsByMaterial) {
+    for (const auto& entry : nameAndVisAttsByMaterial)
+    {
       G4int nTets = 0;
       const auto& material = entry.first;
       const auto& nameAndVisAtts = nameAndVisAttsByMaterial[material];
@@ -1961,9 +2099,10 @@ void G4VSceneHandler::DrawTetMeshAsSurfaces(const G4Mesh& mesh)
       // Transfer vertices into a vector ready for creating polyhedral surface
       std::vector<G4ThreeVector> verticesForPolyhedron;
       const auto& range = verticesByMaterial.equal_range(material);
-      for (auto vByMat = range.first; vByMat != range.second; ++vByMat) {
+      for (auto vByMat = range.first; vByMat != range.second; ++vByMat)
+      {
         const std::vector<G4ThreeVector>& vertices = vByMat->second;
-        for (const auto& vertex: vertices)
+        for (const auto& vertex : vertices)
           verticesForPolyhedron.push_back(vertex);
         ++nTets;
       }
@@ -1975,27 +2114,26 @@ void G4VSceneHandler::DrawTetMeshAsSurfaces(const G4Mesh& mesh)
       polyhedron.SetVisAttributes(visAtts);
       polyhedron.SetInfo(name);
 
-      if (print) {
-        G4cout
-        << std::setw(30) << std::left << name.substr(0,30) << std::right
-        << ": " << std::setw(7) << nTets << " tetrahedra"
-        << " (" << std::setw(7) << 4*nTets << " faces)"
-        << ": reduced to " << std::setw(7) << polyhedron.GetNoFacets() << " facets ("
-        << std::setw(2) << std::fixed << std::setprecision(2) << 100*polyhedron.GetNoFacets()/(4*nTets)
-        << "%): colour " << std::fixed << std::setprecision(2)
-        << visAtts.GetColour() << std::defaultfloat
-        << G4endl;
-     }
+      if (print)
+      {
+        G4cout << std::setw(30) << std::left << name.substr(0, 30) << std::right << ": "
+               << std::setw(7) << nTets << " tetrahedra"
+               << " (" << std::setw(7) << 4 * nTets << " faces)"
+               << ": reduced to " << std::setw(7) << polyhedron.GetNoFacets() << " facets ("
+               << std::setw(2) << std::fixed << std::setprecision(2)
+               << 100 * polyhedron.GetNoFacets() / (4 * nTets) << "%): colour " << std::fixed
+               << std::setprecision(2) << visAtts.GetColour() << std::defaultfloat << G4endl;
+      }
 
       nTetsTotal += nTets;
       nFacetsTotal += polyhedron.GetNoFacets();
     }
 
-    if (print) {
-      G4cout << "Total number of tetrahedra: " << nTetsTotal << " (" << 4*nTetsTotal << " faces)"
-      << ": reduced to " << nFacetsTotal << " facets ("
-      << std::setw(2) << std::fixed << std::setprecision(2) << 100*nFacetsTotal/(4*nTetsTotal) << "%)"
-      << G4endl;
+    if (print)
+    {
+      G4cout << "Total number of tetrahedra: " << nTetsTotal << " (" << 4 * nTetsTotal << " faces)"
+             << ": reduced to " << nFacetsTotal << " facets (" << std::setw(2) << std::fixed
+             << std::setprecision(2) << 100 * nFacetsTotal / (4 * nTetsTotal) << "%)" << G4endl;
     }
   }
 
@@ -2003,31 +2141,35 @@ void G4VSceneHandler::DrawTetMeshAsSurfaces(const G4Mesh& mesh)
   auto pPVModel = dynamic_cast<G4PhysicalVolumeModel*>(fpModel);
 
   G4String parameterisationName;
-  if (pPVModel) {
+  if (pPVModel)
+  {
     parameterisationName = pPVModel->GetFullPVPath().back().GetPhysicalVolume()->GetName();
   }
 
   // Draw the surfaces by material
   // Now we transform to world coordinates
-  BeginPrimitives (mesh.GetTransform());
-  for (const auto& entry: surfacesByMaterial) {
+  BeginPrimitives(mesh.GetTransform());
+  for (const auto& entry : surfacesByMaterial)
+  {
     const auto& poly = entry.second;
     // The current "leaf" node in the PVPath is the parameterisation. Here it has
     // been converted into polyhedra by material. So...temporarily...change
     // its name to that of the material (whose name has been stored in Info)
     // so that its appearance in the scene tree of, e.g., G4OpenGLQtViewer, has
     // an appropriate name and its visibility and colour may be changed.
-    if (pPVModel) {
+    if (pPVModel)
+    {
       const auto& fullPVPath = pPVModel->GetFullPVPath();
       auto leafPV = fullPVPath.back().GetPhysicalVolume();
       leafPV->SetName(poly.GetInfo());
     }
     AddPrimitive(poly);
   }
-  EndPrimitives ();
+  EndPrimitives();
 
   // Restore parameterisation name
-  if (pPVModel) {
+  if (pPVModel)
+  {
     pPVModel->GetFullPVPath().back().GetPhysicalVolume()->SetName(parameterisationName);
   }
 
@@ -2035,20 +2177,16 @@ void G4VSceneHandler::DrawTetMeshAsSurfaces(const G4Mesh& mesh)
   return;
 }
 
-G4ThreeVector
-G4VSceneHandler::GetPointInBox(const G4ThreeVector& pos,
-                               G4double halfX,
-                               G4double halfY,
-                               G4double halfZ) const
+G4ThreeVector G4VSceneHandler::GetPointInBox(const G4ThreeVector& pos, G4double halfX,
+                                             G4double halfY, G4double halfZ) const
 {
-  G4double x = pos.getX() + (2.*G4QuickRand() - 1.)*halfX;
-  G4double y = pos.getY() + (2.*G4QuickRand() - 1.)*halfY;
-  G4double z = pos.getZ() + (2.*G4QuickRand() - 1.)*halfZ;
+  G4double x = pos.getX() + (2. * G4QuickRand() - 1.) * halfX;
+  G4double y = pos.getY() + (2. * G4QuickRand() - 1.) * halfY;
+  G4double z = pos.getZ() + (2. * G4QuickRand() - 1.) * halfZ;
   return G4ThreeVector(x, y, z);
 }
 
-G4ThreeVector
-G4VSceneHandler::GetPointInTet(const std::vector<G4ThreeVector>& vertices) const
+G4ThreeVector G4VSceneHandler::GetPointInTet(const std::vector<G4ThreeVector>& vertices) const
 {
   G4double p = G4QuickRand();
   G4double q = G4QuickRand();
@@ -2071,5 +2209,5 @@ G4VSceneHandler::GetPointInTet(const std::vector<G4ThreeVector>& vertices) const
     p = 1. - q - tmp;
   }
   G4double a = 1. - p - q - r;
-  return vertices[0]*a + vertices[1]*p + vertices[2]*q + vertices[3]*r;
+  return vertices[0] * a + vertices[1] * p + vertices[2] * q + vertices[3] * r;
 }

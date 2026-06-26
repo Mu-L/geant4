@@ -37,25 +37,24 @@
 //----------------------------------------------------------------------------
 //
 #include "G4PrecoNeutronBuilder.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4NeutronInelasticXS.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4NeutronInelasticXS.hh"
+#include "G4SystemOfUnits.hh"
 
-G4PrecoNeutronBuilder::
-G4PrecoNeutronBuilder() 
+G4PrecoNeutronBuilder::G4PrecoNeutronBuilder()
 {
   theMin = 0;
-  theMax = 170.*MeV;
+  theMax = 170. * MeV;
   theModel = new G4PreCompoundModel(new G4ExcitationHandler);
 }
 
-void G4PrecoNeutronBuilder::
-Build(G4HadronInelasticProcess * aP)
+void G4PrecoNeutronBuilder::Build(G4HadronInelasticProcess* aP)
 {
   theModel->SetMinEnergy(theMin);
   theModel->SetMaxEnergy(theMax);
   aP->RegisterMe(theModel);
-  aP->AddDataSet(new G4NeutronInelasticXS);  
+  aP->AddDataSet(new G4NeutronInelasticXS);
 }

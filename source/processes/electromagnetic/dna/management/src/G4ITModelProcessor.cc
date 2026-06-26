@@ -33,362 +33,340 @@
 // -------------------------------------------------------------------
 
 #include "G4ITModelProcessor.hh"
-#include "G4VITTimeStepComputer.hh"
-#include "G4VITReactionProcess.hh"
+
 #include "G4ITReaction.hh"
 #include "G4ITTrackHolder.hh"
 #include "G4ITTrackingManager.hh"
-#include "G4VITStepModel.hh"
-#include "G4UserTimeStepAction.hh"
-#include "G4UnitsTable.hh"
 #include "G4Scheduler.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4UnitsTable.hh"
+#include "G4UserTimeStepAction.hh"
+#include "G4VITReactionProcess.hh"
+#include "G4VITStepModel.hh"
+#include "G4VITTimeStepComputer.hh"
+
 #include <vector>
 
-//#define DEBUG_MEM
+// #define DEBUG_MEM
 
 #ifdef DEBUG_MEM
-#include "G4MemStat.hh"
+#  include "G4MemStat.hh"
 using namespace G4MemStat;
 #endif
 
 G4ITModelProcessor::G4ITModelProcessor()
 {
-    fpTrack = nullptr;
-    fInitialized = false;
-    fUserMinTimeStep = -1.;
-    fTSTimeStep = DBL_MAX;
-    fpTrackingManager = nullptr;
-    fReactionSet = nullptr;
-    fpTrackContainer = nullptr;
-    fpModelHandler = nullptr;
-    fpActiveModelWithMinTimeStep = nullptr;
-    fComputeTimeStep = false;
-    fComputeReaction = false;
+  fpTrack = nullptr;
+  fInitialized = false;
+  fUserMinTimeStep = -1.;
+  fTSTimeStep = DBL_MAX;
+  fpTrackingManager = nullptr;
+  fReactionSet = nullptr;
+  fpTrackContainer = nullptr;
+  fpModelHandler = nullptr;
+  fpActiveModelWithMinTimeStep = nullptr;
+  fComputeTimeStep = false;
+  fComputeReaction = false;
 }
 
 G4ITModelProcessor::~G4ITModelProcessor() = default;
 
 void G4ITModelProcessor::RegisterModel(double time, G4VITStepModel* model)
 {
-    fpModelHandler->RegisterModel(model, time);
+  fpModelHandler->RegisterModel(model, time);
 }
 
 void G4ITModelProcessor::Initialize()
 {
-    fpModelHandler->Initialize();
-    fReactionSet = G4ITReactionSet::Instance();
-    fpTrackContainer = G4ITTrackHolder::Instance();
-    fInitialized = true;
-    fComputeTimeStep = false;
-    fComputeReaction = false;
-    if (fpModelHandler->GetTimeStepComputerFlag())
-    {
-        fComputeTimeStep = true;
-    }
-    if (fpModelHandler->GetReactionProcessFlag())
-    {
-        fComputeReaction = true;
-    }
+  fpModelHandler->Initialize();
+  fReactionSet = G4ITReactionSet::Instance();
+  fpTrackContainer = G4ITTrackHolder::Instance();
+  fInitialized = true;
+  fComputeTimeStep = false;
+  fComputeReaction = false;
+  if (fpModelHandler->GetTimeStepComputerFlag())
+  {
+    fComputeTimeStep = true;
+  }
+  if (fpModelHandler->GetReactionProcessFlag())
+  {
+    fComputeReaction = true;
+  }
 }
 
 G4double G4ITModelProcessor::CalculateMinTimeStep(G4double currentGlobalTime,
                                                   G4double definedMinTimeStep)
 {
-
-#if defined (DEBUG_MEM) && defined (DEBUG_MEM_DETAILED_STEPPING)
-    MemStat mem_first, mem_second, mem_diff;
-    mem_first = MemoryUsage();
+#if defined(DEBUG_MEM) && defined(DEBUG_MEM_DETAILED_STEPPING)
+  MemStat mem_first, mem_second, mem_diff;
+  mem_first = MemoryUsage();
 #endif
 
-    fpActiveModelWithMinTimeStep = nullptr;
-    fTSTimeStep = DBL_MAX;
+  fpActiveModelWithMinTimeStep = nullptr;
+  fTSTimeStep = DBL_MAX;
 
-    InitializeStepper(currentGlobalTime, definedMinTimeStep);
+  InitializeStepper(currentGlobalTime, definedMinTimeStep);
 
-#if defined (DEBUG_MEM) && defined (DEBUG_MEM_DETAILED_STEPPING)
-    mem_second = MemoryUsage();
-    mem_diff = mem_second-mem_first;
-    G4cout << "\t || MEM || G4Scheduler::CalculateMinTimeStep || After "
-    "computing fpModelProcessor -> InitializeStepper, diff is : "
-    << mem_diff
-    << G4endl;
+#if defined(DEBUG_MEM) && defined(DEBUG_MEM_DETAILED_STEPPING)
+  mem_second = MemoryUsage();
+  mem_diff = mem_second - mem_first;
+  G4cout << "\t || MEM || G4Scheduler::CalculateMinTimeStep || After "
+            "computing fpModelProcessor -> InitializeStepper, diff is : "
+         << mem_diff << G4endl;
 #endif
 
-    for (auto& pStepModel : fActiveModels)
+  for (auto& pStepModel : fActiveModels)
+  {
+    fTSTimeStep =
+      pStepModel->GetTimeStepper()->CalculateMinTimeStep(currentGlobalTime, definedMinTimeStep);
+
+    fpActiveModelWithMinTimeStep = pStepModel;
+
+    if (fTSTimeStep == -1)
     {
-        fTSTimeStep =
-            pStepModel->GetTimeStepper()->CalculateMinTimeStep(
-                currentGlobalTime,
-                definedMinTimeStep);
-
-        fpActiveModelWithMinTimeStep = pStepModel;
-
-        if(fTSTimeStep == -1){
-            fpActiveModelWithMinTimeStep->GetReactionProcess()->Initialize();
-            if(fReactionSet->Empty()) return DBL_MAX;
-            const auto& fReactionSetInTime = fReactionSet->GetReactionsPerTime();
-            fTSTimeStep = fReactionSetInTime.begin()->get()->GetTime() - currentGlobalTime;
-        }
+      fpActiveModelWithMinTimeStep->GetReactionProcess()->Initialize();
+      if (fReactionSet->Empty()) return DBL_MAX;
+      const auto& fReactionSetInTime = fReactionSet->GetReactionsPerTime();
+      fTSTimeStep = fReactionSetInTime.begin()->get()->GetTime() - currentGlobalTime;
     }
+  }
 
-#if defined (DEBUG_MEM) && defined (DEBUG_MEM_DETAILED_STEPPING)
-    mem_second = MemoryUsage();
-    mem_diff = mem_second-mem_first;
-    G4cout << "\t || MEM || G4Scheduler::CalculateMinTimeStep || "
-    "After looping on tracks, diff is : " << mem_diff << G4endl;
+#if defined(DEBUG_MEM) && defined(DEBUG_MEM_DETAILED_STEPPING)
+  mem_second = MemoryUsage();
+  mem_diff = mem_second - mem_first;
+  G4cout << "\t || MEM || G4Scheduler::CalculateMinTimeStep || "
+            "After looping on tracks, diff is : "
+         << mem_diff << G4endl;
 #endif
-    return fTSTimeStep;
+  return fTSTimeStep;
 }
 
 //______________________________________________________________________________
 
-void G4ITModelProcessor::InitializeStepper(G4double currentGlobalTime,
-                                           G4double userMinTime)
+void G4ITModelProcessor::InitializeStepper(G4double currentGlobalTime, G4double userMinTime)
 {
-    G4VITTimeStepComputer::SetTimes(currentGlobalTime, userMinTime);
+  G4VITTimeStepComputer::SetTimes(currentGlobalTime, userMinTime);
 
-#if defined (DEBUG_MEM)
-    MemStat mem_first, mem_second, mem_diff;
-            mem_first = MemoryUsage();
+#if defined(DEBUG_MEM)
+  MemStat mem_first, mem_second, mem_diff;
+  mem_first = MemoryUsage();
 #endif
 
-    fActiveModels = fpModelHandler->GetActiveModels(currentGlobalTime);
+  fActiveModels = fpModelHandler->GetActiveModels(currentGlobalTime);
 
-    for (auto& pModel : fActiveModels)
-    {
-        pModel->PrepareNewTimeStep();
-    }
+  for (auto& pModel : fActiveModels)
+  {
+    pModel->PrepareNewTimeStep();
+  }
 
-#if defined (DEBUG_MEM)
-    mem_second = MemoryUsage();
-            mem_diff = mem_second-mem_first;
-            G4cout << "\t || MEM || G4ITModelProcessor::InitializeStepper || After computing stepper -> Prepare(), diff is : " << mem_diff << G4endl;
+#if defined(DEBUG_MEM)
+  mem_second = MemoryUsage();
+  mem_diff = mem_second - mem_first;
+  G4cout << "\t || MEM || G4ITModelProcessor::InitializeStepper || After computing stepper -> "
+            "Prepare(), diff is : "
+         << mem_diff << G4endl;
 #endif
-
 }
 
 //_________________________________________________________________________
 
-void G4ITModelProcessor::ComputeTrackReaction(G4ITStepStatus fITStepStatus,
-                                              G4double fGlobalTime,
+void G4ITModelProcessor::ComputeTrackReaction(G4ITStepStatus fITStepStatus, G4double fGlobalTime,
                                               G4double currentTimeStep,
                                               G4double /*previousTimeStep*/,
-                                              G4bool reachedUserTimeLimit,
-                                              G4double fTimeTolerance,
+                                              G4bool reachedUserTimeLimit, G4double fTimeTolerance,
                                               G4UserTimeStepAction* fpUserTimeStepAction,
                                               G4int
 #ifdef G4VERBOSE
-fVerbose
+                                                fVerbose
 #endif
 )
 {
-    if (fReactionSet->Empty())
+  if (fReactionSet->Empty())
+  {
+    return;
+  }
+
+  if (fITStepStatus == eCollisionBetweenTracks)
+  {
+    G4VITReactionProcess* pReactionProcess = fpActiveModelWithMinTimeStep->GetReactionProcess();
+    fReactionInfo = pReactionProcess->FindReaction(fReactionSet, currentTimeStep, fGlobalTime,
+                                                   reachedUserTimeLimit);
+
+    // TODO
+    // A ne faire uniquement si le temps choisis est celui calculé par le time stepper
+    // Sinon utiliser quelque chose comme : fModelProcessor->FindReaction(&fMainList);
+
+    for (auto& pChanges : fReactionInfo)
     {
-        return;
-    }
+      auto pTrackA = const_cast<G4Track*>(pChanges->GetTrackA());
+      auto pTrackB = const_cast<G4Track*>(pChanges->GetTrackB());
 
-    if (fITStepStatus == eCollisionBetweenTracks)
-    {
-        G4VITReactionProcess* pReactionProcess = fpActiveModelWithMinTimeStep->GetReactionProcess();
-        fReactionInfo = pReactionProcess->FindReaction(fReactionSet,
-                currentTimeStep,
-                fGlobalTime,
-                reachedUserTimeLimit);
+      if (pTrackA == nullptr || pTrackB == nullptr || pTrackA->GetTrackStatus() == fStopAndKill
+          || pTrackB->GetTrackStatus() == fStopAndKill)
+      {
+        continue;
+      }
 
-        // TODO
-        // A ne faire uniquement si le temps choisis est celui calculé par le time stepper
-        // Sinon utiliser quelque chose comme : fModelProcessor->FindReaction(&fMainList);
+      G4int nbSecondaries = pChanges->GetNumberOfSecondaries();
+      const std::vector<G4Track*>* productsVector = pChanges->GetfSecondary();
 
-        for (auto& pChanges : fReactionInfo)
+      if (fpUserTimeStepAction != nullptr)
+      {
+        fpUserTimeStepAction->UserReactionAction(*pTrackA, *pTrackB, productsVector);
+      }
+
+#ifdef G4VERBOSE
+      if (fVerbose != 0)
+      {
+        G4cout << "At time : " << std::setw(7) << G4BestUnit(fGlobalTime, "Time")
+               << " Reaction : " << GetIT(pTrackA)->GetName() << " (" << pTrackA->GetTrackID()
+               << ") + " << GetIT(pTrackB)->GetName() << " (" << pTrackB->GetTrackID() << ") -> ";
+      }
+#endif
+
+      if (nbSecondaries > 0)
+      {
+        for (int i = 0; i < nbSecondaries; ++i)
         {
-            auto pTrackA = const_cast<G4Track*>(pChanges->GetTrackA());
-            auto pTrackB = const_cast<G4Track*>(pChanges->GetTrackB());
-
-            if (pTrackA == nullptr
-                || pTrackB == nullptr
-                || pTrackA->GetTrackStatus() == fStopAndKill
-                || pTrackB->GetTrackStatus() == fStopAndKill)
-            {
-                continue;
-            }
-
-            G4int nbSecondaries = pChanges->GetNumberOfSecondaries();
-            const std::vector<G4Track*>* productsVector = pChanges->GetfSecondary();
-
-            if (fpUserTimeStepAction != nullptr)
-            {
-                fpUserTimeStepAction->UserReactionAction(*pTrackA,
-                                                         *pTrackB,
-                                                         productsVector);
-            }
-
 #ifdef G4VERBOSE
-            if (fVerbose != 0)
-            {
-                G4cout << "At time : " << std::setw(7) << G4BestUnit(fGlobalTime, "Time")
-                       << " Reaction : " << GetIT(pTrackA)->GetName() << " ("
-                       << pTrackA->GetTrackID() << ") + " << GetIT(pTrackB)->GetName() << " ("
-                       << pTrackB->GetTrackID() << ") -> ";
-            }
+          if ((fVerbose != 0) && i != 0)
+          {
+            G4cout << " + ";
+          }
 #endif
 
-            if (nbSecondaries > 0)
-            {
-                for (int i = 0; i < nbSecondaries; ++i)
-                {
-#ifdef G4VERBOSE
-                    if ((fVerbose != 0) && i != 0)
-                    {
-                        G4cout << " + ";
-                    }
-#endif
+          G4Track* secondary = (*productsVector)[i];  // changes->GetSecondary(i);
+          //                    fpTrackContainer->_PushTrack(secondary);
+          GetIT(secondary)->SetParentID(pTrackA->GetTrackID(), pTrackB->GetTrackID());
 
-                    G4Track* secondary = (*productsVector)[i]; //changes->GetSecondary(i);
-//                    fpTrackContainer->_PushTrack(secondary);
-                    GetIT(secondary)->SetParentID(pTrackA->GetTrackID(),
-                                                  pTrackB->GetTrackID());
+          if (secondary->GetGlobalTime() - fGlobalTime > fTimeTolerance)
+          {
+            G4ExceptionDescription exceptionDescription;
+            exceptionDescription << "The time of the secondary should not be bigger than the"
+                                    " current global time."
+                                 << " This may cause synchronization problem. If the process you"
+                                    " are using required "
+                                 << "such feature please contact the developers." << G4endl
+                                 << "The global time in the step manager : "
+                                 << G4BestUnit(fGlobalTime, "Time") << G4endl
+                                 << "The global time of the track : "
+                                 << G4BestUnit(secondary->GetGlobalTime(), "Time") << G4endl;
 
-                    if (secondary->GetGlobalTime() - fGlobalTime > fTimeTolerance)
-                    {
-                        G4ExceptionDescription exceptionDescription;
-                        exceptionDescription << "The time of the secondary should not be bigger than the"
-                                                " current global time."
-                                             << " This may cause synchronization problem. If the process you"
-                                                " are using required "
-                                             << "such feature please contact the developers." << G4endl
-                                             << "The global time in the step manager : "
-                                             << G4BestUnit(fGlobalTime, "Time")
-                                             << G4endl
-                                             << "The global time of the track : "
-                                             << G4BestUnit(secondary->GetGlobalTime(), "Time")
-                                             << G4endl;
-
-                        G4Exception("G4Scheduler::ComputeInteractionBetweenTracks",
-                                    "ITScheduler010",
-                                    FatalErrorInArgument,
-                                    exceptionDescription);
-                    }
+            G4Exception("G4Scheduler::ComputeInteractionBetweenTracks", "ITScheduler010",
+                        FatalErrorInArgument, exceptionDescription);
+          }
 
 #ifdef G4VERBOSE
-                    if (fVerbose != 0)
-                    {
-                        G4cout << GetIT(secondary)->GetName() << " ("
-                               << secondary->GetTrackID() << ")";
-                    }
+          if (fVerbose != 0)
+          {
+            G4cout << GetIT(secondary)->GetName() << " (" << secondary->GetTrackID() << ")";
+          }
 #endif
-                }
-            }
-            else
-            {
+        }
+      }
+      else
+      {
 #ifdef G4VERBOSE
-                if (fVerbose != 0)
-                {
-                    G4cout << "No product";
-                }
+        if (fVerbose != 0)
+        {
+          G4cout << "No product";
+        }
 #endif
-            }
+      }
 #ifdef G4VERBOSE
-            if (fVerbose != 0)
-            {
-                G4cout << G4endl;
-            }
+      if (fVerbose != 0)
+      {
+        G4cout << G4endl;
+      }
 #endif
-            if (pTrackA->GetTrackID() == 0 || pTrackB->GetTrackID() == 0)
-            {
-                G4Track* pTrack = nullptr;
-                if (pTrackA->GetTrackID() == 0)
-                {
-                    pTrack = pTrackA;
-                }
-                else
-                {
-                    pTrack = pTrackB;
-                }
-
-                G4ExceptionDescription exceptionDescription;
-                exceptionDescription
-                    << "The problem was found for the reaction between tracks :"
-                    << pTrackA->GetParticleDefinition()->GetParticleName() << " ("
-                    << pTrackA->GetTrackID() << ") & "
-                    << pTrackB->GetParticleDefinition()->GetParticleName() << " ("
-                    << pTrackB->GetTrackID() << "). \n";
-
-                if (pTrack->GetStep() == nullptr)
-                {
-                    exceptionDescription << "Also no step was found"
-                                         << " ie track->GetStep() == 0 \n";
-                }
-
-                exceptionDescription << "Parent ID of trackA : "
-                                     << pTrackA->GetParentID() << "\n";
-                exceptionDescription << "Parent ID of trackB : "
-                                     << pTrackB->GetParentID() << "\n";
-
-                exceptionDescription
-                    << "The ID of one of the reaction track was not setup.";
-                G4Exception("G4Scheduler::ComputeInteractionBetweenTracks",
-                            "ITScheduler011",
-                            FatalErrorInArgument,
-                            exceptionDescription);
-            }
-
-            if (pChanges->WereParentsKilled())
-            {
-                pTrackA->SetTrackStatus(fStopAndKill);
-                pTrackB->SetTrackStatus(fStopAndKill);
-
-                fpTrackingManager->EndTracking(pTrackA);
-                fpTrackingManager->EndTracking(pTrackB);
-            }
-
-            pChanges.reset(nullptr);
+      if (pTrackA->GetTrackID() == 0 || pTrackB->GetTrackID() == 0)
+      {
+        G4Track* pTrack = nullptr;
+        if (pTrackA->GetTrackID() == 0)
+        {
+          pTrack = pTrackA;
+        }
+        else
+        {
+          pTrack = pTrackB;
         }
 
-        fReactionInfo.clear();
+        G4ExceptionDescription exceptionDescription;
+        exceptionDescription << "The problem was found for the reaction between tracks :"
+                             << pTrackA->GetParticleDefinition()->GetParticleName() << " ("
+                             << pTrackA->GetTrackID() << ") & "
+                             << pTrackB->GetParticleDefinition()->GetParticleName() << " ("
+                             << pTrackB->GetTrackID() << "). \n";
+
+        if (pTrack->GetStep() == nullptr)
+        {
+          exceptionDescription << "Also no step was found"
+                               << " ie track->GetStep() == 0 \n";
+        }
+
+        exceptionDescription << "Parent ID of trackA : " << pTrackA->GetParentID() << "\n";
+        exceptionDescription << "Parent ID of trackB : " << pTrackB->GetParentID() << "\n";
+
+        exceptionDescription << "The ID of one of the reaction track was not setup.";
+        G4Exception("G4Scheduler::ComputeInteractionBetweenTracks", "ITScheduler011",
+                    FatalErrorInArgument, exceptionDescription);
+      }
+
+      if (pChanges->WereParentsKilled())
+      {
+        pTrackA->SetTrackStatus(fStopAndKill);
+        pTrackB->SetTrackStatus(fStopAndKill);
+
+        fpTrackingManager->EndTracking(pTrackA);
+        fpTrackingManager->EndTracking(pTrackB);
+      }
+
+      pChanges.reset(nullptr);
     }
 
-//    fReactionSet->CleanAllReaction();
+    fReactionInfo.clear();
+  }
 
-    fpTrackContainer->MergeSecondariesWithMainList();
-    fpTrackContainer->KillTracks();
+  //    fReactionSet->CleanAllReaction();
+
+  fpTrackContainer->MergeSecondariesWithMainList();
+  fpTrackContainer->KillTracks();
 }
 
 void G4ITModelProcessor::SetTrack(const G4Track* track)
 {
-    fpTrack = track;
+  fpTrack = track;
 }
 
 void G4ITModelProcessor::SetModelHandler(G4ITModelHandler* pModelHandler)
 {
-    if (fInitialized)
-    {
-        G4ExceptionDescription exceptionDescription;
-        exceptionDescription
-            << "You are trying to set a new model while the model processor has alreaday be initialized";
-        G4Exception("G4ITModelProcessor::SetModelHandler", "ITModelProcessor001",
-                    FatalErrorInArgument, exceptionDescription);
-    }
-    fpModelHandler = pModelHandler;
+  if (fInitialized)
+  {
+    G4ExceptionDescription exceptionDescription;
+    exceptionDescription
+      << "You are trying to set a new model while the model processor has alreaday be initialized";
+    G4Exception("G4ITModelProcessor::SetModelHandler", "ITModelProcessor001", FatalErrorInArgument,
+                exceptionDescription);
+  }
+  fpModelHandler = pModelHandler;
 }
 
 void G4ITModelProcessor::CleanProcessor()
 {
-    fpTrack = nullptr;
+  fpTrack = nullptr;
 }
 
 bool G4ITModelProcessor::GetComputeTimeStep() const
 {
-    return fComputeTimeStep;
+  return fComputeTimeStep;
 }
 
 const G4Track* G4ITModelProcessor::GetTrack() const
 {
-    return fpTrack;
+  return fpTrack;
 }
 
 void G4ITModelProcessor::SetTrackingManager(G4ITTrackingManager* pTrackingManager)
 {
-    fpTrackingManager = pTrackingManager;
+  fpTrackingManager = pTrackingManager;
 }
-

@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4AntiProton_h
-#define G4AntiProton_h 1
+#ifndef G4ANTIPROTON_HH
+#define G4ANTIPROTON_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4AntiProton : public G4ParticleDefinition
 {
   public:
+
     static G4AntiProton* Definition();
     static G4AntiProton* AntiProtonDefinition();
     static G4AntiProton* AntiProton();
 
   private:
+
     G4AntiProton() {}
     ~G4AntiProton() override = default;
 

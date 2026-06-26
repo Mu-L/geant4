@@ -32,14 +32,18 @@
 //               16 Nov 1999  M.G. Pia  STL migration
 // -----------------------------------------------------------------------------
 
-#ifndef G4ListOfCollisions_h
-#define G4ListOfCollisions_h 1
+#ifndef G4LISTOFCOLLISIONS_HH
+#define G4LISTOFCOLLISIONS_HH
 
-#include "globals.hh"
-#include <vector>
 #include "G4CollisionInitialState.hh"
+#include "globals.hh"
+
+#include <vector>
 
 typedef std::vector<G4CollisionInitialState*> G4ListOfCollisions;
-struct DeleteCollisionInitialState { void operator()(G4CollisionInitialState *aC) {delete aC;} };
+struct DeleteCollisionInitialState
+{
+    void operator()(G4CollisionInitialState* aC) { delete aC; }
+};
 
 #endif

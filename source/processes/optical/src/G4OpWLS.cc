@@ -41,14 +41,15 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "G4OpWLS.hh"
-#include "G4ios.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
+
 #include "G4OpProcessSubType.hh"
-#include "G4Poisson.hh"
 #include "G4OpticalParameters.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4Poisson.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4WLSTimeGeneratorProfileDelta.hh"
 #include "G4WLSTimeGeneratorProfileExponential.hh"
+#include "G4ios.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 G4OpWLS::G4OpWLS(const G4String& processName, G4ProcessType type)
@@ -59,14 +60,13 @@ G4OpWLS::G4OpWLS(const G4String& processName, G4ProcessType type)
   SetProcessSubType(fOpWLS);
   theIntegralTable = nullptr;
 
-  if(verboseLevel > 0)
-    G4cout << GetProcessName() << " is created " << G4endl;
+  if (verboseLevel > 0) G4cout << GetProcessName() << " is created " << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 G4OpWLS::~G4OpWLS()
 {
-  if(theIntegralTable)
+  if (theIntegralTable)
   {
     theIntegralTable->clearAndDestroy();
     delete theIntegralTable;
@@ -75,7 +75,10 @@ G4OpWLS::~G4OpWLS()
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-void G4OpWLS::PreparePhysicsTable(const G4ParticleDefinition&) { Initialise(); }
+void G4OpWLS::PreparePhysicsTable(const G4ParticleDefinition&)
+{
+  Initialise();
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 void G4OpWLS::Initialise()
@@ -86,50 +89,47 @@ void G4OpWLS::Initialise()
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-G4VParticleChange* G4OpWLS::PostStepDoIt(const G4Track& aTrack,
-                                         const G4Step& aStep)
+G4VParticleChange* G4OpWLS::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 {
   aParticleChange.Initialize(aTrack);
   aParticleChange.ProposeTrackStatus(fStopAndKill);
 
-  if(verboseLevel > 1)
+  if (verboseLevel > 1)
   {
     G4cout << "\n** G4OpWLS: Photon absorbed! **" << G4endl;
   }
 
-  G4MaterialPropertiesTable* MPT =
-    aTrack.GetMaterial()->GetMaterialPropertiesTable();
-  if(!MPT)
+  G4MaterialPropertiesTable* MPT = aTrack.GetMaterial()->GetMaterialPropertiesTable();
+  if (!MPT)
   {
     return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
   }
 
   G4PhysicsFreeVector* WLSIntegral = nullptr;
-  if(!MPT->GetProperty(kWLSCOMPONENT))
+  if (!MPT->GetProperty(kWLSCOMPONENT))
   {
     return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
   }
   else
   {
     // Retrieve the WLS Integral for this material
-    WLSIntegral = (G4PhysicsFreeVector*) ((*theIntegralTable)
-      (aTrack.GetMaterial()->GetIndex()));
+    WLSIntegral = (G4PhysicsFreeVector*)((*theIntegralTable)(aTrack.GetMaterial()->GetIndex()));
   }
 
   G4double primaryEnergy = aTrack.GetDynamicParticle()->GetKineticEnergy();
   // No WLS photons are produced if the primary photon's energy is below
   // the lower bound of the WLS integral range
-  if(primaryEnergy < WLSIntegral->GetMinValue())
+  if (primaryEnergy < WLSIntegral->GetMinValue())
   {
     return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
   }
 
   G4int NumPhotons = 1;
-  if(MPT->ConstPropertyExists(kWLSMEANNUMBERPHOTONS))
+  if (MPT->ConstPropertyExists(kWLSMEANNUMBERPHOTONS))
   {
     G4double MeanNumberOfPhotons = MPT->GetConstProperty(kWLSMEANNUMBERPHOTONS);
-    NumPhotons                   = G4int(G4Poisson(MeanNumberOfPhotons));
-    if(NumPhotons <= 0)
+    NumPhotons = G4int(G4Poisson(MeanNumberOfPhotons));
+    if (NumPhotons <= 0)
     {
       // return unchanged particle and no secondaries
       aParticleChange.SetNumberOfSecondaries(0);
@@ -143,32 +143,32 @@ G4VParticleChange* G4OpWLS::PostStepDoIt(const G4Track& aTrack,
 
   // Max WLS Integral - force sampling of a WLS photon with energy below
   // the primary photon's energy
-  G4double CIImax = (primaryEnergy > WLSIntegral->GetMaxEnergy()) ?
-    WLSIntegral->GetMaxValue() : WLSIntegral->Value(primaryEnergy);
+  G4double CIImax = (primaryEnergy > WLSIntegral->GetMaxEnergy())
+                      ? WLSIntegral->GetMaxValue()
+                      : WLSIntegral->Value(primaryEnergy);
 
-  for(G4int i = 0; i < NumPhotons; ++i)
+  for (G4int i = 0; i < NumPhotons; ++i)
   {
     // Determine photon energy
     G4double sampledEnergy = WLSIntegral->GetEnergy(G4UniformRand() * CIImax);
 
     // Make sure the energy of the secondary is less than that of the primary
-    if(sampledEnergy > primaryEnergy)
+    if (sampledEnergy > primaryEnergy)
     {
       G4ExceptionDescription ed;
       ed << "Sampled photon energy " << sampledEnergy << " is greater than "
          << "the primary photon energy " << primaryEnergy << G4endl;
       G4Exception("G4OpWLS::PostStepDoIt", "WSL01", FatalException, ed);
     }
-    else if(verboseLevel > 1)
+    else if (verboseLevel > 1)
     {
-      G4cout << "G4OpWLS: Created photon with energy: " << sampledEnergy
-             << G4endl;
+      G4cout << "G4OpWLS: Created photon with energy: " << sampledEnergy << G4endl;
     }
 
     // Generate random photon direction
     G4double cost = 1. - 2. * G4UniformRand();
     G4double sint = std::sqrt((1. - cost) * (1. + cost));
-    G4double phi  = twopi * G4UniformRand();
+    G4double phi = twopi * G4UniformRand();
     G4double sinp = std::sin(phi);
     G4double cosp = std::cos(phi);
     G4ParticleMomentum photonMomentum(sint * cosp, sint * sinp, cost);
@@ -176,21 +176,20 @@ G4VParticleChange* G4OpWLS::PostStepDoIt(const G4Track& aTrack,
     G4ThreeVector photonPolarization(cost * cosp, cost * sinp, -sint);
     G4ThreeVector perp = photonMomentum.cross(photonPolarization);
 
-    phi                = twopi * G4UniformRand();
-    sinp               = std::sin(phi);
-    cosp               = std::cos(phi);
+    phi = twopi * G4UniformRand();
+    sinp = std::sin(phi);
+    cosp = std::cos(phi);
     photonPolarization = (cosp * photonPolarization + sinp * perp).unit();
 
     // Generate a new photon:
-    auto sec_dp =
-      new G4DynamicParticle(G4OpticalPhoton::OpticalPhoton(), photonMomentum);
+    auto sec_dp = new G4DynamicParticle(G4OpticalPhoton::OpticalPhoton(), photonMomentum);
     sec_dp->SetPolarization(photonPolarization);
     sec_dp->SetKineticEnergy(sampledEnergy);
 
-    G4double secTime = pPostStepPoint->GetGlobalTime() +
-                       WLSTimeGeneratorProfile->GenerateTime(WLSTime);
+    G4double secTime =
+      pPostStepPoint->GetGlobalTime() + WLSTimeGeneratorProfile->GenerateTime(WLSTime);
     G4ThreeVector secPos = pPostStepPoint->GetPosition();
-    G4Track* secTrack    = new G4Track(sec_dp, secTime, secPos);
+    G4Track* secTrack = new G4Track(sec_dp, secTime, secPos);
 
     secTrack->SetTouchableHandle(aTrack.GetTouchableHandle());
     secTrack->SetParentID(aTrack.GetTrackID());
@@ -199,11 +198,11 @@ G4VParticleChange* G4OpWLS::PostStepDoIt(const G4Track& aTrack,
   }
 
   aParticleChange.SetNumberOfSecondaries((G4int)proposedSecondaries.size());
-  for(auto sec : proposedSecondaries)
+  for (auto sec : proposedSecondaries)
   {
     aParticleChange.AddSecondary(sec);
   }
-  if(verboseLevel > 1)
+  if (verboseLevel > 1)
   {
     G4cout << "\n Exiting from G4OpWLS::DoIt -- NumberOfSecondaries = "
            << aParticleChange.GetNumberOfSecondaries() << G4endl;
@@ -215,7 +214,7 @@ G4VParticleChange* G4OpWLS::PostStepDoIt(const G4Track& aTrack,
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 void G4OpWLS::BuildPhysicsTable(const G4ParticleDefinition&)
 {
-  if(theIntegralTable)
+  if (theIntegralTable)
   {
     theIntegralTable->clearAndDestroy();
     delete theIntegralTable;
@@ -223,52 +222,50 @@ void G4OpWLS::BuildPhysicsTable(const G4ParticleDefinition&)
   }
 
   const G4MaterialTable* materialTable = G4Material::GetMaterialTable();
-  std::size_t numOfMaterials           = G4Material::GetNumberOfMaterials();
-  theIntegralTable                     = new G4PhysicsTable(numOfMaterials);
+  std::size_t numOfMaterials = G4Material::GetNumberOfMaterials();
+  theIntegralTable = new G4PhysicsTable(numOfMaterials);
 
   // loop for materials
-  for(std::size_t i = 0; i < numOfMaterials; ++i)
+  for (std::size_t i = 0; i < numOfMaterials; ++i)
   {
     auto physVector = new G4PhysicsFreeVector();
 
     // Retrieve vector of WLS wavelength intensity for
     // the material from the material's optical properties table.
-    G4MaterialPropertiesTable* MPT =
-      (*materialTable)[i]->GetMaterialPropertiesTable();
-    if(MPT)
+    G4MaterialPropertiesTable* MPT = (*materialTable)[i]->GetMaterialPropertiesTable();
+    if (MPT)
     {
       G4MaterialPropertyVector* wlsVector = MPT->GetProperty(kWLSCOMPONENT);
-      if(wlsVector)
+      if (wlsVector)
       {
         // Retrieve the first intensity point in vector
         // of (photon energy, intensity) pairs
         G4double currentIN = (*wlsVector)[0];
-        if(currentIN >= 0.0)
+        if (currentIN >= 0.0)
         {
           // Create first (photon energy)
-          G4double currentPM  = wlsVector->Energy(0);
+          G4double currentPM = wlsVector->Energy(0);
           G4double currentCII = 0.0;
           physVector->InsertValues(currentPM, currentCII);
 
           // Set previous values to current ones prior to loop
-          G4double prevPM  = currentPM;
+          G4double prevPM = currentPM;
           G4double prevCII = currentCII;
-          G4double prevIN  = currentIN;
+          G4double prevIN = currentIN;
 
           // loop over all (photon energy, intensity)
           // pairs stored for this material
-          for(std::size_t j = 1; j < wlsVector->GetVectorLength(); ++j)
+          for (std::size_t j = 1; j < wlsVector->GetVectorLength(); ++j)
           {
             currentPM = wlsVector->Energy(j);
             currentIN = (*wlsVector)[j];
-            currentCII =
-              prevCII + 0.5 * (currentPM - prevPM) * (prevIN + currentIN);
+            currentCII = prevCII + 0.5 * (currentPM - prevPM) * (prevIN + currentIN);
 
             physVector->InsertValues(currentPM, currentCII);
 
-            prevPM  = currentPM;
+            prevPM = currentPM;
             prevCII = currentCII;
-            prevIN  = currentIN;
+            prevIN = currentIN;
           }
         }
       }
@@ -278,18 +275,16 @@ void G4OpWLS::BuildPhysicsTable(const G4ParticleDefinition&)
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-G4double G4OpWLS::GetMeanFreePath(const G4Track& aTrack, G4double,
-                                  G4ForceCondition*)
+G4double G4OpWLS::GetMeanFreePath(const G4Track& aTrack, G4double, G4ForceCondition*)
 {
   G4double thePhotonEnergy = aTrack.GetDynamicParticle()->GetTotalEnergy();
-  G4double attLength       = DBL_MAX;
-  G4MaterialPropertiesTable* MPT =
-    aTrack.GetMaterial()->GetMaterialPropertiesTable();
+  G4double attLength = DBL_MAX;
+  G4MaterialPropertiesTable* MPT = aTrack.GetMaterial()->GetMaterialPropertiesTable();
 
-  if(MPT)
+  if (MPT)
   {
     G4MaterialPropertyVector* attVector = MPT->GetProperty(kWLSABSLENGTH);
-    if(attVector)
+    if (attVector)
     {
       attLength = attVector->Value(thePhotonEnergy, idx_wls);
     }
@@ -300,24 +295,22 @@ G4double G4OpWLS::GetMeanFreePath(const G4Track& aTrack, G4double,
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 void G4OpWLS::UseTimeProfile(const G4String name)
 {
-  if(WLSTimeGeneratorProfile)
+  if (WLSTimeGeneratorProfile)
   {
     delete WLSTimeGeneratorProfile;
     WLSTimeGeneratorProfile = nullptr;
   }
-  if(name == "delta")
+  if (name == "delta")
   {
     WLSTimeGeneratorProfile = new G4WLSTimeGeneratorProfileDelta("delta");
   }
-  else if(name == "exponential")
+  else if (name == "exponential")
   {
-    WLSTimeGeneratorProfile =
-      new G4WLSTimeGeneratorProfileExponential("exponential");
+    WLSTimeGeneratorProfile = new G4WLSTimeGeneratorProfileExponential("exponential");
   }
   else
   {
-    G4Exception("G4OpWLS::UseTimeProfile", "em0202", FatalException,
-                "generator does not exist");
+    G4Exception("G4OpWLS::UseTimeProfile", "em0202", FatalException, "generator does not exist");
   }
   G4OpticalParameters::Instance()->SetWLSTimeProfile(name);
 }

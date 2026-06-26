@@ -33,8 +33,8 @@
 //
 // Author: Marc Verderi, November 2013.
 // --------------------------------------------------------------------
-#ifndef G4ILawTruncatedExp_hh
-#define G4ILawTruncatedExp_hh 1
+#ifndef G4ILAWTRUNCATEDEXP_HH
+#define G4ILAWTRUNCATEDEXP_HH
 
 #include "G4VBiasingInteractionLaw.hh"
 
@@ -44,7 +44,7 @@ class G4ILawTruncatedExp : public G4VBiasingInteractionLaw
 
     G4ILawTruncatedExp(const G4String& name = "expForceInteractionLaw");
     virtual ~G4ILawTruncatedExp();
-  
+
     virtual G4double ComputeEffectiveCrossSectionAt(G4double length) const;
     virtual G4double ComputeNonInteractionProbabilityAt(G4double length) const;
     // -- sample the distribution

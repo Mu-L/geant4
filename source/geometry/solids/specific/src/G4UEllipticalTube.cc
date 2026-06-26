@@ -28,52 +28,52 @@
 // 13-08-2019 Gabriele Cosmo, CERN
 // --------------------------------------------------------------------
 
+// Geant4/VecGeom headers must be included in order
+// clang-format off
 #include "G4EllipticalTube.hh"
 #include "G4UEllipticalTube.hh"
+// clang-format on
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include "G4AffineTransform.hh"
-#include "G4VPVParameterisation.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4BoundingEnvelope.hh"
-#include "G4Polyhedron.hh"
+#  include "G4AffineTransform.hh"
+#  include "G4BoundingEnvelope.hh"
+#  include "G4PhysicalConstants.hh"
+#  include "G4Polyhedron.hh"
+#  include "G4VPVParameterisation.hh"
 
 ////////////////////////////////////////////////////////////////////////
 //
 // Constructor - check & set half widths
 
-
-G4UEllipticalTube::G4UEllipticalTube(const G4String& pName,
-                                           G4double dx,
-                                           G4double dy,
-                                           G4double dz )
+G4UEllipticalTube::G4UEllipticalTube(const G4String& pName, G4double dx, G4double dy, G4double dz)
   : Base_t(pName, dx, dy, dz)
-{ }
+{}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Copy constructor
 
-G4UEllipticalTube::G4UEllipticalTube(const G4UEllipticalTube& rhs)
-  : Base_t(rhs)
-{ }
+G4UEllipticalTube::G4UEllipticalTube(const G4UEllipticalTube& rhs) : Base_t(rhs) {}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Assignment operator
 
-G4UEllipticalTube& G4UEllipticalTube::operator = (const G4UEllipticalTube& rhs)
+G4UEllipticalTube& G4UEllipticalTube::operator=(const G4UEllipticalTube& rhs)
 {
-   // Check assignment to self
-   //
-   if (this == &rhs)  { return *this; }
+  // Check assignment to self
+  //
+  if (this == &rhs)
+  {
+    return *this;
+  }
 
-   // Copy base class data
-   //
-   Base_t::operator=(rhs);
+  // Copy base class data
+  //
+  Base_t::operator=(rhs);
 
-   return *this;
+  return *this;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -127,37 +127,34 @@ G4VSolid* G4UEllipticalTube::Clone() const
 //
 // Get bounding box
 
-void G4UEllipticalTube::BoundingLimits(G4ThreeVector& pMin,
-                                       G4ThreeVector& pMax) const
+void G4UEllipticalTube::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
 {
   G4double dx = GetDx();
   G4double dy = GetDy();
   G4double dz = GetDz();
 
-  pMin.set(-dx,-dy,-dz);
-  pMax.set( dx, dy, dz);
+  pMin.set(-dx, -dy, -dz);
+  pMax.set(dx, dy, dz);
 }
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Calculate extent under transform and specified limit
 
-G4bool
-G4UEllipticalTube::CalculateExtent(const EAxis pAxis,
-                                   const G4VoxelLimits& pVoxelLimit,
-                                   const G4AffineTransform& pTransform,
-                                         G4double& pMin, G4double& pMax) const
+G4bool G4UEllipticalTube::CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                                          const G4AffineTransform& pTransform, G4double& pMin,
+                                          G4double& pMax) const
 {
   G4ThreeVector bmin, bmax;
   G4bool exist;
 
   // Check bounding box (bbox)
   //
-  BoundingLimits(bmin,bmax);
-  G4BoundingEnvelope bbox(bmin,bmax);
-#ifdef G4BBOX_EXTENT
-  return bbox.CalculateExtent(pAxis,pVoxelLimit, pTransform, pMin, pMax);
-#endif
+  BoundingLimits(bmin, bmax);
+  G4BoundingEnvelope bbox(bmin, bmax);
+#  ifdef G4BBOX_EXTENT
+  return bbox.CalculateExtent(pAxis, pVoxelLimit, pTransform, pMin, pMax);
+#  endif
   if (bbox.BoundingBoxVsVoxelLimits(pAxis, pVoxelLimit, pTransform, pMin, pMax))
   {
     return exist = pMin < pMax;
@@ -169,30 +166,30 @@ G4UEllipticalTube::CalculateExtent(const EAxis pAxis,
 
   // Set bounding envelope (benv) and calculate extent
   //
-  const G4int NSTEPS = 24; // number of steps for whole circle
-  G4double ang = twopi/NSTEPS;
+  const G4int NSTEPS = 24;  // number of steps for whole circle
+  G4double ang = twopi / NSTEPS;
 
-  G4double sinHalf = std::sin(0.5*ang);
-  G4double cosHalf = std::cos(0.5*ang);
-  G4double sinStep = 2.*sinHalf*cosHalf;
-  G4double cosStep = 1. - 2.*sinHalf*sinHalf;
-  G4double sx = dx/cosHalf;
-  G4double sy = dy/cosHalf;
+  G4double sinHalf = std::sin(0.5 * ang);
+  G4double cosHalf = std::cos(0.5 * ang);
+  G4double sinStep = 2. * sinHalf * cosHalf;
+  G4double cosStep = 1. - 2. * sinHalf * sinHalf;
+  G4double sx = dx / cosHalf;
+  G4double sy = dy / cosHalf;
 
   G4double sinCur = sinHalf;
   G4double cosCur = cosHalf;
   G4ThreeVectorList baseA(NSTEPS), baseB(NSTEPS);
-  for (G4int k=0; k<NSTEPS; ++k)
+  for (G4int k = 0; k < NSTEPS; ++k)
   {
-    baseA[k].set(sx*cosCur,sy*sinCur,-dz);
-    baseB[k].set(sx*cosCur,sy*sinCur, dz);
+    baseA[k].set(sx * cosCur, sy * sinCur, -dz);
+    baseB[k].set(sx * cosCur, sy * sinCur, dz);
 
     G4double sinTmp = sinCur;
-    sinCur = sinCur*cosStep + cosCur*sinStep;
-    cosCur = cosCur*cosStep - sinTmp*sinStep;
+    sinCur = sinCur * cosStep + cosCur * sinStep;
+    cosCur = cosCur * cosStep - sinTmp * sinStep;
   }
 
-  std::vector<const G4ThreeVectorList *> polygons(2);
+  std::vector<const G4ThreeVectorList*> polygons(2);
   polygons[0] = &baseA;
   polygons[1] = &baseB;
   G4BoundingEnvelope benv(bmin, bmax, polygons);

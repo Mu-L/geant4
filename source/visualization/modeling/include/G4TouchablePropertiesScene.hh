@@ -32,34 +32,34 @@
 #ifndef G4TOUCHABLEPROPERTIESSCENE_HH
 #define G4TOUCHABLEPROPERTIESSCENE_HH
 
-#include "G4PseudoScene.hh"
 #include "G4ModelingParameters.hh"
-#include "G4Transform3D.hh"
 #include "G4PhysicalVolumeModel.hh"
+#include "G4PseudoScene.hh"
+#include "G4Transform3D.hh"
 
 #include <iostream>
 
-class G4TouchablePropertiesScene: public G4PseudoScene {
+class G4TouchablePropertiesScene : public G4PseudoScene
+{
+  public:
 
-public:
+    G4TouchablePropertiesScene(G4PhysicalVolumeModel* pSearchPVModel,
+                               const G4ModelingParameters::PVNameCopyNoPath& requiredTouchable);
 
-  G4TouchablePropertiesScene
-  (G4PhysicalVolumeModel* pSearchPVModel,
-   const G4ModelingParameters::PVNameCopyNoPath& requiredTouchable);
+    virtual ~G4TouchablePropertiesScene();
 
-  virtual ~G4TouchablePropertiesScene ();
+    const G4PhysicalVolumeModel::TouchableProperties& GetFoundTouchableProperties() const
+    {
+      return fFoundTouchableProperties;
+    }
 
-  const G4PhysicalVolumeModel::TouchableProperties&
-  GetFoundTouchableProperties() const
-  {return fFoundTouchableProperties;}
+  private:
 
-private:
+    void ProcessVolume(const G4VSolid&);
 
-  void ProcessVolume(const G4VSolid&);
-
-  const G4PhysicalVolumeModel*           fpSearchPVModel;
-  G4ModelingParameters::PVNameCopyNoPath fRequiredTouchable;
-  G4PhysicalVolumeModel::TouchableProperties fFoundTouchableProperties;
+    const G4PhysicalVolumeModel* fpSearchPVModel;
+    G4ModelingParameters::PVNameCopyNoPath fRequiredTouchable;
+    G4PhysicalVolumeModel::TouchableProperties fFoundTouchableProperties;
 };
 
 #endif

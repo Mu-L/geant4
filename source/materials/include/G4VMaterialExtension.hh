@@ -38,7 +38,7 @@
 //
 
 #ifndef G4VMATERIALEXTENSION_HH
-#define G4VMATERIALEXTENSION_HH 1
+#define G4VMATERIALEXTENSION_HH
 
 #include "G4String.hh"
 #include "G4ios.hh"
@@ -52,25 +52,27 @@ using G4MaterialExtensionHash = std::hash<std::string>;
 
 class G4VMaterialExtension
 {
- public:  // with description
-  // Base class constructor
-  G4VMaterialExtension(const G4String& name) : fName(name), fHash(G4MaterialExtensionHash{}(name))
-  {}
-  virtual ~G4VMaterialExtension() = default;
+  public:  // with description
 
-  virtual void Print() const = 0;
+    // Base class constructor
+    G4VMaterialExtension(const G4String& name) : fName(name), fHash(G4MaterialExtensionHash{}(name))
+    {}
+    virtual ~G4VMaterialExtension() = default;
 
-  // Return the hash value of this extension
-  const std::size_t& GetHash() const { return fHash; }
-  // Return the extension name
-  const G4String& GetName() const { return fName; }
+    virtual void Print() const = 0;
 
- protected:
-  // Name of the extension
-  const G4String& fName;
-  // Hash value of the name.
-  // Calculated at initialization time
-  const std::size_t fHash;
+    // Return the hash value of this extension
+    const std::size_t& GetHash() const { return fHash; }
+    // Return the extension name
+    const G4String& GetName() const { return fName; }
+
+  protected:
+
+    // Name of the extension
+    const G4String& fName;
+    // Hash value of the name.
+    // Calculated at initialization time
+    const std::size_t fHash;
 };
 
 #endif

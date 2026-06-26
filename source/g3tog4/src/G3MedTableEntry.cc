@@ -29,17 +29,13 @@
 
 #include "G3MedTableEntry.hh"
 
-#include "G4Material.hh"
 #include "G4MagneticField.hh"
+#include "G4Material.hh"
 #include "G4UserLimits.hh"
 
-G3MedTableEntry::G3MedTableEntry(G4int id, G4Material* material, 
-       G4MagneticField* field, G4UserLimits* limits, G4int isvol)
-  : fID(id),
-    fMaterial(material),
-    fField(field),
-    fLimits(limits),
-    fISVOL(isvol)
+G3MedTableEntry::G3MedTableEntry(G4int id, G4Material* material, G4MagneticField* field,
+                                 G4UserLimits* limits, G4int isvol)
+  : fID(id), fMaterial(material), fField(field), fLimits(limits), fISVOL(isvol)
 {}
 
 G3MedTableEntry::G3MedTableEntry(const G3MedTableEntry& right)
@@ -47,36 +43,37 @@ G3MedTableEntry::G3MedTableEntry(const G3MedTableEntry& right)
     fMaterial(right.GetMaterial()),
     fField(right.GetField()),
     fLimits(right.GetLimits()),
-    fISVOL(right.GetISVOL())    
-{}    
-
-G3MedTableEntry::~G3MedTableEntry()
+    fISVOL(right.GetISVOL())
 {}
 
+G3MedTableEntry::~G3MedTableEntry() {}
+
 G3MedTableEntry& G3MedTableEntry::operator=(const G3MedTableEntry& right)
-{ 
-  if (&right == this)  { return *this; }
+{
+  if (&right == this)
+  {
+    return *this;
+  }
   fID = right.GetID();
-  fMaterial = right.GetMaterial();     
+  fMaterial = right.GetMaterial();
   fField = right.GetField();
   fLimits = right.GetLimits();
-  fISVOL = right.GetISVOL();  
+  fISVOL = right.GetISVOL();
   return *this;
 }
 
 G4bool G3MedTableEntry::operator==(const G3MedTableEntry& right) const
-{ 
-  if (fID == right.GetID()) 
+{
+  if (fID == right.GetID())
     return true;
   else
     return false;
 }
 
 G4bool G3MedTableEntry::operator!=(const G3MedTableEntry& right) const
-{ 
-  if (*this == right) 
+{
+  if (*this == right)
     return false;
   else
     return true;
 }
-

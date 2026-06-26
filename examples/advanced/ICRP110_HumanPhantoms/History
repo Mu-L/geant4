@@ -6,7 +6,7 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -----------------------------------------------------------------------------
 
-## 2026-03-02 John Allison (ICRP110Phantoms-V11-03-00)
+## 2026-03-02 John Allison (ICRP110Phantoms-V11-04-00)
 - ICRP110PhantomConstruction.cc, ICRP110PhantomNestedParameterisation.cc,
   ICRP110UserScoreWriter.cc:
   - Fix "Implicit conversion loses integer precision" warnings.

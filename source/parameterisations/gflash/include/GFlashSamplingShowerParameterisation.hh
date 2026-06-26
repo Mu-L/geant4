@@ -38,9 +38,10 @@
 // Author: Joanna Weng - 02.2004
 //---------------------------------------------------------------
 #ifndef GFlashSamplingShowerParameterisation_h
-#define GFlashSamplingShowerParameterisation_h 1
+#define GFlashSamplingShowerParameterisation_h
 
 #include "globals.hh"
+
 #include "GFlashSamplingShowerTuning.hh"
 #include "GVFlashShowerParameterisation.hh"
 
@@ -49,6 +50,7 @@ class G4Material;
 class GFlashSamplingShowerParameterisation : public GVFlashShowerParameterisation
 {
   public:
+
     GFlashSamplingShowerParameterisation(
       G4Material* aMat1, G4Material* aMat2, G4double d1, G4double d2,
       /// \param aMat1 passive material, \param dd1 - passive layer thickness
@@ -64,7 +66,6 @@ class GFlashSamplingShowerParameterisation : public GVFlashShowerParameterisatio
     G4double IntegrateEneLongitudinal(G4double LongitudinalStep);
     G4double IntegrateNspLongitudinal(G4double LongitudinalStep);
     G4double ComputeTau(G4double LongitudinalPosition);
-    void SetMaterial(G4Material* mat1, G4Material* mat2);
     G4double GeneratePhi();
     G4double GenerateRadius(G4int ispot, G4double Energy, G4double LongitudinalPosition);
     G4double GenerateExponential(G4double Energy);
@@ -85,6 +86,13 @@ class GFlashSamplingShowerParameterisation : public GVFlashShowerParameterisatio
     G4double ApplySampling(const G4double DEne, const G4double Energy);
 
   private:
+
+    void SetMaterial(G4Material* mat1, G4Material* mat2);
+
+    void ComputeLongitudinalParameters(G4double y);
+    void GenerateEnergyProfile(G4double y);
+    void GenerateNSpotProfile(G4double y);
+
     // medium related quantities
     //
     G4Material *material1, *material2;
@@ -119,9 +127,6 @@ class GFlashSamplingShowerParameterisation : public GVFlashShowerParameterisatio
     G4double ParsSigLogT1, ParsSigLogT2;
     G4double ParsSigLogA1, ParsSigLogA2;
     G4double ParsRho1, ParsRho2;
-    void ComputeLongitudinalParameters(G4double y);
-    void GenerateEnergyProfile(G4double y);
-    void GenerateNSpotProfile(G4double y);
 
     // Radial Coefficients homo
     //

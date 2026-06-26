@@ -25,43 +25,32 @@
 //
 //
 //
-// 
+//
 // John Allison  17/11/96.
 
 #include "G4Text.hh"
 
-G4Text::G4Text (const G4String& text):
-fText   (text),
-fLayout (left),
-fXOffset(0.) , fYOffset(0.)
+G4Text::G4Text(const G4String& text) : fText(text), fLayout(left), fXOffset(0.), fYOffset(0.) {}
+
+G4Text::G4Text(const G4String& text, const G4Point3D& pos)
+  : G4VMarker(pos), fText(text), fLayout(left), fXOffset(0.), fYOffset(0.)
 {}
 
-G4Text::G4Text (const G4String& text, const G4Point3D& pos):
-G4VMarker (pos),
-fText     (text),
-fLayout   (left),
-fXOffset(0.) , fYOffset(0.)
+G4Text::G4Text(const G4VMarker& marker)
+  : G4VMarker(marker), fText(""), fLayout(left), fXOffset(0.), fYOffset(0.)
 {}
 
-G4Text::G4Text (const G4VMarker& marker):
-G4VMarker (marker),
-fText     ("")    ,
-fLayout   (left)  ,
-fXOffset(0.) , fYOffset(0.)
-{}
+G4Text::~G4Text() = default;
 
-G4Text::~G4Text () = default;
-
-std::ostream& operator<< (std::ostream& os, const G4Text& text)
+std::ostream& operator<<(std::ostream& os, const G4Text& text)
 {
-  os << "G4Text: \"" << text.GetText()
-     << "\"\n  layout " << text.GetLayout()
-     << ", offset (" << text.GetXOffset() << ',' << text.GetYOffset() << ")\n"
+  os << "G4Text: \"" << text.GetText() << "\"\n  layout " << text.GetLayout() << ", offset ("
+     << text.GetXOffset() << ',' << text.GetYOffset() << ")\n"
      << (const G4VMarker&)text;
   return os;
 }
 
-std::ostream& operator<< (std::ostream& os, G4Text::Layout layout)
+std::ostream& operator<<(std::ostream& os, G4Text::Layout layout)
 {
   if (layout == G4Text::left) os << "left";
   if (layout == G4Text::centre) os << "centre";

@@ -40,10 +40,13 @@ inline void G4Timer::Stop()
 {
   times(&fEndTimes);
   fEndRealTime = clock_type::now();
-  fValidTimes  = true;
+  fValidTimes = true;
 }
 
-inline G4bool G4Timer::IsValid() const { return fValidTimes; }
+inline G4bool G4Timer::IsValid() const
+{
+  return fValidTimes;
+}
 
 inline const char* G4Timer::GetClockTime() const
 {

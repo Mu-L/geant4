@@ -27,6 +27,7 @@
 // Author: Ivana Hrivnacova, 17/10/2011  (ivana@ipno.in2p3.fr)
 
 #include "G4AnalysisVerbose.hh"
+
 #include "G4UnitsTable.hh"
 #include "G4ios.hh"
 
@@ -38,33 +39,30 @@ G4AnalysisVerbose::G4AnalysisVerbose() = default;
 //
 
 //_____________________________________________________________________________
-void G4AnalysisVerbose::Message(G4int level,
-                                const G4String& action,
-                                const G4String& object,
-                                const G4String& objectName,
-                                G4bool success) const
+void G4AnalysisVerbose::Message(G4int level, const G4String& action, const G4String& object,
+                                const G4String& objectName, G4bool success) const
 {
-  if ( level == 0 ) return;
+  if (level == 0) return;
 
-  if ( level < 0 || level > fkMaxLevel ) {
-     // add exception
-     return;
+  if (level < 0 || level > fkMaxLevel)
+  {
+    // add exception
+    return;
   }
 
-  G4cout << "... "
-         << fToBeDoneText[level-1]
-         << action
-         << " "
-         << object;
-  if (objectName.size() != 0u) {
-     G4cout << " : " << objectName;
+  G4cout << "... " << fToBeDoneText[level - 1] << action << " " << object;
+  if (objectName.size() != 0u)
+  {
+    G4cout << " : " << objectName;
   }
 
-  if (success) {
-     G4cout << " " << fDoneText[level-1];
+  if (success)
+  {
+    G4cout << " " << fDoneText[level - 1];
   }
-  else {
-     G4cout << " " << fFailureText;
+  else
+  {
+    G4cout << " " << fFailureText;
   }
 
   G4cout << G4endl;

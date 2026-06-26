@@ -46,6 +46,7 @@ class G4VtkVisContext;
 class G4VtkImagePipeline : G4VVtkPipeline
 {
   public:
+
     G4VtkImagePipeline(const G4String& name, const G4VtkVisContext& vc);
     ~G4VtkImagePipeline() override = default;
     void AddFilter(vtkSmartPointer<vtkImageAlgorithm> f) { filters.push_back(f); }
@@ -55,7 +56,8 @@ class G4VtkImagePipeline : G4VVtkPipeline
     void AddChildPipeline(G4VtkImagePipeline* child)
     {
       childPipelines.push_back(child);
-      if (child->GetDisableParent()) {
+      if (child->GetDisableParent())
+      {
         Disable();
       }
     }
@@ -74,6 +76,7 @@ class G4VtkImagePipeline : G4VVtkPipeline
     void Enable() override;
 
   private:
+
     std::vector<vtkSmartPointer<vtkImageAlgorithm>>
       filters;  // derived types can store filters in this vector
     std::vector<G4VtkImagePipeline*> childPipelines;

@@ -28,16 +28,16 @@
 //		to setBulletTarget().
 
 #include "G4InteractionCase.hh"
-#include "G4InuclParticle.hh"
+
 #include "G4InuclElementaryParticle.hh"
 #include "G4InuclNuclei.hh"
-
+#include "G4InuclParticle.hh"
 
 // Evaluate concrete types of input particles and assign bullet, target
 
-void G4InteractionCase::set(G4InuclParticle* part1, 
-			    G4InuclParticle* part2) {
-  clear();		// Reset everything in case of failure
+void G4InteractionCase::set(G4InuclParticle* part1, G4InuclParticle* part2)
+{
+  clear();  // Reset everything in case of failure
 
   // See which one of the two (or both) is a nucleus
   G4InuclNuclei* nucl1 = dynamic_cast<G4InuclNuclei*>(part1);
@@ -46,25 +46,36 @@ void G4InteractionCase::set(G4InuclParticle* part1,
   G4InuclElementaryParticle* had1 = dynamic_cast<G4InuclElementaryParticle*>(part1);
   G4InuclElementaryParticle* had2 = dynamic_cast<G4InuclElementaryParticle*>(part2);
 
-  if (nucl1 && nucl2) { 	// Nuclear collision, lighter is projectile
+  if (nucl1 && nucl2)
+  {  // Nuclear collision, lighter is projectile
     inter_case = -2;
-    if (nucl2->getA() >= nucl1->getA()) {
-      bullet = part1;
-      target = part2;
-    } else {
-      bullet = part2;
-      target = part1;
-    } 
-  } else if (nucl1 || nucl2) {	// Hadron on nucleus, hadron projectile
-    inter_case = -1;
-    if (nucl1 && had2) {
-      bullet = part2;
-      target = part1;
-    } else {
+    if (nucl2->getA() >= nucl1->getA())
+    {
       bullet = part1;
       target = part2;
     }
-  } else if (had1 && had2) {	// Hadron-hadron interaction, order irrelevant
+    else
+    {
+      bullet = part2;
+      target = part1;
+    }
+  }
+  else if (nucl1 || nucl2)
+  {  // Hadron on nucleus, hadron projectile
+    inter_case = -1;
+    if (nucl1 && had2)
+    {
+      bullet = part2;
+      target = part1;
+    }
+    else
+    {
+      bullet = part1;
+      target = part2;
+    }
+  }
+  else if (had1 && had2)
+  {  // Hadron-hadron interaction, order irrelevant
     inter_case = had1->type() * had2->type();
     bullet = part1;
     target = part2;

@@ -27,9 +27,9 @@
 //
 // Class description:
 //
-// A singleton class which stores the (volume) navigator used by 
+// A singleton class which stores the (volume) navigator used by
 // the transportation process to do the geometrical tracking.
-// It also stores a pointer to the propagator used in a (magnetic) 
+// It also stores a pointer to the propagator used in a (magnetic)
 // field and to the field manager.
 // The class instance is created before main() is called, and
 // in turn creates the navigator and the rest.
@@ -37,8 +37,8 @@
 // Created: John Apostolakis (CERN), 10 March 1997
 // Reviewed: Gabriele Cosmo (CERN), 26 April 2006
 // --------------------------------------------------------------------
-#ifndef  G4TransportationManager_hh
-#define  G4TransportationManager_hh 1
+#ifndef G4TRANSPORTATIONMANAGER_HH
+#define G4TRANSPORTATIONMANAGER_HH
 
 #include "G4Navigator.hh"
 #include "G4SafetyHelper.hh"
@@ -53,11 +53,13 @@ class G4VPhysicalVolume;
 /**
  * @brief G4TransportationManager is a singleton class which stores the
  * navigator used by the transportation process to do the geometrical tracking.
+ * @ingroup geometry_navigation
+ *
  * It also stores a pointer to the propagator used in a (magnetic) field and
  * to the field manager.
  */
 
-class G4TransportationManager 
+class G4TransportationManager
 {
   public:
 
@@ -77,13 +79,13 @@ class G4TransportationManager
     inline G4PropagatorInField* GetPropagatorInField() const;
     inline void SetPropagatorInField(G4PropagatorInField* newFieldPropagator);
     inline G4FieldManager* GetFieldManager() const;
-    void SetFieldManager( G4FieldManager* newFieldManager );
+    void SetFieldManager(G4FieldManager* newFieldManager);
 
     /**
      * Accessor and modifier for the navigator for tracking.
      */
     inline G4Navigator* GetNavigatorForTracking() const;
-    void SetNavigatorForTracking( G4Navigator* newNavigator );
+    void SetNavigatorForTracking(G4Navigator* newNavigator);
 
     /**
      * Sets the world volume for tracking.
@@ -116,14 +118,14 @@ class G4TransportationManager
      * If already existing just returns the pointer.
      *  @returns Pointer to the tracking world volume.
      */
-    G4VPhysicalVolume* GetParallelWorld ( const G4String& worldName );
+    G4VPhysicalVolume* GetParallelWorld(const G4String& worldName);
 
     /**
      * Verifies existance or not of an istance of the world volume with
      * same name in the collection.
      *  @returns Pointer to the tracking world volume.
      */
-    G4VPhysicalVolume* IsWorldExisting ( const G4String& worldName );
+    G4VPhysicalVolume* IsWorldExisting(const G4String& worldName);
 
     /**
      * Returns a navigator associated to either the world volume name
@@ -131,17 +133,17 @@ class G4TransportationManager
      * If not existing already, creates it and registers it in the collection.
      *  @returns Pointer to a tracking navigator.
      */
-    G4Navigator* GetNavigator ( const G4String& worldName );
-    G4Navigator* GetNavigator ( G4VPhysicalVolume* aWorld );
+    G4Navigator* GetNavigator(const G4String& worldName);
+    G4Navigator* GetNavigator(G4VPhysicalVolume* aWorld);
 
     /**
      * Methods for handling navigators. Navigator for tracking is always the
      * first (i.e. position 0 in the collection) and cannot be de-registered.
      */
-    G4bool RegisterWorld( G4VPhysicalVolume* aWorld );
-    void DeRegisterNavigator( G4Navigator* aNavigator );
-    G4int  ActivateNavigator( G4Navigator* aNavigator );
-    void DeActivateNavigator( G4Navigator* aNavigator );
+    G4bool RegisterWorld(G4VPhysicalVolume* aWorld);
+    void DeRegisterNavigator(G4Navigator* aNavigator);
+    G4int ActivateNavigator(G4Navigator* aNavigator);
+    void DeActivateNavigator(G4Navigator* aNavigator);
     void InactivateAll();
 
     /**
@@ -151,7 +153,7 @@ class G4TransportationManager
      * additional threads.
      */
     static G4Navigator* GetFirstTrackingNavigator();
-    static void SetFirstTrackingNavigator(G4Navigator *nav);   
+    static void SetFirstTrackingNavigator(G4Navigator* nav);
 
     /**
      * Clears collection of navigators and deletes the allocated objects
@@ -163,7 +165,7 @@ class G4TransportationManager
     /**
      * Destructor. Called internally only by G4RunManagerKernel.
      */
-    ~G4TransportationManager(); 
+    ~G4TransportationManager();
 
   public:
 
@@ -186,8 +188,8 @@ class G4TransportationManager
      * De-registers an already allocated world volume.
      * The pointed object is not deleted.
      */
-    void DeRegisterWorld( G4VPhysicalVolume* aWorld );
- 
+    void DeRegisterWorld(G4VPhysicalVolume* aWorld);
+
   private:
 
     /** The collection of all navigators registered. */
@@ -200,9 +202,9 @@ class G4TransportationManager
     std::vector<G4VPhysicalVolume*> fWorlds;
 
     G4PropagatorInField* fPropagatorInField;
-    G4FieldManager*      fFieldManager;
+    G4FieldManager* fFieldManager;
     G4GeometryMessenger* fGeomMessenger;
-    G4SafetyHelper*      fSafetyHelper;
+    G4SafetyHelper* fSafetyHelper;
 
     static G4ThreadLocal G4TransportationManager* fTransportationManager;
 
@@ -211,4 +213,4 @@ class G4TransportationManager
 
 #include "G4TransportationManager.icc"
 
-#endif 
+#endif

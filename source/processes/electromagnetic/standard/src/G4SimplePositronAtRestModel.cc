@@ -30,37 +30,34 @@
 // File name:     G4SimplePositronAtRestModel
 //
 // Author:        Vladimir Ivanchenko
-// 
+//
 // Creation date: 14 May 2024
 //
 // -------------------------------------------------------------------
 //
 
 #include "G4SimplePositronAtRestModel.hh"
+
 #include "G4DynamicParticle.hh"
-#include "G4Material.hh"
-#include "Randomize.hh"
 #include "G4Gamma.hh"
-#include "G4RandomDirection.hh"
-#include "G4ThreeVector.hh"
+#include "G4Material.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4RandomDirection.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4ThreeVector.hh"
+#include "Randomize.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4SimplePositronAtRestModel::G4SimplePositronAtRestModel()
-  : G4VPositronAtRestModel("Simple")
-{}    
+G4SimplePositronAtRestModel::G4SimplePositronAtRestModel() : G4VPositronAtRestModel("Simple") {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4SimplePositronAtRestModel::SampleSecondaries(
-             std::vector<G4DynamicParticle*>& secParticles,
-             G4double&, const G4Material*) const
+void G4SimplePositronAtRestModel::SampleSecondaries(std::vector<G4DynamicParticle*>& secParticles,
+                                                    G4double&, const G4Material*) const
 {
   G4ThreeVector dir1 = G4RandomDirection();
-  auto aGamma1 = new G4DynamicParticle(G4Gamma::Gamma(), dir1,
-				       CLHEP::electron_mass_c2);
+  auto aGamma1 = new G4DynamicParticle(G4Gamma::Gamma(), dir1, CLHEP::electron_mass_c2);
   G4double phi = CLHEP::twopi * G4UniformRand();
   G4double cosphi = std::cos(phi);
   G4double sinphi = std::sin(phi);
@@ -70,12 +67,11 @@ void G4SimplePositronAtRestModel::SampleSecondaries(
   secParticles.push_back(aGamma1);
 
   G4ThreeVector dir2 = -dir1;
-  auto aGamma2 = new G4DynamicParticle(G4Gamma::Gamma(), dir2,
-				       CLHEP::electron_mass_c2);
+  auto aGamma2 = new G4DynamicParticle(G4Gamma::Gamma(), dir2, CLHEP::electron_mass_c2);
   G4ThreeVector pol2(-sinphi, cosphi, 0.0);
   pol2.rotateUz(dir1);
   aGamma2->SetPolarization(pol2);
-  secParticles.push_back(aGamma2);  
+  secParticles.push_back(aGamma2);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -84,6 +80,6 @@ void G4SimplePositronAtRestModel::PrintGeneratorInformation() const
 {
   G4cout << "\n" << G4endl;
   G4cout << "Simple AtRest positron 2-gamma annihilation model" << G4endl;
-} 
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

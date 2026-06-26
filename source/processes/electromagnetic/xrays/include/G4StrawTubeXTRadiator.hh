@@ -37,43 +37,43 @@
 // 28.09.07, V.Ivanchenko general cleanup without change of algorithms
 //
 
-#ifndef G4StrawTubeXTRadiator_h
-#define G4StrawTubeXTRadiator_h 1
+#ifndef G4STRAWTUBEXTRADIATOR_HH
+#define G4STRAWTUBEXTRADIATOR_HH
 
-#include "globals.hh"
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"
 #include "G4VXTRenergyLoss.hh"
+#include "globals.hh"
 
 class G4SandiaTable;
 
 class G4StrawTubeXTRadiator : public G4VXTRenergyLoss
 {
- public:
-  explicit G4StrawTubeXTRadiator(
-    G4LogicalVolume* anEnvelope, G4Material*, G4Material*, G4double, G4double,
-    G4Material*, G4bool unishut = false,
-    const G4String& processName = "StrawTubeXTRadiator");
-  ~G4StrawTubeXTRadiator();
+  public:
 
-  // Auxiliary functions for plate/gas material parameters
-  G4double GetMediumFormationZone(G4double, G4double, G4double);
-  void ComputeMediumPhotoAbsCof();
-  G4double GetMediumLinearPhotoAbs(G4double);
-  G4complex GetMediumComplexFZ(G4double, G4double, G4double);
+    explicit G4StrawTubeXTRadiator(G4LogicalVolume* anEnvelope, G4Material*, G4Material*, G4double,
+                                   G4double, G4Material*, G4bool unishut = false,
+                                   const G4String& processName = "StrawTubeXTRadiator");
+    ~G4StrawTubeXTRadiator();
 
-  G4double GetStackFactor(G4double energy, G4double gamma,
-                          G4double varAngle) override;
+    // Auxiliary functions for plate/gas material parameters
+    G4double GetMediumFormationZone(G4double, G4double, G4double);
+    void ComputeMediumPhotoAbsCof();
+    G4double GetMediumLinearPhotoAbs(G4double);
+    G4complex GetMediumComplexFZ(G4double, G4double, G4double);
 
-  void ProcessDescription(std::ostream&) const override;
-  void DumpInfo() const override { ProcessDescription(G4cout); };
+    G4double GetStackFactor(G4double energy, G4double gamma, G4double varAngle) override;
 
- protected:
-  G4SandiaTable* fMediumPhotoAbsCof;
+    void ProcessDescription(std::ostream&) const override;
+    void DumpInfo() const override { ProcessDescription(G4cout); };
 
-  G4double fSigma3;
+  protected:
 
-  G4int fMatIndex3;
+    G4SandiaTable* fMediumPhotoAbsCof;
+
+    G4double fSigma3;
+
+    G4int fMatIndex3;
 };
 
 #endif

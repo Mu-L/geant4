@@ -25,30 +25,27 @@
 //
 //
 // Hadronic Process: Nuclear De-excitations
-// by V. Lara (Oct 1998) 
+// by V. Lara (Oct 1998)
 //
 
-#ifndef G4VLevelDensityParameter_h
-#define G4VLevelDensityParameter_h 1
+#ifndef G4VLEVELDENSITYPARAMETER_HH
+#define G4VLEVELDENSITYPARAMETER_HH
 
 #include "globals.hh"
 
-class G4VLevelDensityParameter 
+class G4VLevelDensityParameter
 {
-public:
+  public:
 
-  G4VLevelDensityParameter() = default;
-  virtual ~G4VLevelDensityParameter() = default;
+    G4VLevelDensityParameter() = default;
+    virtual ~G4VLevelDensityParameter() = default;
 
-  virtual G4double 
-  LevelDensityParameter(G4int A, G4int Z, G4double U) const = 0;
+    virtual G4double LevelDensityParameter(G4int A, G4int Z, G4double U) const = 0;
 
-  G4VLevelDensityParameter(const G4VLevelDensityParameter &right) = delete;
-  const G4VLevelDensityParameter & operator=(const G4VLevelDensityParameter &right) = delete;
-  G4bool operator==(const G4VLevelDensityParameter &right) const = delete;
-  G4bool operator!=(const G4VLevelDensityParameter &right) const = delete;
-  
+    G4VLevelDensityParameter(const G4VLevelDensityParameter& right) = delete;
+    const G4VLevelDensityParameter& operator=(const G4VLevelDensityParameter& right) = delete;
+    G4bool operator==(const G4VLevelDensityParameter& right) const = delete;
+    G4bool operator!=(const G4VLevelDensityParameter& right) const = delete;
 };
-
 
 #endif

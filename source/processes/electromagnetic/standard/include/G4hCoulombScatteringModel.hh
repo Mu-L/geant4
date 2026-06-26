@@ -31,7 +31,7 @@
 //
 // File name:     G4hCoulombScatteringModel
 //
-// Author:        Vladimir Ivanchenko 
+// Author:        Vladimir Ivanchenko
 //
 // Creation date: 08.06.2012 from G4eCoulombScatteringModel
 //
@@ -39,24 +39,24 @@
 //
 // Class Description:
 //
-// Implementation of Coulomb Scattering of a charge particle 
-// on Atomic Nucleus for interval of scattering anles in Lab system 
+// Implementation of Coulomb Scattering of a charge particle
+// on Atomic Nucleus for interval of scattering anles in Lab system
 // thetaMin - ThetaMax.
-//   The model based on analysis of J.M.Fernandez-Varea et al. 
-// NIM B73(1993)447 originated from G.Wentzel Z.Phys. 40(1927)590 with 
+//   The model based on analysis of J.M.Fernandez-Varea et al.
+// NIM B73(1993)447 originated from G.Wentzel Z.Phys. 40(1927)590 with
 // screening parameter from H.A.Bethe Phys. Rev. 89 (1953) 1256.
-// 
+//
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4hCoulombScatteringModel_h
-#define G4hCoulombScatteringModel_h 1
+#ifndef G4HCOULOMBSCATTERINGMODEL_HH
+#define G4HCOULOMBSCATTERINGMODEL_HH
 
-#include "G4VEmModel.hh"
-#include "globals.hh"
 #include "G4MaterialCutsCouple.hh"
+#include "G4VEmModel.hh"
 #include "G4WentzelVIRelXSection.hh"
+#include "globals.hh"
 
 class G4ParticleChangeForGamma;
 class G4ParticleDefinition;
@@ -65,104 +65,91 @@ class G4NistManager;
 
 class G4hCoulombScatteringModel : public G4VEmModel
 {
+  public:
 
-public:
+    explicit G4hCoulombScatteringModel(G4bool combined = true);
 
-  explicit G4hCoulombScatteringModel(G4bool combined = true);
- 
-  ~G4hCoulombScatteringModel() override;
+    ~G4hCoulombScatteringModel() override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void InitialiseLocal(const G4ParticleDefinition*, 
-                       G4VEmModel* masterModel) override;
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel* masterModel) override;
 
-  G4double ComputeCrossSectionPerAtom(
-                                const G4ParticleDefinition*,
-				G4double kinEnergy, 
-				G4double Z, 
-				G4double A, 
-				G4double cut,
-				G4double emax) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A, G4double cut, G4double emax) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  G4double MinPrimaryEnergy(const G4Material*,
-			    const G4ParticleDefinition*,
-			    G4double) final;
+    G4double MinPrimaryEnergy(const G4Material*, const G4ParticleDefinition*, G4double) final;
 
-  // defines low energy limit of the model
-  inline void SetLowEnergyThreshold(G4double val);
+    // defines low energy limit of the model
+    inline void SetLowEnergyThreshold(G4double val);
 
-  // user definition of low-energy threshold of recoil
-  inline void SetRecoilThreshold(G4double eth);
+    // user definition of low-energy threshold of recoil
+    inline void SetRecoilThreshold(G4double eth);
 
-  // defines low energy limit on energy transfer to atomic electron
-  inline void SetFixedCut(G4double);
+    // defines low energy limit on energy transfer to atomic electron
+    inline void SetFixedCut(G4double);
 
-  // low energy limit on energy transfer to atomic electron
-  inline G4double GetFixedCut() const;
+    // low energy limit on energy transfer to atomic electron
+    inline G4double GetFixedCut() const;
 
-  // hide assignment operator
-  G4hCoulombScatteringModel & operator=
-  (const G4hCoulombScatteringModel &right) = delete;
-  G4hCoulombScatteringModel(const  G4hCoulombScatteringModel&) = delete;
+    // hide assignment operator
+    G4hCoulombScatteringModel& operator=(const G4hCoulombScatteringModel& right) = delete;
+    G4hCoulombScatteringModel(const G4hCoulombScatteringModel&) = delete;
 
-protected:
+  protected:
 
-  inline void DefineMaterial(const G4MaterialCutsCouple*);
+    inline void DefineMaterial(const G4MaterialCutsCouple*);
 
-  inline void SetupParticle(const G4ParticleDefinition*);
+    inline void SetupParticle(const G4ParticleDefinition*);
 
-private:
- 
-  G4IonTable*               theIonTable;
-  G4ParticleChangeForGamma* fParticleChange;
-  G4WentzelVIRelXSection*   wokvi;
-  G4NistManager*            fNistManager;
+  private:
 
-  const G4ParticleDefinition*  particle;
-  const G4ParticleDefinition*  theProton;
-  const std::vector<G4double>* pCuts;
+    G4IonTable* theIonTable;
+    G4ParticleChangeForGamma* fParticleChange;
+    G4WentzelVIRelXSection* wokvi;
+    G4NistManager* fNistManager;
 
-  const G4MaterialCutsCouple* currentCouple;
-  const G4Material*           currentMaterial;
-  G4int                       currentMaterialIndex;
+    const G4ParticleDefinition* particle;
+    const G4ParticleDefinition* theProton;
+    const std::vector<G4double>* pCuts;
 
-  G4double                  cosThetaMin;
-  G4double                  cosThetaMax;
-  G4double                  recoilThreshold;
-  G4double                  elecRatio;
-  G4double                  mass;
+    const G4MaterialCutsCouple* currentCouple;
+    const G4Material* currentMaterial;
+    G4int currentMaterialIndex;
 
-  G4double                  fixedCut;
+    G4double cosThetaMin;
+    G4double cosThetaMax;
+    G4double recoilThreshold;
+    G4double elecRatio;
+    G4double mass;
 
-  G4bool                    isCombined;  
+    G4double fixedCut;
+
+    G4bool isCombined;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
-void G4hCoulombScatteringModel::DefineMaterial(const G4MaterialCutsCouple* cup) 
-{ 
-  if(cup != currentCouple) {
+inline void G4hCoulombScatteringModel::DefineMaterial(const G4MaterialCutsCouple* cup)
+{
+  if (cup != currentCouple)
+  {
     currentCouple = cup;
     currentMaterial = cup->GetMaterial();
-    currentMaterialIndex = currentCouple->GetIndex(); 
+    currentMaterialIndex = currentCouple->GetIndex();
   }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline 
-void G4hCoulombScatteringModel::SetupParticle(const G4ParticleDefinition* p)
+inline void G4hCoulombScatteringModel::SetupParticle(const G4ParticleDefinition* p)
 {
   // Initialise mass and charge
-  if(p != particle) {
+  if (p != particle)
+  {
     particle = p;
     mass = particle->GetPDGMass();
     wokvi->SetupParticle(p);

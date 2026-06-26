@@ -32,13 +32,13 @@
 // File name:     G4VhNuclearStoppingPower
 //
 // Author:        V.Ivanchenko (Vladimir.Ivanchenko@cern.ch)
-// 
+//
 // Creation date: 20 July 2000
 //
-// Modifications: 
+// Modifications:
 // 20/07/2000  V.Ivanchenko First implementation
 //
-// Class Description: 
+// Class Description:
 //
 // Hadrons/ions nuclear stopping power parameterisation
 // Virtual class to provide an interface before nucleare stopping
@@ -48,32 +48,30 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4VhNuclearStoppingPower_h
-#define G4VhNuclearStoppingPower_h 1
+#ifndef G4VHNUCLEARSTOPPINGPOWER_HH
+#define G4VHNUCLEARSTOPPINGPOWER_HH
 
 #include "globals.hh"
 
-class G4VhNuclearStoppingPower 
+class G4VhNuclearStoppingPower
 {
-public:
-  explicit G4VhNuclearStoppingPower();
-  virtual ~G4VhNuclearStoppingPower();
+  public:
 
-  void SetNuclearStoppingFluctuationsOn() {lossFlucFlag = true;}; 
-  void SetNuclearStoppingFluctuationsOff() {lossFlucFlag = false;}; 
+    explicit G4VhNuclearStoppingPower();
+    virtual ~G4VhNuclearStoppingPower();
 
-  virtual G4double NuclearStoppingPower(G4double kineticEnergy,
-                                        G4double z1, G4double z2, 
-                                        G4double m1, G4double m2) const=0;
+    void SetNuclearStoppingFluctuationsOn() { lossFlucFlag = true; };
+    void SetNuclearStoppingFluctuationsOff() { lossFlucFlag = false; };
 
-  G4VhNuclearStoppingPower & operator=(const G4VhNuclearStoppingPower &right) = delete;
-  G4VhNuclearStoppingPower(const G4VhNuclearStoppingPower&) = delete;
+    virtual G4double NuclearStoppingPower(G4double kineticEnergy, G4double z1, G4double z2,
+                                          G4double m1, G4double m2) const = 0;
 
-protected:
-  G4bool lossFlucFlag;
- 
+    G4VhNuclearStoppingPower& operator=(const G4VhNuclearStoppingPower& right) = delete;
+    G4VhNuclearStoppingPower(const G4VhNuclearStoppingPower&) = delete;
+
+  protected:
+
+    G4bool lossFlucFlag;
 };
 
 #endif
-
-

@@ -32,12 +32,12 @@
 
 // Author: Gabriele Cosmo (CERN), 24 October 2001.
 // --------------------------------------------------------------------
-#ifndef G4GeometryMessenger_hh
-#define G4GeometryMessenger_hh 1
+#ifndef G4GEOMETRYMESSENGER_HH
+#define G4GEOMETRYMESSENGER_HH
 
+#include "G4ThreeVector.hh"
 #include "G4Types.hh"
 #include "G4UImessenger.hh"
-#include "G4ThreeVector.hh"
 
 #include <vector>
 
@@ -54,6 +54,7 @@ class G4GeomTestVolume;
 /**
  * @brief G4GeometryMessenger is a messenger defining commands for debugging,
  * verifying and controlling the detector geometry and navigation.
+ * @ingroup geometry_navigation
  */
 
 class G4GeometryMessenger : public G4UImessenger
@@ -69,9 +70,9 @@ class G4GeometryMessenger : public G4UImessenger
     /**
      * Sets/gets values for UI command.
      */
-    void SetNewValue( G4UIcommand* command, G4String newValues ) override;
-    G4String GetCurrentValue( G4UIcommand* command ) override;
-  
+    void SetNewValue(G4UIcommand* command, G4String newValues) override;
+    G4String GetCurrentValue(G4UIcommand* command) override;
+
   private:
 
     void Init();
@@ -85,16 +86,16 @@ class G4GeometryMessenger : public G4UImessenger
 
     struct OverlapMode
     {
-      inline static const G4String placed = "placed";
-      inline static const G4String logical = "logical";
+        inline static const G4String placed = "placed";
+        inline static const G4String logical = "logical";
     };
 
-    G4UIdirectory             *geodir, *navdir, *testdir;
-    G4UIcmdWithABool          *chkCmd, *pchkCmd, *verCmd, *parCmd;
-    G4UIcmdWithoutParameter   *resCmd;
-    G4UIcmdWithAString        *recCmd;
-    G4UIcmdWithADoubleAndUnit *tolCmd;
-    G4UIcmdWithAnInteger      *verbCmd, *rslCmd, *rcsCmd, *rcdCmd, *errCmd;
+    G4UIdirectory *geodir, *navdir, *testdir;
+    G4UIcmdWithABool *chkCmd, *pchkCmd, *verCmd, *parCmd;
+    G4UIcmdWithoutParameter* resCmd;
+    G4UIcmdWithAString* recCmd;
+    G4UIcmdWithADoubleAndUnit* tolCmd;
+    G4UIcmdWithAnInteger *verbCmd, *rslCmd, *rcsCmd, *rcdCmd, *errCmd;
 
     G4double tol = 0.0;
     G4int recLevel = 0, recDepth = -1;

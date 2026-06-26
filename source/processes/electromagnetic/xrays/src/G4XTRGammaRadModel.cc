@@ -28,11 +28,9 @@
 
 ////////////////////////////////////////////////////////////////////////////
 // Constructor, destructor
-G4XTRGammaRadModel::G4XTRGammaRadModel(G4LogicalVolume* anEnvelope,
-                                       G4double alphaPlate, G4double alphaGas,
-                                       G4Material* foilMat, G4Material* gasMat,
-                                       G4double a, G4double b, G4int n,
-                                       const G4String& processName)
+G4XTRGammaRadModel::G4XTRGammaRadModel(G4LogicalVolume* anEnvelope, G4double alphaPlate,
+                                       G4double alphaGas, G4Material* foilMat, G4Material* gasMat,
+                                       G4double a, G4double b, G4int n, const G4String& processName)
   : G4VXTRenergyLoss(anEnvelope, foilMat, gasMat, a, b, n, processName)
 {
   G4cout << "Gamma distributed X-ray TR radiator model is called" << G4endl;
@@ -40,9 +38,8 @@ G4XTRGammaRadModel::G4XTRGammaRadModel(G4LogicalVolume* anEnvelope,
   // Build energy and angular integral spectra of X-ray TR photons from
   // a radiator
   fAlphaPlate = alphaPlate;
-  fAlphaGas   = alphaGas;
-  G4cout << "fAlphaPlate = " << fAlphaPlate << " ; fAlphaGas = " << fAlphaGas
-         << G4endl;
+  fAlphaGas = alphaGas;
+  G4cout << "fAlphaPlate = " << fAlphaPlate << " ; fAlphaGas = " << fAlphaGas << G4endl;
   fExitFlux = true;
 }
 
@@ -62,8 +59,7 @@ void G4XTRGammaRadModel::ProcessDescription(std::ostream& out) const
 // according to exponent. The mean values of the plate and gas gap thicknesses
 // are supposed to be about XTR formation zones but much less than
 // mean absorption length of XTR photons in coresponding material.
-G4double G4XTRGammaRadModel::GetStackFactor(G4double energy, G4double gamma,
-                                            G4double varAngle)
+G4double G4XTRGammaRadModel::GetStackFactor(G4double energy, G4double gamma, G4double varAngle)
 {
   G4double result, Qa, Qb, Q, Za, Zb, Ma, Mb;
 
@@ -77,16 +73,14 @@ G4double G4XTRGammaRadModel::GetStackFactor(G4double energy, G4double gamma,
   Qa = std::pow(Qa, -fAlphaPlate);
   Qb = (1.0 + fGasThick * Mb / fAlphaGas);
   Qb = std::pow(Qb, -fAlphaGas);
-  Q  = Qa * Qb;
+  Q = Qa * Qb;
 
-  G4complex Ca(1.0 + 0.5 * fPlateThick * Ma / fAlphaPlate,
-               fPlateThick / Za / fAlphaPlate);
-  G4complex Cb(1.0 + 0.5 * fGasThick * Mb / fAlphaGas,
-               fGasThick / Zb / fAlphaGas);
+  G4complex Ca(1.0 + 0.5 * fPlateThick * Ma / fAlphaPlate, fPlateThick / Za / fAlphaPlate);
+  G4complex Cb(1.0 + 0.5 * fGasThick * Mb / fAlphaGas, fGasThick / Zb / fAlphaGas);
 
   G4complex Ha = std::pow(Ca, -fAlphaPlate);
   G4complex Hb = std::pow(Cb, -fAlphaGas);
-  G4complex H  = Ha * Hb;
+  G4complex H = Ha * Hb;
 
   G4complex F1 = (0.5 * (1 + Qa) * (1.0 + H) - Ha - Qa * Hb) / (1.0 - H);
 

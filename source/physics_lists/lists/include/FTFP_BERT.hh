@@ -26,7 +26,7 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   
+// ClassName:
 //
 // Author: 2007  Gunter Folger
 //   created from FTFP
@@ -35,26 +35,23 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef FTFP_BERT_h
-#define FTFP_BERT_h 1
+#ifndef FTFP_BERT_HH
+#define FTFP_BERT_HH
+
+#include "G4VModularPhysicsList.hh"
+#include "globals.hh"
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
-#include "globals.hh"
-#include "G4VModularPhysicsList.hh"
-
-class FTFP_BERT: public G4VModularPhysicsList 
+class FTFP_BERT : public G4VModularPhysicsList
 {
-public:
-  FTFP_BERT(G4int ver = 1);
-  virtual ~FTFP_BERT()=default;
+  public:
 
-  FTFP_BERT(const FTFP_BERT &) = delete;
-  FTFP_BERT & operator=(const FTFP_BERT &)=delete;
-  
+    FTFP_BERT(G4int ver = 1);
+    virtual ~FTFP_BERT() = default;
+
+    FTFP_BERT(const FTFP_BERT&) = delete;
+    FTFP_BERT& operator=(const FTFP_BERT&) = delete;
 };
 
 #endif
-
-
-

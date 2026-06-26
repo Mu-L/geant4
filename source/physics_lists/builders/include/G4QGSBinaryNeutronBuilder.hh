@@ -36,45 +36,43 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4QGSBinaryNeutronBuilder_h
-#define G4QGSBinaryNeutronBuilder_h 1
+#ifndef G4QGSBINARYNEUTRONBUILDER_HH
+#define G4QGSBINARYNEUTRONBUILDER_HH
 
-#include "globals.hh"
-
-#include "G4HadronElasticProcess.hh"
-#include "G4NeutronFissionProcess.hh"
-#include "G4NeutronCaptureProcess.hh"
-#include "G4HadronInelasticProcess.hh"
-#include "G4VNeutronBuilder.hh"
-
-#include "G4TheoFSGenerator.hh"
 #include "G4BinaryCascade.hh"
+#include "G4ExcitedStringDecay.hh"
+#include "G4HadronElasticProcess.hh"
+#include "G4HadronInelasticProcess.hh"
+#include "G4NeutronCaptureProcess.hh"
+#include "G4NeutronFissionProcess.hh"
+#include "G4QGSMFragmentation.hh"
 #include "G4QGSModel.hh"
 #include "G4QGSParticipants.hh"
-#include "G4QGSMFragmentation.hh"
-#include "G4ExcitedStringDecay.hh"
 #include "G4QuasiElasticChannel.hh"
+#include "G4TheoFSGenerator.hh"
+#include "G4VNeutronBuilder.hh"
+#include "globals.hh"
 
 class G4QGSBinaryNeutronBuilder : public G4VNeutronBuilder
 {
-  public: 
-    G4QGSBinaryNeutronBuilder(G4bool quasiElastic=false);
+  public:
+
+    G4QGSBinaryNeutronBuilder(G4bool quasiElastic = false);
     virtual ~G4QGSBinaryNeutronBuilder();
 
-    virtual void Build(G4HadronElasticProcess *) final override {}
-    virtual void Build(G4NeutronFissionProcess *) final override {}
-    virtual void Build(G4NeutronCaptureProcess *) final override {}
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
+    virtual void Build(G4HadronElasticProcess*) final override {}
+    virtual void Build(G4NeutronFissionProcess*) final override {}
+    virtual void Build(G4NeutronCaptureProcess*) final override {}
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
-    using G4VNeutronBuilder::Build; //Prevent compiler warning
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+
+    using G4VNeutronBuilder::Build;  // Prevent compiler warning
 
   private:
-    G4TheoFSGenerator * theModel;
-    G4double theMin;
 
+    G4TheoFSGenerator* theModel;
+    G4double theMin;
 };
 
 #endif
-

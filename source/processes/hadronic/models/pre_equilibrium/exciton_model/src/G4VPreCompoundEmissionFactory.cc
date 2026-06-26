@@ -28,15 +28,16 @@
 
 #include "G4VPreCompoundEmissionFactory.hh"
 
-G4VPreCompoundEmissionFactory::G4VPreCompoundEmissionFactory() 
-{}
+G4VPreCompoundEmissionFactory::G4VPreCompoundEmissionFactory() {}
 
 G4VPreCompoundEmissionFactory::~G4VPreCompoundEmissionFactory()
 {
-  if (fragvector != nullptr) {
-    for(auto const & ptr : *fragvector) { delete ptr; }
+  if (fragvector != nullptr)
+  {
+    for (auto const& ptr : *fragvector)
+    {
+      delete ptr;
+    }
     delete fragvector;
   }
 }
-
-

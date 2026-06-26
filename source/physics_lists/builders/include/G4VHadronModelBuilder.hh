@@ -34,36 +34,36 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4VHadronModelBuilder_h
-#define G4VHadronModelBuilder_h 1
+#ifndef G4VHADRONMODELBUILDER_HH
+#define G4VHADRONMODELBUILDER_HH
 
 #include "G4HadronicInteraction.hh"
 #include "globals.hh"
 
-class G4VHadronModelBuilder 
+class G4VHadronModelBuilder
 {
-public: 
+  public:
 
-  G4VHadronModelBuilder(const G4String& name ="");
+    G4VHadronModelBuilder(const G4String& name = "");
 
-  virtual ~G4VHadronModelBuilder();
+    virtual ~G4VHadronModelBuilder();
 
-  G4HadronicInteraction* GetModel();
+    G4HadronicInteraction* GetModel();
 
-  inline const G4String& GetName() const;
+    inline const G4String& GetName() const;
 
-protected:
+  protected:
 
-  virtual G4HadronicInteraction* BuildModel() = 0;
+    virtual G4HadronicInteraction* BuildModel() = 0;
 
-private:
+  private:
 
-  // copy constructor and hide assignment operator
-  G4VHadronModelBuilder(G4VHadronModelBuilder &);
-  G4VHadronModelBuilder & operator=(const G4VHadronModelBuilder &right);
+    // copy constructor and hide assignment operator
+    G4VHadronModelBuilder(G4VHadronModelBuilder&);
+    G4VHadronModelBuilder& operator=(const G4VHadronModelBuilder& right);
 
-  G4HadronicInteraction* model;
-  G4String name; 
+    G4HadronicInteraction* model;
+    G4String name;
 };
 
 inline const G4String& G4VHadronModelBuilder::GetName() const
@@ -72,4 +72,3 @@ inline const G4String& G4VHadronModelBuilder::GetName() const
 }
 
 #endif
-

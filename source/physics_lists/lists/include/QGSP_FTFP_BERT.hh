@@ -34,24 +34,21 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef QGSP_FTFP_BERT_h
-#define QGSP_FTFP_BERT_h 1
+#ifndef QGSP_FTFP_BERT_HH
+#define QGSP_FTFP_BERT_HH
 
-#include "globals.hh"
 #include "G4VModularPhysicsList.hh"
+#include "globals.hh"
 
-class QGSP_FTFP_BERT: public G4VModularPhysicsList
+class QGSP_FTFP_BERT : public G4VModularPhysicsList
 {
-public:
-  QGSP_FTFP_BERT(G4int ver = 1);
-  virtual ~QGSP_FTFP_BERT()=default;
+  public:
 
-  QGSP_FTFP_BERT(const QGSP_FTFP_BERT &) = delete;
-  QGSP_FTFP_BERT & operator=(const QGSP_FTFP_BERT &)=delete;  
-  
+    QGSP_FTFP_BERT(G4int ver = 1);
+    virtual ~QGSP_FTFP_BERT() = default;
+
+    QGSP_FTFP_BERT(const QGSP_FTFP_BERT&) = delete;
+    QGSP_FTFP_BERT& operator=(const QGSP_FTFP_BERT&) = delete;
 };
 
 #endif
-
-
-

@@ -43,7 +43,10 @@
 
 /**
  * @brief describes the DELPHI magnetic field. The axial symmetry field is
- * mainly directed along Z axis. The function MagneticField(yTrack,B)
+ * mainly directed along Z axis.
+ * @ingroup geometry_magneticfield
+ *
+ * The function MagneticField(yTrack,B)
  * calculates the magnetic induction vector B in given point corresponding
  * according to parameterisation given in: P.Billoir, DELPHI 87-6 PROG 65, 1987.
  */
@@ -51,7 +54,7 @@
 class G4DELPHIMagField : public G4MagneticField
 {
   public:
-                       
+
     /**
      * Default Constructor and Destructor.
      */

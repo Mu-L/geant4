@@ -31,13 +31,12 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgbPlaceParamLinear_hh
-#define G4tgbPlaceParamLinear_hh 1
+#ifndef G4TGBPLACEPARAMLINEAR_HH
+#define G4TGBPLACEPARAMLINEAR_HH
 
-#include "globals.hh"
-
-#include "G4tgbPlaceParameterisation.hh"
 #include "G4ThreeVector.hh"
+#include "G4tgbPlaceParameterisation.hh"
+#include "globals.hh"
 
 class G4VPhysicalVolume;
 class G4tgrPlaceParameterisation;
@@ -48,8 +47,7 @@ class G4tgbPlaceParamLinear : public G4tgbPlaceParameterisation
 
     G4tgbPlaceParamLinear(G4tgrPlaceParameterisation*);
     ~G4tgbPlaceParamLinear();
-    void ComputeTransformation(const G4int copyNo,
-                               G4VPhysicalVolume* physVol) const;
+    void ComputeTransformation(const G4int copyNo, G4VPhysicalVolume* physVol) const;
 
   private:
 

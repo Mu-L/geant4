@@ -35,14 +35,15 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4AntiBarionBuilder_h
-#define G4AntiBarionBuilder_h 1
+#ifndef G4ANTIBARIONBUILDER_HH
+#define G4ANTIBARIONBUILDER_HH
 
 #include "globals.hh"
 
 class G4AntiBarionBuilder
 {
-  public: 
+  public:
+
     G4AntiBarionBuilder() = default;
     ~G4AntiBarionBuilder() = default;
 
@@ -50,4 +51,3 @@ class G4AntiBarionBuilder
 };
 
 #endif
-

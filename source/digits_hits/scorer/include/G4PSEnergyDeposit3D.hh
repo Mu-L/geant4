@@ -26,8 +26,8 @@
 //
 //
 
-#ifndef G4PSEnergyDeposit3D_h
-#define G4PSEnergyDeposit3D_h 1
+#ifndef G4PSENERGYDEPOSIT3D_HH
+#define G4PSENERGYDEPOSIT3D_HH
 
 #include "G4PSEnergyDeposit.hh"
 ///////////////////////////////////////////////////////////////////////////////
@@ -40,19 +40,21 @@
 
 class G4PSEnergyDeposit3D : public G4PSEnergyDeposit
 {
- public:
-  G4PSEnergyDeposit3D(const G4String& name, G4int ni = 1, G4int nj = 1, G4int nk = 1,
-                      G4int depi = 2, G4int depj = 1, G4int depk = 0);
-  G4PSEnergyDeposit3D(const G4String& name, const G4String& unit, G4int ni = 1,
-                      G4int nj = 1, G4int nk = 1, G4int depi = 2,
-                      G4int depj = 1, G4int depk = 0);
+  public:
 
-  ~G4PSEnergyDeposit3D() override = default;
+    G4PSEnergyDeposit3D(const G4String& name, G4int ni = 1, G4int nj = 1, G4int nk = 1,
+                        G4int depi = 2, G4int depj = 1, G4int depk = 0);
+    G4PSEnergyDeposit3D(const G4String& name, const G4String& unit, G4int ni = 1, G4int nj = 1,
+                        G4int nk = 1, G4int depi = 2, G4int depj = 1, G4int depk = 0);
 
- protected:
-  G4int GetIndex(G4Step*) override;
+    ~G4PSEnergyDeposit3D() override = default;
 
- private:
-  G4int fDepthi, fDepthj, fDepthk;
+  protected:
+
+    G4int GetIndex(G4Step*) override;
+
+  private:
+
+    G4int fDepthi, fDepthj, fDepthk;
 };
 #endif

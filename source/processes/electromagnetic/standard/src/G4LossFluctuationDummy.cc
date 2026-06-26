@@ -31,10 +31,10 @@
 // File name:     G4LossFluctuationDummy
 //
 // Author:        V. Ivanchenko
-// 
+//
 // Creation date: 14.02.2022
 //
-// Modifications: 
+// Modifications:
 //
 //
 
@@ -42,14 +42,13 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "G4LossFluctuationDummy.hh"
-#include "G4MaterialCutsCouple.hh"
+
 #include "G4DynamicParticle.hh"
+#include "G4MaterialCutsCouple.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4LossFluctuationDummy::G4LossFluctuationDummy(const G4String& nam)
- : G4VEmFluctuationModel(nam)
-{}
+G4LossFluctuationDummy::G4LossFluctuationDummy(const G4String& nam) : G4VEmFluctuationModel(nam) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -57,33 +56,24 @@ G4LossFluctuationDummy::~G4LossFluctuationDummy() = default;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double 
-G4LossFluctuationDummy::SampleFluctuations(const G4MaterialCutsCouple*,
-                                           const G4DynamicParticle*,
-                                           const G4double,
-                                           const G4double,
-                                           const G4double,
-                                           const G4double averageLoss)
+G4double G4LossFluctuationDummy::SampleFluctuations(const G4MaterialCutsCouple*,
+                                                    const G4DynamicParticle*, const G4double,
+                                                    const G4double, const G4double,
+                                                    const G4double averageLoss)
 {
   return averageLoss;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-
-G4double G4LossFluctuationDummy::Dispersion(const G4Material*,
-                                            const G4DynamicParticle*,
-                                            const G4double, const G4double,
-                                            const G4double)
+G4double G4LossFluctuationDummy::Dispersion(const G4Material*, const G4DynamicParticle*,
+                                            const G4double, const G4double, const G4double)
 {
   return 0.0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void 
-G4LossFluctuationDummy::SetParticleAndCharge(const G4ParticleDefinition*,
-                                             G4double)
-{}
+void G4LossFluctuationDummy::SetParticleAndCharge(const G4ParticleDefinition*, G4double) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

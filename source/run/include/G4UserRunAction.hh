@@ -42,8 +42,8 @@
 
 // Original author: M.Asai, 1998
 // --------------------------------------------------------------------
-#ifndef G4UserRunAction_hh
-#define G4UserRunAction_hh 1
+#ifndef G4USERRUNACTION_HH
+#define G4USERRUNACTION_HH
 
 #include "G4Types.hh"
 
@@ -52,6 +52,7 @@ class G4Run;
 class G4UserRunAction
 {
   public:
+
     G4UserRunAction();
     virtual ~G4UserRunAction() = default;
 
@@ -63,6 +64,7 @@ class G4UserRunAction
     inline G4bool IsMaster() const { return isMaster; }
 
   protected:
+
     G4bool isMaster = true;
 };
 

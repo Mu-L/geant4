@@ -30,12 +30,13 @@
  *  Created on: Jul 23, 2019
  *      Author: W. G. Shin
  *              J. Ramos-Mendez and B. Faddegon
-*/
+ */
 
 #include "G4O3.hh"
+
+#include "G4ParticleTable.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4ParticleTable.hh"
 
 // ######################################################################
 // ###                         Ozone                               ###
@@ -68,11 +69,12 @@ G4O3* G4O3::Definition()
     //    );
 
     G4double mass = 47.99319 * g / Avogadro * c_squared;
-    anInstance = new G4MoleculeDefinition(name, mass, 2.0e-9 * (m * m / s), 0, 0,
-                                          2.0 * angstrom, 3);
+    anInstance =
+      new G4MoleculeDefinition(name, mass, 2.0e-9 * (m * m / s), 0, 0, 2.0 * angstrom, 3);
 
-    ((G4MoleculeDefinition*) anInstance)->SetLevelOccupation(0); // Set 2 electrons on 1 single occupancy
-    ((G4MoleculeDefinition*) anInstance)->SetFormatedName(formatedName);
+    ((G4MoleculeDefinition*)anInstance)
+      ->SetLevelOccupation(0);  // Set 2 electrons on 1 single occupancy
+    ((G4MoleculeDefinition*)anInstance)->SetFormatedName(formatedName);
   }
   theInstance = static_cast<G4O3*>(anInstance);
   return theInstance;

@@ -29,20 +29,21 @@
 // Description: class containing numerically integrated angular distributions
 //              in the CM for pi+ p and pi- n elastic scattering.  Below 2.6
 //              GeV distributions are taken from SAID phase shift calculations
-//              with Coulomb interactions turned off.  Above 2.6 GeV, pp 
+//              with Coulomb interactions turned off.  Above 2.6 GeV, pp
 //              elastic scattering data are used.
 //
 
-#ifndef G4PipP2PipPAngDst_h
-#define G4PipP2PPipAngDst_h 1
+#ifndef G4PIPP2PIPPANGDST_HH
+#define G4PIPP2PIPPANGDST_HH
 
 #include "G4NumIntTwoBodyAngDst.hh"
 
+class G4PipP2PipPAngDst : public G4NumIntTwoBodyAngDst<11, 19>
+{
+  public:
 
-class G4PipP2PipPAngDst : public G4NumIntTwoBodyAngDst<11,19> {
-public:
-  G4PipP2PipPAngDst(G4int verbose = 0);
-  virtual ~G4PipP2PipPAngDst() {;}
+    G4PipP2PipPAngDst(G4int verbose = 0);
+    virtual ~G4PipP2PipPAngDst() { ; }
 };
 
 #endif

@@ -29,45 +29,40 @@
 //
 //
 
-#ifndef G4NeutrinoElectronCcXsc_h
-#define G4NeutrinoElectronCcXsc_h
+#ifndef G4NEUTRINOELECTRONCCXSC_HH
+#define G4NEUTRINOELECTRONCCXSC_HH
 
-
-#include "globals.hh"
 #include "G4VCrossSectionDataSet.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 
 class G4NeutrinoElectronCcXsc : public G4VCrossSectionDataSet
 {
-public:
-   
-  G4NeutrinoElectronCcXsc();
-  ~G4NeutrinoElectronCcXsc();
+  public:
 
-  virtual
-  G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z, const G4Material*);
+    G4NeutrinoElectronCcXsc();
+    ~G4NeutrinoElectronCcXsc();
 
+    virtual G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z, const G4Material*);
 
-  virtual
-  G4double GetElementCrossSection(const G4DynamicParticle*, 
-				  G4int Z, const G4Material*);
+    virtual G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z, const G4Material*);
 
-  void SetCutEnergy(G4double ec){fCutEnergy=ec;};
-  G4double GetCutEnergy(){return fCutEnergy;};
+    void SetCutEnergy(G4double ec) { fCutEnergy = ec; };
+    G4double GetCutEnergy() { return fCutEnergy; };
 
-  void SetBiasingFactor(G4double bf){fBiasingFactor=bf;};
-  G4double GetBiasingFactor(){return fBiasingFactor;};
+    void SetBiasingFactor(G4double bf) { fBiasingFactor = bf; };
+    G4double GetBiasingFactor() { return fBiasingFactor; };
 
-protected:
+  protected:
 
-  G4double fCofXsc;    // 2*Gf*Gf*MeC2/pi
-  G4double fSin2tW;    // sin^2theta_Weinberg
-  G4double fCutEnergy; // minimal recoil electron energy detected
-  G4double fBiasingFactor; // biasing xsc up
+    G4double fCofXsc;  // 2*Gf*Gf*MeC2/pi
+    G4double fSin2tW;  // sin^2theta_Weinberg
+    G4double fCutEnergy;  // minimal recoil electron energy detected
+    G4double fBiasingFactor;  // biasing xsc up
 
-  G4ParticleDefinition* theMuonMinus;
-  G4ParticleDefinition* theTauMinus;
+    G4ParticleDefinition* theMuonMinus;
+    G4ParticleDefinition* theTauMinus;
 };
 
 #endif

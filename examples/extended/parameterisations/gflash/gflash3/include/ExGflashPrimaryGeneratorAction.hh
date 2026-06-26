@@ -37,12 +37,14 @@ class G4GeneralParticleSource;
 class ExGflashPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
   public:
+
     ExGflashPrimaryGeneratorAction();
     ~ExGflashPrimaryGeneratorAction() override;
 
     void GeneratePrimaries(G4Event* anEvent) override;
 
   private:
+
     G4GeneralParticleSource* fParticleGun{nullptr};
 };
 

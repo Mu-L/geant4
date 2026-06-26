@@ -26,11 +26,11 @@
 //
 //
 
-#ifndef G4PSCellFlux_h
-#define G4PSCellFlux_h 1
+#ifndef G4PSCELLFLUX_HH
+#define G4PSCELLFLUX_HH
 
-#include "G4VPrimitivePlotter.hh"
 #include "G4THitsMap.hh"
+#include "G4VPrimitivePlotter.hh"
 
 class G4VSolid;
 
@@ -56,28 +56,31 @@ class G4VSolid;
 
 class G4PSCellFlux : public G4VPrimitivePlotter
 {
- public:
-  G4PSCellFlux(const G4String& name, G4int depth = 0);
-  G4PSCellFlux(const G4String& name, const G4String& unit, G4int depth = 0);
-  ~G4PSCellFlux() override = default;
+  public:
 
-  inline void Weighted(G4bool flg = true) { weighted = flg; }
-  // Multiply track weight
+    G4PSCellFlux(const G4String& name, G4int depth = 0);
+    G4PSCellFlux(const G4String& name, const G4String& unit, G4int depth = 0);
+    ~G4PSCellFlux() override = default;
 
-  void Initialize(G4HCofThisEvent*) override;
-  void clear() override;
-  void PrintAll() override;
+    inline void Weighted(G4bool flg = true) { weighted = flg; }
+    // Multiply track weight
 
-  virtual void SetUnit(const G4String& unit);
+    void Initialize(G4HCofThisEvent*) override;
+    void clear() override;
+    void PrintAll() override;
 
- protected:
-  G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
-  virtual G4double ComputeVolume(G4Step*, G4int idx);
-  virtual void DefineUnitAndCategory();
+    virtual void SetUnit(const G4String& unit);
 
- private:
-  G4int HCID;
-  G4THitsMap<G4double>* EvtMap;
-  G4bool weighted;
+  protected:
+
+    G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+    virtual G4double ComputeVolume(G4Step*, G4int idx);
+    virtual void DefineUnitAndCategory();
+
+  private:
+
+    G4int HCID;
+    G4THitsMap<G4double>* EvtMap;
+    G4bool weighted;
 };
 #endif

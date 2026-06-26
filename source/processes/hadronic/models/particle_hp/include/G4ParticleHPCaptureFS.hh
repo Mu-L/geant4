@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4ParticleHPCaptureFS_h
-#define G4ParticleHPCaptureFS_h
+#ifndef G4PARTICLEHPCAPTUREFS_HH
+#define G4PARTICLEHPCAPTUREFS_HH
 
 #include "G4NeutronHPCaptureFS.hh"
 using G4ParticleHPCaptureFS = G4NeutronHPCaptureFS;

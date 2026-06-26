@@ -27,7 +27,7 @@
 // Jane Tinslay, John Allison, Joseph Perl November 2005
 //
 // Class Description:
-// Trajectory model which colours a trajectory according to  
+// Trajectory model which colours a trajectory according to
 // charge. Guts taken from G4VTrajectory::DrawTrajectory method.
 // Class Description - End:
 
@@ -37,22 +37,20 @@
 #include "G4Colour.hh"
 #include "G4VTrajectoryModel.hh"
 
-class G4TrajectoryGenericDrawer : public G4VTrajectoryModel {
+class G4TrajectoryGenericDrawer : public G4VTrajectoryModel
+{
+  public:  // With description
 
-public: // With description
+    G4TrajectoryGenericDrawer(const G4String& name = "Unspecified", G4VisTrajContext* context = 0);
 
-  G4TrajectoryGenericDrawer(const G4String& name = "Unspecified", G4VisTrajContext* context=0);
+    virtual ~G4TrajectoryGenericDrawer();
 
-  virtual ~G4TrajectoryGenericDrawer();
+    virtual void Draw(const G4VTrajectory& trajectory, const G4bool& visible = true) const;
 
-  virtual void Draw(const G4VTrajectory& trajectory, 
-		    const G4bool& visible = true) const;
+    virtual void Print(std::ostream& ostr) const;
+    // Print configuration
 
-  virtual void Print(std::ostream& ostr) const;
-  // Print configuration
-
-private:
-  
+  private:
 };
 
 #endif

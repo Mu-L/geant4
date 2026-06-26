@@ -30,17 +30,17 @@
 
 #include "G4AttValue.hh"
 #include "G4Colour.hh"
+#include "G4ModelingParameters.hh"
 #include "G4Polyline.hh"
 #include "G4Polymarker.hh"
+#include "G4RichTrajectoryPoint.hh"
 #include "G4UIcommand.hh"
+#include "G4VModel.hh"
 #include "G4VTrajectory.hh"
 #include "G4VTrajectoryPoint.hh"
-#include "G4RichTrajectoryPoint.hh"
 #include "G4VVisManager.hh"
 #include "G4VisAttributes.hh"
 #include "G4VisTrajContext.hh"
-#include "G4VModel.hh"
-#include "G4ModelingParameters.hh"
 
 #include <utility>
 
@@ -74,25 +74,30 @@ TimesValidity GetPointsAndTimes(const G4VTrajectory& traj, const G4VisTrajContex
   // Keep positions.  Don't store unless first or different.
   std::vector<G4ThreeVector> positions;
 
-  for (G4int iPoint = 0; iPoint < traj.GetPointEntries(); iPoint++) {
+  for (G4int iPoint = 0; iPoint < traj.GetPointEntries(); iPoint++)
+  {
     G4VTrajectoryPoint* aTrajectoryPoint = traj.GetPoint(iPoint);
     const G4ThreeVector& trajectoryPointPosition = aTrajectoryPoint->GetPosition();
 
     // Only store if first or if different
-    if (positions.size() == 0 || trajectoryPointPosition != positions[positions.size() - 1]) {
+    if (positions.size() == 0 || trajectoryPointPosition != positions[positions.size() - 1])
+    {
       // Pre- and Post-Point times from the trajectory point...
       G4double trajectoryPointPreTime = -std::numeric_limits<double>::max();
       G4double trajectoryPointPostTime = std::numeric_limits<double>::max();
 
-      if (context.GetTimeSliceInterval() && validity == ValidTimes) {
-
+      if (context.GetTimeSliceInterval() && validity == ValidTimes)
+      {
         const auto richTrajectoryPoint = dynamic_cast<G4RichTrajectoryPoint*>(aTrajectoryPoint);
-        if (richTrajectoryPoint) {
-          trajectoryPointPreTime  = richTrajectoryPoint->GetPreStepPointGlobalTime();
+        if (richTrajectoryPoint)
+        {
+          trajectoryPointPreTime = richTrajectoryPoint->GetPreStepPointGlobalTime();
           trajectoryPointPostTime = richTrajectoryPoint->GetPostStepPointGlobalTime();
-          if (trajectoryPointPostTime > 1000000. * context.GetTimeSliceInterval()) {
+          if (trajectoryPointPostTime > 1000000. * context.GetTimeSliceInterval())
+          {
             static G4bool warnedTimeExceeded = false;
-            if (!warnedTimeExceeded) {
+            if (!warnedTimeExceeded)
+            {
               G4Exception("G4TrajectoryUtils::GetPointsAndTimes", "modeling0128", JustWarning,
                           "Trajectory point times exceed limit (>1000000 time slice)."
                           "\nNormal trajectory will be drawn.");
@@ -100,9 +105,12 @@ TimesValidity GetPointsAndTimes(const G4VTrajectory& traj, const G4VisTrajContex
             }
             validity = InvalidTimes;
           }
-        } else {
+        }
+        else
+        {
           static G4bool warnedNoAttValues = false;
-          if (!warnedNoAttValues) {
+          if (!warnedNoAttValues)
+          {
             G4Exception("G4TrajectoryUtils::GetPointsAndTimes", "modeling0127", JustWarning,
                         "Trajectory point times not found. Use G4RichTrajectory:"
                         "\n  /vis/scene/add/trajectories rich");
@@ -113,15 +121,19 @@ TimesValidity GetPointsAndTimes(const G4VTrajectory& traj, const G4VisTrajContex
       }
 
       const std::vector<G4ThreeVector>* auxiliaries = aTrajectoryPoint->GetAuxiliaryPoints();
-      if (0 != auxiliaries) {
-        for (size_t iAux = 0; iAux < auxiliaries->size(); ++iAux) {
+      if (0 != auxiliaries)
+      {
+        for (size_t iAux = 0; iAux < auxiliaries->size(); ++iAux)
+        {
           const G4ThreeVector& auxPointPosition = (*auxiliaries)[iAux];
-          if (positions.size() == 0 || auxPointPosition != positions[positions.size() - 1]) {
+          if (positions.size() == 0 || auxPointPosition != positions[positions.size() - 1])
+          {
             // Only store if first or if different
             positions.push_back(trajectoryPointPosition);
             trajectoryLine.push_back(auxPointPosition);
             auxiliaryPoints.push_back(auxPointPosition);
-            if (validity == ValidTimes) {
+            if (validity == ValidTimes)
+            {
               // Interpolate time for auxiliary points...
               G4double s1 = (auxPointPosition - lastTrajectoryPointPosition).mag();
               G4double s2 = (trajectoryPointPosition - auxPointPosition).mag();
@@ -137,7 +149,8 @@ TimesValidity GetPointsAndTimes(const G4VTrajectory& traj, const G4VisTrajContex
       positions.push_back(trajectoryPointPosition);
       trajectoryLine.push_back(trajectoryPointPosition);
       stepPoints.push_back(trajectoryPointPosition);
-      if (validity == ValidTimes) {
+      if (validity == ValidTimes)
+      {
         trajectoryLineTimes.push_back(trajectoryPointPostTime);
         stepPointTimes.push_back(trajectoryPointPostTime);
       }
@@ -158,10 +171,13 @@ static void SliceLine(G4double timeIncrement, G4Polyline& trajectoryLine,
   newTrajectoryLine.push_back(trajectoryLine[0]);
   newTrajectoryLineTimes.push_back(trajectoryLineTimes[0]);
   size_t lineSize = trajectoryLine.size();
-  if (lineSize > 1) {
-    for (size_t i = 1; i < trajectoryLine.size(); ++i) {
+  if (lineSize > 1)
+  {
+    for (size_t i = 1; i < trajectoryLine.size(); ++i)
+    {
       G4double deltaT = trajectoryLineTimes[i] - trajectoryLineTimes[i - 1];
-      if (deltaT > 0.) {
+      if (deltaT > 0.)
+      {
         G4double practicalTimeIncrement = std::max(timeIncrement, deltaT / 100.);
         for (G4double t = (int(trajectoryLineTimes[i - 1] / practicalTimeIncrement) + 1)
                           * practicalTimeIncrement;
@@ -191,7 +207,8 @@ static void DrawWithoutTime(const G4VisTrajContext& myContext, G4Polyline& traje
   G4VVisManager* pVVisManager = G4VVisManager::GetConcreteInstance();
   if (0 == pVVisManager) return;
 
-  if (myContext.GetDrawLine() && myContext.GetLineVisible()) {
+  if (myContext.GetDrawLine() && myContext.GetLineVisible())
+  {
     G4VisAttributes trajectoryLineAttribs(myContext.GetLineColour());
     trajectoryLineAttribs.SetLineWidth(myContext.GetLineWidth());
     trajectoryLine.SetVisAttributes(&trajectoryLineAttribs);
@@ -199,7 +216,8 @@ static void DrawWithoutTime(const G4VisTrajContext& myContext, G4Polyline& traje
     pVVisManager->Draw(trajectoryLine);
   }
 
-  if (myContext.GetDrawAuxPts() && myContext.GetAuxPtsVisible() && (auxiliaryPoints.size() > 0)) {
+  if (myContext.GetDrawAuxPts() && myContext.GetAuxPtsVisible() && (auxiliaryPoints.size() > 0))
+  {
     auxiliaryPoints.SetMarkerType(myContext.GetAuxPtsType());
     auxiliaryPoints.SetSize(myContext.GetAuxPtsSizeType(), myContext.GetAuxPtsSize());
     auxiliaryPoints.SetFillStyle(myContext.GetAuxPtsFillStyle());
@@ -210,7 +228,8 @@ static void DrawWithoutTime(const G4VisTrajContext& myContext, G4Polyline& traje
     pVVisManager->Draw(auxiliaryPoints);
   }
 
-  if (myContext.GetDrawStepPts() && myContext.GetStepPtsVisible() && (stepPoints.size() > 0)) {
+  if (myContext.GetDrawStepPts() && myContext.GetStepPtsVisible() && (stepPoints.size() > 0))
+  {
     stepPoints.SetMarkerType(myContext.GetStepPtsType());
     stepPoints.SetSize(myContext.GetStepPtsSizeType(), myContext.GetStepPtsSize());
     stepPoints.SetFillStyle(myContext.GetStepPtsFillStyle());
@@ -234,26 +253,31 @@ static void DrawWithTime(const G4VisTrajContext& myContext, G4Polyline& trajecto
   if (0 == pVVisManager) return;
 
   const auto& timeParameters = G4VModel::GetCurrentModelingParameters()->GetTimeParameters();
-  const auto& viewerStartTime    = timeParameters.fStartTime;
-  const auto& viewerEndTime      = timeParameters.fEndTime;
-  const auto& viewerFadeFactor   = timeParameters.fFadeFactor;
+  const auto& viewerStartTime = timeParameters.fStartTime;
+  const auto& viewerEndTime = timeParameters.fEndTime;
+  const auto& viewerFadeFactor = timeParameters.fFadeFactor;
 
-  if (myContext.GetDrawLine() && myContext.GetLineVisible()) {
+  if (myContext.GetDrawLine() && myContext.GetLineVisible())
+  {
     G4VisAttributes trajectoryLineAttribs(myContext.GetLineColour());
     trajectoryLineAttribs.SetLineWidth(myContext.GetLineWidth());
 
-    for (size_t i = 1; i < trajectoryLine.size(); ++i) {
+    for (size_t i = 1; i < trajectoryLine.size(); ++i)
+    {
       const auto& sliceStartTime = trajectoryLineTimes[i - 1];
       const auto& sliceEndTime = trajectoryLineTimes[i];
-      if (sliceStartTime >= viewerStartTime && sliceEndTime <= viewerEndTime) {
+      if (sliceStartTime >= viewerStartTime && sliceEndTime <= viewerEndTime)
+      {
         G4Polyline slice;
         slice.push_back(trajectoryLine[i - 1]);
         slice.push_back(trajectoryLine[i]);
         trajectoryLineAttribs.SetStartTime(trajectoryLineTimes[i - 1]);
         trajectoryLineAttribs.SetEndTime(trajectoryLineTimes[i]);
-        if (viewerStartTime >= 0.) {
-          auto opacityMultiplier = 1. - viewerFadeFactor
-          * (viewerEndTime - trajectoryLineTimes[i]) / (viewerEndTime - viewerStartTime);
+        if (viewerStartTime >= 0.)
+        {
+          auto opacityMultiplier = 1.
+                                   - viewerFadeFactor * (viewerEndTime - trajectoryLineTimes[i])
+                                       / (viewerEndTime - viewerStartTime);
           auto colour = myContext.GetLineColour();
           colour.SetAlpha(opacityMultiplier * colour.GetAlpha());
           trajectoryLineAttribs.SetColour(colour);
@@ -264,13 +288,16 @@ static void DrawWithTime(const G4VisTrajContext& myContext, G4Polyline& trajecto
     }
   }
 
-  if (myContext.GetDrawAuxPts() && myContext.GetAuxPtsVisible() && (auxiliaryPoints.size() > 0)) {
+  if (myContext.GetDrawAuxPts() && myContext.GetAuxPtsVisible() && (auxiliaryPoints.size() > 0))
+  {
     G4VisAttributes auxiliaryPointsAttribs(myContext.GetAuxPtsColour());
 
-    for (size_t i = 0; i < auxiliaryPoints.size(); ++i) {
+    for (size_t i = 0; i < auxiliaryPoints.size(); ++i)
+    {
       const auto& auxStartTime = auxiliaryPointTimes[i];
       const auto& auxEndTime = auxiliaryPointTimes[i];
-      if (auxStartTime >= viewerStartTime && auxEndTime <= viewerEndTime) {
+      if (auxStartTime >= viewerStartTime && auxEndTime <= viewerEndTime)
+      {
         G4Polymarker point;
         point.push_back(auxiliaryPoints[i]);
         point.SetMarkerType(myContext.GetAuxPtsType());
@@ -278,9 +305,11 @@ static void DrawWithTime(const G4VisTrajContext& myContext, G4Polyline& trajecto
         point.SetFillStyle(myContext.GetAuxPtsFillStyle());
         auxiliaryPointsAttribs.SetStartTime(auxiliaryPointTimes[i]);
         auxiliaryPointsAttribs.SetEndTime(auxiliaryPointTimes[i]);
-        if (viewerStartTime >= 0.) {
-          auto opacityMultiplier = 1. - viewerFadeFactor
-          * (viewerEndTime - auxiliaryPointTimes[i] ) / (viewerEndTime - viewerStartTime);
+        if (viewerStartTime >= 0.)
+        {
+          auto opacityMultiplier = 1.
+                                   - viewerFadeFactor * (viewerEndTime - auxiliaryPointTimes[i])
+                                       / (viewerEndTime - viewerStartTime);
           auto colour = myContext.GetAuxPtsColour();
           colour.SetAlpha(opacityMultiplier * colour.GetAlpha());
           auxiliaryPointsAttribs.SetColour(colour);
@@ -291,13 +320,16 @@ static void DrawWithTime(const G4VisTrajContext& myContext, G4Polyline& trajecto
     }
   }
 
-  if (myContext.GetDrawStepPts() && myContext.GetStepPtsVisible() && (stepPoints.size() > 0)) {
+  if (myContext.GetDrawStepPts() && myContext.GetStepPtsVisible() && (stepPoints.size() > 0))
+  {
     G4VisAttributes stepPointsAttribs(myContext.GetStepPtsColour());
 
-    for (size_t i = 0; i < stepPoints.size(); ++i) {
+    for (size_t i = 0; i < stepPoints.size(); ++i)
+    {
       const auto& pointStartTime = stepPointTimes[i];
       const auto& pointEndTime = stepPointTimes[i];
-      if (pointStartTime >= viewerStartTime && pointEndTime <= viewerEndTime) {
+      if (pointStartTime >= viewerStartTime && pointEndTime <= viewerEndTime)
+      {
         G4Polymarker point;
         point.push_back(stepPoints[i]);
         point.SetMarkerType(myContext.GetStepPtsType());
@@ -305,9 +337,11 @@ static void DrawWithTime(const G4VisTrajContext& myContext, G4Polyline& trajecto
         point.SetFillStyle(myContext.GetStepPtsFillStyle());
         stepPointsAttribs.SetStartTime(stepPointTimes[i]);
         stepPointsAttribs.SetEndTime(stepPointTimes[i]);
-        if (viewerStartTime >= 0.) {
-          auto opacityMultiplier = 1. - viewerFadeFactor
-          * (viewerEndTime - stepPointTimes[i]) / (viewerEndTime - viewerStartTime);
+        if (viewerStartTime >= 0.)
+        {
+          auto opacityMultiplier = 1.
+                                   - viewerFadeFactor * (viewerEndTime - stepPointTimes[i])
+                                       / (viewerEndTime - viewerStartTime);
           auto colour = myContext.GetStepPtsColour();
           colour.SetAlpha(opacityMultiplier * colour.GetAlpha());
           stepPointsAttribs.SetColour(colour);
@@ -337,13 +371,15 @@ void DrawLineAndPoints(const G4VTrajectory& traj, const G4VisTrajContext& contex
     GetPointsAndTimes(traj, context, trajectoryLine, auxiliaryPoints, stepPoints,
                       trajectoryLineTimes, auxiliaryPointTimes, stepPointTimes);
 
-  if (validity == ValidTimes) {
+  if (validity == ValidTimes)
+  {
     SliceLine(context.GetTimeSliceInterval(), trajectoryLine, trajectoryLineTimes);
 
     DrawWithTime(context, trajectoryLine, auxiliaryPoints, stepPoints, trajectoryLineTimes,
                  auxiliaryPointTimes, stepPointTimes);
   }
-  else {
+  else
+  {
     DrawWithoutTime(context, trajectoryLine, auxiliaryPoints, stepPoints);
   }
 }

@@ -75,9 +75,11 @@ void G4VDNAModel::LoadCrossSectionData(const G4ParticleDefinition* particleName)
 
   // iterate on each material contained into the fStringOfMaterials variable (through
   // applyToMatVect)
-  for (const auto & i : applyToMatVect) {
+  for (const auto& i : applyToMatVect)
+  {
     auto pMat = G4Material::GetMaterial(i, false);
-    if (i != "all" && pMat == nullptr) {
+    if (i != "all" && pMat == nullptr)
+    {
       continue;
     }
 
@@ -90,8 +92,10 @@ void G4VDNAModel::LoadCrossSectionData(const G4ParticleDefinition* particleName)
     // We have to do a for loop because of the "all" option
     // applyToMatVect[i] == "all" implies applyToMatVect.size()=1 and we want to iterate on all
     // registered materials
-    for (std::size_t j = 0; j < fModelMaterials.size(); ++j) {
-      if (i == "all" || pMat->GetIndex() == fModelMaterials[j]) {
+    for (std::size_t j = 0; j < fModelMaterials.size(); ++j)
+    {
+      if (i == "all" || pMat->GetIndex() == fModelMaterials[j])
+      {
         isMatFound = true;
         materialID = fModelMaterials[j];
         pParticle = fModelParticles[j];
@@ -107,7 +111,8 @@ void G4VDNAModel::LoadCrossSectionData(const G4ParticleDefinition* particleName)
     }
 
     // check if we found a correspondance, if not: fatal error
-    if (!isMatFound) {
+    if (!isMatFound)
+    {
       std::ostringstream oss;
       oss << i
           << " material was not found. It means the material specified in the UserPhysicsList is "
@@ -141,17 +146,21 @@ std::vector<G4String> G4VDNAModel::BuildApplyToMatVect(const G4String& materials
   std::vector<G4String> materialVect;
 
   // if we don't find any "/" then it means we only have one "material" (could be the "all" option)
-  if (materials.find('/') == std::string::npos) {
+  if (materials.find('/') == std::string::npos)
+  {
     // we add the material to the output vector
     materialVect.push_back(materials);
   }
   // if we have several materials listed in the string then we must retrieve them
-  else {
+  else
+  {
     G4String materialsNonIdentified = materials;
 
-    while (materialsNonIdentified.find_first_of('/') != std::string::npos) {
+    while (materialsNonIdentified.find_first_of('/') != std::string::npos)
+    {
       // we select the first material and stop at the "/" caracter
-      const G4String& mat = materialsNonIdentified.substr(0, materialsNonIdentified.find_first_of('/'));
+      const G4String& mat =
+        materialsNonIdentified.substr(0, materialsNonIdentified.find_first_of('/'));
       materialVect.push_back(mat);
 
       // we remove the previous material from the materialsNonIdentified string
@@ -183,16 +192,19 @@ G4int G4VDNAModel::RandomSelectShell(const G4double& k, const G4ParticleDefiniti
 
   auto pos = fData[materialID].find(particle);
 
-  if (pos != fData[materialID].end()) {
+  if (pos != fData[materialID].end())
+  {
     G4DNACrossSectionDataSet* table = pos->second.get();
 
-    if (table != nullptr) {
+    if (table != nullptr)
+    {
       auto valuesBuffer = new G4double[table->NumberOfComponents()];
       auto n = (G4int)table->NumberOfComponents();
       G4int i(n);
       G4double value = 0.;
 
-      while (i > 0) {
+      while (i > 0)
+      {
         --i;
         valuesBuffer[i] = table->GetComponent(i)->FindValue(k);
         value += valuesBuffer[i];
@@ -202,10 +214,12 @@ G4int G4VDNAModel::RandomSelectShell(const G4double& k, const G4ParticleDefiniti
 
       i = n;
 
-      while (i > 0) {
+      while (i > 0)
+      {
         --i;
 
-        if (valuesBuffer[i] > value) {
+        if (valuesBuffer[i] > value)
+        {
           delete[] valuesBuffer;
           return i;
         }
@@ -215,7 +229,8 @@ G4int G4VDNAModel::RandomSelectShell(const G4double& k, const G4ParticleDefiniti
       delete[] valuesBuffer;
     }
   }
-  else {
+  else
+  {
     G4cout << "particle : " << particle->GetParticleName()
            << " Materials : " << (*G4Material::GetMaterialTable())[materialID]->GetName() << "  "
            << this->GetName() << G4endl;
@@ -233,8 +248,10 @@ G4bool G4VDNAModel::IsMaterialDefine(const std::size_t& materialID)
 
   G4double matTableSize = G4Material::GetMaterialTable()->size();
 
-  for (int i = 0; i < matTableSize; i++) {
-    if (materialID == G4Material::GetMaterialTable()->at(i)->GetIndex()) {
+  for (int i = 0; i < matTableSize; i++)
+  {
+    if (materialID == G4Material::GetMaterialTable()->at(i)->GetIndex())
+    {
       exist = true;
       return exist;
     }
@@ -249,8 +266,10 @@ G4bool G4VDNAModel::IsMaterialExistingInModel(const std::size_t& materialID)
 {
   // Check if the given material is defined in the current model class
 
-  for (const auto& it : fModelMaterials) {
-    if (it == materialID) {
+  for (const auto& it : fModelMaterials)
+  {
+    if (it == materialID)
+    {
       return true;
     }
   }
@@ -264,9 +283,12 @@ G4bool G4VDNAModel::IsParticleExistingInModelForMaterial(const G4ParticleDefinit
   // 1- is the material existing in model ?
   // 2- if yes, is the particle defined for that material ?
 
-  if (IsMaterialExistingInModel(materialID)) {
-    for (const auto& it : fModelParticles) {
-      if (it == particleName) {
+  if (IsMaterialExistingInModel(materialID))
+  {
+    for (const auto& it : fModelParticles)
+    {
+      if (it == particleName)
+      {
         return true;
       }
     }

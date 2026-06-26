@@ -44,6 +44,7 @@ class G4FermiStableFragment : public G4VFermiFragmentAN
                               std::vector<G4FermiParticle>& fragments) const override;
 
   private:
+
     void DoInitialize() override;
 };
 

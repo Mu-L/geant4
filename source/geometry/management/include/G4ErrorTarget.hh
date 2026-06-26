@@ -34,17 +34,21 @@
 #ifndef G4ERRORTARGET_HH
 #define G4ERRORTARGET_HH
 
-#include "globals.hh"
 #include "G4ThreeVector.hh"
+#include "globals.hh"
 
 class G4Step;
 
-enum G4ErrorTargetType{ G4ErrorTarget_PlaneSurface,
-                        G4ErrorTarget_CylindricalSurface,
-                        G4ErrorTarget_GeomVolume,
-                        G4ErrorTarget_TrkL };
+enum G4ErrorTargetType
+{
+  G4ErrorTarget_PlaneSurface,
+  G4ErrorTarget_CylindricalSurface,
+  G4ErrorTarget_GeomVolume,
+  G4ErrorTarget_TrkL
+};
 /**
  * @brief G4ErrorTarget is base class for all error propagation targets.
+ * @ingroup geometry_management
  */
 
 class G4ErrorTarget
@@ -60,20 +64,19 @@ class G4ErrorTarget
     /**
      * Methods to compute the distance from the target volume.
      */
-    virtual G4double GetDistanceFromPoint( const G4ThreeVector&,
-                                           const G4ThreeVector& ) const;
-    virtual G4double GetDistanceFromPoint( const G4ThreeVector& ) const;
+    virtual G4double GetDistanceFromPoint(const G4ThreeVector&, const G4ThreeVector&) const;
+    virtual G4double GetDistanceFromPoint(const G4ThreeVector&) const;
 
     /**
      * Returns true if the target surface / target track length is reached.
      */
     virtual G4bool TargetReached(const G4Step*);
-      // 
+    //
 
     /**
      * Dumps parameters to standard output.
      */
-    virtual void Dump( const G4String& msg ) const = 0;
+    virtual void Dump(const G4String& msg) const = 0;
 
     /**
      * Returns the type ID of the target.

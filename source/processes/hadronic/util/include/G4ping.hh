@@ -23,54 +23,54 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4ping_h
-#define G4ping_h
+#ifndef G4PING_HH
+#define G4PING_HH
+
+#include "G4LorentzVector.hh"
+#include "globals.hh"
 
 #include <vector>
 
-#include "globals.hh"
-#include "G4LorentzVector.hh"
-
-  class G4ping
-  {
-   public:
+class G4ping
+{
+  public:
 
     G4ping(const G4String& aName) : theName(aName) {}
-    
-    void push_back(const G4String& aS) {theS.push_back(aS);}
-    void push_back(G4double aD) {theD.push_back(aD);}
-    void push_back(const G4LorentzVector& aV) {theV.push_back(aV);}
-    
+
+    void push_back(const G4String& aS) { theS.push_back(aS); }
+    void push_back(G4double aD) { theD.push_back(aD); }
+    void push_back(const G4LorentzVector& aV) { theV.push_back(aV); }
+
     void dump()
     {
-      if(std::getenv(theName))
+      if (std::getenv(theName))
       {
         std::size_t i(0);
-	for(i=0; i<theS.size(); ++i)
-	{
-	  G4cout << theS[i]<<", ";
-	}
-	for(i=0; i<theD.size(); ++i)
-	{
-	  G4cout << theD[i]<<", ";
-	}
-	for(i=0; i<theV.size(); ++i)
-	{
-	  G4cout << theV[i]<<", ";
-	}
-	G4cout << G4endl;
+        for (i = 0; i < theS.size(); ++i)
+        {
+          G4cout << theS[i] << ", ";
+        }
+        for (i = 0; i < theD.size(); ++i)
+        {
+          G4cout << theD[i] << ", ";
+        }
+        for (i = 0; i < theV.size(); ++i)
+        {
+          G4cout << theV[i] << ", ";
+        }
+        G4cout << G4endl;
       }
       theS.clear();
       theD.clear();
       theV.clear();
     }
 
-   private:
+  private:
 
     std::vector<G4String> theS;
     std::vector<G4double> theD;
     std::vector<G4LorentzVector> theV;
-    
+
     G4String theName;
-  };
+};
 #endif

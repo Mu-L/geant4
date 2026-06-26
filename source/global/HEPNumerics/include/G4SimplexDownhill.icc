@@ -32,15 +32,15 @@
 #include <iostream>
 #include <numeric>
 
-template <class T>
+template<class T>
 void G4SimplexDownhill<T>::init()
 {
   alpha = 2.0;  // refrection coefficient:  0 < alpha
-  beta  = 0.5;  // contraction coefficient:   0 < beta < 1
+  beta = 0.5;  // contraction coefficient:   0 < beta < 1
   gamma = 2.0;  // expantion coefficient:  1 < gamma
 
   maximum_no_trial = 10000;
-  max_se           = FLT_MIN;
+  max_se = FLT_MIN;
   // max_ratio = FLT_EPSILON/1;
   max_ratio = DBL_EPSILON / 1;
   minimized = false;
@@ -58,7 +58,7 @@ SetFunction( G4int n , G4double( *afunc )( std::vector < G4double > ) )
 
 */
 
-template <class T>
+template<class T>
 G4double G4SimplexDownhill<T>::GetMinimum()
 {
   initialize();
@@ -71,10 +71,10 @@ G4double G4SimplexDownhill<T>::GetMinimum()
 
   auto it_minh = std::min_element(currentHeights.cbegin(), currentHeights.cend());
   G4int imin = 0;
-  G4int i    = 0;
-  for(auto it = currentHeights.cbegin(); it != currentHeights.cend(); ++it)
+  G4int i = 0;
+  for (auto it = currentHeights.cbegin(); it != currentHeights.cend(); ++it)
   {
-    if(it == it_minh)
+    if (it == it_minh)
     {
       imin = i;
     }
@@ -93,8 +93,7 @@ G4double G4SimplexDownhill<T>::GetMinimum()
   doDownhill();
   // G4cout << "End Second Trials" << G4endl;
 
-  G4double sum =
-    std::accumulate(currentHeights.begin(), currentHeights.end(), 0.0);
+  G4double sum = std::accumulate(currentHeights.begin(), currentHeights.end(), 0.0);
   G4double average = sum / (numberOfVariable + 1);
   G4double minimum = average;
 
@@ -103,16 +102,16 @@ G4double G4SimplexDownhill<T>::GetMinimum()
   return minimum;
 }
 
-template <class T>
+template<class T>
 void G4SimplexDownhill<T>::initialize()
 {
   currentSimplex.resize(numberOfVariable + 1);
   currentHeights.resize(numberOfVariable + 1);
 
-  for(G4int i = 0; i < numberOfVariable; ++i)
+  for (G4int i = 0; i < numberOfVariable; ++i)
   {
     std::vector<G4double> avec(numberOfVariable, 0.0);
-    avec[i]           = 1.0;
+    avec[i] = 1.0;
     currentSimplex[i] = std::move(avec);
   }
 
@@ -121,26 +120,26 @@ void G4SimplexDownhill<T>::initialize()
   currentSimplex[numberOfVariable] = std::move(avec);
 }
 
-template <class T>
+template<class T>
 void G4SimplexDownhill<T>::calHeights()
 {
-  for(G4int i = 0; i <= numberOfVariable; ++i)
+  for (G4int i = 0; i <= numberOfVariable; ++i)
   {
     currentHeights[i] = getValue(currentSimplex[i]);
   }
 }
 
-template <class T>
+template<class T>
 std::vector<G4double> G4SimplexDownhill<T>::calCentroid(G4int ih)
 {
   std::vector<G4double> centroid(numberOfVariable, 0.0);
 
   G4int i = 0;
-  for(const auto & it : currentSimplex)
+  for (const auto& it : currentSimplex)
   {
-    if(i != ih)
+    if (i != ih)
     {
-      for(G4int j = 0; j < numberOfVariable; ++j)
+      for (G4int j = 0; j < numberOfVariable; ++j)
       {
         centroid[j] += it[j] / numberOfVariable;
       }
@@ -151,15 +150,15 @@ std::vector<G4double> G4SimplexDownhill<T>::calCentroid(G4int ih)
   return centroid;
 }
 
-template <class T>
-std::vector<G4double> G4SimplexDownhill<T>::getReflectionPoint(
-  std::vector<G4double> p, std::vector<G4double> centroid)
+template<class T>
+std::vector<G4double> G4SimplexDownhill<T>::getReflectionPoint(std::vector<G4double> p,
+                                                               std::vector<G4double> centroid)
 {
   // G4cout << "Reflection" << G4endl;
 
   std::vector<G4double> reflectionP(numberOfVariable, 0.0);
 
-  for(G4int i = 0; i < numberOfVariable; ++i)
+  for (G4int i = 0; i < numberOfVariable; ++i)
   {
     reflectionP[i] = (1 + alpha) * centroid[i] - alpha * p[i];
   }
@@ -167,15 +166,15 @@ std::vector<G4double> G4SimplexDownhill<T>::getReflectionPoint(
   return reflectionP;
 }
 
-template <class T>
-std::vector<G4double> G4SimplexDownhill<T>::getExpansionPoint(
-  std::vector<G4double> p, std::vector<G4double> centroid)
+template<class T>
+std::vector<G4double> G4SimplexDownhill<T>::getExpansionPoint(std::vector<G4double> p,
+                                                              std::vector<G4double> centroid)
 {
   // G4cout << "Expantion" << G4endl;
 
   std::vector<G4double> expansionP(numberOfVariable, 0.0);
 
-  for(G4int i = 0; i < numberOfVariable; ++i)
+  for (G4int i = 0; i < numberOfVariable; ++i)
   {
     expansionP[i] = (1 - gamma) * centroid[i] + gamma * p[i];
   }
@@ -183,13 +182,13 @@ std::vector<G4double> G4SimplexDownhill<T>::getExpansionPoint(
   return expansionP;
 }
 
-template <class T>
-std::vector<G4double> G4SimplexDownhill<T>::getContractionPoint(
-  std::vector<G4double> p, std::vector<G4double> centroid)
+template<class T>
+std::vector<G4double> G4SimplexDownhill<T>::getContractionPoint(std::vector<G4double> p,
+                                                                std::vector<G4double> centroid)
 {
   std::vector<G4double> contractionP(numberOfVariable, 0.0);
 
-  for(G4int i = 0; i < numberOfVariable; ++i)
+  for (G4int i = 0; i < numberOfVariable; ++i)
   {
     contractionP[i] = (1 - beta) * centroid[i] + beta * p[i];
   }
@@ -197,15 +196,14 @@ std::vector<G4double> G4SimplexDownhill<T>::getContractionPoint(
   return contractionP;
 }
 
-template <class T>
+template<class T>
 G4bool G4SimplexDownhill<T>::isItGoodEnough()
 {
-  G4double sum =
-    std::accumulate(currentHeights.begin(), currentHeights.end(), 0.0);
+  G4double sum = std::accumulate(currentHeights.begin(), currentHeights.end(), 0.0);
   G4double average = sum / (numberOfVariable + 1);
 
   G4double delta = 0.0;
-  for(G4int i = 0; i <= numberOfVariable; ++i)
+  for (G4int i = 0; i <= numberOfVariable; ++i)
   {
     delta += std::abs(currentHeights[i] - average);
   }
@@ -218,16 +216,16 @@ G4bool G4SimplexDownhill<T>::isItGoodEnough()
   return result;
 }
 
-template <class T>
+template<class T>
 void G4SimplexDownhill<T>::doDownhill()
 {
   G4int nth_trial = 0;
 
-  while(nth_trial < maximum_no_trial)
+  while (nth_trial < maximum_no_trial)
   {
     calHeights();
 
-    if(isItGoodEnough())
+    if (isItGoodEnough())
     {
       break;
     }
@@ -238,13 +236,13 @@ void G4SimplexDownhill<T>::doDownhill()
     G4double h_H = *it_maxh;
     G4double h_L = *it_minh;
 
-    G4int ih      = 0;
-    G4int il      = 0;
+    G4int ih = 0;
+    G4int il = 0;
     G4double h_H2 = 0.0;
-    G4int i       = 0;
-    for(auto it = currentHeights.cbegin(); it != currentHeights.cend(); ++it)
+    G4int i = 0;
+    for (auto it = currentHeights.cbegin(); it != currentHeights.cend(); ++it)
     {
-      if(it == it_maxh)
+      if (it == it_maxh)
       {
         ih = i;
       }
@@ -253,7 +251,7 @@ void G4SimplexDownhill<T>::doDownhill()
         h_H2 = std::max(h_H2, *it);
       }
 
-      if(it == it_minh)
+      if (it == it_minh)
       {
         il = i;
       }
@@ -263,19 +261,18 @@ void G4SimplexDownhill<T>::doDownhill()
     std::vector<G4double> centroidPoint = calCentroid(ih);
 
     // REFLECTION
-    std::vector<G4double> reflectionPoint =
-      getReflectionPoint(currentSimplex[ih], centroidPoint);
+    std::vector<G4double> reflectionPoint = getReflectionPoint(currentSimplex[ih], centroidPoint);
 
     G4double h = getValue(reflectionPoint);
 
-    if(h <= h_L)
+    if (h <= h_L)
     {
       // EXPANSION
       std::vector<G4double> expansionPoint =
         getExpansionPoint(reflectionPoint, std::move(centroidPoint));
       G4double hh = getValue(expansionPoint);
 
-      if(hh <= h_L)
+      if (hh <= h_L)
       {
         // Replace
         currentSimplex[ih] = std::move(expansionPoint);
@@ -290,7 +287,7 @@ void G4SimplexDownhill<T>::doDownhill()
     }
     else
     {
-      if(h <= h_H2)
+      if (h <= h_H2)
       {
         // Replace
         currentSimplex[ih] = std::move(reflectionPoint);
@@ -298,7 +295,7 @@ void G4SimplexDownhill<T>::doDownhill()
       }
       else
       {
-        if(h <= h_H)
+        if (h <= h_H)
         {
           // Replace
           currentSimplex[ih] = std::move(reflectionPoint);
@@ -308,7 +305,7 @@ void G4SimplexDownhill<T>::doDownhill()
         std::vector<G4double> contractionPoint =
           getContractionPoint(currentSimplex[ih], std::move(centroidPoint));
         G4double hh = getValue(contractionPoint);
-        if(hh <= h_H)
+        if (hh <= h_H)
         {
           // Replace
           currentSimplex[ih] = std::move(contractionPoint);
@@ -317,10 +314,10 @@ void G4SimplexDownhill<T>::doDownhill()
         else
         {
           // Replace
-          for(G4int j = 0; j <= numberOfVariable; ++j)
+          for (G4int j = 0; j <= numberOfVariable; ++j)
           {
             std::vector<G4double> vec(numberOfVariable, 0.0);
-            for(G4int k = 0; k < numberOfVariable; ++k)
+            for (G4int k = 0; k < numberOfVariable; ++k)
             {
               vec[k] = (currentSimplex[j][k] + currentSimplex[il][k]) / 2.0;
             }
@@ -334,10 +331,10 @@ void G4SimplexDownhill<T>::doDownhill()
   }
 }
 
-template <class T>
+template<class T>
 std::vector<G4double> G4SimplexDownhill<T>::GetMinimumPoint()
 {
-  if(!minimized)
+  if (!minimized)
   {
     GetMinimum();
   }
@@ -345,10 +342,10 @@ std::vector<G4double> G4SimplexDownhill<T>::GetMinimumPoint()
   auto it_minh = std::min_element(currentHeights.cbegin(), currentHeights.cend());
 
   G4int imin = 0;
-  G4int i    = 0;
-  for(auto it = currentHeights.cbegin(); it != currentHeights.cend(); ++it)
+  G4int i = 0;
+  for (auto it = currentHeights.cbegin(); it != currentHeights.cend(); ++it)
   {
-    if(it == it_minh)
+    if (it == it_minh)
     {
       imin = i;
     }

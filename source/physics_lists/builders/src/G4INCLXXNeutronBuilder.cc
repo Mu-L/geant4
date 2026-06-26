@@ -24,36 +24,38 @@
 // ********************************************************************
 //
 #include "G4INCLXXNeutronBuilder.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4ParticleTable.hh"
-#include "G4ProcessManager.hh"
-#include "G4NeutronInelasticXS.hh"
-#include "G4PreCompoundModel.hh"
+
+#include "G4CrossSectionDataSetRegistry.hh"
+#include "G4HadronInelasticProcess.hh"
 #include "G4HadronicInteraction.hh"
 #include "G4HadronicInteractionRegistry.hh"
-#include "G4HadronInelasticProcess.hh"
-#include "G4CrossSectionDataSetRegistry.hh"
+#include "G4NeutronInelasticXS.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "G4PreCompoundModel.hh"
+#include "G4ProcessManager.hh"
+#include "G4SystemOfUnits.hh"
 
-G4INCLXXNeutronBuilder::
-G4INCLXXNeutronBuilder() 
+G4INCLXXNeutronBuilder::G4INCLXXNeutronBuilder()
 {
   withPreCompound = true;
   thePreCompoundMin = 0;
-  thePreCompoundMax = 2*MeV;
-  theMin = 1.0*MeV;
-  theMax = 3.0*GeV;
-  G4HadronicInteraction* p =
-    G4HadronicInteractionRegistry::Instance()->FindModel("PRECO");
+  thePreCompoundMax = 2 * MeV;
+  theMin = 1.0 * MeV;
+  theMax = 3.0 * GeV;
+  G4HadronicInteraction* p = G4HadronicInteractionRegistry::Instance()->FindModel("PRECO");
   thePreCompoundModel = static_cast<G4VPreCompoundModel*>(p);
-  if(!thePreCompoundModel) { thePreCompoundModel = new G4PreCompoundModel(); }
+  if (!thePreCompoundModel)
+  {
+    thePreCompoundModel = new G4PreCompoundModel();
+  }
   theModel = new G4INCLXXInterface(thePreCompoundModel);
 }
 
-void G4INCLXXNeutronBuilder::
-Build(G4HadronInelasticProcess * aP)
+void G4INCLXXNeutronBuilder::Build(G4HadronInelasticProcess* aP)
 {
-  if(withPreCompound) {
+  if (withPreCompound)
+  {
     thePreCompoundModel->SetMinEnergy(thePreCompoundMin);
     thePreCompoundModel->SetMaxEnergy(thePreCompoundMax);
     aP->RegisterMe(thePreCompoundModel);
@@ -61,6 +63,7 @@ Build(G4HadronInelasticProcess * aP)
   theModel->SetMinEnergy(theMin);
   theModel->SetMaxEnergy(theMax);
   aP->RegisterMe(theModel);
-  aP->AddDataSet((G4NeutronInelasticXS*)G4CrossSectionDataSetRegistry::Instance()->GetCrossSectionDataSet(G4NeutronInelasticXS::Default_Name()));
+  aP->AddDataSet(
+    (G4NeutronInelasticXS*)G4CrossSectionDataSetRegistry::Instance()->GetCrossSectionDataSet(
+      G4NeutronInelasticXS::Default_Name()));
 }
-

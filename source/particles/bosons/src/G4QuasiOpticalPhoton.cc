@@ -38,7 +38,8 @@ G4QuasiOpticalPhoton* G4QuasiOpticalPhoton::Definition()
   // search in particle table
   G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
   G4ParticleDefinition* anInstance = pTable->FindParticle(name);
-  if (anInstance == nullptr) {
+  if (anInstance == nullptr)
+  {
     // create particle
     //
     //    Arguments for constructor are as follows
@@ -63,8 +64,7 @@ G4QuasiOpticalPhoton* G4QuasiOpticalPhoton::Definition()
   return theInstance;
 }
 
-G4QuasiOpticalPhoton*
-G4QuasiOpticalPhoton::QuasiOpticalPhotonDefinition()
+G4QuasiOpticalPhoton* G4QuasiOpticalPhoton::QuasiOpticalPhotonDefinition()
 {
   return Definition();
 }

@@ -28,13 +28,13 @@
 // Author: Youhei Morita, 12.09.2001
 // --------------------------------------------------------------------
 #ifndef G4MCTSIMEVENT_HH
-#define G4MCTSIMEVENT_HH 1
-
-#include <iostream>
-#include <vector>
-#include <map>
+#define G4MCTSIMEVENT_HH
 
 #include "G4Types.hh"
+
+#include <iostream>
+#include <map>
+#include <vector>
 
 class G4MCTSimParticle;
 class G4MCTSimVertex;
@@ -51,7 +51,7 @@ class G4MCTSimEvent
 
     inline G4MCTSimEvent(const G4MCTSimEvent& right);
     inline G4MCTSimEvent& operator=(const G4MCTSimEvent& right);
-      // copy constructor and assignment operator
+    // copy constructor and assignment operator
 
     G4bool AddParticle(const G4MCTSimParticle* aparticle);
     inline G4int GetNofParticles() const;
@@ -123,14 +123,12 @@ inline G4MCTSimEvent::particle_iterator G4MCTSimEvent::particles_end()
   return particleMap.end();
 }
 
-inline G4MCTSimEvent::particle_const_iterator G4MCTSimEvent::particles_begin()
-  const
+inline G4MCTSimEvent::particle_const_iterator G4MCTSimEvent::particles_begin() const
 {
   return particleMap.cbegin();
 }
 
-inline G4MCTSimEvent::particle_const_iterator G4MCTSimEvent::particles_end()
-  const
+inline G4MCTSimEvent::particle_const_iterator G4MCTSimEvent::particles_end() const
 {
   return particleMap.cend();
 }
@@ -145,8 +143,7 @@ inline G4MCTSimEvent::vertex_iterator G4MCTSimEvent::vertices_end()
   return vertexVec.end();
 }
 
-inline G4MCTSimEvent::vertex_const_iterator G4MCTSimEvent::vertices_begin()
-  const
+inline G4MCTSimEvent::vertex_const_iterator G4MCTSimEvent::vertices_begin() const
 {
   return vertexVec.cbegin();
 }

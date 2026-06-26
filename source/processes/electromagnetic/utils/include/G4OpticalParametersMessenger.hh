@@ -39,11 +39,10 @@
 // This class defines commands for the optical physics
 //
 
-#ifndef G4OpticalParametersMessenger_h
-#define G4OpticalParametersMessenger_h 1
+#ifndef G4OPTICALPARAMETERSMESSENGER_HH
+#define G4OPTICALPARAMETERSMESSENGER_HH
 
 #include "G4UImessenger.hh"
-
 #include "globals.hh"
 
 class G4VProcess;
@@ -60,102 +59,102 @@ class G4UIcommand;
 
 class G4OpticalParametersMessenger : public G4UImessenger
 {
- public:
-  G4OpticalParametersMessenger(G4OpticalParameters*);
-  virtual ~G4OpticalParametersMessenger();
+  public:
 
-  // methods
-  virtual void SetNewValue(G4UIcommand*, G4String);
+    G4OpticalParametersMessenger(G4OpticalParameters*);
+    virtual ~G4OpticalParametersMessenger();
 
- private:
-  G4OpticalParametersMessenger() = delete;
-  G4OpticalParametersMessenger(const G4OpticalParametersMessenger& right) =
-    delete;
-  G4OpticalParametersMessenger& operator=(
-    const G4OpticalParametersMessenger& right) = delete;
+    // methods
+    virtual void SetNewValue(G4UIcommand*, G4String);
 
-  // data members
+  private:
 
-  /// associated class
-  G4OpticalParameters* params;
+    G4OpticalParametersMessenger() = delete;
+    G4OpticalParametersMessenger(const G4OpticalParametersMessenger& right) = delete;
+    G4OpticalParametersMessenger& operator=(const G4OpticalParametersMessenger& right) = delete;
 
-  /// command directory
-  G4UIdirectory* fDir;
-  G4UIdirectory* fCerenkovDir;
-  G4UIdirectory* fScintDir;
-  G4UIdirectory* fWlsDir;
-  G4UIdirectory* fWls2Dir;
-  G4UIdirectory* fBoundaryDir;
-  G4UIdirectory* fMieDir;
-  G4UIdirectory* fAbsDir;
-  G4UIdirectory* fRaylDir;
+    // data members
 
-  /// selectOpProcess command
-  G4UIcommand* fActivateProcessCmd;
+    /// associated class
+    G4OpticalParameters* params;
 
-  /// setProcessVerbose command
-  G4UIcmdWithAnInteger* fVerboseCmd;
+    /// command directory
+    G4UIdirectory* fDir;
+    G4UIdirectory* fCerenkovDir;
+    G4UIdirectory* fScintDir;
+    G4UIdirectory* fWlsDir;
+    G4UIdirectory* fWls2Dir;
+    G4UIdirectory* fBoundaryDir;
+    G4UIdirectory* fMieDir;
+    G4UIdirectory* fAbsDir;
+    G4UIdirectory* fRaylDir;
 
-  // Cerenkov
+    /// selectOpProcess command
+    G4UIcommand* fActivateProcessCmd;
 
-  // setCerenkovMaxPhotons command
-  G4UIcmdWithAnInteger* fCerenkovMaxPhotonsCmd;
+    /// setProcessVerbose command
+    G4UIcmdWithAnInteger* fVerboseCmd;
 
-  /// setCerenkovMaxBetaChange command
-  G4UIcmdWithADouble* fCerenkovMaxBetaChangeCmd;
+    // Cerenkov
 
-  /// setStackPhotons command
-  G4UIcmdWithABool* fCerenkovStackPhotonsCmd;
+    // setCerenkovMaxPhotons command
+    G4UIcmdWithAnInteger* fCerenkovMaxPhotonsCmd;
 
-  /// setOffloadPhotons command
-  G4UIcmdWithABool* fCerenkovOffloadPhotonsCmd;
+    /// setCerenkovMaxBetaChange command
+    G4UIcmdWithADouble* fCerenkovMaxBetaChangeCmd;
 
-  G4UIcmdWithABool* fCerenkovTrackSecondariesFirstCmd;
-  G4UIcmdWithAnInteger* fCerenkovVerboseLevelCmd;
+    /// setStackPhotons command
+    G4UIcmdWithABool* fCerenkovStackPhotonsCmd;
 
-  // Scintillation
+    /// setOffloadPhotons command
+    G4UIcmdWithABool* fCerenkovOffloadPhotonsCmd;
 
-  /// setScintillationByParticleType command
-  G4UIcmdWithABool* fScintByParticleTypeCmd;
+    G4UIcmdWithABool* fCerenkovTrackSecondariesFirstCmd;
+    G4UIcmdWithAnInteger* fCerenkovVerboseLevelCmd;
 
-  /// setScintillationTrackInfo command
-  G4UIcmdWithABool* fScintTrackInfoCmd;
+    // Scintillation
 
-  /// setStackPhotons command
-  G4UIcmdWithABool* fScintStackPhotonsCmd;
+    /// setScintillationByParticleType command
+    G4UIcmdWithABool* fScintByParticleTypeCmd;
 
-  /// setOffloadPhotons command
-  G4UIcmdWithABool* fScintOffloadPhotonsCmd;
+    /// setScintillationTrackInfo command
+    G4UIcmdWithABool* fScintTrackInfoCmd;
 
-  G4UIcmdWithABool* fScintTrackSecondariesFirstCmd;
+    /// setStackPhotons command
+    G4UIcmdWithABool* fScintStackPhotonsCmd;
 
-  /// setFiniteRiseTime command
-  G4UIcmdWithABool* fScintFiniteRiseTimeCmd;
+    /// setOffloadPhotons command
+    G4UIcmdWithABool* fScintOffloadPhotonsCmd;
 
-  G4UIcmdWithAnInteger* fScintVerboseLevelCmd;
+    G4UIcmdWithABool* fScintTrackSecondariesFirstCmd;
 
-  // WLS
+    /// setFiniteRiseTime command
+    G4UIcmdWithABool* fScintFiniteRiseTimeCmd;
 
-  /// setWLSTimeProfile command
-  G4UIcmdWithAString* fWLSTimeProfileCmd;
-  G4UIcmdWithAnInteger* fWLSVerboseLevelCmd;
+    G4UIcmdWithAnInteger* fScintVerboseLevelCmd;
 
-  // WLS2
+    // WLS
 
-  /// setWLS2TimeProfile command
-  G4UIcmdWithAString* fWLS2TimeProfileCmd;
-  G4UIcmdWithAnInteger* fWLS2VerboseLevelCmd;
+    /// setWLSTimeProfile command
+    G4UIcmdWithAString* fWLSTimeProfileCmd;
+    G4UIcmdWithAnInteger* fWLSVerboseLevelCmd;
 
-  /// setInvokeSD command
-  G4UIcmdWithABool* fBoundaryInvokeSDCmd;
-  G4UIcmdWithAnInteger* fBoundaryVerboseLevelCmd;
+    // WLS2
 
-  G4UIcmdWithAnInteger* fAbsorptionVerboseLevelCmd;
-  G4UIcmdWithAnInteger* fRayleighVerboseLevelCmd;
-  G4UIcmdWithAnInteger* fMieVerboseLevelCmd;
+    /// setWLS2TimeProfile command
+    G4UIcmdWithAString* fWLS2TimeProfileCmd;
+    G4UIcmdWithAnInteger* fWLS2VerboseLevelCmd;
 
-  G4UIcommand* fDumpCmd;
-  G4UIcommand* fXRayCmd;
+    /// setInvokeSD command
+    G4UIcmdWithABool* fBoundaryInvokeSDCmd;
+    G4UIcmdWithAnInteger* fBoundaryVerboseLevelCmd;
+
+    G4UIcmdWithAnInteger* fAbsorptionVerboseLevelCmd;
+    G4UIcmdWithAnInteger* fRayleighVerboseLevelCmd;
+    G4UIcmdWithAnInteger* fMieVerboseLevelCmd;
+
+    G4UIcommand* fDumpCmd;
+    G4UIcommand* fXRayCmd;
 };
 
 #endif  // G4OpticalParametersMessenger_h

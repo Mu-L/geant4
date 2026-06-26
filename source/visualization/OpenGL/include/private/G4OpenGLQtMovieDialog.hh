@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 
 #ifndef G4OPENGLQTMOVIEDIALOG_HH
 #define G4OPENGLQTMOVIEDIALOG_HH
@@ -44,46 +44,48 @@ class QGroupBox;
 */
 class G4OpenGLQtMovieDialog : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
- public:
-  /** Construct a G4OpenGLQtMovieDialog
-      @param parent : parent widget
-  */
-  G4OpenGLQtMovieDialog(G4OpenGLQtViewer*,QWidget*);
+  public:
 
-  /** Destroys G4OpenGLQtMovieDialog */
-  ~G4OpenGLQtMovieDialog();
-  void setRecordingStatus(QString);
-  void setRecordingInfos(QString);
+    /** Construct a G4OpenGLQtMovieDialog
+        @param parent : parent widget
+    */
+    G4OpenGLQtMovieDialog(G4OpenGLQtViewer*, QWidget*);
 
-private :
-  QLineEdit* fEncoderPath;
-  QLineEdit* fTempFolderPath;
-  QLineEdit* fSaveFileName;
-  G4OpenGLQtViewer *fParentViewer;
-  QLabel *fEncoderStatus;
-  QLabel *fTempFolderStatus;
-  QLabel *fSaveFileStatus;
-  QLabel *fRecordingStatus;
-  QLabel *fRecordingInfos;
-  QPushButton *fButtonStopFinishClose;
-  QPushButton *fButtonSave;
-  QPushButton *fButtonStartPause;
+    /** Destroys G4OpenGLQtMovieDialog */
+    ~G4OpenGLQtMovieDialog();
+    void setRecordingStatus(QString);
+    void setRecordingInfos(QString);
 
-public Q_SLOTS :
-  void stopFinishClose();
-  void save();
-  bool checkEncoderSwParameters();
-  bool checkSaveFileNameParameters();
-  bool checkTempFolderParameters();
+  private:
 
-private Q_SLOTS :
-  void selectEncoderPathAction();
-  void selectTempPathAction();
-  void selectSaveFileNameAction();
-  void resetRecording();
-  void enabledApplyButton();
+    QLineEdit* fEncoderPath;
+    QLineEdit* fTempFolderPath;
+    QLineEdit* fSaveFileName;
+    G4OpenGLQtViewer* fParentViewer;
+    QLabel* fEncoderStatus;
+    QLabel* fTempFolderStatus;
+    QLabel* fSaveFileStatus;
+    QLabel* fRecordingStatus;
+    QLabel* fRecordingInfos;
+    QPushButton* fButtonStopFinishClose;
+    QPushButton* fButtonSave;
+    QPushButton* fButtonStartPause;
+
+  public Q_SLOTS:
+    void stopFinishClose();
+    void save();
+    bool checkEncoderSwParameters();
+    bool checkSaveFileNameParameters();
+    bool checkTempFolderParameters();
+
+  private Q_SLOTS:
+    void selectEncoderPathAction();
+    void selectTempPathAction();
+    void selectSaveFileNameAction();
+    void resetRecording();
+    void enabledApplyButton();
 };
 
 #endif

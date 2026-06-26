@@ -29,47 +29,46 @@
 //
 
 #include "G4Li8GEMProbability.hh"
+
 #include "G4SystemOfUnits.hh"
 
-G4Li8GEMProbability::G4Li8GEMProbability() :
-  G4GEMProbability(8,3,2.0) // A,Z,Spin
+G4Li8GEMProbability::G4Li8GEMProbability() : G4GEMProbability(8, 3, 2.0)  // A,Z,Spin
 {
-  ExcitEnergies.push_back(980.8*keV);
+  ExcitEnergies.push_back(980.8 * keV);
   ExcitSpins.push_back(1.0);
-  ExcitLifetimes.push_back(8.0E-15*second);
-  
-  ExcitEnergies.push_back(2255.0*keV);
+  ExcitLifetimes.push_back(8.0E-15 * second);
+
+  ExcitEnergies.push_back(2255.0 * keV);
   ExcitSpins.push_back(3.0);
-  ExcitLifetimes.push_back(fPlanck/(33.0*keV));
+  ExcitLifetimes.push_back(fPlanck / (33.0 * keV));
 
-  ExcitEnergies.push_back(3210.0*keV);
+  ExcitEnergies.push_back(3210.0 * keV);
   ExcitSpins.push_back(1.0);
-  ExcitLifetimes.push_back(fPlanck/(1.0*MeV));
+  ExcitLifetimes.push_back(fPlanck / (1.0 * MeV));
 
-  ExcitEnergies.push_back(5400.0*keV);
+  ExcitEnergies.push_back(5400.0 * keV);
   ExcitSpins.push_back(1.0);
-  ExcitLifetimes.push_back(fPlanck/(650.0*keV));
+  ExcitLifetimes.push_back(fPlanck / (650.0 * keV));
 
-  ExcitEnergies.push_back(6.1e3*keV);
+  ExcitEnergies.push_back(6.1e3 * keV);
   ExcitSpins.push_back(3.0);
-  ExcitLifetimes.push_back(fPlanck/(1.0*MeV));
+  ExcitLifetimes.push_back(fPlanck / (1.0 * MeV));
 
-  ExcitEnergies.push_back(6530.0*keV);
+  ExcitEnergies.push_back(6530.0 * keV);
   ExcitSpins.push_back(4.0);
-  ExcitLifetimes.push_back(fPlanck/(35.0*keV));
+  ExcitLifetimes.push_back(fPlanck / (35.0 * keV));
 
-  ExcitEnergies.push_back(7.1e3*keV);
+  ExcitEnergies.push_back(7.1e3 * keV);
   ExcitSpins.push_back(0.0);
-  ExcitLifetimes.push_back(fPlanck/(400.0*keV));
+  ExcitLifetimes.push_back(fPlanck / (400.0 * keV));
 
-  ExcitEnergies.push_back(9000.0*keV);
+  ExcitEnergies.push_back(9000.0 * keV);
   ExcitSpins.push_back(0.0);
-  ExcitLifetimes.push_back(fPlanck/(6000.0*keV));
+  ExcitLifetimes.push_back(fPlanck / (6000.0 * keV));
 
-  ExcitEnergies.push_back(10822.0*keV);
+  ExcitEnergies.push_back(10822.0 * keV);
   ExcitSpins.push_back(0.0);
-  ExcitLifetimes.push_back(fPlanck/(12.0*keV));
+  ExcitLifetimes.push_back(fPlanck / (12.0 * keV));
 }
 
-G4Li8GEMProbability::~G4Li8GEMProbability()
-{}
+G4Li8GEMProbability::~G4Li8GEMProbability() {}

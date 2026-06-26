@@ -30,20 +30,20 @@
 #include "G4ReplicaNavigation.hh"
 
 #include "G4AffineTransform.hh"
-#include "G4SmartVoxelProxy.hh"
-#include "G4SmartVoxelNode.hh"
-#include "G4VSolid.hh"
 #include "G4GeometryTolerance.hh"
+#include "G4SmartVoxelNode.hh"
+#include "G4SmartVoxelProxy.hh"
+#include "G4VSolid.hh"
 
 namespace
 {
-  const G4ThreeVector VecCartAxes[3]=
-  { G4ThreeVector(1.,0.,0.), G4ThreeVector(0.,1.,0.), G4ThreeVector(0.,0.,1.) };
-  const G4ExitNormal::ESide SideCartAxesPlus[3]=
-  { G4ExitNormal::kPX, G4ExitNormal::kPY, G4ExitNormal::kPZ };
-  const G4ExitNormal::ESide SideCartAxesMinus[3]=
-  { G4ExitNormal::kMX, G4ExitNormal::kMX, G4ExitNormal::kMX };
-}
+const G4ThreeVector VecCartAxes[3] = {G4ThreeVector(1., 0., 0.), G4ThreeVector(0., 1., 0.),
+                                      G4ThreeVector(0., 0., 1.)};
+const G4ExitNormal::ESide SideCartAxesPlus[3] = {G4ExitNormal::kPX, G4ExitNormal::kPY,
+                                                 G4ExitNormal::kPZ};
+const G4ExitNormal::ESide SideCartAxesMinus[3] = {G4ExitNormal::kMX, G4ExitNormal::kMX,
+                                                  G4ExitNormal::kMX};
+}  // namespace
 
 // ********************************************************************
 // Constructor
@@ -54,30 +54,28 @@ G4ReplicaNavigation::G4ReplicaNavigation()
   kCarTolerance = G4GeometryTolerance::GetInstance()->GetSurfaceTolerance();
   kRadTolerance = G4GeometryTolerance::GetInstance()->GetRadialTolerance();
   kAngTolerance = G4GeometryTolerance::GetInstance()->GetAngularTolerance();
-  halfkCarTolerance = kCarTolerance*0.5;
-  halfkRadTolerance = kRadTolerance*0.5;
-  halfkAngTolerance = kAngTolerance*0.5;
-  fMinStep = 0.05*kCarTolerance;
+  halfkCarTolerance = kCarTolerance * 0.5;
+  halfkRadTolerance = kRadTolerance * 0.5;
+  halfkAngTolerance = kAngTolerance * 0.5;
+  fMinStep = 0.05 * kCarTolerance;
 }
 
 // ********************************************************************
 // Inside
 // ********************************************************************
 //
-EInside
-G4ReplicaNavigation::Inside(const G4VPhysicalVolume* pVol,
-                            const G4int replicaNo,
-                            const G4ThreeVector& localPoint) const
+EInside G4ReplicaNavigation::Inside(const G4VPhysicalVolume* pVol, const G4int replicaNo,
+                                    const G4ThreeVector& localPoint) const
 {
   EInside in = kOutside;
-  
+
   // Replication data
   //
   EAxis axis;
   G4int nReplicas;
   G4double width, offset;
   G4bool consuming;
-  
+
   G4double coord, rad2, rmin, tolRMax2, rmax, tolRMin2;
 
   pVol->GetReplicationData(axis, nReplicas, width, offset, consuming);
@@ -87,25 +85,25 @@ G4ReplicaNavigation::Inside(const G4VPhysicalVolume* pVol,
     case kXAxis:
     case kYAxis:
     case kZAxis:
-      coord = std::fabs(localPoint(axis))-width*0.5;
-      if ( coord<=-halfkCarTolerance )
+      coord = std::fabs(localPoint(axis)) - width * 0.5;
+      if (coord <= -halfkCarTolerance)
       {
         in = kInside;
       }
-      else if ( coord<=halfkCarTolerance )
+      else if (coord <= halfkCarTolerance)
       {
         in = kSurface;
       }
       break;
     case kPhi:
-      if ( (localPoint.y() != 0.0)||(localPoint.x() != 0.0) )
+      if ((localPoint.y() != 0.0) || (localPoint.x() != 0.0))
       {
-        coord = std::fabs(std::atan2(localPoint.y(),localPoint.x()))-width*0.5;
-        if ( coord<=-halfkAngTolerance )
+        coord = std::fabs(std::atan2(localPoint.y(), localPoint.x())) - width * 0.5;
+        if (coord <= -halfkAngTolerance)
         {
           in = kInside;
         }
-        else if ( coord<=halfkAngTolerance )
+        else if (coord <= halfkAngTolerance)
         {
           in = kSurface;
         }
@@ -117,14 +115,14 @@ G4ReplicaNavigation::Inside(const G4VPhysicalVolume* pVol,
       break;
     case kRho:
       rad2 = localPoint.perp2();
-      rmax = (replicaNo+1)*width+offset;
-      tolRMax2  = rmax-halfkRadTolerance;
+      rmax = (replicaNo + 1) * width + offset;
+      tolRMax2 = rmax - halfkRadTolerance;
       tolRMax2 *= tolRMax2;
-      if ( rad2>tolRMax2 )
+      if (rad2 > tolRMax2)
       {
-        tolRMax2 = rmax+halfkRadTolerance;
+        tolRMax2 = rmax + halfkRadTolerance;
         tolRMax2 *= tolRMax2;
-        if ( rad2<=tolRMax2 )
+        if (rad2 <= tolRMax2)
         {
           in = kSurface;
         }
@@ -133,16 +131,16 @@ G4ReplicaNavigation::Inside(const G4VPhysicalVolume* pVol,
       {
         // Known to be inside outer radius
         //
-        if ( (replicaNo != 0)||(offset != 0.0) )
+        if ((replicaNo != 0) || (offset != 0.0))
         {
-          rmin = rmax-width;
-          tolRMin2 = rmin-halfkRadTolerance;
+          rmin = rmax - width;
+          tolRMin2 = rmin - halfkRadTolerance;
           tolRMin2 *= tolRMin2;
-          if ( rad2>tolRMin2 )
+          if (rad2 > tolRMin2)
           {
-            tolRMin2 = rmin+halfkRadTolerance;
+            tolRMin2 = rmin + halfkRadTolerance;
             tolRMin2 *= tolRMin2;
-            if ( rad2>=tolRMin2 )
+            if (rad2 >= tolRMin2)
             {
               in = kInside;
             }
@@ -159,8 +157,7 @@ G4ReplicaNavigation::Inside(const G4VPhysicalVolume* pVol,
       }
       break;
     default:
-      G4Exception("G4ReplicaNavigation::Inside()", "GeomNav0002",
-                  FatalException, "Unknown axis!");
+      G4Exception("G4ReplicaNavigation::Inside()", "GeomNav0002", FatalException, "Unknown axis!");
       break;
   }
   return in;
@@ -170,78 +167,8 @@ G4ReplicaNavigation::Inside(const G4VPhysicalVolume* pVol,
 // DistanceToOut
 // ********************************************************************
 //
-G4double
-G4ReplicaNavigation::DistanceToOut(const G4VPhysicalVolume* pVol,
-                                   const G4int replicaNo,
-                                   const G4ThreeVector& localPoint) const
-{
-  // Replication data
-  //
-  EAxis axis;
-  G4int nReplicas;
-  G4double width,offset;
-  G4bool consuming;
-  
-  G4double safety = 0.;
-  G4double safe1,safe2;
-  G4double coord, rho, rmin, rmax;
-
-  pVol->GetReplicationData(axis, nReplicas, width, offset, consuming);
-  switch(axis)
-  {
-    case kXAxis:
-    case kYAxis:
-    case kZAxis:
-       coord = localPoint(axis);
-       safe1 = width*0.5-coord;
-       safe2 = width*0.5+coord;
-       safety = (safe1<=safe2) ? safe1 : safe2;
-       break;
-    case kPhi:
-      if ( localPoint.y()<=0 )
-      {
-        safety = localPoint.x()*std::sin(width*0.5)
-               + localPoint.y()*std::cos(width*0.5);
-      }
-      else
-      {
-        safety = localPoint.x()*std::sin(width*0.5)
-               - localPoint.y()*std::cos(width*0.5);
-      }
-      break;
-    case kRho:
-      rho = localPoint.perp();
-      rmax = width*(replicaNo+1)+offset;
-      if ( (replicaNo != 0)||(offset != 0.0) )
-      {
-        rmin  = rmax-width;
-        safe1 = rho-rmin;
-        safe2 = rmax-rho;
-        safety = (safe1<=safe2) ? safe1 : safe2;
-      }
-      else
-      {
-        safety = rmax-rho;
-      }
-      break;
-    default:
-     G4Exception("G4ReplicaNavigation::DistanceToOut()", "GeomNav0002",
-                 FatalException, "Unknown axis!");
-     break;
-  }
-  return (safety >= halfkCarTolerance) ? safety : 0;
-}
-
-// ********************************************************************
-// DistanceToOut
-// ********************************************************************
-//
-G4double
-G4ReplicaNavigation::DistanceToOut(const G4VPhysicalVolume* pVol,
-                                   const G4int replicaNo,
-                                   const G4ThreeVector& localPoint,
-                                   const G4ThreeVector& localDirection,
-                                   G4ExitNormal& arExitNormal ) const
+G4double G4ReplicaNavigation::DistanceToOut(const G4VPhysicalVolume* pVol, const G4int replicaNo,
+                                            const G4ThreeVector& localPoint) const
 {
   // Replication data
   //
@@ -250,58 +177,121 @@ G4ReplicaNavigation::DistanceToOut(const G4VPhysicalVolume* pVol,
   G4double width, offset;
   G4bool consuming;
 
-  G4double Dist=kInfinity;
+  G4double safety = 0.;
+  G4double safe1, safe2;
+  G4double coord, rho, rmin, rmax;
+
+  pVol->GetReplicationData(axis, nReplicas, width, offset, consuming);
+  switch (axis)
+  {
+    case kXAxis:
+    case kYAxis:
+    case kZAxis:
+      coord = localPoint(axis);
+      safe1 = width * 0.5 - coord;
+      safe2 = width * 0.5 + coord;
+      safety = (safe1 <= safe2) ? safe1 : safe2;
+      break;
+    case kPhi:
+      if (localPoint.y() <= 0)
+      {
+        safety = localPoint.x() * std::sin(width * 0.5) + localPoint.y() * std::cos(width * 0.5);
+      }
+      else
+      {
+        safety = localPoint.x() * std::sin(width * 0.5) - localPoint.y() * std::cos(width * 0.5);
+      }
+      break;
+    case kRho:
+      rho = localPoint.perp();
+      rmax = width * (replicaNo + 1) + offset;
+      if ((replicaNo != 0) || (offset != 0.0))
+      {
+        rmin = rmax - width;
+        safe1 = rho - rmin;
+        safe2 = rmax - rho;
+        safety = (safe1 <= safe2) ? safe1 : safe2;
+      }
+      else
+      {
+        safety = rmax - rho;
+      }
+      break;
+    default:
+      G4Exception("G4ReplicaNavigation::DistanceToOut()", "GeomNav0002", FatalException,
+                  "Unknown axis!");
+      break;
+  }
+  return (safety >= halfkCarTolerance) ? safety : 0;
+}
+
+// ********************************************************************
+// DistanceToOut
+// ********************************************************************
+//
+G4double G4ReplicaNavigation::DistanceToOut(const G4VPhysicalVolume* pVol, const G4int replicaNo,
+                                            const G4ThreeVector& localPoint,
+                                            const G4ThreeVector& localDirection,
+                                            G4ExitNormal& arExitNormal) const
+{
+  // Replication data
+  //
+  EAxis axis;
+  G4int nReplicas;
+  G4double width, offset;
+  G4bool consuming;
+
+  G4double Dist = kInfinity;
   G4double coord, Comp, lindist;
   G4double signC = 0.0;
-  G4ExitNormal candidateNormal; 
-   
+  G4ExitNormal candidateNormal;
+
   pVol->GetReplicationData(axis, nReplicas, width, offset, consuming);
-  switch(axis)
+  switch (axis)
   {
     case kXAxis:
     case kYAxis:
     case kZAxis:
       coord = localPoint(axis);
       Comp = localDirection(axis);
-      if ( Comp>0 )
+      if (Comp > 0)
       {
-        lindist = width*0.5-coord;
-        Dist = (lindist>0) ? lindist/Comp : 0;
-        signC= 1.0;
+        lindist = width * 0.5 - coord;
+        Dist = (lindist > 0) ? lindist / Comp : 0;
+        signC = 1.0;
       }
-      else if ( Comp<0 )
+      else if (Comp < 0)
       {
-        lindist = width*0.5+coord;
-        Dist = (lindist>0) ? -lindist/Comp : 0;
-        signC= -1.0;
+        lindist = width * 0.5 + coord;
+        Dist = (lindist > 0) ? -lindist / Comp : 0;
+        signC = -1.0;
       }
       else
       {
         Dist = kInfinity;
       }
       // signC = sign<G4double>(Comp)
-      candidateNormal.exitNormal = ( signC * VecCartAxes[axis]);
+      candidateNormal.exitNormal = (signC * VecCartAxes[axis]);
       candidateNormal.calculated = true;
       candidateNormal.validConvex = true;
-      candidateNormal.exitSide =
-        (Comp>0) ? SideCartAxesPlus[axis] : SideCartAxesMinus[axis];
+      candidateNormal.exitSide = (Comp > 0) ? SideCartAxesPlus[axis] : SideCartAxesMinus[axis];
       break;
     case kPhi:
-      Dist = DistanceToOutPhi(localPoint,localDirection,width,candidateNormal);
-        // candidateNormal set in call
+      Dist = DistanceToOutPhi(localPoint, localDirection, width, candidateNormal);
+      // candidateNormal set in call
       break;
     case kRho:
-      Dist = DistanceToOutRad(localPoint,localDirection,width,offset,
-                              replicaNo,candidateNormal);
-        // candidateNormal set in call
+      Dist =
+        DistanceToOutRad(localPoint, localDirection, width, offset, replicaNo, candidateNormal);
+      // candidateNormal set in call
       break;
     default:
-     G4Exception("G4ReplicaNavigation::DistanceToOut()", "GeomNav0002",
-                 FatalException, "Unknown axis!");
-     break;
+      G4Exception("G4ReplicaNavigation::DistanceToOut()", "GeomNav0002", FatalException,
+                  "Unknown axis!");
+      break;
   }
 
-  arExitNormal= candidateNormal; // .exitNormal;
+  arExitNormal = candidateNormal;  // .exitNormal;
 
   return Dist;
 }
@@ -310,11 +300,10 @@ G4ReplicaNavigation::DistanceToOut(const G4VPhysicalVolume* pVol,
 // DistanceToOutPhi
 // ********************************************************************
 //
-G4double
-G4ReplicaNavigation::DistanceToOutPhi(const G4ThreeVector& localPoint,
-                                      const G4ThreeVector& localDirection,
-                                      const G4double width,
-                                      G4ExitNormal& foundNormal ) const
+G4double G4ReplicaNavigation::DistanceToOutPhi(const G4ThreeVector& localPoint,
+                                               const G4ThreeVector& localDirection,
+                                               const G4double width,
+                                               G4ExitNormal& foundNormal) const
 {
   // Phi Intersection
   // NOTE: width<=pi by definition
@@ -322,40 +311,40 @@ G4ReplicaNavigation::DistanceToOutPhi(const G4ThreeVector& localPoint,
   G4double sinSPhi = -2.0, cosSPhi = -2.0;
   G4double pDistS, pDistE, compS, compE, Dist, dist2, yi;
   G4ExitNormal::ESide sidePhi = G4ExitNormal::kNull;
-  G4ThreeVector  candidateNormal;
+  G4ThreeVector candidateNormal;
 
-  if ( (localPoint.x()!=0.0) || (localPoint.y()!=0.0) )
+  if ((localPoint.x() != 0.0) || (localPoint.y() != 0.0))
   {
-    sinSPhi = std::sin(-width*0.5);  // SIN of starting phi plane
-    cosSPhi = std::cos(width*0.5);   // COS of starting phi plane
+    sinSPhi = std::sin(-width * 0.5);  // SIN of starting phi plane
+    cosSPhi = std::cos(width * 0.5);  // COS of starting phi plane
 
     // pDist -ve when inside
     //
-    pDistS = localPoint.x()*sinSPhi-localPoint.y()*cosSPhi;
-     // Start plane at phi= -S
-    pDistE = localPoint.x()*sinSPhi+localPoint.y()*cosSPhi;
-     // End   plane at phi= +S
+    pDistS = localPoint.x() * sinSPhi - localPoint.y() * cosSPhi;
+    // Start plane at phi= -S
+    pDistE = localPoint.x() * sinSPhi + localPoint.y() * cosSPhi;
+    // End   plane at phi= +S
 
     // Comp -ve when in direction of outwards normal
     //
-    compS = -sinSPhi*localDirection.x()+cosSPhi*localDirection.y();
-    compE = -sinSPhi*localDirection.x()-cosSPhi*localDirection.y();
+    compS = -sinSPhi * localDirection.x() + cosSPhi * localDirection.y();
+    compE = -sinSPhi * localDirection.x() - cosSPhi * localDirection.y();
 
-    if ( (pDistS<=halfkCarTolerance)&&(pDistE<=halfkCarTolerance) )
+    if ((pDistS <= halfkCarTolerance) && (pDistE <= halfkCarTolerance))
     {
       // Inside both phi *full* planes
       //
-      if ( compS<0 )
+      if (compS < 0)
       {
-        dist2 = pDistS/compS;
-        yi = localPoint.y()+dist2*localDirection.y();
+        dist2 = pDistS / compS;
+        yi = localPoint.y() + dist2 * localDirection.y();
 
         // Check intersecting with correct half-plane (no -> no intersect)
         //
-        if ( yi<=0 )
+        if (yi <= 0)
         {
-          Dist = (pDistS<=-halfkCarTolerance) ? dist2 : 0;
-          sidePhi= G4ExitNormal::kSPhi; // tbc
+          Dist = (pDistS <= -halfkCarTolerance) ? dist2 : 0;
+          sidePhi = G4ExitNormal::kSPhi;  // tbc
         }
         else
         {
@@ -366,49 +355,52 @@ G4ReplicaNavigation::DistanceToOutPhi(const G4ThreeVector& localPoint,
       {
         Dist = kInfinity;
       }
-      if ( compE<0 )
+      if (compE < 0)
       {
-        dist2 = pDistE/compE;
-        
+        dist2 = pDistE / compE;
+
         // Only check further if < starting phi intersection
         //
-        if ( dist2<Dist )
+        if (dist2 < Dist)
         {
-          yi = localPoint.y()+dist2*localDirection.y();
+          yi = localPoint.y() + dist2 * localDirection.y();
 
           // Check intersecting with correct half-plane
           //
-          if ( yi>=0 )
+          if (yi >= 0)
           {
             // Leaving via ending phi
             //
-            Dist = (pDistE<=-halfkCarTolerance) ? dist2 : 0;
+            Dist = (pDistE <= -halfkCarTolerance) ? dist2 : 0;
             sidePhi = G4ExitNormal::kEPhi;
           }
         }
       }
     }
-    else if ( (pDistS>halfkCarTolerance)&&(pDistE>halfkCarTolerance) )
+    else if ((pDistS > halfkCarTolerance) && (pDistE > halfkCarTolerance))
     {
       // Outside both *full* phi planes
       // if towards both >=0 then once inside will remain inside
       //
-      Dist = ((compS>=0)&&(compE>=0)) ? kInfinity : 0;
+      Dist = ((compS >= 0) && (compE >= 0)) ? kInfinity : 0;
     }
-    else if ( (pDistS>halfkCarTolerance)&&(pDistE<=halfkCarTolerance) )
+    else if ((pDistS > halfkCarTolerance) && (pDistE <= halfkCarTolerance))
     {
       // Outside full starting plane, inside full ending plane
       //
-      if ( compE<0 )
-      {      
-        dist2 = pDistE/compE;
-        yi = localPoint.y()+dist2*localDirection.y();
+      if (compE < 0)
+      {
+        dist2 = pDistE / compE;
+        yi = localPoint.y() + dist2 * localDirection.y();
 
         // Check intersection in correct half-plane
         // (if not -> remain in extent)
         //
-        Dist = (yi>0) ? dist2 : kInfinity;
-        if( yi> 0 ) { sidePhi = G4ExitNormal::kEPhi; }
+        Dist = (yi > 0) ? dist2 : kInfinity;
+        if (yi > 0)
+        {
+          sidePhi = G4ExitNormal::kEPhi;
+        }
       }
       else  // Leaving immediately by starting phi
       {
@@ -420,18 +412,21 @@ G4ReplicaNavigation::DistanceToOutPhi(const G4ThreeVector& localPoint,
       // Must be (pDistS<=halfkCarTolerance)&&(pDistE>halfkCarTolerance)
       // Inside full starting plane, outside full ending plane
       //
-      if ( compE>=0 )
+      if (compE >= 0)
       {
-        if ( compS<0 )
+        if (compS < 0)
         {
-          dist2 = pDistS/compS;
-          yi = localPoint.y()+dist2*localDirection.y();
+          dist2 = pDistS / compS;
+          yi = localPoint.y() + dist2 * localDirection.y();
 
           // Check intersection in correct half-plane
           // (if not -> remain in extent)
           //
-          Dist = (yi<0) ? dist2 : kInfinity;
-          if(yi<0)  { sidePhi = G4ExitNormal::kSPhi; }
+          Dist = (yi < 0) ? dist2 : kInfinity;
+          if (yi < 0)
+          {
+            sidePhi = G4ExitNormal::kSPhi;
+          }
         }
         else
         {
@@ -451,32 +446,32 @@ G4ReplicaNavigation::DistanceToOutPhi(const G4ThreeVector& localPoint,
   {
     // On z axis + travel not || to z axis -> use direction vector
     //
-    if( (std::fabs(localDirection.phi())<=width*0.5) )
+    if ((std::fabs(localDirection.phi()) <= width * 0.5))
     {
-       Dist = kInfinity;
+      Dist = kInfinity;
     }
     else
     {
-       Dist = 0.;
-       sidePhi = G4ExitNormal::kMY;
+      Dist = 0.;
+      sidePhi = G4ExitNormal::kMY;
     }
   }
 
-  if(sidePhi == G4ExitNormal::kSPhi )
+  if (sidePhi == G4ExitNormal::kSPhi)
   {
-    candidateNormal = G4ThreeVector(sinSPhi,-cosSPhi,0.) ;
+    candidateNormal = G4ThreeVector(sinSPhi, -cosSPhi, 0.);
   }
   else if (sidePhi == G4ExitNormal::kEPhi)
   {
-    candidateNormal = G4ThreeVector(sinSPhi,cosSPhi,0.) ;
+    candidateNormal = G4ThreeVector(sinSPhi, cosSPhi, 0.);
   }
-  else if (sidePhi == G4ExitNormal::kMY )
+  else if (sidePhi == G4ExitNormal::kMY)
   {
-    candidateNormal = G4ThreeVector(0., -1.0, 0.); // Split -S and +S 'phi'
+    candidateNormal = G4ThreeVector(0., -1.0, 0.);  // Split -S and +S 'phi'
   }
-  foundNormal.calculated= (sidePhi != G4ExitNormal::kNull );
-  foundNormal.exitNormal= candidateNormal;
-   
+  foundNormal.calculated = (sidePhi != G4ExitNormal::kNull);
+  foundNormal.exitNormal = candidateNormal;
+
   return Dist;
 }
 
@@ -484,22 +479,20 @@ G4ReplicaNavigation::DistanceToOutPhi(const G4ThreeVector& localPoint,
 // DistanceToOutRad
 // ********************************************************************
 //
-G4double
-G4ReplicaNavigation::DistanceToOutRad(const G4ThreeVector& localPoint,
-                                      const G4ThreeVector& localDirection,
-                                      const G4double width,
-                                      const G4double offset,
-                                      const G4int replicaNo,
-                                      G4ExitNormal& foundNormal ) const
+G4double G4ReplicaNavigation::DistanceToOutRad(const G4ThreeVector& localPoint,
+                                               const G4ThreeVector& localDirection,
+                                               const G4double width, const G4double offset,
+                                               const G4int replicaNo,
+                                               G4ExitNormal& foundNormal) const
 {
   G4double rmin, rmax, t1, t2, t3, deltaR;
   G4double b, c, d2, srd;
-  G4ExitNormal::ESide  sideR= G4ExitNormal::kNull;
+  G4ExitNormal::ESide sideR = G4ExitNormal::kNull;
 
   //
   // Radial Intersections
   //
-  
+
   // Find intersction with cylinders at rmax/rmin
   // Intersection point (xi,yi,zi) on line
   // x=localPoint.x+t*localDirection.x etc.
@@ -512,31 +505,31 @@ G4ReplicaNavigation::DistanceToOutRad(const G4ThreeVector& localPoint,
   //
   //            t1                t2                    t3
 
-  rmin = replicaNo*width+offset;
-  rmax = (replicaNo+1)*width+offset;
+  rmin = replicaNo * width + offset;
+  rmax = (replicaNo + 1) * width + offset;
 
-  t1 = 1.0-localDirection.z()*localDirection.z();   // since v normalised
-  t2 = localPoint.x()*localDirection.x()+localPoint.y()*localDirection.y();
-  t3 = localPoint.x()*localPoint.x()+localPoint.y()*localPoint.y();
-  
-  if ( t1>0 )        // Check not parallel
+  t1 = 1.0 - localDirection.z() * localDirection.z();  // since v normalised
+  t2 = localPoint.x() * localDirection.x() + localPoint.y() * localDirection.y();
+  t3 = localPoint.x() * localPoint.x() + localPoint.y() * localPoint.y();
+
+  if (t1 > 0)  // Check not parallel
   {
     // Calculate srd, r exit distance
     //
-    if ( t2>=0 )
+    if (t2 >= 0)
     {
       // Delta r not negative => leaving via rmax
       //
-      deltaR = t3-rmax*rmax;
-    
+      deltaR = t3 - rmax * rmax;
+
       // NOTE: Should use
       // rho-rmax<-halfkRadTolerance - [no sqrts for efficiency]
       //
-      if ( deltaR<-halfkRadTolerance )
+      if (deltaR < -halfkRadTolerance)
       {
-        b  = t2/t1;
-        c  = deltaR/t1;
-        srd = -b+std::sqrt(b*b-c);
+        b = t2 / t1;
+        c = deltaR / t1;
+        srd = -b + std::sqrt(b * b - c);
         sideR = G4ExitNormal::kRMax;
       }
       else
@@ -554,17 +547,17 @@ G4ReplicaNavigation::DistanceToOutRad(const G4ThreeVector& localPoint,
       //
       if (rmin != 0.0)
       {
-        deltaR = t3-rmin*rmin;
-        b  = t2/t1;
-        c  = deltaR/t1;
-        d2 = b*b-c;
-        if ( d2>=0 )
+        deltaR = t3 - rmin * rmin;
+        b = t2 / t1;
+        c = deltaR / t1;
+        d2 = b * b - c;
+        if (d2 >= 0)
         {
           // Leaving via rmin
           // NOTE: Should use
           // rho-rmin>halfkRadTolerance - [no sqrts for efficiency]
           //
-          srd = (deltaR>halfkRadTolerance) ? -b-std::sqrt(d2) : 0.0;
+          srd = (deltaR > halfkRadTolerance) ? -b - std::sqrt(d2) : 0.0;
           // Is the following more accurate ?
           // srd = (deltaR>halfkRadTolerance) ? c/( -b - std::sqrt(d2)) : 0.0;
           sideR = G4ExitNormal::kRMin;
@@ -573,10 +566,10 @@ G4ReplicaNavigation::DistanceToOutRad(const G4ThreeVector& localPoint,
         {
           // No rmin intersect -> must be rmax intersect
           //
-          deltaR = t3-rmax*rmax;
-          c  = deltaR/t1;
-          d2 = b*b-c;
-          srd = (d2 < 0.) ? 0.0 : -b+std::sqrt(d2);
+          deltaR = t3 - rmax * rmax;
+          c = deltaR / t1;
+          d2 = b * b - c;
+          srd = (d2 < 0.) ? 0.0 : -b + std::sqrt(d2);
           sideR = G4ExitNormal::kRMax;
         }
       }
@@ -584,41 +577,41 @@ G4ReplicaNavigation::DistanceToOutRad(const G4ThreeVector& localPoint,
       {
         // No rmin intersect -> must be rmax intersect
         //
-        deltaR = t3-rmax*rmax;
-        b  = t2/t1;
-        c  = deltaR/t1;
-        d2 = b*b-c;
-        srd = (d2 < 0.) ? 0.0 : -b+std::sqrt(d2);
-        sideR= G4ExitNormal::kRMax;
+        deltaR = t3 - rmax * rmax;
+        b = t2 / t1;
+        c = deltaR / t1;
+        d2 = b * b - c;
+        srd = (d2 < 0.) ? 0.0 : -b + std::sqrt(d2);
+        sideR = G4ExitNormal::kRMax;
       }
     }
   }
   else
   {
-    srd =kInfinity;
+    srd = kInfinity;
     sideR = G4ExitNormal::kNull;
   }
-   
-  if( sideR != G4ExitNormal::kNull ) // if ((side == kRMax) || (side==kRMin))
+
+  if (sideR != G4ExitNormal::kNull)  // if ((side == kRMax) || (side==kRMin))
   {
     // Note: returned vector not explicitly normalised
     // (divided by fRMax for unit vector)
 
     G4double xi, yi;
-    xi = localPoint.x() + srd*localDirection.x();
-    yi = localPoint.y() + srd*localDirection.y();
-    G4ThreeVector normalR = G4ThreeVector(xi,yi,0.0);
-     
-    if( sideR == G4ExitNormal::kRMax )
+    xi = localPoint.x() + srd * localDirection.x();
+    yi = localPoint.y() + srd * localDirection.y();
+    G4ThreeVector normalR = G4ThreeVector(xi, yi, 0.0);
+
+    if (sideR == G4ExitNormal::kRMax)
     {
-      normalR *= 1.0/rmax;
+      normalR *= 1.0 / rmax;
     }
     else
     {
-      normalR *= (-1.0)/rmin;
+      normalR *= (-1.0) / rmin;
     }
-    foundNormal.exitNormal= normalR;
-    foundNormal.calculated= true;
+    foundNormal.exitNormal = normalR;
+    foundNormal.calculated = true;
     foundNormal.validConvex = (sideR == G4ExitNormal::kRMax);
     foundNormal.exitSide = sideR;
   }
@@ -626,7 +619,7 @@ G4ReplicaNavigation::DistanceToOutRad(const G4ThreeVector& localPoint,
   {
     foundNormal.calculated = false;
   }
-   
+
   return srd;
 }
 
@@ -636,18 +629,16 @@ G4ReplicaNavigation::DistanceToOutRad(const G4ThreeVector& localPoint,
 // Setup transformation and transform point into local system
 // ********************************************************************
 //
-void
-G4ReplicaNavigation::ComputeTransformation(const G4int replicaNo,
-                                                 G4VPhysicalVolume* pVol,
-                                                 G4ThreeVector& point) const
+void G4ReplicaNavigation::ComputeTransformation(const G4int replicaNo, G4VPhysicalVolume* pVol,
+                                                G4ThreeVector& point) const
 {
-  G4double val,cosv,sinv,tmpx,tmpy;
+  G4double val, cosv, sinv, tmpx, tmpy;
 
   // Replication data
   //
   EAxis axis;
   G4int nReplicas;
-  G4double width,offset;
+  G4double width, offset;
   G4bool consuming;
 
   pVol->GetReplicationData(axis, nReplicas, width, offset, consuming);
@@ -655,27 +646,27 @@ G4ReplicaNavigation::ComputeTransformation(const G4int replicaNo,
   switch (axis)
   {
     case kXAxis:
-      val = -width*0.5*(nReplicas-1)+width*replicaNo;
-      pVol->SetTranslation(G4ThreeVector(val,0,0));
-      point.setX(point.x()-val);
+      val = -width * 0.5 * (nReplicas - 1) + width * replicaNo;
+      pVol->SetTranslation(G4ThreeVector(val, 0, 0));
+      point.setX(point.x() - val);
       break;
     case kYAxis:
-      val = -width*0.5*(nReplicas-1)+width*replicaNo;
-      pVol->SetTranslation(G4ThreeVector(0,val,0));
-      point.setY(point.y()-val);
+      val = -width * 0.5 * (nReplicas - 1) + width * replicaNo;
+      pVol->SetTranslation(G4ThreeVector(0, val, 0));
+      point.setY(point.y() - val);
       break;
     case kZAxis:
-      val = -width*0.5*(nReplicas-1)+width*replicaNo;
-      pVol->SetTranslation(G4ThreeVector(0,0,val));
-      point.setZ(point.z()-val);
+      val = -width * 0.5 * (nReplicas - 1) + width * replicaNo;
+      pVol->SetTranslation(G4ThreeVector(0, 0, val));
+      point.setZ(point.z() - val);
       break;
     case kPhi:
-      val = -(offset+width*(replicaNo+0.5));
-      SetPhiTransformation(val,pVol);
+      val = -(offset + width * (replicaNo + 0.5));
+      SetPhiTransformation(val, pVol);
       cosv = std::cos(val);
       sinv = std::sin(val);
-      tmpx = point.x()*cosv-point.y()*sinv;
-      tmpy = point.x()*sinv+point.y()*cosv;
+      tmpx = point.x() * cosv - point.y() * sinv;
+      tmpy = point.x() * sinv + point.y() * cosv;
       point.setY(tmpy);
       point.setX(tmpx);
       break;
@@ -692,9 +683,8 @@ G4ReplicaNavigation::ComputeTransformation(const G4int replicaNo,
 // Setup transformation into local system
 // ********************************************************************
 //
-void
-G4ReplicaNavigation::ComputeTransformation(const G4int replicaNo,
-                                                 G4VPhysicalVolume* pVol) const
+void G4ReplicaNavigation::ComputeTransformation(const G4int replicaNo,
+                                                G4VPhysicalVolume* pVol) const
 {
   G4double val;
 
@@ -710,20 +700,20 @@ G4ReplicaNavigation::ComputeTransformation(const G4int replicaNo,
   switch (axis)
   {
     case kXAxis:
-      val = -width*0.5*(nReplicas-1)+width*replicaNo;
-      pVol->SetTranslation(G4ThreeVector(val,0,0));
+      val = -width * 0.5 * (nReplicas - 1) + width * replicaNo;
+      pVol->SetTranslation(G4ThreeVector(val, 0, 0));
       break;
     case kYAxis:
-      val = -width*0.5*(nReplicas-1)+width*replicaNo;
-      pVol->SetTranslation(G4ThreeVector(0,val,0));
+      val = -width * 0.5 * (nReplicas - 1) + width * replicaNo;
+      pVol->SetTranslation(G4ThreeVector(0, val, 0));
       break;
     case kZAxis:
-      val = -width*0.5*(nReplicas-1)+width*replicaNo;
-      pVol->SetTranslation(G4ThreeVector(0,0,val));
+      val = -width * 0.5 * (nReplicas - 1) + width * replicaNo;
+      pVol->SetTranslation(G4ThreeVector(0, 0, val));
       break;
     case kPhi:
-      val = -(offset+width*(replicaNo+0.5));
-      SetPhiTransformation(val,pVol);
+      val = -(offset + width * (replicaNo + 0.5));
+      SetPhiTransformation(val, pVol);
       break;
     case kRho:
       // No setup required for radial case
@@ -736,43 +726,34 @@ G4ReplicaNavigation::ComputeTransformation(const G4int replicaNo,
 // ComputeStep
 // ********************************************************************
 //
-G4double
-G4ReplicaNavigation::ComputeStep(const G4ThreeVector& globalPoint,
-                                 const G4ThreeVector& globalDirection,
-                                 const G4ThreeVector& localPoint,
-                                 const G4ThreeVector& localDirection,
-                                 const G4double currentProposedStepLength,
-                                       G4double& newSafety,
-                                       G4NavigationHistory &history,
-                                 // std::pair<G4bool,G4bool>& validAndCalculated
-                                       G4bool& validExitNormal,
-                                       G4bool& calculatedExitNormal, 
-                                       G4ThreeVector& exitNormalVector,
-                                       G4bool& exiting,
-                                       G4bool& entering,
-                                       G4VPhysicalVolume* (*pBlockedPhysical),
-                                       G4int& blockedReplicaNo )
+G4double G4ReplicaNavigation::ComputeStep(
+  const G4ThreeVector& globalPoint, const G4ThreeVector& globalDirection,
+  const G4ThreeVector& localPoint, const G4ThreeVector& localDirection,
+  const G4double currentProposedStepLength, G4double& newSafety, G4NavigationHistory& history,
+  // std::pair<G4bool,G4bool>& validAndCalculated
+  G4bool& validExitNormal, G4bool& calculatedExitNormal, G4ThreeVector& exitNormalVector,
+  G4bool& exiting, G4bool& entering, G4VPhysicalVolume*(*pBlockedPhysical), G4int& blockedReplicaNo)
 {
   G4VPhysicalVolume *repPhysical, *motherPhysical;
   G4VPhysicalVolume *samplePhysical, *blockedExitedVol = nullptr;
-  G4LogicalVolume *repLogical;
-  G4VSolid *motherSolid;
+  G4LogicalVolume* repLogical;
+  G4VSolid* motherSolid;
   G4ThreeVector repPoint, repDirection, sampleDirection;
-  G4double ourStep=currentProposedStepLength;
-  G4double ourSafety=kInfinity;
+  G4double ourStep = currentProposedStepLength;
+  G4double ourSafety = kInfinity;
   G4double sampleStep, sampleSafety, motherStep, motherSafety;
   G4long localNoDaughters, sampleNo;
   G4int depth;
   G4ExitNormal exitNormalStc;
   // G4int depthDeterminingStep= -1; // Useful only for debugging - for now
 
-  calculatedExitNormal= false;
-  
+  calculatedExitNormal = false;
+
   // Exiting normal optimisation
   //
-  if ( exiting&&validExitNormal )
+  if (exiting && validExitNormal)
   {
-    if ( localDirection.dot(exitNormalVector)>=kMinExitingNormalCosine )
+    if (localDirection.dot(exitNormalVector) >= kMinExitingNormalCosine)
     {
       // Block exited daughter volume
       //
@@ -780,37 +761,31 @@ G4ReplicaNavigation::ComputeStep(const G4ThreeVector& globalPoint,
       ourSafety = 0;
     }
   }
-  exiting  = false;
+  exiting = false;
   entering = false;
 
   repPhysical = history.GetTopVolume();
-  repLogical  = repPhysical->GetLogicalVolume();
+  repLogical = repPhysical->GetLogicalVolume();
 
   //
   // Compute intersection with replica boundaries & replica safety
   //
 
-  sampleSafety = DistanceToOut(repPhysical,
-                               history.GetTopReplicaNo(),
-                               localPoint);
+  sampleSafety = DistanceToOut(repPhysical, history.GetTopReplicaNo(), localPoint);
   G4ExitNormal normalOutStc;
-  const auto  topDepth= (G4int)history.GetDepth();
+  const auto topDepth = (G4int)history.GetDepth();
 
-  ourSafety = std::min( ourSafety, sampleSafety);
+  ourSafety = std::min(ourSafety, sampleSafety);
 
-  if ( sampleSafety<ourStep )
+  if (sampleSafety < ourStep)
   {
-
-    sampleStep = DistanceToOut(repPhysical,
-                               history.GetTopReplicaNo(),
-                               localPoint,
-                               localDirection,
+    sampleStep = DistanceToOut(repPhysical, history.GetTopReplicaNo(), localPoint, localDirection,
                                normalOutStc);
-    if ( sampleStep<ourStep )
+    if (sampleStep < ourStep)
     {
       ourStep = sampleStep;
       exiting = true;
-      validExitNormal = normalOutStc.validConvex; // false; -> Old,Conservative
+      validExitNormal = normalOutStc.validConvex;  // false; -> Old,Conservative
 
       exitNormalStc = normalOutStc;
       exitNormalStc.exitNormal =
@@ -819,54 +794,47 @@ G4ReplicaNavigation::ComputeStep(const G4ThreeVector& globalPoint,
     }
   }
   const G4int secondDepth = topDepth;
-  depth = secondDepth;  
+  depth = secondDepth;
 
   // Loop checking, 07.10.2016, JA -- Need to add: assert(depth>0)
-  while ( history.GetVolumeType(depth)==kReplica )  
+  while (history.GetVolumeType(depth) == kReplica)
   {
     const G4AffineTransform& GlobalToLocal = history.GetTransform(depth);
     repPoint = GlobalToLocal.TransformPoint(globalPoint);
     // repPoint = history.GetTransform(depth).TransformPoint(globalPoint);
- 
-    sampleSafety = DistanceToOut(history.GetVolume(depth),
-                                 history.GetReplicaNo(depth),
-                                 repPoint);
-    if ( sampleSafety < ourSafety )
+
+    sampleSafety = DistanceToOut(history.GetVolume(depth), history.GetReplicaNo(depth), repPoint);
+    if (sampleSafety < ourSafety)
     {
       ourSafety = sampleSafety;
     }
-    if ( sampleSafety < ourStep )
+    if (sampleSafety < ourStep)
     {
-      G4ThreeVector newLocalDirection =
-          GlobalToLocal.TransformAxis(globalDirection);
-      sampleStep = DistanceToOut(history.GetVolume(depth),
-                                 history.GetReplicaNo(depth),
-                                 repPoint,
-                                 newLocalDirection,
-                                 normalOutStc);
-      if ( sampleStep < ourStep )
+      G4ThreeVector newLocalDirection = GlobalToLocal.TransformAxis(globalDirection);
+      sampleStep = DistanceToOut(history.GetVolume(depth), history.GetReplicaNo(depth), repPoint,
+                                 newLocalDirection, normalOutStc);
+      if (sampleStep < ourStep)
       {
         ourStep = sampleStep;
         exiting = true;
-       
+
         // As step is limited by this level, must set Exit Normal
         //
         G4ThreeVector localExitNorm = normalOutStc.exitNormal;
-        G4ThreeVector globalExitNorm =
-          GlobalToLocal.InverseTransformAxis(localExitNorm);
+        G4ThreeVector globalExitNorm = GlobalToLocal.InverseTransformAxis(localExitNorm);
 
-        exitNormalStc = normalOutStc; // Normal, convex, calculated, side
+        exitNormalStc = normalOutStc;  // Normal, convex, calculated, side
         exitNormalStc.exitNormal = globalExitNorm;
         calculatedExitNormal = true;
       }
     }
     depth--;
   }
- 
+
   // Compute mother safety & intersection
   //
   G4ThreeVector exitVectorMother;
-  G4bool exitConvex = false; // Value obtained in DistanceToOut(p,v) call
+  G4bool exitConvex = false;  // Value obtained in DistanceToOut(p,v) call
   G4ExitNormal motherNormalStc;
 
   repPoint = history.GetTransform(depth).TransformPoint(globalPoint);
@@ -875,36 +843,33 @@ G4ReplicaNavigation::ComputeStep(const G4ThreeVector& globalPoint,
   motherSafety = motherSolid->DistanceToOut(repPoint);
   repDirection = history.GetTransform(depth).TransformAxis(globalDirection);
 
-  motherStep = motherSolid->DistanceToOut(repPoint,repDirection,true,
-                                          &exitConvex,&exitVectorMother);
-  if( exitConvex )
+  motherStep =
+    motherSolid->DistanceToOut(repPoint, repDirection, true, &exitConvex, &exitVectorMother);
+  if (exitConvex)
   {
-     motherNormalStc = G4ExitNormal( exitVectorMother, true, false,
-                                     G4ExitNormal::kMother);
-     calculatedExitNormal = true;
+    motherNormalStc = G4ExitNormal(exitVectorMother, true, false, G4ExitNormal::kMother);
+    calculatedExitNormal = true;
   }
   const G4AffineTransform& globalToLocalTop = history.GetTopTransform();
 
-  G4bool motherDeterminedStep = (motherStep<ourStep);
+  G4bool motherDeterminedStep = (motherStep < ourStep);
 
-  if( (!exitConvex) && motherDeterminedStep )
+  if ((!exitConvex) && motherDeterminedStep)
   {
-     exitVectorMother = motherSolid->SurfaceNormal( repPoint );
-     motherNormalStc = G4ExitNormal( exitVectorMother, true, false,
-                                     G4ExitNormal::kMother);
-     // CalculatedExitNormal -> true;
-     // Convex               -> false: do not know value
-     // ExitSide             -> kMother (or kNull)
- 
-     calculatedExitNormal = true;
+    exitVectorMother = motherSolid->SurfaceNormal(repPoint);
+    motherNormalStc = G4ExitNormal(exitVectorMother, true, false, G4ExitNormal::kMother);
+    // CalculatedExitNormal -> true;
+    // Convex               -> false: do not know value
+    // ExitSide             -> kMother (or kNull)
+
+    calculatedExitNormal = true;
   }
-  if( motherDeterminedStep )
+  if (motherDeterminedStep)
   {
-     G4ThreeVector globalExitNormalTop =
-       globalToLocalTop.InverseTransformAxis(exitVectorMother);
-     
-     exitNormalStc = motherNormalStc;
-     exitNormalStc.exitNormal = globalExitNormalTop;
+    G4ThreeVector globalExitNormalTop = globalToLocalTop.InverseTransformAxis(exitVectorMother);
+
+    exitNormalStc = motherNormalStc;
+    exitNormalStc.exitNormal = globalExitNormalTop;
   }
 
   // Push in principle no longer necessary. G4Navigator now takes care of ...
@@ -914,41 +879,37 @@ G4ReplicaNavigation::ComputeStep(const G4ThreeVector& globalPoint,
   // Requires further investigation and eventually reimplementation of
   // LevelLocate() to take into account point and direction ...
   //
-  if( ourStep<fMinStep )
+  if (ourStep < fMinStep)
   {
-    ourStep = 2*kCarTolerance;
+    ourStep = 2 * kCarTolerance;
   }
 
-  if ( motherSafety<ourSafety )
+  if (motherSafety < ourSafety)
   {
     ourSafety = motherSafety;
   }
 
 #ifdef G4VERBOSE
-  if ( fCheck )
+  if (fCheck)
   {
-    if( motherSolid->Inside(localPoint)==kOutside )
+    if (motherSolid->Inside(localPoint) == kOutside)
     {
       std::ostringstream message;
-      message << "Point outside volume !" << G4endl
-              << "          Point " << localPoint
-              << " is outside current volume " << motherPhysical->GetName()
+      message << "Point outside volume !" << G4endl << "          Point " << localPoint
+              << " is outside current volume " << motherPhysical->GetName() << G4endl;
+      G4double estDistToSolid = motherSolid->DistanceToIn(localPoint);
+      message << "          Estimated isotropic distance to solid (distToIn)= " << estDistToSolid
               << G4endl;
-      G4double estDistToSolid= motherSolid->DistanceToIn(localPoint); 
-      message << "          Estimated isotropic distance to solid (distToIn)= " 
-              << estDistToSolid << G4endl;
-      if( estDistToSolid > 100.0 * kCarTolerance )
+      if (estDistToSolid > 100.0 * kCarTolerance)
       {
         motherSolid->DumpInfo();
-        G4Exception("G4ReplicaNavigation::ComputeStep()",
-                    "GeomNav0003", FatalException, message,
-                    "Point is far outside Current Volume !" ); 
+        G4Exception("G4ReplicaNavigation::ComputeStep()", "GeomNav0003", FatalException, message,
+                    "Point is far outside Current Volume !");
       }
       else
       {
-        G4Exception("G4ReplicaNavigation::ComputeStep()",
-                    "GeomNav1002", JustWarning, message,
-                    "Point is a little outside Current Volume."); 
+        G4Exception("G4ReplicaNavigation::ComputeStep()", "GeomNav1002", JustWarning, message,
+                    "Point is a little outside Current Volume.");
       }
     }
   }
@@ -957,7 +918,7 @@ G4ReplicaNavigation::ComputeStep(const G4ThreeVector& globalPoint,
   // Comparison of steps may need precision protection
   //
 #if 1
-  if( motherDeterminedStep )
+  if (motherDeterminedStep)
   {
     ourStep = motherStep;
     exiting = true;
@@ -965,9 +926,9 @@ G4ReplicaNavigation::ComputeStep(const G4ThreeVector& globalPoint,
 
   // Transform it to the Grand-Mother Reference Frame (current convention)
   //
-  if ( calculatedExitNormal )
+  if (calculatedExitNormal)
   {
-    if ( motherDeterminedStep )
+    if (motherDeterminedStep)
     {
       exitNormalVector = motherNormalStc.exitNormal;
     }
@@ -980,11 +941,10 @@ G4ReplicaNavigation::ComputeStep(const G4ThreeVector& globalPoint,
     }
     // Transform to Grand-mother reference frame
     const G4RotationMatrix* rot = motherPhysical->GetRotation();
-    if ( rot != nullptr )
+    if (rot != nullptr)
     {
       exitNormalVector *= rot->inverse();
     }
-
   }
   else
   {
@@ -992,16 +952,16 @@ G4ReplicaNavigation::ComputeStep(const G4ThreeVector& globalPoint,
   }
 
 #else
-  if ( motherSafety<=ourStep )
+  if (motherSafety <= ourStep)
   {
-    if ( motherStep<=ourStep )
+    if (motherStep <= ourStep)
     {
       ourStep = motherStep;
       exiting = true;
-      if ( validExitNormal )
+      if (validExitNormal)
       {
         const G4RotationMatrix* rot = motherPhysical->GetRotation();
-        if ( rot )
+        if (rot)
         {
           exitNormal *= rot->inverse();
         }
@@ -1015,98 +975,95 @@ G4ReplicaNavigation::ComputeStep(const G4ThreeVector& globalPoint,
   }
 #endif
 
-
   G4bool daughterDeterminedStep = false;
   G4ThreeVector daughtNormRepCrd;
-     // Exit normal of daughter transformed to
-     // the coordinate system of Replica (i.e. last depth)
+  // Exit normal of daughter transformed to
+  // the coordinate system of Replica (i.e. last depth)
 
   //
   // Compute daughter safeties & intersections
   //
   localNoDaughters = repLogical->GetNoDaughters();
-  for ( sampleNo=localNoDaughters-1; sampleNo>=0; sampleNo-- )
+  for (sampleNo = localNoDaughters - 1; sampleNo >= 0; sampleNo--)
   {
     samplePhysical = repLogical->GetDaughter((G4int)sampleNo);
-    if ( samplePhysical!=blockedExitedVol )
+    if (samplePhysical != blockedExitedVol)
     {
       G4ThreeVector localExitNorm;
       G4ThreeVector normReplicaCoord;
 
-      G4AffineTransform sampleTf(samplePhysical->GetRotation(),
-                                 samplePhysical->GetTranslation());
+      G4AffineTransform sampleTf(samplePhysical->GetRotation(), samplePhysical->GetTranslation());
       sampleTf.Invert();
-      const G4ThreeVector samplePoint =
-                        sampleTf.TransformPoint(localPoint);
-      const G4VSolid* sampleSolid =
-                        samplePhysical->GetLogicalVolume()->GetSolid();
-      const G4double sampleSafetyDistance =
-                        sampleSolid->DistanceToIn(samplePoint);
-      if ( sampleSafetyDistance<ourSafety )
+      const G4ThreeVector samplePoint = sampleTf.TransformPoint(localPoint);
+      const G4VSolid* sampleSolid = samplePhysical->GetLogicalVolume()->GetSolid();
+      const G4double sampleSafetyDistance = sampleSolid->DistanceToIn(samplePoint);
+      if (sampleSafetyDistance < ourSafety)
       {
         ourSafety = sampleSafetyDistance;
       }
-      if ( sampleSafetyDistance<=ourStep )
+      if (sampleSafetyDistance <= ourStep)
       {
         sampleDirection = sampleTf.TransformAxis(localDirection);
-        const G4double sampleStepDistance =
-                        sampleSolid->DistanceToIn(samplePoint,sampleDirection);
-        if ( sampleStepDistance<=ourStep )
+        const G4double sampleStepDistance = sampleSolid->DistanceToIn(samplePoint, sampleDirection);
+        if (sampleStepDistance <= ourStep)
         {
           daughterDeterminedStep = true;
 
-          ourStep  = sampleStepDistance;
+          ourStep = sampleStepDistance;
           entering = true;
-          exiting  = false;
+          exiting = false;
           *pBlockedPhysical = samplePhysical;
-          blockedReplicaNo  = (G4int)sampleNo;
+          blockedReplicaNo = (G4int)sampleNo;
 
 #ifdef DAUGHTER_NORMAL_ALSO
           // This norm can be calculated later, if needed daughter is available
           localExitNorm = sampleSolid->SurfaceNormal(samplePoint);
           daughtNormRepCrd = sampleTf.InverseTransformAxis(localExitNorm);
 #endif
-          
+
 #ifdef G4VERBOSE
           // Check to see that the resulting point is indeed in/on volume.
           // This check could eventually be made only for successful candidate.
 
-          if ( ( fCheck ) && ( sampleStepDistance < kInfinity ) )
+          if ((fCheck) && (sampleStepDistance < kInfinity))
           {
             G4ThreeVector intersectionPoint;
-            intersectionPoint = samplePoint
-                              + sampleStepDistance * sampleDirection;
-            EInside insideIntPt = sampleSolid->Inside(intersectionPoint); 
-            if ( insideIntPt != kSurface )
+            intersectionPoint = samplePoint + sampleStepDistance * sampleDirection;
+            EInside insideIntPt = sampleSolid->Inside(intersectionPoint);
+            if (insideIntPt != kSurface)
             {
-              G4long oldcoutPrec = G4cout.precision(16); 
+              G4long oldcoutPrec = G4cout.precision(16);
               std::ostringstream message;
-              message << "Navigator gets conflicting response from Solid."
-                      << G4endl
-                      << "          Inaccurate DistanceToIn for solid "
-                      << sampleSolid->GetName() << G4endl
-                      << "          Solid gave DistanceToIn = "
-                      << sampleStepDistance << " yet returns " ;
-              if ( insideIntPt == kInside ) {
-                message << "-kInside-"; 
-              } else if ( insideIntPt == kOutside ) {
-                message << "-kOutside-";
-              } else {
-                message << "-kSurface-"; 
+              message << "Navigator gets conflicting response from Solid." << G4endl
+                      << "          Inaccurate DistanceToIn for solid " << sampleSolid->GetName()
+                      << G4endl << "          Solid gave DistanceToIn = " << sampleStepDistance
+                      << " yet returns ";
+              if (insideIntPt == kInside)
+              {
+                message << "-kInside-";
               }
-              message << " for this point !" << G4endl
-                      << "          Point = " << intersectionPoint << G4endl;
-              if ( insideIntPt != kInside ) {
-                message << "        DistanceToIn(p) = " 
-                       << sampleSolid->DistanceToIn(intersectionPoint)
-                       << G4endl;
-}
-              if ( insideIntPt != kOutside ) { 
-                message << "        DistanceToOut(p) = " 
-                       << sampleSolid->DistanceToOut(intersectionPoint);
-}
-              G4Exception("G4ReplicaNavigation::ComputeStep()", 
-                          "GeomNav1002", JustWarning, message); 
+              else if (insideIntPt == kOutside)
+              {
+                message << "-kOutside-";
+              }
+              else
+              {
+                message << "-kSurface-";
+              }
+              message << " for this point !" << G4endl << "          Point = " << intersectionPoint
+                      << G4endl;
+              if (insideIntPt != kInside)
+              {
+                message << "        DistanceToIn(p) = "
+                        << sampleSolid->DistanceToIn(intersectionPoint) << G4endl;
+              }
+              if (insideIntPt != kOutside)
+              {
+                message << "        DistanceToOut(p) = "
+                        << sampleSolid->DistanceToOut(intersectionPoint);
+              }
+              G4Exception("G4ReplicaNavigation::ComputeStep()", "GeomNav1002", JustWarning,
+                          message);
               G4cout.precision(oldcoutPrec);
             }
           }
@@ -1119,14 +1076,14 @@ G4ReplicaNavigation::ComputeStep(const G4ThreeVector& globalPoint,
   calculatedExitNormal &= (!daughterDeterminedStep);
 
 #ifdef DAUGHTER_NORMAL_ALSO
-  if( daughterDeterminedStep )
+  if (daughterDeterminedStep)
   {
     // G4ThreeVector daughtNormGlobal =
     //   GlobalToLastDepth.Inverse().TransformAxis(daughtNormRepCrd);
     // ==> Can calculate it, but have no way to transmit it to caller (for now)
 
     exitNormalVector = globalToLocalTop.InverseTransformAxis(daughtNormGlobal);
-    validExitNormal = false; // Entering daughter - never convex for parent
+    validExitNormal = false;  // Entering daughter - never convex for parent
 
     calculatedExitNormal = true;
   }
@@ -1144,16 +1101,15 @@ G4ReplicaNavigation::ComputeStep(const G4ThreeVector& globalPoint,
 // and to daughter volumes.
 // ********************************************************************
 //
-G4double
-G4ReplicaNavigation::ComputeSafety(const G4ThreeVector& globalPoint,
-                                   const G4ThreeVector& localPoint,
-                                   const G4NavigationHistory& history,
-                                   const G4double ) const
+G4double G4ReplicaNavigation::ComputeSafety(const G4ThreeVector& globalPoint,
+                                            const G4ThreeVector& localPoint,
+                                            const G4NavigationHistory& history,
+                                            const G4double) const
 {
   G4VPhysicalVolume *repPhysical, *motherPhysical;
   G4VPhysicalVolume *samplePhysical, *blockedExitedVol = nullptr;
-  G4LogicalVolume *repLogical;
-  G4VSolid *motherSolid;
+  G4LogicalVolume* repLogical;
+  G4VSolid* motherSolid;
   G4ThreeVector repPoint;
   G4double ourSafety = kInfinity;
   G4double sampleSafety;
@@ -1161,30 +1117,26 @@ G4ReplicaNavigation::ComputeSafety(const G4ThreeVector& globalPoint,
   G4int depth;
 
   repPhysical = history.GetTopVolume();
-  repLogical  = repPhysical->GetLogicalVolume();
+  repLogical = repPhysical->GetLogicalVolume();
 
   //
   // Compute intersection with replica boundaries & replica safety
   //
 
-  sampleSafety = DistanceToOut(history.GetTopVolume(),
-                               history.GetTopReplicaNo(),
-                               localPoint);
-  if ( sampleSafety<ourSafety )
+  sampleSafety = DistanceToOut(history.GetTopVolume(), history.GetTopReplicaNo(), localPoint);
+  if (sampleSafety < ourSafety)
   {
     ourSafety = sampleSafety;
   }
 
-  depth = (G4int)history.GetDepth()-1;
+  depth = (G4int)history.GetDepth() - 1;
 
   // Loop checking, 07.10.2016, JA -- need to add: assert(depth>0)
-  while ( history.GetVolumeType(depth)==kReplica )
-  {      
+  while (history.GetVolumeType(depth) == kReplica)
+  {
     repPoint = history.GetTransform(depth).TransformPoint(globalPoint);
-    sampleSafety = DistanceToOut(history.GetVolume(depth),
-                                 history.GetReplicaNo(depth),
-                                 repPoint);
-    if ( sampleSafety<ourSafety )
+    sampleSafety = DistanceToOut(history.GetVolume(depth), history.GetReplicaNo(depth), repPoint);
+    if (sampleSafety < ourSafety)
     {
       ourSafety = sampleSafety;
     }
@@ -1198,7 +1150,7 @@ G4ReplicaNavigation::ComputeSafety(const G4ThreeVector& globalPoint,
   motherSolid = motherPhysical->GetLogicalVolume()->GetSolid();
   sampleSafety = motherSolid->DistanceToOut(repPoint);
 
-  if ( sampleSafety<ourSafety )
+  if (sampleSafety < ourSafety)
   {
     ourSafety = sampleSafety;
   }
@@ -1206,21 +1158,17 @@ G4ReplicaNavigation::ComputeSafety(const G4ThreeVector& globalPoint,
   // Compute daughter safeties & intersections
   //
   localNoDaughters = repLogical->GetNoDaughters();
-  for ( sampleNo=localNoDaughters-1; sampleNo>=0; sampleNo-- )
+  for (sampleNo = localNoDaughters - 1; sampleNo >= 0; sampleNo--)
   {
     samplePhysical = repLogical->GetDaughter((G4int)sampleNo);
-    if ( samplePhysical!=blockedExitedVol )
+    if (samplePhysical != blockedExitedVol)
     {
-      G4AffineTransform sampleTf(samplePhysical->GetRotation(),
-                                 samplePhysical->GetTranslation());
+      G4AffineTransform sampleTf(samplePhysical->GetRotation(), samplePhysical->GetTranslation());
       sampleTf.Invert();
-      const G4ThreeVector samplePoint =
-                            sampleTf.TransformPoint(localPoint);
-      const G4VSolid *sampleSolid =
-                            samplePhysical->GetLogicalVolume()->GetSolid();
-      const G4double sampleSafetyDistance =
-                            sampleSolid->DistanceToIn(samplePoint);
-      if ( sampleSafetyDistance<ourSafety )
+      const G4ThreeVector samplePoint = sampleTf.TransformPoint(localPoint);
+      const G4VSolid* sampleSolid = samplePhysical->GetLogicalVolume()->GetSolid();
+      const G4double sampleSafetyDistance = sampleSolid->DistanceToIn(samplePoint);
+      if (sampleSafetyDistance < ourSafety)
       {
         ourSafety = sampleSafetyDistance;
       }
@@ -1233,52 +1181,49 @@ G4ReplicaNavigation::ComputeSafety(const G4ThreeVector& globalPoint,
 // BackLocate
 // ********************************************************************
 //
-EInside
-G4ReplicaNavigation::BackLocate(G4NavigationHistory& history,
-                          const G4ThreeVector& globalPoint,
-                                G4ThreeVector& localPoint,
-                          const G4bool& exiting,
-                                G4bool& notKnownInside ) const
+EInside G4ReplicaNavigation::BackLocate(G4NavigationHistory& history,
+                                        const G4ThreeVector& globalPoint, G4ThreeVector& localPoint,
+                                        const G4bool& exiting, G4bool& notKnownInside) const
 {
-  G4VPhysicalVolume *pNRMother = nullptr;
-  G4VSolid *motherSolid;
+  G4VPhysicalVolume* pNRMother = nullptr;
+  G4VSolid* motherSolid;
   G4ThreeVector repPoint, goodPoint;
   G4int mdepth, depth, cdepth;
   EInside insideCode;
 
   cdepth = (G4int)history.GetDepth();
-  
+
   // Find non replicated mother
   //
-  for ( mdepth=cdepth-1; mdepth>=0; mdepth-- )
+  for (mdepth = cdepth - 1; mdepth >= 0; mdepth--)
   {
-    if ( history.GetVolumeType(mdepth)!=kReplica )
+    if (history.GetVolumeType(mdepth) != kReplica)
     {
       pNRMother = history.GetVolume(mdepth);
       break;
     }
   }
 
-  if( pNRMother == nullptr ) 
+  if (pNRMother == nullptr)
   {
-    // All the tree of mother volumes were Replicas. 
+    // All the tree of mother volumes were Replicas.
     // This is an error, as the World volume must be a Placement
     //
-    G4Exception("G4ReplicaNavigation::BackLocate()", "GeomNav0002",
-                FatalException, "The World volume must be a Placement!");
+    G4Exception("G4ReplicaNavigation::BackLocate()", "GeomNav0002", FatalException,
+                "The World volume must be a Placement!");
     return kInside;
   }
 
   motherSolid = pNRMother->GetLogicalVolume()->GetSolid();
   goodPoint = history.GetTransform(mdepth).TransformPoint(globalPoint);
   insideCode = motherSolid->Inside(goodPoint);
-  if ( (insideCode==kOutside)||((insideCode==kSurface)&&exiting) )
+  if ((insideCode == kOutside) || ((insideCode == kSurface) && exiting))
   {
     // Outside mother -> back up to mother level
     // Locate.. in Navigator will back up one more level
     // localPoint not required
     //
-    history.BackLevel(cdepth-mdepth);
+    history.BackLevel(cdepth - mdepth);
     //      localPoint = goodPoint;
   }
   else
@@ -1288,29 +1233,25 @@ G4ReplicaNavigation::BackLocate(G4NavigationHistory& history,
     // Still within replications
     // Check down: if on outside stop at this level
     //
-    for ( depth=mdepth+1; depth<cdepth; ++depth)
+    for (depth = mdepth + 1; depth < cdepth; ++depth)
     {
       repPoint = history.GetTransform(depth).TransformPoint(globalPoint);
-      insideCode = Inside(history.GetVolume(depth),
-                          history.GetReplicaNo(depth),
-                          repPoint);
-      if ( (insideCode==kOutside)||((insideCode==kSurface)&&exiting) )
+      insideCode = Inside(history.GetVolume(depth), history.GetReplicaNo(depth), repPoint);
+      if ((insideCode == kOutside) || ((insideCode == kSurface) && exiting))
       {
         localPoint = goodPoint;
-        history.BackLevel(cdepth-depth);
+        history.BackLevel(cdepth - depth);
         return insideCode;
       }
       goodPoint = repPoint;
     }
     localPoint = history.GetTransform(depth).TransformPoint(globalPoint);
-    insideCode = Inside(history.GetVolume(depth),
-                        history.GetReplicaNo(depth),
-                        localPoint);
+    insideCode = Inside(history.GetVolume(depth), history.GetReplicaNo(depth), localPoint);
     // If outside level, set localPoint = coordinates in reference system
     // of *previous* level - location code in navigator will back up one
     // level [And also manage blocking]
     //
-    if ( (insideCode==kOutside)||((insideCode==kSurface)&&exiting) )
+    if ((insideCode == kOutside) || ((insideCode == kSurface) && exiting))
     {
       localPoint = goodPoint;
     }

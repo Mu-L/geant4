@@ -36,8 +36,8 @@
 //   including polarization transfer
 // -------------------------------------------------------------------
 
-#ifndef G4PolarizedGammaConversionModel_h
-#define G4PolarizedGammaConversionModel_h 1
+#ifndef G4POLARIZEDGAMMACONVERSIONMODEL_HH
+#define G4POLARIZEDGAMMACONVERSIONMODEL_HH
 
 #include "G4BetheHeitlerModel.hh"
 
@@ -50,29 +50,28 @@ class G4PolarizedGammaConversionXS;
 
 class G4PolarizedGammaConversionModel : public G4BetheHeitlerModel
 {
- public:
-  explicit G4PolarizedGammaConversionModel(
-    const G4ParticleDefinition* p = nullptr, const G4String& nam = "polConv");
+  public:
 
-  virtual ~G4PolarizedGammaConversionModel() override;
+    explicit G4PolarizedGammaConversionModel(const G4ParticleDefinition* p = nullptr,
+                                             const G4String& nam = "polConv");
 
-  virtual void Initialise(const G4ParticleDefinition*,
-                          const G4DataVector&) override;
+    virtual ~G4PolarizedGammaConversionModel() override;
 
-  virtual void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-                                 const G4MaterialCutsCouple*,
-                                 const G4DynamicParticle*, G4double tmin,
-                                 G4double maxEnergy) override;
+    virtual void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  inline const G4Element* SelectedAtom();
+    virtual void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                                   const G4DynamicParticle*, G4double tmin,
+                                   G4double maxEnergy) override;
 
-  G4PolarizedGammaConversionModel& operator=(
-    const G4PolarizedGammaConversionModel& right) = delete;
-  G4PolarizedGammaConversionModel(const G4PolarizedGammaConversionModel&) =
-    delete;
+    inline const G4Element* SelectedAtom();
 
- private:
-  G4PolarizedGammaConversionXS* fCrossSectionCalculator;
+    G4PolarizedGammaConversionModel&
+    operator=(const G4PolarizedGammaConversionModel& right) = delete;
+    G4PolarizedGammaConversionModel(const G4PolarizedGammaConversionModel&) = delete;
+
+  private:
+
+    G4PolarizedGammaConversionXS* fCrossSectionCalculator;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

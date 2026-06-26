@@ -25,27 +25,25 @@
 //
 //
 
-#include "G4ElectronNuclearProcess.hh" 
-#include "G4Electron.hh"
+#include "G4ElectronNuclearProcess.hh"
+
 #include "G4ElectroNuclearCrossSection.hh"
+#include "G4Electron.hh"
+
 #include <iostream>
 
-G4ElectronNuclearProcess::
-G4ElectronNuclearProcess(const G4String& processName)
-  : G4HadronInelasticProcess( processName, G4Electron::Electron() )
-{ 
-  G4CrossSectionDataStore * theStore = GetCrossSectionDataStore();
+G4ElectronNuclearProcess::G4ElectronNuclearProcess(const G4String& processName)
+  : G4HadronInelasticProcess(processName, G4Electron::Electron())
+{
+  G4CrossSectionDataStore* theStore = GetCrossSectionDataStore();
   theStore->AddDataSet(new G4ElectroNuclearCrossSection);
-} 
+}
 
-    
-G4ElectronNuclearProcess::~G4ElectronNuclearProcess()
-{}
-
+G4ElectronNuclearProcess::~G4ElectronNuclearProcess() {}
 
 void G4ElectronNuclearProcess::ProcessDescription(std::ostream& outFile) const
 {
-  outFile << "G4ElectronNuclearProcess handles inelastic electron scattering\n" 
+  outFile << "G4ElectronNuclearProcess handles inelastic electron scattering\n"
           << "from nuclei by invoking one hybrid electromagnetic-hadronic\n"
           << "model and one hybrid electromagnetic-hadronic cross section set.\n";
 }

@@ -25,36 +25,34 @@
 //
 //
 
-#ifndef G4VElasticCollision_h
-#define G4VElasticCollision_h
+#ifndef G4VELASTICCOLLISION_HH
+#define G4VELASTICCOLLISION_HH
 
-#include "globals.hh"
+#include "G4KineticTrackVector.hh"
+#include "G4VAngularDistribution.hh"
 #include "G4VCollision.hh"
 #include "G4VCrossSectionSource.hh"
-#include "G4VAngularDistribution.hh"
-#include "G4KineticTrackVector.hh"
+#include "globals.hh"
 
 class G4KineticTrack;
 
 class G4VElasticCollision : public G4VCollision
 {
+  public:
 
-public:
+    G4VElasticCollision();
 
-  G4VElasticCollision();
+    virtual ~G4VElasticCollision();
 
-  virtual ~G4VElasticCollision();
+    G4bool operator==(const G4VElasticCollision& right) const;
+    G4bool operator!=(const G4VElasticCollision& right) const;
 
-  G4bool operator==(const G4VElasticCollision &right) const;
-  G4bool operator!=(const G4VElasticCollision &right) const;
+    virtual G4KineticTrackVector* FinalState(const G4KineticTrack& trk1,
+                                             const G4KineticTrack& trk2) const;
 
-  virtual G4KineticTrackVector* FinalState(const G4KineticTrack& trk1, 
-					      const G4KineticTrack& trk2) const;
+  protected:
 
-protected:
-
-private:  
-
+  private:
 };
 
 #endif

@@ -41,6 +41,7 @@
 //
 #include "G4ParticleHPInelastic.hh"
 
+#include "G4AutoLock.hh"
 #include "G4HadronicParameters.hh"
 #include "G4ParticleHP2AInelasticFS.hh"
 #include "G4ParticleHP2N2AInelasticFS.hh"
@@ -81,17 +82,16 @@
 #include "G4ParticleHPTInelasticFS.hh"
 #include "G4ParticleHPThermalBoost.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4AutoLock.hh"
 
 G4bool G4ParticleHPInelastic::fLock[] = {false, false, false, false, false, false};
-std::vector<G4ParticleHPChannelList*>*
-G4ParticleHPInelastic::theInelastic[] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
+std::vector<G4ParticleHPChannelList*>* G4ParticleHPInelastic::theInelastic[] = {
+  nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 
 static std::once_flag applyOnce;
 
 namespace
 {
-  G4Mutex theHPInelastic = G4MUTEX_INITIALIZER;
+G4Mutex theHPInelastic = G4MUTEX_INITIALIZER;
 }
 
 G4ParticleHPInelastic::G4ParticleHPInelastic(G4ParticleDefinition* p, const char* name)
@@ -103,26 +103,29 @@ G4ParticleHPInelastic::G4ParticleHPInelastic(G4ParticleDefinition* p, const char
 
 #ifdef G4VERBOSE
   if (fManager->GetVerboseLevel() > 1)
-    G4cout << "@@@ G4ParticleHPInelastic instantiated for "
-           << p->GetParticleName() << " indexP=" << indexP
-	   << "/n    data directory " << dirName << G4endl;
+    G4cout << "@@@ G4ParticleHPInelastic instantiated for " << p->GetParticleName()
+           << " indexP=" << indexP << "/n    data directory " << dirName << G4endl;
 #endif
 }
 
 G4ParticleHPInelastic::~G4ParticleHPInelastic()
 {
   // Vector is shared, only one delete
-  if (isFirst) {
+  if (isFirst)
+  {
     ClearData();
   }
 }
 
 void G4ParticleHPInelastic::ClearData()
 {
-  for (G4int i=0; i<6; ++i) {
-    if (theInelastic[i] != nullptr) {
-      for (auto const& p : *(theInelastic[i])) {
-	delete p;
+  for (G4int i = 0; i < 6; ++i)
+  {
+    if (theInelastic[i] != nullptr)
+    {
+      for (auto const& p : *(theInelastic[i]))
+      {
+        delete p;
       }
       delete theInelastic[i];
       theInelastic[i] = nullptr;
@@ -141,30 +144,34 @@ G4HadFinalState* G4ParticleHPInelastic::ApplyYourself(const G4HadProjectile& aTr
   G4int it = 0;
   /*
   G4cout << "G4ParticleHPInelastic::ApplyYourself n=" << n << " index=" << index
-	 << " indexP=" << indexP << " "
+   << " indexP=" << indexP << " "
          << aTrack.GetDefinition()->GetParticleName() << G4endl;
   */
-  if (n != 1) {
+  if (n != 1)
+  {
     auto xSec = new G4double[n];
     G4double sum = 0;
     G4int i;
     const G4double* NumAtomsPerVolume = theMaterial->GetVecNbOfAtomsPerVolume();
     G4double rWeight;
-    G4double xs; 
+    G4double xs;
     G4ParticleHPThermalBoost aThermalE;
-    for (i = 0; i < n; ++i) {
+    for (i = 0; i < n; ++i)
+    {
       elm = theMaterial->GetElement(i);
       index = elm->GetIndex();
       /*
-      G4cout << "i=" << i << "  index=" << index << "  " << elm->GetName() 
-	     << "  " << (*(theInelastic[indexP]))[index] << G4endl;
+      G4cout << "i=" << i << "  index=" << index << "  " << elm->GetName()
+       << "  " << (*(theInelastic[indexP]))[index] << G4endl;
       */
       rWeight = NumAtomsPerVolume[i];
-      if (aTrack.GetDefinition() == G4Neutron::Neutron()) {
-        xs = (*(theInelastic[indexP]))[index]->GetXsec(aThermalE.GetThermalEnergy(aTrack, elm,
-						       theMaterial->GetTemperature()));
+      if (aTrack.GetDefinition() == G4Neutron::Neutron())
+      {
+        xs = (*(theInelastic[indexP]))[index]->GetXsec(
+          aThermalE.GetThermalEnergy(aTrack, elm, theMaterial->GetTemperature()));
       }
-      else {
+      else
+      {
         xs = (*(theInelastic[indexP]))[index]->GetXsec(aTrack.GetKineticEnergy());
       }
       xs *= rWeight;
@@ -176,7 +183,8 @@ G4HadFinalState* G4ParticleHPInelastic::ApplyYourself(const G4HadProjectile& aTr
 #endif
     }
     sum *= G4UniformRand();
-    for (it = 0; it < n; ++it) {
+    for (it = 0; it < n; ++it)
+    {
       elm = theMaterial->GetElement(it);
       index = elm->GetIndex();
       if (sum <= xSec[it]) break;
@@ -186,25 +194,22 @@ G4HadFinalState* G4ParticleHPInelastic::ApplyYourself(const G4HadProjectile& aTr
 
 #ifdef G4VERBOSE
   if (fManager->GetDEBUG())
-    G4cout << " G4ParticleHPInelastic: Elem it=" << it << "  "
-           << elm->GetName() << " index=" << index
-	   << " from material " << theMaterial->GetName()
-           << G4endl;
+    G4cout << " G4ParticleHPInelastic: Elem it=" << it << "  " << elm->GetName()
+           << " index=" << index << " from material " << theMaterial->GetName() << G4endl;
 #endif
 
-  G4HadFinalState* result = 
-    (*(theInelastic[indexP]))[index]->ApplyYourself(elm, aTrack);
+  G4HadFinalState* result = (*(theInelastic[indexP]))[index]->ApplyYourself(elm, aTrack);
 
   aNucleus.SetParameters(fManager->GetReactionWhiteBoard()->GetTargA(),
                          fManager->GetReactionWhiteBoard()->GetTargZ());
-  
+
   const G4Element* target_element = (*G4Element::GetElementTable())[index];
   const G4Isotope* target_isotope = nullptr;
   auto iele = (G4int)target_element->GetNumberOfIsotopes();
-  for (G4int j = 0; j != iele; ++j) {
+  for (G4int j = 0; j != iele; ++j)
+  {
     target_isotope = target_element->GetIsotope(j);
-    if (target_isotope->GetN() == fManager->GetReactionWhiteBoard()->GetTargA())
-      break;
+    if (target_isotope->GetN() == fManager->GetReactionWhiteBoard()->GetTargA()) break;
   }
   aNucleus.SetIsotope(target_isotope);
 
@@ -225,36 +230,49 @@ void G4ParticleHPInelastic::BuildPhysicsTable(const G4ParticleDefinition& projec
   std::call_once(applyOnce, [this]() { isFirst = true; });
 
   G4int nelm = (G4int)G4Element::GetNumberOfElements();
-  if (isFirst && nelm != numEle) { 
+  if (isFirst && nelm != numEle)
+  {
     G4AutoLock l(&theHPInelastic);
-    if (nelm != numEle) {
-      for (G4int i=0; i<6; ++i) { fLock[i] = false; }
+    if (nelm != numEle)
+    {
+      for (G4int i = 0; i < 6; ++i)
+      {
+        fLock[i] = false;
+      }
     }
     l.unlock();
   }
-  if (fLock[indexP]) { return; }
+  if (fLock[indexP])
+  {
+    return;
+  }
 
   // extra elements should be initialized
   G4AutoLock l(&theHPInelastic);
-  if (fLock[indexP]) { return; }
+  if (fLock[indexP])
+  {
+    return;
+  }
 
   fLock[indexP] = true;
   G4int n0 = numEle;
   numEle = nelm;
 
-  if (nullptr == theInelastic[indexP]) {
+  if (nullptr == theInelastic[indexP])
+  {
     theInelastic[indexP] = new std::vector<G4ParticleHPChannelList*>;
   }
 
-  if (fManager->GetVerboseLevel() > 0 && isFirst) {
+  if (fManager->GetVerboseLevel() > 0 && isFirst)
+  {
     fManager->DumpSetting();
     G4cout << "@@@ G4ParticleHPInelastic instantiated for particle "
-	   << theProjectile->GetParticleName() << "/n    data directory is "
-	   << dirName << G4endl;
+           << theProjectile->GetParticleName() << "/n    data directory is " << dirName << G4endl;
   }
 
   auto table = G4Element::GetElementTable();
-  for (G4int i = n0; i < nelm; ++i) {
+  for (G4int i = n0; i < nelm; ++i)
+  {
     auto clist = new G4ParticleHPChannelList(36, theProjectile);
     theInelastic[indexP]->push_back(clist);
     clist->Init((*table)[i], dirName, theProjectile);
@@ -295,19 +313,19 @@ void G4ParticleHPInelastic::BuildPhysicsTable(const G4ParticleDefinition& projec
     clist->Register(new G4ParticleHPPTInelasticFS, "F35/");
     clist->Register(new G4ParticleHPDAInelasticFS, "F36/");
 #ifdef G4VERBOSE
-    if (fManager->GetVerboseLevel() > 1) {
-      G4cout << "ParticleHP::Inelastic for " 
-	     << theProjectile->GetParticleName() << " off " 
-	     << (*table)[i]->GetName() << G4endl;
+    if (fManager->GetVerboseLevel() > 1)
+    {
+      G4cout << "ParticleHP::Inelastic for " << theProjectile->GetParticleName() << " off "
+             << (*table)[i]->GetName() << G4endl;
     }
 #endif
   }
-  fManager->RegisterInelasticFinalStates( &projectile , theInelastic[indexP] );
+  fManager->RegisterInelasticFinalStates(&projectile, theInelastic[indexP]);
   l.unlock();
 }
 
 void G4ParticleHPInelastic::ModelDescription(std::ostream& outFile) const
 {
   outFile << "High Precision (HP) model for inelastic reaction of "
-	  << theProjectile->GetParticleName() << " below 20MeV\n";
+          << theProjectile->GetParticleName() << " below 20MeV\n";
 }

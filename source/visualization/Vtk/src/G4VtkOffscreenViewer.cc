@@ -24,20 +24,18 @@
 // ********************************************************************
 
 #include "G4VtkOffscreenViewer.hh"
-#include "G4VtkSceneHandler.hh"
-#include "G4VSceneHandler.hh"
 
-#include <vtkWindowToImageFilter.h>
+#include "G4VSceneHandler.hh"
+#include "G4VtkSceneHandler.hh"
+
 #include <vtkPNGWriter.h>
+#include <vtkWindowToImageFilter.h>
 
 G4VtkOffscreenViewer::G4VtkOffscreenViewer(G4VSceneHandler& sceneHandler, const G4String& name)
   : G4VtkViewer(sceneHandler, name)
-{
-}
+{}
 
-G4VtkOffscreenViewer::~G4VtkOffscreenViewer()
-{
-}
+G4VtkOffscreenViewer::~G4VtkOffscreenViewer() {}
 
 void G4VtkOffscreenViewer::Initialise()
 {

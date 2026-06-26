@@ -36,8 +36,8 @@
 //
 // Author: M.Asai (SLAC), 2010.
 //---------------------------------------------------------------------
-#ifndef G4ParallelWorldProcessStore_h
-#define G4ParallelWorldProcessStore_h 1
+#ifndef G4PARALLELWORLDPROCESSSTORE_HH
+#define G4PARALLELWORLDPROCESSSTORE_HH
 
 #include "globals.hh"
 

@@ -29,65 +29,67 @@
 //
 
 #include "G4FermiBreakUpUtil.hh"
+
 #include "G4FermiFragment.hh"
 #include "G4NuclearRadii.hh"
 #include "G4PhysicalConstants.hh"
 
-namespace G4FermiBreakUpUtil {
+namespace G4FermiBreakUpUtil
+{
 
-  const G4double coeff = 0.6;
+const G4double coeff = 0.6;
 
-  // Coulomb barrier
-  G4double CoulombBarrier(const G4int Z1, const G4int A1,
-                          const G4int Z2, const G4int A2, const G4double exc) {
-    const G4double r1 = G4NuclearRadii::RadiusCB(Z1, A1);
-    const G4double r2 = G4NuclearRadii::RadiusCB(Z2, A2);
-    G4double CB = CLHEP::elm_coupling*(Z1*Z2)/(coeff*r1 + r2);
-    if (exc > 0.0) { CB /= (1.0 + std::sqrt(exc/((2*(A1 + A2))*CLHEP::MeV))); }
-    return CB;
-  }
-
-  // 2-body decay probability
-  G4double Probability(const G4int A,
-                       const G4FermiFragment* f1, const G4FermiFragment* f2,
-                       const G4double mass, const G4double exc) {
-    G4double prob = 0.0;
-    const G4double mass1 = f1->GetTotalEnergy();
-    const G4double mass2 = f2->GetTotalEnergy();
-    const G4double bCouloumb =
-      CoulombBarrier(f1->GetZ(), f1->GetA(), f2->GetZ(), f2->GetA(), exc);
-    if (mass < mass1 + mass2 + bCouloumb)
-      return prob;
-
-    // free energy
-    const G4double e = mass - mass1 - mass2;
-
-    // Spin factor S_n
-    const G4int S_n = (std::abs(f1->TwoSpinParity())+1)
-      *(std::abs(f2->TwoSpinParity())+1); 
-
-    // mass factors
-    const G4double x = mass1*mass2/(mass1 + mass2);
-    G4double massFactor = x*std::sqrt(x);
-
-    // Permutation Factor G_n - search for identical fragments
-    G4double G_n = (f1 == f2) ? 0.5 : 1.0;
-
-    prob = (A*S_n) * massFactor*G_n*std::sqrt(e);
-    //G4cout << "prob= " << prob << " Coeff= " << Coeff << G4endl;
-    return prob;
-  }
-
-  G4bool CheckSpinParity(const G4FermiFragment* f1, const G4FermiFragment* f2,
-			 const G4FermiFragment* f3)
+// Coulomb barrier
+G4double CoulombBarrier(const G4int Z1, const G4int A1, const G4int Z2, const G4int A2,
+                        const G4double exc)
+{
+  const G4double r1 = G4NuclearRadii::RadiusCB(Z1, A1);
+  const G4double r2 = G4NuclearRadii::RadiusCB(Z2, A2);
+  G4double CB = CLHEP::elm_coupling * (Z1 * Z2) / (coeff * r1 + r2);
+  if (exc > 0.0)
   {
-    // check parity
-    G4int spin1 = f1->TwoSpinParity();
-    G4int spin2 = f2->TwoSpinParity();
-    G4int spin3 = f3->TwoSpinParity();
-    if ((spin3 > 0 && spin1*spin2 < 0) || (spin3 < 0 && spin1*spin2 > 0))
-      return false;
-
-    return true;
+    CB /= (1.0 + std::sqrt(exc / ((2 * (A1 + A2)) * CLHEP::MeV)));
   }
+  return CB;
 }
+
+// 2-body decay probability
+G4double Probability(const G4int A, const G4FermiFragment* f1, const G4FermiFragment* f2,
+                     const G4double mass, const G4double exc)
+{
+  G4double prob = 0.0;
+  const G4double mass1 = f1->GetTotalEnergy();
+  const G4double mass2 = f2->GetTotalEnergy();
+  const G4double bCouloumb = CoulombBarrier(f1->GetZ(), f1->GetA(), f2->GetZ(), f2->GetA(), exc);
+  if (mass < mass1 + mass2 + bCouloumb) return prob;
+
+  // free energy
+  const G4double e = mass - mass1 - mass2;
+
+  // Spin factor S_n
+  const G4int S_n = (std::abs(f1->TwoSpinParity()) + 1) * (std::abs(f2->TwoSpinParity()) + 1);
+
+  // mass factors
+  const G4double x = mass1 * mass2 / (mass1 + mass2);
+  G4double massFactor = x * std::sqrt(x);
+
+  // Permutation Factor G_n - search for identical fragments
+  G4double G_n = (f1 == f2) ? 0.5 : 1.0;
+
+  prob = (A * S_n) * massFactor * G_n * std::sqrt(e);
+  // G4cout << "prob= " << prob << " Coeff= " << Coeff << G4endl;
+  return prob;
+}
+
+G4bool CheckSpinParity(const G4FermiFragment* f1, const G4FermiFragment* f2,
+                       const G4FermiFragment* f3)
+{
+  // check parity
+  G4int spin1 = f1->TwoSpinParity();
+  G4int spin2 = f2->TwoSpinParity();
+  G4int spin3 = f3->TwoSpinParity();
+  if ((spin3 > 0 && spin1 * spin2 < 0) || (spin3 < 0 && spin1 * spin2 > 0)) return false;
+
+  return true;
+}
+}  // namespace G4FermiBreakUpUtil

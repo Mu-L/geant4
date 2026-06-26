@@ -34,63 +34,60 @@
 // 24.11.06 V.Ivanchenko: Add G4HadronHElasticPhysics and G4NeutronTrackingCut
 // 16.05.07 V.Ivanchenko: rename EM builders
 // 20.04.11 V.Ivanchenko: remove extra headers of elastic builders
-//                        added FTFP/Binary ion physics 
+//                        added FTFP/Binary ion physics
 // 16.10.12 A.Ribon: renamed the used physics classes
 //
 //----------------------------------------------------------------------------
 //
 
 #include "QBBC.hh"
-#include "globals.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
 
+#include "G4ChargeExchangePhysics.hh"
 #include "G4DecayPhysics.hh"
+#include "G4EmExtraPhysics.hh"
 #include "G4EmStandardPhysics.hh"
 #include "G4EmStandardPhysics_option4.hh"
-#include "G4EmExtraPhysics.hh"
-#include "G4StoppingPhysics.hh"
-
-#include "G4HadronInelasticQBBC.hh"
 #include "G4HadronElasticPhysics.hh"
-#include "G4HadronElasticPhysicsXS.hh"
 #include "G4HadronElasticPhysicsHP.hh"
-#include "G4ChargeExchangePhysics.hh"
-#include "G4IonPhysicsXS.hh"
+#include "G4HadronElasticPhysicsXS.hh"
+#include "G4HadronInelasticQBBC.hh"
 #include "G4IonElasticPhysics.hh"
+#include "G4IonPhysicsXS.hh"
 #include "G4NeutronTrackingCut.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4StoppingPhysics.hh"
+#include "G4SystemOfUnits.hh"
+#include "globals.hh"
 
-QBBC::QBBC( G4int ver, const G4String&)
+QBBC::QBBC(G4int ver, const G4String&)
 {
-  if(ver > 0) 
-    G4cout << "<<< Reference Physics List QBBC " <<G4endl;	
+  if (ver > 0) G4cout << "<<< Reference Physics List QBBC " << G4endl;
 
-  defaultCutValue = 0.7*CLHEP::mm;
+  defaultCutValue = 0.7 * CLHEP::mm;
   SetVerboseLevel(ver);
 
   // EM Physics
-  RegisterPhysics( new G4EmStandardPhysics(ver) );
+  RegisterPhysics(new G4EmStandardPhysics(ver));
 
   // Synchroton Radiation & GN Physics
-  RegisterPhysics( new G4EmExtraPhysics(ver) );
+  RegisterPhysics(new G4EmExtraPhysics(ver));
 
   // Decays
-  RegisterPhysics( new G4DecayPhysics(ver) );
+  RegisterPhysics(new G4DecayPhysics(ver));
 
-   // Hadron Physics
-  RegisterPhysics( new G4HadronElasticPhysicsXS(ver) );
+  // Hadron Physics
+  RegisterPhysics(new G4HadronElasticPhysicsXS(ver));
 
-  RegisterPhysics( new G4StoppingPhysics(ver) );
+  RegisterPhysics(new G4StoppingPhysics(ver));
 
-  RegisterPhysics( new G4IonPhysicsXS(ver) );
+  RegisterPhysics(new G4IonPhysicsXS(ver));
 
-  RegisterPhysics( new G4IonElasticPhysics(ver) );
+  RegisterPhysics(new G4IonElasticPhysics(ver));
 
-  RegisterPhysics( new G4HadronInelasticQBBC(ver));
+  RegisterPhysics(new G4HadronInelasticQBBC(ver));
 
-  RegisterPhysics( new G4ChargeExchangePhysics(ver) );
+  RegisterPhysics(new G4ChargeExchangePhysics(ver));
 
   // Neutron tracking cut
-  RegisterPhysics( new G4NeutronTrackingCut(ver) );
-}		 
-
+  RegisterPhysics(new G4NeutronTrackingCut(ver));
+}

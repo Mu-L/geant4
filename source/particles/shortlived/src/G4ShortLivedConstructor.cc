@@ -59,7 +59,8 @@ G4bool G4ShortLivedConstructor::isConstructed = false;
 
 void G4ShortLivedConstructor::ConstructParticle()
 {
-  if (!isConstructed) {
+  if (!isConstructed)
+  {
     ConstructQuarks();
     ConstructResonances();
     isConstructed = true;

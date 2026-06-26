@@ -23,24 +23,25 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-//hp
+// hp
 
-#include "globals.hh"
 #include "G4CollisionnpElastic.hh"
-#include "G4KineticTrack.hh"
-#include "G4VCrossSectionSource.hh"
-#include "G4Proton.hh"
-#include "G4Neutron.hh"
-#include "G4XnpElastic.hh"
+
 #include "G4AngularDistribution.hh"
-#include "G4ThreeVector.hh"
-#include "G4LorentzVector.hh"
-#include "G4LorentzRotation.hh"
+#include "G4AngularDistributionNP.hh"  //  np scattering
+#include "G4KineticTrack.hh"
 #include "G4KineticTrackVector.hh"
-#include "G4AngularDistributionNP.hh"   //  np scattering
+#include "G4LorentzRotation.hh"
+#include "G4LorentzVector.hh"
+#include "G4Neutron.hh"
+#include "G4Proton.hh"
+#include "G4ThreeVector.hh"
+#include "G4VCrossSectionSource.hh"
+#include "G4XnpElastic.hh"
+#include "globals.hh"
 // hpw ok.
 G4CollisionnpElastic::G4CollisionnpElastic()
-{ 
+{
   // Subtype of interacting particles
   const G4String& subType1 = G4Proton::ProtonDefinition()->GetParticleSubType();
   const G4String& subType2 = G4Neutron::NeutronDefinition()->GetParticleSubType();
@@ -48,46 +49,44 @@ G4CollisionnpElastic::G4CollisionnpElastic()
   colliders1.push_back(subType1);
   colliders2.push_back(subType2);
 
-//  angularDistribution = new G4AngularDistribution(true);
+  //  angularDistribution = new G4AngularDistribution(true);
   angularDistribution = new G4AngularDistributionNP();
   crossSectionSource = new G4XnpElastic();
 }
 
-
 G4CollisionnpElastic::~G4CollisionnpElastic()
-{ 
+{
   delete angularDistribution;
   delete crossSectionSource;
 }
 
-
-G4bool G4CollisionnpElastic::IsInCharge(const G4KineticTrack& trk1, 
-					const G4KineticTrack& trk2) const
-{ 
+G4bool G4CollisionnpElastic::IsInCharge(const G4KineticTrack& trk1,
+                                        const G4KineticTrack& trk2) const
+{
   G4bool isInCharge = false;
 
   const G4ParticleDefinition* def1 = trk1.GetDefinition();
   const G4ParticleDefinition* def2 = trk2.GetDefinition();
-  
-  if ( (def1 == G4Neutron::NeutronDefinition() && 
-	def2 == G4Proton::ProtonDefinition() )
-       ||
-       (def1 == G4Proton::ProtonDefinition() && 
-	def2 == G4Neutron::NeutronDefinition() ) )
-    {
-      isInCharge = true;
-    }
+
+  if ((def1 == G4Neutron::NeutronDefinition() && def2 == G4Proton::ProtonDefinition())
+      || (def1 == G4Proton::ProtonDefinition() && def2 == G4Neutron::NeutronDefinition()))
+  {
+    isInCharge = true;
+  }
   return isInCharge;
 }
 
-
 const std::vector<G4String>& G4CollisionnpElastic::GetListOfColliders(G4int whichOne) const
 {
-	if (whichOne == 1)  {
-		return colliders1;
-	} else if (whichOne == 2) {
-		return colliders2;
-	}
+  if (whichOne == 1)
+  {
+    return colliders1;
+  }
+  else if (whichOne == 2)
+  {
+    return colliders2;
+  }
 
-	throw G4HadronicException(__FILE__, __LINE__, "G4CollisionnpElastic::GetListOfColliders - Argument outside valid range");
+  throw G4HadronicException(
+    __FILE__, __LINE__, "G4CollisionnpElastic::GetListOfColliders - Argument outside valid range");
 }

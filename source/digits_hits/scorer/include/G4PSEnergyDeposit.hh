@@ -26,11 +26,11 @@
 //
 //
 
-#ifndef G4PSEnergyDeposit_h
-#define G4PSEnergyDeposit_h 1
+#ifndef G4PSENERGYDEPOSIT_HH
+#define G4PSENERGYDEPOSIT_HH
 
-#include "G4VPrimitivePlotter.hh"
 #include "G4THitsMap.hh"
+#include "G4VPrimitivePlotter.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Description:
@@ -46,23 +46,27 @@
 
 class G4PSEnergyDeposit : public G4VPrimitivePlotter
 {
- public:
-  G4PSEnergyDeposit(const G4String& name, G4int depth = 0);  // default unit
-  G4PSEnergyDeposit(const G4String& name, const G4String& unit, G4int depth = 0);
-  ~G4PSEnergyDeposit() override = default;
+  public:
 
- public:
-  void Initialize(G4HCofThisEvent*) override;
-  void clear() override;
-  void PrintAll() override;
+    G4PSEnergyDeposit(const G4String& name, G4int depth = 0);  // default unit
+    G4PSEnergyDeposit(const G4String& name, const G4String& unit, G4int depth = 0);
+    ~G4PSEnergyDeposit() override = default;
 
-  virtual void SetUnit(const G4String& unit);
+  public:
 
- protected:
-  G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+    void Initialize(G4HCofThisEvent*) override;
+    void clear() override;
+    void PrintAll() override;
 
- private:
-  G4int HCID;
-  G4THitsMap<G4double>* EvtMap;
+    virtual void SetUnit(const G4String& unit);
+
+  protected:
+
+    G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+
+  private:
+
+    G4int HCID;
+    G4THitsMap<G4double>* EvtMap;
 };
 #endif

@@ -40,8 +40,8 @@
 
 #include "G4HCtable.hh"
 #include "G4SDStructure.hh"
-#include "globals.hh"
 #include "G4VSDFilter.hh"
+#include "globals.hh"
 
 #include <vector>
 
@@ -52,68 +52,72 @@ class G4SDmessenger;
 
 class G4SDManager
 {
- public:
-  // Returns the pointer to the singleton object, creating it if not null
-  static G4SDManager* GetSDMpointer();
+  public:
 
-  // Returns current pointer to the singleton object
-  // Caller is responsible for checking value against `nullptr`
-  static G4SDManager* GetSDMpointerIfExist();
+    // Returns the pointer to the singleton object, creating it if not null
+    static G4SDManager* GetSDMpointer();
 
-  G4SDManager(const G4SDManager&) = delete;
-  G4SDManager& operator=(const G4SDManager&) = delete;
-  ~G4SDManager();
+    // Returns current pointer to the singleton object
+    // Caller is responsible for checking value against `nullptr`
+    static G4SDManager* GetSDMpointerIfExist();
 
-  // Register sensitive detector instance
-  // This method must be invoked when the user constructs their sensitive detector
-  void AddNewDetector(G4VSensitiveDetector* aSD);
+    G4SDManager(const G4SDManager&) = delete;
+    G4SDManager& operator=(const G4SDManager&) = delete;
+    ~G4SDManager();
 
-  // Activate/inactivate the registered sensitive detector.
-  // For the inactivated detectors, hits collections will not be stored to the G4HCofThisEvent
-  // object.
-  void Activate(const G4String& dName, G4bool activeFlag);
+    // Register sensitive detector instance
+    // This method must be invoked when the user constructs their sensitive detector
+    void AddNewDetector(G4VSensitiveDetector* aSD);
 
-  // Return ID number of sensitive detector with given name
-  G4int GetCollectionID(const G4String& colName);
+    // Activate/inactivate the registered sensitive detector.
+    // For the inactivated detectors, hits collections will not be stored to the G4HCofThisEvent
+    // object.
+    void Activate(const G4String& dName, G4bool activeFlag);
 
-  // Return ID number of sensitive detector with subdetector and name
-  // equivelant to GetCollectionID(detSubName+'/'+colSubName)
-  G4int GetCollectionID(const G4String& detSubName, const G4String& colSubName );
+    // Return ID number of sensitive detector with given name
+    G4int GetCollectionID(const G4String& colName);
 
-  // Return ID number of sensitive detector creating given hits collection
-  G4int GetCollectionID(G4VHitsCollection* aHC);
+    // Return ID number of sensitive detector with subdetector and name
+    // equivelant to GetCollectionID(detSubName+'/'+colSubName)
+    G4int GetCollectionID(const G4String& detSubName, const G4String& colSubName);
 
-  G4VSensitiveDetector* FindSensitiveDetector(const G4String& dName, G4bool warning = true);
-  G4HCofThisEvent* PrepareNewEvent();
-  void TerminateCurrentEvent(G4HCofThisEvent* HCE);
-  void AddNewCollection(const G4String& SDname, const G4String& DCname);
+    // Return ID number of sensitive detector creating given hits collection
+    G4int GetCollectionID(G4VHitsCollection* aHC);
 
-  inline void SetVerboseLevel(G4int vl)
-  {
-    verboseLevel = vl;
-    treeTop->SetVerboseLevel(vl);
-  }
-  inline G4SDStructure* GetTreeTop() const { return treeTop; }
-  inline void ListTree() const { treeTop->ListTree(); }
-  inline G4int GetCollectionCapacity() const { return HCtable->entries(); }
-  inline G4HCtable* GetHCtable() const { return HCtable; }
+    G4VSensitiveDetector* FindSensitiveDetector(const G4String& dName, G4bool warning = true);
+    G4HCofThisEvent* PrepareNewEvent();
+    void TerminateCurrentEvent(G4HCofThisEvent* HCE);
+    void AddNewCollection(const G4String& SDname, const G4String& DCname);
 
-  void RegisterSDFilter(G4VSDFilter* filter);
-  void DeRegisterSDFilter(G4VSDFilter* filter);
+    inline void SetVerboseLevel(G4int vl)
+    {
+      verboseLevel = vl;
+      treeTop->SetVerboseLevel(vl);
+    }
+    inline G4SDStructure* GetTreeTop() const { return treeTop; }
+    inline void ListTree() const { treeTop->ListTree(); }
+    inline G4int GetCollectionCapacity() const { return HCtable->entries(); }
+    inline G4HCtable* GetHCtable() const { return HCtable; }
 
- protected:
-  G4SDManager();
+    void RegisterSDFilter(G4VSDFilter* filter);
+    void DeRegisterSDFilter(G4VSDFilter* filter);
 
- private:
-  void DestroyFilters();
+  protected:
 
- private:
-  static G4ThreadLocal G4SDManager* fSDManager;
-  G4SDStructure* treeTop;
-  G4int verboseLevel{0};
-  G4HCtable* HCtable;
-  G4SDmessenger* theMessenger;
-  std::vector<G4VSDFilter*> FilterList;
+    G4SDManager();
+
+  private:
+
+    void DestroyFilters();
+
+  private:
+
+    static G4ThreadLocal G4SDManager* fSDManager;
+    G4SDStructure* treeTop;
+    G4int verboseLevel{0};
+    G4HCtable* HCtable;
+    G4SDmessenger* theMessenger;
+    std::vector<G4VSDFilter*> FilterList;
 };
 
 #endif

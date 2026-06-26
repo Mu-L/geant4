@@ -27,35 +27,35 @@
 //
 // Author: Pedro Arce (CIEMAT), 2014
 // --------------------------------------------------------------------
-#ifndef G4LEPTSElossDistr_hh
-#define G4LEPTSElossDistr_hh 1
+#ifndef G4LEPTSELOSSDISTR_HH
+#define G4LEPTSELOSSDISTR_HH
 
-#include "globals.hh"
 #include "Randomize.hh"
+#include "globals.hh"
 
-#include <map> 
+#include <map>
 
 class G4LEPTSDistribution;
 
 class G4LEPTSElossDistr
 {
- public:
+  public:
 
-  G4LEPTSElossDistr(const G4String&);
+    G4LEPTSElossDistr(const G4String&);
 
-  void ReadFile();
-  G4double Sample( G4double, G4double );
-  G4bool IsFileFound() const { return bFileFound; }
+    void ReadFile();
+    G4double Sample(G4double, G4double);
+    G4bool IsFileFound() const { return bFileFound; }
 
- private:
+  private:
 
-  std::map<G4double, std::map<G4double, G4LEPTSDistribution *> > theDistributions;
+    std::map<G4double, std::map<G4double, G4LEPTSDistribution*>> theDistributions;
     // Energy , angle , distribution
 
-  G4int theNDistributions;
-  G4String fileName;
-  G4int NoBins;
-  G4bool bFileFound;
+    G4int theNDistributions;
+    G4String fileName;
+    G4int NoBins;
+    G4bool bFileFound;
 };
 
 #endif

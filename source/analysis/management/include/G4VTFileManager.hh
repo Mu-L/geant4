@@ -28,27 +28,28 @@
 
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
-#ifndef G4VTFileManager_h
-#define G4VTFileManager_h 1
+#ifndef G4VTFILEMANAGER_HH
+#define G4VTFILEMANAGER_HH
 
-#include "G4VFileManager.hh"
-#include "G4TNtupleDescription.hh"
 #include "G4TFileManager.hh"
+#include "G4TNtupleDescription.hh"
+#include "G4VFileManager.hh"
 #include "globals.hh"
 
 #include "tools/wcsv_ntuple"
 
-template <typename FT>
-class G4VTFileManager : public G4VFileManager,
-                        public G4TFileManager<FT>
+template<typename FT>
+class G4VTFileManager : public G4VFileManager, public G4TFileManager<FT>
 {
   public:
+
     explicit G4VTFileManager(const G4AnalysisManagerState& state)
-      : G4VFileManager(state), G4TFileManager<FT>(state) {}
+      : G4VFileManager(state), G4TFileManager<FT>(state)
+    {}
     ~G4VTFileManager() override = default;
 
-    using G4VFileManager::WriteFile;
     using G4VFileManager::CloseFile;
+    using G4VFileManager::WriteFile;
 
     // Methods applied to file per name
     G4bool CreateFile(const G4String& fileName) final;
@@ -69,63 +70,57 @@ class G4VTFileManager : public G4VFileManager,
     std::shared_ptr<FT> GetFile() const;
 
   protected:
+
     // Data members
     // Default file - created at OpenFile call
-    std::shared_ptr<FT> fFile { nullptr };
+    std::shared_ptr<FT> fFile{nullptr};
 };
 
 //_____________________________________________________________________________
-template <typename FT>
-inline
-G4bool G4VTFileManager<FT>::CreateFile(const G4String& fileName)
+template<typename FT>
+inline G4bool G4VTFileManager<FT>::CreateFile(const G4String& fileName)
 {
   return (G4TFileManager<FT>::CreateTFile(fileName) != nullptr);
 }
 
 //_____________________________________________________________________________
-template <typename FT>
-inline
-G4bool G4VTFileManager<FT>::WriteFile(const G4String& fileName)
+template<typename FT>
+inline G4bool G4VTFileManager<FT>::WriteFile(const G4String& fileName)
 {
   return G4TFileManager<FT>::WriteTFile(fileName);
 }
 
 //_____________________________________________________________________________
-template <typename FT>
-inline
-G4bool G4VTFileManager<FT>::CloseFile(const G4String& fileName)
+template<typename FT>
+inline G4bool G4VTFileManager<FT>::CloseFile(const G4String& fileName)
 {
   return G4TFileManager<FT>::CloseTFile(fileName);
 }
 
 //_____________________________________________________________________________
-template <typename FT>
-inline
-G4bool G4VTFileManager<FT>::SetIsEmpty(const G4String& fileName, G4bool isEmpty)
+template<typename FT>
+inline G4bool G4VTFileManager<FT>::SetIsEmpty(const G4String& fileName, G4bool isEmpty)
 {
   return G4TFileManager<FT>::SetIsEmpty(fileName, isEmpty);
 }
 
 //_____________________________________________________________________________
-template <typename FT>
-inline
-G4bool G4VTFileManager<FT>::OpenFiles()
+template<typename FT>
+inline G4bool G4VTFileManager<FT>::OpenFiles()
 {
   return G4TFileManager<FT>::OpenFiles();
 }
 
 //_____________________________________________________________________________
-template <typename FT>
-inline
-G4bool G4VTFileManager<FT>::WriteFiles()
+template<typename FT>
+inline G4bool G4VTFileManager<FT>::WriteFiles()
 {
   return G4TFileManager<FT>::WriteFiles();
 }
 
 //_____________________________________________________________________________
-template <typename FT>
-inline
-G4bool G4VTFileManager<FT>::CloseFiles()
+template<typename FT>
+inline G4bool G4VTFileManager<FT>::CloseFiles()
 {
   auto result = G4TFileManager<FT>::CloseFiles();
 
@@ -136,9 +131,8 @@ G4bool G4VTFileManager<FT>::CloseFiles()
 }
 
 //_____________________________________________________________________________
-template <typename FT>
-inline
-G4bool G4VTFileManager<FT>::DeleteEmptyFiles()
+template<typename FT>
+inline G4bool G4VTFileManager<FT>::DeleteEmptyFiles()
 {
   auto result = G4TFileManager<FT>::DeleteEmptyFiles();
 
@@ -149,9 +143,8 @@ G4bool G4VTFileManager<FT>::DeleteEmptyFiles()
 }
 
 //_____________________________________________________________________________
-template <typename FT>
-inline
-void G4VTFileManager<FT>::Clear()
+template<typename FT>
+inline void G4VTFileManager<FT>::Clear()
 {
   G4TFileManager<FT>::ClearData();
   G4BaseFileManager::ClearData();
@@ -159,7 +152,7 @@ void G4VTFileManager<FT>::Clear()
 }
 
 //_____________________________________________________________________________
-template <typename FT>
+template<typename FT>
 inline std::shared_ptr<FT> G4VTFileManager<FT>::GetFile() const
 {
   return fFile;

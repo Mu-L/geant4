@@ -33,30 +33,32 @@
 // - Created:  P. Arce, September 2004
 // --------------------------------------------------------------------
 
-#ifndef G4ErrorGeomVolumeTarget_HH
-#define G4ErrorGeomVolumeTarget_HH
+#ifndef G4ERRORGEOMVOLUMETARGET_HH
+#define G4ERRORGEOMVOLUMETARGET_HH
 
-#include "globals.hh"
-#include "G4ThreeVector.hh"
 #include "G4ErrorTarget.hh"
 #include "G4Plane3D.hh"
+#include "G4ThreeVector.hh"
+#include "globals.hh"
 
 class G4Step;
 class G4String;
 
 class G4ErrorGeomVolumeTarget : public G4ErrorTarget
 {
- public:  // with description
-  G4ErrorGeomVolumeTarget(const G4String& name);
-  virtual ~G4ErrorGeomVolumeTarget() {}
+  public:  // with description
 
-  virtual G4bool TargetReached(const G4Step* aStep);
-  // return true when particle is entering the volume
+    G4ErrorGeomVolumeTarget(const G4String& name);
+    virtual ~G4ErrorGeomVolumeTarget() {}
 
-  virtual void Dump(const G4String& msg) const;
+    virtual G4bool TargetReached(const G4Step* aStep);
+    // return true when particle is entering the volume
 
- private:
-  G4String theName;
+    virtual void Dump(const G4String& msg) const;
+
+  private:
+
+    G4String theName;
 };
 
 #endif

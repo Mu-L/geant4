@@ -30,36 +30,44 @@
 // Modified:
 // 21.03.2013 V.Ivanchenko redesigned and cleaned up
 
-#ifndef G4CookPairingCorrections_h
-#define G4CookPairingCorrections_h 1
+#ifndef G4COOKPAIRINGCORRECTIONS_HH
+#define G4COOKPAIRINGCORRECTIONS_HH
 
 #include "globals.hh"
 
 class G4CookPairingCorrections
 {
-public:
+  public:
 
-  explicit G4CookPairingCorrections();
-	
-  inline G4bool GetPairingCorrection(G4int N, G4int Z, G4double& result) const
-  {
-    G4bool res = false;
-    if(Z >= ZTableMin && Z <= ZTableMax && N >= NTableMin && N <= NTableMax) { 
-      result = PairingZTable[Z-ZTableMin] + PairingNTable[N-NTableMin];
-      res = true; 
+    explicit G4CookPairingCorrections();
+
+    inline G4bool GetPairingCorrection(G4int N, G4int Z, G4double& result) const
+    {
+      G4bool res = false;
+      if (Z >= ZTableMin && Z <= ZTableMax && N >= NTableMin && N <= NTableMax)
+      {
+        result = PairingZTable[Z - ZTableMin] + PairingNTable[N - NTableMin];
+        res = true;
+      }
+      return res;
     }
-    return res;
-  }
-  
-  enum  { ZTableSize = 68, NTableSize = 118, ZTableMin = 28, ZTableMax = 95,
-	  NTableMin = 33, NTableMax = 150 };
-private:
-  
-  G4CookPairingCorrections(const G4CookPairingCorrections & right) = delete;
-  const G4CookPairingCorrections & operator=(const G4CookPairingCorrections & right) = delete;
 
-  static G4double PairingZTable[ZTableSize];
-  static G4double PairingNTable[NTableSize];
-  
+    enum
+    {
+      ZTableSize = 68,
+      NTableSize = 118,
+      ZTableMin = 28,
+      ZTableMax = 95,
+      NTableMin = 33,
+      NTableMax = 150
+    };
+
+  private:
+
+    G4CookPairingCorrections(const G4CookPairingCorrections& right) = delete;
+    const G4CookPairingCorrections& operator=(const G4CookPairingCorrections& right) = delete;
+
+    static G4double PairingZTable[ZTableSize];
+    static G4double PairingNTable[NTableSize];
 };
 #endif

@@ -28,4 +28,3 @@
 
 G4CT_COUNT_INIT_IMPL(G4VMolecularDissociationDisplacer, 0)
 G4CT_COUNT_IMPL(G4VMolecularDissociationDisplacer, NoDisplacement)
-

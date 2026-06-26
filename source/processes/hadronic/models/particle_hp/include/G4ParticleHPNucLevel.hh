@@ -29,8 +29,8 @@
 // Data structure class for gamma levels to replace gamma data classes
 // of P. Arce
 //
-#ifndef G4ParticleHPNucLevel_h
-#define G4ParticleHPNucLevel_h 1
+#ifndef G4PARTICLEHPNUCLEVEL_HH
+#define G4PARTICLEHPNUCLEVEL_HH
 
 #include "G4ReactionProduct.hh"
 #include "globals.hh"
@@ -40,6 +40,7 @@
 class G4ParticleHPNucLevel
 {
   public:
+
     explicit G4ParticleHPNucLevel(G4double e);
     ~G4ParticleHPNucLevel() = default;
 
@@ -62,6 +63,7 @@ class G4ParticleHPNucLevel
     const G4ParticleHPNucLevel& operator=(const G4ParticleHPNucLevel&) = delete;
 
   private:
+
     G4int nGammas = 0;
     G4double levelEnergy;
 

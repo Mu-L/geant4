@@ -27,13 +27,14 @@
 // Jane Tinslay, John Allison, Joseph Perl November 2005
 
 #include "G4TrajectoryDrawByParticleID.hh"
-#include "G4TrajectoryDrawerUtils.hh"
-#include "G4VisTrajContext.hh"
-#include "G4VTrajectory.hh"
 
-G4TrajectoryDrawByParticleID::G4TrajectoryDrawByParticleID(const G4String& name, G4VisTrajContext* context)
-  :G4VTrajectoryModel(name, context)
-  ,fDefault(G4Colour::Grey())
+#include "G4TrajectoryDrawerUtils.hh"
+#include "G4VTrajectory.hh"
+#include "G4VisTrajContext.hh"
+
+G4TrajectoryDrawByParticleID::G4TrajectoryDrawByParticleID(const G4String& name,
+                                                           G4VisTrajContext* context)
+  : G4VTrajectoryModel(name, context), fDefault(G4Colour::Grey())
 {
   Set("gamma", "green");
   Set("e-", "red");
@@ -46,8 +47,7 @@ G4TrajectoryDrawByParticleID::G4TrajectoryDrawByParticleID(const G4String& name,
 
 G4TrajectoryDrawByParticleID::~G4TrajectoryDrawByParticleID() {}
 
-void
-G4TrajectoryDrawByParticleID::Draw(const G4VTrajectory& traj, const G4bool& /*visible*/) const
+void G4TrajectoryDrawByParticleID::Draw(const G4VTrajectory& traj, const G4bool& /*visible*/) const
 {
   G4Colour colour(fDefault);
   G4String particle = traj.GetParticleName();
@@ -55,63 +55,59 @@ G4TrajectoryDrawByParticleID::Draw(const G4VTrajectory& traj, const G4bool& /*vi
   fMap.GetColour(particle, colour);
 
   G4VisTrajContext myContext(GetContext());
-  
+
   myContext.SetLineColour(colour);
-  
-  if (GetVerbose()) {
-    G4cout<<"G4TrajectoryDrawByParticleID drawer named "<<Name();
-    G4cout<<", drawing trajectory with particle type, "<<particle<<G4endl;
-    G4cout<<", with configuration:"<<G4endl;
+
+  if (GetVerbose())
+  {
+    G4cout << "G4TrajectoryDrawByParticleID drawer named " << Name();
+    G4cout << ", drawing trajectory with particle type, " << particle << G4endl;
+    G4cout << ", with configuration:" << G4endl;
     myContext.Print(G4cout);
   }
 
   G4TrajectoryDrawerUtils::DrawLineAndPoints(traj, myContext);
 }
 
-void
-G4TrajectoryDrawByParticleID::SetDefault(const G4String& colour)
+void G4TrajectoryDrawByParticleID::SetDefault(const G4String& colour)
 {
-  G4Colour myColour(G4Colour::White());      
+  G4Colour myColour(G4Colour::White());
 
-  // Will not modify myColour if colour key does not exist  
-  if (!G4Colour::GetColour(colour, myColour)) {
+  // Will not modify myColour if colour key does not exist
+  if (!G4Colour::GetColour(colour, myColour))
+  {
     G4ExceptionDescription ed;
-    ed << "G4Colour with key "<<colour<<" does not exist ";
-    G4Exception
-      ("G4TrajectoryDrawByParticleID::SetDefault(const G4String& colour)",
-       "modeling0124", JustWarning, ed);
+    ed << "G4Colour with key " << colour << " does not exist ";
+    G4Exception("G4TrajectoryDrawByParticleID::SetDefault(const G4String& colour)", "modeling0124",
+                JustWarning, ed);
   }
 
   SetDefault(myColour);
 }
 
-void
-G4TrajectoryDrawByParticleID::SetDefault(const G4Colour& colour)
+void G4TrajectoryDrawByParticleID::SetDefault(const G4Colour& colour)
 {
   fDefault = colour;
 }
 
-void
-G4TrajectoryDrawByParticleID::Set(const G4String& particle, const G4String& colour)
+void G4TrajectoryDrawByParticleID::Set(const G4String& particle, const G4String& colour)
 {
   fMap.Set(particle, colour);
 }
 
-void
-G4TrajectoryDrawByParticleID::Set(const G4String& particle, const G4Colour& colour)
+void G4TrajectoryDrawByParticleID::Set(const G4String& particle, const G4Colour& colour)
 {
   fMap[particle] = colour;
 }
 
-void
-G4TrajectoryDrawByParticleID::Print(std::ostream& ostr) const
+void G4TrajectoryDrawByParticleID::Print(std::ostream& ostr) const
 {
-  ostr<<"G4TrajectoryDrawByParticleID model "<< Name() <<" colour scheme: "<<std::endl;
-  
-  ostr<<"Default colour: "<<fDefault<<G4endl;
+  ostr << "G4TrajectoryDrawByParticleID model " << Name() << " colour scheme: " << std::endl;
+
+  ostr << "Default colour: " << fDefault << G4endl;
 
   fMap.Print(ostr);
 
-  ostr<<"Default configuration:"<<G4endl;
+  ostr << "Default configuration:" << G4endl;
   GetContext().Print(G4cout);
 }

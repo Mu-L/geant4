@@ -25,101 +25,92 @@
 //
 //
 
-#ifndef G4DNAScreenedRutherfordElasticModel_h
-#define G4DNAScreenedRutherfordElasticModel_h 1
+#ifndef G4DNASCREENEDRUTHERFORDELASTICMODEL_HH
+#define G4DNASCREENEDRUTHERFORDELASTICMODEL_HH
+
+#include "G4NistManager.hh"
+#include "G4ParticleChangeForGamma.hh"
+#include "G4ProductionCutsTable.hh"
+#include "G4VEmModel.hh"
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
-#include "G4VEmModel.hh"
-#include "G4ParticleChangeForGamma.hh"
-#include "G4ProductionCutsTable.hh"
-#include "G4NistManager.hh"
-
 class G4DNAScreenedRutherfordElasticModel : public G4VEmModel
 {
-public:
-  G4DNAScreenedRutherfordElasticModel(const G4ParticleDefinition* p = nullptr, 
-		          const G4String& nam = "DNAScreenedRutherfordElasticModel");
+  public:
 
-  ~G4DNAScreenedRutherfordElasticModel() override;
+    G4DNAScreenedRutherfordElasticModel(const G4ParticleDefinition* p = nullptr,
+                                        const G4String& nam = "DNAScreenedRutherfordElasticModel");
 
-  G4DNAScreenedRutherfordElasticModel& operator=
-    (const G4DNAScreenedRutherfordElasticModel &right) = delete;
-  G4DNAScreenedRutherfordElasticModel(const G4DNAScreenedRutherfordElasticModel&) = delete;
+    ~G4DNAScreenedRutherfordElasticModel() override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    G4DNAScreenedRutherfordElasticModel&
+    operator=(const G4DNAScreenedRutherfordElasticModel& right) = delete;
+    G4DNAScreenedRutherfordElasticModel(const G4DNAScreenedRutherfordElasticModel&) = delete;
 
-  G4double CrossSectionPerVolume(const G4Material* material,
-                                         const G4ParticleDefinition* p,
-                                         G4double ekin,
-                                         G4double emin,
-                                         G4double emax) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-                                 const G4MaterialCutsCouple*,
-                                 const G4DynamicParticle*,
-                                 G4double tmin,
-                                 G4double maxEnergy) override;
+    G4double CrossSectionPerVolume(const G4Material* material, const G4ParticleDefinition* p,
+                                   G4double ekin, G4double emin, G4double emax) override;
 
-  inline void SetKillBelowThreshold (G4double threshold);
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  inline void SelectFasterComputation(G4bool input); 
+    inline void SetKillBelowThreshold(G4double threshold);
 
-protected:
-  G4ParticleChangeForGamma* fParticleChangeForGamma;
+    inline void SelectFasterComputation(G4bool input);
 
-private:
-  G4double lowEnergyLimit;
-  G4double intermediateEnergyLimit;
-  G4double highEnergyLimit;
-  
-  // -- Brenner & Zaider
-  std::vector<G4double> betaCoeff;
-  std::vector<G4double> deltaCoeff;
-  std::vector<G4double> gamma035_10Coeff;
-  std::vector<G4double> gamma10_100Coeff;
-  std::vector<G4double> gamma100_200Coeff;
-  
-  // -- Water density table
-  const std::vector<G4double>* fpWaterDensity;
-  
-  G4int verboseLevel;
-  
-  G4bool isInitialised{false};
-  G4bool fasterCode;
-  
-  // -- Cross section
-  G4double RutherfordCrossSection(G4double energy, G4double z);
-  G4double ScreeningFactor(G4double energy, G4double z);
-  
-  // -- Final state according to Brenner & Zaider
-  G4double BrennerZaiderRandomizeCosTheta(G4double k);
-  G4double CalculatePolynomial(G4double k, std::vector<G4double>& vec);
+  protected:
 
-   
-  // -- Final state according to Screened Rutherford
-  G4double ScreenedRutherfordRandomizeCosTheta(G4double k, G4double z);
+    G4ParticleChangeForGamma* fParticleChangeForGamma;
 
+  private:
+
+    G4double lowEnergyLimit;
+    G4double intermediateEnergyLimit;
+    G4double highEnergyLimit;
+
+    // -- Brenner & Zaider
+    std::vector<G4double> betaCoeff;
+    std::vector<G4double> deltaCoeff;
+    std::vector<G4double> gamma035_10Coeff;
+    std::vector<G4double> gamma10_100Coeff;
+    std::vector<G4double> gamma100_200Coeff;
+
+    // -- Water density table
+    const std::vector<G4double>* fpWaterDensity;
+
+    G4int verboseLevel;
+
+    G4bool isInitialised{false};
+    G4bool fasterCode;
+
+    // -- Cross section
+    G4double RutherfordCrossSection(G4double energy, G4double z);
+    G4double ScreeningFactor(G4double energy, G4double z);
+
+    // -- Final state according to Brenner & Zaider
+    G4double BrennerZaiderRandomizeCosTheta(G4double k);
+    G4double CalculatePolynomial(G4double k, std::vector<G4double>& vec);
+
+    // -- Final state according to Screened Rutherford
+    G4double ScreenedRutherfordRandomizeCosTheta(G4double k, G4double z);
 };
 
-inline void
-G4DNAScreenedRutherfordElasticModel::SetKillBelowThreshold (G4double)
+inline void G4DNAScreenedRutherfordElasticModel::SetKillBelowThreshold(G4double)
 {
-    G4ExceptionDescription errMsg;
-    errMsg << "The method G4DNAScreenedRutherfordElasticModel::"
-              "SetKillBelowThreshold is deprecated";
-    
-    G4Exception("G4DNAScreenedRutherfordElasticModel::SetKillBelowThreshold",
-                "deprecated",
-                JustWarning,
-                errMsg);
-}		 
+  G4ExceptionDescription errMsg;
+  errMsg << "The method G4DNAScreenedRutherfordElasticModel::"
+            "SetKillBelowThreshold is deprecated";
 
-inline void
-G4DNAScreenedRutherfordElasticModel::SelectFasterComputation(G4bool input)
-{ 
-    fasterCode = input; 
-}		 
+  G4Exception("G4DNAScreenedRutherfordElasticModel::SetKillBelowThreshold", "deprecated",
+              JustWarning, errMsg);
+}
+
+inline void G4DNAScreenedRutherfordElasticModel::SelectFasterComputation(G4bool input)
+{
+  fasterCode = input;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 

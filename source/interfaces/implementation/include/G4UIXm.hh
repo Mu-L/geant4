@@ -25,8 +25,8 @@
 //
 //
 //
-#ifndef G4UIXm_h
-#define G4UIXm_h
+#ifndef G4UIXM_HH
+#define G4UIXM_HH
 
 #include "G4VBasicShell.hh"
 #include "G4VInteractiveSession.hh"
@@ -59,48 +59,50 @@ class G4UIsession;
 
 class G4UIXm : public G4VBasicShell, public G4VInteractiveSession
 {
- public:  // With description
-  // (argv, argc) or (0, NULL) had to be given.
-  G4UIXm(G4int, char**);
-  ~G4UIXm();
+  public:  // With description
 
-  // To enter interactive X loop ; waiting/executing command,...
-  G4UIsession* SessionStart();
+    // (argv, argc) or (0, NULL) had to be given.
+    G4UIXm(G4int, char**);
+    ~G4UIXm();
 
-  // To add a pulldown menu in the menu bar.
-  // First argument is the name of the menu.
-  // Second argument is the label of the cascade button.
-  // Ex : AddMenu("my_menu","My menu")
-  void AddMenu(const char*, const char*);
+    // To enter interactive X loop ; waiting/executing command,...
+    G4UIsession* SessionStart();
 
-  // To add a push button in a pulldown menu.
-  // First argument is the name of the menu.
-  // Second argument is the label of the button.
-  // Third argument is the Geant4 command executed when the button is fired.
-  // Ex : AddButton("my_menu","Run","/run/beamOn 1");
-  void AddButton(const char*, const char*, const char*);
+    // To add a pulldown menu in the menu bar.
+    // First argument is the name of the menu.
+    // Second argument is the label of the cascade button.
+    // Ex : AddMenu("my_menu","My menu")
+    void AddMenu(const char*, const char*);
 
-  void Prompt(const G4String&);
-  void SessionTerminate();
-  virtual void PauseSessionStart(const G4String&);
-  virtual G4int ReceiveG4debug(const G4String&);
-  virtual G4int ReceiveG4cout(const G4String&);
-  virtual G4int ReceiveG4cerr(const G4String&);
-  G4String GetCommand(Widget);
+    // To add a push button in a pulldown menu.
+    // First argument is the name of the menu.
+    // Second argument is the label of the button.
+    // Third argument is the Geant4 command executed when the button is fired.
+    // Ex : AddButton("my_menu","Run","/run/beamOn 1");
+    void AddButton(const char*, const char*, const char*);
 
- private:
-  void SecondaryLoop(const G4String&);
-  G4bool GetHelpChoice(G4int&);
-  void ExitHelp() const;
-  static void CommandEnteredCallback(Widget, XtPointer, XtPointer);
-  static void keyHandler(Widget, XtPointer, XEvent*, Boolean*);
-  static void ButtonCallback(Widget, XtPointer, XtPointer);
+    void Prompt(const G4String&);
+    void SessionTerminate();
+    virtual void PauseSessionStart(const G4String&);
+    virtual G4int ReceiveG4debug(const G4String&);
+    virtual G4int ReceiveG4cout(const G4String&);
+    virtual G4int ReceiveG4cerr(const G4String&);
+    G4String GetCommand(Widget);
 
-  Widget form, shell, command, menuBar, text;
-  std::map<Widget, G4String, std::less<Widget>> commands;
-  G4bool fHelp;
-  G4int fHelpChoice;
-  G4String menu_str[6] = {"form", "menuBar", "command", "Clear", "clearButton", "text"};
+  private:
+
+    void SecondaryLoop(const G4String&);
+    G4bool GetHelpChoice(G4int&);
+    void ExitHelp() const;
+    static void CommandEnteredCallback(Widget, XtPointer, XtPointer);
+    static void keyHandler(Widget, XtPointer, XEvent*, Boolean*);
+    static void ButtonCallback(Widget, XtPointer, XtPointer);
+
+    Widget form, shell, command, menuBar, text;
+    std::map<Widget, G4String, std::less<Widget>> commands;
+    G4bool fHelp;
+    G4int fHelpChoice;
+    G4String menu_str[6] = {"form", "menuBar", "command", "Clear", "clearButton", "text"};
 };
 
 #endif

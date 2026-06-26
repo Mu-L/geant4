@@ -28,7 +28,7 @@
 // Geant4 header : G4NeutronFissionVI
 // Created:  03 October 2023
 // Author  V.Ivanchenko
-//  
+//
 // Modified:
 //
 // Class Description
@@ -36,14 +36,14 @@
 // Class Description - End
 //
 
-#ifndef G4NeutronFissionVI_h
-#define G4NeutronFissionVI_h 1
- 
-#include "globals.hh"
-#include "G4HadronicInteraction.hh"
+#ifndef G4NEUTRONFISSIONVI_HH
+#define G4NEUTRONFISSIONVI_HH
+
 #include "G4HadProjectile.hh"
-#include "G4Nucleus.hh"
+#include "G4HadronicInteraction.hh"
 #include "G4LorentzVector.hh"
+#include "G4Nucleus.hh"
+#include "globals.hh"
 
 class G4VEvaporationChannel;
 class G4IonTable;
@@ -52,32 +52,32 @@ class G4ParticleHPManager;
 
 class G4NeutronFissionVI : public G4HadronicInteraction
 {
-public:
+  public:
 
-  G4NeutronFissionVI();
+    G4NeutronFissionVI();
 
-  ~G4NeutronFissionVI() override;
+    ~G4NeutronFissionVI() override;
 
-  G4HadFinalState* ApplyYourself(const G4HadProjectile & aTrack, 
-                                 G4Nucleus & targetNucleus) override;
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
+                                   G4Nucleus& targetNucleus) override;
 
-  void InitialiseModel() override;
+    void InitialiseModel() override;
 
-  G4NeutronFissionVI & operator=(const G4NeutronFissionVI &right) = delete;
-  G4NeutronFissionVI(const G4NeutronFissionVI&) = delete;
+    G4NeutronFissionVI& operator=(const G4NeutronFissionVI& right) = delete;
+    G4NeutronFissionVI(const G4NeutronFissionVI&) = delete;
 
-private:
+  private:
 
-  G4int secID{-1};  // creator model ID for secondaries produced by this model
-  G4ParticleHPManager* fManagerHP;
-  G4ExcitationHandler* fHandler{nullptr};
-  G4VEvaporationChannel* fFission{nullptr};
-  G4IonTable* theTableOfIons;
+    G4int secID{-1};  // creator model ID for secondaries produced by this model
+    G4ParticleHPManager* fManagerHP;
+    G4ExcitationHandler* fHandler{nullptr};
+    G4VEvaporationChannel* fFission{nullptr};
+    G4IonTable* theTableOfIons;
 
-  G4double minExcitation;
-  G4double emaxT;
-  G4LorentzVector lab4mom;
-  G4bool fLocalHandler{false};
+    G4double minExcitation;
+    G4double emaxT;
+    G4LorentzVector lab4mom;
+    G4bool fLocalHandler{false};
 };
 
 #endif

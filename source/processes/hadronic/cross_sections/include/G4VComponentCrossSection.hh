@@ -35,144 +35,115 @@
 //
 // Modifications:
 //
- 
+
 //
 // Class Description
 // This is a base class for hadronic cross section data source
 // Class Description - End
 
-#ifndef G4VComponentCrossSection_h
-#define G4VComponentCrossSection_h 1
+#ifndef G4VCOMPONENTCROSSSECTION_HH
+#define G4VCOMPONENTCROSSSECTION_HH
 
-#include "G4ParticleDefinition.hh"
 #include "G4Element.hh"
+#include "G4ParticleDefinition.hh"
 #include "globals.hh"
 
 class G4CrossSectionDataSetRegistry;
 
 class G4VComponentCrossSection
 {
-public: //with description
+  public:  // with description
 
-  explicit G4VComponentCrossSection(const G4String& nam = "");
+    explicit G4VComponentCrossSection(const G4String& nam = "");
 
-  virtual ~G4VComponentCrossSection();
+    virtual ~G4VComponentCrossSection();
 
-  inline
-  G4double GetTotalElementCrossSection(const G4ParticleDefinition*,
-				       G4double kinEnergy,
-				       const G4Element*);
+    inline G4double GetTotalElementCrossSection(const G4ParticleDefinition*, G4double kinEnergy,
+                                                const G4Element*);
 
-  virtual
-  G4double GetTotalElementCrossSection(const G4ParticleDefinition*,
-				       G4double kinEnergy, 
-				       G4int /*Z*/, G4double /*N*/) = 0;
+    virtual G4double GetTotalElementCrossSection(const G4ParticleDefinition*, G4double kinEnergy,
+                                                 G4int /*Z*/, G4double /*N*/) = 0;
 
-  virtual
-  G4double GetTotalIsotopeCrossSection(const G4ParticleDefinition*,
-				       G4double kinEnergy,
-				       G4int /*Z*/, G4int /*N*/) = 0;
+    virtual G4double GetTotalIsotopeCrossSection(const G4ParticleDefinition*, G4double kinEnergy,
+                                                 G4int /*Z*/, G4int /*N*/) = 0;
 
-  inline
-  G4double GetInelasticElementCrossSection(const G4ParticleDefinition*,
-					   G4double kinEnergy, 
-					   const G4Element*);
+    inline G4double GetInelasticElementCrossSection(const G4ParticleDefinition*, G4double kinEnergy,
+                                                    const G4Element*);
 
-  virtual
-  G4double GetInelasticElementCrossSection(const G4ParticleDefinition*,
-					   G4double kinEnergy, 
-					   G4int /*Z*/, G4double /*N*/) = 0;
+    virtual G4double GetInelasticElementCrossSection(const G4ParticleDefinition*,
+                                                     G4double kinEnergy, G4int /*Z*/,
+                                                     G4double /*N*/) = 0;
 
-  virtual
-  G4double GetInelasticIsotopeCrossSection(const G4ParticleDefinition*,
-					   G4double kinEnergy, 
-					   G4int /*Z*/, G4int /*N*/) = 0;
+    virtual G4double GetInelasticIsotopeCrossSection(const G4ParticleDefinition*,
+                                                     G4double kinEnergy, G4int /*Z*/,
+                                                     G4int /*N*/) = 0;
 
-  inline
-  G4double GetElasticElementCrossSection(const G4ParticleDefinition*,
-					 G4double kinEnergy, 
-					 const G4Element*);
+    inline G4double GetElasticElementCrossSection(const G4ParticleDefinition*, G4double kinEnergy,
+                                                  const G4Element*);
 
-  virtual
-  G4double GetElasticElementCrossSection(const G4ParticleDefinition*,
-					 G4double kinEnergy, 
-					 G4int /*Z*/, G4double /*N*/) = 0;
+    virtual G4double GetElasticElementCrossSection(const G4ParticleDefinition*, G4double kinEnergy,
+                                                   G4int /*Z*/, G4double /*N*/) = 0;
 
-  virtual
-  G4double GetElasticIsotopeCrossSection(const G4ParticleDefinition*,
-					 G4double kinEnergy, 
-					 G4int /*Z*/, G4int /*N*/) = 0;
+    virtual G4double GetElasticIsotopeCrossSection(const G4ParticleDefinition*, G4double kinEnergy,
+                                                   G4int /*Z*/, G4int /*N*/) = 0;
 
-  virtual
-  G4double ComputeQuasiElasticRatio(const G4ParticleDefinition*,
-				    G4double kinEnergy, 
-				    G4int /*Z*/, G4int /*N*/);
+    virtual G4double ComputeQuasiElasticRatio(const G4ParticleDefinition*, G4double kinEnergy,
+                                              G4int /*Z*/, G4int /*N*/);
 
-  virtual
-  void BuildPhysicsTable(const G4ParticleDefinition&);
+    virtual void BuildPhysicsTable(const G4ParticleDefinition&);
 
-  virtual
-  void DumpPhysicsTable(const G4ParticleDefinition&);
+    virtual void DumpPhysicsTable(const G4ParticleDefinition&);
 
-  virtual void Description(std::ostream&) const;
+    virtual void Description(std::ostream&) const;
 
-  inline void SetVerboseLevel(G4int value);
+    inline void SetVerboseLevel(G4int value);
 
-  inline G4int GetVerboseLevel() const;
+    inline G4int GetVerboseLevel() const;
 
-  inline G4double GetMinKinEnergy() const;
+    inline G4double GetMinKinEnergy() const;
 
-  inline void SetMinKinEnergy(G4double value);
+    inline void SetMinKinEnergy(G4double value);
 
-  inline G4double GetMaxKinEnergy() const;
+    inline G4double GetMaxKinEnergy() const;
 
-  inline void SetMaxKinEnergy(G4double value);
+    inline void SetMaxKinEnergy(G4double value);
 
-  inline const G4String& GetName() const;
+    inline const G4String& GetName() const;
 
-private:
+  private:
 
-  G4VComponentCrossSection & operator=(const G4VComponentCrossSection &right);
-  G4VComponentCrossSection(const G4VComponentCrossSection&);
+    G4VComponentCrossSection& operator=(const G4VComponentCrossSection& right);
+    G4VComponentCrossSection(const G4VComponentCrossSection&);
 
-  G4CrossSectionDataSetRegistry* registry;
+    G4CrossSectionDataSetRegistry* registry;
 
-  G4int verboseLevel;
+    G4int verboseLevel;
 
-  G4double minKinEnergy;
-  G4double maxKinEnergy;
+    G4double minKinEnergy;
+    G4double maxKinEnergy;
 
-  const G4String name;
+    const G4String name;
 };
 
-inline G4double 
-G4VComponentCrossSection::GetTotalElementCrossSection(
-         const G4ParticleDefinition* p,
-	 G4double kinEnergy, 
-	 const G4Element* elm)
+inline G4double G4VComponentCrossSection::GetTotalElementCrossSection(const G4ParticleDefinition* p,
+                                                                      G4double kinEnergy,
+                                                                      const G4Element* elm)
 {
-  return GetTotalElementCrossSection(p,kinEnergy,
-				     elm->GetZasInt(),elm->GetN());
+  return GetTotalElementCrossSection(p, kinEnergy, elm->GetZasInt(), elm->GetN());
 }
 
-inline G4double 
-G4VComponentCrossSection::GetInelasticElementCrossSection(
-         const G4ParticleDefinition* p,
-	 G4double kinEnergy, 
-	 const G4Element* elm)
+inline G4double
+G4VComponentCrossSection::GetInelasticElementCrossSection(const G4ParticleDefinition* p,
+                                                          G4double kinEnergy, const G4Element* elm)
 {
-  return GetInelasticElementCrossSection(p,kinEnergy,
-					 elm->GetZasInt(),elm->GetN());
+  return GetInelasticElementCrossSection(p, kinEnergy, elm->GetZasInt(), elm->GetN());
 }
 
-inline G4double 
-G4VComponentCrossSection::GetElasticElementCrossSection(
-         const G4ParticleDefinition* p,
-	 G4double kinEnergy, 
-	 const G4Element* elm)
+inline G4double
+G4VComponentCrossSection::GetElasticElementCrossSection(const G4ParticleDefinition* p,
+                                                        G4double kinEnergy, const G4Element* elm)
 {
-  return GetElasticElementCrossSection(p,kinEnergy,
-				       elm->GetZasInt(),elm->GetN());
+  return GetElasticElementCrossSection(p, kinEnergy, elm->GetZasInt(), elm->GetN());
 }
 
 inline void G4VComponentCrossSection::SetVerboseLevel(G4int value)

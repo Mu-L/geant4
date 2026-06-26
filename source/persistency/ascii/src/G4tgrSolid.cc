@@ -28,25 +28,21 @@
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
 
-#include <map>
-#include <set>
-
 #include "G4tgrSolid.hh"
 
 #include "G4SystemOfUnits.hh"
-#include "G4tgrUtils.hh"
 #include "G4tgrMessenger.hh"
+#include "G4tgrUtils.hh"
 #include "G4tgrVolumeMgr.hh"
 
-// --------------------------------------------------------------------
-G4tgrSolid::G4tgrSolid()
-{
-}
+#include <map>
+#include <set>
 
 // --------------------------------------------------------------------
-G4tgrSolid::~G4tgrSolid()
-{
-}
+G4tgrSolid::G4tgrSolid() {}
+
+// --------------------------------------------------------------------
+G4tgrSolid::~G4tgrSolid() {}
 
 // --------------------------------------------------------------------
 G4tgrSolid::G4tgrSolid(const std::vector<G4String>& wl)
@@ -63,7 +59,7 @@ G4tgrSolid::G4tgrSolid(const std::vector<G4String>& wl)
   G4tgrVolumeMgr::GetInstance()->RegisterMe(this);
 
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 1)
+  if (G4tgrMessenger::GetVerboseLevel() >= 1)
   {
     G4cout << " Created " << *this << G4endl;
   }
@@ -158,28 +154,27 @@ void G4tgrSolid::FillSolidParams(const std::vector<G4String>& wl)
 
   G4String solidType = wl[2];
   //--- Default unit (mm) if length, deg if angle
-  for(G4int ii = 0; ii < (G4int)noParRead; ++ii)
+  for (G4int ii = 0; ii < (G4int)noParRead; ++ii)
   {
     G4bool isAngle = 0;
-    std::map<G4String, std::set<G4int>>::const_iterator ite =
-      angleParams.find(solidType);
-    if(ite != angleParams.cend())
+    std::map<G4String, std::set<G4int>>::const_iterator ite = angleParams.find(solidType);
+    if (ite != angleParams.cend())
     {
       std::set<G4int> apar2 = (*ite).second;
-      if(apar2.find(ii) != apar2.cend())
+      if (apar2.find(ii) != apar2.cend())
       {
         isAngle = 1;
         vd->push_back(G4tgrUtils::GetDouble(wl[3 + ii], deg));
 #ifdef G4VERBOSE
-        if(G4tgrMessenger::GetVerboseLevel() >= 3)
+        if (G4tgrMessenger::GetVerboseLevel() >= 3)
         {
-          G4cout << " G4tgrSolid::FillSolidParams() - Angle param found "
-                 << solidType << " " << ii << G4endl;
+          G4cout << " G4tgrSolid::FillSolidParams() - Angle param found " << solidType << " " << ii
+                 << G4endl;
         }
 #endif
       }
     }
-    if(!isAngle)
+    if (!isAngle)
     {
       vd->push_back(G4tgrUtils::GetDouble(wl[3 + ii]));
     }
@@ -189,12 +184,11 @@ void G4tgrSolid::FillSolidParams(const std::vector<G4String>& wl)
 // --------------------------------------------------------------------
 std::ostream& operator<<(std::ostream& os, const G4tgrSolid& sol)
 {
-  os << "G4tgrSolid= " << sol.theName << " of type " << sol.theType
-     << " PARAMS: ";
-  if(sol.theSolidParams.size() != 0)
+  os << "G4tgrSolid= " << sol.theName << " of type " << sol.theType << " PARAMS: ";
+  if (sol.theSolidParams.size() != 0)
   {
     std::vector<G4double> solpar = *(sol.theSolidParams[0]);
-    for(std::size_t ii = 0; ii < solpar.size(); ++ii)
+    for (std::size_t ii = 0; ii < solpar.size(); ++ii)
     {
       os << solpar[ii] << " ";
     }

@@ -29,11 +29,12 @@
 // --------------------------------------------------------------------
 
 #include "G4LockcoutDestination.hh"
+
 #include "G4AutoLock.hh"
 
 namespace
 {
-  G4Mutex out_mutex = G4MUTEX_INITIALIZER;
+G4Mutex out_mutex = G4MUTEX_INITIALIZER;
 }
 
 // --------------------------------------------------------------------

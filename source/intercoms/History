@@ -6,7 +6,10 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-05-26 Gabriele Cosmo (intercoms-V11-03-01)
+## 2026-06-19 Ben Morgan (intercoms-V11-04-02)
+- Apply clang-format to all C++ files.
+
+## 2026-05-26 Gabriele Cosmo (intercoms-V11-04-01)
 - Fixed MT data race in G4UImanager, by adding a file-local mutex and guarded
   the four command-tree mutation paths AddNewCommand(), AddWorkerCommand(),
   RemoveCommand(), RemoveWorkerCommand().
@@ -14,11 +17,14 @@ It must **not** be used as a substitute for writing good git commit messages!
   AddNewCommand() does not hold it while forwarding to AddWorkerCommand()
   on the master UI manager.
 
+## 2026-01-09 Ben Morgan (intercoms-V11-04-00)
+- Update header guards to style/format required by Geant4 coding guidelines.
+
 ## 2025-04-11 Makoto Asai (intercoms-V11-03-00)
 - G4UImanager, G4UIcontrolMessenger
   - Introducing "@@" keyword that can be placed in any UI command that takes
     a macro file name. It creates a temporal macro file with following commands
-    until /control/endRecord command comes. This “@@” mechanism works recursively.
+    until /control/endRecord command comes. This "@@" mechanism works recursively.
   - If a file name is enclosed in a pair of "@", that macro file is created.
   - This mechanism works for both interactive mode and batch mode. When used in
     interactive mode with Qt GUI, you can use up-arrow, tab-key and clickable

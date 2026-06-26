@@ -29,70 +29,67 @@
 
 #include "G4UIQt.hh"
 
+#include "G4AttCheck.hh"
 #include "G4MTcoutDestination.hh"
+#include "G4PhysicalConstants.hh"
 #include "G4Qt.hh"
+#include "G4SceneTreeItem.hh"
 #include "G4StateManager.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4Types.hh"
 #include "G4UIcommand.hh"
 #include "G4UIcommandStatus.hh"
 #include "G4UIcommandTree.hh"
 #include "G4UImanager.hh"
-#include "G4UIcommand.hh"
 #include "G4UIparameter.hh"
-#include "G4SceneTreeItem.hh"
-#include "G4AttCheck.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4PhysicalConstants.hh"
-
-#include <cstring>
-#include <chrono>
-#include <thread>
 
 #include <qapplication.h>
-#include <qdialog.h>
-#include <qevent.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qlineedit.h>
-#include <qmenubar.h>
-#include <qmessagebox.h>
-#include <qpushbutton.h>
-#include <qscrollbar.h>
-#include <qsplitter.h>
-#include <qtextbrowser.h>
-#include <qtextedit.h>
-#include <qwidget.h>
 #include <qboxlayout.h>
 #include <qbuttongroup.h>
 #include <qcolordialog.h>
 #include <qcombobox.h>
 #include <qcompleter.h>
+#include <qdialog.h>
+#include <qevent.h>
 #include <qfiledialog.h>
 #include <qgroupbox.h>
 #include <qheaderview.h>
+#include <qlabel.h>
+#include <qlayout.h>
+#include <qlineedit.h>
 #include <qlistwidget.h>
 #include <qmainwindow.h>
 #include <qmenu.h>
+#include <qmenubar.h>
+#include <qmessagebox.h>
 #include <qpainter.h>
+#include <qpushbutton.h>
 #include <qradiobutton.h>
 #include <qscrollarea.h>
+#include <qscrollbar.h>
+#include <qsplitter.h>
 #include <qstandarditemmodel.h>
 #include <qstringlist.h>
 #include <qtabbar.h>
 #include <qtablewidget.h>
 #include <qtabwidget.h>
+#include <qtextbrowser.h>
+#include <qtextedit.h>
 #include <qtextstream.h>
 #include <qtoolbar.h>
 #include <qtoolbox.h>
+#include <qwidget.h>
 
-#include <QInputDialog>
-#include <QSpinBox>
 #include <QDoubleSpinBox>
+#include <QInputDialog>
 #include <QScreen>
-
-#include <set>
-#include <map>
+#include <QSpinBox>
+#include <chrono>
 #include <cstdlib>
+#include <cstring>
+#include <map>
+#include <set>
+#include <thread>
 
 #ifndef G4GMAKE
 #  include "moc_G4UIQt.cpp"
@@ -199,11 +196,13 @@ G4UIQt::G4UIQt(G4int argc, char** argv)
     fZoomOutSelected(false)
 {
   G4Qt* interactorManager = G4Qt::getInstance(argc, argv, (char*)"Qt");
-  if ((QApplication*)interactorManager->GetMainInteractor() == nullptr) {
+  if ((QApplication*)interactorManager->GetMainInteractor() == nullptr)
+  {
     G4UImanager* UImanager = G4UImanager::GetUIpointer();
     G4int verbose = UImanager->GetVerboseLevel();
 
-    if (verbose >= 2) {
+    if (verbose >= 2)
+    {
       G4cout << "G4UIQt : Unable to init Qt. Aborted" << G4endl;
     }
   }
@@ -214,17 +213,21 @@ G4UIQt::G4UIQt(G4int argc, char** argv)
 
   // Check if already define in external app QMainWindow
   G4bool found = false;
-  Q_FOREACH (QWidget* widget, QApplication::allWidgets()) {
-    if ((!found) && (widget->inherits("QMainWindow"))) {
+  Q_FOREACH (QWidget* widget, QApplication::allWidgets())
+  {
+    if ((!found) && (widget->inherits("QMainWindow")))
+    {
       found = true;
     }
   }
 
-  if (found) {
+  if (found)
+  {
     G4UImanager* UImanager = G4UImanager::GetUIpointer();
     G4int verbose = UImanager->GetVerboseLevel();
 
-    if (verbose >= 2) {
+    if (verbose >= 2)
+    {
       G4cout << "G4UIQt : Found an external App with a QMainWindow already defined. Aborted"
              << G4endl;
     }
@@ -284,7 +287,8 @@ G4UIQt::G4UIQt(G4int argc, char** argv)
 G4UIQt::~G4UIQt()
 {
   G4UImanager* UI = G4UImanager::GetUIpointer();  // TO KEEP
-  if (UI != nullptr) {  // TO KEEP
+  if (UI != nullptr)
+  {  // TO KEEP
     UI->SetSession(nullptr);  // TO KEEP
     UI->SetG4UIWindow(nullptr);
     UI->SetCoutDestination(nullptr);  // TO KEEP
@@ -298,15 +302,19 @@ void G4UIQt::DefaultIcons(G4bool aVal)
 {
   fDefaultIcons = aVal;
 
-  if (! fMainWindow->isVisible()) {
+  if (!fMainWindow->isVisible())
+  {
     return;
   }
 
-  if (fToolbarApp != nullptr) {
-    if (aVal) {
+  if (fToolbarApp != nullptr)
+  {
+    if (aVal)
+    {
       fToolbarApp->setVisible(true);
     }
-    else {
+    else
+    {
       // Set not visible until session start
       fToolbarApp->setVisible(false);
     }
@@ -315,8 +323,10 @@ void G4UIQt::DefaultIcons(G4bool aVal)
 
 void G4UIQt::SetDefaultIconsToolbar()
 {
-  if (fDefaultIcons) {
-    if (fToolbarApp == nullptr) {
+  if (fDefaultIcons)
+  {
+    if (fToolbarApp == nullptr)
+    {
       fToolbarApp = new QToolBar();
       fToolbarApp->setIconSize(QSize(20, 20));
       fMainWindow->addToolBar(Qt::TopToolBarArea, fToolbarApp);
@@ -328,7 +338,7 @@ void G4UIQt::SetDefaultIconsToolbar()
 
     // View parameters
     fToolbarApp->addAction(QIcon(*fParamIcon), "Viewer properties", this,
-      [this]() { this->ViewerPropertiesIconCallback(0); });
+                           [this]() { this->ViewerPropertiesIconCallback(0); });
 
     // Cursors style icons
     AddIcon("Move", "move", "");
@@ -1589,45 +1599,43 @@ void G4UIQt::CreateIcons()
 }
 // clang-format on
 
-namespace {
-  G4SceneTreeItem* ConvertToG4SceneTreeItem(QTreeWidgetItem* item)
-  {
+namespace
+{
+G4SceneTreeItem* ConvertToG4SceneTreeItem(QTreeWidgetItem* item)
+{
   auto qVariant = item->data(0, Qt::UserRole);
   std::istringstream iss(qVariant.toString().toStdString());
-  void* itemAddress; iss >> itemAddress;
+  void* itemAddress;
+  iss >> itemAddress;
   return static_cast<G4SceneTreeItem*>(itemAddress);
-  }
-
-  QColor ConvertG4ColourToQColor(const G4Colour& g4Colour)
-  {
-  return QColor((int)(g4Colour.GetRed()*255),
-                (int)(g4Colour.GetGreen()*255),
-                (int)(g4Colour.GetBlue()*255),
-                (int)(g4Colour.GetAlpha()*255));
-  }
-
-  G4Colour ConvertQColorToG4Colour(const QColor& qColor)
-  {
-  return G4Color(qColor.red()/255.,
-                 qColor.green()/255.,
-                 qColor.blue()/255.,
-                 qColor.alpha()/255.);
-  }
-
-  // Some file-local variables
-  G4int thisSceneTreePVDepth = -1;
-  const G4int maxInherentSliderValue = 100;
-  G4double transparencyByDepthValue = 0.;
-  G4int transparencyByDepthOption = 1;
 }
+
+QColor ConvertG4ColourToQColor(const G4Colour& g4Colour)
+{
+  return QColor((int)(g4Colour.GetRed() * 255), (int)(g4Colour.GetGreen() * 255),
+                (int)(g4Colour.GetBlue() * 255), (int)(g4Colour.GetAlpha() * 255));
+}
+
+G4Colour ConvertQColorToG4Colour(const QColor& qColor)
+{
+  return G4Color(qColor.red() / 255., qColor.green() / 255., qColor.blue() / 255.,
+                 qColor.alpha() / 255.);
+}
+
+// Some file-local variables
+G4int thisSceneTreePVDepth = -1;
+const G4int maxInherentSliderValue = 100;
+G4double transparencyByDepthValue = 0.;
+G4int transparencyByDepthOption = 1;
+}  // namespace
 
 void G4UIQt::CreateNewSceneTreeWidget()
 {
   fNewSceneTreeWidget = new QWidget;
-  fNewSceneTreeWidget->setStyleSheet ("padding: 0px ");
+  fNewSceneTreeWidget->setStyleSheet("padding: 0px ");
   fNewSceneTreeWidget->setLayout(new QVBoxLayout);
-  fNewSceneTreeWidget->layout()->setContentsMargins(0,0,0,0);
-  fNewSceneTreeWidget->setWindowTitle("some name"/*QString(GetName().data())*/);
+  fNewSceneTreeWidget->layout()->setContentsMargins(0, 0, 0, 0);
+  fNewSceneTreeWidget->setWindowTitle("some name" /*QString(GetName().data())*/);
   // Add it to the "old" fSceneTreeWidget
   fSceneTreeWidget->layout()->addWidget(fNewSceneTreeWidget);
 
@@ -1640,8 +1648,10 @@ void G4UIQt::CreateNewSceneTreeWidget()
   // Helper widgets
   auto helpWidget = new QWidget();
   auto helpLayout = new QVBoxLayout();
-  auto zero = new QLabel(); zero->setText("Show\nall");
-  auto one = new QLabel(); one->setText("Hide\nall");
+  auto zero = new QLabel();
+  zero->setText("Show\nall");
+  auto one = new QLabel();
+  one->setText("Hide\nall");
   auto depthWidget = new QWidget();
   auto showBox = new QWidget(depthWidget);
   auto showBoxLayout = new QHBoxLayout();
@@ -1662,46 +1672,44 @@ void G4UIQt::CreateNewSceneTreeWidget()
   buttonBoxlayout->addWidget(fUnwrapButtonWidget);
   buttonBoxlayout->addWidget(fFadeButtonWidget);
   buttonBoxlayout->addWidget(fXrayButtonWidget);
-  buttonBoxlayout->setContentsMargins(0,0,0,0);
+  buttonBoxlayout->setContentsMargins(0, 0, 0, 0);
   buttonBox->setLayout(buttonBoxlayout);
   // Layout
-  showBoxLayout->setContentsMargins(0,0,0,0);
+  showBoxLayout->setContentsMargins(0, 0, 0, 0);
   showBoxLayout->addWidget(zero);
   showBoxLayout->addWidget(fNewSceneTreeSlider);
   showBoxLayout->addWidget(one);
   showBox->setLayout(showBoxLayout);
   helpLayout->addWidget(showBox);
   helpWidget->setLayout(helpLayout);
-  helpLayout->setContentsMargins(0,0,0,0);
+  helpLayout->setContentsMargins(0, 0, 0, 0);
   helpLayout->addWidget(buttonBox);
   fNewSceneTreeWidget->layout()->addWidget(helpWidget);
 
   // A click on the check box makes the volume visible/invisible
   connect(fNewSceneTreeItemTreeWidget, &QTreeWidget::itemClicked,
-          [&](QTreeWidgetItem* item){SceneTreeItemClicked(item);});
+          [&](QTreeWidgetItem* item) { SceneTreeItemClicked(item); });
   // A double click on either the colour icon or the name pops up a colour dialogue
   connect(fNewSceneTreeItemTreeWidget, &QTreeWidget::itemDoubleClicked,
-          [&](QTreeWidgetItem* item){SceneTreeItemDoubleClicked(item);});
+          [&](QTreeWidgetItem* item) { SceneTreeItemDoubleClicked(item); });
 
   // A click on the expansion triangle is handled here.
   connect(fNewSceneTreeItemTreeWidget, &QTreeWidget::itemExpanded,
-          [&](QTreeWidgetItem* item){SceneTreeItemExpanded(item);});
+          [&](QTreeWidgetItem* item) { SceneTreeItemExpanded(item); });
   connect(fNewSceneTreeItemTreeWidget, &QTreeWidget::itemCollapsed,
-          [&](QTreeWidgetItem* item){SceneTreeItemCollapsed(item);});
+          [&](QTreeWidgetItem* item) { SceneTreeItemCollapsed(item); });
 
   // Connect the slider
   connect(fNewSceneTreeSlider, &QSlider::valueChanged,
-          [&](int value){SliderValueChanged(value);});
-  connect(fNewSceneTreeSlider, &QSlider::sliderReleased,
-          [&]{SliderReleased();});
+          [&](int value) { SliderValueChanged(value); });
+  connect(fNewSceneTreeSlider, &QSlider::sliderReleased, [&] { SliderReleased(); });
 
   // Connect the slider buttons
   connect(fUnwrapButtonWidget, &QRadioButton::clicked,
-          [&]{SliderRadioButtonClicked(1);});  // Unwrap
-  connect(fFadeButtonWidget, &QRadioButton::clicked,
-          [&]{SliderRadioButtonClicked(2);});  // Fade
+          [&] { SliderRadioButtonClicked(1); });  // Unwrap
+  connect(fFadeButtonWidget, &QRadioButton::clicked, [&] { SliderRadioButtonClicked(2); });  // Fade
   connect(fXrayButtonWidget, &QRadioButton::clicked,
-          [&]{SliderRadioButtonClicked(3);});  // X-ray
+          [&] { SliderRadioButtonClicked(3); });  // X-ray
 }
 
 void G4UIQt::UpdateSceneTree(const G4SceneTreeItem& root)
@@ -1717,13 +1725,13 @@ void G4UIQt::UpdateSceneTree(const G4SceneTreeItem& root)
   fMaxPVDepth = 0;
 
   // Build a new GUI-side tree
-  fNewSceneTreeItemTreeWidget->setHeaderLabel (root.GetDescription().c_str());
-  for (const auto& model : root.GetChildren()) {
-
+  fNewSceneTreeItemTreeWidget->setHeaderLabel(root.GetDescription().c_str());
+  for (const auto& model : root.GetChildren())
+  {
     auto item = new QTreeWidgetItem(fNewSceneTreeItemTreeWidget);
 
     // Add this GUI-side representation of the model as a child of the top widget
-    fNewSceneTreeItemTreeWidget->insertTopLevelItem(0,item);
+    fNewSceneTreeItemTreeWidget->insertTopLevelItem(0, item);
 
     // Add text that appears in the scene tree
     item->setText(0, model.GetModelType().c_str());
@@ -1732,35 +1740,38 @@ void G4UIQt::UpdateSceneTree(const G4SceneTreeItem& root)
     // There may be a way to add data as a QVariant, or a list of QVariants,
     // but let's try adding a G4SceneTreeItem pointer as a hex string. (There
     // does not seem to be a way of adding a pointer directly.)
-    std::ostringstream oss; oss << std::hex << &model;
+    std::ostringstream oss;
+    oss << std::hex << &model;
     auto data = QVariant(oss.str().c_str());
     item->setData(0, Qt::UserRole, data);
 
     // Load a tooltip
     G4String toolTipMessage = model.GetModelDescription();
-    if (!model.GetFurtherInfo().empty()) {
+    if (!model.GetFurtherInfo().empty())
+    {
       toolTipMessage += "\n  " + model.GetFurtherInfo();
     }
     item->setToolTip(0, toolTipMessage.c_str());
 
     // Set the check state
-    item->setCheckState
-    (0, model.GetVisAttributes().IsVisible()? Qt::Checked: Qt::Unchecked);
+    item->setCheckState(0, model.GetVisAttributes().IsVisible() ? Qt::Checked : Qt::Unchecked);
 
     // Set the expand state
     item->setExpanded(model.IsExpanded());
 
-    if (model.GetType() == G4SceneTreeItem::pvmodel) {
+    if (model.GetType() == G4SceneTreeItem::pvmodel)
+    {
       thisSceneTreePVDepth = -1;  // First item is the model - touchables hang from it
-      BuildPVQTree(model,item);
+      BuildPVQTree(model, item);
     }
   }
 }
 
-
-void G4UIQt::UpdateDrawingStyle(G4int style) {
+void G4UIQt::UpdateDrawingStyle(G4int style)
+{
   // Surface style
-  switch (style) {
+  switch (style)
+  {
     case 0:
       this->SetIconWireframeSelected();
       break;
@@ -1781,36 +1792,42 @@ void G4UIQt::UpdateDrawingStyle(G4int style) {
   }
 }
 
-void G4UIQt::UpdateProjectionStyle(G4int style) {
-  if (style == 0.) { // ortho
+void G4UIQt::UpdateProjectionStyle(G4int style)
+{
+  if (style == 0.)
+  {  // ortho
     this->SetIconOrthoSelected();
-  } else {
+  }
+  else
+  {
     this->SetIconPerspectiveSelected();
   }
 }
 
-void G4UIQt::UpdateTransparencySlider(G4double depth, G4int option) {
+void G4UIQt::UpdateTransparencySlider(G4double depth, G4int option)
+{
   fNewSceneTreeSlider->blockSignals(true);
   fNewSceneTreeSlider->setValue(depth * maxInherentSliderValue / fMaxPVDepth);
   fNewSceneTreeSlider->blockSignals(false);
-  if (option == 1) {
+  if (option == 1)
+  {
     fUnwrapButtonWidget->blockSignals(true);
     fUnwrapButtonWidget->setChecked(true);
     fUnwrapButtonWidget->blockSignals(false);
   }
-  else if (option == 2) {
+  else if (option == 2)
+  {
     fFadeButtonWidget->blockSignals(true);
     fFadeButtonWidget->setChecked(true);
     fFadeButtonWidget->blockSignals(false);
   }
-  else if (option == 3) {
+  else if (option == 3)
+  {
     fXrayButtonWidget->blockSignals(true);
     fXrayButtonWidget->setChecked(true);
     fXrayButtonWidget->blockSignals(false);
   }
 }
-
-
 
 // Build Physical Volume tree of touchables
 void G4UIQt::BuildPVQTree(const G4SceneTreeItem& g4stItem, QTreeWidgetItem* qtwItem)
@@ -1818,42 +1835,49 @@ void G4UIQt::BuildPVQTree(const G4SceneTreeItem& g4stItem, QTreeWidgetItem* qtwI
   if (fMaxPVDepth < thisSceneTreePVDepth) fMaxPVDepth = thisSceneTreePVDepth;
   thisSceneTreePVDepth++;
   const auto& g4stChildren = g4stItem.GetChildren();
-  for (const auto& g4stChild: g4stChildren) {
+  for (const auto& g4stChild : g4stChildren)
+  {
     QStringList qStringList;
     qStringList.append(g4stChild.GetDescription().c_str());
     auto newQTWItem = new QTreeWidgetItem(qStringList);
 
     // Add a GUI-side representation of the touchable as a child
     qtwItem->addChild(newQTWItem);
-    
+
     // Load with info from g4stChild
     // There may be a way to add data as a QVariant, or a list of QVariants,
     // but let's try adding a G4SceneTreeItem pointer as a hex string. (There
     // does not seem to be a way of adding a pointer directly.)
-    std::ostringstream oss; oss << std::hex << &g4stChild;
+    std::ostringstream oss;
+    oss << std::hex << &g4stChild;
     auto data = QVariant(oss.str().c_str());
     newQTWItem->setData(0, Qt::UserRole, data);
 
     // Load a tooltip
-    if (g4stChild.GetType() == G4SceneTreeItem::ghost) {
+    if (g4stChild.GetType() == G4SceneTreeItem::ghost)
+    {
       auto& nameCopyNo = g4stChild.GetDescription();
-      auto name = nameCopyNo.substr(0,nameCopyNo.find(':'));
-      oss.str(""); oss << nameCopyNo <<
-      ": Click to make visible and get more information."
-      "\n  This may not work if the volume is in the \"base path\". (Hover on"
-      "\n  G4PhysicalVolumeModel to see base path.) If this is the case,"
-      "\n  \"/vis/scene/add/volume " << name << "\" to bring into the displayed tree.)";
+      auto name = nameCopyNo.substr(0, nameCopyNo.find(':'));
+      oss.str("");
+      oss << nameCopyNo
+          << ": Click to make visible and get more information."
+             "\n  This may not work if the volume is in the \"base path\". (Hover on"
+             "\n  G4PhysicalVolumeModel to see base path.) If this is the case,"
+             "\n  \"/vis/scene/add/volume "
+          << name << "\" to bring into the displayed tree.)";
       newQTWItem->setToolTip(0, oss.str().c_str());
-    } else {  // A fully defined touchable
-      oss.str(""); oss << g4stChild.GetPVPath() <<
-      "\nTo see properties, right-click/dump.";
+    }
+    else
+    {  // A fully defined touchable
+      oss.str("");
+      oss << g4stChild.GetPVPath() << "\nTo see properties, right-click/dump.";
       newQTWItem->setToolTip(0, oss.str().c_str());
     }
 
     // Set the check state
-    newQTWItem->setCheckState
-    (0, g4stChild.GetVisAttributes().IsVisible()? Qt::Checked: Qt::Unchecked);
-    
+    newQTWItem->setCheckState(0, g4stChild.GetVisAttributes().IsVisible() ? Qt::Checked
+                                                                          : Qt::Unchecked);
+
     // Set the expand state
     newQTWItem->setExpanded(g4stChild.IsExpanded());
 
@@ -1862,11 +1886,11 @@ void G4UIQt::BuildPVQTree(const G4SceneTreeItem& g4stItem, QTreeWidgetItem* qtwI
     pixmap.fill(ConvertG4ColourToQColor(g4stChild.GetVisAttributes().GetColour()));
     QPainter painter(&pixmap);
     painter.setPen(Qt::black);
-    painter.drawRect(0,0,15,15); // Draw contour
-    newQTWItem->setIcon(0,pixmap);
+    painter.drawRect(0, 0, 15, 15);  // Draw contour
+    newQTWItem->setIcon(0, pixmap);
 
     // Continue recursively
-    BuildPVQTree(g4stChild,newQTWItem);
+    BuildPVQTree(g4stChild, newQTWItem);
   }
   thisSceneTreePVDepth--;
 }
@@ -1882,9 +1906,9 @@ void G4UIQt::SceneTreeItemClicked(QTreeWidgetItem* item)
   // Respond according to type
   G4String argument = "false", inverse = "true";
   auto newCheckState = item->checkState(0);
-  auto oldCheckState
-  = sceneTreeItem->GetVisAttributes().IsVisible()? Qt::Checked: Qt::Unchecked;
-  switch (sceneTreeItem->GetType()) {
+  auto oldCheckState = sceneTreeItem->GetVisAttributes().IsVisible() ? Qt::Checked : Qt::Unchecked;
+  switch (sceneTreeItem->GetType())
+  {
     case G4SceneTreeItem::unidentified:
       break;  // Do nothing
     case G4SceneTreeItem::root:
@@ -1893,10 +1917,11 @@ void G4UIQt::SceneTreeItemClicked(QTreeWidgetItem* item)
       [[fallthrough]];
     case G4SceneTreeItem::pvmodel:
       // Clicked - but has checkbox actually been clicked?
-      if (newCheckState != oldCheckState) {
+      if (newCheckState != oldCheckState)
+      {
         if (newCheckState == Qt::Checked) argument = "true";
-        uiMan->ApplyCommand
-        ("/vis/scene/activateModel \"" + sceneTreeItem->GetModelDescription() + "\" " + argument);
+        uiMan->ApplyCommand("/vis/scene/activateModel \"" + sceneTreeItem->GetModelDescription()
+                            + "\" " + argument);
       }
       break;
     case G4SceneTreeItem::ghost:
@@ -1904,17 +1929,21 @@ void G4UIQt::SceneTreeItemClicked(QTreeWidgetItem* item)
     case G4SceneTreeItem::touchable:
       // Construct and apply touchable commands
       // Clicked - but has checkbox actually been clicked?
-      if (newCheckState != oldCheckState) {
-        if (newCheckState == Qt::Checked) {
-          argument = "true"; inverse = "false";
+      if (newCheckState != oldCheckState)
+      {
+        if (newCheckState == Qt::Checked)
+        {
+          argument = "true";
+          inverse = "false";
         }
         uiMan->ApplyCommand("/vis/set/touchable" + sceneTreeItem->GetPVPath());
         uiMan->ApplyCommand("/vis/touchable/set/visibility " + argument);
         static G4bool first = true;
-        if (first && sceneTreeItem->GetChildren().size() > 0 && argument == "false") {
+        if (first && sceneTreeItem->GetChildren().size() > 0 && argument == "false")
+        {
           QMessageBox msgBox;
-          msgBox.setText
-          ("To make all descendants invisible, select, then right-click/daughtersInvisible/true.");
+          msgBox.setText(
+            "To make all descendants invisible, select, then right-click/daughtersInvisible/true.");
           msgBox.setStandardButtons(QMessageBox::Ok);
           msgBox.exec();
           first = false;
@@ -1932,15 +1961,15 @@ void G4UIQt::SceneTreeItemDoubleClicked(QTreeWidgetItem* item)
   if (sceneTreeItem->GetType() != G4SceneTreeItem::touchable) return;
 
   auto oldQColor = ConvertG4ColourToQColor(sceneTreeItem->GetVisAttributes().GetColour());
-  auto newQColor = QColorDialog::getColor
-  (oldQColor, fNewSceneTreeItemTreeWidget, "", QColorDialog::ShowAlphaChannel);
+  auto newQColor = QColorDialog::getColor(oldQColor, fNewSceneTreeItemTreeWidget, "",
+                                          QColorDialog::ShowAlphaChannel);
   if (!newQColor.isValid()) return;
   if (newQColor == oldQColor) return;
 
   auto newColour = ConvertQColorToG4Colour(newQColor);
-  std::ostringstream oss; oss << std::setprecision(2)
-  << newColour.GetRed() << ' ' << newColour.GetGreen()
-  << ' ' << newColour.GetBlue() << ' ' << newColour.GetAlpha();
+  std::ostringstream oss;
+  oss << std::setprecision(2) << newColour.GetRed() << ' ' << newColour.GetGreen() << ' '
+      << newColour.GetBlue() << ' ' << newColour.GetAlpha();
   auto uiMan = G4UImanager::GetUIpointer();
   uiMan->ApplyCommand("/vis/set/touchable" + sceneTreeItem->GetPVPath());
   uiMan->ApplyCommand("/vis/touchable/set/colour " + oss.str());
@@ -1951,7 +1980,8 @@ void G4UIQt::SceneTreeItemDoubleClicked(QTreeWidgetItem* item)
   // invisible - perhaps they should use the visibility flag, but hey-ho).
   // By design, the sceneTreeItem remains, so it can still be interacted with, but
   // the colour will not be updated, so we do it here.
-  if (newColour.GetAlpha() == 0.) {
+  if (newColour.GetAlpha() == 0.)
+  {
     sceneTreeItem->AccessVisAttributes().SetColour(newColour);
   }
 }
@@ -1962,8 +1992,9 @@ void G4UIQt::SceneTreeItemExpanded(QTreeWidgetItem* item)
   auto sceneTreeItem = ConvertToG4SceneTreeItem(item);
   if (sceneTreeItem == nullptr) return;
 
-  if (sceneTreeItem->GetType() == G4SceneTreeItem::ghost ||
-      sceneTreeItem->GetType() == G4SceneTreeItem::touchable) {
+  if (sceneTreeItem->GetType() == G4SceneTreeItem::ghost
+      || sceneTreeItem->GetType() == G4SceneTreeItem::touchable)
+  {
     sceneTreeItem->SetExpanded(true);
   }
 }
@@ -1974,8 +2005,9 @@ void G4UIQt::SceneTreeItemCollapsed(QTreeWidgetItem* item)
   auto sceneTreeItem = ConvertToG4SceneTreeItem(item);
   if (sceneTreeItem == nullptr) return;
 
-  if (sceneTreeItem->GetType() == G4SceneTreeItem::ghost ||
-      sceneTreeItem->GetType() == G4SceneTreeItem::touchable) {
+  if (sceneTreeItem->GetType() == G4SceneTreeItem::ghost
+      || sceneTreeItem->GetType() == G4SceneTreeItem::touchable)
+  {
     sceneTreeItem->SetExpanded(false);
   }
 }
@@ -1984,8 +2016,8 @@ void G4UIQt::SliderValueChanged(G4int value)
 {
   transparencyByDepthValue = value;
   std::ostringstream oss;
-  oss << fMaxPVDepth*transparencyByDepthValue/maxInherentSliderValue
-  << ' ' << transparencyByDepthOption;
+  oss << fMaxPVDepth * transparencyByDepthValue / maxInherentSliderValue << ' '
+      << transparencyByDepthOption;
   auto uiMan = G4UImanager::GetUIpointer();
   // Suppress command echoing during sliding
   auto keepVerbose = uiMan->GetVerboseLevel();
@@ -1998,18 +2030,19 @@ void G4UIQt::SliderReleased()
 {
   transparencyByDepthValue = fNewSceneTreeSlider->value();
   std::ostringstream oss;
-  oss << fMaxPVDepth*transparencyByDepthValue/maxInherentSliderValue
-  << ' ' << transparencyByDepthOption;
+  oss << fMaxPVDepth * transparencyByDepthValue / maxInherentSliderValue << ' '
+      << transparencyByDepthOption;
   auto uiMan = G4UImanager::GetUIpointer();
   // Don't suppress command echoing in this case
   uiMan->ApplyCommand("/vis/viewer/set/transparencyByDepth " + oss.str());
 }
 
-void G4UIQt::SliderRadioButtonClicked(G4int buttonNo) {
+void G4UIQt::SliderRadioButtonClicked(G4int buttonNo)
+{
   transparencyByDepthOption = buttonNo;
   std::ostringstream oss;
-  oss << fMaxPVDepth*transparencyByDepthValue/maxInherentSliderValue
-  << ' ' << transparencyByDepthOption;
+  oss << fMaxPVDepth * transparencyByDepthValue / maxInherentSliderValue << ' '
+      << transparencyByDepthOption;
   auto uiMan = G4UImanager::GetUIpointer();
   // Don't suppress command echoing in this case
   uiMan->ApplyCommand("/vis/viewer/set/transparencyByDepth " + oss.str());
@@ -2023,22 +2056,33 @@ void G4UIQt::NewSceneTreeItemTreeWidget::mousePressEvent(QMouseEvent* ev)
   auto currentMousePressPosition = ev->globalPosition().toPoint();
 #endif
 
-  if (ev->button() == Qt::RightButton) {
+  if (ev->button() == Qt::RightButton)
+  {
     auto item = currentItem();
-    if (item) {
+    if (item)
+    {
       auto sceneTreeItem = ConvertToG4SceneTreeItem(item);
-      if (sceneTreeItem) {
-        if (sceneTreeItem->GetType() == G4SceneTreeItem::touchable) {
-
+      if (sceneTreeItem)
+      {
+        if (sceneTreeItem->GetType() == G4SceneTreeItem::touchable)
+        {
           // We wish to present actions (and menus) in alphabetical order. I have
           // not found the required insert methods so we make our own list (map)
           // and add actions and menus and then creating appropriate qActions.
           // Using std::map to get alphabetical order. To control the order use
           // std::list of pairs instead.
-          enum CommandType {withoutParameter, withABool, withAnInteger, withADouble, withAString};
-          static std::map<G4String,CommandType> alphabetical;  // Ensures alphabetical order
+          enum CommandType
+          {
+            withoutParameter,
+            withABool,
+            withAnInteger,
+            withADouble,
+            withAString
+          };
+          static std::map<G4String, CommandType> alphabetical;  // Ensures alphabetical order
           static G4bool first = true;
-          if (first) {
+          if (first)
+          {
             first = false;
             // Rather than simply take all commands, select those that make sense
             // in this pop-up menu.
@@ -2073,19 +2117,20 @@ void G4UIQt::NewSceneTreeItemTreeWidget::mousePressEvent(QMouseEvent* ev)
           std::vector<QAction*> actions;  // Temporary container for action pointers
           std::vector<QMenu*> menus;  // Temporary container for menu pointers
 
-          for (const auto& action : alphabetical) {
+          for (const auto& action : alphabetical)
+          {
             const auto& af = action.first;  // G4String name of action
 
-            if (action.second == withoutParameter) {
-
+            if (action.second == withoutParameter)
+            {
               auto qAction = new QAction(af.c_str(), this);
               actions.push_back(qAction);  // into temporary container
               topMenu.addAction(qAction);
               connect(qAction, &QAction::triggered, this,
-                      [this, &af, &sceneTreeItem]{ActWithoutParameter(af, sceneTreeItem);});
-
-            } else if (action.second == withABool) {
-
+                      [this, &af, &sceneTreeItem] { ActWithoutParameter(af, sceneTreeItem); });
+            }
+            else if (action.second == withABool)
+            {
               auto menu = new QMenu(af.c_str());
               menus.push_back(menu);  // into temporary container
               topMenu.addMenu(menu);
@@ -2093,65 +2138,67 @@ void G4UIQt::NewSceneTreeItemTreeWidget::mousePressEvent(QMouseEvent* ev)
               actions.push_back(qActionTrue);  // into temporary container
               menu->addAction(qActionTrue);
               connect(qActionTrue, &QAction::triggered, this,
-                      [this, &af, &sceneTreeItem]{ActWithABool(af, sceneTreeItem, true);});
+                      [this, &af, &sceneTreeItem] { ActWithABool(af, sceneTreeItem, true); });
               auto qActionFalse = new QAction("false", this);
               actions.push_back(qActionFalse);  // into temporary container
               menu->addAction(qActionFalse);
               connect(qActionFalse, &QAction::triggered, this,
-                      [this, &af, &sceneTreeItem]{ActWithABool(af, sceneTreeItem, false);});
-
-            } else if (action.second == withAnInteger) {
-
+                      [this, &af, &sceneTreeItem] { ActWithABool(af, sceneTreeItem, false); });
+            }
+            else if (action.second == withAnInteger)
+            {
               auto qAction = new QAction(af.c_str(), this);
               actions.push_back(qAction);  // into temporary container
               topMenu.addAction(qAction);
               connect(qAction, &QAction::triggered, this,
-                      [this, &af, &sceneTreeItem]{ActWithAnInteger(af, sceneTreeItem);});
-
-            } else if (action.second == withADouble) {
-
+                      [this, &af, &sceneTreeItem] { ActWithAnInteger(af, sceneTreeItem); });
+            }
+            else if (action.second == withADouble)
+            {
               auto qAction = new QAction(af.c_str(), this);
               actions.push_back(qAction);  // into temporary container
               topMenu.addAction(qAction);
               connect(qAction, &QAction::triggered, this,
-                      [this, &af, &sceneTreeItem]{ActWithADouble(af, sceneTreeItem);});
-
-            } else if (action.second == withAString) {
-
+                      [this, &af, &sceneTreeItem] { ActWithADouble(af, sceneTreeItem); });
+            }
+            else if (action.second == withAString)
+            {
               auto qAction = new QAction(af.c_str(), this);
               actions.push_back(qAction);  // into temporary container
               topMenu.addAction(qAction);
               connect(qAction, &QAction::triggered, this,
-                      [this, &af, &sceneTreeItem]{ActWithAString(af, sceneTreeItem);});
+                      [this, &af, &sceneTreeItem] { ActWithAString(af, sceneTreeItem); });
             }
           }
 
           topMenu.exec(currentMousePressPosition);
 
           // Clean up
-          for (auto action : actions) {
+          for (auto action : actions)
+          {
             // No need to disconnect. Qt say, "A signal-slot connection is removed
             // when either of the objects involved are destroyed."
             delete action;
           }
-          for (auto menu : menus) {
+          for (auto menu : menus)
+          {
             delete menu;
           }
         }
       }
     }
   }
-  
+
   // Pass event on up the widget tree for other actions
   QTreeWidget::mousePressEvent(ev);
 }
 
-void G4UIQt::NewSceneTreeItemTreeWidget::ActWithoutParameter
- (const G4String& action, G4SceneTreeItem* sceneTreeItem)
+void G4UIQt::NewSceneTreeItemTreeWidget::ActWithoutParameter(const G4String& action,
+                                                             G4SceneTreeItem* sceneTreeItem)
 {
   // Special case: dump
-  if (action == "dump") {
-
+  if (action == "dump")
+  {
     auto widget = new QWidget;
     widget->setWindowTitle(sceneTreeItem->GetDescription().c_str());
     auto layout = new QVBoxLayout;
@@ -2180,22 +2227,23 @@ void G4UIQt::NewSceneTreeItemTreeWidget::ActWithoutParameter
   uiMan->ApplyCommand("/vis/touchable/" + action);
 }
 
-void G4UIQt::NewSceneTreeItemTreeWidget::ActWithABool
- (const G4String& action, G4SceneTreeItem* sceneTreeItem, G4bool whatever)
+void G4UIQt::NewSceneTreeItemTreeWidget::ActWithABool(const G4String& action,
+                                                      G4SceneTreeItem* sceneTreeItem,
+                                                      G4bool whatever)
 {
   auto uiMan = G4UImanager::GetUIpointer();
   uiMan->ApplyCommand("/vis/set/touchable" + sceneTreeItem->GetPVPath());
-  G4String which = whatever? "true": "false";
+  G4String which = whatever ? "true" : "false";
   uiMan->ApplyCommand("/vis/touchable/set/" + action + ' ' + which);
 }
 
-void G4UIQt::NewSceneTreeItemTreeWidget::ActWithAnInteger
-(const G4String& action, G4SceneTreeItem* sceneTreeItem)
+void G4UIQt::NewSceneTreeItemTreeWidget::ActWithAnInteger(const G4String& action,
+                                                          G4SceneTreeItem* sceneTreeItem)
 {
   G4bool ok = true;
-  auto newValue = QInputDialog::getInt(this, action.c_str(), action.c_str(),
-                                       0, 0, 9999999, 1, &ok);
-  if (ok) {
+  auto newValue = QInputDialog::getInt(this, action.c_str(), action.c_str(), 0, 0, 9999999, 1, &ok);
+  if (ok)
+  {
     auto uiMan = G4UImanager::GetUIpointer();
     uiMan->ApplyCommand("/vis/set/touchable" + sceneTreeItem->GetPVPath());
     uiMan->ApplyCommand("/vis/touchable/set/" + action + ' '
@@ -2203,13 +2251,13 @@ void G4UIQt::NewSceneTreeItemTreeWidget::ActWithAnInteger
   }
 }
 
-void G4UIQt::NewSceneTreeItemTreeWidget::ActWithADouble
- (const G4String& action, G4SceneTreeItem* sceneTreeItem)
+void G4UIQt::NewSceneTreeItemTreeWidget::ActWithADouble(const G4String& action,
+                                                        G4SceneTreeItem* sceneTreeItem)
 {
   G4bool ok = true;
-  auto newValue = QInputDialog::getDouble(this, action.c_str(), action.c_str(),
-                                          0, 0, 999, 1, &ok);
-  if (ok) {
+  auto newValue = QInputDialog::getDouble(this, action.c_str(), action.c_str(), 0, 0, 999, 1, &ok);
+  if (ok)
+  {
     auto uiMan = G4UImanager::GetUIpointer();
     uiMan->ApplyCommand("/vis/set/touchable" + sceneTreeItem->GetPVPath());
     uiMan->ApplyCommand("/vis/touchable/set/" + action + ' '
@@ -2217,28 +2265,30 @@ void G4UIQt::NewSceneTreeItemTreeWidget::ActWithADouble
   }
 }
 
-void G4UIQt::NewSceneTreeItemTreeWidget::ActWithAString
- (const G4String& action, G4SceneTreeItem* sceneTreeItem)
+void G4UIQt::NewSceneTreeItemTreeWidget::ActWithAString(const G4String& action,
+                                                        G4SceneTreeItem* sceneTreeItem)
 {
   auto uiMan = G4UImanager::GetUIpointer();
   auto command = uiMan->FindCommand("/vis/touchable/set/" + action);
-  if (command) {
+  if (command)
+  {
     QStringList qStringList;
     const auto& candidates = command->GetParameter(0)->GetParameterCandidates();
     std::istringstream iss(candidates);
     G4String candidate;
-    while (iss >> candidate) qStringList.append(candidate.c_str());
+    while (iss >> candidate)
+      qStringList.append(candidate.c_str());
     G4bool ok = true;
-    auto chosenValue = QInputDialog::getItem(this, action.c_str(), action.c_str(), qStringList,
-                                             0, false, &ok);
-    if (ok) {
+    auto chosenValue =
+      QInputDialog::getItem(this, action.c_str(), action.c_str(), qStringList, 0, false, &ok);
+    if (ok)
+    {
       uiMan->ApplyCommand("/vis/set/touchable" + sceneTreeItem->GetPVPath());
       G4String g4ChosenValue = chosenValue.toStdString();
       uiMan->ApplyCommand("/vis/touchable/set/" + action + ' ' + g4ChosenValue);
     }
   }
 }
-
 
 /** Create the History ToolBox Widget
  */
@@ -2281,9 +2331,10 @@ QWidget* G4UIQt::CreateHelpTBWidget()
 
   // Set layouts
 
-  if (fHelpTreeWidget != nullptr) {
+  if (fHelpTreeWidget != nullptr)
+  {
     fHelpVSplitter->addWidget(fHelpTreeWidget);
-    fHelpVSplitter->setStretchFactor(0,4);
+    fHelpVSplitter->setStretchFactor(0, 4);
   }
   fHelpVSplitter->addWidget(fParameterHelpLabel);
   fHelpVSplitter->addWidget(fParameterHelpTable);
@@ -2307,38 +2358,41 @@ QWidget* G4UIQt::CreateHelpTBWidget()
 
 /** Create widget to set and manipulate time window and other effects
  */
-namespace {  // For use in CreateTimeWindowWidget()
+namespace
+{  // For use in CreateTimeWindowWidget()
 
-  auto cm2ns = [](double scale)  // lambda function for use below (with severe rounding)
-  {return std::pow(10., std::floor(std::log10((scale*cm/c_light)/ns)));};
+auto cm2ns = [](double scale)  // lambda function for use below (with severe rounding)
+{
+  return std::pow(10., std::floor(std::log10((scale * cm / c_light) / ns)));
+};
 
-  // Some values depend on the scale of the detector
-  double detectorScale = 100.;  // cm
-  double detectorTimescaleNano = cm2ns(detectorScale);  // ns (correponding time, rounded)
+// Some values depend on the scale of the detector
+double detectorScale = 100.;  // cm
+double detectorTimescaleNano = cm2ns(detectorScale);  // ns (correponding time, rounded)
 
-  // Time slice interval
-  double timeSliceInterval = detectorTimescaleNano/100; // ns
-  double timeSliceIntervalSpinBoxSingleStep = detectorTimescaleNano/100.; // ns
-  double timeSliceIntervalSpinBoxMaximum = detectorTimescaleNano*100; // ns
+// Time slice interval
+double timeSliceInterval = detectorTimescaleNano / 100;  // ns
+double timeSliceIntervalSpinBoxSingleStep = detectorTimescaleNano / 100.;  // ns
+double timeSliceIntervalSpinBoxMaximum = detectorTimescaleNano * 100;  // ns
 
-  // Duration of time window
-  double duration = detectorTimescaleNano/10; // ns
-  const double durationSpinBoxSingleStep = detectorTimescaleNano/10.; // ns
-  const double durationSpinBoxMaximum = detectorTimescaleNano*1000; // ns
+// Duration of time window
+double duration = detectorTimescaleNano / 10;  // ns
+const double durationSpinBoxSingleStep = detectorTimescaleNano / 10.;  // ns
+const double durationSpinBoxMaximum = detectorTimescaleNano * 1000;  // ns
 
-  // Parameters of time evolution feature
-  double startTime = 0.; // ns
-  double timeSliderValue   = 0.; // ns
-  double timeSliderMinimum = 0.; // ns
-  double timeSliderMaximum = detectorTimescaleNano; // ns
-  double timeSliderIncrement = detectorTimescaleNano/100; // ns
-  double timeSliderIncrementSpinBoxSingleStep = detectorTimescaleNano/100.; // ns
-  double timeSliderIncrementSpinBoxMaximum = detectorTimescaleNano; // ns
+// Parameters of time evolution feature
+double startTime = 0.;  // ns
+double timeSliderValue = 0.;  // ns
+double timeSliderMinimum = 0.;  // ns
+double timeSliderMaximum = detectorTimescaleNano;  // ns
+double timeSliderIncrement = detectorTimescaleNano / 100;  // ns
+double timeSliderIncrementSpinBoxSingleStep = detectorTimescaleNano / 100.;  // ns
+double timeSliderIncrementSpinBoxMaximum = detectorTimescaleNano;  // ns
 
-  // Other spin boxes
-  const double spinBoxSingleStep = detectorTimescaleNano/10.; // ns
-  const double spinBoxMaximum = detectorTimescaleNano*1000; // ns
-}
+// Other spin boxes
+const double spinBoxSingleStep = detectorTimescaleNano / 10.;  // ns
+const double spinBoxMaximum = detectorTimescaleNano * 1000;  // ns
+}  // namespace
 
 QWidget* G4UIQt::CreateTimeWindowWidget()
 {
@@ -2353,87 +2407,87 @@ QWidget* G4UIQt::CreateTimeWindowWidget()
   topLayout->setContentsMargins(topMargins, topMargins, topMargins, topMargins);
 
   // Some spin boxes with names in the top space, so we can change value
-  auto timeSliceIntervalSpinBox   = new QDoubleSpinBox;
-  auto durationSpinBox            = new QDoubleSpinBox;
+  auto timeSliceIntervalSpinBox = new QDoubleSpinBox;
+  auto durationSpinBox = new QDoubleSpinBox;
   auto timeSliderIncrementSpinBox = new QDoubleSpinBox;
-  auto timeSliderMinSpinBox       = new QDoubleSpinBox;
-  auto timeSliderMaxSpinBox       = new QDoubleSpinBox;
-  auto timeSliderValueSpinBox     = new QDoubleSpinBox;
+  auto timeSliderMinSpinBox = new QDoubleSpinBox;
+  auto timeSliderMaxSpinBox = new QDoubleSpinBox;
+  auto timeSliderValueSpinBox = new QDoubleSpinBox;
 
-  { // Header
+  {  // Header
     auto header = new QLabel;
     header->setAlignment(Qt::AlignHCenter);
     header->setText("Time window control");
     topLayout->addWidget(header);
-  } // Header
+  }  // Header
 
   // Prepare Events Panel
   auto prepareEventsPanel = new QLabel;
   prepareEventsPanel->setFrameStyle(QFrame::Panel);
   auto prepareEventsLayout = new QVBoxLayout(prepareEventsPanel);
-  prepareEventsLayout->setContentsMargins
-  (panelLeftRightMargins, panelTopBottomMargins, panelLeftRightMargins, panelTopBottomMargins);
+  prepareEventsLayout->setContentsMargins(panelLeftRightMargins, panelTopBottomMargins,
+                                          panelLeftRightMargins, panelTopBottomMargins);
   topLayout->addWidget(prepareEventsPanel);
   topLayout->setStretchFactor(prepareEventsPanel, 10);
 
-  { // Place stuff in the Prepare Events Panel
+  {  // Place stuff in the Prepare Events Panel
 
     static int nEvents = 1;
 
-    { // Header
+    {  // Header
       auto prepareTitle = new QLabel;
       prepareTitle->setFixedHeight(20);
       prepareTitle->setAlignment(Qt::AlignHCenter);
       prepareTitle->setText("Prepare event(s)");
       prepareEventsLayout->addWidget(prepareTitle);
-    } // Header
+    }  // Header
 
-    { // Detector scale
+    {  // Detector scale
       auto widget = new QWidget;
       auto layout = new QHBoxLayout(widget);
-      layout->setContentsMargins(0,0,0,0);
+      layout->setContentsMargins(0, 0, 0, 0);
       auto label = new QLabel;
       label->setText("Detector scale");
       layout->addWidget(label);
       auto spinBox = new QDoubleSpinBox;
-      spinBox->setRange(0., detectorScale*1000);
+      spinBox->setRange(0., detectorScale * 1000);
       spinBox->setValue(detectorScale);
-      spinBox->setSingleStep(detectorScale/10.);
+      spinBox->setSingleStep(detectorScale / 10.);
       spinBox->setSuffix(" cm");
-      spinBox->setToolTip
-      ("This is rough guidance for the default values of"
-       "\nsome of the parameters below, so that they better"
-       "\ncorrespond to the physical dimensions of the detector."
-       "\nIt sets the default values, but you can still make"
-       "\nyour own adjustments.");
+      spinBox->setToolTip(
+        "This is rough guidance for the default values of"
+        "\nsome of the parameters below, so that they better"
+        "\ncorrespond to the physical dimensions of the detector."
+        "\nIt sets the default values, but you can still make"
+        "\nyour own adjustments.");
       layout->addWidget(spinBox);
       prepareEventsLayout->addWidget(widget);
-      connect(spinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [=](double scale){
+      connect(spinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [=](double scale) {
         detectorTimescaleNano = cm2ns(scale);
 
-        timeSliceInterval = detectorTimescaleNano/100;  // ns
+        timeSliceInterval = detectorTimescaleNano / 100;  // ns
         timeSliceIntervalSpinBox->setRange(0., timeSliceIntervalSpinBoxMaximum);  // ns
         timeSliceIntervalSpinBox->setSingleStep(timeSliceInterval);  // ns
         timeSliceIntervalSpinBox->setValue(timeSliceInterval);  // ns
 
-        duration = detectorTimescaleNano/10.;
-        durationSpinBox->setRange(0., detectorTimescaleNano*100.);
-        durationSpinBox->setSingleStep(detectorTimescaleNano/100.);
+        duration = detectorTimescaleNano / 10.;
+        durationSpinBox->setRange(0., detectorTimescaleNano * 100.);
+        durationSpinBox->setSingleStep(detectorTimescaleNano / 100.);
         durationSpinBox->setValue(duration);
 
-        timeSliderIncrementSpinBox->setRange(0., detectorTimescaleNano/100.);
-        timeSliderIncrementSpinBox->setValue(detectorTimescaleNano/100.);
+        timeSliderIncrementSpinBox->setRange(0., detectorTimescaleNano / 100.);
+        timeSliderIncrementSpinBox->setValue(detectorTimescaleNano / 100.);
 
         timeSliderMaxSpinBox->setRange(0., detectorTimescaleNano);
-        timeSliderMaxSpinBox->setSingleStep(detectorTimescaleNano/10.);
+        timeSliderMaxSpinBox->setSingleStep(detectorTimescaleNano / 10.);
         timeSliderMaxSpinBox->setValue(detectorTimescaleNano);
       });
-    } // Detector scale
+    }  // Detector scale
 
-    { // Events box
+    {  // Events box
       auto widget = new QWidget;
       auto layout = new QHBoxLayout(widget);
-      layout->setContentsMargins(0,0,0,0);
+      layout->setContentsMargins(0, 0, 0, 0);
       auto label = new QLabel;
       label->setText("Number of events");
       layout->addWidget(label);
@@ -2441,15 +2495,13 @@ QWidget* G4UIQt::CreateTimeWindowWidget()
       spinBox->setRange(1, 9999);
       layout->addWidget(spinBox);
       prepareEventsLayout->addWidget(widget);
-      connect(spinBox, QOverload<int>::of(&QSpinBox::valueChanged), [](int n){
-        nEvents = n;
-      });
-    } // Events box
+      connect(spinBox, QOverload<int>::of(&QSpinBox::valueChanged), [](int n) { nEvents = n; });
+    }  // Events box
 
-    { // Time slice interval (the trajectory slices)
+    {  // Time slice interval (the trajectory slices)
       auto widget = new QWidget;
       auto layout = new QHBoxLayout(widget);
-      layout->setContentsMargins(0,0,0,0);
+      layout->setContentsMargins(0, 0, 0, 0);
       auto label = new QLabel;
       label->setText("Time slice interval");
       layout->addWidget(label);
@@ -2458,90 +2510,81 @@ QWidget* G4UIQt::CreateTimeWindowWidget()
       timeSliceIntervalSpinBox->setSingleStep(timeSliceIntervalSpinBoxSingleStep);
       timeSliceIntervalSpinBox->setDecimals(3);
       timeSliceIntervalSpinBox->setSuffix(" ns");
-      timeSliceIntervalSpinBox->setToolTip
-      ("This should be about 1/100 of the time taken for"
-       "\nlight to travel across the field of view.");
+      timeSliceIntervalSpinBox->setToolTip(
+        "This should be about 1/100 of the time taken for"
+        "\nlight to travel across the field of view.");
       layout->addWidget(timeSliceIntervalSpinBox);
       prepareEventsLayout->addWidget(widget);
       connect(timeSliceIntervalSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
-              [](double dt){
-        timeSliceInterval = dt;
-      });
+              [](double dt) { timeSliceInterval = dt; });
 
-    } // Time slice interval (the trajectory slices)
+    }  // Time slice interval (the trajectory slices)
 
-    { // Prepare and and display event(s)
+    {  // Prepare and and display event(s)
       auto button = new QPushButton("Prepare");
       prepareEventsLayout->addWidget(button);
-      button->setToolTip
-      ("Or do it yourself. You will need:"
-       "\n  /vis/scene/add/trajectories rich"
-       "\nCreate a trajectories model, then"
-       "\n  /vis/modeling/trajectories/<model-name>/default/setTimeSliceInterval 0.01 ns"
-       "\nthen set colours, step points, linewidth, etc., as desired,"
-       "\nand /run/beamOn one or more events."
-       );
-      connect(button, &QPushButton::clicked, this, [](){
+      button->setToolTip(
+        "Or do it yourself. You will need:"
+        "\n  /vis/scene/add/trajectories rich"
+        "\nCreate a trajectories model, then"
+        "\n  /vis/modeling/trajectories/<model-name>/default/setTimeSliceInterval 0.01 ns"
+        "\nthen set colours, step points, linewidth, etc., as desired,"
+        "\nand /run/beamOn one or more events.");
+      connect(button, &QPushButton::clicked, this, []() {
         auto ui = G4UImanager::GetUIpointer();
         ui->ApplyCommand("/vis/scene/add/trajectories rich");
         static G4int modelNo = 0;  // Seems we have to create a new model every time
         G4String modelName = "fromGUI-" + G4UIcommand::ConvertToString(modelNo++);
-        ui->ApplyCommand
-        ("/vis/modeling/trajectories/create/drawByCharge " + modelName);
-        ui->ApplyCommand
-        ("/vis/modeling/trajectories/" + modelName + "/default/setTimeSliceInterval "
-         + G4UIcommand::ConvertToString(timeSliceInterval) + " ns ");
-        ui->ApplyCommand
-        ("/vis/modeling/trajectories/" + modelName + "/default/setLineWidth 5");
-        ui->ApplyCommand
-        ("/vis/modeling/trajectories/" + modelName + "/default/setDrawStepPts true");
-        ui->ApplyCommand
-        ("/vis/modeling/trajectories/" + modelName + "/default/setStepPtsSize 10");
-        ui->ApplyCommand
-        ("/vis/modeling/trajectories/" + modelName + "/default/setStepPtsFillStyle filled");
-        ui->ApplyCommand
-        ("/vis/modeling/trajectories/" + modelName + "/default/setDrawAuxPts true");
-        ui->ApplyCommand
-        ("/vis/modeling/trajectories/" + modelName + "/default/setAuxPtsSize 10");
-        ui->ApplyCommand
-        ("/vis/modeling/trajectories/" + modelName + "/default/setAuxPtsFillStyle filled");
-        ui->ApplyCommand
-        ("/run/beamOn " + G4UIcommand::ConvertToString(nEvents));
+        ui->ApplyCommand("/vis/modeling/trajectories/create/drawByCharge " + modelName);
+        ui->ApplyCommand("/vis/modeling/trajectories/" + modelName
+                         + "/default/setTimeSliceInterval "
+                         + G4UIcommand::ConvertToString(timeSliceInterval) + " ns ");
+        ui->ApplyCommand("/vis/modeling/trajectories/" + modelName + "/default/setLineWidth 5");
+        ui->ApplyCommand("/vis/modeling/trajectories/" + modelName
+                         + "/default/setDrawStepPts true");
+        ui->ApplyCommand("/vis/modeling/trajectories/" + modelName + "/default/setStepPtsSize 10");
+        ui->ApplyCommand("/vis/modeling/trajectories/" + modelName
+                         + "/default/setStepPtsFillStyle filled");
+        ui->ApplyCommand("/vis/modeling/trajectories/" + modelName + "/default/setDrawAuxPts true");
+        ui->ApplyCommand("/vis/modeling/trajectories/" + modelName + "/default/setAuxPtsSize 10");
+        ui->ApplyCommand("/vis/modeling/trajectories/" + modelName
+                         + "/default/setAuxPtsFillStyle filled");
+        ui->ApplyCommand("/run/beamOn " + G4UIcommand::ConvertToString(nEvents));
       });
-    } // Prepare and and display event(s)
+    }  // Prepare and and display event(s)
 
-    { // Blank widget with non-zero stretch (squashes others up)
+    {  // Blank widget with non-zero stretch (squashes others up)
       auto spacer = new QWidget;
       prepareEventsLayout->addWidget(spacer);
       prepareEventsLayout->setStretchFactor(spacer, 1);
-    } // Blank widget with non-zero stretch (squashes others up)
+    }  // Blank widget with non-zero stretch (squashes others up)
 
-  } // Place stuff in the Prepare Events Panel
+  }  // Place stuff in the Prepare Events Panel
 
   // Time Parameters Panel
   auto timeParametersPanel = new QLabel;
   timeParametersPanel->setFrameStyle(QFrame::Panel);
   auto timeParametersLayout = new QVBoxLayout(timeParametersPanel);
-  timeParametersLayout->setContentsMargins
-  (panelLeftRightMargins, panelTopBottomMargins, panelLeftRightMargins, panelTopBottomMargins);
+  timeParametersLayout->setContentsMargins(panelLeftRightMargins, panelTopBottomMargins,
+                                           panelLeftRightMargins, panelTopBottomMargins);
   topLayout->addWidget(timeParametersPanel);
   topLayout->setStretchFactor(timeParametersPanel, 10);
   auto startTimeSpinBox = new QDoubleSpinBox;
 
-  { // Place stuff in the Time Parameters Panel
+  {  // Place stuff in the Time Parameters Panel
 
-    { // Header
+    {  // Header
       auto header = new QLabel;
       header->setFixedHeight(20);
       header->setAlignment(Qt::AlignHCenter);
       header->setText("Time parameters");
       timeParametersLayout->addWidget(header);
-    } // Header
+    }  // Header
 
-    { // Start time
+    {  // Start time
       auto widget = new QWidget;
       auto layout = new QHBoxLayout(widget);
-      layout->setContentsMargins(0,0,0,0);
+      layout->setContentsMargins(0, 0, 0, 0);
       auto label = new QLabel;
       label->setText("Start time");
       layout->addWidget(label);
@@ -2553,19 +2596,19 @@ QWidget* G4UIQt::CreateTimeWindowWidget()
       layout->addWidget(startTimeSpinBox);
       timeParametersLayout->addWidget(widget);
       connect(startTimeSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
-              [](double st){
-        startTime = st;
-        auto ui = G4UImanager::GetUIpointer();
-        ui->ApplyCommand("/vis/viewer/set/timeWindow/startTime "
-                         + G4UIcommand::ConvertToString(startTime) + " ns "
-                         + G4UIcommand::ConvertToString(duration) + " ns");
-      });
-    } // Start time
+              [](double st) {
+                startTime = st;
+                auto ui = G4UImanager::GetUIpointer();
+                ui->ApplyCommand("/vis/viewer/set/timeWindow/startTime "
+                                 + G4UIcommand::ConvertToString(startTime) + " ns "
+                                 + G4UIcommand::ConvertToString(duration) + " ns");
+              });
+    }  // Start time
 
-    { // Duration
+    {  // Duration
       auto widget = new QWidget;
       auto layout = new QHBoxLayout(widget);
-      layout->setContentsMargins(0,0,0,0);
+      layout->setContentsMargins(0, 0, 0, 0);
       auto label = new QLabel;
       label->setText("Duration");
       layout->addWidget(label);
@@ -2574,25 +2617,24 @@ QWidget* G4UIQt::CreateTimeWindowWidget()
       durationSpinBox->setSingleStep(durationSpinBoxSingleStep);
       durationSpinBox->setDecimals(3);
       durationSpinBox->setSuffix(" ns");
-      durationSpinBox->setToolTip
-      ("Duration of time window, typically"
-       "\n10x the time slice interval.");
+      durationSpinBox->setToolTip(
+        "Duration of time window, typically"
+        "\n10x the time slice interval.");
       layout->addWidget(durationSpinBox);
       timeParametersLayout->addWidget(widget);
-      connect(durationSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
-              [](double d){
+      connect(durationSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [](double d) {
         duration = d;
         auto ui = G4UImanager::GetUIpointer();
         ui->ApplyCommand("/vis/viewer/set/timeWindow/startTime "
                          + G4UIcommand::ConvertToString(startTime) + " ns "
                          + G4UIcommand::ConvertToString(duration) + " ns");
       });
-    } // Duration
+    }  // Duration
 
-    { // Fade factor
+    {  // Fade factor
       auto widget = new QWidget;
       auto layout = new QHBoxLayout(widget);
-      layout->setContentsMargins(0,0,0,0);
+      layout->setContentsMargins(0, 0, 0, 0);
       auto label = new QLabel;
       label->setText("Fade factor");
       layout->addWidget(label);
@@ -2600,85 +2642,85 @@ QWidget* G4UIQt::CreateTimeWindowWidget()
       spinBox->setRange(0., 1.);
       spinBox->setValue(1.);
       spinBox->setSingleStep(spinBoxSingleStep);
-      spinBox->setToolTip
-      ("Factor by which time-sliced objects fade over"
-       "\nthe duration of the window, giving an impression"
-       "\nof direction of motion.");
+      spinBox->setToolTip(
+        "Factor by which time-sliced objects fade over"
+        "\nthe duration of the window, giving an impression"
+        "\nof direction of motion.");
       layout->addWidget(spinBox);
       timeParametersLayout->addWidget(widget);
-      connect(spinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [](double f){
+      connect(spinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged), [](double f) {
         auto ui = G4UImanager::GetUIpointer();
-        ui->ApplyCommand("/vis/viewer/set/timeWindow/fadeFactor " +
-                         G4UIcommand::ConvertToString(f));
+        ui->ApplyCommand("/vis/viewer/set/timeWindow/fadeFactor "
+                         + G4UIcommand::ConvertToString(f));
       });
-    } // Duration
+    }  // Duration
 
-    { // Display head time
+    {  // Display head time
       auto widget = new QRadioButton("Display head time");
       widget->setChecked(false);
-      widget->setToolTip
-      ("Displays the time corresponding to end/head of"
-       "\nthe time window. The font size, position and"
-       "\ncolour can be set with /vis/viewer/set/timeWindow/");
+      widget->setToolTip(
+        "Displays the time corresponding to end/head of"
+        "\nthe time window. The font size, position and"
+        "\ncolour can be set with /vis/viewer/set/timeWindow/");
       timeParametersLayout->addWidget(widget);
-      connect(widget, &QRadioButton::clicked, [=](){
+      connect(widget, &QRadioButton::clicked, [=]() {
         G4String checked = "false";
         if (widget->isChecked()) checked = "true";
         auto ui = G4UImanager::GetUIpointer();
         ui->ApplyCommand("/vis/viewer/set/timeWindow/displayHeadTime " + checked);
       });
-    } // Display head time
+    }  // Display head time
 
-    { // Apply
+    {  // Apply
       auto button = new QPushButton("Apply");
       button->setToolTip("Applies the above settings");
       timeParametersLayout->addWidget(button);
-      connect(button, &QPushButton::clicked, this, [](){
+      connect(button, &QPushButton::clicked, this, []() {
         auto ui = G4UImanager::GetUIpointer();
         ui->ApplyCommand("/vis/viewer/set/timeWindow/startTime "
                          + G4UIcommand::ConvertToString(startTime) + " ns "
                          + G4UIcommand::ConvertToString(duration) + " ns");
       });
-    } // Apply
+    }  // Apply
 
-    { // Blank widget with non-zero stretch (squashes others up)
+    {  // Blank widget with non-zero stretch (squashes others up)
       auto spacer = new QWidget;
       timeParametersLayout->addWidget(spacer);
       timeParametersLayout->setStretchFactor(spacer, 1);
-    } // Blank widget with non-zero stretch (squashes others up)
+    }  // Blank widget with non-zero stretch (squashes others up)
 
-  } // Place stuff in the Time Parameters Panel
+  }  // Place stuff in the Time Parameters Panel
 
   // Time Evolution Panel
   auto timeEvolutionPanel = new QLabel;
   timeEvolutionPanel->setFrameStyle(QFrame::Panel);
   auto timeEvolutionLayout = new QVBoxLayout(timeEvolutionPanel);
-  timeEvolutionLayout->setContentsMargins
-  (panelLeftRightMargins, panelTopBottomMargins, panelLeftRightMargins, panelTopBottomMargins);
+  timeEvolutionLayout->setContentsMargins(panelLeftRightMargins, panelTopBottomMargins,
+                                          panelLeftRightMargins, panelTopBottomMargins);
   topLayout->addWidget(timeEvolutionPanel);
   topLayout->setStretchFactor(timeEvolutionPanel, 15);
 
-  { // Place stuff in the Time Evolution Panel
+  {  // Place stuff in the Time Evolution Panel
 
     const int sliderIntMaximum = 1000;
     const int sliderIntTickInterval = 100;
     static int sliderIntValue = 0;
-    static double desiredfps = 10.; // fps
+    static double desiredfps = 10.;  // fps
     static G4bool stopRun = false;
     auto timeEvolutionSlider = new QSlider(Qt::Horizontal);
 
-    { // Header
+    {  // Header
       auto header = new QLabel;
       header->setFixedHeight(20);
       header->setAlignment(Qt::AlignHCenter);
       header->setText("Time evolution");
       timeEvolutionLayout->addWidget(header);
-    } // Header
+    }  // Header
 
-    { // Time slider increment
+    {  // Time slider increment
       auto widget = new QWidget;
       auto layout = new QHBoxLayout(widget);
-      layout->setContentsMargins(0,0,0,0);
+      layout->setContentsMargins(0, 0, 0, 0);
       auto label = new QLabel;
       label->setText("Increment");
       layout->addWidget(label);
@@ -2691,15 +2733,13 @@ QWidget* G4UIQt::CreateTimeWindowWidget()
       layout->addWidget(timeSliderIncrementSpinBox);
       timeEvolutionLayout->addWidget(widget);
       connect(timeSliderIncrementSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
-              [](double inc){
-        timeSliderIncrement = inc;
-      });
-    } // Slider increment
+              [](double inc) { timeSliderIncrement = inc; });
+    }  // Slider increment
 
-    { // Slider labels
+    {  // Slider labels
       auto widget = new QWidget;
       auto layout = new QHBoxLayout(widget);
-      layout->setContentsMargins(0,0,0,0);
+      layout->setContentsMargins(0, 0, 0, 0);
       timeEvolutionLayout->addWidget(widget);
       auto label1 = new QLabel("min");
       label1->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
@@ -2710,12 +2750,12 @@ QWidget* G4UIQt::CreateTimeWindowWidget()
       auto label3 = new QLabel("max");
       label3->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
       layout->addWidget(label3);
-    } // Slider labels
+    }  // Slider labels
 
-    { // Slider values
+    {  // Slider values
       auto widget = new QWidget;
       auto layout = new QHBoxLayout(widget);
-      layout->setContentsMargins(0,0,0,0);
+      layout->setContentsMargins(0, 0, 0, 0);
       timeEvolutionLayout->addWidget(widget);
       timeSliderMinSpinBox->setRange(0., spinBoxMaximum);
       timeSliderMinSpinBox->setSingleStep(spinBoxSingleStep);
@@ -2723,18 +2763,14 @@ QWidget* G4UIQt::CreateTimeWindowWidget()
       timeSliderMinSpinBox->setSuffix(" ns");
       layout->addWidget(timeSliderMinSpinBox);
       connect(timeSliderMinSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
-              [](double smin){
-        timeSliderMinimum = smin;
-      });
+              [](double smin) { timeSliderMinimum = smin; });
       timeSliderValueSpinBox->setRange(0., spinBoxMaximum);
       timeSliderValueSpinBox->setSingleStep(spinBoxSingleStep);
       timeSliderValueSpinBox->setDecimals(3);
       timeSliderValueSpinBox->setSuffix(" ns");
       layout->addWidget(timeSliderValueSpinBox);
       connect(timeSliderValueSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
-              [](double sv){
-        timeSliderValue = sv;
-      });
+              [](double sv) { timeSliderValue = sv; });
       timeSliderMaxSpinBox->setRange(0., spinBoxMaximum);
       timeSliderMaxSpinBox->setSingleStep(spinBoxSingleStep);
       timeSliderMaxSpinBox->setValue(timeSliderMaximum);
@@ -2742,24 +2778,22 @@ QWidget* G4UIQt::CreateTimeWindowWidget()
       timeSliderMaxSpinBox->setSuffix(" ns");
       layout->addWidget(timeSliderMaxSpinBox);
       connect(timeSliderMaxSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
-              [](double smax){
-        timeSliderMaximum = smax;
-      });
-    } // Slider values
+              [](double smax) { timeSliderMaximum = smax; });
+    }  // Slider values
 
-    { // Slider
+    {  // Slider
       timeEvolutionSlider->setMaximum(sliderIntMaximum);
       timeEvolutionSlider->setMinimum(0);
       timeEvolutionSlider->setTickPosition(QSlider::TicksAbove);
       timeEvolutionSlider->setTickInterval(sliderIntTickInterval);
-      timeEvolutionSlider->setToolTip
-      ("Move time window. Click on a position or slide"
-       "\nwith middle button/3-finger pad gesture.");
+      timeEvolutionSlider->setToolTip(
+        "Move time window. Click on a position or slide"
+        "\nwith middle button/3-finger pad gesture.");
       timeEvolutionLayout->addWidget(timeEvolutionSlider);
-      connect(timeEvolutionSlider, &QSlider::valueChanged, [=](int value){
+      connect(timeEvolutionSlider, &QSlider::valueChanged, [=](int value) {
         sliderIntValue = value;
         startTime = timeSliderMinimum
-        + sliderIntValue * (timeSliderMaximum - timeSliderMinimum) / sliderIntMaximum;
+                    + sliderIntValue * (timeSliderMaximum - timeSliderMinimum) / sliderIntMaximum;
         startTimeSpinBox->setValue(startTime);
         timeSliderValueSpinBox->setValue(startTime);
         auto ui = G4UImanager::GetUIpointer();
@@ -2771,10 +2805,10 @@ QWidget* G4UIQt::CreateTimeWindowWidget()
                          + G4UIcommand::ConvertToString(duration) + " ns");
         ui->SetVerboseLevel(keepVerbose);
       });
-      connect(timeEvolutionSlider, &QSlider::sliderReleased, [=](){
+      connect(timeEvolutionSlider, &QSlider::sliderReleased, [=]() {
         sliderIntValue = timeEvolutionSlider->value();
         startTime = timeSliderMinimum
-        + sliderIntValue * (timeSliderMaximum - timeSliderMinimum) / sliderIntMaximum;
+                    + sliderIntValue * (timeSliderMaximum - timeSliderMinimum) / sliderIntMaximum;
         startTimeSpinBox->setValue(startTime);
         timeSliderValueSpinBox->setValue(startTime);
         auto ui = G4UImanager::GetUIpointer();
@@ -2782,19 +2816,19 @@ QWidget* G4UIQt::CreateTimeWindowWidget()
                          + G4UIcommand::ConvertToString(startTime) + " ns "
                          + G4UIcommand::ConvertToString(duration) + " ns");
       });
-      connect(timeEvolutionSlider, &QSlider::sliderPressed, [=](){
+      connect(timeEvolutionSlider, &QSlider::sliderPressed, [=]() {
         stopRun = true;
         sliderIntValue = timeEvolutionSlider->value();
         startTime = timeSliderMinimum
-        + sliderIntValue * (timeSliderMaximum - timeSliderMinimum) / sliderIntMaximum;
+                    + sliderIntValue * (timeSliderMaximum - timeSliderMinimum) / sliderIntMaximum;
         startTimeSpinBox->setValue(startTime);
       });
-    } // Slider
+    }  // Slider
 
-    { // Desired frames per second
+    {  // Desired frames per second
       auto widget = new QWidget;
       auto layout = new QHBoxLayout(widget);
-      layout->setContentsMargins(0,0,0,0);
+      layout->setContentsMargins(0, 0, 0, 0);
       auto label = new QLabel;
       label->setText("Desired fps");
       layout->addWidget(label);
@@ -2803,77 +2837,77 @@ QWidget* G4UIQt::CreateTimeWindowWidget()
       fpsSpinBox->setSingleStep(1.);
       fpsSpinBox->setValue(10.);
       fpsSpinBox->setSuffix(" fps");
-      fpsSpinBox->setToolTip
-      ("Desired frames per second. Since re-rendering each"
-       "\nframe is CPU-intensive, this might not be achieved.");
+      fpsSpinBox->setToolTip(
+        "Desired frames per second. Since re-rendering each"
+        "\nframe is CPU-intensive, this might not be achieved.");
       layout->addWidget(fpsSpinBox);
       timeEvolutionLayout->addWidget(widget);
       connect(fpsSpinBox, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
-              [](double fps){
-        desiredfps = fps;
-      });
-    } // Desired frames per second
+              [](double fps) { desiredfps = fps; });
+    }  // Desired frames per second
 
-    { // Run
+    {  // Run
       auto button = new QPushButton("Go");
       button->setToolTip("Run the time evolution sequence");
       timeEvolutionLayout->addWidget(button);
-      connect(button, &QPushButton::clicked, [=](){
+      connect(button, &QPushButton::clicked, [=]() {
         auto ui = G4UImanager::GetUIpointer();
         // Suppress command echoing during sliding
         auto keepVerbose = ui->GetVerboseLevel();
         ui->SetVerboseLevel(0);
-        for (startTime = timeSliderMinimum;
-             startTime <= timeSliderMaximum; startTime += timeSliderIncrement) {
+        for (startTime = timeSliderMinimum; startTime <= timeSliderMaximum;
+             startTime += timeSliderIncrement)
+        {
           if (stopRun) break;
           auto a = std::chrono::steady_clock::now();
           startTimeSpinBox->setValue(startTime);
           timeSliderValueSpinBox->setValue(startTime);
-          sliderIntValue = sliderIntMaximum
-          * (startTime - timeSliderMinimum) / (timeSliderMaximum - timeSliderMinimum);
+          sliderIntValue = sliderIntMaximum * (startTime - timeSliderMinimum)
+                           / (timeSliderMaximum - timeSliderMinimum);
           timeEvolutionSlider->setValue(sliderIntValue);
           ui->ApplyCommand("/vis/viewer/set/timeWindow/startTime "
                            + G4UIcommand::ConvertToString(startTime) + " ns "
                            + G4UIcommand::ConvertToString(duration) + " ns");
           auto b = std::chrono::steady_clock::now();
           auto timeTaken = b - a;
-          auto desiredTime = std::chrono::duration<double>(1./desiredfps);
+          auto desiredTime = std::chrono::duration<double>(1. / desiredfps);
           auto timeLeft = desiredTime - timeTaken;
-          if (timeLeft > std::chrono::duration<double>::zero()) {
+          if (timeLeft > std::chrono::duration<double>::zero())
+          {
             std::this_thread::sleep_for(timeLeft);
           }
         }
         stopRun = false;
         ui->SetVerboseLevel(keepVerbose);
       });
-    } // Run
+    }  // Run
 
-    { // Blank widget with non-zero stretch (squashes others up)
+    {  // Blank widget with non-zero stretch (squashes others up)
       auto spacer = new QWidget;
       timeEvolutionLayout->addWidget(spacer);
       timeEvolutionLayout->setStretchFactor(spacer, 1);
-    } // Blank widget with non-zero stretch (squashes others up)
+    }  // Blank widget with non-zero stretch (squashes others up)
 
-  } // Place stuff in the Time Evolution Panel
+  }  // Place stuff in the Time Evolution Panel
 
-  { // Further information
+  {  // Further information
     auto header = new QLabel;
     header->setAlignment(Qt::AlignHCenter);
-    header->setText
-    ("Further time window commands are"
-     "\navailable in /vis/viewer/set/timeWindow/."
-     "\n\nYou can capture views, including"
-     "\nrotation and zooming, with /vis/viewer/save,"
-     "\nand play back with /vis/viewer/interpolate."
-     "\n\nSee examples/extended/visualization/movies.");
+    header->setText(
+      "Further time window commands are"
+      "\navailable in /vis/viewer/set/timeWindow/."
+      "\n\nYou can capture views, including"
+      "\nrotation and zooming, with /vis/viewer/save,"
+      "\nand play back with /vis/viewer/interpolate."
+      "\n\nSee examples/extended/visualization/movies.");
     topLayout->addWidget(header);
-  } // Further information
+  }  // Further information
 
-  { // Blank widget (adds small space at bottom)
+  {  // Blank widget (adds small space at bottom)
     auto spacer = new QWidget;
     topLayout->addWidget(spacer);
     topLayout->setStretchFactor(spacer, 1);
-  } // Blank widget (adds small space at bottom)
+  }  // Blank widget (adds small space at bottom)
 
   return fTimeWindowWidget;
 }
@@ -2899,8 +2933,8 @@ G4UIDockWidget* G4UIQt::CreateCoutTBWidget()
   coutTBClearButton->setToolTip("Clear console output");
   coutTBClearButton->setStyleSheet("border-radius:7px;");
   connect(coutTBClearButton, SIGNAL(clicked()), SLOT(ClearButtonCallback()));
-  connect(
-    fCoutFilter, SIGNAL(textEdited(const QString&)), SLOT(CoutFilterCallback(const QString&)));
+  connect(fCoutFilter, SIGNAL(textEdited(const QString&)),
+          SLOT(CoutFilterCallback(const QString&)));
 
   auto coutTBSaveOutputButton = new QPushButton();
   coutTBSaveOutputButton->setIcon(*fSaveIcon);
@@ -2917,8 +2951,7 @@ G4UIDockWidget* G4UIQt::CreateCoutTBWidget()
   // add all candidates to widget
   fThreadsFilterComboBox = new QComboBox();
   fThreadsFilterComboBox->setInsertPolicy(QComboBox::InsertAlphabetically);
-  connect(
-    fThreadsFilterComboBox, SIGNAL(activated(int)), this, SLOT(ThreadComboBoxCallback(int)));
+  connect(fThreadsFilterComboBox, SIGNAL(activated(int)), this, SLOT(ThreadComboBoxCallback(int)));
 
   UpdateCoutThreadFilter();
 
@@ -2964,8 +2997,8 @@ G4UIDockWidget* G4UIQt::CreateCoutTBWidget()
 
   // Connect signal
   connect(fCommandArea, SIGNAL(returnPressed()), SLOT(CommandEnteredCallback()));
-  connect(
-    fCommandArea, SIGNAL(textEdited(const QString&)), SLOT(CommandEditedCallback(const QString&)));
+  connect(fCommandArea, SIGNAL(textEdited(const QString&)),
+          SLOT(CommandEditedCallback(const QString&)));
 
   commandLineWidget->setLayout(layoutCommandLine);
   commandLineWidget->setMinimumSize(50, 50);
@@ -2981,7 +3014,10 @@ G4UIDockWidget* G4UIQt::CreateCoutTBWidget()
 
 /** Create the VisParameters ToolBox Widget
  */
-QWidget* G4UIQt::CreateVisParametersTBWidget() { return nullptr; }
+QWidget* G4UIQt::CreateVisParametersTBWidget()
+{
+  return nullptr;
+}
 
 /** Create the VisParameters ToolBox Widget
  */
@@ -3119,7 +3155,8 @@ void G4UIQt::CreateViewerWidget()
   // clang-format on
 
   // fill right splitter
-  if (fViewerTabWidget == nullptr) {
+  if (fViewerTabWidget == nullptr)
+  {
 #if QT_VERSION < 0x060000
     fViewerTabWidget = new G4QTabWidget();
 #else
@@ -3130,7 +3167,7 @@ void G4UIQt::CreateViewerWidget()
 
     fViewerTabWidget->setUsesScrollButtons(true);
 
-    connect(fViewerTabWidget, SIGNAL(tabCloseRequested(int)),this, SLOT(TabCloseCallback(int)));
+    connect(fViewerTabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(TabCloseCallback(int)));
 #if QT_VERSION < 0x060000
     connect(fViewerTabWidget, SIGNAL(currentChanged(int)), SLOT(UpdateTabWidget(int)));
 #else
@@ -3148,13 +3185,17 @@ void G4UIQt::CreateViewerWidget()
 
 /** Get the ViewerComponents ToolBox Widget
  */
-QWidget* G4UIQt::GetSceneTreeWidget() { return fSceneTreeWidget; }
+QWidget* G4UIQt::GetSceneTreeWidget()
+{
+  return fSceneTreeWidget;
+}
 
 /** Get the Viewer properties  Widget
  */
 QWidget* G4UIQt::GetViewerPropertiesWidget()
 {
-  if (fViewerPropertiesDialog == nullptr) {
+  if (fViewerPropertiesDialog == nullptr)
+  {
     CreateViewerPropertiesDialog();
   }
   return fViewerPropertiesWidget;
@@ -3164,7 +3205,8 @@ QWidget* G4UIQt::GetViewerPropertiesWidget()
  */
 QWidget* G4UIQt::GetPickInfosWidget()
 {
-  if (fPickInfosDialog == nullptr) {
+  if (fPickInfosDialog == nullptr)
+  {
     CreatePickInfosDialog();
   }
   return fPickInfosWidget;
@@ -3174,7 +3216,8 @@ QWidget* G4UIQt::GetPickInfosWidget()
  */
 G4bool G4UIQt::AddViewerTab(QWidget* aWidget, std::string title)
 {
-  if (fViewerTabWidget == nullptr) {
+  if (fViewerTabWidget == nullptr)
+  {
     return false;
   }
   fViewerTabWidget->addTab(aWidget, title.c_str());
@@ -3186,14 +3229,16 @@ G4bool G4UIQt::AddViewerTab(QWidget* aWidget, std::string title)
  */
 G4bool G4UIQt::AddViewerTabFromFile(std::string fileName, std::string title)
 {
-  if (fViewerTabWidget == nullptr) {
+  if (fViewerTabWidget == nullptr)
+  {
     return false;
   }
 
   G4UImanager* UI = G4UImanager::GetUIpointer();
   if (UI == nullptr) return false;
   std::ifstream file(UI->FindMacroPath(fileName.c_str()).data());
-  if (file) {
+  if (file)
+  {
     std::string content((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
 
     auto text = new QTextEdit();
@@ -3203,7 +3248,8 @@ G4bool G4UIQt::AddViewerTabFromFile(std::string fileName, std::string title)
     text->setReadOnly(true);
     fViewerTabWidget->addTab(text, title.c_str());
   }
-  else {
+  else
+  {
     return false;
   }
   return true;
@@ -3215,12 +3261,14 @@ G4bool G4UIQt::AddViewerTabFromFile(std::string fileName, std::string title)
 G4bool G4UIQt::AddTabWidget(QWidget* aWidget, QString name)
 {
 #if QT_VERSION < 0x060000
-  if (fViewerTabWidget == nullptr) {
+  if (fViewerTabWidget == nullptr)
+  {
     CreateViewerWidget();
   }
 #endif
 
-  if (aWidget == nullptr) {
+  if (aWidget == nullptr)
+  {
     return false;
   }
 #if QT_VERSION < 0x060000
@@ -3235,11 +3283,12 @@ G4bool G4UIQt::AddTabWidget(QWidget* aWidget, QString name)
   // Set visible
   fViewerTabWidget->setLastTabCreated(fViewerTabWidget->currentIndex());
 #else
-  //G.Barrand: disconnect temporarily the signal/slot on UpdateTabWidget(), else
-  //           if adding a viewer, the UpdateTabWidget/Apply("vis/viewer/select") will
-  //           issue an ERROR message since the viewer is not yet declared to the G4VisManager
-  //           at this moment (see the logic in G4VisManager::CreateViewer()).
-  QObject::disconnect(fViewerTabWidget, SIGNAL(currentChanged(int)), this, SLOT(UpdateTabWidget(int)));
+  // G.Barrand: disconnect temporarily the signal/slot on UpdateTabWidget(), else
+  //            if adding a viewer, the UpdateTabWidget/Apply("vis/viewer/select") will
+  //            issue an ERROR message since the viewer is not yet declared to the G4VisManager
+  //            at this moment (see the logic in G4VisManager::CreateViewer()).
+  QObject::disconnect(fViewerTabWidget, SIGNAL(currentChanged(int)), this,
+                      SLOT(UpdateTabWidget(int)));
   fViewerTabWidget->addTab(aWidget, name);
   fViewerTabWidget->setCurrentIndex(fViewerTabWidget->count() - 1);
   QObject::connect(fViewerTabWidget, SIGNAL(currentChanged(int)), this, SLOT(UpdateTabWidget(int)));
@@ -3255,10 +3304,12 @@ G4bool G4UIQt::AddTabWidget(QWidget* aWidget, QString name)
 
 void G4UIQt::SetStartPage(const std::string& text)
 {
-  if (! text.empty()) {
+  if (!text.empty())
+  {
     fDefaultViewerFirstPageHTMLText = text;
   }
-  if (fStartPage == nullptr) {
+  if (fStartPage == nullptr)
+  {
     fStartPage = new QTextBrowser();
     fStartPage->setContentsMargins(5, 5, 5, 5);
     fStartPage->setReadOnly(true);
@@ -3270,7 +3321,8 @@ void G4UIQt::SetStartPage(const std::string& text)
 #if QT_VERSION < 0x060000
 void G4UIQt::UpdateTabWidget(int tabNumber)
 {
-  if (fViewerTabWidget == nullptr) {
+  if (fViewerTabWidget == nullptr)
+  {
     fViewerTabWidget = new G4QTabWidget;
   }
 
@@ -3287,12 +3339,14 @@ void G4UIQt::UpdateTabWidget(int tabNumber)
 #else
 void G4UIQt::UpdateTabWidget(int)
 {
-  //G.Barrand: have the Apply("vis/viewer/select") done here instead of
-  //           in a G4QTabWidget::paintEvent(). A signal/slot looks a more
-  //           adequate Qt mechanism to do that.
-  if (fViewerTabWidget->currentWidget() != nullptr) {
+  // G.Barrand: have the Apply("vis/viewer/select") done here instead of
+  //            in a G4QTabWidget::paintEvent(). A signal/slot looks a more
+  //            adequate Qt mechanism to do that.
+  if (fViewerTabWidget->currentWidget() != nullptr)
+  {
     auto edit = dynamic_cast<QTextEdit*>(fViewerTabWidget->currentWidget());
-    if (edit == nullptr) {
+    if (edit == nullptr)
+    {
       QString text = fViewerTabWidget->tabText(fViewerTabWidget->currentIndex());
       QString paramSelect = QString("/vis/viewer/select ") + text;
       G4UImanager::GetUIpointer()->ApplyCommand(paramSelect.toStdString().c_str());
@@ -3305,8 +3359,10 @@ void G4UIQt::UpdateTabWidget(int)
  */
 void G4UIQt::ResizeTabWidget(QResizeEvent* e)
 {
-  if (fViewerTabWidget != nullptr) {
-    for (G4int a = 0; a < fViewerTabWidget->count(); a++) {
+  if (fViewerTabWidget != nullptr)
+  {
+    for (G4int a = 0; a < fViewerTabWidget->count(); a++)
+    {
       fViewerTabWidget->widget(a)->resize(e->size());
     }
   }
@@ -3324,10 +3380,12 @@ G4UIsession* G4UIQt::SessionStart()
 
   fMainWindow->setVisible(true);
 
-  if (fDefaultIcons) {
+  if (fDefaultIcons)
+  {
     fToolbarApp->setVisible(true);
   }
-  else {
+  else
+  {
     // Set not visible until session start
     fToolbarApp->setVisible(false);
   }
@@ -3381,11 +3439,13 @@ void G4UIQt::PauseSessionStart(const G4String& aState)
 {
   if (aState == nullptr) return;
 
-  if (aState == "G4_pause> ") {  // TO KEEP
+  if (aState == "G4_pause> ")
+  {  // TO KEEP
     SecondaryLoop("Pause, type continue to exit this state");  // TO KEEP
   }  // TO KEEP
 
-  if (aState == "EndOfEvent") {  // TO KEEP
+  if (aState == "EndOfEvent")
+  {  // TO KEEP
     // Picking with feed back in event data Done here !!!
     SecondaryLoop("End of event, type continue to exit this state");  // TO KEEP
   }  // TO KEEP
@@ -3402,7 +3462,8 @@ void G4UIQt::SecondaryLoop(const G4String& aPrompt)
   G4Qt* interactorManager = G4Qt::getInstance();  // TO KEEP ?
   Prompt(aPrompt);  // TO KEEP
   exitPause = false;  // TO KEEP
-  while (true) {
+  while (true)
+  {
     ((QApplication*)interactorManager)->processEvents(QEventLoop::WaitForMoreEvents);
     if (exitPause) break;  // TO KEEP
   }  // TO KEEP
@@ -3414,7 +3475,7 @@ void G4UIQt::SecondaryLoop(const G4String& aPrompt)
 #  include "G4Threading.hh"
 namespace
 {
-  G4Mutex ReceiveMutex = G4MUTEX_INITIALIZER;
+G4Mutex ReceiveMutex = G4MUTEX_INITIALIZER;
 }  // namespace
 #endif
 
@@ -3451,27 +3512,35 @@ G4int G4UIQt::ReceiveG4debug(const G4String& aString)
   // Tabs (\t) are more tricky since the number of equivalent spaces depends
   // on how many characters precede it. Probably needs an HTML table. For now
   // we replace \t with four spaces.
-  for (G4int i = 0; i < (G4int)aString.length() - 1; ++i) {
-    if (aString[i] == '\n') {
+  for (G4int i = 0; i < (G4int)aString.length() - 1; ++i)
+  {
+    if (aString[i] == '\n')
+    {
       aStringWithStyle += "<br>";
     }
-    else if (aString[i] == ' ') {
+    else if (aString[i] == ' ')
+    {
       aStringWithStyle += "&nbsp;";
     }
-    else if (aString[i] == '\t') {
+    else if (aString[i] == '\t')
+    {
       aStringWithStyle += "&nbsp;&nbsp;&nbsp;&nbsp;";
     }
-    else if (aString[i] == '<') {
+    else if (aString[i] == '<')
+    {
       aStringWithStyle += "&lt;";
     }
-    else {
+    else
+    {
       aStringWithStyle += aString[i];
     }
   }
-  if (fOutputStyles["debug"].fixed) {
+  if (fOutputStyles["debug"].fixed)
+  {
     aStringWithStyle = "<span style='font-family:courier;'>" + aStringWithStyle + "</span>";
   }
-  else {
+  else
+  {
     aStringWithStyle = "<span>" + aStringWithStyle + "</span>";
   }
 
@@ -3486,14 +3555,16 @@ G4int G4UIQt::ReceiveG4debug(const G4String& aString)
   QString result = FilterOutput(txt, "", fCoutFilter->text());
 #endif
 
-  if (result.isEmpty()) {
+  if (result.isEmpty())
+  {
     return 0;
   }
 
-  if (fOutputStyles["debug"].highlight) {
+  if (fOutputStyles["debug"].highlight)
+  {
     QPalette pal;
-    result = QString("<span style='background:") + pal.link().color().name() + ";'>&nbsp;</span>" +
-             "<span style='background: Pink;'> " + result + "</span>";
+    result = QString("<span style='background:") + pal.link().color().name() + ";'>&nbsp;</span>"
+             + "<span style='background: Pink;'> " + result + "</span>";
   }
   result = QString("<font color=\"Green\">") + result + QString("</font>");
 
@@ -3518,7 +3589,8 @@ G4int G4UIQt::ReceiveG4cout(const G4String& aString)
 
   // Try to be smart :
   // "*** This is just a warning message. ***"
-  if (G4StrUtil::contains(aString, "*** This is just a warning message. ***")) {
+  if (G4StrUtil::contains(aString, "*** This is just a warning message. ***"))
+  {
     return ReceiveG4cerr(aString);
   }
 
@@ -3546,27 +3618,35 @@ G4int G4UIQt::ReceiveG4cout(const G4String& aString)
   // Tabs (\t) are more tricky since the number of equivalent spaces depends
   // on how many characters precede it. Probably needs an HTML table. For now
   // we replace \t with four spaces.
-  for (G4int i = 0; i < (G4int)aString.length() - 1; ++i) {
-    if (aString[i] == '\n') {
+  for (G4int i = 0; i < (G4int)aString.length() - 1; ++i)
+  {
+    if (aString[i] == '\n')
+    {
       aStringWithStyle += "<br>";
     }
-    else if (aString[i] == ' ') {
+    else if (aString[i] == ' ')
+    {
       aStringWithStyle += "&nbsp;";
     }
-    else if (aString[i] == '\t') {
+    else if (aString[i] == '\t')
+    {
       aStringWithStyle += "&nbsp;&nbsp;&nbsp;&nbsp;";
     }
-    else if (aString[i] == '<') {
+    else if (aString[i] == '<')
+    {
       aStringWithStyle += "&lt;";
     }
-    else {
+    else
+    {
       aStringWithStyle += aString[i];
     }
   }
-  if (fOutputStyles["cout"].fixed) {
+  if (fOutputStyles["cout"].fixed)
+  {
     aStringWithStyle = "<span style='font-family:courier;'>" + aStringWithStyle + "</span>";
   }
-  else {
+  else
+  {
     aStringWithStyle = "<span>" + aStringWithStyle + "</span>";
   }
 
@@ -3581,17 +3661,20 @@ G4int G4UIQt::ReceiveG4cout(const G4String& aString)
   QString result = FilterOutput(txt, "", fCoutFilter->text());
 #endif
 
-  if (result.isEmpty()) {
+  if (result.isEmpty())
+  {
     return 0;
   }
 
   G4UImanager* UI = G4UImanager::GetUIpointer();
-  if (fOutputStyles["cout"].highlight) {
-    if (! UI->IsLastCommandOutputTreated()) {
+  if (fOutputStyles["cout"].highlight)
+  {
+    if (!UI->IsLastCommandOutputTreated())
+    {
       QPalette pal;
-      result = QString("<span style='background:") + pal.link().color().name() +
-               ";'>&nbsp;</span>" + "<span style='background:" + pal.highlight().color().name() +
-               ";'> " + result + "</span>";
+      result = QString("<span style='background:") + pal.link().color().name() + ";'>&nbsp;</span>"
+               + "<span style='background:" + pal.highlight().color().name() + ";'> " + result
+               + "</span>";
     }
   }
   UI->SetLastCommandOutputTreated();
@@ -3641,27 +3724,35 @@ G4int G4UIQt::ReceiveG4cerr(const G4String& aString)
   // Tabs (\t) are more tricky since the number of equivalent spaces depends
   // on how many characters precede it. Probably needs an HTML table. For now
   // we replace \t with four spaces.
-  for (G4int i = 0; i < (G4int)aString.length() - 1; ++i) {
-    if (aString[i] == '\n') {
+  for (G4int i = 0; i < (G4int)aString.length() - 1; ++i)
+  {
+    if (aString[i] == '\n')
+    {
       aStringWithStyle += "<br>";
     }
-    else if (aString[i] == ' ') {
+    else if (aString[i] == ' ')
+    {
       aStringWithStyle += "&nbsp;";
     }
-    else if (aString[i] == '\t') {
+    else if (aString[i] == '\t')
+    {
       aStringWithStyle += "&nbsp;&nbsp;&nbsp;&nbsp;";
     }
-    else if (aString[i] == '<') {
+    else if (aString[i] == '<')
+    {
       aStringWithStyle += "&lt;";
     }
-    else {
+    else
+    {
       aStringWithStyle += aString[i];
     }
   }
-  if (fOutputStyles["cerr"].fixed) {
+  if (fOutputStyles["cerr"].fixed)
+  {
     aStringWithStyle = "<span style='font-family:courier;'>" + aStringWithStyle + "</span>";
   }
-  else {
+  else
+  {
     aStringWithStyle = "<span>" + aStringWithStyle + "</span>";
   }
 
@@ -3676,14 +3767,16 @@ G4int G4UIQt::ReceiveG4cerr(const G4String& aString)
 #else
   QString result = FilterOutput(txt, "", fCoutFilter->text());
 #endif
-  if (result.isEmpty()) {
+  if (result.isEmpty())
+  {
     return 0;
   }
 
   // Suppress space, \n,\t,\r...
-  if (QString(aString.data()).trimmed() != "") {
-    if ((G4StateManager::GetStateManager()->GetCurrentState() == G4State_Abort) ||
-        (G4StateManager::GetStateManager()->GetCurrentState() == G4State_Quit))
+  if (QString(aString.data()).trimmed() != "")
+  {
+    if ((G4StateManager::GetStateManager()->GetCurrentState() == G4State_Abort)
+        || (G4StateManager::GetStateManager()->GetCurrentState() == G4State_Quit))
     {
       // In case of Abort or Quit, the useful error message should be in the last error message !
       fLastErrMessage += "\n" + aString;
@@ -3695,7 +3788,8 @@ G4int G4UIQt::ReceiveG4cerr(const G4String& aString)
   fCoutTBTextArea->append(QString("<font color=\"Red\">") + result + QString("</font>"));
   fCoutTBTextArea->ensureCursorVisible();
 
-  if (QString(aString.data()).trimmed() != "") {
+  if (QString(aString.data()).trimmed() != "")
+  {
     fLastErrMessage += aString;
   }
 #ifdef G4MULTITHREADED
@@ -3710,9 +3804,11 @@ G4String G4UIQt::GetThreadPrefix()
 #ifdef G4MULTITHREADED
   G4UImanager* UI = G4UImanager::GetUIpointer();
   if (UI == nullptr) return "";
-  if (UI->GetThreadCout() != nullptr) {
+  if (UI->GetThreadCout() != nullptr)
+  {
     threadPrefix = UI->GetThreadCout()->GetFullPrefixString().data();
-    if (UI->GetThreadCout()->GetPrefixString() == G4String("G4VIS")) {
+    if (UI->GetThreadCout()->GetPrefixString() == G4String("G4VIS"))
+    {
       return "G4VIS";
     }
   }
@@ -3727,20 +3823,26 @@ void G4UIQt::UpdateCoutThreadFilter()
   if (UI == nullptr) return;
 
   // add "All" and "Master"
-  if (fThreadsFilterComboBox->count() < 2) {
-    if (fThreadsFilterComboBox->findText("All", Qt::MatchExactly) == -1) {
+  if (fThreadsFilterComboBox->count() < 2)
+  {
+    if (fThreadsFilterComboBox->findText("All", Qt::MatchExactly) == -1)
+    {
       fThreadsFilterComboBox->addItem("All");
     }
   }
-  if (fThreadsFilterComboBox->count() < 2) {
-    if (fThreadsFilterComboBox->findText("Master", Qt::MatchExactly) == -1) {
+  if (fThreadsFilterComboBox->count() < 2)
+  {
+    if (fThreadsFilterComboBox->findText("Master", Qt::MatchExactly) == -1)
+    {
       fThreadsFilterComboBox->addItem("Master");
     }
   }
   // Add current Cout
   G4String prefix = GetThreadPrefix();
-  if (! prefix.empty()) {
-    if (fThreadsFilterComboBox->findText(prefix.data(), Qt::MatchExactly) == -1) {
+  if (!prefix.empty())
+  {
+    if (fThreadsFilterComboBox->findText(prefix.data(), Qt::MatchExactly) == -1)
+    {
       fThreadsFilterComboBox->addItem(prefix.data());
     }
   }
@@ -3777,11 +3879,13 @@ void G4UIQt::AddButton(const char* aMenu, const char* aLabel, const char* aComma
 
   QMenu* parentTmp = (QMenu*)GetInteractor(aMenu);
 
-  if (parentTmp == nullptr) {
+  if (parentTmp == nullptr)
+  {
     G4UImanager* UImanager = G4UImanager::GetUIpointer();
     G4int verbose = UImanager->GetVerboseLevel();
 
-    if (verbose >= 2) {
+    if (verbose >= 2)
+    {
       G4cout << "Menu name " << aMenu << " does not exist, please define it before using it."
              << G4endl;
     }
@@ -3795,20 +3899,23 @@ void G4UIQt::AddButton(const char* aMenu, const char* aLabel, const char* aComma
 
   G4String cmd = aCommand;
   std::size_t cmdEndPos = cmd.find_first_of(" \t");
-  if (cmdEndPos != std::string::npos) {
+  if (cmdEndPos != std::string::npos)
+  {
     cmd.erase(cmdEndPos);
   }
 
-  if (treeTop->FindPath(cmd) == nullptr) {
-    if (cmd != "ls" && cmd.substr(0, 3) != "ls " && cmd != "pwd" && cmd != "cd" &&
-        cmd.substr(0, 3) != "cd " && cmd != "help" && cmd.substr(0, 5) != "help " &&
-        cmd[0] != '?' && cmd != "hist" && cmd != "history" && cmd[0] != '!' && cmd != "exit" &&
-        cmd != "cont" && cmd != "continue")
+  if (treeTop->FindPath(cmd) == nullptr)
+  {
+    if (cmd != "ls" && cmd.substr(0, 3) != "ls " && cmd != "pwd" && cmd != "cd"
+        && cmd.substr(0, 3) != "cd " && cmd != "help" && cmd.substr(0, 5) != "help "
+        && cmd[0] != '?' && cmd != "hist" && cmd != "history" && cmd[0] != '!' && cmd != "exit"
+        && cmd != "cont" && cmd != "continue")
     {
       G4UImanager* UImanager = G4UImanager::GetUIpointer();
       G4int verbose = UImanager->GetVerboseLevel();
 
-      if (verbose >= 2) {
+      if (verbose >= 2)
+      {
         G4cout << "Warning: command '" << cmd
                << "' does not exist, please define it before using it." << G4endl;
       }
@@ -3823,110 +3930,140 @@ void G4UIQt::AddButton(const char* aMenu, const char* aLabel, const char* aComma
  special case for the "open" icon. It will open a file selector and map the return file to the given
  command.
 */
-void G4UIQt::AddIcon(
-  const char* aLabel, const char* aIconFile, const char* aCommand, const char* aFileName)
+void G4UIQt::AddIcon(const char* aLabel, const char* aIconFile, const char* aCommand,
+                     const char* aFileName)
 {
   if (aLabel == nullptr) return;  // TO KEEP
   // special case, aCommand could be NULL if aIconFile is not user_icon
-  if (aCommand == nullptr) {
-    if (std::string(aIconFile) == "user_icon") {
+  if (aCommand == nullptr)
+  {
+    if (std::string(aIconFile) == "user_icon")
+    {
       return;  // TO KEEP
     }
   }
   QPixmap* pix;
   G4bool userToolBar = false;
 
-  if (! fDefaultIcons) {
+  if (!fDefaultIcons)
+  {
     userToolBar = true;
   }
-  if (std::string(aIconFile) == "user_icon") {
+  if (std::string(aIconFile) == "user_icon")
+  {
     // try to open a file
     G4UImanager* UImanager = G4UImanager::GetUIpointer();
     pix = new QPixmap(UImanager->FindMacroPath(aFileName).data());
-    if (pix->isNull()) {
+    if (pix->isNull())
+    {
       G4int verbose = UImanager->GetVerboseLevel();
 
-      if (verbose >= 2) {
+      if (verbose >= 2)
+      {
         G4cout << "Warning: file '" << aFileName
                << "' is incorrect or does not exist, this command will not be build" << G4endl;
       }
       return;
     }
   }
-  else if (std::string(aIconFile) == "open") {
+  else if (std::string(aIconFile) == "open")
+  {
     pix = fOpenIcon;
   }
-  else if (std::string(aIconFile) == "save") {
+  else if (std::string(aIconFile) == "save")
+  {
     pix = fSaveIcon;
   }
-  else if (std::string(aIconFile) == "move") {
+  else if (std::string(aIconFile) == "move")
+  {
     pix = fMoveIcon;
   }
-  else if (std::string(aIconFile) == "rotate") {
+  else if (std::string(aIconFile) == "rotate")
+  {
     pix = fRotateIcon;
   }
-  else if (std::string(aIconFile) == "pick") {
+  else if (std::string(aIconFile) == "pick")
+  {
     pix = fPickIcon;
   }
-  else if (std::string(aIconFile) == "zoom_in") {
+  else if (std::string(aIconFile) == "zoom_in")
+  {
     pix = fZoomInIcon;
   }
-  else if (std::string(aIconFile) == "zoom_out") {
+  else if (std::string(aIconFile) == "zoom_out")
+  {
     pix = fZoomOutIcon;
   }
-  else if (std::string(aIconFile) == "wireframe") {
+  else if (std::string(aIconFile) == "wireframe")
+  {
     pix = fWireframeIcon;
   }
-  else if (std::string(aIconFile) == "solid") {
+  else if (std::string(aIconFile) == "solid")
+  {
     pix = fSolidIcon;
   }
-  else if (std::string(aIconFile) == "point_cloud") {
+  else if (std::string(aIconFile) == "point_cloud")
+  {
     pix = fPointCloudIcon;
   }
-  else if (std::string(aIconFile) == "hidden_line_removal") {
+  else if (std::string(aIconFile) == "hidden_line_removal")
+  {
     pix = fHiddenLineRemovalIcon;
   }
-  else if (std::string(aIconFile) == "hidden_line_and_surface_removal") {
+  else if (std::string(aIconFile) == "hidden_line_and_surface_removal")
+  {
     pix = fHiddenLineAndSurfaceRemovalIcon;
   }
-  else if (std::string(aIconFile) == "perspective") {
+  else if (std::string(aIconFile) == "perspective")
+  {
     pix = fPerspectiveIcon;
   }
-  else if (std::string(aIconFile) == "ortho") {
+  else if (std::string(aIconFile) == "ortho")
+  {
     pix = fOrthoIcon;
   }
-  else if (std::string(aIconFile) == "runBeamOn") {
+  else if (std::string(aIconFile) == "runBeamOn")
+  {
     pix = fRunIcon;
   }
-  else if (std::string(aIconFile) == "exit") {
+  else if (std::string(aIconFile) == "exit")
+  {
     pix = fExitIcon;
   }
-  else if (std::string(aIconFile) == "reset_camera") {
+  else if (std::string(aIconFile) == "reset_camera")
+  {
     pix = fResetCameraIcon;
   }
-  else if (std::string(aIconFile) == "resetTargetPoint") {
+  else if (std::string(aIconFile) == "resetTargetPoint")
+  {
     pix = fResetTargetPointIcon;
   }
-  else {
+  else
+  {
     G4UImanager* UImanager = G4UImanager::GetUIpointer();
     G4int verbose = UImanager->GetVerboseLevel();
 
-    if (verbose >= 2) {
+    if (verbose >= 2)
+    {
       G4cout << "Parameter" << aIconFile << " not defined" << G4endl;
     }
     return;
   }
   QToolBar* currentToolbar = nullptr;
-  if (userToolBar) {
-    if (fToolbarUser == nullptr) {
+  if (userToolBar)
+  {
+    if (fToolbarUser == nullptr)
+    {
       fToolbarUser = new QToolBar();
       fToolbarUser->setIconSize(QSize(20, 20));
       fMainWindow->addToolBar(Qt::TopToolBarArea, fToolbarUser);
     }
     currentToolbar = fToolbarUser;
   }
-  else {
-    if (fToolbarApp == nullptr) {
+  else
+  {
+    if (fToolbarApp == nullptr)
+    {
       fToolbarApp = new QToolBar();
       fToolbarApp->setIconSize(QSize(20, 20));
       fMainWindow->addToolBar(Qt::TopToolBarArea, fToolbarApp);
@@ -3938,12 +4075,15 @@ void G4UIQt::AddIcon(
 
   QList<QAction*> list = currentToolbar->actions();
 
-  for (auto i : list) {
-    if (i->text() == QString(aLabel)) {
+  for (auto i : list)
+  {
+    if (i->text() == QString(aLabel))
+    {
       G4UImanager* UI = G4UImanager::GetUIpointer();
       if (UI == nullptr) return;
       G4int verbose = UI->GetVerboseLevel();
-      if (verbose >= 2) {
+      if (verbose >= 2)
+      {
         G4cout << "Warning: A toolBar icon \"" << aLabel << "\" already exists with the same name!"
                << G4endl;
       }
@@ -3951,45 +4091,47 @@ void G4UIQt::AddIcon(
   }
 
   // special cases :"open"
-  if (std::string(aIconFile) == "open") {
+  if (std::string(aIconFile) == "open")
+  {
     QString txt = aCommand + fStringSeparator + aLabel;
-    currentToolbar->addAction(
-      QIcon(*pix), aIconFile, this, [this, txt]() { this->OpenIconCallback(txt); });
+    currentToolbar->addAction(QIcon(*pix), aIconFile, this,
+                              [this, txt]() { this->OpenIconCallback(txt); });
 
     // special cases :"save"
   }
-  else if (std::string(aIconFile) == "save") {
+  else if (std::string(aIconFile) == "save")
+  {
     QString txt = aCommand + fStringSeparator + aLabel;
-    currentToolbar->addAction(
-      QIcon(*pix), aIconFile, this, [this, txt]() { this->SaveIconCallback(txt); });
+    currentToolbar->addAction(QIcon(*pix), aIconFile, this,
+                              [this, txt]() { this->SaveIconCallback(txt); });
     // special cases : cursor style
   }
-  else if ((std::string(aIconFile) == "move") || (std::string(aIconFile) == "rotate") ||
-           (std::string(aIconFile) == "pick") || (std::string(aIconFile) == "zoom_out") ||
-           (std::string(aIconFile) == "zoom_in"))
+  else if ((std::string(aIconFile) == "move") || (std::string(aIconFile) == "rotate")
+           || (std::string(aIconFile) == "pick") || (std::string(aIconFile) == "zoom_out")
+           || (std::string(aIconFile) == "zoom_in"))
   {
     QString txt = QString(aIconFile);
-    QAction* action = currentToolbar->addAction(
-      QIcon(*pix), aIconFile, this, [this, txt]() { this->ChangeCursorAction(txt); });
+    QAction* action = currentToolbar->addAction(QIcon(*pix), aIconFile, this,
+                                                [this, txt]() { this->ChangeCursorAction(txt); });
     action->setCheckable(true);
     action->setChecked(false);
     action->setData(aIconFile);
 
-    if (std::string(aIconFile) == "rotate") {
+    if (std::string(aIconFile) == "rotate")
+    {
       SetIconRotateSelected();
     }
 
     // special case : surface style
   }
-  else if ((std::string(aIconFile) == "hidden_line_removal") ||
-           (std::string(aIconFile) == "hidden_line_and_surface_removal") ||
-           (std::string(aIconFile) == "solid") || 
-           (std::string(aIconFile) == "wireframe") ||
-           (std::string(aIconFile) == "point_cloud"))
+  else if ((std::string(aIconFile) == "hidden_line_removal")
+           || (std::string(aIconFile) == "hidden_line_and_surface_removal")
+           || (std::string(aIconFile) == "solid") || (std::string(aIconFile) == "wireframe")
+           || (std::string(aIconFile) == "point_cloud"))
   {
     QString txt = QString(aIconFile);
-    QAction* action = currentToolbar->addAction(
-      QIcon(*pix), aIconFile, this, [this, txt]() { this->ChangeSurfaceStyle(txt); });
+    QAction* action = currentToolbar->addAction(QIcon(*pix), aIconFile, this,
+                                                [this, txt]() { this->ChangeSurfaceStyle(txt); });
     action->setCheckable(true);
     action->setChecked(true);
     action->setData(aIconFile);
@@ -4000,7 +4142,8 @@ void G4UIQt::AddIcon(
     if (std::string(aIconFile) == "hidden_line_and_surface_removal") {
       SetIconHLHSRSelected();
     }*/
-    if (std::string(aIconFile) == "solid") {
+    if (std::string(aIconFile) == "solid")
+    {
       SetIconSolidSelected();
     }
     /*if (std::string(aIconFile) == "wireframe") {
@@ -4012,7 +4155,8 @@ void G4UIQt::AddIcon(
 
     // special case : perspective/ortho
   }
-  else if ((std::string(aIconFile) == "perspective") || (std::string(aIconFile) == "ortho")) {
+  else if ((std::string(aIconFile) == "perspective") || (std::string(aIconFile) == "ortho"))
+  {
     QString txt = QString(aIconFile);
     QAction* action = currentToolbar->addAction(
       QIcon(*pix), aIconFile, this, [this, txt]() { this->ChangePerspectiveOrtho(txt); });
@@ -4020,33 +4164,42 @@ void G4UIQt::AddIcon(
     action->setChecked(true);
     action->setData(aIconFile);
 
-    if (std::string(aIconFile) == "perspective") {
+    if (std::string(aIconFile) == "perspective")
+    {
       SetIconPerspectiveSelected();
     }
-    if (std::string(aIconFile) == "ortho") {
+    if (std::string(aIconFile) == "ortho")
+    {
       SetIconOrthoSelected();
     }
     // special cases :"resetCamera"
   }
-  else if (std::string(aIconFile) == "reset_camera") {
-    currentToolbar->addAction(QIcon(*pix), aIconFile, this, [this]() { this->ResetCameraCallback(); });
+  else if (std::string(aIconFile) == "reset_camera")
+  {
+    currentToolbar->addAction(QIcon(*pix), aIconFile, this,
+                              [this]() { this->ResetCameraCallback(); });
   }
-  else {
+  else
+  {
     // Find the command in the command tree
     G4UImanager* UI = G4UImanager::GetUIpointer();
     if (UI == nullptr) return;
     G4UIcommandTree* treeTop = UI->GetTree();
-    if (aCommand != nullptr) {
+    if (aCommand != nullptr)
+    {
       std::string str = aCommand;
       std::string::size_type pos = str.find(' ');
-      if (pos != std::string::npos) {
+      if (pos != std::string::npos)
+      {
         str = str.substr(0, pos).c_str();
       }
-      if (treeTop->FindPath(str.c_str()) == nullptr) {
+      if (treeTop->FindPath(str.c_str()) == nullptr)
+      {
         G4UImanager* UImanager = G4UImanager::GetUIpointer();
         G4int verbose = UImanager->GetVerboseLevel();
 
-        if (verbose >= 2) {
+        if (verbose >= 2)
+        {
           G4cout << "Warning: command '" << aCommand
                  << "' does not exist, please define it before using it." << G4endl;
         }
@@ -4075,22 +4228,28 @@ void G4UIQt::NativeMenu(G4bool aVal)
   fMainWindow->menuBar()->setNativeMenuBar(aVal);
 }
 
-void G4UIQt::ClearMenu() { fMainWindow->menuBar()->clear(); }
+void G4UIQt::ClearMenu()
+{
+  fMainWindow->menuBar()->clear();
+}
 
 void G4UIQt::ActivateCommand(G4String newCommand)
 {
-  if (fHelpTreeWidget == nullptr) {
+  if (fHelpTreeWidget == nullptr)
+  {
     return;
   }
   // Look for the choosen command "newCommand"
   std::size_t i = newCommand.find(' ');
   G4String targetCom = "";
-  if (i != std::string::npos) {
+  if (i != std::string::npos)
+  {
     G4String newValue = newCommand.substr(i + 1, newCommand.length() - (i + 1));
     G4StrUtil::strip(newValue);
     targetCom = ModifyToFullPathCommand(newValue);
   }
-  if (! targetCom.empty()) {
+  if (!targetCom.empty())
+  {
     OpenHelpTreeOnCommand(targetCom.data());
   }
 
@@ -4105,7 +4264,8 @@ void G4UIQt::ActivateCommand(G4String newCommand)
 
 void G4UIQt::InitHelpTreeAndVisParametersWidget()
 {
-  if (fHelpTreeWidget == nullptr) {
+  if (fHelpTreeWidget == nullptr)
+  {
     fHelpTreeWidget = new QTreeWidget();
   }
 
@@ -4117,7 +4277,7 @@ void G4UIQt::InitHelpTreeAndVisParametersWidget()
 
   connect(fHelpTreeWidget, SIGNAL(itemSelectionChanged()), this, SLOT(HelpTreeClicCallback()));
   connect(fHelpTreeWidget, SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)), this,
-    SLOT(HelpTreeDoubleClicCallback()));
+          SLOT(HelpTreeDoubleClicCallback()));
 }
 /**
    Create the help tree widget
@@ -4127,19 +4287,24 @@ void G4UIQt::InitHelpTreeAndVisParametersWidget()
 
 void G4UIQt::FillHelpTree()
 {
-  if (fHelpTreeWidget == nullptr) {
+  if (fHelpTreeWidget == nullptr)
+  {
     InitHelpTreeAndVisParametersWidget();
   }
 
   QString searchText = fHelpLine->text();
 
-  if (searchText == "") {
+  if (searchText == "")
+  {
     fHelpTreeWidget->clear();
-  } else {
+  }
+  else
+  {
     return;
   }
 
-  if (fParameterHelpLabel != nullptr) {
+  if (fParameterHelpLabel != nullptr)
+  {
     fParameterHelpLabel->setText("Choose a command in the command tree");
     fParameterHelpTable->setVisible(false);
   }
@@ -4151,18 +4316,21 @@ void G4UIQt::FillHelpTree()
   G4int treeSize = treeTop->GetTreeEntry();
   QTreeWidgetItem* newItem = nullptr;
   QString commandText = "";
-  for (G4int a = 0; a < treeSize; ++a) {
+  for (G4int a = 0; a < treeSize; ++a)
+  {
     // Creating new item
     newItem = nullptr;
 
     commandText = QString((char*)(treeTop->GetTree(a + 1)->GetPathName()).data()).trimmed();
 
     // if already exist, don't create it !
-    for (G4int b = 0; b < fHelpTreeWidget->topLevelItemCount(); ++b) {
+    for (G4int b = 0; b < fHelpTreeWidget->topLevelItemCount(); ++b)
+    {
       if (newItem == nullptr) newItem = FindTreeItem(fHelpTreeWidget->topLevelItem(b), commandText);
     }
 
-    if (newItem == nullptr) {
+    if (newItem == nullptr)
+    {
       newItem = new QTreeWidgetItem();
       newItem->setText(0, GetShortCommandPath(commandText));
       fHelpTreeWidget->addTopLevelItem(newItem);
@@ -4187,12 +4355,14 @@ void G4UIQt::CreateHelpTree(QTreeWidgetItem* aParent, G4UIcommandTree* aCommandT
 
   QString commandText = "";
   // Get the Sub directories
-  for (G4int a = 0; a < aCommandTree->GetTreeEntry(); ++a) {
+  for (G4int a = 0; a < aCommandTree->GetTreeEntry(); ++a)
+  {
     commandText = QString((char*)(aCommandTree->GetTree(a + 1)->GetPathName()).data()).trimmed();
 
     // if already exist, don't create it !
     newItem = FindTreeItem(aParent, commandText);
-    if (newItem == nullptr) {
+    if (newItem == nullptr)
+    {
       newItem = new QTreeWidgetItem();
       newItem->setText(0, GetShortCommandPath(commandText));
       aParent->addChild(newItem);
@@ -4202,14 +4372,16 @@ void G4UIQt::CreateHelpTree(QTreeWidgetItem* aParent, G4UIcommandTree* aCommandT
 
   // Get the Commands
 
-  for (G4int a = 0; a < aCommandTree->GetCommandEntry(); ++a) {
+  for (G4int a = 0; a < aCommandTree->GetCommandEntry(); ++a)
+  {
     QStringList stringList;
     commandText =
       QString((char*)(aCommandTree->GetCommand(a + 1)->GetCommandPath()).data()).trimmed();
 
     // if already exist, don't create it !
     newItem = FindTreeItem(aParent, commandText);
-    if (newItem == nullptr) {
+    if (newItem == nullptr)
+    {
       newItem = new QTreeWidgetItem();
       newItem->setText(0, GetShortCommandPath(commandText));
       aParent->addChild(newItem);
@@ -4223,13 +4395,14 @@ void G4UIQt::CreateHelpTree(QTreeWidgetItem* aParent, G4UIcommandTree* aCommandT
  If depthLevel is 1 : create ToolBox
  If depthLevel is 2 or more : create GroupBox
 */
-G4bool G4UIQt::CreateVisCommandGroupAndToolBox(
-  G4UIcommand* aCommand, QWidget* aParent, G4int aDepthLevel, G4bool isDialog)
+G4bool G4UIQt::CreateVisCommandGroupAndToolBox(G4UIcommand* aCommand, QWidget* aParent,
+                                               G4int aDepthLevel, G4bool isDialog)
 {
   QString commandText =
     QString((char*)(aCommand->GetCommandPath().data())).section("/", -aDepthLevel);
 
-  if (commandText == nullptr) {
+  if (commandText == nullptr)
+  {
     return false;
   }
 
@@ -4239,64 +4412,82 @@ G4bool G4UIQt::CreateVisCommandGroupAndToolBox(
   G4bool found = false;
   QString commandSection = commandText.left(commandText.indexOf("/"));
 
-  if (aDepthLevel == 1) {
+  if (aDepthLevel == 1)
+  {
     auto currentParent = dynamic_cast<QToolBox*>(aParent);
-    if (currentParent != nullptr) {
+    if (currentParent != nullptr)
+    {
       // already exists ?
-      for (G4int a = 0; a < currentParent->count(); ++a) {
-        if (currentParent->itemText(a) == commandSection) {
+      for (G4int a = 0; a < currentParent->count(); ++a)
+      {
+        if (currentParent->itemText(a) == commandSection)
+        {
           found = true;
           newParentWidget = currentParent->widget(a);
         }
       }
     }
     // Not found ? create it
-    if (! found) {
+    if (!found)
+    {
       newParentWidget = new QGroupBox();
       newParentWidget->setLayout(new QVBoxLayout());
-      if (currentParent != nullptr) {
+      if (currentParent != nullptr)
+      {
         currentParent->addItem(newParentWidget, commandSection);
       }
-      else {
-        if (aParent->layout() == nullptr) {
+      else
+      {
+        if (aParent->layout() == nullptr)
+        {
           aParent->setLayout(new QVBoxLayout());
         }
         aParent->layout()->addWidget(newParentWidget);
       }
 
-      if (commandText.indexOf("/") == -1) {
+      if (commandText.indexOf("/") == -1)
+      {
         // Guidance
         QString guidance;
         auto n_guidanceEntry = (G4int)aCommand->GetGuidanceEntries();
-        for (G4int i_thGuidance = 0; i_thGuidance < n_guidanceEntry; i_thGuidance++) {
+        for (G4int i_thGuidance = 0; i_thGuidance < n_guidanceEntry; i_thGuidance++)
+        {
           guidance += QString((char*)(aCommand->GetGuidanceLine(i_thGuidance)).data()) + "\n";
         }
         newParentWidget->setToolTip(guidance);
       }
 
       auto sc = dynamic_cast<QScrollArea*>(newParentWidget->parent()->parent());
-      if (sc != nullptr) {
+      if (sc != nullptr)
+      {
         sc->ensureWidgetVisible(newParentWidget);
       }
     }
   }
-  else {
+  else
+  {
     // try to know if this level is already there
     auto currentParent = dynamic_cast<QGroupBox*>(aParent);
-    if (currentParent != nullptr) {
+    if (currentParent != nullptr)
+    {
       // if depth==2, then we add a [more parameters inside] to the toolBoxItem parent
       // QGroupBox > QWidget > QScrollArea > QToolBox
-      if (aDepthLevel == 2) {
+      if (aDepthLevel == 2)
+      {
         auto parentToolBox = dynamic_cast<QToolBox*>(currentParent->parent()->parent()->parent());
-        if (parentToolBox != nullptr) {
+        if (parentToolBox != nullptr)
+        {
           //          parentToolBox->setItemText(parentToolBox->indexOf(currentParent),"[more
           //          parameters inside]");
         }
       }
-      for (G4int a = 0; a < aParent->layout()->count(); ++a) {
+      for (G4int a = 0; a < aParent->layout()->count(); ++a)
+      {
         auto gb = dynamic_cast<QGroupBox*>(aParent->layout()->itemAt(a)->widget());
-        if (gb != nullptr) {
-          if (gb->title() == commandSection) {
+        if (gb != nullptr)
+        {
+          if (gb->title() == commandSection)
+          {
             found = true;
             newParentWidget = gb;
           }
@@ -4305,10 +4496,12 @@ G4bool G4UIQt::CreateVisCommandGroupAndToolBox(
     }
 
     // Not found ? create it
-    if (! found) {
+    if (!found)
+    {
       newParentWidget = new QGroupBox();
       newParentWidget->setLayout(new QVBoxLayout());
-      if (aParent->layout() == nullptr) {
+      if (aParent->layout() == nullptr)
+      {
         aParent->setLayout(new QVBoxLayout());
       }
       aParent->layout()->addWidget(newParentWidget);
@@ -4317,7 +4510,8 @@ G4bool G4UIQt::CreateVisCommandGroupAndToolBox(
       // Guidance
       QString guidance;
       auto n_guidanceEntry = (G4int)aCommand->GetGuidanceEntries();
-      for (G4int i_thGuidance = 0; i_thGuidance < n_guidanceEntry; i_thGuidance++) {
+      for (G4int i_thGuidance = 0; i_thGuidance < n_guidanceEntry; i_thGuidance++)
+      {
         guidance += QString((char*)(aCommand->GetGuidanceLine(i_thGuidance)).data()) + "\n";
       }
       newParentWidget->setToolTip(guidance);
@@ -4325,12 +4519,15 @@ G4bool G4UIQt::CreateVisCommandGroupAndToolBox(
   }
 
   // fill command groupbox
-  if (commandText.indexOf("/") == -1) {
-    if (CreateCommandWidget(aCommand, newParentWidget, isDialog)) {
+  if (commandText.indexOf("/") == -1)
+  {
+    if (CreateCommandWidget(aCommand, newParentWidget, isDialog))
+    {
       return true;
     }
   }
-  else {
+  else
+  {
     CreateVisCommandGroupAndToolBox(aCommand, newParentWidget, aDepthLevel - 1, isDialog);
   }
 
@@ -4344,13 +4541,15 @@ G4bool G4UIQt::CreateVisCommandGroupAndToolBox(
 */
 G4bool G4UIQt::CreateCommandWidget(G4UIcommand* aCommand, QWidget* aParent, G4bool isDialog)
 {
-  if (aCommand == nullptr) {
+  if (aCommand == nullptr)
+  {
     return false;
   }
 
   // parameters
   auto n_parameterEntry = (G4int)aCommand->GetParameterEntries();
-  if (n_parameterEntry > 0) {
+  if (n_parameterEntry > 0)
+  {
     G4UIparameter* param;
 
     // Re-implementation of G4UIparameter.cc
@@ -4370,28 +4569,35 @@ G4bool G4UIQt::CreateCommandWidget(G4UIcommand* aCommand, QWidget* aParent, G4bo
     QWidget* redInput = nullptr;
     QWidget* greenInput = nullptr;
 
-    for (G4int i_thParameter = 0; i_thParameter < n_parameterEntry; i_thParameter++) {
+    for (G4int i_thParameter = 0; i_thParameter < n_parameterEntry; i_thParameter++)
+    {
       QString txt;
       param = aCommand->GetParameter(i_thParameter);
       auto label = new QLabel(QString((char*)(param->GetParameterName()).data()));
 
-      if ((label->text() == "red") || (label->text() == "red_or_string")) {
+      if ((label->text() == "red") || (label->text() == "red_or_string"))
+      {
         nbColorParameter++;
         isStillColorParameter = true;
       }
-      else if ((label->text() == "green") && isStillColorParameter) {
+      else if ((label->text() == "green") && isStillColorParameter)
+      {
         nbColorParameter++;
       }
-      else if ((label->text() == "blue") && isStillColorParameter) {
+      else if ((label->text() == "blue") && isStillColorParameter)
+      {
         nbColorParameter++;
       }
-      else if (! isColorDialogAdded) {
+      else if (!isColorDialogAdded)
+      {
         // not following red/green/blue parameters ?
-        if (nbColorParameter == 1) {
+        if (nbColorParameter == 1)
+        {
           gridLayout->addWidget(redLabel, i_thParameter - 1, 0);
           gridLayout->addWidget(redInput, i_thParameter - 1, 1);
         }
-        else if (nbColorParameter == 2) {
+        else if (nbColorParameter == 2)
+        {
           gridLayout->addWidget(redLabel, i_thParameter - 2, 0);
           gridLayout->addWidget(redInput, i_thParameter - 2, 1);
           gridLayout->addWidget(greenLabel, i_thParameter - 1, 0);
@@ -4401,26 +4607,29 @@ G4bool G4UIQt::CreateCommandWidget(G4UIcommand* aCommand, QWidget* aParent, G4bo
       }
       // Check parameter type, could be NULL if not found
       QWidget* input = nullptr;
-      if ((QString(QChar(param->GetParameterType())) == "d") ||
-          (QString(QChar(param->GetParameterType())) == "i"))
+      if ((QString(QChar(param->GetParameterType())) == "d")
+          || (QString(QChar(param->GetParameterType())) == "i"))
       {
         input = new QLineEdit();
         // set default value
         dynamic_cast<QLineEdit*>(input)->setText(QString((char*)(param->GetDefaultValue()).data()));
 
-        if (((label->text() == "red") || (label->text() == "red_or_string")) &&
-            isStillColorParameter)
+        if (((label->text() == "red") || (label->text() == "red_or_string"))
+            && isStillColorParameter)
         {
           redDefaultStr = QString((char*)(param->GetDefaultValue()).data());
         }
-        else if ((label->text() == "green") && isStillColorParameter) {
+        else if ((label->text() == "green") && isStillColorParameter)
+        {
           greenDefaultStr = QString((char*)(param->GetDefaultValue()).data());
         }
-        else if ((label->text() == "blue") && isStillColorParameter) {
+        else if ((label->text() == "blue") && isStillColorParameter)
+        {
           blueDefaultStr = QString((char*)(param->GetDefaultValue()).data());
         }
       }
-      else if (QString(QChar(param->GetParameterType())) == "b") {
+      else if (QString(QChar(param->GetParameterType())) == "b")
+      {
         input = new QWidget();
         auto layout = new QHBoxLayout();
         input->setLayout(layout);
@@ -4435,15 +4644,17 @@ G4bool G4UIQt::CreateCommandWidget(G4UIcommand* aCommand, QWidget* aParent, G4bo
 
         // set default value
         QString defaultValue = QString((char*)(param->GetDefaultValue()).data());
-        if (defaultValue == "0") {
+        if (defaultValue == "0")
+        {
           radioOff->setChecked(true);
         }
-        else if (defaultValue == "1") {
+        else if (defaultValue == "1")
+        {
           radioOn->setChecked(true);
         }
       }
-      else if ((QString(QChar(param->GetParameterType())) == "s") &&
-               (! param->GetParameterCandidates().empty()))
+      else if ((QString(QChar(param->GetParameterType())) == "s")
+               && (!param->GetParameterCandidates().empty()))
       {
         input = new QComboBox();
         QString candidates = QString((char*)(param->GetParameterCandidates()).data());
@@ -4451,19 +4662,23 @@ G4bool G4UIQt::CreateCommandWidget(G4UIcommand* aCommand, QWidget* aParent, G4bo
 
         // add all candidates to widget
         QString defaultValue = QString((char*)(param->GetDefaultValue()).data());
-        for (int a = 0; a < list.size(); a++) {
+        for (int a = 0; a < list.size(); a++)
+        {
           dynamic_cast<QComboBox*>(input)->addItem(list.at(a));
-          if (list.at(a) == defaultValue) {
+          if (list.at(a) == defaultValue)
+          {
             dynamic_cast<QComboBox*>(input)->setCurrentIndex(a);
           }
         }
       }
-      else if ((QString(QChar(param->GetParameterType())) == "s")) {  // string
+      else if ((QString(QChar(param->GetParameterType())) == "s"))
+      {  // string
         input = new QLineEdit();
         // set default value
         dynamic_cast<QLineEdit*>(input)->setText(QString((char*)(param->GetDefaultValue()).data()));
       }
-      else if ((QString(QChar(param->GetParameterType())) == "c")) {  // on/off
+      else if ((QString(QChar(param->GetParameterType())) == "c"))
+      {  // on/off
         input = new QWidget();
         auto layout = new QHBoxLayout();
         input->setLayout(layout);
@@ -4478,60 +4693,74 @@ G4bool G4UIQt::CreateCommandWidget(G4UIcommand* aCommand, QWidget* aParent, G4bo
 
         // set default value
         QString defaultValue = QString((char*)(param->GetDefaultValue()).data());
-        if (defaultValue == "off") {
+        if (defaultValue == "off")
+        {
           radioOff->setChecked(true);
         }
-        else if (defaultValue == "on") {
+        else if (defaultValue == "on")
+        {
           radioOn->setChecked(true);
         }
       }
-      else {
+      else
+      {
         input = new QLineEdit();
         dynamic_cast<QLineEdit*>(input)->setText(QString((char*)(param->GetDefaultValue()).data()));
       }
 
       txt += "\nParameter : " + QString((char*)(param->GetParameterName()).data()) + "\n";
-      if (! param->GetParameterGuidance().empty())
+      if (!param->GetParameterGuidance().empty())
         txt += QString((char*)(param->GetParameterGuidance()).data()) + "\n";
 
       txt += " Parameter type  : " + QString(QChar(param->GetParameterType())) + "\n";
-      if (param->IsOmittable()) {
+      if (param->IsOmittable())
+      {
         txt += " Omittable       : True\n";
       }
-      else {
+      else
+      {
         txt += " Omittable       : False\n";
       }
-      if (param->GetCurrentAsDefault()) {
+      if (param->GetCurrentAsDefault())
+      {
         txt += " Default value   : taken from the current value\n";
       }
-      else if (! param->GetDefaultValue().empty()) {
+      else if (!param->GetDefaultValue().empty())
+      {
         txt += " Default value   : " + QString((char*)(param->GetDefaultValue()).data()) + "\n";
       }
-      if (! param->GetParameterRange().empty()) {
+      if (!param->GetParameterRange().empty())
+      {
         txt += " Parameter range : " + QString((char*)(param->GetParameterRange()).data()) + "\n";
       }
-      if (! param->GetParameterCandidates().empty()) {
+      if (!param->GetParameterCandidates().empty())
+      {
         txt +=
           " Candidates      : " + QString((char*)(param->GetParameterCandidates()).data()) + "\n";
       }
 
-      if (isStillColorParameter && (nbColorParameter != 0)) {
-        if ((label->text() == "red") || (label->text() == "red_or_string")) {
+      if (isStillColorParameter && (nbColorParameter != 0))
+      {
+        if ((label->text() == "red") || (label->text() == "red_or_string"))
+        {
           redLabel = label;
           redInput = input;
         }
-        else if (label->text() == "green") {
+        else if (label->text() == "green")
+        {
           greenLabel = label;
           greenInput = input;
         }
-        else if (label->text() == "blue") {
+        else if (label->text() == "blue")
+        {
           // we have all, then add a color chooser
 
           // Create a pixmap with the default color
           QColor qc;
-          if ((redDefaultStr != "") && (redDefaultStr != "") && (redDefaultStr != "")) {
-            qc.setRgbF(
-              redDefaultStr.toDouble(), greenDefaultStr.toDouble(), blueDefaultStr.toDouble());
+          if ((redDefaultStr != "") && (redDefaultStr != "") && (redDefaultStr != ""))
+          {
+            qc.setRgbF(redDefaultStr.toDouble(), greenDefaultStr.toDouble(),
+                       blueDefaultStr.toDouble());
           }
           QPixmap pixmap = QPixmap(QSize(16, 16));
           pixmap.fill(qc);
@@ -4541,8 +4770,8 @@ G4bool G4UIQt::CreateCommandWidget(G4UIcommand* aCommand, QWidget* aParent, G4bo
 
           input = new QPushButton("Change color");
           dynamic_cast<QPushButton*>(input)->setIcon(pixmap);
-          dynamic_cast<QPushButton*>(input)->setAccessibleName(
-            redDefaultStr + " " + greenDefaultStr + " " + blueDefaultStr);
+          dynamic_cast<QPushButton*>(input)->setAccessibleName(redDefaultStr + " " + greenDefaultStr
+                                                               + " " + blueDefaultStr);
           label = new QLabel("Choose color");
 
           // less 1 because we have to add one to the row number
@@ -4553,12 +4782,13 @@ G4bool G4UIQt::CreateCommandWidget(G4UIcommand* aCommand, QWidget* aParent, G4bo
 
           // Connect pushButton to ColorDialog in callback
           connect(dynamic_cast<QPushButton*>(input), &QPushButton::clicked,
-            [this, input]() { this->ChangeColorCallback(input); });
+                  [this, input]() { this->ChangeColorCallback(input); });
           isColorDialogAdded = true;
           isStillColorParameter = false;
         }
       }
-      else {
+      else
+      {
         gridLayout->addWidget(label, i_thParameter - nbColorParameter, 0);
         input->setToolTip(txt);
         gridLayout->addWidget(input, i_thParameter - nbColorParameter, 1);
@@ -4570,12 +4800,14 @@ G4bool G4UIQt::CreateCommandWidget(G4UIcommand* aCommand, QWidget* aParent, G4bo
     gridLayout->addWidget(name, n_parameterEntry - nbColorParameter, 0);
 
     auto applyButton = new QPushButton("Apply");
-    if (! isDialog) {
+    if (!isDialog)
+    {
       gridLayout->addWidget(applyButton, n_parameterEntry - nbColorParameter, 1);
       connect(applyButton, &QPushButton::clicked,
-        [this, paramWidget]() { this->VisParameterCallback(paramWidget); });
+              [this, paramWidget]() { this->VisParameterCallback(paramWidget); });
     }
-    else {
+    else
+    {
       // Apply/Cancel buttons
 
       applyButton->setAutoDefault(true);
@@ -4587,26 +4819,30 @@ G4bool G4UIQt::CreateCommandWidget(G4UIcommand* aCommand, QWidget* aParent, G4bo
       gridLayout->addWidget(applyButton, n_parameterEntry - nbColorParameter, 0);
 
       connect(applyButton, &QPushButton::clicked,
-        [this, paramWidget]() { this->VisParameterCallback(paramWidget); });
+              [this, paramWidget]() { this->VisParameterCallback(paramWidget); });
 
       QWidget* parentCheck = aParent;
       QDialog* parentDialog = nullptr;
       G4bool found = false;
-      while ((parentCheck->parentWidget()) != nullptr) {
+      while ((parentCheck->parentWidget()) != nullptr)
+      {
         parentCheck = parentCheck->parentWidget();
         parentDialog = dynamic_cast<QDialog*>(parentCheck);
-        if (parentDialog != nullptr) {
+        if (parentDialog != nullptr)
+        {
           connect(applyButton, SIGNAL(clicked()), parentDialog, SLOT(accept()));
           connect(cancelButton, SIGNAL(clicked()), parentDialog, SLOT(reject()));
           found = true;
         }
       }
-      if (! found) {
+      if (!found)
+      {
         return false;
       }
     }
 
-    if (aParent->layout() == nullptr) {
+    if (aParent->layout() == nullptr)
+    {
       aParent->setLayout(new QVBoxLayout());
     }
     aParent->layout()->addWidget(paramWidget);
@@ -4626,14 +4862,16 @@ QTreeWidgetItem* G4UIQt::FindTreeItem(QTreeWidgetItem* aParent, const QString& a
   // Suppress last "/"
   QString myCommand = aCommand;
 
-  if (myCommand.lastIndexOf("/") == (myCommand.size() - 1)) {
+  if (myCommand.lastIndexOf("/") == (myCommand.size() - 1))
+  {
     myCommand = myCommand.left(myCommand.size() - 1);
   }
 
   if (GetLongCommandPath(aParent) == myCommand) return aParent;
 
   QTreeWidgetItem* tmp = nullptr;
-  for (G4int a = 0; a < aParent->childCount(); ++a) {
+  for (G4int a = 0; a < aParent->childCount(); ++a)
+  {
     if (tmp == nullptr) tmp = FindTreeItem(aParent->child(a), myCommand);
   }
   return tmp;
@@ -4656,50 +4894,61 @@ QString G4UIQt::GetCommandList(const G4UIcommand* aCommand)
   auto n_guidanceEntry = (G4int)aCommand->GetGuidanceEntries();
   auto n_parameterEntry = (G4int)aCommand->GetParameterEntries();
 
-  if ((commandPath.empty()) && (rangeString.empty()) && (n_guidanceEntry == 0) &&
-      (n_parameterEntry == 0))
+  if ((commandPath.empty()) && (rangeString.empty()) && (n_guidanceEntry == 0)
+      && (n_parameterEntry == 0))
   {
     return txt;
   }
 
-  if ((commandPath.length() - 1) != '/') {
+  if ((commandPath.length() - 1) != '/')
+  {
     txt += "Command " + QString((char*)(commandPath).data()) + "\n";
   }
   txt += "Guidance :\n";
 
-  for (G4int i_thGuidance = 0; i_thGuidance < n_guidanceEntry; i_thGuidance++) {
+  for (G4int i_thGuidance = 0; i_thGuidance < n_guidanceEntry; i_thGuidance++)
+  {
     txt += QString((char*)(aCommand->GetGuidanceLine(i_thGuidance)).data()) + "\n";
   }
-  if (! rangeString.empty()) {
+  if (!rangeString.empty())
+  {
     txt += " Range of parameters : " + QString((char*)(rangeString).data()) + "\n";
   }
-  if (n_parameterEntry > 0) {
+  if (n_parameterEntry > 0)
+  {
     G4UIparameter* param;
 
     // Re-implementation of G4UIparameter.cc
 
-    for (G4int i_thParameter = 0; i_thParameter < n_parameterEntry; i_thParameter++) {
+    for (G4int i_thParameter = 0; i_thParameter < n_parameterEntry; i_thParameter++)
+    {
       param = aCommand->GetParameter(i_thParameter);
       txt += "\nParameter : " + QString((char*)(param->GetParameterName()).data()) + "\n";
-      if (! param->GetParameterGuidance().empty())
+      if (!param->GetParameterGuidance().empty())
         txt += QString((char*)(param->GetParameterGuidance()).data()) + "\n";
       txt += " Parameter type  : " + QString(QChar(param->GetParameterType())) + "\n";
-      if (param->IsOmittable()) {
+      if (param->IsOmittable())
+      {
         txt += " Omittable       : True\n";
       }
-      else {
+      else
+      {
         txt += " Omittable       : False\n";
       }
-      if (param->GetCurrentAsDefault()) {
+      if (param->GetCurrentAsDefault())
+      {
         txt += " Default value   : taken from the current value\n";
       }
-      else if (! param->GetDefaultValue().empty()) {
+      else if (!param->GetDefaultValue().empty())
+      {
         txt += " Default value   : " + QString((char*)(param->GetDefaultValue()).data()) + "\n";
       }
-      if (! param->GetParameterRange().empty()) {
+      if (!param->GetParameterRange().empty())
+      {
         txt += " Parameter range : " + QString((char*)(param->GetParameterRange()).data()) + "\n";
       }
-      if (! param->GetParameterCandidates().empty()) {
+      if (!param->GetParameterCandidates().empty())
+      {
         txt +=
           " Candidates      : " + QString((char*)(param->GetParameterCandidates()).data()) + "\n";
       }
@@ -4729,34 +4978,39 @@ void G4UIQt::updateHelpArea(const G4UIcommand* aCommand)
   auto n_guidanceEntry = (G4int)aCommand->GetGuidanceEntries();
   auto n_parameterEntry = (G4int)aCommand->GetParameterEntries();
 
-  if ((commandPath.empty()) && (rangeString.empty()) && (n_guidanceEntry == 0) &&
-      (n_parameterEntry == 0))
+  if ((commandPath.empty()) && (rangeString.empty()) && (n_guidanceEntry == 0)
+      && (n_parameterEntry == 0))
   {
     return;
   }
 
-  if ((commandPath.length() - 1) != '/') {
+  if ((commandPath.length() - 1) != '/')
+  {
     txt += "<b>Command </b> " + QString((char*)(commandPath).data()) + "<br />";
   }
   txt += "<b>Guidance :</b> ";
   QString tmpGuidance = "";
-  for (G4int i_thGuidance = 0; i_thGuidance < n_guidanceEntry; i_thGuidance++) {
+  for (G4int i_thGuidance = 0; i_thGuidance < n_guidanceEntry; i_thGuidance++)
+  {
     tmpGuidance = QString((char*)(aCommand->GetGuidanceLine(i_thGuidance)).data());
     tmpGuidance = tmpGuidance.toHtmlEscaped();
     tmpGuidance.replace("\n", "<br />");
     txt += tmpGuidance + "<br />";
   }
-  if (! rangeString.empty()) {
+  if (!rangeString.empty())
+  {
     QString range = QString((char*)(rangeString).data());
     range = range.toHtmlEscaped();
     txt += "<b>Range of parameters : </b> " + range + "<br />";
   }
-  else {
+  else
+  {
     txt += "<br />";
   }
   fParameterHelpLabel->setHtml(txt);
 
-  if (n_parameterEntry > 0) {
+  if (n_parameterEntry > 0)
+  {
     G4UIparameter* param;
 
     // Re-implementation of G4UIparameter.cc
@@ -4780,53 +5034,65 @@ void G4UIQt::updateHelpArea(const G4UIcommand* aCommand)
     G4int size = fnt.pointSize();
     fnt.setPointSize(size - 2);
 
-    for (G4int a = 0; a < n_parameterEntry; a++) {
+    for (G4int a = 0; a < n_parameterEntry; a++)
+    {
       param = aCommand->GetParameter(a);
       fParameterHelpTable->setItem(a, 0, new QTableWidgetItem(QString::number(a + 1)));
 
       fParameterHelpTable->setItem(
         a, 1, new QTableWidgetItem(QString((char*)(param->GetParameterName()).data())));
-      if (! param->GetParameterGuidance().empty()) {
+      if (!param->GetParameterGuidance().empty())
+      {
         fParameterHelpTable->setItem(
           a, 2, new QTableWidgetItem(QString((char*)(param->GetParameterGuidance()).data())));
       }
-      fParameterHelpTable->setItem(
-        a, 3, new QTableWidgetItem(QString(QChar(param->GetParameterType()))));
+      fParameterHelpTable->setItem(a, 3,
+                                   new QTableWidgetItem(QString(QChar(param->GetParameterType()))));
 
-      if (param->IsOmittable()) {
+      if (param->IsOmittable())
+      {
         fParameterHelpTable->setItem(a, 4, new QTableWidgetItem(QString("True")));
       }
-      else {
+      else
+      {
         fParameterHelpTable->setItem(a, 4, new QTableWidgetItem(QString("False")));
       }
-      if (param->GetCurrentAsDefault()) {
-        fParameterHelpTable->setItem(
-          a, 5, new QTableWidgetItem(QString("taken from the current value")));
+      if (param->GetCurrentAsDefault())
+      {
+        fParameterHelpTable->setItem(a, 5,
+                                     new QTableWidgetItem(QString("taken from the current value")));
       }
-      else if (! param->GetDefaultValue().empty()) {
+      else if (!param->GetDefaultValue().empty())
+      {
         fParameterHelpTable->setItem(
           a, 5, new QTableWidgetItem(QString((char*)(param->GetDefaultValue()).data())));
       }
-      if (! param->GetParameterRange().empty()) {
+      if (!param->GetParameterRange().empty())
+      {
         fParameterHelpTable->setItem(
           a, 6, new QTableWidgetItem(QString((char*)(param->GetParameterRange()).data())));
       }
-      if (! param->GetParameterCandidates().empty()) {
+      if (!param->GetParameterCandidates().empty())
+      {
         fParameterHelpTable->setItem(
           a, 7, new QTableWidgetItem(QString((char*)(param->GetParameterCandidates()).data())));
       }
       // tooltips
-      for (G4int b = 0; b < 8; ++b) {
+      for (G4int b = 0; b < 8; ++b)
+      {
         QTableWidgetItem* tmp = fParameterHelpTable->item(a, b);
-        if (tmp != nullptr) {
+        if (tmp != nullptr)
+        {
           tmp->setToolTip(tmp->text());
           tmp->setFlags(Qt::NoItemFlags);
         }
       }
       fParameterHelpTable->resizeRowToContents(a);
     }
-    for (G4int c = 0; c < 8; ++c) {
-      if (c != 2) {
+    for (G4int c = 0; c < 8; ++c)
+    {
+      if (c != 2)
+      {
         fParameterHelpTable->resizeColumnToContents(c);
       }
     }
@@ -4846,23 +5112,29 @@ G4bool G4UIQt::IsGUICommand(const G4UIcommand* aCommand)
 
   auto n_parameterEntry = (G4int)aCommand->GetParameterEntries();
 
-  if (n_parameterEntry > 0) {
+  if (n_parameterEntry > 0)
+  {
     G4UIparameter* param;
 
     // Re-implementation of G4UIparameter.cc
 
-    for (G4int i_thParameter = 0; i_thParameter < n_parameterEntry; i_thParameter++) {
+    for (G4int i_thParameter = 0; i_thParameter < n_parameterEntry; i_thParameter++)
+    {
       param = aCommand->GetParameter(i_thParameter);
-      if (QString(QChar(param->GetParameterType())) == "d") {
+      if (QString(QChar(param->GetParameterType())) == "d")
+      {
         return true;
       }
-      if (QString(QChar(param->GetParameterType())) == "b") {
+      if (QString(QChar(param->GetParameterType())) == "b")
+      {
         return true;
       }
-      if (QString(QChar(param->GetParameterType())) == "i") {
+      if (QString(QChar(param->GetParameterType())) == "i")
+      {
         return true;
       }
-      if (QString(QChar(param->GetParameterType())) == "s") {
+      if (QString(QChar(param->GetParameterType())) == "s")
+      {
         return true;
       }
     }
@@ -4872,7 +5144,10 @@ G4bool G4UIQt::IsGUICommand(const G4UIcommand* aCommand)
 
 /**  Implement G4VBasicShell vurtual function
  */
-G4bool G4UIQt::GetHelpChoice(G4int&) { return true; }
+G4bool G4UIQt::GetHelpChoice(G4int&)
+{
+  return true;
+}
 
 /**   Event filter method. Every event from QtApplication goes here.<br/>
    We apply a filter only for the Up and Down Arrow press when the QLineEdit<br/>
@@ -4889,48 +5164,63 @@ G4bool G4UIQt::eventFilter(  // Should stay with a minuscule eventFilter because
   if (aObj == nullptr) return false;
   if (aEvent == nullptr) return false;
 
-  if (aObj == fHistoryTBTableList) {
-    if (aEvent->type() == QEvent::KeyPress) {
+  if (aObj == fHistoryTBTableList)
+  {
+    if (aEvent->type() == QEvent::KeyPress)
+    {
       fCommandArea->setFocus();
     }
   }
 
-  if (aObj == fCompleter->popup()) {
-    if (aEvent->type() == QEvent::KeyPress) {
+  if (aObj == fCompleter->popup())
+  {
+    if (aEvent->type() == QEvent::KeyPress)
+    {
       auto e = static_cast<QKeyEvent*>(aEvent);
-      if (e->key() == (Qt::Key_Tab)) {
+      if (e->key() == (Qt::Key_Tab))
+      {
         tabKeyPress = true;
       }
     }
-    else if (aEvent->type() == QEvent::Hide) {
+    else if (aEvent->type() == QEvent::Hide)
+    {
       // Store this value
       QString c = fCommandArea->text();
       fLastCompleteCommand = c.left(c.indexOf("<"));
     }
   }
 
-  if (aObj == fCommandArea) {
-    if (aEvent->type() == QEvent::KeyPress) {
+  if (aObj == fCommandArea)
+  {
+    if (aEvent->type() == QEvent::KeyPress)
+    {
       auto e = static_cast<QKeyEvent*>(aEvent);
-      if ((e->key() == (Qt::Key_Down)) || (e->key() == (Qt::Key_PageDown)) ||
-          (e->key() == (Qt::Key_Up)) || (e->key() == (Qt::Key_PageUp)))
+      if ((e->key() == (Qt::Key_Down)) || (e->key() == (Qt::Key_PageDown))
+          || (e->key() == (Qt::Key_Up)) || (e->key() == (Qt::Key_PageUp)))
       {
         G4int selection = fHistoryTBTableList->currentRow();
-        if (fHistoryTBTableList->count() != 0) {
-          if (selection == -1) {
+        if (fHistoryTBTableList->count() != 0)
+        {
+          if (selection == -1)
+          {
             selection = fHistoryTBTableList->count() - 1;
           }
-          else {
-            if (e->key() == (Qt::Key_Down)) {
+          else
+          {
+            if (e->key() == (Qt::Key_Down))
+            {
               if (selection < (fHistoryTBTableList->count() - 1)) selection++;
             }
-            else if (e->key() == (Qt::Key_PageDown)) {
+            else if (e->key() == (Qt::Key_PageDown))
+            {
               selection = fHistoryTBTableList->count() - 1;
             }
-            else if (e->key() == (Qt::Key_Up)) {
+            else if (e->key() == (Qt::Key_Up))
+            {
               if (selection > 0) selection--;
             }
-            else if (e->key() == (Qt::Key_PageUp)) {
+            else if (e->key() == (Qt::Key_PageUp))
+            {
               selection = 0;
             }
           }
@@ -4940,30 +5230,34 @@ G4bool G4UIQt::eventFilter(  // Should stay with a minuscule eventFilter because
         }
         moveCommandCursor = true;
       }
-      else if (e->key() == (Qt::Key_Tab)) {
+      else if (e->key() == (Qt::Key_Tab))
+      {
         tabKeyPress = true;
       }
-      else if (((e->modifiers() == Qt::ControlModifier) || (e->modifiers() == Qt::MetaModifier)) &&
-               (e->key() == Qt::Key_A))
+      else if (((e->modifiers() == Qt::ControlModifier) || (e->modifiers() == Qt::MetaModifier))
+               && (e->key() == Qt::Key_A))
       {
         fCommandArea->home(false);
         return true;
       }
-      else if (((e->modifiers() == Qt::ControlModifier) || (e->modifiers() == Qt::MetaModifier)) &&
-               (e->key() == Qt::Key_E))
+      else if (((e->modifiers() == Qt::ControlModifier) || (e->modifiers() == Qt::MetaModifier))
+               && (e->key() == Qt::Key_E))
       {
         fCommandArea->end(false);
         return true;
       }
     }
-    else if (aEvent->type() == QEvent::Paint) {
-      if (fLastCompleteCommand != "") {
+    else if (aEvent->type() == QEvent::Paint)
+    {
+      if (fLastCompleteCommand != "")
+      {
         fCommandArea->setText(fLastCompleteCommand);
         fLastCompleteCommand = "";
       }
     }
   }
-  if (tabKeyPress) {
+  if (tabKeyPress)
+  {
     G4String ss = Complete(fCommandArea->text().toStdString().c_str());
     fCommandArea->setText((char*)(ss.data()));
     fCommandArea->setFocus();
@@ -4975,11 +5269,13 @@ G4bool G4UIQt::eventFilter(  // Should stay with a minuscule eventFilter because
 
   G4bool res = false;
   // change cursor position if needed
-  if (moveCommandCursor) {
+  if (moveCommandCursor)
+  {
     fCommandArea->setCursorPosition((int)fCommandArea->text().length());
     fCommandArea->setCursorPosition(4);
   }
-  else {
+  else
+  {
     // pass the event on to the parent class
     res = QObject::eventFilter(aObj, aEvent);
   }
@@ -4992,8 +5288,10 @@ void G4UIQt::UpdateCommandCompleter()
 
   // remove previous one
   fCommandArea->setCompleter(nullptr);
-  if (fCompleter != nullptr) {
-    if (fCompleter->popup() != nullptr) {
+  if (fCompleter != nullptr)
+  {
+    if (fCompleter->popup() != nullptr)
+    {
       fCompleter->popup()->removeEventFilter(this);
     }
   }
@@ -5005,7 +5303,8 @@ void G4UIQt::UpdateCommandCompleter()
   G4UImanager* UI = G4UImanager::GetUIpointer();
   G4UIcommandTree* commandTreeTop = UI->GetTree();
   G4UIcommandTree* aTree = commandTreeTop->FindCommandTree("/");
-  if (aTree != nullptr) {
+  if (aTree != nullptr)
+  {
     G4int Ndir = aTree->GetTreeEntry();
     fCompleter->setMaxVisibleItems(Ndir);
   }
@@ -5034,19 +5333,24 @@ QStandardItemModel* G4UIQt::CreateCompleterModel(const G4String& aCmd)
   G4UImanager* UI = G4UImanager::GetUIpointer();
   G4UIcommandTree* commandTreeTop = UI->GetTree();
   G4UIcommandTree* aTree = commandTreeTop->FindCommandTree(pName);
-  if (aTree != nullptr) {
+  if (aTree != nullptr)
+  {
     G4int Ndir = aTree->GetTreeEntry();
     G4int Ncmd = aTree->GetCommandEntry();
 
     // directory ...
-    for (G4int idir = 1; idir <= Ndir; ++idir) {
+    for (G4int idir = 1; idir <= Ndir; ++idir)
+    {
       G4String fpdir = aTree->GetTree(idir)->GetPathName();
       // matching test
-      if (fpdir.find(remainingPath, 0) == 0) {
-        if (nMatch == 0) {
+      if (fpdir.find(remainingPath, 0) == 0)
+      {
+        if (nMatch == 0)
+        {
           matchingPath = fpdir;
         }
-        else {
+        else
+        {
           matchingPath = aTree->GetFirstMatchedString(fpdir, matchingPath);
         }
         nMatch++;
@@ -5060,7 +5364,8 @@ QStandardItemModel* G4UIQt::CreateCompleterModel(const G4String& aCmd)
 
         // Go recursively
         QStandardItemModel* subModel = CreateCompleterModel(fpdir.data());
-        for (G4int a = 0; a < subModel->rowCount(); ++a) {
+        for (G4int a = 0; a < subModel->rowCount(); ++a)
+        {
           // copy item (an item could only be part of one model
           auto tempItem = new QStandardItem(subModel->item(a)->text());
           tempItem->setIcon(subModel->item(a)->icon());
@@ -5068,12 +5373,14 @@ QStandardItemModel* G4UIQt::CreateCompleterModel(const G4String& aCmd)
           tempItem->setData(subModel->item(a)->data());
 
           // dir
-          if (tempItem->data() == 1) {
+          if (tempItem->data() == 1)
+          {
             subModel->item(a);
             subDirModelList.append(tempItem);
           }
           // command
-          else if (tempItem->data() == 0) {
+          else if (tempItem->data() == 0)
+          {
             subCommandModelList.append(tempItem);
           }
         }
@@ -5089,7 +5396,8 @@ QStandardItemModel* G4UIQt::CreateCompleterModel(const G4String& aCmd)
     std::string tooltip;
     G4String params;
 
-    for (G4int icmd = 1; icmd <= Ncmd; ++icmd) {
+    for (G4int icmd = 1; icmd <= Ncmd; ++icmd)
+    {
       tooltip = "";
       params = " ";
       command = aTree->GetCommand(icmd);
@@ -5099,30 +5407,38 @@ QStandardItemModel* G4UIQt::CreateCompleterModel(const G4String& aCmd)
       n_parameterEntry = (G4int)command->GetParameterEntries();
 
       // matching test
-      if (longCommandName.find(remainingPath, 0) == 0) {
-        if (nMatch == 0) {
+      if (longCommandName.find(remainingPath, 0) == 0)
+      {
+        if (nMatch == 0)
+        {
           matchingPath = longCommandName + " ";
         }
-        else {
+        else
+        {
           strtmp = longCommandName + " ";
           matchingPath = aTree->GetFirstMatchedString(matchingPath, strtmp);
         }
 
         // guidance
-        for (G4int i_thGuidance = 0; i_thGuidance < n_guidanceEntry; i_thGuidance++) {
+        for (G4int i_thGuidance = 0; i_thGuidance < n_guidanceEntry; i_thGuidance++)
+        {
           tooltip += std::string((command->GetGuidanceLine(i_thGuidance)).data());
-          if (i_thGuidance < n_guidanceEntry - 1) {
+          if (i_thGuidance < n_guidanceEntry - 1)
+          {
             tooltip += "\n";
           }
         }
 
         // parameters
-        for (G4int a = 0; a < n_parameterEntry; a++) {
+        for (G4int a = 0; a < n_parameterEntry; a++)
+        {
           param = command->GetParameter(a);
-          if (param->IsOmittable()) {
+          if (param->IsOmittable())
+          {
             params += "[<" + param->GetParameterName() + ">] ";
           }
-          else {
+          else
+          {
             params += "<" + param->GetParameterName() + "> ";
           }
         }
@@ -5144,16 +5460,20 @@ QStandardItemModel* G4UIQt::CreateCompleterModel(const G4String& aCmd)
   model->setColumnCount(1);
 
   // concat models
-  for (auto a : dirModelList) {
+  for (auto a : dirModelList)
+  {
     model->appendRow(a);
   }
-  for (auto a : subDirModelList) {
+  for (auto a : subDirModelList)
+  {
     model->appendRow(a);
   }
-  for (auto a : commandModelList) {
+  for (auto a : commandModelList)
+  {
     model->appendRow(a);
   }
-  for (auto a : subCommandModelList) {
+  for (auto a : subCommandModelList)
+  {
     model->appendRow(a);
   }
 
@@ -5168,7 +5488,10 @@ QStandardItemModel* G4UIQt::CreateCompleterModel(const G4String& aCmd)
 
 /**   Called when user give "help" command.
  */
-void G4UIQt::ShowHelpCallback() { TerminalHelp(""); }
+void G4UIQt::ShowHelpCallback()
+{
+  TerminalHelp("");
+}
 
 /**   Called when user click on clear button. Clear the text Output area
  */
@@ -5180,7 +5503,10 @@ void G4UIQt::ClearButtonCallback()
 
 /**   Called when user exit session
  */
-void G4UIQt::ExitSession() { SessionTerminate(); }
+void G4UIQt::ExitSession()
+{
+  SessionTerminate();
+}
 
 void G4UIQt::ExitHelp() const {}
 
@@ -5192,29 +5518,35 @@ void G4UIQt::CommandEnteredCallback()
   // split by any new line character
   fCommandArea->setText(fCommandArea->text().trimmed());
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-  QStringList list = fCommandArea->text().split(QRegularExpression("[\r\n]"),QString::SkipEmptyParts);
+  QStringList list =
+    fCommandArea->text().split(QRegularExpression("[\r\n]"), QString::SkipEmptyParts);
 #else
-  QStringList list = fCommandArea->text().split(QRegularExpression("[\r\n]"),Qt::SkipEmptyParts);
+  QStringList list = fCommandArea->text().split(QRegularExpression("[\r\n]"), Qt::SkipEmptyParts);
 #endif
 
   // Apply for all commands
-  for (G4int a = 0; a < list.size(); ++a) {
+  for (G4int a = 0; a < list.size(); ++a)
+  {
     QString txt(list[a].trimmed());
-    if (txt != "") {
+    if (txt != "")
+    {
       fHistoryTBTableList->addItem(txt);
       fHistoryTBTableList->clearSelection();
       fHistoryTBTableList->setCurrentItem(nullptr);
       fCommandArea->setText("");
       G4Qt* interactorManager = G4Qt::getInstance();
-      if (interactorManager != nullptr) {
+      if (interactorManager != nullptr)
+      {
         interactorManager->FlushAndWaitExecution();
       }
 
       G4String command = txt.toStdString().c_str();
-      if (command.substr(0, 4) != "help") {
+      if (command.substr(0, 4) != "help")
+      {
         ApplyShellCommand(command, exitSession, exitPause);
       }
-      else {
+      else
+      {
         ActivateCommand(command);
       }
     }
@@ -5238,13 +5570,16 @@ void G4UIQt::CommandEnteredCallback()
 void G4UIQt::CommandEditedCallback(const QString&)
 {
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
-  QStringList list = fCommandArea->text().split(QRegularExpression("[\r\n]"), QString::SkipEmptyParts);
+  QStringList list =
+    fCommandArea->text().split(QRegularExpression("[\r\n]"), QString::SkipEmptyParts);
 #else
   QStringList list = fCommandArea->text().split(QRegularExpression("[\r\n]"), Qt::SkipEmptyParts);
 #endif
 
-  if (list.size() > 1) {  // trigger ActivateCommand
-    for (G4int a = 0; a < list.size() - 1; ++a) {
+  if (list.size() > 1)
+  {  // trigger ActivateCommand
+    for (G4int a = 0; a < list.size() - 1; ++a)
+    {
       // set only the first part
       fCommandArea->setText(list[a]);
       // trigger callback
@@ -5259,64 +5594,78 @@ void G4UIQt::CommandEditedCallback(const QString&)
  */
 void G4UIQt::VisParameterCallback(QWidget* widget)
 {
-  if (widget == nullptr) {
+  if (widget == nullptr)
+  {
     return;
   }
 
   // Look in all the Grid layout, but only column 1 (0 is the parameter name)
   auto grid = dynamic_cast<QGridLayout*>(widget->layout());
-  if (grid == nullptr) {
+  if (grid == nullptr)
+  {
     return;
   }
   QString command;
   QWidget* name = grid->itemAtPosition(grid->rowCount() - 1, 0)->widget();
-  if (dynamic_cast<QLabel*>(name) == nullptr) {
+  if (dynamic_cast<QLabel*>(name) == nullptr)
+  {
     return;
   }
   command += (dynamic_cast<QLabel*>(name))->text() + " ";
 
-  for (G4int a = 0; a < grid->rowCount() - 1; ++a) {
+  for (G4int a = 0; a < grid->rowCount() - 1; ++a)
+  {
     QWidget* widgetTmp = grid->itemAtPosition(a, 1)->widget();
 
     // 4 kind of widgets : QLineEdit / QComboBox / radioButtonsGroup / QPushButton (color chooser)
-    if (widgetTmp != nullptr) {
-      if (dynamic_cast<QLineEdit*>(widgetTmp) != nullptr) {
+    if (widgetTmp != nullptr)
+    {
+      if (dynamic_cast<QLineEdit*>(widgetTmp) != nullptr)
+      {
         command += (dynamic_cast<QLineEdit*>(widgetTmp))->text() + " ";
       }
-      else if (dynamic_cast<QComboBox*>(widgetTmp) != nullptr) {
+      else if (dynamic_cast<QComboBox*>(widgetTmp) != nullptr)
+      {
         command += (dynamic_cast<QComboBox*>(widgetTmp))
-                     ->itemText((dynamic_cast<QComboBox*>(widgetTmp))->currentIndex()) +
-                   " ";
+                     ->itemText((dynamic_cast<QComboBox*>(widgetTmp))->currentIndex())
+                   + " ";
 
         // Color chooser
       }
-      else if (dynamic_cast<QPushButton*>(widgetTmp) != nullptr) {
+      else if (dynamic_cast<QPushButton*>(widgetTmp) != nullptr)
+      {
         command += widgetTmp->accessibleName() + " ";
 
         // Check for Button group
       }
-      else if (dynamic_cast<QWidget*>(widgetTmp) != nullptr) {
-        if (widgetTmp->layout()->count() > 0) {
-          if (dynamic_cast<QRadioButton*>(widgetTmp->layout()->itemAt(0)->widget()) != nullptr) {
+      else if (dynamic_cast<QWidget*>(widgetTmp) != nullptr)
+      {
+        if (widgetTmp->layout()->count() > 0)
+        {
+          if (dynamic_cast<QRadioButton*>(widgetTmp->layout()->itemAt(0)->widget()) != nullptr)
+          {
             QAbstractButton* checked =
               (dynamic_cast<QRadioButton*>(widgetTmp->layout()->itemAt(0)->widget()))
                 ->group()
                 ->checkedButton();
-            if (checked != nullptr) {
+            if (checked != nullptr)
+            {
               command += (dynamic_cast<QRadioButton*>(widgetTmp->layout()->itemAt(0)->widget()))
                            ->group()
                            ->checkedButton()
-                           ->text() +
-                         " ";
+                           ->text()
+                         + " ";
             }
           }
         }
       }
     }
   }
-  if (command != "") {
+  if (command != "")
+  {
     G4UImanager* UI = G4UImanager::GetUIpointer();
-    if (UI != nullptr) {
+    if (UI != nullptr)
+    {
       UI->ApplyCommand(command.toStdString().c_str());
     }
   }
@@ -5337,12 +5686,15 @@ void G4UIQt::ButtonCallback(const QString& aCommand)
 
   G4UIcommand* command = treeTop->FindPath(ss);
 
-  if (command != nullptr) {
+  if (command != nullptr)
+  {
     // if is GUI, then open a dialog
-    if (IsGUICommand(command)) {
+    if (IsGUICommand(command))
+    {
       auto menuParameterDialog = new QDialog();
 
-      if (CreateVisCommandGroupAndToolBox(command, menuParameterDialog, 1, true)) {
+      if (CreateVisCommandGroupAndToolBox(command, menuParameterDialog, 1, true))
+      {
         menuParameterDialog->setWindowTitle(aCommand);
         menuParameterDialog->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum));
 
@@ -5381,17 +5733,21 @@ void G4UIQt::HelpTreeClicCallback()
   std::string itemText = GetLongCommandPath(item).toStdString();
 
   // check if it is a command path
-  if (item->childCount() > 0) {
+  if (item->childCount() > 0)
+  {
     itemText += "/";
   }
   G4UIcommand* command = treeTop->FindPath(itemText.c_str());
 
-  if (command != nullptr) {
+  if (command != nullptr)
+  {
     updateHelpArea(command);
   }
-  else {  // this is a command
+  else
+  {  // this is a command
     G4UIcommandTree* path = treeTop->FindCommandTree(itemText.c_str());
-    if (path != nullptr) {
+    if (path != nullptr)
+    {
       // this is not a command, this is a sub directory
       // We display the Title
       fParameterHelpLabel->setVisible(true);
@@ -5434,7 +5790,10 @@ void G4UIQt::CommandHistoryCallback()
   fCommandArea->setText(item->text());
 }
 
-void G4UIQt::ThreadComboBoxCallback(int) { CoutFilterCallback(""); }
+void G4UIQt::ThreadComboBoxCallback(int)
+{
+  CoutFilterCallback("");
+}
 
 void G4UIQt::CoutFilterCallback(const QString&)
 {
@@ -5447,11 +5806,13 @@ void G4UIQt::CoutFilterCallback(const QString&)
 
 void G4UIQt::SaveOutputCallback()
 {
-  QString fileName = QFileDialog::getSaveFileName(
-    fMainWindow, "Save console output as...", fLastOpenPath, "Save output as...");
-  if (fileName != "") {
+  QString fileName = QFileDialog::getSaveFileName(fMainWindow, "Save console output as...",
+                                                  fLastOpenPath, "Save output as...");
+  if (fileName != "")
+  {
     QFile data(fileName);
-    if (data.open(QFile::WriteOnly | QFile::Truncate)) {
+    if (data.open(QFile::WriteOnly | QFile::Truncate))
+    {
       QTextStream out(&data);
       out << fCoutTBTextArea->toPlainText();
       out.flush();
@@ -5460,15 +5821,18 @@ void G4UIQt::SaveOutputCallback()
   }
 }
 
-QString G4UIQt::FilterOutput(
-  const G4UIOutputString& output, const QString& currentThread, const QString& filter)
+QString G4UIQt::FilterOutput(const G4UIOutputString& output, const QString& currentThread,
+                             const QString& filter)
 {
 #ifdef G4MULTITHREADED
-  if ((currentThread == "All") || (currentThread == output.fThread.data())) {
+  if ((currentThread == "All") || (currentThread == output.fThread.data()))
+  {
 #else
-  if (currentThread == "") {
+  if (currentThread == "")
+  {
 #endif
-    if (output.fText.contains(QRegularExpression(filter))) {
+    if (output.fText.contains(QRegularExpression(filter)))
+    {
       return output.fText;
     }
   }
@@ -5480,7 +5844,8 @@ void G4UIQt::FilterAllOutputTextArea()
   QString currentThread = "";
 #ifdef G4MULTITHREADED
   currentThread = fThreadsFilterComboBox->currentText();
-  if (currentThread == "Master") {
+  if (currentThread == "Master")
+  {
     currentThread = "";
   }
 #endif
@@ -5492,20 +5857,26 @@ void G4UIQt::FilterAllOutputTextArea()
 
   fCoutTBTextArea->clear();
 
-  for (auto& out : fG4OutputString) {
-    if (FilterOutput(out, currentThread, filter) != "") {
+  for (auto& out : fG4OutputString)
+  {
+    if (FilterOutput(out, currentThread, filter) != "")
+    {
       // changing color ?
-      if (out.fOutputStream != previousOutputStream) {
+      if (out.fOutputStream != previousOutputStream)
+      {
         previousOutputStream = out.fOutputStream;
-        if (out.fOutputStream == "info") {
+        if (out.fOutputStream == "info")
+        {
           pref = "";
           post = "";
         }
-        else if (out.fOutputStream == "warning") {
+        else if (out.fOutputStream == "warning")
+        {
           pref = "<font color=\"DarkYellow\">";
           post = "</font>";
         }
-        else {
+        else
+        {
           pref = "<font color=\"Red\">";
           post = "</font>";
         }
@@ -5516,7 +5887,7 @@ void G4UIQt::FilterAllOutputTextArea()
 }
 
 /* Callback called when user give a new string to look for
-   Display a list of matching commands. 
+   Display a list of matching commands.
    If no string is set, will display the complete help tree
 */
 void G4UIQt::LookForHelpStringCallback()
@@ -5526,7 +5897,8 @@ void G4UIQt::LookForHelpStringCallback()
 
   fParameterHelpLabel->setText("");
   fParameterHelpTable->setVisible(false);
-  if (searchText == "") {
+  if (searchText == "")
+  {
     FillHelpTree();
     return;
   }
@@ -5534,11 +5906,8 @@ void G4UIQt::LookForHelpStringCallback()
   OpenHelpTreeOnCommand(searchText);
 }
 
-
-
 void G4UIQt::OpenHelpTreeOnCommand(const QString& searchText)
 {
-
   // Get the help tree
   G4UImanager* UI = G4UImanager::GetUIpointer();
   if (UI == nullptr) return;
@@ -5557,7 +5926,8 @@ void G4UIQt::OpenHelpTreeOnCommand(const QString& searchText)
   QStringList labels = {"Command", "Match"};
   fHelpTreeWidget->setHeaderLabels(labels);
 
-  if (commandResultMap.empty()) {
+  if (commandResultMap.empty())
+  {
     fParameterHelpLabel->setText("No match found");
     fParameterHelpTable->setVisible(false);
     return;
@@ -5568,29 +5938,35 @@ void G4UIQt::OpenHelpTreeOnCommand(const QString& searchText)
 
   QTreeWidgetItem* newItem;
   G4int nItems = 0;
- 
-  for (auto it = commandResultMap.end(); it != commandResultMap.begin();) {
+
+  for (auto it = commandResultMap.end(); it != commandResultMap.begin();)
+  {
     it--;
     if (nItems >= 50) break;
 
     // 20 maximum progress values
-    for (G4int i = 0; i < G4int(it.key() * 10); ++i) {
+    for (G4int i = 0; i < G4int(it.key() * 10); ++i)
+    {
       progressStr += progressChar;
     }
 
     newItem = new QTreeWidgetItem();
     QString commandStr = it.value().trimmed();
 
-    if (commandStr.indexOf("/") == 0) {
+    if (commandStr.indexOf("/") == 0)
+    {
       commandStr.remove(0, 1);
     }
 
     newItem->setText(0, commandStr);
     newItem->setText(1, progressStr);
     fHelpTreeWidget->addTopLevelItem(newItem);
-    if (it.key() > 1) {
+    if (it.key() > 1)
+    {
       newItem->setForeground(1, QBrush(Qt::red));
-    } else {
+    }
+    else
+    {
       newItem->setForeground(1, QBrush(Qt::blue));
     }
 
@@ -5600,26 +5976,26 @@ void G4UIQt::OpenHelpTreeOnCommand(const QString& searchText)
 
   fHelpTreeWidget->resizeColumnToContents(0);
   fHelpTreeWidget->sortItems(1, Qt::DescendingOrder);
-
 }
 
-
-QMultiMap<G4double, QString> G4UIQt::LookForHelpStringInChildTree(
-  G4UIcommandTree* aCommandTree, const QString& searchText)
+QMultiMap<G4double, QString> G4UIQt::LookForHelpStringInChildTree(G4UIcommandTree* aCommandTree,
+                                                                  const QString& searchText)
 {
   QMultiMap<G4double, QString> commandResultMap;
   if (aCommandTree == nullptr) return commandResultMap;
 
   // Loop over sub trees
   QMultiMap<G4double, QString> commandChildResultMap;
-  for (G4int i = 0; i < aCommandTree->GetTreeEntry(); ++i) {
+  for (G4int i = 0; i < aCommandTree->GetTreeEntry(); ++i)
+  {
     commandChildResultMap = LookForHelpStringInChildTree(aCommandTree->GetTree(i + 1), searchText);
     commandResultMap += commandChildResultMap;
     commandChildResultMap.clear();
   }
 
   // Loop over the commands and compute match score
-  for (G4int i = 0; i < aCommandTree->GetCommandEntry(); ++i) {
+  for (G4int i = 0; i < aCommandTree->GetCommandEntry(); ++i)
+  {
     const G4UIcommand* command = aCommandTree->GetCommand(i + 1);
     if (command == nullptr) continue;
     G4double score = ComputeStringMatchScore(QString(command->GetCommandPath().data()), searchText);
@@ -5629,26 +6005,30 @@ QMultiMap<G4double, QString> G4UIQt::LookForHelpStringInChildTree(
   return commandResultMap;
 }
 
-
 G4double G4UIQt::ComputeStringMatchScore(const QString& string, const QString& searchText)
 {
-  if (string.contains(searchText, Qt::CaseInsensitive)) {
-    //Score (1,2] for matched string
+  if (string.contains(searchText, Qt::CaseInsensitive))
+  {
+    // Score (1,2] for matched string
     return 1 + G4double(searchText.size()) / string.size();
-  
-  } else {
-
-    //Score (0,1) for similar string (Normalized Levenshtein distance)
+  }
+  else
+  {
+    // Score (0,1) for similar string (Normalized Levenshtein distance)
     const auto nSize = (G4int)string.size();
     const auto mSize = (G4int)searchText.size();
 
     QVector<QVector<G4int>> dp(nSize + 1, QVector<G4int>(mSize + 1));
 
-    for (G4int i = 0; i <= nSize; ++i) dp[i][0] = i;
-    for (G4int j = 0; j <= mSize; ++j) dp[0][j] = j;
+    for (G4int i = 0; i <= nSize; ++i)
+      dp[i][0] = i;
+    for (G4int j = 0; j <= mSize; ++j)
+      dp[0][j] = j;
 
-    for (G4int i = 1; i <= nSize; ++i) {
-      for (G4int j = 1; j <= mSize; ++j) {
+    for (G4int i = 1; i <= nSize; ++i)
+    {
+      for (G4int j = 1; j <= mSize; ++j)
+      {
         G4int cost = (string[i - 1] == searchText[j - 1]) ? 0 : 1;
         dp[i][j] = std::min({dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost});
       }
@@ -5658,16 +6038,17 @@ G4double G4UIQt::ComputeStringMatchScore(const QString& string, const QString& s
   }
 }
 
-
 QString G4UIQt::GetShortCommandPath(QString& commandPath)
 {
-  if (commandPath.indexOf("/") == 0) {
+  if (commandPath.indexOf("/") == 0)
+  {
     commandPath = commandPath.right(commandPath.size() - 1);
   }
 
   commandPath = commandPath.right(commandPath.size() - commandPath.lastIndexOf("/", -2) - 1);
 
-  if (commandPath.lastIndexOf("/") == (commandPath.size() - 1)) {
+  if (commandPath.lastIndexOf("/") == (commandPath.size() - 1))
+  {
     commandPath = commandPath.left(commandPath.size() - 1);
   }
 
@@ -5682,7 +6063,8 @@ QString G4UIQt::GetLongCommandPath(QTreeWidgetItem* item)
   QString itemText = "";
   itemText = item->text(0);
 
-  while (item->parent() != nullptr) {
+  while (item->parent() != nullptr)
+  {
     itemText = item->parent()->text(0) + "/" + itemText;
     item = item->parent();
   }
@@ -5693,23 +6075,26 @@ QString G4UIQt::GetLongCommandPath(QTreeWidgetItem* item)
 
 void G4UIQt::ChangeColorCallback(QWidget* widget)
 {
-  if (widget == nullptr) {
+  if (widget == nullptr)
+  {
     return;
   }
 
   auto button = dynamic_cast<QPushButton*>(widget);
-  if (button == nullptr) {
+  if (button == nullptr)
+  {
     return;
   }
   QString value = button->accessibleName();
 
   QColor old;
   old.setRgbF(value.section(" ", 0, 1).toDouble(), value.section(" ", 1, 2).toDouble(),
-    value.section(" ", 2, 3).toDouble());
+              value.section(" ", 2, 3).toDouble());
   QColor color =
     QColorDialog::getColor(old, fUITabWidget, "Change color", QColorDialog::ShowAlphaChannel);
 
-  if (color.isValid()) {
+  if (color.isValid())
+  {
     // rebuild the widget icon
     QPixmap pixmap = QPixmap(QSize(16, 16));
     pixmap.fill(color);
@@ -5717,9 +6102,8 @@ void G4UIQt::ChangeColorCallback(QWidget* widget)
     painter.setPen(Qt::black);
     painter.drawRect(0, 0, 15, 15);  // Draw contour
 
-    button->setAccessibleName(QString::number(color.redF()) + " " +
-                              QString::number(color.greenF()) + " " +
-                              QString::number(color.blueF()) + " ");
+    button->setAccessibleName(QString::number(color.redF()) + " " + QString::number(color.greenF())
+                              + " " + QString::number(color.blueF()) + " ");
     button->setIcon(pixmap);
   }
 }
@@ -5729,18 +6113,24 @@ void G4UIQt::ChangeCursorAction(const QString& action)
   // Theses actions should be in the app toolbar
 
   if (fToolbarApp == nullptr) return;
- 
+
   QList<QAction*> list = fToolbarApp->actions();
 
-  if (action == "pick") {
-    for (auto i : list) {
-      if (i->data().toString() == "pick") {
+  if (action == "pick")
+  {
+    for (auto i : list)
+    {
+      if (i->data().toString() == "pick")
+      {
         fPickSelected = !fPickSelected;
         i->setChecked(fPickSelected);
-        if (fPickSelected) {
+        if (fPickSelected)
+        {
           G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/set/picking true");
           CreatePickInfosDialog();
-        } else {
+        }
+        else
+        {
           G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/set/picking false");
           if (fPickInfosDialog != nullptr) fPickInfosDialog->hide();
         }
@@ -5754,23 +6144,29 @@ void G4UIQt::ChangeCursorAction(const QString& action)
   fZoomInSelected = true;
   fZoomOutSelected = true;
 
-  for (auto i : list) {
-    if (i->data().toString() == action) {
+  for (auto i : list)
+  {
+    if (i->data().toString() == action)
+    {
       i->setChecked(true);
     }
-    else if (i->data().toString() == "move") {
+    else if (i->data().toString() == "move")
+    {
       fMoveSelected = false;
       i->setChecked(false);
-      }
-    else if (i->data().toString() == "rotate") {
+    }
+    else if (i->data().toString() == "rotate")
+    {
       fRotateSelected = false;
       i->setChecked(false);
     }
-    else if (i->data().toString() == "zoom_in") {
+    else if (i->data().toString() == "zoom_in")
+    {
       fZoomInSelected = false;
       i->setChecked(false);
     }
-    else if (i->data().toString() == "zoom_out") {
+    else if (i->data().toString() == "zoom_out")
+    {
       fZoomOutSelected = false;
       i->setChecked(false);
     }
@@ -5790,44 +6186,56 @@ void G4UIQt::ChangeSurfaceStyle(const QString& action)
 
   if (fToolbarApp == nullptr) return;
   QList<QAction*> list = fToolbarApp->actions();
-  for (auto i : list) {
-    if (i->data().toString() == action) {
+  for (auto i : list)
+  {
+    if (i->data().toString() == action)
+    {
       i->setChecked(true);
     }
-    else if (i->data().toString() == "hidden_line_removal") {
+    else if (i->data().toString() == "hidden_line_removal")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "hidden_line_and_surface_removal") {
+    else if (i->data().toString() == "hidden_line_and_surface_removal")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "solid") {
+    else if (i->data().toString() == "solid")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "wireframe") {
+    else if (i->data().toString() == "wireframe")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "point_cloud") {
+    else if (i->data().toString() == "point_cloud")
+    {
       i->setChecked(false);
     }
   }
 
-  if (action == "hidden_line_removal") {
+  if (action == "hidden_line_removal")
+  {
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/set/style w");
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/set/hiddenEdge 1");
   }
-  else if (action == "hidden_line_and_surface_removal") {
+  else if (action == "hidden_line_and_surface_removal")
+  {
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/set/style s");
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/set/hiddenEdge 1");
   }
-  else if (action == "solid") {
+  else if (action == "solid")
+  {
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/set/style s");
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/set/hiddenEdge 0");
   }
-  else if (action == "wireframe") {
+  else if (action == "wireframe")
+  {
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/set/style w");
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/set/hiddenEdge 0");
   }
-  else if (action == "point_cloud") {
+  else if (action == "point_cloud")
+  {
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/set/style c");
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/set/hiddenEdge 0");
   }
@@ -5838,9 +6246,11 @@ void G4UIQt::OpenIconCallback(const QString& aParam)
   QString aCommand = aParam.left(aParam.indexOf(fStringSeparator));
   QString aLabel = aParam.mid(aParam.indexOf(fStringSeparator) + fStringSeparator.length());
 
-  QString nomFich = QFileDialog::getOpenFileName(fMainWindow, aLabel, fLastOpenPath,
-    "Macro files (*.mac);;Geant4 files( *.mac *.g4* *.in);;All (*.*)");
-  if (nomFich != "") {
+  QString nomFich =
+    QFileDialog::getOpenFileName(fMainWindow, aLabel, fLastOpenPath,
+                                 "Macro files (*.mac);;Geant4 files( *.mac *.g4* *.in);;All (*.*)");
+  if (nomFich != "")
+  {
     G4UImanager::GetUIpointer()->ApplyCommand(
       (QString(aCommand) + QString(" ") + nomFich).toStdString().c_str());
     QDir dir;
@@ -5855,7 +6265,8 @@ void G4UIQt::SaveIconCallback(const QString& aParam)
 
   QString nomFich =
     QFileDialog::getSaveFileName(fMainWindow, aLabel, fLastOpenPath, "Macro files (*.mac)");
-  if (nomFich != "") {
+  if (nomFich != "")
+  {
     G4UImanager::GetUIpointer()->ApplyCommand(
       (QString(aCommand) + QString(" ") + nomFich).toStdString().c_str());
     QDir dir;
@@ -5865,7 +6276,8 @@ void G4UIQt::SaveIconCallback(const QString& aParam)
 
 void G4UIQt::CreateViewerPropertiesDialog()
 {
-  if (fViewerPropertiesDialog != nullptr) {
+  if (fViewerPropertiesDialog != nullptr)
+  {
     return;
   }
   fViewerPropertiesDialog = new QDialog();
@@ -5874,7 +6286,8 @@ void G4UIQt::CreateViewerPropertiesDialog()
   fViewerPropertiesDialog->setSizePolicy(
     QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 
-  if (fViewerPropertiesWidget == nullptr) {
+  if (fViewerPropertiesWidget == nullptr)
+  {
     fViewerPropertiesWidget = new QWidget();
     auto layoutPropertiesWidget = new QVBoxLayout();
     fViewerPropertiesWidget->setLayout(layoutPropertiesWidget);
@@ -5891,7 +6304,8 @@ void G4UIQt::CreateViewerPropertiesDialog()
 
 void G4UIQt::CreatePickInfosDialog()
 {
-  if (fPickInfosDialog != nullptr) {
+  if (fPickInfosDialog != nullptr)
+  {
     return;
   }
 
@@ -5901,8 +6315,9 @@ void G4UIQt::CreatePickInfosDialog()
   fPickInfosDialog->resize(screenSize.width() * 0.3, screenSize.height() * 0.3);
   fPickInfosDialog->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
   fPickInfosDialog->setWindowFlags(Qt::WindowStaysOnTopHint);
-  
-  if (fPickInfosWidget == nullptr) {
+
+  if (fPickInfosWidget == nullptr)
+  {
     fPickInfosWidget = new QWidget();
     auto layoutPickInfos = new QVBoxLayout();
     fPickInfosWidget->setLayout(layoutPickInfos);
@@ -5922,8 +6337,10 @@ void G4UIQt::CreateEmptyViewerPropertiesWidget()
   if (fViewerPropertiesWidget == nullptr) return;
   if (fViewerPropertiesWidget->layout() == nullptr) return;
   QLayoutItem* wItem;
-  if (fViewerPropertiesWidget->layout()->count() != 0) {
-    while ((wItem = fViewerPropertiesWidget->layout()->takeAt(0)) != nullptr) {
+  if (fViewerPropertiesWidget->layout()->count() != 0)
+  {
+    while ((wItem = fViewerPropertiesWidget->layout()->takeAt(0)) != nullptr)
+    {
       delete wItem->widget();
       delete wItem;
     }
@@ -5938,8 +6355,10 @@ void G4UIQt::CreateEmptyViewerPropertiesWidget()
 void G4UIQt::CreateEmptyPickInfosWidget()
 {
   QLayoutItem* wItem;
-  if (fPickInfosWidget->layout()->count() != 0) {
-    while ((wItem = fPickInfosWidget->layout()->takeAt(0)) != nullptr) {
+  if (fPickInfosWidget->layout()->count() != 0)
+  {
+    while ((wItem = fPickInfosWidget->layout()->takeAt(0)) != nullptr)
+    {
       delete wItem->widget();
       delete wItem;
     }
@@ -5966,28 +6385,35 @@ void G4UIQt::ChangePerspectiveOrtho(const QString& action)
   if (fToolbarApp == nullptr) return;
   QList<QAction*> list = fToolbarApp->actions();
   QString checked = "";
-  for (auto i : list) {
-    if (i->data().toString() == action) {
+  for (auto i : list)
+  {
+    if (i->data().toString() == action)
+    {
       i->setChecked(true);
       checked = i->data().toString();
     }
-    else if (i->data().toString() == "perspective") {
+    else if (i->data().toString() == "perspective")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "ortho") {
+    else if (i->data().toString() == "ortho")
+    {
       i->setChecked(false);
     }
   }
 
-  if ((action == "ortho") && (checked == "ortho")) {
+  if ((action == "ortho") && (checked == "ortho"))
+  {
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/set/projection o");
   }
-  else if ((action == "perspective") && (checked == "perspective")) {
+  else if ((action == "perspective") && (checked == "perspective"))
+  {
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/set/projection p");
   }
 }
 
-void G4UIQt::ResetCameraCallback() {
+void G4UIQt::ResetCameraCallback()
+{
   G4UImanager::GetUIpointer()->ApplyCommand("/vis/viewer/resetCameraParameters");
 }
 
@@ -6001,17 +6427,22 @@ void G4UIQt::SetIconMoveSelected()
 
   if (fToolbarApp == nullptr) return;
   QList<QAction*> list = fToolbarApp->actions();
-  for (auto i : list) {
-    if (i->data().toString() == "move") {
+  for (auto i : list)
+  {
+    if (i->data().toString() == "move")
+    {
       i->setChecked(true);
     }
-    else if (i->data().toString() == "rotate") {
+    else if (i->data().toString() == "rotate")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "zoom_in") {
+    else if (i->data().toString() == "zoom_in")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "zoom_out") {
+    else if (i->data().toString() == "zoom_out")
+    {
       i->setChecked(false);
     }
   }
@@ -6027,17 +6458,22 @@ void G4UIQt::SetIconRotateSelected()
 
   if (fToolbarApp == nullptr) return;
   QList<QAction*> list = fToolbarApp->actions();
-  for (auto i : list) {
-    if (i->data().toString() == "rotate") {
+  for (auto i : list)
+  {
+    if (i->data().toString() == "rotate")
+    {
       i->setChecked(true);
     }
-    else if (i->data().toString() == "move") {
+    else if (i->data().toString() == "move")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "zoom_in") {
+    else if (i->data().toString() == "zoom_in")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "zoom_out") {
+    else if (i->data().toString() == "zoom_out")
+    {
       i->setChecked(false);
     }
   }
@@ -6049,18 +6485,21 @@ void G4UIQt::TogglePickSelection()
   fPickSelected = !fPickSelected;
 
   QToolBar* toolbar = fToolbarApp;
-  if (! fDefaultIcons) {
+  if (!fDefaultIcons)
+  {
     toolbar = fToolbarUser;
   }
   if (toolbar == nullptr) return;
 
   QList<QAction*> list = toolbar->actions();
-  for (auto i : list) {
-    if (i->data().toString() == "pick") {
+  for (auto i : list)
+  {
+    if (i->data().toString() == "pick")
+    {
       i->setChecked(fPickSelected);
     }
-    }
-    }
+  }
+}
 
 void G4UIQt::SetIconZoomInSelected()
 {
@@ -6071,23 +6510,29 @@ void G4UIQt::SetIconZoomInSelected()
   fZoomOutSelected = false;
 
   QToolBar* toolbar = fToolbarApp;
-  if (! fDefaultIcons) {
+  if (!fDefaultIcons)
+  {
     toolbar = fToolbarUser;
   }
   if (toolbar == nullptr) return;
 
   QList<QAction*> list = toolbar->actions();
-  for (auto i : list) {
-    if (i->data().toString() == "zoom_in") {
+  for (auto i : list)
+  {
+    if (i->data().toString() == "zoom_in")
+    {
       i->setChecked(true);
     }
-    else if (i->data().toString() == "move") {
+    else if (i->data().toString() == "move")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "rotate") {
+    else if (i->data().toString() == "rotate")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "zoom_out") {
+    else if (i->data().toString() == "zoom_out")
+    {
       i->setChecked(false);
     }
   }
@@ -6102,23 +6547,29 @@ void G4UIQt::SetIconZoomOutSelected()
   fZoomInSelected = false;
 
   QToolBar* toolbar = fToolbarApp;
-  if (! fDefaultIcons) {
+  if (!fDefaultIcons)
+  {
     toolbar = fToolbarUser;
   }
   if (toolbar == nullptr) return;
 
   QList<QAction*> list = toolbar->actions();
-  for (auto i : list) {
-    if (i->data().toString() == "zoom_out") {
+  for (auto i : list)
+  {
+    if (i->data().toString() == "zoom_out")
+    {
       i->setChecked(true);
     }
-    else if (i->data().toString() == "move") {
+    else if (i->data().toString() == "move")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "rotate") {
+    else if (i->data().toString() == "rotate")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "zoom_in") {
+    else if (i->data().toString() == "zoom_in")
+    {
       i->setChecked(false);
     }
   }
@@ -6129,26 +6580,33 @@ void G4UIQt::SetIconSolidSelected()
   // Theses actions should be in the app toolbar
 
   QToolBar* toolbar = fToolbarApp;
-  if (! fDefaultIcons) {
+  if (!fDefaultIcons)
+  {
     toolbar = fToolbarUser;
   }
   if (toolbar == nullptr) return;
 
   QList<QAction*> list = toolbar->actions();
-  for (auto i : list) {
-    if (i->data().toString() == "solid") {
+  for (auto i : list)
+  {
+    if (i->data().toString() == "solid")
+    {
       i->setChecked(true);
     }
-    else if (i->data().toString() == "hidden_line_removal") {
+    else if (i->data().toString() == "hidden_line_removal")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "hidden_line_and_surface_removal") {
+    else if (i->data().toString() == "hidden_line_and_surface_removal")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "wireframe") {
+    else if (i->data().toString() == "wireframe")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "point_cloud") {
+    else if (i->data().toString() == "point_cloud")
+    {
       i->setChecked(false);
     }
   }
@@ -6159,26 +6617,33 @@ void G4UIQt::SetIconWireframeSelected()
   // Theses actions should be in the app toolbar
 
   QToolBar* toolbar = fToolbarApp;
-  if (! fDefaultIcons) {
+  if (!fDefaultIcons)
+  {
     toolbar = fToolbarUser;
   }
   if (toolbar == nullptr) return;
 
   QList<QAction*> list = toolbar->actions();
-  for (auto i : list) {
-    if (i->data().toString() == "wireframe") {
+  for (auto i : list)
+  {
+    if (i->data().toString() == "wireframe")
+    {
       i->setChecked(true);
     }
-    else if (i->data().toString() == "hidden_line_removal") {
+    else if (i->data().toString() == "hidden_line_removal")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "hidden_line_and_surface_removal") {
+    else if (i->data().toString() == "hidden_line_and_surface_removal")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "solid") {
+    else if (i->data().toString() == "solid")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "point_cloud") {
+    else if (i->data().toString() == "point_cloud")
+    {
       i->setChecked(false);
     }
   }
@@ -6189,26 +6654,33 @@ void G4UIQt::SetIconHLRSelected()
   // Theses actions should be in the app toolbar
 
   QToolBar* toolbar = fToolbarApp;
-  if (! fDefaultIcons) {
+  if (!fDefaultIcons)
+  {
     toolbar = fToolbarUser;
   }
   if (toolbar == nullptr) return;
 
   QList<QAction*> list = toolbar->actions();
-  for (auto i : list) {
-    if (i->data().toString() == "hidden_line_removal") {
+  for (auto i : list)
+  {
+    if (i->data().toString() == "hidden_line_removal")
+    {
       i->setChecked(true);
     }
-    else if (i->data().toString() == "solid") {
+    else if (i->data().toString() == "solid")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "hidden_line_and_surface_removal") {
+    else if (i->data().toString() == "hidden_line_and_surface_removal")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "wireframe") {
+    else if (i->data().toString() == "wireframe")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "point_cloud") {
+    else if (i->data().toString() == "point_cloud")
+    {
       i->setChecked(false);
     }
   }
@@ -6219,27 +6691,34 @@ void G4UIQt::SetIconHLHSRSelected()
   // Theses actions should be in the app toolbar
 
   QToolBar* toolbar = fToolbarApp;
-  if (! fDefaultIcons) {
+  if (!fDefaultIcons)
+  {
     toolbar = fToolbarUser;
   }
 
   if (toolbar == nullptr) return;
 
   QList<QAction*> list = toolbar->actions();
-  for (auto i : list) {
-    if (i->data().toString() == "hidden_line_and_surface_removal") {
+  for (auto i : list)
+  {
+    if (i->data().toString() == "hidden_line_and_surface_removal")
+    {
       i->setChecked(true);
     }
-    else if (i->data().toString() == "solid") {
+    else if (i->data().toString() == "solid")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "hidden_line_removal") {
+    else if (i->data().toString() == "hidden_line_removal")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "wireframe") {
+    else if (i->data().toString() == "wireframe")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "point_cloud") {
+    else if (i->data().toString() == "point_cloud")
+    {
       i->setChecked(false);
     }
   }
@@ -6250,29 +6729,35 @@ void G4UIQt::SetIconCoudPointSelected()
   // Theses actions should be in the app toolbar
 
   QToolBar* toolbar = fToolbarApp;
-  if (!fDefaultIcons) {
+  if (!fDefaultIcons)
+  {
     toolbar = fToolbarUser;
   }
   if (toolbar == nullptr) return;
 
   QList<QAction*> list = toolbar->actions();
-  for (auto i : list) {
-    if (i->data().toString() == "point_cloud") {
+  for (auto i : list)
+  {
+    if (i->data().toString() == "point_cloud")
+    {
       i->setChecked(true);
     }
-    else if (i->data().toString() == "wireframe") {
+    else if (i->data().toString() == "wireframe")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "hidden_line_removal") {
+    else if (i->data().toString() == "hidden_line_removal")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "hidden_line_and_surface_removal") {
+    else if (i->data().toString() == "hidden_line_and_surface_removal")
+    {
       i->setChecked(false);
     }
-    else if (i->data().toString() == "solid") {
+    else if (i->data().toString() == "solid")
+    {
       i->setChecked(false);
     }
-
   }
 }
 
@@ -6281,17 +6766,21 @@ void G4UIQt::SetIconPerspectiveSelected()
   // Theses actions should be in the app toolbar
 
   QToolBar* toolbar = fToolbarApp;
-  if (! fDefaultIcons) {
+  if (!fDefaultIcons)
+  {
     toolbar = fToolbarUser;
   }
   if (toolbar == nullptr) return;
 
   QList<QAction*> list = toolbar->actions();
-  for (auto i : list) {
-    if (i->data().toString() == "perspective") {
+  for (auto i : list)
+  {
+    if (i->data().toString() == "perspective")
+    {
       i->setChecked(true);
     }
-    else if (i->data().toString() == "ortho") {
+    else if (i->data().toString() == "ortho")
+    {
       i->setChecked(false);
     }
   }
@@ -6302,18 +6791,22 @@ void G4UIQt::SetIconOrthoSelected()
   // Theses actions should be in the app toolbar
 
   QToolBar* toolbar = fToolbarApp;
-  if (! fDefaultIcons) {
+  if (!fDefaultIcons)
+  {
     toolbar = fToolbarUser;
   }
 
   if (toolbar == nullptr) return;
 
   QList<QAction*> list = toolbar->actions();
-  for (auto i : list) {
-    if (i->data().toString() == "ortho") {
+  for (auto i : list)
+  {
+    if (i->data().toString() == "ortho")
+    {
       i->setChecked(true);
     }
-    else if (i->data().toString() == "perspective") {
+    else if (i->data().toString() == "perspective")
+    {
       i->setChecked(false);
     }
   }
@@ -6338,17 +6831,19 @@ G4QTabWidget::G4QTabWidget()
 {}
 #endif
 
-G4UIOutputString::G4UIOutputString(const QString& text, const G4String& origine, const G4String& outputStream)
+G4UIOutputString::G4UIOutputString(const QString& text, const G4String& origine,
+                                   const G4String& outputStream)
   : fText(text), fThread(origine)
 {
-  if (! GetOutputList().contains(QString(" ") + outputStream + " ")) {
+  if (!GetOutputList().contains(QString(" ") + outputStream + " "))
+  {
     fOutputStream = "info";
   }
-  else {
+  else
+  {
     fOutputStream = outputStream;
   }
 }
-
 
 void G4UIQt::TabCloseCallback(int a)
 {
@@ -6363,26 +6858,32 @@ void G4UIQt::TabCloseCallback(int a)
 
   // if last QWidget : Add empty string
   G4bool lastTab = true;
-  for (G4int c = 0; c < fViewerTabWidget->count(); ++c) {
-    if (fViewerTabWidget->tabText(c).contains("viewer")) {
+  for (G4int c = 0; c < fViewerTabWidget->count(); ++c)
+  {
+    if (fViewerTabWidget->tabText(c).contains("viewer"))
+    {
       lastTab = false;
     }
   }
 
-  if (lastTab) {
+  if (lastTab)
+  {
     CreateEmptyViewerPropertiesWidget();
   }
   // delete the widget
   delete temp;
 #else
   // remove the tab
-  QObject::disconnect(fViewerTabWidget, SIGNAL(currentChanged(int)), this, SLOT(UpdateTabWidget(int)));
+  QObject::disconnect(fViewerTabWidget, SIGNAL(currentChanged(int)), this,
+                      SLOT(UpdateTabWidget(int)));
   fViewerTabWidget->removeTab(a);
   QObject::connect(fViewerTabWidget, SIGNAL(currentChanged(int)), this, SLOT(UpdateTabWidget(int)));
 
   G4int lastViewerTabIndex = -1;
-  for (G4int c = 0; c < fViewerTabWidget->count(); ++c) {
-    if (fViewerTabWidget->tabText(c).contains("viewer")) {
+  for (G4int c = 0; c < fViewerTabWidget->count(); ++c)
+  {
+    if (fViewerTabWidget->tabText(c).contains("viewer"))
+    {
       lastViewerTabIndex = c;
     }
   }
@@ -6391,21 +6892,26 @@ void G4UIQt::TabCloseCallback(int a)
   delete temp;
 
   // if last QWidget : Add empty string
-  if (lastViewerTabIndex==(-1)) {
+  if (lastViewerTabIndex == (-1))
+  {
     CreateEmptyViewerPropertiesWidget();
-  } else {
-    UpdateTabWidget(lastViewerTabIndex); //have to do this after the widget deletion.
+  }
+  else
+  {
+    UpdateTabWidget(lastViewerTabIndex);  // have to do this after the widget deletion.
   }
 #endif
 }
 
 void G4UIQt::ToolBoxActivated(int a)
 {
-  if (fUITabWidget->widget(a) == fHelpTBWidget) {
+  if (fUITabWidget->widget(a) == fHelpTBWidget)
+  {
     // Rebuild the help tree
     FillHelpTree();
   }
-  else if (fUITabWidget->widget(a) == fSceneTreeWidget) {
+  else if (fUITabWidget->widget(a) == fSceneTreeWidget)
+  {
     fSceneTreeWidget->setVisible(true);
   }
 }
@@ -6413,23 +6919,29 @@ void G4UIQt::ToolBoxActivated(int a)
 #if QT_VERSION < 0x060000
 void G4QTabWidget::paintEvent(QPaintEvent*)
 {
-  if (currentWidget() != nullptr) {
-    if (isTabSelected()) {
+  if (currentWidget() != nullptr)
+  {
+    if (isTabSelected())
+    {
       //      QCoreApplication::sendPostedEvents () ;
 
       QString text = tabText(currentIndex());
 
-      if (fLastCreated == -1) {
+      if (fLastCreated == -1)
+      {
         auto edit = dynamic_cast<QTextEdit*>(currentWidget());
-        if (edit == nullptr) {
+        if (edit == nullptr)
+        {
           QString paramSelect = QString("/vis/viewer/select ") + text;
           G4UImanager* UI = G4UImanager::GetUIpointer();
-          if (UI != nullptr) {
+          if (UI != nullptr)
+          {
             UI->ApplyCommand(paramSelect.toStdString().c_str());
           }
         }
       }
-      else {
+      else
+      {
         fLastCreated = -1;
       }
       setTabSelected(false);

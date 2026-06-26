@@ -33,8 +33,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -43,7 +43,7 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 //
 // ---------------------------------------------------------------------
 //	GEANT 4 class header file
@@ -68,11 +68,11 @@
 //                    Change the way dynCharge and eNb is calculated
 // ---------------------------------------------------------------------
 
-#ifndef G4Molecule_h
-#define G4Molecule_h 1
+#ifndef G4MOLECULE_HH
+#define G4MOLECULE_HH
 
-#include "G4IT.hh"
 #include "G4Allocator.hh"
+#include "G4IT.hh"
 #include "G4MoleculeDefinition.hh"
 
 class G4Molecule;
@@ -97,42 +97,34 @@ G4Molecule* GetMolecule(const G4Track* track);
 
 class G4Molecule : public G4IT
 {
+  public:
 
-public:
     // With Description
 
-    ITDef(G4Molecule) // NOLINT because it's a macro
+    ITDef(G4Molecule)  // NOLINT because it's a macro
 
-        //From G4VUserTrackInformation
-        void Print() const override;
+      // From G4VUserTrackInformation
+      void Print() const override;
 
     //  new/delete operators are overloded to use G4Allocator
-    inline void *operator new(size_t);
+    inline void* operator new(size_t);
 #ifdef __IBMCPP__
-    inline void *operator new(size_t sz, void* p)
-    {
-        return p;
-    }
+    inline void* operator new(size_t sz, void* p) { return p; }
 #endif
     inline void operator delete(void*);
 
     G4Molecule(const G4Molecule&);
-    G4Molecule & operator=(const G4Molecule &right);
-    G4bool operator==(const G4Molecule &right) const;
-    G4bool operator!=(const G4Molecule &right) const;
-    G4bool operator<(const G4Molecule &right) const;
+    G4Molecule& operator=(const G4Molecule& right);
+    G4bool operator==(const G4Molecule& right) const;
+    G4bool operator!=(const G4Molecule& right) const;
+    G4bool operator<(const G4Molecule& right) const;
 
-    operator int() const
-    {
-        return GetMoleculeID();
-    }
+    operator int() const { return GetMoleculeID(); }
 
-    G4ITType GetITSubType() const override
-    {
-        return GetMoleculeID();
-    }
+    G4ITType GetITSubType() const override { return GetMoleculeID(); }
 
-public:
+  public:
+
     //------ Constructors --------------------------
     /** To build a molecule at ground state according to a given
      * G4MoleculeDefinition that can be obtained from G4GenericMoleculeManager
@@ -157,7 +149,7 @@ public:
     ~G4Molecule() override;
 
     //-------- Methods -------------------------------
-    //Get from static definition
+    // Get from static definition
     /** Returns the name of the molecule
      */
     const G4String& GetName() const override;
@@ -199,13 +191,15 @@ public:
 
     /** Returns the number of electron.
      */
-    G4double GetNbElectrons() const; //This method can be used to check if the electron s number is physical
+    G4double GetNbElectrons()
+      const;  // This method can be used to check if the electron s number is physical
 
     /** Show the electronic state of the molecule.
      */
     void PrintState() const;
 
-    G4Track* BuildTrack(G4double globalTime, const G4ThreeVector &Position, const G4Track * = nullptr);
+    G4Track* BuildTrack(G4double globalTime, const G4ThreeVector& Position,
+                        const G4Track* = nullptr);
 
     G4double GetKineticEnergy() const;
 
@@ -222,9 +216,9 @@ public:
      */
     const G4MoleculeDefinition* GetDefinition() const;
 
-    //methods to set/get changing parameters
+    // methods to set/get changing parameters
 
-  /////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////
     /** Sets the diffusion coefficient D of the molecule used in diffusion
      * processes to calculate the mean square jump distance between two
      * changes of direction. In three dimension : <x^2> = 6 D t where t is
@@ -238,8 +232,7 @@ public:
 
     /** Returns the diffusion coefficient D.
      */
-    G4double GetDiffusionCoefficient(const G4Material*,
-                                     double temperature) const;
+    G4double GetDiffusionCoefficient(const G4Material*, double temperature) const;
 
     /** Set the decay time of the molecule.
      */
@@ -285,7 +278,8 @@ public:
 
     static G4Molecule* GetMolecule(const G4Track*);
 
-private:
+  private:
+
     /** Default molecule builder
      */
     G4Molecule();
@@ -299,21 +293,21 @@ extern G4DLLIMPORT G4Allocator<G4Molecule>*& aMoleculeAllocator();
 #endif
 
 //////////////////////////
-inline void * G4Molecule::operator new(size_t)
+inline void* G4Molecule::operator new(size_t)
 //////////////////////////
 {
-    if (aMoleculeAllocator() == nullptr)
-    {
-        aMoleculeAllocator() = new G4Allocator<G4Molecule>;
-    }
-    return (void *)aMoleculeAllocator()->MallocSingle();
+  if (aMoleculeAllocator() == nullptr)
+  {
+    aMoleculeAllocator() = new G4Allocator<G4Molecule>;
+  }
+  return (void*)aMoleculeAllocator()->MallocSingle();
 }
 
 //////////////////////////
-inline void G4Molecule::operator delete(void * aMolecule)
+inline void G4Molecule::operator delete(void* aMolecule)
 //////////////////////////
 {
-    aMoleculeAllocator()->FreeSingle((G4Molecule *)aMolecule);
+  aMoleculeAllocator()->FreeSingle((G4Molecule*)aMolecule);
 }
 
 #endif

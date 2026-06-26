@@ -6,6 +6,12 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-06-08 Ben Morgan (hadr-man-V11-04-01)
+- Add headers required for used declarations.
+
+## 2026-04-13 Makoto Asai (hadr-man-V11-04-00)
+- G4HadronicProcessStore - introducing GetInteractionLength method.
+
 ## 2025-08-25 Vladimir Ivanchenko (hadr-man-V11-03-02)
 - G4HadronicProcess - removed misleading exception - fixed problem #2675
 

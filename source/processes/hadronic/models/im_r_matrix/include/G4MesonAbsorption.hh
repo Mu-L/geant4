@@ -23,47 +23,49 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4MesonAbsorption_hh
-#define G4MesonAbsorption_hh
+#ifndef G4MESONABSORPTION_HH
+#define G4MESONABSORPTION_HH
 
-#include <vector>
+#include "G4BCAction.hh"
 #include "G4CollisionInitialState.hh"
 #include "G4KineticTrack.hh"
-#include "G4BCAction.hh"
+
+#include <vector>
 
 class G4MesonAbsorption : public G4BCAction
 {
   public:
-  G4MesonAbsorption(){}
-  virtual ~G4MesonAbsorption(){}
 
-  virtual const std::vector<G4CollisionInitialState *> &
-         GetCollisions(G4KineticTrack * aProjectile, 
-	               std::vector<G4KineticTrack *> & someCandidates,
-		       G4double aCurrentTime);
+    G4MesonAbsorption() {}
+    virtual ~G4MesonAbsorption() {}
 
-  virtual G4KineticTrackVector * 
-         GetFinalState(G4KineticTrack * aProjectile, 
-	               std::vector<G4KineticTrack *> & theTargets);
+    virtual const std::vector<G4CollisionInitialState*>&
+    GetCollisions(G4KineticTrack* aProjectile, std::vector<G4KineticTrack*>& someCandidates,
+                  G4double aCurrentTime);
 
-  G4CollisionInitialState * GetCollision(G4KineticTrack * projectile, 
-                                         std::vector<G4KineticTrack *> targets);
+    virtual G4KineticTrackVector* GetFinalState(G4KineticTrack* aProjectile,
+                                                std::vector<G4KineticTrack*>& theTargets);
 
-  private:
-    G4MesonAbsorption(const G4MesonAbsorption &);
-    G4MesonAbsorption & operator= (const G4MesonAbsorption &);
+    G4CollisionInitialState* GetCollision(G4KineticTrack* projectile,
+                                          std::vector<G4KineticTrack*> targets);
 
   private:
-  G4double GetTimeToAbsorption(const G4KineticTrack& trk1, const G4KineticTrack& trk2);
-  
-  void FindAndFillCluster(G4KineticTrackVector & result, 
-                         G4KineticTrack * aProjectile,
-			 std::vector<G4KineticTrack *> & someCandidates);
-  
-  G4double AbsorptionCrossSection(const G4KineticTrack & trk1, const G4KineticTrack & trk2);  
+
+    G4MesonAbsorption(const G4MesonAbsorption&);
+    G4MesonAbsorption& operator=(const G4MesonAbsorption&);
+
   private:
-  std::vector<G4CollisionInitialState *> theCollisions;
-    
+
+    G4double GetTimeToAbsorption(const G4KineticTrack& trk1, const G4KineticTrack& trk2);
+
+    void FindAndFillCluster(G4KineticTrackVector& result, G4KineticTrack* aProjectile,
+                            std::vector<G4KineticTrack*>& someCandidates);
+
+    G4double AbsorptionCrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2);
+
+  private:
+
+    std::vector<G4CollisionInitialState*> theCollisions;
 };
 
 #endif

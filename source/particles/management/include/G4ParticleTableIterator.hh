@@ -28,8 +28,8 @@
 // Authors: G.Cosmo, 2 December 1995 - Design, based on object model
 //          H.Kurashige, 28 October 1999 - First implementation
 // --------------------------------------------------------------------
-#ifndef G4ParticleTableIterator_hh
-#define G4ParticleTableIterator_hh 1
+#ifndef G4PARTICLETABLEITERATOR_HH
+#define G4PARTICLETABLEITERATOR_HH
 
 #include "G4ParticleDefinition.hh"
 
@@ -39,6 +39,7 @@ template<class K, class V>
 class G4ParticleTableIterator
 {
   public:
+
     using Map = std::map<K, V, std::less<K>>;
 
     G4ParticleTableIterator(Map& adict) : it(adict.begin()), mydict(&adict) {}
@@ -52,15 +53,18 @@ class G4ParticleTableIterator
 
     G4bool operator()()
     {
-      if (!defined) {
+      if (!defined)
+      {
         defined = true;
         it = mydict->begin();
       }
-      else {
+      else
+      {
         ++it;
       }
       if (it == mydict->end()) return false;
-      if (skipIons) {
+      if (skipIons)
+      {
         while ((static_cast<G4ParticleDefinition*>((*it).second))->IsGeneralIon())
         {  // Loop checking, 09.08.2015, K.Kurashige
           ++it;
@@ -81,6 +85,7 @@ class G4ParticleTableIterator
     V value() const { return (*it).second; }
 
   private:
+
     typename Map::iterator it;
     Map* mydict = nullptr;
     G4bool defined = false;

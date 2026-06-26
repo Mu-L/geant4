@@ -25,37 +25,36 @@
 //
 //
 //
-#ifndef G4VNuclearDensity_h
-#define G4VNuclearDensity_h 1
+#ifndef G4VNUCLEARDENSITY_HH
+#define G4VNUCLEARDENSITY_HH
 
-#include "globals.hh"
 #include "G4ThreeVector.hh"
+#include "globals.hh"
 
-
-class G4VNuclearDensity 
+class G4VNuclearDensity
 {
-
   public:
+
     G4VNuclearDensity();
     virtual ~G4VNuclearDensity();
-    
-    inline G4double GetDensity(const G4ThreeVector & aPosition) const
-    {
-	return rho0*GetRelativeDensity(aPosition);
-    };
-    
-    virtual G4double GetRelativeDensity(const G4ThreeVector & aPosition) const = 0;
-    virtual G4double GetRadius(const G4double maxRelativeDenisty) const = 0;
-    virtual G4double GetDeriv(const G4ThreeVector & point) const = 0;    
 
-  protected:    
-    inline void Setrho0(G4double arho0) { rho0=arho0; };
+    inline G4double GetDensity(const G4ThreeVector& aPosition) const
+    {
+      return rho0 * GetRelativeDensity(aPosition);
+    };
+
+    virtual G4double GetRelativeDensity(const G4ThreeVector& aPosition) const = 0;
+    virtual G4double GetRadius(const G4double maxRelativeDenisty) const = 0;
+    virtual G4double GetDeriv(const G4ThreeVector& point) const = 0;
+
+  protected:
+
+    inline void Setrho0(G4double arho0) { rho0 = arho0; };
     inline G4double Getrho0() const { return rho0; };
-   
+
   private:
-  
+
     G4double rho0;
 };
 
 #endif
-

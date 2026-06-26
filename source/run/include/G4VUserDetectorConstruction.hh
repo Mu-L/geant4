@@ -35,8 +35,8 @@
 
 // Original author: M.Asai, 1999
 // --------------------------------------------------------------------
-#ifndef G4VUserDetectorConstruction_hh
-#define G4VUserDetectorConstruction_hh 1
+#ifndef G4VUSERDETECTORCONSTRUCTION_HH
+#define G4VUSERDETECTORCONSTRUCTION_HH
 
 #include "globals.hh"
 
@@ -50,6 +50,7 @@ class G4VSensitiveDetector;
 class G4VUserDetectorConstruction
 {
   public:
+
     G4VUserDetectorConstruction() = default;
     virtual ~G4VUserDetectorConstruction() = default;
 
@@ -71,11 +72,13 @@ class G4VUserDetectorConstruction
     G4VUserParallelWorld* GetParallelWorld(G4int i) const;
 
   protected:
+
     void SetSensitiveDetector(const G4String& logVolName, G4VSensitiveDetector* aSD,
                               G4bool multi = false);
     void SetSensitiveDetector(G4LogicalVolume* logVol, G4VSensitiveDetector* aSD);
 
   private:
+
     std::vector<G4VUserParallelWorld*> parallelWorld;
 };
 

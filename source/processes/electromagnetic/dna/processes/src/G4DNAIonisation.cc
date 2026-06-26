@@ -25,149 +25,98 @@
 //
 
 #include "G4DNAIonisation.hh"
-#include "G4LEPTSIonisationModel.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4LowEnergyEmProcessSubType.hh"
 
-//SEB
+#include "G4DNABornIonisationModel.hh"
+#include "G4DNARuddIonisationExtendedModel.hh"
+#include "G4LEPTSIonisationModel.hh"
+#include "G4LowEnergyEmProcessSubType.hh"
+#include "G4SystemOfUnits.hh"
+
+// SEB
+#include "G4Alpha.hh"
+#include "G4DNAGenericIonsManager.hh"
+#include "G4Deuteron.hh"
+#include "G4Electron.hh"
 #include "G4GenericIon.hh"
 #include "G4Positron.hh"
+#include "G4Proton.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-using namespace std;
-
-G4DNAIonisation::G4DNAIonisation(const G4String& processName,
-                                 G4ProcessType type) :
-    G4VEmProcess(processName, type) 
+G4DNAIonisation::G4DNAIonisation(const G4String& processName, G4ProcessType type)
+  : G4VEmProcess(processName, type)
 {
   SetProcessSubType(fLowEnergyIonisation);
+  SetBuildTableFlag(false);
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-G4DNAIonisation::~G4DNAIonisation()
-= default;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4bool G4DNAIonisation::IsApplicable(const G4ParticleDefinition& p)
+G4bool G4DNAIonisation::IsApplicable(const G4ParticleDefinition&)
 {
-  G4DNAGenericIonsManager *instance;
-  instance = G4DNAGenericIonsManager::Instance();
-
-  return (&p == G4Electron::Electron() || &p == G4Positron::Positron()
-          || &p == G4Proton::Proton() || &p == instance->GetIon("hydrogen")
-          || &p == instance->GetIon("alpha++")
-          || &p == instance->GetIon("alpha+")
-          || &p == instance->GetIon("helium")
-          //SEB
-          //|| &p == instance->GetIon("carbon")
-          //|| &p == instance->GetIon("nitrogen")
-          //|| &p == instance->GetIon("oxygen")
-          //|| &p == instance->GetIon("iron")
-      || &p == G4GenericIon::GenericIonDefinition());
+  return true;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void G4DNAIonisation::InitialiseProcess(const G4ParticleDefinition* p)
 {
-  if(!isInitialised)
+  if (!isInitialised)
   {
     isInitialised = true;
-    SetBuildTableFlag(false);
 
     G4String name = p->GetParticleName();
+    G4EmParameters* param = G4EmParameters::Instance();
+    const G4double emaxElectronDNA = param->MaxDNAElectronEnergy();
+    const G4double emaxProtonDNA = param->MaxDNAProtonEnergy();
+    const G4double emaxIonDNA = param->MaxDNAIonEnergyPerNucleon();
 
-    if(name == "e-")
+    if (name == "e-")
     {
-      if(EmModel() == nullptr)
+      if (EmModel() == nullptr)
       {
-        auto  born =
-            new G4DNABornIonisationModel();
+        auto born = new G4DNABornIonisationModel();
         SetEmModel(born);
-        born->SetLowEnergyLimit(11. * eV);
-        born->SetHighEnergyLimit(1. * MeV);
+        born->SetHighEnergyLimit(emaxElectronDNA);
       }
       AddEmModel(1, EmModel());
     }
-    else if(name == "e+")
+    else if (name == "e+")
     {
-      if(EmModel() == nullptr)
+      if (EmModel() == nullptr)
       {
-        auto  lepts =
-            new G4LEPTSIonisationModel();
+        auto lepts = new G4LEPTSIonisationModel();
         SetEmModel(lepts);
-        lepts->SetLowEnergyLimit(1. * eV);
-        lepts->SetHighEnergyLimit(1. * MeV);
+        lepts->SetLowEnergyLimit(CLHEP::eV);
+        lepts->SetHighEnergyLimit(emaxElectronDNA);
       }
       AddEmModel(1, EmModel());
     }
-
-    if(name == "proton")
+    else if (name == "proton")
     {
-      if(EmModel(0) == nullptr) // MK : Is this a reliable test ? VI: it is useful
+      if (EmModel(0) == nullptr)  // MK : Is this a reliable test ? VI: it is useful
       {
-        auto  rudd =
-             new G4DNARuddIonisationModel();
-        rudd->SetLowEnergyLimit(0 * eV);
-        rudd->SetHighEnergyLimit(500 * keV);
+        G4double elim = 500 * CLHEP::keV;
+        auto rudd = new G4DNARuddIonisationExtendedModel();
+        rudd->SetHighEnergyLimit(elim);
         SetEmModel(rudd);
 
-        auto  born =
-            new G4DNABornIonisationModel();
-        born->SetLowEnergyLimit(500 * keV);
-        born->SetHighEnergyLimit(100 * MeV);
+        auto born = new G4DNABornIonisationModel();
+        born->SetLowEnergyLimit(elim);
+        born->SetHighEnergyLimit(emaxProtonDNA);
         SetEmModel(born);
       }
 
       AddEmModel(1, EmModel());
-      if(EmModel(1) != nullptr) AddEmModel(2, EmModel(1));
+      if (EmModel(1) != nullptr) AddEmModel(2, EmModel(1));
     }
-
-    if(name == "hydrogen")
+    else
     {
-      if(EmModel() == nullptr)
+      if (EmModel() == nullptr)
       {
-        auto  rudd =
-             new G4DNARuddIonisationModel();
-         SetEmModel(rudd);
-        rudd->SetLowEnergyLimit(0 * eV);
-        rudd->SetHighEnergyLimit(100 * MeV);
-      }
-      AddEmModel(1, EmModel());
-    }
-
-    if(name == "alpha" || name == "alpha+" || name == "helium")
-    {
-      if(EmModel() == nullptr)
-      {
-        auto  rudd =
-            new G4DNARuddIonisationModel();
+        auto rudd = new G4DNARuddIonisationExtendedModel();
         SetEmModel(rudd);
-        rudd->SetLowEnergyLimit(0 * keV);
-        rudd->SetHighEnergyLimit(400 * MeV);
-      }
-      AddEmModel(1, EmModel());
-    }
-
-    // Extension to HZE proposed by Z. Francis
-
-    //SEB
-    if(/*name == "carbon" || name == "nitrogen" || name == "oxygen" || name == "iron" ||*/
-    name == "GenericIon")
-    //
-    {
-      if(EmModel() == nullptr)
-      {
-        auto  ruddExt =
-            new G4DNARuddIonisationExtendedModel();
-        SetEmModel(ruddExt);
-        ruddExt->SetLowEnergyLimit(0 * keV);
-        //SEB: 1e6*MeV by default - updated in model class
-        //EmModel()->SetHighEnergyLimit(p->GetAtomicMass()*1e6*MeV);
-        ruddExt->SetHighEnergyLimit(1e6 * MeV);
+        rudd->SetHighEnergyLimit(emaxIonDNA);
       }
       AddEmModel(1, EmModel());
     }
@@ -178,16 +127,14 @@ void G4DNAIonisation::InitialiseProcess(const G4ParticleDefinition* p)
 
 void G4DNAIonisation::PrintInfo()
 {
-  if(EmModel(1) != nullptr)
+  if (EmModel(1) != nullptr)
   {
-    G4cout << " Total cross sections computed from " << EmModel(0)->GetName()
-           << " and " << EmModel(1)->GetName() << " models" << G4endl;
+    G4cout << " Total cross sections computed from " << EmModel(0)->GetName() << " and "
+           << EmModel(1)->GetName() << " models" << G4endl;
   }
   else
   {
-    G4cout << " Total cross sections computed from "
-           << EmModel()->GetName()
-           << G4endl;
+    G4cout << " Total cross sections computed from " << EmModel()->GetName() << G4endl;
   }
 }
 

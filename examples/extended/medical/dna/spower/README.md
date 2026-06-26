@@ -56,9 +56,7 @@ SteppingAction::UserSteppingAction method.
 
 ## PHYSICS
 
-Specific physics constructors, called G4EmDNAPhysics_stationary*
-and adapted from G4EmDNAPhysics* are available to set all inelastic
-models in a stationary mode for the computation of the stopping
+All inelastic models are set in a stationary mode for the computation of the stopping
 power.
 
 ## SIMULATION OUTPUT AND RESULT ANALYSIS

@@ -6,7 +6,7 @@ be used as a substitute for writing good git commit messages!
 
 --------------------------------------------------------------------
 
-## 2026-02-11 John Allison (vistree-V11-03-00)
+## 2026-02-11 John Allison (vistree-V11-04-00)
 - Move fVerbosityGuidance to G4ASCIITree factory.
   - It was a static variable in G4ASCIITreeMessenger - static to allow access - but
     it gives "AddressSanitizer: container-overflow" with "-fsanitize=address,undefined"

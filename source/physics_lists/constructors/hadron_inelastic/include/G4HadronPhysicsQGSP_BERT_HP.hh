@@ -39,28 +39,28 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4HadronPhysicsQGSP_BERT_HP_h
-#define G4HadronPhysicsQGSP_BERT_HP_h 1
+#ifndef G4HADRONPHYSICSQGSP_BERT_HP_HH
+#define G4HADRONPHYSICSQGSP_BERT_HP_HH
 
 #include "G4HadronPhysicsQGSP_BERT.hh"
 
-
-class G4HadronPhysicsQGSP_BERT_HP : public G4HadronPhysicsQGSP_BERT 
+class G4HadronPhysicsQGSP_BERT_HP : public G4HadronPhysicsQGSP_BERT
 {
-  public: 
-    G4HadronPhysicsQGSP_BERT_HP(G4int verbose =1);
-    G4HadronPhysicsQGSP_BERT_HP(const G4String& name, G4bool quasiElastic=true);
+  public:
+
+    G4HadronPhysicsQGSP_BERT_HP(G4int verbose = 1);
+    G4HadronPhysicsQGSP_BERT_HP(const G4String& name, G4bool quasiElastic = true);
     virtual ~G4HadronPhysicsQGSP_BERT_HP() {}
 
     // copy constructor and hide assignment operator
-    G4HadronPhysicsQGSP_BERT_HP(G4HadronPhysicsQGSP_BERT_HP &) = delete;
-    G4HadronPhysicsQGSP_BERT_HP & operator =
-    (const G4HadronPhysicsQGSP_BERT_HP &right) = delete;
+    G4HadronPhysicsQGSP_BERT_HP(G4HadronPhysicsQGSP_BERT_HP&) = delete;
+    G4HadronPhysicsQGSP_BERT_HP& operator=(const G4HadronPhysicsQGSP_BERT_HP& right) = delete;
+
   protected:
+
     void Neutron() override;
 };
 
 // 2002 by J.P. Wellisch
 
 #endif
-

@@ -25,77 +25,62 @@
 //
 //
 
-#ifndef G4VCrossSectionSource_h
-#define G4VCrossSectionSource_h
+#ifndef G4VCROSSSECTIONSOURCE_HH
+#define G4VCROSSSECTIONSOURCE_HH
 
-#include "globals.hh"
-#include "G4HadronicException.hh"
 #include "G4CrossSectionVector.hh"
+#include "G4HadronicException.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 class G4KineticTrack;
 
-class G4VCrossSectionSource 
+class G4VCrossSectionSource
 {
+  public:
 
-public:
+    // Constructors
+    G4VCrossSectionSource();
 
-  // Constructors
-  G4VCrossSectionSource();
+    virtual ~G4VCrossSectionSource();
 
-  virtual ~G4VCrossSectionSource();
+    G4bool operator==(const G4VCrossSectionSource& right) const;
+    G4bool operator!=(const G4VCrossSectionSource& right) const;
+    //  G4bool operator<(const G4VCrossSectionSource &right) const;
 
-  G4bool operator==(const G4VCrossSectionSource &right) const;
-  G4bool operator!=(const G4VCrossSectionSource &right) const;
-  //  G4bool operator<(const G4VCrossSectionSource &right) const;
+    virtual G4double CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const = 0;
 
-  virtual G4double CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const = 0;
- 
-  virtual const G4CrossSectionVector* GetComponents() const = 0;
-  
-  virtual G4String Name() const = 0;
+    virtual const G4CrossSectionVector* GetComponents() const = 0;
 
-  virtual void Print() const;
-  virtual void PrintAll(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
+    virtual G4String Name() const = 0;
 
-  virtual G4bool IsValid(G4double e) const;
+    virtual void Print() const;
+    virtual void PrintAll(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
 
-  virtual G4double HighLimit() const;
-  virtual G4double LowLimit() const;
+    virtual G4bool IsValid(G4double e) const;
 
-protected:
+    virtual G4double HighLimit() const;
+    virtual G4double LowLimit() const;
 
-  G4bool InLimits(G4double e, G4double eLow, G4double eHigh) const;
+  protected:
 
-  // Determine lighter particle
-  const G4ParticleDefinition* FindLightParticle(const G4KineticTrack& trk1, 
-						const G4KineticTrack& trk2) const;
+    G4bool InLimits(G4double e, G4double eLow, G4double eHigh) const;
 
-  // Parameterisation
-  G4double FcrossX(G4double e, G4double e0, G4double sigma, 
-                   G4double eParam, G4double power) const;
+    // Determine lighter particle
+    const G4ParticleDefinition* FindLightParticle(const G4KineticTrack& trk1,
+                                                  const G4KineticTrack& trk2) const;
 
-  const G4ParticleDefinition * FindKeyParticle(const G4KineticTrack& trk1,const G4KineticTrack& trk2) const;
-  
-private:  
+    // Parameterisation
+    G4double FcrossX(G4double e, G4double e0, G4double sigma, G4double eParam,
+                     G4double power) const;
 
-  G4VCrossSectionSource(const G4VCrossSectionSource &right);
-  G4VCrossSectionSource& operator=(const G4VCrossSectionSource &right);
-  
+    const G4ParticleDefinition* FindKeyParticle(const G4KineticTrack& trk1,
+                                                const G4KineticTrack& trk2) const;
+
+  private:
+
+    G4VCrossSectionSource(const G4VCrossSectionSource& right);
+    G4VCrossSectionSource& operator=(const G4VCrossSectionSource& right);
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-

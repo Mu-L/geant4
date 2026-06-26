@@ -24,31 +24,39 @@
 // ********************************************************************
 //
 #include "G4ChannelingTrackData.hh"
+
 #include "G4Channeling.hh"
 #include "G4SystemOfUnits.hh"
 
 G4ChannelingTrackData::G4ChannelingTrackData()
-: G4VAuxiliaryTrackInformation(),
-fChannelingProcess(0),
-fDBL(G4ThreeVector(DBL_MAX,DBL_MAX,DBL_MAX)),
-fMomCh(fDBL),
-fPosCh(fDBL),
-fNuD(1.),
-fElD(1.),
-fEFX(0.),
-fEFY(0.){;}
+  : G4VAuxiliaryTrackInformation(),
+    fChannelingProcess(0),
+    fDBL(G4ThreeVector(DBL_MAX, DBL_MAX, DBL_MAX)),
+    fMomCh(fDBL),
+    fPosCh(fDBL),
+    fNuD(1.),
+    fElD(1.),
+    fEFX(0.),
+    fEFY(0.)
+{
+  ;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4ChannelingTrackData::~G4ChannelingTrackData(){;}
+G4ChannelingTrackData::~G4ChannelingTrackData()
+{
+  ;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4ChannelingTrackData::Print() const {
-    G4cout << "Nuclei Density Ratio: " << fNuD << G4endl;
-    G4cout << "Electron Density Ratio: " << fElD << G4endl;
-    G4cout << "Channeling Momentum (GeV/c): " << fMomCh/CLHEP::GeV << G4endl;
-    G4cout << "Channeling Position (angstrom): " << fPosCh/CLHEP::angstrom << G4endl;
+void G4ChannelingTrackData::Print() const
+{
+  G4cout << "Nuclei Density Ratio: " << fNuD << G4endl;
+  G4cout << "Electron Density Ratio: " << fElD << G4endl;
+  G4cout << "Channeling Momentum (GeV/c): " << fMomCh / CLHEP::GeV << G4endl;
+  G4cout << "Channeling Position (angstrom): " << fPosCh / CLHEP::angstrom << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

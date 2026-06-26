@@ -31,12 +31,12 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrRotationMatrix_hh
-#define G4tgrRotationMatrix_hh 1
-
-#include <vector>
+#ifndef G4TGRROTATIONMATRIX_HH
+#define G4TGRROTATIONMATRIX_HH
 
 #include "globals.hh"
+
+#include <vector>
 
 enum G4RotMatInputType
 {
@@ -53,20 +53,19 @@ class G4tgrRotationMatrix
     ~G4tgrRotationMatrix();
 
     G4tgrRotationMatrix(const std::vector<G4String>& wl);
-      // Construct the G4tgrRotationMatrix (fill its data members)
-      // interpreting the data in the list of words 'wl'
+    // Construct the G4tgrRotationMatrix (fill its data members)
+    // interpreting the data in the list of words 'wl'
 
     const G4String& GetName() { return theName; }
     std::vector<G4double>& GetValues() { return theValues; }
 
-    friend std::ostream& operator<<(std::ostream& os,
-                                    const G4tgrRotationMatrix& obj);
+    friend std::ostream& operator<<(std::ostream& os, const G4tgrRotationMatrix& obj);
 
   private:
 
     G4String theName = "Rotation-Matrix";
     std::vector<G4double> theValues;
-      // thetaX,phiX,thetaY,phiY,thetaZ,phiZ;
+    // thetaX,phiX,thetaY,phiY,thetaZ,phiZ;
 
     G4RotMatInputType theInputType = rm9;
 };

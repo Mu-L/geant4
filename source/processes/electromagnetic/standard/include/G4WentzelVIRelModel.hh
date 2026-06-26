@@ -32,7 +32,7 @@
 //
 // File name:     G4WentzelVIRelModel
 //
-// Author:        V.Ivanchenko 
+// Author:        V.Ivanchenko
 //
 // Creation date: 08.06.2012 from G4WentzelVIModel
 //
@@ -49,12 +49,13 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4WentzelVIRelModel_h
-#define G4WentzelVIRelModel_h 1
+#ifndef G4WENTZELVIRELMODEL_HH
+#define G4WENTZELVIRELMODEL_HH
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "G4WentzelVIModel.hh"
+
 #include <vector>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -63,38 +64,32 @@ class G4NistManager;
 
 class G4WentzelVIRelModel : public G4WentzelVIModel
 {
+  public:
 
-public:
+    explicit G4WentzelVIRelModel();
 
-  explicit G4WentzelVIRelModel();
+    ~G4WentzelVIRelModel() override;
 
-  ~G4WentzelVIRelModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double KineticEnergy,
+                                        G4double AtomicNumber, G4double AtomicWeight = 0.,
+                                        G4double cut = DBL_MAX, G4double emax = DBL_MAX) override;
 
-  G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
-				      G4double KineticEnergy,
-				      G4double AtomicNumber,
-				      G4double AtomicWeight=0., 
-				      G4double cut = DBL_MAX,
-				      G4double emax= DBL_MAX) override;
+    void DefineMaterial(const G4MaterialCutsCouple* cup);
 
-  void DefineMaterial(const G4MaterialCutsCouple* cup);
+    //  hide assignment operator
+    G4WentzelVIRelModel& operator=(const G4WentzelVIRelModel& right) = delete;
+    G4WentzelVIRelModel(const G4WentzelVIRelModel&) = delete;
 
-  //  hide assignment operator
-  G4WentzelVIRelModel & operator=(const  G4WentzelVIRelModel &right) = delete;
-  G4WentzelVIRelModel(const  G4WentzelVIRelModel&) = delete;
+  private:
 
-private:
+    void ComputeEffectiveMass();
 
-  void ComputeEffectiveMass();
-
-  static std::vector<G4double> effMass;
-  G4NistManager* fNistManager;
+    static std::vector<G4double> effMass;
+    G4NistManager* fNistManager;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

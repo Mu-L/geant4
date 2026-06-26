@@ -31,7 +31,7 @@
 // Author: G.Cosmo, 2019
 // --------------------------------------------------------------------
 #ifndef windefs_hh
-#define windefs_hh 1
+#define windefs_hh
 
 #if defined(_WIN32)
 #  if defined(ABSOLUTE)

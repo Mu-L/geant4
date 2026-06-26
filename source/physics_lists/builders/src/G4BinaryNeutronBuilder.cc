@@ -37,26 +37,23 @@
 //----------------------------------------------------------------------------
 //
 #include "G4BinaryNeutronBuilder.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4HadronicParameters.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4HadronicParameters.hh"
+#include "G4SystemOfUnits.hh"
 
+G4BinaryNeutronBuilder::G4BinaryNeutronBuilder()
+{
+  theMin = 0.0;
+  theMax = G4HadronicParameters::Instance()->GetMaxEnergyTransitionFTF_Cascade();
+  theModel = new G4BinaryCascade();
+}
 
-G4BinaryNeutronBuilder::
-G4BinaryNeutronBuilder() 
- {
-   theMin = 0.0;
-   theMax = G4HadronicParameters::Instance()->GetMaxEnergyTransitionFTF_Cascade();
-   theModel = new G4BinaryCascade();
- }
-
- void G4BinaryNeutronBuilder::
- Build(G4HadronInelasticProcess * aP)
- {
-   theModel->SetMinEnergy(theMin);
-   theModel->SetMaxEnergy(theMax);
-   aP->RegisterMe(theModel);
- }
-
+void G4BinaryNeutronBuilder::Build(G4HadronInelasticProcess* aP)
+{
+  theModel->SetMinEnergy(theMin);
+  theModel->SetMaxEnergy(theMax);
+  aP->RegisterMe(theModel);
+}

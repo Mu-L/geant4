@@ -89,13 +89,9 @@ In addition, cite the main Geant4-DNA collaboration publications:
       + G4EmDNAPhysics_option4 constructor
 
     The full list of physics lists available for the user are:
-      + G4EmDNAPhysics_option1
       + G4EmDNAPhysics_option2
-      + G4EmDNAPhysics_option3
       + G4EmDNAPhysics_option4
-      + G4EmDNAPhysics_option5
       + G4EmDNAPhysics_option6
-      + G4EmDNAPhysics_option7
       + G4EmDNAPhysics_option8
 
     By default, if no chemistry list is assigned using the "/physics/SetChemistry" 

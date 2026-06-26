@@ -30,55 +30,56 @@
 //---------------------------------------------------------------------------
 
 #include "G4HadronicParametersMessenger.hh"
-#include "G4UIdirectory.hh"
-#include "G4UIcommand.hh"
-#include "G4UIcmdWithAnInteger.hh"
-#include "G4UIcmdWithADoubleAndUnit.hh"
-#include "G4UIcmdWithABool.hh"
+
 #include "G4HadronicParameters.hh"
+#include "G4UIcmdWithABool.hh"
+#include "G4UIcmdWithADoubleAndUnit.hh"
+#include "G4UIcmdWithAnInteger.hh"
+#include "G4UIcommand.hh"
+#include "G4UIdirectory.hh"
 
-
-G4HadronicParametersMessenger::G4HadronicParametersMessenger( G4HadronicParameters* inputHadParam ) :
-  theHadronicParameters( inputHadParam )
+G4HadronicParametersMessenger::G4HadronicParametersMessenger(G4HadronicParameters* inputHadParam)
+  : theHadronicParameters(inputHadParam)
 {
   // Main directory for the whole hadronic
-  theDirectory = new G4UIdirectory( "/process/had/" );
-  theDirectory->SetGuidance( "Control of general hadronic physics parameters and choices." );
+  theDirectory = new G4UIdirectory("/process/had/");
+  theDirectory->SetGuidance("Control of general hadronic physics parameters and choices.");
 
   // This command setup the overall verbose level for hadronics.
   // It is the responsibility of all hadronic models, cross sections and processes to check
   // this verbose level and behave consistently: in particular, if the level is "0" there
   // should be no print out regardless of their eventual internal (local) verbosity level.
-  theVerboseCmd = new G4UIcmdWithAnInteger( "/process/had/verbose", this );
-  theVerboseCmd->SetGuidance( "Set verbose level: 0 (minimum), 1 (default), 2 (higher), ... (even higher)" );
-  theVerboseCmd->SetParameterName( "VerboseLevel", true );
-  theVerboseCmd->SetDefaultValue( 1 );
-  theVerboseCmd->SetRange( "VerboseLevel>=0" );
-  theVerboseCmd->AvailableForStates( G4State_PreInit );
+  theVerboseCmd = new G4UIcmdWithAnInteger("/process/had/verbose", this);
+  theVerboseCmd->SetGuidance(
+    "Set verbose level: 0 (minimum), 1 (default), 2 (higher), ... (even higher)");
+  theVerboseCmd->SetParameterName("VerboseLevel", true);
+  theVerboseCmd->SetDefaultValue(1);
+  theVerboseCmd->SetRange("VerboseLevel>=0");
+  theVerboseCmd->AvailableForStates(G4State_PreInit);
 
   // This command sets the max energy for hadronics.
-  theMaxEnergyCmd = new G4UIcmdWithADoubleAndUnit( "/process/had/maxEnergy", this );
-  theMaxEnergyCmd->SetGuidance( "Max energy for hadronics (default: 100 TeV)" );
-  theMaxEnergyCmd->SetParameterName( "MaxEnergy", false );
-  theMaxEnergyCmd->SetUnitCategory( "Energy" );
-  theMaxEnergyCmd->SetRange( "MaxEnergy>0.0" );
-  theMaxEnergyCmd->AvailableForStates( G4State_PreInit );
+  theMaxEnergyCmd = new G4UIcmdWithADoubleAndUnit("/process/had/maxEnergy", this);
+  theMaxEnergyCmd->SetGuidance("Max energy for hadronics (default: 100 TeV)");
+  theMaxEnergyCmd->SetParameterName("MaxEnergy", false);
+  theMaxEnergyCmd->SetUnitCategory("Energy");
+  theMaxEnergyCmd->SetRange("MaxEnergy>0.0");
+  theMaxEnergyCmd->AvailableForStates(G4State_PreInit);
 
   // This command enable the Cosmic Ray (CR) coalescence
-  theCRCoalescenceCmd = new G4UIcmdWithABool( "/process/had/enableCRCoalescence", this );
-  theCRCoalescenceCmd->SetGuidance( "Enable Cosmic Ray (CR) coalescence." );
-  theCRCoalescenceCmd->SetParameterName( "EnableCRCoalescence", false );
-  theCRCoalescenceCmd->SetDefaultValue( false );
+  theCRCoalescenceCmd = new G4UIcmdWithABool("/process/had/enableCRCoalescence", this);
+  theCRCoalescenceCmd->SetGuidance("Enable Cosmic Ray (CR) coalescence.");
+  theCRCoalescenceCmd->SetParameterName("EnableCRCoalescence", false);
+  theCRCoalescenceCmd->SetDefaultValue(false);
 
   // This command dumps the hadronic parameters to G4cout
-  theDumpCmd = new G4UIcommand( "/process/had/printParameters", this );
-  theDumpCmd->SetGuidance( "Print all Hadronic parameters." );
-  theDumpCmd->AvailableForStates( G4State_PreInit, G4State_Idle );
-  theDumpCmd->SetToBeBroadcasted( false );
+  theDumpCmd = new G4UIcommand("/process/had/printParameters", this);
+  theDumpCmd->SetGuidance("Print all Hadronic parameters.");
+  theDumpCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+  theDumpCmd->SetToBeBroadcasted(false);
 }
 
-
-G4HadronicParametersMessenger::~G4HadronicParametersMessenger() {
+G4HadronicParametersMessenger::~G4HadronicParametersMessenger()
+{
   delete theDirectory;
   delete theVerboseCmd;
   delete theMaxEnergyCmd;
@@ -86,19 +87,25 @@ G4HadronicParametersMessenger::~G4HadronicParametersMessenger() {
   delete theDumpCmd;
 }
 
-
-void G4HadronicParametersMessenger::SetNewValue( G4UIcommand *command, G4String newValues ) {
-  if ( command == theVerboseCmd ) {
+void G4HadronicParametersMessenger::SetNewValue(G4UIcommand* command, G4String newValues)
+{
+  if (command == theVerboseCmd)
+  {
     // Note that the messenger updates only the verbose level of the class G4HadronicParameters:
     // it is the responsibility of each hadronic model, cross section and process to check
     // this verbose level and behave accordingly.
-    theHadronicParameters->SetVerboseLevel( theVerboseCmd->GetNewIntValue( newValues ) );
-  } else if ( command == theMaxEnergyCmd ) { 
-    theHadronicParameters->SetMaxEnergy( theMaxEnergyCmd->GetNewDoubleValue( newValues ) );
-  } else if ( command == theCRCoalescenceCmd ) {
-    theHadronicParameters->SetEnableCRCoalescence( theCRCoalescenceCmd->GetNewBoolValue( newValues ) );
+    theHadronicParameters->SetVerboseLevel(theVerboseCmd->GetNewIntValue(newValues));
   }
-  else if ( command == theDumpCmd ) {
+  else if (command == theMaxEnergyCmd)
+  {
+    theHadronicParameters->SetMaxEnergy(theMaxEnergyCmd->GetNewDoubleValue(newValues));
+  }
+  else if (command == theCRCoalescenceCmd)
+  {
+    theHadronicParameters->SetEnableCRCoalescence(theCRCoalescenceCmd->GetNewBoolValue(newValues));
+  }
+  else if (command == theDumpCmd)
+  {
     theHadronicParameters->Dump();
   }
 }

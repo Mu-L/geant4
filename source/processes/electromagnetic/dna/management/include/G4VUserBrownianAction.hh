@@ -25,23 +25,24 @@
 //
 //
 
-#ifndef _G4VUSERBROWNIANACTION_HH
-#define _G4VUSERBROWNIANACTION_HH
-#include "G4Types.hh"
+#ifndef G4VUSERBROWNIANACTION_HH
+#define G4VUSERBROWNIANACTION_HH
 #include "G4Track.hh"
+#include "G4Types.hh"
 // experimental
 class G4VUserBrownianAction
 {
- public:
-  G4VUserBrownianAction()          = default;
-  virtual ~G4VUserBrownianAction() = default;
+  public:
 
-  //  virtual G4double GetDiffusionCoefficient(G4Material*,
-  //                                           G4Molecule*) { return 0;}
+    G4VUserBrownianAction() = default;
+    virtual ~G4VUserBrownianAction() = default;
 
-  // If returns true: track is killed
-  virtual void Transport(G4ThreeVector&, G4Track* pTrack = nullptr) = 0;
-  virtual G4double GetDistanceToBoundary(const G4Track&)            = 0;
+    //  virtual G4double GetDiffusionCoefficient(G4Material*,
+    //                                           G4Molecule*) { return 0;}
+
+    // If returns true: track is killed
+    virtual void Transport(G4ThreeVector&, G4Track* pTrack = nullptr) = 0;
+    virtual G4double GetDistanceToBoundary(const G4Track&) = 0;
 };
 
 #endif

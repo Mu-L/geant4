@@ -33,8 +33,8 @@
 
 // Author: H.Kurashige, 30 May 1997
 // --------------------------------------------------------------------
-#ifndef G4MuonDecayChannel_hh
-#define G4MuonDecayChannel_hh 1
+#ifndef G4MUONDECAYCHANNEL_HH
+#define G4MUONDECAYCHANNEL_HH
 
 #include "G4VDecayChannel.hh"
 #include "G4ios.hh"
@@ -43,6 +43,7 @@
 class G4MuonDecayChannel : public G4VDecayChannel
 {
   public:
+
     // Constructor & destructor
     G4MuonDecayChannel(const G4String& parentName, G4double BR);
     ~G4MuonDecayChannel() override = default;
@@ -50,6 +51,7 @@ class G4MuonDecayChannel : public G4VDecayChannel
     G4DecayProducts* DecayIt(G4double) override;
 
   protected:
+
     G4MuonDecayChannel() = default;
 
     // Copy constructor and assignment operator

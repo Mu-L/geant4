@@ -29,47 +29,41 @@
 //
 //
 
-#ifndef G4NeutrinoElectronTotXsc_h
-#define G4NeutrinoElectronTotXsc_h
+#ifndef G4NEUTRINOELECTRONTOTXSC_HH
+#define G4NEUTRINOELECTRONTOTXSC_HH
 
-
-#include "globals.hh"
 #include "G4VCrossSectionDataSet.hh"
+#include "globals.hh"
 
 class G4NeutrinoElectronCcXsc;
 class G4NeutrinoElectronNcXsc;
 
 class G4NeutrinoElectronTotXsc : public G4VCrossSectionDataSet
 {
-public:
-   
-  G4NeutrinoElectronTotXsc();
-  ~G4NeutrinoElectronTotXsc();
+  public:
 
-  virtual
-  G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z, const G4Material*);
+    G4NeutrinoElectronTotXsc();
+    ~G4NeutrinoElectronTotXsc();
 
+    virtual G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z, const G4Material*);
 
-  virtual
-  G4double GetElementCrossSection(const G4DynamicParticle*, 
-				  G4int Z, const G4Material*);
+    virtual G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z, const G4Material*);
 
-  void SetCutEnergy(G4double ec){fCutEnergy=ec;};
-  G4double GetCutEnergy(){return fCutEnergy;};
+    void SetCutEnergy(G4double ec) { fCutEnergy = ec; };
+    G4double GetCutEnergy() { return fCutEnergy; };
 
-  void SetBiasingFactor(G4double bf);
-  void SetBiasingFactors(G4double bfCc, G4double bfNc); // for separate testing
-  G4double GetBiasingFactor(){return fBiasingFactor;};
-  G4double GetCcRatio(){return fCcRatio;};
+    void SetBiasingFactor(G4double bf);
+    void SetBiasingFactors(G4double bfCc, G4double bfNc);  // for separate testing
+    G4double GetBiasingFactor() { return fBiasingFactor; };
+    G4double GetCcRatio() { return fCcRatio; };
 
-protected:
+  protected:
 
-  G4NeutrinoElectronCcXsc* fCcXsc;
-  G4NeutrinoElectronNcXsc* fNcXsc;
-  G4double fCutEnergy; // min detected recoil energy
-  G4double fBiasingFactor; // biasing xsc up
-  G4double fCcRatio; // biasing xsc up
-
+    G4NeutrinoElectronCcXsc* fCcXsc;
+    G4NeutrinoElectronNcXsc* fNcXsc;
+    G4double fCutEnergy;  // min detected recoil energy
+    G4double fBiasingFactor;  // biasing xsc up
+    G4double fCcRatio;  // biasing xsc up
 };
 
 #endif

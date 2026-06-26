@@ -30,10 +30,11 @@
  *      Author: mkaramit
  */
 
-#ifndef SOURCE_PROCESSES_ELECTROMAGNETIC_DNA_MANAGEMENT_INCLUDE_G4VITSTEPPINGVERBOSE_HH_
-#define SOURCE_PROCESSES_ELECTROMAGNETIC_DNA_MANAGEMENT_INCLUDE_G4VITSTEPPINGVERBOSE_HH_
+#ifndef G4VITSTEPPINGVERBOSE_HH
+#define G4VITSTEPPINGVERBOSE_HH
 
-#include "globals.hh"                 // Include from 'global'
+#include "globals.hh"  // Include from 'global'
+
 #include <vector>
 
 class G4Navigator;
@@ -43,22 +44,21 @@ class G4VSensitiveDetector;
 class G4ProcessVector;
 class G4Track;
 
-//#include "G4TrackVector.hh"           // Include from 'tracking'
-#include "G4StepStatus.hh"            // Include from 'track'
+// #include "G4TrackVector.hh"           // Include from 'tracking'
+#include "G4StepStatus.hh"  // Include from 'track'
 class G4UserSteppingAction;
 class G4StepPoint;
-#include "G4TouchableHandle.hh"
-
 #include "G4ForceCondition.hh"  //enum 'track'
-#include "G4GPILSelection.hh"   //enum 'track'
+#include "G4GPILSelection.hh"  //enum 'track'
 #include "G4ITStepProcessor.hh"
+#include "G4TouchableHandle.hh"
 #include "G4VITProcess.hh"
 
 class G4VParticleChange;
 class G4ITStepProcessorState;
-//class ProcessGeneralInfo;
-//class G4VPhysicalVolume;
-//class G4ProcessVector;
+// class ProcessGeneralInfo;
+// class G4VPhysicalVolume;
+// class G4ProcessVector;
 
 #include <G4UImessenger.hh>
 
@@ -66,138 +66,132 @@ class G4UIcmdWithAnInteger;
 
 class G4VITSteppingVerbose : G4UImessenger
 {
-public:
-  G4VITSteppingVerbose();
-  ~G4VITSteppingVerbose() override;
+  public:
 
-public:
+    G4VITSteppingVerbose();
+    ~G4VITSteppingVerbose() override;
 
-  virtual void TrackingStarted(G4Track* track);
-  virtual void TrackingEnded(G4Track* track);
+  public:
 
-  virtual void DoItStarted() = 0;
-  virtual void PreStepVerbose(G4Track*) = 0;
-  virtual void PostStepVerbose(G4Track*) = 0;
+    virtual void TrackingStarted(G4Track* track);
+    virtual void TrackingEnded(G4Track* track);
 
-  // these methods are invoked in the SteppingManager
-  virtual void NewStep() = 0;
-  void CopyState();
+    virtual void DoItStarted() = 0;
+    virtual void PreStepVerbose(G4Track*) = 0;
+    virtual void PostStepVerbose(G4Track*) = 0;
 
-  virtual void StepInfoForLeadingTrack() = 0;
+    // these methods are invoked in the SteppingManager
+    virtual void NewStep() = 0;
+    void CopyState();
 
-  virtual void AtRestDoItInvoked() = 0;
-  virtual void AtRestDoItOneByOne() = 0;
+    virtual void StepInfoForLeadingTrack() = 0;
 
-  virtual void PostStepDoItAllDone() = 0;
-  virtual void PostStepDoItOneByOne() = 0;
+    virtual void AtRestDoItInvoked() = 0;
+    virtual void AtRestDoItOneByOne() = 0;
 
-  virtual void AlongStepDoItAllDone() = 0;
-  virtual void AlongStepDoItOneByOne() = 0;
+    virtual void PostStepDoItAllDone() = 0;
+    virtual void PostStepDoItOneByOne() = 0;
 
-  virtual void StepInfo() = 0;
-  virtual void DPSLStarted() = 0;
-  virtual void DPSLUserLimit() = 0;
-  virtual void DPSLPostStep() = 0;
-  virtual void DPSLAlongStep() = 0;
-  virtual void VerboseTrack() = 0;
-  virtual void VerboseParticleChange() = 0;
+    virtual void AlongStepDoItAllDone() = 0;
+    virtual void AlongStepDoItOneByOne() = 0;
 
-  //____________________________________________________________________________
+    virtual void StepInfo() = 0;
+    virtual void DPSLStarted() = 0;
+    virtual void DPSLUserLimit() = 0;
+    virtual void DPSLPostStep() = 0;
+    virtual void DPSLAlongStep() = 0;
+    virtual void VerboseTrack() = 0;
+    virtual void VerboseParticleChange() = 0;
 
-  inline void SetVerbose(int flag)
-  {
-    fVerboseLevel = flag;
-  }
+    //____________________________________________________________________________
 
-  inline G4int GetVerbose()
-  {
-    return fVerboseLevel;
-  }
+    inline void SetVerbose(int flag) { fVerboseLevel = flag; }
 
-  //____________________________________________________________________________
+    inline G4int GetVerbose() { return fVerboseLevel; }
 
-  void SetNewValue(G4UIcommand * command,
-                           G4String newValue) override;
+    //____________________________________________________________________________
 
-  G4String GetCurrentValue(G4UIcommand * command) override;
+    void SetNewValue(G4UIcommand* command, G4String newValue) override;
 
+    G4String GetCurrentValue(G4UIcommand* command) override;
 
-  //____________________________________________________________________________
+    //____________________________________________________________________________
 
-  void SetStepProcessor(const G4ITStepProcessor* stepProcessor)
-  {
-    this->fpStepProcessor = stepProcessor;
-  }
+    void SetStepProcessor(const G4ITStepProcessor* stepProcessor)
+    {
+      this->fpStepProcessor = stepProcessor;
+    }
 
-  void TrackBanner(G4Track* track, const G4String& message);
+    void TrackBanner(G4Track* track, const G4String& message);
 
-protected:
-  const G4ITStepProcessor* fpStepProcessor;
+  protected:
 
-  G4UIcmdWithAnInteger* fpVerboseUI;
-  G4ITStepProcessorState* fpState;
-  const ProcessGeneralInfo* fpProcessGeneralInfo;
+    const G4ITStepProcessor* fpStepProcessor;
 
-  G4double PhysicalStep;
-  G4StepStatus fStepStatus;
+    G4UIcmdWithAnInteger* fpVerboseUI;
+    G4ITStepProcessorState* fpState;
+    const ProcessGeneralInfo* fpProcessGeneralInfo;
 
-  const G4VParticleChange* fParticleChange;
-  const G4Track* fTrack;
-  const G4TrackVector* fSecondary;
-  const G4Step* fStep;
-  G4StepPoint* fPreStepPoint;
-  G4StepPoint* fPostStepPoint;
+    G4double PhysicalStep;
+    G4StepStatus fStepStatus;
 
-  const G4VPhysicalVolume* fCurrentVolume;
-//  G4VSensitiveDetector* fSensitive;
-  const G4VITProcess* fCurrentProcess;
-  // The pointer to the process of which DoIt or
-  // GetPhysicalInteractionLength has been just executed.
+    const G4VParticleChange* fParticleChange;
+    const G4Track* fTrack;
+    const G4TrackVector* fSecondary;
+    const G4Step* fStep;
+    G4StepPoint* fPreStepPoint;
+    G4StepPoint* fPostStepPoint;
 
-  G4ProcessVector* fAtRestDoItVector;
-  G4ProcessVector* fAlongStepDoItVector;
-  G4ProcessVector* fPostStepDoItVector;
+    const G4VPhysicalVolume* fCurrentVolume;
+    //  G4VSensitiveDetector* fSensitive;
+    const G4VITProcess* fCurrentProcess;
+    // The pointer to the process of which DoIt or
+    // GetPhysicalInteractionLength has been just executed.
 
-  G4ProcessVector* fAtRestGetPhysIntVector;
-  G4ProcessVector* fAlongStepGetPhysIntVector;
-  G4ProcessVector* fPostStepGetPhysIntVector;
+    G4ProcessVector* fAtRestDoItVector;
+    G4ProcessVector* fAlongStepDoItVector;
+    G4ProcessVector* fPostStepDoItVector;
 
-  size_t MAXofAtRestLoops;
-  size_t MAXofAlongStepLoops;
-  size_t MAXofPostStepLoops;
+    G4ProcessVector* fAtRestGetPhysIntVector;
+    G4ProcessVector* fAlongStepGetPhysIntVector;
+    G4ProcessVector* fPostStepGetPhysIntVector;
 
-  size_t fAtRestDoItProcTriggered;
-  size_t fPostStepDoItProcTriggered;
+    size_t MAXofAtRestLoops;
+    size_t MAXofAlongStepLoops;
+    size_t MAXofPostStepLoops;
 
-  G4int fN2ndariesAtRestDoIt;
-  G4int fN2ndariesAlongStepDoIt;
-  G4int fN2ndariesPostStepDoIt;
-  // These are the numbers of secondaries generated by the process
-  // just executed.
+    size_t fAtRestDoItProcTriggered;
+    size_t fPostStepDoItProcTriggered;
 
-//  G4Navigator *fNavigator;
+    G4int fN2ndariesAtRestDoIt;
+    G4int fN2ndariesAlongStepDoIt;
+    G4int fN2ndariesPostStepDoIt;
+    // These are the numbers of secondaries generated by the process
+    // just executed.
 
-  G4int fVerboseLevel;
+    //  G4Navigator *fNavigator;
 
-  using G4SelectedAtRestDoItVector = std::vector<G4int>;
-  using G4SelectedAlongStepDoItVector = std::vector<G4int>;
-  using G4SelectedPostStepDoItVector = std::vector<G4int>;
-  G4SelectedAtRestDoItVector* fSelectedAtRestDoItVector;
-  G4SelectedPostStepDoItVector* fSelectedPostStepDoItVector;
+    G4int fVerboseLevel;
 
-  G4double fPreviousStepSize;
+    using G4SelectedAtRestDoItVector = std::vector<G4int>;
+    using G4SelectedAlongStepDoItVector = std::vector<G4int>;
+    using G4SelectedPostStepDoItVector = std::vector<G4int>;
+    G4SelectedAtRestDoItVector* fSelectedAtRestDoItVector;
+    G4SelectedPostStepDoItVector* fSelectedPostStepDoItVector;
 
-  G4TouchableHandle fTouchableHandle;
+    G4double fPreviousStepSize;
 
-//  G4SteppingControl StepControlFlag;
+    G4TouchableHandle fTouchableHandle;
 
-  G4double physIntLength;
-  G4ForceCondition fCondition;
-  G4GPILSelection fGPILSelection;
-  // Above three variables are for the method
-  // DefinePhysicalStepLength(). To pass these information to
-  // the method Verbose, they are kept at here. Need a more
-  // elegant mechanism.
+    //  G4SteppingControl StepControlFlag;
+
+    G4double physIntLength;
+    G4ForceCondition fCondition;
+    G4GPILSelection fGPILSelection;
+    // Above three variables are for the method
+    // DefinePhysicalStepLength(). To pass these information to
+    // the method Verbose, they are kept at here. Need a more
+    // elegant mechanism.
 };
 
 #endif /* SOURCE_PROCESSES_ELECTROMAGNETIC_DNA_MANAGEMENT_INCLUDE_G4VITSTEPPINGVERBOSE_HH_ */

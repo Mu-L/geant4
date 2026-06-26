@@ -28,39 +28,35 @@
 //
 // Modifications:
 //
-// 23 January 2012 V.Ivanchenko added pointer of G4VPhotonEvaporation 
+// 23 January 2012 V.Ivanchenko added pointer of G4VPhotonEvaporation
 
 #include "G4EvaporationFactory.hh"
 
+#include "G4AlphaEvaporationChannel.hh"
+#include "G4CompetitiveFission.hh"
+#include "G4DeuteronEvaporationChannel.hh"
+#include "G4He3EvaporationChannel.hh"
 #include "G4NeutronEvaporationChannel.hh"
 #include "G4ProtonEvaporationChannel.hh"
-#include "G4DeuteronEvaporationChannel.hh"
 #include "G4TritonEvaporationChannel.hh"
-#include "G4He3EvaporationChannel.hh"
-#include "G4AlphaEvaporationChannel.hh"
 
-#include "G4CompetitiveFission.hh"
-
-G4EvaporationFactory::G4EvaporationFactory(G4VEvaporationChannel* ptr)
-  : G4VEvaporationFactory(ptr)
+G4EvaporationFactory::G4EvaporationFactory(G4VEvaporationChannel* ptr) : G4VEvaporationFactory(ptr)
 {}
 
 std::vector<G4VEvaporationChannel*>* G4EvaporationFactory::GetChannel()
 {
-  std::vector<G4VEvaporationChannel*>* theChannel = 
-    new std::vector<G4VEvaporationChannel*>;
+  std::vector<G4VEvaporationChannel*>* theChannel = new std::vector<G4VEvaporationChannel*>;
   theChannel->reserve(8);
 
-  theChannel->push_back( thePhotonEvaporation );          // Photon Channel
-  theChannel->push_back( new G4CompetitiveFission() );    // Fission Channel
+  theChannel->push_back(thePhotonEvaporation);  // Photon Channel
+  theChannel->push_back(new G4CompetitiveFission());  // Fission Channel
 
-  theChannel->push_back( new G4NeutronEvaporationChannel() );  // n
-  theChannel->push_back( new G4ProtonEvaporationChannel() );   // p
-  theChannel->push_back( new G4DeuteronEvaporationChannel() ); // Deuteron
-  theChannel->push_back( new G4TritonEvaporationChannel() );   // Triton
-  theChannel->push_back( new G4He3EvaporationChannel() );      // He3
-  theChannel->push_back( new G4AlphaEvaporationChannel() );    // Alpha
+  theChannel->push_back(new G4NeutronEvaporationChannel());  // n
+  theChannel->push_back(new G4ProtonEvaporationChannel());  // p
+  theChannel->push_back(new G4DeuteronEvaporationChannel());  // Deuteron
+  theChannel->push_back(new G4TritonEvaporationChannel());  // Triton
+  theChannel->push_back(new G4He3EvaporationChannel());  // He3
+  theChannel->push_back(new G4AlphaEvaporationChannel());  // Alpha
 
   return theChannel;
-
 }

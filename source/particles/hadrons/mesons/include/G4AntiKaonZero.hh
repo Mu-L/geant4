@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4AntiKaonZero_h
-#define G4AntiKaonZero_h 1
+#ifndef G4ANTIKAONZERO_HH
+#define G4ANTIKAONZERO_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4AntiKaonZero : public G4ParticleDefinition
 {
   public:
+
     static G4AntiKaonZero* Definition();
     static G4AntiKaonZero* AntiKaonZeroDefinition();
     static G4AntiKaonZero* AntiKaonZero();
 
   private:
+
     G4AntiKaonZero() {}
     ~G4AntiKaonZero() override = default;
 

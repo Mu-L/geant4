@@ -25,8 +25,8 @@
 //
 //
 //
-#ifndef G4ExcitedStringVector_h
-#define G4ExcitedStringVector_h 1
+#ifndef G4EXCITEDSTRINGVECTOR_HH
+#define G4EXCITEDSTRINGVECTOR_HH
 
 // ------------------------------------------------------------
 //      GEANT 4 class header file
@@ -36,9 +36,13 @@
 // ------------------------------------------------------------
 
 #include "G4ExcitedString.hh"
+
 #include <vector>
 
-typedef std::vector<G4ExcitedString *> G4ExcitedStringVector;
-struct DeleteString { void operator()(G4ExcitedString* aS){delete aS;} };
+typedef std::vector<G4ExcitedString*> G4ExcitedStringVector;
+struct DeleteString
+{
+    void operator()(G4ExcitedString* aS) { delete aS; }
+};
 
 #endif

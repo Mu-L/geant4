@@ -45,9 +45,10 @@
 G4IonisParamElm::G4IonisParamElm(G4double AtomNumber)
 {
   G4int Z = G4lrint(AtomNumber);
-  if (Z < 1) {
+  if (Z < 1)
+  {
     G4Exception("G4IonisParamElm::G4IonisParamElm()", "mat501", FatalException,
-      "It is not allowed to create an Element with Z<1");
+                "It is not allowed to create an Element with Z<1");
   }
   G4Pow* g4pow = G4Pow::GetInstance();
 
@@ -67,7 +68,8 @@ G4IonisParamElm::G4IonisParamElm(G4double AtomNumber)
   // Fast ions or hadrons
 
   G4int iz = Z - 1;
-  if (91 < iz) {
+  if (91 < iz)
+  {
     iz = 91;
   }
 
@@ -126,4 +128,7 @@ G4IonisParamElm::G4IonisParamElm(G4double AtomNumber)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.... ....oooOO0OOooo....
 
-G4IonisParamElm::~G4IonisParamElm() { delete[] fShellCorrectionVector; }
+G4IonisParamElm::~G4IonisParamElm()
+{
+  delete[] fShellCorrectionVector;
+}

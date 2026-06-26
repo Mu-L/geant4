@@ -32,15 +32,15 @@
 // to be defined by implementing the inquiry function interface.
 //
 // The key method is  GetFieldValue( const G4double Point[4],
-//                    *************        G4double* fieldArr ) 
-// Given an input position/time vector 'Point', 
+//                    *************        G4double* fieldArr )
+// Given an input position/time vector 'Point',
 // this method must return the value of the field in "fieldArr".
 //
 // A field must also specify whether it changes a track's energy:
-//                    DoesFieldChangeEnergy() 
+//                    DoesFieldChangeEnergy()
 //                    *********************
 // A field must co-work with a corresponding Equation of Motion, to
-// enable the integration of a particle's position, momentum and, optionally, 
+// enable the integration of a particle's position, momentum and, optionally,
 // spin.  For this a field and its equation of motion must follow the
 // same convention for the order of field components in the array "fieldArr"
 
@@ -49,16 +49,18 @@
 #ifndef G4FIELD_HH
 #define G4FIELD_HH
 
-#include "G4Types.hh"
 #include "G4FieldParameters.hh"
+#include "G4Types.hh"
 #include "globals.hh"
 
 /**
  * @brief G4Field is the abstract class for any kind of field.
+ * @ingroup geometry_magneticfield
+ *
  * It allows any kind of field (vector, scalar, tensor and any set of them)
  * to be defined by implementing the inquiry function interface.
  * A field must co-work with a corresponding Equation of Motion, to
- * enable the integration of a particle's position, momentum and, optionally, 
+ * enable the integration of a particle's position, momentum and, optionally,
  * spin. For this a field and its equation of motion must follow the same
  * convention for the order of field components.
  */
@@ -81,12 +83,12 @@ class G4Field
     /**
      * Copy constructor and assignment operator.
      */
-    G4Field( const G4Field& p) = default;
-    G4Field& operator = (const G4Field& p); 
+    G4Field(const G4Field& p) = default;
+    G4Field& operator=(const G4Field& p);
 
     /**
      * Given the position time vector 'Point', returns the value of the
-     * field in the array 'fieldArr'. Notes: 
+     * field in the array 'fieldArr'. Notes:
      * 1) The 'Point' vector has the following structure:
      *      Point[0]  is  x  ( position, in Geant4 units )
      *      Point[1]  is  y
@@ -97,8 +99,7 @@ class G4Field
      *  @param[in] Point The position time vector.
      *  @param[out] fieldArr The field array in output.
      */
-    virtual void GetFieldValue( const G4double Point[4],
-                                      G4double* fieldArr ) const = 0;
+    virtual void GetFieldValue(const G4double Point[4], G4double* fieldArr) const = 0;
 
     /**
      * Each type/class of field should respond the field does change energy.
@@ -119,13 +120,13 @@ class G4Field
      *  @returns true if the field does include gravity.
      */
     inline G4bool IsGravityActive() const { return fGravityActive; }
-        //  Does this field include gravity?
+    //  Does this field include gravity?
 
     /**
      * Sets the gravity flag.
      */
     inline void SetGravityActive(G4bool OnOffFlag) { fGravityActive = OnOffFlag; }
-    
+
     /**
      * Interface method to implement cloning, needed by multi-threading.
      * Here issuing a fatal exception, as expecting this to be implemented
@@ -141,5 +142,5 @@ class G4Field
 
     G4bool fGravityActive = false;
 };
- 
+
 #endif

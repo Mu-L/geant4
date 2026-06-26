@@ -33,20 +33,19 @@ inline G4String G4GenericFileManager::GetDefaultFileType() const
 }
 
 //_____________________________________________________________________________
-template <typename HT>
-inline
-G4bool G4GenericFileManager::WriteTExtra(
-  const G4String& fileName, HT* ht, const G4String& htName)
+template<typename HT>
+inline G4bool G4GenericFileManager::WriteTExtra(const G4String& fileName, HT* ht,
+                                                const G4String& htName)
 {
   Message(G4Analysis::kVL4, "write", "extra file",
-    fileName + " with " + G4Analysis::GetHnType<HT>() + "  " + htName);
+          fileName + " with " + G4Analysis::GetHnType<HT>() + "  " + htName);
 
   std::shared_ptr<G4VFileManager> fileManager = GetFileManager(fileName);
-  if ( ! fileManager ) {
-    G4Analysis::Warn(
-      "Cannot get file manager for " + fileName + " .\n" +
-      "Writing " + G4Analysis::GetHnType<HT>() + " " + htName + " failed.",
-      fkClass, "WriteTExtra");
+  if (!fileManager)
+  {
+    G4Analysis::Warn("Cannot get file manager for " + fileName + " .\n" + "Writing "
+                       + G4Analysis::GetHnType<HT>() + " " + htName + " failed.",
+                     fkClass, "WriteTExtra");
     return false;
   }
 

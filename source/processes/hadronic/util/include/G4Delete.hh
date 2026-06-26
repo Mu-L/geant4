@@ -23,9 +23,13 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef Delete_h
-#define Delete_h
+#ifndef G4DELETE_HH
+#define G4DELETE_HH
 
-template <class T> struct Delete{void operator()(T * aT){delete aT;}};
+template<class T>
+struct Delete
+{
+    void operator()(T* aT) { delete aT; }
+};
 
 #endif

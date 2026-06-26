@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  July 1995
 
 // Class Description:
@@ -35,20 +35,20 @@
 #ifndef G4POINT3DLIST_HH
 #define G4POINT3DLIST_HH
 
-#include <vector>
 #include "G4Point3D.hh"
+
 #include <iostream>
+#include <vector>
 
-class G4Point3DList: public std::vector<G4Point3D> {
-  
-  friend std::ostream& operator << (std::ostream& os, const G4Point3DList& points);
-  
-public:
+class G4Point3DList : public std::vector<G4Point3D>
+{
+    friend std::ostream& operator<<(std::ostream& os, const G4Point3DList& points);
 
-  using iterator = std::vector<G4Point3D>::iterator;
+  public:
 
-  virtual ~G4Point3DList();
+    using iterator = std::vector<G4Point3D>::iterator;
 
+    virtual ~G4Point3DList();
 };
 
 #endif

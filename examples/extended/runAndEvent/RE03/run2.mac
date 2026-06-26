@@ -41,13 +41,17 @@
 #
 /score/list
 #
-/vis/disable
+/control/doifInteractive /vis/disable
+/gun/particle mu-
 /run/beamOn 2000
-/vis/enable
+/control/doifInteractive /vis/enable
 #
 ########################################
 #
-/score/drawProjection boxMesh_2c nOfStepGamma
-/score/drawProjection boxMesh_2b nOfStepGamma
-/score/drawProjection boxMesh_2a nOfStepGamma
+/control/ifInteractive @@
+  /score/drawProjection boxMesh_2c nOfStepGamma
+  /score/drawProjection boxMesh_2b nOfStepGamma ! ! false 1
+  /score/drawProjection boxMesh_2a nOfStepGamma ! ! false 2
+/control/endRecord
+#
 #

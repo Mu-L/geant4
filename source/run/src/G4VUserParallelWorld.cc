@@ -60,8 +60,10 @@ void G4VUserParallelWorld::SetSensitiveDetector(const G4String& logVolName,
   G4LogicalVolumeStore* store = G4LogicalVolumeStore::GetInstance();
   auto volmap = store->GetMap();
   auto pos = volmap.find(logVolName);
-  if (pos != volmap.cend()) {
-    if ((pos->second.size() > 1) && !multi) {
+  if (pos != volmap.cend())
+  {
+    if ((pos->second.size() > 1) && !multi)
+    {
       G4String eM = "More than one logical volumes of name <";
       eM += pos->first;
       eM += "> are found and thus the sensitive detector <";
@@ -71,11 +73,13 @@ void G4VUserParallelWorld::SetSensitiveDetector(const G4String& logVolName,
                   eM);
     }
     found = true;
-    for (auto& i : pos->second) {
+    for (auto& i : pos->second)
+    {
       SetSensitiveDetector(i, aSD);
     }
   }
-  if (!found) {
+  if (!found)
+  {
     G4String eM2 = "No logical volume of name <";
     eM2 += logVolName;
     eM2 += "> is found. The specified sensitive detector <";

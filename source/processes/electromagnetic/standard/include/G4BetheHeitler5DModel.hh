@@ -41,7 +41,7 @@
 //          version (Denis Bernard)
 // 04-06-18 Performance optimization of the final state sampling (M. Novak)
 // 10-04-19 CLHEP for boost and rotation, remove local functions (IgS)
-// 02-09-19 Set base class to be G4PairProductionRelModel that can provide 
+// 02-09-19 Set base class to be G4PairProductionRelModel that can provide
 //          accurate sections now from threshold to very high energies
 //          including the LPM effect. (M. Novak)
 // 14-10-19 Muon's pair genaration in SampleSecondaries
@@ -54,8 +54,8 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4BetheHeitler5DModel_h
-#define G4BetheHeitler5DModel_h 1
+#ifndef G4BETHEHEITLER5DMODEL_HH
+#define G4BETHEHEITLER5DMODEL_HH
 
 #include "G4PairProductionRelModel.hh"
 
@@ -63,49 +63,45 @@ class G4IonTable;
 
 class G4BetheHeitler5DModel : public G4PairProductionRelModel
 {
+  public:
 
-public:
+    explicit G4BetheHeitler5DModel(const G4ParticleDefinition* p = nullptr,
+                                   const G4String& nam = "BetheHeitler5D");
 
-  explicit G4BetheHeitler5DModel(const G4ParticleDefinition* p = nullptr,
-                                 const G4String& nam = "BetheHeitler5D");
+    ~G4BetheHeitler5DModel() override;
 
-  ~G4BetheHeitler5DModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
+                           const G4MaterialCutsCouple* couple,
+                           const G4DynamicParticle* aDynamicGamma, G4double, G4double) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
-                         const G4MaterialCutsCouple* couple,
-                         const G4DynamicParticle* aDynamicGamma,
-                         G4double, G4double) override;
+    inline void SetVerbose(G4int val) { fVerbose = val; }
 
-  inline void SetVerbose(G4int val) { fVerbose = val; }
+    // Only e+, e+ or mu+, mu- pairs supported
+    void SetLeptonPair(const G4ParticleDefinition* p1, const G4ParticleDefinition* p2);
 
-  // Only e+, e+ or mu+, mu- pairs supported
-  void SetLeptonPair(const G4ParticleDefinition* p1,
-		     const G4ParticleDefinition* p2);
+    // hide assignment operator
+    G4BetheHeitler5DModel& operator=(const G4BetheHeitler5DModel& right) = delete;
+    G4BetheHeitler5DModel(const G4BetheHeitler5DModel&) = delete;
 
-  // hide assignment operator
-  G4BetheHeitler5DModel& operator=(const G4BetheHeitler5DModel& right) = delete;
-  G4BetheHeitler5DModel(const  G4BetheHeitler5DModel&) = delete;
+  private:
 
-private:
+    G4double MaxDiffCrossSection(const G4double* par, G4double eZ, G4double e, G4double loge) const;
 
-  G4double MaxDiffCrossSection(const G4double* par, G4double eZ,
-                               G4double e, G4double loge) const;
+    inline void SetConversionMode(G4int to) { fConvMode = to; }
 
-  inline void SetConversionMode(G4int to) { fConvMode = to; }
+    G4IonTable* theIonTable;
 
-  G4IonTable* theIonTable;
+    const G4ParticleDefinition* fLepton1;
+    const G4ParticleDefinition* fLepton2;
 
-  const G4ParticleDefinition*  fLepton1;
-  const G4ParticleDefinition*  fLepton2;
+    const G4ParticleDefinition* fTheMuPlus;
+    const G4ParticleDefinition* fTheMuMinus;
 
-  const G4ParticleDefinition*  fTheMuPlus;
-  const G4ParticleDefinition*  fTheMuMinus;
-
-  G4int  fVerbose;
-  G4int  fConversionType;
-  G4int  fConvMode;
-  G4bool iraw;
+    G4int fVerbose;
+    G4int fConversionType;
+    G4int fConvMode;
+    G4bool iraw;
 };
 #endif

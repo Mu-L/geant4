@@ -44,11 +44,11 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-#ifndef G4EmLowEParametersMessenger_h
-#define G4EmLowEParametersMessenger_h 1
+#ifndef G4EMLOWEPARAMETERSMESSENGER_HH
+#define G4EMLOWEPARAMETERSMESSENGER_HH
 
-#include "globals.hh"
 #include "G4UImessenger.hh"
+#include "globals.hh"
 
 class G4UIcommand;
 class G4UIcmdWithABool;
@@ -61,45 +61,51 @@ class G4EmLowEParameters;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-class G4EmLowEParametersMessenger: public G4UImessenger
+class G4EmLowEParametersMessenger : public G4UImessenger
 {
-public:   // with description
-  
-  explicit G4EmLowEParametersMessenger(G4EmLowEParameters*);
-  ~G4EmLowEParametersMessenger() override;
+  public:  // with description
 
-  void SetNewValue(G4UIcommand*, G4String) override;
+    explicit G4EmLowEParametersMessenger(G4EmLowEParameters*);
+    ~G4EmLowEParametersMessenger() override;
 
-  G4EmLowEParametersMessenger & operator=
-  (const G4EmLowEParametersMessenger &right) = delete;
-  G4EmLowEParametersMessenger(const G4EmLowEParametersMessenger&) = delete;
+    void SetNewValue(G4UIcommand*, G4String) override;
 
-private:
+    G4EmLowEParametersMessenger& operator=(const G4EmLowEParametersMessenger& right) = delete;
+    G4EmLowEParametersMessenger(const G4EmLowEParametersMessenger&) = delete;
 
-  G4EmLowEParameters*        theParameters;
+  private:
 
-  G4UIcmdWithABool*          deCmd;
-  G4UIcmdWithABool*          dirFluoCmd;
-  G4UIcmdWithABool*          dirFluoCmd1;
-  G4UIcmdWithABool*          auCmd;
-  G4UIcmdWithABool*          auCascadeCmd;
-  G4UIcmdWithABool*          pixeCmd;
-  G4UIcmdWithABool*          dcutCmd;
-  G4UIcmdWithABool*          dnafCmd;
-  G4UIcmdWithABool*          dnasCmd;
-  G4UIcmdWithABool*          dnamscCmd;
+    G4EmLowEParameters* theParameters;
 
-  G4UIcmdWithAString*        pixeXsCmd;
-  G4UIcmdWithAString*        pixeeXsCmd;
-  G4UIcmdWithAString*        livCmd;
-  G4UIcmdWithAString*        dnaSolCmd;
-  G4UIcmdWithAString*        dnaChemModel;
-  G4UIcmdWithAString*        direFluoCmd;
+    G4UIcmdWithABool* deCmd;
+    G4UIcmdWithABool* dirFluoCmd;
+    G4UIcmdWithABool* dirFluoCmd1;
+    G4UIcmdWithABool* auCmd;
+    G4UIcmdWithABool* auCascadeCmd;
+    G4UIcmdWithABool* pixeCmd;
+    G4UIcmdWithABool* dcutCmd;
+    G4UIcmdWithABool* dnafCmd;
+    G4UIcmdWithABool* dnasCmd;
+    G4UIcmdWithABool* dnamscCmd;
+    G4UIcmdWithABool* dnamioniCmd;
 
-  G4UIcmdWithAString*        meCmd;
-  G4UIcommand*               dnaCmd;
-  G4UIcommand*               deexCmd;
+    G4UIcmdWithADoubleAndUnit* minEnECmd;
+    G4UIcmdWithADoubleAndUnit* maxEnECmd;
+    G4UIcmdWithADoubleAndUnit* minEnPCmd;
+    G4UIcmdWithADoubleAndUnit* maxEnPCmd;
+    G4UIcmdWithADoubleAndUnit* minEnICmd;
+    G4UIcmdWithADoubleAndUnit* maxEnICmd;
+
+    G4UIcmdWithAString* pixeXsCmd;
+    G4UIcmdWithAString* pixeeXsCmd;
+    G4UIcmdWithAString* livCmd;
+    G4UIcmdWithAString* dnaSolCmd;
+    G4UIcmdWithAString* dnaChemModel;
+    G4UIcmdWithAString* direFluoCmd;
+
+    G4UIcmdWithAString* meCmd;
+    G4UIcommand* dnaCmd;
+    G4UIcommand* deexCmd;
 };
 
 #endif
-

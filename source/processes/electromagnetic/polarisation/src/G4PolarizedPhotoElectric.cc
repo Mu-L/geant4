@@ -27,15 +27,13 @@
 
 #include "G4PolarizedPhotoElectric.hh"
 
-#include "G4PolarizedPhotoElectricModel.hh"
 #include "G4Electron.hh"
-#include "G4Gamma.hh"
 #include "G4EmParameters.hh"
+#include "G4Gamma.hh"
+#include "G4PolarizedPhotoElectricModel.hh"
 
-G4PolarizedPhotoElectric::G4PolarizedPhotoElectric(const G4String& processName,
-                                                   G4ProcessType type)
-  : G4VEmProcess(processName, type)
-  , fIsInitialised(false)
+G4PolarizedPhotoElectric::G4PolarizedPhotoElectric(const G4String& processName, G4ProcessType type)
+  : G4VEmProcess(processName, type), fIsInitialised(false)
 {
   SetBuildTableFlag(false);
   SetSecondaryParticle(G4Electron::Electron());
@@ -61,10 +59,10 @@ G4bool G4PolarizedPhotoElectric::IsApplicable(const G4ParticleDefinition& p)
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 void G4PolarizedPhotoElectric::InitialiseProcess(const G4ParticleDefinition*)
 {
-  if(!fIsInitialised)
+  if (!fIsInitialised)
   {
     fIsInitialised = true;
-    if(!EmModel())
+    if (!EmModel())
     {
       SetEmModel(new G4PolarizedPhotoElectricModel);
     }

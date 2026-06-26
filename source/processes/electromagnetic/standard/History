@@ -5,18 +5,31 @@ which **must** added in reverse chronological order (newest at the top).
 It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
-
-## 2026-06-13 D.Konstantinov (emstand-V11-03-17)
+## 2026-06-13 D.Konstantinov (emstand-V11-04-04)
 - G4eplusTo3GammaOKVIModel - fixed the transverse direction sign of the third
   photon in on-fly 3-gamma positron annihilation. This restores zero total
   photon momentum in the CMS before boosting to the lab frame and prevents
   unphysical energy non-conservation in EM option4.
   Resolves [bugzilla issue #2737](https://bugzilla-geant4.kek.jp/show_bug.cgi?id=2737).
 
-## 2026-05-28 V.Ivanchenko
+## 2026-05-28 V.Ivanchenko (emstand-V11-04-03)
 - G4eeToTwoGammaModel, G4eplusTo2or3GammaModel - fixed problem #2730 on gamma
   spectra in annihilation on fly by restoring algorithm, which was used
   in 11.2.2 and before. 
+
+## 2026-05-18 V.Ivanchenko (emstand-V11-04-02)
+- G4UrbanMscModel - L.Urban proposed final optimisation of the step limit
+  algorithm, used in EM physics option3.
+
+## 2026-02-24 V.Ivanchenko (emstand-V11-04-01)
+- G4UrbanMscModel - L.Urban proposed minor optimisation of the step limit
+  algorithm, used in EM physics option3.
+
+## 2026-01-30 V.Ivanchenko (emstand-V11-04-00)
+- G4GoudsmitSaundersonMscModel, G4BraggModel, G4BraggIonModel, G4BetheBlochModel,
+  G4LindhardSorensenIonModel - technical modifications due to modifications,
+  which are introduced to utils in the merge request <emutils-V11-04-02>.
+  Physics is unchanged.
 
 ## 2025-11-07 M.Novak (emstand-V11-03-16)
 - G4eDPWACoulombScatteringModel, G4eDPWAElasticDCS - fixed some of the mixed

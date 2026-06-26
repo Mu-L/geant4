@@ -37,21 +37,23 @@
 #ifndef G4NAVIGATIONHISTORY_HH
 #define G4NAVIGATIONHISTORY_HH
 
-#include <assert.h>
-#include <vector>
-#include <iostream>
+#include "G4AffineTransform.hh"
+#include "G4Allocator.hh"
+#include "G4NavigationHistoryPool.hh"
+#include "G4NavigationLevel.hh"
+#include "G4VPhysicalVolume.hh"
 
 #include "geomdefs.hh"
 #include "geomwdefs.hh"
-#include "G4AffineTransform.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4NavigationLevel.hh"
-#include "G4NavigationHistoryPool.hh"
-#include "G4Allocator.hh"
+#include <assert.h>
+
+#include <iostream>
+#include <vector>
 
 /**
  * @brief G4NavigationHistory is a class responsible for the maintenance
  * of the history of the path taken through the geometrical hierarchy.
+ * @ingroup geometry_management
  */
 
 class G4NavigationHistory
@@ -61,8 +63,7 @@ class G4NavigationHistory
     /**
      * Streaming operator.
      */
-    friend std::ostream&
-    operator << (std::ostream& os, const G4NavigationHistory& h);
+    friend std::ostream& operator<<(std::ostream& os, const G4NavigationHistory& h);
 
     /**
      * Constructor. Sizes history lists & resets histories.
@@ -91,7 +92,7 @@ class G4NavigationHistory
     inline void Clear();
 
     /**
-     * Setups the initial entry in stack: copies through volume transform 
+     * Setups the initial entry in stack: copies through volume transform
      * and rotarion matrix. The volume 'pVol' is assumed to be unrotated.
      */
     inline void SetFirstEntry(G4VPhysicalVolume* pVol);
@@ -99,7 +100,7 @@ class G4NavigationHistory
     /**
      * Returns the topmost transformation.
      */
-    inline const G4AffineTransform& GetTopTransform() const; 
+    inline const G4AffineTransform& GetTopTransform() const;
 
     /**
      * Returns a pointer to the topmost transformation.
@@ -162,8 +163,7 @@ class G4NavigationHistory
      *  @param[in] vType The volume type.
      *  @param[in] nReplica The replica number.
      */
-    inline void NewLevel(G4VPhysicalVolume* pNewMother,
-                         EVolume vType = kNormal,
+    inline void NewLevel(G4VPhysicalVolume* pNewMother, EVolume vType = kNormal,
                          G4int nReplica = -1);
 
     /**
@@ -181,8 +181,8 @@ class G4NavigationHistory
     /**
      * New/delete override for "G4Allocator".
      */
-    inline void *operator new(std::size_t);
-    inline void operator delete(void *aHistory);
+    inline void* operator new(std::size_t);
+    inline void operator delete(void* aHistory);
 
   private:
 

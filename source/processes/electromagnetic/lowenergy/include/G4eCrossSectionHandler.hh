@@ -37,40 +37,32 @@
 
 // -------------------------------------------------------------------
 #ifndef G4ECROSSSECTIONHANDLER_HH
-#define G4ECROSSSECTIONHANDLER_HH 1
+#define G4ECROSSSECTIONHANDLER_HH
 
 #include "G4VCrossSectionHandler.hh"
-#include "globals.hh"
 #include "G4VEMDataSet.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4VDataSetAlgorithm;
 
-class G4eCrossSectionHandler : public G4VCrossSectionHandler 
+class G4eCrossSectionHandler : public G4VCrossSectionHandler
 {
-public:
-  explicit G4eCrossSectionHandler(G4VDataSetAlgorithm* alg,
-			 G4double emin, G4double emax, G4int nbin);
+  public:
 
-  virtual ~G4eCrossSectionHandler();
-  G4eCrossSectionHandler(const G4eCrossSectionHandler&) = delete;
-  G4eCrossSectionHandler & operator=(const G4eCrossSectionHandler &right) = delete;
+    explicit G4eCrossSectionHandler(G4VDataSetAlgorithm* alg, G4double emin, G4double emax,
+                                    G4int nbin);
 
-protected:  
-  std::vector<G4VEMDataSet*>* 
-  BuildCrossSectionsForMaterials(const G4DataVector& energyVector, 
-				 const G4DataVector* energyCuts = 0) override;
+    virtual ~G4eCrossSectionHandler();
+    G4eCrossSectionHandler(const G4eCrossSectionHandler&) = delete;
+    G4eCrossSectionHandler& operator=(const G4eCrossSectionHandler& right) = delete;
+
+  protected:
+
+    std::vector<G4VEMDataSet*>*
+    BuildCrossSectionsForMaterials(const G4DataVector& energyVector,
+                                   const G4DataVector* energyCuts = 0) override;
 };
- 
+
 #endif
-
-
-
-
-
-
-
-
-
-
-

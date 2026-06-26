@@ -34,8 +34,8 @@
 //   Katsuya Amako  (e-mail: Katsuya.Amako@kek.jp)
 //   Takashi Sasaki (e-mail: Takashi.Sasaki@kek.jp)
 // --------------------------------------------------------------------
-#ifndef G4SteppingControl_hh
-#define G4SteppingControl_hh 1
+#ifndef G4STEPPINGCONTROL_HH
+#define G4STEPPINGCONTROL_HH
 
 enum G4SteppingControl
 {

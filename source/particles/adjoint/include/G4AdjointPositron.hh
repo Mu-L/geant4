@@ -37,19 +37,21 @@
 //    The use of adjoint particles instead of "normal" particles
 //    during a reverse simulation is based on an idea of M. Asai
 //
-#ifndef G4AdjointPositron_h
-#define G4AdjointPositron_h 1
+#ifndef G4ADJOINTPOSITRON_HH
+#define G4ADJOINTPOSITRON_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4AdjointPositron : public G4ParticleDefinition
 {
   public:
+
     static G4AdjointPositron* Definition();
     static G4AdjointPositron* AdjointPositronDefinition();
     static G4AdjointPositron* AdjointPositron();
 
   private:
+
     G4AdjointPositron() {}
     ~G4AdjointPositron() override = default;
 

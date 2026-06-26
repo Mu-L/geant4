@@ -34,59 +34,57 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4PhysListFactoryAlt_h
-#define G4PhysListFactoryAlt_h 1
+#ifndef G4PHYSLISTFACTORYALT_HH
+#define G4PHYSLISTFACTORYALT_HH
 
 #include "G4VModularPhysicsList.hh"
 #include "globals.hh"
 
-namespace g4alt {
+namespace g4alt
+{
 
 class G4PhysListFactory
 {
-public:
+  public:
 
-  G4PhysListFactory(G4int verbose = 1);
+    G4PhysListFactory(G4int verbose = 1);
 
-  ~G4PhysListFactory();
+    ~G4PhysListFactory();
 
-  G4VModularPhysicsList* GetReferencePhysList(const G4String&);
-  // instantiate PhysList by name
+    G4VModularPhysicsList* GetReferencePhysList(const G4String&);
+    // instantiate PhysList by name
 
-  G4VModularPhysicsList* ReferencePhysList();
-  // instantiate PhysList by environment variable "PHYSLIST"
+    G4VModularPhysicsList* ReferencePhysList();
+    // instantiate PhysList by environment variable "PHYSLIST"
 
-  void SetDefaultReferencePhysList(const G4String& name="");
-  // set a prefered list in case where $PHYSLIST isn't defined
-  // if not set (or called with "") this falls back to system default
+    void SetDefaultReferencePhysList(const G4String& name = "");
+    // set a prefered list in case where $PHYSLIST isn't defined
+    // if not set (or called with "") this falls back to system default
 
-  G4bool IsReferencePhysList(const G4String&) const;
-  // check if the name is in the list of PhysLists names
+    G4bool IsReferencePhysList(const G4String&) const;
+    // check if the name is in the list of PhysLists names
 
-  const std::vector<G4String>& AvailablePhysLists() const;
-  // list of avalable base Phys Lists
+    const std::vector<G4String>& AvailablePhysLists() const;
+    // list of avalable base Phys Lists
 
-  const std::vector<G4String>& AvailablePhysListsEM() const;
-  // list of avalable EM options
+    const std::vector<G4String>& AvailablePhysListsEM() const;
+    // list of avalable EM options
 
-  void PrintAvailablePhysLists() const;
-  // print what users can select
+    void PrintAvailablePhysLists() const;
+    // print what users can select
 
-  void  SetVerbose(G4int val);
-  G4int GetVerbose() const;
+    void SetVerbose(G4int val);
+    G4int GetVerbose() const;
 
-  void  SetUnknownFatal(G4int val);
-  G4int GetUnknownFatal() const;
-  // throw an exception if requested list is unsatisfiable?
+    void SetUnknownFatal(G4int val);
+    G4int GetUnknownFatal() const;
+    // throw an exception if requested list is unsatisfiable?
 
-private:
+  private:
 
-  // no data
+    // no data
 };
 
-}  // end-of-namespace 'g4alt'
+}  // namespace g4alt
 
 #endif
-
-
-

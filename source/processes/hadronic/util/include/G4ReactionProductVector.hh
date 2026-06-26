@@ -23,24 +23,18 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-//
-//
-//
 //	History: first implementation, alternative to G4FastVector
-//               less fast, but it has variable array length and checks boundaries
-//	26th September, Chr. Voelcker
-// ------------------------------------------------------------
+//           less fast, but it has variable array length and checks boundaries
+//	26th September 1999, Chr. Voelcker
+//
 
-#ifndef G4ReactionProductVector_h
-#define G4ReactionProductVector_h 1
-
-#include "globals.hh"
-#include "G4ios.hh"
+#ifndef G4REACTIONPRODUCTVECTOR_HH
+#define G4REACTIONPRODUCTVECTOR_HH
 
 #include "G4ReactionProduct.hh"
+
 #include <vector>
 
-typedef std::vector<G4ReactionProduct *> G4ReactionProductVector;
-struct DeleteReactionProduct{ void operator()(G4ReactionProduct * aR){delete aR;} };
+typedef std::vector<G4ReactionProduct*> G4ReactionProductVector;
 
 #endif

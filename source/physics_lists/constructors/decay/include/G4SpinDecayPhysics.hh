@@ -34,32 +34,31 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4SpinDecayPhysics_h
-#define G4SpinDecayPhysics_h 1
-
-#include "G4VPhysicsConstructor.hh"
+#ifndef G4SPINDECAYPHYSICS_HH
+#define G4SPINDECAYPHYSICS_HH
 
 #include "G4DecayWithSpin.hh"
 #include "G4PionDecayMakeSpin.hh"
+#include "G4VPhysicsConstructor.hh"
 
 class G4SpinDecayPhysics : public G4VPhysicsConstructor
 {
-public:
+  public:
 
-  G4SpinDecayPhysics(G4int ver = 1);
-  G4SpinDecayPhysics(const G4String& name, G4int ver = 1);
-  ~G4SpinDecayPhysics() override;
+    G4SpinDecayPhysics(G4int ver = 1);
+    G4SpinDecayPhysics(const G4String& name, G4int ver = 1);
+    ~G4SpinDecayPhysics() override;
 
     // This method will be invoked in the Construct() method.
     // each particle type will be instantiated
 
-  void ConstructParticle() override;
-    
+    void ConstructParticle() override;
+
     // This method will be invoked in the Construct() method.
     // each physics process will be instantiated and
     // registered to the process manager of each particle type
 
-  void ConstructProcess() override;
+    void ConstructProcess() override;
 };
 
 #endif

@@ -39,14 +39,14 @@
 
 #include "G4NeutronKiller.hh"
 
-#include "G4SystemOfUnits.hh"
 #include "G4NeutronKillerMessenger.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4TransportationProcessType.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4NeutronKiller::G4NeutronKiller(const G4String& processName, G4ProcessType aType)
- : G4VDiscreteProcess(processName, aType)
+  : G4VDiscreteProcess(processName, aType)
 {
   // set Process Sub Type
   SetProcessSubType(NEUTRON_KILLER);
@@ -58,9 +58,9 @@ G4NeutronKiller::G4NeutronKiller(const G4String& processName, G4ProcessType aTyp
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4NeutronKiller::~G4NeutronKiller() 
-{ 
-  delete pMess; 
+G4NeutronKiller::~G4NeutronKiller()
+{
+  delete pMess;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -75,9 +75,8 @@ G4bool G4NeutronKiller::IsApplicable(const G4ParticleDefinition& particle)
 void G4NeutronKiller::SetTimeLimit(G4double val)
 {
   timeThreshold = val;
-  if(verboseLevel > 0) 
-    G4cout << "### G4NeutronKiller: timeLimit(ns) = " 
-	   << timeThreshold/ns << G4endl;
+  if (verboseLevel > 0)
+    G4cout << "### G4NeutronKiller: timeLimit(ns) = " << timeThreshold / ns << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -85,36 +84,33 @@ void G4NeutronKiller::SetTimeLimit(G4double val)
 void G4NeutronKiller::SetKinEnergyLimit(G4double val)
 {
   kinEnergyThreshold = val;
-  if(verboseLevel > 0) 
-    G4cout << "### G4NeutronKiller: Tracking cut E(MeV) = " 
-	   << kinEnergyThreshold/MeV << G4endl;
+  if (verboseLevel > 0)
+    G4cout << "### G4NeutronKiller: Tracking cut E(MeV) = " << kinEnergyThreshold / MeV << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4NeutronKiller::PostStepGetPhysicalInteractionLength( 
-				 const G4Track& aTrack,
-				 G4double, G4ForceCondition* condition)
+G4double G4NeutronKiller::PostStepGetPhysicalInteractionLength(const G4Track& aTrack, G4double,
+                                                               G4ForceCondition* condition)
 {
   // condition is set to "Not Forced"
   *condition = NotForced;
-  
-  return (aTrack.GetGlobalTime() > timeThreshold || 
-          aTrack.GetKineticEnergy() < kinEnergyThreshold) ? 0.0 : DBL_MAX;
+
+  return (aTrack.GetGlobalTime() > timeThreshold || aTrack.GetKineticEnergy() < kinEnergyThreshold)
+           ? 0.0
+           : DBL_MAX;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4NeutronKiller::GetMeanFreePath(const G4Track&,G4double,
-					  G4ForceCondition*)
+G4double G4NeutronKiller::GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*)
 {
   return DBL_MAX;
-}    
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4VParticleChange* G4NeutronKiller::PostStepDoIt(const G4Track& aTrack, 
-						 const G4Step&)
+G4VParticleChange* G4NeutronKiller::PostStepDoIt(const G4Track& aTrack, const G4Step&)
 {
   pParticleChange->Initialize(aTrack);
   pParticleChange->ProposeTrackStatus(fStopAndKill);

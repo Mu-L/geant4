@@ -39,16 +39,18 @@
 void G4CellScoreComposer::EstimatorCalculation(const G4Step& aStep)
 {
   G4StepPoint* p = aStep.GetPreStepPoint();
-  if (p == nullptr) {
+  if (p == nullptr)
+  {
     G4Exception("G4CellScoreComposer::EstimatorCalculation", "Det0191", FatalException,
-      " no pointer to pre PreStepPoint!");
+                " no pointer to pre PreStepPoint!");
   }
   G4double sl = aStep.GetStepLength();
   G4double slw = sl * p->GetWeight();
   G4double slwe = slw * p->GetKineticEnergy();
 
   G4double v = p->GetVelocity();
-  if (! (v > 0.)) {
+  if (!(v > 0.))
+  {
     v = 10e-9;
   }
 
@@ -58,8 +60,14 @@ void G4CellScoreComposer::EstimatorCalculation(const G4Step& aStep)
   fSCScoreValues.fSumSLWE += slwe;
   fSCScoreValues.fSumSLWE_v += slwe / v;
 }
-void G4CellScoreComposer::TrackEnters() { fSCScoreValues.fSumTracksEntering++; }
-void G4CellScoreComposer::NewTrackPopedUp() { fSCScoreValues.fSumPopulation++; }
+void G4CellScoreComposer::TrackEnters()
+{
+  fSCScoreValues.fSumTracksEntering++;
+}
+void G4CellScoreComposer::NewTrackPopedUp()
+{
+  fSCScoreValues.fSumPopulation++;
+}
 
 void G4CellScoreComposer::SetCollisionWeight(G4double weight)
 {
@@ -69,7 +77,8 @@ void G4CellScoreComposer::SetCollisionWeight(G4double weight)
 
 const G4CellScoreValues& G4CellScoreComposer::GetStandardCellScoreValues() const
 {
-  if (fSCScoreValues.fSumSLW > 0.) {
+  if (fSCScoreValues.fSumSLW > 0.)
+  {
     // divide by SumSLW or SumSLW_v ?
     fSCScoreValues.fNumberWeightedEnergy = fSCScoreValues.fSumSLWE_v / fSCScoreValues.fSumSLW_v;
 

@@ -40,7 +40,10 @@
 
 /**
  * @brief G4ErrorMag_UsualEqRhs serves to reverse the magnetic field when
- * propagation is backwards. It is used for error propagation.
+ * propagation is backwards.
+ * @ingroup geometry_magneticfield
+ *
+ * It is used for error propagation.
  */
 
 class G4ErrorMag_UsualEqRhs : public G4Mag_UsualEqRhs
@@ -51,7 +54,7 @@ class G4ErrorMag_UsualEqRhs : public G4Mag_UsualEqRhs
      * Constructor for G4ErrorMag_UsualEqRhs.
      *  @param[in] MagField Pointer to the magnetic field.
      */
-    G4ErrorMag_UsualEqRhs( G4MagneticField* MagField );
+    G4ErrorMag_UsualEqRhs(G4MagneticField* MagField);
 
     /**
      * Default Destructor.
@@ -65,9 +68,7 @@ class G4ErrorMag_UsualEqRhs : public G4Mag_UsualEqRhs
      *  @param[in] B Field value.
      *  @param[out] dydx Derivatives array.
      */
-    void EvaluateRhsGivenB( const G4double y[],
-                            const G4double B[3],
-                                  G4double dydx[] ) const override;
+    void EvaluateRhsGivenB(const G4double y[], const G4double B[3], G4double dydx[]) const override;
 };
 
 #endif

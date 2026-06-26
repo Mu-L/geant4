@@ -29,26 +29,26 @@
 //
 // Author: Ivana Hrivnacova, 19/06/2015  (ivana@ipno.in2p3.fr)
 
-#ifndef G4TFileInformation_h
-#define G4TFileInformation_h 1
+#ifndef G4TFILEINFORMATION_HH
+#define G4TFILEINFORMATION_HH
 
 #include "globals.hh"
 
 #include <memory>
 #include <utility>
 
-template <typename FT>
+template<typename FT>
 struct G4TFileInformation
 {
-  G4TFileInformation(G4String fileName) : fFileName(std::move(fileName)) {}
-  G4TFileInformation() = default;
-  ~G4TFileInformation() = default;
+    G4TFileInformation(G4String fileName) : fFileName(std::move(fileName)) {}
+    G4TFileInformation() = default;
+    ~G4TFileInformation() = default;
 
-  G4String fFileName;
-  std::shared_ptr<FT> fFile { nullptr };
-  G4bool fIsOpen { false };
-  G4bool fIsEmpty  {true };
-  G4bool fIsDeleted { false };
+    G4String fFileName;
+    std::shared_ptr<FT> fFile{nullptr};
+    G4bool fIsOpen{false};
+    G4bool fIsEmpty{true};
+    G4bool fIsDeleted{false};
 };
 
 #endif

@@ -28,15 +28,15 @@
 // G4PSFlatSurfaceFlux
 #include "G4PSFlatSurfaceFlux.hh"
 
-#include "G4SystemOfUnits.hh"
-#include "G4StepStatus.hh"
-#include "G4Track.hh"
-#include "G4VSolid.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4VPVParameterisation.hh"
-#include "G4UnitsTable.hh"
 #include "G4GeometryTolerance.hh"
+#include "G4StepStatus.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4Track.hh"
+#include "G4UnitsTable.hh"
+#include "G4VPVParameterisation.hh"
+#include "G4VPhysicalVolume.hh"
 #include "G4VScoreHistFiller.hh"
+#include "G4VSolid.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // (Description)
@@ -60,19 +60,18 @@
 //              vs. cell flux * track weight             (Makoto Asai)
 ///////////////////////////////////////////////////////////////////////////////
 
-G4PSFlatSurfaceFlux::G4PSFlatSurfaceFlux(const G4String& name, G4int direction,
-                                         G4int depth)
-  : G4PSFlatSurfaceFlux(name, direction, "percm2", depth) 
+G4PSFlatSurfaceFlux::G4PSFlatSurfaceFlux(const G4String& name, G4int direction, G4int depth)
+  : G4PSFlatSurfaceFlux(name, direction, "percm2", depth)
 {}
 
 G4PSFlatSurfaceFlux::G4PSFlatSurfaceFlux(const G4String& name, G4int direction,
                                          const G4String& unit, G4int depth)
-  : G4VPrimitivePlotter(name, depth)
-  , HCID(-1)
-  , fDirection(direction)
-  , EvtMap(nullptr)
-  , weighted(true)
-  , divideByArea(true)
+  : G4VPrimitivePlotter(name, depth),
+    HCID(-1),
+    fDirection(direction),
+    EvtMap(nullptr),
+    weighted(true),
+    divideByArea(true)
 {
   DefineUnitAndCategory();
   SetUnit(unit);
@@ -80,15 +79,14 @@ G4PSFlatSurfaceFlux::G4PSFlatSurfaceFlux(const G4String& name, G4int direction,
 
 G4bool G4PSFlatSurfaceFlux::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
-  G4StepPoint* preStep             = aStep->GetPreStepPoint();
-  G4VPhysicalVolume* physVol       = preStep->GetPhysicalVolume();
+  G4StepPoint* preStep = aStep->GetPreStepPoint();
+  G4VPhysicalVolume* physVol = preStep->GetPhysicalVolume();
   G4VPVParameterisation* physParam = physVol->GetParameterisation();
-  G4VSolid* solid                  = nullptr;
-  if(physParam != nullptr)
+  G4VSolid* solid = nullptr;
+  if (physParam != nullptr)
   {  // for parameterized volume
-    G4int idx =
-      ((G4TouchableHistory*) (aStep->GetPreStepPoint()->GetTouchable()))
-        ->GetReplicaNumber(indexDepth);
+    G4int idx = ((G4TouchableHistory*)(aStep->GetPreStepPoint()->GetTouchable()))
+                  ->GetReplicaNumber(indexDepth);
     solid = physParam->ComputeSolid(idx, physVol);
     solid->ComputeDimensions(physParam, idx, physVol);
   }
@@ -97,19 +95,19 @@ G4bool G4PSFlatSurfaceFlux::ProcessHits(G4Step* aStep, G4TouchableHistory*)
     solid = physVol->GetLogicalVolume()->GetSolid();
   }
 
-  auto  boxSolid = (G4Box*) (solid);
+  auto boxSolid = (G4Box*)(solid);
 
   G4int dirFlag = IsSelectedSurface(aStep, boxSolid);
-  if(dirFlag > 0)
+  if (dirFlag > 0)
   {
-    if(fDirection == fFlux_InOut || fDirection == dirFlag)
+    if (fDirection == fFlux_InOut || fDirection == dirFlag)
     {
       G4StepPoint* thisStep = nullptr;
-      if(dirFlag == fFlux_In)
+      if (dirFlag == fFlux_In)
       {
         thisStep = preStep;
       }
-      else if(dirFlag == fFlux_Out)
+      else if (dirFlag == fFlux_Out)
       {
         thisStep = aStep->GetPostStepPoint();
       }
@@ -119,34 +117,29 @@ G4bool G4PSFlatSurfaceFlux::ProcessHits(G4Step* aStep, G4TouchableHistory*)
       }
 
       G4TouchableHandle theTouchable = thisStep->GetTouchableHandle();
-      G4ThreeVector pdirection       = thisStep->GetMomentumDirection();
+      G4ThreeVector pdirection = thisStep->GetMomentumDirection();
       G4ThreeVector localdir =
         theTouchable->GetHistory()->GetTopTransform().TransformAxis(pdirection);
       //
       G4double angleFactor = localdir.z();
-      if(angleFactor < 0)
-        angleFactor *= -1.;
+      if (angleFactor < 0) angleFactor *= -1.;
       G4double flux = 1.0;
-      if(weighted)
-        flux *= preStep->GetWeight();  // Current (Particle Weight)
+      if (weighted) flux *= preStep->GetWeight();  // Current (Particle Weight)
       //
-      G4double square =
-        4. * boxSolid->GetXHalfLength() * boxSolid->GetYHalfLength();
+      G4double square = 4. * boxSolid->GetXHalfLength() * boxSolid->GetYHalfLength();
       //
       flux = flux / angleFactor;  // Flux with angle.
-      if(divideByArea)
-        flux /= square;
+      if (divideByArea) flux /= square;
       //
       G4int index = GetIndex(aStep);
       EvtMap->add(index, flux);
 
-      if(!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
+      if (!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
       {
         auto filler = G4VScoreHistFiller::Instance();
-        if(filler == nullptr)
+        if (filler == nullptr)
         {
-          G4Exception("G4PSFlatSurfaceFlux::ProcessHits", "SCORER0123",
-                      JustWarning,
+          G4Exception("G4PSFlatSurfaceFlux::ProcessHits", "SCORER0123", JustWarning,
                       "G4TScoreHistFiller is not instantiated!! Histogram is "
                       "not filled.");
         }
@@ -158,8 +151,7 @@ G4bool G4PSFlatSurfaceFlux::ProcessHits(G4Step* aStep, G4TouchableHistory*)
     }
   }
 #ifdef debug
-  G4cout << " PASSED vol " << index << " trk " << trkid << " len "
-         << fFlatSurfaceFlux << G4endl;
+  G4cout << " PASSED vol " << index << " trk " << trkid << " len " << fFlatSurfaceFlux << G4endl;
 #endif
 
   return true;
@@ -167,30 +159,26 @@ G4bool G4PSFlatSurfaceFlux::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 
 G4int G4PSFlatSurfaceFlux::IsSelectedSurface(G4Step* aStep, G4Box* boxSolid)
 {
-  G4TouchableHandle theTouchable =
-    aStep->GetPreStepPoint()->GetTouchableHandle();
-  G4double kCarTolerance =
-    G4GeometryTolerance::GetInstance()->GetSurfaceTolerance();
+  G4TouchableHandle theTouchable = aStep->GetPreStepPoint()->GetTouchableHandle();
+  G4double kCarTolerance = G4GeometryTolerance::GetInstance()->GetSurfaceTolerance();
 
-  if(aStep->GetPreStepPoint()->GetStepStatus() == fGeomBoundary)
+  if (aStep->GetPreStepPoint()->GetStepStatus() == fGeomBoundary)
   {
     // Entering Geometry
     G4ThreeVector stppos1 = aStep->GetPreStepPoint()->GetPosition();
-    G4ThreeVector localpos1 =
-      theTouchable->GetHistory()->GetTopTransform().TransformPoint(stppos1);
-    if(std::fabs(localpos1.z() + boxSolid->GetZHalfLength()) < kCarTolerance)
+    G4ThreeVector localpos1 = theTouchable->GetHistory()->GetTopTransform().TransformPoint(stppos1);
+    if (std::fabs(localpos1.z() + boxSolid->GetZHalfLength()) < kCarTolerance)
     {
       return fFlux_In;
     }
   }
 
-  if(aStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary)
+  if (aStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary)
   {
     // Exiting Geometry
     G4ThreeVector stppos2 = aStep->GetPostStepPoint()->GetPosition();
-    G4ThreeVector localpos2 =
-      theTouchable->GetHistory()->GetTopTransform().TransformPoint(stppos2);
-    if(std::fabs(localpos2.z() + boxSolid->GetZHalfLength()) < kCarTolerance)
+    G4ThreeVector localpos2 = theTouchable->GetHistory()->GetTopTransform().TransformPoint(stppos2);
+    if (std::fabs(localpos2.z() + boxSolid->GetZHalfLength()) < kCarTolerance)
     {
       return fFlux_Out;
     }
@@ -201,47 +189,46 @@ G4int G4PSFlatSurfaceFlux::IsSelectedSurface(G4Step* aStep, G4Box* boxSolid)
 
 void G4PSFlatSurfaceFlux::Initialize(G4HCofThisEvent* HCE)
 {
-  EvtMap = new G4THitsMap<G4double>(GetMultiFunctionalDetector()->GetName(),
-                                    GetName());
-  if(HCID < 0)
-    HCID = GetCollectionID(0);
-  HCE->AddHitsCollection(HCID, (G4VHitsCollection*) EvtMap);
+  EvtMap = new G4THitsMap<G4double>(GetMultiFunctionalDetector()->GetName(), GetName());
+  if (HCID < 0) HCID = GetCollectionID(0);
+  HCE->AddHitsCollection(HCID, (G4VHitsCollection*)EvtMap);
 }
 
-void G4PSFlatSurfaceFlux::clear() { EvtMap->clear(); }
+void G4PSFlatSurfaceFlux::clear()
+{
+  EvtMap->clear();
+}
 
 void G4PSFlatSurfaceFlux::PrintAll()
 {
   G4cout << " MultiFunctionalDet  " << detector->GetName() << G4endl;
   G4cout << " PrimitiveScorer" << GetName() << G4endl;
   G4cout << " Number of entries " << EvtMap->entries() << G4endl;
-  for(const auto& [copy, flux] : *(EvtMap->GetMap()))
+  for (const auto& [copy, flux] : *(EvtMap->GetMap()))
   {
-    G4cout << "  copy no.: " << copy
-           << "  flux  : " << *(flux) / GetUnitValue() << " ["
+    G4cout << "  copy no.: " << copy << "  flux  : " << *(flux) / GetUnitValue() << " ["
            << GetUnit() << "]" << G4endl;
   }
 }
 
 void G4PSFlatSurfaceFlux::SetUnit(const G4String& unit)
 {
-  if(divideByArea)
+  if (divideByArea)
   {
     CheckAndSetUnit(unit, "Per Unit Surface");
   }
   else
   {
-    if(unit.empty())
+    if (unit.empty())
     {
-      unitName  = unit;
+      unitName = unit;
       unitValue = 1.0;
     }
     else
     {
-      G4String msg = "Invalid unit [" + unit + "] (Current  unit is [" +
-                     GetUnit() + "] ) for " + GetName();
-      G4Exception("G4PSFlatSurfaceFlux::SetUnit", "DetPS0008", JustWarning,
-                  msg);
+      G4String msg =
+        "Invalid unit [" + unit + "] (Current  unit is [" + GetUnit() + "] ) for " + GetName();
+      G4Exception("G4PSFlatSurfaceFlux::SetUnit", "DetPS0008", JustWarning, msg);
     }
   }
 }
@@ -249,9 +236,7 @@ void G4PSFlatSurfaceFlux::SetUnit(const G4String& unit)
 void G4PSFlatSurfaceFlux::DefineUnitAndCategory()
 {
   // Per Unit Surface
-  new G4UnitDefinition("percentimeter2", "percm2", "Per Unit Surface",
-                       (1. / cm2));
-  new G4UnitDefinition("permillimeter2", "permm2", "Per Unit Surface",
-                       (1. / mm2));
+  new G4UnitDefinition("percentimeter2", "percm2", "Per Unit Surface", (1. / cm2));
+  new G4UnitDefinition("permillimeter2", "permm2", "Per Unit Surface", (1. / mm2));
   new G4UnitDefinition("permeter2", "perm2", "Per Unit Surface", (1. / m2));
 }

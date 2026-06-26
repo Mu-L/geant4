@@ -25,37 +25,41 @@
 //
 //
 //
-// 
+//
 // John Allison  26th August 1998.
 // Model which knows how to draw GEANT4 hits.
 
 #include "G4HitsModel.hh"
 
+#include "G4Event.hh"
 #include "G4ModelingParameters.hh"
 #include "G4VGraphicsScene.hh"
-#include "G4Event.hh"
 
-G4HitsModel::~G4HitsModel () {}
+G4HitsModel::~G4HitsModel() {}
 
-G4HitsModel::G4HitsModel ():
-  fpCurrentHit(nullptr)
+G4HitsModel::G4HitsModel() : fpCurrentHit(nullptr)
 {
   fType = "G4HitsModel";
   fGlobalTag = "G4HitsModel for all hits.";
   fGlobalDescription = fGlobalTag;
 }
 
-void G4HitsModel::DescribeYourselfTo (G4VGraphicsScene& sceneHandler)
+void G4HitsModel::DescribeYourselfTo(G4VGraphicsScene& sceneHandler)
 {
   const G4Event* event = fpMP->GetEvent();
-  if (event) {
+  if (event)
+  {
     G4HCofThisEvent* HCE = event->GetHCofThisEvent();
-    if (HCE) {
+    if (HCE)
+    {
       G4int nHC = (G4int)HCE->GetCapacity();
-      for (G4int iHC = 0; iHC < nHC; ++iHC) {
-        G4VHitsCollection* HC = HCE -> GetHC (iHC);
-        if (HC) {
-          for(std::size_t iHit = 0; iHit < HC->GetSize(); ++iHit) {
+      for (G4int iHC = 0; iHC < nHC; ++iHC)
+      {
+        G4VHitsCollection* HC = HCE->GetHC(iHC);
+        if (HC)
+        {
+          for (std::size_t iHit = 0; iHit < HC->GetSize(); ++iHit)
+          {
             fpCurrentHit = HC->GetHit(iHit);
             if (fpCurrentHit) sceneHandler.AddCompound(*fpCurrentHit);
           }

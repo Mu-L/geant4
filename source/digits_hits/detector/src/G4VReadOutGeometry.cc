@@ -128,24 +128,30 @@ G4bool G4VReadOutGeometry::CheckROVolume(G4Step* currentStep, G4TouchableHistory
   ROhist = nullptr;
   G4bool incFlg = true;
   auto PV = currentStep->GetPreStepPoint()->GetPhysicalVolume();
-  if (((fexcludeList) != nullptr) && (fexcludeList->CheckPV(PV))) {
+  if (((fexcludeList) != nullptr) && (fexcludeList->CheckPV(PV)))
+  {
     incFlg = false;
   }
-  else if (((fincludeList) != nullptr) && (fincludeList->CheckPV(PV))) {
+  else if (((fincludeList) != nullptr) && (fincludeList->CheckPV(PV)))
+  {
     incFlg = true;
   }
-  else if (((fexcludeList) != nullptr) && (fexcludeList->CheckLV(PV->GetLogicalVolume()))) {
+  else if (((fexcludeList) != nullptr) && (fexcludeList->CheckLV(PV->GetLogicalVolume())))
+  {
     incFlg = false;
   }
-  else if (((fincludeList) != nullptr) && (fincludeList->CheckLV(PV->GetLogicalVolume()))) {
+  else if (((fincludeList) != nullptr) && (fincludeList->CheckLV(PV->GetLogicalVolume())))
+  {
     incFlg = true;
   }
-  if (! incFlg) return false;
+  if (!incFlg) return false;
 
-  if (ROworld != nullptr) {
+  if (ROworld != nullptr)
+  {
     incFlg = FindROTouchable(currentStep);
   }
-  if (incFlg) {
+  if (incFlg)
+  {
     ROhist = touchableHistory;
   }
   return incFlg;
@@ -161,13 +167,17 @@ G4bool G4VReadOutGeometry::FindROTouchable(G4Step* currentStep)
   // At first invokation, creates the touchable history. Note
   // that default value (false) of Locate method is used.
   //  ---------> But the default Value is TRUE <-------------------- J.A.
-  if (touchableHistory == nullptr) {
+  if (touchableHistory == nullptr)
+  {
     touchableHistory = new G4TouchableHistory();
-    ROnavigator->LocateGlobalPointAndUpdateTouchable(currentStep->GetPreStepPoint()->GetPosition(),
+    ROnavigator->LocateGlobalPointAndUpdateTouchable(
+      currentStep->GetPreStepPoint()->GetPosition(),
       currentStep->GetPreStepPoint()->GetMomentumDirection(), touchableHistory);
   }
-  else {
-    ROnavigator->LocateGlobalPointAndUpdateTouchable(currentStep->GetPreStepPoint()->GetPosition(),
+  else
+  {
+    ROnavigator->LocateGlobalPointAndUpdateTouchable(
+      currentStep->GetPreStepPoint()->GetPosition(),
       currentStep->GetPreStepPoint()->GetMomentumDirection(), touchableHistory, true);
   }
   // Can the above be improved by the use of an isotropic safety
@@ -180,7 +190,8 @@ G4bool G4VReadOutGeometry::FindROTouchable(G4Step* currentStep)
   // checks if volume is sensitive:
   auto currentVolume = touchableHistory->GetVolume();
   // checks first if a physical volume exists here:
-  if (currentVolume != nullptr) {
+  if (currentVolume != nullptr)
+  {
     return currentVolume->GetLogicalVolume()->GetSensitiveDetector() != nullptr;
   }
   // no sensitive volume found: returns false

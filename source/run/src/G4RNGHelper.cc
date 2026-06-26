@@ -42,7 +42,8 @@ G4TemplateRNGHelper<G4String>* G4TemplateRNGHelper<G4String>::instance = nullptr
 template<class T>
 G4TemplateRNGHelper<T>* G4TemplateRNGHelper<T>::GetInstance()
 {
-  if (instance == nullptr) {
+  if (instance == nullptr)
+  {
     instance = new G4TemplateRNGHelper<T>();
   }
   return instance;
@@ -59,7 +60,8 @@ G4TemplateRNGHelper<T>* G4TemplateRNGHelper<T>::GetInstanceIfExist()
 template<>
 G4TemplateRNGHelper<G4long>* G4TemplateRNGHelper<G4long>::GetInstance()
 {
-  if (instance == nullptr) {
+  if (instance == nullptr)
+  {
     instance = new G4TemplateRNGHelper<G4long>();
   }
   return instance;
@@ -76,7 +78,8 @@ G4TemplateRNGHelper<G4long>* G4TemplateRNGHelper<G4long>::GetInstanceIfExist()
 template<>
 G4TemplateRNGHelper<G4String>* G4TemplateRNGHelper<G4String>::GetInstance()
 {
-  if (instance == nullptr) {
+  if (instance == nullptr)
+  {
     instance = new G4TemplateRNGHelper<G4String>();
   }
   return instance;

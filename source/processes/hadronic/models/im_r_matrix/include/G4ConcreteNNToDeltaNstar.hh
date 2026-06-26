@@ -25,39 +25,41 @@
 //
 //
 
-#ifndef G4ConcreteNNToDeltaNstar_h
-#define G4ConcreteNNToDeltaNstar_h
+#ifndef G4CONCRETENNTODELTANSTAR_HH
+#define G4CONCRETENNTODELTANSTAR_HH
 
-#include "globals.hh"
-#include "G4VScatteringCollision.hh"
-#include "G4VCrossSectionSource.hh"
-#include "G4VAngularDistribution.hh"
-#include "G4KineticTrackVector.hh"
-#include <vector>
-#include "G4XDeltaNstarTable.hh"
 #include "G4ConcreteNNTwoBodyResonance.hh"
+#include "G4KineticTrackVector.hh"
+#include "G4VAngularDistribution.hh"
+#include "G4VCrossSectionSource.hh"
+#include "G4VScatteringCollision.hh"
+#include "G4XDeltaNstarTable.hh"
+#include "globals.hh"
 
-//class G4KineticTrack;
+#include <vector>
+
+// class G4KineticTrack;
 
 class G4ConcreteNNToDeltaNstar : public G4ConcreteNNTwoBodyResonance
 {
-public:
-  G4ConcreteNNToDeltaNstar(const G4ParticleDefinition* aPrimary,
-		       const G4ParticleDefinition* bPriamry,
-		       const G4ParticleDefinition* aSecondary,
-		       const G4ParticleDefinition* bSecondary);
+  public:
 
-  virtual ~G4ConcreteNNToDeltaNstar();  
-  virtual G4String GetName() const { return "ConcreteNNToNNStar"; }
+    G4ConcreteNNToDeltaNstar(const G4ParticleDefinition* aPrimary,
+                             const G4ParticleDefinition* bPriamry,
+                             const G4ParticleDefinition* aSecondary,
+                             const G4ParticleDefinition* bSecondary);
 
-private:
-  G4ConcreteNNToDeltaNstar(const G4ConcreteNNToDeltaNstar &);
-  G4ConcreteNNToDeltaNstar & operator= (const G4ConcreteNNToDeltaNstar &);
+    virtual ~G4ConcreteNNToDeltaNstar();
+    virtual G4String GetName() const { return "ConcreteNNToNNStar"; }
 
-private:  
+  private:
 
-  static G4ThreadLocal G4XDeltaNstarTable *theSigmaTable_G4MT_TLS_;
+    G4ConcreteNNToDeltaNstar(const G4ConcreteNNToDeltaNstar&);
+    G4ConcreteNNToDeltaNstar& operator=(const G4ConcreteNNToDeltaNstar&);
 
+  private:
+
+    static G4ThreadLocal G4XDeltaNstarTable* theSigmaTable_G4MT_TLS_;
 };
 
 #endif

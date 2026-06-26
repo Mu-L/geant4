@@ -27,7 +27,7 @@
 //
 // Class description:
 //
-// Interface class for a weight window store. It defines how the lower 
+// Interface class for a weight window store. It defines how the lower
 // weight window bound can be obtained from a weight window store.
 
 // Author: Michael Dressel (CERN), 2003
@@ -42,6 +42,8 @@ class G4VPhysicalVolume;
 
 /**
  * @brief G4VWeightWindowStore is an interface class for a weight window store.
+ * @ingroup geometry_biasing
+ *
  * It defines how the lower weight window bound can be obtained from a weight
  * window store.
  */
@@ -57,11 +59,10 @@ class G4VWeightWindowStore
     virtual ~G4VWeightWindowStore() = default;
 
     /**
-     * Computes a lower weight bound value of a "cell" addressed by a 
+     * Computes a lower weight bound value of a "cell" addressed by a
      * G4GeometryCell and the corresponding energy from the store.
      */
-    virtual G4double GetLowerWeight(const G4GeometryCell& gCell, 
-                                          G4double partEnergy) const = 0;
+    virtual G4double GetLowerWeight(const G4GeometryCell& gCell, G4double partEnergy) const = 0;
 
     /**
      * Returns true if the gCell is in the store, else false.

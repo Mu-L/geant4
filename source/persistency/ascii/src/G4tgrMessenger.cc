@@ -29,9 +29,10 @@
 // --------------------------------------------------------------------
 
 #include "G4tgrMessenger.hh"
-#include "G4UIdirectory.hh"
-#include "G4UIcmdWithoutParameter.hh"
+
 #include "G4UIcmdWithAnInteger.hh"
+#include "G4UIcmdWithoutParameter.hh"
+#include "G4UIdirectory.hh"
 
 G4ThreadLocal G4int G4tgrMessenger::theVerboseLevel = 0;
 
@@ -57,15 +58,21 @@ G4tgrMessenger::~G4tgrMessenger()
 }
 
 // --------------------------------------------------------------------
-G4int G4tgrMessenger::GetVerboseLevel() { return theVerboseLevel; }
+G4int G4tgrMessenger::GetVerboseLevel()
+{
+  return theVerboseLevel;
+}
 
 // --------------------------------------------------------------------
-void G4tgrMessenger::SetVerboseLevel(G4int verb) { theVerboseLevel = verb; }
+void G4tgrMessenger::SetVerboseLevel(G4int verb)
+{
+  theVerboseLevel = verb;
+}
 
 // --------------------------------------------------------------------
 void G4tgrMessenger::SetNewValue(G4UIcommand* command, G4String newValues)
 {
-  if(command == verboseCmd)
+  if (command == verboseCmd)
   {
     G4tgrMessenger::SetVerboseLevel(verboseCmd->GetNewIntValue(newValues));
   }
@@ -75,7 +82,7 @@ void G4tgrMessenger::SetNewValue(G4UIcommand* command, G4String newValues)
 G4String G4tgrMessenger::GetCurrentValue(G4UIcommand* command)
 {
   G4String cv;
-  if(command == verboseCmd)
+  if (command == verboseCmd)
   {
     cv = verboseCmd->ConvertToString(G4tgrMessenger::GetVerboseLevel());
   }

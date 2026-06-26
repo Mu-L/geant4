@@ -38,8 +38,8 @@
 // Author: T. Koi (SLAC/SCCS), November-2006 - First implementation.
 //         P. Arce (CIEMAT), June-2014 - Conversion neutron_hp to particle_hp
 // --------------------------------------------------------------------
-#ifndef G4ParticleHPThermalScattering_h
-#define G4ParticleHPThermalScattering_h 1
+#ifndef G4PARTICLEHPTHERMALSCATTERING_HH
+#define G4PARTICLEHPTHERMALSCATTERING_HH
 
 #include "G4HadronicInteraction.hh"
 #include "G4ParticleHPThermalScatteringNames.hh"
@@ -135,8 +135,10 @@ class G4ParticleHPThermalScattering : public G4HadronicInteraction
 
     // Coherent Elastic
     //         ElementID             temp                             BraggE     cumulativeP
-    std::map<G4int, std::map<G4double, std::vector<std::pair<G4double, G4double>*>*>*>* coherentFSs{nullptr};
-    std::map<G4double, std::vector<std::pair<G4double, G4double>*>*>* readACoherentFSDATA(const G4String&);
+    std::map<G4int, std::map<G4double, std::vector<std::pair<G4double, G4double>*>*>*>* coherentFSs{
+      nullptr};
+    std::map<G4double, std::vector<std::pair<G4double, G4double>*>*>*
+    readACoherentFSDATA(const G4String&);
 
     // Incoherent Elastic
     //         ElementID          temp       aFS for this temp (and this element)

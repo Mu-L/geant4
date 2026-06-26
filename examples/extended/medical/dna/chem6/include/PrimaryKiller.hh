@@ -37,10 +37,10 @@
 #ifndef CHEM6_PrimaryKiller_h
 #define CHEM6_PrimaryKiller_h 1
 
-#include <G4THitsMap.hh>
-#include <G4UImessenger.hh>
-#include <G4VPrimitiveScorer.hh>
-#include <G4UnitsTable.hh>
+#include "G4THitsMap.hh"
+#include "G4UImessenger.hh"
+#include "G4VPrimitiveScorer.hh"
+#include "G4UnitsTable.hh"
 
 class G4UIcmdWithADoubleAndUnit;
 class G4UIcmdWith3VectorAndUnit;
@@ -75,15 +75,14 @@ public:
    */
   void SetNewValue(G4UIcommand *command, G4String newValue) override;
 
-  void Initialize(G4HCofThisEvent *) override {fELoss = 0.;};
-
-  void EndOfEvent(G4HCofThisEvent *) override {};
-
+  void Initialize(G4HCofThisEvent *) override;
 
 protected:
   G4bool ProcessHits(G4Step *, G4TouchableHistory *) override;
 
 private:
+  G4bool fKillPrimary = false; // true if fELossRange_Min is set less than
+                               // fELossRange_Max, meaning PrimaryKiller is activated
   G4double fELoss = 0; // cumulated energy loss by the primary
   G4double fELossRange_Min = DBL_MAX; // fELoss from which the primary is killed
   G4double fELossRange_Max = DBL_MAX; // fELoss from which the event is aborted

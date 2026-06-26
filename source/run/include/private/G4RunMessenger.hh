@@ -64,6 +64,7 @@ class G4UIcommand;
 class G4RunMessenger : public G4UImessenger
 {
   public:
+
     G4RunMessenger(G4RunManager* runMgr);
     ~G4RunMessenger() override;
 
@@ -71,6 +72,7 @@ class G4RunMessenger : public G4UImessenger
     G4String GetCurrentValue(G4UIcommand* command) override;
 
   private:
+
     G4RunManager* runManager = nullptr;
     G4String macroFileName = "***NULL***";  // internal use only!!!
 

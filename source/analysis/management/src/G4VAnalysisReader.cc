@@ -27,17 +27,18 @@
 // Author: Ivana Hrivnacova, 09/07/2013  (ivana@ipno.in2p3.fr)
 
 #include "G4VAnalysisReader.hh"
+
 #include "G4AnalysisUtilities.hh"
 #include "G4HnManager.hh"
-#include "G4VRNtupleManager.hh"
-#include "G4VRFileManager.hh"
 #include "G4Threading.hh"
+#include "G4VRFileManager.hh"
+#include "G4VRNtupleManager.hh"
 
 using namespace G4Analysis;
 
 //_____________________________________________________________________________
 G4VAnalysisReader::G4VAnalysisReader(const G4String& type)
- : fState(type, ! G4Threading::IsWorkerThread())
+  : fState(type, !G4Threading::IsWorkerThread())
 {}
 
 //_____________________________________________________________________________
@@ -112,14 +113,15 @@ G4String G4VAnalysisReader::GetFileName() const
 }
 
 //_____________________________________________________________________________
-G4int G4VAnalysisReader::ReadH1(const G4String& h1Name,
-                                const G4String& fileName,
+G4int G4VAnalysisReader::ReadH1(const G4String& h1Name, const G4String& fileName,
                                 const G4String& dirName)
 {
-  if ( fileName != "" ) {
+  if (fileName != "")
+  {
     return ReadH1Impl(h1Name, fileName, dirName, true);
   }
-  if (fVFileManager->GetFileName() == "") {
+  if (fVFileManager->GetFileName() == "")
+  {
     Warn("Cannot get H1 " + h1Name + ". File name has to be set first.", fkClass, "ReadH1");
     return kInvalidId;
   }
@@ -127,14 +129,15 @@ G4int G4VAnalysisReader::ReadH1(const G4String& h1Name,
 }
 
 //_____________________________________________________________________________
-G4int G4VAnalysisReader::ReadH2(const G4String& h2Name,
-                                const G4String& fileName,
+G4int G4VAnalysisReader::ReadH2(const G4String& h2Name, const G4String& fileName,
                                 const G4String& dirName)
 {
-  if ( fileName != "" ) {
+  if (fileName != "")
+  {
     return ReadH2Impl(h2Name, fileName, dirName, true);
   }
-  if (fVFileManager->GetFileName() == "") {
+  if (fVFileManager->GetFileName() == "")
+  {
     Warn("Cannot get H2 " + h2Name + ". File name has to be set first.", fkClass, "ReadH2");
     return kInvalidId;
   }
@@ -142,14 +145,15 @@ G4int G4VAnalysisReader::ReadH2(const G4String& h2Name,
 }
 
 //_____________________________________________________________________________
-G4int G4VAnalysisReader::ReadH3(const G4String& h3Name,
-                                const G4String& fileName,
+G4int G4VAnalysisReader::ReadH3(const G4String& h3Name, const G4String& fileName,
                                 const G4String& dirName)
 {
-  if ( fileName != "" ) {
+  if (fileName != "")
+  {
     return ReadH3Impl(h3Name, fileName, dirName, true);
   }
-  if (fVFileManager->GetFileName() == "") {
+  if (fVFileManager->GetFileName() == "")
+  {
     Warn("Cannot get H3 " + h3Name + ". File name has to be set first.", fkClass, "ReadH3");
     return kInvalidId;
   }
@@ -157,14 +161,15 @@ G4int G4VAnalysisReader::ReadH3(const G4String& h3Name,
 }
 
 //_____________________________________________________________________________
-G4int G4VAnalysisReader::ReadP1(const G4String& p1Name,
-                                const G4String& fileName,
+G4int G4VAnalysisReader::ReadP1(const G4String& p1Name, const G4String& fileName,
                                 const G4String& dirName)
 {
-  if ( fileName != "" ) {
+  if (fileName != "")
+  {
     return ReadP1Impl(p1Name, fileName, dirName, true);
   }
-  if (fVFileManager->GetFileName() == "") {
+  if (fVFileManager->GetFileName() == "")
+  {
     Warn("Cannot get P1 " + p1Name + ". File name has to be set first.", fkClass, "ReadP1");
     return kInvalidId;
   }
@@ -172,14 +177,15 @@ G4int G4VAnalysisReader::ReadP1(const G4String& p1Name,
 }
 
 //_____________________________________________________________________________
-G4int G4VAnalysisReader::ReadP2(const G4String& p2Name,
-                                const G4String& fileName,
+G4int G4VAnalysisReader::ReadP2(const G4String& p2Name, const G4String& fileName,
                                 const G4String& dirName)
 {
-  if ( fileName != "" ) {
+  if (fileName != "")
+  {
     return ReadP2Impl(p2Name, fileName, dirName, true);
   }
-  if (fVFileManager->GetFileName() == "") {
+  if (fVFileManager->GetFileName() == "")
+  {
     Warn("Cannot get P2 " + p2Name + ". File name has to be set first.", fkClass, "ReadP2");
     return kInvalidId;
   }
@@ -246,138 +252,123 @@ G4bool G4VAnalysisReader::SetFirstNtupleId(G4int firstId)
 }
 
 //_____________________________________________________________________________
-G4int G4VAnalysisReader::GetNtuple(const G4String& ntupleName,
-                                   const G4String& fileName,
+G4int G4VAnalysisReader::GetNtuple(const G4String& ntupleName, const G4String& fileName,
                                    const G4String& dirName)
 {
-  if ( fileName != "" ) {
+  if (fileName != "")
+  {
     return fVNtupleManager->ReadNtupleImpl(ntupleName, fileName, dirName, true);
   }
   // Check if fileName was set
-  if (fVFileManager->GetFileName() == "") {
+  if (fVFileManager->GetFileName() == "")
+  {
     Warn("Cannot read Ntuple " + ntupleName += ". File name has to be set first.", fkClass,
-      "ReadNtuple");
+         "ReadNtuple");
     return kInvalidId;
   }
   return fVNtupleManager->ReadNtupleImpl(ntupleName, fVFileManager->GetFileName(), dirName, false);
 }
 
 //_____________________________________________________________________________
-G4bool G4VAnalysisReader::SetNtupleIColumn(const G4String& columnName,
-                                            G4int& value)
+G4bool G4VAnalysisReader::SetNtupleIColumn(const G4String& columnName, G4int& value)
 {
   return fVNtupleManager->SetNtupleIColumn(columnName, value);
 }
 
 //_____________________________________________________________________________
-G4bool G4VAnalysisReader::SetNtupleFColumn(const G4String& columnName,
-                                            G4float& value)
+G4bool G4VAnalysisReader::SetNtupleFColumn(const G4String& columnName, G4float& value)
 {
   return fVNtupleManager->SetNtupleFColumn(columnName, value);
 }
 
 //_____________________________________________________________________________
-G4bool G4VAnalysisReader::SetNtupleDColumn(const G4String& columnName,
-                                            G4double& value)
+G4bool G4VAnalysisReader::SetNtupleDColumn(const G4String& columnName, G4double& value)
 {
   return fVNtupleManager->SetNtupleDColumn(columnName, value);
 }
 
 //_____________________________________________________________________________
-G4bool G4VAnalysisReader::SetNtupleSColumn(const G4String& columnName,
-                                            G4String& value)
+G4bool G4VAnalysisReader::SetNtupleSColumn(const G4String& columnName, G4String& value)
 {
   return fVNtupleManager->SetNtupleSColumn(columnName, value);
 }
 
 //_____________________________________________________________________________
-G4bool G4VAnalysisReader::SetNtupleIColumn(const G4String& columnName,
-                                            std::vector<int>& vector)
+G4bool G4VAnalysisReader::SetNtupleIColumn(const G4String& columnName, std::vector<int>& vector)
 {
   return fVNtupleManager->SetNtupleIColumn(columnName, vector);
 }
 
 //_____________________________________________________________________________
-G4bool G4VAnalysisReader::SetNtupleFColumn(const G4String& columnName,
-                                            std::vector<float>& vector)
+G4bool G4VAnalysisReader::SetNtupleFColumn(const G4String& columnName, std::vector<float>& vector)
 {
   return fVNtupleManager->SetNtupleFColumn(columnName, vector);
 }
 
 //_____________________________________________________________________________
-G4bool G4VAnalysisReader::SetNtupleDColumn(const G4String& columnName,
-                                            std::vector<double>& vector)
+G4bool G4VAnalysisReader::SetNtupleDColumn(const G4String& columnName, std::vector<double>& vector)
 {
   return fVNtupleManager->SetNtupleDColumn(columnName, vector);
 }
 
 //_____________________________________________________________________________
 G4bool G4VAnalysisReader::SetNtupleSColumn(const G4String& columnName,
-                                            std::vector<std::string>& vector)
+                                           std::vector<std::string>& vector)
 {
   return fVNtupleManager->SetNtupleSColumn(columnName, vector);
 }
 
 //_____________________________________________________________________________
-G4bool G4VAnalysisReader::SetNtupleIColumn(G4int ntupleId,
-                                            const G4String& columnName,
-                                            G4int& value)
+G4bool G4VAnalysisReader::SetNtupleIColumn(G4int ntupleId, const G4String& columnName, G4int& value)
 {
   return fVNtupleManager->SetNtupleIColumn(ntupleId, columnName, value);
 }
 
 //_____________________________________________________________________________
-G4bool G4VAnalysisReader::SetNtupleFColumn(G4int ntupleId,
-                                            const G4String& columnName,
-                                            G4float& value)
+G4bool G4VAnalysisReader::SetNtupleFColumn(G4int ntupleId, const G4String& columnName,
+                                           G4float& value)
 {
   return fVNtupleManager->SetNtupleFColumn(ntupleId, columnName, value);
 }
 
 //_____________________________________________________________________________
-G4bool G4VAnalysisReader::SetNtupleDColumn(G4int ntupleId,
-                                            const G4String& columnName,
-                                            G4double& value)
+G4bool G4VAnalysisReader::SetNtupleDColumn(G4int ntupleId, const G4String& columnName,
+                                           G4double& value)
 {
   return fVNtupleManager->SetNtupleDColumn(ntupleId, columnName, value);
 }
 
 //_____________________________________________________________________________
-G4bool G4VAnalysisReader::SetNtupleSColumn(G4int ntupleId,
-                                            const G4String& columnName,
-                                            G4String& value)
+G4bool G4VAnalysisReader::SetNtupleSColumn(G4int ntupleId, const G4String& columnName,
+                                           G4String& value)
 {
   return fVNtupleManager->SetNtupleSColumn(ntupleId, columnName, value);
 }
 
 //_____________________________________________________________________________
-G4bool G4VAnalysisReader::SetNtupleIColumn(G4int ntupleId,
-                                            const G4String& columnName,
-                                            std::vector<int>& vector)
+G4bool G4VAnalysisReader::SetNtupleIColumn(G4int ntupleId, const G4String& columnName,
+                                           std::vector<int>& vector)
 {
   return fVNtupleManager->SetNtupleIColumn(ntupleId, columnName, vector);
 }
 
 //_____________________________________________________________________________
-G4bool G4VAnalysisReader::SetNtupleFColumn(G4int ntupleId,
-                                            const G4String& columnName,
-                                            std::vector<float>& vector)
+G4bool G4VAnalysisReader::SetNtupleFColumn(G4int ntupleId, const G4String& columnName,
+                                           std::vector<float>& vector)
 {
   return fVNtupleManager->SetNtupleFColumn(ntupleId, columnName, vector);
 }
 
 //_____________________________________________________________________________
-G4bool G4VAnalysisReader::SetNtupleDColumn(G4int ntupleId,
-                                            const G4String& columnName,
-                                            std::vector<double>& vector)
+G4bool G4VAnalysisReader::SetNtupleDColumn(G4int ntupleId, const G4String& columnName,
+                                           std::vector<double>& vector)
 {
   return fVNtupleManager->SetNtupleDColumn(ntupleId, columnName, vector);
 }
 
 //_____________________________________________________________________________
-G4bool G4VAnalysisReader::SetNtupleSColumn(G4int ntupleId,
-                                            const G4String& columnName,
-                                            std::vector<std::string>& vector)
+G4bool G4VAnalysisReader::SetNtupleSColumn(G4int ntupleId, const G4String& columnName,
+                                           std::vector<std::string>& vector)
 {
   return fVNtupleManager->SetNtupleSColumn(ntupleId, columnName, vector);
 }
@@ -387,7 +378,6 @@ G4bool G4VAnalysisReader::GetNtupleRow()
 {
   return fVNtupleManager->GetNtupleRow();
 }
-
 
 //_____________________________________________________________________________
 G4bool G4VAnalysisReader::GetNtupleRow(G4int ntupleId)

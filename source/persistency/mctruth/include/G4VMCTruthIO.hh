@@ -32,7 +32,7 @@
 // Author: Youhei Morita, 18.11.2001
 // --------------------------------------------------------------------
 #ifndef G4VMCTRUTHIO_HH
-#define G4VMCTRUTHIO_HH 1
+#define G4VMCTRUTHIO_HH
 
 #include "G4MCTEvent.hh"
 
@@ -41,23 +41,23 @@ class G4VMCTruthIO
   public:
 
     G4VMCTruthIO();
-      // Constructor
+    // Constructor
 
     virtual ~G4VMCTruthIO();
-      // Destructor
+    // Destructor
 
     virtual G4bool Store(G4MCTEvent*) = 0;
-      // Pure virtual method for storing MCTruth Event.
-      // Each persistency package should implement a concrete method
-      // of storing the G4MCTEvent with this signature
+    // Pure virtual method for storing MCTruth Event.
+    // Each persistency package should implement a concrete method
+    // of storing the G4MCTEvent with this signature
 
     virtual G4bool Retrieve(G4MCTEvent*&) = 0;
-      // Pure virtual method for retrieving MCTruth Event.
-      // Each persistency package should implement a concrete method
-      // of storing the G4MCTEvent with this signature
+    // Pure virtual method for retrieving MCTruth Event.
+    // Each persistency package should implement a concrete method
+    // of storing the G4MCTEvent with this signature
 
     void SetVerboseLevel(G4int v) { m_verbose = v; }
-      // Set verbose level.
+    // Set verbose level.
 
   protected:
 

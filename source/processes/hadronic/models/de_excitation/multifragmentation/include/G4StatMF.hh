@@ -26,45 +26,43 @@
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara
 
-#ifndef G4StatMF_h
-#define G4StatMF_h 1
+#ifndef G4STATMF_HH
+#define G4STATMF_HH
 
-#include "globals.hh"
+#include "G4Fragment.hh"
+#include "G4StatMFChannel.hh"
+#include "G4StatMFMacroCanonical.hh"
+#include "G4StatMFMicroCanonical.hh"
 #include "G4VMultiFragmentation.hh"
 #include "G4VStatMFEnsemble.hh"
-#include "G4StatMFMicroCanonical.hh"
-#include "G4StatMFMacroCanonical.hh"
-#include "G4StatMFChannel.hh"
-#include "G4Fragment.hh"
+#include "globals.hh"
 
 class G4StatMF : public G4VMultiFragmentation
 {
-public:
+  public:
 
-  G4StatMF();
-  ~G4StatMF() override;
+    G4StatMF();
+    ~G4StatMF() override;
 
-  G4FragmentVector* BreakItUp(const G4Fragment &theNucleus) override;
+    G4FragmentVector* BreakItUp(const G4Fragment& theNucleus) override;
 
-  G4StatMF(const G4StatMF & right) = delete;
-  G4StatMF & operator=(const G4StatMF & right) = delete;
-  G4bool operator==(const G4StatMF & right) = delete;
-  G4bool operator!=(const G4StatMF & right) = delete;
+    G4StatMF(const G4StatMF& right) = delete;
+    G4StatMF& operator=(const G4StatMF& right) = delete;
+    G4bool operator==(const G4StatMF& right) = delete;
+    G4bool operator!=(const G4StatMF& right) = delete;
 
-private:
+  private:
 
-  // This finds temperature of breaking channel.
-  G4bool FindTemperatureOfBreakingChannel(const G4Fragment & theFragment, 
-					  const G4StatMFChannel * aChannel,
-					  G4double & Temperature);
+    // This finds temperature of breaking channel.
+    G4bool FindTemperatureOfBreakingChannel(const G4Fragment& theFragment,
+                                            const G4StatMFChannel* aChannel, G4double& Temperature);
 
-  G4double CalcEnergy(G4int A, G4int Z, const G4StatMFChannel* aChannel,
-		      G4double T);
+    G4double CalcEnergy(G4int A, G4int Z, const G4StatMFChannel* aChannel, G4double T);
 
-  G4StatMFMicroCanonical* theMicrocanonicalEnsemble{nullptr};
-  G4StatMFMacroCanonical* theMacrocanonicalEnsemble{nullptr};
+    G4StatMFMicroCanonical* theMicrocanonicalEnsemble{nullptr};
+    G4StatMFMacroCanonical* theMacrocanonicalEnsemble{nullptr};
 
-  G4VStatMFEnsemble* fEnsemble{nullptr};
+    G4VStatMFEnsemble* fEnsemble{nullptr};
 };
 
 #endif

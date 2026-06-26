@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4Deuteron_h
-#define G4Deuteron_h 1
+#ifndef G4DEUTERON_HH
+#define G4DEUTERON_HH
 
 #include "G4Ions.hh"
 
 class G4Deuteron : public G4Ions
 {
   public:
+
     static G4Deuteron* Definition();
     static G4Deuteron* DeuteronDefinition();
     static G4Deuteron* Deuteron();
 
   private:
+
     G4Deuteron() {}
     ~G4Deuteron() override = default;
 

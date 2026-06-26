@@ -38,69 +38,67 @@
 //
 // Author: G.Cosmo (CERN), November 2000
 // --------------------------------------------------------------------
-#ifndef G4AllocatorPool_hh
-#define G4AllocatorPool_hh 1
+#ifndef G4ALLOCATORPOOL_HH
+#define G4ALLOCATORPOOL_HH
 
 class G4AllocatorPool
 {
- public:
-  explicit G4AllocatorPool(unsigned int n = 0);
-  // Create a pool of elements of size n
-  ~G4AllocatorPool();
-  // Destructor. Return storage to the free store
+  public:
 
-  G4AllocatorPool(const G4AllocatorPool& right) = default;
-  // Copy constructor
-  G4AllocatorPool& operator=(const G4AllocatorPool& right);
-  // Equality operator
+    explicit G4AllocatorPool(unsigned int n = 0);
+    // Create a pool of elements of size n
+    ~G4AllocatorPool();
+    // Destructor. Return storage to the free store
 
-  inline void* Alloc();
-  // Allocate one element
-  inline void Free(void* b);
-  // Return an element back to the pool
+    G4AllocatorPool(const G4AllocatorPool& right) = default;
+    // Copy constructor
+    G4AllocatorPool& operator=(const G4AllocatorPool& right);
+    // Equality operator
 
-  inline unsigned int Size() const;
-  // Return storage size
-  void Reset();
-  // Return storage to the free store
+    inline void* Alloc();
+    // Allocate one element
+    inline void Free(void* b);
+    // Return an element back to the pool
 
-  inline int GetNoPages() const;
-  // Return the total number of allocated pages
-  inline unsigned int GetPageSize() const;
-  // Accessor for default page size
-  inline void GrowPageSize(unsigned int factor);
-  // Increase default page size by a given factor
+    inline unsigned int Size() const;
+    // Return storage size
+    void Reset();
+    // Return storage to the free store
 
- private:
-  struct G4PoolLink
-  {
-    G4PoolLink* next;
-  };
-  class G4PoolChunk
-  {
-   public:
-    explicit G4PoolChunk(unsigned int sz)
-      : size(sz)
-      , mem(new char[size])
-      , next(nullptr)
+    inline int GetNoPages() const;
+    // Return the total number of allocated pages
+    inline unsigned int GetPageSize() const;
+    // Accessor for default page size
+    inline void GrowPageSize(unsigned int factor);
+    // Increase default page size by a given factor
+
+  private:
+
+    struct G4PoolLink
     {
-      ;
-    }
-    ~G4PoolChunk() { delete[] mem; }
-    const unsigned int size;
-    char* mem;
-    G4PoolChunk* next;
-  };
+        G4PoolLink* next;
+    };
+    class G4PoolChunk
+    {
+      public:
 
-  void Grow();
-  // Make pool larger
+        explicit G4PoolChunk(unsigned int sz) : size(sz), mem(new char[size]), next(nullptr) { ; }
+        ~G4PoolChunk() { delete[] mem; }
+        const unsigned int size;
+        char* mem;
+        G4PoolChunk* next;
+    };
 
- private:
-  const unsigned int esize;
-  unsigned int csize;
-  G4PoolChunk* chunks = nullptr;
-  G4PoolLink* head    = nullptr;
-  int nchunks         = 0;
+    void Grow();
+    // Make pool larger
+
+  private:
+
+    const unsigned int esize;
+    unsigned int csize;
+    G4PoolChunk* chunks = nullptr;
+    G4PoolLink* head = nullptr;
+    int nchunks = 0;
 };
 
 // ------------------------------------------------------------
@@ -113,12 +111,12 @@ class G4AllocatorPool
 //
 inline void* G4AllocatorPool::Alloc()
 {
-  if(head == nullptr)
+  if (head == nullptr)
   {
     Grow();
   }
   G4PoolLink* p = head;  // return first element
-  head          = p->next;
+  head = p->next;
   return p;
 }
 
@@ -129,27 +127,36 @@ inline void* G4AllocatorPool::Alloc()
 inline void G4AllocatorPool::Free(void* b)
 {
   auto* p = static_cast<G4PoolLink*>(b);
-  p->next       = head;  // put b back as first element
-  head          = p;
+  p->next = head;  // put b back as first element
+  head = p;
 }
 
 // ************************************************************
 // Size
 // ************************************************************
 //
-inline unsigned int G4AllocatorPool::Size() const { return nchunks * csize; }
+inline unsigned int G4AllocatorPool::Size() const
+{
+  return nchunks * csize;
+}
 
 // ************************************************************
 // GetNoPages
 // ************************************************************
 //
-inline int G4AllocatorPool::GetNoPages() const { return nchunks; }
+inline int G4AllocatorPool::GetNoPages() const
+{
+  return nchunks;
+}
 
 // ************************************************************
 // GetPageSize
 // ************************************************************
 //
-inline unsigned int G4AllocatorPool::GetPageSize() const { return csize; }
+inline unsigned int G4AllocatorPool::GetPageSize() const
+{
+  return csize;
+}
 
 // ************************************************************
 // GrowPageSize

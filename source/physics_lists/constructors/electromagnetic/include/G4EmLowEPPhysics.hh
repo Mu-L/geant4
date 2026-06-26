@@ -37,8 +37,8 @@
 // *********************************************************************
 //
 
-#ifndef G4EmLowEPPhysics_h
-#define G4EmLowEPPhysics_h 1
+#ifndef G4EMLOWEPPHYSICS_HH
+#define G4EMLOWEPPHYSICS_HH
 
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
@@ -47,22 +47,16 @@
 
 class G4EmLowEPPhysics : public G4VPhysicsConstructor
 {
-public:
+  public:
 
-  explicit G4EmLowEPPhysics(G4int ver=1, const G4String& name= "");
+    explicit G4EmLowEPPhysics(G4int ver = 1, const G4String& name = "");
 
-  ~G4EmLowEPPhysics() override;
+    ~G4EmLowEPPhysics() override;
 
-  void ConstructParticle() override;
-  void ConstructProcess() override;
+    void ConstructParticle() override;
+    void ConstructProcess() override;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-
-
-
-
-

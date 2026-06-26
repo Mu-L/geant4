@@ -26,7 +26,7 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   
+// ClassName:
 //
 // Author: 2007 Gunter Folger
 //
@@ -34,27 +34,23 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef FTF_BIC_h
-#define FTF_BIC_h 1
+#ifndef FTF_BIC_HH
+#define FTF_BIC_HH
+
+#include "G4VModularPhysicsList.hh"
+#include "globals.hh"
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
-#include "globals.hh"
-#include "G4VModularPhysicsList.hh"
-
-
-class FTF_BIC: public G4VModularPhysicsList
+class FTF_BIC : public G4VModularPhysicsList
 {
-public:
-  FTF_BIC(G4int ver = 1);
-  virtual ~FTF_BIC()=default;
-  
-  FTF_BIC(const FTF_BIC &) = delete;
-  FTF_BIC & operator=(const FTF_BIC &)=delete;
-  
+  public:
+
+    FTF_BIC(G4int ver = 1);
+    virtual ~FTF_BIC() = default;
+
+    FTF_BIC(const FTF_BIC&) = delete;
+    FTF_BIC& operator=(const FTF_BIC&) = delete;
 };
 
 #endif
-
-
-

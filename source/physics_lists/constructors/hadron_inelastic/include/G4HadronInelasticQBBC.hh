@@ -35,34 +35,33 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4HadronInelasticQBBC_h
-#define G4HadronInelasticQBBC_h 1
+#ifndef G4HADRONINELASTICQBBC_HH
+#define G4HADRONINELASTICQBBC_HH
 
-#include "globals.hh"
 #include "G4VHadronPhysics.hh"
+#include "globals.hh"
 
 class G4HadronInelasticQBBC : public G4VHadronPhysics
 {
-public: 
+  public:
 
-  // constructor
-  G4HadronInelasticQBBC(G4int ver = 1);
+    // constructor
+    G4HadronInelasticQBBC(G4int ver = 1);
 
-  G4HadronInelasticQBBC(const G4String& name,
-			G4int ver = 1, G4bool ftf = false, G4bool bert = false,
-			G4bool chips = false, G4bool hp = false, 
-			G4bool glauber = false);
+    G4HadronInelasticQBBC(const G4String& name, G4int ver = 1, G4bool ftf = false,
+                          G4bool bert = false, G4bool chips = false, G4bool hp = false,
+                          G4bool glauber = false);
 
-  virtual ~G4HadronInelasticQBBC() = default;
+    virtual ~G4HadronInelasticQBBC() = default;
 
-  // This method will be invoked in the Construct() method.
-  // each physics process will be instantiated and
-  // registered to the process manager of each particle type 
-  void ConstructProcess() override;
+    // This method will be invoked in the Construct() method.
+    // each physics process will be instantiated and
+    // registered to the process manager of each particle type
+    void ConstructProcess() override;
 
-  // copy constructor and hide assignment operator
-  G4HadronInelasticQBBC(G4HadronInelasticQBBC &) = delete;
-  G4HadronInelasticQBBC & operator=(const G4HadronInelasticQBBC &right) = delete;
+    // copy constructor and hide assignment operator
+    G4HadronInelasticQBBC(G4HadronInelasticQBBC&) = delete;
+    G4HadronInelasticQBBC& operator=(const G4HadronInelasticQBBC& right) = delete;
 };
 
 #endif

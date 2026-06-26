@@ -31,10 +31,6 @@
 
 #include "G4He3EvaporationChannel.hh"
 
-G4He3EvaporationChannel::G4He3EvaporationChannel() 
-  : G4EvaporationChannel(3,2,&pr) 
-{}
+G4He3EvaporationChannel::G4He3EvaporationChannel() : G4EvaporationChannel(3, 2, &pr) {}
 
-G4He3EvaporationChannel::~G4He3EvaporationChannel() 
-{}
-
+G4He3EvaporationChannel::~G4He3EvaporationChannel() {}

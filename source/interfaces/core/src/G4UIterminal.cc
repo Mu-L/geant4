@@ -61,16 +61,18 @@ extern "C"
     G4StateManager* stateManager = G4StateManager::GetStateManager();
     G4ApplicationState state = stateManager->GetCurrentState();
 
-    if (state == G4State_GeomClosed || state == G4State_EventProc) {
+    if (state == G4State_GeomClosed || state == G4State_EventProc)
+    {
       G4cout << "aborting Run ...";
       G4UImanager::GetUIpointer()->ApplyCommand("/run/abort");
       G4cout << G4endl;
     }
-    else {
+    else
+    {
       G4cout << G4endl << "Session terminated." << G4endl;
       theshell->ResetTerminal();
-      G4Exception(
-        "G4UIterminal::SignalHandler()", "UI0001", FatalException, "KeyboardInterrput with Ctrl-C");
+      G4Exception("G4UIterminal::SignalHandler()", "UI0001", FatalException,
+                  "KeyboardInterrput with Ctrl-C");
     }
 
     // for original Unix / System V
@@ -103,7 +105,8 @@ G4UIterminal::G4UIterminal(G4VUIshell* aShell, G4bool qsig)
   theshell = shell;  // locally stored for the signal handler
 
   // add signal handler
-  if (qsig) {
+  if (qsig)
+  {
 #ifndef WIN32
     signal(SIGINT, SignalHandler);
 #endif
@@ -116,7 +119,8 @@ G4UIterminal::~G4UIterminal()
 {
   delete shell;
 
-  if (G4UImanager::GetUIpointer() != nullptr) {
+  if (G4UImanager::GetUIpointer() != nullptr)
+  {
     UI->SetSession(nullptr);
     UI->SetCoutDestination(nullptr);
   }
@@ -136,7 +140,8 @@ G4UIsession* G4UIterminal::SessionStart()
   iExit = true;
 
   G4String newCommand = GetCommand();
-  while (iExit) {
+  while (iExit)
+  {
     ExecuteCommand(newCommand);
     newCommand = GetCommand();
   }
@@ -150,7 +155,8 @@ void G4UIterminal::PauseSessionStart(const G4String& msg)
   iCont = true;
 
   G4String newCommand = GetCommand(msg);
-  while (iCont) {
+  while (iCont)
+  {
     ExecuteCommand(newCommand);
     newCommand = GetCommand(msg);
   }
@@ -170,16 +176,19 @@ void G4UIterminal::ExecuteCommand(const G4String& aCommand)
   G4int commandStatus = returnVal - paramIndex;
 
   G4UIcommand* cmd = nullptr;
-  if (commandStatus != fCommandSucceeded) {
+  if (commandStatus != fCommandSucceeded)
+  {
     cmd = FindCommand(aCommand);
   }
 
-  switch (commandStatus) {
+  switch (commandStatus)
+  {
     case fCommandSucceeded:
       break;
     case fCommandNotFound:
       G4cerr << "command <" << UI->SolveAlias(aCommand) << "> not found" << G4endl;
-      if (aCommand.find("@@") != G4String::npos) {
+      if (aCommand.find("@@") != G4String::npos)
+      {
         G4cout << "@@G4UIterminal" << G4endl;
       }
       break;
@@ -220,86 +229,105 @@ G4String G4UIterminal::GetCommand(const char* msg)
 
   G4String nC = G4StrUtil::lstrip_copy(newCommand);
 
-  if (nC.length() == 0) {
+  if (nC.length() == 0)
+  {
     newCommand = nullString;
   }
-  else if (nC[0] == '#') {
+  else if (nC[0] == '#')
+  {
     G4cout << nC << G4endl;
     newCommand = nullString;
   }
-  else if (nC == "ls" || nC.substr(0, 3) == "ls ") {  // list commands
+  else if (nC == "ls" || nC.substr(0, 3) == "ls ")
+  {  // list commands
     ListDirectory(nC);
     newCommand = nullString;
   }
-  else if (nC == "lc" || nC.substr(0, 3) == "lc ") {  // ... by shell
+  else if (nC == "lc" || nC.substr(0, 3) == "lc ")
+  {  // ... by shell
     shell->ListCommand(nC.erase(0, 2));
     newCommand = nullString;
   }
-  else if (nC == "pwd") {  // show current directory
+  else if (nC == "pwd")
+  {  // show current directory
     G4cout << "Current Command Directory : " << GetCurrentWorkingDirectory() << G4endl;
     newCommand = nullString;
   }
-  else if (nC == "cwd") {  // ... by shell
+  else if (nC == "cwd")
+  {  // ... by shell
     shell->ShowCurrentDirectory();
     newCommand = nullString;
   }
-  else if (nC == "cd" || nC.substr(0, 3) == "cd ") {  // "cd"
+  else if (nC == "cd" || nC.substr(0, 3) == "cd ")
+  {  // "cd"
     ChangeDirectoryCommand(nC);
     shell->SetCurrentDirectory(GetCurrentWorkingDirectory());
     newCommand = nullString;
   }
-  else if (nC == "help" || nC.substr(0, 5) == "help ") {  // "help"
+  else if (nC == "help" || nC.substr(0, 5) == "help ")
+  {  // "help"
     TerminalHelp(nC);
     newCommand = nullString;
   }
-  else if (nC[0] == '?') {  // "show current value of a parameter"
+  else if (nC[0] == '?')
+  {  // "show current value of a parameter"
     ShowCurrent(nC);
     newCommand = nullString;
   }
-  else if (nC == "hist" || nC == "history") {  // "hist/history"
+  else if (nC == "hist" || nC == "history")
+  {  // "hist/history"
     G4int nh = UI->GetNumberOfHistory();
-    for (G4int i = 0; i < nh; i++) {
+    for (G4int i = 0; i < nh; i++)
+    {
       G4cout << i << ": " << UI->GetPreviousCommand(i) << G4endl;
     }
     newCommand = nullString;
   }
-  else if (nC[0] == '!') {  // "!"
+  else if (nC[0] == '!')
+  {  // "!"
     G4String ss = nC.substr(1, nC.length() - 1);
     G4int vl;
     const char* tt = ss;
     std::istringstream is(tt);
     is >> vl;
     G4int nh = UI->GetNumberOfHistory();
-    if (vl >= 0 && vl < nh) {
+    if (vl >= 0 && vl < nh)
+    {
       newCommand = UI->GetPreviousCommand(vl);
       G4cout << newCommand << G4endl;
     }
-    else {
+    else
+    {
       G4cerr << "history " << vl << " is not found." << G4endl;
       newCommand = nullString;
     }
   }
-  else if (nC == "exit") {  // "exit"
-    if (iCont) {
+  else if (nC == "exit")
+  {  // "exit"
+    if (iCont)
+    {
       G4cout << "You are now processing RUN." << G4endl;
       G4cout << "Please abort it using \"/run/abort\" command first" << G4endl;
       G4cout << " and use \"continue\" command until the application" << G4endl;
       G4cout << " becomes to Idle." << G4endl;
     }
-    else {
+    else
+    {
       iExit = false;
       newCommand = nullString;
     }
   }
-  else if (nC == "cont" || nC == "continue") {  // "cont/continu"
+  else if (nC == "cont" || nC == "continue")
+  {  // "cont/continu"
     iCont = false;
     newCommand = nullString;
   }
-  else if (nC.empty()) {  // NULL command
+  else if (nC.empty())
+  {  // NULL command
     newCommand = nullString;
   }
-  else {
-  }
+  else
+  {}
 
   return ModifyToFullPathCommand(newCommand);
 }
@@ -333,7 +361,8 @@ G4bool G4UIterminal::GetHelpChoice(G4int& aInt)
 ///////////////////////////////////////////////
 {
   G4cin >> aInt;
-  if (! G4cin.good()) {
+  if (!G4cin.good())
+  {
     G4cin.clear();
     G4cin.ignore(30, '\n');
     return false;

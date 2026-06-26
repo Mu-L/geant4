@@ -59,7 +59,8 @@ G4IsotopeProperty::G4IsotopeProperty(const G4IsotopeProperty& right)
 
 G4IsotopeProperty& G4IsotopeProperty::operator=(G4IsotopeProperty& right)
 {
-  if (this != &right) {
+  if (this != &right)
+  {
     fAtomicNumber = right.fAtomicNumber;
     fAtomicMass = right.fAtomicMass;
     fISpin = right.fISpin;
@@ -98,25 +99,30 @@ void G4IsotopeProperty::DumpInfo() const
 #ifdef G4VERBOSE
   G4cout << "AtomicNumber: " << fAtomicNumber << ",  "
          << "AtomicMass: " << fAtomicMass << G4endl;
-  if ((fISpin % 2) != 0) {
+  if ((fISpin % 2) != 0)
+  {
     G4cout << "Spin: " << fISpin << "/2";
   }
-  else {
+  else
+  {
     G4cout << "Spin: " << fISpin / 2;
   }
   G4cout << ",   "
          << "MagneticMoment: " << fMagneticMoment / MeV * tesla << "[MeV/T]" << G4endl;
   G4cout << "Isomer Level: " << fIsomerLevel << ", Excited Energy: " << std::setprecision(1)
          << fEnergy / keV;
-  if (fFloatLevelBase != G4Ions::G4FloatLevelBase::no_Float) {
+  if (fFloatLevelBase != G4Ions::G4FloatLevelBase::no_Float)
+  {
     G4cout << " +" << G4Ions::FloatLevelBaseChar(fFloatLevelBase);
   }
   G4cout << " [keV]"
          << ",   " << std::setprecision(6) << "Life Time: " << fLifeTime / ns << "[ns]" << G4endl;
-  if (fDecayTable != nullptr) {
+  if (fDecayTable != nullptr)
+  {
     fDecayTable->DumpInfo();
   }
-  else {
+  else
+  {
     // G4cout << "Decay Table is not defined !" << G4endl;
   }
 #endif

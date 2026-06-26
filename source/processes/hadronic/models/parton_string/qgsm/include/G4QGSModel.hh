@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4QGSModel_h
-#define G4QGSModel_h 1
+#ifndef G4QGSMODEL_HH
+#define G4QGSMODEL_HH
 
 // Class Description
 // Model for hadron (p,n,pi,K) nuclear reactions in geant4. IT implements
@@ -32,18 +32,19 @@
 // To be used in your physics list, in case you need this kind of physics.
 // Class Description - End
 
-#include <cmath>
-#include <CLHEP/Units/SystemOfUnits.h>
-
+#include "G4DiffractiveStringBuilder.hh"
 #include "G4ExcitedStringVector.hh"
+#include "G4Fancy3DNucleus.hh"
 #include "G4KineticTrackVector.hh"
 #include "G4ParticleTable.hh"
-#include "G4Fancy3DNucleus.hh"
-#include "G4VPartonStringModel.hh"
-#include "G4QGSParticipants.hh"
-#include "G4DiffractiveStringBuilder.hh"
-#include "G4SoftStringBuilder.hh"
 #include "G4PartonPair.hh"
+#include "G4QGSParticipants.hh"
+#include "G4SoftStringBuilder.hh"
+#include "G4VPartonStringModel.hh"
+
+#include <CLHEP/Units/SystemOfUnits.h>
+
+#include <cmath>
 
 //***************************************************************************
 
@@ -51,31 +52,33 @@ template<class ParticipantType>
 class G4QGSModel : public G4VPartonStringModel
 {
   public:
+
     G4QGSModel();
     virtual ~G4QGSModel();
 
-    G4QGSModel(const G4QGSModel &right) = delete;
-    G4QGSModel& operator=(const G4QGSModel &right) = delete;
-    G4bool operator==(const G4QGSModel &right) const = delete;
-    G4bool operator!=(const G4QGSModel &right) const = delete;
+    G4QGSModel(const G4QGSModel& right) = delete;
+    G4QGSModel& operator=(const G4QGSModel& right) = delete;
+    G4bool operator==(const G4QGSModel& right) const = delete;
+    G4bool operator!=(const G4QGSModel& right) const = delete;
 
     G4V3DNucleus* GetWoundedNucleus() const override;
     G4V3DNucleus* GetProjectileNucleus() const override;
     void ModelDescription(std::ostream& outFile) const override;
 
   protected:
+
     void Init(const G4Nucleus& Nucleus, const G4DynamicParticle& dyn) override;
-    G4ExcitedStringVector * GetStrings() override;
+    G4ExcitedStringVector* GetStrings() override;
 
   private:
+
     ParticipantType theParticipants;
     G4DiffractiveStringBuilder theDiffractiveStringBuilder;
     G4SoftStringBuilder theSoftStringBuilder;
 };
 
 //***************************************************************************
-    
+
 #include "G4QGSModel.icc"
 
 #endif
-

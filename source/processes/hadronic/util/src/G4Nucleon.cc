@@ -35,32 +35,28 @@
 //       class for a nucleon (inside a 3D Nucleus)
 // ------------------------------------------------------------
 
-G4Nucleon::G4Nucleon()
-: theBindingE(0.) , theParticleType(0), theSplitableHadron(0)
-{}
+G4Nucleon::G4Nucleon() : theBindingE(0.), theParticleType(0), theSplitableHadron(0) {}
 
-G4Nucleon::~G4Nucleon()
+G4Nucleon::~G4Nucleon() {}
+
+void G4Nucleon::Boost(const G4LorentzVector& aMomentum)
 {
-}
+  //   see e.g. CERNLIB short writeup U101 for the algorithm
+  G4double mass = aMomentum.mag();
+  G4double factor =
+    (theMomentum.vect() * aMomentum.vect() / (aMomentum.e() + mass) - theMomentum.e()) / mass;
 
-void G4Nucleon::Boost(const G4LorentzVector & aMomentum)
-{
-//   see e.g. CERNLIB short writeup U101 for the algorithm
-	G4double mass=aMomentum.mag();
-	G4double factor=
-	    ( theMomentum.vect()*aMomentum.vect()/(aMomentum.e()+mass) - theMomentum.e() ) / mass;
-
-	theMomentum.setE(1/mass*theMomentum.dot(aMomentum));
-	theMomentum.setVect(factor*aMomentum.vect() + theMomentum.vect());
+  theMomentum.setE(1 / mass * theMomentum.dot(aMomentum));
+  theMomentum.setVect(factor * aMomentum.vect() + theMomentum.vect());
 }
 
 #include <iostream>
-std::ostream & operator << (std::ostream &stream, const G4Nucleon& nucleon)
+std::ostream& operator<<(std::ostream& stream, const G4Nucleon& nucleon)
 {
-//	stream<< nucleon.GetDefinition()->GetParticleName()
-//	 << "  is " << nucleon.AreYouHit() ? " " : "not" 
-//	 << " hit. Momentum/position:" << G4endl;
-	stream<< "  momentum : " << nucleon.Get4Momentum() << G4endl;
-	stream<< "  position : " << nucleon.GetPosition() ;
-	return stream;
-}	  
+  //	stream<< nucleon.GetDefinition()->GetParticleName()
+  //	 << "  is " << nucleon.AreYouHit() ? " " : "not"
+  //	 << " hit. Momentum/position:" << G4endl;
+  stream << "  momentum : " << nucleon.Get4Momentum() << G4endl;
+  stream << "  position : " << nucleon.GetPosition();
+  return stream;
+}

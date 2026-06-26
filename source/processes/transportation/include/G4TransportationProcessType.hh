@@ -36,13 +36,13 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4TransportationProcessType_h
-#define G4TransportationProcessType_h 1
+#ifndef G4TRANSPORTATIONPROCESSTYPE_HH
+#define G4TRANSPORTATIONPROCESSTYPE_HH
 
 enum G4TransportationProcessType
 {
-  TRANSPORTATION = 91 ,
-  COUPLED_TRANSPORTATION = 92 ,
+  TRANSPORTATION = 91,
+  COUPLED_TRANSPORTATION = 92,
   TRANSPORTATION_WITH_MSC = 93,
   // following processes belong to 'General' type
   STEP_LIMITER = 401,

@@ -32,15 +32,15 @@
 
 // Author: Makoto Asai, 1999
 // --------------------------------------------------------------------
-#ifndef G4PrimaryTransformer_hh 
-#define G4PrimaryTransformer_hh 1
+#ifndef G4PRIMARYTRANSFORMER_HH
+#define G4PRIMARYTRANSFORMER_HH
 
-#include "globals.hh"
-#include "G4TrackVector.hh"
-#include "G4ParticleTable.hh"
-#include "G4PrimaryParticle.hh"
 #include "G4DynamicParticle.hh"
 #include "G4ExceptionSeverity.hh"
+#include "G4ParticleTable.hh"
+#include "G4PrimaryParticle.hh"
+#include "G4TrackVector.hh"
+#include "globals.hh"
 
 class G4Event;
 class G4PrimaryVertex;
@@ -51,48 +51,43 @@ class G4PrimaryTransformer
 
     G4PrimaryTransformer();
     virtual ~G4PrimaryTransformer() = default;
-    
-    G4TrackVector* GimmePrimaries(G4Event* anEvent, G4int trackIDCounter=0);
+
+    G4TrackVector* GimmePrimaries(G4Event* anEvent, G4int trackIDCounter = 0);
     void CheckUnknown();
 
-    inline void SetVerboseLevel(G4int vl)
-      { verboseLevel = vl; }
+    inline void SetVerboseLevel(G4int vl) { verboseLevel = vl; }
 
     void SetUnknownParticleDefined(G4bool vl);
     void SetChargedUnknownParticleDefined(G4bool vl);
-      // By invoking these methods, the user can alter the treatment of,
-      // respectively, 'unknown' and 'chargedunknown' particles.
-      // The ideal place to invoke these methods is in the BeginOfRunAction().
+    // By invoking these methods, the user can alter the treatment of,
+    // respectively, 'unknown' and 'chargedunknown' particles.
+    // The ideal place to invoke these methods is in the BeginOfRunAction().
 
-    inline G4bool GetUnknownParticleDefined() const
-      { return unknownParticleDefined; }
+    inline G4bool GetUnknownParticleDefined() const { return unknownParticleDefined; }
 
-    inline G4bool GetChargedUnknownParticleDefined() const
-      { return chargedUnknownParticleDefined; }
-  
+    inline G4bool GetChargedUnknownParticleDefined() const { return chargedUnknownParticleDefined; }
+
   protected:
 
     void GenerateTracks(G4PrimaryVertex* primaryVertex);
-    void GenerateSingleTrack(G4PrimaryParticle* primaryParticle,
-                             G4double x0, G4double y0, G4double z0,
-                             G4double t0, G4double wv);
-    void SetDecayProducts(G4PrimaryParticle* mother,
-                          G4DynamicParticle* motherDP);
-    G4bool CheckDynamicParticle(G4DynamicParticle*DP);
+    void GenerateSingleTrack(G4PrimaryParticle* primaryParticle, G4double x0, G4double y0,
+                             G4double z0, G4double t0, G4double wv);
+    void SetDecayProducts(G4PrimaryParticle* mother, G4DynamicParticle* motherDP);
+    G4bool CheckDynamicParticle(G4DynamicParticle* DP);
 
     // Following two virtual methods are provided to customize the use
     // of G4PrimaryTransformer for particle types exotic to Geant4.
 
     virtual G4ParticleDefinition* GetDefinition(G4PrimaryParticle* pp);
-      // Return appropriate G4ParticleDefinition w.r.t. the primary particle. 
-      // If nullptr is returned, the particle will not be treated as a track,
-      // but its daughters will be examined in case it has "pre-assigned
-      // decay products".
+    // Return appropriate G4ParticleDefinition w.r.t. the primary particle.
+    // If nullptr is returned, the particle will not be treated as a track,
+    // but its daughters will be examined in case it has "pre-assigned
+    // decay products".
 
     virtual G4bool IsGoodForTrack(G4ParticleDefinition* pd);
-      // Return true if a primary particle should be converted into a track.
-      // By default, all particles of non-shortlived and shortlived with
-      // valid decay tables are converted.
+    // Return true if a primary particle should be converted into a track.
+    // By default, all particles of non-shortlived and shortlived with
+    // valid decay tables are converted.
 
   protected:
 
@@ -111,10 +106,14 @@ class G4PrimaryTransformer
 
     static G4double kETolerance;
     static G4ExceptionSeverity kETSeverity;
-  public:
-    static void SetKETolerance(G4double val, G4ExceptionSeverity sev = JustWarning)
-    { kETolerance = val; kETSeverity = sev; }
 
+  public:
+
+    static void SetKETolerance(G4double val, G4ExceptionSeverity sev = JustWarning)
+    {
+      kETolerance = val;
+      kETSeverity = sev;
+    }
 };
 
 #endif

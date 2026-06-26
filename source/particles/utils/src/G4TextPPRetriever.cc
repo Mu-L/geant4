@@ -47,7 +47,8 @@ void G4TextPPRetriever::Retrieve(const G4String& option)
 
   // loop over all particles in G4ParticleTable
   theParticleIterator->reset();
-  while ((*theParticleIterator)()) {  // Loop checking, 09.08.2015, K.Kurashige
+  while ((*theParticleIterator)())
+  {  // Loop checking, 09.08.2015, K.Kurashige
     G4ParticleDefinition* particle = theParticleIterator->value();
     ModifyPropertyTable(particle);
   }
@@ -59,8 +60,10 @@ void G4TextPPRetriever::SparseOption(const G4String& option)
 
   // 1st option : base directory
   baseDir = savedToken();
-  if (!baseDir.empty()) {
-    if (baseDir.back() != '/') {
+  if (!baseDir.empty())
+  {
+    if (baseDir.back() != '/')
+    {
       baseDir += "/";
     }
   }
@@ -85,7 +88,8 @@ G4bool G4TextPPRetriever::ModifyPropertyTable(const G4ParticleDefinition* partic
   G4String name_t;
   G4int encoding;
   inFile >> name_t >> encoding;
-  if ((name != name_t) || (encoding != pData->GetPDGEncoding())) {
+  if ((name != name_t) || (encoding != pData->GetPDGEncoding()))
+  {
     G4cout << "G4TextPPRetriever::ModifyPropertyTable:   ";
     G4cout << "particle name or encoding mismatch for " << name;
     G4cout << G4endl;
@@ -110,13 +114,16 @@ G4bool G4TextPPRetriever::ModifyPropertyTable(const G4ParticleDefinition* partic
   mass *= GeV;
   width *= GeV;
   charge *= eplus;
-  if (mass != pData->GetPDGMass()) {
+  if (mass != pData->GetPDGMass())
+  {
     pData->SetPDGMass(mass);
   }
-  if (width != pData->GetPDGWidth()) {
+  if (width != pData->GetPDGWidth())
+  {
     pData->SetPDGWidth(width);
   }
-  if (charge != pData->GetPDGCharge()) {
+  if (charge != pData->GetPDGCharge())
+  {
     pData->SetPDGCharge(charge);
   }
 
@@ -124,7 +131,8 @@ G4bool G4TextPPRetriever::ModifyPropertyTable(const G4ParticleDefinition* partic
   G4double tlife;
   inFile >> tlife;
   tlife *= second;
-  if (tlife != pData->GetPDGLifeTime()) {
+  if (tlife != pData->GetPDGLifeTime())
+  {
     pData->SetPDGLifeTime(tlife);
   }
 
@@ -135,14 +143,16 @@ G4bool G4TextPPRetriever::ModifyPropertyTable(const G4ParticleDefinition* partic
   if (dcyTable == nullptr) return true;
 
   G4int idx = 0;
-  while (!inFile.eof()) {  // Loop checking, 09.08.2015, K.Kurashige
+  while (!inFile.eof())
+  {  // Loop checking, 09.08.2015, K.Kurashige
     G4double br;
     G4int n_daughters;
     inFile >> br >> n_daughters;
 
     G4VDecayChannel* channel = dcyTable->GetDecayChannel(idx);
 
-    if (n_daughters == channel->GetNumberOfDaughters()) {
+    if (n_daughters == channel->GetNumberOfDaughters())
+    {
       channel->SetBR(br);
     }
 

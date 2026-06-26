@@ -32,14 +32,10 @@
 #include "PhysListEmStandardSSM.hh"
 #include "PhysicsListMessenger.hh"
 
-#include "G4EmDNAPhysics.hh"
-#include "G4EmDNAPhysics_option1.hh"
 #include "G4EmDNAPhysics_option2.hh"
-#include "G4EmDNAPhysics_option3.hh"
 #include "G4EmDNAPhysics_option4.hh"
-#include "G4EmDNAPhysics_option5.hh"
 #include "G4EmDNAPhysics_option6.hh"
-#include "G4EmDNAPhysics_option7.hh"
+#include "G4EmDNAPhysics_option8.hh"
 #include "G4EmLivermorePhysics.hh"
 #include "G4EmLowEPPhysics.hh"
 #include "G4EmPenelopePhysics.hh"
@@ -222,45 +218,25 @@ void PhysicsList::AddPhysicsList(const G4String& name)
     delete fEmPhysicsList;
     fEmPhysicsList = new G4EmLowEPPhysics();
   }
-  else if (name == "dna") {
-    fEmName = name;
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics();
-  }
-  else if (name == "dna_opt1") {
-    fEmName = name;
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics_option1();
-  }
   else if (name == "dna_opt2") {
     fEmName = name;
     delete fEmPhysicsList;
     fEmPhysicsList = new G4EmDNAPhysics_option2();
-  }
-  else if (name == "dna_opt3") {
-    fEmName = name;
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics_option3();
   }
   else if (name == "dna_opt4") {
     fEmName = name;
     delete fEmPhysicsList;
     fEmPhysicsList = new G4EmDNAPhysics_option4();
   }
-  else if (name == "dna_opt5") {
-    fEmName = name;
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics_option5();
-  }
   else if (name == "dna_opt6") {
     fEmName = name;
     delete fEmPhysicsList;
     fEmPhysicsList = new G4EmDNAPhysics_option6();
   }
-  else if (name == "dna_opt7") {
+  else if (name == "dna_opt8") {
     fEmName = name;
     delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics_option7();
+    fEmPhysicsList = new G4EmDNAPhysics_option8();
   }
   else {
     G4cout << "PhysicsList::AddPhysicsList: <" << name << ">"

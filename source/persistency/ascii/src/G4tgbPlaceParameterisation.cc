@@ -28,21 +28,19 @@
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
 
-#include "G4tgrPlaceParameterisation.hh"
-#include "G4tgbPlaceParamCircle.hh"
 #include "G4RotationMatrix.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4tgrMessenger.hh"
-#include "G4tgbRotationMatrixMgr.hh"
 #include "G4UIcommand.hh"
+#include "G4VPhysicalVolume.hh"
+#include "G4tgbPlaceParamCircle.hh"
+#include "G4tgbRotationMatrixMgr.hh"
+#include "G4tgrMessenger.hh"
+#include "G4tgrPlaceParameterisation.hh"
 
 // --------------------------------------------------------------------
-G4tgbPlaceParameterisation::
-G4tgbPlaceParameterisation(G4tgrPlaceParameterisation* tgrParam)
+G4tgbPlaceParameterisation::G4tgbPlaceParameterisation(G4tgrPlaceParameterisation* tgrParam)
 {
   theRotationMatrix =
-    G4tgbRotationMatrixMgr::GetInstance()->FindOrBuildG4RotMatrix(
-      tgrParam->GetRotMatName());
+    G4tgbRotationMatrixMgr::GetInstance()->FindOrBuildG4RotMatrix(tgrParam->GetRotMatName());
 }
 
 // --------------------------------------------------------------------
@@ -52,29 +50,26 @@ G4tgbPlaceParameterisation::~G4tgbPlaceParameterisation()
 }
 
 // --------------------------------------------------------------------
-void G4tgbPlaceParameterisation::ComputeTransformation(const G4int,
-                                                       G4VPhysicalVolume*) const
-{
-}
+void G4tgbPlaceParameterisation::ComputeTransformation(const G4int, G4VPhysicalVolume*) const {}
 
 // --------------------------------------------------------------------
-void G4tgbPlaceParameterisation::
-CheckNExtraData(G4tgrPlaceParameterisation* tgrParam, G4int nWcheck,
-                WLSIZEtype st, const G4String& methodName)
+void G4tgbPlaceParameterisation::CheckNExtraData(G4tgrPlaceParameterisation* tgrParam,
+                                                 G4int nWcheck, WLSIZEtype st,
+                                                 const G4String& methodName)
 {
   std::vector<G4double> extraData = tgrParam->GetExtraData();
-  G4int ndata                     = (G4int)extraData.size();
+  G4int ndata = (G4int)extraData.size();
 
   G4String outStr = methodName + " " + tgrParam->GetType() + " ";
-  G4bool isOK     = G4tgrUtils::CheckListSize(ndata, nWcheck, st, outStr);
+  G4bool isOK = G4tgrUtils::CheckListSize(ndata, nWcheck, st, outStr);
 
-  if(!isOK)
+  if (!isOK)
   {
     G4String chartmp = G4UIcommand::ConvertToString(nWcheck);
     outStr += chartmp + G4String(" words");
     G4cerr << outStr;
     G4cerr << " NUMBER OF WORDS " << ndata << G4endl;
-    G4Exception("G4tgbPlaceParameterisation::CheckNExtraData", "InvalidData",
-                FatalException, "Invalid data size.");
+    G4Exception("G4tgbPlaceParameterisation::CheckNExtraData", "InvalidData", FatalException,
+                "Invalid data size.");
   }
 }

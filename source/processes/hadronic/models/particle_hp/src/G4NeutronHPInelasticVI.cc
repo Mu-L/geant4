@@ -31,9 +31,11 @@
 
 #include "G4NeutronHPInelasticVI.hh"
 
+#include "G4AutoLock.hh"
+#include "G4Element.hh"
 #include "G4HadronicParameters.hh"
-#include "G4ParticleHPManager.hh"
-
+#include "G4Neutron.hh"
+#include "G4Nucleus.hh"
 #include "G4ParticleHP2AInelasticFS.hh"
 #include "G4ParticleHP2N2AInelasticFS.hh"
 #include "G4ParticleHP2NAInelasticFS.hh"
@@ -51,6 +53,7 @@
 #include "G4ParticleHPDAInelasticFS.hh"
 #include "G4ParticleHPDInelasticFS.hh"
 #include "G4ParticleHPHe3InelasticFS.hh"
+#include "G4ParticleHPManager.hh"
 #include "G4ParticleHPN2AInelasticFS.hh"
 #include "G4ParticleHPN2PInelasticFS.hh"
 #include "G4ParticleHPN3AInelasticFS.hh"
@@ -71,30 +74,26 @@
 #include "G4ParticleHPT2AInelasticFS.hh"
 #include "G4ParticleHPTInelasticFS.hh"
 #include "G4ParticleHPThermalBoost.hh"
-
-#include "G4Neutron.hh"
-#include "G4Nucleus.hh"
-#include "G4Element.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4AutoLock.hh"
 
 G4bool G4NeutronHPInelasticVI::fLock = false;
 G4ParticleHPChannelList* G4NeutronHPInelasticVI::theChannels[] = {nullptr};
 
 namespace
 {
-  G4Mutex theHPInelastic = G4MUTEX_INITIALIZER;
+G4Mutex theHPInelastic = G4MUTEX_INITIALIZER;
 }
 
-G4NeutronHPInelasticVI::G4NeutronHPInelasticVI()
-  : G4HadronicInteraction("NeutronHPInelastic")
+G4NeutronHPInelasticVI::G4NeutronHPInelasticVI() : G4HadronicInteraction("NeutronHPInelastic")
 {
-  SetMaxEnergy(20*CLHEP::MeV);
+  SetMaxEnergy(20 * CLHEP::MeV);
   fManagerHP = G4ParticleHPManager::GetInstance();
-  if ( !fLock ) {
+  if (!fLock)
+  {
     fLock = true;
     fInitializer = true;
-    for ( G4int i=0; i<ZMAXHPI; ++i ) {
+    for (G4int i = 0; i < ZMAXHPI; ++i)
+    {
       theChannels[i] = nullptr;
     }
   }
@@ -102,8 +101,10 @@ G4NeutronHPInelasticVI::G4NeutronHPInelasticVI()
 
 G4NeutronHPInelasticVI::~G4NeutronHPInelasticVI()
 {
-  if ( fInitializer ) {
-    for ( G4int i=0; i<ZMAXHPI; ++i ) {
+  if (fInitializer)
+  {
+    for (G4int i = 0; i < ZMAXHPI; ++i)
+    {
       delete theChannels[i];
     }
   }
@@ -114,7 +115,10 @@ G4HadFinalState* G4NeutronHPInelasticVI::ApplyYourself(const G4HadProjectile& aT
 {
   G4HadFinalState* finalState = nullptr;
   G4int Z = aNucleus.GetZ_asInt();
-  if ( Z >= ZMAXHPI || Z < 1 ) { return finalState; }
+  if (Z >= ZMAXHPI || Z < 1)
+  {
+    return finalState;
+  }
 
   G4int A = aNucleus.GetA_asInt();
   fManagerHP->OpenReactionWhiteBoard();
@@ -122,13 +126,19 @@ G4HadFinalState* G4NeutronHPInelasticVI::ApplyYourself(const G4HadProjectile& aT
   fManagerHP->GetReactionWhiteBoard()->SetTargA(A);
 
   G4ParticleHPChannelList* clist = theChannels[Z];
-  if ( nullptr == clist ) {
+  if (nullptr == clist)
+  {
     InitialiseOnFly();
-    if ( nullptr == clist ) { return finalState; }
+    if (nullptr == clist)
+    {
+      return finalState;
+    }
   }
 
-  for (auto const & elm : *(G4Element::GetElementTable())) {
-    if ( Z == elm->GetZasInt() ) {
+  for (auto const& elm : *(G4Element::GetElementTable()))
+  {
+    if (Z == elm->GetZasInt())
+    {
       finalState = clist->ApplyYourself(elm, aTrack);
       break;
     }
@@ -146,7 +156,8 @@ const std::pair<G4double, G4double> G4NeutronHPInelasticVI::GetFatalEnergyCheckL
 
 void G4NeutronHPInelasticVI::BuildPhysicsTable(const G4ParticleDefinition&)
 {
-  if ( fInitializer ) {
+  if (fInitializer)
+  {
     Initialise();
     fManagerHP->DumpSetting();
   }
@@ -164,10 +175,13 @@ void G4NeutronHPInelasticVI::Initialise()
   G4String dirName;
   G4ParticleDefinition* part = nullptr;
 
-  for (auto const & elm : *(G4Element::GetElementTable())) {
+  for (auto const& elm : *(G4Element::GetElementTable()))
+  {
     G4int Z = elm->GetZasInt();
-    if ( 0 < Z && Z < ZMAXHPI && nullptr == theChannels[Z] ) {
-      if ( nullptr == part ) {
+    if (0 < Z && Z < ZMAXHPI && nullptr == theChannels[Z])
+    {
+      if (nullptr == part)
+      {
         part = G4Neutron::Neutron();
         dirName = fManagerHP->GetNeutronHPPath() + "/Inelastic";
       }
@@ -211,10 +225,10 @@ void G4NeutronHPInelasticVI::Initialise()
       clist->Register(new G4ParticleHPPTInelasticFS, "F35/");
       clist->Register(new G4ParticleHPDAInelasticFS, "F36/");
 #ifdef G4VERBOSE
-      if (fManagerHP->GetVerboseLevel() > 1) {
-	G4cout << "G4NeutronHP::InelasticVI for " 
-	       << part->GetParticleName() << " off " 
-	       << elm->GetName() << G4endl;
+      if (fManagerHP->GetVerboseLevel() > 1)
+      {
+        G4cout << "G4NeutronHP::InelasticVI for " << part->GetParticleName() << " off "
+               << elm->GetName() << G4endl;
       }
 #endif
     }
@@ -224,5 +238,5 @@ void G4NeutronHPInelasticVI::Initialise()
 void G4NeutronHPInelasticVI::ModelDescription(std::ostream& outFile) const
 {
   outFile << "High Precision (HP) model for inelastic reaction of "
-	  << " neutrons below 20MeV\n";
+          << " neutrons below 20MeV\n";
 }

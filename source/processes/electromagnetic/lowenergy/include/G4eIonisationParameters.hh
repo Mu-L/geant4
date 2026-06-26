@@ -26,14 +26,14 @@
 //
 //
 // Author: Maria Grazia Pia (Maria.Grazia.Pia@cern.ch)
-//         V. Ivanchenko 
+//         V. Ivanchenko
 //         Values of the parameters from A. Forti's fit
 //
 // History:
 // -----------
 // 31 Jul 2001   MGP        Created
-// 12.09.01 V.Ivanchenko    Add param and interpolation of parametersVI  
-// 10.10.2001 MGP           Revision to improve code quality and 
+// 12.09.01 V.Ivanchenko    Add param and interpolation of parametersVI
+// 10.10.2001 MGP           Revision to improve code quality and
 //                          consistency with design
 // 29.11.01  V.Ivanchenko    Parametrisation is updated
 //
@@ -41,44 +41,46 @@
 
 // Class description:
 // Low Energy Electromagnetic Physics
-// Set of parameters for LowEnergyIonisation described spectrum 
+// Set of parameters for LowEnergyIonisation described spectrum
 // of delta-electrons retrieved from EEDL database.
 // -------------------------------------------------------------------
 
 #ifndef G4IONISATIONPARAMETERS_HH
-#define G4IONISATIONPARAMETERS_HH 1
+#define G4IONISATIONPARAMETERS_HH
 
-#include "globals.hh"
 #include "G4DataVector.hh"
+#include "globals.hh"
+
 #include <map>
 
 class G4VDataSetAlgorithm;
 class G4VEMDataSet;
 
-class G4eIonisationParameters {
- 
-public:
-  explicit G4eIonisationParameters();
+class G4eIonisationParameters
+{
+  public:
 
-  ~G4eIonisationParameters();
- 
-  G4double Parameter(G4int Z, G4int shellIndex, 
-		     G4int parameterIndex, G4double e) const;
-  G4double Excitation(G4int Z, G4double e) const;
-  void PrintData() const;
+    explicit G4eIonisationParameters();
 
-  G4eIonisationParameters(const G4eIonisationParameters&) = delete;
-  G4eIonisationParameters & operator=(const G4eIonisationParameters &right) = delete;
+    ~G4eIonisationParameters();
 
-private:
-  void LoadData();
+    G4double Parameter(G4int Z, G4int shellIndex, G4int parameterIndex, G4double e) const;
+    G4double Excitation(G4int Z, G4double e) const;
+    void PrintData() const;
 
-  G4DataVector activeZ;
-  // Parameters of the energy spectra
-  std::map<G4int,G4VEMDataSet*,std::less<G4int> > param;
-  std::map<G4int,G4VEMDataSet*,std::less<G4int> > excit;
+    G4eIonisationParameters(const G4eIonisationParameters&) = delete;
+    G4eIonisationParameters& operator=(const G4eIonisationParameters& right) = delete;
 
-  size_t length = 24;
+  private:
+
+    void LoadData();
+
+    G4DataVector activeZ;
+    // Parameters of the energy spectra
+    std::map<G4int, G4VEMDataSet*, std::less<G4int>> param;
+    std::map<G4int, G4VEMDataSet*, std::less<G4int>> excit;
+
+    size_t length = 24;
 };
- 
+
 #endif

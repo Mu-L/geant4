@@ -34,7 +34,8 @@
 G4InterpolationScheme G4InterpolationManager::MakeScheme(G4int it)
 {
   G4InterpolationScheme result(LINLIN);
-  switch (it) {
+  switch (it)
+  {
     case 1:
       result = HISTO;
       break;
@@ -90,30 +91,35 @@ G4InterpolationScheme G4InterpolationManager::MakeScheme(G4int it)
 
 void G4InterpolationManager::AppendScheme(G4int aPoint, const G4InterpolationScheme& aScheme)
 {
-  if (aPoint != nEntries) {
+  if (aPoint != nEntries)
+  {
     G4cout << "G4InterpolationManager::AppendScheme - " << aPoint << " " << nEntries << G4endl;
     throw G4HadronicException(__FILE__, __LINE__,
                               "Wrong usage of G4InterpolationManager::AppendScheme");
   }
-  if (nEntries == 0) {
+  if (nEntries == 0)
+  {
     nEntries = 1;
     nRanges = 1;
     start[0] = 0;
     range[0] = 1;
     scheme[0] = aScheme;
   }
-  else if (aScheme == scheme[nRanges - 1]) {
+  else if (aScheme == scheme[nRanges - 1])
+  {
     ++range[nRanges - 1];
     nEntries++;
   }
-  else {
+  else
+  {
     nEntries++;
     nRanges++;
     G4int i;
     auto buffer = new G4int[nRanges];
     auto buffer1 = new G4int[nRanges];
     auto buff2 = new G4InterpolationScheme[nRanges];
-    for (i = 0; i < nRanges - 1; i++) {
+    for (i = 0; i < nRanges - 1; i++)
+    {
       buffer[i] = start[i];
       buffer1[i] = range[i];
       buff2[i] = scheme[i];

@@ -26,8 +26,8 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4DNAExcitation_h
-#define G4DNAExcitation_h 1
+#ifndef G4DNAEXCITATION_HH
+#define G4DNAEXCITATION_HH
 
 #include "G4VEmProcess.hh"
 
@@ -35,26 +35,26 @@
 
 class G4DNAExcitation : public G4VEmProcess
 {
-public:
+  public:
 
-  G4DNAExcitation(const G4String& processName ="DNAExcitation",
-		     G4ProcessType type = fElectromagnetic);
+    G4DNAExcitation(const G4String& processName = "DNAExcitation",
+                    G4ProcessType type = fElectromagnetic);
 
-  ~G4DNAExcitation() override = default;
+    ~G4DNAExcitation() override = default;
 
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
-  
-  void ProcessDescription(std::ostream& outFile) const override;
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
 
-protected:
+    void ProcessDescription(std::ostream& outFile) const override;
 
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+  protected:
 
-private:
-     
-  G4bool isInitialised{false};
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool isInitialised{false};
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-  
+
 #endif

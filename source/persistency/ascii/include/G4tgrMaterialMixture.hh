@@ -31,14 +31,14 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrMaterialMixture_hh
-#define G4tgrMaterialMixture_hh 1
+#ifndef G4TGRMATERIALMIXTURE_HH
+#define G4TGRMATERIALMIXTURE_HH
+
+#include "G4tgrMaterial.hh"
+#include "globals.hh"
 
 #include <iostream>
 #include <vector>
-
-#include "globals.hh"
-#include "G4tgrMaterial.hh"
 
 class G4tgrMaterialMixture : public G4tgrMaterial
 {
@@ -47,9 +47,8 @@ class G4tgrMaterialMixture : public G4tgrMaterial
     G4tgrMaterialMixture();
     ~G4tgrMaterialMixture();
 
-    G4tgrMaterialMixture(const G4String& matType,
-                         const std::vector<G4String>& wl);
-      // Fill the data interpreting the list of words read 'wl'
+    G4tgrMaterialMixture(const G4String& matType, const std::vector<G4String>& wl);
+    // Fill the data interpreting the list of words read 'wl'
 
     friend std::ostream& operator<<(std::ostream&, const G4tgrMaterialMixture&);
 

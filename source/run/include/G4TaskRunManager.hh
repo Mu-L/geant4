@@ -32,8 +32,8 @@
 //   Users initializes an instance of this class instead of G4RunManager
 //   to start a multi-threaded simulation.
 
-#ifndef G4TaskRunManager_hh
-#define G4TaskRunManager_hh 1
+#ifndef G4TASKRUNMANAGER_HH
+#define G4TASKRUNMANAGER_HH
 
 #include "G4EnvironmentUtils.hh"
 #include "G4MTBarrier.hh"
@@ -67,10 +67,12 @@ class G4TaskRunManager : public G4MTRunManager, public PTL::TaskRunManager
     friend class G4RunManagerFactory;
 
   public:
+
     using InitializeSeedsCallback = std::function<G4bool(G4int, G4int&, G4int&)>;
     using RunTaskGroup = G4TaskGroup<void>;
 
   public:
+
     // Returns the singleton instance of the run manager common to all threads
     // implementing the master behavior
     static G4TaskRunManager* GetMasterRunManager()
@@ -171,6 +173,7 @@ class G4TaskRunManager : public G4MTRunManager, public PTL::TaskRunManager
     void AbortEvent() override;
 
   protected:
+
     virtual void ComputeNumberOfTasks();
 
     // Initialize the seeds list, if derived class does not implement this method
@@ -190,6 +193,7 @@ class G4TaskRunManager : public G4MTRunManager, public PTL::TaskRunManager
     virtual void AddEventTask(G4int);
 
   protected:
+
     // Barriers: synch points between master and workers
     RunTaskGroup* workTaskGroup = nullptr;
 
@@ -204,6 +208,7 @@ class G4TaskRunManager : public G4MTRunManager, public PTL::TaskRunManager
     };
 
   protected:
+
     // grainsize
     G4bool workersStarted = false;
     G4int eventGrainsize = 0;

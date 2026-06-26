@@ -35,28 +35,36 @@
 class G4UIcmdWithAString;
 class G4UIcmdWithABool;
 
-class G4VisCommandViewerDefaultHiddenEdge: public G4VVisCommand {
-public:
-  G4VisCommandViewerDefaultHiddenEdge();
-  virtual ~G4VisCommandViewerDefaultHiddenEdge();
-  G4String GetCurrentValue(G4UIcommand* command);
-  void SetNewValue(G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandViewerDefaultHiddenEdge(const G4VisCommandViewerDefaultHiddenEdge&);
-  G4VisCommandViewerDefaultHiddenEdge& operator=(const G4VisCommandViewerDefaultHiddenEdge&);
-  G4UIcmdWithABool* fpCommand;
+class G4VisCommandViewerDefaultHiddenEdge : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandViewerDefaultHiddenEdge();
+    virtual ~G4VisCommandViewerDefaultHiddenEdge();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandViewerDefaultHiddenEdge(const G4VisCommandViewerDefaultHiddenEdge&);
+    G4VisCommandViewerDefaultHiddenEdge& operator=(const G4VisCommandViewerDefaultHiddenEdge&);
+    G4UIcmdWithABool* fpCommand;
 };
 
-class G4VisCommandViewerDefaultStyle: public G4VVisCommand {
-public:
-  G4VisCommandViewerDefaultStyle();
-  virtual ~G4VisCommandViewerDefaultStyle();
-  G4String GetCurrentValue(G4UIcommand* command);
-  void SetNewValue(G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandViewerDefaultStyle(const G4VisCommandViewerDefaultStyle&);
-  G4VisCommandViewerDefaultStyle& operator=(const G4VisCommandViewerDefaultStyle&);
-  G4UIcmdWithAString* fpCommand;
+class G4VisCommandViewerDefaultStyle : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandViewerDefaultStyle();
+    virtual ~G4VisCommandViewerDefaultStyle();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandViewerDefaultStyle(const G4VisCommandViewerDefaultStyle&);
+    G4VisCommandViewerDefaultStyle& operator=(const G4VisCommandViewerDefaultStyle&);
+    G4UIcmdWithAString* fpCommand;
 };
 
 #endif

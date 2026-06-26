@@ -42,13 +42,13 @@
 // Class Description:
 //
 // Implementation of gamma Compton scatteribg on free electron
-// 
+//
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4KleinNishinaCompton_h
-#define G4KleinNishinaCompton_h 1
+#ifndef G4KLEINNISHINACOMPTON_HH
+#define G4KLEINNISHINACOMPTON_HH
 
 #include "G4VEmModel.hh"
 
@@ -56,44 +56,33 @@ class G4ParticleChangeForGamma;
 
 class G4KleinNishinaCompton : public G4VEmModel
 {
+  public:
 
-public:
+    explicit G4KleinNishinaCompton(const G4ParticleDefinition* p = nullptr,
+                                   const G4String& nam = "Klein-Nishina");
 
-  explicit G4KleinNishinaCompton(const G4ParticleDefinition* p = nullptr, 
-				 const G4String& nam = "Klein-Nishina");
+    ~G4KleinNishinaCompton() override;
 
-  ~G4KleinNishinaCompton() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel* masterModel) override;
 
-  void InitialiseLocal(const G4ParticleDefinition*, 
-		       G4VEmModel* masterModel) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A, G4double cut, G4double emax) override;
 
-  G4double ComputeCrossSectionPerAtom(
-                                const G4ParticleDefinition*,
-                                      G4double kinEnergy, 
-                                      G4double Z, 
-                                      G4double A, 
-                                      G4double cut,
-                                      G4double emax) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
+    // hide assignment operator
+    G4KleinNishinaCompton& operator=(const G4KleinNishinaCompton& right) = delete;
+    G4KleinNishinaCompton(const G4KleinNishinaCompton&) = delete;
 
-  // hide assignment operator
-  G4KleinNishinaCompton & operator=
-  (const G4KleinNishinaCompton &right) = delete;
-  G4KleinNishinaCompton(const  G4KleinNishinaCompton&) = delete;
+  protected:
 
-protected:
-
-  G4ParticleDefinition*     theGamma;
-  G4ParticleDefinition*     theElectron;
-  G4ParticleChangeForGamma* fParticleChange;
-  G4double                  lowestSecondaryEnergy;
+    G4ParticleDefinition* theGamma;
+    G4ParticleDefinition* theElectron;
+    G4ParticleChangeForGamma* fParticleChange;
+    G4double lowestSecondaryEnergy;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

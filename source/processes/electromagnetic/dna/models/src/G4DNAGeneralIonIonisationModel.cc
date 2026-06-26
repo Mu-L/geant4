@@ -26,16 +26,17 @@
 //
 
 #include "G4DNAGeneralIonIonisationModel.hh"
+
 #include "G4DNARuddIonisationExtendedModel.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
 #include "G4EmParameters.hh"
 #include "G4GenericIon.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4DNAGeneralIonIonisationModel::G4DNAGeneralIonIonisationModel(
-	    const G4ParticleDefinition*, const G4String& nam)
+G4DNAGeneralIonIonisationModel::G4DNAGeneralIonIonisationModel(const G4ParticleDefinition*,
+                                                               const G4String& nam)
   : G4VEmModel(nam)
 {
   fRuddIonisation = new G4DNARuddIonisationExtendedModel();
@@ -46,21 +47,21 @@ G4DNAGeneralIonIonisationModel::G4DNAGeneralIonIonisationModel(
 void G4DNAGeneralIonIonisationModel::Initialise(const G4ParticleDefinition* part,
                                                 const G4DataVector& v)
 {
-  if (part != G4GenericIon::GenericIon()) {
+  if (part != G4GenericIon::GenericIon())
+  {
     G4ExceptionDescription ed;
-    ed << "Wrong particle type <" << part->GetParticleName()
-       << "> - only G4GenericIon is allowed";  
-    G4Exception("G4DNAGeneralIonIonisationModel::Initialise(...)",
-                 "em2001", FatalException, ed);
+    ed << "Wrong particle type <" << part->GetParticleName() << "> - only G4GenericIon is allowed";
+    G4Exception("G4DNAGeneralIonIonisationModel::Initialise(...)", "em2001", FatalException, ed);
   }
-  
+
   // stationary model and tracking cut may be defined between runs
   auto param = G4EmParameters::Instance();
   fLowestEnergy = param->LowestMuHadEnergy();
 
   // this pointer should be defined once before initialisation of
   // concrete models
-  if (nullptr == fParticleChangeForGamma) {
+  if (nullptr == fParticleChangeForGamma)
+  {
     fParticleChangeForGamma = GetParticleChangeForGamma();
 
     // should be set once for each model
@@ -82,11 +83,13 @@ void G4DNAGeneralIonIonisationModel::StartTracking(G4Track* track)
 
 G4double G4DNAGeneralIonIonisationModel::CrossSectionPerVolume(const G4Material* mat,
                                                                const G4ParticleDefinition* p,
-							       G4double ekin,
-							       G4double, G4double)
+                                                               G4double ekin, G4double, G4double)
 {
   // apply tracking cut
-  if (ekin <= fLowestEnergy) { return DBL_MAX; }
+  if (ekin <= fLowestEnergy)
+  {
+    return DBL_MAX;
+  }
 
   // select model
   fCurrentModel = fRuddIonisation;
@@ -102,13 +105,14 @@ G4double G4DNAGeneralIonIonisationModel::CrossSectionPerVolume(const G4Material*
 
 void G4DNAGeneralIonIonisationModel::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
                                                        const G4MaterialCutsCouple* couple,
-                                                       const G4DynamicParticle* dp,
-                                                       G4double, G4double)
+                                                       const G4DynamicParticle* dp, G4double,
+                                                       G4double)
 {
   G4double ekin = dp->GetKineticEnergy();
 
   // tracking cut
-  if (ekin <= fLowestEnergy) {
+  if (ekin <= fLowestEnergy)
+  {
     fParticleChangeForGamma->SetProposedKineticEnergy(0.);
     fParticleChangeForGamma->ProposeTrackStatus(fStopButAlive);
     fParticleChangeForGamma->ProposeLocalEnergyDeposit(ekin);

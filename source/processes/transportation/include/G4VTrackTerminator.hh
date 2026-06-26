@@ -32,7 +32,7 @@
 //
 // This is an interface for an object which can be called to kill a track.
 // The type it provides is needed in case importance biasing and scoring
-// is done at the same time. 
+// is done at the same time.
 // For navigation in the parallel geometry which is done by the importance
 // biasing process (it derives from G4ParallelTransport), importance biasing
 // has to be done before scoring (to score the correct volume).
@@ -46,22 +46,21 @@
 #ifndef G4VTRACKTERMINATOR_HH
 #define G4VTRACKTERMINATOR_HH
 
-#include "G4Types.hh"
 #include "G4String.hh"
+#include "G4Types.hh"
 
 class G4VTrackTerminator
 {
+  public:  // with description
 
-public:  // with description
+    G4VTrackTerminator();
+    virtual ~G4VTrackTerminator();
+    virtual void KillTrack() const = 0;
+    virtual const G4String& GetName() const = 0;
 
-  G4VTrackTerminator();
-  virtual ~G4VTrackTerminator();
-  virtual void KillTrack() const = 0;
-  virtual const G4String &GetName() const = 0;
+  protected:
 
-protected:
-
-  G4double kCarTolerance;
+    G4double kCarTolerance;
 };
 
 #endif

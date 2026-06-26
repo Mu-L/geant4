@@ -32,8 +32,8 @@
 
 // Author: Makoto Asai, 1997
 // --------------------------------------------------------------------
-#ifndef G4UImanager_hh
-#define G4UImanager_hh 1
+#ifndef G4UIMANAGER_HH
+#define G4UIMANAGER_HH
 
 #include "G4UIcommandStatus.hh"
 #include "G4VStateDependent.hh"
@@ -57,6 +57,7 @@ class G4UIbridge;
 class G4UImanager : public G4VStateDependent
 {
   public:
+
     // A static method to get the pointer to the only existing object
     // of this class
     static G4UImanager* GetUIpointer();
@@ -194,7 +195,8 @@ class G4UImanager : public G4VStateDependent
     inline G4String GetPreviousCommand(G4int i) const
     {
       G4String st;
-      if (i >= 0 && i < G4int(histVec.size())) {
+      if (i >= 0 && i < G4int(histVec.size()))
+      {
         st = histVec[i];
       }
       return st;
@@ -211,7 +213,8 @@ class G4UImanager : public G4VStateDependent
     {
       isMaster = val;
       stackCommandsForBroadcast = val;
-      if (val && (bridges == nullptr)) {
+      if (val && (bridges == nullptr))
+      {
         bridges = new std::vector<G4UIbridge*>;
         fMasterUImanager() = this;
       }
@@ -244,15 +247,17 @@ class G4UImanager : public G4VStateDependent
     inline bool IsLastCommandOutputTreated() { return fLastCommandOutputTreated; }
     inline void SetLastCommandOutputTreated() { fLastCommandOutputTreated = true; }
 
-    void StartRecording(G4String fn, G4bool ifAppend,
-             G4bool ifTemp=false, G4String assocCmd="**NOCMD**");
+    void StartRecording(G4String fn, G4bool ifAppend, G4bool ifTemp = false,
+                        G4String assocCmd = "**NOCMD**");
     void RecordCommand(const G4String& aCommand);
     G4int EndRecording();
 
   protected:
+
     G4UImanager();
 
   private:
+
     void AddWorkerCommand(G4UIcommand* newCommand);
     void RemoveWorkerCommand(G4UIcommand* aCommand);
 
@@ -261,6 +266,7 @@ class G4UImanager : public G4VStateDependent
     G4UIcommandTree* FindDirectory(const char* dirName);
 
   private:
+
     G4ICOMS_DLL static G4UImanager*& fUImanager();  // thread-local
     G4ICOMS_DLL static G4bool& fUImanagerHasBeenKilled();  // thread-local
     G4ICOMS_DLL static G4UImanager*& fMasterUImanager();
@@ -301,9 +307,8 @@ class G4UImanager : public G4VStateDependent
 
     G4int fRecordDepth = -1;
     std::vector<std::ofstream*> fRecordFile;
-    std::vector<std::pair<G4String,G4bool>> fRecordFileName;
+    std::vector<std::pair<G4String, G4bool>> fRecordFileName;
     std::vector<G4String> fAccosiatedCommand;
-    
 };
 
 #endif

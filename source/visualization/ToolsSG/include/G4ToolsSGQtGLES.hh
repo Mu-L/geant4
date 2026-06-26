@@ -30,24 +30,41 @@
 
 #include "G4VGraphicsSystem.hh"
 
-namespace toolx {namespace Qt {class session;}}
+namespace toolx
+{
+namespace Qt
+{
+class session;
+}
+}  // namespace toolx
 
-class G4ToolsSGQtGLES: public G4VGraphicsSystem {
-  typedef G4VGraphicsSystem parent;
-public:
-  G4ToolsSGQtGLES();
-  virtual ~G4ToolsSGQtGLES();
-protected:  
-  G4ToolsSGQtGLES(const G4ToolsSGQtGLES& a_from):parent(a_from){}
-  G4ToolsSGQtGLES& operator=(const G4ToolsSGQtGLES&) {return *this;}
-public:  
-  G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
-  G4VViewer* CreateViewer (G4VSceneHandler&, const G4String& name = "");
-  G4bool IsUISessionCompatible () const;
-protected:  
-  void Initialise();
-protected:
-  toolx::Qt::session* fSGSession;
+class G4ToolsSGQtGLES : public G4VGraphicsSystem
+{
+    typedef G4VGraphicsSystem parent;
+
+  public:
+
+    G4ToolsSGQtGLES();
+    virtual ~G4ToolsSGQtGLES();
+
+  protected:
+
+    G4ToolsSGQtGLES(const G4ToolsSGQtGLES& a_from) : parent(a_from) {}
+    G4ToolsSGQtGLES& operator=(const G4ToolsSGQtGLES&) { return *this; }
+
+  public:
+
+    G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
+    G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "");
+    G4bool IsUISessionCompatible() const;
+
+  protected:
+
+    void Initialise();
+
+  protected:
+
+    toolx::Qt::session* fSGSession;
 };
 
 #endif

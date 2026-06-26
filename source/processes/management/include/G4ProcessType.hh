@@ -31,15 +31,15 @@
 
 // Author: H.Kurashige
 // --------------------------------------------------------------------
-#ifndef G4ProcessType_hh
-#define G4ProcessType_hh 1
+#ifndef G4PROCESSTYPE_HH
+#define G4PROCESSTYPE_HH
 
 enum G4ProcessType
 {
   fNotDefined,
   fTransportation,
   fElectromagnetic,
-  fOptical,             
+  fOptical,
   fHadronic,
   fPhotolepton_hadron,
   fDecay,

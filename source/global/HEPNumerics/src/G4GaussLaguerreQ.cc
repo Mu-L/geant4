@@ -39,68 +39,62 @@
 // fWeight[0,..,nLaguerre-1] .
 //
 
-G4GaussLaguerreQ::G4GaussLaguerreQ(function pFunction, G4double alpha,
-                                   G4int nLaguerre)
+G4GaussLaguerreQ::G4GaussLaguerreQ(function pFunction, G4double alpha, G4int nLaguerre)
   : G4VGaussianQuadrature(pFunction)
 {
   const G4double tolerance = 1.0e-10;
-  const G4int maxNumber    = 12;
+  const G4int maxNumber = 12;
   G4int i = 1, k = 1;
-  G4double newton0 = 0.0, newton1 = 0.0, temp1 = 0.0, temp2 = 0.0, temp3 = 0.0,
-           temp = 0.0, cofi = 0.0;
+  G4double newton0 = 0.0, newton1 = 0.0, temp1 = 0.0, temp2 = 0.0, temp3 = 0.0, temp = 0.0,
+           cofi = 0.0;
 
-  fNumber   = nLaguerre;
+  fNumber = nLaguerre;
   fAbscissa = new G4double[fNumber];
-  fWeight   = new G4double[fNumber];
+  fWeight = new G4double[fNumber];
 
-  for(i = 1; i <= fNumber; ++i)  // Loop over the desired roots
+  for (i = 1; i <= fNumber; ++i)  // Loop over the desired roots
   {
-    if(i == 1)
+    if (i == 1)
     {
-      newton0 = (1.0 + alpha) * (3.0 + 0.92 * alpha) /
-                (1.0 + 2.4 * fNumber + 1.8 * alpha);
+      newton0 = (1.0 + alpha) * (3.0 + 0.92 * alpha) / (1.0 + 2.4 * fNumber + 1.8 * alpha);
     }
-    else if(i == 2)
+    else if (i == 2)
     {
       newton0 += (15.0 + 6.25 * alpha) / (1.0 + 0.9 * alpha + 2.5 * fNumber);
     }
     else
     {
       cofi = i - 2;
-      newton0 += ((1.0 + 2.55 * cofi) / (1.9 * cofi) +
-                  1.26 * cofi * alpha / (1.0 + 3.5 * cofi)) *
-                 (newton0 - fAbscissa[i - 3]) / (1.0 + 0.3 * alpha);
+      newton0 += ((1.0 + 2.55 * cofi) / (1.9 * cofi) + 1.26 * cofi * alpha / (1.0 + 3.5 * cofi))
+                 * (newton0 - fAbscissa[i - 3]) / (1.0 + 0.3 * alpha);
     }
-    for(k = 1; k <= maxNumber; ++k)
+    for (k = 1; k <= maxNumber; ++k)
     {
       temp1 = 1.0;
       temp2 = 0.0;
-      for(G4int j = 1; j <= fNumber; ++j)
+      for (G4int j = 1; j <= fNumber; ++j)
       {
         temp3 = temp2;
         temp2 = temp1;
-        temp1 =
-          ((2 * j - 1 + alpha - newton0) * temp2 - (j - 1 + alpha) * temp3) / j;
+        temp1 = ((2 * j - 1 + alpha - newton0) * temp2 - (j - 1 + alpha) * temp3) / j;
       }
-      temp    = (fNumber * temp1 - (fNumber + alpha) * temp2) / newton0;
+      temp = (fNumber * temp1 - (fNumber + alpha) * temp2) / newton0;
       newton1 = newton0;
       newton0 = newton1 - temp1 / temp;
-      if(std::fabs(newton0 - newton1) <= tolerance)
+      if (std::fabs(newton0 - newton1) <= tolerance)
       {
         break;
       }
     }
-    if(k > maxNumber)
+    if (k > maxNumber)
     {
-      G4Exception("G4GaussLaguerreQ::G4GaussLaguerreQ()", "OutOfRange",
-                  FatalException,
+      G4Exception("G4GaussLaguerreQ::G4GaussLaguerreQ()", "OutOfRange", FatalException,
                   "Too many iterations in Gauss-Laguerre constructor");
     }
 
     fAbscissa[i - 1] = newton0;
-    fWeight[i - 1]   = -std::exp(GammaLogarithm(alpha + fNumber) -
-                               GammaLogarithm((G4double) fNumber)) /
-                     (temp * fNumber * temp2);
+    fWeight[i - 1] = -std::exp(GammaLogarithm(alpha + fNumber) - GammaLogarithm((G4double)fNumber))
+                     / (temp * fNumber * temp2);
   }
 }
 
@@ -115,7 +109,7 @@ G4GaussLaguerreQ::G4GaussLaguerreQ(function pFunction, G4double alpha,
 G4double G4GaussLaguerreQ::Integral() const
 {
   G4double integral = 0.0;
-  for(G4int i = 0; i < fNumber; ++i)
+  for (G4int i = 0; i < fNumber; ++i)
   {
     integral += fWeight[i] * fFunction(fAbscissa[i]);
   }

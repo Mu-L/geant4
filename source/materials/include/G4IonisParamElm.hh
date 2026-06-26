@@ -31,78 +31,80 @@
 // 09.03.01: copy constructor and assignement operator in public (mma)
 // 09.07.98: data moved from G4Element (mma)
 
-#ifndef G4IonisParamElm_HH
-#define G4IonisParamElm_HH
+#ifndef G4IONISPARAMELM_HH
+#define G4IONISPARAMELM_HH
 
 #include "G4ios.hh"
 #include "globals.hh"
 
 class G4IonisParamElm
 {
- public:  // with description
-  G4IonisParamElm(G4double Z);
-  ~G4IonisParamElm();
-  G4IonisParamElm& operator=(const G4IonisParamElm&) = delete;
-  G4IonisParamElm(G4IonisParamElm&) = delete;
+  public:  // with description
 
-  // retrieval methods
+    G4IonisParamElm(G4double Z);
+    ~G4IonisParamElm();
+    G4IonisParamElm& operator=(const G4IonisParamElm&) = delete;
+    G4IonisParamElm(G4IonisParamElm&) = delete;
 
-  // atomic number Z
-  G4double GetZ() const { return fZ; }
+    // retrieval methods
 
-  // std::pow (Z,1/3)
-  G4double GetZ3() const { return fZ3; }
+    // atomic number Z
+    G4double GetZ() const { return fZ; }
 
-  // std::pow (Z(Z+1),1/3)
-  G4double GetZZ3() const { return fZZ3; }
+    // std::pow (Z,1/3)
+    G4double GetZ3() const { return fZ3; }
 
-  // std::log(Z)/3
-  G4double GetlogZ3() const { return flogZ3; }
+    // std::pow (Z(Z+1),1/3)
+    G4double GetZZ3() const { return fZZ3; }
 
-  // 0.1*std::pow(Z,1/3)*MeV/proton_mass_c2
-  G4double GetTau0() const { return fTau0; };
+    // std::log(Z)/3
+    G4double GetlogZ3() const { return flogZ3; }
 
-  // 2*MeV/proton mass
-  G4double GetTaul() const { return fTaul; }
+    // 0.1*std::pow(Z,1/3)*MeV/proton_mass_c2
+    G4double GetTau0() const { return fTau0; };
 
-  // parameters for the low energy ion.loss
-  G4double GetAlow() const { return fAlow; }
-  G4double GetBlow() const { return fBlow; }
-  G4double GetClow() const { return fClow; }
+    // 2*MeV/proton mass
+    G4double GetTaul() const { return fTaul; }
 
-  // ICRU'37 report
-  G4double GetMeanExcitationEnergy() const { return fMeanExcitationEnergy; }
+    // parameters for the low energy ion.loss
+    G4double GetAlow() const { return fAlow; }
+    G4double GetBlow() const { return fBlow; }
+    G4double GetClow() const { return fClow; }
 
-  G4double GetFermiVelocity() const { return fVFermi; };
-  G4double GetLFactor() const { return fLFactor; };
+    // ICRU'37 report
+    G4double GetMeanExcitationEnergy() const { return fMeanExcitationEnergy; }
 
-  // shell correction coefficients
-  G4double* GetShellCorrectionVector() const { return fShellCorrectionVector; }
+    G4double GetFermiVelocity() const { return fVFermi; };
+    G4double GetLFactor() const { return fLFactor; };
 
-  G4bool operator==(const G4IonisParamElm&) const = delete;
-  G4bool operator!=(const G4IonisParamElm&) const = delete;
+    // shell correction coefficients
+    G4double* GetShellCorrectionVector() const { return fShellCorrectionVector; }
 
- private:
-  //
-  //  data members
-  //
-  G4double fZ;  // effective Z
-  G4double fZ3;  // std::pow (Z,1/3)
-  G4double fZZ3;  // std::pow (Z(Z+1),1/3)
-  G4double flogZ3;  // std::log(Z)/3
+    G4bool operator==(const G4IonisParamElm&) const = delete;
+    G4bool operator!=(const G4IonisParamElm&) const = delete;
 
-  //  ------ ionisation loss ---------------------------------
+  private:
 
-  G4double fTau0;  // 0.1*std::pow(Z,1/3)*MeV/proton_mass_c2
-  G4double fTaul;  // 2*MeV/proton mass
-  G4double fBetheBlochLow;  // Bethe-Bloch at fTaul*particle mass
-  G4double fAlow, fBlow, fClow;  // parameters for the low energy ion.loss
-  G4double fMeanExcitationEnergy;  //
-  G4double* fShellCorrectionVector;  // shell correction coefficients
+    //
+    //  data members
+    //
+    G4double fZ;  // effective Z
+    G4double fZ3;  // std::pow (Z,1/3)
+    G4double fZZ3;  // std::pow (Z(Z+1),1/3)
+    G4double flogZ3;  // std::log(Z)/3
 
-  // parameters for ion corrections computations
-  G4double fVFermi;
-  G4double fLFactor;
+    //  ------ ionisation loss ---------------------------------
+
+    G4double fTau0;  // 0.1*std::pow(Z,1/3)*MeV/proton_mass_c2
+    G4double fTaul;  // 2*MeV/proton mass
+    G4double fBetheBlochLow;  // Bethe-Bloch at fTaul*particle mass
+    G4double fAlow, fBlow, fClow;  // parameters for the low energy ion.loss
+    G4double fMeanExcitationEnergy;  //
+    G4double* fShellCorrectionVector;  // shell correction coefficients
+
+    // parameters for ion corrections computations
+    G4double fVFermi;
+    G4double fLFactor;
 };
 
 #endif

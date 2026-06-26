@@ -33,10 +33,10 @@
 // Author:        Laszlo Urban
 //
 // Creation date: 24.10.2006 cloned from G4MultipleScattering by VI
-// 
+//
 // Modifications:
-// 20.03.07 Remove local parameter skin (V.Ivanchenko) 
-// 04.07.09 Remove other local parameters (V.Ivanchenko) 
+// 20.03.07 Remove local parameter skin (V.Ivanchenko)
+// 04.07.09 Remove other local parameters (V.Ivanchenko)
 //
 //
 //------------------------------------------------------------------------------
@@ -51,8 +51,8 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4hMultipleScattering_h
-#define G4hMultipleScattering_h 1
+#ifndef G4HMULTIPLESCATTERING_HH
+#define G4HMULTIPLESCATTERING_HH
 
 #include "G4VMultipleScattering.hh"
 
@@ -61,34 +61,32 @@
 class G4hMultipleScattering : public G4VMultipleScattering
 
 {
-public: 
+  public:
 
-  explicit G4hMultipleScattering(const G4String& processName="msc");
+    explicit G4hMultipleScattering(const G4String& processName = "msc");
 
-  ~G4hMultipleScattering() override;
+    ~G4hMultipleScattering() override;
 
-  // returns true for charged particles, false otherwise
-  G4bool IsApplicable (const G4ParticleDefinition& p) final;
+    // returns true for charged particles, false otherwise
+    G4bool IsApplicable(const G4ParticleDefinition& p) final;
 
-  // print documentation in html format
-  void ProcessDescription(std::ostream&) const override;
+    // print documentation in html format
+    void ProcessDescription(std::ostream&) const override;
 
-  G4hMultipleScattering & operator=
-  (const G4hMultipleScattering &right) = delete;
-  G4hMultipleScattering(const G4hMultipleScattering&) = delete;
+    G4hMultipleScattering& operator=(const G4hMultipleScattering& right) = delete;
+    G4hMultipleScattering(const G4hMultipleScattering&) = delete;
 
-protected:
+  protected:
 
-  // Print out of the class parameters
-  void StreamProcessInfo(std::ostream& outFile) const override;
+    // Print out of the class parameters
+    void StreamProcessInfo(std::ostream& outFile) const override;
 
-  // This function initialise models
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+    // This function initialise models
+    void InitialiseProcess(const G4ParticleDefinition*) override;
 
-private:
+  private:
 
-  G4bool isInitialized;
-
+    G4bool isInitialized;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

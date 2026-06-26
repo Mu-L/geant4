@@ -45,8 +45,10 @@ G4HadronXSDataTable* G4HadronXSDataTable::sInstance = nullptr;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4HadronXSDataTable* G4HadronXSDataTable::Instance() {
-  if ( sInstance == nullptr ) {
+G4HadronXSDataTable* G4HadronXSDataTable::Instance()
+{
+  if (sInstance == nullptr)
+  {
     static G4HadronXSDataTable theObject;
     sInstance = &theObject;
   }
@@ -55,22 +57,28 @@ G4HadronXSDataTable* G4HadronXSDataTable::Instance() {
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4HadronXSDataTable::G4HadronXSDataTable()
-{}
+G4HadronXSDataTable::G4HadronXSDataTable() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4HadronXSDataTable::~G4HadronXSDataTable()
 {
-  for (std::size_t i = 0; i < fPiData.size(); ++i) {
+  for (std::size_t i = 0; i < fPiData.size(); ++i)
+  {
     auto ptr = fPiData[i];
-    for (std::size_t j = 0; j < ptr->size(); ++j) {
+    for (std::size_t j = 0; j < ptr->size(); ++j)
+    {
       auto p = (*ptr)[j];
-      for (std::size_t k = i + 1; k < fPiData.size(); ++k) {
-	auto qtr = fPiData[k];
-	for (std::size_t l = 0; l < qtr->size(); ++l) {
-	  if ((*qtr)[l] == p) { (*qtr)[l] = nullptr; }
-	}
+      for (std::size_t k = i + 1; k < fPiData.size(); ++k)
+      {
+        auto qtr = fPiData[k];
+        for (std::size_t l = 0; l < qtr->size(); ++l)
+        {
+          if ((*qtr)[l] == p)
+          {
+            (*qtr)[l] = nullptr;
+          }
+        }
       }
       delete p;
       (*ptr)[j] = nullptr;
@@ -78,7 +86,8 @@ G4HadronXSDataTable::~G4HadronXSDataTable()
     delete ptr;
   }
   fPiData.clear();
-  for (auto const & ptr : fTable) {
+  for (auto const& ptr : fTable)
+  {
     ptr->clearAndDestroy();
     delete ptr;
   }
@@ -89,9 +98,16 @@ G4HadronXSDataTable::~G4HadronXSDataTable()
 
 void G4HadronXSDataTable::AddPiData(std::vector<G4PiData*>* ptr)
 {
-  if (nullptr == ptr || ptr->empty()) { return; }
-  for (auto & d : fPiData) {
-    if (ptr == d) { return; }
+  if (nullptr == ptr || ptr->empty())
+  {
+    return;
+  }
+  for (auto& d : fPiData)
+  {
+    if (ptr == d)
+    {
+      return;
+    }
   }
   fPiData.push_back(ptr);
 }
@@ -100,8 +116,15 @@ void G4HadronXSDataTable::AddPiData(std::vector<G4PiData*>* ptr)
 
 void G4HadronXSDataTable::AddTable(G4PhysicsTable* ptr)
 {
-  if (nullptr != ptr) {
-    for (auto & p : fTable) { if (p == ptr) { return; } }
+  if (nullptr != ptr)
+  {
+    for (auto& p : fTable)
+    {
+      if (p == ptr)
+      {
+        return;
+      }
+    }
     fTable.push_back(ptr);
   }
 }

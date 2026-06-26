@@ -45,8 +45,8 @@
 
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPBGGNucleonInelasticXS_h
-#define G4ParticleHPBGGNucleonInelasticXS_h
+#ifndef G4PARTICLEHPBGGNUCLEONINELASTICXS_HH
+#define G4PARTICLEHPBGGNUCLEONINELASTICXS_HH
 
 #include "G4BGGNucleonInelasticXS.hh"
 #include "G4ParticleDefinition.hh"
@@ -65,6 +65,7 @@ class G4Isotope;
 class G4ParticleHPBGGNucleonInelasticXS : public G4BGGNucleonInelasticXS
 {
   public:
+
     G4ParticleHPBGGNucleonInelasticXS(const G4ParticleDefinition*);
 
     ~G4ParticleHPBGGNucleonInelasticXS() override;
@@ -77,6 +78,7 @@ class G4ParticleHPBGGNucleonInelasticXS : public G4BGGNucleonInelasticXS
                            const G4Material* mat = nullptr) override;
 
   private:
+
     G4double fLowEnergyLimitForHPN;
 };
 

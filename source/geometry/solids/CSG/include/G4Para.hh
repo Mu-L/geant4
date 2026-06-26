@@ -63,16 +63,16 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UPARA 1
+#  define G4GEOM_USE_UPARA 1
 #endif
 
 #if defined(G4GEOM_USE_UPARA)
-  #define G4UPara G4Para
-  #include "G4UPara.hh"
+#  define G4UPara G4Para
+#  include "G4UPara.hh"
 #else
 
-#include "G4CSGSolid.hh"
-#include "G4Polyhedron.hh"
+#  include "G4CSGSolid.hh"
+#  include "G4Polyhedron.hh"
 
 /**
  * @brief G4Para represents a parallelepiped, essentially a box with half
@@ -80,6 +80,7 @@
  * polar line joining the faces at +-dz in z, and alpha formed by the y axis
  * and the plane joining the centre of the faces parallel to the z-x plane
  * at -dy and +dy.
+ * @ingroup geometry_solids_csg
  */
 
 class G4Para : public G4CSGSolid
@@ -100,17 +101,15 @@ class G4Para : public G4CSGSolid
      *  @param[in] pPhi Azimuthal angle of the line joining the centres of
      *             the faces at -dz and +dz in Z.
      */
-    G4Para(const G4String& pName,
-                 G4double pDx, G4double pDy, G4double pDz,
-                 G4double pAlpha, G4double pTheta, G4double pPhi);
+    G4Para(const G4String& pName, G4double pDx, G4double pDy, G4double pDz, G4double pAlpha,
+           G4double pTheta, G4double pPhi);
 
     /**
      * Constructs a parallelepiped, given a name and its 8 vertices.
      *  @param[in] pName The name of the solid.
      *  @param[in] pt Points of the 8 vertices.
      */
-    G4Para(const G4String& pName,
-           const G4ThreeVector pt[8]);
+    G4Para(const G4String& pName, const G4ThreeVector pt[8]);
 
     /**
      * Default destructor.
@@ -120,15 +119,15 @@ class G4Para : public G4CSGSolid
     /**
      * Accessors. Obtain (re)computed values of the original parameters.
      */
-    inline G4double GetZHalfLength()  const;
+    inline G4double GetZHalfLength() const;
     inline G4ThreeVector GetSymAxis() const;
-    inline G4double GetYHalfLength()  const;
-    inline G4double GetXHalfLength()  const;
-    inline G4double GetTanAlpha()     const;
-    inline G4double GetAlpha()  const;
-    inline G4double GetTheta()  const;    
-    inline G4double GetPhi()    const;
-   
+    inline G4double GetYHalfLength() const;
+    inline G4double GetXHalfLength() const;
+    inline G4double GetTanAlpha() const;
+    inline G4double GetAlpha() const;
+    inline G4double GetTheta() const;
+    inline G4double GetPhi() const;
+
     /**
      * Modifiers.
      */
@@ -138,12 +137,12 @@ class G4Para : public G4CSGSolid
     inline void SetAlpha(G4double alpha);
     inline void SetTanAlpha(G4double val);
     inline void SetThetaAndPhi(G4double pTheta, G4double pPhi);
-   
+
     /**
      * Sets all parameters, as for constructor.
      */
-    void SetAllParameters(G4double pDx, G4double pDy, G4double pDz,
-                          G4double pAlpha, G4double pTheta, G4double pPhi);
+    void SetAllParameters(G4double pDx, G4double pDy, G4double pDz, G4double pAlpha,
+                          G4double pTheta, G4double pPhi);
 
     /**
      * Returning an estimation of the solid volume (capacity) and
@@ -156,8 +155,7 @@ class G4Para : public G4CSGSolid
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -177,24 +175,21 @@ class G4Para : public G4CSGSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Concrete implementations of the expected query interfaces for
      * solids, as defined in the base class G4VSolid.
      */
     EInside Inside(const G4ThreeVector& p) const override;
-    G4ThreeVector SurfaceNormal( const G4ThreeVector& p) const override;
-    G4double DistanceToIn(const G4ThreeVector& p,
-                          const G4ThreeVector& v) const override;
+    G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
     G4double DistanceToIn(const G4ThreeVector& p) const override;
     G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
-                           const G4bool calcNorm = false,
-                                 G4bool* validNorm = nullptr,
-                                 G4ThreeVector* n = nullptr) const override;
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
     G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
@@ -227,8 +222,8 @@ class G4Para : public G4CSGSolid
     /**
      * Methods for creating graphical representations (i.e. for visualisation).
      */
-    void DescribeYourselfTo (G4VGraphicsScene& scene) const override;
-    G4Polyhedron* CreatePolyhedron () const override;
+    void DescribeYourselfTo(G4VGraphicsScene& scene) const override;
+    G4Polyhedron* CreatePolyhedron() const override;
 
     /**
      * Fake default constructor for usage restricted to direct object
@@ -260,16 +255,19 @@ class G4Para : public G4CSGSolid
      * for points not on the surface.
      */
     G4ThreeVector ApproxSurfaceNormal(const G4ThreeVector& p) const;
-   
+
   private:
 
     G4double halfCarTolerance;
-    G4double fDx,fDy,fDz;
-    G4double fTalpha,fTthetaCphi,fTthetaSphi;
-    struct { G4double a,b,c,d; } fPlanes[4];
+    G4double fDx, fDy, fDz;
+    G4double fTalpha, fTthetaCphi, fTthetaSphi;
+    struct
+    {
+        G4double a, b, c, d;
+    } fPlanes[4];
 };
 
-#include "G4Para.icc"
+#  include "G4Para.icc"
 
 #endif
 

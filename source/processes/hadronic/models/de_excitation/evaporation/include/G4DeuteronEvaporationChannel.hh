@@ -28,29 +28,29 @@
 //
 // 17-11-2010 V.Ivanchenko moved constructor and destructor to source and cleanup
 
-#ifndef G4DeuteronEvaporationChannel_h
-#define G4DeuteronEvaporationChannel_h 1
+#ifndef G4DEUTERONEVAPORATIONCHANNEL_HH
+#define G4DEUTERONEVAPORATIONCHANNEL_HH
 
-#include "G4EvaporationChannel.hh"
 #include "G4DeuteronEvaporationProbability.hh"
+#include "G4EvaporationChannel.hh"
 
 class G4DeuteronEvaporationChannel : public G4EvaporationChannel
 {
-public:
-  // only available constructor
-  explicit G4DeuteronEvaporationChannel();
+  public:
 
-  // destructor
-  ~G4DeuteronEvaporationChannel() override;
+    // only available constructor
+    explicit G4DeuteronEvaporationChannel();
 
-private:
-  const G4DeuteronEvaporationChannel & operator=
-  (const G4DeuteronEvaporationChannel & right);  
-  G4DeuteronEvaporationChannel(const G4DeuteronEvaporationChannel & right);
-  G4bool operator==(const G4DeuteronEvaporationChannel & right) const;
-  G4bool operator!=(const G4DeuteronEvaporationChannel & right) const;
-	
-  G4DeuteronEvaporationProbability pr;
+    // destructor
+    ~G4DeuteronEvaporationChannel() override;
 
+  private:
+
+    const G4DeuteronEvaporationChannel& operator=(const G4DeuteronEvaporationChannel& right);
+    G4DeuteronEvaporationChannel(const G4DeuteronEvaporationChannel& right);
+    G4bool operator==(const G4DeuteronEvaporationChannel& right) const;
+    G4bool operator!=(const G4DeuteronEvaporationChannel& right) const;
+
+    G4DeuteronEvaporationProbability pr;
 };
 #endif

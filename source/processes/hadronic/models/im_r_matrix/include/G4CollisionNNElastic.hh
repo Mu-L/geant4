@@ -25,56 +25,60 @@
 //
 //
 
-#ifndef G4CollisionNNElastic_h
-#define G4CollisionNNElastic_h
+#ifndef G4COLLISIONNNELASTIC_HH
+#define G4COLLISIONNNELASTIC_HH
 
-#include "globals.hh"
+#include "G4KineticTrackVector.hh"
+#include "G4VAngularDistribution.hh"
 #include "G4VCollision.hh"
 #include "G4VCrossSectionSource.hh"
-#include "G4VAngularDistribution.hh"
-#include "G4KineticTrackVector.hh"
 #include "G4VElasticCollision.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4KineticTrack;
 
 class G4CollisionNNElastic : public G4VElasticCollision
 {
+  public:
 
-public:
+    G4CollisionNNElastic();
 
-  G4CollisionNNElastic();
+    virtual ~G4CollisionNNElastic();
 
-  virtual ~G4CollisionNNElastic();
+    G4bool operator==(const G4CollisionNNElastic& right) const;
+    G4bool operator!=(const G4CollisionNNElastic& right) const;
 
-  G4bool operator==(const G4CollisionNNElastic &right) const;
-  G4bool operator!=(const G4CollisionNNElastic &right) const;
+    virtual G4bool IsInCharge(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
 
-  virtual G4bool IsInCharge(const G4KineticTrack& trk1, 
-			    const G4KineticTrack& trk2) const;
+    virtual G4String GetName() const { return "NN Elastic Collision"; }
 
-  virtual G4String GetName() const { return "NN Elastic Collision"; }
-  
-private:
-  G4CollisionNNElastic(const G4CollisionNNElastic &);
-  G4CollisionNNElastic & operator= (const G4CollisionNNElastic &);
+  private:
 
-protected:
+    G4CollisionNNElastic(const G4CollisionNNElastic&);
+    G4CollisionNNElastic& operator=(const G4CollisionNNElastic&);
 
-  virtual const G4VCrossSectionSource* GetCrossSectionSource() const { return crossSectionSource; }
-  virtual const G4VAngularDistribution* GetAngularDistribution() const { return angularDistribution; }
+  protected:
 
-  virtual const std::vector<G4String>& GetListOfColliders(G4int whichOne) const;  
+    virtual const G4VCrossSectionSource* GetCrossSectionSource() const
+    {
+      return crossSectionSource;
+    }
+    virtual const G4VAngularDistribution* GetAngularDistribution() const
+    {
+      return angularDistribution;
+    }
 
+    virtual const std::vector<G4String>& GetListOfColliders(G4int whichOne) const;
 
-private:  
+  private:
 
-  G4VCrossSectionSource* crossSectionSource;
-  G4VAngularDistribution* angularDistribution;
+    G4VCrossSectionSource* crossSectionSource;
+    G4VAngularDistribution* angularDistribution;
 
-  std::vector<G4String> colliders1;
-  std::vector<G4String> colliders2;
-
+    std::vector<G4String> colliders1;
+    std::vector<G4String> colliders2;
 };
 
 #endif

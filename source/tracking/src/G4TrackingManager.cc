@@ -33,9 +33,9 @@
 
 #include "G4TrackingManager.hh"
 
-#include "G4Trajectory.hh"
 #include "G4RichTrajectory.hh"
 #include "G4SmoothTrajectory.hh"
+#include "G4Trajectory.hh"
 #include "G4ios.hh"
 
 //////////////////////////////////////
@@ -67,7 +67,8 @@ void G4TrackingManager::ProcessOneTrack(G4Track* apValueG4Track)
 
   // Clear secondary particle vector
   //
-  for (auto& itr : *GimmeSecondaries()) {
+  for (auto& itr : *GimmeSecondaries())
+  {
     delete itr;
   }
   GimmeSecondaries()->clear();
@@ -81,7 +82,8 @@ void G4TrackingManager::ProcessOneTrack(G4Track* apValueG4Track)
   // Pre tracking user intervention process
 
   fpTrajectory = nullptr;
-  if (fpUserTrackingAction != nullptr) {
+  if (fpUserTrackingAction != nullptr)
+  {
     fpUserTrackingAction->PreUserTrackingAction(fpTrack);
   }
 
@@ -91,9 +93,11 @@ void G4TrackingManager::ProcessOneTrack(G4Track* apValueG4Track)
 #ifdef G4_STORE_TRAJECTORY
     // Construct a trajectory if it is requested
     //
-    if ((StoreTrajectory != 0) && (fpTrajectory == nullptr)) {
+    if ((StoreTrajectory != 0) && (fpTrajectory == nullptr))
+    {
       // default trajectory concrete class object
-      switch (StoreTrajectory) {
+      switch (StoreTrajectory)
+      {
         default:
         case 1:
           fpTrajectory = new G4Trajectory(fpTrack);
@@ -122,15 +126,18 @@ void G4TrackingManager::ProcessOneTrack(G4Track* apValueG4Track)
 
     // Track the particle Step-by-Step while it is alive
     //
-    while ((fpTrack->GetTrackStatus() == fAlive) || (fpTrack->GetTrackStatus() == fStopButAlive)) {
+    while ((fpTrack->GetTrackStatus() == fAlive) || (fpTrack->GetTrackStatus() == fStopButAlive))
+    {
       fpTrack->IncrementCurrentStepNumber();
       fpSteppingManager->Stepping();
 #ifdef G4_STORE_TRAJECTORY
-      if (StoreTrajectory != 0) {
+      if (StoreTrajectory != 0)
+      {
         fpTrajectory->AppendStep(fpSteppingManager->GetStep());
       }
 #endif
-      if (EventIsAborted) {
+      if (EventIsAborted)
+      {
         fpTrack->SetTrackStatus(fKillTrackAndSecondaries);
       }
     }
@@ -139,17 +146,20 @@ void G4TrackingManager::ProcessOneTrack(G4Track* apValueG4Track)
   }
 
   // Post tracking user intervention process.
-  if (fpUserTrackingAction != nullptr) {
+  if (fpUserTrackingAction != nullptr)
+  {
     fpUserTrackingAction->PostUserTrackingAction(fpTrack);
   }
 
   // Destruct the trajectory if it was created
 #ifdef G4VERBOSE
-  if ((StoreTrajectory != 0) && verboseLevel > 10) {
+  if ((StoreTrajectory != 0) && verboseLevel > 10)
+  {
     fpTrajectory->ShowTrajectory();
   }
 #endif
-  if ((StoreTrajectory == 0) && (fpTrajectory != nullptr)) {
+  if ((StoreTrajectory == 0) && (fpTrajectory != nullptr))
+  {
     delete fpTrajectory;
     fpTrajectory = nullptr;
   }
@@ -161,7 +171,7 @@ void G4TrackingManager::SetTrajectory(G4VTrajectory* aTrajectory)
 {
 #ifndef G4_STORE_TRAJECTORY
   G4Exception("G4TrackingManager::SetTrajectory()", "Tracking0015", FatalException,
-    "Invoked without G4_STORE_TRAJECTORY option set!");
+              "Invoked without G4_STORE_TRAJECTORY option set!");
 #endif
   fpTrajectory = aTrajectory;
 }
@@ -196,4 +206,3 @@ void G4TrackingManager::SetStoreTrajectory(G4int value)
 {
   StoreTrajectory = value;
 }
-

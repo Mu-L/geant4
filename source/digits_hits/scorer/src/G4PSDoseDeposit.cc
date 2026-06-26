@@ -27,11 +27,12 @@
 //
 // G4PSDoseDeposit
 #include "G4PSDoseDeposit.hh"
-#include "G4VSolid.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4VPVParameterisation.hh"
+
 #include "G4UnitsTable.hh"
+#include "G4VPVParameterisation.hh"
+#include "G4VPhysicalVolume.hh"
 #include "G4VScoreHistFiller.hh"
+#include "G4VSolid.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // (Description)
@@ -46,14 +47,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 G4PSDoseDeposit::G4PSDoseDeposit(const G4String& name, G4int depth)
-  : G4PSDoseDeposit(name, "Gy", depth) 
+  : G4PSDoseDeposit(name, "Gy", depth)
 {}
 
-G4PSDoseDeposit::G4PSDoseDeposit(const G4String& name, const G4String& unit,
-                                 G4int depth)
-  : G4VPrimitivePlotter(name, depth)
-  , HCID(-1)
-  , EvtMap(nullptr)
+G4PSDoseDeposit::G4PSDoseDeposit(const G4String& name, const G4String& unit, G4int depth)
+  : G4VPrimitivePlotter(name, depth), HCID(-1), EvtMap(nullptr)
 {
   SetUnit(unit);
 }
@@ -61,32 +59,26 @@ G4PSDoseDeposit::G4PSDoseDeposit(const G4String& name, const G4String& unit,
 G4bool G4PSDoseDeposit::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
   G4double edep = aStep->GetTotalEnergyDeposit();
-  if(edep == 0.)
-    return false;
+  if (edep == 0.) return false;
 
-  G4int idx = ((G4TouchableHistory*) (aStep->GetPreStepPoint()->GetTouchable()))
-                ->GetReplicaNumber(indexDepth);
+  G4int idx =
+    ((G4TouchableHistory*)(aStep->GetPreStepPoint()->GetTouchable()))->GetReplicaNumber(indexDepth);
   G4double cubicVolume = ComputeVolume(aStep, idx);
 
-  G4double density = aStep->GetTrack()
-                       ->GetStep()
-                       ->GetPreStepPoint()
-                       ->GetMaterial()
-                       ->GetDensity();
-  G4double dose  = edep / (density * cubicVolume);
-  G4double wei   = aStep->GetPreStepPoint()->GetWeight();
-  G4int index    = GetIndex(aStep);
+  G4double density = aStep->GetTrack()->GetStep()->GetPreStepPoint()->GetMaterial()->GetDensity();
+  G4double dose = edep / (density * cubicVolume);
+  G4double wei = aStep->GetPreStepPoint()->GetWeight();
+  G4int index = GetIndex(aStep);
   G4double dosew = dose * wei;
   EvtMap->add(index, dosew);
 
-  if(!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
+  if (!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
   {
     auto filler = G4VScoreHistFiller::Instance();
-    if(filler == nullptr)
+    if (filler == nullptr)
     {
-      G4Exception(
-        "G4PSDoseDeposit::ProcessHits", "SCORER0123", JustWarning,
-        "G4TScoreHistFiller is not instantiated!! Histogram is not filled.");
+      G4Exception("G4PSDoseDeposit::ProcessHits", "SCORER0123", JustWarning,
+                  "G4TScoreHistFiller is not instantiated!! Histogram is not filled.");
     }
     else
     {
@@ -99,26 +91,27 @@ G4bool G4PSDoseDeposit::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 
 void G4PSDoseDeposit::Initialize(G4HCofThisEvent* HCE)
 {
-  EvtMap = new G4THitsMap<G4double>(GetMultiFunctionalDetector()->GetName(),
-                                    GetName());
-  if(HCID < 0)
+  EvtMap = new G4THitsMap<G4double>(GetMultiFunctionalDetector()->GetName(), GetName());
+  if (HCID < 0)
   {
     HCID = GetCollectionID(0);
   }
-  HCE->AddHitsCollection(HCID, (G4VHitsCollection*) EvtMap);
+  HCE->AddHitsCollection(HCID, (G4VHitsCollection*)EvtMap);
 }
 
-void G4PSDoseDeposit::clear() { EvtMap->clear(); }
+void G4PSDoseDeposit::clear()
+{
+  EvtMap->clear();
+}
 
 void G4PSDoseDeposit::PrintAll()
 {
   G4cout << " MultiFunctionalDet  " << detector->GetName() << G4endl;
   G4cout << " PrimitiveScorer " << GetName() << G4endl;
   G4cout << " Number of entries " << EvtMap->entries() << G4endl;
-  for(const auto& [copy, dose] : *(EvtMap->GetMap()))
+  for (const auto& [copy, dose] : *(EvtMap->GetMap()))
   {
-    G4cout << "  copy no.: " << copy
-           << "  dose deposit: " << *(dose) / GetUnitValue() << " ["
+    G4cout << "  copy no.: " << copy << "  dose deposit: " << *(dose) / GetUnitValue() << " ["
            << GetUnit() << "]" << G4endl;
   }
 }

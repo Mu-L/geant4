@@ -28,8 +28,8 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4FastSimulationPhysics_h
-#define G4FastSimulationPhysics_h 1
+#ifndef G4FASTSIMULATIONPHYSICS_HH
+#define G4FASTSIMULATIONPHYSICS_HH
 
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
@@ -40,47 +40,50 @@
 
 class G4FastSimulationPhysics : public G4VPhysicsConstructor
 {
-public:
-  
-  G4FastSimulationPhysics(const G4String& name = "FastSimP");
-  virtual ~G4FastSimulationPhysics();
+  public:
 
-public:
-  // --------------------------------------
-  // -- Fast simulation activation methods:
-  // --------------------------------------
-  // -- Used to select particles for which fast simulation has to be activated:
-  // ---- Activate fast simulation for one particle with fast simulation attached to mass geometry: (without geometry name) or
-  // ---- activate fast simulation for one particle with fast simulation attached to a parallel geometry:
-  void ActivateFastSimulation(const G4String particleName, const G4String parallelGeometryName = "");
+    G4FastSimulationPhysics(const G4String& name = "FastSimP");
+    virtual ~G4FastSimulationPhysics();
 
-  // -- Information about particles under fast simulation:
-  void BeVerbose() { fVerbose = true; }
-  
-public:
-  
-  // This method is dummy for physics
-  virtual void ConstructParticle();
-  
-  // This method will be invoked in the Construct() method.
-  // each physics process will be instantiated and
-  // registered to the process manager of each particle type
-  virtual void ConstructProcess();
-  
-private:
-  
-  // hide assignment operator
-  G4FastSimulationPhysics & operator=(const G4FastSimulationPhysics &right);
-  G4FastSimulationPhysics(const G4FastSimulationPhysics&);
+  public:
 
-  // -- Particles under fast simulation:
-  std::vector< G4String >  fParticlesUnderFastSimulation;
-  // -- And their related possible parallel geometries:
-  std::vector< G4String >  fGeometries;
+    // --------------------------------------
+    // -- Fast simulation activation methods:
+    // --------------------------------------
+    // -- Used to select particles for which fast simulation has to be activated:
+    // ---- Activate fast simulation for one particle with fast simulation attached to mass
+    // geometry: (without geometry name) or
+    // ---- activate fast simulation for one particle with fast simulation attached to a parallel
+    // geometry:
+    void ActivateFastSimulation(const G4String particleName,
+                                const G4String parallelGeometryName = "");
 
-  // -- Report:
-  G4bool fVerbose;
-  
+    // -- Information about particles under fast simulation:
+    void BeVerbose() { fVerbose = true; }
+
+  public:
+
+    // This method is dummy for physics
+    virtual void ConstructParticle();
+
+    // This method will be invoked in the Construct() method.
+    // each physics process will be instantiated and
+    // registered to the process manager of each particle type
+    virtual void ConstructProcess();
+
+  private:
+
+    // hide assignment operator
+    G4FastSimulationPhysics& operator=(const G4FastSimulationPhysics& right);
+    G4FastSimulationPhysics(const G4FastSimulationPhysics&);
+
+    // -- Particles under fast simulation:
+    std::vector<G4String> fParticlesUnderFastSimulation;
+    // -- And their related possible parallel geometries:
+    std::vector<G4String> fGeometries;
+
+    // -- Report:
+    G4bool fVerbose;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

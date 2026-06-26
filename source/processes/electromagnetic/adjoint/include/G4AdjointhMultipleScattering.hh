@@ -35,8 +35,8 @@
 //  and not before the step.
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4AdjointhMultipleScattering_h
-#define G4AdjointhMultipleScattering_h 1
+#ifndef G4ADJOINTHMULTIPLESCATTERING_HH
+#define G4ADJOINTHMULTIPLESCATTERING_HH
 
 #include "G4VMultipleScattering.hh"
 
@@ -44,27 +44,29 @@ class G4VMscModel;
 
 class G4AdjointhMultipleScattering : public G4VMultipleScattering
 {
- public:
-  explicit G4AdjointhMultipleScattering(const G4String& processName = "msc");
+  public:
 
-  ~G4AdjointhMultipleScattering() override;
+    explicit G4AdjointhMultipleScattering(const G4String& processName = "msc");
 
-  // returns true for charged particles, false otherwise
-  G4bool IsApplicable(const G4ParticleDefinition& p) override;
+    ~G4AdjointhMultipleScattering() override;
 
-  void ProcessDescription(std::ostream&) const override;
-  void DumpInfo() const override { ProcessDescription(G4cout); };
-  void StreamProcessInfo(std::ostream& out) const override;
+    // returns true for charged particles, false otherwise
+    G4bool IsApplicable(const G4ParticleDefinition& p) override;
 
-  G4AdjointhMultipleScattering(G4AdjointhMultipleScattering&) = delete;
-  G4AdjointhMultipleScattering& operator=(
-    const G4AdjointhMultipleScattering& right) = delete;
+    void ProcessDescription(std::ostream&) const override;
+    void DumpInfo() const override { ProcessDescription(G4cout); };
+    void StreamProcessInfo(std::ostream& out) const override;
 
- protected:
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+    G4AdjointhMultipleScattering(G4AdjointhMultipleScattering&) = delete;
+    G4AdjointhMultipleScattering& operator=(const G4AdjointhMultipleScattering& right) = delete;
 
- private:
-  G4bool fIsInitialized = false;
+  protected:
+
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool fIsInitialized = false;
 };
 
 #endif

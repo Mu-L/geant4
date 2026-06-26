@@ -35,32 +35,33 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4TritonBuilder_h
-#define G4TritonBuilder_h 1
-
-#include "G4PhysicsBuilderInterface.hh"
-#include "globals.hh"
+#ifndef G4TRITONBUILDER_HH
+#define G4TRITONBUILDER_HH
 
 #include "G4HadronInelasticProcess.hh"
+#include "G4PhysicsBuilderInterface.hh"
 #include "G4VTritonBuilder.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4TritonBuilder : public G4PhysicsBuilderInterface
 {
-  public: 
+  public:
+
     G4TritonBuilder();
     virtual ~G4TritonBuilder() {}
 
     virtual void Build() final;
-    virtual void RegisterMe(G4PhysicsBuilderInterface * aB) final;
+    virtual void RegisterMe(G4PhysicsBuilderInterface* aB) final;
 
-    using G4PhysicsBuilderInterface::Build; //Prevent compiler warning
+    using G4PhysicsBuilderInterface::Build;  // Prevent compiler warning
 
   private:
-    G4HadronInelasticProcess * theTritonInelastic;
-    
-    std::vector<G4VTritonBuilder *> theModelCollections;
+
+    G4HadronInelasticProcess* theTritonInelastic;
+
+    std::vector<G4VTritonBuilder*> theModelCollections;
 };
 
 #endif
-

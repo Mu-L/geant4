@@ -30,30 +30,29 @@
 //
 // J. M. Quesada (July 2009) coulomb barrier striclty according to Furihata's paper
 
-#ifndef G4DeuteronGEMChannel_h
-#define G4DeuteronGEMChannel_h 1
+#ifndef G4DEUTERONGEMCHANNEL_HH
+#define G4DEUTERONGEMCHANNEL_HH
 
-#include "G4GEMChannel.hh"
 #include "G4DeuteronGEMProbability.hh"
+#include "G4GEMChannel.hh"
 
 class G4DeuteronGEMChannel : public G4GEMChannel
 {
-public:
-  // only available constructor
-  explicit G4DeuteronGEMChannel() 
-    : G4GEMChannel(2,1,"d",&theEvaporationProbability) {}
+  public:
 
-  // destructor
-  ~G4DeuteronGEMChannel() {};
+    // only available constructor
+    explicit G4DeuteronGEMChannel() : G4GEMChannel(2, 1, "d", &theEvaporationProbability) {}
 
-private:
+    // destructor
+    ~G4DeuteronGEMChannel() {};
 
-  const G4DeuteronGEMChannel & operator=(const G4DeuteronGEMChannel & right) = delete;  
-  G4DeuteronGEMChannel(const G4DeuteronGEMChannel & right) = delete;
-  G4bool operator==(const G4DeuteronGEMChannel & right) const = delete;
-  G4bool operator!=(const G4DeuteronGEMChannel & right) const = delete;
-	
-  G4DeuteronGEMProbability theEvaporationProbability;
-    
+  private:
+
+    const G4DeuteronGEMChannel& operator=(const G4DeuteronGEMChannel& right) = delete;
+    G4DeuteronGEMChannel(const G4DeuteronGEMChannel& right) = delete;
+    G4bool operator==(const G4DeuteronGEMChannel& right) const = delete;
+    G4bool operator!=(const G4DeuteronGEMChannel& right) const = delete;
+
+    G4DeuteronGEMProbability theEvaporationProbability;
 };
 #endif

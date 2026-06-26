@@ -5,8 +5,7 @@ which **must** added in reverse chronological order (newest at the top).
 It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
-
-## 2026-03-29 Dmitri Konstantinov (had-hadronization-V11-03-00)
+## 2026-03-29 Dmitri Konstantinov (had-hadronization-V11-04-00)
 - G4VLongitudinalStringDecay: fixed wrong MesonWeight indices in the d-dbar
   neutral-meson table in SetMinMasses(); eta and eta' weights now match their
   proper state indices.

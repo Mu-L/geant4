@@ -34,42 +34,41 @@
 // 12.04.2017 A.Dotti move to new design with base class//
 //----------------------------------------------------------------------------
 //
-#ifndef G4FTFBinaryKaonBuilder_h
-#define G4FTFBinaryKaonBuilder_h 1
+#ifndef G4FTFBINARYKAONBUILDER_HH
+#define G4FTFBINARYKAONBUILDER_HH
 
-#include "globals.hh"
-
+#include "G4BinaryCascade.hh"
+#include "G4ExcitedStringDecay.hh"
+#include "G4FTFModel.hh"
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
-#include "G4VKaonBuilder.hh"
-
-#include "G4TheoFSGenerator.hh"
-#include "G4BinaryCascade.hh"
-#include "G4FTFModel.hh"
 #include "G4LundStringFragmentation.hh"
-#include "G4ExcitedStringDecay.hh"
 #include "G4QuasiElasticChannel.hh"
+#include "G4TheoFSGenerator.hh"
 #include "G4VCrossSectionDataSet.hh"
+#include "G4VKaonBuilder.hh"
+#include "globals.hh"
 
 class G4FTFBinaryKaonBuilder : public G4VKaonBuilder
 {
-  public: 
-    G4FTFBinaryKaonBuilder(G4bool quasiElastic=false);
+  public:
+
+    G4FTFBinaryKaonBuilder(G4bool quasiElastic = false);
     virtual ~G4FTFBinaryKaonBuilder();
 
-    virtual void Build(G4HadronElasticProcess * aP) final override;
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
-    virtual void SetMaxEnergy(G4double aM) final override {theMax = aM;}
+    virtual void Build(G4HadronElasticProcess* aP) final override;
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
-    using G4VKaonBuilder::Build; //Prevent compiler warning
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+    virtual void SetMaxEnergy(G4double aM) final override { theMax = aM; }
+
+    using G4VKaonBuilder::Build;  // Prevent compiler warning
 
   private:
-    G4TheoFSGenerator * theModel;
+
+    G4TheoFSGenerator* theModel;
     G4double theMin;
     G4double theMax;
 };
 
 #endif
-

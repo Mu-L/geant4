@@ -43,47 +43,35 @@
 #include "G4CascadeDeexciteBase.hh"
 #include "G4FissionStore.hh"
 #include "G4InuclNuclei.hh"
+
 #include <vector>
 
+class G4Fissioner : public G4CascadeDeexciteBase
+{
+  public:
 
-class G4Fissioner : public G4CascadeDeexciteBase {
-public:
-  G4Fissioner() : G4CascadeDeexciteBase("G4Fissioner") {;}
-  virtual ~G4Fissioner() {;}
+    G4Fissioner() : G4CascadeDeexciteBase("G4Fissioner") { ; }
+    virtual ~G4Fissioner() { ; }
 
-  virtual void deExcite(const G4Fragment& target, G4CollisionOutput& output);
+    virtual void deExcite(const G4Fragment& target, G4CollisionOutput& output);
 
-private: 
-  G4FissionStore fissionStore;
+  private:
 
-  G4double getC2(G4int A1, 
-		 G4int A2, 
-		 G4double X3, 
-		 G4double X4, 
-		 G4double R12) const; 
+    G4FissionStore fissionStore;
 
-  G4double getZopt(G4int A1, 
-		   G4int A2, 
-		   G4int ZT, 
-                   G4double X3, 
-		   G4double X4, 
-		   G4double R12) const;
-		    
-  void potentialMinimization(G4double& VP, 
-			     G4double (&ED)[2], 
-			     G4double& VC,
-			     G4int AF, 
-			     G4int AS, 
-			     G4int ZF, 
-			     G4int ZS,
-			     G4double AL1[2], 
-			     G4double BET1[2], 
-			     G4double& R12) const; 
+    G4double getC2(G4int A1, G4int A2, G4double X3, G4double X4, G4double R12) const;
 
-private:
-  // Copying of modules is forbidden
-  G4Fissioner(const G4Fissioner&);
-  G4Fissioner& operator=(const G4Fissioner&);
-};        
+    G4double getZopt(G4int A1, G4int A2, G4int ZT, G4double X3, G4double X4, G4double R12) const;
+
+    void potentialMinimization(G4double& VP, G4double (&ED)[2], G4double& VC, G4int AF, G4int AS,
+                               G4int ZF, G4int ZS, G4double AL1[2], G4double BET1[2],
+                               G4double& R12) const;
+
+  private:
+
+    // Copying of modules is forbidden
+    G4Fissioner(const G4Fissioner&);
+    G4Fissioner& operator=(const G4Fissioner&);
+};
 
 #endif /* G4FISSIONER_HH */

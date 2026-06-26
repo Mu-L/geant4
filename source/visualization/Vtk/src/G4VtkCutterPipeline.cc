@@ -72,7 +72,8 @@ G4VtkCutterPipeline::G4VtkCutterPipeline(G4String nameIn, const G4VtkVisContext&
   actor->GetProperty()->SetLineWidth(10);
 
   // colour parameters
-  if (useVcColour) {
+  if (useVcColour)
+  {
     actor->GetProperty()->SetOpacity(vc.alpha);
     actor->GetProperty()->SetColor(vc.red, vc.green, vc.blue);
   }

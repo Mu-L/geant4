@@ -30,31 +30,33 @@
 //
 
 #include "G4NeutronHPElasticVI.hh"
+
+#include "G4AutoLock.hh"
+#include "G4Element.hh"
+#include "G4Nucleus.hh"
 #include "G4ParticleHPChannel.hh"
 #include "G4ParticleHPElasticFS.hh"
 #include "G4ParticleHPManager.hh"
-#include "G4Element.hh"
-#include "G4Nucleus.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4AutoLock.hh"
 
 G4bool G4NeutronHPElasticVI::fLock = false;
 G4ParticleHPChannel* G4NeutronHPElasticVI::theElastic[] = {nullptr};
 
 namespace
 {
-  G4Mutex theHPElastic = G4MUTEX_INITIALIZER;
+G4Mutex theHPElastic = G4MUTEX_INITIALIZER;
 }
 
-G4NeutronHPElasticVI::G4NeutronHPElasticVI()
-  : G4HadronicInteraction("NeutronHPElastic")
+G4NeutronHPElasticVI::G4NeutronHPElasticVI() : G4HadronicInteraction("NeutronHPElastic")
 {
-  SetMaxEnergy(20*CLHEP::MeV);
+  SetMaxEnergy(20 * CLHEP::MeV);
   fManagerHP = G4ParticleHPManager::GetInstance();
-  if ( !fLock ) {
+  if (!fLock)
+  {
     fLock = true;
     fInitializer = true;
-    for ( G4int i=0; i<ZMAXHPE; ++i ) {
+    for (G4int i = 0; i < ZMAXHPE; ++i)
+    {
       theElastic[i] = nullptr;
     }
   }
@@ -62,8 +64,10 @@ G4NeutronHPElasticVI::G4NeutronHPElasticVI()
 
 G4NeutronHPElasticVI::~G4NeutronHPElasticVI()
 {
-  if ( fInitializer ) {
-    for ( G4int i=0; i<ZMAXHPE; ++i) {
+  if (fInitializer)
+  {
+    for (G4int i = 0; i < ZMAXHPE; ++i)
+    {
       delete theElastic[i];
     }
   }
@@ -74,7 +78,10 @@ G4HadFinalState* G4NeutronHPElasticVI::ApplyYourself(const G4HadProjectile& aTra
 {
   G4HadFinalState* finalState = nullptr;
   G4int Z = aNucleus.GetZ_asInt();
-  if ( Z >= ZMAXHPE || Z < 1 ) { return finalState; }
+  if (Z >= ZMAXHPE || Z < 1)
+  {
+    return finalState;
+  }
 
   G4int A = aNucleus.GetA_asInt();
   fManagerHP->OpenReactionWhiteBoard();
@@ -82,9 +89,13 @@ G4HadFinalState* G4NeutronHPElasticVI::ApplyYourself(const G4HadProjectile& aTra
   fManagerHP->GetReactionWhiteBoard()->SetTargA(A);
 
   G4ParticleHPChannel* mod = theElastic[Z];
-  if ( nullptr == mod ) {
+  if (nullptr == mod)
+  {
     InitialiseOnFly();
-    if ( nullptr == mod ) { return finalState; }
+    if (nullptr == mod)
+    {
+      return finalState;
+    }
   }
 
   // The boolean "true", as last argument, specifies to G4ParticleHPChannel::ApplyYourself
@@ -103,7 +114,10 @@ const std::pair<G4double, G4double> G4NeutronHPElasticVI::GetFatalEnergyCheckLev
 
 void G4NeutronHPElasticVI::BuildPhysicsTable(const G4ParticleDefinition&)
 {
-  if ( fInitializer ) { Initialise(); }
+  if (fInitializer)
+  {
+    Initialise();
+  }
 }
 
 void G4NeutronHPElasticVI::InitialiseOnFly()
@@ -117,12 +131,15 @@ void G4NeutronHPElasticVI::Initialise()
 {
   G4ParticleHPElasticFS* theFS = nullptr;
   G4String dirName;
-  for (auto const & elm : *(G4Element::GetElementTable())) {
+  for (auto const& elm : *(G4Element::GetElementTable()))
+  {
     G4int Z = elm->GetZasInt();
-    if ( 0 < Z && Z < ZMAXHPE && nullptr == theElastic[Z] ) {
+    if (0 < Z && Z < ZMAXHPE && nullptr == theElastic[Z])
+    {
       theElastic[Z] = new G4ParticleHPChannel();
-      if ( nullptr == theFS ) {
-	theFS = new G4ParticleHPElasticFS();
+      if (nullptr == theFS)
+      {
+        theFS = new G4ParticleHPElasticFS();
         dirName = fManagerHP->GetNeutronHPPath() + "/Elastic";
       }
       theElastic[Z]->Init(elm, dirName);

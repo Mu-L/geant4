@@ -31,8 +31,8 @@
 // 21.03.2013 V.Ivanchenko redesigned and cleaned up
 // 21.03.2013 V.Ivanchenko redesign parameters classes
 
-#ifndef G4FissionBarrier_h
-#define G4FissionBarrier_h 1
+#ifndef G4FISSIONBARRIER_HH
+#define G4FISSIONBARRIER_HH
 
 #include "G4VFissionBarrier.hh"
 #include "globals.hh"
@@ -41,24 +41,24 @@ class G4CameronShellPlusPairingCorrections;
 
 class G4FissionBarrier : public G4VFissionBarrier
 {
-public:
+  public:
 
-  explicit G4FissionBarrier();
+    explicit G4FissionBarrier();
 
-  ~G4FissionBarrier() override;
+    ~G4FissionBarrier() override;
 
-  G4double FissionBarrier(G4int A, G4int Z, G4double U) const final;
+    G4double FissionBarrier(G4int A, G4int Z, G4double U) const final;
 
-private:
+  private:
 
-  G4double BarashenkovFissionBarrier(G4int A, G4int Z) const;
-  
-  G4FissionBarrier(const G4FissionBarrier & right);
-  const G4FissionBarrier & operator=(const G4FissionBarrier & right);
-  G4bool operator==(const G4FissionBarrier & right) const;
-  G4bool operator!=(const G4FissionBarrier & right) const;
+    G4double BarashenkovFissionBarrier(G4int A, G4int Z) const;
 
-  const G4CameronShellPlusPairingCorrections* SPtr;
+    G4FissionBarrier(const G4FissionBarrier& right);
+    const G4FissionBarrier& operator=(const G4FissionBarrier& right);
+    G4bool operator==(const G4FissionBarrier& right) const;
+    G4bool operator!=(const G4FissionBarrier& right) const;
+
+    const G4CameronShellPlusPairingCorrections* SPtr;
 };
 
 #endif

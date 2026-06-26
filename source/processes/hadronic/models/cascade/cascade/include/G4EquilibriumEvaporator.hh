@@ -46,56 +46,58 @@
 #ifndef G4EQUILIBRIUM_EVAPORATOR_HH
 #define G4EQUILIBRIUM_EVAPORATOR_HH
 
+#include "G4BigBanger.hh"
 #include "G4CascadeDeexciteBase.hh"
 #include "G4CascadeInterpolator.hh"
 #include "G4CollisionOutput.hh"
 #include "G4Fissioner.hh"
-#include "G4BigBanger.hh"
 #include "G4InuclSpecialFunctions.hh"
 
+class G4EquilibriumEvaporator : public G4CascadeDeexciteBase
+{
+  public:
 
-class G4EquilibriumEvaporator : public G4CascadeDeexciteBase {
-public:
-  G4EquilibriumEvaporator();
-  virtual ~G4EquilibriumEvaporator();
+    G4EquilibriumEvaporator();
+    virtual ~G4EquilibriumEvaporator();
 
-  virtual void setVerboseLevel(G4int verbose);
+    virtual void setVerboseLevel(G4int verbose);
 
-  virtual void deExcite(const G4Fragment& target, G4CollisionOutput& output);
+    virtual void deExcite(const G4Fragment& target, G4CollisionOutput& output);
 
-private: 
-  // Replace base class verision with more complex conditions
-  virtual G4bool explosion(G4int a, G4int z, G4double e) const;
+  private:
 
-  // NOTE:  Must redeclare base-class polymorphisms
-  virtual G4bool explosion(const G4Fragment& target) const {
-    return G4CascadeDeexciteBase::explosion(target);
-  }
+    // Replace base class verision with more complex conditions
+    virtual G4bool explosion(G4int a, G4int z, G4double e) const;
 
-  G4bool goodRemnant(G4int a, G4int z) const; 
+    // NOTE:  Must redeclare base-class polymorphisms
+    virtual G4bool explosion(const G4Fragment& target) const
+    {
+      return G4CascadeDeexciteBase::explosion(target);
+    }
 
-  G4InuclSpecialFunctions::paraMaker theParaMaker;
-  G4double getE0(G4int A) const; 
-  G4double getPARLEVDEN(G4int A, G4int Z) const; 
-  G4double getQF(G4double x, G4double x2, G4int a, G4int z, G4double e) const;
-  G4double getAF(G4double x, G4int a, G4int z, G4double e) const; 
+    G4bool goodRemnant(G4int a, G4int z) const;
 
-  // Buffer for parameter sets
-  std::pair<std::vector<G4double>, std::vector<G4double> > parms;
-  G4CollisionOutput fission_output;
+    G4InuclSpecialFunctions::paraMaker theParaMaker;
+    G4double getE0(G4int A) const;
+    G4double getPARLEVDEN(G4int A, G4int Z) const;
+    G4double getQF(G4double x, G4double x2, G4int a, G4int z, G4double e) const;
+    G4double getAF(G4double x, G4int a, G4int z, G4double e) const;
 
-  // Interpolation object for QF
-  G4CascadeInterpolator<72> QFinterp;
+    // Buffer for parameter sets
+    std::pair<std::vector<G4double>, std::vector<G4double>> parms;
+    G4CollisionOutput fission_output;
 
-  G4Fissioner theFissioner;
-  G4BigBanger theBigBanger;
+    // Interpolation object for QF
+    G4CascadeInterpolator<72> QFinterp;
 
-private:
-  // Copying of modules is forbidden
-  G4EquilibriumEvaporator(const G4EquilibriumEvaporator&);
-  G4EquilibriumEvaporator& operator=(const G4EquilibriumEvaporator&);
-};        
+    G4Fissioner theFissioner;
+    G4BigBanger theBigBanger;
+
+  private:
+
+    // Copying of modules is forbidden
+    G4EquilibriumEvaporator(const G4EquilibriumEvaporator&);
+    G4EquilibriumEvaporator& operator=(const G4EquilibriumEvaporator&);
+};
 
 #endif /* G4EQUILIBRIUM_EVAPORATOR_HH */
-
-

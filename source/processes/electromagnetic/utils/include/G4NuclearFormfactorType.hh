@@ -40,8 +40,8 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4NuclearFormfactorType_h
-#define G4NuclearFormfactorType_h 1
+#ifndef G4NUCLEARFORMFACTORTYPE_HH
+#define G4NUCLEARFORMFACTORTYPE_HH
 
 enum G4NuclearFormfactorType
 {
@@ -51,5 +51,3 @@ enum G4NuclearFormfactorType
   fFlatNF
 };
 #endif
-
-

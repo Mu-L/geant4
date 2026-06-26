@@ -242,7 +242,7 @@ std::vector<std::string> splitXLinkString( std::string const &a_XLink ) {
 
     if( start < end ) {
         std::string element = a_XLink.substr( start, end - start );
-        elements.push_back( element );
+        elements.push_back( std::move( element ) );
     }   
     
     return( elements );

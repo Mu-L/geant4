@@ -40,61 +40,60 @@
 // 20.11.2006 G.Folger: add Tracking Cut for neutrons
 // 26.04.2007 G.Folger: Enable quasielastic for QGS string model
 // 16.05.2007 V.Ivanchenko: rename EM builders
-// 16.08.2010 H.Kurashige: Remove inclusion of G4ParticleWithCuts 
+// 16.08.2010 H.Kurashige: Remove inclusion of G4ParticleWithCuts
 // 16.10.2012 A.Ribon: Use new default stopping and ion physics.
 // 15.10.2018 V.Ivanchenko: update and move to src
 //
 //----------------------------------------------------------------------------
 //
 
-#include "globals.hh"
-#include "G4ios.hh"
-#include "G4DecayPhysics.hh"
-#include "G4EmStandardPhysics.hh"
-#include "G4EmExtraPhysics.hh"
-#include "G4IonPhysics.hh"
-#include "G4IonElasticPhysics.hh"
-#include "G4StoppingPhysics.hh"
-#include "G4HadronElasticPhysics.hh"
-#include "G4NeutronTrackingCut.hh"
-
 #include "QGSP_BIC.hh"
+
+#include "G4DecayPhysics.hh"
+#include "G4EmExtraPhysics.hh"
+#include "G4EmStandardPhysics.hh"
+#include "G4HadronElasticPhysics.hh"
 #include "G4HadronPhysicsQGSP_BIC.hh"
+#include "G4IonElasticPhysics.hh"
+#include "G4IonPhysics.hh"
+#include "G4NeutronTrackingCut.hh"
+#include "G4StoppingPhysics.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 QGSP_BIC::QGSP_BIC(G4int ver)
 {
-  if(ver > 0) {
-    G4cout << "<<< Geant4 Physics List simulation engine: QGSP_BIC"<<G4endl;
-    G4cout <<G4endl;
+  if (ver > 0)
+  {
+    G4cout << "<<< Geant4 Physics List simulation engine: QGSP_BIC" << G4endl;
+    G4cout << G4endl;
   }
 
-  defaultCutValue = 0.7*CLHEP::mm;
+  defaultCutValue = 0.7 * CLHEP::mm;
   SetVerboseLevel(ver);
 
   // EM Physics
-  RegisterPhysics( new G4EmStandardPhysics(ver) );
+  RegisterPhysics(new G4EmStandardPhysics(ver));
 
   // Synchroton Radiation & GN Physics
-  RegisterPhysics( new G4EmExtraPhysics(ver) );
+  RegisterPhysics(new G4EmExtraPhysics(ver));
 
   // Decays
-  RegisterPhysics( new G4DecayPhysics(ver) );
+  RegisterPhysics(new G4DecayPhysics(ver));
 
-   // Hadron Elastic scattering
-  RegisterPhysics( new G4HadronElasticPhysics(ver) );
+  // Hadron Elastic scattering
+  RegisterPhysics(new G4HadronElasticPhysics(ver));
 
-   // Hadron Physics
-  RegisterPhysics( new G4HadronPhysicsQGSP_BIC(ver));
+  // Hadron Physics
+  RegisterPhysics(new G4HadronPhysicsQGSP_BIC(ver));
 
   // Stopping Physics
-  RegisterPhysics( new G4StoppingPhysics(ver) );
+  RegisterPhysics(new G4StoppingPhysics(ver));
 
   // Ion Physics
-  RegisterPhysics( new G4IonElasticPhysics(ver) );
-  RegisterPhysics( new G4IonPhysics(ver));
-  
+  RegisterPhysics(new G4IonElasticPhysics(ver));
+  RegisterPhysics(new G4IonPhysics(ver));
+
   // Neutron tracking cut
-  RegisterPhysics( new G4NeutronTrackingCut(ver));
-
+  RegisterPhysics(new G4NeutronTrackingCut(ver));
 }
-

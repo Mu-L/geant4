@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPEvapSpectrum_h
-#define G4ParticleHPEvapSpectrum_h 1
+#ifndef G4PARTICLEHPEVAPSPECTRUM_HH
+#define G4PARTICLEHPEVAPSPECTRUM_HH
 
 #include "G4ParticleHPVector.hh"
 #include "G4VParticleHPEDis.hh"
@@ -44,6 +44,7 @@
 class G4ParticleHPEvapSpectrum : public G4VParticleHPEDis
 {
   public:
+
     G4ParticleHPEvapSpectrum() = default;
     ~G4ParticleHPEvapSpectrum() override = default;
 
@@ -69,6 +70,7 @@ class G4ParticleHPEvapSpectrum : public G4VParticleHPEDis
     }
 
   private:
+
     G4ParticleHPVector theFractionalProb;
 
     G4ParticleHPVector theThetaDist;

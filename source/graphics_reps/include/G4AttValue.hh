@@ -42,38 +42,36 @@
 // The association between the G4AttValue and the G4AttDef object is
 // made through the data member "name".
 //
-// @author M.Frailis 
+// @author M.Frailis
 // @author R.Giannitrapani
 // @author J.Perl
 // Class Description - End:
 
-
-  class G4AttValue {
-    
+class G4AttValue
+{
   public:
-    G4AttValue(const G4String& name,
-               const G4String& value,
-               const G4String& showLabel): 
-      m_name(name),m_value(value),
-      m_showLabel(showLabel){};
-    G4AttValue()= default;
-    ~G4AttValue()= default;
 
-    const G4String& GetName()const{return m_name;};
-    const G4String& GetValue()const{return m_value;};
-    const G4String& GetShowLabel()const{return m_showLabel;};
+    G4AttValue(const G4String& name, const G4String& value, const G4String& showLabel)
+      : m_name(name), m_value(value), m_showLabel(showLabel) {};
+    G4AttValue() = default;
+    ~G4AttValue() = default;
 
-    void SetName(const G4String& name){m_name = name;};
-    void SetValue(const G4String& val){m_value = val;};
-    void SetShowLabel(const G4String& lab){m_showLabel = lab;};
+    const G4String& GetName() const { return m_name; };
+    const G4String& GetValue() const { return m_value; };
+    const G4String& GetShowLabel() const { return m_showLabel; };
+
+    void SetName(const G4String& name) { m_name = name; };
+    void SetValue(const G4String& val) { m_value = val; };
+    void SetShowLabel(const G4String& lab) { m_showLabel = lab; };
 
   private:
-    /// The name of the attribute 
+
+    /// The name of the attribute
     G4String m_name;
     /// The value of the attribute
     G4String m_value;
     /// The bitmap for the label display
     G4String m_showLabel;
-  };
+};
 
-#endif //G4ATTVALUE_H
+#endif  // G4ATTVALUE_H

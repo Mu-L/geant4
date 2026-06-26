@@ -34,8 +34,7 @@
 // Returns the local coordinate of the current track
 // ********************************************************************
 //
-inline
-G4ThreeVector G4Navigator::GetCurrentLocalCoordinate() const
+inline G4ThreeVector G4Navigator::GetCurrentLocalCoordinate() const
 {
   return fLastLocatedPointLocal;
 }
@@ -46,8 +45,7 @@ G4ThreeVector G4Navigator::GetCurrentLocalCoordinate() const
 // Returns local direction of vector direction in world coord system
 // ********************************************************************
 //
-inline
-G4ThreeVector G4Navigator::ComputeLocalAxis(const G4ThreeVector& pVec) const
+inline G4ThreeVector G4Navigator::ComputeLocalAxis(const G4ThreeVector& pVec) const
 {
   return fHistory.GetTopTransform().TransformAxis(pVec);
 }
@@ -58,9 +56,7 @@ G4ThreeVector G4Navigator::ComputeLocalAxis(const G4ThreeVector& pVec) const
 // Returns local coordinates of a point in the world coord system
 // ********************************************************************
 //
-inline
-G4ThreeVector
-G4Navigator::ComputeLocalPoint(const G4ThreeVector& pGlobalPoint) const
+inline G4ThreeVector G4Navigator::ComputeLocalPoint(const G4ThreeVector& pGlobalPoint) const
 {
   return fHistory.GetTopTransform().TransformPoint(pGlobalPoint);
 }
@@ -71,8 +67,7 @@ G4Navigator::ComputeLocalPoint(const G4ThreeVector& pGlobalPoint) const
 // Returns the current  world (`topmost') volume
 // ********************************************************************
 //
-inline
-G4VPhysicalVolume* G4Navigator::GetWorldVolume() const
+inline G4VPhysicalVolume* G4Navigator::GetWorldVolume() const
 {
   return fTopPhysical;
 }
@@ -83,19 +78,18 @@ G4VPhysicalVolume* G4Navigator::GetWorldVolume() const
 // Sets the world (`topmost') volume
 // ********************************************************************
 //
-inline
-void G4Navigator::SetWorldVolume(G4VPhysicalVolume* pWorld)
+inline void G4Navigator::SetWorldVolume(G4VPhysicalVolume* pWorld)
 {
-  if ( !(pWorld->GetTranslation() == G4ThreeVector(0,0,0)) )
+  if (!(pWorld->GetTranslation() == G4ThreeVector(0, 0, 0)))
   {
-    G4Exception ("G4Navigator::SetWorldVolume()", "GeomNav0002",
-                 FatalException, "Volume must be centered on the origin.");
+    G4Exception("G4Navigator::SetWorldVolume()", "GeomNav0002", FatalException,
+                "Volume must be centered on the origin.");
   }
   const G4RotationMatrix* rm = pWorld->GetRotation();
-  if ( (rm != nullptr) && (!rm->isIdentity()) )
+  if ((rm != nullptr) && (!rm->isIdentity()))
   {
-    G4Exception ("G4Navigator::SetWorldVolume()", "GeomNav0002",
-                 FatalException, "Volume must not be rotated.");
+    G4Exception("G4Navigator::SetWorldVolume()", "GeomNav0002", FatalException,
+                "Volume must not be rotated.");
   }
   fTopPhysical = pWorld;
   fHistory.SetFirstEntry(pWorld);
@@ -108,8 +102,7 @@ void G4Navigator::SetWorldVolume(G4VPhysicalVolume* pWorld)
 // by the geometry was taken in its entirety
 // ********************************************************************
 //
-inline
-void G4Navigator::SetGeometricallyLimitedStep()
+inline void G4Navigator::SetGeometricallyLimitedStep()
 {
   fWasLimitedByGeometry = true;
 }
@@ -120,8 +113,7 @@ void G4Navigator::SetGeometricallyLimitedStep()
 // Resets stack and minimum of navigator state `machine'
 // ********************************************************************
 //
-inline
-void G4Navigator::ResetStackAndState()
+inline void G4Navigator::ResetStackAndState()
 {
   fHistory.Reset();
   ResetState();
@@ -131,8 +123,7 @@ void G4Navigator::ResetStackAndState()
 // VolumeType
 // ********************************************************************
 //
-inline
-EVolume G4Navigator::VolumeType(const G4VPhysicalVolume *pVol) const
+inline EVolume G4Navigator::VolumeType(const G4VPhysicalVolume* pVol) const
 {
   return pVol->VolumeType();
 }
@@ -141,8 +132,7 @@ EVolume G4Navigator::VolumeType(const G4VPhysicalVolume *pVol) const
 // CharacteriseDaughters
 // ********************************************************************
 //
-inline
-EVolume G4Navigator::CharacteriseDaughters(const G4LogicalVolume *pLog) const
+inline EVolume G4Navigator::CharacteriseDaughters(const G4LogicalVolume* pLog) const
 {
   return pLog->CharacteriseDaughters();
 }
@@ -151,14 +141,12 @@ EVolume G4Navigator::CharacteriseDaughters(const G4LogicalVolume *pLog) const
 // GetDaughtersRegularStructureId
 // ********************************************************************
 //
-inline
-G4int G4Navigator::
-GetDaughtersRegularStructureId(const G4LogicalVolume *pLog) const
+inline G4int G4Navigator::GetDaughtersRegularStructureId(const G4LogicalVolume* pLog) const
 {
   G4int regId = 0;
-  G4VPhysicalVolume *pVol;
+  G4VPhysicalVolume* pVol;
 
-  if ( pLog->GetNoDaughters() == 1 )
+  if (pLog->GetNoDaughters() == 1)
   {
     pVol = pLog->GetDaughter(0);
     regId = pVol->GetRegularStructureId();
@@ -174,8 +162,7 @@ GetDaughtersRegularStructureId(const G4LogicalVolume *pLog) const
 // and return one in the local coord system
 // ********************************************************************
 //
-inline
-const G4AffineTransform& G4Navigator::GetGlobalToLocalTransform() const
+inline const G4AffineTransform& G4Navigator::GetGlobalToLocalTransform() const
 {
   return fHistory.GetTopTransform();
 }
@@ -183,13 +170,12 @@ const G4AffineTransform& G4Navigator::GetGlobalToLocalTransform() const
 // ********************************************************************
 // GetLocalToGlobalTransform
 //
-// Returns local to global transformation 
+// Returns local to global transformation
 // ********************************************************************
 //
-inline
-const G4AffineTransform G4Navigator::GetLocalToGlobalTransform() const
+inline const G4AffineTransform G4Navigator::GetLocalToGlobalTransform() const
 {
-  return fHistory.GetTopTransform().Inverse(); 
+  return fHistory.GetTopTransform().Inverse();
 }
 
 // ********************************************************************
@@ -198,8 +184,7 @@ const G4AffineTransform G4Navigator::GetLocalToGlobalTransform() const
 // Computes+returns the local->global translation of current volume
 // ********************************************************************
 //
-inline
-G4ThreeVector G4Navigator::NetTranslation() const
+inline G4ThreeVector G4Navigator::NetTranslation() const
 {
   return fHistory.GetTopTransform().InverseNetTranslation();
 }
@@ -210,8 +195,7 @@ G4ThreeVector G4Navigator::NetTranslation() const
 // Computes+returns the local->global rotation of current volume
 // ********************************************************************
 //
-inline
-G4RotationMatrix G4Navigator::NetRotation() const
+inline G4RotationMatrix G4Navigator::NetRotation() const
 {
   return fHistory.GetTopTransform().InverseNetRotation();
 }
@@ -222,8 +206,7 @@ G4RotationMatrix G4Navigator::NetRotation() const
 // `Touchable' creation method: caller has deletion responsibility
 // ********************************************************************
 //
-inline
-G4TouchableHistory* G4Navigator::CreateTouchableHistory() const
+inline G4TouchableHistory* G4Navigator::CreateTouchableHistory() const
 {
   return new G4TouchableHistory(fHistory);
 }
@@ -234,8 +217,7 @@ G4TouchableHistory* G4Navigator::CreateTouchableHistory() const
 // `Touchable' creation method: caller has deletion responsibility
 // ********************************************************************
 //
-inline
-G4TouchableHistory*
+inline G4TouchableHistory*
 G4Navigator::CreateTouchableHistory(const G4NavigationHistory* history) const
 {
   return new G4TouchableHistory(*history);
@@ -245,25 +227,22 @@ G4Navigator::CreateTouchableHistory(const G4NavigationHistory* history) const
 // LocateGlobalPointAndUpdateTouchableHandle
 // ********************************************************************
 //
-inline
-void G4Navigator::LocateGlobalPointAndUpdateTouchableHandle(
-                               const G4ThreeVector&       position,
-                               const G4ThreeVector&       direction,
-                                     G4TouchableHandle&   oldTouchableToUpdate,
-                               const G4bool               RelativeSearch )
+inline void G4Navigator::LocateGlobalPointAndUpdateTouchableHandle(
+  const G4ThreeVector& position, const G4ThreeVector& direction,
+  G4TouchableHandle& oldTouchableToUpdate, const G4bool RelativeSearch)
 {
   G4VPhysicalVolume* pPhysVol;
-  pPhysVol = LocateGlobalPointAndSetup( position,&direction,RelativeSearch );
-  if( fEnteredDaughter || fExitedMother )
+  pPhysVol = LocateGlobalPointAndSetup(position, &direction, RelativeSearch);
+  if (fEnteredDaughter || fExitedMother)
   {
-     oldTouchableToUpdate = CreateTouchableHistory();
-     if( pPhysVol == nullptr )
-     {
-       // We want to ensure that the touchable is correct in this case.
-       // The method below should do this and recalculate a lot more ....
-       //
-       oldTouchableToUpdate->UpdateYourself( pPhysVol, &fHistory );
-     }
+    oldTouchableToUpdate = CreateTouchableHistory();
+    if (pPhysVol == nullptr)
+    {
+      // We want to ensure that the touchable is correct in this case.
+      // The method below should do this and recalculate a lot more ....
+      //
+      oldTouchableToUpdate->UpdateYourself(pPhysVol, &fHistory);
+    }
   }
   return;
 }
@@ -274,39 +253,34 @@ void G4Navigator::LocateGlobalPointAndUpdateTouchableHandle(
 // Use direction
 // ********************************************************************
 //
-inline
-void G4Navigator::LocateGlobalPointAndUpdateTouchable(
-                           const G4ThreeVector&       position,
-                           const G4ThreeVector&       direction,
-                                 G4VTouchable*        touchableToUpdate,
-                           const G4bool               RelativeSearch  )
+inline void G4Navigator::LocateGlobalPointAndUpdateTouchable(const G4ThreeVector& position,
+                                                             const G4ThreeVector& direction,
+                                                             G4VTouchable* touchableToUpdate,
+                                                             const G4bool RelativeSearch)
 {
   G4VPhysicalVolume* pPhysVol;
-  pPhysVol = LocateGlobalPointAndSetup( position, &direction, RelativeSearch);  
-  touchableToUpdate->UpdateYourself( pPhysVol, &fHistory );
+  pPhysVol = LocateGlobalPointAndSetup(position, &direction, RelativeSearch);
+  touchableToUpdate->UpdateYourself(pPhysVol, &fHistory);
 }
 
 // ********************************************************************
 // LocateGlobalPointAndUpdateTouchable
 // ********************************************************************
 //
-inline
-void G4Navigator::LocateGlobalPointAndUpdateTouchable(
-                           const G4ThreeVector&       position,
-                                 G4VTouchable*        touchableToUpdate,
-                           const G4bool               RelativeSearch )
+inline void G4Navigator::LocateGlobalPointAndUpdateTouchable(const G4ThreeVector& position,
+                                                             G4VTouchable* touchableToUpdate,
+                                                             const G4bool RelativeSearch)
 {
   G4VPhysicalVolume* pPhysVol;
-  pPhysVol = LocateGlobalPointAndSetup( position, nullptr, RelativeSearch);  
-  touchableToUpdate->UpdateYourself( pPhysVol, &fHistory );
+  pPhysVol = LocateGlobalPointAndSetup(position, nullptr, RelativeSearch);
+  touchableToUpdate->UpdateYourself(pPhysVol, &fHistory);
 }
 
 // ********************************************************************
 // GetVerboseLevel
 // ********************************************************************
 //
-inline
-G4int G4Navigator::GetVerboseLevel() const
+inline G4int G4Navigator::GetVerboseLevel() const
 {
   return fVerbose;
 }
@@ -315,8 +289,7 @@ G4int G4Navigator::GetVerboseLevel() const
 // SetVerboseLevel
 // ********************************************************************
 //
-inline
-void G4Navigator::SetVerboseLevel(G4int level)
+inline void G4Navigator::SetVerboseLevel(G4int level)
 {
   fVerbose = level;
   fnormalNav.SetVerboseLevel(level);
@@ -324,15 +297,17 @@ void G4Navigator::SetVerboseLevel(G4int level)
   fparamNav.SetVerboseLevel(level);
   freplicaNav.SetVerboseLevel(level);
   fregularNav.SetVerboseLevel(level);
-  if (fpExternalNav != nullptr) { fpExternalNav->SetVerboseLevel(level); }
+  if (fpExternalNav != nullptr)
+  {
+    fpExternalNav->SetVerboseLevel(level);
+  }
 }
 
 // ********************************************************************
 // IsActive
 // ********************************************************************
 //
-inline
-G4bool G4Navigator::IsActive() const
+inline G4bool G4Navigator::IsActive() const
 {
   return fActive;
 }
@@ -341,8 +316,7 @@ G4bool G4Navigator::IsActive() const
 // Activate
 // ********************************************************************
 //
-inline
-void G4Navigator::Activate(G4bool flag)
+inline void G4Navigator::Activate(G4bool flag)
 {
   fActive = flag;
 }
@@ -353,8 +327,7 @@ void G4Navigator::Activate(G4bool flag)
 // To inform the caller if the track is entering a daughter volume
 // ********************************************************************
 //
-inline
-G4bool G4Navigator::EnteredDaughterVolume() const
+inline G4bool G4Navigator::EnteredDaughterVolume() const
 {
   return fEnteredDaughter;
 }
@@ -363,8 +336,7 @@ G4bool G4Navigator::EnteredDaughterVolume() const
 // ExitedMotherVolume
 // ********************************************************************
 //
-inline
-G4bool G4Navigator::ExitedMotherVolume() const
+inline G4bool G4Navigator::ExitedMotherVolume() const
 {
   return fExitedMother;
 }
@@ -373,8 +345,7 @@ G4bool G4Navigator::ExitedMotherVolume() const
 // CheckMode
 // ********************************************************************
 //
-inline
-void  G4Navigator::CheckMode(G4bool mode)
+inline void G4Navigator::CheckMode(G4bool mode)
 {
   fCheck = mode;
   fnormalNav.CheckMode(mode);
@@ -382,15 +353,17 @@ void  G4Navigator::CheckMode(G4bool mode)
   fparamNav.CheckMode(mode);
   freplicaNav.CheckMode(mode);
   fregularNav.CheckMode(mode);
-  if (fpExternalNav != nullptr) { fpExternalNav->CheckMode(mode); }
+  if (fpExternalNav != nullptr)
+  {
+    fpExternalNav->CheckMode(mode);
+  }
 }
 
 // ********************************************************************
 // IsCheckModeActive
 // ********************************************************************
 //
-inline
-G4bool G4Navigator::IsCheckModeActive() const
+inline G4bool G4Navigator::IsCheckModeActive() const
 {
   return fCheck;
 }
@@ -399,8 +372,7 @@ G4bool G4Navigator::IsCheckModeActive() const
 // SetPushVerbosity
 // ********************************************************************
 //
-inline
-void G4Navigator::SetPushVerbosity(G4bool mode)
+inline void G4Navigator::SetPushVerbosity(G4bool mode)
 {
   fWarnPush = mode;
 }
@@ -412,34 +384,32 @@ void G4Navigator::SetPushVerbosity(G4bool mode)
 // and is returning zero steps
 // ********************************************************************
 //
-inline 
-G4int G4Navigator::SeverityOfZeroStepping( G4int* noZeroSteps ) const 
+inline G4int G4Navigator::SeverityOfZeroStepping(G4int* noZeroSteps) const
 {
   G4int severity = 0, noZeros = fNumberZeroSteps;
-  if( noZeroSteps != nullptr )
+  if (noZeroSteps != nullptr)
   {
     *noZeroSteps = fNumberZeroSteps;
   }
-  if( noZeros >= fAbandonThreshold_NoZeroSteps )
+  if (noZeros >= fAbandonThreshold_NoZeroSteps)
   {
     severity = 10;
   }
-  if( noZeros > 0 && noZeros < fActionThreshold_NoZeroSteps )
+  if (noZeros > 0 && noZeros < fActionThreshold_NoZeroSteps)
   {
-    severity =  5 * noZeros / fActionThreshold_NoZeroSteps;
+    severity = 5 * noZeros / fActionThreshold_NoZeroSteps;
   }
-  else if( noZeros == fActionThreshold_NoZeroSteps )
+  else if (noZeros == fActionThreshold_NoZeroSteps)
   {
-    severity =  5; 
+    severity = 5;
   }
-  else if( noZeros >= fAbandonThreshold_NoZeroSteps - 2 )
+  else if (noZeros >= fAbandonThreshold_NoZeroSteps - 2)
   {
-    severity =  9; 
+    severity = 9;
   }
-  else if( noZeros < fAbandonThreshold_NoZeroSteps - 2 )
+  else if (noZeros < fAbandonThreshold_NoZeroSteps - 2)
   {
-    severity =  5 + 4 * (noZeros-fAbandonThreshold_NoZeroSteps)
-                      / fActionThreshold_NoZeroSteps;
+    severity = 5 + 4 * (noZeros - fAbandonThreshold_NoZeroSteps) / fActionThreshold_NoZeroSteps;
   }
   return severity;
 }
@@ -448,8 +418,7 @@ G4int G4Navigator::SeverityOfZeroStepping( G4int* noZeroSteps ) const
 // GetVoxelNavigator
 // ********************************************************************
 //
-inline
-G4VoxelNavigation& G4Navigator::GetVoxelNavigator()
+inline G4VoxelNavigation& G4Navigator::GetVoxelNavigator()
 {
   return *fpvoxelNav;
 }
@@ -458,31 +427,29 @@ G4VoxelNavigation& G4Navigator::GetVoxelNavigator()
 // EnableBestSafety
 // ********************************************************************
 //
-inline void G4Navigator::EnableBestSafety( G4bool value )
+inline void G4Navigator::EnableBestSafety(G4bool value)
 {
-  GetVoxelNavigator().EnableBestSafety( value );
+  GetVoxelNavigator().EnableBestSafety(value);
 }
 
 // ********************************************************************
 // SetExternalNavigation
 // ********************************************************************
 //
-inline
-G4VExternalNavigation* G4Navigator::GetExternalNavigation() const
+inline G4VExternalNavigation* G4Navigator::GetExternalNavigation() const
 {
   return fpExternalNav;
-} 
+}
 
 // ********************************************************************
 // Clone
 // ********************************************************************
 //
-inline
-G4Navigator* G4Navigator::Clone() const
+inline G4Navigator* G4Navigator::Clone() const
 {
-  auto  clone_nav = new G4Navigator();
+  auto clone_nav = new G4Navigator();
   clone_nav->SetWorldVolume(fTopPhysical);
-  if( fpExternalNav != nullptr )
+  if (fpExternalNav != nullptr)
   {
     clone_nav->SetExternalNavigation(fpExternalNav->Clone());
   }
@@ -493,8 +460,7 @@ G4Navigator* G4Navigator::Clone() const
 // GetLastStepEndPoint
 // ********************************************************************
 //
-inline
-G4ThreeVector G4Navigator::GetLastStepEndPoint() const
+inline G4ThreeVector G4Navigator::GetLastStepEndPoint() const
 {
   return fStepEndPoint;
 }

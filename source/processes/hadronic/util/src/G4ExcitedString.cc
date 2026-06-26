@@ -34,140 +34,134 @@
 //       class for an excited string used by Parton String Models
 // ------------------------------------------------------------
 
-
 // G4ExcitedString
 #include "G4ExcitedString.hh"
+
 #include <algorithm>
 
-
 G4ExcitedString::G4ExcitedString(G4Parton* Color, G4Parton* AntiColor, G4int Direction)
-    {
-    thePartons.push_back(Color);
-    thePartons.push_back(AntiColor);
-    theTimeOfCreation = 0.;                           // Uzhi 15.05.08
-    thePosition = Color->GetPosition();
-    theDirection = Direction;
-    theTrack=0;
-    }
-
-G4ExcitedString::G4ExcitedString(G4Parton* Color, G4Parton* Gluon,  G4Parton* AntiColor, G4int Direction)
-    {
-    thePartons.push_back(Color);
-    thePartons.push_back(Gluon);
-    thePartons.push_back(AntiColor);
-    theTimeOfCreation = 0.;                            // Uzhi 15.05.08
-    thePosition = Color->GetPosition();
-    theDirection = Direction;
-    theTrack=0;
-    }
-
-G4ExcitedString::G4ExcitedString(G4KineticTrack * track)
 {
-        theTimeOfCreation = track->GetFormationTime(); // Uzhi 15.05.08
-	thePosition = track->GetPosition();
-	theTrack= track;
-	theDirection=0;
+  thePartons.push_back(Color);
+  thePartons.push_back(AntiColor);
+  theTimeOfCreation = 0.;  // Uzhi 15.05.08
+  thePosition = Color->GetPosition();
+  theDirection = Direction;
+  theTrack = 0;
+}
+
+G4ExcitedString::G4ExcitedString(G4Parton* Color, G4Parton* Gluon, G4Parton* AntiColor,
+                                 G4int Direction)
+{
+  thePartons.push_back(Color);
+  thePartons.push_back(Gluon);
+  thePartons.push_back(AntiColor);
+  theTimeOfCreation = 0.;  // Uzhi 15.05.08
+  thePosition = Color->GetPosition();
+  theDirection = Direction;
+  theTrack = 0;
+}
+
+G4ExcitedString::G4ExcitedString(G4KineticTrack* track)
+{
+  theTimeOfCreation = track->GetFormationTime();  // Uzhi 15.05.08
+  thePosition = track->GetPosition();
+  theTrack = track;
+  theDirection = 0;
 }
 
 G4ExcitedString::~G4ExcitedString()
 {
   std::for_each(thePartons.begin(), thePartons.end(), DeleteParton());
-  if ( theTrack ) {
+  if (theTrack)
+  {
     delete theTrack;
-    theTrack=0;
+    theTrack = 0;
   }
 }
 
-
-//const G4ExcitedString & G4ExcitedString::operator=(const G4ExcitedString &right)
+// const G4ExcitedString & G4ExcitedString::operator=(const G4ExcitedString &right)
 //{}
 
-
-//G4bool G4ExcitedString::operator==(const G4ExcitedString &right) const
+// G4bool G4ExcitedString::operator==(const G4ExcitedString &right) const
 //{}
 
-//G4bool G4ExcitedString::operator!=(const G4ExcitedString &right) const
+// G4bool G4ExcitedString::operator!=(const G4ExcitedString &right) const
 //{}
-
-
 
 // Additional Declarations
 
-
 void G4ExcitedString::Boost(G4ThreeVector& Velocity)
-    {
-    for(unsigned int cParton = 0; cParton < thePartons.size() ; cParton++ )
-        {
-        G4LorentzVector Mom = thePartons[cParton]->Get4Momentum();
-        Mom.boost(Velocity);
-        thePartons[cParton]->Set4Momentum(Mom);
-        }
-    }
+{
+  for (unsigned int cParton = 0; cParton < thePartons.size(); cParton++)
+  {
+    G4LorentzVector Mom = thePartons[cParton]->Get4Momentum();
+    Mom.boost(Velocity);
+    thePartons[cParton]->Set4Momentum(Mom);
+  }
+}
 
 //---------------------------------------------------------------------------------
 
 G4Parton* G4ExcitedString::GetColorParton(void) const
-    {
-    G4Parton * start = *(thePartons.begin());
-    G4Parton * end = *(thePartons.end()-1);
-    G4int Encoding = start->GetPDGcode();
-    if (Encoding < -1000 || ((Encoding  < 1000) && (Encoding > 0)))
-        return start;
-    return end; 
-    }
+{
+  G4Parton* start = *(thePartons.begin());
+  G4Parton* end = *(thePartons.end() - 1);
+  G4int Encoding = start->GetPDGcode();
+  if (Encoding < -1000 || ((Encoding < 1000) && (Encoding > 0))) return start;
+  return end;
+}
 
 //---------------------------------------------------------------------------------
 
 G4Parton* G4ExcitedString::GetGluon(void) const
-    {
-    return thePartons[1]; 
-    }
+{
+  return thePartons[1];
+}
 
 //---------------------------------------------------------------------------------
 
 G4Parton* G4ExcitedString::GetGluon(G4int GluonPos) const
-    {
-    return thePartons[1 + GluonPos]; 
-    }
+{
+  return thePartons[1 + GluonPos];
+}
 
 //---------------------------------------------------------------------------------
 
 G4Parton* G4ExcitedString::GetAntiColorParton(void) const
-    {
-    G4Parton * start = *(thePartons.begin());
-    G4Parton * end = *(thePartons.end()-1);
-    G4int Encoding = start->GetPDGcode();
-    if (Encoding < -1000 || ((Encoding  < 1000) && (Encoding > 0)))
-        return end; 
-    return start; 
-    }
+{
+  G4Parton* start = *(thePartons.begin());
+  G4Parton* end = *(thePartons.end() - 1);
+  G4int Encoding = start->GetPDGcode();
+  if (Encoding < -1000 || ((Encoding < 1000) && (Encoding > 0))) return end;
+  return start;
+}
 
 //---------------------------------------------------------------------------------
 
 G4bool G4ExcitedString::IsItKinkyString(void) const
-    {
-    return (thePartons.size() > 2);    
-    }
+{
+  return (thePartons.size() > 2);
+}
 
 //---------------------------------------------------------------------------------
 
 G4int G4ExcitedString::GetDirection(void) const
-    {
-    return theDirection;    
-    }
+{
+  return theDirection;
+}
 
 //*********************************************************************************
 
 G4Parton* G4ExcitedString::GetLeftParton(void) const
-    {
-    return *thePartons.begin(); 
-    }
+{
+  return *thePartons.begin();
+}
 
 //---------------------------------------------------------------------------------
 
 G4Parton* G4ExcitedString::GetRightParton(void) const
-    {
-    return *(thePartons.end()-1); 
-    }
+{
+  return *(thePartons.end() - 1);
+}
 
 //*********************************************************************************

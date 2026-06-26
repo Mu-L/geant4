@@ -62,7 +62,8 @@ G4PhysicsListHelper::G4PhysicsListHelper()
   ReadOrdingParameterTable();
 
 #ifdef G4VERBOSE
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     DumpOrdingParameterTable();
   }
 #endif
@@ -71,7 +72,8 @@ G4PhysicsListHelper::G4PhysicsListHelper()
 // --------------------------------------------------------------------
 G4PhysicsListHelper::~G4PhysicsListHelper()
 {
-  if (theTable != nullptr) {
+  if (theTable != nullptr)
+  {
     theTable->clear();
     delete theTable;
     theTable = nullptr;
@@ -82,7 +84,8 @@ G4PhysicsListHelper::~G4PhysicsListHelper()
 // --------------------------------------------------------------------
 G4PhysicsListHelper* G4PhysicsListHelper::GetPhysicsListHelper()
 {
-  if (pPLHelper == nullptr) {
+  if (pPLHelper == nullptr)
+  {
     static G4ThreadLocalSingleton<G4PhysicsListHelper> inst;
     pPLHelper = inst.Instance();
   }
@@ -103,13 +106,16 @@ void G4PhysicsListHelper::CheckParticleList() const
 
   // loop over all particles in G4ParticleTable
   aParticleIterator->reset();
-  while ((*aParticleIterator)()) {
+  while ((*aParticleIterator)())
+  {
     G4ParticleDefinition* particle = aParticleIterator->value();
     G4String name = particle->GetParticleName();
     // check if any EM process exists
-    if (!isEmProc) {
+    if (!isEmProc)
+    {
       G4ProcessVector* list = particle->GetProcessManager()->GetProcessList();
-      for (G4int idx = 0; idx < (G4int)list->size(); ++idx) {
+      for (G4int idx = 0; idx < (G4int)list->size(); ++idx)
+      {
         isEmProc = ((*list)[idx])->GetProcessType() == fElectromagnetic;
         if (isEmProc) break;
       }
@@ -127,7 +133,8 @@ void G4PhysicsListHelper::CheckParticleList() const
       isProton = true;
     else if (particle->GetParticleType() == "nucleus")
       isAnyIon = true;
-    else if (particle->GetParticleType() == "baryon") {
+    else if (particle->GetParticleType() == "baryon")
+    {
       if (particle->GetPDGCharge() != 0.0) isAnyChargedBaryon = true;
     }
   }
@@ -139,14 +146,16 @@ void G4PhysicsListHelper::CheckParticleList() const
   //   if one of them exist
   G4bool isEmBasic = isElectron || isPositron || isGamma;
   G4bool isMissingEmBasic = !isElectron || !isPositron || !isGamma;
-  if (isEmBasic && isMissingEmBasic) {
+  if (isEmBasic && isMissingEmBasic)
+  {
     G4String missingName = "";
     if (!isElectron) missingName += "e- ";
     if (!isPositron) missingName += "e+ ";
     if (!isGamma) missingName += "gamma ";
 
 #ifdef G4VERBOSE
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       G4cout << "G4PhysicsListHelper::CheckParticleList: " << missingName << " do not exist "
              << G4endl;
       G4cout << " These particle are necessary for basic EM processes" << G4endl;
@@ -159,11 +168,13 @@ void G4PhysicsListHelper::CheckParticleList() const
   // RULE 2
   //  proton should exist
   //   if any other charged baryon  exist
-  if (!isProton && isAnyChargedBaryon) {
+  if (!isProton && isAnyChargedBaryon)
+  {
     G4String missingName = "proton ";
 
 #ifdef G4VERBOSE
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       G4cout << "G4PhysicsListHelper::CheckParticleList: " << missingName << " does not exist "
              << G4endl;
       G4cout << " Proton is necessary for EM baryon processes" << G4endl;
@@ -177,11 +188,13 @@ void G4PhysicsListHelper::CheckParticleList() const
   // RULE 3
   //  GenericIonn should exist
   //   if any other ion  exist
-  if (!isGenericIon && isAnyIon) {
+  if (!isGenericIon && isAnyIon)
+  {
     G4String missingName = "GenericIon ";
 
 #ifdef G4VERBOSE
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       G4cout << "G4PhysicsListHelper::CheckParticleList: " << missingName << " does not exist "
              << G4endl;
       G4cout << " GenericIon should be created if any ion is necessary" << G4endl;
@@ -198,7 +211,8 @@ void G4PhysicsListHelper::AddTransportation()
   G4int verboseLevelTransport = 0;
 
 #ifdef G4VERBOSE
-  if (verboseLevel > 2) {
+  if (verboseLevel > 2)
+  {
     G4cout << "G4PhysicsListHelper::AddTransportation()  " << G4endl;
   }
 #endif
@@ -213,11 +227,13 @@ void G4PhysicsListHelper::AddTransportation()
     if (theLooperThresholds == 2) coupledTransport->SetHighLooperThresholds();
     theTransportationProcess = coupledTransport;
 
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       G4cout << "--- G4CoupledTransportation is used " << G4endl;
     }
   }
-  else {
+  else
+  {
     auto simpleTransport = new G4Transportation(verboseLevelTransport);
     if (theLooperThresholds == 0) simpleTransport->SetLowLooperThresholds();
     if (theLooperThresholds == 2) simpleTransport->SetHighLooperThresholds();
@@ -226,14 +242,17 @@ void G4PhysicsListHelper::AddTransportation()
 
   // loop over all particles in G4ParticleTable
   aParticleIterator->reset();
-  while ((*aParticleIterator)()) {
+  while ((*aParticleIterator)())
+  {
     G4ParticleDefinition* particle = aParticleIterator->value();
     G4ProcessManager* pmanager = particle->GetProcessManager();
     // Add transportation process for all particles
-    if (pmanager == nullptr) {
+    if (pmanager == nullptr)
+    {
       // Error !! no process manager
 #ifdef G4VERBOSE
-      if (verboseLevel > 0) {
+      if (verboseLevel > 0)
+      {
         G4cout << "G4PhysicsListHelper::AddTransportation  "
                << " : No Process Manager for " << particle->GetParticleName() << G4endl;
       }
@@ -258,7 +277,8 @@ void G4PhysicsListHelper::ReadOrdingParameterTable()
   std::ifstream fIn;
 
   // create OrdParamTable
-  if (theTable != nullptr) {
+  if (theTable != nullptr)
+  {
     theTable->clear();
     delete theTable;
     theTable = nullptr;
@@ -269,9 +289,11 @@ void G4PhysicsListHelper::ReadOrdingParameterTable()
 
   ReadInDefaultOrderingParameter();
 
-  if (sizeOfTable == 0) {
+  if (sizeOfTable == 0)
+  {
 #ifdef G4VERBOSE
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       G4cout << "G4PhysicsListHelper::ReadOrdingParameterTable "
              << " Empty file " << ordParamFileName << G4endl;
     }
@@ -287,9 +309,11 @@ void G4PhysicsListHelper::ReadOrdingParameterTable()
 // --------------------------------------------------------------------
 void G4PhysicsListHelper::DumpOrdingParameterTable(G4int subType) const
 {
-  if (theTable == nullptr) {
+  if (theTable == nullptr)
+  {
 #ifdef G4VERBOSE
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       G4cout << "G4PhysicsListHelper::DumpOrdingParameterTable   "
              << " No ordering parameter table  : " << ordParamFileName << G4endl;
     }
@@ -304,16 +328,19 @@ void G4PhysicsListHelper::DumpOrdingParameterTable(G4int subType) const
          << "      AlongStep"
          << "        PostStep"
          << "     Duplicable" << G4endl;
-  for (G4int i = 0; i < sizeOfTable; ++i) {
+  for (G4int i = 0; i < sizeOfTable; ++i)
+  {
     G4PhysicsListOrderingParameter* tmp = &(theTable->at(i));
     if ((subType >= 0) && (subType != tmp->processSubType)) continue;
     G4cout << std::setw(18) << tmp->processTypeName << std::setw(15) << tmp->processType
            << std::setw(15) << tmp->processSubType << std::setw(15) << tmp->ordering[0]
            << std::setw(15) << tmp->ordering[1] << std::setw(15) << tmp->ordering[2];
-    if (tmp->isDuplicable) {
+    if (tmp->isDuplicable)
+    {
       G4cout << "  true";
     }
-    else {
+    else
+    {
       G4cout << "  false";
     }
     G4cout << G4endl;
@@ -325,9 +352,11 @@ G4PhysicsListOrderingParameter G4PhysicsListHelper::GetOrdingParameter(G4int sub
 {
   G4PhysicsListOrderingParameter value;
 
-  if (theTable == nullptr) {
+  if (theTable == nullptr)
+  {
 #ifdef G4VERBOSE
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       G4cout << "G4PhysicsListHelper::GetOrderingParameter : "
              << " No ordering parameter table  : " << ordParamFileName << G4endl;
     }
@@ -335,9 +364,11 @@ G4PhysicsListOrderingParameter G4PhysicsListHelper::GetOrdingParameter(G4int sub
     return value;
   }
 
-  for (G4int i = 0; i < sizeOfTable; ++i) {
+  for (G4int i = 0; i < sizeOfTable; ++i)
+  {
     G4PhysicsListOrderingParameter* tmp = &(theTable->at(i));
-    if (subType == tmp->processSubType) {
+    if (subType == tmp->processSubType)
+    {
       value.processTypeName = tmp->processTypeName;
       value.processType = tmp->processType;
       value.processSubType = tmp->processSubType;
@@ -353,9 +384,11 @@ G4PhysicsListOrderingParameter G4PhysicsListHelper::GetOrdingParameter(G4int sub
 // --------------------------------------------------------------------
 G4bool G4PhysicsListHelper::RegisterProcess(G4VProcess* process, G4ParticleDefinition* particle)
 {
-  if (theTable == nullptr) {
+  if (theTable == nullptr)
+  {
 #ifdef G4VERBOSE
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       G4cout << "G4PhysicsListHelper::RegisterProcess :"
              << " No ordering parameter table  : " << ordParamFileName << G4endl;
     }
@@ -370,16 +403,19 @@ G4bool G4PhysicsListHelper::RegisterProcess(G4VProcess* process, G4ParticleDefin
   const G4int pSubType = process->GetProcessSubType();
 
 #ifdef G4VERBOSE
-  if (verboseLevel > 2) {
+  if (verboseLevel > 2)
+  {
     G4cout << "G4PhysicsListHelper::RegisterProcess :" << pName << " Process Type = " << pType
            << " SubType = " << pSubType << " to " << particle->GetParticleName() << G4endl;
   }
 #endif
 
   // Check Process Type/SubType
-  if ((pType < 1) || (pSubType < 1)) {
+  if ((pType < 1) || (pSubType < 1))
+  {
 #ifdef G4VERBOSE
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       G4cout << "G4PhysicsListHelper::RegisterProcess :" << pName << " for "
              << particle->GetParticleName() << " has illegal Process Type = " << pType
              << " SubType = " << pSubType << G4endl;
@@ -393,9 +429,11 @@ G4bool G4PhysicsListHelper::RegisterProcess(G4VProcess* process, G4ParticleDefin
   G4bool isFound = false;
   G4int ord[3];
   G4bool duplicable = false;
-  for (G4int i = 0; i < sizeOfTable; ++i) {
+  for (G4int i = 0; i < sizeOfTable; ++i)
+  {
     G4PhysicsListOrderingParameter* tmp = &(theTable->at(i));
-    if ((tmp->processType == pType) && (tmp->processSubType == pSubType)) {
+    if ((tmp->processType == pType) && (tmp->processSubType == pSubType))
+    {
       ord[0] = tmp->ordering[0];
       ord[1] = tmp->ordering[1];
       ord[2] = tmp->ordering[2];
@@ -404,9 +442,11 @@ G4bool G4PhysicsListHelper::RegisterProcess(G4VProcess* process, G4ParticleDefin
       break;
     }
   }
-  if (!isFound) {
+  if (!isFound)
+  {
 #ifdef G4VERBOSE
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       G4cout << "G4PhysicsListHelper::RegisterProcess :" << pName << " for "
              << particle->GetParticleName() << " with  type/subtype =" << pType << "/" << pSubType
              << "  is not registered in OrdingParameterTable  " << G4endl;
@@ -419,10 +459,12 @@ G4bool G4PhysicsListHelper::RegisterProcess(G4VProcess* process, G4ParticleDefin
 
   // Check Process Manager
   G4ProcessManager* pManager = particle->GetProcessManager();
-  if (pManager == nullptr) {
+  if (pManager == nullptr)
+  {
     // Error !! no process manager
 #ifdef G4VERBOSE
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       G4cout << "G4PhysicsListHelper::RegisterProcess "
              << " : No Process Manager for " << particle->GetParticleName() << G4endl;
     }
@@ -433,15 +475,19 @@ G4bool G4PhysicsListHelper::RegisterProcess(G4VProcess* process, G4ParticleDefin
   }
 
   // Check Duplication
-  if (!duplicable) {
+  if (!duplicable)
+  {
     G4bool duplicated = false;
     G4ProcessVector* pList = pManager->GetProcessList();
-    for (G4int idx = 0; idx < (G4int)pList->size(); ++idx) {
+    for (G4int idx = 0; idx < (G4int)pList->size(); ++idx)
+    {
       const G4VProcess* p = (*pList)[idx];
-      if ((p->GetProcessType() == pType) && (p->GetProcessSubType() == pSubType)) {
+      if ((p->GetProcessType() == pType) && (p->GetProcessSubType() == pSubType))
+      {
         duplicated = true;
 #ifdef G4VERBOSE
-        if (verboseLevel > 0) {
+        if (verboseLevel > 0)
+        {
           G4cout << "G4PhysicsListHelper::RegisterProcess :" << pName << " for "
                  << particle->GetParticleName() << " with  type/subtype =" << pType << "/"
                  << pSubType << "  is has same subType as " << p->GetProcessName() << " for "
@@ -461,23 +507,29 @@ G4bool G4PhysicsListHelper::RegisterProcess(G4VProcess* process, G4ParticleDefin
   if (code < 0) return false;
 
   // Set Ordering Parameter
-  for (G4int idx = 0; idx < 3; ++idx) {
+  for (G4int idx = 0; idx < 3; ++idx)
+  {
     auto idxOrd = static_cast<G4ProcessVectorDoItIndex>(idx);
-    if (ord[idx] < 0) {
+    if (ord[idx] < 0)
+    {
       // Do Nothing because NO DOIT
     }
-    else if (ord[idx] == 0) {
+    else if (ord[idx] == 0)
+    {
       pManager->SetProcessOrderingToFirst(process, idxOrd);
     }
-    else if (ord[idx] < 9999) {
+    else if (ord[idx] < 9999)
+    {
       pManager->SetProcessOrdering(process, idxOrd, ord[idx]);
     }
-    else {
+    else
+    {
       pManager->SetProcessOrderingToLast(process, idxOrd);
     }
   }
 #ifdef G4VERBOSE
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "G4PhysicsListHelper::RegisterProcess :" << pName << " for "
            << particle->GetParticleName() << " with  type/subtype =" << pType << "/" << pSubType
            << " is successfully registered with ordering parameters " << ord[0] << ":" << ord[1]

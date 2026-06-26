@@ -4,6 +4,9 @@
 
 /run/initialize
 
+# for visualization uncomment the following line and ensure to run with -ui or -gui flag
+# /control/execute vis.mac
+
 /chem/PrintSpeciesTable
 
 # set all reaction rates to zero (only diffusion)
@@ -31,9 +34,8 @@
 /scheduler/verbose 0
 /scheduler/endTime 1 microsecond
 
-/scorer/BasicMoleculeCounts/nOfTimeBins 50
-/scorer/BasicCounter_VariablePrecision/nOfTimeBins 50
-/scorer/basicreactioncounts/nOfTimeBins 50
+/scorer/BasicMoleculeCounts/setNbOfTimeBins 50
+/scorer/BasicCounter_VariablePrecision/setNbOfTimeBins 50
 
 /run/printProgress 2
 

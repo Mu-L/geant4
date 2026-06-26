@@ -84,7 +84,8 @@ G4TaskRunManager::G4TaskRunManager(G4VUserTaskQueue* task_queue, G4bool useTBB, 
   MTkernel = static_cast<G4TaskRunManagerKernel*>(kernel);
 
   G4int numberOfStaticAllocators = kernel->GetNumberOfStaticAllocators();
-  if (numberOfStaticAllocators > 0) {
+  if (numberOfStaticAllocators > 0)
+  {
     G4ExceptionDescription msg1;
     msg1 << "There are " << numberOfStaticAllocators << " static G4Allocator objects detected.\n"
          << "In multi-threaded mode, all G4Allocator objects must "
@@ -110,7 +111,8 @@ G4TaskRunManager::G4TaskRunManager(G4VUserTaskQueue* task_queue, G4bool useTBB, 
 
   if (_nthread_env == "max")
     forcedNwokers = G4Threading::G4GetNumberOfCores();
-  else if (!_nthread_env.empty()) {
+  else if (!_nthread_env.empty())
+  {
     std::stringstream ss;
     G4int _nthread_val = -1;
     ss << _nthread_env;
@@ -127,7 +129,8 @@ G4TaskRunManager::G4TaskRunManager(G4VUserTaskQueue* task_queue, G4bool useTBB, 
   G4int _useTBB = G4GetEnv<G4int>("G4FORCE_TBB", (G4int)useTBB);
   if (_useTBB > 0) useTBB = true;
 #else
-  if (useTBB) {
+  if (useTBB)
+  {
     G4ExceptionDescription msg;
     msg << "TBB was requested but Geant4 was not built with TBB support";
     G4Exception("G4TaskRunManager::G4TaskRunManager(...)", "Run0131", JustWarning, msg);
@@ -180,8 +183,10 @@ void G4TaskRunManager::StoreRNGStatus(const G4String& fn)
 
 void G4TaskRunManager::SetNumberOfThreads(G4int n)
 {
-  if (forcedNwokers > 0) {
-    if (verboseLevel > 0) {
+  if (forcedNwokers > 0)
+  {
+    if (verboseLevel > 0)
+    {
       G4ExceptionDescription msg;
       msg << "\n### Number of threads is forced to " << forcedNwokers
           << " by G4FORCENUMBEROFTHREADS environment variable. G4TaskRunManager::" << __FUNCTION__
@@ -190,10 +195,13 @@ void G4TaskRunManager::SetNumberOfThreads(G4int n)
     }
     nworkers = forcedNwokers;
   }
-  else {
+  else
+  {
     nworkers = n;
-    if (poolInitialized) {
-      if (verboseLevel > 0) {
+    if (poolInitialized)
+    {
+      if (verboseLevel > 0)
+      {
         std::stringstream ss;
         ss << "\n### Thread-pool already initialized. Resizing  to " << nworkers << "threads ###";
         G4cout << ss.str() << "\n" << G4endl;
@@ -231,7 +239,8 @@ void G4TaskRunManager::Initialize()
 
 void G4TaskRunManager::InitializeThreadPool()
 {
-  if (poolInitialized && (threadPool != nullptr) && (workTaskGroup != nullptr)) {
+  if (poolInitialized && (threadPool != nullptr) && (workTaskGroup != nullptr))
+  {
     G4Exception("G4TaskRunManager::InitializeThreadPool", "Run1040", JustWarning,
                 "Threadpool already initialized. Ignoring...");
     return;
@@ -240,20 +249,24 @@ void G4TaskRunManager::InitializeThreadPool()
   PTL::TaskRunManager::Initialize(nworkers);
 
   // create the joiners
-  if (workTaskGroup == nullptr) {
+  if (workTaskGroup == nullptr)
+  {
     workTaskGroup = new RunTaskGroup(threadPool);
   }
 
-  if (verboseLevel > 0) {
+  if (verboseLevel > 0)
+  {
     std::stringstream ss;
     ss.fill('=');
     ss << std::setw(90) << "";
     G4cout << "\n" << ss.str() << G4endl;
 
-    if (threadPool->is_tbb_threadpool()) {
+    if (threadPool->is_tbb_threadpool())
+    {
       G4cout << "G4TaskRunManager :: Using TBB..." << G4endl;
     }
-    else {
+    else
+    {
       G4cout << "G4TaskRunManager :: Using G4ThreadPool..." << G4endl;
     }
 
@@ -286,14 +299,17 @@ void G4TaskRunManager::ComputeNumberOfTasks()
   G4int nEvtsPerTask =
     (numberOfEventToBeProcessed > grainSize) ? (numberOfEventToBeProcessed / grainSize) : 1;
 
-  if (eventModuloDef > 0) {
+  if (eventModuloDef > 0)
+  {
     eventModulo = eventModuloDef;
   }
-  else {
+  else
+  {
     eventModulo = G4int(std::sqrt(G4double(numberOfEventToBeProcessed)));
     if (eventModulo < 1) eventModulo = 1;
   }
-  if (eventModulo > nEvtsPerTask) {
+  if (eventModulo > nEvtsPerTask)
+  {
     G4int oldMod = eventModulo;
     eventModulo = nEvtsPerTask;
 
@@ -316,7 +332,8 @@ void G4TaskRunManager::ComputeNumberOfTasks()
   numberOfEventsPerTask = nEvtsPerTask;
   eventModulo = numberOfEventsPerTask;
 
-  if (fakeRun && verboseLevel > 2) {
+  if (fakeRun && verboseLevel > 2)
+  {
     std::stringstream msg;
     msg << "--> G4TaskRunManager::ComputeNumberOfTasks() --> " << numberOfTasks << " tasks with "
         << numberOfEventsPerTask << " events/task...";
@@ -341,10 +358,13 @@ void G4TaskRunManager::CreateAndStartWorkers()
 
   ComputeNumberOfTasks();
 
-  if (fakeRun) {
-    if (initializeStarted) {
+  if (fakeRun)
+  {
+    if (initializeStarted)
+    {
       auto initCmdStack = GetCommandStack();
-      if (!initCmdStack.empty()) {
+      if (!initCmdStack.empty())
+      {
         threadPool->execute_on_all_threads([cmds = std::move(initCmdStack)]() {
           for (auto& itr : cmds)
             G4UImanager::GetUIpointer()->ApplyCommand(itr);
@@ -352,8 +372,10 @@ void G4TaskRunManager::CreateAndStartWorkers()
         });
       }
     }
-    else {
-      if (verboseLevel > 0) {
+    else
+    {
+      if (verboseLevel > 0)
+      {
         std::stringstream msg;
         msg << "--> G4TaskRunManager::CreateAndStartWorkers() --> "
             << "Initializing workers...";
@@ -369,9 +391,11 @@ void G4TaskRunManager::CreateAndStartWorkers()
     }
     initializeStarted = true;
   }
-  else {
+  else
+  {
     auto initCmdStack = GetCommandStack();
-    if (!initCmdStack.empty()) {
+    if (!initCmdStack.empty())
+    {
       threadPool->execute_on_all_threads([cmds = std::move(initCmdStack)]() {
         for (auto& itr : cmds)
           G4UImanager::GetUIpointer()->ApplyCommand(itr);
@@ -382,7 +406,8 @@ void G4TaskRunManager::CreateAndStartWorkers()
     // does not execute any tasks
     threadPool->execute_on_all_threads([]() { G4TaskRunManagerKernel::ExecuteWorkerInit(); });
 
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       std::stringstream msg;
       msg << "--> G4TaskRunManager::CreateAndStartWorkers() --> "
           << "Creating " << numberOfTasks << " tasks with " << numberOfEventsPerTask
@@ -395,7 +420,8 @@ void G4TaskRunManager::CreateAndStartWorkers()
     }
 
     G4int remaining = numberOfEventToBeProcessed;
-    for (G4int nt = 0; nt < numberOfTasks + 1; ++nt) {
+    for (G4int nt = 0; nt < numberOfTasks + 1; ++nt)
+    {
       if (runAborted) break;
       if (remaining > 0) AddEventTask(nt);
       remaining -= numberOfEventsPerTask;
@@ -421,7 +447,8 @@ void G4TaskRunManager::RefillSeeds()
 {
   G4RNGHelper* helper = G4RNGHelper::GetInstance();
   G4int nFill = 0;
-  switch (SeedOncePerCommunication()) {
+  switch (SeedOncePerCommunication())
+  {
     case 0:
       nFill = numberOfEventToBeProcessed - nSeedsFilled;
       break;
@@ -447,21 +474,24 @@ void G4TaskRunManager::InitializeEventLoop(G4int n_event, const char* macroFile,
   numberOfEventToBeProcessed = n_event;
   numberOfEventProcessed = 0;
 
-  if (!fakeRun) {
+  if (!fakeRun)
+  {
     nSeedsUsed = 0;
     nSeedsFilled = 0;
 
     if (verboseLevel > 0) timer->Start();
 
     n_select_msg = n_select;
-    if (macroFile != nullptr) {
+    if (macroFile != nullptr)
+    {
       if (n_select_msg < 0) n_select_msg = n_event;
 
       msgText = "/control/execute ";
       msgText += macroFile;
       selectMacro = macroFile;
     }
-    else {
+    else
+    {
       n_select_msg = -1;
       selectMacro = "";
     }
@@ -472,13 +502,16 @@ void G4TaskRunManager::InitializeEventLoop(G4int n_event, const char* macroFile,
     // If user did not implement InitializeSeeds,
     // use default: nSeedsPerEvent seeds per event
 
-    if (n_event > 0) {
+    if (n_event > 0)
+    {
       G4bool _overload = InitializeSeeds(n_event);
       G4bool _functor = false;
       if (!_overload) _functor = initSeedsCallback(n_event, nSeedsPerEvent, nSeedsFilled);
-      if (!_overload && !_functor) {
+      if (!_overload && !_functor)
+      {
         G4RNGHelper* helper = G4RNGHelper::GetInstance();
-        switch (SeedOncePerCommunication()) {
+        switch (SeedOncePerCommunication())
+        {
           case 0:
             nSeedsFilled = n_event;
             break;
@@ -543,7 +576,8 @@ void G4TaskRunManager::ConstructScoringWorlds()
   GetMasterWorlds().clear();
   auto nWorlds = (G4int)G4TransportationManager::GetTransportationManager()->GetNoWorlds();
   auto itrW = G4TransportationManager::GetTransportationManager()->GetWorldsIterator();
-  for (G4int iWorld = 0; iWorld < nWorlds; ++iWorld) {
+  for (G4int iWorld = 0; iWorld < nWorlds; ++iWorld)
+  {
     addWorld(iWorld, *itrW);
     ++itrW;
   }
@@ -571,9 +605,11 @@ G4bool G4TaskRunManager::SetUpAnEvent(G4Event* evt, G4long& s1, G4long& s2, G4lo
                                       G4bool reseedRequired)
 {
   G4AutoLock l(&setUpEventMutex);
-  if (numberOfEventProcessed < numberOfEventToBeProcessed) {
+  if (numberOfEventProcessed < numberOfEventToBeProcessed)
+  {
     evt->SetEventID(numberOfEventProcessed);
-    if (reseedRequired) {
+    if (reseedRequired)
+    {
       G4RNGHelper* helper = G4RNGHelper::GetInstance();
       G4int idx_rndm = nSeedsPerEvent * nSeedsUsed;
       s1 = helper->GetSeed(idx_rndm);
@@ -593,20 +629,24 @@ G4bool G4TaskRunManager::SetUpAnEvent(G4Event* evt, G4long& s1, G4long& s2, G4lo
 G4int G4TaskRunManager::SetUpNEvents(G4Event* evt, G4SeedsQueue* seedsQueue, G4bool reseedRequired)
 {
   G4AutoLock l(&setUpEventMutex);
-  if (numberOfEventProcessed < numberOfEventToBeProcessed && !runAborted) {
+  if (numberOfEventProcessed < numberOfEventToBeProcessed && !runAborted)
+  {
     G4int nevt = numberOfEventsPerTask;
     G4int nmod = eventModulo;
-    if (numberOfEventProcessed + nevt > numberOfEventToBeProcessed) {
+    if (numberOfEventProcessed + nevt > numberOfEventToBeProcessed)
+    {
       nevt = numberOfEventToBeProcessed - numberOfEventProcessed;
       nmod = numberOfEventToBeProcessed - numberOfEventProcessed;
     }
     evt->SetEventID(numberOfEventProcessed);
 
-    if (reseedRequired) {
+    if (reseedRequired)
+    {
       G4RNGHelper* helper = G4RNGHelper::GetInstance();
       G4int nevRnd = nmod;
       if (SeedOncePerCommunication() > 0) nevRnd = 1;
-      for (G4int i = 0; i < nevRnd; ++i) {
+      for (G4int i = 0; i < nevRnd; ++i)
+      {
         seedsQueue->push(helper->GetSeed(nSeedsPerEvent * nSeedsUsed));
         seedsQueue->push(helper->GetSeed(nSeedsPerEvent * nSeedsUsed + 1));
         if (nSeedsPerEvent == 3) seedsQueue->push(helper->GetSeed(nSeedsPerEvent * nSeedsUsed + 2));
@@ -627,7 +667,8 @@ void G4TaskRunManager::TerminateWorkers()
   // Force workers to execute (if any) all UI commands left in the stack
   RequestWorkersProcessCommandsStack();
 
-  if (workTaskGroup != nullptr) {
+  if (workTaskGroup != nullptr)
+  {
     workTaskGroup->join();
     if (!fakeRun)
       threadPool->execute_on_all_threads([]() { G4TaskRunManagerKernel::TerminateWorker(); });
@@ -640,11 +681,13 @@ void G4TaskRunManager::AbortRun(G4bool softAbort)
 {
   // This method is valid only for GeomClosed or EventProc state
   G4ApplicationState currentState = G4StateManager::GetStateManager()->GetCurrentState();
-  if (currentState == G4State_GeomClosed || currentState == G4State_EventProc) {
+  if (currentState == G4State_GeomClosed || currentState == G4State_EventProc)
+  {
     runAborted = true;
     MTkernel->BroadcastAbortRun(softAbort);
   }
-  else {
+  else
+  {
     G4cerr << "Run is not in progress. AbortRun() ignored." << G4endl;
   }
 }
@@ -660,7 +703,8 @@ void G4TaskRunManager::AbortEvent()
 
 void G4TaskRunManager::WaitForEndEventLoopWorkers()
 {
-  if (workTaskGroup != nullptr) {
+  if (workTaskGroup != nullptr)
+  {
     workTaskGroup->join();
     if (!fakeRun)
       threadPool->execute_on_all_threads(
@@ -676,7 +720,8 @@ void G4TaskRunManager::RequestWorkersProcessCommandsStack()
 
   auto process_commands_stack = []() {
     G4MTRunManager* mrm = G4MTRunManager::GetMasterRunManager();
-    if (mrm != nullptr) {
+    if (mrm != nullptr)
+    {
       auto cmds = mrm->GetCommandStack();
       for (const auto& itr : cmds)
         G4UImanager::GetUIpointer()->ApplyCommand(itr);  // TLS instance

@@ -29,16 +29,17 @@
 // --------------------------------------------------------------------
 
 #include "G4VRangeToEnergyConverter.hh"
-#include "G4ParticleTable.hh"
-#include "G4Element.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4Log.hh"
-#include "G4Exp.hh"
+
 #include "G4AutoLock.hh"
+#include "G4Element.hh"
+#include "G4Exp.hh"
+#include "G4Log.hh"
+#include "G4ParticleTable.hh"
+#include "G4SystemOfUnits.hh"
 
 namespace
 {
-  G4Mutex theREMutex = G4MUTEX_INITIALIZER;
+G4Mutex theREMutex = G4MUTEX_INITIALIZER;
 }
 
 G4double G4VRangeToEnergyConverter::sEmin = 0.0;
@@ -52,7 +53,7 @@ G4int G4VRangeToEnergyConverter::sNbin = 350;
 // --------------------------------------------------------------------
 G4VRangeToEnergyConverter::G4VRangeToEnergyConverter()
 {
-  if(sEnergy==nullptr) FillEnergyVector(0.99*CLHEP::keV, 10.0*CLHEP::GeV);
+  if (sEnergy == nullptr) FillEnergyVector(0.99 * CLHEP::keV, 10.0 * CLHEP::GeV);
 }
 
 // --------------------------------------------------------------------
@@ -68,33 +69,32 @@ G4VRangeToEnergyConverter::~G4VRangeToEnergyConverter()
 }
 
 // --------------------------------------------------------------------
-G4double G4VRangeToEnergyConverter::Convert(const G4double rangeCut, 
-                                            const G4Material* material) 
+G4double G4VRangeToEnergyConverter::Convert(const G4double rangeCut, const G4Material* material)
 {
 #ifdef G4VERBOSE
-  if (GetVerboseLevel()>3)
+  if (GetVerboseLevel() > 3)
   {
     G4cout << "G4VRangeToEnergyConverter::Convert() - ";
-    G4cout << "Convert for " << material->GetName() 
-	   << " with Range Cut " << rangeCut/mm << "[mm]" << G4endl;
+    G4cout << "Convert for " << material->GetName() << " with Range Cut " << rangeCut / mm << "[mm]"
+           << G4endl;
   }
 #endif
 
   G4double cut = 0.0;
-  if(fPDG == 22) 
-  {  
+  if (fPDG == 22)
+  {
     cut = ConvertForGamma(rangeCut, material);
   }
-  else 
+  else
   {
     cut = ConvertForElectron(rangeCut, material);
 
-    const G4double tune = 0.025*CLHEP::mm*CLHEP::g/CLHEP::cm3;
-    const G4double lowen = 30.*CLHEP::keV; 
-    if(cut < lowen)
+    const G4double tune = 0.025 * CLHEP::mm * CLHEP::g / CLHEP::cm3;
+    const G4double lowen = 30. * CLHEP::keV;
+    if (cut < lowen)
     {
-      //  corr. should be switched on smoothly   
-      cut /= (1.+(1.-cut/lowen)*tune/(rangeCut*material->GetDensity())); 
+      //  corr. should be switched on smoothly
+      cut /= (1. + (1. - cut / lowen) * tune / (rangeCut * material->GetDensity()));
     }
   }
 
@@ -103,14 +103,13 @@ G4double G4VRangeToEnergyConverter::Convert(const G4double rangeCut,
 }
 
 // --------------------------------------------------------------------
-void G4VRangeToEnergyConverter::SetEnergyRange(const G4double lowedge,
-                                               const G4double highedge)
+void G4VRangeToEnergyConverter::SetEnergyRange(const G4double lowedge, const G4double highedge)
 {
-  G4double ehigh = std::min(10.*CLHEP::GeV, highedge);
-  if(ehigh > lowedge)
+  G4double ehigh = std::min(10. * CLHEP::GeV, highedge);
+  if (ehigh > lowedge)
   {
     FillEnergyVector(lowedge, ehigh);
-  }  
+  }
 }
 
 // --------------------------------------------------------------------
@@ -118,7 +117,7 @@ G4double G4VRangeToEnergyConverter::GetLowEdgeEnergy()
 {
   return sEmin;
 }
-    
+
 // --------------------------------------------------------------------
 G4double G4VRangeToEnergyConverter::GetHighEdgeEnergy()
 {
@@ -135,38 +134,42 @@ G4double G4VRangeToEnergyConverter::GetMaxEnergyCut()
 // --------------------------------------------------------------------
 void G4VRangeToEnergyConverter::SetMaxEnergyCut(const G4double value)
 {
-  G4double ehigh = std::min(10.*CLHEP::GeV, value);
-  if(ehigh > sEmin)
+  G4double ehigh = std::min(10. * CLHEP::GeV, value);
+  if (ehigh > sEmin)
   {
     FillEnergyVector(sEmin, ehigh);
   }
 }
 
 // --------------------------------------------------------------------
-void G4VRangeToEnergyConverter::FillEnergyVector(const G4double emin, 
-                                                 const G4double emax)
+void G4VRangeToEnergyConverter::FillEnergyVector(const G4double emin, const G4double emax)
 {
   // sanity check
-  if ((sEmin == emin && sEmax == emax) || emin <= 0.0 || emax <= emin) { return; }
+  if ((sEmin == emin && sEmax == emax) || emin <= 0.0 || emax <= emin)
+  {
+    return;
+  }
 
   // fill energy vector
   G4AutoLock l(&theREMutex);
   sEmin = emin;
   sEmax = emax;
-  sNbin = sNbinPerDecade*G4lrint(std::log10(emax/emin));
+  sNbin = sNbinPerDecade * G4lrint(std::log10(emax / emin));
   delete sEnergy;
   sEnergy = new std::vector<G4double>(sNbin + 1);
   (*sEnergy)[0] = emin;
   (*sEnergy)[sNbin] = emax;
-  G4double fact = G4Log(emax/emin)/sNbin;
-  for (G4int i=1; i<sNbin; ++i) { (*sEnergy)[i] = emin*G4Exp(i * fact); }
+  G4double fact = G4Log(emax / emin) / sNbin;
+  for (G4int i = 1; i < sNbin; ++i)
+  {
+    (*sEnergy)[i] = emin * G4Exp(i * fact);
+  }
   l.unlock();
 }
 
 // --------------------------------------------------------------------
-G4double 
-G4VRangeToEnergyConverter::ConvertForGamma(const G4double rangeCut, 
-                                           const G4Material* material)
+G4double G4VRangeToEnergyConverter::ConvertForGamma(const G4double rangeCut,
+                                                    const G4Material* material)
 {
   const G4ElementVector* elm = material->GetElementVector();
   const G4double* dens = material->GetAtomicNumDensityVector();
@@ -177,17 +180,17 @@ G4VRangeToEnergyConverter::ConvertForGamma(const G4double rangeCut,
   G4double range2 = 0.0;
   G4double e1 = 0.0;
   G4double e2 = 0.0;
-  for (G4int i=0; i<sNbin; ++i)
+  for (G4int i = 0; i < sNbin; ++i)
   {
     e2 = (*sEnergy)[i];
     G4double sig = 0.;
-    
-    for (G4int j=0; j<nelm; ++j)
+
+    for (G4int j = 0; j < nelm; ++j)
     {
-      sig += dens[j]*ComputeValue((*elm)[j]->GetZasInt(), e2); 
+      sig += dens[j] * ComputeValue((*elm)[j]->GetZasInt(), e2);
     }
-    range2 = (sig > 0.0) ? 5./sig : DBL_MAX;
-    if(i == 0 || range2 < rangeCut)
+    range2 = (sig > 0.0) ? 5. / sig : DBL_MAX;
+    if (i == 0 || range2 < rangeCut)
     {
       e1 = e2;
       range1 = range2;
@@ -201,9 +204,8 @@ G4VRangeToEnergyConverter::ConvertForGamma(const G4double rangeCut,
 }
 
 // --------------------------------------------------------------------
-G4double 
-G4VRangeToEnergyConverter::ConvertForElectron(const G4double rangeCut, 
-                                              const G4Material* material)
+G4double G4VRangeToEnergyConverter::ConvertForElectron(const G4double rangeCut,
+                                                       const G4Material* material)
 {
   const G4ElementVector* elm = material->GetElementVector();
   const G4double* dens = material->GetAtomicNumDensityVector();
@@ -217,17 +219,17 @@ G4VRangeToEnergyConverter::ConvertForElectron(const G4double rangeCut,
   G4double e1 = 0.0;
   G4double e2 = 0.0;
   G4double range = 0.;
-  for (G4int i=0; i<sNbin; ++i)
+  for (G4int i = 0; i < sNbin; ++i)
   {
     e2 = (*sEnergy)[i];
     dedx2 = 0.0;
-    for (G4int j=0; j<nelm; ++j)
+    for (G4int j = 0; j < nelm; ++j)
     {
-      dedx2 += dens[j]*ComputeValue((*elm)[j]->GetZasInt(), e2); 
+      dedx2 += dens[j] * ComputeValue((*elm)[j]->GetZasInt(), e2);
     }
-    range += (dedx1 + dedx2 > 0.0) ? 2*(e2 - e1)/(dedx1 + dedx2) : 0.0;
+    range += (dedx1 + dedx2 > 0.0) ? 2 * (e2 - e1) / (dedx1 + dedx2) : 0.0;
     range2 = range;
-    if(range2 < rangeCut)
+    if (range2 < rangeCut)
     {
       e1 = e2;
       dedx1 = dedx2;

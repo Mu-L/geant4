@@ -37,12 +37,12 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4AdjointCSManager_h
-#define G4AdjointCSManager_h 1
+#ifndef G4ADJOINTCSMANAGER_HH
+#define G4ADJOINTCSMANAGER_HH
 
-#include "globals.hh"
 #include "G4AdjointCSMatrix.hh"
 #include "G4ThreadLocalSingleton.hh"
+#include "globals.hh"
 
 #include <vector>
 
@@ -57,187 +57,175 @@ class G4VEnergyLossProcess;
 
 class G4AdjointCSManager
 {
-  friend class G4ThreadLocalSingleton<G4AdjointCSManager>;
+    friend class G4ThreadLocalSingleton<G4AdjointCSManager>;
 
- public:
-  ~G4AdjointCSManager();
-  static G4AdjointCSManager* GetAdjointCSManager();
+  public:
 
-  G4int GetNbProcesses();
+    ~G4AdjointCSManager();
+    static G4AdjointCSManager* GetAdjointCSManager();
 
-  // Registration of the different models and processes
+    G4int GetNbProcesses();
 
-  std::size_t RegisterEmAdjointModel(G4VEmAdjointModel*);
+    // Registration of the different models and processes
 
-  void RegisterEmProcess(G4VEmProcess* aProcess,
-                         G4ParticleDefinition* aPartDef);
+    std::size_t RegisterEmAdjointModel(G4VEmAdjointModel*);
 
-  void RegisterEnergyLossProcess(G4VEnergyLossProcess* aProcess,
-                                 G4ParticleDefinition* aPartDef);
+    void RegisterEmProcess(G4VEmProcess* aProcess, G4ParticleDefinition* aPartDef);
 
-  void RegisterAdjointParticle(G4ParticleDefinition* aPartDef);
+    void RegisterEnergyLossProcess(G4VEnergyLossProcess* aProcess, G4ParticleDefinition* aPartDef);
 
-  // Building of the CS Matrices and Total Forward and Adjoint LambdaTables
-  void BuildCrossSectionMatrices();
+    void RegisterAdjointParticle(G4ParticleDefinition* aPartDef);
 
-  void BuildTotalSigmaTables();
+    // Building of the CS Matrices and Total Forward and Adjoint LambdaTables
+    void BuildCrossSectionMatrices();
 
-  // Get TotalCrossSections form Total Lambda Tables, Needed for Weight
-  // correction and scaling of the
-  G4double GetTotalAdjointCS(G4ParticleDefinition* aPartDef, G4double Ekin,
-                             const G4MaterialCutsCouple* aCouple);
+    void BuildTotalSigmaTables();
 
-  G4double GetTotalForwardCS(G4ParticleDefinition* aPartDef, G4double Ekin,
-                             const G4MaterialCutsCouple* aCouple);
+    // Get TotalCrossSections form Total Lambda Tables, Needed for Weight
+    // correction and scaling of the
+    G4double GetTotalAdjointCS(G4ParticleDefinition* aPartDef, G4double Ekin,
+                               const G4MaterialCutsCouple* aCouple);
 
-  G4double GetAdjointSigma(G4double Ekin_nuc, std::size_t index_model,
-                           G4bool is_scat_proj_to_proj,
-                           const G4MaterialCutsCouple* aCouple);
+    G4double GetTotalForwardCS(G4ParticleDefinition* aPartDef, G4double Ekin,
+                               const G4MaterialCutsCouple* aCouple);
 
-  void GetEminForTotalCS(G4ParticleDefinition* aPartDef,
-                         const G4MaterialCutsCouple* aCouple,
-                         G4double& emin_adj, G4double& emin_fwd);
+    G4double GetAdjointSigma(G4double Ekin_nuc, std::size_t index_model,
+                             G4bool is_scat_proj_to_proj, const G4MaterialCutsCouple* aCouple);
 
-  void GetMaxFwdTotalCS(G4ParticleDefinition* aPartDef,
-                        const G4MaterialCutsCouple* aCouple,
-                        G4double& e_sigma_max, G4double& sigma_max);
+    void GetEminForTotalCS(G4ParticleDefinition* aPartDef, const G4MaterialCutsCouple* aCouple,
+                           G4double& emin_adj, G4double& emin_fwd);
 
-  void GetMaxAdjTotalCS(G4ParticleDefinition* aPartDef,
-                        const G4MaterialCutsCouple* aCouple,
-                        G4double& e_sigma_max, G4double& sigma_max);
+    void GetMaxFwdTotalCS(G4ParticleDefinition* aPartDef, const G4MaterialCutsCouple* aCouple,
+                          G4double& e_sigma_max, G4double& sigma_max);
 
-  // CrossSection Correction 1 or FwdCS/AdjCS following the G4boolean value of
-  // forward_CS_is_used and forward_CS_mode
-  G4double GetCrossSectionCorrection(G4ParticleDefinition* aPartDef,
-                                     G4double PreStepEkin,
-                                     const G4MaterialCutsCouple* aCouple,
-                                     G4bool& fwd_is_used);
+    void GetMaxAdjTotalCS(G4ParticleDefinition* aPartDef, const G4MaterialCutsCouple* aCouple,
+                          G4double& e_sigma_max, G4double& sigma_max);
 
-  // Cross section mode
-  inline void SetFwdCrossSectionMode(G4bool aBool) { fForwardCSMode = aBool; }
+    // CrossSection Correction 1 or FwdCS/AdjCS following the G4boolean value of
+    // forward_CS_is_used and forward_CS_mode
+    G4double GetCrossSectionCorrection(G4ParticleDefinition* aPartDef, G4double PreStepEkin,
+                                       const G4MaterialCutsCouple* aCouple, G4bool& fwd_is_used);
 
-  // Weight correction
-  G4double GetContinuousWeightCorrection(G4ParticleDefinition* aPartDef,
-                                         G4double PreStepEkin,
-                                         G4double AfterStepEkin,
-                                         const G4MaterialCutsCouple* aCouple,
-                                         G4double step_length);
+    // Cross section mode
+    inline void SetFwdCrossSectionMode(G4bool aBool) { fForwardCSMode = aBool; }
 
-  G4double GetPostStepWeightCorrection();
+    // Weight correction
+    G4double GetContinuousWeightCorrection(G4ParticleDefinition* aPartDef, G4double PreStepEkin,
+                                           G4double AfterStepEkin,
+                                           const G4MaterialCutsCouple* aCouple,
+                                           G4double step_length);
 
-  // called by the adjoint model to get the CS, if not otherwise specified
-  G4double ComputeAdjointCS(G4Material* aMaterial, G4VEmAdjointModel* aModel,
-                            G4double PrimEnergy, G4double Tcut,
-                            G4bool isScatProjToProj,
-                            std::vector<G4double>& AdjointCS_for_each_element);
+    G4double GetPostStepWeightCorrection();
 
-  // called by the adjoint model to sample secondary energy from the CS matrix
-  G4Element* SampleElementFromCSMatrices(G4Material* aMaterial,
-                                         G4VEmAdjointModel* aModel,
-                                         G4double PrimEnergy, G4double Tcut,
-                                         G4bool isScatProjToProj);
+    // called by the adjoint model to get the CS, if not otherwise specified
+    G4double ComputeAdjointCS(G4Material* aMaterial, G4VEmAdjointModel* aModel, G4double PrimEnergy,
+                              G4double Tcut, G4bool isScatProjToProj,
+                              std::vector<G4double>& AdjointCS_for_each_element);
 
-  // Total Adjoint CS is computed at initialisation phase
-  G4double ComputeTotalAdjointCS(const G4MaterialCutsCouple* aMatCutCouple,
-                                 G4ParticleDefinition* aPart,
-                                 G4double PrimEnergy);
+    // called by the adjoint model to sample secondary energy from the CS matrix
+    G4Element* SampleElementFromCSMatrices(G4Material* aMaterial, G4VEmAdjointModel* aModel,
+                                           G4double PrimEnergy, G4double Tcut,
+                                           G4bool isScatProjToProj);
 
-  G4ParticleDefinition* GetAdjointParticleEquivalent(
-    G4ParticleDefinition* theFwdPartDef);
+    // Total Adjoint CS is computed at initialisation phase
+    G4double ComputeTotalAdjointCS(const G4MaterialCutsCouple* aMatCutCouple,
+                                   G4ParticleDefinition* aPart, G4double PrimEnergy);
 
-  G4ParticleDefinition* GetForwardParticleEquivalent(
-    G4ParticleDefinition* theAdjPartDef);
+    G4ParticleDefinition* GetAdjointParticleEquivalent(G4ParticleDefinition* theFwdPartDef);
 
-  // inline
-  inline void SetIon(G4ParticleDefinition* adjIon, G4ParticleDefinition* fwdIon)
-  {
-    fAdjIon = adjIon;
-    fFwdIon = fwdIon;
-  }
+    G4ParticleDefinition* GetForwardParticleEquivalent(G4ParticleDefinition* theAdjPartDef);
 
- private:
-  G4AdjointCSManager();
+    // inline
+    inline void SetIon(G4ParticleDefinition* adjIon, G4ParticleDefinition* fwdIon)
+    {
+      fAdjIon = adjIon;
+      fFwdIon = fwdIon;
+    }
 
-  void DefineCurrentMaterial(const G4MaterialCutsCouple* couple);
+  private:
 
-  void DefineCurrentParticle(const G4ParticleDefinition* aPartDef);
+    G4AdjointCSManager();
 
-  G4double ComputeAdjointCS(G4double aPrimEnergy,
-                            G4AdjointCSMatrix* anAdjointCSMatrix,
-                            G4double Tcut);
+    void DefineCurrentMaterial(const G4MaterialCutsCouple* couple);
 
-  std::vector<G4AdjointCSMatrix*> BuildCrossSectionsModelAndElement(
-    G4VEmAdjointModel* aModel, G4int Z, G4int A, G4int nbin_pro_decade);
+    void DefineCurrentParticle(const G4ParticleDefinition* aPartDef);
 
-  std::vector<G4AdjointCSMatrix*> BuildCrossSectionsModelAndMaterial(
-    G4VEmAdjointModel* aModel, G4Material* aMaterial, G4int nbin_pro_decade);
+    G4double ComputeAdjointCS(G4double aPrimEnergy, G4AdjointCSMatrix* anAdjointCSMatrix,
+                              G4double Tcut);
 
-  static constexpr G4double fTmin = 0.1 * CLHEP::keV;
-  static constexpr G4double fTmax = 100. * CLHEP::TeV;
-  // fNbins chosen to avoid error
-  // in the CS value close to CS jump. (For example at Tcut)
-  static constexpr G4int fNbins = 320;
+    std::vector<G4AdjointCSMatrix*> BuildCrossSectionsModelAndElement(G4VEmAdjointModel* aModel,
+                                                                      G4int Z, G4int A,
+                                                                      G4int nbin_pro_decade);
 
-  static G4ThreadLocal G4AdjointCSManager* fInstance;
+    std::vector<G4AdjointCSMatrix*> BuildCrossSectionsModelAndMaterial(G4VEmAdjointModel* aModel,
+                                                                       G4Material* aMaterial,
+                                                                       G4int nbin_pro_decade);
 
-  // only one ion can be considered by simulation
-  G4ParticleDefinition* fAdjIon = nullptr;
-  G4ParticleDefinition* fFwdIon = nullptr;
+    static constexpr G4double fTmin = 0.1 * CLHEP::keV;
+    static constexpr G4double fTmax = 100. * CLHEP::TeV;
+    // fNbins chosen to avoid error
+    // in the CS value close to CS jump. (For example at Tcut)
+    static constexpr G4int fNbins = 320;
 
-  G4MaterialCutsCouple* fCurrentCouple = nullptr;
-  G4Material* fCurrentMaterial         = nullptr;
+    static G4ThreadLocal G4AdjointCSManager* fInstance;
 
-  // x dim is for G4VAdjointEM*, y dim is for elements
-  std::vector<std::vector<G4AdjointCSMatrix*>>
-    fAdjointCSMatricesForScatProjToProj;
+    // only one ion can be considered by simulation
+    G4ParticleDefinition* fAdjIon = nullptr;
+    G4ParticleDefinition* fFwdIon = nullptr;
 
-  std::vector<std::vector<G4AdjointCSMatrix*>> fAdjointCSMatricesForProdToProj;
+    G4MaterialCutsCouple* fCurrentCouple = nullptr;
+    G4Material* fCurrentMaterial = nullptr;
 
-  std::vector<G4VEmAdjointModel*> fAdjointModels;
+    // x dim is for G4VAdjointEM*, y dim is for elements
+    std::vector<std::vector<G4AdjointCSMatrix*>> fAdjointCSMatricesForScatProjToProj;
 
-  std::vector<std::size_t> fIndexOfAdjointEMModelInAction;
-  std::vector<G4bool> fIsScatProjToProj;
-  std::vector<std::vector<G4double>> fLastAdjointCSVsModelsAndElements;
+    std::vector<std::vector<G4AdjointCSMatrix*>> fAdjointCSMatricesForProdToProj;
 
-  // total adjoint and total forward cross section table in function of material
-  // and in function of adjoint particle type
-  std::vector<G4PhysicsTable*> fTotalFwdSigmaTable;
-  std::vector<G4PhysicsTable*> fTotalAdjSigmaTable;
+    std::vector<G4VEmAdjointModel*> fAdjointModels;
 
-  // Sigma table for each G4VAdjointEMModel
-  std::vector<G4PhysicsTable*> fSigmaTableForAdjointModelScatProjToProj;
-  std::vector<G4PhysicsTable*> fSigmaTableForAdjointModelProdToProj;
+    std::vector<std::size_t> fIndexOfAdjointEMModelInAction;
+    std::vector<G4bool> fIsScatProjToProj;
+    std::vector<std::vector<G4double>> fLastAdjointCSVsModelsAndElements;
 
-  std::vector<std::vector<G4double>> fEminForFwdSigmaTables;
-  std::vector<std::vector<G4double>> fEminForAdjSigmaTables;
-  std::vector<std::vector<G4double>> fEkinofFwdSigmaMax;
-  std::vector<std::vector<G4double>> fEkinofAdjSigmaMax;
+    // total adjoint and total forward cross section table in function of material
+    // and in function of adjoint particle type
+    std::vector<G4PhysicsTable*> fTotalFwdSigmaTable;
+    std::vector<G4PhysicsTable*> fTotalAdjSigmaTable;
 
-  // list of forward G4VEmProcess and of G4VEnergyLossProcess for the different
-  // adjoint particle
-  std::vector<std::vector<G4VEmProcess*>*> fForwardProcesses;
-  std::vector<std::vector<G4VEnergyLossProcess*>*> fForwardLossProcesses;
+    // Sigma table for each G4VAdjointEMModel
+    std::vector<G4PhysicsTable*> fSigmaTableForAdjointModelScatProjToProj;
+    std::vector<G4PhysicsTable*> fSigmaTableForAdjointModelProdToProj;
 
-  // list of adjoint particles considered
-  std::vector<G4ParticleDefinition*> fAdjointParticlesInAction;
+    std::vector<std::vector<G4double>> fEminForFwdSigmaTables;
+    std::vector<std::vector<G4double>> fEminForAdjSigmaTables;
+    std::vector<std::vector<G4double>> fEkinofFwdSigmaMax;
+    std::vector<std::vector<G4double>> fEkinofAdjSigmaMax;
 
-  G4double fMassRatio              = 1.;  // ion
-  G4double fLastCSCorrectionFactor = 1.;
+    // list of forward G4VEmProcess and of G4VEnergyLossProcess for the different
+    // adjoint particle
+    std::vector<std::vector<G4VEmProcess*>*> fForwardProcesses;
+    std::vector<std::vector<G4VEnergyLossProcess*>*> fForwardLossProcesses;
 
-  G4ParticleDefinition* fCurrentParticleDef = nullptr;
-  std::size_t fCurrentParticleIndex = 0;
-  std::size_t fCurrentMatIndex      = 0;
+    // list of adjoint particles considered
+    std::vector<G4ParticleDefinition*> fAdjointParticlesInAction;
 
-  G4bool fCSMatricesBuilt = false;
-  G4bool fSigmaTableBuilt = false;
-  G4bool fForwardCSUsed   = true;
-  G4bool fForwardCSMode   = true;
-  // Two CS mode are possible:
-  // 1) fForwardCSMode = false, the Adjoint CS are used as it is implying
-  //    an AlongStep Weight Correction.
-  // 2) fForwardCSMode = true, the Adjoint CS are scaled to have the total
-  //    adjoint CS equal to the fwd one implying a PostStep Weight Correction.
-  // For energies where the total Fwd CS or the total adjoint CS are zero,
-  // the scaling is not possible and fForwardCSUsed is set to false
+    G4double fMassRatio = 1.;  // ion
+    G4double fLastCSCorrectionFactor = 1.;
+
+    G4ParticleDefinition* fCurrentParticleDef = nullptr;
+    std::size_t fCurrentParticleIndex = 0;
+    std::size_t fCurrentMatIndex = 0;
+
+    G4bool fCSMatricesBuilt = false;
+    G4bool fSigmaTableBuilt = false;
+    G4bool fForwardCSUsed = true;
+    G4bool fForwardCSMode = true;
+    // Two CS mode are possible:
+    // 1) fForwardCSMode = false, the Adjoint CS are used as it is implying
+    //    an AlongStep Weight Correction.
+    // 2) fForwardCSMode = true, the Adjoint CS are scaled to have the total
+    //    adjoint CS equal to the fwd one implying a PostStep Weight Correction.
+    // For energies where the total Fwd CS or the total adjoint CS are zero,
+    // the scaling is not possible and fForwardCSUsed is set to false
 };
 #endif

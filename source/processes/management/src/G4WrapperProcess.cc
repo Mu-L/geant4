@@ -31,22 +31,17 @@
 #include "G4WrapperProcess.hh"
 
 // --------------------------------------------------------------------
-G4WrapperProcess::G4WrapperProcess(const G4String& aName,
-                                         G4ProcessType aType)
+G4WrapperProcess::G4WrapperProcess(const G4String& aName, G4ProcessType aType)
   : G4VProcess(aName, aType)
-{
-}
+{}
 
 // --------------------------------------------------------------------
 G4WrapperProcess::G4WrapperProcess(const G4WrapperProcess& right)
   : G4VProcess(*((G4VProcess*)(&right))), pRegProcess(right.pRegProcess)
-{
-}
+{}
 
 // --------------------------------------------------------------------
-G4WrapperProcess::~G4WrapperProcess()
-{
-}
+G4WrapperProcess::~G4WrapperProcess() {}
 
 // --------------------------------------------------------------------
 void G4WrapperProcess::ResetNumberOfInteractionLengthLeft()
@@ -55,44 +50,35 @@ void G4WrapperProcess::ResetNumberOfInteractionLengthLeft()
 }
 
 // --------------------------------------------------------------------
-G4double G4WrapperProcess::
-AlongStepGetPhysicalInteractionLength( const G4Track& track,
-                                             G4double  previousStepSize,
-                                             G4double  currentMinimumStep,
-                                             G4double& proposedSafety,
-                                             G4GPILSelection* selection )
+G4double G4WrapperProcess::AlongStepGetPhysicalInteractionLength(const G4Track& track,
+                                                                 G4double previousStepSize,
+                                                                 G4double currentMinimumStep,
+                                                                 G4double& proposedSafety,
+                                                                 G4GPILSelection* selection)
 {
-  return pRegProcess->
-         AlongStepGetPhysicalInteractionLength( track,
-                                                previousStepSize,
-                                                currentMinimumStep,
-                                                proposedSafety,
-                                                selection );
+  return pRegProcess->AlongStepGetPhysicalInteractionLength(
+    track, previousStepSize, currentMinimumStep, proposedSafety, selection);
 }
 
 // --------------------------------------------------------------------
-G4double G4WrapperProcess::
-AtRestGetPhysicalInteractionLength( const G4Track& track,
-                                          G4ForceCondition* condition )
+G4double G4WrapperProcess::AtRestGetPhysicalInteractionLength(const G4Track& track,
+                                                              G4ForceCondition* condition)
 {
-  return pRegProcess->AtRestGetPhysicalInteractionLength( track, condition );
+  return pRegProcess->AtRestGetPhysicalInteractionLength(track, condition);
 }
 
 // --------------------------------------------------------------------
-G4double G4WrapperProcess::
-PostStepGetPhysicalInteractionLength( const G4Track& track,
-                                            G4double   previousStepSize,
-                                            G4ForceCondition* condition )
+G4double G4WrapperProcess::PostStepGetPhysicalInteractionLength(const G4Track& track,
+                                                                G4double previousStepSize,
+                                                                G4ForceCondition* condition)
 {
-  return pRegProcess->PostStepGetPhysicalInteractionLength( track,
-                                                            previousStepSize,
-                                                            condition );
+  return pRegProcess->PostStepGetPhysicalInteractionLength(track, previousStepSize, condition);
 }
-      
+
 // --------------------------------------------------------------------
 void G4WrapperProcess::SetProcessManager(const G4ProcessManager* procMan)
 {
-  pRegProcess->SetProcessManager(procMan); 
+  pRegProcess->SetProcessManager(procMan);
 }
 
 const G4ProcessManager* G4WrapperProcess::GetProcessManager()
@@ -101,24 +87,21 @@ const G4ProcessManager* G4WrapperProcess::GetProcessManager()
 }
 
 // --------------------------------------------------------------------
-G4VParticleChange* G4WrapperProcess::PostStepDoIt( const G4Track& track,
-                                                   const G4Step&  stepData )
+G4VParticleChange* G4WrapperProcess::PostStepDoIt(const G4Track& track, const G4Step& stepData)
 {
-  return pRegProcess->PostStepDoIt( track, stepData );        
+  return pRegProcess->PostStepDoIt(track, stepData);
 }
 
 // --------------------------------------------------------------------
-G4VParticleChange* G4WrapperProcess::AlongStepDoIt( const G4Track& track,
-                                                    const G4Step& stepData )
+G4VParticleChange* G4WrapperProcess::AlongStepDoIt(const G4Track& track, const G4Step& stepData)
 {
-  return pRegProcess->AlongStepDoIt( track, stepData );        
+  return pRegProcess->AlongStepDoIt(track, stepData);
 }
- 
+
 // --------------------------------------------------------------------
-G4VParticleChange* G4WrapperProcess::AtRestDoIt( const G4Track& track,
-                                                 const G4Step& stepData )
+G4VParticleChange* G4WrapperProcess::AtRestDoIt(const G4Track& track, const G4Step& stepData)
 {
-  return pRegProcess->AtRestDoIt( track, stepData );        
+  return pRegProcess->AtRestDoIt(track, stepData);
 }
 
 // --------------------------------------------------------------------
@@ -140,22 +123,18 @@ void G4WrapperProcess::PreparePhysicsTable(const G4ParticleDefinition& particle)
 }
 
 // --------------------------------------------------------------------
-G4bool G4WrapperProcess::
-StorePhysicsTable(const G4ParticleDefinition* particle,
-                  const G4String& directory, 
-                        G4bool ascii)
+G4bool G4WrapperProcess::StorePhysicsTable(const G4ParticleDefinition* particle,
+                                           const G4String& directory, G4bool ascii)
 {
   return pRegProcess->StorePhysicsTable(particle, directory, ascii);
-} 
- 
+}
+
 // --------------------------------------------------------------------
-G4bool G4WrapperProcess::
-RetrievePhysicsTable( const G4ParticleDefinition* particle,
-                      const G4String& directory, 
-                            G4bool ascii)
+G4bool G4WrapperProcess::RetrievePhysicsTable(const G4ParticleDefinition* particle,
+                                              const G4String& directory, G4bool ascii)
 {
   return pRegProcess->RetrievePhysicsTable(particle, directory, ascii);
-}  
+}
 
 // --------------------------------------------------------------------
 void G4WrapperProcess::StartTracking(G4Track* track)
@@ -181,7 +160,7 @@ void G4WrapperProcess::RegisterProcess(G4VProcess* process)
 const G4VProcess* G4WrapperProcess::GetRegisteredProcess() const
 {
   return pRegProcess;
-} 
+}
 
 // --------------------------------------------------------------------
 void G4WrapperProcess::SetMasterProcess(G4VProcess* masterP)

@@ -30,27 +30,28 @@
 //
 // File name:     G4HadDataHandler
 //
-// Author:        V. Ivanchenko 
-// 
+// Author:        V. Ivanchenko
+//
 // Creation date: 05 July 2022
 //
-// Modifications: 
+// Modifications:
 //
-// Class Description: 
+// Class Description:
 //
 // A storage of G4PhysicsTable
 //
-// Class Description: End 
+// Class Description: End
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4HadDataHandler_h
-#define G4HadDataHandler_h 1
+#ifndef G4HADDATAHANDLER_HH
+#define G4HADDATAHANDLER_HH
 
-#include "globals.hh"
 #include "G4PhysicsTable.hh"
 #include "G4PhysicsVector.hh"
+#include "globals.hh"
+
 #include <vector>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -59,54 +60,56 @@ class G4VProcess;
 
 class G4HadDataHandler
 {
-public:
+  public:
 
-  explicit G4HadDataHandler(std::size_t nTable);
+    explicit G4HadDataHandler(std::size_t nTable);
 
-  ~G4HadDataHandler();
+    ~G4HadDataHandler();
 
-  // add table
-  void AddTable(G4PhysicsTable*);
+    // add table
+    void AddTable(G4PhysicsTable*);
 
-  // update table with existing index
-  void UpdateTable(G4PhysicsTable*, std::size_t idx);
+    // update table with existing index
+    void UpdateTable(G4PhysicsTable*, std::size_t idx);
 
-  // clean existing table
-  void CleanTable(std::size_t idx);
-  
-  // keep pointer of master thread process
-  void SetMasterProcess(const G4VProcess*);
+    // clean existing table
+    void CleanTable(std::size_t idx);
 
-  // return pointer of master thread process
-  const G4VProcess* GetMasterProcess(std::size_t idx) const;
+    // keep pointer of master thread process
+    void SetMasterProcess(const G4VProcess*);
 
-  // access to the table via index
-  inline const G4PhysicsTable* GetTable(std::size_t idx) const { 
-    return (idx < tLength) ? data[idx] : nullptr; 
-  }
-  inline G4PhysicsTable* Table(std::size_t idx) const {
-    return (idx < tLength) ? data[idx] : nullptr; 
-  }
+    // return pointer of master thread process
+    const G4VProcess* GetMasterProcess(std::size_t idx) const;
 
-  // access to vector, no check on input index
-  inline 
-  const G4PhysicsVector* GetVector(std::size_t itable, std::size_t ivec) const
-  { return (*(data[itable]))[ivec]; }
+    // access to the table via index
+    inline const G4PhysicsTable* GetTable(std::size_t idx) const
+    {
+      return (idx < tLength) ? data[idx] : nullptr;
+    }
+    inline G4PhysicsTable* Table(std::size_t idx) const
+    {
+      return (idx < tLength) ? data[idx] : nullptr;
+    }
 
-  inline const std::vector<G4PhysicsTable*>& GetTables() const { return data; }
+    // access to vector, no check on input index
+    inline const G4PhysicsVector* GetVector(std::size_t itable, std::size_t ivec) const
+    {
+      return (*(data[itable]))[ivec];
+    }
 
-  // hide assignment operator 
-  G4HadDataHandler & operator=(const G4HadDataHandler &right) = delete;
-  G4HadDataHandler(const G4HadDataHandler&) = delete;
+    inline const std::vector<G4PhysicsTable*>& GetTables() const { return data; }
 
-private:
+    // hide assignment operator
+    G4HadDataHandler& operator=(const G4HadDataHandler& right) = delete;
+    G4HadDataHandler(const G4HadDataHandler&) = delete;
 
-  std::vector<G4PhysicsTable*> data;
-  std::size_t tLength;
-  std::vector<const G4VProcess*> masterProcess;
+  private:
+
+    std::vector<G4PhysicsTable*> data;
+    std::size_t tLength;
+    std::vector<const G4VProcess*> masterProcess;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

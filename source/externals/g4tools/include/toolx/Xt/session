@@ -10,85 +10,117 @@
 
 #include <ostream>
 
-namespace toolx {
-namespace Xt {
+namespace toolx
+{
+namespace Xt
+{
 
-class session {
-public:
-  session(std::ostream& a_out)
-  :m_out(a_out),m_app_context(0),m_app_widget(0),m_app_owner(false)
-  {}
-  session(std::ostream& a_out,XtAppContext a_app_context,Widget a_app_widget)
-  :m_out(a_out),m_app_context(a_app_context),m_app_widget(a_app_widget),m_app_owner(false)
-  {}
-  session(std::ostream& a_out,int& a_argc,char** a_argv)
-  :m_out(a_out),m_app_context(0),m_app_widget(0),m_app_owner(false)
-  {
-  //LookDSM_Problem();
-    Arg args[1];
-    XtSetArg(args[0],XtNgeometry,XtNewString("100x100"));
-    m_app_widget = ::XtAppInitialize(&m_app_context,"toolx::Xt::session",NULL,(Cardinal)0,&a_argc,a_argv,NULL,args,1);
-    if(!m_app_context || !m_app_widget) {
-      m_app_context = 0;
-      m_app_widget = 0;
-      m_app_owner = false;
-      return;
+class session
+{
+  public:
+
+    session(std::ostream& a_out)
+      : m_out(a_out), m_app_context(0), m_app_widget(0), m_app_owner(false)
+    {}
+    session(std::ostream& a_out, XtAppContext a_app_context, Widget a_app_widget)
+      : m_out(a_out), m_app_context(a_app_context), m_app_widget(a_app_widget), m_app_owner(false)
+    {}
+    session(std::ostream& a_out, int& a_argc, char** a_argv)
+      : m_out(a_out), m_app_context(0), m_app_widget(0), m_app_owner(false)
+    {
+      // LookDSM_Problem();
+      Arg args[1];
+      XtSetArg(args[0], XtNgeometry, XtNewString("100x100"));
+      m_app_widget = ::XtAppInitialize(&m_app_context, "toolx::Xt::session", NULL, (Cardinal)0,
+                                       &a_argc, a_argv, NULL, args, 1);
+      if (!m_app_context || !m_app_widget)
+      {
+        m_app_context = 0;
+        m_app_widget = 0;
+        m_app_owner = false;
+        return;
+      }
+      m_app_owner = true;
     }
-    m_app_owner = true;
-  }
-  virtual ~session() {
-    if(m_app_owner) {
-      if(m_app_widget) {::XtDestroyWidget(m_app_widget);m_app_widget = 0;}
-      if(m_app_context) {::XtDestroyApplicationContext(m_app_context);m_app_context = 0;}
+    virtual ~session()
+    {
+      if (m_app_owner)
+      {
+        if (m_app_widget)
+        {
+          ::XtDestroyWidget(m_app_widget);
+          m_app_widget = 0;
+        }
+        if (m_app_context)
+        {
+          ::XtDestroyApplicationContext(m_app_context);
+          m_app_context = 0;
+        }
+      }
     }
-  }
-protected:
-  session(const session& a_from)
-  :m_out(a_from.m_out),m_app_context(0),m_app_widget(0),m_app_owner(false)
-  {}
-  session& operator=(const session&){return *this;}
-public:
-  std::ostream& out() const {return m_out;}
-  bool is_valid() {return m_app_context && m_app_widget?true:false;}
-  bool steer() {
-    if(!m_app_context) return false;
-    while(true) {
-      XEvent event;
-      ::XtAppNextEvent(m_app_context,&event);
-      ::XtDispatchEvent(&event);
-      //if(m_exit) break;
+
+  protected:
+
+    session(const session& a_from)
+      : m_out(a_from.m_out), m_app_context(0), m_app_widget(0), m_app_owner(false)
+    {}
+    session& operator=(const session&) { return *this; }
+
+  public:
+
+    std::ostream& out() const { return m_out; }
+    bool is_valid() { return m_app_context && m_app_widget ? true : false; }
+    bool steer()
+    {
+      if (!m_app_context) return false;
+      while (true)
+      {
+        XEvent event;
+        ::XtAppNextEvent(m_app_context, &event);
+        ::XtDispatchEvent(&event);
+        // if(m_exit) break;
+      }
+      return true;
     }
-    return true;
-  }
-  bool sync() {
-    if(!m_app_context) return false;
-    while(true) { 
-      XtInputMask input = ::XtAppPending(m_app_context);
-      if(input==0) break;
-      XEvent event;
-      ::XtAppNextEvent(m_app_context,&event);
-      ::XtDispatchEvent(&event);        
+    bool sync()
+    {
+      if (!m_app_context) return false;
+      while (true)
+      {
+        XtInputMask input = ::XtAppPending(m_app_context);
+        if (input == 0) break;
+        XEvent event;
+        ::XtAppNextEvent(m_app_context, &event);
+        ::XtDispatchEvent(&event);
+      }
+      return true;
     }
-    return true;
-  }
-public:
-  Widget get_app_widget() {return m_app_widget;}
-protected:
-  std::ostream& m_out;
-  XtAppContext m_app_context;
-  Widget m_app_widget;  
-  bool m_app_owner;
+
+  public:
+
+    Widget get_app_widget() { return m_app_widget; }
+
+  protected:
+
+    std::ostream& m_out;
+    XtAppContext m_app_context;
+    Widget m_app_widget;
+    bool m_app_owner;
 };
 
-}}
+}  // namespace Xt
+}  // namespace toolx
 
 #include <X11/IntrinsicP.h>
 
-namespace toolx {
-namespace Xt {
+namespace toolx
+{
+namespace Xt
+{
 
-inline bool post_expose(Widget a_widget) {
-  if(!XtIsRealized(a_widget)) return false;
+inline bool post_expose(Widget a_widget)
+{
+  if (!XtIsRealized(a_widget)) return false;
   XEvent event;
   event.type = Expose;
   event.xexpose.serial = 0;
@@ -100,13 +132,14 @@ inline bool post_expose(Widget a_widget) {
   event.xexpose.width = a_widget->core.width;
   event.xexpose.height = a_widget->core.height;
   event.xexpose.count = 0;
-  //locks
-  Status stat = ::XSendEvent(event.xexpose.display,event.xexpose.window,False,0L,&event);
+  // locks
+  Status stat = ::XSendEvent(event.xexpose.display, event.xexpose.window, False, 0L, &event);
   ::XFlush(event.xexpose.display);
-  //unlock();
-  return (stat==0?false:true);
+  // unlock();
+  return (stat == 0 ? false : true);
 }
 
-}}
+}  // namespace Xt
+}  // namespace toolx
 
 #endif

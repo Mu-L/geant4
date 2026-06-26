@@ -43,12 +43,14 @@ G4UIArrayString::G4UIArrayString(const G4String& stream)
 
   // tokenize...
   std::size_t indx = 0;
-  while (true) {
+  while (true)
+  {
     std::size_t jc = astream.find(' ', indx);
     nElement++;
     if (jc == G4String::npos) break;
     jc++;  // fix a tiny mistake...
-    for (; jc < astream.length();) {  // skip continuing spaces
+    for (; jc < astream.length();)
+    {  // skip continuing spaces
       if (astream[(G4int)jc] == ' ')
         jc++;
       else
@@ -62,15 +64,18 @@ G4UIArrayString::G4UIArrayString(const G4String& stream)
 
   // push...
   indx = 0;
-  for (std::size_t i = 0; i < nElement; ++i) {
+  for (std::size_t i = 0; i < nElement; ++i)
+  {
     std::size_t jc = astream.find(' ', indx);
     if (jc != G4String::npos)
       stringArray[i] = astream.substr(indx, jc - indx);
-    else {  // last token
+    else
+    {  // last token
       jc = astream.length() + 1;
       stringArray[i] = astream.substr(indx, jc - indx);
     }
-    for (std::size_t j = 1; jc + j < astream.length(); ++j) {  // skip continuing spaces
+    for (std::size_t j = 1; jc + j < astream.length(); ++j)
+    {  // skip continuing spaces
       if (astream[G4int(jc + j)] == ' ')
         jc++;
       else
@@ -124,13 +129,15 @@ G4int G4UIArrayString::GetNField(G4int icol) const
 ////////////////////////////////////////////////
 {
   std::size_t maxWidth = 0;
-  for (G4int iy = 1; iy <= GetNRow(icol); ++iy) {
+  for (G4int iy = 1; iy <= GetNRow(icol); ++iy)
+  {
     std::size_t ilen = GetElement(icol, iy)->length();
     // care for color code
     // if(GetElement(icol,iy)-> index(strESC,0) != G4String::npos) {
     // if(strESC == (*GetElement(icol,iy))[0] ) {
     const char tgt = (*GetElement(icol, iy))[(std::size_t)0];
-    if (strESC == tgt) {
+    if (strESC == tgt)
+    {
       ilen -= 5;
     }
     if (ilen > maxWidth) maxWidth = ilen;
@@ -145,7 +152,8 @@ G4int G4UIArrayString::CalculateColumnWidth() const
 {
   G4int totalWidth = 0;
 
-  for (G4int ix = 1; ix <= (G4int)nColumn; ++ix) {
+  for (G4int ix = 1; ix <= (G4int)nColumn; ++ix)
+  {
     totalWidth += GetNField(ix);
   }
 
@@ -160,30 +168,36 @@ void G4UIArrayString::Show(G4int ncol)
 //////////////////////////////////////
 {
   // calculate #colums in need...
-  while (CalculateColumnWidth() < ncol) {
+  while (CalculateColumnWidth() < ncol)
+  {
     nColumn++;
   }
-  while (CalculateColumnWidth() > ncol && nColumn > 1) {
+  while (CalculateColumnWidth() > ncol && nColumn > 1)
+  {
     nColumn--;
   }
 
-  for (G4int iy = 1; iy <= GetNRow(1); iy++) {
+  for (G4int iy = 1; iy <= GetNRow(1); iy++)
+  {
     G4int nc = (G4int)nColumn;
-    if (iy == GetNRow(1)) {  // last row
+    if (iy == GetNRow(1))
+    {  // last row
       nc = G4int(nElement % nColumn);
       if (nc == 0) nc = (G4int)nColumn;
     }
-    for (G4int ix = 1; ix <= nc; ++ix) {
+    for (G4int ix = 1; ix <= nc; ++ix)
+    {
       G4String word = GetElement(ix, iy)->data();
 
       // care for color code
       G4String colorWord;
       const char tgt = word[(std::size_t)0];
-      if (strESC == tgt) {
+      if (strESC == tgt)
+      {
         colorWord = word.substr(0, 5);
         word.erase(0, 5);
       }
-      if (! colorWord.empty()) G4cout << colorWord << std::flush;
+      if (!colorWord.empty()) G4cout << colorWord << std::flush;
 
       G4cout << std::setiosflags(std::ios::left) << std::setw(GetNField(ix)) << word.c_str()
              << std::flush;

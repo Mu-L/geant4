@@ -31,38 +31,37 @@
 #include "tools/rcsv_histo"
 
 //_____________________________________________________________________________
-template <typename HT>
-inline
-G4String G4CsvHnRFileManager<HT>::GetHnFileName(
-  const G4String& hnType, const G4String& hnName,
-  const G4String& fileName, G4bool isUserFileName) const
+template<typename HT>
+inline G4String
+G4CsvHnRFileManager<HT>::GetHnFileName(const G4String& hnType, const G4String& hnName,
+                                       const G4String& fileName, G4bool isUserFileName) const
 {
-  if ( isUserFileName ) {
+  if (isUserFileName)
+  {
     return fRFileManager->GetFullFileName(fileName);
   }
   return fRFileManager->GetHnFileName(hnType, hnName);
 }
 
 //_____________________________________________________________________________
-template <typename HT>
-inline
-HT*  G4CsvHnRFileManager<HT>::ReadT(
-  std::istream& htFile, const G4String& fileName, std::string_view inFunction)
+template<typename HT>
+inline HT* G4CsvHnRFileManager<HT>::ReadT(std::istream& htFile, const G4String& fileName,
+                                          std::string_view inFunction)
 {
   tools::rcsv::histo handler(htFile);
   std::string objectTypeInFile;
   void* object;
   auto verbose = false;
-  if ( ! handler.read(G4cout, objectTypeInFile, object, verbose) ) {
-    G4Analysis::Warn(
-      "Cannot get " + G4Analysis::GetHnType<HT>() + " in file " + fileName,
-      fkClass, inFunction);
+  if (!handler.read(G4cout, objectTypeInFile, object, verbose))
+  {
+    G4Analysis::Warn("Cannot get " + G4Analysis::GetHnType<HT>() + " in file " + fileName, fkClass,
+                     inFunction);
     return nullptr;
   }
-  if (objectTypeInFile != HT::s_class()) {
-    G4Analysis::Warn(
-      "Object type read in " + G4Analysis::GetHnType<HT>() +" does not match",
-      fkClass, inFunction);
+  if (objectTypeInFile != HT::s_class())
+  {
+    G4Analysis::Warn("Object type read in " + G4Analysis::GetHnType<HT>() + " does not match",
+                     fkClass, inFunction);
     return nullptr;
   }
 
@@ -70,23 +69,22 @@ HT*  G4CsvHnRFileManager<HT>::ReadT(
 }
 
 //_____________________________________________________________________________
-template <typename HT>
-inline
-HT* G4CsvHnRFileManager<HT>::Read(
-  const G4String& htName, const G4String& fileName, const G4String& dirName,
-  G4bool isUserFileName)
+template<typename HT>
+inline HT* G4CsvHnRFileManager<HT>::Read(const G4String& htName, const G4String& fileName,
+                                         const G4String& dirName, G4bool isUserFileName)
 {
   // Get file name
-  auto htFileName =
-    GetHnFileName(G4Analysis::GetHnType<HT>(), htName, fileName, isUserFileName);
+  auto htFileName = GetHnFileName(G4Analysis::GetHnType<HT>(), htName, fileName, isUserFileName);
 
   // Update directory path
-  if ( ! dirName.empty() ) {
+  if (!dirName.empty())
+  {
     htFileName = "./" + dirName + "/" + htFileName;
   }
 
   std::ifstream htFile(htFileName);
-  if ( ! htFile.is_open() ) {
+  if (!htFile.is_open())
+  {
     G4Analysis::Warn("Cannot open file " + htFileName, fkClass, "Read");
     return nullptr;
   }

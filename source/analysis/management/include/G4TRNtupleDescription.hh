@@ -28,60 +28,72 @@
 //
 // Author: Ivana Hrivnacova, 20/07/2017 (ivana@ipno.in2p3.fr)
 
-#ifndef G4TRNtupleDescription_h
-#define G4TRNtupleDescription_h 1
+#ifndef G4TRNTUPLEDESCRIPTION_HH
+#define G4TRNTUPLEDESCRIPTION_HH
 
 #include "tools/ntuple_binding"
 
 #include <map>
 #include <vector>
 
-namespace tools {
+namespace tools
+{
 class ntuple_binding;
 }
 
-template <typename NT>
+template<typename NT>
 struct G4TRNtupleDescription
 {
-  G4TRNtupleDescription(NT* rntuple)
-    :  fNtuple(rntuple),
-       fNtupleBinding(new tools::ntuple_binding())
-  {}
+    G4TRNtupleDescription(NT* rntuple)
+      : fNtuple(rntuple), fNtupleBinding(new tools::ntuple_binding())
+    {}
 
-  G4TRNtupleDescription() = delete;
-  ~G4TRNtupleDescription()
+    G4TRNtupleDescription() = delete;
+    ~G4TRNtupleDescription()
+    {
+      delete fNtupleBinding;
+      delete fNtuple;
+
       {
-        delete fNtupleBinding;
-        delete fNtuple;
-
-        {for ( auto& mapElement : fIVectorBindingMap ) {
+        for (auto& mapElement : fIVectorBindingMap)
+        {
           delete mapElement.first;
-        }}
-        {for ( auto& mapElement : fFVectorBindingMap ) {
-          delete mapElement.first;
-        }}
-        {for ( auto& mapElement : fDVectorBindingMap ) {
-          delete mapElement.first;
-        }}
-        {for ( auto& mapElement : fSVectorBindingMap ) {
-          delete mapElement.first;
-        }}
+        }
       }
+      {
+        for (auto& mapElement : fFVectorBindingMap)
+        {
+          delete mapElement.first;
+        }
+      }
+      {
+        for (auto& mapElement : fDVectorBindingMap)
+        {
+          delete mapElement.first;
+        }
+      }
+      {
+        for (auto& mapElement : fSVectorBindingMap)
+        {
+          delete mapElement.first;
+        }
+      }
+    }
 
-  // deleted copy constructor
-  G4TRNtupleDescription(const G4TRNtupleDescription& rhs) = delete;
-  // deleted assignement operator
-  G4TRNtupleDescription& operator=(G4TRNtupleDescription& rhs) = delete;
+    // deleted copy constructor
+    G4TRNtupleDescription(const G4TRNtupleDescription& rhs) = delete;
+    // deleted assignement operator
+    G4TRNtupleDescription& operator=(G4TRNtupleDescription& rhs) = delete;
 
-  NT* fNtuple { nullptr };
-  tools::ntuple_binding* fNtupleBinding { nullptr };
-  G4bool fIsInitialized { false };
+    NT* fNtuple{nullptr};
+    tools::ntuple_binding* fNtupleBinding{nullptr};
+    G4bool fIsInitialized{false};
 
-  // needed for XML
-  std::map<NT*, std::vector<int>* >    fIVectorBindingMap;
-  std::map<NT*, std::vector<float>* >  fFVectorBindingMap;
-  std::map<NT*, std::vector<double>* > fDVectorBindingMap;
-  std::map<NT*, std::vector<std::string>* > fSVectorBindingMap;
+    // needed for XML
+    std::map<NT*, std::vector<int>*> fIVectorBindingMap;
+    std::map<NT*, std::vector<float>*> fFVectorBindingMap;
+    std::map<NT*, std::vector<double>*> fDVectorBindingMap;
+    std::map<NT*, std::vector<std::string>*> fSVectorBindingMap;
 };
 
 #endif

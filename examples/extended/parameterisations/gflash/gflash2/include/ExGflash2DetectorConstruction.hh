@@ -35,11 +35,6 @@
 class G4LogicalVolume;
 class G4VPhysicalVolume;
 
-class GFlashHomoShowerParameterisation;
-class GFlashShowerModel;
-class GFlashHitMaker;
-class GFlashParticleBounds;
-
 class ExGflash2DetectorConstruction : public G4VUserDetectorConstruction
 {
   public:

@@ -27,6 +27,7 @@
 //
 // G4PSTrackLength
 #include "G4PSTrackLength.hh"
+
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
 ////////////////////////////////////////////////////////////////////////////////
@@ -44,14 +45,13 @@ G4PSTrackLength::G4PSTrackLength(const G4String& name, G4int depth)
   : G4PSTrackLength(name, "mm", depth)
 {}
 
-G4PSTrackLength::G4PSTrackLength(const G4String& name, const G4String& unit,
-                                 G4int depth)
-  : G4VPrimitiveScorer(name, depth)
-  , HCID(-1)
-  , EvtMap(nullptr)
-  , weighted(false)
-  , multiplyKinE(false)
-  , divideByVelocity(false)
+G4PSTrackLength::G4PSTrackLength(const G4String& name, const G4String& unit, G4int depth)
+  : G4VPrimitiveScorer(name, depth),
+    HCID(-1),
+    EvtMap(nullptr),
+    weighted(false),
+    multiplyKinE(false),
+    divideByVelocity(false)
 {
   DefineUnitAndCategory();
   SetUnit(unit);
@@ -74,14 +74,10 @@ void G4PSTrackLength::DivideByVelocity(G4bool flg)
 G4bool G4PSTrackLength::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
   G4double trklength = aStep->GetStepLength();
-  if(trklength == 0.)
-    return false;
-  if(weighted)
-    trklength *= aStep->GetPreStepPoint()->GetWeight();
-  if(multiplyKinE)
-    trklength *= aStep->GetPreStepPoint()->GetKineticEnergy();
-  if(divideByVelocity)
-    trklength /= aStep->GetPreStepPoint()->GetVelocity();
+  if (trklength == 0.) return false;
+  if (weighted) trklength *= aStep->GetPreStepPoint()->GetWeight();
+  if (multiplyKinE) trklength *= aStep->GetPreStepPoint()->GetKineticEnergy();
+  if (divideByVelocity) trklength /= aStep->GetPreStepPoint()->GetVelocity();
   G4int index = GetIndex(aStep);
   EvtMap->add(index, trklength);
   return true;
@@ -90,33 +86,36 @@ G4bool G4PSTrackLength::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 void G4PSTrackLength::Initialize(G4HCofThisEvent* HCE)
 {
   EvtMap = new G4THitsMap<G4double>(detector->GetName(), GetName());
-  if(HCID < 0)
+  if (HCID < 0)
   {
     HCID = GetCollectionID(0);
   }
-  HCE->AddHitsCollection(HCID, (G4VHitsCollection*) EvtMap);
+  HCE->AddHitsCollection(HCID, (G4VHitsCollection*)EvtMap);
 }
 
-void G4PSTrackLength::clear() { EvtMap->clear(); }
+void G4PSTrackLength::clear()
+{
+  EvtMap->clear();
+}
 
 void G4PSTrackLength::PrintAll()
 {
   G4cout << " MultiFunctionalDet  " << detector->GetName() << G4endl;
   G4cout << " PrimitiveScorer " << GetName() << G4endl;
   G4cout << " Number of entries " << EvtMap->entries() << G4endl;
-  for(const auto& [copy, length] : *(EvtMap->GetMap()))
+  for (const auto& [copy, length] : *(EvtMap->GetMap()))
   {
     G4cout << "  copy no.: " << copy;
-    if(multiplyKinE)
+    if (multiplyKinE)
     {
-      if(divideByVelocity)
+      if (divideByVelocity)
         G4cout << " EnergyFlux: ";
       else
         G4cout << " EnergyFlow: ";
     }
     else
     {
-      if(divideByVelocity)
+      if (divideByVelocity)
         G4cout << " Time: ";
       else
         G4cout << " Length: ";
@@ -128,11 +127,11 @@ void G4PSTrackLength::PrintAll()
 
 void G4PSTrackLength::SetUnit(const G4String& unit)
 {
-  if(multiplyKinE)
+  if (multiplyKinE)
   {
-    if(divideByVelocity)
+    if (divideByVelocity)
     {
-      if(unit.empty())
+      if (unit.empty())
       {
         CheckAndSetUnit("MeV_second", "EnergyFlux");
       }
@@ -143,7 +142,7 @@ void G4PSTrackLength::SetUnit(const G4String& unit)
     }
     else
     {
-      if(unit.empty())
+      if (unit.empty())
       {
         CheckAndSetUnit("MeV_mm", "EnergyFlow");
       }
@@ -155,9 +154,9 @@ void G4PSTrackLength::SetUnit(const G4String& unit)
   }
   else
   {
-    if(divideByVelocity)
+    if (divideByVelocity)
     {
-      if(unit.empty())
+      if (unit.empty())
       {
         CheckAndSetUnit("second", "Time");
       }
@@ -168,7 +167,7 @@ void G4PSTrackLength::SetUnit(const G4String& unit)
     }
     else
     {
-      if(unit.empty())
+      if (unit.empty())
       {
         CheckAndSetUnit("mm", "Length");
       }

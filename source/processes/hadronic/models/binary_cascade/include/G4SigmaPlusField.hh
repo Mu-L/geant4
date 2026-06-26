@@ -25,35 +25,36 @@
 //
 //
 
-#ifndef G4SigmaPlusField_h
-#define  G4SigmaPlusField_h 1
-
-#include <CLHEP/Units/SystemOfUnits.h>
+#ifndef G4SIGMAPLUSFIELD_HH
+#define G4SIGMAPLUSFIELD_HH
 
 #include "G4VNuclearField.hh"
 
-class G4SigmaPlusField: public G4VNuclearField
+#include <CLHEP/Units/SystemOfUnits.h>
+
+class G4SigmaPlusField : public G4VNuclearField
 {
-public:
-  G4SigmaPlusField(G4V3DNucleus * nucleus, G4double coeff = 0.36*CLHEP::fermi);
-  virtual ~G4SigmaPlusField();
+  public:
 
-private:
-  G4SigmaPlusField(const  G4SigmaPlusField &right);
-  const G4SigmaPlusField & operator=(const G4SigmaPlusField & right);
-  G4bool operator==(const G4SigmaPlusField & right) const;
-  G4bool operator!=(const G4SigmaPlusField & right) const;
+    G4SigmaPlusField(G4V3DNucleus* nucleus, G4double coeff = 0.36 * CLHEP::fermi);
+    virtual ~G4SigmaPlusField();
 
-public:
-  virtual G4double GetField(const G4ThreeVector & aPosition);
-  virtual G4double GetBarrier();
-  virtual G4double GetCoeff() { return theCoeff; }
+  private:
 
-private:
-  G4double theCoeff;
+    G4SigmaPlusField(const G4SigmaPlusField& right);
+    const G4SigmaPlusField& operator=(const G4SigmaPlusField& right);
+    G4bool operator==(const G4SigmaPlusField& right) const;
+    G4bool operator!=(const G4SigmaPlusField& right) const;
+
+  public:
+
+    virtual G4double GetField(const G4ThreeVector& aPosition);
+    virtual G4double GetBarrier();
+    virtual G4double GetCoeff() { return theCoeff; }
+
+  private:
+
+    G4double theCoeff;
 };
 
 #endif
-
-
-

@@ -34,19 +34,20 @@
 // Author: G.Cosmo, 01.09.2004 - Initial version
 // --------------------------------------------------------------------
 #ifndef G4VNOTIFIER_HH
-#define G4VNOTIFIER_HH 1
+#define G4VNOTIFIER_HH
 
 class G4VNotifier
 {
- public:
-  G4VNotifier() = default;
-  virtual ~G4VNotifier() = default;
-  // Constructor and destructor
+  public:
 
-  virtual void NotifyRegistration() = 0;
-  // Notification of object registration
-  virtual void NotifyDeRegistration() = 0;
-  // Notification of object deregistration
+    G4VNotifier() = default;
+    virtual ~G4VNotifier() = default;
+    // Constructor and destructor
+
+    virtual void NotifyRegistration() = 0;
+    // Notification of object registration
+    virtual void NotifyDeRegistration() = 0;
+    // Notification of object deregistration
 };
 
 #endif

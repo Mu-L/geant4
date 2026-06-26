@@ -28,46 +28,38 @@
 // Implementation of inline methods of G4Ellipsoid
 // --------------------------------------------------------------------
 
-inline
-G4double G4Ellipsoid::GetDx() const
+inline G4double G4Ellipsoid::GetDx() const
 {
   return fDx;
 }
 
-inline
-G4double G4Ellipsoid::GetDy() const
+inline G4double G4Ellipsoid::GetDy() const
 {
   return fDy;
 }
 
-inline
-G4double G4Ellipsoid::GetDz() const
+inline G4double G4Ellipsoid::GetDz() const
 {
   return fDz;
 }
 
-inline
-G4double G4Ellipsoid::GetSemiAxisMax (G4int i) const
+inline G4double G4Ellipsoid::GetSemiAxisMax(G4int i) const
 {
-  return (i==0) ? fDx : ((i==1) ? fDy : fDz);
+  return (i == 0) ? fDx : ((i == 1) ? fDy : fDz);
 }
 
-inline
-G4double G4Ellipsoid::GetZBottomCut() const
+inline G4double G4Ellipsoid::GetZBottomCut() const
 {
   return fZBottomCut;
 }
 
-inline
-G4double G4Ellipsoid::GetZTopCut() const
+inline G4double G4Ellipsoid::GetZTopCut() const
 {
   return fZTopCut;
 }
 
-inline
-void G4Ellipsoid::SetSemiAxis(G4double newxSemiAxis,
-                              G4double newySemiAxis,
-                              G4double newzSemiAxis)
+inline void G4Ellipsoid::SetSemiAxis(G4double newxSemiAxis, G4double newySemiAxis,
+                                     G4double newzSemiAxis)
 {
   fDx = newxSemiAxis;
   fDy = newySemiAxis;
@@ -77,8 +69,7 @@ void G4Ellipsoid::SetSemiAxis(G4double newxSemiAxis,
   fRebuildPolyhedron = true;
 }
 
-inline
-void G4Ellipsoid::SetZCuts (G4double newzBottomCut, G4double newzTopCut)
+inline void G4Ellipsoid::SetZCuts(G4double newzBottomCut, G4double newzTopCut)
 {
   fZBottomCut = newzBottomCut;
   fZTopCut = newzTopCut;

@@ -32,103 +32,88 @@
 
 // -----------------------------------------------------------------------------
 
-#ifndef G4CollisionInitialState_hh
-#define G4CollisionInitialState_hh
+#ifndef G4COLLISIONINITIALSTATE_HH
+#define G4COLLISIONINITIALSTATE_HH
 
+#include "G4HadTmpUtil.hh"
 #include "G4KineticTrack.hh"
 #include "G4KineticTrackVector.hh"
-#include "G4HadTmpUtil.hh"
 
 class G4BCAction;
 
 class G4CollisionInitialState
 {
+  public:
 
-public:
-  G4CollisionInitialState();
-  G4CollisionInitialState(G4double time, G4KineticTrack * aPrimary,
-			  G4KineticTrack * aTarget);
-  G4CollisionInitialState(G4double time, G4KineticTrack * aPrimary,
-			  const G4KineticTrackVector & aTarget,
-			  G4BCAction * aFSGenerator);
+    G4CollisionInitialState();
+    G4CollisionInitialState(G4double time, G4KineticTrack* aPrimary, G4KineticTrack* aTarget);
+    G4CollisionInitialState(G4double time, G4KineticTrack* aPrimary,
+                            const G4KineticTrackVector& aTarget, G4BCAction* aFSGenerator);
 
-  ~G4CollisionInitialState() { }
+    ~G4CollisionInitialState() {}
 
-  G4CollisionInitialState(const G4CollisionInitialState & right);
-  G4CollisionInitialState & operator=(const G4CollisionInitialState & right);
+    G4CollisionInitialState(const G4CollisionInitialState& right);
+    G4CollisionInitialState& operator=(const G4CollisionInitialState& right);
 
-  G4bool operator<(const G4CollisionInitialState & right) const
-    {return (theCollisionTime < right.theCollisionTime);}
-
-  G4bool operator==(const G4CollisionInitialState& right) const
-    {return (theCollisionTime == right.theCollisionTime);}
-
-
-  G4KineticTrack * GetPrimary(void)
-    {return thePrimary;}
-  void SetPrimary(G4KineticTrack * aPrimary)
-    {thePrimary = aPrimary;}
-
-  G4KineticTrack * GetTarget(void)
-    {return theTarget;}
-  void SetTarget(G4KineticTrack * aTarget)
-    {theTarget = aTarget;}
-
-  void AddTarget(G4KineticTrack * aTarget)
-    {theTs.push_back(aTarget);}
-  G4KineticTrackVector  & GetTargetCollection(void)
-    {return theTs;}
-  G4KineticTrackVector * GetFinalState();
-  G4int GetTargetBaryonNumber()
-  {
-    G4double result=0;
-    for(size_t i=0; i<theTs.size(); i++)
+    G4bool operator<(const G4CollisionInitialState& right) const
     {
-      result += theTs[i]->GetDefinition()->GetBaryonNumber();
+      return (theCollisionTime < right.theCollisionTime);
     }
-    return G4lrint(result);
-  }
-  G4int GetTargetCharge()
-  {
-    G4double result=0;
-    for(size_t i=0; i<theTs.size(); i++)
+
+    G4bool operator==(const G4CollisionInitialState& right) const
     {
-      result += theTs[i]->GetDefinition()->GetPDGCharge();
+      return (theCollisionTime == right.theCollisionTime);
     }
-    return G4lrint(result);
-  }
 
-// -new interface post pion:
+    G4KineticTrack* GetPrimary(void) { return thePrimary; }
+    void SetPrimary(G4KineticTrack* aPrimary) { thePrimary = aPrimary; }
 
-  G4double GetCollisionTime(void)
-    {return theCollisionTime;}
-  void SetCollisionTime(G4double value)
-    {theCollisionTime = value;}
+    G4KineticTrack* GetTarget(void) { return theTarget; }
+    void SetTarget(G4KineticTrack* aTarget) { theTarget = aTarget; }
 
-// for debugging only
-const G4BCAction * GetGenerator()
-  {
-    return theFSGenerator;
-  }
+    void AddTarget(G4KineticTrack* aTarget) { theTs.push_back(aTarget); }
+    G4KineticTrackVector& GetTargetCollection(void) { return theTs; }
+    G4KineticTrackVector* GetFinalState();
+    G4int GetTargetBaryonNumber()
+    {
+      G4double result = 0;
+      for (size_t i = 0; i < theTs.size(); i++)
+      {
+        result += theTs[i]->GetDefinition()->GetBaryonNumber();
+      }
+      return G4lrint(result);
+    }
+    G4int GetTargetCharge()
+    {
+      G4double result = 0;
+      for (size_t i = 0; i < theTs.size(); i++)
+      {
+        result += theTs[i]->GetDefinition()->GetPDGCharge();
+      }
+      return G4lrint(result);
+    }
 
+    // -new interface post pion:
 
-  void Print() const;
+    G4double GetCollisionTime(void) { return theCollisionTime; }
+    void SetCollisionTime(G4double value) { theCollisionTime = value; }
 
-//  friend std::ostream& operator<<(std::ostream & out, const G4CollisionInitialState & collision){
-//  out=1;
-//  return out;
-//  }
+    // for debugging only
+    const G4BCAction* GetGenerator() { return theFSGenerator; }
 
+    void Print() const;
 
-private:
+    //  friend std::ostream& operator<<(std::ostream & out, const G4CollisionInitialState &
+    //  collision){ out=1; return out;
+    //  }
 
-  G4double theCollisionTime;
-  G4KineticTrack * thePrimary;
-  G4KineticTrack * theTarget;
-  G4KineticTrackVector theTs;
-  G4BCAction * theFSGenerator;
+  private:
+
+    G4double theCollisionTime;
+    G4KineticTrack* thePrimary;
+    G4KineticTrack* theTarget;
+    G4KineticTrackVector theTs;
+    G4BCAction* theFSGenerator;
 };
 
 #endif
-
-

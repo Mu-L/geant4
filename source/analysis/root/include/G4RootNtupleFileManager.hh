@@ -29,8 +29,8 @@
 
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
-#ifndef G4RootNtupleFileManager_h
-#define G4RootNtupleFileManager_h 1
+#ifndef G4ROOTNTUPLEFILEMANAGER_HH
+#define G4ROOTNTUPLEFILEMANAGER_HH
 
 #include "G4VNtupleFileManager.hh"
 
@@ -45,9 +45,10 @@ class G4NtupleBookingManager;
 
 class G4RootNtupleFileManager : public G4VNtupleFileManager
 {
-  friend class G4RootMpiNtupleFileManager;
+    friend class G4RootMpiNtupleFileManager;
 
   public:
+
     explicit G4RootNtupleFileManager(const G4AnalysisManagerState& state);
     G4RootNtupleFileManager() = delete;
     ~G4RootNtupleFileManager() override;
@@ -73,40 +74,46 @@ class G4RootNtupleFileManager : public G4VNtupleFileManager
     std::shared_ptr<G4RootNtupleManager> GetNtupleManager() const;
 
   private:
+
     // Static data members
     static G4RootNtupleFileManager* fgMasterInstance;
 
-    void  SetNtupleMergingMode(G4bool mergeNtuples, G4int nofNtupleFiles);
+    void SetNtupleMergingMode(G4bool mergeNtuples, G4int nofNtupleFiles);
     G4int GetNtupleFileNumber();
     G4bool CloseNtupleFiles();
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4RootNtupleFileManager" };
+    static constexpr std::string_view fkClass{"G4RootNtupleFileManager"};
 
     // data members
-    G4bool  fIsInitialized { false };
-    G4int   fNofNtupleFiles { 0 };
-    G4bool  fNtupleRowWise { false };
-    G4bool  fNtupleRowMode { true };
-    G4NtupleMergeMode  fNtupleMergeMode { G4NtupleMergeMode::kNone };
-    std::shared_ptr<G4RootNtupleManager>  fNtupleManager { nullptr };
-    std::shared_ptr<G4RootPNtupleManager> fSlaveNtupleManager { nullptr };
-    std::shared_ptr<G4RootFileManager>    fFileManager { nullptr };
+    G4bool fIsInitialized{false};
+    G4int fNofNtupleFiles{0};
+    G4bool fNtupleRowWise{false};
+    G4bool fNtupleRowMode{true};
+    G4NtupleMergeMode fNtupleMergeMode{G4NtupleMergeMode::kNone};
+    std::shared_ptr<G4RootNtupleManager> fNtupleManager{nullptr};
+    std::shared_ptr<G4RootPNtupleManager> fSlaveNtupleManager{nullptr};
+    std::shared_ptr<G4RootFileManager> fFileManager{nullptr};
 };
 
-inline void G4RootNtupleFileManager::SetFileManager(
-  std::shared_ptr<G4RootFileManager> fileManager)
+inline void G4RootNtupleFileManager::SetFileManager(std::shared_ptr<G4RootFileManager> fileManager)
 {
   fFileManager = std::move(fileManager);
 }
 
 inline G4NtupleMergeMode G4RootNtupleFileManager::GetMergeMode() const
-{ return fNtupleMergeMode; }
+{
+  return fNtupleMergeMode;
+}
 
 inline G4bool G4RootNtupleFileManager::IsNtupleMergingSupported() const
-{ return true; }
+{
+  return true;
+}
 
 inline std::shared_ptr<G4RootNtupleManager> G4RootNtupleFileManager::GetNtupleManager() const
-{ return fNtupleManager; }
+{
+  return fNtupleManager;
+}
 
 #endif

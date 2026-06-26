@@ -23,11 +23,7 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 
-#include <cmath>
-
 #include "G4VtkViewer.hh"
-
-#include <CLHEP/Units/PhysicalConstants.h>
 
 #include "G4Transform3D.hh"
 #include "G4VSceneHandler.hh"
@@ -40,20 +36,23 @@
 #include "G4VtkUtility.hh"
 #include "G4VtkVisContext.hh"
 
+#include <CLHEP/Units/PhysicalConstants.h>
 #include <vtkBMPWriter.h>
+#include <vtkGLTFExporter.h>
 #include <vtkIVExporter.h>  // open inventor
 #include <vtkImageWriter.h>
 #include <vtkImplicitPlaneRepresentation.h>
 #include <vtkImplicitPlaneWidget2.h>
 #include <vtkJPEGWriter.h>
+#include <vtkJSONRenderWindowExporter.h>
 #include <vtkLightCollection.h>
 #include <vtkOBJExporter.h>
-#include <vtkGLTFExporter.h>
 #include <vtkOOGLExporter.h>
-#include <vtkX3DExporter.h>
-#include <vtkJSONRenderWindowExporter.h>
 #include <vtkVtkJSSceneGraphSerializer.h>
-//#include <vtkBufferedArchiver.h>
+#include <vtkX3DExporter.h>
+
+#include <cmath>
+// #include <vtkBufferedArchiver.h>
 #include <vtkPNGWriter.h>
 #include <vtkPNMWriter.h>
 #include <vtkPOVExporter.h>
@@ -103,11 +102,13 @@ void G4VtkViewer::Initialise()
   G4int screenSizeX = _renderWindow->GetScreenSize()[0];
   G4int screenSizeY = _renderWindow->GetScreenSize()[1];
   G4int positionX = fVP.GetWindowLocationHintX();
-  if (fVP.IsWindowLocationHintXNegative()) {
+  if (fVP.IsWindowLocationHintXNegative())
+  {
     positionX = screenSizeX + positionX - fVP.GetWindowSizeHintX();
   }
   G4int positionY = fVP.GetWindowLocationHintY();
-  if (!fVP.IsWindowLocationHintYNegative()) {
+  if (!fVP.IsWindowLocationHintYNegative())
+  {
     positionY = screenSizeY + positionY - fVP.GetWindowSizeHintY();
   }
   _renderWindow->SetPosition(positionX, positionY);
@@ -163,7 +164,8 @@ void G4VtkViewer::SetView()
 
   // target and camera positions
   G4double radius = fSceneHandler.GetExtent().GetExtentRadius();
-  if (radius <= 0.) {
+  if (radius <= 0.)
+  {
     radius = 1.;
   }
 
@@ -173,23 +175,27 @@ void G4VtkViewer::SetView()
   G4double zoomFactor = fVP.GetZoomFactor();
   G4double fieldHalfAngle = fVP.GetFieldHalfAngle();
 
-  G4Point3D cameraPosition = targetPosition + viewpointDirection.unit() /zoomFactor  * cameraDistance;
+  G4Point3D cameraPosition =
+    targetPosition + viewpointDirection.unit() / zoomFactor * cameraDistance;
 
   vtkCamera* activeCamera = renderer->GetActiveCamera();
   activeCamera->SetFocalPoint(targetPosition.x(), targetPosition.y(), targetPosition.z());
-  activeCamera->SetViewAngle(2*fieldHalfAngle / CLHEP::pi * 180);
+  activeCamera->SetViewAngle(2 * fieldHalfAngle / CLHEP::pi * 180);
   activeCamera->SetPosition(cameraPosition.x(), cameraPosition.y(), cameraPosition.z());
   activeCamera->SetParallelScale(cameraDistance / zoomFactor);
 
-  if (fieldHalfAngle == 0) {
+  if (fieldHalfAngle == 0)
+  {
     activeCamera->SetParallelProjection(1);
   }
-  else {
+  else
+  {
     activeCamera->SetParallelProjection(0);
   }
 
   // need to set camera distance and parallel scale on first set view
-  if (firstSetView) {
+  if (firstSetView)
+  {
     geant4Callback->SetVtkInitialValues(cameraDistance, cameraDistance);
     activeCamera->SetParallelScale(cameraDistance);
     firstSetView = false;
@@ -205,26 +211,32 @@ void G4VtkViewer::SetView()
   G4Vector3D lightPosition = targetPosition + lightDirection.unit() * cameraDistance;
 
   vtkLightCollection* currentLights = renderer->GetLights();
-  if (currentLights->GetNumberOfItems() != 0) {
+  if (currentLights->GetNumberOfItems() != 0)
+  {
     auto currentLight = dynamic_cast<vtkLight*>(currentLights->GetItemAsObject(0));
-    if (currentLight != nullptr) {
+    if (currentLight != nullptr)
+    {
       currentLight->SetPosition(lightPosition.x(), lightPosition.y(), lightPosition.z());
-      if (lightsMoveWithCamera) {
+      if (lightsMoveWithCamera)
+      {
         currentLight->SetLightTypeToCameraLight();
       }
-      else {
+      else
+      {
         currentLight->SetLightTypeToSceneLight();
       }
     }
   }
 
   // cut away
-  if (fVP.IsCutaway()) {
+  if (fVP.IsCutaway())
+  {
     G4cout << "Add cutaway planes" << G4endl;
   }
 
   // section
-  if (fVP.IsSection()) {
+  if (fVP.IsSection())
+  {
     G4cout << "Add section" << G4endl;
   }
 }
@@ -329,10 +341,12 @@ void G4VtkViewer::FinishView()
   _renderWindow->GetInteractor()->Initialize();
   _renderWindow->Render();
 
-  if (firstFinishView) {
+  if (firstFinishView)
+  {
     firstFinishView = false;
   }
-  else {
+  else
+  {
     _renderWindow->GetInteractor()->Start();
   }
 }
@@ -341,25 +355,32 @@ void G4VtkViewer::ExportScreenShot(G4String path, G4String format)
 {
   vtkImageWriter* imWriter = nullptr;
 
-  if (format == "bmp") {
+  if (format == "bmp")
+  {
     imWriter = vtkBMPWriter::New();
   }
-  else if (format == "jpg") {
+  else if (format == "jpg")
+  {
     imWriter = vtkJPEGWriter::New();
   }
-  else if (format == "pnm") {
+  else if (format == "pnm")
+  {
     imWriter = vtkPNMWriter::New();
   }
-  else if (format == "png") {
+  else if (format == "png")
+  {
     imWriter = vtkPNGWriter::New();
   }
-  else if (format == "tiff") {
+  else if (format == "tiff")
+  {
     imWriter = vtkTIFFWriter::New();
   }
-  else if (format == "ps") {
+  else if (format == "ps")
+  {
     imWriter = vtkPostScriptWriter::New();
   }
-  else {
+  else
+  {
     return;
   }
 
@@ -369,12 +390,14 @@ void G4VtkViewer::ExportScreenShot(G4String path, G4String format)
     vtkSmartPointer<vtkWindowToImageFilter>::New();
   winToImage->SetInput(_renderWindow);
   winToImage->SetScale(1);
-  if (format == "ps") {
+  if (format == "ps")
+  {
     winToImage->SetInputBufferTypeToRGB();
     winToImage->ReadFrontBufferOff();
     winToImage->Update();
   }
-  else {
+  else
+  {
     winToImage->SetInputBufferTypeToRGBA();
   }
 
@@ -407,25 +430,29 @@ void G4VtkViewer::ExportVTPScene(G4String path)
   exporter->Write();
 }
 
-void G4VtkViewer::ExportGLTFScene(G4String fileName) {
+void G4VtkViewer::ExportGLTFScene(G4String fileName)
+{
   vtkSmartPointer<vtkGLTFExporter> exporter = vtkSmartPointer<vtkGLTFExporter>::New();
   exporter->SetRenderWindow(_renderWindow);
-  exporter->SetFileName((fileName+".gltf").c_str());
+  exporter->SetFileName((fileName + ".gltf").c_str());
   exporter->InlineDataOn();
   exporter->Write();
 }
 
-void G4VtkViewer::ExportX3DScene(G4String fileName) {
+void G4VtkViewer::ExportX3DScene(G4String fileName)
+{
   vtkSmartPointer<vtkX3DExporter> exporter = vtkSmartPointer<vtkX3DExporter>::New();
   exporter->SetRenderWindow(_renderWindow);
-  exporter->SetFileName((fileName+".x3d").c_str());
+  exporter->SetFileName((fileName + ".x3d").c_str());
   exporter->Write();
 }
 
-
-void G4VtkViewer::ExportJSONRenderWindowScene(G4String /*fileName*/) {
-  vtkSmartPointer<vtkJSONRenderWindowExporter> exporter = vtkSmartPointer<vtkJSONRenderWindowExporter>::New();
-  vtkSmartPointer<vtkVtkJSSceneGraphSerializer> serializer = vtkSmartPointer<vtkVtkJSSceneGraphSerializer>::New();
+void G4VtkViewer::ExportJSONRenderWindowScene(G4String /*fileName*/)
+{
+  vtkSmartPointer<vtkJSONRenderWindowExporter> exporter =
+    vtkSmartPointer<vtkJSONRenderWindowExporter>::New();
+  vtkSmartPointer<vtkVtkJSSceneGraphSerializer> serializer =
+    vtkSmartPointer<vtkVtkJSSceneGraphSerializer>::New();
   exporter->SetRenderWindow(_renderWindow);
   exporter->SetSerializer(serializer);
   exporter->Write();
@@ -441,11 +468,14 @@ void G4VtkViewer::ExportVTPCutter(G4String fileName)
 
   // loop over pipelines
   auto separate = s.GetSeparatePipeMap();
-  for (const auto& i : separate) {
+  for (const auto& i : separate)
+  {
     i.second->GetActor();
     auto children = i.second->GetChildPipelines();
-    for (auto child : children) {
-      if (child->GetTypeName() == "G4VtkCutterPipeline") {
+    for (auto child : children)
+    {
+      if (child->GetTypeName() == "G4VtkCutterPipeline")
+      {
         auto childCutter = dynamic_cast<G4VtkCutterPipeline*>(child);
         tempRenderer->AddActor(childCutter->GetActor());
       }
@@ -453,11 +483,14 @@ void G4VtkViewer::ExportVTPCutter(G4String fileName)
   }
 
   auto tensor = s.GetTensorPipeMap();
-  for (const auto& i : tensor) {
+  for (const auto& i : tensor)
+  {
     i.second->GetActor();
     auto children = i.second->GetChildPipelines();
-    for (auto child : children) {
-      if (child->GetTypeName() == "G4VtkCutterPipeline") {
+    for (auto child : children)
+    {
+      if (child->GetTypeName() == "G4VtkCutterPipeline")
+      {
         auto childCutter = dynamic_cast<G4VtkCutterPipeline*>(child);
         tempRenderer->AddActor(childCutter->GetActor());
       }
@@ -465,11 +498,14 @@ void G4VtkViewer::ExportVTPCutter(G4String fileName)
   }
 
   auto append = s.GetAppendPipeMap();
-  for (const auto& i : append) {
+  for (const auto& i : append)
+  {
     i.second->GetActor();
     auto children = i.second->GetChildPipelines();
-    for (auto child : children) {
-      if (child->GetTypeName() == "G4VtkCutterPipeline") {
+    for (auto child : children)
+    {
+      if (child->GetTypeName() == "G4VtkCutterPipeline")
+      {
         auto childCutter = dynamic_cast<G4VtkCutterPipeline*>(child);
         tempRenderer->AddActor(childCutter->GetActor());
       }
@@ -477,11 +513,14 @@ void G4VtkViewer::ExportVTPCutter(G4String fileName)
   }
 
   auto baked = s.GetBakePipeMap();
-  for (const auto& i : baked) {
+  for (const auto& i : baked)
+  {
     i.second->GetActor();
     auto children = i.second->GetChildPipelines();
-    for (auto child : children) {
-      if (child->GetTypeName() == "G4VtkCutterPipeline") {
+    for (auto child : children)
+    {
+      if (child->GetTypeName() == "G4VtkCutterPipeline")
+      {
         auto childCutter = dynamic_cast<G4VtkCutterPipeline*>(child);
         tempRenderer->AddActor(childCutter->GetActor());
       }
@@ -505,34 +544,40 @@ void G4VtkViewer::ExportFormatStore(G4String fileName, G4String storeName)
 
   auto& fVtkSceneHandler = dynamic_cast<G4VtkSceneHandler&>(fSceneHandler);
 
-  if (storeName == "transient") {
+  if (storeName == "transient")
+  {
     G4VtkStore& store = fVtkSceneHandler.GetTransientStore();
     store.AddToRenderer(tempRenderer);
   }
-  else {
+  else
+  {
     G4VtkStore& store = fVtkSceneHandler.GetStore();
     store.AddToRenderer(tempRenderer);
   }
 
-  if (fileName.find("obj") != std::string::npos) {
+  if (fileName.find("obj") != std::string::npos)
+  {
     vtkNew<vtkOBJExporter> exporter;
     exporter->SetRenderWindow(tempRenderWindow);
     exporter->SetFilePrefix(fileName.c_str());
     exporter->Write();
   }
-  else if (fileName.find("vrml") != std::string::npos) {
+  else if (fileName.find("vrml") != std::string::npos)
+  {
     vtkNew<vtkVRMLExporter> exporter;
     exporter->SetRenderWindow(tempRenderWindow);
     exporter->SetFileName(fileName.c_str());
     exporter->Write();
   }
-  else if (fileName.find("vtp") != std::string::npos) {
+  else if (fileName.find("vtp") != std::string::npos)
+  {
     vtkNew<vtkSingleVTPExporter> exporter;
     exporter->SetRenderWindow(tempRenderWindow);
     exporter->SetFileName(fileName.c_str());
     exporter->Write();
   }
-  else if (fileName.find("gltf") != std::string::npos) {
+  else if (fileName.find("gltf") != std::string::npos)
+  {
     vtkNew<vtkGLTFExporter> exporter;
     exporter->SetRenderWindow(tempRenderWindow);
     exporter->SetFileName(fileName.c_str());
@@ -630,7 +675,8 @@ void G4VtkViewer::EnableClipper(const G4Plane3D& plane, G4bool bWidget)
   G4VtkStore& s = fVtkSceneHandler.GetStore();
   G4String name = G4String("clipper");
   s.AddClipper(name, plane);
-  if (bWidget) {
+  if (bWidget)
+  {
     EnableClipperWidget();
   }
 }
@@ -658,7 +704,8 @@ void G4VtkViewer::EnableCutter(const G4Plane3D& plane, G4bool bWidget)
   G4VtkStore& s = fVtkSceneHandler.GetStore();
   G4String name = G4String("cutter");
   s.AddCutter(name, plane);
-  if (bWidget) {
+  if (bWidget)
+  {
     EnableCutterWidget();
   }
 }
@@ -710,20 +757,18 @@ void G4VtkViewer::AddImageOverlay(const G4String& fileName, const G4double alpha
   G4cout << xScale << " " << yScale << G4endl;
   auto transformation = G4Transform3D::Identity;
   auto scal = G4Scale3D(xScale, yScale, 1);
-  auto rotx = G4RotateX3D(rotation[0]/180*CLHEP::pi);
-  auto roty = G4RotateY3D(rotation[1]/180*CLHEP::pi);
-  auto rotz = G4RotateZ3D(rotation[2]/180*CLHEP::pi);
-  auto tranImg = G4Translate3D(  -std::fabs(imageBottomLeft[0] + imageTopRight[0]) / 2.0,
-                                 -std::fabs(imageBottomLeft[1] + imageTopRight[1]) / 2.0,
-                                 0);
-  auto tran = G4Translate3D(translation[0],
-                            translation[1],
-                            translation[2]);
+  auto rotx = G4RotateX3D(rotation[0] / 180 * CLHEP::pi);
+  auto roty = G4RotateY3D(rotation[1] / 180 * CLHEP::pi);
+  auto rotz = G4RotateZ3D(rotation[2] / 180 * CLHEP::pi);
+  auto tranImg = G4Translate3D(-std::fabs(imageBottomLeft[0] + imageTopRight[0]) / 2.0,
+                               -std::fabs(imageBottomLeft[1] + imageTopRight[1]) / 2.0, 0);
+  auto tran = G4Translate3D(translation[0], translation[1], translation[2]);
 
   G4cout << translation[0] << " " << translation[1] << " " << translation[2] << G4endl;
   transformation = tran * rotz * roty * rotx * scal * tranImg * transformation;
 
-  G4cout << transformation.dx() << " " << transformation.dy() << " " << transformation.dz() << G4endl;
+  G4cout << transformation.dx() << " " << transformation.dy() << " " << transformation.dz()
+         << G4endl;
   auto& fVtkSceneHandler = dynamic_cast<G4VtkSceneHandler&>(fSceneHandler);
   G4VtkStore& st = fVtkSceneHandler.GetTransientStore();
 
@@ -748,7 +793,6 @@ void G4VtkViewer::AddGeometryOverlay(const G4String& fileName, const G4double co
 
   auto& fVtkSceneHandler = dynamic_cast<G4VtkSceneHandler&>(fSceneHandler);
   G4VtkStore& st = fVtkSceneHandler.GetTransientStore();
-
 
   G4VtkVisContext vc = G4VtkVisContext(this, nullptr, false, transformation);
   if (representation == "w")

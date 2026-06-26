@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,12 +41,13 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-
-#pragma once
+#ifndef G4VITREACTIONPROCESS_HH
+#define G4VITREACTIONPROCESS_HH
 
 #include "globals.hh"
+
 #include <memory>
 #include <vector>
 
@@ -63,7 +64,8 @@ struct G4ITType;
  */
 class G4VITReactionProcess
 {
-public:
+  public:
+
     G4VITReactionProcess() = default;
     virtual ~G4VITReactionProcess() = default;
     G4VITReactionProcess(const G4VITReactionProcess& other) = delete;
@@ -72,21 +74,23 @@ public:
     /** First initialization (done once for all at the begin of the run)
      * eg. check if the reaction table is given ...
      */
-    virtual void Initialize(){;}
+    virtual void Initialize() { ; }
 
     virtual G4bool IsApplicable(const G4ITType&, const G4ITType&) const;
 
-    virtual G4bool TestReactibility(const G4Track&,
-                                    const G4Track&,
-                                    double /*currentStepTime*/,
+    virtual G4bool TestReactibility(const G4Track&, const G4Track&, double /*currentStepTime*/,
                                     bool /*reachedUserStepTimeLimit*/) = 0;
 
-    virtual std::vector<std::unique_ptr<G4ITReactionChange>> FindReaction(G4ITReactionSet*, const double, const double, const bool)=0;
+    virtual std::vector<std::unique_ptr<G4ITReactionChange>>
+    FindReaction(G4ITReactionSet*, const double, const double, const bool) = 0;
     virtual std::unique_ptr<G4ITReactionChange> MakeReaction(const G4Track&, const G4Track&) = 0;
 
     virtual void SetReactionTable(const G4ITReactionTable*);
 
-protected:
+  protected:
+
     const G4ITReactionTable* fpReactionTable = nullptr;
-    G4String fName ;
+    G4String fName;
 };
+
+#endif

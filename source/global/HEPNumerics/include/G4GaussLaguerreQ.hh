@@ -37,29 +37,30 @@
 // Author: V.Grichine, 13.05.1997
 // --------------------------------------------------------------------
 #ifndef G4GAUSSLAGUERREQ_HH
-#define G4GAUSSLAGUERREQ_HH 1
+#define G4GAUSSLAGUERREQ_HH
 
 #include "G4VGaussianQuadrature.hh"
 
 class G4GaussLaguerreQ : public G4VGaussianQuadrature
 {
- public:
-  G4GaussLaguerreQ(function pFunction, G4double alpha, G4int nLaguerre);
-  // Constructor for Gauss-Laguerre quadrature method: integral from zero to
-  // infinity of std::pow(x,alpha)*std::exp(-x)*f(x). The value of nLaguerre
-  // sets the accuracy.
-  // The constructor creates arrays fAbscissa[0,..,nLaguerre-1] and
-  // fWeight[0,..,nLaguerre-1] . The function GaussLaguerre(f) should be
-  // called then with any f.
+  public:
 
-  G4GaussLaguerreQ(const G4GaussLaguerreQ&) = delete;
-  G4GaussLaguerreQ& operator=(const G4GaussLaguerreQ&) = delete;
+    G4GaussLaguerreQ(function pFunction, G4double alpha, G4int nLaguerre);
+    // Constructor for Gauss-Laguerre quadrature method: integral from zero to
+    // infinity of std::pow(x,alpha)*std::exp(-x)*f(x). The value of nLaguerre
+    // sets the accuracy.
+    // The constructor creates arrays fAbscissa[0,..,nLaguerre-1] and
+    // fWeight[0,..,nLaguerre-1] . The function GaussLaguerre(f) should be
+    // called then with any f.
 
-  G4double Integral() const;
-  // Gauss-Laguerre method for integration of
-  // std::pow(x,alpha)*std::exp(-x)*pFunction(x) from zero up to infinity.
-  // pFunction is evaluated in fNumber points for which fAbscissa[i] and
-  // fWeight[i] arrays were created in constructor.
+    G4GaussLaguerreQ(const G4GaussLaguerreQ&) = delete;
+    G4GaussLaguerreQ& operator=(const G4GaussLaguerreQ&) = delete;
+
+    G4double Integral() const;
+    // Gauss-Laguerre method for integration of
+    // std::pow(x,alpha)*std::exp(-x)*pFunction(x) from zero up to infinity.
+    // pFunction is evaluated in fNumber points for which fAbscissa[i] and
+    // fWeight[i] arrays were created in constructor.
 };
 
 #endif

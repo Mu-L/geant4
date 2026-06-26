@@ -42,58 +42,57 @@
 // This is a singleton keeping pointers to all physics constructors
 // Class Description - End
 
-#ifndef G4PhysicsConstructorRegistry_h
-#define G4PhysicsConstructorRegistry_h 1
+#ifndef G4PHYSICSCONSTRUCTORREGISTRY_HH
+#define G4PHYSICSCONSTRUCTORREGISTRY_HH
 
-#include <vector>
-#include <map>
-#include "globals.hh"
 #include "G4ThreadLocalSingleton.hh"
+#include "globals.hh"
+
+#include <map>
+#include <vector>
 
 class G4VPhysicsConstructor;
 class G4VBasePhysConstrFactory;
 
 class G4PhysicsConstructorRegistry
 {
+    friend class G4ThreadLocalSingleton<G4PhysicsConstructorRegistry>;
 
-  friend class G4ThreadLocalSingleton<G4PhysicsConstructorRegistry>;
+  public:
 
-public:
+    static G4PhysicsConstructorRegistry* Instance();
+    // access
 
-  static G4PhysicsConstructorRegistry* Instance();
-  // access
+    ~G4PhysicsConstructorRegistry();
 
-  ~G4PhysicsConstructorRegistry();
+    void Register(G4VPhysicsConstructor*);
+    // register new physics constructors
 
-  void Register(G4VPhysicsConstructor*);
-  //register new physics constructors
+    void DeRegister(G4VPhysicsConstructor*);
+    // deregister physics constructors
 
-  void DeRegister(G4VPhysicsConstructor*);
-  //deregister physics constructors
+    void Clean();
+    // clean the store
 
-  void Clean();
-  //clean the store
+    void AddFactory(G4String, G4VBasePhysConstrFactory*);
 
-  void AddFactory(G4String, G4VBasePhysConstrFactory*);
+    G4VPhysicsConstructor* GetPhysicsConstructor(const G4String& name);
 
-  G4VPhysicsConstructor* GetPhysicsConstructor(const G4String& name);
+    G4bool IsKnownPhysicsConstructor(const G4String& name);
 
-  G4bool IsKnownPhysicsConstructor(const G4String& name);
+    std::vector<G4String> AvailablePhysicsConstructors() const;
 
-  std::vector<G4String> AvailablePhysicsConstructors() const;
+    void PrintAvailablePhysicsConstructors() const;
 
-  void PrintAvailablePhysicsConstructors() const;
+  private:
 
-private:
+    G4PhysicsConstructorRegistry();
 
-  G4PhysicsConstructorRegistry();
+    static G4ThreadLocal G4PhysicsConstructorRegistry* theInstance;
 
-  static G4ThreadLocal G4PhysicsConstructorRegistry* theInstance;
+    std::vector<G4VPhysicsConstructor*> physConstr;
 
-  std::vector<G4VPhysicsConstructor*> physConstr;
-
-  std::map<G4String, G4VBasePhysConstrFactory*> factories;
-
+    std::map<G4String, G4VBasePhysConstrFactory*> factories;
 };
 
 #endif

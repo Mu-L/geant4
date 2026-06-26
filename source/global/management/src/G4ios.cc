@@ -30,9 +30,9 @@
 
 #include "G4ios.hh"
 
-#include "G4coutDestination.hh"
-#include "G4Threading.hh"
 #include "G4AutoLock.hh"
+#include "G4Threading.hh"
+#include "G4coutDestination.hh"
 
 #include <iostream>
 
@@ -46,106 +46,106 @@ G4Mutex g_stream_finalization_mutex;
 // Concrete streambuf redirecting output to G4coutDestination via G4cout etc
 // Templated on two policy types to determine:
 // - DestinationPolicy: which member member function of G4coutDestination to redirect to
-// - DefaultPolicy: what to do if G4coutDestination is default (nullptr) 
-template <typename DestinationPolicy, typename DefaultPolicy>
+// - DefaultPolicy: what to do if G4coutDestination is default (nullptr)
+template<typename DestinationPolicy, typename DefaultPolicy>
 class G4strstreambuf : public std::basic_streambuf<char>
 {
- public:
-  G4strstreambuf()
-  {
-    size = 4095;
-    buffer = new char[size + 1];
-  }
+  public:
 
-  ~G4strstreambuf() override
-  {
-    delete[] buffer;
-  }
+    G4strstreambuf()
+    {
+      size = 4095;
+      buffer = new char[size + 1];
+    }
 
-  G4strstreambuf(const G4strstreambuf&) = delete;
-  G4strstreambuf& operator=(const G4strstreambuf&) = delete;
+    ~G4strstreambuf() override { delete[] buffer; }
 
-  G4int overflow(G4int c = EOF) override
-  {
-    G4int result = 0;
-    if (count >= size) result = sync();
+    G4strstreambuf(const G4strstreambuf&) = delete;
+    G4strstreambuf& operator=(const G4strstreambuf&) = delete;
 
-    buffer[count] = (char)c;
-    count++;
+    G4int overflow(G4int c = EOF) override
+    {
+      G4int result = 0;
+      if (count >= size) result = sync();
 
-    return result;
-  }
+      buffer[count] = (char)c;
+      count++;
 
-  G4int sync() override
-  {
-    buffer[count] = '\0';
-    count = 0;
-    return ReceiveString();
-  }
+      return result;
+    }
+
+    G4int sync() override
+    {
+      buffer[count] = '\0';
+      count = 0;
+      return ReceiveString();
+    }
 
 #ifdef WIN32
-  virtual G4int underflow() { return 0; }
+    virtual G4int underflow() { return 0; }
 #endif
 
-  void SetDestination(G4coutDestination* dest) { destination = dest; }
+    void SetDestination(G4coutDestination* dest) { destination = dest; }
 
-  inline G4int ReceiveString()
-  {
-    G4String stringToSend(buffer);
-    if (destination != nullptr) {
-      return DestinationPolicy::PostMessage(destination, stringToSend);
+    inline G4int ReceiveString()
+    {
+      G4String stringToSend(buffer);
+      if (destination != nullptr)
+      {
+        return DestinationPolicy::PostMessage(destination, stringToSend);
+      }
+      return DefaultPolicy::PostMessage(stringToSend);
     }
-    return DefaultPolicy::PostMessage(stringToSend);
-  }
 
- private:
-  char* buffer = nullptr;
-  G4int count = 0;
-  G4int size = 0;
-  G4coutDestination* destination = nullptr;
+  private:
+
+    char* buffer = nullptr;
+    G4int count = 0;
+    G4int size = 0;
+    G4coutDestination* destination = nullptr;
 };
 
 // Policies
 struct PostToG4debug
 {
-  static inline G4int PostMessage(G4coutDestination* d, const G4String& s)
-  {
-    return d->ReceiveG4debug_(s);
-  }
+    static inline G4int PostMessage(G4coutDestination* d, const G4String& s)
+    {
+      return d->ReceiveG4debug_(s);
+    }
 };
 
 struct PostToG4cout
 {
-  static inline G4int PostMessage(G4coutDestination* d, const G4String& s)
-  {
-    return d->ReceiveG4cout_(s);
-  }
+    static inline G4int PostMessage(G4coutDestination* d, const G4String& s)
+    {
+      return d->ReceiveG4cout_(s);
+    }
 };
 
 struct PostToG4cerr
 {
-  static inline G4int PostMessage(G4coutDestination* d, const G4String& s)
-  {
-    return d->ReceiveG4cerr_(s);
-  }
+    static inline G4int PostMessage(G4coutDestination* d, const G4String& s)
+    {
+      return d->ReceiveG4cerr_(s);
+    }
 };
 
 struct DefaultToCout
 {
-  static inline G4int PostMessage(const G4String& s)
-  {
-    std::cout << s << std::flush;
-    return 0;
-  }
+    static inline G4int PostMessage(const G4String& s)
+    {
+      std::cout << s << std::flush;
+      return 0;
+    }
 };
 
 struct DefaultToCerr
 {
-  static inline G4int PostMessage(const G4String& s)
-  {
-    std::cerr << s << std::flush;
-    return 0;
-  }
+    static inline G4int PostMessage(const G4String& s)
+    {
+      std::cerr << s << std::flush;
+      return 0;
+    }
 };
 
 using G4debugstreambuf = G4strstreambuf<PostToG4debug, DefaultToCout>;
@@ -195,24 +195,30 @@ std::ostream*& _G4cerr_p()
 void G4iosInitialization()
 {
   // --- Stream Buffers
-  if (_G4debugbuf_p() == nullptr) {
+  if (_G4debugbuf_p() == nullptr)
+  {
     _G4debugbuf_p() = new G4debugstreambuf;
   }
-  if (_G4coutbuf_p() == nullptr) {
+  if (_G4coutbuf_p() == nullptr)
+  {
     _G4coutbuf_p() = new G4coutstreambuf;
   }
-  if (_G4cerrbuf_p() == nullptr) {
+  if (_G4cerrbuf_p() == nullptr)
+  {
     _G4cerrbuf_p() = new G4cerrstreambuf;
   }
 
   // --- Streams
-  if (_G4debug_p() == &std::cout || _G4debug_p() == nullptr) {
+  if (_G4debug_p() == &std::cout || _G4debug_p() == nullptr)
+  {
     _G4debug_p() = new std::ostream(_G4debugbuf_p());
   }
-  if (_G4cout_p() == &std::cout || _G4cout_p() == nullptr) {
+  if (_G4cout_p() == &std::cout || _G4cout_p() == nullptr)
+  {
     _G4cout_p() = new std::ostream(_G4coutbuf_p());
   }
-  if (_G4cerr_p() == &std::cerr || _G4cerr_p() == nullptr) {
+  if (_G4cerr_p() == &std::cerr || _G4cerr_p() == nullptr)
+  {
     _G4cerr_p() = new std::ostream(_G4cerrbuf_p());
   }
 }
@@ -270,13 +276,10 @@ void G4iosFinalization()
 // initialized once.
 namespace
 {
-struct RAII_G4iosSystem {
-   RAII_G4iosSystem() {
-     G4iosInitialization();
-   }
-   ~RAII_G4iosSystem() {
-     G4iosFinalization();
-   }
+struct RAII_G4iosSystem
+{
+    RAII_G4iosSystem() { G4iosInitialization(); }
+    ~RAII_G4iosSystem() { G4iosFinalization(); }
 };
 }  // namespace
 // Extern but not user reachable (anonymous type)
@@ -294,7 +297,8 @@ std::ostream G4cout(&G4coutbuf);
 std::ostream G4cerr(&G4cerrbuf);
 
 void G4iosInitialization() {}
-void G4iosFinalization() {
+void G4iosFinalization()
+{
   G4debug.flush();
   G4cout.flush();
   G4cerr.flush();

@@ -7,6 +7,19 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2025-05-16 Vladimir Ivanchenko (hadr-util-V11-04-02)
+- G4ReactionProduct - restore SetZero() method by request of CMS
+
+## 2025-12-23 Vladimir Ivanchenko (hadr-util-V11-04-01)
+- G4ReactionProduct, G4ReactionProductVector - fixed Coverity warning - added move
+    operator, use std::size, use the same format for all inline methods, removed
+    unused header G4HadronicException.hh, maximally use "default" keyword.
+- G4DecayStrongResonances - simplified and clean-up the code - no need try/cauch
+    construction.
+
+## 2025-12-17 Vladimir Ivanchenko (hadr-util-V11-04-00)
+- G4HadFinalState - use std:size_t, minor change of format
+
 ## 2025-11-06 Vladimir Ivanchenko (hadr-util-V11-03-06)
 - G4HadronicParameters: added extra flag to enable/disable usage of precise
     XS data for neutrons in resonance energy region.

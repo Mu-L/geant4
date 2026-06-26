@@ -4,11 +4,14 @@
 #ifndef tools_rroot_date
 #define tools_rroot_date
 
-namespace tools {
-namespace rroot {
+namespace tools
+{
+namespace rroot
+{
 
 typedef unsigned int date;
 
-}}
+}
+}  // namespace tools
 
 #endif

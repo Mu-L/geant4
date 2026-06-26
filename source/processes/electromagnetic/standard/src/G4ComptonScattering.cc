@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// 
+//
 //------------ G4ComptonScattering physics process -----------------------------
 //                   by Michel Maire, April 1996
 //
@@ -33,29 +33,30 @@
 // -----------------------------------------------------------------------------
 
 #include "G4ComptonScattering.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4KleinNishinaModel.hh"
-#include "G4KleinNishinaCompton.hh"
+
 #include "G4Electron.hh"
 #include "G4EmParameters.hh"
+#include "G4KleinNishinaCompton.hh"
+#include "G4KleinNishinaModel.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 using namespace std;
 
-G4ComptonScattering::G4ComptonScattering(const G4String& processName,
-  G4ProcessType type):G4VEmProcess (processName, type)
+G4ComptonScattering::G4ComptonScattering(const G4String& processName, G4ProcessType type)
+  : G4VEmProcess(processName, type)
 {
   SetStartFromNullFlag(true);
   SetBuildTableFlag(true);
   SetSecondaryParticle(G4Electron::Electron());
   SetProcessSubType(fComptonScattering);
-  SetMinKinEnergyPrim(1*CLHEP::MeV);
+  SetMinKinEnergyPrim(1 * CLHEP::MeV);
   SetSplineFlag(true);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
- 
+
 G4ComptonScattering::~G4ComptonScattering() = default;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -69,14 +70,18 @@ G4bool G4ComptonScattering::IsApplicable(const G4ParticleDefinition& p)
 
 void G4ComptonScattering::InitialiseProcess(const G4ParticleDefinition*)
 {
-  if(!isInitialised) {
+  if (!isInitialised)
+  {
     isInitialised = true;
-    if(nullptr == EmModel(0)) { SetEmModel(new G4KleinNishinaCompton()); }
+    if (nullptr == EmModel(0))
+    {
+      SetEmModel(new G4KleinNishinaCompton());
+    }
     G4EmParameters* param = G4EmParameters::Instance();
     EmModel(0)->SetLowEnergyLimit(param->MinKinEnergy());
     EmModel(0)->SetHighEnergyLimit(param->MaxKinEnergy());
     AddEmModel(1, EmModel(0));
-  } 
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

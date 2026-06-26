@@ -43,6 +43,7 @@
 // 20140508  Per V. Ivanchenko, attempt to use common instance of PreCompound.
 
 #include "G4PreCompoundDeexcitation.hh"
+
 #include "G4HadronicInteraction.hh"
 #include "G4HadronicInteractionRegistry.hh"
 #include "G4InuclElementaryParticle.hh"
@@ -54,80 +55,84 @@
 
 using namespace G4InuclParticleNames;
 
-
 // Constructor and destructor
 
-G4PreCompoundDeexcitation::G4PreCompoundDeexcitation() 
-  : G4CascadeDeexciteBase("G4PreCompoundDeexcitation"),
-    theExcitationHandler(0), theDeExcitation(0) {
+G4PreCompoundDeexcitation::G4PreCompoundDeexcitation()
+  : G4CascadeDeexciteBase("G4PreCompoundDeexcitation"), theExcitationHandler(0), theDeExcitation(0)
+{
   // Access common instance of PreCompound instead of creating new one
-  G4HadronicInteraction* p =
-    G4HadronicInteractionRegistry::Instance()->FindModel("PRECO");
+  G4HadronicInteraction* p = G4HadronicInteractionRegistry::Instance()->FindModel("PRECO");
 
   // If not found, or cast fails, create a local instance
   theDeExcitation = static_cast<G4PreCompoundModel*>(p);
-  if (!theDeExcitation) {
+  if (!theDeExcitation)
+  {
     theExcitationHandler = new G4ExcitationHandler;
     theDeExcitation = new G4PreCompoundModel(theExcitationHandler);
   }
 }
 
-G4PreCompoundDeexcitation::~G4PreCompoundDeexcitation() {
+G4PreCompoundDeexcitation::~G4PreCompoundDeexcitation()
+{
   // Per V.I. -- do not delete locally; handled in hadronic registry
-  //delete theExcitationHandler;
-  //delete theDeExcitation;
+  // delete theExcitationHandler;
+  // delete theDeExcitation;
 }
 
-void G4PreCompoundDeexcitation::setVerboseLevel(G4int verbose) {
+void G4PreCompoundDeexcitation::setVerboseLevel(G4int verbose)
+{
   G4CascadeDeexciteBase::setVerboseLevel(verbose);
   theDeExcitation->SetVerboseLevel(verbose);
   // NOTE: G4ExcitationHandler doesn't have verbosity
 }
 
-
 // Main processing
 
 void G4PreCompoundDeexcitation::deExcite(const G4Fragment& fragment,
-					 G4CollisionOutput& globalOutput) {
-  if (verboseLevel)
-    G4cout << " >>> G4PreCompoundDeexcitation::deExcite" << G4endl;
+                                         G4CollisionOutput& globalOutput)
+{
+  if (verboseLevel) G4cout << " >>> G4PreCompoundDeexcitation::deExcite" << G4endl;
 
-  if (verboseLevel > 1)
-    G4cout << fragment << G4endl;
+  if (verboseLevel > 1) G4cout << fragment << G4endl;
 
   G4ReactionProductVector* precompoundProducts = 0;
 
-  if (explosion(fragment) && theExcitationHandler) {
+  if (explosion(fragment) && theExcitationHandler)
+  {
     // FIXME: in principle, the explosion(...) stuff should also
     // handle properly the case of Z=0 (neutron blob)
     if (verboseLevel) G4cout << " calling BreakItUp" << G4endl;
     precompoundProducts = theExcitationHandler->BreakItUp(fragment);
-
-  } else {
+  }
+  else
+  {
     if (verboseLevel) G4cout << " calling DeExcite" << G4endl;
     // NOTE:  DeExcite() interface takes a *non-const* reference
     // Make a non-const copy of original G4Fragment; otherwise it may be
     // changed by DeExcite()
     G4Fragment originalFragment(fragment);
-    precompoundProducts =
-      theDeExcitation->DeExcite(originalFragment);
+    precompoundProducts = theDeExcitation->DeExcite(originalFragment);
   }
 
   // Transfer output of de-excitation back into Bertini objects
-  if (precompoundProducts) {
-    if (verboseLevel>1) {
+  if (precompoundProducts)
+  {
+    if (verboseLevel > 1)
+    {
       G4cout << " Got " << precompoundProducts->size()
-	     << " secondaries back from PreCompound:" << G4endl;
+             << " secondaries back from PreCompound:" << G4endl;
     }
 
-    globalOutput.setVerboseLevel(verboseLevel);	// For debugging
+    globalOutput.setVerboseLevel(verboseLevel);  // For debugging
     globalOutput.addOutgoingParticles(precompoundProducts);
     globalOutput.setVerboseLevel(0);
 
-    for ( size_t i = 0; i < precompoundProducts->size(); i++ ) {
-      if ( (*precompoundProducts)[ i ] ) {
-        delete (*precompoundProducts)[ i ];
-        (*precompoundProducts)[ i ] = 0;
+    for (size_t i = 0; i < precompoundProducts->size(); i++)
+    {
+      if ((*precompoundProducts)[i])
+      {
+        delete (*precompoundProducts)[i];
+        (*precompoundProducts)[i] = 0;
       }
     }
     precompoundProducts->clear();

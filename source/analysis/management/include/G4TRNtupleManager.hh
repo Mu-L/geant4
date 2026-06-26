@@ -28,23 +28,25 @@
 //
 // Author: Ivana Hrivnacova, 20/07/2017 (ivana@ipno.in2p3.fr)
 
-#ifndef G4TRNtupleManager_h
-#define G4TRNtupleManager_h 1
+#ifndef G4TRNTUPLEMANAGER_HH
+#define G4TRNTUPLEMANAGER_HH
 
 #include "G4BaseRNtupleManager.hh"
 #include "G4TRNtupleDescription.hh"
 #include "globals.hh"
 
-#include <vector>
 #include <string_view>
+#include <vector>
 
-template <typename NT>
+template<typename NT>
 class G4TRNtupleManager : public G4BaseRNtupleManager
 {
   public:
+
     G4TRNtupleManager() = delete;
 
   protected:
+
     explicit G4TRNtupleManager(const G4AnalysisManagerState& state);
     ~G4TRNtupleManager() override;
 
@@ -62,9 +64,9 @@ class G4TRNtupleManager : public G4BaseRNtupleManager
     G4int SetNtuple(G4TRNtupleDescription<NT>* rntupleDescription);
 
     // Methods to bind ntuple (from base class)
-    using G4BaseRNtupleManager::SetNtupleIColumn;
-    using G4BaseRNtupleManager::SetNtupleFColumn;
     using G4BaseRNtupleManager::SetNtupleDColumn;
+    using G4BaseRNtupleManager::SetNtupleFColumn;
+    using G4BaseRNtupleManager::SetNtupleIColumn;
     using G4BaseRNtupleManager::SetNtupleSColumn;
 
     // Methods to bind ntuple
@@ -74,14 +76,14 @@ class G4TRNtupleManager : public G4BaseRNtupleManager
     G4bool SetNtupleSColumn(G4int ntupleId, const G4String& columnName, G4String& value) final;
 
     // Bind the ntuple columns of vector type
-    G4bool SetNtupleIColumn(
-      G4int ntupleId, const G4String& columnName, std::vector<G4int>& vector) override;
-    G4bool SetNtupleFColumn(
-      G4int ntupleId, const G4String& columnName, std::vector<G4float>& vector) override;
-    G4bool SetNtupleDColumn(
-      G4int ntupleId, const G4String& columnName, std::vector<G4double>& vector) override;
-    G4bool SetNtupleSColumn(
-      G4int ntupleId, const G4String& columnName, std::vector<std::string>& vector) override;
+    G4bool SetNtupleIColumn(G4int ntupleId, const G4String& columnName,
+                            std::vector<G4int>& vector) override;
+    G4bool SetNtupleFColumn(G4int ntupleId, const G4String& columnName,
+                            std::vector<G4float>& vector) override;
+    G4bool SetNtupleDColumn(G4int ntupleId, const G4String& columnName,
+                            std::vector<G4double>& vector) override;
+    G4bool SetNtupleSColumn(G4int ntupleId, const G4String& columnName,
+                            std::vector<std::string>& vector) override;
 
     using G4BaseRNtupleManager::GetNtupleRow;
     G4bool GetNtupleRow(G4int ntupleId) final;
@@ -90,27 +92,25 @@ class G4TRNtupleManager : public G4BaseRNtupleManager
     G4int GetNofNtuples() const final;
 
     // Utility method
-    G4TRNtupleDescription<NT>*  GetNtupleDescriptionInFunction(G4int id,
-                                         std::string_view function,
-                                         G4bool warn = true) const;
+    G4TRNtupleDescription<NT>* GetNtupleDescriptionInFunction(G4int id, std::string_view function,
+                                                              G4bool warn = true) const;
 
   private:
+
     // Fuctions which are specific to output type
     //
     virtual G4bool GetTNtupleRow(G4TRNtupleDescription<NT>* rntupleDescription) = 0;
 
     // Common implementation
     //
-    template <typename T>
-    G4bool SetNtupleTColumn(G4int ntupleId, const G4String& name,
-                            T& value);
+    template<typename T>
+    G4bool SetNtupleTColumn(G4int ntupleId, const G4String& name, T& value);
 
-    template <typename T>
-    G4bool SetNtupleTColumn(G4int ntupleId, const G4String& name,
-                            std::vector<T>& vector);
+    template<typename T>
+    G4bool SetNtupleTColumn(G4int ntupleId, const G4String& name, std::vector<T>& vector);
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4TRNtupleManager<NT>" };
+    static constexpr std::string_view fkClass{"G4TRNtupleManager<NT>"};
 
     // Data members
     std::vector<G4TRNtupleDescription<NT>*> fNtupleDescriptionVector;
@@ -119,4 +119,3 @@ class G4TRNtupleManager : public G4BaseRNtupleManager
 #include "G4TRNtupleManager.icc"
 
 #endif
-

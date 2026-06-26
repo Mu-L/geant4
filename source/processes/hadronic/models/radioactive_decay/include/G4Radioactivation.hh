@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4Radioactivation_h
-#define G4Radioactivation_h 1
+#ifndef G4RADIOACTIVATION_HH
+#define G4RADIOACTIVATION_HH
 
 #include "G4RadioactiveDecay.hh"
 

@@ -27,33 +27,34 @@
 // by V. Lara
 //
 // Modifications:
-// 23 January 2012 by V.Ivanchenko added pointer of G4VPhotonEvaporation to 
+// 23 January 2012 by V.Ivanchenko added pointer of G4VPhotonEvaporation to
 //    the constructor
 
-#ifndef G4VEvaporationFactory_hh
-#define G4VEvaporationFactory_hh 1
+#ifndef G4VEVAPORATIONFACTORY_HH
+#define G4VEVAPORATIONFACTORY_HH
 
 #include "G4VEvaporationChannel.hh"
+
 #include <vector>
 
 class G4VEvaporationFactory
 {
-public:
+  public:
 
-  explicit G4VEvaporationFactory(G4VEvaporationChannel* p) : thePhotonEvaporation(p) {};
+    explicit G4VEvaporationFactory(G4VEvaporationChannel* p) : thePhotonEvaporation(p) {};
 
-  virtual ~G4VEvaporationFactory() = default;
+    virtual ~G4VEvaporationFactory() = default;
 
-  virtual std::vector<G4VEvaporationChannel*>* GetChannel() = 0;
+    virtual std::vector<G4VEvaporationChannel*>* GetChannel() = 0;
 
-  G4VEvaporationFactory(const G4VEvaporationFactory &) = delete;
-  const G4VEvaporationFactory& operator=(const G4VEvaporationFactory&) = delete;
-  G4bool operator==(const G4VEvaporationFactory&) const = delete;
-  G4bool operator!=(const G4VEvaporationFactory&) const = delete;
+    G4VEvaporationFactory(const G4VEvaporationFactory&) = delete;
+    const G4VEvaporationFactory& operator=(const G4VEvaporationFactory&) = delete;
+    G4bool operator==(const G4VEvaporationFactory&) const = delete;
+    G4bool operator!=(const G4VEvaporationFactory&) const = delete;
 
-protected:
+  protected:
 
-  G4VEvaporationChannel* thePhotonEvaporation;
+    G4VEvaporationChannel* thePhotonEvaporation;
 };
 
 #endif

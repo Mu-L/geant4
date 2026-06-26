@@ -24,10 +24,11 @@
 // ********************************************************************
 //
 #ifndef G4MOLECULECOUNTERTIMECOMPARER_HH
-#define G4MOLECULECOUNTERTIMECOMPARER_HH 1
+#define G4MOLECULECOUNTERTIMECOMPARER_HH
+
+#include "G4Types.hh"
 
 #include <CLHEP/Units/PhysicalConstants.h>
-#include "G4Types.hh"
 
 #include <map>
 #include <vector>
@@ -35,6 +36,7 @@
 class G4MoleculeCounterTimeComparer
 {
   public:
+
     enum TimeComparerType
     {
       FixedPrecision,
@@ -42,6 +44,7 @@ class G4MoleculeCounterTimeComparer
     };
 
   public:
+
     G4MoleculeCounterTimeComparer();
     virtual ~G4MoleculeCounterTimeComparer() = default;
 
@@ -57,13 +60,16 @@ class G4MoleculeCounterTimeComparer
     bool operator()(const G4double&, const G4double&) const;
 
   private:
+
     TimeComparerType fType;
     G4double fPrecision{1 * CLHEP::picosecond};
     std::map<G4double, G4double> fVariablePrecision{};
 
   public:  // Factory
+
     static G4MoleculeCounterTimeComparer CreateWithFixedPrecision(G4double);
-    static G4MoleculeCounterTimeComparer CreateWithVariablePrecision(const std::map<G4double, G4double>&);
+    static G4MoleculeCounterTimeComparer
+    CreateWithVariablePrecision(const std::map<G4double, G4double>&);
 };
 
 #endif

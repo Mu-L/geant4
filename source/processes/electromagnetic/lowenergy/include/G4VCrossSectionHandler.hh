@@ -45,100 +45,87 @@
 // -------------------------------------------------------------------
 
 #ifndef G4VCROSSSECTIONHANDLER_HH
-#define G4VCROSSSECTIONHANDLER_HH 1
+#define G4VCROSSSECTIONHANDLER_HH
+
+#include "G4DataVector.hh"
+#include "G4MaterialCutsCouple.hh"
+#include "globals.hh"
+
+#include <CLHEP/Units/SystemOfUnits.h>
 
 #include <map>
 #include <vector>
-#include <CLHEP/Units/SystemOfUnits.h>
-
-#include "globals.hh"
-#include "G4DataVector.hh"
-#include "G4MaterialCutsCouple.hh"
 
 class G4VDataSetAlgorithm;
 class G4VEMDataSet;
 class G4Material;
 class G4Element;
 
-class G4VCrossSectionHandler {
+class G4VCrossSectionHandler
+{
+  public:
 
-public:
-  explicit G4VCrossSectionHandler();
-  explicit G4VCrossSectionHandler(G4VDataSetAlgorithm* interpolation,
-			 G4double minE = 250*CLHEP::eV,
-                         G4double maxE = 100*CLHEP::GeV,
-			 G4int nBins = 200,
-			 G4double unitE = CLHEP::MeV,
-                         G4double unitData = CLHEP::barn,
-			 G4int minZ = 1, G4int maxZ = 99);
+    explicit G4VCrossSectionHandler();
+    explicit G4VCrossSectionHandler(G4VDataSetAlgorithm* interpolation,
+                                    G4double minE = 250 * CLHEP::eV,
+                                    G4double maxE = 100 * CLHEP::GeV, G4int nBins = 200,
+                                    G4double unitE = CLHEP::MeV, G4double unitData = CLHEP::barn,
+                                    G4int minZ = 1, G4int maxZ = 99);
 
-  virtual ~G4VCrossSectionHandler();
+    virtual ~G4VCrossSectionHandler();
 
-  void Initialise(G4VDataSetAlgorithm* interpolation = nullptr,
-		  G4double minE = 250*CLHEP::eV,
-                  G4double maxE = 100*CLHEP::GeV,
-		  G4int numberOfBins = 200,
-		  G4double unitE = CLHEP::MeV,
-                  G4double unitData = CLHEP::barn,
-		  G4int minZ = 1, G4int maxZ = 99);
+    void Initialise(G4VDataSetAlgorithm* interpolation = nullptr, G4double minE = 250 * CLHEP::eV,
+                    G4double maxE = 100 * CLHEP::GeV, G4int numberOfBins = 200,
+                    G4double unitE = CLHEP::MeV, G4double unitData = CLHEP::barn, G4int minZ = 1,
+                    G4int maxZ = 99);
 
-  G4int SelectRandomAtom(const G4MaterialCutsCouple* couple, G4double e) const;
-  const G4Element* SelectRandomElement(const G4MaterialCutsCouple* material,
-				             G4double e) const;
+    G4int SelectRandomAtom(const G4MaterialCutsCouple* couple, G4double e) const;
+    const G4Element* SelectRandomElement(const G4MaterialCutsCouple* material, G4double e) const;
 
-  G4int SelectRandomShell(G4int Z, G4double e) const;
-  G4VEMDataSet* BuildMeanFreePathForMaterials(const G4DataVector* energyCuts = nullptr);
-  G4double FindValue(G4int Z, G4double e) const;
-  G4double FindValue(G4int Z, G4double e, G4int shellIndex) const;
-  G4double ValueForMaterial(const G4Material* material, G4double e) const;
-  void LoadData(const G4String& dataFile);
-  void LoadNonLogData(const G4String& dataFile);
-  void LoadShellData(const G4String& dataFile);
-  void PrintData() const;
-  void Clear();
+    G4int SelectRandomShell(G4int Z, G4double e) const;
+    G4VEMDataSet* BuildMeanFreePathForMaterials(const G4DataVector* energyCuts = nullptr);
+    G4double FindValue(G4int Z, G4double e) const;
+    G4double FindValue(G4int Z, G4double e, G4int shellIndex) const;
+    G4double ValueForMaterial(const G4Material* material, G4double e) const;
+    void LoadData(const G4String& dataFile);
+    void LoadNonLogData(const G4String& dataFile);
+    void LoadShellData(const G4String& dataFile);
+    void PrintData() const;
+    void Clear();
 
-  G4VCrossSectionHandler(const G4VCrossSectionHandler&) = delete;
-  G4VCrossSectionHandler & operator=(const G4VCrossSectionHandler &right) = delete;
+    G4VCrossSectionHandler(const G4VCrossSectionHandler&) = delete;
+    G4VCrossSectionHandler& operator=(const G4VCrossSectionHandler& right) = delete;
 
-protected:
+  protected:
 
-  G4int NumberOfComponents(G4int Z) const;
-  void ActiveElements();
+    G4int NumberOfComponents(G4int Z) const;
+    void ActiveElements();
 
-  // Factory method
-  virtual std::vector<G4VEMDataSet*>* BuildCrossSectionsForMaterials(const G4DataVector& energyVector,
-								       const G4DataVector* energyCuts = nullptr) = 0;
+    // Factory method
+    virtual std::vector<G4VEMDataSet*>*
+    BuildCrossSectionsForMaterials(const G4DataVector& energyVector,
+                                   const G4DataVector* energyCuts = nullptr) = 0;
 
-  // Factory method
-  virtual G4VDataSetAlgorithm* CreateInterpolation();
-  const G4VDataSetAlgorithm* GetInterpolation() const { return interpolation; }
+    // Factory method
+    virtual G4VDataSetAlgorithm* CreateInterpolation();
+    const G4VDataSetAlgorithm* GetInterpolation() const { return interpolation; }
 
-private:
-  G4VDataSetAlgorithm* interpolation;
-  G4DataVector activeZ;
+  private:
 
-  std::map<G4int,G4VEMDataSet*,std::less<G4int> > dataMap;
-  std::vector<G4VEMDataSet*>* crossSections;
+    G4VDataSetAlgorithm* interpolation;
+    G4DataVector activeZ;
 
-  G4double eMin;
-  G4double eMax;
-  G4double unit1;
-  G4double unit2;
+    std::map<G4int, G4VEMDataSet*, std::less<G4int>> dataMap;
+    std::vector<G4VEMDataSet*>* crossSections;
 
-  G4int zMin;
-  G4int zMax;
-  G4int nBins;
+    G4double eMin;
+    G4double eMax;
+    G4double unit1;
+    G4double unit2;
+
+    G4int zMin;
+    G4int zMax;
+    G4int nBins;
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-

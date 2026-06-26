@@ -39,13 +39,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-G4PSPassageCellCurrent3D::G4PSPassageCellCurrent3D(const G4String& name, G4int ni,
-                                                   G4int nj, G4int nk, G4int di,
-                                                   G4int dj, G4int dk)
-  : G4PSPassageCellCurrent(name)
-  , fDepthi(di)
-  , fDepthj(dj)
-  , fDepthk(dk)
+G4PSPassageCellCurrent3D::G4PSPassageCellCurrent3D(const G4String& name, G4int ni, G4int nj,
+                                                   G4int nk, G4int di, G4int dj, G4int dk)
+  : G4PSPassageCellCurrent(name), fDepthi(di), fDepthj(dj), fDepthk(dk)
 {
   SetNijk(ni, nj, nk);
 }
@@ -53,9 +49,9 @@ G4PSPassageCellCurrent3D::G4PSPassageCellCurrent3D(const G4String& name, G4int n
 G4int G4PSPassageCellCurrent3D::GetIndex(G4Step* aStep)
 {
   const G4VTouchable* touchable = aStep->GetPreStepPoint()->GetTouchable();
-  G4int i                       = touchable->GetReplicaNumber(fDepthi);
-  G4int j                       = touchable->GetReplicaNumber(fDepthj);
-  G4int k                       = touchable->GetReplicaNumber(fDepthk);
+  G4int i = touchable->GetReplicaNumber(fDepthi);
+  G4int j = touchable->GetReplicaNumber(fDepthj);
+  G4int k = touchable->GetReplicaNumber(fDepthk);
 
   return i * fNj * fNk + j * fNk + k;
 }

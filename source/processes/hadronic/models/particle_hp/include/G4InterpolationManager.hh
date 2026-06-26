@@ -25,8 +25,8 @@
 //
 //
 //
-#ifndef G4InterpolationManager_h
-#define G4InterpolationManager_h 1
+#ifndef G4INTERPOLATIONMANAGER_HH
+#define G4INTERPOLATIONMANAGER_HH
 
 #include "G4HadronicException.hh"
 #include "G4InterpolationScheme.hh"
@@ -38,6 +38,7 @@
 class G4InterpolationManager
 {
   public:
+
     friend class G4InterpolationIterator;
 
     G4InterpolationManager()
@@ -61,7 +62,8 @@ class G4InterpolationManager
 
     G4InterpolationManager& operator=(const G4InterpolationManager& aManager)
     {
-      if (this != &aManager) {
+      if (this != &aManager)
+      {
         nRanges = aManager.nRanges;
         nEntries = aManager.nEntries;
         delete[] scheme;
@@ -70,7 +72,8 @@ class G4InterpolationManager
         scheme = new G4InterpolationScheme[nRanges];
         start = new G4int[nRanges];
         range = new G4int[nRanges];
-        for (G4int i = 0; i < nRanges; i++) {
+        for (G4int i = 0; i < nRanges; i++)
+        {
           scheme[i] = aManager.scheme[i];
           start[i] = aManager.start[i];
           range[i] = aManager.range[i];
@@ -107,7 +110,8 @@ class G4InterpolationManager
       scheme = new G4InterpolationScheme[nRanges];
       start[0] = 0;
       G4int it;
-      for (G4int i = 0; i < nRanges; i++) {
+      for (G4int i = 0; i < nRanges; i++)
+      {
         aDataFile >> range[i];
         //***************************************************************
         // EMendoza -> there is a bug here.
@@ -128,7 +132,8 @@ class G4InterpolationManager
     inline G4InterpolationScheme GetScheme(G4int index) const
     {
       G4int it = 0;
-      for (G4int i = 1; i < nRanges; i++) {
+      for (G4int i = 1; i < nRanges; i++)
+      {
         if (index < start[i]) break;
         it = i;
       }
@@ -144,31 +149,40 @@ class G4InterpolationManager
     inline G4InterpolationScheme GetInverseScheme(G4int index)
     {
       G4InterpolationScheme result = GetScheme(index);
-      if (result == HISTO) {
+      if (result == HISTO)
+      {
         result = RANDOM;
       }
-      else if (result == LINLOG) {
+      else if (result == LINLOG)
+      {
         result = LOGLIN;
       }
-      else if (result == LOGLIN) {
+      else if (result == LOGLIN)
+      {
         result = LINLOG;
       }
-      else if (result == CHISTO) {
+      else if (result == CHISTO)
+      {
         result = CRANDOM;
       }
-      else if (result == CLINLOG) {
+      else if (result == CLINLOG)
+      {
         result = CLOGLIN;
       }
-      else if (result == CLOGLIN) {
+      else if (result == CLOGLIN)
+      {
         result = CLINLOG;
       }
-      else if (result == UHISTO) {
+      else if (result == UHISTO)
+      {
         result = URANDOM;
       }
-      else if (result == ULINLOG) {
+      else if (result == ULINLOG)
+      {
         result = ULOGLIN;
       }
-      else if (result == ULOGLIN) {
+      else if (result == ULOGLIN)
+      {
         result = ULINLOG;
       }
       return result;
@@ -177,6 +191,7 @@ class G4InterpolationManager
     void AppendScheme(G4int aPoint, const G4InterpolationScheme& aScheme);
 
   private:
+
     G4int nRanges;
     G4InterpolationScheme* scheme;
     G4int* start;

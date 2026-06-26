@@ -25,8 +25,8 @@
 //
 //
 //
-#ifndef G4Nucleon_h
-#define G4Nucleon_h 1
+#ifndef G4NUCLEON_HH
+#define G4NUCLEON_HH
 
 // ------------------------------------------------------------
 //      GEANT 4 class header file
@@ -36,100 +36,95 @@
 //       class for a nucleon (inside a 3D Nucleus)
 // ------------------------------------------------------------
 
-#include "G4ThreeVector.hh"
+#include "G4AntiLambda.hh"
+#include "G4AntiNeutron.hh"
+#include "G4AntiProton.hh"
+#include "G4Lambda.hh"
 #include "G4LorentzVector.hh"
-#include "globals.hh"
+#include "G4Neutron.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4Proton.hh"
-#include "G4Neutron.hh"
-#include "G4Lambda.hh"
-#include "G4AntiProton.hh"
-#include "G4AntiNeutron.hh"
-#include "G4AntiLambda.hh"
+#include "G4ThreeVector.hh"
 #include "G4VKineticNucleon.hh"
+#include "globals.hh"
 
-//#include "G4VSplitableHadron.hh"
+// #include "G4VSplitableHadron.hh"
 class G4VSplitableHadron;
 
 class G4Nucleon : public G4VKineticNucleon
 {
-
   public:
-      G4Nucleon();
-      ~G4Nucleon();
 
-      inline G4bool operator==(const G4Nucleon &right) const;
-      inline G4bool operator!=(const G4Nucleon &right) const;
-      G4Nucleon& operator=(const G4Nucleon& right);
+    G4Nucleon();
+    ~G4Nucleon();
+
+    inline G4bool operator==(const G4Nucleon& right) const;
+    inline G4bool operator!=(const G4Nucleon& right) const;
+    G4Nucleon& operator=(const G4Nucleon& right);
 
   public:
 
     void SetPosition(const G4ThreeVector aPosition);
     const G4ThreeVector& GetPosition() const;
 
-    inline void SetMomentum(G4LorentzVector & aMomentum) {theMomentum = aMomentum;}
-    inline const G4LorentzVector& GetMomentum()  const {return theMomentum;}
-    virtual inline const G4LorentzVector & Get4Momentum()  const {return theMomentum;}
+    inline void SetMomentum(G4LorentzVector& aMomentum) { theMomentum = aMomentum; }
+    inline const G4LorentzVector& GetMomentum() const { return theMomentum; }
+    virtual inline const G4LorentzVector& Get4Momentum() const { return theMomentum; }
 
-    inline void SetBindingEnergy(G4double anEnergy) {theBindingE = anEnergy;}
-    inline G4double GetBindingEnergy()  const {return theBindingE;}
+    inline void SetBindingEnergy(G4double anEnergy) { theBindingE = anEnergy; }
+    inline G4double GetBindingEnergy() const { return theBindingE; }
 
-    inline void SetParticleType(G4Proton*  aProton) {theParticleType = aProton;}
-    inline void SetParticleType(G4Neutron* aNeutron){theParticleType = aNeutron;}
-    inline void SetParticleType(G4Lambda*  aLambda) {theParticleType = aLambda;}
+    inline void SetParticleType(G4Proton* aProton) { theParticleType = aProton; }
+    inline void SetParticleType(G4Neutron* aNeutron) { theParticleType = aNeutron; }
+    inline void SetParticleType(G4Lambda* aLambda) { theParticleType = aLambda; }
 
-    inline void SetParticleType(G4AntiProton*  aAntiProton) {theParticleType = aAntiProton;}
-    inline void SetParticleType(G4AntiNeutron* aAntiNeutron){theParticleType = aAntiNeutron;}
-    inline void SetParticleType(G4AntiLambda*  aAntiLambda) {theParticleType = aAntiLambda;}
+    inline void SetParticleType(G4AntiProton* aAntiProton) { theParticleType = aAntiProton; }
+    inline void SetParticleType(G4AntiNeutron* aAntiNeutron) { theParticleType = aAntiNeutron; }
+    inline void SetParticleType(G4AntiLambda* aAntiLambda) { theParticleType = aAntiLambda; }
 
-    inline  const G4ParticleDefinition* GetParticleType() const {return theParticleType;}
-    virtual const G4ParticleDefinition* GetDefinition() const {return theParticleType;}
-    
-    inline void Boost(const G4ThreeVector & beta){ theMomentum.boost(beta); } 
-           void Boost(const G4LorentzVector & aMomentum);
+    inline const G4ParticleDefinition* GetParticleType() const { return theParticleType; }
+    virtual const G4ParticleDefinition* GetDefinition() const { return theParticleType; }
 
-    inline void Hit(G4VSplitableHadron *aHit) { theSplitableHadron=aHit;}
-//    inline void Hit(G4int ) { isHit=true;}    
-    inline void Hit(G4int ) 
-    { 
-      theSplitableHadron=reinterpret_cast<G4VSplitableHadron *>(1111); 
-    }
-    inline G4VSplitableHadron * GetSplitableHadron() const { return theSplitableHadron;}
-    inline G4bool AreYouHit() const {  return theSplitableHadron!=0;}
+    inline void Boost(const G4ThreeVector& beta) { theMomentum.boost(beta); }
+    void Boost(const G4LorentzVector& aMomentum);
+
+    inline void Hit(G4VSplitableHadron* aHit) { theSplitableHadron = aHit; }
+    //    inline void Hit(G4int ) { isHit=true;}
+    inline void Hit(G4int) { theSplitableHadron = reinterpret_cast<G4VSplitableHadron*>(1111); }
+    inline G4VSplitableHadron* GetSplitableHadron() const { return theSplitableHadron; }
+    inline G4bool AreYouHit() const { return theSplitableHadron != 0; }
 
   private:
 
     G4ThreeVector thePosition;
     G4LorentzVector theMomentum;
     G4double theBindingE;
-    const G4ParticleDefinition * theParticleType;
-    G4VSplitableHadron * theSplitableHadron;
-
-
+    const G4ParticleDefinition* theParticleType;
+    G4VSplitableHadron* theSplitableHadron;
 };
 
-std::ostream & operator << (std::ostream &, const G4Nucleon&);
+std::ostream& operator<<(std::ostream&, const G4Nucleon&);
 
-inline G4bool G4Nucleon::operator==(const G4Nucleon &right) const
+inline G4bool G4Nucleon::operator==(const G4Nucleon& right) const
 {
-	return this==&right;
+  return this == &right;
 }
-inline G4bool G4Nucleon::operator!=(const G4Nucleon &right) const
+inline G4bool G4Nucleon::operator!=(const G4Nucleon& right) const
 {
-	return this!=&right;
+  return this != &right;
 }
 
 inline G4Nucleon& G4Nucleon::operator=(const G4Nucleon& right)
 {
-   if (this != &right)
-   {
-      thePosition=right.GetPosition();
-      theMomentum=right.Get4Momentum();
-      theBindingE=right.GetBindingEnergy();
-      theParticleType=right.GetDefinition();
-      theSplitableHadron=right.GetSplitableHadron();
-   }
-	return *this;
+  if (this != &right)
+  {
+    thePosition = right.GetPosition();
+    theMomentum = right.Get4Momentum();
+    theBindingE = right.GetBindingEnergy();
+    theParticleType = right.GetDefinition();
+    theSplitableHadron = right.GetSplitableHadron();
+  }
+  return *this;
 }
 
 inline void G4Nucleon::SetPosition(const G4ThreeVector aPosition)
@@ -143,4 +138,3 @@ inline const G4ThreeVector& G4Nucleon::GetPosition() const
 }
 
 #endif
-

@@ -31,100 +31,97 @@
 // -----------------------------------------------------------------------------
 
 #include "G4CollisionInitialState.hh"
-#include "G4SystemOfUnits.hh"
+
 #include "G4BCAction.hh"
+#include "G4SystemOfUnits.hh"
 // Class G4CollisionInitialState
 
-G4CollisionInitialState::G4CollisionInitialState() :
-   theCollisionTime(DBL_MAX), thePrimary(0), theTarget(0), theFSGenerator(0)
-{
-}
+G4CollisionInitialState::G4CollisionInitialState()
+  : theCollisionTime(DBL_MAX), thePrimary(0), theTarget(0), theFSGenerator(0)
+{}
 
-
-G4CollisionInitialState::G4CollisionInitialState(G4double time,
-   G4KineticTrack * aPrimary, G4KineticTrack * aTarget)
+G4CollisionInitialState::G4CollisionInitialState(G4double time, G4KineticTrack* aPrimary,
+                                                 G4KineticTrack* aTarget)
 {
-   theCollisionTime = time;
-   thePrimary       = aPrimary;
-   theTarget        = aTarget;
-   theTs.clear();
-   theFSGenerator = 0;
+  theCollisionTime = time;
+  thePrimary = aPrimary;
+  theTarget = aTarget;
+  theTs.clear();
+  theFSGenerator = 0;
 }
 
 // +new interface post pion:
-G4CollisionInitialState::G4CollisionInitialState(G4double time,
-   G4KineticTrack * aPrimary, const G4KineticTrackVector & aTarget,
-   G4BCAction * aFSGenerator)
+G4CollisionInitialState::G4CollisionInitialState(G4double time, G4KineticTrack* aPrimary,
+                                                 const G4KineticTrackVector& aTarget,
+                                                 G4BCAction* aFSGenerator)
 {
-   theCollisionTime = time;
-   thePrimary       = aPrimary;
-   theTarget = 0;
-   for (size_t i=0; i<aTarget.size(); i++) theTs.push_back(aTarget[i]);
-   theFSGenerator = aFSGenerator;
+  theCollisionTime = time;
+  thePrimary = aPrimary;
+  theTarget = 0;
+  for (size_t i = 0; i < aTarget.size(); i++)
+    theTs.push_back(aTarget[i]);
+  theFSGenerator = aFSGenerator;
 }
 // -new interface post pion:
 
-
-G4CollisionInitialState::G4CollisionInitialState(const G4CollisionInitialState & right)
+G4CollisionInitialState::G4CollisionInitialState(const G4CollisionInitialState& right)
 {
-     theCollisionTime = right.theCollisionTime;
-     thePrimary       = right.thePrimary;
-     theTarget        = right.theTarget;
-     for (size_t i=0; i<right.theTs.size(); i++) theTs.push_back(right.theTs[i]);
-     theFSGenerator   = right.theFSGenerator;
+  theCollisionTime = right.theCollisionTime;
+  thePrimary = right.thePrimary;
+  theTarget = right.theTarget;
+  for (size_t i = 0; i < right.theTs.size(); i++)
+    theTs.push_back(right.theTs[i]);
+  theFSGenerator = right.theFSGenerator;
 }
 
-G4CollisionInitialState & G4CollisionInitialState::operator=(const G4CollisionInitialState& right)
+G4CollisionInitialState& G4CollisionInitialState::operator=(const G4CollisionInitialState& right)
 {
-   if (this != &right)
-   {
-      theCollisionTime = right.theCollisionTime;
-      thePrimary       = right.thePrimary;
-      theTarget        = right.theTarget;
-      for (size_t i=0; i<right.theTs.size(); i++)
-          theTs.push_back(right.theTs[i]);
-      theFSGenerator   = right.theFSGenerator;
-   }
-
-   return *this;
-}
-
-//#include <typeinfo>
-
-  G4KineticTrackVector * G4CollisionInitialState::
-  GetFinalState()
+  if (this != &right)
   {
-//    G4cerr << "what is the FS generator? "
-//           << typeid(*theFSGenerator).name()
-//	   <<G4endl;
-    return theFSGenerator->GetFinalState(thePrimary, theTs);
+    theCollisionTime = right.theCollisionTime;
+    thePrimary = right.thePrimary;
+    theTarget = right.theTarget;
+    for (size_t i = 0; i < right.theTs.size(); i++)
+      theTs.push_back(right.theTs[i]);
+    theFSGenerator = right.theFSGenerator;
   }
 
-//#include <typeinfo>
+  return *this;
+}
+
+// #include <typeinfo>
+
+G4KineticTrackVector* G4CollisionInitialState::GetFinalState()
+{
+  //    G4cerr << "what is the FS generator? "
+  //           << typeid(*theFSGenerator).name()
+  //	   <<G4endl;
+  return theFSGenerator->GetFinalState(thePrimary, theTs);
+}
+
+// #include <typeinfo>
 
 void G4CollisionInitialState::Print() const
 {
-   G4int tgtPdg=theTarget ?
-     theTarget->GetDefinition()->GetPDGEncoding() : 0;
-   G4cout << "  collision " << this << " time: "
-     << theCollisionTime/second << " proj: "
-     << thePrimary << "/pdg=" << thePrimary->GetDefinition()->GetPDGEncoding()
-     << " tgt: " << theTarget << "/pdg=" << tgtPdg
-     << " Collision type: "<< typeid(*theFSGenerator).name();
-
+  G4int tgtPdg = theTarget ? theTarget->GetDefinition()->GetPDGEncoding() : 0;
+  G4cout << "  collision " << this << " time: " << theCollisionTime / second
+         << " proj: " << thePrimary << "/pdg=" << thePrimary->GetDefinition()->GetPDGEncoding()
+         << " tgt: " << theTarget << "/pdg=" << tgtPdg
+         << " Collision type: " << typeid(*theFSGenerator).name();
 }
 
-  /*
-std::ostream& G4CollisionInitialState::operator<<(std::ostream& out, const G4CollisionInitialState & collision)
+/*
+std::ostream& G4CollisionInitialState::operator<<(std::ostream& out, const G4CollisionInitialState &
+collision)
 {
-  G4int tgtPdg=collision.GetTarget() ?
-    collision.GetTarget()->GetDefinition()->GetPDGEncoding() : 0;
-  out << "  collision " << collision << " time: "
-    << collision.GetCollisionTime()/second << " proj: "
-    << collision.GetPrimary() << "/pdg=" << collision.GetPrimary()->GetDefinition()->GetPDGEncoding()
-    << " tgt: " << collision.GetTarget() << "/pdg=" << tgtPdg
-    << " Collision type: "<< typeid(*collision.GetGenerator()).name();
+G4int tgtPdg=collision.GetTarget() ?
+  collision.GetTarget()->GetDefinition()->GetPDGEncoding() : 0;
+out << "  collision " << collision << " time: "
+  << collision.GetCollisionTime()/second << " proj: "
+  << collision.GetPrimary() << "/pdg=" << collision.GetPrimary()->GetDefinition()->GetPDGEncoding()
+  << " tgt: " << collision.GetTarget() << "/pdg=" << tgtPdg
+  << " Collision type: "<< typeid(*collision.GetGenerator()).name();
 
-  return out;
+return out;
 }
 */

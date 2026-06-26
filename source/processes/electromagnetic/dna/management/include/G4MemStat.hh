@@ -30,8 +30,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -40,45 +40,44 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#ifndef G4MEMSTAT_HH_
-#define G4MEMSTAT_HH_
+#ifndef G4MEMSTAT_HH
+#define G4MEMSTAT_HH
 
 #include "globals.hh"
 
 namespace G4MemStat
 {
 
-	struct MemStat;
+struct MemStat;
 
-	std::ostream & operator<<(std::ostream &os, const MemStat& p);
+std::ostream& operator<<(std::ostream& os, const MemStat& p);
 
-	struct MemStat
-	{
+struct MemStat
+{
+    friend std::ostream& operator<<(std::ostream& os, const MemStat& p);
+    double vmz{0};
+    double mem{0};
 
-        friend std::ostream & operator<<(std::ostream &os, const MemStat& p);
-		double vmz{0};
-		double mem{0};
+    MemStat() = default;
+    MemStat(const MemStat& right)
+    {
+      vmz = right.vmz;
+      mem = right.mem;
+    }
 
-		MemStat()= default;
-		MemStat(const MemStat& right)
-		{
-			vmz = right.vmz;
-			mem = right.mem;
-		}
+    MemStat operator-(const MemStat& right)
+    {
+      MemStat output;
+      output.vmz = this->vmz - right.vmz;
+      output.mem = this->mem - right.mem;
+      return output;
+    }
+};
 
-		MemStat operator-(const MemStat& right)
-		{
-			MemStat output;
-			output.vmz = this->vmz-right.vmz;
-			output.mem = this->mem-right.mem;
-			return output;
-		}
-	};
+MemStat MemoryUsage();
 
-	MemStat MemoryUsage();
-
-	std::ostream & operator<<(std::ostream &os, const MemStat& p);
-}
+std::ostream& operator<<(std::ostream& os, const MemStat& p);
+}  // namespace G4MemStat
 #endif /* MEMSTAT_HH_ */

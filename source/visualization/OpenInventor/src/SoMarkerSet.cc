@@ -32,24 +32,21 @@
 /*--------------------------------------------------------------------------*/
 
 // this :
-#include <HEPVis/nodes/SoMarkerSet.h>
-
-#include <Inventor/errors/SoDebugError.h>
-#include <Inventor/misc/SoState.h>
-#include <Inventor/actions/SoGLRenderAction.h>
-#include <Inventor/nodes/SoPointSet.h>
-
-#include <Inventor/elements/SoCoordinateElement.h>
-#include <Inventor/elements/SoCacheElement.h>
-#include <Inventor/elements/SoLazyElement.h>
-
 #include <HEPVis/SbGL.h>
 #include <HEPVis/actions/SoGL2PSAction.h>
+#include <HEPVis/nodes/SoMarkerSet.h>
+#include <Inventor/actions/SoGLRenderAction.h>
+#include <Inventor/elements/SoCacheElement.h>
+#include <Inventor/elements/SoCoordinateElement.h>
+#include <Inventor/elements/SoLazyElement.h>
+#include <Inventor/errors/SoDebugError.h>
+#include <Inventor/misc/SoState.h>
+#include <Inventor/nodes/SoPointSet.h>
 
-static void drawMarker(SoAction*,int);
-static GLubyte* getBitmap(int,int,char []); 
+static void drawMarker(SoAction*, int);
+static GLubyte* getBitmap(int, int, char[]);
 
-/* 
+/*
   "  x  "
   "  x  "
   "xxxxx"
@@ -76,127 +73,109 @@ static char plus_5_5[] = {
   "  x  "
   "xxxxx"
   "  x  "
-  "  x  "
-};
+  "  x  "};
 static char asterisk_5_5[] = {
   "x x x"
   " xxx "
   "  x  "
   " xxx "
-  "x x x"
-};
+  "x x x"};
 static char cross_5_5[] = {
   "x   x"
   " x x "
   "  x  "
   " x x "
-  "x   x"
-};
+  "x   x"};
 static char star_5_5[] = {
   "x x x"
   " xxx "
   "xxxxx"
   " xxx "
-  "x x x"
-};
+  "x x x"};
 static char circle_line_5_5[] = {
   " xxx "
   "x   x"
   "x   x"
   "x   x"
-  " xxx "
-};       
+  " xxx "};
 static char circle_filled_5_5[] = {
   " xxx "
   "xxxxx"
   "xxxxx"
   "xxxxx"
-  " xxx "
-};       
-static char triangle_up_line_5_5[] = { //OpenGL will draw with y reversed.
+  " xxx "};
+static char triangle_up_line_5_5[] = {  // OpenGL will draw with y reversed.
   "xxxxx"
   " x x "
   " x x "
   "  x  "
-  "  x  "
-};
+  "  x  "};
 static char triangle_up_filled_5_5[] = {
   "xxxxx"
   " xxx "
   " xxx "
   "  x  "
-  "  x  "
-};
+  "  x  "};
 static char triangle_down_line_5_5[] = {
   "  x  "
   "  x  "
   " x x "
   " x x "
-  "xxxxx"
-};
+  "xxxxx"};
 static char triangle_down_filled_5_5[] = {
   "  x  "
   "  x  "
   " xxx "
   " xxx "
-  "xxxxx"
-};
+  "xxxxx"};
 static char david_star_line_5_5[] = {
   "  x  "
   "xxxxx"
   " x x "
   "xxxxx"
-  "  x  "
-};       
+  "  x  "};
 static char david_star_filled_5_5[] = {
   "  x  "
   "xxxxx"
   " xxx "
   "xxxxx"
-  "  x  "
-};       
+  "  x  "};
 static char swiss_cross_line_5_5[] = {
   " xxx "
   "xx xx"
   "x   x"
   "xx xx"
-  " xxx "
-};       
+  " xxx "};
 static char swiss_cross_filled_5_5[] = {
   " xxx "
   "xxxxx"
   "xxxxx"
   "xxxxx"
-  " xxx "
-};       
+  " xxx "};
 static char diamond_line_5_5[] = {
   "  x  "
   " x x "
   "x   x"
   " x x "
-  "  x  "
-};
+  "  x  "};
 static char diamond_filled_5_5[] = {
   "  x  "
   " xxx "
   "xxxxx"
   " xxx "
-  "  x  "
-};
+  "  x  "};
 static char square_line_5_5[] = {
   "xxxxx"
   "x   x"
   "x   x"
   "x   x"
-  "xxxxx"
-};
+  "xxxxx"};
 static char square_filled_5_5[] = {
   "xxxxx"
   "xxxxx"
   "xxxxx"
   "xxxxx"
-  "xxxxx"
-};
+  "xxxxx"};
 ///////////////////////////////////////////////////////////////
 /// 7 7 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
@@ -207,8 +186,7 @@ static char plus_7_7[] = {
   "xxxxxxx"
   "   x   "
   "   x   "
-  "   x   "
-};
+  "   x   "};
 static char asterisk_7_7[] = {
   "x  x  x"
   " x x x "
@@ -216,8 +194,7 @@ static char asterisk_7_7[] = {
   "   x   "
   "  xxx  "
   " x x x "
-  "x  x  x"
-};
+  "x  x  x"};
 static char cross_7_7[] = {
   "x     x"
   " x   x "
@@ -225,8 +202,7 @@ static char cross_7_7[] = {
   "   x   "
   "  xxx  "
   " x   x "
-  "x     x"
-};
+  "x     x"};
 static char star_7_7[] = {
   "x  x  x"
   " x x x "
@@ -234,8 +210,7 @@ static char star_7_7[] = {
   "xxxxxxx"
   "  xxx  "
   " x x x "
-  "x  x  x"
-};
+  "x  x  x"};
 static char circle_line_7_7[] = {
   " xxxxx "
   "x     x"
@@ -243,8 +218,7 @@ static char circle_line_7_7[] = {
   "x     x"
   "x     x"
   "x     x"
-  " xxxxx "
-};       
+  " xxxxx "};
 static char circle_filled_7_7[] = {
   " xxxxx "
   "xxxxxxx"
@@ -252,17 +226,15 @@ static char circle_filled_7_7[] = {
   "xxxxxxx"
   "xxxxxxx"
   "xxxxxxx"
-  " xxxxx "
-};       
-static char triangle_up_line_7_7[] = { //OpenGL will draw with y reversed.
+  " xxxxx "};
+static char triangle_up_line_7_7[] = {  // OpenGL will draw with y reversed.
   "xxxxxxx"
   " x   x "
   " x   x "
   "  x x  "
   "  x x  "
   "   x   "
-  "   x   "
-};
+  "   x   "};
 static char triangle_up_filled_7_7[] = {
   "xxxxxxx"
   " xxxxx "
@@ -270,8 +242,7 @@ static char triangle_up_filled_7_7[] = {
   "  xxx  "
   "  xxx  "
   "   x   "
-  "   x   "
-};
+  "   x   "};
 static char triangle_down_line_7_7[] = {
   "   x   "
   "   x   "
@@ -279,8 +250,7 @@ static char triangle_down_line_7_7[] = {
   "  x x  "
   " x   x "
   " x   x "
-  "xxxxxxx"
-};
+  "xxxxxxx"};
 static char triangle_down_filled_7_7[] = {
   "   x   "
   "   x   "
@@ -288,8 +258,7 @@ static char triangle_down_filled_7_7[] = {
   "  xxx  "
   " xxxxx "
   " xxxxx "
-  "xxxxxxx"
-};
+  "xxxxxxx"};
 static char david_star_line_7_7[] = {
   "   x   "
   "xxxxxxx"
@@ -297,8 +266,7 @@ static char david_star_line_7_7[] = {
   "  x x  "
   " x   x "
   "xxxxxxx"
-  "   x   "
-};       
+  "   x   "};
 static char david_star_filled_7_7[] = {
   "   x   "
   "xxxxxxx"
@@ -306,8 +274,7 @@ static char david_star_filled_7_7[] = {
   "  xxx  "
   " xxxxx "
   "xxxxxxx"
-  "   x   "
-};       
+  "   x   "};
 static char swiss_cross_line_7_7[] = {
   "  xxx  "
   "  x x  "
@@ -315,8 +282,7 @@ static char swiss_cross_line_7_7[] = {
   "x     x"
   "xxx xxx"
   "  x x  "
-  "  xxx  "
-};       
+  "  xxx  "};
 static char swiss_cross_filled_7_7[] = {
   "  xxx  "
   "  xxx  "
@@ -324,8 +290,7 @@ static char swiss_cross_filled_7_7[] = {
   "xxxxxxx"
   "xxxxxxx"
   "  xxx  "
-  "  xxx  "
-};       
+  "  xxx  "};
 static char diamond_line_7_7[] = {
   "   x   "
   "  x x  "
@@ -333,8 +298,7 @@ static char diamond_line_7_7[] = {
   "x     x"
   " x   x "
   "  x x  "
-  "   x   "
-};
+  "   x   "};
 static char diamond_filled_7_7[] = {
   "   x   "
   "  xxx  "
@@ -342,8 +306,7 @@ static char diamond_filled_7_7[] = {
   "xxxxxxx"
   " xxxxx "
   "  xxx  "
-  "   x   "
-};
+  "   x   "};
 static char square_line_7_7[] = {
   "xxxxxxx"
   "x     x"
@@ -351,8 +314,7 @@ static char square_line_7_7[] = {
   "x     x"
   "x     x"
   "x     x"
-  "xxxxxxx"
-};
+  "xxxxxxx"};
 static char square_filled_7_7[] = {
   "xxxxxxx"
   "xxxxxxx"
@@ -360,8 +322,7 @@ static char square_filled_7_7[] = {
   "xxxxxxx"
   "xxxxxxx"
   "xxxxxxx"
-  "xxxxxxx"
-};
+  "xxxxxxx"};
 
 ///////////////////////////////////////////////////////////////
 /// 9 9 ///////////////////////////////////////////////////////
@@ -375,8 +336,7 @@ static char plus_9_9[] = {
   "    x    "
   "    x    "
   "    x    "
-  "    x    "
-};
+  "    x    "};
 static char asterisk_9_9[] = {
   "x   x   x"
   " x  x  x "
@@ -386,8 +346,7 @@ static char asterisk_9_9[] = {
   "   xxx   "
   "  x x x  "
   " x  x  x "
-  "x   x   x"
-};
+  "x   x   x"};
 static char cross_9_9[] = {
   "x       x"
   " x     x "
@@ -397,8 +356,7 @@ static char cross_9_9[] = {
   "   x x   "
   "  x   x  "
   " x     x "
-  "x       x"
-};
+  "x       x"};
 static char star_9_9[] = {
   "x   x   x"
   " x  x  x "
@@ -408,8 +366,7 @@ static char star_9_9[] = {
   "   xxx   "
   "  x x x  "
   " x  x  x "
-  "x   x   x"
-};
+  "x   x   x"};
 static char circle_line_9_9[] = {
   "   xxx   "
   " xx   xx "
@@ -419,8 +376,7 @@ static char circle_line_9_9[] = {
   "x       x"
   " x     x "
   " xx   xx "
-  "   xxx   "
-};       
+  "   xxx   "};
 static char circle_filled_9_9[] = {
   "   xxx   "
   " xxxxxxx "
@@ -430,9 +386,8 @@ static char circle_filled_9_9[] = {
   "xxxxxxxxx"
   " xxxxxxx "
   " xxxxxxx "
-  "   xxx   "
-};       
-static char triangle_up_line_9_9[] = { //OpenGL will draw with y reversed.
+  "   xxx   "};
+static char triangle_up_line_9_9[] = {  // OpenGL will draw with y reversed.
   "xxxxxxxxx"
   " x     x "
   " x     x "
@@ -441,8 +396,7 @@ static char triangle_up_line_9_9[] = { //OpenGL will draw with y reversed.
   "   x x   "
   "   x x   "
   "    x    "
-  "    x    "
-};
+  "    x    "};
 static char triangle_up_filled_9_9[] = {
   "xxxxxxxxx"
   " xxxxxxx "
@@ -452,8 +406,7 @@ static char triangle_up_filled_9_9[] = {
   "   xxx   "
   "   xxx   "
   "    x    "
-  "    x    "
-};
+  "    x    "};
 static char triangle_down_line_9_9[] = {
   "    x    "
   "    x    "
@@ -463,8 +416,7 @@ static char triangle_down_line_9_9[] = {
   "  x   x  "
   " x     x "
   " x     x "
-  "xxxxxxxxx"
-};
+  "xxxxxxxxx"};
 static char triangle_down_filled_9_9[] = {
   "    x    "
   "    x    "
@@ -474,8 +426,7 @@ static char triangle_down_filled_9_9[] = {
   "  xxxxx  "
   " xxxxxxx "
   " xxxxxxx "
-  "xxxxxxxxx"
-};
+  "xxxxxxxxx"};
 static char david_star_line_9_9[] = {
   "    x    "
   "   x x   "
@@ -485,8 +436,7 @@ static char david_star_line_9_9[] = {
   " x     x "
   "xxxxxxxxx"
   "   x x   "
-  "    x    "
-};       
+  "    x    "};
 static char david_star_filled_9_9[] = {
   "    x    "
   "   xxx   "
@@ -496,8 +446,7 @@ static char david_star_filled_9_9[] = {
   " xxxxxxx "
   "xxxxxxxxx"
   "   xxx   "
-  "    x    "
-};       
+  "    x    "};
 static char swiss_cross_line_9_9[] = {
   "   xxx   "
   "   x x   "
@@ -507,8 +456,7 @@ static char swiss_cross_line_9_9[] = {
   "xxxx xxxx"
   "   x x   "
   "   x x   "
-  "   xxx   "
-};       
+  "   xxx   "};
 static char swiss_cross_filled_9_9[] = {
   "   xxx   "
   "   xxx   "
@@ -518,8 +466,7 @@ static char swiss_cross_filled_9_9[] = {
   "xxxxxxxxx"
   "   xxx   "
   "   xxx   "
-  "   xxx   "
-};       
+  "   xxx   "};
 static char diamond_line_9_9[] = {
   "    x    "
   "   x x   "
@@ -529,8 +476,7 @@ static char diamond_line_9_9[] = {
   " x     x "
   "  x   x  "
   "   x x   "
-  "    x    "
-};
+  "    x    "};
 static char diamond_filled_9_9[] = {
   "    x    "
   "   xxx   "
@@ -540,8 +486,7 @@ static char diamond_filled_9_9[] = {
   " xxxxxxx "
   "  xxxxx  "
   "   xxx   "
-  "    x    "
-};
+  "    x    "};
 static char square_line_9_9[] = {
   "xxxxxxxxx"
   "x       x"
@@ -551,8 +496,7 @@ static char square_line_9_9[] = {
   "x       x"
   "x       x"
   "x       x"
-  "xxxxxxxxx"
-};
+  "xxxxxxxxx"};
 static char square_filled_9_9[] = {
   "xxxxxxxxx"
   "xxxxxxxxx"
@@ -562,116 +506,110 @@ static char square_filled_9_9[] = {
   "xxxxxxxxx"
   "xxxxxxxxx"
   "xxxxxxxxx"
-  "xxxxxxxxx"
-};
+  "xxxxxxxxx"};
 
 static char* sFigures[54] = {
- plus_5_5,   //0
- asterisk_5_5,
- cross_5_5,
- star_5_5,
- circle_line_5_5,
- circle_filled_5_5,
- triangle_up_line_5_5,
- triangle_up_filled_5_5,
- triangle_down_line_5_5,
- triangle_down_filled_5_5,
- david_star_line_5_5,
- david_star_filled_5_5,
- swiss_cross_line_5_5,
- swiss_cross_filled_5_5,
- diamond_line_5_5,
- diamond_filled_5_5,
- square_line_5_5,
- square_filled_5_5, //17
- plus_7_7,
- asterisk_7_7,
- cross_7_7,
- star_7_7,
- circle_line_7_7,
- circle_filled_7_7,
- triangle_up_line_7_7,
- triangle_up_filled_7_7,
- triangle_down_line_7_7,
- triangle_down_filled_7_7,
- david_star_line_7_7,
- david_star_filled_7_7,
- swiss_cross_line_7_7,
- swiss_cross_filled_7_7,
- diamond_line_7_7,
- diamond_filled_7_7,
- square_line_7_7,
- square_filled_7_7, //35
- plus_9_9,
- asterisk_9_9,
- cross_9_9,
- star_9_9,
- circle_line_9_9,
- circle_filled_9_9,
- triangle_up_line_9_9,
- triangle_up_filled_9_9,
- triangle_down_line_9_9,
- triangle_down_filled_9_9,
- david_star_line_9_9,
- david_star_filled_9_9,
- swiss_cross_line_9_9,
- swiss_cross_filled_9_9,
- diamond_line_9_9,
- diamond_filled_9_9,
- square_line_9_9,
- square_filled_9_9 //53
+  plus_5_5,  // 0
+  asterisk_5_5,
+  cross_5_5,
+  star_5_5,
+  circle_line_5_5,
+  circle_filled_5_5,
+  triangle_up_line_5_5,
+  triangle_up_filled_5_5,
+  triangle_down_line_5_5,
+  triangle_down_filled_5_5,
+  david_star_line_5_5,
+  david_star_filled_5_5,
+  swiss_cross_line_5_5,
+  swiss_cross_filled_5_5,
+  diamond_line_5_5,
+  diamond_filled_5_5,
+  square_line_5_5,
+  square_filled_5_5,  // 17
+  plus_7_7,
+  asterisk_7_7,
+  cross_7_7,
+  star_7_7,
+  circle_line_7_7,
+  circle_filled_7_7,
+  triangle_up_line_7_7,
+  triangle_up_filled_7_7,
+  triangle_down_line_7_7,
+  triangle_down_filled_7_7,
+  david_star_line_7_7,
+  david_star_filled_7_7,
+  swiss_cross_line_7_7,
+  swiss_cross_filled_7_7,
+  diamond_line_7_7,
+  diamond_filled_7_7,
+  square_line_7_7,
+  square_filled_7_7,  // 35
+  plus_9_9,
+  asterisk_9_9,
+  cross_9_9,
+  star_9_9,
+  circle_line_9_9,
+  circle_filled_9_9,
+  triangle_up_line_9_9,
+  triangle_up_filled_9_9,
+  triangle_down_line_9_9,
+  triangle_down_filled_9_9,
+  david_star_line_9_9,
+  david_star_filled_9_9,
+  swiss_cross_line_9_9,
+  swiss_cross_filled_9_9,
+  diamond_line_9_9,
+  diamond_filled_9_9,
+  square_line_9_9,
+  square_filled_9_9  // 53
 };
 
 SO_NODE_SOURCE(HEPVis_SoMarkerSet)
 //////////////////////////////////////////////////////////////////////////////
-void HEPVis_SoMarkerSet::initClass (
-)
+void HEPVis_SoMarkerSet::initClass()
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
   static bool first = true;
-  if (first) {
+  if (first)
+  {
     first = false;
-    SO_NODE_INIT_CLASS(HEPVis_SoMarkerSet,SoPointSet,"PointSet");
+    SO_NODE_INIT_CLASS(HEPVis_SoMarkerSet, SoPointSet, "PointSet");
   }
 }
 //////////////////////////////////////////////////////////////////////////////
-HEPVis_SoMarkerSet::HEPVis_SoMarkerSet (
-)
+HEPVis_SoMarkerSet::HEPVis_SoMarkerSet()
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
   SO_NODE_CONSTRUCTOR(HEPVis_SoMarkerSet);
-  
-  SO_NODE_ADD_FIELD(markerIndex,(CROSS_5_5));
+
+  SO_NODE_ADD_FIELD(markerIndex, (CROSS_5_5));
 }
 //////////////////////////////////////////////////////////////////////////////
-HEPVis_SoMarkerSet::~HEPVis_SoMarkerSet (
-)
+HEPVis_SoMarkerSet::~HEPVis_SoMarkerSet()
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
-{
-}
+{}
 //////////////////////////////////////////////////////////////////////////////
-void HEPVis_SoMarkerSet::GLRender (
- SoGLRenderAction* aAction
-)
+void HEPVis_SoMarkerSet::GLRender(SoGLRenderAction* aAction)
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
   SoState* state = aAction->getState();
 
-  const SoCoordinateElement* coordinateElement = 
-    SoCoordinateElement::getInstance(state);
-  if(coordinateElement==NULL) return;
+  const SoCoordinateElement* coordinateElement = SoCoordinateElement::getInstance(state);
+  if (coordinateElement == NULL) return;
 
-  if(aAction->isOfType(SoGL2PSAction::getClassTypeId())) {
+  if (aAction->isOfType(SoGL2PSAction::getClassTypeId()))
+  {
     SoCacheElement::invalidate(state);
   }
 
-  const SbColor& color = SoLazyElement::getDiffuse(aAction->getState(),0);
-  float red,green,blue;
-  color.getValue(red,green,blue);
+  const SbColor& color = SoLazyElement::getDiffuse(aAction->getState(), 0);
+  float red, green, blue;
+  color.getValue(red, green, blue);
 
   int mark = markerIndex[0];
 
@@ -679,76 +617,77 @@ void HEPVis_SoMarkerSet::GLRender (
   int pointn = numPoints.getValue();
   int pointi;
 
-  glPushAttrib( (GLbitfield)(GL_CURRENT_BIT | GL_ENABLE_BIT));
+  glPushAttrib((GLbitfield)(GL_CURRENT_BIT | GL_ENABLE_BIT));
   glDisable(GL_LIGHTING);
-  glColor3f(red,green,blue);
+  glColor3f(red, green, blue);
 
-#ifdef WIN32  
-  //WIN32 : depth test is out over bitmap !
+#ifdef WIN32
+  // WIN32 : depth test is out over bitmap !
   glDisable(GL_DEPTH_TEST);
 #endif
 
-  glPixelStorei(GL_UNPACK_ALIGNMENT,1);
-  for(pointi=starti;pointi<pointn;pointi++){
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  for (pointi = starti; pointi < pointn; pointi++)
+  {
     const SbVec3f& vec = coordinateElement->get3(pointi);
-    glRasterPos3f(vec[0],vec[1],vec[2]);
-    // Do a push, pop to correct a deffect of Mesa-3.1. 
+    glRasterPos3f(vec[0], vec[1], vec[2]);
+    // Do a push, pop to correct a deffect of Mesa-3.1.
     // If not, further line drawing will have bad colors.
     // The glPopAttrib will compell a reinitialisation of
     // some internal Mesa state.
-    //glPushAttrib(GL_ALL_ATTRIB_BITS);
-    //glPopAttrib();
+    // glPushAttrib(GL_ALL_ATTRIB_BITS);
+    // glPopAttrib();
     //
-    drawMarker(aAction,mark);
+    drawMarker(aAction, mark);
   }
 
   glPopAttrib();
 }
 //////////////////////////////////////////////////////////////////////////////
-void drawMarker(
- SoAction* aAction
-,int aStyle
-)
+void drawMarker(SoAction* aAction, int aStyle)
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
-  GLsizei w = 0,h = 0;
-  GLfloat xorig = 0,yorig = 0;
-  GLfloat xmove = 0,ymove = 0;
+  GLsizei w = 0, h = 0;
+  GLfloat xorig = 0, yorig = 0;
+  GLfloat xmove = 0, ymove = 0;
 
-  if((aStyle>=0)&&(aStyle<18)) {
+  if ((aStyle >= 0) && (aStyle < 18))
+  {
     w = h = 5;
     xorig = yorig = 2;
-    GLubyte* bitmap = getBitmap(w,h,sFigures[aStyle]);
-    glBitmap(w,h,xorig,yorig,0.,0.,bitmap);
-    delete [] bitmap;
-  } else if((aStyle>=18)&&(aStyle<36)) {
+    GLubyte* bitmap = getBitmap(w, h, sFigures[aStyle]);
+    glBitmap(w, h, xorig, yorig, 0., 0., bitmap);
+    delete[] bitmap;
+  }
+  else if ((aStyle >= 18) && (aStyle < 36))
+  {
     w = h = 7;
     xorig = yorig = 3;
-    GLubyte* bitmap = getBitmap(w,h,sFigures[aStyle]);
-    glBitmap(w,h,xorig,yorig,0.,0.,bitmap);
-    delete [] bitmap;
-  } else if((aStyle>=36)&&(aStyle<54)) {
+    GLubyte* bitmap = getBitmap(w, h, sFigures[aStyle]);
+    glBitmap(w, h, xorig, yorig, 0., 0., bitmap);
+    delete[] bitmap;
+  }
+  else if ((aStyle >= 36) && (aStyle < 54))
+  {
     w = h = 9;
     xorig = yorig = 4;
-    GLubyte* bitmap = getBitmap(w,h,sFigures[aStyle]);
-    glBitmap(w,h,xorig,yorig,0.,0.,bitmap);
-    delete [] bitmap;
-  } else {
+    GLubyte* bitmap = getBitmap(w, h, sFigures[aStyle]);
+    glBitmap(w, h, xorig, yorig, 0., 0., bitmap);
+    delete[] bitmap;
+  }
+  else
+  {
     return;
   }
 
-  if(aAction->isOfType(SoGL2PSAction::getClassTypeId())) {
-    ((SoGL2PSAction*)aAction)->addBitmap(w,h,xorig,yorig,xmove,ymove);
+  if (aAction->isOfType(SoGL2PSAction::getClassTypeId()))
+  {
+    ((SoGL2PSAction*)aAction)->addBitmap(w, h, xorig, yorig, xmove, ymove);
   }
-
 }
 //////////////////////////////////////////////////////////////////////////////
-GLubyte* getBitmap(
- int aW
-,int aH
-,char aFigure[]
-) 
+GLubyte* getBitmap(int aW, int aH, char aFigure[])
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
@@ -757,36 +696,42 @@ GLubyte* getBitmap(
   int ichar = 0;
   int ibit = 0;
   unsigned char byte = 0;
-  for ( int row = 0; row < aH; row++ ){
-    for ( int col = 0; col < aW; col++){ 
+  for (int row = 0; row < aH; row++)
+  {
+    for (int col = 0; col < aW; col++)
+    {
       unsigned char c = aFigure[ichar];
       ichar++;
-      if(c==' ') {
-        ibit++;
-      } else { 
-        byte += (1<<(7-ibit));
+      if (c == ' ')
+      {
         ibit++;
       }
-      if(ibit==8) {
-        //unsigned char h = byte / 16;
-        //unsigned char l = byte % 16;
-        //printf("0x%x%x\n",h,l);
+      else
+      {
+        byte += (1 << (7 - ibit));
+        ibit++;
+      }
+      if (ibit == 8)
+      {
+        // unsigned char h = byte / 16;
+        // unsigned char l = byte % 16;
+        // printf("0x%x%x\n",h,l);
         bitmap[index] = byte;
         index++;
         ibit = 0;
         byte = 0;
       }
-
     }
-    if(ibit!=8) { //Jump to next byte.
-      //unsigned char h = byte / 16;
-      //unsigned char l = byte % 16;
-      //printf("0x%x%x\n",h,l);
+    if (ibit != 8)
+    {  // Jump to next byte.
+      // unsigned char h = byte / 16;
+      // unsigned char l = byte % 16;
+      // printf("0x%x%x\n",h,l);
       bitmap[index] = byte;
       index++;
       ibit = 0;
       byte = 0;
     }
   }
-  return bitmap; 
+  return bitmap;
 }

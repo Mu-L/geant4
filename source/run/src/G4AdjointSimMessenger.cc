@@ -60,7 +60,6 @@ G4AdjointSimMessenger::G4AdjointSimMessenger(G4AdjointSimManager* pAdjointRunMan
   // Start and adjoint Run
   //---------------------
 
-
   beamOnCmd = new G4UIcommand("/adjoint/start_run", this);
   beamOnCmd->SetGuidance("Start an adjoint Run.");
   beamOnCmd->SetGuidance("Default number of events to be processed is 1.");
@@ -216,20 +215,24 @@ G4AdjointSimMessenger::~G4AdjointSimMessenger()
 void G4AdjointSimMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
   if (command == nullptr) return;
-  if (command == beamOnCmd) {
+  if (command == beamOnCmd)
+  {
     G4int nev;
     const auto nv = (const char*)newValue;
     std::istringstream is(nv);
     is >> nev;
     theAdjointRunManager->RunAdjointSimulation(nev);
   }
-  else if (command == ConsiderParticleAsPrimaryCmd) {
+  else if (command == ConsiderParticleAsPrimaryCmd)
+  {
     theAdjointRunManager->ConsiderParticleAsPrimary(newValue);
   }
-  else if (command == NeglectParticleAsPrimaryCmd) {
+  else if (command == NeglectParticleAsPrimaryCmd)
+  {
     theAdjointRunManager->NeglectParticleAsPrimary(newValue);
   }
-  if (command == DefineSpherExtSourceCmd) {
+  if (command == DefineSpherExtSourceCmd)
+  {
     G4double x, y, z, r;
     G4String unit;
     const auto nv = (const char*)newValue;
@@ -242,7 +245,8 @@ void G4AdjointSimMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     r *= G4UnitDefinition::GetValueOf(unit);
     theAdjointRunManager->DefineSphericalExtSource(r, G4ThreeVector(x, y, z));
   }
-  else if (command == DefineSpherExtSourceCenteredOnAVolumeCmd) {
+  else if (command == DefineSpherExtSourceCenteredOnAVolumeCmd)
+  {
     G4double r;
     G4String vol_name, unit;
     const auto nv = (const char*)newValue;
@@ -251,13 +255,16 @@ void G4AdjointSimMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     r *= G4UnitDefinition::GetValueOf(unit);
     theAdjointRunManager->DefineSphericalExtSourceWithCentreAtTheCentreOfAVolume(r, vol_name);
   }
-  else if (command == DefineExtSourceOnAVolumeExtSurfaceCmd) {
+  else if (command == DefineExtSourceOnAVolumeExtSurfaceCmd)
+  {
     theAdjointRunManager->DefineExtSourceOnTheExtSurfaceOfAVolume(newValue);
   }
-  else if (command == setExtSourceEMaxCmd) {
+  else if (command == setExtSourceEMaxCmd)
+  {
     theAdjointRunManager->SetExtSourceEmax(setExtSourceEMaxCmd->GetNewDoubleValue(newValue));
   }
-  else if (command == DefineSpherAdjSourceCmd) {
+  else if (command == DefineSpherAdjSourceCmd)
+  {
     G4double x, y, z, r;
     G4String unit;
     const auto nv = (const char*)newValue;
@@ -270,7 +277,8 @@ void G4AdjointSimMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     r *= G4UnitDefinition::GetValueOf(unit);
     theAdjointRunManager->DefineSphericalAdjointSource(r, G4ThreeVector(x, y, z));
   }
-  else if (command == DefineSpherAdjSourceCenteredOnAVolumeCmd) {
+  else if (command == DefineSpherAdjSourceCenteredOnAVolumeCmd)
+  {
     G4double r;
     G4String vol_name, unit;
     const auto nv = (const char*)newValue;
@@ -279,24 +287,30 @@ void G4AdjointSimMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     r *= G4UnitDefinition::GetValueOf(unit);
     theAdjointRunManager->DefineSphericalAdjointSourceWithCentreAtTheCentreOfAVolume(r, vol_name);
   }
-  else if (command == DefineAdjSourceOnAVolumeExtSurfaceCmd) {
+  else if (command == DefineAdjSourceOnAVolumeExtSurfaceCmd)
+  {
     theAdjointRunManager->DefineAdjointSourceOnTheExtSurfaceOfAVolume(newValue);
   }
-  else if (command == setAdjSourceEminCmd) {
+  else if (command == setAdjSourceEminCmd)
+  {
     theAdjointRunManager->SetAdjointSourceEmin(setAdjSourceEminCmd->GetNewDoubleValue(newValue));
   }
-  else if (command == setAdjSourceEmaxCmd) {
+  else if (command == setAdjSourceEmaxCmd)
+  {
     theAdjointRunManager->SetAdjointSourceEmax(setAdjSourceEmaxCmd->GetNewDoubleValue(newValue));
   }
-  else if (command == setNbOfPrimaryFwdGammasPerEventCmd) {
+  else if (command == setNbOfPrimaryFwdGammasPerEventCmd)
+  {
     theAdjointRunManager->SetNbOfPrimaryFwdGammasPerEvent(
       setNbOfPrimaryFwdGammasPerEventCmd->GetNewIntValue(newValue));
   }
-  else if (command == setNbOfPrimaryAdjGammasPerEventCmd) {
+  else if (command == setNbOfPrimaryAdjGammasPerEventCmd)
+  {
     theAdjointRunManager->SetNbAdjointPrimaryGammasPerEvent(
       setNbOfPrimaryAdjGammasPerEventCmd->GetNewIntValue(newValue));
   }
-  else if (command == setNbOfPrimaryAdjElectronsPerEventCmd) {
+  else if (command == setNbOfPrimaryAdjElectronsPerEventCmd)
+  {
     theAdjointRunManager->SetNbAdjointPrimaryElectronsPerEvent(
       setNbOfPrimaryAdjElectronsPerEventCmd->GetNewIntValue(newValue));
   }

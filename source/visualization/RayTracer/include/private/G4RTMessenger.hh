@@ -33,9 +33,8 @@
 // UI commands which are unique to G4RayTracer.
 //
 
-
-#ifndef G4RTMessenger_HH
-#define G4RTMessenger_HH 1
+#ifndef G4RTMESSENGER_HH
+#define G4RTMESSENGER_HH
 
 #include "G4UImessenger.hh"
 class G4UIdirectory;
@@ -50,18 +49,20 @@ class G4TheRayTracer;
 class G4RTMessenger : public G4UImessenger
 {
   public:
+
     static G4RTMessenger* GetInstance(G4TheRayTracer* p1);  // Singleton constructor.
     virtual ~G4RTMessenger();
-    
-    virtual G4String GetCurrentValue(G4UIcommand * command);
-    virtual void SetNewValue(G4UIcommand * command,G4String newValue);
+
+    virtual G4String GetCurrentValue(G4UIcommand* command);
+    virtual void SetNewValue(G4UIcommand* command, G4String newValue);
 
   private:
+
     G4RTMessenger(G4TheRayTracer* p1);
     static G4RTMessenger* fpInstance;
     G4TheRayTracer* theDefaultTracer;  // The first tracer to
-				       // instantiate this messenger.
-    G4TheRayTracer* theTracer;         // The current tracer.
+                                       // instantiate this messenger.
+    G4TheRayTracer* theTracer;  // The current tracer.
 
     G4UIdirectory* rayDirectory;
     G4UIcmdWithAnInteger* columnCmd;
@@ -79,6 +80,3 @@ class G4RTMessenger : public G4UImessenger
 };
 
 #endif
-
-
-

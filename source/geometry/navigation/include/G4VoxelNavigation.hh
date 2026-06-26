@@ -22,7 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // G4VoxelNavigation
 //
 // Class description:
@@ -33,21 +33,21 @@
 // Author: Paul Kent (CERN), August 1996
 // --------------------------------------------------------------------
 #ifndef G4VOXELNAVIGATION_HH
-#define G4VOXELNAVIGATION_HH 1
+#define G4VOXELNAVIGATION_HH
 
-#include "geomdefs.hh"
-#include "G4VNavigation.hh"
+#include "G4AffineTransform.hh"
+#include "G4BlockingList.hh"
+#include "G4LogicalVolume.hh"
 #include "G4NavigationHistory.hh"
 #include "G4NavigationLogger.hh"
-#include "G4AffineTransform.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4LogicalVolume.hh"
-#include "G4VSolid.hh"
 #include "G4ThreeVector.hh"
+#include "G4VNavigation.hh"
+#include "G4VPhysicalVolume.hh"
+#include "G4VSolid.hh"
 
-#include "G4BlockingList.hh"
+#include "geomdefs.hh"
 
-class G4VoxelSafety; 
+class G4VoxelSafety;
 
 // Required for inline implementation
 //
@@ -55,15 +55,17 @@ class G4VoxelSafety;
 
 // Required for voxel handling & voxel stack
 //
-#include <vector>
-#include "G4SmartVoxelProxy.hh"
-#include "G4SmartVoxelNode.hh"
 #include "G4SmartVoxelHeader.hh"
+#include "G4SmartVoxelNode.hh"
+#include "G4SmartVoxelProxy.hh"
+
+#include <vector>
 
 /**
  * @brief G4VoxelNavigation is a concrete utility class for navigation in
  * volumes containing only G4PVPlacement daughter volumes for which voxels
  * have been constructed.
+ * @ingroup geometry_navigation
  */
 
 class G4VoxelNavigation : public G4VNavigation
@@ -82,8 +84,8 @@ class G4VoxelNavigation : public G4VNavigation
      *  @param[in] localPoint Local point
      *  @returns Pointer to the node where the given point is located.
      */
-    inline G4SmartVoxelNode* VoxelLocate( G4SmartVoxelHeader* pHead,
-                                    const G4ThreeVector& localPoint );
+    inline G4SmartVoxelNode* VoxelLocate(G4SmartVoxelHeader* pHead,
+                                         const G4ThreeVector& localPoint);
 
     /**
      * Searches positioned volumes in mother at current top level of @p history
@@ -98,13 +100,10 @@ class G4VoxelNavigation : public G4VNavigation
      *  @param[in,out] localPoint Point in local coordinates system.
      *  @returns Whether a containing volume has been found.
      */
-    inline G4bool LevelLocate( G4NavigationHistory& history,
-                         const G4VPhysicalVolume* blockedVol,
-                         const G4int blockedNum,
-                         const G4ThreeVector& globalPoint,
-                         const G4ThreeVector* globalDirection,
-                         const G4bool pLocatedOnEdge, 
-                               G4ThreeVector& localPoint ) override;
+    inline G4bool LevelLocate(G4NavigationHistory& history, const G4VPhysicalVolume* blockedVol,
+                              const G4int blockedNum, const G4ThreeVector& globalPoint,
+                              const G4ThreeVector* globalDirection, const G4bool pLocatedOnEdge,
+                              G4ThreeVector& localPoint) override;
 
     /**
      * Computes the length of a step to the next boundary.
@@ -127,21 +126,15 @@ class G4VoxelNavigation : public G4VNavigation
      *  @returns Length from current point to next boundary surface along
      *           @p localDirection.
      */
-    G4double ComputeStep( const G4ThreeVector& localPoint,
-                          const G4ThreeVector& localDirection,
-                          const G4double currentProposedStepLength,
-                                G4double& newSafety,
-                                G4NavigationHistory& history,
-                                G4bool& validExitNormal,
-                                G4ThreeVector& exitNormal,
-                                G4bool& exiting,
-                                G4bool& entering,
-                                G4VPhysicalVolume* (*pBlockedPhysical),
-                                G4int& blockedReplicaNo ) override;
+    G4double ComputeStep(const G4ThreeVector& localPoint, const G4ThreeVector& localDirection,
+                         const G4double currentProposedStepLength, G4double& newSafety,
+                         G4NavigationHistory& history, G4bool& validExitNormal,
+                         G4ThreeVector& exitNormal, G4bool& exiting, G4bool& entering,
+                         G4VPhysicalVolume*(*pBlockedPhysical), G4int& blockedReplicaNo) override;
 
     /**
      * Calculates the isotropic distance to the nearest boundary from the
-     * specified point in the local coordinate system. 
+     * specified point in the local coordinate system.
      * The localpoint utilised must be within the current volume.
      *  @param[in] localPoint Local point.
      *  @param[in] history Navigation history.
@@ -149,9 +142,8 @@ class G4VoxelNavigation : public G4VNavigation
      *             need not be checked.
      *  @returns Length from current point to closest surface.
      */
-    G4double ComputeSafety( const G4ThreeVector& localpoint,
-                            const G4NavigationHistory& history,
-                            const G4double pMaxLength = DBL_MAX ) override;
+    G4double ComputeSafety(const G4ThreeVector& localpoint, const G4NavigationHistory& history,
+                           const G4double pMaxLength = DBL_MAX) override;
 
     /**
      * Updates internal navigation state to take into account that location
@@ -159,20 +151,20 @@ class G4VoxelNavigation : public G4VNavigation
      *  @param[in] motherPhysical Current physical volume.
      *  @param[in] localPoint Local point.
      */
-    void RelocateWithinVolume( G4VPhysicalVolume* motherPhysical,
-                               const G4ThreeVector& localPoint ) override;
+    void RelocateWithinVolume(G4VPhysicalVolume* motherPhysical,
+                              const G4ThreeVector& localPoint) override;
 
     /**
      * Verbosity control.
      *  @note If level>0 && G4VERBOSE, printout can occur.
      */
     inline G4int GetVerboseLevel() const override;
-    void  SetVerboseLevel(G4int level) override;
+    void SetVerboseLevel(G4int level) override;
 
     /**
      * Enables best-possible evaluation of isotropic safety.
      */
-    inline void EnableBestSafety( G4bool flag = false );
+    inline void EnableBestSafety(G4bool flag = false);
 
   protected:
 
@@ -182,7 +174,7 @@ class G4VoxelNavigation : public G4VNavigation
      *  @param[in] localPoint Local point.
      *  @returns Safety length from current point to voxel boundary.
      */
-    G4double ComputeVoxelSafety( const G4ThreeVector& localPoint ) const;
+    G4double ComputeVoxelSafety(const G4ThreeVector& localPoint) const;
 
     /**
      * Finds the next voxel from the current voxel and point in the specified
@@ -195,34 +187,25 @@ class G4VoxelNavigation : public G4VNavigation
      *           true  otherwise
      *           [the information on the next voxel is saved].
      */
-    G4bool LocateNextVoxel( const G4ThreeVector& localPoint,
-                            const G4ThreeVector& localDirection,
-                            const G4double currentStep );
+    G4bool LocateNextVoxel(const G4ThreeVector& localPoint, const G4ThreeVector& localDirection,
+                           const G4double currentStep);
 
   private:  // Logging functions
 
-    void PreComputeStepLog  (const G4VPhysicalVolume* motherPhysical,
-                                   G4double motherSafety,
-                             const G4ThreeVector& localPoint);
-    void AlongComputeStepLog(const G4VSolid* sampleSolid,
-                             const G4ThreeVector& samplePoint,
+    void PreComputeStepLog(const G4VPhysicalVolume* motherPhysical, G4double motherSafety,
+                           const G4ThreeVector& localPoint);
+    void AlongComputeStepLog(const G4VSolid* sampleSolid, const G4ThreeVector& samplePoint,
                              const G4ThreeVector& sampleDirection,
-                             const G4ThreeVector& localDirection,
-                                   G4double sampleSafety,
-                                   G4double sampleStep);
-    void PostComputeStepLog (const G4VSolid* motherSolid,
-                             const G4ThreeVector& localPoint,
-                             const G4ThreeVector& localDirection,
-                                   G4double motherStep,
-                                   G4double motherSafety);
-    void ComputeSafetyLog   (const G4VSolid* solid,
-                             const G4ThreeVector& point,
-                                   G4double safety,
-                                   G4bool banner);
-    inline void PrintDaughterLog (const G4VSolid* sampleSolid,
-                                  const G4ThreeVector& samplePoint,
-                                        G4double sampleSafety,
-                                        G4double sampleStep);   
+                             const G4ThreeVector& localDirection, G4double sampleSafety,
+                             G4double sampleStep);
+    void PostComputeStepLog(const G4VSolid* motherSolid, const G4ThreeVector& localPoint,
+                            const G4ThreeVector& localDirection, G4double motherStep,
+                            G4double motherSafety);
+    void ComputeSafetyLog(const G4VSolid* solid, const G4ThreeVector& point, G4double safety,
+                          G4bool banner);
+    inline void PrintDaughterLog(const G4VSolid* sampleSolid, const G4ThreeVector& samplePoint,
+                                 G4double sampleSafety, G4double sampleStep);
+
   protected:
 
     /** Blocked volumes. */
@@ -244,10 +227,10 @@ class G4VoxelNavigation : public G4VNavigation
     std::vector<G4int> fVoxelNoSlicesStack;
 
     /** Width of voxels at each level. */
-    std::vector<G4double> fVoxelSliceWidthStack; 
+    std::vector<G4double> fVoxelSliceWidthStack;
 
     /** Node no point is inside at each level. */
-    std::vector<G4int> fVoxelNodeNoStack;    
+    std::vector<G4int> fVoxelNodeNoStack;
 
     /** Voxel headers at each level. */
     std::vector<G4SmartVoxelHeader*> fVoxelHeaderStack;
@@ -265,7 +248,7 @@ class G4VoxelNavigation : public G4VNavigation
     G4double fHalfTolerance;
 
     /** Flag for best safety. */
-    G4bool fBestSafety = false; 
+    G4bool fBestSafety = false;
 
     /** Verbosity logger. */
     G4NavigationLogger* fLogger;

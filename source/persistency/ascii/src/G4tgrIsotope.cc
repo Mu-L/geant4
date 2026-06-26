@@ -31,18 +31,14 @@
 #include "G4tgrIsotope.hh"
 
 #include "G4SystemOfUnits.hh"
-#include "G4tgrUtils.hh"
 #include "G4tgrMessenger.hh"
+#include "G4tgrUtils.hh"
 
 // --------------------------------------------------------------------
-G4tgrIsotope::G4tgrIsotope()
-{
-}
+G4tgrIsotope::G4tgrIsotope() {}
 
 // --------------------------------------------------------------------
-G4tgrIsotope::~G4tgrIsotope()
-{
-}
+G4tgrIsotope::~G4tgrIsotope() {}
 
 // --------------------------------------------------------------------
 G4tgrIsotope::G4tgrIsotope(const std::vector<G4String>& wl)
@@ -51,12 +47,12 @@ G4tgrIsotope::G4tgrIsotope(const std::vector<G4String>& wl)
   G4tgrUtils::CheckWLsize(wl, 5, WLSIZE_EQ, "G4tgrIsotope::G4tgIstotope");
 
   theName = G4tgrUtils::GetString(wl[1]);
-  theZ    = G4tgrUtils::GetInt(wl[2]);
-  theN    = G4tgrUtils::GetInt(wl[3]);
-  theA    = G4tgrUtils::GetDouble(wl[4], g / mole);
+  theZ = G4tgrUtils::GetInt(wl[2]);
+  theN = G4tgrUtils::GetInt(wl[3]);
+  theA = G4tgrUtils::GetDouble(wl[4], g / mole);
 
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 1)
+  if (G4tgrMessenger::GetVerboseLevel() >= 1)
   {
     G4cout << " Created " << *this << G4endl;
   }
@@ -66,8 +62,8 @@ G4tgrIsotope::G4tgrIsotope(const std::vector<G4String>& wl)
 // --------------------------------------------------------------------
 std::ostream& operator<<(std::ostream& os, const G4tgrIsotope& obj)
 {
-  os << "G4tgrIsotope= " << obj.theName << " Z = " << obj.theZ
-     << " N= " << obj.theN << " A= " << obj.theA << G4endl;
+  os << "G4tgrIsotope= " << obj.theName << " Z = " << obj.theZ << " N= " << obj.theN
+     << " A= " << obj.theA << G4endl;
 
   return os;
 }

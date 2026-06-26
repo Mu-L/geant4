@@ -28,8 +28,8 @@
 
 // Created by Z. Francis
 
-#ifndef G4DNAAttachment_h
-#define G4DNAAttachment_h 1
+#ifndef G4DNAATTACHMENT_HH
+#define G4DNAATTACHMENT_HH
 
 #include "G4VEmProcess.hh"
 
@@ -41,26 +41,26 @@
 class G4DNAAttachment : public G4VEmProcess
 
 {
-public: 
+  public:
 
-  G4DNAAttachment(const G4String& processName ="DNAAttachment",
-		     G4ProcessType type = fElectromagnetic);
+    G4DNAAttachment(const G4String& processName = "DNAAttachment",
+                    G4ProcessType type = fElectromagnetic);
 
-  ~G4DNAAttachment() override;
+    ~G4DNAAttachment() override;
 
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
-  
-  virtual void PrintInfo();
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
 
-protected:
+    virtual void PrintInfo();
 
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+  protected:
 
-private:
-     
-  G4bool       isInitialised{false};
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool isInitialised{false};
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-  
+
 #endif

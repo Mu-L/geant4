@@ -34,14 +34,15 @@
 
 // Author: M.Asai, 1998
 // --------------------------------------------------------------------
-#ifndef G4UIcmdWithAString_hh
-#define G4UIcmdWithAString_hh 1
+#ifndef G4UICMDWITHASTRING_HH
+#define G4UICMDWITHASTRING_HH
 
 #include "G4UIcommand.hh"
 
 class G4UIcmdWithAString : public G4UIcommand
 {
   public:
+
     // Constructor. The command string with full path directory
     // and the pointer to the messenger must be given
     G4UIcmdWithAString(const char* theCommandPath, G4UImessenger* theMessenger);

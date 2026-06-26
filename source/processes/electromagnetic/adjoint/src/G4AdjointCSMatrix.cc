@@ -29,11 +29,14 @@
 #include "G4AdjointInterpolator.hh"
 #include "G4SystemOfUnits.hh"
 
-#include <iomanip>
 #include <fstream>
+#include <iomanip>
 
 ///////////////////////////////////////////////////////
-G4AdjointCSMatrix::G4AdjointCSMatrix(G4bool aBool) { fScatProjToProj = aBool; }
+G4AdjointCSMatrix::G4AdjointCSMatrix(G4bool aBool)
+{
+  fScatProjToProj = aBool;
+}
 
 ///////////////////////////////////////////////////////
 G4AdjointCSMatrix::~G4AdjointCSMatrix()
@@ -41,22 +44,26 @@ G4AdjointCSMatrix::~G4AdjointCSMatrix()
   fLogPrimEnergyVector.clear();
   fLogCrossSectionVector.clear();
 
-  for (auto p : fLogSecondEnergyMatrix) {
+  for (auto p : fLogSecondEnergyMatrix)
+  {
     p->clear();
     delete p;
     p = nullptr;
   }
   fLogSecondEnergyMatrix.clear();
 
-  for (auto p : fLogProbMatrix) {
+  for (auto p : fLogProbMatrix)
+  {
     p->clear();
     delete p;
     p = nullptr;
   }
   fLogProbMatrix.clear();
 
-  for (auto p : fLogProbMatrixIndex) {
-    if (p) {
+  for (auto p : fLogProbMatrixIndex)
+  {
+    if (p)
+    {
       p->clear();
       delete p;
       p = nullptr;
@@ -80,8 +87,7 @@ void G4AdjointCSMatrix::Clear()
 ///////////////////////////////////////////////////////
 void G4AdjointCSMatrix::AddData(G4double aLogPrimEnergy, G4double aLogCS,
                                 std::vector<G4double>* aLogSecondEnergyVector,
-                                std::vector<G4double>* aLogProbVector,
-                                std::size_t n_pro_decade)
+                                std::vector<G4double>* aLogProbVector, std::size_t n_pro_decade)
 {
   G4AdjointInterpolator* theInterpolator = G4AdjointInterpolator::GetInstance();
 
@@ -93,19 +99,17 @@ void G4AdjointCSMatrix::AddData(G4double aLogPrimEnergy, G4double aLogCS,
 
   std::vector<std::size_t>* aLogProbVectorIndex = nullptr;
 
-  if(n_pro_decade > 0 && !aLogProbVector->empty())
+  if (n_pro_decade > 0 && !aLogProbVector->empty())
   {
     aLogProbVectorIndex = new std::vector<std::size_t>();
-    G4double dlog       = std::log(10.) / n_pro_decade;
-    G4double log_val =
-      G4int(std::min((*aLogProbVector)[0], aLogProbVector->back()) / dlog) * dlog;
+    G4double dlog = std::log(10.) / n_pro_decade;
+    G4double log_val = G4int(std::min((*aLogProbVector)[0], aLogProbVector->back()) / dlog) * dlog;
     fLog0Vector.push_back(log_val);
 
     // Loop checking, 07-Aug-2015, Vladimir Ivanchenko
-    while(log_val < 0.)
+    while (log_val < 0.)
     {
-      aLogProbVectorIndex->push_back(
-        theInterpolator->FindPosition(log_val, (*aLogProbVector)));
+      aLogProbVectorIndex->push_back(theInterpolator->FindPosition(log_val, (*aLogProbVector)));
       log_val += dlog;
     }
   }
@@ -119,20 +123,18 @@ void G4AdjointCSMatrix::AddData(G4double aLogPrimEnergy, G4double aLogCS,
 }
 
 ///////////////////////////////////////////////////////
-G4bool G4AdjointCSMatrix::GetData(unsigned int i, G4double& aLogPrimEnergy,
-                                  G4double& aLogCS, G4double& log0,
-                                  std::vector<G4double>*& aLogSecondEnergyVector,
+G4bool G4AdjointCSMatrix::GetData(unsigned int i, G4double& aLogPrimEnergy, G4double& aLogCS,
+                                  G4double& log0, std::vector<G4double>*& aLogSecondEnergyVector,
                                   std::vector<G4double>*& aLogProbVector,
                                   std::vector<std::size_t>*& aLogProbVectorIndex)
 {
-  if(i >= fNbPrimEnergy)
-    return false;
-  aLogPrimEnergy         = fLogPrimEnergyVector[i];
-  aLogCS                 = fLogCrossSectionVector[i];
+  if (i >= fNbPrimEnergy) return false;
+  aLogPrimEnergy = fLogPrimEnergyVector[i];
+  aLogCS = fLogCrossSectionVector[i];
   aLogSecondEnergyVector = fLogSecondEnergyMatrix[i];
-  aLogProbVector         = fLogProbMatrix[i];
-  aLogProbVectorIndex    = fLogProbMatrixIndex[i];
-  log0                   = fLog0Vector[i];
+  aLogProbVector = fLogProbMatrix[i];
+  aLogProbVectorIndex = fLogProbMatrixIndex[i];
+  log0 = fLog0Vector[i];
   return true;
 }
 
@@ -143,17 +145,17 @@ void G4AdjointCSMatrix::Write(const G4String& file_name)
   FileOutput << std::setiosflags(std::ios::scientific);
   FileOutput << std::setprecision(6);
   FileOutput << fLogPrimEnergyVector.size() << G4endl;
-  for(std::size_t i = 0; i < fLogPrimEnergyVector.size(); ++i)
+  for (std::size_t i = 0; i < fLogPrimEnergyVector.size(); ++i)
   {
     FileOutput << std::exp(fLogPrimEnergyVector[i]) / MeV << '\t'
                << std::exp(fLogCrossSectionVector[i]) << G4endl;
     std::size_t j1 = 0;
     FileOutput << fLogSecondEnergyMatrix[i]->size() << G4endl;
-    for(std::size_t j = 0; j < fLogSecondEnergyMatrix[i]->size(); ++j)
+    for (std::size_t j = 0; j < fLogSecondEnergyMatrix[i]->size(); ++j)
     {
       FileOutput << std::exp((*fLogSecondEnergyMatrix[i])[j]);
       ++j1;
-      if(j1 < 10)
+      if (j1 < 10)
         FileOutput << '\t';
       else
       {
@@ -161,15 +163,14 @@ void G4AdjointCSMatrix::Write(const G4String& file_name)
         j1 = 0;
       }
     }
-    if(j1 > 0)
-      FileOutput << G4endl;
+    if (j1 > 0) FileOutput << G4endl;
     j1 = 0;
     FileOutput << fLogProbMatrix[i]->size() << G4endl;
-    for(std::size_t j = 0; j < fLogProbMatrix[i]->size(); ++j)
+    for (std::size_t j = 0; j < fLogProbMatrix[i]->size(); ++j)
     {
       FileOutput << std::exp((*fLogProbMatrix[i])[j]);
       ++j1;
-      if(j1 < 10)
+      if (j1 < 10)
         FileOutput << '\t';
       else
       {
@@ -177,8 +178,7 @@ void G4AdjointCSMatrix::Write(const G4String& file_name)
         j1 = 0;
       }
     }
-    if(j1 > 0)
-      FileOutput << G4endl;
+    if (j1 > 0) FileOutput << G4endl;
   }
 }
 
@@ -193,7 +193,7 @@ void G4AdjointCSMatrix::Read(const G4String& file_name)
   fLogSecondEnergyMatrix.clear();
   fLogProbMatrix.clear();
   FileOutput >> n1;
-  for(std::size_t i = 0; i < n1; ++i)
+  for (std::size_t i = 0; i < n1; ++i)
   {
     G4double E, CS;
     FileOutput >> E >> CS;
@@ -203,14 +203,14 @@ void G4AdjointCSMatrix::Read(const G4String& file_name)
     fLogSecondEnergyMatrix.push_back(new std::vector<G4double>());
     fLogProbMatrix.push_back(new std::vector<G4double>());
 
-    for(std::size_t j = 0; j < n2; ++j)
+    for (std::size_t j = 0; j < n2; ++j)
     {
       G4double E1;
       FileOutput >> E1;
       fLogSecondEnergyMatrix[i]->push_back(E1);
     }
     FileOutput >> n2;
-    for(std::size_t j = 0; j < n2; ++j)
+    for (std::size_t j = 0; j < n2; ++j)
     {
       G4double prob;
       FileOutput >> prob;

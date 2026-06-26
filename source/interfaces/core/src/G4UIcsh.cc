@@ -46,7 +46,8 @@ G4String G4UIcsh::GetCommandLineString(const char* msg)
 
   G4String newCommand;
   G4StrUtil::readline(G4cin, newCommand, false);
-  if (! G4cin.good()) {
+  if (!G4cin.good())
+  {
     G4cin.clear();
     newCommand = "exit";
     return newCommand;
@@ -54,11 +55,13 @@ G4String G4UIcsh::GetCommandLineString(const char* msg)
   G4StrUtil::rstrip(newCommand, '\r');  // fix for odd behavior on Windows
 
   // multi-line
-  while ((newCommand.length() > 0) && (newCommand[G4int(newCommand.length() - 1)] == '_')) {
+  while ((newCommand.length() > 0) && (newCommand[G4int(newCommand.length() - 1)] == '_'))
+  {
     G4String newLine;
     newCommand.erase(newCommand.length() - 1);
     G4StrUtil::readline(G4cin, newLine, false);
-    if (! G4cin.good()) {
+    if (!G4cin.good())
+    {
       G4cin.clear();
       newCommand = "exit";
       return newCommand;

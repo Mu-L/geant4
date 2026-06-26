@@ -11,7 +11,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -145,6 +145,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 0
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -958,15 +959,15 @@ G4VoxelisationHelper::ReportVoxelStats -- Voxel Statistics
  Run terminated.
 Run Summary
   Number of events processed : 20
-  User=7.820000s Real=7.844421s Sys=0.010000s
+  User=7.310000s Real=7.353301s Sys=0.010000s
 ### Run 0 end.
 ... write file : ccal.root - done
 ... close file : ccal.root - done
 G4 kernel has come to Quit state.
 Deleting G4Run (id:0) 
-UserDetectorConstruction deleted 0x1283e30
-UserPhysicsList deleted 0x1283490
-UserActionInitialization deleted 0x14483c0
+UserDetectorConstruction deleted 0x20ba4e0
+UserPhysicsList deleted 0x20b91e0
+UserActionInitialization deleted 0x2281030
 UserWorkerInitialization deleted 0
 UserWorkerThreadInitialization deleted 0
 UserRunAction deleted.
@@ -980,19 +981,19 @@ TransportationManager deleted.
 Total navigation history collections cleaned: 49
 G4RNGHelper object is deleted.
 ================== Deleting memory pools ===================
-Pool ID '20G4NavigationLevelRep', size : 0.0721 MB
+Pool ID '20G4NavigationLevelRep', size : 0.0711 MB
 Pool ID '24G4ReferenceCountedHandleIvE', size : 0.000961 MB
-Pool ID '17G4DynamicParticle', size : 0.0548 MB
+Pool ID '17G4DynamicParticle', size : 0.0586 MB
 Pool ID '7G4Event', size : 0.000961 MB
 Pool ID '15G4PrimaryVertex', size : 0.000961 MB
 Pool ID '17G4PrimaryParticle', size : 0.000961 MB
 Pool ID '15G4HCofThisEvent', size : 0.000961 MB
 Pool ID '16G4HitsCollection', size : 0.000961 MB
-Pool ID '7G4Track', size : 0.109 MB
+Pool ID '7G4Track', size : 0.116 MB
 Pool ID '18G4TouchableHistory', size : 0.00577 MB
 Pool ID '15G4CountedObjectIvE', size : 0.000961 MB
-Pool ID '17G4ReactionProduct', size : 0.0183 MB
-Pool ID '10G4Fragment', size : 0.0125 MB
+Pool ID '17G4ReactionProduct', size : 0.0135 MB
+Pool ID '10G4Fragment', size : 0.00769 MB
 Number of memory pools allocated: 13 of which, static: 0
 Dynamic pools deleted: 13 / Total memory freed: 0.28 MB
 ============================================================

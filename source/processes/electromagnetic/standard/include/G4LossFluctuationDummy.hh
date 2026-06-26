@@ -38,41 +38,34 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4LossFluctuationDummy_h
-#define G4LossFluctuationDummy_h 1
+#ifndef G4LOSSFLUCTUATIONDUMMY_HH
+#define G4LOSSFLUCTUATIONDUMMY_HH
 
 #include "G4VEmFluctuationModel.hh"
 
 class G4LossFluctuationDummy : public G4VEmFluctuationModel
 {
+  public:
 
-public:
+    explicit G4LossFluctuationDummy(const G4String& nam = "DummyFluc");
 
-  explicit G4LossFluctuationDummy(const G4String& nam = "DummyFluc");
+    ~G4LossFluctuationDummy() override;
 
-  ~G4LossFluctuationDummy() override;
+    G4double SampleFluctuations(const G4MaterialCutsCouple*, const G4DynamicParticle*,
+                                const G4double, const G4double, const G4double,
+                                const G4double) final;
 
-  G4double SampleFluctuations(const G4MaterialCutsCouple*,
-			      const G4DynamicParticle*,
-                              const G4double, const G4double,
-			      const G4double, const G4double) final;
+    G4double Dispersion(const G4Material*, const G4DynamicParticle*, const G4double, const G4double,
+                        const G4double) final;
 
-  G4double Dispersion(const G4Material*,
-		      const G4DynamicParticle*,
-                      const G4double, const G4double,
-                      const G4double) final;
+    // Initialisation prestep
+    void SetParticleAndCharge(const G4ParticleDefinition*, G4double) final;
 
-  // Initialisation prestep
-  void SetParticleAndCharge(const G4ParticleDefinition*, G4double) final;
-
-  // hide assignment operator
-  G4LossFluctuationDummy & operator=
-  (const  G4LossFluctuationDummy &right) = delete;
-  G4LossFluctuationDummy(const  G4LossFluctuationDummy&) = delete;
-
+    // hide assignment operator
+    G4LossFluctuationDummy& operator=(const G4LossFluctuationDummy& right) = delete;
+    G4LossFluctuationDummy(const G4LossFluctuationDummy&) = delete;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

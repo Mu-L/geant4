@@ -23,16 +23,19 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 
-#pragma once
+#ifndef G4VTKOFFSCREEN_HH
+#define G4VTKOFFSCREEN_HH
 
 #include "G4VGraphicsSystem.hh"
 
 class G4VtkOffscreen : public G4VGraphicsSystem
 {
   public:
+
     G4VtkOffscreen();
     ~G4VtkOffscreen() override = default;
     G4VSceneHandler* CreateSceneHandler(const G4String& name = "") override;
     G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "") override;
 };
 
+#endif

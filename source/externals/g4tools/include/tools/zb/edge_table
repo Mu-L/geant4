@@ -4,23 +4,20 @@
 #ifndef tools_zb_edge_table
 #define tools_zb_edge_table
 
+#include "../cmemT"
 #include "line"
 #include "point"
 
-#include "../cmemT"
-#include <cstdio> //NULL
+#include <cstdio>  //NULL
 
-namespace tools {
-namespace zb {
+namespace tools
+{
+namespace zb
+{
 
 /***************************************************************************/
-inline void InsertEdgeInET (
- EdgeTable* ET
-,EdgeTableEntry* ETE
-,int scanline
-,ScanLineListBlock** SLLBlock
-,int* iSLLBlock
-)
+inline void InsertEdgeInET(EdgeTable* ET, EdgeTableEntry* ETE, int scanline,
+                           ScanLineListBlock** SLLBlock, int* iSLLBlock)
 /***************************************************************************/
 /*
  *     InsertEdgeInET
@@ -35,69 +32,63 @@ inline void InsertEdgeInET (
 {
   EdgeTableEntry *start, *prev;
   ScanLineList *pSLL, *pPrevSLL;
-  ScanLineListBlock *tmpSLLBlock;
-/*.........................................................................*/
+  ScanLineListBlock* tmpSLLBlock;
+  /*.........................................................................*/
 
-    /*
-     * find the right bucket to put the edge into
-     */
-    pPrevSLL = &ET->scanlines;
-    pSLL = pPrevSLL->next;
-    while (pSLL && (pSLL->scanline < scanline))
+  /*
+   * find the right bucket to put the edge into
+   */
+  pPrevSLL = &ET->scanlines;
+  pSLL = pPrevSLL->next;
+  while (pSLL && (pSLL->scanline < scanline))
+  {
+    pPrevSLL = pSLL;
+    pSLL = pSLL->next;
+  }
+
+  /*
+   * reassign pSLL (pointer to ScanLineList) if necessary
+   */
+  if ((pSLL == NULL) || (pSLL->scanline > scanline))
+  {
+    if (*iSLLBlock > SLLSPERBLOCK - 1)
     {
-        pPrevSLL = pSLL;
-        pSLL = pSLL->next;
+      tmpSLLBlock = cmem_alloc<ScanLineListBlock>(1);
+      (*SLLBlock)->next = tmpSLLBlock;
+      tmpSLLBlock->next = (ScanLineListBlock*)NULL;
+      *SLLBlock = tmpSLLBlock;
+      *iSLLBlock = 0;
     }
+    pSLL = &((*SLLBlock)->SLLs[(*iSLLBlock)++]);
 
-    /*
-     * reassign pSLL (pointer to ScanLineList) if necessary
-     */
-    if ( (pSLL==NULL) || (pSLL->scanline > scanline))
-    {
-        if (*iSLLBlock > SLLSPERBLOCK-1)
-        {
-            tmpSLLBlock = cmem_alloc<ScanLineListBlock>(1);
-            (*SLLBlock)->next = tmpSLLBlock;
-            tmpSLLBlock->next = (ScanLineListBlock *)NULL;
-            *SLLBlock = tmpSLLBlock;
-            *iSLLBlock = 0;
-        }
-        pSLL = &((*SLLBlock)->SLLs[(*iSLLBlock)++]);
+    pSLL->next = pPrevSLL->next;
+    pSLL->edgelist = (EdgeTableEntry*)NULL;
+    pPrevSLL->next = pSLL;
+  }
+  pSLL->scanline = scanline;
 
-        pSLL->next = pPrevSLL->next;
-        pSLL->edgelist = (EdgeTableEntry *)NULL;
-        pPrevSLL->next = pSLL;
-    }
-    pSLL->scanline = scanline;
+  /*
+   * now insert the edge in the right bucket
+   */
+  prev = (EdgeTableEntry*)NULL;
+  start = pSLL->edgelist;
+  while (start && (start->bres.minor_axis < ETE->bres.minor_axis))
+  {
+    prev = start;
+    start = start->next;
+  }
+  ETE->next = start;
 
-    /*
-     * now insert the edge in the right bucket
-     */
-    prev = (EdgeTableEntry *)NULL;
-    start = pSLL->edgelist;
-    while (start && (start->bres.minor_axis < ETE->bres.minor_axis))
-    {
-        prev = start;
-        start = start->next;
-    }
-    ETE->next = start;
-
-    if (prev!=NULL)
-        prev->next = ETE;
-    else
-        pSLL->edgelist = ETE;
+  if (prev != NULL)
+    prev->next = ETE;
+  else
+    pSLL->edgelist = ETE;
 }
 
 /***************************************************************************/
-inline void CreateETandAET (
- int count
-,point* pts
-,EdgeTable* ET
-,EdgeTableEntry* AET
-,EdgeTableEntry* pETEs
-,ScanLineListBlock* pSLLBlock
-,int a_pts_xmin,int a_pts_ymin,int a_pts_ymax
-)
+inline void CreateETandAET(int count, point* pts, EdgeTable* ET, EdgeTableEntry* AET,
+                           EdgeTableEntry* pETEs, ScanLineListBlock* pSLLBlock, int a_pts_xmin,
+                           int a_pts_ymin, int a_pts_ymax)
 /***************************************************************************/
 /*
  *     CreateEdgeTable
@@ -129,198 +120,204 @@ inline void CreateETandAET (
   point *PrevPt, *CurrPt;
   int iSLLBlock = 0;
   int dy;
-/*.........................................................................*/
+  /*.........................................................................*/
 
-    if (count < 2)  return;
+  if (count < 2) return;
+
+  /*
+   *  initialize the Active Edge Table
+   */
+  AET->next = (EdgeTableEntry*)NULL;
+  AET->back = (EdgeTableEntry*)NULL;
+  AET->nextWETE = (EdgeTableEntry*)NULL;
+  AET->bres.minor_axis = a_pts_xmin;
+
+  /*
+   *  initialize the Edge Table.
+   */
+  ET->scanlines.next = (ScanLineList*)NULL;
+  ET->ymax = a_pts_ymin;
+  ET->ymin = a_pts_ymax;
+  pSLLBlock->next = (ScanLineListBlock*)NULL;
+
+  PrevPt = &pts[count - 1];
+
+  /*
+   *  for each vertex in the array of points.
+   *  In this loop we are dealing with two vertices at
+   *  a time -- these make up one edge of the polygon.
+   */
+  while (count--)
+  {
+    CurrPt = pts++;
 
     /*
-     *  initialize the Active Edge Table
+     *  find out which point is above and which is below.
      */
-    AET->next = (EdgeTableEntry *)NULL;
-    AET->back = (EdgeTableEntry *)NULL;
-    AET->nextWETE = (EdgeTableEntry *)NULL;
-    AET->bres.minor_axis = a_pts_xmin;
-
-    /*
-     *  initialize the Edge Table.
-     */
-    ET->scanlines.next = (ScanLineList *)NULL;
-    ET->ymax = a_pts_ymin;
-    ET->ymin = a_pts_ymax;
-    pSLLBlock->next = (ScanLineListBlock *)NULL;
-
-    PrevPt = &pts[count-1];
-
-    /*
-     *  for each vertex in the array of points.
-     *  In this loop we are dealing with two vertices at
-     *  a time -- these make up one edge of the polygon.
-     */
-    while (count--)
+    if (PrevPt->y > CurrPt->y)
     {
-        CurrPt = pts++;
-
-        /*
-         *  find out which point is above and which is below.
-         */
-        if (PrevPt->y > CurrPt->y)
-        {
-            bottom = PrevPt, top = CurrPt;
-            pETEs->ClockWise = 0;
-        }
-        else
-        {
-            bottom = CurrPt, top = PrevPt;
-            pETEs->ClockWise = 1;
-        }
-
-        /*
-         * don't add horizontal edges to the Edge table.
-         */
-        if (bottom->y != top->y)
-        {
-            pETEs->ymax = (int)(bottom->y-1);  /* -1 so we don't get last scanline */
-
-            /*
-             *  initialize integer edge algorithm
-             */
-            dy = (int)(bottom->y - top->y);
-            BRESINITPGONSTRUCT (dy,(int)top->x,(int)bottom->x, pETEs->bres)
-
-            InsertEdgeInET (ET, pETEs, (int)top->y, &pSLLBlock, &iSLLBlock);
-
-	    if (PrevPt->y > ET->ymax) ET->ymax = (int) PrevPt->y;
-	    if (PrevPt->y < ET->ymin) ET->ymin = (int) PrevPt->y;
-            pETEs++;
-        }
-
-        PrevPt = CurrPt;
+      bottom = PrevPt, top = CurrPt;
+      pETEs->ClockWise = 0;
     }
+    else
+    {
+      bottom = CurrPt, top = PrevPt;
+      pETEs->ClockWise = 1;
+    }
+
+    /*
+     * don't add horizontal edges to the Edge table.
+     */
+    if (bottom->y != top->y)
+    {
+      pETEs->ymax = (int)(bottom->y - 1); /* -1 so we don't get last scanline */
+
+      /*
+       *  initialize integer edge algorithm
+       */
+      dy = (int)(bottom->y - top->y);
+      BRESINITPGONSTRUCT(dy, (int)top->x, (int)bottom->x, pETEs->bres)
+
+      InsertEdgeInET(ET, pETEs, (int)top->y, &pSLLBlock, &iSLLBlock);
+
+      if (PrevPt->y > ET->ymax) ET->ymax = (int)PrevPt->y;
+      if (PrevPt->y < ET->ymin) ET->ymin = (int)PrevPt->y;
+      pETEs++;
+    }
+
+    PrevPt = CurrPt;
+  }
 }
 
-inline void LoadAET(EdgeTableEntry* AET,EdgeTableEntry* ETEs) {
-/*
- *     LoadAET
- *
- *     This routine moves EdgeTableEntries from the
- *     EdgeTable into the Active Edge Table,
- *     leaving them sorted by smaller x coordinate.
- *
- */
-  EdgeTableEntry *pPrevAET;
-  EdgeTableEntry *tmp;
+inline void LoadAET(EdgeTableEntry* AET, EdgeTableEntry* ETEs)
+{
+  /*
+   *     LoadAET
+   *
+   *     This routine moves EdgeTableEntries from the
+   *     EdgeTable into the Active Edge Table,
+   *     leaving them sorted by smaller x coordinate.
+   *
+   */
+  EdgeTableEntry* pPrevAET;
+  EdgeTableEntry* tmp;
 
   pPrevAET = AET;
   AET = AET->next;
-  while(ETEs) {
-        while (AET && (AET->bres.minor_axis < ETEs->bres.minor_axis))
-        {
-            pPrevAET = AET;
-            AET = AET->next;
-        }
-        tmp = ETEs->next;
-        ETEs->next = AET;
-        if (AET!=NULL)
-            AET->back = ETEs;
-        ETEs->back = pPrevAET;
-        pPrevAET->next = ETEs;
-        pPrevAET = ETEs;
+  while (ETEs)
+  {
+    while (AET && (AET->bres.minor_axis < ETEs->bres.minor_axis))
+    {
+      pPrevAET = AET;
+      AET = AET->next;
+    }
+    tmp = ETEs->next;
+    ETEs->next = AET;
+    if (AET != NULL) AET->back = ETEs;
+    ETEs->back = pPrevAET;
+    pPrevAET->next = ETEs;
+    pPrevAET = ETEs;
 
-        ETEs = tmp;
+    ETEs = tmp;
   }
 }
 
-inline void ComputeWAET(EdgeTableEntry* AET) {
-/*
- *     ComputeWAET
- *
- *     This routine links the AET by the
- *     nextWETE (winding EdgeTableEntry) link for
- *     use by the winding number rule.  The final
- *     Active Edge Table (AET) might look something
- *     like:
- *
- *     AET
- *     ----------  ---------   ---------
- *     |ymax    |  |ymax    |  |ymax    |
- *     | ...    |  |...     |  |...     |
- *     |next    |->|next    |->|next    |->...
- *     |nextWETE|  |nextWETE|  |nextWETE|
- *     ---------   ---------   ^--------
- *         |                   |       |
- *         V------------------->       V---> ...
- *
- */
-  EdgeTableEntry *pWETE;
+inline void ComputeWAET(EdgeTableEntry* AET)
+{
+  /*
+   *     ComputeWAET
+   *
+   *     This routine links the AET by the
+   *     nextWETE (winding EdgeTableEntry) link for
+   *     use by the winding number rule.  The final
+   *     Active Edge Table (AET) might look something
+   *     like:
+   *
+   *     AET
+   *     ----------  ---------   ---------
+   *     |ymax    |  |ymax    |  |ymax    |
+   *     | ...    |  |...     |  |...     |
+   *     |next    |->|next    |->|next    |->...
+   *     |nextWETE|  |nextWETE|  |nextWETE|
+   *     ---------   ---------   ^--------
+   *         |                   |       |
+   *         V------------------->       V---> ...
+   *
+   */
+  EdgeTableEntry* pWETE;
   int inside = 1;
   int isInside = 0;
 
-  AET->nextWETE = (EdgeTableEntry *)NULL;
+  AET->nextWETE = (EdgeTableEntry*)NULL;
   pWETE = AET;
   AET = AET->next;
-  while(AET) {
-        if (AET->ClockWise!=0)
-            isInside++;
-        else
-            isInside--;
+  while (AET)
+  {
+    if (AET->ClockWise != 0)
+      isInside++;
+    else
+      isInside--;
 
-        if (( (inside==0) && (isInside==0) ) ||
-            ( (inside!=0) && (isInside!=0) ))
-        {
-            pWETE->nextWETE = AET;
-            pWETE = AET;
-            inside = !inside;
-        }
-        AET = AET->next;
+    if (((inside == 0) && (isInside == 0)) || ((inside != 0) && (isInside != 0)))
+    {
+      pWETE->nextWETE = AET;
+      pWETE = AET;
+      inside = !inside;
+    }
+    AET = AET->next;
   }
-  pWETE->nextWETE = (EdgeTableEntry *)NULL;
+  pWETE->nextWETE = (EdgeTableEntry*)NULL;
 }
 
-inline int InsertAndSort(EdgeTableEntry* AET) {
+inline int InsertAndSort(EdgeTableEntry* AET)
+{
   // InsertAndSort
   //   Just a simple insertion sort using
   //   pointers and back pointers to sort the Active
   //   Edge Table.
 
-  EdgeTableEntry *pETEchase;
-  EdgeTableEntry *pETEinsert;
-  EdgeTableEntry *pETEchaseBackTMP;
+  EdgeTableEntry* pETEchase;
+  EdgeTableEntry* pETEinsert;
+  EdgeTableEntry* pETEchaseBackTMP;
   int changed = 0;
 
   AET = AET->next;
-  while(AET) {
-        pETEinsert = AET;
-        pETEchase = AET;
-        while (pETEchase->back->bres.minor_axis > AET->bres.minor_axis)
-            pETEchase = pETEchase->back;
+  while (AET)
+  {
+    pETEinsert = AET;
+    pETEchase = AET;
+    while (pETEchase->back->bres.minor_axis > AET->bres.minor_axis)
+      pETEchase = pETEchase->back;
 
-        AET = AET->next;
-        if (pETEchase != pETEinsert)
-        {
-            pETEchaseBackTMP = pETEchase->back;
-            pETEinsert->back->next = AET;
-            if (AET!=NULL)
-                AET->back = pETEinsert->back;
-            pETEinsert->next = pETEchase;
-            pETEchase->back->next = pETEinsert;
-            pETEchase->back = pETEinsert;
-            pETEinsert->back = pETEchaseBackTMP;
-            changed = 1;
-        }
+    AET = AET->next;
+    if (pETEchase != pETEinsert)
+    {
+      pETEchaseBackTMP = pETEchase->back;
+      pETEinsert->back->next = AET;
+      if (AET != NULL) AET->back = pETEinsert->back;
+      pETEinsert->next = pETEchase;
+      pETEchase->back->next = pETEinsert;
+      pETEchase->back = pETEinsert;
+      pETEinsert->back = pETEchaseBackTMP;
+      changed = 1;
+    }
   }
-  return(changed);
+  return (changed);
 }
 
-inline void FreeStorage(ScanLineListBlock* pSLLBlock){
+inline void FreeStorage(ScanLineListBlock* pSLLBlock)
+{
   // Clean up our act.
   ScanLineListBlock* tmpSLLBlock;
-  while(pSLLBlock) {
+  while (pSLLBlock)
+  {
     tmpSLLBlock = pSLLBlock->next;
     cmem_free(pSLLBlock);
     pSLLBlock = tmpSLLBlock;
   }
 }
 
-}}
+}  // namespace zb
+}  // namespace tools
 
 #endif

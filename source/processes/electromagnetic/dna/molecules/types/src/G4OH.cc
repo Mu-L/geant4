@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Author: Mathieu Karamitors 
+// Author: Mathieu Karamitors
 //
 // History:
 // -----------
@@ -33,9 +33,10 @@
 // -------------------------------------------------------------------
 
 #include "G4OH.hh"
+
+#include "G4ParticleTable.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4ParticleTable.hh"
 
 // ######################################################################
 // ###                         Hydroxyl                               ###
@@ -66,18 +67,17 @@ G4OH* G4OH::Definition()
     //    );
 
     G4double mass = 17.00734 * g / Avogadro * c_squared;
-    anInstance = new G4MoleculeDefinition(name, mass, 2.8e-9 * (m * m / s), 0,
-                                          5, 0.958 * angstrom, // radius
-                                          2 // number of atoms
-                                          );
+    anInstance =
+      new G4MoleculeDefinition(name, mass, 2.8e-9 * (m * m / s), 0, 5, 0.958 * angstrom,  // radius
+                               2  // number of atoms
+      );
 
-    ((G4MoleculeDefinition*) anInstance)->SetLevelOccupation(0);
-    ((G4MoleculeDefinition*) anInstance)->SetLevelOccupation(1);
-    ((G4MoleculeDefinition*) anInstance)->SetLevelOccupation(2);
-    ((G4MoleculeDefinition*) anInstance)->SetLevelOccupation(3, 3);
-    ((G4MoleculeDefinition*) anInstance)->SetFormatedName("OH");
+    ((G4MoleculeDefinition*)anInstance)->SetLevelOccupation(0);
+    ((G4MoleculeDefinition*)anInstance)->SetLevelOccupation(1);
+    ((G4MoleculeDefinition*)anInstance)->SetLevelOccupation(2);
+    ((G4MoleculeDefinition*)anInstance)->SetLevelOccupation(3, 3);
+    ((G4MoleculeDefinition*)anInstance)->SetFormatedName("OH");
   }
   theInstance = static_cast<G4OH*>(anInstance);
   return theInstance;
 }
-

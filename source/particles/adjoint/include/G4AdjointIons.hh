@@ -37,8 +37,8 @@
 //		is based on an idea of M. Asai.
 //
 
-#ifndef G4AdjointIons_h
-#define G4AdjointIons_h 1
+#ifndef G4ADJOINTIONS_HH
+#define G4ADJOINTIONS_HH
 
 #include "G4ParticleDefinition.hh"
 #include "G4String.hh"
@@ -55,6 +55,7 @@ class G4AdjointIons : public G4ParticleDefinition
     //  the normal particle properties.
 
   public:
+
     // clang-format off
    G4AdjointIons(
        const G4String&     aName,        G4double            mass,
@@ -81,9 +82,11 @@ class G4AdjointIons : public G4ParticleDefinition
     G4double GetExcitationEnergy() const;
 
   protected:
+
     G4AdjointIons() = default;
 
   private:
+
     G4double theExcitationEnergy;
 };
 

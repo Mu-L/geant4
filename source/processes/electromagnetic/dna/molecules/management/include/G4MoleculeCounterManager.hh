@@ -27,7 +27,7 @@
 // Author: Christian Velten (2025)
 
 #ifndef G4MOLECULECOUNTERMANAGER_HH
-#define G4MOLECULECOUNTERMANAGER_HH 1
+#define G4MOLECULECOUNTERMANAGER_HH
 
 #include "G4Exception.hh"
 #include "G4Threading.hh"
@@ -45,25 +45,30 @@ class G4Run;
 class G4Step;
 class G4StepPoint;
 class G4Track;
+class G4DNAMesh;
 class G4MoleculeCounterManagerMessenger;
 
 class G4MoleculeCounterManager final
 {
   private:
+
     struct Private
     {
         explicit Private() = default;
     };
 
   public:
+
     G4MoleculeCounterManager(Private);
     ~G4MoleculeCounterManager();
 
   private:
+
     G4bool fInstancesRegistered{false};
     void RegisterInstance();
 
   public:
+
     static G4MoleculeCounterManager* Instance();
     static G4MoleculeCounterManager* GetInstanceIfExists();
     static void DeleteInstance();
@@ -78,12 +83,14 @@ class G4MoleculeCounterManager final
     void DeregisterAllCounters();
 
   private:
+
     template<typename T>
     G4int RegisterCounter(std::map<G4int, T*>&, std::unique_ptr<T>, std::function<G4int()>);
     void InitializeMaster();
     void InitializeWorker();
 
   public:
+
     // methods to receive forwarding from G4DNAChemistryManager
     void BeginOfEventAction(const G4Event*);
     void BeginOfRunAction(const G4Run*);
@@ -92,12 +99,19 @@ class G4MoleculeCounterManager final
     // Dumping counters
     void DumpMasterCounters() const;
     void DumpWorkerCounters() const;
+    // Validation
+    G4bool ManagerFlagsAreReasonable() const;
+
+  protected:
+
     // Accumulation of counters into master
     void AbsorbWorkerManagerCounters(const G4MoleculeCounterManager* = nullptr);
 
     //
     // Calls to Molecule Counters
+
   public:
+
     // [[deprecated("This should only be used for IRT and may be replaced as well.")]]
     void AddMoleculeWithoutTrack(const G4MolecularConfiguration*, G4double, G4int = 1);
     // [[deprecated("This should only be used for IRT and may be replaced as well.")]]
@@ -116,7 +130,8 @@ class G4MoleculeCounterManager final
 
     // [[deprecated("TBD")]]
     void RecordReaction(const G4DNAMolecularReactionData*, G4double, G4int = 1);
-    // void RecordReaction(const G4Track*, const G4Track*, const G4DNAMolecularReactionData*, G4double,
+    // void RecordReaction(const G4Track*, const G4Track*, const G4DNAMolecularReactionData*,
+    // G4double,
     //                     G4int = 1);
 
     void ActivateReactionCounterAtTimes(G4int, G4double, G4double, G4bool = true, G4bool = true);
@@ -129,12 +144,15 @@ class G4MoleculeCounterManager final
     void NotifyOfStep(const G4Step*);
     void NotifyOfFinalize();
 
+    void NotifyOfMesoscopicMeshSnapshot(const G4DNAMesh* const, G4double);
+
     // These will be broadcast to all counters registered at time of call
     void BroadcastIgnoreMolecule(const G4MoleculeDefinition*);
     void BroadcastIgnoreReactant(const G4MolecularConfiguration*);
     void BroadcastRegisterAllMoleculesAndReactants();
 
   private:
+
     static const G4MoleculeCounterManager* fpMasterInstance;
     static std::vector<const G4MoleculeCounterManager*> fWorkerInstances;
     G4ThreadLocalStatic std::unique_ptr<G4MoleculeCounterManager> fpInstance;
@@ -153,6 +171,7 @@ class G4MoleculeCounterManager final
     std::map<G4int, G4VMoleculeReactionCounter*> fReactionCounters{};
 
   public:
+
     G4bool GetIsActive() const { return fIsActive; }
     void SetIsActive(G4bool flag) { fIsActive = flag; }
 
@@ -184,6 +203,7 @@ class G4MoleculeCounterManager final
     const T* GetMoleculeReactionCounter(G4int) const;
 
   private:
+
     G4ThreadLocalStatic std::atomic<G4bool> fBeginOfEventTriggered;
     static std::atomic<G4bool> fBeginOfRunTriggered;
 };
@@ -198,12 +218,14 @@ G4int G4MoleculeCounterManager::RegisterCounter(std::map<G4int, T*>& map,
   // this template allows for more than one counter type to be registered in the same way without
   // duplicating code; see public methods for G4VMoleculeCounter and G4VMoleculeReactionCounter
 
-  if (fVerbosity > 0) {
+  if (fVerbosity > 0)
+  {
     G4cout << "G4MoleculeCounterManager::RegisterCounter ("
            << (G4Threading::IsMasterThread() ? "master" : "worker") << ")" << G4endl;
   }
 
-  if (counter->GetManagedId() >= 0) {
+  if (counter->GetManagedId() >= 0)
+  {
     G4ExceptionDescription description;
     description << "Trying to add a counter whose id was already altered to be non-negative!\n";
     description << "  Id: " << counter->GetManagedId() << "\n";

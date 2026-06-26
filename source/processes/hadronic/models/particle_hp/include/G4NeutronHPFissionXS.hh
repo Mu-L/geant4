@@ -23,35 +23,35 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// V. Ivanchenko 23 September 2023 
+// V. Ivanchenko 23 September 2023
 //
 // Cross-section data set for a high precision (based on evaluated data
 // libraries) description of neutron induced fission below 20 MeV
 // for nucleus with 87 < Z < 101.
 //
 
-#ifndef G4NeutronHPFissionXS_h
-#define G4NeutronHPFissionXS_h 1
+#ifndef G4NEUTRONHPFISSIONXS_HH
+#define G4NEUTRONHPFISSIONXS_HH
 
 #include "G4CrossSectionHP.hh"
+
 #include <fstream>
 
 class G4NeutronHPFissionXS final : public G4CrossSectionHP
 {
   public:
+
     G4NeutronHPFissionXS();
 
     ~G4NeutronHPFissionXS() override = default;
 
     void CrossSectionDescription(std::ostream&) const final;
 
-    G4bool IsElementApplicable(const G4DynamicParticle*, 
-                               G4int Z, const G4Material*) final;
+    G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z, const G4Material*) final;
 
-    G4double GetElementCrossSection(const G4DynamicParticle*, 
-			            G4int Z, const G4Material*) final; 
+    G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z, const G4Material*) final;
 
-    G4NeutronHPFissionXS & operator=(const G4NeutronHPFissionXS &right) = delete;
+    G4NeutronHPFissionXS& operator=(const G4NeutronHPFissionXS& right) = delete;
     G4NeutronHPFissionXS(const G4NeutronHPFissionXS&) = delete;
 };
 

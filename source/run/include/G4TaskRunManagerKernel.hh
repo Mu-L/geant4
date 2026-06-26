@@ -50,8 +50,8 @@
 //     This class re-implements only the method that require special treatment
 //     to implement worker behavior
 
-#ifndef G4TaskRunManagerKernel_hh
-#define G4TaskRunManagerKernel_hh 1
+#ifndef G4TASKRUNMANAGERKERNEL_HH
+#define G4TASKRUNMANAGERKERNEL_HH
 
 #include "G4RunManagerKernel.hh"
 #include "G4TaskRunManager.hh"
@@ -67,10 +67,12 @@ class G4WorkerTaskRunManager;
 class G4TaskRunManagerKernel : public G4RunManagerKernel
 {
   public:
+
     G4TaskRunManagerKernel();
     ~G4TaskRunManagerKernel() override = default;
 
   public:  // with descroption
+
     static G4WorkerThread* GetWorkerThread();
     // G4ThreadPool tasks
     static void InitializeWorker();
@@ -91,6 +93,7 @@ class G4TaskRunManagerKernel : public G4RunManagerKernel
     void BroadcastAbortRun(G4bool softAbort);
 
   protected:
+
     void SetupShadowProcess() const override;
     G4RUN_DLL static std::vector<G4String> initCmdStack;
 };

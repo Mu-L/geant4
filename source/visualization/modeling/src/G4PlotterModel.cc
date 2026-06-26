@@ -22,15 +22,16 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // Guy Barrand 25th September 2021
 
 #include "G4PlotterModel.hh"
 
 #include "G4VGraphicsScene.hh"
 
-G4PlotterModel::G4PlotterModel(G4Plotter& a_plotter,const G4String& description,const G4Transform3D& a_transform)
-:fPlotter(a_plotter),fTransform(a_transform)
+G4PlotterModel::G4PlotterModel(G4Plotter& a_plotter, const G4String& description,
+                               const G4Transform3D& a_transform)
+  : fPlotter(a_plotter), fTransform(a_transform)
 {
   fType = "G4PlotterModel";
   fGlobalTag = fType;
@@ -41,11 +42,11 @@ G4PlotterModel::G4PlotterModel(G4Plotter& a_plotter,const G4String& description,
   //   radius = sqrt(3*half*half)
   //   half = sqrt(radius*radius/3)
   double radius = 0.5;
-  double half = ::sqrt(radius*radius/3.0);
-  fExtent = G4VisExtent(-half,half,-half,half,-half,half); //x,y,z min/max.
+  double half = ::sqrt(radius * radius / 3.0);
+  fExtent = G4VisExtent(-half, half, -half, half, -half, half);  // x,y,z min/max.
 }
 
-void G4PlotterModel::DescribeYourselfTo (G4VGraphicsScene& sceneHandler)
+void G4PlotterModel::DescribeYourselfTo(G4VGraphicsScene& sceneHandler)
 {
   sceneHandler.BeginPrimitives(fTransform);
   sceneHandler.AddPrimitive(fPlotter);

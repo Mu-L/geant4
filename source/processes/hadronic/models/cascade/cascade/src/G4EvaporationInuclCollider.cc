@@ -36,36 +36,37 @@
 //		with G4Fragment
 
 #include "G4EvaporationInuclCollider.hh"
+
 #include "G4CollisionOutput.hh"
 #include "G4EquilibriumEvaporator.hh"
 #include "G4InuclNuclei.hh"
 
-
 typedef std::vector<G4InuclElementaryParticle>::iterator particleIterator;
 typedef std::vector<G4InuclNuclei>::iterator nucleiIterator;
 
-	 
 G4EvaporationInuclCollider::G4EvaporationInuclCollider()
   : G4CascadeDeexciteBase("G4EvaporationInuclCollider"),
-    theEquilibriumEvaporator(new G4EquilibriumEvaporator) {}
+    theEquilibriumEvaporator(new G4EquilibriumEvaporator)
+{}
 
-G4EvaporationInuclCollider::~G4EvaporationInuclCollider() {
+G4EvaporationInuclCollider::~G4EvaporationInuclCollider()
+{
   delete theEquilibriumEvaporator;
 }
 
-
-void
-G4EvaporationInuclCollider::deExcite(const G4Fragment& target,
-				     G4CollisionOutput& globalOutput) {
-  if (verboseLevel) {
+void G4EvaporationInuclCollider::deExcite(const G4Fragment& target, G4CollisionOutput& globalOutput)
+{
+  if (verboseLevel)
+  {
     G4cout << " >>> G4EvaporationInuclCollider::deExcite" << G4endl;
   }
 
-  if (verboseLevel>3) G4cout << target << G4endl;
+  if (verboseLevel > 3) G4cout << target << G4endl;
 
   theEquilibriumEvaporator->deExcite(target, globalOutput);
 
-  if (verboseLevel > 2) {
+  if (verboseLevel > 2)
+  {
     G4cout << " After EquilibriumEvaporator " << G4endl;
     globalOutput.printCollisionOutput();
     G4cout << "G4EvaporationInuclCollider::collide end" << G4endl;

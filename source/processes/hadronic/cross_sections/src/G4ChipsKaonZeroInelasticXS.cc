@@ -32,79 +32,78 @@
 // The last update: M.V. Kossov, CERN/ITEP (Moscow) 15-Feb-04
 //
 // ****************************************************************************************
-// Short description: Cross-sections extracted (by W.Pokorski) from the CHIPS package for 
+// Short description: Cross-sections extracted (by W.Pokorski) from the CHIPS package for
 // K(zero)-nuclear  interactions. Original author: M. Kossov
 // -------------------------------------------------------------------------------------
 //
 
 #include "G4ChipsKaonZeroInelasticXS.hh"
+
+#include "G4AntiKaonZero.hh"
+#include "G4CrossSectionDataSetRegistry.hh"
 #include "G4DynamicParticle.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4KaonZero.hh"
 #include "G4KaonZeroLong.hh"
 #include "G4KaonZeroShort.hh"
-#include "G4AntiKaonZero.hh"
-#include "G4CrossSectionDataSetRegistry.hh"
+#include "G4ParticleDefinition.hh"
 
 // factory
 #include "G4CrossSectionFactory.hh"
 //
 G4_DECLARE_XS_FACTORY(G4ChipsKaonZeroInelasticXS);
 
-G4ChipsKaonZeroInelasticXS::G4ChipsKaonZeroInelasticXS():G4VCrossSectionDataSet(Default_Name())
+G4ChipsKaonZeroInelasticXS::G4ChipsKaonZeroInelasticXS() : G4VCrossSectionDataSet(Default_Name())
 {
-    lastLEN=0;// Pointer to the lastArray of LowEn CS
-    lastHEN=0;// Pointer to the lastArray of HighEnCS
-    lastN=0;  // The last N of calculated nucleus
-    lastZ=0;  // The last Z of calculated nucleus
-    lastP=0.; // Last used in cross section Momentum
-    lastTH=0.;// Last threshold momentum
-    lastCS=0.;// Last value of the Cross Section
-    lastI=0;  // The last position in the DAMDB
-    
-  theKMinusCS = (G4ChipsKaonMinusInelasticXS*)G4CrossSectionDataSetRegistry::Instance()->GetCrossSectionDataSet(G4ChipsKaonMinusInelasticXS::Default_Name());;
-  theKPlusCS = (G4ChipsKaonPlusInelasticXS*)G4CrossSectionDataSetRegistry::Instance()->GetCrossSectionDataSet(G4ChipsKaonPlusInelasticXS::Default_Name());
+  lastLEN = 0;  // Pointer to the lastArray of LowEn CS
+  lastHEN = 0;  // Pointer to the lastArray of HighEnCS
+  lastN = 0;  // The last N of calculated nucleus
+  lastZ = 0;  // The last Z of calculated nucleus
+  lastP = 0.;  // Last used in cross section Momentum
+  lastTH = 0.;  // Last threshold momentum
+  lastCS = 0.;  // Last value of the Cross Section
+  lastI = 0;  // The last position in the DAMDB
+
+  theKMinusCS =
+    (G4ChipsKaonMinusInelasticXS*)G4CrossSectionDataSetRegistry::Instance()->GetCrossSectionDataSet(
+      G4ChipsKaonMinusInelasticXS::Default_Name());
+  ;
+  theKPlusCS =
+    (G4ChipsKaonPlusInelasticXS*)G4CrossSectionDataSetRegistry::Instance()->GetCrossSectionDataSet(
+      G4ChipsKaonPlusInelasticXS::Default_Name());
 }
 
+G4ChipsKaonZeroInelasticXS::~G4ChipsKaonZeroInelasticXS() {}
 
-G4ChipsKaonZeroInelasticXS::~G4ChipsKaonZeroInelasticXS()
+void G4ChipsKaonZeroInelasticXS::CrossSectionDescription(std::ostream& outFile) const
 {
+  outFile << "G4ChipsKaonZeroInelasticXS provides the inelastic cross\n"
+          << "section for K0 nucleus scattering as a function of incident\n"
+          << "momentum. The cross section is calculated using M. Kossov's\n"
+          << "CHIPS parameterization of cross section data.\n";
 }
 
-void
-G4ChipsKaonZeroInelasticXS::CrossSectionDescription(std::ostream& outFile) const
-{
-    outFile << "G4ChipsKaonZeroInelasticXS provides the inelastic cross\n"
-            << "section for K0 nucleus scattering as a function of incident\n"
-            << "momentum. The cross section is calculated using M. Kossov's\n"
-            << "CHIPS parameterization of cross section data.\n";
-}
-
-G4bool G4ChipsKaonZeroInelasticXS::IsIsoApplicable(const G4DynamicParticle*, G4int, G4int,    
-				 const G4Element*,
-				 const G4Material*)
+G4bool G4ChipsKaonZeroInelasticXS::IsIsoApplicable(const G4DynamicParticle*, G4int, G4int,
+                                                   const G4Element*, const G4Material*)
 {
   return true;
 }
 
-
-
 // The main member function giving the collision cross section (P is in IU, CS is in mb)
 // Make pMom in independent units ! (Now it is MeV)
 
-G4double G4ChipsKaonZeroInelasticXS::GetIsoCrossSection(const G4DynamicParticle* Pt, G4int tgZ, G4int A,  
-							const G4Isotope*,
-							const G4Element*,
-							const G4Material*)
+G4double G4ChipsKaonZeroInelasticXS::GetIsoCrossSection(const G4DynamicParticle* Pt, G4int tgZ,
+                                                        G4int A, const G4Isotope*, const G4Element*,
+                                                        const G4Material*)
 {
-  G4double pMom=Pt->GetTotalMomentum();
+  G4double pMom = Pt->GetTotalMomentum();
   G4int N = A - tgZ;
-  
+
   return GetChipsCrossSection(pMom, tgZ, N, 311);
 }
 
 G4double G4ChipsKaonZeroInelasticXS::GetChipsCrossSection(G4double mom, G4int Z, G4int N, G4int pdg)
 {
-  return (theKMinusCS->GetChipsCrossSection(mom,Z,N,pdg)
-	  +theKPlusCS->GetChipsCrossSection(mom,Z,N,pdg))/2;
+  return (theKMinusCS->GetChipsCrossSection(mom, Z, N, pdg)
+          + theKPlusCS->GetChipsCrossSection(mom, Z, N, pdg))
+         / 2;
 }

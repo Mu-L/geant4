@@ -25,7 +25,7 @@
 //
 //
 // -------------------------------------------------------------------
-//      GEANT 4 class file 
+//      GEANT 4 class file
 //
 //      CERN, Geneva, Switzerland
 //
@@ -36,149 +36,170 @@
 // -------------------------------------------------------------------
 
 #include "G4GammaTransition.hh"
+
 #include "G4AtomicShells.hh"
-#include "Randomize.hh"
-#include "G4RandomDirection.hh"
-#include "G4Gamma.hh"
 #include "G4Electron.hh"
+#include "G4Gamma.hh"
 #include "G4LorentzVector.hh"
-#include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4RandomDirection.hh"
+#include "G4SystemOfUnits.hh"
+#include "Randomize.hh"
 
-G4GammaTransition::G4GammaTransition() 
-  : polarFlag(false), fDirection(0.,0.,0.), fTwoJMAX(10), fVerbose(0)
+G4GammaTransition::G4GammaTransition()
+  : polarFlag(false), fDirection(0., 0., 0.), fTwoJMAX(10), fVerbose(0)
 {}
 
-G4GammaTransition::~G4GammaTransition() 
-{}
-  
-G4Fragment* 
-G4GammaTransition::SampleTransition(G4Fragment* nucleus,
-				    G4double newExcEnergy,
-				    G4double mpRatio,
-				    G4int  JP1,
-				    G4int  JP2,
-				    G4int  MP,
-				    G4int  shell,
-				    G4bool isDiscrete,
-				    G4bool gamma)
+G4GammaTransition::~G4GammaTransition() {}
+
+G4Fragment* G4GammaTransition::SampleTransition(G4Fragment* nucleus, G4double newExcEnergy,
+                                                G4double mpRatio, G4int JP1, G4int JP2, G4int MP,
+                                                G4int shell, G4bool isDiscrete, G4bool gamma)
 {
   G4Fragment* result = nullptr;
   G4double bondEnergy = 0.0;
   G4bool isGamma = gamma;
-  if (!isDiscrete) { isGamma = true; }
+  if (!isDiscrete)
+  {
+    isGamma = true;
+  }
 
   G4double excEnergy = nucleus->GetExcitationEnergy();
 
-  // check is IC electron can be emitted 
-  if (!isGamma) { 
-    if(0 <= shell) {
+  // check is IC electron can be emitted
+  if (!isGamma)
+  {
+    if (0 <= shell)
+    {
       G4int Z = nucleus->GetZ_asInt();
-      if(Z <= 104) {
-	G4int idx = std::min(shell, G4AtomicShells::GetNumberOfShells(Z)-1);
-	bondEnergy = G4AtomicShells::GetBindingEnergy(Z, idx);
-	if (bondEnergy > excEnergy) {
-	  isGamma = true;
-	}
-      } else {
-	isGamma = true;
+      if (Z <= 104)
+      {
+        G4int idx = std::min(shell, G4AtomicShells::GetNumberOfShells(Z) - 1);
+        bondEnergy = G4AtomicShells::GetBindingEnergy(Z, idx);
+        if (bondEnergy > excEnergy)
+        {
+          isGamma = true;
+        }
       }
-    } else {
+      else
+      {
+        isGamma = true;
+      }
+    }
+    else
+    {
       isGamma = true;
     }
   }
-  if (fVerbose > 2) {
-    G4cout << "G4GammaTransition::GenerateGamma " << " Eexnew=" << newExcEnergy 
-	   << " Ebond=" << bondEnergy << G4endl;
-  } 
-  
+  if (fVerbose > 2)
+  {
+    G4cout << "G4GammaTransition::GenerateGamma " << " Eexnew=" << newExcEnergy
+           << " Ebond=" << bondEnergy << G4endl;
+  }
+
   // complete selection of secondary
   G4ParticleDefinition* part;
   G4int ne = nucleus->GetNumberOfElectrons();
-  if (0 == ne) { isGamma = true; }
+  if (0 == ne)
+  {
+    isGamma = true;
+  }
 
-  if ( isGamma ) { part = G4Gamma::Gamma(); }
-  else {
+  if (isGamma)
+  {
+    part = G4Gamma::Gamma();
+  }
+  else
+  {
     part = G4Electron::Electron();
     --ne;
     nucleus->SetNumberOfElectrons(ne);
   }
 
-  if (isGamma && polarFlag && isDiscrete && JP1 <= fTwoJMAX) {
+  if (isGamma && polarFlag && isDiscrete && JP1 <= fTwoJMAX)
+  {
     SampleDirection(nucleus, mpRatio, JP1, JP2, MP);
-  } else {
+  }
+  else
+  {
     fDirection = G4RandomDirection();
   }
 
-  // 4-vector of initial fragnet 
+  // 4-vector of initial fragnet
   G4LorentzVector lv = nucleus->GetMomentum();
 
   // kinematics of the decay
   G4double emass = part->GetPDGMass();
   G4double m0 = nucleus->GetGroundStateMass() + excEnergy;
   G4double m1 = nucleus->GetGroundStateMass() + newExcEnergy;
-  if (!isGamma) {
-    m0 += (ne + 1)*CLHEP::electron_mass_c2 - bondEnergy;
-    m1 += ne*CLHEP::electron_mass_c2;
+  if (!isGamma)
+  {
+    m0 += (ne + 1) * CLHEP::electron_mass_c2 - bondEnergy;
+    m1 += ne * CLHEP::electron_mass_c2;
   }
 
   // 2-body decay in rest frame
-  const G4double elim2 = 100.*CLHEP::eV*CLHEP::eV;
+  const G4double elim2 = 100. * CLHEP::eV * CLHEP::eV;
   G4bool atRest = (lv.vect().mag2() < elim2);
   G4ThreeVector bst(0.0, 0.0, 0.0);
-  if (!atRest) { bst = lv.boostVector(); }
+  if (!atRest)
+  {
+    bst = lv.boostVector();
+  }
 
-  //G4cout << "Ecm= " << ecm << " mass= " << mass << " emass= " << emass << G4endl;
+  // G4cout << "Ecm= " << ecm << " mass= " << mass << " emass= " << emass << G4endl;
 
-  G4double energy = 0.5*((m0 - m1)*(m0 + m1) + emass*emass)/m0;
-  G4double mom = (isGamma) ? energy : std::sqrt((energy - emass)*(energy + emass));
+  G4double energy = 0.5 * ((m0 - m1) * (m0 + m1) + emass * emass) / m0;
+  G4double mom = (isGamma) ? energy : std::sqrt((energy - emass) * (energy + emass));
 
   // emitted gamma or e-
-  G4LorentzVector res4mom(mom * fDirection.x(),
-			  mom * fDirection.y(),
-			  mom * fDirection.z(), energy);
+  G4LorentzVector res4mom(mom * fDirection.x(), mom * fDirection.y(), mom * fDirection.z(), energy);
   // residual
   energy = m0 - energy;
-  mom = std::sqrt((energy - m1)*(energy + m1));
-  lv.set(-mom*fDirection.x(), -mom*fDirection.y(), -mom*fDirection.z(), energy);
+  mom = std::sqrt((energy - m1) * (energy + m1));
+  lv.set(-mom * fDirection.x(), -mom * fDirection.y(), -mom * fDirection.z(), energy);
 
   // Lab system transform for short lived level
-  if (!atRest) {
+  if (!atRest)
+  {
     lv.boost(bst);
     res4mom.boost(bst);
   }
 
-  // modified primary fragment 
+  // modified primary fragment
   nucleus->SetExcEnergyAndMomentum(newExcEnergy, lv);
 
   // gamma or e- are produced
   result = new G4Fragment(res4mom, part);
 
-  //G4cout << " DeltaE= " << e0 - lv.e() - res4mom.e() + emass
+  // G4cout << " DeltaE= " << e0 - lv.e() - res4mom.e() + emass
   //	 << "   Emass= " << emass << G4endl;
-  if(fVerbose > 2) {
+  if (fVerbose > 2)
+  {
     G4cout << "G4GammaTransition::SampleTransition : " << *result << G4endl;
     G4cout << "       Left nucleus: " << *nucleus << G4endl;
   }
   return result;
 }
 
-void G4GammaTransition::SampleDirection(G4Fragment* nuc, G4double ratio, 
-					G4int twoJ1, G4int twoJ2, G4int mp)
+void G4GammaTransition::SampleDirection(G4Fragment* nuc, G4double ratio, G4int twoJ1, G4int twoJ2,
+                                        G4int mp)
 {
   G4double cosTheta, phi;
-  G4NuclearPolarization* np = nuc->GetNuclearPolarization(); 
-  if(fVerbose > 2) {
-    G4cout << "G4GammaTransition::SampleDirection : 2J1= " << twoJ1 
-	   << " 2J2= " << twoJ2 << " ratio= " << ratio 
-	   << " mp= " << mp << G4endl;
+  G4NuclearPolarization* np = nuc->GetNuclearPolarization();
+  if (fVerbose > 2)
+  {
+    G4cout << "G4GammaTransition::SampleDirection : 2J1= " << twoJ1 << " 2J2= " << twoJ2
+           << " ratio= " << ratio << " mp= " << mp << G4endl;
     G4cout << "  Nucleus: " << *nuc << G4endl;
   }
-  if(nullptr == np) {
-    cosTheta = 2*G4UniformRand() - 1.0;
-    phi = CLHEP::twopi*G4UniformRand();
-
-  } else {
+  if (nullptr == np)
+  {
+    cosTheta = 2 * G4UniformRand() - 1.0;
+    phi = CLHEP::twopi * G4UniformRand();
+  }
+  else
+  {
     // PhotonEvaporation dataset:
     // The multipolarity number with 1,2,3,4,5,6,7 representing E0,E1,M1,E2,M2,E3,M3
     // monopole transition and 100*Nx+Ny representing multipolarity transition with
@@ -189,21 +210,28 @@ void G4GammaTransition::SampleDirection(G4Fragment* nuc, G4double ratio,
     G4double mpRatio = ratio;
 
     G4int L0 = 0, Lp = 0;
-    if (mp > 99) {
-      L0 = mp/200;
-      Lp = (mp%100)/2;
-    } else {
-      L0 = mp/2;
+    if (mp > 99)
+    {
+      L0 = mp / 200;
+      Lp = (mp % 100) / 2;
+    }
+    else
+    {
+      L0 = mp / 2;
       Lp = 0;
       mpRatio = 0.;
-    } 
+    }
     fPolTrans.SampleGammaTransition(np, twoJ1, twoJ2, L0, Lp, mpRatio, cosTheta, phi);
   }
 
-  G4double sinTheta = std::sqrt((1.-cosTheta)*(1.+cosTheta));
-  fDirection.set(sinTheta*std::cos(phi),sinTheta*std::sin(phi),cosTheta);
-  if(fVerbose > 3) {
+  G4double sinTheta = std::sqrt((1. - cosTheta) * (1. + cosTheta));
+  fDirection.set(sinTheta * std::cos(phi), sinTheta * std::sin(phi), cosTheta);
+  if (fVerbose > 3)
+  {
     G4cout << "G4GammaTransition::SampleDirection done: " << fDirection << G4endl;
-    if(np) { G4cout << *np << G4endl; }
+    if (np)
+    {
+      G4cout << *np << G4endl;
+    }
   }
 }

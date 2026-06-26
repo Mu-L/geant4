@@ -40,8 +40,8 @@
 // Based on the study by S. Zein et. al. Nucl. Inst. Meth. B 488 (2021) 70-82
 // 1/2/2023 : Hoang added modification for DNA cross sections
 
-#ifndef G4DNACPA100ExcitationModel_h
-#define G4DNACPA100ExcitationModel_h 1
+#ifndef G4DNACPA100EXCITATIONMODEL_HH
+#define G4DNACPA100EXCITATIONMODEL_HH
 
 #include "G4DNACPA100ExcitationStructure.hh"
 #include "G4DNACrossSectionDataSet.hh"
@@ -56,6 +56,7 @@
 class G4DNACPA100ExcitationModel : public G4VDNAModel
 {
   public:
+
     explicit G4DNACPA100ExcitationModel(const G4ParticleDefinition* p = nullptr,
                                         const G4String& nam = "DNACPA100ExcitationModel");
 
@@ -77,6 +78,7 @@ class G4DNACPA100ExcitationModel : public G4VDNAModel
     G4int verboseLevel = 0;
 
   private:
+
     G4ParticleChangeForGamma* fParticleChangeForGamma = nullptr;
     G4bool statCode = false;
     G4bool isInitialised = false;

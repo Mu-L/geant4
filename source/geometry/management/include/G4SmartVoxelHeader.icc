@@ -29,62 +29,52 @@
 //         Gabriele Cosmo (CERN), 18.04.2001 - Migrated to STL vector
 // --------------------------------------------------------------------
 
-inline
-G4int G4SmartVoxelHeader::GetMaxEquivalentSliceNo() const
+inline G4int G4SmartVoxelHeader::GetMaxEquivalentSliceNo() const
 {
   return fmaxEquivalent;
 }
 
-inline
-void G4SmartVoxelHeader::SetMaxEquivalentSliceNo(G4int pMax)
+inline void G4SmartVoxelHeader::SetMaxEquivalentSliceNo(G4int pMax)
 {
   fmaxEquivalent = pMax;
 }
 
-inline
-G4int G4SmartVoxelHeader::GetMinEquivalentSliceNo() const
+inline G4int G4SmartVoxelHeader::GetMinEquivalentSliceNo() const
 {
   return fminEquivalent;
 }
 
-inline
-void G4SmartVoxelHeader::SetMinEquivalentSliceNo(G4int pMin)
+inline void G4SmartVoxelHeader::SetMinEquivalentSliceNo(G4int pMin)
 {
   fminEquivalent = pMin;
 }
 
-inline
-EAxis G4SmartVoxelHeader::GetAxis() const
+inline EAxis G4SmartVoxelHeader::GetAxis() const
 {
   return faxis;
 }
 
-inline
-EAxis G4SmartVoxelHeader::GetParamAxis() const
+inline EAxis G4SmartVoxelHeader::GetParamAxis() const
 {
   return fparamAxis;
 }
 
-inline
-G4double G4SmartVoxelHeader::GetMaxExtent() const
+inline G4double G4SmartVoxelHeader::GetMaxExtent() const
 {
   return fmaxExtent;
 }
 
-inline
-G4double G4SmartVoxelHeader::GetMinExtent() const
+inline G4double G4SmartVoxelHeader::GetMinExtent() const
 {
   return fminExtent;
 }
 
-inline
-std::size_t G4SmartVoxelHeader::GetNoSlices() const
+inline std::size_t G4SmartVoxelHeader::GetNoSlices() const
 {
   return fslices.size();
 }
 
-inline
-G4SmartVoxelProxy* G4SmartVoxelHeader::GetSlice(std::size_t n) const
+inline G4SmartVoxelProxy* G4SmartVoxelHeader::GetSlice(std::size_t n) const
 {
   return fslices[n];
 }

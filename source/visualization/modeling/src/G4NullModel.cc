@@ -25,20 +25,19 @@
 //
 //
 //
-// 
+//
 // John Allison  4th April 1998.
 // Null model - simply a holder for modeling parameter.
 // DO NOT INVOKE DescribeYourself.
 
 #include "G4NullModel.hh"
 
-G4NullModel::G4NullModel (const G4ModelingParameters* pMP):
-  G4VModel (pMP) {}
+G4NullModel::G4NullModel(const G4ModelingParameters* pMP) : G4VModel(pMP) {}
 
-G4NullModel::~G4NullModel () {}
+G4NullModel::~G4NullModel() {}
 
-void G4NullModel::DescribeYourselfTo (G4VGraphicsScene&) {
-  G4Exception ("G4NullModel::DescribeYourselfTo",
-	       "modeling0002", FatalException,
-	       "There is a serious mistake if this is called!");
+void G4NullModel::DescribeYourselfTo(G4VGraphicsScene&)
+{
+  G4Exception("G4NullModel::DescribeYourselfTo", "modeling0002", FatalException,
+              "There is a serious mistake if this is called!");
 }

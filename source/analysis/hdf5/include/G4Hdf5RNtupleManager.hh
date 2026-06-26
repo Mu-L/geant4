@@ -29,8 +29,8 @@
 //
 // Author: Ivana Hrivnacova, 20/07/2017 (ivana@ipno.in2p3.fr)
 
-#ifndef G4Hdf5RNtupleManager_h
-#define G4Hdf5RNtupleManager_h 1
+#ifndef G4HDF5RNTUPLEMANAGER_HH
+#define G4HDF5RNTUPLEMANAGER_HH
 
 #include "G4TRNtupleManager.hh"
 #include "globals.hh"
@@ -44,36 +44,36 @@ class G4Hdf5RFileManager;
 
 class G4Hdf5RNtupleManager : public G4TRNtupleManager<toolx::hdf5::ntuple>
 {
-  friend class G4Hdf5AnalysisReader;
+    friend class G4Hdf5AnalysisReader;
 
   public:
+
     explicit G4Hdf5RNtupleManager(const G4AnalysisManagerState& state);
     G4Hdf5RNtupleManager() = delete;
     ~G4Hdf5RNtupleManager() override = default;
 
   private:
+
     // Set methods
     void SetFileManager(std::shared_ptr<G4Hdf5RFileManager> fileManager);
 
     // Methods from the base class
     G4int ReadNtupleImpl(const G4String& ntupleName, const G4String& fileName,
-      const G4String& dirName, G4bool isUserFileName) final;
+                         const G4String& dirName, G4bool isUserFileName) final;
     G4bool GetTNtupleRow(G4TRNtupleDescription<toolx::hdf5::ntuple>* ntupleDescription) final;
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4Hdf5RNtupleManager" };
+    static constexpr std::string_view fkClass{"G4Hdf5RNtupleManager"};
 
     // Data members
-    std::shared_ptr<G4Hdf5RFileManager>  fFileManager { nullptr };
+    std::shared_ptr<G4Hdf5RFileManager> fFileManager{nullptr};
 };
 
 // // inline functions
 
-inline void
-G4Hdf5RNtupleManager::SetFileManager(std::shared_ptr<G4Hdf5RFileManager> fileManager)
+inline void G4Hdf5RNtupleManager::SetFileManager(std::shared_ptr<G4Hdf5RFileManager> fileManager)
 {
   fFileManager = std::move(fileManager);
 }
 
 #endif
-

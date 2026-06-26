@@ -31,7 +31,7 @@
 #include "G4VScoreNtupleWriter.hh"
 
 //_____________________________________________________________________________
-G4VScoreNtupleWriter* G4VScoreNtupleWriter::fgMasterInstance         = nullptr;
+G4VScoreNtupleWriter* G4VScoreNtupleWriter::fgMasterInstance = nullptr;
 G4ThreadLocal G4VScoreNtupleWriter* G4VScoreNtupleWriter::fgInstance = nullptr;
 
 //_____________________________________________________________________________
@@ -43,9 +43,9 @@ G4VScoreNtupleWriter* G4VScoreNtupleWriter::Instance()
 
   G4bool isMaster = !G4Threading::IsWorkerThread();
 
-  if((!isMaster) && (fgInstance == nullptr))
+  if ((!isMaster) && (fgInstance == nullptr))
   {
-    if(fgMasterInstance != nullptr)
+    if (fgMasterInstance != nullptr)
     {
       fgInstance = fgMasterInstance->CreateInstance();
     }
@@ -59,28 +59,30 @@ G4VScoreNtupleWriter::G4VScoreNtupleWriter()
 {
   G4bool isMaster = !G4Threading::IsWorkerThread();
 
-  if(isMaster && (fgMasterInstance != nullptr))
+  if (isMaster && (fgMasterInstance != nullptr))
   {
     G4ExceptionDescription description;
     description << "      "
                 << "G4VScoreNtupleWriter on master already exists."
                 << "Cannot create another instance.";
-    G4Exception("G4VScoreNtupleWriter::G4VScoreNtupleWriter()", "Analysis_F001",
-                FatalException, description);
+    G4Exception("G4VScoreNtupleWriter::G4VScoreNtupleWriter()", "Analysis_F001", FatalException,
+                description);
   }
-  if(fgInstance != nullptr)
+  if (fgInstance != nullptr)
   {
     G4ExceptionDescription description;
     description << "      "
                 << "G4VScoreNtupleWriter on worker already exists."
                 << "Cannot create another instance.";
-    G4Exception("G4VScoreNtupleWriter::G4VScoreNtupleWriter()", "Analysis_F001",
-                FatalException, description);
+    G4Exception("G4VScoreNtupleWriter::G4VScoreNtupleWriter()", "Analysis_F001", FatalException,
+                description);
   }
-  if(isMaster)
-    fgMasterInstance = this;
+  if (isMaster) fgMasterInstance = this;
   fgInstance = this;
 }
 
 //_____________________________________________________________________________
-G4VScoreNtupleWriter::~G4VScoreNtupleWriter() { fgInstance = nullptr; }
+G4VScoreNtupleWriter::~G4VScoreNtupleWriter()
+{
+  fgInstance = nullptr;
+}

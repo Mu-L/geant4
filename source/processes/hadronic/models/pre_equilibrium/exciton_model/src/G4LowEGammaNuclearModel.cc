@@ -23,48 +23,50 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// Physics model class G4LowEGammaNuclearModel 
+// Physics model class G4LowEGammaNuclearModel
 // Created:  15 May 2019
 // Author  V.Ivanchenko
-//  
+//
 //
 
 #include "G4LowEGammaNuclearModel.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4Fragment.hh"
-#include "G4NucleiProperties.hh"
+
 #include "G4DynamicParticle.hh"
+#include "G4Fragment.hh"
 #include "G4HadSecondary.hh"
+#include "G4HadronicInteractionRegistry.hh"
+#include "G4HadronicParameters.hh"
+#include "G4NucleiProperties.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4PhysicsModelCatalog.hh"
+#include "G4PreCompoundModel.hh"
 #include "G4ReactionProduct.hh"
 #include "G4ReactionProductVector.hh"
-#include "G4HadronicParameters.hh"
-#include "G4HadronicInteractionRegistry.hh"
-#include "G4PreCompoundModel.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4ThreeVector.hh"
-#include "G4PhysicsModelCatalog.hh"
 
-G4LowEGammaNuclearModel::G4LowEGammaNuclearModel() 
-  : G4HadronicInteraction("GammaNPreco"),lab4mom(0.,0.,0.,0.), secID(-1)
+G4LowEGammaNuclearModel::G4LowEGammaNuclearModel()
+  : G4HadronicInteraction("GammaNPreco"), lab4mom(0., 0., 0., 0.), secID(-1)
 {
   secID = G4PhysicsModelCatalog::GetModelID("model_" + GetModelName());
-  SetMinEnergy( 0.0*CLHEP::GeV );
-  SetMaxEnergy( G4HadronicParameters::Instance()->GetMaxEnergy() );
+  SetMinEnergy(0.0 * CLHEP::GeV);
+  SetMaxEnergy(G4HadronicParameters::Instance()->GetMaxEnergy());
 
   // reuse existing pre-compound model
-  G4HadronicInteraction* p =
-    G4HadronicInteractionRegistry::Instance()->FindModel("PRECO");
+  G4HadronicInteraction* p = G4HadronicInteractionRegistry::Instance()->FindModel("PRECO");
   fPreco = static_cast<G4PreCompoundModel*>(p);
-  if(!fPreco) { fPreco = new G4PreCompoundModel(); }
+  if (!fPreco)
+  {
+    fPreco = new G4PreCompoundModel();
+  }
 }
 
 G4LowEGammaNuclearModel::~G4LowEGammaNuclearModel() = default;
 
-void G4LowEGammaNuclearModel::InitialiseModel()
-{}
+void G4LowEGammaNuclearModel::InitialiseModel() {}
 
-G4HadFinalState* G4LowEGammaNuclearModel::ApplyYourself(
-		 const G4HadProjectile& aTrack, G4Nucleus& theNucleus)
+G4HadFinalState* G4LowEGammaNuclearModel::ApplyYourself(const G4HadProjectile& aTrack,
+                                                        G4Nucleus& theNucleus)
 {
   theParticleChange.Clear();
 
@@ -72,50 +74,55 @@ G4HadFinalState* G4LowEGammaNuclearModel::ApplyYourself(
   G4int Z = theNucleus.GetZ_asInt();
 
   // Create initial state
-  lab4mom.set(0.,0.,0.,G4NucleiProperties::GetNuclearMass(A, Z));
+  lab4mom.set(0., 0., 0., G4NucleiProperties::GetNuclearMass(A, Z));
   lab4mom += aTrack.Get4Momentum();
 
   G4Fragment frag(A, Z, lab4mom);
   frag.SetNumberOfExcitedParticle(1, 1);
-  frag.SetNumberOfHoles(1,1);
+  frag.SetNumberOfHoles(1, 1);
   frag.SetCreatorModelID(secID);
 
-  if (verboseLevel > 1) {
-    G4cout << "G4LowEGammaNuclearModel::ApplyYourself initial G4Fragmet:" 
-	   << G4endl;
+  if (verboseLevel > 1)
+  {
+    G4cout << "G4LowEGammaNuclearModel::ApplyYourself initial G4Fragmet:" << G4endl;
     G4cout << frag << G4endl;
   }
   G4ReactionProductVector* res = fPreco->DeExcite(frag);
 
   // secondaries produced
-  if(res) {
-
+  if (res)
+  {
     theParticleChange.SetStatusChange(stopAndKill);
     std::size_t nsec = res->size();
-    if (verboseLevel > 1) {
+    if (verboseLevel > 1)
+    {
       G4cout << "G4LowEGammaNuclearModel: " << nsec << " secondaries" << G4endl;
     }
-    for(std::size_t i=0; i<nsec; ++i) {
-      if((*res)[i]) {
-	G4double ekin = (*res)[i]->GetKineticEnergy();
-	G4ThreeVector dir(0.,0.,1.);
-	if(ekin > 0.0) { dir = (*res)[i]->GetMomentum().unit(); }
-	G4HadSecondary* news = new G4HadSecondary(
-          new G4DynamicParticle((*res)[i]->GetDefinition(), dir, ekin));
-	news->SetTime((*res)[i]->GetTOF());
-	news->SetCreatorModelID(secID);
-	theParticleChange.AddSecondary(*news);
-	if (verboseLevel > 1) {
-	  G4cout << i << ". " << (*res)[i]->GetDefinition()->GetParticleName()
-		 << " Ekin(MeV)= " << ekin/MeV
-		 << " dir: " << dir << G4endl;
-	}
-	delete (*res)[i];
+    for (std::size_t i = 0; i < nsec; ++i)
+    {
+      if ((*res)[i])
+      {
+        G4double ekin = (*res)[i]->GetKineticEnergy();
+        G4ThreeVector dir(0., 0., 1.);
+        if (ekin > 0.0)
+        {
+          dir = (*res)[i]->GetMomentum().unit();
+        }
+        G4HadSecondary* news =
+          new G4HadSecondary(new G4DynamicParticle((*res)[i]->GetDefinition(), dir, ekin));
+        news->SetTime((*res)[i]->GetTOF());
+        news->SetCreatorModelID(secID);
+        theParticleChange.AddSecondary(*news);
+        if (verboseLevel > 1)
+        {
+          G4cout << i << ". " << (*res)[i]->GetDefinition()->GetParticleName()
+                 << " Ekin(MeV)= " << ekin / MeV << " dir: " << dir << G4endl;
+        }
+        delete (*res)[i];
         delete news;
       }
-    } 
+    }
     delete res;
-  } 
+  }
   return &theParticleChange;
 }
-

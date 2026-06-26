@@ -44,7 +44,8 @@ void G4ParticleHPReactionWhiteBoard::Dump() const
   G4cout << "Target A = " << targA << G4endl;
   G4cout << "Target M = " << targM << G4endl;
 
-  for (const auto& it : mapStringPair) {
+  for (const auto& it : mapStringPair)
+  {
     G4cout << it.first << " " << it.second << G4endl;
   }
   //,,,
@@ -53,7 +54,8 @@ void G4ParticleHPReactionWhiteBoard::Dump() const
 
 G4bool G4ParticleHPReactionWhiteBoard::AddRecord(std::pair<G4String, G4String> new_record)
 {
-  if (mapStringPair.find(new_record.first) != mapStringPair.end()) {
+  if (mapStringPair.find(new_record.first) != mapStringPair.end())
+  {
     G4cout << "This key is already used in the current reaction white board!" << G4endl;
     return false;
   }
@@ -64,7 +66,8 @@ G4bool G4ParticleHPReactionWhiteBoard::AddRecord(std::pair<G4String, G4String> n
 G4String G4ParticleHPReactionWhiteBoard::GetValue(const G4String& key) const
 {
   auto it = mapStringPair.find(key);
-  if (it == mapStringPair.end()) {
+  if (it == mapStringPair.end())
+  {
     G4cout << "No entry for this key " << key << " in the current reaction white board!" << G4endl;
     return "NONE";
   }

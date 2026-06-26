@@ -39,14 +39,15 @@
 
 // Original author: M.Asai, 1999
 // --------------------------------------------------------------------
-#ifndef G4VUserPrimaryGeneratorAction_hh
-#define G4VUserPrimaryGeneratorAction_hh 1
+#ifndef G4VUSERPRIMARYGENERATORACTION_HH
+#define G4VUSERPRIMARYGENERATORACTION_HH
 
 class G4Event;
 
 class G4VUserPrimaryGeneratorAction
 {
   public:
+
     G4VUserPrimaryGeneratorAction();
     virtual ~G4VUserPrimaryGeneratorAction() = default;
 

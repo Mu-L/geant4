@@ -33,15 +33,10 @@
 #include "G4LogicalVolume.hh"
 
 // --------------------------------------------------------------------
-G4GDMLWriteSetup::G4GDMLWriteSetup()
-  : G4GDMLWriteSolids()
-{
-}
+G4GDMLWriteSetup::G4GDMLWriteSetup() : G4GDMLWriteSolids() {}
 
 // --------------------------------------------------------------------
-G4GDMLWriteSetup::~G4GDMLWriteSetup()
-{
-}
+G4GDMLWriteSetup::~G4GDMLWriteSetup() {}
 
 // --------------------------------------------------------------------
 void G4GDMLWriteSetup::SetupWrite(xercesc::DOMElement* gdmlElement,

@@ -29,30 +29,27 @@
 // by V. Lara
 //
 // Modifications:
-// 23 January 2012 by V.Ivanchenko added pointer of G4VPhotonEvaporation to 
+// 23 January 2012 by V.Ivanchenko added pointer of G4VPhotonEvaporation to
 //    the constructor
 
-
-#ifndef G4EvaporationFactory_hh
-#define G4EvaporationFactory_hh 1
-
+#ifndef G4EVAPORATIONFACTORY_HH
+#define G4EVAPORATIONFACTORY_HH
 
 #include "G4VEvaporationFactory.hh"
 
 class G4EvaporationFactory : public G4VEvaporationFactory
 {
-public:
+  public:
 
-  explicit G4EvaporationFactory(G4VEvaporationChannel* photoEvaporation);
+    explicit G4EvaporationFactory(G4VEvaporationChannel* photoEvaporation);
 
-  ~G4EvaporationFactory() override = default;
+    ~G4EvaporationFactory() override = default;
 
-  std::vector<G4VEvaporationChannel*>* GetChannel() override;
+    std::vector<G4VEvaporationChannel*>* GetChannel() override;
 
-  G4EvaporationFactory(const G4EvaporationFactory&) = delete;
-  const G4EvaporationFactory& operator=
-  (const G4EvaporationFactory& val) = delete;
-  G4bool operator==(const G4EvaporationFactory& val) const = delete;
-  G4bool operator!=(const G4EvaporationFactory& val) const = delete;
+    G4EvaporationFactory(const G4EvaporationFactory&) = delete;
+    const G4EvaporationFactory& operator=(const G4EvaporationFactory& val) = delete;
+    G4bool operator==(const G4EvaporationFactory& val) const = delete;
+    G4bool operator!=(const G4EvaporationFactory& val) const = delete;
 };
 #endif

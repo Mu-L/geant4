@@ -50,14 +50,9 @@
 // for discrete physics constructors!
 #include "G4EmDNAChemistry.hh"
 #include "G4EmDNAChemistry_option1.hh"
-#include "G4EmDNAPhysics.hh"
-#include "G4EmDNAPhysics_option1.hh"
 #include "G4EmDNAPhysics_option2.hh"
-#include "G4EmDNAPhysics_option3.hh"
 #include "G4EmDNAPhysics_option4.hh"
-#include "G4EmDNAPhysics_option5.hh"
 #include "G4EmDNAPhysics_option6.hh"
-#include "G4EmDNAPhysics_option7.hh"
 #include "G4EmDNAPhysics_option8.hh"
 // for condensed physics constructors!
 #include "G4EmLivermorePhysics.hh"
@@ -199,24 +194,9 @@ void PhysicsList::RegisterConstructor(const G4String& name)
     delete fEmPhysicsList;
     fEmPhysicsList = new G4EmLivermorePhysics();
   }
-  else if (name == "G4EmDNAPhysics") {
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics(verboseLevel);
-    fEmName = name;
-  }
-  else if (name == "G4EmDNAPhysics_option1") {
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics_option1(verboseLevel);
-    fEmName = name;
-  }
   else if (name == "G4EmDNAPhysics_option2") {
     delete fEmPhysicsList;
     fEmPhysicsList = new G4EmDNAPhysics_option2(verboseLevel);
-    fEmName = name;
-  }
-  else if (name == "G4EmDNAPhysics_option3") {
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics_option3(verboseLevel);
     fEmName = name;
   }
   else if (name == "G4EmDNAPhysics_option4") {
@@ -224,19 +204,9 @@ void PhysicsList::RegisterConstructor(const G4String& name)
     fEmPhysicsList = new G4EmDNAPhysics_option4(verboseLevel);
     fEmName = name;
   }
-  else if (name == "G4EmDNAPhysics_option5") {
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics_option5(verboseLevel);
-    fEmName = name;
-  }
   else if (name == "G4EmDNAPhysics_option6") {
     delete fEmPhysicsList;
     fEmPhysicsList = new G4EmDNAPhysics_option6(verboseLevel);
-    fEmName = name;
-  }
-  else if (name == "G4EmDNAPhysics_option7") {
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics_option7(verboseLevel);
     fEmName = name;
   }
   else if (name == "G4EmDNAPhysics_option8") {

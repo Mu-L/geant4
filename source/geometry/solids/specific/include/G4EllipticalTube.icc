@@ -26,26 +26,22 @@
 // Implementation of inline methods of G4EllipticalTube
 // --------------------------------------------------------------------
 
-inline
-G4double G4EllipticalTube::GetDx() const
+inline G4double G4EllipticalTube::GetDx() const
 {
   return fDx;
 }
 
-inline
-G4double G4EllipticalTube::GetDy() const
+inline G4double G4EllipticalTube::GetDy() const
 {
   return fDy;
 }
 
-inline
-G4double G4EllipticalTube::GetDz() const
+inline G4double G4EllipticalTube::GetDz() const
 {
   return fDz;
 }
 
-inline
-void G4EllipticalTube::SetDx(G4double Dx)
+inline void G4EllipticalTube::SetDx(G4double Dx)
 {
   fDx = Dx;
   CheckParameters();
@@ -54,8 +50,7 @@ void G4EllipticalTube::SetDx(G4double Dx)
   fRebuildPolyhedron = true;
 }
 
-inline
-void G4EllipticalTube::SetDy( G4double Dy )
+inline void G4EllipticalTube::SetDy(G4double Dy)
 {
   fDy = Dy;
   CheckParameters();
@@ -64,8 +59,7 @@ void G4EllipticalTube::SetDy( G4double Dy )
   fRebuildPolyhedron = true;
 }
 
-inline
-void G4EllipticalTube::SetDz( G4double Dz )
+inline void G4EllipticalTube::SetDz(G4double Dz)
 {
   fDz = Dz;
   CheckParameters();

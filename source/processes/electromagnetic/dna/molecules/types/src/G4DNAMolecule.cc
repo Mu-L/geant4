@@ -23,7 +23,7 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// 
+//
 
 #include "G4DNAMolecule.hh"
 
@@ -38,25 +38,25 @@ G4DamagedDeoxyribose* G4DamagedDeoxyribose::fgInstance = nullptr;
 
 G4DamagedDeoxyribose* G4DamagedDeoxyribose::Definition()
 {
-    const G4String name = "Damaged_Deoxyribose";
-    if(fgInstance != nullptr)
-    {
-        return fgInstance;
-    }
-    G4ParticleTable* pTable =G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition* pInstance = pTable->FindParticle(name);
-
-    if(pInstance == nullptr)
-    {
-        G4double mass = 134.1305 * g / Avogadro * c_squared;//wikipedia
-        pInstance = new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0,
-                                               5, 3.0 * angstrom, // radius
-                                               2 // number of atoms
-                                               ); 
-    }
-    
-    fgInstance = static_cast<G4DamagedDeoxyribose*>(pInstance);
+  const G4String name = "Damaged_Deoxyribose";
+  if (fgInstance != nullptr)
+  {
     return fgInstance;
+  }
+  G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
+  G4ParticleDefinition* pInstance = pTable->FindParticle(name);
+
+  if (pInstance == nullptr)
+  {
+    G4double mass = 134.1305 * g / Avogadro * c_squared;  // wikipedia
+    pInstance =
+      new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0, 5, 3.0 * angstrom,  // radius
+                               2  // number of atoms
+      );
+  }
+
+  fgInstance = static_cast<G4DamagedDeoxyribose*>(pInstance);
+  return fgInstance;
 }
 
 G4DamagedAdenine* G4DamagedAdenine::fgInstance = nullptr;
@@ -65,26 +65,25 @@ G4DamagedAdenine* G4DamagedAdenine::fgInstance = nullptr;
 
 G4DamagedAdenine* G4DamagedAdenine::Definition()
 {
-     const G4String name = "Damaged_Adenine";
-    if(fgInstance != nullptr)
-    {
-        return fgInstance;
-    }
-    G4ParticleTable* pTable =G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition* pInstance = pTable->FindParticle(name);
-
-    if(pInstance == nullptr)
-    {
-         G4double mass = 135.1267 * g / Avogadro * c_squared;
-         pInstance = new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0,
-                                               5, 3.0 * angstrom, // radius
-                                               2 // number of atoms
-                                               );
-    }
-    fgInstance = static_cast<G4DamagedAdenine*>(pInstance);
+  const G4String name = "Damaged_Adenine";
+  if (fgInstance != nullptr)
+  {
     return fgInstance;
-}
+  }
+  G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
+  G4ParticleDefinition* pInstance = pTable->FindParticle(name);
 
+  if (pInstance == nullptr)
+  {
+    G4double mass = 135.1267 * g / Avogadro * c_squared;
+    pInstance =
+      new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0, 5, 3.0 * angstrom,  // radius
+                               2  // number of atoms
+      );
+  }
+  fgInstance = static_cast<G4DamagedAdenine*>(pInstance);
+  return fgInstance;
+}
 
 G4DamagedGuanine* G4DamagedGuanine::fgInstance = nullptr;
 
@@ -92,24 +91,24 @@ G4DamagedGuanine* G4DamagedGuanine::fgInstance = nullptr;
 
 G4DamagedGuanine* G4DamagedGuanine::Definition()
 {
-    const G4String name = "Damaged_Guanine";
-    if(fgInstance != nullptr)
-    {
-        return fgInstance;
-    }
-    G4ParticleTable* pTable =G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition* pInstance = pTable->FindParticle(name);
-
-    if(pInstance == nullptr)
-    {
-         G4double mass = 151.1261 * g / Avogadro * c_squared;
-         pInstance = new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0,
-                                               5, 3.0 * angstrom, // radius
-                                               2 // number of atoms
-                                               );
-    }
-    fgInstance = static_cast<G4DamagedGuanine*>(pInstance);
+  const G4String name = "Damaged_Guanine";
+  if (fgInstance != nullptr)
+  {
     return fgInstance;
+  }
+  G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
+  G4ParticleDefinition* pInstance = pTable->FindParticle(name);
+
+  if (pInstance == nullptr)
+  {
+    G4double mass = 151.1261 * g / Avogadro * c_squared;
+    pInstance =
+      new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0, 5, 3.0 * angstrom,  // radius
+                               2  // number of atoms
+      );
+  }
+  fgInstance = static_cast<G4DamagedGuanine*>(pInstance);
+  return fgInstance;
 }
 
 G4DamagedThymine* G4DamagedThymine::fgInstance = nullptr;
@@ -118,25 +117,25 @@ G4DamagedThymine* G4DamagedThymine::fgInstance = nullptr;
 
 G4DamagedThymine* G4DamagedThymine::Definition()
 {
-    const G4String name = "Damaged_Thymine";
-    if(fgInstance != nullptr)
-    {
-        return fgInstance;
-    }
-    G4ParticleTable* pTable =G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition* pInstance = pTable->FindParticle(name);
-
-    if(pInstance == nullptr)
-    {
-         G4double mass = 126.1133 * g / Avogadro * c_squared;
-         pInstance = new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0,
-                                               5, 3.0 * angstrom, // radius
-	                                           2 // number of atoms
-                                               );
-    }
-
-    fgInstance = static_cast<G4DamagedThymine*>(pInstance);
+  const G4String name = "Damaged_Thymine";
+  if (fgInstance != nullptr)
+  {
     return fgInstance;
+  }
+  G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
+  G4ParticleDefinition* pInstance = pTable->FindParticle(name);
+
+  if (pInstance == nullptr)
+  {
+    G4double mass = 126.1133 * g / Avogadro * c_squared;
+    pInstance =
+      new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0, 5, 3.0 * angstrom,  // radius
+                               2  // number of atoms
+      );
+  }
+
+  fgInstance = static_cast<G4DamagedThymine*>(pInstance);
+  return fgInstance;
 }
 
 G4DamagedCytosine* G4DamagedCytosine::fgInstance = nullptr;
@@ -145,26 +144,25 @@ G4DamagedCytosine* G4DamagedCytosine::fgInstance = nullptr;
 
 G4DamagedCytosine* G4DamagedCytosine::Definition()
 {
-    const G4String name = "Damaged_Cytosine";
-    if(fgInstance != nullptr)
-    {
-        return fgInstance;
-    }
-    G4ParticleTable* pTable =G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition* pInstance = pTable->FindParticle(name);
+  const G4String name = "Damaged_Cytosine";
+  if (fgInstance != nullptr)
+  {
+    return fgInstance;
+  }
+  G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
+  G4ParticleDefinition* pInstance = pTable->FindParticle(name);
 
-    if(pInstance == nullptr)
-    {
-        G4double mass = 111.102 * g / Avogadro * c_squared;
-        pInstance = new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0,
-                                              5, 2.9 * angstrom, // radius
-                                              2 // number of atoms
-                                              );
-     }
-     fgInstance = static_cast<G4DamagedCytosine*>(pInstance);
-     return fgInstance;
+  if (pInstance == nullptr)
+  {
+    G4double mass = 111.102 * g / Avogadro * c_squared;
+    pInstance =
+      new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0, 5, 2.9 * angstrom,  // radius
+                               2  // number of atoms
+      );
+  }
+  fgInstance = static_cast<G4DamagedCytosine*>(pInstance);
+  return fgInstance;
 }
-
 
 G4Deoxyribose* G4Deoxyribose::fgInstance = nullptr;
 
@@ -172,24 +170,24 @@ G4Deoxyribose* G4Deoxyribose::fgInstance = nullptr;
 
 G4Deoxyribose* G4Deoxyribose::Definition()
 {
-    const G4String name = "Deoxyribose";
-    if(fgInstance != nullptr)
-    {
-        return fgInstance;
-    }
-    G4ParticleTable* pTable =G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition* pInstance = pTable->FindParticle(name);
-
-    if(pInstance == nullptr)
-    {
-         G4double mass = 134.1305 * g / Avogadro * c_squared;
-         pInstance = new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0,
-                                               5, 2.9 * angstrom, // radius
-	                                           2 // number of atoms
-                                               );
-    }
-    fgInstance = static_cast<G4Deoxyribose*>(pInstance);
+  const G4String name = "Deoxyribose";
+  if (fgInstance != nullptr)
+  {
     return fgInstance;
+  }
+  G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
+  G4ParticleDefinition* pInstance = pTable->FindParticle(name);
+
+  if (pInstance == nullptr)
+  {
+    G4double mass = 134.1305 * g / Avogadro * c_squared;
+    pInstance =
+      new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0, 5, 2.9 * angstrom,  // radius
+                               2  // number of atoms
+      );
+  }
+  fgInstance = static_cast<G4Deoxyribose*>(pInstance);
+  return fgInstance;
 }
 
 G4Phosphate* G4Phosphate::fgInstance = nullptr;
@@ -198,24 +196,24 @@ G4Phosphate* G4Phosphate::fgInstance = nullptr;
 
 G4Phosphate* G4Phosphate::Definition()
 {
-    const G4String name = "Phosphate";
-    if(fgInstance != nullptr)
-    {
-        return fgInstance;
-    }
-    G4ParticleTable* pTable =G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition* pInstance = pTable->FindParticle(name);
-
-    if(pInstance == nullptr)
-    {
-        G4double mass = 94.9714 * g / Avogadro * c_squared;
-        pInstance = new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0,
-                                             5, 2.7 * angstrom, // radius
-                                             2 // number of atoms
-                                             );
-    }
-    fgInstance = static_cast<G4Phosphate*>(pInstance);
+  const G4String name = "Phosphate";
+  if (fgInstance != nullptr)
+  {
     return fgInstance;
+  }
+  G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
+  G4ParticleDefinition* pInstance = pTable->FindParticle(name);
+
+  if (pInstance == nullptr)
+  {
+    G4double mass = 94.9714 * g / Avogadro * c_squared;
+    pInstance =
+      new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0, 5, 2.7 * angstrom,  // radius
+                               2  // number of atoms
+      );
+  }
+  fgInstance = static_cast<G4Phosphate*>(pInstance);
+  return fgInstance;
 }
 
 G4Adenine* G4Adenine::fgInstance = nullptr;
@@ -224,24 +222,23 @@ G4Adenine* G4Adenine::fgInstance = nullptr;
 
 G4Adenine* G4Adenine::Definition()
 {
-    const G4String name = "Adenine";
-    if(fgInstance != nullptr)
-    {
-        return fgInstance;
-    }
-    G4ParticleTable* pTable =G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition* pInstance = pTable->FindParticle(name);
-
-    if(pInstance == nullptr)
-    {
-        G4double mass = 135.1267 * g / Avogadro * c_squared;
-        pInstance = new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0,
-                                             5, 3 * angstrom, // radius
-                                             1 // number of atoms
-                                             );
-    }
-    fgInstance = static_cast<G4Adenine*>(pInstance);
+  const G4String name = "Adenine";
+  if (fgInstance != nullptr)
+  {
     return fgInstance;
+  }
+  G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
+  G4ParticleDefinition* pInstance = pTable->FindParticle(name);
+
+  if (pInstance == nullptr)
+  {
+    G4double mass = 135.1267 * g / Avogadro * c_squared;
+    pInstance = new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0, 5, 3 * angstrom,  // radius
+                                         1  // number of atoms
+    );
+  }
+  fgInstance = static_cast<G4Adenine*>(pInstance);
+  return fgInstance;
 }
 
 G4Guanine* G4Guanine::fgInstance = nullptr;
@@ -250,26 +247,24 @@ G4Guanine* G4Guanine::fgInstance = nullptr;
 
 G4Guanine* G4Guanine::Definition()
 {
-    const G4String name = "Guanine";
-    if(fgInstance != nullptr)
-    {
-        return fgInstance;
-    }
-    G4ParticleTable* pTable =G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition* pInstance = pTable->FindParticle(name);
-
-    if(pInstance == nullptr)
-    {
-        G4double mass = 151.1261 * g / Avogadro * c_squared;
-        pInstance = new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0, 
-                                             5, 3 * angstrom, // radius
-                                             1 // number of atoms
-                                             );
-
-    }
-
-    fgInstance = static_cast<G4Guanine*>(pInstance);
+  const G4String name = "Guanine";
+  if (fgInstance != nullptr)
+  {
     return fgInstance;
+  }
+  G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
+  G4ParticleDefinition* pInstance = pTable->FindParticle(name);
+
+  if (pInstance == nullptr)
+  {
+    G4double mass = 151.1261 * g / Avogadro * c_squared;
+    pInstance = new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0, 5, 3 * angstrom,  // radius
+                                         1  // number of atoms
+    );
+  }
+
+  fgInstance = static_cast<G4Guanine*>(pInstance);
+  return fgInstance;
 }
 
 G4Thymine* G4Thymine::fgInstance = nullptr;
@@ -278,24 +273,23 @@ G4Thymine* G4Thymine::fgInstance = nullptr;
 
 G4Thymine* G4Thymine::Definition()
 {
-    const G4String name = "Thymine";
-    if(fgInstance != nullptr)
-    {
-        return fgInstance;
-    }
-    G4ParticleTable* pTable =G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition* pInstance = pTable->FindParticle(name);
-
-    if(pInstance == nullptr)
-    {
-    G4double mass = 126.1133 * g / Avogadro * c_squared;
-    pInstance = new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0,
-                                         5, 3 * angstrom, // radius
-                                         1 // number of atoms
-                                         );
-    }
-    fgInstance = static_cast<G4Thymine*>(pInstance);
+  const G4String name = "Thymine";
+  if (fgInstance != nullptr)
+  {
     return fgInstance;
+  }
+  G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
+  G4ParticleDefinition* pInstance = pTable->FindParticle(name);
+
+  if (pInstance == nullptr)
+  {
+    G4double mass = 126.1133 * g / Avogadro * c_squared;
+    pInstance = new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0, 5, 3 * angstrom,  // radius
+                                         1  // number of atoms
+    );
+  }
+  fgInstance = static_cast<G4Thymine*>(pInstance);
+  return fgInstance;
 }
 
 G4Cytosine* G4Cytosine::fgInstance = nullptr;
@@ -304,24 +298,23 @@ G4Cytosine* G4Cytosine::fgInstance = nullptr;
 
 G4Cytosine* G4Cytosine::Definition()
 {
-    const G4String name = "Cytosine";
-    if(fgInstance != nullptr)
-    {
-        return fgInstance;
-    }
-    G4ParticleTable* pTable =G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition* pInstance = pTable->FindParticle(name);
-
-    if(pInstance == nullptr)
-    {
-        G4double mass = 111.102 * g / Avogadro * c_squared;
-        pInstance = new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0,
-                                             5, 3 * angstrom, // radius
-                                             1 // number of atoms
-                                             );
-    }
-    fgInstance = static_cast<G4Cytosine*>(pInstance);
+  const G4String name = "Cytosine";
+  if (fgInstance != nullptr)
+  {
     return fgInstance;
+  }
+  G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
+  G4ParticleDefinition* pInstance = pTable->FindParticle(name);
+
+  if (pInstance == nullptr)
+  {
+    G4double mass = 111.102 * g / Avogadro * c_squared;
+    pInstance = new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0, 5, 3 * angstrom,  // radius
+                                         1  // number of atoms
+    );
+  }
+  fgInstance = static_cast<G4Cytosine*>(pInstance);
+  return fgInstance;
 }
 
 G4ModifiedHistone* G4ModifiedHistone::fgInstance = nullptr;
@@ -330,26 +323,25 @@ G4ModifiedHistone* G4ModifiedHistone::fgInstance = nullptr;
 
 G4ModifiedHistone* G4ModifiedHistone::Definition()
 {
-    const G4String name = "Modified_Histone";
-    if(fgInstance != nullptr)
-    {
-        return fgInstance;
-    }
-    G4ParticleTable* pTable =G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition* pInstance = pTable->FindParticle(name);
-
-    if(pInstance == nullptr)
-    {
-        G4double mass = 1.4e4 * g / Avogadro * c_squared;
-        pInstance = new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0,
-                                             5, 24 * angstrom, // radius
-                                             1 // number of atoms
-                                             );
-    }
-    fgInstance = static_cast<G4ModifiedHistone*>(pInstance);
+  const G4String name = "Modified_Histone";
+  if (fgInstance != nullptr)
+  {
     return fgInstance;
-}
+  }
+  G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
+  G4ParticleDefinition* pInstance = pTable->FindParticle(name);
 
+  if (pInstance == nullptr)
+  {
+    G4double mass = 1.4e4 * g / Avogadro * c_squared;
+    pInstance =
+      new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0, 5, 24 * angstrom,  // radius
+                               1  // number of atoms
+      );
+  }
+  fgInstance = static_cast<G4ModifiedHistone*>(pInstance);
+  return fgInstance;
+}
 
 G4Histone* G4Histone::fgInstance = nullptr;
 
@@ -357,22 +349,22 @@ G4Histone* G4Histone::fgInstance = nullptr;
 
 G4Histone* G4Histone::Definition()
 {
-    const G4String name = "Histone";
-    if(fgInstance != nullptr)
-    {
-        return fgInstance;
-    }
-    G4ParticleTable* pTable =G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition* pInstance = pTable->FindParticle(name);
-
-    if(pInstance == nullptr)
-    {
-        G4double mass = 1.4e4 * g / Avogadro * c_squared;//14 kDa in wikipedia
-        pInstance = new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0,
-                                             5, 24 * angstrom, // radius
-                                             1 // number of atoms
-                                             );
-    }
-    fgInstance = static_cast<G4Histone*>(pInstance);
+  const G4String name = "Histone";
+  if (fgInstance != nullptr)
+  {
     return fgInstance;
+  }
+  G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
+  G4ParticleDefinition* pInstance = pTable->FindParticle(name);
+
+  if (pInstance == nullptr)
+  {
+    G4double mass = 1.4e4 * g / Avogadro * c_squared;  // 14 kDa in wikipedia
+    pInstance =
+      new G4MoleculeDefinition(name, mass, 0 * (m * m / s), 0, 5, 24 * angstrom,  // radius
+                               1  // number of atoms
+      );
+  }
+  fgInstance = static_cast<G4Histone*>(pInstance);
+  return fgInstance;
 }

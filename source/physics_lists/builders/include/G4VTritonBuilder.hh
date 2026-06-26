@@ -34,8 +34,8 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4VTritonBuilder_h
-#define G4VTritonBuilder_h
+#ifndef G4VTRITONBUILDER_HH
+#define G4VTRITONBUILDER_HH
 
 #include "G4PhysicsBuilderInterface.hh"
 
@@ -44,13 +44,13 @@ class G4HadronElasticProcess;
 
 class G4VTritonBuilder : public G4PhysicsBuilderInterface
 {
-public:
-  G4VTritonBuilder() = default;
-  virtual ~G4VTritonBuilder() {}
-  virtual void Build(G4HadronElasticProcess * aP) = 0;
-  virtual void Build(G4HadronInelasticProcess * aP) = 0;
-  using G4PhysicsBuilderInterface::Build; //Prevent compiler warning
+  public:
+
+    G4VTritonBuilder() = default;
+    virtual ~G4VTritonBuilder() {}
+    virtual void Build(G4HadronElasticProcess* aP) = 0;
+    virtual void Build(G4HadronInelasticProcess* aP) = 0;
+    using G4PhysicsBuilderInterface::Build;  // Prevent compiler warning
 };
 
 #endif
-

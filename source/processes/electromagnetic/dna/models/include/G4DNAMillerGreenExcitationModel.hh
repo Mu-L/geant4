@@ -25,127 +25,109 @@
 //
 //
 
-#ifndef G4DNAMillerGreenExcitationModel_h
-#define G4DNAMillerGreenExcitationModel_h 1
+#ifndef G4DNAMILLERGREENEXCITATIONMODEL_HH
+#define G4DNAMILLERGREENEXCITATIONMODEL_HH
 
-#include "G4VEmModel.hh"
-#include "G4ParticleChangeForGamma.hh"
-#include "G4ProductionCutsTable.hh"
-
-#include "G4Proton.hh"
 #include "G4DNAGenericIonsManager.hh"
 #include "G4DNAWaterExcitationStructure.hh"
-#include "Randomize.hh"
 #include "G4NistManager.hh"
+#include "G4ParticleChangeForGamma.hh"
+#include "G4ProductionCutsTable.hh"
+#include "G4Proton.hh"
+#include "G4VEmModel.hh"
+#include "Randomize.hh"
 
 #include <deque>
 
 class G4DNAMillerGreenExcitationModel : public G4VEmModel
 {
+  public:
 
-public:
+    G4DNAMillerGreenExcitationModel(const G4ParticleDefinition* p = nullptr,
+                                    const G4String& nam = "DNAMillerGreenExcitationModel");
 
-  G4DNAMillerGreenExcitationModel(const G4ParticleDefinition* p = nullptr, 
-		          const G4String& nam = "DNAMillerGreenExcitationModel");
+    ~G4DNAMillerGreenExcitationModel() override;
 
-  ~G4DNAMillerGreenExcitationModel() override;
-   
-  G4DNAMillerGreenExcitationModel & operator=(const  G4DNAMillerGreenExcitationModel &right) = delete;
-  G4DNAMillerGreenExcitationModel(const  G4DNAMillerGreenExcitationModel&) = delete;
+    G4DNAMillerGreenExcitationModel&
+    operator=(const G4DNAMillerGreenExcitationModel& right) = delete;
+    G4DNAMillerGreenExcitationModel(const G4DNAMillerGreenExcitationModel&) = delete;
 
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    G4double CrossSectionPerVolume(const G4Material* material, const G4ParticleDefinition* p,
+                                   G4double ekin, G4double emin, G4double emax) override;
 
-  G4double CrossSectionPerVolume(const G4Material* material,
-					   const G4ParticleDefinition* p,
-					   G4double ekin,
-					   G4double emin,
-					   G4double emax) override;
+    G4double GetPartialCrossSection(const G4Material*, G4int /*level*/, const G4ParticleDefinition*,
+                                    G4double /*kineticEnergy*/) override;
 
-  G4double GetPartialCrossSection(const G4Material*,
-                                          G4int /*level*/,
-                                          const G4ParticleDefinition*,
-                                          G4double /*kineticEnergy*/) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-				 const G4MaterialCutsCouple*,
-				 const G4DynamicParticle*,
-				 G4double tmin,
-				 G4double maxEnergy) override;
+    inline void SelectStationary(G4bool input);
 
-  inline void SelectStationary(G4bool input); 
+  protected:
 
-protected:
+    G4ParticleChangeForGamma* fParticleChangeForGamma;
 
-  G4ParticleChangeForGamma* fParticleChangeForGamma;
+  private:
 
-private:
+    G4bool statCode;
 
-  G4bool statCode;
+    // Water density table
+    const std::vector<G4double>* fpMolWaterDensity;
 
-  // Water density table
-  const std::vector<G4double>* fpMolWaterDensity;
+    std::map<G4String, G4double, std::less<G4String>> lowEnergyLimit;
+    std::map<G4String, G4double, std::less<G4String>> highEnergyLimit;
 
-  std::map<G4String,G4double,std::less<G4String> > lowEnergyLimit;
-  std::map<G4String,G4double,std::less<G4String> > highEnergyLimit;
+    G4bool isInitialised{false};
+    G4int verboseLevel;
 
-  G4bool isInitialised{false};
-  G4int verboseLevel;
-  
-  // Cross section
+    // Cross section
 
-  // Partial cross section
-  
-  G4double PartialCrossSection(G4double energy,G4int level, const G4ParticleDefinition* particle);
+    // Partial cross section
 
-  G4double Sum(G4double energy, const G4ParticleDefinition* particle);
+    G4double PartialCrossSection(G4double energy, G4int level,
+                                 const G4ParticleDefinition* particle);
 
-  G4int RandomSelect(G4double energy, const G4ParticleDefinition* particle);
+    G4double Sum(G4double energy, const G4ParticleDefinition* particle);
 
-  G4int nLevels;
+    G4int RandomSelect(G4double energy, const G4ParticleDefinition* particle);
 
-  G4DNAWaterExcitationStructure waterExcitation;
-  
-  G4double S_1s(G4double t, 
-		G4double energyTransferred, 
-		G4double slaterEffectiveCharge,
-		G4double shellNumber);
+    G4int nLevels;
 
-  G4double S_2s(G4double t, 
-		G4double energyTransferred,  
-		G4double slaterEffectiveCharge, 
-		G4double shellNumber);
+    G4DNAWaterExcitationStructure waterExcitation;
 
-  G4double S_2p(G4double t, 
-		G4double energyTransferred, 
-		G4double slaterEffectiveCharge, 
-		G4double shellNumber);
+    G4double S_1s(G4double t, G4double energyTransferred, G4double slaterEffectiveCharge,
+                  G4double shellNumber);
 
-  G4double R(G4double t, 
-	     G4double energyTransferred, 
-	     G4double slaterEffectiveCharge, 
-	     G4double shellNumber);
+    G4double S_2s(G4double t, G4double energyTransferred, G4double slaterEffectiveCharge,
+                  G4double shellNumber);
 
-  G4double kineticEnergyCorrection[4]; // 4 is the particle type index
-  G4double slaterEffectiveCharge[3][4];
-  G4double sCoefficient[3][4];
+    G4double S_2p(G4double t, G4double energyTransferred, G4double slaterEffectiveCharge,
+                  G4double shellNumber);
 
-  //
-  // Reusable particle definitions
-  G4ParticleDefinition* protonDef = nullptr;
-  G4ParticleDefinition* hydrogenDef = nullptr;
-  G4ParticleDefinition* alphaPlusPlusDef = nullptr;
-  G4ParticleDefinition* alphaPlusDef = nullptr;
-  G4ParticleDefinition* heliumDef = nullptr;
-  
+    G4double R(G4double t, G4double energyTransferred, G4double slaterEffectiveCharge,
+               G4double shellNumber);
+
+    G4double kineticEnergyCorrection[4];  // 4 is the particle type index
+    G4double slaterEffectiveCharge[3][4];
+    G4double sCoefficient[3][4];
+
+    //
+    // Reusable particle definitions
+    G4ParticleDefinition* protonDef = nullptr;
+    G4ParticleDefinition* hydrogenDef = nullptr;
+    G4ParticleDefinition* alphaPlusPlusDef = nullptr;
+    G4ParticleDefinition* alphaPlusDef = nullptr;
+    G4ParticleDefinition* heliumDef = nullptr;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline void G4DNAMillerGreenExcitationModel::SelectStationary (G4bool input)
-{ 
-    statCode = input; 
-}		 
+inline void G4DNAMillerGreenExcitationModel::SelectStationary(G4bool input)
+{
+  statCode = input;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 

@@ -35,15 +35,15 @@
 
 #include "G4PolarizationMessenger.hh"
 
-#include "G4ios.hh"
-#include "G4PolarizationManager.hh"
 #include "G4PolarizationHelper.hh"
+#include "G4PolarizationManager.hh"
 #include "G4Tokenizer.hh"
 #include "G4UIcmdWithABool.hh"
-#include "G4UIcmdWithAnInteger.hh"
 #include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithAnInteger.hh"
 #include "G4UIcmdWithoutParameter.hh"
 #include "G4UIdirectory.hh"
+#include "G4ios.hh"
 
 G4PolarizationMessenger::G4PolarizationMessenger(G4PolarizationManager* polMgr)
   : polarizationManager(polMgr)
@@ -68,21 +68,15 @@ G4PolarizationMessenger::G4PolarizationMessenger(G4PolarizationManager* polMgr)
   optActivateCmd->SetDefaultValue(true);
 
   volumeDirectory = new G4UIdirectory("/polarization/volume/");
-  volumeDirectory->SetGuidance(
-    "Status control commands of registered polarized logical volumes.");
+  volumeDirectory->SetGuidance("Status control commands of registered polarized logical volumes.");
 
-  printVolumeListCmd =
-    new G4UIcmdWithoutParameter("/polarization/volume/list", this);
-  printVolumeListCmd->SetGuidance(
-    "print list of registered polarized logical volumes");
-  printVolumeListCmd->AvailableForStates(G4State_PreInit, G4State_Idle,
-                                         G4State_GeomClosed);
+  printVolumeListCmd = new G4UIcmdWithoutParameter("/polarization/volume/list", this);
+  printVolumeListCmd->SetGuidance("print list of registered polarized logical volumes");
+  printVolumeListCmd->AvailableForStates(G4State_PreInit, G4State_Idle, G4State_GeomClosed);
 
   setPolarizationCmd = new G4UIcommand("/polarization/volume/set", this);
-  setPolarizationCmd->SetGuidance(
-    "set or change polarization of a logical volume");
-  setPolarizationCmd->AvailableForStates(G4State_PreInit, G4State_Idle,
-                                         G4State_GeomClosed);
+  setPolarizationCmd->SetGuidance("set or change polarization of a logical volume");
+  setPolarizationCmd->AvailableForStates(G4State_PreInit, G4State_Idle, G4State_GeomClosed);
 
   G4UIparameter* param;
   param = new G4UIparameter("logicalVolumeName", 's', false);
@@ -101,20 +95,18 @@ G4PolarizationMessenger::G4PolarizationMessenger(G4PolarizationManager* polMgr)
   testDirectory = new G4UIdirectory("/polarization/test/");
   testDirectory->SetGuidance("provides access to some internal test routines.");
 
-  testPolarizationTransformationCmd = new G4UIcmdWithoutParameter(
-    "/polarization/test/polarizationTransformation", this);
+  testPolarizationTransformationCmd =
+    new G4UIcmdWithoutParameter("/polarization/test/polarizationTransformation", this);
   testPolarizationTransformationCmd->SetGuidance(
     "checks definition of particle reference frame and corresponding "
     "translation routines");
-  testPolarizationTransformationCmd->AvailableForStates(
-    G4State_PreInit, G4State_Idle, G4State_GeomClosed);
+  testPolarizationTransformationCmd->AvailableForStates(G4State_PreInit, G4State_Idle,
+                                                        G4State_GeomClosed);
 
   testInteractionFrameCmd =
     new G4UIcmdWithoutParameter("/polarization/test/interactionFrame", this);
-  testInteractionFrameCmd->SetGuidance(
-    "checks definition of interaction frame");
-  testInteractionFrameCmd->AvailableForStates(G4State_PreInit, G4State_Idle,
-                                              G4State_GeomClosed);
+  testInteractionFrameCmd->SetGuidance("checks definition of interaction frame");
+  testInteractionFrameCmd->AvailableForStates(G4State_PreInit, G4State_Idle, G4State_GeomClosed);
 }
 
 G4PolarizationMessenger::~G4PolarizationMessenger()
@@ -131,48 +123,45 @@ G4PolarizationMessenger::~G4PolarizationMessenger()
   delete polarizationDirectory;
 }
 
-void G4PolarizationMessenger::SetNewValue(G4UIcommand* command,
-                                          G4String newValue)
+void G4PolarizationMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
-  if(command == verboseCmd)
+  if (command == verboseCmd)
   {
     polarizationManager->SetVerbose(verboseCmd->GetNewIntValue(newValue));
   }
-  else if(command == optActivateCmd)
+  else if (command == optActivateCmd)
   {
-    polarizationManager->SetActivated(
-      optActivateCmd->GetNewBoolValue(newValue));
+    polarizationManager->SetActivated(optActivateCmd->GetNewBoolValue(newValue));
   }
-  else if(command == printVolumeListCmd)
+  else if (command == printVolumeListCmd)
   {
     polarizationManager->ListVolumes();
   }
-  else if(command == setPolarizationCmd)
+  else if (command == setPolarizationCmd)
   {
     G4Tokenizer next(newValue);
     G4String volumeName = next();
     G4double px = 0., py = 0., pz = 0.;
     G4String dvalue = next();
-    if(!dvalue.empty())
+    if (!dvalue.empty())
     {
-      px     = StoD(dvalue);
+      px = StoD(dvalue);
       dvalue = next();
-      if(!dvalue.empty())
+      if (!dvalue.empty())
       {
-        py     = StoD(dvalue);
+        py = StoD(dvalue);
         dvalue = next();
-        if(!dvalue.empty())
-          pz = StoD(dvalue);
+        if (!dvalue.empty()) pz = StoD(dvalue);
       }
     }
     G4ThreeVector pol(px, py, pz);
     polarizationManager->SetVolumePolarization(volumeName, pol);
   }
-  else if(command == testPolarizationTransformationCmd)
+  else if (command == testPolarizationTransformationCmd)
   {
     G4PolarizationHelper::TestPolarizationTransformations();
   }
-  else if(command == testInteractionFrameCmd)
+  else if (command == testInteractionFrameCmd)
   {
     G4PolarizationHelper::TestInteractionFrame();
   }
@@ -181,7 +170,7 @@ void G4PolarizationMessenger::SetNewValue(G4UIcommand* command,
 G4String G4PolarizationMessenger::GetCurrentValue(G4UIcommand* command)
 {
   G4String cv;
-  if(command == verboseCmd)
+  if (command == verboseCmd)
   {
     cv = verboseCmd->ConvertToString(polarizationManager->GetVerbose());
   }

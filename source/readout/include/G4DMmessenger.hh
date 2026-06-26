@@ -26,8 +26,8 @@
 //
 //
 
-#ifndef G4DMmessenger_h
-#define G4DMmessenger_h 1
+#ifndef G4DMMESSENGER_HH
+#define G4DMMESSENGER_HH
 
 #include "G4UImessenger.hh"
 
@@ -49,23 +49,21 @@ class G4UIcmdWithAString;
 // digitizer module(s).
 //
 
-class G4DMmessenger: public G4UImessenger
+class G4DMmessenger : public G4UImessenger
 {
   public:
-    G4DMmessenger(G4DigiManager * DigiManager);
+
+    G4DMmessenger(G4DigiManager* DigiManager);
     ~G4DMmessenger();
-    void SetNewValue(G4UIcommand * command,G4String newValues);
-  
+    void SetNewValue(G4UIcommand* command, G4String newValues);
+
   private:
-    G4DigiManager * fDMan;
+
+    G4DigiManager* fDMan;
     G4UIdirectory* digiDir;
     G4UIcmdWithoutParameter* listCmd;
     G4UIcmdWithAString* digiCmd;
     G4UIcmdWithAnInteger* verboseCmd;
 };
 
-
-
-
 #endif
-

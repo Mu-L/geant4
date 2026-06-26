@@ -32,72 +32,75 @@
 // Original Author: Giovanni Santin (ESA) - October 2005 in GRAS tool
 // Adaptation and comments by: John Apostolakis (CERN) - November 2011
 // --------------------------------------------------------------------
-#ifndef G4StatDouble_hh
-#define G4StatDouble_hh 1
+#ifndef G4STATDOUBLE_HH
+#define G4STATDOUBLE_HH
 
 #include "globals.hh"
 
 class G4StatDouble
 {
- public:
-  G4StatDouble();
-  G4StatDouble(G4double);
-  virtual ~G4StatDouble() = default;
+  public:
 
-  G4StatDouble(const G4StatDouble&) = default;
+    G4StatDouble();
+    G4StatDouble(G4double);
+    virtual ~G4StatDouble() = default;
 
-  G4StatDouble& operator=(const G4double& rhs)
-  {
-    reset();
-    fill(rhs);
-    return *this;
-  }
-  G4StatDouble& operator=(const G4StatDouble& rhs) = default;
-  G4StatDouble& operator+=(const G4double& rhs)
-  {
-    fill(rhs);
-    return *this;
-  }
-  G4StatDouble& operator+=(const G4StatDouble& rhs)
-  {
-    add(&rhs);
-    return *this;
-  }
+    G4StatDouble(const G4StatDouble&) = default;
 
-  void reset();
-  void fill(G4double x, G4double weight = 1.);
-  // Add new data point: value "x" with weight
-  void scale(G4double);
-  // Reset scale
+    G4StatDouble& operator=(const G4double& rhs)
+    {
+      reset();
+      fill(rhs);
+      return *this;
+    }
+    G4StatDouble& operator=(const G4StatDouble& rhs) = default;
+    G4StatDouble& operator+=(const G4double& rhs)
+    {
+      fill(rhs);
+      return *this;
+    }
+    G4StatDouble& operator+=(const G4StatDouble& rhs)
+    {
+      add(&rhs);
+      return *this;
+    }
 
-  G4double mean() const;
-  G4double rms();
-  // The moments
+    void reset();
+    void fill(G4double x, G4double weight = 1.);
+    // Add new data point: value "x" with weight
+    void scale(G4double);
+    // Reset scale
 
-  G4double mean(G4double ext_sum_w) const;
-  // Mean scaled to sum of weights
-  G4double rms(G4double ext_sum_w, G4int ext_n);
-  // RMS  scaled to sum of weights
+    G4double mean() const;
+    G4double rms();
+    // The moments
 
-  void add(const G4StatDouble*);
-  // merge 2 statistics
+    G4double mean(G4double ext_sum_w) const;
+    // Mean scaled to sum of weights
+    G4double rms(G4double ext_sum_w, G4int ext_n);
+    // RMS  scaled to sum of weights
 
-  inline G4int n() const { return m_n; }
-  inline G4double sum_w() const { return m_sum_w; }
-  inline G4double sum_w2() const { return m_sum_w2; }
-  inline G4double sum_wx() const { return m_sum_wx; }
-  inline G4double sum_wx2() const { return m_sum_wx2; }
+    void add(const G4StatDouble*);
+    // merge 2 statistics
 
- protected:
-  G4double rms(G4double sum_wx, G4double sum_wx2, G4double sum_w, G4int n);
+    inline G4int n() const { return m_n; }
+    inline G4double sum_w() const { return m_sum_w; }
+    inline G4double sum_w2() const { return m_sum_w2; }
+    inline G4double sum_wx() const { return m_sum_wx; }
+    inline G4double sum_wx2() const { return m_sum_wx2; }
 
- protected:
-  G4double m_sum_wx  = 0.0;
-  G4double m_sum_wx2 = 0.0;
-  G4int m_n          = 0;
-  G4double m_sum_w   = 0.0;
-  G4double m_sum_w2  = 0.0;
-  G4double m_scale   = 0.0;
+  protected:
+
+    G4double rms(G4double sum_wx, G4double sum_wx2, G4double sum_w, G4int n);
+
+  protected:
+
+    G4double m_sum_wx = 0.0;
+    G4double m_sum_wx2 = 0.0;
+    G4int m_n = 0;
+    G4double m_sum_w = 0.0;
+    G4double m_sum_w2 = 0.0;
+    G4double m_scale = 0.0;
 };
 
 #endif

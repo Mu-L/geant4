@@ -28,8 +28,8 @@
 //
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
-#ifndef G4VFileManager_h
-#define G4VFileManager_h 1
+#ifndef G4VFILEMANAGER_HH
+#define G4VFILEMANAGER_HH
 
 #include "G4BaseFileManager.hh"
 #include "G4VTHnFileManager.hh"
@@ -38,19 +38,22 @@
 #include <memory>
 #include <string_view>
 
-namespace tools {
-namespace histo {
+namespace tools
+{
+namespace histo
+{
 class h1d;
 class h2d;
 class h3d;
 class p1d;
 class p2d;
-}
-}
+}  // namespace histo
+}  // namespace tools
 
 class G4VFileManager : public G4BaseFileManager
 {
   public:
+
     explicit G4VFileManager(const G4AnalysisManagerState& state);
     G4VFileManager() = delete;
     ~G4VFileManager() override = default;
@@ -87,75 +90,93 @@ class G4VFileManager : public G4BaseFileManager
     G4int GetCycle() const;
 
     // Access to helpers
-    template <typename HT>
+    template<typename HT>
     std::shared_ptr<G4VTHnFileManager<HT>> GetHnFileManager() const;
 
   protected:
+
     // Static data members
-    static constexpr std::string_view fkClass { "G4VFileManager" };
+    static constexpr std::string_view fkClass{"G4VFileManager"};
 
     // Data members
     G4String fHistoDirectoryName;
     G4String fNtupleDirectoryName;
-    G4bool   fIsOpenFile { false };
-    G4bool   fLockDirectoryNames { false };
+    G4bool fIsOpenFile{false};
+    G4bool fLockDirectoryNames{false};
 
     // FileManagers per object type
-    std::shared_ptr<G4VTHnFileManager<tools::histo::h1d>> fH1FileManager { nullptr };
-    std::shared_ptr<G4VTHnFileManager<tools::histo::h2d>> fH2FileManager { nullptr };
-    std::shared_ptr<G4VTHnFileManager<tools::histo::h3d>> fH3FileManager { nullptr };
-    std::shared_ptr<G4VTHnFileManager<tools::histo::p1d>> fP1FileManager { nullptr };
-    std::shared_ptr<G4VTHnFileManager<tools::histo::p2d>> fP2FileManager { nullptr };
+    std::shared_ptr<G4VTHnFileManager<tools::histo::h1d>> fH1FileManager{nullptr};
+    std::shared_ptr<G4VTHnFileManager<tools::histo::h2d>> fH2FileManager{nullptr};
+    std::shared_ptr<G4VTHnFileManager<tools::histo::h3d>> fH3FileManager{nullptr};
+    std::shared_ptr<G4VTHnFileManager<tools::histo::p1d>> fP1FileManager{nullptr};
+    std::shared_ptr<G4VTHnFileManager<tools::histo::p2d>> fP2FileManager{nullptr};
 };
 
 // inline functions
 
 inline void G4VFileManager::LockDirectoryNames()
-{ fLockDirectoryNames = true; }
+{
+  fLockDirectoryNames = true;
+}
 
 inline void G4VFileManager::UnlockDirectoryNames()
-{ fLockDirectoryNames = false; }
+{
+  fLockDirectoryNames = false;
+}
 
 inline G4bool G4VFileManager::IsOpenFile() const
-{ return fIsOpenFile; }
+{
+  return fIsOpenFile;
+}
 
 inline G4String G4VFileManager::GetHistoDirectoryName() const
-{ return fHistoDirectoryName; }
+{
+  return fHistoDirectoryName;
+}
 
 inline G4String G4VFileManager::GetNtupleDirectoryName() const
-{ return fNtupleDirectoryName; }
+{
+  return fNtupleDirectoryName;
+}
 
 inline G4int G4VFileManager::GetCycle() const
-{ return fState.GetCycle(); }
+{
+  return fState.GetCycle();
+}
 
-template <>
-inline
-std::shared_ptr<G4VTHnFileManager<tools::histo::h1d>>
+template<>
+inline std::shared_ptr<G4VTHnFileManager<tools::histo::h1d>>
 G4VFileManager::GetHnFileManager<tools::histo::h1d>() const
-{   return fH1FileManager; }
+{
+  return fH1FileManager;
+}
 
-template <>
-inline
-std::shared_ptr<G4VTHnFileManager<tools::histo::h2d>>
+template<>
+inline std::shared_ptr<G4VTHnFileManager<tools::histo::h2d>>
 G4VFileManager::GetHnFileManager<tools::histo::h2d>() const
-{ return fH2FileManager; }
+{
+  return fH2FileManager;
+}
 
-template <>
-inline
-std::shared_ptr<G4VTHnFileManager<tools::histo::h3d>>
+template<>
+inline std::shared_ptr<G4VTHnFileManager<tools::histo::h3d>>
 G4VFileManager::GetHnFileManager<tools::histo::h3d>() const
-{ return fH3FileManager; }
+{
+  return fH3FileManager;
+}
 
-template <>
-inline
-std::shared_ptr<G4VTHnFileManager<tools::histo::p1d>>
+template<>
+inline std::shared_ptr<G4VTHnFileManager<tools::histo::p1d>>
 G4VFileManager::GetHnFileManager<tools::histo::p1d>() const
-{ return fP1FileManager; }
+{
+  return fP1FileManager;
+}
 
-template <>
-inline
-std::shared_ptr<G4VTHnFileManager<tools::histo::p2d>>
+template<>
+inline std::shared_ptr<G4VTHnFileManager<tools::histo::p2d>>
 G4VFileManager::GetHnFileManager<tools::histo::p2d>() const
-{ return fP2FileManager; }
+{
+  return fP2FileManager;
+}
 
 #endif

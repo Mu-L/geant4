@@ -28,48 +28,58 @@
 // -----------------------------------------------------------------------------
 //      GEANT 4 class header file
 //
-//      History: 
+//      History:
 //             Gunter Folger, August/September 2001
-//               Create class; 
+//               Create class;
 // -----------------------------------------------------------------------------
 //
 
-#ifndef G4HadronBuilder_h
-#define G4HadronBuilder_h 1
+#ifndef G4HADRONBUILDER_HH
+#define G4HADRONBUILDER_HH
 
+#include "G4ParticleDefinition.hh"
 #include "globals.hh"
+
 #include <vector>
-#include "G4ParticleDefinition.hh"
-#include "G4ParticleDefinition.hh"
 
 class G4HadronBuilder
 {
   public:
-     G4ParticleDefinition * Build(G4ParticleDefinition * black, G4ParticleDefinition * white);
-     G4ParticleDefinition * BuildLowSpin(G4ParticleDefinition * black, G4ParticleDefinition * white);
-     G4ParticleDefinition * BuildHighSpin(G4ParticleDefinition * black, G4ParticleDefinition * white);
 
-     //  ctor
-     G4HadronBuilder(const std::vector<G4double> & mesonMix, const G4double barionMix,
-		     const std::vector<G4double> & scalarMesonMix,
-		     const std::vector<G4double> & vectorMesonMix,
-                     const G4double Eta_cProb, const G4double Eta_bProb);
+    G4ParticleDefinition* Build(G4ParticleDefinition* black, G4ParticleDefinition* white);
+    G4ParticleDefinition* BuildLowSpin(G4ParticleDefinition* black, G4ParticleDefinition* white);
+    G4ParticleDefinition* BuildHighSpin(G4ParticleDefinition* black, G4ParticleDefinition* white);
+
+    //  ctor
+    G4HadronBuilder(const std::vector<G4double>& mesonMix, const G4double barionMix,
+                    const std::vector<G4double>& scalarMesonMix,
+                    const std::vector<G4double>& vectorMesonMix, const G4double Eta_cProb,
+                    const G4double Eta_bProb);
 
   private:
-     G4HadronBuilder(); // no default ctor
 
-     enum Spin { SpinZero=1, SpinHalf=2, SpinOne=3, SpinThreeHalf=4 };
+    G4HadronBuilder();  // no default ctor
 
-     G4ParticleDefinition * Meson(G4ParticleDefinition * black, G4ParticleDefinition * white, Spin spin);
+    enum Spin
+    {
+      SpinZero = 1,
+      SpinHalf = 2,
+      SpinOne = 3,
+      SpinThreeHalf = 4
+    };
 
-     G4ParticleDefinition * Barion(G4ParticleDefinition * black, G4ParticleDefinition * white, Spin spin);
-     
-     std::vector<G4double> mesonSpinMix;
-     G4double barionSpinMix;
-     std::vector<G4double> scalarMesonMixings;
-     std::vector<G4double> vectorMesonMixings;
-     
-     G4double ProbEta_c, ProbEta_b;
+    G4ParticleDefinition* Meson(G4ParticleDefinition* black, G4ParticleDefinition* white,
+                                Spin spin);
+
+    G4ParticleDefinition* Barion(G4ParticleDefinition* black, G4ParticleDefinition* white,
+                                 Spin spin);
+
+    std::vector<G4double> mesonSpinMix;
+    G4double barionSpinMix;
+    std::vector<G4double> scalarMesonMixings;
+    std::vector<G4double> vectorMesonMixings;
+
+    G4double ProbEta_c, ProbEta_b;
 };
 
 #endif

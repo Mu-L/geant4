@@ -32,23 +32,22 @@
 //      File name:     G4CollisionVector
 //
 //      Author:        Maria Grazia Pia
-// 
+//
 //      Creation date: 15 April 1999
 //
-//      Modifications: 
-//      
+//      Modifications:
+//
 // -------------------------------------------------------------------
 
 #ifndef G4COLLISIONVECTOR_HH
 #define G4COLLISIONVECTOR_HH
 
 #include "globals.hh"
+
 #include <vector>
 
 class G4VCollision;
 
-typedef std::vector<G4VCollision *> G4CollisionVector;
+typedef std::vector<G4VCollision*> G4CollisionVector;
 
 #endif
-
-

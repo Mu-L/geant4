@@ -35,6 +35,7 @@
 // -------------------------------------------------------------------
 
 #include "G4VITTrackHolder.hh"
+
 #include "G4ITTrackHolder.hh"
 #include "G4Track.hh"
 #include "G4Types.hh"
@@ -59,7 +60,6 @@ G4VITTrackHolder* G4VITTrackHolder::Instance()
 
 void G4VITTrackHolder::Push(G4Track* track)
 {
-  //abort();
+  // abort();
   delete track;
 }
-

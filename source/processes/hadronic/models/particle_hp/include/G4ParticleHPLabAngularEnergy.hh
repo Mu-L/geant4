@@ -43,6 +43,7 @@
 class G4ParticleHPLabAngularEnergy : public G4VParticleHPEnergyAngular
 {
   public:
+
     G4ParticleHPLabAngularEnergy()
     {
       theEnergies = nullptr;
@@ -56,7 +57,8 @@ class G4ParticleHPLabAngularEnergy : public G4VParticleHPEnergyAngular
     {
       delete[] theEnergies;
       delete[] nCosTh;
-      if (theData != nullptr) {
+      if (theData != nullptr)
+      {
         for (G4int i = 0; i < nEnergies; i++)
           delete[] theData[i];
         delete[] theData;
@@ -65,11 +67,13 @@ class G4ParticleHPLabAngularEnergy : public G4VParticleHPEnergyAngular
     }
 
   public:
+
     void Init(std::istream& aDataFile) override;
     G4ReactionProduct* Sample(G4double anEnergy, G4double massCode, G4double mass) override;
     G4double MeanEnergyOfThisInteraction() override { return currentMeanEnergy.Get(); }
 
   private:
+
     // number of incoming neutron energies
     G4int nEnergies;
     // Interpol between neutron energies

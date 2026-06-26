@@ -25,27 +25,27 @@
 //
 //
 //
-// 
+//
 // John Allison  15th May 2014
 // A base class for "pseudo" scenes/graphics systems.
 
 #include "G4PseudoScene.hh"
 
+#include "G4LogicalVolume.hh"
 #include "G4Mesh.hh"
 #include "G4VPhysicalVolume.hh"
-#include "G4LogicalVolume.hh"
 
-void G4PseudoScene::AddCompound(const G4Mesh& mesh) {
+void G4PseudoScene::AddCompound(const G4Mesh& mesh)
+{
   // Catches mesh if special mesh rendering set
   ProcessVolume(*mesh.GetContainerVolume()->GetLogicalVolume()->GetSolid());
 }
 
-void G4PseudoScene::ProcessVolume (const G4VSolid& solid)
+void G4PseudoScene::ProcessVolume(const G4VSolid& solid)
 {
   G4ExceptionDescription ed;
   ed << "G4PseudoScene::ProcessVolume called for solid \"" << solid.GetName()
-  << "\".\n  This is a base class - it shouldn't happen."
-  << "\n  The concrete implementation has not processed this solid.";
-  G4Exception("G4PseudoScene::ProcessVolume", "modeling0014",
-	      FatalException, ed);
+     << "\".\n  This is a base class - it shouldn't happen."
+     << "\n  The concrete implementation has not processed this solid.";
+  G4Exception("G4PseudoScene::ProcessVolume", "modeling0014", FatalException, ed);
 }

@@ -25,62 +25,53 @@
 //
 //
 // -------------------------------------------------------------------
-//      GEANT 4 class header file 
+//      GEANT 4 class header file
 //
 //      CERN, Geneva, Switzerland
 //
 //      File name:     G4KM_NucleonEqRhs.hh
 //
 //      Author:        Alessandro Brunengo (Alessandro.Brunengo@ge.infn.it)
-// 
+//
 //      Creation date: 5 June 2000
 // -------------------------------------------------------------------
 
-#ifndef G4KM_NucleonEqRhs_hh
-#define G4KM_NucleonEqRhs_hh
+#ifndef G4KM_NUCLEONEQRHS_HH
+#define G4KM_NUCLEONEQRHS_HH
 
 #include "globals.hh"
-//#include "G4EquationOfMotion.hh"
+// #include "G4EquationOfMotion.hh"
+#include "G4KM_DummyField.hh"  // needed by G4Mag_EqRhs constructor.
 #include "G4Mag_EqRhs.hh"
-#include "G4KM_DummyField.hh" // needed by G4Mag_EqRhs constructor.
 #include "G4V3DNucleus.hh"
 
-//class G4KM_NucleonEqRhs : public G4EquationOfMotion // I'd like
+// class G4KM_NucleonEqRhs : public G4EquationOfMotion // I'd like
 class G4KM_NucleonEqRhs : public G4Mag_EqRhs
 {
+  public:
 
-public:
-  G4KM_NucleonEqRhs(G4KM_DummyField *field, G4V3DNucleus * nucleus);
-  ~G4KM_NucleonEqRhs();
+    G4KM_NucleonEqRhs(G4KM_DummyField* field, G4V3DNucleus* nucleus);
+    ~G4KM_NucleonEqRhs();
 
-  virtual void EvaluateRhsGivenB(const G4double y[], const G4double B[3],
-				 G4double dydx[]) const;
-  virtual void SetChargeMomentumMass(G4ChargeState particleCharge,
-				     G4double MomentumXc,
-				     G4double MassXc2);
-  void SetMass(G4double aMass);
+    virtual void EvaluateRhsGivenB(const G4double y[], const G4double B[3], G4double dydx[]) const;
+    virtual void SetChargeMomentumMass(G4ChargeState particleCharge, G4double MomentumXc,
+                                       G4double MassXc2);
+    void SetMass(G4double aMass);
 
-private:
+  private:
 
-// use G4VKM_NuclearDensity as it needs a GetDeriv() method.
-  G4V3DNucleus * theNucleus;
-  G4double factor;
-  G4int A;
-  G4double theMass;
+    // use G4VKM_NuclearDensity as it needs a GetDeriv() method.
+    G4V3DNucleus* theNucleus;
+    G4double factor;
+    G4int A;
+    G4double theMass;
 };
-
-
 
 inline void G4KM_NucleonEqRhs::SetMass(G4double aMass)
 {
   theMass = aMass;
 }
 
-
-
-inline G4KM_NucleonEqRhs::~G4KM_NucleonEqRhs()
-{ }
+inline G4KM_NucleonEqRhs::~G4KM_NucleonEqRhs() {}
 
 #endif
-
-

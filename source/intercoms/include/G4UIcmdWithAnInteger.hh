@@ -33,14 +33,15 @@
 
 // Author: M.Asai, 1998
 // --------------------------------------------------------------------
-#ifndef G4UIcmdWithAnInteger_hh
-#define G4UIcmdWithAnInteger_hh 1
+#ifndef G4UICMDWITHANINTEGER_HH
+#define G4UICMDWITHANINTEGER_HH
 
 #include "G4UIcommand.hh"
 
 class G4UIcmdWithAnInteger : public G4UIcommand
 {
   public:
+
     // Constructor. The command string with full path directory
     // and the pointer to the messenger must be given
     G4UIcmdWithAnInteger(const char* commandPath, G4UImessenger* messenger);

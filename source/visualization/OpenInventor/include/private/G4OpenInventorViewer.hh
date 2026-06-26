@@ -46,60 +46,71 @@ class SbVec3f;
 //
 // Base class for various OpenInventorView classes.
 //
-class G4OpenInventorViewer: public G4VViewer {
-public: //G4VViewer
-  virtual void DrawView();
-  virtual void ShowView();
-  virtual void ClearView();
-  virtual void SetView();
-  virtual void KernelVisitDecision();
-public:
-  G4OpenInventorViewer(G4OpenInventorSceneHandler& scene,
-		       const G4String& name = "");
-  virtual ~G4OpenInventorViewer();
+class G4OpenInventorViewer : public G4VViewer
+{
+  public:  // G4VViewer
 
-protected:
-  virtual void ViewerRender() = 0;
-  virtual SoCamera* GetCamera() = 0;
-  void Escape();
-  void WritePostScript(const G4String& file = "g4out.ps");
-  void WritePDF(const G4String& file = "g4out.pdf");
-  void WritePixmapPostScript(const G4String& file = "g4out.ps");
-  void WriteInventor(const G4String& file = "g4out.iv");
-  void SceneGraphStatistics();
-  void EraseDetector();
-  void EraseEvent();
-  void SetPreviewAndFull();
-  void SetPreview();
-  void SetSolid();
-  void SetWireFrame();
-  void SetReducedWireFrame(bool);
-  void UpdateScene();
-  G4String Help(const G4String& topic = "controls");
+    virtual void DrawView();
+    virtual void ShowView();
+    virtual void ClearView();
+    virtual void SetView();
+    virtual void KernelVisitDecision();
 
-private:
-  static void GroupCameraSensorCB(void*,SoSensor*);
-  // FWJ no longer needed:
-  //  static void CameraSensorCB(void*,SoSensor*);
-  static void pointAt(SoCamera*,const SbVec3f & targetpoint, const SbVec3f & upvector);
-  static void lookAt(SoCamera*,const SbVec3f & dir, const SbVec3f & up);
-  static void lookedAt(SoCamera*,SbVec3f & dir, SbVec3f & up);
-private:
-  G4bool CompareForKernelVisit(G4ViewParameters&);
-  G4bool CompareForTransientsRedraw(G4ViewParameters&);
-  void DrawDetector();
-private:
-  G4ViewParameters fLastVP;  // Memory for making kernel visit decisions.
-protected:
-  static void SelectionCB(void*,SoPath*);
-  G4OpenInventorSceneHandler& fG4OpenInventorSceneHandler;
-  G4VInteractorManager* fInteractorManager;
-  SoSelection* fSoSelection;
-  Geant4_SoImageWriter* fSoImageWriter;
-  Geant4_SoGL2PSAction* fGL2PSAction;
-  SoNodeSensor* fGroupCameraSensor;
-  // FWJ no longer needed:
-  //  SoNodeSensor* fCameraSensor;
+  public:
+
+    G4OpenInventorViewer(G4OpenInventorSceneHandler& scene, const G4String& name = "");
+    virtual ~G4OpenInventorViewer();
+
+  protected:
+
+    virtual void ViewerRender() = 0;
+    virtual SoCamera* GetCamera() = 0;
+    void Escape();
+    void WritePostScript(const G4String& file = "g4out.ps");
+    void WritePDF(const G4String& file = "g4out.pdf");
+    void WritePixmapPostScript(const G4String& file = "g4out.ps");
+    void WriteInventor(const G4String& file = "g4out.iv");
+    void SceneGraphStatistics();
+    void EraseDetector();
+    void EraseEvent();
+    void SetPreviewAndFull();
+    void SetPreview();
+    void SetSolid();
+    void SetWireFrame();
+    void SetReducedWireFrame(bool);
+    void UpdateScene();
+    G4String Help(const G4String& topic = "controls");
+
+  private:
+
+    static void GroupCameraSensorCB(void*, SoSensor*);
+    // FWJ no longer needed:
+    //  static void CameraSensorCB(void*,SoSensor*);
+    static void pointAt(SoCamera*, const SbVec3f& targetpoint, const SbVec3f& upvector);
+    static void lookAt(SoCamera*, const SbVec3f& dir, const SbVec3f& up);
+    static void lookedAt(SoCamera*, SbVec3f& dir, SbVec3f& up);
+
+  private:
+
+    G4bool CompareForKernelVisit(G4ViewParameters&);
+    G4bool CompareForTransientsRedraw(G4ViewParameters&);
+    void DrawDetector();
+
+  private:
+
+    G4ViewParameters fLastVP;  // Memory for making kernel visit decisions.
+
+  protected:
+
+    static void SelectionCB(void*, SoPath*);
+    G4OpenInventorSceneHandler& fG4OpenInventorSceneHandler;
+    G4VInteractorManager* fInteractorManager;
+    SoSelection* fSoSelection;
+    Geant4_SoImageWriter* fSoImageWriter;
+    Geant4_SoGL2PSAction* fGL2PSAction;
+    SoNodeSensor* fGroupCameraSensor;
+    // FWJ no longer needed:
+    //  SoNodeSensor* fCameraSensor;
 };
 
 #endif

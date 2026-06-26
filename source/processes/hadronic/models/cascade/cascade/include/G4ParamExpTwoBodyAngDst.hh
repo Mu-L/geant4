@@ -31,50 +31,60 @@
 //
 // 20130227  Renamed from "ParamExp" to "ParamExp" to fix misattribution.
 
-#ifndef G4ParamExpTwoBodyAngDst_h
-#define G4ParamExpTwoBodyAngDst_h 1
+#ifndef G4PARAMEXPTWOBODYANGDST_HH
+#define G4PARAMEXPTWOBODYANGDST_HH
 
-#include "G4VTwoBodyAngDst.hh"
 #include "G4CascadeInterpolator.hh"
+#include "G4VTwoBodyAngDst.hh"
 
+template<G4int NKEBINS>
+class G4ParamExpTwoBodyAngDst : public G4VTwoBodyAngDst
+{
+  public:
 
-template <G4int NKEBINS>
-class G4ParamExpTwoBodyAngDst : public G4VTwoBodyAngDst {
-public:
-  enum { nKEbins=NKEBINS };	// For use in function arguments
+    enum
+    {
+      nKEbins = NKEBINS
+    };  // For use in function arguments
 
-  G4ParamExpTwoBodyAngDst(const G4String& name, 
-			     const G4double (&kebins)[nKEbins],
-			     const G4double (&pFrac)[nKEbins],
-			     const G4double (&pA)[nKEbins],
-			     const G4double (&pC)[nKEbins],
-			     const G4double (&pCos)[nKEbins],
-			     G4int verbose = 0)
-    : G4VTwoBodyAngDst(name, verbose), labKE(kebins), angleCut(pFrac), 
-      smallScale(pA), largeScale(pC), cosScale(pCos), interpolator(kebins) {;}
+    G4ParamExpTwoBodyAngDst(const G4String& name, const G4double (&kebins)[nKEbins],
+                            const G4double (&pFrac)[nKEbins], const G4double (&pA)[nKEbins],
+                            const G4double (&pC)[nKEbins], const G4double (&pCos)[nKEbins],
+                            G4int verbose = 0)
+      : G4VTwoBodyAngDst(name, verbose),
+        labKE(kebins),
+        angleCut(pFrac),
+        smallScale(pA),
+        largeScale(pC),
+        cosScale(pCos),
+        interpolator(kebins)
+    {
+      ;
+    }
 
-  virtual ~G4ParamExpTwoBodyAngDst() {;}
-  
-  virtual G4double GetCosTheta(const G4double& ekin, const G4double& pcm) const;
-  
-protected:
-  // Kinetic energies at which angular distributions are taken
-  const G4double (&labKE)[nKEbins];
+    virtual ~G4ParamExpTwoBodyAngDst() { ; }
 
-  // Cut-off for small- vs. large-angle functions at each energy
-  const G4double (&angleCut)[nKEbins];
+    virtual G4double GetCosTheta(const G4double& ekin, const G4double& pcm) const;
 
-  // Scale factors for small- vs. large-angle regions
-  const G4double (&smallScale)[nKEbins];
-  const G4double (&largeScale)[nKEbins];
+  protected:
 
-  // Scale factor for exponential mapping to cos(theta)
-  const G4double (&cosScale)[nKEbins];
+    // Kinetic energies at which angular distributions are taken
+    const G4double (&labKE)[nKEbins];
 
-  G4CascadeInterpolator<NKEBINS> interpolator;
+    // Cut-off for small- vs. large-angle functions at each energy
+    const G4double (&angleCut)[nKEbins];
+
+    // Scale factors for small- vs. large-angle regions
+    const G4double (&smallScale)[nKEbins];
+    const G4double (&largeScale)[nKEbins];
+
+    // Scale factor for exponential mapping to cos(theta)
+    const G4double (&cosScale)[nKEbins];
+
+    G4CascadeInterpolator<NKEBINS> interpolator;
 };
 
 // Implementations must be included for templated classes
 #include "G4ParamExpTwoBodyAngDst.icc"
 
-#endif	/* G4ParamExpTwoBodyAngDst_h */
+#endif /* G4ParamExpTwoBodyAngDst_h */

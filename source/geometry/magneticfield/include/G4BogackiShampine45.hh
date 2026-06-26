@@ -27,7 +27,7 @@
 //
 // Class description:
 //
-// An implementation of the embedded RK method from the following paper 
+// An implementation of the embedded RK method from the following paper
 // by P. Bogacki and L. F. Shampine:
 //    "An efficient Runge-Kutta (4,5) pair"
 //    Comput. Math. with Appl., vol. 32, no. 6, pp. 15-28, Sep. 1996.
@@ -52,6 +52,8 @@
  * @brief G4BogackiShampine45 is an integrator of particle's equation of
  * motion based on the Bogacki-Shampine method with FSAL property, allowing
  * the reuse of the last derivative in the next step.
+ * @ingroup geometry_magneticfield
+ *
  * This Stepper provides 'dense output'. After a successful step, it is
  * possible to obtain an estimate of the value of the function at an
  * intermediate point of the interval. This requires only two additional
@@ -68,15 +70,14 @@ class G4BogackiShampine45 : public G4MagIntegratorStepper
      *  @param[in] numberOfVariables The number of integration variables.
      *  @param[in] primary Flag for initialisation of the auxiliary stepper.
      */
-    G4BogackiShampine45(G4EquationOfMotion* EqRhs,
-                        G4int numberOfVariables = 6,
-                        G4bool primary =  true);
+    G4BogackiShampine45(G4EquationOfMotion* EqRhs, G4int numberOfVariables = 6,
+                        G4bool primary = true);
 
     /**
      * Destructor.
      */
     ~G4BogackiShampine45() override;
-    
+
     /**
      * Copy constructor and assignment operator not allowed.
      */
@@ -94,26 +95,22 @@ class G4BogackiShampine45 : public G4MagIntegratorStepper
      *  @param[out] yout Integration output.
      *  @param[out] yerr The estimated error.
      */
-    void Stepper( const G4double y[],
-                  const G4double dydx[],
-                        G4double h,
-                        G4double yout[],
-                        G4double yerr[] ) override;
+    void Stepper(const G4double y[], const G4double dydx[], G4double h, G4double yout[],
+                 G4double yerr[]) override;
 
     /**
      * Setup all coefficients for interpolation.
      */
     void SetupInterpolationHigh();  // ( yInput, dydx, Step);
     inline void SetupInterpolation() { SetupInterpolationHigh(); }
-    
+
     /**
      * Calculates the output at the tau fraction of step.
      *  @param[in] tau The tau fraction of the step.
      *  @param[out] yOut Interpolation output.
      */
-    void InterpolateHigh( G4double tau, G4double yOut[] ) const;
-    inline void Interpolate( G4double tau, 
-                             G4double yOut[] ) { InterpolateHigh( tau, yOut); }
+    void InterpolateHigh(G4double tau, G4double yOut[]) const;
+    inline void Interpolate(G4double tau, G4double yOut[]) { InterpolateHigh(tau, yOut); }
 
     /**
      * Returns the distance from chord line.
@@ -133,33 +130,31 @@ class G4BogackiShampine45 : public G4MagIntegratorStepper
     /**
      * Acccessor for dydx array.
      */
-    void GetLastDydx( G4double dyDxLast[] );
+    void GetLastDydx(G4double dyDxLast[]);
 
     /**
      * Initialises the values of the bi[][] array.
      */
     void PrepareConstants();
-   
-  private:
-    
-    G4double *ak2, *ak3, *ak4, *ak5, *ak6, *ak7, *ak8,
-             *ak9, *ak10, *ak11, *yTemp, *yIn;
 
-    G4double *p[6];
+  private:
+
+    G4double *ak2, *ak3, *ak4, *ak5, *ak6, *ak7, *ak8, *ak9, *ak10, *ak11, *yTemp, *yIn;
+
+    G4double* p[6];
 
     G4double fLastStepLength = -1.0;
 
     /** For DistChord() calculations. */
-    G4double *fLastInitialVector, *fLastFinalVector, *fLastDyDx,
-             *fMidVector, *fMidError;
-    
+    G4double *fLastInitialVector, *fLastFinalVector, *fLastDyDx, *fMidVector, *fMidError;
+
     G4BogackiShampine45* fAuxStepper = nullptr;
 
     /** For chord - until interpolation is proven. */
     G4bool fPreparedInterpolation = false;
 
     /** Class constants. */
-    static G4bool fPreparedConstants;   
+    static G4bool fPreparedConstants;
     static G4double bi[12][7];
 };
 

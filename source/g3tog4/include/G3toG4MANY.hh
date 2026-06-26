@@ -32,13 +32,13 @@
 //
 // void G3toG4MANY(G3VolTableEntry* curVTE);
 //
-// void MakeBooleanSolids(G3VolTableEntry* curVTE, 
+// void MakeBooleanSolids(G3VolTableEntry* curVTE,
 //                        G3VolTableEntryVector* overlaps,
 //                        const G4Transform3D& transform);
 //
-// void SubstractSolids(G3VolTableEntry* vte1, 
+// void SubstractSolids(G3VolTableEntry* vte1,
 //                      G3VolTableEntry* vte2,
-//                      G4int copy, 
+//                      G4int copy,
 //                      const G4Transform3D& transform);
 //
 // G4Transform3D GetTransform3D(G3Pos*);
@@ -59,25 +59,24 @@
 // By I.Hrivnacova, 22.10.01
 
 #ifndef G3TOG4_MANY_HH
-#define G3TOG4_MANY_HH 1
+#define G3TOG4_MANY_HH
 
-#include <vector>
-#include "G3VolTableEntry.hh"
 #include "G4Transform3D.hh"
 
-typedef std::vector<G3VolTableEntry*>  G3VolTableEntryVector;
+#include "G3VolTableEntry.hh"
+
+#include <vector>
+
+typedef std::vector<G3VolTableEntry*> G3VolTableEntryVector;
 
 void G3toG4MANY(G3VolTableEntry* curVTE);
 
-void MakeBooleanSolids(G3VolTableEntry* curVTE, 
-                       G3VolTableEntryVector* overlaps,
-		       const G4Transform3D& transform);
+void MakeBooleanSolids(G3VolTableEntry* curVTE, G3VolTableEntryVector* overlaps,
+                       const G4Transform3D& transform);
 
-void SubstractSolids(G3VolTableEntry* vte1, 
-                     G3VolTableEntry* vte2,
-	             G4int copy, 
-		     const G4Transform3D& transform);
+void SubstractSolids(G3VolTableEntry* vte1, G3VolTableEntry* vte2, G4int copy,
+                     const G4Transform3D& transform);
 
 G4Transform3D GetTransform3D(G3Pos*);
 
-#endif  
+#endif

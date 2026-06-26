@@ -22,7 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // G4ReplicaNavigation
 //
 // Class description:
@@ -34,16 +34,16 @@
 // Author: Paul Kent (CERN), August 1996
 // --------------------------------------------------------------------
 #ifndef G4REPLICANAVIGATION_HH
-#define G4REPLICANAVIGATION_HH 1
+#define G4REPLICANAVIGATION_HH
+
+#include "G4BlockingList.hh"
+#include "G4LogicalVolume.hh"
+#include "G4NavigationHistory.hh"
+#include "G4ThreeVector.hh"
+#include "G4Types.hh"
+#include "G4VPhysicalVolume.hh"
 
 #include <CLHEP/Units/SystemOfUnits.h>
-
-#include "G4Types.hh"
-#include "G4NavigationHistory.hh"
-#include "G4LogicalVolume.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4ThreeVector.hh"
-#include "G4BlockingList.hh"
 
 // Required for voxel handling
 //
@@ -53,32 +53,51 @@ class G4VSolid;
 
 struct G4ExitNormal
 {
-  /**
-   * @brief G4ExitNormal, a bucket to hold value of Normal (3-vector), Booleans
-   * for calculated and leave-behind or 'validConvex', and exiting side..
-   */
-   
-   /** Identity of 'Side' of Replicas. Used by DistanceToOut methods. */
-   enum  ESide {kNull,kRMin,kRMax,kSPhi,kEPhi,kPX,kMX,kPY,kMY,kPZ,kMZ,kMother};
+    /**
+     * @brief G4ExitNormal, a bucket to hold value of Normal (3-vector), Booleans
+     * for calculated and leave-behind or 'validConvex', and exiting side.
+     * @ingroup geometry_navigation.
+     */
 
-   G4ThreeVector exitNormal;
-   G4bool        calculated;   // Normal
-   G4bool        validConvex;  // Solid locally convex
-   ESide         exitSide;
+    /** Identity of 'Side' of Replicas. Used by DistanceToOut methods. */
+    enum ESide
+    {
+      kNull,
+      kRMin,
+      kRMax,
+      kSPhi,
+      kEPhi,
+      kPX,
+      kMX,
+      kPY,
+      kMY,
+      kPZ,
+      kMZ,
+      kMother
+    };
 
- public:
+    G4ThreeVector exitNormal;
+    G4bool calculated;  // Normal
+    G4bool validConvex;  // Solid locally convex
+    ESide exitSide;
 
-   G4ExitNormal(const G4ThreeVector& norm = G4ThreeVector(0.,0.,0.),
-                G4bool        calc = false,
-                G4bool        valid= false,
-                ESide         side = kNull )
-   { exitNormal= norm; calculated= calc; validConvex=valid; exitSide=side;}
+  public:
+
+    G4ExitNormal(const G4ThreeVector& norm = G4ThreeVector(0., 0., 0.), G4bool calc = false,
+                 G4bool valid = false, ESide side = kNull)
+    {
+      exitNormal = norm;
+      calculated = calc;
+      validConvex = valid;
+      exitSide = side;
+    }
 };
 
 /**
  * @brief G4ReplicaNavigation is a utility class for navigation in volumes
  * containing a single G4PVParameterised volume for which voxels for the
  * replicated volumes have been constructed.
+ * @ingroup geometry_navigation
  * @note Voxels MUST be along one axis only: NOT refined.
  */
 
@@ -90,7 +109,7 @@ class G4ReplicaNavigation
      * Constructor and default Destructor.
      */
     G4ReplicaNavigation();
-   ~G4ReplicaNavigation() = default;
+    ~G4ReplicaNavigation() = default;
 
     /**
      * Searches positioned volumes in mother at current top level of @p history
@@ -104,13 +123,10 @@ class G4ReplicaNavigation
      *  @param[in,out] localPoint Point in local coordinates system.
      *  @returns Whether a containing volume has been found.
      */
-    inline G4bool LevelLocate( G4NavigationHistory& history,
-                         const G4VPhysicalVolume* blockedVol,
-                         const G4int blockedNum,
-                         const G4ThreeVector& globalPoint,
-                         const G4ThreeVector* globalDirection,
-                         const G4bool pLocatedOnEdge, 
-                               G4ThreeVector& localPoint );
+    inline G4bool LevelLocate(G4NavigationHistory& history, const G4VPhysicalVolume* blockedVol,
+                              const G4int blockedNum, const G4ThreeVector& globalPoint,
+                              const G4ThreeVector* globalDirection, const G4bool pLocatedOnEdge,
+                              G4ThreeVector& localPoint);
 
     /**
      * Computes the length of a step to the next boundary.
@@ -135,24 +151,17 @@ class G4ReplicaNavigation
      *  @returns Length from current point to next boundary surface along
      *           @p localDirection.
      */
-    G4double ComputeStep( const G4ThreeVector& globalPoint,
-                          const G4ThreeVector& globalDirection,
-                          const G4ThreeVector& localPoint,
-                          const G4ThreeVector& localDirection,
-                          const G4double currentProposedStepLength,
-                                G4double& newSafety,
-                                G4NavigationHistory& history,
-                                G4bool& validExitNormal,
-                                G4bool& calculatedExitNormal,
-                                G4ThreeVector &exitNormal,
-                                G4bool& exiting,
-                                G4bool& entering,
-                                G4VPhysicalVolume* (*pBlockedPhysical),
-                                G4int &blockedReplicaNo );
+    G4double ComputeStep(const G4ThreeVector& globalPoint, const G4ThreeVector& globalDirection,
+                         const G4ThreeVector& localPoint, const G4ThreeVector& localDirection,
+                         const G4double currentProposedStepLength, G4double& newSafety,
+                         G4NavigationHistory& history, G4bool& validExitNormal,
+                         G4bool& calculatedExitNormal, G4ThreeVector& exitNormal, G4bool& exiting,
+                         G4bool& entering, G4VPhysicalVolume*(*pBlockedPhysical),
+                         G4int& blockedReplicaNo);
 
     /**
      * Calculates the isotropic distance to the nearest boundary from the
-     * specified point in the local/global coordinate system. 
+     * specified point in the local/global coordinate system.
      * The localpoint utilised must be within the current volume.
      *  @param[in] globalPoint Global point.
      *  @param[in] localPoint Local point.
@@ -161,13 +170,12 @@ class G4ReplicaNavigation
      *             need not be checked.
      *  @returns Length from current point to closest surface.
      */
-    G4double ComputeSafety( const G4ThreeVector& globalPoint,
-                            const G4ThreeVector& localPoint,
-                            const G4NavigationHistory& history,
-                            const G4double pProposedMaxLength = DBL_MAX ) const;
+    G4double ComputeSafety(const G4ThreeVector& globalPoint, const G4ThreeVector& localPoint,
+                           const G4NavigationHistory& history,
+                           const G4double pProposedMaxLength = DBL_MAX) const;
 
     /**
-     * Locates the specified point in the local/global coordinate system. 
+     * Locates the specified point in the local/global coordinate system.
      * The localpoint utilised must be within the current volume.
      *  @param[in] history Navigation history.
      *  @param[in] globalPoint Global point.
@@ -176,24 +184,20 @@ class G4ReplicaNavigation
      *  @param[in,out] notKnownInside Flag to indicate whether exiting replica.
      *  @returns If point is located inside the current replica volume.
      */
-    EInside BackLocate( G4NavigationHistory &history,
-                  const G4ThreeVector& globalPoint,
-                        G4ThreeVector& localPoint,
-                  const G4bool& exiting,
-                        G4bool& notKnownInside ) const;
+    EInside BackLocate(G4NavigationHistory& history, const G4ThreeVector& globalPoint,
+                       G4ThreeVector& localPoint, const G4bool& exiting,
+                       G4bool& notKnownInside) const;
 
     /**
      * Setups transformation and transform point into local system.
      */
-    void ComputeTransformation( const G4int replicaNo,
-                                      G4VPhysicalVolume* pVol,
-                                      G4ThreeVector& point ) const;
+    void ComputeTransformation(const G4int replicaNo, G4VPhysicalVolume* pVol,
+                               G4ThreeVector& point) const;
 
     /**
      * Setups transformation into local system.
      */
-    void ComputeTransformation( const G4int replicaNo,
-                                      G4VPhysicalVolume* pVol ) const; 
+    void ComputeTransformation(const G4int replicaNo, G4VPhysicalVolume* pVol) const;
 
     /**
      * Computes if local point point is inside the reference volume or not.
@@ -202,9 +206,8 @@ class G4ReplicaNavigation
      *  @param[in] localPoint Point in local coordinates system.
      *  @returns If point is inside referenced replica volume or not.
      */
-    EInside Inside( const G4VPhysicalVolume* pVol,
-                    const G4int replicaNo,
-                    const G4ThreeVector& localPoint ) const;
+    EInside Inside(const G4VPhysicalVolume* pVol, const G4int replicaNo,
+                   const G4ThreeVector& localPoint) const;
 
     /**
      * Estimates the isotropic distance to exit the reference volume from
@@ -214,9 +217,8 @@ class G4ReplicaNavigation
      *  @param[in] localPoint Point in local coordinates system.
      *  @returns The isotropic distance to exit.
      */
-    G4double DistanceToOut( const G4VPhysicalVolume* pVol,
-                            const G4int replicaNo,
-                            const G4ThreeVector& localPoint ) const;
+    G4double DistanceToOut(const G4VPhysicalVolume* pVol, const G4int replicaNo,
+                           const G4ThreeVector& localPoint) const;
 
     /**
      * Calculates the distance to exit the reference volume from the provided
@@ -228,18 +230,16 @@ class G4ReplicaNavigation
      *  @param[in,out] candidateNormal The candidate exit notmal.
      *  @returns The distance to exit.
      */
-    G4double DistanceToOut( const G4VPhysicalVolume* pVol,
-                            const G4int replicaNo,
-                            const G4ThreeVector& localPoint,
-                            const G4ThreeVector& localDirection,
-                                  G4ExitNormal& candidateNormal ) const;
+    G4double DistanceToOut(const G4VPhysicalVolume* pVol, const G4int replicaNo,
+                           const G4ThreeVector& localPoint, const G4ThreeVector& localDirection,
+                           G4ExitNormal& candidateNormal) const;
 
     /**
      * Verbosity control.
      *  @note If level>0 && G4VERBOSE, printout can occur.
      */
     inline G4int GetVerboseLevel() const;
-    inline void  SetVerboseLevel(G4int level);
+    inline void SetVerboseLevel(G4int level);
 
     /**
      * Run navigation in "check-mode", therefore using additional
@@ -258,33 +258,26 @@ class G4ReplicaNavigation
      *  @param[in] blocked Flag to indicate if volume is blocked or not.
      *  @returns Pointer to the node where the given point is located.
      */
-    inline G4int VoxelLocate( const G4SmartVoxelHeader* pHead,
-                              const G4ThreeVector& localPoint,
-                              const G4int blocked=-1 ) const;
+    inline G4int VoxelLocate(const G4SmartVoxelHeader* pHead, const G4ThreeVector& localPoint,
+                             const G4int blocked = -1) const;
 
     /**
      * Computes distance to exit for phi replica.
      */
-    G4double DistanceToOutPhi( const G4ThreeVector& localPoint,
-                               const G4ThreeVector& localDirection,
-                               const G4double width,
-                               G4ExitNormal& foundNormal ) const;
+    G4double DistanceToOutPhi(const G4ThreeVector& localPoint, const G4ThreeVector& localDirection,
+                              const G4double width, G4ExitNormal& foundNormal) const;
 
     /**
      * Computes distance to exit for radial replica.
      */
-    G4double DistanceToOutRad( const G4ThreeVector& localPoint,
-                               const G4ThreeVector& localDirection,
-                               const G4double width,
-                               const G4double offset,
-                               const G4int replicaNo,
-                                     G4ExitNormal& foundNormal ) const;
+    G4double DistanceToOutRad(const G4ThreeVector& localPoint, const G4ThreeVector& localDirection,
+                              const G4double width, const G4double offset, const G4int replicaNo,
+                              G4ExitNormal& foundNormal) const;
 
     /**
      * Sets phi rotation of target volume.
      */
-    inline void SetPhiTransformation( const G4double ang,
-                                      G4VPhysicalVolume* pVol = nullptr ) const;
+    inline void SetPhiTransformation(const G4double ang, G4VPhysicalVolume* pVol = nullptr) const;
 
   private:
 
@@ -292,15 +285,14 @@ class G4ReplicaNavigation
     // **********
 
     /** Check mode. */
-    G4bool fCheck = false; 
- 
+    G4bool fCheck = false;
+
     /** Verbosity. */
-    G4int  fVerbose = 0;
+    G4int fVerbose = 0;
 
     /** Local cached constants. */
-    G4double kCarTolerance, kRadTolerance, kAngTolerance,
-             halfkCarTolerance, halfkRadTolerance, halfkAngTolerance,
-             fMinStep;
+    G4double kCarTolerance, kRadTolerance, kAngTolerance, halfkCarTolerance, halfkRadTolerance,
+      halfkAngTolerance, fMinStep;
 };
 
 #include "G4ReplicaNavigation.icc"

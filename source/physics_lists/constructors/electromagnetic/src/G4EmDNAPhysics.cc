@@ -27,19 +27,21 @@
 //
 
 #include "G4EmDNAPhysics.hh"
+
 #include "G4EmDNABuilder.hh"
 #include "G4SystemOfUnits.hh"
 
 // ions
 #include "G4Alpha.hh"
 #include "G4DNAGenericIonsManager.hh"
+#include "G4Deuteron.hh"
 
 // utilities
-#include "G4EmParameters.hh"
-#include "G4PhysicsListHelper.hh"
 #include "G4BuilderType.hh"
 #include "G4EmBuilder.hh"
+#include "G4EmParameters.hh"
 #include "G4PhysListUtil.hh"
+#include "G4PhysicsListHelper.hh"
 
 // factory
 #include "G4PhysicsConstructorFactory.hh"
@@ -48,8 +50,7 @@ G4_DECLARE_PHYSCONSTR_FACTORY(G4EmDNAPhysics);
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4EmDNAPhysics::G4EmDNAPhysics(G4int ver, const G4String& name)
-  : G4VPhysicsConstructor(name)
+G4EmDNAPhysics::G4EmDNAPhysics(G4int ver, const G4String& name) : G4VPhysicsConstructor(name)
 {
   // instantiate singletones for physics
   G4PhysListUtil::InitialiseParameters();
@@ -58,22 +59,22 @@ G4EmDNAPhysics::G4EmDNAPhysics(G4int ver, const G4String& name)
   SetVerboseLevel(ver);
   G4EmParameters* param = G4EmParameters::Instance();
   param->SetDefaults();
-  param->SetMinEnergy(10*CLHEP::eV);
-  param->SetMaxEnergy(600*CLHEP::MeV);
-  param->SetLowestElectronEnergy(0*CLHEP::eV);
+  param->SetMinEnergy(10 * CLHEP::eV);
+  param->SetMaxEnergy(600 * CLHEP::MeV);
+  param->SetLowestElectronEnergy(0 * CLHEP::eV);
   param->SetNumberOfBinsPerDecade(20);
   param->ActivateAngularGeneratorForIonisation(true);
-  param->SetStepFunction(0.2, 10*CLHEP::um);
-  param->SetStepFunctionMuHad(0.1, 50*CLHEP::um);
-  param->SetStepFunctionLightIons(0.1, 20*CLHEP::um);
-  param->SetStepFunctionIons(0.1, 1*CLHEP::um);
+  param->SetStepFunction(0.2, 10 * CLHEP::um);
+  param->SetStepFunctionMuHad(0.1, 50 * CLHEP::um);
+  param->SetStepFunctionLightIons(0.1, 20 * CLHEP::um);
+  param->SetStepFunctionIons(0.1, 1 * CLHEP::um);
   param->SetUseICRU90Data(true);
   param->SetUseMottCorrection(true);
   param->SetMscStepLimitType(fUseSafetyPlus);
   param->SetMscSkin(3);
   param->SetMscRangeFactor(0.08);
-  param->SetFluo(true);  
-  param->SetAuger(true);  
+  param->SetFluo(true);
+  param->SetAuger(true);
   param->SetDeexcitationIgnoreCut(true);
   param->SetPositronAtRestModelType(fAllisonPositronium);
   param->ActivateDNA();
@@ -96,32 +97,33 @@ void G4EmDNAPhysics::ConstructProcess()
 {
   // parameters
   G4EmParameters* param = G4EmParameters::Instance();
-  const G4double emaxDNA = param->MaxDNAElectronEnergy();
-  const G4double emaxIonDNA = param->MaxDNAIonEnergy();
-  const G4double eminBorn = 500.*CLHEP::keV;
+  const G4double emaxElectronDNA = param->MaxDNAElectronEnergy();
+  const G4double emaxProtonDNA = param->MaxDNAProtonEnergy();
+  const G4double emaxIonDNA = param->MaxDNAIonEnergyPerNucleon();
   const G4bool fast = param->DNAFast();
   const G4bool st = param->DNAStationary();
-  if(verboseLevel > 1) {
-    G4cout << "### " << GetPhysicsName() 
-	   << " Construct Processes EmaxDNA(MeV)= " 
-           << emaxDNA/CLHEP::MeV << "; useMSC: " << fast 
-           << "; stationary: " << st << G4endl;
+  if (verboseLevel > 1)
+  {
+    G4cout << "### " << GetPhysicsName()
+           << " Construct Processes EmaxDNA(MeV)= " << emaxElectronDNA / CLHEP::MeV
+           << "; useMSC: " << fast << "; stationary: " << st << G4endl;
   }
-  G4DNAGenericIonsManager* genericIonsManager
-    = G4DNAGenericIonsManager::Instance();
+  G4DNAGenericIonsManager* genericIonsManager = G4DNAGenericIonsManager::Instance();
 
   // standard physics
-  G4EmDNABuilder::ConstructStandardEmPhysics(emaxDNA, emaxIonDNA, 
-                                             emaxIonDNA, emaxIonDNA,
-                                             dnaGS, fast);
+  G4EmDNABuilder::ConstructStandardEmPhysics(emaxElectronDNA, emaxProtonDNA, emaxIonDNA, dnaGS,
+                                             fast);
 
   // DNA physics
-  G4EmDNABuilder::ConstructDNAElectronPhysics(emaxDNA, 0, fast, st);
-  G4EmDNABuilder::ConstructDNAProtonPhysics(eminBorn, emaxIonDNA, 0, fast, st);
+  G4EmDNABuilder::ConstructDNAElectronPhysics(emaxElectronDNA, 0, fast, st);
+  G4EmDNABuilder::ConstructDNAProtonPhysics(emaxProtonDNA, 0, fast, st);
   G4EmDNABuilder::ConstructDNAIonPhysics(emaxIonDNA, 0);
 
   G4ParticleDefinition* part = genericIonsManager->GetIon("hydrogen");
   G4EmDNABuilder::ConstructDNALightIonPhysics(part, 0, 0, emaxIonDNA, fast, st);
+
+  part = G4Deuteron::Deuteron();
+  G4EmDNABuilder::ConstructDNALightIonPhysics(part, 1, 0, emaxIonDNA, fast, st);
 
   part = G4Alpha::Alpha();
   G4EmDNABuilder::ConstructDNALightIonPhysics(part, 2, 0, emaxIonDNA, fast, st);

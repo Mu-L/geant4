@@ -33,14 +33,14 @@
 
 // Author: Makoto Asai, 2000
 // --------------------------------------------------------------------
-#ifndef G4RayShooter_hh
-#define G4RayShooter_hh 1
+#ifndef G4RAYSHOOTER_HH
+#define G4RAYSHOOTER_HH
 
-#include "globals.hh"
-#include "G4ThreeVector.hh"
 #include "G4ParticleDefinition.hh"
-#include "G4PrimaryVertex.hh"
 #include "G4ParticleMomentum.hh"
+#include "G4PrimaryVertex.hh"
+#include "G4ThreeVector.hh"
+#include "globals.hh"
 
 class G4Event;
 
@@ -52,17 +52,18 @@ class G4RayShooter
     virtual ~G4RayShooter() = default;
 
     void Shoot(G4Event* evt, G4ThreeVector vtx, G4ThreeVector direc);
-      // Generates a primary vertex and a primary particle at the given
-      // vertex point and with the given direction. This method is invoked
-      // by G4RayTracer and G4MaterialScanner.
+    // Generates a primary vertex and a primary particle at the given
+    // vertex point and with the given direction. This method is invoked
+    // by G4RayTracer and G4MaterialScanner.
 
   private:
+
     G4ParticleDefinition* particle_definition = nullptr;
-    G4ParticleMomentum    particle_momentum_direction;
-    G4double              particle_energy = 1.0*CLHEP::GeV;
-    G4ThreeVector         particle_position;
-    G4double              particle_time = 0.0;
-    G4ThreeVector         particle_polarization;
+    G4ParticleMomentum particle_momentum_direction;
+    G4double particle_energy = 1.0 * CLHEP::GeV;
+    G4ThreeVector particle_position;
+    G4double particle_time = 0.0;
+    G4ThreeVector particle_polarization;
 };
 
 #endif

@@ -67,53 +67,53 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4CRCoalescence_h
-#define G4CRCoalescence_h 1
+#ifndef G4CRCOALESCENCE_HH
+#define G4CRCOALESCENCE_HH
 
-#include "G4ReactionProductVector.hh"
 #include "G4HadProjectile.hh"
 #include "G4HadronicInteraction.hh"
+#include "G4ReactionProductVector.hh"
 
-class G4CRCoalescence : public G4HadronicInteraction {
+class G4CRCoalescence : public G4HadronicInteraction
+{
   public:
-  
+
     explicit G4CRCoalescence();
     ~G4CRCoalescence() override;
-    G4CRCoalescence( const G4CRCoalescence &right ) = delete;
-    const G4CRCoalescence & operator=( const G4CRCoalescence &right ) = delete;
-    G4bool operator==( const G4CRCoalescence &right ) const = delete;
-    G4bool operator!=( const G4CRCoalescence &right ) const = delete;
+    G4CRCoalescence(const G4CRCoalescence& right) = delete;
+    const G4CRCoalescence& operator=(const G4CRCoalescence& right) = delete;
+    G4bool operator==(const G4CRCoalescence& right) const = delete;
+    G4bool operator!=(const G4CRCoalescence& right) const = delete;
 
     // Set the parameter used in the coalescence condition
-    void SetP0Coalescence( const G4HadProjectile &thePrimary, G4String /* model */ );
+    void SetP0Coalescence(const G4HadProjectile& thePrimary, G4String /* model */);
 
     // Main method: form deuterons and antideuterons by coalescence of, respectively,
     //              proton-neutron and antiproton-antineutron pairs with close momenta
-    void GenerateDeuterons( G4ReactionProductVector* result );
+    void GenerateDeuterons(G4ReactionProductVector* result);
 
   private:
- 
+
     // Utility methods
-    void PushDeuteron( const G4ThreeVector &p1, const G4ThreeVector &p2, G4int charge,
-		       G4ReactionProductVector* result );
-    G4int FindPartner( const G4ThreeVector &p1, G4double m1,
-  		       std::vector< std::pair< G4int, G4ThreeVector > > &neutron,
-		       G4double m2, G4int charge );
-    G4bool Coalescence( const G4ThreeVector &p1, G4double m1,
-			const G4ThreeVector &p2, G4double m2, G4int charge );
-    G4bool Coalescence( G4double p1x, G4double p1y, G4double p1z, G4double m1,
-                        G4double p2x, G4double p2y, G4double p2z, G4double m2, G4int charge );
-    G4double GetPcm( const G4ThreeVector& p1, G4double m1,
-		     const G4ThreeVector& p2, G4double m2 );
-    G4double GetPcm( G4double p1x, G4double p1y, G4double p1z, G4double m1,
-		     G4double p2x, G4double p2y, G4double p2z, G4double m2 );
-    G4double GetS( G4double p1x, G4double p1y, G4double p1z, G4double m1,
-		   G4double p2x, G4double p2y, G4double p2z, G4double m2 );
-  
-    G4double fP0_d;     // Coalescence parameter for deuterons
+    void PushDeuteron(const G4ThreeVector& p1, const G4ThreeVector& p2, G4int charge,
+                      G4ReactionProductVector* result);
+    G4int FindPartner(const G4ThreeVector& p1, G4double m1,
+                      std::vector<std::pair<G4int, G4ThreeVector>>& neutron, G4double m2,
+                      G4int charge);
+    G4bool Coalescence(const G4ThreeVector& p1, G4double m1, const G4ThreeVector& p2, G4double m2,
+                       G4int charge);
+    G4bool Coalescence(G4double p1x, G4double p1y, G4double p1z, G4double m1, G4double p2x,
+                       G4double p2y, G4double p2z, G4double m2, G4int charge);
+    G4double GetPcm(const G4ThreeVector& p1, G4double m1, const G4ThreeVector& p2, G4double m2);
+    G4double GetPcm(G4double p1x, G4double p1y, G4double p1z, G4double m1, G4double p2x,
+                    G4double p2y, G4double p2z, G4double m2);
+    G4double GetS(G4double p1x, G4double p1y, G4double p1z, G4double m1, G4double p2x, G4double p2y,
+                  G4double p2z, G4double m2);
+
+    G4double fP0_d;  // Coalescence parameter for deuterons
     G4double fP0_dbar;  // Coalescence parameter for antideuterons
 
-    G4int secID;  // Creator model ID for the secondaries created by this model 
+    G4int secID;  // Creator model ID for the secondaries created by this model
 };
 
 #endif

@@ -38,38 +38,48 @@ class G4VisAttributes;
 
 #include <map>
 
-class G4VVisCommandGeometry: public G4VVisCommand {
-public:
-  virtual ~G4VVisCommandGeometry();
-protected:
-  static std::map<G4LogicalVolume*, const G4VisAttributes*>
-  fVisAttsMap;
-  typedef std::map<G4LogicalVolume*, const G4VisAttributes*>::const_iterator
-  VisAttsMapIterator;
+class G4VVisCommandGeometry : public G4VVisCommand
+{
+  public:
+
+    virtual ~G4VVisCommandGeometry();
+
+  protected:
+
+    static std::map<G4LogicalVolume*, const G4VisAttributes*> fVisAttsMap;
+    typedef std::map<G4LogicalVolume*, const G4VisAttributes*>::const_iterator VisAttsMapIterator;
 };
 
-class G4VisCommandGeometryList: public G4VVisCommandGeometry {
-public:
-  G4VisCommandGeometryList();
-  virtual ~G4VisCommandGeometryList();
-  G4String GetCurrentValue(G4UIcommand* command);
-  void SetNewValue(G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandGeometryList(const G4VisCommandGeometryList&);
-  G4VisCommandGeometryList& operator=(const G4VisCommandGeometryList&);
-  G4UIcmdWithAString* fpCommand;
+class G4VisCommandGeometryList : public G4VVisCommandGeometry
+{
+  public:
+
+    G4VisCommandGeometryList();
+    virtual ~G4VisCommandGeometryList();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandGeometryList(const G4VisCommandGeometryList&);
+    G4VisCommandGeometryList& operator=(const G4VisCommandGeometryList&);
+    G4UIcmdWithAString* fpCommand;
 };
 
-class G4VisCommandGeometryRestore: public G4VVisCommandGeometry {
-public:
-  G4VisCommandGeometryRestore();
-  virtual ~G4VisCommandGeometryRestore();
-  G4String GetCurrentValue(G4UIcommand* command);
-  void SetNewValue(G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandGeometryRestore(const G4VisCommandGeometryRestore&);
-  G4VisCommandGeometryRestore& operator=(const G4VisCommandGeometryRestore&);
-  G4UIcmdWithAString* fpCommand;
+class G4VisCommandGeometryRestore : public G4VVisCommandGeometry
+{
+  public:
+
+    G4VisCommandGeometryRestore();
+    virtual ~G4VisCommandGeometryRestore();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandGeometryRestore(const G4VisCommandGeometryRestore&);
+    G4VisCommandGeometryRestore& operator=(const G4VisCommandGeometryRestore&);
+    G4UIcmdWithAString* fpCommand;
 };
 
 #endif

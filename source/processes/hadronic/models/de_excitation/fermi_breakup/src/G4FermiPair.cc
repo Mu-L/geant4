@@ -29,11 +29,12 @@
 //
 
 #include "G4FermiPair.hh"
-#include "G4NucleiProperties.hh"
+
 #include "G4FermiBreakUpUtil.hh"
+#include "G4NucleiProperties.hh"
 
 G4FermiPair::G4FermiPair(const G4FermiFragment* f1, const G4FermiFragment* f2)
-  :  fragment1(f1), fragment2(f2)
+  : fragment1(f1), fragment2(f2)
 {
   totalZ = f1->GetZ() + f2->GetZ();
   totalA = f1->GetA() + f2->GetA();
@@ -44,7 +45,6 @@ G4FermiPair::G4FermiPair(const G4FermiFragment* f1, const G4FermiFragment* f2)
 G4double G4FermiPair::GetMinMass(G4double Eex) const
 {
   return fragment1->GetTotalEnergy() + fragment2->GetTotalEnergy()
-    + G4FermiBreakUpUtil::CoulombBarrier(fragment1->GetZ(), fragment1->GetA(),
-                                         fragment2->GetZ(), fragment2->GetA(),
-                                         Eex);
+         + G4FermiBreakUpUtil::CoulombBarrier(fragment1->GetZ(), fragment1->GetA(),
+                                              fragment2->GetZ(), fragment2->GetA(), Eex);
 }

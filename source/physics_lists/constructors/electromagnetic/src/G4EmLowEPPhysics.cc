@@ -37,79 +37,73 @@
 //
 
 #include "G4EmLowEPPhysics.hh"
+
 #include "G4ParticleDefinition.hh"
-#include "G4SystemOfUnits.hh"
 #include "G4ParticleTable.hh"
+#include "G4SystemOfUnits.hh"
 
 // *** Processes and models
 
 // gamma
-#include "G4PhotoElectricEffect.hh"
-#include "G4LivermorePhotoElectricModel.hh"
-#include "G4PhotoElectricAngularGeneratorPolarized.hh"
-
-#include "G4ComptonScattering.hh"
-#include "G4LowEPPolarizedComptonModel.hh"
-
-#include "G4GammaConversion.hh"
 #include "G4BetheHeitler5DModel.hh"
-
-#include "G4RayleighScattering.hh" 
-#include "G4LivermorePolarizedRayleighModel.hh"
-
-#include "G4PEEffectFluoModel.hh"
+#include "G4ComptonScattering.hh"
+#include "G4GammaConversion.hh"
 #include "G4KleinNishinaModel.hh"
+#include "G4LivermorePhotoElectricModel.hh"
+#include "G4LivermorePolarizedRayleighModel.hh"
+#include "G4LowEPPolarizedComptonModel.hh"
+#include "G4PEEffectFluoModel.hh"
+#include "G4PhotoElectricAngularGeneratorPolarized.hh"
+#include "G4PhotoElectricEffect.hh"
+#include "G4RayleighScattering.hh"
 
 // e+-
-#include "G4eMultipleScattering.hh"
+#include "G4Generator2BS.hh"
+#include "G4LivermoreIonisationModel.hh"
+#include "G4SeltzerBergerModel.hh"
 #include "G4UniversalFluctuation.hh"
+#include "G4eBremsstrahlung.hh"
+#include "G4eIonisation.hh"
+#include "G4eMultipleScattering.hh"
 #include "G4ePairProduction.hh"
 
-#include "G4eIonisation.hh"
-#include "G4LivermoreIonisationModel.hh"
-
-#include "G4eBremsstrahlung.hh"
-#include "G4SeltzerBergerModel.hh"
-#include "G4Generator2BS.hh"
-
 // e+
-#include "G4eplusAnnihilation.hh"
 #include "G4PenelopeIonisationModel.hh"
+#include "G4eplusAnnihilation.hh"
 
 // hadrons
-#include "G4hMultipleScattering.hh"
-#include "G4MscStepLimitType.hh"
-
-#include "G4hIonisation.hh"
-#include "G4ionIonisation.hh"
 #include "G4IonParametrisedLossModel.hh"
 #include "G4LindhardSorensenIonModel.hh"
+#include "G4MscStepLimitType.hh"
 #include "G4NuclearStopping.hh"
+#include "G4hIonisation.hh"
+#include "G4hMultipleScattering.hh"
+#include "G4ionIonisation.hh"
 
 // msc models
+#include "G4CoulombScattering.hh"
+#include "G4GoudsmitSaundersonMscModel.hh"
+#include "G4LowEWentzelVIModel.hh"
 #include "G4UrbanMscModel.hh"
 #include "G4WentzelVIModel.hh"
-#include "G4LowEWentzelVIModel.hh"
-#include "G4GoudsmitSaundersonMscModel.hh"
 #include "G4eCoulombScatteringModel.hh"
-#include "G4CoulombScattering.hh"
 
 // interfaces
-#include "G4LossTableManager.hh"
 #include "G4EmBuilder.hh"
 #include "G4EmParameters.hh"
+#include "G4LossTableManager.hh"
 
 // particles
 
-#include "G4Gamma.hh"
 #include "G4Electron.hh"
-#include "G4Positron.hh"
+#include "G4Gamma.hh"
 #include "G4GenericIon.hh"
+#include "G4Positron.hh"
 
 //
-#include "G4PhysicsListHelper.hh"
 #include "G4BuilderType.hh"
 #include "G4EmModelActivator.hh"
+#include "G4PhysicsListHelper.hh"
 
 // factory
 #include "G4PhysicsConstructorFactory.hh"
@@ -125,16 +119,16 @@ G4EmLowEPPhysics::G4EmLowEPPhysics(G4int ver, const G4String&)
   G4EmParameters* param = G4EmParameters::Instance();
   param->SetDefaults();
   param->SetVerbose(ver);
-  param->SetMinEnergy(100*CLHEP::eV);
-  param->SetLowestElectronEnergy(100*CLHEP::eV);
+  param->SetMinEnergy(100 * CLHEP::eV);
+  param->SetLowestElectronEnergy(100 * CLHEP::eV);
   param->SetNumberOfBinsPerDecade(20);
   param->ActivateAngularGeneratorForIonisation(true);
-  param->SetStepFunction(0.2, 100*CLHEP::um);
-  param->SetStepFunctionMuHad(0.1, 50*CLHEP::um);
-  param->SetStepFunctionLightIons(0.1, 20*CLHEP::um);
-  param->SetStepFunctionIons(0.1, 1*CLHEP::um);
+  param->SetStepFunction(0.2, 100 * CLHEP::um);
+  param->SetStepFunctionMuHad(0.1, 50 * CLHEP::um);
+  param->SetStepFunctionLightIons(0.1, 20 * CLHEP::um);
+  param->SetStepFunctionIons(0.1, 1 * CLHEP::um);
   param->SetUseMottCorrection(true);
-  param->SetMscRangeFactor(0.04);   
+  param->SetMscRangeFactor(0.04);
   param->SetMuHadLateralDisplacement(true);
   param->SetFluo(true);
   param->SetAuger(true);
@@ -144,8 +138,7 @@ G4EmLowEPPhysics::G4EmLowEPPhysics(G4int ver, const G4String&)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4EmLowEPPhysics::~G4EmLowEPPhysics()
-{}
+G4EmLowEPPhysics::~G4EmLowEPPhysics() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -159,7 +152,8 @@ void G4EmLowEPPhysics::ConstructParticle()
 
 void G4EmLowEPPhysics::ConstructProcess()
 {
-  if(verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "### " << GetPhysicsName() << " Construct Processes " << G4endl;
   }
   G4EmBuilder::PrepareEMPhysics();
@@ -173,7 +167,8 @@ void G4EmLowEPPhysics::ConstructProcess()
   // nuclear stopping
   G4double nielEnergyLimit = param->MaxNIELEnergy();
   G4NuclearStopping* pnuc = nullptr;
-  if(nielEnergyLimit > 0.0) {
+  if (nielEnergyLimit > 0.0)
+  {
     pnuc = new G4NuclearStopping();
     pnuc->SetMaxKinEnergy(nielEnergyLimit);
   }
@@ -190,7 +185,7 @@ void G4EmLowEPPhysics::ConstructProcess()
   theLivermorePEModel->SetAngularDistribution(new G4PhotoElectricAngularGeneratorPolarized());
   pe->SetEmModel(theLivermorePEModel);
 
-  // Compton scattering - Polarised Monash model  
+  // Compton scattering - Polarised Monash model
   G4ComptonScattering* cs = new G4ComptonScattering;
   G4VEmModel* theLowEPCSModel = new G4LowEPPolarizedComptonModel();
   cs->SetEmModel(theLowEPCSModel);
@@ -232,8 +227,8 @@ void G4EmLowEPPhysics::ConstructProcess()
   // Ionisation - Livermore should be used only for low energies
   G4eIonisation* eioni = new G4eIonisation();
   G4LivermoreIonisationModel* theIoniLivermore = new G4LivermoreIonisationModel();
-  theIoniLivermore->SetHighEnergyLimit(0.1*CLHEP::MeV); 
-  eioni->AddEmModel(0, theIoniLivermore, new G4UniversalFluctuation() );
+  theIoniLivermore->SetHighEnergyLimit(0.1 * CLHEP::MeV);
+  eioni->AddEmModel(0, theIoniLivermore, new G4UniversalFluctuation());
 
   // Bremsstrahlung
   G4eBremsstrahlung* brem = new G4eBremsstrahlung();
@@ -246,7 +241,7 @@ void G4EmLowEPPhysics::ConstructProcess()
   br1->SetHighEnergyLimit(GeV);
 
   G4ePairProduction* ee = new G4ePairProduction();
- 
+
   // register processes
   ph->RegisterProcess(msc, particle);
   ph->RegisterProcess(ss, particle);
@@ -273,10 +268,10 @@ void G4EmLowEPPhysics::ConstructProcess()
   ssm->SetLowEnergyLimit(highEnergyLimit);
   ssm->SetActivationLowEnergyLimit(highEnergyLimit);
 
-  // Standard ionisation 
+  // Standard ionisation
   eioni = new G4eIonisation();
   G4VEmModel* pen = new G4PenelopeIonisationModel();
-  pen->SetHighEnergyLimit(0.1*MeV);
+  pen->SetHighEnergyLimit(0.1 * MeV);
   eioni->AddEmModel(0, pen, new G4UniversalFluctuation());
 
   // Bremsstrahlung
@@ -299,14 +294,17 @@ void G4EmLowEPPhysics::ConstructProcess()
 
   // generic ion
   particle = G4GenericIon::GenericIon();
-       
+
   G4ionIonisation* ionIoni = new G4ionIonisation();
   G4VEmModel* mod = new G4LindhardSorensenIonModel();
   ionIoni->SetEmModel(mod);
 
   ph->RegisterProcess(hmsc, particle);
   ph->RegisterProcess(ionIoni, particle);
-  if(nullptr != pnuc) { ph->RegisterProcess(pnuc, particle); }
+  if (nullptr != pnuc)
+  {
+    ph->RegisterProcess(pnuc, particle);
+  }
 
   // muons, hadrons ions
   G4EmBuilder::ConstructCharged(hmsc, pnuc);

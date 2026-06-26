@@ -73,7 +73,8 @@ G4UIWin32::G4UIWin32()
     fHistoryPos(-1)
 {
   G4UImanager* UI = G4UImanager::GetUIpointer();
-  if (UI != nullptr) {
+  if (UI != nullptr)
+  {
     UI->SetSession(this);
     UI->SetG4UIWindow(this);
   }
@@ -88,7 +89,8 @@ G4UIWin32::G4UIWin32()
   interactorManager = G4Win32::getInstance();
 
   static G4bool Done = false;
-  if (! Done) {
+  if (!Done)
+  {
     WNDCLASS wc;
     wc.style = 0;
     wc.lpfnWndProc = (WNDPROC)G4UIWin32::MainWindowProc;
@@ -101,9 +103,10 @@ G4UIWin32::G4UIWin32()
     wc.lpszMenuName = (PTSTR)mainClassName;
     wc.lpszClassName = (PTSTR)mainClassName;
 
-    if (! RegisterClass(&wc)) {
+    if (!RegisterClass(&wc))
+    {
       MessageBoxA(nullptr, "G4UIWin32: Win32 window registration failed!", "Error!",
-        MB_ICONEXCLAMATION | MB_OK);
+                  MB_ICONEXCLAMATION | MB_OK);
       G4cout << "G4UIWin32: Win32 window registration failed!" << G4endl;
       return;
     }
@@ -150,10 +153,12 @@ G4UIWin32::G4UIWin32()
   tmpSession = this;
   char winName[] = "Geant4";
   fHWndMainWindow = ::CreateWindowEx(WS_EX_CLIENTEDGE, (PTSTR)mainClassName, (PTSTR)winName,
-    WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-    CW_USEDEFAULT, nullptr, menuBar, ::GetModuleHandle(nullptr), nullptr);
+                                     WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, CW_USEDEFAULT,
+                                     CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, nullptr, menuBar,
+                                     ::GetModuleHandle(nullptr), nullptr);
 
-  if (fHWndMainWindow == nullptr) {
+  if (fHWndMainWindow == nullptr)
+  {
     MessageBoxA(nullptr, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
     return;
   }
@@ -180,7 +185,8 @@ G4UIWin32::G4UIWin32()
 G4UIWin32::~G4UIWin32()
 {
   G4UImanager* UI = G4UImanager::GetUIpointer();
-  if (UI != nullptr) {
+  if (UI != nullptr)
+  {
     UI->SetSession(nullptr);
     UI->SetG4UIWindow(nullptr);
     UI->SetCoutDestination(nullptr);
@@ -196,7 +202,8 @@ G4UIWin32::~G4UIWin32()
   if (fHWndComboBox != nullptr) ::SetWindowLongPtr(fHWndComboBox, GWLP_USERDATA, LONG(NULL));
   if (fHWndToolBar != nullptr) ::SetWindowLongPtr(fHWndToolBar, GWLP_USERDATA, LONG(NULL));
   if (fHWndEditor != nullptr) ::SetWindowLongPtr(fHWndEditor, GWLP_USERDATA, LONG(NULL));
-  if (fHWndMainWindow != nullptr) {
+  if (fHWndMainWindow != nullptr)
+  {
     ::SetWindowLongPtr(fHWndMainWindow, GWLP_USERDATA, LONG(NULL));
     ::DestroyWindow(fHWndMainWindow);
   }
@@ -208,7 +215,8 @@ G4UIWin32::~G4UIWin32()
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 G4UIsession* G4UIWin32::SessionStart()
 {
-  if (interactorManager != nullptr) {
+  if (interactorManager != nullptr)
+  {
     Prompt("session");
     exitSession = false;
 
@@ -218,7 +226,8 @@ G4UIsession* G4UIWin32::SessionStart()
 
     interactorManager->DisableSecondaryLoop();
     void* event;
-    while ((event = interactorManager->GetEvent()) != nullptr) {
+    while ((event = interactorManager->GetEvent()) != nullptr)
+    {
       interactorManager->DispatchEvent(event);
       if (exitSession) break;
     }
@@ -247,11 +256,13 @@ void G4UIWin32::SessionTerminate() {}
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 void G4UIWin32::PauseSessionStart(const G4String& a_state)
 {
-  if (a_state == "G4_pause> ") {
+  if (a_state == "G4_pause> ")
+  {
     SecondaryLoop("Pause, type continue to exit this state");
   }
 
-  if (a_state == "EndOfEvent") {
+  if (a_state == "EndOfEvent")
+  {
     // Picking with feed back in event data Done here !!!
     SecondaryLoop("End of event, type continue to exit this state");
   }
@@ -263,11 +274,13 @@ void G4UIWin32::PauseSessionStart(const G4String& a_state)
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 void G4UIWin32::SecondaryLoop(const G4String& a_prompt)
 {
-  if (interactorManager != nullptr) {
+  if (interactorManager != nullptr)
+  {
     Prompt(a_prompt);
     exitPause = false;
     void* event;
-    while ((event = interactorManager->GetEvent()) != nullptr) {
+    while ((event = interactorManager->GetEvent()) != nullptr)
+    {
       interactorManager->DispatchEvent(event);
       if (exitPause) break;
     }
@@ -328,17 +341,19 @@ G4bool G4UIWin32::GetHelpChoice(G4int& aInt)
 {
   fHelp = true;
 
-  if (interactorManager != nullptr) {
+  if (interactorManager != nullptr)
+  {
     Prompt("Help");
     exitHelp = false;
     void* event;
-    while ((event = interactorManager->GetEvent()) != nullptr) {
+    while ((event = interactorManager->GetEvent()) != nullptr)
+    {
       interactorManager->DispatchEvent(event);
       if (exitHelp) break;
     }
     Prompt("session");
     //
-    if (! fHelp) return false;
+    if (!fHelp) return false;
     aInt = fHelpChoice;
     fHelp = false;
     return true;
@@ -359,7 +374,8 @@ void G4UIWin32::ExitHelp() const {}
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 void G4UIWin32::AddMenu(const char* a_name, const char* a_label)
 {
-  if (a_name != nullptr) {
+  if (a_name != nullptr)
+  {
     HMENU hMenu = CreatePopupMenu();
     AppendMenuA(menuBar, MF_POPUP, (UINT_PTR)hMenu, a_label);
     AddInteractor(a_name, (G4Interactor)hMenu);
@@ -373,7 +389,8 @@ void G4UIWin32::AddMenu(const char* a_name, const char* a_label)
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 void G4UIWin32::AddButton(const char* a_menu, const char* a_label, const char* a_command)
 {
-  if ((a_menu != nullptr) && (a_label != nullptr) && (a_command != nullptr)) {
+  if ((a_menu != nullptr) && (a_label != nullptr) && (a_command != nullptr))
+  {
     HMENU hMenu = (HMENU)GetInteractor(a_menu);
     actionIdentifier++;
     commands[actionIdentifier] = a_command;
@@ -385,20 +402,26 @@ void G4UIWin32::AddButton(const char* a_menu, const char* a_label, const char* a
 
 /****************************************************************************************************/
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-G4String G4UIWin32::GetCommand(G4int a_id) { return commands[a_id]; }
+G4String G4UIWin32::GetCommand(G4int a_id)
+{
+  return commands[a_id];
+}
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 /****************************************************************************************************/
 
 /****************************************************************************************************/
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-LRESULT CALLBACK G4UIWin32::MainWindowProc(
-  HWND aWindow, UINT aMessage, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK G4UIWin32::MainWindowProc(HWND aWindow, UINT aMessage, WPARAM wParam,
+                                           LPARAM lParam)
 {
-  switch (aMessage) {
+  switch (aMessage)
+  {
     case WM_CREATE: {
       auto* This = (G4UIWin32*)tmpSession;
-      if (This != nullptr) {
-        if (! This->CreateComponents(aWindow)) {
+      if (This != nullptr)
+      {
+        if (!This->CreateComponents(aWindow))
+        {
           MessageBoxA(aWindow, "Could not create components.", "Error", MB_OK | MB_ICONERROR);
           return false;
         }
@@ -408,8 +431,10 @@ LRESULT CALLBACK G4UIWin32::MainWindowProc(
 
     case WM_SIZE: {
       auto* This = (G4UIWin32*)::GetWindowLongPtr(aWindow, GWLP_USERDATA);
-      if (This != nullptr) {
-        if (! This->ResizeComponents(aWindow)) {
+      if (This != nullptr)
+      {
+        if (!This->ResizeComponents(aWindow))
+        {
           MessageBoxA(aWindow, "Could not resize components.", "Error", MB_OK | MB_ICONERROR);
           return false;
         }
@@ -433,28 +458,33 @@ LRESULT CALLBACK G4UIWin32::MainWindowProc(
 
     case WM_NOTIFY: {
       auto* This = (G4UIWin32*)::GetWindowLongPtr(aWindow, GWLP_USERDATA);
-      if (This != nullptr) {
-        switch (((LPNMHDR)lParam)->code) {
+      if (This != nullptr)
+      {
+        switch (((LPNMHDR)lParam)->code)
+        {
           // Tooltip for Toolbar
           case TTN_NEEDTEXT: {
             auto lpttt = (LPTOOLTIPTEXT)lParam;
             lpttt->hinst = nullptr;
             UINT idButton = lpttt->hdr.idFrom;
             lpttt->lpszText = (PTSTR)This->GetToolTips(idButton).c_str();
-          } break;
+          }
+          break;
 
           // Tooltip for TreeView
           case TVN_GETINFOTIP: {
             auto pTip = (LPNMTVGETINFOTIP)lParam;
             pTip->pszText = (PTSTR)This->GetHelpTreeToolTips(pTip->hItem).c_str();
-          } break;
+          }
+          break;
 
           // Double click for TreeView
           case NM_DBLCLK: {
             auto lpnmh = (LPNMHDR)lParam;
             auto item = TreeView_GetSelection(lpnmh->hwndFrom);
             This->HelpTreeDoubleClick(item);
-          } break;
+          }
+          break;
         }
       }
     }
@@ -463,12 +493,14 @@ LRESULT CALLBACK G4UIWin32::MainWindowProc(
     case WM_COMMAND: {
       auto* This = (G4UIWin32*)::GetWindowLongPtr(aWindow, GWLP_USERDATA);
       if (This != nullptr)
-        if (! This->ProcessDefaultCommands(LOWORD(wParam)))
+        if (!This->ProcessDefaultCommands(LOWORD(wParam)))
           // If the command was not processed, do it now
-          switch (LOWORD(wParam)) {
+          switch (LOWORD(wParam))
+          {
             case IDC_MAIN_EDIT: {
               // We have to release some space when the buffer is full
-              if (HIWORD(wParam) == EN_ERRSPACE || HIWORD(wParam) == EN_MAXTEXT) {
+              if (HIWORD(wParam) == EN_ERRSPACE || HIWORD(wParam) == EN_MAXTEXT)
+              {
                 G4int bufferSize =
                   SendMessage(This->fHWndEditor, EM_GETLIMITTEXT, (WPARAM)0, (LPARAM)0);
 
@@ -479,9 +511,11 @@ LRESULT CALLBACK G4UIWin32::MainWindowProc(
                 // Scroll to the bottom
                 SendMessage(This->fHWndEditor, WM_VSCROLL, SB_BOTTOM, NULL);
               }
-            } break;
+            }
+            break;
             default:
-              if (! This->fHelp) {
+              if (!This->fHelp)
+              {
                 G4String command = This->GetCommand(wParam);
                 This->ApplyShellCommand(command, exitSession, exitPause);
               }
@@ -498,18 +532,21 @@ LRESULT CALLBACK G4UIWin32::MainWindowProc(
 
 /****************************************************************************************************/
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-LRESULT CALLBACK G4UIWin32::ComboEditorWindowProc(
-  HWND aWindow, UINT aMessage, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK G4UIWin32::ComboEditorWindowProc(HWND aWindow, UINT aMessage, WPARAM wParam,
+                                                  LPARAM lParam)
 {
   // We need to go two steps up: Editor -> ComboBox -> Window
   HWND parent = GetParent(GetParent(aWindow));
   auto* This = (G4UIWin32*)::GetWindowLongPtr(parent, GWLP_USERDATA);
 
-  switch (aMessage) {
+  switch (aMessage)
+  {
     case WM_KEYDOWN:
-      switch (wParam) {
+      switch (wParam)
+      {
         case VK_TAB: {
-          if (This != nullptr) {
+          if (This != nullptr)
+          {
             if (This->fHelp) break;
 
             This->ProcessTabKey();
@@ -541,7 +578,8 @@ LRESULT CALLBACK G4UIWin32::ComboEditorWindowProc(
 
     case WM_KEYUP:
     case WM_CHAR:
-      switch (wParam) {
+      switch (wParam)
+      {
         case VK_TAB:
         case VK_ESCAPE:
         case VK_RETURN:
@@ -572,16 +610,17 @@ G4bool G4UIWin32::CreateComponents(HWND aWindow)
   char winName[] = "EDIT";
   char winParam[] = "";
   fHWndEditor = CreateWindowEx(WS_EX_CLIENTEDGE, (PTSTR)winName, (PTSTR)winParam,
-    WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL |
-      ES_AUTOHSCROLL | ES_READONLY,
-    0, 0, 100, 100, aWindow, (HMENU)IDC_MAIN_EDIT, GetModuleHandle(nullptr), nullptr);
+                               WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE
+                                 | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY,
+                               0, 0, 100, 100, aWindow, (HMENU)IDC_MAIN_EDIT,
+                               GetModuleHandle(nullptr), nullptr);
   if (fHWndEditor == nullptr)
     MessageBoxA(aWindow, "Could not create edit box.", "Error", MB_OK | MB_ICONERROR);
 
   // Set editor font
   // hfDefault = (HFONT) GetStockObject(DEFAULT_GUI_FONT);
   hfDefault = CreateFontA(-10, -8, 0, 0, 0, false, 0, 0, OEM_CHARSET, OUT_RASTER_PRECIS,
-    CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FIXED_PITCH, "System");
+                          CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FIXED_PITCH, "System");
   SendMessage(fHWndEditor, WM_SETFONT, (WPARAM)hfDefault, MAKELPARAM(false, 0));
 
   // Set editor's buffer size (the default value is too small)
@@ -589,8 +628,8 @@ G4bool G4UIWin32::CreateComponents(HWND aWindow)
 
   // Create Toolbar
   fHWndToolBar = CreateWindowEx(0, TOOLBARCLASSNAME, nullptr,
-    WS_CHILD | WS_VISIBLE | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS, 0, 0, 0, 0, aWindow,
-    (HMENU)IDC_MAIN_TOOL, GetModuleHandle(nullptr), nullptr);
+                                WS_CHILD | WS_VISIBLE | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS, 0, 0, 0, 0,
+                                aWindow, (HMENU)IDC_MAIN_TOOL, GetModuleHandle(nullptr), nullptr);
   if (fHWndToolBar == nullptr)
     MessageBoxA(aWindow, "Could not create tool bar.", "Error", MB_OK | MB_ICONERROR);
 
@@ -607,15 +646,27 @@ G4bool G4UIWin32::CreateComponents(HWND aWindow)
   tbab.nID = IDB_HIST_SMALL_COLOR;
   SendMessage(fHWndToolBar, TB_ADDBITMAP, (WPARAM)0, (LPARAM)&tbab);
 
-  G4int btnBMP[NUM_BUTTONS] = {STD_FILEOPEN, STD_FILESAVE, -1, STD_FIND, STD_FIND, -1,
-    15 + HIST_FORWARD, -1, STD_HELP, -1, STD_FILENEW, STD_FILESAVE};
-  G4int btnSTL[NUM_BUTTONS] = {TBSTYLE_BUTTON, TBSTYLE_BUTTON, TBSTYLE_SEP, TBSTYLE_BUTTON,
-    TBSTYLE_BUTTON, TBSTYLE_SEP, TBSTYLE_BUTTON, TBSTYLE_SEP, TBSTYLE_BUTTON, TBSTYLE_SEP,
-    TBSTYLE_BUTTON, TBSTYLE_BUTTON};
-  G4int btnCMD[NUM_BUTTONS] = {ID_OPEN_MACRO, ID_SAVE_VIEWER_STATE, -1, ID_ZOOM_IN, ID_ZOOM_OUT, -1,
-    ID_RUN_BEAMON, -1, ID_HELP_ABOUT, -1, ID_LOG_CLEAN, ID_LOG_SAVE};
+  G4int btnBMP[NUM_BUTTONS] = {STD_FILEOPEN, STD_FILESAVE,      -1, STD_FIND, STD_FIND,
+                               -1,           15 + HIST_FORWARD, -1, STD_HELP, -1,
+                               STD_FILENEW,  STD_FILESAVE};
+  G4int btnSTL[NUM_BUTTONS] = {TBSTYLE_BUTTON, TBSTYLE_BUTTON, TBSTYLE_SEP,    TBSTYLE_BUTTON,
+                               TBSTYLE_BUTTON, TBSTYLE_SEP,    TBSTYLE_BUTTON, TBSTYLE_SEP,
+                               TBSTYLE_BUTTON, TBSTYLE_SEP,    TBSTYLE_BUTTON, TBSTYLE_BUTTON};
+  G4int btnCMD[NUM_BUTTONS] = {ID_OPEN_MACRO,
+                               ID_SAVE_VIEWER_STATE,
+                               -1,
+                               ID_ZOOM_IN,
+                               ID_ZOOM_OUT,
+                               -1,
+                               ID_RUN_BEAMON,
+                               -1,
+                               ID_HELP_ABOUT,
+                               -1,
+                               ID_LOG_CLEAN,
+                               ID_LOG_SAVE};
   ZeroMemory(tbb, sizeof(tbb));
-  for (G4int i = 0; i < NUM_BUTTONS; i++) {
+  for (G4int i = 0; i < NUM_BUTTONS; i++)
+  {
     tbb[i].iBitmap = btnBMP[i];
     tbb[i].fsState = TBSTATE_ENABLED;
     tbb[i].fsStyle = btnSTL[i];
@@ -625,9 +676,9 @@ G4bool G4UIWin32::CreateComponents(HWND aWindow)
   SendMessage(fHWndToolBar, TB_ADDBUTTONS, sizeof(tbb) / sizeof(TBBUTTON), (LPARAM)&tbb);
 
   // Create the Combobox
-  fHWndComboBox = CreateWindowEx(0, WC_COMBOBOX, TEXT(""),
-    CBS_DROPDOWN | CBS_HASSTRINGS | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE, 150, 0, 200, 200,
-    aWindow, (HMENU)IDC_MAIN_COMBO, GetModuleHandle(nullptr), nullptr);
+  fHWndComboBox = CreateWindowEx(
+    0, WC_COMBOBOX, TEXT(""), CBS_DROPDOWN | CBS_HASSTRINGS | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE,
+    150, 0, 200, 200, aWindow, (HMENU)IDC_MAIN_COMBO, GetModuleHandle(nullptr), nullptr);
 
   // Display an initial item in the selection field
   SendMessage(fHWndComboBox, CB_SETCURSEL, (WPARAM)2, (LPARAM)0);
@@ -645,10 +696,10 @@ G4bool G4UIWin32::CreateComponents(HWND aWindow)
   // the tree-view control.
   GetClientRect(aWindow, &rcClient);
   fHWndHelpTree = CreateWindowEx(0, WC_TREEVIEW, TEXT("Tree View"),
-    WS_VISIBLE | WS_CHILD | WS_BORDER | TVS_INFOTIP | TVS_HASBUTTONS | TVS_HASLINES |
-      TVS_LINESATROOT,
-    0, 0, rcClient.right, rcClient.bottom, aWindow, (HMENU)IDC_MAIN_TREE_VIEW,
-    GetModuleHandle(nullptr), nullptr);
+                                 WS_VISIBLE | WS_CHILD | WS_BORDER | TVS_INFOTIP | TVS_HASBUTTONS
+                                   | TVS_HASLINES | TVS_LINESATROOT,
+                                 0, 0, rcClient.right, rcClient.bottom, aWindow,
+                                 (HMENU)IDC_MAIN_TREE_VIEW, GetModuleHandle(nullptr), nullptr);
 
   // Initialize the Help Tree View.
   /*    if (!InitHelpTreeItems()) {
@@ -657,8 +708,9 @@ G4bool G4UIWin32::CreateComponents(HWND aWindow)
       }*/
 
   // Create Status bar
-  fHWndStatus = CreateWindowEx(0, STATUSCLASSNAME, nullptr, WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP,
-    100, 100, 200, 200, aWindow, (HMENU)IDC_MAIN_STATUS, GetModuleHandle(nullptr), nullptr);
+  fHWndStatus =
+    CreateWindowEx(0, STATUSCLASSNAME, nullptr, WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP, 100, 100,
+                   200, 200, aWindow, (HMENU)IDC_MAIN_STATUS, GetModuleHandle(nullptr), nullptr);
 
   SendMessage(fHWndStatus, SB_SETPARTS, sizeof(statwidths) / sizeof(int), (LPARAM)statwidths);
   // SendMessage(fHWndStatus, SB_SETTEXT, 0, (LPARAM) "Hi there :)");
@@ -715,16 +767,16 @@ G4bool G4UIWin32::ResizeComponents(HWND aWindow)
   iEditWidth = iToolWidth - iTreeViewWidth;
 
   // TreeView location and size
-  SetWindowPos(
-    fHWndHelpTree, nullptr, 0, iToolHeight, iTreeViewWidth, iTreeViewHeight, SWP_NOZORDER);
+  SetWindowPos(fHWndHelpTree, nullptr, 0, iToolHeight, iTreeViewWidth, iTreeViewHeight,
+               SWP_NOZORDER);
 
   // Editor location and size
-  SetWindowPos(
-    fHWndEditor, nullptr, iTreeViewWidth, iToolHeight, iEditWidth, iEditHeight, SWP_NOZORDER);
+  SetWindowPos(fHWndEditor, nullptr, iTreeViewWidth, iToolHeight, iEditWidth, iEditHeight,
+               SWP_NOZORDER);
 
   // ComboBox location and size
-  SetWindowPos(
-    fHWndComboBox, nullptr, iTreeViewWidth, iToolHeight + iEditHeight, iEditWidth, 200, 0);
+  SetWindowPos(fHWndComboBox, nullptr, iTreeViewWidth, iToolHeight + iEditHeight, iEditWidth, 200,
+               0);
 
   return true;
 }
@@ -738,7 +790,8 @@ void G4UIWin32::ProcessTabKey()
   char buffer[256];
 
   // Only process the command it the user has written something
-  if (SendMessage(fHWndComboBox, WM_GETTEXT, (WPARAM)sizeof(buffer), (LPARAM)buffer) != 0) {
+  if (SendMessage(fHWndComboBox, WM_GETTEXT, (WPARAM)sizeof(buffer), (LPARAM)buffer) != 0)
+  {
     G4String command(buffer);
 
     SetFocus(fHWndComboBox);
@@ -749,7 +802,8 @@ void G4UIWin32::ProcessTabKey()
     Edit_SetText(fHWndComboEditor, (PTSTR)d);
     Edit_SetSel(fHWndComboEditor, l, l);
   }
-  else {
+  else
+  {
     if (GetFocus() == fHWndComboEditor)
       SetFocus(fHWndHelpTree);
     else
@@ -779,7 +833,8 @@ void G4UIWin32::ProcessEnterKey()
   DWORD dwIndex, numItems;
 
   // Only process the command it the user has written something
-  if (SendMessage(fHWndComboBox, WM_GETTEXT, (WPARAM)sizeof(buffer), (LPARAM)buffer) != 0) {
+  if (SendMessage(fHWndComboBox, WM_GETTEXT, (WPARAM)sizeof(buffer), (LPARAM)buffer) != 0)
+  {
     SetFocus(fHWndComboBox);
 
     // Read command
@@ -788,11 +843,13 @@ void G4UIWin32::ProcessEnterKey()
     // Now clear the current selection.
     SendMessage(fHWndComboBox, CB_SETCURSEL, (WPARAM)-1, (LPARAM)0);
 
-    if (fHelp) {
+    if (fHelp)
+    {
       exitHelp = true;
       fHelp = ConvertStringToInt(command.data(), fHelpChoice);
     }
-    else {
+    else
+    {
       fHistory.push_back(command);
       fHistoryPos = -1;
       ApplyShellCommand(command, exitSession, exitPause);
@@ -806,13 +863,15 @@ void G4UIWin32::ProcessEnterKey()
       if (dwIndex == CB_ERR)
         dwIndex = SendMessage(fHWndComboBox, CB_INSERTSTRING, (WPARAM)0, (LPARAM)buffer);
       // If the string exists, move it to the first position
-      if (dwIndex != CB_ERR) {
+      if (dwIndex != CB_ERR)
+      {
         SendMessage(fHWndComboBox, CB_DELETESTRING, (WPARAM)dwIndex, (LPARAM)0);
         dwIndex = SendMessage(fHWndComboBox, CB_INSERTSTRING, (WPARAM)0, (LPARAM)buffer);
       }
 
       numItems = SendMessage(fHWndComboBox, CB_GETCOUNT, (WPARAM)0, (LPARAM)0);
-      while (numItems > MAX_HISTORY_ITEMS) {
+      while (numItems > MAX_HISTORY_ITEMS)
+      {
         SendMessage(fHWndComboBox, CB_DELETESTRING, (WPARAM)(numItems - 1), (LPARAM)0);
         numItems = SendMessage(fHWndComboBox, CB_GETCOUNT, (WPARAM)0, (LPARAM)0);
       }
@@ -827,7 +886,8 @@ void G4UIWin32::ProcessEnterKey()
 void G4UIWin32::ProcessUpKey()
 {
   G4int pos = fHistoryPos == -1 ? fHistory.size() - 1 : fHistoryPos - 1;
-  if ((pos >= 0) && (pos < (G4int)fHistory.size())) {
+  if ((pos >= 0) && (pos < (G4int)fHistory.size()))
+  {
     G4String command = fHistory[pos];
     const char* d = command.data();
     G4int l = strlen(d);
@@ -845,7 +905,8 @@ void G4UIWin32::ProcessUpKey()
 void G4UIWin32::ProcessDownKey()
 {
   G4int pos = fHistoryPos + 1;
-  if ((pos >= 0) && (pos < (G4int)fHistory.size())) {
+  if ((pos >= 0) && (pos < (G4int)fHistory.size()))
+  {
     G4String command = fHistory[pos];
     const char* d = command.data();
     G4int l = strlen(d);
@@ -854,8 +915,9 @@ void G4UIWin32::ProcessDownKey()
 
     fHistoryPos = pos;
   }
-  else if (pos >= (G4int)fHistory.size()) {
-	char eName[] = "";
+  else if (pos >= (G4int)fHistory.size())
+  {
+    char eName[] = "";
     Edit_SetText(fHWndComboEditor, (PTSTR)eName);
     Edit_SetSel(fHWndComboEditor, 0, 0);
 
@@ -869,7 +931,8 @@ void G4UIWin32::ProcessDownKey()
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 G4bool G4UIWin32::ProcessDefaultCommands(G4int idCommand)
 {
-  switch (idCommand) {
+  switch (idCommand)
+  {
     case ID_EXIT_APP:
       PostMessage(fHWndMainWindow, WM_CLOSE, 0, 0);
       return true;
@@ -880,7 +943,8 @@ G4bool G4UIWin32::ProcessDefaultCommands(G4int idCommand)
       DoSaveViewer(fHWndMainWindow);
       return true;
     case ID_RUN_BEAMON:
-      if (! fHelp) {
+      if (!fHelp)
+      {
         G4String command = "/run/beamOn 1";
         ApplyShellCommand(command, exitSession, exitPause);
       }
@@ -888,72 +952,81 @@ G4bool G4UIWin32::ProcessDefaultCommands(G4int idCommand)
     case ID_RUN_CMD:
       return true;
     case ID_VIEW_SOLID:
-      if (! fHelp) {
+      if (!fHelp)
+      {
         G4String command = "/vis/viewer/set/style s";
         ApplyShellCommand(command, exitSession, exitPause);
       }
       return true;
     case ID_VIEW_WIREFRAME:
-      if (! fHelp) {
+      if (!fHelp)
+      {
         G4String command = "/vis/viewer/set/style w";
         ApplyShellCommand(command, exitSession, exitPause);
       }
       return true;
     case ID_PROJ_ORTHOGRAPHIC:
-      if (! fHelp) {
+      if (!fHelp)
+      {
         G4String command = "/vis/viewer/set/projection o";
         ApplyShellCommand(command, exitSession, exitPause);
       }
       return true;
     case ID_PROJ_PERSPECTIVE:
-      if (! fHelp) {
+      if (!fHelp)
+      {
         G4String command = "/vis/viewer/set/projection p";
         ApplyShellCommand(command, exitSession, exitPause);
       }
       return true;
     case ID_ZOOM_IN:
-      if (! fHelp) {
+      if (!fHelp)
+      {
         G4String command = "/vis/viewer/zoom 1.2";
         ApplyShellCommand(command, exitSession, exitPause);
       }
       return true;
     case ID_ZOOM_OUT:
-      if (! fHelp) {
+      if (!fHelp)
+      {
         G4String command = "/vis/viewer/zoom 0.8";
         ApplyShellCommand(command, exitSession, exitPause);
       }
       return true;
     case ID_ORIENTATION_XY:
-      if (! fHelp) {
+      if (!fHelp)
+      {
         G4String command = "/vis/viewer/set/viewpointThetaPhi 0. 0.";
         ApplyShellCommand(command, exitSession, exitPause);
       }
       return true;
     case ID_ORIENTATION_XZ:
-      if (! fHelp) {
+      if (!fHelp)
+      {
         G4String command = "/vis/viewer/set/viewpointThetaPhi 90. 0.";
         ApplyShellCommand(command, exitSession, exitPause);
       }
       return true;
     case ID_ORIENTATION_YZ:
-      if (! fHelp) {
+      if (!fHelp)
+      {
         G4String command = "/vis/viewer/set/viewpointThetaPhi 0. 90.";
         ApplyShellCommand(command, exitSession, exitPause);
       }
       return true;
     case ID_ORIENTATION_OBLIQUE:
-      if (! fHelp) {
+      if (!fHelp)
+      {
         G4String command = "/vis/viewer/set/viewpointThetaPhi 45. -45.";
         ApplyShellCommand(command, exitSession, exitPause);
       }
       return true;
     case ID_HELP_ABOUT:
       return true;
-    case ID_LOG_CLEAN:
-	  {
-	    char eName[] = "";
-        SetDlgItemText(fHWndMainWindow, IDC_MAIN_EDIT, (PTSTR)eName);
-	  }
+    case ID_LOG_CLEAN: {
+      char eName[] = "";
+      SetDlgItemText(fHWndMainWindow, IDC_MAIN_EDIT, (PTSTR)eName);
+    }
       return true;
     case ID_LOG_SAVE:
       DoSaveLog(fHWndMainWindow);
@@ -969,7 +1042,8 @@ G4bool G4UIWin32::ProcessDefaultCommands(G4int idCommand)
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 G4String G4UIWin32::GetToolTips(G4int idButton)
 {
-  switch (idButton) {
+  switch (idButton)
+  {
     case ID_OPEN_MACRO:
       return "Open and execute macro file";
 
@@ -1017,11 +1091,13 @@ G4String G4UIWin32::GetHelpTreeToolTips(HTREEITEM item)
 
   G4UIcommand* command = treeTop->FindPath(itemText.c_str());
 
-  if (command) {
+  if (command)
+  {
     // This is a command, return the first line of help
     return command->GetGuidanceLine(0).data();
   }
-  else {
+  else
+  {
     // This is not a command, but a sub directory, return the title
     G4UIcommandTree* path = treeTop->FindCommandTree(itemText.c_str());
     if (path) return path->GetTitle().data();
@@ -1040,7 +1116,8 @@ G4String G4UIWin32::ConvertNewLines(const G4String& a_string)
   // we must convert them to Windows' style (\r\n)
   G4String str = a_string;
   std::size_t index = str.find("\n", 0);
-  while (index < str.length()) {
+  while (index < str.length())
+  {
     str.replace(index, 1, "\r\n");
     // Advance index forward so the next iteration doesn't pick it up as well.
     index = str.find("\n", index + 2);
@@ -1073,18 +1150,22 @@ G4bool G4UIWin32::SaveLogFile(LPCTSTR fileName)
 
   hFile =
     CreateFile(fileName, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
-  if (hFile != INVALID_HANDLE_VALUE) {
+  if (hFile != INVALID_HANDLE_VALUE)
+  {
     DWORD dwTextLength;
 
     dwTextLength = GetWindowTextLength(fHWndEditor);
     // No need to bother if there's no text.
-    if (dwTextLength > 0) {
+    if (dwTextLength > 0)
+    {
       LPSTR text;
       DWORD dwBufferSize = dwTextLength + 1;
 
       text = (LPSTR)GlobalAlloc(GPTR, dwBufferSize);
-      if (text != nullptr) {
-        if (GetWindowTextA(fHWndEditor, text, dwBufferSize)) {
+      if (text != nullptr)
+      {
+        if (GetWindowTextA(fHWndEditor, text, dwBufferSize))
+        {
           DWORD dwWritten;
 
           if (WriteFile(hFile, text, dwTextLength, &dwWritten, nullptr)) bSuccess = true;
@@ -1103,7 +1184,8 @@ G4bool G4UIWin32::SaveLogFile(LPCTSTR fileName)
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 void G4UIWin32::AddText(LPSTR text)
 {
-  if ((fHWndEditor != nullptr) && (text != nullptr) && (text[0] != '\0')) {
+  if ((fHWndEditor != nullptr) && (text != nullptr) && (text[0] != '\0'))
+  {
     // Get current text length
     G4int ndx = GetWindowTextLength(fHWndEditor);
 
@@ -1137,7 +1219,8 @@ void G4UIWin32::DoOpenMacro(HWND aWindow)
   char dName[] = "mac";
   ofn.lpstrDefExt = (PTSTR)dName;
 
-  if (GetOpenFileName(&ofn)) {
+  if (GetOpenFileName(&ofn))
+  {
     G4String command = "/control/execute " + G4String(szFileName);
     ApplyShellCommand(command, exitSession, exitPause);
 
@@ -1167,7 +1250,8 @@ void G4UIWin32::DoSaveViewer(HWND aWindow)
   ofn.lpstrDefExt = (PTSTR)dName;
   ofn.Flags = OFN_EXPLORER | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
 
-  if (GetSaveFileName(&ofn)) {
+  if (GetSaveFileName(&ofn))
+  {
     G4String command = "/vis/viewer/save " + G4String(szFileName);
     ApplyShellCommand(command, exitSession, exitPause);
 
@@ -1197,8 +1281,10 @@ void G4UIWin32::DoSaveLog(HWND aWindow)
   ofn.lpstrDefExt = (PTSTR)dName;
   ofn.Flags = OFN_EXPLORER | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
 
-  if (GetSaveFileName(&ofn)) {
-    if (SaveLogFile((PTSTR)szFileName)) {
+  if (GetSaveFileName(&ofn))
+  {
+    if (SaveLogFile((PTSTR)szFileName))
+    {
       SendDlgItemMessage(aWindow, IDC_MAIN_STATUS, SB_SETTEXT, 0, (LPARAM) "Saved log file...");
       SendDlgItemMessage(aWindow, IDC_MAIN_STATUS, SB_SETTEXT, 1, (LPARAM)szFileName);
     }
@@ -1219,7 +1305,8 @@ G4bool G4UIWin32::InitHelpTreeItems()
 
   G4int treeSize = treeTop->GetTreeEntry();
   G4String commandText;
-  for (G4int a = 0; a < treeSize; a++) {
+  for (G4int a = 0; a < treeSize; a++)
+  {
     // Creating new item
     commandText = treeTop->GetTree(a + 1)->GetPathName().data();
 
@@ -1241,25 +1328,27 @@ G4bool G4UIWin32::InitHelpTreeItems()
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 void G4UIWin32::CreateHelpTree(HTREEITEM aParent, G4UIcommandTree* aCommandTree)
 {
-  if ((aParent != nullptr) && (aCommandTree != nullptr)) {
+  if ((aParent != nullptr) && (aCommandTree != nullptr))
+  {
     // Creating new item
     HTREEITEM newItem;
 
     G4String commandText;
     // Get the Sub directories
-    for (G4int a = 0; a < aCommandTree->GetTreeEntry(); a++) {
+    for (G4int a = 0; a < aCommandTree->GetTreeEntry(); a++)
+    {
       commandText = aCommandTree->GetTree(a + 1)->GetPathName().data();
 
       // Add the item to the tree-view control.
-      newItem =
-        AddItemToHelpTree((PTSTR)GetShortCommandPath(commandText).c_str(), aParent);
+      newItem = AddItemToHelpTree((PTSTR)GetShortCommandPath(commandText).c_str(), aParent);
 
       // Look for children
       CreateHelpTree(newItem, aCommandTree->GetTree(a + 1));
     }
 
     // Get the Commands
-    for (G4int a = 0; a < aCommandTree->GetCommandEntry(); a++) {
+    for (G4int a = 0; a < aCommandTree->GetCommandEntry(); a++)
+    {
       commandText = aCommandTree->GetCommand(a + 1)->GetCommandPath().data();
 
       // Add the item to the tree-view control.
@@ -1293,8 +1382,8 @@ HTREEITEM G4UIWin32::AddItemToHelpTree(LPTSTR lpszItem, HTREEITEM aParent)
   tvins.hParent = aParent;
 
   // Add the item to the tree-view control.
-  hPrev = (HTREEITEM)SendMessage(
-    fHWndHelpTree, TVM_INSERTITEM, (WPARAM)0, (LPARAM)(LPTVINSERTSTRUCT)&tvins);
+  hPrev = (HTREEITEM)SendMessage(fHWndHelpTree, TVM_INSERTITEM, (WPARAM)0,
+                                 (LPARAM)(LPTVINSERTSTRUCT)&tvins);
 
   if (hPrev == nullptr)
     return nullptr;
@@ -1332,7 +1421,8 @@ LPSTR G4UIWin32::GetItemPath(HTREEITEM item)
   tvitem.cchTextMax = sizeof(infoTipBuf) / sizeof(TCHAR);
 
   std::string str = "";
-  while  (item != nullptr) {
+  while (item != nullptr)
+  {
     TreeView_GetItem(fHWndHelpTree, &tvitem);
     str = "/" + std::string((PSTR)tvitem.pszText) + str;
 

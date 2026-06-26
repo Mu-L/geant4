@@ -29,13 +29,13 @@
 //
 // History:
 // -----------
-// 12 Jan 2009   L. Pandola   1st implementation. Migration from EM process 
+// 12 Jan 2009   L. Pandola   1st implementation. Migration from EM process
 //                            to EM model. Physics is unchanged.
-// 23 Oct 2009   L. Pandola   remove un-necessary methods to manage atomic 
+// 23 Oct 2009   L. Pandola   remove un-necessary methods to manage atomic
 //                            deexcitation (done by G4VEmModel)
 // 01 Jun 2011   V Ivanchenko general cleanup - all old deexcitation code removed
 // 04 Jul 2011   L Pandola    removed unused private member
-// 
+//
 // -------------------------------------------------------------------
 //
 // Class description:
@@ -44,7 +44,7 @@
 // -------------------------------------------------------------------
 
 #ifndef G4LIVERMOREIONISATIONMODEL_HH
-#define G4LIVERMOREIONISATIONMODEL_HH 1
+#define G4LIVERMOREIONISATIONMODEL_HH
 
 #include "G4VEmModel.hh"
 #include "globals.hh"
@@ -54,54 +54,47 @@ class G4VEnergySpectrum;
 class G4ParticleChangeForLoss;
 class G4AtomicTransitionManager;
 
-class G4LivermoreIonisationModel : public G4VEmModel 
+class G4LivermoreIonisationModel : public G4VEmModel
 {
-public:
-  G4LivermoreIonisationModel(const G4ParticleDefinition* p=nullptr,
-			     const G4String& processName = "LowEnergyIoni");  
-  virtual ~G4LivermoreIonisationModel();
+  public:
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    G4LivermoreIonisationModel(const G4ParticleDefinition* p = nullptr,
+                               const G4String& processName = "LowEnergyIoni");
+    virtual ~G4LivermoreIonisationModel();
 
-  
-  G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
-				      G4double kinEnergy,
-				      G4double Z,
-				      G4double A=0,
-				      G4double cut=0,
-				      G4double emax=DBL_MAX) override;
-					 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
-				   
-  G4double ComputeDEDXPerVolume(const G4Material*,
-				const G4ParticleDefinition*,
-				G4double kineticEnergy,
-				G4double cutEnergy) override;
-		 
-  void SetVerboseLevel(G4int vl) {verboseLevel = vl;};
-  G4int GetVerboseLevel(){return verboseLevel;};
-  
-  G4LivermoreIonisationModel & operator=(const G4LivermoreIonisationModel &right) = delete;
-  G4LivermoreIonisationModel(const G4LivermoreIonisationModel&) = delete;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-protected:
-  G4ParticleChangeForLoss* fParticleChange;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A = 0, G4double cut = 0,
+                                        G4double emax = DBL_MAX) override;
 
-private:
-  G4eIonisationCrossSectionHandler* crossSectionHandler;
-  G4VEnergySpectrum* energySpectrum;
-  G4AtomicTransitionManager* transitionManager;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  //Intrinsic energy limits of the model: cannot be extended by the parent process
-  G4double fIntrinsicLowEnergyLimit;
-  G4double fIntrinsicHighEnergyLimit;  
-  G4int verboseLevel;
-  G4bool isInitialised;
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                  G4double kineticEnergy, G4double cutEnergy) override;
+
+    void SetVerboseLevel(G4int vl) { verboseLevel = vl; };
+    G4int GetVerboseLevel() { return verboseLevel; };
+
+    G4LivermoreIonisationModel& operator=(const G4LivermoreIonisationModel& right) = delete;
+    G4LivermoreIonisationModel(const G4LivermoreIonisationModel&) = delete;
+
+  protected:
+
+    G4ParticleChangeForLoss* fParticleChange;
+
+  private:
+
+    G4eIonisationCrossSectionHandler* crossSectionHandler;
+    G4VEnergySpectrum* energySpectrum;
+    G4AtomicTransitionManager* transitionManager;
+
+    // Intrinsic energy limits of the model: cannot be extended by the parent process
+    G4double fIntrinsicLowEnergyLimit;
+    G4double fIntrinsicHighEnergyLimit;
+    G4int verboseLevel;
+    G4bool isInitialised;
 };
 
 #endif
-

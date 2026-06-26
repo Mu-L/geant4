@@ -28,8 +28,8 @@
 // Class description:
 //
 // This is an abstract base class for the representation of a positioned volume.
-// The volume is placed within a mother volume, relative to its coordinate 
-// system. Either a single positioned volume or many positioned volumes can 
+// The volume is placed within a mother volume, relative to its coordinate
+// system. Either a single positioned volume or many positioned volumes can
 // be represented by a particular G4VPhysicalVolume.
 
 // Author: Paul Kent (CERN), 24.07.1995 - First non-stub version
@@ -37,14 +37,13 @@
 #ifndef G4VPHYSICALVOLUME_HH
 #define G4VPHYSICALVOLUME_HH
 
-#include "G4Types.hh"
+#include "G4GeomSplitter.hh"
+#include "G4RotationMatrix.hh"
 #include "G4String.hh"
+#include "G4ThreeVector.hh"
+#include "G4Types.hh"
 
 #include "geomdefs.hh"
-
-#include "G4RotationMatrix.hh"
-#include "G4ThreeVector.hh"
-#include "G4GeomSplitter.hh"
 
 class G4LogicalVolume;
 class G4VPVParameterisation;
@@ -53,6 +52,7 @@ class G4VPVParameterisation;
  * @brief G4PVData encapsulates the fields associated to G4VPhysicalVolume
  * that are not read-only - they will change during simulation and must have
  * a per-thread state.
+ * @ingroup geometry_management
  */
 
 class G4PVData
@@ -64,7 +64,9 @@ class G4PVData
     void initialize()
     {
       frot = nullptr;
-      tx = 0.; ty = 0.; tz = 0.;
+      tx = 0.;
+      ty = 0.;
+      tz = 0.;
     }
 
     G4RotationMatrix* frot = nullptr;
@@ -79,6 +81,7 @@ using G4PVManager = G4GeomSplitter<G4PVData>;
  * of a positioned volume. The volume is placed within a mother volume,
  * relative to its coordinate system. Either a single positioned volume or
  * many positioned volumes can be represented by a particular G4VPhysicalVolume.
+ * @ingroup geometry_management
  */
 
 class G4VPhysicalVolume
@@ -102,11 +105,8 @@ class G4VPhysicalVolume
      *  @param[in] pLogical The pointer to its logical volume.
      *  @param[in] pMother The pointer to the mother's physical volume.
      */
-    G4VPhysicalVolume(G4RotationMatrix* pRot,
-                const G4ThreeVector& tlate,
-                const G4String& pName,
-                      G4LogicalVolume* pLogical,
-                      G4VPhysicalVolume* pMother);
+    G4VPhysicalVolume(G4RotationMatrix* pRot, const G4ThreeVector& tlate, const G4String& pName,
+                      G4LogicalVolume* pLogical, G4VPhysicalVolume* pMother);
 
     /**
      * Destructor, will be subclassed. Removes volume from the volume store.
@@ -122,7 +122,7 @@ class G4VPhysicalVolume
     /**
      * Equality defined by equal addresses only..
      */
-    inline G4bool operator == (const G4VPhysicalVolume& p) const;
+    inline G4bool operator==(const G4VPhysicalVolume& p) const;
 
     // Accessors. They make a distinction between whether the rotation or
     // translation is being made for the frame or the object/volume that is
@@ -132,8 +132,8 @@ class G4VPhysicalVolume
      * Accessors returning the rotation/translation of the *object* relative
      * to the mother.
      */
-    G4RotationMatrix* GetObjectRotation() const;       //  Obsolete 
-    G4RotationMatrix GetObjectRotationValue() const;   //  Replacement
+    G4RotationMatrix* GetObjectRotation() const;  //  Obsolete
+    G4RotationMatrix GetObjectRotationValue() const;  //  Replacement
     G4ThreeVector GetObjectTranslation() const;
 
     /**
@@ -177,9 +177,9 @@ class G4VPhysicalVolume
     inline void SetLogicalVolume(G4LogicalVolume* pLogical);
 
     inline G4LogicalVolume* GetMotherLogical() const;
-      // Return the current mother logical volume pointer.
+    // Return the current mother logical volume pointer.
     inline void SetMotherLogical(G4LogicalVolume* pMother);
-      // Set the mother logical volume. Must not be called when geometry closed.
+    // Set the mother logical volume. Must not be called when geometry closed.
 
     /**
      * Getter/setter for the volume's name.
@@ -204,7 +204,7 @@ class G4VPhysicalVolume
      * NOT implemented. Should return true if the volume is MANY type.
      */
     virtual G4bool IsMany() const = 0;
- 
+
     /**
      * Accessor/modifier for optional handling of the volume copy-number.
      */
@@ -239,11 +239,8 @@ class G4VPhysicalVolume
      *  @param[in,out] consuming Flag of replica characterisation (always true
      *                 for pure replicas).
      */
-    virtual void GetReplicationData(EAxis& axis,
-                                    G4int& nReplicas,
-                                    G4double& width,
-                                    G4double& offset,
-                                    G4bool& consuming) const = 0;
+    virtual void GetReplicationData(EAxis& axis, G4int& nReplicas, G4double& width,
+                                    G4double& offset, G4bool& consuming) const = 0;
 
     /**
      * Returns true if the underlying volume structure is regular.
@@ -271,8 +268,8 @@ class G4VPhysicalVolume
      *  @param[in] errMax Maximum of overlaps errors to report (default is 1).
      *  @returns True if an overlap occurs.
      */
-    virtual G4bool CheckOverlaps(G4int res=1000, G4double tol=0.,
-                                 G4bool verbose=true, G4int errMax=1);
+    virtual G4bool CheckOverlaps(G4int res = 1000, G4double tol = 0., G4bool verbose = true,
+                                 G4int errMax = 1);
 
     /**
      * Fake default constructor for usage restricted to direct object
@@ -300,15 +297,15 @@ class G4VPhysicalVolume
      * Old VolumeType() method, replaced by virtual method, kept for checking.
      */
     inline EVolume DeduceVolumeType() const;
-      
+
   protected:
 
     /**
      * This method is similar to the constructor. It is used by each worker
      * thread to achieve the partial effect as that of the master thread.
      */
-    void InitialiseWorker(G4VPhysicalVolume* pMasterObject,
-                          G4RotationMatrix* pRot, const G4ThreeVector& tlate);
+    void InitialiseWorker(G4VPhysicalVolume* pMasterObject, G4RotationMatrix* pRot,
+                          const G4ThreeVector& tlate);
 
     /**
      * This method is similar to the destructor. It is used by each worker
@@ -340,7 +337,7 @@ class G4VPhysicalVolume
     G4PVData* pvdata = nullptr;
 };
 
-// NOTE: 
+// NOTE:
 // The type G4PVManager is introduced to encapsulate the methods used by
 // both the master thread and worker threads to allocate memory space for
 // the fields encapsulated by the class G4PVData. When each thread
@@ -355,7 +352,7 @@ class G4VPhysicalVolume
 // G4VPhysicalVolume as follows: "static G4PVManager subInstanceManager;".
 // For the master thread, the array for G4PVData instances grows dynamically
 // along with G4VPhysicalVolume instances are created. For each worker thread,
-// it copies the array of G4PVData instances from the master thread.           
+// it copies the array of G4PVData instances from the master thread.
 // In addition, it invokes a method similiar to the constructor explicitly
 // to achieve the partial effect for each instance in the array.
 

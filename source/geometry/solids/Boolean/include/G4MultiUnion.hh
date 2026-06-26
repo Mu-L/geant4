@@ -39,15 +39,15 @@
 #ifndef G4MULTIUNION_HH
 #define G4MULTIUNION_HH
 
-#include <vector>
-
-#include "G4VSolid.hh"
+#include "G4Point3D.hh"
+#include "G4SurfBits.hh"
 #include "G4ThreeVector.hh"
 #include "G4Transform3D.hh"
-#include "G4Point3D.hh"
+#include "G4VSolid.hh"
 #include "G4Vector3D.hh"
-#include "G4SurfBits.hh"
 #include "G4Voxelizer.hh"
+
+#include <vector>
 
 class G4Polyhedron;
 
@@ -62,7 +62,7 @@ class G4Polyhedron;
 
 class G4MultiUnion : public G4VSolid
 {
-  friend class G4Voxelizer;
+    friend class G4Voxelizer;
 
   public:
 
@@ -70,7 +70,6 @@ class G4MultiUnion : public G4VSolid
      * Empty default constructor.
      */
     G4MultiUnion();
-
 
     /**
      * Constructor assigning a name and initialising components.
@@ -109,7 +108,7 @@ class G4MultiUnion : public G4VSolid
      */
     inline const G4Transform3D& GetTransformation(G4int index) const;
     inline G4VSolid* GetSolid(G4int index) const;
-    inline G4int GetNumberOfSolids()const;
+    inline G4int GetNumberOfSolids() const;
 
     /**
      * Returning if the given point "aPoint" is inside or not the solid,
@@ -153,13 +152,11 @@ class G4MultiUnion : public G4VSolid
      *  @param[in] calcNorm Flag unused.
      *  @param[out] validNorm Unused.
      *  @param[out] aNormalVector The exiting outwards normal vector (undefined
-     *              Magnitude). 
+     *              Magnitude).
      *  @returns The distance value to exit a volume.
      */
-    G4double DistanceToOut(const G4ThreeVector& aPoint,
-                           const G4ThreeVector& aDirection,
-                           const G4bool calcNorm = false,
-                           G4bool* validNorm = nullptr,
+    G4double DistanceToOut(const G4ThreeVector& aPoint, const G4ThreeVector& aDirection,
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
                            G4ThreeVector* aNormalVector = nullptr) const override;
 
     /**
@@ -168,12 +165,10 @@ class G4MultiUnion : public G4VSolid
      */
     G4double DistanceToInNoVoxels(const G4ThreeVector& aPoint,
                                   const G4ThreeVector& aDirection) const;
-    G4double DistanceToOutVoxels(const G4ThreeVector& aPoint,
-                                 const G4ThreeVector& aDirection,
-                                       G4ThreeVector* aNormalVector) const;
-    G4double DistanceToOutNoVoxels(const G4ThreeVector& aPoint,
-                                   const G4ThreeVector& aDirection,
-                                         G4ThreeVector* aNormalVector) const;
+    G4double DistanceToOutVoxels(const G4ThreeVector& aPoint, const G4ThreeVector& aDirection,
+                                 G4ThreeVector* aNormalVector) const;
+    G4double DistanceToOutNoVoxels(const G4ThreeVector& aPoint, const G4ThreeVector& aDirection,
+                                   G4ThreeVector* aNormalVector) const;
 
     /**
      * Returns the outwards pointing unit normal of the shape for the
@@ -206,10 +201,9 @@ class G4MultiUnion : public G4VSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                           G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Returns an estimate of the structure capacity or surface area.
@@ -230,7 +224,7 @@ class G4MultiUnion : public G4VSolid
     /**
      * Returns a new allocated clone of the multi-union structure.
      */
-    G4VSolid* Clone() const override ;
+    G4VSolid* Clone() const override;
 
     /**
      * Returns the type ID, "G4MultiUnion" of the solid.
@@ -263,23 +257,19 @@ class G4MultiUnion : public G4VSolid
     /**
      * Methods for creating graphical representations (i.e. for visualisation).
      */
-    void DescribeYourselfTo ( G4VGraphicsScene& scene ) const override ;
-    G4Polyhedron* CreatePolyhedron () const override ;
-    G4Polyhedron* GetPolyhedron () const override;
+    void DescribeYourselfTo(G4VGraphicsScene& scene) const override;
+    G4Polyhedron* CreatePolyhedron() const override;
+    G4Polyhedron* GetPolyhedron() const override;
 
   private:
 
     /**
      * Utility methods for safety and distance computation.
      */
-    EInside InsideWithExclusion(const G4ThreeVector& aPoint,
-                                      G4SurfBits* bits = nullptr) const;
-    G4int SafetyFromOutsideNumberNode(const G4ThreeVector& aPoint,
-                                            G4double& safety) const;
-    G4double DistanceToInCandidates(const G4ThreeVector& aPoint,
-                                    const G4ThreeVector& aDirection,
-                                          std::vector<G4int>& candidates,
-                                          G4SurfBits& bits) const;
+    EInside InsideWithExclusion(const G4ThreeVector& aPoint, G4SurfBits* bits = nullptr) const;
+    G4int SafetyFromOutsideNumberNode(const G4ThreeVector& aPoint, G4double& safety) const;
+    G4double DistanceToInCandidates(const G4ThreeVector& aPoint, const G4ThreeVector& aDirection,
+                                    std::vector<G4int>& candidates, G4SurfBits& bits) const;
 
     /**
      * Conversion utilities.
@@ -287,11 +277,11 @@ class G4MultiUnion : public G4VSolid
     inline G4ThreeVector GetLocalPoint(const G4Transform3D& trans,
                                        const G4ThreeVector& gpoint) const;
     inline G4ThreeVector GetLocalVector(const G4Transform3D& trans,
-                                       const G4ThreeVector& gvec) const;
+                                        const G4ThreeVector& gvec) const;
     inline G4ThreeVector GetGlobalPoint(const G4Transform3D& trans,
-                                       const G4ThreeVector& lpoint) const;
+                                        const G4ThreeVector& lpoint) const;
     inline G4ThreeVector GetGlobalVector(const G4Transform3D& trans,
-                                       const G4ThreeVector& lvec) const;
+                                         const G4ThreeVector& lvec) const;
     void TransformLimits(G4ThreeVector& min, G4ThreeVector& max,
                          const G4Transform3D& transformation) const;
 
@@ -299,17 +289,17 @@ class G4MultiUnion : public G4VSolid
 
     struct G4MultiUnionSurface
     {
-      G4ThreeVector point;
-      G4VSolid* solid;
+        G4ThreeVector point;
+        G4VSolid* solid;
     };
 
     std::vector<G4VSolid*> fSolids;
     std::vector<G4Transform3D> fTransformObjs;
-    G4Voxelizer fVoxels;              // Vozelizer for the solid
-    G4double fCubicVolume = 0.0;      // Cubic Volume
-    G4double fSurfaceArea = 0.0;      // Surface Area
-    G4double kRadTolerance;           // Cached radial tolerance
-    mutable G4bool fAccurate = false; // Accurate safety (off by default)
+    G4Voxelizer fVoxels;  // Vozelizer for the solid
+    G4double fCubicVolume = 0.0;  // Cubic Volume
+    G4double fSurfaceArea = 0.0;  // Surface Area
+    G4double kRadTolerance;  // Cached radial tolerance
+    mutable G4bool fAccurate = false;  // Accurate safety (off by default)
 
     mutable G4bool fRebuildPolyhedron = false;
     mutable G4Polyhedron* fpPolyhedron = nullptr;

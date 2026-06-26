@@ -31,22 +31,22 @@
 // --------------------------------------------------------------------
 
 #include "G4AdjointPosOnPhysVolGenerator.hh"
+
+#include "G4AffineTransform.hh"
+#include "G4LogicalVolumeStore.hh"
+#include "G4PhysicalVolumeStore.hh"
+#include "G4VPhysicalVolume.hh"
 #include "G4VSolid.hh"
 #include "G4VoxelLimits.hh"
-#include "G4AffineTransform.hh"
 #include "Randomize.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4PhysicalVolumeStore.hh"
-#include "G4LogicalVolumeStore.hh"
 
-G4ThreadLocal G4AdjointPosOnPhysVolGenerator*
-G4AdjointPosOnPhysVolGenerator::theInstance = nullptr;
+G4ThreadLocal G4AdjointPosOnPhysVolGenerator* G4AdjointPosOnPhysVolGenerator::theInstance = nullptr;
 
 // --------------------------------------------------------------------
 //
 G4AdjointPosOnPhysVolGenerator* G4AdjointPosOnPhysVolGenerator::GetInstance()
 {
-  if(theInstance == nullptr)
+  if (theInstance == nullptr)
   {
     theInstance = new G4AdjointPosOnPhysVolGenerator;
   }
@@ -55,15 +55,14 @@ G4AdjointPosOnPhysVolGenerator* G4AdjointPosOnPhysVolGenerator::GetInstance()
 
 // --------------------------------------------------------------------
 //
-G4VPhysicalVolume*
-G4AdjointPosOnPhysVolGenerator::DefinePhysicalVolume(const G4String& aName)
+G4VPhysicalVolume* G4AdjointPosOnPhysVolGenerator::DefinePhysicalVolume(const G4String& aName)
 {
   thePhysicalVolume = nullptr;
   theSolid = nullptr;
   G4PhysicalVolumeStore* thePhysVolStore = G4PhysicalVolumeStore::GetInstance();
-  for ( unsigned int i=0; i< thePhysVolStore->size(); ++i )
+  for (unsigned int i = 0; i < thePhysVolStore->size(); ++i)
   {
-    G4String vol_name =(*thePhysVolStore)[i]->GetName();
+    G4String vol_name = (*thePhysVolStore)[i]->GetName();
     if (vol_name.empty())
     {
       vol_name = (*thePhysVolStore)[i]->GetLogicalVolume()->GetName();
@@ -80,19 +79,16 @@ G4AdjointPosOnPhysVolGenerator::DefinePhysicalVolume(const G4String& aName)
   }
   else
   {
-    G4cout << "The physical volume with name " << aName
-           << " does not exist!!" << G4endl;
+    G4cout << "The physical volume with name " << aName << " does not exist!!" << G4endl;
     G4cout << "Before generating a source on an external surface " << G4endl
-           << "of a volume you should select another physical volume."
-           << G4endl; 
+           << "of a volume you should select another physical volume." << G4endl;
   }
   return thePhysicalVolume;
 }
 
 // --------------------------------------------------------------------
 //
-void
-G4AdjointPosOnPhysVolGenerator::DefinePhysicalVolume1(const G4String& aName)
+void G4AdjointPosOnPhysVolGenerator::DefinePhysicalVolume1(const G4String& aName)
 {
   thePhysicalVolume = DefinePhysicalVolume(aName);
 }
@@ -101,341 +97,343 @@ G4AdjointPosOnPhysVolGenerator::DefinePhysicalVolume1(const G4String& aName)
 //
 G4double G4AdjointPosOnPhysVolGenerator::ComputeAreaOfExtSurface()
 {
-  return ComputeAreaOfExtSurface(theSolid); 
+  return ComputeAreaOfExtSurface(theSolid);
 }
 
 // --------------------------------------------------------------------
 //
 G4double G4AdjointPosOnPhysVolGenerator::ComputeAreaOfExtSurface(G4int NStats)
 {
-  return ComputeAreaOfExtSurface(theSolid,NStats); 
+  return ComputeAreaOfExtSurface(theSolid, NStats);
 }
 
 // --------------------------------------------------------------------
 //
 G4double G4AdjointPosOnPhysVolGenerator::ComputeAreaOfExtSurface(G4double eps)
 {
-  return ComputeAreaOfExtSurface(theSolid,eps); 
+  return ComputeAreaOfExtSurface(theSolid, eps);
 }
 
 // --------------------------------------------------------------------
 //
-G4double
-G4AdjointPosOnPhysVolGenerator::ComputeAreaOfExtSurface(G4VSolid* aSolid)
+G4double G4AdjointPosOnPhysVolGenerator::ComputeAreaOfExtSurface(G4VSolid* aSolid)
 {
-  return ComputeAreaOfExtSurface(aSolid,1.e-3); 
+  return ComputeAreaOfExtSurface(aSolid, 1.e-3);
 }
 
 // --------------------------------------------------------------------
 //
-G4double
-G4AdjointPosOnPhysVolGenerator::ComputeAreaOfExtSurface(G4VSolid* aSolid,
-                                                        G4int NStats)
+G4double G4AdjointPosOnPhysVolGenerator::ComputeAreaOfExtSurface(G4VSolid* aSolid, G4int NStats)
 {
   if (ModelOfSurfaceSource == "OnSolid")
   {
     if (UseSphere)
     {
-      return ComputeAreaOfExtSurfaceStartingFromSphere(aSolid,NStats);        
+      return ComputeAreaOfExtSurfaceStartingFromSphere(aSolid, NStats);
     }
-    
-    return ComputeAreaOfExtSurfaceStartingFromBox(aSolid,NStats);
+
+    return ComputeAreaOfExtSurfaceStartingFromBox(aSolid, NStats);
   }
-  
+
   G4ThreeVector p, dir;
   if (ModelOfSurfaceSource == "ExternalSphere")
   {
-    return GenerateAPositionOnASphereBoundary(aSolid, p,dir);
+    return GenerateAPositionOnASphereBoundary(aSolid, p, dir);
   }
-  
-  return GenerateAPositionOnABoxBoundary(aSolid, p,dir);
+
+  return GenerateAPositionOnABoxBoundary(aSolid, p, dir);
 }
 
 // --------------------------------------------------------------------
 //
-G4double
-G4AdjointPosOnPhysVolGenerator::ComputeAreaOfExtSurface(G4VSolid* aSolid,
-                                                        G4double eps)
+G4double G4AdjointPosOnPhysVolGenerator::ComputeAreaOfExtSurface(G4VSolid* aSolid, G4double eps)
 {
-  auto  Nstats = G4int(1./(eps*eps));
-  return ComputeAreaOfExtSurface(aSolid,Nstats);
+  auto Nstats = G4int(1. / (eps * eps));
+  return ComputeAreaOfExtSurface(aSolid, Nstats);
 }
 
 // --------------------------------------------------------------------
 //
-void G4AdjointPosOnPhysVolGenerator::
-GenerateAPositionOnTheExtSurfaceOfASolid(G4VSolid* aSolid, G4ThreeVector& p,
-                                         G4ThreeVector& direction)
+void G4AdjointPosOnPhysVolGenerator::GenerateAPositionOnTheExtSurfaceOfASolid(
+  G4VSolid* aSolid, G4ThreeVector& p, G4ThreeVector& direction)
 {
   if (ModelOfSurfaceSource == "OnSolid")
   {
-    GenerateAPositionOnASolidBoundary(aSolid, p,direction);
+    GenerateAPositionOnASolidBoundary(aSolid, p, direction);
     return;
   }
   if (ModelOfSurfaceSource == "ExternalSphere")
   {
     GenerateAPositionOnASphereBoundary(aSolid, p, direction);
     return;
-  }        
+  }
   GenerateAPositionOnABoxBoundary(aSolid, p, direction);
   return;
 }
 
 // --------------------------------------------------------------------
 //
-void G4AdjointPosOnPhysVolGenerator::
-GenerateAPositionOnTheExtSurfaceOfTheSolid(G4ThreeVector& p,
-                                           G4ThreeVector& direction)
+void G4AdjointPosOnPhysVolGenerator::GenerateAPositionOnTheExtSurfaceOfTheSolid(
+  G4ThreeVector& p, G4ThreeVector& direction)
 {
-  GenerateAPositionOnTheExtSurfaceOfASolid(theSolid,p,direction);
+  GenerateAPositionOnTheExtSurfaceOfASolid(theSolid, p, direction);
 }
 
 // --------------------------------------------------------------------
 //
-G4double G4AdjointPosOnPhysVolGenerator::
-ComputeAreaOfExtSurfaceStartingFromBox(G4VSolid* aSolid, G4int Nstat)
+G4double G4AdjointPosOnPhysVolGenerator::ComputeAreaOfExtSurfaceStartingFromBox(G4VSolid* aSolid,
+                                                                                G4int Nstat)
 {
-  if ( Nstat <= 0 ) { return 0.; }
-  G4double area=1.;
-  G4int i=0, j=0;
-  while (i<Nstat)
+  if (Nstat <= 0)
+  {
+    return 0.;
+  }
+  G4double area = 1.;
+  G4int i = 0, j = 0;
+  while (i < Nstat)
   {
     G4ThreeVector p, direction;
-    area = GenerateAPositionOnABoxBoundary( aSolid,p, direction);
-    G4double dist_to_in = aSolid->DistanceToIn(p,direction);
-    if (dist_to_in<kInfinity/2.) { ++i; }
+    area = GenerateAPositionOnABoxBoundary(aSolid, p, direction);
+    G4double dist_to_in = aSolid->DistanceToIn(p, direction);
+    if (dist_to_in < kInfinity / 2.)
+    {
+      ++i;
+    }
     ++j;
   }
-  area=area*G4double(i)/G4double(j);
+  area = area * G4double(i) / G4double(j);
   return area;
 }
 
 // --------------------------------------------------------------------
 //
-G4double G4AdjointPosOnPhysVolGenerator::
-ComputeAreaOfExtSurfaceStartingFromSphere(G4VSolid* aSolid, G4int Nstat)
+G4double G4AdjointPosOnPhysVolGenerator::ComputeAreaOfExtSurfaceStartingFromSphere(G4VSolid* aSolid,
+                                                                                   G4int Nstat)
 {
-  if ( Nstat <= 0 ) { return 0.; }
-  G4double area=1.;
-  G4int i=0, j=0;
-  while (i<Nstat)
+  if (Nstat <= 0)
+  {
+    return 0.;
+  }
+  G4double area = 1.;
+  G4int i = 0, j = 0;
+  while (i < Nstat)
   {
     G4ThreeVector p, direction;
-    area = GenerateAPositionOnASphereBoundary( aSolid,p, direction);
-    G4double dist_to_in = aSolid->DistanceToIn(p,direction);
-    if (dist_to_in<kInfinity/2.)  { ++i; }
+    area = GenerateAPositionOnASphereBoundary(aSolid, p, direction);
+    G4double dist_to_in = aSolid->DistanceToIn(p, direction);
+    if (dist_to_in < kInfinity / 2.)
+    {
+      ++i;
+    }
     ++j;
   }
-  area=area*G4double(i)/G4double(j);
+  area = area * G4double(i) / G4double(j);
   return area;
 }
 
 // --------------------------------------------------------------------
 //
-void G4AdjointPosOnPhysVolGenerator::
-GenerateAPositionOnASolidBoundary(G4VSolid* aSolid, G4ThreeVector& p,
-                                  G4ThreeVector& direction)
-{ 
+void G4AdjointPosOnPhysVolGenerator::GenerateAPositionOnASolidBoundary(G4VSolid* aSolid,
+                                                                       G4ThreeVector& p,
+                                                                       G4ThreeVector& direction)
+{
   G4bool find_pos = false;
   while (!find_pos)
   {
     if (UseSphere)
     {
-      GenerateAPositionOnASphereBoundary( aSolid,p, direction );
+      GenerateAPositionOnASphereBoundary(aSolid, p, direction);
     }
     else
     {
-      GenerateAPositionOnABoxBoundary( aSolid,p, direction);
+      GenerateAPositionOnABoxBoundary(aSolid, p, direction);
     }
-    G4double dist_to_in = aSolid->DistanceToIn(p,direction);
-    if (dist_to_in<kInfinity/2.)
+    G4double dist_to_in = aSolid->DistanceToIn(p, direction);
+    if (dist_to_in < kInfinity / 2.)
     {
       find_pos = true;
-      p += 0.999999*direction*dist_to_in;
+      p += 0.999999 * direction * dist_to_in;
     }
   }
 }
 
 // --------------------------------------------------------------------
 //
-G4double G4AdjointPosOnPhysVolGenerator::
-GenerateAPositionOnASphereBoundary(G4VSolid* aSolid, G4ThreeVector& p,
-                                   G4ThreeVector& direction)
+G4double G4AdjointPosOnPhysVolGenerator::GenerateAPositionOnASphereBoundary(
+  G4VSolid* aSolid, G4ThreeVector& p, G4ThreeVector& direction)
 {
-  G4double minX,maxX,minY,maxY,minZ,maxZ;
+  G4double minX, maxX, minY, maxY, minZ, maxZ;
 
   // values needed for CalculateExtent signature
 
-  G4VoxelLimits limit;                // Unlimited
+  G4VoxelLimits limit;  // Unlimited
   G4AffineTransform origin;
 
   // min max extents of pSolid along X,Y,Z
 
-  aSolid->CalculateExtent(kXAxis,limit,origin,minX,maxX);
-  aSolid->CalculateExtent(kYAxis,limit,origin,minY,maxY);
-  aSolid->CalculateExtent(kZAxis,limit,origin,minZ,maxZ);
+  aSolid->CalculateExtent(kXAxis, limit, origin, minX, maxX);
+  aSolid->CalculateExtent(kYAxis, limit, origin, minY, maxY);
+  aSolid->CalculateExtent(kZAxis, limit, origin, minZ, maxZ);
 
-  G4ThreeVector center = G4ThreeVector((minX+maxX)/2.,
-                                       (minY+maxY)/2.,
-                                       (minZ+maxZ)/2.);
-  G4double dX=(maxX-minX)/2.;
-  G4double dY=(maxY-minY)/2.;
-  G4double dZ=(maxZ-minZ)/2.;
-  G4double scale=1.01;
-  G4double r=scale*std::sqrt(dX*dX+dY*dY+dZ*dZ);
+  G4ThreeVector center = G4ThreeVector((minX + maxX) / 2., (minY + maxY) / 2., (minZ + maxZ) / 2.);
+  G4double dX = (maxX - minX) / 2.;
+  G4double dY = (maxY - minY) / 2.;
+  G4double dZ = (maxZ - minZ) / 2.;
+  G4double scale = 1.01;
+  G4double r = scale * std::sqrt(dX * dX + dY * dY + dZ * dZ);
 
   G4double cos_th2 = G4UniformRand();
   G4double theta = std::acos(std::sqrt(cos_th2));
-  G4double phi=G4UniformRand()*CLHEP::twopi;
-  direction.setRThetaPhi(1.,theta,phi);
-  direction=-direction;
-  G4double cos_th = (1.-2.*G4UniformRand());
+  G4double phi = G4UniformRand() * CLHEP::twopi;
+  direction.setRThetaPhi(1., theta, phi);
+  direction = -direction;
+  G4double cos_th = (1. - 2. * G4UniformRand());
   theta = std::acos(cos_th);
-  if (G4UniformRand() < 0.5)  { theta=CLHEP::pi-theta; }
-  phi=G4UniformRand()*CLHEP::twopi;
-  p.setRThetaPhi(r,theta,phi);
-  p+=center;
+  if (G4UniformRand() < 0.5)
+  {
+    theta = CLHEP::pi - theta;
+  }
+  phi = G4UniformRand() * CLHEP::twopi;
+  p.setRThetaPhi(r, theta, phi);
+  p += center;
   direction.rotateY(theta);
   direction.rotateZ(phi);
-  return 4.*CLHEP::pi*r*r;;
+  return 4. * CLHEP::pi * r * r;
+  ;
 }
 
 // --------------------------------------------------------------------
 //
-G4double G4AdjointPosOnPhysVolGenerator::
-GenerateAPositionOnABoxBoundary(G4VSolid* aSolid, G4ThreeVector& p,
-                                G4ThreeVector& direction)
+G4double G4AdjointPosOnPhysVolGenerator::GenerateAPositionOnABoxBoundary(G4VSolid* aSolid,
+                                                                         G4ThreeVector& p,
+                                                                         G4ThreeVector& direction)
 {
+  G4double ran_var, px, py, pz, minX, maxX, minY, maxY, minZ, maxZ;
 
-  G4double ran_var,px,py,pz,minX,maxX,minY,maxY,minZ,maxZ;
-  
   // values needed for CalculateExtent signature
 
-  G4VoxelLimits limit;                // Unlimited
+  G4VoxelLimits limit;  // Unlimited
   G4AffineTransform origin;
 
   // min max extents of pSolid along X,Y,Z
 
-  aSolid->CalculateExtent(kXAxis,limit,origin,minX,maxX);
-  aSolid->CalculateExtent(kYAxis,limit,origin,minY,maxY);
-  aSolid->CalculateExtent(kZAxis,limit,origin,minZ,maxZ);
-  
-  G4double scale=.1;
-  minX-=scale*std::abs(minX);
-  minY-=scale*std::abs(minY);
-  minZ-=scale*std::abs(minZ);
-  maxX+=scale*std::abs(maxX);
-  maxY+=scale*std::abs(maxY);
-  maxZ+=scale*std::abs(maxZ);
-  
-  G4double dX=(maxX-minX);
-  G4double dY=(maxY-minY);
-  G4double dZ=(maxZ-minZ);
+  aSolid->CalculateExtent(kXAxis, limit, origin, minX, maxX);
+  aSolid->CalculateExtent(kYAxis, limit, origin, minY, maxY);
+  aSolid->CalculateExtent(kZAxis, limit, origin, minZ, maxZ);
 
-  G4double XY_prob=2.*dX*dY;
-  G4double YZ_prob=2.*dY*dZ;
-  G4double ZX_prob=2.*dZ*dX;
-  G4double area=XY_prob+YZ_prob+ZX_prob;
-  XY_prob/=area;
-  YZ_prob/=area;
-  ZX_prob/=area;
-  
-  ran_var=G4UniformRand();
+  G4double scale = .1;
+  minX -= scale * std::abs(minX);
+  minY -= scale * std::abs(minY);
+  minZ -= scale * std::abs(minZ);
+  maxX += scale * std::abs(maxX);
+  maxY += scale * std::abs(maxY);
+  maxZ += scale * std::abs(maxZ);
+
+  G4double dX = (maxX - minX);
+  G4double dY = (maxY - minY);
+  G4double dZ = (maxZ - minZ);
+
+  G4double XY_prob = 2. * dX * dY;
+  G4double YZ_prob = 2. * dY * dZ;
+  G4double ZX_prob = 2. * dZ * dX;
+  G4double area = XY_prob + YZ_prob + ZX_prob;
+  XY_prob /= area;
+  YZ_prob /= area;
+  ZX_prob /= area;
+
+  ran_var = G4UniformRand();
   G4double cos_th2 = G4UniformRand();
-  G4double sth = std::sqrt(1.-cos_th2);
+  G4double sth = std::sqrt(1. - cos_th2);
   G4double cth = std::sqrt(cos_th2);
-  G4double phi = G4UniformRand()*CLHEP::twopi;
-  G4double dirX = sth*std::cos(phi);
-  G4double dirY = sth*std::sin(phi);
+  G4double phi = G4UniformRand() * CLHEP::twopi;
+  G4double dirX = sth * std::cos(phi);
+  G4double dirY = sth * std::sin(phi);
   G4double dirZ = cth;
-  if (ran_var <=XY_prob)  // on the XY faces
+  if (ran_var <= XY_prob)  // on the XY faces
   {
-    G4double ran_var1=ran_var/XY_prob;
-    G4double ranX=ran_var1;
-    if (ran_var1<=0.5)
+    G4double ran_var1 = ran_var / XY_prob;
+    G4double ranX = ran_var1;
+    if (ran_var1 <= 0.5)
     {
-      pz=minZ;
-      direction=G4ThreeVector(dirX,dirY,dirZ);
-      ranX=ran_var1*2.;
-    } 
+      pz = minZ;
+      direction = G4ThreeVector(dirX, dirY, dirZ);
+      ranX = ran_var1 * 2.;
+    }
     else
     {
-      pz=maxZ;
-      direction=-G4ThreeVector(dirX,dirY,dirZ);
-      ranX=(ran_var1-0.5)*2.;
+      pz = maxZ;
+      direction = -G4ThreeVector(dirX, dirY, dirZ);
+      ranX = (ran_var1 - 0.5) * 2.;
     }
-    G4double ranY=G4UniformRand();
-    px=minX+(maxX-minX)*ranX;
-    py=minY+(maxY-minY)*ranY;
+    G4double ranY = G4UniformRand();
+    px = minX + (maxX - minX) * ranX;
+    py = minY + (maxY - minY) * ranY;
   }
-  else if (ran_var <=(XY_prob+YZ_prob))  // on the YZ faces
+  else if (ran_var <= (XY_prob + YZ_prob))  // on the YZ faces
   {
-    G4double ran_var1=(ran_var-XY_prob)/YZ_prob;
-    G4double ranY=ran_var1;
-    if (ran_var1<=0.5)
+    G4double ran_var1 = (ran_var - XY_prob) / YZ_prob;
+    G4double ranY = ran_var1;
+    if (ran_var1 <= 0.5)
     {
-      px=minX;
-      direction=G4ThreeVector(dirZ,dirX,dirY);
-      ranY=ran_var1*2.;
-    } 
+      px = minX;
+      direction = G4ThreeVector(dirZ, dirX, dirY);
+      ranY = ran_var1 * 2.;
+    }
     else
     {
-      px=maxX;
-      direction=-G4ThreeVector(dirZ,dirX,dirY);
-      ranY=(ran_var1-0.5)*2.;
+      px = maxX;
+      direction = -G4ThreeVector(dirZ, dirX, dirY);
+      ranY = (ran_var1 - 0.5) * 2.;
     }
-    G4double ranZ=G4UniformRand();
-    py=minY+(maxY-minY)*ranY;
-    pz=minZ+(maxZ-minZ)*ranZ;
+    G4double ranZ = G4UniformRand();
+    py = minY + (maxY - minY) * ranY;
+    pz = minZ + (maxZ - minZ) * ranZ;
   }
   else  // on the ZX faces
   {
-    G4double ran_var1=(ran_var-XY_prob-YZ_prob)/ZX_prob;
-    G4double ranZ=ran_var1;
-    if (ran_var1<=0.5)
+    G4double ran_var1 = (ran_var - XY_prob - YZ_prob) / ZX_prob;
+    G4double ranZ = ran_var1;
+    if (ran_var1 <= 0.5)
     {
-      py=minY;
-      direction=G4ThreeVector(dirY,dirZ,dirX);
-      ranZ=ran_var1*2.;
-    } 
+      py = minY;
+      direction = G4ThreeVector(dirY, dirZ, dirX);
+      ranZ = ran_var1 * 2.;
+    }
     else
     {
-      py=maxY;
-      direction=-G4ThreeVector(dirY,dirZ,dirX);
-      ranZ=(ran_var1-0.5)*2.;
+      py = maxY;
+      direction = -G4ThreeVector(dirY, dirZ, dirX);
+      ranZ = (ran_var1 - 0.5) * 2.;
     }
-    G4double ranX=G4UniformRand();
-    px=minX+(maxX-minX)*ranX;
-    pz=minZ+(maxZ-minZ)*ranZ;
+    G4double ranX = G4UniformRand();
+    px = minX + (maxX - minX) * ranX;
+    pz = minZ + (maxZ - minZ) * ranZ;
   }
-  
-  p=G4ThreeVector(px,py,pz);
+
+  p = G4ThreeVector(px, py, pz);
   return area;
 }
 
 // --------------------------------------------------------------------
 //
-void G4AdjointPosOnPhysVolGenerator::
-GenerateAPositionOnTheExtSurfaceOfThePhysicalVolume(G4ThreeVector& p,
-                                                    G4ThreeVector& direction)
+void G4AdjointPosOnPhysVolGenerator::GenerateAPositionOnTheExtSurfaceOfThePhysicalVolume(
+  G4ThreeVector& p, G4ThreeVector& direction)
 {
   if (thePhysicalVolume == nullptr)
   {
     G4cout << "Before generating a source on an external surface" << G4endl
-           << "of volume you should select a physical volume" << G4endl; 
+           << "of volume you should select a physical volume" << G4endl;
     return;
   }
-  GenerateAPositionOnTheExtSurfaceOfTheSolid(p,direction);
+  GenerateAPositionOnTheExtSurfaceOfTheSolid(p, direction);
   p = theTransformationFromPhysVolToWorld.TransformPoint(p);
   direction = theTransformationFromPhysVolToWorld.TransformAxis(direction);
 }
 
 // --------------------------------------------------------------------
 //
-void G4AdjointPosOnPhysVolGenerator::
-GenerateAPositionOnTheExtSurfaceOfThePhysicalVolume(G4ThreeVector& p,
-                                                    G4ThreeVector& direction,
-                                                    G4double& costh_to_normal)
+void G4AdjointPosOnPhysVolGenerator::GenerateAPositionOnTheExtSurfaceOfThePhysicalVolume(
+  G4ThreeVector& p, G4ThreeVector& direction, G4double& costh_to_normal)
 {
   GenerateAPositionOnTheExtSurfaceOfThePhysicalVolume(p, direction);
   costh_to_normal = CosThDirComparedToNormal;
@@ -452,9 +450,8 @@ void G4AdjointPosOnPhysVolGenerator::ComputeTransformationFromPhysVolToWorld()
   while (mother != nullptr)
   {
     theTransformationFromPhysVolToWorld *=
-      G4AffineTransform(daughter->GetFrameRotation(),
-                        daughter->GetObjectTranslation());
-    for ( unsigned int i=0; i<thePhysVolStore->size(); ++i )
+      G4AffineTransform(daughter->GetFrameRotation(), daughter->GetObjectTranslation());
+    for (unsigned int i = 0; i < thePhysVolStore->size(); ++i)
     {
       if ((*thePhysVolStore)[i]->GetLogicalVolume() == mother)
       {

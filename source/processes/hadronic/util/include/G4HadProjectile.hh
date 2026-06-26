@@ -23,77 +23,78 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4HadProjectile_hh
-#define G4HadProjectile_hh
+#ifndef G4HADPROJECTILE_HH
+#define G4HADPROJECTILE_HH
 
-#include "globals.hh"
+#include "G4LorentzRotation.hh"
+#include "G4LorentzVector.hh"
 #include "G4Material.hh"
 #include "G4ParticleDefinition.hh"
-#include "G4LorentzVector.hh"
 #include "G4ThreeVector.hh"
-#include "G4LorentzRotation.hh"
+#include "globals.hh"
 
 class G4Track;
 class G4DynamicParticle;
 
 class G4HadProjectile
 {
-public:
-  G4HadProjectile();
-  G4HadProjectile(const G4Track &aT);
-  G4HadProjectile(const G4DynamicParticle &aT);
-  ~G4HadProjectile();
+  public:
 
-  void Initialise(const G4Track &aT);
+    G4HadProjectile();
+    G4HadProjectile(const G4Track& aT);
+    G4HadProjectile(const G4DynamicParticle& aT);
+    ~G4HadProjectile();
 
-  inline const G4Material * GetMaterial() const;
-  inline const G4ParticleDefinition * GetDefinition() const;
-  inline const G4LorentzVector & Get4Momentum() const;
-  inline const G4ThreeVector & GetMomentumDirection() const;
-  inline G4LorentzRotation & GetTrafoToLab();
-  inline G4double GetKineticEnergy() const;
-  inline G4double GetTotalEnergy() const;
-  inline G4double GetTotalMomentum() const;
-  inline G4double GetGlobalTime() const;
-  inline G4double GetBoundEnergy() const;
-  inline void SetGlobalTime(G4double t);
-  inline void SetBoundEnergy(G4double e);
-    
-private:
+    void Initialise(const G4Track& aT);
 
-  void InitialiseLocal(const G4DynamicParticle*);
-  
-  // hide assignment operator as private 
-  G4HadProjectile& operator=(const G4HadProjectile &right);
-  G4HadProjectile(const G4HadProjectile& );
+    inline const G4Material* GetMaterial() const;
+    inline const G4ParticleDefinition* GetDefinition() const;
+    inline const G4LorentzVector& Get4Momentum() const;
+    inline const G4ThreeVector& GetMomentumDirection() const;
+    inline G4LorentzRotation& GetTrafoToLab();
+    inline G4double GetKineticEnergy() const;
+    inline G4double GetTotalEnergy() const;
+    inline G4double GetTotalMomentum() const;
+    inline G4double GetGlobalTime() const;
+    inline G4double GetBoundEnergy() const;
+    inline void SetGlobalTime(G4double t);
+    inline void SetBoundEnergy(G4double e);
 
-  const G4Material * theMat;
-  const G4ParticleDefinition * theDef;
-  G4LorentzVector theMom;
-  G4LorentzRotation toLabFrame;
-  G4ThreeVector theDirection;
-  G4double theMass;
-  G4double theKinEnergy;
-  G4double theTime;
-  G4double theBoundEnergy;
+  private:
+
+    void InitialiseLocal(const G4DynamicParticle*);
+
+    // hide assignment operator as private
+    G4HadProjectile& operator=(const G4HadProjectile& right);
+    G4HadProjectile(const G4HadProjectile&);
+
+    const G4Material* theMat;
+    const G4ParticleDefinition* theDef;
+    G4LorentzVector theMom;
+    G4LorentzRotation toLabFrame;
+    G4ThreeVector theDirection;
+    G4double theMass;
+    G4double theKinEnergy;
+    G4double theTime;
+    G4double theBoundEnergy;
 };
 
-const G4Material * G4HadProjectile::GetMaterial() const 
+const G4Material* G4HadProjectile::GetMaterial() const
 {
   return theMat;
 }
 
-const G4ParticleDefinition * G4HadProjectile::GetDefinition() const 
+const G4ParticleDefinition* G4HadProjectile::GetDefinition() const
 {
   return theDef;
 }
 
-inline const G4LorentzVector& G4HadProjectile::Get4Momentum() const 
+inline const G4LorentzVector& G4HadProjectile::Get4Momentum() const
 {
   return theMom;
 }
 
-inline G4LorentzRotation& G4HadProjectile::GetTrafoToLab() 
+inline G4LorentzRotation& G4HadProjectile::GetTrafoToLab()
 {
   return toLabFrame;
 }
@@ -113,29 +114,29 @@ G4double G4HadProjectile::GetTotalMomentum() const
   return theMom.pz();
 }
 
-G4double G4HadProjectile::GetKineticEnergy() const 
+G4double G4HadProjectile::GetKineticEnergy() const
 {
   return theKinEnergy;
 }
 
-inline G4double G4HadProjectile::GetGlobalTime() const 
+inline G4double G4HadProjectile::GetGlobalTime() const
 {
   return theTime;
 }
 
 inline G4double G4HadProjectile::GetBoundEnergy() const
 {
-  return theBoundEnergy; 
+  return theBoundEnergy;
 }
 
-inline void G4HadProjectile::SetGlobalTime(G4double t) 
-{ 
-  theTime = t; 
+inline void G4HadProjectile::SetGlobalTime(G4double t)
+{
+  theTime = t;
 }
 
-inline void G4HadProjectile::SetBoundEnergy(G4double e) 
-{ 
-  theBoundEnergy = e; 
+inline void G4HadProjectile::SetBoundEnergy(G4double e)
+{
+  theBoundEnergy = e;
 }
 
 #endif

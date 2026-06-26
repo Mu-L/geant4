@@ -32,14 +32,16 @@ void G4FastSimulationHelper::ActivateFastSimulation(G4ProcessManager* pmanager,
                                                     G4String parallelGeometryName)
 {
   G4FastSimulationManagerProcess* fastSimProcess;
-  if (parallelGeometryName.empty()) {
+  if (parallelGeometryName.empty())
+  {
     fastSimProcess = new G4FastSimulationManagerProcess("fastSimProcess_massGeom");
     // -- For the parametrisation envelope belonging to the mass geometry case, the
     // G4FastSimulationManagerProcess
     // -- is a PostStep process, and ordering does not matter:
     pmanager->AddDiscreteProcess(fastSimProcess);
   }
-  else {
+  else
+  {
     fastSimProcess =
       new G4FastSimulationManagerProcess("fastSimProcess_parallelGeom", parallelGeometryName);
     // -- For the parallel geometry case, the G4FastSimulationManagerProcessz

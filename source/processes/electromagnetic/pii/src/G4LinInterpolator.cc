@@ -38,39 +38,37 @@
 
 // Constructor
 
-G4LinInterpolator::G4LinInterpolator()
-{ }
+G4LinInterpolator::G4LinInterpolator() {}
 
 // Destructor
 
-G4LinInterpolator::~G4LinInterpolator()
-{ }
+G4LinInterpolator::~G4LinInterpolator() {}
 
+G4IInterpolator* G4LinInterpolator::Clone() const
+{
+  return new G4LinInterpolator;
+}
 
-G4IInterpolator* G4LinInterpolator::Clone() const 
-{ return new G4LinInterpolator; }
-
-G4double G4LinInterpolator::Calculate(G4double x, G4int bin, 
-				      const G4DataVector& points, 
-				      const G4DataVector& data) const
+G4double G4LinInterpolator::Calculate(G4double x, G4int bin, const G4DataVector& points,
+                                      const G4DataVector& data) const
 {
   G4int nBins = G4int(data.size() - 1);
   G4double value = 0.;
   if (x < points[0])
-    {
-      value = 0.;
-    }
+  {
+    value = 0.;
+  }
   else if (bin < nBins)
-    {
-      G4double e1 = points[bin];
-      G4double e2 = points[bin+1];
-      G4double d1 = data[bin];
-      G4double d2 = data[bin+1];
-      value = d1 + (d2 - d1)*(x - e1)/(e2 - e1);
-    }
+  {
+    G4double e1 = points[bin];
+    G4double e2 = points[bin + 1];
+    G4double d1 = data[bin];
+    G4double d2 = data[bin + 1];
+    value = d1 + (d2 - d1) * (x - e1) / (e2 - e1);
+  }
   else
-    {
-      value = data[nBins];
-    }
+  {
+    value = data[nBins];
+  }
   return value;
 }

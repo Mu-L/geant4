@@ -57,26 +57,33 @@ G4UIparameter::~G4UIparameter() = default;
 void G4UIparameter::List()
 {
   G4cout << G4endl << "Parameter : " << parameterName << G4endl;
-  if (!parameterGuidance.empty()) {
+  if (!parameterGuidance.empty())
+  {
     G4cout << parameterGuidance << G4endl;
   }
   G4cout << " Parameter type  : " << parameterType << G4endl;
-  if (omittable) {
+  if (omittable)
+  {
     G4cout << " Omittable       : True" << G4endl;
   }
-  else {
+  else
+  {
     G4cout << " Omittable       : False" << G4endl;
   }
-  if (currentAsDefaultFlag) {
+  if (currentAsDefaultFlag)
+  {
     G4cout << " Default value   : taken from the current value" << G4endl;
   }
-  else if (!defaultValue.empty()) {
+  else if (!defaultValue.empty())
+  {
     G4cout << " Default value   : " << defaultValue << G4endl;
   }
-  if (!rangeExpression.empty()) {
+  if (!rangeExpression.empty())
+  {
     G4cout << " Parameter range : " << rangeExpression << G4endl;
   }
-  if (!parameterCandidate.empty()) {
+  if (!parameterCandidate.empty())
+  {
     G4cout << " Candidates      : " << parameterCandidate << G4endl;
   }
 }
@@ -103,12 +110,14 @@ void G4UIparameter::SetDefaultValue(G4double theDefaultValue)
 void G4UIparameter::SetDefaultUnit(const char* theDefaultUnit)
 {
   char type = (char)std::toupper(parameterType);
-  if (type != 'S') {
+  if (type != 'S')
+  {
     G4ExceptionDescription ed;
     ed << "This method can be used only for a string-type parameter that is "
           "used to specify a unit.\n"
        << "This parameter <" << parameterName << "> is defined as ";
-    switch (type) {
+    switch (type)
+    {
       case 'D':
         ed << "double.";
         break;
@@ -134,13 +143,16 @@ void G4UIparameter::SetDefaultUnit(const char* theDefaultUnit)
 
 G4int G4UIparameter::CheckNewValue(const char* newValue)
 {
-  if (!TypeCheck(newValue)) {
+  if (!TypeCheck(newValue))
+  {
     return fParameterUnreadable;
   }
-  if (!G4UIparsing::RangeCheck(*this, newValue)) {
+  if (!G4UIparsing::RangeCheck(*this, newValue))
+  {
     return fParameterOutOfRange;
   }
-  if (!CandidateCheck(newValue)) {
+  if (!CandidateCheck(newValue))
+  {
     return fParameterOutOfCandidates;
   }
   return 0;  // succeeded
@@ -149,21 +161,25 @@ G4int G4UIparameter::CheckNewValue(const char* newValue)
 // --------------------------------------------------------------------
 G4bool G4UIparameter::CandidateCheck(const char* newValue)
 {
-  if (parameterCandidate.empty()) {
+  if (parameterCandidate.empty())
+  {
     return true;
   }
 
   G4Tokenizer candidateTokenizer(parameterCandidate);
   G4String aToken;
-  while (!(aToken = candidateTokenizer()).empty()) {
-    if (aToken == newValue) {
+  while (!(aToken = candidateTokenizer()).empty())
+  {
+    if (aToken == newValue)
+    {
       return true;
     }
   }
   G4cerr << "parameter value (" << newValue << ") is not listed in the candidate List." << G4endl;
   G4cerr << "  Candidates are:";
   G4Tokenizer candidateListTokenizer(parameterCandidate);
-  while (!(aToken = candidateListTokenizer()).empty()) {
+  while (!(aToken = candidateListTokenizer()).empty())
+  {
     G4cerr << ' ' << aToken;
   }
   G4cerr << G4endl;
@@ -176,21 +192,25 @@ G4bool G4UIparameter::TypeCheck(const char* newValue)
 {
   G4String newValueString(newValue);
   char type = (char)std::toupper(parameterType);
-  switch (type) {
+  switch (type)
+  {
     case 'D':
-      if (!G4UIparsing::IsDouble(newValueString.data())) {
+      if (!G4UIparsing::IsDouble(newValueString.data()))
+      {
         G4cerr << newValue << ": double value expected." << G4endl;
         return false;
       }
       break;
     case 'I':
-      if (!G4UIparsing::IsInt(newValueString.data(), 10)) {
+      if (!G4UIparsing::IsInt(newValueString.data(), 10))
+      {
         G4cerr << newValue << ": integer expected." << G4endl;
         return false;
       }
       break;
     case 'L':
-      if (!G4UIparsing::IsInt(newValueString.data(), 20)) {
+      if (!G4UIparsing::IsInt(newValueString.data(), 20))
+      {
         G4cerr << newValue << ": long int expected." << G4endl;
         return false;
       }

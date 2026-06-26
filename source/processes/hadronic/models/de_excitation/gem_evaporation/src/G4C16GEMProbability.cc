@@ -28,13 +28,9 @@
 // by V. Lara (Nov 1999)
 //
 
-
 #include "G4C16GEMProbability.hh"
 
-G4C16GEMProbability::G4C16GEMProbability() :
-  G4GEMProbability(16,6,0.0) // A,Z,Spin
+G4C16GEMProbability::G4C16GEMProbability() : G4GEMProbability(16, 6, 0.0)  // A,Z,Spin
 {}
 
-G4C16GEMProbability::~G4C16GEMProbability()
-{}
-
+G4C16GEMProbability::~G4C16GEMProbability() {}

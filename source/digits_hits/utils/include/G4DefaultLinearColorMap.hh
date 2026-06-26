@@ -27,20 +27,20 @@
 //
 // Author: Makoto Asai
 // --------------------------------------------------------------------
-#ifndef G4DefaultLinearColorMap_h
-#define G4DefaultLinearColorMap_h 1
+#ifndef G4DEFAULTLINEARCOLORMAP_HH
+#define G4DEFAULTLINEARCOLORMAP_HH
 
-#include "globals.hh"
 #include "G4VScoreColorMap.hh"
+#include "globals.hh"
 
 class G4DefaultLinearColorMap : public G4VScoreColorMap
 {
- public:
+  public:
 
-  using G4VScoreColorMap::G4VScoreColorMap;
-  ~G4DefaultLinearColorMap() override = default;
+    using G4VScoreColorMap::G4VScoreColorMap;
+    ~G4DefaultLinearColorMap() override = default;
 
-  void GetMapColor(G4double val, G4double color[4]) override;
+    void GetMapColor(G4double val, G4double color[4]) override;
 };
 
 #endif

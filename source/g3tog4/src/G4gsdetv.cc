@@ -26,29 +26,30 @@
 //
 
 #include "G4ios.hh"
-#include "G3toG4.hh"
+
 #include "G3DetTable.hh"
 #include "G3VolTable.hh"
+#include "G3toG4.hh"
 
 class G4VSensitiveDetector;
 
-void PG4gsdetv(G4String *tokens)
+void PG4gsdetv(G4String* tokens)
 {
-    // fill the parameter containers
-    G3fillParams(tokens,PTgsdetv);
+  // fill the parameter containers
+  G3fillParams(tokens, PTgsdetv);
 
-    // interpret the parameters
-    G4String chset = Spar[0];
-    G4String chdet = Spar[1];
-    G4int idtyp = Ipar[0];
-    G4int nwhi = Ipar[1];
-    G4int nwdi = Ipar[2];
+  // interpret the parameters
+  G4String chset = Spar[0];
+  G4String chdet = Spar[1];
+  G4int idtyp = Ipar[0];
+  G4int nwhi = Ipar[1];
+  G4int nwdi = Ipar[2];
 
-    G4gsdetv(chset,chdet,idtyp,nwhi,nwdi);
+  G4gsdetv(chset, chdet, idtyp, nwhi, nwdi);
 }
 
-void G4gsdetv(G4String, G4String, G4int, G4int,G4int)
-{  
+void G4gsdetv(G4String, G4String, G4int, G4int, G4int)
+{
   G4cout << "G4gsdetv not currently implemented." << G4endl;
   /*
     // get lvol for detector chdet
@@ -67,4 +68,3 @@ void G4gsdetv(G4String, G4String, G4int, G4int,G4int)
     // G3Det.put(chset,idtyp,sdet);
     */
 }
-

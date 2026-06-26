@@ -27,9 +27,10 @@
 // Author: Ivana Hrivnacova, 09/04/2014 (ivana@ipno.in2p3.fr)
 
 #include "G4RootAnalysisReader.hh"
+
+#include "G4AnalysisUtilities.hh"
 #include "G4RootRFileManager.hh"
 #include "G4RootRNtupleManager.hh"
-#include "G4AnalysisUtilities.hh"
 #include "G4ThreadLocalSingleton.hh"
 #include "G4Threading.hh"
 
@@ -43,10 +44,9 @@ G4RootAnalysisReader* G4RootAnalysisReader::Instance()
 }
 
 //_____________________________________________________________________________
-G4RootAnalysisReader::G4RootAnalysisReader()
- : G4ToolsAnalysisReader("Root")
+G4RootAnalysisReader::G4RootAnalysisReader() : G4ToolsAnalysisReader("Root")
 {
-  if ( ! G4Threading::IsWorkerThread() ) fgMasterInstance = this;
+  if (!G4Threading::IsWorkerThread()) fgMasterInstance = this;
 
   // Create managers
   fNtupleManager = std::make_shared<G4RootRNtupleManager>(fState);
@@ -61,7 +61,7 @@ G4RootAnalysisReader::G4RootAnalysisReader()
 //_____________________________________________________________________________
 G4RootAnalysisReader::~G4RootAnalysisReader()
 {
-  if ( fState.GetIsMaster() ) fgMasterInstance = nullptr;
+  if (fState.GetIsMaster()) fgMasterInstance = nullptr;
 }
 
 //
@@ -71,7 +71,7 @@ G4RootAnalysisReader::~G4RootAnalysisReader()
 //_____________________________________________________________________________
 G4bool G4RootAnalysisReader::Reset()
 {
-// Reset histograms and ntuple
+  // Reset histograms and ntuple
 
   auto result = true;
 
@@ -86,13 +86,14 @@ G4bool G4RootAnalysisReader::Reset()
 //
 
 //_____________________________________________________________________________
-G4bool  G4RootAnalysisReader::CloseFilesImpl(G4bool reset)
+G4bool G4RootAnalysisReader::CloseFilesImpl(G4bool reset)
 {
   Message(kVL4, "close", "files");
 
   auto result = true;
 
-  if (reset) {
+  if (reset)
+  {
     result &= Reset();
   }
 

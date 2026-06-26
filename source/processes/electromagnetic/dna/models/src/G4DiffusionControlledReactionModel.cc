@@ -26,23 +26,24 @@
 // Author: Hoang TRAN
 
 #include "G4DiffusionControlledReactionModel.hh"
-#include "G4Track.hh"
+
 #include "G4DNAMolecularReactionTable.hh"
-#include "G4PhysicalConstants.hh"
+#include "G4Electron_aq.hh"
+#include "G4ErrorFunction.hh"
 #include "G4Exp.hh"
 #include "G4IRTUtils.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4Electron_aq.hh"
-#include "Randomize.hh"
 #include "G4Molecule.hh"
-#include "G4ErrorFunction.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4Track.hh"
+#include "Randomize.hh"
 
 G4DiffusionControlledReactionModel::G4DiffusionControlledReactionModel() = default;
 
 G4DiffusionControlledReactionModel::~G4DiffusionControlledReactionModel() = default;
 
-void G4DiffusionControlledReactionModel::Initialise(
-  const G4MolecularConfiguration* pMolecule, const G4Track&)
+void G4DiffusionControlledReactionModel::Initialise(const G4MolecularConfiguration* pMolecule,
+                                                    const G4Track&)
 {
   fpReactionData = fpReactionTable->GetReactionData(pMolecule);
 }
@@ -53,20 +54,20 @@ void G4DiffusionControlledReactionModel::InitialiseToPrint(
   fpReactionData = fpReactionTable->GetReactionData(pMolecule);
 }
 
-G4double G4DiffusionControlledReactionModel::GetReactionRadius(
-  const G4MolecularConfiguration* pMol1, const G4MolecularConfiguration* pMol2)
+G4double
+G4DiffusionControlledReactionModel::GetReactionRadius(const G4MolecularConfiguration* pMol1,
+                                                      const G4MolecularConfiguration* pMol2)
 {
   auto reactionData = fpReactionTable->GetReactionData(pMol1, pMol2);
-  if(reactionData == nullptr)
+  if (reactionData == nullptr)
   {
     G4ExceptionDescription exceptionDescription;
     exceptionDescription << "No reactionData"
-                         << " for : " << pMol1->GetName() << " and "
-                         << pMol2->GetName();
-    G4Exception("G4DiffusionControlledReactionModel"
-                "::GetReactionRadius()",
-                "G4DiffusionControlledReactionModel00", FatalException,
-                exceptionDescription);
+                         << " for : " << pMol1->GetName() << " and " << pMol2->GetName();
+    G4Exception(
+      "G4DiffusionControlledReactionModel"
+      "::GetReactionRadius()",
+      "G4DiffusionControlledReactionModel00", FatalException, exceptionDescription);
     return 0.;
   }
   return reactionData->GetEffectiveReactionRadius();
@@ -79,94 +80,90 @@ G4double G4DiffusionControlledReactionModel::GetReactionRadius(const G4int& i)
   return GetReactionRadius(pMol1, pMol2);
 }
 
-G4double G4DiffusionControlledReactionModel::GetTimeToEncounter(
-  const G4Track& trackA, const G4Track& trackB)
+G4double G4DiffusionControlledReactionModel::GetTimeToEncounter(const G4Track& trackA,
+                                                                const G4Track& trackB)
 {
   auto pMolConfA = GetMolecule(trackA)->GetMolecularConfiguration();
   auto pMolConfB = GetMolecule(trackB)->GetMolecularConfiguration();
 
-  G4double D =
-    pMolConfA->GetDiffusionCoefficient() + pMolConfB->GetDiffusionCoefficient();
+  G4double D = pMolConfA->GetDiffusionCoefficient() + pMolConfB->GetDiffusionCoefficient();
 
-  if(D == 0)
+  if (D == 0)
   {
     G4ExceptionDescription exceptionDescription;
-    exceptionDescription << "The total diffusion coefficient for : "
-                         << pMolConfA->GetName() << " and "
-                         << pMolConfB->GetName() << " is null ";
-    G4Exception("G4DiffusionControlledReactionModel"
-                "::GetTimeToEncounter()",
-                "G4DiffusionControlledReactionModel03", FatalException,
-                exceptionDescription);
+    exceptionDescription << "The total diffusion coefficient for : " << pMolConfA->GetName()
+                         << " and " << pMolConfB->GetName() << " is null ";
+    G4Exception(
+      "G4DiffusionControlledReactionModel"
+      "::GetTimeToEncounter()",
+      "G4DiffusionControlledReactionModel03", FatalException, exceptionDescription);
   }
 
-  auto reactionData = G4DNAMolecularReactionTable::Instance()->GetReactionData(
-    pMolConfA, pMolConfB);
-  G4double kobs     = reactionData->GetObservedReactionRateConstant();
+  auto reactionData =
+    G4DNAMolecularReactionTable::Instance()->GetReactionData(pMolConfA, pMolConfB);
+  G4double kobs = reactionData->GetObservedReactionRateConstant();
   G4double distance = (trackA.GetPosition() - trackB.GetPosition()).mag();
   G4double SmoluchowskiRadius = reactionData->GetEffectiveReactionRadius();
 
-  if(distance == 0 || distance < SmoluchowskiRadius)
+  if (distance == 0 || distance < SmoluchowskiRadius)
   {
     G4ExceptionDescription exceptionDescription;
     exceptionDescription << "distance = " << distance << " is uncorrected with "
-                         << " Reff = " << SmoluchowskiRadius
-                         << " for : " << pMolConfA->GetName() << " and "
-                         << pMolConfB->GetName();
-    G4Exception("G4DiffusionControlledReactionModel"
-                "::GetTimeToEncounter()",
-                "G4DiffusionControlledReactionModel02", FatalException,
-                exceptionDescription);
+                         << " Reff = " << SmoluchowskiRadius << " for : " << pMolConfA->GetName()
+                         << " and " << pMolConfB->GetName();
+    G4Exception(
+      "G4DiffusionControlledReactionModel"
+      "::GetTimeToEncounter()",
+      "G4DiffusionControlledReactionModel02", FatalException, exceptionDescription);
   }
   else
   {
-    G4double Winf  = SmoluchowskiRadius / distance;
-    G4double U     = G4UniformRand();
-    G4double X     = 0;
+    G4double Winf = SmoluchowskiRadius / distance;
+    G4double U = G4UniformRand();
+    G4double X = 0;
     G4double irt_1 = -1.0 * ps;
-    if(Winf > 0 && U < Winf)
+    if (Winf > 0 && U < Winf)
     {
       G4double erfcIn = G4ErrorFunction::erfcInv(U / Winf);
-      if(erfcIn != 0)
+      if (erfcIn != 0)
       {
-        G4double d =
-          (distance - SmoluchowskiRadius) / erfcIn;
+        G4double d = (distance - SmoluchowskiRadius) / erfcIn;
         irt_1 = (1.0 / (4 * D)) * d * d;
       }
     }
 
-    if(reactionData->GetReactionType() == 0)  // Totally diffused contr
+    if (reactionData->GetReactionType() == 0)  // Totally diffused contr
     {
       return irt_1;
     }
 
-    if(irt_1 < 0)
+    if (irt_1 < 0)
     {
       return irt_1;
     }
-    
+
     G4double kdif = 4 * CLHEP::pi * D * SmoluchowskiRadius * Avogadro;
 
-    if(pMolConfA == pMolConfB)
+    if (pMolConfA == pMolConfB)
     {
       kdif /= 2;
     }
-    G4double kact   = G4IRTUtils::GetKact(kobs, kdif);
+    G4double kact = G4IRTUtils::GetKact(kobs, kdif);
     G4double sumOfk = kact + kdif;
-    if(sumOfk != 0)
+    if (sumOfk != 0)
     {
       G4double rateFactor = kact / sumOfk;
-      if(G4UniformRand() > rateFactor)
+      if (G4UniformRand() > rateFactor)
       {
         return -1.0 * ps;
       }
       G4double Y = std::abs(G4RandGauss::shoot(0.0, std::sqrt(2)));
 
-      if(Y > 0)
+      if (Y > 0)
       {
         X = -(G4Log(G4UniformRand())) / Y;
       }
-      G4double f     = X * SmoluchowskiRadius * kdif / sumOfk;
+      G4double f = X * SmoluchowskiRadius * kdif / sumOfk;
       G4double irt_2 = (f * f) / D;
       return irt_1 + irt_2;
     }

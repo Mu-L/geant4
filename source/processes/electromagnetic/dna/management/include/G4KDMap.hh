@@ -30,8 +30,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -40,87 +40,78 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
 #ifndef G4ITMAPROOM_HH
 #define G4ITMAPROOM_HH
 
 #include <map>
-//#include <unordered_map>
-#include <vector>
-#include <deque>
-#include <cmath>
-#include <iostream>
-
+// #include <unordered_map>
 #include "G4Types.hh"
+
+#include <cmath>
+#include <deque>
+#include <iostream>
+#include <vector>
 
 class G4KDNode_Base;
 
 class __1DSortOut
 {
-public :
-  __1DSortOut(std::size_t dimension);
-  __1DSortOut(const __1DSortOut& right);
-  G4int GetDimension();
-  G4KDNode_Base* GetMidle(std::size_t& /*G4KDNode_deque*/);
+  public:
 
-  std::deque<G4KDNode_Base*>::iterator Insert(G4KDNode_Base*);
-  G4KDNode_Base* PopOutMiddle();
-  void Sort();
-  void Erase(std::deque<G4KDNode_Base*>::iterator &);
-  std::size_t Size()
-  {
-    return fContainer.size();
-  }
+    __1DSortOut(std::size_t dimension);
+    __1DSortOut(const __1DSortOut& right);
+    G4int GetDimension();
+    G4KDNode_Base* GetMidle(std::size_t& /*G4KDNode_deque*/);
 
-protected :
-  struct sortOutNDim
-  {
-     sortOutNDim(std::size_t dimension)
-     {
-  	   fDimension = dimension;
-     }
-     G4bool operator() (G4KDNode_Base* const& lhs, G4KDNode_Base* const& rhs);
-     std::size_t fDimension;
-  };
+    std::deque<G4KDNode_Base*>::iterator Insert(G4KDNode_Base*);
+    G4KDNode_Base* PopOutMiddle();
+    void Sort();
+    void Erase(std::deque<G4KDNode_Base*>::iterator&);
+    std::size_t Size() { return fContainer.size(); }
 
-  std::deque<G4KDNode_Base*> fContainer;
-  sortOutNDim fSortOutNDim;
+  protected:
+
+    struct sortOutNDim
+    {
+        sortOutNDim(std::size_t dimension) { fDimension = dimension; }
+        G4bool operator()(G4KDNode_Base* const& lhs, G4KDNode_Base* const& rhs);
+        std::size_t fDimension;
+    };
+
+    std::deque<G4KDNode_Base*> fContainer;
+    sortOutNDim fSortOutNDim;
 };
 
 class G4KDMap
 {
-public:
-  G4KDMap(std::size_t dimensions): fSortOut(dimensions, __1DSortOut(dimensions))
-  {
-        fIsSorted = false;
-//        for(std::size_t i = 0 ; i < dimensions ; ++i)
-//        {
-//            fSortOut[i] = new __1DSortOut(i);
-//        }
-  }
+  public:
 
-  void Insert(G4KDNode_Base* pos);
-  void Sort();
+    G4KDMap(std::size_t dimensions) : fSortOut(dimensions, __1DSortOut(dimensions))
+    {
+      fIsSorted = false;
+      //        for(std::size_t i = 0 ; i < dimensions ; ++i)
+      //        {
+      //            fSortOut[i] = new __1DSortOut(i);
+      //        }
+    }
 
-  G4KDNode_Base* PopOutMiddle(std::size_t dimension);
-  std::size_t GetDimension()
-  {
-      return fSortOut.size();
-  }
+    void Insert(G4KDNode_Base* pos);
+    void Sort();
 
-  std::size_t GetSize()
-  {
-      return fMap.size();
-  }
+    G4KDNode_Base* PopOutMiddle(std::size_t dimension);
+    std::size_t GetDimension() { return fSortOut.size(); }
 
-private:
-  G4bool fIsSorted;
-  std::vector<__1DSortOut> fSortOut;
-  std::map<G4KDNode_Base*, std::vector<std::deque<G4KDNode_Base*>::iterator>> fMap;
+    std::size_t GetSize() { return fMap.size(); }
 
-  // A mettre directement dans G4KDNode
+  private:
+
+    G4bool fIsSorted;
+    std::vector<__1DSortOut> fSortOut;
+    std::map<G4KDNode_Base*, std::vector<std::deque<G4KDNode_Base*>::iterator>> fMap;
+
+    // A mettre directement dans G4KDNode
 };
 
-
-#endif // G4ITMAPROOM_HH
+#endif  // G4ITMAPROOM_HH

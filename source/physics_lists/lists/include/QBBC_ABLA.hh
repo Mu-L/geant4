@@ -42,19 +42,20 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef QBBC_ABLA_h
-#define QBBC_ABLA_h 1
+#ifndef QBBC_ABLA_HH
+#define QBBC_ABLA_HH
 
-#include "globals.hh"
 #include "G4VModularPhysicsList.hh"
+#include "globals.hh"
 
-
-class QBBC_ABLA : public G4VModularPhysicsList {
+class QBBC_ABLA : public G4VModularPhysicsList
+{
   public:
-    explicit QBBC_ABLA( G4int ver = 1, const G4String& type = "QBBC_ABLA" );
+
+    explicit QBBC_ABLA(G4int ver = 1, const G4String& type = "QBBC_ABLA");
     virtual ~QBBC_ABLA() = default;
-    QBBC_ABLA( const QBBC_ABLA& ) = delete;
-    QBBC_ABLA& operator=( const QBBC_ABLA& right ) = delete;
+    QBBC_ABLA(const QBBC_ABLA&) = delete;
+    QBBC_ABLA& operator=(const QBBC_ABLA& right) = delete;
 };
 
 #endif

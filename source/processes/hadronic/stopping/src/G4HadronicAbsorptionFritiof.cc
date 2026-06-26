@@ -39,75 +39,70 @@
 //
 //---------------------------------------------------------------------------
 
-#include <iostream>
-
-#include "G4SystemOfUnits.hh"
 #include "G4HadronicAbsorptionFritiof.hh"
-#include "G4PreCompoundModel.hh"
-#include "G4GeneratorPrecompoundInterface.hh"
-#include "G4FTFModel.hh"
-#include "G4LundStringFragmentation.hh"
+
 #include "G4ExcitedStringDecay.hh"
-#include "G4TheoFSGenerator.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4ParticleTypes.hh"
+#include "G4FTFModel.hh"
+#include "G4GeneratorPrecompoundInterface.hh"
 #include "G4HadronicInteractionRegistry.hh"
 #include "G4HadronicParameters.hh"
+#include "G4LundStringFragmentation.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTypes.hh"
+#include "G4PreCompoundModel.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4TheoFSGenerator.hh"
+
+#include <iostream>
 
 // Constructor
-G4HadronicAbsorptionFritiof::
-G4HadronicAbsorptionFritiof( G4ParticleDefinition* pdef )
-  : G4HadronStoppingProcess( "hFritiofCaptureAtRest" ), 
-    pdefApplicable( pdef ) {
-  
-  G4TheoFSGenerator * theModel = new G4TheoFSGenerator( "FTFP" );
-  G4FTFModel * theStringModel = new G4FTFModel;
+G4HadronicAbsorptionFritiof::G4HadronicAbsorptionFritiof(G4ParticleDefinition* pdef)
+  : G4HadronStoppingProcess("hFritiofCaptureAtRest"), pdefApplicable(pdef)
+{
+  G4TheoFSGenerator* theModel = new G4TheoFSGenerator("FTFP");
+  G4FTFModel* theStringModel = new G4FTFModel;
   theStringModel->SetFragmentationModel(new G4ExcitedStringDecay());
 
   // Not a cascade - goes straight to Preco
-  G4HadronicInteraction* p =
-    G4HadronicInteractionRegistry::Instance()->FindModel("PRECO");
-  G4VPreCompoundModel * thePreEquilib = static_cast<G4VPreCompoundModel*>(p); 
-  if(! thePreEquilib) { thePreEquilib = new G4PreCompoundModel; }
+  G4HadronicInteraction* p = G4HadronicInteractionRegistry::Instance()->FindModel("PRECO");
+  G4VPreCompoundModel* thePreEquilib = static_cast<G4VPreCompoundModel*>(p);
+  if (!thePreEquilib)
+  {
+    thePreEquilib = new G4PreCompoundModel;
+  }
 
-  G4GeneratorPrecompoundInterface * theCascade = 
-    new G4GeneratorPrecompoundInterface( thePreEquilib ); 
+  G4GeneratorPrecompoundInterface* theCascade = new G4GeneratorPrecompoundInterface(thePreEquilib);
 
-  theModel->SetHighEnergyGenerator( theStringModel );
-  theModel->SetTransport( theCascade );
+  theModel->SetHighEnergyGenerator(theStringModel);
+  theModel->SetTransport(theCascade);
 
-  G4double theMin = 0.0*GeV;
+  G4double theMin = 0.0 * GeV;
   G4double theMax = G4HadronicParameters::Instance()->GetMaxEnergy();
-  theModel->SetMinEnergy( theMin );
-  theModel->SetMaxEnergy( theMax );
+  theModel->SetMinEnergy(theMin);
+  theModel->SetMaxEnergy(theMax);
 
-  RegisterMe( theModel );
+  RegisterMe(theModel);
 }
 
-G4HadronicAbsorptionFritiof::~G4HadronicAbsorptionFritiof() {
-}
+G4HadronicAbsorptionFritiof::~G4HadronicAbsorptionFritiof() {}
 
 // Applies to constructor-specified particle, or to all known cases
-G4bool G4HadronicAbsorptionFritiof::
-IsApplicable( const G4ParticleDefinition& particle ) {
-  return ( ( 0 == pdefApplicable && 
-             ( &particle == G4AntiProton::Definition()     ||
-               &particle == G4AntiNeutron::Definition()    ||
-               &particle == G4AntiLambda::Definition()     ||
-	       &particle == G4AntiSigmaZero::Definition()  ||
-	       &particle == G4AntiSigmaPlus::Definition()  ||
-               &particle == G4AntiXiZero::Definition()     ||
-               particle.GetBaryonNumber() < -1 ) )     // Anti-nuclei
-	   || ( &particle == pdefApplicable ) );
+G4bool G4HadronicAbsorptionFritiof::IsApplicable(const G4ParticleDefinition& particle)
+{
+  return (
+    (0 == pdefApplicable
+     && (&particle == G4AntiProton::Definition() || &particle == G4AntiNeutron::Definition()
+         || &particle == G4AntiLambda::Definition() || &particle == G4AntiSigmaZero::Definition()
+         || &particle == G4AntiSigmaPlus::Definition() || &particle == G4AntiXiZero::Definition()
+         || particle.GetBaryonNumber() < -1))  // Anti-nuclei
+    || (&particle == pdefApplicable));
 }
 
-
 // Documentation of purpose
-void G4HadronicAbsorptionFritiof::
-ProcessDescription( std::ostream& os ) const {
+void G4HadronicAbsorptionFritiof::ProcessDescription(std::ostream& os) const
+{
   os << "Stopping and absorption of anti_proton, anti_neutron, anti_lambda, \n"
      << "anti_sigma0, anti_sigma+, anti_xi0 and all anti-nuclei \n"
      << "using  Fritiof (FTF) string model.\n"
-     << "Geant4 PreCompound model is used for nuclear de-excitation."
-     << std::endl;
+     << "Geant4 PreCompound model is used for nuclear de-excitation." << std::endl;
 }

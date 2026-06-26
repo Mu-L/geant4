@@ -27,43 +27,38 @@
 // --------------------------------------------------------------------
 
 #include "G4VBiasingOperator.hh"
+
 #include "G4VBiasingOperation.hh"
 #include "G4VParticleChange.hh"
 
-G4MapCache< const G4LogicalVolume*, G4VBiasingOperator* > G4VBiasingOperator::fLogicalToSetupMap;
-G4VectorCache< G4VBiasingOperator* > G4VBiasingOperator::fOperators;
-G4Cache< G4BiasingOperatorStateNotifier* > G4VBiasingOperator::fStateNotifier(nullptr);
+G4MapCache<const G4LogicalVolume*, G4VBiasingOperator*> G4VBiasingOperator::fLogicalToSetupMap;
+G4VectorCache<G4VBiasingOperator*> G4VBiasingOperator::fOperators;
+G4Cache<G4BiasingOperatorStateNotifier*> G4VBiasingOperator::fStateNotifier(nullptr);
 
-G4VBiasingOperator::G4VBiasingOperator(const G4String& name)
-  : fName( name )
+G4VBiasingOperator::G4VBiasingOperator(const G4String& name) : fName(name)
 {
   fOperators.Push_back(this);
 
-  if ( fStateNotifier.Get() == nullptr )
-    fStateNotifier.Put( new G4BiasingOperatorStateNotifier() );
+  if (fStateNotifier.Get() == nullptr) fStateNotifier.Put(new G4BiasingOperatorStateNotifier());
 }
 
 void G4VBiasingOperator::AttachTo(const G4LogicalVolume* logical)
 {
   auto it = fLogicalToSetupMap.Find(logical);
-  if ( it == fLogicalToSetupMap.End() )
+  if (it == fLogicalToSetupMap.End())
   {
     fLogicalToSetupMap[logical] = this;
   }
-  else if ( (*it).second != this )
+  else if ((*it).second != this)
   {
     G4ExceptionDescription ed;
-    ed << "Biasing operator `" << GetName() 
-       << "' can not be attached to Logical volume `"
-       << logical->GetName() << "' which is already used by another operator !"
-       << G4endl;
-    G4Exception("G4VBiasingOperator::AttachTo(...)",
-                "BIAS.MNG.01", JustWarning, ed);
+    ed << "Biasing operator `" << GetName() << "' can not be attached to Logical volume `"
+       << logical->GetName() << "' which is already used by another operator !" << G4endl;
+    G4Exception("G4VBiasingOperator::AttachTo(...)", "BIAS.MNG.01", JustWarning, ed);
   }
 }
 
-const std::vector < G4VBiasingOperator* >&
-G4VBiasingOperator::GetBiasingOperators()
+const std::vector<G4VBiasingOperator*>& G4VBiasingOperator::GetBiasingOperators()
 {
   return fOperators.Get();
 }
@@ -71,133 +66,131 @@ G4VBiasingOperator::GetBiasingOperators()
 G4VBiasingOperator* G4VBiasingOperator::GetBiasingOperator(const G4LogicalVolume* logical)
 {
   auto it = fLogicalToSetupMap.Find(logical);
-  if ( it == fLogicalToSetupMap.End() ) { return nullptr; }
-  else  { return (*it).second; }
+  if (it == fLogicalToSetupMap.End())
+  {
+    return nullptr;
+  }
+  else
+  {
+    return (*it).second;
+  }
 }
 
-G4VBiasingOperation* G4VBiasingOperator::GetProposedOccurenceBiasingOperation(const G4Track* track, const G4BiasingProcessInterface* callingProcess)
+G4VBiasingOperation* G4VBiasingOperator::GetProposedOccurenceBiasingOperation(
+  const G4Track* track, const G4BiasingProcessInterface* callingProcess)
 {
   fOccurenceBiasingOperation = ProposeOccurenceBiasingOperation(track, callingProcess);
   return fOccurenceBiasingOperation;
 }
 
-G4VBiasingOperation* G4VBiasingOperator::GetProposedFinalStateBiasingOperation(const G4Track* track, const G4BiasingProcessInterface* callingProcess)
+G4VBiasingOperation* G4VBiasingOperator::GetProposedFinalStateBiasingOperation(
+  const G4Track* track, const G4BiasingProcessInterface* callingProcess)
 {
-  fFinalStateBiasingOperation = ProposeFinalStateBiasingOperation(track, callingProcess); 
+  fFinalStateBiasingOperation = ProposeFinalStateBiasingOperation(track, callingProcess);
   return fFinalStateBiasingOperation;
 }
 
-G4VBiasingOperation* G4VBiasingOperator::GetProposedNonPhysicsBiasingOperation(const G4Track* track, const G4BiasingProcessInterface* callingProcess)
+G4VBiasingOperation* G4VBiasingOperator::GetProposedNonPhysicsBiasingOperation(
+  const G4Track* track, const G4BiasingProcessInterface* callingProcess)
 {
   fNonPhysicsBiasingOperation = ProposeNonPhysicsBiasingOperation(track, callingProcess);
   return fNonPhysicsBiasingOperation;
 }
 
-void G4VBiasingOperator::
-ReportOperationApplied( const G4BiasingProcessInterface*  callingProcess,
-                              G4BiasingAppliedCase biasingCase,
-                              G4VBiasingOperation* operationApplied,
-                        const G4VParticleChange* particleChangeProduced )
+void G4VBiasingOperator::ReportOperationApplied(const G4BiasingProcessInterface* callingProcess,
+                                                G4BiasingAppliedCase biasingCase,
+                                                G4VBiasingOperation* operationApplied,
+                                                const G4VParticleChange* particleChangeProduced)
 {
   fPreviousBiasingAppliedCase = biasingCase;
-  fPreviousAppliedOccurenceBiasingOperation  = nullptr;
+  fPreviousAppliedOccurenceBiasingOperation = nullptr;
   fPreviousAppliedFinalStateBiasingOperation = nullptr;
   fPreviousAppliedNonPhysicsBiasingOperation = nullptr;
-  switch ( biasingCase )
+  switch (biasingCase)
   {
     case BAC_None:
       break;
     case BAC_NonPhysics:
-      fPreviousAppliedNonPhysicsBiasingOperation = operationApplied ;
+      fPreviousAppliedNonPhysicsBiasingOperation = operationApplied;
       break;
     case BAC_FinalState:
       fPreviousAppliedFinalStateBiasingOperation = operationApplied;
       break;
     case BAC_Occurence:
-      G4Exception("G4VBiasingOperator::ReportOperationApplied(...)",
-                  "BIAS.MNG.02", JustWarning,
+      G4Exception("G4VBiasingOperator::ReportOperationApplied(...)", "BIAS.MNG.02", JustWarning,
                   "Internal logic error, please report !");
       break;
     default:
-      G4Exception("G4VBiasingOperator::ReportOperationApplied(...)",
-                  "BIAS.MNG.03", JustWarning,
+      G4Exception("G4VBiasingOperator::ReportOperationApplied(...)", "BIAS.MNG.03", JustWarning,
                   "Internal logic error, please report !");
   }
-  OperationApplied( callingProcess, biasingCase, operationApplied, particleChangeProduced );
+  OperationApplied(callingProcess, biasingCase, operationApplied, particleChangeProduced);
 }
 
-void G4VBiasingOperator::
-ReportOperationApplied( const G4BiasingProcessInterface* callingProcess,
-                              G4BiasingAppliedCase biasingCase,
-                              G4VBiasingOperation* occurenceOperationApplied,
-                              G4double weightForOccurenceInteraction,
-                              G4VBiasingOperation* finalStateOperationApplied,
-                        const G4VParticleChange* particleChangeProduced )
+void G4VBiasingOperator::ReportOperationApplied(const G4BiasingProcessInterface* callingProcess,
+                                                G4BiasingAppliedCase biasingCase,
+                                                G4VBiasingOperation* occurenceOperationApplied,
+                                                G4double weightForOccurenceInteraction,
+                                                G4VBiasingOperation* finalStateOperationApplied,
+                                                const G4VParticleChange* particleChangeProduced)
 {
   fPreviousBiasingAppliedCase = biasingCase;
   fPreviousAppliedOccurenceBiasingOperation = occurenceOperationApplied;
   fPreviousAppliedFinalStateBiasingOperation = finalStateOperationApplied;
-  OperationApplied( callingProcess, biasingCase, occurenceOperationApplied, weightForOccurenceInteraction, finalStateOperationApplied, particleChangeProduced );
+  OperationApplied(callingProcess, biasingCase, occurenceOperationApplied,
+                   weightForOccurenceInteraction, finalStateOperationApplied,
+                   particleChangeProduced);
 }
 
-void G4VBiasingOperator::
-ExitingBiasing( const G4Track* track, const G4BiasingProcessInterface* callingProcess )
+void G4VBiasingOperator::ExitingBiasing(const G4Track* track,
+                                        const G4BiasingProcessInterface* callingProcess)
 {
-  ExitBiasing( track, callingProcess );
-  
+  ExitBiasing(track, callingProcess);
+
   // -- reset all data members:
-  fOccurenceBiasingOperation                  = nullptr ;
-  fFinalStateBiasingOperation                 = nullptr ;
-  fNonPhysicsBiasingOperation                 = nullptr ;
-  fPreviousProposedOccurenceBiasingOperation  = nullptr ;
-  fPreviousProposedFinalStateBiasingOperation = nullptr ;
-  fPreviousProposedNonPhysicsBiasingOperation = nullptr ;
-  fPreviousAppliedOccurenceBiasingOperation   = nullptr ;
-  fPreviousAppliedFinalStateBiasingOperation  = nullptr ;
-  fPreviousAppliedNonPhysicsBiasingOperation  = nullptr ;
-  fPreviousBiasingAppliedCase                 = BAC_None ;
+  fOccurenceBiasingOperation = nullptr;
+  fFinalStateBiasingOperation = nullptr;
+  fNonPhysicsBiasingOperation = nullptr;
+  fPreviousProposedOccurenceBiasingOperation = nullptr;
+  fPreviousProposedFinalStateBiasingOperation = nullptr;
+  fPreviousProposedNonPhysicsBiasingOperation = nullptr;
+  fPreviousAppliedOccurenceBiasingOperation = nullptr;
+  fPreviousAppliedFinalStateBiasingOperation = nullptr;
+  fPreviousAppliedNonPhysicsBiasingOperation = nullptr;
+  fPreviousBiasingAppliedCase = BAC_None;
 }
 
 // -- dummy empty implementations to allow letting arguments visible in the .hh
 // -- but avoiding annoying warning messages about unused variables
 // -- methods to inform operator that its biasing control is over:
-void G4VBiasingOperator::
-ExitBiasing( const G4Track*, const G4BiasingProcessInterface*)
+void G4VBiasingOperator::ExitBiasing(const G4Track*, const G4BiasingProcessInterface*) {}
+void G4VBiasingOperator::OperationApplied(const G4BiasingProcessInterface*, G4BiasingAppliedCase,
+                                          G4VBiasingOperation*, const G4VParticleChange*)
 {}
-void G4VBiasingOperator::
-OperationApplied( const G4BiasingProcessInterface*, G4BiasingAppliedCase,
-                  G4VBiasingOperation*, const G4VParticleChange* )
-{
-}
-void G4VBiasingOperator::
-OperationApplied( const G4BiasingProcessInterface*, G4BiasingAppliedCase,
-                  G4VBiasingOperation*, G4double,
-                  G4VBiasingOperation*, const G4VParticleChange* )
-{
-}
+void G4VBiasingOperator::OperationApplied(const G4BiasingProcessInterface*, G4BiasingAppliedCase,
+                                          G4VBiasingOperation*, G4double, G4VBiasingOperation*,
+                                          const G4VParticleChange*)
+{}
 
 // ----------------------------------------------------------------------------
 // -- state machine to get biasing operators messaged at the beginning of runs:
 // ----------------------------------------------------------------------------
 
-G4BiasingOperatorStateNotifier::G4BiasingOperatorStateNotifier()
-: G4VStateDependent()
+G4BiasingOperatorStateNotifier::G4BiasingOperatorStateNotifier() : G4VStateDependent()
 {
-  fPreviousState =  G4State_PreInit;
+  fPreviousState = G4State_PreInit;
 }
 
-G4bool G4BiasingOperatorStateNotifier::
-Notify( G4ApplicationState requestedState )
+G4bool G4BiasingOperatorStateNotifier::Notify(G4ApplicationState requestedState)
 {
-  if ( ( fPreviousState == G4State_Idle )
-    && ( requestedState == G4State_GeomClosed ) )
+  if ((fPreviousState == G4State_Idle) && (requestedState == G4State_GeomClosed))
   {
-    for ( auto i = 0; i < (G4int)G4VBiasingOperator::fOperators.Size(); ++i )
+    for (auto i = 0; i < (G4int)G4VBiasingOperator::fOperators.Size(); ++i)
     {
       G4VBiasingOperator::fOperators[i]->StartRun();
     }
   }
   fPreviousState = requestedState;
-  
+
   return true;
 }

@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4SigmacPlus_h
-#define G4SigmacPlus_h 1
+#ifndef G4SIGMACPLUS_HH
+#define G4SIGMACPLUS_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4SigmacPlus : public G4ParticleDefinition
 {
   public:
+
     static G4SigmacPlus* Definition();
     static G4SigmacPlus* SigmacPlusDefinition();
     static G4SigmacPlus* SigmacPlus();
 
   private:
+
     G4SigmacPlus() {}
     ~G4SigmacPlus() override = default;
 

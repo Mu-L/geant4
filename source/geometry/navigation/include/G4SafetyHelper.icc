@@ -28,27 +28,24 @@
 // Author:  John Apostolakis (CERN), 5 July 2006
 // ----------------------------------------------------------------------------
 
-inline G4int G4SafetyHelper::SetVerboseLevel( G4int lev )
+inline G4int G4SafetyHelper::SetVerboseLevel(G4int lev)
 {
   G4int oldlv = fVerbose;
   fVerbose = lev;
   return oldlv;
-} 
+}
 
-inline
-void G4SafetyHelper::EnableParallelNavigation(G4bool parallel) 
+inline void G4SafetyHelper::EnableParallelNavigation(G4bool parallel)
 {
   fUseParallelGeometries = parallel;
-} 
+}
 
-inline
-G4VPhysicalVolume* G4SafetyHelper::GetWorldVolume()
+inline G4VPhysicalVolume* G4SafetyHelper::GetWorldVolume()
 {
   return fpMassNavigator->GetWorldVolume();
 }
 
-inline
-void G4SafetyHelper::SetCurrentSafety(G4double val, const G4ThreeVector& pos)
+inline void G4SafetyHelper::SetCurrentSafety(G4double val, const G4ThreeVector& pos)
 {
   fLastSafety = val;
   fLastSafetyPosition = pos;

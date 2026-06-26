@@ -31,12 +31,12 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrVolumeAssembly_hh
-#define G4tgrVolumeAssembly_hh 1
+#ifndef G4TGRVOLUMEASSEMBLY_HH
+#define G4TGRVOLUMEASSEMBLY_HH
 
-#include "globals.hh"
-#include "G4tgrVolume.hh"
 #include "G4ThreeVector.hh"
+#include "G4tgrVolume.hh"
+#include "globals.hh"
 
 class G4tgrVolumeAssembly : public G4tgrVolume
 {
@@ -47,18 +47,14 @@ class G4tgrVolumeAssembly : public G4tgrVolume
     ~G4tgrVolumeAssembly();
 
     virtual G4tgrPlace* AddPlace(const std::vector<G4String>& wl);
-      // Add a position with the data read from a ':place_assembly' tag
+    // Add a position with the data read from a ':place_assembly' tag
 
-    const G4String& GetComponentName(G4int ii) const
-    {
-      return theComponentNames[ii];
-    }
-    const G4String& GetComponentRM(G4int ii) const {return theComponentRMs[ii];}
-    G4ThreeVector GetComponentPos(G4int ii) const {return theComponentPos[ii];}
+    const G4String& GetComponentName(G4int ii) const { return theComponentNames[ii]; }
+    const G4String& GetComponentRM(G4int ii) const { return theComponentRMs[ii]; }
+    G4ThreeVector GetComponentPos(G4int ii) const { return theComponentPos[ii]; }
     G4int GetNoComponents() const { return (G4int)theComponentNames.size(); }
 
-    friend std::ostream& operator<<(std::ostream& os,
-                                    const G4tgrVolumeAssembly& obj);
+    friend std::ostream& operator<<(std::ostream& os, const G4tgrVolumeAssembly& obj);
 
   protected:
 

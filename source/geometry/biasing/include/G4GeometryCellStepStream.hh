@@ -37,6 +37,7 @@
 
 /**
  * @brief Declarations of streams for G4GeometryCell and G4GeometryCellStep.
+ * @ingroup geometry_biasing
  */
 
 std::ostream& operator<<(std::ostream& out, const G4GeometryCell& tk);

@@ -27,11 +27,12 @@
 //
 // Author: Makoto Asai
 // --------------------------------------------------------------------
-#ifndef G4ScoringProbe_h
-#define G4ScoringProbe_h 1
+#ifndef G4SCORINGPROBE_HH
+#define G4SCORINGPROBE_HH
 
-#include "globals.hh"
+#include "G4RotationMatrix.hh"
 #include "G4VScoringMesh.hh"
+#include "globals.hh"
 
 #include <vector>
 
@@ -40,45 +41,44 @@ class G4Material;
 
 class G4ScoringProbe : public G4VScoringMesh
 {
- public:
+  public:
 
-  G4ScoringProbe(const G4String& lvName, G4double half_size,
-                 G4bool checkOverlap = false);
-  ~G4ScoringProbe() override = default;
+    G4ScoringProbe(const G4String& lvName, G4double half_size, G4bool checkOverlap = false);
+    ~G4ScoringProbe() override = default;
 
-  void LocateProbe(G4ThreeVector pos)
-  {
-    posVec.push_back(pos);
-    G4int nbin[] = { static_cast<G4int>(posVec.size()), 1, 1 };
-    SetNumberOfSegments(nbin);
-  }
-  G4int GetNumberOfProbes() const { return (G4int)posVec.size(); }
-  void SetProbeSize(G4double val) { probeSize = val; }
-  G4double GetProbeSize() const { return probeSize; }
-  G4bool SetMaterial(G4String val);
+    void LocateProbe(G4ThreeVector pos)
+    {
+      posVec.push_back(pos);
+      G4int nbin[] = {static_cast<G4int>(posVec.size()), 1, 1};
+      SetNumberOfSegments(nbin);
+    }
+    G4int GetNumberOfProbes() const { return (G4int)posVec.size(); }
+    void SetProbeSize(G4double val) { probeSize = val; }
+    G4double GetProbeSize() const { return probeSize; }
+    G4bool SetMaterial(G4String val);
 
-  void List() const override;
+    void List() const override;
 
-  //++++++++++ visualization method not yet implemented
-  void Draw(RunScore* /*map*/, G4VScoreColorMap* /*colorMap*/,
-            G4int /*axflg=111*/) override {}
-  void DrawColumn(RunScore* /*map*/, G4VScoreColorMap* /*colorMap*/,
-                  G4int /*idxProj*/, G4int /*idxColumn*/) override {}
+    //++++++++++ visualization method not yet implemented
+    void Draw(RunScore* map, G4VScoreColorMap* colorMap, G4int axflg = 111) override;
+    void DrawColumn(RunScore* /*map*/, G4VScoreColorMap* /*colorMap*/, G4int /*idxProj*/,
+                    G4int /*idxColumn*/) override
+    {}
 
- protected:
+  protected:
 
-  // construct scoring volume
-  void SetupGeometry(G4VPhysicalVolume*) override;
+    // construct scoring volume
+    void SetupGeometry(G4VPhysicalVolume*) override;
 
- protected:
+  protected:
 
-  G4String logVolName;
-  std::vector<G4ThreeVector> posVec;
-  G4double probeSize;
-  G4bool chkOverlap;
-  G4String layeredMaterialName;
-  G4Material* layeredMaterial;
-  G4String regName;
+    G4String logVolName;
+    std::vector<G4ThreeVector> posVec;
+    G4double probeSize;
+    G4bool chkOverlap;
+    G4String layeredMaterialName;
+    G4Material* layeredMaterial;
+    G4String regName;
 };
 
 #endif

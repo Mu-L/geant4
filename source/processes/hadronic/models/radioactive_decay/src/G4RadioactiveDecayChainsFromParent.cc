@@ -26,31 +26,24 @@
 
 #include "G4RadioactiveDecayChainsFromParent.hh"
 
+G4RadioactiveDecayChainsFromParent::G4RadioactiveDecayChainsFromParent() {}
 
-G4RadioactiveDecayChainsFromParent::G4RadioactiveDecayChainsFromParent()
-{}
-
-
-G4RadioactiveDecayChainsFromParent::
-G4RadioactiveDecayChainsFromParent(const G4RadioactiveDecayChainsFromParent& right)
+G4RadioactiveDecayChainsFromParent::G4RadioactiveDecayChainsFromParent(
+  const G4RadioactiveDecayChainsFromParent& right)
 {
   ionName = right.ionName;
   itsRates = right.itsRates;
 }
 
-
 G4RadioactiveDecayChainsFromParent&
 G4RadioactiveDecayChainsFromParent::operator=(const G4RadioactiveDecayChainsFromParent& right)
 {
-  if (this != &right) { 
+  if (this != &right)
+  {
     ionName = right.ionName;
     itsRates = right.itsRates;
   }
   return *this;
 }
 
-
-G4RadioactiveDecayChainsFromParent::~G4RadioactiveDecayChainsFromParent()
-{} 
-
-
+G4RadioactiveDecayChainsFromParent::~G4RadioactiveDecayChainsFromParent() {}

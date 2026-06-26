@@ -38,9 +38,10 @@
 // Author: Joanna Weng - 02.2004
 // ---------------------------------------------------------------
 #ifndef GFlashHomoShowerParameterisation_h
-#define GFlashHomoShowerParameterisation_h 1
+#define GFlashHomoShowerParameterisation_h
 
 #include "globals.hh"
+
 #include "GVFlashHomoShowerTuning.hh"
 #include "GVFlashShowerParameterisation.hh"
 
@@ -49,6 +50,7 @@ class G4Material;
 class GFlashHomoShowerParameterisation : public GVFlashShowerParameterisation
 {
   public:  // with description
+
     GFlashHomoShowerParameterisation(G4Material* aMat, GVFlashHomoShowerTuning* aPar = 0);
     ~GFlashHomoShowerParameterisation();
 
@@ -63,21 +65,27 @@ class GFlashHomoShowerParameterisation : public GVFlashShowerParameterisation
     G4double GeneratePhi();
     G4double GenerateRadius(G4int ispot, G4double Energy, G4double LongitudinalPosition);
     G4double GenerateExponential(G4double Energy);
-    void SetMaterial(G4Material* mat);
 
     inline G4double GetAveR99() { return (3.5 * Rm); }
     inline G4double GetAveR90() { return (1.5 * Rm); }  // ok
 
-    inline G4double GetAveTmx() {return (X0 * std::exp(AveLogTmaxh));}
-    inline G4double GetAveT99() {return (X0 * AveLogTmaxh/(AveLogAlphah-1.00));}
-    inline G4double GetAveT90() {return (2.5* X0*std::exp( AveLogTmaxh) );}
+    inline G4double GetAveTmx() { return (X0 * std::exp(AveLogTmaxh)); }
+    inline G4double GetAveT99() { return (X0 * AveLogTmaxh / (AveLogAlphah - 1.00)); }
+    inline G4double GetAveT90() { return (2.5 * X0 * std::exp(AveLogTmaxh)); }
 
-    inline   G4double GetNspot(){ return NSpot;}
+    inline G4double GetNspot() { return NSpot; }
     inline G4double GetX0() { return X0; }
     inline G4double GetEc() { return Ec; }
     inline G4double GetRm() { return Rm; }
 
   private:
+
+    void SetMaterial(G4Material* mat);
+
+    void ComputeLongitudinalParameters(G4double y);
+    void GenerateEnergyProfile(G4double y);
+    void GenerateNSpotProfile(G4double y);
+
     G4Material* material;
 
     // Resolution
@@ -95,10 +103,6 @@ class GFlashHomoShowerParameterisation : public GVFlashShowerParameterisation
     G4double ParSigLogT1, ParSigLogT2;
     G4double ParSigLogA1, ParSigLogA2;
     G4double ParRho1, ParRho2;
-
-    void ComputeLongitudinalParameters(G4double y);
-    void GenerateEnergyProfile(G4double y);
-    void GenerateNSpotProfile(G4double y);
 
     // Radial Coefficients
     G4double ParRC1, ParRC2, ParRC3, ParRC4;
@@ -127,4 +131,3 @@ class GFlashHomoShowerParameterisation : public GVFlashShowerParameterisation
 };
 
 #endif
-

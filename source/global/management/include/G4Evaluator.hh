@@ -30,6 +30,7 @@
 #define G4EVALUATOR_HH
 
 #include "globals.hh"
+
 #include <CLHEP/Evaluator/Evaluator.h>
 
 using G4Evaluator = HepTool::Evaluator;

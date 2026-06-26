@@ -23,18 +23,16 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4INCLXXNeutronBuilder_h
-#define G4INCLXXNeutronBuilder_h 1
-
-#include "globals.hh"
+#ifndef G4INCLXXNEUTRONBUILDER_HH
+#define G4INCLXXNEUTRONBUILDER_HH
 
 #include "G4HadronElasticProcess.hh"
-#include "G4NeutronFissionProcess.hh"
+#include "G4INCLXXInterface.hh"
 #include "G4NeutronCaptureProcess.hh"
+#include "G4NeutronFissionProcess.hh"
 #include "G4VNeutronBuilder.hh"
-
-#include "G4INCLXXInterface.hh"   
 #include "G4VPreCompoundModel.hh"
+#include "globals.hh"
 
 /**
  * Builder for neutron processes using the INCL++ intra-nuclear
@@ -52,35 +50,37 @@
  */
 class G4INCLXXNeutronBuilder : public G4VNeutronBuilder
 {
-  public: 
+  public:
+
     G4INCLXXNeutronBuilder();
     virtual ~G4INCLXXNeutronBuilder() {}
 
-  public: 
-    virtual void Build(G4HadronElasticProcess *) final override {}
-    virtual void Build(G4NeutronFissionProcess *) final override {}
-    virtual void Build(G4NeutronCaptureProcess *) final override {}
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
-    virtual void SetMaxEnergy(G4double aM) final override {theMax = aM;}
+  public:
 
-    void SetMinPreCompoundEnergy(G4double aM) {thePreCompoundMin = aM;}
-    void SetMaxPreCompoundEnergy(G4double aM) {thePreCompoundMax = aM;}
+    virtual void Build(G4HadronElasticProcess*) final override {}
+    virtual void Build(G4NeutronFissionProcess*) final override {}
+    virtual void Build(G4NeutronCaptureProcess*) final override {}
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
-    void UsePreCompound(const G4bool w) { withPreCompound = w;}
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+    virtual void SetMaxEnergy(G4double aM) final override { theMax = aM; }
 
-    using G4VNeutronBuilder::Build; //Prevent compiler warning
+    void SetMinPreCompoundEnergy(G4double aM) { thePreCompoundMin = aM; }
+    void SetMaxPreCompoundEnergy(G4double aM) { thePreCompoundMax = aM; }
+
+    void UsePreCompound(const G4bool w) { withPreCompound = w; }
+
+    using G4VNeutronBuilder::Build;  // Prevent compiler warning
+
   private:
-    G4INCLXXInterface * theModel;    
-    G4VPreCompoundModel * thePreCompoundModel;    
+
+    G4INCLXXInterface* theModel;
+    G4VPreCompoundModel* thePreCompoundModel;
     G4bool withPreCompound;
     G4double thePreCompoundMin;
     G4double thePreCompoundMax;
     G4double theMin;
     G4double theMax;
-
 };
 
 #endif
-

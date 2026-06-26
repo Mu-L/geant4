@@ -37,80 +37,89 @@
 // 21-04-16, created by E.Bagli
 
 #ifndef G4ATOMICFORMFACTOR_HH
-#define G4ATOMICFORMFACTOR_HH 1
+#define G4ATOMICFORMFACTOR_HH
 
 #include "G4Exp.hh"
-#include <CLHEP/Units/PhysicalConstants.h>
 #include "globals.hh"
+
+#include <CLHEP/Units/PhysicalConstants.h>
 
 #include <map>
 #include <vector>
 
 class G4AtomicFormFactor
 {
- public:
-  static G4AtomicFormFactor* GetManager()
-  {
-    if (s_G4AtomicFormFactorManager == nullptr) {
-      s_G4AtomicFormFactorManager = new G4AtomicFormFactor();
+  public:
+
+    static G4AtomicFormFactor* GetManager()
+    {
+      if (s_G4AtomicFormFactorManager == nullptr)
+      {
+        s_G4AtomicFormFactorManager = new G4AtomicFormFactor();
+      }
+      return s_G4AtomicFormFactorManager;
     }
-    return s_G4AtomicFormFactorManager;
-  }
 
-  G4double Get(G4double kScatteringVector, G4int Z, G4int charge = 0)
-  {
-    if (loadedIndex != GetIndex(Z, charge)) {
-      LoadCoefficiencts(GetIndex(Z, charge));
+    G4double Get(G4double kScatteringVector, G4int Z, G4int charge = 0)
+    {
+      if (loadedIndex != GetIndex(Z, charge))
+      {
+        LoadCoefficiencts(GetIndex(Z, charge));
+      }
+      G4double result = 0.;
+      // Convert k from mm^-1 to Å^-1 and divide by 4π , then square.
+      const G4double kVecOn4Pi = (kScatteringVector * 1.0e-7) * (1.0 / (4.0 * CLHEP::pi));
+      G4double kVecOn4PiSquared = kVecOn4Pi * kVecOn4Pi;  // (k/(4π))^2 in Å^-2
+
+      for (unsigned int i0 = 0; i0 < 4; i0++)
+      {
+        result += theCoefficients[i0 * 2] * G4Exp(-theCoefficients[i0 * 2 + 1] * kVecOn4PiSquared);
+      }
+      result += theCoefficients[8];
+      return result;
     }
-    G4double result = 0.;
-    // Convert k from mm^-1 to Å^-1 and divide by 4π , then square.
-    const G4double kVecOn4Pi = (kScatteringVector * 1.0e-7) * (1.0 / (4.0 * CLHEP::pi));
-    G4double kVecOn4PiSquared = kVecOn4Pi * kVecOn4Pi;  // (k/(4π))^2 in Å^-2
 
-    for (unsigned int i0 = 0; i0 < 4; i0++) {
-      result += theCoefficients[i0 * 2] * G4Exp(-theCoefficients[i0 * 2 + 1] * kVecOn4PiSquared);
+  protected:
+
+    G4AtomicFormFactor();
+    ~G4AtomicFormFactor() = default;
+
+  private:
+
+    void InsertCoefficients(G4int index, const std::vector<G4double>& aDoubleVec)
+    {
+      theCoefficientsMap.insert(std::pair<G4int, std::vector<G4double>>(index, aDoubleVec));
     }
-    result += theCoefficients[8];
-    return result;
-  }
 
- protected:
-  G4AtomicFormFactor(); 
-  ~G4AtomicFormFactor() = default;
-
- private:
-  void InsertCoefficients(G4int index, const std::vector<G4double>& aDoubleVec)
-  {
-    theCoefficientsMap.insert(std::pair<G4int, std::vector<G4double>>(index, aDoubleVec));
-  }
-
-  // LoadCoefficiencts() method allows the evaluation of the atomic form
-  // factor coefficients and the storage in theCoefficients.
-  // If theCoefficients are already correct, no need to get new ones
-  // Reference: International Tables for Crystallography (2006).
-  // Vol. C, ch. 6.1, pp. 554-595
-  // doi: 10.1107/97809553602060000600
-  // Chapter 6.1. Intensity of diffracted intensities
-  // IUCr Eq. 6.1.1.15, Coefficients Table 6.1.1.4
-  void LoadCoefficiencts(G4int index)
-  {
-    loadedIndex = index;
-    for (unsigned int i0 = 0; i0 < 9; i0++) {
-      theCoefficients[i0] = theCoefficientsMap[index][i0];
+    // LoadCoefficiencts() method allows the evaluation of the atomic form
+    // factor coefficients and the storage in theCoefficients.
+    // If theCoefficients are already correct, no need to get new ones
+    // Reference: International Tables for Crystallography (2006).
+    // Vol. C, ch. 6.1, pp. 554-595
+    // doi: 10.1107/97809553602060000600
+    // Chapter 6.1. Intensity of diffracted intensities
+    // IUCr Eq. 6.1.1.15, Coefficients Table 6.1.1.4
+    void LoadCoefficiencts(G4int index)
+    {
+      loadedIndex = index;
+      for (unsigned int i0 = 0; i0 < 9; i0++)
+      {
+        theCoefficients[i0] = theCoefficientsMap[index][i0];
+      }
     }
-  }
 
-  // Get() function gives back the Atomic Form Factor of the Z material
-  inline G4int GetIndex(G4int Z, G4int charge = 0) { return Z * 100 + charge; }
+    // Get() function gives back the Atomic Form Factor of the Z material
+    inline G4int GetIndex(G4int Z, G4int charge = 0) { return Z * 100 + charge; }
 
- private:
-  inline static G4AtomicFormFactor* s_G4AtomicFormFactorManager = nullptr;
+  private:
 
-  // theCoefficientsMap stores the coefficients for the form factor
-  // calculations. It can be loaded only by LoadCoefficiencts()
-  // and accessed by theCoefficients[].
-  std::map<G4int, std::vector<G4double>> theCoefficientsMap;
-  G4double theCoefficients[9];
-  G4int loadedIndex;
+    inline static G4AtomicFormFactor* s_G4AtomicFormFactorManager = nullptr;
+
+    // theCoefficientsMap stores the coefficients for the form factor
+    // calculations. It can be loaded only by LoadCoefficiencts()
+    // and accessed by theCoefficients[].
+    std::map<G4int, std::vector<G4double>> theCoefficientsMap;
+    G4double theCoefficients[9];
+    G4int loadedIndex;
 };
 #endif

@@ -36,8 +36,8 @@
 //
 // Author: Makoto Asai
 // ---------------------------------------------------------------------
-#ifndef G4VSensitiveDetector_h
-#define G4VSensitiveDetector_h 1
+#ifndef G4VSENSITIVEDETECTOR_HH
+#define G4VSENSITIVEDETECTOR_HH
 
 #include "G4CollectionNameVector.hh"
 #include "G4HCofThisEvent.hh"
@@ -49,99 +49,104 @@
 
 class G4VSensitiveDetector
 {
- public:
-  // Constructors. The user's concrete class must use one of these constructors
-  // by the constructor initializer of the derived class. The name of
-  // the sensitive detector must be unique.
-  explicit G4VSensitiveDetector(const G4String& name);
-  G4VSensitiveDetector(const G4VSensitiveDetector& right);
-  G4VSensitiveDetector& operator=(const G4VSensitiveDetector& right);
-  virtual ~G4VSensitiveDetector() = default;
+  public:
 
-  G4bool operator==(const G4VSensitiveDetector& right) const;
-  G4bool operator!=(const G4VSensitiveDetector& right) const;
+    // Constructors. The user's concrete class must use one of these constructors
+    // by the constructor initializer of the derived class. The name of
+    // the sensitive detector must be unique.
+    explicit G4VSensitiveDetector(const G4String& name);
+    G4VSensitiveDetector(const G4VSensitiveDetector& right);
+    G4VSensitiveDetector& operator=(const G4VSensitiveDetector& right);
+    virtual ~G4VSensitiveDetector() = default;
 
-  //  These two methods are invoked at the begining and at the end of each
-  // event. The hits collection(s) created by this sensitive detector must
-  // be set to the G4HCofThisEvent object at one of these two methods.
-  virtual void Initialize(G4HCofThisEvent*) {}
-  virtual void EndOfEvent(G4HCofThisEvent*) {}
+    G4bool operator==(const G4VSensitiveDetector& right) const;
+    G4bool operator!=(const G4VSensitiveDetector& right) const;
 
-  //  This method is invoked if the event abortion is occured. Hits collections
-  // created but not beibg set to G4HCofThisEvent at the event should be
-  // deleted. Collection(s) which have already set to G4HCofThisEvent will be
-  // deleted automatically.
-  virtual void clear() {}
+    //  These two methods are invoked at the begining and at the end of each
+    // event. The hits collection(s) created by this sensitive detector must
+    // be set to the G4HCofThisEvent object at one of these two methods.
+    virtual void Initialize(G4HCofThisEvent*) {}
+    virtual void EndOfEvent(G4HCofThisEvent*) {}
 
-  virtual void DrawAll() {}
-  virtual void PrintAll() {}
+    //  This method is invoked if the event abortion is occured. Hits collections
+    // created but not beibg set to G4HCofThisEvent at the event should be
+    // deleted. Collection(s) which have already set to G4HCofThisEvent will be
+    // deleted automatically.
+    virtual void clear() {}
 
-  //  This is the public method invoked by G4SteppingManager for generating
-  // hit(s). The actual user's implementation for generating hit(s) must be
-  // implemented in GenerateHits() virtual protected method. This method
-  // MUST NOT be overriden.
-  inline G4bool Hit(G4Step* aStep)
-  {
-    G4TouchableHistory* ROhis = nullptr;
-    if (! isActive()) return false;
-    if (filter != nullptr) {
-      if (! (filter->Accept(aStep))) return false;
+    virtual void DrawAll() {}
+    virtual void PrintAll() {}
+
+    //  This is the public method invoked by G4SteppingManager for generating
+    // hit(s). The actual user's implementation for generating hit(s) must be
+    // implemented in GenerateHits() virtual protected method. This method
+    // MUST NOT be overriden.
+    inline G4bool Hit(G4Step* aStep)
+    {
+      G4TouchableHistory* ROhis = nullptr;
+      if (!isActive()) return false;
+      if (filter != nullptr)
+      {
+        if (!(filter->Accept(aStep))) return false;
+      }
+      if (ROgeometry != nullptr)
+      {
+        if (!(ROgeometry->CheckROVolume(aStep, ROhis))) return false;
+      }
+      return ProcessHits(aStep, ROhis);
     }
-    if (ROgeometry != nullptr) {
-      if (! (ROgeometry->CheckROVolume(aStep, ROhis))) return false;
-    }
-    return ProcessHits(aStep, ROhis);
-  }
 
-  //  Register the Readout geometry.
-  inline void SetROgeometry(G4VReadOutGeometry* value) { ROgeometry = value; }
+    //  Register the Readout geometry.
+    inline void SetROgeometry(G4VReadOutGeometry* value) { ROgeometry = value; }
 
-  //  Register a filter
-  inline void SetFilter(G4VSDFilter* value) { filter = value; }
+    //  Register a filter
+    inline void SetFilter(G4VSDFilter* value) { filter = value; }
 
-  inline G4int GetNumberOfCollections() const { return G4int(collectionName.size()); }
-  inline const G4String& GetCollectionName(G4int id) const { return collectionName[id]; }
-  inline void SetVerboseLevel(G4int vl) { verboseLevel = vl; }
-  inline void Activate(G4bool activeFlag) { active = activeFlag; }
-  inline G4bool isActive() const { return active; }
-  inline const G4String& GetName() const { return SensitiveDetectorName; }
-  inline const G4String& GetPathName() const { return thePathName; }
-  inline const G4String& GetFullPathName() const { return fullPathName; }
-  inline G4VReadOutGeometry* GetROgeometry() const { return ROgeometry; }
-  inline G4VSDFilter* GetFilter() const { return filter; }
+    inline G4int GetNumberOfCollections() const { return G4int(collectionName.size()); }
+    inline const G4String& GetCollectionName(G4int id) const { return collectionName[id]; }
+    inline void SetVerboseLevel(G4int vl) { verboseLevel = vl; }
+    inline void Activate(G4bool activeFlag) { active = activeFlag; }
+    inline G4bool isActive() const { return active; }
+    inline const G4String& GetName() const { return SensitiveDetectorName; }
+    inline const G4String& GetPathName() const { return thePathName; }
+    inline const G4String& GetFullPathName() const { return fullPathName; }
+    inline G4VReadOutGeometry* GetROgeometry() const { return ROgeometry; }
+    inline G4VSDFilter* GetFilter() const { return filter; }
 
-  virtual G4VSensitiveDetector* Clone() const;
+    virtual G4VSensitiveDetector* Clone() const;
 
- protected:  // with description
-  //  The user MUST implement this method for generating hit(s) using the
-  // information of G4Step object. Note that the volume and the position
-  // information is kept in PreStepPoint of G4Step.
-  //  Be aware that this method is a protected method and it sill be invoked
-  // by Hit() method of Base class after Readout geometry associated to the
-  // sensitive detector is handled.
-  //  "ROhist" will be given only is a Readout geometry is defined to this
-  // sensitive detector. The G4TouchableHistory object of the tracking geometry
-  // is stored in the PreStepPoint object of G4Step.
-  virtual G4bool ProcessHits(G4Step* aStep, G4TouchableHistory* ROhist) = 0;
+  protected:  // with description
 
-  //  This is a utility method which returns the hits collection ID of the
-  // "i"-th collection. "i" is the order (starting with zero) of the collection
-  // whose name is stored to the collectionName protected vector.
-  virtual G4int GetCollectionID(G4int i);
+    //  The user MUST implement this method for generating hit(s) using the
+    // information of G4Step object. Note that the volume and the position
+    // information is kept in PreStepPoint of G4Step.
+    //  Be aware that this method is a protected method and it sill be invoked
+    // by Hit() method of Base class after Readout geometry associated to the
+    // sensitive detector is handled.
+    //  "ROhist" will be given only is a Readout geometry is defined to this
+    // sensitive detector. The G4TouchableHistory object of the tracking geometry
+    // is stored in the PreStepPoint object of G4Step.
+    virtual G4bool ProcessHits(G4Step* aStep, G4TouchableHistory* ROhist) = 0;
 
- protected:
-  //  This protected name vector must be filled at the constructor of the user's
-  // concrete class for registering the name(s) of hits collection(s) being
-  // created by this particular sensitive detector.
-  G4CollectionNameVector collectionName;
+    //  This is a utility method which returns the hits collection ID of the
+    // "i"-th collection. "i" is the order (starting with zero) of the collection
+    // whose name is stored to the collectionName protected vector.
+    virtual G4int GetCollectionID(G4int i);
 
-  G4String SensitiveDetectorName;  // detector name
-  G4String thePathName;  // directory path
-  G4String fullPathName;  // path + detector name
-  G4int verboseLevel{0};
-  G4bool active{true};
-  G4VReadOutGeometry* ROgeometry{nullptr};
-  G4VSDFilter* filter{nullptr};
+  protected:
+
+    //  This protected name vector must be filled at the constructor of the user's
+    // concrete class for registering the name(s) of hits collection(s) being
+    // created by this particular sensitive detector.
+    G4CollectionNameVector collectionName;
+
+    G4String SensitiveDetectorName;  // detector name
+    G4String thePathName;  // directory path
+    G4String fullPathName;  // path + detector name
+    G4int verboseLevel{0};
+    G4bool active{true};
+    G4VReadOutGeometry* ROgeometry{nullptr};
+    G4VSDFilter* filter{nullptr};
 };
 
 #endif

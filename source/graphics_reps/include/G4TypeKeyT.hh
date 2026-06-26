@@ -33,20 +33,24 @@
 
 #include "G4TypeKey.hh"
 
-template <typename T>
-class G4TypeKeyT : public G4TypeKey { 
+template<typename T>
+class G4TypeKeyT : public G4TypeKey
+{
+  public:
 
-public:
-  
-  G4TypeKeyT() {
-    static G4ThreadLocal Key *pkey = nullptr ;
-    if (pkey == nullptr) { pkey = new Key; *pkey = NextKey(); }
-    Key &key = *pkey;
-    fMyKey = key;
-  }
+    G4TypeKeyT()
+    {
+      static G4ThreadLocal Key* pkey = nullptr;
+      if (pkey == nullptr)
+      {
+        pkey = new Key;
+        *pkey = NextKey();
+      }
+      Key& key = *pkey;
+      fMyKey = key;
+    }
 
-  ~G4TypeKeyT() override = default;
-
+    ~G4TypeKeyT() override = default;
 };
 
 #endif

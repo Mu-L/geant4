@@ -23,34 +23,34 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// V. Ivanchenko 23 September 2023 
+// V. Ivanchenko 23 September 2023
 //
 // Cross-section data set for a high precision (based on evaluated data
 // libraries) description of neutron radiative capture below 20 MeV.
 //
 
-#ifndef G4NeutronHPCaptureXS_h
-#define G4NeutronHPCaptureXS_h 1
+#ifndef G4NEUTRONHPCAPTUREXS_HH
+#define G4NEUTRONHPCAPTUREXS_HH
 
 #include "G4CrossSectionHP.hh"
+
 #include <fstream>
 
 class G4NeutronHPCaptureXS final : public G4CrossSectionHP
 {
   public:
+
     G4NeutronHPCaptureXS();
 
     ~G4NeutronHPCaptureXS() override = default;
 
     void CrossSectionDescription(std::ostream&) const final;
 
-    G4bool IsElementApplicable(const G4DynamicParticle*, 
-                               G4int Z, const G4Material*) final;
+    G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z, const G4Material*) final;
 
-    G4double GetElementCrossSection(const G4DynamicParticle*, 
-			            G4int Z, const G4Material*) final; 
+    G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z, const G4Material*) final;
 
-    G4NeutronHPCaptureXS & operator=(const G4NeutronHPCaptureXS &right) = delete;
+    G4NeutronHPCaptureXS& operator=(const G4NeutronHPCaptureXS& right) = delete;
     G4NeutronHPCaptureXS(const G4NeutronHPCaptureXS&) = delete;
 };
 

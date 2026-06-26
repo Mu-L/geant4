@@ -85,40 +85,51 @@ void G4UserWorkerThreadInitialization::SetupRNGEngine(const CLHEP::HepRandomEngi
   CLHEP::HepRandomEngine* retRNG = nullptr;
 
   // Need to make these calls thread safe
-  if (dynamic_cast<const CLHEP::HepJamesRandom*>(aNewRNG) != nullptr) {
+  if (dynamic_cast<const CLHEP::HepJamesRandom*>(aNewRNG) != nullptr)
+  {
     retRNG = new CLHEP::HepJamesRandom;
   }
-  else if (dynamic_cast<const CLHEP::MixMaxRng*>(aNewRNG) != nullptr) {
+  else if (dynamic_cast<const CLHEP::MixMaxRng*>(aNewRNG) != nullptr)
+  {
     retRNG = new CLHEP::MixMaxRng;
   }
-  else if (dynamic_cast<const CLHEP::RanecuEngine*>(aNewRNG) != nullptr) {
+  else if (dynamic_cast<const CLHEP::RanecuEngine*>(aNewRNG) != nullptr)
+  {
     retRNG = new CLHEP::RanecuEngine;
   }
-  else if (dynamic_cast<const CLHEP::RanluxppEngine*>(aNewRNG) != nullptr) {
+  else if (dynamic_cast<const CLHEP::RanluxppEngine*>(aNewRNG) != nullptr)
+  {
     retRNG = new CLHEP::RanluxppEngine;
   }
-  else if (dynamic_cast<const CLHEP::Ranlux64Engine*>(aNewRNG) != nullptr) {
+  else if (dynamic_cast<const CLHEP::Ranlux64Engine*>(aNewRNG) != nullptr)
+  {
     const auto theRNG = dynamic_cast<const CLHEP::Ranlux64Engine*>(aNewRNG);
     retRNG = new CLHEP::Ranlux64Engine(123, theRNG->getLuxury());
   }
-  else if (dynamic_cast<const CLHEP::MTwistEngine*>(aNewRNG) != nullptr) {
+  else if (dynamic_cast<const CLHEP::MTwistEngine*>(aNewRNG) != nullptr)
+  {
     retRNG = new CLHEP::MTwistEngine;
   }
-  else if (dynamic_cast<const CLHEP::DualRand*>(aNewRNG) != nullptr) {
+  else if (dynamic_cast<const CLHEP::DualRand*>(aNewRNG) != nullptr)
+  {
     retRNG = new CLHEP::DualRand;
   }
-  else if (dynamic_cast<const CLHEP::RanluxEngine*>(aNewRNG) != nullptr) {
+  else if (dynamic_cast<const CLHEP::RanluxEngine*>(aNewRNG) != nullptr)
+  {
     const auto theRNG = dynamic_cast<const CLHEP::RanluxEngine*>(aNewRNG);
     retRNG = new CLHEP::RanluxEngine(123, theRNG->getLuxury());
   }
-  else if (dynamic_cast<const CLHEP::RanshiEngine*>(aNewRNG) != nullptr) {
+  else if (dynamic_cast<const CLHEP::RanshiEngine*>(aNewRNG) != nullptr)
+  {
     retRNG = new CLHEP::RanshiEngine;
   }
 
-  if (retRNG != nullptr) {
+  if (retRNG != nullptr)
+  {
     G4Random::setTheEngine(retRNG);
   }
-  else {
+  else
+  {
     // Does a new method, such as aNewRng->newEngine() exist to clone it ?
     G4ExceptionDescription msg;
     msg << " Unknown type of RNG Engine - " << G4endl

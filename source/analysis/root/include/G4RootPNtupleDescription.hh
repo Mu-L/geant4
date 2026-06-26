@@ -28,38 +28,40 @@
 //
 // Author: Ivana Hrivnacova, 04/10/2016  (ivana@ipno.in2p3.fr)
 
-#ifndef G4RootPNtupleDescription_h
-#define G4RootPNtupleDescription_h 1
+#ifndef G4ROOTPNTUPLEDESCRIPTION_HH
+#define G4ROOTPNTUPLEDESCRIPTION_HH
 
-#include "G4TNtupleDescription.hh"
 #include "G4RootFileDef.hh"
+#include "G4TNtupleDescription.hh"
 #include "globals.hh"
 
 #include "tools/ntuple_booking"
-#include "tools/wroot/mt_ntuple_row_wise"
 #include "tools/wroot/mt_ntuple_column_wise"
+#include "tools/wroot/mt_ntuple_row_wise"
 
 #include <fstream>
 
-namespace tools {
-namespace wroot {
+namespace tools
+{
+namespace wroot
+{
 class branch;
 class ntuple;
-}
-}
+}  // namespace wroot
+}  // namespace tools
 
 using RootNtupleDescription = G4TNtupleDescription<tools::wroot::ntuple, G4RootFile>;
 
 class G4RootPNtupleDescription
 {
   public:
-    G4RootPNtupleDescription(G4NtupleBooking* g4NtupleBooking)
-      :  fDescription(g4NtupleBooking) {}
+
+    G4RootPNtupleDescription(G4NtupleBooking* g4NtupleBooking) : fDescription(g4NtupleBooking) {}
 
     ~G4RootPNtupleDescription()
-      {
-        if ( fDescription.GetIsNtupleOwner() ) delete fNtuple;
-      }
+    {
+      if (fDescription.GetIsNtupleOwner()) delete fNtuple;
+    }
 
     // Set methods
     void SetNtuple(tools::wroot::imt_ntuple* intuple);
@@ -73,42 +75,49 @@ class G4RootPNtupleDescription
     std::vector<tools::wroot::branch*>& GetMainBranches();
 
   private:
+
     RootNtupleDescription fDescription;
-    tools::wroot::imt_ntuple* fNtuple { nullptr };
-    tools::wroot::base_pntuple* fBasePNtuple { nullptr };
+    tools::wroot::imt_ntuple* fNtuple{nullptr};
+    tools::wroot::base_pntuple* fBasePNtuple{nullptr};
     std::vector<tools::wroot::branch*> fMainBranches;
 };
 
 // inline function
 
-inline void G4RootPNtupleDescription::SetNtuple(
-  tools::wroot::imt_ntuple* intuple)
-{ fNtuple = intuple; }
+inline void G4RootPNtupleDescription::SetNtuple(tools::wroot::imt_ntuple* intuple)
+{
+  fNtuple = intuple;
+}
 
-inline void G4RootPNtupleDescription::SetBasePNtuple(
-  tools::wroot::base_pntuple* basePNtuple)
-{ fBasePNtuple = basePNtuple; }
+inline void G4RootPNtupleDescription::SetBasePNtuple(tools::wroot::base_pntuple* basePNtuple)
+{
+  fBasePNtuple = basePNtuple;
+}
 
 inline void G4RootPNtupleDescription::Reset()
 {
-  if ( fDescription.GetIsNtupleOwner() ) delete fNtuple;
+  if (fDescription.GetIsNtupleOwner()) delete fNtuple;
   fNtuple = nullptr;
 }
 
-inline RootNtupleDescription&
-G4RootPNtupleDescription::GetDescription()
-{ return fDescription; }
+inline RootNtupleDescription& G4RootPNtupleDescription::GetDescription()
+{
+  return fDescription;
+}
 
-inline tools::wroot::imt_ntuple*
-G4RootPNtupleDescription::GetNtuple() const
-{ return fNtuple; }
+inline tools::wroot::imt_ntuple* G4RootPNtupleDescription::GetNtuple() const
+{
+  return fNtuple;
+}
 
-inline tools::wroot::base_pntuple*
-G4RootPNtupleDescription::GetBasePNtuple() const
-{ return fBasePNtuple; }
+inline tools::wroot::base_pntuple* G4RootPNtupleDescription::GetBasePNtuple() const
+{
+  return fBasePNtuple;
+}
 
-inline std::vector<tools::wroot::branch*>&
-G4RootPNtupleDescription::GetMainBranches()
-{ return fMainBranches; }
+inline std::vector<tools::wroot::branch*>& G4RootPNtupleDescription::GetMainBranches()
+{
+  return fMainBranches;
+}
 
 #endif

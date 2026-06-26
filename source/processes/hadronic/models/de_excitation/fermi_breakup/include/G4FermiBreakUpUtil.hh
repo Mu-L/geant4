@@ -28,8 +28,8 @@
 // by V. Ivanchenko (June 2023)
 //
 
-#ifndef G4FermiBreakUpUtil_h
-#define G4FermiBreakUpUtil_h 1
+#ifndef G4FERMIBREAKUPUTIL_HH
+#define G4FERMIBREAKUPUTIL_HH
 
 #include "globals.hh"
 
@@ -37,16 +37,15 @@ class G4FermiFragment;
 
 namespace G4FermiBreakUpUtil
 {
-  G4double CoulombBarrier(const G4int Z1, const G4int A1,
-                          const G4int Z2, const G4int A2, const G4double exc);
+G4double CoulombBarrier(const G4int Z1, const G4int A1, const G4int Z2, const G4int A2,
+                        const G4double exc);
 
-  G4double Probability(const G4int A,
-                       const G4FermiFragment* f1, const G4FermiFragment* f2,
-                       const G4double mass, const G4double exc);
+G4double Probability(const G4int A, const G4FermiFragment* f1, const G4FermiFragment* f2,
+                     const G4double mass, const G4double exc);
 
-  G4bool CheckSpinParity(const G4FermiFragment* f1, const G4FermiFragment* f2,
-			 const G4FermiFragment* f3);
+G4bool CheckSpinParity(const G4FermiFragment* f1, const G4FermiFragment* f2,
+                       const G4FermiFragment* f3);
 
-}
+}  // namespace G4FermiBreakUpUtil
 
 #endif

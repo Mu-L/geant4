@@ -6,7 +6,12 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-05-27 Gabriele Cosmo (g4tools-V11-03-14)
+## 2026-06-19 Ben Morgan (g4tools-V11-04-13)
+- Apply clang-format to all C++ files.
+  - Protect X11 header ordering changes to avoid compile errors from use of private
+    X11 headers.
+
+## 2026-05-27 Gabriele Cosmo (g4tools-V11-04-12)
 - Fixed compilation warning on gcc-16.1; implemented construction-order fix
   in columns.icc: added column_string_data so column_string::m_value exists
   before column_string_ref binds a leaf_string_ref to it.
@@ -17,9 +22,84 @@ It must **not** be used as a substitute for writing good git commit messages!
   Updated copy/assignment paths to preserve the previous behavior while moving
   storage into these early-constructed bases.
 
-## 2026-05-12 Gabriele Cosmo
+## 2026-05-24 Ben Morgan (g4tools-V11-04-11)
+- Add clang-format exclusions for specific regions of g4tools:
+  - tools/fonts: to retain "data-as-code" layout,
+  - tools/glutess: to prevent compilation errors due to fragility of
+    header inclusion order,
+  - tools/fpng,gl2ps,tojpeg: to avoid modification of copied in upstream code.
+
+## 2026-05-19 I. Hrivnacova (g4tools-V11-04-10)
+- Fixed compilation warnings "missing braces around initializer",
+  observed with gcc v11.5
+  - addressing the problem report #2705.
+
+## 2026-05-12 Gabriele Cosmo (g4tools-V11-04-09)
 - Fixed compilation warning on gcc-16.1 for variable set but not used in
   array::fill().
+
+## 2026-04-25 Ben Morgan (g4tools-V11-04-08)
+- Tidy unused/irrelevant/redundant code from within tools/sg plotting. 
+
+## 2026-02-16 John Allison (g4tools-V11-04-07)
+- sf_rot and sf_vec:
+  - Fix "Implicit conversion loses integer precision" warnings on Mac Xcode.
+
+## 2026-02-11 Guy Barrand (g4tools-V11-04-06)
+- tools/sg/group: add a takeover_nodes() method to transfer nodes from another group.
+
+## 2026-02-06 Guy Barrand (g4tools-V11-04-05)
+- toolx/sg/text_freetype_marker: override char_height_touched() to handle properly the fact that
+  the field "height" is expected to be given in pixels/window-size (contrary to the one in
+  text_freetype that is expected to be a in "3D scene size"). It fixes a crash (due to undue
+  too big bitmap size) seen from G4ToolsSceneHandler::AddPrimitive(G4Text) if asking for
+  "font_pixmap" modeling of text.
+
+## 2026-01-31 Ben Morgan (g4tools-V11-04-04)
+- Remove unused carray header
+- Simplify text_valop to allow removal of valop, valop2sg
+
+## 2026-01-27 Ben Morgan (g4tools-V11-04-03)
+- Remove obsolete rtausmef RNG.
+  - C++ Standard Library provides sufficient quality and distributions for
+    use within tools itself.
+
+## 2026-01-26 Ben Morgan (g4tools-V11-04-02)
+- Modernize, simplify, and optimize string-related functions.
+  - Remove unused default arguments.
+  - Use C++17 to simplify and optimize functions. 
+  - Unify string-to-value functionality, including optimized path for integrals.
+
+## 2025-12-11 Ben Morgan (g4tools-V11-04-01)
+- Maintenance fixes highlighted by implementing unit tests for string related functionality
+  - Move `out_error` function to `hplot`, the only place it is used
+  - Simplify `no_stream` using C++17, as this is difficult to test.
+  - Move `num2s` definition for `std::string` before using `numas` function to fix
+    compilation error in unit tests for `num2s`.
+
+## 2025-12-09 Ben Morgan (g4tools-V11-04-00)
+- General modernization of classes in tools/lina (linear algebra)
+  - Remove unused classes, member functions
+  - Remove deprecated/duplicated member functions, updating client
+    code to use single form where needed
+  - Refactor box/line/plane/vec/quat/mat into single forms
+    - Templated on underlying numeric type for consistency and
+      avoiding awkward and unneccesary inheritance
+    - Modernize math functions to use std:: library versions
+      for consistency and ease
+    - General use C++17 for simplicity/clarity
+    - Provide type aliases for backward compatibility/clarity
+  - Refactor colorf to use composition
+    - Avoid inheritance, simplifying implementation and so color is
+      modelled better.
+    - Provide facade to keep API compatible.
+  - Preliminary refactor of matrix classes
+    - Improve comments describing implementation
+    - Use static_assert to restrict mat dimension as dimensions larger than 4
+      are not required
+  - Update client code of lina classes where needed
+    - Update #includes for new/renamed headers
+    - Remove some round-tripping of calls
 
 ## 2025-10-17 Guy Barrand (g4tools-V11-03-13)
 - toolx/sg/GL_manager, GL_action, GL_viewer: template the access to the OpenGL functions.

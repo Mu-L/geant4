@@ -26,55 +26,55 @@
 //
 //-----------------------------------------------------------------------------
 //
-// GEANT4 Class header file 
+// GEANT4 Class header file
 //
 // File name:  G4ElementSelector
 //
 // Author:        V.Ivanchenko (Vladimir.Ivantchenko@cern.ch)
-// 
+//
 // Creation date: 21 April 2012 on base of G4StopElementSelector
 //
-// Class Description: 
+// Class Description:
 //
 // Selection of elements for slow negative particle capture
-// Alternative selector should inherit from this class 
+// Alternative selector should inherit from this class
 //
 // N.C.Mukhopadhyay Phys. Rep. 30 (1977) 1.
 //
 //-----------------------------------------------------------------------------
 //
-// Modifications: 
+// Modifications:
 //
 //-----------------------------------------------------------------------------
 
-#ifndef G4ElementSelector_h
-#define G4ElementSelector_h 1
- 
-#include "globals.hh"
+#ifndef G4ELEMENTSELECTOR_HH
+#define G4ELEMENTSELECTOR_HH
+
 #include "G4Element.hh"
 #include "G4Track.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4Nucleus;
 
-class G4ElementSelector 
-{ 
-public:
- 
-  G4ElementSelector();
-  
-  virtual ~G4ElementSelector();
+class G4ElementSelector
+{
+  public:
 
-  virtual const G4Element* SelectZandA(const G4Track& track, G4Nucleus*);
+    G4ElementSelector();
 
-private:
+    virtual ~G4ElementSelector();
 
-  // hide assignment operator as private 
-  G4ElementSelector& operator=(const G4ElementSelector &right);
-  G4ElementSelector(const G4ElementSelector& );
+    virtual const G4Element* SelectZandA(const G4Track& track, G4Nucleus*);
 
-  std::vector<G4double> prob;
+  private:
+
+    // hide assignment operator as private
+    G4ElementSelector& operator=(const G4ElementSelector& right);
+    G4ElementSelector(const G4ElementSelector&);
+
+    std::vector<G4double> prob;
 };
 
 #endif
- 

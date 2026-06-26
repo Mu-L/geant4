@@ -26,18 +26,20 @@
 /// \file particles/phonons/include/G4PhononTransFast.hh
 /// \brief Definition of the G4PhononTransFast class
 //
-#ifndef G4PhononTransFast_h
-#define G4PhononTransFast_h 1
+#ifndef G4PHONONTRANSFAST_HH
+#define G4PHONONTRANSFAST_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4PhononTransFast : public G4ParticleDefinition
 {
   public:
+
     static G4PhononTransFast* Definition();
     static G4PhononTransFast* PhononDefinition();
 
   private:
+
     G4PhononTransFast() {}
     ~G4PhononTransFast() override = default;
 

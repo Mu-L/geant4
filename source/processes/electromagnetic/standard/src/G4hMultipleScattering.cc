@@ -33,10 +33,10 @@
 // Author:        Laszlo Urban
 //
 // Creation date: 24.10.2006 cloned from G4MultipleScattering
-// 
+//
 // Modified:
 // 12-02-07 skin can be changed via UI command (VI)
-// 20.03.07 Remove local parameter skin, set facgeom=0.1(V.Ivanchenko) 
+// 20.03.07 Remove local parameter skin, set facgeom=0.1(V.Ivanchenko)
 //
 // -----------------------------------------------------------------------------
 //
@@ -44,8 +44,9 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "G4hMultipleScattering.hh"
-#include "G4UrbanMscModel.hh"
+
 #include "G4MscStepLimitType.hh"
+#include "G4UrbanMscModel.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -54,7 +55,7 @@ using namespace std;
 G4hMultipleScattering::G4hMultipleScattering(const G4String& processName)
   : G4VMultipleScattering(processName)
 {
-  isInitialized = false;  
+  isInitialized = false;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -63,7 +64,7 @@ G4hMultipleScattering::~G4hMultipleScattering() = default;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4bool G4hMultipleScattering::IsApplicable (const G4ParticleDefinition& p)
+G4bool G4hMultipleScattering::IsApplicable(const G4ParticleDefinition& p)
 {
   return (p.GetPDGCharge() != 0.0);
 }
@@ -72,8 +73,14 @@ G4bool G4hMultipleScattering::IsApplicable (const G4ParticleDefinition& p)
 
 void G4hMultipleScattering::InitialiseProcess(const G4ParticleDefinition*)
 {
-  if(isInitialized) { return; }
-  if(nullptr == EmModel(0)) { SetEmModel( new G4UrbanMscModel() ); }
+  if (isInitialized)
+  {
+    return;
+  }
+  if (nullptr == EmModel(0))
+  {
+    SetEmModel(new G4UrbanMscModel());
+  }
   AddEmModel(1, EmModel(0));
   isInitialized = true;
 }
@@ -82,12 +89,12 @@ void G4hMultipleScattering::InitialiseProcess(const G4ParticleDefinition*)
 
 void G4hMultipleScattering::StreamProcessInfo(std::ostream& out) const
 {
-  out << "      RangeFactor= " << RangeFactor()
-      << ", stepLimType: " << StepLimitType()
+  out << "      RangeFactor= " << RangeFactor() << ", stepLimType: " << StepLimitType()
       << ", latDisp: " << LateralDisplasmentFlag();
-  if(StepLimitType() == fUseDistanceToBoundary) {
-    out  << ", skin= " << Skin() << ", geomFactor= " << GeomFactor();
-  }  
+  if (StepLimitType() == fUseDistanceToBoundary)
+  {
+    out << ", skin= " << Skin() << ", geomFactor= " << GeomFactor();
+  }
   out << G4endl;
 }
 
@@ -95,12 +102,10 @@ void G4hMultipleScattering::StreamProcessInfo(std::ostream& out) const
 
 void G4hMultipleScattering::ProcessDescription(std::ostream& out) const
 {
-  out << 
-  "  Hadron multiple scattering. Simulates combined effects of elastic \n" <<
-  "    scattering at the end of the step, to save computing time. May\n"<<
-  "    be combined with Coulomb scattering in a 'mixed' scattering algorithm.";
+  out << "  Hadron multiple scattering. Simulates combined effects of elastic \n"
+      << "    scattering at the end of the step, to save computing time. May\n"
+      << "    be combined with Coulomb scattering in a 'mixed' scattering algorithm.";
   G4VMultipleScattering::ProcessDescription(out);
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.... 
-
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

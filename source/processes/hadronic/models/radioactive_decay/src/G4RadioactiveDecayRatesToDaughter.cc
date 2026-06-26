@@ -24,20 +24,19 @@
 // ********************************************************************
 //
 
-#include "G4ParticleDefinition.hh"
-#include "G4ParticleTable.hh"
-#include "G4DecayTable.hh"
-#include "G4DecayProducts.hh"
 #include "G4RadioactiveDecayRatesToDaughter.hh"
 
+#include "G4DecayProducts.hh"
+#include "G4DecayTable.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
 
 G4RadioactiveDecayRatesToDaughter::G4RadioactiveDecayRatesToDaughter()
- : Z(0), A(0), E(0.0), generation(0), verboseLevel(0)
+  : Z(0), A(0), E(0.0), generation(0), verboseLevel(0)
 {}
 
-
-G4RadioactiveDecayRatesToDaughter::
-G4RadioactiveDecayRatesToDaughter(const G4RadioactiveDecayRatesToDaughter& right)
+G4RadioactiveDecayRatesToDaughter::G4RadioactiveDecayRatesToDaughter(
+  const G4RadioactiveDecayRatesToDaughter& right)
 {
   Z = right.Z;
   A = right.A;
@@ -48,11 +47,11 @@ G4RadioactiveDecayRatesToDaughter(const G4RadioactiveDecayRatesToDaughter& right
   verboseLevel = right.verboseLevel;
 }
 
-
-G4RadioactiveDecayRatesToDaughter& G4RadioactiveDecayRatesToDaughter::
-operator=(const G4RadioactiveDecayRatesToDaughter& right)
+G4RadioactiveDecayRatesToDaughter&
+G4RadioactiveDecayRatesToDaughter::operator=(const G4RadioactiveDecayRatesToDaughter& right)
 {
-  if (this != &right) { 
+  if (this != &right)
+  {
     Z = right.Z;
     A = right.A;
     E = right.E;
@@ -64,25 +63,15 @@ operator=(const G4RadioactiveDecayRatesToDaughter& right)
   return *this;
 }
 
-
-G4RadioactiveDecayRatesToDaughter::~G4RadioactiveDecayRatesToDaughter()
-{} 
-
+G4RadioactiveDecayRatesToDaughter::~G4RadioactiveDecayRatesToDaughter() {}
 
 void G4RadioactiveDecayRatesToDaughter::DumpInfo()
 {
-  G4cout << " Z: " << Z << "  A: " << A << "  E: " << E <<G4endl;
+  G4cout << " Z: " << Z << "  A: " << A << "  E: " << E << G4endl;
   G4cout << " Generation: " << generation << G4endl;
-//  G4cout << " Coefficiency: " << decayRateC << endl;
-//  G4cout << " Tao: " << tao << endl;
+  //  G4cout << " Coefficiency: " << decayRateC << endl;
+  //  G4cout << " Tao: " << tao << endl;
   // need to overload << for decayRAteC and tao first!
 
   G4cout << G4endl;
 }
-
-
-
-
-
-
-

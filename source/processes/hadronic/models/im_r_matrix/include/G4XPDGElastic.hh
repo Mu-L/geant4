@@ -31,81 +31,78 @@
 //      File name:     G4XPDGElastic
 //
 //      Author:        Maria Grazia Pia (MariaGrazia.Pia@genova.infn.it)
-// 
+//
 //      Creation date: 15 April 1999
 //
-//      Modifications: 
-//      
+//      Modifications:
+//
 // -------------------------------------------------------------------
 
 #ifndef G4XPDGELASTIC_HH
 #define G4XPDGELASTIC_HH
 
-#include "globals.hh"
 #include "G4VCrossSectionSource.hh"
+#include "globals.hh"
+
 #include <algorithm>
 #include <map>
 
 class G4KineticTrack;
 class G4ParticleDefinition;
 
-typedef std::pair<const G4ParticleDefinition *,const G4ParticleDefinition *> G4pDefPair;
+typedef std::pair<const G4ParticleDefinition*, const G4ParticleDefinition*> G4pDefPair;
 
 class G4XPDGElastic : public G4VCrossSectionSource
 {
+  public:
 
-public:
+    G4XPDGElastic();
 
-  G4XPDGElastic();
+    virtual ~G4XPDGElastic();
 
-  virtual ~G4XPDGElastic();
+    G4bool operator==(const G4XPDGElastic& right) const;
+    G4bool operator!=(const G4XPDGElastic& right) const;
 
-  G4bool operator==(const G4XPDGElastic &right) const;
-  G4bool operator!=(const G4XPDGElastic &right) const;
+    virtual G4double CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
 
-  virtual G4double CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
- 
-  virtual const G4CrossSectionVector* GetComponents() const { return 0; }
+    virtual const G4CrossSectionVector* GetComponents() const { return 0; }
 
-  virtual G4String Name() const;
+    virtual G4String Name() const;
 
-  virtual G4bool IsValid(G4double e) const;
+    virtual G4bool IsValid(G4double e) const;
 
-  virtual G4double LowLimit() const { return _lowLimit; }
+    virtual G4double LowLimit() const { return _lowLimit; }
 
+  protected:
 
-protected:
+  private:
 
+    G4XPDGElastic(const G4XPDGElastic& right);
+    const G4XPDGElastic& operator=(const G4XPDGElastic& right);
 
-private:  
+    static const G4double _lowLimit;
+    static const G4double _highLimit;
 
-  G4XPDGElastic(const G4XPDGElastic &right);
-  const G4XPDGElastic& operator=(const G4XPDGElastic &right);
-  
-  static const G4double _lowLimit;
-  static const G4double _highLimit;
+    static const G4int nPar;
+    static const G4double pPiPlusPDGFit[7];
+    static const G4double pPiMinusPDGFit[7];
+    static const G4double pKPlusPDGFit[7];
+    static const G4double pKMinusPDGFit[7];
+    static const G4double ppPDGFit[7];
+    static const G4double ppbarPDGFit[7];
+    static const G4double npbarPDGFit[7];
 
-  static const G4int nPar;
-  static const G4double pPiPlusPDGFit[7];
-  static const G4double pPiMinusPDGFit[7];
-  static const G4double pKPlusPDGFit[7];
-  static const G4double pKMinusPDGFit[7];
-  static const G4double ppPDGFit[7];
-  static const G4double ppbarPDGFit[7];
-  static const G4double npbarPDGFit[7];
+    std::map<G4pDefPair, std::vector<G4double>, std::less<G4pDefPair>> xMap;
 
-  std::map <G4pDefPair, std::vector<G4double>, std::less<G4pDefPair> > xMap;
+    typedef std::map<G4pDefPair, std::vector<G4double>, std::less<G4pDefPair>> PairDoubleMap;
 
-  typedef std::map <G4pDefPair, std::vector<G4double>, std::less<G4pDefPair> > PairDoubleMap;
-
-  //  G4double pMinFit;
-  //  G4double pMaxFit;
-  //  G4double aFit;
-  //  G4double bFit;
-  //  G4double nFit;
-  //  G4double cFit;
-  //  G4double dFit;
-
+    //  G4double pMinFit;
+    //  G4double pMaxFit;
+    //  G4double aFit;
+    //  G4double bFit;
+    //  G4double nFit;
+    //  G4double cFit;
+    //  G4double dFit;
 };
 
 #endif

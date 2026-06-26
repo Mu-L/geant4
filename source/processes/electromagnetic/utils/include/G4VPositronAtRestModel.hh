@@ -28,10 +28,10 @@
 // File name:     G4VPositronAtRestModel
 //
 // Author:        V. Ivanchenko
-// 
+//
 // Creation date: 13 May 2024
 //
-// Class Description: 
+// Class Description:
 // Abstract base class for sampling of positron annihilation at rest
 // There is a requirement to implementation of the virtual method
 // SampleSecondaries(...):
@@ -42,10 +42,11 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4VPositronAtRestModel_h
-#define G4VPositronAtRestModel_h 1
+#ifndef G4VPOSITRONATRESTMODEL_HH
+#define G4VPOSITRONATRESTMODEL_HH
 
 #include "globals.hh"
+
 #include <vector>
 
 class G4Material;
@@ -53,28 +54,25 @@ class G4DynamicParticle;
 
 class G4VPositronAtRestModel
 {
-public:
+  public:
 
-  explicit G4VPositronAtRestModel(const G4String& name) : fName(name) {};
+    explicit G4VPositronAtRestModel(const G4String& name) : fName(name) {};
 
-  virtual ~G4VPositronAtRestModel() = default;
+    virtual ~G4VPositronAtRestModel() = default;
 
-  virtual void SampleSecondaries(std::vector<G4DynamicParticle*>& secParticles,
-				 G4double& localEnergyDeposit,
-				 const G4Material*) const = 0;
+    virtual void SampleSecondaries(std::vector<G4DynamicParticle*>& secParticles,
+                                   G4double& localEnergyDeposit, const G4Material*) const = 0;
 
-  virtual void PrintGeneratorInformation() const = 0;
+    virtual void PrintGeneratorInformation() const = 0;
 
-  const G4String& GetName() const { return fName; };
+    const G4String& GetName() const { return fName; };
 
-  G4VPositronAtRestModel& operator=
-  (const  G4VPositronAtRestModel& right) = delete;
-  G4VPositronAtRestModel(const G4VPositronAtRestModel&) = delete;
+    G4VPositronAtRestModel& operator=(const G4VPositronAtRestModel& right) = delete;
+    G4VPositronAtRestModel(const G4VPositronAtRestModel&) = delete;
 
-private:
+  private:
 
-  G4String fName;
+    G4String fName;
 };
 
 #endif
-

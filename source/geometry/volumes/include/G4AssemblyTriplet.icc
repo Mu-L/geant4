@@ -22,132 +22,109 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // Class G4AssemblyTriplet - inline implementation
 //
 // Author: Radovan Chytracek (CERN), November 2000
 // ----------------------------------------------------------------------
 
-inline
-G4AssemblyTriplet::G4AssemblyTriplet()
+inline G4AssemblyTriplet::G4AssemblyTriplet()
 {
-  G4ThreeVector v(0.,0.,0.);
+  G4ThreeVector v(0., 0., 0.);
   fTranslation = v;
 }
 
-inline
-G4AssemblyTriplet::G4AssemblyTriplet( G4LogicalVolume* pVolume,
-                                      G4ThreeVector& translation,
-                                      G4RotationMatrix* pRotation,
-                                      G4bool isReflection )
-  : fVolume( pVolume ), fTranslation( translation ), fRotation( pRotation ),
+inline G4AssemblyTriplet::G4AssemblyTriplet(G4LogicalVolume* pVolume, G4ThreeVector& translation,
+                                            G4RotationMatrix* pRotation, G4bool isReflection)
+  : fVolume(pVolume), fTranslation(translation), fRotation(pRotation), fIsReflection(isReflection)
+{}
+
+inline G4AssemblyTriplet::G4AssemblyTriplet(G4AssemblyVolume* pAssembly, G4ThreeVector& translation,
+                                            G4RotationMatrix* pRotation, G4bool isReflection)
+  : fTranslation(translation),
+    fRotation(pRotation),
+    fAssembly(pAssembly),
     fIsReflection(isReflection)
-{
-}
+{}
 
-inline
-G4AssemblyTriplet::G4AssemblyTriplet( G4AssemblyVolume* pAssembly,
-                                      G4ThreeVector& translation,
-                                      G4RotationMatrix* pRotation,
-                                      G4bool isReflection )
-  : fTranslation( translation ), fRotation( pRotation ),
-    fAssembly( pAssembly ), fIsReflection(isReflection) 
+inline G4AssemblyTriplet::G4AssemblyTriplet(const G4AssemblyTriplet& scopy)
 {
-}
-
-inline
-G4AssemblyTriplet::G4AssemblyTriplet( const G4AssemblyTriplet& scopy )
-{
-  fVolume       = scopy.GetVolume();
-  fRotation     = scopy.GetRotation();
-  fTranslation  = scopy.GetTranslation();
-  fAssembly     = scopy.GetAssembly();
+  fVolume = scopy.GetVolume();
+  fRotation = scopy.GetRotation();
+  fTranslation = scopy.GetTranslation();
+  fAssembly = scopy.GetAssembly();
   fIsReflection = scopy.IsReflection();
 }
 
-inline
-G4AssemblyTriplet::~G4AssemblyTriplet() = default;
+inline G4AssemblyTriplet::~G4AssemblyTriplet() = default;
 
-inline
-G4LogicalVolume* G4AssemblyTriplet::GetVolume() const
+inline G4LogicalVolume* G4AssemblyTriplet::GetVolume() const
 {
   return fVolume;
 }
 
-inline
-void G4AssemblyTriplet::SetVolume( G4LogicalVolume* pVolume )
+inline void G4AssemblyTriplet::SetVolume(G4LogicalVolume* pVolume)
 {
-  if ( fAssembly != nullptr ) 
+  if (fAssembly != nullptr)
   {
-    G4Exception("G4AssemblyTriplet::SetVolume()",
-                "GeomVol1001", JustWarning,
+    G4Exception("G4AssemblyTriplet::SetVolume()", "GeomVol1001", JustWarning,
                 "There is an assembly already set, it will be ignored.");
   }
   fVolume = pVolume;
   fAssembly = nullptr;
 }
 
-inline
-G4AssemblyVolume* G4AssemblyTriplet::GetAssembly() const
+inline G4AssemblyVolume* G4AssemblyTriplet::GetAssembly() const
 {
   return fAssembly;
 }
 
-inline
-void G4AssemblyTriplet::SetAssembly( G4AssemblyVolume* pAssembly )
+inline void G4AssemblyTriplet::SetAssembly(G4AssemblyVolume* pAssembly)
 {
-  if ( fVolume != nullptr ) 
+  if (fVolume != nullptr)
   {
-    G4Exception("G4AssemblyTriplet::SetAssembly()",
-                "GeomVol1001", JustWarning,
+    G4Exception("G4AssemblyTriplet::SetAssembly()", "GeomVol1001", JustWarning,
                 "There is a volume already set, it will be ignored.");
   }
   fAssembly = pAssembly;
   fVolume = nullptr;
 }
 
-inline
-G4ThreeVector G4AssemblyTriplet::GetTranslation() const
+inline G4ThreeVector G4AssemblyTriplet::GetTranslation() const
 {
   return fTranslation;
 }
 
-inline
-void G4AssemblyTriplet::SetTranslation( G4ThreeVector& translation )
+inline void G4AssemblyTriplet::SetTranslation(G4ThreeVector& translation)
 {
   fTranslation = translation;
 }
 
-inline
-G4RotationMatrix* G4AssemblyTriplet::GetRotation() const
+inline G4RotationMatrix* G4AssemblyTriplet::GetRotation() const
 {
   return fRotation;
 }
 
-inline
-void G4AssemblyTriplet::SetRotation( G4RotationMatrix* pRotation )
+inline void G4AssemblyTriplet::SetRotation(G4RotationMatrix* pRotation)
 {
   fRotation = pRotation;
 }
 
-inline
-G4bool G4AssemblyTriplet::IsReflection() const
+inline G4bool G4AssemblyTriplet::IsReflection() const
 {
   return fIsReflection;
-}  
+}
 
-inline
-G4AssemblyTriplet&
-G4AssemblyTriplet::operator=( const G4AssemblyTriplet& scopy )
+inline G4AssemblyTriplet& G4AssemblyTriplet::operator=(const G4AssemblyTriplet& scopy)
 {
-  if( this != &scopy )
+  if (this != &scopy)
   {
-    fVolume       = scopy.GetVolume();
-    fRotation     = scopy.GetRotation();
-    fTranslation  = scopy.GetTranslation();
-    fAssembly     = scopy.GetAssembly();
+    fVolume = scopy.GetVolume();
+    fRotation = scopy.GetRotation();
+    fTranslation = scopy.GetTranslation();
+    fAssembly = scopy.GetAssembly();
     fIsReflection = scopy.IsReflection();
   }
-  
+
   return *this;
 }

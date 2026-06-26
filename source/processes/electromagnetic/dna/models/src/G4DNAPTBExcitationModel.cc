@@ -53,22 +53,27 @@ G4DNAPTBExcitationModel::G4DNAPTBExcitationModel(const G4String& applyToMaterial
   fpN2 = G4Material::GetMaterial("N2", false);
   // initialisation of mean energy loss for each material
 
-  if (fpTHF != nullptr) {
+  if (fpTHF != nullptr)
+  {
     fTableMeanEnergyPTB[fpTHF->GetIndex()] = 8.01 * eV;
   }
 
-  if (fpPY != nullptr) {
+  if (fpPY != nullptr)
+  {
     fTableMeanEnergyPTB[fpPY->GetIndex()] = 7.61 * eV;
   }
 
-  if (fpPU != nullptr) {
+  if (fpPU != nullptr)
+  {
     fTableMeanEnergyPTB[fpPU->GetIndex()] = 7.61 * eV;
   }
-  if (fpTMP != nullptr) {
+  if (fpTMP != nullptr)
+  {
     fTableMeanEnergyPTB[fpTMP->GetIndex()] = 8.01 * eV;
   }
 
-  if (verboseLevel > 0) {
+  if (verboseLevel > 0)
+  {
     G4cout << "PTB excitation model is constructed " << G4endl;
   }
 }
@@ -78,7 +83,8 @@ G4DNAPTBExcitationModel::G4DNAPTBExcitationModel(const G4String& applyToMaterial
 void G4DNAPTBExcitationModel::Initialise(const G4ParticleDefinition* particle,
                                          const G4DataVector& /*cuts*/)
 {
-  if (isInitialised) {
+  if (isInitialised)
+  {
     return;
   }
   if (verboseLevel > 3)
@@ -86,7 +92,8 @@ void G4DNAPTBExcitationModel::Initialise(const G4ParticleDefinition* particle,
     G4cout << "Calling G4DNAPTBExcitationModel::Initialise()" << G4endl;
   }
 
-  if (particle != G4Electron::ElectronDefinition()) {
+  if (particle != G4Electron::ElectronDefinition())
+  {
     std::ostringstream oss;
     oss << " Model is not applied for this particle " << particle->GetParticleName();
     G4Exception("G4DNAPTBExcitationModel::Initialise", "PTB001", FatalException, oss.str().c_str());
@@ -99,33 +106,38 @@ void G4DNAPTBExcitationModel::Initialise(const G4ParticleDefinition* particle,
   // Cross section data
   //*******************************************************
   std::size_t index;
-  if (fpTHF != nullptr) {
+  if (fpTHF != nullptr)
+  {
     index = fpTHF->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_excitation_e-_PTB_THF", scaleFactor);
     SetLowELimit(index, particle, 9. * eV);
     SetHighELimit(index, particle, 1. * keV);
   }
-  if (fpPY != nullptr) {
+  if (fpPY != nullptr)
+  {
     index = fpPY->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_excitation_e-_PTB_PY", scaleFactor);
     SetLowELimit(index, particle, 9. * eV);
     SetHighELimit(index, particle, 1. * keV);
   }
 
-  if (fpPU != nullptr) {
+  if (fpPU != nullptr)
+  {
     index = fpPU->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_excitation_e-_PTB_PU", scaleFactor);
     SetLowELimit(index, particle, 9. * eV);
     SetHighELimit(index, particle, 1. * keV);
   }
 
-  if (fpTMP != nullptr) {
+  if (fpTMP != nullptr)
+  {
     index = fpTMP->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_excitation_e-_PTB_TMP", scaleFactor);
     SetLowELimit(index, particle, 9. * eV);
     SetHighELimit(index, particle, 1. * keV);
   }
-  if (fpG4_WATER != nullptr) {
+  if (fpG4_WATER != nullptr)
+  {
     index = fpG4_WATER->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_excitation_e_born", scaleFactorBorn);
     SetLowELimit(index, particle, 9. * eV);
@@ -133,64 +145,75 @@ void G4DNAPTBExcitationModel::Initialise(const G4ParticleDefinition* particle,
   }
   // DNA materials
   //
-  if (fpBackbone_THF != nullptr) {
+  if (fpBackbone_THF != nullptr)
+  {
     index = fpBackbone_THF->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_excitation_e-_PTB_THF", scaleFactor * 33. / 30);
     SetLowELimit(index, particle, 9. * eV);
     SetHighELimit(index, particle, 1. * keV);
   }
-  if (fpCytosine_PY != nullptr) {
+  if (fpCytosine_PY != nullptr)
+  {
     index = fpCytosine_PY->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_excitation_e-_PTB_PY", scaleFactor * 42. / 30);
     SetLowELimit(index, particle, 9. * eV);
     SetHighELimit(index, particle, 1. * keV);
   }
-  if (fpThymine_PY != nullptr) {
+  if (fpThymine_PY != nullptr)
+  {
     index = fpThymine_PY->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_excitation_e-_PTB_PY", scaleFactor * 48. / 30);
     SetLowELimit(index, particle, 9. * eV);
     SetHighELimit(index, particle, 1. * keV);
   }
-  if (fpAdenine_PU != nullptr) {
+  if (fpAdenine_PU != nullptr)
+  {
     index = fpAdenine_PU->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_excitation_e-_PTB_PU", scaleFactor * 50. / 44);
     SetLowELimit(index, particle, 9. * eV);
     SetHighELimit(index, particle, 1. * keV);
   }
-  if (fpGuanine_PU != nullptr) {
+  if (fpGuanine_PU != nullptr)
+  {
     index = fpGuanine_PU->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_excitation_e-_PTB_PU", scaleFactor * 56. / 44);
     SetLowELimit(index, particle, 9. * eV);
     SetHighELimit(index, particle, 1. * keV);
   }
-  if (fpBackbone_TMP != nullptr) {
+  if (fpBackbone_TMP != nullptr)
+  {
     index = fpBackbone_TMP->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_excitation_e-_PTB_TMP", scaleFactor * 33. / 50);
     SetLowELimit(index, particle, 9. * eV);
     SetHighELimit(index, particle, 1. * keV);
   }
   // MPietrzak, adding paths for N2
-  if (fpN2 != nullptr) {
+  if (fpN2 != nullptr)
+  {
     index = fpN2->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_excitation_e-_PTB_N2", scaleFactor);
     SetLowELimit(index, particle, 13. * eV);
     SetHighELimit(index, particle, 1.02 * MeV);
   }
-  if (!G4DNAMaterialManager::Instance()->IsLocked()) {
+  if (!G4DNAMaterialManager::Instance()->IsLocked())
+  {
     // Load data
     LoadCrossSectionData(particle);
     G4DNAMaterialManager::Instance()->SetMasterDataModel(DNAModelType::fDNAExcitation, this);
     fpModelData = this;
   }
-  else {
+  else
+  {
     auto dataModel = dynamic_cast<G4DNAPTBExcitationModel*>(
       G4DNAMaterialManager::Instance()->GetModel(DNAModelType::fDNAExcitation));
-    if (dataModel == nullptr) {
+    if (dataModel == nullptr)
+    {
       G4cout << "G4DNAPTBExcitationModel::Initialise:: not good modelData" << G4endl;
       G4Exception("G4DNAPTBExcitationModel::Initialise", "PTB0006", FatalException,
                   "not good modelData");
     }
-    else {
+    else
+    {
       fpModelData = dataModel;
     }
   }
@@ -221,18 +244,21 @@ G4double G4DNAPTBExcitationModel::CrossSectionPerVolume(const G4Material* materi
   highLim = fpModelData->GetHighELimit(MatID, p);
 
   // Check that we are in the correct energy range
-  if (ekin >= lowLim && ekin < highLim) {
+  if (ekin >= lowLim && ekin < highLim)
+  {
     // Get the map with all the data tables
     auto Data = fpModelData->GetData();
 
-    if ((*Data)[MatID][p] == nullptr) {
+    if ((*Data)[MatID][p] == nullptr)
+    {
       G4Exception("G4DNAPTBExcitationModel::CrossSectionPerVolume", "em00236", FatalException,
                   "No model is registered");
     }
     // Retrieve the cross section value
     sigma = (*Data)[MatID][p]->FindValue(ekin);
 
-    if (verboseLevel > 2) {
+    if (verboseLevel > 2)
+    {
       G4cout << "__________________________________" << G4endl;
       G4cout << "°°° G4DNAPTBExcitationModel - XS INFO START" << G4endl;
       G4cout << "°°° Kinetic energy(eV)=" << ekin / eV << " particle : " << particleName << G4endl;
@@ -243,8 +269,7 @@ G4double G4DNAPTBExcitationModel::CrossSectionPerVolume(const G4Material* materi
   }
 
   // Return the cross section value
-  auto MolDensity =
-    (*G4DNAMolecularMaterial::Instance()->GetNumMolPerVolTableFor(material))[MatID];
+  auto MolDensity = (*G4DNAMolecularMaterial::Instance()->GetNumMolPerVolTableFor(material))[MatID];
   return sigma * MolDensity;
 }
 
@@ -266,8 +291,10 @@ void G4DNAPTBExcitationModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
   G4double highLim = fpModelData->GetHighELimit(materialID, particle);
 
   // Check if we are in the correct energy range
-  if (k >= lowLim && k < highLim) {
-    if (fpN2 != nullptr && materialID == fpN2->GetIndex()) {
+  if (k >= lowLim && k < highLim)
+  {
+    if (fpN2 != nullptr && materialID == fpN2->GetIndex())
+    {
       // Retrieve the excitation energy for the current material
       G4int level = fpModelData->RandomSelectShell(k, particle, materialID);
       G4double excitationEnergy = ptbExcitationStructure.ExcitationEnergy(level, fpN2->GetIndex());
@@ -277,13 +304,15 @@ void G4DNAPTBExcitationModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
 
       // Check that the new energy is above zero before applying it the particle.
       // Otherwise, do nothing.
-      if (newEnergy > 0) {
+      if (newEnergy > 0)
+      {
         fParticleChangeForGamma->ProposeMomentumDirection(aDynamicParticle->GetMomentumDirection());
         fParticleChangeForGamma->SetProposedKineticEnergy(newEnergy);
         fParticleChangeForGamma->ProposeLocalEnergyDeposit(excitationEnergy);
         G4double ioniThres = ptbIonisationStructure.IonisationEnergy(0, fpN2->GetIndex());
         // if excitation energy greater than ionisation threshold, then autoionisaiton
-        if ((excitationEnergy > ioniThres) && (G4UniformRand() < 0.5)) {
+        if ((excitationEnergy > ioniThres) && (G4UniformRand() < 0.5))
+        {
           fParticleChangeForGamma->ProposeLocalEnergyDeposit(ioniThres);
           // energy of ejected electron
           G4double secondaryKinetic = excitationEnergy - ioniThres;
@@ -297,36 +326,42 @@ void G4DNAPTBExcitationModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
           fvect->push_back(dp);
         }
       }
-      else {
+      else
+      {
         G4ExceptionDescription description;
         description << "Kinetic energy <= 0 at " << fpN2->GetName() << " material !!!";
         G4Exception("G4DNAPTBExcitationModel::SampleSecondaries", "", FatalException, description);
       }
     }
-    else if (fpG4_WATER == nullptr || materialID != fpG4_WATER->GetIndex()) {
+    else if (fpG4_WATER == nullptr || materialID != fpG4_WATER->GetIndex())
+    {
       // Retrieve the excitation energy for the current material
       G4double excitationEnergy = fTableMeanEnergyPTB[materialID];
       // Calculate the new energy of the particle
       G4double newEnergy = k - excitationEnergy;
       // Check that the new energy is above zero before applying it the particle.
       // Otherwise, do nothing.
-      if (newEnergy > 0) {
+      if (newEnergy > 0)
+      {
         fParticleChangeForGamma->ProposeMomentumDirection(aDynamicParticle->GetMomentumDirection());
         fParticleChangeForGamma->SetProposedKineticEnergy(newEnergy);
         fParticleChangeForGamma->ProposeLocalEnergyDeposit(excitationEnergy);
       }
-      else {
+      else
+      {
         G4ExceptionDescription description;
         description << "Kinetic energy <= 0 at " << materialID << " index material !!!";
         G4Exception("G4DNAPTBExcitationModel::SampleSecondaries", "", FatalException, description);
       }
     }
-    else {
+    else
+    {
       G4int level = RandomSelectShell(k, particle, materialID);
       G4double excitationEnergy = waterStructure.ExcitationEnergy(level);
       G4double newEnergy = k - excitationEnergy;
 
-      if (newEnergy > 0) {
+      if (newEnergy > 0)
+      {
         fParticleChangeForGamma->ProposeMomentumDirection(aDynamicParticle->GetMomentumDirection());
         fParticleChangeForGamma->SetProposedKineticEnergy(newEnergy);
         fParticleChangeForGamma->ProposeLocalEnergyDeposit(excitationEnergy);
@@ -334,7 +369,8 @@ void G4DNAPTBExcitationModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
         G4DNAChemistryManager::Instance()->CreateWaterMolecule(eExcitedMolecule, level,
                                                                theIncomingTrack);
       }
-      else {
+      else
+      {
         G4ExceptionDescription description;
         description << "Kinetic energy <= 0 at " << materialID << " ID material !!!";
         G4Exception("G4DNAPTBExcitationModel::SampleSecondaries", "", FatalException, description);

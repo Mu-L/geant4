@@ -32,8 +32,8 @@
 #include "G4VPrimitiveScorer.hh"
 #include "G4VScoringMesh.hh"
 
-#include <map>
 #include <fstream>
+#include <map>
 
 void G4VScoreWriter::SetScoringMesh(G4VScoringMesh* sm)
 {
@@ -42,8 +42,7 @@ void G4VScoreWriter::SetScoringMesh(G4VScoringMesh* sm)
   fScoringMesh->GetNumberOfSegments(fNMeshSegments);
 }
 
-void G4VScoreWriter::DumpQuantityToFile(const G4String& psName,
-                                        const G4String& fileName,
+void G4VScoreWriter::DumpQuantityToFile(const G4String& psName, const G4String& fileName,
                                         const G4String& option)
 {
   // change the option string into lowercase to the case-insensitive.
@@ -51,10 +50,8 @@ void G4VScoreWriter::DumpQuantityToFile(const G4String& psName,
   std::transform(opt.begin(), opt.end(), opt.begin(), (int (*)(int))(tolower));
 
   // confirm the option
-  if(opt.empty())
-    opt = "csv";
-  if(opt.find("csv") == std::string::npos &&
-     opt.find("sequence") == std::string::npos)
+  if (opt.empty()) opt = "csv";
+  if (opt.find("csv") == std::string::npos && opt.find("sequence") == std::string::npos)
   {
     G4cerr << "ERROR : DumpToFile : Unknown option -> " << option << G4endl;
     return;
@@ -62,7 +59,7 @@ void G4VScoreWriter::DumpQuantityToFile(const G4String& psName,
 
   // open the file
   std::ofstream ofile(fileName);
-  if(!ofile)
+  if (!ofile)
   {
     G4cerr << "ERROR : DumpToFile : File open error -> " << fileName << G4endl;
     return;
@@ -73,101 +70,92 @@ void G4VScoreWriter::DumpQuantityToFile(const G4String& psName,
   // retrieve the map
   MeshScoreMap fSMap = fScoringMesh->GetScoreMap();
 
-  // NOLINTNEXTLINE(modernize-use-auto): Explicitly want a const_iterator 
+  // NOLINTNEXTLINE(modernize-use-auto): Explicitly want a const_iterator
   MeshScoreMap::const_iterator msMapItr = fSMap.find(psName);
-  if(msMapItr == fSMap.end())
+  if (msMapItr == fSMap.end())
   {
-    G4cerr << "ERROR : DumpToFile : Unknown quantity, \"" << psName << "\"."
-           << G4endl;
+    G4cerr << "ERROR : DumpToFile : Unknown quantity, \"" << psName << "\"." << G4endl;
     return;
   }
 
   std::map<G4int, G4StatDouble*>* score = msMapItr->second->GetMap();
   ofile << "# primitive scorer name: " << msMapItr->first << std::endl;
-  if(fact != 1.0)
+  if (fact != 1.0)
   {
     ofile << "# multiplied factor : " << fact << std::endl;
   }
 
   G4double unitValue = fScoringMesh->GetPSUnitValue(psName);
-  G4String unit      = fScoringMesh->GetPSUnit(psName);
+  G4String unit = fScoringMesh->GetPSUnit(psName);
   G4String divisionAxisNames[3];
   fScoringMesh->GetDivisionAxisNames(divisionAxisNames);
   // index order
-  ofile << "# i" << divisionAxisNames[0] << ", i" << divisionAxisNames[1]
-        << ", i" << divisionAxisNames[2];
+  ofile << "# i" << divisionAxisNames[0] << ", i" << divisionAxisNames[1] << ", i"
+        << divisionAxisNames[2];
   // unit of scored value
   ofile << ", total(value) ";
-  if(!unit.empty())
-    ofile << "[" << unit << "]";
+  if (!unit.empty()) ofile << "[" << unit << "]";
   ofile << ", total(val^2), entry" << G4endl;
 
   // "sequence" option: write header info
-  if(opt.find("sequence") != std::string::npos)
+  if (opt.find("sequence") != std::string::npos)
   {
-    ofile << fNMeshSegments[0] << " " << fNMeshSegments[1] << " "
-          << fNMeshSegments[2] << G4endl;
+    ofile << fNMeshSegments[0] << " " << fNMeshSegments[1] << " " << fNMeshSegments[2] << G4endl;
   }
 
   // write quantity
   G4long count = 0;
   ofile << std::setprecision(16);  // for double value with 8 bytes
-  for(G4int x = 0; x < fNMeshSegments[0]; x++)
+  for (G4int x = 0; x < fNMeshSegments[0]; x++)
   {
-    for(G4int y = 0; y < fNMeshSegments[1]; y++)
+    for (G4int y = 0; y < fNMeshSegments[1]; y++)
     {
-      for(G4int z = 0; z < fNMeshSegments[2]; z++)
+      for (G4int z = 0; z < fNMeshSegments[2]; z++)
       {
         G4int idx = GetIndex(x, y, z);
 
-        if(opt.find("csv") != std::string::npos)
-          ofile << x << "," << y << "," << z << ",";
+        if (opt.find("csv") != std::string::npos) ofile << x << "," << y << "," << z << ",";
 
         auto value = score->find(idx);
-        if(value == score->end())
+        if (value == score->end())
         {
           ofile << 0. << "," << 0. << "," << 0;
         }
         else
         {
           ofile << (value->second->sum_wx()) / unitValue * fact << ","
-                << (value->second->sum_wx2()) / unitValue / unitValue * fact *
-                     fact
-                << "," << value->second->n();
+                << (value->second->sum_wx2()) / unitValue / unitValue * fact * fact << ","
+                << value->second->n();
         }
 
-        if(opt.find("csv") != std::string::npos)
+        if (opt.find("csv") != std::string::npos)
         {
           ofile << G4endl;
         }
-        else if(opt.find("sequence") != std::string::npos)
+        else if (opt.find("sequence") != std::string::npos)
         {
           ofile << " ";
-          if(count++ % 5 == 4)
-            ofile << G4endl;
+          if (count++ % 5 == 4) ofile << G4endl;
         }
 
       }  // z
-    }    // y
-  }      // x
+    }  // y
+  }  // x
   ofile << std::setprecision(6);
 
   // close the file
   ofile.close();
 }
 
-void G4VScoreWriter::DumpAllQuantitiesToFile(const G4String& fileName,
-                                             const G4String& option)
+void G4VScoreWriter::DumpAllQuantitiesToFile(const G4String& fileName, const G4String& option)
 {
   // change the option string into lowercase to the case-insensitive.
   G4String opt = option;
   std::transform(opt.begin(), opt.end(), opt.begin(), (G4int (*)(G4int))(tolower));
 
   // confirm the option
-  if(opt.empty())
-    opt = "csv";
-  if(opt.find("csv") == std::string::npos &&
-     opt.find("sequence") == std::string::npos)
+  if (opt.empty()) opt = "csv";
+  if (opt.find("csv") == std::string::npos && opt.find("sequence") == std::string::npos)
   {
     G4cerr << "ERROR : DumpToFile : Unknown option -> " << option << G4endl;
     return;
@@ -175,13 +163,13 @@ void G4VScoreWriter::DumpAllQuantitiesToFile(const G4String& fileName,
 
   // open the file
   std::ofstream ofile(fileName);
-  if(!ofile)
+  if (!ofile)
   {
     G4cerr << "ERROR : DumpToFile : File open error -> " << fileName << G4endl;
     return;
   }
   ofile << "# mesh name: " << fScoringMesh->GetWorldName() << G4endl;
-  if(fact != 1.0)
+  if (fact != 1.0)
   {
     ofile << "# multiplied factor : " << fact << std::endl;
   }
@@ -189,10 +177,10 @@ void G4VScoreWriter::DumpAllQuantitiesToFile(const G4String& fileName,
   // retrieve the map
   using MeshScoreMap = G4VScoringMesh::MeshScoreMap;
   MeshScoreMap fSMap = fScoringMesh->GetScoreMap();
-  // NOLINTNEXTLINE(modernize-use-auto): Explicitly want a const_iterator 
+  // NOLINTNEXTLINE(modernize-use-auto): Explicitly want a const_iterator
   MeshScoreMap::const_iterator msMapItr = fSMap.begin();
   std::map<G4int, G4StatDouble*>* score;
-  for(; msMapItr != fSMap.end(); msMapItr++)
+  for (; msMapItr != fSMap.end(); msMapItr++)
   {
     G4String psname = msMapItr->first;
 
@@ -200,66 +188,61 @@ void G4VScoreWriter::DumpAllQuantitiesToFile(const G4String& fileName,
     ofile << "# primitive scorer name: " << msMapItr->first << std::endl;
 
     G4double unitValue = fScoringMesh->GetPSUnitValue(psname);
-    G4String unit      = fScoringMesh->GetPSUnit(psname);
+    G4String unit = fScoringMesh->GetPSUnit(psname);
     G4String divisionAxisNames[3];
     fScoringMesh->GetDivisionAxisNames(divisionAxisNames);
     // index order
-    ofile << "# i" << divisionAxisNames[0] << ", i" << divisionAxisNames[1]
-          << ", i" << divisionAxisNames[2];
+    ofile << "# i" << divisionAxisNames[0] << ", i" << divisionAxisNames[1] << ", i"
+          << divisionAxisNames[2];
     // unit of scored value
     ofile << ", total(value) ";
-    if(!unit.empty())
-      ofile << "[" << unit << "]";
+    if (!unit.empty()) ofile << "[" << unit << "]";
     ofile << ", total(val^2), entry" << G4endl;
 
     // "sequence" option: write header info
-    if(opt.find("sequence") != std::string::npos)
+    if (opt.find("sequence") != std::string::npos)
     {
-      ofile << fNMeshSegments[0] << " " << fNMeshSegments[1] << " "
-            << fNMeshSegments[2] << G4endl;
+      ofile << fNMeshSegments[0] << " " << fNMeshSegments[1] << " " << fNMeshSegments[2] << G4endl;
     }
 
     // write quantity
     G4long count = 0;
     ofile << std::setprecision(16);  // for double value with 8 bytes
-    for(G4int x = 0; x < fNMeshSegments[0]; x++)
+    for (G4int x = 0; x < fNMeshSegments[0]; x++)
     {
-      for(G4int y = 0; y < fNMeshSegments[1]; y++)
+      for (G4int y = 0; y < fNMeshSegments[1]; y++)
       {
-        for(G4int z = 0; z < fNMeshSegments[2]; z++)
+        for (G4int z = 0; z < fNMeshSegments[2]; z++)
         {
           G4int idx = GetIndex(x, y, z);
 
-          if(opt.find("csv") != std::string::npos)
-            ofile << x << "," << y << "," << z << ",";
+          if (opt.find("csv") != std::string::npos) ofile << x << "," << y << "," << z << ",";
 
           auto value = score->find(idx);
-          if(value == score->end())
+          if (value == score->end())
           {
             ofile << 0. << "," << 0. << "," << 0;
           }
           else
           {
             ofile << (value->second->sum_wx()) / unitValue * fact << ","
-                  << (value->second->sum_wx2()) / unitValue / unitValue * fact *
-                       fact
-                  << "," << value->second->n();
+                  << (value->second->sum_wx2()) / unitValue / unitValue * fact * fact << ","
+                  << value->second->n();
           }
 
-          if(opt.find("csv") != std::string::npos)
+          if (opt.find("csv") != std::string::npos)
           {
             ofile << G4endl;
           }
-          else if(opt.find("sequence") != std::string::npos)
+          else if (opt.find("sequence") != std::string::npos)
           {
             ofile << " ";
-            if(count++ % 5 == 4)
-              ofile << G4endl;
+            if (count++ % 5 == 4) ofile << G4endl;
           }
 
         }  // z
-      }    // y
-    }      // x
+      }  // y
+    }  // x
     ofile << std::setprecision(6);
 
   }  // for(; msMapItr ....)

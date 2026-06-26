@@ -27,29 +27,28 @@
 // --------------------------------------------------------------------
 
 #include "G4BOptrForceCollisionTrackData.hh"
+
 #include "G4BOptrForceCollision.hh"
 
-G4BOptrForceCollisionTrackData::
-G4BOptrForceCollisionTrackData( const G4BOptrForceCollision* optr )
-  : G4VAuxiliaryTrackInformation(),
-    fForceCollisionOperator( optr )
+G4BOptrForceCollisionTrackData::G4BOptrForceCollisionTrackData(const G4BOptrForceCollision* optr)
+  : G4VAuxiliaryTrackInformation(), fForceCollisionOperator(optr)
 {
   fForceCollisionState = ForceCollisionState::free;
 }
 
 G4BOptrForceCollisionTrackData::~G4BOptrForceCollisionTrackData()
 {
-  if ( fForceCollisionState != ForceCollisionState::free )
+  if (fForceCollisionState != ForceCollisionState::free)
   {
     G4ExceptionDescription ed;
     ed << "Track deleted while under G4BOptrForceCollision biasing scheme of operator `";
-    if ( fForceCollisionOperator == nullptr )
+    if (fForceCollisionOperator == nullptr)
       ed << "(none)";
     else
       ed << fForceCollisionOperator->GetName();
-    ed <<"'. Will result in inconsistencies.";
-    G4Exception(" G4BOptrForceCollisionTrackData::~G4BOptrForceCollisionTrackData()",
-                "BIAS.GEN.19", JustWarning, ed);
+    ed << "'. Will result in inconsistencies.";
+    G4Exception(" G4BOptrForceCollisionTrackData::~G4BOptrForceCollisionTrackData()", "BIAS.GEN.19",
+                JustWarning, ed);
   }
 }
 
@@ -57,7 +56,7 @@ void G4BOptrForceCollisionTrackData::Print() const
 {
   G4cout << " G4BOptrForceCollisionTrackData object : " << this << G4endl;
   G4cout << "     Force collision operator : ";
-  if ( fForceCollisionOperator == nullptr )
+  if (fForceCollisionOperator == nullptr)
   {
     G4cout << "(none)";
   }
@@ -67,18 +66,18 @@ void G4BOptrForceCollisionTrackData::Print() const
   }
   G4cout << G4endl;
   G4cout << "     Force collision state    : ";
-  switch ( fForceCollisionState )
+  switch (fForceCollisionState)
   {
-    case ForceCollisionState::free :
+    case ForceCollisionState::free:
       G4cout << "free from biasing ";
       break;
-    case ForceCollisionState::toBeCloned :
+    case ForceCollisionState::toBeCloned:
       G4cout << "to be cloned ";
       break;
-    case ForceCollisionState::toBeForced :
+    case ForceCollisionState::toBeForced:
       G4cout << "to be interaction forced ";
       break;
-    case ForceCollisionState::toBeFreeFlight :
+    case ForceCollisionState::toBeFreeFlight:
       G4cout << "to be free flight forced (under weight = 0) ";
       break;
     default:

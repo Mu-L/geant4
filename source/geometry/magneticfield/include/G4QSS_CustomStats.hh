@@ -42,95 +42,96 @@
 // #define ON_COMPUTE_STEP_ITERATIONS 20
 // #define ON_COMPUTE_STEP_ITERATIONS_G4 2e3
 
-#include "G4qss_misc.hh"
 #include "G4Types.hh"
 #include "G4ios.hh"
+#include "G4qss_misc.hh"
 
 #include <atomic>
 #include <map>
 
 /**
  * @brief QSSStats contains functions for statistics on the QSS drivers.
+ * @ingroup geometry_magneticfield
  */
 
 struct QSSStats
 {
-  G4double precision_dQMin;
-  G4double precision_dQRel;
-  G4int currentStep;
-  G4int substeps;
-  std::atomic<G4int> stepperSteps;
-  std::map<G4int, std::map<G4int, G4int>> substepsByStepNumberByTrackID;
+    G4double precision_dQMin;
+    G4double precision_dQRel;
+    G4int currentStep;
+    G4int substeps;
+    std::atomic<G4int> stepperSteps;
+    std::map<G4int, std::map<G4int, G4int>> substepsByStepNumberByTrackID;
 
-  G4double reset_time;
-  G4double integration_time;
+    G4double reset_time;
+    G4double integration_time;
 
-  G4int dqrel_changes[Qss_misc::VAR_IDX_END];
-  G4int dqmin_changes[Qss_misc::VAR_IDX_END];
-  G4double max_error[Qss_misc::VAR_IDX_END];
+    G4int dqrel_changes[Qss_misc::VAR_IDX_END];
+    G4int dqmin_changes[Qss_misc::VAR_IDX_END];
+    G4double max_error[Qss_misc::VAR_IDX_END];
 
-  QSSStats()
-  {
-    substeps = 0;
-    reset_time = 0;
-    integration_time = 0;
-
-    for (std::size_t i = 0; i < Qss_misc::VAR_IDX_END; ++i)
+    QSSStats()
     {
-      dqrel_changes[i] = 0;
-      dqmin_changes[i] = 0;
-      max_error[i] = 0;
-    }
-  };
+      substeps = 0;
+      reset_time = 0;
+      integration_time = 0;
 
-  void print() const
-  {
-    G4int steps = stepperSteps.load();
-
-    std::vector<std::string> vars{"x", "y", "z", "vx", "vy", "vz"};
-
-    G4double avg_substeps = (G4double)substeps / steps;
-    G4double avg_integration_time = (G4double)integration_time / steps;
-    G4double avg_substeps_integration_time = (G4double)integration_time / substeps;
-    G4double avg_reset_time = (G4double)reset_time / steps;
-
-    std::stringstream ss;
-
-    ss << "QSS stats:" << std::endl;
-    ss << "dQMin: " << precision_dQMin << std::endl;
-    ss << "dQRel: " << precision_dQRel << std::endl;
-
-    ss << " Total steps: " << steps << std::endl
-       << " Total substeps: " << substeps << std::endl
-       << " Substeps average per step: " << avg_substeps << std::endl;
-
-    ss << " Substeps by track-step:" << std::endl;
-    for (const auto& stp : substepsByStepNumberByTrackID)
-    {
-      ss << "  Track #" << stp.first << std::endl;
-      for (const auto& stp2 : stp.second)
+      for (std::size_t i = 0; i < Qss_misc::VAR_IDX_END; ++i)
       {
-        ss << "    Step " << stp2.first << " => " << stp2.second << " substeps" << std::endl;
+        dqrel_changes[i] = 0;
+        dqmin_changes[i] = 0;
+        max_error[i] = 0;
       }
-    }
+    };
 
-    ss << " Integration time: " << integration_time << std::endl
-       << " Integration time average (step): " << avg_integration_time << std::endl
-       << " Integration time average (substep): " << avg_substeps_integration_time << std::endl;
-
-    ss << " Reset time: " << reset_time << std::endl
-       << " Reset time average: " << avg_reset_time << std::endl;
-
-    for (std::size_t index = 0; index < Qss_misc::VAR_IDX_END; ++index)
+    void print() const
     {
-      ss << " Variable " << vars[index] << ":" << std::endl;
-      ss << "  dQRel changes: " << dqrel_changes[index] << std::endl;
-      ss << "  dQMin changes: " << dqmin_changes[index] << std::endl;
-      ss << "  Max error: " << max_error[index] << std::endl;
-    }
+      G4int steps = stepperSteps.load();
 
-    G4cout << ss.rdbuf();
-  };
+      std::vector<std::string> vars{"x", "y", "z", "vx", "vy", "vz"};
+
+      G4double avg_substeps = (G4double)substeps / steps;
+      G4double avg_integration_time = (G4double)integration_time / steps;
+      G4double avg_substeps_integration_time = (G4double)integration_time / substeps;
+      G4double avg_reset_time = (G4double)reset_time / steps;
+
+      std::stringstream ss;
+
+      ss << "QSS stats:" << std::endl;
+      ss << "dQMin: " << precision_dQMin << std::endl;
+      ss << "dQRel: " << precision_dQRel << std::endl;
+
+      ss << " Total steps: " << steps << std::endl
+         << " Total substeps: " << substeps << std::endl
+         << " Substeps average per step: " << avg_substeps << std::endl;
+
+      ss << " Substeps by track-step:" << std::endl;
+      for (const auto& stp : substepsByStepNumberByTrackID)
+      {
+        ss << "  Track #" << stp.first << std::endl;
+        for (const auto& stp2 : stp.second)
+        {
+          ss << "    Step " << stp2.first << " => " << stp2.second << " substeps" << std::endl;
+        }
+      }
+
+      ss << " Integration time: " << integration_time << std::endl
+         << " Integration time average (step): " << avg_integration_time << std::endl
+         << " Integration time average (substep): " << avg_substeps_integration_time << std::endl;
+
+      ss << " Reset time: " << reset_time << std::endl
+         << " Reset time average: " << avg_reset_time << std::endl;
+
+      for (std::size_t index = 0; index < Qss_misc::VAR_IDX_END; ++index)
+      {
+        ss << " Variable " << vars[index] << ":" << std::endl;
+        ss << "  dQRel changes: " << dqrel_changes[index] << std::endl;
+        ss << "  dQMin changes: " << dqmin_changes[index] << std::endl;
+        ss << "  Max error: " << max_error[index] << std::endl;
+      }
+
+      G4cout << ss.rdbuf();
+    };
 };
 
 #endif

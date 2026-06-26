@@ -62,52 +62,51 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4MuPairProduction_h
-#define G4MuPairProduction_h 1
+#ifndef G4MUPAIRPRODUCTION_HH
+#define G4MUPAIRPRODUCTION_HH
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "globals.hh"
 #include "G4VEnergyLossProcess.hh"
+#include "globals.hh"
 
 class G4MuPairProduction : public G4VEnergyLossProcess
 {
-public:
+  public:
 
-  explicit G4MuPairProduction(const G4String& processName = "muPairProd");
+    explicit G4MuPairProduction(const G4String& processName = "muPairProd");
 
-  ~G4MuPairProduction() override = default;
+    ~G4MuPairProduction() override = default;
 
-  G4bool IsApplicable(const G4ParticleDefinition& p) override;
+    G4bool IsApplicable(const G4ParticleDefinition& p) override;
 
-  G4double MinPrimaryEnergy(const G4ParticleDefinition* p,
-			    const G4Material*, G4double cut) override;
+    G4double MinPrimaryEnergy(const G4ParticleDefinition* p, const G4Material*,
+                              G4double cut) override;
 
-  inline void SetLowestKineticEnergy(G4double e);
+    inline void SetLowestKineticEnergy(G4double e);
 
-  // print description in html
-  void ProcessDescription(std::ostream&) const override;
+    // print description in html
+    void ProcessDescription(std::ostream&) const override;
 
-  G4MuPairProduction & operator=(const G4MuPairProduction &right) = delete;
-  G4MuPairProduction(const G4MuPairProduction&) = delete;
+    G4MuPairProduction& operator=(const G4MuPairProduction& right) = delete;
+    G4MuPairProduction(const G4MuPairProduction&) = delete;
 
-protected:
+  protected:
 
-  // Print out of the class parameters
-  void StreamProcessInfo(std::ostream& outFile) const override;
+    // Print out of the class parameters
+    void StreamProcessInfo(std::ostream& outFile) const override;
 
-  void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
-			           const G4ParticleDefinition*) override;
+    void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
+                                     const G4ParticleDefinition*) override;
 
-  const G4ParticleDefinition* theParticle = nullptr;
-  G4double                    lowestKinEnergy;
-  G4bool                      isInitialised = false;
-
+    const G4ParticleDefinition* theParticle = nullptr;
+    G4double lowestKinEnergy;
+    G4bool isInitialised = false;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline void G4MuPairProduction::SetLowestKineticEnergy(G4double e) 
+inline void G4MuPairProduction::SetLowestKineticEnergy(G4double e)
 {
   lowestKinEnergy = e;
 }

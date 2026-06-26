@@ -25,33 +25,32 @@
 //
 //
 //
-#ifndef G4NuclearShellModelDensity_h
-#define G4NuclearShellModelDensity_h 1
+#ifndef G4NUCLEARSHELLMODELDENSITY_HH
+#define G4NUCLEARSHELLMODELDENSITY_HH
 
-#include "globals.hh"
 #include "G4ThreeVector.hh"
 #include "G4VNuclearDensity.hh"
+#include "globals.hh"
 
-#include <CLHEP/Units/PhysicalConstants.h>	// pi, fermi,..
-//#include <cmath>				// pow,..
+#include <CLHEP/Units/PhysicalConstants.h>  // pi, fermi,..
+// #include <cmath>				// pow,..
 
 class G4NuclearShellModelDensity : public G4VNuclearDensity
 {
-
   public:
+
     G4NuclearShellModelDensity(G4int anA, G4int aZ);
     ~G4NuclearShellModelDensity();
-    
-    G4double GetRelativeDensity(const G4ThreeVector & aPosition) const;
+
+    G4double GetRelativeDensity(const G4ThreeVector& aPosition) const;
     G4double GetRadius(const G4double maxRelativeDenisty) const;
-    G4double GetDeriv(const G4ThreeVector & aPosition) const;    
+    G4double GetDeriv(const G4ThreeVector& aPosition) const;
 
   private:
-    G4int    theA;
-    //G4int    theZ;
+
+    G4int theA;
+    // G4int    theZ;
     G4double theRsquare;
-  
 };
 
 #endif
-

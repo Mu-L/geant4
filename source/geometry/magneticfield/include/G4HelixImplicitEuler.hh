@@ -45,6 +45,7 @@
 /**
  * @brief G4HelixImplicitEuler implements a helix implicit Euler
  * stepper for magnetic field with 2nd order solver.
+ * @ingroup geometry_magneticfield
  */
 
 class G4HelixImplicitEuler : public G4MagHelicalStepper
@@ -61,7 +62,7 @@ class G4HelixImplicitEuler : public G4MagHelicalStepper
      * Default Destructor.
      */
     ~G4HelixImplicitEuler() override = default;
-  
+
     /**
      * The stepper function for the integration.
      *  @param[in] y Starting values array of integration variables.
@@ -69,11 +70,8 @@ class G4HelixImplicitEuler : public G4MagHelicalStepper
      *  @param[in] h The given step size.
      *  @param[out] yout Integration output.
      */
-    void DumbStepper( const G4double y[],
-                            G4ThreeVector Bfld,
-                            G4double h,
-                            G4double yout[] ) override;
-  
+    void DumbStepper(const G4double y[], G4ThreeVector Bfld, G4double h, G4double yout[]) override;
+
     /**
      * Returns the order, 2, of integration.
      */

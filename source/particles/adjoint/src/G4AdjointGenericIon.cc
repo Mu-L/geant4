@@ -38,7 +38,8 @@ G4AdjointGenericIon* G4AdjointGenericIon::Definition()
   // search in particle table]
   G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
   auto anInstance = static_cast<G4AdjointIons*>(pTable->FindParticle(name));
-  if (anInstance == nullptr) {
+  if (anInstance == nullptr)
+  {
     // create particle
     //
     //    Arguments for constructor are as follows

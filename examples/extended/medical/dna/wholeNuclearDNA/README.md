@@ -87,8 +87,7 @@ To build the whole geometry, set the flag fBuildBases in DetectorConstruction to
 
 ## PHYSICS
 
-This example uses the Geant4-DNA processes, using the G4EmDNAPhysics constructor 
-as in the dnaphysics example.
+This example uses the Geant4-DNA processes.
 
 ## SIMULATION OUTPUT AND RESULT ANALYSIS
 

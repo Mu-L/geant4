@@ -39,8 +39,8 @@
 // - 25.01.2013, G.Cosmo, A.Dotti - Introduced thread-safety for MT
 // - 15.06.2017, K.L.Genser - Added support for MuonicAtom
 // --------------------------------------------------------------------
-#ifndef G4ParticleDefinition_hh
-#define G4ParticleDefinition_hh 1
+#ifndef G4PARTICLEDEFINITION_HH
+#define G4PARTICLEDEFINITION_HH
 
 #include "G4PDefManager.hh"
 #include "G4ios.hh"
@@ -63,6 +63,7 @@ class G4ParticleDefinition
     friend class G4ParticlePropertyTable;
 
   public:
+
     // Only one type of constructor can be used for G4ParticleDefinition.
     // If you want to create new particle, you must set name of the particle
     // at construction. Most of members seen as arguments of the constructor
@@ -219,6 +220,7 @@ class G4ParticleDefinition
     inline G4int GetNumberOfAntiLambdasInAntiHypernucleus() const;
 
   protected:
+
     // Cannot be used
     G4ParticleDefinition();
 
@@ -248,6 +250,7 @@ class G4ParticleDefinition
     G4bool isMuonicAtom = false;
 
   private:
+
     // --- Shadow of master pointers
 
     // Each worker thread can access this field from the master thread

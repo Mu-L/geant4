@@ -36,17 +36,17 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4DecayProcessType_h
-#define G4DecayProcessType_h 1
+#ifndef G4DECAYPROCESSTYPE_HH
+#define G4DECAYPROCESSTYPE_HH
 
 enum G4DecayProcessType
 {
-  DECAY = 201 ,
-  DECAY_WithSpin ,
-  DECAY_PionMakeSpin ,
+  DECAY = 201,
+  DECAY_WithSpin,
+  DECAY_PionMakeSpin,
   DECAY_Radioactive = 210,
   DECAY_Unknown = 211,
-  DECAY_MuAtom  = 221,
+  DECAY_MuAtom = 221,
   DECAY_External = 231
 };
 #endif

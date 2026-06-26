@@ -31,67 +31,45 @@
 //      File name:     G4XnpTotal
 //
 //      Author:        Maria Grazia Pia (MariaGrazia.Pia@genova.infn.it)
-// 
+//
 //      Creation date: 15 April 1999
 //
-//      Modifications: 
-//      
+//      Modifications:
+//
 // -------------------------------------------------------------------
 
 #ifndef G4XNPTOTAL_HH
 #define G4XNPTOTAL_HH
 
-#include "globals.hh"
 #include "G4CrossSectionPatch.hh"
 #include "G4CrossSectionVector.hh"
+#include "globals.hh"
 
 class G4KineticTrack;
 
 class G4XnpTotal : public G4CrossSectionPatch
 {
+  public:
 
-public:
+    G4XnpTotal();
 
-  G4XnpTotal();
+    virtual ~G4XnpTotal();
 
-  virtual ~G4XnpTotal();
+    G4bool operator==(const G4XnpTotal& right) const;
+    G4bool operator!=(const G4XnpTotal& right) const;
 
-  G4bool operator==(const G4XnpTotal &right) const;
-  G4bool operator!=(const G4XnpTotal &right) const;
+    virtual const G4CrossSectionVector* GetComponents() const { return components; }
 
-  virtual const G4CrossSectionVector* GetComponents() const { return components; } 
- 
-  virtual G4String Name() const;
+    virtual G4String Name() const;
 
+  protected:
 
-protected:
+  private:
 
+    G4XnpTotal(const G4XnpTotal& right);
+    const G4XnpTotal& operator=(const G4XnpTotal& right);
 
-private:  
-
-  G4XnpTotal(const G4XnpTotal &right);
-  const G4XnpTotal& operator=(const G4XnpTotal &right);
-
-  G4CrossSectionVector* components;
-
+    G4CrossSectionVector* components;
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

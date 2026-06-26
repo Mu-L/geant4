@@ -36,22 +36,23 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedExtruded.h>
-#include "G4TwoVector.hh"
+#  include "G4Polyhedron.hh"
+#  include "G4TwoVector.hh"
 
-#include "G4Polyhedron.hh"
+#  include <VecGeom/volumes/UnplacedExtruded.h>
 
 /**
  * @brief G4UExtrudedSolid is a wrapper class for G4ExtrudedSolid
  * to make use of VecGeom ExtrudedSolid.
+ * @ingroup geometry_solids_specific
  */
 
 class G4UExtrudedSolid : public G4UAdapter<vecgeom::UnplacedExtruded>
 {
-  using Shape_t = vecgeom::UnplacedExtruded;
-  using Base_t  = G4UAdapter<vecgeom::UnplacedExtruded>;
+    using Shape_t = vecgeom::UnplacedExtruded;
+    using Base_t = G4UAdapter<vecgeom::UnplacedExtruded>;
 
   public:
 
@@ -60,13 +61,14 @@ class G4UExtrudedSolid : public G4UAdapter<vecgeom::UnplacedExtruded>
      */
     struct ZSection
     {
-      ZSection() : fZ(0.), fOffset(0.,0.), fScale(1.) {}
-      ZSection(G4double z, const G4TwoVector& offset, G4double scale)
-        : fZ(z), fOffset(offset), fScale(scale) {}
+        ZSection() : fZ(0.), fOffset(0., 0.), fScale(1.) {}
+        ZSection(G4double z, const G4TwoVector& offset, G4double scale)
+          : fZ(z), fOffset(offset), fScale(scale)
+        {}
 
-      G4double    fZ;
-      G4TwoVector fOffset;
-      G4double    fScale;
+        G4double fZ;
+        G4TwoVector fOffset;
+        G4double fScale;
     };
 
     /**
@@ -77,9 +79,8 @@ class G4UExtrudedSolid : public G4UAdapter<vecgeom::UnplacedExtruded>
      *  @param[in] zsections The 3D polyline with scale factors, i.e. the
      *             Z-sections defined by Z position in increasing order.
      */
-    G4UExtrudedSolid(const G4String&                 pName,
-                     const std::vector<G4TwoVector>& polygon,
-                     const std::vector<ZSection>&    zsections);
+    G4UExtrudedSolid(const G4String& pName, const std::vector<G4TwoVector>& polygon,
+                     const std::vector<ZSection>& zsections);
 
     /**
      * Special constructor for an extruded polygon with 2 Z-sections.
@@ -93,13 +94,9 @@ class G4UExtrudedSolid : public G4UAdapter<vecgeom::UnplacedExtruded>
      *  @param[in] off2 (X, Y) position of the second polygon in +halfZ.
      *  @param[in] scale2 Scale factor at +halfZ.
      */
-    G4UExtrudedSolid(const G4String&                 pName,
-                     const std::vector<G4TwoVector>& polygon,
-                     G4double                        halfZ,
-                     const G4TwoVector& off1 = G4TwoVector(0.,0.),
-                           G4double scale1 = 1.,
-                     const G4TwoVector& off2 = G4TwoVector(0.,0.),
-                           G4double scale2 = 1. );
+    G4UExtrudedSolid(const G4String& pName, const std::vector<G4TwoVector>& polygon, G4double halfZ,
+                     const G4TwoVector& off1 = G4TwoVector(0., 0.), G4double scale1 = 1.,
+                     const G4TwoVector& off2 = G4TwoVector(0., 0.), G4double scale2 = 1.);
 
     /**
      * Default Destructor.
@@ -143,10 +140,9 @@ class G4UExtrudedSolid : public G4UAdapter<vecgeom::UnplacedExtruded>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pMin, G4double& pMax) const override;  
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.
@@ -156,8 +152,8 @@ class G4UExtrudedSolid : public G4UAdapter<vecgeom::UnplacedExtruded>
     /**
      * Copy constructor and assignment operator.
      */
-    G4UExtrudedSolid( const G4UExtrudedSolid& source );
-    G4UExtrudedSolid &operator=(const G4UExtrudedSolid& source);
+    G4UExtrudedSolid(const G4UExtrudedSolid& source);
+    G4UExtrudedSolid& operator=(const G4UExtrudedSolid& source);
 };
 
 // --------------------------------------------------------------------

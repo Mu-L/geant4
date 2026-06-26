@@ -51,12 +51,13 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4EmCalculator_h
-#define G4EmCalculator_h 1
+#ifndef G4EMCALCULATOR_HH
+#define G4EMCALCULATOR_HH
+
+#include "G4VAtomDeexcitation.hh"
+#include "globals.hh"
 
 #include <vector>
-#include "globals.hh"
-#include "G4VAtomDeexcitation.hh"
 
 class G4LossTableManager;
 class G4NistManager;
@@ -78,479 +79,394 @@ class G4IonTable;
 
 class G4EmCalculator
 {
+  public:
 
-public:
+    G4EmCalculator();
 
-  G4EmCalculator();
+    ~G4EmCalculator();
 
-  ~G4EmCalculator();
+    //===========================================================================
+    // Methods to access precalculated dE/dx and cross sections
+    // Materials should exist in the list of the G4MaterialCutsCouple
+    //===========================================================================
 
-  //===========================================================================
-  // Methods to access precalculated dE/dx and cross sections
-  // Materials should exist in the list of the G4MaterialCutsCouple
-  //===========================================================================
+    G4double GetDEDX(G4double kinEnergy, const G4ParticleDefinition*, const G4Material*,
+                     const G4Region* r = nullptr);
+    inline G4double GetDEDX(G4double kinEnergy, const G4String& part, const G4String& mat,
+                            const G4String& regname = "world");
 
-  G4double GetDEDX(G4double kinEnergy, const G4ParticleDefinition*, 
-		   const G4Material*,
-                   const G4Region* r = nullptr);
-  inline G4double GetDEDX(G4double kinEnergy, const G4String& part, 
-		   const G4String& mat,
-                   const G4String& regname = "world");
+    G4double GetRangeFromRestricteDEDX(G4double kinEnergy, const G4ParticleDefinition*,
+                                       const G4Material*, const G4Region* r = nullptr);
+    inline G4double GetRangeFromRestricteDEDX(G4double kinEnergy, const G4String& part,
+                                              const G4String& mat,
+                                              const G4String& regname = "world");
 
-  G4double GetRangeFromRestricteDEDX(G4double kinEnergy, 
-				     const G4ParticleDefinition*, 
-				     const G4Material*,
-				     const G4Region* r = nullptr);
-  inline G4double GetRangeFromRestricteDEDX(G4double kinEnergy, 
-					    const G4String& part, 
-					    const G4String& mat,
-					    const G4String& regname = "world");
+    G4double GetCSDARange(G4double kinEnergy, const G4ParticleDefinition*, const G4Material*,
+                          const G4Region* r = nullptr);
+    inline G4double GetCSDARange(G4double kinEnergy, const G4String& part, const G4String& mat,
+                                 const G4String& regname = "world");
 
-  G4double GetCSDARange(G4double kinEnergy, const G4ParticleDefinition*, 
-			const G4Material*,
-			const G4Region* r = nullptr);
-  inline G4double GetCSDARange(G4double kinEnergy, const G4String& part, 
-			const G4String& mat,
-			const G4String& regname = "world");
+    G4double GetRange(G4double kinEnergy, const G4ParticleDefinition*, const G4Material*,
+                      const G4Region* r = nullptr);
+    inline G4double GetRange(G4double kinEnergy, const G4String& part, const G4String& mat,
+                             const G4String& regname = "world");
 
-  G4double GetRange(G4double kinEnergy, const G4ParticleDefinition*, 
-			const G4Material*,
-			const G4Region* r = nullptr);
-  inline G4double GetRange(G4double kinEnergy, const G4String& part, 
-			const G4String& mat,
-			const G4String& regname = "world");
+    G4double GetKinEnergy(G4double range, const G4ParticleDefinition*, const G4Material*,
+                          const G4Region* r = nullptr);
+    inline G4double GetKinEnergy(G4double range, const G4String& part, const G4String& mat,
+                                 const G4String& regname = "world");
 
-  G4double GetKinEnergy(G4double range, const G4ParticleDefinition*, 
-			const G4Material*,
-			const G4Region* r = nullptr);
-  inline G4double GetKinEnergy(G4double range, const G4String& part, 
-			const G4String& mat,
-			const G4String& regname = "world");
+    G4double GetCrossSectionPerVolume(G4double kinEnergy, const G4ParticleDefinition*,
+                                      const G4String& processName, const G4Material*,
+                                      const G4Region* r = nullptr);
+    inline G4double GetCrossSectionPerVolume(G4double kinEnergy, const G4String& part,
+                                             const G4String& proc, const G4String& mat,
+                                             const G4String& regname = "world");
 
-  G4double GetCrossSectionPerVolume(
-                   G4double kinEnergy, const G4ParticleDefinition*,
-                   const G4String& processName,  const G4Material*,
-		   const G4Region* r = nullptr);
-  inline G4double GetCrossSectionPerVolume(
-                   G4double kinEnergy, const G4String& part, const G4String& proc,
-                   const G4String& mat, const G4String& regname = "world");
+    G4double GetShellIonisationCrossSectionPerAtom(const G4String& part, G4int Z,
+                                                   G4AtomicShellEnumerator shell,
+                                                   G4double kinEnergy);
 
-  G4double GetShellIonisationCrossSectionPerAtom(
-                   const G4String& part, G4int Z, 
-		   G4AtomicShellEnumerator shell,
-                   G4double kinEnergy);
+    G4double GetMeanFreePath(G4double kinEnergy, const G4ParticleDefinition*,
+                             const G4String& processName, const G4Material*,
+                             const G4Region* r = nullptr);
+    inline G4double GetMeanFreePath(G4double kinEnergy, const G4String& part, const G4String& proc,
+                                    const G4String& mat, const G4String& regname = "world");
 
-  G4double GetMeanFreePath(G4double kinEnergy, const G4ParticleDefinition*,
-			   const G4String& processName,  const G4Material*,
-			   const G4Region* r = nullptr);
-  inline G4double GetMeanFreePath(G4double kinEnergy, const G4String& part, 
-				  const G4String& proc, const G4String& mat, 
-				  const G4String& regname = "world");
+    void PrintDEDXTable(const G4ParticleDefinition*);
 
-  void PrintDEDXTable(const G4ParticleDefinition*);
+    void PrintRangeTable(const G4ParticleDefinition*);
 
-  void PrintRangeTable(const G4ParticleDefinition*);
+    void PrintInverseRangeTable(const G4ParticleDefinition*);
 
-  void PrintInverseRangeTable(const G4ParticleDefinition*);
+    //===========================================================================
+    // Methods to calculate dE/dx and cross sections "on fly"
+    // Existing tables and G4MaterialCutsCouples are not used
+    //===========================================================================
 
-  //===========================================================================
-  // Methods to calculate dE/dx and cross sections "on fly"
-  // Existing tables and G4MaterialCutsCouples are not used
-  //===========================================================================
+    G4double ComputeDEDX(G4double kinEnergy, const G4ParticleDefinition*,
+                         const G4String& processName, const G4Material*, G4double cut = DBL_MAX);
+    inline G4double ComputeDEDX(G4double kinEnergy, const G4String& part, const G4String& proc,
+                                const G4String& mat, G4double cut = DBL_MAX);
 
-  G4double ComputeDEDX(G4double kinEnergy, const G4ParticleDefinition*,
-                       const G4String& processName,  const G4Material*,
-		       G4double cut = DBL_MAX);
-  inline G4double ComputeDEDX(G4double kinEnergy, const G4String& part, 
-		       const G4String& proc,
-                       const G4String& mat, G4double cut = DBL_MAX);
+    G4double ComputeElectronicDEDX(G4double kinEnergy, const G4ParticleDefinition*,
+                                   const G4Material* mat, G4double cut = DBL_MAX);
+    inline G4double ComputeElectronicDEDX(G4double kinEnergy, const G4String& part,
+                                          const G4String& mat, G4double cut = DBL_MAX);
 
-  G4double ComputeElectronicDEDX(G4double kinEnergy, 
-				 const G4ParticleDefinition*,
-				 const G4Material* mat, G4double cut = DBL_MAX);
-  inline G4double ComputeElectronicDEDX(G4double kinEnergy, const G4String& part,
-				 const G4String& mat, G4double cut = DBL_MAX);
+    G4double ComputeDEDXForCutInRange(G4double kinEnergy, const G4ParticleDefinition*,
+                                      const G4Material* mat, G4double rangecut = DBL_MAX);
 
-  G4double ComputeDEDXForCutInRange(G4double kinEnergy, 
-				    const G4ParticleDefinition*,
-				    const G4Material* mat, G4double rangecut = DBL_MAX);
-  inline G4double ComputeDEDXForCutInRange(G4double kinEnergy, const G4String& part,
-					   const G4String& mat, 
-					   G4double rangecut = DBL_MAX);
+    inline G4double ComputeDEDXForCutInRange(G4double kinEnergy, const G4String& part,
+                                             const G4String& mat, G4double rangecut = DBL_MAX);
 
-  G4double ComputeNuclearDEDX(G4double kinEnergy, const G4ParticleDefinition*, 
-			      const G4Material*);
-  inline G4double ComputeNuclearDEDX(G4double kinEnergy, const G4String& part, 
-			      const G4String& mat);
+    G4double ComputeNuclearDEDX(G4double kinEnergy, const G4ParticleDefinition*, const G4Material*);
+    inline G4double ComputeNuclearDEDX(G4double kinEnergy, const G4String& part,
+                                       const G4String& mat);
 
-  G4double ComputeTotalDEDX(G4double kinEnergy, const G4ParticleDefinition*, 
-			    const G4Material*, G4double cut = DBL_MAX);
-  inline G4double ComputeTotalDEDX(G4double kinEnergy, const G4String& part, 
-			    const G4String& mat, G4double cut = DBL_MAX);
+    G4double ComputeTotalDEDX(G4double kinEnergy, const G4ParticleDefinition*, const G4Material*,
+                              G4double cut = DBL_MAX);
+    inline G4double ComputeTotalDEDX(G4double kinEnergy, const G4String& part, const G4String& mat,
+                                     G4double cut = DBL_MAX);
 
-  G4double ComputeCrossSectionPerVolume(
-                       G4double kinEnergy, const G4ParticleDefinition*,
-                       const G4String& processName,  const G4Material*,
-		       G4double cut = 0.0);
-  inline G4double ComputeCrossSectionPerVolume(
-                       G4double kinEnergy, const G4String& part, 
-		       const G4String& proc,
-                       const G4String& mat, G4double cut = 0.0);
+    G4double ComputeCrossSectionPerVolume(G4double kinEnergy, const G4ParticleDefinition*,
+                                          const G4String& processName, const G4Material*,
+                                          G4double cut = 0.0);
+    inline G4double ComputeCrossSectionPerVolume(G4double kinEnergy, const G4String& part,
+                                                 const G4String& proc, const G4String& mat,
+                                                 G4double cut = 0.0);
 
-  G4double ComputeCrossSectionPerAtom(
-                       G4double kinEnergy, const G4ParticleDefinition*,
-                       const G4String& processName, G4double Z, G4double A,
-		       G4double cut = 0.0);
-  inline G4double ComputeCrossSectionPerAtom(
-                       G4double kinEnergy, const G4String& part,
-                       const G4String& processName, const G4Element*,
-		       G4double cut = 0.0);
+    G4double ComputeCrossSectionPerAtom(G4double kinEnergy, const G4ParticleDefinition*,
+                                        const G4String& processName, G4double Z, G4double A,
+                                        G4double cut = 0.0);
+    inline G4double ComputeCrossSectionPerAtom(G4double kinEnergy, const G4String& part,
+                                               const G4String& processName, const G4Element*,
+                                               G4double cut = 0.0);
 
-  G4double ComputeCrossSectionPerShell(
-                       G4double kinEnergy, const G4ParticleDefinition*,
-                       const G4String& processName, G4int Z, G4int shellIdx,
-		       G4double cut = 0.0);
-  inline G4double ComputeCrossSectionPerShell(
-                       G4double kinEnergy, const G4String& part,
-                       const G4String& processName, const G4Element*,
-                       G4int shellIdx,
-		       G4double cut = 0.0);
+    G4double ComputeCrossSectionPerShell(G4double kinEnergy, const G4ParticleDefinition*,
+                                         const G4String& processName, G4int Z, G4int shellIdx,
+                                         G4double cut = 0.0);
 
-  G4double ComputeGammaAttenuationLength(G4double kinEnergy, 
-					 const G4Material*);
+    inline G4double ComputeCrossSectionPerShell(G4double kinEnergy, const G4String& part,
+                                                const G4String& processName, const G4Element*,
+                                                G4int shellIdx, G4double cut = 0.0);
 
-  G4double ComputeShellIonisationCrossSectionPerAtom(
-                   const G4String& part, G4int Z, 
-		   G4AtomicShellEnumerator shell,
-                   G4double kinEnergy,
-                   const G4Material* mat = nullptr);
+    G4double ComputeGammaAttenuationLength(G4double kinEnergy, const G4Material*);
 
-  G4double ComputeMeanFreePath(
-                       G4double kinEnergy, const G4ParticleDefinition*,
-                       const G4String& processName,  const G4Material*,
-		       G4double cut = 0.0);
-  inline G4double ComputeMeanFreePath(
-                       G4double kinEnergy, const G4String&, const G4String&,
-                       const G4String& processName, G4double cut = 0.0);
+    G4double ComputeShellIonisationCrossSectionPerAtom(const G4String& part, G4int Z,
+                                                       G4AtomicShellEnumerator shell,
+                                                       G4double kinEnergy,
+                                                       const G4Material* mat = nullptr);
 
-  G4double ComputeEnergyCutFromRangeCut(
-                       G4double range, const G4ParticleDefinition*,
-		       const G4Material*);
-  inline G4double ComputeEnergyCutFromRangeCut(
-                       G4double range, const G4String&,
-		       const G4String&);
+    G4double ComputeMeanFreePath(G4double kinEnergy, const G4ParticleDefinition*,
+                                 const G4String& processName, const G4Material*,
+                                 G4double cut = 0.0);
+    inline G4double ComputeMeanFreePath(G4double kinEnergy, const G4String&, const G4String&,
+                                        const G4String& processName, G4double cut = 0.0);
 
-  //===========================================================================
-  // Methods to access particles, materials, regions, processes
-  //===========================================================================
+    G4double ComputeEnergyCutFromRangeCut(G4double range, const G4ParticleDefinition*,
+                                          const G4Material*);
+    inline G4double ComputeEnergyCutFromRangeCut(G4double range, const G4String&, const G4String&);
 
-  const G4ParticleDefinition* FindParticle(const G4String&);
+    //===========================================================================
+    // Methods to access particles, materials, regions, processes
+    //===========================================================================
 
-  const G4ParticleDefinition* FindIon(G4int Z, G4int A);
+    const G4ParticleDefinition* FindParticle(const G4String&);
 
-  const G4Material* FindMaterial(const G4String&);
+    const G4ParticleDefinition* FindIon(G4int Z, G4int A);
 
-  const G4Region* FindRegion(const G4String&);
+    const G4Material* FindMaterial(const G4String&);
 
-  const G4MaterialCutsCouple* FindCouple(const G4Material*, 
-					 const G4Region* r = nullptr);
+    const G4Region* FindRegion(const G4String&);
 
-  G4VProcess* FindProcess(const G4ParticleDefinition* part,
-			  const G4String& processName);
+    const G4MaterialCutsCouple* FindCouple(const G4Material*, const G4Region* r = nullptr);
 
-  void SetupMaterial(const G4Material*);
+    G4VProcess* FindProcess(const G4ParticleDefinition* part, const G4String& processName);
 
-  void SetupMaterial(const G4String&);
+    void SetupMaterial(const G4Material*);
 
-  void SetVerbose(G4int val);
+    void SetupMaterial(const G4String&);
 
-  inline void SetApplySmoothing(G4int val);
+    void SetVerbose(G4int val);
 
-  // hide copy and assign
-  G4EmCalculator & operator=(const  G4EmCalculator &right) = delete;
-  G4EmCalculator(const  G4EmCalculator&) = delete;
+    inline void SetApplySmoothing(G4int val);
 
-private:
+    // hide copy and assign
+    G4EmCalculator& operator=(const G4EmCalculator& right) = delete;
+    G4EmCalculator(const G4EmCalculator&) = delete;
 
-  G4bool UpdateParticle(const G4ParticleDefinition*, G4double kinEnergy);
+  private:
 
-  G4bool UpdateCouple(const G4Material*, G4double cut);
+    G4bool UpdateParticle(const G4ParticleDefinition*, G4double kinEnergy);
 
-  void FindLambdaTable(const G4ParticleDefinition*, 
-                       const G4String& processName,
-		                   G4double kinEnergy, G4int& proctype);
+    G4bool UpdateCouple(const G4Material*, G4double cut);
 
-  G4bool FindEmModel(const G4ParticleDefinition*, 
-                     const G4String& processName,
-                           G4double kinEnergy);
+    void FindLambdaTable(const G4ParticleDefinition*, const G4String& processName,
+                         G4double kinEnergy, G4int& proctype);
 
-  G4VEnergyLossProcess* FindEnLossProcess(const G4ParticleDefinition*,
-					  const G4String& processName);
+    G4bool FindEmModel(const G4ParticleDefinition*, const G4String& processName,
+                       G4double kinEnergy);
 
-  G4VEmProcess* FindDiscreteProcess(const G4ParticleDefinition*,
-				    const G4String& processName);
+    G4VEnergyLossProcess* FindEnLossProcess(const G4ParticleDefinition*,
+                                            const G4String& processName);
 
-  G4VMultipleScattering* FindMscProcess(const G4ParticleDefinition*,
-					const G4String& processName);
+    G4VEmProcess* FindDiscreteProcess(const G4ParticleDefinition*, const G4String& processName);
 
-  G4bool ActiveForParticle(const G4ParticleDefinition* part,
-			   G4VProcess* proc);
+    G4VMultipleScattering* FindMscProcess(const G4ParticleDefinition*, const G4String& processName);
 
-  void CheckMaterial(G4int Z);
+    G4bool ActiveForParticle(const G4ParticleDefinition* part, G4VProcess* proc);
 
-  G4EmParameters*              theParameters;
-  G4LossTableManager*          manager;
-  G4NistManager*               nist;
-  G4IonTable*                  ionTable;
-  G4EmCorrections*             corr; 
+    void CheckMaterial(G4int Z);
 
-  // cache
-  const G4MaterialCutsCouple*  currentCouple = nullptr;
-  const G4Material*            currentMaterial = nullptr;
-  const G4Material*            cutMaterial = nullptr;
-  const G4ParticleDefinition*  currentParticle = nullptr;
-  const G4ParticleDefinition*  lambdaParticle = nullptr;
-  const G4ParticleDefinition*  baseParticle = nullptr;
-  const G4PhysicsTable*        currentLambda = nullptr;
+    G4EmParameters* theParameters;
+    G4LossTableManager* manager;
+    G4NistManager* nist;
+    G4IonTable* ionTable;
+    G4EmCorrections* corr;
 
-  G4VEmModel*                  currentModel = nullptr;
-  G4VEmModel*                  loweModel = nullptr;
-  G4VEnergyLossProcess*        currentProcess = nullptr;
-  G4VProcess*                  curProcess = nullptr;
-  G4DynamicParticle*           dynParticle = nullptr;
+    // cache
+    const G4MaterialCutsCouple* currentCouple = nullptr;
+    const G4Material* currentMaterial = nullptr;
+    const G4Material* cutMaterial = nullptr;
+    const G4ParticleDefinition* currentParticle = nullptr;
+    const G4ParticleDefinition* lambdaParticle = nullptr;
+    const G4ParticleDefinition* baseParticle = nullptr;
+    const G4PhysicsTable* currentLambda = nullptr;
 
-  const G4ParticleDefinition*  theGenericIon;
-  G4ionEffectiveCharge*        ionEffCharge;
+    G4VEmModel* currentModel = nullptr;
+    G4VEmModel* loweModel = nullptr;
+    G4VEnergyLossProcess* currentProcess = nullptr;
+    G4VProcess* curProcess = nullptr;
+    G4DynamicParticle* dynParticle = nullptr;
 
-  G4double                     currentCut = DBL_MAX;
-  G4double                     chargeSquare = 1.0;
-  G4double                     massRatio = 1.0;
-  G4double                     mass = 0;
-  G4double                     cutenergy[3];
+    const G4ParticleDefinition* theGenericIon;
+    G4ionEffectiveCharge* ionEffCharge;
 
-  G4int                        currentCoupleIndex = 0;
-  G4int                        nLocalMaterials = 0;
-  G4int                        verbose = 0;
+    G4double currentCut = DBL_MAX;
+    G4double chargeSquare = 1.0;
+    G4double massRatio = 1.0;
+    G4double mass = 0;
+    G4double length = 0.0;
+    G4double cutenergy[3];
 
-  G4bool                       isIon = false;
-  G4bool                       isApplicable = false;
-  G4bool                       applySmoothing = true;
+    G4int currentCoupleIndex = 0;
+    G4int nLocalMaterials = 0;
+    G4int verbose = 0;
 
-  std::vector<const G4Material*>            localMaterials;
-  std::vector<const G4MaterialCutsCouple*>  localCouples;
-  std::vector<G4double>                     localCuts;
+    G4bool isIon = false;
+    G4bool isApplicable = false;
+    G4bool applySmoothing = true;
 
-  G4String                     currentName = "";
-  G4String                     lambdaName = "";
-  G4String                     currentParticleName = "";
-  G4String                     currentMaterialName = "";
-  G4String                     currentProcessName = "";
+    std::vector<const G4Material*> localMaterials;
+    std::vector<const G4MaterialCutsCouple*> localCouples;
+    std::vector<G4double> localCuts;
+
+    G4String currentName;
+    G4String lambdaName;
+    G4String currentParticleName;
+    G4String currentMaterialName;
+    G4String currentProcessName;
 };
 
 //....oooOO0OOooo.......oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-inline
-G4double G4EmCalculator::GetDEDX(G4double kinEnergy, const G4String& particle,
-                                 const G4String& material, const G4String& reg)
+inline G4double G4EmCalculator::GetDEDX(G4double kinEnergy, const G4String& particle,
+                                        const G4String& material, const G4String& reg)
 {
-  return GetDEDX(kinEnergy,FindParticle(particle),
-		 FindMaterial(material),FindRegion(reg));
+  return GetDEDX(kinEnergy, FindParticle(particle), FindMaterial(material), FindRegion(reg));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
-G4double G4EmCalculator::GetRangeFromRestricteDEDX(G4double kinEnergy, 
-						   const G4String& particle,
-						   const G4String& material, 
-						   const G4String& reg)
+inline G4double G4EmCalculator::GetRangeFromRestricteDEDX(G4double kinEnergy,
+                                                          const G4String& particle,
+                                                          const G4String& material,
+                                                          const G4String& reg)
 {
-  return GetRangeFromRestricteDEDX(kinEnergy,FindParticle(particle),
-				   FindMaterial(material),FindRegion(reg));
+  return GetRangeFromRestricteDEDX(kinEnergy, FindParticle(particle), FindMaterial(material),
+                                   FindRegion(reg));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
-G4double G4EmCalculator::GetCSDARange(G4double kinEnergy, 
-				      const G4String& particle,
-				      const G4String& material, 
-				      const G4String& reg)
+inline G4double G4EmCalculator::GetCSDARange(G4double kinEnergy, const G4String& particle,
+                                             const G4String& material, const G4String& reg)
 {
-  return GetCSDARange(kinEnergy,FindParticle(particle),
-		  FindMaterial(material),FindRegion(reg));
+  return GetCSDARange(kinEnergy, FindParticle(particle), FindMaterial(material), FindRegion(reg));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
-G4double G4EmCalculator::GetRange(G4double kinEnergy, 
-				  const G4String& particle,
-				  const G4String& material, 
-				  const G4String& reg)
+inline G4double G4EmCalculator::GetRange(G4double kinEnergy, const G4String& particle,
+                                         const G4String& material, const G4String& reg)
 {
-  return GetRange(kinEnergy,FindParticle(particle),
-		  FindMaterial(material),FindRegion(reg));
+  return GetRange(kinEnergy, FindParticle(particle), FindMaterial(material), FindRegion(reg));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
-G4double G4EmCalculator::GetKinEnergy(G4double range, const G4String& particle,
-                                      const G4String& material, const G4String& reg)
+inline G4double G4EmCalculator::GetKinEnergy(G4double range, const G4String& particle,
+                                             const G4String& material, const G4String& reg)
 {
-  return GetKinEnergy(range,FindParticle(particle),
-		      FindMaterial(material),FindRegion(reg));
+  return GetKinEnergy(range, FindParticle(particle), FindMaterial(material), FindRegion(reg));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
-G4double G4EmCalculator::GetCrossSectionPerVolume(G4double kinEnergy,
-                                            const G4String& particle,
-					    const G4String& processName,
-                                            const G4String& material,
-					    const G4String& reg)
+inline G4double G4EmCalculator::GetCrossSectionPerVolume(G4double kinEnergy,
+                                                         const G4String& particle,
+                                                         const G4String& processName,
+                                                         const G4String& material,
+                                                         const G4String& reg)
 {
-  return GetCrossSectionPerVolume(kinEnergy,FindParticle(particle),processName,
-                                  FindMaterial(material),FindRegion(reg));
+  return GetCrossSectionPerVolume(kinEnergy, FindParticle(particle), processName,
+                                  FindMaterial(material), FindRegion(reg));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
-G4double G4EmCalculator::GetMeanFreePath(G4double kinEnergy,
-                                         const G4String& particle,
-					 const G4String& processName,
-                                         const G4String& material,
-					 const G4String& reg)
+inline G4double G4EmCalculator::GetMeanFreePath(G4double kinEnergy, const G4String& particle,
+                                                const G4String& processName,
+                                                const G4String& material, const G4String& reg)
 {
-  return GetMeanFreePath(kinEnergy,FindParticle(particle),processName,
-                         FindMaterial(material),FindRegion(reg));
+  return GetMeanFreePath(kinEnergy, FindParticle(particle), processName, FindMaterial(material),
+                         FindRegion(reg));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline G4double 
-G4EmCalculator::ComputeElectronicDEDX(G4double kinEnergy, const G4String& part,
-				      const G4String& mat, G4double cut)
+inline G4double G4EmCalculator::ComputeElectronicDEDX(G4double kinEnergy, const G4String& part,
+                                                      const G4String& mat, G4double cut)
 {
-  return 
-    ComputeElectronicDEDX(kinEnergy,FindParticle(part),FindMaterial(mat),cut);
+  return ComputeElectronicDEDX(kinEnergy, FindParticle(part), FindMaterial(mat), cut);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline G4double 
-G4EmCalculator::ComputeDEDXForCutInRange(G4double kinEnergy, 
-					 const G4String& part,
-					 const G4String& mat, 
-					 G4double rangecut)
+inline G4double G4EmCalculator::ComputeDEDXForCutInRange(G4double kinEnergy, const G4String& part,
+                                                         const G4String& mat, G4double rangecut)
 {
-  return ComputeDEDXForCutInRange(kinEnergy,FindParticle(part),
-				  FindMaterial(mat), rangecut);
+  return ComputeDEDXForCutInRange(kinEnergy, FindParticle(part), FindMaterial(mat), rangecut);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
-G4double G4EmCalculator::ComputeTotalDEDX(G4double kinEnergy, 
-					  const G4String& part,
-					  const G4String& mat, 
-					  G4double cut)
+inline G4double G4EmCalculator::ComputeTotalDEDX(G4double kinEnergy, const G4String& part,
+                                                 const G4String& mat, G4double cut)
 {
-  return ComputeTotalDEDX(kinEnergy,FindParticle(part),FindMaterial(mat),cut);
+  return ComputeTotalDEDX(kinEnergy, FindParticle(part), FindMaterial(mat), cut);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
-G4double G4EmCalculator::ComputeDEDX(G4double kinEnergy,
-                                     const G4String& particle,
-				     const G4String& processName,
-                                     const G4String& material,
-                                           G4double cut)
+inline G4double G4EmCalculator::ComputeDEDX(G4double kinEnergy, const G4String& particle,
+                                            const G4String& processName, const G4String& material,
+                                            G4double cut)
 {
-  return ComputeDEDX(kinEnergy,FindParticle(particle),processName,
-                     FindMaterial(material),cut);
+  return ComputeDEDX(kinEnergy, FindParticle(particle), processName, FindMaterial(material), cut);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
-G4double G4EmCalculator::ComputeNuclearDEDX(G4double kinEnergy,
-                                      const G4String& particle,
-				      const G4String& material)
+inline G4double G4EmCalculator::ComputeNuclearDEDX(G4double kinEnergy, const G4String& particle,
+                                                   const G4String& material)
 {
-  return ComputeNuclearDEDX(kinEnergy,FindParticle(particle),
-			    FindMaterial(material));
+  return ComputeNuclearDEDX(kinEnergy, FindParticle(particle), FindMaterial(material));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
-G4double G4EmCalculator::ComputeCrossSectionPerVolume(
-                                                   G4double kinEnergy,
-                                             const G4String& particle,
-					     const G4String& processName,
-                                             const G4String& material,
-                                                   G4double cut)
+inline G4double G4EmCalculator::ComputeCrossSectionPerVolume(G4double kinEnergy,
+                                                             const G4String& particle,
+                                                             const G4String& processName,
+                                                             const G4String& material, G4double cut)
 {
-  return ComputeCrossSectionPerVolume(kinEnergy,FindParticle(particle),
-				      processName,
-                                      FindMaterial(material),cut);
+  return ComputeCrossSectionPerVolume(kinEnergy, FindParticle(particle), processName,
+                                      FindMaterial(material), cut);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
-G4double G4EmCalculator::ComputeCrossSectionPerAtom(G4double kinEnergy,
-                                              const G4String& particle,
-                                              const G4String& processName,
- 					      const G4Element* elm,
-		                                    G4double cut)
+inline G4double G4EmCalculator::ComputeCrossSectionPerAtom(G4double kinEnergy,
+                                                           const G4String& particle,
+                                                           const G4String& processName,
+                                                           const G4Element* elm, G4double cut)
 {
-  return ComputeCrossSectionPerAtom(kinEnergy,FindParticle(particle),
-				    processName,
-                                    elm->GetZ(),elm->GetN(),cut);
+  return ComputeCrossSectionPerAtom(kinEnergy, FindParticle(particle), processName, elm->GetZ(),
+                                    elm->GetN(), cut);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline G4double G4EmCalculator::ComputeCrossSectionPerShell(
-                       G4double kinEnergy, const G4String& part,
-                       const G4String& processName, const G4Element* elm,
-                       G4int shellIdx, G4double cut)
+inline G4double G4EmCalculator::ComputeCrossSectionPerShell(G4double kinEnergy,
+                                                            const G4String& part,
+                                                            const G4String& processName,
+                                                            const G4Element* elm, G4int shellIdx,
+                                                            G4double cut)
 {
-  return ComputeCrossSectionPerShell(kinEnergy, FindParticle(part), 
-				     processName, elm->GetZasInt(), 
-				     shellIdx, cut);
+  return ComputeCrossSectionPerShell(kinEnergy, FindParticle(part), processName, elm->GetZasInt(),
+                                     shellIdx, cut);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
-G4double G4EmCalculator::ComputeEnergyCutFromRangeCut(
-                         G4double range, 
-			 const G4String& particle,
-			 const G4String& material)
+inline G4double G4EmCalculator::ComputeEnergyCutFromRangeCut(G4double range,
+                                                             const G4String& particle,
+                                                             const G4String& material)
 {
-  return ComputeEnergyCutFromRangeCut(range,FindParticle(particle),
-				      FindMaterial(material));
+  return ComputeEnergyCutFromRangeCut(range, FindParticle(particle), FindMaterial(material));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
-G4double G4EmCalculator::ComputeMeanFreePath(G4double kinEnergy,
-                                             const G4String& particle,
-                                             const G4String& processName,
-                                             const G4String& material,
-                                                   G4double cut)
+inline G4double G4EmCalculator::ComputeMeanFreePath(G4double kinEnergy, const G4String& particle,
+                                                    const G4String& processName,
+                                                    const G4String& material, G4double cut)
 {
-  return ComputeMeanFreePath(kinEnergy,FindParticle(particle),processName,
-                             FindMaterial(material),cut);
+  return ComputeMeanFreePath(kinEnergy, FindParticle(particle), processName, FindMaterial(material),
+                             cut);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

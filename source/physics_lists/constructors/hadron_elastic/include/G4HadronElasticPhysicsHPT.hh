@@ -42,20 +42,20 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4HadronElasticPhysicsHPT_h
-#define G4HadronElasticPhysicsHPT_h 1
+#ifndef G4HADRONELASTICPHYSICSHPT_HH
+#define G4HADRONELASTICPHYSICSHPT_HH
 
 #include "G4HadronElasticPhysicsHP.hh"
 
+class G4HadronElasticPhysicsHPT : public G4HadronElasticPhysicsHP
+{
+  public:
 
-class G4HadronElasticPhysicsHPT : public G4HadronElasticPhysicsHP {
-  public: 
-    explicit G4HadronElasticPhysicsHPT( G4int ver = 1 ); 
+    explicit G4HadronElasticPhysicsHPT(G4int ver = 1);
     virtual ~G4HadronElasticPhysicsHPT() = default;
     void ConstructProcess() final;
-    G4HadronElasticPhysicsHPT( G4HadronElasticPhysicsHPT & ) = delete;
-    G4HadronElasticPhysicsHPT & operator=( const G4HadronElasticPhysicsHPT &right ) = delete;
+    G4HadronElasticPhysicsHPT(G4HadronElasticPhysicsHPT&) = delete;
+    G4HadronElasticPhysicsHPT& operator=(const G4HadronElasticPhysicsHPT& right) = delete;
 };
-
 
 #endif

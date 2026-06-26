@@ -25,29 +25,27 @@
 //
 //
 //
-// 
+//
 // Class G4OpenGLImmediateWin32Viewer : a class derived from
 //   G4OpenGLWin32Viewer and G4OpenGLImmediateViewer.
 
-#ifndef G4OpenGLIMMEDIATEWIN32VIEWER_HH
-#define G4OpenGLIMMEDIATEWIN32VIEWER_HH
+#ifndef G4OPENGLIMMEDIATEWIN32VIEWER_HH
+#define G4OPENGLIMMEDIATEWIN32VIEWER_HH
 
 #include "G4OpenGLImmediateViewer.hh"
 #include "G4OpenGLWin32Viewer.hh"
-
 #include "globals.hh"
 
 class G4OpenGLImmediateSceneHandler;
 
-class G4OpenGLImmediateWin32Viewer:
-public G4OpenGLWin32Viewer, public G4OpenGLImmediateViewer{
-  
-public:
-  G4OpenGLImmediateWin32Viewer (G4OpenGLImmediateSceneHandler& scene,
-				const G4String& name = "");
-  void Initialise ();
-  void DrawView ();
-  void FinishView ();
+class G4OpenGLImmediateWin32Viewer : public G4OpenGLWin32Viewer, public G4OpenGLImmediateViewer
+{
+  public:
+
+    G4OpenGLImmediateWin32Viewer(G4OpenGLImmediateSceneHandler& scene, const G4String& name = "");
+    void Initialise();
+    void DrawView();
+    void FinishView();
 };
 
 #endif

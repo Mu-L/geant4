@@ -26,14 +26,15 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPFastLegendre_h
-#define G4ParticleHPFastLegendre_h 1
+#ifndef G4PARTICLEHPFASTLEGENDRE_HH
+#define G4PARTICLEHPFASTLEGENDRE_HH
 
 #include "globals.hh"
 
 class G4ParticleHPFastLegendre
 {
   public:
+
     G4ParticleHPFastLegendre()
     {
       value = new const G4double*[31];
@@ -129,19 +130,22 @@ class G4ParticleHPFastLegendre
       if (l > 30) return regularEvaluate(l, costh);
       G4double result;
       G4int bin = GetBin(l, costh);
-      if (bin != theNbin[l] - 1) {
+      if (bin != theNbin[l] - 1)
+      {
         G4double y1, y2;
         y1 = value[l][bin];
         y2 = value[l][bin + 1];
         result = Interpolate(bin, l, y1, y2, costh);
       }
-      else {
+      else
+      {
         result = value[l][bin];
       }
       return result;
     }
 
   private:
+
     G4double regularEvaluate(int l, double x);
     G4double regularIntegrate(int l, double x);
 

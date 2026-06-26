@@ -23,27 +23,22 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4IosFlagsSaver_
-#define G4IosFlagsSaver_
+#ifndef G4IOSFLAGSSAVER_HH
+#define G4IOSFLAGSSAVER_HH
 
 #include <iostream>
 
 class G4IosFlagsSaver
 {
-public:
-  explicit G4IosFlagsSaver(std::ostream& _ios) :
-      fIO(_ios), fFlags(_ios.flags())
-  {
-  }
-  ~G4IosFlagsSaver()
-  {
-    fIO.flags(fFlags);
-  }
+  public:
 
-private:
-  std::ostream& fIO;
-  std::ios::fmtflags fFlags;
+    explicit G4IosFlagsSaver(std::ostream& _ios) : fIO(_ios), fFlags(_ios.flags()) {}
+    ~G4IosFlagsSaver() { fIO.flags(fFlags); }
+
+  private:
+
+    std::ostream& fIO;
+    std::ios::fmtflags fFlags;
 };
 
 #endif
-

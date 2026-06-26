@@ -39,65 +39,63 @@
 //
 //---------------------------------------------------------------------------
 
-#include <iostream>
-
-#include "G4SystemOfUnits.hh"
 #include "G4HadronicAbsorptionFritiofWithBinaryCascade.hh"
-#include "G4PreCompoundModel.hh"
-#include "G4GeneratorPrecompoundInterface.hh"
-#include "G4FTFModel.hh"
-#include "G4LundStringFragmentation.hh"
-#include "G4ExcitedStringDecay.hh"
-#include "G4TheoFSGenerator.hh"
+
 #include "G4BinaryCascade.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4ParticleTypes.hh"
+#include "G4ExcitedStringDecay.hh"
+#include "G4FTFModel.hh"
+#include "G4GeneratorPrecompoundInterface.hh"
 #include "G4HadronicInteractionRegistry.hh"
 #include "G4HadronicParameters.hh"
+#include "G4LundStringFragmentation.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTypes.hh"
+#include "G4PreCompoundModel.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4TheoFSGenerator.hh"
+
+#include <iostream>
 
 // Constructor
-G4HadronicAbsorptionFritiofWithBinaryCascade::
-G4HadronicAbsorptionFritiofWithBinaryCascade( G4ParticleDefinition* pdef )
-  : G4HadronStoppingProcess( "hFritiofWithBinaryCascadeCaptureAtRest" ), 
-    pdefApplicable( pdef ) {
-  
-  G4TheoFSGenerator* theModel = new G4TheoFSGenerator( "FTFB" );
+G4HadronicAbsorptionFritiofWithBinaryCascade::G4HadronicAbsorptionFritiofWithBinaryCascade(
+  G4ParticleDefinition* pdef)
+  : G4HadronStoppingProcess("hFritiofWithBinaryCascadeCaptureAtRest"), pdefApplicable(pdef)
+{
+  G4TheoFSGenerator* theModel = new G4TheoFSGenerator("FTFB");
   G4FTFModel* theStringModel = new G4FTFModel;
   theStringModel->SetFragmentationModel(new G4ExcitedStringDecay());
 
   G4BinaryCascade* theCascade = new G4BinaryCascade;
 
-  theModel->SetHighEnergyGenerator( theStringModel );
-  theModel->SetTransport( theCascade );
+  theModel->SetHighEnergyGenerator(theStringModel);
+  theModel->SetTransport(theCascade);
 
-  G4double theMin = 0.0*GeV;
+  G4double theMin = 0.0 * GeV;
   G4double theMax = G4HadronicParameters::Instance()->GetMaxEnergy();
-  theModel->SetMinEnergy( theMin );
-  theModel->SetMaxEnergy( theMax );
+  theModel->SetMinEnergy(theMin);
+  theModel->SetMaxEnergy(theMax);
 
-  RegisterMe( theModel );
+  RegisterMe(theModel);
 }
 
-G4HadronicAbsorptionFritiofWithBinaryCascade::~G4HadronicAbsorptionFritiofWithBinaryCascade() {
-}
+G4HadronicAbsorptionFritiofWithBinaryCascade::~G4HadronicAbsorptionFritiofWithBinaryCascade() {}
 
 // Applies to constructor-specified particle, or to all known cases
-G4bool G4HadronicAbsorptionFritiofWithBinaryCascade::
-IsApplicable( const G4ParticleDefinition& particle ) {
+G4bool
+G4HadronicAbsorptionFritiofWithBinaryCascade::IsApplicable(const G4ParticleDefinition& particle)
+{
   // It is applicable only for anti_proton and anti_neutron, but not for
   // light anti-ion because the propagate method for nucleus-nucleus interaction:
   //   G4VIntraNuclearTransportModel::Propagate()
   // is not implemented.
-  return ( ( ( ! pdefApplicable )  && 
-             ( &particle == G4AntiProton::Definition()  ||  &particle == G4AntiNeutron::Definition() ) )
-	   ||  &particle == pdefApplicable );
+  return (((!pdefApplicable)
+           && (&particle == G4AntiProton::Definition() || &particle == G4AntiNeutron::Definition()))
+          || &particle == pdefApplicable);
 }
 
-
 // Documentation of purpose
-void G4HadronicAbsorptionFritiofWithBinaryCascade::
-ProcessDescription( std::ostream& os ) const {
+void G4HadronicAbsorptionFritiofWithBinaryCascade::ProcessDescription(std::ostream& os) const
+{
   os << "Stopping and absorption of anti_proton and anti_neutron \n"
-     << "using  Fritiof (FTF) string model coupled with Binary Cascade (BIC) model."
-     << std::endl;
+     << "using  Fritiof (FTF) string model coupled with Binary Cascade (BIC) model." << std::endl;
 }

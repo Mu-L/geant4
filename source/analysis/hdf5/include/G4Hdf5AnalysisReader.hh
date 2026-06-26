@@ -29,8 +29,8 @@
 
 // Author: Ivana Hrivnacova, 20/07/2017 (ivana@ipno.in2p3.fr)
 
-#ifndef G4Hdf5AnalysisReader_h
-#define G4Hdf5AnalysisReader_h 1
+#ifndef G4HDF5ANALYSISREADER_HH
+#define G4HDF5ANALYSISREADER_HH
 
 #include "G4ToolsAnalysisReader.hh"
 #include "globals.hh"
@@ -43,14 +43,15 @@
 class G4Hdf5AnalysisReader;
 class G4Hdf5RFileManager;
 class G4Hdf5RNtupleManager;
-template <class T>
+template<class T>
 class G4ThreadLocalSingleton;
 
 class G4Hdf5AnalysisReader : public G4ToolsAnalysisReader
 {
-  friend class G4ThreadLocalSingleton<G4Hdf5AnalysisReader>;
+    friend class G4ThreadLocalSingleton<G4Hdf5AnalysisReader>;
 
   public:
+
     ~G4Hdf5AnalysisReader() override;
 
     // Static methods
@@ -62,25 +63,26 @@ class G4Hdf5AnalysisReader : public G4ToolsAnalysisReader
     using G4VAnalysisReader::GetNtuple;
 
   protected:
+
     // Virtual methods from base class
     G4bool CloseFilesImpl(G4bool reset) final;
 
   private:
+
     G4Hdf5AnalysisReader();
 
     // Methods
     G4bool Reset();
 
     // Static data members
-    inline static G4Hdf5AnalysisReader* fgMasterInstance { nullptr };
-    static constexpr std::string_view fkClass { "G4Hdf5AnalysisReader" };
+    inline static G4Hdf5AnalysisReader* fgMasterInstance{nullptr};
+    static constexpr std::string_view fkClass{"G4Hdf5AnalysisReader"};
 
     // Data members
-    std::shared_ptr<G4Hdf5RNtupleManager> fNtupleManager { nullptr };
-    std::shared_ptr<G4Hdf5RFileManager>   fFileManager { nullptr };
+    std::shared_ptr<G4Hdf5RNtupleManager> fNtupleManager{nullptr};
+    std::shared_ptr<G4Hdf5RFileManager> fFileManager{nullptr};
 };
 
 #include "G4Hdf5AnalysisReader.icc"
 
 #endif
-

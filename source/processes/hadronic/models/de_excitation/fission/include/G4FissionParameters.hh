@@ -26,70 +26,68 @@
 //
 //
 // Hadronic Process: Nuclear De-excitations
-// by V. Lara (Oct 1998) 
+// by V. Lara (Oct 1998)
 //
 
-#ifndef G4FissionParameters_h
-#define G4FissionParameters_h 1
+#ifndef G4FISSIONPARAMETERS_HH
+#define G4FISSIONPARAMETERS_HH
 
-#include "globals.hh"
 #include "G4Exp.hh"
+#include "globals.hh"
 
-class G4FissionParameters 
+class G4FissionParameters
 {
-public:
+  public:
 
-  G4FissionParameters();
+    G4FissionParameters();
 
-  ~G4FissionParameters();  
+    ~G4FissionParameters();
 
-  void DefineParameters(G4int A, G4int Z, G4double ExEnergy, 
-			G4double FissionBarrier);
-  
-public:
+    void DefineParameters(G4int A, G4int Z, G4double ExEnergy, G4double FissionBarrier);
 
-  inline G4int GetA1(void) const { return A1; }
-  inline G4int GetA2(void) const { return A2; }
+  public:
 
-  inline G4double GetAs(void) const { return As; }
-  inline G4double GetSigma1(void) const { return Sigma1; }
-  inline G4double GetSigma2(void) const { return Sigma2; }
-  inline G4double GetSigmaS(void) const { return SigmaS; }
-  inline G4double GetW(void) const { return w; }
+    inline G4int GetA1(void) const { return A1; }
+    inline G4int GetA2(void) const { return A2; }
 
-private:
+    inline G4double GetAs(void) const { return As; }
+    inline G4double GetSigma1(void) const { return Sigma1; }
+    inline G4double GetSigma2(void) const { return Sigma2; }
+    inline G4double GetSigmaS(void) const { return SigmaS; }
+    inline G4double GetW(void) const { return w; }
 
-  inline G4double LocalExp(G4double x) const
-  {
-    return (std::abs(x) < 8.) ? G4Exp(-0.5*x*x) : 0.0;
-  }
+  private:
 
-  G4FissionParameters(const G4FissionParameters &right);
-  const G4FissionParameters & operator=(const G4FissionParameters &right);
-  G4bool operator==(const G4FissionParameters &right) const;
-  G4bool operator!=(const G4FissionParameters &right) const;
+    inline G4double LocalExp(G4double x) const
+    {
+      return (std::abs(x) < 8.) ? G4Exp(-0.5 * x * x) : 0.0;
+    }
 
-  // Mean numbers of the corresponding Gaussians for assymmetric
-  // fission
-  G4int A1;
-  G4int A2;
-  G4double A3;
+    G4FissionParameters(const G4FissionParameters& right);
+    const G4FissionParameters& operator=(const G4FissionParameters& right);
+    G4bool operator==(const G4FissionParameters& right) const;
+    G4bool operator!=(const G4FissionParameters& right) const;
 
-  // Mean number for symmetric fission
-  G4double As;
+    // Mean numbers of the corresponding Gaussians for assymmetric
+    // fission
+    G4int A1;
+    G4int A2;
+    G4double A3;
 
-  // Dispersions of the corresponding Gaussians for assymmetric
-  // fission
-  G4double Sigma1;
-  G4double Sigma2;
+    // Mean number for symmetric fission
+    G4double As;
 
-  // Dispersion for symmetric fission
-  G4double SigmaS;
+    // Dispersions of the corresponding Gaussians for assymmetric
+    // fission
+    G4double Sigma1;
+    G4double Sigma2;
 
-  // Weight which determines the relative contribution of symmetric
-  // and assymmetric components
-  G4double w;
+    // Dispersion for symmetric fission
+    G4double SigmaS;
+
+    // Weight which determines the relative contribution of symmetric
+    // and assymmetric components
+    G4double w;
 };
-
 
 #endif

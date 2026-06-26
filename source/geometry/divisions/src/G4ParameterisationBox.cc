@@ -32,62 +32,59 @@
 
 #include "G4ParameterisationBox.hh"
 
-#include <iomanip>
+#include "G4Box.hh"
+#include "G4ReflectedSolid.hh"
+#include "G4RotationMatrix.hh"
 #include "G4ThreeVector.hh"
 #include "G4Transform3D.hh"
-#include "G4RotationMatrix.hh"
 #include "G4VPhysicalVolume.hh"
-#include "G4ReflectedSolid.hh"
-#include "G4Box.hh"
+
+#include <iomanip>
 
 //--------------------------------------------------------------------------
-G4VParameterisationBox::
-G4VParameterisationBox( EAxis axis, G4int nDiv, G4double width,
-                        G4double offset, G4VSolid* msolid,
-                        DivisionType divType )
-  :  G4VDivisionParameterisation( axis, nDiv, width, offset, divType, msolid )
+G4VParameterisationBox::G4VParameterisationBox(EAxis axis, G4int nDiv, G4double width,
+                                               G4double offset, G4VSolid* msolid,
+                                               DivisionType divType)
+  : G4VDivisionParameterisation(axis, nDiv, width, offset, divType, msolid)
 {
   auto msol = (G4Box*)(msolid);
   if (msolid->GetEntityType() == "G4ReflectedSolid")
   {
-    // Get constituent solid  
-    G4VSolid* mConstituentSolid 
-       = ((G4ReflectedSolid*)msolid)->GetConstituentMovedSolid();
+    // Get constituent solid
+    G4VSolid* mConstituentSolid = ((G4ReflectedSolid*)msolid)->GetConstituentMovedSolid();
     msol = (G4Box*)(mConstituentSolid);
     fmotherSolid = msol;
     fReflectedSolid = true;
-  }    
+  }
 }
 
 //--------------------------------------------------------------------------
 G4VParameterisationBox::~G4VParameterisationBox() = default;
 
 //--------------------------------------------------------------------------
-G4ParameterisationBoxX::
-G4ParameterisationBoxX( EAxis axis, G4int nDiv, G4double width,
-                        G4double offset, G4VSolid* msolid,
-                        DivisionType divType )
-  :  G4VParameterisationBox( axis, nDiv, width, offset, msolid, divType )
+G4ParameterisationBoxX::G4ParameterisationBoxX(EAxis axis, G4int nDiv, G4double width,
+                                               G4double offset, G4VSolid* msolid,
+                                               DivisionType divType)
+  : G4VParameterisationBox(axis, nDiv, width, offset, msolid, divType)
 {
   CheckParametersValidity();
-  SetType( "DivisionBoxX" );
+  SetType("DivisionBoxX");
 
   auto mbox = (G4Box*)(fmotherSolid);
-  if( divType == DivWIDTH )
+  if (divType == DivWIDTH)
   {
-    fnDiv = CalculateNDiv( 2*mbox->GetXHalfLength(), width, offset );
+    fnDiv = CalculateNDiv(2 * mbox->GetXHalfLength(), width, offset);
   }
-  else if( divType == DivNDIV )
+  else if (divType == DivNDIV)
   {
-    fwidth = CalculateWidth( 2*mbox->GetXHalfLength(), nDiv, offset );
+    fwidth = CalculateWidth(2 * mbox->GetXHalfLength(), nDiv, offset);
   }
 #ifdef G4DIVDEBUG
-  if( verbose >= 1 )
+  if (verbose >= 1)
   {
-    G4cout << " G4ParameterisationBoxX - no divisions "
-           << fnDiv << " = " << nDiv << G4endl
-           << " Offset " << foffset << " = " << offset << G4endl
-           << " Width " << fwidth << " = " << width << G4endl;
+    G4cout << " G4ParameterisationBoxX - no divisions " << fnDiv << " = " << nDiv << G4endl
+           << " Offset " << foffset << " = " << offset << G4endl << " Width " << fwidth << " = "
+           << width << G4endl;
   }
 #endif
 }
@@ -99,96 +96,89 @@ G4ParameterisationBoxX::~G4ParameterisationBoxX() = default;
 G4double G4ParameterisationBoxX::GetMaxParameter() const
 {
   auto msol = (G4Box*)(fmotherSolid);
-  return 2*msol->GetXHalfLength();
+  return 2 * msol->GetXHalfLength();
 }
 
 //------------------------------------------------------------------------
-void
-G4ParameterisationBoxX::
-ComputeTransformation( const G4int copyNo, G4VPhysicalVolume* physVol ) const
+void G4ParameterisationBoxX::ComputeTransformation(const G4int copyNo,
+                                                   G4VPhysicalVolume* physVol) const
 {
-  auto msol = (G4Box*)(fmotherSolid );
-  G4double mdx = msol->GetXHalfLength( );
+  auto msol = (G4Box*)(fmotherSolid);
+  G4double mdx = msol->GetXHalfLength();
 
-  //----- translation 
-  G4ThreeVector origin(0.,0.,0.); 
-  G4double posi = -mdx + foffset+(copyNo+0.5)*fwidth;
+  //----- translation
+  G4ThreeVector origin(0., 0., 0.);
+  G4double posi = -mdx + foffset + (copyNo + 0.5) * fwidth;
 
-  if( faxis == kXAxis )
+  if (faxis == kXAxis)
   {
-    origin.setX( posi ); 
+    origin.setX(posi);
   }
   else
   {
     std::ostringstream message;
     message << "Only axes along X are allowed !  Axis: " << faxis;
-    G4Exception("G4ParameterisationBoxX::ComputeTransformation()",
-                "GeomDiv0002", FatalException, message);
+    G4Exception("G4ParameterisationBoxX::ComputeTransformation()", "GeomDiv0002", FatalException,
+                message);
   }
 #ifdef G4DIVDEBUG
-  if( verbose >= 2 )
+  if (verbose >= 2)
   {
-    G4cout << std::setprecision(8) << " G4ParameterisationBoxX: "
-           << copyNo << G4endl
+    G4cout << std::setprecision(8) << " G4ParameterisationBoxX: " << copyNo << G4endl
            << " Position " << origin << " Axis " << faxis << G4endl;
   }
 #endif
-  //----- set translation 
-  physVol->SetTranslation( origin );
+  //----- set translation
+  physVol->SetTranslation(origin);
 }
 
 //------------------------------------------------------------------------
-void
-G4ParameterisationBoxX::
-ComputeDimensions( G4Box& box, const G4int,
-                   const G4VPhysicalVolume* ) const
+void G4ParameterisationBoxX::ComputeDimensions(G4Box& box, const G4int,
+                                               const G4VPhysicalVolume*) const
 {
   auto msol = (G4Box*)(fmotherSolid);
 
-  G4double pDx = fwidth/2. - fhgap;
+  G4double pDx = fwidth / 2. - fhgap;
   G4double pDy = msol->GetYHalfLength();
   G4double pDz = msol->GetZHalfLength();
 
-  box.SetXHalfLength( pDx );
-  box.SetYHalfLength( pDy );
-  box.SetZHalfLength( pDz );
+  box.SetXHalfLength(pDx);
+  box.SetYHalfLength(pDy);
+  box.SetZHalfLength(pDz);
 
 #ifdef G4DIVDEBUG
-  if( verbose >= 2 )
+  if (verbose >= 2)
   {
-    G4cout << " G4ParameterisationBoxX::ComputeDimensions()" << G4endl
-           << " pDx: " << pDz << G4endl;
+    G4cout << " G4ParameterisationBoxX::ComputeDimensions()" << G4endl << " pDx: " << pDz << G4endl;
     box.DumpInfo();
   }
 #endif
 }
 
 //------------------------------------------------------------------------
-G4ParameterisationBoxY::
-G4ParameterisationBoxY( EAxis axis, G4int nDiv, G4double width,
-                        G4double offset, G4VSolid* msolid,
-                        DivisionType divType)
-  :  G4VParameterisationBox( axis, nDiv, width, offset, msolid, divType )
+G4ParameterisationBoxY::G4ParameterisationBoxY(EAxis axis, G4int nDiv, G4double width,
+                                               G4double offset, G4VSolid* msolid,
+                                               DivisionType divType)
+  : G4VParameterisationBox(axis, nDiv, width, offset, msolid, divType)
 {
   CheckParametersValidity();
-  SetType( "DivisionBoxY" );
+  SetType("DivisionBoxY");
 
   auto mbox = (G4Box*)(fmotherSolid);
-  if( divType == DivWIDTH )
+  if (divType == DivWIDTH)
   {
-    fnDiv = CalculateNDiv( 2*mbox->GetYHalfLength(), width, offset );
+    fnDiv = CalculateNDiv(2 * mbox->GetYHalfLength(), width, offset);
   }
-  else if( divType == DivNDIV )
+  else if (divType == DivNDIV)
   {
-    fwidth = CalculateWidth( 2*mbox->GetYHalfLength(), nDiv, offset );
+    fwidth = CalculateWidth(2 * mbox->GetYHalfLength(), nDiv, offset);
   }
 
 #ifdef G4DIVDEBUG
-  if( verbose >= 1 )
+  if (verbose >= 1)
   {
-    G4cout << " G4ParameterisationBoxY - no divisions " << fnDiv << " = "
-           << nDiv << ". Offset " << foffset << " = " << offset
-           << ". Width " << fwidth << " = " << width << G4endl;
+    G4cout << " G4ParameterisationBoxY - no divisions " << fnDiv << " = " << nDiv << ". Offset "
+           << foffset << " = " << offset << ". Width " << fwidth << " = " << width << G4endl;
   }
 #endif
 }
@@ -200,94 +190,87 @@ G4ParameterisationBoxY::~G4ParameterisationBoxY() = default;
 G4double G4ParameterisationBoxY::GetMaxParameter() const
 {
   auto msol = (G4Box*)(fmotherSolid);
-  return 2*msol->GetYHalfLength();
+  return 2 * msol->GetYHalfLength();
 }
 
 //------------------------------------------------------------------------
-void
-G4ParameterisationBoxY::
-ComputeTransformation( const G4int copyNo, G4VPhysicalVolume* physVol ) const
+void G4ParameterisationBoxY::ComputeTransformation(const G4int copyNo,
+                                                   G4VPhysicalVolume* physVol) const
 {
   auto msol = (G4Box*)(fmotherSolid);
   G4double mdy = msol->GetYHalfLength();
 
-  //----- translation 
-  G4ThreeVector origin(0.,0.,0.); 
-  G4double posi = -mdy + foffset + (copyNo+0.5)*fwidth;
-  if( faxis == kYAxis )
+  //----- translation
+  G4ThreeVector origin(0., 0., 0.);
+  G4double posi = -mdy + foffset + (copyNo + 0.5) * fwidth;
+  if (faxis == kYAxis)
   {
-    origin.setY( posi ); 
+    origin.setY(posi);
   }
   else
   {
     std::ostringstream message;
     message << "Only axes along Y are allowed !  Axis: " << faxis;
-    G4Exception("G4ParameterisationBoxY::ComputeTransformation()",
-                "GeomDiv0002", FatalException, message);
+    G4Exception("G4ParameterisationBoxY::ComputeTransformation()", "GeomDiv0002", FatalException,
+                message);
   }
 #ifdef G4DIVDEBUG
-  if( verbose >= 2 )
+  if (verbose >= 2)
   {
-    G4cout << std::setprecision(8) << " G4ParameterisationBoxY: "
-           << copyNo << G4endl
+    G4cout << std::setprecision(8) << " G4ParameterisationBoxY: " << copyNo << G4endl
            << " Position " << origin << " Axis " << faxis << G4endl;
   }
 #endif
-   //----- set translation 
-  physVol->SetTranslation( origin );
+  //----- set translation
+  physVol->SetTranslation(origin);
 }
 
 //------------------------------------------------------------------------
-void
-G4ParameterisationBoxY::
-ComputeDimensions( G4Box& box, const G4int,
-                   const G4VPhysicalVolume* ) const
+void G4ParameterisationBoxY::ComputeDimensions(G4Box& box, const G4int,
+                                               const G4VPhysicalVolume*) const
 {
   auto msol = (G4Box*)(fmotherSolid);
 
   G4double pDx = msol->GetXHalfLength();
-  G4double pDy = fwidth/2. - fhgap;
+  G4double pDy = fwidth / 2. - fhgap;
   G4double pDz = msol->GetZHalfLength();
 
-  box.SetXHalfLength( pDx );
-  box.SetYHalfLength( pDy );
-  box.SetZHalfLength( pDz );
+  box.SetXHalfLength(pDx);
+  box.SetYHalfLength(pDy);
+  box.SetZHalfLength(pDz);
 
 #ifdef G4DIVDEBUG
-  if( verbose >= 2 )
+  if (verbose >= 2)
   {
-    G4cout << " G4ParameterisationBoxY::ComputeDimensions()" << G4endl
-           << " pDx: " << pDz << G4endl;
+    G4cout << " G4ParameterisationBoxY::ComputeDimensions()" << G4endl << " pDx: " << pDz << G4endl;
     box.DumpInfo();
   }
 #endif
 }
 
 //------------------------------------------------------------------------
-G4ParameterisationBoxZ::
-G4ParameterisationBoxZ( EAxis axis, G4int nDiv, G4double width,
-                        G4double offset, G4VSolid* msolid,
-                        DivisionType divType )
-  :  G4VParameterisationBox( axis, nDiv, width, offset, msolid, divType )
+G4ParameterisationBoxZ::G4ParameterisationBoxZ(EAxis axis, G4int nDiv, G4double width,
+                                               G4double offset, G4VSolid* msolid,
+                                               DivisionType divType)
+  : G4VParameterisationBox(axis, nDiv, width, offset, msolid, divType)
 {
   CheckParametersValidity();
-  SetType( "DivisionBoxZ" );
+  SetType("DivisionBoxZ");
 
   auto mbox = (G4Box*)(fmotherSolid);
-  if( divType == DivWIDTH )
+  if (divType == DivWIDTH)
   {
-    fnDiv = CalculateNDiv( 2*mbox->GetZHalfLength(), width, offset );
+    fnDiv = CalculateNDiv(2 * mbox->GetZHalfLength(), width, offset);
   }
-  else if ( divType == DivNDIV )
+  else if (divType == DivNDIV)
   {
-    fwidth = CalculateWidth( 2*mbox->GetZHalfLength(), nDiv, offset );
+    fwidth = CalculateWidth(2 * mbox->GetZHalfLength(), nDiv, offset);
   }
 #ifdef G4DIVDEBUG
-  if( verbose >= 1 )
+  if (verbose >= 1)
   {
-    G4cout << " G4ParameterisationBoxZ - no divisions " << fnDiv << " = "
-           << nDiv << ". Offset " << foffset << " = " << offset
-           << ". Width " << fwidth << " = " << width << G4endl;
+    G4cout << " G4ParameterisationBoxZ - no divisions " << fnDiv << " = " << nDiv << ". Offset "
+           << foffset << " = " << offset << ". Width " << fwidth << " = " << width << G4endl;
   }
 #endif
 }
@@ -299,65 +282,60 @@ G4ParameterisationBoxZ::~G4ParameterisationBoxZ() = default;
 G4double G4ParameterisationBoxZ::GetMaxParameter() const
 {
   auto msol = (G4Box*)(fmotherSolid);
-  return 2*msol->GetZHalfLength();
+  return 2 * msol->GetZHalfLength();
 }
 
 //------------------------------------------------------------------------
-void
-G4ParameterisationBoxZ::
-ComputeTransformation( const G4int copyNo, G4VPhysicalVolume *physVol ) const
+void G4ParameterisationBoxZ::ComputeTransformation(const G4int copyNo,
+                                                   G4VPhysicalVolume* physVol) const
 {
-  auto msol = (G4Box*)(fmotherSolid );
+  auto msol = (G4Box*)(fmotherSolid);
   G4double mdz = msol->GetZHalfLength();
 
-   //----- translation 
-  G4ThreeVector origin(0.,0.,0.); 
-  G4double posi = -mdz + OffsetZ() + (copyNo+0.5)*fwidth;
+  //----- translation
+  G4ThreeVector origin(0., 0., 0.);
+  G4double posi = -mdz + OffsetZ() + (copyNo + 0.5) * fwidth;
 
-  if( faxis == kZAxis )
+  if (faxis == kZAxis)
   {
-    origin.setZ( posi ); 
+    origin.setZ(posi);
   }
   else
-  { 
+  {
     std::ostringstream message;
     message << "Only axes along Z are allowed !  Axis: " << faxis;
-    G4Exception("G4ParameterisationBoxZ::ComputeTransformation()",
-                "GeomDiv0002", FatalException, message);
+    G4Exception("G4ParameterisationBoxZ::ComputeTransformation()", "GeomDiv0002", FatalException,
+                message);
   }
 #ifdef G4DIVDEBUG
-  if( verbose >= 2 )
+  if (verbose >= 2)
   {
-    G4cout << std::setprecision(8) << " G4ParameterisationBoxZ: "
-           << copyNo << G4endl
+    G4cout << std::setprecision(8) << " G4ParameterisationBoxZ: " << copyNo << G4endl
            << " Position " << origin << " Axis " << faxis << G4endl;
   }
 #endif
-   //----- set translation 
-  physVol->SetTranslation( origin );
+  //----- set translation
+  physVol->SetTranslation(origin);
 }
 
 //------------------------------------------------------------------------
-void
-G4ParameterisationBoxZ::
-ComputeDimensions( G4Box& box, const G4int,
-                   const G4VPhysicalVolume* ) const
+void G4ParameterisationBoxZ::ComputeDimensions(G4Box& box, const G4int,
+                                               const G4VPhysicalVolume*) const
 {
   auto msol = (G4Box*)(fmotherSolid);
 
   G4double pDx = msol->GetXHalfLength();
   G4double pDy = msol->GetYHalfLength();
-  G4double pDz = fwidth/2. - fhgap;
+  G4double pDz = fwidth / 2. - fhgap;
 
-  box.SetXHalfLength( pDx );
-  box.SetYHalfLength( pDy );
-  box.SetZHalfLength( pDz );
+  box.SetXHalfLength(pDx);
+  box.SetYHalfLength(pDy);
+  box.SetZHalfLength(pDz);
 
 #ifdef G4DIVDEBUG
-  if( verbose >= 2 )
+  if (verbose >= 2)
   {
-    G4cout << " G4ParameterisationBoxZ::ComputeDimensions()" << G4endl
-           << " pDx: " << pDz << G4endl;
+    G4cout << " G4ParameterisationBoxZ::ComputeDimensions()" << G4endl << " pDx: " << pDz << G4endl;
     box.DumpInfo();
   }
 #endif

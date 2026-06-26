@@ -41,23 +41,22 @@
 //
 // -------------------------------------------------------------------
 
-inline void
-G4ITTransportation::SetPropagatorInField( G4PropagatorInField* pFieldPropagator)
+inline void G4ITTransportation::SetPropagatorInField(G4PropagatorInField* pFieldPropagator)
 {
-   fFieldPropagator= pFieldPropagator;
+  fFieldPropagator = pFieldPropagator;
 }
 
 inline G4PropagatorInField* G4ITTransportation::GetPropagatorInField()
 {
-   return fFieldPropagator;
+  return fFieldPropagator;
 }
 
-inline void G4ITTransportation::SetVerboseLevel( G4int verboseLev )
+inline void G4ITTransportation::SetVerboseLevel(G4int verboseLev)
 {
-  fVerboseLevel= verboseLev;
+  fVerboseLevel = verboseLev;
 }
 
-inline G4int G4ITTransportation::GetVerboseLevel( ) const
+inline G4int G4ITTransportation::GetVerboseLevel() const
 {
   return fVerboseLevel;
 }
@@ -77,25 +76,25 @@ inline G4int G4ITTransportation::GetThresholdTrials() const
   return fThresholdTrials;
 }
 
-inline void G4ITTransportation::SetThresholdWarningEnergy( G4double newEnWarn )
+inline void G4ITTransportation::SetThresholdWarningEnergy(G4double newEnWarn)
 {
-  fThreshold_Warning_Energy= newEnWarn;
+  fThreshold_Warning_Energy = newEnWarn;
 }
 
-inline void G4ITTransportation::SetThresholdImportantEnergy( G4double newEnImp )
+inline void G4ITTransportation::SetThresholdImportantEnergy(G4double newEnImp)
 {
   fThreshold_Important_Energy = newEnImp;
 }
 
-inline void G4ITTransportation::SetThresholdTrials(G4int newMaxTrials )
+inline void G4ITTransportation::SetThresholdTrials(G4int newMaxTrials)
 {
   fThresholdTrials = newMaxTrials;
 }
 
-     // Get/Set parameters for killing loopers:
-     //   Above 'important' energy a 'looping' particle in field will
-     //   *NOT* be abandoned, except after fThresholdTrials attempts.
-     // Below Warning energy, no verbosity for looping particles is issued
+// Get/Set parameters for killing loopers:
+//   Above 'important' energy a 'looping' particle in field will
+//   *NOT* be abandoned, except after fThresholdTrials attempts.
+// Below Warning energy, no verbosity for looping particles is issued
 
 inline G4double G4ITTransportation::GetMaxEnergyKilled() const
 {
@@ -109,18 +108,19 @@ inline G4double G4ITTransportation::GetSumEnergyKilled() const
 
 inline void G4ITTransportation::ResetKilledStatistics(G4int report)
 {
-  if( report != 0 ) {
+  if (report != 0)
+  {
     G4cout << " G4ITTransportation: Statistics for looping particles " << G4endl;
-    G4cout << "   Sum of energy of loopers killed: " <<  fSumEnergyKilled << G4endl;
-    G4cout << "   Max energy of loopers killed: " <<  fMaxEnergyKilled << G4endl;
+    G4cout << "   Sum of energy of loopers killed: " << fSumEnergyKilled << G4endl;
+    G4cout << "   Max energy of loopers killed: " << fMaxEnergyKilled << G4endl;
   }
 
-  fSumEnergyKilled= 0;
-  fMaxEnergyKilled= -1.0*CLHEP::GeV;
+  fSumEnergyKilled = 0;
+  fMaxEnergyKilled = -1.0 * CLHEP::GeV;
 }
-     // Statistics for tracks killed (currently due to looping in field)
+// Statistics for tracks killed (currently due to looping in field)
 
 inline void G4ITTransportation::EnableShortStepOptimisation(G4bool optimiseShortStep)
 {
-  fShortStepOptimisation=optimiseShortStep;
+  fShortStepOptimisation = optimiseShortStep;
 }

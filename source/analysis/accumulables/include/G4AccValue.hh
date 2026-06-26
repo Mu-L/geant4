@@ -28,35 +28,33 @@
 //
 // Author: Ivana Hrivnacova, IJCLab IN2P3/CNRS, 07/09/2015
 
-#ifndef G4AccValue_h
-#define G4AccValue_h 1
+#ifndef G4ACCVALUE_HH
+#define G4ACCVALUE_HH
 
-#include "G4VAccumulable.hh"
 #include "G4MergeMode.hh"
-
+#include "G4VAccumulable.hh"
 #include "globals.hh"
 
-template <typename T>
+template<typename T>
 class G4AccValue : public G4VAccumulable
 {
   public:
-    G4AccValue(const G4String& name, T initValue,
-                  G4MergeMode mergeMode = G4MergeMode::kAddition);
-    G4AccValue(T initValue = 0,
-                  G4MergeMode mergeMode = G4MergeMode::kAddition);
+
+    G4AccValue(const G4String& name, T initValue, G4MergeMode mergeMode = G4MergeMode::kAddition);
+    G4AccValue(T initValue = 0, G4MergeMode mergeMode = G4MergeMode::kAddition);
     G4AccValue(const G4AccValue& rhs);
     G4AccValue(G4AccValue&& rhs) noexcept;
     ~G4AccValue() override = default;
 
     // Operators
-    G4AccValue<T>& operator= (const G4AccValue<T>& rhs);
+    G4AccValue<T>& operator=(const G4AccValue<T>& rhs);
     G4AccValue<T>& operator=(G4AccValue<T>&& rhs) noexcept;
     G4AccValue<T>& operator+=(const G4AccValue<T>& rhs);
     G4AccValue<T>& operator*=(const G4AccValue<T>& rhs);
-    G4AccValue<T>  operator++(int); // postfix increment
-    G4AccValue<T>& operator++();    // prefix increment
+    G4AccValue<T> operator++(int);  // postfix increment
+    G4AccValue<T>& operator++();  // prefix increment
 
-    G4AccValue<T>& operator= (const T& rhs);
+    G4AccValue<T>& operator=(const T& rhs);
     G4AccValue<T>& operator+=(const T& rhs);
     G4AccValue<T>& operator*=(const T& rhs);
 
@@ -72,14 +70,15 @@ class G4AccValue : public G4VAccumulable
     G4AccType GetType() const final { return G4AccType::kValue; }
 
     // Get methods
-    T  GetValue() const;
+    T GetValue() const;
 
   private:
+
     // Data members
-    T  fValue = 0;
-    T  fInitValue = 0;
+    T fValue = 0;
+    T fInitValue = 0;
     G4MergeFunction<T> fMergeFunction;
- };
+};
 
 // inline functions
 

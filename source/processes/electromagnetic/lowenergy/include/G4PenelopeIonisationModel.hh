@@ -28,9 +28,9 @@
 //
 // History:
 // -----------
-// 30 Mar 2010   L. Pandola   1st implementation. 
+// 30 Mar 2010   L. Pandola   1st implementation.
 // 25 May 2011   L. Pandola   Renamed (make v2008 as default Penelope)
-// 09 Mar 2012   L. Pandola   Moved the management and calculation of 
+// 09 Mar 2012   L. Pandola   Moved the management and calculation of
 //                            cross sections to a separate class
 // 07 Oct 2013   L. Pandola   Migration to MT
 // 23 Jun 2015   L. Pandola   Added private member to store the PIXE flag
@@ -43,13 +43,13 @@
 // -------------------------------------------------------------------
 
 #ifndef G4PENELOPEIONISATIONMODEL_HH
-#define G4PENELOPEIONISATIONMODEL_HH 1
+#define G4PENELOPEIONISATIONMODEL_HH
 
-#include "globals.hh"
-#include "G4VEmModel.hh"
 #include "G4DataVector.hh"
 #include "G4ParticleChangeForLoss.hh"
 #include "G4VAtomDeexcitation.hh"
+#include "G4VEmModel.hh"
+#include "globals.hh"
 
 class G4PhysicsFreeVector;
 class G4PhysicsLogVector;
@@ -62,89 +62,73 @@ class G4PenelopeOscillator;
 class G4PenelopeCrossSection;
 class G4PenelopeIonisationXSHandler;
 
-class G4PenelopeIonisationModel : public G4VEmModel 
+class G4PenelopeIonisationModel : public G4VEmModel
 {
-public:
-  explicit G4PenelopeIonisationModel(const G4ParticleDefinition* p=nullptr,
-			    const G4String& processName ="PenIoni");
-  virtual ~G4PenelopeIonisationModel();
+  public:
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
-  void InitialiseLocal(const G4ParticleDefinition*,
-		       G4VEmModel*) override;
+    explicit G4PenelopeIonisationModel(const G4ParticleDefinition* p = nullptr,
+                                       const G4String& processName = "PenIoni");
+    virtual ~G4PenelopeIonisationModel();
 
-  //*This is a dummy method. Never inkoved by the tracking, it just issues 
-  //*a warning if one tries to get Cross Sections per Atom via the 
-  //*G4EmCalculator.
-  G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
-				      G4double,
-				      G4double,
-				      G4double,
-				      G4double,
-				      G4double) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel*) override;
 
-  G4double CrossSectionPerVolume(const G4Material* material,
-				 const G4ParticleDefinition* 
-				 theParticle,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy = DBL_MAX) override;
-					 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
-				   
-  G4double ComputeDEDXPerVolume(const G4Material*,
-				const G4ParticleDefinition*,
-				G4double kineticEnergy,
-				G4double cutEnergy) override;
+    //*This is a dummy method. Never inkoved by the tracking, it just issues
+    //*a warning if one tries to get Cross Sections per Atom via the
+    //*G4EmCalculator.
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double, G4double, G4double,
+                                        G4double, G4double) override;
 
-  // Min cut in kinetic energy allowed by the model
-  G4double MinEnergyCut(const G4ParticleDefinition*,
-			const G4MaterialCutsCouple*) override;		
+    G4double CrossSectionPerVolume(const G4Material* material,
+                                   const G4ParticleDefinition* theParticle, G4double kineticEnergy,
+                                   G4double cutEnergy, G4double maxEnergy = DBL_MAX) override;
 
-  void SetVerbosityLevel(G4int lev){fVerboseLevel = lev;};
-  G4int GetVerbosityLevel(){return fVerboseLevel;};
-  
-  G4PenelopeIonisationModel & operator=(const G4PenelopeIonisationModel &right) = delete;
-  G4PenelopeIonisationModel(const G4PenelopeIonisationModel&) = delete;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-protected:
-  G4ParticleChangeForLoss* fParticleChange;
-  const G4ParticleDefinition* fParticle;
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                  G4double kineticEnergy, G4double cutEnergy) override;
 
-private:
-  void SetParticle(const G4ParticleDefinition*);
-  void SampleFinalStateElectron(const G4Material*,
-				G4double cutEnergy,
-				G4double kineticEnergy);
-  void SampleFinalStatePositron(const G4Material*,
-				G4double cutEnergy,
-				G4double kineticEnergy);
+    // Min cut in kinetic energy allowed by the model
+    G4double MinEnergyCut(const G4ParticleDefinition*, const G4MaterialCutsCouple*) override;
 
-  G4PenelopeOscillatorManager* fOscManager;
-  G4PenelopeIonisationXSHandler* fCrossSectionHandler;
-  G4VAtomDeexcitation* fAtomDeexcitation;
+    void SetVerbosityLevel(G4int lev) { fVerboseLevel = lev; };
+    G4int GetVerbosityLevel() { return fVerboseLevel; };
 
-  G4double fKineticEnergy1;
-  G4double fCosThetaPrimary;
-  G4double fEnergySecondary;
-  G4double fCosThetaSecondary;
+    G4PenelopeIonisationModel& operator=(const G4PenelopeIonisationModel& right) = delete;
+    G4PenelopeIonisationModel(const G4PenelopeIonisationModel&) = delete;
 
-  //Intrinsic energy limits of the model: cannot be extended by the parent process
-  G4double fIntrinsicLowEnergyLimit;
-  G4double fIntrinsicHighEnergyLimit;
+  protected:
 
-  G4int fVerboseLevel;
-  G4int fTargetOscillator;
-  size_t fNBins;
-  G4bool fIsInitialised;
-  G4bool fPIXEflag;
-  //Used only for G4EmCalculator and Unit Tests
-  G4bool fLocalTable;
+    G4ParticleChangeForLoss* fParticleChange;
+    const G4ParticleDefinition* fParticle;
+
+  private:
+
+    void SetParticle(const G4ParticleDefinition*);
+    void SampleFinalStateElectron(const G4Material*, G4double cutEnergy, G4double kineticEnergy);
+    void SampleFinalStatePositron(const G4Material*, G4double cutEnergy, G4double kineticEnergy);
+
+    G4PenelopeOscillatorManager* fOscManager;
+    G4PenelopeIonisationXSHandler* fCrossSectionHandler;
+    G4VAtomDeexcitation* fAtomDeexcitation;
+
+    G4double fKineticEnergy1;
+    G4double fCosThetaPrimary;
+    G4double fEnergySecondary;
+    G4double fCosThetaSecondary;
+
+    // Intrinsic energy limits of the model: cannot be extended by the parent process
+    G4double fIntrinsicLowEnergyLimit;
+    G4double fIntrinsicHighEnergyLimit;
+
+    G4int fVerboseLevel;
+    G4int fTargetOscillator;
+    size_t fNBins;
+    G4bool fIsInitialised;
+    G4bool fPIXEflag;
+    // Used only for G4EmCalculator and Unit Tests
+    G4bool fLocalTable;
 };
 
 #endif
-

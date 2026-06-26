@@ -31,16 +31,19 @@
 //	26th September, Chr. Voelcker
 // ------------------------------------------------------------
 
-#ifndef G4DynamicParticleVector_h
-#define G4DynamicParticleVector_h 1
-
-#include "globals.hh"
-#include "G4ios.hh"
+#ifndef G4DYNAMICPARTICLEVECTOR_HH
+#define G4DYNAMICPARTICLEVECTOR_HH
 
 #include "G4DynamicParticle.hh"
-#include <vector> 
+#include "G4ios.hh"
+#include "globals.hh"
 
-typedef std::vector<G4DynamicParticle *> G4DynamicParticleVector;
-struct DeleteDynamicParticle {void operator()(G4DynamicParticle*aP) {delete aP;}};
+#include <vector>
+
+typedef std::vector<G4DynamicParticle*> G4DynamicParticleVector;
+struct DeleteDynamicParticle
+{
+    void operator()(G4DynamicParticle* aP) { delete aP; }
+};
 
 #endif

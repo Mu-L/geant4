@@ -36,8 +36,10 @@
 
 #include "G4AttValue.hh"
 
-std::shared_ptr<std::vector<G4AttValue>> G4VTrajectoryPoint::GetAttValues() const {
-  if (!fpAttValues) {
+std::shared_ptr<std::vector<G4AttValue>> G4VTrajectoryPoint::GetAttValues() const
+{
+  if (!fpAttValues)
+  {
     fpAttValues = std::make_shared<std::vector<G4AttValue>>(*CreateAttValues());
   }
   return fpAttValues;

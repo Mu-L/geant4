@@ -29,27 +29,25 @@
 // Revised: Tatiana Nikitina (CERN)
 // --------------------------------------------------------------------
 
-#include "globals.hh"
-
 #include "G4Paraboloid.hh"
+
+#include "globals.hh"
 
 #if !(defined(G4GEOM_USE_UPARABOLOID) && defined(G4GEOM_USE_SYS_USOLIDS))
 
-#include "G4VoxelLimits.hh"
-#include "G4AffineTransform.hh"
-#include "G4BoundingEnvelope.hh"
-#include "G4QuickRand.hh"
-
-#include "G4VGraphicsScene.hh"
-#include "G4VisExtent.hh"
-
-#include "G4AutoLock.hh"
+#  include "G4AffineTransform.hh"
+#  include "G4AutoLock.hh"
+#  include "G4BoundingEnvelope.hh"
+#  include "G4QuickRand.hh"
+#  include "G4VGraphicsScene.hh"
+#  include "G4VisExtent.hh"
+#  include "G4VoxelLimits.hh"
 
 namespace
 {
-  G4Mutex polyhedronMutex = G4MUTEX_INITIALIZER;
-  G4Mutex paraboloidMutex = G4MUTEX_INITIALIZER;
-}
+G4Mutex polyhedronMutex = G4MUTEX_INITIALIZER;
+G4Mutex paraboloidMutex = G4MUTEX_INITIALIZER;
+}  // namespace
 
 using namespace CLHEP;
 
@@ -57,19 +55,14 @@ using namespace CLHEP;
 //
 // constructor - check parameters
 //
-G4Paraboloid::G4Paraboloid(const G4String& pName,
-                                 G4double pDz,
-                                 G4double pR1,
-                                 G4double pR2)
- : G4VSolid(pName)
+G4Paraboloid::G4Paraboloid(const G4String& pName, G4double pDz, G4double pR1, G4double pR2)
+  : G4VSolid(pName)
 {
-  if( (pDz <= 0.) || (pR2 <= pR1) || (pR1 < 0.) )
+  if ((pDz <= 0.) || (pR2 <= pR1) || (pR1 < 0.))
   {
     std::ostringstream message;
-    message << "Invalid dimensions. Negative Input Values or R1>=R2 - "
-            << GetName();
-    G4Exception("G4Paraboloid::G4Paraboloid()", "GeomSolids0002",
-                FatalErrorInArgument, message,
+    message << "Invalid dimensions. Negative Input Values or R1>=R2 - " << GetName();
+    G4Exception("G4Paraboloid::G4Paraboloid()", "GeomSolids0002", FatalErrorInArgument, message,
                 "Z half-length must be larger than zero or R1>=R2.");
   }
 
@@ -93,10 +86,7 @@ G4Paraboloid::G4Paraboloid(const G4String& pName,
 // Fake default constructor - sets only member data and allocates memory
 //                            for usage restricted to object persistency.
 //
-G4Paraboloid::G4Paraboloid( __void__& a )
-  : G4VSolid(a)
-{
-}
+G4Paraboloid::G4Paraboloid(__void__& a) : G4VSolid(a) {}
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -104,7 +94,8 @@ G4Paraboloid::G4Paraboloid( __void__& a )
 //
 G4Paraboloid::~G4Paraboloid()
 {
-  delete fpPolyhedron; fpPolyhedron = nullptr;
+  delete fpPolyhedron;
+  fpPolyhedron = nullptr;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -113,33 +104,46 @@ G4Paraboloid::~G4Paraboloid()
 //
 G4Paraboloid::G4Paraboloid(const G4Paraboloid& rhs)
   : G4VSolid(rhs),
-    fSurfaceArea(rhs.fSurfaceArea), fCubicVolume(rhs.fCubicVolume),
-    dz(rhs.dz), r1(rhs.r1), r2(rhs.r2), k1(rhs.k1), k2(rhs.k2)
-{
-}
+    fSurfaceArea(rhs.fSurfaceArea),
+    fCubicVolume(rhs.fCubicVolume),
+    dz(rhs.dz),
+    r1(rhs.r1),
+    r2(rhs.r2),
+    k1(rhs.k1),
+    k2(rhs.k2)
+{}
 
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Assignment operator
 //
-G4Paraboloid& G4Paraboloid::operator = (const G4Paraboloid& rhs)
+G4Paraboloid& G4Paraboloid::operator=(const G4Paraboloid& rhs)
 {
-   // Check assignment to self
-   //
-   if (this == &rhs)  { return *this; }
+  // Check assignment to self
+  //
+  if (this == &rhs)
+  {
+    return *this;
+  }
 
-   // Copy base class data
-   //
-   G4VSolid::operator=(rhs);
+  // Copy base class data
+  //
+  G4VSolid::operator=(rhs);
 
-   // Copy data
-   //
-   fSurfaceArea = rhs.fSurfaceArea; fCubicVolume = rhs.fCubicVolume;
-   dz = rhs.dz; r1 = rhs.r1; r2 = rhs.r2; k1 = rhs.k1; k2 = rhs.k2;
-   fRebuildPolyhedron = false;
-   delete fpPolyhedron; fpPolyhedron = nullptr;
+  // Copy data
+  //
+  fSurfaceArea = rhs.fSurfaceArea;
+  fCubicVolume = rhs.fCubicVolume;
+  dz = rhs.dz;
+  r1 = rhs.r1;
+  r2 = rhs.r2;
+  k1 = rhs.k1;
+  k2 = rhs.k2;
+  fRebuildPolyhedron = false;
+  delete fpPolyhedron;
+  fpPolyhedron = nullptr;
 
-   return *this;
+  return *this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -148,10 +152,10 @@ G4Paraboloid& G4Paraboloid::operator = (const G4Paraboloid& rhs)
 //
 void G4Paraboloid::SetZHalfLength(G4double pDz)
 {
-  if(pDz <= 0)
+  if (pDz <= 0)
   {
-    G4Exception("G4Paraboloid::SetZHalfLength()", "GeomSolids0002",
-                FatalException, "Invalid dimensions.");
+    G4Exception("G4Paraboloid::SetZHalfLength()", "GeomSolids0002", FatalException,
+                "Invalid dimensions.");
   }
   else
   {
@@ -170,10 +174,10 @@ void G4Paraboloid::SetZHalfLength(G4double pDz)
 //
 void G4Paraboloid::SetRadiusPlusZ(G4double pR2)
 {
-  if(pR2 <= 0 || pR2 <= r1)
+  if (pR2 <= 0 || pR2 <= r1)
   {
-    G4Exception("G4Paraboloid::SetRadiusPlusZ()", "GeomSolids0002",
-                FatalException, "Invalid dimensions.");
+    G4Exception("G4Paraboloid::SetRadiusPlusZ()", "GeomSolids0002", FatalException,
+                "Invalid dimensions.");
   }
   else
   {
@@ -192,10 +196,10 @@ void G4Paraboloid::SetRadiusPlusZ(G4double pR2)
 //
 void G4Paraboloid::SetRadiusMinusZ(G4double pR1)
 {
-  if(pR1 < 0 || pR1 >= r2)
+  if (pR1 < 0 || pR1 >= r2)
   {
-    G4Exception("G4Paraboloid::SetRadiusMinusZ()", "GeomSolids0002",
-                FatalException, "Invalid dimensions.");
+    G4Exception("G4Paraboloid::SetRadiusMinusZ()", "GeomSolids0002", FatalException,
+                "Invalid dimensions.");
   }
   else
   {
@@ -215,22 +219,22 @@ void G4Paraboloid::SetRadiusMinusZ(G4double pR1)
 G4double G4Paraboloid::CalculateSurfaceArea() const
 {
   // Surface area for a paraboloid of height hmax
-  G4double hmax = k2/k1 + dz;
-  G4double Amax = sqr(r2) + 4*sqr(hmax);
-  Amax *= std::sqrt(Amax); // set Amax = sqrt(Amax^3)
+  G4double hmax = k2 / k1 + dz;
+  G4double Amax = sqr(r2) + 4 * sqr(hmax);
+  Amax *= std::sqrt(Amax);  // set Amax = sqrt(Amax^3)
   Amax = CLHEP::pi * r2 / 6 / sqr(hmax) * (Amax - r2 * r2 * r2);
 
   // Surface area for a paraboloid of height hmin
   G4double Amin = 0.0;
-  if(r1 != 0)
+  if (r1 != 0)
   {
-    G4double hmin = k2/k1 - dz;
-    Amin = sqr(r1) + 4*sqr(hmin);
-    Amin *= std::sqrt(Amin); // set Amin = sqrt(Amin^3)
+    G4double hmin = k2 / k1 - dz;
+    Amin = sqr(r1) + 4 * sqr(hmin);
+    Amin *= std::sqrt(Amin);  // set Amin = sqrt(Amin^3)
     Amin = CLHEP::pi * r1 / 6 / sqr(hmin) * (Amin - r1 * r1 * r1);
   }
   // Total surface area
-  return Amax - Amin + (sqr(r1) + sqr(r2))*CLHEP::pi;
+  return Amax - Amin + (sqr(r1) + sqr(r2)) * CLHEP::pi;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -254,7 +258,7 @@ G4double G4Paraboloid::GetSurfaceArea()
 //
 G4double G4Paraboloid::GetCubicVolume()
 {
-  if(fCubicVolume == 0)
+  if (fCubicVolume == 0)
   {
     G4AutoLock l(&paraboloidMutex);
     fCubicVolume = CLHEP::pi * (sqr(r1) + sqr(r2)) * dz;
@@ -267,23 +271,19 @@ G4double G4Paraboloid::GetCubicVolume()
 //
 // Get bounding box
 //
-void G4Paraboloid::BoundingLimits(G4ThreeVector& pMin,
-                                  G4ThreeVector& pMax) const
+void G4Paraboloid::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
 {
-  pMin.set(-r2,-r2,-dz);
-  pMax.set( r2, r2, dz);
+  pMin.set(-r2, -r2, -dz);
+  pMax.set(r2, r2, dz);
 
   // Check correctness of the bounding box
   //
   if (pMin.x() >= pMax.x() || pMin.y() >= pMax.y() || pMin.z() >= pMax.z())
   {
     std::ostringstream message;
-    message << "Bad bounding box (min >= max) for solid: "
-            << GetName() << " !"
-            << "\npMin = " << pMin
-            << "\npMax = " << pMax;
-    G4Exception("G4Paraboloid::BoundingLimits()", "GeomMgt0001",
-                JustWarning, message);
+    message << "Bad bounding box (min >= max) for solid: " << GetName() << " !"
+            << "\npMin = " << pMin << "\npMax = " << pMax;
+    G4Exception("G4Paraboloid::BoundingLimits()", "GeomMgt0001", JustWarning, message);
     DumpInfo();
   }
 }
@@ -292,20 +292,18 @@ void G4Paraboloid::BoundingLimits(G4ThreeVector& pMin,
 //
 // Calculate extent under transform and specified limit
 //
-G4bool
-G4Paraboloid::CalculateExtent(const EAxis pAxis,
-                              const G4VoxelLimits& pVoxelLimit,
-                              const G4AffineTransform& pTransform,
-                                    G4double& pMin, G4double& pMax) const
+G4bool G4Paraboloid::CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                                     const G4AffineTransform& pTransform, G4double& pMin,
+                                     G4double& pMax) const
 {
   G4ThreeVector bmin, bmax;
 
   // Get bounding box
-  BoundingLimits(bmin,bmax);
+  BoundingLimits(bmin, bmax);
 
   // Find extent
-  G4BoundingEnvelope bbox(bmin,bmax);
-  return bbox.CalculateExtent(pAxis,pVoxelLimit,pTransform,pMin,pMax);
+  G4BoundingEnvelope bbox(bmin, bmax);
+  return bbox.CalculateExtent(pAxis, pVoxelLimit, pTransform, pMin, pMax);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -316,18 +314,20 @@ EInside G4Paraboloid::Inside(const G4ThreeVector& p) const
 {
   // First check is  the point is above or below the solid.
   //
-  if(std::fabs(p.z()) > dz + 0.5 * kCarTolerance) { return kOutside; }
+  if (std::fabs(p.z()) > dz + 0.5 * kCarTolerance)
+  {
+    return kOutside;
+  }
 
-  G4double rho2 = p.perp2(),
-           rhoSurfTimesTol2  = (k1 * p.z() + k2) * sqr(kCarTolerance),
-           A = rho2 - ((k1 *p.z() + k2) + 0.25 * kCarTolerance * kCarTolerance);
+  G4double rho2 = p.perp2(), rhoSurfTimesTol2 = (k1 * p.z() + k2) * sqr(kCarTolerance),
+           A = rho2 - ((k1 * p.z() + k2) + 0.25 * kCarTolerance * kCarTolerance);
 
-  if(A < 0 && sqr(A) > rhoSurfTimesTol2)
+  if (A < 0 && sqr(A) > rhoSurfTimesTol2)
   {
     // Actually checking rho < radius of paraboloid at z = p.z().
     // We're either inside or in lower/upper cutoff area.
 
-    if(std::fabs(p.z()) > dz - 0.5 * kCarTolerance)
+    if (std::fabs(p.z()) > dz - 0.5 * kCarTolerance)
     {
       // We're in the upper/lower cutoff area, sides have a paraboloid shape
       // maybe further checks should be made to make these nicer
@@ -336,13 +336,13 @@ EInside G4Paraboloid::Inside(const G4ThreeVector& p) const
     }
     return kInside;
   }
-  if(A <= 0 || sqr(A) < rhoSurfTimesTol2)
+  if (A <= 0 || sqr(A) < rhoSurfTimesTol2)
   {
     // We're in the parabolic surface.
 
     return kSurface;
   }
-  
+
   return kOutside;
 }
 
@@ -350,31 +350,29 @@ EInside G4Paraboloid::Inside(const G4ThreeVector& p) const
 //
 // SurfaceNormal
 //
-G4ThreeVector G4Paraboloid::SurfaceNormal( const G4ThreeVector& p) const
+G4ThreeVector G4Paraboloid::SurfaceNormal(const G4ThreeVector& p) const
 {
   G4ThreeVector n(0, 0, 0);
-  if(std::fabs(p.z()) > dz + 0.5 * kCarTolerance)
+  if (std::fabs(p.z()) > dz + 0.5 * kCarTolerance)
   {
     // If above or below just return normal vector for the cutoff plane.
 
-    n = G4ThreeVector(0, 0, p.z()/std::fabs(p.z()));
+    n = G4ThreeVector(0, 0, p.z() / std::fabs(p.z()));
   }
-  else if(std::fabs(p.z()) > dz - 0.5 * kCarTolerance)
+  else if (std::fabs(p.z()) > dz - 0.5 * kCarTolerance)
   {
     // This means we're somewhere in the plane z = dz or z = -dz.
     // (As far as the program is concerned anyway.
 
-    if(p.z() < 0) // Are we in upper or lower plane?
+    if (p.z() < 0)  // Are we in upper or lower plane?
     {
-      if(p.perp2() > sqr(r1 + 0.5 * kCarTolerance))
+      if (p.perp2() > sqr(r1 + 0.5 * kCarTolerance))
       {
         n = G4ThreeVector(p.x(), p.y(), -k1 / 2).unit();
       }
-      else if(r1 < 0.5 * kCarTolerance
-           || p.perp2() > sqr(r1 - 0.5 * kCarTolerance))
+      else if (r1 < 0.5 * kCarTolerance || p.perp2() > sqr(r1 - 0.5 * kCarTolerance))
       {
-        n = G4ThreeVector(p.x(), p.y(), 0.).unit()
-          + G4ThreeVector(0., 0., -1.).unit();
+        n = G4ThreeVector(p.x(), p.y(), 0.).unit() + G4ThreeVector(0., 0., -1.).unit();
         n = n.unit();
       }
       else
@@ -384,15 +382,13 @@ G4ThreeVector G4Paraboloid::SurfaceNormal( const G4ThreeVector& p) const
     }
     else
     {
-      if(p.perp2() > sqr(r2 + 0.5 * kCarTolerance))
+      if (p.perp2() > sqr(r2 + 0.5 * kCarTolerance))
       {
         n = G4ThreeVector(p.x(), p.y(), 0.).unit();
       }
-      else if(r2 < 0.5 * kCarTolerance
-           || p.perp2() > sqr(r2 - 0.5 * kCarTolerance))
+      else if (r2 < 0.5 * kCarTolerance || p.perp2() > sqr(r2 - 0.5 * kCarTolerance))
       {
-        n = G4ThreeVector(p.x(), p.y(), 0.).unit()
-          + G4ThreeVector(0., 0., 1.).unit();
+        n = G4ThreeVector(p.x(), p.y(), 0.).unit() + G4ThreeVector(0., 0., 1.).unit();
         n = n.unit();
       }
       else
@@ -404,36 +400,37 @@ G4ThreeVector G4Paraboloid::SurfaceNormal( const G4ThreeVector& p) const
   else
   {
     G4double rho2 = p.perp2();
-    G4double rhoSurfTimesTol2  = (k1 * p.z() + k2) * sqr(kCarTolerance);
-    G4double A = rho2 - ((k1 *p.z() + k2)
-               + 0.25 * kCarTolerance * kCarTolerance);
+    G4double rhoSurfTimesTol2 = (k1 * p.z() + k2) * sqr(kCarTolerance);
+    G4double A = rho2 - ((k1 * p.z() + k2) + 0.25 * kCarTolerance * kCarTolerance);
 
-    if(A < 0 && sqr(A) > rhoSurfTimesTol2)
+    if (A < 0 && sqr(A) > rhoSurfTimesTol2)
     {
       // Actually checking rho < radius of paraboloid at z = p.z().
       // We're inside.
 
-      if(p.mag2() != 0) { n = p.unit(); }
+      if (p.mag2() != 0)
+      {
+        n = p.unit();
+      }
     }
-    else if(A <= 0 || sqr(A) < rhoSurfTimesTol2)
+    else if (A <= 0 || sqr(A) < rhoSurfTimesTol2)
     {
       // We're in the parabolic surface.
 
-      n = G4ThreeVector(p.x(), p.y(), - k1 / 2).unit();
+      n = G4ThreeVector(p.x(), p.y(), -k1 / 2).unit();
     }
     else
     {
-      n = G4ThreeVector(p.x(), p.y(), - k1 / 2).unit();
+      n = G4ThreeVector(p.x(), p.y(), -k1 / 2).unit();
     }
   }
 
-  if(n.mag2() == 0)
+  if (n.mag2() == 0)
   {
     std::ostringstream message;
-    message << "No normal defined for this point p." << G4endl
-            << "          p = " << 1 / mm * p << " mm";
-    G4Exception("G4Paraboloid::SurfaceNormal(p)", "GeomSolids1002",
-                JustWarning, message);
+    message << "No normal defined for this point p." << G4endl << "          p = " << 1 / mm * p
+            << " mm";
+    G4Exception("G4Paraboloid::SurfaceNormal(p)", "GeomSolids1002", JustWarning, message);
   }
   return n;
 }
@@ -444,24 +441,26 @@ G4ThreeVector G4Paraboloid::SurfaceNormal( const G4ThreeVector& p) const
 // - return kInfinity if no intersection
 //
 //
-G4double G4Paraboloid::DistanceToIn( const G4ThreeVector& p,
-                                     const G4ThreeVector& v  ) const
+G4double G4Paraboloid::DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const
 {
   G4double rho2 = p.perp2(), paraRho2 = std::fabs(k1 * p.z() + k2);
-  G4double tol2 = kCarTolerance*kCarTolerance;
-  G4double tolh = 0.5*kCarTolerance;
+  G4double tol2 = kCarTolerance * kCarTolerance;
+  G4double tolh = 0.5 * kCarTolerance;
 
-  if((r2 != 0.0) && p.z() > - tolh + dz)
+  if ((r2 != 0.0) && p.z() > -tolh + dz)
   {
     // If the points is above check for intersection with upper edge.
 
-    if(v.z() < 0)
+    if (v.z() < 0)
     {
-      G4double intersection = (dz - p.z()) / v.z(); // With plane z = dz.
-      if(sqr(p.x() + v.x()*intersection)
-       + sqr(p.y() + v.y()*intersection) < sqr(r2 + 0.5 * kCarTolerance))
+      G4double intersection = (dz - p.z()) / v.z();  // With plane z = dz.
+      if (sqr(p.x() + v.x() * intersection) + sqr(p.y() + v.y() * intersection)
+          < sqr(r2 + 0.5 * kCarTolerance))
       {
-        if(p.z() < tolh + dz) { return 0; }
+        if (p.z() < tolh + dz)
+        {
+          return 0;
+        }
         return intersection;
       }
     }
@@ -470,17 +469,20 @@ G4double G4Paraboloid::DistanceToIn( const G4ThreeVector& p,
       return kInfinity;
     }
   }
-  else if((r1 != 0.0) && p.z() < tolh - dz)
+  else if ((r1 != 0.0) && p.z() < tolh - dz)
   {
     // If the points is belove check for intersection with lower edge.
 
-    if(v.z() > 0)
+    if (v.z() > 0)
     {
-      G4double intersection = (-dz - p.z()) / v.z(); // With plane z = -dz.
-      if(sqr(p.x() + v.x()*intersection)
-       + sqr(p.y() + v.y()*intersection) < sqr(r1 + 0.5 * kCarTolerance))
+      G4double intersection = (-dz - p.z()) / v.z();  // With plane z = -dz.
+      if (sqr(p.x() + v.x() * intersection) + sqr(p.y() + v.y() * intersection)
+          < sqr(r1 + 0.5 * kCarTolerance))
       {
-        if(p.z() > -tolh - dz) { return 0; }
+        if (p.z() > -tolh - dz)
+        {
+          return 0;
+        }
         return intersection;
       }
     }
@@ -490,66 +492,72 @@ G4double G4Paraboloid::DistanceToIn( const G4ThreeVector& p,
     }
   }
 
-  G4double A = k1 / 2 * v.z() - p.x() * v.x() - p.y() * v.y(),
-           vRho2 = v.perp2(), intersection,
+  G4double A = k1 / 2 * v.z() - p.x() * v.x() - p.y() * v.y(), vRho2 = v.perp2(), intersection,
            B = (k1 * p.z() + k2 - rho2) * vRho2;
 
-  if ( ( (rho2 > paraRho2) && (sqr(rho2-paraRho2-0.25*tol2) > tol2*paraRho2) )
-    || (p.z() < - dz+kCarTolerance)
-    || (p.z() > dz-kCarTolerance) ) // Make sure it's safely outside.
+  if (((rho2 > paraRho2) && (sqr(rho2 - paraRho2 - 0.25 * tol2) > tol2 * paraRho2))
+      || (p.z() < -dz + kCarTolerance)
+      || (p.z() > dz - kCarTolerance))  // Make sure it's safely outside.
   {
     // Is there a problem with squaring rho twice?
 
-    if(vRho2<tol2) // Needs to be treated separately.
+    if (vRho2 < tol2)  // Needs to be treated separately.
     {
-      intersection = ((rho2 - k2)/k1 - p.z())/v.z();
-      if(intersection < 0) { return kInfinity; }
-      if(std::fabs(p.z() + v.z() * intersection) <= dz) { return intersection; }
+      intersection = ((rho2 - k2) / k1 - p.z()) / v.z();
+      if (intersection < 0)
+      {
+        return kInfinity;
+      }
+      if (std::fabs(p.z() + v.z() * intersection) <= dz)
+      {
+        return intersection;
+      }
       return kInfinity;
     }
 
-    if(A*A + B < 0) // No real intersections.
+    if (A * A + B < 0)  // No real intersections.
     {
       return kInfinity;
     }
-    
+
     intersection = (A - std::sqrt(B + sqr(A))) / vRho2;
-    if(intersection < 0)
+    if (intersection < 0)
     {
       return kInfinity;
     }
 
-    if(std::fabs(p.z() + intersection * v.z()) < dz + tolh)
+    if (std::fabs(p.z() + intersection * v.z()) < dz + tolh)
     {
       return intersection;
     }
 
     return kInfinity;
   }
-  if(sqr(rho2 - paraRho2 - .25 * tol2) <= tol2 * paraRho2)
+  if (sqr(rho2 - paraRho2 - .25 * tol2) <= tol2 * paraRho2)
   {
     // If this is true we're somewhere in the border.
 
-    G4ThreeVector normal(p.x(), p.y(), -k1/2);
-    if(normal.dot(v) <= 0) { return 0; }
-    
+    G4ThreeVector normal(p.x(), p.y(), -k1 / 2);
+    if (normal.dot(v) <= 0)
+    {
+      return 0;
+    }
+
     return kInfinity;
   }
-  
+
   std::ostringstream message;
-  if(Inside(p) == kInside)
+  if (Inside(p) == kInside)
   {
     message << "Point p is inside! - " << GetName() << G4endl;
   }
   else
   {
-    message << "Likely a problem in this function, for solid: " << GetName()
-            << G4endl;
+    message << "Likely a problem in this function, for solid: " << GetName() << G4endl;
   }
-  message << "          p = " << p * (1/mm) << " mm" << G4endl
-          << "          v = " << v * (1/mm) << " mm";
-  G4Exception("G4Paraboloid::DistanceToIn(p,v)", "GeomSolids1002",
-              JustWarning, message);
+  message << "          p = " << p * (1 / mm) << " mm" << G4endl << "          v = " << v * (1 / mm)
+          << " mm";
+  G4Exception("G4Paraboloid::DistanceToIn(p,v)", "GeomSolids1002", JustWarning, message);
   return 0;
 }
 
@@ -560,32 +568,47 @@ G4double G4Paraboloid::DistanceToIn( const G4ThreeVector& p,
 //
 G4double G4Paraboloid::DistanceToIn(const G4ThreeVector& p) const
 {
-  G4double safz = -dz+std::fabs(p.z());
-  if(safz<0.) { safz=0.; }
+  G4double safz = -dz + std::fabs(p.z());
+  if (safz < 0.)
+  {
+    safz = 0.;
+  }
   G4double safr = kInfinity;
 
-  G4double rho = p.x()*p.x()+p.y()*p.y();
-  G4double paraRho = (p.z()-k2)/k1;
+  G4double rho = p.x() * p.x() + p.y() * p.y();
+  G4double paraRho = (p.z() - k2) / k1;
   G4double sqrho = std::sqrt(rho);
 
-  if(paraRho<0.)
+  if (paraRho < 0.)
   {
-    safr=sqrho-r2;
-    if(safr>safz) { safz=safr; }
+    safr = sqrho - r2;
+    if (safr > safz)
+    {
+      safz = safr;
+    }
     return safz;
   }
 
   G4double sqprho = std::sqrt(paraRho);
-  G4double dRho = sqrho-sqprho;
-  if(dRho<0.) { return safz; }
+  G4double dRho = sqrho - sqprho;
+  if (dRho < 0.)
+  {
+    return safz;
+  }
 
-  G4double talf = -2.*k1*sqprho;
-  G4double tmp  = 1+talf*talf;
-  if(tmp<0.) { return safz; }
+  G4double talf = -2. * k1 * sqprho;
+  G4double tmp = 1 + talf * talf;
+  if (tmp < 0.)
+  {
+    return safz;
+  }
 
-  G4double salf = talf/std::sqrt(tmp);
-  safr = std::fabs(dRho*salf);
-  if(safr>safz) { safz=safr; }
+  G4double salf = talf / std::sqrt(tmp);
+  safr = std::fabs(dRho * salf);
+  if (safr > safz)
+  {
+    safz = safr;
+  }
 
   return safz;
 }
@@ -594,18 +617,19 @@ G4double G4Paraboloid::DistanceToIn(const G4ThreeVector& p) const
 //
 // Calculate distance to surface of shape from 'inside'
 //
-G4double G4Paraboloid::DistanceToOut(const G4ThreeVector& p,
-                                    const G4ThreeVector& v,
-                                    const G4bool calcNorm,
-                                          G4bool* validNorm,
-                                          G4ThreeVector* n ) const
+G4double G4Paraboloid::DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                                     const G4bool calcNorm, G4bool* validNorm,
+                                     G4ThreeVector* n) const
 {
   G4double rho2 = p.perp2(), paraRho2 = std::fabs(k1 * p.z() + k2);
   G4double vRho2 = v.perp2(), intersection;
-  G4double tol2 = kCarTolerance*kCarTolerance;
-  G4double tolh = 0.5*kCarTolerance;
+  G4double tol2 = kCarTolerance * kCarTolerance;
+  G4double tolh = 0.5 * kCarTolerance;
 
-  if(calcNorm) { *validNorm = false; }
+  if (calcNorm)
+  {
+    *validNorm = false;
+  }
 
   // We have that the particle p follows the line x = p + s * v
   // meaning x = p.x() + s * v.x(), y = p.y() + s * v.y() and
@@ -621,12 +645,12 @@ G4double G4Paraboloid::DistanceToOut(const G4ThreeVector& p,
   //
   G4double B = (-rho2 + paraRho2) * vRho2;
 
-  if ( rho2 < paraRho2 && sqr(rho2 - paraRho2 - 0.25 * tol2) > tol2 * paraRho2
-    && std::fabs(p.z()) < dz - kCarTolerance)
+  if (rho2 < paraRho2 && sqr(rho2 - paraRho2 - 0.25 * tol2) > tol2 * paraRho2
+      && std::fabs(p.z()) < dz - kCarTolerance)
   {
     // Make sure it's safely inside.
 
-    if(v.z() > 0)
+    if (v.z() > 0)
     {
       // It's heading upwards, check where it colides with the plane z = dz.
       // When it does, is that in the surface of the paraboloid.
@@ -634,16 +658,16 @@ G4double G4Paraboloid::DistanceToOut(const G4ThreeVector& p,
       // => variable = (z - p.z()) / v.z() so intersection must be:
 
       intersection = (dz - p.z()) / v.z();
-      G4ThreeVector ip = p + intersection * v; // Point of intersection.
+      G4ThreeVector ip = p + intersection * v;  // Point of intersection.
 
-      if(ip.perp2() < sqr(r2 + kCarTolerance))
+      if (ip.perp2() < sqr(r2 + kCarTolerance))
       {
-        if(calcNorm)
+        if (calcNorm)
         {
           *n = G4ThreeVector(0, 0, 1);
-          if(r2 < tolh || ip.perp2() > sqr(r2 - tolh))
+          if (r2 < tolh || ip.perp2() > sqr(r2 - tolh))
           {
-            *n += G4ThreeVector(ip.x(), ip.y(), - k1 / 2).unit();
+            *n += G4ThreeVector(ip.x(), ip.y(), -k1 / 2).unit();
             *n = n->unit();
           }
           *validNorm = true;
@@ -651,7 +675,7 @@ G4double G4Paraboloid::DistanceToOut(const G4ThreeVector& p,
         return intersection;
       }
     }
-    else if(v.z() < 0)
+    else if (v.z() < 0)
     {
       // It's heading downwards, check were it colides with the plane z = -dz.
       // When it does, is that in the surface of the paraboloid.
@@ -659,16 +683,16 @@ G4double G4Paraboloid::DistanceToOut(const G4ThreeVector& p,
       // => variable = (z - p.z()) / v.z() so intersection must be:
 
       intersection = (-dz - p.z()) / v.z();
-      G4ThreeVector ip = p + intersection * v; // Point of intersection.
+      G4ThreeVector ip = p + intersection * v;  // Point of intersection.
 
-      if(ip.perp2() < sqr(r1 + tolh))
+      if (ip.perp2() < sqr(r1 + tolh))
       {
-        if(calcNorm)
+        if (calcNorm)
         {
           *n = G4ThreeVector(0, 0, -1);
-          if(r1 < tolh || ip.perp2() > sqr(r1 - tolh))
+          if (r1 < tolh || ip.perp2() > sqr(r1 - tolh))
           {
-            *n += G4ThreeVector(ip.x(), ip.y(), - k1 / 2).unit();
+            *n += G4ThreeVector(ip.x(), ip.y(), -k1 / 2).unit();
             *n = n->unit();
           }
           *validNorm = true;
@@ -679,90 +703,91 @@ G4double G4Paraboloid::DistanceToOut(const G4ThreeVector& p,
 
     // Now check for collisions with paraboloid surface.
 
-    if(vRho2 == 0) // Needs to be treated seperately.
+    if (vRho2 == 0)  // Needs to be treated seperately.
     {
-      intersection = ((rho2 - k2)/k1 - p.z())/v.z();
-      if(calcNorm)
+      intersection = ((rho2 - k2) / k1 - p.z()) / v.z();
+      if (calcNorm)
       {
         G4ThreeVector intersectionP = p + v * intersection;
-        *n = G4ThreeVector(intersectionP.x(), intersectionP.y(), -k1/2);
+        *n = G4ThreeVector(intersectionP.x(), intersectionP.y(), -k1 / 2);
         *n = n->unit();
 
         *validNorm = true;
       }
       return intersection;
     }
-    if( ((A <= 0) && (B >= sqr(A) * (sqr(vRho2) - 1))) || (A >= 0))
+    if (((A <= 0) && (B >= sqr(A) * (sqr(vRho2) - 1))) || (A >= 0))
     {
       // intersection = (A + std::sqrt(B + sqr(A))) / vRho2;
       // The above calculation has a precision problem:
       // known problem of solving quadratic equation with small A
 
-      A = A/vRho2;
-      B = (k1 * p.z() + k2 - rho2)/vRho2;
-      intersection = B/(-A + std::sqrt(B + sqr(A)));
-      if(calcNorm)
+      A = A / vRho2;
+      B = (k1 * p.z() + k2 - rho2) / vRho2;
+      intersection = B / (-A + std::sqrt(B + sqr(A)));
+      if (calcNorm)
       {
         G4ThreeVector intersectionP = p + v * intersection;
-        *n = G4ThreeVector(intersectionP.x(), intersectionP.y(), -k1/2);
+        *n = G4ThreeVector(intersectionP.x(), intersectionP.y(), -k1 / 2);
         *n = n->unit();
         *validNorm = true;
       }
       return intersection;
     }
     std::ostringstream message;
-    message << "There is no intersection between given line and solid!"
-            << G4endl
-            << "          p = " << p << G4endl
-            << "          v = " << v;
-    G4Exception("G4Paraboloid::DistanceToOut(p,v,...)", "GeomSolids1002",
-                JustWarning, message);
+    message << "There is no intersection between given line and solid!" << G4endl
+            << "          p = " << p << G4endl << "          v = " << v;
+    G4Exception("G4Paraboloid::DistanceToOut(p,v,...)", "GeomSolids1002", JustWarning, message);
 
     return kInfinity;
   }
-  if ( (rho2 < paraRho2 + kCarTolerance
-     || sqr(rho2 - paraRho2 - 0.25 * tol2) < tol2 * paraRho2 )
-     && std::fabs(p.z()) < dz + tolh)
+  if ((rho2 < paraRho2 + kCarTolerance || sqr(rho2 - paraRho2 - 0.25 * tol2) < tol2 * paraRho2)
+      && std::fabs(p.z()) < dz + tolh)
   {
     // If this is true we're somewhere in the border.
 
-    G4ThreeVector normal = G4ThreeVector (p.x(), p.y(), -k1/2);
+    G4ThreeVector normal = G4ThreeVector(p.x(), p.y(), -k1 / 2);
 
-    if(std::fabs(p.z()) > dz - tolh)
+    if (std::fabs(p.z()) > dz - tolh)
     {
       // We're in the lower or upper edge
       //
-      if( ((v.z() > 0) && (p.z() > 0)) || ((v.z() < 0) && (p.z() < 0)) )
-      {             // If we're heading out of the object that is treated here
-        if(calcNorm)
+      if (((v.z() > 0) && (p.z() > 0)) || ((v.z() < 0) && (p.z() < 0)))
+      {  // If we're heading out of the object that is treated here
+        if (calcNorm)
         {
           *validNorm = true;
-          if(p.z() > 0)
-            { *n = G4ThreeVector(0, 0, 1); }
+          if (p.z() > 0)
+          {
+            *n = G4ThreeVector(0, 0, 1);
+          }
           else
-            { *n = G4ThreeVector(0, 0, -1); }
+          {
+            *n = G4ThreeVector(0, 0, -1);
+          }
         }
         return 0;
       }
 
-      if(v.z() == 0)
+      if (v.z() == 0)
       {
         // Case where we're moving inside the surface needs to be
         // treated separately.
         // Distance until it goes out through a side is returned.
 
-        G4double r = (p.z() > 0)? r2 : r1;
+        G4double r = (p.z() > 0) ? r2 : r1;
         G4double pDotV = p.dot(v);
-        A = vRho2 * ( sqr(r) - sqr(p.x()) - sqr(p.y()));
+        A = vRho2 * (sqr(r) - sqr(p.x()) - sqr(p.y()));
         intersection = (-pDotV + std::sqrt(A + sqr(pDotV))) / vRho2;
 
-        if(calcNorm)
+        if (calcNorm)
         {
           *validNorm = true;
 
-          *n = (G4ThreeVector(0, 0, p.z()/std::fabs(p.z()))
-              + G4ThreeVector(p.x() + v.x() * intersection, p.y() + v.y()
-              * intersection, -k1/2).unit()).unit();
+          *n = (G4ThreeVector(0, 0, p.z() / std::fabs(p.z()))
+                + G4ThreeVector(p.x() + v.x() * intersection, p.y() + v.y() * intersection, -k1 / 2)
+                    .unit())
+                 .unit();
         }
         return intersection;
       }
@@ -788,57 +813,55 @@ G4double G4Paraboloid::DistanceToOut(const G4ThreeVector& p,
     //   return 0;
     // }
 
-    if(v.z() > 0)
+    if (v.z() > 0)
     {
       // Check for collision with upper edge.
 
       intersection = (dz - p.z()) / v.z();
       G4ThreeVector ip = p + intersection * v;
 
-      if(ip.perp2() < sqr(r2 - tolh))
+      if (ip.perp2() < sqr(r2 - tolh))
       {
-        if(calcNorm)
+        if (calcNorm)
         {
           *validNorm = true;
           *n = G4ThreeVector(0, 0, 1);
         }
         return intersection;
       }
-      if(ip.perp2() < sqr(r2 + tolh))
+      if (ip.perp2() < sqr(r2 + tolh))
       {
-        if(calcNorm)
+        if (calcNorm)
         {
           *validNorm = true;
-          *n = G4ThreeVector(0, 0, 1)
-             + G4ThreeVector(ip.x(), ip.y(), - k1 / 2).unit();
+          *n = G4ThreeVector(0, 0, 1) + G4ThreeVector(ip.x(), ip.y(), -k1 / 2).unit();
           *n = n->unit();
         }
         return intersection;
       }
     }
-    if( v.z() < 0)
+    if (v.z() < 0)
     {
       // Check for collision with lower edge.
 
       intersection = (-dz - p.z()) / v.z();
       G4ThreeVector ip = p + intersection * v;
 
-      if(ip.perp2() < sqr(r1 - tolh))
+      if (ip.perp2() < sqr(r1 - tolh))
       {
-        if(calcNorm)
+        if (calcNorm)
         {
           *validNorm = true;
           *n = G4ThreeVector(0, 0, -1);
         }
         return intersection;
       }
-      if(ip.perp2() < sqr(r1 + tolh))
+      if (ip.perp2() < sqr(r1 + tolh))
       {
-        if(calcNorm)
+        if (calcNorm)
         {
           *validNorm = true;
-          *n = G4ThreeVector(0, 0, -1)
-             + G4ThreeVector(ip.x(), ip.y(), - k1 / 2).unit();
+          *n = G4ThreeVector(0, 0, -1) + G4ThreeVector(ip.x(), ip.y(), -k1 / 2).unit();
           *n = n->unit();
         }
         return intersection;
@@ -847,27 +870,27 @@ G4double G4Paraboloid::DistanceToOut(const G4ThreeVector& p,
 
     // Note: comparison with zero below would not be correct !
     //
-    if(std::fabs(vRho2) > tol2) // precision error in the calculation of
-    {                           // intersection = (A+std::sqrt(B+sqr(A)))/vRho2
-      A = A/vRho2;
+    if (std::fabs(vRho2) > tol2)  // precision error in the calculation of
+    {  // intersection = (A+std::sqrt(B+sqr(A)))/vRho2
+      A = A / vRho2;
       B = (k1 * p.z() + k2 - rho2);
-      if(std::fabs(B)>kCarTolerance)
+      if (std::fabs(B) > kCarTolerance)
       {
-        B = (B)/vRho2;
-        intersection = B/(-A + std::sqrt(B + sqr(A)));
+        B = (B) / vRho2;
+        intersection = B / (-A + std::sqrt(B + sqr(A)));
       }
-      else                      // Point is On both borders: Z and parabolic
-      {                         // solution depends on normal.dot(v) sign
-        if(normal.dot(v) >= 0)
+      else  // Point is On both borders: Z and parabolic
+      {  // solution depends on normal.dot(v) sign
+        if (normal.dot(v) >= 0)
         {
-          if(calcNorm)
+          if (calcNorm)
           {
             *validNorm = true;
             *n = normal.unit();
           }
           return 0;
         }
-        intersection = 2.*A;
+        intersection = 2. * A;
       }
     }
     else
@@ -875,25 +898,24 @@ G4double G4Paraboloid::DistanceToOut(const G4ThreeVector& p,
       intersection = ((rho2 - k2) / k1 - p.z()) / v.z();
     }
 
-    if(calcNorm)
+    if (calcNorm)
     {
       *validNorm = true;
-      *n = G4ThreeVector(p.x() + intersection * v.x(), p.y()
-         + intersection * v.y(), - k1 / 2);
+      *n = G4ThreeVector(p.x() + intersection * v.x(), p.y() + intersection * v.y(), -k1 / 2);
       *n = n->unit();
     }
     return intersection;
   }
-  
-#ifdef G4SPECSDEBUG
-  if(kOutside == Inside(p))
+
+#  ifdef G4SPECSDEBUG
+  if (kOutside == Inside(p))
   {
-    G4Exception("G4Paraboloid::DistanceToOut(p,v,...)", "GeomSolids1002",
-                JustWarning, "Point p is outside!");
+    G4Exception("G4Paraboloid::DistanceToOut(p,v,...)", "GeomSolids1002", JustWarning,
+                "Point p is outside!");
   }
-  G4Exception("G4Paraboloid::DistanceToOut(p,v,...)", "GeomSolids1002",
-              JustWarning, "There's an error in this functions code.");
-#endif
+  G4Exception("G4Paraboloid::DistanceToOut(p,v,...)", "GeomSolids1002", JustWarning,
+              "There's an error in this functions code.");
+#  endif
   return kInfinity;
 }
 
@@ -903,39 +925,45 @@ G4double G4Paraboloid::DistanceToOut(const G4ThreeVector& p,
 //
 G4double G4Paraboloid::DistanceToOut(const G4ThreeVector& p) const
 {
-  G4double safe=0.0,rho,safeR,safeZ ;
-  G4double tanRMax,secRMax,pRMax ;
+  G4double safe = 0.0, rho, safeR, safeZ;
+  G4double tanRMax, secRMax, pRMax;
 
-#ifdef G4SPECSDEBUG
-  if( Inside(p) == kOutside )
+#  ifdef G4SPECSDEBUG
+  if (Inside(p) == kOutside)
   {
-     G4cout << G4endl ;
-     DumpInfo();
-     std::ostringstream message;
-     G4long oldprc = message.precision(16);
-     message << "Point p is outside !?" << G4endl
-             << "Position:" << G4endl
-             << "   p.x() = "   << p.x()/mm << " mm" << G4endl
-             << "   p.y() = "   << p.y()/mm << " mm" << G4endl
-             << "   p.z() = "   << p.z()/mm << " mm";
-     message.precision(oldprc) ;
-     G4Exception("G4Paraboloid::DistanceToOut(p)", "GeomSolids1002",
-                 JustWarning, message);
+    G4cout << G4endl;
+    DumpInfo();
+    std::ostringstream message;
+    G4long oldprc = message.precision(16);
+    message << "Point p is outside !?" << G4endl << "Position:" << G4endl
+            << "   p.x() = " << p.x() / mm << " mm" << G4endl << "   p.y() = " << p.y() / mm
+            << " mm" << G4endl << "   p.z() = " << p.z() / mm << " mm";
+    message.precision(oldprc);
+    G4Exception("G4Paraboloid::DistanceToOut(p)", "GeomSolids1002", JustWarning, message);
   }
-#endif
+#  endif
 
   rho = p.perp();
-  safeZ = dz - std::fabs(p.z()) ;
+  safeZ = dz - std::fabs(p.z());
 
-  tanRMax = (r2 - r1)*0.5/dz ;
-  secRMax = std::sqrt(1.0 + tanRMax*tanRMax) ;
-  pRMax   = tanRMax*p.z() + (r1+r2)*0.5 ;
-  safeR  = (pRMax - rho)/secRMax ;
+  tanRMax = (r2 - r1) * 0.5 / dz;
+  secRMax = std::sqrt(1.0 + tanRMax * tanRMax);
+  pRMax = tanRMax * p.z() + (r1 + r2) * 0.5;
+  safeR = (pRMax - rho) / secRMax;
 
-  if (safeZ < safeR) { safe = safeZ; }
-  else { safe = safeR; }
-  if ( safe < 0.5 * kCarTolerance ) { safe = 0; }
-  return safe ;
+  if (safeZ < safeR)
+  {
+    safe = safeZ;
+  }
+  else
+  {
+    safe = safeR;
+  }
+  if (safe < 0.5 * kCarTolerance)
+  {
+    safe = 0;
+  }
+  return safe;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -960,7 +988,7 @@ G4VSolid* G4Paraboloid::Clone() const
 //
 // Stream object contents to an output stream
 //
-std::ostream& G4Paraboloid::StreamInfo( std::ostream& os ) const
+std::ostream& G4Paraboloid::StreamInfo(std::ostream& os) const
 {
   G4long oldprc = os.precision(16);
   os << "-----------------------------------------------------------\n"
@@ -968,9 +996,9 @@ std::ostream& G4Paraboloid::StreamInfo( std::ostream& os ) const
      << "    ===================================================\n"
      << " Solid type: G4Paraboloid\n"
      << " Parameters: \n"
-     << "    z half-axis:   " << dz/mm << " mm \n"
-     << "    radius at -dz: " << r1/mm << " mm \n"
-     << "    radius at dz:  " << r2/mm << " mm \n"
+     << "    z half-axis:   " << dz / mm << " mm \n"
+     << "    radius at -dz: " << r1 / mm << " mm \n"
+     << "    radius at dz:  " << r2 / mm << " mm \n"
      << "-----------------------------------------------------------\n";
   os.precision(oldprc);
 
@@ -983,57 +1011,59 @@ std::ostream& G4Paraboloid::StreamInfo( std::ostream& os ) const
 //
 G4ThreeVector G4Paraboloid::GetPointOnSurface() const
 {
-  G4double phi = twopi*G4QuickRand();
-  G4double select = fSurfaceArea*G4QuickRand();
+  G4double phi = twopi * G4QuickRand();
+  G4double select = fSurfaceArea * G4QuickRand();
   G4double z, rho;
-  if (select < pi*(sqr(r1) + sqr(r2)))
+  if (select < pi * (sqr(r1) + sqr(r2)))
   {
-    if(select < pi*sqr(r1))
+    if (select < pi * sqr(r1))
     {
       z = -dz;
-      rho = r1*std::sqrt(G4QuickRand());
+      rho = r1 * std::sqrt(G4QuickRand());
     }
     else
     {
       z = dz;
-      rho = r2*std::sqrt(G4QuickRand());
+      rho = r2 * std::sqrt(G4QuickRand());
     }
   }
   else
   {
     // rejection sampling
-    G4double mu_max = dz*k1 + k2 + 0.25*k1; // max surface element squared
+    G4double mu_max = dz * k1 + k2 + 0.25 * k1;  // max surface element squared
     for (auto i = 0; i < 10000; ++i)
     {
-      z = dz*(2*G4QuickRand() - 1);
-      G4double mu = z*k1 + k2 + 0.25*k1; // surface element squared
-      if (mu_max*sqr(G4QuickRand()) <= mu) { break; }
+      z = dz * (2 * G4QuickRand() - 1);
+      G4double mu = z * k1 + k2 + 0.25 * k1;  // surface element squared
+      if (mu_max * sqr(G4QuickRand()) <= mu)
+      {
+        break;
+      }
     }
-    rho = std::sqrt(z*k1 + k2);
+    rho = std::sqrt(z * k1 + k2);
   }
-  return { rho*std::cos(phi), rho*std::sin(phi), z };
+  return {rho * std::cos(phi), rho * std::sin(phi), z};
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Methods for visualisation
 //
-void G4Paraboloid::DescribeYourselfTo (G4VGraphicsScene& scene) const
+void G4Paraboloid::DescribeYourselfTo(G4VGraphicsScene& scene) const
 {
   scene.AddSolid(*this);
 }
 
-G4Polyhedron* G4Paraboloid::CreatePolyhedron () const
+G4Polyhedron* G4Paraboloid::CreatePolyhedron() const
 {
   return new G4PolyhedronParaboloid(r1, r2, dz, 0., twopi);
 }
 
-G4Polyhedron* G4Paraboloid::GetPolyhedron () const
+G4Polyhedron* G4Paraboloid::GetPolyhedron() const
 {
-  if (fpPolyhedron == nullptr ||
-      fRebuildPolyhedron ||
-      fpPolyhedron->GetNumberOfRotationStepsAtTimeOfCreation() !=
-      fpPolyhedron->GetNumberOfRotationSteps())
+  if (fpPolyhedron == nullptr || fRebuildPolyhedron
+      || fpPolyhedron->GetNumberOfRotationStepsAtTimeOfCreation()
+           != fpPolyhedron->GetNumberOfRotationSteps())
   {
     G4AutoLock l(&polyhedronMutex);
     delete fpPolyhedron;
@@ -1044,4 +1074,4 @@ G4Polyhedron* G4Paraboloid::GetPolyhedron () const
   return fpPolyhedron;
 }
 
-#endif // !defined(G4GEOM_USE_UPARABOLOID) || !defined(G4GEOM_USE_SYS_USOLIDS)
+#endif  // !defined(G4GEOM_USE_UPARABOLOID) || !defined(G4GEOM_USE_SYS_USOLIDS)

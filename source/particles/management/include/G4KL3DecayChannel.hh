@@ -27,8 +27,8 @@
 
 // Author: H.Kurashige, 30 May 1997
 // --------------------------------------------------------------------
-#ifndef G4KL3DecayChannel_hh
-#define G4KL3DecayChannel_hh 1
+#ifndef G4KL3DECAYCHANNEL_HH
+#define G4KL3DECAYCHANNEL_HH
 
 #include "G4VDecayChannel.hh"
 #include "G4ios.hh"
@@ -37,6 +37,7 @@
 class G4KL3DecayChannel : public G4VDecayChannel
 {
   public:
+
     // Constructor & destructor
     G4KL3DecayChannel(const G4String& theParentName, G4double theBR, const G4String& thePionName,
                       const G4String& theLeptonName, const G4String& theNutrinoName);
@@ -49,6 +50,7 @@ class G4KL3DecayChannel : public G4VDecayChannel
     inline G4double GetDalitzParameterXi() const;
 
   protected:
+
     // Copy constructor and assignment operator
     G4KL3DecayChannel(const G4KL3DecayChannel&) = default;
     G4KL3DecayChannel& operator=(const G4KL3DecayChannel&);
@@ -79,9 +81,11 @@ class G4KL3DecayChannel : public G4VDecayChannel
                            G4double massPi, G4double massL, G4double massNu);
 
   private:
+
     G4KL3DecayChannel() = default;
 
   private:
+
     // Used in DalitzDensity() coefficients
     G4double pLambda = 0.0;
     G4double pXi0 = 0.0;

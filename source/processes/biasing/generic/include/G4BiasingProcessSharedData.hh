@@ -40,11 +40,11 @@
 //
 // Author: Marc Verderi, September 2014.
 // --------------------------------------------------------------------
-#ifndef G4BiasingProcessSharedData_h
-#define G4BiasingProcessSharedData_h 1
+#ifndef G4BIASINGPROCESSSHAREDDATA_HH
+#define G4BIASINGPROCESSSHAREDDATA_HH
 
-#include "globals.hh"
 #include "G4Cache.hh"
+#include "globals.hh"
 
 #include <vector>
 
@@ -55,8 +55,8 @@ class G4ParallelGeometriesLimiterProcess;
 
 class G4BiasingProcessSharedData
 {
-  friend class G4BiasingProcessInterface;
-  friend class G4ParallelGeometriesLimiterProcess;
+    friend class G4BiasingProcessInterface;
+    friend class G4ParallelGeometriesLimiterProcess;
 
   public:
 
@@ -64,29 +64,37 @@ class G4BiasingProcessSharedData
     // -- Public access methods:
     // -------------------------
     // -- The biasing process interface objects sharing this shared data class:
-    const std::vector< const G4BiasingProcessInterface* >& GetBiasingProcessInterfaces() const
-      { return fPublicBiasingProcessInterfaces; }
-    const std::vector< const G4BiasingProcessInterface* >& GetPhysicsBiasingProcessInterfaces() const
-      { return fPublicPhysicsBiasingProcessInterfaces; }
-    const std::vector< const G4BiasingProcessInterface* >& GetNonPhysicsBiasingProcessInterfaces() const
-      { return fPublicNonPhysicsBiasingProcessInterfaces; }
-  
+    const std::vector<const G4BiasingProcessInterface*>& GetBiasingProcessInterfaces() const
+    {
+      return fPublicBiasingProcessInterfaces;
+    }
+    const std::vector<const G4BiasingProcessInterface*>& GetPhysicsBiasingProcessInterfaces() const
+    {
+      return fPublicPhysicsBiasingProcessInterfaces;
+    }
+    const std::vector<const G4BiasingProcessInterface*>&
+    GetNonPhysicsBiasingProcessInterfaces() const
+    {
+      return fPublicNonPhysicsBiasingProcessInterfaces;
+    }
+
     // -- The possible geometry limiter process:
     const G4ParallelGeometriesLimiterProcess* GetParallelGeometriesLimiterProcess() const
-      { return fParallelGeometriesLimiterProcess; }
+    {
+      return fParallelGeometriesLimiterProcess;
+    }
 
   private:
 
     // -- Methods used by the G4BiasingProcessInterface objects.
     // -- Object is created by G4BiasingProcessInterface object:
-    G4BiasingProcessSharedData( const G4ProcessManager* mgr)
-      : fProcessManager(mgr) {}
+    G4BiasingProcessSharedData(const G4ProcessManager* mgr) : fProcessManager(mgr) {}
     ~G4BiasingProcessSharedData() {}
 
     // -- biasing operators:
-    void CurrentBiasingOperator( G4VBiasingOperator* );
+    void CurrentBiasingOperator(G4VBiasingOperator*);
     G4VBiasingOperator* CurrentBiasingOperator() const;
-    void PreviousBiasingOperator( G4VBiasingOperator* );
+    void PreviousBiasingOperator(G4VBiasingOperator*);
     G4VBiasingOperator* PreviousBiasingOperator() const;
 
   private:
@@ -97,28 +105,28 @@ class G4BiasingProcessSharedData
     G4VBiasingOperator* fPreviousBiasingOperator = nullptr;
     G4VBiasingOperator* fParallelGeometryOperator = nullptr;
     G4VBiasingOperator* fMassGeometryOperator = nullptr;
-    // -- 
+    // --
     G4bool fIsNewOperator = true;
     G4bool fLeavingPreviousOperator = false;
 
     // -- biasing process interfaces sharing this object:
-    std::vector < G4BiasingProcessInterface* > fBiasingProcessInterfaces;
-    std::vector < G4BiasingProcessInterface* > fPhysicsBiasingProcessInterfaces;
-    std::vector < G4BiasingProcessInterface* > fNonPhysicsBiasingProcessInterfaces;
+    std::vector<G4BiasingProcessInterface*> fBiasingProcessInterfaces;
+    std::vector<G4BiasingProcessInterface*> fPhysicsBiasingProcessInterfaces;
+    std::vector<G4BiasingProcessInterface*> fNonPhysicsBiasingProcessInterfaces;
     // -- the same ones, for public use:
-    std::vector < const G4BiasingProcessInterface* > fPublicBiasingProcessInterfaces;
-    std::vector < const G4BiasingProcessInterface* > fPublicPhysicsBiasingProcessInterfaces;
-    std::vector < const G4BiasingProcessInterface* > fPublicNonPhysicsBiasingProcessInterfaces;
+    std::vector<const G4BiasingProcessInterface*> fPublicBiasingProcessInterfaces;
+    std::vector<const G4BiasingProcessInterface*> fPublicPhysicsBiasingProcessInterfaces;
+    std::vector<const G4BiasingProcessInterface*> fPublicNonPhysicsBiasingProcessInterfaces;
 
     // -- possible process limiting step on parallel geometries:
     G4ParallelGeometriesLimiterProcess* fParallelGeometriesLimiterProcess = nullptr;
-  
+
     // -- thread local:
     // -- Map between process managers and shared data. This map is made of
     // -- pointers of G4BiasingSharedData instead of objects themselves :
     // -- each process needs to keep a valid pointer of a shared data object
     // -- but a map of object will make pointers invalid when map is increased.
-    static G4MapCache< const G4ProcessManager*, G4BiasingProcessSharedData* > fSharedDataMap;
+    static G4MapCache<const G4ProcessManager*, G4BiasingProcessSharedData*> fSharedDataMap;
 };
 
 #endif

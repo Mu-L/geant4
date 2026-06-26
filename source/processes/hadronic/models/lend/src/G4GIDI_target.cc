@@ -25,6 +25,7 @@
 //
 
 #include <G4GIDI.hh>
+#include "G4GIDI_impl.hh"
 
 /*! \class G4GIDI_target
  * A class to store map files for a particular projectile.
@@ -34,18 +35,18 @@
  * @param a_MCProtare               [in]    The MCGIDI protare.
  ***********************************************************************************************************/
 
-G4GIDI_target::G4GIDI_target( PoPI::Database const &a_pops, MCGIDI::DomainHash const &a_domainHash, GIDI::Protare const &a_GIDI_protare, 
+G4GIDI_target::Impl::Impl( PoPI::Database const &a_pops, MCGIDI::DomainHash const &a_domainHash, GIDI::Protare const &a_GIDI_protare,
                 MCGIDI::Protare *a_MCGIDI_protare ) :
         m_MCGIDI_protare( a_MCGIDI_protare ),
+        m_domainHash( a_domainHash ),
+        m_elasticAngular( nullptr ),
         m_target( a_GIDI_protare.target( ).ID( ) ),
         m_fileName( a_GIDI_protare.fileName( ) ),
         m_evaluation( a_GIDI_protare.evaluation( ) ),
         m_targetZ( 0 ),
         m_targetA( 0 ),
         m_targetM( 0 ),
-        m_targetMass( 0.0 ),
-        m_domainHash( a_domainHash ),
-        m_elasticAngular( nullptr ) {
+        m_targetMass( 0.0 ) {
 
     PoPI::Base const *targetAsBase = &a_pops.get<PoPI::Base const>( m_target );
     PoPI::Base const *targetAsBase2 = targetAsBase;
@@ -85,7 +86,7 @@ G4GIDI_target::G4GIDI_target( PoPI::Database const &a_pops, MCGIDI::DomainHash c
 /* *********************************************************************************************************//**
  ***********************************************************************************************************/
 
-G4GIDI_target::~G4GIDI_target( ) {
+G4GIDI_target::Impl::~Impl( ) {
 
     delete m_MCGIDI_protare;
 }
@@ -93,16 +94,83 @@ G4GIDI_target::~G4GIDI_target( ) {
 /* *********************************************************************************************************//**
  ***********************************************************************************************************/
 
+G4GIDI_target::G4GIDI_target( std::unique_ptr<Impl> a_impl ) :
+        m_impl( std::move( a_impl ) ) {
+}
+
+/* *********************************************************************************************************//**
+ ***********************************************************************************************************/
+
+G4GIDI_target::~G4GIDI_target( ) = default;
+
+/* *********************************************************************************************************//**
+ ***********************************************************************************************************/
+
+std::string const *G4GIDI_target::getName( ) const { return( &m_impl->m_target ); }
+
+/* *********************************************************************************************************//**
+ ***********************************************************************************************************/
+
+std::string const *G4GIDI_target::getFilename( ) const { return( &m_impl->m_fileName ); }
+
+/* *********************************************************************************************************//**
+ ***********************************************************************************************************/
+
+std::string const *G4GIDI_target::getEvaluation( ) const { return( &m_impl->m_evaluation ); }
+
+/* *********************************************************************************************************//**
+ ***********************************************************************************************************/
+
+int G4GIDI_target::getZ( ) const { return( m_impl->m_targetZ ); }
+
+/* *********************************************************************************************************//**
+ ***********************************************************************************************************/
+
+int G4GIDI_target::getA( ) const { return( m_impl->m_targetA ); }
+
+/* *********************************************************************************************************//**
+ ***********************************************************************************************************/
+
+int G4GIDI_target::getM( ) const { return( m_impl->m_targetM ); }
+
+/* *********************************************************************************************************//**
+ ***********************************************************************************************************/
+
+double G4GIDI_target::getMass( ) const { return( m_impl->m_targetMass ); }
+
+/* *********************************************************************************************************//**
+ ***********************************************************************************************************/
+
+std::vector<int> const &G4GIDI_target::elasticIndices( ) { return( m_impl->m_elasticIndices ); }
+
+/* *********************************************************************************************************//**
+ ***********************************************************************************************************/
+
+std::vector<int> const &G4GIDI_target::captureIndices( ) { return( m_impl->m_captureIndices ); }
+
+/* *********************************************************************************************************//**
+ ***********************************************************************************************************/
+
+std::vector<int> const &G4GIDI_target::fissionIndices( ) { return( m_impl->m_fissionIndices ); }
+
+/* *********************************************************************************************************//**
+ ***********************************************************************************************************/
+
+std::vector<int> const &G4GIDI_target::othersIndices( ) { return( m_impl->m_othersIndices ); }
+
+/* *********************************************************************************************************//**
+ ***********************************************************************************************************/
+
 int G4GIDI_target::getNumberOfChannels( ) const {
 
-    return( static_cast<int>( m_MCGIDI_protare->numberOfReactions( ) ) );
+    return( static_cast<int>( m_impl->m_MCGIDI_protare->numberOfReactions( ) ) );
 }
 /* *********************************************************************************************************//**
  ***********************************************************************************************************/
 
 int G4GIDI_target::getNumberOfProductionChannels( ) const {
 
-    return( static_cast<int>( m_MCGIDI_protare->numberOfOrphanProducts( ) ) );
+    return( static_cast<int>( m_impl->m_MCGIDI_protare->numberOfOrphanProducts( ) ) );
 }
 
 /* *********************************************************************************************************//**
@@ -110,7 +178,7 @@ int G4GIDI_target::getNumberOfProductionChannels( ) const {
 
 channelID G4GIDI_target::getChannelsID( int channelIndex ) const {
 
-    return( channelID( m_MCGIDI_protare->reaction( channelIndex )->label( ).c_str( ) ) );
+    return( channelID( m_impl->m_MCGIDI_protare->reaction( channelIndex )->label( ).c_str( ) ) );
 }
 
 /* *********************************************************************************************************//**
@@ -120,8 +188,8 @@ std::vector<channelID> *G4GIDI_target::getChannelIDs( ) const {
 
     std::vector<channelID> *channelIDs = new std::vector<channelID>( 0 );
 
-    for( std::size_t reactionIndex = 0; reactionIndex < m_MCGIDI_protare->numberOfReactions( ); ++reactionIndex ) {
-        MCGIDI::Reaction const *reaction = m_MCGIDI_protare->reaction( reactionIndex );
+    for( std::size_t reactionIndex = 0; reactionIndex < m_impl->m_MCGIDI_protare->numberOfReactions( ); ++reactionIndex ) {
+        MCGIDI::Reaction const *reaction = m_impl->m_MCGIDI_protare->reaction( reactionIndex );
         channelIDs->push_back( reaction->label( ).c_str( ) );
     }
 
@@ -135,8 +203,8 @@ std::vector<channelID> *G4GIDI_target::getProductionChannelIDs( ) const {
 
     std::vector<channelID> *channelIDs = new std::vector<channelID>( 0 );
 
-    for( std::size_t reactionIndex = 0; reactionIndex < m_MCGIDI_protare->numberOfOrphanProducts( ); ++reactionIndex ) {
-        MCGIDI::Reaction const *reaction = m_MCGIDI_protare->orphanProduct( reactionIndex );
+    for( std::size_t reactionIndex = 0; reactionIndex < m_impl->m_MCGIDI_protare->numberOfOrphanProducts( ); ++reactionIndex ) {
+        MCGIDI::Reaction const *reaction = m_impl->m_MCGIDI_protare->orphanProduct( reactionIndex );
         channelIDs->push_back( reaction->label( ).c_str( ) );
     }
 
@@ -148,9 +216,9 @@ std::vector<channelID> *G4GIDI_target::getProductionChannelIDs( ) const {
 
 double G4GIDI_target::getTotalCrossSectionAtE( double a_energy, double a_temperature ) const {
 
-    std::size_t hashIndex = m_domainHash.index( a_energy );
+    std::size_t hashIndex = m_impl->m_domainHash.index( a_energy );
 
-    return( m_MCGIDI_protare->crossSection( m_URR_protareInfos, hashIndex, a_temperature, a_energy ) );
+    return( m_impl->m_MCGIDI_protare->crossSection( m_impl->m_URR_protareInfos, hashIndex, a_temperature, a_energy ) );
 }
 
 /* *********************************************************************************************************//**
@@ -158,7 +226,7 @@ double G4GIDI_target::getTotalCrossSectionAtE( double a_energy, double a_tempera
 
 double G4GIDI_target::getElasticCrossSectionAtE( double a_energy, double a_temperature ) const {
 
-    return( sumChannelCrossSectionAtE( m_elasticIndices, a_energy, a_temperature ) );
+    return( sumChannelCrossSectionAtE( m_impl->m_elasticIndices, a_energy, a_temperature ) );
 }
 
 /* *********************************************************************************************************//**
@@ -166,7 +234,7 @@ double G4GIDI_target::getElasticCrossSectionAtE( double a_energy, double a_tempe
 
 double G4GIDI_target::getCaptureCrossSectionAtE( double a_energy, double a_temperature ) const {
 
-    return( sumChannelCrossSectionAtE( m_captureIndices, a_energy, a_temperature ) );
+    return( sumChannelCrossSectionAtE( m_impl->m_captureIndices, a_energy, a_temperature ) );
 }
 
 /* *********************************************************************************************************//**
@@ -174,7 +242,7 @@ double G4GIDI_target::getCaptureCrossSectionAtE( double a_energy, double a_tempe
 
 double G4GIDI_target::getFissionCrossSectionAtE( double a_energy, double a_temperature ) const {
 
-    return( sumChannelCrossSectionAtE( m_fissionIndices, a_energy, a_temperature ) );
+    return( sumChannelCrossSectionAtE( m_impl->m_fissionIndices, a_energy, a_temperature ) );
 }
 
 /* *********************************************************************************************************//**
@@ -182,7 +250,7 @@ double G4GIDI_target::getFissionCrossSectionAtE( double a_energy, double a_tempe
 
 double G4GIDI_target::getOthersCrossSectionAtE( double a_energy, double a_temperature ) const {
 
-    return( sumChannelCrossSectionAtE( m_othersIndices, a_energy, a_temperature ) );
+    return( sumChannelCrossSectionAtE( m_impl->m_othersIndices, a_energy, a_temperature ) );
 }
 
 /* *********************************************************************************************************//**
@@ -190,11 +258,11 @@ double G4GIDI_target::getOthersCrossSectionAtE( double a_energy, double a_temper
 
 double G4GIDI_target::sumChannelCrossSectionAtE( std::vector<int> const &a_indices, double a_energy, double a_temperature ) const {
 
-    std::size_t hashIndex = m_domainHash.index( a_energy );
+    std::size_t hashIndex = m_impl->m_domainHash.index( a_energy );
     double crossSection = 0.0;
 
     for( auto indexIter = a_indices.begin( ); indexIter != a_indices.end( ); ++indexIter ) {
-        crossSection += m_MCGIDI_protare->reactionCrossSection( *indexIter, m_URR_protareInfos, hashIndex, a_temperature, a_energy );
+        crossSection += m_impl->m_MCGIDI_protare->reactionCrossSection( *indexIter, m_impl->m_URR_protareInfos, hashIndex, a_temperature, a_energy );
     }
 
     return( crossSection );
@@ -248,7 +316,7 @@ int G4GIDI_target::sampleChannelCrossSectionAtE( int a_nIndices, int const *a_in
 
 double G4GIDI_target::getElasticFinalState( double a_energy, LUPI_maybeUnused double a_temperature, double (*a_rng)( void * ), void *a_rngState ) const {
 
-    return( m_elasticAngular->sample( a_energy, a_rng( a_rngState ), [&]() -> double { return a_rng( a_rngState ); } ) );
+    return( m_impl->m_elasticAngular->sample( a_energy, a_rng( a_rngState ), [&]() -> double { return a_rng( a_rngState ); } ) );
 }
 
 /* *********************************************************************************************************//**
@@ -256,7 +324,7 @@ double G4GIDI_target::getElasticFinalState( double a_energy, LUPI_maybeUnused do
 
 std::vector<G4GIDI_Product> *G4GIDI_target::getCaptureFinalState( double a_energy, double a_temperature, double (*a_rng)( void * ), void *a_rngState ) const {
 
-    return( getFinalState( m_captureIndices, a_energy, a_temperature, a_rng, a_rngState ) );
+    return( getFinalState( m_impl->m_captureIndices, a_energy, a_temperature, a_rng, a_rngState ) );
 }
 
 /* *********************************************************************************************************//**
@@ -264,7 +332,7 @@ std::vector<G4GIDI_Product> *G4GIDI_target::getCaptureFinalState( double a_energ
 
 std::vector<G4GIDI_Product> *G4GIDI_target::getFissionFinalState( double a_energy, double a_temperature, double (*a_rng)( void * ), void *a_rngState ) const {
 
-    return( getFinalState( m_fissionIndices, a_energy, a_temperature, a_rng, a_rngState ) );
+    return( getFinalState( m_impl->m_fissionIndices, a_energy, a_temperature, a_rng, a_rngState ) );
 }
 
 /* *********************************************************************************************************//**
@@ -272,7 +340,7 @@ std::vector<G4GIDI_Product> *G4GIDI_target::getFissionFinalState( double a_energ
 
 std::vector<G4GIDI_Product> *G4GIDI_target::getOthersFinalState( double a_energy, double a_temperature, double (*a_rng)( void * ), void *a_rngState ) const {
 
-    return( getFinalState( m_othersIndices, a_energy, a_temperature, a_rng, a_rngState ) );
+    return( getFinalState( m_impl->m_othersIndices, a_energy, a_temperature, a_rng, a_rngState ) );
 }
 
 /* *********************************************************************************************************//**
@@ -294,8 +362,8 @@ std::vector<G4GIDI_Product> *G4GIDI_target::getFinalState( std::vector<int> cons
     MCGIDI::Sampling::Input input( false, MCGIDI::Sampling::Upscatter::Model::none );
     input.setTemperatureAndEnergy( a_temperature, a_energy );
 
-    MCGIDI::Reaction const *reaction = m_MCGIDI_protare->reaction( reactionIndex );
-    reaction->sampleProducts( m_MCGIDI_protare, input, [&]() -> double { return a_rng( a_rngState ); },
+    MCGIDI::Reaction const *reaction = m_impl->m_MCGIDI_protare->reaction( reactionIndex );
+    reaction->sampleProducts( m_impl->m_MCGIDI_protare, input, [&]() -> double { return a_rng( a_rngState ); },
         [&] (MCGIDI::Sampling::Product &a_product) -> void { productHandler.push_back( a_product ); }, productHandler );
 
     std::vector<G4GIDI_Product> *products = new std::vector<G4GIDI_Product>( productHandler.size( ) );

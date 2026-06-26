@@ -32,26 +32,26 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4HadronElasticPhysicsVI_h
-#define G4HadronElasticPhysicsVI_h 1
+#ifndef G4HADRONELASTICPHYSICSVI_HH
+#define G4HADRONELASTICPHYSICSVI_HH
 
 #include "G4HadronElasticPhysics.hh"
 
 class G4HadronElasticPhysicsVI : public G4HadronElasticPhysics
 {
-public: 
+  public:
 
-  explicit G4HadronElasticPhysicsVI(G4int ver = 1); 
+    explicit G4HadronElasticPhysicsVI(G4int ver = 1);
 
-  ~G4HadronElasticPhysicsVI() override = default;
+    ~G4HadronElasticPhysicsVI() override = default;
 
-  // This method will be invoked in the Construct() method.
-  // each physics process will be instantiated and
-  // registered to the process manager of each particle type 
-  void ConstructProcess() final;
+    // This method will be invoked in the Construct() method.
+    // each physics process will be instantiated and
+    // registered to the process manager of each particle type
+    void ConstructProcess() final;
 
-  G4HadronElasticPhysicsVI(const G4HadronElasticPhysicsVI&) = delete;
-  G4HadronElasticPhysicsVI& operator=(const G4HadronElasticPhysicsVI&) = delete;
+    G4HadronElasticPhysicsVI(const G4HadronElasticPhysicsVI&) = delete;
+    G4HadronElasticPhysicsVI& operator=(const G4HadronElasticPhysicsVI&) = delete;
 };
 
 #endif

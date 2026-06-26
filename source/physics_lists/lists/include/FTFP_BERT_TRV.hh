@@ -35,26 +35,23 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef FTFP_BERT_TRV_h
-#define FTFP_BERT_TRV_h 1
+#ifndef FTFP_BERT_TRV_HH
+#define FTFP_BERT_TRV_HH
+
+#include "G4VModularPhysicsList.hh"
+#include "globals.hh"
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
-#include "globals.hh"
-#include "G4VModularPhysicsList.hh"
-
-
-class FTFP_BERT_TRV: public G4VModularPhysicsList
+class FTFP_BERT_TRV : public G4VModularPhysicsList
 {
-public:
-  FTFP_BERT_TRV(G4int ver = 1);
-  virtual ~FTFP_BERT_TRV()=default;
-  
-  FTFP_BERT_TRV(const FTFP_BERT_TRV &) = delete;
-  FTFP_BERT_TRV & operator=(const FTFP_BERT_TRV &)=delete;
+  public:
+
+    FTFP_BERT_TRV(G4int ver = 1);
+    virtual ~FTFP_BERT_TRV() = default;
+
+    FTFP_BERT_TRV(const FTFP_BERT_TRV&) = delete;
+    FTFP_BERT_TRV& operator=(const FTFP_BERT_TRV&) = delete;
 };
 
 #endif
-
-
-

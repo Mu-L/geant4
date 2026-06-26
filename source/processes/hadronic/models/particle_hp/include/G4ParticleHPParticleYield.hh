@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPParticleYield_h
-#define G4ParticleHPParticleYield_h 1
+#ifndef G4PARTICLEHPPARTICLEYIELD_HH
+#define G4PARTICLEHPPARTICLEYIELD_HH
 
 #include "G4ParticleHPList.hh"
 #include "G4ParticleHPPolynomExpansion.hh"
@@ -62,10 +62,12 @@ class G4ParticleHPParticleYield
       G4int iflag;
       aDataFile >> targetMass >> iflag;
       if (iflag == 1) simpleMean = false;
-      if (simpleMean) {
+      if (simpleMean)
+      {
         theSimpleMean.Init(aDataFile, CLHEP::eV);
       }
-      else {
+      else
+      {
         theMean.Init(aDataFile);
       }
     }
@@ -76,10 +78,12 @@ class G4ParticleHPParticleYield
       G4int iflag;
       aDataFile >> targetMass >> iflag;
       if (iflag == 2) spontPrompt = false;
-      if (spontPrompt) {
+      if (spontPrompt)
+      {
         aDataFile >> theSpontPrompt;
       }
-      else {
+      else
+      {
         thePrompt.Init(aDataFile, CLHEP::eV);
       }
     }
@@ -91,17 +95,20 @@ class G4ParticleHPParticleYield
       aDataFile >> targetMass >> iflag;
       thePrecursorDecayConstants.Init(aDataFile, 1. / CLHEP::s);  // s is the CLHEP unit second
       if (iflag == 2) spontDelayed = false;
-      if (spontDelayed) {
+      if (spontDelayed)
+      {
         aDataFile >> theSpontDelayed;
       }
-      else {
+      else
+      {
         theDelayed.Init(aDataFile, CLHEP::eV);
       }
     }
 
     inline G4double GetMean(G4double anEnergy) const
     {
-      if (simpleMean) {
+      if (simpleMean)
+      {
         return theSimpleMean.GetY(anEnergy);
       }
       return theMean.GetValue(anEnergy);
@@ -110,7 +117,8 @@ class G4ParticleHPParticleYield
     inline G4double GetPrompt(G4double anEnergy) const
     {
       if (!hasPromptData) return 0;
-      if (spontPrompt) {
+      if (spontPrompt)
+      {
         return theSpontPrompt;
       }
       return thePrompt.GetY(anEnergy);
@@ -119,7 +127,8 @@ class G4ParticleHPParticleYield
     inline G4double GetDelayed(G4double anEnergy) const
     {
       if (!hasDelayedData) return 0;
-      if (spontDelayed) {
+      if (spontDelayed)
+      {
         return theSpontDelayed;
       }
       return theDelayed.GetY(anEnergy);

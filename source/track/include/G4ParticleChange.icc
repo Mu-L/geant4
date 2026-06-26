@@ -25,7 +25,7 @@
 //
 // G4ParticleChange inline methods implementation
 //
-// Author: Hisaya Kurashige, 23 March 1998  
+// Author: Hisaya Kurashige, 23 March 1998
 // --------------------------------------------------------------------
 
 inline G4Step* G4ParticleChange::UpdateStepInfo(G4Step* pStep)
@@ -33,7 +33,10 @@ inline G4Step* G4ParticleChange::UpdateStepInfo(G4Step* pStep)
   return G4VParticleChange::UpdateStepInfo(pStep);
 }
 
-inline G4double G4ParticleChange::GetEnergy() const { return theEnergyChange; }
+inline G4double G4ParticleChange::GetEnergy() const
+{
+  return theEnergyChange;
+}
 
 inline void G4ParticleChange::ProposeEnergy(G4double finalEnergy)
 {
@@ -56,8 +59,7 @@ inline const G4ThreeVector* G4ParticleChange::GetMomentumDirection() const
   return &theMomentumDirectionChange;
 }
 
-inline void G4ParticleChange::ProposeMomentumDirection(G4double Px, G4double Py,
-                                                       G4double Pz)
+inline void G4ParticleChange::ProposeMomentumDirection(G4double Px, G4double Py, G4double Pz)
 {
   theMomentumDirectionChange.setX(Px);
   theMomentumDirectionChange.setY(Py);
@@ -74,14 +76,12 @@ inline const G4ThreeVector* G4ParticleChange::GetPolarization() const
   return &thePolarizationChange;
 }
 
-inline void G4ParticleChange::ProposePolarization(
-  const G4ThreeVector& finalPoralization)
+inline void G4ParticleChange::ProposePolarization(const G4ThreeVector& finalPoralization)
 {
   thePolarizationChange = finalPoralization;
 }
 
-inline void G4ParticleChange::ProposePolarization(G4double Px, G4double Py,
-                                                  G4double Pz)
+inline void G4ParticleChange::ProposePolarization(G4double Px, G4double Py, G4double Pz)
 {
   thePolarizationChange.setX(Px);
   thePolarizationChange.setY(Py);
@@ -93,14 +93,12 @@ inline const G4ThreeVector* G4ParticleChange::GetPosition() const
   return &thePositionChange;
 }
 
-inline void G4ParticleChange::ProposePosition(
-  const G4ThreeVector& finalPosition)
+inline void G4ParticleChange::ProposePosition(const G4ThreeVector& finalPosition)
 {
   thePositionChange = finalPosition;
 }
 
-inline void G4ParticleChange::ProposePosition(G4double x, G4double y,
-                                              G4double z)
+inline void G4ParticleChange::ProposePosition(G4double x, G4double y, G4double z)
 {
   thePositionChange.setX(x);
   thePositionChange.setY(y);
@@ -117,8 +115,7 @@ inline void G4ParticleChange::ProposeProperTime(G4double tau)
   theProperTimeChange = tau;
 }
 
-inline G4ThreeVector G4ParticleChange::GetGlobalPosition(
-  const G4ThreeVector& displacement) const
+inline G4ThreeVector G4ParticleChange::GetGlobalPosition(const G4ThreeVector& displacement) const
 {
   return thePositionChange + displacement;
 }
@@ -145,27 +142,37 @@ inline G4double G4ParticleChange::GetLocalTime(G4double timeDelay) const
   return theTimeChange + timeDelay;
 }
 
-inline G4double G4ParticleChange::GetMass() const { return theMassChange; }
+inline G4double G4ParticleChange::GetMass() const
+{
+  return theMassChange;
+}
 
-inline void G4ParticleChange::ProposeMass(G4double t) { theMassChange = t; }
+inline void G4ParticleChange::ProposeMass(G4double t)
+{
+  theMassChange = t;
+}
 
-inline G4double G4ParticleChange::GetCharge() const { return theChargeChange; }
+inline G4double G4ParticleChange::GetCharge() const
+{
+  return theChargeChange;
+}
 
-inline void G4ParticleChange::ProposeCharge(G4double t) { theChargeChange = t; }
+inline void G4ParticleChange::ProposeCharge(G4double t)
+{
+  theChargeChange = t;
+}
 
 inline G4double G4ParticleChange::GetMagneticMoment() const
 {
   return theMagneticMomentChange;
 }
 
-inline void G4ParticleChange::ProposeMagneticMoment(
-  G4double finalMagneticMoment)
+inline void G4ParticleChange::ProposeMagneticMoment(G4double finalMagneticMoment)
 {
   theMagneticMomentChange = finalMagneticMoment;
 }
 
-inline G4ThreeVector G4ParticleChange::CalcMomentum(G4double energy,
-                                                    G4ThreeVector direction,
+inline G4ThreeVector G4ParticleChange::CalcMomentum(G4double energy, G4ThreeVector direction,
                                                     G4double mass) const
 {
   G4double tMomentum = std::sqrt(energy * energy + 2 * energy * mass);

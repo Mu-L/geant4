@@ -25,24 +25,25 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  24th October 1996
 // G4OpenGLTransform3D provides OpenGL style transformation matrix
 // from G4Transform3D.
 
 #include "G4OpenGLTransform3D.hh"
+
 #include "G4Types.hh"
 
-G4OpenGLTransform3D::G4OpenGLTransform3D (const G4Transform3D &t)
+G4OpenGLTransform3D::G4OpenGLTransform3D(const G4Transform3D& t)
 {
-  GLdouble *p = m;
-  for (G4int i=0; i<4; ++i)
-  { 
-    for (G4int k=0; k<3; ++k)
+  GLdouble* p = m;
+  for (G4int i = 0; i < 4; ++i)
+  {
+    for (G4int k = 0; k < 3; ++k)
     {
-      *p++ = t(k,i);
+      *p++ = t(k, i);
     }
-    *p++ = 0.; 
-  } 
-  m[15] = 1.; 
+    *p++ = 0.;
+  }
+  m[15] = 1.;
 }

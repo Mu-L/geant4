@@ -29,20 +29,22 @@
 
 #include "G4MIData.hh"
 
-#include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4MIData::G4MIData(const G4String& name):
-  G4VMaterialExtension(name),
-  fFilenameFF(""),
-  fFilenameCS(""),
-  fMolWeight(0.) 
-{;}
+G4MIData::G4MIData(const G4String& name)
+  : G4VMaterialExtension(name), fFilenameFF(""), fFilenameCS(""), fMolWeight(0.)
+{
+  ;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4MIData::~G4MIData() {;}
+G4MIData::~G4MIData()
+{
+  ;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

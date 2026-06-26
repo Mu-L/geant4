@@ -36,39 +36,39 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4FTFBinaryProtonBuilder_h
-#define G4FTFBinaryProtonBuilder_h 
+#ifndef G4FTFBINARYPROTONBUILDER_HH
+#define G4FTFBINARYPROTONBUILDER_HH
 
-#include "globals.hh"
-
+#include "G4BinaryCascade.hh"
+#include "G4ExcitedStringDecay.hh"
+#include "G4FTFModel.hh"
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
-#include "G4VProtonBuilder.hh"
-
-#include "G4TheoFSGenerator.hh"
-#include "G4BinaryCascade.hh"
-#include "G4FTFModel.hh"
 #include "G4LundStringFragmentation.hh"
-#include "G4ExcitedStringDecay.hh"
 #include "G4QuasiElasticChannel.hh"
+#include "G4TheoFSGenerator.hh"
+#include "G4VProtonBuilder.hh"
+#include "globals.hh"
 
 class G4FTFBinaryProtonBuilder : public G4VProtonBuilder
 {
-  public: 
-    G4FTFBinaryProtonBuilder(G4bool quasiElastic=false);
+  public:
+
+    G4FTFBinaryProtonBuilder(G4bool quasiElastic = false);
     virtual ~G4FTFBinaryProtonBuilder();
 
-    virtual void Build(G4HadronElasticProcess *) final override {};
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
-    virtual void SetMaxEnergy(G4double aM) final override {theMax = aM;}
-    using G4VProtonBuilder::Build; //Prevent compiler warning
+    virtual void Build(G4HadronElasticProcess*) final override {};
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
+
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+    virtual void SetMaxEnergy(G4double aM) final override { theMax = aM; }
+    using G4VProtonBuilder::Build;  // Prevent compiler warning
+
   private:
-    G4TheoFSGenerator * theModel;
+
+    G4TheoFSGenerator* theModel;
     G4double theMin;
     G4double theMax;
 };
 
 #endif
-

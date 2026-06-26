@@ -37,49 +37,50 @@
 // Author: V.Grichine, 13.05.1997
 // --------------------------------------------------------------------
 #ifndef G4GAUSSLEGENDREQ_HH
-#define G4GAUSSLEGENDREQ_HH 1
+#define G4GAUSSLEGENDREQ_HH
 
 #include "G4VGaussianQuadrature.hh"
 
 class G4GaussLegendreQ : public G4VGaussianQuadrature
 {
- public:
-  explicit G4GaussLegendreQ(function pFunction);
+  public:
 
-  G4GaussLegendreQ(function pFunction, G4int nLegendre);
-  // Constructor for GaussLegendre quadrature method. The value nLegendre set
-  // the accuracy required, i.e the number of points where the function
-  // pFunction will be evaluated during integration. The constructor creates
-  // the arrays for abscissas and weights that used in Gauss-Legendre
-  // quadrature method.
-  // The values a and b are the limits of integration of the pFunction.
+    explicit G4GaussLegendreQ(function pFunction);
 
-  G4GaussLegendreQ(const G4GaussLegendreQ&) = delete;
-  G4GaussLegendreQ& operator=(const G4GaussLegendreQ&) = delete;
+    G4GaussLegendreQ(function pFunction, G4int nLegendre);
+    // Constructor for GaussLegendre quadrature method. The value nLegendre set
+    // the accuracy required, i.e the number of points where the function
+    // pFunction will be evaluated during integration. The constructor creates
+    // the arrays for abscissas and weights that used in Gauss-Legendre
+    // quadrature method.
+    // The values a and b are the limits of integration of the pFunction.
 
-  G4double Integral(G4double a, G4double b) const;
-  // Returns the integral of the function to be pointed by fFunction between a
-  // and b, by 2*fNumber point Gauss-Legendre integration: the function is
-  // evaluated exactly 2*fNumber Times at interior points in the range of
-  // integration. Since the weights and abscissas are, in this case, symmetric
-  // around the midpoint of the range of integration, there are actually only
-  // fNumber distinct values of each.
+    G4GaussLegendreQ(const G4GaussLegendreQ&) = delete;
+    G4GaussLegendreQ& operator=(const G4GaussLegendreQ&) = delete;
 
-  G4double QuickIntegral(G4double a, G4double b) const;
-  // Returns the integral of the function to be pointed by fFunction between a
-  // and b, by ten point Gauss-Legendre integration: the function is evaluated
-  // exactly ten Times at interior points in the range of integration. Since
-  // the weights and abscissas are, in this case, symmetric around the midpoint
-  // of the range of integration, there are actually only five distinct values
-  // of each.
+    G4double Integral(G4double a, G4double b) const;
+    // Returns the integral of the function to be pointed by fFunction between a
+    // and b, by 2*fNumber point Gauss-Legendre integration: the function is
+    // evaluated exactly 2*fNumber Times at interior points in the range of
+    // integration. Since the weights and abscissas are, in this case, symmetric
+    // around the midpoint of the range of integration, there are actually only
+    // fNumber distinct values of each.
 
-  G4double AccurateIntegral(G4double a, G4double b) const;
-  // Returns the integral of the function to be pointed by fFunction between a
-  // and b, by 96 point Gauss-Legendre integration: the function is evaluated
-  // exactly ten Times at interior points in the range of integration. Since
-  // the weights and abscissas are, in this case, symmetric around the midpoint
-  // of the range of integration, there are actually only five distinct values
-  // of each.
+    G4double QuickIntegral(G4double a, G4double b) const;
+    // Returns the integral of the function to be pointed by fFunction between a
+    // and b, by ten point Gauss-Legendre integration: the function is evaluated
+    // exactly ten Times at interior points in the range of integration. Since
+    // the weights and abscissas are, in this case, symmetric around the midpoint
+    // of the range of integration, there are actually only five distinct values
+    // of each.
+
+    G4double AccurateIntegral(G4double a, G4double b) const;
+    // Returns the integral of the function to be pointed by fFunction between a
+    // and b, by 96 point Gauss-Legendre integration: the function is evaluated
+    // exactly ten Times at interior points in the range of integration. Since
+    // the weights and abscissas are, in this case, symmetric around the midpoint
+    // of the range of integration, there are actually only five distinct values
+    // of each.
 };
 
 #endif

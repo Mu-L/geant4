@@ -30,75 +30,72 @@
 //
 // 31.10.22 V. Grichine - extension to tau-neutrinos based on mu_nu XS energy scaled
 
-#ifndef G4TauNeutrinoNucleusTotXsc_h
-#define G4TauNeutrinoNucleusTotXsc_h
+#ifndef G4TAUNEUTRINONUCLEUSTOTXSC_HH
+#define G4TAUNEUTRINONUCLEUSTOTXSC_HH
 
-
-#include "globals.hh"
 #include "G4VCrossSectionDataSet.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 
 class G4TauNeutrinoNucleusTotXsc : public G4VCrossSectionDataSet
 {
-public:
-   
-  G4TauNeutrinoNucleusTotXsc();
-  ~G4TauNeutrinoNucleusTotXsc();
+  public:
 
-  virtual
-  G4bool IsIsoApplicable(const G4DynamicParticle*, G4int Z, G4int A, const G4Element*, const G4Material*);
-  
-  virtual
-  G4bool IsElementApplicable(const G4DynamicParticle*, G4int , const G4Material*){ return true; };
+    G4TauNeutrinoNucleusTotXsc();
+    ~G4TauNeutrinoNucleusTotXsc();
 
+    virtual G4bool IsIsoApplicable(const G4DynamicParticle*, G4int Z, G4int A, const G4Element*,
+                                   const G4Material*);
 
-  // virtual G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z, const G4Material*);
-  virtual G4double GetElementCrossSection(const G4DynamicParticle* dynPart,
-					       G4int Z,
-					  const G4Material* mat);
-  virtual
-  G4double GetIsoCrossSection(const G4DynamicParticle* aPart, G4int Z, G4int A,  
-			      const G4Isotope*,
-			      const G4Element*,
-			      const G4Material*);
+    virtual G4bool IsElementApplicable(const G4DynamicParticle*, G4int, const G4Material*)
+    {
+      return true;
+    };
 
-  G4int GetEnergyIndex(G4double energy);
-  G4double GetNuMuTotCsXsc(G4int index, G4double energy, G4int Z, G4int A);
-  G4double GetANuMuTotCsXsc(G4int index, G4double energy, G4int Z, G4int A);
+    // virtual G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z, const
+    // G4Material*);
+    virtual G4double GetElementCrossSection(const G4DynamicParticle* dynPart, G4int Z,
+                                            const G4Material* mat);
+    virtual G4double GetIsoCrossSection(const G4DynamicParticle* aPart, G4int Z, G4int A,
+                                        const G4Isotope*, const G4Element*, const G4Material*);
 
-  G4double GetNuMuTotCsArray(G4int index);
-  G4double GetANuMuTotCsArray(G4int index);
+    G4int GetEnergyIndex(G4double energy);
+    G4double GetNuMuTotCsXsc(G4int index, G4double energy, G4int Z, G4int A);
+    G4double GetANuMuTotCsXsc(G4int index, G4double energy, G4int Z, G4int A);
 
-  void SetCutEnergy(G4double ec){fCutEnergy=ec;};
-  G4double GetCutEnergy(){return fCutEnergy;};
+    G4double GetNuMuTotCsArray(G4int index);
+    G4double GetANuMuTotCsArray(G4int index);
 
-  void SetBiasingFactor(G4double bf){fBiasingFactor=bf;};
-  G4double GetBiasingFactor(){return fBiasingFactor;};
+    void SetCutEnergy(G4double ec) { fCutEnergy = ec; };
+    G4double GetCutEnergy() { return fCutEnergy; };
 
-  G4double GetTotXsc(){return fTotXsc;};
-  G4double GetCcTotRatio(){return fCcTotRatio;};
-  G4double GetQEratio(){return fQEratio;};
+    void SetBiasingFactor(G4double bf) { fBiasingFactor = bf; };
+    G4double GetBiasingFactor() { return fBiasingFactor; };
 
-protected:
+    G4double GetTotXsc() { return fTotXsc; };
+    G4double GetCcTotRatio() { return fCcTotRatio; };
+    G4double GetQEratio() { return fQEratio; };
 
-  G4double fCofXsc;    // 2*Gf*Gf*MeC2/pi
-  G4double fSin2tW;    // sin^2theta_Weinberg
-  G4double fCofS, fCofL;
-  G4double fCutEnergy; // minimal recoil electron energy detected
-  G4double fBiasingFactor; // biasing xsc up
-  G4double fTotXsc, fCcTotRatio, fCcFactor, fNcFactor, fQEratio;
-  G4double fEmc, fEtc, fDtc;
-  G4int fIndex;
+  protected:
 
-  static const G4double fNuMuEnergy[50];
-  static const G4double fNuMuInXsc[50];
-  static const G4double fNuMuQeXsc[50];
-  static const G4double fANuMuInXsc[50];
-  static const G4double fANuMuQeXsc[50];
+    G4double fCofXsc;  // 2*Gf*Gf*MeC2/pi
+    G4double fSin2tW;  // sin^2theta_Weinberg
+    G4double fCofS, fCofL;
+    G4double fCutEnergy;  // minimal recoil electron energy detected
+    G4double fBiasingFactor;  // biasing xsc up
+    G4double fTotXsc, fCcTotRatio, fCcFactor, fNcFactor, fQEratio;
+    G4double fEmc, fEtc, fDtc;
+    G4int fIndex;
 
-  // G4ParticleDefinition* theMuonMinus;
-  // G4ParticleDefinition* theMuonPlus;
+    static const G4double fNuMuEnergy[50];
+    static const G4double fNuMuInXsc[50];
+    static const G4double fNuMuQeXsc[50];
+    static const G4double fANuMuInXsc[50];
+    static const G4double fANuMuQeXsc[50];
+
+    // G4ParticleDefinition* theMuonMinus;
+    // G4ParticleDefinition* theMuonPlus;
 };
 
 #endif

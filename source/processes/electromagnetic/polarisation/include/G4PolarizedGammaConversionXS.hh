@@ -29,38 +29,37 @@
 //
 // Author:        Karim Laihem
 
-#ifndef G4PolarizedGammaConversionXS_h
-#define G4PolarizedGammaConversionXS_h 1
+#ifndef G4POLARIZEDGAMMACONVERSIONXS_HH
+#define G4POLARIZEDGAMMACONVERSIONXS_HH
 
 #include "G4StokesVector.hh"
 #include "G4VPolarizedXS.hh"
 
 class G4PolarizedGammaConversionXS : public G4VPolarizedXS
 {
- public:
-  G4PolarizedGammaConversionXS();
-  ~G4PolarizedGammaConversionXS() override;
+  public:
 
-  void Initialize(G4double eps, G4double X, G4double phi,
-                  const G4StokesVector& p0, const G4StokesVector& p1,
-                  G4int flag = 0) override;
+    G4PolarizedGammaConversionXS();
+    ~G4PolarizedGammaConversionXS() override;
 
-  G4double XSection(const G4StokesVector& pol2,
-                    const G4StokesVector& pol3) override;
+    void Initialize(G4double eps, G4double X, G4double phi, const G4StokesVector& p0,
+                    const G4StokesVector& p1, G4int flag = 0) override;
 
-  // return expected mean polarisation
-  G4StokesVector GetPol2() override;  // electron/positron
-  G4StokesVector GetPol3() override;  // photon
+    G4double XSection(const G4StokesVector& pol2, const G4StokesVector& pol3) override;
 
-  G4PolarizedGammaConversionXS& operator                            =(
-    const G4PolarizedGammaConversionXS& right) = delete;
-  G4PolarizedGammaConversionXS(const G4PolarizedGammaConversionXS&) = delete;
+    // return expected mean polarisation
+    G4StokesVector GetPol2() override;  // electron/positron
+    G4StokesVector GetPol3() override;  // photon
 
- private:
-  static G4double SCRN[2][19];  // screening function lookup table
+    G4PolarizedGammaConversionXS& operator=(const G4PolarizedGammaConversionXS& right) = delete;
+    G4PolarizedGammaConversionXS(const G4PolarizedGammaConversionXS&) = delete;
 
-  G4StokesVector fFinalElectronPolarization;
-  G4StokesVector fFinalPositronPolarization;
+  private:
+
+    static G4double SCRN[2][19];  // screening function lookup table
+
+    G4StokesVector fFinalElectronPolarization;
+    G4StokesVector fFinalPositronPolarization;
 };
 
 #endif

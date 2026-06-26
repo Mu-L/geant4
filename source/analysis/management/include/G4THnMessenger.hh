@@ -29,16 +29,16 @@
 //
 // Author: Ivana Hrivnacova, 26/08/2022  (ivana@ipno.in2p3.fr)
 
-#ifndef G4THnMessenger_h
-#define G4THnMessenger_h 1
+#ifndef G4THNMESSENGER_HH
+#define G4THNMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
 
-#include <memory>
 #include <array>
-#include <vector>
+#include <memory>
 #include <string_view>
+#include <vector>
 
 class G4VAnalysisManager;
 class G4UIdirectory;
@@ -46,14 +46,15 @@ class G4UIcommand;
 struct G4HnDimension;
 struct G4HnDimensionInformation;
 
-template <unsigned int DIM, typename HT>
+template<unsigned int DIM, typename HT>
 class G4THnToolsManager;
 
-template <unsigned int DIM, typename HT>
+template<unsigned int DIM, typename HT>
 class G4THnMessenger : public G4UImessenger
 {
   public:
-    G4THnMessenger(G4THnToolsManager<DIM,HT>* manager);
+
+    G4THnMessenger(G4THnToolsManager<DIM, HT>* manager);
     G4THnMessenger() = delete;
     ~G4THnMessenger() override = default;
 
@@ -62,12 +63,13 @@ class G4THnMessenger : public G4UImessenger
     void SetNewValue(G4UIcommand* command, G4String value) final;
 
   private:
+
     // Helper functions
     G4String GetObjectType() const;
     G4bool IsProfileLastDimension(unsigned int idim) const;
     std::unique_ptr<G4UIcommand> CreateCommand(G4String name, G4String guideline);
-    void CreateDimensionParameters(unsigned int idim, 
-           std::vector<G4UIparameter*>& parameters) const;
+    void CreateDimensionParameters(unsigned int idim,
+                                   std::vector<G4UIparameter*>& parameters) const;
     void AddIdParameter(G4UIcommand& command);
     G4String GetTAddress(G4int id) const;
     G4String GetTVectorAddress() const;
@@ -85,31 +87,30 @@ class G4THnMessenger : public G4UImessenger
     void CreateGetVectorCommand();
 
     // Functions to retrieve data
-    void GetBinData(unsigned int idim, G4int& counter, 
-           const std::vector<G4String>& parameters, G4HnDimension& bins) const;
-    void GetBinInfoData(unsigned int idim, G4int& counter, 
-           const std::vector<G4String>& parameters, G4HnDimension& bins, 
-           G4HnDimensionInformation& info) const;
+    void GetBinData(unsigned int idim, G4int& counter, const std::vector<G4String>& parameters,
+                    G4HnDimension& bins) const;
+    void GetBinInfoData(unsigned int idim, G4int& counter, const std::vector<G4String>& parameters,
+                        G4HnDimension& bins, G4HnDimensionInformation& info) const;
     void GetData(G4int& counter, const std::vector<G4String>& parameters,
-           std::array<G4HnDimension, DIM>& bins,
-           std::array<G4HnDimensionInformation, DIM>& info) const;
+                 std::array<G4HnDimension, DIM>& bins,
+                 std::array<G4HnDimensionInformation, DIM>& info) const;
 
     // constants
-    static constexpr std::string_view fkClass { "G4THnMessenger" };
+    static constexpr std::string_view fkClass{"G4THnMessenger"};
 
     // Data members
-    G4THnToolsManager<DIM,HT>* fManager { nullptr }; ///< Associated class
+    G4THnToolsManager<DIM, HT>* fManager{nullptr};  ///< Associated class
 
-    std::unique_ptr<G4UIdirectory>  fHnDir;
-    std::unique_ptr<G4UIcommand>  fCreateCmd;
-    std::unique_ptr<G4UIcommand>  fSetCmd;
-    std::unique_ptr<G4UIcommand>  fDeleteCmd;
-    std::array<std::unique_ptr<G4UIcommand>, DIM>  fSetDimensionCmd;
-    std::unique_ptr<G4UIcommand>  fSetTitleCmd;
-    std::array<std::unique_ptr<G4UIcommand>, DIM+1> fSetAxisCmd;
-    std::unique_ptr<G4UIcommand>  fListCmd;
-    std::unique_ptr<G4UIcommand>  fGetTCmd;
-    std::unique_ptr<G4UIcommand>  fGetTVectorCmd;
+    std::unique_ptr<G4UIdirectory> fHnDir;
+    std::unique_ptr<G4UIcommand> fCreateCmd;
+    std::unique_ptr<G4UIcommand> fSetCmd;
+    std::unique_ptr<G4UIcommand> fDeleteCmd;
+    std::array<std::unique_ptr<G4UIcommand>, DIM> fSetDimensionCmd;
+    std::unique_ptr<G4UIcommand> fSetTitleCmd;
+    std::array<std::unique_ptr<G4UIcommand>, DIM + 1> fSetAxisCmd;
+    std::unique_ptr<G4UIcommand> fListCmd;
+    std::unique_ptr<G4UIcommand> fGetTCmd;
+    std::unique_ptr<G4UIcommand> fGetTVectorCmd;
 
     std::array<unsigned int, DIM> fTmpId;
     std::array<G4HnDimension, DIM> fTmpBins;
@@ -120,6 +121,6 @@ class G4THnMessenger : public G4UImessenger
 };
 
 // #include "G4THnMessenger.icc"
-    // to avoid include recursion the implementation is included in G4THnToolsManager.hh
+// to avoid include recursion the implementation is included in G4THnToolsManager.hh
 
 #endif

@@ -59,14 +59,15 @@
 //       store thread-local objects, use G4ThreadLocal keyword.
 //
 
-#ifndef G4UserTaskInitialization_hh
-#define G4UserTaskInitialization_hh
+#ifndef G4USERTASKINITIALIZATION_HH
+#define G4USERTASKINITIALIZATION_HH
 
 #include "G4UserWorkerInitialization.hh"
 
 class G4UserTaskInitialization : public G4UserWorkerInitialization
 {
   public:  // with description
+
     G4UserTaskInitialization() = default;
     ~G4UserTaskInitialization() override = default;
 

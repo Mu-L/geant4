@@ -31,16 +31,15 @@
 
 #include "G4VIntegrationDriver.hh"
 
-void G4VIntegrationDriver::RenewStepperAndAdjust(G4MagIntegratorStepper *)
+void G4VIntegrationDriver::RenewStepperAndAdjust(G4MagIntegratorStepper*)
 {
-  G4Exception("G4VIntegrationDriver::RenewStepperAndAdjust",
-              "Geometry001", FatalException,
-       "This method exists only for the original G4MagIntegratorDriver class. "
-       "Not defined for other classes derived from G4VIntegrationDriver");
+  G4Exception("G4VIntegrationDriver::RenewStepperAndAdjust", "Geometry001", FatalException,
+              "This method exists only for the original G4MagIntegratorDriver class. "
+              "Not defined for other classes derived from G4VIntegrationDriver");
 }
 
-std::ostream& operator<<( std::ostream& os, const G4VIntegrationDriver& id)
+std::ostream& operator<<(std::ostream& os, const G4VIntegrationDriver& id)
 {
-   id.StreamInfo( os );
-   return os;
+  id.StreamInfo(os);
+  return os;
 }

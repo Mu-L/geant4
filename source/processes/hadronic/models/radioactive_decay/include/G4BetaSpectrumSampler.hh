@@ -34,21 +34,18 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4BetaSpectrumSampler_h
-#define G4BetaSpectrumSampler_h 1
+#ifndef G4BETASPECTRUMSAMPLER_HH
+#define G4BETASPECTRUMSAMPLER_HH
 
 #include "globals.hh"
 
 class G4BetaSpectrumSampler
 {
-public:
+  public:
 
-  // sampling of any spectra using cumulative PDF function
-  // energy stepts are uniform starting from zero
-  // no check on array size is performed 
-  static G4double shoot(const G4int npoints, const G4double* aCDF,
-                        const G4double estep);
-
+    // sampling of any spectra using cumulative PDF function
+    // energy stepts are uniform starting from zero
+    // no check on array size is performed
+    static G4double shoot(const G4int npoints, const G4double* aCDF, const G4double estep);
 };
 #endif
-

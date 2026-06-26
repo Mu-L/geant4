@@ -30,13 +30,14 @@
 //
 
 #include "G4VErrorLimitProcess.hh"
+
 #include "G4ErrorMessenger.hh"
 
 //------------------------------------------------------------------------
 G4VErrorLimitProcess::G4VErrorLimitProcess(const G4String& processName)
   : G4VDiscreteProcess(processName)
 {
-  theStepLimit  = kInfinity;
+  theStepLimit = kInfinity;
   theStepLength = kInfinity;
 }
 
@@ -51,8 +52,7 @@ G4double G4VErrorLimitProcess::GetMeanFreePath(const class G4Track&, G4double,
 }
 
 //------------------------------------------------------------------------
-G4VParticleChange* G4VErrorLimitProcess::PostStepDoIt(const G4Track& aTrack,
-                                                      const G4Step&)
+G4VParticleChange* G4VErrorLimitProcess::PostStepDoIt(const G4Track& aTrack, const G4Step&)
 {
   theParticleChange.Initialize(aTrack);
   return &theParticleChange;

@@ -27,9 +27,8 @@
 //
 //
 
-
-#ifndef G4RayTracer_H
-#define G4RayTracer_H 1
+#ifndef G4RAYTRACER_HH
+#define G4RAYTRACER_HH
 
 // class description:
 //
@@ -44,13 +43,16 @@ class G4TheRayTracer;
 
 class G4RayTracer : public G4VGraphicsSystem
 {
-public: // with description
-  G4RayTracer();
-  ~G4RayTracer();
-  G4VSceneHandler* CreateSceneHandler (const G4String& );
-  G4VViewer* CreateViewer (G4VSceneHandler&, const G4String& );
-private:
-  G4TheRayTracer* theRayTracer;
+  public:  // with description
+
+    G4RayTracer();
+    ~G4RayTracer();
+    G4VSceneHandler* CreateSceneHandler(const G4String&);
+    G4VViewer* CreateViewer(G4VSceneHandler&, const G4String&);
+
+  private:
+
+    G4TheRayTracer* theRayTracer;
 };
 
 #endif

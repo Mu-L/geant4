@@ -29,6 +29,7 @@
 // --------------------------------------------------------------------
 
 #include "G4ChebyshevApproximation.hh"
+
 #include "G4PhysicalConstants.hh"
 
 // Constructor for initialisation of the class data members.
@@ -37,31 +38,31 @@
 // pointed by pFunction. The values a and b fix the interval of validity
 // of the Chebyshev approximation.
 
-G4ChebyshevApproximation::G4ChebyshevApproximation(function pFunction, G4int n,
-                                                   G4double a, G4double b)
-  : fFunction(pFunction)
-  , fNumber(n)
-  , fChebyshevCof(new G4double[fNumber])
-  , fMean(0.5 * (b + a))
-  , fDiff(0.5 * (b - a))
+G4ChebyshevApproximation::G4ChebyshevApproximation(function pFunction, G4int n, G4double a,
+                                                   G4double b)
+  : fFunction(pFunction),
+    fNumber(n),
+    fChebyshevCof(new G4double[fNumber]),
+    fMean(0.5 * (b + a)),
+    fDiff(0.5 * (b - a))
 {
   G4int i = 0, j = 0;
   G4double rootSum = 0.0, cofj = 0.0;
   auto tempFunction = new G4double[fNumber];
-  G4double weight        = 2.0 / fNumber;
-  G4double cof           = 0.5 * weight * pi;  // pi/n
+  G4double weight = 2.0 / fNumber;
+  G4double cof = 0.5 * weight * pi;  // pi/n
 
-  for(i = 0; i < fNumber; ++i)
+  for (i = 0; i < fNumber; ++i)
   {
-    rootSum         = std::cos(cof * (i + 0.5));
+    rootSum = std::cos(cof * (i + 0.5));
     tempFunction[i] = fFunction(rootSum * fDiff + fMean);
   }
-  for(j = 0; j < fNumber; ++j)
+  for (j = 0; j < fNumber; ++j)
   {
-    cofj    = cof * j;
+    cofj = cof * j;
     rootSum = 0.0;
 
-    for(i = 0; i < fNumber; ++i)
+    for (i = 0; i < fNumber; ++i)
     {
       rootSum += tempFunction[i] * std::cos(cofj * (i + 0.5));
     }
@@ -77,37 +78,36 @@ G4ChebyshevApproximation::G4ChebyshevApproximation(function pFunction, G4int n,
 // array of fChebyshevCof will be of (nx-mx) size.  The values a and b
 // fix the interval of validity of the Chebyshev approximation.
 
-G4ChebyshevApproximation::G4ChebyshevApproximation(function pFunction, G4int nx,
-                                                   G4int mx, G4double a,
-                                                   G4double b)
-  : fFunction(pFunction)
-  , fNumber(nx)
-  , fChebyshevCof(new G4double[fNumber])
-  , fMean(0.5 * (b + a))
-  , fDiff(0.5 * (b - a))
+G4ChebyshevApproximation::G4ChebyshevApproximation(function pFunction, G4int nx, G4int mx,
+                                                   G4double a, G4double b)
+  : fFunction(pFunction),
+    fNumber(nx),
+    fChebyshevCof(new G4double[fNumber]),
+    fMean(0.5 * (b + a)),
+    fDiff(0.5 * (b - a))
 {
-  if(nx <= mx)
+  if (nx <= mx)
   {
-    G4Exception("G4ChebyshevApproximation::G4ChebyshevApproximation()",
-                "InvalidCall", FatalException, "Invalid arguments !");
+    G4Exception("G4ChebyshevApproximation::G4ChebyshevApproximation()", "InvalidCall",
+                FatalException, "Invalid arguments !");
   }
   G4int i = 0, j = 0;
   G4double rootSum = 0.0, cofj = 0.0;
   auto tempFunction = new G4double[fNumber];
-  G4double weight        = 2.0 / fNumber;
-  G4double cof           = 0.5 * weight * pi;  // pi/nx
+  G4double weight = 2.0 / fNumber;
+  G4double cof = 0.5 * weight * pi;  // pi/nx
 
-  for(i = 0; i < fNumber; ++i)
+  for (i = 0; i < fNumber; ++i)
   {
-    rootSum         = std::cos(cof * (i + 0.5));
+    rootSum = std::cos(cof * (i + 0.5));
     tempFunction[i] = fFunction(rootSum * fDiff + fMean);
   }
-  for(j = 0; j < fNumber; ++j)
+  for (j = 0; j < fNumber; ++j)
   {
-    cofj    = cof * j;
+    cofj = cof * j;
     rootSum = 0.0;
 
-    for(i = 0; i < fNumber; ++i)
+    for (i = 0; i < fNumber; ++i)
     {
       rootSum += tempFunction[i] * std::cos(cofj * (i + 0.5));
     }
@@ -115,11 +115,11 @@ G4ChebyshevApproximation::G4ChebyshevApproximation(function pFunction, G4int nx,
   }
   // Chebyshev coefficients for (mx)-derivative of pFunction
 
-  for(i = 1; i <= mx; ++i)
+  for (i = 1; i <= mx; ++i)
   {
     DerivativeChebyshevCof(tempFunction);
     fNumber--;
-    for(j = 0; j < fNumber; ++j)
+    for (j = 0; j < fNumber; ++j)
     {
       fChebyshevCof[j] = tempFunction[j];  // corresponds to (i)-derivative
     }
@@ -132,32 +132,31 @@ G4ChebyshevApproximation::G4ChebyshevApproximation(function pFunction, G4int nx,
 // Constructor for creation of Chebyshev coefficients for integral
 // from pFunction.
 
-G4ChebyshevApproximation::G4ChebyshevApproximation(function pFunction,
-                                                   G4double a, G4double b,
+G4ChebyshevApproximation::G4ChebyshevApproximation(function pFunction, G4double a, G4double b,
                                                    G4int n)
-  : fFunction(pFunction)
-  , fNumber(n)
-  , fChebyshevCof(new G4double[fNumber])
-  , fMean(0.5 * (b + a))
-  , fDiff(0.5 * (b - a))
+  : fFunction(pFunction),
+    fNumber(n),
+    fChebyshevCof(new G4double[fNumber]),
+    fMean(0.5 * (b + a)),
+    fDiff(0.5 * (b - a))
 {
   G4int i = 0, j = 0;
   G4double rootSum = 0.0, cofj = 0.0;
   auto tempFunction = new G4double[fNumber];
-  G4double weight        = 2.0 / fNumber;
-  G4double cof           = 0.5 * weight * pi;  // pi/n
+  G4double weight = 2.0 / fNumber;
+  G4double cof = 0.5 * weight * pi;  // pi/n
 
-  for(i = 0; i < fNumber; ++i)
+  for (i = 0; i < fNumber; ++i)
   {
-    rootSum         = std::cos(cof * (i + 0.5));
+    rootSum = std::cos(cof * (i + 0.5));
     tempFunction[i] = fFunction(rootSum * fDiff + fMean);
   }
-  for(j = 0; j < fNumber; ++j)
+  for (j = 0; j < fNumber; ++j)
   {
-    cofj    = cof * j;
+    cofj = cof * j;
     rootSum = 0.0;
 
-    for(i = 0; i < fNumber; ++i)
+    for (i = 0; i < fNumber; ++i)
     {
       rootSum += tempFunction[i] * std::cos(cofj * (i + 0.5));
     }
@@ -166,7 +165,7 @@ G4ChebyshevApproximation::G4ChebyshevApproximation(function pFunction,
   // Chebyshev coefficients for integral of pFunction
 
   IntegralChebyshevCof(tempFunction);
-  for(j = 0; j < fNumber; ++j)
+  for (j = 0; j < fNumber; ++j)
   {
     fChebyshevCof[j] = tempFunction[j];  // corresponds to integral
   }
@@ -189,10 +188,10 @@ G4ChebyshevApproximation::~G4ChebyshevApproximation()
 
 G4double G4ChebyshevApproximation::GetChebyshevCof(G4int number) const
 {
-  if(number < 0 && number >= fNumber)
+  if (number < 0 && number >= fNumber)
   {
-    G4Exception("G4ChebyshevApproximation::GetChebyshevCof()", "InvalidCall",
-                FatalException, "Argument out of range !");
+    G4Exception("G4ChebyshevApproximation::GetChebyshevCof()", "InvalidCall", FatalException,
+                "Argument out of range !");
   }
   return fChebyshevCof[number];
 }
@@ -204,20 +203,19 @@ G4double G4ChebyshevApproximation::GetChebyshevCof(G4int number) const
 
 G4double G4ChebyshevApproximation::ChebyshevEvaluation(G4double x) const
 {
-  G4double evaluate = 0.0, evaluate2 = 0.0, temp = 0.0, xReduced = 0.0,
-           xReduced2 = 0.0;
+  G4double evaluate = 0.0, evaluate2 = 0.0, temp = 0.0, xReduced = 0.0, xReduced2 = 0.0;
 
-  if((x - fMean + fDiff) * (x - fMean - fDiff) > 0.0)
+  if ((x - fMean + fDiff) * (x - fMean - fDiff) > 0.0)
   {
-    G4Exception("G4ChebyshevApproximation::ChebyshevEvaluation()",
-                "InvalidCall", FatalException, "Invalid argument !");
+    G4Exception("G4ChebyshevApproximation::ChebyshevEvaluation()", "InvalidCall", FatalException,
+                "Invalid argument !");
   }
-  xReduced  = (x - fMean) / fDiff;
+  xReduced = (x - fMean) / fDiff;
   xReduced2 = 2.0 * xReduced;
-  for(G4int i = fNumber - 1; i >= 1; --i)
+  for (G4int i = fNumber - 1; i >= 1; --i)
   {
-    temp      = evaluate;
-    evaluate  = xReduced2 * evaluate - evaluate2 + fChebyshevCof[i];
+    temp = evaluate;
+    evaluate = xReduced2 * evaluate - evaluate2 + fChebyshevCof[i];
     evaluate2 = temp;
   }
   return xReduced * evaluate - evaluate2 + 0.5 * fChebyshevCof[0];
@@ -230,14 +228,14 @@ G4double G4ChebyshevApproximation::ChebyshevEvaluation(G4double x) const
 
 void G4ChebyshevApproximation::DerivativeChebyshevCof(G4double derCof[]) const
 {
-  G4double cof        = 1.0 / fDiff;
+  G4double cof = 1.0 / fDiff;
   derCof[fNumber - 1] = 0.0;
   derCof[fNumber - 2] = 2 * (fNumber - 1) * fChebyshevCof[fNumber - 1];
-  for(G4int i = fNumber - 3; i >= 0; --i)
+  for (G4int i = fNumber - 3; i >= 0; --i)
   {
     derCof[i] = derCof[i + 2] + 2 * (i + 1) * fChebyshevCof[i + 1];
   }
-  for(G4int j = 0; j < fNumber; ++j)
+  for (G4int j = 0; j < fNumber; ++j)
   {
     derCof[j] *= cof;
   }
@@ -252,11 +250,10 @@ void G4ChebyshevApproximation::DerivativeChebyshevCof(G4double derCof[]) const
 // of validity (we start the integration from this point).
 //
 
-void G4ChebyshevApproximation::IntegralChebyshevCof(
-  G4double integralCof[]) const
+void G4ChebyshevApproximation::IntegralChebyshevCof(G4double integralCof[]) const
 {
   G4double cof = 0.5 * fDiff, sum = 0.0, factor = 1.0;
-  for(G4int i = 1; i < fNumber - 1; ++i)
+  for (G4int i = 1; i < fNumber - 1; ++i)
   {
     integralCof[i] = cof * (fChebyshevCof[i - 1] - fChebyshevCof[i + 1]) / i;
     sum += factor * integralCof[i];

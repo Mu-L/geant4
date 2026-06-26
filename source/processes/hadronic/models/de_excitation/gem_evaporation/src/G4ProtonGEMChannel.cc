@@ -30,4 +30,3 @@
 //
 
 #include "G4ProtonGEMChannel.hh"
-

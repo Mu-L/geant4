@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4PionPlus_h
-#define G4PionPlus_h 1
+#ifndef G4PIONPLUS_HH
+#define G4PIONPLUS_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4PionPlus : public G4ParticleDefinition
 {
   public:
+
     static G4PionPlus* Definition();
     static G4PionPlus* PionPlusDefinition();
     static G4PionPlus* PionPlus();
 
   private:
+
     G4PionPlus() {}
     ~G4PionPlus() override = default;
 

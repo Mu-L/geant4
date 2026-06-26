@@ -32,17 +32,17 @@
 // File name:     G4VhNuclearStoppingPower
 //
 // Author:        V.Ivanchenko (Vladimir.Ivanchenko@cern.ch)
-// 
+//
 // Creation date: 20 July 2000
 //
-// Modifications: 
+// Modifications:
 // 20/07/2000  V.Ivanchenko First implementation
 //
-// Class Description: 
+// Class Description:
 //
 // Hadrons/ions nuclear stopping power parametrisation
 //
-// Class Description: End 
+// Class Description: End
 //
 // -------------------------------------------------------------------
 //
@@ -53,12 +53,14 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4VhNuclearStoppingPower::G4VhNuclearStoppingPower() :
-  lossFlucFlag(true)
-{;}
+G4VhNuclearStoppingPower::G4VhNuclearStoppingPower() : lossFlucFlag(true)
+{
+  ;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4VhNuclearStoppingPower::~G4VhNuclearStoppingPower() 
-{;}
-
+G4VhNuclearStoppingPower::~G4VhNuclearStoppingPower()
+{
+  ;
+}

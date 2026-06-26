@@ -39,6 +39,7 @@
 #include "G4EmDNAPhysics_option2.hh"
 #include "G4EmDNAPhysics_option4.hh"
 #include "G4EmDNAPhysics_option6.hh"
+#include "G4EmDNAPhysics_option8.hh"
 #include "G4EmLivermorePhysics.hh"
 #include "G4EmParameters.hh"
 #include "G4SystemOfUnits.hh"

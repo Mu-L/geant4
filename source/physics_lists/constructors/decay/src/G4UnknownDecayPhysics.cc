@@ -35,10 +35,10 @@
 
 #include "G4UnknownDecayPhysics.hh"
 
-#include "G4ProcessManager.hh"
-#include "G4UnknownParticle.hh"
 #include "G4ChargedUnknownParticle.hh"
+#include "G4ProcessManager.hh"
 #include "G4UnknownDecay.hh"
+#include "G4UnknownParticle.hh"
 
 // factory
 #include "G4PhysicsConstructorFactory.hh"
@@ -46,18 +46,14 @@
 G4_DECLARE_PHYSCONSTR_FACTORY(G4UnknownDecayPhysics);
 
 G4UnknownDecayPhysics::G4UnknownDecayPhysics(G4int ver)
-  :  G4VPhysicsConstructor("UnknownDecay"), verbose(ver)
-{
-}
+  : G4VPhysicsConstructor("UnknownDecay"), verbose(ver)
+{}
 
 G4UnknownDecayPhysics::G4UnknownDecayPhysics(const G4String& name, G4int ver)
-  :  G4VPhysicsConstructor(name), verbose(ver)
-{
-}
+  : G4VPhysicsConstructor(name), verbose(ver)
+{}
 
-G4UnknownDecayPhysics::~G4UnknownDecayPhysics()
-{
-}
+G4UnknownDecayPhysics::~G4UnknownDecayPhysics() {}
 
 void G4UnknownDecayPhysics::ConstructParticle()
 {
@@ -71,16 +67,17 @@ void G4UnknownDecayPhysics::ConstructProcess()
 
   // Add Decay Process
   G4UnknownDecay* fDecayProcess = new G4UnknownDecay();
-  auto myParticleIterator=GetParticleIterator();
+  auto myParticleIterator = GetParticleIterator();
   myParticleIterator->reset();
-  G4ParticleDefinition* particle=0;
+  G4ParticleDefinition* particle = 0;
 
-  while( (*myParticleIterator)() )
+  while ((*myParticleIterator)())
   {
     particle = myParticleIterator->value();
-    if( fDecayProcess->IsApplicable(*particle) ) 
-    { 
-      if(verbose > 1) {
+    if (fDecayProcess->IsApplicable(*particle))
+    {
+      if (verbose > 1)
+      {
         G4cout << "### Decays for " << particle->GetParticleName() << G4endl;
       }
       ph->RegisterProcess(fDecayProcess, particle);

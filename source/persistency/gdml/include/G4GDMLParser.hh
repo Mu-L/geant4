@@ -32,26 +32,25 @@
 // Author: Zoltan Torzsok, November 2007
 // --------------------------------------------------------------------
 #ifndef G4GDMLPARSER_HH
-#define G4GDMLPARSER_HH 1
+#define G4GDMLPARSER_HH
 
+#include "G4GDMLEvaluator.hh"
+#include "G4GDMLMessenger.hh"
 #include "G4GDMLReadStructure.hh"
 #include "G4GDMLWriteStructure.hh"
-#include "G4STRead.hh"
-#include "G4GDMLMessenger.hh"
-#include "G4GDMLEvaluator.hh"
-
-#include "G4TransportationManager.hh"
 #include "G4Navigator.hh"
+#include "G4STRead.hh"
 #include "G4Threading.hh"
+#include "G4TransportationManager.hh"
 
 #ifndef G4GDML_DEFAULT_SCHEMALOCATION
-#define G4GDML_DEFAULT_SCHEMALOCATION                                          \
-  G4String("http://cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd")
+#  define G4GDML_DEFAULT_SCHEMALOCATION \
+    G4String("http://cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd")
 #endif
 
 #ifndef G4GDML_DEFAULT_WRITE_SCHEMALOCATION
-#define G4GDML_DEFAULT_WRITE_SCHEMALOCATION                                    \
-  G4String("http://cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd")
+#  define G4GDML_DEFAULT_WRITE_SCHEMALOCATION \
+    G4String("http://cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd")
 #endif
 
 class G4GDMLParser
@@ -77,10 +76,9 @@ class G4GDMLParser
     // in input. Validation against schema is activated by default.
     // Schema validation is disabled, as XercesC currently does not support https.
 
-    inline void Write( const G4String& filename,
-                       const G4VPhysicalVolume* pvol = 0,
-                       G4bool storeReferences = true,
-               const G4String& SchemaLocation = G4GDML_DEFAULT_WRITE_SCHEMALOCATION);
+    inline void Write(const G4String& filename, const G4VPhysicalVolume* pvol = 0,
+                      G4bool storeReferences = true,
+                      const G4String& SchemaLocation = G4GDML_DEFAULT_WRITE_SCHEMALOCATION);
     //
     // Exports on a GDML file, specified by 'filename' a geometry tree
     // starting from 'pvol' as top volume. Uniqueness of stored entities
@@ -88,9 +86,9 @@ class G4GDMLParser
     // Alternative path for the schema location can be specified; by default
     // the URL to the GDML web site is used.
 
-    inline void Write( const G4String& filename, const G4LogicalVolume* lvol,
-                       G4bool storeReferences = true,
-               const G4String& SchemaLocation = G4GDML_DEFAULT_WRITE_SCHEMALOCATION);
+    inline void Write(const G4String& filename, const G4LogicalVolume* lvol,
+                      G4bool storeReferences = true,
+                      const G4String& SchemaLocation = G4GDML_DEFAULT_WRITE_SCHEMALOCATION);
     //
     // Exports on a GDML file, specified by 'filename' a geometry tree
     // starting from 'pvol' as top volume. Uniqueness of stored entities
@@ -99,8 +97,7 @@ class G4GDMLParser
     // the URL to the GDML web site is used. Same as method above except
     // that the logical volume must be provided here.
 
-    inline G4LogicalVolume* ParseST(const G4String& name, G4Material* medium,
-                                    G4Material* solid);
+    inline G4LogicalVolume* ParseST(const G4String& name, G4Material* medium, G4Material* solid);
     //
     // Imports a tessellated geometry stored as STEP-Tools files
     // 'name.geom' and 'name.tree'. It returns a pointer of a generated
@@ -119,10 +116,8 @@ class G4GDMLParser
     inline G4GDMLMatrix GetMatrix(const G4String& name) const;
     inline G4LogicalVolume* GetVolume(const G4String& name) const;
     inline G4VPhysicalVolume* GetPhysVolume(const G4String& name) const;
-    inline G4VPhysicalVolume*
-           GetWorldVolume(const G4String& setupName = "Default") const;
-    inline G4GDMLAuxListType
-           GetVolumeAuxiliaryInformation(G4LogicalVolume* lvol) const;
+    inline G4VPhysicalVolume* GetWorldVolume(const G4String& setupName = "Default") const;
+    inline G4GDMLAuxListType GetVolumeAuxiliaryInformation(G4LogicalVolume* lvol) const;
     inline const G4GDMLAuxMapType* GetAuxMap() const;
     inline const G4GDMLAuxListType* GetAuxList() const;
     inline void AddAuxiliary(G4GDMLAuxStructType myaux);
@@ -136,7 +131,7 @@ class G4GDMLParser
     inline void SetImportSchema(const G4String& path_and_filename);
 
     inline G4int GetMaxExportLevel() const;  // Manage max number of levels
-    inline void SetMaxExportLevel(G4int);    // to export
+    inline void SetMaxExportLevel(G4int);  // to export
 
     inline void Clear();  // Clears the evaluator
 
@@ -145,8 +140,7 @@ class G4GDMLParser
     inline void AddModule(const G4VPhysicalVolume* const physvol);
     inline void AddModule(const G4int depth);
     inline void SetAddPointerToName(G4bool set);
-    inline void AddVolumeAuxiliary(G4GDMLAuxStructType myaux,
-                                   const G4LogicalVolume* const lvol);
+    inline void AddVolumeAuxiliary(G4GDMLAuxStructType myaux, const G4LogicalVolume* const lvol);
     inline void SetOutputFileOverwrite(G4bool flag);
 
   private:

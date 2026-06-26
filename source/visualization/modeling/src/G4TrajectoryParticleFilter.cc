@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Filter trajectories according to particle type. Only registered 
+// Filter trajectories according to particle type. Only registered
 // particle types will pass the filter.
 //
 // Jane Tinslay March 2006
@@ -32,19 +32,21 @@
 #include "G4TrajectoryParticleFilter.hh"
 
 G4TrajectoryParticleFilter::G4TrajectoryParticleFilter(const G4String& name)
-  :G4SmartFilter<G4VTrajectory>(name)
+  : G4SmartFilter<G4VTrajectory>(name)
 {}
 
 G4TrajectoryParticleFilter::~G4TrajectoryParticleFilter() {}
 
-bool
-G4TrajectoryParticleFilter::Evaluate(const G4VTrajectory& traj) const
+bool G4TrajectoryParticleFilter::Evaluate(const G4VTrajectory& traj) const
 {
   G4String particle = traj.GetParticleName();
 
-  if (GetVerbose()) G4cout<<"G4TrajectoryParticleFilter processing trajectory with particle type: "<<particle<<G4endl;
+  if (GetVerbose())
+    G4cout << "G4TrajectoryParticleFilter processing trajectory with particle type: " << particle
+           << G4endl;
 
-  std::vector<G4String>::const_iterator iter = std::find(fParticles.begin(), fParticles.end(), particle);
+  std::vector<G4String>::const_iterator iter =
+    std::find(fParticles.begin(), fParticles.end(), particle);
 
   // Fail if particle type not found in particle list
   if (iter == fParticles.end()) return false;
@@ -52,27 +54,24 @@ G4TrajectoryParticleFilter::Evaluate(const G4VTrajectory& traj) const
   return true;
 }
 
-
-void
-G4TrajectoryParticleFilter::Add(const G4String& particle)
+void G4TrajectoryParticleFilter::Add(const G4String& particle)
 {
   fParticles.push_back(particle);
 }
 
-void
-G4TrajectoryParticleFilter::Print(std::ostream& ostr) const
+void G4TrajectoryParticleFilter::Print(std::ostream& ostr) const
 {
-  ostr<<"Particle types registered: "<<G4endl;
+  ostr << "Particle types registered: " << G4endl;
   std::vector<G4String>::const_iterator iter = fParticles.begin();
-  
-  while (iter != fParticles.end()) {
-    ostr<<*iter<<G4endl;    
+
+  while (iter != fParticles.end())
+  {
+    ostr << *iter << G4endl;
     iter++;
   }
 }
 
-void 
-G4TrajectoryParticleFilter::Clear()
+void G4TrajectoryParticleFilter::Clear()
 {
   // Clear particle type vector
   fParticles.clear();

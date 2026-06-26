@@ -37,8 +37,11 @@
 // Author: Jonathan Madsen (May 28th 2020)
 // ---------------------------------------------------------------
 
-#pragma once
+#ifndef G4VTASK_HH
+#define G4VTASK_HH
 
 #include "PTL/VTask.hh"
 
 using G4VTask = PTL::VTask;
+
+#endif

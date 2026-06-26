@@ -26,11 +26,11 @@
 //
 //
 // Hadronic Process: Nuclear De-excitation
-// by V. Lara (Oct 1998) 
+// by V. Lara (Oct 1998)
 //
 
-#ifndef G4FissionLevelDensityParameter_h
-#define G4FissionLevelDensityParameter_h 1
+#ifndef G4FISSIONLEVELDENSITYPARAMETER_HH
+#define G4FISSIONLEVELDENSITYPARAMETER_HH
 
 #include "G4VLevelDensityParameter.hh"
 
@@ -38,24 +38,23 @@ class G4NuclearLevelData;
 
 class G4FissionLevelDensityParameter : public G4VLevelDensityParameter
 {
-public:
-  explicit G4FissionLevelDensityParameter();
-  virtual ~G4FissionLevelDensityParameter();
+  public:
 
-  G4double LevelDensityParameter(G4int A, G4int Z, G4double U) const final;
+    explicit G4FissionLevelDensityParameter();
+    virtual ~G4FissionLevelDensityParameter();
 
-private:  
-  G4FissionLevelDensityParameter(const G4FissionLevelDensityParameter &right);
-  const G4FissionLevelDensityParameter & operator=
-  (const G4FissionLevelDensityParameter &right);
-  G4bool operator==(const G4FissionLevelDensityParameter &right) const;
-  G4bool operator!=(const G4FissionLevelDensityParameter &right) const;
-  
-private:
-  
-  G4NuclearLevelData* fNucData;
+    G4double LevelDensityParameter(G4int A, G4int Z, G4double U) const final;
 
+  private:
+
+    G4FissionLevelDensityParameter(const G4FissionLevelDensityParameter& right);
+    const G4FissionLevelDensityParameter& operator=(const G4FissionLevelDensityParameter& right);
+    G4bool operator==(const G4FissionLevelDensityParameter& right) const;
+    G4bool operator!=(const G4FissionLevelDensityParameter& right) const;
+
+  private:
+
+    G4NuclearLevelData* fNucData;
 };
-
 
 #endif

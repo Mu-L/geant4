@@ -29,21 +29,21 @@
 // --------------------------------------------------------------------
 
 #include "G4LogicalCrystalVolume.hh"
-#include "G4ExtendedMaterial.hh"
+
 #include "G4CrystalExtension.hh"
+#include "G4ExtendedMaterial.hh"
 #include "G4VMaterialExtension.hh"
 
 std::vector<G4LogicalVolume*> G4LogicalCrystalVolume::fLCVvec;
 
 // --------------------------------------------------------------------
 
-G4LogicalCrystalVolume::
-G4LogicalCrystalVolume(G4VSolid* pSolid, G4ExtendedMaterial* pMaterial,
-                       const G4String& name, G4FieldManager* pFieldMgr,
-                       G4VSensitiveDetector* pSDetector,
-                       G4UserLimits* pULimits, G4bool optimise,
-                       G4int h, G4int k, G4int l, G4double rot)
-: G4LogicalVolume(pSolid,pMaterial,name,pFieldMgr,pSDetector,pULimits,optimise)
+G4LogicalCrystalVolume::G4LogicalCrystalVolume(G4VSolid* pSolid, G4ExtendedMaterial* pMaterial,
+                                               const G4String& name, G4FieldManager* pFieldMgr,
+                                               G4VSensitiveDetector* pSDetector,
+                                               G4UserLimits* pULimits, G4bool optimise, G4int h,
+                                               G4int k, G4int l, G4double rot)
+  : G4LogicalVolume(pSolid, pMaterial, name, pFieldMgr, pSDetector, pULimits, optimise)
 {
   SetMillerOrientation(h, k, l, rot);
   fLCVvec.push_back(this);
@@ -53,8 +53,7 @@ G4LogicalCrystalVolume(G4VSolid* pSolid, G4ExtendedMaterial* pMaterial,
 
 G4LogicalCrystalVolume::~G4LogicalCrystalVolume()
 {
-  fLCVvec.erase( std::remove(fLCVvec.begin(),fLCVvec.end(), this ),
-                 fLCVvec.end() );
+  fLCVvec.erase(std::remove(fLCVvec.begin(), fLCVvec.end(), this), fLCVvec.end());
 }
 
 // --------------------------------------------------------------------
@@ -69,9 +68,8 @@ G4bool G4LogicalCrystalVolume::IsLattice(G4LogicalVolume* aLV)
 const G4CrystalExtension* G4LogicalCrystalVolume::GetCrystal() const
 {
   return dynamic_cast<G4CrystalExtension*>(
-         dynamic_cast<G4ExtendedMaterial*>(GetMaterial() )
-                                ->RetrieveExtension("crystal"));
-}				
+    dynamic_cast<G4ExtendedMaterial*>(GetMaterial())->RetrieveExtension("crystal"));
+}
 
 // --------------------------------------------------------------------
 
@@ -82,50 +80,51 @@ const G4ThreeVector& G4LogicalCrystalVolume::GetBasis(G4int i) const
 
 // --------------------------------------------------------------------
 
-void G4LogicalCrystalVolume::SetMillerOrientation(G4int h,
-                                                  G4int k,
-                                                  G4int l,
-                                                  G4double rot)
+void G4LogicalCrystalVolume::SetMillerOrientation(G4int h, G4int k, G4int l, G4double rot)
 {
   // Align Miller normal vector (hkl) with +Z axis, and rotation about axis
 
   if (verboseLevel != 0)
   {
-    G4cout << "G4LatticePhysical::SetMillerOrientation(" << h << " "
-           << k << " " << l << ", " << rot/CLHEP::deg << " deg)" << G4endl;
+    G4cout << "G4LatticePhysical::SetMillerOrientation(" << h << " " << k << " " << l << ", "
+           << rot / CLHEP::deg << " deg)" << G4endl;
   }
-    
-   hMiller = h;
-   kMiller = k;
-   lMiller = l;
-   fRot = rot;
-    
-   G4ThreeVector norm = (h*GetBasis(0)+k*GetBasis(1)+l*GetBasis(2)).unit();
-    
-   if (verboseLevel>1) { G4cout << " norm = " << norm << G4endl; }
-    
-   // Aligns geometry +Z axis with lattice (hkl) normal
-   fOrient = G4RotationMatrix::IDENTITY;
-   fOrient.rotateZ(rot).rotateY(norm.theta()).rotateZ(norm.phi());
-   fInverse = fOrient.inverse();
-    
-   if (verboseLevel>1) { G4cout << " fOrient = " << fOrient << G4endl; }
-    
-   // FIXME:  Is this equivalent to (phi,theta,rot) Euler angles???
+
+  hMiller = h;
+  kMiller = k;
+  lMiller = l;
+  fRot = rot;
+
+  G4ThreeVector norm = (h * GetBasis(0) + k * GetBasis(1) + l * GetBasis(2)).unit();
+
+  if (verboseLevel > 1)
+  {
+    G4cout << " norm = " << norm << G4endl;
+  }
+
+  // Aligns geometry +Z axis with lattice (hkl) normal
+  fOrient = G4RotationMatrix::IDENTITY;
+  fOrient.rotateZ(rot).rotateY(norm.theta()).rotateZ(norm.phi());
+  fInverse = fOrient.inverse();
+
+  if (verboseLevel > 1)
+  {
+    G4cout << " fOrient = " << fOrient << G4endl;
+  }
+
+  // FIXME:  Is this equivalent to (phi,theta,rot) Euler angles???
 }
 
 // --------------------------------------------------------------------
 
 // Rotate input vector between lattice and solid orientations
 
-const G4ThreeVector&
-G4LogicalCrystalVolume::RotateToLattice(G4ThreeVector& dir) const
+const G4ThreeVector& G4LogicalCrystalVolume::RotateToLattice(G4ThreeVector& dir) const
 {
   return dir.transform(fOrient);
 }
 
-const G4ThreeVector&
-G4LogicalCrystalVolume::RotateToSolid(G4ThreeVector& dir) const
+const G4ThreeVector& G4LogicalCrystalVolume::RotateToSolid(G4ThreeVector& dir) const
 {
   return dir.transform(fInverse);
 }

@@ -36,20 +36,21 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedCone.h>
+#  include "G4Polyhedron.hh"
 
-#include "G4Polyhedron.hh"
+#  include <VecGeom/volumes/UnplacedCone.h>
 
 /**
  * @brief G4UCons is a wrapper class for G4Cons to make use of VecGeom Cone.
+ * @ingroup geometry_solids_csg
  */
 
 class G4UCons : public G4UAdapter<vecgeom::GenericUnplacedCone>
 {
-  using Shape_t = vecgeom::GenericUnplacedCone;
-  using Base_t = G4UAdapter<vecgeom::GenericUnplacedCone>;
+    using Shape_t = vecgeom::GenericUnplacedCone;
+    using Base_t = G4UAdapter<vecgeom::GenericUnplacedCone>;
 
   public:
 
@@ -64,24 +65,20 @@ class G4UCons : public G4UAdapter<vecgeom::GenericUnplacedCone>
      *  @param[in] pSPhi Starting angle of the segment in radians.
      *  @param[in] pDPhi Delta angle of the segment in radians.
      */
-    G4UCons(const G4String& pName,
-                  G4double pRmin1, G4double pRmax1,
-                  G4double pRmin2, G4double pRmax2,
-                  G4double pDz,
-                  G4double pSPhi, G4double pDPhi);
+    G4UCons(const G4String& pName, G4double pRmin1, G4double pRmax1, G4double pRmin2,
+            G4double pRmax2, G4double pDz, G4double pSPhi, G4double pDPhi);
 
     /**
      * Default destructor.
      */
-   ~G4UCons() override = default;
+    ~G4UCons() override = default;
 
     /**
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions( G4VPVParameterisation* p,
-                            const G4int n,
-                            const G4VPhysicalVolume* pRep ) override;
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
+                           const G4VPhysicalVolume* pRep) override;
 
     /**
      * Makes a clone of the object for use in multi-treading.
@@ -94,26 +91,26 @@ class G4UCons : public G4UAdapter<vecgeom::GenericUnplacedCone>
      */
     G4double GetInnerRadiusMinusZ() const;
     G4double GetOuterRadiusMinusZ() const;
-    G4double GetInnerRadiusPlusZ()  const;
-    G4double GetOuterRadiusPlusZ()  const;
-    G4double GetZHalfLength()       const;
-    G4double GetStartPhiAngle()     const;
-    G4double GetDeltaPhiAngle()     const;
-    G4double GetSinStartPhi()       const;
-    G4double GetCosStartPhi()       const;
-    G4double GetSinEndPhi()         const;
-    G4double GetCosEndPhi()         const;
-  
+    G4double GetInnerRadiusPlusZ() const;
+    G4double GetOuterRadiusPlusZ() const;
+    G4double GetZHalfLength() const;
+    G4double GetStartPhiAngle() const;
+    G4double GetDeltaPhiAngle() const;
+    G4double GetSinStartPhi() const;
+    G4double GetCosStartPhi() const;
+    G4double GetSinEndPhi() const;
+    G4double GetCosEndPhi() const;
+
     /**
      * Modifiers.
      */
-    void SetInnerRadiusMinusZ (G4double Rmin1 );
-    void SetOuterRadiusMinusZ (G4double Rmax1 );
-    void SetInnerRadiusPlusZ  (G4double Rmin2 );
-    void SetOuterRadiusPlusZ  (G4double Rmax2 );
-    void SetZHalfLength       (G4double newDz );
-    void SetStartPhiAngle     (G4double newSPhi, G4bool trig=true);
-    void SetDeltaPhiAngle     (G4double newDPhi);
+    void SetInnerRadiusMinusZ(G4double Rmin1);
+    void SetOuterRadiusMinusZ(G4double Rmax1);
+    void SetInnerRadiusPlusZ(G4double Rmin2);
+    void SetOuterRadiusPlusZ(G4double Rmax2);
+    void SetZHalfLength(G4double newDz);
+    void SetStartPhiAngle(G4double newSPhi, G4bool trig = true);
+    void SetDeltaPhiAngle(G4double newDPhi);
 
     /**
      * Returns the type ID, "G4Cons" of the solid.
@@ -137,10 +134,9 @@ class G4UCons : public G4UAdapter<vecgeom::GenericUnplacedCone>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.
@@ -151,7 +147,7 @@ class G4UCons : public G4UAdapter<vecgeom::GenericUnplacedCone>
      * Copy constructor and assignment operator.
      */
     G4UCons(const G4UCons& rhs);
-    G4UCons& operator=(const G4UCons& rhs); 
+    G4UCons& operator=(const G4UCons& rhs);
 };
 
 // --------------------------------------------------------------------

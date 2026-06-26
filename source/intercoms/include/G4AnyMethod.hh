@@ -44,8 +44,8 @@
 //        Ed Brey, Mark Rodgers, Peter Dimov, and James Curran
 // when:  July 2001
 // --------------------------------------------------------------------
-#ifndef G4AnyMethod_hh
-#define G4AnyMethod_hh 1
+#ifndef G4ANYMETHOD_HH
+#define G4ANYMETHOD_HH
 
 #include "G4Types.hh"
 
@@ -57,6 +57,7 @@
 class G4BadArgument : public std::bad_cast
 {
   public:
+
     G4BadArgument() = default;
     const char* what() const throw() override { return "G4BadArgument: failed operator()"; }
 };
@@ -64,6 +65,7 @@ class G4BadArgument : public std::bad_cast
 class G4AnyMethod
 {
   public:
+
     G4AnyMethod() = default;
 
     template<class S, class T>
@@ -146,9 +148,11 @@ class G4AnyMethod
     }
 
   private:
+
     class Placeholder
     {
       public:
+
         Placeholder() = default;
         virtual ~Placeholder() = default;
         virtual Placeholder* Clone() const = 0;

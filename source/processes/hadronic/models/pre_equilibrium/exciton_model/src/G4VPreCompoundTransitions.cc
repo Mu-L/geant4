@@ -26,15 +26,14 @@
 //
 // V.Ivanchenko 20.08.2010
 //
- 
+
 #include "G4VPreCompoundTransitions.hh"
+
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 
 G4VPreCompoundTransitions::G4VPreCompoundTransitions()
-  :useNGB(false),useCEMtr(false),  
-   TransitionProb1(0.0), TransitionProb2(0.0), TransitionProb3(0.0)
+  : useNGB(false), useCEMtr(false), TransitionProb1(0.0), TransitionProb2(0.0), TransitionProb3(0.0)
 {}
 
-G4VPreCompoundTransitions::~G4VPreCompoundTransitions() 
-{}
+G4VPreCompoundTransitions::~G4VPreCompoundTransitions() {}

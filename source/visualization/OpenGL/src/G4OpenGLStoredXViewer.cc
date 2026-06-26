@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  7th February 1997
 // Class G4OpenGLStoredXViewer : a class derived from G4OpenGLXViewer and
 //                             G4OpenGLStoredViewer.
@@ -33,45 +33,46 @@
 #include "G4OpenGLStoredXViewer.hh"
 
 #include "G4OpenGLStoredSceneHandler.hh"
-#include "G4ios.hh"
 #include "G4Threading.hh"
+#include "G4ios.hh"
 
-G4OpenGLStoredXViewer::
-G4OpenGLStoredXViewer (G4OpenGLStoredSceneHandler& sceneHandler,
-		 const G4String& name)
- : G4VViewer (sceneHandler, sceneHandler.IncrementViewCount (), name),
-   G4OpenGLViewer (sceneHandler),
-   G4OpenGLXViewer (sceneHandler),
-   G4OpenGLStoredViewer (sceneHandler)
+G4OpenGLStoredXViewer::G4OpenGLStoredXViewer(G4OpenGLStoredSceneHandler& sceneHandler,
+                                             const G4String& name)
+  : G4VViewer(sceneHandler, sceneHandler.IncrementViewCount(), name),
+    G4OpenGLViewer(sceneHandler),
+    G4OpenGLXViewer(sceneHandler),
+    G4OpenGLStoredViewer(sceneHandler)
 {
   if (fViewId < 0) return;  // In case error in base class instantiation.
 
-  if (!vi_stored) {
+  if (!vi_stored)
+  {
     fViewId = -1;  // This flags an error.
     G4cerr << "G4OpenGLStoredXViewer::G4OpenGLStoredXViewer -"
-      " G4OpenGLXViewer couldn't get a visual." << G4endl;
+              " G4OpenGLXViewer couldn't get a visual."
+           << G4endl;
     return;
   }
 }
 
-G4OpenGLStoredXViewer::~G4OpenGLStoredXViewer () {}
+G4OpenGLStoredXViewer::~G4OpenGLStoredXViewer() {}
 
-void G4OpenGLStoredXViewer::Initialise () {
-
+void G4OpenGLStoredXViewer::Initialise()
+{
 #ifdef G4DEBUG_VIS_OGL
   printf("G4OpenGLStoredXViewer::Initialise\n");
 #endif
-  CreateGLXContext (vi_stored);
-  CreateMainWindow ();
-  CreateFontLists ();
+  CreateGLXContext(vi_stored);
+  CreateMainWindow();
+  CreateFontLists();
 
-  InitializeGLView ();
+  InitializeGLView();
 
-  glDrawBuffer (GL_BACK);
+  glDrawBuffer(GL_BACK);
 }
 
-void G4OpenGLStoredXViewer::DrawView () {
-
+void G4OpenGLStoredXViewer::DrawView()
+{
 #ifdef G4DEBUG_VIS_OGL
   printf("G4OpenGLStoredXViewer::DrawView\n");
 #endif
@@ -82,69 +83,72 @@ void G4OpenGLStoredXViewer::DrawView () {
   // The fNeedKernelVisit flag might have been set by the user in
   // /vis/viewer/rebuild, but if not, make decision and set flag only
   // if necessary...
-  if (!fNeedKernelVisit) KernelVisitDecision ();
+  if (!fNeedKernelVisit) KernelVisitDecision();
   fLastVP = fVP;
-  G4bool kernelVisitWasNeeded = fNeedKernelVisit; // Keep (ProcessView resets).
-  ProcessView ();
+  G4bool kernelVisitWasNeeded = fNeedKernelVisit;  // Keep (ProcessView resets).
+  ProcessView();
 
-  if(style!=G4ViewParameters::hlr && haloing_enabled) {
-
-    HaloingFirstPass ();
-    DrawDisplayLists ();
+  if (style != G4ViewParameters::hlr && haloing_enabled)
+  {
+    HaloingFirstPass();
+    DrawDisplayLists();
 #ifdef G4DEBUG_VIS_OGL
-  printf("G4OpenGLStoredXViewer::DrawView flush \n");
+    printf("G4OpenGLStoredXViewer::DrawView flush \n");
 #endif
-    glFlush ();
+    glFlush();
 
-    HaloingSecondPass ();
+    HaloingSecondPass();
 
-    DrawDisplayLists ();
-
-  } else {
-
-    if (!kernelVisitWasNeeded) {
+    DrawDisplayLists();
+  }
+  else
+  {
+    if (!kernelVisitWasNeeded)
+    {
 #ifdef G4DEBUG_VIS_OGL
       printf("G4OpenGLStoredXViewer::DrawView NO need kernel visit\n");
 #endif
-      DrawDisplayLists ();
-
-    } else {
-
+      DrawDisplayLists();
+    }
+    else
+    {
 #ifdef G4DEBUG_VIS_OGL
       printf("G4OpenGLStoredXViewer::DrawView NEED kernel visit\n");
 #endif
-    // However, union cutaways are implemented in DrawDisplayLists, so make
-    // an extra pass...
-      if (fVP.IsCutaway() &&
-	  fVP.GetCutawayMode() == G4ViewParameters::cutawayUnion) {
-	ClearView();
-	DrawDisplayLists ();
-      } else { // ADD TO AVOID KernelVisit=1 and nothing to display
-        DrawDisplayLists ();
+      // However, union cutaways are implemented in DrawDisplayLists, so make
+      // an extra pass...
+      if (fVP.IsCutaway() && fVP.GetCutawayMode() == G4ViewParameters::cutawayUnion)
+      {
+        ClearView();
+        DrawDisplayLists();
+      }
+      else
+      {  // ADD TO AVOID KernelVisit=1 and nothing to display
+        DrawDisplayLists();
       }
     }
   }
 
-  FinishView ();
-
+  FinishView();
 }
 
-void G4OpenGLStoredXViewer::FinishView () {
+void G4OpenGLStoredXViewer::FinishView()
+{
 #ifdef G4DEBUG_VIS_OGL
   printf("G4OpenGLStoredXViewer::FinishView\n");
 #endif
 
-//  glXWaitGL (); //Wait for effects of all previous OpenGL commands to
-                //be propagated before progressing.
-// JA: Commented out July 2021 - slows rendering down in some cases and I
-// don't see any adverse effects.
+  //  glXWaitGL (); //Wait for effects of all previous OpenGL commands to
+  // be propagated before progressing.
+  // JA: Commented out July 2021 - slows rendering down in some cases and I
+  // don't see any adverse effects.
 
 #ifdef G4DEBUG_VIS_OGL
   printf("G4OpenGLStoredXViewer::FinishView flush \n");
 #endif
-  glFlush (); //FIXME
+  glFlush();  // FIXME
 
   GLint renderMode;
   glGetIntegerv(GL_RENDER_MODE, &renderMode);
-  if (renderMode == GL_RENDER) glXSwapBuffers (dpy, win);  
+  if (renderMode == GL_RENDER) glXSwapBuffers(dpy, win);
 }

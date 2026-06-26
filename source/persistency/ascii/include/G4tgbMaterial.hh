@@ -31,19 +31,18 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgbMaterial_hh
-#define G4tgbMaterial_hh 1
+#ifndef G4TGBMATERIAL_HH
+#define G4TGBMATERIAL_HH
 
+#include "G4Material.hh"
+#include "G4tgrMaterial.hh"
 #include "globals.hh"
 
 #include <iostream>
 
-#include "G4tgrMaterial.hh"
-#include "G4Material.hh"
-
 class G4tgbMaterial
 {
-  friend std::ostream& operator<<(std::ostream&, const G4tgbMaterial&);
+    friend std::ostream& operator<<(std::ostream&, const G4tgbMaterial&);
 
   public:
 
@@ -58,10 +57,7 @@ class G4tgbMaterial
 
     G4double GetDensity() const { return theTgrMate->GetDensity(); }
 
-    G4int GetNumberOfMaterials() const
-    {
-      return theTgrMate->GetNumberOfComponents();
-    }
+    G4int GetNumberOfMaterials() const { return theTgrMate->GetNumberOfComponents(); }
 
     G4double GetA() const { return theTgrMate->GetA(); }
 

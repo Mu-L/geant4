@@ -28,13 +28,13 @@
 // Author: Youhei Morita, 12.09.2001
 // --------------------------------------------------------------------
 #ifndef G4MCTEVENT_HH
-#define G4MCTEVENT_HH 1
+#define G4MCTEVENT_HH
+
+#include "G4MCTGenParticle.hh"
+#include "G4Types.hh"
 
 #include <iostream>
 #include <map>
-
-#include "G4Types.hh"
-#include "G4MCTGenParticle.hh"
 
 class G4MCTGenEvent;
 class G4MCTSimEvent;
@@ -52,11 +52,11 @@ class G4MCTEvent
 
     inline G4MCTEvent(const G4MCTEvent& right);
     inline G4MCTEvent& operator=(const G4MCTEvent& right);
-      // copy constructor and assignment operator
+    // copy constructor and assignment operator
 
     inline void SetEventNumber(G4int n);
     inline G4int GetEventNumber() const;
-      // set/get functions
+    // set/get functions
 
     inline G4MCTGenEvent* GetGenEvent() const;
     inline G4MCTSimEvent* GetSimEvent() const;
@@ -64,8 +64,7 @@ class G4MCTEvent
     inline G4int GetNofPrimaries() const;
     G4MCTSimParticle* GetSimParticle(const G4MCTGenParticle& genpart) const;
     G4MCTGenParticle GetGenParticle(const G4MCTSimParticle* simpart) const;
-    G4int AddPrimaryPair(const G4MCTGenParticle& genp,
-                        const G4MCTSimParticle* simp);
+    G4int AddPrimaryPair(const G4MCTGenParticle& genp, const G4MCTSimParticle* simp);
     void ClearEvent();
     void Print(std::ostream& ostr = std::cout) const;
 
@@ -94,7 +93,10 @@ class G4MCTEvent
 // inline methods
 // ====================================================================
 
-inline G4MCTEvent::G4MCTEvent(const G4MCTEvent& right) { *this = right; }
+inline G4MCTEvent::G4MCTEvent(const G4MCTEvent& right)
+{
+  *this = right;
+}
 
 inline G4MCTEvent& G4MCTEvent::operator=(const G4MCTEvent& right)
 {
@@ -125,7 +127,7 @@ inline G4int G4MCTEvent::GetNofPrimaries() const
 }
 
 inline G4MCTSimEvent* G4MCTEvent::GetSimEvent() const
-{ 
+{
   return simEvent;
 }
 
@@ -135,26 +137,22 @@ inline G4MCTGenEvent* G4MCTEvent::GetGenEvent() const
 }
 
 // iterators
-inline
-G4MCTEvent::genprimary_const_iterator G4MCTEvent::genprimaries_begin() const
+inline G4MCTEvent::genprimary_const_iterator G4MCTEvent::genprimaries_begin() const
 {
   return gen2simParticleMap.cbegin();
 }
 
-inline
-G4MCTEvent::genprimary_const_iterator G4MCTEvent::genprimaries_end() const
+inline G4MCTEvent::genprimary_const_iterator G4MCTEvent::genprimaries_end() const
 {
   return gen2simParticleMap.cend();
 }
 
-inline
-G4MCTEvent::simprimary_const_iterator G4MCTEvent::simprimaries_begin() const
+inline G4MCTEvent::simprimary_const_iterator G4MCTEvent::simprimaries_begin() const
 {
   return sim2genParticleMap.cbegin();
 }
 
-inline
-G4MCTEvent::simprimary_const_iterator G4MCTEvent::simprimaries_end() const
+inline G4MCTEvent::simprimary_const_iterator G4MCTEvent::simprimaries_end() const
 {
   return sim2genParticleMap.cend();
 }

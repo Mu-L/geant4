@@ -29,11 +29,9 @@
 // by V. Lara (Nov 1998)
 
 #include "G4VMultiFragmentation.hh"
+
 #include "G4HadronicException.hh"
 
-G4VMultiFragmentation::G4VMultiFragmentation()
-{}
+G4VMultiFragmentation::G4VMultiFragmentation() {}
 
-G4VMultiFragmentation::~G4VMultiFragmentation()
-{}
-
+G4VMultiFragmentation::~G4VMultiFragmentation() {}

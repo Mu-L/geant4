@@ -28,19 +28,18 @@
 
 #include "G4AnalysisUtilities.hh"
 
-#include "tools/waxml/histos"
 #include "tools/waxml/begend"
+#include "tools/waxml/histos"
 
 //_____________________________________________________________________________
-template <typename HT>
-G4bool G4XmlHnFileManager<HT>::WriteExtra(
-  HT* ht, const G4String& htName, const G4String& fileName)
+template<typename HT>
+G4bool G4XmlHnFileManager<HT>::WriteExtra(HT* ht, const G4String& htName, const G4String& fileName)
 {
   // create a new file
   std::ofstream hnFile(fileName);
 
   // Do nothing if there is no file
-  if ( ! hnFile.is_open() ) return false;
+  if (!hnFile.is_open()) return false;
 
   // Write file opening
   tools::waxml::begin(hnFile);
@@ -50,10 +49,10 @@ G4bool G4XmlHnFileManager<HT>::WriteExtra(
 
   // write histo
   auto result = tools::waxml::write(hnFile, *ht, path, htName);
-  if ( ! result) {
-    G4Analysis::Warn(
-      "Saving " + G4Analysis::GetHnType<HT>() + " " + htName + " failed",
-      fkClass, "WriteExtra");
+  if (!result)
+  {
+    G4Analysis::Warn("Saving " + G4Analysis::GetHnType<HT>() + " " + htName + " failed", fkClass,
+                     "WriteExtra");
     return false;
   }
 
@@ -64,11 +63,11 @@ G4bool G4XmlHnFileManager<HT>::WriteExtra(
 }
 
 //_____________________________________________________________________________
-template <typename HT>
-G4bool G4XmlHnFileManager<HT>::Write(
-  HT* ht, const G4String& htName,  G4String& fileName)
+template<typename HT>
+G4bool G4XmlHnFileManager<HT>::Write(HT* ht, const G4String& htName, G4String& fileName)
 {
-  if ( fileName.empty()) {
+  if (fileName.empty())
+  {
     // should not happen
     G4cerr << "!!! Xml file name not defined." << G4endl;
     G4cerr << "!!! Write " << htName << " failed." << G4endl;
@@ -76,10 +75,10 @@ G4bool G4XmlHnFileManager<HT>::Write(
   }
 
   auto hnFile = fFileManager->GetTFile(fileName);
-  if ( hnFile == nullptr ) {
+  if (hnFile == nullptr)
+  {
     // This prototype can be used only with OpenFile() mode
-    G4Analysis::Warn(
-      G4String("Failed to get Xml file ") + fileName, fkClass, "Write");
+    G4Analysis::Warn(G4String("Failed to get Xml file ") + fileName, fkClass, "Write");
     return false;
   }
 

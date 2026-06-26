@@ -38,85 +38,78 @@
 #include "G4VTrajectory.hh"
 
 // Attribute filter
-class G4TrajectoryAttributeFilterFactory : public G4VModelFactory< G4VFilter<G4VTrajectory>  > {
+class G4TrajectoryAttributeFilterFactory : public G4VModelFactory<G4VFilter<G4VTrajectory>>
+{
+  public:  // With description
 
-public: // With description
+    typedef std::vector<G4UImessenger*> Messengers;
+    typedef std::pair<G4VFilter<G4VTrajectory>*, Messengers> ModelAndMessengers;
 
-  typedef std::vector<G4UImessenger*> Messengers;
-  typedef std::pair< G4VFilter<G4VTrajectory> *, Messengers > ModelAndMessengers;
+    G4TrajectoryAttributeFilterFactory();
 
-  G4TrajectoryAttributeFilterFactory();
+    virtual ~G4TrajectoryAttributeFilterFactory();
 
-  virtual ~G4TrajectoryAttributeFilterFactory();
-  
-  ModelAndMessengers Create(const G4String& placement, const G4String& name);
-    
+    ModelAndMessengers Create(const G4String& placement, const G4String& name);
 };
 
 // Charge filter
-class G4TrajectoryChargeFilterFactory : public G4VModelFactory< G4VFilter<G4VTrajectory>  > {
+class G4TrajectoryChargeFilterFactory : public G4VModelFactory<G4VFilter<G4VTrajectory>>
+{
+  public:  // With description
 
-public: // With description
+    typedef std::vector<G4UImessenger*> Messengers;
+    typedef std::pair<G4VFilter<G4VTrajectory>*, Messengers> ModelAndMessengers;
 
-  typedef std::vector<G4UImessenger*> Messengers;
-  typedef std::pair< G4VFilter<G4VTrajectory> *, Messengers > ModelAndMessengers;
+    G4TrajectoryChargeFilterFactory();
 
-  G4TrajectoryChargeFilterFactory();
+    virtual ~G4TrajectoryChargeFilterFactory();
 
-  virtual ~G4TrajectoryChargeFilterFactory();
-  
-  ModelAndMessengers Create(const G4String& placement, const G4String& name);
-    
+    ModelAndMessengers Create(const G4String& placement, const G4String& name);
 };
 
 // Particle filter
-class G4TrajectoryParticleFilterFactory : public G4VModelFactory< G4VFilter<G4VTrajectory>  > {
+class G4TrajectoryParticleFilterFactory : public G4VModelFactory<G4VFilter<G4VTrajectory>>
+{
+  public:  // With description
 
-public: // With description
+    typedef std::vector<G4UImessenger*> Messengers;
+    typedef std::pair<G4VFilter<G4VTrajectory>*, Messengers> ModelAndMessengers;
 
-  typedef std::vector<G4UImessenger*> Messengers;
-  typedef std::pair< G4VFilter<G4VTrajectory> *, Messengers > ModelAndMessengers;
+    G4TrajectoryParticleFilterFactory();
 
-  G4TrajectoryParticleFilterFactory();
+    virtual ~G4TrajectoryParticleFilterFactory();
 
-  virtual ~G4TrajectoryParticleFilterFactory();
-  
-  ModelAndMessengers Create(const G4String& placement, const G4String& name);
-    
+    ModelAndMessengers Create(const G4String& placement, const G4String& name);
 };
 
 // Origin volume filter
-class G4TrajectoryOriginVolumeFilterFactory : public G4VModelFactory< G4VFilter<G4VTrajectory>  > {
+class G4TrajectoryOriginVolumeFilterFactory : public G4VModelFactory<G4VFilter<G4VTrajectory>>
+{
+  public:  // With description
 
-public: // With description
+    typedef std::vector<G4UImessenger*> Messengers;
+    typedef std::pair<G4VFilter<G4VTrajectory>*, Messengers> ModelAndMessengers;
 
-  typedef std::vector<G4UImessenger*> Messengers;
-  typedef std::pair< G4VFilter<G4VTrajectory> *, Messengers > ModelAndMessengers;
+    G4TrajectoryOriginVolumeFilterFactory();
 
-  G4TrajectoryOriginVolumeFilterFactory();
+    virtual ~G4TrajectoryOriginVolumeFilterFactory();
 
-  virtual ~G4TrajectoryOriginVolumeFilterFactory();
-
-  ModelAndMessengers Create(const G4String& placement, const G4String& name);
-
+    ModelAndMessengers Create(const G4String& placement, const G4String& name);
 };
 
 // Encountered volume filter
-class G4TrajectoryEncounteredVolumeFilterFactory : public G4VModelFactory< G4VFilter<G4VTrajectory>  > {
+class G4TrajectoryEncounteredVolumeFilterFactory : public G4VModelFactory<G4VFilter<G4VTrajectory>>
+{
+  public:  // With description
 
-public: // With description
+    typedef std::vector<G4UImessenger*> Messengers;
+    typedef std::pair<G4VFilter<G4VTrajectory>*, Messengers> ModelAndMessengers;
 
-  typedef std::vector<G4UImessenger*> Messengers;
-  typedef std::pair< G4VFilter<G4VTrajectory> *, Messengers > ModelAndMessengers;
+    G4TrajectoryEncounteredVolumeFilterFactory();
 
-  G4TrajectoryEncounteredVolumeFilterFactory();
+    virtual ~G4TrajectoryEncounteredVolumeFilterFactory();
 
-  virtual ~G4TrajectoryEncounteredVolumeFilterFactory();
-
-  ModelAndMessengers Create(const G4String& placement, const G4String& name);
-
+    ModelAndMessengers Create(const G4String& placement, const G4String& name);
 };
 
-
 #endif
-

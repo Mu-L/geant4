@@ -31,11 +31,11 @@
 //  Abstract class for adjoint/reverse discrete scattering
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4VAdjointReverseReaction_h
-#define G4VAdjointReverseReaction_h 1
+#ifndef G4VADJOINTREVERSEREACTION_HH
+#define G4VADJOINTREVERSEREACTION_HH
 
-#include "globals.hh"
 #include "G4VDiscreteProcess.hh"
+#include "globals.hh"
 
 class G4AdjointCSManager;
 class G4ParticleChange;
@@ -46,37 +46,35 @@ class G4VParticleChange;
 
 class G4VAdjointReverseReaction : public G4VDiscreteProcess
 {
- public:
-  explicit G4VAdjointReverseReaction(const G4String& process_name,
-                                     G4bool whichScatCase);
+  public:
 
-  ~G4VAdjointReverseReaction() override;
+    explicit G4VAdjointReverseReaction(const G4String& process_name, G4bool whichScatCase);
 
-  void BuildPhysicsTable(const G4ParticleDefinition&) override;
+    ~G4VAdjointReverseReaction() override;
 
-  G4VParticleChange* PostStepDoIt(const G4Track&,
-                                  const G4Step&) override;
+    void BuildPhysicsTable(const G4ParticleDefinition&) override;
 
-  G4VAdjointReverseReaction(G4VAdjointReverseReaction&) = delete;
-  G4VAdjointReverseReaction& operator=(
-    const G4VAdjointReverseReaction& right) = delete;
+    G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&) override;
 
- protected:
-  G4double GetMeanFreePath(const G4Track& track,
-                           G4double previousStepSize,
-                           G4ForceCondition* condition) override;
+    G4VAdjointReverseReaction(G4VAdjointReverseReaction&) = delete;
+    G4VAdjointReverseReaction& operator=(const G4VAdjointReverseReaction& right) = delete;
 
-  G4VEmAdjointModel* fAdjointModel = nullptr;
-  G4bool fIsScatProjToProj;
+  protected:
 
- private:
+    G4double GetMeanFreePath(const G4Track& track, G4double previousStepSize,
+                             G4ForceCondition* condition) override;
 
-  G4ParticleChange* fParticleChange;
-  G4AdjointCSManager* fCSManager;
+    G4VEmAdjointModel* fAdjointModel = nullptr;
+    G4bool fIsScatProjToProj;
 
-  G4int fTrackId = 0;
+  private:
 
-  G4bool fIsFwdCSUsed = false;
+    G4ParticleChange* fParticleChange;
+    G4AdjointCSManager* fCSManager;
+
+    G4int fTrackId = 0;
+
+    G4bool fIsFwdCSUsed = false;
 };
 
 #endif

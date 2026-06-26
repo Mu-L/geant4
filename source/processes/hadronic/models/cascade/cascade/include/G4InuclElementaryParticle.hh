@@ -54,90 +54,90 @@
 
 class G4ParticleDefinition;
 
+class G4InuclElementaryParticle : public G4InuclParticle
+{
+  public:
 
-class G4InuclElementaryParticle : public G4InuclParticle {
-public:
-  G4InuclElementaryParticle() 
-    : G4InuclParticle() {}
+    G4InuclElementaryParticle() : G4InuclParticle() {}
 
-  G4InuclElementaryParticle(G4int ityp, Model model=DefaultModel) 
-    : G4InuclParticle(makeDefinition(ityp), model) {}
+    G4InuclElementaryParticle(G4int ityp, Model model = DefaultModel)
+      : G4InuclParticle(makeDefinition(ityp), model)
+    {}
 
-  G4InuclElementaryParticle(const G4DynamicParticle& dynPart,
-			    Model model=DefaultModel)
-    : G4InuclParticle(dynPart, model) {}
+    G4InuclElementaryParticle(const G4DynamicParticle& dynPart, Model model = DefaultModel)
+      : G4InuclParticle(dynPart, model)
+    {}
 
-  G4InuclElementaryParticle(const G4LorentzVector& mom,
-			    G4int ityp, Model model=DefaultModel)
-    : G4InuclParticle(makeDefinition(ityp), mom, model) {}
+    G4InuclElementaryParticle(const G4LorentzVector& mom, G4int ityp, Model model = DefaultModel)
+      : G4InuclParticle(makeDefinition(ityp), mom, model)
+    {}
 
-  G4InuclElementaryParticle(G4double ekin, G4int ityp,
-			    Model model=DefaultModel) 
-    : G4InuclParticle(makeDefinition(ityp), ekin, model) {}
+    G4InuclElementaryParticle(G4double ekin, G4int ityp, Model model = DefaultModel)
+      : G4InuclParticle(makeDefinition(ityp), ekin, model)
+    {}
 
-  // WARNING:  This may create a particle without a valid type code!
-  G4InuclElementaryParticle(const G4LorentzVector& mom,
-			    const G4ParticleDefinition* pd,
-			    Model model=DefaultModel)
-    : G4InuclParticle(pd, mom, model) {}
+    // WARNING:  This may create a particle without a valid type code!
+    G4InuclElementaryParticle(const G4LorentzVector& mom, const G4ParticleDefinition* pd,
+                              Model model = DefaultModel)
+      : G4InuclParticle(pd, mom, model)
+    {}
 
-  // Copy and assignment constructors for use with std::vector<>
-  G4InuclElementaryParticle(const G4InuclElementaryParticle& right)
-    : G4InuclParticle(right) {}
+    // Copy and assignment constructors for use with std::vector<>
+    G4InuclElementaryParticle(const G4InuclElementaryParticle& right) : G4InuclParticle(right) {}
 
-  G4InuclElementaryParticle& operator=(const G4InuclElementaryParticle& right);
+    G4InuclElementaryParticle& operator=(const G4InuclElementaryParticle& right);
 
-  // Overwrite data structure (avoids creating/copying temporaries)
-  void fill(G4int ityp, Model model=DefaultModel) { fill(0., ityp, model); }
+    // Overwrite data structure (avoids creating/copying temporaries)
+    void fill(G4int ityp, Model model = DefaultModel) { fill(0., ityp, model); }
 
-  void fill(const G4LorentzVector& mom, G4int ityp, Model model=DefaultModel);
+    void fill(const G4LorentzVector& mom, G4int ityp, Model model = DefaultModel);
 
-  void fill(G4double ekin, G4int ityp, Model model=DefaultModel);
+    void fill(G4double ekin, G4int ityp, Model model = DefaultModel);
 
-  // WARNING:  This may create a particle without a valid type code!
-  void fill(const G4LorentzVector& mom, const G4ParticleDefinition* pd,
-	    Model model=DefaultModel);
+    // WARNING:  This may create a particle without a valid type code!
+    void fill(const G4LorentzVector& mom, const G4ParticleDefinition* pd,
+              Model model = DefaultModel);
 
-  // Assignment and accessor functions
-  void setType(G4int ityp);
-  G4int type() const { return type(getDefinition()); }
+    // Assignment and accessor functions
+    void setType(G4int ityp);
+    G4int type() const { return type(getDefinition()); }
 
-  static G4int type(const G4ParticleDefinition* pd);
+    static G4int type(const G4ParticleDefinition* pd);
 
-  // Ensure that type code refers to a known particle
-  inline static G4bool valid(G4int ityp) { return ityp!=0; }
-  G4bool valid() const { return valid(type()); }
+    // Ensure that type code refers to a known particle
+    inline static G4bool valid(G4int ityp) { return ityp != 0; }
+    G4bool valid() const { return valid(type()); }
 
-  G4bool isPhoton() const { return G4InuclParticleNames::isPhoton(type()); }
-  G4bool isMuon() const { return G4InuclParticleNames::isMuon(type()); }
-  G4bool isElectron() const { return G4InuclParticleNames::isElectron(type()); }
-  G4bool isNeutrino() const { return G4InuclParticleNames::isNeutrino(type()); }
-  G4bool pion() const { return G4InuclParticleNames::pion(type()); }
-  G4bool nucleon() const { return G4InuclParticleNames::nucleon(type()); }
-  G4bool antinucleon() const { return G4InuclParticleNames::antinucleon(type()); }
+    G4bool isPhoton() const { return G4InuclParticleNames::isPhoton(type()); }
+    G4bool isMuon() const { return G4InuclParticleNames::isMuon(type()); }
+    G4bool isElectron() const { return G4InuclParticleNames::isElectron(type()); }
+    G4bool isNeutrino() const { return G4InuclParticleNames::isNeutrino(type()); }
+    G4bool pion() const { return G4InuclParticleNames::pion(type()); }
+    G4bool nucleon() const { return G4InuclParticleNames::nucleon(type()); }
+    G4bool antinucleon() const { return G4InuclParticleNames::antinucleon(type()); }
 
-  G4int baryon() const { 		// Can use as a bool (!=0 ==> true)
-    return getDefinition()->GetBaryonNumber();
-  }
+    G4int baryon() const
+    {  // Can use as a bool (!=0 ==> true)
+      return getDefinition()->GetBaryonNumber();
+    }
 
-  G4bool antibaryon() const { return baryon() < 0; }
+    G4bool antibaryon() const { return baryon() < 0; }
 
-  G4bool hyperon() const { return (baryon() && getStrangeness()); }
+    G4bool hyperon() const { return (baryon() && getStrangeness()); }
 
-  G4bool quasi_deutron() const {
-    return G4InuclParticleNames::quasi_deutron(type());
-  }
+    G4bool quasi_deutron() const { return G4InuclParticleNames::quasi_deutron(type()); }
 
-  G4int getStrangeness() const { return getStrangeness(type()); }
+    G4int getStrangeness() const { return getStrangeness(type()); }
 
-  virtual void print(std::ostream& os) const;
+    virtual void print(std::ostream& os) const;
 
-  static G4int getStrangeness(G4int type);
-  static G4double getParticleMass(G4int type);
+    static G4int getStrangeness(G4int type);
+    static G4double getParticleMass(G4int type);
 
-protected:
-  // Convert internal type code to standard GEANT4 pointer
-  static const G4ParticleDefinition* makeDefinition(G4int ityp);
-};        
+  protected:
 
-#endif // G4INUCL_ELEMENTARY_PARTICLE_HH 
+    // Convert internal type code to standard GEANT4 pointer
+    static const G4ParticleDefinition* makeDefinition(G4int ityp);
+};
+
+#endif  // G4INUCL_ELEMENTARY_PARTICLE_HH

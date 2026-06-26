@@ -26,11 +26,11 @@
 //
 //
 
-#ifndef G4PSMinKinEAtGeneration_h
-#define G4PSMinKinEAtGeneration_h 1
+#ifndef G4PSMINKINEATGENERATION_HH
+#define G4PSMINKINEATGENERATION_HH
 
-#include "G4VPrimitivePlotter.hh"
 #include "G4THitsMap.hh"
+#include "G4VPrimitivePlotter.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // (Description)
@@ -47,23 +47,26 @@
 
 class G4PSMinKinEAtGeneration : public G4VPrimitivePlotter
 {
- public: 
-  G4PSMinKinEAtGeneration(const G4String& name, G4int depth = 0);
-  G4PSMinKinEAtGeneration(const G4String& name, const G4String& unit, G4int depth = 0);
-  ~G4PSMinKinEAtGeneration() override = default;
+  public:
 
-  void Initialize(G4HCofThisEvent*) override;
-  void clear() override;
-  void PrintAll() override;
+    G4PSMinKinEAtGeneration(const G4String& name, G4int depth = 0);
+    G4PSMinKinEAtGeneration(const G4String& name, const G4String& unit, G4int depth = 0);
+    ~G4PSMinKinEAtGeneration() override = default;
 
-  virtual void SetUnit(const G4String& unit);
+    void Initialize(G4HCofThisEvent*) override;
+    void clear() override;
+    void PrintAll() override;
 
- protected:
-  G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+    virtual void SetUnit(const G4String& unit);
 
- private:
-  G4int HCID;
-  G4THitsMap<G4double>* EvtMap;
+  protected:
+
+    G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+
+  private:
+
+    G4int HCID;
+    G4THitsMap<G4double>* EvtMap;
 };
 
 #endif

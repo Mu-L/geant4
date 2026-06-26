@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,12 +41,13 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-
-#pragma once
+#ifndef G4DNAMOLECULARREACTION_HH
+#define G4DNAMOLECULARREACTION_HH
 
 #include <G4VITReactionProcess.hh>
+
 #include <vector>
 
 class G4DNAMolecularReactionTable;
@@ -54,33 +55,35 @@ class G4VDNAReactionModel;
 class G4ITReactionSet;
 
 /**
-  * G4DNAMolecularReaction is the reaction process
-  * used in G4DNAMolecularStepByStepModel.
-  * It test whether molecules can react after testing.
-  * If so, the reaction is made.
-  * \deprecated This class will be removed
-  */
+ * G4DNAMolecularReaction is the reaction process
+ * used in G4DNAMolecularStepByStepModel.
+ * It test whether molecules can react after testing.
+ * If so, the reaction is made.
+ * \deprecated This class will be removed
+ */
 class G4DNAMolecularReaction : public G4VITReactionProcess
 {
-public:
+  public:
+
     G4DNAMolecularReaction();
     explicit G4DNAMolecularReaction(G4VDNAReactionModel*);
     ~G4DNAMolecularReaction() override = default;
     G4DNAMolecularReaction(const G4DNAMolecularReaction& other) = delete;
     G4DNAMolecularReaction& operator=(const G4DNAMolecularReaction& other) = delete;
 
-    G4bool TestReactibility(const G4Track&,
-                            const G4Track&,
-                            double currentStepTime,
+    G4bool TestReactibility(const G4Track&, const G4Track&, double currentStepTime,
                             bool userStepTimeLimit) override;
 
-    std::vector<std::unique_ptr<G4ITReactionChange>> FindReaction(G4ITReactionSet*,
-    		const double, const double, const bool) override;
+    std::vector<std::unique_ptr<G4ITReactionChange>>
+    FindReaction(G4ITReactionSet*, const double, const double, const bool) override;
     std::unique_ptr<G4ITReactionChange> MakeReaction(const G4Track&, const G4Track&) override;
 
     void SetReactionModel(G4VDNAReactionModel*);
 
-protected:
+  protected:
+
     const G4DNAMolecularReactionTable*& fMolReactionTable;
     G4VDNAReactionModel* fpReactionModel;
 };
+
+#endif

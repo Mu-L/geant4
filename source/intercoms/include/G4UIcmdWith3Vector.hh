@@ -33,8 +33,8 @@
 
 // Author: M.Asai, 1998
 // --------------------------------------------------------------------
-#ifndef G4UIcmdWith3Vector_hh
-#define G4UIcmdWith3Vector_hh 1
+#ifndef G4UICMDWITH3VECTOR_HH
+#define G4UICMDWITH3VECTOR_HH
 
 #include "G4ThreeVector.hh"
 #include "G4UIcommand.hh"
@@ -42,6 +42,7 @@
 class G4UIcmdWith3Vector : public G4UIcommand
 {
   public:
+
     // Constructor. The command string with full path directory
     // and the pointer to the messenger must be given
     G4UIcmdWith3Vector(const char* theCommandPath, G4UImessenger* theMessenger);

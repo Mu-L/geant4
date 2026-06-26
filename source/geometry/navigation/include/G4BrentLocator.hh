@@ -26,7 +26,7 @@
 // G4BrentLocator
 //
 // class description:
-// 
+//
 // Implementing the calculation of the intersection point with a boundary when
 // PropagationInField is used. Second order locator based on Brent Method
 // for finding the intersection point by means of a 'depth' algorithm in case
@@ -35,13 +35,16 @@
 // Author: Tatiana Nikitina (CERN), 27 October 2008
 // ---------------------------------------------------------------------------
 #ifndef G4BRENTLOCATOR_HH
-#define G4BRENTLOCATOR_HH 1
+#define G4BRENTLOCATOR_HH
 
 #include "G4VIntersectionLocator.hh"
 
 /**
  * @brief G4BrentLocator implements the calculation of the intersection point
- * with a boundary when G4PropagationInField is used. Second order locator based
+ * with a boundary when G4PropagationInField is used.
+ * @ingroup geometry_navigation
+ *
+ * Second order locator based
  * on Brent Method for finding the intersection point by means of a 'depth'
  * algorithm in case of slow progress (intersection is not found after 100
  * trials).
@@ -49,17 +52,17 @@
 class G4BrentLocator : public G4VIntersectionLocator
 {
   public:
- 
+
     /**
      * Constructor and Destructor.
      */
-    G4BrentLocator(G4Navigator *theNavigator);
+    G4BrentLocator(G4Navigator* theNavigator);
     ~G4BrentLocator() override;
 
     /**
      * If such an intersection exists, this method calculates the intersection
      * point of the true path of the particle with the surface of the current
-     * volume (or of one of its daughters). 
+     * volume (or of one of its daughters).
      * Should use lateral displacement as measure of convergence.
      *  @note Changes the safety!
      *  @param[in] curveStartPointTangent Start point tangent track.
@@ -69,23 +72,22 @@ class G4BrentLocator : public G4VIntersectionLocator
      *  @param[out] recalculatedEndPoint Flagging if end point was recomputed.
      *  @param[in,out] fPreviousSafety Previous safety distance.
      *  @param[in,out] fPreviousSftOrigin Previous safety point origin.
-     *  @returns Whether intersection exists or not. 
+     *  @returns Whether intersection exists or not.
      */
-    G4bool EstimateIntersectionPoint( 
-         const  G4FieldTrack&       curveStartPointTangent,           // A
-         const  G4FieldTrack&       curveEndPointTangent,             // B
-         const  G4ThreeVector&      trialPoint,                       // E
-                G4FieldTrack&       intersectPointTangent,            // Output
-                G4bool&             recalculatedEndPoint,             // Out
-                G4double&           fPreviousSafety,                  // In/Out
-                G4ThreeVector&      fPreviousSftOrigin) override;     // In/Out
+    G4bool EstimateIntersectionPoint(const G4FieldTrack& curveStartPointTangent,  // A
+                                     const G4FieldTrack& curveEndPointTangent,  // B
+                                     const G4ThreeVector& trialPoint,  // E
+                                     G4FieldTrack& intersectPointTangent,  // Output
+                                     G4bool& recalculatedEndPoint,  // Out
+                                     G4double& fPreviousSafety,  // In/Out
+                                     G4ThreeVector& fPreviousSftOrigin) override;  // In/Out
 
   private:
 
     static const G4int max_depth = 4;
 
     /** Used to store intermediate track values in case of too slow progress. */
-    G4FieldTrack* ptrInterMedFT[max_depth+1];
+    G4FieldTrack* ptrInterMedFT[max_depth + 1];
 };
 
 #endif

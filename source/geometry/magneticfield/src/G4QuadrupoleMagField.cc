@@ -29,51 +29,49 @@
 // -------------------------------------------------------------------
 
 #include "G4QuadrupoleMagField.hh"
+
 #include "G4RotationMatrix.hh"
 
 namespace
 {
-   G4RotationMatrix IdentityMatrix; 
+G4RotationMatrix IdentityMatrix;
 }
 
 G4QuadrupoleMagField::G4QuadrupoleMagField(G4double pGradient)
 {
-   fGradient = pGradient;
-   fpMatrix  = &IdentityMatrix;
+  fGradient = pGradient;
+  fpMatrix = &IdentityMatrix;
 }
 
 // -------------------------------------------------------------------
 
-G4QuadrupoleMagField::G4QuadrupoleMagField(G4double pGradient,
-                                           const G4ThreeVector& pOrigin,
+G4QuadrupoleMagField::G4QuadrupoleMagField(G4double pGradient, const G4ThreeVector& pOrigin,
                                            G4RotationMatrix* pMatrix)
 {
-   fGradient = pGradient ;
-   fOrigin   = pOrigin ;
-   fpMatrix  = pMatrix ;
+  fGradient = pGradient;
+  fOrigin = pOrigin;
+  fpMatrix = pMatrix;
 }
 
 // -------------------------------------------------------------------
 
 G4Field* G4QuadrupoleMagField::Clone() const
 {
-   return new G4QuadrupoleMagField(fGradient, fOrigin, fpMatrix);
+  return new G4QuadrupoleMagField(fGradient, fOrigin, fpMatrix);
 }
 
 // -------------------------------------------------------------------
 
-void G4QuadrupoleMagField::GetFieldValue( const G4double y[],         // [7]
-                                                G4double B[]  ) const // [3]
+void G4QuadrupoleMagField::GetFieldValue(const G4double y[],  // [7]
+                                         G4double B[]) const  // [3]
 {
   //  with displaced origin and rotation
 
-  G4ThreeVector r_global = G4ThreeVector(y[0] - fOrigin.x(),
-                                         y[1] - fOrigin.y(),
-                                         y[2] - fOrigin.z());
-  
+  G4ThreeVector r_global =
+    G4ThreeVector(y[0] - fOrigin.x(), y[1] - fOrigin.y(), y[2] - fOrigin.z());
+
   const G4ThreeVector r_local = (*fpMatrix) * r_global;
-  const G4ThreeVector B_local( fGradient * r_local.y(),
-                               fGradient * r_local.x(), 0);
+  const G4ThreeVector B_local(fGradient * r_local.y(), fGradient * r_local.x(), 0);
   const G4ThreeVector B_global = fpMatrix->inverse() * B_local;
 
   B[0] = B_global.x();

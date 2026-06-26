@@ -31,8 +31,8 @@
 // messages to be displayed.
 // Original author: M.Asai, 2025
 // --------------------------------------------------------------------
-#ifndef G4ExceptionHandlerMessenger_hh
-#define G4ExceptionHandlerMessenger_hh 1
+#ifndef G4EXCEPTIONHANDLERMESSENGER_HH
+#define G4EXCEPTIONHANDLERMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -40,11 +40,13 @@
 class G4ExceptionHandler;
 class G4UIdirectory;
 class G4UIcmdWithAnInteger;
+class G4UIcmdWithAString;
 class G4UIcommand;
 
 class G4ExceptionHandlerMessenger : public G4UImessenger
 {
   public:
+
     G4ExceptionHandlerMessenger(G4ExceptionHandler* expH);
     ~G4ExceptionHandlerMessenger() override;
 
@@ -52,11 +54,14 @@ class G4ExceptionHandlerMessenger : public G4UImessenger
     G4String GetCurrentValue(G4UIcommand* command) override;
 
   private:
+
     G4ExceptionHandler* expHandler = nullptr;
 
     G4UIdirectory* EHDirectory = nullptr;
     G4UIcommand* nwCmd = nullptr;
     G4UIcmdWithAnInteger* tnwCmd = nullptr;
+    G4UIcommand* wfCmd = nullptr;
+    G4UIcmdWithAString* awfCmd = nullptr;
 };
 
 #endif

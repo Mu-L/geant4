@@ -46,21 +46,21 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include "G4hhIonisation.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4BraggNoDeltaModel.hh"
+
 #include "G4BetheBlochNoDeltaModel.hh"
-#include "G4ICRU73NoDeltaModel.hh"
-#include "G4UniversalFluctuation.hh"
-#include "G4IonFluctuations.hh"
-#include "G4UnitsTable.hh"
+#include "G4BraggNoDeltaModel.hh"
 #include "G4Electron.hh"
 #include "G4EmParameters.hh"
+#include "G4ICRU73NoDeltaModel.hh"
+#include "G4IonFluctuations.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4UnitsTable.hh"
+#include "G4UniversalFluctuation.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4hhIonisation::G4hhIonisation(const G4String& name)
-  : G4VEnergyLossProcess(name)
+G4hhIonisation::G4hhIonisation(const G4String& name) : G4VEnergyLossProcess(name)
 {
   SetVerboseLevel(1);
   SetProcessSubType(fIonisation);
@@ -69,8 +69,7 @@ G4hhIonisation::G4hhIonisation(const G4String& name)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4hhIonisation::~G4hhIonisation()
-{}
+G4hhIonisation::~G4hhIonisation() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -81,60 +80,72 @@ G4bool G4hhIonisation::IsApplicable(const G4ParticleDefinition& p)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double G4hhIonisation::MinPrimaryEnergy(const G4ParticleDefinition*,
-					  const G4Material*,
-					  G4double cut)
+G4double G4hhIonisation::MinPrimaryEnergy(const G4ParticleDefinition*, const G4Material*,
+                                          G4double cut)
 {
-  G4double x = 0.5*cut/electron_mass_c2;
-  G4double y = electron_mass_c2/mass;
-  G4double gam = x*y + std::sqrt((1. + x)*(1. + x*y*y));
-  return mass*(gam - 1.0);
+  G4double x = 0.5 * cut / electron_mass_c2;
+  G4double y = electron_mass_c2 / mass;
+  G4double gam = x * y + std::sqrt((1. + x) * (1. + x * y * y));
+  return mass * (gam - 1.0);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4hhIonisation::InitialiseEnergyLossProcess(
-         const G4ParticleDefinition* part,
-         const G4ParticleDefinition* bpart)
+void G4hhIonisation::InitialiseEnergyLossProcess(const G4ParticleDefinition* part,
+                                                 const G4ParticleDefinition* bpart)
 {
-  if(isInitialised) { return; }
+  if (isInitialised)
+  {
+    return;
+  }
 
   theParticle = part;
-  if(nullptr != bpart) { 
+  if (nullptr != bpart)
+  {
     G4cout << "G4hhIonisation::InitialiseEnergyLossProcess WARNING: no "
-	   << "base particle should be defined for the process "
-	   << GetProcessName() << G4endl; 
+           << "base particle should be defined for the process " << GetProcessName() << G4endl;
   }
-  mass  = theParticle->GetPDGMass();
-  ratio = electron_mass_c2/mass;
-  G4double eth = 2*CLHEP::MeV*mass/proton_mass_c2;
+  mass = theParticle->GetPDGMass();
+  ratio = electron_mass_c2 / mass;
+  G4double eth = 2 * CLHEP::MeV * mass / proton_mass_c2;
   flucModel = new G4IonFluctuations();
 
   G4EmParameters* param = G4EmParameters::Instance();
-  G4double emin = std::min(param->MinKinEnergy(), 0.1*eth);
-  G4double emax = std::max(param->MaxKinEnergy(), 100*eth);
+  G4double emin = std::min(param->MinKinEnergy(), 0.1 * eth);
+  G4double emax = std::max(param->MaxKinEnergy(), 100 * eth);
 
   SetMinKinEnergy(emin);
   SetMaxKinEnergy(emax);
-  G4int bin = G4lrint(param->NumberOfBinsPerDecade()*std::log10(emax/emin));
+  G4int bin = G4lrint(param->NumberOfBinsPerDecade() * std::log10(emax / emin));
   SetDEDXBinning(bin);
 
-  G4VEmModel* em = EmModel(0); 
-  if (nullptr == em) { 
-    if(part->GetPDGCharge() > 0.0) { em = new G4BraggNoDeltaModel(); }
-    else { em = new G4ICRU73NoDeltaModel(); }
+  G4VEmModel* em = EmModel(0);
+  if (nullptr == em)
+  {
+    if (part->GetPDGCharge() > 0.0)
+    {
+      em = new G4BraggNoDeltaModel();
+    }
+    else
+    {
+      em = new G4ICRU73NoDeltaModel();
+    }
   }
   em->SetLowEnergyLimit(emin);
   em->SetHighEnergyLimit(eth);
   AddEmModel(1, em, flucModel);
 
   em = EmModel(1);
-  if(nullptr == em) { em = new G4BetheBlochNoDeltaModel(); }
+  if (nullptr == em)
+  {
+    em = new G4BetheBlochNoDeltaModel();
+  }
   em->SetLowEnergyLimit(eth);
   em->SetHighEnergyLimit(emax);
   AddEmModel(1, em, flucModel);
 
-  if(verboseLevel>1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "G4hhIonisation is initialised" << G4endl;
   }
   isInitialised = true;

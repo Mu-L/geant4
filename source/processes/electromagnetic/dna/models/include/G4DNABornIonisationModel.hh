@@ -23,19 +23,19 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// Created 25.03.2025 V.Ivanchenko 
+// Created 25.03.2025 V.Ivanchenko
 // on base of the G4DNABornIonisationModel1 of S.Incerti & M.Karamitros
 //
 // Simulation of ionisation for electrons and protons
 //
 
-#ifndef G4DNABornIonisationModel_h
-#define G4DNABornIonisationModel_h 1
+#ifndef G4DNABORNIONISATIONMODEL_HH
+#define G4DNABORNIONISATIONMODEL_HH
 
+#include "G4DNAWaterIonisationStructure.hh"
+#include "G4ParticleChangeForGamma.hh"
 #include "G4VEmModel.hh"
 #include "G4VSIntegration.hh"
-#include "G4ParticleChangeForGamma.hh"
-#include "G4DNAWaterIonisationStructure.hh"
 
 class G4DNAChemistryManager;
 class G4VAtomDeexcitation;
@@ -44,102 +44,97 @@ class G4DNASamplingTable;
 
 class G4DNABornIonisationModel : public G4VEmModel, public G4VSIntegration
 {
-public:
+  public:
 
-  G4DNABornIonisationModel(const G4ParticleDefinition* p = nullptr,
-		           const G4String& nam = "DNABornIonisationModel");
+    G4DNABornIonisationModel(const G4ParticleDefinition* p = nullptr,
+                             const G4String& nam = "DNABornIonisationModel");
 
-  ~G4DNABornIonisationModel() override;
-   
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    ~G4DNABornIonisationModel() override;
 
-  G4double ProbabilityDensityFunction(G4double ekin) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  G4double CrossSectionPerVolume(const G4Material* material,
-				 const G4ParticleDefinition* p,
-				 G4double ekin,
-				 G4double emin,
-				 G4double emax) override;
+    G4double ProbabilityDensityFunction(G4double ekin) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin, G4double maxEnergy) override;
+    G4double CrossSectionPerVolume(const G4Material* material, const G4ParticleDefinition* p,
+                                   G4double ekin, G4double emin, G4double emax) override;
 
-  void StartTracking(G4Track*) override;
-  
-  void SelectFasterComputation(G4bool input) { fasterCode = input; }; 
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  void SelectStationary(G4bool input) { statCode = input; }; 
+    void StartTracking(G4Track*) override;
 
-  void SelectSPScaling(G4bool input) { spScaling = input; };
+    void SelectFasterComputation(G4bool input) { fasterCode = input; };
 
-  G4DNABornIonisationModel & operator=(const  G4DNABornIonisationModel &right) = delete;
-  G4DNABornIonisationModel(const  G4DNABornIonisationModel&) = delete;
+    void SelectStationary(G4bool input) { statCode = input; };
 
-private:
+    void SelectSPScaling(G4bool input) { spScaling = input; };
 
-  void LoadData();
+    G4DNABornIonisationModel& operator=(const G4DNABornIonisationModel& right) = delete;
+    G4DNABornIonisationModel(const G4DNABornIonisationModel&) = delete;
 
-  G4int SelectShell();
+  private:
 
-  G4double SampleCumulative();
+    void LoadData();
 
-  G4double SampleDifferential();
+    G4int SelectShell();
 
-protected:
+    G4double SampleCumulative();
 
-  G4ParticleChangeForGamma* fParticleChangeForGamma;
+    G4double SampleDifferential();
 
-private:
+  protected:
 
-  // Water density table
-  static const std::vector<G4double>* fpWaterDensity;
+    G4ParticleChangeForGamma* fParticleChangeForGamma;
 
-  // data
-  static G4DNACrossSectionDataSet* xsdata_e;
-  static G4DNACrossSectionDataSet* xsdata_p;
-  G4DNACrossSectionDataSet* xsdata{nullptr};
+  private:
 
-  // sampling data
-  static G4DNASamplingTable* sampling_e;
-  static G4DNASamplingTable* sampling_p;
-  G4DNASamplingTable* sampling;
-    
-  const G4ParticleDefinition* fParticle{nullptr};
-  const G4Track* fTrack{nullptr};
+    // Water density table
+    static const std::vector<G4double>* fpWaterDensity;
 
-  G4DNAChemistryManager* fChemistry{nullptr};
+    // data
+    static G4DNACrossSectionDataSet* xsdata_e;
+    static G4DNACrossSectionDataSet* xsdata_p;
+    G4DNACrossSectionDataSet* xsdata{nullptr};
 
-  // Deexcitation manager to produce fluo photons and e-
-  G4VAtomDeexcitation* fAtomDeexcitation;
+    // sampling data
+    static G4DNASamplingTable* sampling_e;
+    static G4DNASamplingTable* sampling_p;
+    G4DNASamplingTable* sampling;
 
-  // limits of x-section table
-  G4double fLowEnergy{0.0};
-  G4double fHighEnergy{0.0};
-  G4double fpLimitEnergy{0.0};
-  G4double feLimitEnergy{0.0};
+    const G4ParticleDefinition* fParticle{nullptr};
+    const G4Track* fTrack{nullptr};
 
-  // tracking cut
-  G4double fAbsorptionEnergy{0.0};
+    G4DNAChemistryManager* fChemistry{nullptr};
 
-  G4double fMass{0.0};
-  G4double fPrimaryEnergy{0.0};
-  G4double fMaxEnergy{0.0};
-  G4double fTemp[5] = {0.0};
+    // Deexcitation manager to produce fluo photons and e-
+    G4VAtomDeexcitation* fAtomDeexcitation;
 
-  G4int fSelectedShell{0};
-  G4int verbose{0};
+    // limits of x-section table
+    G4double fLowEnergy{0.0};
+    G4double fHighEnergy{0.0};
+    G4double fpLimitEnergy{0.0};
+    G4double feLimitEnergy{0.0};
 
-  G4bool isFirst{false};
-  G4bool isInitialised{false};
-  G4bool isElectron{false};
-  G4bool fasterCode{false};
-  G4bool statCode{false};
-  G4bool spScaling{true};
+    // tracking cut
+    G4double fAbsorptionEnergy{0.0};
 
-  // Final state  
-  G4DNAWaterIonisationStructure waterStructure;
+    G4double fMass{0.0};
+    G4double fPrimaryEnergy{0.0};
+    G4double fMaxEnergy{0.0};
+    G4double fTemp[5] = {0.0};
+
+    G4int fSelectedShell{0};
+    G4int verbose{0};
+
+    G4bool isFirst{false};
+    G4bool isInitialised{false};
+    G4bool isElectron{false};
+    G4bool fasterCode{false};
+    G4bool statCode{false};
+    G4bool spScaling{true};
+
+    // Final state
+    G4DNAWaterIonisationStructure waterStructure;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

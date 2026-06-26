@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4NeutronHPThermalScatteringNames_h
-#define G4NeutronHPThermalScatteringNames_h
+#ifndef G4NEUTRONHPTHERMALSCATTERINGNAMES_HH
+#define G4NEUTRONHPTHERMALSCATTERINGNAMES_HH
 
 #include "G4ParticleHPThermalScatteringNames.hh"
 using G4NeutronHPThermalScatteringNames = G4ParticleHPThermalScatteringNames;

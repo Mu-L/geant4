@@ -29,25 +29,24 @@
 // --------------------------------------------------------------------
 
 #include "G4tgrMaterialFactory.hh"
-#include "G4tgrUtils.hh"
-#include "G4tgrElementSimple.hh"
+
 #include "G4tgrElementFromIsotopes.hh"
-#include "G4tgrMaterialSimple.hh"
-#include "G4tgrMaterialMixture.hh"
+#include "G4tgrElementSimple.hh"
 #include "G4tgrFileReader.hh"
+#include "G4tgrMaterialMixture.hh"
+#include "G4tgrMaterialSimple.hh"
 #include "G4tgrMessenger.hh"
+#include "G4tgrUtils.hh"
 
 G4ThreadLocal G4tgrMaterialFactory* G4tgrMaterialFactory::theInstance = nullptr;
 
 // --------------------------------------------------------------------
-G4tgrMaterialFactory::G4tgrMaterialFactory()
-{
-}
+G4tgrMaterialFactory::G4tgrMaterialFactory() {}
 
 // --------------------------------------------------------------------
 G4tgrMaterialFactory* G4tgrMaterialFactory::GetInstance()
 {
-  if(theInstance == nullptr)
+  if (theInstance == nullptr)
   {
     theInstance = new G4tgrMaterialFactory;
   }
@@ -57,24 +56,21 @@ G4tgrMaterialFactory* G4tgrMaterialFactory::GetInstance()
 // --------------------------------------------------------------------
 G4tgrMaterialFactory::~G4tgrMaterialFactory()
 {
-  for(auto isotcite = theG4tgrIsotopes.cbegin();
-           isotcite != theG4tgrIsotopes.cend(); ++isotcite)
+  for (auto isotcite = theG4tgrIsotopes.cbegin(); isotcite != theG4tgrIsotopes.cend(); ++isotcite)
   {
-    delete(*isotcite).second;
+    delete (*isotcite).second;
   }
   theG4tgrIsotopes.clear();
 
-  for(auto elemcite = theG4tgrElements.cbegin();
-           elemcite != theG4tgrElements.cend(); ++elemcite)
+  for (auto elemcite = theG4tgrElements.cbegin(); elemcite != theG4tgrElements.cend(); ++elemcite)
   {
-    delete(*elemcite).second;
+    delete (*elemcite).second;
   }
   theG4tgrElements.clear();
 
-  for(auto matcite = theG4tgrMaterials.cbegin();
-           matcite != theG4tgrMaterials.cend(); ++matcite)
+  for (auto matcite = theG4tgrMaterials.cbegin(); matcite != theG4tgrMaterials.cend(); ++matcite)
   {
-    delete(*matcite).second;
+    delete (*matcite).second;
   }
   theG4tgrMaterials.clear();
   delete theInstance;
@@ -84,7 +80,7 @@ G4tgrMaterialFactory::~G4tgrMaterialFactory()
 G4tgrIsotope* G4tgrMaterialFactory::AddIsotope(const std::vector<G4String>& wl)
 {
   //---------- Look if isotope exists
-  if(FindIsotope(G4tgrUtils::GetString(wl[1])) != 0)
+  if (FindIsotope(G4tgrUtils::GetString(wl[1])) != 0)
   {
     ErrorAlreadyExists("isotope", wl);
   }
@@ -96,11 +92,10 @@ G4tgrIsotope* G4tgrMaterialFactory::AddIsotope(const std::vector<G4String>& wl)
 }
 
 // --------------------------------------------------------------------
-G4tgrElementSimple*
-G4tgrMaterialFactory::AddElementSimple(const std::vector<G4String>& wl)
+G4tgrElementSimple* G4tgrMaterialFactory::AddElementSimple(const std::vector<G4String>& wl)
 {
   //---------- Look if element exists
-  if(FindElement(G4tgrUtils::GetString(wl[1])) != 0)
+  if (FindElement(G4tgrUtils::GetString(wl[1])) != 0)
   {
     ErrorAlreadyExists("element", wl);
   }
@@ -116,7 +111,7 @@ G4tgrElementFromIsotopes*
 G4tgrMaterialFactory::AddElementFromIsotopes(const std::vector<G4String>& wl)
 {
   //---------- Look if element exists
-  if(FindElement(G4tgrUtils::GetString(wl[1])) != 0)
+  if (FindElement(G4tgrUtils::GetString(wl[1])) != 0)
   {
     ErrorAlreadyExists("element", wl);
   }
@@ -128,18 +123,17 @@ G4tgrMaterialFactory::AddElementFromIsotopes(const std::vector<G4String>& wl)
 }
 
 // --------------------------------------------------------------------
-G4tgrMaterialSimple*
-G4tgrMaterialFactory::AddMaterialSimple(const std::vector<G4String>& wl)
+G4tgrMaterialSimple* G4tgrMaterialFactory::AddMaterialSimple(const std::vector<G4String>& wl)
 {
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 2)
+  if (G4tgrMessenger::GetVerboseLevel() >= 2)
   {
     G4cout << " G4tgrMaterialFactory::AddMaterialSimple" << wl[1] << G4endl;
   }
 #endif
 
   //---------- Look if material exists
-  if(FindMaterial(G4tgrUtils::GetString(wl[1])) != 0)
+  if (FindMaterial(G4tgrUtils::GetString(wl[1])) != 0)
   {
     ErrorAlreadyExists("material simple", wl);
   }
@@ -153,19 +147,18 @@ G4tgrMaterialFactory::AddMaterialSimple(const std::vector<G4String>& wl)
 }
 
 // --------------------------------------------------------------------
-G4tgrMaterialMixture*
-G4tgrMaterialFactory::AddMaterialMixture(const std::vector<G4String>& wl,
-                                         const G4String& mixtType)
+G4tgrMaterialMixture* G4tgrMaterialFactory::AddMaterialMixture(const std::vector<G4String>& wl,
+                                                               const G4String& mixtType)
 {
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 2)
+  if (G4tgrMessenger::GetVerboseLevel() >= 2)
   {
     G4cout << " G4tgrMaterialFactory::AddMaterialMixture " << wl[1] << G4endl;
   }
 #endif
 
   //---------- Look if material already exists
-  if(FindMaterial(G4tgrUtils::GetString(wl[1])) != 0)
+  if (FindMaterial(G4tgrUtils::GetString(wl[1])) != 0)
   {
     ErrorAlreadyExists("material mixture", wl);
   }
@@ -183,7 +176,7 @@ G4tgrMaterialFactory::AddMaterialMixture(const std::vector<G4String>& wl,
 G4tgrIsotope* G4tgrMaterialFactory::FindIsotope(const G4String& name) const
 {
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 3)
+  if (G4tgrMessenger::GetVerboseLevel() >= 3)
   {
     G4cout << " G4tgrMaterialFactory::FindIsotope() - " << name << G4endl;
   }
@@ -191,17 +184,16 @@ G4tgrIsotope* G4tgrMaterialFactory::FindIsotope(const G4String& name) const
 
   G4mstgrisot::const_iterator cite;
   cite = theG4tgrIsotopes.find(name);
-  if(cite == theG4tgrIsotopes.cend())
+  if (cite == theG4tgrIsotopes.cend())
   {
     return nullptr;
   }
   else
   {
 #ifdef G4VERBOSE
-    if(G4tgrMessenger::GetVerboseLevel() >= 3)
+    if (G4tgrMessenger::GetVerboseLevel() >= 3)
     {
-      G4cout << " G4tgrIsotope found: " << ((*cite).second)->GetName()
-             << G4endl;
+      G4cout << " G4tgrIsotope found: " << ((*cite).second)->GetName() << G4endl;
     }
 #endif
     return (*cite).second;
@@ -212,25 +204,24 @@ G4tgrIsotope* G4tgrMaterialFactory::FindIsotope(const G4String& name) const
 G4tgrElement* G4tgrMaterialFactory::FindElement(const G4String& name) const
 {
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 3)
+  if (G4tgrMessenger::GetVerboseLevel() >= 3)
   {
     G4cout << " G4tgrMaterialFactory::FindElement() - " << name << G4endl;
   }
 #endif
   G4mstgrelem::const_iterator cite;
   cite = theG4tgrElements.find(name);
-  if(cite == theG4tgrElements.cend())
+  if (cite == theG4tgrElements.cend())
   {
     return nullptr;
   }
   else
   {
 #ifdef G4VERBOSE
-    if(G4tgrMessenger::GetVerboseLevel() >= 3)
+    if (G4tgrMessenger::GetVerboseLevel() >= 3)
     {
       DumpElementList();
-      G4cout << " G4tgrElement found: " << ((*cite).second)->GetName()
-             << G4endl;
+      G4cout << " G4tgrElement found: " << ((*cite).second)->GetName() << G4endl;
     }
 #endif
     return (*cite).second;
@@ -241,14 +232,14 @@ G4tgrElement* G4tgrMaterialFactory::FindElement(const G4String& name) const
 G4tgrMaterial* G4tgrMaterialFactory::FindMaterial(const G4String& name) const
 {
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 3)
+  if (G4tgrMessenger::GetVerboseLevel() >= 3)
   {
     G4cout << " G4tgrMaterialFactory::FindMaterial() - " << name << G4endl;
   }
 #endif
   G4mstgrmate::const_iterator cite;
   cite = theG4tgrMaterials.find(name);
-  if(cite == theG4tgrMaterials.cend())
+  if (cite == theG4tgrMaterials.cend())
   {
     return nullptr;
   }
@@ -262,8 +253,7 @@ G4tgrMaterial* G4tgrMaterialFactory::FindMaterial(const G4String& name) const
 void G4tgrMaterialFactory::DumpIsotopeList() const
 {
   G4cout << " @@@@@@@@@@@@@@@@ DUMPING G4tgrIsotope's List " << G4endl;
-  for(auto cite = theG4tgrIsotopes.cbegin();
-           cite != theG4tgrIsotopes.cend(); ++cite)
+  for (auto cite = theG4tgrIsotopes.cbegin(); cite != theG4tgrIsotopes.cend(); ++cite)
   {
     G4cout << " ISOT: " << (*cite).second->GetName() << G4endl;
   }
@@ -273,8 +263,7 @@ void G4tgrMaterialFactory::DumpIsotopeList() const
 void G4tgrMaterialFactory::DumpElementList() const
 {
   G4cout << " @@@@@@@@@@@@@@@@ DUMPING G4tgrElement's List " << G4endl;
-  for(auto cite = theG4tgrElements.cbegin();
-           cite != theG4tgrElements.cend(); ++cite)
+  for (auto cite = theG4tgrElements.cbegin(); cite != theG4tgrElements.cend(); ++cite)
   {
     G4cout << " ELEM: " << (*cite).second->GetName() << G4endl;
   }
@@ -284,8 +273,7 @@ void G4tgrMaterialFactory::DumpElementList() const
 void G4tgrMaterialFactory::DumpMaterialList() const
 {
   G4cout << " @@@@@@@@@@@@@@@@ DUMPING G4tgrMaterial's List " << G4endl;
-  for(auto cite = theG4tgrMaterials.cbegin();
-           cite != theG4tgrMaterials.cend(); ++cite)
+  for (auto cite = theG4tgrMaterials.cbegin(); cite != theG4tgrMaterials.cend(); ++cite)
   {
     G4tgrMaterial* mate = (*cite).second;
     G4cout << " MATE: " << mate->GetName() << " Type: " << mate->GetType()
@@ -299,16 +287,15 @@ void G4tgrMaterialFactory::ErrorAlreadyExists(const G4String& object,
                                               const G4bool bNoRepeating)
 {
   G4String msg = object + G4String(" repeated");
-  if(bNoRepeating)
+  if (bNoRepeating)
   {
     G4tgrUtils::DumpVS(wl, (G4String("!!!! EXITING: ") + msg).c_str());
-    G4Exception("G4tgrMaterialFactory", "FatalError", FatalException,
-                "Aborting...");
+    G4Exception("G4tgrMaterialFactory", "FatalError", FatalException, "Aborting...");
   }
   else
   {
 #ifdef G4VERBOSE
-    if(G4tgrMessenger::GetVerboseLevel() >= 1)
+    if (G4tgrMessenger::GetVerboseLevel() >= 1)
     {
       G4tgrUtils::DumpVS(wl, (G4String("!! WARNING: ") + msg).c_str());
     }

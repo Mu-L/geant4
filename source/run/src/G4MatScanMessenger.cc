@@ -31,6 +31,7 @@
 #include "G4MatScanMessenger.hh"
 
 #include "G4MaterialScanner.hh"
+#include "G4ParticleTable.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4ThreeVector.hh"
 #include "G4Tokenizer.hh"
@@ -38,8 +39,8 @@
 #include "G4UIcmdWith3VectorAndUnit.hh"
 #include "G4UIcmdWithABool.hh"
 #include "G4UIcmdWithAString.hh"
-#include "G4UIcmdWithoutParameter.hh"
 #include "G4UIcmdWithAnInteger.hh"
+#include "G4UIcmdWithoutParameter.hh"
 #include "G4UIcommand.hh"
 #include "G4UIdirectory.hh"
 #include "G4UIparameter.hh"
@@ -146,15 +147,56 @@ G4MatScanMessenger::G4MatScanMessenger(G4MaterialScanner* p1)
   regionCmd->SetParameterName("region", true);
   regionCmd->SetDefaultValue("DefaultRegionForTheWorld");
   regionCmd->SetToBeBroadcasted(false);
-  
+
+  thinCmd = new G4UIcommand("/control/matScan/ignoreThinMaterials", this);
+  thinCmd->SetGuidance("Ignore thin density materials from accumulation of mass length,");
+  thinCmd->SetGuidance("radiation length and interaction length.");
+  thinCmd->SetGuidance("If material is specified, material whose density is equal to or");
+  thinCmd->SetGuidance("thinner than the specified material is not accumulated.");
+  thinCmd->SetGuidance("If material is not specified, G4_AIR is used.");
+  thinCmd->SetGuidance("Specifying material must be defined in G4NISTMaterialManager");
+  thinCmd->SetGuidance("or already defined in the detector construction.");
+  par = new G4UIparameter("flag", 'b', true);
+  par->SetDefaultValue(true);
+  thinCmd->SetParameter(par);
+  par = new G4UIparameter("material", 's', true);
+  par->SetDefaultValue("G4_AIR");
+  thinCmd->SetParameter(par);
+  thinCmd->SetToBeBroadcasted(false);
+
   verboseCmd = new G4UIcmdWithAnInteger("/control/matScan/verbose", this);
   verboseCmd->SetGuidance("Set verbose level of material scan");
   verboseCmd->SetGuidance("0: default, properties integrated over the scan");
   verboseCmd->SetGuidance("1: integrated properties per material");
   verboseCmd->SetGuidance("2: detailed properties per material crossed");
-  verboseCmd->SetParameterName("verbose_level", false);
+  verboseCmd->SetParameterName("verbose_level", true);
   verboseCmd->SetDefaultValue(0);
   verboseCmd->SetToBeBroadcasted(false);
+
+  defPartCmd = new G4UIcommand("/control/matScan/particleForIntLength", this);
+  defPartCmd->SetGuidance("Alternate particle type and its kinetic energy");
+  defPartCmd->SetGuidance("Hadronic inelastic cross-section, and hense the hadronic");
+  defPartCmd->SetGuidance("interaction length depend on particle type and its kinetic");
+  defPartCmd->SetGuidance("energy. By default the material scanner uses 1 GeV/c proton.");
+  defPartCmd->SetGuidance("This command alternates the particle type and its kinetic energy.");
+  par = new G4UIparameter("pName", 's', false);
+  defPartCmd->SetParameter(par);
+  par = new G4UIparameter("eKin", 'd', false);
+  defPartCmd->SetParameter(par);
+  par = new G4UIparameter("unit", 's', true);
+  par->SetDefaultUnit("GeV");
+  defPartCmd->SetParameter(par);
+  defPartCmd->SetToBeBroadcasted(false);
+
+  oFileCmd = new G4UIcmdWithAString("/control/matScan/outputFile", this);
+  oFileCmd->SetGuidance("Define the file name of the material scanner output");
+  oFileCmd->SetGuidance("If this command is not used, the output is shown on the display");
+  oFileCmd->SetGuidance("To reset the setting, use \"**Screen**\" as the file name.");
+  oFileCmd->SetGuidance("If more than one scan is made without changing the file name,");
+  oFileCmd->SetGuidance("results are appended to the file.");
+  oFileCmd->SetParameterName("fName", true);
+  oFileCmd->SetDefaultValue("**Screen**");
+  oFileCmd->SetToBeBroadcasted(false);
 }
 
 // --------------------------------------------------------------------
@@ -168,6 +210,10 @@ G4MatScanMessenger::~G4MatScanMessenger()
   delete eyePosCmd;
   delete regSenseCmd;
   delete regionCmd;
+  delete thinCmd;
+  delete verboseCmd;
+  delete defPartCmd;
+  delete oFileCmd;
   delete msDirectory;
 }
 
@@ -175,27 +221,32 @@ G4MatScanMessenger::~G4MatScanMessenger()
 G4String G4MatScanMessenger::GetCurrentValue(G4UIcommand* command)
 {
   G4String currentValue;
-  if (command == thetaCmd) {
+  if (command == thetaCmd)
+  {
     currentValue = thetaCmd->ConvertToString(theScanner->GetNTheta());
     currentValue += " ";
     currentValue += thetaCmd->ConvertToString((theScanner->GetThetaMin()) / deg);
     currentValue += " ";
     currentValue += thetaCmd->ConvertToString((theScanner->GetThetaSpan()) / deg);
   }
-  else if (command == phiCmd) {
+  else if (command == phiCmd)
+  {
     currentValue = phiCmd->ConvertToString(theScanner->GetNPhi());
     currentValue += " ";
     currentValue += phiCmd->ConvertToString((theScanner->GetPhiMin()) / deg);
     currentValue += " ";
     currentValue += phiCmd->ConvertToString((theScanner->GetPhiSpan()) / deg);
   }
-  else if (command == eyePosCmd) {
+  else if (command == eyePosCmd)
+  {
     currentValue = eyePosCmd->ConvertToString(theScanner->GetEyePosition(), "m");
   }
-  else if (command == regSenseCmd) {
+  else if (command == regSenseCmd)
+  {
     currentValue = regSenseCmd->ConvertToString(theScanner->GetRegionSensitive());
   }
-  else if (command == regionCmd) {
+  else if (command == regionCmd)
+  {
     currentValue = theScanner->GetRegionName();
   }
   return currentValue;
@@ -204,10 +255,12 @@ G4String G4MatScanMessenger::GetCurrentValue(G4UIcommand* command)
 // --------------------------------------------------------------------
 void G4MatScanMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
-  if (command == scanCmd) {
+  if (command == scanCmd)
+  {
     theScanner->Scan();
   }
-  else if (command == thetaCmd) {
+  else if (command == thetaCmd)
+  {
     G4Tokenizer next(newValue);
     G4int nbin = StoI(next());
     G4double thetaMin = StoD(next());
@@ -219,7 +272,8 @@ void G4MatScanMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     theScanner->SetThetaMin(thetaMin);
     theScanner->SetThetaSpan(thetaSpan);
   }
-  else if (command == phiCmd) {
+  else if (command == phiCmd)
+  {
     G4Tokenizer next(newValue);
     G4int nbin = StoI(next());
     G4double phiMin = StoD(next());
@@ -231,20 +285,46 @@ void G4MatScanMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     theScanner->SetPhiMin(phiMin);
     theScanner->SetPhiSpan(phiSpan);
   }
-  else if (command == eyePosCmd) {
+  else if (command == eyePosCmd)
+  {
     theScanner->SetEyePosition(eyePosCmd->GetNew3VectorValue(newValue));
   }
-  else if (command == regSenseCmd) {
+  else if (command == regSenseCmd)
+  {
     theScanner->SetRegionSensitive(regSenseCmd->GetNewBoolValue(newValue));
   }
-  else if (command == regionCmd) {
-    if (theScanner->SetRegionName(newValue)) theScanner->SetRegionSensitive(true);
+  else if (command == regionCmd)
+  {
+    if (theScanner->SetRegionName(newValue))
+    {
+      theScanner->SetRegionSensitive(true);
+    }
+    else
+    {
+      G4ExceptionDescription ed;
+      ed << "Region <" << newValue << "> is not defined. Command ignored.";
+      command->CommandFailed(ed);
+    }
   }
-  else if(command == verboseCmd)
+  else if (command == verboseCmd)
   {
     theScanner->SetVerbosity(StoI(newValue));
   }
-  else if (command == singleCmd || command == single2Cmd) {
+  else if (command == thinCmd)
+  {
+    G4Tokenizer next(newValue);
+    G4bool flg = StoB(next());
+    G4String mat = next();
+    auto rv = theScanner->SetThinMaterial(flg, mat);
+    if (!rv)
+    {
+      G4ExceptionDescription ed;
+      ed << "Material <" << mat << "> is not defined. Command ignored.";
+      command->CommandFailed(ed);
+    }
+  }
+  else if (command == singleCmd || command == single2Cmd)
+  {
     G4int ntheta = theScanner->GetNTheta();
     G4double thetaMin = theScanner->GetThetaMin();
     G4double thetaSpan = theScanner->GetThetaSpan();
@@ -254,7 +334,8 @@ void G4MatScanMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 
     G4double theta = 0.;
     G4double phi = 0.;
-    if (command == singleCmd) {
+    if (command == singleCmd)
+    {
       G4Tokenizer next(newValue);
       theta = StoD(next());
       phi = StoD(next());
@@ -262,7 +343,8 @@ void G4MatScanMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
       theta *= singleCmd->ValueOf(unit);
       phi *= singleCmd->ValueOf(unit);
     }
-    else if (command == single2Cmd) {
+    else if (command == single2Cmd)
+    {
       G4ThreeVector v = single2Cmd->GetNew3VectorValue(newValue);
       theta = 90. * deg - v.theta();
       phi = v.phi();
@@ -281,5 +363,28 @@ void G4MatScanMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     theScanner->SetNPhi(nphi);
     theScanner->SetPhiMin(phiMin);
     theScanner->SetPhiSpan(phiSpan);
+  }
+  else if (command == defPartCmd)
+  {
+    G4Tokenizer next(newValue);
+    G4String pName = next();
+    auto* ptcl = G4ParticleTable::GetParticleTable()->FindParticle(pName);
+    if (ptcl == nullptr)
+    {
+      G4ExceptionDescription ed;
+      ed << "Particle <" << pName << "> is not found. Command ignored.";
+      command->CommandFailed(ed);
+    }
+    else
+    {
+      G4double eKin = StoD(next());
+      G4String unit = next();
+      eKin *= defPartCmd->ValueOf(unit);
+      theScanner->SetDetDefaultParticle(ptcl, eKin);
+    }
+  }
+  else if (command == oFileCmd)
+  {
+    theScanner->SetOutFile(newValue);
   }
 }

@@ -38,70 +38,71 @@
 //
 // --------------------------------------------------------------------
 
-#ifndef G4VSIntegration_HH
-#define G4VSIntegration_HH 1
+#ifndef G4VSINTEGRATION_HH
+#define G4VSINTEGRATION_HH
 
 #include "globals.hh"
 
 class G4VSIntegration
 {
- public:
-  G4VSIntegration() = default;
+  public:
 
-  virtual ~G4VSIntegration() = default;
+    G4VSIntegration() = default;
 
-  // this method should be implemented in a consumer class
-  virtual G4double ProbabilityDensityFunction(G4double) = 0;
+    virtual ~G4VSIntegration() = default;
 
-  virtual const G4String& ModelName() const;
+    // this method should be implemented in a consumer class
+    virtual G4double ProbabilityDensityFunction(G4double) = 0;
 
-  // initialisation before run called once
-  // accuracy - accuracy of integration
-  // fact1 - value < 1 to define energy E1: Pmax*fact = P(E1)
-  //         and E2: P(E1)*fact = P(E2)
-  // fact2 - value > 1 provides tolerance for max cross section
-  // deltaE - the default step in energy
-  // dmin, dmax - min and max values of step
-  void InitialiseIntegrator(G4double accuracy, G4double fact1, G4double fact2,
-			    G4double de, G4double dmin, G4double dmax);
+    virtual const G4String& ModelName() const;
 
-  // compute integral of probability density function
-  G4double ComputeIntegral(const G4double emin, const G4double  emax);
+    // initialisation before run called once
+    // accuracy - accuracy of integration
+    // fact1 - value < 1 to define energy E1: Pmax*fact = P(E1)
+    //         and E2: P(E1)*fact = P(E2)
+    // fact2 - value > 1 provides tolerance for max cross section
+    // deltaE - the default step in energy
+    // dmin, dmax - min and max values of step
+    void InitialiseIntegrator(G4double accuracy, G4double fact1, G4double fact2, G4double de,
+                              G4double dmin, G4double dmax);
 
-  // sample value according to probability density function
-  // it is assumed that ComputeIntegral(emin, emax) was executed 
-  G4double SampleValue();
+    // compute integral of probability density function
+    G4double ComputeIntegral(const G4double emin, const G4double emax);
 
-  G4VSIntegration(const G4VSIntegration&) = delete;
-  G4VSIntegration& operator=(const G4VSIntegration&) = delete;
-  G4bool operator==(const G4VSIntegration &right) const = delete;
-  G4bool operator!=(const G4VSIntegration &right) const = delete;
+    // sample value according to probability density function
+    // it is assumed that ComputeIntegral(emin, emax) was executed
+    G4double SampleValue();
 
-  void SetVerbose(G4int verb) { fVerbose = verb; }
+    G4VSIntegration(const G4VSIntegration&) = delete;
+    G4VSIntegration& operator=(const G4VSIntegration&) = delete;
+    G4bool operator==(const G4VSIntegration& right) const = delete;
+    G4bool operator!=(const G4VSIntegration& right) const = delete;
 
-private:
+    void SetVerbose(G4int verb) { fVerbose = verb; }
 
-  G4double fAcc{0.001};    // accuracy of integration
-  G4double fMinDelta{0.1}; // minimal step integration
-  G4double fMaxDelta{2.0}; // maximal step integration
-  G4double fDelta{1.0};    // the default step
-  G4double fFactor1{0.25};
-  G4double fFactor2{1.05};
+  private:
 
-  // parameters describing function
-  G4double fEmin{0.0};
-  G4double fEmax{0.0};
-  G4double fE1{0.0};
-  G4double fP1{0.0};
-  G4double fE2{0.0}; 
-  G4double fP2{0.0};
-  G4double fPmax{0.0};
+    G4double fAcc{0.001};  // accuracy of integration
+    G4double fMinDelta{0.1};  // minimal step integration
+    G4double fMaxDelta{2.0};  // maximal step integration
+    G4double fDelta{1.0};  // the default step
+    G4double fFactor1{0.25};
+    G4double fFactor2{1.05};
 
-  G4int fVerbose{0};
-  G4int fWarnLimit{4};
-  G4int fnWarn{0};
+    // parameters describing function
+    G4double fEmin{0.0};
+    G4double fEmax{0.0};
+    G4double fE1{0.0};
+    G4double fP1{0.0};
+    G4double fE2{0.0};
+    G4double fP2{0.0};
+    G4double fPmax{0.0};
 
-  G4String dummy{""};
+    G4int fVerbose{0};
+    G4int fWarnLimit{4};
+    G4int fnWarn{0};
+
+    G4String dummy{""};
 };
 
 #endif

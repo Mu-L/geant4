@@ -42,32 +42,30 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
 #include "G4CrossSectionDataStore.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4UnitsTable.hh"
-#include "Randomize.hh"
-#include "G4Nucleus.hh"
 
 #include "G4DynamicParticle.hh"
-#include "G4Isotope.hh"
 #include "G4Element.hh"
+#include "G4HadronicParameters.hh"
+#include "G4Isotope.hh"
 #include "G4Material.hh"
 #include "G4MaterialTable.hh"
 #include "G4NistManager.hh"
-#include "G4HadronicParameters.hh"
+#include "G4Nucleus.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4UnitsTable.hh"
+#include "Randomize.hh"
+
 #include <algorithm>
 #include <typeinfo>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-G4CrossSectionDataStore::G4CrossSectionDataStore()
-  : nist(G4NistManager::Instance())
-{}
+G4CrossSectionDataStore::G4CrossSectionDataStore() : nist(G4NistManager::Instance()) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-G4double 
-G4CrossSectionDataStore::ComputeCrossSection(const G4DynamicParticle* dp,
-					     const G4Material* mat)
+G4double G4CrossSectionDataStore::ComputeCrossSection(const G4DynamicParticle* dp,
+                                                      const G4Material* mat)
 {
   currentMaterial = mat;
   matParticle = dp->GetDefinition();
@@ -77,12 +75,15 @@ G4CrossSectionDataStore::ComputeCrossSection(const G4DynamicParticle* dp,
   std::size_t nElements = mat->GetNumberOfElements();
   const G4double* nAtomsPerVolume = mat->GetVecNbOfAtomsPerVolume();
 
-  if(xsecelm.size() < nElements) { xsecelm.resize(nElements); }
+  if (xsecelm.size() < nElements)
+  {
+    xsecelm.resize(nElements);
+  }
 
-  for(G4int i=0; i<(G4int)nElements; ++i) {
-    G4double xs = 
-      nAtomsPerVolume[i]*GetCrossSection(dp, mat->GetElement(i), mat);
-    matCrossSection += std::max(xs, 0.0); 
+  for (G4int i = 0; i < (G4int)nElements; ++i)
+  {
+    G4double xs = nAtomsPerVolume[i] * GetCrossSection(dp, mat->GetElement(i), mat);
+    matCrossSection += std::max(xs, 0.0);
     xsecelm[i] = matCrossSection;
   }
   return matCrossSection;
@@ -90,16 +91,14 @@ G4CrossSectionDataStore::ComputeCrossSection(const G4DynamicParticle* dp,
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-G4double G4CrossSectionDataStore::GetCrossSection(const G4DynamicParticle* dp,
-                                                  const G4Element* elm,
+G4double G4CrossSectionDataStore::GetCrossSection(const G4DynamicParticle* dp, const G4Element* elm,
                                                   const G4Material* mat)
 {
   // first check the most last cross section
-  G4int i = nDataSetList-1;
+  G4int i = nDataSetList - 1;
   G4int Z = elm->GetZasInt();
 
-  if(elm->GetNaturalAbundanceFlag() &&
-     dataSetList[i]->IsElementApplicable(dp, Z, mat))
+  if (elm->GetNaturalAbundanceFlag() && dataSetList[i]->IsElementApplicable(dp, Z, mat))
   {
     // element wise cross section
     return dataSetList[i]->GetElementCrossSection(dp, Z, mat);
@@ -114,95 +113,94 @@ G4double G4CrossSectionDataStore::GetCrossSection(const G4DynamicParticle* dp,
   G4double sigma = 0.0;
 
   // isotope and element wise cross sections
-  for(G4int j = 0; j < nIso; ++j) 
+  for (G4int j = 0; j < nIso; ++j)
   {
     const G4Isotope* iso = elm->GetIsotope(j);
-    sigma += abundVector[j] *
-      GetIsoCrossSection(dp, Z, iso->GetN(), iso, elm, mat, i);
+    sigma += abundVector[j] * GetIsoCrossSection(dp, Z, iso->GetN(), iso, elm, mat, i);
   }
   return sigma;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-G4double
-G4CrossSectionDataStore::GetIsoCrossSection(const G4DynamicParticle* dp,
-					    G4int Z, G4int A, 
-					    const G4Isotope* iso,
-					    const G4Element* elm,
-					    const G4Material* mat, 
-					    G4int idx)
+G4double G4CrossSectionDataStore::GetIsoCrossSection(const G4DynamicParticle* dp, G4int Z, G4int A,
+                                                     const G4Isotope* iso, const G4Element* elm,
+                                                     const G4Material* mat, G4int idx)
 {
-  // this methods is called after the check that dataSetList[idx] 
+  // this methods is called after the check that dataSetList[idx]
   // depend on isotopes, so first isotopes are checked
-  if(dataSetList[idx]->IsIsoApplicable(dp, Z, A, elm, mat) ) {
+  if (dataSetList[idx]->IsIsoApplicable(dp, Z, A, elm, mat))
+  {
     return dataSetList[idx]->GetIsoCrossSection(dp, Z, A, iso, elm, mat);
   }
 
   // no isotope wise cross section - check other datasets
-  for (G4int j = nDataSetList-1; j >= 0; --j) {
-    if(dataSetList[j]->IsElementApplicable(dp, Z, mat)) {
+  for (G4int j = nDataSetList - 1; j >= 0; --j)
+  {
+    if (dataSetList[j]->IsElementApplicable(dp, Z, mat))
+    {
       return dataSetList[j]->GetElementCrossSection(dp, Z, mat);
-    } else if (dataSetList[j]->IsIsoApplicable(dp, Z, A, elm, mat)) {
+    }
+    else if (dataSetList[j]->IsIsoApplicable(dp, Z, A, elm, mat))
+    {
       return dataSetList[j]->GetIsoCrossSection(dp, Z, A, iso, elm, mat);
     }
   }
   G4ExceptionDescription ed;
-  ed << "No isotope cross section found for " 
-     << dp->GetDefinition()->GetParticleName()
-     << " off target Element " << elm->GetName() 
-     << " Z= " << Z << " A= " << A;
-  if(nullptr != mat) ed << " from " << mat->GetName();
-  ed << " E(MeV)=" << dp->GetKineticEnergy()/MeV << G4endl; 
-  G4Exception("G4CrossSectionDataStore::GetIsoCrossSection", "had001", 
-              FatalException, ed);
+  ed << "No isotope cross section found for " << dp->GetDefinition()->GetParticleName()
+     << " off target Element " << elm->GetName() << " Z= " << Z << " A= " << A;
+  if (nullptr != mat) ed << " from " << mat->GetName();
+  ed << " E(MeV)=" << dp->GetKineticEnergy() / MeV << G4endl;
+  G4Exception("G4CrossSectionDataStore::GetIsoCrossSection", "had001", FatalException, ed);
   return 0.0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-G4double
-G4CrossSectionDataStore::GetCrossSection(const G4DynamicParticle* dp,
-                                         G4int Z, G4int A,
-					 const G4Isotope* iso,
-                                         const G4Element* elm,
-					 const G4Material* mat)
+G4double G4CrossSectionDataStore::GetCrossSection(const G4DynamicParticle* dp, G4int Z, G4int A,
+                                                  const G4Isotope* iso, const G4Element* elm,
+                                                  const G4Material* mat)
 {
-  for (G4int i = nDataSetList-1; i >= 0; --i) {
-    if (dataSetList[i]->IsIsoApplicable(dp, Z, A, elm, mat) ) {
+  for (G4int i = nDataSetList - 1; i >= 0; --i)
+  {
+    if (dataSetList[i]->IsIsoApplicable(dp, Z, A, elm, mat))
+    {
       return dataSetList[i]->GetIsoCrossSection(dp, Z, A, iso, elm, mat);
-    } else if(dataSetList[i]->IsElementApplicable(dp, Z, mat)) {
+    }
+    else if (dataSetList[i]->IsElementApplicable(dp, Z, mat))
+    {
       return dataSetList[i]->GetElementCrossSection(dp, Z, mat);
     }
   }
   G4ExceptionDescription ed;
-  ed << "No isotope cross section found for " 
-     << dp->GetDefinition()->GetParticleName()
-     << " off target Element " << elm->GetName() 
-     << " Z= " << Z << " A= " << A;
-  if(nullptr != mat) ed << " from " << mat->GetName();
-  ed << " E(MeV)=" << dp->GetKineticEnergy()/MeV << G4endl; 
-  G4Exception("G4CrossSectionDataStore::GetCrossSection", "had001", 
-              FatalException, ed);
+  ed << "No isotope cross section found for " << dp->GetDefinition()->GetParticleName()
+     << " off target Element " << elm->GetName() << " Z= " << Z << " A= " << A;
+  if (nullptr != mat) ed << " from " << mat->GetName();
+  ed << " E(MeV)=" << dp->GetKineticEnergy() / MeV << G4endl;
+  G4Exception("G4CrossSectionDataStore::GetCrossSection", "had001", FatalException, ed);
   return 0.0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-const G4Element*
-G4CrossSectionDataStore::SampleZandA(const G4DynamicParticle* dp,
-                                     const G4Material* mat,
-				     G4Nucleus& target)
+const G4Element* G4CrossSectionDataStore::SampleZandA(const G4DynamicParticle* dp,
+                                                      const G4Material* mat, G4Nucleus& target)
 {
-  if(nullptr != forcedElement) { return forcedElement; }
+  if (nullptr != forcedElement)
+  {
+    return forcedElement;
+  }
   std::size_t nElements = mat->GetNumberOfElements();
   const G4Element* anElement = mat->GetElement(0);
 
-  // select element from a compound 
-  if(1 < nElements) {
-    G4double cross = matCrossSection*G4UniformRand();
-    for(G4int i=0; i<(G4int)nElements; ++i) {
-      if(cross <= xsecelm[i]) {
+  // select element from a compound
+  if (1 < nElements)
+  {
+    G4double cross = matCrossSection * G4UniformRand();
+    for (G4int i = 0; i < (G4int)nElements; ++i)
+    {
+      if (cross <= xsecelm[i])
+      {
         anElement = mat->GetElement(i);
         break;
       }
@@ -212,9 +210,9 @@ G4CrossSectionDataStore::SampleZandA(const G4DynamicParticle* dp,
   G4int Z = anElement->GetZasInt();
   const G4Isotope* iso = nullptr;
 
-  G4int i = nDataSetList-1;
-  if (dataSetList[i]->IsElementApplicable(dp, Z, mat)) {
-
+  G4int i = nDataSetList - 1;
+  if (dataSetList[i]->IsElementApplicable(dp, Z, mat))
+  {
     //----------------------------------------------------------------
     // element-wise cross section
     // isotope cross section is not computed
@@ -223,13 +221,14 @@ G4CrossSectionDataStore::SampleZandA(const G4DynamicParticle* dp,
     iso = anElement->GetIsotope(0);
 
     // more than 1 isotope
-    if(1 < nIso) { 
-      iso = dataSetList[i]->SelectIsotope(anElement, 
-                                          dp->GetKineticEnergy(),
-					  dp->GetLogKineticEnergy());
+    if (1 < nIso)
+    {
+      iso =
+        dataSetList[i]->SelectIsotope(anElement, dp->GetKineticEnergy(), dp->GetLogKineticEnergy());
     }
-  } else {
-
+  }
+  else
+  {
     //----------------------------------------------------------------
     // isotope-wise cross section
     // isotope cross section is computed
@@ -238,28 +237,35 @@ G4CrossSectionDataStore::SampleZandA(const G4DynamicParticle* dp,
     iso = anElement->GetIsotope(0);
 
     // more than 1 isotope
-    if(1 < nIso) {
+    if (1 < nIso)
+    {
       const G4double* abundVector = anElement->GetRelativeAbundanceVector();
-      if(xseciso.size() < nIso) { xseciso.resize(nIso); }
+      if (xseciso.size() < nIso)
+      {
+        xseciso.resize(nIso);
+      }
 
       G4double cross = 0.0;
       G4int j;
-      for (j = 0; j<(G4int)nIso; ++j) {
-	G4double xsec = 0.0;
-	if(abundVector[j] > 0.0) {
-	  iso = anElement->GetIsotope(j);
-	  xsec = abundVector[j]*
-	    GetIsoCrossSection(dp, Z, iso->GetN(), iso, anElement, mat, i);
-	}
-	cross += xsec;
-	xseciso[j] = cross;
+      for (j = 0; j < (G4int)nIso; ++j)
+      {
+        G4double xsec = 0.0;
+        if (abundVector[j] > 0.0)
+        {
+          iso = anElement->GetIsotope(j);
+          xsec = abundVector[j] * GetIsoCrossSection(dp, Z, iso->GetN(), iso, anElement, mat, i);
+        }
+        cross += xsec;
+        xseciso[j] = cross;
       }
       cross *= G4UniformRand();
-      for (j = 0; j<(G4int)nIso; ++j) {
-	if(cross <= xseciso[j]) {
-	  iso = anElement->GetIsotope(j);
-	  break;
-	}
+      for (j = 0; j < (G4int)nIso; ++j)
+      {
+        if (cross <= xseciso[j])
+        {
+          iso = anElement->GetIsotope(j);
+          break;
+        }
       }
     }
   }
@@ -269,28 +275,29 @@ G4CrossSectionDataStore::SampleZandA(const G4DynamicParticle* dp,
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-void
-G4CrossSectionDataStore::BuildPhysicsTable(const G4ParticleDefinition& part)
+void G4CrossSectionDataStore::BuildPhysicsTable(const G4ParticleDefinition& part)
 {
-  if (nDataSetList == 0) {
+  if (nDataSetList == 0)
+  {
     G4ExceptionDescription ed;
-    ed << "No cross section is registered for " 
-       << part.GetParticleName() << G4endl;
-    G4Exception("G4CrossSectionDataStore::BuildPhysicsTable", "had001", 
-                FatalException, ed);
+    ed << "No cross section is registered for " << part.GetParticleName() << G4endl;
+    G4Exception("G4CrossSectionDataStore::BuildPhysicsTable", "had001", FatalException, ed);
     return;
   }
   matParticle = &part;
-  for (G4int i=0; i<nDataSetList; ++i) {
+  for (G4int i = 0; i < nDataSetList; ++i)
+  {
     dataSetList[i]->BuildPhysicsTable(part);
   }
   const G4MaterialTable* theMatTable = G4Material::GetMaterialTable();
   std::size_t nelm = 0;
   std::size_t niso = 0;
-  for(auto mat : *theMatTable) {
+  for (auto mat : *theMatTable)
+  {
     std::size_t nElements = mat->GetNumberOfElements();
     nelm = std::max(nelm, nElements);
-    for(G4int j=0; j<(G4int)nElements; ++j) {
+    for (G4int j = 0; j < (G4int)nElements; ++j)
+    {
       niso = std::max(niso, mat->GetElement(j)->GetNumberOfIsotopes());
     }
   }
@@ -301,28 +308,28 @@ G4CrossSectionDataStore::BuildPhysicsTable(const G4ParticleDefinition& part)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-void 
-G4CrossSectionDataStore::DumpPhysicsTable(const G4ParticleDefinition& part)
+void G4CrossSectionDataStore::DumpPhysicsTable(const G4ParticleDefinition& part)
 {
   // Print out all cross section data sets used and the energies at
   // which they apply
 
-  if (nDataSetList == 0) {
+  if (nDataSetList == 0)
+  {
     G4cout << "WARNING - G4CrossSectionDataStore::DumpPhysicsTable: "
-	   << " no data sets registered" << G4endl;
+           << " no data sets registered" << G4endl;
     return;
   }
 
-  for (G4int i = nDataSetList-1; i >= 0; --i) {
+  for (G4int i = nDataSetList - 1; i >= 0; --i)
+  {
     G4double e1 = dataSetList[i]->GetMinKinEnergy();
     G4double e2 = dataSetList[i]->GetMaxKinEnergy();
-    G4cout
-      << "     Cr_sctns: " << std::setw(25) << dataSetList[i]->GetName() << ": "
-      << G4BestUnit(e1, "Energy") << " ---> "
-      << G4BestUnit(e2, "Energy") << "\n";
-    if (dataSetList[i]->GetName() == "G4CrossSectionPairGG") {
+    G4cout << "     Cr_sctns: " << std::setw(25) << dataSetList[i]->GetName() << ": "
+           << G4BestUnit(e1, "Energy") << " ---> " << G4BestUnit(e2, "Energy") << "\n";
+    if (dataSetList[i]->GetName() == "G4CrossSectionPairGG")
+    {
       dataSetList[i]->DumpPhysicsTable(part);
-      G4cout << G4endl;      
+      G4cout << G4endl;
     }
   }
 }
@@ -341,67 +348,64 @@ void G4CrossSectionDataStore::DumpHtml(const G4ParticleDefinition& /* pD */,
   G4String physListName = param->GetPhysListName();
   G4String dirName = param->GetPhysListDocDir();
 
-  for (G4int i = nDataSetList-1; i > 0; i--) {
-    elo = dataSetList[i]->GetMinKinEnergy()/GeV;
-    ehi = dataSetList[i]->GetMaxKinEnergy()/GeV;
-    outFile << "      <li><b><a href=\"" << physListName << "_"
-	    << dataSetList[i]->GetName() << ".html\"> "
-            << dataSetList[i]->GetName() << "</a> from "
-            << elo << " GeV to " << ehi << " GeV </b></li>\n";
+  for (G4int i = nDataSetList - 1; i > 0; i--)
+  {
+    elo = dataSetList[i]->GetMinKinEnergy() / GeV;
+    ehi = dataSetList[i]->GetMaxKinEnergy() / GeV;
+    outFile << "      <li><b><a href=\"" << physListName << "_" << dataSetList[i]->GetName()
+            << ".html\"> " << dataSetList[i]->GetName() << "</a> from " << elo << " GeV to " << ehi
+            << " GeV </b></li>\n";
     PrintCrossSectionHtml(dataSetList[i], physListName, dirName);
   }
 
-  G4double defaultHi = dataSetList[0]->GetMaxKinEnergy()/GeV;
-  if (ehi < defaultHi) {
-    outFile << "      <li><b><a href=\"" << dataSetList[0]->GetName() 
-	    << ".html\"> "
-            << dataSetList[0]->GetName() << "</a> from "
-            << ehi << " GeV to " << defaultHi << " GeV </b></li>\n";
+  G4double defaultHi = dataSetList[0]->GetMaxKinEnergy() / GeV;
+  if (ehi < defaultHi)
+  {
+    outFile << "      <li><b><a href=\"" << dataSetList[0]->GetName() << ".html\"> "
+            << dataSetList[0]->GetName() << "</a> from " << ehi << " GeV to " << defaultHi
+            << " GeV </b></li>\n";
     PrintCrossSectionHtml(dataSetList[0], physListName, dirName);
   }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-void G4CrossSectionDataStore::PrintCrossSectionHtml(const G4VCrossSectionDataSet *cs,
+void G4CrossSectionDataStore::PrintCrossSectionHtml(const G4VCrossSectionDataSet* cs,
                                                     const G4String& physListName,
                                                     const G4String& dirName) const
 {
-
   G4String pathName = dirName + "/" + physListName + "_" + HtmlFileName(cs->GetName());
   std::ofstream outCS;
   outCS.open(pathName);
   outCS << "<html>\n";
   outCS << "<head>\n";
-  outCS << "<title>Description of " << cs->GetName() 
-	<< "</title>\n";
+  outCS << "<title>Description of " << cs->GetName() << "</title>\n";
   outCS << "</head>\n";
   outCS << "<body>\n";
-  
+
   cs->CrossSectionDescription(outCS);
-  
+
   outCS << "</body>\n";
   outCS << "</html>\n";
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-G4String G4CrossSectionDataStore::HtmlFileName(const G4String & in) const
+G4String G4CrossSectionDataStore::HtmlFileName(const G4String& in) const
 {
-   G4String str(in);
-   // replace blanks by _  C++11 version:
-   std::transform(str.begin(), str.end(), str.begin(), [](char ch) {
-       return ch == ' ' ? '_' : ch;
-   });
-   str=str + ".html";		
-   return str;
+  G4String str(in);
+  // replace blanks by _  C++11 version:
+  std::transform(str.begin(), str.end(), str.begin(), [](char ch) { return ch == ' ' ? '_' : ch; });
+  str = str + ".html";
+  return str;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
 void G4CrossSectionDataStore::AddDataSet(G4VCrossSectionDataSet* p)
 {
-  if(p->ForAllAtomsAndEnergies()) { 
+  if (p->ForAllAtomsAndEnergies())
+  {
     dataSetList.clear();
     nDataSetList = 0;
   }
@@ -413,16 +417,21 @@ void G4CrossSectionDataStore::AddDataSet(G4VCrossSectionDataSet* p)
 
 void G4CrossSectionDataStore::AddDataSet(G4VCrossSectionDataSet* p, std::size_t i)
 {
-  if(p->ForAllAtomsAndEnergies()) {
+  if (p->ForAllAtomsAndEnergies())
+  {
     dataSetList.clear();
     dataSetList.push_back(p);
     nDataSetList = 1;
-  } else if ( i >= dataSetList.size() ) {
+  }
+  else if (i >= dataSetList.size())
+  {
     dataSetList.push_back(p);
     ++nDataSetList;
-  } else {
-    std::vector< G4VCrossSectionDataSet* >::iterator it = dataSetList.end() - i;
-    dataSetList.insert(it , p);
+  }
+  else
+  {
+    std::vector<G4VCrossSectionDataSet*>::iterator it = dataSetList.end() - i;
+    dataSetList.insert(it, p);
     ++nDataSetList;
   }
 }

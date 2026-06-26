@@ -46,29 +46,31 @@
 // Required for inline visualization adapter functions
 //
 #include "G4AffineTransform.hh"
-#include "G4VoxelLimits.hh"
-#include "G4VGraphicsScene.hh"
-#include "G4Polyhedron.hh"
-#include "G4VisExtent.hh"
-#include "G4BoundingEnvelope.hh"
 #include "G4AutoLock.hh"
-
+#include "G4BoundingEnvelope.hh"
 #include "G4GeomTypes.hh"
+#include "G4Polyhedron.hh"
+#include "G4VGraphicsScene.hh"
+#include "G4VisExtent.hh"
+#include "G4VoxelLimits.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/base/Global.h>
-#include <VecGeom/base/Vector3D.h>
+#  include <VecGeom/base/Global.h>
+#  include <VecGeom/base/Vector3D.h>
 
 class G4VPVParameterisation;
 
 /**
  * @brief G4UAdapter is a utility class for adapting VecGeom solids API to
- * Geant4 solids. The Adapter is supposed to be a G4VSolid
+ * Geant4 solids.
+ * @ingroup geometry_management
+ *
+ * The Adapter is supposed to be a G4VSolid
  * "implemented-in-terms-of" the VecGeom UnplacedVolume_t.
  */
 
-template <class UnplacedVolume_t>
+template<class UnplacedVolume_t>
 class G4UAdapter : public G4VSolid, protected UnplacedVolume_t
 {
   public:
@@ -91,8 +93,8 @@ class G4UAdapter : public G4VSolid, protected UnplacedVolume_t
      *  @param[in] name The name of the volume.
      *  @param[in] params Templated arguments for UnplacedVolume_t.
      */
-    template <typename... T>
-    G4UAdapter(const G4String& name, const T &... params);
+    template<typename... T>
+    G4UAdapter(const G4String& name, const T&... params);
 
     /**
      * Virtual destructor.
@@ -120,10 +122,9 @@ class G4UAdapter : public G4VSolid, protected UnplacedVolume_t
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    virtual G4bool CalculateExtent(const EAxis pAxis,
-                                   const G4VoxelLimits& pVoxelLimit,
-                                   const G4AffineTransform& pTransform,
-                               G4double& pMin, G4double& pMax) const override;
+    virtual G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                                   const G4AffineTransform& pTransform, G4double& pMin,
+                                   G4double& pMax) const override;
 
     /**
      * Returns the characterisation of a point at offset 'p' respect
@@ -153,8 +154,7 @@ class G4UAdapter : public G4VSolid, protected UnplacedVolume_t
      *  @param[in] v The normalised direction vector.
      *  @returns The distance to enter the shape.
      */
-    virtual G4double DistanceToIn(const G4ThreeVector& p,
-                                  const G4ThreeVector& v) const override;
+    virtual G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
 
     /**
      * Calculates the distance to the nearest surface of a shape from an
@@ -180,10 +180,8 @@ class G4UAdapter : public G4VSolid, protected UnplacedVolume_t
      *              'calcNorm' must be true, otherwise it is unused.
      *  @returns The distance to exit the shape.
      */
-    virtual G4double DistanceToOut(const G4ThreeVector& p,
-                                   const G4ThreeVector& v,
-                                   const G4bool calcNorm = false,
-                                   G4bool* validNorm = 0,
+    virtual G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                                   const G4bool calcNorm = false, G4bool* validNorm = 0,
                                    G4ThreeVector* n = 0) const override;
 
     /**
@@ -199,8 +197,7 @@ class G4UAdapter : public G4VSolid, protected UnplacedVolume_t
      * dimension computation. Throws exception if ComputeDimensions() is
      * called from an illegal derived class.
      */
-    virtual void ComputeDimensions(G4VPVParameterisation* p,
-                                   const G4int n,
+    virtual void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                                    const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -264,7 +261,7 @@ class G4UAdapter : public G4VSolid, protected UnplacedVolume_t
     /**
      * Provides extent (bounding box) as possible hint to the graphics view.
      */
-    virtual G4VisExtent GetExtent()  const override;
+    virtual G4VisExtent GetExtent() const override;
 
     /**
      * Creates a Polyhedron used for Visualisation.
@@ -277,25 +274,21 @@ class G4UAdapter : public G4VSolid, protected UnplacedVolume_t
      */
     virtual G4Polyhedron* GetPolyhedron() const override;
 
-
     // VecGeom overridden methods ---------------------------------------------
 
-    vecgeom::Precision
-    DistanceToOut(U3Vector const& position, U3Vector const& direction,
-                  vecgeom::Precision stepMax = kInfinity) const override
+    vecgeom::Precision DistanceToOut(U3Vector const& position, U3Vector const& direction,
+                                     vecgeom::Precision stepMax = kInfinity) const override
     {
       return UnplacedVolume_t::DistanceToOut(position, direction, stepMax);
     }
 
-    vecgeom::EnumInside
-    Inside(U3Vector const& aPoint) const override
+    vecgeom::EnumInside Inside(U3Vector const& aPoint) const override
     {
       return UnplacedVolume_t::Inside(aPoint);
     }
 
-    vecgeom::Precision
-    DistanceToIn(U3Vector const& position, U3Vector const& direction,
-                 const vecgeom::Precision step_max = kInfinity) const override
+    vecgeom::Precision DistanceToIn(U3Vector const& position, U3Vector const& direction,
+                                    const vecgeom::Precision step_max = kInfinity) const override
     {
       return UnplacedVolume_t::DistanceToIn(position, direction, step_max);
     }
@@ -323,14 +316,14 @@ class G4UAdapter : public G4VSolid, protected UnplacedVolume_t
     /** Cached geometrical tolerance. */
     G4double kHalfTolerance;
 
-    using UnplacedVolume_t::DistanceToOut;
     using UnplacedVolume_t::DistanceToIn;
+    using UnplacedVolume_t::DistanceToOut;
 };
 
 // Inline implementations
 
-#include "G4UAdapter.icc"
+#  include "G4UAdapter.icc"
 
 #endif  // G4GEOM_USE_USOLIDS
 
-#endif // G4UADAPTER_HH
+#endif  // G4UADAPTER_HH

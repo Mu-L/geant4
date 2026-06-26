@@ -26,15 +26,15 @@
 //
 //-----------------------------------------------------------------------------
 //
-// GEANT4 Class header file 
+// GEANT4 Class header file
 //
 // File name:  G4EmCaptureCascade
 //
 // Author:        V.Ivanchenko (Vladimir.Ivantchenko@cern.ch)
-// 
+//
 // Creation date: 22 April 2012 on base of G4MuMinusCaptureCascade
 //
-// Class Description: 
+// Class Description:
 //
 // Simulation of electromagnetic cascade from capture level to K-shell
 // of the mesonic atom
@@ -44,70 +44,62 @@
 //
 //-----------------------------------------------------------------------------
 //
-// Modifications: 
+// Modifications:
 //
 //-----------------------------------------------------------------------------
 
-#ifndef G4EmCaptureCascade_h
-#define G4EmCaptureCascade_h 1
+#ifndef G4EMCAPTURECASCADE_HH
+#define G4EMCAPTURECASCADE_HH
 
-#include "globals.hh"
-#include "G4Nucleus.hh"
-#include "G4Track.hh"
+#include "G4DynamicParticle.hh"
+#include "G4HadFinalState.hh"
 #include "G4HadProjectile.hh"
 #include "G4HadSecondary.hh"
-#include "G4HadFinalState.hh"
 #include "G4HadronicInteraction.hh"
-#include "G4RandomDirection.hh"
+#include "G4Nucleus.hh"
 #include "G4ParticleDefinition.hh"
-#include "G4DynamicParticle.hh"
+#include "G4RandomDirection.hh"
 #include "G4ThreeVector.hh"
+#include "G4Track.hh"
+#include "globals.hh"
 
 class G4EmCaptureCascade : public G4HadronicInteraction
-{ 
-public:
- 
-  explicit G4EmCaptureCascade();
- 
-  virtual ~G4EmCaptureCascade();
+{
+  public:
 
-  virtual G4HadFinalState* ApplyYourself(const G4HadProjectile &aTrack, 
-					 G4Nucleus & targetNucleus );
+    explicit G4EmCaptureCascade();
 
-  virtual void ModelDescription(std::ostream& outFile) const; 
+    virtual ~G4EmCaptureCascade();
 
-private:
+    virtual G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& targetNucleus);
 
-  inline void AddNewParticle(G4ParticleDefinition* aParticle,
-			     G4double kinEnergy);
+    virtual void ModelDescription(std::ostream& outFile) const;
 
-  // hide assignment operator as private 
-  G4EmCaptureCascade& operator=(const G4EmCaptureCascade &right) = delete;
-  G4EmCaptureCascade(const G4EmCaptureCascade& ) = delete;
+  private:
 
-  G4HadFinalState result;
-  G4ParticleDefinition* theElectron;
-  G4ParticleDefinition* theGamma;
-  G4double fMuMass;
-  G4double fTime;
-  G4double fLevelEnergy[14];
-  G4double fKLevelEnergy[93];
+    inline void AddNewParticle(G4ParticleDefinition* aParticle, G4double kinEnergy);
+
+    // hide assignment operator as private
+    G4EmCaptureCascade& operator=(const G4EmCaptureCascade& right) = delete;
+    G4EmCaptureCascade(const G4EmCaptureCascade&) = delete;
+
+    G4HadFinalState result;
+    G4ParticleDefinition* theElectron;
+    G4ParticleDefinition* theGamma;
+    G4double fMuMass;
+    G4double fTime;
+    G4double fLevelEnergy[14];
+    G4double fKLevelEnergy[93];
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline void 
-G4EmCaptureCascade::AddNewParticle(G4ParticleDefinition* aParticle,
-				   G4double kinEnergy)
+inline void G4EmCaptureCascade::AddNewParticle(G4ParticleDefinition* aParticle, G4double kinEnergy)
 {
-  G4DynamicParticle* dp = new G4DynamicParticle(aParticle,
-                                                G4RandomDirection(),
-                                                kinEnergy);
+  G4DynamicParticle* dp = new G4DynamicParticle(aParticle, G4RandomDirection(), kinEnergy);
   G4HadSecondary hs(dp);
   hs.SetTime(fTime);
   result.AddSecondary(hs);
 }
 
 #endif
-
-

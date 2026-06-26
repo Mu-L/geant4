@@ -26,7 +26,7 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   
+// ClassName:
 //
 // Author: 2007 Gunter Folger
 //   created from G4HadronPhysicsFTFP
@@ -35,29 +35,29 @@
 //
 //----------------------------------------------------------------------------
 //
-#include <iomanip>   
-
 #include "G4HadronPhysicsFTFP_BERT_TRV.hh"
-#include "G4SystemOfUnits.hh"
 
 #include "G4HadronicParameters.hh"
+#include "G4SystemOfUnits.hh"
+
+#include <iomanip>
 
 // factory
 #include "G4PhysicsConstructorFactory.hh"
 //
 G4_DECLARE_PHYSCONSTR_FACTORY(G4HadronPhysicsFTFP_BERT_TRV);
 
-G4HadronPhysicsFTFP_BERT_TRV::G4HadronPhysicsFTFP_BERT_TRV(G4int verb) :
-    G4HadronPhysicsFTFP_BERT_TRV("hInelastic FTFP_BERT_TRV",false)
+G4HadronPhysicsFTFP_BERT_TRV::G4HadronPhysicsFTFP_BERT_TRV(G4int verb)
+  : G4HadronPhysicsFTFP_BERT_TRV("hInelastic FTFP_BERT_TRV", false)
 {
   G4HadronicParameters::Instance()->SetVerboseLevel(verb);
 }
 
-G4HadronPhysicsFTFP_BERT_TRV::G4HadronPhysicsFTFP_BERT_TRV(const G4String& name, G4bool quasiElastic)
-    :  G4HadronPhysicsFTFP_BERT(name,quasiElastic)
+G4HadronPhysicsFTFP_BERT_TRV::G4HadronPhysicsFTFP_BERT_TRV(const G4String& name,
+                                                           G4bool quasiElastic)
+  : G4HadronPhysicsFTFP_BERT(name, quasiElastic)
 {
   G4HadronicParameters::Instance()->SetEnableBCParticles(true);
 }
 
-G4HadronPhysicsFTFP_BERT_TRV::~G4HadronPhysicsFTFP_BERT_TRV()
-{}
+G4HadronPhysicsFTFP_BERT_TRV::~G4HadronPhysicsFTFP_BERT_TRV() {}

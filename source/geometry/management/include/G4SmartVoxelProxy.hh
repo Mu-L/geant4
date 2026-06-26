@@ -39,22 +39,24 @@
 #ifndef G4SMARTVOXELPROXY_HH
 #define G4SMARTVOXELPROXY_HH
 
-#include <assert.h>
+#include "G4Types.hh"
 
 #include "geomwdefs.hh"
-#include "G4Types.hh"
+#include <assert.h>
 
 class G4SmartVoxelNode;
 class G4SmartVoxelHeader;
 
 /**
- * @brief G4SmartVoxelProxy is a class for proxying smart voxels. The class
- * represents either a header (in turn referring to more VoxelProxies) or a
+ * @brief G4SmartVoxelProxy is a class for proxying smart voxels.
+ * @ingroup geometry_management
+ *
+ * The class represents either a header (in turn referring to more VoxelProxies) or a
  * node. If created as a node, calls to GetHeader() cause an exception, and
  * likewise GetNode() when a header.
  */
 
-class G4SmartVoxelProxy 
+class G4SmartVoxelProxy
 {
   public:
 
@@ -78,7 +80,7 @@ class G4SmartVoxelProxy
     /**
      * Equality operator. True when objects share the same address.
      */
-    inline G4bool operator == (const G4SmartVoxelProxy& v) const;
+    inline G4bool operator==(const G4SmartVoxelProxy& v) const;
 
     /**
      * Returns true if proxying for a header, else false.
@@ -94,7 +96,7 @@ class G4SmartVoxelProxy
      * Returns the pointer to the proxied node, else throws a G4Exception.
      */
     inline G4SmartVoxelNode* GetNode() const;
- 
+
     /**
      * Returns the pointer to the proxied header, else throws a G4Exception.
      */

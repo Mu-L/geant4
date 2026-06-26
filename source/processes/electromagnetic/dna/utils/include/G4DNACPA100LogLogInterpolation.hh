@@ -27,58 +27,42 @@
 //
 // Users are requested to cite the following papers:
 // - M. Terrissol, A. Baudre, Radiat. Prot. Dosim. 31 (1990) 175-177
-// - M.C. Bordage, J. Bordes, S. Edel, M. Terrissol, X. Franceries, 
+// - M.C. Bordage, J. Bordes, S. Edel, M. Terrissol, X. Franceries,
 //   M. Bardies, N. Lampe, S. Incerti, Phys. Med. 32 (2016) 1833-1840
 //
-// Authors of this class: 
+// Authors of this class:
 // M.C. Bordage, M. Terrissol, S. Edel, J. Bordes, S. Incerti
 //
 // 15.01.2014: creation
 //
 
 #ifndef G4LOGLOGINTERPOLATION_HH
-#define G4LOGLOGINTERPOLATION_HH 1
+#define G4LOGLOGINTERPOLATION_HH
 
-#include "globals.hh"
-#include "G4VDataSetAlgorithm.hh"
 #include "G4DataVector.hh"
+#include "G4VDataSetAlgorithm.hh"
+#include "globals.hh"
 
-class G4DNACPA100LogLogInterpolation : public G4VDataSetAlgorithm {
- 
-public:
+class G4DNACPA100LogLogInterpolation : public G4VDataSetAlgorithm
+{
+  public:
 
-  G4DNACPA100LogLogInterpolation();
+    G4DNACPA100LogLogInterpolation();
 
-  ~G4DNACPA100LogLogInterpolation() override;
- 
-  G4double Calculate(G4double point, G4int bin, 
-       const G4DataVector& energies, 
-       const G4DataVector& data) const override;
+    ~G4DNACPA100LogLogInterpolation() override;
 
-  G4double Calculate(G4double point, G4int bin,
-       const G4DataVector& energies,
-       const G4DataVector& data, 
-       const G4DataVector& log_energies, 
-       const G4DataVector& log_data) const override;
+    G4double Calculate(G4double point, G4int bin, const G4DataVector& energies,
+                       const G4DataVector& data) const override;
 
-  G4VDataSetAlgorithm* Clone() const override; 
+    G4double Calculate(G4double point, G4int bin, const G4DataVector& energies,
+                       const G4DataVector& data, const G4DataVector& log_energies,
+                       const G4DataVector& log_data) const override;
 
-private:
+    G4VDataSetAlgorithm* Clone() const override;
 
-  
-  // Hide copy constructor and assignment operator
+  private:
 
+    // Hide copy constructor and assignment operator
 };
- 
+
 #endif
- 
-
-
-
-
-
-
-
-
-
-

@@ -31,248 +31,243 @@
 // by V. Lara (May 1998)
 //
 // Modifications:
-// 03.05.2010 V.Ivanchenko General cleanup of inline functions: objects 
-//            are accessed by reference; remove double return 
+// 03.05.2010 V.Ivanchenko General cleanup of inline functions: objects
+//            are accessed by reference; remove double return
 //            tolerance of excitation energy at modent it is computed;
 //            safe computation of excitation for exotic fragments
 // 18.05.2010 V.Ivanchenko added member theGroundStateMass and inline
-//            method which allowing to compute this value once and use 
+//            method which allowing to compute this value once and use
 //            many times
 // 26.09.2010 V.Ivanchenko added number of protons, neutrons, proton holes
 //            and neutron holes as members of the class and Get/Set methods;
 //            removed not needed 'const'; removed old debug staff and unused
-//            private methods; add comments and reorder methods for 
+//            private methods; add comments and reorder methods for
 //            better reading
 // 27.10.2021 A.Ribon extension for hypernuclei.
 
-#ifndef G4Fragment_h
-#define G4Fragment_h 1
+#ifndef G4FRAGMENT_HH
+#define G4FRAGMENT_HH
 
-#include "globals.hh"
 #include "G4Allocator.hh"
+#include "G4HyperNucleiProperties.hh"
 #include "G4LorentzVector.hh"
-#include "G4ThreeVector.hh"
+#include "G4Neutron.hh"
 #include "G4NuclearPolarization.hh"
 #include "G4NucleiProperties.hh"
-#include "G4HyperNucleiProperties.hh"
 #include "G4Proton.hh"
-#include "G4Neutron.hh"
+#include "G4ThreeVector.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4ParticleDefinition;
 
-class G4Fragment;     
+class G4Fragment;
 typedef std::vector<G4Fragment*> G4FragmentVector;
 
-class G4Fragment 
+class G4Fragment
 {
-public:
+  public:
 
-  // ============= CONSTRUCTORS ==================
+    // ============= CONSTRUCTORS ==================
 
-  // Default constructor - obsolete
-  G4Fragment();
+    // Default constructor - obsolete
+    G4Fragment();
 
-  // Destructor
-  ~G4Fragment();
+    // Destructor
+    ~G4Fragment();
 
-  // Copy constructor
-  G4Fragment(const G4Fragment &right);
+    // Copy constructor
+    G4Fragment(const G4Fragment& right);
 
-  // A,Z and 4-momentum - main constructor for fragment
-  G4Fragment(G4int A, G4int Z, const G4LorentzVector& aMomentum);
+    // A,Z and 4-momentum - main constructor for fragment
+    G4Fragment(G4int A, G4int Z, const G4LorentzVector& aMomentum);
 
-  // A,Z,numberOfLambdas and 4-momentum
-  G4Fragment(G4int A, G4int Z, G4int numberOfLambdas,
-             const G4LorentzVector& aMomentum);
+    // A,Z,numberOfLambdas and 4-momentum
+    G4Fragment(G4int A, G4int Z, G4int numberOfLambdas, const G4LorentzVector& aMomentum);
 
-  // 4-momentum and pointer to G4particleDefinition (for gammas, e-)
-  G4Fragment(const G4LorentzVector& aMomentum, 
-	     const G4ParticleDefinition* aParticleDefinition);
+    // 4-momentum and pointer to G4particleDefinition (for gammas, e-)
+    G4Fragment(const G4LorentzVector& aMomentum, const G4ParticleDefinition* aParticleDefinition);
 
-  // ============= OPERATORS ==================
-    
-  G4Fragment & operator=(const G4Fragment &right);
-  G4bool operator==(const G4Fragment &right) const;
-  G4bool operator!=(const G4Fragment &right) const;
+    // ============= OPERATORS ==================
 
-  friend std::ostream& operator<<(std::ostream&, const G4Fragment&);
+    G4Fragment& operator=(const G4Fragment& right);
+    G4bool operator==(const G4Fragment& right) const;
+    G4bool operator!=(const G4Fragment& right) const;
 
-  //  new/delete operators are overloded to use G4Allocator
-  inline void *operator new(size_t);
-  inline void operator delete(void *aFragment);
+    friend std::ostream& operator<<(std::ostream&, const G4Fragment&);
 
-  // ============= GENERAL METHODS ==================
+    //  new/delete operators are overloded to use G4Allocator
+    inline void* operator new(size_t);
+    inline void operator delete(void* aFragment);
 
-  inline G4int GetZ_asInt() const;
-  inline G4int GetA_asInt() const;
+    // ============= GENERAL METHODS ==================
 
-  // update number of nucleons without check on input
-  // ground state mass is not recomputed
-  inline void SetZandA_asInt(G4int Znew, G4int Anew, G4int Lnew=0);
+    inline G4int GetZ_asInt() const;
+    inline G4int GetA_asInt() const;
 
-  // non-negative number of lambdas/anti-lambdas
-  // ground state mass is not recomputed
-  void SetNumberOfLambdas(G4int numberOfLambdas);
+    // update number of nucleons without check on input
+    // ground state mass is not recomputed
+    inline void SetZandA_asInt(G4int Znew, G4int Anew, G4int Lnew = 0);
 
-  inline G4int GetNumberOfLambdas() const;
+    // non-negative number of lambdas/anti-lambdas
+    // ground state mass is not recomputed
+    void SetNumberOfLambdas(G4int numberOfLambdas);
 
-  inline G4double GetExcitationEnergy() const;
+    inline G4int GetNumberOfLambdas() const;
 
-  inline G4double GetGroundStateMass() const;
-   
-  inline const G4LorentzVector& GetMomentum() const;
+    inline G4double GetExcitationEnergy() const;
 
-  // ground state mass and excitation energy are recomputed
-  inline G4double RecomputeGroundStateMass();
+    inline G4double GetGroundStateMass() const;
 
-  // update main fragment parameters full check on input 
-  // ground state mass and excitation energy are recomputed
-  inline void SetMomentum(const G4LorentzVector& value);
-  inline void SetZAandMomentum(const G4LorentzVector&,
-                               G4int Z, G4int A,
-                               G4int nLambdas = 0);
+    inline const G4LorentzVector& GetMomentum() const;
 
-  // ground state mass is not recomputed
-  void SetExcEnergyAndMomentum(G4double eexc, const G4LorentzVector&);
-  G4double GetBindingEnergy() const;
-    
-  // computation of mass for any imput Z, A and number of Lambdas
-  // no check on input values
-  inline G4double ComputeGroundStateMass(G4int Z, G4int A,
-                                         G4int nLambdas = 0) const;
+    // ground state mass and excitation energy are recomputed
+    inline G4double RecomputeGroundStateMass();
 
-  // extra methods
-  inline G4double GetSpin() const;
-  inline void SetSpin(G4double value);
+    // update main fragment parameters full check on input
+    // ground state mass and excitation energy are recomputed
+    inline void SetMomentum(const G4LorentzVector& value);
+    inline void SetZAandMomentum(const G4LorentzVector&, G4int Z, G4int A, G4int nLambdas = 0);
 
-  inline G4int GetCreatorModelID() const;
-  inline void SetCreatorModelID(G4int value);
+    // ground state mass is not recomputed
+    void SetExcEnergyAndMomentum(G4double eexc, const G4LorentzVector&);
+    G4double GetBindingEnergy() const;
 
-  inline G4bool IsLongLived() const;
-  inline void SetLongLived(G4bool value);
+    // computation of mass for any imput Z, A and number of Lambdas
+    // no check on input values
+    inline G4double ComputeGroundStateMass(G4int Z, G4int A, G4int nLambdas = 0) const;
 
-  // obsolete methods
-  inline G4double GetZ() const;
-  inline G4double GetA() const;
-  inline void SetZ(G4double value);
-  inline void SetA(G4double value);
-  
-  // ============= METHODS FOR PRE-COMPOUND MODEL ===============
+    // extra methods
+    inline G4double GetSpin() const;
+    inline void SetSpin(G4double value);
 
-  inline G4int GetNumberOfExcitons() const;
-  
-  inline G4int GetNumberOfParticles() const;
-  inline G4int GetNumberOfCharged() const;
-  inline void SetNumberOfExcitedParticle(G4int valueTot, G4int valueP);
+    inline G4int GetCreatorModelID() const;
+    inline void SetCreatorModelID(G4int value);
 
-  inline G4int GetNumberOfHoles() const;
-  inline G4int GetNumberOfChargedHoles() const;
-  inline void SetNumberOfHoles(G4int valueTot, G4int valueP=0);
-  
-  // these methods will be removed in future
-  inline void SetNumberOfParticles(G4int value);
-  inline void SetNumberOfCharged(G4int value);
+    inline G4bool IsLongLived() const;
+    inline void SetLongLived(G4bool value);
 
-  // ============= METHODS FOR PHOTON EVAPORATION ===============
+    // obsolete methods
+    inline G4double GetZ() const;
+    inline G4double GetA() const;
+    inline void SetZ(G4double value);
+    inline void SetA(G4double value);
 
-  inline G4int GetNumberOfElectrons() const;
-  inline void SetNumberOfElectrons(G4int value);
+    // ============= METHODS FOR PRE-COMPOUND MODEL ===============
 
-  inline G4int GetFloatingLevelNumber() const;
-  inline void SetFloatingLevelNumber(G4int value);
+    inline G4int GetNumberOfExcitons() const;
 
-  inline const G4ParticleDefinition * GetParticleDefinition() const;
-  inline void SetParticleDefinition(const G4ParticleDefinition * p);
+    inline G4int GetNumberOfParticles() const;
+    inline G4int GetNumberOfCharged() const;
+    inline void SetNumberOfExcitedParticle(G4int valueTot, G4int valueP);
 
-  inline G4double GetCreationTime() const;
-  inline void SetCreationTime(G4double time);
+    inline G4int GetNumberOfHoles() const;
+    inline G4int GetNumberOfChargedHoles() const;
+    inline void SetNumberOfHoles(G4int valueTot, G4int valueP = 0);
 
-  // G4Fragment class is not responsible for creation and delition of 
-  // G4NuclearPolarization object
-  inline G4NuclearPolarization* NuclearPolarization();
-  inline G4NuclearPolarization* GetNuclearPolarization() const;
-  inline void SetNuclearPolarization(G4NuclearPolarization*);
+    // these methods will be removed in future
+    inline void SetNumberOfParticles(G4int value);
+    inline void SetNumberOfCharged(G4int value);
 
-  void SetAngularMomentum(const G4ThreeVector&);
-  G4ThreeVector GetAngularMomentum() const;
+    // ============= METHODS FOR PHOTON EVAPORATION ===============
 
-  // ============= PRIVATE METHODS ==============================
+    inline G4int GetNumberOfElectrons() const;
+    inline void SetNumberOfElectrons(G4int value);
 
-private:
+    inline G4int GetFloatingLevelNumber() const;
+    inline void SetFloatingLevelNumber(G4int value);
 
-  void CalculateMassAndExcitationEnergy();
+    inline const G4ParticleDefinition* GetParticleDefinition() const;
+    inline void SetParticleDefinition(const G4ParticleDefinition* p);
 
-  void ExcitationEnergyWarning();
+    inline G4double GetCreationTime() const;
+    inline void SetCreationTime(G4double time);
 
-  void NumberOfExitationWarning(const G4String&);
+    // G4Fragment class is not responsible for creation and delition of
+    // G4NuclearPolarization object
+    inline G4NuclearPolarization* NuclearPolarization();
+    inline G4NuclearPolarization* GetNuclearPolarization() const;
+    inline void SetNuclearPolarization(G4NuclearPolarization*);
 
-  // ============= DATA MEMBERS ==================
+    void SetAngularMomentum(const G4ThreeVector&);
+    G4ThreeVector GetAngularMomentum() const;
 
-  G4int theA;
-  
-  G4int theZ;
+    // ============= PRIVATE METHODS ==============================
 
-  // Non-negative number of lambdas/anti-lambdas inside the nucleus/anti-nucleus
-  G4int theL;  
-  
-  G4double theExcitationEnergy;
+  private:
 
-  G4double theGroundStateMass;
+    void CalculateMassAndExcitationEnergy();
 
-  G4LorentzVector theMomentum;
-  
-  // Nuclear polarisation by default is nullptr
-  G4NuclearPolarization* thePolarization;
+    void ExcitationEnergyWarning();
 
-  // creator model type
-  G4int creatorModel;
+    void NumberOfExitationWarning(const G4String&);
 
-  // Exciton model data members  
-  G4int numberOfParticles;  
-  G4int numberOfCharged;
-  G4int numberOfHoles;
-  G4int numberOfChargedHoles;
+    // ============= DATA MEMBERS ==================
 
-  // Gamma evaporation data members
-  G4int numberOfShellElectrons;
-  G4int xLevel;
+    G4int theA;
 
-  const G4ParticleDefinition* theParticleDefinition;
-  
-  G4double spin;
-  G4double theCreationTime;
+    G4int theZ;
 
-  G4bool isLongLived = false; 
+    // Non-negative number of lambdas/anti-lambdas inside the nucleus/anti-nucleus
+    G4int theL;
+
+    G4double theExcitationEnergy;
+
+    G4double theGroundStateMass;
+
+    G4LorentzVector theMomentum;
+
+    // Nuclear polarisation by default is nullptr
+    G4NuclearPolarization* thePolarization;
+
+    // creator model type
+    G4int creatorModel;
+
+    // Exciton model data members
+    G4int numberOfParticles;
+    G4int numberOfCharged;
+    G4int numberOfHoles;
+    G4int numberOfChargedHoles;
+
+    // Gamma evaporation data members
+    G4int numberOfShellElectrons;
+    G4int xLevel;
+
+    const G4ParticleDefinition* theParticleDefinition;
+
+    G4double spin;
+    G4double theCreationTime;
+
+    G4bool isLongLived = false;
 };
 
 // ============= INLINE METHOD IMPLEMENTATIONS ===================
 
 #if defined G4HADRONIC_ALLOC_EXPORT
-  extern G4DLLEXPORT G4Allocator<G4Fragment>*& pFragmentAllocator();
+extern G4DLLEXPORT G4Allocator<G4Fragment>*& pFragmentAllocator();
 #else
-  extern G4DLLIMPORT G4Allocator<G4Fragment>*& pFragmentAllocator();
+extern G4DLLIMPORT G4Allocator<G4Fragment>*& pFragmentAllocator();
 #endif
 
-inline void * G4Fragment::operator new(size_t)
+inline void* G4Fragment::operator new(size_t)
 {
-  if (!pFragmentAllocator()) { 
+  if (!pFragmentAllocator())
+  {
     pFragmentAllocator() = new G4Allocator<G4Fragment>;
   }
-  return (void*) pFragmentAllocator()->MallocSingle();
+  return (void*)pFragmentAllocator()->MallocSingle();
 }
 
-inline void G4Fragment::operator delete(void * aFragment)
+inline void G4Fragment::operator delete(void* aFragment)
 {
-  pFragmentAllocator()->FreeSingle((G4Fragment *) aFragment);
+  pFragmentAllocator()->FreeSingle((G4Fragment*)aFragment);
 }
 
-inline G4double 
-G4Fragment::ComputeGroundStateMass(G4int Z, G4int A, G4int nLambdas) const
+inline G4double G4Fragment::ComputeGroundStateMass(G4int Z, G4int A, G4int nLambdas) const
 {
-  return ( nLambdas <= 0 ) 
-    ? G4NucleiProperties::GetNuclearMass(A, Z) 
-    : G4HyperNucleiProperties::GetNuclearMass(A, Z, nLambdas); 
+  return (nLambdas <= 0) ? G4NucleiProperties::GetNuclearMass(A, Z)
+                         : G4HyperNucleiProperties::GetNuclearMass(A, Z, nLambdas);
 }
 
 inline G4double G4Fragment::RecomputeGroundStateMass()
@@ -286,13 +281,12 @@ inline G4int G4Fragment::GetA_asInt() const
   return theA;
 }
 
-inline G4int G4Fragment::GetZ_asInt()  const
+inline G4int G4Fragment::GetZ_asInt() const
 {
   return theZ;
 }
 
-inline void 
-G4Fragment::SetZandA_asInt(G4int Znew, G4int Anew, G4int Lnew)
+inline void G4Fragment::SetZandA_asInt(G4int Znew, G4int Anew, G4int Lnew)
 {
   theZ = Znew;
   theA = Anew;
@@ -309,17 +303,17 @@ inline G4int G4Fragment::GetNumberOfLambdas() const
   return theL;
 }
 
-inline G4double G4Fragment::GetExcitationEnergy()  const
+inline G4double G4Fragment::GetExcitationEnergy() const
 {
   return theExcitationEnergy;
 }
 
 inline G4double G4Fragment::GetGroundStateMass() const
 {
-  return theGroundStateMass; 
+  return theGroundStateMass;
 }
 
-inline const G4LorentzVector& G4Fragment::GetMomentum()  const
+inline const G4LorentzVector& G4Fragment::GetMomentum() const
 {
   return theMomentum;
 }
@@ -330,15 +324,13 @@ inline void G4Fragment::SetMomentum(const G4LorentzVector& value)
   CalculateMassAndExcitationEnergy();
 }
 
-inline void 
-G4Fragment::SetZAandMomentum(const G4LorentzVector& v,
-                             G4int Z, G4int A, G4int nLambdas)
+inline void G4Fragment::SetZAandMomentum(const G4LorentzVector& v, G4int Z, G4int A, G4int nLambdas)
 {
   SetZandA_asInt(Z, A, nLambdas);
   SetMomentum(v);
 }
 
-inline G4double G4Fragment::GetZ()  const
+inline G4double G4Fragment::GetZ() const
 {
   return static_cast<G4double>(theZ);
 }
@@ -358,37 +350,37 @@ inline void G4Fragment::SetA(const G4double value)
   theA = G4lrint(value);
 }
 
-inline G4int G4Fragment::GetNumberOfExcitons()  const
+inline G4int G4Fragment::GetNumberOfExcitons() const
 {
   return numberOfParticles + numberOfHoles;
 }
 
-inline G4int G4Fragment::GetNumberOfParticles()  const
+inline G4int G4Fragment::GetNumberOfParticles() const
 {
   return numberOfParticles;
 }
 
-inline G4int G4Fragment::GetNumberOfCharged()  const
+inline G4int G4Fragment::GetNumberOfCharged() const
 {
   return numberOfCharged;
 }
 
-inline 
-void G4Fragment::SetNumberOfExcitedParticle(G4int valueTot, G4int valueP)
+inline void G4Fragment::SetNumberOfExcitedParticle(G4int valueTot, G4int valueP)
 {
   numberOfParticles = valueTot;
   numberOfCharged = valueP;
-  if(valueTot < valueP)  { 
-    NumberOfExitationWarning("SetNumberOfExcitedParticle"); 
+  if (valueTot < valueP)
+  {
+    NumberOfExitationWarning("SetNumberOfExcitedParticle");
   }
 }
 
-inline G4int G4Fragment::GetNumberOfHoles()  const
+inline G4int G4Fragment::GetNumberOfHoles() const
 {
   return numberOfHoles;
 }
 
-inline G4int G4Fragment::GetNumberOfChargedHoles()  const
+inline G4int G4Fragment::GetNumberOfChargedHoles() const
 {
   return numberOfChargedHoles;
 }
@@ -397,8 +389,9 @@ inline void G4Fragment::SetNumberOfHoles(G4int valueTot, G4int valueP)
 {
   numberOfHoles = valueTot;
   numberOfChargedHoles = valueP;
-  if(valueTot < valueP)  { 
-    NumberOfExitationWarning("SetNumberOfHoles"); 
+  if (valueTot < valueP)
+  {
+    NumberOfExitationWarning("SetNumberOfHoles");
   }
 }
 
@@ -410,8 +403,9 @@ inline void G4Fragment::SetNumberOfParticles(G4int value)
 inline void G4Fragment::SetNumberOfCharged(G4int value)
 {
   numberOfCharged = value;
-  if(value > numberOfParticles)  { 
-    NumberOfExitationWarning("SetNumberOfCharged"); 
+  if (value > numberOfParticles)
+  {
+    NumberOfExitationWarning("SetNumberOfCharged");
   }
 }
 
@@ -465,18 +459,17 @@ inline void G4Fragment::SetFloatingLevelNumber(G4int value)
   xLevel = value;
 }
 
-inline 
-const G4ParticleDefinition* G4Fragment::GetParticleDefinition(void) const
+inline const G4ParticleDefinition* G4Fragment::GetParticleDefinition(void) const
 {
   return theParticleDefinition;
 }
 
-inline void G4Fragment::SetParticleDefinition(const G4ParticleDefinition * p)
+inline void G4Fragment::SetParticleDefinition(const G4ParticleDefinition* p)
 {
   theParticleDefinition = p;
 }
 
-inline G4double G4Fragment::GetCreationTime() const 
+inline G4double G4Fragment::GetCreationTime() const
 {
   return theCreationTime;
 }

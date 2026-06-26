@@ -29,19 +29,19 @@
 //
 // Author:  Michael Kelsey <kelsey@slac.stanford.edu>
 
-#ifndef G4DecayKineticTracks_hh
-#define G4DecayKineticTracks_hh 1
+#ifndef G4DECAYKINETICTRACKS_HH
+#define G4DECAYKINETICTRACKS_HH
 
 class G4KineticTrackVector;
 
+class G4DecayKineticTracks
+{
+  public:
 
-class G4DecayKineticTracks {
-public:
-  G4DecayKineticTracks(G4KineticTrackVector *tracks=0);
+    G4DecayKineticTracks(G4KineticTrackVector* tracks = 0);
 
-  // User may keep object permanently (static) and re-use as needed
-  void Decay(G4KineticTrackVector *tracks) const;
+    // User may keep object permanently (static) and re-use as needed
+    void Decay(G4KineticTrackVector* tracks) const;
 };
 
-#endif	/* G4DecayKineticTracks_hh */
-
+#endif /* G4DecayKineticTracks_hh */

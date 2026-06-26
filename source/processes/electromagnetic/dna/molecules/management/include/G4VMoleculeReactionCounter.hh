@@ -25,7 +25,7 @@
 //
 // Author: Christian Velten (2025)
 #ifndef G4VMOLECULEREACTIONCOUNTER_HH
-#define G4VMOLECULEREACTIONCOUNTER_HH 1
+#define G4VMOLECULEREACTIONCOUNTER_HH
 
 #include "G4VMoleculeCounterInternalBase.hh"
 
@@ -43,48 +43,57 @@ class G4VMoleculeReactionCounter : public G4VMoleculeCounterInternalBase
     friend class G4VUserMoleculeReactionCounter;
 
   public:
+
     enum MoleculeReactionCounterType
     {
       Other,
       Basic,
     };
-    struct G4VMoleculeReactionCounterIndex
+    struct G4VMoleculeReactionCounterIndex : G4VMoleculeCounterIndexInterface
     {
         virtual ~G4VMoleculeReactionCounterIndex() = default;
         virtual G4bool operator<(G4VMoleculeReactionCounterIndex const&) const = 0;
         virtual G4bool operator==(G4VMoleculeReactionCounterIndex const&) const = 0;
-        virtual G4String GetInfo() const = 0;
         virtual const G4DNAMolecularReactionData* GetReactionData() const = 0;
     };
 
   private:
+
     G4VMoleculeReactionCounter();
-    G4VMoleculeReactionCounter(const G4String&, MoleculeReactionCounterType =
-                                                  MoleculeReactionCounterType::Basic);
+    G4VMoleculeReactionCounter(const G4String&,
+                               MoleculeReactionCounterType = MoleculeReactionCounterType::Basic);
     G4VMoleculeReactionCounter(G4VMoleculeReactionCounter const&) = delete;
     void operator=(G4VMoleculeReactionCounter const& x) = delete;
 
   public:
+
     ~G4VMoleculeReactionCounter() override = default;
 
   public:
-    // virtual std::unique_ptr<G4VMoleculeReactionCounterIndex> BuildIndex(const G4Track*, const G4Track*, const G4DNAMolecularReactionData*) const = 0;
-    virtual std::unique_ptr<G4VMoleculeReactionCounterIndex> BuildSimpleIndex(const G4DNAMolecularReactionData*) const = 0;
 
-    virtual void RecordReaction(std::unique_ptr<G4VMoleculeReactionCounterIndex>, G4double, G4int = 1) = 0;
+    // virtual std::unique_ptr<G4VMoleculeReactionCounterIndex> BuildIndex(const G4Track*, const
+    // G4Track*, const G4DNAMolecularReactionData*) const = 0;
+    virtual std::unique_ptr<G4VMoleculeReactionCounterIndex>
+    BuildSimpleIndex(const G4DNAMolecularReactionData*) const = 0;
+
+    virtual void RecordReaction(std::unique_ptr<G4VMoleculeReactionCounterIndex>, G4double,
+                                G4int = 1) = 0;
 
     virtual std::set<const G4DNAMolecularReactionData*> GetRecordedReactions() const = 0;
 
   protected:
+
     MoleculeReactionCounterType fType{MoleculeReactionCounterType::Basic};
 
   public:
-	  MoleculeReactionCounterType GetType() const;
+
+    MoleculeReactionCounterType GetType() const;
 };
 
 //------------------------------------------------------------------------------
 
-inline G4VMoleculeReactionCounter::MoleculeReactionCounterType G4VMoleculeReactionCounter::GetType() const
+inline G4VMoleculeReactionCounter::MoleculeReactionCounterType
+G4VMoleculeReactionCounter::GetType() const
 {
   return fType;
 }

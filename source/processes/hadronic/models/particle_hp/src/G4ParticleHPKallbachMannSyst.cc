@@ -58,9 +58,11 @@ G4double G4ParticleHPKallbachMannSyst::Sample(G4double anEnergy)
 
   G4int icounter = 0;
   G4int icounter_max = 1024;
-  do {
+  do
+  {
     icounter++;
-    if (icounter > icounter_max) {
+    if (icounter > icounter_max)
+    {
       G4cout << "Loop-counter exceeded the threshold value at " << __LINE__ << "th line of "
              << __FILE__ << "." << G4endl;
       break;
@@ -90,7 +92,8 @@ G4double G4ParticleHPKallbachMannSyst::GetKallbachZero(G4double anEnergy)
   // delta 4.0e-16 is OK
   // safety factor of 2
   G4double delta = 8.0e-16;
-  if (std::abs(theCompoundFraction - 1) < delta) {
+  if (std::abs(theCompoundFraction - 1) < delta)
+  {
     theCompoundFraction = 1.0 - delta;
   }
   result = 0.5 * (1. / A(anEnergy)) * G4Log((1 - theCompoundFraction) / (1 + theCompoundFraction));
@@ -124,26 +127,33 @@ G4double G4ParticleHPKallbachMannSyst::A(G4double anEnergy)
 
   G4double Ma = 1;
   G4double mb = 1;
-  if (theProjectileA == 1 || (theProjectileZ == 1 && theProjectileA == 2)) {
+  if (theProjectileA == 1 || (theProjectileZ == 1 && theProjectileA == 2))
+  {
     Ma = 1;
   }  // neutron,proton,deuteron
-  else if (theProjectileA == 4 && theProjectileZ == 2) {
+  else if (theProjectileA == 4 && theProjectileZ == 2)
+  {
     Ma = 0;
   }  // alpha
-  else if (theProjectileA == 3 && (theProjectileZ == 1 || theProjectileZ == 2)) {
+  else if (theProjectileA == 3 && (theProjectileZ == 1 || theProjectileZ == 2))
+  {
     Ma = 0.5;
   }  // tritum,He3 : set intermediate value
-  else {
+  else
+  {
     throw G4HadronicException(__FILE__, __LINE__,
                               "Severe error in the sampling of Kallbach-Mann Systematics");
   }
-  if (theProductA == 1 && theProductZ == 0) {
+  if (theProductA == 1 && theProductZ == 0)
+  {
     mb = 1. / 2.;
   }  // neutron
-  else if (theProductA == 4 && theProductZ == 2) {
+  else if (theProductA == 4 && theProductZ == 2)
+  {
     mb = 2;
   }  // alpha
-  else {
+  else
+  {
     mb = 1;
   }
 
@@ -156,7 +166,10 @@ G4double G4ParticleHPKallbachMannSyst::SeparationEnergy(G4int Ac, G4int Nc, G4in
                                                         G4int Abinding, G4int Zbinding)
 {
   G4double result = 0.0;
-  if (Ac < 1 || AA < 1) { return result; }
+  if (Ac < 1 || AA < 1)
+  {
+    return result;
+  }
   G4int NA = AA - ZA;
   G4int Zc = Ac - Nc;
   result = 15.68 * (Ac - AA);

@@ -26,21 +26,21 @@
 //
 //
 // Geant4 Hadron Elastic Scattering Process -- header file
-// 
+//
 // Created 26 July 2012 V.Ivanchenko from G4WHadronElasticProcess
-//  
+//
 // Modified:
 //
 
 // Class Description
-// General process for hadron nuclear elastic scattering  
+// General process for hadron nuclear elastic scattering
 // Class Description - End
 
-#ifndef G4HadronElasticProcess_h
-#define G4HadronElasticProcess_h 1
- 
-#include "globals.hh"
+#ifndef G4HADRONELASTICPROCESS_HH
+#define G4HADRONELASTICPROCESS_HH
+
 #include "G4HadronicProcess.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 class G4CrossSectionDataStore;
@@ -48,36 +48,35 @@ class G4VCrossSectionRatio;
 
 class G4HadronElasticProcess : public G4HadronicProcess
 {
-public:
+  public:
 
-  explicit G4HadronElasticProcess(const G4String& procName = "hadElastic");
+    explicit G4HadronElasticProcess(const G4String& procName = "hadElastic");
 
-  ~G4HadronElasticProcess() override;
- 
-  G4VParticleChange* PostStepDoIt(const G4Track& aTrack, 
-                                  const G4Step& aStep) override;
+    ~G4HadronElasticProcess() override;
 
-  // set internal limit
-  virtual void SetLowestEnergy(G4double);
+    G4VParticleChange* PostStepDoIt(const G4Track& aTrack, const G4Step& aStep) override;
 
-  // obsolete method - will be removed
-  virtual void SetLowestEnergyNeutron(G4double);
+    // set internal limit
+    virtual void SetLowestEnergy(G4double);
 
-  void ProcessDescription(std::ostream& outFile) const override;
+    // obsolete method - will be removed
+    virtual void SetLowestEnergyNeutron(G4double);
 
-  // enable sampling of low-mass diffraction process
-  void SetDiffraction(G4HadronicInteraction*, G4VCrossSectionRatio*);
+    void ProcessDescription(std::ostream& outFile) const override;
 
-private:
+    // enable sampling of low-mass diffraction process
+    void SetDiffraction(G4HadronicInteraction*, G4VCrossSectionRatio*);
 
-  // hide assignment operator as private 
-  G4HadronElasticProcess& operator=(const G4HadronElasticProcess &right);
-  G4HadronElasticProcess(const G4HadronElasticProcess& );
+  private:
 
-  void PrintWarning(const G4String&) const;
+    // hide assignment operator as private
+    G4HadronElasticProcess& operator=(const G4HadronElasticProcess& right);
+    G4HadronElasticProcess(const G4HadronElasticProcess&);
 
-  G4HadronicInteraction* fDiffraction;
-  G4VCrossSectionRatio*  fDiffractionRatio;
+    void PrintWarning(const G4String&) const;
+
+    G4HadronicInteraction* fDiffraction;
+    G4VCrossSectionRatio* fDiffractionRatio;
 };
 
 #endif

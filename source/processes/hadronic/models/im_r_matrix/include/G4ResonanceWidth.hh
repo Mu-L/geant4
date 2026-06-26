@@ -32,38 +32,39 @@
 //      File name:     G4ResonanceWidth
 //
 //      Author:        Maria Grazia Pia (MariaGrazia.Pia@genova.infn.it)
-// 
+//
 //      Creation date: 15 April 1999
 //
-//      Modifications: 
-//      
+//      Modifications:
+//
 // -------------------------------------------------------------------
 
 #ifndef G4RESONANCEWIDTH_HH
 #define G4RESONANCEWIDTH_HH
 
-#include <map>
 #include "globals.hh"
+
+#include <map>
 
 class G4PhysicsVector;
 
-class G4ResonanceWidth 
+class G4ResonanceWidth
 {
-public:
+  public:
 
-  G4ResonanceWidth() {};
+    G4ResonanceWidth() {};
 
-  virtual ~G4ResonanceWidth() {};
+    virtual ~G4ResonanceWidth() {};
 
-  // Returned pointer is owned by the client
-  virtual G4PhysicsVector* MassDependentWidth(const G4String& name) const = 0;
+    // Returned pointer is owned by the client
+    virtual G4PhysicsVector* MassDependentWidth(const G4String& name) const = 0;
 
-protected:
-  
-private:  
+  protected:
 
-  G4ResonanceWidth(const G4ResonanceWidth& right);
-  G4ResonanceWidth& operator=(const G4ResonanceWidth& right);
+  private:
+
+    G4ResonanceWidth(const G4ResonanceWidth& right);
+    G4ResonanceWidth& operator=(const G4ResonanceWidth& right);
 };
-  
+
 #endif

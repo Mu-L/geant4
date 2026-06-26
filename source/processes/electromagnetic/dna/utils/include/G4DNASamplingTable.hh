@@ -23,48 +23,47 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// Created 25.03.2025 V.Ivanchenko 
+// Created 25.03.2025 V.Ivanchenko
 // on base of codes of S.Incerti & M.Karamitros
 //
 // Double differential cross section data structure
 //
 
-#ifndef  G4DNASamplingTable_HH
-#define  G4DNASamplingTable_HH 1
+#ifndef G4DNASAMPLINGTABLE_HH
+#define G4DNASAMPLINGTABLE_HH
 
 #include "globals.hh"
+
 #include <vector>
 
 class G4DNASamplingTable
-{ 
-public:
-  explicit G4DNASamplingTable(std::size_t npoint);
-  ~G4DNASamplingTable();
+{
+  public:
 
-  void LoadData(const G4String& filename, G4double factorE, G4double scaleFactor,
-		G4bool verbose);
+    explicit G4DNASamplingTable(std::size_t npoint);
+    ~G4DNASamplingTable();
 
-  G4double GetValue(G4double ekinPrimary, G4double ekinSecondary, G4int shell) const;
+    void LoadData(const G4String& filename, G4double factorE, G4double scaleFactor, G4bool verbose);
 
-  G4double SampleCumulative(G4double ekinPrimary, G4int shell) const;
-    
-  G4DNASamplingTable(const G4DNASamplingTable & copy) = delete;
-  G4DNASamplingTable& operator=(const G4DNASamplingTable& right) = delete;
+    G4double GetValue(G4double ekinPrimary, G4double ekinSecondary, G4int shell) const;
 
-private:
+    G4double SampleCumulative(G4double ekinPrimary, G4int shell) const;
 
-  G4int GetIndex(const std::vector<G4double>&, G4double x) const;
-  
-  G4double VecInterpolation(const std::vector<G4double>* ener,
-			    const std::vector<G4double>* val, G4double energy) const;
-  
-  G4double Interpolate(G4double e1, G4double e2, G4double e,
-		       G4double xs1, G4double xs2) const;
+    G4DNASamplingTable(const G4DNASamplingTable& copy) = delete;
+    G4DNASamplingTable& operator=(const G4DNASamplingTable& right) = delete;
 
-  G4int fNpoints{0};
-  std::vector<G4double> fPrimaryEnergy;
-  std::vector<std::vector<G4double>* > fSecEnergy;
-  std::vector<std::vector<G4double>* > fPDF[5];
-  
+  private:
+
+    G4int GetIndex(const std::vector<G4double>&, G4double x) const;
+
+    G4double VecInterpolation(const std::vector<G4double>* ener, const std::vector<G4double>* val,
+                              G4double energy) const;
+
+    G4double Interpolate(G4double e1, G4double e2, G4double e, G4double xs1, G4double xs2) const;
+
+    G4int fNpoints{0};
+    std::vector<G4double> fPrimaryEnergy;
+    std::vector<std::vector<G4double>*> fSecEnergy;
+    std::vector<std::vector<G4double>*> fPDF[5];
 };
 #endif

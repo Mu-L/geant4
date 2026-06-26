@@ -23,64 +23,57 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// G4PhysicsTableHelper class implementation 
+// G4PhysicsTableHelper class implementation
 //
 // Author: H.Kurashige, 20 August 2004 - First implementation
 // --------------------------------------------------------------------
 
-#include "G4PhysicsTableHelper.hh" 
-#include "G4ProductionCutsTable.hh"
+#include "G4PhysicsTableHelper.hh"
+
 #include "G4MCCIndexConversionTable.hh"
+#include "G4ProductionCutsTable.hh"
 #include "G4Threading.hh"
 #include "G4ios.hh"
 
-G4int G4PhysicsTableHelper::verboseLevel = 1; 
+G4int G4PhysicsTableHelper::verboseLevel = 1;
 
 // --------------------------------------------------------------------
-G4PhysicsTableHelper::G4PhysicsTableHelper()
-{
-}
+G4PhysicsTableHelper::G4PhysicsTableHelper() {}
 
 // --------------------------------------------------------------------
-G4PhysicsTableHelper::~G4PhysicsTableHelper()
-{
-}
+G4PhysicsTableHelper::~G4PhysicsTableHelper() {}
 
 // --------------------------------------------------------------------
-G4PhysicsTable*
-G4PhysicsTableHelper::PreparePhysicsTable(G4PhysicsTable* physTable)
+G4PhysicsTable* G4PhysicsTableHelper::PreparePhysicsTable(G4PhysicsTable* physTable)
 {
-  G4ProductionCutsTable* cutTable
-    = G4ProductionCutsTable::GetProductionCutsTable();
-  std::size_t numberOfMCC = cutTable->GetTableSize(); 
+  G4ProductionCutsTable* cutTable = G4ProductionCutsTable::GetProductionCutsTable();
+  std::size_t numberOfMCC = cutTable->GetTableSize();
 
-  if ( physTable != nullptr )
+  if (physTable != nullptr)
   {
     // compare size of physics table and number of material-cuts-couple
-    if ( physTable->size() < numberOfMCC )
+    if (physTable->size() < numberOfMCC)
     {
-#ifdef G4VERBOSE  
-      if (verboseLevel>2)
+#ifdef G4VERBOSE
+      if (verboseLevel > 2)
       {
         G4cout << "G4PhysicsTableHelper::PreparePhysicsTable: "
-               << " the table " << physTable << " size="
-	       << physTable->size()
+               << " the table " << physTable << " size=" << physTable->size()
                << " will be is resized to " << numberOfMCC << G4endl;
       }
-#endif 
+#endif
       // enlarge physics table
       physTable->resize(numberOfMCC, nullptr);
     }
-    else if ( physTable->size() > numberOfMCC )
+    else if (physTable->size() > numberOfMCC)
     {
-      // ERROR: this situation should not occur  
+      // ERROR: this situation should not occur
       // size of physics table is larger than number of material-cuts-couple
       G4ExceptionDescription ed;
       ed << "table " << physTable << " size=" << physTable->size()
-	 << " is longer than number of material-cuts-couple " << numberOfMCC; 
-      G4Exception( "G4PhysicsTableHelper::PreparePhysicsTable()",
-                   "ProcCuts001", FatalException, ed);
-    } 
+         << " is longer than number of material-cuts-couple " << numberOfMCC;
+      G4Exception("G4PhysicsTableHelper::PreparePhysicsTable()", "ProcCuts001", FatalException, ed);
+    }
   }
   else
   {
@@ -89,85 +82,79 @@ G4PhysicsTableHelper::PreparePhysicsTable(G4PhysicsTable* physTable)
     physTable->resize(numberOfMCC, nullptr);
   }
 
-#ifdef G4VERBOSE  
-  if (verboseLevel>2)
+#ifdef G4VERBOSE
+  if (verboseLevel > 2)
   {
     G4cout << "G4PhysicsTableHelper::PreparePhysicsTable: "
-	   << " the table "<< physTable
-	   << " size=" << numberOfMCC << G4endl;
+           << " the table " << physTable << " size=" << numberOfMCC << G4endl;
   }
-#endif 
+#endif
 
   // Reset recal-needed flag for all physics vectors
   physTable->ResetFlagArray();
 
-  for (std::size_t idx = 0; idx <numberOfMCC; ++idx)
+  for (std::size_t idx = 0; idx < numberOfMCC; ++idx)
   {
     const G4MaterialCutsCouple* mcc = cutTable->GetMaterialCutsCouple((G4int)idx);
 
-    // check if re-calculation of the physics vector is needed 
+    // check if re-calculation of the physics vector is needed
     // MCC is not used
-    if ( !mcc->IsUsed() ) physTable->ClearFlag(idx);
+    if (!mcc->IsUsed()) physTable->ClearFlag(idx);
 
-    // RecalcNeeded flag of MCC is not asserted 
-    if ( !mcc->IsRecalcNeeded() ) physTable->ClearFlag(idx);
+    // RecalcNeeded flag of MCC is not asserted
+    if (!mcc->IsRecalcNeeded()) physTable->ClearFlag(idx);
   }
-  
+
   return physTable;
 }
 
 // --------------------------------------------------------------------
 G4bool G4PhysicsTableHelper::RetrievePhysicsTable(G4PhysicsTable* physTable,
-                                                  const G4String& fileName,
-                                                  G4bool ascii, G4bool spline)
+                                                  const G4String& fileName, G4bool ascii,
+                                                  G4bool spline)
 {
-  if (physTable == nullptr ) return false;
-  
+  if (physTable == nullptr) return false;
+
   // retrieve physics table from the given file
   G4PhysicsTable* tempTable = new G4PhysicsTable();
-  if (! tempTable->RetrievePhysicsTable(fileName,ascii,spline) )
+  if (!tempTable->RetrievePhysicsTable(fileName, ascii, spline))
   {
     G4ExceptionDescription ed;
     ed << "Cannot retrieve physics table from the file <" << fileName << ">";
-    G4Exception( "G4ProductionCutsTable::RetrievePhysicsTable()",
-                 "ProcCuts105", JustWarning, ed);
-    delete tempTable;
-    return false;
-  } 
-
-  G4ProductionCutsTable* cutTable
-    = G4ProductionCutsTable::GetProductionCutsTable();  
-  const G4MCCIndexConversionTable* converter
-    = cutTable->GetMCCIndexConversionTable();
-
-  // check physics table size
-  if ( tempTable->size() != converter->size())
-  {
-    G4ExceptionDescription ed;
-    ed << "Physics table in " << fileName
-       << "\n   size=" << tempTable->size() << " "
-       << " is inconsistent with material-cut-couple "
-       << "size=" << converter->size() << " the table is not retrieved!";
-    G4Exception("G4ProductionCutsTable::RetrievePhysicsTable()",
-                "ProcCuts106", JustWarning, ed);
+    G4Exception("G4ProductionCutsTable::RetrievePhysicsTable()", "ProcCuts105", JustWarning, ed);
     delete tempTable;
     return false;
   }
-  
-  // fill the given physics table with retrieved physics vectors 
-  for (std::size_t idx=0; idx<converter->size(); ++idx)
+
+  G4ProductionCutsTable* cutTable = G4ProductionCutsTable::GetProductionCutsTable();
+  const G4MCCIndexConversionTable* converter = cutTable->GetMCCIndexConversionTable();
+
+  // check physics table size
+  if (tempTable->size() != converter->size())
+  {
+    G4ExceptionDescription ed;
+    ed << "Physics table in " << fileName << "\n   size=" << tempTable->size() << " "
+       << " is inconsistent with material-cut-couple "
+       << "size=" << converter->size() << " the table is not retrieved!";
+    G4Exception("G4ProductionCutsTable::RetrievePhysicsTable()", "ProcCuts106", JustWarning, ed);
+    delete tempTable;
+    return false;
+  }
+
+  // fill the given physics table with retrieved physics vectors
+  for (std::size_t idx = 0; idx < converter->size(); ++idx)
   {
     if (converter->IsUsed(idx))
     {
       G4int i = converter->GetIndex(idx);
-      if(i < 0) 
+      if (i < 0)
       {
         tempTable->clearAndDestroy();
-	delete tempTable;
-	return false;
-      }	
+        delete tempTable;
+        return false;
+      }
       G4PhysicsVector* vec = (*physTable)[i];
-      if (vec != nullptr ) delete vec;
+      if (vec != nullptr) delete vec;
       (*physTable)[i] = (*tempTable)[idx];
       physTable->ClearFlag(i);
     }
@@ -179,25 +166,25 @@ G4bool G4PhysicsTableHelper::RetrievePhysicsTable(G4PhysicsTable* physTable,
 }
 
 // --------------------------------------------------------------------
-void G4PhysicsTableHelper::SetPhysicsVector(G4PhysicsTable* physTable,
-                                            std::size_t idx,
+void G4PhysicsTableHelper::SetPhysicsVector(G4PhysicsTable* physTable, std::size_t idx,
                                             G4PhysicsVector* vec)
 {
-  if ( physTable == nullptr) {  return;  }
+  if (physTable == nullptr)
+  {
+    return;
+  }
 
-  if ( physTable->size() <= idx)
+  if (physTable->size() <= idx)
   {
     G4ExceptionDescription ed;
     ed << "Given index (" << idx << ")  exceeds "
        << "the size of the physics table "
        << "( size =" << physTable->size() << ") the vector is not added!";
-    G4Exception("G4ProductionCutsTable::SetPhysicsVector()",
-                "ProcCuts107",
-                JustWarning, ed);
+    G4Exception("G4ProductionCutsTable::SetPhysicsVector()", "ProcCuts107", JustWarning, ed);
     return;
-  } 
+  }
 
-  // set physics vector 
+  // set physics vector
   (*physTable)[idx] = vec;
   // clear flag
   physTable->ClearFlag(idx);
@@ -206,7 +193,7 @@ void G4PhysicsTableHelper::SetPhysicsVector(G4PhysicsTable* physTable,
 // --------------------------------------------------------------------
 void G4PhysicsTableHelper::SetVerboseLevel(G4int value)
 {
-  if( !G4Threading::IsWorkerThread() ) verboseLevel = value;
+  if (!G4Threading::IsWorkerThread()) verboseLevel = value;
 }
 
 // --------------------------------------------------------------------

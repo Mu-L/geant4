@@ -28,81 +28,79 @@
 // 16-10-2017 G.Cosmo, CERN
 // --------------------------------------------------------------------
 
+// Geant4/VecGeom headers must be included in order
+// clang-format off
 #include "G4Hype.hh"
-
 #include "G4UHype.hh"
+// clang-format on
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include "G4AffineTransform.hh"
-#include "G4VPVParameterisation.hh"
-#include "G4BoundingEnvelope.hh"
-#include "G4Polyhedron.hh"
+#  include "G4AffineTransform.hh"
+#  include "G4BoundingEnvelope.hh"
+#  include "G4Polyhedron.hh"
+#  include "G4VPVParameterisation.hh"
 
 ////////////////////////////////////////////////////////////////////////
 //
 // Constructor
 
-G4UHype::G4UHype(const G4String& pName,
-                       G4double  newInnerRadius,
-                       G4double  newOuterRadius,
-                       G4double  newInnerStereo,
-                       G4double  newOuterStereo,
-                       G4double  newHalfLenZ)
-  : Base_t(pName, newInnerRadius, newOuterRadius,
-                  newInnerStereo, newOuterStereo, newHalfLenZ)
-{ }
+G4UHype::G4UHype(const G4String& pName, G4double newInnerRadius, G4double newOuterRadius,
+                 G4double newInnerStereo, G4double newOuterStereo, G4double newHalfLenZ)
+  : Base_t(pName, newInnerRadius, newOuterRadius, newInnerStereo, newOuterStereo, newHalfLenZ)
+{}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Copy constructor
 
-G4UHype::G4UHype(const G4UHype& rhs)
-  : Base_t(rhs)
-{ }
+G4UHype::G4UHype(const G4UHype& rhs) : Base_t(rhs) {}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Assignment operator
 
-G4UHype& G4UHype::operator = (const G4UHype& rhs)
+G4UHype& G4UHype::operator=(const G4UHype& rhs)
 {
-   // Check assignment to self
-   //
-   if (this == &rhs)  { return *this; }
+  // Check assignment to self
+  //
+  if (this == &rhs)
+  {
+    return *this;
+  }
 
-   // Copy base class data
-   //
-   Base_t::operator=(rhs);
+  // Copy base class data
+  //
+  Base_t::operator=(rhs);
 
-   return *this;
+  return *this;
 }
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Accessors
 
-G4double G4UHype::GetInnerRadius () const
+G4double G4UHype::GetInnerRadius() const
 {
   return GetRmin();
 }
 
-G4double G4UHype::GetOuterRadius () const
+G4double G4UHype::GetOuterRadius() const
 {
   return GetRmax();
 }
 
-G4double G4UHype::GetZHalfLength () const
+G4double G4UHype::GetZHalfLength() const
 {
   return GetDz();
 }
 
-G4double G4UHype::GetInnerStereo () const
+G4double G4UHype::GetInnerStereo() const
 {
   return GetStIn();
 }
 
-G4double G4UHype::GetOuterStereo () const
+G4double G4UHype::GetOuterStereo() const
 {
   return GetStOut();
 }
@@ -111,49 +109,46 @@ G4double G4UHype::GetOuterStereo () const
 //
 // Modifiers
 
-void G4UHype::SetInnerRadius (G4double newIRad)
+void G4UHype::SetInnerRadius(G4double newIRad)
 {
   SetParameters(newIRad, GetRmax(), GetStIn(), GetStOut(), GetDz());
   fRebuildPolyhedron = true;
 }
 
-void G4UHype::SetOuterRadius (G4double newORad)
+void G4UHype::SetOuterRadius(G4double newORad)
 {
   SetParameters(GetRmin(), newORad, GetStIn(), GetStOut(), GetDz());
   fRebuildPolyhedron = true;
 }
 
-void G4UHype::SetZHalfLength (G4double newHLZ)
+void G4UHype::SetZHalfLength(G4double newHLZ)
 {
   SetParameters(GetRmin(), GetRmax(), GetStIn(), GetStOut(), newHLZ);
   fRebuildPolyhedron = true;
 }
 
-void G4UHype::SetInnerStereo (G4double newISte)
+void G4UHype::SetInnerStereo(G4double newISte)
 {
   SetParameters(GetRmin(), GetRmax(), newISte, GetStOut(), GetDz());
   fRebuildPolyhedron = true;
 }
 
-void G4UHype::SetOuterStereo (G4double newOSte)
+void G4UHype::SetOuterStereo(G4double newOSte)
 {
   SetParameters(GetRmin(), GetRmax(), GetStIn(), newOSte, GetDz());
   fRebuildPolyhedron = true;
 }
-
 
 ////////////////////////////////////////////////////////////////////////
 //
 // Dispatch to parameterisation for replication mechanism dimension
 // computation & modification.
 
-void G4UHype::ComputeDimensions(G4VPVParameterisation* p,
-                                const G4int n,
+void G4UHype::ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                                 const G4VPhysicalVolume* pRep)
 {
-  p->ComputeDimensions(*(G4Hype*)this,n,pRep);
+  p->ComputeDimensions(*(G4Hype*)this, n, pRep);
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -168,24 +163,20 @@ G4VSolid* G4UHype::Clone() const
 //
 // Get bounding box
 
-void G4UHype::BoundingLimits(G4ThreeVector& pMin,
-                             G4ThreeVector& pMax) const
+void G4UHype::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
 {
   G4double endORadius = GetEndInnerRadius();
-  pMin.set(-endORadius,-endORadius,-GetDz());
-  pMax.set( endORadius, endORadius, GetDz());
+  pMin.set(-endORadius, -endORadius, -GetDz());
+  pMax.set(endORadius, endORadius, GetDz());
 
   // Check correctness of the bounding box
   //
   if (pMin.x() >= pMax.x() || pMin.y() >= pMax.y() || pMin.z() >= pMax.z())
   {
     std::ostringstream message;
-    message << "Bad bounding box (min >= max) for solid: "
-            << GetName() << " !"
-            << "\npMin = " << pMin
-            << "\npMax = " << pMax;
-    G4Exception("G4UHype::BoundingLimits()", "GeomMgt0001",
-                JustWarning, message);
+    message << "Bad bounding box (min >= max) for solid: " << GetName() << " !"
+            << "\npMin = " << pMin << "\npMax = " << pMax;
+    G4Exception("G4UHype::BoundingLimits()", "GeomMgt0001", JustWarning, message);
     StreamInfo(G4cout);
   }
 }
@@ -194,20 +185,18 @@ void G4UHype::BoundingLimits(G4ThreeVector& pMin,
 //
 // Calculate extent under transform and specified limit
 
-G4bool
-G4UHype::CalculateExtent(const EAxis pAxis,
-                         const G4VoxelLimits& pVoxelLimit,
-                         const G4AffineTransform& pTransform,
-                               G4double& pMin, G4double& pMax) const
+G4bool G4UHype::CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                                const G4AffineTransform& pTransform, G4double& pMin,
+                                G4double& pMax) const
 {
   G4ThreeVector bmin, bmax;
 
   // Get bounding box
-  BoundingLimits(bmin,bmax);
+  BoundingLimits(bmin, bmax);
 
   // Find extent
-  G4BoundingEnvelope bbox(bmin,bmax);
-  return bbox.CalculateExtent(pAxis,pVoxelLimit,pTransform,pMin,pMax);
+  G4BoundingEnvelope bbox(bmin, bmax);
+  return bbox.CalculateExtent(pAxis, pVoxelLimit, pTransform, pMin, pMax);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -216,8 +205,7 @@ G4UHype::CalculateExtent(const EAxis pAxis,
 //
 G4Polyhedron* G4UHype::CreatePolyhedron() const
 {
-  return new G4PolyhedronHype(GetRmin(), GetRmax(),
-                              GetTIn2(), GetTOut2(), GetDz());
+  return new G4PolyhedronHype(GetRmin(), GetRmax(), GetTIn2(), GetTOut2(), GetDz());
 }
 
 #endif  // G4GEOM_USE_USOLIDS

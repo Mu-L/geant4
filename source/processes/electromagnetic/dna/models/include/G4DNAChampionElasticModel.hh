@@ -25,124 +25,95 @@
 //
 //
 
-#ifndef G4DNAChampionElasticModel_h
-#define G4DNAChampionElasticModel_h 1
+#ifndef G4DNACHAMPIONELASTICMODEL_HH
+#define G4DNACHAMPIONELASTICMODEL_HH
+
+#include "G4DNACrossSectionDataSet.hh"
+#include "G4Electron.hh"
+#include "G4LogLogInterpolation.hh"
+#include "G4NistManager.hh"
+#include "G4ParticleChangeForGamma.hh"
+#include "G4ProductionCutsTable.hh"
+#include "G4VEmModel.hh"
 
 #include <map>
-#include "G4DNACrossSectionDataSet.hh"
-#include "G4VEmModel.hh"
-#include "G4Electron.hh"
-#include "G4ParticleChangeForGamma.hh"
-#include "G4LogLogInterpolation.hh"
-#include "G4ProductionCutsTable.hh"
-#include "G4NistManager.hh"
 
 class G4DNAChampionElasticModel : public G4VEmModel
 {
+  public:
 
-public:
+    G4DNAChampionElasticModel(const G4ParticleDefinition* p = nullptr,
+                              const G4String& nam = "DNAChampionElasticModel");
 
-  G4DNAChampionElasticModel(const G4ParticleDefinition* p = nullptr,
-                            const G4String& nam = "DNAChampionElasticModel");
+    ~G4DNAChampionElasticModel() override;
 
-  ~G4DNAChampionElasticModel() override;
+    G4DNAChampionElasticModel& operator=(const G4DNAChampionElasticModel& right) = delete;
+    G4DNAChampionElasticModel(const G4DNAChampionElasticModel&) = delete;
 
-  G4DNAChampionElasticModel & operator=(const G4DNAChampionElasticModel &right) = delete;
-  G4DNAChampionElasticModel(const G4DNAChampionElasticModel&) = delete;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*,
-                          const G4DataVector&) override;
+    G4double CrossSectionPerVolume(const G4Material* material, const G4ParticleDefinition* p,
+                                   G4double ekin, G4double emin, G4double emax) override;
 
-  G4double CrossSectionPerVolume(const G4Material* material,
-                                         const G4ParticleDefinition* p,
-                                         G4double ekin,
-                                         G4double emin,
-                                         G4double emax) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-                                 const G4MaterialCutsCouple*,
-                                 const G4DynamicParticle*,
-                                 G4double tmin,
-                                 G4double maxEnergy) override;
+    void SetKillBelowThreshold(G4double threshold);
 
-  void SetKillBelowThreshold(G4double threshold);
+    inline G4double GetKillBelowThreshold()
+    {
+      G4ExceptionDescription errMsg;
+      errMsg << "The method G4DNAChampionElasticModel::"
+                "GetKillBelowThreshold is deprecated";
 
-  inline G4double GetKillBelowThreshold()
-  {
-    G4ExceptionDescription errMsg;
-    errMsg << "The method G4DNAChampionElasticModel::"
-              "GetKillBelowThreshold is deprecated";
-    
-    G4Exception("G4DNAChampionElasticModel::GetKillBelowThreshold",
-                "deprecated",
-                JustWarning,
-                errMsg);
-    return 0.;
-  }
+      G4Exception("G4DNAChampionElasticModel::GetKillBelowThreshold", "deprecated", JustWarning,
+                  errMsg);
+      return 0.;
+    }
 
-private:
-  // Cross section
-  using VecMap = std::map<G4double, std::vector<G4double>>;
-  VecMap eVecm;
-  using TriDimensionMap = std::map<G4double, std::map<G4double, G4double>>;
-  TriDimensionMap eDiffCrossSectionData;
-  std::vector<G4double> eTdummyVec;
+  private:
 
-  // Water density table
-  const std::vector<G4double>* fpMolWaterDensity;
+    // Cross section
+    using VecMap = std::map<G4double, std::vector<G4double>>;
+    VecMap eVecm;
+    using TriDimensionMap = std::map<G4double, std::map<G4double, G4double>>;
+    TriDimensionMap eDiffCrossSectionData;
+    std::vector<G4double> eTdummyVec;
 
-  // Cross section
-  G4DNACrossSectionDataSet* fpData;
+    // Water density table
+    const std::vector<G4double>* fpMolWaterDensity;
 
-protected:
-  G4ParticleChangeForGamma* fParticleChangeForGamma;
+    // Cross section
+    G4DNACrossSectionDataSet* fpData;
 
-private:
-  G4int verboseLevel;
-  G4bool isInitialised{false};
-  
-  // Final state
+  protected:
 
-  //G4double DifferentialCrossSection(G4ParticleDefinition* aParticle,
-  //                                  G4double k, G4double theta);
+    G4ParticleChangeForGamma* fParticleChangeForGamma;
 
-  G4double Theta(//G4ParticleDefinition * aParticleDefinition,
-                 G4double k,
-                 G4double integrDiff);
+  private:
 
-  G4double LinLinInterpolate(G4double e1,
-                             G4double e2,
-                             G4double e,
-                             G4double xs1,
-                             G4double xs2);
+    G4int verboseLevel;
+    G4bool isInitialised{false};
 
-  G4double LinLogInterpolate(G4double e1,
-                             G4double e2,
-                             G4double e,
-                             G4double xs1,
-                             G4double xs2);
+    // Final state
 
-  G4double LogLogInterpolate(G4double e1,
-                             G4double e2,
-                             G4double e,
-                             G4double xs1,
-                             G4double xs2);
+    // G4double DifferentialCrossSection(G4ParticleDefinition* aParticle,
+    //                                   G4double k, G4double theta);
 
-  G4double QuadInterpolator(G4double e11,
-                            G4double e12,
-                            G4double e21,
-                            G4double e22,
-                            G4double x11,
-                            G4double x12,
-                            G4double x21,
-                            G4double x22,
-                            G4double t1,
-                            G4double t2,
-                            G4double t,
-                            G4double e);
+    G4double Theta(  // G4ParticleDefinition * aParticleDefinition,
+      G4double k, G4double integrDiff);
 
-  G4double RandomizeCosTheta(G4double k);
+    G4double LinLinInterpolate(G4double e1, G4double e2, G4double e, G4double xs1, G4double xs2);
 
+    G4double LinLogInterpolate(G4double e1, G4double e2, G4double e, G4double xs1, G4double xs2);
+
+    G4double LogLogInterpolate(G4double e1, G4double e2, G4double e, G4double xs1, G4double xs2);
+
+    G4double QuadInterpolator(G4double e11, G4double e12, G4double e21, G4double e22, G4double x11,
+                              G4double x12, G4double x21, G4double x22, G4double t1, G4double t2,
+                              G4double t, G4double e);
+
+    G4double RandomizeCosTheta(G4double k);
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

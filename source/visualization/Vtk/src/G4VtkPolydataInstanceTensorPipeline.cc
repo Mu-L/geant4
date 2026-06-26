@@ -56,8 +56,8 @@ std::size_t G4VtkPolydataInstanceTensorPipeline::MakeHash(const G4Polyhedron& po
   return hash;
 }
 
-G4VtkPolydataInstanceTensorPipeline::G4VtkPolydataInstanceTensorPipeline(G4String nameIn,
-                                                                         const G4VtkVisContext& vcIn)
+G4VtkPolydataInstanceTensorPipeline::G4VtkPolydataInstanceTensorPipeline(
+  G4String nameIn, const G4VtkVisContext& vcIn)
   : G4VtkPolydataInstancePipeline(nameIn, vcIn)
 {
   // Set pipeline type

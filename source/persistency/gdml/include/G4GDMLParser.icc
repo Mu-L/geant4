@@ -30,7 +30,7 @@
 
 inline void G4GDMLParser::Read(const G4String& filename, G4bool validate)
 {
-  if(G4Threading::IsMasterThread())
+  if (G4Threading::IsMasterThread())
   {
     reader->Read(filename, validate, false, strip);
     ImportRegions();
@@ -40,7 +40,7 @@ inline void G4GDMLParser::Read(const G4String& filename, G4bool validate)
 // --------------------------------------------------------------------
 inline void G4GDMLParser::ReadModule(const G4String& filename, G4bool validate)
 {
-  if(G4Threading::IsMasterThread())
+  if (G4Threading::IsMasterThread())
   {
     reader->Read(filename, validate, true);
     ImportRegions();
@@ -48,16 +48,15 @@ inline void G4GDMLParser::ReadModule(const G4String& filename, G4bool validate)
 }
 
 // --------------------------------------------------------------------
-inline void G4GDMLParser::Write(const G4String& filename,
-                                const G4VPhysicalVolume* pvol, G4bool refs,
-                                const G4String& schemaLocation)
+inline void G4GDMLParser::Write(const G4String& filename, const G4VPhysicalVolume* pvol,
+                                G4bool refs, const G4String& schemaLocation)
 {
-  if(G4Threading::IsMasterThread())
+  if (G4Threading::IsMasterThread())
   {
-    const G4int depth     = 0;
+    const G4int depth = 0;
     G4LogicalVolume* lvol = nullptr;
 
-    if(pvol == nullptr)
+    if (pvol == nullptr)
     {
       lvol = G4TransportationManager::GetTransportationManager()
                ->GetNavigatorForTracking()
@@ -69,7 +68,7 @@ inline void G4GDMLParser::Write(const G4String& filename,
       lvol = pvol->GetLogicalVolume();
     }
 
-    if(rexp)
+    if (rexp)
     {
       ExportRegions(refs);
     }
@@ -78,22 +77,21 @@ inline void G4GDMLParser::Write(const G4String& filename,
 }
 
 // --------------------------------------------------------------------
-inline void G4GDMLParser::Write(const G4String& filename,
-                                const G4LogicalVolume* lvol, G4bool refs,
+inline void G4GDMLParser::Write(const G4String& filename, const G4LogicalVolume* lvol, G4bool refs,
                                 const G4String& schemaLocation)
 {
-  if(G4Threading::IsMasterThread())
+  if (G4Threading::IsMasterThread())
   {
     const G4int depth = 0;
 
-    if(lvol == nullptr)
+    if (lvol == nullptr)
     {
       lvol = G4TransportationManager::GetTransportationManager()
                ->GetNavigatorForTracking()
                ->GetWorldVolume()
                ->GetLogicalVolume();
     }
-    if(rexp)
+    if (rexp)
     {
       ExportRegions(refs);
     }
@@ -102,11 +100,10 @@ inline void G4GDMLParser::Write(const G4String& filename,
 }
 
 // --------------------------------------------------------------------
-inline G4LogicalVolume* G4GDMLParser::ParseST(const G4String& filename,
-                                              G4Material* medium,
+inline G4LogicalVolume* G4GDMLParser::ParseST(const G4String& filename, G4Material* medium,
                                               G4Material* solid)
 {
-  if(G4Threading::IsMasterThread())
+  if (G4Threading::IsMasterThread())
   {
     G4STRead STreader;
     return STreader.Read(filename, medium, solid);
@@ -166,20 +163,17 @@ inline G4LogicalVolume* G4GDMLParser::GetVolume(const G4String& name) const
   return reader->GetVolume(name);
 }
 
-inline G4VPhysicalVolume*
-G4GDMLParser::GetPhysVolume(const G4String& name) const
+inline G4VPhysicalVolume* G4GDMLParser::GetPhysVolume(const G4String& name) const
 {
   return reader->GetPhysvol(name);
 }
 
-inline G4VPhysicalVolume*
-G4GDMLParser::GetWorldVolume(const G4String& setupName) const
+inline G4VPhysicalVolume* G4GDMLParser::GetWorldVolume(const G4String& setupName) const
 {
   return reader->GetWorldVolume(setupName);
 }
 
-inline G4GDMLAuxListType
-G4GDMLParser::GetVolumeAuxiliaryInformation(G4LogicalVolume* logvol) const
+inline G4GDMLAuxListType G4GDMLParser::GetVolumeAuxiliaryInformation(G4LogicalVolume* logvol) const
 {
   return reader->GetVolumeAuxiliaryInformation(logvol);
 }

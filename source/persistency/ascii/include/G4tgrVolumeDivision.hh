@@ -37,14 +37,14 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrVolumeDivision_hh
-#define G4tgrVolumeDivision_hh 1
+#ifndef G4TGRVOLUMEDIVISION_HH
+#define G4TGRVOLUMEDIVISION_HH
+
+#include "G4tgrPlaceDivRep.hh"
+#include "G4tgrVolume.hh"
+#include "globals.hh"
 
 #include <map>
-
-#include "globals.hh"
-#include "G4tgrVolume.hh"
-#include "G4tgrPlaceDivRep.hh"
 
 using G4mmss = std::multimap<G4String, G4String>;
 
@@ -57,8 +57,7 @@ class G4tgrVolumeDivision : public G4tgrVolume
 
     G4tgrPlaceDivRep* GetPlaceDivision() { return thePlaceDiv; }
 
-    friend std::ostream& operator<<(std::ostream& os,
-                                    const G4tgrVolumeDivision& obj);
+    friend std::ostream& operator<<(std::ostream& os, const G4tgrVolumeDivision& obj);
 
   private:
 

@@ -26,42 +26,37 @@
 // G4ExactHelixStepper implementation
 //
 // Author: John Apostolakis (CERN), 28.01.2005.
-//         Implementation adapted from ExplicitEuler by W.Wander 
+//         Implementation adapted from ExplicitEuler by W.Wander
 // -------------------------------------------------------------------
 
 #include "G4ExactHelixStepper.hh"
+
+#include "G4LineSection.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4ThreeVector.hh"
-#include "G4LineSection.hh"
 
 G4ExactHelixStepper::G4ExactHelixStepper(G4Mag_EqRhs* EqRhs)
-  : G4MagHelicalStepper(EqRhs),
-    fBfieldValue(DBL_MAX, DBL_MAX, DBL_MAX)
-{
-}
+  : G4MagHelicalStepper(EqRhs), fBfieldValue(DBL_MAX, DBL_MAX, DBL_MAX)
+{}
 
 // ---------------------------------------------------------------------------
 
-void
-G4ExactHelixStepper::Stepper( const G4double yInput[],
-                              const G4double*,
-                                    G4double hstep,
-                                    G4double yOut[],
-                                    G4double yErr[] )
-{  
+void G4ExactHelixStepper::Stepper(const G4double yInput[], const G4double*, G4double hstep,
+                                  G4double yOut[], G4double yErr[])
+{
   const G4int nvar = 6;
 
   G4int i;
   G4ThreeVector Bfld_value;
 
-  MagFieldEvaluate(yInput, Bfld_value);        
+  MagFieldEvaluate(yInput, Bfld_value);
   AdvanceHelix(yInput, Bfld_value, hstep, yOut);
 
   // We are assuming a constant field: helix is exact
   //
-  for(i=0; i<nvar; ++i)
+  for (i = 0; i < nvar; ++i)
   {
-    yErr[i] = 0.0 ;
+    yErr[i] = 0.0;
   }
 
   fBfieldValue = Bfld_value;
@@ -69,46 +64,40 @@ G4ExactHelixStepper::Stepper( const G4double yInput[],
 
 // ---------------------------------------------------------------------------
 
-void
-G4ExactHelixStepper::DumbStepper( const G4double yIn[],
-                                        G4ThreeVector Bfld,
-                                        G4double h,
-                                        G4double yOut[])
+void G4ExactHelixStepper::DumbStepper(const G4double yIn[], G4ThreeVector Bfld, G4double h,
+                                      G4double yOut[])
 {
   // Assuming a constant field: solution is a helix
 
   AdvanceHelix(yIn, Bfld, h, yOut);
 
-  G4Exception("G4ExactHelixStepper::DumbStepper",
-              "GeomField0002", FatalException,
-              "Should not be called. Stepper must do all the work." ); 
-}  
-
+  G4Exception("G4ExactHelixStepper::DumbStepper", "GeomField0002", FatalException,
+              "Should not be called. Stepper must do all the work.");
+}
 
 // ---------------------------------------------------------------------------
 
-G4double
-G4ExactHelixStepper::DistChord() const 
+G4double G4ExactHelixStepper::DistChord() const
 {
   // Implementation : must check whether h/R >  pi  !!
   //   If( h/R <  pi)   DistChord=h/2*std::tan(Ang_curve/4)
   //   Else             DistChord=R_helix
 
   G4double distChord;
-  G4double Ang_curve=GetAngCurve();
+  G4double Ang_curve = GetAngCurve();
 
-  if (Ang_curve<=pi)
+  if (Ang_curve <= pi)
   {
-    distChord=GetRadHelix()*(1-std::cos(0.5*Ang_curve));
+    distChord = GetRadHelix() * (1 - std::cos(0.5 * Ang_curve));
   }
-  else if(Ang_curve<twopi)
+  else if (Ang_curve < twopi)
   {
-    distChord=GetRadHelix()*(1+std::cos(0.5*(twopi-Ang_curve)));
+    distChord = GetRadHelix() * (1 + std::cos(0.5 * (twopi - Ang_curve)));
   }
   else
   {
-    distChord=2.*GetRadHelix();  
+    distChord = 2. * GetRadHelix();
   }
 
   return distChord;
-}   
+}

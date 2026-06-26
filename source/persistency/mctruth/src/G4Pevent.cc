@@ -31,13 +31,10 @@
 #include "G4Pevent.hh"
 
 // --------------------------------------------------------------------
-G4Pevent::G4Pevent(G4MCTEvent* mctevt, G4Event* g4evt)
-  : f_mctevt(mctevt)
-  , f_g4evt(g4evt)
+G4Pevent::G4Pevent(G4MCTEvent* mctevt, G4Event* g4evt) : f_mctevt(mctevt), f_g4evt(g4evt)
 {
   m_id = g4evt->GetEventID();
-  if(mctevt != nullptr)
-    genEventID = mctevt->GetEventNumber();
+  if (mctevt != nullptr) genEventID = mctevt->GetEventNumber();
 }
 
 // --------------------------------------------------------------------

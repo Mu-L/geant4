@@ -31,56 +31,49 @@
 // --------------------------------------------------------------------
 
 #include "G4VContinuousDiscreteProcess.hh"
-#include "G4SystemOfUnits.hh"
 
-#include "G4Step.hh"
-#include "G4Track.hh"
 #include "G4MaterialTable.hh"
+#include "G4Step.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4Track.hh"
 #include "G4VParticleChange.hh"
 
 // --------------------------------------------------------------------
 G4VContinuousDiscreteProcess::G4VContinuousDiscreteProcess()
   : G4VProcess("No Name Discrete Process")
 {
-  G4Exception("G4VContinuousDiscreteProcess::G4VContinuousDiscreteProcess()",
-              "ProcMan102", JustWarning, "Default constructor is called");
+  G4Exception("G4VContinuousDiscreteProcess::G4VContinuousDiscreteProcess()", "ProcMan102",
+              JustWarning, "Default constructor is called");
 }
 
 // --------------------------------------------------------------------
-G4VContinuousDiscreteProcess::
-G4VContinuousDiscreteProcess(const G4String& aName, G4ProcessType aType)
+G4VContinuousDiscreteProcess::G4VContinuousDiscreteProcess(const G4String& aName,
+                                                           G4ProcessType aType)
   : G4VProcess(aName, aType)
 {
   enableAtRestDoIt = false;
 }
 
 // --------------------------------------------------------------------
-G4VContinuousDiscreteProcess::~G4VContinuousDiscreteProcess()
-{
-}
+G4VContinuousDiscreteProcess::~G4VContinuousDiscreteProcess() {}
 
 // --------------------------------------------------------------------
-G4VContinuousDiscreteProcess::
-G4VContinuousDiscreteProcess(G4VContinuousDiscreteProcess& right)
-  : G4VProcess(right),
-    valueGPILSelection(right.valueGPILSelection)
-{
-}
+G4VContinuousDiscreteProcess::G4VContinuousDiscreteProcess(G4VContinuousDiscreteProcess& right)
+  : G4VProcess(right), valueGPILSelection(right.valueGPILSelection)
+{}
 
 // --------------------------------------------------------------------
-G4double G4VContinuousDiscreteProcess::
-PostStepGetPhysicalInteractionLength( const G4Track& track,
-                                      G4double   previousStepSize,
-                                      G4ForceCondition* condition )
+G4double G4VContinuousDiscreteProcess::PostStepGetPhysicalInteractionLength(
+  const G4Track& track, G4double previousStepSize, G4ForceCondition* condition)
 {
-  if ( (previousStepSize <=0.0) || (theNumberOfInteractionLengthLeft<=0.0))
+  if ((previousStepSize <= 0.0) || (theNumberOfInteractionLengthLeft <= 0.0))
   {
     // beginning of tracking (or just after DoIt() of this process)
     ResetNumberOfInteractionLengthLeft();
   }
-  else if ( previousStepSize > 0.0)
+  else if (previousStepSize > 0.0)
   {
-    // subtract NumberOfInteractionLengthLeft 
+    // subtract NumberOfInteractionLengthLeft
     SubtractNumberOfInteractionLengthLeft(previousStepSize);
   }
   else
@@ -93,7 +86,7 @@ PostStepGetPhysicalInteractionLength( const G4Track& track,
   *condition = NotForced;
 
   // get mean free path
-  currentInteractionLength = GetMeanFreePath(track,previousStepSize,condition);
+  currentInteractionLength = GetMeanFreePath(track, previousStepSize, condition);
 
   G4double value;
   if (currentInteractionLength < DBL_MAX)
@@ -105,23 +98,21 @@ PostStepGetPhysicalInteractionLength( const G4Track& track,
     value = DBL_MAX;
   }
 #ifdef G4VERBOSE
-  if (verboseLevel>1)
+  if (verboseLevel > 1)
   {
     G4cout << "G4VContinuousDiscreteProcess::PostStepGetPhysicalInteractionLength() - ";
     G4cout << "[ " << GetProcessName() << "]" << G4endl;
     track.GetDynamicParticle()->DumpInfo();
-    G4cout << " in Material  " <<  track.GetMaterial()->GetName() << G4endl;
-    G4cout << "InteractionLength= " << value/cm <<"[cm] " << G4endl;
+    G4cout << " in Material  " << track.GetMaterial()->GetName() << G4endl;
+    G4cout << "InteractionLength= " << value / cm << "[cm] " << G4endl;
   }
 #endif
   return value;
 }
 
 // --------------------------------------------------------------------
-G4VParticleChange*
-G4VContinuousDiscreteProcess::PostStepDoIt( const G4Track& ,
-                                            const G4Step& )
-{ 
+G4VParticleChange* G4VContinuousDiscreteProcess::PostStepDoIt(const G4Track&, const G4Step&)
+{
   // clear  NumberOfInteractionLengthLeft
   ClearNumberOfInteractionLengthLeft();
 
@@ -129,10 +120,8 @@ G4VContinuousDiscreteProcess::PostStepDoIt( const G4Track& ,
 }
 
 // --------------------------------------------------------------------
-G4VParticleChange*
-G4VContinuousDiscreteProcess::AlongStepDoIt( const G4Track& ,
-                                             const G4Step& )
-{ 
+G4VParticleChange* G4VContinuousDiscreteProcess::AlongStepDoIt(const G4Track&, const G4Step&)
+{
   // clear  NumberOfInteractionLengthLeft
   ClearNumberOfInteractionLengthLeft();
 
@@ -140,31 +129,29 @@ G4VContinuousDiscreteProcess::AlongStepDoIt( const G4Track& ,
 }
 
 // --------------------------------------------------------------------
-G4double G4VContinuousDiscreteProcess::
-AlongStepGetPhysicalInteractionLength( const G4Track& track,
-                                       G4double previousStepSize,
-                                       G4double currentMinimumStep,
-                                       G4double& currentSafety,
-                                       G4GPILSelection* selection )
+G4double G4VContinuousDiscreteProcess::AlongStepGetPhysicalInteractionLength(
+  const G4Track& track, G4double previousStepSize, G4double currentMinimumStep,
+  G4double& currentSafety, G4GPILSelection* selection)
 {
   // GPILSelection is set to defaule value of CandidateForSelection
   valueGPILSelection = CandidateForSelection;
 
   // get Step limit proposed by the process
-  G4double steplength = GetContinuousStepLimit(track,previousStepSize,currentMinimumStep,currentSafety);
+  G4double steplength =
+    GetContinuousStepLimit(track, previousStepSize, currentMinimumStep, currentSafety);
 
   // set return value for G4GPILSelection
   *selection = valueGPILSelection;
 
 #ifdef G4VERBOSE
-  if (verboseLevel>1)
+  if (verboseLevel > 1)
   {
     G4cout << "G4VContinuousDiscreteProcess::AlongStepGetPhysicalInteractionLength() - ";
     G4cout << "[ " << GetProcessName() << "]" << G4endl;
     track.GetDynamicParticle()->DumpInfo();
-    G4cout << " in Material  " <<  track.GetMaterial()->GetName() << G4endl;
-    G4cout << "IntractionLength= " << steplength/cm <<"[cm] " << G4endl;
+    G4cout << " in Material  " << track.GetMaterial()->GetName() << G4endl;
+    G4cout << "IntractionLength= " << steplength / cm << "[cm] " << G4endl;
   }
 #endif
-  return  steplength;
+  return steplength;
 }

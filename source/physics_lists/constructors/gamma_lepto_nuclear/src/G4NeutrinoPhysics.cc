@@ -37,47 +37,40 @@
 
 #include "G4NeutrinoPhysics.hh"
 
-#include "G4SystemOfUnits.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4ProcessManager.hh"
-
-#include "G4Electron.hh"
-#include "G4AntiNeutrinoE.hh"
-#include "G4NeutrinoE.hh"
-#include "G4AntiNeutrinoMu.hh"
-#include "G4NeutrinoMu.hh"
-#include "G4AntiNeutrinoTau.hh"
-#include "G4NeutrinoTau.hh"
-
-#include "G4NeutrinoElectronProcess.hh"
-#include "G4NeutrinoElectronTotXsc.hh"
-#include "G4NeutrinoElectronCcModel.hh"
-#include "G4NeutrinoElectronNcModel.hh"
-
-#include "G4MuNeutrinoNucleusProcess.hh"
-#include "G4TauNeutrinoNucleusProcess.hh"
-#include "G4ElNeutrinoNucleusProcess.hh"
-#include "G4NuVacOscProcess.hh"
-
-#include "G4MuNeutrinoNucleusTotXsc.hh"
-#include "G4TauNeutrinoNucleusTotXsc.hh"
-#include "G4ElNeutrinoNucleusTotXsc.hh"
-
-#include "G4NuMuNucleusCcModel.hh"
-#include "G4NuMuNucleusNcModel.hh"
-#include "G4ANuMuNucleusCcModel.hh"
-#include "G4ANuMuNucleusNcModel.hh"
-
-#include "G4NuTauNucleusCcModel.hh"
-#include "G4NuTauNucleusNcModel.hh"
-#include "G4ANuTauNucleusCcModel.hh"
-#include "G4ANuTauNucleusNcModel.hh"
-
-#include "G4NuElNucleusCcModel.hh"
-#include "G4NuElNucleusNcModel.hh"
 #include "G4ANuElNucleusCcModel.hh"
 #include "G4ANuElNucleusNcModel.hh"
- 
+#include "G4ANuMuNucleusCcModel.hh"
+#include "G4ANuMuNucleusNcModel.hh"
+#include "G4ANuTauNucleusCcModel.hh"
+#include "G4ANuTauNucleusNcModel.hh"
+#include "G4AntiNeutrinoE.hh"
+#include "G4AntiNeutrinoMu.hh"
+#include "G4AntiNeutrinoTau.hh"
+#include "G4ElNeutrinoNucleusProcess.hh"
+#include "G4ElNeutrinoNucleusTotXsc.hh"
+#include "G4Electron.hh"
+#include "G4MuNeutrinoNucleusProcess.hh"
+#include "G4MuNeutrinoNucleusTotXsc.hh"
+#include "G4NeutrinoE.hh"
+#include "G4NeutrinoElectronCcModel.hh"
+#include "G4NeutrinoElectronNcModel.hh"
+#include "G4NeutrinoElectronProcess.hh"
+#include "G4NeutrinoElectronTotXsc.hh"
+#include "G4NeutrinoMu.hh"
+#include "G4NeutrinoTau.hh"
+#include "G4NuElNucleusCcModel.hh"
+#include "G4NuElNucleusNcModel.hh"
+#include "G4NuMuNucleusCcModel.hh"
+#include "G4NuMuNucleusNcModel.hh"
+#include "G4NuTauNucleusCcModel.hh"
+#include "G4NuTauNucleusNcModel.hh"
+#include "G4NuVacOscProcess.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ProcessManager.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4TauNeutrinoNucleusProcess.hh"
+#include "G4TauNeutrinoNucleusTotXsc.hh"
+
 // factory
 #include "G4PhysicsConstructorFactory.hh"
 //
@@ -85,12 +78,11 @@ G4_DECLARE_PHYSCONSTR_FACTORY(G4NeutrinoPhysics);
 
 //////////////////////////////////////
 
-G4NeutrinoPhysics::G4NeutrinoPhysics(G4int ver): 
-  G4VPhysicsConstructor("NeutrinoPhys"),
-  verbose(ver)
+G4NeutrinoPhysics::G4NeutrinoPhysics(G4int ver)
+  : G4VPhysicsConstructor("NeutrinoPhys"), verbose(ver)
 {
   theMessenger = new G4NeutrinoPhysicsMessenger(this);
-  if(verbose > 1) G4cout << "### G4NeutrinoPhysics" << G4endl;
+  if (verbose > 1) G4cout << "### G4NeutrinoPhysics" << G4endl;
 }
 
 G4NeutrinoPhysics::~G4NeutrinoPhysics()
@@ -110,22 +102,22 @@ void G4NeutrinoPhysics::SetNuOscillation(G4bool val)
 
 void G4NeutrinoPhysics::SetNuEleCcBias(G4double bf)
 {
-  if(bf > 0.0) fNuEleCcBias = bf;
+  if (bf > 0.0) fNuEleCcBias = bf;
 }
 
 void G4NeutrinoPhysics::SetNuEleNcBias(G4double bf)
 {
-  if(bf > 0.0) fNuEleNcBias = bf;
+  if (bf > 0.0) fNuEleNcBias = bf;
 }
 
 void G4NeutrinoPhysics::SetNuNucleusBias(G4double bf)
 {
-  if(bf > 0.0) fNuNucleusBias = bf;
+  if (bf > 0.0) fNuNucleusBias = bf;
 }
 
 void G4NeutrinoPhysics::SetNuOscDistanceBias(G4double bf)
 {
-  if(bf > 0.0) fNuOscDistanceBias = bf;
+  if (bf > 0.0) fNuOscDistanceBias = bf;
 }
 
 void G4NeutrinoPhysics::SetNuDetectorName(const G4String& dn)
@@ -154,21 +146,18 @@ void G4NeutrinoPhysics::ConstructParticle()
 void G4NeutrinoPhysics::ConstructProcess()
 {
   const G4ParticleDefinition* p[6] = {
-    G4AntiNeutrinoE::AntiNeutrinoE(),
-    G4NeutrinoE::NeutrinoE(),
-    G4AntiNeutrinoMu::AntiNeutrinoMu(),
-    G4NeutrinoMu::NeutrinoMu(),
-    G4AntiNeutrinoTau::AntiNeutrinoTau(),
-    G4NeutrinoTau::NeutrinoTau()
-  };
+    G4AntiNeutrinoE::AntiNeutrinoE(),     G4NeutrinoE::NeutrinoE(),
+    G4AntiNeutrinoMu::AntiNeutrinoMu(),   G4NeutrinoMu::NeutrinoMu(),
+    G4AntiNeutrinoTau::AntiNeutrinoTau(), G4NeutrinoTau::NeutrinoTau()};
 
   // neutrino vacuum oscillation process
-  if (fNuOscillation) {
+  if (fNuOscillation)
+  {
     auto theNuVacOscProcess = new G4NuVacOscProcess(fNuOscDistanceName);
     theNuVacOscProcess->SetBiasingFactor(fNuOscDistanceBias);
-    
 
-    for (G4int i=0; i<6; ++i) {
+    for (G4int i = 0; i < 6; ++i)
+    {
       p[i]->GetProcessManager()->AddDiscreteProcess(theNuVacOscProcess);
     }
   }
@@ -177,11 +166,13 @@ void G4NeutrinoPhysics::ConstructProcess()
   auto theNuEleProcess = new G4NeutrinoElectronProcess(fNuDetectorName);
   G4NeutrinoElectronTotXsc* theNuEleTotXsc = new G4NeutrinoElectronTotXsc();
 
-  if (fNuETotXscActivated) {
+  if (fNuETotXscActivated)
+  {
     G4double bftot = std::max(fNuEleCcBias, fNuEleNcBias);
     theNuEleProcess->SetBiasingFactor(bftot);
   }
-  else {
+  else
+  {
     theNuEleProcess->SetBiasingFactors(fNuEleCcBias, fNuEleNcBias);
     theNuEleTotXsc->SetBiasingFactors(fNuEleCcBias, fNuEleNcBias);
   }
@@ -192,15 +183,17 @@ void G4NeutrinoPhysics::ConstructProcess()
   theNuEleProcess->RegisterMe(ccModel);
   theNuEleProcess->RegisterMe(ncModel);
 
-  for (G4int i=0; i<6; ++i) {
+  for (G4int i = 0; i < 6; ++i)
+  {
     p[i]->GetProcessManager()->AddDiscreteProcess(theNuEleProcess);
   }
 
   // nu_mu nucleus interactions
   auto theNuMuNucleusProcess = new G4MuNeutrinoNucleusProcess(fNuDetectorName);
   auto theNuMuNucleusTotXsc = new G4MuNeutrinoNucleusTotXsc();
-    
-  if (fNuETotXscActivated) {
+
+  if (fNuETotXscActivated)
+  {
     theNuMuNucleusProcess->SetBiasingFactor(fNuNucleusBias);
   }
   theNuMuNucleusProcess->AddDataSet(theNuMuNucleusTotXsc);
@@ -209,21 +202,23 @@ void G4NeutrinoPhysics::ConstructProcess()
   G4NuMuNucleusNcModel* numunuclnc = new G4NuMuNucleusNcModel();
   G4ANuMuNucleusCcModel* anumunuclcc = new G4ANuMuNucleusCcModel();
   G4ANuMuNucleusNcModel* anumunuclnc = new G4ANuMuNucleusNcModel();
-    
+
   theNuMuNucleusProcess->RegisterMe(numunuclcc);
   theNuMuNucleusProcess->RegisterMe(numunuclnc);
   theNuMuNucleusProcess->RegisterMe(anumunuclcc);
   theNuMuNucleusProcess->RegisterMe(anumunuclnc);
 
-  for (G4int i=2; i<=3; ++i) {
+  for (G4int i = 2; i <= 3; ++i)
+  {
     p[i]->GetProcessManager()->AddDiscreteProcess(theNuMuNucleusProcess);
   }
 
   // nu_tau nucleus interactions
   auto theNuTauNucleusProcess = new G4TauNeutrinoNucleusProcess(fNuDetectorName);
   auto theNuTauNucleusTotXsc = new G4TauNeutrinoNucleusTotXsc();
-    
-  if(fNuETotXscActivated) {
+
+  if (fNuETotXscActivated)
+  {
     theNuTauNucleusProcess->SetBiasingFactor(fNuNucleusBias);
   }
   theNuTauNucleusProcess->AddDataSet(theNuTauNucleusTotXsc);
@@ -232,21 +227,23 @@ void G4NeutrinoPhysics::ConstructProcess()
   G4NuTauNucleusNcModel* nutaunuclnc = new G4NuTauNucleusNcModel();
   G4ANuTauNucleusCcModel* anutaunuclcc = new G4ANuTauNucleusCcModel();
   G4ANuTauNucleusNcModel* anutaunuclnc = new G4ANuTauNucleusNcModel();
-    
+
   theNuTauNucleusProcess->RegisterMe(nutaunuclcc);
   theNuTauNucleusProcess->RegisterMe(nutaunuclnc);
   theNuTauNucleusProcess->RegisterMe(anutaunuclcc);
   theNuTauNucleusProcess->RegisterMe(anutaunuclnc);
 
-  for (G4int i=4; i<=5; ++i) {
+  for (G4int i = 4; i <= 5; ++i)
+  {
     p[i]->GetProcessManager()->AddDiscreteProcess(theNuTauNucleusProcess);
   }
 
   // nu_e nucleus interactions
   auto theNuElNucleusProcess = new G4ElNeutrinoNucleusProcess(fNuDetectorName);
   auto theNuElNucleusTotXsc = new G4ElNeutrinoNucleusTotXsc();
-    
-  if (fNuETotXscActivated) {
+
+  if (fNuETotXscActivated)
+  {
     theNuElNucleusProcess->SetBiasingFactor(fNuNucleusBias);
   }
   theNuElNucleusProcess->AddDataSet(theNuElNucleusTotXsc);
@@ -255,13 +252,14 @@ void G4NeutrinoPhysics::ConstructProcess()
   G4NuElNucleusNcModel* nuelnuclnc = new G4NuElNucleusNcModel();
   G4ANuElNucleusCcModel* anuelnuclcc = new G4ANuElNucleusCcModel();
   G4ANuElNucleusNcModel* anuelnuclnc = new G4ANuElNucleusNcModel();
-    
+
   theNuElNucleusProcess->RegisterMe(nuelnuclcc);
   theNuElNucleusProcess->RegisterMe(nuelnuclnc);
   theNuElNucleusProcess->RegisterMe(anuelnuclcc);
   theNuElNucleusProcess->RegisterMe(anuelnuclnc);
 
-  for (G4int i=0; i<=1; ++i) {
+  for (G4int i = 0; i <= 1; ++i)
+  {
     p[i]->GetProcessManager()->AddDiscreteProcess(theNuElNucleusProcess);
   }
 }

@@ -43,29 +43,32 @@ class QString;
 //
 // Class description - end :
 
-class G4SoQt : public G4VInteractorManager {
-public:
-  virtual ~G4SoQt();
-  static G4SoQt* getInstance();
-  // FWJ no command line args for time being
-  //  static G4SoQt* getInstance(int, char**, char*);
-  G4bool Inited();
-  void* GetEvent();
-  void FlushAndWaitExecution();
-  void SecondaryLoop();
-   // Added direct exit method
-  void ExitSecondaryLoop();
-  bool IsExternalApp();
+class G4SoQt : public G4VInteractorManager
+{
+  public:
 
-private:
-  G4SoQt(const G4SoQt&);
-  G4SoQt();
-  //  G4SoQt(int, char**, char*);
-  G4SoQt& operator=(const G4SoQt&);
-  static G4SoQt* instance; // Pointer to single instance.
-  //  int    argn;
-  //  char** args;
-  bool externalApp;
+    virtual ~G4SoQt();
+    static G4SoQt* getInstance();
+    // FWJ no command line args for time being
+    //  static G4SoQt* getInstance(int, char**, char*);
+    G4bool Inited();
+    void* GetEvent();
+    void FlushAndWaitExecution();
+    void SecondaryLoop();
+    // Added direct exit method
+    void ExitSecondaryLoop();
+    bool IsExternalApp();
+
+  private:
+
+    G4SoQt(const G4SoQt&);
+    G4SoQt();
+    //  G4SoQt(int, char**, char*);
+    G4SoQt& operator=(const G4SoQt&);
+    static G4SoQt* instance;  // Pointer to single instance.
+    //  int    argn;
+    //  char** args;
+    bool externalApp;
 };
 
 #endif

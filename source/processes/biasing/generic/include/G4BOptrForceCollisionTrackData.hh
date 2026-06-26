@@ -35,36 +35,39 @@
 //
 // Author: M.Verderi (LLR), October 2015.
 // --------------------------------------------------------------------
-#ifndef G4BOptrForceCollisionTrackData_hh
-#define G4BOptrForceCollisionTrackData_hh 1
+#ifndef G4BOPTRFORCECOLLISIONTRACKDATA_HH
+#define G4BOPTRFORCECOLLISIONTRACKDATA_HH
 
 #include "G4VAuxiliaryTrackInformation.hh"
 
 class G4BOptrForceCollision;
 
-enum class ForceCollisionState { free, toBeCloned, toBeForced, toBeFreeFlight };
+enum class ForceCollisionState
+{
+  free,
+  toBeCloned,
+  toBeForced,
+  toBeFreeFlight
+};
 
 class G4BOptrForceCollisionTrackData : public G4VAuxiliaryTrackInformation
 {
-  friend class G4BOptrForceCollision;
-  
+    friend class G4BOptrForceCollision;
+
   public:
 
-    G4BOptrForceCollisionTrackData( const G4BOptrForceCollision* );
+    G4BOptrForceCollisionTrackData(const G4BOptrForceCollision*);
     ~G4BOptrForceCollisionTrackData();
-  
+
     // -- from base class:
     void Print() const;
 
     // -- Get methods:
-    G4bool IsFreeFromBiasing() const
-    {
-      return ( fForceCollisionState == ForceCollisionState::free);
-    }
+    G4bool IsFreeFromBiasing() const { return (fForceCollisionState == ForceCollisionState::free); }
 
     // -- no set methods are provided : sets are made under exclusive
     //    control of G4BOptrForceCollision objects through friendness.
-  
+
   private:
 
     void Reset()

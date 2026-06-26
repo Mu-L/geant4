@@ -22,23 +22,24 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // History:
 // -----------
 //  01 Oct 2011   A.M., S.I. - 1st implementation
-// 
+//
 // Class description
 // ----------------
 //  Computation of K, L & M shell ECPSSR ionisation cross sections for protons and alphas
-//  Based on the work of A. Taborda et al. 
+//  Based on the work of A. Taborda et al.
 //  X-Ray Spectrom. 2011, 40, 127-134
 // ---------------------------------------------------------------------------------------
 
-#ifndef G4ecpssrFormFactorLixsModel_HH
-#define G4ecpssrFormFactorLixsModel_HH 1
+#ifndef G4ECPSSRFORMFACTORLIXSMODEL_HH
+#define G4ECPSSRFORMFACTORLIXSMODEL_HH
 
 #include "G4VecpssrLiModel.hh"
 #include "globals.hh"
+
 #include <map>
 
 class G4VDataSetAlgorithm;
@@ -46,27 +47,32 @@ class G4VEMDataSet;
 
 class G4ecpssrFormFactorLixsModel : public G4VecpssrLiModel
 {
-public:
-  explicit G4ecpssrFormFactorLixsModel();
+  public:
 
-  virtual ~G4ecpssrFormFactorLixsModel();
-			     
-  G4double CalculateL1CrossSection (G4int zTarget, G4double massIncident, G4double energyIncident) override;
-  G4double CalculateL2CrossSection (G4int zTarget, G4double massIncident, G4double energyIncident) override;
-  G4double CalculateL3CrossSection (G4int zTarget, G4double massIncident, G4double energyIncident) override;
-				     
-  G4ecpssrFormFactorLixsModel(const G4ecpssrFormFactorLixsModel&) = delete;
-  G4ecpssrFormFactorLixsModel & operator = (const G4ecpssrFormFactorLixsModel &right) = delete;
+    explicit G4ecpssrFormFactorLixsModel();
 
-private:
-  G4VDataSetAlgorithm* interpolation;
+    virtual ~G4ecpssrFormFactorLixsModel();
 
-  std::map< G4int , G4VEMDataSet* > protonL1DataSetMap;
-  std::map< G4int , G4VEMDataSet* > protonL2DataSetMap;
-  std::map< G4int , G4VEMDataSet* > protonL3DataSetMap;
-  std::map< G4int , G4VEMDataSet* > alphaL1DataSetMap;
-  std::map< G4int , G4VEMDataSet* > alphaL2DataSetMap;
-  std::map< G4int , G4VEMDataSet* > alphaL3DataSetMap;
+    G4double CalculateL1CrossSection(G4int zTarget, G4double massIncident,
+                                     G4double energyIncident) override;
+    G4double CalculateL2CrossSection(G4int zTarget, G4double massIncident,
+                                     G4double energyIncident) override;
+    G4double CalculateL3CrossSection(G4int zTarget, G4double massIncident,
+                                     G4double energyIncident) override;
+
+    G4ecpssrFormFactorLixsModel(const G4ecpssrFormFactorLixsModel&) = delete;
+    G4ecpssrFormFactorLixsModel& operator=(const G4ecpssrFormFactorLixsModel& right) = delete;
+
+  private:
+
+    G4VDataSetAlgorithm* interpolation;
+
+    std::map<G4int, G4VEMDataSet*> protonL1DataSetMap;
+    std::map<G4int, G4VEMDataSet*> protonL2DataSetMap;
+    std::map<G4int, G4VEMDataSet*> protonL3DataSetMap;
+    std::map<G4int, G4VEMDataSet*> alphaL1DataSetMap;
+    std::map<G4int, G4VEMDataSet*> alphaL2DataSetMap;
+    std::map<G4int, G4VEMDataSet*> alphaL3DataSetMap;
 };
 
 #endif

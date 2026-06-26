@@ -46,7 +46,6 @@
 
 #include "G4ParticleHPContAngularPar.hh"
 
-#include "G4ParticleDefinition.hh"
 #include "G4Alpha.hh"
 #include "G4Deuteron.hh"
 #include "G4Electron.hh"
@@ -55,6 +54,7 @@
 #include "G4IonTable.hh"
 #include "G4Neutron.hh"
 #include "G4NucleiProperties.hh"
+#include "G4ParticleDefinition.hh"
 #include "G4ParticleHPKallbachMannSyst.hh"
 #include "G4ParticleHPLegendreStore.hh"
 #include "G4ParticleHPManager.hh"
@@ -95,9 +95,11 @@ G4ParticleHPContAngularPar::G4ParticleHPContAngularPar(G4ParticleHPContAngularPa
   fCache.Put(v);
   const std::size_t esize = nEnergies > 0 ? nEnergies : 1;
   theAngular = new G4ParticleHPList[esize];
-  for (G4int ie = 0; ie < nEnergies; ++ie) {
+  for (G4int ie = 0; ie < nEnergies; ++ie)
+  {
     theAngular[ie].SetLabel(val.theAngular[ie].GetLabel());
-    for (G4int ip = 0; ip < nAngularParameters; ++ip) {
+    for (G4int ip = 0; ip < nAngularParameters; ++ip)
+    {
       theAngular[ie].SetValue(ip, val.theAngular[ie].GetValue(ip));
     }
   }
@@ -120,7 +122,8 @@ void G4ParticleHPContAngularPar::Init(std::istream& aDataFile, const G4ParticleD
   const std::size_t esize = nEnergies > 0 ? nEnergies : 1;
   theAngular = new G4ParticleHPList[esize];
   G4double sEnergy;
-  for (G4int i = 0; i < nEnergies; ++i) {
+  for (G4int i = 0; i < nEnergies; ++i)
+  {
     aDataFile >> sEnergy;
     sEnergy *= eV;
     theAngular[i].SetLabel(sEnergy);
@@ -141,31 +144,38 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
   auto result = new G4ReactionProduct;
   auto Z = static_cast<G4int>(massCode / 1000);
   auto A = static_cast<G4int>(massCode - 1000 * Z);
-  if (massCode == 0) {
+  if (massCode == 0)
+  {
     result->SetDefinition(G4Gamma::Gamma());
   }
-  else if (A == 0) {
+  else if (A == 0)
+  {
     result->SetDefinition(G4Electron::Electron());
     if (Z == 1) result->SetDefinition(G4Positron::Positron());
   }
-  else if (A == 1) {
+  else if (A == 1)
+  {
     result->SetDefinition(G4Neutron::Neutron());
     if (Z == 1) result->SetDefinition(G4Proton::Proton());
   }
-  else if (A == 2) {
+  else if (A == 2)
+  {
     result->SetDefinition(G4Deuteron::Deuteron());
   }
-  else if (A == 3) {
+  else if (A == 3)
+  {
     result->SetDefinition(G4Triton::Triton());
     if (Z == 2) result->SetDefinition(G4He3::He3());
   }
-  else if (A == 4) {
+  else if (A == 4)
+  {
     result->SetDefinition(G4Alpha::Alpha());
     if (Z != 2)
       throw G4HadronicException(__FILE__, __LINE__,
                                 "G4ParticleHPContAngularPar: Unknown ion case 1");
   }
-  else {
+  else
+  {
     result->SetDefinition(G4IonTable::GetIonTable()->GetIon(Z, A, 0));
   }
 
@@ -175,14 +185,17 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
   G4double cosTh(0);
   /*
   G4cout << "G4ParticleHPContAngularPar::Sample E=" << anEnergy <<" Z=" << Z << " A=" << A
-         << " angularRep=" << angularRep << " Nd=" << nDiscreteEnergies 
+         << " angularRep=" << angularRep << " Nd=" << nDiscreteEnergies
          << " Ne=" << nEnergies << G4endl;
   */
-  if (angularRep == 1) {
-    if (nDiscreteEnergies != 0) {
+  if (angularRep == 1)
+  {
+    if (nDiscreteEnergies != 0)
+    {
       // 1st check remaining_energy
       // if this is the first set it. (How?)
-      if (fCache.Get().fresh) {
+      if (fCache.Get().fresh)
+      {
         // Discrete Lines, larger energies come first
         // Continues Emssions, low to high                                 LAST
         fCache.Get().remaining_energy =
@@ -192,20 +205,23 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
 
       // Cheating for small remaining_energy
       // Temporary solution
-      if (nDiscreteEnergies == nEnergies) {
+      if (nDiscreteEnergies == nEnergies)
+      {
         fCache.Get().remaining_energy =
           std::max(fCache.Get().remaining_energy,
                    theAngular[nDiscreteEnergies - 1].GetLabel());  // Minimum Line
       }
-      else {
+      else
+      {
         G4double cont_min = 0.0;
-        for (G4int j = nDiscreteEnergies; j < nEnergies; ++j) {
+        for (G4int j = nDiscreteEnergies; j < nEnergies; ++j)
+        {
           cont_min = theAngular[j].GetLabel();
           if (theAngular[j].GetValue(0) != 0.0) break;
         }
         fCache.Get().remaining_energy = std::max(
           fCache.Get().remaining_energy, std::min(theAngular[nDiscreteEnergies - 1].GetLabel(),
-                                                   cont_min));  // Minimum Line or grid
+                                                  cont_min));  // Minimum Line or grid
       }
 
       G4double random = G4UniformRand();
@@ -213,7 +229,8 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
       running[0] = 0.0;
 
       G4double delta;
-      for (G4int j = 0; j < nDiscreteEnergies; ++j) {
+      for (G4int j = 0; j < nDiscreteEnergies; ++j)
+      {
         delta = 0.0;
         if (theAngular[j].GetLabel() <= fCache.Get().remaining_energy)
           delta = theAngular[j].GetValue(0);
@@ -223,7 +240,8 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
       G4double tot_prob_DIS = std::max(running[nDiscreteEnergies], 0.0);
 
       G4double delta1;
-      for (G4int j = nDiscreteEnergies; j < nEnergies; ++j) {
+      for (G4int j = nDiscreteEnergies; j < nEnergies; ++j)
+      {
         delta1 = 0.0;
         G4double e_low = 0.0;
         G4double e_high = 0.0;
@@ -235,11 +253,14 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
         // 1: theAngular[nDiscreteEnergies].GetLabel() != 0.0
         //    delta1 should be used between j-1 and j
         //    At j = nDiscreteEnergies (the first) e_low should be set explicitly
-        if (theAngular[j].GetLabel() != 0) {
-          if (j == nDiscreteEnergies) {
+        if (theAngular[j].GetLabel() != 0)
+        {
+          if (j == nDiscreteEnergies)
+          {
             e_low = 0.0 / eV;
           }
-          else {
+          else
+          {
             if (j < 1) j = 1;  // Protection against evaluation of arrays at index j-1
             e_low = theAngular[j - 1].GetLabel() / eV;
           }
@@ -248,12 +269,15 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
 
         // 2: theAngular[nDiscreteEnergies].GetLabel() == 0.0
         //    delta1 should be used between j and j+1
-        if (theAngular[j].GetLabel() == 0.0) {
+        if (theAngular[j].GetLabel() == 0.0)
+        {
           e_low = theAngular[j].GetLabel() / eV;
-          if (j != nEnergies - 1) {
+          if (j != nEnergies - 1)
+          {
             e_high = theAngular[j + 1].GetLabel() / eV;
           }
-          else {
+          else
+          {
             e_high = theAngular[j].GetLabel() / eV;
           }
         }
@@ -263,9 +287,10 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
       G4double tot_prob_CON = std::max(running[nEnergies] - running[nDiscreteEnergies], 0.0);
 
       // Give up in the pathological case of null probabilities
-      if (tot_prob_DIS == 0.0 && tot_prob_CON == 0.0) {
+      if (tot_prob_DIS == 0.0 && tot_prob_CON == 0.0)
+      {
         delete[] running;
-	return result;
+        return result;
       }
       // Normalize random
       random *= (tot_prob_DIS + tot_prob_CON);
@@ -276,9 +301,11 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
           || nDiscreteEnergies == nEnergies)
       {
         // Discrete Emission
-        for (G4int j = 0; j < nDiscreteEnergies; ++j) {
+        for (G4int j = 0; j < nDiscreteEnergies; ++j)
+        {
           // Here we should use i+1
-          if (random < running[j + 1]) {
+          if (random < running[j + 1])
+          {
             it = j;
             break;
           }
@@ -287,18 +314,22 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
 
         G4ParticleHPLegendreStore theStore(1);
         theStore.Init(0, fsEnergy, nAngularParameters);
-        for (G4int j = 0; j < nAngularParameters; ++j) {
+        for (G4int j = 0; j < nAngularParameters; ++j)
+        {
           theStore.SetCoeff(0, j, theAngular[it].GetValue(j));
         }
         // use it to sample.
         cosTh = theStore.SampleMax(fsEnergy);
         // Done
       }
-      else {
+      else
+      {
         // Continuous emission
-        for (G4int j = nDiscreteEnergies; j < nEnergies; ++j) {
+        for (G4int j = nDiscreteEnergies; j < nEnergies; ++j)
+        {
           // Here we should use i
-          if (random < running[j]) {
+          if (random < running[j])
+          {
             it = j;
             break;
           }
@@ -320,7 +351,8 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
         theStore.Init(1, y2, nAngularParameters);
         theStore.SetManager(theManager);
         G4int itt;
-        for (G4int j = 0; j < nAngularParameters; ++j) {
+        for (G4int j = 0; j < nAngularParameters; ++j)
+        {
           itt = it;
           if (it == nDiscreteEnergies) itt = it + 1;
           // "This case "it-1" has data for Discrete, so we will use an extrpolated values it and
@@ -342,9 +374,11 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
 
       // end (nDiscreteEnergies != 0) branch
     }
-    else {
+    else
+    {
       // Only continue, TK will clean up
-      if (fCache.Get().fresh) {
+      if (fCache.Get().fresh)
+      {
         fCache.Get().remaining_energy = theAngular[nEnergies - 1].GetLabel();
         fCache.Get().fresh = false;
       }
@@ -353,9 +387,11 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
       auto running = new G4double[nEnergies];
       running[0] = 0;
       G4double weighted = 0;
-      for (i = 1; i < nEnergies; i++) {
+      for (i = 1; i < nEnergies; i++)
+      {
         running[i] = running[i - 1];
-        if (fCache.Get().remaining_energy >= theAngular[i].GetLabel()) {
+        if (fCache.Get().remaining_energy >= theAngular[i].GetLabel())
+        {
           running[i] += theInt.GetBinIntegral(
             theManager.GetScheme(i - 1), theAngular[i - 1].GetLabel(), theAngular[i].GetLabel(),
             theAngular[i - 1].GetValue(0), theAngular[i].GetValue(0));
@@ -366,34 +402,42 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
       }
 
       // Cache the mean energy in this distribution
-      if (nEnergies == 1 || running[nEnergies - 1] == 0) {
+      if (nEnergies == 1 || running[nEnergies - 1] == 0)
+      {
         fCache.Get().currentMeanEnergy = 0.0;
       }
-      else {
+      else
+      {
         fCache.Get().currentMeanEnergy = weighted / running[nEnergies - 1];
       }
 
       if (nEnergies == 1) it = 0;
-      if (running[nEnergies - 1] != 0) {
-        for (i = 1; i < nEnergies; i++) {
+      if (running[nEnergies - 1] != 0)
+      {
+        for (i = 1; i < nEnergies; i++)
+        {
           it = i;
           if (random < running[i] / running[nEnergies - 1]) break;
         }
       }
 
       if (running[nEnergies - 1] == 0) it = 0;
-      if (it < nDiscreteEnergies || it == 0) {
-        if (it == 0) {
+      if (it < nDiscreteEnergies || it == 0)
+      {
+        if (it == 0)
+        {
           fsEnergy = theAngular[it].GetLabel();
           G4ParticleHPLegendreStore theStore(1);
           theStore.Init(0, fsEnergy, nAngularParameters);
-          for (i = 0; i < nAngularParameters; i++) {
+          for (i = 0; i < nAngularParameters; i++)
+          {
             theStore.SetCoeff(0, i, theAngular[it].GetValue(i));
           }
           // use it to sample.
           cosTh = theStore.SampleMax(fsEnergy);
         }
-        else {
+        else
+        {
           G4double e1, e2;
           e1 = theAngular[it - 1].GetLabel();
           e2 = theAngular[it].GetLabel();
@@ -404,7 +448,8 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
           G4ParticleHPLegendreStore theStore(2);
           theStore.Init(0, e1, nAngularParameters);
           theStore.Init(1, e2, nAngularParameters);
-          for (i = 0; i < nAngularParameters; i++) {
+          for (i = 0; i < nAngularParameters; i++)
+          {
             theStore.SetCoeff(0, i, theAngular[it - 1].GetValue(i));
             theStore.SetCoeff(1, i, theAngular[it].GetValue(i));
           }
@@ -413,7 +458,8 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
           cosTh = theStore.SampleMax(fsEnergy);
         }
       }
-      else {  // continuum contribution
+      else
+      {  // continuum contribution
         G4double x1 = running[it - 1] / running[nEnergies - 1];
         G4double x2 = running[it] / running[nEnergies - 1];
         G4double y1 = theAngular[it - 1].GetLabel();
@@ -423,7 +469,8 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
         theStore.Init(0, y1, nAngularParameters);
         theStore.Init(1, y2, nAngularParameters);
         theStore.SetManager(theManager);
-        for (i = 0; i < nAngularParameters; i++) {
+        for (i = 0; i < nAngularParameters; i++)
+        {
           theStore.SetCoeff(0, i, theAngular[it - 1].GetValue(i));
           theStore.SetCoeff(1, i, theAngular[it].GetValue(i));
         }
@@ -441,13 +488,15 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
     }
     // end of (angularRep == 1) branch
   }
-  else if (angularRep == 2) {
+  else if (angularRep == 2)
+  {
     // first get the energy (already the right for this incoming energy)
     G4int j;
     auto running = new G4double[nEnergies];
     running[0] = 0;
     G4double weighted = 0;
-    for (j = 1; j < nEnergies; ++j) {
+    for (j = 1; j < nEnergies; ++j)
+    {
       if (j != 0) running[j] = running[j - 1];
       running[j] += theInt.GetBinIntegral(theManager.GetScheme(j - 1), theAngular[j - 1].GetLabel(),
                                           theAngular[j].GetLabel(), theAngular[j - 1].GetValue(0),
@@ -465,9 +514,10 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
 
     G4int itt(0);
     G4double randkal = G4UniformRand();
-    for (j = 1; j < nEnergies; ++j) {
+    for (j = 1; j < nEnergies; ++j)
+    {
       itt = j;
-      if (randkal*running[nEnergies - 1] < running[j]) break;
+      if (randkal * running[nEnergies - 1] < running[j]) break;
     }
 
     // Interpolate the secondary energy
@@ -515,12 +565,14 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
     cosTh = theKallbach.Sample(anEnergy);
     // end (angularRep == 2) branch
   }
-  else if (angularRep > 10 && angularRep < 16) {
+  else if (angularRep > 10 && angularRep < 16)
+  {
     G4double random = G4UniformRand();
     auto running = new G4double[nEnergies];
     running[0] = 0;
     G4double weighted = 0;
-    for (i = 1; i < nEnergies; ++i) {
+    for (i = 1; i < nEnergies; ++i)
+    {
       if (i != 0) running[i] = running[i - 1];
       running[i] += theInt.GetBinIntegral(theManager.GetScheme(i - 1), theAngular[i - 1].GetLabel(),
                                           theAngular[i].GetLabel(), theAngular[i - 1].GetValue(0),
@@ -537,17 +589,21 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
       fCache.Get().currentMeanEnergy = weighted / running[nEnergies - 1];
 
     if (nEnergies == 1) it = 0;
-    for (i = 1; i < nEnergies; i++) {
+    for (i = 1; i < nEnergies; i++)
+    {
       it = i;
       if (random < running[i] / running[nEnergies - 1]) break;
     }
 
-    if (it < nDiscreteEnergies || it == 0) {
-      if (it == 0) {
+    if (it < nDiscreteEnergies || it == 0)
+    {
+      if (it == 0)
+      {
         fsEnergy = theAngular[0].GetLabel();
         G4ParticleHPVector theStore;
         G4int aCounter = 0;
-        for (G4int j = 1; j < nAngularParameters; j += 2) {
+        for (G4int j = 1; j < nAngularParameters; j += 2)
+        {
           theStore.SetX(aCounter, theAngular[0].GetValue(j));
           theStore.SetY(aCounter, theAngular[0].GetValue(j + 1));
           aCounter++;
@@ -557,7 +613,8 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
         theStore.SetInterpolationManager(aMan);
         cosTh = theStore.Sample();
       }
-      else {
+      else
+      {
         fsEnergy = theAngular[it].GetLabel();
         G4ParticleHPVector theStore;
         G4InterpolationManager aMan;
@@ -565,7 +622,8 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
         theStore.SetInterpolationManager(aMan);  // Store interpolates f(costh)
         G4InterpolationScheme currentScheme = theManager.GetInverseScheme(it);
         G4int aCounter = 0;
-        for (G4int j = 1; j < nAngularParameters; j += 2) {
+        for (G4int j = 1; j < nAngularParameters; j += 2)
+        {
           theStore.SetX(aCounter, theAngular[it].GetValue(j));
           theStore.SetY(aCounter, theInt.Interpolate(currentScheme, random,
                                                      running[it - 1] / running[nEnergies - 1],
@@ -577,7 +635,8 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
         cosTh = theStore.Sample();
       }
     }
-    else {
+    else
+    {
       G4double x1 = running[it - 1] / running[nEnergies - 1];
       G4double x2 = running[it] / running[nEnergies - 1];
       G4double y1 = theAngular[it - 1].GetLabel();
@@ -589,7 +648,8 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
       aMan.Init(angularRep - 10, nAngularParameters - 1);
 
       G4int j;
-      for (i = 0, j = 1; i < nAngularParameters; i++, j += 2) {
+      for (i = 0, j = 1; i < nAngularParameters; i++, j += 2)
+      {
         theBuff1.SetX(i, theAngular[it - 1].GetValue(j));
         theBuff1.SetY(i, theAngular[it - 1].GetValue(j + 1));
         theBuff2.SetX(i, theAngular[it].GetValue(j));
@@ -601,7 +661,8 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
       x1 = y1;
       x2 = y2;
       G4double x, y;
-      for (i = 0; i < theBuff1.GetVectorLength(); i++) {
+      for (i = 0; i < theBuff1.GetVectorLength(); i++)
+      {
         x = theBuff1.GetX(i);  // costh binning identical
         y1 = theBuff1.GetY(i);
         y2 = theBuff2.GetY(i);
@@ -614,19 +675,27 @@ G4ReactionProduct* G4ParticleHPContAngularPar::Sample(G4double anEnergy, G4doubl
     }
     delete[] running;
   }
-  else {
+  else
+  {
     throw G4HadronicException(__FILE__, __LINE__,
                               "G4ParticleHPContAngularPar::Sample: Unknown angular representation");
   }
-  //G4cout << "  Efin=" << fsEnergy << G4endl;
+  // G4cout << "  Efin=" << fsEnergy << G4endl;
   result->SetKineticEnergy(fsEnergy);
 
   G4double phi = twopi * G4UniformRand();
-  if(cosTh > 1.0) { cosTh = 1.0; }
-  else if (cosTh < -1.0) { cosTh = -1.0; }
-  G4double sinth = std::sqrt((1.0 - cosTh)*(1.0 + cosTh));
+  if (cosTh > 1.0)
+  {
+    cosTh = 1.0;
+  }
+  else if (cosTh < -1.0)
+  {
+    cosTh = -1.0;
+  }
+  G4double sinth = std::sqrt((1.0 - cosTh) * (1.0 + cosTh));
   G4double mtot = result->GetTotalMomentum();
-  G4ThreeVector tempVector(mtot * sinth * std::cos(phi), mtot * sinth * std::sin(phi), mtot * cosTh);
+  G4ThreeVector tempVector(mtot * sinth * std::cos(phi), mtot * sinth * std::sin(phi),
+                           mtot * cosTh);
   result->SetMomentum(tempVector);
   return result;
 }
@@ -641,10 +710,12 @@ void G4ParticleHPContAngularPar::PrepareTableInterpolation()
   // No attempt is made here to correct for the energies - rather an epsilon
   // is subtracted from the energy in order to uniquely identify the line
 
-  for (G4int ie = 0; ie < nDiscreteEnergies; ie++) {
+  for (G4int ie = 0; ie < nDiscreteEnergies; ie++)
+  {
     // check if energy is already present and subtract epsilon if that's the case
     G4double myE = theAngular[ie].GetLabel();
-    while (theDiscreteEnergiesOwn.find(myE) != theDiscreteEnergiesOwn.end()) {
+    while (theDiscreteEnergiesOwn.find(myE) != theDiscreteEnergiesOwn.end())
+    {
       myE -= 1e-6;
     }
     theDiscreteEnergiesOwn[myE] = ie;
@@ -668,8 +739,14 @@ void G4ParticleHPContAngularPar::BuildByInterpolation(G4double anEnergy,
   // call path (fCacheAngular vs theAngular[]) aliasing cannot occur, so
   // tmp1/tmp2 remain empty and the copies cost nothing.
   std::unique_ptr<G4ParticleHPContAngularPar> tmp1, tmp2;
-  if (this == &angpar1) { tmp1 = std::make_unique<G4ParticleHPContAngularPar>(angpar1); }
-  if (this == &angpar2) { tmp2 = std::make_unique<G4ParticleHPContAngularPar>(angpar2); }
+  if (this == &angpar1)
+  {
+    tmp1 = std::make_unique<G4ParticleHPContAngularPar>(angpar1);
+  }
+  if (this == &angpar2)
+  {
+    tmp2 = std::make_unique<G4ParticleHPContAngularPar>(angpar2);
+  }
   const G4ParticleHPContAngularPar& p1 = tmp1 ? *tmp1 : angpar1;
   const G4ParticleHPContAngularPar& p2 = tmp2 ? *tmp2 : angpar2;
 
@@ -691,35 +768,43 @@ void G4ParticleHPContAngularPar::BuildByInterpolation(G4double anEnergy,
   std::map<G4double, G4int>::const_iterator itedeo2;
   std::vector<G4ParticleHPList*> vAngular(discEnerOwn1.size());
   G4double discEner1;
-  for (itedeo1 = discEnerOwn1.cbegin(); itedeo1 != discEnerOwn1.cend(); ++itedeo1) {
+  for (itedeo1 = discEnerOwn1.cbegin(); itedeo1 != discEnerOwn1.cend(); ++itedeo1)
+  {
     discEner1 = itedeo1->first;
-    if (discEner1 < theMinEner) {
+    if (discEner1 < theMinEner)
+    {
       theMinEner = discEner1;
     }
-    if (discEner1 > theMaxEner) {
+    if (discEner1 > theMaxEner)
+    {
       theMaxEner = discEner1;
     }
     ie1 = itedeo1->second;
     itedeo2 = discEnerOwn2.find(discEner1);
-    if (itedeo2 == discEnerOwn2.cend()) {
+    if (itedeo2 == discEnerOwn2.cend())
+    {
       ie2 = -1;
     }
-    else {
+    else
+    {
       ie2 = itedeo2->second;
     }
     vAngular[ie1] = new G4ParticleHPList();
     vAngular[ie1]->SetLabel(p1.theAngular[ie1].GetLabel());
     G4double val1, val2;
-    for (G4int ip = 0; ip < nAngularParameters; ++ip) {
+    for (G4int ip = 0; ip < nAngularParameters; ++ip)
+    {
       val1 = p1.theAngular[ie1].GetValue(ip);
-      if (ie2 != -1) {
+      if (ie2 != -1)
+      {
         val2 = p2.theAngular[ie2].GetValue(ip);
       }
-      else {
+      else
+      {
         val2 = 0.;
       }
-      G4double value = theInt.Interpolate(aScheme, anEnergy, p1.theEnergy,
-                                          p2.theEnergy, val1, val2);
+      G4double value =
+        theInt.Interpolate(aScheme, anEnergy, p1.theEnergy, p2.theEnergy, val1, val2);
       vAngular[ie1]->SetValue(ip, value);
     }
   }  // itedeo1 loop
@@ -727,34 +812,42 @@ void G4ParticleHPContAngularPar::BuildByInterpolation(G4double anEnergy,
   // Add the ones in set2 but not in set1
   std::vector<G4ParticleHPList*>::const_iterator itv;
   G4double discEner2;
-  for (itedeo2 = discEnerOwn2.cbegin(); itedeo2 != discEnerOwn2.cend(); ++itedeo2) {
+  for (itedeo2 = discEnerOwn2.cbegin(); itedeo2 != discEnerOwn2.cend(); ++itedeo2)
+  {
     discEner2 = itedeo2->first;
     ie2 = itedeo2->second;
     G4bool notFound = true;
     itedeo1 = discEnerOwn1.find(discEner2);
-    if (itedeo1 != discEnerOwn1.cend()) {
+    if (itedeo1 != discEnerOwn1.cend())
+    {
       notFound = false;
     }
-    if (notFound) {
+    if (notFound)
+    {
       // not yet in list
-      if (discEner2 < theMinEner) {
+      if (discEner2 < theMinEner)
+      {
         theMinEner = discEner2;
       }
-      if (discEner2 > theMaxEner) {
+      if (discEner2 > theMaxEner)
+      {
         theMaxEner = discEner2;
       }
       // find position to insert
       G4bool isInserted = false;
       ie = 0;
-      for (itv = vAngular.cbegin(); itv != vAngular.cend(); ++itv, ++ie) {
-        if (discEner2 > (*itv)->GetLabel()) {
+      for (itv = vAngular.cbegin(); itv != vAngular.cend(); ++itv, ++ie)
+      {
+        if (discEner2 > (*itv)->GetLabel())
+        {
           itv = vAngular.insert(itv, new G4ParticleHPList);
           (*itv)->SetLabel(p2.theAngular[ie2].GetLabel());
           isInserted = true;
           break;
         }
       }
-      if (!isInserted) {
+      if (!isInserted)
+      {
         ie = (G4int)vAngular.size();
         vAngular.push_back(new G4ParticleHPList);
         vAngular[ie]->SetLabel(p2.theAngular[ie2].GetLabel());
@@ -762,11 +855,12 @@ void G4ParticleHPContAngularPar::BuildByInterpolation(G4double anEnergy,
       }
 
       G4double val1, val2;
-      for (G4int ip = 0; ip < nAngularParameters; ++ip) {
+      for (G4int ip = 0; ip < nAngularParameters; ++ip)
+      {
         val1 = 0;
         val2 = p2.theAngular[ie2].GetValue(ip);
-        G4double value = theInt.Interpolate(aScheme, anEnergy, p1.theEnergy,
-                                            p2.theEnergy, val1, val2);
+        G4double value =
+          theInt.Interpolate(aScheme, anEnergy, p1.theEnergy, p2.theEnergy, val1, val2);
         vAngular[ie]->SetValue(ip, value);
       }
     }  // end if(notFound)
@@ -776,14 +870,17 @@ void G4ParticleHPContAngularPar::BuildByInterpolation(G4double anEnergy,
   nDiscreteEnergies = (G4int)vAngular.size();
   delete[] theAngular;
   theAngular = nullptr;
-  if (nDiscreteEnergies > 0) {
+  if (nDiscreteEnergies > 0)
+  {
     theAngular = new G4ParticleHPList[nDiscreteEnergies];
   }
   theDiscreteEnergiesOwn.clear();
   theDiscreteEnergies.clear();
-  for (ie = 0; ie < nDiscreteEnergies; ++ie) {
+  for (ie = 0; ie < nDiscreteEnergies; ++ie)
+  {
     theAngular[ie].SetLabel(vAngular[ie]->GetLabel());
-    for (G4int ip = 0; ip < nAngularParameters; ++ip) {
+    for (G4int ip = 0; ip < nAngularParameters; ++ip)
+    {
       theAngular[ie].SetValue(ip, vAngular[ie]->GetValue(ip));
     }
     theDiscreteEnergiesOwn[theAngular[ie].GetLabel()] = ie;
@@ -799,12 +896,10 @@ void G4ParticleHPContAngularPar::BuildByInterpolation(G4double anEnergy,
   // Don't use theMinEner or theMaxEner here, since the transformed energies
   // need the interpolated range from the original Angpar
   G4double interMinEner = p1.GetMinEner()
-                          + (theEnergy - p1.GetEnergy())
-                              * (p2.GetMinEner() - p1.GetMinEner())
+                          + (theEnergy - p1.GetEnergy()) * (p2.GetMinEner() - p1.GetMinEner())
                               / (p2.GetEnergy() - p1.GetEnergy());
   G4double interMaxEner = p1.GetMaxEner()
-                          + (theEnergy - p1.GetEnergy())
-                              * (p2.GetMaxEner() - p1.GetMaxEner())
+                          + (theEnergy - p1.GetEnergy()) * (p2.GetMaxEner() - p1.GetMaxEner())
                               / (p2.GetEnergy() - p1.GetEnergy());
   // Loop to energies of new set
   theEnergiesTransformed.clear();
@@ -825,7 +920,8 @@ void G4ParticleHPContAngularPar::BuildByInterpolation(G4double anEnergy,
 
   G4double e1(0.);
   G4double eTNorm1(0.);
-  for (ie1 = nDiscreteEnergies1; ie1 < nEnergies1; ++ie1) {
+  for (ie1 = nDiscreteEnergies1; ie1 < nEnergies1; ++ie1)
+  {
     e1 = p1.theAngular[ie1].GetLabel();
     eTNorm1 = (e1 - minEner1);
     if (maxEner1 != minEner1) eTNorm1 /= (maxEner1 - minEner1);
@@ -834,7 +930,8 @@ void G4ParticleHPContAngularPar::BuildByInterpolation(G4double anEnergy,
 
   G4double e2(0.);
   G4double eTNorm2(0.);
-  for (ie2 = nDiscreteEnergies2; ie2 < nEnergies2; ++ie2) {
+  for (ie2 = nDiscreteEnergies2; ie2 < nEnergies2; ++ie2)
+  {
     e2 = p2.theAngular[ie2].GetLabel();
     eTNorm2 = (e2 - minEner2);
     if (maxEner2 != minEner2) eTNorm2 /= (maxEner2 - minEner2);
@@ -850,10 +947,13 @@ void G4ParticleHPContAngularPar::BuildByInterpolation(G4double anEnergy,
 
   // Copy discrete energies and interpolated parameters to new array
 
-  if (theAngular != nullptr) {
-    for (ie = 0; ie < nDiscreteEnergies; ++ie) {
+  if (theAngular != nullptr)
+  {
+    for (ie = 0; ie < nDiscreteEnergies; ++ie)
+    {
       theNewAngular[ie].SetLabel(theAngular[ie].GetLabel());
-      for (G4int ip = 0; ip < nAngularParameters; ++ip) {
+      for (G4int ip = 0; ip < nAngularParameters; ++ip)
+      {
         theNewAngular[ie].SetValue(ip, theAngular[ie].GetValue(ip));
       }
     }
@@ -866,18 +966,21 @@ void G4ParticleHPContAngularPar::BuildByInterpolation(G4double anEnergy,
 
   G4double e1Interp(0.);
   G4double e2Interp(0.);
-  for (ie = nDiscreteEnergies; ie < nEnergies; ++ie, ++iteet) {
+  for (ie = nDiscreteEnergies; ie < nEnergies; ++ie, ++iteet)
+  {
     G4double eT = (*iteet);
 
     //--- Use eT1 = eT: Get energy and parameters of copyAngpar1 for this eT
     e1Interp = (maxEner1 - minEner1) * eT + minEner1;
     //----- Get parameter value corresponding to this e1Interp
-    for (ie1 = nDiscreteEnergies1; ie1 < nEnergies1; ++ie1) {
+    for (ie1 = nDiscreteEnergies1; ie1 < nEnergies1; ++ie1)
+    {
       if ((p1.theAngular[ie1].GetLabel() - e1Interp) > 1.E-10 * e1Interp) break;
     }
     ie1Prev = ie1 - 1;
     if (ie1 == 0) ++ie1Prev;
-    if (ie1 == nEnergies1) {
+    if (ie1 == nEnergies1)
+    {
       ie1--;
       ie1Prev = ie1;
     }
@@ -885,12 +988,14 @@ void G4ParticleHPContAngularPar::BuildByInterpolation(G4double anEnergy,
     //--- Use eT2 = eT: Get energy and parameters of copyAngpar2 for this eT
     e2Interp = (maxEner2 - minEner2) * eT + minEner2;
     //----- Get parameter value corresponding to this e2Interp
-    for (ie2 = nDiscreteEnergies2; ie2 < nEnergies2; ++ie2) {
+    for (ie2 = nDiscreteEnergies2; ie2 < nEnergies2; ++ie2)
+    {
       if ((p2.theAngular[ie2].GetLabel() - e2Interp) > 1.E-10 * e2Interp) break;
     }
     ie2Prev = ie2 - 1;
     if (ie2 == 0) ++ie2Prev;
-    if (ie2 == nEnergies2) {
+    if (ie2 == nEnergies2)
+    {
       ie2--;
       ie2Prev = ie2;
     }
@@ -899,34 +1004,38 @@ void G4ParticleHPContAngularPar::BuildByInterpolation(G4double anEnergy,
     G4double eN = (interMaxEner - interMinEner) * eT + interMinEner;
 
     theAngular[ie].SetLabel(eN);
-    if (eN < theMinEner) {
+    if (eN < theMinEner)
+    {
       theMinEner = eN;
     }
-    if (eN > theMaxEner) {
+    if (eN > theMaxEner)
+    {
       theMaxEner = eN;
     }
 
     G4double val1(0.);
     G4double val2(0.);
     G4double value(0.);
-    for (G4int ip = 0; ip < nAngularParameters; ++ip) {
-      val1 = theInt.Interpolate2(
-               theManager.GetScheme(ie), e1Interp, p1.theAngular[ie1Prev].GetLabel(),
-               p1.theAngular[ie1].GetLabel(), p1.theAngular[ie1Prev].GetValue(ip),
-               p1.theAngular[ie1].GetValue(ip))
-             * (maxEner1 - minEner1);
-      val2 = theInt.Interpolate2(
-               theManager.GetScheme(ie), e2Interp, p2.theAngular[ie2Prev].GetLabel(),
-               p2.theAngular[ie2].GetLabel(), p2.theAngular[ie2Prev].GetValue(ip),
-               p2.theAngular[ie2].GetValue(ip))
-             * (maxEner2 - minEner2);
+    for (G4int ip = 0; ip < nAngularParameters; ++ip)
+    {
+      val1 =
+        theInt.Interpolate2(theManager.GetScheme(ie), e1Interp, p1.theAngular[ie1Prev].GetLabel(),
+                            p1.theAngular[ie1].GetLabel(), p1.theAngular[ie1Prev].GetValue(ip),
+                            p1.theAngular[ie1].GetValue(ip))
+        * (maxEner1 - minEner1);
+      val2 =
+        theInt.Interpolate2(theManager.GetScheme(ie), e2Interp, p2.theAngular[ie2Prev].GetLabel(),
+                            p2.theAngular[ie2].GetLabel(), p2.theAngular[ie2Prev].GetValue(ip),
+                            p2.theAngular[ie2].GetValue(ip))
+        * (maxEner2 - minEner2);
 
-      value = theInt.Interpolate(aScheme, anEnergy, p1.theEnergy, p2.theEnergy,
-                                 val1, val2);
-      if (interMaxEner != interMinEner) {
+      value = theInt.Interpolate(aScheme, anEnergy, p1.theEnergy, p2.theEnergy, val1, val2);
+      if (interMaxEner != interMinEner)
+      {
         value /= (interMaxEner - interMinEner);
       }
-      else if (value != 0) {
+      else if (value != 0)
+      {
         throw G4HadronicException(__FILE__, __LINE__,
                                   "G4ParticleHPContAngularPar::PrepareTableInterpolation "
                                   "interMaxEner == interMinEner and  value != 0.");

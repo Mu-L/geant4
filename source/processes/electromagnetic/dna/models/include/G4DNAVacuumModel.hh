@@ -25,8 +25,8 @@
 //
 //
 
-#ifndef G4DNAVacuumModel_h
-#define G4DNAVacuumModel_h 1
+#ifndef G4DNAVACUUMMODEL_HH
+#define G4DNAVACUUMMODEL_HH
 
 #include "G4DNACrossSectionDataSet.hh"
 #include "G4Electron.hh"
@@ -44,57 +44,60 @@
  */
 class G4DNAVacuumModel : public G4VDNAModel
 {
- public:
-  /*!
-   * \brief G4DNAVacuumModel
-   * Constructor
-   * \param applyToMaterial
-   * \param p
-   * \param nam
-   */
-  G4DNAVacuumModel(const G4String& applyToMaterial = "all", const G4ParticleDefinition* p = nullptr,
-    const G4String& nam = "DNAPTBVacuumModel");
+  public:
 
-  /*!
-   * \brief ~G4DNAVacuumModel
-   * Destructor
-   */
-  ~G4DNAVacuumModel() override;
+    /*!
+     * \brief G4DNAVacuumModel
+     * Constructor
+     * \param applyToMaterial
+     * \param p
+     * \param nam
+     */
+    G4DNAVacuumModel(const G4String& applyToMaterial = "all",
+                     const G4ParticleDefinition* p = nullptr,
+                     const G4String& nam = "DNAPTBVacuumModel");
 
-  G4DNAVacuumModel(const G4DNAVacuumModel&) = delete;  // prevent copy-construction
-  G4DNAVacuumModel& operator=(const G4DNAVacuumModel& right) = delete;  // prevent assignement
+    /*!
+     * \brief ~G4DNAVacuumModel
+     * Destructor
+     */
+    ~G4DNAVacuumModel() override;
 
-  /*!
-   * \brief Initialise
-   * Registers the G4_Galactic material as "void material" for every particle
-   */
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    G4DNAVacuumModel(const G4DNAVacuumModel&) = delete;  // prevent copy-construction
+    G4DNAVacuumModel& operator=(const G4DNAVacuumModel& right) = delete;  // prevent assignement
 
-  /*!
-   * \brief CrossSectionPerVolume
-   * \param material
-   * \param materialName
-   * \param p
-   * \param ekin
-   * \param emin
-   * \param emax
-   * \return cross section value
-   */
-  G4double CrossSectionPerVolume(const G4Material* material,
-    const G4ParticleDefinition* p, G4double ekin, G4double emin, G4double emax) override;
+    /*!
+     * \brief Initialise
+     * Registers the G4_Galactic material as "void material" for every particle
+     */
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  /*!
-   * \brief SampleSecondaries
-   * \param materialName
-   * \param particleChangeForGamma
-   * \param tmin
-   * \param tmax
-   */
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*, const G4DynamicParticle*, G4double tmin, G4double tmax) override;
+    /*!
+     * \brief CrossSectionPerVolume
+     * \param material
+     * \param materialName
+     * \param p
+     * \param ekin
+     * \param emin
+     * \param emax
+     * \return cross section value
+     */
+    G4double CrossSectionPerVolume(const G4Material* material, const G4ParticleDefinition* p,
+                                   G4double ekin, G4double emin, G4double emax) override;
 
- private:
-  G4int verboseLevel = 0;  ///< verbose level
+    /*!
+     * \brief SampleSecondaries
+     * \param materialName
+     * \param particleChangeForGamma
+     * \param tmin
+     * \param tmax
+     */
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double tmax) override;
 
+  private:
+
+    G4int verboseLevel = 0;  ///< verbose level
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

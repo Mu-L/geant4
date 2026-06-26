@@ -27,21 +27,22 @@
 //
 // Class description:
 //
-// A utility class that calculates the distance of a point from a 
+// A utility class that calculates the distance of a point from a
 // line section.
 
 // Author: John Apostolakis (CERN), 1999
 // --------------------------------------------------------------------
 
-#ifndef G4LineSection_hh
-#define G4LineSection_hh
+#ifndef G4LINESECTION_HH
+#define G4LINESECTION_HH
 
-#include "G4Types.hh" 
 #include "G4ThreeVector.hh"
+#include "G4Types.hh"
 
 /**
  * @brief G4LineSection is a utility class that calculates the distance
  * of a point from a line section.
+ * @ingroup geometry_magneticfield
  */
 
 class G4LineSection
@@ -53,8 +54,7 @@ class G4LineSection
      *  @param[in] PntA Coordinates of point A defining the line.
      *  @param[in] PntB Coordinates of point B defining the line.
      */
-    G4LineSection( const G4ThreeVector& PntA,
-                   const G4ThreeVector& PntB );
+    G4LineSection(const G4ThreeVector& PntA, const G4ThreeVector& PntB);
 
     /**
      * Default Destructor.
@@ -64,7 +64,7 @@ class G4LineSection
     /**
      * Returns the distance of point 'OtherPnt' from the line.
      */
-    G4double Dist( const G4ThreeVector& OtherPnt ) const;
+    G4double Dist(const G4ThreeVector& OtherPnt) const;
 
     /**
      * Returns the distance squared.
@@ -74,9 +74,9 @@ class G4LineSection
     /**
      * Defines line and returns the distance of point 'OtherPnt' from it.
      */
-    inline static G4double Distline( const G4ThreeVector& OtherPnt, 
-                                     const G4ThreeVector& LinePntA, 
-                                     const G4ThreeVector& LinePntB );
+    inline static G4double Distline(const G4ThreeVector& OtherPnt, const G4ThreeVector& LinePntA,
+                                    const G4ThreeVector& LinePntB);
+
   private:
 
     G4ThreeVector EndpointA;
@@ -86,19 +86,17 @@ class G4LineSection
 
 // Inline methods implementations
 
-inline
-G4double G4LineSection::GetABdistanceSq() const
+inline G4double G4LineSection::GetABdistanceSq() const
 {
   return fABdistanceSq;
 }
 
-inline
-G4double G4LineSection::Distline( const G4ThreeVector& OtherPnt, 
-                                  const G4ThreeVector& LinePntA, 
-                                  const G4ThreeVector& LinePntB )
+inline G4double G4LineSection::Distline(const G4ThreeVector& OtherPnt,
+                                        const G4ThreeVector& LinePntA,
+                                        const G4ThreeVector& LinePntB)
 {
-  G4LineSection LineAB( LinePntA, LinePntB );  // Line from A to B
-  return LineAB.Dist( OtherPnt );
+  G4LineSection LineAB(LinePntA, LinePntB);  // Line from A to B
+  return LineAB.Dist(OtherPnt);
 }
 
 #endif

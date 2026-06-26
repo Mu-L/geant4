@@ -68,7 +68,8 @@ G4int G4PDefManager::CreateSubInstance()
 {
   G4AutoLock l(&mutex);
   ++totalobj;
-  if (totalobj > slavetotalspace()) {
+  if (totalobj > slavetotalspace())
+  {
     l.unlock();
     NewSubInstances();
     l.lock();
@@ -82,18 +83,21 @@ void G4PDefManager::NewSubInstances()
 // by the subclass.
 {
   G4AutoLock l(&mutex);
-  if (slavetotalspace() >= totalobj) {
+  if (slavetotalspace() >= totalobj)
+  {
     return;
   }
   G4int originaltotalspace = slavetotalspace();
   slavetotalspace() = totalobj + 512;
   offset() = (G4PDefData*)realloc(offset(), slavetotalspace() * sizeof(G4PDefData));
-  if (offset() == nullptr) {
+  if (offset() == nullptr)
+  {
     G4Exception("G4PDefManager::NewSubInstances()", "OutOfMemory", FatalException,
                 "Cannot malloc space!");
   }
 
-  for (G4int i = originaltotalspace; i < slavetotalspace(); ++i) {
+  for (G4int i = originaltotalspace; i < slavetotalspace(); ++i)
+  {
     offset()[i].initialize();
   }
 }
@@ -101,7 +105,8 @@ void G4PDefManager::NewSubInstances()
 // Invoked by all threads to free the subinstance array.
 void G4PDefManager::FreeSlave()
 {
-  if (offset() == nullptr) {
+  if (offset() == nullptr)
+  {
     return;
   }
   free(offset());
@@ -116,7 +121,8 @@ G4PDefData* G4PDefManager::GetOffset()
 // Use recycled work area, which was created previously.
 void G4PDefManager::UseWorkArea(G4PDefData* newOffset)
 {
-  if ((offset() != nullptr) && (offset() != newOffset)) {
+  if ((offset() != nullptr) && (offset() != newOffset))
+  {
     G4Exception("G4PDefManager::UseWorkspace()", "InvalidCondition", FatalException,
                 "Thread already has workspace - cannot use another.");
   }

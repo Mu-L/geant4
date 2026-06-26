@@ -36,25 +36,26 @@
 // Author: V.Grichine, 13.05.1997 V.Grichine
 // --------------------------------------------------------------------
 #ifndef G4GAUSSHERMITEQ_HH
-#define G4GAUSSHERMITEQ_HH 1
+#define G4GAUSSHERMITEQ_HH
 
 #include "G4VGaussianQuadrature.hh"
 
 class G4GaussHermiteQ : public G4VGaussianQuadrature
 {
- public:
-  // Constructor
+  public:
 
-  G4GaussHermiteQ(function pFunction, G4int nHermite);
-  // Constructor for Gauss-Hermite quadrature method.
-  // The function GaussHermite should be called then.
+    // Constructor
 
-  G4GaussHermiteQ(const G4GaussHermiteQ&) = delete;
-  G4GaussHermiteQ& operator=(const G4GaussHermiteQ&) = delete;
+    G4GaussHermiteQ(function pFunction, G4int nHermite);
+    // Constructor for Gauss-Hermite quadrature method.
+    // The function GaussHermite should be called then.
 
-  G4double Integral() const;
-  // Gauss-Hermite method for integration of std::exp(-x*x)*nFunction(x) from
-  // minus infinity to plus infinity.
+    G4GaussHermiteQ(const G4GaussHermiteQ&) = delete;
+    G4GaussHermiteQ& operator=(const G4GaussHermiteQ&) = delete;
+
+    G4double Integral() const;
+    // Gauss-Hermite method for integration of std::exp(-x*x)*nFunction(x) from
+    // minus infinity to plus infinity.
 };
 
 #endif

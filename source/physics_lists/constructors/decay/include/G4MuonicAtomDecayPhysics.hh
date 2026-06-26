@@ -26,8 +26,8 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4MuonicAtomDecayPhysics_h
-#define G4MuonicAtomDecayPhysics_h 1
+#ifndef G4MUONICATOMDECAYPHYSICS_HH
+#define G4MUONICATOMDECAYPHYSICS_HH
 
 #include "G4VPhysicsConstructor.hh"
 
@@ -35,31 +35,25 @@
 
 class G4MuonicAtomDecayPhysics : public G4VPhysicsConstructor
 {
-public: 
-  explicit G4MuonicAtomDecayPhysics(G4int verbose = 0);
-  explicit G4MuonicAtomDecayPhysics(const G4String& name);
-  virtual ~G4MuonicAtomDecayPhysics();
+  public:
 
-public: 
-  // This method is dummy for physics
-  virtual void ConstructParticle() override;
- 
-  // This method will be invoked in the Construct() method.
-  // each physics process will be instantiated and
-  // registered to the process manager of each particle type 
-  virtual void ConstructProcess() override;
+    explicit G4MuonicAtomDecayPhysics(G4int verbose = 0);
+    explicit G4MuonicAtomDecayPhysics(const G4String& name);
+    virtual ~G4MuonicAtomDecayPhysics();
 
-private:
+  public:
+
+    // This method is dummy for physics
+    virtual void ConstructParticle() override;
+
+    // This method will be invoked in the Construct() method.
+    // each physics process will be instantiated and
+    // registered to the process manager of each particle type
+    virtual void ConstructProcess() override;
+
+  private:
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-
-
-
-
-
-
-

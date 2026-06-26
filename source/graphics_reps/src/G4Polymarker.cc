@@ -25,35 +25,38 @@
 //
 //
 //
-// 
+//
 // John Allison  November 1996
 
 #include "G4Polymarker.hh"
 
-G4Polymarker::G4Polymarker ():
-fMarkerType (G4Polymarker::dots)
+G4Polymarker::G4Polymarker() : fMarkerType(G4Polymarker::dots) {}
+
+G4Polymarker::G4Polymarker(const G4VMarker& marker)
+  : G4VMarker(marker), fMarkerType(G4Polymarker::dots)
 {}
 
-G4Polymarker::G4Polymarker (const G4VMarker& marker):
-  G4VMarker (marker),
-  fMarkerType (G4Polymarker::dots)
-{}
+G4Polymarker::~G4Polymarker() = default;
 
-G4Polymarker::~G4Polymarker () = default;
-
-std::ostream& operator << (std::ostream& os, const G4Polymarker& marker) {
+std::ostream& operator<<(std::ostream& os, const G4Polymarker& marker)
+{
   os << "G4Polymarker: type: ";
-  switch (marker.fMarkerType) {
-  case G4Polymarker::dots:
-    os << "dots"; break;
-  case G4Polymarker::circles:
-    os << "circles"; break;
-  case G4Polymarker::squares:
-    os << "squares"; break;
-  default:
-    os << "unrecognised"; break;
+  switch (marker.fMarkerType)
+  {
+    case G4Polymarker::dots:
+      os << "dots";
+      break;
+    case G4Polymarker::circles:
+      os << "circles";
+      break;
+    case G4Polymarker::squares:
+      os << "squares";
+      break;
+    default:
+      os << "unrecognised";
+      break;
   }
-  os << "\n  " << (G4VMarker) marker;
-  os << "\n  " << (G4Point3DList) marker;
+  os << "\n  " << (G4VMarker)marker;
+  os << "\n  " << (G4Point3DList)marker;
   return os;
 }

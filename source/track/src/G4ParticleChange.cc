@@ -25,31 +25,29 @@
 //
 // G4ParticleChange class implementation
 //
-// Author: Hisaya Kurashige, 23 March 1998  
+// Author: Hisaya Kurashige, 23 March 1998
 // --------------------------------------------------------------------
 
 #include "G4ParticleChange.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4Track.hh"
-#include "G4Step.hh"
+
 #include "G4DynamicParticle.hh"
 #include "G4ExceptionSeverity.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4Step.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4Track.hh"
 
 // --------------------------------------------------------------------
-G4ParticleChange::G4ParticleChange()
-{}
+G4ParticleChange::G4ParticleChange() {}
 
 // --------------------------------------------------------------------
-void G4ParticleChange::AddSecondary(G4DynamicParticle* aParticle,
-                                    G4bool IsGoodForTracking)
+void G4ParticleChange::AddSecondary(G4DynamicParticle* aParticle, G4bool IsGoodForTracking)
 {
   // create track
   G4Track* aTrack = new G4Track(aParticle, GetGlobalTime(), thePositionChange);
 
   // set IsGoodGorTrackingFlag
-  if(IsGoodForTracking)
-    aTrack->SetGoodForTrackingFlag();
+  if (IsGoodForTracking) aTrack->SetGoodForTrackingFlag();
 
   // touchable handle is copied to keep the pointer
   aTrack->SetTouchableHandle(theCurrentTrack->GetTouchableHandle());
@@ -59,16 +57,14 @@ void G4ParticleChange::AddSecondary(G4DynamicParticle* aParticle,
 }
 
 // --------------------------------------------------------------------
-void G4ParticleChange::AddSecondary(G4DynamicParticle* aParticle,
-                                    G4ThreeVector newPosition,
+void G4ParticleChange::AddSecondary(G4DynamicParticle* aParticle, G4ThreeVector newPosition,
                                     G4bool IsGoodForTracking)
 {
   // create track
   G4Track* aTrack = new G4Track(aParticle, GetGlobalTime(), newPosition);
 
   // set IsGoodGorTrackingFlag
-  if(IsGoodForTracking)
-    aTrack->SetGoodForTrackingFlag();
+  if (IsGoodForTracking) aTrack->SetGoodForTrackingFlag();
 
   // touchable is a temporary object, so you cannot keep the pointer
   aTrack->SetTouchableHandle(nullptr);
@@ -78,15 +74,14 @@ void G4ParticleChange::AddSecondary(G4DynamicParticle* aParticle,
 }
 
 // --------------------------------------------------------------------
-void G4ParticleChange::AddSecondary(G4DynamicParticle* aParticle,
-                                    G4double newTime, G4bool IsGoodForTracking)
+void G4ParticleChange::AddSecondary(G4DynamicParticle* aParticle, G4double newTime,
+                                    G4bool IsGoodForTracking)
 {
   // create track
   G4Track* aTrack = new G4Track(aParticle, newTime, thePositionChange);
 
   // set IsGoodGorTrackingFlag
-  if(IsGoodForTracking)
-    aTrack->SetGoodForTrackingFlag();
+  if (IsGoodForTracking) aTrack->SetGoodForTrackingFlag();
 
   // touchable handle is copied to keep the pointer
   aTrack->SetTouchableHandle(theCurrentTrack->GetTouchableHandle());
@@ -111,16 +106,16 @@ void G4ParticleChange::Initialize(const G4Track& track)
 
   // set Energy/Momentum etc. equal to those of the parent particle
   const G4DynamicParticle* pParticle = track.GetDynamicParticle();
-  theEnergyChange                    = pParticle->GetKineticEnergy();
-  theVelocityChange                  = track.GetVelocity();
-  isVelocityChanged                  = false;
-  theMomentumDirectionChange         = pParticle->GetMomentumDirection();
-  thePolarizationChange              = pParticle->GetPolarization();
-  theProperTimeChange                = pParticle->GetProperTime();
+  theEnergyChange = pParticle->GetKineticEnergy();
+  theVelocityChange = track.GetVelocity();
+  isVelocityChanged = false;
+  theMomentumDirectionChange = pParticle->GetMomentumDirection();
+  thePolarizationChange = pParticle->GetPolarization();
+  theProperTimeChange = pParticle->GetProperTime();
 
   // set mass/charge/MagneticMoment of DynamicParticle
-  theMassChange           = pParticle->GetMass();
-  theChargeChange         = pParticle->GetCharge();
+  theMassChange = pParticle->GetMass();
+  theChargeChange = pParticle->GetCharge();
   theMagneticMomentChange = pParticle->GetMagneticMoment();
 
   // set Position equal to those of the parent track
@@ -157,19 +152,19 @@ G4Step* G4ParticleChange::UpdateStepForAlongStep(G4Step* pStep)
 
   // calculate new kinetic energy
   G4double preEnergy = pPreStepPoint->GetKineticEnergy();
-  G4double energy =
-    pPostStepPoint->GetKineticEnergy() + (theEnergyChange - preEnergy);
+  G4double energy = pPostStepPoint->GetKineticEnergy() + (theEnergyChange - preEnergy);
 
   // update kinetic energy and momentum direction
-  if(energy > 0.0)
+  if (energy > 0.0)
   {
     // calculate new momentum
-    G4ThreeVector pMomentum = pPostStepPoint->GetMomentum()
-      + (CalcMomentum(theEnergyChange, theMomentumDirectionChange,
-		      theMassChange) - pPreStepPoint->GetMomentum());
+    G4ThreeVector pMomentum =
+      pPostStepPoint->GetMomentum()
+      + (CalcMomentum(theEnergyChange, theMomentumDirectionChange, theMassChange)
+         - pPreStepPoint->GetMomentum());
     G4double tMomentum2 = pMomentum.mag2();
     G4ThreeVector direction(1.0, 0.0, 0.0);
-    if(tMomentum2 > 0.)
+    if (tMomentum2 > 0.)
     {
       direction = pMomentum / std::sqrt(tMomentum2);
     }
@@ -177,27 +172,27 @@ G4Step* G4ParticleChange::UpdateStepForAlongStep(G4Step* pStep)
     pPostStepPoint->SetKineticEnergy(energy);
 
     // if velocity is not set it should be recomputed
-    //  
-    if(!isVelocityChanged)
+    //
+    if (!isVelocityChanged)
     {
       if (theMassChange > 0.0)
       {
-	theVelocityChange = CLHEP::c_light *
-	  std::sqrt(energy*(energy + 2*theMassChange))/(energy + theMassChange);
+        theVelocityChange = CLHEP::c_light * std::sqrt(energy * (energy + 2 * theMassChange))
+                            / (energy + theMassChange);
       }
-      else 
+      else
       {
-	// zero mass particle
-	theVelocityChange = CLHEP::c_light;
-	// optical photon case
-	if(theCurrentTrack->GetParticleDefinition()->GetPDGEncoding() == -22)
-	{
+        // zero mass particle
+        theVelocityChange = CLHEP::c_light;
+        // optical photon case
+        if (theCurrentTrack->GetParticleDefinition()->GetPDGEncoding() == -22)
+        {
           G4Track* pTrack = pStep->GetTrack();
           G4double e = pTrack->GetKineticEnergy();
-	  pTrack->SetKineticEnergy(energy);
+          pTrack->SetKineticEnergy(energy);
           theVelocityChange = pTrack->CalculateVelocityForOpticalPhoton();
-	  pTrack->SetKineticEnergy(e);
-	}
+          pTrack->SetKineticEnergy(e);
+        }
       }
     }
     pPostStepPoint->SetVelocity(theVelocityChange);
@@ -210,23 +205,24 @@ G4Step* G4ParticleChange::UpdateStepForAlongStep(G4Step* pStep)
   }
 
   // update polarization
-  pPostStepPoint->AddPolarization(thePolarizationChange -
-                                  pPreStepPoint->GetPolarization());
+  pPostStepPoint->AddPolarization(thePolarizationChange - pPreStepPoint->GetPolarization());
 
   // update position and time
   pPostStepPoint->AddPosition(thePositionChange - pPreStepPoint->GetPosition());
   pPostStepPoint->AddGlobalTime(theTimeChange - theLocalTime0);
   pPostStepPoint->AddLocalTime(theTimeChange - theLocalTime0);
-  pPostStepPoint->AddProperTime(theProperTimeChange -
-                                pPreStepPoint->GetProperTime());
+  pPostStepPoint->AddProperTime(theProperTimeChange - pPreStepPoint->GetProperTime());
 
-  if(isParentWeightProposed)
+  if (isParentWeightProposed)
   {
     pPostStepPoint->SetWeight(theParentWeight);
   }
 
 #ifdef G4VERBOSE
-  if(debugFlag) { CheckIt( *theCurrentTrack ); }
+  if (debugFlag)
+  {
+    CheckIt(*theCurrentTrack);
+  }
 #endif
 
   // update the G4Step specific attributes
@@ -243,7 +239,7 @@ G4Step* G4ParticleChange::UpdateStepForPostStep(G4Step* pStep)
   // momentum vector
 
   G4StepPoint* pPostStepPoint = pStep->GetPostStepPoint();
-  G4Track* pTrack             = pStep->GetTrack();
+  G4Track* pTrack = pStep->GetTrack();
 
   // set Mass/Charge
   pPostStepPoint->SetMass(theMassChange);
@@ -254,17 +250,17 @@ G4Step* G4ParticleChange::UpdateStepForPostStep(G4Step* pStep)
   pPostStepPoint->SetMomentumDirection(theMomentumDirectionChange);
 
   // calculate velocity
-  if(theEnergyChange > 0.0)
+  if (theEnergyChange > 0.0)
   {
     pPostStepPoint->SetKineticEnergy(theEnergyChange);
     pTrack->SetKineticEnergy(theEnergyChange);
-    if(!isVelocityChanged)
+    if (!isVelocityChanged)
     {
       theVelocityChange = pTrack->CalculateVelocity();
     }
     pPostStepPoint->SetVelocity(theVelocityChange);
   }
-  else 
+  else
   {
     pPostStepPoint->SetKineticEnergy(0.0);
     pPostStepPoint->SetVelocity(0.0);
@@ -279,13 +275,16 @@ G4Step* G4ParticleChange::UpdateStepForPostStep(G4Step* pStep)
   pPostStepPoint->SetLocalTime(theTimeChange);
   pPostStepPoint->SetProperTime(theProperTimeChange);
 
-  if(isParentWeightProposed)
+  if (isParentWeightProposed)
   {
     pPostStepPoint->SetWeight(theParentWeight);
   }
 
 #ifdef G4VERBOSE
-  if(debugFlag) { CheckIt( *theCurrentTrack ); }
+  if (debugFlag)
+  {
+    CheckIt(*theCurrentTrack);
+  }
 #endif
 
   // update the G4Step specific attributes
@@ -307,8 +306,7 @@ G4Step* G4ParticleChange::UpdateStepForAtRest(G4Step* pStep)
   // update kinetic energy and momentum direction
   pPostStepPoint->SetMomentumDirection(theMomentumDirectionChange);
   pPostStepPoint->SetKineticEnergy(theEnergyChange);
-  if(!isVelocityChanged)
-    theVelocityChange = theCurrentTrack->CalculateVelocity();
+  if (!isVelocityChanged) theVelocityChange = theCurrentTrack->CalculateVelocity();
   pPostStepPoint->SetVelocity(theVelocityChange);
 
   // update polarization
@@ -320,13 +318,16 @@ G4Step* G4ParticleChange::UpdateStepForAtRest(G4Step* pStep)
   pPostStepPoint->SetLocalTime(theTimeChange);
   pPostStepPoint->SetProperTime(theProperTimeChange);
 
-  if(isParentWeightProposed)
+  if (isParentWeightProposed)
   {
     pPostStepPoint->SetWeight(theParentWeight);
   }
 
 #ifdef G4VERBOSE
-  if(debugFlag) { CheckIt( *theCurrentTrack ); }
+  if (debugFlag)
+  {
+    CheckIt(*theCurrentTrack);
+  }
 #endif
 
   // update the G4Step specific attributes
@@ -341,41 +342,34 @@ void G4ParticleChange::DumpInfo() const
 
   G4long oldprc = G4cout.precision(8);
 
-  G4cout << "        Mass (GeV)          : " << std::setw(20) << theMassChange / GeV
-         << G4endl;
-  G4cout << "        Charge (eplus)      : " << std::setw(20)
-         << theChargeChange / eplus << G4endl;
-  G4cout << "        MagneticMoment      : " << std::setw(20)
-         << theMagneticMomentChange << G4endl;
+  G4cout << "        Mass (GeV)          : " << std::setw(20) << theMassChange / GeV << G4endl;
+  G4cout << "        Charge (eplus)      : " << std::setw(20) << theChargeChange / eplus << G4endl;
+  G4cout << "        MagneticMoment      : " << std::setw(20) << theMagneticMomentChange << G4endl;
   G4cout << "                         =  : " << std::setw(20)
-         << theMagneticMomentChange
-            * 2. * theMassChange / c_squared / eplus / hbar_Planck
+         << theMagneticMomentChange * 2. * theMassChange / c_squared / eplus / hbar_Planck
          << "*[e hbar]/[2 m]" << G4endl;
-  G4cout << "        Position - x (mm)   : " << std::setw(20)
-         << thePositionChange.x() / mm << G4endl;
-  G4cout << "        Position - y (mm)   : " << std::setw(20)
-         << thePositionChange.y() / mm << G4endl;
-  G4cout << "        Position - z (mm)   : " << std::setw(20)
-         << thePositionChange.z() / mm << G4endl;
-  G4cout << "        Time (ns)           : " << std::setw(20)
-         << theTimeChange / ns << G4endl;
-  G4cout << "        Proper Time (ns)    : " << std::setw(20)
-         << theProperTimeChange / ns << G4endl;
-  G4cout << "        Momentum Direct - x : " << std::setw(20)
-         << theMomentumDirectionChange.x() << G4endl;
-  G4cout << "        Momentum Direct - y : " << std::setw(20)
-         << theMomentumDirectionChange.y() << G4endl;
-  G4cout << "        Momentum Direct - z : " << std::setw(20)
-         << theMomentumDirectionChange.z() << G4endl;
-  G4cout << "        Kinetic Energy (MeV): " << std::setw(20)
-         << theEnergyChange / MeV << G4endl;
-  G4cout << "        Velocity  (/c)      : " << std::setw(20)
-         << theVelocityChange / c_light << G4endl;
-  G4cout << "        Polarization - x    : " << std::setw(20)
-         << thePolarizationChange.x() << G4endl;
-  G4cout << "        Polarization - y    : " << std::setw(20)
-         << thePolarizationChange.y() << G4endl;
-  G4cout << "        Polarization - z    : " << std::setw(20)
-         << thePolarizationChange.z() << G4endl;
+  G4cout << "        Position - x (mm)   : " << std::setw(20) << thePositionChange.x() / mm
+         << G4endl;
+  G4cout << "        Position - y (mm)   : " << std::setw(20) << thePositionChange.y() / mm
+         << G4endl;
+  G4cout << "        Position - z (mm)   : " << std::setw(20) << thePositionChange.z() / mm
+         << G4endl;
+  G4cout << "        Time (ns)           : " << std::setw(20) << theTimeChange / ns << G4endl;
+  G4cout << "        Proper Time (ns)    : " << std::setw(20) << theProperTimeChange / ns << G4endl;
+  G4cout << "        Momentum Direct - x : " << std::setw(20) << theMomentumDirectionChange.x()
+         << G4endl;
+  G4cout << "        Momentum Direct - y : " << std::setw(20) << theMomentumDirectionChange.y()
+         << G4endl;
+  G4cout << "        Momentum Direct - z : " << std::setw(20) << theMomentumDirectionChange.z()
+         << G4endl;
+  G4cout << "        Kinetic Energy (MeV): " << std::setw(20) << theEnergyChange / MeV << G4endl;
+  G4cout << "        Velocity  (/c)      : " << std::setw(20) << theVelocityChange / c_light
+         << G4endl;
+  G4cout << "        Polarization - x    : " << std::setw(20) << thePolarizationChange.x()
+         << G4endl;
+  G4cout << "        Polarization - y    : " << std::setw(20) << thePolarizationChange.y()
+         << G4endl;
+  G4cout << "        Polarization - z    : " << std::setw(20) << thePolarizationChange.z()
+         << G4endl;
   G4cout.precision(oldprc);
 }

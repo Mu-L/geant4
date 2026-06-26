@@ -36,7 +36,8 @@ inline G4int G4ParticleDefinition::GetInstanceID() const
 
 inline G4bool G4ParticleDefinition::GetPDGStable() const
 {
-  if (IsGeneralIon()) {
+  if (IsGeneralIon())
+  {
     return (GetIonLifeTime() < 0.);
   }
 
@@ -94,12 +95,15 @@ inline void G4ParticleDefinition::SetMasterProcessManager(G4ProcessManager* aNew
 inline G4int G4ParticleDefinition::GetQuarkContent(G4int flavor) const
 {
   G4int content = 0;
-  if ((flavor > 0) && (flavor <= NumberOfQuarkFlavor)) {
+  if ((flavor > 0) && (flavor <= NumberOfQuarkFlavor))
+  {
     content = theQuarkContent[flavor - 1];
   }
-  else {
+  else
+  {
 #ifdef G4VERBOSE
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       std::ostringstream message;
       message << "Invalid Quark Flavor: " << flavor;
       G4Exception("G4ParticleDefinition::GetQuarkContent()", "InvalidFlavor", JustWarning, message);
@@ -112,12 +116,15 @@ inline G4int G4ParticleDefinition::GetQuarkContent(G4int flavor) const
 inline G4int G4ParticleDefinition::GetAntiQuarkContent(G4int flavor) const
 {
   G4int content = 0;
-  if ((flavor > 0) && (flavor <= NumberOfQuarkFlavor)) {
+  if ((flavor > 0) && (flavor <= NumberOfQuarkFlavor))
+  {
     content = theAntiQuarkContent[flavor - 1];
   }
-  else {
+  else
+  {
 #ifdef G4VERBOSE
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       std::ostringstream message;
       message << "Invalid Quark Flavor: " << flavor;
       G4Exception("G4ParticleDefinition::GetAntiQuarkContent()", "InvalidFlavor", JustWarning,
@@ -192,7 +199,8 @@ inline G4int G4ParticleDefinition::GetNumberOfLambdasInHypernucleus() const
 {
   G4int numberOfLambdas = 0;
   // PDG code of hypernuclei: 10LZZZAAAI
-  if (thePDGEncoding > 0 && thePDGEncoding / 1000000000 != 0) {
+  if (thePDGEncoding > 0 && thePDGEncoding / 1000000000 != 0)
+  {
     numberOfLambdas = (thePDGEncoding / 10000000) % 100;
   }
   return numberOfLambdas;
@@ -207,7 +215,8 @@ inline G4int G4ParticleDefinition::GetNumberOfAntiLambdasInAntiHypernucleus() co
 {
   G4int numberOfAntiLambdas = 0;
   // PDG code of anti-hypernuclei: -10LZZZAAAI
-  if (thePDGEncoding < 0 && thePDGEncoding / 1000000000 != 0) {
+  if (thePDGEncoding < 0 && thePDGEncoding / 1000000000 != 0)
+  {
     numberOfAntiLambdas = (std::abs(thePDGEncoding) / 10000000) % 100;
   }
   return numberOfAntiLambdas;

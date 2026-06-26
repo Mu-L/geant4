@@ -38,8 +38,8 @@
 
 // Author: H.Kurashige, 13 June 1997
 // --------------------------------------------------------------------
-#ifndef G4DecayTableMessenger_hh
-#define G4DecayTableMessenger_hh 1
+#ifndef G4DECAYTABLEMESSENGER_HH
+#define G4DECAYTABLEMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -57,6 +57,7 @@ class G4UIcmdWithADouble;
 class G4DecayTableMessenger : public G4UImessenger
 {
   public:
+
     G4DecayTableMessenger(G4ParticleTable* pTable = nullptr);
     ~G4DecayTableMessenger() override;
 
@@ -67,6 +68,7 @@ class G4DecayTableMessenger : public G4UImessenger
     G4DecayTableMessenger& operator=(const G4DecayTableMessenger&) = delete;
 
   private:
+
     G4ParticleDefinition* SetCurrentParticle();
 
     G4ParticleTable* theParticleTable = nullptr;

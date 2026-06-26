@@ -53,20 +53,21 @@
 // Author: V.Grichine, 13.05.2005
 // --------------------------------------------------------------------
 #ifndef G4AN_POL_SOLVER_HH
-#define G4AN_POL_SOLVER_HH 1
+#define G4AN_POL_SOLVER_HH
 
 #include "G4Types.hh"
 
 class G4AnalyticalPolSolver
 {
- public:
-  G4AnalyticalPolSolver();
-  ~G4AnalyticalPolSolver();
+  public:
 
-  G4int QuadRoots(G4double p[5], G4double r[3][5]);
-  G4int CubicRoots(G4double p[5], G4double r[3][5]);
-  G4int BiquadRoots(G4double p[5], G4double r[3][5]);
-  G4int QuarticRoots(G4double p[5], G4double r[3][5]);
+    G4AnalyticalPolSolver();
+    ~G4AnalyticalPolSolver();
+
+    G4int QuadRoots(G4double p[5], G4double r[3][5]);
+    G4int CubicRoots(G4double p[5], G4double r[3][5]);
+    G4int BiquadRoots(G4double p[5], G4double r[3][5]);
+    G4int QuarticRoots(G4double p[5], G4double r[3][5]);
 };
 
 #endif

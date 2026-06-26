@@ -70,51 +70,49 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4MuIonisation_h
-#define G4MuIonisation_h 1
+#ifndef G4MUIONISATION_HH
+#define G4MUIONISATION_HH
 
+#include "G4VEmModel.hh"
 #include "G4VEnergyLossProcess.hh"
 #include "globals.hh"
-#include "G4VEmModel.hh"
 
 class G4Material;
 
 class G4MuIonisation : public G4VEnergyLossProcess
 {
+  public:
 
-public:
+    explicit G4MuIonisation(const G4String& name = "muIoni");
 
-  explicit G4MuIonisation(const G4String& name = "muIoni");
+    ~G4MuIonisation() override = default;
 
-  ~G4MuIonisation() override = default;
+    G4bool IsApplicable(const G4ParticleDefinition& p) override;
 
-  G4bool IsApplicable(const G4ParticleDefinition& p) override;
+    G4double MinPrimaryEnergy(const G4ParticleDefinition* p, const G4Material*,
+                              G4double cut) override;
 
-  G4double MinPrimaryEnergy(const G4ParticleDefinition* p,
-                            const G4Material*, G4double cut) override;
+    // print description in html
+    void ProcessDescription(std::ostream&) const override;
 
+    // hide assignment operator
+    G4MuIonisation& operator=(const G4MuIonisation& right) = delete;
+    G4MuIonisation(const G4MuIonisation&) = delete;
 
-  // print description in html
-  void ProcessDescription(std::ostream&) const override;
+  protected:
 
-  // hide assignment operator
-  G4MuIonisation & operator=(const G4MuIonisation &right) = delete;
-  G4MuIonisation(const G4MuIonisation&) = delete;
+    void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
+                                     const G4ParticleDefinition*) override;
 
-protected:
+  private:
 
-  void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
-                                   const G4ParticleDefinition*) override;
+    const G4ParticleDefinition* theParticle = nullptr;
+    const G4ParticleDefinition* theBaseParticle = nullptr;
 
-private:
+    G4double mass = 0.0;
+    G4double ratio = 0.0;
 
-  const G4ParticleDefinition* theParticle = nullptr;
-  const G4ParticleDefinition* theBaseParticle = nullptr;
-
-  G4double mass = 0.0;
-  G4double ratio = 0.0;
-
-  G4bool isInitialised = false;
+    G4bool isInitialised = false;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

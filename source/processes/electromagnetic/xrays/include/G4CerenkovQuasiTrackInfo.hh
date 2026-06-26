@@ -25,17 +25,17 @@
 // Class Description:
 //
 // Concrete implementation of G4VAuxiliaryTrackInformation used to store
-// metadata associated with a quasi-Cerenkov track generated during the 
+// metadata associated with a quasi-Cerenkov track generated during the
 // Cerenkov process.
 //
 // This class is intended to be attached to a G4Track of G4QuasiOpticalPhoton
-// via G4Track::SetAuxiliaryTrackInformation(modelId, this) where 
+// via G4Track::SetAuxiliaryTrackInformation(modelId, this) where
 // modelId is obtained by G4PhysicsModelCatalog::GetModelID("model_Cerenkov")
 // The stored information can later be retrieved using:
 // G4Track::GetAuxiliaryTrackInformation(modelId).
 //
-#ifndef G4CerenkovQuasiTrackInfo_h
-#define G4CerenkovQuasiTrackInfo_h
+#ifndef G4CERENKOVQUASITRACKINFO_HH
+#define G4CERENKOVQUASITRACKINFO_HH
 
 #include "G4Allocator.hh"
 #include "G4QuasiOpticalData.hh"
@@ -43,37 +43,38 @@
 
 class G4CerenkovQuasiTrackInfo : public G4VAuxiliaryTrackInformation
 {
- public:
-  explicit G4CerenkovQuasiTrackInfo(const G4QuasiOpticalData& data,
-			            G4double pre_num_photons,
-			            G4double post_num_photons);
+  public:
 
-  ~G4CerenkovQuasiTrackInfo() override = default;
+    explicit G4CerenkovQuasiTrackInfo(const G4QuasiOpticalData& data, G4double pre_num_photons,
+                                      G4double post_num_photons);
 
-  // Required by G4VAuxiliaryTrackInformation
-  void* operator new(size_t);
-  void operator delete(void* aCerenkovATI);
+    ~G4CerenkovQuasiTrackInfo() override = default;
 
-  // Copy Constructor/instruction
-  G4CerenkovQuasiTrackInfo(const G4CerenkovQuasiTrackInfo&) = default;
-  G4CerenkovQuasiTrackInfo& operator=(const G4CerenkovQuasiTrackInfo&) = default;
+    // Required by G4VAuxiliaryTrackInformation
+    void* operator new(size_t);
+    void operator delete(void* aCerenkovATI);
 
-  void Print() const override;
+    // Copy Constructor/instruction
+    G4CerenkovQuasiTrackInfo(const G4CerenkovQuasiTrackInfo&) = default;
+    G4CerenkovQuasiTrackInfo& operator=(const G4CerenkovQuasiTrackInfo&) = default;
 
-  G4QuasiOpticalData GetQuasiOpticalData() const { return fQuasiOpticalData; }
-  G4double GetPreNumPhotons() const { return fPreNumPhotons; }
-  G4double GetPostNumPhotons() const { return fPostNumPhotons; }
+    void Print() const override;
+    G4CerenkovQuasiTrackInfo* Clone() const override;
 
-  // Static class allowing to check if a G4VAuxiliaryTrackInformation is a
-  // G4CerenkovQuasiTrackInfo and cast it without changing the pointer of the
-  // pointed data.
-  static G4CerenkovQuasiTrackInfo* Cast(
-    const G4VAuxiliaryTrackInformation* const);
+    G4QuasiOpticalData GetQuasiOpticalData() const { return fQuasiOpticalData; }
+    G4double GetPreNumPhotons() const { return fPreNumPhotons; }
+    G4double GetPostNumPhotons() const { return fPostNumPhotons; }
 
- private:
-  G4QuasiOpticalData fQuasiOpticalData; // Common optical data 
-  G4double fPreNumPhotons{};  // Average number of photons at the pre-step
-  G4double fPostNumPhotons{};  // Average number of photons at the post-step
+    // Static class allowing to check if a G4VAuxiliaryTrackInformation is a
+    // G4CerenkovQuasiTrackInfo and cast it without changing the pointer of the
+    // pointed data.
+    static G4CerenkovQuasiTrackInfo* Cast(const G4VAuxiliaryTrackInformation* const);
+
+  private:
+
+    G4QuasiOpticalData fQuasiOpticalData;  // Common optical data
+    G4double fPreNumPhotons{};  // Average number of photons at the pre-step
+    G4double fPostNumPhotons{};  // Average number of photons at the post-step
 };
 
 ///
@@ -82,25 +83,23 @@ class G4CerenkovQuasiTrackInfo : public G4VAuxiliaryTrackInformation
 ///
 
 #if defined G4EM_ALLOC_EXPORT
-extern G4DLLEXPORT G4Allocator<G4CerenkovQuasiTrackInfo>*&
-aCerenkovATIAllocator();
+extern G4DLLEXPORT G4Allocator<G4CerenkovQuasiTrackInfo>*& aCerenkovATIAllocator();
 #else
-extern G4DLLIMPORT G4Allocator<G4CerenkovQuasiTrackInfo>*&
-aCerenkovATIAllocator();
+extern G4DLLIMPORT G4Allocator<G4CerenkovQuasiTrackInfo>*& aCerenkovATIAllocator();
 #endif
 
 inline void* G4CerenkovQuasiTrackInfo::operator new(size_t)
 {
-  if(aCerenkovATIAllocator() == nullptr)
+  if (aCerenkovATIAllocator() == nullptr)
   {
     aCerenkovATIAllocator() = new G4Allocator<G4CerenkovQuasiTrackInfo>;
   }
-  return (void*) aCerenkovATIAllocator()->MallocSingle();
+  return (void*)aCerenkovATIAllocator()->MallocSingle();
 }
 
 inline void G4CerenkovQuasiTrackInfo::operator delete(void* aCerenkovATI)
 {
-  aCerenkovATIAllocator()->FreeSingle((G4CerenkovQuasiTrackInfo*) aCerenkovATI);
+  aCerenkovATIAllocator()->FreeSingle((G4CerenkovQuasiTrackInfo*)aCerenkovATI);
 }
 
 #endif  // G4CerenkovQuasiTrackInfo_h

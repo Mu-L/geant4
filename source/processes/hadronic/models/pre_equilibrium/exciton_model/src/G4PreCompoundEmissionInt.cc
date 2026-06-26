@@ -31,49 +31,53 @@
 //
 
 #include "G4PreCompoundEmissionInt.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4Pow.hh"
+
+#include "G4DeexPrecoParameters.hh"
 #include "G4Exp.hh"
-#include "G4Log.hh"
-#include "Randomize.hh"
-#include "G4RandomDirection.hh"
-#include "G4PreCompoundEmissionFactory.hh"
 #include "G4HETCEmissionFactory.hh"
 #include "G4HadronicException.hh"
+#include "G4Log.hh"
 #include "G4NuclearLevelData.hh"
-#include "G4DeexPrecoParameters.hh"
+#include "G4PhysicalConstants.hh"
 #include "G4PhysicsModelCatalog.hh"
+#include "G4Pow.hh"
+#include "G4PreCompoundEmissionFactory.hh"
+#include "G4RandomDirection.hh"
+#include "G4SystemOfUnits.hh"
+#include "Randomize.hh"
 
-G4PreCompoundEmissionInt::G4PreCompoundEmissionInt(G4int verb)
-  : fVerbose(verb)
+G4PreCompoundEmissionInt::G4PreCompoundEmissionInt(G4int verb) : fVerbose(verb)
 {
   theFragmentsFactory = new G4PreCompoundEmissionFactory();
-  theFragmentsVector = 
-    new G4PreCompoundFragmentVector(theFragmentsFactory->GetFragmentVector());
+  theFragmentsVector = new G4PreCompoundFragmentVector(theFragmentsFactory->GetFragmentVector());
   g4calc = G4Pow::GetInstance();
   fNuclData = G4NuclearLevelData::GetInstance();
   G4DeexPrecoParameters* param = fNuclData->GetParameters();
-  fFermiEnergy  = param->GetFermiEnergy();
+  fFermiEnergy = param->GetFermiEnergy();
   fUseAngularGenerator = param->UseAngularGen();
   fModelID = G4PhysicsModelCatalog::GetModelID("model_PRECO");
 }
 
 G4PreCompoundEmissionInt::~G4PreCompoundEmissionInt()
 {
-  delete theFragmentsFactory; 
-  delete theFragmentsVector; 
+  delete theFragmentsFactory;
+  delete theFragmentsVector;
 }
 
 void G4PreCompoundEmissionInt::SetDefaultModel()
 {
-  if (theFragmentsFactory) { delete theFragmentsFactory; }
+  if (theFragmentsFactory)
+  {
+    delete theFragmentsFactory;
+  }
   theFragmentsFactory = new G4PreCompoundEmissionFactory();
-  if (theFragmentsVector) {
+  if (theFragmentsVector)
+  {
     theFragmentsVector->SetVector(theFragmentsFactory->GetFragmentVector());
-  } else {
-    theFragmentsVector = 
-      new G4PreCompoundFragmentVector(theFragmentsFactory->GetFragmentVector());
+  }
+  else
+  {
+    theFragmentsVector = new G4PreCompoundFragmentVector(theFragmentsFactory->GetFragmentVector());
   }
 }
 
@@ -81,25 +85,26 @@ void G4PreCompoundEmissionInt::SetHETCModel()
 {
   if (theFragmentsFactory) delete theFragmentsFactory;
   theFragmentsFactory = new G4HETCEmissionFactory();
-  if (theFragmentsVector) {
+  if (theFragmentsVector)
+  {
     theFragmentsVector->SetVector(theFragmentsFactory->GetFragmentVector());
-  } else {
-    theFragmentsVector = 
-      new G4PreCompoundFragmentVector(theFragmentsFactory->GetFragmentVector());
+  }
+  else
+  {
+    theFragmentsVector = new G4PreCompoundFragmentVector(theFragmentsFactory->GetFragmentVector());
   }
 }
 
-G4ReactionProduct*
-G4PreCompoundEmissionInt::PerformEmission(G4Fragment& aFragment)
+G4ReactionProduct* G4PreCompoundEmissionInt::PerformEmission(G4Fragment& aFragment)
 {
   G4ReactionProduct* res = nullptr;
   // Choose a Fragment for emission
-  G4VPreCompoundFragment* thePreFragment =
-    theFragmentsVector->ChooseFragment();
-  if (thePreFragment == nullptr) {
+  G4VPreCompoundFragment* thePreFragment = theFragmentsVector->ChooseFragment();
+  if (thePreFragment == nullptr)
+  {
     G4cout << "G4PreCompoundEmission::PerformEmission : "
-	   << "I couldn't choose a fragment while trying to de-excite\n" 
-	   << aFragment << G4endl;
+           << "I couldn't choose a fragment while trying to de-excite\n"
+           << aFragment << G4endl;
     throw G4HadronicException(__FILE__, __LINE__, "");
     return res;
   }
@@ -107,46 +112,48 @@ G4PreCompoundEmissionInt::PerformEmission(G4Fragment& aFragment)
   // Kinetic Energy of emitted fragment
   G4double kinEnergy = thePreFragment->SampleKineticEnergy(aFragment);
   kinEnergy = std::max(kinEnergy, 0.0);
-  
+
   // Calculate the fragment momentum (three vector theFinalMomentum)
-  if(fUseAngularGenerator) {
-    AngularDistribution(thePreFragment,aFragment,kinEnergy);
-  } else {
-    G4double pmag = 
-      std::sqrt(kinEnergy*(kinEnergy + 2.0*thePreFragment->GetNuclearMass()));
-    theFinalMomentum = pmag*G4RandomDirection();
+  if (fUseAngularGenerator)
+  {
+    AngularDistribution(thePreFragment, aFragment, kinEnergy);
+  }
+  else
+  {
+    G4double pmag = std::sqrt(kinEnergy * (kinEnergy + 2.0 * thePreFragment->GetNuclearMass()));
+    theFinalMomentum = pmag * G4RandomDirection();
   }
 
   // Mass of emittef fragment
   G4double EmittedMass = thePreFragment->GetNuclearMass();
-  // Now we can calculate the four momentum 
+  // Now we can calculate the four momentum
   // both options are valid and give the same result but 2nd one is faster
-  G4LorentzVector Emitted4Momentum(theFinalMomentum,EmittedMass + kinEnergy);
+  G4LorentzVector Emitted4Momentum(theFinalMomentum, EmittedMass + kinEnergy);
 
-  if (2 < fVerbose) {
-    G4cout << "             Emitted  Z="
-	   << thePreFragment->GetZ() << " A=" << thePreFragment->GetA() 
- 	   << " Ekin(MeV)=" << kinEnergy << " 4-mom C.M.S.: "
-	   << Emitted4Momentum << G4endl;
+  if (2 < fVerbose)
+  {
+    G4cout << "             Emitted  Z=" << thePreFragment->GetZ()
+           << " A=" << thePreFragment->GetA() << " Ekin(MeV)=" << kinEnergy
+           << " 4-mom C.M.S.: " << Emitted4Momentum << G4endl;
   }
-  
+
   // Perform Lorentz boost
   G4LorentzVector Rest4Momentum = aFragment.GetMomentum();
-  Emitted4Momentum.boost(Rest4Momentum.boostVector());  
+  Emitted4Momentum.boost(Rest4Momentum.boostVector());
 
   // Set emitted fragment momentum
-  thePreFragment->SetMomentum(Emitted4Momentum);	
+  thePreFragment->SetMomentum(Emitted4Momentum);
 
   // Residual nucleus
   Rest4Momentum -= Emitted4Momentum;
-    
+
   // Update nucleus parameters
   // Z and A
   G4int prodZ = thePreFragment->GetZ();
   G4int prodA = thePreFragment->GetA();
   G4int Z = aFragment.GetZ_asInt() - prodZ;
   G4int A = aFragment.GetA_asInt() - prodA;
-    
+
   // Number of excitons
   G4int np = aFragment.GetNumberOfParticles() - prodA;
   np = std::min(std::max(np, 0), A);
@@ -157,24 +164,25 @@ G4PreCompoundEmissionInt::PerformEmission(G4Fragment& aFragment)
   aFragment.SetZandA_asInt(Z, A);
   aFragment.SetNumberOfExcitedParticle(np, nz);
 
-  // Update nucleus momentum 
+  // Update nucleus momentum
   // A check on consistence of Z, A, and mass will be performed
   aFragment.SetMomentum(Rest4Momentum);
-	
-  // Create a G4ReactionProduct 
+
+  // Create a G4ReactionProduct
   res = thePreFragment->GetReactionProduct();
 
   // Set the creator model ID
   aFragment.SetCreatorModelID(fModelID);
-  if (res != nullptr) { res->SetCreatorModelID(fModelID); }
-  
+  if (res != nullptr)
+  {
+    res->SetCreatorModelID(fModelID);
+  }
+
   return res;
 }
 
-void G4PreCompoundEmissionInt::AngularDistribution(
-                          G4VPreCompoundFragment* thePreFragment,
-			  const G4Fragment& aFragment,
-			  G4double ekin) 
+void G4PreCompoundEmissionInt::AngularDistribution(G4VPreCompoundFragment* thePreFragment,
+                                                   const G4Fragment& aFragment, G4double ekin)
 {
   G4int p = aFragment.GetNumberOfParticles();
   G4int h = aFragment.GetNumberOfHoles();
@@ -182,114 +190,138 @@ void G4PreCompoundEmissionInt::AngularDistribution(
 
   // Emission particle separation energy
   G4double Bemission = thePreFragment->GetBindingEnergy();
-	
-  G4double gg = (6.0/pi2)*fNuclData->GetLevelDensity(aFragment.GetZ_asInt(),
-                                                     aFragment.GetA_asInt(),U);
-	
+
+  G4double gg =
+    (6.0 / pi2) * fNuclData->GetLevelDensity(aFragment.GetZ_asInt(), aFragment.GetA_asInt(), U);
+
   // Average exciton energy relative to bottom of nuclear well
-  G4double Eav = 2*p*(p+1)/((p+h)*gg);
-	
+  G4double Eav = 2 * p * (p + 1) / ((p + h) * gg);
+
   // Excitation energy relative to the Fermi Level
-  G4double Uf = std::max(U - (p - h)*fFermiEnergy , 0.0);
+  G4double Uf = std::max(U - (p - h) * fFermiEnergy, 0.0);
   //  G4double Uf = U - KineticEnergyOfEmittedFragment - Bemission;
 
-  G4double w_num = rho(p+1, h, gg, Uf, fFermiEnergy);
-  G4double w_den = rho(p,   h, gg, Uf, fFermiEnergy);
+  G4double w_num = rho(p + 1, h, gg, Uf, fFermiEnergy);
+  G4double w_den = rho(p, h, gg, Uf, fFermiEnergy);
   if (w_num > 0.0 && w_den > 0.0)
-    {
-      Eav *= (w_num/w_den);
-      Eav += - Uf/(p+h) + fFermiEnergy;
-    }
-  else 
-    {
-      Eav = fFermiEnergy;
-    }
-  
+  {
+    Eav *= (w_num / w_den);
+    Eav += -Uf / (p + h) + fFermiEnergy;
+  }
+  else
+  {
+    Eav = fFermiEnergy;
+  }
+
   // VI + JMQ 19/01/2010 update computation of the parameter an
   //
   G4double an = 0.0;
   G4double Eeff = ekin + Bemission + fFermiEnergy;
-  if(ekin > DBL_MIN && Eeff > DBL_MIN) {
+  if (ekin > DBL_MIN && Eeff > DBL_MIN)
+  {
+    G4double zeta = std::max(1.0, 9.3 / std::sqrt(ekin / CLHEP::MeV));
 
-    G4double zeta = std::max(1.0,9.3/std::sqrt(ekin/CLHEP::MeV));
-  
-    // This should be the projectile energy. If I would know which is 
-    // the projectile (proton, neutron) I could remove the binding energy. 
+    // This should be the projectile energy. If I would know which is
+    // the projectile (proton, neutron) I could remove the binding energy.
     // But, what happens if INC precedes precompound? This approximation
     // seems to work well enough
     G4double ProjEnergy = aFragment.GetExcitationEnergy();
 
-    an = 3*std::sqrt((ProjEnergy+fFermiEnergy)*Eeff)/(zeta*Eav);
+    an = 3 * std::sqrt((ProjEnergy + fFermiEnergy) * Eeff) / (zeta * Eav);
 
     G4int ne = aFragment.GetNumberOfExcitons() - 1;
-    if ( ne > 1 ) { an /= static_cast<G4double>(ne); }
-			
+    if (ne > 1)
+    {
+      an /= static_cast<G4double>(ne);
+    }
+
     // protection of exponent
-    if ( an > 10. ) { an = 10.; }
+    if (an > 10.)
+    {
+      an = 10.;
+    }
   }
 
-  // sample cosine of theta and not theta as in old versions  
+  // sample cosine of theta and not theta as in old versions
   G4double random = G4UniformRand();
   G4double cost;
- 
-  if(an < 0.1) { cost = 1. - 2*random; }
-  else {
-    G4double exp2an = G4Exp(-2*an);
-    cost = 1. + G4Log(1-random*(1-exp2an))/an;
-    if(cost > 1.) { cost = 1.; }
-    else if(cost < -1.) {cost = -1.; }
-  }  
 
-  G4double phi = CLHEP::twopi*G4UniformRand();
-  
-  // Calculate the momentum magnitude of emitted fragment 	
-  G4double pmag = 
-    std::sqrt(ekin*(ekin + 2.0*thePreFragment->GetNuclearMass()));
-  
-  G4double sint = std::sqrt((1.0-cost)*(1.0+cost));
+  if (an < 0.1)
+  {
+    cost = 1. - 2 * random;
+  }
+  else
+  {
+    G4double exp2an = G4Exp(-2 * an);
+    cost = 1. + G4Log(1 - random * (1 - exp2an)) / an;
+    if (cost > 1.)
+    {
+      cost = 1.;
+    }
+    else if (cost < -1.)
+    {
+      cost = -1.;
+    }
+  }
 
-  theFinalMomentum.set(pmag*std::cos(phi)*sint,pmag*std::sin(phi)*sint,
-		       pmag*cost);
+  G4double phi = CLHEP::twopi * G4UniformRand();
+
+  // Calculate the momentum magnitude of emitted fragment
+  G4double pmag = std::sqrt(ekin * (ekin + 2.0 * thePreFragment->GetNuclearMass()));
+
+  G4double sint = std::sqrt((1.0 - cost) * (1.0 + cost));
+
+  theFinalMomentum.set(pmag * std::cos(phi) * sint, pmag * std::sin(phi) * sint, pmag * cost);
 
   // theta is the angle wrt the incident direction
   G4ThreeVector theIncidentDirection = aFragment.GetMomentum().vect().unit();
   theFinalMomentum.rotateUz(theIncidentDirection);
 }
 
-G4double G4PreCompoundEmissionInt::rho(G4int p, G4int h, G4double gg, 
-				       G4double E, G4double Ef) const
-{	
+G4double G4PreCompoundEmissionInt::rho(G4int p, G4int h, G4double gg, G4double E, G4double Ef) const
+{
   // 25.02.2010 V.Ivanchenko added more protections
-  G4double Aph = (p*p + h*h + p - 3.0*h)/(4.0*gg);
-  
-  if ( E - Aph < 0.0) { return 0.0; }
-  
-  G4double logConst = (p+h)*G4Log(gg) 
-    - g4calc->logfactorial(p+h-1) - g4calc->logfactorial(p) 
-    - g4calc->logfactorial(h);
+  G4double Aph = (p * p + h * h + p - 3.0 * h) / (4.0 * gg);
+
+  if (E - Aph < 0.0)
+  {
+    return 0.0;
+  }
+
+  G4double logConst = (p + h) * G4Log(gg) - g4calc->logfactorial(p + h - 1)
+                      - g4calc->logfactorial(p) - g4calc->logfactorial(h);
 
   // initialise values using j=0
 
-  G4double t1=1;
-  G4double t2=1;
-  G4double logt3 = (p+h-1) * G4Log(E-Aph) + logConst;
+  G4double t1 = 1;
+  G4double t2 = 1;
+  G4double logt3 = (p + h - 1) * G4Log(E - Aph) + logConst;
   const G4double logmax = 200.;
-  if(logt3 > logmax) { logt3 = logmax; }
-  G4double tot = G4Exp( logt3 );
+  if (logt3 > logmax)
+  {
+    logt3 = logmax;
+  }
+  G4double tot = G4Exp(logt3);
 
   // and now sum rest of terms
-  // 25.02.2010 V.Ivanchenko change while to for loop and cleanup 
-  G4double Eeff = E - Aph; 
-  for(G4int j=1; j<=h; ++j) 
+  // 25.02.2010 V.Ivanchenko change while to for loop and cleanup
+  G4double Eeff = E - Aph;
+  for (G4int j = 1; j <= h; ++j)
+  {
+    Eeff -= Ef;
+    if (Eeff < 0.0)
     {
-      Eeff -= Ef;
-      if(Eeff < 0.0) { break; }
-      t1 *= -1.;
-      t2 *= static_cast<G4double>(h+1-j)/static_cast<G4double>(j);
-      logt3 = (p+h-1) * G4Log( Eeff) + logConst;
-      if(logt3 > logmax) { logt3 = logmax; }
-      tot += t1*t2*G4Exp(logt3);
+      break;
     }
-        
+    t1 *= -1.;
+    t2 *= static_cast<G4double>(h + 1 - j) / static_cast<G4double>(j);
+    logt3 = (p + h - 1) * G4Log(Eeff) + logConst;
+    if (logt3 > logmax)
+    {
+      logt3 = logmax;
+    }
+    tot += t1 * t2 * G4Exp(logt3);
+  }
+
   return tot;
 }

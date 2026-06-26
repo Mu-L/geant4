@@ -28,7 +28,7 @@
 // Author: Gabriele Cosmo, 5 September 1995 - Created
 // --------------------------------------------------------------------
 #ifndef templates_hh
-#define templates_hh 1
+#define templates_hh
 
 #include <climits>
 #include <limits>
@@ -100,20 +100,20 @@ using Float = float;
 
 //---------------------------------
 
-template <class T>
+template<class T>
 inline void G4SwapPtr(T*& a, T*& b)
 {
   T* tmp = a;
-  a      = b;
-  b      = tmp;
+  a = b;
+  b = tmp;
 }
 
-template <class T>
+template<class T>
 inline void G4SwapObj(T* a, T* b)
 {
   T tmp = *a;
-  *a    = *b;
-  *b    = tmp;
+  *a = *b;
+  *b = tmp;
 }
 
 //-----------------------------
@@ -124,7 +124,7 @@ inline void G4SwapObj(T* a, T* b)
 #    undef sqr
 #  endif
 
-template <class T>
+template<class T>
 inline T sqr(const T& x)
 {
   return x * x;
@@ -173,7 +173,7 @@ inline int G4lrint(double ad)
 //              G4ConsumeParameters(val);
 //          }
 //
-template <typename... _Args>
+template<typename... _Args>
 inline void G4ConsumeParameters(_Args&&...)
 {}
 

@@ -25,59 +25,57 @@
 //
 //
 #include "G4DNAUpdateSystemModel.hh"
-#include "G4Molecule.hh"
-#include "G4DNAMolecularReactionTable.hh"
-#include "G4UnitsTable.hh"
-#include "G4MoleculeCounter.hh"
-#include "G4DNAScavengerMaterial.hh"
-#include "G4Scheduler.hh"
 
+#include "G4DNAMolecularReactionTable.hh"
+#include "G4DNAScavengerMaterial.hh"
+#include "G4Molecule.hh"
+#include "G4MoleculeCounter.hh"
 #include "G4MoleculeCounterManager.hh"
+#include "G4Scheduler.hh"
+#include "G4UnitsTable.hh"
 
 G4DNAUpdateSystemModel::G4DNAUpdateSystemModel() = default;
 
-void G4DNAUpdateSystemModel::SetMesh(G4DNAMesh* pMesh) { fpMesh = pMesh; }
+void G4DNAUpdateSystemModel::SetMesh(G4DNAMesh* pMesh)
+{
+  fpMesh = pMesh;
+}
 void G4DNAUpdateSystemModel::KillMolecule(const Index& index, MolType type)
 {
   // kill normal molecule
   auto& node = fpMesh->GetVoxelMapList(index);
-  auto iter  = node.find(type);
-  if(iter != node.end())
+  auto iter = node.find(type);
+  if (iter != node.end())
   {
-    if(iter->second <= 0)
+    if (iter->second <= 0)
     {
       G4ExceptionDescription exceptionDescription;
-      exceptionDescription
-        << "G4DNAUpdateSystemModel::KillMolecule::molecule : "
-        << type->GetName() << " index : " << index
-        << " number : " << iter->second << G4endl;
-      G4Exception("G4DNAEventScheduler::Stepping", "G4DNAEventScheduler002",
-                  FatalErrorInArgument, exceptionDescription);
+      exceptionDescription << "G4DNAUpdateSystemModel::KillMolecule::molecule : " << type->GetName()
+                           << " index : " << index << " number : " << iter->second << G4endl;
+      G4Exception("G4DNAEventScheduler::Stepping", "G4DNAEventScheduler002", FatalErrorInArgument,
+                  exceptionDescription);
     }
     iter->second--;
     if (G4MoleculeCounterManager::Instance()->GetIsActive())
     {
-		  G4MoleculeCounterManager::Instance()->RemoveMoleculeWithoutTrack(type, fGlobalTime);
+      G4MoleculeCounterManager::Instance()->RemoveMoleculeWithoutTrack(type, fGlobalTime);
     }
   }
   else
   {
-    auto pScavengerMaterial = dynamic_cast<G4DNAScavengerMaterial*>(
-      G4Scheduler::Instance()->GetScavengerMaterial());
-    if(pScavengerMaterial != nullptr)
+    auto pScavengerMaterial =
+      dynamic_cast<G4DNAScavengerMaterial*>(G4Scheduler::Instance()->GetScavengerMaterial());
+    if (pScavengerMaterial != nullptr)
     {
-      pScavengerMaterial->ReduceNumberMoleculePerVolumeUnitForMaterialConf(
-        type, fGlobalTime);
+      pScavengerMaterial->ReduceNumberMoleculePerVolumeUnitForMaterialConf(type, fGlobalTime);
     }
     else
     {
       G4ExceptionDescription exceptionDescription;
-      exceptionDescription
-        << "index : " << index << " " << type->GetName()
-        << "  This molecule is not belong scavengers or particle-base"
-        << G4endl;
-      G4Exception("G4DNAEventScheduler::Stepping", "G4DNAEventScheduler002",
-                  FatalErrorInArgument, exceptionDescription);
+      exceptionDescription << "index : " << index << " " << type->GetName()
+                           << "  This molecule is not belong scavengers or particle-base" << G4endl;
+      G4Exception("G4DNAEventScheduler::Stepping", "G4DNAEventScheduler002", FatalErrorInArgument,
+                  exceptionDescription);
     }
   }
 }
@@ -85,15 +83,14 @@ void G4DNAUpdateSystemModel::KillMolecule(const Index& index, MolType type)
 void G4DNAUpdateSystemModel::JumpTo(const Index& index, MolType type)
 {
   auto& node = fpMesh->GetVoxelMapList(index);
-  auto iter  = node.find(type);
-  if(iter != node.end())
+  auto iter = node.find(type);
+  if (iter != node.end())
   {
-    if(iter->second <= 0)
+    if (iter->second <= 0)
     {
       G4ExceptionDescription exceptionDescription;
-      exceptionDescription << "G4DNAUpdateSystemModel::JumpTo::molecule : "
-                           << type->GetName() << " index : " << index
-                           << " number : " << iter->second;
+      exceptionDescription << "G4DNAUpdateSystemModel::JumpTo::molecule : " << type->GetName()
+                           << " index : " << index << " number : " << iter->second;
       G4Exception("G4DNAUpdateSystemModel::JumpTo", "G4DNAUpdateSystemModel001",
                   FatalErrorInArgument, exceptionDescription);
     }
@@ -105,26 +102,25 @@ void G4DNAUpdateSystemModel::JumpTo(const Index& index, MolType type)
     G4ExceptionDescription exceptionDescription;
     exceptionDescription << "index : " << index << " " << type->GetName()
                          << " There is no this type";
-    G4Exception("G4DNAUpdateSystemModel::JumpTo", "G4DNAUpdateSystemModel002",
-                FatalErrorInArgument, exceptionDescription);
+    G4Exception("G4DNAUpdateSystemModel::JumpTo", "G4DNAUpdateSystemModel002", FatalErrorInArgument,
+                exceptionDescription);
   }
 }
 
 void G4DNAUpdateSystemModel::CreateMolecule(const Index& index, MolType type)
 {
   // for scavenger
-  auto pScavengerMaterial = dynamic_cast<G4DNAScavengerMaterial*>(
-    G4Scheduler::Instance()->GetScavengerMaterial());
-  if(pScavengerMaterial != nullptr && pScavengerMaterial->find(type))
+  auto pScavengerMaterial =
+    dynamic_cast<G4DNAScavengerMaterial*>(G4Scheduler::Instance()->GetScavengerMaterial());
+  if (pScavengerMaterial != nullptr && pScavengerMaterial->find(type))
   {
-    pScavengerMaterial->AddNumberMoleculePerVolumeUnitForMaterialConf(
-      type, fGlobalTime);
+    pScavengerMaterial->AddNumberMoleculePerVolumeUnitForMaterialConf(type, fGlobalTime);
     return;
   }
   // for molecule
   auto& node = fpMesh->GetVoxelMapList(index);
-  auto iter  = node.find(type);
-  if(iter != node.end())
+  auto iter = node.find(type);
+  if (iter != node.end())
   {
     iter->second++;
   }
@@ -135,7 +131,7 @@ void G4DNAUpdateSystemModel::CreateMolecule(const Index& index, MolType type)
 
   if (G4MoleculeCounterManager::Instance()->GetIsActive())
   {
-	  G4MoleculeCounterManager::Instance()->AddMoleculeWithoutTrack(type, fGlobalTime);
+    G4MoleculeCounterManager::Instance()->AddMoleculeWithoutTrack(type, fGlobalTime);
   }
 }
 
@@ -143,8 +139,8 @@ void G4DNAUpdateSystemModel::JumpIn(const Index& index, MolType type)
 {
   // for molecule
   auto& node = fpMesh->GetVoxelMapList(index);
-  auto iter  = node.find(type);
-  if(iter != node.end())
+  auto iter = node.find(type);
+  if (iter != node.end())
   {
     iter->second++;
   }
@@ -154,30 +150,28 @@ void G4DNAUpdateSystemModel::JumpIn(const Index& index, MolType type)
   }
 }
 
-void G4DNAUpdateSystemModel::UpdateSystem(const Index& index,
-                                          const ReactionData& data)
+void G4DNAUpdateSystemModel::UpdateSystem(const Index& index, const ReactionData& data)
 {
   auto reactant1 = data.GetReactant1();
   auto reactant2 = data.GetReactant2();
 #ifdef G4VERBOSE
-  if(fVerbose != 0)
+  if (fVerbose != 0)
   {
     G4cout << "At time : " << std::setw(7) << G4BestUnit(fGlobalTime, "Time")
-           << " Reaction : " << reactant1->GetName() << " + "
-           << reactant2->GetName() << " -> ";
+           << " Reaction : " << reactant1->GetName() << " + " << reactant2->GetName() << " -> ";
   }
 #endif
   const G4int nbProducts = data.GetNbProducts();
-  if(nbProducts != 0)
+  if (nbProducts != 0)
   {
-    for(G4int j = 0; j < nbProducts; ++j)
+    for (G4int j = 0; j < nbProducts; ++j)
     {
 #ifdef G4VERBOSE
-      if((fVerbose != 0) && j != 0)
+      if ((fVerbose != 0) && j != 0)
       {
         G4cout << " + ";
       }
-      if(fVerbose != 0)
+      if (fVerbose != 0)
       {
         G4cout << data.GetProduct(j)->GetName();
       }
@@ -188,14 +182,14 @@ void G4DNAUpdateSystemModel::UpdateSystem(const Index& index,
   else
   {
 #ifdef G4VERBOSE
-    if(fVerbose != 0)
+    if (fVerbose != 0)
     {
       G4cout << "No product";
     }
 #endif
   }
 #ifdef G4VERBOSE
-  if(fVerbose != 0)
+  if (fVerbose != 0)
   {
     G4cout << G4endl;
   }
@@ -204,17 +198,16 @@ void G4DNAUpdateSystemModel::UpdateSystem(const Index& index,
   KillMolecule(index, reactant2);
 }
 
-void G4DNAUpdateSystemModel::UpdateSystem(const Index& index,
-                                          const JumpingData& data)
+void G4DNAUpdateSystemModel::UpdateSystem(const Index& index, const JumpingData& data)
 {
-  auto reactant    = std::get<0>(data);
+  auto reactant = std::get<0>(data);
   auto JunpToIndex = std::get<1>(data);
 #ifdef G4VERBOSE
-  if(fVerbose > 1)
+  if (fVerbose > 1)
   {
     G4cout << "At time : " << std::setw(7) << G4BestUnit(fGlobalTime, "Time")
-           << " Jumping : " << reactant->GetName() << " from " << index
-           << " -> " << JunpToIndex << G4endl;
+           << " Jumping : " << reactant->GetName() << " from " << index << " -> " << JunpToIndex
+           << G4endl;
   }
 #endif
   JumpTo(index, reactant);

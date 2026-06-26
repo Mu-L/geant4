@@ -31,11 +31,11 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrMaterial_hh
-#define G4tgrMaterial_hh 1
+#ifndef G4TGRMATERIAL_HH
+#define G4TGRMATERIAL_HH
 
-#include "globals.hh"
 #include "G4Material.hh"
+#include "globals.hh"
 
 class G4tgrMaterial
 {
@@ -49,20 +49,17 @@ class G4tgrMaterial
     const G4String& GetName() const { return theName; }
 
     G4double GetDensity() const { return theDensity; }
-      // Density in g/cm3
+    // Density in g/cm3
 
     G4int GetNumberOfComponents() const { return theNoComponents; }
     const G4String& GetType() const { return theMateType; }
 
-    virtual G4double GetA() const                       = 0;
-    virtual G4double GetZ() const                       = 0;
+    virtual G4double GetA() const = 0;
+    virtual G4double GetZ() const = 0;
     virtual const G4String& GetComponent(G4int i) const = 0;
-    virtual G4double GetFraction(G4int i)               = 0;
+    virtual G4double GetFraction(G4int i) = 0;
 
-    G4double GetIonisationMeanExcitationEnergy() const
-    {
-      return theIonisationMeanExcitationEnergy;
-    }
+    G4double GetIonisationMeanExcitationEnergy() const { return theIonisationMeanExcitationEnergy; }
 
     void SetIonisationMeanExcitationEnergy(G4double mee)
     {

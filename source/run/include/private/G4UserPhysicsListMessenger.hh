@@ -45,8 +45,8 @@
 
 // Original author: H.Kurashige, 9 January 1998
 // --------------------------------------------------------------------
-#ifndef G4UserPhysicsListMessenger_hh
-#define G4UserPhysicsListMessenger_hh 1
+#ifndef G4USERPHYSICSLISTMESSENGER_HH
+#define G4USERPHYSICSLISTMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -63,6 +63,7 @@ class G4UIcommand;
 class G4UserPhysicsListMessenger : public G4UImessenger
 {
   public:
+
     G4UserPhysicsListMessenger(G4VUserPhysicsList* pParticleList);
     ~G4UserPhysicsListMessenger() override;
 
@@ -70,9 +71,11 @@ class G4UserPhysicsListMessenger : public G4UImessenger
     G4String GetCurrentValue(G4UIcommand* command) override;
 
   protected:
+
     G4VUserPhysicsList* thePhysicsList = nullptr;
 
   private:
+
     // Hidden default constructor.
     G4UserPhysicsListMessenger() = default;
 

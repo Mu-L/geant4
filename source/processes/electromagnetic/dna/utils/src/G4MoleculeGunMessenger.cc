@@ -42,11 +42,9 @@
 
 //------------------------------------------------------------------------------
 
-G4MoleculeGunMessenger::G4MoleculeGunMessenger(G4MoleculeGun* gun) :
-  G4UImessenger("/chem/gun/", "")
+G4MoleculeGunMessenger::G4MoleculeGunMessenger(G4MoleculeGun* gun) : G4UImessenger("/chem/gun/", "")
 {
-  fpGunNewGunType = new G4UIcmdWithAString("/chem/gun/newShoot",
-                                           this);
+  fpGunNewGunType = new G4UIcmdWithAString("/chem/gun/newShoot", this);
   fpMoleculeGun = gun;
 }
 
@@ -66,25 +64,24 @@ G4String G4MoleculeGunMessenger::GetCurrentValue(G4UIcommand* /*command*/)
 
 //------------------------------------------------------------------------------
 
-void G4MoleculeGunMessenger::SetNewValue(G4UIcommand* command,
-                                         G4String newValue)
+void G4MoleculeGunMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
   if (command == fpGunNewGunType)
   {
-    std::istringstream iss (newValue);
-    
+    std::istringstream iss(newValue);
+
     G4String shootName;
     iss >> shootName;
-    
+
     G4String shootType;
     iss >> shootType;
-        
-    if(shootType.empty() || shootType.empty())
+
+    if (shootType.empty() || shootType.empty())
     {
       CreateNewType<G4Track>(shootName);
     }
     else
-    {      
+    {
       CreateNewType<G4ContinuousMedium>(shootName);
     }
   }
@@ -92,8 +89,7 @@ void G4MoleculeGunMessenger::SetNewValue(G4UIcommand* command,
 
 //------------------------------------------------------------------------------
 
-G4MoleculeShootMessenger::G4MoleculeShootMessenger(const G4String& name,
-                                                   G4MoleculeGunMessenger*,
+G4MoleculeShootMessenger::G4MoleculeShootMessenger(const G4String& name, G4MoleculeGunMessenger*,
                                                    G4shared_ptr<G4MoleculeShoot> shoot)
   : fpShoot(std::move(shoot))
 {
@@ -125,7 +121,7 @@ G4MoleculeShootMessenger::G4MoleculeShootMessenger(const G4String& name,
   tmp += "/type";
   fpGunType = new G4UIcmdWithAString(tmp, this);
 
-//  fpShoot.reset(new TG4MoleculeShoot<G4Track>());
+  //  fpShoot.reset(new TG4MoleculeShoot<G4Track>());
 }
 
 //------------------------------------------------------------------------------
@@ -150,7 +146,7 @@ void G4MoleculeShootMessenger::SetNewValue(G4UIcommand* command, G4String newVal
   {
     fpShoot->fPosition = fpGunPosition->GetNew3VectorValue(newValue);
   }
-  else if(command == fpGunRdnmPosition)
+  else if (command == fpGunRdnmPosition)
   {
     fpShoot->fBoxSize = new G4ThreeVector(fpGunRdnmPosition->GetNew3VectorValue(newValue));
   }
@@ -164,11 +160,12 @@ void G4MoleculeShootMessenger::SetNewValue(G4UIcommand* command, G4String newVal
   }
   else if (command == fpGunType)
   {
-    if(newValue == "CM")
+    if (newValue == "CM")
     {
-//      G4cout << "**** Change type" << G4endl;
-//      TG4MoleculeShoot<G4ContinuousMedium>* casted = static_cast<TG4MoleculeShoot<G4ContinuousMedium>*>(fpShoot.get());
-//      fpShoot.reset(casted);
+      //      G4cout << "**** Change type" << G4endl;
+      //      TG4MoleculeShoot<G4ContinuousMedium>* casted =
+      //      static_cast<TG4MoleculeShoot<G4ContinuousMedium>*>(fpShoot.get());
+      //      fpShoot.reset(casted);
       fpShoot = fpShoot.get()->ChangeType<G4ContinuousMedium>();
     }
   }
@@ -188,7 +185,7 @@ G4String G4MoleculeShootMessenger::GetCurrentValue(G4UIcommand* command)
   }
   if (command == fpGunRdnmPosition)
   {
-    if(fpShoot->fBoxSize != nullptr)
+    if (fpShoot->fBoxSize != nullptr)
     {
       return fpGunRdnmPosition->ConvertToStringWithBestUnit(*fpShoot->fBoxSize);
     }
@@ -206,4 +203,3 @@ G4String G4MoleculeShootMessenger::GetCurrentValue(G4UIcommand* command)
 }
 
 //------------------------------------------------------------------------------
-

@@ -34,16 +34,17 @@
 //              is used.
 //
 
-#ifndef G4Pi0P2Pi0PAngDst_h
-#define G4Pi0P2PPi0AngDst_h 1
+#ifndef G4PI0P2PI0PANGDST_HH
+#define G4PI0P2PI0PANGDST_HH
 
 #include "G4NumIntTwoBodyAngDst.hh"
 
+class G4Pi0P2Pi0PAngDst : public G4NumIntTwoBodyAngDst<11, 19>
+{
+  public:
 
-class G4Pi0P2Pi0PAngDst : public G4NumIntTwoBodyAngDst<11,19> {
-public:
-  G4Pi0P2Pi0PAngDst(G4int verbose = 0);
-  virtual ~G4Pi0P2Pi0PAngDst() {;}
+    G4Pi0P2Pi0PAngDst(G4int verbose = 0);
+    virtual ~G4Pi0P2Pi0PAngDst() { ; }
 };
 
 #endif

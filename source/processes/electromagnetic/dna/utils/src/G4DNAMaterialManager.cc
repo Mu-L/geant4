@@ -27,21 +27,26 @@
 // and keeps DNA cross sections.
 
 #include "G4DNAMaterialManager.hh"
-#include "G4StateManager.hh"
-#include "G4Threading.hh"
+
 #include "G4AutoLock.hh"
 #include "G4NistManager.hh"
+#include "G4StateManager.hh"
+#include "G4Threading.hh"
 
-G4DNAMaterialManager *G4DNAMaterialManager::theInstance = nullptr;
+G4DNAMaterialManager* G4DNAMaterialManager::theInstance = nullptr;
 
-namespace {
-  G4Mutex MaterialMutex = G4MUTEX_INITIALIZER;
+namespace
+{
+G4Mutex MaterialMutex = G4MUTEX_INITIALIZER;
 }
 
-G4DNAMaterialManager *G4DNAMaterialManager::Instance() {
-  if (nullptr == theInstance) {
+G4DNAMaterialManager* G4DNAMaterialManager::Instance()
+{
+  if (nullptr == theInstance)
+  {
     G4AutoLock l(&MaterialMutex);
-    if (nullptr == theInstance) {
+    if (nullptr == theInstance)
+    {
       static G4DNAMaterialManager manager;
       theInstance = &manager;
     }
@@ -50,16 +55,19 @@ G4DNAMaterialManager *G4DNAMaterialManager::Instance() {
   return theInstance;
 }
 
-G4DNAMaterialManager::G4DNAMaterialManager() {
+G4DNAMaterialManager::G4DNAMaterialManager()
+{
   G4NistManager::Instance();
   fStateManager = G4StateManager::GetStateManager();
 }
 
-G4VEmModel* G4DNAMaterialManager::GetModel(const DNAModelType& t){
+G4VEmModel* G4DNAMaterialManager::GetModel(const DNAModelType& t)
+{
   return fData[t];
 }
 
-void G4DNAMaterialManager::SetMasterDataModel(const DNAModelType& t, G4VEmModel* m){
+void G4DNAMaterialManager::SetMasterDataModel(const DNAModelType& t, G4VEmModel* m)
+{
   fData[t] = m;
 }
 

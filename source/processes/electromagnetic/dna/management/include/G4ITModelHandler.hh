@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,14 +41,16 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#pragma once
+#ifndef G4ITMODELHANDLER_HH
+#define G4ITMODELHANDLER_HH
 
-#include "G4Types.hh"
 #include "G4ITType.hh"
-#include <vector>
+#include "G4Types.hh"
+
 #include <memory>
+#include <vector>
 
 class G4ITModelManager;
 class G4VITStepModel;
@@ -59,7 +61,8 @@ class G4VITStepModel;
  */
 class G4ITModelHandler
 {
-public:
+  public:
+
     G4ITModelHandler();
 
     G4ITModelHandler(const G4ITModelHandler& other) = delete;
@@ -86,11 +89,14 @@ public:
 
     bool GetReactionProcessFlag();
 
-protected:
+  protected:
+
     G4bool fIsInitialized;
     std::unique_ptr<G4ITModelManager> fpModelManager;
 
-    G4bool fTimeStepComputerFlag; // Set true if a time stepper is registered
-    G4bool fReactionProcessFlag; // Set true if a reaction process is registered
+    G4bool fTimeStepComputerFlag;  // Set true if a time stepper is registered
+    G4bool fReactionProcessFlag;  // Set true if a reaction process is registered
     G4bool fFinalize = false;
 };
+
+#endif

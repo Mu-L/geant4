@@ -34,17 +34,17 @@
 // Author: John Apostolakis (CERN), 30 April 2010
 // --------------------------------------------------------------------
 #ifndef G4VOXELSAFETY_HH
-#define G4VOXELSAFETY_HH 1
+#define G4VOXELSAFETY_HH
+
+#include "G4AffineTransform.hh"
+#include "G4BlockingList.hh"
+#include "G4LogicalVolume.hh"
+#include "G4NavigationHistory.hh"
+#include "G4ThreeVector.hh"
+#include "G4VPhysicalVolume.hh"
+#include "G4VSolid.hh"
 
 #include "geomdefs.hh"
-#include "G4NavigationHistory.hh"
-#include "G4AffineTransform.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4LogicalVolume.hh"
-#include "G4VSolid.hh"
-#include "G4ThreeVector.hh"
-
-#include "G4BlockingList.hh"
 
 #include <vector>  // Required for voxel handling & voxel stack
 
@@ -55,6 +55,7 @@ class G4SmartVoxelHeader;
  * @brief G4VoxelSafety is an utility class for the handling isotropic safety
  * in volumes containing only G4PVPlacement daughter volumes for which voxels
  * have been constructed.
+ * @ingroup geometry_navigation
  */
 
 class G4VoxelSafety
@@ -69,23 +70,22 @@ class G4VoxelSafety
 
     /**
      * Calculates the isotropic distance to the nearest boundary from the
-     * specified point in the local coordinate system. 
+     * specified point in the local coordinate system.
      * The localpoint utilised must be within the current volume.
      *  @param[in] localPoint Local point.
      *  @param[in] currentPhysical Current physical volume.
      *  @param[in] maxLength Maximum length beyond which volumes are not checked.
      *  @returns Isotropic distance of given point to closest surface.
      */
-    G4double ComputeSafety( const G4ThreeVector& localPoint,
-                            const G4VPhysicalVolume& currentPhysical, 
-                                  G4double maxLength = DBL_MAX );
+    G4double ComputeSafety(const G4ThreeVector& localPoint,
+                           const G4VPhysicalVolume& currentPhysical, G4double maxLength = DBL_MAX);
 
     /**
      * Verbosity control.
      *  @note If level>0 && G4VERBOSE, printout can occur.
      */
-    inline G4int GetVerboseLevel() const { return fVerbose; } 
-    inline void  SetVerboseLevel(G4int level) { fVerbose = level; } 
+    inline G4int GetVerboseLevel() const { return fVerbose; }
+    inline void SetVerboseLevel(G4int level) { fVerbose = level; }
 
   protected:
 
@@ -99,12 +99,10 @@ class G4VoxelSafety
      *  @param[in] previousMinSafety Minimum distance beyond which not to look.
      *  @returns Isotropic distance of the point to closest volume in all nodes.
      */
-    G4double SafetyForVoxelHeader( const G4SmartVoxelHeader* pHead,
-                                   const G4ThreeVector& localPoint,
-                                         G4double maxLength,
-                                   const G4VPhysicalVolume& currentPhysical,
-                                         G4double distUpperDepth = 0.0,
-                                         G4double previousMinSafety = DBL_MAX );
+    G4double SafetyForVoxelHeader(const G4SmartVoxelHeader* pHead, const G4ThreeVector& localPoint,
+                                  G4double maxLength, const G4VPhysicalVolume& currentPhysical,
+                                  G4double distUpperDepth = 0.0,
+                                  G4double previousMinSafety = DBL_MAX);
 
     /**
      * Calculates the safety for volumes included in current Voxel Node.
@@ -112,8 +110,8 @@ class G4VoxelSafety
      *  @param[in] localPoint Local point.
      *  @returns Isotropic distance of given point to closest volume in node.
      */
-    G4double SafetyForVoxelNode( const G4SmartVoxelNode* curVoxelNode,
-                                 const G4ThreeVector& localPoint ); 
+    G4double SafetyForVoxelNode(const G4SmartVoxelNode* curVoxelNode,
+                                const G4ThreeVector& localPoint);
 
   private:
 
@@ -140,17 +138,16 @@ class G4VoxelSafety
     std::vector<G4int> fVoxelNoSlicesStack;
 
     /** Width of voxels at each level */
-    std::vector<G4double> fVoxelSliceWidthStack; 
+    std::vector<G4double> fVoxelSliceWidthStack;
 
     /** Node no point is inside at each level */
-    std::vector<G4int> fVoxelNodeNoStack;    
+    std::vector<G4int> fVoxelNodeNoStack;
 
     /** Voxel headers at each level */
     std::vector<const G4SmartVoxelHeader*> fVoxelHeaderStack;
 
     // ----- END Voxel Stack information --------------------------------------
 
-    G4bool fCheck = false;
     G4int fVerbose = 0;
     G4double kCarTolerance;
 };

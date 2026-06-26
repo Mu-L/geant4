@@ -41,32 +41,35 @@
 
 #include "Run.hh"
 
-#include "ScoreBasicMoleculeCounts.hh"
-#include "ScoreBasicReactionCounts.hh"
+#include "G4MoleculeCounterScorer.hh"
+#include "G4MoleculeReactionCounterScorer.hh"
 
 #include "G4MoleculeCounterManager.hh"
 #include "G4SDManager.hh"
 #include "G4VSensitiveDetector.hh"
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
 Run::Run() : G4Run()
 {
   auto mfdet = dynamic_cast<G4MultiFunctionalDetector*>(
     G4SDManager::GetSDMpointer()->FindSensitiveDetector("mfDetector"));
 
-  fScorerMoleculesBasic = mfdet->GetPrimitive(
-    G4SDManager::GetSDMpointer()->GetCollectionID("mfDetector/BasicMoleculeCounts"));
-  fScorerMoleculesBasicVariablePrecision = mfdet->GetPrimitive(
-    G4SDManager::GetSDMpointer()->GetCollectionID("mfDetector/BasicCounter_VariablePrecision"));
-  fScorerReactionsBasic = mfdet->GetPrimitive(
-    G4SDManager::GetSDMpointer()->GetCollectionID("mfDetector/BasicReactionCounts"));
+  fScorerMoleculesBasic = dynamic_cast<G4MoleculeCounterScorer*>(mfdet->GetPrimitive(G4SDManager::GetSDMpointer()->GetCollectionID("mfDetector/BasicMoleculeCounts")));
+  fScorerMoleculesBasicVariablePrecision = dynamic_cast<G4MoleculeCounterScorer*>(mfdet->GetPrimitive(G4SDManager::GetSDMpointer()->GetCollectionID("mfDetector/BasicCounter_VariablePrecision")));
+  fScorerReactionsBasic = dynamic_cast<G4MoleculeReactionCounterScorer*>(mfdet->GetPrimitive(G4SDManager::GetSDMpointer()->GetCollectionID("mfDetector/BasicReactionCounts")));
 }
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
 void Run::Merge(const G4Run* aRun)
 {
   if (aRun == nullptr || aRun == this) return;
+	
+  auto myRun = static_cast<const Run*>(aRun);
 
   // Ideally, merging of workers -> master counters is handled by the counter manager
-  // as part of its EndOfEventAction and EndOfRunAction, if and when the manager it instructed
+  // as part of its EndOfEventAction and EndOfRunAction, if and when the manager is instructed
   // to reset the counters between events or runs.
   // In the case of resets between runs, the user has two options:
   //   (1) ignore the master counter entries and merge results from sensitive detector workers; or
@@ -87,28 +90,25 @@ void Run::Merge(const G4Run* aRun)
       || !G4MoleculeCounterManager::Instance()->GetAccumulateCounterIntoMaster())
   {
     {
-      auto masterScorer = dynamic_cast<ScoreBasicMoleculeCounts*>(this->fScorerMoleculesBasic);
-      auto localScorer = dynamic_cast<ScoreBasicMoleculeCounts*>(
-        static_cast<const Run*>(aRun)->fScorerMoleculesBasic);
+      auto masterScorer = this->fScorerMoleculesBasic;
+      auto localScorer = myRun->fScorerMoleculesBasic;
       masterScorer->AbsorbResultsFromWorkerScorer(localScorer);
     }
 
     {
-      auto masterScorer =
-        dynamic_cast<ScoreBasicMoleculeCounts*>(this->fScorerMoleculesBasicVariablePrecision);
-      auto localScorer = dynamic_cast<ScoreBasicMoleculeCounts*>(
-        static_cast<const Run*>(aRun)->fScorerMoleculesBasicVariablePrecision);
+      auto masterScorer = this->fScorerMoleculesBasicVariablePrecision;
+      auto localScorer = myRun->fScorerMoleculesBasicVariablePrecision;
       masterScorer->AbsorbResultsFromWorkerScorer(localScorer);
     }
 
     {
-      auto masterScorer = dynamic_cast<ScoreBasicReactionCounts*>(this->fScorerReactionsBasic);
-      auto localScorer = dynamic_cast<ScoreBasicReactionCounts*>(
-        static_cast<const Run*>(aRun)->fScorerReactionsBasic);
+      auto masterScorer = this->fScorerReactionsBasic;
+      auto localScorer = myRun->fScorerReactionsBasic;
       masterScorer->AbsorbResultsFromWorkerScorer(localScorer);
     }
   }
 
   G4Run::Merge(aRun);
 }
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

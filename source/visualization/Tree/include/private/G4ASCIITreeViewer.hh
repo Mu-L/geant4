@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  5th April 2001
 // A dummy viewer for ASCIITreeSceneHandler.
 
@@ -34,10 +34,12 @@
 
 #include "G4VTreeViewer.hh"
 
-class G4ASCIITreeViewer: public G4VTreeViewer {
-public:
-  G4ASCIITreeViewer(G4VSceneHandler&,const G4String& name);
-  virtual ~G4ASCIITreeViewer();
+class G4ASCIITreeViewer : public G4VTreeViewer
+{
+  public:
+
+    G4ASCIITreeViewer(G4VSceneHandler&, const G4String& name);
+    virtual ~G4ASCIITreeViewer();
 };
 
 #endif

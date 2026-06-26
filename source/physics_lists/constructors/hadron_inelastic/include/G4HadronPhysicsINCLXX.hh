@@ -41,13 +41,12 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4HadronPhysicsINCLXX_h
-#define G4HadronPhysicsINCLXX_h 1
-
-#include "globals.hh"
-#include "G4ios.hh"
+#ifndef G4HADRONPHYSICSINCLXX_HH
+#define G4HADRONPHYSICSINCLXX_HH
 
 #include "G4HadronPhysicsFTFP_BERT.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 /**
  * Build hadronic physics using INCL++, high-energy models (QGSP or FTFP) and
@@ -61,20 +60,22 @@
 
 class G4HadronPhysicsINCLXX : public G4HadronPhysicsFTFP_BERT
 {
-  public: 
-    G4HadronPhysicsINCLXX(G4int verbose =1);
-    G4HadronPhysicsINCLXX(const G4String& name, const G4bool quasiElastic=true, const G4bool neutronHP=false, const G4bool ftfp=false);
+  public:
+
+    G4HadronPhysicsINCLXX(G4int verbose = 1);
+    G4HadronPhysicsINCLXX(const G4String& name, const G4bool quasiElastic = true,
+                          const G4bool neutronHP = false, const G4bool ftfp = false);
     virtual ~G4HadronPhysicsINCLXX();
 
     void ConstructProcess() override;
 
-    void SetQuasiElastic(G4bool value) {QuasiElastic = value;}; 
+    void SetQuasiElastic(G4bool value) { QuasiElastic = value; };
 
-    G4HadronPhysicsINCLXX(G4HadronPhysicsINCLXX &) = delete;
-    G4HadronPhysicsINCLXX & operator =
-    (const G4HadronPhysicsINCLXX &right) = delete;
+    G4HadronPhysicsINCLXX(G4HadronPhysicsINCLXX&) = delete;
+    G4HadronPhysicsINCLXX& operator=(const G4HadronPhysicsINCLXX& right) = delete;
 
   protected:
+
     void Neutron() override;
     void Proton() override;
     void Pion() override;
@@ -82,9 +83,9 @@ class G4HadronPhysicsINCLXX : public G4HadronPhysicsFTFP_BERT
     void Others() override;
 
   private:
+
     G4bool withNeutronHP;
     G4bool withFTFP;
 };
 
 #endif
-

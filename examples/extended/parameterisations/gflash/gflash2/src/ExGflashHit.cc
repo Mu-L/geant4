@@ -28,6 +28,7 @@
 
 #include "ExGflashHit.hh"
 
+#include "G4Circle.hh"
 #include "G4Colour.hh"
 #include "G4LogicalVolume.hh"
 #include "G4Transform3D.hh"
@@ -95,15 +96,13 @@ void ExGflashHit::Draw()
 {
   G4VVisManager* pVVisManager = G4VVisManager::GetConcreteInstance();
   if (pVVisManager) {
-    G4Transform3D trans(fRot, fPos);
-    G4VisAttributes attribs;
-    const G4VisAttributes* pVA = fLogV->GetVisAttributes();
-    if (pVA) attribs = *pVA;
+    G4Circle circle(fPos);
+    circle.SetScreenSize(0.04);
+    circle.SetFillStyle(G4Circle::filled);
     G4Colour colour(1., 0., 0.);
-    attribs.SetColour(colour);
-    attribs.SetForceWireframe(false);
-    attribs.SetForceSolid(true);
-    pVVisManager->Draw(*fLogV, attribs, trans);
+    G4VisAttributes attribs(colour);
+    circle.SetVisAttributes(attribs);
+    pVVisManager->Draw(circle);
   }
 }
 

@@ -33,7 +33,7 @@
 // G4FieldManagerStore::GetInstance().
 //
 // All FieldManagers should be registered with G4FieldManagerStore,
-// and removed on their destruction. 
+// and removed on their destruction.
 // Intended principally to enable resetting of 'state' at start of event.
 // The underlying container initially has a capacity of 100.
 
@@ -42,13 +42,16 @@
 #ifndef G4FIELDMANAGERSTORE_HH
 #define G4FIELDMANAGERSTORE_HH
 
-#include <vector>
-
 #include "G4FieldManager.hh"
+
+#include <vector>
 
 /**
  * @brief G4FieldManagerStore is a container for all field managers, with
- * functionality derived from std::vector<T>. The class is a singleton.
+ * functionality derived from std::vector<T>.
+ * @ingroup geometry_magneticfield
+ *
+ * The class is a singleton.
  * All field managers should be registered with G4FieldManagerStore,
  * and removed on their destruction. Intended principally to enable resetting
  * of 'state' at start of an event.
@@ -91,7 +94,7 @@ class G4FieldManagerStore : public std::vector<G4FieldManager*>
     ~G4FieldManagerStore();
 
   private:
-  
+
     /**
      * Private constructor.
      */

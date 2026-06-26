@@ -29,7 +29,7 @@
 //
 // File name:     G4EmExtraParametersMessenger
 //
-// Author:        Vladimir Ivanchenko 
+// Author:        Vladimir Ivanchenko
 //
 // Creation date: 07-05-2019
 //
@@ -44,11 +44,11 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-#ifndef G4EmExtraParametersMessenger_h
-#define G4EmExtraParametersMessenger_h 1
+#ifndef G4EMEXTRAPARAMETERSMESSENGER_HH
+#define G4EMEXTRAPARAMETERSMESSENGER_HH
 
-#include "globals.hh"
 #include "G4UImessenger.hh"
+#include "globals.hh"
 
 class G4UIcommand;
 class G4UIcmdWithABool;
@@ -61,42 +61,40 @@ class G4EmExtraParameters;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-class G4EmExtraParametersMessenger: public G4UImessenger
+class G4EmExtraParametersMessenger : public G4UImessenger
 {
-public:   // with description
-  
-  explicit G4EmExtraParametersMessenger(G4EmExtraParameters*);
-  ~G4EmExtraParametersMessenger() override;
+  public:  // with description
 
-  void SetNewValue(G4UIcommand*, G4String) override;
+    explicit G4EmExtraParametersMessenger(G4EmExtraParameters*);
+    ~G4EmExtraParametersMessenger() override;
 
-  G4EmExtraParametersMessenger & operator=
-  (const G4EmExtraParametersMessenger &right) = delete;
-  G4EmExtraParametersMessenger(const G4EmExtraParametersMessenger&) = delete;
+    void SetNewValue(G4UIcommand*, G4String) override;
 
-private:
+    G4EmExtraParametersMessenger& operator=(const G4EmExtraParametersMessenger& right) = delete;
+    G4EmExtraParametersMessenger(const G4EmExtraParametersMessenger&) = delete;
 
-  G4EmExtraParameters*       theParameters;
+  private:
 
-  G4UIcmdWithABool*          dirSplitCmd;
-  G4UIcmdWithABool*          qeCmd;
+    G4EmExtraParameters* theParameters;
 
-  G4UIcmdWithADoubleAndUnit* dirSplitRadiusCmd;
+    G4UIcmdWithABool* dirSplitCmd;
+    G4UIcmdWithABool* qeCmd;
 
-  G4UIcommand*               paiCmd;
-  G4UIcommand*               mscoCmd;
+    G4UIcmdWithADoubleAndUnit* dirSplitRadiusCmd;
 
-  G4UIcmdWithAString*        SubSecCmd;
-  G4UIcommand*               bfCmd;
-  G4UIcommand*               fiCmd;
-  G4UIcommand*               bsCmd;
-  G4UIcommand*               StepFuncCmd;
-  G4UIcommand*               StepFuncCmd1;
-  G4UIcommand*               StepFuncCmd2;
-  G4UIcommand*               StepFuncCmd3;
+    G4UIcommand* paiCmd;
+    G4UIcommand* mscoCmd;
 
-  G4UIcmdWith3VectorAndUnit* dirSplitTargetCmd;
+    G4UIcmdWithAString* SubSecCmd;
+    G4UIcommand* bfCmd;
+    G4UIcommand* fiCmd;
+    G4UIcommand* bsCmd;
+    G4UIcommand* StepFuncCmd;
+    G4UIcommand* StepFuncCmd1;
+    G4UIcommand* StepFuncCmd2;
+    G4UIcommand* StepFuncCmd3;
+
+    G4UIcmdWith3VectorAndUnit* dirSplitTargetCmd;
 };
 
 #endif
-

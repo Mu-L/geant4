@@ -6,17 +6,24 @@
 
 #include "../impi"
 
-namespace tools {
-namespace wroot {
+namespace tools
+{
+namespace wroot
+{
 
-class impi_ntuple {
-public:
-  virtual bool add_row(impi&,int,int) = 0;
-  virtual bool end_fill(impi&,int,int) = 0;
-public:
-  virtual ~impi_ntuple() {}
+class impi_ntuple
+{
+  public:
+
+    virtual bool add_row(impi&, int, int) = 0;
+    virtual bool end_fill(impi&, int, int) = 0;
+
+  public:
+
+    virtual ~impi_ntuple() {}
 };
 
-}}
+}  // namespace wroot
+}  // namespace tools
 
 #endif

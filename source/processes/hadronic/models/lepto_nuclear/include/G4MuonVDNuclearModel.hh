@@ -33,65 +33,62 @@
 //              Kokoulin's muon cross section and equivalent gamma spectrum
 //              are used.
 //
- 
-#ifndef G4MuonVDNuclearModel_h
-#define G4MuonVDNuclearModel_h 1 
+
+#ifndef G4MUONVDNUCLEARMODEL_HH
+#define G4MUONVDNUCLEARMODEL_HH
 
 #include "G4HadronicInteraction.hh"
 
 class G4CascadeInterface;
-class G4TheoFSGenerator; 
+class G4TheoFSGenerator;
 class G4LundStringFragmentation;
 class G4ExcitedStringDecay;
 class G4KokoulinMuonNuclearXS;
-class G4ElementData; 
+class G4ElementData;
 
 class G4MuonVDNuclearModel : public G4HadronicInteraction
 {
-public:
-    
-  G4MuonVDNuclearModel();
-  ~G4MuonVDNuclearModel() override;
+  public:
 
-  G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
-				 G4Nucleus& targetNucleus) override;
+    G4MuonVDNuclearModel();
+    ~G4MuonVDNuclearModel() override;
 
-  void ModelDescription(std::ostream& outFile) const override;
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
+                                   G4Nucleus& targetNucleus) override;
 
-private:
-    
-  G4DynamicParticle* CalculateEMVertex(const G4HadProjectile& aTrack,
-				       G4Nucleus& targetNucleus);
+    void ModelDescription(std::ostream& outFile) const override;
 
-  void CalculateHadronicVertex(G4DynamicParticle* incident,
-			       G4Nucleus& target);
+  private:
 
-  void MakeSamplingTable();
+    G4DynamicParticle* CalculateEMVertex(const G4HadProjectile& aTrack, G4Nucleus& targetNucleus);
 
-  G4MuonVDNuclearModel & operator=(const G4MuonVDNuclearModel &right) = delete;
-  G4MuonVDNuclearModel(const  G4MuonVDNuclearModel&) = delete;
+    void CalculateHadronicVertex(G4DynamicParticle* incident, G4Nucleus& target);
 
-  static const G4int NBIN = 800;
-  static const G4int nzdat = 5;
-  static const G4int ntdat = 73;
+    void MakeSamplingTable();
 
-  static const G4int zdat[nzdat];
-  static const G4double adat[nzdat];
-  static const G4double tdat[ntdat];
-  
-  static G4ElementData* fElementData;             
+    G4MuonVDNuclearModel& operator=(const G4MuonVDNuclearModel& right) = delete;
+    G4MuonVDNuclearModel(const G4MuonVDNuclearModel&) = delete;
 
-  G4double CutFixed;
+    static const G4int NBIN = 800;
+    static const G4int nzdat = 5;
+    static const G4int ntdat = 73;
 
-  G4KokoulinMuonNuclearXS* muNucXS;
+    static const G4int zdat[nzdat];
+    static const G4double adat[nzdat];
+    static const G4double tdat[ntdat];
 
-  G4TheoFSGenerator* ftfp;
-  G4LundStringFragmentation* theFragmentation;
-  G4ExcitedStringDecay* theStringDecay;
-  G4CascadeInterface* bert;
+    static G4ElementData* fElementData;
 
-  G4int secID;  // Creator model ID for the secondaries created by this model
+    G4double CutFixed;
+
+    G4KokoulinMuonNuclearXS* muNucXS;
+
+    G4TheoFSGenerator* ftfp;
+    G4LundStringFragmentation* theFragmentation;
+    G4ExcitedStringDecay* theStringDecay;
+    G4CascadeInterface* bert;
+
+    G4int secID;  // Creator model ID for the secondaries created by this model
 };
- 
-#endif
 
+#endif

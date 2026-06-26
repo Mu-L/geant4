@@ -27,6 +27,7 @@
 //
 // G4PSPassageTrackLength
 #include "G4PSPassageTrackLength.hh"
+
 #include "G4StepStatus.hh"
 #include "G4Track.hh"
 #include "G4UnitsTable.hh"
@@ -49,34 +50,32 @@ G4PSPassageTrackLength::G4PSPassageTrackLength(const G4String& name, G4int depth
   : G4PSPassageTrackLength(name, "mm", depth)
 {}
 
-G4PSPassageTrackLength::G4PSPassageTrackLength(const G4String& name,
-                                               const G4String& unit,
+G4PSPassageTrackLength::G4PSPassageTrackLength(const G4String& name, const G4String& unit,
                                                G4int depth)
-  : G4VPrimitivePlotter(name, depth)
-  , HCID(-1)
-  , fCurrentTrkID(-1)
-  , fTrackLength(0.)
-  , EvtMap(nullptr)
-  , weighted(false)
+  : G4VPrimitivePlotter(name, depth),
+    HCID(-1),
+    fCurrentTrkID(-1),
+    fTrackLength(0.),
+    EvtMap(nullptr),
+    weighted(false)
 {
   SetUnit(unit);
 }
 
 G4bool G4PSPassageTrackLength::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
-  if(IsPassed(aStep))
+  if (IsPassed(aStep))
   {
     G4int index = GetIndex(aStep);
     EvtMap->add(index, fTrackLength);
 
-    if(!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
+    if (!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
     {
       auto filler = G4VScoreHistFiller::Instance();
-      if(filler == nullptr)
+      if (filler == nullptr)
       {
-        G4Exception(
-          "G4PSPassageTrackLength::ProcessHits", "SCORER0123", JustWarning,
-          "G4TScoreHistFiller is not instantiated!! Histogram is not filled.");
+        G4Exception("G4PSPassageTrackLength::ProcessHits", "SCORER0123", JustWarning,
+                    "G4TScoreHistFiller is not instantiated!! Histogram is not filled.");
       }
       else
       {
@@ -93,35 +92,34 @@ G4bool G4PSPassageTrackLength::IsPassed(G4Step* aStep)
   G4bool Passed = false;
 
   G4bool IsEnter = aStep->GetPreStepPoint()->GetStepStatus() == fGeomBoundary;
-  G4bool IsExit  = aStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary;
+  G4bool IsExit = aStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary;
 
-  G4int trkid        = aStep->GetTrack()->GetTrackID();
+  G4int trkid = aStep->GetTrack()->GetTrackID();
   G4double trklength = aStep->GetStepLength();
-  if(weighted)
-    trklength *= aStep->GetPreStepPoint()->GetWeight();
+  if (weighted) trklength *= aStep->GetPreStepPoint()->GetWeight();
 
-  if(IsEnter && IsExit)
-  {                            // Passed at one step
+  if (IsEnter && IsExit)
+  {  // Passed at one step
     fTrackLength = trklength;  // Track length is absolutely given.
-    Passed       = true;
+    Passed = true;
   }
-  else if(IsEnter)
-  {                         // Enter a new geometry
+  else if (IsEnter)
+  {  // Enter a new geometry
     fCurrentTrkID = trkid;  // Resetting the current track.
-    fTrackLength  = trklength;
+    fTrackLength = trklength;
   }
-  else if(IsExit)
+  else if (IsExit)
   {  // Exit a current geometry
-    if(fCurrentTrkID == trkid)
+    if (fCurrentTrkID == trkid)
     {
       fTrackLength += trklength;  // Adding the track length to current one,
-      Passed = true;              // if the track is same as entered.
+      Passed = true;  // if the track is same as entered.
     }
   }
   else
   {  // Inside geometry
-    if(fCurrentTrkID == trkid)
-    {                             // Adding the track length to current one ,
+    if (fCurrentTrkID == trkid)
+    {  // Adding the track length to current one ,
       fTrackLength += trklength;  // if the track is same as entered.
     }
   }
@@ -134,22 +132,23 @@ void G4PSPassageTrackLength::Initialize(G4HCofThisEvent* HCE)
   fCurrentTrkID = -1;
 
   EvtMap = new G4THitsMap<G4double>(detector->GetName(), GetName());
-  if(HCID < 0)
-    HCID = GetCollectionID(0);
+  if (HCID < 0) HCID = GetCollectionID(0);
   HCE->AddHitsCollection(HCID, EvtMap);
 }
 
-void G4PSPassageTrackLength::clear() { EvtMap->clear(); }
+void G4PSPassageTrackLength::clear()
+{
+  EvtMap->clear();
+}
 
 void G4PSPassageTrackLength::PrintAll()
 {
   G4cout << " MultiFunctionalDet  " << detector->GetName() << G4endl;
   G4cout << " PrimitiveSenstivity " << GetName() << G4endl;
   G4cout << " Number of entries " << EvtMap->entries() << G4endl;
-  for(const auto& [copy, length] : *(EvtMap->GetMap()))
+  for (const auto& [copy, length] : *(EvtMap->GetMap()))
   {
-    G4cout << "  copy no.: " << copy
-           << "  track length : " << *(length) / GetUnitValue() << " ["
+    G4cout << "  copy no.: " << copy << "  track length : " << *(length) / GetUnitValue() << " ["
            << GetUnit() << "]" << G4endl;
   }
 }

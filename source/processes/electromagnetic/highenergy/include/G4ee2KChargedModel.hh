@@ -45,40 +45,39 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4ee2KChargedModel_h
-#define G4ee2KChargedModel_h 1
+#ifndef G4EE2KCHARGEDMODEL_HH
+#define G4EE2KCHARGEDMODEL_HH
 
 #include "G4Vee2hadrons.hh"
-#include "globals.hh"
 #include "G4eeCrossSections.hh"
+#include "globals.hh"
 
 class G4DynamicParticle;
 class G4PhysicsVector;
 
 class G4ee2KChargedModel : public G4Vee2hadrons
 {
+  public:
 
-public:
+    explicit G4ee2KChargedModel(G4eeCrossSections*, G4double, G4double);
 
-  explicit G4ee2KChargedModel(G4eeCrossSections*,G4double,G4double);
+    ~G4ee2KChargedModel() override;
 
-  ~G4ee2KChargedModel() override;
+    G4double PeakEnergy() const override;
 
-  G4double PeakEnergy() const override;
+    G4double ComputeCrossSection(G4double) const override;
 
-  G4double ComputeCrossSection(G4double) const override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, G4double,
+                           const G4ThreeVector&) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-              G4double, const G4ThreeVector&) override;
+    // hide assignment operator
+    G4ee2KChargedModel& operator=(const G4ee2KChargedModel& right) = delete;
+    G4ee2KChargedModel(const G4ee2KChargedModel&) = delete;
 
-  // hide assignment operator
-  G4ee2KChargedModel & operator=(const  G4ee2KChargedModel &right) = delete;
-  G4ee2KChargedModel(const  G4ee2KChargedModel&) = delete;
+  private:
 
-private:
-
-  G4double massK;
-  G4double massPhi;
+    G4double massK;
+    G4double massPhi;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

@@ -44,6 +44,7 @@
 class G4FPYNormalFragmentDist : public G4FissionProductYieldDist
 {
   public:
+
     // Constructor definition
     /** Default constructor
      *  - Usage:
@@ -75,10 +76,12 @@ class G4FPYNormalFragmentDist : public G4FissionProductYieldDist
                             std::istringstream& dataFile);
 
   protected:
+
     /** Initialize is a common function called by all constructors. */
     void Initialize();
 
   protected:
+
     // Functions
     /** Selects a fission product from the probability tree, limited by the
      *  number of nucleons available to the system.
@@ -86,7 +89,9 @@ class G4FPYNormalFragmentDist : public G4FissionProductYieldDist
     G4Ions* GetFissionProduct() override;
 
     // Destructor function(s)
+
   public:
+
     /** Default deconstructor. It is a virtual function since
      *  G4FPYNormalFragmentDist inherits from G4FissionProductYieldDist
      */

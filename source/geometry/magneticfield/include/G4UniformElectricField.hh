@@ -34,13 +34,14 @@
 #ifndef G4UNIFORMELECTRICFIELD_HH
 #define G4UNIFORMELECTRICFIELD_HH
 
-#include "G4Types.hh"
-#include "G4ThreeVector.hh"
 #include "G4ElectricField.hh"
+#include "G4ThreeVector.hh"
+#include "G4Types.hh"
 
 /**
  * @brief G4UniformElectricField is class defining a uniform
  * electric magnetic field.
+ * @ingroup geometry_magneticfield
  */
 
 class G4UniformElectricField : public G4ElectricField
@@ -60,9 +61,7 @@ class G4UniformElectricField : public G4ElectricField
      *  @param[in] vTheta The Theta component.
      *  @param[in] vPhi The Phi component.
      */
-    G4UniformElectricField(G4double vField,
-                           G4double vTheta,
-                           G4double vPhi);
+    G4UniformElectricField(G4double vField, G4double vTheta, G4double vPhi);
 
     /**
      * Default Destructor.
@@ -72,8 +71,8 @@ class G4UniformElectricField : public G4ElectricField
     /**
      * Copy constructor and assignment operator.
      */
-    G4UniformElectricField(const G4UniformElectricField &p);
-    G4UniformElectricField& operator = (const G4UniformElectricField &p);
+    G4UniformElectricField(const G4UniformElectricField& p);
+    G4UniformElectricField& operator=(const G4UniformElectricField& p);
 
     /**
      * Returns the field value 'field' on given time 'pos'.
@@ -86,7 +85,7 @@ class G4UniformElectricField : public G4ElectricField
     G4Field* Clone() const override;
 
   private:
-  
+
     G4double fFieldComponents[6];
 };
 

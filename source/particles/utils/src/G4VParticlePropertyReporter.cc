@@ -43,12 +43,14 @@ G4bool G4VParticlePropertyReporter::FillList(G4String name)
 {
   G4ParticlePropertyData* pData = pPropertyTable->GetParticleProperty(name);
   G4bool result = false;
-  if (pData != nullptr) {
+  if (pData != nullptr)
+  {
     // the particle exists
     pList.push_back(pData);
     result = true;
   }
-  else {
+  else
+  {
     // pointer to the particle table
     G4ParticleTable* theParticleTable = G4ParticleTable::GetParticleTable();
     G4ParticleTable::G4PTblDicIterator* theParticleIterator;
@@ -56,15 +58,18 @@ G4bool G4VParticlePropertyReporter::FillList(G4String name)
 
     // loop over all particles in G4ParticleTable
     theParticleIterator->reset();
-    while ((*theParticleIterator)()) {  // Loop checking, 09.08.2015, K.Kurashige
+    while ((*theParticleIterator)())
+    {  // Loop checking, 09.08.2015, K.Kurashige
       G4ParticleDefinition* particle = theParticleIterator->value();
       G4String type = particle->GetParticleType();
       pData = pPropertyTable->GetParticleProperty(particle);
-      if (name == "all") {
+      if (name == "all")
+      {
         pList.push_back(pData);
         result = true;
       }
-      else if (name == type) {
+      else if (name == type)
+      {
         pList.push_back(pData);
         result = true;
       }

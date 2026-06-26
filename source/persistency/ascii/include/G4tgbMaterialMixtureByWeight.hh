@@ -31,11 +31,11 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgbMaterialMixtureByWeight_hh
-#define G4tgbMaterialMixtureByWeight_hh 1
+#ifndef G4TGBMATERIALMIXTUREBYWEIGHT_HH
+#define G4TGBMATERIALMIXTUREBYWEIGHT_HH
 
-#include "globals.hh"
 #include "G4tgbMaterialMixture.hh"
+#include "globals.hh"
 
 class G4tgbMaterialMixtureByWeight : public G4tgbMaterialMixture
 {
@@ -46,7 +46,7 @@ class G4tgbMaterialMixtureByWeight : public G4tgbMaterialMixture
     ~G4tgbMaterialMixtureByWeight();
 
     G4Material* BuildG4Material();
-      // Return the associated G4Material and if does not exist build it
+    // Return the associated G4Material and if does not exist build it
 };
 
 #endif

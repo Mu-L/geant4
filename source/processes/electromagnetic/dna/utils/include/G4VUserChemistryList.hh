@@ -30,8 +30,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -40,10 +40,10 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#ifndef G4VUSERCHEMISTRYLIST_HH_
-#define G4VUSERCHEMISTRYLIST_HH_
+#ifndef G4VUSERCHEMISTRYLIST_HH
+#define G4VUSERCHEMISTRYLIST_HH
 
 #include "G4Types.hh"
 class G4Molecule;
@@ -53,53 +53,39 @@ class G4MoleculeDefinition;
 
 class G4VUserChemistryList
 {
-public:
-  G4VUserChemistryList(G4bool flag = true);
-  virtual ~G4VUserChemistryList();
+  public:
 
-  // If your user class also inherits from G4VPhysicsConstructor,
-  // please put this flag to true
-  bool IsPhysicsConstructor()
-  {
-    return fIsPhysicsConstructor;
-  }
-  
-  void ThisIsAPhysicsConstructor(G4bool flag = true)
-  {
-    fIsPhysicsConstructor = flag;
-  }
+    G4VUserChemistryList(G4bool flag = true);
+    virtual ~G4VUserChemistryList();
 
-  ////////////////////////////////
-  // to be called from PhysicsList
+    // If your user class also inherits from G4VPhysicsConstructor,
+    // please put this flag to true
+    bool IsPhysicsConstructor() { return fIsPhysicsConstructor; }
 
-  virtual void ConstructMolecule()
-  {
-    ;
-  } // PhysicsList::ConstructParticle
-  virtual void ConstructProcess()
-  {
-    ;
-  } // PhysicsList::ConstructProcess
+    void ThisIsAPhysicsConstructor(G4bool flag = true) { fIsPhysicsConstructor = flag; }
 
-  /////////////
+    ////////////////////////////////
+    // to be called from PhysicsList
 
-  virtual void ConstructDissociationChannels()
-  {
-    ;
-  }
-  virtual void ConstructReactionTable(G4DNAMolecularReactionTable* reactionTable) = 0;
-  virtual void ConstructTimeStepModel(G4DNAMolecularReactionTable* reactionTable) = 0;
+    virtual void ConstructMolecule() { ; }  // PhysicsList::ConstructParticle
+    virtual void ConstructProcess() { ; }  // PhysicsList::ConstructProcess
 
-  void BuildPhysicsTable();
+    /////////////
 
- protected:
-  void BuildPhysicsTable(G4MoleculeDefinition*);
+    virtual void ConstructDissociationChannels() { ; }
+    virtual void ConstructReactionTable(G4DNAMolecularReactionTable* reactionTable) = 0;
+    virtual void ConstructTimeStepModel(G4DNAMolecularReactionTable* reactionTable) = 0;
 
-  void RegisterTimeStepModel(G4VITStepModel* timeStepModel,
-                             G4double startingTime = 0);
+    void BuildPhysicsTable();
 
-  G4int verboseLevel;
-  G4bool fIsPhysicsConstructor;
+  protected:
+
+    void BuildPhysicsTable(G4MoleculeDefinition*);
+
+    void RegisterTimeStepModel(G4VITStepModel* timeStepModel, G4double startingTime = 0);
+
+    G4int verboseLevel;
+    G4bool fIsPhysicsConstructor;
 };
 
 #endif /* G4VUSERCHEMISTRYLIST_HH_ */

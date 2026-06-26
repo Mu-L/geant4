@@ -25,7 +25,7 @@
 //
 // G4 Fission Process -- header file
 // F.W. Jones, TRIUMF, 03-DEC-96
-//  
+//
 // For further comments see G4NeutronFissionProcess.cc.
 //
 // 27-MAR-97 F.W.Jones: first version for Alpha release
@@ -37,30 +37,28 @@
 // 01-SEP-2008 V.Ivanchenko: use methods from the base class
 //
 
-
 // Class Description
-// Process for induced fission; 
+// Process for induced fission;
 // to be used in your physics list in case you need this physics.
 // Class Description - End
 
-#ifndef G4NeutronFissionProcess_h
-#define G4NeutronFissionProcess_h 1
- 
-#include "globals.hh"
-#include "G4HadronicProcess.hh"
+#ifndef G4NEUTRONFISSIONPROCESS_HH
+#define G4NEUTRONFISSIONPROCESS_HH
 
+#include "G4HadronicProcess.hh"
+#include "globals.hh"
 
 class G4NeutronFissionProcess : public G4HadronicProcess
 {
-public:
+  public:
 
-  G4NeutronFissionProcess(const G4String& processName ="nFission");
+    G4NeutronFissionProcess(const G4String& processName = "nFission");
 
-  virtual ~G4NeutronFissionProcess();
- 
-  virtual G4bool IsApplicable(const G4ParticleDefinition& p);
+    virtual ~G4NeutronFissionProcess();
 
-  virtual void ProcessDescription(std::ostream& outFile) const;
+    virtual G4bool IsApplicable(const G4ParticleDefinition& p);
+
+    virtual void ProcessDescription(std::ostream& outFile) const;
 };
 
 #endif

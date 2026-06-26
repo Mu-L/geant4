@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4Fancy3DNucleus_h
-#define G4Fancy3DNucleus_h 1
+#ifndef G4FANCY3DNUCLEUS_HH
+#define G4FANCY3DNUCLEUS_HH
 
 // ------------------------------------------------------------
 //      GEANT 4 class header file
@@ -38,112 +38,115 @@
 //		places, momentum and fermiM to class data members for
 //		reuse.  Remove args from ReduceSum(), use data members.
 
-#include "globals.hh"
 #include "G4DynamicParticle.hh"
+#include "G4FermiMomentum.hh"
 #include "G4Nucleon.hh"
 #include "G4V3DNucleus.hh"
 #include "G4VNuclearDensity.hh"
-#include "G4FermiMomentum.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4Fancy3DNucleusHelper;
 
 // to test if we can drop old interface for (A,Z), comment next line..
-//#define NON_INTEGER_A_Z 1
+// #define NON_INTEGER_A_Z 1
 
 class G4Fancy3DNucleus : public G4V3DNucleus
 {
-
   public:
-      G4Fancy3DNucleus();
-      ~G4Fancy3DNucleus();
+
+    G4Fancy3DNucleus();
+    ~G4Fancy3DNucleus();
 
   private:
-      G4Fancy3DNucleus(const G4Fancy3DNucleus &right);
-      const G4Fancy3DNucleus & operator=(const G4Fancy3DNucleus &right);
-      G4bool operator==(const G4Fancy3DNucleus &right) const;
-      G4bool operator!=(const G4Fancy3DNucleus &right) const;
-      
 
-//  Implementation 
-      void ChooseNucleons();
-      void ChoosePositions();
-      void ChooseFermiMomenta();
-      G4double BindingEnergy();
-      G4bool ReduceSum();
+    G4Fancy3DNucleus(const G4Fancy3DNucleus& right);
+    const G4Fancy3DNucleus& operator=(const G4Fancy3DNucleus& right);
+    G4bool operator==(const G4Fancy3DNucleus& right) const;
+    G4bool operator!=(const G4Fancy3DNucleus& right) const;
+
+    //  Implementation
+    void ChooseNucleons();
+    void ChoosePositions();
+    void ChooseFermiMomenta();
+    G4double BindingEnergy();
+    G4bool ReduceSum();
 
   public:
+
 #if defined(NON_INTEGER_A_Z)
-      void Init(G4double theA, G4double theZ, G4int numberOfLambdas = 0);
+    void Init(G4double theA, G4double theZ, G4int numberOfLambdas = 0);
 #endif
-      void Init(G4int theA, G4int theZ, G4int numberOfLambdas = 0);
-      G4bool StartLoop();
-      G4Nucleon * GetNextNucleon();
-      const std::vector<G4Nucleon> & GetNucleons();
-      G4int GetMassNumber();
-      G4double GetMass();
-      G4int GetCharge();
-      G4int GetNumberOfLambdas();  // Non-negative number of Lambdas (for hypernuclei) or anti-Lambdas (for anti-hypernuclei) 
-      G4double GetNuclearRadius();
-      G4double GetNuclearRadius(const G4double maxRelativeDensity);
-      G4double GetOuterRadius();
-      G4double AddExcitationEnergy(G4double);
-      G4double GetExcitationEnergy();
-      G4double CoulombBarrier();
-      void DoLorentzBoost(const G4LorentzVector & theBoost);
-      void DoLorentzBoost(const G4ThreeVector & theBeta);
-      void DoLorentzContraction(const G4LorentzVector & theBoost);
-      void DoLorentzContraction(const G4ThreeVector & theBeta);
-      void CenterNucleons();
-      void DoTranslation(const G4ThreeVector & theShift);
-      const G4VNuclearDensity * GetNuclearDensity() const;
-      void SortNucleonsIncZ();
-      void SortNucleonsDecZ();
-      
+    void Init(G4int theA, G4int theZ, G4int numberOfLambdas = 0);
+    G4bool StartLoop();
+    G4Nucleon* GetNextNucleon();
+    const std::vector<G4Nucleon>& GetNucleons();
+    G4int GetMassNumber();
+    G4double GetMass();
+    G4int GetCharge();
+    G4int GetNumberOfLambdas();  // Non-negative number of Lambdas (for hypernuclei) or anti-Lambdas
+                                 // (for anti-hypernuclei)
+    G4double GetNuclearRadius();
+    G4double GetNuclearRadius(const G4double maxRelativeDensity);
+    G4double GetOuterRadius();
+    G4double AddExcitationEnergy(G4double);
+    G4double GetExcitationEnergy();
+    G4double CoulombBarrier();
+    void DoLorentzBoost(const G4LorentzVector& theBoost);
+    void DoLorentzBoost(const G4ThreeVector& theBeta);
+    void DoLorentzContraction(const G4LorentzVector& theBoost);
+    void DoLorentzContraction(const G4ThreeVector& theBeta);
+    void CenterNucleons();
+    void DoTranslation(const G4ThreeVector& theShift);
+    const G4VNuclearDensity* GetNuclearDensity() const;
+    void SortNucleonsIncZ();
+    void SortNucleonsDecZ();
+
   private:
-  
-  G4int myA;
-  G4int myZ;
-  G4int myL;  // Non-negative number of Lambdas (for hypernuclei) or anti-Lambdas (for anti-hypernuclei) 
-  std::vector<G4Nucleon> theNucleons;
 
-  G4int currentNucleon;
-  G4VNuclearDensity * theDensity;
-  G4FermiMomentum theFermi;  
-  G4double nucleondistance;
-  G4double excitationEnergy;
-  
-  std::vector<G4ThreeVector> places;		// For selecting locations
-  std::vector<G4ThreeVector> momentum;		// For selecting nucleon motion
-  std::vector<G4double> fermiM;
-  std::vector<G4Fancy3DNucleusHelper> testSums;	// For sorting nucleon configs
+    G4int myA;
+    G4int myZ;
+    G4int myL;  // Non-negative number of Lambdas (for hypernuclei) or anti-Lambdas (for
+                // anti-hypernuclei)
+    std::vector<G4Nucleon> theNucleons;
+
+    G4int currentNucleon;
+    G4VNuclearDensity* theDensity;
+    G4FermiMomentum theFermi;
+    G4double nucleondistance;
+    G4double excitationEnergy;
+
+    std::vector<G4ThreeVector> places;  // For selecting locations
+    std::vector<G4ThreeVector> momentum;  // For selecting nucleon motion
+    std::vector<G4double> fermiM;
+    std::vector<G4Fancy3DNucleusHelper> testSums;  // For sorting nucleon configs
 };
-
 
 inline G4int G4Fancy3DNucleus::GetCharge()
 {
-	return myZ;
+  return myZ;
 }
 
 inline G4int G4Fancy3DNucleus::GetMassNumber()
 {
-	return myA;
+  return myA;
 }
 
 inline G4int G4Fancy3DNucleus::GetNumberOfLambdas()
 {
-        return myL;
-} 
+  return myL;
+}
 
 inline G4double G4Fancy3DNucleus::AddExcitationEnergy(G4double anE)
 {
-   excitationEnergy +=anE;
-   return excitationEnergy;
+  excitationEnergy += anE;
+  return excitationEnergy;
 }
 
 inline G4double G4Fancy3DNucleus::GetExcitationEnergy()
 {
-   return excitationEnergy;
+  return excitationEnergy;
 }
 
 #endif

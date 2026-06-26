@@ -33,8 +33,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4WilsonRadius_h
-#define G4WilsonRadius_h 1
+#ifndef G4WILSONRADIUS_HH
+#define G4WILSONRADIUS_HH
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //
 // MODULE:              G4WilsonRadus.hh
@@ -78,13 +78,15 @@
 class G4WilsonRadius
 {
   public:
-    G4WilsonRadius ();
-    ~G4WilsonRadius ();
-  
-    G4double GetWilsonRMSRadius (G4double A);
-    G4double GetWilsonRadius (G4double A);
+
+    G4WilsonRadius();
+    ~G4WilsonRadius();
+
+    G4double GetWilsonRMSRadius(G4double A);
+    G4double GetWilsonRadius(G4double A);
 
   private:
+
     G4double r0sq;
     G4double factor;
     G4double third;

@@ -45,30 +45,31 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4VWLSTimeGeneratorProfile_h
-#define G4VWLSTimeGeneratorProfile_h 1
+#ifndef G4VWLSTIMEGENERATORPROFILE_HH
+#define G4VWLSTIMEGENERATORPROFILE_HH
 
 #include "G4ios.hh"
-//#include "globals.hh"
+// #include "globals.hh"
 #include "G4MaterialPropertiesTable.hh"
 // class G4MaterialPropertiesTable;
 
 class G4VWLSTimeGeneratorProfile
 {
- public:
-  G4VWLSTimeGeneratorProfile(const G4String& name);
+  public:
 
-  virtual ~G4VWLSTimeGeneratorProfile();
+    G4VWLSTimeGeneratorProfile(const G4String& name);
 
-  virtual G4double GenerateTime(const G4double time_constant)     = 0;
-  virtual G4double GenerateTime(const G4MaterialPropertiesTable*) = 0;
+    virtual ~G4VWLSTimeGeneratorProfile();
 
- private:
-  // hide assignment operator
+    virtual G4double GenerateTime(const G4double time_constant) = 0;
+    virtual G4double GenerateTime(const G4MaterialPropertiesTable*) = 0;
 
-  G4VWLSTimeGeneratorProfile& operator=
-    (const G4VWLSTimeGeneratorProfile& right) = delete;
-  G4VWLSTimeGeneratorProfile(const G4VWLSTimeGeneratorProfile&) = delete;
+  private:
+
+    // hide assignment operator
+
+    G4VWLSTimeGeneratorProfile& operator=(const G4VWLSTimeGeneratorProfile& right) = delete;
+    G4VWLSTimeGeneratorProfile(const G4VWLSTimeGeneratorProfile&) = delete;
 };
 
 #endif

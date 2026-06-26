@@ -27,6 +27,7 @@
 // M. Bug et al, Rad. Phys and Chem. 130, 459-479 (2017)
 
 #include "G4DNAPTBIonisationStructure.hh"
+
 #include "G4Material.hh"
 #include "G4SystemOfUnits.hh"
 
@@ -46,17 +47,19 @@ G4DNAPTBIonisationStructure::G4DNAPTBIonisationStructure()
   fpN2 = G4Material::GetMaterial("N2", false);
 
   // MPietrzak
-  if (fpN2 != nullptr) {
+  if (fpN2 != nullptr)
+  {
     auto index = fpN2->GetIndex();
     energyConstant[index].push_back(15.58 * eV);
     energyConstant[index].push_back(17.07 * eV);
     energyConstant[index].push_back(21.00 * eV);
     energyConstant[index].push_back(41.72 * eV);
-    energyConstant[index].push_back(409.9*eV);
+    energyConstant[index].push_back(409.9 * eV);
   }
 
   // MPietrzak
-  if (fpG4_WATER != nullptr) {
+  if (fpG4_WATER != nullptr)
+  {
     auto index = fpG4_WATER->GetIndex();
     energyConstant[index].push_back(10.79 * eV);
     energyConstant[index].push_back(13.39 * eV);
@@ -64,7 +67,8 @@ G4DNAPTBIonisationStructure::G4DNAPTBIonisationStructure()
     energyConstant[index].push_back(32.30 * eV);
     energyConstant[index].push_back(539.0 * eV);
   }
-  if (fpTHF != nullptr) {
+  if (fpTHF != nullptr)
+  {
     auto index = fpTHF->GetIndex();
     energyConstant[index].push_back(9.74 * eV);
     energyConstant[index].push_back(12.31 * eV);
@@ -88,7 +92,8 @@ G4DNAPTBIonisationStructure::G4DNAPTBIonisationStructure()
     energyConstant[index].push_back(557.94 * eV);
   }
 
-  if (fpPY != nullptr) {
+  if (fpPY != nullptr)
+  {
     auto index = fpPY->GetIndex();
     energyConstant[index].push_back(9.73 * eV);
     energyConstant[index].push_back(10.96 * eV);
@@ -113,7 +118,8 @@ G4DNAPTBIonisationStructure::G4DNAPTBIonisationStructure()
     energyConstant[index].push_back(423.44 * eV);
   }
 
-  if (fpPU != nullptr) {
+  if (fpPU != nullptr)
+  {
     auto index = fpPU->GetIndex();
     energyConstant[index].push_back(9.58 * eV);
     energyConstant[index].push_back(10.57 * eV);
@@ -148,7 +154,8 @@ G4DNAPTBIonisationStructure::G4DNAPTBIonisationStructure()
     energyConstant[index].push_back(423.98 * eV);
   }
 
-  if (fpTMP != nullptr) {
+  if (fpTMP != nullptr)
+  {
     auto index = fpTMP->GetIndex();
     energyConstant[index].push_back(10.81 * eV);
     energyConstant[index].push_back(10.81 * eV);
@@ -189,7 +196,8 @@ G4DNAPTBIonisationStructure::G4DNAPTBIonisationStructure()
     energyConstant[index].push_back(2178.05 * eV);
   }
 
-  for (const auto& [index, levels] : energyConstant) {
+  for (const auto& [index, levels] : energyConstant)
+  {
     nLevels[index] = (G4int)levels.size();
   }
 }
@@ -199,12 +207,13 @@ G4double G4DNAPTBIonisationStructure::IonisationEnergy(G4int level, const size_t
   size_t matNameModif = ReplaceMaterial(materialID);
 
   // check if the material exist in the map
-  if (energyConstant.find(matNameModif) == energyConstant.end()) {
+  if (energyConstant.find(matNameModif) == energyConstant.end())
+  {
     std::ostringstream oss;
     oss << "Material name was not found in energyConstantMap. Problematic material is: "
         << materialID;
-    G4Exception(
-      "G4DNAPTBIonisationStructure::IonisationEnergy", "em0002", FatalException, oss.str().c_str());
+    G4Exception("G4DNAPTBIonisationStructure::IonisationEnergy", "em0002", FatalException,
+                oss.str().c_str());
   }
 
   G4double ionisation = 0.;
@@ -219,12 +228,13 @@ G4int G4DNAPTBIonisationStructure::NumberOfLevels(const size_t& materialID)
   auto matNameModif = ReplaceMaterial(materialID);
 
   // check if the material exist in the map
-  if (nLevels.find(matNameModif) == nLevels.end()) {
+  if (nLevels.find(matNameModif) == nLevels.end())
+  {
     std::ostringstream oss;
     oss << "Material name was not found in energyConstantMap. Problematic material is: "
         << matNameModif;
-    G4Exception(
-      "G4DNAPTBIonisationStructure::NumberOfLevels", "em0002", FatalException, oss.str().c_str());
+    G4Exception("G4DNAPTBIonisationStructure::NumberOfLevels", "em0002", FatalException,
+                oss.str().c_str());
   }
 
   return nLevels[matNameModif];
@@ -232,22 +242,28 @@ G4int G4DNAPTBIonisationStructure::NumberOfLevels(const size_t& materialID)
 
 size_t G4DNAPTBIonisationStructure::ReplaceMaterial(const size_t& materialID)
 {
-  if (fpBackbone_THF != nullptr && materialID == fpBackbone_THF->GetIndex()) {
+  if (fpBackbone_THF != nullptr && materialID == fpBackbone_THF->GetIndex())
+  {
     return fpTHF->GetIndex();
   }
-  if (fpBackbone_TMP != nullptr && materialID == fpBackbone_TMP->GetIndex()) {
+  if (fpBackbone_TMP != nullptr && materialID == fpBackbone_TMP->GetIndex())
+  {
     return fpTMP->GetIndex();
   }
-  if (fpAdenine_PU != nullptr && materialID == fpAdenine_PU->GetIndex()) {
+  if (fpAdenine_PU != nullptr && materialID == fpAdenine_PU->GetIndex())
+  {
     return fpPU->GetIndex();
   }
-  if (fpGuanine_PU != nullptr && materialID == fpGuanine_PU->GetIndex()) {
+  if (fpGuanine_PU != nullptr && materialID == fpGuanine_PU->GetIndex())
+  {
     return fpPU->GetIndex();
   }
-  if (fpThymine_PY != nullptr && materialID == fpThymine_PY->GetIndex()) {
+  if (fpThymine_PY != nullptr && materialID == fpThymine_PY->GetIndex())
+  {
     return fpPY->GetIndex();
   }
-  if (fpCytosine_PY != nullptr && materialID == fpCytosine_PY->GetIndex()) {
+  if (fpCytosine_PY != nullptr && materialID == fpCytosine_PY->GetIndex())
+  {
     return fpPY->GetIndex();
   }
   return materialID;

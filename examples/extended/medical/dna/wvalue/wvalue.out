@@ -10,7 +10,7 @@
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -157,6 +157,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 1
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -197,11 +198,16 @@ Type of PIXE cross section for e+-                 Livermore
 =======================================================================
 ======                 DNA Physics Parameters                  ========
 =======================================================================
-Max DNA electron energy                            1 MeV
-Max DNA ion energy                                 300 MeV
+Min DNA electron energy                            10 eV
+Min DNA proton energy                              100 eV
+Min DNA ion energy                                 1000 eV
+Max DNA electron energy                            10 MeV
+Max DNA proton energy                              3e+08 MeV
+Max DNA ion energy                                 100 MeV/u
 Use fast sampling in DNA models                    1
 Use Stationary option in DNA models                0
 Use DNA with multiple scattering of e-             0
+Use DNA multiple ionisation                        0
 Use DNA e- solvation model type                    11003
 =======================================================================
 
@@ -243,14 +249,14 @@ eIoni:  for e-  XStype:1  SubType=2
       Lambda tables from threshold to 600 MeV, 20 bins/decade, spline: 1
       StepFunction=(0.2, 0.01 mm), integ: 1, fluct: 1, linLossLim= 0.01
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-        MollerBhabha : Emin=    1 MeV Emax=  600 MeV  deltaVI
+        MollerBhabha : Emin=   10 MeV Emax=  600 MeV  deltaVI
 
 eBrem:  for e-  XStype:4  SubType=3
       dE/dx and range tables from 10 eV  to 600 MeV in 160 bins
       Lambda tables from threshold to 600 MeV, 20 bins/decade, spline: 1
       LPM flag: 1 for E > 0.6 GeV,  VertexHighEnergyTh(GeV)= 100000
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-             eBremSB : Emin=    1 MeV Emax=  600 MeV  AngularGen2BS
+             eBremSB : Emin=   10 MeV Emax=  600 MeV  AngularGen2BS
 
 e-_G4DNAElectronSolvation:  for e- SubType=58 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
@@ -260,22 +266,20 @@ DNAOneStepThermalizationModel_Meesungnoen2002 : Emin=    0 eV  Emax=   10 eV
 
 e-_G4DNAElastic:  for e- SubType=51 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNAUeharaScreenedRutherfordElasticModel : Emin=    0 eV  Emax=    1 MeV
-          DummyModel : Emin=    1 MeV Emax=  600 MeV
+DNAUeharaScreenedRutherfordElasticModel : Emin=    0 eV  Emax=   10 MeV
+          DummyModel : Emin=   10 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 e-_G4DNAExcitation:  for e- SubType=52 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNAEmfietzoglouExcitationModel : Emin=    0 eV  Emax=   10 keV
-DNABornExcitationModel : Emin=   10 keV Emax=    1 MeV
-          DummyModel : Emin=    1 MeV Emax=  600 MeV
+DNAEmfietzoglouExcitationModel : Emin=    0 eV  Emax=   10 MeV
+          DummyModel : Emin=   10 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 e-_G4DNAIonisation:  for e- SubType=53 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNAEmfietzoglouIonisationModel : Emin=    0 eV  Emax=   10 keV  deltaBorn Fluo
-DNABornIonisationModel : Emin=   10 keV Emax=    1 MeV  deltaBorn Fluo
-          DummyModel : Emin=    1 MeV Emax=  600 MeV
+DNAEmfietzoglouIonisationModel : Emin=    0 eV  Emax=   10 MeV  deltaBorn Fluo
+          DummyModel : Emin=   10 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 msc:  for e+  SubType= 10
@@ -343,7 +347,7 @@ DNADingfelderChargeDecreaseModel : Emin=    0 eV  Emax=  100 MeV
 
 msc:  for GenericIon  SubType= 10
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-            UrbanMsc : Emin=    1 MeV Emax=  600 MeV
+            UrbanMsc : Emin=    0 eV  Emax=  600 MeV
           StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:0 Skin=3 Llim=1 mm
 
 ionIoni:  for GenericIon  XStype:3  SubType=2
@@ -351,12 +355,12 @@ ionIoni:  for GenericIon  XStype:3  SubType=2
       Lambda tables from threshold to 600 MeV, 20 bins/decade, spline: 1
       StepFunction=(0.1, 0.001 mm), integ: 3, fluct: 1, linLossLim= 0.02
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-          BetheBloch : Emin=  300 MeV Emax=  600 MeV  deltaVI
+    LindhardSorensen : Emin=  100 MeV Emax=  600 MeV  deltaVI
 
 GenericIon_G4DNAIonisation:  for GenericIon SubType=53 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNAIonIonisationModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNAIonIonisationModel : Emin=    0 eV  Emax=  100 MeV
+          DummyModel : Emin=  100 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 nuclearStopping:  for GenericIon SubType=8 BuildTable=0
@@ -373,7 +377,7 @@ ionIoni:  for alpha  XStype:1  SubType=2
       Lambda tables from threshold to 600 MeV, 20 bins/decade, spline: 1
       StepFunction=(0.1, 0.02 mm), integ: 1, fluct: 1, linLossLim= 0.02
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-          BetheBloch : Emin=  300 MeV Emax=  600 MeV  deltaVI
+          BetheBloch : Emin=397.26 MeV Emax=  600 MeV  deltaVI
 
 alpha_G4DNAElastic:  for alpha SubType=51 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
@@ -383,20 +387,20 @@ alpha_G4DNAElastic:  for alpha SubType=51 BuildTable=0
 
 alpha_G4DNAExcitation:  for alpha SubType=52 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=397.26 MeV
+          DummyModel : Emin=397.26 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 alpha_G4DNAIonisation:  for alpha SubType=53 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNARuddIonisationExtendedModel : Emin=    0 eV  Emax=  300 MeV  deltaRudd Fluo
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNARuddIonisationExtendedModel : Emin=    0 eV  Emax=397.26 MeV  deltaRudd Fluo
+          DummyModel : Emin=397.26 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 alpha_G4DNAChargeDecrease:  for alpha SubType=56 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNADingfelderChargeDecreaseModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNADingfelderChargeDecreaseModel : Emin=    0 eV  Emax=  100 MeV
+          DummyModel : Emin=  100 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 msc:  for alpha+  SubType= 10
@@ -409,7 +413,7 @@ hIoni:  for alpha+  XStype:3  SubType=2
       Lambda tables from threshold to 600 MeV, 20 bins/decade, spline: 1
       StepFunction=(0.1, 0.05 mm), integ: 3, fluct: 1, linLossLim= 0.01
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-          BetheBloch : Emin=  300 MeV Emax=  600 MeV  deltaVI
+          BetheBloch : Emin=397.264 MeV Emax=  600 MeV  deltaVI
 
 alpha+_G4DNAElastic:  for alpha+ SubType=51 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
@@ -419,26 +423,26 @@ alpha+_G4DNAElastic:  for alpha+ SubType=51 BuildTable=0
 
 alpha+_G4DNAExcitation:  for alpha+ SubType=52 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=397.264 MeV
+          DummyModel : Emin=397.264 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 alpha+_G4DNAIonisation:  for alpha+ SubType=53 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNARuddIonisationExtendedModel : Emin=    0 eV  Emax=  300 MeV  deltaRudd Fluo
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNARuddIonisationExtendedModel : Emin=    0 eV  Emax=397.264 MeV  deltaRudd Fluo
+          DummyModel : Emin=397.264 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 alpha+_G4DNAChargeIncrease:  for alpha+ SubType=57 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNADingfelderChargeIncreaseModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNADingfelderChargeIncreaseModel : Emin=    0 eV  Emax=  100 MeV
+          DummyModel : Emin=  100 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 alpha+_G4DNAChargeDecrease:  for alpha+ SubType=56 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNADingfelderChargeDecreaseModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNADingfelderChargeDecreaseModel : Emin=    0 eV  Emax=  100 MeV
+          DummyModel : Emin=  100 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 msc:  for anti_proton  SubType= 10
@@ -462,20 +466,20 @@ helium_G4DNAElastic:  for helium SubType=51 BuildTable=0
 
 helium_G4DNAExcitation:  for helium SubType=52 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=397.264 MeV
+          DummyModel : Emin=397.264 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 helium_G4DNAIonisation:  for helium SubType=53 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNARuddIonisationExtendedModel : Emin=    0 eV  Emax=  300 MeV  deltaRudd Fluo
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNARuddIonisationExtendedModel : Emin=    0 eV  Emax=397.264 MeV  deltaRudd Fluo
+          DummyModel : Emin=397.264 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 helium_G4DNAChargeIncrease:  for helium SubType=57 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNADingfelderChargeIncreaseModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNADingfelderChargeIncreaseModel : Emin=    0 eV  Emax=  100 MeV
+          DummyModel : Emin=  100 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 hydrogen_G4DNAElastic:  for hydrogen SubType=51 BuildTable=0
@@ -584,340 +588,340 @@ hIoni:  for pi-  XStype:3  SubType=2
 
  The run is 1000 e- of 12.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 0.071 +- 0.257
+ Nb of ionisations = 0.058 +- 0.234
 
- w = 169.014 eV  +- 611.366 eV 
+ w = 206.897 eV  +- 833.805 eV 
 
  Total Energy deposited        = 12.000 eV  +- 0.002 meV
 
- Track length of primary track = 10.554 nm  +- 10.331 nm 
- Projected range               = 2.949 Ang +- 1.402 nm 
+ Track length of primary track = 11.216 nm  +- 11.589 nm 
+ Projected range               = 2.546 Ang +- 1.407 nm 
 
- Nb of steps of primary track  = 59.02 +- 55.64
+ Nb of steps of primary track  = 62.40 +- 62.40
 
- Step size                     = 1.691 Ang +- 40635.446 fm 
+ Step size                     = 1.744 Ang +- 40990.660 fm 
 
  ======================== run summary =====================
 
  The run is 1000 e- of 15.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 0.197 +- 0.398
+ Nb of ionisations = 0.217 +- 0.412
 
- w = 76.142 eV  +- 153.727 eV 
+ w = 69.124 eV  +- 131.305 eV 
 
  Total Energy deposited        = 15.000 eV  +- 0.002 meV
 
- Track length of primary track = 8.185 nm  +- 8.300 nm 
- Projected range               = 3.040 Ang +- 1.254 nm 
+ Track length of primary track = 8.016 nm  +- 7.762 nm 
+ Projected range               = 2.848 Ang +- 1.204 nm 
 
- Nb of steps of primary track  = 42.34 +- 41.14
+ Nb of steps of primary track  = 41.46 +- 38.67
 
- Step size                     = 1.840 Ang +- 52760.680 fm 
+ Step size                     = 1.845 Ang +- 48408.133 fm 
 
  ======================== run summary =====================
 
  The run is 1000 e- of 20.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 0.450 +- 0.497
+ Nb of ionisations = 0.433 +- 0.495
 
- w = 44.444 eV  +- 49.135 eV 
+ w = 46.189 eV  +- 52.855 eV 
 
  Total Energy deposited        = 20.000 eV  +- 0.003 meV
 
- Track length of primary track = 11.639 nm  +- 13.481 nm 
- Projected range               = 2.981 Ang +- 1.455 nm 
+ Track length of primary track = 10.808 nm  +- 12.053 nm 
+ Projected range               = 2.911 Ang +- 1.425 nm 
 
- Nb of steps of primary track  = 59.86 +- 73.54
+ Nb of steps of primary track  = 55.41 +- 65.21
 
- Step size                     = 1.971 Ang +- 53482.686 fm 
+ Step size                     = 1.972 Ang +- 53032.372 fm 
 
  ======================== run summary =====================
 
  The run is 1000 e- of 30.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 0.976 +- 0.477
+ Nb of ionisations = 0.980 +- 0.475
 
- w = 30.738 eV  +- 15.019 eV 
+ w = 30.612 eV  +- 14.837 eV 
 
  Total Energy deposited        = 30.000 eV  +- 0.004 meV
 
- Track length of primary track = 11.966 nm  +- 11.214 nm 
- Projected range               = 4.655 Ang +- 1.657 nm 
+ Track length of primary track = 12.565 nm  +- 11.064 nm 
+ Projected range               = 3.584 Ang +- 1.736 nm 
 
- Nb of steps of primary track  = 58.89 +- 59.54
+ Nb of steps of primary track  = 62.48 +- 58.85
 
- Step size                     = 2.115 Ang +- 55190.941 fm 
+ Step size                     = 2.086 Ang +- 48911.092 fm 
 
  ======================== run summary =====================
 
  The run is 1000 e- of 40.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 1.385 +- 0.532
+ Nb of ionisations = 1.416 +- 0.550
 
- w = 28.881 eV  +- 11.089 eV 
+ w = 28.249 eV  +- 10.980 eV 
 
  Total Energy deposited        = 40.000 eV  +- 0.007 meV
 
- Track length of primary track = 11.575 nm  +- 9.602 nm 
- Projected range               = 5.695 Ang +- 1.639 nm 
+ Track length of primary track = 11.106 nm  +- 9.408 nm 
+ Projected range               = 4.966 Ang +- 1.643 nm 
 
- Nb of steps of primary track  = 55.30 +- 49.02
+ Nb of steps of primary track  = 52.22 +- 46.74
 
- Step size                     = 2.167 Ang +- 54558.919 fm 
+ Step size                     = 2.204 Ang +- 57083.288 fm 
 
  ======================== run summary =====================
 
  The run is 1000 e- of 50.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 1.860 +- 0.604
+ Nb of ionisations = 1.899 +- 0.602
 
- w = 26.882 eV  +- 8.724 eV 
+ w = 26.330 eV  +- 8.351 eV 
 
  Total Energy deposited        = 50.000 eV  +- 0.000 eV 
 
- Track length of primary track = 12.920 nm  +- 12.461 nm 
- Projected range               = 7.342 Ang +- 1.784 nm 
+ Track length of primary track = 12.495 nm  +- 10.678 nm 
+ Projected range               = 6.853 Ang +- 1.733 nm 
 
- Nb of steps of primary track  = 60.71 +- 65.77
+ Nb of steps of primary track  = 58.30 +- 55.00
 
- Step size                     = 2.263 Ang +- 53500.842 fm 
+ Step size                     = 2.275 Ang +- 53750.204 fm 
 
  ======================== run summary =====================
 
  The run is 1000 e- of 60.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 2.350 +- 0.660
+ Nb of ionisations = 2.290 +- 0.672
 
- w = 25.532 eV  +- 7.170 eV 
+ w = 26.201 eV  +- 7.691 eV 
 
  Total Energy deposited        = 60.000 eV  +- 0.008 meV
 
- Track length of primary track = 13.410 nm  +- 11.600 nm 
- Projected range               = 9.489 Ang +- 1.921 nm 
+ Track length of primary track = 13.419 nm  +- 10.679 nm 
+ Projected range               = 8.389 Ang +- 1.985 nm 
 
- Nb of steps of primary track  = 61.59 +- 59.09
+ Nb of steps of primary track  = 62.20 +- 55.06
 
- Step size                     = 2.299 Ang +- 52163.872 fm 
+ Step size                     = 2.312 Ang +- 52039.766 fm 
 
  ======================== run summary =====================
 
  The run is 1000 e- of 70.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 2.779 +- 0.706
+ Nb of ionisations = 2.720 +- 0.712
 
- w = 25.189 eV  +- 6.397 eV 
+ w = 25.735 eV  +- 6.741 eV 
 
  Total Energy deposited        = 70.000 eV  +- 0.000 eV 
 
- Track length of primary track = 13.803 nm  +- 10.625 nm 
- Projected range               = 9.496 Ang +- 2.014 nm 
+ Track length of primary track = 13.673 nm  +- 10.406 nm 
+ Projected range               = 1.041 nm  +- 1.946 nm 
 
- Nb of steps of primary track  = 62.35 +- 54.58
+ Nb of steps of primary track  = 61.34 +- 52.58
 
- Step size                     = 2.380 Ang +- 55612.021 fm 
+ Step size                     = 2.391 Ang +- 59765.444 fm 
 
  ======================== run summary =====================
 
  The run is 1000 e- of 80.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 3.227 +- 0.760
+ Nb of ionisations = 3.128 +- 0.777
 
- w = 24.791 eV  +- 5.838 eV 
+ w = 25.575 eV  +- 6.352 eV 
 
  Total Energy deposited        = 80.000 eV  +- 0.013 meV
 
- Track length of primary track = 14.121 nm  +- 10.406 nm 
- Projected range               = 1.079 nm  +- 2.190 nm 
+ Track length of primary track = 13.598 nm  +- 10.319 nm 
+ Projected range               = 1.042 nm  +- 2.101 nm 
 
- Nb of steps of primary track  = 62.70 +- 52.42
+ Nb of steps of primary track  = 60.08 +- 52.14
 
- Step size                     = 2.411 Ang +- 54776.486 fm 
+ Step size                     = 2.433 Ang +- 61720.952 fm 
 
  ======================== run summary =====================
 
  The run is 1000 e- of 90.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 3.683 +- 0.789
+ Nb of ionisations = 3.517 +- 0.786
 
- w = 24.437 eV  +- 5.235 eV 
+ w = 25.590 eV  +- 5.719 eV 
 
  Total Energy deposited        = 90.000 eV  +- 0.000 eV 
 
- Track length of primary track = 14.788 nm  +- 10.807 nm 
- Projected range               = 1.150 nm  +- 2.318 nm 
+ Track length of primary track = 14.715 nm  +- 11.070 nm 
+ Projected range               = 1.194 nm  +- 2.169 nm 
 
- Nb of steps of primary track  = 64.67 +- 55.16
+ Nb of steps of primary track  = 64.74 +- 56.84
 
- Step size                     = 2.485 Ang +- 61014.545 fm 
+ Step size                     = 2.462 Ang +- 59150.769 fm 
 
  ======================== run summary =====================
 
  The run is 1000 e- of 100.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 4.075 +- 0.823
+ Nb of ionisations = 4.015 +- 0.847
 
- w = 24.540 eV  +- 4.956 eV 
+ w = 24.907 eV  +- 5.252 eV 
 
  Total Energy deposited        = 100.000 eV  +- 0.000 eV 
 
- Track length of primary track = 15.543 nm  +- 11.738 nm 
- Projected range               = 1.391 nm  +- 2.310 nm 
+ Track length of primary track = 15.351 nm  +- 11.162 nm 
+ Projected range               = 1.318 nm  +- 2.371 nm 
 
- Nb of steps of primary track  = 67.20 +- 59.45
+ Nb of steps of primary track  = 66.22 +- 56.74
 
- Step size                     = 2.521 Ang +- 59450.227 fm 
+ Step size                     = 2.537 Ang +- 64467.447 fm 
 
  ======================== run summary =====================
 
  The run is 1000 e- of 200.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 8.548 +- 1.156
+ Nb of ionisations = 8.384 +- 1.187
 
- w = 23.397 eV  +- 3.163 eV 
+ w = 23.855 eV  +- 3.377 eV 
 
  Total Energy deposited        = 200.000 eV  +- 0.000 eV 
 
- Track length of primary track = 19.744 nm  +- 11.453 nm 
- Projected range               = 2.592 nm  +- 3.413 nm 
+ Track length of primary track = 19.485 nm  +- 11.000 nm 
+ Projected range               = 2.650 nm  +- 3.445 nm 
 
- Nb of steps of primary track  = 72.15 +- 55.90
+ Nb of steps of primary track  = 70.73 +- 52.58
 
- Step size                     = 3.051 Ang +- 79103.199 fm 
+ Step size                     = 3.085 Ang +- 83901.784 fm 
 
  ======================== run summary =====================
 
  The run is 1000 e- of 300.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 12.861 +- 1.396
+ Nb of ionisations = 12.791 +- 1.452
 
- w = 23.326 eV  +- 2.531 eV 
+ w = 23.454 eV  +- 2.662 eV 
 
  Total Energy deposited        = 300.000 eV  +- 0.000 eV 
 
- Track length of primary track = 25.406 nm  +- 11.855 nm 
- Projected range               = 4.655 nm  +- 4.636 nm 
+ Track length of primary track = 25.074 nm  +- 11.726 nm 
+ Projected range               = 4.574 nm  +- 4.408 nm 
 
- Nb of steps of primary track  = 78.98 +- 55.17
+ Nb of steps of primary track  = 79.64 +- 54.96
 
- Step size                     = 3.654 Ang +- 1.069 Ang
+ Step size                     = 3.574 Ang +- 1.059 Ang
 
  ======================== run summary =====================
 
  The run is 1000 e- of 400.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 17.371 +- 1.617
+ Nb of ionisations = 17.082 +- 1.706
 
- w = 23.027 eV  +- 2.143 eV 
+ w = 23.416 eV  +- 2.339 eV 
 
  Total Energy deposited        = 400.000 eV  +- 0.000 eV 
 
- Track length of primary track = 30.544 nm  +- 12.199 nm 
- Projected range               = 6.563 nm  +- 5.902 nm 
+ Track length of primary track = 29.873 nm  +- 12.173 nm 
+ Projected range               = 6.222 nm  +- 5.830 nm 
 
- Nb of steps of primary track  = 82.54 +- 52.21
+ Nb of steps of primary track  = 80.74 +- 52.58
 
- Step size                     = 4.209 Ang +- 1.328 Ang
+ Step size                     = 4.204 Ang +- 1.315 Ang
 
  ======================== run summary =====================
 
  The run is 1000 e- of 500.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 21.777 +- 1.794
+ Nb of ionisations = 21.285 +- 1.880
 
- w = 22.960 eV  +- 1.891 eV 
+ w = 23.491 eV  +- 2.075 eV 
 
  Total Energy deposited        = 500.000 eV  +- 0.059 meV
 
- Track length of primary track = 37.830 nm  +- 13.926 nm 
- Projected range               = 8.680 nm  +- 7.557 nm 
+ Track length of primary track = 36.866 nm  +- 14.621 nm 
+ Projected range               = 8.418 nm  +- 7.576 nm 
 
- Nb of steps of primary track  = 90.72 +- 56.26
+ Nb of steps of primary track  = 90.56 +- 62.28
 
- Step size                     = 4.754 Ang +- 1.543 Ang
+ Step size                     = 4.697 Ang +- 1.491 Ang
 
  ======================== run summary =====================
 
  The run is 1000 e- of 600.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 26.176 +- 1.999
+ Nb of ionisations = 25.695 +- 2.015
 
- w = 22.922 eV  +- 1.751 eV 
+ w = 23.351 eV  +- 1.832 eV 
 
  Total Energy deposited        = 600.000 eV  +- 0.000 eV 
 
- Track length of primary track = 45.553 nm  +- 15.060 nm 
- Projected range               = 11.912 nm  +- 10.013 nm 
+ Track length of primary track = 42.657 nm  +- 14.282 nm 
+ Projected range               = 12.006 nm  +- 9.225 nm 
 
- Nb of steps of primary track  = 96.93 +- 60.57
+ Nb of steps of primary track  = 91.82 +- 53.75
 
- Step size                     = 5.401 Ang +- 1.760 Ang
+ Step size                     = 5.281 Ang +- 1.694 Ang
 
  ======================== run summary =====================
 
  The run is 1000 e- of 700.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 30.613 +- 2.154
+ Nb of ionisations = 30.001 +- 2.196
 
- w = 22.866 eV  +- 1.609 eV 
+ w = 23.333 eV  +- 1.708 eV 
 
- Total Energy deposited        = 700.000 eV  +- 0.041 meV
+ Total Energy deposited        = 700.000 eV  +- 0.040 meV
 
- Track length of primary track = 52.133 nm  +- 16.238 nm 
- Projected range               = 14.733 nm  +- 12.064 nm 
+ Track length of primary track = 50.636 nm  +- 16.088 nm 
+ Projected range               = 14.918 nm  +- 11.719 nm 
 
- Nb of steps of primary track  = 99.01 +- 56.03
+ Nb of steps of primary track  = 98.70 +- 58.17
 
- Step size                     = 5.984 Ang +- 1.951 Ang
+ Step size                     = 5.852 Ang +- 1.905 Ang
 
  ======================== run summary =====================
 
  The run is 1000 e- of 800.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 34.971 +- 2.415
+ Nb of ionisations = 34.365 +- 2.351
 
- w = 22.876 eV  +- 1.580 eV 
+ w = 23.279 eV  +- 1.593 eV 
 
  Total Energy deposited        = 800.000 eV  +- 0.000 eV 
 
- Track length of primary track = 61.143 nm  +- 18.577 nm 
- Projected range               = 18.896 nm  +- 14.220 nm 
+ Track length of primary track = 58.764 nm  +- 18.222 nm 
+ Projected range               = 18.910 nm  +- 13.290 nm 
 
- Nb of steps of primary track  = 103.62 +- 59.04
+ Nb of steps of primary track  = 102.52 +- 60.73
 
- Step size                     = 6.723 Ang +- 2.240 Ang
+ Step size                     = 6.519 Ang +- 2.096 Ang
 
  ======================== run summary =====================
 
  The run is 1000 e- of 900.00 eV  through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 39.325 +- 2.515
+ Nb of ionisations = 38.600 +- 2.517
 
- w = 22.886 eV  +- 1.464 eV 
+ w = 23.316 eV  +- 1.520 eV 
 
  Total Energy deposited        = 900.000 eV  +- 0.000 eV 
 
- Track length of primary track = 68.302 nm  +- 20.068 nm 
- Projected range               = 21.913 nm  +- 16.820 nm 
+ Track length of primary track = 67.306 nm  +- 18.903 nm 
+ Projected range               = 22.206 nm  +- 16.015 nm 
 
- Nb of steps of primary track  = 103.79 +- 57.59
+ Nb of steps of primary track  = 104.89 +- 54.41
 
- Step size                     = 7.428 Ang +- 2.419 Ang
+ Step size                     = 7.216 Ang +- 2.437 Ang
 
  ======================== run summary =====================
 
  The run is 1000 e- of 1.00 keV through a sphere of radius 1.00 m  of G4_WATER (density: 1.00 g/cm3 )
 
- Nb of ionisations = 43.707 +- 2.607
+ Nb of ionisations = 42.882 +- 2.606
 
- w = 22.880 eV  +- 1.365 eV 
+ w = 23.320 eV  +- 1.417 eV 
 
- Total Energy deposited        = 1.000 keV +- 0.118 meV
+ Total Energy deposited        = 1.000 keV +- 0.117 meV
 
- Track length of primary track = 78.141 nm  +- 21.651 nm 
- Projected range               = 25.589 nm  +- 18.973 nm 
+ Track length of primary track = 74.400 nm  +- 21.762 nm 
+ Projected range               = 25.885 nm  +- 18.840 nm 
 
- Nb of steps of primary track  = 108.06 +- 52.13
+ Nb of steps of primary track  = 109.31 +- 60.77
 
- Step size                     = 8.070 Ang +- 2.702 Ang
+ Step size                     = 7.703 Ang +- 2.520 Ang
 Graphics systems deleted.
 Visualization Manager deleting...

@@ -28,9 +28,6 @@
 
 #include "G4VNuclearDensity.hh"
 
-G4VNuclearDensity::G4VNuclearDensity() :
-  rho0(0.) 
-  {}
+G4VNuclearDensity::G4VNuclearDensity() : rho0(0.) {}
 
 G4VNuclearDensity::~G4VNuclearDensity() {}
-    

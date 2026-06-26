@@ -28,8 +28,8 @@
 
 // Author: Ivana Hrivnacova, 20/07/2017 (ivana@ipno.in2p3.fr)
 
-#ifndef G4Hdf5RFileManager_h
-#define G4Hdf5RFileManager_h 1
+#ifndef G4HDF5RFILEMANAGER_HH
+#define G4HDF5RFILEMANAGER_HH
 
 #include "G4VRFileManager.hh"
 #include "globals.hh"
@@ -37,14 +37,15 @@
 #include "toolx/hdf5/ntuple"
 
 #include <map>
-#include <tuple>
 #include <string_view>
+#include <tuple>
 
 using G4Hdf5File = std::tuple<hid_t, hid_t, hid_t>;
 
 class G4Hdf5RFileManager : public G4VRFileManager
 {
   public:
+
     explicit G4Hdf5RFileManager(const G4AnalysisManagerState& state);
     G4Hdf5RFileManager() = delete;
     ~G4Hdf5RFileManager() override = default;
@@ -56,22 +57,21 @@ class G4Hdf5RFileManager : public G4VRFileManager
 
     // Get methods
     G4Hdf5File* GetRFile(const G4String& fileName, G4bool isPerThread);
-    hid_t GetHistoRDirectory(const G4String& fileName, const G4String& dirName,
-                   G4bool isPerThread);
+    hid_t GetHistoRDirectory(const G4String& fileName, const G4String& dirName, G4bool isPerThread);
     hid_t GetNtupleRDirectory(const G4String& fileName, const G4String& dirName,
-                    G4bool isPerThread);
+                              G4bool isPerThread);
 
   private:
+
     // Methods
     hid_t OpenRFile(const G4String& fileName, G4bool isPerThread);
     hid_t OpenDirectory(hid_t file, const G4String& directoryName);
-    hid_t GetRDirectory(const G4String& directoryType,
-                   const G4String& fileName, const G4String& dirName,
-                   G4bool isPerThread);
+    hid_t GetRDirectory(const G4String& directoryType, const G4String& fileName,
+                        const G4String& dirName, G4bool isPerThread);
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4Hdf5RFileManager" };
-    inline static const G4String fgkDefaultDirectoryName { "default" };
+    static constexpr std::string_view fkClass{"G4Hdf5RFileManager"};
+    inline static const G4String fgkDefaultDirectoryName{"default"};
 
     // Data members
     std::map<G4String, G4Hdf5File> fRFiles;

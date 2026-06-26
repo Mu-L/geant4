@@ -58,8 +58,8 @@
 //     Contract:     ESA contract 21435/08/NL/AT
 //     Customer:     ESA/ESTEC
 // --------------------------------------------------------------------
-#ifndef G4AdjointPrimaryGeneratorAction_hh
-#define G4AdjointPrimaryGeneratorAction_hh 1
+#ifndef G4ADJOINTPRIMARYGENERATORACTION_HH
+#define G4ADJOINTPRIMARYGENERATORACTION_HH
 
 #include "G4ThreeVector.hh"
 #include "G4VUserPrimaryGeneratorAction.hh"
@@ -80,6 +80,7 @@ class G4ParticleDefinition;
 class G4AdjointPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
   public:
+
     G4AdjointPrimaryGeneratorAction();
     ~G4AdjointPrimaryGeneratorAction() override;
 
@@ -120,12 +121,12 @@ class G4AdjointPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     }
 
   private:  // methods
+
     G4double ComputeEnergyDistWeight(G4double energy, G4double E1, G4double E2);
 
   private:  // attributes
+
     G4String rndmFlag;  // flag for a rndm impact point
-
-
 
     // Emin and Emax energies of the adjoint source
     //---------------------------------------------

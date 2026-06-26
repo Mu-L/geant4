@@ -25,74 +25,81 @@
 //
 //
 
-#ifndef G4CollisionMesonBaryonToResonance_h
-#define G4CollisionMesonBaryonToResonance_h
+#ifndef G4COLLISIONMESONBARYONTORESONANCE_HH
+#define G4COLLISIONMESONBARYONTORESONANCE_HH
 
-#include "globals.hh"
 #include "G4CollisionComposite.hh"
-#include "G4VCrossSectionSource.hh"
-#include "G4VAngularDistribution.hh"
 #include "G4KineticTrackVector.hh"
-#include <vector>
-#include "G4XpipNTotal.hh"
-#include "G4XpimNTotal.hh"
+#include "G4PionMinus.hh"
 #include "G4PionPlus.hh"
 #include "G4Proton.hh"
-#include "G4PionMinus.hh"
+#include "G4VAngularDistribution.hh"
+#include "G4VCrossSectionSource.hh"
+#include "G4XpimNTotal.hh"
+#include "G4XpipNTotal.hh"
+#include "globals.hh"
 
+#include <vector>
 
 class G4CollisionMesonBaryonToResonance : public G4CollisionComposite
 {
+  public:
 
-public:
+    G4CollisionMesonBaryonToResonance();
+    virtual ~G4CollisionMesonBaryonToResonance() {};
 
-  G4CollisionMesonBaryonToResonance();
-  virtual ~G4CollisionMesonBaryonToResonance(){};
+  private:
 
-private:
-  G4CollisionMesonBaryonToResonance(const G4CollisionMesonBaryonToResonance &);
-  G4CollisionMesonBaryonToResonance & operator= (const G4CollisionMesonBaryonToResonance &);
+    G4CollisionMesonBaryonToResonance(const G4CollisionMesonBaryonToResonance&);
+    G4CollisionMesonBaryonToResonance& operator=(const G4CollisionMesonBaryonToResonance&);
 
-
-  virtual G4String GetName() const { return "mN -> baryon Resonance Collision"; }  
-  virtual G4double CrossSection(const G4KineticTrack& trk1, 
-				const G4KineticTrack& trk2) const
-  {
-    G4double result=0;
-//     if(trk1.GetDefinition() == G4PionPlus::PionPlus() && trk2.GetDefinition()==G4Proton::Proton())
-//     {
-//       result=thepipp.CrossSection(trk1, trk2);
-//     }
-//     else if(trk2.GetDefinition() == G4PionPlus::PionPlus() && trk1.GetDefinition()==G4Proton::Proton())
-//     {
-//       result=thepipp.CrossSection(trk2, trk1);
-//     }
-//     else if(trk1.GetDefinition() == G4PionMinus::PionMinus() && trk2.GetDefinition()==G4Proton::Proton())
-//     {
-//       result=thepimp.CrossSection(trk1, trk2);
-//     }
-//     else if(trk2.GetDefinition() == G4PionMinus::PionMinus() && trk1.GetDefinition()==G4Proton::Proton())
-//     {
-//       result=thepimp.CrossSection(trk2, trk1);
-//     }
-//     else 
+    virtual G4String GetName() const { return "mN -> baryon Resonance Collision"; }
+    virtual G4double CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const
     {
-      result = G4CollisionComposite::CrossSection(trk1, trk2);
+      G4double result = 0;
+      //     if(trk1.GetDefinition() == G4PionPlus::PionPlus() &&
+      //     trk2.GetDefinition()==G4Proton::Proton())
+      //     {
+      //       result=thepipp.CrossSection(trk1, trk2);
+      //     }
+      //     else if(trk2.GetDefinition() == G4PionPlus::PionPlus() &&
+      //     trk1.GetDefinition()==G4Proton::Proton())
+      //     {
+      //       result=thepipp.CrossSection(trk2, trk1);
+      //     }
+      //     else if(trk1.GetDefinition() == G4PionMinus::PionMinus() &&
+      //     trk2.GetDefinition()==G4Proton::Proton())
+      //     {
+      //       result=thepimp.CrossSection(trk1, trk2);
+      //     }
+      //     else if(trk2.GetDefinition() == G4PionMinus::PionMinus() &&
+      //     trk1.GetDefinition()==G4Proton::Proton())
+      //     {
+      //       result=thepimp.CrossSection(trk2, trk1);
+      //     }
+      //     else
+      {
+        result = G4CollisionComposite::CrossSection(trk1, trk2);
+      }
+      return result;
     }
-    return result;
-  }
 
-protected:
-  
-  virtual const std::vector<G4String>& GetListOfColliders(G4int ) const
-  {
-    throw G4HadronicException(__FILE__, __LINE__, "Tried to call G4CollisionMesonBaryonToResonance::GetListOfColliders. Please find out why!");
-    std::vector<G4String> * aList = new std::vector<G4String>;
-    return *aList;
-  } 
-private:
-  G4XpipNTotal thepipp;
-  G4XpimNTotal thepimp;
+  protected:
+
+    virtual const std::vector<G4String>& GetListOfColliders(G4int) const
+    {
+      throw G4HadronicException(
+        __FILE__, __LINE__,
+        "Tried to call G4CollisionMesonBaryonToResonance::GetListOfColliders. Please find out "
+        "why!");
+      std::vector<G4String>* aList = new std::vector<G4String>;
+      return *aList;
+    }
+
+  private:
+
+    G4XpipNTotal thepipp;
+    G4XpimNTotal thepimp;
 };
 
 #endif

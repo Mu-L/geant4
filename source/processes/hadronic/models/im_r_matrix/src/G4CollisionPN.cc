@@ -25,36 +25,33 @@
 //
 //
 
-#include "globals.hh"
 #include "G4CollisionPN.hh"
-#include "G4XnpTotal.hh"
-#include "G4CollisionnpElastic.hh"
+
 #include "G4CollisionNNToNDelta.hh"
+#include "G4CollisionnpElastic.hh"
 #include "G4Pair.hh"
+#include "G4XnpTotal.hh"
+#include "globals.hh"
 
 // J.P. Wellisch, Dec 2004.
 
 typedef GROUP2(G4CollisionnpElastic, G4CollisionNNToNDelta) theChannels;
 
 G4CollisionPN::G4CollisionPN()
-{ 
-
+{
   crossSectionSource = new G4XnpTotal();
   Register aR;
   G4ForEach<theChannels>::Apply(&aR, this);
 }
 
-
 G4CollisionPN::~G4CollisionPN()
-{ 
+{
   delete crossSectionSource;
   crossSectionSource = 0;
 }
 
-
-const std::vector<G4String>& G4CollisionPN::GetListOfColliders(G4int ) const
+const std::vector<G4String>& G4CollisionPN::GetListOfColliders(G4int) const
 {
   throw G4HadronicException(__FILE__, __LINE__, "G4CollisionPN:: GetListOfColliders called");
   return colliders1;
 }
-

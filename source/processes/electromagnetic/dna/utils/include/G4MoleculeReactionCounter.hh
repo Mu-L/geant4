@@ -26,47 +26,52 @@
 //
 // Author: Christian Velten (2025)
 
-#ifndef G4MoleculeReactionCounter_hh
-#define G4MoleculeReactionCounter_hh 1
+#ifndef G4MOLECULEREACTIONCOUNTER_HH
+#define G4MOLECULEREACTIONCOUNTER_HH
 
 #include "G4DNAMolecularReactionTable.hh"
 #include "G4VUserMoleculeReactionCounter.hh"
 
 //------------------------------------------------------------------------------
 
-struct G4MoleculeReactionCounterIndex : public G4VMoleculeReactionCounter::G4VMoleculeReactionCounterIndex
+struct G4MoleculeReactionCounterIndex
+  : public G4VMoleculeReactionCounter::G4VMoleculeReactionCounterIndex
 {
     const G4DNAMolecularReactionData* ReactionData;
 
     G4MoleculeReactionCounterIndex() : ReactionData(nullptr) {}
-    explicit G4MoleculeReactionCounterIndex(const G4DNAMolecularReactionData* reaction) : ReactionData(reaction) {}
+    explicit G4MoleculeReactionCounterIndex(const G4DNAMolecularReactionData* reaction)
+      : ReactionData(reaction)
+    {}
     ~G4MoleculeReactionCounterIndex() override = default;
 
     G4bool operator<(G4VMoleculeReactionCounterIndex const& other) const override
     {
-      return std::less{}(ReactionData, static_cast<const G4MoleculeReactionCounterIndex&>(other).ReactionData);
+      return std::less{}(ReactionData,
+                         static_cast<const G4MoleculeReactionCounterIndex&>(other).ReactionData);
     }
     G4bool operator==(G4VMoleculeReactionCounterIndex const& other) const override
     {
-      return std::equal_to{}(ReactionData, static_cast<const G4MoleculeReactionCounterIndex&>(other).ReactionData);
+      return std::equal_to{}(
+        ReactionData, static_cast<const G4MoleculeReactionCounterIndex&>(other).ReactionData);
     }
     G4String FormattedReactionString(const G4DNAMolecularReactionData* reactionData) const;
 
     G4String GetInfo() const override
     {
-      G4String null = "This reaction data is null";
-      if (ReactionData == nullptr)
-        return null;
-      else
-        return FormattedReactionString(ReactionData);
+      return ReactionData == nullptr ? G4String("This index has no reaction data (null)!")
+                                     : FormattedReactionString(ReactionData);
     }
     const G4DNAMolecularReactionData* GetReactionData() const override { return ReactionData; }
 };
 
-class G4MoleculeReactionCounter : public G4VUserMoleculeReactionCounter<G4MoleculeReactionCounterIndex>
+class G4MoleculeReactionCounter
+  : public G4VUserMoleculeReactionCounter<G4MoleculeReactionCounterIndex>
 {
     //----------------------------------------------------------------------------
+
   public:
+
     G4MoleculeReactionCounter();
     G4MoleculeReactionCounter(G4String);
     ~G4MoleculeReactionCounter() override = default;
@@ -74,7 +79,9 @@ class G4MoleculeReactionCounter : public G4VUserMoleculeReactionCounter<G4Molecu
     void InitializeUser() override;
 
   public:
-    std::unique_ptr<G4VMoleculeReactionCounterIndex> BuildSimpleIndex(const G4DNAMolecularReactionData*) const override;
+
+    std::unique_ptr<G4VMoleculeReactionCounterIndex>
+    BuildSimpleIndex(const G4DNAMolecularReactionData*) const override;
 };
 
 #endif  // G4MoleculeReactionCounter_hh

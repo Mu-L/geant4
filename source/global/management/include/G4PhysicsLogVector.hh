@@ -38,29 +38,41 @@
 // Revisions:
 // - 11 Nov. 2000, H.Kurashige : Use STL vector for dataVector and binVector
 // --------------------------------------------------------------------
-#ifndef G4PhysicsLogVector_hh
-#define G4PhysicsLogVector_hh 1
+#ifndef G4PHYSICSLOGVECTOR_HH
+#define G4PHYSICSLOGVECTOR_HH
 
 #include "G4PhysicsVector.hh"
 #include "globals.hh"
 
+/** @brief Physics vector specialised for logarithmic bin spacing
+ * @ingroup global_management
+ */
 class G4PhysicsLogVector : public G4PhysicsVector
 {
-public:
-  // The vector will be filled from external file using Retrieve() method
-  explicit G4PhysicsLogVector(G4bool spline = false);
+  public:
 
-  // Energies will be computed and filled at construction, values will be 
-  // filled with zeros. Required Nbin > 1 and Emax > Emin > 0.
-  // Use PutValue(..) to fill the data vector
-  explicit G4PhysicsLogVector(G4double Emin, G4double Emax, std::size_t Nbin,
-                              G4bool spline = false);
+    /** @brief Create an empty Log-binned vector */
+    explicit G4PhysicsLogVector(G4bool spline = false);
 
-  ~G4PhysicsLogVector() override = default;
+    /** @brief Create a zero-valued log vector
+     *
+     * Energy bins are initialised to cover the range [Emin, EMax] using Nbin bins.
+     * @param Emin Minimum energy bin edge
+     * @param Emax Maximum energy bin edge
+     * @param Nbin Number of bins
+     * @pre Nbin > 1
+     * @pre Emax > Emin > 0
+     * @post Energy bins are created and corresponding values are initialised to zero
+     * @param spline Whether to use splined interpolation
+     */
+    explicit G4PhysicsLogVector(G4double Emin, G4double Emax, std::size_t Nbin,
+                                G4bool spline = false);
 
-protected:
+    ~G4PhysicsLogVector() override = default;
 
-  void Initialise() final;
+  protected:
+
+    void Initialise() final;
 };
 
 #endif

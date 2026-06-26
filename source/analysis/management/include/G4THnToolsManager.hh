@@ -28,32 +28,32 @@
 //
 // Author: Ivana Hrivnacova, 10/08/2022  (ivana@ipno.in2p3.fr)
 
-#ifndef G4THnToolsManager_h
-#define G4THnToolsManager_h 1
+#ifndef G4THNTOOLSMANAGER_HH
+#define G4THNTOOLSMANAGER_HH
 
 #include "G4AnalysisUtilities.hh"
-#include "G4VTBaseHnManager.hh"
 #include "G4THnManager.hh"
+#include "G4VTBaseHnManager.hh"
 #include "globals.hh"
 
-#include <memory>
 #include <array>
+#include <memory>
 #include <string_view>
 
 class G4AnalysisManagerState;
 class G4HnManager;
 class G4UImessenger;
 
-template <unsigned int DIM, typename HT>
-class G4THnToolsManager : public G4VTBaseHnManager<DIM>,
-                          public G4THnManager<HT>
+template<unsigned int DIM, typename HT>
+class G4THnToolsManager : public G4VTBaseHnManager<DIM>, public G4THnManager<HT>
 
 {
-  // Disable using the object managers outside
-  friend class G4VAnalysisManager;
-  friend class G4VAnalysisReader;
+    // Disable using the object managers outside
+    friend class G4VAnalysisManager;
+    friend class G4VAnalysisReader;
 
   public:
+
     G4THnToolsManager(const G4AnalysisManagerState& state);
     ~G4THnToolsManager() override = default;
 
@@ -63,22 +63,20 @@ class G4THnToolsManager : public G4VTBaseHnManager<DIM>,
 
     // Methods for handling histograms
     G4int Create(const G4String& name, const G4String& title,
-               const std::array<G4HnDimension, DIM>& bins,
-               const std::array<G4HnDimensionInformation, DIM>& hnInfo) override;
+                 const std::array<G4HnDimension, DIM>& bins,
+                 const std::array<G4HnDimensionInformation, DIM>& hnInfo) override;
 
-    G4bool Set(G4int id,
-               const std::array<G4HnDimension, DIM>& bins,
+    G4bool Set(G4int id, const std::array<G4HnDimension, DIM>& bins,
                const std::array<G4HnDimensionInformation, DIM>& hnInfo) override;
 
     G4bool Scale(G4int id, G4double factor) override;
     G4int GetNofHns(G4bool onlyIfExist) const override;
 
     // Methods to fill histograms
-    G4bool Fill(G4int id, std::array<G4double, DIM> value,
-                G4double weight = 1.0) override;
+    G4bool Fill(G4int id, std::array<G4double, DIM> value, G4double weight = 1.0) override;
 
     // Access methods
-    G4int GetId(const G4String &name, G4bool warn = true) const override;
+    G4int GetId(const G4String& name, G4bool warn = true) const override;
 
     // Access to bins parameters
     G4int GetNbins(unsigned int idim, G4int id) const override;
@@ -87,18 +85,17 @@ class G4THnToolsManager : public G4VTBaseHnManager<DIM>,
     G4double GetWidth(unsigned int idim, G4int id) const override;
 
     // Setters for attributes for plotting
-    G4bool SetTitle(G4int id, const G4String &title) override;
-    G4bool SetAxisTitle(unsigned int idim, G4int id,
-                        const G4String &title) override;
+    G4bool SetTitle(G4int id, const G4String& title) override;
+    G4bool SetAxisTitle(unsigned int idim, G4int id, const G4String& title) override;
 
     // Access attributes for plotting
     G4String GetTitle(G4int id) const override;
     G4String GetAxisTitle(unsigned int idim, G4int id) const override;
 
     // Methods to list/print histograms
-    G4bool WriteOnAscii(std::ofstream &output) override;
+    G4bool WriteOnAscii(std::ofstream& output) override;
     // Function with specialization per histo type
-    G4bool List(std::ostream &output, G4bool onlyIfActive = true) override;
+    G4bool List(std::ostream& output, G4bool onlyIfActive = true) override;
 
     // Methods to delete selected histograms
     G4bool Delete(G4int id, G4bool keepSetting) override;
@@ -108,6 +105,7 @@ class G4THnToolsManager : public G4VTBaseHnManager<DIM>,
     const std::shared_ptr<G4HnManager> GetHnManager() const override;
 
   protected:
+
     // Functions from base class
     using G4THnManager<HT>::RegisterT;
     using G4THnManager<HT>::GetTHnInFunction;
@@ -116,45 +114,43 @@ class G4THnToolsManager : public G4VTBaseHnManager<DIM>,
     using G4THnManager<HT>::IsVerbose;
     using G4THnManager<HT>::Message;
 
-    static constexpr std::string_view fkClass { "G4THnToolsManager" };
+    static constexpr std::string_view fkClass{"G4THnToolsManager"};
 
   private:
+
     void UpdateInformation(G4HnInformation* hnInformation,
                            const std::array<G4HnDimensionInformation, DIM>& hnInfo);
 
     G4HnInformation* CreateInformation(const G4String& name,
-                       const std::array<G4HnDimensionInformation, DIM>& hnInfo);
+                                       const std::array<G4HnDimensionInformation, DIM>& hnInfo);
 
-    void AddAnnotation(HT* ht,
-                       const std::array<G4HnDimensionInformation, DIM>& hnInfo);
+    void AddAnnotation(HT* ht, const std::array<G4HnDimensionInformation, DIM>& hnInfo);
 
     G4bool CheckName(const G4String& name) const;
 
     // Functions with specialization per histo type
 
-    HT* CreateToolsHT(const G4String& title,
-                      const std::array<G4HnDimension, DIM>& bins,
+    HT* CreateToolsHT(const G4String& title, const std::array<G4HnDimension, DIM>& bins,
                       const std::array<G4HnDimensionInformation, DIM>& hnInfo);
 
-    void ConfigureToolsHT(HT* ht,
-                      const std::array<G4HnDimension, DIM>& bins,
-                      const std::array<G4HnDimensionInformation, DIM>& hnInfo);
+    void ConfigureToolsHT(HT* ht, const std::array<G4HnDimension, DIM>& bins,
+                          const std::array<G4HnDimensionInformation, DIM>& hnInfo);
 
-    G4bool FillHT(HT* ht, const G4HnInformation& hnInformation,
-                     std::array<G4double, DIM>& value, 
-                     G4double weight = 1.0);
+    G4bool FillHT(HT* ht, const G4HnInformation& hnInformation, std::array<G4double, DIM>& value,
+                  G4double weight = 1.0);
 
-   // redefine tools::histo::key_axis_x_title() - not available via upper types
-   static const std::array<std::string, G4Analysis::kMaxDim> fkKeyAxisTitle;
+    // redefine tools::histo::key_axis_x_title() - not available via upper types
+    static const std::array<std::string, G4Analysis::kMaxDim> fkKeyAxisTitle;
 
-   std::unique_ptr<G4UImessenger> fMessenger;
+    std::unique_ptr<G4UImessenger> fMessenger;
 };
 
 // inline functions
 
 #include "G4THnMessenger.hh"
-#include "G4THnToolsManager.icc"
+
 #include "G4THnMessenger.icc"
-    // include messenger and its implementation here to avoid include recursion
+#include "G4THnToolsManager.icc"
+// include messenger and its implementation here to avoid include recursion
 
 #endif

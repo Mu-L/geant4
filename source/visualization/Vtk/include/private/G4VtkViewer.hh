@@ -39,8 +39,8 @@
 #include "G4VtkUtility.hh"
 
 #ifndef WIN32
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wextra-semi"
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wextra-semi"
 #endif
 
 #include <vtkAutoInit.h>
@@ -60,7 +60,7 @@
 #include <vtkTextActor.h>
 
 #ifndef WIN32
-#pragma GCC diagnostic pop
+#  pragma GCC diagnostic pop
 #endif
 
 VTK_MODULE_INIT(vtkRenderingOpenGL2)
@@ -70,6 +70,7 @@ VTK_MODULE_INIT(vtkRenderingFreeType)
 class vtkGeant4Callback : public vtkCommand
 {
   public:
+
     static vtkGeant4Callback* New() { return new vtkGeant4Callback; }
 
     vtkGeant4Callback() { fVP = nullptr; }
@@ -92,18 +93,22 @@ class vtkGeant4Callback : public vtkCommand
                           + std::pow(cp[2] - fp[2], 2));
 
       fVP->SetCurrentTargetPoint(G4Point3D(fp[0], fp[1], fp[2]));
-      fVP->SetViewpointDirection((G4Point3D(cp[0], cp[1], cp[2]) - G4Point3D(fp[0], fp[1], fp[2])).unit());
+      fVP->SetViewpointDirection(
+        (G4Point3D(cp[0], cp[1], cp[2]) - G4Point3D(fp[0], fp[1], fp[2])).unit());
       fVP->SetUpVector(G4Vector3D(ud[0], ud[1], ud[2]));
 
-      if (cam->GetParallelProjection() != 0) {
+      if (cam->GetParallelProjection() != 0)
+      {
         fVP->SetZoomFactor(parallelScale / ps);
       }
-      else {
+      else
+      {
         fVP->SetZoomFactor(cameraDistance / cd);
       }
     }
 
   protected:
+
     G4ViewParameters* fVP;
     G4double parallelScale;
     G4double cameraDistance;
@@ -112,6 +117,7 @@ class vtkGeant4Callback : public vtkCommand
 class vtkInfoCallback : public vtkCommand
 {
   public:
+
     static vtkInfoCallback* New() { return new vtkInfoCallback; }
 
     vtkInfoCallback()
@@ -134,9 +140,8 @@ class vtkInfoCallback : public vtkCommand
       double distance = cam->GetDistance();
       double near;
       double far;
-      cam->GetClippingRange(near,far);
+      cam->GetClippingRange(near, far);
       double parallelScale = cam->GetParallelScale();
-
 
       if (pos == nullptr) return;
 
@@ -158,14 +163,16 @@ class vtkInfoCallback : public vtkCommand
                "parallel scale     : %.1f\n"
                "number actors      : %i\n"
                "fps                : %.1f",
-               pos[0], pos[1], pos[2], foc[0], foc[1], foc[2], viewAngle, distance, near, far, parallelScale,
-               nActors, fps);
-      if (this->TextActor != nullptr) {
+               pos[0], pos[1], pos[2], foc[0], foc[1], foc[2], viewAngle, distance, near, far,
+               parallelScale, nActors, fps);
+      if (this->TextActor != nullptr)
+      {
         this->TextActor->SetInput(this->TextBuff);
       }
     }
 
   protected:
+
     vtkTextActor* TextActor;
     char TextBuff[256];
     std::chrono::time_point<std::chrono::steady_clock> t1;
@@ -175,6 +182,7 @@ class vtkInfoCallback : public vtkCommand
 class vtkIPWCallback : public vtkCommand
 {
   public:
+
     static vtkIPWCallback* New() { return new vtkIPWCallback; }
 
     vtkIPWCallback() = default;
@@ -189,11 +197,13 @@ class vtkIPWCallback : public vtkCommand
 
     void Execute(vtkObject* caller, unsigned long, void*) override
     {
-      if (this->plane == nullptr) {
+      if (this->plane == nullptr)
+      {
         this->plane = vtkPlane::New();
       }
 
-      if (pipelineToUpdateName.empty() || pipelineToUpdateType.empty()) {
+      if (pipelineToUpdateName.empty() || pipelineToUpdateType.empty())
+      {
         return;
       }
 
@@ -214,6 +224,7 @@ class vtkIPWCallback : public vtkCommand
 class G4VtkViewer : public G4VViewer
 {
   public:
+
     G4VtkViewer(G4VSceneHandler&, const G4String& name);
     void Initialise() override;
     ~G4VtkViewer() override;
@@ -263,15 +274,17 @@ class G4VtkViewer : public G4VViewer
                          const G4double imageBottomLeft[2], const G4double worldBottomLeft[2],
                          const G4double imageTopRight[2], const G4double worldTopRight[2],
                          const G4double rot[3], const G4double trans[3]);
-    void AddGeometryOverlay(const G4String& fileName, const G4double colour[3], const G4double alpha,
-                            const G4String& representation,
+    void AddGeometryOverlay(const G4String& fileName, const G4double colour[3],
+                            const G4double alpha, const G4String& representation,
                             const G4double scale[3], const G4double rotation[3],
                             const G4double translation[3]);
 
-    void Render() {_renderWindow->Render();}
-    void StartInteractor() {
+    void Render() { _renderWindow->Render(); }
+    void StartInteractor()
+    {
       G4cout << "StartInteractor" << G4endl;
-      _renderWindow->GetInteractor()->Start();}
+      _renderWindow->GetInteractor()->Start();
+    }
 
     void Print();
 
@@ -279,8 +292,8 @@ class G4VtkViewer : public G4VViewer
 
     virtual void SetWidgetInteractor(vtkAbstractWidget* widget);
 
-    void ExportView(){};
-    void SetGeant4View(){};
+    void ExportView() {};
+    void SetGeant4View() {};
 
     vtkNew<vtkTextActor> infoTextActor;
     vtkNew<vtkInfoCallback> infoCallback;
@@ -292,6 +305,7 @@ class G4VtkViewer : public G4VViewer
     vtkRenderWindowInteractor* renderWindowInteractor;
 
   protected:
+
     G4bool firstSetView = true;
     G4bool firstFinishView = true;
     G4double cameraDistance;

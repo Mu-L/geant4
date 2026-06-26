@@ -33,8 +33,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4Bessel_h
-#define G4Bessel_h 1
+#ifndef G4BESSEL_HH
+#define G4BESSEL_HH
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //
 // MODULE:		G4Bessel.hh
@@ -66,17 +66,18 @@
 class G4Bessel
 {
   public:
-    G4Bessel ();
-    ~G4Bessel ();
-  
-    G4double I0 (G4double);
-    G4double I1 (G4double);
-    G4double K0 (G4double);
-    G4double K1 (G4double);
-    G4double pI0 (G4double);
-    G4double pI1 (G4double);
-    G4double pK0 (G4double);
-    G4double pK1 (G4double);
+
+    G4Bessel();
+    ~G4Bessel();
+
+    G4double I0(G4double);
+    G4double I1(G4double);
+    G4double K0(G4double);
+    G4double K1(G4double);
+    G4double pI0(G4double);
+    G4double pI1(G4double);
+    G4double pK0(G4double);
+    G4double pK1(G4double);
 };
 ////////////////////////////////////////////////////////////////////////////////
 //

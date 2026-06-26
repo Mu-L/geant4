@@ -26,7 +26,7 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   
+// ClassName:
 //
 // Author: Witek Pokorski
 //
@@ -34,40 +34,47 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef TG4GenericPhysicsList_h
-#define TG4GenericPhysicsList_h 1
+#ifndef TG4GENERICPHYSICSLIST_HH
+#define TG4GENERICPHYSICSLIST_HH
 
+#include "G4GenericMessenger.hh"
+#include "G4PhysicsConstructorRegistry.hh"
 #include "G4VModularPhysicsList.hh"
 #include "globals.hh"
+
 #include "CompileTimeConstraints.hh"
-#include "G4PhysicsConstructorRegistry.hh"
-#include "G4GenericMessenger.hh"
 
 template<class T>
-class TG4GenericPhysicsList: public T
+class TG4GenericPhysicsList : public T
 {
-public:
-  TG4GenericPhysicsList(G4int ver = 1);
-  TG4GenericPhysicsList(std::vector<G4String>* physConstr, G4int ver = 1);
-  virtual ~TG4GenericPhysicsList();
-  
-public:
-  // SetCuts() 
-  virtual void SetCuts();
+  public:
 
-private:
-  enum {ok = CompileTimeConstraints::IsA<T, G4VModularPhysicsList>::ok };
+    TG4GenericPhysicsList(G4int ver = 1);
+    TG4GenericPhysicsList(std::vector<G4String>* physConstr, G4int ver = 1);
+    virtual ~TG4GenericPhysicsList();
 
-  void RegisterPhysicsConstructor(G4String& physconstr) {this->RegisterPhysics(G4PhysicsConstructorRegistry::Instance()->GetPhysicsConstructor(physconstr));}
+  public:
 
-  G4GenericMessenger messenger;
-  void DeclareProperties();
+    // SetCuts()
+    virtual void SetCuts();
 
+  private:
+
+    enum
+    {
+      ok = CompileTimeConstraints::IsA<T, G4VModularPhysicsList>::ok
+    };
+
+    void RegisterPhysicsConstructor(G4String& physconstr)
+    {
+      this->RegisterPhysics(
+        G4PhysicsConstructorRegistry::Instance()->GetPhysicsConstructor(physconstr));
+    }
+
+    G4GenericMessenger messenger;
+    void DeclareProperties();
 };
 #include "G4GenericPhysicsList.icc"
 typedef TG4GenericPhysicsList<G4VModularPhysicsList> G4GenericPhysicsList;
 
 #endif
-
-
-

@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  31st December 1997.
 //
 // Class Description:
@@ -52,26 +52,25 @@
 
 #include "G4VModel.hh"
 
-template <class F> class G4CallbackModel: public G4VModel {
+template<class F>
+class G4CallbackModel : public G4VModel
+{
+  public:
 
- public:
-  G4CallbackModel(F* function):
-    fFunction(function) {}
-  ~G4CallbackModel() {}
-  void DescribeYourselfTo(G4VGraphicsScene& sceneHandler) {
-    (*fFunction)(sceneHandler, fpMP);
-  }
+    G4CallbackModel(F* function) : fFunction(function) {}
+    ~G4CallbackModel() {}
+    void DescribeYourselfTo(G4VGraphicsScene& sceneHandler) { (*fFunction)(sceneHandler, fpMP); }
 
-protected:
+  protected:
 
-  F* fFunction;
+    F* fFunction;
 
-private:
+  private:
 
-  // Private copy constructor and assigment operator - copying and
-  // assignment not allowed.  Keeps CodeWizard happy.
-  G4CallbackModel (const G4CallbackModel&);
-  G4CallbackModel& operator = (const G4CallbackModel&);
+    // Private copy constructor and assigment operator - copying and
+    // assignment not allowed.  Keeps CodeWizard happy.
+    G4CallbackModel(const G4CallbackModel&);
+    G4CallbackModel& operator=(const G4CallbackModel&);
 };
 
 #endif

@@ -31,11 +31,11 @@
  */
 
 #include "G4ITNavigator.hh"
-//#include "G4ITNavigator2.hh"
+// #include "G4ITNavigator2.hh"
 
 // !>
 
-G4ITNavigator2 ::G4NavigatorState::G4NavigatorState()    
+G4ITNavigator2 ::G4NavigatorState::G4NavigatorState()
 {
   ResetState();
 }
@@ -77,7 +77,7 @@ void G4ITNavigator2::G4NavigatorState::ResetState()
   fLocatedOutsideWorld = false;
 }
 
-G4ITNavigator2 ::G4NavigatorState::G4NavigatorState(const G4NavigatorState& rhs)    
+G4ITNavigator2 ::G4NavigatorState::G4NavigatorState(const G4NavigatorState& rhs)
 {
   fExitNormal = rhs.fExitNormal;
   fValidExitNormal = rhs.fValidExitNormal;
@@ -143,7 +143,6 @@ G4ITNavigator2::G4NavigatorState::operator=(const G4NavigatorState& rhs)
 
 G4ITNavigator2 ::G4SaveNavigatorState::G4SaveNavigatorState()
 {
-
   sWasLimitedByGeometry = false;
   sEntering = false;
   sExiting = false;
@@ -151,16 +150,15 @@ G4ITNavigator2 ::G4SaveNavigatorState::G4SaveNavigatorState()
   sEnteredDaughter = false;
   sExitedMother = false;
 
-
   sValidExitNormal = false;
   sExitNormal = G4ThreeVector(0, 0, 0);
 
   sPreviousSftOrigin = G4ThreeVector(0, 0, 0);
   sPreviousSafety = 0.0;
 
-//  sLocatedOnEdge = false;
-//  sPushed = false;
-//  sNumberZeroSteps = 0;
+  //  sLocatedOnEdge = false;
+  //  sPushed = false;
+  //  sNumberZeroSteps = 0;
 
   spBlockedPhysicalVolume = nullptr;
   sBlockedReplicaNo = -1;
@@ -186,9 +184,9 @@ G4ITNavigator2 ::G4SaveNavigatorState::G4SaveNavigatorState(G4NavigatorState* rh
 
   sWasLimitedByGeometry = rhs->fWasLimitedByGeometry;
 
-//  sLocatedOnEdge = rhs->fLocatedOnEdge;
-//  sPushed = rhs->fPushed;
-//  sNumberZeroSteps = rhs->fNumberZeroSteps;
+  //  sLocatedOnEdge = rhs->fLocatedOnEdge;
+  //  sPushed = rhs->fPushed;
+  //  sNumberZeroSteps = rhs->fNumberZeroSteps;
 
   sEnteredDaughter = rhs->fEnteredDaughter;
   sExitedMother = rhs->fExitedMother;
@@ -197,7 +195,8 @@ G4ITNavigator2 ::G4SaveNavigatorState::G4SaveNavigatorState(G4NavigatorState* rh
   sLocatedOutsideWorld = rhs->fLocatedOutsideWorld;
 }
 
-G4ITNavigator2::G4NavigatorState& G4ITNavigator2::G4NavigatorState::operator=(const G4SaveNavigatorState& rhs)
+G4ITNavigator2::G4NavigatorState&
+G4ITNavigator2::G4NavigatorState::operator=(const G4SaveNavigatorState& rhs)
 {
   fExitNormal = rhs.sExitNormal;
   fValidExitNormal = rhs.sValidExitNormal;
@@ -206,17 +205,17 @@ G4ITNavigator2::G4NavigatorState& G4ITNavigator2::G4NavigatorState::operator=(co
 
   fBlockedPhysicalVolume = rhs.spBlockedPhysicalVolume;
   fBlockedReplicaNo = rhs.sBlockedReplicaNo;
-//	fCalculatedExitNormal = rhs.sCalculatedExitNormal;
+  //	fCalculatedExitNormal = rhs.sCalculatedExitNormal;
 
   fLastStepWasZero = (rhs.sLastStepWasZero != 0);
-//	fLastTriedStepComputation =rhs.sLastTriedStepComputation;
-//	fChangedGrandMotherRefFrame = rhs.sChangedGrandMotherRefFrame;
+  //	fLastTriedStepComputation =rhs.sLastTriedStepComputation;
+  //	fChangedGrandMotherRefFrame = rhs.sChangedGrandMotherRefFrame;
 
   fPreviousSftOrigin = rhs.sPreviousSftOrigin;
   fPreviousSafety = rhs.sPreviousSafety;
-//  fNumberZeroSteps = rhs.sNumberZeroSteps;
-//  fLocatedOnEdge = rhs.sLocatedOnEdge;
-//  fPushed = rhs.sPushed;
+  //  fNumberZeroSteps = rhs.sNumberZeroSteps;
+  //  fLocatedOnEdge = rhs.sLocatedOnEdge;
+  //  fPushed = rhs.sPushed;
   fWasLimitedByGeometry = rhs.sWasLimitedByGeometry;
 
   fEnteredDaughter = rhs.sEnteredDaughter;

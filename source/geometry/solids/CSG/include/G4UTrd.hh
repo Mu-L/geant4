@@ -36,20 +36,21 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedTrd.h>
+#  include "G4Polyhedron.hh"
 
-#include "G4Polyhedron.hh"
+#  include <VecGeom/volumes/UnplacedTrd.h>
 
 /**
  * @brief G4UTrd is a wrapper class for G4Trd to make use of VecGeom Trd.
+ * @ingroup geometry_solids_csg
  */
 
-class G4UTrd : public G4UAdapter<vecgeom::GenericUnplacedTrd> 
+class G4UTrd : public G4UAdapter<vecgeom::GenericUnplacedTrd>
 {
-  using Shape_t = vecgeom::GenericUnplacedTrd;
-  using Base_t  = G4UAdapter<vecgeom::GenericUnplacedTrd>;
+    using Shape_t = vecgeom::GenericUnplacedTrd;
+    using Base_t = G4UAdapter<vecgeom::GenericUnplacedTrd>;
 
   public:
 
@@ -62,10 +63,8 @@ class G4UTrd : public G4UAdapter<vecgeom::GenericUnplacedTrd>
      *  @param[in] pdy2 Half-length along Y at the surface positioned at +dz.
      *  @param[in] pdz Half-length along Z axis.
      */
-    G4UTrd(const G4String& pName,
-                 G4double pdx1, G4double pdx2,
-                 G4double pdy1, G4double pdy2,
-                 G4double pdz);
+    G4UTrd(const G4String& pName, G4double pdx1, G4double pdx2, G4double pdy1, G4double pdy2,
+           G4double pdz);
 
     /**
      * Default destructor.
@@ -76,8 +75,7 @@ class G4UTrd : public G4UAdapter<vecgeom::GenericUnplacedTrd>
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -93,7 +91,7 @@ class G4UTrd : public G4UAdapter<vecgeom::GenericUnplacedTrd>
     G4double GetXHalfLength2() const;
     G4double GetYHalfLength1() const;
     G4double GetYHalfLength2() const;
-    G4double GetZHalfLength()  const;
+    G4double GetZHalfLength() const;
 
     /**
      * Modifiers.
@@ -107,8 +105,7 @@ class G4UTrd : public G4UAdapter<vecgeom::GenericUnplacedTrd>
     /**
      * Sets all parameters, as for constructor. Checks and sets half-widths.
      */
-    void SetAllParameters(G4double pdx1, G4double pdx2,
-                          G4double pdy1, G4double pdy2, G4double pdz);
+    void SetAllParameters(G4double pdx1, G4double pdx2, G4double pdy1, G4double pdy2, G4double pdz);
 
     /**
      * Returns the type ID, "G4Trd" of the solid.
@@ -137,10 +134,9 @@ class G4UTrd : public G4UAdapter<vecgeom::GenericUnplacedTrd>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                           G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.
@@ -151,7 +147,7 @@ class G4UTrd : public G4UAdapter<vecgeom::GenericUnplacedTrd>
      * Copy constructor and assignment operator.
      */
     G4UTrd(const G4UTrd& rhs);
-    G4UTrd& operator=(const G4UTrd& rhs); 
+    G4UTrd& operator=(const G4UTrd& rhs);
 };
 
 // --------------------------------------------------------------------

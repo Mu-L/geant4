@@ -33,8 +33,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4EMDissociation_h
-#define G4EMDissociation_h
+#ifndef G4EMDISSOCIATION_HH
+#define G4EMDISSOCIATION_HH
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //
 // MODULE:		G4EMDissociation.hh
@@ -66,36 +66,40 @@
 //
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-#include "G4HadronicInteraction.hh"
-#include "G4ExcitationHandler.hh"
-#include "G4HadProjectile.hh"
-#include "G4Nucleus.hh"
 #include "G4EMDissociationCrossSection.hh"
 #include "G4EMDissociationSpectrum.hh"
+#include "G4ExcitationHandler.hh"
+#include "G4HadProjectile.hh"
+#include "G4HadronicInteraction.hh"
+#include "G4Nucleus.hh"
 #include "globals.hh"
-
 
 class G4EMDissociation : public G4HadronicInteraction
 {
   public:
+
     G4EMDissociation();
-    G4EMDissociation (G4ExcitationHandler *);
-    ~G4EMDissociation ();
-    
+    G4EMDissociation(G4ExcitationHandler*);
+    ~G4EMDissociation();
+
     G4EMDissociation(const G4EMDissociation& emd) = delete;
-    const G4EMDissociation& operator=(G4EMDissociation &right) = delete;
+    const G4EMDissociation& operator=(G4EMDissociation& right) = delete;
 
     virtual G4HadFinalState* ApplyYourself(const G4HadProjectile&, G4Nucleus&);
 
   private:
+
     void PrintWelcomeMessage();
 
   private:
+
     G4ExcitationHandler* theExcitationHandler;
     G4bool handlerDefinedInternally;
     G4EMDissociationCrossSection* dissociationCrossSection;
     G4EMDissociationSpectrum* thePhotonSpectrum;
-    G4int secID_projectileDissociation;  // Creator model ID for the secondaries created by projectile dissociation
-    G4int secID_targetDissociation;      // Creator model ID for the secondaries created by target     dissociation
+    G4int secID_projectileDissociation;  // Creator model ID for the secondaries created by
+                                         // projectile dissociation
+    G4int secID_targetDissociation;  // Creator model ID for the secondaries created by target
+                                     // dissociation
 };
 #endif

@@ -31,15 +31,16 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgbPlaceParameterisation_hh
-#define G4tgbPlaceParameterisation_hh 1
+#ifndef G4TGBPLACEPARAMETERISATION_HH
+#define G4TGBPLACEPARAMETERISATION_HH
 
-#include "globals.hh"
-#include "geomdefs.hh"
-#include "G4VPVParameterisation.hh"
-#include "G4ThreeVector.hh"
 #include "G4RotationMatrix.hh"
+#include "G4ThreeVector.hh"
+#include "G4VPVParameterisation.hh"
 #include "G4tgrUtils.hh"
+#include "globals.hh"
+
+#include "geomdefs.hh"
 
 class G4VPhysicalVolume;
 class G4tgrPlaceParameterisation;
@@ -53,8 +54,8 @@ class G4tgbPlaceParameterisation : public G4VPVParameterisation
 
     virtual void ComputeTransformation(const G4int, G4VPhysicalVolume*) const;
 
-    void CheckNExtraData(G4tgrPlaceParameterisation* tgrParam, G4int nWcheck,
-                         WLSIZEtype st, const G4String& methodName);
+    void CheckNExtraData(G4tgrPlaceParameterisation* tgrParam, G4int nWcheck, WLSIZEtype st,
+                         const G4String& methodName);
 
     G4int GetNCopies() const { return theNCopies; }
     EAxis GetAxis() const { return theAxis; }

@@ -41,8 +41,8 @@
 // and G4OpticalSurfaceModel.
 ////////////////////////////////////////////////////////////////////////
 
-#ifndef G4OpticalSurface_h
-#define G4OpticalSurface_h 1
+#ifndef G4OPTICALSURFACE_HH
+#define G4OPTICALSURFACE_HH
 
 #include "G4Physics2DVector.hh"
 #include "G4SurfaceProperty.hh"
@@ -118,149 +118,153 @@ class G4MaterialPropertiesTable;
 
 class G4OpticalSurface : public G4SurfaceProperty
 {
- public:
-  // Constructor of an optical surface object.
-  G4OpticalSurface(const G4String& name, G4OpticalSurfaceModel model = glisur,
-    G4OpticalSurfaceFinish finish = polished, G4SurfaceType type = dielectric_dielectric,
-    G4double value = 1.0);
+  public:
 
-  ~G4OpticalSurface() override;
+    // Constructor of an optical surface object.
+    G4OpticalSurface(const G4String& name, G4OpticalSurfaceModel model = glisur,
+                     G4OpticalSurfaceFinish finish = polished,
+                     G4SurfaceType type = dielectric_dielectric, G4double value = 1.0);
 
-  G4OpticalSurface(const G4OpticalSurface& right);
-  G4OpticalSurface& operator=(const G4OpticalSurface& right);
+    ~G4OpticalSurface() override;
 
-  G4bool operator==(const G4OpticalSurface& right) const;
-  G4bool operator!=(const G4OpticalSurface& right) const;
+    G4OpticalSurface(const G4OpticalSurface& right);
+    G4OpticalSurface& operator=(const G4OpticalSurface& right);
 
-  void SetType(const G4SurfaceType& type) override;
+    G4bool operator==(const G4OpticalSurface& right) const;
+    G4bool operator!=(const G4OpticalSurface& right) const;
 
-  // Returns the optical surface finish.
-  inline G4OpticalSurfaceFinish GetFinish() const { return theFinish; }
+    void SetType(const G4SurfaceType& type) override;
 
-  // Sets the optical surface finish.
-  void SetFinish(const G4OpticalSurfaceFinish);
+    // Returns the optical surface finish.
+    inline G4OpticalSurfaceFinish GetFinish() const { return theFinish; }
 
-  // Returns the optical surface model used.
-  inline G4OpticalSurfaceModel GetModel() const { return theModel; }
+    // Sets the optical surface finish.
+    void SetFinish(const G4OpticalSurfaceFinish);
 
-  // Sets the optical surface model to be followed.
-  inline void SetModel(const G4OpticalSurfaceModel model) { theModel = model; }
+    // Returns the optical surface model used.
+    inline G4OpticalSurfaceModel GetModel() const { return theModel; }
 
-  // Returns an unified model surface parameter.
-  inline G4double GetSigmaAlpha() const { return sigma_alpha; }
+    // Sets the optical surface model to be followed.
+    inline void SetModel(const G4OpticalSurfaceModel model) { theModel = model; }
 
-  // Sets an unified model surface parameter.
-  inline void SetSigmaAlpha(const G4double s_a) { sigma_alpha = s_a; }
+    // Returns an unified model surface parameter.
+    inline G4double GetSigmaAlpha() const { return sigma_alpha; }
 
-  // Returns the optical surface polish type.
-  G4double GetPolish() const { return polish; }
+    // Sets an unified model surface parameter.
+    inline void SetSigmaAlpha(const G4double s_a) { sigma_alpha = s_a; }
 
-  // Sets the optical surface polish type.
-  inline void SetPolish(const G4double plsh) { polish = plsh; }
+    // Returns the optical surface polish type.
+    G4double GetPolish() const { return polish; }
 
-  // Retrieves the pointer of the G4MaterialPropertiesTable
-  // attached to optical surface.
-  inline G4MaterialPropertiesTable* GetMaterialPropertiesTable() const
-  {
-    return theMaterialPropertiesTable;
-  }
+    // Sets the optical surface polish type.
+    inline void SetPolish(const G4double plsh) { polish = plsh; }
 
-  // Attaches a G4MaterialPropertiesTable to the optical surface.
-  inline void SetMaterialPropertiesTable(G4MaterialPropertiesTable* anMPT)
-  {
-    theMaterialPropertiesTable = anMPT;
-  }
+    // Retrieves the pointer of the G4MaterialPropertiesTable
+    // attached to optical surface.
+    inline G4MaterialPropertiesTable* GetMaterialPropertiesTable() const
+    {
+      return theMaterialPropertiesTable;
+    }
 
-  // Prints information about the optical surface.
-  void DumpInfo() const;
+    // Attaches a G4MaterialPropertiesTable to the optical surface.
+    inline void SetMaterialPropertiesTable(G4MaterialPropertiesTable* anMPT)
+    {
+      theMaterialPropertiesTable = anMPT;
+    }
 
-  // call the correct ReadXXXFile
-  void ReadDataFile();
+    // Prints information about the optical surface.
+    void DumpInfo() const;
 
-  // read a zlib-compressed file
-  void ReadCompressedFile(const G4String&, std::istringstream&);
+    // call the correct ReadXXXFile
+    void ReadDataFile();
 
-  // Method to read the Look-Up-Table into array AngularDistribution
-  void ReadLUTFile();
+    // read a zlib-compressed file
+    void ReadCompressedFile(const G4String&, std::istringstream&);
 
-  // for DAVIS model
-  inline G4double GetAngularDistributionValue(G4int, G4int, G4int);
+    // Method to read the Look-Up-Table into array AngularDistribution
+    void ReadLUTFile();
 
-  // Returns the AngularDistributionValue
-  inline G4double GetAngularDistributionValueLUT(G4int);
+    // for DAVIS model
+    inline G4double GetAngularDistributionValue(G4int, G4int, G4int);
 
-  // Method to read the Davis Look-Up-Table into array AngularDistribution
-  void ReadLUTDAVISFile();
+    // Returns the AngularDistributionValue
+    inline G4double GetAngularDistributionValueLUT(G4int);
 
-  // Method to read the Look-Up-Table for reflectivity
-  void ReadReflectivityLUTFile();
+    // Method to read the Davis Look-Up-Table into array AngularDistribution
+    void ReadLUTDAVISFile();
 
-  // Returns the reflectivity value from the Davis Look-Up-Table
-  inline G4double GetReflectivityLUTValue(G4int);
+    // Method to read the Look-Up-Table for reflectivity
+    void ReadReflectivityLUTFile();
 
-  // Returns the number of lines in the Davis Look-Up-Table
-  G4int GetInmax() const;
+    // Returns the reflectivity value from the Davis Look-Up-Table
+    inline G4double GetReflectivityLUTValue(G4int);
 
-  // Returns the number of probability values per incidentangle
-  G4int GetLUTbins() const;
+    // Returns the number of lines in the Davis Look-Up-Table
+    G4int GetInmax() const;
 
-  // Returns the number of reflectivity values per angle
-  G4int GetRefMax() const;
+    // Returns the number of probability values per incidentangle
+    G4int GetLUTbins() const;
 
-  G4int GetThetaIndexMax() const;
-  G4int GetPhiIndexMax() const;
+    // Returns the number of reflectivity values per angle
+    G4int GetRefMax() const;
 
-  // Method to read the dichroic surface data file into Dichroic
-  void ReadDichroicFile();
+    G4int GetThetaIndexMax() const;
+    G4int GetPhiIndexMax() const;
 
-  inline G4Physics2DVector* GetDichroicVector();
+    // Method to read the dichroic surface data file into Dichroic
+    void ReadDichroicFile();
 
- private:
-  G4OpticalSurfaceModel theModel;  // Surface model
-  G4OpticalSurfaceFinish theFinish;  // Surface finish
+    inline G4Physics2DVector* GetDichroicVector();
 
-  G4double sigma_alpha;  // The sigma of micro-facet polar angle
-  G4double polish;  // Polish parameter in glisur model
+  private:
 
-  G4MaterialPropertiesTable* theMaterialPropertiesTable{nullptr};
+    G4OpticalSurfaceModel theModel;  // Surface model
+    G4OpticalSurfaceFinish theFinish;  // Surface finish
 
-  static const G4int incidentIndexMax = 91;
-  static const G4int thetaIndexMax = 45;
-  static const G4int phiIndexMax = 37;
+    G4double sigma_alpha;  // The sigma of micro-facet polar angle
+    G4double polish;  // Polish parameter in glisur model
 
-  G4float* AngularDistribution;
-  G4Physics2DVector* DichroicVector;
+    G4MaterialPropertiesTable* theMaterialPropertiesTable{nullptr};
 
-  // for DAVIS model
-  static const G4int indexmax = 7280001;  // 3640001;
-  static const G4int RefMax = 90;
-  static const G4int LUTbins = 20000;
-  G4float* AngularDistributionLUT;
-  G4float* Reflectivity;
+    static const G4int incidentIndexMax = 91;
+    static const G4int thetaIndexMax = 45;
+    static const G4int phiIndexMax = 37;
+
+    G4float* AngularDistribution;
+    G4Physics2DVector* DichroicVector;
+
+    // for DAVIS model
+    static const G4int indexmax = 7280001;  // 3640001;
+    static const G4int RefMax = 90;
+    static const G4int LUTbins = 20000;
+    G4float* AngularDistributionLUT;
+    G4float* Reflectivity;
 };
 
 ////////////////////
 // Inline methods
 ////////////////////
 
-inline G4double G4OpticalSurface::GetAngularDistributionValue(
-  G4int angleIncident, G4int thetaIndex, G4int phiIndex)
+inline G4double G4OpticalSurface::GetAngularDistributionValue(G4int angleIncident, G4int thetaIndex,
+                                                              G4int phiIndex)
 {
   G4int product = angleIncident * thetaIndex * phiIndex;
-  if (product < 0 || product >= incidentIndexMax * thetaIndexMax * phiIndexMax) {
+  if (product < 0 || product >= incidentIndexMax * thetaIndexMax * phiIndexMax)
+  {
     G4ExceptionDescription ed;
     ed << "Index angleIncident: " << angleIncident << " thetaIndex: " << thetaIndex
        << " phiIndex: " << phiIndex << " out of range!";
     G4Exception("G4OpticalSurface::GetAngularDistributionValue", "mat317", FatalException, ed);
     return 0.;
   }
-  return (G4double)AngularDistribution[angleIncident + thetaIndex * incidentIndexMax +
-                                       phiIndex * thetaIndexMax * incidentIndexMax];
+  return (G4double)AngularDistribution[angleIncident + thetaIndex * incidentIndexMax
+                                       + phiIndex * thetaIndexMax * incidentIndexMax];
 }
 
 inline G4double G4OpticalSurface::GetAngularDistributionValueLUT(G4int i)
 {
-  if (i < 0 || i >= indexmax) {
+  if (i < 0 || i >= indexmax)
+  {
     G4ExceptionDescription ed;
     ed << "Index " << i << " out of range!";
     G4Exception("G4OpticalSurface::GetAngularDistributionValueLUT", "mat318", FatalException, ed);
@@ -271,7 +275,8 @@ inline G4double G4OpticalSurface::GetAngularDistributionValueLUT(G4int i)
 
 inline G4double G4OpticalSurface::GetReflectivityLUTValue(G4int i)
 {
-  if (i < 0 || i >= RefMax) {
+  if (i < 0 || i >= RefMax)
+  {
     G4ExceptionDescription ed;
     ed << "Index " << i << " out of range!";
     G4Exception("G4OpticalSurface::GetReflectivityLUTValue", "mat319", FatalException, ed);
@@ -280,6 +285,9 @@ inline G4double G4OpticalSurface::GetReflectivityLUTValue(G4int i)
   return (G4double)Reflectivity[i];
 }
 
-inline G4Physics2DVector* G4OpticalSurface::GetDichroicVector() { return DichroicVector; }
+inline G4Physics2DVector* G4OpticalSurface::GetDichroicVector()
+{
+  return DichroicVector;
+}
 
 #endif /* G4OpticalSurface_h */

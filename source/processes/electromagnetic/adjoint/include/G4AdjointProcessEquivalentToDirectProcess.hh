@@ -33,67 +33,61 @@
 //  A virtual class for wrapper process objects.
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4AdjointProcessEquivalentToDirectProcess_h
-#define G4AdjointProcessEquivalentToDirectProcess_h 1
+#ifndef G4ADJOINTPROCESSEQUIVALENTTODIRECTPROCESS_HH
+#define G4ADJOINTPROCESSEQUIVALENTTODIRECTPROCESS_HH
 
 #include "G4VProcess.hh"
 
 class G4AdjointProcessEquivalentToDirectProcess : public G4VProcess
 {
- public:
-  explicit G4AdjointProcessEquivalentToDirectProcess(
-    const G4String& aName, G4VProcess* aProcess,
-    G4ParticleDefinition* fwd_particle_def);
+  public:
 
-  ~G4AdjointProcessEquivalentToDirectProcess() override;
+    explicit G4AdjointProcessEquivalentToDirectProcess(const G4String& aName, G4VProcess* aProcess,
+                                                       G4ParticleDefinition* fwd_particle_def);
 
-  G4VParticleChange* PostStepDoIt(const G4Track& track,
-                                  const G4Step& stepData) override;
+    ~G4AdjointProcessEquivalentToDirectProcess() override;
 
-  G4VParticleChange* AlongStepDoIt(const G4Track& track,
-                                   const G4Step& stepData) override;
-  G4VParticleChange* AtRestDoIt(const G4Track& track,
-                                const G4Step& stepData) override;
+    G4VParticleChange* PostStepDoIt(const G4Track& track, const G4Step& stepData) override;
 
-  G4double AlongStepGetPhysicalInteractionLength(
-    const G4Track& track, G4double previousStepSize,
-    G4double currentMinimumStep, G4double& proposedSafety,
-    G4GPILSelection* selection) override;
+    G4VParticleChange* AlongStepDoIt(const G4Track& track, const G4Step& stepData) override;
+    G4VParticleChange* AtRestDoIt(const G4Track& track, const G4Step& stepData) override;
 
-  G4double AtRestGetPhysicalInteractionLength(
-    const G4Track& track, G4ForceCondition* condition) override;
+    G4double AlongStepGetPhysicalInteractionLength(const G4Track& track, G4double previousStepSize,
+                                                   G4double currentMinimumStep,
+                                                   G4double& proposedSafety,
+                                                   G4GPILSelection* selection) override;
 
-  G4double PostStepGetPhysicalInteractionLength(
-    const G4Track& track, G4double previousStepSize,
-    G4ForceCondition* condition) override;
+    G4double AtRestGetPhysicalInteractionLength(const G4Track& track,
+                                                G4ForceCondition* condition) override;
 
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
+    G4double PostStepGetPhysicalInteractionLength(const G4Track& track, G4double previousStepSize,
+                                                  G4ForceCondition* condition) override;
 
-  void BuildPhysicsTable(const G4ParticleDefinition&) override;
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
 
-  void PreparePhysicsTable(const G4ParticleDefinition&) override;
+    void BuildPhysicsTable(const G4ParticleDefinition&) override;
 
-  G4bool StorePhysicsTable(const G4ParticleDefinition*,
-                           const G4String& directory,
-                           G4bool ascii = false) override;
+    void PreparePhysicsTable(const G4ParticleDefinition&) override;
 
-  G4bool RetrievePhysicsTable(const G4ParticleDefinition*,
-                              const G4String& directory,
-                              G4bool ascii = false) override;
+    G4bool StorePhysicsTable(const G4ParticleDefinition*, const G4String& directory,
+                             G4bool ascii = false) override;
 
-  void StartTracking(G4Track*) override;
-  void EndTracking() override;
+    G4bool RetrievePhysicsTable(const G4ParticleDefinition*, const G4String& directory,
+                                G4bool ascii = false) override;
 
-  void ResetNumberOfInteractionLengthLeft() override;
+    void StartTracking(G4Track*) override;
+    void EndTracking() override;
 
-  G4AdjointProcessEquivalentToDirectProcess(G4AdjointProcessEquivalentToDirectProcess&) =
-    delete;
-  G4AdjointProcessEquivalentToDirectProcess& operator=(
-    const G4AdjointProcessEquivalentToDirectProcess& right) = delete;
+    void ResetNumberOfInteractionLengthLeft() override;
 
- private:
-  G4ParticleDefinition* fFwdParticleDef;
-  G4VProcess* fDirectProcess;
+    G4AdjointProcessEquivalentToDirectProcess(G4AdjointProcessEquivalentToDirectProcess&) = delete;
+    G4AdjointProcessEquivalentToDirectProcess&
+    operator=(const G4AdjointProcessEquivalentToDirectProcess& right) = delete;
+
+  private:
+
+    G4ParticleDefinition* fFwdParticleDef;
+    G4VProcess* fDirectProcess;
 };
 
 #endif

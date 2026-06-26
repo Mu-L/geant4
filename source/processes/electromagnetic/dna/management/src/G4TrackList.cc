@@ -54,7 +54,7 @@ G4FastListNode<G4Track>* G4FastList<G4Track>::__GetNode(G4Track* __track)
     exceptionDescription << "This track " << GetIT(__track)->GetName();
     exceptionDescription << " was not connected to any trackList ";
     G4Exception("G4FastList<OBJECT>::Unflag", "G4TrackList003", FatalErrorInArgument,
-        exceptionDescription);
+                exceptionDescription);
     return nullptr;
   }
   return __trackListNode;
@@ -66,26 +66,23 @@ void G4FastList<G4Track>::DeleteObject(G4Track* __track)
 {
   if (G4AllocatorList::GetAllocatorListIfExist() == nullptr) return;
 
-  auto  __step = const_cast<G4Step*>(__track->GetStep());
+  auto __step = const_cast<G4Step*>(__track->GetStep());
   if (__step != nullptr)
   {
-    if (__step->GetfSecondary() != nullptr)
-      __step->DeleteSecondaryVector();
+    if (__step->GetfSecondary() != nullptr) __step->DeleteSecondaryVector();
     delete __step;
   }
   delete __track;
 }
 
-
 template<>
-  void G4FastListNode<G4Track>::DetachYourSelf()
+void G4FastListNode<G4Track>::DetachYourSelf()
+{
+  if (fpObject != nullptr)
   {
-    if(fpObject != nullptr)
-    {
-      GetIT(fpObject)->SetListNode(nullptr);
-    }
+    GetIT(fpObject)->SetListNode(nullptr);
   }
-
+}
 
 //! SPECIFIC TO TRACKS
 template<>
@@ -109,11 +106,11 @@ G4FastListNode<G4Track>* G4FastList<G4Track>::Flag(G4Track* __track)
       G4ExceptionDescription exceptionDescription;
       exceptionDescription << "This track " << __iTrack->GetName();
       exceptionDescription << " is already attached to a TrackList ";
-      G4Exception("G4FastList<OBJECT>::Flag", "G4TrackList001",
-          FatalErrorInArgument,
-          exceptionDescription);
+      G4Exception("G4FastList<OBJECT>::Flag", "G4TrackList001", FatalErrorInArgument,
+                  exceptionDescription);
     }
-  } else
+  }
+  else
   {
     __trackListNode = new G4FastListNode<G4Track>(__track);
     __iTrack->SetListNode(__trackListNode);
@@ -132,15 +129,13 @@ void G4FastList<G4Track>::CheckFlag(G4FastListNode<G4Track>* __trackListNode)
   {
     G4Track* track = __trackListNode->GetObject();
     G4ExceptionDescription exceptionDescription;
-    exceptionDescription << "The track " << GetIT(track)->GetName()
-        << " with trackID " << track->GetTrackID()
-        << " is not correctly linked to a TrackList."
-        << G4endl
-        << "You are probably trying to withdraw this track "
-        << "from the list but it probably does not belong to "
-        << "this track list." << G4endl;
-    G4Exception("G4FastList<OBJECT>::CheckFlag", "G4FastList002",
-        FatalErrorInArgument, exceptionDescription);
+    exceptionDescription << "The track " << GetIT(track)->GetName() << " with trackID "
+                         << track->GetTrackID() << " is not correctly linked to a TrackList."
+                         << G4endl << "You are probably trying to withdraw this track "
+                         << "from the list but it probably does not belong to "
+                         << "this track list." << G4endl;
+    G4Exception("G4FastList<OBJECT>::CheckFlag", "G4FastList002", FatalErrorInArgument,
+                exceptionDescription);
   }
 }
 
@@ -155,7 +150,6 @@ G4FastListNode<G4Track>* G4FastList<G4Track>::EraseListNode(G4Track* __track)
   delete __node;
   return __next;
 }
-
 
 //! SPECIFIC TO TRACKS
 template<>
@@ -178,9 +172,8 @@ G4FastList<G4Track>* G4FastList<G4Track>::GetList(G4Track* __track)
   G4IT* __IT = GetIT(__track);
   G4FastListNode<G4Track>* __trackListNode = __IT->GetListNode();
 
-  if(__trackListNode == nullptr) return nullptr;
-  if(__trackListNode->fListRef == nullptr) return nullptr;
+  if (__trackListNode == nullptr) return nullptr;
+  if (__trackListNode->fListRef == nullptr) return nullptr;
 
   return __trackListNode->fListRef->fpList;
 }
-

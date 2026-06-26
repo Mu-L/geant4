@@ -27,19 +27,21 @@
 //
 //----------------------------------------------------------------------------
 
-#ifndef G4AntiHyperTriton_h
-#define G4AntiHyperTriton_h 1
+#ifndef G4ANTIHYPERTRITON_HH
+#define G4ANTIHYPERTRITON_HH
 
 #include "G4Ions.hh"
 
 class G4AntiHyperTriton : public G4Ions
 {
   public:
+
     static G4AntiHyperTriton* Definition();
     static G4AntiHyperTriton* AntiHyperTritonDefinition();
     static G4AntiHyperTriton* AntiHyperTriton();
 
   private:
+
     G4AntiHyperTriton() {}
     ~G4AntiHyperTriton() override = default;
 

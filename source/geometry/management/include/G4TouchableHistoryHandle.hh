@@ -22,7 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // Class G4TouchableHistoryHandle
 //
 // Class description:
@@ -45,6 +45,8 @@
 /**
  * @brief G4TouchableHistoryHandle is a type providing reference counting
  * mechanism for a G4TouchableHistory object.
+ * @ingroup geometry_management
+ *
  * The basic rule for the use of this type is that this handle must always
  * be exchanged by reference and never be dinamically allocated (i.e. never
  * instantiated using 'new').

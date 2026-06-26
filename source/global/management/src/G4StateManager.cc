@@ -29,12 +29,13 @@
 // --------------------------------------------------------------------
 
 #include "G4StateManager.hh"
+
 #include "G4ios.hh"
 
 // Initialization of the static pointer of the single class instance
 //
 G4ThreadLocal G4StateManager* G4StateManager::theStateManager = nullptr;
-G4int G4StateManager::verboseLevel                            = 0;
+G4int G4StateManager::verboseLevel = 0;
 
 // --------------------------------------------------------------------
 G4StateManager::G4StateManager()
@@ -48,13 +49,13 @@ G4StateManager::~G4StateManager()
 {
   G4VStateDependent* state = nullptr;
 
-  while(!theDependentsList.empty())
+  while (!theDependentsList.empty())
   {
     state = theDependentsList.back();
     theDependentsList.pop_back();
-    for(auto i = theDependentsList.cbegin(); i != theDependentsList.cend();)
+    for (auto i = theDependentsList.cbegin(); i != theDependentsList.cend();)
     {
-      if(*i == state)
+      if (*i == state)
       {
         i = theDependentsList.erase(i);
       }
@@ -74,7 +75,7 @@ G4StateManager::~G4StateManager()
 // --------------------------------------------------------------------
 G4StateManager* G4StateManager::GetStateManager()
 {
-  if(theStateManager == nullptr)
+  if (theStateManager == nullptr)
   {
     theStateManager = new G4StateManager;
   }
@@ -82,17 +83,16 @@ G4StateManager* G4StateManager::GetStateManager()
 }
 
 // --------------------------------------------------------------------
-G4bool G4StateManager::RegisterDependent(G4VStateDependent* aDependent,
-                                         G4bool bottom)
+G4bool G4StateManager::RegisterDependent(G4VStateDependent* aDependent, G4bool bottom)
 {
   G4bool ack = true;
-  if(!bottom)
+  if (!bottom)
   {
     theDependentsList.push_back(aDependent);
   }
   else
   {
-    if(theBottomDependent != nullptr)
+    if (theBottomDependent != nullptr)
     {
       theDependentsList.push_back(theBottomDependent);
     }
@@ -105,12 +105,12 @@ G4bool G4StateManager::RegisterDependent(G4VStateDependent* aDependent,
 G4bool G4StateManager::DeregisterDependent(G4VStateDependent* aDependent)
 {
   G4VStateDependent* tmp = nullptr;
-  for(auto i = theDependentsList.cbegin(); i != theDependentsList.cend();)
+  for (auto i = theDependentsList.cbegin(); i != theDependentsList.cend();)
   {
-    if(**i == *aDependent)
+    if (**i == *aDependent)
     {
       tmp = *i;
-      i   = theDependentsList.erase(i);
+      i = theDependentsList.erase(i);
     }
     else
     {
@@ -139,48 +139,46 @@ G4bool G4StateManager::SetNewState(const G4ApplicationState& requestedState)
 }
 
 // --------------------------------------------------------------------
-G4bool G4StateManager::SetNewState(const G4ApplicationState& requestedState,
-                                   const char* msg)
+G4bool G4StateManager::SetNewState(const G4ApplicationState& requestedState, const char* msg)
 {
-  if(requestedState == G4State_Abort && suppressAbortion > 0)
+  if (requestedState == G4State_Abort && suppressAbortion > 0)
   {
-    if(suppressAbortion == 2)
+    if (suppressAbortion == 2)
     {
       return false;
     }
-    if(theCurrentState == G4State_EventProc)
+    if (theCurrentState == G4State_EventProc)
     {
       return false;
     }
   }
-  msgptr                        = msg;
-  std::size_t i                 = 0;
-  G4bool ack                    = true;
+  msgptr = msg;
+  std::size_t i = 0;
+  G4bool ack = true;
   G4ApplicationState savedState = thePreviousState;
-  thePreviousState              = theCurrentState;
+  thePreviousState = theCurrentState;
 
-  while((ack) && (i < theDependentsList.size()))
+  while ((ack) && (i < theDependentsList.size()))
   {
     ack = theDependentsList[i]->Notify(requestedState);
     ++i;
   }
-  if(theBottomDependent != nullptr)
+  if (theBottomDependent != nullptr)
   {
     ack = theBottomDependent->Notify(requestedState);
   }
 
-  if(!ack)
+  if (!ack)
   {
     thePreviousState = savedState;
   }
   else
   {
     theCurrentState = requestedState;
-    if(verboseLevel > 0)
+    if (verboseLevel > 0)
     {
-      G4cout << "#### G4StateManager::SetNewState from "
-             << GetStateString(thePreviousState) << " to "
-             << GetStateString(requestedState) << G4endl;
+      G4cout << "#### G4StateManager::SetNewState from " << GetStateString(thePreviousState)
+             << " to " << GetStateString(requestedState) << G4endl;
     }
   }
   msgptr = nullptr;
@@ -188,16 +186,15 @@ G4bool G4StateManager::SetNewState(const G4ApplicationState& requestedState,
 }
 
 // --------------------------------------------------------------------
-G4VStateDependent* G4StateManager::RemoveDependent(
-  const G4VStateDependent* aDependent)
+G4VStateDependent* G4StateManager::RemoveDependent(const G4VStateDependent* aDependent)
 {
   G4VStateDependent* tmp = nullptr;
-  for(auto i = theDependentsList.cbegin(); i != theDependentsList.cend();)
+  for (auto i = theDependentsList.cbegin(); i != theDependentsList.cend();)
   {
-    if(**i == *aDependent)
+    if (**i == *aDependent)
     {
       tmp = *i;
-      i   = theDependentsList.erase(i);
+      i = theDependentsList.erase(i);
     }
     else
     {
@@ -211,7 +208,7 @@ G4VStateDependent* G4StateManager::RemoveDependent(
 G4String G4StateManager::GetStateString(const G4ApplicationState& aState) const
 {
   G4String stateName;
-  switch(aState)
+  switch (aState)
   {
     case G4State_PreInit:
       stateName = "PreInit";
@@ -242,18 +239,25 @@ G4String G4StateManager::GetStateString(const G4ApplicationState& aState) const
 }
 
 // --------------------------------------------------------------------
-void G4StateManager::SetVerboseLevel(G4int val) { verboseLevel = val; }
+void G4StateManager::SetVerboseLevel(G4int val)
+{
+  verboseLevel = val;
+}
 
 // --------------------------------------------------------------------
 void G4StateManager::NotifyDeletion(const G4Event* evt)
 {
-  for(auto& d : theDependentsList) 
-  { d->NotifyDeletion(evt); }
+  for (auto& d : theDependentsList)
+  {
+    d->NotifyDeletion(evt);
+  }
 }
 
 // --------------------------------------------------------------------
 void G4StateManager::NotifyDeletion(const G4Run* rn)
 {
-  for(auto& d : theDependentsList)
-  { d->NotifyDeletion(rn); }
+  for (auto& d : theDependentsList)
+  {
+    d->NotifyDeletion(rn);
+  }
 }

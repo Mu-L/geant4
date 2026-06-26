@@ -32,11 +32,11 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrPlace_hh
-#define G4tgrPlace_hh 1
+#ifndef G4TGRPLACE_HH
+#define G4TGRPLACE_HH
 
-#include "globals.hh"
 #include "G4ThreeVector.hh"
+#include "globals.hh"
 
 class G4tgrVolume;
 
@@ -61,17 +61,17 @@ class G4tgrPlace
   protected:
 
     G4tgrVolume* theVolume = nullptr;
-      // The detunit to which it belongs
+    // The detunit to which it belongs
 
     G4String theParentName = "";
-      // The parent (by name, as we will allow that a child
-      // is placed in the file before the parent is created)
+    // The parent (by name, as we will allow that a child
+    // is placed in the file before the parent is created)
 
     unsigned int theCopyNo = 0;
-      // The copy number
+    // The copy number
 
     G4String theType = "";
-      // The type (simple/replica/param)
+    // The type (simple/replica/param)
 };
 
 #endif

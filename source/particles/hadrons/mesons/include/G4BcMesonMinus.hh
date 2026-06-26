@@ -31,19 +31,21 @@
 // **********************************************************************
 // ----------------------------------------------------------------
 
-#ifndef G4BcMesonMinus_h
-#define G4BcMesonMinus_h 1
+#ifndef G4BCMESONMINUS_HH
+#define G4BCMESONMINUS_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4BcMesonMinus : public G4ParticleDefinition
 {
   public:
+
     static G4BcMesonMinus* Definition();
     static G4BcMesonMinus* BcMesonMinusDefinition();
     static G4BcMesonMinus* BcMesonMinus();
 
   private:
+
     G4BcMesonMinus() {}
     ~G4BcMesonMinus() override = default;
 

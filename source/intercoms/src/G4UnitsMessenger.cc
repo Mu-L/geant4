@@ -54,7 +54,8 @@ G4UnitsMessenger::~G4UnitsMessenger()
 // --------------------------------------------------------------------
 void G4UnitsMessenger::SetNewValue(G4UIcommand* command, G4String)
 {
-  if (command == ListCmd) {
+  if (command == ListCmd)
+  {
     G4UnitDefinition::PrintUnitsTable();
   }
 }

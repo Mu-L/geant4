@@ -35,11 +35,11 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4IonINCLXXPhysics_h
-#define G4IonINCLXXPhysics_h 1
+#ifndef G4IONINCLXXPHYSICS_HH
+#define G4IONINCLXXPHYSICS_HH
 
-#include "globals.hh"
 #include "G4VPhysicsConstructor.hh"
+#include "globals.hh"
 
 #include <vector>
 
@@ -51,33 +51,30 @@ class G4VCrossSectionDataSet;
 
 class G4IonINCLXXPhysics : public G4VPhysicsConstructor
 {
-public:
-  G4IonINCLXXPhysics(G4int ver = 0);
-  G4IonINCLXXPhysics(const G4String& name, G4int ver = 0);
-  ~G4IonINCLXXPhysics() override;
+  public:
 
-  // This method will be invoked in the Construct() method.
-  // each particle type will be instantiated
-  void ConstructParticle() override;
+    G4IonINCLXXPhysics(G4int ver = 0);
+    G4IonINCLXXPhysics(const G4String& name, G4int ver = 0);
+    ~G4IonINCLXXPhysics() override;
 
-  // This method will be invoked in the Construct() method.
-  // each physics process will be instantiated and
-  // registered to the process manager of each particle type
-  void ConstructProcess() override;
+    // This method will be invoked in the Construct() method.
+    // each particle type will be instantiated
+    void ConstructParticle() override;
 
-private:
+    // This method will be invoked in the Construct() method.
+    // each physics process will be instantiated and
+    // registered to the process manager of each particle type
+    void ConstructProcess() override;
 
-  void AddProcess(const G4String&,
-		  G4ParticleDefinition*, 
-		  G4HadronicInteraction*,
-		  G4HadronicInteraction*,
-		  G4VCrossSectionDataSet*);
+  private:
 
-  G4double emaxINCLXX;
-  G4double deltaE;
+    void AddProcess(const G4String&, G4ParticleDefinition*, G4HadronicInteraction*,
+                    G4HadronicInteraction*, G4VCrossSectionDataSet*);
 
-  G4int  verbose;
+    G4double emaxINCLXX;
+    G4double deltaE;
+
+    G4int verbose;
 };
 
 #endif
-

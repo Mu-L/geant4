@@ -25,55 +25,61 @@
 //
 //
 //
-// 
+//
 // John Allison  31st December 1997.
 // Base class for models.
 
 #include "G4VModel.hh"
 
-#include "G4RotationMatrix.hh"
 #include "G4ModelingParameters.hh"
+#include "G4RotationMatrix.hh"
 
 const G4ModelingParameters* G4VModel::fpCurrentMP = nullptr;
 
-G4VModel::G4VModel (const G4ModelingParameters* pMP):
-  fType ("Other"),
-  fGlobalTag ("Empty"),
-  fGlobalDescription ("Empty")
+G4VModel::G4VModel(const G4ModelingParameters* pMP)
+  : fType("Other"), fGlobalTag("Empty"), fGlobalDescription("Empty")
 {
   fpMP = pMP;
 }
 
-G4VModel::~G4VModel () {}
+G4VModel::~G4VModel() {}
 
-const G4ModelingParameters* G4VModel::GetCurrentModelingParameters () {
+const G4ModelingParameters* G4VModel::GetCurrentModelingParameters()
+{
   return fpCurrentMP;
 }
 
-G4String G4VModel::GetCurrentTag () const {
+G4String G4VModel::GetCurrentTag() const
+{
   // Override in concrete class if concept of "current" is meaningful.
   return fGlobalTag;
 }
 
-G4String G4VModel::GetCurrentDescription () const {
+G4String G4VModel::GetCurrentDescription() const
+{
   // Override in concrete class if concept of "current" is meaningful.
   return fGlobalDescription;
 }
 
-void G4VModel::SetCurrentModelingParameters (const G4ModelingParameters* pMP) {
+void G4VModel::SetCurrentModelingParameters(const G4ModelingParameters* pMP)
+{
   fpCurrentMP = pMP;
 }
 
-G4bool G4VModel::Validate (G4bool) {
+G4bool G4VModel::Validate(G4bool)
+{
   return true;
 }
 
-std::ostream& operator << (std::ostream& os, const G4VModel& model) {
+std::ostream& operator<<(std::ostream& os, const G4VModel& model)
+{
   os << model.fGlobalDescription;
   os << "\n  Modeling parameters:";
   const G4ModelingParameters* mp = model.fpMP;
-  if (mp) os << "\n  " << *mp;
-  else os << " none.";
+  if (mp)
+    os << "\n  " << *mp;
+  else
+    os << " none.";
   os << "\n  Extent: " << model.fExtent;
   return os;
 }

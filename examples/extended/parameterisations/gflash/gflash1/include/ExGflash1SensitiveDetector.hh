@@ -36,7 +36,6 @@
 #include "globals.hh"
 
 class G4GFlashSpot;
-class ExGflash1DetectorConstruction;
 
 class G4Step;
 class G4HCofThisEvent;
@@ -45,7 +44,8 @@ class G4TouchableHistory;
 class ExGflash1SensitiveDetector : public G4VSensitiveDetector, public G4VGFlashSensitiveDetector
 {
   public:
-    ExGflash1SensitiveDetector(G4String, ExGflash1DetectorConstruction* det);
+
+    ExGflash1SensitiveDetector(G4String);
     ~ExGflash1SensitiveDetector() override;
 
     void Initialize(G4HCofThisEvent*) override;
@@ -54,8 +54,8 @@ class ExGflash1SensitiveDetector : public G4VSensitiveDetector, public G4VGFlash
     void EndOfEvent(G4HCofThisEvent*) override;
 
   private:
+
     ExGflashHitsCollection* fCaloHitsCollection;
-    ExGflash1DetectorConstruction* fDetector;
     G4int fHCID{-1};
 };
 

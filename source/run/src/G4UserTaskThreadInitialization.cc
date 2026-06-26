@@ -59,7 +59,8 @@ G4Thread* G4UserTaskThreadInitialization::CreateAndStartWorker(G4WorkerThread*)
 // Avoid compilation warning in sequential
 void G4UserTaskThreadInitialization::JoinWorker(G4Thread* aThread)
 {
-  if (aThread != nullptr) {
+  if (aThread != nullptr)
+  {
     G4THREADJOIN(*aThread);
   }
 }
@@ -82,9 +83,10 @@ void G4UserTaskThreadInitialization::SetupRNGEngine(const CLHEP::HepRandomEngine
     retRNG = new CLHEP::MixMaxRng;
   else if (dynamic_cast<const CLHEP::RanecuEngine*>(aNewRNG) != nullptr)
     retRNG = new CLHEP::RanecuEngine;
-  else if (dynamic_cast<const CLHEP::Ranlux64Engine*>(aNewRNG) != nullptr) {
+  else if (dynamic_cast<const CLHEP::Ranlux64Engine*>(aNewRNG) != nullptr)
+  {
     const CLHEP::Ranlux64Engine* theRNG = dynamic_cast<const CLHEP::Ranlux64Engine*>(aNewRNG);
-    retRNG= new CLHEP::Ranlux64Engine(123,theRNG->getLuxury());
+    retRNG = new CLHEP::Ranlux64Engine(123, theRNG->getLuxury());
   }
   else if (dynamic_cast<const CLHEP::RanluxppEngine*>(aNewRNG) != nullptr)
     retRNG = new CLHEP::RanluxppEngine;
@@ -92,16 +94,18 @@ void G4UserTaskThreadInitialization::SetupRNGEngine(const CLHEP::HepRandomEngine
     retRNG = new CLHEP::MTwistEngine;
   else if (dynamic_cast<const CLHEP::DualRand*>(aNewRNG) != nullptr)
     retRNG = new CLHEP::DualRand;
-  else if (dynamic_cast<const CLHEP::RanluxEngine*>(aNewRNG) != nullptr) {
+  else if (dynamic_cast<const CLHEP::RanluxEngine*>(aNewRNG) != nullptr)
+  {
     const CLHEP::RanluxEngine* theRNG = dynamic_cast<const CLHEP::RanluxEngine*>(aNewRNG);
-    retRNG= new CLHEP::RanluxEngine(123,theRNG->getLuxury());
+    retRNG = new CLHEP::RanluxEngine(123, theRNG->getLuxury());
   }
   else if (dynamic_cast<const CLHEP::RanshiEngine*>(aNewRNG) != nullptr)
     retRNG = new CLHEP::RanshiEngine;
 
   if (retRNG != nullptr)
     G4Random::setTheEngine(retRNG);
-  else {
+  else
+  {
     // Does a new method, such as aNewRng->newEngine() exist to clone it ?
     G4ExceptionDescription msg;
     msg << " Unknown type of RNG Engine - " << G4endl

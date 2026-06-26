@@ -43,8 +43,8 @@
 // 21.01.02 V. Grichine, first version
 //
 
-#ifndef G4GammaXTRadiator_h
-#define G4GammaXTRadiator_h 1
+#ifndef G4GAMMAXTRADIATOR_HH
+#define G4GAMMAXTRADIATOR_HH
 
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"
@@ -52,18 +52,17 @@
 
 class G4GammaXTRadiator : public G4VXTRenergyLoss
 {
- public:
-  explicit G4GammaXTRadiator(G4LogicalVolume* anEnvelope, G4double, G4double,
-                             G4Material*, G4Material*, G4double, G4double,
-                             G4int,
-                             const G4String& processName = "XTRgammaRadiator");
-  ~G4GammaXTRadiator();
+  public:
 
-  void ProcessDescription(std::ostream&) const override;
-  void DumpInfo() const override { ProcessDescription(G4cout); };
+    explicit G4GammaXTRadiator(G4LogicalVolume* anEnvelope, G4double, G4double, G4Material*,
+                               G4Material*, G4double, G4double, G4int,
+                               const G4String& processName = "XTRgammaRadiator");
+    ~G4GammaXTRadiator();
 
-  G4double GetStackFactor(G4double energy, G4double gamma,
-                          G4double varAngle) override;
+    void ProcessDescription(std::ostream&) const override;
+    void DumpInfo() const override { ProcessDescription(G4cout); };
+
+    G4double GetStackFactor(G4double energy, G4double gamma, G4double varAngle) override;
 };
 
 #endif

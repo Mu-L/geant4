@@ -28,38 +28,32 @@
 // Author: Dionysios Anninos, 8.9.2005
 // --------------------------------------------------------------------
 
-inline
-G4double G4EllipticalCone::GetSemiAxisMax () const
+inline G4double G4EllipticalCone::GetSemiAxisMax() const
 {
-  return std::max(xSemiAxis,ySemiAxis);
+  return std::max(xSemiAxis, ySemiAxis);
 }
 
-inline
-G4double G4EllipticalCone::GetSemiAxisMin () const
+inline G4double G4EllipticalCone::GetSemiAxisMin() const
 {
-  return std::min(xSemiAxis,ySemiAxis);
+  return std::min(xSemiAxis, ySemiAxis);
 }
 
-inline
-G4double G4EllipticalCone::GetSemiAxisX () const
+inline G4double G4EllipticalCone::GetSemiAxisX() const
 {
   return xSemiAxis;
 }
 
-inline
-G4double G4EllipticalCone::GetSemiAxisY () const
+inline G4double G4EllipticalCone::GetSemiAxisY() const
 {
   return ySemiAxis;
 }
 
-inline
-G4double G4EllipticalCone::GetZMax() const
+inline G4double G4EllipticalCone::GetZMax() const
 {
   return zheight;
 }
 
-inline
-G4double G4EllipticalCone::GetZTopCut() const
+inline G4double G4EllipticalCone::GetZTopCut() const
 {
   return zTopCut;
 }

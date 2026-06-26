@@ -6,6 +6,32 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-06-05 Ben Morgan (emmuons-V11-04-05)
+- G4EnergyLossForExtrapolator - Use FindIndex in TrueStepLength as per use in
+  other functions. Prevents segfault under certain circumstances, in this case
+  exposed by changes in `emstand-V11-04-03` and seen in CI for test31 when
+  running on alma10 with GCC15.
+
+## 2026-05-17 V. Ivanchenko (emmuons-V11-04-04)
+- G4MuPairProductionModel, G4EnergyLossForExtrapolator - make static initialisation
+  safe for the MT mode
+
+## 2026-04-03 V.Ivanchenko (emmuons-V11-04-03)
+- G4TablesForExtrapolator - fixed Coverity warning on memory leak at exit
+
+## 2026-02-17 G.Cosmo (emmuons-V11-04-02)
+- Fixed compilation warnings for implicit type conversions on macOS/XCode.
+
+## 2026-02-10 V.Ivanchenko (emmuons-V11-04-01)
+- G4EnergyLossForExtrapolator - in order to avoid data race in the MT mode,
+  implement backward propagation only for materials used in geometry,
+  and ignore base material approach.
+
+## 2026-01-30 V.Ivanchenko (emmuons-V11-04-00)
+- G4EnergyLossForExtrapolator, G4TablesForExtrapolator - technical modifications
+  due to modifications introduced to utils in the merge request
+  <emutils-V11-04-02>. Physics is unchanged.
+
 ## 2025-07-30 G.Cosmo (emmuons-V11-03-02)
 - Fixed compilation warnings for implicit type conversions on macOS/XCode
   in G4MuPairProductionModel.

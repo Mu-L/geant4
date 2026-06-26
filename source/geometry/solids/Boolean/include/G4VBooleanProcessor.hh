@@ -42,6 +42,7 @@ class G4VSolid;
 /**
  * @brief G4VBooleanProcessor is a virtual base class for Boolean solid
  * processing.
+ * @ingroup geometry_solids_boolean
  */
 
 class G4VBooleanProcessor
@@ -58,22 +59,24 @@ class G4VBooleanProcessor
      * Boolean operations on polyhedrons of the component solids.
      * To be implemented in derived classes.
      */
-    virtual G4PolyhedronArbitrary* Intersection(G4Polyhedron* /*p1*/,
-                                                G4Polyhedron* /*p2*/)
-      { return nullptr; }
-    virtual G4PolyhedronArbitrary* Union(G4Polyhedron* /*p1*/,
-                                         G4Polyhedron* /*p2*/)
-      { return nullptr; }
-    virtual G4PolyhedronArbitrary* Subtraction(G4Polyhedron* /*p1*/,
-                                               G4Polyhedron* /*p2*/)
-      { return nullptr; }
+    virtual G4PolyhedronArbitrary* Intersection(G4Polyhedron* /*p1*/, G4Polyhedron* /*p2*/)
+    {
+      return nullptr;
+    }
+    virtual G4PolyhedronArbitrary* Union(G4Polyhedron* /*p1*/, G4Polyhedron* /*p2*/)
+    {
+      return nullptr;
+    }
+    virtual G4PolyhedronArbitrary* Subtraction(G4Polyhedron* /*p1*/, G4Polyhedron* /*p2*/)
+    {
+      return nullptr;
+    }
 
     /**
      * Processing method of the final solid.
      * To be implemented in derived classes.
      */
-    virtual G4PolyhedronArbitrary* Process(const G4VSolid* /*bs*/)
-      { return nullptr; }
+    virtual G4PolyhedronArbitrary* Process(const G4VSolid* /*bs*/) { return nullptr; }
 };
 
 #endif

@@ -29,12 +29,12 @@
 
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
-#ifndef G4GenericAnalysisManager_h
-#define G4GenericAnalysisManager_h 1
+#ifndef G4GENERICANALYSISMANAGER_HH
+#define G4GENERICANALYSISMANAGER_HH
 
-#include "G4ToolsAnalysisManager.hh"
-#include "G4THnManager.hh"
 #include "G4AnalysisUtilities.hh"
+#include "G4THnManager.hh"
+#include "G4ToolsAnalysisManager.hh"
 #include "globals.hh"
 
 #include <memory>
@@ -45,19 +45,21 @@ class G4GenericAnalysisManager;
 class G4GenericFileManager;
 class G4HnInformation;
 class G4VNtupleFileManager;
-template <class T>
+template<class T>
 class G4ThreadLocalSingleton;
 
-namespace tools {
+namespace tools
+{
 class ntuple_bookig;
 }
 
-class G4GenericAnalysisManager : public  G4ToolsAnalysisManager
+class G4GenericAnalysisManager : public G4ToolsAnalysisManager
 {
-  friend class G4RootMpiAnalysisManager;
-  friend class G4ThreadLocalSingleton<G4GenericAnalysisManager>;
+    friend class G4RootMpiAnalysisManager;
+    friend class G4ThreadLocalSingleton<G4GenericAnalysisManager>;
 
   public:
+
     ~G4GenericAnalysisManager() override;
 
     // Static methods
@@ -77,16 +79,15 @@ class G4GenericAnalysisManager : public  G4ToolsAnalysisManager
     G4bool WriteP1(G4int id, const G4String& fileName);
     G4bool WriteP2(G4int id, const G4String& fileName);
 
-
     // Access methods
     // In difference from output specific managers, generic manager
     // provides access only to ntuple_booking
-    tools::ntuple_booking* GetNtuple(G4bool warn = true,
-                              G4bool onlyIfActive = true) const;
+    tools::ntuple_booking* GetNtuple(G4bool warn = true, G4bool onlyIfActive = true) const;
     tools::ntuple_booking* GetNtuple(G4int ntupleId, G4bool warn = true,
-                              G4bool onlyIfActive = true) const;
+                                     G4bool onlyIfActive = true) const;
 
   protected:
+
     // Virtual methods from base class
     G4bool OpenFileImpl(const G4String& fileName) override;
     void SetDefaultFileTypeImpl(const G4String& value) override;
@@ -95,29 +96,30 @@ class G4GenericAnalysisManager : public  G4ToolsAnalysisManager
     std::shared_ptr<G4VFileManager> GetFileManager(const G4String& fileName) final;
 
   private:
+
     G4GenericAnalysisManager();
     // Methods
     void CreateNtupleFileManager(const G4String& fileName);
 
     // Static data members
-    inline static G4GenericAnalysisManager* fgMasterInstance { nullptr };
-    inline static G4ThreadLocal G4bool fgIsInstance { false };
-    static constexpr std::string_view fkClass { "G4GenericAnalysisManager" };
+    inline static G4GenericAnalysisManager* fgMasterInstance{nullptr};
+    inline static G4ThreadLocal G4bool fgIsInstance{false};
+    static constexpr std::string_view fkClass{"G4GenericAnalysisManager"};
 
     // Data members
-    std::shared_ptr<G4GenericFileManager> fFileManager { nullptr };
+    std::shared_ptr<G4GenericFileManager> fFileManager{nullptr};
     // add G4GenericNtupleManager
     // this class will be analogic to file managers but with ntuples
-    std::shared_ptr<G4VNtupleFileManager> fNtupleFileManager { nullptr };
+    std::shared_ptr<G4VNtupleFileManager> fNtupleFileManager{nullptr};
 
     // Data members
-    G4bool  fIsNtupleMergingSet { false };
-    G4int   fNofNtupleFiles { 0 };
-    G4bool  fMergeNtuples { false };
-    G4bool  fNtupleRowWise { false };
-    G4bool  fNtupleRowMode { true };
-    unsigned int fBasketSize { G4Analysis::kDefaultBasketSize };
-    unsigned int fBasketEntries { G4Analysis::kDefaultBasketEntries };
+    G4bool fIsNtupleMergingSet{false};
+    G4int fNofNtupleFiles{0};
+    G4bool fMergeNtuples{false};
+    G4bool fNtupleRowWise{false};
+    G4bool fNtupleRowMode{true};
+    unsigned int fBasketSize{G4Analysis::kDefaultBasketSize};
+    unsigned int fBasketEntries{G4Analysis::kDefaultBasketEntries};
 };
 
 #include "G4GenericAnalysisManager.icc"

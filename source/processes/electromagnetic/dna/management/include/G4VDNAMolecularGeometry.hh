@@ -30,26 +30,23 @@
  *     Author: WG Shin
  */
 
-#ifndef G4VDNAMolecularGeometry_HH
-#define G4VDNAMolecularGeometry_HH
+#ifndef G4VDNAMOLECULARGEOMETRY_HH
+#define G4VDNAMOLECULARGEOMETRY_HH
 
-#include "globals.hh"
-#include "G4ThreeVector.hh"
 #include "G4LogicalVolume.hh"
+#include "G4ThreeVector.hh"
 #include "G4VPhysicalVolume.hh"
+#include "globals.hh"
 
 class G4VDNAMolecularGeometry
 {
-public:
-  G4VDNAMolecularGeometry()= default;
-  virtual ~G4VDNAMolecularGeometry()= default;
+  public:
 
-  virtual void FindNearbyMolecules(const G4LogicalVolume*,
-                                 const G4ThreeVector&,
-                                 std::vector<G4VPhysicalVolume*>&,
-                                 G4double){};
+    G4VDNAMolecularGeometry() = default;
+    virtual ~G4VDNAMolecularGeometry() = default;
 
-
+    virtual void FindNearbyMolecules(const G4LogicalVolume*, const G4ThreeVector&,
+                                     std::vector<G4VPhysicalVolume*>&, G4double) {};
 };
 
 #endif

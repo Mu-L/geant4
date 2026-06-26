@@ -30,8 +30,8 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-#ifndef G4PionDecayMakeSpin_h
-#define G4PionDecayMakeSpin_h 1
+#ifndef G4PIONDECAYMAKESPIN_HH
+#define G4PIONDECAYMAKESPIN_HH
 
 #include "G4Decay.hh"
 #include "G4ParticleTable.hh"
@@ -40,8 +40,8 @@ class G4PionDecayMakeSpin : public G4Decay
 {
   public:
 
-    //  Constructors 
-    G4PionDecayMakeSpin(const G4String& processName ="Decay");
+    //  Constructors
+    G4PionDecayMakeSpin(const G4String& processName = "Decay");
 
     //  Destructor
     virtual ~G4PionDecayMakeSpin();
@@ -52,15 +52,14 @@ class G4PionDecayMakeSpin : public G4Decay
   private:
 
     //  copy constructor
-    G4PionDecayMakeSpin(const G4PionDecayMakeSpin &right);
+    G4PionDecayMakeSpin(const G4PionDecayMakeSpin& right);
 
     //  Assignment Operation (generated)
-    G4PionDecayMakeSpin & operator=(const G4PionDecayMakeSpin &right);
+    G4PionDecayMakeSpin& operator=(const G4PionDecayMakeSpin& right);
 
   protected:
 
-    virtual void DaughterPolarization(const G4Track& aTrack,
-                              G4DecayProducts* products) override;
+    virtual void DaughterPolarization(const G4Track& aTrack, G4DecayProducts* products) override;
 };
 
 #endif

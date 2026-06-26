@@ -33,22 +33,23 @@
 // -----------------------------------------------------------------------------
 
 #include "G4PhotoElectricEffect.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4PEEffectFluoModel.hh"
+
 #include "G4Electron.hh"
 #include "G4EmParameters.hh"
+#include "G4PEEffectFluoModel.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 using namespace std;
 
-G4PhotoElectricEffect::G4PhotoElectricEffect(const G4String& processName,
-  G4ProcessType type):G4VEmProcess (processName, type)
+G4PhotoElectricEffect::G4PhotoElectricEffect(const G4String& processName, G4ProcessType type)
+  : G4VEmProcess(processName, type)
 {
   SetBuildTableFlag(false);
   SetSecondaryParticle(G4Electron::Electron());
   SetProcessSubType(fPhotoElectricEffect);
-  SetMinKinEnergyPrim(200*keV);
+  SetMinKinEnergyPrim(200 * keV);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -66,9 +67,13 @@ G4bool G4PhotoElectricEffect::IsApplicable(const G4ParticleDefinition& p)
 
 void G4PhotoElectricEffect::InitialiseProcess(const G4ParticleDefinition*)
 {
-  if(!isInitialised) {
+  if (!isInitialised)
+  {
     isInitialised = true;
-    if(nullptr == EmModel()) { SetEmModel(new G4PEEffectFluoModel()); }
+    if (nullptr == EmModel())
+    {
+      SetEmModel(new G4PEEffectFluoModel());
+    }
     G4EmParameters* param = G4EmParameters::Instance();
     EmModel()->SetLowEnergyLimit(param->MinKinEnergy());
     EmModel()->SetHighEnergyLimit(param->MaxKinEnergy());

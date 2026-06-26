@@ -31,102 +31,101 @@
 // -----------
 // 31 Jul 2001   MGP        Created as G4EMShellDataSe
 //  9 Mar 2008   MGP        Cleaned up unreadable code modified by former developer
-//                          (Further clean-up needed) 
+//                          (Further clean-up needed)
 // 31 Jul 2008   MGP        Revised and renamed to G4PixeShellDataSet
 //
 // -------------------------------------------------------------------
 
 // Class description:
-// Shell data set 
+// Shell data set
 // Applies a Composite design pattern for data library management
 
 // -------------------------------------------------------------------
 
-#ifndef  G4PIXESHELLDATASET_HH
-#define  G4PIXESHELLDATASET_HH 1
+#ifndef G4PIXESHELLDATASET_HH
+#define G4PIXESHELLDATASET_HH
 
-#include <vector>
+#include "G4IDataSet.hh"
+#include "globals.hh"
+
 #include <CLHEP/Units/SystemOfUnits.h>
 
-#include "globals.hh"
-#include "G4IDataSet.hh"
+#include <vector>
 
 class G4IInterpolator;
 
-class G4PixeShellDataSet : public G4IDataSet 
-{ 
-public:
-  G4PixeShellDataSet(G4int Z, 
-		     G4IInterpolator* algo, 
-		     //const G4String& particleTpye="proton",
-                     const G4String& modelK="ecpssr",
-		     const G4String& modelL="ecpssr",
-		     const G4String& modelM="ecpssr",
-		     G4double eUnit=CLHEP::MeV, 
-		     G4double dataUnit=CLHEP::barn);
+class G4PixeShellDataSet : public G4IDataSet
+{
+  public:
 
-  virtual ~G4PixeShellDataSet();
- 
-  virtual G4double FindValue(G4double energy, G4int componentId=0) const;
-  
-  virtual void PrintData(void) const;
+    G4PixeShellDataSet(G4int Z, G4IInterpolator* algo,
+                       // const G4String& particleTpye="proton",
+                       const G4String& modelK = "ecpssr", const G4String& modelL = "ecpssr",
+                       const G4String& modelM = "ecpssr", G4double eUnit = CLHEP::MeV,
+                       G4double dataUnit = CLHEP::barn);
 
-  virtual const G4IDataSet* GetComponent(G4int componentId) const 
-  { return components[componentId]; }
+    virtual ~G4PixeShellDataSet();
 
-  virtual void AddComponent(G4IDataSet* dataSet) 
-  { components.push_back(dataSet); }
+    virtual G4double FindValue(G4double energy, G4int componentId = 0) const;
 
-  virtual size_t NumberOfComponents(void) const 
-  { return components.size(); }
+    virtual void PrintData(void) const;
 
-  virtual const G4DataVector& GetEnergies(G4int componentId) const 
-  { return GetComponent(componentId)->GetEnergies(0); }
+    virtual const G4IDataSet* GetComponent(G4int componentId) const
+    {
+      return components[componentId];
+    }
 
-  virtual const G4DataVector& GetData(G4int componentId) const 
-  { return GetComponent(componentId)->GetData(0); }
+    virtual void AddComponent(G4IDataSet* dataSet) { components.push_back(dataSet); }
 
-  virtual void SetEnergiesData(G4DataVector* energies, 
-			       G4DataVector* data, 
-			       G4int componentId);
+    virtual size_t NumberOfComponents(void) const { return components.size(); }
 
-  virtual G4bool LoadData(const G4String& fileName);
-  virtual G4bool SaveData(const G4String& fileName) const;
+    virtual const G4DataVector& GetEnergies(G4int componentId) const
+    {
+      return GetComponent(componentId)->GetEnergies(0);
+    }
 
-  virtual G4double RandomSelect(G4int /*componentId = 0*/) const {return -1.;};
-   
-protected:
+    virtual const G4DataVector& GetData(G4int componentId) const
+    {
+      return GetComponent(componentId)->GetData(0);
+    }
 
-  G4double GetUnitEnergies() const { return unitEnergies; }
-  G4double GetUnitData() const { return unitData; }
-  const G4IInterpolator* GetAlgorithm() const { return algorithm; }
-   
-  void CleanUpComponents(void);
+    virtual void SetEnergiesData(G4DataVector* energies, G4DataVector* data, G4int componentId);
 
-private:
+    virtual G4bool LoadData(const G4String& fileName);
+    virtual G4bool SaveData(const G4String& fileName) const;
 
-  G4String FullFileName(const G4String& particleType,
-			const G4String& subShell) const;
-  G4int TranslateShell(const G4String& subShell) const;
-  
-  // Hide copy constructor and assignment operator 
-  G4PixeShellDataSet();
-  G4PixeShellDataSet(const G4PixeShellDataSet& copy);
-  G4PixeShellDataSet& operator=(const G4PixeShellDataSet& right);
+    virtual G4double RandomSelect(G4int /*componentId = 0*/) const { return -1.; };
 
-  std::vector<G4IDataSet*> components;          // Owned pointers
+  protected:
 
-  G4int z;
-  G4IInterpolator* algorithm;           // Owned pointer 
-  // G4String particle;
-  // G4String crossModelK;
-  // G4String crossModelL;
-  // G4String crossModelM;
-  std::vector<G4String> crossModel;
-  G4double unitEnergies;
-  G4double unitData;
-  std::vector<G4String> shellName;
-  std::vector<G4String> subShellName;
+    G4double GetUnitEnergies() const { return unitEnergies; }
+    G4double GetUnitData() const { return unitData; }
+    const G4IInterpolator* GetAlgorithm() const { return algorithm; }
 
+    void CleanUpComponents(void);
+
+  private:
+
+    G4String FullFileName(const G4String& particleType, const G4String& subShell) const;
+    G4int TranslateShell(const G4String& subShell) const;
+
+    // Hide copy constructor and assignment operator
+    G4PixeShellDataSet();
+    G4PixeShellDataSet(const G4PixeShellDataSet& copy);
+    G4PixeShellDataSet& operator=(const G4PixeShellDataSet& right);
+
+    std::vector<G4IDataSet*> components;  // Owned pointers
+
+    G4int z;
+    G4IInterpolator* algorithm;  // Owned pointer
+    // G4String particle;
+    // G4String crossModelK;
+    // G4String crossModelL;
+    // G4String crossModelM;
+    std::vector<G4String> crossModel;
+    G4double unitEnergies;
+    G4double unitData;
+    std::vector<G4String> shellName;
+    std::vector<G4String> subShellName;
 };
 #endif /* G4PIXESHELLDATASET_HH */

@@ -31,47 +31,51 @@
 
 namespace G4DimensionedTypeUtils
 {
-  // Helper class
-  class HasName{
+// Helper class
+class HasName
+{
   public:
-    HasName(const G4String& name): fName(name) {};
+
+    HasName(const G4String& name) : fName(name) {};
     bool operator()(const G4UnitDefinition* value) const
     {
       return ((value->GetName() == fName) || (value->GetSymbol() == fName));
     }
-  private:
-    G4String fName;
-  };
-  
-  // Get unit value from input string. Return value indicates if
-  // conversion was successful.
-  G4bool GetUnitValue(const G4String& unit, G4double& value)
-  {
-    // Get units table
-    G4UnitsTable& unitTable = G4UnitDefinition::GetUnitsTable();
-    if (unitTable.empty()) G4UnitDefinition::BuildUnitsTable();
-    
-    // Iterate over unit lists, searching for unit match
-    auto iterTable = unitTable.begin();
-    
-    HasName myUnit(unit);
-    G4bool gotUnit(false);
-    
-    while (!gotUnit && (iterTable != unitTable.end())) {
-      G4UnitsContainer unitContainer = (*iterTable)->GetUnitsList();
-      
-      auto iterUnits =
-      std::find_if(unitContainer.begin(), unitContainer.end(), myUnit);
-      
-      if (iterUnits != unitContainer.end()) {
-        value = (*iterUnits)->GetValue();
-        gotUnit = true;
-      }
-      
-      iterTable++;
-    }
-    
-    return gotUnit;
-  }
-}
 
+  private:
+
+    G4String fName;
+};
+
+// Get unit value from input string. Return value indicates if
+// conversion was successful.
+G4bool GetUnitValue(const G4String& unit, G4double& value)
+{
+  // Get units table
+  G4UnitsTable& unitTable = G4UnitDefinition::GetUnitsTable();
+  if (unitTable.empty()) G4UnitDefinition::BuildUnitsTable();
+
+  // Iterate over unit lists, searching for unit match
+  auto iterTable = unitTable.begin();
+
+  HasName myUnit(unit);
+  G4bool gotUnit(false);
+
+  while (!gotUnit && (iterTable != unitTable.end()))
+  {
+    G4UnitsContainer unitContainer = (*iterTable)->GetUnitsList();
+
+    auto iterUnits = std::find_if(unitContainer.begin(), unitContainer.end(), myUnit);
+
+    if (iterUnits != unitContainer.end())
+    {
+      value = (*iterUnits)->GetValue();
+      gotUnit = true;
+    }
+
+    iterTable++;
+  }
+
+  return gotUnit;
+}
+}  // namespace G4DimensionedTypeUtils

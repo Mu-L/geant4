@@ -51,8 +51,8 @@
 // Authors: G.Cosmo, 2 December 1995 - Design, based on object model
 //          M.Asai, 29 January 1996 - First implementation
 // --------------------------------------------------------------------
-#ifndef G4PrimaryParticle_hh
-#define G4PrimaryParticle_hh 1
+#ifndef G4PRIMARYPARTICLE_HH
+#define G4PRIMARYPARTICLE_HH
 
 #include "G4Allocator.hh"
 #include "G4ThreeVector.hh"
@@ -66,6 +66,7 @@ class G4VUserPrimaryParticleInformation;
 class G4PrimaryParticle
 {
   public:
+
     // Constructors
     G4PrimaryParticle();
     G4PrimaryParticle(G4int Pcode);
@@ -150,6 +151,7 @@ class G4PrimaryParticle
     inline void SetUserInformation(G4VUserPrimaryParticleInformation* anInfo);
 
   private:
+
     const G4ParticleDefinition* G4code = nullptr;
 
     G4ThreeVector direction;
@@ -181,7 +183,8 @@ extern G4PART_DLL G4Allocator<G4PrimaryParticle>*& aPrimaryParticleAllocator();
 
 inline void* G4PrimaryParticle::operator new(std::size_t)
 {
-  if (aPrimaryParticleAllocator() == nullptr) {
+  if (aPrimaryParticleAllocator() == nullptr)
+  {
     aPrimaryParticleAllocator() = new G4Allocator<G4PrimaryParticle>;
   }
   return (void*)aPrimaryParticleAllocator()->MallocSingle();
@@ -349,10 +352,12 @@ inline void G4PrimaryParticle::SetG4code(const G4ParticleDefinition* Gcode)
 
 inline void G4PrimaryParticle::SetNext(G4PrimaryParticle* np)
 {
-  if (nextParticle == nullptr) {
+  if (nextParticle == nullptr)
+  {
     nextParticle = np;
   }
-  else {
+  else
+  {
     nextParticle->SetNext(np);
   }
 }
@@ -364,10 +369,12 @@ inline void G4PrimaryParticle::ClearNext()
 
 inline void G4PrimaryParticle::SetDaughter(G4PrimaryParticle* np)
 {
-  if (daughterParticle == nullptr) {
+  if (daughterParticle == nullptr)
+  {
     daughterParticle = np;
   }
-  else {
+  else
+  {
     daughterParticle->SetNext(np);
   }
 }

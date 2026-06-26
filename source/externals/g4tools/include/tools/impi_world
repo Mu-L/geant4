@@ -6,18 +6,23 @@
 
 #include <string>
 
-namespace tools {
+namespace tools
+{
 
-class impi_world {
-public:
-  virtual ~impi_world(){}
-public:
-  virtual bool init(int*,char***) = 0;
-  virtual bool rank(int& a_rank) const = 0;
-  virtual bool size(int& a_size) const = 0;
-  virtual bool processor_name(std::string&) const = 0;
+class impi_world
+{
+  public:
+
+    virtual ~impi_world() {}
+
+  public:
+
+    virtual bool init(int*, char***) = 0;
+    virtual bool rank(int& a_rank) const = 0;
+    virtual bool size(int& a_size) const = 0;
+    virtual bool processor_name(std::string&) const = 0;
 };
 
-}
+}  // namespace tools
 
 #endif

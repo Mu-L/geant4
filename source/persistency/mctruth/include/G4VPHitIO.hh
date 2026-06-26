@@ -32,10 +32,10 @@
 // Author: Youhei Morita, 10.08.2001
 // --------------------------------------------------------------------
 #ifndef G4VPHITIO_HH
-#define G4VPHITIO_HH 1
+#define G4VPHITIO_HH
 
-#include "G4HCofThisEvent.hh"
 #include "G4HCIOcatalog.hh"
+#include "G4HCofThisEvent.hh"
 #include "G4VPHitsCollectionIO.hh"
 
 class G4VPHitIO
@@ -43,31 +43,31 @@ class G4VPHitIO
   public:
 
     G4VPHitIO();
-      // Constructor
+    // Constructor
 
     virtual ~G4VPHitIO() {}
-      // Destructor
+    // Destructor
 
     G4VPHitIO* GetVPHitIO() { return f_G4VPHitIO; }
-      // Returns the pointer of the hit collection I/O manager
+    // Returns the pointer of the hit collection I/O manager
 
     virtual G4bool Store(const G4HCofThisEvent*) = 0;
-      // Pure virtual method for storing hit collections of this event.
-      // Each persistency package should implement a concrete method
-      // of storing the hit collection of this event with this signature
+    // Pure virtual method for storing hit collections of this event.
+    // Each persistency package should implement a concrete method
+    // of storing the hit collection of this event with this signature
 
     virtual G4bool Retrieve(G4HCofThisEvent*&) = 0;
-      // Pure virtual method for retrieving hit collections of this event.
-      // Each persistency package should implement a concrete method
-      // of storing the hit collection of this event with this signature
+    // Pure virtual method for retrieving hit collections of this event.
+    // Each persistency package should implement a concrete method
+    // of storing the hit collection of this event with this signature
 
     void SetVerboseLevel(G4int v);
-      // Sets verbose level
+    // Sets verbose level
 
   protected:
 
     void SetG4VPHitIO(G4VPHitIO* hitMan) { f_G4VPHitIO = hitMan; }
-      // Registers the hit collection I/O manager
+    // Registers the hit collection I/O manager
 
   protected:
 

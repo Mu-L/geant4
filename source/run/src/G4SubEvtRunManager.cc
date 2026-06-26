@@ -32,8 +32,8 @@
 #include "G4ProductionCutsTable.hh"
 #include "G4Run.hh"
 #include "G4ScoringManager.hh"
-#include "G4THitsMap.hh"
 #include "G4StateManager.hh"
+#include "G4THitsMap.hh"
 #include "G4Task.hh"
 #include "G4TaskGroup.hh"
 #include "G4TaskManager.hh"
@@ -42,25 +42,25 @@
 #include "G4ThreadPool.hh"
 #include "G4Threading.hh"
 #include "G4Timer.hh"
+#include "G4Trajectory.hh"
 #include "G4TransportationManager.hh"
 #include "G4UImanager.hh"
+#include "G4UserEventAction.hh"
 #include "G4UserRunAction.hh"
+#include "G4UserSubEvtThreadInitialization.hh"
 #include "G4UserTaskInitialization.hh"
 #include "G4UserTaskQueue.hh"
-#include "G4UserSubEvtThreadInitialization.hh"
+#include "G4VScoreNtupleWriter.hh"
 #include "G4VUserActionInitialization.hh"
 #include "G4VUserPhysicsList.hh"
-#include "G4UserEventAction.hh"
-#include "G4VScoreNtupleWriter.hh"
+#include "G4VVisManager.hh"
 #include "G4WorkerSubEvtRunManager.hh"
 #include "G4WorkerThread.hh"
-#include "G4VVisManager.hh"
-#include "G4Trajectory.hh"
 
+#include <algorithm>
 #include <cstdlib>
 #include <cstring>
 #include <iterator>
-#include <algorithm>
 
 //============================================================================//
 
@@ -73,9 +73,8 @@ G4Mutex registerSubEvtWorkerMutex;
 
 //============================================================================//
 
-G4SubEvtRunManager::G4SubEvtRunManager(G4VUserTaskQueue* task_queue, 
-                                               G4bool useTBB, G4int grainsize)
- : G4TaskRunManager(task_queue, useTBB, grainsize)
+G4SubEvtRunManager::G4SubEvtRunManager(G4VUserTaskQueue* task_queue, G4bool useTBB, G4int grainsize)
+  : G4TaskRunManager(task_queue, useTBB, grainsize)
 {
   runManagerType = subEventMasterRM;
   G4UImanager::GetUIpointer()->SetAlias("RunMode subEventParallel");
@@ -83,9 +82,10 @@ G4SubEvtRunManager::G4SubEvtRunManager(G4VUserTaskQueue* task_queue,
 
 //============================================================================//
 
-G4SubEvtRunManager::G4SubEvtRunManager(G4bool useTBB)
- : G4SubEvtRunManager(nullptr, useTBB, 0)
-{ runManagerType = subEventMasterRM; }
+G4SubEvtRunManager::G4SubEvtRunManager(G4bool useTBB) : G4SubEvtRunManager(nullptr, useTBB, 0)
+{
+  runManagerType = subEventMasterRM;
+}
 
 //============================================================================//
 
@@ -116,8 +116,10 @@ void G4SubEvtRunManager::Initialize()
 void G4SubEvtRunManager::RunInitialization()
 {
   G4RunManager::RunInitialization();
-  if(!fakeRun) 
-  { if(CheckSubEvtTypes()) runInProgress = true; }
+  if (!fakeRun)
+  {
+    if (CheckSubEvtTypes()) runInProgress = true;
+  }
 }
 
 //============================================================================//
@@ -127,13 +129,13 @@ void G4SubEvtRunManager::ProcessOneEvent(G4int i_event)
   currentEvent = GenerateEvent(i_event);
   currentEvent->MasterEventForSubEventMode();
   eventManager->ProcessOneEvent(currentEvent);
-  
-  // Following two lines should not be executed here, as spawned sub-events may 
+
+  // Following two lines should not be executed here, as spawned sub-events may
   // be still being processed. These methods are invoked when all sub-events belongings
   // to this event are processed and scores of these sub-events are marged to the
   // corresponding master event.
-  //AnalyzeEvent(currentEvent);
-  //UpdateScoring();
+  // AnalyzeEvent(currentEvent);
+  // UpdateScoring();
 
   if (i_event < n_select_msg) G4UImanager::GetUIpointer()->ApplyCommand(msgText);
 }
@@ -154,41 +156,46 @@ void G4SubEvtRunManager::TerminateOneEvent()
 
 void G4SubEvtRunManager::StackPreviousEvent(G4Event* anEvent)
 {
-  if(n_perviousEventsToBeStored>0) {
+  if (n_perviousEventsToBeStored > 0)
+  {
     G4ExceptionDescription ed;
-    ed << "G4RunManager::SetNumberOfEventsToBeStored() is not supported in sub-event parallel mode.\n"
+    ed << "G4RunManager::SetNumberOfEventsToBeStored() is not supported in sub-event parallel "
+          "mode.\n"
        << "User may still keep events bu G4EventManager::KeepTheCurrentEvent()";
-    G4Exception("G4SubEvtRunManager::StackPreviousEvent","SubEvtRM1200",FatalException,ed);
+    G4Exception("G4SubEvtRunManager::StackPreviousEvent", "SubEvtRM1200", FatalException, ed);
     return;
   }
 
-  if(anEvent->GetNumberOfRemainingSubEvents()>0)
+  if (anEvent->GetNumberOfRemainingSubEvents() > 0)
   // sub-events are still under processing. Event is not yet fully completed.
   {
     currentRun->StoreEvent(anEvent);
   }
   else
   // Event is already completed.
-  { 
+  {
     // making sure this is the first path
-    if(!(anEvent->IsEventCompleted()))
+    if (!(anEvent->IsEventCompleted()))
     {
       anEvent->EventCompleted();
-      if(userEventAction!=nullptr) userEventAction->EndOfEventAction(anEvent);
+      if (userEventAction != nullptr) userEventAction->EndOfEventAction(anEvent);
       auto pVisManager = G4VVisManager::GetConcreteInstance();
       if (pVisManager) pVisManager->EventReadyForVis(anEvent);
       UpdateScoring(anEvent);
-      if(anEvent->ToBeKept() || anEvent->GetNumberOfGrips()>0) 
-      { // we keep this event for post-processing (i.e. for vis)
+      if (anEvent->ToBeKept() || anEvent->GetNumberOfGrips() > 0)
+      {  // we keep this event for post-processing (i.e. for vis)
         currentRun->StoreEvent(anEvent);
       }
       else
-      { 
+      {
         ReportEventDeletion(anEvent);
         delete anEvent;
       }
-    } else {
-      G4Exception("G4SubEvtRunManager::StackPreviousEvent","SubEvtRM1209",FatalException,"We should not be here!!");
+    }
+    else
+    {
+      G4Exception("G4SubEvtRunManager::StackPreviousEvent", "SubEvtRM1209", FatalException,
+                  "We should not be here!!");
     }
   }
 
@@ -204,65 +211,67 @@ void G4SubEvtRunManager::CleanUpUnnecessaryEvents(G4int keepNEvents)
   // N.B. If ToBeKept() is true, the pointer of this event is
   // kept in G4Run, and deleted along with the deletion of G4Run.
 
-  if(keepNEvents>0) {
+  if (keepNEvents > 0)
+  {
     G4ExceptionDescription ed;
-    ed << "G4RunManager::SetNumberOfEventsToBeStored() is not supported in sub-event parallel mode.\n"
+    ed << "G4RunManager::SetNumberOfEventsToBeStored() is not supported in sub-event parallel "
+          "mode.\n"
        << "User may still keep events bu G4EventManager::KeepTheCurrentEvent()";
-    G4Exception("G4SubEvtRunManager::CleanUpUnnecessaryEvents","SubEvtRM1201",FatalException,ed);
+    G4Exception("G4SubEvtRunManager::CleanUpUnnecessaryEvents", "SubEvtRM1201", FatalException, ed);
     return;
   }
 
-  assert(currentRun!=nullptr);
+  assert(currentRun != nullptr);
 
   auto eventVector = currentRun->GetEventVector();
-  if(eventVector==nullptr || eventVector->empty()) return;
+  if (eventVector == nullptr || eventVector->empty()) return;
   auto eItr = eventVector->cbegin();
-  while(eItr != eventVector->cend())
+  while (eItr != eventVector->cend())
   {
     const G4Event* ev = *eItr;
-    if(ev!=nullptr)
+    if (ev != nullptr)
     {
-      if(!(ev->IsEventCompleted()))
+      if (!(ev->IsEventCompleted()))
       {
-        if(ev->GetNumberOfRemainingSubEvents()==0)
-        { // This event has been completed since last time we were here
+        if (ev->GetNumberOfRemainingSubEvents() == 0)
+        {  // This event has been completed since last time we were here
           ev->EventCompleted();
-          if(userEventAction!=nullptr) userEventAction->EndOfEventAction(ev);
+          if (userEventAction != nullptr) userEventAction->EndOfEventAction(ev);
           auto pVisManager = G4VVisManager::GetConcreteInstance();
           if (pVisManager) pVisManager->EventReadyForVis(ev);
           UpdateScoring(ev);
-          if(ev->ToBeKept() || ev->GetNumberOfGrips()>0) 
-          { // we keep this event for post-processing (i.e. for vis)
+          if (ev->ToBeKept() || ev->GetNumberOfGrips() > 0)
+          {  // we keep this event for post-processing (i.e. for vis)
             eItr++;
           }
           else
-          { // this event is no longer needed
+          {  // this event is no longer needed
             ReportEventDeletion(ev);
             delete ev;
             eItr = eventVector->erase(eItr);
           }
         }
         else
-        { // this event is still incomplete
+        {  // this event is still incomplete
           eItr++;
         }
       }
-      else if(ev->ToBeKept() || ev->GetNumberOfGrips()>0) 
-      { // we still need this event
+      else if (ev->ToBeKept() || ev->GetNumberOfGrips() > 0)
+      {  // we still need this event
         eItr++;
       }
       else
-      { // post-processing done. we no longer need this event
+      {  // post-processing done. we no longer need this event
         ReportEventDeletion(ev);
         delete ev;
         eItr = eventVector->erase(eItr);
-      } 
+      }
     }
     else
-    { // ev is a null pointer 
+    {  // ev is a null pointer
       eItr = eventVector->erase(eItr);
     }
-  }   
+  }
 }
 
 //============================================================================//
@@ -278,10 +287,13 @@ void G4SubEvtRunManager::CreateAndStartWorkers()
 
   ComputeNumberOfTasks();
 
-  if (fakeRun) {
-    if (initializeStarted) {
+  if (fakeRun)
+  {
+    if (initializeStarted)
+    {
       auto initCmdStack = GetCommandStack();
-      if (!initCmdStack.empty()) {
+      if (!initCmdStack.empty())
+      {
         threadPool->execute_on_all_threads([cmds = std::move(initCmdStack)]() {
           for (auto& itr : cmds)
             G4UImanager::GetUIpointer()->ApplyCommand(itr);
@@ -289,8 +301,10 @@ void G4SubEvtRunManager::CreateAndStartWorkers()
         });
       }
     }
-    else {
-      if (verboseLevel > 0) {
+    else
+    {
+      if (verboseLevel > 0)
+      {
         std::stringstream msg;
         msg << "--> G4SubEvtRunManager::CreateAndStartWorkers() --> "
             << "Initializing workers...";
@@ -306,9 +320,11 @@ void G4SubEvtRunManager::CreateAndStartWorkers()
     }
     initializeStarted = true;
   }
-  else {
+  else
+  {
     auto initCmdStack = GetCommandStack();
-    if (!initCmdStack.empty()) {
+    if (!initCmdStack.empty())
+    {
       threadPool->execute_on_all_threads([cmds = std::move(initCmdStack)]() {
         for (auto& itr : cmds)
           G4UImanager::GetUIpointer()->ApplyCommand(itr);
@@ -319,7 +335,8 @@ void G4SubEvtRunManager::CreateAndStartWorkers()
     // does not execute any tasks
     threadPool->execute_on_all_threads([]() { G4TaskRunManagerKernel::ExecuteWorkerInit(); });
 
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       std::stringstream msg;
       msg << "--> G4SubEvtRunManager::CreateAndStartWorkers() --> "
           << "Creating " << numberOfTasks << " tasks with " << numberOfEventsPerTask
@@ -335,7 +352,7 @@ void G4SubEvtRunManager::CreateAndStartWorkers()
        Currently, number of tasks is equal to number of threads
        and each task has a loop that endlessly asks for next sub-event
        until no additional sub-event is available in the master.
-       This is not ideal. We should make each task work only for some limited 
+       This is not ideal. We should make each task work only for some limited
        number of sub-events, and create as many number of tasks as needed
        on the fly during the event loop of the master thread., e.g.
     G4int remaining = numberOfEventToBeProcessed;
@@ -344,8 +361,10 @@ void G4SubEvtRunManager::CreateAndStartWorkers()
       remaining -= numberOfEventsPerTask;
     }
     */
-    for(G4int nt = 0; nt < numberOfTasks; ++nt)
-    { AddEventTask(nt); }
+    for (G4int nt = 0; nt < numberOfTasks; ++nt)
+    {
+      AddEventTask(nt);
+    }
   }
 }
 
@@ -363,7 +382,8 @@ void G4SubEvtRunManager::RefillSeeds()
 {
   G4RNGHelper* helper = G4RNGHelper::GetInstance();
   G4int nFill = 0;
-  switch (SeedOncePerCommunication()) {
+  switch (SeedOncePerCommunication())
+  {
     case 0:
       nFill = numberOfEventToBeProcessed - nSeedsFilled;
       break;
@@ -389,21 +409,24 @@ void G4SubEvtRunManager::InitializeEventLoop(G4int n_event, const char* macroFil
   numberOfEventToBeProcessed = n_event;
   numberOfEventProcessed = 0;
 
-  if (!fakeRun) {
+  if (!fakeRun)
+  {
     nSeedsUsed = 0;
     nSeedsFilled = 0;
 
     if (verboseLevel > 0) timer->Start();
 
     n_select_msg = n_select;
-    if (macroFile != nullptr) {
+    if (macroFile != nullptr)
+    {
       if (n_select_msg < 0) n_select_msg = n_event;
 
       msgText = "/control/execute ";
       msgText += macroFile;
       selectMacro = macroFile;
     }
-    else {
+    else
+    {
       n_select_msg = -1;
       selectMacro = "";
     }
@@ -414,13 +437,16 @@ void G4SubEvtRunManager::InitializeEventLoop(G4int n_event, const char* macroFil
     // If user did not implement InitializeSeeds,
     // use default: nSeedsPerEvent seeds per event
 
-    if (n_event > 0) {
+    if (n_event > 0)
+    {
       G4bool _overload = InitializeSeeds(n_event);
       G4bool _functor = false;
       if (!_overload) _functor = initSeedsCallback(n_event, nSeedsPerEvent, nSeedsFilled);
-      if (!_overload && !_functor) {
+      if (!_overload && !_functor)
+      {
         G4RNGHelper* helper = G4RNGHelper::GetInstance();
-        switch (SeedOncePerCommunication()) {
+        switch (SeedOncePerCommunication())
+        {
           case 1:
             nSeedsFilled = nworkers;
             break;
@@ -463,7 +489,7 @@ void G4SubEvtRunManager::RunTermination()
 
   runInProgress = false;
 
-  //TODO (PHASE-II): do we need this???
+  // TODO (PHASE-II): do we need this???
   workTaskGroup->wait();
 
   // Wait now for all threads to finish event-loop
@@ -473,23 +499,25 @@ void G4SubEvtRunManager::RunTermination()
   G4RunManager::TerminateEventLoop();
   G4RunManager::RunTermination();
 
-  if(currentRun!=nullptr) 
+  if (currentRun != nullptr)
   {
     auto eventVector = currentRun->GetEventVector();
-    if(eventVector!=nullptr)
+    if (eventVector != nullptr)
     {
       G4int notReady = 1;
-      while(notReady>0)
+      while (notReady > 0)
       {
         notReady = 0;
-        for(auto ev:*eventVector)
+        for (auto ev : *eventVector)
         {
-          if(ev->GetNumberOfRemainingSubEvents()>0 || ev->GetNumberOfGrips()>0 )
-          { notReady++; }
+          if (ev->GetNumberOfRemainingSubEvents() > 0 || ev->GetNumberOfGrips() > 0)
+          {
+            notReady++;
+          }
         }
-        if(notReady>0)
+        if (notReady > 0)
         {
-          if(verboseLevel>2)
+          if (verboseLevel > 2)
           {
             G4cout << "G4SubEvtRunManager::RunTermination - " << notReady
                    << " events are still incomplete. Waiting for them." << G4endl;
@@ -513,7 +541,8 @@ void G4SubEvtRunManager::ConstructScoringWorlds()
   GetMasterWorlds().clear();
   auto nWorlds = (G4int)G4TransportationManager::GetTransportationManager()->GetNoWorlds();
   auto itrW = G4TransportationManager::GetTransportationManager()->GetWorldsIterator();
-  for (G4int iWorld = 0; iWorld < nWorlds; ++iWorld) {
+  for (G4int iWorld = 0; iWorld < nWorlds; ++iWorld)
+  {
     addWorld(iWorld, *itrW);
     ++itrW;
   }
@@ -527,18 +556,18 @@ void G4SubEvtRunManager::MergeScores(const G4ScoringManager* localScoringManager
   if (masterScM != nullptr) masterScM->Merge(localScoringManager);
 }
 
-const G4SubEvent* G4SubEvtRunManager::GetSubEvent(G4int ty, G4bool& notReady,
-              G4long& s1, G4long& s2, G4long& s3, G4bool reseedRequired)
+const G4SubEvent* G4SubEvtRunManager::GetSubEvent(G4int ty, G4bool& notReady, G4long& s1,
+                                                  G4long& s2, G4long& s3, G4bool reseedRequired)
 {
   G4AutoLock l(&accessSubEventMutex);
 
-// This method is invoked from the worker, the ownership of G4SubEvent object
-// remains to the master, i.e. will be deleted by the master thread through
-// TerminateSubEvent() method.
+  // This method is invoked from the worker, the ownership of G4SubEvent object
+  // remains to the master, i.e. will be deleted by the master thread through
+  // TerminateSubEvent() method.
 
-  if(currentRun==nullptr)
+  if (currentRun == nullptr)
   {
-  // Run has not yet started.
+    // Run has not yet started.
     notReady = true;
     return nullptr;
   }
@@ -547,40 +576,42 @@ const G4SubEvent* G4SubEvtRunManager::GetSubEvent(G4int ty, G4bool& notReady,
   // RACE HERE: against:
   // 1 G4Run::StoreEvent(G4Event*) G4Run.cc:80
   // 2 G4RunManager::StackPreviousEvent(G4Event*) G4RunManager.cc:572
-  for(auto& ev : *eventVector)
+  for (auto& ev : *eventVector)
   {
-  // looping over stored events
+    // looping over stored events
     // RACE HERE: against:
-    // 1 G4Run::StoreEvent(G4Event*) G4Run.cc:80 
-    // 2 G4RunManager::StackPreviousEvent(G4Event*) G4RunManager.cc:572 
+    // 1 G4Run::StoreEvent(G4Event*) G4Run.cc:80
+    // 2 G4RunManager::StackPreviousEvent(G4Event*) G4RunManager.cc:572
     auto se = const_cast<G4Event*>(ev)->PopSubEvent(ty);
-    if(se!=nullptr)
+    if (se != nullptr)
     {
-    // Sub-event is found in an event that is already finished its event-loop
+      // Sub-event is found in an event that is already finished its event-loop
       notReady = false;
-      if(reseedRequired) SetUpSeedsForSubEvent(s1,s2,s3);
+      if (reseedRequired) SetUpSeedsForSubEvent(s1, s2, s3);
       return se;
     }
   }
 
   auto sep = eventManager->PopSubEvent(ty);
-  if(sep!=nullptr)
+  if (sep != nullptr)
   {
-  // Sub-event is found in an event that is still in the event loop
+    // Sub-event is found in an event that is still in the event loop
     notReady = false;
-    if(reseedRequired) SetUpSeedsForSubEvent(s1,s2,s3);
+    if (reseedRequired) SetUpSeedsForSubEvent(s1, s2, s3);
     return sep;
-  } else {
-  // No sub-event available
+  }
+  else
+  {
+    // No sub-event available
     // RACE HERE vs line 345
-    if(runInProgress)
+    if (runInProgress)
     {
-    // Run is still in progress. Worker should wait until a sub-event is ready
+      // Run is still in progress. Worker should wait until a sub-event is ready
       notReady = true;
     }
     else
     {
-    // Run is over. No more sub-event to come unless new run starts.
+      // Run is over. No more sub-event to come unless new run starts.
       notReady = false;
     }
     return nullptr;
@@ -589,7 +620,7 @@ const G4SubEvent* G4SubEvtRunManager::GetSubEvent(G4int ty, G4bool& notReady,
 
 void G4SubEvtRunManager::SetUpSeedsForSubEvent(G4long& s1, G4long& s2, G4long& s3)
 {
-  //TODO (PHASE-II): Seeding scheme for sub-event has to be revisited
+  // TODO (PHASE-II): Seeding scheme for sub-event has to be revisited
   G4RNGHelper* helper = G4RNGHelper::GetInstance();
   G4int idx_rndm = nSeedsPerEvent * nSeedsUsed;
   s1 = helper->GetSeed(idx_rndm);
@@ -599,10 +630,9 @@ void G4SubEvtRunManager::SetUpSeedsForSubEvent(G4long& s1, G4long& s2, G4long& s
   if (nSeedsUsed == nSeedsFilled) RefillSeeds();
 }
 
-
 //============================================================================//
 //
-//G4bool G4SubEvtRunManager::SetUpAnEvent(G4Event* evt, G4long& s1, G4long& s2, G4long& s3,
+// G4bool G4SubEvtRunManager::SetUpAnEvent(G4Event* evt, G4long& s1, G4long& s2, G4long& s3,
 //                                      G4bool reseedRequired)
 //{
 //  G4AutoLock l(&setUpEventMutex);
@@ -625,7 +655,8 @@ void G4SubEvtRunManager::SetUpSeedsForSubEvent(G4long& s1, G4long& s2, G4long& s
 
 //============================================================================//
 //
-//G4int G4SubEvtRunManager::SetUpNEvents(G4Event* evt, G4SeedsQueue* seedsQueue, G4bool reseedRequired)
+// G4int G4SubEvtRunManager::SetUpNEvents(G4Event* evt, G4SeedsQueue* seedsQueue, G4bool
+// reseedRequired)
 //{
 //  G4AutoLock l(&setUpEventMutex);
 //  if (numberOfEventProcessed < numberOfEventToBeProcessed && !runAborted) {
@@ -644,9 +675,8 @@ void G4SubEvtRunManager::SetUpSeedsForSubEvent(G4long& s1, G4long& s2, G4long& s
 //      for (G4int i = 0; i < nevRnd; ++i) {
 //        seedsQueue->push(helper->GetSeed(nSeedsPerEvent * nSeedsUsed));
 //        seedsQueue->push(helper->GetSeed(nSeedsPerEvent * nSeedsUsed + 1));
-//        if (nSeedsPerEvent == 3) seedsQueue->push(helper->GetSeed(nSeedsPerEvent * nSeedsUsed + 2));
-//        nSeedsUsed++;
-//        if (nSeedsUsed == nSeedsFilled) RefillSeeds();
+//        if (nSeedsPerEvent == 3) seedsQueue->push(helper->GetSeed(nSeedsPerEvent * nSeedsUsed +
+//        2)); nSeedsUsed++; if (nSeedsUsed == nSeedsFilled) RefillSeeds();
 //      }
 //    }
 //    numberOfEventProcessed += nevt;
@@ -657,40 +687,43 @@ void G4SubEvtRunManager::SetUpSeedsForSubEvent(G4long& s1, G4long& s2, G4long& s
 
 //============================================================================//
 
-void G4SubEvtRunManager::SubEventFinished(const G4SubEvent* se,const G4Event* evt)
+void G4SubEvtRunManager::SubEventFinished(const G4SubEvent* se, const G4Event* evt)
 {
   G4AutoLock l(&accessSubEventMutex);
   auto masterEvt = se->GetEvent();
-  if(masterEvt==nullptr) {
-    G4Exception("G4SubEvtRunManager::SubEventFinished()","SERM0001",
-      FatalException,"Pointer of master event is null. PANIC!");
-    return; // NOLINT: required to help Coverity recognise FatalException as exit point
+  if (masterEvt == nullptr)
+  {
+    G4Exception("G4SubEvtRunManager::SubEventFinished()", "SERM0001", FatalException,
+                "Pointer of master event is null. PANIC!");
+    return;  // NOLINT: required to help Coverity recognise FatalException as exit point
   }
 
-  if(userEventAction) {
-    userEventAction->MergeSubEvent(masterEvt,evt);
+  if (userEventAction)
+  {
+    userEventAction->MergeSubEvent(masterEvt, evt);
   }
-  if(trajectoriesToBeMerged) MergeTrajectories(se,evt);
-  UpdateScoringForSubEvent(se,evt);
+  if (trajectoriesToBeMerged) MergeTrajectories(se, evt);
+  UpdateScoringForSubEvent(se, evt);
   evt->ScoresRecorded();
-  eventManager->TerminateSubEvent(se,evt);
+  eventManager->TerminateSubEvent(se, evt);
 }
 
 //============================================================================//
 
-void G4SubEvtRunManager::MergeTrajectories(const G4SubEvent* se,const G4Event* evt)
+void G4SubEvtRunManager::MergeTrajectories(const G4SubEvent* se, const G4Event* evt)
 {
   auto masterEvt = se->GetEvent();
   auto* trajVector = evt->GetTrajectoryContainer()->GetVector();
   auto* masterTrajContainer = masterEvt->GetTrajectoryContainer();
-  if(masterTrajContainer==nullptr) 
+  if (masterTrajContainer == nullptr)
   {
     masterTrajContainer = new G4TrajectoryContainer;
     masterEvt->SetTrajectoryContainer(masterTrajContainer);
   }
-  for(auto& traj : *trajVector)
+  for (auto& traj : *trajVector)
   {
-    if(traj!=nullptr) {
+    if (traj != nullptr)
+    {
       auto* cloned = traj->CloneForMaster();
       masterTrajContainer->push_back(cloned);
     }
@@ -699,7 +732,7 @@ void G4SubEvtRunManager::MergeTrajectories(const G4SubEvent* se,const G4Event* e
 
 //============================================================================//
 
-void G4SubEvtRunManager::UpdateScoringForSubEvent(const G4SubEvent* se,const G4Event* evt)
+void G4SubEvtRunManager::UpdateScoringForSubEvent(const G4SubEvent* se, const G4Event* evt)
 {
   auto masterEvt = se->GetEvent();
 
@@ -708,34 +741,37 @@ void G4SubEvtRunManager::UpdateScoringForSubEvent(const G4SubEvent* se,const G4E
   auto nPar = (G4int)ScM->GetNumberOfMesh();
   if (nPar < 1) return;
 
-  if(verboseLevel>3) {
+  if (verboseLevel > 3)
+  {
     G4cout << "merging scores of sub-event belonging to event id #" << masterEvt->GetEventID()
-           << " --- sub-event has " << evt->GetHCofThisEvent()->GetCapacity()
-           << " hits collections" << G4endl;
+           << " --- sub-event has " << evt->GetHCofThisEvent()->GetCapacity() << " hits collections"
+           << G4endl;
   }
   G4HCofThisEvent* HCE = evt->GetHCofThisEvent();
   if (HCE == nullptr) return;
   auto nColl = (G4int)HCE->GetCapacity();
   G4HCofThisEvent* masterHCE = masterEvt->GetHCofThisEvent();
-  if (masterHCE == nullptr || (G4int)masterHCE->GetCapacity() != nColl) 
+  if (masterHCE == nullptr || (G4int)masterHCE->GetCapacity() != nColl)
   {
-    G4Exception("G4SubEvtRunManager::UpdateScoringForSubEvent()","SERM0002",
-      FatalException,"Number of hits colleactions for scrorers mismatch!! PANIC!!");
+    G4Exception("G4SubEvtRunManager::UpdateScoringForSubEvent()", "SERM0002", FatalException,
+                "Number of hits colleactions for scrorers mismatch!! PANIC!!");
     return;
   }
-  for (G4int i = 0; i < nColl; ++i) {
+  for (G4int i = 0; i < nColl; ++i)
+  {
     auto* HC = dynamic_cast<G4THitsMap<G4double>*>(HCE->GetHC(i));
     auto* masterHC = dynamic_cast<G4THitsMap<G4double>*>(masterHCE->GetHC(i));
     if (HC != nullptr && masterHC != nullptr)
-    { *masterHC += *HC; }
+    {
+      *masterHC += *HC;
+    }
     else
     {
-       G4Exception("G4SubEvtRunManager::UpdateScoringForSubEvent()","SERM0003",
-         FatalException,"HitsCollection is not type of G4THitsMap<G4double>. PANIC!!");
-       return;
+      G4Exception("G4SubEvtRunManager::UpdateScoringForSubEvent()", "SERM0003", FatalException,
+                  "HitsCollection is not type of G4THitsMap<G4double>. PANIC!!");
+      return;
     }
   }
-  
 }
 
 //============================================================================//
@@ -747,31 +783,32 @@ void G4SubEvtRunManager::CleanUpPreviousEvents()
   // or from the destructor of G4RunManager at the very end of
   // the program.
   auto evItr = previousEvents->cbegin();
-  while (evItr != previousEvents->cend()) {
+  while (evItr != previousEvents->cend())
+  {
     G4Event* evt = *evItr;
     if (evt != nullptr)
     {
       ReportEventDeletion(evt);
       // remove evt from the event vector of G4Run as well
-      if(currentRun!=nullptr)
+      if (currentRun != nullptr)
       {
         auto eventVector = currentRun->GetEventVector();
-        auto eItr = std::find(eventVector->cbegin(),eventVector->cend(),evt);
-        if(eItr != eventVector->cend()) eventVector->erase(eItr);
+        auto eItr = std::find(eventVector->cbegin(), eventVector->cend(), evt);
+        if (eItr != eventVector->cend()) eventVector->erase(eItr);
       }
       delete evt;
     }
     evItr = previousEvents->erase(evItr);
   }
-  if(currentRun!=nullptr)
+  if (currentRun != nullptr)
   {
     auto eventVector = currentRun->GetEventVector();
-    if(eventVector==nullptr || eventVector->empty()) return;
+    if (eventVector == nullptr || eventVector->empty()) return;
     auto eItr = eventVector->cbegin();
-    while(eItr != eventVector->cend())
+    while (eItr != eventVector->cend())
     {
       const G4Event* ev = *eItr;
-      if(ev!=nullptr)
+      if (ev != nullptr)
       {
         ReportEventDeletion(ev);
         delete ev;
@@ -788,7 +825,8 @@ void G4SubEvtRunManager::TerminateWorkers()
   // Force workers to execute (if any) all UI commands left in the stack
   RequestWorkersProcessCommandsStack();
 
-  if (workTaskGroup != nullptr) {
+  if (workTaskGroup != nullptr)
+  {
     workTaskGroup->join();
     if (!fakeRun)
       threadPool->execute_on_all_threads([]() { G4TaskRunManagerKernel::TerminateWorker(); });
@@ -801,11 +839,13 @@ void G4SubEvtRunManager::AbortRun(G4bool softAbort)
 {
   // This method is valid only for GeomClosed or EventProc state
   G4ApplicationState currentState = G4StateManager::GetStateManager()->GetCurrentState();
-  if (currentState == G4State_GeomClosed || currentState == G4State_EventProc) {
+  if (currentState == G4State_GeomClosed || currentState == G4State_EventProc)
+  {
     runAborted = true;
     MTkernel->BroadcastAbortRun(softAbort);
   }
-  else {
+  else
+  {
     G4cerr << "Run is not in progress. AbortRun() ignored." << G4endl;
   }
 }
@@ -821,7 +861,8 @@ void G4SubEvtRunManager::AbortEvent()
 
 void G4SubEvtRunManager::WaitForEndEventLoopWorkers()
 {
-  if (workTaskGroup != nullptr) {
+  if (workTaskGroup != nullptr)
+  {
     workTaskGroup->join();
     if (!fakeRun)
       threadPool->execute_on_all_threads(
@@ -837,7 +878,8 @@ void G4SubEvtRunManager::RequestWorkersProcessCommandsStack()
 
   auto process_commands_stack = []() {
     G4MTRunManager* mrm = G4MTRunManager::GetMasterRunManager();
-    if (mrm != nullptr) {
+    if (mrm != nullptr)
+    {
       auto cmds = mrm->GetCommandStack();
       for (const auto& itr : cmds)
         G4UImanager::GetUIpointer()->ApplyCommand(itr);  // TLS instance
@@ -854,15 +896,15 @@ void G4SubEvtRunManager::ThisWorkerProcessCommandsStackDone() {}
 
 //============================================================================//
 
-void G4SubEvtRunManager::RegisterSubEventType(G4int ty, G4int maxEnt) 
+void G4SubEvtRunManager::RegisterSubEventType(G4int ty, G4int maxEnt)
 {
   G4AutoLock l(&registerSubEvtWorkerMutex);
   fSubEvtTypeMap[ty] = maxEnt;
   eventManager->UseSubEventParallelism();
-  eventManager->GetStackManager()->RegisterSubEventType(ty,maxEnt);
+  eventManager->GetStackManager()->RegisterSubEventType(ty, maxEnt);
 }
 
-void G4SubEvtRunManager::RegisterSubEvtWorker(G4WorkerSubEvtRunManager*wrm,G4int typ)
+void G4SubEvtRunManager::RegisterSubEvtWorker(G4WorkerSubEvtRunManager* wrm, G4int typ)
 {
   G4AutoLock l(&registerSubEvtWorkerMutex);
   fWorkerMap[wrm] = typ;
@@ -870,22 +912,24 @@ void G4SubEvtRunManager::RegisterSubEvtWorker(G4WorkerSubEvtRunManager*wrm,G4int
 
 G4bool G4SubEvtRunManager::CheckSubEvtTypes()
 {
-  for(auto& seT : fSubEvtTypeMap)
+  for (auto& seT : fSubEvtTypeMap)
   {
     G4int ty = seT.first;
     G4int seTyp = -1;
-    for(auto& worker : fWorkerMap)
+    for (auto& worker : fWorkerMap)
     {
-      if(worker.second==ty)
-      { seTyp = ty; break; }
+      if (worker.second == ty)
+      {
+        seTyp = ty;
+        break;
+      }
     }
-    if(seTyp==-1)
+    if (seTyp == -1)
     {
       G4ExceptionDescription ed;
       ed << "There is no worker with sub-event type " << ty
          << " registered. There must be at least one worker who is responsible.";
-      G4Exception("G4SubEvtRunManager::CheckSubEvtTypes",
-         "SubEvtRM1210",FatalException,ed);
+      G4Exception("G4SubEvtRunManager::CheckSubEvtTypes", "SubEvtRM1210", FatalException, ed);
       return false;
     }
   }
@@ -959,5 +1003,3 @@ void G4SubEvtRunManager::SetUserAction(G4UserSteppingAction* ua)
 {
   G4RunManager::SetUserAction(ua);
 }
-
-

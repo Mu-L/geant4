@@ -40,42 +40,27 @@
 // -------------------------------------------------------------------
 
 #ifndef G4LINLOGINTERPOLATION_HH
-#define G4LINLOGINTERPOLATION_HH 1
+#define G4LINLOGINTERPOLATION_HH
 
-#include "globals.hh"
-#include "G4VDataSetAlgorithm.hh"
 #include "G4DataVector.hh"
+#include "G4VDataSetAlgorithm.hh"
+#include "globals.hh"
 
-class G4LinLogInterpolation : public G4VDataSetAlgorithm {
- 
-public:
-  explicit G4LinLogInterpolation();
-  ~G4LinLogInterpolation();
- 
-  G4double Calculate(G4double point, G4int bin, 
-		     const G4DataVector& energies, 
-		     const G4DataVector& data) const override;
+class G4LinLogInterpolation : public G4VDataSetAlgorithm
+{
+  public:
 
-  G4double Calculate(G4double point, G4int bin,
-                     const G4DataVector& energies,
-                     const G4DataVector& data, 
-		     const G4DataVector& log_energies, 
-		     const G4DataVector& log_data) const override;
+    explicit G4LinLogInterpolation();
+    ~G4LinLogInterpolation();
 
-  G4VDataSetAlgorithm* Clone() const override 
-  { return new G4LinLogInterpolation; }
+    G4double Calculate(G4double point, G4int bin, const G4DataVector& energies,
+                       const G4DataVector& data) const override;
 
+    G4double Calculate(G4double point, G4int bin, const G4DataVector& energies,
+                       const G4DataVector& data, const G4DataVector& log_energies,
+                       const G4DataVector& log_data) const override;
+
+    G4VDataSetAlgorithm* Clone() const override { return new G4LinLogInterpolation; }
 };
- 
+
 #endif
- 
-
-
-
-
-
-
-
-
-
-

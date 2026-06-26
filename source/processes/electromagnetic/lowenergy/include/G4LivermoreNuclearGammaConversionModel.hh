@@ -25,75 +25,63 @@
 //
 // Authors: G.Depaola & F.Longo
 
-#ifndef G4LivermoreNuclearGammaConversionModel_h
-#define G4LivermoreNuclearGammaConversionModel_h 1
+#ifndef G4LIVERMORENUCLEARGAMMACONVERSIONMODEL_HH
+#define G4LIVERMORENUCLEARGAMMACONVERSIONMODEL_HH
 
-#include "G4VEmModel.hh"
 #include "G4Electron.hh"
-#include "G4Positron.hh"
 #include "G4ParticleChangeForGamma.hh"
 #include "G4PhysicsFreeVector.hh"
+#include "G4Positron.hh"
 #include "G4ProductionCutsTable.hh"
+#include "G4VEmModel.hh"
 
 class G4LivermoreNuclearGammaConversionModel : public G4VEmModel
 {
+  public:
 
-public:
+    explicit G4LivermoreNuclearGammaConversionModel(
+      const G4ParticleDefinition* p = nullptr, const G4String& nam = "LivermoreNuclearConversion");
 
-  explicit G4LivermoreNuclearGammaConversionModel(const G4ParticleDefinition* p = nullptr, 
-		                  const G4String& nam = "LivermoreNuclearConversion");
+    virtual ~G4LivermoreNuclearGammaConversionModel();
 
-  virtual ~G4LivermoreNuclearGammaConversionModel();
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, 
-                          const G4DataVector&) override;
+    // MT
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel* masterModel) override;
 
-  //MT
-  void InitialiseLocal(const G4ParticleDefinition*, 
-			             G4VEmModel* masterModel) override;
+    void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
+    // END MT
 
-  void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
-  //END MT
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A = 0, G4double cut = 0,
+                                        G4double emax = DBL_MAX) override;
 
-  G4double ComputeCrossSectionPerAtom(
-				      const G4ParticleDefinition*,
-                                      G4double kinEnergy, 
-                                      G4double Z, 
-                                      G4double A=0, 
-                                      G4double cut=0,
-                                      G4double emax=DBL_MAX) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-				 const G4MaterialCutsCouple*,
-				 const G4DynamicParticle*,
-				       G4double tmin,
-				       G4double maxEnergy) override;
+    G4double MinPrimaryEnergy(const G4Material*, const G4ParticleDefinition*, G4double) override;
 
-  G4double MinPrimaryEnergy(const G4Material*,
-				    const G4ParticleDefinition*,
-				    G4double) override;
+    G4LivermoreNuclearGammaConversionModel&
+    operator=(const G4LivermoreNuclearGammaConversionModel& right) = delete;
+    G4LivermoreNuclearGammaConversionModel(const G4LivermoreNuclearGammaConversionModel&) = delete;
 
-  G4LivermoreNuclearGammaConversionModel & operator=(const  G4LivermoreNuclearGammaConversionModel &right) 
-  = delete;
-  G4LivermoreNuclearGammaConversionModel(const  G4LivermoreNuclearGammaConversionModel&) = delete;
+  private:
 
-private:
-  void ReadData(size_t Z, const char* path = 0);
-  G4double ScreenFunction1(G4double screenVariable);
-  G4double ScreenFunction2(G4double screenVariable);
+    void ReadData(size_t Z, const char* path = 0);
+    G4double ScreenFunction1(G4double screenVariable);
+    G4double ScreenFunction2(G4double screenVariable);
 
-  G4ParticleChangeForGamma* fParticleChange;
+    G4ParticleChangeForGamma* fParticleChange;
 
-  //MT
-  static const G4int maxZ = 100;
-  static G4PhysicsFreeVector* data[maxZ+1]; // 101 because Z range is 1-100
-  //END MT
+    // MT
+    static const G4int maxZ = 100;
+    static G4PhysicsFreeVector* data[maxZ + 1];  // 101 because Z range is 1-100
+    // END MT
 
-  G4double lowEnergyLimit;  
-  G4double smallEnergy;
-  G4int verboseLevel;
-  G4bool isInitialised;
-  
+    G4double lowEnergyLimit;
+    G4double smallEnergy;
+    G4int verboseLevel;
+    G4bool isInitialised;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

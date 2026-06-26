@@ -31,8 +31,8 @@
 
 // Author: M.Asai, 2013
 // --------------------------------------------------------------------
-#ifndef G4LocalThreadCoutMessenger_hh
-#define G4LocalThreadCoutMessenger_hh 1
+#ifndef G4LOCALTHREADCOUTMESSENGER_HH
+#define G4LOCALTHREADCOUTMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -46,12 +46,14 @@ class G4UIcmdWithAnInteger;
 class G4LocalThreadCoutMessenger : public G4UImessenger
 {
   public:
+
     G4LocalThreadCoutMessenger();
     ~G4LocalThreadCoutMessenger() override;
 
     void SetNewValue(G4UIcommand*, G4String) override;
 
   private:
+
     G4UIdirectory* coutDir = nullptr;
     G4UIcommand* coutFileNameCmd = nullptr;
     G4UIcommand* cerrFileNameCmd = nullptr;

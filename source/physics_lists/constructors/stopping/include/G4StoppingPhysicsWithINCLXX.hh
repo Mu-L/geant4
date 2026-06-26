@@ -32,45 +32,48 @@
 //
 // Date:       May 2023
 //
-// Modified:  
+// Modified:
 //
 // Class Description:
 //
 // This class provides the nuclear capture at rest of negatively charged
-// particles, using: Bertini for pi-, K-, Sigma-, Xi-, and Omega-; 
+// particles, using: Bertini for pi-, K-, Sigma-, Xi-, and Omega-;
 //                   INCLXX for anti-proton;
-//                   Fritiof/Precompound for anti-neutron, anti-lambda, 
+//                   Fritiof/Precompound for anti-neutron, anti-lambda,
 //                   anti-sigma0,  anti-sigma+, anti-xi0 and anti-nuclei;
 //                   another model for mu-.
 //
 //----------------------------------------------------------------------------
 
-#ifndef G4StoppingPhysicsWithINCLXX_h
-#define G4StoppingPhysicsWithINCLXX_h 1
+#ifndef G4STOPPINGPHYSICSWITHINCLXX_HH
+#define G4STOPPINGPHYSICSWITHINCLXX_HH
 
-#include "globals.hh"
 #include "G4VPhysicsConstructor.hh"
+#include "globals.hh"
 
-class G4StoppingPhysicsWithINCLXX : public G4VPhysicsConstructor {
-  public: 
-    G4StoppingPhysicsWithINCLXX( G4int ver = 1 );
-    G4StoppingPhysicsWithINCLXX( const G4String& name, G4int ver = 1,
-		                 G4bool UseMuonMinusCapture = true );
+class G4StoppingPhysicsWithINCLXX : public G4VPhysicsConstructor
+{
+  public:
+
+    G4StoppingPhysicsWithINCLXX(G4int ver = 1);
+    G4StoppingPhysicsWithINCLXX(const G4String& name, G4int ver = 1,
+                                G4bool UseMuonMinusCapture = true);
     ~G4StoppingPhysicsWithINCLXX() override;
 
-    // This method will be invoked in the Construct() method. 
+    // This method will be invoked in the Construct() method.
     // each particle type will be instantiated
     virtual void ConstructParticle() override;
 
     // This method will be invoked in the Construct() method.
     // each physics process will be instantiated and
-    // registered to the process manager of each particle type 
+    // registered to the process manager of each particle type
     virtual void ConstructProcess() override;
 
     void SetMuonMinusCapture(G4bool val) { useMuonMinusCapture = val; };
 
   private:
-    G4int  verbose;
+
+    G4int verbose;
     G4bool useMuonMinusCapture;
 };
 

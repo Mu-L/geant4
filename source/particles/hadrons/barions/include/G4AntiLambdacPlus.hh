@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4AntiLambdacPlus_h
-#define G4AntiLambdacPlus_h 1
+#ifndef G4ANTILAMBDACPLUS_HH
+#define G4ANTILAMBDACPLUS_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4AntiLambdacPlus : public G4ParticleDefinition
 {
   public:
+
     static G4AntiLambdacPlus* Definition();
     static G4AntiLambdacPlus* AntiLambdacPlusDefinition();
     static G4AntiLambdacPlus* AntiLambdacPlus();
 
   private:
+
     G4AntiLambdacPlus() {}
     ~G4AntiLambdacPlus() override = default;
 

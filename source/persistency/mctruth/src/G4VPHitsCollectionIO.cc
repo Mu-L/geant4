@@ -31,12 +31,9 @@
 #include "G4VPHitsCollectionIO.hh"
 
 // --------------------------------------------------------------------
-G4VPHitsCollectionIO::G4VPHitsCollectionIO(const G4String& detName,
-                                           const G4String& colName)
-  : f_detName(detName)
-  , f_colName(colName)
-{
-}
+G4VPHitsCollectionIO::G4VPHitsCollectionIO(const G4String& detName, const G4String& colName)
+  : f_detName(detName), f_colName(colName)
+{}
 
 // --------------------------------------------------------------------
 G4bool G4VPHitsCollectionIO::operator==(const G4VPHitsCollectionIO& right) const

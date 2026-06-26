@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr) 
+// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr)
 //
 // History:
 // -----------
@@ -32,36 +32,22 @@
 //
 // -------------------------------------------------------------------
 
-
 #include "G4VITRestProcess.hh"
-G4VITRestProcess::G4VITRestProcess()
-                   :G4VITProcess("No Name Rest Process")
+G4VITRestProcess::G4VITRestProcess() : G4VITProcess("No Name Rest Process")
 {
-  G4Exception("G4VITRestProcess::G4VITRestProcess()","Illegal operation",
-	      JustWarning,"default constructor is called");
+  G4Exception("G4VITRestProcess::G4VITRestProcess()", "Illegal operation", JustWarning,
+              "default constructor is called");
 }
 
-G4VITRestProcess::G4VITRestProcess(const G4String& aName , G4ProcessType aType)
-                  : G4VITProcess(aName, aType)
+G4VITRestProcess::G4VITRestProcess(const G4String& aName, G4ProcessType aType)
+  : G4VITProcess(aName, aType)
 {
   enableAlongStepDoIt = false;
   enablePostStepDoIt = false;
 }
 
-G4VITRestProcess::~G4VITRestProcess()
-= default;
+G4VITRestProcess::~G4VITRestProcess() = default;
 
 G4VITRestProcess::G4VITRestProcess(const G4VITRestProcess& right)
-                   
-= default;
 
-
-
-
-
-
-
-
-
-
-
+  = default;

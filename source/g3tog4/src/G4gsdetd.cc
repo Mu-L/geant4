@@ -25,33 +25,34 @@
 //
 //
 
-#include "G3toG4.hh"
 #include "G3DetTable.hh"
+#include "G3toG4.hh"
 
 class G4VSensitiveDetector;
 
-void PG4gsdetd(G4String *tokens)
+void PG4gsdetd(G4String* tokens)
 {
-    // fill the parameter containers
-    G3fillParams(tokens,PTgsdetd);
+  // fill the parameter containers
+  G3fillParams(tokens, PTgsdetd);
 
-    // interpret the parameters
-    G4String chset = Spar[0];
-    G4String chdet = Spar[1];
-    G4int nd = Ipar[0];
-    G4String chnmsd[100];
-    for (G4int i=0; i<=nd; i++ ) chnmsd[i] = Spar[2+i].data();
-    G4int *nbitsd = &Ipar[1];
+  // interpret the parameters
+  G4String chset = Spar[0];
+  G4String chdet = Spar[1];
+  G4int nd = Ipar[0];
+  G4String chnmsd[100];
+  for (G4int i = 0; i <= nd; i++)
+    chnmsd[i] = Spar[2 + i].data();
+  G4int* nbitsd = &Ipar[1];
 
-    G4gsdetd(chset,chdet,nd,chnmsd,nbitsd);
+  G4gsdetd(chset, chdet, nd, chnmsd, nbitsd);
 }
 
 void G4gsdetd(G4String, G4String, G4int, G4String*, G4int*)
 {
-    // Get pointer to detector chset
-    // G4VSensitiveDetector* sdet = G3Det.GetSD(chset, chdet);
-    // Add hits to sensitive detector
-    // for (G4int i=0; i<nd; i++) {
-      // $$$        sdet->AddDigi(chnmsd[i],nbitsd[i]);
-    // }
+  // Get pointer to detector chset
+  // G4VSensitiveDetector* sdet = G3Det.GetSD(chset, chdet);
+  // Add hits to sensitive detector
+  // for (G4int i=0; i<nd; i++) {
+  // $$$        sdet->AddDigi(chnmsd[i],nbitsd[i]);
+  // }
 }

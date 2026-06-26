@@ -49,7 +49,8 @@ G4bool G4SensitiveVolumeList::operator!=(const G4SensitiveVolumeList& right) con
 // Other Operations
 G4bool G4SensitiveVolumeList::CheckPV(const G4VPhysicalVolume* pvp) const
 {
-  for (auto pv : thePhysicalVolumeList) {
+  for (auto pv : thePhysicalVolumeList)
+  {
     if (pv == pvp) return true;
   }
   return false;
@@ -57,7 +58,8 @@ G4bool G4SensitiveVolumeList::CheckPV(const G4VPhysicalVolume* pvp) const
 
 G4bool G4SensitiveVolumeList::CheckLV(const G4LogicalVolume* lvp) const
 {
-  for (auto lv : theLogicalVolumeList) {
+  for (auto lv : theLogicalVolumeList)
+  {
     if (lv == lvp) return true;
   }
   return false;

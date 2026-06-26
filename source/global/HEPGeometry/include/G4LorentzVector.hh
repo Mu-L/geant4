@@ -25,8 +25,8 @@
 //
 //
 //
-#ifndef G4LorentzVector_hh
-#define G4LorentzVector_hh
+#ifndef G4LORENTZVECTOR_HH
+#define G4LORENTZVECTOR_HH
 
 #include <CLHEP/Vector/LorentzVector.h>
 

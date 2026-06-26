@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr) 
+// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr)
 //
 // History:
 // -----------
@@ -38,93 +38,89 @@ using namespace std;
 
 G4Allocator<G4KDTreeResult>*& aKDTreeAllocator()
 {
-    G4ThreadLocalStatic G4Allocator<G4KDTreeResult>* _instance = nullptr;
-    return _instance;
+  G4ThreadLocalStatic G4Allocator<G4KDTreeResult>* _instance = nullptr;
+  return _instance;
 }
 
 struct ResNode
 {
-public:
-  ResNode():fNode(nullptr),fDistanceSqr(0){}
-  ResNode(double distsqr, G4KDNode_Base* node):
-  fNode(node),fDistanceSqr(distsqr)
-  {}
-  
-  ResNode(const ResNode& right)
-  {
-    fNode = right.fNode;
-    fDistanceSqr= right.fDistanceSqr;
-  }
-  ResNode& operator=(const ResNode& rhs)
-  {
-    if(this == &rhs) return *this;
-    fNode = rhs.fNode;
-    fDistanceSqr= rhs.fDistanceSqr;
-    return *this;
-  }
-  ~ResNode()= default;
-  
-  G4bool operator<(const ResNode& right) const
-  {
-    return (fDistanceSqr < right.fDistanceSqr);
-  }
-  
-  G4KDNode_Base* GetNode() { return fNode;}
-  double GetDistanceSqr() { return fDistanceSqr;}
-  
-protected:
-  G4KDNode_Base* fNode;
-  double fDistanceSqr;
+  public:
+
+    ResNode() : fNode(nullptr), fDistanceSqr(0) {}
+    ResNode(double distsqr, G4KDNode_Base* node) : fNode(node), fDistanceSqr(distsqr) {}
+
+    ResNode(const ResNode& right)
+    {
+      fNode = right.fNode;
+      fDistanceSqr = right.fDistanceSqr;
+    }
+    ResNode& operator=(const ResNode& rhs)
+    {
+      if (this == &rhs) return *this;
+      fNode = rhs.fNode;
+      fDistanceSqr = rhs.fDistanceSqr;
+      return *this;
+    }
+    ~ResNode() = default;
+
+    G4bool operator<(const ResNode& right) const { return (fDistanceSqr < right.fDistanceSqr); }
+
+    G4KDNode_Base* GetNode() { return fNode; }
+    double GetDistanceSqr() { return fDistanceSqr; }
+
+  protected:
+
+    G4KDNode_Base* fNode;
+    double fDistanceSqr;
 };
 
 // comparison
-bool CompareResNode(const ResNode& left,
-                    const ResNode& right)
+bool CompareResNode(const ResNode& left, const ResNode& right)
 {
-    return left < right;
+  return left < right;
 }
 
 G4KDTreeResult::G4KDTreeResult(G4KDTree* tree)
 {
-    fTree = tree;
+  fTree = tree;
 }
 
 G4KDTreeResult::~G4KDTreeResult()
 {
-  KDTR_parent::erase(begin(),end());
-    //std::list<ResNode>::erase(begin(),end());
+  KDTR_parent::erase(begin(), end());
+  // std::list<ResNode>::erase(begin(),end());
 }
 
 void G4KDTreeResult::Insert(double dis_sq, G4KDNode_Base* node)
 {
-    //std::list<ResNode>::push_back(ResNode(dis_sq,node));
- KDTR_parent::push_back(ResNode(dis_sq,node));
+  // std::list<ResNode>::push_back(ResNode(dis_sq,node));
+  KDTR_parent::push_back(ResNode(dis_sq, node));
 }
 
 void G4KDTreeResult::Clear()
 {
-//    std::list<ResNode>::erase(begin(),end());
-//    fIterator = std::list<ResNode>::begin();
-  KDTR_parent::erase(begin(),end());
+  //    std::list<ResNode>::erase(begin(),end());
+  //    fIterator = std::list<ResNode>::begin();
+  KDTR_parent::erase(begin(), end());
   fIterator = KDTR_parent::begin();
 }
 
 void G4KDTreeResult::Sort()
 {
-    //std::list<ResNode>::sort(CompareResNode);
+  // std::list<ResNode>::sort(CompareResNode);
   std::sort(begin(), end(), CompareResNode);
 }
 
 size_t G4KDTreeResult::GetSize() const
 {
-    //return std::list<ResNode>::size();
+  // return std::list<ResNode>::size();
   return KDTR_parent::size();
 }
 
 size_t G4KDTreeResult::size() const
 {
   return KDTR_parent::size();
-  //return std::list<ResNode>::size();
+  // return std::list<ResNode>::size();
 }
 
 void G4KDTreeResult::Rewind()
@@ -134,19 +130,20 @@ void G4KDTreeResult::Rewind()
 
 bool G4KDTreeResult::End()
 {
-    return (fIterator == end());
+  return (fIterator == end());
 }
 
 void G4KDTreeResult::Next()
 {
-    ++fIterator;
+  ++fIterator;
 }
 
 double G4KDTreeResult::GetDistanceSqr() const
 {
-    return (*fIterator).GetDistanceSqr();
+  return (*fIterator).GetDistanceSqr();
 }
 
-G4KDNode_Base* G4KDTreeResult::GetNode() const {
-	return (*fIterator).GetNode();
+G4KDNode_Base* G4KDTreeResult::GetNode() const
+{
+  return (*fIterator).GetNode();
 }

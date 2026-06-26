@@ -26,54 +26,56 @@
 // add elastic scattering processes of proton, hydrogen, helium, alpha+, alpha++
 
 #include "G4DNAElastic.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4Positron.hh"
+
+#include "G4Alpha.hh"
+#include "G4Deuteron.hh"
 #include "G4LowEnergyEmProcessSubType.hh"
+#include "G4Positron.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 using namespace std;
 
-G4DNAElastic::G4DNAElastic(const G4String& processName, G4ProcessType type) :
-    G4VEmProcess(processName, type)
+G4DNAElastic::G4DNAElastic(const G4String& processName, G4ProcessType type)
+  : G4VEmProcess(processName, type)
 {
   SetProcessSubType(fLowEnergyElastic);
+  SetBuildTableFlag(false);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4DNAElastic::~G4DNAElastic()
-= default;
+G4DNAElastic::~G4DNAElastic() = default;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4bool G4DNAElastic::IsApplicable(const G4ParticleDefinition& p)
 {
-  G4DNAGenericIonsManager *instance;
+  G4DNAGenericIonsManager* instance;
   instance = G4DNAGenericIonsManager::Instance();
 
-  return (&p == G4Electron::Electron() || &p == G4Positron::Positron()
-          || &p == G4Proton::Proton() || &p == instance->GetIon("hydrogen")
-          || &p == instance->GetIon("alpha++")
-          || &p == instance->GetIon("alpha+")
+  return (&p == G4Electron::Electron() || &p == G4Positron::Positron() || &p == G4Proton::Proton()
+          || &p == instance->GetIon("hydrogen")
+          //          || &p == G4Deuteron::Deuteron()
+          || &p == G4Alpha::Alpha() || &p == instance->GetIon("alpha+")
           || &p == instance->GetIon("helium"));
-
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void G4DNAElastic::InitialiseProcess(const G4ParticleDefinition* p)
 {
-  if(!isInitialised)
+  if (!isInitialised)
   {
     isInitialised = true;
     SetBuildTableFlag(false);
 
     G4String name = p->GetParticleName();
 
-    if(name == "e-")
+    if (name == "e-")
     {
-      if(EmModel() == nullptr)
+      if (EmModel() == nullptr)
       {
         SetEmModel(new G4DNAScreenedRutherfordElasticModel);
         EmModel()->SetLowEnergyLimit(0 * eV);
@@ -82,9 +84,9 @@ void G4DNAElastic::InitialiseProcess(const G4ParticleDefinition* p)
       AddEmModel(1, EmModel());
     }
 
-    else if(name == "proton" || name == "hydrogen")
+    else if (name == "proton" || name == "hydrogen")
     {
-      if(EmModel() == nullptr)
+      if (EmModel() == nullptr)
       {
         SetEmModel(new G4DNAIonElasticModel);
         EmModel()->SetLowEnergyLimit(0 * eV);
@@ -94,9 +96,9 @@ void G4DNAElastic::InitialiseProcess(const G4ParticleDefinition* p)
     }
 
     // "alpha" must be explicitly used, not alpha++
-    else if(name == "helium" || name == "alpha" || name == "alpha+")
+    else if (name == "helium" || name == "alpha" || name == "alpha+")
     {
-      if(EmModel() == nullptr)
+      if (EmModel() == nullptr)
       {
         SetEmModel(new G4DNAIonElasticModel);
         EmModel()->SetLowEnergyLimit(0 * eV);
@@ -111,8 +113,7 @@ void G4DNAElastic::InitialiseProcess(const G4ParticleDefinition* p)
 
 void G4DNAElastic::PrintInfo()
 {
-  G4cout << " Total cross sections computed from " << EmModel()->GetName()
-         << " model" << G4endl;
+  G4cout << " Total cross sections computed from " << EmModel()->GetName() << " model" << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

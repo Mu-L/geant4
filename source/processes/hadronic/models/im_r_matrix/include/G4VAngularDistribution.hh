@@ -31,11 +31,11 @@
 //      File name:     G4VAngularDistribution
 //
 //      Author:        Maria Grazia Pia (MariaGrazia.Pia@genova.infn.it)
-// 
+//
 //      Creation date: 15 April 2000
 //
-//      Modifications: 
-//      
+//      Modifications:
+//
 // Abstract class for angular distribution strategy pattern
 //
 // Id: G4VAngularDistribution.hh,v 1.16 2000/05/11 19:07:29 pia Exp $ //
@@ -45,30 +45,28 @@
 #ifndef G4VANGULARDISTRIBUTION_HH
 #define G4VANGULARDISTRIBUTION_HH
 
-#include <CLHEP/Units/PhysicalConstants.h>
-
-#include "globals.hh"
 #include "G4HadronicException.hh"
 #include "Randomize.hh"
+#include "globals.hh"
 
-class G4VAngularDistribution 
+#include <CLHEP/Units/PhysicalConstants.h>
+
+class G4VAngularDistribution
 {
+  public:
 
-public:
+    // Constructors
+    G4VAngularDistribution() {}
 
-  // Constructors
-  G4VAngularDistribution() { }
+    virtual ~G4VAngularDistribution() {}
 
-  virtual ~G4VAngularDistribution() { }
+    virtual G4double CosTheta(G4double s, G4double m1, G4double m2) const = 0;
 
-  virtual G4double CosTheta(G4double s, G4double m1, G4double m2) const = 0;
+    virtual G4double Phi() const { return 2. * CLHEP::pi * G4UniformRand(); }
 
-  virtual G4double Phi() const { return 2.*CLHEP::pi*G4UniformRand(); }
+  protected:
 
-protected:
-
-private:  
-
+  private:
 };
 
 #endif

@@ -51,7 +51,8 @@ G4AblaDataFile::G4AblaDataFile()
  */
 G4bool G4AblaDataFile::readData()
 {
-  if (!G4FindDataDir("G4ABLADATA")) {
+  if (!G4FindDataDir("G4ABLADATA"))
+  {
     G4ExceptionDescription ed;
     ed << " Data missing: set environment variable G4ABLADATA\n"
        << " to point to the directory containing data files needed\n"
@@ -67,7 +68,8 @@ G4bool G4AblaDataFile::readData()
   G4String defoFile(dataPath + "/defo.dat");
   G4String massFile(dataPath + "/mass2020.dat");
 
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     // G4cout <<"Data path   = " << dataPath    << G4endl;
     // G4cout <<"FlAlphaFile = " << flAlphaFile << G4endl;
     // G4cout <<"FrldmFile   = " << frldmFile   << G4endl;
@@ -81,14 +83,16 @@ G4bool G4AblaDataFile::readData()
   std::ifstream defoin(defoFile.c_str());
   std::ifstream massin(massFile.c_str());
 
-  if (!massin.is_open()) {
+  if (!massin.is_open())
+  {
     massFile = dataPath + "/mass2016.dat";
     massin.close();
     massin.open(massFile.c_str());
     std::cout << "Mass evaluation file mass2020.dat not found, current file: " << massFile.c_str()
               << std::endl;
 
-    if (!massin.is_open()) {
+    if (!massin.is_open())
+    {
       massFile = dataPath + "/mass2003.dat";
       massin.close();
       massin.open(massFile.c_str());
@@ -121,8 +125,10 @@ G4bool G4AblaDataFile::readData()
   const G4int rowsbeta = 137;
   const G4int colsbeta = 251;
 
-  for (G4int i = 0; i < zcols; i++) {
-    for (G4int j = 0; j < nrows; j++) {
+  for (G4int i = 0; i < zcols; i++)
+  {
+    for (G4int j = 0; j < nrows; j++)
+    {
       setAlpha(j, i, 0.0);
       setEcnz(j, i, 0.0);
       setVgsld(j, i, 0.0);
@@ -130,8 +136,10 @@ G4bool G4AblaDataFile::readData()
     }
   }
 
-  for (G4int i = 0; i < rows; i++) {
-    for (G4int j = 0; j < cols; j++) {
+  for (G4int i = 0; i < rows; i++)
+  {
+    for (G4int j = 0; j < cols; j++)
+    {
       flalphain >> fflalpha;
       frldmin >> ffrldm;
       vgsldin >> fvgsld;
@@ -143,30 +151,37 @@ G4bool G4AblaDataFile::readData()
     }
   }
 
-  for (G4int i = 0; i < rowsbeta; i++) {
-    for (G4int j = 0; j < colsbeta; j++) {
+  for (G4int i = 0; i < rowsbeta; i++)
+  {
+    for (G4int j = 0; j < colsbeta; j++)
+    {
       setBeta2(j, i, 0.0);
       setBeta4(j, i, 0.0);
     }
   }
 
   defoin >> fj >> fk >> fbeta2 >> fbeta4;
-  while (!defoin.eof()) {
+  while (!defoin.eof())
+  {
     setBeta2(fk, fj, fbeta2);
     setBeta4(fk, fj, fbeta4);
     defoin >> fj >> fk >> fbeta2 >> fbeta4;
   }
 
-  for (G4int i = 0; i < zcols; i++) {
-    for (G4int j = 0; j < nrows; j++) {
+  for (G4int i = 0; i < zcols; i++)
+  {
+    for (G4int j = 0; j < nrows; j++)
+    {
       setMexp(j, i, 0.0);
       setMexpID(j, i, 0);
     }
   }
   massin >> a2 >> a3 >> a4 >> a7;
-  while (!massin.eof()) {
+  while (!massin.eof())
+  {
     //
-    if (a3 < lpcols) {
+    if (a3 < lpcols)
+    {
       setMexpID(a2, a3, 1);
       setMexp(a2, a3, 938.7829835 * a3 + 939.5653301 * a2 - 1. * a4 * a7 / 1000.);
     }

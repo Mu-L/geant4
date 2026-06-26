@@ -24,8 +24,8 @@
 // ********************************************************************
 //
 
-#ifndef G4ESTARStopping_h
-#define G4ESTARStopping_h 1
+#ifndef G4ESTARSTOPPING_HH
+#define G4ESTARSTOPPING_HH
 
 //---------------------------------------------------------------------------
 //
@@ -40,58 +40,57 @@
 // Contract:            CSMAN-5288
 //
 // Modifications:
-// 
+//
 //----------------------------------------------------------------------------
 //
 // Class Description:
 //
-// Data on Stopping Powers from the NIST Data Base  
+// Data on Stopping Powers from the NIST Data Base
 // http://physics.nist.gov/PhysRefData/STAR/Text/ESTAR.html
 //
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-
-#include "globals.hh"
 #include "G4PhysicsFreeVector.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4Material;
 
-class G4ESTARStopping 
-{ 
-public: 
+class G4ESTARStopping
+{
+  public:
 
-  explicit G4ESTARStopping(const G4String& datatype = "");
+    explicit G4ESTARStopping(const G4String& datatype = "");
 
-  ~G4ESTARStopping();
+    ~G4ESTARStopping();
 
-  G4int GetIndex(const G4Material*);
+    G4int GetIndex(const G4Material*);
 
-  G4double GetElectronicDEDX(G4int idx, G4double energy);
+    G4double GetElectronicDEDX(G4int idx, G4double energy);
 
-  inline G4double GetElectronicDEDX(const G4Material*, G4double energy);
+    inline G4double GetElectronicDEDX(const G4Material*, G4double energy);
 
-  // hide assignment operator
-  G4ESTARStopping & operator=(const  G4ESTARStopping &right) = delete;
-  G4ESTARStopping(const  G4ESTARStopping&) = delete;
+    // hide assignment operator
+    G4ESTARStopping& operator=(const G4ESTARStopping& right) = delete;
+    G4ESTARStopping(const G4ESTARStopping&) = delete;
 
-private:
+  private:
 
-  void Initialise();
+    void Initialise();
 
-  void AddData(const G4double* energy, const G4double* xs, G4int idx);
+    void AddData(const G4double* energy, const G4double* xs, G4int idx);
 
-  const G4Material* currentMaterial = nullptr;
+    const G4Material* currentMaterial = nullptr;
 
-  G4int type = 0;
-  G4int matIndex = -1;
-  std::vector<G4PhysicsFreeVector*> sdata;
-  std::vector<G4String> name;
+    G4int type = 0;
+    G4int matIndex = -1;
+    std::vector<G4PhysicsFreeVector*> sdata;
+    std::vector<G4String> name;
 };
 
-inline G4double G4ESTARStopping::GetElectronicDEDX(const G4Material* mat, 
-						   G4double energy)
+inline G4double G4ESTARStopping::GetElectronicDEDX(const G4Material* mat, G4double energy)
 {
   return GetElectronicDEDX(GetIndex(mat), energy);
 }

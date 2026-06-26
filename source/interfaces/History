@@ -6,19 +6,25 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-02-20 Gabriele Cosmo (interfaces-V11-03-13)
+## 2026-06-19 Ben Morgan (interfaces-V11-04-05)
+- Apply clang-format to all C++ files.
+
+## 2026-02-20 Gabriele Cosmo (interfaces-V11-04-04)
 - Fix in G4UIQt::ComputeStringMatchScore(..) in setting number of elements
   for a QVector; restored use of G4int in place of std::size_t, according
   to QVector signature.
 
-## 2026-02-17 Gabriele Cosmo
+## 2026-02-17 Gabriele Cosmo (interfaces-V11-04-03)
 - G4UIQt: Use std::size_t and G4 types where appropriate.
 
-## 2026-02-16 John Allison
+## 2026-02-16 John Allison (interfaces-V11-04-02)
 - G4UIQt: Fix "Implicit conversion loses integer precision" warnings on Mac Xcode.
 
-## 2026-01-30 Andrea Barresi
+## 2026-01-30 Andrea Barresi (interfaces-V11-04-01)
 - G4UIQt: Reimplemented the command search feature for the Help tree.
+
+## 2026-01-09 Ben Morgan (interfaces-V11-04-00)
+- Update header guards to style/format required by Geant4 coding guidelines.
 
 ## 2025-10-31 Andrea Barresi (interfaces-V11-03-12)
 -G4VInteractiveSession:

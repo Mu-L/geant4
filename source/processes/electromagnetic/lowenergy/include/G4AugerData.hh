@@ -33,82 +33,80 @@
 // -------------------------------------------------------------------
 // Class description:
 // Low Energy Electromagnetic Physics
-// This Class loads and stores all the information of auger effect (shellIds, 
-// probabilities and  energies of the electrons emitted) 
+// This Class loads and stores all the information of auger effect (shellIds,
+// probabilities and  energies of the electrons emitted)
 // -------------------------------------------------------------------
 
 #ifndef G4AUGERDATA_HH
-#define G4AUGERDATA_HH 1
+#define G4AUGERDATA_HH
 
-#include "globals.hh"
-#include <vector>
-#include <map>
 #include "G4AugerTransition.hh"
+#include "globals.hh"
+
+#include <map>
+#include <vector>
 
 class G4DataVector;
 
 class G4AugerData
 {
-public:
+  public:
 
-  explicit G4AugerData();
-  ~G4AugerData() = default;
+    explicit G4AugerData();
+    ~G4AugerData() = default;
 
-  /// The method returns the number of shells in wich a 
-  /// vacancy can be filled by a NON-radiative transition, given the atomic number
-  size_t NumberOfVacancies(G4int Z) const;
+    /// The method returns the number of shells in wich a
+    /// vacancy can be filled by a NON-radiative transition, given the atomic number
+    size_t NumberOfVacancies(G4int Z) const;
 
-  /// Given the index of the vacancy (and the atomic number Z) returns its identity
-  G4int VacancyId(G4int Z, G4int vacancyIndex) const;
-  
-  /// Given the index of a vacancy in the atom with the atomc number Z, returns the number of
-  /// shells starting from wich an electron can fill the vacancy
-  size_t NumberOfTransitions(G4int Z, G4int vacancyIndex) const;
+    /// Given the index of the vacancy (and the atomic number Z) returns its identity
+    G4int VacancyId(G4int Z, G4int vacancyIndex) const;
 
-  /// Given the atomic number Z, the Index of the initial vacancy shell 
-  /// and the index of the starting shell for the 
-  /// transition, returns the identity of the shell originating the electron transition
-  G4int StartShellId(G4int Z, G4int initialVacancyIndex, G4int transitionShellIndex) const;
+    /// Given the index of a vacancy in the atom with the atomc number Z, returns the number of
+    /// shells starting from wich an electron can fill the vacancy
+    size_t NumberOfTransitions(G4int Z, G4int vacancyIndex) const;
 
-  /// Given the atomic number , the indexes of the starting, the auger originating shell, 
-  /// and the transition shell Id, returns the transition energy
-  G4double StartShellEnergy(G4int Z, G4int vacancyIndex, G4int transitionId, G4int augerIndex) const;
+    /// Given the atomic number Z, the Index of the initial vacancy shell
+    /// and the index of the starting shell for the
+    /// transition, returns the identity of the shell originating the electron transition
+    G4int StartShellId(G4int Z, G4int initialVacancyIndex, G4int transitionShellIndex) const;
 
-  /// Given the atomic number, the  index of the starting shell, the auger originating shells, 
-  /// and the transition shell Id, returns the transition probability
-  G4double StartShellProb(G4int Z, G4int vacancyIndex,G4int transitionId,G4int augerIndex) const;
+    /// Given the atomic number , the indexes of the starting, the auger originating shell,
+    /// and the transition shell Id, returns the transition energy
+    G4double StartShellEnergy(G4int Z, G4int vacancyIndex, G4int transitionId,
+                              G4int augerIndex) const;
 
-  /// Given the atomic number, the index of the starting vacancy shell and the transition shell Id,
-  /// returns the number of shells wich an auger electron can come from.
-  size_t NumberOfAuger(G4int Z, G4int initIndex, G4int vacancyId) const;
+    /// Given the atomic number, the  index of the starting shell, the auger originating shells,
+    /// and the transition shell Id, returns the transition probability
+    G4double StartShellProb(G4int Z, G4int vacancyIndex, G4int transitionId,
+                            G4int augerIndex) const;
 
-  /// Given the atomic number, th index of the starting and the auger originating shell, 
-  /// and the transition shell Id, returns the ager originating shell Id
-  size_t AugerShellId(G4int Z, G4int vacancyIndex, G4int transId, G4int augerIndex) const;
+    /// Given the atomic number, the index of the starting vacancy shell and the transition shell
+    /// Id, returns the number of shells wich an auger electron can come from.
+    size_t NumberOfAuger(G4int Z, G4int initIndex, G4int vacancyId) const;
 
-  std::vector<G4AugerTransition> LoadData(G4int Z);
-  void BuildAugerTransitionTable();
-  void PrintData(G4int Z);
+    /// Given the atomic number, th index of the starting and the auger originating shell,
+    /// and the transition shell Id, returns the ager originating shell Id
+    size_t AugerShellId(G4int Z, G4int vacancyIndex, G4int transId, G4int augerIndex) const;
 
-  /// Given the atomic number and the vacancy initial shell index  returns 
-  /// the AugerTransition object related to that shell
-  G4AugerTransition* GetAugerTransition(G4int Z, G4int vacancyShellIndex);
-  
-  /// Given the atomic number returns a vector of possible AugerTransition objects
-  std::vector<G4AugerTransition>* GetAugerTransitions(G4int Z);
+    std::vector<G4AugerTransition> LoadData(G4int Z);
+    void BuildAugerTransitionTable();
+    void PrintData(G4int Z);
 
-private:
-  typedef std::map<G4int,std::vector<G4AugerTransition>,std::less<G4int> > trans_Table;
-  trans_Table augerTransitionTable;
+    /// Given the atomic number and the vacancy initial shell index  returns
+    /// the AugerTransition object related to that shell
+    G4AugerTransition* GetAugerTransition(G4int Z, G4int vacancyShellIndex);
 
-  std::vector<G4int> nInitShells;
-  std::vector<G4int> numberOfVacancies;
-  
+    /// Given the atomic number returns a vector of possible AugerTransition objects
+    std::vector<G4AugerTransition>* GetAugerTransitions(G4int Z);
+
+  private:
+
+    typedef std::map<G4int, std::vector<G4AugerTransition>, std::less<G4int>> trans_Table;
+    trans_Table augerTransitionTable;
+
+    std::vector<G4int> nInitShells;
+    std::vector<G4int> numberOfVacancies;
 };
 
 #endif
-
-
-
-
-

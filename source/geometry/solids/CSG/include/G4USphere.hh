@@ -36,21 +36,22 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedSphere.h>
+#  include "G4Polyhedron.hh"
 
-#include "G4Polyhedron.hh"
+#  include <VecGeom/volumes/UnplacedSphere.h>
 
 /**
  * @brief G4USphere is a wrapper class for G4Sphere to make use of
  * VecGeom Sphere.
+ * @ingroup geometry_solids_csg
  */
 
 class G4USphere : public G4UAdapter<vecgeom::UnplacedSphere>
 {
-  using Shape_t = vecgeom::UnplacedSphere;
-  using Base_t  = G4UAdapter<vecgeom::UnplacedSphere>;
+    using Shape_t = vecgeom::UnplacedSphere;
+    using Base_t = G4UAdapter<vecgeom::UnplacedSphere>;
 
   public:
 
@@ -65,11 +66,9 @@ class G4USphere : public G4UAdapter<vecgeom::UnplacedSphere>
      *  @param[in] pSTheta Starting Theta angle of the segment in radians.
      *  @param[in] pDTheta Delta Theta angle of the segment in radians.
      */
-    G4USphere(const G4String& pName,
-                    G4double pRmin, G4double pRmax,
-                    G4double pSPhi, G4double pDPhi,
-                    G4double pSTheta, G4double pDTheta);
-       
+    G4USphere(const G4String& pName, G4double pRmin, G4double pRmax, G4double pSPhi, G4double pDPhi,
+              G4double pSTheta, G4double pDTheta);
+
     /**
      * Default destructor.
      */
@@ -79,8 +78,7 @@ class G4USphere : public G4UAdapter<vecgeom::UnplacedSphere>
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -92,28 +90,28 @@ class G4USphere : public G4UAdapter<vecgeom::UnplacedSphere>
     /**
      * Accessors.
      */
-    G4double GetInnerRadius    () const;
-    G4double GetOuterRadius    () const;
-    G4double GetStartPhiAngle  () const;
-    G4double GetDeltaPhiAngle  () const;
+    G4double GetInnerRadius() const;
+    G4double GetOuterRadius() const;
+    G4double GetStartPhiAngle() const;
+    G4double GetDeltaPhiAngle() const;
     G4double GetStartThetaAngle() const;
     G4double GetDeltaThetaAngle() const;
-    G4double GetSinStartPhi    () const;
-    G4double GetCosStartPhi    () const;
-    G4double GetSinEndPhi      () const;
-    G4double GetCosEndPhi      () const;
-    G4double GetSinStartTheta  () const;
-    G4double GetCosStartTheta  () const;
-    G4double GetSinEndTheta    () const;
-    G4double GetCosEndTheta    () const;
+    G4double GetSinStartPhi() const;
+    G4double GetCosStartPhi() const;
+    G4double GetSinEndPhi() const;
+    G4double GetCosEndPhi() const;
+    G4double GetSinStartTheta() const;
+    G4double GetCosStartTheta() const;
+    G4double GetSinEndTheta() const;
+    G4double GetCosEndTheta() const;
 
     /**
      * Modifiers.
      */
-    void SetInnerRadius    (G4double newRMin);
-    void SetOuterRadius    (G4double newRmax);
-    void SetStartPhiAngle  (G4double newSphi, G4bool trig=true);
-    void SetDeltaPhiAngle  (G4double newDphi);
+    void SetInnerRadius(G4double newRMin);
+    void SetOuterRadius(G4double newRmax);
+    void SetStartPhiAngle(G4double newSphi, G4bool trig = true);
+    void SetDeltaPhiAngle(G4double newDphi);
     void SetStartThetaAngle(G4double newSTheta);
     void SetDeltaThetaAngle(G4double newDTheta);
 
@@ -139,10 +137,9 @@ class G4USphere : public G4UAdapter<vecgeom::UnplacedSphere>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.
@@ -153,7 +150,7 @@ class G4USphere : public G4UAdapter<vecgeom::UnplacedSphere>
      * Copy constructor and assignment operator.
      */
     G4USphere(const G4USphere& rhs);
-    G4USphere& operator=(const G4USphere& rhs); 
+    G4USphere& operator=(const G4USphere& rhs);
 };
 
 // --------------------------------------------------------------------

@@ -58,6 +58,8 @@ class G4VIntegrationDriver;
 /**
  * @brief G4FieldSetup is a class for constructing magnetic, electromagnetic
  * and gravity fields which strength is defined via G4Field.
+ * @ingroup geometry_magneticfield
+ *
  * The equation of motion of a particle in a field and the integration method
  * are set according to the selection in G4FieldParameters, as well as other
  * accuracy parameters.
@@ -74,9 +76,8 @@ class G4FieldSetup
      *  @param[in] lv Optional logical volume where field applies; if
      *             null, global field applies.
      */
-    G4FieldSetup(const G4FieldParameters& parameters,
-                       G4Field* field,
-                       G4LogicalVolume* lv = nullptr);
+    G4FieldSetup(const G4FieldParameters& parameters, G4Field* field,
+                 G4LogicalVolume* lv = nullptr);
 
     /**
      * Default Destructor.
@@ -129,8 +130,7 @@ class G4FieldSetup
      *  @param[in] field Pointer to the field in input.
      *  @returns The pointer to the cached field or the input field otherwise.
      */
-    G4Field* CreateCachedField( const G4FieldParameters& parameters,
-                                      G4Field* field);
+    G4Field* CreateCachedField(const G4FieldParameters& parameters, G4Field* field);
 
     /**
      * Creates and sets the equation of motion of a particle in a field.
@@ -145,8 +145,7 @@ class G4FieldSetup
      *  @param[in] stepper The stepper type.
      *  @returns The pointer to the created integration stepper.
      */
-    G4MagIntegratorStepper* CreateStepper(G4EquationOfMotion* equation,
-                                          G4StepperType stepper);
+    G4MagIntegratorStepper* CreateStepper(G4EquationOfMotion* equation, G4StepperType stepper);
 
     /**
      * Creates and sets the FSAL field integration driver.
@@ -155,9 +154,8 @@ class G4FieldSetup
      *  @param[in] minStep The minimum allowed step.
      *  @returns The pointer to the created FSAL integration driver.
      */
-    G4VIntegrationDriver*
-    CreateFSALStepperAndDriver(G4EquationOfMotion* equation,
-                               G4StepperType stepper, G4double minStep);
+    G4VIntegrationDriver* CreateFSALStepperAndDriver(G4EquationOfMotion* equation,
+                                                     G4StepperType stepper, G4double minStep);
 
     // Methods to update field setup step by step
 

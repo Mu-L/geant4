@@ -11,7 +11,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -175,6 +175,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 0
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -668,6 +669,13 @@ hIoni:  for pi-  XStype:3  SubType=2
           BetheBloch : Emin=297.505 keV Emax=  100 GeV
       ===== Limit on energy threshold has been applied 
 
+hBrems:  for pi-  XStype:1  SubType=3
+      dE/dx and range tables from 100 eV  to 100 GeV in 180 bins
+      Lambda tables from threshold to 100 GeV, 20 bins/decade, spline: 1
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+               hBrem : Emin=    0 eV  Emax=  100 GeV  ModifiedMephi
+      ===== Limit on energy threshold has been applied 
+
 ========= Table of registered couples ============================
 
 Index : 0     used in the geometry : Yes
@@ -784,14 +792,14 @@ Particle name: alpha
 ---> Begin of event: 0
 
      Primary Energy: 5.486 MeV
-     LXe collection: 1195 hits
-     PMT collection: 5146 hits
+     LXe collection: 1123 hits
+     PMT collection: 5312 hits
      First hit in LXe: alpha
-     Number of hits in LXe: 1195
+     Number of hits in LXe: 1123
      Total energy in LXe: 5.00298 MeV
-     Average light collection time: 24.1207 ns 
-     Number of PMT hits (photoelectron equivalent): 5146
-     5146 PMT hits in alpha_pmt.out
+     Average light collection time: 24.4107 ns 
+     Number of PMT hits (photoelectron equivalent): 5312
+     5312 PMT hits in alpha_pmt.out
      Event summary in file alpha.out
 /vis/scene/notifyHandlers
 WARNING: Scene "none" not found.
@@ -809,10 +817,10 @@ WARNING: G4VisManager::IsValidView(): Attempt to draw when no graphics system
  Run terminated.
 Run Summary
   Number of events processed : 1
-  User=0.790000s Real=1.017351s Sys=0.040000s
+  User=0.720000s Real=0.762637s Sys=0.040000s
 Graphics systems deleted.
 Visualization Manager deleting...
 ================== Deleting memory pools ===================
 Number of memory pools allocated: 18 of which, static: 0
-Dynamic pools deleted: 18 / Total memory freed: 39 MB
+Dynamic pools deleted: 18 / Total memory freed: 38 MB
 ============================================================

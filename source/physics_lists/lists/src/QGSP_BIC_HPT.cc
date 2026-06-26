@@ -41,46 +41,48 @@
 //----------------------------------------------------------------------------
 //
 
-#include "G4DecayPhysics.hh"
-#include "G4RadioactiveDecayPhysics.hh"
-#include "G4EmStandardPhysics_option4.hh"
-#include "G4EmExtraPhysics.hh"
-#include "G4IonPhysics.hh"
-#include "G4IonElasticPhysics.hh"
-#include "G4StoppingPhysics.hh"
-#include "G4HadronElasticPhysicsHPT.hh"
 #include "QGSP_BIC_HPT.hh"
+
+#include "G4DecayPhysics.hh"
+#include "G4EmExtraPhysics.hh"
+#include "G4EmStandardPhysics_option4.hh"
+#include "G4HadronElasticPhysicsHPT.hh"
 #include "G4HadronPhysicsQGSP_BIC_HP.hh"
+#include "G4IonElasticPhysics.hh"
+#include "G4IonPhysics.hh"
+#include "G4RadioactiveDecayPhysics.hh"
+#include "G4StoppingPhysics.hh"
 
-
-QGSP_BIC_HPT::QGSP_BIC_HPT( G4int ver ) {
-  if ( ver > 0 ) {
+QGSP_BIC_HPT::QGSP_BIC_HPT(G4int ver)
+{
+  if (ver > 0)
+  {
     G4cout << "<<< Geant4 Physics List simulation engine: QGSP_BIC_HPT" << G4endl << G4endl;
   }
-  defaultCutValue = 0.7*CLHEP::mm;
-  SetCutValue( 0.0, "proton" );
-  SetVerboseLevel( ver );
+  defaultCutValue = 0.7 * CLHEP::mm;
+  SetCutValue(0.0, "proton");
+  SetVerboseLevel(ver);
 
   // EM Physics
-  RegisterPhysics( new G4EmStandardPhysics_option4(ver) );
+  RegisterPhysics(new G4EmStandardPhysics_option4(ver));
 
   // Synchroton Radiation & GN Physics
-  RegisterPhysics( new G4EmExtraPhysics(ver) );
+  RegisterPhysics(new G4EmExtraPhysics(ver));
 
   // Decays
-  RegisterPhysics( new G4DecayPhysics(ver) );
-  RegisterPhysics( new G4RadioactiveDecayPhysics(ver) );
+  RegisterPhysics(new G4DecayPhysics(ver));
+  RegisterPhysics(new G4RadioactiveDecayPhysics(ver));
 
   // Hadron Elastic scattering
-  RegisterPhysics( new G4HadronElasticPhysicsHPT(ver) );
+  RegisterPhysics(new G4HadronElasticPhysicsHPT(ver));
 
   // Hadron Physics
-  RegisterPhysics(  new G4HadronPhysicsQGSP_BIC_HP(ver) );
+  RegisterPhysics(new G4HadronPhysicsQGSP_BIC_HP(ver));
 
   // Stopping Physics
-  RegisterPhysics( new G4StoppingPhysics(ver) );
+  RegisterPhysics(new G4StoppingPhysics(ver));
 
   // Ion Physics
-  RegisterPhysics( new G4IonElasticPhysics(ver) );
-  RegisterPhysics( new G4IonPhysics(ver) );
+  RegisterPhysics(new G4IonElasticPhysics(ver));
+  RegisterPhysics(new G4IonPhysics(ver));
 }

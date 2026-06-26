@@ -9,7 +9,7 @@
 // * include a list of copyright holders.                             *
 // *                                                                  *
 // * Neither the authors of this software system, nor their employing *
-// * institutes,nor the agencies providing financial support for this * 
+// * institutes,nor the agencies providing financial support for this *
 // * work  make  any representation or  warranty, express or implied, *
 // * regarding  this  software system or assume any liability for its *
 // * use.  Please see the license in the file  LICENSE  and URL above *
@@ -39,31 +39,25 @@
 
 /**
  * @brief G4DriverReporter is an auxiliary utility class to print information
- * from integration drivers. It can be used by different types of drivers.
+ * from integration drivers.
+ * @ingroup geometry_magneticfield
+ *
+ * It can be used by different types of drivers.
  */
 
-class G4DriverReporter 
+class G4DriverReporter
 {
   public:
 
-    static void PrintStatus(const G4double* StartArr,
-                            G4double xstart,
-                            const G4double* CurrentArr,
-                            G4double xcurrent,
-                            G4double requestStep,
-                            unsigned int subStepNo,
-                            unsigned int noIntegrationVariables);    
-   
-    static void PrintStatus(const G4FieldTrack& StartFT,
-                            const G4FieldTrack& CurrentFT,
-                            G4double requestStep,
-                            unsigned int subStepNo);
-   
-    static void PrintStat_Aux(const G4FieldTrack& aFieldTrack,
-                              G4double requestStep,
-                              G4double actualStep,
-                              G4int subStepNo,
-                              G4double subStepSize,
+    static void PrintStatus(const G4double* StartArr, G4double xstart, const G4double* CurrentArr,
+                            G4double xcurrent, G4double requestStep, unsigned int subStepNo,
+                            unsigned int noIntegrationVariables);
+
+    static void PrintStatus(const G4FieldTrack& StartFT, const G4FieldTrack& CurrentFT,
+                            G4double requestStep, unsigned int subStepNo);
+
+    static void PrintStat_Aux(const G4FieldTrack& aFieldTrack, G4double requestStep,
+                              G4double actualStep, G4int subStepNo, G4double subStepSize,
                               G4double dotVelocities);
 };
 #endif

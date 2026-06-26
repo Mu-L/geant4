@@ -22,14 +22,15 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // G4NavigationHistory Implementation
 //
 // Author: Paul Kent (CERN), 25.07.1996 - Initial version.
 // ----------------------------------------------------------------------
 
-#include "G4ios.hh"
 #include "G4NavigationHistory.hh"
+
+#include "G4ios.hh"
 
 G4Allocator<G4NavigationHistory>*& aNavigHistoryAllocator()
 {
@@ -43,16 +44,16 @@ G4NavigationHistory::G4NavigationHistory()
   Clear();
 }
 
-G4NavigationHistory::G4NavigationHistory(const G4NavigationHistory &h)
+G4NavigationHistory::G4NavigationHistory(const G4NavigationHistory& h)
 {
   fNavHistory = G4NavigationHistoryPool::GetInstance()->GetLevels();
-  if( GetMaxDepth() != h.GetMaxDepth() )
+  if (GetMaxDepth() != h.GetMaxDepth())
   {
-    fNavHistory->resize( h.GetMaxDepth() );
+    fNavHistory->resize(h.GetMaxDepth());
   }
 
-  for ( auto ilev=G4long(h.fStackDepth); ilev>=0; --ilev )
-  { 
+  for (auto ilev = G4long(h.fStackDepth); ilev >= 0; --ilev)
+  {
     (*fNavHistory)[ilev] = (*h.fNavHistory)[ilev];
   }
   fStackDepth = h.fStackDepth;
@@ -63,18 +64,16 @@ G4NavigationHistory::~G4NavigationHistory()
   G4NavigationHistoryPool::GetInstance()->DeRegister(fNavHistory);
 }
 
-std::ostream&
-operator << (std::ostream& os, const G4NavigationHistory& nav)
+std::ostream& operator<<(std::ostream& os, const G4NavigationHistory& nav)
 {
   os << "History depth=" << nav.GetDepth() << G4endl;
-  for ( G4int i=0; i<=(G4int)nav.GetDepth(); ++i )
+  for (G4int i = 0; i <= (G4int)nav.GetDepth(); ++i)
   {
-    os << "Level=["<<i<<"]: ";
-    if( nav.GetVolume(i) != nullptr )
+    os << "Level=[" << i << "]: ";
+    if (nav.GetVolume(i) != nullptr)
     {
-      os << "Phys Name=["<< nav.GetVolume(i)->GetName()
-         << "] Type=[";
-      switch(nav.GetVolumeType(i))
+      os << "Phys Name=[" << nav.GetVolume(i)->GetName() << "] Type=[";
+      switch (nav.GetVolumeType(i))
       {
         case kNormal:
           os << "N";

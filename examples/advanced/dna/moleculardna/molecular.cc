@@ -48,8 +48,8 @@ void PrintUsage()
 {
   G4cout << " Usage: " << G4endl;
   G4cout << " molecular [-m macro ] [-t nThreads] [-p PhysicsList] [-v vis]" << G4endl;
-  G4cout << "   -p is the G4DNA Physics List option. Default (0) is"
-         << " G4EmDNAPhysics" << G4endl;
+  G4cout << "   -p is the G4DNA Physics List option. Default (2) is"
+         << " G4EmDNAPhysics_option2" << G4endl;
   G4cout << "   note: -t option is available only for multi-threaded mode." << G4endl;
 }
 }  // namespace

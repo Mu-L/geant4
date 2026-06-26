@@ -39,26 +39,30 @@
 // V. Ivanchenko, May-2023 Basic revision of particle HP classes
 //
 #include "G4ParticleHPProduct.hh"
-#include "G4ParticleHPManager.hh"
-#include "G4HadronicParameters.hh"
+
 #include "G4HadronicException.hh"
+#include "G4HadronicParameters.hh"
 #include "G4ParticleHPContEnergyAngular.hh"
 #include "G4ParticleHPDiscreteTwoBody.hh"
 #include "G4ParticleHPIsotropic.hh"
 #include "G4ParticleHPLabAngularEnergy.hh"
+#include "G4ParticleHPManager.hh"
 #include "G4ParticleHPNBodyPhaseSpace.hh"
-#include "Randomize.hh"
 #include "G4Poisson.hh"
 #include "G4Proton.hh"
+#include "Randomize.hh"
 
 G4ParticleHPProduct::G4ParticleHPProduct()
 {
   toBeCached val;
   fCache.Put(val);
 
-  if (G4ParticleHPManager::GetInstance()->GetPHCUsePoisson()) {
+  if (G4ParticleHPManager::GetInstance()->GetPHCUsePoisson())
+  {
     theMultiplicityMethod = G4HPMultiPoisson;
-  } else {
+  }
+  else
+  {
     theMultiplicityMethod = G4HPMultiBetweenInts;
   }
 }
@@ -71,29 +75,34 @@ G4ParticleHPProduct::~G4ParticleHPProduct()
 void G4ParticleHPProduct::Init(std::istream& aDataFile, const G4ParticleDefinition* projectile)
 {
   aDataFile >> theMassCode >> theMass >> theIsomerFlag >> theDistLaw >> theGroundStateQValue
-	    >> theActualStateQValue;
+    >> theActualStateQValue;
   theGroundStateQValue *= CLHEP::eV;
   theActualStateQValue *= CLHEP::eV;
   theYield.Init(aDataFile, CLHEP::eV);
   theYield.Hash();
-  if (theDistLaw == 0) {
+  if (theDistLaw == 0)
+  {
     // distribution not known, use E-independent, isotropic
     // angular distribution
     theDist = new G4ParticleHPIsotropic;
   }
-  else if (theDistLaw == 1) {
+  else if (theDistLaw == 1)
+  {
     // Continuum energy-angular distribution
     theDist = new G4ParticleHPContEnergyAngular(projectile);
   }
-  else if (theDistLaw == 2) {
+  else if (theDistLaw == 2)
+  {
     // Discrete 2-body scattering
     theDist = new G4ParticleHPDiscreteTwoBody;
   }
-  else if (theDistLaw == 3) {
+  else if (theDistLaw == 3)
+  {
     // Isotropic emission
     theDist = new G4ParticleHPIsotropic;
   }
-  else if (theDistLaw == 4) {
+  else if (theDistLaw == 4)
+  {
     // Discrete 2-body recoil modification not used for now.
     // theDist = new G4ParticleHPDiscreteTwoBody;
     // the above is only temporary;
@@ -103,19 +112,23 @@ void G4ParticleHPProduct::Init(std::istream& aDataFile, const G4ParticleDefiniti
   //    {
   // charged particles only, to be used in a later stage. @@@@
   //    }
-  else if (theDistLaw == 6) {
+  else if (theDistLaw == 6)
+  {
     // N-Body phase space
     theDist = new G4ParticleHPNBodyPhaseSpace;
   }
-  else if (theDistLaw == 7) {
+  else if (theDistLaw == 7)
+  {
     // Laboratory angular energy paraetrisation
     theDist = new G4ParticleHPLabAngularEnergy;
   }
-  else {
-        throw G4HadronicException(__FILE__, __LINE__,
-                                  "distribution law unknown to G4ParticleHPProduct");
+  else
+  {
+    throw G4HadronicException(__FILE__, __LINE__,
+                              "distribution law unknown to G4ParticleHPProduct");
   }
-  if (theDist != nullptr) {
+  if (theDist != nullptr)
+  {
     theDist->SetQValue(theActualStateQValue);
     theDist->Init(aDataFile);
   }
@@ -123,23 +136,25 @@ void G4ParticleHPProduct::Init(std::istream& aDataFile, const G4ParticleDefiniti
 
 G4int G4ParticleHPProduct::GetMultiplicity(G4double anEnergy)
 {
-  if (theDist == nullptr) {
+  if (theDist == nullptr)
+  {
     fCache.Get().theCurrentMultiplicity = 0;
     return 0;
   }
 
   G4double mean = theYield.GetY(anEnergy);
-  if (mean <= 0.) {
+  if (mean <= 0.)
+  {
     fCache.Get().theCurrentMultiplicity = 0;
     return 0;
   }
-  G4int multi = (theMultiplicityMethod == G4HPMultiPoisson) ?
-    (G4int)G4Poisson(mean) : G4lrint(mean);
+  G4int multi =
+    (theMultiplicityMethod == G4HPMultiPoisson) ? (G4int)G4Poisson(mean) : G4lrint(mean);
 
 #ifdef G4VERBOSE
   if (G4ParticleHPManager::GetInstance()->GetDEBUG())
     G4cout << "G4ParticleHPProduct::GetMultiplicity code=" << theMassCode << " M=" << theMass
-	   << " multi=" << multi << " mean=" << mean << G4endl;
+           << " multi=" << multi << " mean=" << mean << G4endl;
 #endif
   fCache.Get().theCurrentMultiplicity = multi;
 
@@ -148,7 +163,8 @@ G4int G4ParticleHPProduct::GetMultiplicity(G4double anEnergy)
 
 G4ReactionProductVector* G4ParticleHPProduct::Sample(G4double anEnergy, G4int multi)
 {
-  if (theDist == nullptr) {
+  if (theDist == nullptr)
+  {
     return nullptr;
   }
   auto result = new G4ReactionProductVector;
@@ -158,19 +174,22 @@ G4ReactionProductVector* G4ParticleHPProduct::Sample(G4double anEnergy, G4int mu
   G4ReactionProduct* tmp;
   theDist->ClearHistories();
 
-  for (G4int i = 0; i < multi; ++i) {
+  for (G4int i = 0; i < multi; ++i)
+  {
     tmp = theDist->Sample(anEnergy, theMassCode, theMass);
-    if (tmp != nullptr) {
+    if (tmp != nullptr)
+    {
       result->push_back(tmp);
 #ifdef G4VERBOSE
       if (G4ParticleHPManager::GetInstance()->GetDEBUG())
-	G4cout << "multi=" << multi << " i=" << i << " G4ParticleHPProduct::Sample "
-	       << tmp->GetDefinition()->GetParticleName() << " E=" << tmp->GetKineticEnergy()
-	       << G4endl;
+        G4cout << "multi=" << multi << " i=" << i << " G4ParticleHPProduct::Sample "
+               << tmp->GetDefinition()->GetParticleName() << " E=" << tmp->GetKineticEnergy()
+               << G4endl;
 #endif
     }
   }
-  if (multi == 0) {
+  if (multi == 0)
+  {
     tmp = theDist->Sample(anEnergy, theMassCode, theMass);
     delete tmp;
   }

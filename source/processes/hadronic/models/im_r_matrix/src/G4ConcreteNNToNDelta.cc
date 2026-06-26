@@ -25,25 +25,27 @@
 //
 //
 
-#include "globals.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4ConcreteNNToNDelta.hh"
 
-G4ThreadLocal G4XNDeltaTable *G4ConcreteNNToNDelta::theSigmaTable_G4MT_TLS_ = 0;
+#include "G4ParticleDefinition.hh"
+#include "globals.hh"
+
+G4ThreadLocal G4XNDeltaTable* G4ConcreteNNToNDelta::theSigmaTable_G4MT_TLS_ = 0;
 
 G4ConcreteNNToNDelta::G4ConcreteNNToNDelta(const G4ParticleDefinition* aPrimary,
-					   const G4ParticleDefinition* bPrimary,
-					   const G4ParticleDefinition* aSecondary,
-					   const G4ParticleDefinition* bSecondary)  :
-	G4ConcreteNNTwoBodyResonance(NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+                                           const G4ParticleDefinition* bPrimary,
+                                           const G4ParticleDefinition* aSecondary,
+                                           const G4ParticleDefinition* bSecondary)
+  : G4ConcreteNNTwoBodyResonance(NULL, NULL, NULL, NULL, NULL, NULL, NULL)
 {
-   if (!theSigmaTable_G4MT_TLS_) theSigmaTable_G4MT_TLS_ = new G4XNDeltaTable;
-   G4XNDeltaTable &theSigmaTable = *theSigmaTable_G4MT_TLS_;
-   establish_G4MT_TLS_G4ConcreteNNTwoBodyResonance(aPrimary,bPrimary,aSecondary,bSecondary,theSigmaTable);
+  if (!theSigmaTable_G4MT_TLS_) theSigmaTable_G4MT_TLS_ = new G4XNDeltaTable;
+  G4XNDeltaTable& theSigmaTable = *theSigmaTable_G4MT_TLS_;
+  establish_G4MT_TLS_G4ConcreteNNTwoBodyResonance(aPrimary, bPrimary, aSecondary, bSecondary,
+                                                  theSigmaTable);
 }
 
 G4ConcreteNNToNDelta::~G4ConcreteNNToNDelta()
 {
-   if (theSigmaTable_G4MT_TLS_) delete theSigmaTable_G4MT_TLS_;
-	theSigmaTable_G4MT_TLS_=0;
+  if (theSigmaTable_G4MT_TLS_) delete theSigmaTable_G4MT_TLS_;
+  theSigmaTable_G4MT_TLS_ = 0;
 }

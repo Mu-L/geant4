@@ -31,8 +31,8 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrFileReader_hh
-#define G4tgrFileReader_hh 1
+#ifndef G4TGRFILEREADER_HH
+#define G4TGRFILEREADER_HH
 
 #include "globals.hh"
 
@@ -47,7 +47,7 @@ class G4tgrFileReader
   public:
 
     static G4tgrFileReader* GetInstance();
-      // Get the only instance
+    // Get the only instance
 
     virtual ~G4tgrFileReader();
 

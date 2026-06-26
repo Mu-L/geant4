@@ -35,11 +35,11 @@
 //   polarized version of G4eIonisation
 // ----------------------------------------------------------------------------
 
-#ifndef G4PolarizedIonisation_h
-#define G4PolarizedIonisation_h 1
+#ifndef G4POLARIZEDIONISATION_HH
+#define G4POLARIZEDIONISATION_HH
 
-#include "globals.hh"
 #include "G4VEnergyLossProcess.hh"
+#include "globals.hh"
 
 class G4Material;
 class G4MaterialCutsCouple;
@@ -51,55 +51,56 @@ class G4Track;
 
 class G4PolarizedIonisation : public G4VEnergyLossProcess
 {
- public:
-  explicit G4PolarizedIonisation(const G4String& name = "pol-eIoni");
+  public:
 
-  virtual ~G4PolarizedIonisation() override;
+    explicit G4PolarizedIonisation(const G4String& name = "pol-eIoni");
 
-  virtual G4bool IsApplicable(const G4ParticleDefinition& p) override;
+    virtual ~G4PolarizedIonisation() override;
 
-  virtual void ProcessDescription(std::ostream&) const override;
-  virtual void DumpInfo() const override { ProcessDescription(G4cout); };
+    virtual G4bool IsApplicable(const G4ParticleDefinition& p) override;
 
-  G4PolarizedIonisation& operator=(const G4PolarizedIonisation& right) = delete;
-  G4PolarizedIonisation(const G4PolarizedIonisation&)                  = delete;
+    virtual void ProcessDescription(std::ostream&) const override;
+    virtual void DumpInfo() const override { ProcessDescription(G4cout); };
 
- protected:
-  virtual void InitialiseEnergyLossProcess(
-    const G4ParticleDefinition*, const G4ParticleDefinition*) override;
+    G4PolarizedIonisation& operator=(const G4PolarizedIonisation& right) = delete;
+    G4PolarizedIonisation(const G4PolarizedIonisation&) = delete;
 
-  virtual G4double MinPrimaryEnergy(const G4ParticleDefinition*,
-                                    const G4Material*, G4double cut) override;
+  protected:
 
-  virtual G4double PostStepGetPhysicalInteractionLength(
-    const G4Track& track, G4double previousStepSize,
-    G4ForceCondition* condition) override;
+    virtual void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
+                                             const G4ParticleDefinition*) override;
 
-  virtual G4double GetMeanFreePath(const G4Track& track,
-                                   G4double previousStepSize,
-                                   G4ForceCondition* condition) override;
+    virtual G4double MinPrimaryEnergy(const G4ParticleDefinition*, const G4Material*,
+                                      G4double cut) override;
 
-  virtual void BuildPhysicsTable(const G4ParticleDefinition&) override;
+    virtual G4double PostStepGetPhysicalInteractionLength(const G4Track& track,
+                                                          G4double previousStepSize,
+                                                          G4ForceCondition* condition) override;
 
- private:
-  void CleanTables();
+    virtual G4double GetMeanFreePath(const G4Track& track, G4double previousStepSize,
+                                     G4ForceCondition* condition) override;
 
-  void BuildAsymmetryTables(const G4ParticleDefinition& part);
+    virtual void BuildPhysicsTable(const G4ParticleDefinition&) override;
 
-  G4double ComputeAsymmetry(G4double energy, const G4MaterialCutsCouple* couple,
-                            const G4ParticleDefinition& particle, G4double cut,
-                            G4double& tasm);
+  private:
 
-  G4double ComputeSaturationFactor(const G4Track& aTrack);
+    void CleanTables();
 
-  G4VEmFluctuationModel* fFlucModel;
-  G4PolarizedIonisationModel* fEmModel;
+    void BuildAsymmetryTables(const G4ParticleDefinition& part);
 
-  G4PhysicsTable* fAsymmetryTable;
-  G4PhysicsTable* fTransverseAsymmetryTable;
+    G4double ComputeAsymmetry(G4double energy, const G4MaterialCutsCouple* couple,
+                              const G4ParticleDefinition& particle, G4double cut, G4double& tasm);
 
-  G4bool fIsElectron;
-  G4bool fIsInitialised;
+    G4double ComputeSaturationFactor(const G4Track& aTrack);
+
+    G4VEmFluctuationModel* fFlucModel;
+    G4PolarizedIonisationModel* fEmModel;
+
+    G4PhysicsTable* fAsymmetryTable;
+    G4PhysicsTable* fTransverseAsymmetryTable;
+
+    G4bool fIsElectron;
+    G4bool fIsInitialised;
 };
 
 #endif

@@ -30,22 +30,22 @@
 //
 
 #include "G4ErrorSurfaceTrajState.hh"
-#include "G4ErrorPropagatorData.hh"
-
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4Field.hh"
-#include "G4FieldManager.hh"
-#include "G4TransportationManager.hh"
 
 #include "G4ErrorMatrix.hh"
+#include "G4ErrorPropagatorData.hh"
+#include "G4Field.hh"
+#include "G4FieldManager.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4TransportationManager.hh"
 
 #include <iomanip>
 
 //------------------------------------------------------------------------
-G4ErrorSurfaceTrajState::G4ErrorSurfaceTrajState(
-  const G4String& partType, const G4Point3D& pos, const G4Vector3D& mom,
-  const G4Vector3D& vecU, const G4Vector3D& vecV, const G4ErrorTrajErr& errmat)
+G4ErrorSurfaceTrajState::G4ErrorSurfaceTrajState(const G4String& partType, const G4Point3D& pos,
+                                                 const G4Vector3D& mom, const G4Vector3D& vecU,
+                                                 const G4Vector3D& vecV,
+                                                 const G4ErrorTrajErr& errmat)
   : G4ErrorTrajState(partType, pos, mom, errmat)
 {
   Init();
@@ -53,10 +53,8 @@ G4ErrorSurfaceTrajState::G4ErrorSurfaceTrajState(
 }
 
 //------------------------------------------------------------------------
-G4ErrorSurfaceTrajState::G4ErrorSurfaceTrajState(const G4String& partType,
-                                                 const G4Point3D& pos,
-                                                 const G4Vector3D& mom,
-                                                 const G4Plane3D& plane,
+G4ErrorSurfaceTrajState::G4ErrorSurfaceTrajState(const G4String& partType, const G4Point3D& pos,
+                                                 const G4Vector3D& mom, const G4Plane3D& plane,
                                                  const G4ErrorTrajErr& errmat)
   : G4ErrorTrajState(partType, pos, mom, errmat)
 {
@@ -65,10 +63,8 @@ G4ErrorSurfaceTrajState::G4ErrorSurfaceTrajState(const G4String& partType,
 }
 
 //------------------------------------------------------------------------
-G4ErrorSurfaceTrajState::G4ErrorSurfaceTrajState(G4ErrorFreeTrajState& tpSC,
-                                                 const G4Plane3D& plane)
-  : G4ErrorTrajState(tpSC.GetParticleType(), tpSC.GetPosition(),
-                     tpSC.GetMomentum())
+G4ErrorSurfaceTrajState::G4ErrorSurfaceTrajState(G4ErrorFreeTrajState& tpSC, const G4Plane3D& plane)
+  : G4ErrorTrajState(tpSC.GetParticleType(), tpSC.GetPosition(), tpSC.GetMomentum())
 {
   //  fParticleType = tpSC.GetParticleType();
   //  fPosition = tpSC.GetPosition();
@@ -81,12 +77,9 @@ G4ErrorSurfaceTrajState::G4ErrorSurfaceTrajState(G4ErrorFreeTrajState& tpSC,
 }
 
 //------------------------------------------------------------------------
-G4ErrorSurfaceTrajState::G4ErrorSurfaceTrajState(G4ErrorFreeTrajState& tpSC,
-                                                 const G4Vector3D& vecU,
-                                                 const G4Vector3D& vecV,
-                                                 G4ErrorMatrix& transfM)
-  : G4ErrorTrajState(tpSC.GetParticleType(), tpSC.GetPosition(),
-                     tpSC.GetMomentum())
+G4ErrorSurfaceTrajState::G4ErrorSurfaceTrajState(G4ErrorFreeTrajState& tpSC, const G4Vector3D& vecU,
+                                                 const G4Vector3D& vecV, G4ErrorMatrix& transfM)
+  : G4ErrorTrajState(tpSC.GetParticleType(), tpSC.GetPosition(), tpSC.GetMomentum())
 {
   Init();  // needed to define charge sign
   fTrajParam = G4ErrorSurfaceTrajParam(fPosition, fMomentum, vecU, vecV);
@@ -95,26 +88,24 @@ G4ErrorSurfaceTrajState::G4ErrorSurfaceTrajState(G4ErrorFreeTrajState& tpSC,
 }
 
 //------------------------------------------------------------------------
-G4ErrorMatrix G4ErrorSurfaceTrajState::BuildErrorMatrix(
-  G4ErrorFreeTrajState& tpSC, const G4Vector3D&, const G4Vector3D&)
+G4ErrorMatrix G4ErrorSurfaceTrajState::BuildErrorMatrix(G4ErrorFreeTrajState& tpSC,
+                                                        const G4Vector3D&, const G4Vector3D&)
 {
   G4double sclambda = tpSC.GetParameters().GetLambda();
-  G4double scphi    = tpSC.GetParameters().GetPhi();
-  if(G4ErrorPropagatorData::GetErrorPropagatorData()->GetMode() ==
-     G4ErrorMode_PropBackwards)
+  G4double scphi = tpSC.GetParameters().GetPhi();
+  if (G4ErrorPropagatorData::GetErrorPropagatorData()->GetMode() == G4ErrorMode_PropBackwards)
   {
     sclambda *= -1;
     scphi += CLHEP::pi;
   }
   G4double cosLambda = std::cos(sclambda);
   G4double sinLambda = std::sin(sclambda);
-  G4double sinPhi    = std::sin(scphi);
-  G4double cosPhi    = std::cos(scphi);
+  G4double sinPhi = std::sin(scphi);
+  G4double cosPhi = std::cos(scphi);
 
 #ifdef G4EVERBOSE
-  if(iverbose >= 4)
-    G4cout << " PM " << fMomentum.mag() << " pLambda " << sclambda << " pPhi "
-           << scphi << G4endl;
+  if (iverbose >= 4)
+    G4cout << " PM " << fMomentum.mag() << " pLambda " << sclambda << " pPhi " << scphi << G4endl;
 #endif
 
   G4ThreeVector vTN(cosLambda * cosPhi, cosLambda * sinPhi, sinLambda);
@@ -122,9 +113,7 @@ G4ErrorMatrix G4ErrorSurfaceTrajState::BuildErrorMatrix(
   G4ThreeVector vVN(-vTN.z() * vUN.y(), vTN.z() * vUN.x(), cosLambda);
 
 #ifdef G4EVERBOSE
-  if(iverbose >= 4)
-    G4cout << " SC2SD: vTN " << vTN << " vUN " << vUN << " vVN " << vVN
-           << G4endl;
+  if (iverbose >= 4) G4cout << " SC2SD: vTN " << vTN << " vUN " << vUN << " vVN " << vVN << G4endl;
 #endif
   G4double UJ = vUN * GetVectorV();
   G4double UK = vUN * GetVectorW();
@@ -134,20 +123,19 @@ G4ErrorMatrix G4ErrorSurfaceTrajState::BuildErrorMatrix(
   //--- Get transformation first
   G4ErrorMatrix transfM(5, 5, 0);
   //--- Get magnetic field
-  const G4Field* field = G4TransportationManager::GetTransportationManager()
-                           ->GetFieldManager()
-                           ->GetDetectorField();
+  const G4Field* field =
+    G4TransportationManager::GetTransportationManager()->GetFieldManager()->GetDetectorField();
 
   G4Vector3D vectorU = GetVectorV().cross(GetVectorW());
-  G4double T1R       = 1. / (vTN * vectorU);
+  G4double T1R = 1. / (vTN * vectorU);
 
 #ifdef G4EVERBOSE
-  if(iverbose >= 4)
-    G4cout << "surf vectors:U,V,W " << vectorU << " " << GetVectorV() << " "
-           << GetVectorW() << "  T1R:" << T1R << G4endl;
+  if (iverbose >= 4)
+    G4cout << "surf vectors:U,V,W " << vectorU << " " << GetVectorV() << " " << GetVectorW()
+           << "  T1R:" << T1R << G4endl;
 #endif
 
-  if(fCharge != 0 && field)
+  if (fCharge != 0 && field)
   {
     G4double pos[3];
     pos[0] = fPosition.x() * cm;
@@ -155,32 +143,30 @@ G4ErrorMatrix G4ErrorSurfaceTrajState::BuildErrorMatrix(
     pos[2] = fPosition.z() * cm;
     G4double Hd[3];
     field->GetFieldValue(pos, Hd);
-    G4ThreeVector H =
-      G4ThreeVector(Hd[0], Hd[1], Hd[2]) / tesla * 10.;  // in kilogauus
-    G4double magH  = H.mag();
-    G4double invP  = 1. / (fMomentum.mag() / GeV);
+    G4ThreeVector H = G4ThreeVector(Hd[0], Hd[1], Hd[2]) / tesla * 10.;  // in kilogauus
+    G4double magH = H.mag();
+    G4double invP = 1. / (fMomentum.mag() / GeV);
     G4double magHM = magH * invP;
-    if(magH != 0.)
+    if (magH != 0.)
     {
       G4double magHM2 = fCharge / magH;
-      G4double Q      = -magHM * c_light / (km / ns);
+      G4double Q = -magHM * c_light / (km / ns);
 #ifdef G4EVERBOSE
-      if(iverbose >= 4)
+      if (iverbose >= 4)
         G4cout << GeV << " Q " << Q << " magHM " << magHM << " c_light/(km/ns) "
                << c_light / (km / ns) << G4endl;
 #endif
 
       G4double sinz = -H * vUN * magHM2;
       G4double cosz = H * vVN * magHM2;
-      G4double T3R  = Q * std::pow(T1R, 3);
-      G4double UI   = vUN * vectorU;
-      G4double VI   = vVN * vectorU;
+      G4double T3R = Q * std::pow(T1R, 3);
+      G4double UI = vUN * vectorU;
+      G4double VI = vVN * vectorU;
 #ifdef G4EVERBOSE
-      if(iverbose >= 4)
+      if (iverbose >= 4)
       {
         G4cout << " T1R " << T1R << " T3R " << T3R << G4endl;
-        G4cout << " UI " << UI << " VI " << VI << " vectorU " << vectorU
-               << G4endl;
+        G4cout << " UI " << UI << " VI " << VI << " vectorU " << vectorU << G4endl;
         G4cout << " UJ " << UJ << " VJ " << VJ << G4endl;
         G4cout << " UK " << UK << " VK " << VK << G4endl;
       }
@@ -193,7 +179,7 @@ G4ErrorMatrix G4ErrorSurfaceTrajState::BuildErrorMatrix(
     }
   }
 
-  G4double T2R  = T1R * T1R;
+  G4double T2R = T1R * T1R;
   transfM[0][0] = 1.;
   transfM[1][1] = -UK * T2R;
   transfM[1][2] = VK * cosLambda * T2R;
@@ -205,16 +191,13 @@ G4ErrorMatrix G4ErrorSurfaceTrajState::BuildErrorMatrix(
   transfM[4][4] = UJ * T1R;
 
 #ifdef G4EVERBOSE
-  if(iverbose >= 4)
-    G4cout << " SC2SD transf matrix A= " << transfM << G4endl;
+  if (iverbose >= 4) G4cout << " SC2SD transf matrix A= " << transfM << G4endl;
 #endif
   fError = G4ErrorTrajErr(tpSC.GetError().similarity(transfM));
 
 #ifdef G4EVERBOSE
-  if(iverbose >= 1)
-    G4cout << "G4EP: error matrix SC2SD " << fError << G4endl;
-  if(iverbose >= 4)
-    G4cout << "G4ErrorSurfaceTrajState from SC " << *this << G4endl;
+  if (iverbose >= 1) G4cout << "G4EP: error matrix SC2SD " << fError << G4endl;
+  if (iverbose >= 4) G4cout << "G4ErrorSurfaceTrajState from SC " << *this << G4endl;
 #endif
 
   return transfM;  // want to use trasnfM for the reverse transform
@@ -228,7 +211,10 @@ void G4ErrorSurfaceTrajState::Init()
 }
 
 //------------------------------------------------------------------------
-void G4ErrorSurfaceTrajState::Dump(std::ostream& out) const { out << *this; }
+void G4ErrorSurfaceTrajState::Dump(std::ostream& out) const
+{
+  out << *this;
+}
 
 //------------------------------------------------------------------------
 std::ostream& operator<<(std::ostream& out, const G4ErrorSurfaceTrajState& ts)

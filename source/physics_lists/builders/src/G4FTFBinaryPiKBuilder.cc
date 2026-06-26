@@ -39,16 +39,15 @@
 //----------------------------------------------------------------------------
 //
 #include "G4FTFBinaryPiKBuilder.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4BGGPionInelasticXS.hh"
+#include "G4HadronicParameters.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4BGGPionInelasticXS.hh"
-#include "G4HadronicParameters.hh"
+#include "G4SystemOfUnits.hh"
 
-
-G4FTFBinaryPiKBuilder::
-G4FTFBinaryPiKBuilder(G4bool quasiElastic) 
+G4FTFBinaryPiKBuilder::G4FTFBinaryPiKBuilder(G4bool quasiElastic)
 {
   theMin = G4HadronicParameters::Instance()->GetMinEnergyTransitionFTF_Cascade();
   theModel = new G4TheoFSGenerator("FTFB");
@@ -62,24 +61,25 @@ G4FTFBinaryPiKBuilder(G4bool quasiElastic)
   theModel->SetHighEnergyGenerator(theStringModel);
   theModel->SetMinEnergy(theMin);
 
-  if (quasiElastic) {
-     theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
-  } 
-  theModel->SetMaxEnergy( G4HadronicParameters::Instance()->GetMaxEnergy() );
+  if (quasiElastic)
+  {
+    theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
+  }
+  theModel->SetMaxEnergy(G4HadronicParameters::Instance()->GetMaxEnergy());
 }
 
-G4FTFBinaryPiKBuilder:: ~G4FTFBinaryPiKBuilder() 
-{
-}
+G4FTFBinaryPiKBuilder::~G4FTFBinaryPiKBuilder() {}
 
-void G4FTFBinaryPiKBuilder::
-Build(G4HadronInelasticProcess * aP)
+void G4FTFBinaryPiKBuilder::Build(G4HadronInelasticProcess* aP)
 {
   theModel->SetMinEnergy(theMin);
-  if ( aP->GetParticleDefinition() == G4PionPlus::Definition() ) { 
-    aP->AddDataSet( new G4BGGPionInelasticXS( G4PionPlus::Definition() ) );
-  } else if ( aP->GetParticleDefinition() == G4PionMinus::Definition() ) { 
-    aP->AddDataSet( new G4BGGPionInelasticXS( G4PionMinus::Definition() ) );
-  }  
+  if (aP->GetParticleDefinition() == G4PionPlus::Definition())
+  {
+    aP->AddDataSet(new G4BGGPionInelasticXS(G4PionPlus::Definition()));
+  }
+  else if (aP->GetParticleDefinition() == G4PionMinus::Definition())
+  {
+    aP->AddDataSet(new G4BGGPionInelasticXS(G4PionMinus::Definition()));
+  }
   aP->RegisterMe(theModel);
 }

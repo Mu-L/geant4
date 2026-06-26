@@ -42,11 +42,11 @@
 // Author: Marc Verderi, November 2019.
 // --------------------------------------------------------------------
 
-#ifndef G4BOptnLeadingParticle_hh
-#define G4BOptnLeadingParticle_hh 1
+#ifndef G4BOPTNLEADINGPARTICLE_HH
+#define G4BOPTNLEADINGPARTICLE_HH
 
-#include "G4VBiasingOperation.hh"
 #include "G4ParticleChange.hh"
+#include "G4VBiasingOperation.hh"
 
 class G4BOptnLeadingParticle : public G4VBiasingOperation
 {
@@ -56,39 +56,47 @@ class G4BOptnLeadingParticle : public G4VBiasingOperation
     G4BOptnLeadingParticle(const G4String& name);
     // -- destructor:
     virtual ~G4BOptnLeadingParticle();
-  
+
     // -- Methods from G4VBiasingOperation interface:
     // ----------------------------------------------
     // -- Unused:
     virtual const G4VBiasingInteractionLaw*
-    ProvideOccurenceBiasingInteractionLaw( const G4BiasingProcessInterface*,
-                                           G4ForceCondition& ) { return nullptr; }
+    ProvideOccurenceBiasingInteractionLaw(const G4BiasingProcessInterface*, G4ForceCondition&)
+    {
+      return nullptr;
+    }
     // -- Used:
-    virtual G4VParticleChange*
-    ApplyFinalStateBiasing( const G4BiasingProcessInterface*, // -- Method used for this biasing. The related biasing operator
-                            const G4Track*,                   // -- returns this biasing operation at the post step do it level
-                            const G4Step*,                    // -- when the wrapped process has won the interaction length race.
-                            G4bool& );                        // -- The wrapped process final state is then trimmed.
+    virtual G4VParticleChange* ApplyFinalStateBiasing(
+      const G4BiasingProcessInterface*,  // -- Method used for this biasing. The related biasing
+                                         // operator
+      const G4Track*,  // -- returns this biasing operation at the post step do it level
+      const G4Step*,  // -- when the wrapped process has won the interaction length race.
+      G4bool&);  // -- The wrapped process final state is then trimmed.
     // -- Unused:
-    virtual G4double
-    DistanceToApplyOperation( const G4Track*, G4double, G4ForceCondition* ) { return 0.0; }
-    virtual G4VParticleChange*
-    GenerateBiasingFinalState( const G4Track*, const G4Step* ) { return nullptr; }
+    virtual G4double DistanceToApplyOperation(const G4Track*, G4double, G4ForceCondition*)
+    {
+      return 0.0;
+    }
+    virtual G4VParticleChange* GenerateBiasingFinalState(const G4Track*, const G4Step*)
+    {
+      return nullptr;
+    }
 
-    // -- The possibility is given to further apply a Russian roulette on tracks that are accompagnying the leading particle
+    // -- The possibility is given to further apply a Russian roulette on tracks that are
+    // accompagnying the leading particle
     // -- after the classical leading particle biasing algorithm has been applied.
-    // -- This is of interest when applying the technique to e+ -> gamma gamma for example. Given one gamma is leading,
-    // -- the second one is alone in its category, hence selected. With the Russian roulette it is then possible to keep
-    // -- this one randomly. This is also of interest for pi0 decays, or for brem. e- -> e- gamma where the e- or gamma
+    // -- This is of interest when applying the technique to e+ -> gamma gamma for example. Given
+    // one gamma is leading,
+    // -- the second one is alone in its category, hence selected. With the Russian roulette it is
+    // then possible to keep
+    // -- this one randomly. This is also of interest for pi0 decays, or for brem. e- -> e- gamma
+    // where the e- or gamma
     // -- are alone in their category.
-    void SetFurtherKillingProbability( G4double p ) // -- if p <= 0.0 the killing is ignored.
+    void SetFurtherKillingProbability(G4double p)  // -- if p <= 0.0 the killing is ignored.
     {
       fRussianRouletteKillingProbability = p;
     }
-    G4double GetFurtherKillingProbability() const
-    {
-      return fRussianRouletteKillingProbability;
-    }
+    G4double GetFurtherKillingProbability() const { return fRussianRouletteKillingProbability; }
 
   private:
 

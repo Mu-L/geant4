@@ -35,18 +35,24 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "G4BetaSpectrumSampler.hh"
+
 #include "Randomize.hh"
 
 G4double G4BetaSpectrumSampler::shoot(const G4int npoints, const G4double* aCDF,
                                       const G4double estep)
 {
-  G4double prob = aCDF[npoints - 1]*G4UniformRand();
+  G4double prob = aCDF[npoints - 1] * G4UniformRand();
   G4int i = 0;
-  for (; i<npoints; ++i) { if (prob <= aCDF[i]) { break; } }
+  for (; i < npoints; ++i)
+  {
+    if (prob <= aCDF[i])
+    {
+      break;
+    }
+  }
   const G4double p1 = (i > 0) ? aCDF[i - 1] : aCDF[0];
   const G4double p2 = aCDF[i];
   const G4double delta = p2 - p1;
-  const G4double x = (delta > 0.0) ? estep*i - estep*(p2 - prob)/delta : estep*i;
+  const G4double x = (delta > 0.0) ? estep * i - estep * (p2 - prob) / delta : estep * i;
   return x;
 }
-

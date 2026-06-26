@@ -32,51 +32,48 @@
 // File name:     G4DeltaAngleFreeScat
 //
 // Author:        Vladimir Ivantcheko
-// 
+//
 // Creation date: 23 August 2013
 //
-// Modifications: 
+// Modifications:
 //
-// Class Description: 
+// Class Description:
 //
-// Delta-electron Angular Distribution Generation 
+// Delta-electron Angular Distribution Generation
 //
-// Class Description: End 
+// Class Description: End
 //
 // -------------------------------------------------------------------
 //
 
 #include "G4DeltaAngleFreeScat.hh"
+
 #include "G4PhysicalConstants.hh"
 #include "Randomize.hh"
 
 using namespace std;
 
-G4DeltaAngleFreeScat::G4DeltaAngleFreeScat(const G4String&)
-  : G4VEmAngularDistribution("deltaFree")
-{}    
+G4DeltaAngleFreeScat::G4DeltaAngleFreeScat(const G4String&) : G4VEmAngularDistribution("deltaFree")
+{}
 
 G4DeltaAngleFreeScat::~G4DeltaAngleFreeScat() = default;
 
-G4ThreeVector& 
-G4DeltaAngleFreeScat::SampleDirection(const G4DynamicParticle* dp,
-			      G4double kinEnergyFinal, G4int, 
-			      const G4Material*)
+G4ThreeVector& G4DeltaAngleFreeScat::SampleDirection(const G4DynamicParticle* dp,
+                                                     G4double kinEnergyFinal, G4int,
+                                                     const G4Material*)
 {
-  G4double deltaMomentum = 
-    sqrt(kinEnergyFinal*(kinEnergyFinal + 2*electron_mass_c2));
+  G4double deltaMomentum = sqrt(kinEnergyFinal * (kinEnergyFinal + 2 * electron_mass_c2));
 
-  G4double costet = kinEnergyFinal*(dp->GetTotalEnergy() + electron_mass_c2) /
-    (deltaMomentum * dp->GetTotalMomentum());
+  G4double costet = kinEnergyFinal * (dp->GetTotalEnergy() + electron_mass_c2)
+                    / (deltaMomentum * dp->GetTotalMomentum());
 
-  G4double phi = G4UniformRand()*twopi;
-  G4double sintet = sqrt((1 - costet)*(1 + costet));
- 
-  fLocalDirection.set(sintet*cos(phi), sintet*sin(phi), costet);
+  G4double phi = G4UniformRand() * twopi;
+  G4double sintet = sqrt((1 - costet) * (1 + costet));
+
+  fLocalDirection.set(sintet * cos(phi), sintet * sin(phi), costet);
   fLocalDirection.rotateUz(dp->GetMomentumDirection());
 
   return fLocalDirection;
 }
 
-void G4DeltaAngleFreeScat::PrintGeneratorInformation() const
-{} 
+void G4DeltaAngleFreeScat::PrintGeneratorInformation() const {}

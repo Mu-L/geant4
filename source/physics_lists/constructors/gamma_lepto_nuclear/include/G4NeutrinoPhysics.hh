@@ -35,56 +35,51 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4NeutrinoPhysics_h
-#define G4NeutrinoPhysics_h 1
+#ifndef G4NEUTRINOPHYSICS_HH
+#define G4NEUTRINOPHYSICS_HH
 
+#include "G4NeutrinoPhysicsMessenger.hh"
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
-#include "G4NeutrinoPhysicsMessenger.hh"
 
 class G4NeutrinoPhysics : public G4VPhysicsConstructor
 {
-public:
+  public:
 
-  G4NeutrinoPhysics(G4int ver = 1);
+    G4NeutrinoPhysics(G4int ver = 1);
 
-  ~G4NeutrinoPhysics() override;
+    ~G4NeutrinoPhysics() override;
 
-  void ConstructParticle() override;
-  void ConstructProcess() override;
+    void ConstructParticle() override;
+    void ConstructProcess() override;
 
-  void NuETotXscActivated(G4bool val);
-  void SetNuOscillation(G4bool val);
-  void SetNuEleCcBias(G4double bf);
-  void SetNuEleNcBias(G4double bf);
-  void SetNuNucleusBias(G4double bf);
-  void SetNuOscDistanceBias(G4double bf);
-  void SetNuDetectorName(const G4String& dn);
-  void SetNuOscDistanceName(const G4String& dn);
+    void NuETotXscActivated(G4bool val);
+    void SetNuOscillation(G4bool val);
+    void SetNuEleCcBias(G4double bf);
+    void SetNuEleNcBias(G4double bf);
+    void SetNuNucleusBias(G4double bf);
+    void SetNuOscDistanceBias(G4double bf);
+    void SetNuDetectorName(const G4String& dn);
+    void SetNuOscDistanceName(const G4String& dn);
 
-  G4NeutrinoPhysics& operator=(const G4NeutrinoPhysics& right) = delete;
-  G4NeutrinoPhysics(const G4NeutrinoPhysics&) = delete;
+    G4NeutrinoPhysics& operator=(const G4NeutrinoPhysics& right) = delete;
+    G4NeutrinoPhysics(const G4NeutrinoPhysics&) = delete;
 
-private:
+  private:
 
-  G4bool fNuETotXscActivated = false;
-  G4bool fNuOscillation = true;
+    G4bool fNuETotXscActivated = false;
+    G4bool fNuOscillation = true;
 
-  G4double fNuEleCcBias = 1.0;
-  G4double fNuEleNcBias = 1.0;
-  G4double fNuNucleusBias = 1.0;
-  G4double fNuOscDistanceBias = 1.0;
+    G4double fNuEleCcBias = 1.0;
+    G4double fNuEleNcBias = 1.0;
+    G4double fNuNucleusBias = 1.0;
+    G4double fNuOscDistanceBias = 1.0;
 
-  G4String fNuDetectorName = "0";
-  G4String fNuOscDistanceName = "0";
+    G4String fNuDetectorName = "0";
+    G4String fNuOscDistanceName = "0";
 
-  G4NeutrinoPhysicsMessenger* theMessenger;
-  G4int verbose;
+    G4NeutrinoPhysicsMessenger* theMessenger;
+    G4int verbose;
 };
 
 #endif
-
-
-
-
-

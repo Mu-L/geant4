@@ -30,19 +30,19 @@
 //
 
 #include "G4ErrorMagFieldLimitProcess.hh"
+
 #include "G4ErrorMessenger.hh"
-#include "G4TransportationManager.hh"
-#include "G4FieldManager.hh"
 #include "G4Field.hh"
+#include "G4FieldManager.hh"
 #include "G4Track.hh"
+#include "G4TransportationManager.hh"
 
 #ifdef G4VERBOSE
 #  include "G4ErrorPropagatorData.hh"
 #endif
 
 //------------------------------------------------------------------------
-G4ErrorMagFieldLimitProcess::G4ErrorMagFieldLimitProcess(
-  const G4String& processName)
+G4ErrorMagFieldLimitProcess::G4ErrorMagFieldLimitProcess(const G4String& processName)
   : G4VErrorLimitProcess(processName)
 {
   theStepLimit = kInfinity;
@@ -52,16 +52,16 @@ G4ErrorMagFieldLimitProcess::G4ErrorMagFieldLimitProcess(
 G4ErrorMagFieldLimitProcess::~G4ErrorMagFieldLimitProcess() {}
 
 //------------------------------------------------------------------------
-G4double G4ErrorMagFieldLimitProcess::PostStepGetPhysicalInteractionLength(
-  const G4Track& aTrack, G4double, G4ForceCondition* condition)
+G4double
+G4ErrorMagFieldLimitProcess::PostStepGetPhysicalInteractionLength(const G4Track& aTrack, G4double,
+                                                                  G4ForceCondition* condition)
 {
-  *condition           = NotForced;
-  const G4Field* field = G4TransportationManager::GetTransportationManager()
-                           ->GetFieldManager()
-                           ->GetDetectorField();
+  *condition = NotForced;
+  const G4Field* field =
+    G4TransportationManager::GetTransportationManager()->GetFieldManager()->GetDetectorField();
 
   theStepLength = kInfinity;
-  if(field != 0)
+  if (field != 0)
   {
     G4ThreeVector trkPosi = aTrack.GetPosition();
     G4double pos1[3];
@@ -73,16 +73,15 @@ G4double G4ErrorMagFieldLimitProcess::PostStepGetPhysicalInteractionLength(
     field->GetFieldValue(pos1, h1);
 
     G4ThreeVector BVec(h1[0], h1[1], h1[2]);
-    G4double pmag     = aTrack.GetMomentum().mag();
+    G4double pmag = aTrack.GetMomentum().mag();
     G4double BPerpMom = BVec.cross(G4ThreeVector(pmag, 0., 0.)).mag() / pmag;
 
     theStepLength = theStepLimit * pmag / BPerpMom;
 #ifdef G4VERBOSE
-    if(G4ErrorPropagatorData::verbose() >= 3)
+    if (G4ErrorPropagatorData::verbose() >= 3)
     {
-      G4cout << "G4ErrorMagFieldLimitProcess:: stepLength " << theStepLength
-             << " B " << BPerpMom << " BVec " << BVec << " pmag " << pmag
-             << G4endl;
+      G4cout << "G4ErrorMagFieldLimitProcess:: stepLength " << theStepLength << " B " << BPerpMom
+             << " BVec " << BVec << " pmag " << pmag << G4endl;
     }
 #endif
   }

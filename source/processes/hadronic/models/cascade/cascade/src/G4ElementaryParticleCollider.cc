@@ -46,7 +46,7 @@
 // 20100429  M. Kelsey -- Change "photon()" to "isPhoton()"
 // 20100507  M. Kelsey -- Rationalize multiplicity returns to be actual value
 // 20100511  M. Kelsey -- Replace G4PionSampler and G4NucleonSampler with new
-//		pi-N and N-N classes, reorganize if-cascades 
+//		pi-N and N-N classes, reorganize if-cascades
 // 20100511  M. Kelsey -- Eliminate three residual random-angles blocks.
 // 20100511  M. Kelsey -- Bug fix: pi-N two-body final states not correctly
 //		tested for charge-exchange case.
@@ -109,6 +109,7 @@
 // 20150608  M. Kelsey -- Label all while loops as terminating.
 
 #include "G4ElementaryParticleCollider.hh"
+
 #include "G4CascadeChannel.hh"
 #include "G4CascadeChannelTables.hh"
 #include "G4CascadeParameters.hh"
@@ -124,6 +125,7 @@
 #include "G4VMultiBodyMomDst.hh"
 #include "G4VTwoBodyAngDst.hh"
 #include "Randomize.hh"
+
 #include <algorithm>
 #include <cfloat>
 #include <vector>
@@ -133,65 +135,65 @@ using namespace G4InuclSpecialFunctions;
 
 typedef std::vector<G4InuclElementaryParticle>::iterator particleIterator;
 
-
 G4ElementaryParticleCollider::G4ElementaryParticleCollider()
-  : G4CascadeColliderBase("G4ElementaryParticleCollider"),
-    nucleusA(0), nucleusZ(0) {;}
-
-
-void
-G4ElementaryParticleCollider::collide(G4InuclParticle* bullet,
-				      G4InuclParticle* target,
-				      G4CollisionOutput& output) 
+  : G4CascadeColliderBase("G4ElementaryParticleCollider"), nucleusA(0), nucleusZ(0)
 {
-  if (verboseLevel > 1)
-    G4cout << " >>> G4ElementaryParticleCollider::collide" << G4endl;
+  ;
+}
 
-  if (!useEPCollider(bullet,target)) {		// Sanity check
-    G4cerr << " ElementaryParticleCollider -> can collide only particle with particle " 
-           << G4endl;
+void G4ElementaryParticleCollider::collide(G4InuclParticle* bullet, G4InuclParticle* target,
+                                           G4CollisionOutput& output)
+{
+  if (verboseLevel > 1) G4cout << " >>> G4ElementaryParticleCollider::collide" << G4endl;
+
+  if (!useEPCollider(bullet, target))
+  {  // Sanity check
+    G4cerr << " ElementaryParticleCollider -> can collide only particle with particle " << G4endl;
     return;
   }
 
 #ifdef G4CASCADE_DEBUG_SAMPLER
-  static G4bool doPrintTables = true;	// Once and only once per job
-  if (doPrintTables) {
+  static G4bool doPrintTables = true;  // Once and only once per job
+  if (doPrintTables)
+  {
     G4CascadeChannelTables::Print();
     doPrintTables = false;
   }
 #endif
 
-  interCase.set(bullet, target);	// To identify kind of collision
+  interCase.set(bullet, target);  // To identify kind of collision
 
   if (verboseLevel > 1) G4cout << *bullet << G4endl << *target << G4endl;
 
-  G4InuclElementaryParticle* particle1 =
-    dynamic_cast<G4InuclElementaryParticle*>(bullet);
-  G4InuclElementaryParticle* particle2 =	
-    dynamic_cast<G4InuclElementaryParticle*>(target);
+  G4InuclElementaryParticle* particle1 = dynamic_cast<G4InuclElementaryParticle*>(bullet);
+  G4InuclElementaryParticle* particle2 = dynamic_cast<G4InuclElementaryParticle*>(target);
 
-  if (!particle1 || !particle2) {	// Redundant with useEPCollider()
-    G4cerr << " ElementaryParticleCollider -> can only collide hadrons"
-           << G4endl;
+  if (!particle1 || !particle2)
+  {  // Redundant with useEPCollider()
+    G4cerr << " ElementaryParticleCollider -> can only collide hadrons" << G4endl;
     return;
   }
 
   if (particle1->isNeutrino() || particle2->isNeutrino()) return;
 
   // Check for available interaction, or pion+dibaryon special case
-  if (!G4CascadeChannelTables::GetTable(interCase.hadrons()) &&
-      !particle1->quasi_deutron() && !particle2->quasi_deutron()) {
-    G4cerr << " ElementaryParticleCollider -> cannot collide " 
-	   << particle1->getDefinition()->GetParticleName() << " with "
+  if (!G4CascadeChannelTables::GetTable(interCase.hadrons()) && !particle1->quasi_deutron()
+      && !particle2->quasi_deutron())
+  {
+    G4cerr << " ElementaryParticleCollider -> cannot collide "
+           << particle1->getDefinition()->GetParticleName() << " with "
            << particle2->getDefinition()->GetParticleName() << G4endl;
     return;
   }
 
-  G4LorentzConvertor convertToSCM;	// Utility to handle frame manipulation
-  if (particle2->nucleon() || particle2->quasi_deutron()) {
+  G4LorentzConvertor convertToSCM;  // Utility to handle frame manipulation
+  if (particle2->nucleon() || particle2->quasi_deutron())
+  {
     convertToSCM.setBullet(particle1);
     convertToSCM.setTarget(particle2);
-  } else {
+  }
+  else
+  {
     convertToSCM.setBullet(particle2);
     convertToSCM.setTarget(particle1);
   }
@@ -202,66 +204,79 @@ G4ElementaryParticleCollider::collide(G4InuclParticle* bullet,
   G4double etot_scm = convertToSCM.getTotalSCMEnergy();
 
   // Generate any particle collision with nucleon
-  if (particle1->nucleon() || particle2->nucleon()) {
+  if (particle1->nucleon() || particle2->nucleon())
+  {
     G4double ekin = convertToSCM.getKinEnergyInTheTRS();
 
     // SPECIAL:  Very low energy pions may be absorbed by a nucleon
-    if (pionNucleonAbsorption(ekin)) {
+    if (pionNucleonAbsorption(ekin))
+    {
       generateSCMpionNAbsorption(etot_scm, particle1, particle2);
-    } else {
+    }
+    else
+    {
       generateSCMfinalState(ekin, etot_scm, particle1, particle2);
     }
   }
 
   // Generate pion or photon collision with quasi-deuteron
-  if (particle1->quasi_deutron() || particle2->quasi_deutron()) {
-    if (!G4NucleiModel::useQuasiDeuteron(particle1->type(),particle2->type()) &&
-	!G4NucleiModel::useQuasiDeuteron(particle2->type(),particle1->type())) {
+  if (particle1->quasi_deutron() || particle2->quasi_deutron())
+  {
+    if (!G4NucleiModel::useQuasiDeuteron(particle1->type(), particle2->type())
+        && !G4NucleiModel::useQuasiDeuteron(particle2->type(), particle1->type()))
+    {
       G4cerr << " ElementaryParticleCollider -> can only collide pi,mu,gamma with"
-	     << " dibaryons " << G4endl;
+             << " dibaryons " << G4endl;
       return;
     }
 
-    if (particle1->isMuon() || particle2->isMuon()) {
+    if (particle1->isMuon() || particle2->isMuon())
+    {
       generateSCMmuonAbsorption(etot_scm, particle1, particle2);
-    } else {		// Currently, pion absoprtion also handles gammas
+    }
+    else
+    {  // Currently, pion absoprtion also handles gammas
       generateSCMpionAbsorption(etot_scm, particle1, particle2);
     }
-  }    
+  }
 
-  if (particles.empty()) {	// No final state possible, pass bullet through
-    if (verboseLevel) {
-      G4cerr << " ElementaryParticleCollider -> failed to collide " 
-	     << particle1->getMomModule() << " GeV/c " 
-	     << particle1->getDefinition()->GetParticleName() << " with "
-	     << particle2->getDefinition()->GetParticleName() << G4endl;
+  if (particles.empty())
+  {  // No final state possible, pass bullet through
+    if (verboseLevel)
+    {
+      G4cerr << " ElementaryParticleCollider -> failed to collide " << particle1->getMomModule()
+             << " GeV/c " << particle1->getDefinition()->GetParticleName() << " with "
+             << particle2->getDefinition()->GetParticleName() << G4endl;
     }
     return;
   }
 
   // Convert final state back to lab frame
-  G4LorentzVector mom;		// Buffer to avoid memory churn
+  G4LorentzVector mom;  // Buffer to avoid memory churn
   particleIterator ipart;
-  for(ipart = particles.begin(); ipart != particles.end(); ipart++) {	
+  for (ipart = particles.begin(); ipart != particles.end(); ipart++)
+  {
     mom = convertToSCM.backToTheLab(ipart->getMomentum());
-    ipart->setMomentum(mom); 
+    ipart->setMomentum(mom);
   };
 
-  if (verboseLevel) {
+  if (verboseLevel)
+  {
     // Check conservation in multibody final state
     const G4ParticleDefinition* bDef = bullet->getDefinition();
     const G4ParticleDefinition* tDef = target->getDefinition();
 
     G4int initBaryonNumber = bDef->GetBaryonNumber() + tDef->GetBaryonNumber();
     G4int initCharge = bullet->getCharge() + target->getCharge();
-    G4int initStrangeness = bDef->GetQuarkContent(3) - bDef->GetAntiQuarkContent(3) +
-                            tDef->GetQuarkContent(3) - tDef->GetAntiQuarkContent(3);
+    G4int initStrangeness = bDef->GetQuarkContent(3) - bDef->GetAntiQuarkContent(3)
+                            + tDef->GetQuarkContent(3) - tDef->GetAntiQuarkContent(3);
 
     G4int finalBaryonNumber = 0;
     G4int finalCharge = 0;
     G4int finalStrangeness = 0;
 
-    for (ipart = particles.begin(); ipart != particles.end(); ipart++) {
+    for (ipart = particles.begin(); ipart != particles.end(); ipart++)
+    {
       finalBaryonNumber += ipart->baryon();
       finalCharge += ipart->getCharge();
       finalStrangeness += ipart->getStrangeness();
@@ -271,91 +286,87 @@ G4ElementaryParticleCollider::collide(G4InuclParticle* bullet,
     G4int cnc = finalCharge - initCharge;
     G4int snc = finalStrangeness - initStrangeness;
 
-    if (bnc != 0 || cnc != 0 || snc != 0) {
+    if (bnc != 0 || cnc != 0 || snc != 0)
+    {
       G4cout << " G4ElementaryParticleCollider: quantum number non-conservation " << G4endl;
-      G4cout << "   Baryon number: initial = " << initBaryonNumber << ", final = "
-                                               << finalBaryonNumber << G4endl;
-      G4cout << "   Charge: initial = " << initCharge << ", final = "
-                                        << finalCharge << G4endl;
-      G4cout << "   Strangeness: initial = " << initStrangeness << ", final = "
-                                             << finalStrangeness << G4endl;
+      G4cout << "   Baryon number: initial = " << initBaryonNumber
+             << ", final = " << finalBaryonNumber << G4endl;
+      G4cout << "   Charge: initial = " << initCharge << ", final = " << finalCharge << G4endl;
+      G4cout << "   Strangeness: initial = " << initStrangeness << ", final = " << finalStrangeness
+             << G4endl;
 
       G4cout << " bullet = " << bDef->GetParticleName() << G4endl;
       G4cout << " target = " << tDef->GetParticleName() << G4endl;
-      G4cout << " secondaries = " ;
-      for (ipart = particles.begin(); ipart != particles.end(); ipart++) {
-        G4cout << ipart->getDefinition()->GetParticleName() << " " ;
+      G4cout << " secondaries = ";
+      for (ipart = particles.begin(); ipart != particles.end(); ipart++)
+      {
+        G4cout << ipart->getDefinition()->GetParticleName() << " ";
       }
       G4cout << G4endl;
     }
   }
 
-  if (verboseLevel && !validateOutput(bullet, target, particles)) {
-    G4cout << " incoming particles: \n" << *particle1 << G4endl
-	   << *particle2 << G4endl
-	   << " outgoing particles: " << G4endl;
-    for(ipart = particles.begin(); ipart != particles.end(); ipart++)
+  if (verboseLevel && !validateOutput(bullet, target, particles))
+  {
+    G4cout << " incoming particles: \n"
+           << *particle1 << G4endl << *particle2 << G4endl << " outgoing particles: " << G4endl;
+    for (ipart = particles.begin(); ipart != particles.end(); ipart++)
       G4cout << *ipart << G4endl;
-    
-    G4cout << " <<< Non-conservation in G4ElementaryParticleCollider"
-	   << G4endl;
+
+    G4cout << " <<< Non-conservation in G4ElementaryParticleCollider" << G4endl;
   }
-    
+
   std::sort(particles.begin(), particles.end(), G4ParticleLargerEkin());
   output.addOutgoingParticles(particles);
 }
 
-
-G4int 
-G4ElementaryParticleCollider::generateMultiplicity(G4int is, 
-						   G4double ekin) const 
+G4int G4ElementaryParticleCollider::generateMultiplicity(G4int is, G4double ekin) const
 {
   G4int mul = 0;
 
   const G4CascadeChannel* xsecTable = G4CascadeChannelTables::GetTable(is);
 
-  if (xsecTable) mul = xsecTable->getMultiplicity(ekin);
-  else {
-    G4cerr << " G4ElementaryParticleCollider: Unknown interaction channel "
-	   << is << " - multiplicity not generated " << G4endl;
+  if (xsecTable)
+    mul = xsecTable->getMultiplicity(ekin);
+  else
+  {
+    G4cerr << " G4ElementaryParticleCollider: Unknown interaction channel " << is
+           << " - multiplicity not generated " << G4endl;
   }
 
-  if(verboseLevel > 3){
-    G4cout << " G4ElementaryParticleCollider::generateMultiplicity: "  
-           << " multiplicity = " << mul << G4endl; 
+  if (verboseLevel > 3)
+  {
+    G4cout << " G4ElementaryParticleCollider::generateMultiplicity: "
+           << " multiplicity = " << mul << G4endl;
   }
 
   return mul;
 }
 
- 
-void 
-G4ElementaryParticleCollider::generateOutgoingPartTypes(G4int is, G4int mult,
-							G4double ekin)
+void G4ElementaryParticleCollider::generateOutgoingPartTypes(G4int is, G4int mult, G4double ekin)
 {
-  particle_kinds.clear();	// Initialize buffer for generation
+  particle_kinds.clear();  // Initialize buffer for generation
 
   const G4CascadeChannel* xsecTable = G4CascadeChannelTables::GetTable(is);
 
   if (xsecTable)
     xsecTable->getOutgoingParticleTypes(particle_kinds, mult, ekin);
-  else {
-    G4cerr << " G4ElementaryParticleCollider: Unknown interaction channel "
-	   << is << " - outgoing kinds not generated " << G4endl;
+  else
+  {
+    G4cerr << " G4ElementaryParticleCollider: Unknown interaction channel " << is
+           << " - outgoing kinds not generated " << G4endl;
   }
 
   return;
 }
 
-
-void
-G4ElementaryParticleCollider::generateSCMfinalState(G4double ekin, 
-		                     G4double etot_scm, 
-		                     G4InuclElementaryParticle* particle1,
-		                     G4InuclElementaryParticle* particle2) {
-  if (verboseLevel > 2) {
-    G4cout << " >>> G4ElementaryParticleCollider::generateSCMfinalState" 
-           << G4endl;
+void G4ElementaryParticleCollider::generateSCMfinalState(G4double ekin, G4double etot_scm,
+                                                         G4InuclElementaryParticle* particle1,
+                                                         G4InuclElementaryParticle* particle2)
+{
+  if (verboseLevel > 2)
+  {
+    G4cout << " >>> G4ElementaryParticleCollider::generateSCMfinalState" << G4endl;
   }
 
   fsGenerator.SetVerboseLevel(verboseLevel);
@@ -373,107 +384,112 @@ G4ElementaryParticleCollider::generateSCMfinalState(G4double ekin,
   G4bool generate = true;
 
   G4int itry = 0;
-  while (generate && itry++ < itry_max) {  /* Loop checking 08.06.2015 MHK */
-    particles.clear();		// Initialize buffers for this event
+  while (generate && itry++ < itry_max)
+  { /* Loop checking 08.06.2015 MHK */
+    particles.clear();  // Initialize buffers for this event
     particle_kinds.clear();
 
     // Generate list of final-state particles
     multiplicity = generateMultiplicity(is, ekin);
 
     generateOutgoingPartTypes(is, multiplicity, ekin);
-    if (particle_kinds.empty()) {
-      if (verboseLevel > 3) {
-	G4cout << " generateOutgoingPartTypes failed mult " << multiplicity
-	       << G4endl;
+    if (particle_kinds.empty())
+    {
+      if (verboseLevel > 3)
+      {
+        G4cout << " generateOutgoingPartTypes failed mult " << multiplicity << G4endl;
       }
       continue;
     }
 
-    fillOutgoingMasses();	// Fill mass buffer from particle types
+    fillOutgoingMasses();  // Fill mass buffer from particle types
 
     // Attempt to produce final state kinematics
     fsGenerator.Configure(particle1, particle2, particle_kinds);
     generate = !fsGenerator.Generate(etot_scm, masses, scm_momentums);
-  }	// while (generate) 
+  }  // while (generate)
 
-  if (itry >= itry_max) {		// Unable to generate valid final state
+  if (itry >= itry_max)
+  {  // Unable to generate valid final state
     if (verboseLevel > 2)
-      G4cout << " generateSCMfinalState failed " << itry << " attempts"
-	     << G4endl;
+      G4cout << " generateSCMfinalState failed " << itry << " attempts" << G4endl;
     return;
   }
 
   // Store generated momenta into outgoing particles
 
-  particles.resize(multiplicity);		// Preallocate buffer
-  for (G4int i=0; i<multiplicity; i++) {
-    particles[i].fill(scm_momentums[i], particle_kinds[i],
-		      G4InuclParticle::EPCollider);
+  particles.resize(multiplicity);  // Preallocate buffer
+  for (G4int i = 0; i < multiplicity; i++)
+  {
+    particles[i].fill(scm_momentums[i], particle_kinds[i], G4InuclParticle::EPCollider);
   }
 
-  if (verboseLevel > 3) {
-    G4cout << " <<< G4ElementaryParticleCollider::generateSCMfinalState"
-	   << G4endl;
+  if (verboseLevel > 3)
+  {
+    G4cout << " <<< G4ElementaryParticleCollider::generateSCMfinalState" << G4endl;
   }
 
-  return;	// Particles buffer filled
+  return;  // Particles buffer filled
 }
-
 
 // Use generated list of final states to fill mass buffers
 
-void G4ElementaryParticleCollider::fillOutgoingMasses() {
+void G4ElementaryParticleCollider::fillOutgoingMasses()
+{
   std::size_t mult = particle_kinds.size();
 
-  masses.resize(mult,0.);
-  masses2.resize(mult,0.);		// Allows direct [i] setting
+  masses.resize(mult, 0.);
+  masses2.resize(mult, 0.);  // Allows direct [i] setting
 
-  for (std::size_t i = 0; i < mult; ++i) {
+  for (std::size_t i = 0; i < mult; ++i)
+  {
     masses[i] = G4InuclElementaryParticle::getParticleMass(particle_kinds[i]);
     masses2[i] = masses[i] * masses[i];
   }
 }
 
-
 // Generate nucleon momenta for pion or photon absorption by dibaryon
 // The nucleon distribution is assumed to be isotropic in SCM
 
-void
-G4ElementaryParticleCollider::generateSCMpionAbsorption(G4double etot_scm,
-                                     G4InuclElementaryParticle* particle1,
-                                     G4InuclElementaryParticle* particle2)
+void G4ElementaryParticleCollider::generateSCMpionAbsorption(G4double etot_scm,
+                                                             G4InuclElementaryParticle* particle1,
+                                                             G4InuclElementaryParticle* particle2)
 {
   if (verboseLevel > 3)
-    G4cout << " >>> G4ElementaryParticleCollider::generateSCMpionAbsorption" 
-	   << G4endl;
+    G4cout << " >>> G4ElementaryParticleCollider::generateSCMpionAbsorption" << G4endl;
 
-  particles.clear();		// Initialize buffers for this event
+  particles.clear();  // Initialize buffers for this event
   particles.resize(2);
 
   particle_kinds.clear();
 
   G4int typeProduct = particle1->type() * particle2->type();
 
-  if (typeProduct == G4int(pi0)*G4int(diproton) || typeProduct == G4int(pip)*G4int(unboundPN) ||
-      typeProduct == G4int(gam)*G4int(diproton)) {
+  if (typeProduct == G4int(pi0) * G4int(diproton) || typeProduct == G4int(pip) * G4int(unboundPN)
+      || typeProduct == G4int(gam) * G4int(diproton))
+  {
     particle_kinds.push_back(pro);
     particle_kinds.push_back(pro);
-
-  } else if (typeProduct == G4int(pim)*G4int(diproton) || typeProduct == G4int(pip)*G4int(dineutron) ||
-             typeProduct == G4int(pi0)*G4int(unboundPN) || typeProduct == G4int(gam)*G4int(unboundPN)) {
+  }
+  else if (typeProduct == G4int(pim) * G4int(diproton)
+           || typeProduct == G4int(pip) * G4int(dineutron)
+           || typeProduct == G4int(pi0) * G4int(unboundPN)
+           || typeProduct == G4int(gam) * G4int(unboundPN))
+  {
     particle_kinds.push_back(pro);
     particle_kinds.push_back(neu);
-
-  } else if (typeProduct == G4int(pi0)*G4int(dineutron) || typeProduct == G4int(pim)*G4int(unboundPN) ||
-             typeProduct == G4int(gam)*G4int(dineutron)) {
+  }
+  else if (typeProduct == G4int(pi0) * G4int(dineutron)
+           || typeProduct == G4int(pim) * G4int(unboundPN)
+           || typeProduct == G4int(gam) * G4int(dineutron))
+  {
     particle_kinds.push_back(neu);
     particle_kinds.push_back(neu);
-
-  } else {
-    G4cerr << " Illegal absorption: "
-           << particle1->getDefinition()->GetParticleName() << " + "
-           << particle2->getDefinition()->GetParticleName() << " -> ?"
-           << G4endl;
+  }
+  else
+  {
+    G4cerr << " Illegal absorption: " << particle1->getDefinition()->GetParticleName() << " + "
+           << particle2->getDefinition()->GetParticleName() << " -> ?" << G4endl;
     return;
   }
 
@@ -481,8 +497,7 @@ G4ElementaryParticleCollider::generateSCMpionAbsorption(G4double etot_scm,
 
   G4double a = 0.5 * (etot_scm * etot_scm - masses2[0] - masses2[1]);
 
-  G4double pmod = std::sqrt((a*a - masses2[0]*masses2[1])
-			    / (etot_scm*etot_scm) );
+  G4double pmod = std::sqrt((a * a - masses2[0] * masses2[1]) / (etot_scm * etot_scm));
   G4LorentzVector mom1 = generateWithRandomAngles(pmod, masses[0]);
   G4LorentzVector mom2;
   mom2.setVectM(-mom1.vect(), masses[1]);
@@ -491,20 +506,17 @@ G4ElementaryParticleCollider::generateSCMpionAbsorption(G4double etot_scm,
   particles[1].fill(mom2, particle_kinds[1], G4InuclParticle::EPCollider);
 }
 
-
 // Generate nucleon momenta for muon absorption by dibaryon
 // The nucleon distribution is assumed to be isotropic in SCM
 
-void
-G4ElementaryParticleCollider::generateSCMmuonAbsorption(G4double etot_scm,
-                                     G4InuclElementaryParticle* particle1,
-                                     G4InuclElementaryParticle* particle2)
+void G4ElementaryParticleCollider::generateSCMmuonAbsorption(G4double etot_scm,
+                                                             G4InuclElementaryParticle* particle1,
+                                                             G4InuclElementaryParticle* particle2)
 {
   if (verboseLevel > 3)
-    G4cout << " >>> G4ElementaryParticleCollider::generateSCMmuonAbsorption"
-           << G4endl;
+    G4cout << " >>> G4ElementaryParticleCollider::generateSCMmuonAbsorption" << G4endl;
 
-  particles.clear();            // Initialize buffers for this event
+  particles.clear();  // Initialize buffers for this event
   particles.resize(3);
 
   scm_momentums.clear();
@@ -514,54 +526,57 @@ G4ElementaryParticleCollider::generateSCMmuonAbsorption(G4double etot_scm,
 
   G4int typeProduct = particle1->type() * particle2->type();
 
-  if (typeProduct == G4int(mum)*G4int(diproton)) {
+  if (typeProduct == G4int(mum) * G4int(diproton))
+  {
     particle_kinds.push_back(pro);
     particle_kinds.push_back(neu);
-  } else if (typeProduct == G4int(mum)*G4int(unboundPN)) {
+  }
+  else if (typeProduct == G4int(mum) * G4int(unboundPN))
+  {
     particle_kinds.push_back(neu);
     particle_kinds.push_back(neu);
-  } else {
-    G4cerr << " Illegal absorption: "
-           << particle1->getDefinition()->GetParticleName() << " + "
-           << particle2->getDefinition()->GetParticleName() << " -> ?"
-           << G4endl;
+  }
+  else
+  {
+    G4cerr << " Illegal absorption: " << particle1->getDefinition()->GetParticleName() << " + "
+           << particle2->getDefinition()->GetParticleName() << " -> ?" << G4endl;
     return;
   }
   particle_kinds.push_back(mnu);
-  
+
   fillOutgoingMasses();
 
   // Phase space generator required for the 3-body final state
   G4GDecay3 breakup(etot_scm, masses[0], masses[1], masses[2]);
   std::vector<G4ThreeVector> theMomenta = breakup.GetThreeBodyMomenta();
 
-  if (theMomenta.empty()) {
+  if (theMomenta.empty())
+  {
     G4cerr << " generateSCMmuonAbsorption: GetThreeBodyMomenta() failed"
-	   << " for " << particle2->type() << " dibaryon" << G4endl;
+           << " for " << particle2->type() << " dibaryon" << G4endl;
     particle_kinds.clear();
     masses.clear();
     particles.clear();
     return;
   }
 
-  for (std::size_t i=0; i<3; ++i) {
+  for (std::size_t i = 0; i < 3; ++i)
+  {
     scm_momentums[i].setVectM(theMomenta[i], masses[i]);
     particles[i].fill(scm_momentums[i], particle_kinds[i], G4InuclParticle::EPCollider);
   }
-} 
-
+}
 
 // generate nucleons momenta for pion absorption by single nucleon
 
-void
-G4ElementaryParticleCollider::generateSCMpionNAbsorption(G4double /*etot_scm*/,
-			             G4InuclElementaryParticle* particle1,
-			             G4InuclElementaryParticle* particle2) {
+void G4ElementaryParticleCollider::generateSCMpionNAbsorption(G4double /*etot_scm*/,
+                                                              G4InuclElementaryParticle* particle1,
+                                                              G4InuclElementaryParticle* particle2)
+{
   if (verboseLevel > 3)
-    G4cout << " >>> G4ElementaryParticleCollider::generateSCMpionNAbsorption" 
-	   << G4endl;
+    G4cout << " >>> G4ElementaryParticleCollider::generateSCMpionNAbsorption" << G4endl;
 
-  particles.clear();		// Initialize buffers for this event
+  particles.clear();  // Initialize buffers for this event
   particles.resize(1);
 
   particle_kinds.clear();
@@ -570,11 +585,10 @@ G4ElementaryParticleCollider::generateSCMpionNAbsorption(G4double /*etot_scm*/,
   G4int type2 = particle2->type();
 
   // Ensure that single-nucleon absportion is valid (charge exchangeable)
-  if ((type1*type2 != pim*pro && type1*type2 != pip*neu)) {
-    G4cerr << " pion-nucleon absorption: "
-	   << particle1->getDefinition()->GetParticleName() << " + "
-	   << particle2->getDefinition()->GetParticleName() << " -> ?"
-	   << G4endl;
+  if ((type1 * type2 != pim * pro && type1 * type2 != pip * neu))
+  {
+    G4cerr << " pion-nucleon absorption: " << particle1->getDefinition()->GetParticleName() << " + "
+           << particle2->getDefinition()->GetParticleName() << " -> ?" << G4endl;
     return;
   }
 
@@ -587,43 +601,42 @@ G4ElementaryParticleCollider::generateSCMpionNAbsorption(G4double /*etot_scm*/,
   fillOutgoingMasses();
 
   // Get mass of residual nucleus (2-ntype = 1 for proton, 0 for neutron)
-  G4double mRecoil =
-    G4InuclNuclei::getNucleiMass(nucleusA-1, nucleusZ-(2-ntype));
-  G4double mRecoil2 = mRecoil*mRecoil;
+  G4double mRecoil = G4InuclNuclei::getNucleiMass(nucleusA - 1, nucleusZ - (2 - ntype));
+  G4double mRecoil2 = mRecoil * mRecoil;
 
   // Recompute Ecm to include nucleus (for recoil kinematics)
   G4LorentzVector piN4 = particle1->getMomentum() + particle2->getMomentum();
-  G4LorentzVector vsum(0.,0.,0.,mRecoil);
+  G4LorentzVector vsum(0., 0., 0., mRecoil);
   vsum += piN4;
 
   // Two-body kinematics (nucleon against nucleus) in overall CM system
   G4double esq_scm = vsum.m2();
   G4double a = 0.5 * (esq_scm - masses2[0] - mRecoil2);
 
-  G4double pmod = std::sqrt((a*a - masses2[0]*mRecoil2) / esq_scm );
+  G4double pmod = std::sqrt((a * a - masses2[0] * mRecoil2) / esq_scm);
   G4LorentzVector mom1 = generateWithRandomAngles(pmod, masses[0]);
 
-  if (verboseLevel > 3) {
-    G4cout << " outgoing type " << outType << " recoiling on nuclear mass "
-	   << mRecoil << "\n a " << a << " p " << pmod << " Ekin "
-	   << mom1.e()-masses[0] << G4endl;
+  if (verboseLevel > 3)
+  {
+    G4cout << " outgoing type " << outType << " recoiling on nuclear mass " << mRecoil << "\n a "
+           << a << " p " << pmod << " Ekin " << mom1.e() - masses[0] << G4endl;
   }
 
-  mom1.boost(-piN4.boostVector());	// Boost into CM of pi-N collision
+  mom1.boost(-piN4.boostVector());  // Boost into CM of pi-N collision
 
-  if (verboseLevel > 3) {
-    G4cout << " in original pi-N frame p(SCM) " << mom1.rho() << " Ekin "
-	   << mom1.e()-masses[0] << G4endl;
+  if (verboseLevel > 3)
+  {
+    G4cout << " in original pi-N frame p(SCM) " << mom1.rho() << " Ekin " << mom1.e() - masses[0]
+           << G4endl;
   }
 
   // Fill only the ejected nucleon
   particles[0].fill(mom1, particle_kinds[0], G4InuclParticle::EPCollider);
 }
 
-
 // Evaluate whether interaction is candidate for absorption on nucleon
-G4bool 
-G4ElementaryParticleCollider::pionNucleonAbsorption(G4double ekin) const {
+G4bool G4ElementaryParticleCollider::pionNucleonAbsorption(G4double ekin) const
+{
   if (verboseLevel > 3)
     G4cout << " >>> G4ElementaryParticleCollider::pionNucleonAbsorption ?"
            << " ekin " << ekin << " is " << interCase.hadrons() << G4endl;
@@ -633,10 +646,7 @@ G4ElementaryParticleCollider::pionNucleonAbsorption(G4double ekin) const {
 
   // Absorption occurs only for pi- p -> n, or pi+ n -> p
   // Restrict to "very slow" pions, to allow for some normal scattering
-  return ((interCase.hadrons() == pim*pro ||
-	   interCase.hadrons() == pip*neu)
-	  && (ekin < 0.05)		// 50 MeV kinetic energy or less
-	  && (G4UniformRand() < absProb)
-	  );
+  return ((interCase.hadrons() == pim * pro || interCase.hadrons() == pip * neu)
+          && (ekin < 0.05)  // 50 MeV kinetic energy or less
+          && (G4UniformRand() < absProb));
 }
-

@@ -22,20 +22,21 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // G4Region implementation
 //
 // Author: Gabriele Cosmo (CERN), 18.09.2002
 // --------------------------------------------------------------------
 
 #include "G4Region.hh"
-#include "G4RegionStore.hh"
+
 #include "G4LogicalVolume.hh"
-#include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolumeStore.hh"
-#include "G4VNestedParameterisation.hh"
-#include "G4VUserRegionInformation.hh"
 #include "G4Material.hh"
+#include "G4RegionStore.hh"
+#include "G4VNestedParameterisation.hh"
+#include "G4VPhysicalVolume.hh"
+#include "G4VUserRegionInformation.hh"
 
 // These macros changes the references to fields that are now encapsulated
 // in the class G4RegionData.
@@ -62,8 +63,7 @@ const G4RegionManager& G4Region::GetSubInstanceManager()
 //  - Adds self to region Store
 // *******************************************************************
 //
-G4Region::G4Region(const G4String& pName)
-  : fName(pName)
+G4Region::G4Region(const G4String& pName) : fName(pName)
 {
   instanceID = subInstanceManager.CreateSubInstance();
   G4MT_fsmanager = nullptr;
@@ -73,11 +73,9 @@ G4Region::G4Region(const G4String& pName)
   if (rStore->GetRegion(pName, false) != nullptr)
   {
     std::ostringstream message;
-    message << "The region has NOT been registered !" << G4endl
-            << "          Region " << pName << " already existing in store !"
-            << G4endl;
-    G4Exception("G4Region::G4Region()", "GeomMgt1001",
-                JustWarning, message);
+    message << "The region has NOT been registered !" << G4endl << "          Region " << pName
+            << " already existing in store !" << G4endl;
+    G4Exception("G4Region::G4Region()", "GeomMgt1001", JustWarning, message);
   }
   else
   {
@@ -90,8 +88,7 @@ G4Region::G4Region(const G4String& pName)
 //                            for usage restricted to object persistency.
 // ********************************************************************
 //
-G4Region::G4Region( __void__& )
-  : fName("")
+G4Region::G4Region(__void__&) : fName("")
 {
   instanceID = subInstanceManager.CreateSubInstance();
   G4MT_fsmanager = nullptr;
@@ -110,7 +107,7 @@ G4Region::G4Region( __void__& )
 G4Region::~G4Region()
 {
   G4RegionStore::GetInstance()->DeRegister(this);
-  delete fUserInfo; 
+  delete fUserInfo;
 }
 
 // ********************************************************************
@@ -170,30 +167,33 @@ G4UserSteppingAction* G4Region::GetRegionalSteppingAction() const
 //
 void G4Region::ScanVolumeTree(G4LogicalVolume* lv, G4bool region)
 {
-  // If logical volume is going to become a region, add 
+  // If logical volume is going to become a region, add
   // its material to the list if not already present
   //
   G4Region* currentRegion = nullptr;
   std::size_t noDaughters = lv->GetNoDaughters();
   G4Material* volMat = lv->GetMaterial();
-  if((volMat == nullptr) && fInMassGeometry)
+  if ((volMat == nullptr) && fInMassGeometry)
   {
     std::ostringstream message;
     message << "Logical volume <" << lv->GetName() << ">" << G4endl
             << "does not have a valid material pointer." << G4endl
             << "A logical volume belonging to the (tracking) world volume "
             << "must have a valid material.";
-    G4Exception("G4Region::ScanVolumeTree()", "GeomMgt0002",
-                FatalException, message, "Check your geometry construction.");
+    G4Exception("G4Region::ScanVolumeTree()", "GeomMgt0002", FatalException, message,
+                "Check your geometry construction.");
   }
   if (region)
   {
     currentRegion = this;
     if (volMat != nullptr)
-    { 
-      AddMaterial(volMat); 
-      auto  baseMat = const_cast<G4Material*>(volMat->GetBaseMaterial());
-      if (baseMat != nullptr) { AddMaterial(baseMat); }
+    {
+      AddMaterial(volMat);
+      auto baseMat = const_cast<G4Material*>(volMat->GetBaseMaterial());
+      if (baseMat != nullptr)
+      {
+        AddMaterial(baseMat);
+      }
     }
   }
 
@@ -204,7 +204,10 @@ void G4Region::ScanVolumeTree(G4LogicalVolume* lv, G4bool region)
 
   // Stop recursion here if no further daughters are involved
   //
-  if(noDaughters==0) { return; }
+  if (noDaughters == 0)
+  {
+    return;
+  }
 
   G4VPhysicalVolume* daughterPVol = lv->GetDaughter(0);
   if (daughterPVol->IsParameterised())
@@ -217,50 +220,54 @@ void G4Region::ScanVolumeTree(G4LogicalVolume* lv, G4bool region)
     if (pParam->GetMaterialScanner() != nullptr)
     {
       std::size_t matNo = pParam->GetMaterialScanner()->GetNumberOfMaterials();
-      for (std::size_t mat=0; mat<matNo; ++mat)
+      for (std::size_t mat = 0; mat < matNo; ++mat)
       {
         volMat = pParam->GetMaterialScanner()->GetMaterial((G4int)mat);
-        if((volMat == nullptr) && fInMassGeometry)
+        if ((volMat == nullptr) && fInMassGeometry)
         {
           std::ostringstream message;
-          message << "The parameterisation for the physical volume <"
-                  << daughterPVol->GetName() << ">" << G4endl
-                  << "does not return a valid material pointer." << G4endl
+          message << "The parameterisation for the physical volume <" << daughterPVol->GetName()
+                  << ">" << G4endl << "does not return a valid material pointer." << G4endl
                   << "A volume belonging to the (tracking) world volume must "
                   << "have a valid material.";
-          G4Exception("G4Region::ScanVolumeTree()", "GeomMgt0002",
-                      FatalException, message, "Check your parameterisation.");
+          G4Exception("G4Region::ScanVolumeTree()", "GeomMgt0002", FatalException, message,
+                      "Check your parameterisation.");
         }
         if (volMat != nullptr)
-        { 
-          AddMaterial(volMat); 
-          auto  baseMat = const_cast<G4Material*>(volMat->GetBaseMaterial());
-          if (baseMat != nullptr) { AddMaterial(baseMat); }
+        {
+          AddMaterial(volMat);
+          auto baseMat = const_cast<G4Material*>(volMat->GetBaseMaterial());
+          if (baseMat != nullptr)
+          {
+            AddMaterial(baseMat);
+          }
         }
       }
     }
     else
     {
       std::size_t repNo = daughterPVol->GetMultiplicity();
-      for (std::size_t rep=0; rep<repNo; ++rep)
+      for (std::size_t rep = 0; rep < repNo; ++rep)
       {
         volMat = pParam->ComputeMaterial((G4int)rep, daughterPVol);
-        if((volMat == nullptr) && fInMassGeometry)
+        if ((volMat == nullptr) && fInMassGeometry)
         {
           std::ostringstream message;
-          message << "The parameterisation for the physical volume <"
-                  << daughterPVol->GetName() << ">" << G4endl
-                  << "does not return a valid material pointer." << G4endl
+          message << "The parameterisation for the physical volume <" << daughterPVol->GetName()
+                  << ">" << G4endl << "does not return a valid material pointer." << G4endl
                   << "A volume belonging to the (tracking) world volume must "
                   << "have a valid material.";
-          G4Exception("G4Region::ScanVolumeTree()", "GeomMgt0002",
-                      FatalException, message, "Check your parameterisation.");
+          G4Exception("G4Region::ScanVolumeTree()", "GeomMgt0002", FatalException, message,
+                      "Check your parameterisation.");
         }
-        if(volMat != nullptr)
-        { 
+        if (volMat != nullptr)
+        {
           AddMaterial(volMat);
-          auto  baseMat = const_cast<G4Material*>(volMat->GetBaseMaterial());
-          if (baseMat != nullptr) { AddMaterial(baseMat); }
+          auto baseMat = const_cast<G4Material*>(volMat->GetBaseMaterial());
+          if (baseMat != nullptr)
+          {
+            AddMaterial(baseMat);
+          }
         }
       }
     }
@@ -269,7 +276,7 @@ void G4Region::ScanVolumeTree(G4LogicalVolume* lv, G4bool region)
   }
   else
   {
-    for (std::size_t i=0; i<noDaughters; ++i)
+    for (std::size_t i = 0; i < noDaughters; ++i)
     {
       G4LogicalVolume* daughterLVol = lv->GetDaughter(i)->GetLogicalVolume();
       if (!daughterLVol->IsRootRegion())
@@ -298,18 +305,18 @@ void G4Region::AddRootLogicalVolume(G4LogicalVolume* lv, G4bool search)
     std::ostringstream message;
     message << "Logical volume <" << lv->GetName() << "> is already set as" << G4endl
             << "root for region <" << lv->GetRegion()->GetName() << ">." << G4endl
-            << "It cannot be root logical volume for another region <" << GetName()
-            << ">" << G4endl;
-    G4Exception("G4Region::AddRootLogicalVolume()", "GeomMgt0002", FatalException,
-                message, "A logical volume cannot belong to more than one region!");
+            << "It cannot be root logical volume for another region <" << GetName() << ">"
+            << G4endl;
+    G4Exception("G4Region::AddRootLogicalVolume()", "GeomMgt0002", FatalException, message,
+                "A logical volume cannot belong to more than one region!");
     return;
   }
 
   // Check the logical volume is not already in the list
   //
-  if (search) 
+  if (search)
   {
-    auto pos = std::find(fRootVolumes.cbegin(),fRootVolumes.cend(),lv);
+    auto pos = std::find(fRootVolumes.cbegin(), fRootVolumes.cend(), lv);
     if (pos == fRootVolumes.cend())
     {
       // Insert the root volume in the list and set it as root region
@@ -319,7 +326,7 @@ void G4Region::AddRootLogicalVolume(G4LogicalVolume* lv, G4bool search)
     }
   }
   else  // WARNING: user *MUST* guarantee lv is not already inserted.
-  {     // Providing speedup for very complex flat geometries
+  {  // Providing speedup for very complex flat geometries
     fRootVolumes.push_back(lv);
     lv->SetRegionRootFlag(true);
   }
@@ -342,11 +349,11 @@ void G4Region::RemoveRootLogicalVolume(G4LogicalVolume* lv, G4bool scan)
 {
   // Find and remove logical volume from the list
   //
-  auto pos = std::find(fRootVolumes.cbegin(),fRootVolumes.cend(),lv);
+  auto pos = std::find(fRootVolumes.cbegin(), fRootVolumes.cend(), lv);
   if (pos != fRootVolumes.cend())
   {
     if (fRootVolumes.size() != 1)  // Avoid resetting flag for world since
-    {                              // volume may be already deleted !
+    {  // volume may be already deleted !
       lv->SetRegionRootFlag(false);
     }
     fRootVolumes.erase(pos);
@@ -396,7 +403,7 @@ void G4Region::UpdateMaterialList()
   // Loop over the root logical volumes and rebuild the list
   // of materials from scratch
   //
-  for (const auto & rootVolume : fRootVolumes)
+  for (const auto& rootVolume : fRootVolumes)
   {
     ScanVolumeTree(rootVolume, true);
   }
@@ -410,13 +417,16 @@ void G4Region::UpdateMaterialList()
 //
 void G4Region::SetWorld(G4VPhysicalVolume* wp)
 {
-  if(wp == nullptr)
+  if (wp == nullptr)
   {
     fWorldPhys = nullptr;
   }
   else
   {
-    if(BelongsTo(wp)) { fWorldPhys = wp; }
+    if (BelongsTo(wp))
+    {
+      fWorldPhys = wp;
+    }
   }
 
   return;
@@ -427,16 +437,22 @@ void G4Region::SetWorld(G4VPhysicalVolume* wp)
 //  - Returns whether this region belongs to the given physical volume
 //    (recursively scanned to the bottom of the hierarchy)
 // *******************************************************************
-// 
+//
 G4bool G4Region::BelongsTo(G4VPhysicalVolume* thePhys) const
 {
   G4LogicalVolume* currLog = thePhys->GetLogicalVolume();
-  if (currLog->GetRegion()==this) {return true;}
+  if (currLog->GetRegion() == this)
+  {
+    return true;
+  }
 
   std::size_t nDaughters = currLog->GetNoDaughters();
   while ((nDaughters--) != 0)  // Loop checking, 06.08.2015, G.Cosmo
   {
-    if (BelongsTo(currLog->GetDaughter(nDaughters))) {return true;}
+    if (BelongsTo(currLog->GetDaughter(nDaughters)))
+    {
+      return true;
+    }
   }
 
   return false;
@@ -452,7 +468,7 @@ void G4Region::ClearFastSimulationManager()
 {
   G4bool isUnique;
   G4Region* parent = GetParentRegion(isUnique);
-  if(parent != nullptr)
+  if (parent != nullptr)
   {
     if (isUnique)
     {
@@ -463,11 +479,9 @@ void G4Region::ClearFastSimulationManager()
       std::ostringstream message;
       message << "Region <" << fName << "> belongs to more than"
               << " one parent region !" << G4endl
-              << "A region cannot belong to more than one direct parent region,"
-              << G4endl
+              << "A region cannot belong to more than one direct parent region," << G4endl
               << "to have fast-simulation assigned.";
-      G4Exception("G4Region::ClearFastSimulationManager()",
-                  "GeomMgt1002", JustWarning, message);
+      G4Exception("G4Region::ClearFastSimulationManager()", "GeomMgt1002", JustWarning, message);
       G4MT_fsmanager = nullptr;
     }
   }
@@ -482,28 +496,32 @@ void G4Region::ClearFastSimulationManager()
 //  - Returns a region that contains this region.
 //    Otherwise null is returned.
 // *******************************************************************
-// 
+//
 G4Region* G4Region::GetParentRegion(G4bool& unique) const
 {
-  G4Region* parent = nullptr; unique = true;
+  G4Region* parent = nullptr;
+  unique = true;
   G4LogicalVolumeStore* lvStore = G4LogicalVolumeStore::GetInstance();
 
   // Loop over all logical volumes in the store
   //
-  for(const auto & lvol : *lvStore)
+  for (const auto& lvol : *lvStore)
   {
     std::size_t nD = lvol->GetNoDaughters();
     G4Region* aR = lvol->GetRegion();
 
     // Loop over all daughters of each logical volume
     //
-    for(std::size_t iD=0; iD<nD; ++iD)
+    for (std::size_t iD = 0; iD < nD; ++iD)
     {
-      if(lvol->GetDaughter(iD)->GetLogicalVolume()->GetRegion()==this)
-      { 
-        if(parent != nullptr)
+      if (lvol->GetDaughter(iD)->GetLogicalVolume()->GetRegion() == this)
+      {
+        if (parent != nullptr)
         {
-          if(parent!=aR) { unique = false; }
+          if (parent != aR)
+          {
+            unique = false;
+          }
         }
         else  // Cache LV parent region which includes a daughter volume
               // with the same associated region as the current one

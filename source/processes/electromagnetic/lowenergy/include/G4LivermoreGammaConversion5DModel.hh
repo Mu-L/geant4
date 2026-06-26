@@ -29,8 +29,8 @@
 //         derives from G4BetheHeitler5DModel
 // -------------------------------------------------------------------
 
-#ifndef G4LivermoreGammaConversion5DModel_h
-#define G4LivermoreGammaConversion5DModel_h 1
+#ifndef G4LIVERMOREGAMMACONVERSION5DMODEL_HH
+#define G4LIVERMOREGAMMACONVERSION5DMODEL_HH
 
 #include "G4BetheHeitler5DModel.hh"
 #include "G4Log.hh"
@@ -41,36 +41,38 @@ class G4PhysicsLogVector;
 
 class G4LivermoreGammaConversion5DModel : public G4BetheHeitler5DModel
 {
-public:
-  explicit G4LivermoreGammaConversion5DModel(const G4ParticleDefinition* p = nullptr,
-                                             const G4String& nam = "Livermore5DConversion");
-  ~G4LivermoreGammaConversion5DModel() override;
+  public:
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
-  void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
+    explicit G4LivermoreGammaConversion5DModel(const G4ParticleDefinition* p = nullptr,
+                                               const G4String& nam = "Livermore5DConversion");
+    ~G4LivermoreGammaConversion5DModel() override;
 
-  G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
-                                      G4double A = 0.0, G4double cut = 0.0,
-                                      G4double emax = DBL_MAX) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
 
-  G4LivermoreGammaConversion5DModel&
-  operator=(const G4LivermoreGammaConversion5DModel& right) = delete;
-  G4LivermoreGammaConversion5DModel(const G4LivermoreGammaConversion5DModel&) = delete;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A = 0.0, G4double cut = 0.0,
+                                        G4double emax = DBL_MAX) override;
 
-private:
-  const G4String& FindDirectoryPath();
-  void ReadData(const G4int ZZ);
+    G4LivermoreGammaConversion5DModel&
+    operator=(const G4LivermoreGammaConversion5DModel& right) = delete;
+    G4LivermoreGammaConversion5DModel(const G4LivermoreGammaConversion5DModel&) = delete;
 
-  G4ParticleChangeForGamma* fParticleChange;
+  private:
 
-  static G4PhysicsFreeVector* data[101];  // 101 because Z range is 1-100
-  static G4String gDataDirectory;
+    const G4String& FindDirectoryPath();
+    void ReadData(const G4int ZZ);
 
-  G4double lowEnergyLimit;
-  G4int verboseLevel;
-  G4int maxZ = 100;
-  G4bool useSpline = false;
-  G4bool isInitialised = false;
+    G4ParticleChangeForGamma* fParticleChange;
+
+    static G4PhysicsFreeVector* data[101];  // 101 because Z range is 1-100
+    static G4String gDataDirectory;
+
+    G4double lowEnergyLimit;
+    G4int verboseLevel;
+    G4int maxZ = 100;
+    G4bool useSpline = false;
+    G4bool isInitialised = false;
 };
 
 #endif

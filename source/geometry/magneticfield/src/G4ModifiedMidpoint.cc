@@ -29,24 +29,23 @@
 // --------------------------------------------------------------------
 
 #include "G4ModifiedMidpoint.hh"
+
 #include "G4FieldUtils.hh"
 
 using namespace field_utils;
 
-G4ModifiedMidpoint::G4ModifiedMidpoint( G4EquationOfMotion* equation,
-                                        G4int nvar, G4int steps )
+G4ModifiedMidpoint::G4ModifiedMidpoint(G4EquationOfMotion* equation, G4int nvar, G4int steps)
   : fEquation(equation), fnvar(nvar), fsteps(steps)
 {
   if (nvar <= 0)
   {
-    G4Exception("G4ModifiedMidpoint::G4ModifiedMidpoint()",
-                "GeomField0002", FatalException,
+    G4Exception("G4ModifiedMidpoint::G4ModifiedMidpoint()", "GeomField0002", FatalException,
                 "Invalid number of variables; must be greater than zero!");
   }
 }
 
-void G4ModifiedMidpoint::DoStep( const G4double yIn[], const G4double dydyIn[],
-                                 G4double yOut[], G4double hstep) const
+void G4ModifiedMidpoint::DoStep(const G4double yIn[], const G4double dydyIn[], G4double yOut[],
+                                G4double hstep) const
 {
   G4double y0[G4FieldTrack::ncompSVEC];
   G4double y1[G4FieldTrack::ncompSVEC];
@@ -93,9 +92,9 @@ void G4ModifiedMidpoint::DoStep( const G4double yIn[], const G4double dydyIn[],
   }
 }
 
-void G4ModifiedMidpoint::DoStep( const G4double yIn[], const G4double dydxIn[],
-                           G4double yOut[], G4double hstep, G4double yMid[],
-                           G4double derivs[][G4FieldTrack::ncompSVEC]) const
+void G4ModifiedMidpoint::DoStep(const G4double yIn[], const G4double dydxIn[], G4double yOut[],
+                                G4double hstep, G4double yMid[],
+                                G4double derivs[][G4FieldTrack::ncompSVEC]) const
 {
   G4double y0[G4FieldTrack::ncompSVEC];
   G4double y1[G4FieldTrack::ncompSVEC];
@@ -117,7 +116,7 @@ void G4ModifiedMidpoint::DoStep( const G4double yIn[], const G4double dydxIn[],
   // result of first step already gives approximation
   // at the center of the interval
   //
-  if(fsteps == 2)
+  if (fsteps == 2)
   {
     copy(yMid, y1);
   }
@@ -132,12 +131,12 @@ void G4ModifiedMidpoint::DoStep( const G4double yIn[], const G4double dydxIn[],
     copy(yTemp, y1);
     for (G4int j = 0; j < fnvar; ++j)
     {
-      y1[j] = y0[j] + h2 * derivs[i-1][j];
+      y1[j] = y0[j] + h2 * derivs[i - 1][j];
     }
     copy(y0, yTemp);
 
     // save approximation at the center of the interval
-    if(i == fsteps / 2 - 1 )
+    if (i == fsteps / 2 - 1)
     {
       copy(yMid, y1);
     }
@@ -150,7 +149,7 @@ void G4ModifiedMidpoint::DoStep( const G4double yIn[], const G4double dydxIn[],
   //
   for (G4int i = 0; i < fnvar; ++i)
   {
-    yOut[i] = 0.5 * (y0[i] + y1[i] + h * derivs[fsteps-1][i]);
+    yOut[i] = 0.5 * (y0[i] + y1[i] + h * derivs[fsteps - 1][i]);
   }
 }
 

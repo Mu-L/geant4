@@ -30,13 +30,12 @@
 //
 //
 
-#ifndef G4NeutronElectronElXsc_h
-#define G4NeutronElectronElXsc_h
+#ifndef G4NEUTRONELECTRONELXSC_HH
+#define G4NEUTRONELECTRONELXSC_HH
 
-
-#include "globals.hh"
-#include "G4VCrossSectionDataSet.hh"
 #include "G4DynamicParticle.hh"
+#include "G4VCrossSectionDataSet.hh"
+#include "globals.hh"
 
 // class G4ParticleDefinition;
 class G4PhysicsLogVector;
@@ -44,63 +43,56 @@ class G4PhysicsTable;
 
 class G4NeutronElectronElXsc : public G4VCrossSectionDataSet
 {
-public:
-   
-  G4NeutronElectronElXsc();
-  ~G4NeutronElectronElXsc();
+  public:
 
-  void Initialise();
+    G4NeutronElectronElXsc();
+    ~G4NeutronElectronElXsc();
 
-  virtual
-  G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z, const G4Material*);
+    void Initialise();
 
+    virtual G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z, const G4Material*);
 
-  virtual
-  G4double GetElementCrossSection(const G4DynamicParticle*, 
-				  G4int Z, const G4Material*);
+    virtual G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z, const G4Material*);
 
-  G4double GetRosenbluthXsc(const G4DynamicParticle*, 
-				  G4int Z, const G4Material*);
+    G4double GetRosenbluthXsc(const G4DynamicParticle*, G4int Z, const G4Material*);
 
-  G4double XscIntegrand(G4double x);
+    G4double XscIntegrand(G4double x);
 
-   G4double GetElementNonRelXsc(const G4DynamicParticle*, 
-				  G4int Z, const G4Material*);
+    G4double GetElementNonRelXsc(const G4DynamicParticle*, G4int Z, const G4Material*);
 
-  G4double CalculateAm( G4double momentum);
+    G4double CalculateAm(G4double momentum);
 
-  inline G4double GetAm(){return fAm;};
+    inline G4double GetAm() { return fAm; };
 
-  void SetCutEnergy(G4double ec){fCutEnergy=ec;};
-  G4double GetCutEnergy(){return fCutEnergy;};
+    void SetCutEnergy(G4double ec) { fCutEnergy = ec; };
+    G4double GetCutEnergy() { return fCutEnergy; };
 
-  void SetBiasingFactor(G4double bf){fBiasingFactor=bf;};
+    void SetBiasingFactor(G4double bf) { fBiasingFactor = bf; };
 
-protected:
-  G4double fM, fM2, fMv2, fme, fme2, fee, fee2;
-  G4double fCofXsc;    // 
-  G4double fAm;    //
-  G4int fEnergyBin; 
-  G4double fMinEnergy, fMaxEnergy, fCutEnergy; // minimal recoil electron energy detected
-  G4double fBiasingFactor; // biasing xsc up
+  protected:
 
-  G4PhysicsLogVector* fEnergyXscVector;
-  static const G4double fXscArray[200];
+    G4double fM, fM2, fMv2, fme, fme2, fee, fee2;
+    G4double fCofXsc;  //
+    G4double fAm;  //
+    G4int fEnergyBin;
+    G4double fMinEnergy, fMaxEnergy, fCutEnergy;  // minimal recoil electron energy detected
+    G4double fBiasingFactor;  // biasing xsc up
+
+    G4PhysicsLogVector* fEnergyXscVector;
+    static const G4double fXscArray[200];
 };
-
-
 
 ////////////////////////////////////////////////////////////////////
 //
 // return Wentzel atom screening correction for neutron-electron scattering
 
-inline  G4double G4NeutronElectronElXsc::CalculateAm( G4double momentum)
+inline G4double G4NeutronElectronElXsc::CalculateAm(G4double momentum)
 {
-  G4double k   = momentum/CLHEP::hbarc;
-  G4double ch  = 1.13;
-  G4double zn  = 1.77*k*CLHEP::Bohr_radius;
-  G4double zn2 = zn*zn;
-  fAm          = ch/zn2;
+  G4double k = momentum / CLHEP::hbarc;
+  G4double ch = 1.13;
+  G4double zn = 1.77 * k * CLHEP::Bohr_radius;
+  G4double zn2 = zn * zn;
+  fAm = ch / zn2;
 
   return fAm;
 }
@@ -109,18 +101,17 @@ inline  G4double G4NeutronElectronElXsc::CalculateAm( G4double momentum)
 //
 // Slow electron (Tkin << me_c2) in the neutron rest frame
 
-inline G4double G4NeutronElectronElXsc::
-GetElementNonRelXsc(const G4DynamicParticle* aPart, G4int ZZ,  
-		       const G4Material*) 
+inline G4double G4NeutronElectronElXsc::GetElementNonRelXsc(const G4DynamicParticle* aPart,
+                                                            G4int ZZ, const G4Material*)
 {
   G4double result(0.), te(0.), momentum(0.);
 
-  te = aPart->GetKineticEnergy()*fme/fM;
-  momentum = std::sqrt( te*(te + 2.*fme) );
+  te = aPart->GetKineticEnergy() * fme / fM;
+  momentum = std::sqrt(te * (te + 2. * fme));
   fAm = CalculateAm(momentum);
 
-  result = 1. + std::log(1. +1./fAm);
-  result *= fCofXsc; //*energy;
+  result = 1. + std::log(1. + 1. / fAm);
+  result *= fCofXsc;  //*energy;
   result *= ZZ;  // incoherent sum over  all element electrons
 
   return result;

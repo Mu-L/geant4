@@ -27,78 +27,74 @@
 // Authors: G.Depaola & F.Longo
 //
 
-#ifndef G4LivermorePolarizedComptonModel_h
-#define G4LivermorePolarizedComptonModel_h 1
+#ifndef G4LIVERMOREPOLARIZEDCOMPTONMODEL_HH
+#define G4LIVERMOREPOLARIZEDCOMPTONMODEL_HH
 
-#include "G4VEmModel.hh"
 #include "G4PhysicsFreeVector.hh"
+#include "G4VEmModel.hh"
 
 class G4ParticleChangeForGamma;
 class G4VAtomDeexcitation;
 class G4ShellData;
 class G4DopplerProfile;
 
-#include "G4VEMDataSet.hh"
 #include "G4CompositeEMDataSet.hh"
+#include "G4VEMDataSet.hh"
 
 class G4LivermorePolarizedComptonModel : public G4VEmModel
 {
-public:
-  explicit G4LivermorePolarizedComptonModel(const G4ParticleDefinition* p = nullptr, 
-		                   const G4String& nam = "LivermorePolarizedCompton");
+  public:
 
-  virtual ~G4LivermorePolarizedComptonModel();
+    explicit G4LivermorePolarizedComptonModel(const G4ParticleDefinition* p = nullptr,
+                                              const G4String& nam = "LivermorePolarizedCompton");
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
-  void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel* masterModel) override;
-  void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
-  G4double ComputeCrossSectionPerAtom(
-				      const G4ParticleDefinition*,
-                                      G4double kinEnergy, 
-                                      G4double Z, 
-                                      G4double A=0, 
-                                      G4double cut=0,
-                                      G4double emax=DBL_MAX) override;
+    virtual ~G4LivermorePolarizedComptonModel();
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel* masterModel) override;
+    void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A = 0, G4double cut = 0,
+                                        G4double emax = DBL_MAX) override;
 
-  G4LivermorePolarizedComptonModel & operator=(const  G4LivermorePolarizedComptonModel &right) = delete;
-  G4LivermorePolarizedComptonModel(const  G4LivermorePolarizedComptonModel&) = delete;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-private:
-   // specific methods for polarization   
-  G4ThreeVector GetRandomPolarization(G4ThreeVector& direction0); // Random Polarization
-  G4ThreeVector GetPerpendicularPolarization(const G4ThreeVector& direction0, const G4ThreeVector& polarization0) const;
-  G4ThreeVector SetPerpendicularVector(G4ThreeVector& a); // temporary
-  G4ThreeVector SetNewPolarization(G4double epsilon, G4double sinSqrTheta, 
-				   G4double phi, G4double cosTheta);
-  G4double SetPhi(G4double, G4double);
-  void SystemOfRefChange(G4ThreeVector& direction0, G4ThreeVector& direction1, 
-			 G4ThreeVector& polarization0, G4ThreeVector& polarization1);
-  void ReadData(size_t Z, const char* path = 0);
+    G4LivermorePolarizedComptonModel&
+    operator=(const G4LivermorePolarizedComptonModel& right) = delete;
+    G4LivermorePolarizedComptonModel(const G4LivermorePolarizedComptonModel&) = delete;
 
+  private:
 
-  G4ParticleChangeForGamma* fParticleChange;
-  G4VAtomDeexcitation* fAtomDeexcitation;
+    // specific methods for polarization
+    G4ThreeVector GetRandomPolarization(G4ThreeVector& direction0);  // Random Polarization
+    G4ThreeVector GetPerpendicularPolarization(const G4ThreeVector& direction0,
+                                               const G4ThreeVector& polarization0) const;
+    G4ThreeVector SetPerpendicularVector(G4ThreeVector& a);  // temporary
+    G4ThreeVector SetNewPolarization(G4double epsilon, G4double sinSqrTheta, G4double phi,
+                                     G4double cosTheta);
+    G4double SetPhi(G4double, G4double);
+    void SystemOfRefChange(G4ThreeVector& direction0, G4ThreeVector& direction1,
+                           G4ThreeVector& polarization0, G4ThreeVector& polarization1);
+    void ReadData(size_t Z, const char* path = 0);
 
-  // Doppler Broadening
-  static G4ShellData* shellData;
-  static G4DopplerProfile* profileData;
+    G4ParticleChangeForGamma* fParticleChange;
+    G4VAtomDeexcitation* fAtomDeexcitation;
 
-  // Cross Section Handling 
-  static const G4int maxZ = 99;
-  static G4PhysicsFreeVector* data[100];
- 
-  // Scattering function 
-  static G4CompositeEMDataSet* scatterFunctionData;
+    // Doppler Broadening
+    static G4ShellData* shellData;
+    static G4DopplerProfile* profileData;
 
-  G4int verboseLevel;
-  G4bool isInitialised;
-  G4int fEntanglementModelID;
+    // Cross Section Handling
+    static const G4int maxZ = 99;
+    static G4PhysicsFreeVector* data[100];
+
+    // Scattering function
+    static G4CompositeEMDataSet* scatterFunctionData;
+
+    G4int verboseLevel;
+    G4bool isInitialised;
+    G4int fEntanglementModelID;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

@@ -29,19 +29,20 @@
 // GEANT 4 class implementation
 // ------------------------------------------------------------
 
-#include <cmath>
-#include <string.h>
 #include "Gamma.hh"
 
-MyGamma::MyGamma(){}
+#include <string.h>
 
-MyGamma::~MyGamma(){}
+#include <cmath>
+
+MyGamma::MyGamma() {}
+
+MyGamma::~MyGamma() {}
 
 //____________________________________________________________________________
 double MyGamma::Gamma(double z)
 {
-  if (z <= 0)
-      return 0;
+  if (z <= 0) return 0;
 
   return std::tgamma(z);
 }
@@ -87,7 +88,8 @@ double MyGamma::GamCf(double a, double x)
   double d = 1 / b;
   double h = d;
   double an, del;
-  for (int i = 1; i <= itmax; i++) {
+  for (int i = 1; i <= itmax; i++)
+  {
     an = double(-i) * (double(i) - a);
     b += 2;
     d = an * d + b;
@@ -124,7 +126,8 @@ double MyGamma::GamSer(double a, double x)
   double ap = a;
   double sum = 1 / a;
   double del = sum;
-  for (int n = 1; n <= itmax; n++) {
+  for (int n = 1; n <= itmax; n++)
+  {
     ap += 1;
     del = del * x / ap;
     sum += del;
@@ -137,8 +140,7 @@ double MyGamma::GamSer(double a, double x)
 
 double MyGamma::LnGamma(double z)
 {
-  if (z <= 0)
-      return 0;
+  if (z <= 0) return 0;
 
   return std::lgamma(z);
 }

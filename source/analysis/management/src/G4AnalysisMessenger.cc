@@ -27,35 +27,32 @@
 // Author: Ivana Hrivnacova, 24/06/2013  (ivana@ipno.in2p3.fr)
 
 #include "G4AnalysisMessenger.hh"
-#include "G4VAnalysisManager.hh"
-#include "G4NtupleMessenger.hh"
 
-#include "G4UIcmdWithABool.hh"
-#include "G4UIcmdWithAnInteger.hh"
-#include "G4UIcmdWithAString.hh"
-#include "G4UIcmdWithoutParameter.hh"
+#include "G4NtupleMessenger.hh"
 #include "G4Threading.hh"
+#include "G4UIcmdWithABool.hh"
+#include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithAnInteger.hh"
+#include "G4UIcmdWithoutParameter.hh"
+#include "G4VAnalysisManager.hh"
 
 using namespace G4Analysis;
 
 //_____________________________________________________________________________
-G4AnalysisMessenger::G4AnalysisMessenger(G4VAnalysisManager* manager)
-  : fManager(manager)
+G4AnalysisMessenger::G4AnalysisMessenger(G4VAnalysisManager* manager) : fManager(manager)
 {
   fAnalysisDir = std::make_unique<G4UIdirectory>("/analysis/");
   fAnalysisDir->SetGuidance("Analysis control commands");
 
-  fOpenFileCmd = CreateCommand<G4UIcmdWithAString>(
-    "openFile", "Open analysis file", "FileName", true);
+  fOpenFileCmd =
+    CreateCommand<G4UIcmdWithAString>("openFile", "Open analysis file", "FileName", true);
   fOpenFileCmd->SetDefaultValue("");
   fOpenFileCmd->SetToBeBroadcasted(true);
 
-  fWriteCmd = CreateCommandWithoutParameter(
-    "write", "Write analysis data.");
+  fWriteCmd = CreateCommandWithoutParameter("write", "Write analysis data.");
   fWriteCmd->SetToBeBroadcasted(false);
 
-  fResetCmd = CreateCommandWithoutParameter(
-    "reset", "Reset analysis data.");
+  fResetCmd = CreateCommandWithoutParameter("reset", "Reset analysis data.");
   fResetCmd->SetToBeBroadcasted(false);
 
   fCloseFileCmd = CreateCommand<G4UIcmdWithABool>(
@@ -63,8 +60,8 @@ G4AnalysisMessenger::G4AnalysisMessenger(G4VAnalysisManager* manager)
   fCloseFileCmd->SetDefaultValue(true);
   fCloseFileCmd->SetToBeBroadcasted(false);
 
-  fListCmd = CreateCommand<G4UIcmdWithABool>(
-    "list", "List all/activate analysis objects.", "OnlyIfActive", true);
+  fListCmd = CreateCommand<G4UIcmdWithABool>("list", "List all/activate analysis objects.",
+                                             "OnlyIfActive", true);
   fListCmd->SetDefaultValue(true);
 
   fSetDefaultFileTypeCmd = CreateCommand<G4UIcmdWithAString>(
@@ -83,12 +80,11 @@ G4AnalysisMessenger::G4AnalysisMessenger(G4VAnalysisManager* manager)
     "No warning is issued when Get or Fill is called on inactive histogram.",
     "Activation");
 
-  fVerboseCmd = CreateCommand<G4UIcmdWithAnInteger>(
-    "verbose", "Set verbose level", "VerboseLevel");
+  fVerboseCmd = CreateCommand<G4UIcmdWithAnInteger>("verbose", "Set verbose level", "VerboseLevel");
   fVerboseCmd->SetRange("VerboseLevel>=0 && VerboseLevel<=4");
 
-  fCompressionCmd = CreateCommand<G4UIcmdWithAnInteger>(
-    "compression", "Set compression level", "CompressionLevel");
+  fCompressionCmd =
+    CreateCommand<G4UIcmdWithAnInteger>("compression", "Set compression level", "CompressionLevel");
   fCompressionCmd->SetRange("CompressionLevel>=0 && CompressionLevel<=4");
 
   fSetFileNameCmd = CreateCommand<G4UIcmdWithAString>(
@@ -110,11 +106,9 @@ G4AnalysisMessenger::~G4AnalysisMessenger() = default;
 // private functions
 //
 
-
 //_____________________________________________________________________________
 std::unique_ptr<G4UIcmdWithoutParameter>
-G4AnalysisMessenger::CreateCommandWithoutParameter(
-  G4String name, G4String guidance)
+G4AnalysisMessenger::CreateCommandWithoutParameter(G4String name, G4String guidance)
 {
   G4String fullName = "/analysis/" + name;
 
@@ -132,63 +126,75 @@ G4AnalysisMessenger::CreateCommandWithoutParameter(
 //_____________________________________________________________________________
 void G4AnalysisMessenger::SetNewValue(G4UIcommand* command, G4String newValues)
 {
-  if ( command == fOpenFileCmd.get() ) {
+  if (command == fOpenFileCmd.get())
+  {
     // G4cout << "Calling OpenFile from command for " << fManager << G4endl;
     fManager->OpenFile(newValues);
     return;
   }
 
-  if ( command == fWriteCmd.get() ) {
+  if (command == fWriteCmd.get())
+  {
     fManager->WriteFromUI();
     return;
   }
 
-  if ( command == fResetCmd.get() ) {
+  if (command == fResetCmd.get())
+  {
     fManager->ResetFromUI();
     return;
   }
 
-  if ( command == fCloseFileCmd.get() ) {
+  if (command == fCloseFileCmd.get())
+  {
     fManager->CloseFileFromUI(fCloseFileCmd->GetNewBoolValue(newValues));
     return;
   }
 
-  if ( command == fListCmd.get() ) {
+  if (command == fListCmd.get())
+  {
     fManager->List(fListCmd->GetNewBoolValue(newValues));
     return;
   }
 
-  if ( command == fSetDefaultFileTypeCmd.get() ) {
+  if (command == fSetDefaultFileTypeCmd.get())
+  {
     fManager->SetDefaultFileType(newValues);
     return;
   }
 
-  if ( command == fSetActivationCmd.get() ) {
+  if (command == fSetActivationCmd.get())
+  {
     fManager->SetActivation(fSetActivationCmd->GetNewBoolValue(newValues));
     return;
   }
 
-  if ( command == fVerboseCmd.get() ) {
+  if (command == fVerboseCmd.get())
+  {
     fManager->SetVerboseLevel(fVerboseCmd->GetNewIntValue(newValues));
     return;
   }
 
-  if ( command == fCompressionCmd.get() ) {
+  if (command == fCompressionCmd.get())
+  {
     fManager->SetCompressionLevel(fCompressionCmd->GetNewIntValue(newValues));
     return;
   }
 
-  if ( command == fSetFileNameCmd.get() ) {
+  if (command == fSetFileNameCmd.get())
+  {
     fManager->SetFileName(newValues);
     return;
   }
 
-  if ( command == fSetHistoDirNameCmd.get() ) {
+  if (command == fSetHistoDirNameCmd.get())
+  {
     fManager->SetHistoDirectoryName(newValues);
     return;
   }
 
-  if ( command == fSetNtupleDirNameCmd.get() ) {
+  if (command == fSetNtupleDirNameCmd.get())
+  {
     fManager->SetNtupleDirectoryName(newValues);
     return;
   }

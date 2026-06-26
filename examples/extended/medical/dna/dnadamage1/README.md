@@ -54,7 +54,7 @@ particle types and energies.
 ## PHYSICS
 
 This example shows:
-- how to use the Geant4-DNA processes (physics and chemistry) through G4EmDNAPhysics and G4EmDNAChemistry_option2 constructors
+- how to use the Geant4-DNA processes (physics and chemistry) through G4EmDNAPhysics_option2 and G4EmDNAChemistry_option2 constructors
 (look at the PhysicsList class)
 - how to count and save energy depositions giving rise to direct damages using an energy thershold 
 of 17.5 eV in teh nucleotide backbone region.

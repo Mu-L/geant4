@@ -51,32 +51,32 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include "G4eplusAnnihilation.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4MaterialCutsCouple.hh"
-#include "G4Gamma.hh"
-#include "G4Positron.hh"
-#include "G4eeToTwoGammaModel.hh"
-#include "G4EmBiasingManager.hh"
-#include "G4EntanglementAuxInfo.hh"
-#include "G4eplusAnnihilationEntanglementClipBoard.hh"
-#include "G4SimplePositronAtRestModel.hh"
+
 #include "G4AllisonPositronAtRestModel.hh"
-#include "G4OrePowellAtRestModel.hh"
-#include "G4PolarizedOrePowellAtRestModel.hh"
+#include "G4EmBiasingManager.hh"
 #include "G4EmParameters.hh"
-#include "G4PhysicsModelCatalog.hh"
+#include "G4EntanglementAuxInfo.hh"
+#include "G4Gamma.hh"
 #include "G4Log.hh"
+#include "G4MaterialCutsCouple.hh"
+#include "G4OrePowellAtRestModel.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4PhysicsModelCatalog.hh"
+#include "G4PolarizedOrePowellAtRestModel.hh"
+#include "G4Positron.hh"
+#include "G4SimplePositronAtRestModel.hh"
+#include "G4eeToTwoGammaModel.hh"
+#include "G4eplusAnnihilationEntanglementClipBoard.hh"
 
 namespace
 {
-  constexpr G4double fTauPara = 0.12*CLHEP::ns;
-  constexpr G4double fTauOrto = 142.*CLHEP::ns;
-}
+constexpr G4double fTauPara = 0.12 * CLHEP::ns;
+constexpr G4double fTauOrto = 142. * CLHEP::ns;
+}  // namespace
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4eplusAnnihilation::G4eplusAnnihilation(const G4String& name)
-  : G4VEmProcess(name)
+G4eplusAnnihilation::G4eplusAnnihilation(const G4String& name) : G4VEmProcess(name)
 {
   SetCrossSectionType(fEmDecreasing);
   SetBuildTableFlag(false);
@@ -105,8 +105,8 @@ G4bool G4eplusAnnihilation::IsApplicable(const G4ParticleDefinition& p)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double G4eplusAnnihilation::AtRestGetPhysicalInteractionLength(
-                              const G4Track&, G4ForceCondition* condition)
+G4double G4eplusAnnihilation::AtRestGetPhysicalInteractionLength(const G4Track&,
+                                                                 G4ForceCondition* condition)
 {
   *condition = NotForced;
   return 0.0;
@@ -116,9 +116,13 @@ G4double G4eplusAnnihilation::AtRestGetPhysicalInteractionLength(
 
 void G4eplusAnnihilation::InitialiseProcess(const G4ParticleDefinition*)
 {
-  if (!isInitialised) {
+  if (!isInitialised)
+  {
     isInitialised = true;
-    if(nullptr == EmModel(0)) { SetEmModel(new G4eeToTwoGammaModel()); }
+    if (nullptr == EmModel(0))
+    {
+      SetEmModel(new G4eeToTwoGammaModel());
+    }
     EmModel(0)->SetLowEnergyLimit(MinKinEnergy());
     EmModel(0)->SetHighEnergyLimit(MaxKinEnergy());
     AddEmModel(1, EmModel(0));
@@ -126,17 +130,25 @@ void G4eplusAnnihilation::InitialiseProcess(const G4ParticleDefinition*)
   auto param = G4EmParameters::Instance();
 
   // AtRest models should be chosen only once
-  if (nullptr == f2GammaAtRestModel) {
+  if (nullptr == f2GammaAtRestModel)
+  {
     auto type = param->PositronAtRestModelType();
-    if (type == fAllisonPositronium) {
+    if (type == fAllisonPositronium)
+    {
       f2GammaAtRestModel = new G4AllisonPositronAtRestModel();
-    } else if (type == fOrePowell) {
+    }
+    else if (type == fOrePowell)
+    {
       f2GammaAtRestModel = new G4AllisonPositronAtRestModel();
       f3GammaAtRestModel = new G4OrePowellAtRestModel();
-    } else if (type == fOrePowellPolar) {
+    }
+    else if (type == fOrePowellPolar)
+    {
       f2GammaAtRestModel = new G4AllisonPositronAtRestModel();
       f3GammaAtRestModel = new G4PolarizedOrePowellAtRestModel();
-    } else {
+    }
+    else
+    {
       f2GammaAtRestModel = new G4SimplePositronAtRestModel();
     }
   }
@@ -148,13 +160,11 @@ void G4eplusAnnihilation::InitialiseProcess(const G4ParticleDefinition*)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4eplusAnnihilation::StreamProcessInfo(std::ostream&) const
-{} 
+void G4eplusAnnihilation::StreamProcessInfo(std::ostream&) const {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4VParticleChange* G4eplusAnnihilation::AtRestDoIt(const G4Track& track,
-						   const G4Step& step)
+G4VParticleChange* G4eplusAnnihilation::AtRestDoIt(const G4Track& track, const G4Step& step)
 {
   // positron at rest should be killed
   fParticleChange.InitializeForPostStep(track);
@@ -163,12 +173,13 @@ G4VParticleChange* G4eplusAnnihilation::AtRestDoIt(const G4Track& track,
 
   auto couple = step.GetPreStepPoint()->GetMaterialCutsCouple();
   DefineMaterial(couple);
-  
+
   G4double gammaCut = GetGammaEnergyCut();
 
-  // apply cuts 
-  if (fApplyCuts && gammaCut > CLHEP::electron_mass_c2) {
-    fParticleChange.ProposeLocalEnergyDeposit(2*CLHEP::electron_mass_c2); 
+  // apply cuts
+  if (fApplyCuts && gammaCut > CLHEP::electron_mass_c2)
+  {
+    fParticleChange.ProposeLocalEnergyDeposit(2 * CLHEP::electron_mass_c2);
     return &fParticleChange;
   }
 
@@ -176,29 +187,32 @@ G4VParticleChange* G4eplusAnnihilation::AtRestDoIt(const G4Track& track,
   secParticles.clear();
   G4double edep = 0.0;
   G4double ltime;
-  if (nullptr != f3GammaAtRestModel &&
-      G4UniformRand() < currentMaterial->GetIonisation()->GetOrtoPositroniumFraction()) {
+  if (nullptr != f3GammaAtRestModel
+      && G4UniformRand() < currentMaterial->GetIonisation()->GetOrtoPositroniumFraction())
+  {
     f3GammaAtRestModel->SampleSecondaries(secParticles, edep, couple->GetMaterial());
     ltime = fTauOrto;
-  } else {
+  }
+  else
+  {
     f2GammaAtRestModel->SampleSecondaries(secParticles, edep, couple->GetMaterial());
     ltime = fTauPara;
   }
 
   // define new weight for primary and secondaries
-  G4double weight = fParticleChange.GetParentWeight();				  
+  G4double weight = fParticleChange.GetParentWeight();
   std::size_t num0 = secParticles.size();
-  
+
   // Russian roulette
-  if (nullptr != biasManager) {
+  if (nullptr != biasManager)
+  {
     G4int idx = couple->GetIndex();
-    if (biasManager->SecondaryBiasingRegion(idx) &&
-	!biasManager->GetDirectionalSplitting()) {
+    if (biasManager->SecondaryBiasingRegion(idx) && !biasManager->GetDirectionalSplitting())
+    {
       G4VEmModel* mod = EmModel(0);
       G4double eloss = 0.0;
-      weight *= biasManager->ApplySecondaryBiasing(secParticles, track, mod,
-						   &fParticleChange, eloss, 
-                                                   idx, gammaCut);
+      weight *= biasManager->ApplySecondaryBiasing(secParticles, track, mod, &fParticleChange,
+                                                   eloss, idx, gammaCut);
       edep += eloss;
     }
   }
@@ -211,45 +225,57 @@ G4VParticleChange* G4eplusAnnihilation::AtRestDoIt(const G4Track& track,
   // This ensures the clip board lasts until both tracks are destroyed.
   // It is assumed that 2 first secondary particles are the most energetic gamma
   std::shared_ptr<G4eplusAnnihilationEntanglementClipBoard> clipBoard;
-  if (fEntangled && num >= 2) {
+  if (fEntangled && num >= 2)
+  {
     clipBoard = std::make_shared<G4eplusAnnihilationEntanglementClipBoard>();
     clipBoard->SetParentParticleDefinition(track.GetDefinition());
   }
 
-  if (num > 0) {
-    const G4double time = track.GetGlobalTime() - ltime*G4Log(G4UniformRand());
+  if (num > 0)
+  {
+    const G4double time = track.GetGlobalTime() - ltime * G4Log(G4UniformRand());
     const G4ThreeVector& pos = track.GetPosition();
     auto touch = track.GetTouchableHandle();
-    for (std::size_t i=0; i<num; ++i) {
+    for (std::size_t i = 0; i < num; ++i)
+    {
       G4DynamicParticle* dp = secParticles[i];
       G4Track* t = new G4Track(dp, time, pos);
       t->SetTouchableHandle(touch);
-      if (fEntangled && i < 2) {
-	// entangledgammagamma is only true when there are only two gammas
-	// (See code above where entangledgammagamma is calculated.)
-	if (nullptr != clipBoard) { 
-	  if (i == 0) { // First gamma
-	    clipBoard->SetTrackA(t);
-	  } else if (i == 1) {  // Second gamma
-	    clipBoard->SetTrackB(t);
-	  }
-	}
-	t->SetAuxiliaryTrackInformation
-	  (fEntanglementModelID, new G4EntanglementAuxInfo(clipBoard));
+      if (fEntangled && i < 2)
+      {
+        // entangledgammagamma is only true when there are only two gammas
+        // (See code above where entangledgammagamma is calculated.)
+        if (nullptr != clipBoard)
+        {
+          if (i == 0)
+          {  // First gamma
+            clipBoard->SetTrackA(t);
+          }
+          else if (i == 1)
+          {  // Second gamma
+            clipBoard->SetTrackB(t);
+          }
+        }
+        t->SetAuxiliaryTrackInformation(fEntanglementModelID, new G4EntanglementAuxInfo(clipBoard));
       }
-      if (nullptr != biasManager) {
-	t->SetWeight(weight * biasManager->GetWeight((G4int)i));
-      } else {
-	t->SetWeight(weight);
+      if (nullptr != biasManager)
+      {
+        t->SetWeight(weight * biasManager->GetWeight((G4int)i));
+      }
+      else
+      {
+        t->SetWeight(weight);
       }
       pParticleChange->AddSecondary(t);
 
       // define type of secondary
-      if (i < num0) {
-	t->SetCreatorModelID(secID);
+      if (i < num0)
+      {
+        t->SetCreatorModelID(secID);
       }
-      else {
-	t->SetCreatorModelID(biasID);
+      else
+      {
+        t->SetCreatorModelID(biasID);
       }
     }
   }

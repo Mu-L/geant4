@@ -46,29 +46,26 @@
 //
 
 #include "G4WLSTimeGeneratorProfileExponential.hh"
+
 #include "Randomize.hh"
 //
 
-G4WLSTimeGeneratorProfileExponential::G4WLSTimeGeneratorProfileExponential(
-  const G4String& name)
+G4WLSTimeGeneratorProfileExponential::G4WLSTimeGeneratorProfileExponential(const G4String& name)
   : G4VWLSTimeGeneratorProfile(name)
 {}
 
 //
 
-G4WLSTimeGeneratorProfileExponential::~G4WLSTimeGeneratorProfileExponential() =
-  default;
+G4WLSTimeGeneratorProfileExponential::~G4WLSTimeGeneratorProfileExponential() = default;
 
 //
 
-G4double G4WLSTimeGeneratorProfileExponential::GenerateTime(
-  const G4double time_constant)
+G4double G4WLSTimeGeneratorProfileExponential::GenerateTime(const G4double time_constant)
 {
   return -std::log(G4UniformRand()) * time_constant;
 }
 
-G4double G4WLSTimeGeneratorProfileExponential::GenerateTime(
-  const G4MaterialPropertiesTable*)
+G4double G4WLSTimeGeneratorProfileExponential::GenerateTime(const G4MaterialPropertiesTable*)
 {
   // This method is not currently in use
   return 0.;

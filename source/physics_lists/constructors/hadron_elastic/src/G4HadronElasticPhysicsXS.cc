@@ -30,7 +30,7 @@
 // Author: 3 June 2010 V. Ivanchenko
 //
 // Modified:
-// 03.06.2011 V.Ivanchenko change design - now first default constructor 
+// 03.06.2011 V.Ivanchenko change design - now first default constructor
 //            is called, XS cross section is added on top
 //
 //----------------------------------------------------------------------------
@@ -47,9 +47,8 @@ G4_DECLARE_PHYSCONSTR_FACTORY(G4HadronElasticPhysicsXS);
 G4HadronElasticPhysicsXS::G4HadronElasticPhysicsXS(G4int ver)
   : G4HadronElasticPhysics(ver, "hElasticWEL_CHIPS_XS")
 {
-  if(ver > 1) { 
-    G4cout << "### G4HadronElasticPhysicsXS: " << GetPhysicsName() 
-	   << G4endl; 
+  if (ver > 1)
+  {
+    G4cout << "### G4HadronElasticPhysicsXS: " << GetPhysicsName() << G4endl;
   }
 }
-

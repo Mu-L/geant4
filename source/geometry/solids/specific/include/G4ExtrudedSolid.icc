@@ -26,95 +26,97 @@
 // Implementation of inline methods of G4ExtrudedSolid
 // --------------------------------------------------------------------
 
-inline 
-G4int G4ExtrudedSolid::GetNofVertices() const
+inline G4int G4ExtrudedSolid::GetNofVertices() const
 {
   return (G4int)fNv;
 }
 
 inline G4TwoVector G4ExtrudedSolid::GetVertex(G4int index) const
 {
-  if ( index<0 || index >= (G4int)fNv )
+  if (index < 0 || index >= (G4int)fNv)
   {
-    G4Exception ("G4ExtrudedSolid::GetVertex()", "GeomSolids0003",
-                 FatalException, "Index outside range.");
+    G4Exception("G4ExtrudedSolid::GetVertex()", "GeomSolids0003", FatalException,
+                "Index outside range.");
     return {};
   }
   return fPolygon[index];
-}  
+}
 
-inline 
-std::vector<G4TwoVector> G4ExtrudedSolid::GetPolygon() const
+inline std::vector<G4TwoVector> G4ExtrudedSolid::GetPolygon() const
 {
   return fPolygon;
-}  
+}
 
-inline 
-G4int  G4ExtrudedSolid::GetNofZSections() const
+inline G4int G4ExtrudedSolid::GetNofZSections() const
 {
   return (G4int)fNz;
 }
-  
-inline 
-G4ExtrudedSolid::ZSection  G4ExtrudedSolid::GetZSection(G4int index) const
+
+inline G4ExtrudedSolid::ZSection G4ExtrudedSolid::GetZSection(G4int index) const
 {
-  if ( index<0 || index >= (G4int)fNz )
+  if (index < 0 || index >= (G4int)fNz)
   {
-    G4Exception ("G4ExtrudedSolid::GetZSection()", "GeomSolids0003",
-                 FatalException, "Index outside range.");
+    G4Exception("G4ExtrudedSolid::GetZSection()", "GeomSolids0003", FatalException,
+                "Index outside range.");
     return ZSection(0.0, G4TwoVector(), 0.0);
   }
   return fZSections[index];
 }
 
-inline 
-std::vector<G4ExtrudedSolid::ZSection> G4ExtrudedSolid::GetZSections() const
+inline std::vector<G4ExtrudedSolid::ZSection> G4ExtrudedSolid::GetZSections() const
 {
   return fZSections;
-}  
+}
 
-inline
-G4bool G4ExtrudedSolid::PointInPolygon(const G4ThreeVector& p) const
+inline G4bool G4ExtrudedSolid::PointInPolygon(const G4ThreeVector& p) const
 {
   G4bool in = false;
-  G4int icur = static_cast<G4int>(fPolygon[fNv-1].y() > p.y()), iprev = 0;
+  G4int icur = static_cast<G4int>(fPolygon[fNv - 1].y() > p.y()), iprev = 0;
   for (std::size_t i = 0; i < fNv; ++i)
   {
     iprev = icur;
     if ((icur = static_cast<G4int>(fPolygon[i].y() > p.y())) != iprev)
     {
-      in ^= static_cast<int>(p.y()*fLines[i].k + fLines[i].m < p.x());
+      in ^= static_cast<int>(p.y() * fLines[i].k + fLines[i].m < p.x());
     }
   }
   return in;
 }
 
-inline
-G4double G4ExtrudedSolid::DistanceToPolygonSqr(const G4ThreeVector& p) const
+inline G4double G4ExtrudedSolid::DistanceToPolygonSqr(const G4ThreeVector& p) const
 {
   G4double dd = DBL_MAX;
-  for (std::size_t i=0, k=fNv-1; i<fNv; k=i++)
+  for (std::size_t i = 0, k = fNv - 1; i < fNv; k = i++)
   {
     G4double ix = p.x() - fPolygon[i].x();
     G4double iy = p.y() - fPolygon[i].y();
-    G4double u  = fPlanes[i].a*iy - fPlanes[i].b*ix;
+    G4double u = fPlanes[i].a * iy - fPlanes[i].b * ix;
     if (u < 0)
     {
-      G4double tmp = ix*ix + iy*iy;
-      if (tmp < dd) { dd = tmp; }
+      G4double tmp = ix * ix + iy * iy;
+      if (tmp < dd)
+      {
+        dd = tmp;
+      }
     }
     else if (u > fLengths[i])
     {
       G4double kx = p.x() - fPolygon[k].x();
       G4double ky = p.y() - fPolygon[k].y();
-      G4double tmp = kx*kx + ky*ky;
-      if (tmp < dd) { dd = tmp; }
+      G4double tmp = kx * kx + ky * ky;
+      if (tmp < dd)
+      {
+        dd = tmp;
+      }
     }
     else
     {
-      G4double tmp = fPlanes[i].a*p.x() + fPlanes[i].b*p.y() + fPlanes[i].d;
+      G4double tmp = fPlanes[i].a * p.x() + fPlanes[i].b * p.y() + fPlanes[i].d;
       tmp *= tmp;
-      if (tmp < dd) { dd = tmp; }
+      if (tmp < dd)
+      {
+        dd = tmp;
+      }
     }
   }
   return dd;

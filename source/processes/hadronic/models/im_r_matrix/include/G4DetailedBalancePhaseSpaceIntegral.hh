@@ -23,50 +23,53 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4DetailedBalancePhaseSpaceIntegral_h
-#define G4DetailedBalancePhaseSpaceIntegral_h
+#ifndef G4DETAILEDBALANCEPHASESPACEINTEGRAL_HH
+#define G4DETAILEDBALANCEPHASESPACEINTEGRAL_HH
 
-#include "globals.hh"
 #include "G4ParticleDefinition.hh"
+#include "globals.hh"
 
 class G4DetailedBalancePhaseSpaceIntegral
 {
   public:
-  G4DetailedBalancePhaseSpaceIntegral(const G4ParticleDefinition * aR);
-  G4double GetPhaseSpaceIntegral(G4double sqrts);
-  
+
+    G4DetailedBalancePhaseSpaceIntegral(const G4ParticleDefinition* aR);
+    G4double GetPhaseSpaceIntegral(G4double sqrts);
+
   private:
-//  const G4ParticleDefinition * theR;
-  const G4double * data;
-  
+
+    //  const G4ParticleDefinition * theR;
+    const G4double* data;
+
   private:
-  static const G4double sqrts[120];
-  
-  static const G4double delta[120];
-  static const G4double delta1600[120];
-  static const G4double delta1620[120];
-  static const G4double delta1700[120];
-  static const G4double delta1900[120];
-  static const G4double delta1905[120];
-  static const G4double delta1910[120];
-  static const G4double delta1920[120];
-  static const G4double delta1930[120];
-  static const G4double delta1950[120];
-  static const G4double N1440[120];
-  static const G4double N1520[120];
-  static const G4double N1535[120];
-  static const G4double N1650[120];
-  static const G4double N1675[120];
-  static const G4double N1680[120];
-  static const G4double N1700[120];
-  static const G4double N1710[120];
-  static const G4double N1720[120];
-  static const G4double N1900[120];
-  static const G4double N1990[120];
-  static const G4double N2090[120];
-  static const G4double N2190[120];
-  static const G4double N2220[120];
-  static const G4double N2250[120];
+
+    static const G4double sqrts[120];
+
+    static const G4double delta[120];
+    static const G4double delta1600[120];
+    static const G4double delta1620[120];
+    static const G4double delta1700[120];
+    static const G4double delta1900[120];
+    static const G4double delta1905[120];
+    static const G4double delta1910[120];
+    static const G4double delta1920[120];
+    static const G4double delta1930[120];
+    static const G4double delta1950[120];
+    static const G4double N1440[120];
+    static const G4double N1520[120];
+    static const G4double N1535[120];
+    static const G4double N1650[120];
+    static const G4double N1675[120];
+    static const G4double N1680[120];
+    static const G4double N1700[120];
+    static const G4double N1710[120];
+    static const G4double N1720[120];
+    static const G4double N1900[120];
+    static const G4double N1990[120];
+    static const G4double N2090[120];
+    static const G4double N2190[120];
+    static const G4double N2220[120];
+    static const G4double N2250[120];
 };
 
 #endif

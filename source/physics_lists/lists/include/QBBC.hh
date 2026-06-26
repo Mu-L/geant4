@@ -34,27 +34,23 @@
 // 15.04.2007 set glauber=true (V.Ivanchenko)
 //----------------------------------------------------------------------------
 //
-#ifndef QBBC_h
-#define QBBC_h 1
+#ifndef QBBC_HH
+#define QBBC_HH
 
-#include "globals.hh"
 #include "G4VModularPhysicsList.hh"
+#include "globals.hh"
 
 class QBBC : public G4VModularPhysicsList
 {
-public:
+  public:
 
-  explicit QBBC(G4int ver = 1, const G4String& type = "QBBC");
+    explicit QBBC(G4int ver = 1, const G4String& type = "QBBC");
 
-  virtual ~QBBC()=default;
+    virtual ~QBBC() = default;
 
-  // copy constructor and hide assignment operator
-  QBBC(const QBBC &)=delete;
-  QBBC & operator=(const QBBC &right)=delete;
-
+    // copy constructor and hide assignment operator
+    QBBC(const QBBC&) = delete;
+    QBBC& operator=(const QBBC& right) = delete;
 };
 
 #endif
-
-
-

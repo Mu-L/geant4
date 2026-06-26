@@ -29,8 +29,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPAngular_h
-#define G4ParticleHPAngular_h 1
+#ifndef G4PARTICLEHPANGULAR_HH
+#define G4PARTICLEHPANGULAR_HH
 
 #include "G4Cache.hh"
 #include "G4ParticleHPLegendreStore.hh"
@@ -52,6 +52,7 @@ class G4ParticleHPAngular
     };
 
   public:
+
     G4ParticleHPAngular()
     {
       theIsoFlag = true;
@@ -85,6 +86,7 @@ class G4ParticleHPAngular
     inline G4double GetTargetMass() { return targetMass; }
 
   private:
+
     // the type of distribution; currently
     // isotropic (0),
     // and legendre representation (1)

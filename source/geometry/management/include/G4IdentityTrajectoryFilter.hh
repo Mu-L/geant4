@@ -40,12 +40,13 @@
 #ifndef G4IDENTITYTRAJECTORYFILTER_HH
 #define G4IDENTITYTRAJECTORYFILTER_HH
 
-#include "G4VCurvedTrajectoryFilter.hh"
 #include "G4ThreeVector.hh"
+#include "G4VCurvedTrajectoryFilter.hh"
 
 /**
  * @brief G4IdentityTrajectoryFilter implements a trajectory point filter
  * which accepts all points submitted to it.
+ * @ingroup geometry_management
  */
 
 class G4IdentityTrajectoryFilter : public G4VCurvedTrajectoryFilter
@@ -61,7 +62,7 @@ class G4IdentityTrajectoryFilter : public G4VCurvedTrajectoryFilter
     /**
      * Copy constructor and assignement operator not allowed.
      */
-    G4IdentityTrajectoryFilter(const G4IdentityTrajectoryFilter&) =  delete;
+    G4IdentityTrajectoryFilter(const G4IdentityTrajectoryFilter&) = delete;
     G4IdentityTrajectoryFilter& operator=(const G4IdentityTrajectoryFilter&) = delete;
 
     /**
@@ -69,7 +70,7 @@ class G4IdentityTrajectoryFilter : public G4VCurvedTrajectoryFilter
      * rejecting.
      *  @param[in] newPoint The new point to submit.
      */
-    void TakeIntermediatePoint( G4ThreeVector newPoint ) override;
+    void TakeIntermediatePoint(G4ThreeVector newPoint) override;
 };
 
 #endif

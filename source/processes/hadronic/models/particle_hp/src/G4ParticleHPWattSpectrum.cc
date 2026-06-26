@@ -43,9 +43,11 @@ G4double G4ParticleHPWattSpectrum::Sample(G4double anEnergy)
 
   G4int icounter = 0;
   G4int icounter_max = 1024;
-  do {
+  do
+  {
     icounter++;
-    if (icounter > icounter_max) {
+    if (icounter > icounter_max)
+    {
       G4cout << "Loop-counter exceeded the threshold value at " << __LINE__ << "th line of "
              << __FILE__ << "." << G4endl;
       break;

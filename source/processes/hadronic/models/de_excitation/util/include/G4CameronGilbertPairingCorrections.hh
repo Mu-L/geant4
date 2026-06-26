@@ -30,44 +30,43 @@
 // Modified:
 // 21.03.2013 V.Ivanchenko redesigned and cleaned up
 
-
-#ifndef G4CameronGilbertPairingCorrections_h
-#define G4CameronGilbertPairingCorrections_h 1
+#ifndef G4CAMERONGILBERTPAIRINGCORRECTIONS_HH
+#define G4CAMERONGILBERTPAIRINGCORRECTIONS_HH
 
 #include "globals.hh"
 
 class G4CameronGilbertPairingCorrections
 {
-public:
+  public:
 
-  G4CameronGilbertPairingCorrections();
+    G4CameronGilbertPairingCorrections();
 
-  ~G4CameronGilbertPairingCorrections() = default;
+    ~G4CameronGilbertPairingCorrections() = default;
 
-  G4bool GetPairingCorrection(G4int N, G4int Z, G4double& result) const
-  {
-    G4bool res = false;
-    if (Z >= TableMin && Z <= ZTableMax && N >= TableMin && N <= NTableMax) { 
-      result = PairingZTable[Z - TableMin] + PairingNTable[N - TableMin];
-      res = true; 
+    G4bool GetPairingCorrection(G4int N, G4int Z, G4double& result) const
+    {
+      G4bool res = false;
+      if (Z >= TableMin && Z <= ZTableMax && N >= TableMin && N <= NTableMax)
+      {
+        result = PairingZTable[Z - TableMin] + PairingNTable[N - TableMin];
+        res = true;
+      }
+      return res;
     }
-    return res;
-  }
 
-  G4CameronGilbertPairingCorrections(const G4CameronGilbertPairingCorrections& right) = delete;
-  const G4CameronGilbertPairingCorrections& operator=
-  (const G4CameronGilbertPairingCorrections& right) = delete;
+    G4CameronGilbertPairingCorrections(const G4CameronGilbertPairingCorrections& right) = delete;
+    const G4CameronGilbertPairingCorrections&
+    operator=(const G4CameronGilbertPairingCorrections& right) = delete;
 
-private:
+  private:
 
-  const G4int TableMin{11};
-  const G4int ZTableMax{98};
-  const G4int NTableMax{150};
-  static const G4int ZTableSize{88};
-  static const G4int NTableSize{140};
+    const G4int TableMin{11};
+    const G4int ZTableMax{98};
+    const G4int NTableMax{150};
+    static const G4int ZTableSize{88};
+    static const G4int NTableSize{140};
 
-  static G4double PairingZTable[ZTableSize];
-  static G4double PairingNTable[NTableSize];
-	
+    static G4double PairingZTable[ZTableSize];
+    static G4double PairingNTable[NTableSize];
 };
 #endif

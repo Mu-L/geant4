@@ -26,54 +26,53 @@
 //
 // by V. Lara
 //
-// Modified:  
+// Modified:
 // 20.08.2010 V.Ivanchenko added G4Pow and G4PreCompoundParameters pointers
 //                         use int Z and A and cleanup
 
-#ifndef G4HETCFragment_h
-#define G4HETCFragment_h 1
+#ifndef G4HETCFRAGMENT_HH
+#define G4HETCFRAGMENT_HH
 
 #include "G4VPreCompoundFragment.hh"
 #include "Randomize.hh"
 
 class G4HETCFragment : public G4VPreCompoundFragment
 {
-public:  
+  public:
 
-  G4HETCFragment(const G4ParticleDefinition*, G4VCoulombBarrier* p = nullptr);
-  
-  ~G4HETCFragment() override = default;
+    G4HETCFragment(const G4ParticleDefinition*, G4VCoulombBarrier* p = nullptr);
 
-  G4double CalcEmissionProbability(const G4Fragment& aFragment) override;
+    ~G4HETCFragment() override = default;
 
-  G4HETCFragment(const G4HETCFragment &right) = delete;
-  const G4HETCFragment& operator = (const G4HETCFragment &right) = delete;  
-  G4bool operator==(const G4HETCFragment &right) const = delete;
-  G4bool operator!=(const G4HETCFragment &right) const = delete;
+    G4double CalcEmissionProbability(const G4Fragment& aFragment) override;
 
-protected:
+    G4HETCFragment(const G4HETCFragment& right) = delete;
+    const G4HETCFragment& operator=(const G4HETCFragment& right) = delete;
+    G4bool operator==(const G4HETCFragment& right) const = delete;
+    G4bool operator!=(const G4HETCFragment& right) const = delete;
 
-  virtual G4double K(const G4Fragment& aFragment) const = 0;
-  virtual G4double GetSpinFactor() const = 0;
+  protected:
 
-  inline G4double BetaRand(G4int N, G4int L) const;
-  
-private:
+    virtual G4double K(const G4Fragment& aFragment) const = 0;
+    virtual G4double GetSpinFactor() const = 0;
 
-  // This method performs integration for probability function over 
-  // fragment kinetic energy
-  G4double IntegrateEmissionProbability(G4double Low, G4double Up, 
-					const G4Fragment&);	
+    inline G4double BetaRand(G4int N, G4int L) const;
 
-  G4double r2norm;
+  private:
+
+    // This method performs integration for probability function over
+    // fragment kinetic energy
+    G4double IntegrateEmissionProbability(G4double Low, G4double Up, const G4Fragment&);
+
+    G4double r2norm;
 };
 
 inline G4double G4HETCFragment::BetaRand(G4int N, G4int L) const
 {
-  G4double Y1 = G4RandGamma::shoot(N,1);
-  G4double Y2 = G4RandGamma::shoot(L,1);
-  
-  return Y1/(Y1+Y2);
+  G4double Y1 = G4RandGamma::shoot(N, 1);
+  G4double Y2 = G4RandGamma::shoot(L, 1);
+
+  return Y1 / (Y1 + Y2);
 }
 
 #endif

@@ -25,54 +25,56 @@
 //
 //
 
-#ifndef G4CollisionMesonBaryonElastic_h
-#define G4CollisionMesonBaryonElastic_h
+#ifndef G4COLLISIONMESONBARYONELASTIC_HH
+#define G4COLLISIONMESONBARYONELASTIC_HH
 
-#include "globals.hh"
+#include "G4KineticTrackVector.hh"
+#include "G4VAngularDistribution.hh"
 #include "G4VCollision.hh"
 #include "G4VCrossSectionSource.hh"
-#include "G4VAngularDistribution.hh"
-#include "G4KineticTrackVector.hh"
-#include <vector>
 #include "G4VElasticCollision.hh"
+#include "globals.hh"
+
+#include <vector>
 
 class G4KineticTrack;
 
 class G4CollisionMesonBaryonElastic : public G4VElasticCollision
 {
+  public:
 
-public:
+    G4CollisionMesonBaryonElastic();
+    virtual ~G4CollisionMesonBaryonElastic();
 
-  G4CollisionMesonBaryonElastic();
-  virtual ~G4CollisionMesonBaryonElastic();
+    G4bool operator==(const G4CollisionMesonBaryonElastic& right) const;
+    G4bool operator!=(const G4CollisionMesonBaryonElastic& right) const;
 
-  G4bool operator==(const G4CollisionMesonBaryonElastic &right) const;
-  G4bool operator!=(const G4CollisionMesonBaryonElastic &right) const;
-  
-  virtual G4String GetName() const;
-  virtual G4bool IsInCharge(const G4KineticTrack& trk1, 
-			    const G4KineticTrack& trk2) const;
+    virtual G4String GetName() const;
+    virtual G4bool IsInCharge(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
 
-private:
-  G4CollisionMesonBaryonElastic(const G4CollisionMesonBaryonElastic &);
-  G4CollisionMesonBaryonElastic & operator= (const G4CollisionMesonBaryonElastic &);
+  private:
 
-protected:
+    G4CollisionMesonBaryonElastic(const G4CollisionMesonBaryonElastic&);
+    G4CollisionMesonBaryonElastic& operator=(const G4CollisionMesonBaryonElastic&);
 
-  virtual const G4VCrossSectionSource* GetCrossSectionSource() const 
-  { return crossSectionSource; }
-  virtual const G4VAngularDistribution* GetAngularDistribution() const 
-  { return angularDistribution; }
-  virtual const std::vector<G4String>& GetListOfColliders(G4int ) const;
+  protected:
 
-private:  
+    virtual const G4VCrossSectionSource* GetCrossSectionSource() const
+    {
+      return crossSectionSource;
+    }
+    virtual const G4VAngularDistribution* GetAngularDistribution() const
+    {
+      return angularDistribution;
+    }
+    virtual const std::vector<G4String>& GetListOfColliders(G4int) const;
 
-  G4VCrossSectionSource* crossSectionSource;
-  G4VAngularDistribution* angularDistribution;
+  private:
 
-  std::vector<G4String> dummy;
+    G4VCrossSectionSource* crossSectionSource;
+    G4VAngularDistribution* angularDistribution;
 
-
+    std::vector<G4String> dummy;
 };
 
 #endif

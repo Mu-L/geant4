@@ -26,8 +26,8 @@
 // S. Incerti (incerti@cenbg.in2p3.fr)
 //
 
-#ifndef G4EmDNAPhysics_h
-#define G4EmDNAPhysics_h 1
+#ifndef G4EMDNAPHYSICS_HH
+#define G4EMDNAPHYSICS_HH
 
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
@@ -36,23 +36,16 @@
 
 class G4EmDNAPhysics : public G4VPhysicsConstructor
 {
-public:
+  public:
 
-  G4EmDNAPhysics(G4int ver=1, const G4String& name="G4EmDNAPhysics");
+    G4EmDNAPhysics(G4int ver = 1, const G4String& name = "G4EmDNAPhysics");
 
-  ~G4EmDNAPhysics() override = default;
+    ~G4EmDNAPhysics() override = default;
 
-  void ConstructParticle() override;
-  void ConstructProcess() override;
-
+    void ConstructParticle() override;
+    void ConstructProcess() override;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-
-
-
-
-

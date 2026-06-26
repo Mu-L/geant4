@@ -36,37 +36,35 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4BertiniProtonBuilder_h
-#define G4BertiniProtonBuilder_h 
+#ifndef G4BERTINIPROTONBUILDER_HH
+#define G4BERTINIPROTONBUILDER_HH
 
-#include "globals.hh"
-
+#include "G4CascadeInterface.hh"
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
 #include "G4VProtonBuilder.hh"
-
-#include "G4CascadeInterface.hh"   
+#include "globals.hh"
 
 class G4BertiniProtonBuilder : public G4VProtonBuilder
 {
-  public: 
+  public:
+
     G4BertiniProtonBuilder();
     virtual ~G4BertiniProtonBuilder() {}
 
-    virtual void Build(G4HadronElasticProcess *) final override {};
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
-    virtual void SetMaxEnergy(G4double aM) final override {theMax = aM;}
+    virtual void Build(G4HadronElasticProcess*) final override {};
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
-    using G4VProtonBuilder::Build; //Prevent compiler warning
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+    virtual void SetMaxEnergy(G4double aM) final override { theMax = aM; }
+
+    using G4VProtonBuilder::Build;  // Prevent compiler warning
 
   private:
-    G4CascadeInterface * theModel;    
+
+    G4CascadeInterface* theModel;
     G4double theMin;
     G4double theMax;
-
 };
 
 #endif
-

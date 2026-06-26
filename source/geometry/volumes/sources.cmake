@@ -34,4 +34,5 @@ geant4_add_module(G4volumes
     G4VExternalPhysicalVolume.cc)
 
 geant4_module_link_libraries(G4volumes
-  PUBLIC G4globman G4hepgeometry G4geometrymng)
+  PUBLIC G4globman G4hepgeometry G4geometrymng
+  PRIVATE G4heprandom)

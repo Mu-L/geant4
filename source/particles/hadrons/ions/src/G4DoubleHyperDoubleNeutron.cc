@@ -47,7 +47,8 @@ G4DoubleHyperDoubleNeutron* G4DoubleHyperDoubleNeutron::Definition()
   // search in particle table
   G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
   auto anInstance = static_cast<G4Ions*>(pTable->FindParticle(name));
-  if (anInstance == nullptr) {
+  if (anInstance == nullptr)
+  {
     // create particle
     //
     //    Arguments for constructor are as follows

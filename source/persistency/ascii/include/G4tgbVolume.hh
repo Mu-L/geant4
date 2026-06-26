@@ -39,14 +39,15 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgbVolume_hh
-#define G4tgbVolume_hh 1
+#ifndef G4TGBVOLUME_HH
+#define G4TGBVOLUME_HH
+
+#include "G4tgrVolume.hh"
+#include "globals.hh"
+
+#include "geomdefs.hh"
 
 #include <map>
-
-#include "globals.hh"
-#include "G4tgrVolume.hh"
-#include "geomdefs.hh"
 
 class G4tgrPlace;
 class G4tgrSolid;
@@ -63,36 +64,31 @@ class G4tgbVolume
     ~G4tgbVolume();
     G4tgbVolume(G4tgrVolume* vol);
 
-    void ConstructG4Volumes(const G4tgrPlace* place,
-                            const G4LogicalVolume* parentLV);
-      // Construct the G4VSolid, G4LogicalVolume and the G4VPhysicalVolume
-      // of copy 'copyNo'
+    void ConstructG4Volumes(const G4tgrPlace* place, const G4LogicalVolume* parentLV);
+    // Construct the G4VSolid, G4LogicalVolume and the G4VPhysicalVolume
+    // of copy 'copyNo'
 
     G4VSolid* FindOrConstructG4Solid(const G4tgrSolid* vol);
-      // Construct the G4VSolid from the data of the corresponding G4tgrVolume.
-      // Allow to use data from another G4tgrVolume, needed by Boolean solids
-      // (that have to construct two solids and then do the Boolean operation)
+    // Construct the G4VSolid from the data of the corresponding G4tgrVolume.
+    // Allow to use data from another G4tgrVolume, needed by Boolean solids
+    // (that have to construct two solids and then do the Boolean operation)
 
     G4LogicalVolume* ConstructG4LogVol(const G4VSolid* solid);
-      // Construct the G4LogicalVolume and then call the construction of
-      // volumes that are positioned inside this LV
+    // Construct the G4LogicalVolume and then call the construction of
+    // volumes that are positioned inside this LV
 
-    G4VPhysicalVolume* ConstructG4PhysVol(const G4tgrPlace* place,
-                                          const G4LogicalVolume* currentLV,
+    G4VPhysicalVolume* ConstructG4PhysVol(const G4tgrPlace* place, const G4LogicalVolume* currentLV,
                                           const G4LogicalVolume* parentLV);
-      // Construct the G4VPhysicalVolume placing 'curentLV' with position
-      // given by the G4tgrPlace 'copyNo' inside 'parentLV'
+    // Construct the G4VPhysicalVolume placing 'curentLV' with position
+    // given by the G4tgrPlace 'copyNo' inside 'parentLV'
 
-    void SetCutsInRange(G4LogicalVolume* logvol,
-                        std::map<G4String, G4double> cuts);
-    void SetCutsInEnergy(G4LogicalVolume* logvol,
-                         std::map<G4String, G4double> cuts);
+    void SetCutsInRange(G4LogicalVolume* logvol, std::map<G4String, G4double> cuts);
+    void SetCutsInEnergy(G4LogicalVolume* logvol, std::map<G4String, G4double> cuts);
 
-    void CheckNoSolidParams(const G4String& solidType,
-                            const unsigned int NoParamExpected,
+    void CheckNoSolidParams(const G4String& solidType, const unsigned int NoParamExpected,
                             const unsigned int NoParam);
-      // Before building a solid of type 'solydType', check if the number
-      // of paramenters is the expected one
+    // Before building a solid of type 'solydType', check if the number
+    // of paramenters is the expected one
 
     G4VSolid* BuildSolidForDivision(G4VSolid* parentSolid, EAxis axis);
 
@@ -103,7 +99,7 @@ class G4tgbVolume
   private:
 
     G4tgrVolume* theTgrVolume = nullptr;
-      // The G4tgrVolume to which it corresponds
+    // The G4tgrVolume to which it corresponds
 
     G4AssemblyVolume* theG4AssemblyVolume = nullptr;
 };

@@ -30,13 +30,13 @@
 // Manages the per-thread state of solids - those which have a per-thread
 // state and dependent classes (if any)
 // In particular it owns:
-// - the arrays that implement 'split' classes 
+// - the arrays that implement 'split' classes
 // - classes/objects which are owned by the split classes.
 // Background: the classes/objects affected are:
 // - 'split' classes part of its state is per-thread,
 // - per-thread objects, in particular those which are owned by split classes.
-// Goal: Take ownership and control of per-thread state of 
-//       classes to work with multi-threading. 
+// Goal: Take ownership and control of per-thread state of
+//       classes to work with multi-threading.
 //       Offshoot of G4GeometryWorkspace, to deal with Solids.
 
 // Authors: John Apostolakis, Andrea Dotti (CERN), 04.10.2013 - Created
@@ -44,22 +44,23 @@
 #ifndef G4SOLIDSWORKSPACE_HH
 #define G4SOLIDSWORKSPACE_HH
 
+#include "G4PolyconeSide.hh"
+#include "G4PolyhedraSide.hh"
 #include "G4TWorkspacePool.hh"
 #include "G4VSolid.hh"
 
-#include "G4PolyconeSide.hh"
-#include "G4PolyhedraSide.hh"
-
 /**
  * @brief G4SolidsWorkspace manages the per-thread state of thoese solids
- * which have a per-thread state and dependent classes (if any). It takes
- * ownership and control of per-thread state of classes to work with
+ * which have a per-thread state and dependent classes (if any).
+ * @ingroup geometry_solids_specific
+ *
+ * It takes ownership and control of per-thread state of classes to work with
  * multi-threading.
  */
 
 class G4SolidsWorkspace
 {
-  public: 
+  public:
 
     using pool_type = G4TWorkspacePool<G4SolidsWorkspace>;
 
@@ -77,9 +78,9 @@ class G4SolidsWorkspace
     /**
      * Methods to achieve/release ownership.
      */
-    void UseWorkspace();     // Take ownership
-    void ReleaseWorkspace(); // Release ownership
-    void DestroyWorkspace(); // Release ownership and destroy
+    void UseWorkspace();  // Take ownership
+    void ReleaseWorkspace();  // Release ownership
+    void DestroyWorkspace();  // Release ownership and destroy
 
     /**
      * Method to be called at start of each run (especially at the
@@ -90,8 +91,8 @@ class G4SolidsWorkspace
     /**
      * Accessor/modifier for verbosity.
      */
-    inline void SetVerbose(G4bool v) { fVerbose=v; } 
-    inline G4bool GetVerbose()  { return fVerbose; } 
+    inline void SetVerbose(G4bool v) { fVerbose = v; }
+    inline G4bool GetVerbose() { return fVerbose; }
 
     /**
      * Accessor to the object pool.
@@ -110,10 +111,10 @@ class G4SolidsWorkspace
     /** Helper pointers - can be per instance or shared. */
     G4PlSideManager* fpPolyconeSideSIM = nullptr;
     G4PhSideManager* fpPolyhedraSideSIM = nullptr;
-  
+
     // Per Instance variables
     // NOTE: the ownership of the Data Arrays is IN this object
- 
+
     /** Store SubInstanceManager object pointers (SIM pointers). */
     G4PlSideData* fPolyconeSideOffset = nullptr;
     G4PhSideData* fPolyhedraSideOffset = nullptr;
@@ -121,4 +122,4 @@ class G4SolidsWorkspace
     G4bool fVerbose = false;
 };
 
-#endif // G4SOLIDSWORKSPACE_HH
+#endif  // G4SOLIDSWORKSPACE_HH

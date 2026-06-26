@@ -54,53 +54,54 @@
 //
 //
 
-#ifndef G4FissionLibrary_h
-#define G4FissionLibrary_h 1
+#ifndef G4FISSIONLIBRARY_HH
+#define G4FISSIONLIBRARY_HH
 
-#include "globals.hh"
-#include "G4HadProjectile.hh"
 #include "G4DynamicParticleVector.hh"
 #include "G4HadFinalState.hh"
+#include "G4HadProjectile.hh"
+#include "G4LLNLFission.hh"
+#include "G4Nucleus.hh"
+#include "G4ParticleHPAngular.hh"
+#include "G4ParticleHPEnergyDistribution.hh"
 #include "G4ParticleHPFinalState.hh"
+#include "G4ParticleHPFissionERelease.hh"
 #include "G4ParticleHPNames.hh"
 #include "G4ParticleHPParticleYield.hh"
-#include "G4ParticleHPFissionERelease.hh"
-#include "G4ParticleHPEnergyDistribution.hh"
 #include "G4ParticleHPPhotonDist.hh"
-#include "G4ParticleHPAngular.hh"
-#include "G4Nucleus.hh"
-#include "Randomize.hh"
-#include "G4LLNLFission.hh"
 #include "G4fissionEvent.hh"
+#include "Randomize.hh"
+#include "globals.hh"
 
 class G4FissionLibrary : public G4ParticleHPFinalState
 {
   public:
-  
-  G4FissionLibrary();
-  ~G4FissionLibrary();
 
-  void Init (G4double A, G4double Z, G4int M, const G4String& dirName, const G4String&, G4ParticleDefinition* );
-  G4HadFinalState* ApplyYourself(const G4HadProjectile& theTrack);
-  G4ParticleHPFinalState* New() ;
+    G4FissionLibrary();
+    ~G4FissionLibrary();
+
+    void Init(G4double A, G4double Z, G4int M, const G4String& dirName, const G4String&,
+              G4ParticleDefinition*);
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& theTrack);
+    G4ParticleHPFinalState* New();
 
   private:
 
-  void SampleMult(const G4HadProjectile& theTrack, G4int* nPrompt,
-                  G4int* gPrompt, G4double eKinetic);
-  inline G4ParticleHPFissionERelease * GetEnergyRelease() { return &theEnergyRelease; }
+    void SampleMult(const G4HadProjectile& theTrack, G4int* nPrompt, G4int* gPrompt,
+                    G4double eKinetic);
+    inline G4ParticleHPFissionERelease* GetEnergyRelease() { return &theEnergyRelease; }
 
-  G4fissionEvent* fe;
-  G4int theIsotope; // used to call G4fissionEvent
-  G4double targetMass;
-  G4ParticleHPParticleYield theFinalStateNeutrons;
-  G4ParticleHPEnergyDistribution thePromptNeutronEnDis;
-  G4ParticleHPEnergyDistribution theDelayedNeutronEnDis;
-  G4ParticleHPAngular theNeutronAngularDis;
+    G4fissionEvent* fe;
+    G4int theIsotope;  // used to call G4fissionEvent
+    G4double targetMass;
+    G4ParticleHPParticleYield theFinalStateNeutrons;
+    G4ParticleHPEnergyDistribution thePromptNeutronEnDis;
+    G4ParticleHPEnergyDistribution theDelayedNeutronEnDis;
+    G4ParticleHPAngular theNeutronAngularDis;
 
-  G4ParticleHPPhotonDist theFinalStatePhotons;
-  G4ParticleHPFissionERelease theEnergyRelease;
+    G4ParticleHPPhotonDist theFinalStatePhotons;
+    G4ParticleHPFissionERelease theEnergyRelease;
 
-  G4int secID;  // Creator model ID for the secondaries created by this model
+    G4int secID;  // Creator model ID for the secondaries created by this model
 };
 #endif

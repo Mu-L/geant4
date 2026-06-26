@@ -22,21 +22,22 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // G4GeometryWorkspace - implementation
 //
 // Authors: John Apostolakis (CERN), Andrea Dotti (SLAC), July 2013
 // --------------------------------------------------------------------
 
 #include "G4GeometryWorkspace.hh"
-#include "G4PhysicalVolumeStore.hh"
+
 #include "G4AutoLock.hh"
+#include "G4PhysicalVolumeStore.hh"
 
 namespace
 {
-  G4Mutex mutex_init = G4MUTEX_INITIALIZER;
-  G4GeometryWorkspace::pool_type thePool;
-}
+G4Mutex mutex_init = G4MUTEX_INITIALIZER;
+G4GeometryWorkspace::pool_type thePool;
+}  // namespace
 
 // ----------------------------------------------------------------------
 //
@@ -49,20 +50,16 @@ G4GeometryWorkspace::pool_type* G4GeometryWorkspace::GetPool()
 //
 G4GeometryWorkspace::G4GeometryWorkspace()
 {
-  fpLogicalVolumeSIM=
-      &const_cast<G4LVManager&>(G4LogicalVolume::GetSubInstanceManager());
-  fpPhysicalVolumeSIM=
-      &const_cast<G4PVManager&>( G4VPhysicalVolume::GetSubInstanceManager() );
-  fpReplicaSIM=
-      &const_cast<G4PVRManager&>(G4PVReplica::GetSubInstanceManager());
-  fpRegionSIM=
-      &const_cast<G4RegionManager&>(G4Region::GetSubInstanceManager());
+  fpLogicalVolumeSIM = &const_cast<G4LVManager&>(G4LogicalVolume::GetSubInstanceManager());
+  fpPhysicalVolumeSIM = &const_cast<G4PVManager&>(G4VPhysicalVolume::GetSubInstanceManager());
+  fpReplicaSIM = &const_cast<G4PVRManager&>(G4PVReplica::GetSubInstanceManager());
+  fpRegionSIM = &const_cast<G4RegionManager&>(G4Region::GetSubInstanceManager());
 
   // Create a work area for Logical Volumes in this thread
   // then capture its address
   //
   InitialiseWorkspace();
-  
+
   fLogicalVolumeOffset = fpLogicalVolumeSIM->GetOffset();
 
   fPhysicalVolumeOffset = fpPhysicalVolumeSIM->GetOffset();
@@ -74,19 +71,18 @@ G4GeometryWorkspace::G4GeometryWorkspace()
 
 // ----------------------------------------------------------------------
 //
-void
-G4GeometryWorkspace::UseWorkspace()
+void G4GeometryWorkspace::UseWorkspace()
 {
   // Geometry related, split classes mechanism: instantiate sub-instance
   // for this thread
   //
   fpLogicalVolumeSIM->UseWorkArea(fLogicalVolumeOffset);
   fpPhysicalVolumeSIM->UseWorkArea(fPhysicalVolumeOffset);
-  
+
   fpReplicaSIM->UseWorkArea(fReplicaOffset);
   fpRegionSIM->UseWorkArea(fRegionOffset);
 
-  // When recycling a workspace 
+  // When recycling a workspace
   //   - it must be a lightweight operation, to reuse a valid work area
   //   - so it must NOT Initialise anything!
   // Do not call InitialisePhysicalVolumes();
@@ -98,7 +94,7 @@ void G4GeometryWorkspace::ReleaseWorkspace()
 {
   fpLogicalVolumeSIM->UseWorkArea(nullptr);
   fpPhysicalVolumeSIM->UseWorkArea(nullptr);
-  
+
   fpReplicaSIM->UseWorkArea(nullptr);
   fpRegionSIM->UseWorkArea(nullptr);
 }
@@ -110,8 +106,8 @@ void G4GeometryWorkspace::InitialisePhysicalVolumes()
   G4PhysicalVolumeStore* physVolStore = G4PhysicalVolumeStore::GetInstance();
   for (auto physVol : *physVolStore)
   {
-    G4LogicalVolume *logicalVol = physVol->GetLogicalVolume();
- 
+    G4LogicalVolume* logicalVol = physVol->GetLogicalVolume();
+
     // Use shadow pointer
     //
     G4VSolid* solid = logicalVol->GetMasterSolid();
@@ -120,17 +116,17 @@ void G4GeometryWorkspace::InitialisePhysicalVolumes()
     {
       // Placement volume
       //
-      logicalVol->InitialiseWorker(logicalVol,solid,nullptr);
+      logicalVol->InitialiseWorker(logicalVol, solid, nullptr);
     }
     else
-    {          
+    {
       g4PVReplica->InitialiseWorker(g4PVReplica);
-      logicalVol->InitialiseWorker(logicalVol,solid,nullptr);
+      logicalVol->InitialiseWorker(logicalVol, solid, nullptr);
 
       // If the replica's solid (in LV) is changed during navigation,
       // it must be thread-private
       //
-      CloneReplicaSolid( g4PVReplica );
+      CloneReplicaSolid(g4PVReplica);
     }
   }
 }
@@ -138,7 +134,7 @@ void G4GeometryWorkspace::InitialisePhysicalVolumes()
 // ----------------------------------------------------------------------
 // Create a clone of the solid for this replica in this thread
 //
-G4bool G4GeometryWorkspace::CloneReplicaSolid( G4PVReplica* replicaPV )
+G4bool G4GeometryWorkspace::CloneReplicaSolid(G4PVReplica* replicaPV)
 {
   G4LogicalVolume* logicalV = replicaPV->GetLogicalVolume();
   G4VSolid* solid = logicalV->GetSolid();
@@ -147,9 +143,9 @@ G4bool G4GeometryWorkspace::CloneReplicaSolid( G4PVReplica* replicaPV )
   G4VSolid* workerSolid = solid->Clone();
   aLock.unlock();
 
-  if( workerSolid != nullptr )
+  if (workerSolid != nullptr)
   {
-    logicalV->InitialiseWorker(logicalV,workerSolid,nullptr);
+    logicalV->InitialiseWorker(logicalV, workerSolid, nullptr);
   }
   else
   {
@@ -162,11 +158,10 @@ G4bool G4GeometryWorkspace::CloneReplicaSolid( G4PVReplica* replicaPV )
        << "A solid lacks the Clone() method - or Clone() failed." << "\n"
        << "   Type of solid: " << solid->GetEntityType() << "\n"
        << "   Parameters: " << *solid;
-    G4Exception("G4GeometryWorkspace::CloneReplicaSolid()",
-                "GeomVol0003", FatalException, ed);
-    return false; 
+    G4Exception("G4GeometryWorkspace::CloneReplicaSolid()", "GeomVol0003", FatalException, ed);
+    return false;
   }
-  return true; // It Worked
+  return true;  // It Worked
 }
 
 // ----------------------------------------------------------------------

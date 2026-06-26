@@ -38,11 +38,11 @@
 
 #include "G4Dineutron.hh"
 
-#include "globals.hh"
-#include "G4ios.hh"
+#include "G4ParticleTable.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4ParticleTable.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 // ######################################################################
 // ###                          DINEUTRON                             ###
@@ -56,28 +56,33 @@ G4Dineutron* G4Dineutron::theInstance = 0;
 //               type    lepton number  baryon number   PDG encoding
 //             stable         lifetime    decay table
 G4Dineutron::G4Dineutron()
-  : G4VShortLivedParticle("dineutron",
-			  2.*neutron_mass_c2, 0.0*MeV, 0,
-			  2,       +1,       0,          
-			  2,       -2,       0,             
-			  "nucleus",        0,      +2, 0, /* ? 100000020 */
-			  true,       0.,    NULL) {}
+  : G4VShortLivedParticle("dineutron", 2. * neutron_mass_c2, 0.0 * MeV, 0, 2, +1, 0, 2, -2, 0,
+                          "nucleus", 0, +2, 0, /* ? 100000020 */
+                          true, 0., NULL)
+{}
 
-
-G4Dineutron* G4Dineutron::Definition() {
-  if (0 == theInstance) {
-    theInstance = new G4Dineutron;	// There can be only one
+G4Dineutron* G4Dineutron::Definition()
+{
+  if (0 == theInstance)
+  {
+    theInstance = new G4Dineutron;  // There can be only one
 
     G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
     G4bool tableReady = pTable->GetReadiness();
-    pTable->SetReadiness(false);        // Suppress error message
-    pTable->Remove(theInstance);        // Make invisible to GEANT4
-    pTable->SetReadiness(tableReady);   // Set back 'ready to use' flag
+    pTable->SetReadiness(false);  // Suppress error message
+    pTable->Remove(theInstance);  // Make invisible to GEANT4
+    pTable->SetReadiness(tableReady);  // Set back 'ready to use' flag
   }
 
   return theInstance;
 }
 
 // Simple call-throughs
-G4Dineutron* G4Dineutron::DineutronDefinition() { return Definition(); }
-G4Dineutron* G4Dineutron::Dineutron()           { return Definition(); }
+G4Dineutron* G4Dineutron::DineutronDefinition()
+{
+  return Definition();
+}
+G4Dineutron* G4Dineutron::Dineutron()
+{
+  return Definition();
+}

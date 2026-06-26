@@ -29,16 +29,16 @@
 // --------------------------------------------------------------------
 
 #include "G4tgrRotationMatrixFactory.hh"
+
 #include "G4tgrMessenger.hh"
 #include "G4tgrUtils.hh"
 
-G4ThreadLocal G4tgrRotationMatrixFactory*
-  G4tgrRotationMatrixFactory::theInstance = nullptr;
+G4ThreadLocal G4tgrRotationMatrixFactory* G4tgrRotationMatrixFactory::theInstance = nullptr;
 
 // --------------------------------------------------------------------
 G4tgrRotationMatrixFactory* G4tgrRotationMatrixFactory::GetInstance()
 {
-  if(theInstance == nullptr)
+  if (theInstance == nullptr)
   {
     theInstance = new G4tgrRotationMatrixFactory;
   }
@@ -46,49 +46,45 @@ G4tgrRotationMatrixFactory* G4tgrRotationMatrixFactory::GetInstance()
 }
 
 // --------------------------------------------------------------------
-G4tgrRotationMatrixFactory::G4tgrRotationMatrixFactory()
-{
-}
+G4tgrRotationMatrixFactory::G4tgrRotationMatrixFactory() {}
 
 // --------------------------------------------------------------------
 G4tgrRotationMatrixFactory::~G4tgrRotationMatrixFactory()
 {
-  for(auto cite = theTgrRotMats.cbegin(); cite != theTgrRotMats.cend(); ++cite)
+  for (auto cite = theTgrRotMats.cbegin(); cite != theTgrRotMats.cend(); ++cite)
   {
-    delete(*cite).second;
+    delete (*cite).second;
   }
   theTgrRotMats.clear();
   delete theInstance;
 }
 
 // --------------------------------------------------------------------
-G4tgrRotationMatrix* G4tgrRotationMatrixFactory::AddRotMatrix(
-  const std::vector<G4String>& wl)
+G4tgrRotationMatrix* G4tgrRotationMatrixFactory::AddRotMatrix(const std::vector<G4String>& wl)
 {
   //---------- Check for miminum number of words read
-  if(wl.size() != 5 && wl.size() != 8 && wl.size() != 11)
+  if (wl.size() != 5 && wl.size() != 8 && wl.size() != 11)
   {
     G4tgrUtils::DumpVS(wl, "G4tgrRotationMatrixFactory::AddRotMatrix()");
-    G4Exception("G4tgrRotationMatrixFactory::AddRotMatrix()", "InvalidMatrix",
-                FatalException, "Line should have 5, 8 or 11 words !");
+    G4Exception("G4tgrRotationMatrixFactory::AddRotMatrix()", "InvalidMatrix", FatalException,
+                "Line should have 5, 8 or 11 words !");
   }
 
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 2)
+  if (G4tgrMessenger::GetVerboseLevel() >= 2)
   {
-    G4cout << " G4tgrRotationMatrixFactory::AddRotMatrix() - Adding: " << wl[1]
-           << G4endl;
+    G4cout << " G4tgrRotationMatrixFactory::AddRotMatrix() - Adding: " << wl[1] << G4endl;
   }
 #endif
   //---------- Look if rotation matrix exists
-  if(FindRotMatrix(G4tgrUtils::GetString(wl[1])) != 0)
+  if (FindRotMatrix(G4tgrUtils::GetString(wl[1])) != 0)
   {
     G4String ErrMessage = "Rotation matrix repeated... " + wl[1];
-    G4Exception("G4tgrRotationMatrixFactory::AddRotMatrix()", "InvalidInput",
-                FatalException, ErrMessage);
+    G4Exception("G4tgrRotationMatrixFactory::AddRotMatrix()", "InvalidInput", FatalException,
+                ErrMessage);
   }
 
-  G4tgrRotationMatrix* rotm      = new G4tgrRotationMatrix(wl);
+  G4tgrRotationMatrix* rotm = new G4tgrRotationMatrix(wl);
   theTgrRotMats[rotm->GetName()] = rotm;
   theTgrRotMatList.push_back(rotm);
 
@@ -96,13 +92,12 @@ G4tgrRotationMatrix* G4tgrRotationMatrixFactory::AddRotMatrix(
 }
 
 // --------------------------------------------------------------------
-G4tgrRotationMatrix* G4tgrRotationMatrixFactory::FindRotMatrix(
-  const G4String& name)
+G4tgrRotationMatrix* G4tgrRotationMatrixFactory::FindRotMatrix(const G4String& name)
 {
   G4tgrRotationMatrix* rotm = nullptr;
 
   G4mstgrrotm::const_iterator cite = theTgrRotMats.find(name);
-  if(cite != theTgrRotMats.cend())
+  if (cite != theTgrRotMats.cend())
   {
     rotm = (*cite).second;
   }
@@ -114,7 +109,7 @@ G4tgrRotationMatrix* G4tgrRotationMatrixFactory::FindRotMatrix(
 void G4tgrRotationMatrixFactory::DumpRotmList()
 {
   G4cout << " @@@@@@@@@@@@@@@@ DUMPING G4tgrRotationMatrix's List " << G4endl;
-  for(auto cite = theTgrRotMats.cbegin(); cite != theTgrRotMats.cend(); ++cite)
+  for (auto cite = theTgrRotMats.cbegin(); cite != theTgrRotMats.cend(); ++cite)
   {
     G4cout << " ROTM: " << (*cite).second->GetName() << G4endl;
   }

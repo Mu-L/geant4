@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  27th March 1996
 // OpenInventor graphics system factory.
 
@@ -34,15 +34,21 @@
 
 #include "G4OpenInventor.hh"
 
-class G4OpenInventorXt: public G4OpenInventor {
-public:
-  G4OpenInventorXt ();
-  virtual ~G4OpenInventorXt ();
-  G4VViewer* CreateViewer(G4VSceneHandler&,const G4String& name = "");
-private:
-  virtual void Initialize();
-private:
-  bool fInited;
+class G4OpenInventorXt : public G4OpenInventor
+{
+  public:
+
+    G4OpenInventorXt();
+    virtual ~G4OpenInventorXt();
+    G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "");
+
+  private:
+
+    virtual void Initialize();
+
+  private:
+
+    bool fInited;
 };
 
 #endif

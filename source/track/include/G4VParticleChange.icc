@@ -58,8 +58,7 @@ inline G4SteppingControl G4VParticleChange::GetSteppingControl() const
   return theSteppingControlFlag;
 }
 
-inline void
-G4VParticleChange::ProposeSteppingControl(G4SteppingControl StepControlFlag)
+inline void G4VParticleChange::ProposeSteppingControl(G4SteppingControl StepControlFlag)
 {
   theSteppingControlFlag = StepControlFlag;
 }
@@ -99,8 +98,7 @@ inline G4double G4VParticleChange::GetNonIonizingEnergyDeposit() const
   return theNonIonizingEnergyDeposit;
 }
 
-inline void
-G4VParticleChange::ProposeNonIonizingEnergyDeposit(G4double anEnergyPart)
+inline void G4VParticleChange::ProposeNonIonizingEnergyDeposit(G4double anEnergyPart)
 {
   theNonIonizingEnergyDeposit = anEnergyPart;
 }
@@ -141,7 +139,7 @@ inline G4double G4VParticleChange::GetWeight() const
 inline void G4VParticleChange::InitializeLocalEnergyDeposit()
 {
   // clear theLocalEnergyDeposited
-  theLocalEnergyDeposit       = 0.0;
+  theLocalEnergyDeposit = 0.0;
   theNonIonizingEnergyDeposit = 0.0;
 }
 
@@ -154,8 +152,8 @@ inline void G4VParticleChange::InitializeSteppingControl()
 inline void G4VParticleChange::Clear()
 {
   theNumberOfSecondaries = 0;
-  theFirstStepInVolume   = false;
-  theLastStepInVolume    = false;
+  theFirstStepInVolume = false;
+  theLastStepInVolume = false;
 }
 
 inline void G4VParticleChange::InitializeStatusChange(const G4Track& track)
@@ -168,7 +166,7 @@ inline void G4VParticleChange::InitializeStatusChange(const G4Track& track)
 inline void G4VParticleChange::InitializeParentWeight(const G4Track& track)
 {
   // set the parent track's weight
-  theParentWeight        = track.GetWeight();
+  theParentWeight = track.GetWeight();
   isParentWeightProposed = false;
 }
 
@@ -192,7 +190,7 @@ inline void G4VParticleChange::InitializeSecondaries()
 
 inline void G4VParticleChange::SetNumberOfSecondaries(G4int totSecondaries)
 {
-  if(totSecondaries > theSizeOftheListOfSecondaries)
+  if (totSecondaries > theSizeOftheListOfSecondaries)
   {
     theListOfSecondaries.resize(totSecondaries, nullptr);
     theSizeOftheListOfSecondaries = totSecondaries;
@@ -201,7 +199,7 @@ inline void G4VParticleChange::SetNumberOfSecondaries(G4int totSecondaries)
 }
 
 // ----------------------------------------------------------------
-// total 
+// total
 //
 inline void G4VParticleChange::Initialize(const G4Track& track)
 {
@@ -240,7 +238,7 @@ inline G4bool G4VParticleChange::IsSecondaryWeightSetByProcess() const
 
 inline void G4VParticleChange::ProposeWeight(G4double w)
 {
-  theParentWeight        = w;
+  theParentWeight = w;
   isParentWeightProposed = true;
 }
 
@@ -252,5 +250,5 @@ inline void G4VParticleChange::ProposeParentWeight(G4double w)
 inline G4double G4VParticleChange::ComputeBeta(G4double ekin)
 {
   G4double mass = theCurrentTrack->GetDefinition()->GetPDGMass();
-  return std::sqrt(ekin*(ekin + 2*mass))/(ekin + mass);
-} 
+  return std::sqrt(ekin * (ekin + 2 * mass)) / (ekin + mass);
+}

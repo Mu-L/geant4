@@ -26,26 +26,25 @@
 //
 // by V. Lara
 
-#ifndef G4HETCChargedFragment_h
-#define G4HETCChargedFragment_h 1
+#ifndef G4HETCCHARGEDFRAGMENT_HH
+#define G4HETCCHARGEDFRAGMENT_HH
 
 #include "G4HETCFragment.hh"
 
 class G4HETCChargedFragment : public G4HETCFragment
 {
-public:
+  public:
 
-  G4HETCChargedFragment(const G4ParticleDefinition*, G4VCoulombBarrier*);
+    G4HETCChargedFragment(const G4ParticleDefinition*, G4VCoulombBarrier*);
 
-  ~G4HETCChargedFragment() override = default;
+    ~G4HETCChargedFragment() override = default;
 
-  G4double SampleKineticEnergy(const G4Fragment& aFragment) override;
+    G4double SampleKineticEnergy(const G4Fragment& aFragment) override;
 
-  G4HETCChargedFragment(const G4HETCChargedFragment &right) = delete;
-  const G4HETCChargedFragment&
-  operator=(const G4HETCChargedFragment &right) = delete;
-  G4bool operator==(const G4HETCChargedFragment &right) const = delete; 
-  G4bool operator!=(const G4HETCChargedFragment &right) const = delete;
+    G4HETCChargedFragment(const G4HETCChargedFragment& right) = delete;
+    const G4HETCChargedFragment& operator=(const G4HETCChargedFragment& right) = delete;
+    G4bool operator==(const G4HETCChargedFragment& right) const = delete;
+    G4bool operator!=(const G4HETCChargedFragment& right) const = delete;
 };
 
 #endif

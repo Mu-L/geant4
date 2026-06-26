@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4ParticleHPCaptureData_h
-#define G4ParticleHPCaptureData_h
+#ifndef G4PARTICLEHPCAPTUREDATA_HH
+#define G4PARTICLEHPCAPTUREDATA_HH
 
 #include "G4NeutronHPCaptureData.hh"
 using G4ParticleHPCaptureData = G4NeutronHPCaptureData;

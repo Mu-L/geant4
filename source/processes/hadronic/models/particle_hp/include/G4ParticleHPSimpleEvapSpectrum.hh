@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPSimpleEvapSpectrum_h
-#define G4ParticleHPSimpleEvapSpectrum_h 1
+#ifndef G4PARTICLEHPSIMPLEEVAPSPECTRUM_HH
+#define G4PARTICLEHPSIMPLEEVAPSPECTRUM_HH
 
 #include "G4Exp.hh"
 #include "G4Log.hh"
@@ -46,6 +46,7 @@
 class G4ParticleHPSimpleEvapSpectrum : public G4VParticleHPEDis
 {
   public:
+
     G4ParticleHPSimpleEvapSpectrum() { expm1 = G4Exp(-1.); }
     ~G4ParticleHPSimpleEvapSpectrum() override = default;
 
@@ -67,9 +68,11 @@ class G4ParticleHPSimpleEvapSpectrum : public G4VParticleHPEDis
       max = 10. * theta;
       G4int icounter = 0;
       G4int icounter_max = 1024;
-      do {
+      do
+      {
         icounter++;
-        if (icounter > icounter_max) {
+        if (icounter > icounter_max)
+        {
           G4cout << "Loop-counter exceeded the threshold value at " << __LINE__ << "th line of "
                  << __FILE__ << "." << G4endl;
           break;
@@ -82,6 +85,7 @@ class G4ParticleHPSimpleEvapSpectrum : public G4VParticleHPEDis
     }
 
   private:
+
     inline G4double Evapo(G4double anEnergy, G4double theta)
     {
       G4double result = (anEnergy * CLHEP::eV) * G4Exp(-anEnergy * CLHEP::eV / theta);
@@ -89,6 +93,7 @@ class G4ParticleHPSimpleEvapSpectrum : public G4VParticleHPEDis
     }
 
   private:
+
     G4double expm1;
 
     G4ParticleHPVector theFractionalProb;

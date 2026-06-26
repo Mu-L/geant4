@@ -6,6 +6,28 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-06-19 Ben Morgan (track-V11-04-04)
+- Apply clang-format to all C++ files.
+
+## 2026-06-10 Severin Diederichs (track-V11-04-03)
+- Add an overload of `G4Track::IncrementCurrentStepNumber()` taking a
+  `G4int nSteps` argument to increment the current step number by more
+  than one.
+
+## 2026-06-08 Ben Morgan (track-V11-04-02)
+- Use standard Geant4 header guard without value for definition.
+
+## 2026-05-04 Makoto Asai (track-V11-04-01)
+- G4Track
+  - G4VAuxiliaryTrackInformation is cloned when cloning G4Track for sub-event
+- G4VAuxiliaryTrackInformation
+  - Virtual Clone() method is added.  This method must be implemented in the 
+    concrete class if AuxiliaryTrackInformation is used in sub-event parallel
+    mode
+
+## 2026-01-09 Ben Morgan (track-V11-04-00)
+- Update header guards to style/format required by Geant4 coding guidelines.
+
 ## 2024-06-01 Makoto Asai (track-V11-02-03)
 - Add optional copy of touchables when copy constructing G4Track to support
   subevent parallelism

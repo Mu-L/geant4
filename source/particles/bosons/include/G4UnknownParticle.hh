@@ -31,19 +31,21 @@
 //  New impelemenataion as an utility class  H.Kurashige, 14 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4UnknownParticle_h
-#define G4UnknownParticle_h 1
+#ifndef G4UNKNOWNPARTICLE_HH
+#define G4UNKNOWNPARTICLE_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4UnknownParticle : public G4ParticleDefinition
 {
   public:
+
     static G4UnknownParticle* Definition();
     static G4UnknownParticle* UnknownParticleDefinition();
     static G4UnknownParticle* UnknownParticle();
 
   private:
+
     G4UnknownParticle() {}
     ~G4UnknownParticle() override = default;
 

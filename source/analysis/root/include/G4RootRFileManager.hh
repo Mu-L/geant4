@@ -28,11 +28,11 @@
 
 // Author: Ivana Hrivnacova, 10/09/2014  (ivana@ipno.in2p3.fr)
 
-#ifndef G4RootRFileManager_h
-#define G4RootRFileManager_h 1
+#ifndef G4ROOTRFILEMANAGER_HH
+#define G4ROOTRFILEMANAGER_HH
 
-#include "G4VRFileManager.hh"
 #include "G4RootRFileDef.hh"
+#include "G4VRFileManager.hh"
 #include "globals.hh"
 
 #include <map>
@@ -41,6 +41,7 @@
 class G4RootRFileManager : public G4VRFileManager
 {
   public:
+
     explicit G4RootRFileManager(const G4AnalysisManagerState& state);
     G4RootRFileManager() = delete;
     ~G4RootRFileManager() override;
@@ -51,15 +52,15 @@ class G4RootRFileManager : public G4VRFileManager
     void CloseFiles() final {}
 
     // Methods to manipulate input files
-    virtual G4bool OpenRFile(const G4String& fileName,
-                             G4bool isPerThread);
+    virtual G4bool OpenRFile(const G4String& fileName, G4bool isPerThread);
 
     // Get methods
     G4RootRFile* GetRFile(const G4String& fileName, G4bool isPerThread) const;
 
   private:
+
     // Static data members
-    static constexpr std::string_view fkClass { "G4RootRFileManager" };
+    static constexpr std::string_view fkClass{"G4RootRFileManager"};
 
     // data members
     std::map<G4String, G4RootRFile*> fRFiles;

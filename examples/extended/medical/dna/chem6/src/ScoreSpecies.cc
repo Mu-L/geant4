@@ -277,12 +277,20 @@ void ScoreSpecies::WriteWithAnalysisManager(G4VAnalysisManager *analysisManager)
       const G4int N = fNEvent;
 
       if (time == *fTimeToRecord.rbegin()) {
+        G4double variance = 0;
+        if (N == 0) {return;}
+        if (N > 0) {
+          variance = (G2 / N) - std::pow(G / N, 2);
+          if (variance < 0) {
+            variance = 0;
+          }
+        }
         if (N > 1) {
           out << std::setw(12) << G / N << std::setw(12)
-              << std::sqrt(((G2 / N) - std::pow(G / N, 2)) / (N - 1));
+              << std::sqrt(variance / (N - 1));
         } else {
           out << std::setw(12) << G / N << std::setw(12)
-              << std::sqrt(((G2 / N) - std::pow(G / N, 2)) / N);
+              << std::sqrt(variance / N);
         }
       }
 

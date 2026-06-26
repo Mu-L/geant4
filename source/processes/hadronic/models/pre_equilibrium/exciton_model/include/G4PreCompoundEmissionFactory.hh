@@ -24,28 +24,26 @@
 // ********************************************************************
 //
 
-#ifndef G4PreCompoundEmissionFactory_hh
-#define G4PreCompoundEmissionFactory_hh 
+#ifndef G4PRECOMPOUNDEMISSIONFACTORY_HH
+#define G4PRECOMPOUNDEMISSIONFACTORY_HH
 
 #include "G4VPreCompoundEmissionFactory.hh"
 
 class G4PreCompoundEmissionFactory : public G4VPreCompoundEmissionFactory
 {
-public:
+  public:
 
-  G4PreCompoundEmissionFactory();
-  virtual ~G4PreCompoundEmissionFactory();
+    G4PreCompoundEmissionFactory();
+    virtual ~G4PreCompoundEmissionFactory();
 
-  G4PreCompoundEmissionFactory(const G4PreCompoundEmissionFactory&) = delete;
-  const G4PreCompoundEmissionFactory & operator=
-  (const G4PreCompoundEmissionFactory & val) = delete;
-  G4bool operator==(const G4PreCompoundEmissionFactory & val) const = delete;
-  G4bool operator!=(const G4PreCompoundEmissionFactory & val) const = delete;
+    G4PreCompoundEmissionFactory(const G4PreCompoundEmissionFactory&) = delete;
+    const G4PreCompoundEmissionFactory& operator=(const G4PreCompoundEmissionFactory& val) = delete;
+    G4bool operator==(const G4PreCompoundEmissionFactory& val) const = delete;
+    G4bool operator!=(const G4PreCompoundEmissionFactory& val) const = delete;
 
-protected:
+  protected:
 
-  virtual std::vector<G4VPreCompoundFragment*> *  CreateFragmentVector();
-
+    virtual std::vector<G4VPreCompoundFragment*>* CreateFragmentVector();
 };
 
 #endif

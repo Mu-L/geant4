@@ -51,7 +51,8 @@ G4VSceneHandler* G4Vtk::CreateSceneHandler(const G4String& name)
 G4VViewer* G4Vtk::CreateViewer(G4VSceneHandler& scene, const G4String& name)
 {
   G4VViewer* pView = new G4VtkViewer((G4VtkSceneHandler&)scene, name);
-  if (pView->GetViewId() < 0) {
+  if (pView->GetViewId() < 0)
+  {
     G4cerr << "G4Vtk::CreateViewer: ERROR flagged by negative"
               " view id in G4VtkViewer creation."
               "\n Destroying view and returning null pointer."

@@ -29,29 +29,29 @@
 // by V. Lara (Sept. 2001)
 //
 
-#ifndef G4NeutronGEMChannel_h
-#define G4NeutronGEMChannel_h 1
+#ifndef G4NEUTRONGEMCHANNEL_HH
+#define G4NEUTRONGEMCHANNEL_HH
 
 #include "G4GEMChannel.hh"
 #include "G4NeutronGEMProbability.hh"
 
 class G4NeutronGEMChannel : public G4GEMChannel
 {
-public:
-  // only available constructor
-  explicit G4NeutronGEMChannel() 
-    : G4GEMChannel(1,0,"neutron",&theEvaporationProbability) {}
+  public:
 
-  // destructor
-  ~G4NeutronGEMChannel() {};
+    // only available constructor
+    explicit G4NeutronGEMChannel() : G4GEMChannel(1, 0, "neutron", &theEvaporationProbability) {}
 
-private:
-  const G4NeutronGEMChannel & operator=(const G4NeutronGEMChannel & right) = delete;  
-  G4NeutronGEMChannel(const G4NeutronGEMChannel & right) = delete;
-  G4bool operator==(const G4NeutronGEMChannel & right) const = delete;
-  G4bool operator!=(const G4NeutronGEMChannel & right) const = delete;
+    // destructor
+    ~G4NeutronGEMChannel() {};
 
-  G4NeutronGEMProbability theEvaporationProbability;
+  private:
 
+    const G4NeutronGEMChannel& operator=(const G4NeutronGEMChannel& right) = delete;
+    G4NeutronGEMChannel(const G4NeutronGEMChannel& right) = delete;
+    G4bool operator==(const G4NeutronGEMChannel& right) const = delete;
+    G4bool operator!=(const G4NeutronGEMChannel& right) const = delete;
+
+    G4NeutronGEMProbability theEvaporationProbability;
 };
 #endif

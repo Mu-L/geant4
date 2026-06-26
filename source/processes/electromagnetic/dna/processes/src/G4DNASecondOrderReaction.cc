@@ -40,15 +40,15 @@
 #include <memory>
 
 #ifndef State
-#define State(theXInfo) (GetState<SecondOrderReactionState>()->theXInfo)
+#  define State(theXInfo) (GetState<SecondOrderReactionState>()->theXInfo)
 #endif
 
 void G4DNASecondOrderReaction::Create()
 {
   pParticleChange = &fParticleChange;
-  enableAtRestDoIt    = false;
+  enableAtRestDoIt = false;
   enableAlongStepDoIt = false;
-  enablePostStepDoIt  = true;
+  enablePostStepDoIt = true;
 
   SetProcessSubType(fLowEnergyTransportation);
 
@@ -68,30 +68,29 @@ void G4DNASecondOrderReaction::Create()
   verboseLevel = 0;
 }
 
-G4DNASecondOrderReaction::G4DNASecondOrderReaction(const G4String &aName, G4ProcessType type) :
-        G4VITProcess(aName,type)
+G4DNASecondOrderReaction::G4DNASecondOrderReaction(const G4String& aName, G4ProcessType type)
+  : G4VITProcess(aName, type)
 {
   Create();
 }
 
-G4DNASecondOrderReaction::G4DNASecondOrderReaction(const G4DNASecondOrderReaction& rhs):
-        G4VITProcess(rhs)
+G4DNASecondOrderReaction::G4DNASecondOrderReaction(const G4DNASecondOrderReaction& rhs)
+  : G4VITProcess(rhs)
 {
   Create();
 }
 
-G4DNASecondOrderReaction::~G4DNASecondOrderReaction()
-= default;
+G4DNASecondOrderReaction::~G4DNASecondOrderReaction() = default;
 
 G4DNASecondOrderReaction& G4DNASecondOrderReaction::operator=(const G4DNASecondOrderReaction& rhs)
 {
-  if (this == &rhs) return *this; // handle self assignment
+  if (this == &rhs) return *this;  // handle self assignment
 
-  //assignment operator
+  // assignment operator
   return *this;
 }
 
-G4DNASecondOrderReaction::SecondOrderReactionState::SecondOrderReactionState() 
+G4DNASecondOrderReaction::SecondOrderReactionState::SecondOrderReactionState()
 {
   fPreviousTimeAtPreStepPoint = -1;
   fIsInGoodMaterial = false;
@@ -100,49 +99,47 @@ G4DNASecondOrderReaction::SecondOrderReactionState::SecondOrderReactionState()
 void G4DNASecondOrderReaction::BuildPhysicsTable(const G4ParticleDefinition&)
 {
   fpMoleculeDensity = G4DNAMolecularMaterial::Instance()->GetNumMolPerVolTableFor(fpMaterial);
-  fMolarMassOfMaterial = fpMaterial->GetMassOfMolecule()*CLHEP::Avogadro*1e3;
+  fMolarMassOfMaterial = fpMaterial->GetMassOfMolecule() * CLHEP::Avogadro * 1e3;
   fIsInitialized = true;
 }
 
-void
-G4DNASecondOrderReaction::StartTracking(G4Track* track)
+void G4DNASecondOrderReaction::StartTracking(G4Track* track)
 {
   G4VProcess::StartTracking(track);
   G4VITProcess::fpState = std::make_shared<SecondOrderReactionState>();
   G4VITProcess::StartTracking(track);
 }
 
-void
-G4DNASecondOrderReaction::SetReaction(const G4MolecularConfiguration* molConf,
-                                      const G4Material* mat, double reactionRate)
+void G4DNASecondOrderReaction::SetReaction(const G4MolecularConfiguration* molConf,
+                                           const G4Material* mat, double reactionRate)
 {
-  if(fIsInitialized)
+  if (fIsInitialized)
   {
-    G4ExceptionDescription exceptionDescription ;
+    G4ExceptionDescription exceptionDescription;
     exceptionDescription << "G4DNASecondOrderReaction was already initialised. ";
     exceptionDescription << "You cannot set a reaction after initialisation.";
-    G4Exception("G4DNASecondOrderReaction::SetReaction","G4DNASecondOrderReaction001",
-                FatalErrorInArgument,exceptionDescription);
+    G4Exception("G4DNASecondOrderReaction::SetReaction", "G4DNASecondOrderReaction001",
+                FatalErrorInArgument, exceptionDescription);
   }
   fpMolecularConfiguration = molConf;
   fpMaterial = mat;
   fReactionRate = reactionRate;
 }
 
-G4double G4DNASecondOrderReaction::PostStepGetPhysicalInteractionLength(const G4Track& track,
-                                                                        G4double   /*previousStepSize*/,
-                                                                        G4ForceCondition* pForceCond)
+G4double G4DNASecondOrderReaction::PostStepGetPhysicalInteractionLength(
+  const G4Track& track, G4double /*previousStepSize*/, G4ForceCondition* pForceCond)
 {
   //    G4cout << "G4DNASecondOrderReaction::PostStepGetPhysicalInteractionLength" << G4endl;
-  //    G4cout << "For reaction : " << fpMaterial->GetName() << " + " << fpMolecularConfiguration->GetName() << G4endl;
+  //    G4cout << "For reaction : " << fpMaterial->GetName() << " + " <<
+  //    fpMolecularConfiguration->GetName() << G4endl;
 
   //_______________________________________________________________________
   // Check whether the track is in the good material (maybe composite material)
   const G4Material* material = track.GetMaterial();
 
   G4Molecule* mol = GetMolecule(track);
-  if(mol == nullptr) return DBL_MAX;
-  if(mol->GetMolecularConfiguration() != fpMolecularConfiguration)
+  if (mol == nullptr) return DBL_MAX;
+  if (mol->GetMolecularConfiguration() != fpMolecularConfiguration)
   {
     //        G4cout <<"mol->GetMolecularConfiguration() != fpMolecularConfiguration" << G4endl;
     return DBL_MAX;
@@ -150,12 +147,12 @@ G4double G4DNASecondOrderReaction::PostStepGetPhysicalInteractionLength(const G4
 
   G4double molDensity = (*fpMoleculeDensity)[material->GetIndex()];
 
-  if(molDensity == 0.0) // ie : not found
+  if (molDensity == 0.0)  // ie : not found
   {
-    if(State(fIsInGoodMaterial))
+    if (State(fIsInGoodMaterial))
     {
       ResetNumberOfInteractionLengthLeft();
-      //State(fPreviousTimeAtPreStepPoint) = -1;
+      // State(fPreviousTimeAtPreStepPoint) = -1;
       State(fIsInGoodMaterial) = false;
     }
 
@@ -163,7 +160,7 @@ G4double G4DNASecondOrderReaction::PostStepGetPhysicalInteractionLength(const G4
     //        <<" | name of current material : " << material->GetName()
     //        << G4endl;
 
-    return DBL_MAX; // Becareful return here !!
+    return DBL_MAX;  // Becareful return here !!
   }
 
   //    G4cout << " Va calculer le temps d'interaction " << G4endl;
@@ -171,7 +168,7 @@ G4double G4DNASecondOrderReaction::PostStepGetPhysicalInteractionLength(const G4
   State(fIsInGoodMaterial) = true;
 
   //  fConcentration = molDensity/fMolarMassOfMaterial;
-  fConcentration = molDensity/CLHEP::Avogadro;
+  fConcentration = molDensity / CLHEP::Avogadro;
   // G4cout << "Concentration : " << fConcentration / (g/mole)<< G4endl;
 
   //_______________________________________________________________________
@@ -184,10 +181,9 @@ G4double G4DNASecondOrderReaction::PostStepGetPhysicalInteractionLength(const G4
   // => the track has not left this material since the previous call
   G4double previousTimeStep(-1.);
 
-  if(State(fPreviousTimeAtPreStepPoint) != -1)
+  if (State(fPreviousTimeAtPreStepPoint) != -1)
   {
-    previousTimeStep = track.GetGlobalTime() -
-        State(fPreviousTimeAtPreStepPoint) ;
+    previousTimeStep = track.GetGlobalTime() - State(fPreviousTimeAtPreStepPoint);
   }
 
   State(fPreviousTimeAtPreStepPoint) = track.GetGlobalTime();
@@ -195,74 +191,81 @@ G4double G4DNASecondOrderReaction::PostStepGetPhysicalInteractionLength(const G4
   // condition is set to "Not Forced"
   *pForceCond = NotForced;
 
-  if (
-      (previousTimeStep < 0.0) ||
-      (fpState->theNumberOfInteractionLengthLeft<=0.0)) {
+  if ((previousTimeStep < 0.0) || (fpState->theNumberOfInteractionLengthLeft <= 0.0))
+  {
     // beggining of tracking (or just after DoIt of this process)
     ResetNumberOfInteractionLengthLeft();
-  } else if ( previousTimeStep  > 0.0) {
+  }
+  else if (previousTimeStep > 0.0)
+  {
     // get mean free path
     // subtract NumberOfInteractionLengthLeft
-    SubtractNumberOfInteractionLengthLeft( previousTimeStep );
-  } else {
+    SubtractNumberOfInteractionLengthLeft(previousTimeStep);
+  }
+  else
+  {
     // zero time step
     //  Force trigerring the process
     //*pForceCond = Forced;
   }
 
-  fpState->currentInteractionLength = 1/(fReactionRate*fConcentration);
+  fpState->currentInteractionLength = 1 / (fReactionRate * fConcentration);
 
   //    G4cout << "fpState->currentInteractionLength = "
   //        <<  fpState->currentInteractionLength << G4endl;
 
   G4double value;
-  if (fpState->currentInteractionLength <DBL_MAX) {
-    value = fpState->theNumberOfInteractionLengthLeft
-        * (fpState->currentInteractionLength);
-  } else {
+  if (fpState->currentInteractionLength < DBL_MAX)
+  {
+    value = fpState->theNumberOfInteractionLengthLeft * (fpState->currentInteractionLength);
+  }
+  else
+  {
     value = DBL_MAX;
   }
 #ifdef G4VERBOSE
-  if (verboseLevel>2) {
+  if (verboseLevel > 2)
+  {
     G4cout << "G4VITRestDiscreteProcess::PostStepGetPhysicalInteractionLength ";
-    G4cout << "[ " << GetProcessName() << "]" <<G4endl;
+    G4cout << "[ " << GetProcessName() << "]" << G4endl;
     track.GetDynamicParticle()->DumpInfo();
-    G4cout << " in Material  " <<  track.GetMaterial()->GetName() <<G4endl;
-    G4cout << "InteractionLength= " << value/cm <<"[cm] " <<G4endl;
+    G4cout << " in Material  " << track.GetMaterial()->GetName() << G4endl;
+    G4cout << "InteractionLength= " << value / cm << "[cm] " << G4endl;
   }
 #endif
 
-//  G4cout << "currentInteractionLength : " << fpState->currentInteractionLength << G4endl;
-//  G4cout << "Material : " << fpMaterial->GetName()
-//      << "ID: " << track.GetTrackID()
-//      << " Returned time : " << G4BestUnit(value,"Time") << G4endl;
+  //  G4cout << "currentInteractionLength : " << fpState->currentInteractionLength << G4endl;
+  //  G4cout << "Material : " << fpMaterial->GetName()
+  //      << "ID: " << track.GetTrackID()
+  //      << " Returned time : " << G4BestUnit(value,"Time") << G4endl;
 
-  if(value < fReturnedValue)
-    fReturnedValue  = value;
+  if (value < fReturnedValue) fReturnedValue = value;
 
-  return value*-1;
+  return value * -1;
   // multiple by -1 to indicate to the tracking system that we are returning a time
 }
 
-G4VParticleChange* G4DNASecondOrderReaction::PostStepDoIt(const G4Track& track,const G4Step& /*step*/)
+G4VParticleChange* G4DNASecondOrderReaction::PostStepDoIt(const G4Track& track,
+                                                          const G4Step& /*step*/)
 {
   G4Molecule* molecule = GetMolecule(track);
 #ifdef G4VERBOSE
-  if(verboseLevel > 1)
+  if (verboseLevel > 1)
   {
     G4cout << "___________" << G4endl;
     G4cout << ">>> Beginning of G4DNASecondOrderReaction verbose" << G4endl;
-    G4cout << ">>> Returned value : " << G4BestUnit(fReturnedValue,"Time") << G4endl;
-    G4cout << ">>> Time Step : " << G4BestUnit(G4VScheduler::Instance()->GetTimeStep(),"Time") << G4endl;
+    G4cout << ">>> Returned value : " << G4BestUnit(fReturnedValue, "Time") << G4endl;
+    G4cout << ">>> Time Step : " << G4BestUnit(G4VScheduler::Instance()->GetTimeStep(), "Time")
+           << G4endl;
     G4cout << ">>> Reaction : " << molecule->GetName() << " + " << fpMaterial->GetName() << G4endl;
     G4cout << ">>> End of G4DNASecondOrderReaction verbose <<<" << G4endl;
   }
 #endif
-  fReturnedValue  = DBL_MAX;
+  fReturnedValue = DBL_MAX;
   fParticleChange.Initialize(track);
   fParticleChange.ProposeTrackStatus(fStopAndKill);
-  G4DNADamage::Instance()->AddIndirectDamage(fpMaterial->GetName(),molecule,track.GetPosition(),track.GetGlobalTime());
+  G4DNADamage::Instance()->AddIndirectDamage(fpMaterial->GetName(), molecule, track.GetPosition(),
+                                             track.GetGlobalTime());
   State(fPreviousTimeAtPreStepPoint) = -1;
   return &fParticleChange;
 }
-

@@ -29,45 +29,42 @@
 //
 
 #include "G4Mg23GEMProbability.hh"
+
 #include "G4SystemOfUnits.hh"
 
-G4Mg23GEMProbability::G4Mg23GEMProbability() :
-  G4GEMProbability(23,12,3.0/2.0) // A,Z,Spin
+G4Mg23GEMProbability::G4Mg23GEMProbability() : G4GEMProbability(23, 12, 3.0 / 2.0)  // A,Z,Spin
 {
+  ExcitEnergies.push_back(450.70 * keV);
+  ExcitSpins.push_back(5.0 / 2.0);
+  ExcitLifetimes.push_back(1.25 * picosecond);
 
-    ExcitEnergies.push_back(450.70*keV);
-    ExcitSpins.push_back(5.0/2.0);
-    ExcitLifetimes.push_back(1.25*picosecond);
+  ExcitEnergies.push_back(2051.0 * keV);
+  ExcitSpins.push_back(7.0 / 2.0);
+  ExcitLifetimes.push_back(55.0e-3 * picosecond);
 
-    ExcitEnergies.push_back(2051.0*keV);
-    ExcitSpins.push_back(7.0/2.0);
-    ExcitLifetimes.push_back(55.0e-3*picosecond);
+  ExcitEnergies.push_back(2359.0 * keV);
+  ExcitSpins.push_back(1.0 / 2.0);
+  ExcitLifetimes.push_back(575.0e-3 * picosecond);
 
-    ExcitEnergies.push_back(2359.0*keV);
-    ExcitSpins.push_back(1.0/2.0);
-    ExcitLifetimes.push_back(575.0e-3*picosecond);
+  ExcitEnergies.push_back(2715.0 * keV);
+  ExcitSpins.push_back(9.0 / 2.0);
+  ExcitLifetimes.push_back(97.0e-3 * picosecond);
 
-    ExcitEnergies.push_back(2715.0*keV);
-    ExcitSpins.push_back(9.0/2.0);
-    ExcitLifetimes.push_back(97.0e-3*picosecond);
+  ExcitEnergies.push_back(2771.0 * keV);
+  ExcitSpins.push_back(1.0 / 2.0);
+  ExcitLifetimes.push_back(107.0e-3 * picosecond);
 
-    ExcitEnergies.push_back(2771.0*keV);
-    ExcitSpins.push_back(1.0/2.0);
-    ExcitLifetimes.push_back(107.0e-3*picosecond);
+  ExcitEnergies.push_back(2908.0 * keV);
+  ExcitSpins.push_back(3.0 / 2.0);
+  ExcitLifetimes.push_back(17.0e-3 * picosecond);
 
-    ExcitEnergies.push_back(2908.0*keV);
-    ExcitSpins.push_back(3.0/2.0);
-    ExcitLifetimes.push_back(17.0e-3*picosecond);
+  ExcitEnergies.push_back(3795.0 * keV);
+  ExcitSpins.push_back(3.0 / 2.0);
+  ExcitLifetimes.push_back(14.0 * nanosecond);
 
-    ExcitEnergies.push_back(3795.0*keV);
-    ExcitSpins.push_back(3.0/2.0);
-    ExcitLifetimes.push_back(14.0*nanosecond);
-
-    ExcitEnergies.push_back(4356.0*keV);
-    ExcitSpins.push_back(1.0/2.0);
-    ExcitLifetimes.push_back(14.0*nanosecond);
-
+  ExcitEnergies.push_back(4356.0 * keV);
+  ExcitSpins.push_back(1.0 / 2.0);
+  ExcitLifetimes.push_back(14.0 * nanosecond);
 }
 
-G4Mg23GEMProbability::~G4Mg23GEMProbability()
-{}
+G4Mg23GEMProbability::~G4Mg23GEMProbability() {}

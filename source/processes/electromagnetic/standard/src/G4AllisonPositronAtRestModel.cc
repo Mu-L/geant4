@@ -30,41 +30,39 @@
 // File name:     G4AllisonPositronAtRestModel
 //
 // Author:        Vladimir Ivanchenko
-// 
+//
 // Creation date: 14 May 2024
 //
 // -------------------------------------------------------------------
 //
 
 #include "G4AllisonPositronAtRestModel.hh"
+
 #include "G4DynamicParticle.hh"
-#include "G4Material.hh"
-#include "Randomize.hh"
 #include "G4Gamma.hh"
-#include "G4RandomDirection.hh"
-#include "G4ThreeVector.hh"
+#include "G4Material.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4RandomDirection.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4ThreeVector.hh"
+#include "Randomize.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4AllisonPositronAtRestModel::G4AllisonPositronAtRestModel()
-  : G4VPositronAtRestModel("Allison")
-{}    
+G4AllisonPositronAtRestModel::G4AllisonPositronAtRestModel() : G4VPositronAtRestModel("Allison") {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4AllisonPositronAtRestModel::SampleSecondaries(
-             std::vector<G4DynamicParticle*>& secParticles,
-             G4double&, const G4Material* material) const
+void G4AllisonPositronAtRestModel::SampleSecondaries(std::vector<G4DynamicParticle*>& secParticles,
+                                                     G4double&, const G4Material* material) const
 {
   const G4double eGamma = CLHEP::electron_mass_c2;
 
   // In rest frame of positronium gammas are back to back
   const G4ThreeVector& dir1 = G4RandomDirection();
   const G4ThreeVector& dir2 = -dir1;
-  auto aGamma1 = new G4DynamicParticle(G4Gamma::Gamma(),dir1,eGamma);
-  auto aGamma2 = new G4DynamicParticle(G4Gamma::Gamma(),dir2,eGamma);
+  auto aGamma1 = new G4DynamicParticle(G4Gamma::Gamma(), dir1, eGamma);
+  auto aGamma2 = new G4DynamicParticle(G4Gamma::Gamma(), dir2, eGamma);
 
   // In rest frame the gammas are polarised perpendicular to each other - see
   // Pryce and Ward, Nature No 4065 (1947) p.435.
@@ -96,19 +94,20 @@ void G4AllisonPositronAtRestModel::SampleSecondaries(
   const G4double meanEnergyPerIonPair = material->GetIonisation()->GetMeanEnergyPerIonPair();
   const G4double& meanKE = meanEnergyPerIonPair;  // Just an alias
 
-  if (meanKE > 0.) {  // Positronium has motion
+  if (meanKE > 0.)
+  {  // Positronium has motion
     // Mass of positronium
-    const G4double mass = 2.*CLHEP::electron_mass_c2;
+    const G4double mass = 2. * CLHEP::electron_mass_c2;
     // Mean <KE>=3kT/2, as described above
     // const G4double T = 2.*meanKE/(3.*k_Boltzmann);
     // Component velocities: Gaussian, variance kT/m=2<KE>/3m.
-    const G4double sigmav = std::sqrt(2.*meanKE/(3.*mass));
+    const G4double sigmav = std::sqrt(2. * meanKE / (3. * mass));
     // This is in units where c=1
-    const G4double vx = G4RandGauss::shoot(0.,sigmav);
-    const G4double vy = G4RandGauss::shoot(0.,sigmav);
-    const G4double vz = G4RandGauss::shoot(0.,sigmav);
-    const G4ThreeVector v(vx,vy,vz);  // In unit where c=1
-    const G4ThreeVector& beta = v;    // so beta=v/c=v
+    const G4double vx = G4RandGauss::shoot(0., sigmav);
+    const G4double vy = G4RandGauss::shoot(0., sigmav);
+    const G4double vz = G4RandGauss::shoot(0., sigmav);
+    const G4ThreeVector v(vx, vy, vz);  // In unit where c=1
+    const G4ThreeVector& beta = v;  // so beta=v/c=v
     aGamma1->Set4Momentum(aGamma1->Get4Momentum().boost(beta));
     aGamma2->Set4Momentum(aGamma2->Get4Momentum().boost(beta));
 
@@ -117,8 +116,8 @@ void G4AllisonPositronAtRestModel::SampleSecondaries(
     const G4ThreeVector& newDir2 = aGamma2->GetMomentumDirection();
     const G4ThreeVector& axis1 = dir1.cross(newDir1);  // No need to be unit
     const G4ThreeVector& axis2 = dir2.cross(newDir2);  // No need to be unit
-    const G4double& angle1 = std::acos(dir1*newDir1);
-    const G4double& angle2 = std::acos(dir2*newDir2);
+    const G4double& angle1 = std::acos(dir1 * newDir1);
+    const G4double& angle2 = std::acos(dir2 * newDir2);
     pol1.rotate(axis1, angle1);
     pol2.rotate(axis2, angle2);
   }
@@ -138,6 +137,6 @@ void G4AllisonPositronAtRestModel::PrintGeneratorInformation() const
   G4cout << "\n" << G4endl;
   G4cout << "Allison AtRest positron 2-gamma annihilation model." << G4endl;
   G4cout << "Takes into account positronium motion in the media." << G4endl;
-} 
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

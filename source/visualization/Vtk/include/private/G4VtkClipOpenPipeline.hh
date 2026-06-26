@@ -41,6 +41,7 @@ class vtkActor;
 class G4VtkClipOpenPipeline : public G4VVtkPipeline
 {
   public:
+
     G4VtkClipOpenPipeline(G4String name, const G4VtkVisContext& vc,
                           vtkSmartPointer<vtkPolyDataAlgorithm> filter, G4bool useVcColour = false);
     ~G4VtkClipOpenPipeline() override = default;
@@ -58,7 +59,8 @@ class G4VtkClipOpenPipeline : public G4VVtkPipeline
     void Modified() override { G4VVtkPipeline::Modified(); }
     void Clear() override
     {
-      if (renderer != nullptr) {
+      if (renderer != nullptr)
+      {
         renderer->RemoveActor(actor);
       }
       G4VVtkPipeline::Clear();
@@ -67,6 +69,7 @@ class G4VtkClipOpenPipeline : public G4VVtkPipeline
     vtkSmartPointer<vtkActor> GetActor() { return actor; }
 
   private:
+
     vtkSmartPointer<vtkPlane> plane;
     vtkSmartPointer<vtkClipPolyData> clipper;
     vtkSmartPointer<vtkPolyDataMapper> mapper;

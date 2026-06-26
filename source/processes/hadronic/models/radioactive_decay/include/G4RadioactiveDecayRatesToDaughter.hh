@@ -23,12 +23,12 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4RadioactiveDecayRatesToDaughter_h
-#define G4RadioactiveDecayRatesToDaughter_h 1
+#ifndef G4RADIOACTIVEDECAYRATESTODAUGHTER_HH
+#define G4RADIOACTIVEDECAYRATESTODAUGHTER_HH
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //
 // MODULE:              RadioactiveDecayRate.hh
-// Renamed G4RadioactiveDecayRatesToDaughter.hh  (D.H. Wright 5 October 2017) 
+// Renamed G4RadioactiveDecayRatesToDaughter.hh  (D.H. Wright 5 October 2017)
 // Version:             0.b.4
 // Date:                14/04/00
 // Author:              F Lei & P R Truscott
@@ -45,7 +45,7 @@
 // 0.b.3 release.
 //
 // 13 April 2000, F Lei, DERA UK
-// 0.b.4 release. No change to this file     
+// 0.b.4 release. No change to this file
 //
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
@@ -55,7 +55,7 @@
 //  also kept in this class.                                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-   
+
 #include "G4ios.hh"
 #include "globals.hh"
 
@@ -71,28 +71,34 @@ class G4RadioactiveDecayRatesToDaughter
     G4RadioactiveDecayRatesToDaughter(const G4RadioactiveDecayRatesToDaughter&);
     G4RadioactiveDecayRatesToDaughter& operator=(const G4RadioactiveDecayRatesToDaughter&);
 
-    G4bool operator==(const G4RadioactiveDecayRatesToDaughter& right) const {return (this == &right);}
-    G4bool operator!=(const G4RadioactiveDecayRatesToDaughter& right) const {return (this != &right);}
+    G4bool operator==(const G4RadioactiveDecayRatesToDaughter& right) const
+    {
+      return (this == &right);
+    }
+    G4bool operator!=(const G4RadioactiveDecayRatesToDaughter& right) const
+    {
+      return (this != &right);
+    }
 
   public:
 
-    inline G4int GetZ() const {return Z;}
-    inline G4int GetA() const {return A;}
-    inline G4double GetE() const {return E;}
-    inline G4int GetGeneration() const {return generation;}
-    inline std::vector<G4double> GetDecayRateC() const {return decayRateC;}
-    inline std::vector<G4double> GetTaos() const {return taos;}
+    inline G4int GetZ() const { return Z; }
+    inline G4int GetA() const { return A; }
+    inline G4double GetE() const { return E; }
+    inline G4int GetGeneration() const { return generation; }
+    inline std::vector<G4double> GetDecayRateC() const { return decayRateC; }
+    inline std::vector<G4double> GetTaos() const { return taos; }
 
-    inline void SetZ(G4int value) {Z = value;}
-    inline void SetA(G4int value) {A = value;}
-    inline void SetE(G4double value) {E = value;}
-    inline void SetGeneration(G4int value) {generation = value;}
-    inline void SetDecayRateC(std::vector<G4double> value) {decayRateC = std::move(value);}
-    inline void SetTaos(std::vector<G4double> value) {taos = std::move(value);}
+    inline void SetZ(G4int value) { Z = value; }
+    inline void SetA(G4int value) { A = value; }
+    inline void SetE(G4double value) { E = value; }
+    inline void SetGeneration(G4int value) { generation = value; }
+    inline void SetDecayRateC(std::vector<G4double> value) { decayRateC = std::move(value); }
+    inline void SetTaos(std::vector<G4double> value) { taos = std::move(value); }
 
-    inline void  SetVerboseLevel(G4int value) {verboseLevel = value;}
-    inline G4int GetVerboseLevel() const {return verboseLevel;}
-    void  DumpInfo();
+    inline void SetVerboseLevel(G4int value) { verboseLevel = value; }
+    inline G4int GetVerboseLevel() const { return verboseLevel; }
+    void DumpInfo();
 
   protected:
 
@@ -111,6 +117,5 @@ class G4RadioactiveDecayRatesToDaughter
     //  0: Silent
     //  1: Warning message
     //  2: More
-
 };
 #endif

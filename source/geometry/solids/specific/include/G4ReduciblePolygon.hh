@@ -33,10 +33,10 @@
 // For this class, a polygon consists of n > 2 points in 2D
 // space (a,b). The polygon is always closed by connecting the
 // last point to the first. A G4ReduciblePolygon is guaranteed
-// to fulfill this definition in all instances. 
+// to fulfill this definition in all instances.
 //
 // Illegal manipulations (such that a valid polygon would be
-// produced) result in an error return if possible and 
+// produced) result in an error return if possible and
 // otherwise a G4Exception.
 //
 // The set of manipulations is limited currently to what
@@ -52,11 +52,12 @@
 /**
  * @brief G4ReduciblePolygon is a utility class used to specify, test, reduce,
  * and/or otherwise manipulate a 2D polygon.
+ * @ingroup geometry_solids_specific
  */
 
 class G4ReduciblePolygon
 {
-  friend class G4ReduciblePolygonIterator;
+    friend class G4ReduciblePolygonIterator;
 
   public:
 
@@ -66,8 +67,8 @@ class G4ReduciblePolygon
      *  @param[in] b Second array of points.
      *  @param[in] n The number of vertices of the polygon (has to be >=3).
      */
-    G4ReduciblePolygon( const G4double a[], const G4double b[], G4int n );
-  
+    G4ReduciblePolygon(const G4double a[], const G4double b[], G4int n);
+
     /**
      * Special constructor version for G4Polyhedra and G4Polycone, that takes
      * two a points at planes of b (where a==r and b==z).
@@ -76,8 +77,7 @@ class G4ReduciblePolygon
      *  @param[in] z Array of Z coordinates of corners.
      *  @param[in] n The number of vertices of the polygon.
      */
-    G4ReduciblePolygon( const G4double rmin[], const G4double rmax[],
-                        const G4double z[], G4int n );
+    G4ReduciblePolygon(const G4double rmin[], const G4double rmax[], const G4double z[], G4int n);
 
     /**
      * Copy constructor and assignment operator not allowed.
@@ -89,7 +89,7 @@ class G4ReduciblePolygon
      * Destructor, taking care to clear allocated lists.
      */
     ~G4ReduciblePolygon();
-  
+
     /**
      * Accessors.
      */
@@ -98,24 +98,24 @@ class G4ReduciblePolygon
     inline G4double Amax() const { return aMax; }
     inline G4double Bmin() const { return bMin; }
     inline G4double Bmax() const { return bMax; }
-  
+
     /**
      * Copies contents of provided arrays into simple linear arrays.
      */
-    void CopyVertices( G4double a[], G4double b[] ) const;
+    void CopyVertices(G4double a[], G4double b[]) const;
 
     /**
      * Methods to multiply all a or b values by a common scale.
      */
-    void ScaleA( G4double scale );
-    void ScaleB( G4double scale );
-  
+    void ScaleA(G4double scale);
+    void ScaleB(G4double scale);
+
     /**
      * Removes adjacent vertices that are equal.
      *  @param[in] tolerance Provided tolerance for adjacent vertices.
      *  @returns false, if there is a problem (too few vertices remaining).
      */
-    G4bool RemoveDuplicateVertices( G4double tolerance );
+    G4bool RemoveDuplicateVertices(G4double tolerance);
 
     /**
      * Removes any unneeded vertices, i.e. those vertices which are on the
@@ -123,8 +123,8 @@ class G4ReduciblePolygon
      *  @param[in] tolerance Provided tolerance for parallel line segments.
      *  @returns false, if there is a problem (too few vertices remaining).
      */
-    G4bool RemoveRedundantVertices( G4double tolerance );
-  
+    G4bool RemoveRedundantVertices(G4double tolerance);
+
     /**
      * Reverses the order of the vertices.
      */
@@ -146,20 +146,19 @@ class G4ReduciblePolygon
     /**
      * Returns "true" if the polygon crosses itself.
      */
-    G4bool CrossesItself( G4double tolerance );
+    G4bool CrossesItself(G4double tolerance);
 
     /**
      * Decides if a line through two points crosses the polygon,
      * within tolerance.
      */
-    G4bool BisectedBy( G4double a1, G4double b1,
-                       G4double a2, G4double b2, G4double tolerance );
-   
+    G4bool BisectedBy(G4double a1, G4double b1, G4double a2, G4double b2, G4double tolerance);
+
     /**
      * Print function for debugging.
      */
     void Print();
-  
+
     /**
      * Fake default constructor for usage restricted to direct object
      * persistency for clients requiring preallocation of memory for
@@ -168,37 +167,36 @@ class G4ReduciblePolygon
     G4ReduciblePolygon(__void__&);
 
   private:
-  
+
     /**
      * Create the polygon; used in constructors.
      */
-    void Create( const G4double a[], const G4double b[], G4int n );
-  
+    void Create(const G4double a[], const G4double b[], G4int n);
+
     /**
      * Re-calculates global values. To be called when the vertices are changed.
      */
     void CalculateMaxMin();
-  
+
   private:
-  
+
     // Below are member values that are *always* kept up to date
     //
     G4double aMin, aMax, bMin, bMax;
     G4int numVertices = 0;
-  
 
     /**
      * A subclass which holds the vertices in a single-linked list.
      */
-    struct ABVertex;              // Secret recipe for allowing
-    friend struct ABVertex;       // protected nested structures
+    struct ABVertex;  // Secret recipe for allowing
+    friend struct ABVertex;  // protected nested structures
     struct ABVertex
     {
-      ABVertex()  = default;
-      G4double a{0.}, b{0.};
-      ABVertex *next{nullptr};
+        ABVertex() = default;
+        G4double a{0.}, b{0.};
+        ABVertex* next{nullptr};
     };
-  
+
     ABVertex* vertexHead = nullptr;
 };
 
@@ -209,30 +207,35 @@ class G4ReduciblePolygon
 /**
  * @brief G4ReduciblePolygonIterator is companion class for iterating over
  * the vertices of a polygon.
+ * @ingroup geometry_solids_specific
  */
 
 class G4ReduciblePolygonIterator
 {
   public:
 
-    inline G4ReduciblePolygonIterator( const G4ReduciblePolygon* theSubject )
+    inline G4ReduciblePolygonIterator(const G4ReduciblePolygon* theSubject)
     {
-      subject = theSubject; current = nullptr;
+      subject = theSubject;
+      current = nullptr;
     }
-  
-    inline void  Begin() { current = subject->vertexHead; }  
 
-    inline G4bool  Next()
+    inline void Begin() { current = subject->vertexHead; }
+
+    inline G4bool Next()
     {
-      if (current != nullptr) { current=current->next; }
+      if (current != nullptr)
+      {
+        current = current->next;
+      }
       return Valid();
     }
-  
-    inline G4bool  Valid() const { return current != nullptr; }  
-  
+
+    inline G4bool Valid() const { return current != nullptr; }
+
     inline G4double GetA() const { return current->a; }
     inline G4double GetB() const { return current->b; }
-  
+
   private:
 
     const G4ReduciblePolygon* subject = nullptr;  // Who are we iterating over

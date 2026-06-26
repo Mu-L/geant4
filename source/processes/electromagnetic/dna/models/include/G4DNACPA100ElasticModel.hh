@@ -39,8 +39,8 @@
 // Based on the study by S. Zein et. al. Nucl. Inst. Meth. B 488 (2021) 70-82
 // 1/2/2023 : Hoang added modification
 
-#ifndef G4DNACPA100ElasticModel_h
-#define G4DNACPA100ElasticModel_h 1
+#ifndef G4DNACPA100ELASTICMODEL_HH
+#define G4DNACPA100ELASTICMODEL_HH
 
 #include "G4DNACrossSectionDataSet.hh"
 #include "G4Electron.hh"
@@ -62,6 +62,7 @@ class G4DNACPA100ElasticModel : public G4VDNAModel
                std::map<const G4ParticleDefinition*, std::map<G4double, std::vector<G4double>>>>;
 
   public:
+
     explicit G4DNACPA100ElasticModel(const G4ParticleDefinition* p = nullptr,
                                      const G4String& nam = "DNACPA100ElasticModel");
 
@@ -81,12 +82,10 @@ class G4DNACPA100ElasticModel : public G4VDNAModel
 
     G4DNACPA100ElasticModel(const G4DNACPA100ElasticModel&) = delete;
 
-    inline G4double GetElasticLevel(const std::size_t& l)
-    {
-      return fLevels[l];
-    }
+    inline G4double GetElasticLevel(const std::size_t& l) { return fLevels[l]; }
 
   private:
+
     G4ParticleChangeForGamma* fParticleChangeForGamma = nullptr;
     G4bool statCode = false;
     G4bool isInitialised = false;

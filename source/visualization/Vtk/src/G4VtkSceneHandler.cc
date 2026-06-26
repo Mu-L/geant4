@@ -141,12 +141,14 @@ void G4VtkSceneHandler::AddPrimitive(const G4Polyhedron& polyhedron)
   vc.blue = colour.GetBlue();
 
   auto pPVModel = dynamic_cast<G4PhysicalVolumeModel*>(fpModel);
-  if (pPVModel != nullptr) {
+  if (pPVModel != nullptr)
+  {
     vc.fDepth = pPVModel->GetCurrentDepth();
     vc.fDescription = pPVModel->GetCurrentDescription();
   }
 
-  if (fReadyForTransients) {
+  if (fReadyForTransients)
+  {
     if (polyhedronPipelineType == "tensor")
       transientStore.AddPrimitiveTensorGlyph(polyhedron, vc);
     else if (polyhedronPipelineType == "append")
@@ -156,7 +158,8 @@ void G4VtkSceneHandler::AddPrimitive(const G4Polyhedron& polyhedron)
     else if (polyhedronPipelineType == "separate")
       transientStore.AddPrimitiveSeparate(polyhedron, vc);
   }
-  else {
+  else
+  {
     if (polyhedronPipelineType == "tensor")
       store.AddPrimitiveTensorGlyph(polyhedron, vc);
     else if (polyhedronPipelineType == "append")
@@ -200,7 +203,8 @@ G4VtkVisContext G4VtkSceneHandler::MakeDefaultVisContext()
   auto vc = G4VtkVisContext(dynamic_cast<G4VtkViewer*>(fpViewer), fpVisAttribs, fProcessing2D,
                             fObjectTransformation);
 
-  if (fpVisAttribs != nullptr) {
+  if (fpVisAttribs != nullptr)
+  {
     G4Colour c = fpVisAttribs->GetColour();
     vc.red = c.GetRed();
     vc.green = c.GetGreen();
@@ -219,12 +223,14 @@ void G4VtkSceneHandler::AddSolid(const G4Box& box)
   return;
 
   const G4VModel* pv_model = GetModel();
-  if (pv_model == nullptr) {
+  if (pv_model == nullptr)
+  {
     return;
   }
 
   auto pPVModel = dynamic_cast<G4PhysicalVolumeModel*>(fpModel);
-  if (pPVModel == nullptr) {
+  if (pPVModel == nullptr)
+  {
     return;
   }
 
@@ -239,7 +245,7 @@ void G4VtkSceneHandler::AddSolid(const G4Box& box)
          << " parametrisation=" << pv->GetParameterisation()
          << G4endl
 
-              G4Material* mat = pPVModel->GetCurrentMaterial();
+    G4Material* mat = pPVModel->GetCurrentMaterial();
   G4String name = mat->GetName();
   G4double dens = mat->GetDensity() / (g / cm3);
   G4int copyNo = pPVModel->GetCurrentPV()->GetCopyNo();
@@ -263,7 +269,8 @@ void G4VtkSceneHandler::AddCompound(const G4Mesh& mesh)
          << fpViewer->GetViewParameters().GetSpecialMeshRenderingOption() << G4endl;
 #endif
 
-  if(fpViewer->GetViewParameters().GetSpecialMeshRenderingOption() == G4ViewParameters::meshAsDefault)
+  if (fpViewer->GetViewParameters().GetSpecialMeshRenderingOption()
+      == G4ViewParameters::meshAsDefault)
   {
     auto vc = MakeDefaultVisContext();
 
@@ -272,7 +279,8 @@ void G4VtkSceneHandler::AddCompound(const G4Mesh& mesh)
     else
       store.AddCompound(mesh, vc);
   }
-  else {
+  else
+  {
     StandardSpecialMeshRendering(mesh);
   }
 }

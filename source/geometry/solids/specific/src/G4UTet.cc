@@ -28,14 +28,17 @@
 // 1.11.13 G.Cosmo, CERN
 // --------------------------------------------------------------------
 
+// Geant4/VecGeom headers must be included in order
+// clang-format off
 #include "G4Tet.hh"
 #include "G4UTet.hh"
+// clang-format on
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include "G4AffineTransform.hh"
-#include "G4VPVParameterisation.hh"
-#include "G4BoundingEnvelope.hh"
+#  include "G4AffineTransform.hh"
+#  include "G4BoundingEnvelope.hh"
+#  include "G4VPVParameterisation.hh"
 
 using namespace CLHEP;
 
@@ -48,19 +51,15 @@ using namespace CLHEP;
 // in which a very large number of G4Tets are created.
 // A Tet has all of its geometrical information precomputed
 //
-G4UTet::G4UTet(const G4String& pName,
-               const G4ThreeVector& anchor,
-               const G4ThreeVector& p1,
-               const G4ThreeVector& p2,
-               const G4ThreeVector& p3, G4bool* degeneracyFlag)
-  : Base_t(pName, U3Vector(anchor.x(),anchor.y(),anchor.z()),
-                  U3Vector(p1.x(), p1.y(), p1.z()),
-                  U3Vector(p2.x(), p2.y(), p2.z()),
-                  U3Vector(p3.x(), p3.y(), p3.z()))
+G4UTet::G4UTet(const G4String& pName, const G4ThreeVector& anchor, const G4ThreeVector& p1,
+               const G4ThreeVector& p2, const G4ThreeVector& p3, G4bool* degeneracyFlag)
+  : Base_t(pName, U3Vector(anchor.x(), anchor.y(), anchor.z()), U3Vector(p1.x(), p1.y(), p1.z()),
+           U3Vector(p2.x(), p2.y(), p2.z()), U3Vector(p3.x(), p3.y(), p3.z()))
 {
   // Check for degeneracy
   G4bool degenerate = CheckDegeneracy(anchor, p1, p2, p3);
-  if(degeneracyFlag != nullptr) *degeneracyFlag = degenerate;
+  if (degeneracyFlag != nullptr)
+    *degeneracyFlag = degenerate;
   else if (degenerate)
   {
     G4Exception("G4UTet::G4UTet()", "GeomSolids0002", FatalException,
@@ -79,22 +78,23 @@ G4UTet::G4UTet(const G4String& pName,
 //
 // Copy constructor
 //
-G4UTet::G4UTet(const G4UTet& rhs)
-  : Base_t(rhs)
+G4UTet::G4UTet(const G4UTet& rhs) : Base_t(rhs)
 {
   fBmin = rhs.fBmin;
   fBmax = rhs.fBmax;
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Assignment operator
 //
-G4UTet& G4UTet::operator = (const G4UTet& rhs)
+G4UTet& G4UTet::operator=(const G4UTet& rhs)
 {
   // Check assignment to self
-  if (this == &rhs)  { return *this; }
+  if (this == &rhs)
+  {
+    return *this;
+  }
 
   // Copy base class data
   Base_t::operator=(rhs);
@@ -112,12 +112,10 @@ G4UTet& G4UTet::operator = (const G4UTet& rhs)
 // Tetrahedron is concidered as degenerate in case if its minimal
 // height is less than the degeneracy tolerance
 //
-G4bool G4UTet::CheckDegeneracy(const G4ThreeVector& p0,
-                               const G4ThreeVector& p1,
-                               const G4ThreeVector& p2,
-                               const G4ThreeVector& p3) const
+G4bool G4UTet::CheckDegeneracy(const G4ThreeVector& p0, const G4ThreeVector& p1,
+                               const G4ThreeVector& p2, const G4ThreeVector& p3) const
 {
-  G4double hmin = 4. * kCarTolerance; // degeneracy tolerance
+  G4double hmin = 4. * kCarTolerance;  // degeneracy tolerance
 
   // Calculate volume
   G4double vol = std::abs((p1 - p0).cross(p2 - p0).dot(p3 - p0));
@@ -131,10 +129,13 @@ G4bool G4UTet::CheckDegeneracy(const G4ThreeVector& p0,
 
   // Find face with max area
   G4int k = 0;
-  for (G4int i = 1; i < 4; ++i) { if (ss[i] > ss[k]) k = i; }
+  for (G4int i = 1; i < 4; ++i)
+  {
+    if (ss[i] > ss[k]) k = i;
+  }
 
   // Check: vol^2 / s^2 <= hmin^2
-  return (vol*vol <= ss[k]*hmin*hmin);
+  return (vol * vol <= ss[k] * hmin * hmin);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -142,11 +143,7 @@ G4bool G4UTet::CheckDegeneracy(const G4ThreeVector& p0,
 // Dispatch to parameterisation for replication mechanism dimension
 // computation & modification.
 //
-void G4UTet::ComputeDimensions(G4VPVParameterisation*,
-                               const G4int,
-                               const G4VPhysicalVolume*)
-{
-}
+void G4UTet::ComputeDimensions(G4VPVParameterisation*, const G4int, const G4VPhysicalVolume*) {}
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -161,15 +158,13 @@ G4VSolid* G4UTet::Clone() const
 //
 // Modifier
 //
-void G4UTet::SetVertices(const G4ThreeVector& anchor,
-                         const G4ThreeVector& p1,
-                         const G4ThreeVector& p2,
-                         const G4ThreeVector& p3,
-                         G4bool* degeneracyFlag)
+void G4UTet::SetVertices(const G4ThreeVector& anchor, const G4ThreeVector& p1,
+                         const G4ThreeVector& p2, const G4ThreeVector& p3, G4bool* degeneracyFlag)
 {
   // Check for degeneracy
   G4bool degenerate = CheckDegeneracy(anchor, p1, p2, p3);
-  if(degeneracyFlag != nullptr) *degeneracyFlag = degenerate;
+  if (degeneracyFlag != nullptr)
+    *degeneracyFlag = degenerate;
   else if (degenerate)
   {
     G4Exception("G4UTet::SetVertices()", "GeomSolids0002", FatalException,
@@ -184,9 +179,7 @@ void G4UTet::SetVertices(const G4ThreeVector& anchor,
 //
 // Accessors
 //
-void G4UTet::GetVertices(G4ThreeVector& anchor,
-                         G4ThreeVector& p1,
-                         G4ThreeVector& p2,
+void G4UTet::GetVertices(G4ThreeVector& anchor, G4ThreeVector& p1, G4ThreeVector& p2,
                          G4ThreeVector& p3) const
 {
   std::vector<U3Vector> vec(4);
@@ -202,7 +195,7 @@ std::vector<G4ThreeVector> G4UTet::GetVertices() const
   std::vector<U3Vector> vec(4);
   Base_t::GetVertices(vec[0], vec[1], vec[2], vec[3]);
   std::vector<G4ThreeVector> vertices;
-  for (unsigned int i=0; i<4; ++i)
+  for (unsigned int i = 0; i < 4; ++i)
   {
     G4ThreeVector v(vec[i].x(), vec[i].y(), vec[i].z());
     vertices.push_back(v);
@@ -214,37 +207,32 @@ std::vector<G4ThreeVector> G4UTet::GetVertices() const
 //
 // Set bounding box
 //
-void G4UTet::SetBoundingLimits(const G4ThreeVector& pMin,
-                               const G4ThreeVector& pMax)
+void G4UTet::SetBoundingLimits(const G4ThreeVector& pMin, const G4ThreeVector& pMax)
 {
   G4ThreeVector fVertex[4];
   GetVertices(fVertex[0], fVertex[1], fVertex[2], fVertex[3]);
 
-  G4int iout[4] = { 0, 0, 0, 0 };
+  G4int iout[4] = {0, 0, 0, 0};
   for (G4int i = 0; i < 4; ++i)
   {
-    iout[i] = (G4int)(fVertex[i].x() < pMin.x() ||
-                      fVertex[i].y() < pMin.y() ||
-                      fVertex[i].z() < pMin.z() ||
-                      fVertex[i].x() > pMax.x() ||
-                      fVertex[i].y() > pMax.y() ||
-                      fVertex[i].z() > pMax.z());
+    iout[i] = (G4int)(fVertex[i].x() < pMin.x() || fVertex[i].y() < pMin.y()
+                      || fVertex[i].z() < pMin.z() || fVertex[i].x() > pMax.x()
+                      || fVertex[i].y() > pMax.y() || fVertex[i].z() > pMax.z());
   }
   if (iout[0] + iout[1] + iout[2] + iout[3] != 0)
   {
     std::ostringstream message;
-    message << "Attempt to set bounding box that does not encapsulate solid: "
-            << GetName() << " !\n"
+    message << "Attempt to set bounding box that does not encapsulate solid: " << GetName()
+            << " !\n"
             << "  Specified bounding box limits:\n"
             << "    pmin: " << pMin << "\n"
             << "    pmax: " << pMax << "\n"
             << "  Tetrahedron vertices:\n"
-            << "    anchor " << fVertex[0] << ((iout[0]) != 0 ? " is outside\n" : "\n")
-            << "    p1 "     << fVertex[1] << ((iout[1]) != 0 ? " is outside\n" : "\n")
-            << "    p2 "     << fVertex[2] << ((iout[2]) != 0 ? " is outside\n" : "\n")
-            << "    p3 "     << fVertex[3] << ((iout[3]) != 0 ? " is outside"   : "");
-    G4Exception("G4UTet::SetBoundingLimits()", "GeomSolids0002",
-                FatalException, message);
+            << "    anchor " << fVertex[0] << ((iout[0]) != 0 ? " is outside\n" : "\n") << "    p1 "
+            << fVertex[1] << ((iout[1]) != 0 ? " is outside\n" : "\n") << "    p2 " << fVertex[2]
+            << ((iout[2]) != 0 ? " is outside\n" : "\n") << "    p3 " << fVertex[3]
+            << ((iout[3]) != 0 ? " is outside" : "");
+    G4Exception("G4UTet::SetBoundingLimits()", "GeomSolids0002", FatalException, message);
   }
   fBmin = pMin;
   fBmax = pMax;
@@ -264,24 +252,22 @@ void G4UTet::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
 //
 // Calculate extent under transform and specified limit
 
-G4bool
-G4UTet::CalculateExtent(const EAxis pAxis,
-                        const G4VoxelLimits& pVoxelLimit,
-                        const G4AffineTransform& pTransform,
-                              G4double& pMin, G4double& pMax) const
+G4bool G4UTet::CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                               const G4AffineTransform& pTransform, G4double& pMin,
+                               G4double& pMax) const
 {
   G4ThreeVector bmin, bmax;
 
   // Check bounding box (bbox)
   //
-  BoundingLimits(bmin,bmax);
-  G4BoundingEnvelope bbox(bmin,bmax);
+  BoundingLimits(bmin, bmax);
+  G4BoundingEnvelope bbox(bmin, bmax);
 
   // Use simple bounding-box to help in the case of complex 3D meshes
   //
-  return bbox.CalculateExtent(pAxis,pVoxelLimit,pTransform,pMin,pMax);
+  return bbox.CalculateExtent(pAxis, pVoxelLimit, pTransform, pMin, pMax);
 
-#if 0
+#  if 0
   // Precise extent computation (disabled by default for this shape)
   //
   G4bool exist;
@@ -308,7 +294,7 @@ G4UTet::CalculateExtent(const EAxis pAxis,
 
   G4BoundingEnvelope benv(bmin,bmax,polygons);
   return exists = benv.CalculateExtent(pAxis,pVoxelLimit,pTransform,pMin,pMax);
-#endif
+#  endif
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -321,8 +307,8 @@ G4Polyhedron* G4UTet::CreatePolyhedron() const
   Base_t::GetVertices(vec[0], vec[1], vec[2], vec[3]);
 
   G4double xyz[4][3];
-  const G4int faces[4][4] = {{1,3,2,0},{1,4,3,0},{1,2,4,0},{2,3,4,0}};
-  for (unsigned int i=0; i<4; ++i)
+  const G4int faces[4][4] = {{1, 3, 2, 0}, {1, 4, 3, 0}, {1, 2, 4, 0}, {2, 3, 4, 0}};
+  for (unsigned int i = 0; i < 4; ++i)
   {
     xyz[i][0] = vec[i].x();
     xyz[i][1] = vec[i].y();
@@ -330,7 +316,7 @@ G4Polyhedron* G4UTet::CreatePolyhedron() const
   }
 
   auto ph = new G4Polyhedron;
-  ph->createPolyhedron(4,4,xyz,faces);
+  ph->createPolyhedron(4, 4, xyz, faces);
   return ph;
 }
 

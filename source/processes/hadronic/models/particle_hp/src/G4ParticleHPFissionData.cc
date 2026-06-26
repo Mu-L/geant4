@@ -53,7 +53,8 @@ G4ParticleHPFissionData::G4ParticleHPFissionData() : G4VCrossSectionDataSet("Neu
 
   theCrossSections = nullptr;
   instanceOfWorker = false;
-  if (G4Threading::IsWorkerThread()) {
+  if (G4Threading::IsWorkerThread())
+  {
     instanceOfWorker = true;
   }
   element_cache = nullptr;
@@ -64,7 +65,8 @@ G4ParticleHPFissionData::G4ParticleHPFissionData() : G4VCrossSectionDataSet("Neu
 
 G4ParticleHPFissionData::~G4ParticleHPFissionData()
 {
-  if (theCrossSections != nullptr && !instanceOfWorker) {
+  if (theCrossSections != nullptr && !instanceOfWorker)
+  {
     theCrossSections->clearAndDestroy();
     delete theCrossSections;
     theCrossSections = nullptr;
@@ -98,7 +100,8 @@ G4double G4ParticleHPFissionData::GetIsoCrossSection(const G4DynamicParticle* dp
 
 void G4ParticleHPFissionData::BuildPhysicsTable(const G4ParticleDefinition&)
 {
-  if (G4Threading::IsWorkerThread()) {
+  if (G4Threading::IsWorkerThread())
+  {
     theCrossSections = G4ParticleHPManager::GetInstance()->GetFissionCrossSections();
     return;
   }
@@ -112,7 +115,8 @@ void G4ParticleHPFissionData::BuildPhysicsTable(const G4ParticleDefinition&)
   // make a PhysicsVector for each element
 
   auto theElementTable = G4Element::GetElementTable();
-  for (std::size_t i = 0; i < numberOfElements; ++i) {
+  for (std::size_t i = 0; i < numberOfElements; ++i)
+  {
     G4PhysicsVector* physVec = G4ParticleHPData::Instance(G4Neutron::Neutron())
                                  ->MakePhysicsVector((*theElementTable)[i], this);
     theCrossSections->push_back(physVec);
@@ -144,20 +148,24 @@ void G4ParticleHPFissionData::DumpPhysicsTable(const G4ParticleDefinition&)
   std::size_t numberOfElements = G4Element::GetNumberOfElements();
   auto theElementTable = G4Element::GetElementTable();
 
-  for (std::size_t i = 0; i < numberOfElements; ++i) {
+  for (std::size_t i = 0; i < numberOfElements; ++i)
+  {
     G4cout << (*theElementTable)[i]->GetName() << G4endl;
 
-    if ((*((*theCrossSections)(i))).GetVectorLength() == 0) {
+    if ((*((*theCrossSections)(i))).GetVectorLength() == 0)
+    {
       G4cout << "The cross-section data of the fission of this element is not available." << G4endl;
       G4cout << G4endl;
       continue;
     }
 
-    for (G4int ie = 0; ie < 130; ++ie) {
+    for (G4int ie = 0; ie < 130; ++ie)
+    {
       G4double eKinetic = 1.0e-5 * G4Pow::GetInstance()->powA(10.0, ie / 10.0) * eV;
       G4bool outOfRange = false;
 
-      if (eKinetic < 20 * MeV) {
+      if (eKinetic < 20 * MeV)
+      {
         G4cout << eKinetic / eV << " "
                << (*((*theCrossSections)(i))).GetValue(eKinetic, outOfRange) / barn << G4endl;
       }
@@ -184,10 +192,12 @@ G4double G4ParticleHPFissionData::GetCrossSection(const G4DynamicParticle* aP, c
   theNeutronRP.SetMomentum(aP->GetMomentum());
   theNeutronRP.SetKineticEnergy(eKinetic);
 
-  if (G4ParticleHPManager::GetInstance()->GetNeglectDoppler()) {
+  if (G4ParticleHPManager::GetInstance()->GetNeglectDoppler())
+  {
     // NEGLECT_DOPPLER
     G4double factor = 1.0;
-    if (eKinetic < aT * k_Boltzmann) {
+    if (eKinetic < aT * k_Boltzmann)
+    {
       // below 0.1 eV neutrons
       // Have to do some, but now just igonre.
       // Will take care after performance check.

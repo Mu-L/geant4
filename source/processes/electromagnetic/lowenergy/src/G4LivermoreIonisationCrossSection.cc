@@ -28,30 +28,30 @@
 //
 // History:
 // --------
-// 31 May 2011 V.Ivanchenko  Created  
+// 31 May 2011 V.Ivanchenko  Created
 // 09 Mar 2012 L.Pandola     update methods
-// 
+//
 //
 
 #include "G4LivermoreIonisationCrossSection.hh"
-#include "G4SystemOfUnits.hh"
+
 #include "G4AtomicTransitionManager.hh"
+#include "G4SemiLogInterpolation.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4VCrossSectionHandler.hh"
 #include "G4eCrossSectionHandler.hh"
-#include "G4SemiLogInterpolation.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-
-G4LivermoreIonisationCrossSection::G4LivermoreIonisationCrossSection(
-  const G4String& nam) : G4VhShellCrossSection(nam), crossSectionHandler(nullptr)
+G4LivermoreIonisationCrossSection::G4LivermoreIonisationCrossSection(const G4String& nam)
+  : G4VhShellCrossSection(nam), crossSectionHandler(nullptr)
 {
-  fLowEnergyLimit  = 10.0*eV;
-  fHighEnergyLimit = 100.0*GeV;
+  fLowEnergyLimit = 10.0 * eV;
+  fHighEnergyLimit = 100.0 * GeV;
 
   transitionManager = G4AtomicTransitionManager::Instance();
   verboseLevel = 0;
-  
+
   Initialise();
 }
 
@@ -67,33 +67,35 @@ G4LivermoreIonisationCrossSection::~G4LivermoreIonisationCrossSection()
 void G4LivermoreIonisationCrossSection::Initialise()
 {
   const G4int binForFluo = 20;
-  G4int nbin = G4int(std::log10(fHighEnergyLimit/fLowEnergyLimit) + 0.5);
-  if(nbin <= 0) { nbin = 1; }
+  G4int nbin = G4int(std::log10(fHighEnergyLimit / fLowEnergyLimit) + 0.5);
+  if (nbin <= 0)
+  {
+    nbin = 1;
+  }
   nbin *= binForFluo;
 
   // Data on shell ionisation x-sections
-  if (crossSectionHandler) { 
+  if (crossSectionHandler)
+  {
     crossSectionHandler->Clear();
-    delete crossSectionHandler; 
+    delete crossSectionHandler;
   }
 
   G4VDataSetAlgorithm* inter = new G4SemiLogInterpolation();
-  crossSectionHandler = 
-    new G4eCrossSectionHandler(inter,fLowEnergyLimit,fHighEnergyLimit,nbin);
+  crossSectionHandler = new G4eCrossSectionHandler(inter, fLowEnergyLimit, fHighEnergyLimit, nbin);
   crossSectionHandler->LoadShellData("ioni/ion-ss-cs-");
-  //G4cout << "!!!  G4LivermoreIonisationCrossSection::Initialise()" << G4endl;
+  // G4cout << "!!!  G4LivermoreIonisationCrossSection::Initialise()" << G4endl;
 }
 
-G4double 
-G4LivermoreIonisationCrossSection::CrossSection(G4int Z, G4AtomicShellEnumerator shell,
-						G4double kinEnergy, G4double,
-						const G4Material*) 
+G4double G4LivermoreIonisationCrossSection::CrossSection(G4int Z, G4AtomicShellEnumerator shell,
+                                                         G4double kinEnergy, G4double,
+                                                         const G4Material*)
 {
   G4double cross = 0.0;
   G4int n = G4int(shell);
-  G4int nmax = std::min(9,transitionManager->NumberOfShells(Z));
-  if(Z > 6 && Z < 93 && n < nmax && 
-     kinEnergy >= fLowEnergyLimit && kinEnergy <= fHighEnergyLimit) {
+  G4int nmax = std::min(9, transitionManager->NumberOfShells(Z));
+  if (Z > 6 && Z < 93 && n < nmax && kinEnergy >= fLowEnergyLimit && kinEnergy <= fHighEnergyLimit)
+  {
     cross = crossSectionHandler->FindValue(Z, kinEnergy, n);
   }
   return cross;
@@ -101,37 +103,41 @@ G4LivermoreIonisationCrossSection::CrossSection(G4int Z, G4AtomicShellEnumerator
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-std::vector<G4double> 
-G4LivermoreIonisationCrossSection::GetCrossSection(G4int Z,
-						   G4double kinEnergy,
-						   G4double, G4double, 
-						   const G4Material*)
+std::vector<G4double> G4LivermoreIonisationCrossSection::GetCrossSection(G4int Z,
+                                                                         G4double kinEnergy,
+                                                                         G4double, G4double,
+                                                                         const G4Material*)
 {
-  G4int nmax = std::min(9,transitionManager->NumberOfShells(Z));
-  std::vector<G4double> vec(nmax,0.0); 
-  for(G4int i=0; i<nmax; ++i) {
-    vec[i] = CrossSection(Z, G4AtomicShellEnumerator(i), kinEnergy); 
+  G4int nmax = std::min(9, transitionManager->NumberOfShells(Z));
+  std::vector<G4double> vec(nmax, 0.0);
+  for (G4int i = 0; i < nmax; ++i)
+  {
+    vec[i] = CrossSection(Z, G4AtomicShellEnumerator(i), kinEnergy);
   }
   return vec;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-std::vector<G4double> 
-G4LivermoreIonisationCrossSection::Probabilities(G4int Z,
-						 G4double kinEnergy,
-						 G4double,
-						 G4double,
-						 const G4Material*)
+std::vector<G4double> G4LivermoreIonisationCrossSection::Probabilities(G4int Z, G4double kinEnergy,
+                                                                       G4double, G4double,
+                                                                       const G4Material*)
 {
   std::vector<G4double> vec = GetCrossSection(Z, kinEnergy);
   size_t n = vec.size();
   size_t i;
   G4double sum = 0.0;
-  for(i=0; i<n; ++i) { sum += vec[i]; }
-  if(sum > 0.0) { 
-    sum = 1.0/sum; 
-    for(i=0; i<n; ++i) { vec[i] = vec[i]*sum; }
+  for (i = 0; i < n; ++i)
+  {
+    sum += vec[i];
+  }
+  if (sum > 0.0)
+  {
+    sum = 1.0 / sum;
+    for (i = 0; i < n; ++i)
+    {
+      vec[i] = vec[i] * sum;
+    }
   }
   return vec;
 }

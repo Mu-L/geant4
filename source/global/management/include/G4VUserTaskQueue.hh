@@ -32,8 +32,11 @@
 //  Author: Jonathan Madsen (May 28st 2020)
 //  ---------------------------------------------------------------
 
-#pragma once
+#ifndef G4VUSERTASKQUEUE_HH
+#define G4VUSERTASKQUEUE_HH
 
 #include "PTL/VUserTaskQueue.hh"
 
 using G4VUserTaskQueue = PTL::VUserTaskQueue;
+
+#endif

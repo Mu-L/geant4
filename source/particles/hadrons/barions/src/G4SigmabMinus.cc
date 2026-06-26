@@ -54,7 +54,8 @@ G4SigmabMinus* G4SigmabMinus::Definition()
   // search in particle table]
   G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
   G4ParticleDefinition* anInstance = pTable->FindParticle(name);
-  if (theInstance == nullptr) {
+  if (theInstance == nullptr)
+  {
     // create particle
     //
     //    Arguments for constructor are as follows

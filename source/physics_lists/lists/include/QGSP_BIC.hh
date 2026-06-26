@@ -26,7 +26,7 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   
+// ClassName:
 //
 // Author: 2002 J.P. Wellisch
 //
@@ -34,24 +34,21 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef QGSP_BIC_h
-#define QGSP_BIC_h 1
+#ifndef QGSP_BIC_HH
+#define QGSP_BIC_HH
 
-#include "globals.hh"
 #include "G4VModularPhysicsList.hh"
+#include "globals.hh"
 
 class QGSP_BIC : public G4VModularPhysicsList
 {
-public:
-  QGSP_BIC(G4int ver = 1);
-  virtual ~QGSP_BIC()=default;
-  
-  QGSP_BIC(const QGSP_BIC &)=delete;
-  QGSP_BIC & operator=(const QGSP_BIC &right)=delete;
+  public:
 
+    QGSP_BIC(G4int ver = 1);
+    virtual ~QGSP_BIC() = default;
+
+    QGSP_BIC(const QGSP_BIC&) = delete;
+    QGSP_BIC& operator=(const QGSP_BIC& right) = delete;
 };
 
 #endif
-
-
-

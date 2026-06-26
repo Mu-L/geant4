@@ -27,12 +27,13 @@
 // --------------------------------------------------------------------
 
 #include "G4BOptnChangeCrossSection.hh"
+
 #include "G4InteractionLawPhysical.hh"
 
 G4BOptnChangeCrossSection::G4BOptnChangeCrossSection(const G4String& name)
-  : G4VBiasingOperation( name  )
+  : G4VBiasingOperation(name)
 {
-  fBiasedExponentialLaw = new G4InteractionLawPhysical("LawForOperation"+name);
+  fBiasedExponentialLaw = new G4InteractionLawPhysical("LawForOperation" + name);
 }
 
 G4BOptnChangeCrossSection::~G4BOptnChangeCrossSection()
@@ -40,15 +41,17 @@ G4BOptnChangeCrossSection::~G4BOptnChangeCrossSection()
   delete fBiasedExponentialLaw;
 }
 
-const G4VBiasingInteractionLaw* G4BOptnChangeCrossSection::ProvideOccurenceBiasingInteractionLaw( const G4BiasingProcessInterface*, G4ForceCondition& )
+const G4VBiasingInteractionLaw*
+G4BOptnChangeCrossSection::ProvideOccurenceBiasingInteractionLaw(const G4BiasingProcessInterface*,
+                                                                 G4ForceCondition&)
 {
   return fBiasedExponentialLaw;
 }
 
-void G4BOptnChangeCrossSection::SetBiasedCrossSection( G4double xst, G4bool updateInteractionLength )
+void G4BOptnChangeCrossSection::SetBiasedCrossSection(G4double xst, G4bool updateInteractionLength)
 {
-  fBiasedExponentialLaw->SetPhysicalCrossSection( xst );
-  if ( updateInteractionLength ) UpdateForStep( 0.0 );
+  fBiasedExponentialLaw->SetPhysicalCrossSection(xst);
+  if (updateInteractionLength) UpdateForStep(0.0);
 }
 
 G4double G4BOptnChangeCrossSection::GetBiasedCrossSection() const
@@ -62,7 +65,7 @@ void G4BOptnChangeCrossSection::Sample()
   fBiasedExponentialLaw->Sample();
 }
 
-void G4BOptnChangeCrossSection::UpdateForStep( G4double truePathLength )
+void G4BOptnChangeCrossSection::UpdateForStep(G4double truePathLength)
 {
-  fBiasedExponentialLaw->UpdateForStep( truePathLength );
+  fBiasedExponentialLaw->UpdateForStep(truePathLength);
 }

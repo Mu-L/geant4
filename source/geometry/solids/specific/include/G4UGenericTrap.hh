@@ -36,22 +36,23 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedGenTrap.h>
-#include "G4TwoVector.hh"
+#  include "G4Polyhedron.hh"
+#  include "G4TwoVector.hh"
 
-#include "G4Polyhedron.hh"
+#  include <VecGeom/volumes/UnplacedGenTrap.h>
 
 /**
  * @brief G4UGenericTrap is a wrapper class for G4GenericTrap
  * to make use of VecGeom GenericTrap.
+ * @ingroup geometry_solids_specific
  */
 
-class G4UGenericTrap : public G4UAdapter<vecgeom::UnplacedGenTrap> 
+class G4UGenericTrap : public G4UAdapter<vecgeom::UnplacedGenTrap>
 {
-  using Shape_t = vecgeom::UnplacedGenTrap;
-  using Base_t  = G4UAdapter<vecgeom::UnplacedGenTrap>;
+    using Shape_t = vecgeom::UnplacedGenTrap;
+    using Base_t = G4UAdapter<vecgeom::UnplacedGenTrap>;
 
   public:
 
@@ -61,8 +62,7 @@ class G4UGenericTrap : public G4UAdapter<vecgeom::UnplacedGenTrap>
      *  @param[in] halfZ Half length in Z.
      *  @param[in] vertices The (x,y) coordinates of the vertices.
      */
-    G4UGenericTrap(const G4String& name, G4double halfZ,
-                   const std::vector<G4TwoVector>& vertices);
+    G4UGenericTrap(const G4String& name, G4double halfZ, const std::vector<G4TwoVector>& vertices);
 
     /**
      * Default destructor.
@@ -72,19 +72,19 @@ class G4UGenericTrap : public G4UAdapter<vecgeom::UnplacedGenTrap>
     /**
      * Accessors.
      */
-    G4double    GetZHalfLength() const;
-    G4int       GetNofVertices() const;
+    G4double GetZHalfLength() const;
+    G4int GetNofVertices() const;
     G4TwoVector GetVertex(G4int index) const;
     const std::vector<G4TwoVector>& GetVertices() const;
-    G4double    GetTwistAngle(G4int index) const;
-    G4bool      IsTwisted() const;
-    G4int       GetVisSubdivisions() const;
+    G4double GetTwistAngle(G4int index) const;
+    G4bool IsTwisted() const;
+    G4int GetVisSubdivisions() const;
 
     /**
      * Modifiers.
      */
-    void        SetVisSubdivisions(G4int subdiv);
-    void        SetZHalfLength(G4double);
+    void SetVisSubdivisions(G4int subdiv);
+    void SetZHalfLength(G4double);
 
     /**
      * Returns the type ID, "G4GenericTrap" of the solid.
@@ -113,10 +113,9 @@ class G4UGenericTrap : public G4UAdapter<vecgeom::UnplacedGenTrap>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.
@@ -126,7 +125,7 @@ class G4UGenericTrap : public G4UAdapter<vecgeom::UnplacedGenTrap>
     /**
      * Copy constructor and assignment operator.
      */
-    G4UGenericTrap( const G4UGenericTrap& source );
+    G4UGenericTrap(const G4UGenericTrap& source);
     G4UGenericTrap& operator=(const G4UGenericTrap& source);
 
   private:
@@ -140,7 +139,6 @@ class G4UGenericTrap : public G4UAdapter<vecgeom::UnplacedGenTrap>
 
     G4int fVisSubdivisions;
     std::vector<G4TwoVector> fVertices;
-
 };
 
 // --------------------------------------------------------------------

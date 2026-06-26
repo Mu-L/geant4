@@ -35,8 +35,8 @@
 #ifndef G4VGRAPHICSSCENE_HH
 #define G4VGRAPHICSSCENE_HH
 
-#include "globals.hh"
 #include "G4Transform3D.hh"
+#include "globals.hh"
 
 class G4VisAttributes;
 class G4VSolid;
@@ -59,7 +59,8 @@ class G4PhysicalVolumeModel;
 class G4VTrajectory;
 class G4VHit;
 class G4VDigi;
-template <typename T> class G4THitsMap;
+template<typename T>
+class G4THitsMap;
 class G4Polyline;
 class G4Text;
 class G4Circle;
@@ -71,107 +72,106 @@ class G4StatDouble;
 class G4Mesh;
 class G4Plotter;
 
-class G4VGraphicsScene {
+class G4VGraphicsScene
+{
+  public:  // With description
 
-public: // With description
+    G4VGraphicsScene();
+    virtual ~G4VGraphicsScene();
 
-  G4VGraphicsScene();
-  virtual ~G4VGraphicsScene();
+    ///////////////////////////////////////////////////////////////////
+    // Methods for adding solids to the scene handler.  They
+    // must always be called in the triplet PreAddSolid, AddSolid and
+    // PostAddSolid.  The transformation and visualization attributes
+    // must be set by the call to PreAddSolid.  A possible default
+    // implementation is to request the solid to provide a G4Polyhedron
+    // or similar primitive - see, for example, G4VSceneHandler in the
+    // Visualization Category.
 
-  ///////////////////////////////////////////////////////////////////
-  // Methods for adding solids to the scene handler.  They
-  // must always be called in the triplet PreAddSolid, AddSolid and
-  // PostAddSolid.  The transformation and visualization attributes
-  // must be set by the call to PreAddSolid.  A possible default
-  // implementation is to request the solid to provide a G4Polyhedron
-  // or similar primitive - see, for example, G4VSceneHandler in the
-  // Visualization Category.
+    virtual void PreAddSolid(const G4Transform3D& objectTransformation,
+                             const G4VisAttributes& visAttribs) = 0;
+    // objectTransformation is the transformation in the world
+    // coordinate system of the object about to be added, and
+    // visAttribs is its visualization attributes.
 
-  virtual void PreAddSolid (const G4Transform3D& objectTransformation,
-                            const G4VisAttributes& visAttribs) = 0;
-  // objectTransformation is the transformation in the world
-  // coordinate system of the object about to be added, and
-  // visAttribs is its visualization attributes.
+    virtual void PostAddSolid() = 0;
 
-  virtual void PostAddSolid () = 0;
+    // From geometry/solids/CSG
+    virtual void AddSolid(const G4Box&) = 0;
+    virtual void AddSolid(const G4Cons&) = 0;
+    virtual void AddSolid(const G4Orb&) = 0;
+    virtual void AddSolid(const G4Para&) = 0;
+    virtual void AddSolid(const G4Sphere&) = 0;
+    virtual void AddSolid(const G4Torus&) = 0;
+    virtual void AddSolid(const G4Trap&) = 0;
+    virtual void AddSolid(const G4Trd&) = 0;
+    virtual void AddSolid(const G4Tubs&) = 0;
 
-  // From geometry/solids/CSG
-  virtual void AddSolid (const G4Box&)       = 0;
-  virtual void AddSolid (const G4Cons&)      = 0;
-  virtual void AddSolid (const G4Orb&)       = 0;
-  virtual void AddSolid (const G4Para&)      = 0;
-  virtual void AddSolid (const G4Sphere&)    = 0;
-  virtual void AddSolid (const G4Torus&)     = 0;
-  virtual void AddSolid (const G4Trap&)      = 0;
-  virtual void AddSolid (const G4Trd&)       = 0;
-  virtual void AddSolid (const G4Tubs&)      = 0;
+    // From geometry/solids/specific
+    virtual void AddSolid(const G4Ellipsoid&) = 0;
+    virtual void AddSolid(const G4Polycone&) = 0;
+    virtual void AddSolid(const G4Polyhedra&) = 0;
+    virtual void AddSolid(const G4TessellatedSolid&) = 0;
 
-  // From geometry/solids/specific
-  virtual void AddSolid (const G4Ellipsoid&)        = 0;
-  virtual void AddSolid (const G4Polycone&)         = 0;
-  virtual void AddSolid (const G4Polyhedra&)        = 0;
-  virtual void AddSolid (const G4TessellatedSolid&) = 0;
+    // For solids not above
+    virtual void AddSolid(const G4VSolid&) = 0;
 
-  // For solids not above
-  virtual void AddSolid (const G4VSolid&) = 0;
+    ///////////////////////////////////////////////////////////////////
+    // Methods for adding "compound" GEANT4 objects to the scene
+    // handler.  These methods may either (a) invoke "user code" that
+    // uses the "user interface", G4VVisManager (see, for example,
+    // G4VSceneHandler in the Visualization Category, which for
+    // trajectories uses G4VTrajectory::DrawTrajectory, via
+    // G4TrajectoriesModel in the Modeling Category) or (b) invoke
+    // AddPrimitives below (between calls to Begin/EndPrimitives) or (c)
+    // use graphics-system-specific code or (d) any combination of the
+    // above.
 
-  ///////////////////////////////////////////////////////////////////
-  // Methods for adding "compound" GEANT4 objects to the scene
-  // handler.  These methods may either (a) invoke "user code" that
-  // uses the "user interface", G4VVisManager (see, for example,
-  // G4VSceneHandler in the Visualization Category, which for
-  // trajectories uses G4VTrajectory::DrawTrajectory, via
-  // G4TrajectoriesModel in the Modeling Category) or (b) invoke
-  // AddPrimitives below (between calls to Begin/EndPrimitives) or (c)
-  // use graphics-system-specific code or (d) any combination of the
-  // above.
+    virtual void AddCompound(const G4VTrajectory&) = 0;
+    virtual void AddCompound(const G4VHit&) = 0;
+    virtual void AddCompound(const G4VDigi&) = 0;
+    virtual void AddCompound(const G4THitsMap<G4double>&) = 0;
+    virtual void AddCompound(const G4THitsMap<G4StatDouble>&) = 0;
+    virtual void AddCompound(const G4Mesh&) = 0;
 
-  virtual void AddCompound (const G4VTrajectory&)            = 0;
-  virtual void AddCompound (const G4VHit&)                   = 0;
-  virtual void AddCompound (const G4VDigi&)                  = 0;
-  virtual void AddCompound (const G4THitsMap<G4double>&)     = 0;
-  virtual void AddCompound (const G4THitsMap<G4StatDouble>&) = 0;
-  virtual void AddCompound (const G4Mesh&)                   = 0;
+    ///////////////////////////////////////////////////////////////////
+    // Methods for adding graphics primitives to the scene handler.  A
+    // sequence of calls to AddPrimitive must be sandwiched between
+    // calls to BeginPrimitives and EndPrimitives.  A sequence is any
+    // number of calls that have the same transformation.
 
-  ///////////////////////////////////////////////////////////////////
-  // Methods for adding graphics primitives to the scene handler.  A
-  // sequence of calls to AddPrimitive must be sandwiched between
-  // calls to BeginPrimitives and EndPrimitives.  A sequence is any
-  // number of calls that have the same transformation.
+    virtual void BeginPrimitives(const G4Transform3D& objectTransformation = G4Transform3D()) = 0;
+    // objectTransformation is the transformation in the world
+    // coordinate system of the object about to be added.
 
-  virtual void BeginPrimitives
-  (const G4Transform3D& objectTransformation = G4Transform3D()) = 0;
-  // objectTransformation is the transformation in the world
-  // coordinate system of the object about to be added.
+    virtual void EndPrimitives() = 0;
 
-  virtual void EndPrimitives () = 0;
+    virtual void BeginPrimitives2D(const G4Transform3D& objectTransformation = G4Transform3D()) = 0;
 
-  virtual void BeginPrimitives2D
-  (const G4Transform3D& objectTransformation = G4Transform3D()) = 0;
+    virtual void EndPrimitives2D() = 0;
+    // The x,y coordinates of the primitives passed to AddPrimitive are
+    // intrepreted as screen coordinates, -1 < x,y < 1.  The
+    // z-coordinate is ignored.
 
-  virtual void EndPrimitives2D () = 0;
-  // The x,y coordinates of the primitives passed to AddPrimitive are
-  // intrepreted as screen coordinates, -1 < x,y < 1.  The
-  // z-coordinate is ignored.
+    virtual void AddPrimitive(const G4Polyline&) = 0;
+    virtual void AddPrimitive(const G4Text&) = 0;
+    virtual void AddPrimitive(const G4Circle&) = 0;
+    virtual void AddPrimitive(const G4Square&) = 0;
+    virtual void AddPrimitive(const G4Polymarker&) = 0;
+    virtual void AddPrimitive(const G4Polyhedron&) = 0;
+    virtual void AddPrimitive(const G4Plotter&) = 0;
 
-  virtual void AddPrimitive (const G4Polyline&)   = 0;
-  virtual void AddPrimitive (const G4Text&)       = 0;
-  virtual void AddPrimitive (const G4Circle&)     = 0;
-  virtual void AddPrimitive (const G4Square&)     = 0;
-  virtual void AddPrimitive (const G4Polymarker&) = 0;
-  virtual void AddPrimitive (const G4Polyhedron&) = 0;
-  virtual void AddPrimitive (const G4Plotter&)    = 0;
-  
-  virtual const G4VisExtent& GetExtent() const;
-  // The concrete class should overload this or a null extent will be returned.
-  // See G4VScenHandler for example.
+    virtual const G4VisExtent& GetExtent() const;
+    // The concrete class should overload this or a null extent will be returned.
+    // See G4VScenHandler for example.
 
-  // Utilities 
-  G4int GetMaxGeometryDepth() const {return fMaxGeometryDepth;}
-  void  SetMaxGeometryDepth(G4int maxDepth) {fMaxGeometryDepth = maxDepth;}
+    // Utilities
+    G4int GetMaxGeometryDepth() const { return fMaxGeometryDepth; }
+    void SetMaxGeometryDepth(G4int maxDepth) { fMaxGeometryDepth = maxDepth; }
 
-protected:
-  G4int fMaxGeometryDepth = 0;
+  protected:
+
+    G4int fMaxGeometryDepth = 0;
 };
 
 #endif

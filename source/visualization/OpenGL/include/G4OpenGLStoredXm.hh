@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  10th February 1997
 // OpenGL graphics system factory.
 
@@ -34,11 +34,13 @@
 
 #include "G4OpenGLXm.hh"
 
-class G4OpenGLStoredXm: public G4OpenGLXm {
-public:
-  G4OpenGLStoredXm ();
-  G4VSceneHandler* CreateSceneHandler (const G4String& name = "");
-  G4VViewer*  CreateViewer  (G4VSceneHandler&, const G4String& name = "");
+class G4OpenGLStoredXm : public G4OpenGLXm
+{
+  public:
+
+    G4OpenGLStoredXm();
+    G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
+    G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "");
 };
 
 #endif

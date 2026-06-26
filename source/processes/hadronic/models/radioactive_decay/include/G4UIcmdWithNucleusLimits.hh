@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4UIcmdWithNucleusLimits_h
-#define G4UIcmdWithNucleusLimits_h 1
+#ifndef G4UICMDWITHNUCLEUSLIMITS_HH
+#define G4UICMDWITHNUCLEUSLIMITS_HH
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //
 // MODULE:              G4UIcmdWithNucleusAndUnit.hh
@@ -60,44 +60,43 @@
 // 29 February 2000, P R Truscott, DERA UK
 // 0.b.3 release.
 //
-// 
+//
 // 13 April 2000, F Lei, DERA UK
-// 0.b.4 release. No change to this file        
+// 0.b.4 release. No change to this file
 //
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ////////////////////////////////////////////////////////////////////////////////
 //
+#include "G4NucleusLimits.hh"
 #include "G4UIcommand.hh"
 #include "globals.hh"
-
-#include "G4NucleusLimits.hh"
 ////////////////////////////////////////////////////////////////////////////////
 //
 class G4UIcmdWithNucleusLimits : public G4UIcommand
 {
-public: // With description
-    G4UIcmdWithNucleusLimits
-    (const char * theCommandPath, G4UImessenger * theMessenger);
-  //    Constructor identifying the command path in the User Interface and the
-  //    associated G4UImessenger which will use this G4UIcommand object.
-  //
-  ~G4UIcmdWithNucleusLimits();
-  //  Destructor
-  //
+  public:  // With description
+
+    G4UIcmdWithNucleusLimits(const char* theCommandPath, G4UImessenger* theMessenger);
+    //    Constructor identifying the command path in the User Interface and the
+    //    associated G4UImessenger which will use this G4UIcommand object.
+    //
+    ~G4UIcmdWithNucleusLimits();
+    //  Destructor
+    //
     G4NucleusLimits GetNewNucleusLimitsValue(const G4String& paramString);
-  //    Extracts the values aMin, aMax, zMin, zMax from paramString.
-  //    Values returned have aMin, aMax, zMin, and zMax (within the
-  //    G4NucleusLimits variable).
+    //    Extracts the values aMin, aMax, zMin, zMax from paramString.
+    //    Values returned have aMin, aMax, zMin, and zMax (within the
+    //    G4NucleusLimits variable).
     G4String ConvertToString(G4NucleusLimits nuclimit);
-  //    Converts the G4NucleusLimits defined by vec into a G4String.
-    void SetParameterName(const char * theNameAMin,const char * theNameAMax,
-                          const char * theNameZMin, const char * theNameZMax,
-                          G4bool omittable, G4bool currentAsDefault=true);
-  //    Identifies the parameter names associated with each of the G4doubles
-  //    used to define the G4NucleusLimits variable.
+    //    Converts the G4NucleusLimits defined by vec into a G4String.
+    void SetParameterName(const char* theNameAMin, const char* theNameAMax, const char* theNameZMin,
+                          const char* theNameZMax, G4bool omittable,
+                          G4bool currentAsDefault = true);
+    //    Identifies the parameter names associated with each of the G4doubles
+    //    used to define the G4NucleusLimits variable.
     void SetDefaultValue(G4NucleusLimits defVal);
-  //    Sets the default G4NucleusLimits if the command is invoked without any
-  //    parameters.
+    //    Sets the default G4NucleusLimits if the command is invoked without any
+    //    parameters.
 };
 ////////////////////////////////////////////////////////////////////////////////
 #endif

@@ -28,21 +28,23 @@
 // Class description:
 //
 // Implementation of the interfaces for creating volume divisions
-// (defined in G4VPVDivisionFactory) for G4PVDivision type.   
+// (defined in G4VPVDivisionFactory) for G4PVDivision type.
 
 // Author: Ivana Hrivnacova (Orsay), 04.05.2004
 // ------------------------------------------------------------------------
 #ifndef G4PVDIVISION_FACTORY_HH
-#define G4PVDIVISION_FACTORY_HH 1
+#define G4PVDIVISION_FACTORY_HH
+
+#include "G4VPVDivisionFactory.hh"
 
 #include "geomdefs.hh"
-#include "G4VPVDivisionFactory.hh"
 
 class G4LogicalVolume;
 
 /**
  * @brief G4PVDivisionFactory implements the interfaces for creating volume
  * divisions (defined in G4VPVDivisionFactory) for G4PVDivision type.
+ * @ingroup geometry_divisions
  */
 
 class G4PVDivisionFactory : public G4VPVDivisionFactory
@@ -53,7 +55,7 @@ class G4PVDivisionFactory : public G4VPVDivisionFactory
      * Default Destructor.
      */
     ~G4PVDivisionFactory() override = default;
-    
+
     /**
      * Creates a division, using number of divisions and width.
      *  @param[in] pName The volume name.
@@ -65,14 +67,10 @@ class G4PVDivisionFactory : public G4VPVDivisionFactory
      *  @param[in] offset The optional offset distance from mother's border.
      *  @returns The pointer to physical divided volume.
      */
-    G4VPhysicalVolume* CreatePVDivision(
-                             const G4String& pName,
-                                   G4LogicalVolume* pLogical,
-                                   G4LogicalVolume* pMother,
-                             const EAxis pAxis,
-                             const G4int nReplicas,
-                             const G4double width,
-                             const G4double offset ) override;
+    G4VPhysicalVolume* CreatePVDivision(const G4String& pName, G4LogicalVolume* pLogical,
+                                        G4LogicalVolume* pMother, const EAxis pAxis,
+                                        const G4int nReplicas, const G4double width,
+                                        const G4double offset) override;
 
     /**
      * Creates a division, using the number of divisions.
@@ -84,13 +82,9 @@ class G4PVDivisionFactory : public G4VPVDivisionFactory
      *  @param[in] offset The optional offset distance from mother's border.
      *  @returns The pointer to physical divided volume.
      */
-    G4VPhysicalVolume* CreatePVDivision(
-                             const G4String& pName,
-                                   G4LogicalVolume* pLogical,
-                                   G4LogicalVolume* pMother,
-                             const EAxis pAxis,
-                             const G4int nReplicas,
-                             const G4double offset ) override;
+    G4VPhysicalVolume* CreatePVDivision(const G4String& pName, G4LogicalVolume* pLogical,
+                                        G4LogicalVolume* pMother, const EAxis pAxis,
+                                        const G4int nReplicas, const G4double offset) override;
 
     /**
      * Creates a division, using the width of the division slice.
@@ -102,13 +96,9 @@ class G4PVDivisionFactory : public G4VPVDivisionFactory
      *  @param[in] offset The optional offset distance from mother's border.
      *  @returns The pointer to physical divided volume.
      */
-    G4VPhysicalVolume* CreatePVDivision(
-                             const G4String& pName,
-                                   G4LogicalVolume* pLogical,
-                                   G4LogicalVolume* pMother,
-                             const EAxis pAxis,
-                             const G4double width,
-                             const G4double offset ) override;
+    G4VPhysicalVolume* CreatePVDivision(const G4String& pName, G4LogicalVolume* pLogical,
+                                        G4LogicalVolume* pMother, const EAxis pAxis,
+                                        const G4double width, const G4double offset) override;
 
     /**
      * Creates a division, using a parameterisation algorithm.
@@ -118,21 +108,19 @@ class G4PVDivisionFactory : public G4VPVDivisionFactory
      *  @param[in] param The pointer to the parameterisation algorithm.
      *  @returns The pointer to physical divided volume.
      */
-    G4VPhysicalVolume* CreatePVDivision(
-                             const G4String& pName,
-                                   G4LogicalVolume* pLogical,
-                                   G4LogicalVolume* pMother,
-                             const G4VPVParameterisation* param) override;
+    G4VPhysicalVolume* CreatePVDivision(const G4String& pName, G4LogicalVolume* pLogical,
+                                        G4LogicalVolume* pMother,
+                                        const G4VPVParameterisation* param) override;
 
     /**
      * Returns true if 'pv' is a pointer to a division.
      */
-    G4bool IsPVDivision(const G4VPhysicalVolume* pv) const override; 
-    
+    G4bool IsPVDivision(const G4VPhysicalVolume* pv) const override;
+
     /**
      * Creates the unique instance of the singleton.
      */
-    static G4PVDivisionFactory* GetInstance(); 
+    static G4PVDivisionFactory* GetInstance();
 
   protected:
 

@@ -33,44 +33,47 @@
 // 20150608  M. Kelsey -- Label all while loops as terminating.
 
 #include "G4InuclParamAngDst.hh"
-#include "G4InuclSpecialFunctions.hh"
+
 #include "G4InuclParticleNames.hh"
+#include "G4InuclSpecialFunctions.hh"
 #include "Randomize.hh"
 
 using namespace G4InuclSpecialFunctions;
 using namespace G4InuclParticleNames;
 
-
 // Use coefficients in power expansion of random fraction
 
-G4double G4InuclParamAngDst::GetCosTheta(G4int ptype, G4double ekin) const {
-  if (verboseLevel>3) {
-    G4cout << theName << "::GetCosTheta: ptype " << ptype << " ekin " << ekin
-	   << G4endl;
+G4double G4InuclParamAngDst::GetCosTheta(G4int ptype, G4double ekin) const
+{
+  if (verboseLevel > 3)
+  {
+    G4cout << theName << "::GetCosTheta: ptype " << ptype << " ekin " << ekin << G4endl;
   }
 
-  G4int J = (ptype==pro || ptype==neu) ? 0 : 1;		// nucleon vs. other
+  G4int J = (ptype == pro || ptype == neu) ? 0 : 1;  // nucleon vs. other
   if (verboseLevel > 3) G4cout << " J " << J << G4endl;
 
-  const G4int itry_max = 100;	// Parametrizations aren't properly bounded
+  const G4int itry_max = 100;  // Parametrizations aren't properly bounded
 
   G4double Spow = -999.;
   G4int itry = 0;
 
   /* Loop checking 08.06.2015 MHK */
-  while ((Spow < 0. || Spow > 1.) && itry < itry_max) {
+  while ((Spow < 0. || Spow > 1.) && itry < itry_max)
+  {
     itry++;
     Spow = randomInuclPowers(ekin, coeffAB[J]);
   }
 
-  if (itry == itry_max) {	// No success, just throw flat distribution
-    if (verboseLevel > 2) {
-      G4cout << theName << "::GetCosTheta -> itry = itry_max " << itry
-	     << G4endl;
+  if (itry == itry_max)
+  {  // No success, just throw flat distribution
+    if (verboseLevel > 2)
+    {
+      G4cout << theName << "::GetCosTheta -> itry = itry_max " << itry << G4endl;
     }
 
     Spow = G4UniformRand();
   }
 
-  return 2.0*Spow - 1.0;	// Convert generated [0..1] to [-1..1]
+  return 2.0 * Spow - 1.0;  // Convert generated [0..1] to [-1..1]
 }

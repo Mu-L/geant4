@@ -34,15 +34,16 @@
 #ifndef G4RKG3_STEPPER_HH
 #define G4RKG3_STEPPER_HH
 
-#include "G4Types.hh"
 #include "G4MagIntegratorStepper.hh"
 #include "G4ThreeVector.hh"
+#include "G4Types.hh"
 
 class G4Mag_EqRhs;
 
 /**
  * @brief G4RKG3_Stepper implements a Runga-Kutta integrator stepper
  * used in Geant-3.
+ * @ingroup geometry_magneticfield
  */
 
 class G4RKG3_Stepper : public G4MagIntegratorStepper
@@ -64,7 +65,7 @@ class G4RKG3_Stepper : public G4MagIntegratorStepper
      * Copy constructor and assignment operator not allowed.
      */
     G4RKG3_Stepper(const G4RKG3_Stepper&) = delete;
-    G4RKG3_Stepper& operator= (const G4RKG3_Stepper&) = delete;
+    G4RKG3_Stepper& operator=(const G4RKG3_Stepper&) = delete;
 
     /**
      * The stepper for the Runge Kutta integration.
@@ -78,17 +79,14 @@ class G4RKG3_Stepper : public G4MagIntegratorStepper
      *  @param[out] yOut Integration output.
      *  @param[out] yErr The estimated error.
      */
-    void Stepper( const G4double yIn[],
-                  const G4double dydx[],
-                        G4double h,
-                        G4double yOut[],
-                        G4double yErr[] ) override;
+    void Stepper(const G4double yIn[], const G4double dydx[], G4double h, G4double yOut[],
+                 G4double yErr[]) override;
 
     /**
      * Returns the distance from chord line.
      */
-    G4double DistChord() const override ;
- 
+    G4double DistChord() const override;
+
     /**
      * Integrator of Runge-Kutta Stepper from Geant-3 with only two field
      * evaluation per Step. It is used in propagating the initial Step
@@ -96,11 +94,8 @@ class G4RKG3_Stepper : public G4MagIntegratorStepper
      * considerations. B[3] is magnetic field which is passed from substep
      * to substep.
      */
-    void StepNoErr( const G4double tIn[8],
-                    const G4double dydx[6],
-                          G4double Step,
-                          G4double tOut[8],
-                          G4double B[3] );
+    void StepNoErr(const G4double tIn[8], const G4double dydx[6], G4double Step, G4double tOut[8],
+                   G4double B[3]);
     /**
      * Integrator for Runge-Kutta from Geant-3 with evaluation of error in
      * solution and delta geometry based on naive similarity with the case
@@ -108,14 +103,8 @@ class G4RKG3_Stepper : public G4MagIntegratorStepper
      * B1[3] is in input and is the first magnetic field values
      * B2[3] is the output and is the final magnetic field values.
      */
-    void StepWithEst( const G4double tIn[8],
-                      const G4double dydx[6],
-                            G4double Step,
-                            G4double tOut[8],
-                            G4double& alpha2,
-                            G4double& beta2,
-                      const G4double B1[3],
-                            G4double B2[3] );
+    void StepWithEst(const G4double tIn[8], const G4double dydx[6], G4double Step, G4double tOut[8],
+                     G4double& alpha2, G4double& beta2, const G4double B1[3], G4double B2[3]);
 
     /**
      * Returns the order, 4, of integration.
@@ -129,12 +118,10 @@ class G4RKG3_Stepper : public G4MagIntegratorStepper
 
   private:
 
-    G4ThreeVector fyInitial,
-                  fyMidPoint,
-                  fyFinal;
+    G4ThreeVector fyInitial, fyMidPoint, fyFinal;
     G4ThreeVector fpInitial;
     G4ThreeVector BfldIn;
-    G4double      hStep = 0.0;
+    G4double hStep = 0.0;
 };
 
 #endif

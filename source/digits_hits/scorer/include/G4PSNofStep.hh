@@ -26,11 +26,11 @@
 //
 //
 
-#ifndef G4PSNofStep_h
-#define G4PSNofStep_h 1
+#ifndef G4PSNOFSTEP_HH
+#define G4PSNOFSTEP_HH
 
-#include "G4VPrimitivePlotter.hh"
 #include "G4THitsMap.hh"
+#include "G4VPrimitivePlotter.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // (Description)
@@ -45,25 +45,28 @@
 
 class G4PSNofStep : public G4VPrimitivePlotter
 {
- public:
-  G4PSNofStep(const G4String& name, G4int depth = 0);
-  ~G4PSNofStep() override = default;
+  public:
 
-  void Initialize(G4HCofThisEvent*) override;
-  void clear() override;
-  void PrintAll() override;
+    G4PSNofStep(const G4String& name, G4int depth = 0);
+    ~G4PSNofStep() override = default;
 
-  virtual void SetUnit(const G4String& unit);
-  void SetBoundaryFlag(G4bool flg = true) { boundaryFlag = flg; }
+    void Initialize(G4HCofThisEvent*) override;
+    void clear() override;
+    void PrintAll() override;
 
- protected:
-  G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+    virtual void SetUnit(const G4String& unit);
+    void SetBoundaryFlag(G4bool flg = true) { boundaryFlag = flg; }
 
- private:
-  G4int HCID{-1};
-  G4THitsMap<G4double>* EvtMap{nullptr};
+  protected:
 
-  G4bool boundaryFlag{false};
+    G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+
+  private:
+
+    G4int HCID{-1};
+    G4THitsMap<G4double>* EvtMap{nullptr};
+
+    G4bool boundaryFlag{false};
 };
 
 #endif

@@ -31,16 +31,16 @@
 void G4DefaultLinearColorMap::GetMapColor(G4double val, G4double color[4])
 {
   G4double value;
-  if(fMaxVal == fMinVal)
+  if (fMaxVal == fMinVal)
     value = 0.;
   else
     value = (val - fMinVal) / (fMaxVal - fMinVal);
 
-  if(value > 1.)
+  if (value > 1.)
   {
     value = 1.;
   }
-  if(value < 0.)
+  if (value < 0.)
   {
     value = 0.;
   }
@@ -49,20 +49,17 @@ void G4DefaultLinearColorMap::GetMapColor(G4double val, G4double color[4])
   const int NCOLOR = 6;
   struct ColorMap
   {
-    G4double val;
-    G4double rgb[4];
-  } colormap[NCOLOR] = { { 0.0, { 1., 1., 1., 1. } },  // value, r, g, b, alpha
-                         { 0.2, { 0., 0., 1., 1. } },
-                         { 0.4, { 0., 1., 1., 1. } },
-                         { 0.6, { 0., 1., 0., 1. } },
-                         { 0.8, { 1., 1., 0., 1. } },
-                         { 1.0, { 1., 0., 0., 1. } } };
+      G4double val;
+      G4double rgb[4];
+  } colormap[NCOLOR] = {{0.0, {1., 1., 1., 1.}},  // value, r, g, b, alpha
+                        {0.2, {0., 0., 1., 1.}}, {0.4, {0., 1., 1., 1.}}, {0.6, {0., 1., 0., 1.}},
+                        {0.8, {1., 1., 0., 1.}}, {1.0, {1., 0., 0., 1.}}};
 
   // search
-  G4int during[2] = { 0, 0 };
-  for(int i = 1; i < NCOLOR; i++)
+  G4int during[2] = {0, 0};
+  for (int i = 1; i < NCOLOR; i++)
   {
-    if(colormap[i].val >= value)
+    if (colormap[i].val >= value)
     {
       during[0] = i - 1;
       during[1] = i;
@@ -73,12 +70,10 @@ void G4DefaultLinearColorMap::GetMapColor(G4double val, G4double color[4])
   // interpolate
   G4double a = std::fabs(value - colormap[during[0]].val);
   G4double b = std::fabs(value - colormap[during[1]].val);
-  for(int i = 0; i < 4; i++)
+  for (int i = 0; i < 4; i++)
   {
-    color[i] =
-      (b * colormap[during[0]].rgb[i] + a * colormap[during[1]].rgb[i]) /
-      (colormap[during[1]].val - colormap[during[0]].val);
-    if(color[i] > 1.)
-      color[i] = 1.;
+    color[i] = (b * colormap[during[0]].rgb[i] + a * colormap[during[1]].rgb[i])
+               / (colormap[during[1]].val - colormap[during[0]].val);
+    if (color[i] > 1.) color[i] = 1.;
   }
 }

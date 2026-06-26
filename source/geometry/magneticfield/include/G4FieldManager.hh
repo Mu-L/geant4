@@ -31,22 +31,22 @@
 // describes the field of a detector (magnetic, electric or other).
 // Also stores a reference to the chord finder.
 //
-// The G4FieldManager class exists to allow the user program to specify 
+// The G4FieldManager class exists to allow the user program to specify
 // the electric, magnetic and/or other field(s) of the detector.
-// 
-// A field manager can be set to a logical volume (or to more than one), 
+//
+// A field manager can be set to a logical volume (or to more than one),
 // in order to vary its field from that of the world.  In this manner
-// a zero or constant field can override a global field,  a more or 
+// a zero or constant field can override a global field,  a more or
 // less exact version can override the external approximation, lower
-// or higher precision for tracking can be specified, a different 
+// or higher precision for tracking can be specified, a different
 // stepper can be chosen for different volumes, ...
 //
 // It also stores a pointer to the ChordFinder object that can do the
-// propagation in this field. All geometrical track "advancement" 
+// propagation in this field. All geometrical track "advancement"
 // in the field is handled by this ChordFinder object.
 //
-// G4FieldManager allows the other classes/object (of the MagneticField 
-// & other class categories) to find out whether a detector field object 
+// G4FieldManager allows the other classes/object (of the MagneticField
+// & other class categories) to find out whether a detector field object
 // exists and what that object is.
 //
 // The Chord Finder must be created either by calling CreateChordFinder
@@ -57,14 +57,14 @@
 // G4NavigatorForTracking and exists before main is called.
 // However a new one can be created and given to G4NavigatorForTracking.
 //
-// Our current design envisions that one Field manager is 
+// Our current design envisions that one Field manager is
 // valid for each region detector.
 //
 // It is expected that a particular geometrical region has a Field manager.
 // By default a Field Manager is created for the world volume, and
 // will be utilised for all volumes unless it is overridden by a 'local'
 // field manager.
-// Note also that a region with both electric E and magnetic B field will 
+// Note also that a region with both electric E and magnetic B field will
 // have these treated as one field.
 // Similarly it could be extended to treat other fields as additional
 // components of a single field type.
@@ -85,8 +85,11 @@ class G4Track;  // Forward reference for parameter configuration
 /**
  * @brief G4FieldManager is a manager (store) for a pointer to the Field
  * subclass that describes the field of a detector (magnetic, electric or
- * other). It also stores a reference to the chord finder.
- * A field manager can be set to a logical volume (or to more than one), 
+ * other).
+ * @ingroup geometry_magneticfield
+ *
+ * It also stores a reference to the chord finder.
+ * A field manager can be set to a logical volume (or to more than one),
  * in order to vary its field from that of the world volume. In this manner
  * a zero or constant field can override a global field, a more or less exact
  * version can override the external approximation, lower or higher precision
@@ -100,7 +103,7 @@ class G4Track;  // Forward reference for parameter configuration
  * a Field manager. By default a Field Manager is created for the world volume,
  * and will be utilised for all volumes unless it is overridden by a 'local'
  * field manager.
- * Note also that a region with both electric E and magnetic B field will 
+ * Note also that a region with both electric E and magnetic B field will
  * have these treated as one field. Similarly it could be extended to treat
  * other fields as additional components of a single field type.
  */
@@ -117,9 +120,8 @@ class G4FieldManager
      *  @param[in] b Flag to indicate if the field changes the energy; it is
      *             taken from the provided field, if specified.
      */
-    G4FieldManager(G4Field* detectorField = nullptr, 
-                   G4ChordFinder* pChordFinder = nullptr, 
-                   G4bool b = true ); // fieldChangesEnergy is taken from field
+    G4FieldManager(G4Field* detectorField = nullptr, G4ChordFinder* pChordFinder = nullptr,
+                   G4bool b = true);  // fieldChangesEnergy is taken from field
 
     /**
      * Constructor creating the chord finder. It assumes pure magnetic field,
@@ -169,8 +171,8 @@ class G4FieldManager
      * have all been created; else it is an error.
      *  @param[in] detectorField Pointer to the field.
      */
-    inline void ChangeDetectorField(G4Field* detectorField);    
-        
+    inline void ChangeDetectorField(G4Field* detectorField);
+
     /**
      * Methods to get and check (existance of) the field object.
      */
@@ -192,7 +194,7 @@ class G4FieldManager
      * this to change the ChordFinder, the field, etc.
      *  @param[in] pTrack Pointer to a track.
      */
-    virtual void ConfigureForTrack( const G4Track* pTrack );
+    virtual void ConfigureForTrack(const G4Track* pTrack);
 
     /**
      * Static methods to set/get the global field.
@@ -211,33 +213,33 @@ class G4FieldManager
     inline G4double GetDeltaOneStep() const;
 
     /**
-     * Sets both accuracies, maintaining a fixed ratio for accuracies 
+     * Sets both accuracies, maintaining a fixed ratio for accuracies
      * of volume Intersection and Integration (in One Step).
      */
-    inline void SetAccuraciesWithDeltaOneStep(G4double valDeltaOneStep); 
+    inline void SetAccuraciesWithDeltaOneStep(G4double valDeltaOneStep);
 
     /**
      * Sets the accuracy for integration of one step (only).
      */
-    inline void SetDeltaOneStep(G4double valueD1step); 
+    inline void SetDeltaOneStep(G4double valueD1step);
 
     /**
      * Sets the accuracy of intersection of a volume (only).
      */
-    inline void     SetDeltaIntersection(G4double valueDintersection); 
+    inline void SetDeltaIntersection(G4double valueDintersection);
 
     /**
      * Methods to set/get the minimum for Relative accuracy of a Step.
      */
     inline G4double GetMinimumEpsilonStep() const;
-    G4bool SetMinimumEpsilonStep( G4double newEpsMin );
+    G4bool SetMinimumEpsilonStep(G4double newEpsMin);
 
     /**
      * Methods to set/get the maximum for Relative accuracy of a Step.
      */
     inline G4double GetMaximumEpsilonStep() const;
-    G4bool SetMaximumEpsilonStep( G4double newEpsMax );
- 
+    G4bool SetMaximumEpsilonStep(G4double newEpsMax);
+
     /**
      * Methods to set/get flag for field changing energy.
      * For electric field this should be true; for magnetic field this
@@ -245,7 +247,7 @@ class G4FieldManager
      */
     inline G4bool DoesFieldChangeEnergy() const;
     inline void SetFieldChangesEnergy(G4bool value);
-    
+
     /**
      * Needed for multi-threading, create and returns an allocated clone
      * of this object.
@@ -258,8 +260,8 @@ class G4FieldManager
      * a FatalException.
      */
     static G4double GetMaxAcceptedEpsilon();
-    static G4bool SetMaxAcceptedEpsilon(G4double maxEps, G4bool softFail= false);
-   
+    static G4bool SetMaxAcceptedEpsilon(G4double maxEps, G4bool softFail = false);
+
   protected:
 
     /**
@@ -270,17 +272,18 @@ class G4FieldManager
 
     /** Epsilon_min/max values must be smaller than this for robust integration. */
     static G4double fMaxAcceptedEpsilon;
-    static constexpr G4double fMinAcceptedEpsilon = 1000.0 * std::numeric_limits<G4double>::epsilon();
+    static constexpr G4double fMinAcceptedEpsilon =
+      1000.0 * std::numeric_limits<G4double>::epsilon();
 
     /** Setting larger value will give warning. */
     static constexpr G4double fMaxWarningEpsilon = 0.001;
 
     /** Will not accept larger values. */
     static constexpr G4double fMaxFinalEpsilon = 0.02;
-   
+
     /** Controls verbosity of constructors. */
     static G4bool fVerboseConstruction;
-  
+
   private:
 
     /**
@@ -289,7 +292,7 @@ class G4FieldManager
      * separately (e.g. magnetic monopole in B field).
      */
     void InitialiseFieldChangesEnergy();
-  
+
   private:
 
     /** Dependent objects -- with state that depends on tracking. */
@@ -297,7 +300,7 @@ class G4FieldManager
     G4ChordFinder* fChordFinder = nullptr;
 
     /** Flag to indicate if "new" was used to create the Chord Finder. */
-    G4bool fAllocatedChordFinder = false; // 
+    G4bool fAllocatedChordFinder = false;  //
 
     //  1. CHARACTERISTIC of field
 

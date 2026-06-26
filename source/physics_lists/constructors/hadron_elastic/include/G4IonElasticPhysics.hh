@@ -35,33 +35,32 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4IonElasticPhysics_h
-#define G4IonElasticPhysics_h 1
+#ifndef G4IONELASTICPHYSICS_HH
+#define G4IONELASTICPHYSICS_HH
 
-#include "globals.hh"
 #include "G4VPhysicsConstructor.hh"
+#include "globals.hh"
 
 class G4IonElasticPhysics : public G4VPhysicsConstructor
 {
-public: 
+  public:
 
-  explicit G4IonElasticPhysics(G4int ver = 1);
+    explicit G4IonElasticPhysics(G4int ver = 1);
 
-  virtual ~G4IonElasticPhysics();
+    virtual ~G4IonElasticPhysics();
 
-  // This method will be invoked in the Construct() method. 
-  // each particle type will be instantiated
-  void ConstructParticle() override;
- 
-  // This method will be invoked in the Construct() method.
-  // each physics process will be instantiated and
-  // registered to the process manager of each particle type 
-  void ConstructProcess() override;
+    // This method will be invoked in the Construct() method.
+    // each particle type will be instantiated
+    void ConstructParticle() override;
 
-  // copy constructor and hide assignment operator
-  G4IonElasticPhysics(G4IonElasticPhysics &) = delete;
-  G4IonElasticPhysics & operator=
-  (const G4IonElasticPhysics &right) = delete;
+    // This method will be invoked in the Construct() method.
+    // each physics process will be instantiated and
+    // registered to the process manager of each particle type
+    void ConstructProcess() override;
+
+    // copy constructor and hide assignment operator
+    G4IonElasticPhysics(G4IonElasticPhysics&) = delete;
+    G4IonElasticPhysics& operator=(const G4IonElasticPhysics& right) = delete;
 };
 
 #endif

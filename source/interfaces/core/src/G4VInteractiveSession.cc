@@ -30,10 +30,16 @@
 #include "G4InteractorMessenger.hh"
 
 /***************************************************************************/
-G4VInteractiveSession::G4VInteractiveSession() { messenger = new G4InteractorMessenger(this); }
+G4VInteractiveSession::G4VInteractiveSession()
+{
+  messenger = new G4InteractorMessenger(this);
+}
 
 /***************************************************************************/
-G4VInteractiveSession::~G4VInteractiveSession() { delete messenger; }
+G4VInteractiveSession::~G4VInteractiveSession()
+{
+  delete messenger;
+}
 
 /***************************************************************************/
 void G4VInteractiveSession::AddMenu(const char*, const char*) {}
@@ -51,7 +57,7 @@ void G4VInteractiveSession::AddIcon(const char*, const char*, const char*, const
 void G4VInteractiveSession::SetOutputStyle(const char*, const char*)
 {
   G4Exception("G4VInteractiveSession::SetOutputStyle", "uiqt0001", JustWarning,
-    "This type of session does not support output styles.");
+              "This type of session does not support output styles.");
 }
 
 /***************************************************************************/
@@ -96,35 +102,45 @@ void G4VInteractiveSession::SetStyleUtility(const G4String& destination, const G
   // Lambda expression for changing styles
   const auto& setStyle = [&](const G4String& dest) {
     auto& styleForThisDestination = fOutputStyles[dest];
-    if (styleG4 == "fixed") {
+    if (styleG4 == "fixed")
+    {
       styleForThisDestination.fixed = true;
     }
-    else if (styleG4 == "proportional") {
+    else if (styleG4 == "proportional")
+    {
       styleForThisDestination.fixed = false;
     }
-    else if (styleG4 == "bold") {
+    else if (styleG4 == "bold")
+    {
       styleForThisDestination.bold = true;
     }
-    else if (styleG4 == "plain") {
+    else if (styleG4 == "plain")
+    {
       styleForThisDestination.bold = false;
       styleForThisDestination.highlight = false;
     }
-    else if (styleG4 == "highlight") {
+    else if (styleG4 == "highlight")
+    {
       styleForThisDestination.highlight = true;
     }
   };
 
   // Here is where the lambda expression is used
-  if (destinationG4 == "all") {
-    for (auto& i : fOutputStyles) {
+  if (destinationG4 == "all")
+  {
+    for (auto& i : fOutputStyles)
+    {
       setStyle(i.first);
     }
   }
-  else {
-    if (fOutputStyles.find(destinationG4) != fOutputStyles.end()) {
+  else
+  {
+    if (fOutputStyles.find(destinationG4) != fOutputStyles.end())
+    {
       setStyle(destinationG4);
     }
-    else {  // Shouldn't happen, but...
+    else
+    {  // Shouldn't happen, but...
       G4ExceptionDescription ed;
       ed << "Unrecognised output destination \"" << destinationG4 << '"';
       G4Exception("G4VInteractiveSession::SetStyleUtility", "uiqt0002", JustWarning, ed);

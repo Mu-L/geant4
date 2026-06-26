@@ -31,24 +31,29 @@
 //		G4VTwoBodyAngDst (c.f. ROOT's TH1 -> TH2 -> TH3)
 //
 
-#ifndef G4VThreeBodyAngDst_h
-#define G4VThreeBodyAngDst_h 1
+#ifndef G4VTHREEBODYANGDST_HH
+#define G4VTHREEBODYANGDST_HH
 
 #include "G4VTwoBodyAngDst.hh"
 
-class G4VThreeBodyAngDst : public G4VTwoBodyAngDst {
-public:
-  G4VThreeBodyAngDst(const G4String& name, G4int verbose=0)
-    : G4VTwoBodyAngDst(name, verbose) {;}
-  virtual ~G4VThreeBodyAngDst() {;}
+class G4VThreeBodyAngDst : public G4VTwoBodyAngDst
+{
+  public:
 
-  // Three-body mode needs particle type and bullet energy
-  virtual G4double GetCosTheta(G4int ptype, G4double ekin) const = 0;
+    G4VThreeBodyAngDst(const G4String& name, G4int verbose = 0) : G4VTwoBodyAngDst(name, verbose)
+    {
+      ;
+    }
+    virtual ~G4VThreeBodyAngDst() { ; }
 
-  // Implement base-class interface to re-interpret 'pcm' as ptype
-  virtual G4double GetCosTheta(const G4double& ekin, const G4double& pcm) const {
-    return this->GetCosTheta((G4int)pcm, ekin);
-  }
-};        
+    // Three-body mode needs particle type and bullet energy
+    virtual G4double GetCosTheta(G4int ptype, G4double ekin) const = 0;
 
-#endif	/* G4VThreeBodyAngDst_h */
+    // Implement base-class interface to re-interpret 'pcm' as ptype
+    virtual G4double GetCosTheta(const G4double& ekin, const G4double& pcm) const
+    {
+      return this->GetCosTheta((G4int)pcm, ekin);
+    }
+};
+
+#endif /* G4VThreeBodyAngDst_h */

@@ -28,51 +28,48 @@
 // Geant4 Header : G4ChipsElasticModel
 //
 // Author : V.Ivanchenko 29 June 2009 (redesign old elastic model)
-//  
+//
 // Modified:
 //
 // Class Description
-// Default model for elastic scattering; GHEISHA algorithm is used 
+// Default model for elastic scattering; GHEISHA algorithm is used
 // Class Description - End
 
-#ifndef G4ChipsElasticModel_h
-#define G4ChipsElasticModel_h 1
- 
+#ifndef G4CHIPSELASTICMODEL_HH
+#define G4CHIPSELASTICMODEL_HH
+
+#include "G4ChipsAntiBaryonElasticXS.hh"
+#include "G4ChipsKaonMinusElasticXS.hh"
+#include "G4ChipsKaonPlusElasticXS.hh"
+#include "G4ChipsNeutronElasticXS.hh"
+#include "G4ChipsPionMinusElasticXS.hh"
+#include "G4ChipsPionPlusElasticXS.hh"
+#include "G4ChipsProtonElasticXS.hh"
 #include "G4HadronElastic.hh"
 #include "globals.hh"
-#include "G4ChipsProtonElasticXS.hh"
-#include "G4ChipsNeutronElasticXS.hh"
-#include "G4ChipsAntiBaryonElasticXS.hh"
-#include "G4ChipsPionPlusElasticXS.hh"
-#include "G4ChipsPionMinusElasticXS.hh"
-#include "G4ChipsKaonPlusElasticXS.hh"
-#include "G4ChipsKaonMinusElasticXS.hh"
-
 
 class G4ChipsElasticModel : public G4HadronElastic
 {
-public:
+  public:
 
-  G4ChipsElasticModel();
+    G4ChipsElasticModel();
 
-  virtual ~G4ChipsElasticModel();
- 
-  virtual G4double SampleInvariantT(const G4ParticleDefinition* p, 
-				    G4double plab,
-				    G4int Z, G4int A);
-  virtual void ModelDescription(std::ostream&) const;
+    virtual ~G4ChipsElasticModel();
 
-private:
+    virtual G4double SampleInvariantT(const G4ParticleDefinition* p, G4double plab, G4int Z,
+                                      G4int A);
+    virtual void ModelDescription(std::ostream&) const;
 
-  G4ChipsProtonElasticXS* pxsManager;
-  G4ChipsNeutronElasticXS* nxsManager;
+  private:
 
-  G4ChipsAntiBaryonElasticXS* PBARxsManager;
-  G4ChipsPionPlusElasticXS* PIPxsManager;
-  G4ChipsPionMinusElasticXS* PIMxsManager;
-  G4ChipsKaonPlusElasticXS* KPxsManager;
-  G4ChipsKaonMinusElasticXS* KMxsManager;
+    G4ChipsProtonElasticXS* pxsManager;
+    G4ChipsNeutronElasticXS* nxsManager;
 
+    G4ChipsAntiBaryonElasticXS* PBARxsManager;
+    G4ChipsPionPlusElasticXS* PIPxsManager;
+    G4ChipsPionMinusElasticXS* PIMxsManager;
+    G4ChipsKaonPlusElasticXS* KPxsManager;
+    G4ChipsKaonMinusElasticXS* KMxsManager;
 };
 
 #endif

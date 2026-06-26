@@ -26,14 +26,15 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPFieldPoint_h
-#define G4ParticleHPFieldPoint_h 1
+#ifndef G4PARTICLEHPFIELDPOINT_HH
+#define G4PARTICLEHPFIELDPOINT_HH
 
 #include "globals.hh"
 
 class G4ParticleHPFieldPoint
 {
   public:
+
     G4ParticleHPFieldPoint()
     {
       X = 0;
@@ -63,6 +64,7 @@ class G4ParticleHPFieldPoint
     }
 
   private:
+
     G4double X;
     G4double* Y;
     G4int nP;

@@ -38,8 +38,8 @@
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 // V. Ivanchenko July-2023 converted back
 //
-#ifndef G4NeutronHPCapture_h
-#define G4NeutronHPCapture_h 1
+#ifndef G4NEUTRONHPCAPTURE_HH
+#define G4NEUTRONHPCAPTURE_HH
 
 #include "G4HadronicInteraction.hh"
 #include "G4ParticleHPChannel.hh"
@@ -48,6 +48,7 @@
 class G4NeutronHPCapture : public G4HadronicInteraction
 {
   public:
+
     G4NeutronHPCapture();
     ~G4NeutronHPCapture() override;
 
@@ -61,6 +62,7 @@ class G4NeutronHPCapture : public G4HadronicInteraction
     void ModelDescription(std::ostream& outFile) const override;
 
   private:
+
     std::vector<G4ParticleHPChannel*>* theCapture{nullptr};
     G4String dirName;
     G4int numEle{0};

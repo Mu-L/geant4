@@ -42,29 +42,31 @@
 // 11-02-05, GetNumberOfElectrons(Z,ShellNb), V.Ivanchenko
 // 30-04-10, added fIndexOfShells, V.Ivanchenko
 
-#ifndef G4ATOMICSHELLS_H
-#define G4ATOMICSHELLS_H
+#ifndef G4ATOMICSHELLS_HH
+#define G4ATOMICSHELLS_HH
 
 #include "globals.hh"
 
 class G4AtomicShells
 {
- public:  // with description
-  static G4int GetNumberOfShells(G4int Z);
-  static G4int GetNumberOfElectrons(G4int Z, G4int SubshellNb);
-  static G4int GetNumberOfFreeElectrons(G4int Z, G4double th);
-  static G4double GetBindingEnergy(G4int Z, G4int SubshellNb);
-  static G4double GetTotalBindingEnergy(G4int Z);
+  public:  // with description
 
- private:
+    static G4int GetNumberOfShells(G4int Z);
+    static G4int GetNumberOfElectrons(G4int Z, G4int SubshellNb);
+    static G4int GetNumberOfFreeElectrons(G4int Z, G4double th);
+    static G4double GetBindingEnergy(G4int Z, G4int SubshellNb);
+    static G4double GetTotalBindingEnergy(G4int Z);
+
+  private:
+
 #ifdef G4VERBOSE
-  static G4int PrintErrorZ(G4int Z, const G4String&);
-  static G4int PrintErrorShell(G4int Z, G4int SubshellNb, const G4String&);
+    static G4int PrintErrorZ(G4int Z, const G4String&);
+    static G4int PrintErrorShell(G4int Z, G4int SubshellNb, const G4String&);
 #endif
-  static const G4int fNumberOfShells[105];
-  static const G4int fIndexOfShells[105];
-  static const G4int fNumberOfElectrons[1650];
-  static const G4double fBindingEnergies[1650];
+    static const G4int fNumberOfShells[105];
+    static const G4int fIndexOfShells[105];
+    static const G4int fNumberOfElectrons[1650];
+    static const G4double fBindingEnergies[1650];
 };
 
 /*   *********************************************************

@@ -31,13 +31,15 @@
 
 class G4UserMeshAction
 {
- public:
-  G4UserMeshAction()          = default;
-  virtual ~G4UserMeshAction() = default;
+  public:
 
- public:
-  virtual void BeginOfMesh(const G4VDNAMesh* /*aMesh*/, G4double /*time*/){};
-  virtual void InMesh(const G4VDNAMesh* /*pMesh*/, G4double /*time*/){};
-  virtual void EndOfMesh(const G4VDNAMesh* /*aMesh*/, G4double /*time*/){};
+    G4UserMeshAction() = default;
+    virtual ~G4UserMeshAction() = default;
+
+  public:
+
+    virtual void BeginOfMesh(const G4VDNAMesh* /*aMesh*/, G4double /*time*/) {};
+    virtual void InMesh(const G4VDNAMesh* /*pMesh*/, G4double /*time*/) {};
+    virtual void EndOfMesh(const G4VDNAMesh* /*aMesh*/, G4double /*time*/) {};
 };
 #endif  // G4USERMESHACTION_HH

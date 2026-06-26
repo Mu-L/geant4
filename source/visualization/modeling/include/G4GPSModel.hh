@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  26th April 2017.
 //
 // Class Description:
@@ -35,42 +35,42 @@
 #ifndef G4GPSMODEL_HH
 #define G4GPSMODEL_HH
 
-#include "G4VModel.hh"
-
-#include "G4String.hh"
 #include "G4Colour.hh"
+#include "G4String.hh"
+#include "G4VModel.hh"
 
 class G4VGraphicsScene;
 
-class G4GPSModel: public G4VModel {
+class G4GPSModel : public G4VModel
+{
+  public:  // With description
 
-public: // With description
+    G4GPSModel(const G4Colour& colour = G4Colour(1., 0., 0., 0.3));
+    // Create with colour (default red and transparent).
 
-  G4GPSModel (const G4Colour& colour = G4Colour(1.,0.,0.,0.3));
-  // Create with colour (default red and transparent).
+    virtual ~G4GPSModel();
 
-  virtual ~G4GPSModel ();
+    void DescribeYourselfTo(G4VGraphicsScene&);
+    // The main task of a model is to describe itself to the graphics scene
+    // handler (a object which inherits G4VSceneHandler, which inherits
+    // G4VGraphicsScene).
 
-  void DescribeYourselfTo (G4VGraphicsScene&);
-  // The main task of a model is to describe itself to the graphics scene
-  // handler (a object which inherits G4VSceneHandler, which inherits
-  // G4VGraphicsScene).
+    G4String GetCurrentDescription() const;
+    // A description which depends on the current state of the model.
 
-  G4String GetCurrentDescription () const;
-  // A description which depends on the current state of the model.
+    G4String GetCurrentTag() const;
+    // A tag which depends on the current state of the model.
 
-  G4String GetCurrentTag () const;
-  // A tag which depends on the current state of the model.
+  protected:
 
-protected:
+    G4Colour fColour;
 
-  G4Colour fColour;
+  private:
 
-private:
-  // Private copy constructor and assigment operator - copying and
-  // assignment not allowed.  Keeps CodeWizard happy.
-  G4GPSModel (const G4GPSModel&);
-  G4GPSModel& operator = (const G4GPSModel&);
+    // Private copy constructor and assigment operator - copying and
+    // assignment not allowed.  Keeps CodeWizard happy.
+    G4GPSModel(const G4GPSModel&);
+    G4GPSModel& operator=(const G4GPSModel&);
 };
 
 #endif

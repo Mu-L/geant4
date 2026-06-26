@@ -28,8 +28,8 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4ParallelWorldPhysics_h
-#define G4ParallelWorldPhysics_h 1
+#ifndef G4PARALLELWORLDPHYSICS_HH
+#define G4PARALLELWORLDPHYSICS_HH
 
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
@@ -38,28 +38,28 @@
 
 class G4ParallelWorldPhysics : public G4VPhysicsConstructor
 {
-public:
+  public:
 
-  G4ParallelWorldPhysics(const G4String& name = "ParallelWP", G4bool layerdMass = false);
-  virtual ~G4ParallelWorldPhysics();
+    G4ParallelWorldPhysics(const G4String& name = "ParallelWP", G4bool layerdMass = false);
+    virtual ~G4ParallelWorldPhysics();
 
-public:
+  public:
 
-  // This method is dummy for physics
-  virtual void ConstructParticle();
+    // This method is dummy for physics
+    virtual void ConstructParticle();
 
-  // This method will be invoked in the Construct() method.
-  // each physics process will be instantiated and
-  // registered to the process manager of each particle type
-  virtual void ConstructProcess();
+    // This method will be invoked in the Construct() method.
+    // each physics process will be instantiated and
+    // registered to the process manager of each particle type
+    virtual void ConstructProcess();
 
-private:
+  private:
 
-   // hide assignment operator
-  G4ParallelWorldPhysics & operator=(const G4ParallelWorldPhysics &right);
-  G4ParallelWorldPhysics(const G4ParallelWorldPhysics&);
+    // hide assignment operator
+    G4ParallelWorldPhysics& operator=(const G4ParallelWorldPhysics& right);
+    G4ParallelWorldPhysics(const G4ParallelWorldPhysics&);
 
-  G4bool fLayeredMass;
+    G4bool fLayeredMass;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

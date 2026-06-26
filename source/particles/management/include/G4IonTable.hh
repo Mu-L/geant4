@@ -31,8 +31,8 @@
 
 // Author: H.Kurashige, 27 June 1998
 // --------------------------------------------------------------------
-#ifndef G4IonTable_hh
-#define G4IonTable_hh 1
+#ifndef G4IONTABLE_HH
+#define G4IONTABLE_HH
 
 #include "G4Ions.hh"
 #include "G4ParticleDefinition.hh"
@@ -52,6 +52,7 @@ class G4NuclideTable;
 class G4IonTable
 {
   public:
+
     using G4IonList = std::multimap<G4int, const G4ParticleDefinition*>;
     using G4IonListIterator = std::multimap<G4int, const G4ParticleDefinition*>::iterator;
 
@@ -232,6 +233,7 @@ class G4IonTable
     void DumpTable(const G4String& particle_name = "ALL") const;
 
   public:
+
     // Needed for MT
     void InitializeLightIons();
 
@@ -257,6 +259,7 @@ class G4IonTable
 #endif
 
   protected:
+
     G4ParticleDefinition* FindIonInMaster(G4int Z, G4int A, G4int lvl = 0);
     G4ParticleDefinition* FindIonInMaster(G4int Z, G4int A, G4int nL, G4int lvl);
     G4ParticleDefinition* FindIonInMaster(G4int Z, G4int A, G4double E,
@@ -293,6 +296,7 @@ class G4IonTable
     G4int GetVerboseLevel() const;
 
   private:
+
     G4NuclideTable* pNuclideTable = nullptr;
 
     // Isomer table and flag of creation

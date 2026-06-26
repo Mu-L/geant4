@@ -115,7 +115,7 @@ inline void G4Step::AddTotalEnergyDeposit(G4double value)
 
 inline void G4Step::ResetTotalEnergyDeposit()
 {
-  fTotalEnergyDeposit       = 0.;
+  fTotalEnergyDeposit = 0.;
   fNonIonizingEnergyDeposit = 0.;
 }
 
@@ -182,8 +182,8 @@ inline void G4Step::InitializeStep(G4Track* aValue)
   fpTrack->SetStepLength(0.);
 
   // Initialize G4Step attributes
-  fStepLength               = 0.;
-  fTotalEnergyDeposit       = 0.;
+  fStepLength = 0.;
+  fTotalEnergyDeposit = 0.;
   fNonIonizingEnergyDeposit = 0.;
 
   nSecondaryByLastStep = 0;
@@ -239,8 +239,7 @@ inline void G4Step::UpdateTrack()
   fpTrack->SetGlobalTime(fpPostStepPoint->GetGlobalTime());
   fpTrack->SetLocalTime(fpPostStepPoint->GetLocalTime());
   //  mass, charge, proper time
-  auto* pParticle =
-    (G4DynamicParticle*) (fpTrack->GetDynamicParticle());
+  auto* pParticle = (G4DynamicParticle*)(fpTrack->GetDynamicParticle());
   pParticle->SetMass(fpPostStepPoint->GetMass());
   pParticle->SetCharge(fpPostStepPoint->GetCharge());
   pParticle->SetProperTime(fpPostStepPoint->GetProperTime());
@@ -287,7 +286,7 @@ inline G4TrackVector* G4Step::NewSecondaryVector()
 
 inline void G4Step::DeleteSecondaryVector()
 {
-  if(fSecondary != nullptr)
+  if (fSecondary != nullptr)
   {
     fSecondary->clear();
     delete fSecondary;
@@ -325,14 +324,12 @@ inline void G4Step::ClearLastStepFlag()
   fLastStepInVolume = false;
 }
 
-inline void
-G4Step::SetPointerToVectorOfAuxiliaryPoints(std::vector<G4ThreeVector>* vec)
+inline void G4Step::SetPointerToVectorOfAuxiliaryPoints(std::vector<G4ThreeVector>* vec)
 {
   fpVectorOfAuxiliaryPointsPointer = vec;
 }
 
-inline std::vector<G4ThreeVector>*
-G4Step::GetPointerToVectorOfAuxiliaryPoints() const
+inline std::vector<G4ThreeVector>* G4Step::GetPointerToVectorOfAuxiliaryPoints() const
 {
   return fpVectorOfAuxiliaryPointsPointer;
 }

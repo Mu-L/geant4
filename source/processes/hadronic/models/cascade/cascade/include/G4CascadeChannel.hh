@@ -35,25 +35,27 @@
 #define G4_CASCADE_CHANNEL_HH
 
 #include "globals.hh"
+
 #include <iosfwd>
 #include <vector>
 
+class G4CascadeChannel
+{
+  public:
 
-class G4CascadeChannel {
-public:
-  G4CascadeChannel() {}
-  virtual ~G4CascadeChannel() {}
+    G4CascadeChannel() {}
+    virtual ~G4CascadeChannel() {}
 
-  virtual G4double getCrossSection(double ke) const = 0;
-  virtual G4double getCrossSectionSum(double ke) const = 0;
-  virtual G4int getMultiplicity(G4double ke) const = 0;
+    virtual G4double getCrossSection(double ke) const = 0;
+    virtual G4double getCrossSectionSum(double ke) const = 0;
+    virtual G4int getMultiplicity(G4double ke) const = 0;
 
-  virtual void getOutgoingParticleTypes(std::vector<G4int>& kinds,
-					G4int mult, G4double ke) const = 0;
+    virtual void getOutgoingParticleTypes(std::vector<G4int>& kinds, G4int mult,
+                                          G4double ke) const = 0;
 
-  virtual void printTable(std::ostream& os=G4cout) const = 0;
+    virtual void printTable(std::ostream& os = G4cout) const = 0;
 };
 
 std::ostream& operator<<(std::ostream& os, const G4CascadeChannel& chan);
 
-#endif	/* G4_CASCADE_CHANNEL_HH */
+#endif /* G4_CASCADE_CHANNEL_HH */

@@ -36,7 +36,8 @@
 // --------------------------------------------------------------------
 G4VUserPrimaryGeneratorAction::G4VUserPrimaryGeneratorAction()
 {
-  if (!(G4ParticleTable::GetParticleTable()->GetReadiness())) {
+  if (!(G4ParticleTable::GetParticleTable()->GetReadiness()))
+  {
     G4String msg;
     msg = " You are instantiating G4VUserPrimaryGeneratorAction BEFORE your\n";
     msg += "G4VUserPhysicsList is instantiated and assigned to G4RunManager.\n";

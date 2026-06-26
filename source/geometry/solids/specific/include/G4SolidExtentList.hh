@@ -31,26 +31,26 @@
 //
 // This utility class is designed for one specific purpose:
 // to calculate the extent of a CSG-like solid for a voxel
-// (G4VSolid::CalculateExtent). 
+// (G4VSolid::CalculateExtent).
 
 // Author: David C. Williams (UCSC), 1998
 // --------------------------------------------------------------------
 #ifndef G4SOLIDEXTENTLIST_HH
 #define G4SOLIDEXTENTLIST_HH
 
-#include "G4Types.hh"
-
 #include "G4ClippablePolygon.hh"
+#include "G4Types.hh"
 
 /**
  * @brief G4SolidExtentList is utility class designed for calculating
  * the extent of a CSG-like solid for a voxel.
+ * @ingroup geometry_solids_specific
  */
 
 class G4SolidExtentList
 {
   public:
-  
+
     /**
      * Default Constructor.
      */
@@ -61,8 +61,7 @@ class G4SolidExtentList
      *  @param[in] targetAxis Axis along which compute the extent.
      *  @param[in] voxelLimits The limiting space dictated by voxels.
      */
-    G4SolidExtentList( const EAxis targetAxis,
-                       const G4VoxelLimits& voxelLimits );
+    G4SolidExtentList(const EAxis targetAxis, const G4VoxelLimits& voxelLimits);
 
     /**
      * Default Destructor.
@@ -72,7 +71,7 @@ class G4SolidExtentList
     /**
      * Categorises polygon surfaces.
      */
-    void AddSurface( const G4ClippablePolygon& surface );
+    void AddSurface(const G4ClippablePolygon& surface);
 
     /**
      * Returns extent after processing all surfaces.
@@ -80,21 +79,21 @@ class G4SolidExtentList
      *  @param[out] max The maximum extent
      *  @returns false if no surfaces within limits or facing inwards.
      */
-    G4bool GetExtent( G4double& min, G4double& max ) const;
+    G4bool GetExtent(G4double& min, G4double& max) const;
 
   private:
- 
+
     /** Axis and limits... */
-    EAxis axis;     // Target axis
+    EAxis axis;  // Target axis
     G4bool limited = false;  // True if limited
-    G4double minLimit; // ... min limit
-    G4double maxLimit; // ... max limit
+    G4double minLimit;  // ... min limit
+    G4double maxLimit;  // ... max limit
 
     /** Surfaces within the limits... */
     G4ClippablePolygon minSurface,  // Minimum surface within limits
-                       maxSurface,  // Maximum surface within limits
-                       minAbove,    // Minimum surface totally above max limit
-                       maxBelow;    // Maximum surface totally below min limit
+      maxSurface,  // Maximum surface within limits
+      minAbove,  // Minimum surface totally above max limit
+      maxBelow;  // Maximum surface totally below min limit
 };
 
 #endif

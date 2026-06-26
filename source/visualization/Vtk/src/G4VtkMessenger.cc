@@ -295,27 +295,31 @@ void G4VtkMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   G4VisManager* pVisManager = G4VisManager::GetInstance();
 
   G4VViewer* pViewer = pVisManager->GetCurrentViewer();
-  if (pViewer == nullptr) {
+  if (pViewer == nullptr)
+  {
     G4cout << "G4VtkMessenger::SetNewValue: No current viewer.\n"
            << "\"/vis/open\", or similar, to get one." << G4endl;
     return;
   }
 
   auto* pVtkViewer = dynamic_cast<G4VtkViewer*>(pViewer);
-  if (pVtkViewer == nullptr) {
+  if (pVtkViewer == nullptr)
+  {
     G4cout << "G4VtkMessenger::SetNewValue: Current viewer is not of type VTK. \n"
            << "(It is \"" << pViewer->GetName() << "\".)\n"
            << "Use \"/vis/viewer/select\" or \"/vis/open\"." << G4endl;
     return;
   }
 
-  if (command == fpCommandClearNonG4) {
+  if (command == fpCommandClearNonG4)
+  {
     auto sceneHandler = dynamic_cast<G4VtkSceneHandler*>(pViewer->GetSceneHandler());
     auto transientStore = sceneHandler->GetTransientStore();
 
     transientStore.ClearNonG4();
   }
-  else if (command == fpCommandExport) {
+  else if (command == fpCommandExport)
+  {
     G4String format, name;
 
     std::istringstream iss(newValue);
@@ -337,42 +341,54 @@ void G4VtkMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     else
       G4cout << "Unknown /vis/vtk/export file format" << G4endl;
   }
-  else if (command == fpCommandExportCutter) {
+  else if (command == fpCommandExportCutter)
+  {
     std::istringstream iss(newValue);
 
     G4String fileName;
     iss >> fileName;
     pVtkViewer->ExportVTPCutter(fileName);
   }
-  else if (command == fpCommandWarnings) {
-    if (G4UIcommand::ConvertToBool(newValue)) {
+  else if (command == fpCommandWarnings)
+  {
+    if (G4UIcommand::ConvertToBool(newValue))
+    {
       vtkObject::GlobalWarningDisplayOn();
     }
-    else {
+    else
+    {
       vtkObject::GlobalWarningDisplayOff();
     }
   }
-  else if (command == fpCommandHUD) {
-    if (G4UIcommand::ConvertToBool(newValue)) {
+  else if (command == fpCommandHUD)
+  {
+    if (G4UIcommand::ConvertToBool(newValue))
+    {
       pVtkViewer->EnableHUD();
     }
-    else {
+    else
+    {
       pVtkViewer->DisableHUD();
     }
   }
-  else if (command == fpCameraOrientation) {
+  else if (command == fpCameraOrientation)
+  {
     G4cout << newValue << G4endl;
-    if (G4UIcommand::ConvertToBool(newValue)) {
+    if (G4UIcommand::ConvertToBool(newValue))
+    {
       pVtkViewer->EnableCameraOrientationWidget();
     }
-    else {
+    else
+    {
       pVtkViewer->DisableCameraOrientationWidget();
     }
   }
-  else if (command == fpCommandDebugPrint) {
+  else if (command == fpCommandDebugPrint)
+  {
     pVtkViewer->Print();
   }
-  else if (command == fpCommandPolyhedronPipeline) {
+  else if (command == fpCommandPolyhedronPipeline)
+  {
     G4String temp;
 
     std::istringstream iss(newValue);
@@ -382,7 +398,8 @@ void G4VtkMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 
     pVtkViewer->SetPolyhedronPipeline(pipelineType);
   }
-  else if (command == fpCommandImageOverlay) {
+  else if (command == fpCommandImageOverlay)
+  {
     G4String temp;
 
     G4String fileName;
@@ -404,41 +421,42 @@ void G4VtkMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     pVtkViewer->AddImageOverlay(fileName, alpha, imageBottomLeft, worldBottomLeft, imageTopRight,
                                 worldTopRight, rotation, translation);
   }
-  else if (command == fpCommandGeometryOverlay) {
+  else if (command == fpCommandGeometryOverlay)
+  {
     G4String temp;
 
     G4String fileName;
     G4double scale[3] = {1, 1, 1};
-    G4double rotation[3] = {0,0,0};
-    G4double translation[3] = {0,0,0};
+    G4double rotation[3] = {0, 0, 0};
+    G4double translation[3] = {0, 0, 0};
     G4double colour[3] = {0.5, 0.5, 0.5};
     G4double alpha = 1.0;
     G4String representation = "w";
 
     std::istringstream iss(newValue);
 
-    iss >> fileName
-        >> scale[0] >> scale[1] >> scale[2]
-        >> rotation[0] >> rotation[1] >> rotation[2]
-        >> translation[0] >> translation[1] >> translation[2]
-        >> alpha >> representation;
+    iss >> fileName >> scale[0] >> scale[1] >> scale[2] >> rotation[0] >> rotation[1] >> rotation[2]
+      >> translation[0] >> translation[1] >> translation[2] >> alpha >> representation;
 
     G4cout << fileName << G4endl;
-    pVtkViewer->AddGeometryOverlay(fileName, colour, alpha, representation,
-                                   scale, rotation, translation);
+    pVtkViewer->AddGeometryOverlay(fileName, colour, alpha, representation, scale, rotation,
+                                   translation);
   }
 
-
-  else if (command == fpCommandClipper) {
+  else if (command == fpCommandClipper)
+  {
     pVtkViewer->EnableClipper(G4Plane3D(), true);
   }
-  else if (command == fpCommandCutter) {
+  else if (command == fpCommandCutter)
+  {
     pVtkViewer->EnableCutter(G4Plane3D(), true);
   }
-  else if (command == fpCommandShadow) {
+  else if (command == fpCommandShadow)
+  {
     pVtkViewer->EnableShadows();
   }
-  else if (command == fpCommandInteractorStart) {
+  else if (command == fpCommandInteractorStart)
+  {
     pVtkViewer->StartInteractor();
   }
 }

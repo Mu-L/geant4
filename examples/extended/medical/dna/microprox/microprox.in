@@ -8,6 +8,7 @@
 /microprox/phys/addPhysics  dna_opt2
 #/microprox/phys/addPhysics  dna_opt4
 #/microprox/phys/addPhysics  dna_opt6
+#/microprox/phys/addPhysics  dna_opt8
 #
 # Selection of tracking cut
 /microprox/det/setTrackingCut 7.4 eV

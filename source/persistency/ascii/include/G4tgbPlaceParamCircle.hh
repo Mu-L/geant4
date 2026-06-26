@@ -31,14 +31,13 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgbPlaceParamCircle_hh
-#define G4tgbPlaceParamCircle_hh 1
+#ifndef G4TGBPLACEPARAMCIRCLE_HH
+#define G4TGBPLACEPARAMCIRCLE_HH
 
-#include "globals.hh"
-
+#include "G4ThreeVector.hh"
 #include "G4VPVParameterisation.hh"
 #include "G4tgbPlaceParameterisation.hh"
-#include "G4ThreeVector.hh"
+#include "globals.hh"
 
 class G4tgrPlaceParameterisation;
 class G4VPhysicalVolume;
@@ -50,8 +49,7 @@ class G4tgbPlaceParamCircle : public G4tgbPlaceParameterisation
     G4tgbPlaceParamCircle(G4tgrPlaceParameterisation*);
     ~G4tgbPlaceParamCircle();
 
-    void ComputeTransformation(const G4int copyNo,
-                               G4VPhysicalVolume* physVol) const;
+    void ComputeTransformation(const G4int copyNo, G4VPhysicalVolume* physVol) const;
 
   private:
 

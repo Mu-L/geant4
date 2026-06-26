@@ -29,10 +29,10 @@
 // ----------------------------------------------------------------------
 
 #include "G4GeometryCellComp.hh"
+
 #include "G4GeometryCell.hh"
 
-G4bool G4GeometryCellComp::operator() (const G4GeometryCell& k1,
-                                       const G4GeometryCell& k2) const
+G4bool G4GeometryCellComp::operator()(const G4GeometryCell& k1, const G4GeometryCell& k2) const
 {
   G4bool smaller = false;
   if (&(k1.GetPhysicalVolume()) != &(k2.GetPhysicalVolume()))
@@ -41,7 +41,7 @@ G4bool G4GeometryCellComp::operator() (const G4GeometryCell& k1,
   }
   else
   {
-    smaller =  k1.GetReplicaNumber() < k2.GetReplicaNumber();
+    smaller = k1.GetReplicaNumber() < k2.GetReplicaNumber();
   }
   return smaller;
 }

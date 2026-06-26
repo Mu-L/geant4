@@ -28,16 +28,16 @@
 // Class description:
 //
 // This class builds and places the G4ImportanceProcess.
-// If the object is deleted the process is removed from the 
+// If the object is deleted the process is removed from the
 // process list.
 //
 // Author: Michael Dressel, CERN
 // --------------------------------------------------------------------
-#ifndef G4ImportanceConfigurator_hh
-#define G4ImportanceConfigurator_hh 1
+#ifndef G4IMPORTANCECONFIGURATOR_HH
+#define G4IMPORTANCECONFIGURATOR_HH
 
-#include "G4Types.hh"
 #include "G4ProcessPlacer.hh"
+#include "G4Types.hh"
 #include "G4VSamplerConfigurator.hh"
 
 class G4ImportanceProcess;
@@ -47,41 +47,36 @@ class G4VPhysicalVolume;
 
 class G4ImportanceConfigurator : public G4VSamplerConfigurator
 {
+  public:
 
- public:
+    G4ImportanceConfigurator(const G4VPhysicalVolume* worldvolume, const G4String& particlename,
+                             G4VIStore& istore, const G4VImportanceAlgorithm* ialg,
+                             G4bool paraflag);
 
-  G4ImportanceConfigurator(const G4VPhysicalVolume* worldvolume, 
-			   const G4String& particlename,
-                                 G4VIStore& istore,
-                           const G4VImportanceAlgorithm* ialg,
-			         G4bool paraflag);
+    G4ImportanceConfigurator(const G4String& worldvolumeName, const G4String& particlename,
+                             G4VIStore& istore, const G4VImportanceAlgorithm* ialg,
+                             G4bool paraflag);
 
-  G4ImportanceConfigurator(const G4String& worldvolumeName, 
-			   const G4String& particlename,
-                                 G4VIStore& istore,
-                           const G4VImportanceAlgorithm* ialg,
-			         G4bool paraflag);
+    virtual ~G4ImportanceConfigurator();
 
-  virtual ~G4ImportanceConfigurator();
+    G4ImportanceConfigurator(const G4ImportanceConfigurator&) = delete;
+    G4ImportanceConfigurator& operator=(const G4ImportanceConfigurator&) = delete;
 
-  G4ImportanceConfigurator(const G4ImportanceConfigurator&) = delete;
-  G4ImportanceConfigurator& operator=(const G4ImportanceConfigurator&) = delete;
+    virtual void Configure(G4VSamplerConfigurator* preConf);
+    virtual const G4VTrackTerminator* GetTrackTerminator() const;
 
-  virtual void Configure(G4VSamplerConfigurator* preConf);
-  virtual const G4VTrackTerminator* GetTrackTerminator() const;
+    void SetWorldName(const G4String& Name);
 
-  void SetWorldName(const G4String& Name);
+  private:
 
- private:
-
-  const G4VPhysicalVolume* fWorld = nullptr;
-  G4String fWorldName;
-  G4ProcessPlacer fPlacer;
-  G4VIStore& fIStore;
-  G4bool fDeleteIalg = false;
-  const G4VImportanceAlgorithm* fIalgorithm = nullptr;
-  G4ImportanceProcess* fImportanceProcess = nullptr;
-  G4bool paraflag = false;
+    const G4VPhysicalVolume* fWorld = nullptr;
+    G4String fWorldName;
+    G4ProcessPlacer fPlacer;
+    G4VIStore& fIStore;
+    G4bool fDeleteIalg = false;
+    const G4VImportanceAlgorithm* fIalgorithm = nullptr;
+    G4ImportanceProcess* fImportanceProcess = nullptr;
+    G4bool paraflag = false;
 };
 
 #endif

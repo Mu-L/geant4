@@ -35,47 +35,33 @@
 // -------------------------------------------------------------------
 // Class description:
 // Log-Log interpolation of a data set
-// Part of a strategy pattern to encapsulate algorithms for interpolation 
+// Part of a strategy pattern to encapsulate algorithms for interpolation
 
 // -------------------------------------------------------------------
 
 #ifndef G4LOGLOGINTERPOLATOR_HH
-#define G4LOGLOGINTERPOLATOR_HH 1
+#define G4LOGLOGINTERPOLATOR_HH
 
-#include "globals.hh"
-#include "G4IInterpolator.hh"
 #include "G4DataVector.hh"
+#include "G4IInterpolator.hh"
+#include "globals.hh"
 
-class G4LogLogInterpolator : public G4IInterpolator {
- 
-public:
+class G4LogLogInterpolator : public G4IInterpolator
+{
+  public:
 
-  G4LogLogInterpolator();
+    G4LogLogInterpolator();
 
-  ~G4LogLogInterpolator();
- 
-  G4double Calculate(G4double point, G4int bin, 
-		     const G4DataVector& energies, 
-		     const G4DataVector& data) const;
+    ~G4LogLogInterpolator();
 
-  virtual G4IInterpolator* Clone() const; 
+    G4double Calculate(G4double point, G4int bin, const G4DataVector& energies,
+                       const G4DataVector& data) const;
 
-private:
+    virtual G4IInterpolator* Clone() const;
 
-  
-  // Hide copy constructor and assignment operator
+  private:
 
+    // Hide copy constructor and assignment operator
 };
- 
+
 #endif
- 
-
-
-
-
-
-
-
-
-
-

@@ -30,12 +30,13 @@
  *  Created on: Jul 23, 2019
  *      Author: W. G. Shin
  *              J. Ramos-Mendez and B. Faddegon
-*/
+ */
 
 #include "G4O2.hh"
+
+#include "G4ParticleTable.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4ParticleTable.hh"
 
 // ######################################################################
 // ###                         Oxygen molecule                               ###
@@ -68,11 +69,11 @@ G4O2* G4O2::Definition()
     //    );
 
     G4double mass = 31.99546 * g / Avogadro * c_squared;
-    anInstance = new G4MoleculeDefinition(name, mass, 2.4e-9 * (m * m / s), 0, 0,
-                                          1.7 * angstrom, 2);
+    anInstance =
+      new G4MoleculeDefinition(name, mass, 2.4e-9 * (m * m / s), 0, 0, 1.7 * angstrom, 2);
 
-    ((G4MoleculeDefinition*) anInstance)->SetLevelOccupation(0); // not implemented
-    ((G4MoleculeDefinition*) anInstance)->SetFormatedName(formatedName);
+    ((G4MoleculeDefinition*)anInstance)->SetLevelOccupation(0);  // not implemented
+    ((G4MoleculeDefinition*)anInstance)->SetFormatedName(formatedName);
   }
   theInstance = static_cast<G4O2*>(anInstance);
   return theInstance;

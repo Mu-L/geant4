@@ -28,24 +28,26 @@
 
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
-#ifndef G4RootFileManager_h
-#define G4RootFileManager_h 1
+#ifndef G4ROOTFILEMANAGER_HH
+#define G4ROOTFILEMANAGER_HH
 
-#include "G4VTFileManager.hh"
-#include "G4RootFileDef.hh"
 #include "G4AnalysisUtilities.hh"
+#include "G4RootFileDef.hh"
+#include "G4VTFileManager.hh"
 #include "globals.hh"
 
-#include <vector>
 #include <memory>
-#include <tuple>
 #include <string_view>
+#include <tuple>
+#include <vector>
 
-namespace tools {
-namespace wroot{
+namespace tools
+{
+namespace wroot
+{
 class ntuple;
 }
-}
+}  // namespace tools
 
 // Types alias
 using RootNtupleDescription = G4TNtupleDescription<tools::wroot::ntuple, G4RootFile>;
@@ -53,6 +55,7 @@ using RootNtupleDescription = G4TNtupleDescription<tools::wroot::ntuple, G4RootF
 class G4RootFileManager : public G4VTFileManager<G4RootFile>
 {
   public:
+
     explicit G4RootFileManager(const G4AnalysisManagerState& state);
     G4RootFileManager() = delete;
     ~G4RootFileManager() override = default;
@@ -69,63 +72,67 @@ class G4RootFileManager : public G4VTFileManager<G4RootFile>
 
     // Specific methods for files per objects
     std::shared_ptr<G4RootFile> CreateNtupleFile(RootNtupleDescription* ntupleDescription,
-                                  G4int mainNumber = -1);
+                                                 G4int mainNumber = -1);
     std::shared_ptr<G4RootFile> GetNtupleFile(RootNtupleDescription* ntupleDescription,
-                                  G4bool perThread = true,
-                                  G4int mainNumber = -1) const;
-    G4bool CloseNtupleFile(RootNtupleDescription* ntupleDescription,
-                                  G4int mainNumber = -1);
+                                              G4bool perThread = true, G4int mainNumber = -1) const;
+    G4bool CloseNtupleFile(RootNtupleDescription* ntupleDescription, G4int mainNumber = -1);
 
     // Set methods
-    void  SetBasketSize(unsigned int basketSize);
-    void  SetBasketEntries(unsigned int basketEntries);
+    void SetBasketSize(unsigned int basketSize);
+    void SetBasketEntries(unsigned int basketEntries);
 
     // Get methods
     unsigned int GetBasketSize() const;
     unsigned int GetBasketEntries() const;
 
   protected:
+
     // Methods derived from templated base class
     std::shared_ptr<G4RootFile> CreateFileImpl(const G4String& fileName) final;
     G4bool WriteFileImpl(std::shared_ptr<G4RootFile> file) final;
     G4bool CloseFileImpl(std::shared_ptr<G4RootFile> file) final;
 
   private:
+
     // Methods
-    tools::wroot::directory* CreateDirectory(
-                               tools::wroot::file* rfile,
-                               const G4String& directoryName,
-                               const G4String& objectType) const;
-    G4String GetNtupleFileName(
-                RootNtupleDescription* ntupleDescription,
-                G4bool perThread = true,
-                G4int mainNumber = -1) const;
+    tools::wroot::directory* CreateDirectory(tools::wroot::file* rfile,
+                                             const G4String& directoryName,
+                                             const G4String& objectType) const;
+    G4String GetNtupleFileName(RootNtupleDescription* ntupleDescription, G4bool perThread = true,
+                               G4int mainNumber = -1) const;
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4RootFileManager" };
+    static constexpr std::string_view fkClass{"G4RootFileManager"};
 
     // Data members
-    unsigned int fBasketSize { G4Analysis::kDefaultBasketSize };
-    unsigned int fBasketEntries { G4Analysis::kDefaultBasketEntries };
+    unsigned int fBasketSize{G4Analysis::kDefaultBasketSize};
+    unsigned int fBasketEntries{G4Analysis::kDefaultBasketEntries};
 };
 
 // inline functions
 
 //_____________________________________________________________________________
-inline void  G4RootFileManager::SetBasketSize(unsigned int basketSize)
-{ fBasketSize = basketSize; }
+inline void G4RootFileManager::SetBasketSize(unsigned int basketSize)
+{
+  fBasketSize = basketSize;
+}
 
 //_____________________________________________________________________________
-inline void  G4RootFileManager::SetBasketEntries(unsigned int basketEntries)
-{ fBasketEntries = basketEntries; }
+inline void G4RootFileManager::SetBasketEntries(unsigned int basketEntries)
+{
+  fBasketEntries = basketEntries;
+}
 
 //_____________________________________________________________________________
 inline unsigned int G4RootFileManager::GetBasketSize() const
-{ return fBasketSize; }
+{
+  return fBasketSize;
+}
 
 //_____________________________________________________________________________
 inline unsigned int G4RootFileManager::GetBasketEntries() const
-{ return fBasketEntries; }
+{
+  return fBasketEntries;
+}
 
 #endif
-

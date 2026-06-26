@@ -23,58 +23,60 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4VHighEnergyGenerator_h
-#define G4VHighEnergyGenerator_h 1
+#ifndef G4VHIGHENERGYGENERATOR_HH
+#define G4VHIGHENERGYGENERATOR_HH
 
 // Class Description
-// Base class for high energy interaction models in Geant4. 
+// Base class for high energy interaction models in Geant4.
 // By inheriting from this class a high energy interaction model
 // can be used in conjunction with any cascade, precompound model and
 // evaporation phase in the generation of complete final states for
 // inelastic scattering.
 // Class Description - End
 
+#include "G4HadProjectile.hh"
 #include "G4HadronicInteraction.hh"
 #include "G4Nucleus.hh"
-#include "G4HadProjectile.hh"
 #include "G4ReactionProduct.hh"
 #include "G4V3DNucleus.hh"
 
 class G4KineticTrackVector;
 
-
-class G4VHighEnergyGenerator : public G4HadronicInteraction {
+class G4VHighEnergyGenerator : public G4HadronicInteraction
+{
   public:
-    G4VHighEnergyGenerator( const G4String& modelName = "HighEnergyGenerator" );
+
+    G4VHighEnergyGenerator(const G4String& modelName = "HighEnergyGenerator");
     ~G4VHighEnergyGenerator() override;
 
-    G4VHighEnergyGenerator( const G4VHighEnergyGenerator &right ) = delete;
-    const G4VHighEnergyGenerator & operator=( const G4VHighEnergyGenerator &right ) = delete;
-    G4bool operator==( const G4VHighEnergyGenerator &right ) const = delete;
-    G4bool operator!=( const G4VHighEnergyGenerator &right ) const = delete;
+    G4VHighEnergyGenerator(const G4VHighEnergyGenerator& right) = delete;
+    const G4VHighEnergyGenerator& operator=(const G4VHighEnergyGenerator& right) = delete;
+    G4bool operator==(const G4VHighEnergyGenerator& right) const = delete;
+    G4bool operator!=(const G4VHighEnergyGenerator& right) const = delete;
 
     virtual G4V3DNucleus* GetWoundedNucleus() const = 0;
     virtual G4V3DNucleus* GetProjectileNucleus() const;
-    virtual G4KineticTrackVector* Scatter( const G4Nucleus &theNucleus,
-					   const G4DynamicParticle &thePrimary) = 0;
-    void ModelDescription( std::ostream& ) const override;
+    virtual G4KineticTrackVector* Scatter(const G4Nucleus& theNucleus,
+                                          const G4DynamicParticle& thePrimary) = 0;
+    void ModelDescription(std::ostream&) const override;
 
     G4bool IsQuasiElasticInteraction() const;
     G4bool IsDiffractiveInteraction() const;
 
   protected:
+
     G4bool fIsQuasiElasticInteraction = false;
     G4bool fIsDiffractiveInteraction = false;
 };
 
-
-inline G4bool G4VHighEnergyGenerator::IsQuasiElasticInteraction() const {
+inline G4bool G4VHighEnergyGenerator::IsQuasiElasticInteraction() const
+{
   return fIsQuasiElasticInteraction;
 }
 
-inline G4bool G4VHighEnergyGenerator::IsDiffractiveInteraction() const {
+inline G4bool G4VHighEnergyGenerator::IsDiffractiveInteraction() const
+{
   return fIsDiffractiveInteraction;
 }
-
 
 #endif

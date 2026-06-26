@@ -32,18 +32,17 @@
 // Author: Zoltan Torzsok, November 2007
 // --------------------------------------------------------------------
 #ifndef G4GDMLBASE_HH
-#define G4GDMLBASE_HH 1
+#define G4GDMLBASE_HH
 
-#include <xercesc/parsers/XercesDOMParser.hpp>
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/sax/HandlerBase.hpp>
-#include <xercesc/util/XMLUni.hpp>
-#include <xercesc/dom/DOM.hpp>
-
+#include "G4GDMLAuxStructType.hh"
+#include "G4GDMLEvaluator.hh"
 #include "G4Types.hh"
 
-#include "G4GDMLEvaluator.hh"
-#include "G4GDMLAuxStructType.hh"
+#include <xercesc/dom/DOM.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
+#include <xercesc/sax/HandlerBase.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLUni.hpp>
 
 class G4LogicalVolume;
 class G4VPhysicalVolume;
@@ -56,7 +55,7 @@ class G4GDMLErrorHandler : public xercesc::ErrorHandler
 
     void warning(const xercesc::SAXParseException& exception)
     {
-      if(Suppress)
+      if (Suppress)
       {
         return;
       }
@@ -68,20 +67,17 @@ class G4GDMLErrorHandler : public xercesc::ErrorHandler
 
     void error(const xercesc::SAXParseException& exception)
     {
-      if(Suppress)
+      if (Suppress)
       {
         return;
       }
       char* message = xercesc::XMLString::transcode(exception.getMessage());
-      G4cout << "G4GDML: VALIDATION ERROR! " << message
-             << " at line: " << exception.getLineNumber() << G4endl;
+      G4cout << "G4GDML: VALIDATION ERROR! " << message << " at line: " << exception.getLineNumber()
+             << G4endl;
       xercesc::XMLString::release(&message);
     }
 
-    void fatalError(const xercesc::SAXParseException& exception)
-    {
-      error(exception);
-    }
+    void fatalError(const xercesc::SAXParseException& exception) { error(exception); }
     void resetErrors() {}
 
   private:
@@ -93,13 +89,13 @@ class G4GDMLRead
 {
   public:
 
-    virtual void DefineRead(const xercesc::DOMElement* const)           = 0;
-    virtual void MaterialsRead(const xercesc::DOMElement* const)        = 0;
-    virtual void SetupRead(const xercesc::DOMElement* const)            = 0;
-    virtual void SolidsRead(const xercesc::DOMElement* const)           = 0;
+    virtual void DefineRead(const xercesc::DOMElement* const) = 0;
+    virtual void MaterialsRead(const xercesc::DOMElement* const) = 0;
+    virtual void SetupRead(const xercesc::DOMElement* const) = 0;
+    virtual void SolidsRead(const xercesc::DOMElement* const) = 0;
     virtual void Paramvol_contentRead(const xercesc::DOMElement* const) = 0;
-    virtual void Volume_contentRead(const xercesc::DOMElement* const)   = 0;
-    virtual void StructureRead(const xercesc::DOMElement* const)        = 0;
+    virtual void Volume_contentRead(const xercesc::DOMElement* const) = 0;
+    virtual void StructureRead(const xercesc::DOMElement* const) = 0;
     //
     // Pure virtual methods implemented in concrete reader plugin's classes
 
@@ -117,12 +113,11 @@ class G4GDMLRead
     // GDML schema, identified by the tag "userinfo".
 
     virtual G4LogicalVolume* GetVolume(const G4String&) const = 0;
-    virtual G4String GetSetup(const G4String&)                = 0;
+    virtual G4String GetSetup(const G4String&) = 0;
     //
     // More pure virtual methods implemented in the reader plugin.
 
-    void Read(const G4String&, G4bool validation, G4bool isModule,
-              G4bool strip = true);
+    void Read(const G4String&, G4bool validation, G4bool isModule, G4bool strip = true);
     //
     // Main method for reading GDML files.
 

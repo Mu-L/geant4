@@ -28,6 +28,7 @@
 // by V. Lara (Dec 1999)
 
 #include "G4VCoulombBarrier.hh"
+
 #include "G4PhysicalConstants.hh"
 
 G4VCoulombBarrier::G4VCoulombBarrier(G4int anA, G4int aZ)
@@ -45,4 +46,3 @@ G4double G4VCoulombBarrier::BarrierPenetrationFactor(G4int) const
 {
   return 1.0;
 }
-

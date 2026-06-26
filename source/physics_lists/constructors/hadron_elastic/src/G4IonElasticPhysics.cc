@@ -25,7 +25,7 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   G4IonElasticPhysics 
+// ClassName:   G4IonElasticPhysics
 //
 // Author: 23 October 2013 T. Koi
 //
@@ -36,17 +36,15 @@
 
 #include "G4IonElasticPhysics.hh"
 
-#include "G4SystemOfUnits.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4ProcessManager.hh"
-
-#include "G4GenericIon.hh"
-
-#include "G4HadronElasticProcess.hh"
-#include "G4NuclNuclDiffuseElastic.hh"
 #include "G4ComponentGGNuclNuclXsc.hh"
 #include "G4CrossSectionElastic.hh"
+#include "G4GenericIon.hh"
+#include "G4HadronElasticProcess.hh"
 #include "G4HadronicParameters.hh"
+#include "G4NuclNuclDiffuseElastic.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ProcessManager.hh"
+#include "G4SystemOfUnits.hh"
 
 // factory
 #include "G4PhysicsConstructorFactory.hh"
@@ -54,19 +52,17 @@
 G4_DECLARE_PHYSCONSTR_FACTORY(G4IonElasticPhysics);
 //
 
-G4IonElasticPhysics::G4IonElasticPhysics(G4int ver)
-  : G4VPhysicsConstructor("IonElasticPhysics")
+G4IonElasticPhysics::G4IonElasticPhysics(G4int ver) : G4VPhysicsConstructor("IonElasticPhysics")
 {
   // because it is an addition, the type of this constructor is 0
   G4HadronicParameters::Instance()->SetVerboseLevel(ver);
-  if(ver > 1) { 
-    G4cout << "### G4IonElasticPhysics: " << GetPhysicsName() 
-	   << G4endl; 
+  if (ver > 1)
+  {
+    G4cout << "### G4IonElasticPhysics: " << GetPhysicsName() << G4endl;
   }
 }
 
-G4IonElasticPhysics::~G4IonElasticPhysics()
-{}
+G4IonElasticPhysics::~G4IonElasticPhysics() {}
 
 void G4IonElasticPhysics::ConstructParticle()
 {
@@ -78,23 +74,23 @@ void G4IonElasticPhysics::ConstructProcess()
   // Elastic process for other ions
   G4HadronElasticProcess* ionElasticProcess = new G4HadronElasticProcess("ionElastic");
 
-  //Model
+  // Model
   G4NuclNuclDiffuseElastic* ionElastic = new G4NuclNuclDiffuseElastic;
   ionElastic->SetMinEnergy(0.0);
   ionElasticProcess->RegisterMe(ionElastic);
 
-  //Cross Section
+  // Cross Section
   G4ComponentGGNuclNuclXsc* ionElasticXS = new G4ComponentGGNuclNuclXsc;
   G4VCrossSectionDataSet* ionElasticXSDataSet = new G4CrossSectionElastic(ionElasticXS);
   ionElasticXSDataSet->SetMinKinEnergy(0.0);
   ionElasticProcess->AddDataSet(ionElasticXSDataSet);
 
   G4ProcessManager* ionManager = G4GenericIon::GenericIon()->GetProcessManager();
-  ionManager->AddDiscreteProcess( ionElasticProcess );
+  ionManager->AddDiscreteProcess(ionElasticProcess);
 
-  if (G4HadronicParameters::Instance()->GetVerboseLevel() > 1 ) {
-    G4cout << "### IonElasticPhysics: " << ionElasticProcess->GetProcessName()
-	   << " added for " << G4GenericIon::GenericIon()->GetParticleName() 
-	   << G4endl;
+  if (G4HadronicParameters::Instance()->GetVerboseLevel() > 1)
+  {
+    G4cout << "### IonElasticPhysics: " << ionElasticProcess->GetProcessName() << " added for "
+           << G4GenericIon::GenericIon()->GetParticleName() << G4endl;
   }
 }

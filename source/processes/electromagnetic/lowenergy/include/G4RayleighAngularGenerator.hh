@@ -32,59 +32,56 @@
 // File name:  G4RayleighAngularGenerator
 //
 // Author:     Ivantchenko  (antoni@cern.ch, vnivanch@cern.ch)
-//             modified fit formulas from Dermott E. Cullen, 
-//             Nucl. Instrum. Meth. Phys. Res. B v.101, (4),499-510. 
-//            
-// 
+//             modified fit formulas from Dermott E. Cullen,
+//             Nucl. Instrum. Meth. Phys. Res. B v.101, (4),499-510.
+//
+//
 // Creation date: 31 May 2012
 //
-// Modifications: 
+// Modifications:
 //
 //
-// Class Description: 
+// Class Description:
 //
 // Class for Rayleigh Scattering angle sampling
 //
 // -------------------------------------------------------------------
 //
 
-#ifndef G4RayleighAngularGenerator_h
-#define G4RayleighAngularGenerator_h 1
+#ifndef G4RAYLEIGHANGULARGENERATOR_HH
+#define G4RAYLEIGHANGULARGENERATOR_HH
 
-#include "G4VEmAngularDistribution.hh"
-#include "globals.hh"
 #include "G4DynamicParticle.hh"
 #include "G4ThreeVector.hh"
+#include "G4VEmAngularDistribution.hh"
+#include "globals.hh"
 
 class G4RayleighAngularGenerator : public G4VEmAngularDistribution
 {
-public:
-  explicit G4RayleighAngularGenerator();
-  virtual ~G4RayleighAngularGenerator();
+  public:
 
-  G4ThreeVector& SampleDirection(const G4DynamicParticle* dp,
-				 G4double out_energy,
-				 G4int Z,
-				 const G4Material* mat = nullptr) override;
-  G4RayleighAngularGenerator & operator=(const  G4RayleighAngularGenerator &right) = delete;
-  G4RayleighAngularGenerator(const  G4RayleighAngularGenerator&) = delete;
+    explicit G4RayleighAngularGenerator();
+    virtual ~G4RayleighAngularGenerator();
 
-private:
-  // static data
-  static const G4double PP0[101];
-  static const G4double PP1[101];
-  static const G4double PP2[101];
-  static const G4double PP3[101];
-  static const G4double PP4[101];
-  static const G4double PP5[101];
-  static const G4double PP6[101];
-  static const G4double PP7[101];
-  static const G4double PP8[101];
+    G4ThreeVector& SampleDirection(const G4DynamicParticle* dp, G4double out_energy, G4int Z,
+                                   const G4Material* mat = nullptr) override;
+    G4RayleighAngularGenerator& operator=(const G4RayleighAngularGenerator& right) = delete;
+    G4RayleighAngularGenerator(const G4RayleighAngularGenerator&) = delete;
 
-  G4double fFactor;
-  
+  private:
+
+    // static data
+    static const G4double PP0[101];
+    static const G4double PP1[101];
+    static const G4double PP2[101];
+    static const G4double PP3[101];
+    static const G4double PP4[101];
+    static const G4double PP5[101];
+    static const G4double PP6[101];
+    static const G4double PP7[101];
+    static const G4double PP8[101];
+
+    G4double fFactor;
 };
 
-
 #endif
-

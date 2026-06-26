@@ -35,11 +35,9 @@
 #define G4BOOLEANSOLID_HH
 
 #include "G4DisplacedSolid.hh"
-
-#include "G4ThreeVector.hh"
 #include "G4RotationMatrix.hh"
+#include "G4ThreeVector.hh"
 #include "G4Transform3D.hh"
-
 #include "G4VBooleanProcessor.hh"
 
 class HepPolyhedronProcessor;
@@ -47,12 +45,13 @@ class HepPolyhedronProcessor;
 /**
  * @brief G4BooleanSolid is the base class for solids created by Boolean
  * operations between other solids.
+ * @ingroup geometry_solids_boolean
  */
 
 class G4BooleanSolid : public G4VSolid
 {
   public:
- 
+
     /**
      * Constructor of a Boolean composition between two solids with no
      * displacement.
@@ -60,9 +59,7 @@ class G4BooleanSolid : public G4VSolid
      *  @param[in] pSolidA Pointer to the first reference solid.
      *  @param[in] pSolidB Pointer to the second solid to form the composition.
      */
-    G4BooleanSolid( const G4String& pName,
-                          G4VSolid* pSolidA ,
-                          G4VSolid* pSolidB   );
+    G4BooleanSolid(const G4String& pName, G4VSolid* pSolidA, G4VSolid* pSolidB);
 
     /**
      * Constructor of a Boolean composition between two solids with rotation
@@ -74,11 +71,8 @@ class G4BooleanSolid : public G4VSolid
      *  @param[in] rotMatrix Pointer to the rotation vector.
      *  @param[in] transVector The translation vector.
      */
-    G4BooleanSolid( const G4String& pName,
-                          G4VSolid* pSolidA ,
-                          G4VSolid* pSolidB,
-                          G4RotationMatrix* rotMatrix,
-                    const G4ThreeVector& transVector    );
+    G4BooleanSolid(const G4String& pName, G4VSolid* pSolidA, G4VSolid* pSolidB,
+                   G4RotationMatrix* rotMatrix, const G4ThreeVector& transVector);
 
     /**
      * Constructor of a Boolean composition between two solids with a
@@ -89,10 +83,8 @@ class G4BooleanSolid : public G4VSolid
      *  @param[in] pSolidB Pointer to the second solid to form the composition.
      *  @param[in] transform The composed 3D transformation.
      */
-    G4BooleanSolid( const G4String& pName,
-                          G4VSolid* pSolidA ,
-                          G4VSolid* pSolidB , 
-                    const G4Transform3D& transform   );
+    G4BooleanSolid(const G4String& pName, G4VSolid* pSolidA, G4VSolid* pSolidB,
+                   const G4Transform3D& transform);
 
     /**
      * Destructor. If using a displaced solid, deletes all cached
@@ -123,7 +115,7 @@ class G4BooleanSolid : public G4VSolid
      *           If the solid is not a "Boolean", returns nullptr.
      */
     const G4VSolid* GetConstituentSolid(G4int no) const override;
-          G4VSolid* GetConstituentSolid(G4int no) override;
+    G4VSolid* GetConstituentSolid(G4int no) override;
 
     /**
      * Methods returning the computed capacity and surface area of the
@@ -162,7 +154,7 @@ class G4BooleanSolid : public G4VSolid
      */
     inline G4double GetCubVolEpsilon() const;
     void SetCubVolEpsilon(G4double ep);
-   
+
     /**
      * Accessor and setter for controlling/tuning the number of random points
      * to be used for computing the surface area.
@@ -202,23 +194,22 @@ class G4BooleanSolid : public G4VSolid
     static void SetExternalBooleanProcessor(G4VBooleanProcessor* extProcessor);
 
   protected:
-  
+
     /**
      * Gets the list of constituent primitives of the solid and their placements.
      */
-    void GetListOfPrimitives(std::vector<std::pair<G4VSolid *,G4Transform3D>>&,
+    void GetListOfPrimitives(std::vector<std::pair<G4VSolid*, G4Transform3D>>&,
                              const G4Transform3D&) const;
-      // 
+    //
 
     /**
      * Stacks the polyhedra for processing.
      *  @returns A pointer to the top polyhedron.
      */
-    G4Polyhedron* StackPolyhedron(HepPolyhedronProcessor&,
-                                  const G4VSolid*) const;
+    G4Polyhedron* StackPolyhedron(HepPolyhedronProcessor&, const G4VSolid*) const;
 
   protected:
-  
+
     /** Pointers to the costituent solids. */
     G4VSolid* fPtrSolidA = nullptr;
     G4VSolid* fPtrSolidB = nullptr;
@@ -242,7 +233,7 @@ class G4BooleanSolid : public G4VSolid
     mutable G4bool fRebuildPolyhedron = false;
     mutable G4Polyhedron* fpPolyhedron = nullptr;
 
-    mutable std::vector<std::pair<G4VSolid *,G4Transform3D>> fPrimitives;
+    mutable std::vector<std::pair<G4VSolid*, G4Transform3D>> fPrimitives;
     mutable G4double fPrimitivesSurfaceArea = 0.0;
 
     /** If & only if this object created it, it must delete it. */

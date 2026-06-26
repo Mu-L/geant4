@@ -36,10 +36,13 @@
 // Author: Jonathan Madsen (May 28st 2020)
 // ---------------------------------------------------------------
 
-#pragma once
+#ifndef G4TBBTASKGROUP_HH
+#define G4TBBTASKGROUP_HH
 
 #include "PTL/TaskGroup.hh"
 
 // in new version, TaskGroup handles TBB
-template <typename Tp, typename Arg = Tp>
+template<typename Tp, typename Arg = Tp>
 using G4TBBTaskGroup = PTL::TaskGroup<Tp, Arg>;
+
+#endif

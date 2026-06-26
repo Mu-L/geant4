@@ -37,8 +37,8 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4VNeutronBuilder_h
-#define G4VNeutronBuilder_h
+#ifndef G4VNEUTRONBUILDER_HH
+#define G4VNEUTRONBUILDER_HH
 
 #include "G4PhysicsBuilderInterface.hh"
 
@@ -49,16 +49,15 @@ class G4HadronInelasticProcess;
 
 class G4VNeutronBuilder : public G4PhysicsBuilderInterface
 {
-public:
-  G4VNeutronBuilder() = default;
-  virtual ~G4VNeutronBuilder() {} 
-  virtual void Build(G4HadronElasticProcess * aP) = 0;
-  virtual void Build(G4NeutronFissionProcess * aP) = 0;
-  virtual void Build(G4NeutronCaptureProcess * aP) = 0;
-  virtual void Build(G4HadronInelasticProcess * aP) = 0;
-  using G4PhysicsBuilderInterface::Build; //Prevent compiler warning
+  public:
 
+    G4VNeutronBuilder() = default;
+    virtual ~G4VNeutronBuilder() {}
+    virtual void Build(G4HadronElasticProcess* aP) = 0;
+    virtual void Build(G4NeutronFissionProcess* aP) = 0;
+    virtual void Build(G4NeutronCaptureProcess* aP) = 0;
+    virtual void Build(G4HadronInelasticProcess* aP) = 0;
+    using G4PhysicsBuilderInterface::Build;  // Prevent compiler warning
 };
 
 #endif
-

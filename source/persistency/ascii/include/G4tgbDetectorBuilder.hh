@@ -31,11 +31,11 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgbDetectorBuilder_hh
-#define G4tgbDetectorBuilder_hh 1
+#ifndef G4TGBDETECTORBUILDER_HH
+#define G4TGBDETECTORBUILDER_HH
 
-#include "globals.hh"
 #include "G4VPhysicalVolume.hh"
+#include "globals.hh"
 
 class G4tgrVolume;
 

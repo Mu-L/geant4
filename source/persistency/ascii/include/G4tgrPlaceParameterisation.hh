@@ -39,13 +39,13 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrPlaceParameterisation_hh
-#define G4tgrPlaceParameterisation_hh 1
+#ifndef G4TGRPLACEPARAMETERISATION_HH
+#define G4TGRPLACEPARAMETERISATION_HH
+
+#include "G4tgrPlace.hh"
+#include "globals.hh"
 
 #include <vector>
-
-#include "globals.hh"
-#include "G4tgrPlace.hh"
 
 class G4tgrPlaceParameterisation : public G4tgrPlace
 {
@@ -55,27 +55,26 @@ class G4tgrPlaceParameterisation : public G4tgrPlace
     ~G4tgrPlaceParameterisation();
 
     G4tgrPlaceParameterisation(const std::vector<G4String>& p);
-      // Creates an object passing the parameters
+    // Creates an object passing the parameters
 
     // Access functions
 
     const G4String& GetParamType() const { return theParamType; }
-      // GetType returns placement type
+    // GetType returns placement type
     std::vector<G4double> GetExtraData() const { return theExtraData; }
     const G4String& GetRotMatName() const { return theRotMatName; }
 
-    friend std::ostream& operator<<(std::ostream& os,
-                                    const G4tgrPlaceParameterisation& obj);
+    friend std::ostream& operator<<(std::ostream& os, const G4tgrPlaceParameterisation& obj);
 
   private:
 
     G4String theParamType;
     std::vector<G4double> theExtraData;
-      // Extra data not common to all parameterisations
+    // Extra data not common to all parameterisations
 
     G4String theRotMatName;
-      // The rotation matrix (by name, as the rotations
-      // matrices are not yet created)
+    // The rotation matrix (by name, as the rotations
+    // matrices are not yet created)
 };
 
 #endif

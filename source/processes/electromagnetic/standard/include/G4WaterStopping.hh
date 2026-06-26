@@ -24,8 +24,8 @@
 // ********************************************************************
 //
 
-#ifndef G4WaterStopping_h
-#define G4WaterStopping_h 1
+#ifndef G4WATERSTOPPING_HH
+#define G4WATERSTOPPING_HH
 
 //---------------------------------------------------------------------------
 //
@@ -46,37 +46,36 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-
-#include "globals.hh"
 #include "G4PhysicsFreeVector.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4EmCorrections;
 
 class G4WaterStopping
 {
-public:
+  public:
 
-  explicit G4WaterStopping();
+    explicit G4WaterStopping();
 
-  ~G4WaterStopping() = default;
+    ~G4WaterStopping() = default;
 
-  G4double GetElectronicDEDX(G4int Z, G4double energy);
+    G4double GetElectronicDEDX(G4int Z, G4double energy);
 
-  // hide assignment operator
-  G4WaterStopping & operator=(const  G4WaterStopping &right) = delete;
-  G4WaterStopping(const  G4WaterStopping&) = delete;
+    // hide assignment operator
+    G4WaterStopping& operator=(const G4WaterStopping& right) = delete;
+    G4WaterStopping(const G4WaterStopping&) = delete;
 
-private:
+  private:
 
-  void Initialise();
+    void Initialise();
 
-  void AddData(const G4double* energy, const G4double* stoppower, 
-	       G4double factor);
+    void AddData(const G4double* energy, const G4double* stoppower, G4double factor);
 
-  G4bool spline = true;
-  G4double emin;
-  std::vector<G4PhysicsFreeVector*> dedx;
+    G4bool spline = true;
+    G4double emin;
+    std::vector<G4PhysicsFreeVector*> dedx;
 };
 
 #endif

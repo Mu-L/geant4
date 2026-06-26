@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // Scene  John Allison  19th July 1996.
 //
 // Class Description:
@@ -35,154 +35,160 @@
 #ifndef G4SCENE_HH
 #define G4SCENE_HH
 
-#include "globals.hh"
 #include "G4ios.hh"
+#include "globals.hh"
 
 class G4VPhysicalVolume;
 
-#include "G4VisExtent.hh"
 #include "G4Point3D.hh"
 #include "G4VModel.hh"
+#include "G4VisExtent.hh"
+
 #include <vector>
 
-class G4Scene {
+class G4Scene
+{
+  public:  // With description
 
-public: // With description
+    friend std::ostream& operator<<(std::ostream& os, const G4Scene& d);
 
-  friend std::ostream& operator << (std::ostream& os, const G4Scene& d);
+    enum
+    {
+      UNLIMITED = -1
+    };
 
-  enum {UNLIMITED = -1};
+    G4Scene(const G4String& name = "scene-with-unspecified-name");
+    ~G4Scene();
 
-  G4Scene (const G4String& name = "scene-with-unspecified-name");
-  ~G4Scene ();
+    // Makes use of default (compiler generated) copy constructor and
+    // assignment operator.
 
-  // Makes use of default (compiler generated) copy constructor and
-  // assignment operator.
+    G4bool operator==(const G4Scene&) const;
+    G4bool operator!=(const G4Scene&) const;
 
-  G4bool operator == (const G4Scene&) const;
-  G4bool operator != (const G4Scene&) const;
+    //////////////////////////////////////////////////////
+    // Get functions...
 
-  //////////////////////////////////////////////////////
-  // Get functions...
+    const G4String& GetName() const;
 
-  const G4String& GetName () const;
+    G4bool IsEmpty() const;
 
-  G4bool IsEmpty () const;
+    struct Model
+    {
+        Model(G4VModel* pModel) : fActive(true), fpModel(pModel) {}
+        G4bool fActive;
+        G4VModel* fpModel;
+    };
 
-  struct Model {
-    Model(G4VModel* pModel): fActive(true), fpModel(pModel) {}
-    G4bool fActive;
-    G4VModel* fpModel;
-  };
+    const std::vector<Model>& GetRunDurationModelList() const;
+    // Contains models which are expected to last for the duration of
+    // the run, for example geometry volumes.
 
-  const std::vector<Model>& GetRunDurationModelList () const;
-  // Contains models which are expected to last for the duration of
-  // the run, for example geometry volumes.
+    const std::vector<Model>& GetEndOfEventModelList() const;
+    // Contains models which are described at the end of event when the
+    // scene is current.
 
-  const std::vector<Model>& GetEndOfEventModelList () const;
-  // Contains models which are described at the end of event when the
-  // scene is current.
+    const std::vector<Model>& GetEndOfRunModelList() const;
+    // Contains models which are described at the end of event when the
+    // scene is current.
 
-  const std::vector<Model>& GetEndOfRunModelList () const;
-  // Contains models which are described at the end of event when the
-  // scene is current.
+    const G4VisExtent& GetExtent() const;
+    // Overall extent of all objects in the scene.
 
-  const G4VisExtent& GetExtent () const;
-  // Overall extent of all objects in the scene.
+    const G4Point3D& GetStandardTargetPoint() const;
+    // Usually centre of extent.  See G4ViewParameters for definition.
 
-  const G4Point3D& GetStandardTargetPoint () const;
-  // Usually centre of extent.  See G4ViewParameters for definition.
+    G4bool GetRefreshAtEndOfEvent() const;
+    // If true, the visualization manager will request viewer to refresh
+    // "transient" objects, such as hits, at end of event.  Otherwise
+    // they will be accumulated.
 
-  G4bool GetRefreshAtEndOfEvent () const;
-  // If true, the visualization manager will request viewer to refresh
-  // "transient" objects, such as hits, at end of event.  Otherwise
-  // they will be accumulated.
+    G4int GetMaxNumberOfKeptEvents() const;
+    // If RefreshAtEndOfEvent is false, events of the current run are
+    // kept up to this maximum number.  A negative value means all
+    // events of current run are kept.  The events are available for
+    // viewing at the end of run, but are deleted just before the start
+    // of the next run.
 
-  G4int GetMaxNumberOfKeptEvents() const;
-  // If RefreshAtEndOfEvent is false, events of the current run are
-  // kept up to this maximum number.  A negative value means all
-  // events of current run are kept.  The events are available for
-  // viewing at the end of run, but are deleted just before the start
-  // of the next run.
+    G4bool GetRefreshAtEndOfRun() const;
+    // If true, the visualization manager will request viewer to refresh
+    // "transient" objects, such as hits, at end of run.  Otherwise
+    // they will be accumulated.
 
-  G4bool GetRefreshAtEndOfRun () const;
-  // If true, the visualization manager will request viewer to refresh
-  // "transient" objects, such as hits, at end of run.  Otherwise
-  // they will be accumulated.
+    //////////////////////////////////////////////
+    // Add and Set functions...
 
-  //////////////////////////////////////////////
-  // Add and Set functions...
+    G4bool AddRunDurationModel(G4VModel*, G4bool warn = false);
+    // Adds models of type which are expected to last for the duration
+    // of the run, for example geometry volumes.
+    // Returns false if model is already in the list.
+    // Prints warnings if warn is true.
 
-  G4bool AddRunDurationModel (G4VModel*, G4bool warn = false);
-  // Adds models of type which are expected to last for the duration
-  // of the run, for example geometry volumes.
-  // Returns false if model is already in the list.
-  // Prints warnings if warn is true.
+    G4bool AddWorldIfEmpty(G4bool warn = false);
+    // In some situations, if the user asks for a drawing and has not
+    // yet set any run duration models it makes sense to put the "world"
+    // in there by default.
+    // Returns false if model is already in the list.
+    // Prints warnings if warn is true.
 
-  G4bool AddWorldIfEmpty (G4bool warn = false);
-  // In some situations, if the user asks for a drawing and has not
-  // yet set any run duration models it makes sense to put the "world"
-  // in there by default.
-  // Returns false if model is already in the list.
-  // Prints warnings if warn is true.
+    G4bool AddEndOfEventModel(G4VModel*, G4bool warn = false);
+    // Adds models of type which are described at the end of event when
+    // the scene is current.
+    // Returns false if model is already in the list.
+    // Prints warnings if warn is true.
 
-  G4bool AddEndOfEventModel (G4VModel*, G4bool warn = false);
-  // Adds models of type which are described at the end of event when
-  // the scene is current.
-  // Returns false if model is already in the list.
-  // Prints warnings if warn is true.
+    G4bool AddEndOfRunModel(G4VModel*, G4bool warn = false);
+    // Adds models of type which are described at the end of run when
+    // the scene is current.
+    // Returns false if model is already in the list.
+    // Prints warnings if warn is true.
 
-  G4bool AddEndOfRunModel (G4VModel*, G4bool warn = false);
-  // Adds models of type which are described at the end of run when
-  // the scene is current.
-  // Returns false if model is already in the list.
-  // Prints warnings if warn is true.
+    void SetName(const G4String&);
+    // Use with care.  User normally sets scene name by vis commands.
 
-  void SetName (const G4String&);
-  // Use with care.  User normally sets scene name by vis commands.
+    std::vector<Model>& SetRunDurationModelList();
+    // Allows you to change the model list - do with care!
 
-  std::vector<Model>& SetRunDurationModelList ();
-  // Allows you to change the model list - do with care!
+    std::vector<Model>& SetEndOfEventModelList();
+    // Allows you to change the model list - do with care!
 
-  std::vector<Model>& SetEndOfEventModelList ();
-  // Allows you to change the model list - do with care!
+    std::vector<Model>& SetEndOfRunModelList();
+    // Allows you to change the model list - do with care!
 
-  std::vector<Model>& SetEndOfRunModelList ();
-  // Allows you to change the model list - do with care!
+    void SetRefreshAtEndOfEvent(G4bool);
+    // If set true, the visualization manager will request viewer to
+    // refresh "transient" objects, such as hits, at end of event.
+    // Otherwise they will be accumulated.
 
-  void SetRefreshAtEndOfEvent(G4bool);
-  // If set true, the visualization manager will request viewer to
-  // refresh "transient" objects, such as hits, at end of event.
-  // Otherwise they will be accumulated.
+    void SetMaxNumberOfKeptEvents(G4int);
+    // If RefreshAtEndOfEvent is false, events of the current run are
+    // kept up to this maximum number.  A negative value means all
+    // events of current run are kept.  The events are available for
+    // viewing at the end of run, but are deleted just before the start
+    // of the next run.
 
-  void SetMaxNumberOfKeptEvents(G4int);
-  // If RefreshAtEndOfEvent is false, events of the current run are
-  // kept up to this maximum number.  A negative value means all
-  // events of current run are kept.  The events are available for
-  // viewing at the end of run, but are deleted just before the start
-  // of the next run.
+    void SetRefreshAtEndOfRun(G4bool);
+    // If set true, the visualization manager will request viewer to
+    // refresh "transient" objects, such as hits, at end of run.
+    // Otherwise they will be accumulated.
 
-  void SetRefreshAtEndOfRun(G4bool);
-  // If set true, the visualization manager will request viewer to
-  // refresh "transient" objects, such as hits, at end of run.
-  // Otherwise they will be accumulated.
+    //////////////////////////////////////////////
+    // Other functions...
 
-  //////////////////////////////////////////////
-  // Other functions...
+    void CalculateExtent();
+    // (Re-)calculates the extent from the extents of its models.
 
-  void CalculateExtent();
-  // (Re-)calculates the extent from the extents of its models.
+  private:
 
-private:
-  G4String fName;
-  std::vector<Model> fRunDurationModelList;
-  std::vector<Model> fEndOfEventModelList;
-  std::vector<Model> fEndOfRunModelList;
-  G4VisExtent fExtent;
-  G4Point3D   fStandardTargetPoint;
-  G4bool      fRefreshAtEndOfEvent;
-  G4bool      fRefreshAtEndOfRun;
-  G4int       fMaxNumberOfKeptEvents;
+    G4String fName;
+    std::vector<Model> fRunDurationModelList;
+    std::vector<Model> fEndOfEventModelList;
+    std::vector<Model> fEndOfRunModelList;
+    G4VisExtent fExtent;
+    G4Point3D fStandardTargetPoint;
+    G4bool fRefreshAtEndOfEvent;
+    G4bool fRefreshAtEndOfRun;
+    G4int fMaxNumberOfKeptEvents;
 };
 
 #include "G4Scene.icc"

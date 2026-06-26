@@ -29,31 +29,34 @@
 #include "G4AnalysisUtilities.hh"
 
 //_____________________________________________________________________________
-template <typename HT>
-inline
-tools::raxml_out* G4XmlRFileManager::GetHandler(
-  const G4String& fileName, const G4String& objectName,
-  std::string_view inFunction)
+template<typename HT>
+inline tools::raxml_out* G4XmlRFileManager::GetHandler(const G4String& fileName,
+                                                       const G4String& objectName,
+                                                       std::string_view inFunction)
 {
-// Get buffer for reading object specified by objectName and objectType
-// for a file specified by fileName;
-// open the file if it was not yet open
+  // Get buffer for reading object specified by objectName and objectType
+  // for a file specified by fileName;
+  // open the file if it was not yet open
 
   // Histograms and profiles are not saved per thread
   // and ntuple file name is already updated
   auto rfile = GetRFile(fileName);
-  if ( ! rfile ) {
-    if ( ! OpenRFile(fileName) ) return nullptr;
+  if (!rfile)
+  {
+    if (!OpenRFile(fileName)) return nullptr;
     rfile = GetRFile(fileName);
   }
 
   tools::raxml_out* handler = nullptr;
-  if ( rfile ) {
+  if (rfile)
+  {
     std::vector<tools::raxml_out>& objects = rfile->objects();
     std::vector<tools::raxml_out>::iterator it;
-    for (it = objects.begin(); it!=objects.end(); ++it) {
+    for (it = objects.begin(); it != objects.end(); ++it)
+    {
       tools::raxml_out& object = *it;
-      if ((object.cls() == HT::s_class()) && (object.name() == objectName)) {
+      if ((object.cls() == HT::s_class()) && (object.name() == objectName))
+      {
         handler = &object;
         handler->disown();
         break;
@@ -61,10 +64,9 @@ tools::raxml_out* G4XmlRFileManager::GetHandler(
     }
   }
 
-  if ( ! handler ) {
-    G4Analysis::Warn(
-      "Cannot get " + objectName + " in file " + fileName,
-      fkClass, inFunction);
+  if (!handler)
+  {
+    G4Analysis::Warn("Cannot get " + objectName + " in file " + fileName, fkClass, inFunction);
     return nullptr;
   }
 

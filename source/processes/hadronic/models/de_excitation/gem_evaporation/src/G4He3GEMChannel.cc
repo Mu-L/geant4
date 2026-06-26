@@ -29,4 +29,3 @@
 //
 
 #include "G4He3GEMChannel.hh"
-

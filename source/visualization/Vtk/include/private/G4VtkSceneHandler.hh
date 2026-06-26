@@ -41,8 +41,8 @@
 #include <vector>
 
 #ifndef WIN32
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wextra-semi"
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wextra-semi"
 #endif
 
 #include <vtkActor.h>
@@ -76,12 +76,13 @@
 #include <vtkVolume.h>
 
 #ifndef WIN32
-#pragma GCC diagnostic pop
+#  pragma GCC diagnostic pop
 #endif
 
 class G4VtkSceneHandler : public G4VSceneHandler
 {
   public:
+
     G4VtkSceneHandler(G4VGraphicsSystem& system, const G4String& name);
     ~G4VtkSceneHandler() override = default;
 
@@ -121,6 +122,7 @@ class G4VtkSceneHandler : public G4VSceneHandler
     void SetPolyhedronPipeline(const G4String& str);
 
   protected:
+
     static G4int fSceneIdCount;  // Counter for Vtk scene handlers.
 
     G4VtkStore store = G4VtkStore("perm");
@@ -129,6 +131,7 @@ class G4VtkSceneHandler : public G4VSceneHandler
     G4String polyhedronPipelineType;
 
   private:
+
     friend class G4VtkViewer;
 };
 

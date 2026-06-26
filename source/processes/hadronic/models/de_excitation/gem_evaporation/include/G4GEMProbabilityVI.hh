@@ -26,8 +26,8 @@
 // GEM de-excitation model
 // by V. Ivanchenko (July 2019)
 //
-#ifndef G4GEMProbabilityVI_h
-#define G4GEMProbabilityVI_h 1
+#ifndef G4GEMPROBABILITYVI_HH
+#define G4GEMPROBABILITYVI_HH
 
 #include "G4VEmissionProbability.hh"
 
@@ -35,56 +35,52 @@ class G4LevelManager;
 
 class G4GEMProbabilityVI : public G4VEmissionProbability
 {
-public:
+  public:
 
-  explicit G4GEMProbabilityVI(G4int anA, G4int aZ, const G4LevelManager*); 
+    explicit G4GEMProbabilityVI(G4int anA, G4int aZ, const G4LevelManager*);
 
-  ~G4GEMProbabilityVI() override = default;
+    ~G4GEMProbabilityVI() override = default;
 
-  G4double TotalProbability(const G4Fragment&,
-                            const G4double tmin, const G4double tmax, 
-                            const G4double CB, const G4double exEnergy,
-                            const G4double exEvap);
+    G4double TotalProbability(const G4Fragment&, const G4double tmin, const G4double tmax,
+                              const G4double CB, const G4double exEnergy, const G4double exEvap);
 
-  // compute probability for evaporated fragment in ground state
-  G4double ComputeProbability(G4double ekin, G4double CB) override;
+    // compute probability for evaporated fragment in ground state
+    G4double ComputeProbability(G4double ekin, G4double CB) override;
 
-  G4double SampleEnergy(const G4double tmin, const G4double tmax, 
-			const G4double CB, const G4double exEnergy,
-			const G4double exEvap);
+    G4double SampleEnergy(const G4double tmin, const G4double tmax, const G4double CB,
+                          const G4double exEnergy, const G4double exEvap);
 
-  G4GEMProbabilityVI(const G4GEMProbabilityVI& right) = delete;
-  const G4GEMProbabilityVI & operator=(const G4GEMProbabilityVI& right) = delete;
-  G4bool operator==(const G4GEMProbabilityVI& right) const = delete;
-  G4bool operator!=(const G4GEMProbabilityVI& right) const = delete;
+    G4GEMProbabilityVI(const G4GEMProbabilityVI& right) = delete;
+    const G4GEMProbabilityVI& operator=(const G4GEMProbabilityVI& right) = delete;
+    G4bool operator==(const G4GEMProbabilityVI& right) const = delete;
+    G4bool operator!=(const G4GEMProbabilityVI& right) const = delete;
 
-private:
+  private:
 
-  const G4LevelManager* lManager;
+    const G4LevelManager* lManager;
 
-  G4int fragA;
-  G4int fragZ;
+    G4int fragA;
+    G4int fragZ;
 
-  G4double bCoulomb;
-  G4double resA13;
-  G4double U, delta0, delta1, a0, a1;
-  G4double alphaP, betaP;
-  G4double Umax, A13;
-  //  G4double levelDensity, levelDensity1;
+    G4double bCoulomb;
+    G4double resA13;
+    G4double U, delta0, delta1, a0, a1;
+    G4double alphaP, betaP;
+    G4double Umax, A13;
+    //  G4double levelDensity, levelDensity1;
 
-  // Gamma is A_f(2S_f+1) factor, where A_f is fragment atomic 
-  // number and S_f is fragment spin
-  G4double Gamma;
-  G4double coeff;
-  G4double pcoeff;
+    // Gamma is A_f(2S_f+1) factor, where A_f is fragment atomic
+    // number and S_f is fragment spin
+    G4double Gamma;
+    G4double coeff;
+    G4double pcoeff;
 
-  G4double probmax;
+    G4double probmax;
 
-  G4bool isExcited;
+    G4bool isExcited;
 
-  //static const G4double ws[NPOINTSGEM];
-  //static const G4double xs[NPOINTSGEM];
-
+    // static const G4double ws[NPOINTSGEM];
+    // static const G4double xs[NPOINTSGEM];
 };
 
 #endif

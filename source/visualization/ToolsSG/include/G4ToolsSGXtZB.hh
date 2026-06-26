@@ -30,23 +30,40 @@
 
 #include "G4VGraphicsSystem.hh"
 
-namespace toolx {namespace Xt {class session;}}
+namespace toolx
+{
+namespace Xt
+{
+class session;
+}
+}  // namespace toolx
 
-class G4ToolsSGXtZB: public G4VGraphicsSystem {
-  using parent = G4VGraphicsSystem;
-public:
-  G4ToolsSGXtZB();
-  virtual ~G4ToolsSGXtZB();
-protected:  
-  G4ToolsSGXtZB(const G4ToolsSGXtZB& a_from):parent(a_from){}
-  G4ToolsSGXtZB& operator=(const G4ToolsSGXtZB&) {return *this;}
-public:  
-  G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
-  G4VViewer* CreateViewer (G4VSceneHandler&, const G4String& name = "");
-protected:  
-  void Initialise();
-protected:
-  toolx::Xt::session* fSGSession;
+class G4ToolsSGXtZB : public G4VGraphicsSystem
+{
+    using parent = G4VGraphicsSystem;
+
+  public:
+
+    G4ToolsSGXtZB();
+    virtual ~G4ToolsSGXtZB();
+
+  protected:
+
+    G4ToolsSGXtZB(const G4ToolsSGXtZB& a_from) : parent(a_from) {}
+    G4ToolsSGXtZB& operator=(const G4ToolsSGXtZB&) { return *this; }
+
+  public:
+
+    G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
+    G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "");
+
+  protected:
+
+    void Initialise();
+
+  protected:
+
+    toolx::Xt::session* fSGSession;
 };
 
 #endif

@@ -29,112 +29,114 @@
 //
 // History:
 // -----------
-//  
+//
 //  03 Dec 2009  First implementation, Luciano Pandola
-//  16 Feb 2010  Added methods to calculate and store also A and Z 
+//  16 Feb 2010  Added methods to calculate and store also A and Z
 //               for molecules. Luciano Pandola
 //  16 Mar 2010  Added methods to calculate and store mean exc energy
 //               and plasma energy (used for Ionisation). L Pandola
-//  18 Mar 2010  Added method to retrieve number of atoms per 
+//  18 Mar 2010  Added method to retrieve number of atoms per
 //               molecule. L. Pandola
-//  15 Mar 2012  Added method to retrieve number of atom of given Z per 
+//  15 Mar 2012  Added method to retrieve number of atom of given Z per
 //               molecule, L. Pandola
 //
 // -------------------------------------------------------------------
 //
 //! Class description:
-//! Fills and manages G4PenelopeOscillator objects and takes care of 
-//! building and managing the G4PenelopeOscillatorTables for the materials 
+//! Fills and manages G4PenelopeOscillator objects and takes care of
+//! building and managing the G4PenelopeOscillatorTables for the materials
 //! in the geometry. G4PenelopeOscillatorManager is a singleton.
-//! This is compliant with Penelope2008, so different tables (with different 
+//! This is compliant with Penelope2008, so different tables (with different
 //! grouping factors) are created for Ionisation and Compton processes.
 //
 
 // -------------------------------------------------------------------
 
-#ifndef G4PenelopeOscillatorManager_h
-#define G4PenelopeOscillatorManager_h 1
+#ifndef G4PENELOPEOSCILLATORMANAGER_HH
+#define G4PENELOPEOSCILLATORMANAGER_HH
 
-#include "globals.hh"
 #include "G4PenelopeOscillator.hh"
-#include <vector>
+#include "globals.hh"
+
 #include <map>
+#include <vector>
 
 class G4Material;
 
-typedef std::vector<G4PenelopeOscillator*> G4PenelopeOscillatorTable ;
+typedef std::vector<G4PenelopeOscillator*> G4PenelopeOscillatorTable;
 
 // This class is a singleton
-class G4PenelopeOscillatorManager {
-public: 
-  // The only way to get an instance of this class is to call the 
-  // function GetOscillatorManager() 
-  static G4PenelopeOscillatorManager* GetOscillatorManager();
- 
-  //Clear() is invoked by Initialise() of the processes, if required
-  void Clear();
-  void Dump(const G4Material*);
-  
-  //For ionisation
-  G4PenelopeOscillatorTable* GetOscillatorTableIonisation(const G4Material*);  
-  G4PenelopeOscillator* GetOscillatorIonisation(const G4Material*,G4int);
-  
-  //For Compton
-  G4PenelopeOscillatorTable* GetOscillatorTableCompton(const G4Material*);  
-  G4PenelopeOscillator* GetOscillatorCompton(const G4Material*,G4int);
+class G4PenelopeOscillatorManager
+{
+  public:
 
-  void SetVerbosityLevel(G4int vl){fVerbosityLevel = vl;};
-  G4int GetVerbosityLevel(){return fVerbosityLevel;};
-  
-  //!These are cumulative for the molecule
-  //! Returns the total Z for the molecule
-  G4double GetTotalZ(const G4Material*);
-  //!Returns the total A for the molecule
-  G4double GetTotalA(const G4Material*);
-  //! Returns the mean excitation energy
-  G4double GetMeanExcitationEnergy(const G4Material*);
-  //! Returns the squared plasma energy
-  G4double GetPlasmaEnergySquared(const G4Material*);
-  //! Returns the total number of atoms per molecule
-  G4double GetAtomsPerMolecule(const G4Material*);
+    // The only way to get an instance of this class is to call the
+    // function GetOscillatorManager()
+    static G4PenelopeOscillatorManager* GetOscillatorManager();
 
-  //Components of each molecule
-  G4double GetNumberOfZAtomsPerMolecule(const G4Material*,G4int Z);
-  
-  G4PenelopeOscillatorManager& operator=(const 
-					 G4PenelopeOscillatorManager& right) = delete;
-  G4PenelopeOscillatorManager(const G4PenelopeOscillatorManager&) = delete;
-   ~G4PenelopeOscillatorManager();
+    // Clear() is invoked by Initialise() of the processes, if required
+    void Clear();
+    void Dump(const G4Material*);
 
-protected:
-  explicit G4PenelopeOscillatorManager();
- 
-private:
-  //create both tables simultaneously
-  void CheckForTablesCreated();
-  void ReadElementData();
-  void BuildOscillatorTable(const G4Material*);
+    // For ionisation
+    G4PenelopeOscillatorTable* GetOscillatorTableIonisation(const G4Material*);
+    G4PenelopeOscillator* GetOscillatorIonisation(const G4Material*, G4int);
 
-  static G4ThreadLocal G4PenelopeOscillatorManager* instance;
-  
-  //In Penelope2008, the Ionisation and Compton oscillator tables are 
-  //slightly different!
-  std::map<const G4Material*,G4PenelopeOscillatorTable*> 
-  *fOscillatorStoreIonisation;
+    // For Compton
+    G4PenelopeOscillatorTable* GetOscillatorTableCompton(const G4Material*);
+    G4PenelopeOscillator* GetOscillatorCompton(const G4Material*, G4int);
 
-  std::map<const G4Material*,G4PenelopeOscillatorTable*> 
-  *fOscillatorStoreCompton;
+    void SetVerbosityLevel(G4int vl) { fVerbosityLevel = vl; };
+    G4int GetVerbosityLevel() { return fVerbosityLevel; };
 
-  std::map<const G4Material*,G4double> *fAtomicNumber;
-  std::map<const G4Material*,G4double> *fAtomicMass;
-  std::map<const G4Material*,G4double> *fExcitationEnergy;
-  std::map<const G4Material*,G4double> *fPlasmaSquared;
-  std::map<const G4Material*,G4double> *fAtomsPerMolecule;
-  std::map< std::pair<const G4Material*,G4int>, G4double> *fAtomTablePerMolecule;
+    //! These are cumulative for the molecule
+    //!  Returns the total Z for the molecule
+    G4double GetTotalZ(const G4Material*);
+    //! Returns the total A for the molecule
+    G4double GetTotalA(const G4Material*);
+    //! Returns the mean excitation energy
+    G4double GetMeanExcitationEnergy(const G4Material*);
+    //! Returns the squared plasma energy
+    G4double GetPlasmaEnergySquared(const G4Material*);
+    //! Returns the total number of atoms per molecule
+    G4double GetAtomsPerMolecule(const G4Material*);
 
-  G4double fElementData[5][2000];
-  G4int fVerbosityLevel;
-  G4bool fReadElementData;
+    // Components of each molecule
+    G4double GetNumberOfZAtomsPerMolecule(const G4Material*, G4int Z);
+
+    G4PenelopeOscillatorManager& operator=(const G4PenelopeOscillatorManager& right) = delete;
+    G4PenelopeOscillatorManager(const G4PenelopeOscillatorManager&) = delete;
+    ~G4PenelopeOscillatorManager();
+
+  protected:
+
+    explicit G4PenelopeOscillatorManager();
+
+  private:
+
+    // create both tables simultaneously
+    void CheckForTablesCreated();
+    void ReadElementData();
+    void BuildOscillatorTable(const G4Material*);
+
+    static G4ThreadLocal G4PenelopeOscillatorManager* instance;
+
+    // In Penelope2008, the Ionisation and Compton oscillator tables are
+    // slightly different!
+    std::map<const G4Material*, G4PenelopeOscillatorTable*>* fOscillatorStoreIonisation;
+
+    std::map<const G4Material*, G4PenelopeOscillatorTable*>* fOscillatorStoreCompton;
+
+    std::map<const G4Material*, G4double>* fAtomicNumber;
+    std::map<const G4Material*, G4double>* fAtomicMass;
+    std::map<const G4Material*, G4double>* fExcitationEnergy;
+    std::map<const G4Material*, G4double>* fPlasmaSquared;
+    std::map<const G4Material*, G4double>* fAtomsPerMolecule;
+    std::map<std::pair<const G4Material*, G4int>, G4double>* fAtomTablePerMolecule;
+
+    G4double fElementData[5][2000];
+    G4int fVerbosityLevel;
+    G4bool fReadElementData;
 };
 
 #endif

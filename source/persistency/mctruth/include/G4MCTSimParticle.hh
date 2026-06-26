@@ -28,14 +28,14 @@
 // Author: Youhei Morita, 12.09.2001
 // --------------------------------------------------------------------
 #ifndef G4MCTSIMPARTICLE_HH
-#define G4MCTSIMPARTICLE_HH 1
+#define G4MCTSIMPARTICLE_HH
 
-#include <vector>
-#include <iostream>
-
+#include "G4LorentzVector.hh"
 #include "G4String.hh"
 #include "G4Types.hh"
-#include "G4LorentzVector.hh"
+
+#include <iostream>
+#include <vector>
 
 class G4MCTSimVertex;
 class G4MCTSimParticle;
@@ -47,17 +47,15 @@ class G4MCTSimParticle
   public:
 
     G4MCTSimParticle();
-    G4MCTSimParticle(const G4String& aname,
-                     G4int apcode, G4int atid, G4int ptid,
+    G4MCTSimParticle(const G4String& aname, G4int apcode, G4int atid, G4int ptid,
                      const G4LorentzVector& p);
-    G4MCTSimParticle(const G4String& aname,
-                     G4int apcode, G4int atid, G4int ptid,
+    G4MCTSimParticle(const G4String& aname, G4int apcode, G4int atid, G4int ptid,
                      const G4LorentzVector& p, const G4MCTSimVertex* v);
     virtual ~G4MCTSimParticle();
 
     inline G4MCTSimParticle(const G4MCTSimParticle& right);
     inline G4MCTSimParticle& operator=(const G4MCTSimParticle& right);
-      // copy constructor and assignment operator
+    // copy constructor and assignment operator
 
     inline void SetParentParticle(const G4MCTSimParticle* p);
     inline G4MCTSimParticle* GetParentParticle() const;
@@ -119,19 +117,18 @@ inline G4MCTSimParticle::G4MCTSimParticle(const G4MCTSimParticle& right)
   *this = right;
 }
 
-inline G4MCTSimParticle& G4MCTSimParticle::operator=(
-  const G4MCTSimParticle& right)
+inline G4MCTSimParticle& G4MCTSimParticle::operator=(const G4MCTSimParticle& right)
 {
-  parentParticle         = right.parentParticle;
+  parentParticle = right.parentParticle;
   associatedParticleList = right.associatedParticleList;  // shallow copy
 
-  name             = right.name;
-  pdgID            = right.pdgID;
-  trackID          = right.trackID;
-  parentTrackID    = right.parentTrackID;
-  primaryFlag      = right.primaryFlag;
+  name = right.name;
+  pdgID = right.pdgID;
+  trackID = right.trackID;
+  parentTrackID = right.parentTrackID;
+  primaryFlag = right.primaryFlag;
   momentumAtVertex = right.momentumAtVertex;
-  vertex           = right.vertex;
+  vertex = right.vertex;
 
   return *this;
 }

@@ -32,11 +32,13 @@
 
 #include "G4RayTracerViewer.hh"
 
-class G4RayTracerXViewer: public G4RayTracerViewer {
-public:
-  G4RayTracerXViewer(G4VSceneHandler&,const G4String& name);
-  virtual ~G4RayTracerXViewer();
-  void Initialise();
+class G4RayTracerXViewer : public G4RayTracerViewer
+{
+  public:
+
+    G4RayTracerXViewer(G4VSceneHandler&, const G4String& name);
+    virtual ~G4RayTracerXViewer();
+    void Initialise();
 };
 
 #endif

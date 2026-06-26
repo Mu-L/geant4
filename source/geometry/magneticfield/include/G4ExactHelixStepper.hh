@@ -36,21 +36,23 @@
 // As the field is assumed constant, an error is not calculated.
 
 // Author: John Apostolakis (CERN), 28.01.2005.
-//         Implementation adapted from ExplicitEuler by W.Wander 
+//         Implementation adapted from ExplicitEuler by W.Wander
 // --------------------------------------------------------------------
 #ifndef G4EXACTHELIXSTEPPER_HH
 #define G4EXACTHELIXSTEPPER_HH
 
-#include "G4Types.hh"
-#include "G4ThreeVector.hh"
-
-#include "G4MagIntegratorStepper.hh"
 #include "G4MagHelicalStepper.hh"
+#include "G4MagIntegratorStepper.hh"
 #include "G4Mag_EqRhs.hh"
+#include "G4ThreeVector.hh"
+#include "G4Types.hh"
 
 /**
  * @brief G4ExactHelixStepper is a concrete class for particle motion in
- * constant magnetic field. Helix a-la-Explicity Euler: x_1 = x_0 + helix(h)
+ * constant magnetic field.
+ * @ingroup geometry_magneticfield
+ *
+ * Helix a-la-Explicity Euler: x_1 = x_0 + helix(h)
  * with helix(h) being a helix piece of length h.
  * As the field is assumed constant, an error is not calculated.
  */
@@ -69,7 +71,7 @@ class G4ExactHelixStepper : public G4MagHelicalStepper
      * Default Destructor.
      */
     ~G4ExactHelixStepper() override = default;
-  
+
     /**
      * Copy constructor and assignment operator not allowed.
      */
@@ -87,23 +89,17 @@ class G4ExactHelixStepper : public G4MagHelicalStepper
      *  @param[out] yout Integration output.
      *  @param[out] yerr The estimated error.
      */
-    void Stepper( const G4double y[],
-                  const G4double dydx[],
-                        G4double h,
-                        G4double yout[],
-                        G4double yerr[] ) override;
-  
+    void Stepper(const G4double y[], const G4double dydx[], G4double h, G4double yout[],
+                 G4double yerr[]) override;
+
     /**
      * Same as Stepper() function above, but should perform a 'dump' step
      * without error calculation. Assuming a constant field, the solution is
      * a helix. Should NOT be called; issues a fatal exception as the Stepper
      * must do all the work.
      */
-    void DumbStepper( const G4double y[],
-                            G4ThreeVector Bfld,
-                            G4double h,
-                            G4double yout[] ) override;
-  
+    void DumbStepper(const G4double y[], G4ThreeVector Bfld, G4double h, G4double yout[]) override;
+
     /**
      * Estimates the maximum distance of curved solution and chord.
      */

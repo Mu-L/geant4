@@ -30,7 +30,7 @@
 //
 // Created :  10 March 1997, J. Apostolakis
 // Reviewed:  26 April 2006, G. Cosmo
-//  
+//
 // ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
@@ -39,10 +39,9 @@
 // Utility method to return the active navigator for tracking, always
 // the first in the collection of registered navigators.
 //
-inline
-G4ITNavigator* G4ITTransportationManager::GetNavigatorForTracking() const
+inline G4ITNavigator* G4ITTransportationManager::GetNavigatorForTracking() const
 {
-   return fNavigators[0];
+  return fNavigators[0];
 }
 
 // ----------------------------------------------------------------------------
@@ -51,11 +50,10 @@ G4ITNavigator* G4ITTransportationManager::GetNavigatorForTracking() const
 // Set the tracking world volume.
 // This method is to be invoked by G4RunManagerKernel.
 //
-inline 
-void G4ITTransportationManager::SetWorldForTracking(G4VPhysicalVolume* theWorld)
+inline void G4ITTransportationManager::SetWorldForTracking(G4VPhysicalVolume* theWorld)
 {
-   fWorlds[0] = theWorld;
-   fNavigators[0]->SetWorldVolume(theWorld);
+  fWorlds[0] = theWorld;
+  fNavigators[0]->SetWorldVolume(theWorld);
 }
 
 // ----------------------------------------------------------------------------
@@ -64,8 +62,8 @@ void G4ITTransportationManager::SetWorldForTracking(G4VPhysicalVolume* theWorld)
 // Set the active navigator for tracking, always
 // the first in the collection of registered navigators.
 //
-//inline
-//void G4ITTransportationManager::SetNavigatorForTracking(G4ITNavigator* newNavigator)
+// inline
+// void G4ITTransportationManager::SetNavigatorForTracking(G4ITNavigator* newNavigator)
 //{
 //   fNavigators[0] = newNavigator;
 //}
@@ -75,10 +73,9 @@ void G4ITTransportationManager::SetWorldForTracking(G4VPhysicalVolume* theWorld)
 //
 // Return the number of active navigators.
 //
-inline
-size_t G4ITTransportationManager::GetNoActiveNavigators() const
+inline size_t G4ITTransportationManager::GetNoActiveNavigators() const
 {
-   return fActiveNavigators.size();
+  return fActiveNavigators.size();
 }
 
 // ----------------------------------------------------------------------------
@@ -86,13 +83,11 @@ size_t G4ITTransportationManager::GetNoActiveNavigators() const
 //
 // Return an iterator to the list of active navigators.
 //
-inline
-std::vector<G4ITNavigator*>::iterator
+inline std::vector<G4ITNavigator*>::iterator
 G4ITTransportationManager::GetActiveNavigatorsIterator()
 {
-   auto iterator
-     = std::vector<G4ITNavigator*>::iterator(fActiveNavigators.begin());
-   return iterator;
+  auto iterator = std::vector<G4ITNavigator*>::iterator(fActiveNavigators.begin());
+  return iterator;
 }
 
 // ----------------------------------------------------------------------------
@@ -100,10 +95,9 @@ G4ITTransportationManager::GetActiveNavigatorsIterator()
 //
 // Return the number of registered worlds.
 //
-inline
-size_t G4ITTransportationManager::GetNoWorlds() const
+inline size_t G4ITTransportationManager::GetNoWorlds() const
 {
-   return fWorlds.size();
+  return fWorlds.size();
 }
 
 // ----------------------------------------------------------------------------
@@ -111,13 +105,10 @@ size_t G4ITTransportationManager::GetNoWorlds() const
 //
 // Return an iterator to the list of registered worlds.
 //
-inline
-std::vector<G4VPhysicalVolume*>::iterator
-G4ITTransportationManager::GetWorldsIterator()
+inline std::vector<G4VPhysicalVolume*>::iterator G4ITTransportationManager::GetWorldsIterator()
 {
-   auto iterator
-     = std::vector<G4VPhysicalVolume*>::iterator(fWorlds.begin());
-   return iterator;
+  auto iterator = std::vector<G4VPhysicalVolume*>::iterator(fWorlds.begin());
+  return iterator;
 }
 
 // ----------------------------------------------------------------------------
@@ -125,8 +116,7 @@ G4ITTransportationManager::GetWorldsIterator()
 //
 // Return pointer to the created navigation safety helper instance.
 //
-inline
-G4ITSafetyHelper* G4ITTransportationManager::GetSafetyHelper() const
+inline G4ITSafetyHelper* G4ITTransportationManager::GetSafetyHelper() const
 {
   return fpSafetyHelper;
 }

@@ -41,33 +41,32 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-#include "G4UCNProcessSubType.hh"
-
 #include "G4UCNLoss.hh"
 
-#include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4UCNProcessSubType.hh"
 
 /////////////////////////
 // Class Implementation
 /////////////////////////
 
-        //////////////
-        // Operators
-        //////////////
+//////////////
+// Operators
+//////////////
 
 // G4UCNLoss::operator=(const G4UCNLoss &right)
 // {
 // }
 
-        /////////////////
-        // Constructors
-        /////////////////
+/////////////////
+// Constructors
+/////////////////
 
 G4UCNLoss::G4UCNLoss(const G4String& processName, G4ProcessType type)
-         : G4VDiscreteProcess(processName, type)
+  : G4VDiscreteProcess(processName, type)
 {
-  if (verboseLevel>0) G4cout << GetProcessName() << " is created " << G4endl;
+  if (verboseLevel > 0) G4cout << GetProcessName() << " is created " << G4endl;
 
   SetProcessSubType(fUCNLoss);
 }
@@ -76,27 +75,26 @@ G4UCNLoss::G4UCNLoss(const G4String& processName, G4ProcessType type)
 // {
 // }
 
-        ////////////////
-        // Destructors
-        ////////////////
+////////////////
+// Destructors
+////////////////
 
-G4UCNLoss::~G4UCNLoss(){}
+G4UCNLoss::~G4UCNLoss() {}
 
-        ////////////
-        // Methods
-        ////////////
+////////////
+// Methods
+////////////
 
 // PostStepDoIt
 // -------------
 
-G4VParticleChange*
-G4UCNLoss::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
+G4VParticleChange* G4UCNLoss::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 {
   aParticleChange.Initialize(aTrack);
 
   aParticleChange.ProposeTrackStatus(fStopAndKill);
 
-  if (verboseLevel>0) G4cout << "\n** UCN lost! **" << G4endl;
+  if (verboseLevel > 0) G4cout << "\n** UCN lost! **" << G4endl;
 
   return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 }
@@ -104,37 +102,35 @@ G4UCNLoss::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 // GetMeanFreePath
 // ---------------
 
-G4double G4UCNLoss::GetMeanFreePath(const G4Track& aTrack,
- 				    G4double ,
-				    G4ForceCondition* )
+G4double G4UCNLoss::GetMeanFreePath(const G4Track& aTrack, G4double, G4ForceCondition*)
 {
   G4double AttenuationLength = DBL_MAX;
 
   const G4Material* aMaterial = aTrack.GetMaterial();
-  G4MaterialPropertiesTable* aMaterialPropertiesTable =
-                                     aMaterial->GetMaterialPropertiesTable();
+  G4MaterialPropertiesTable* aMaterialPropertiesTable = aMaterial->GetMaterialPropertiesTable();
 
   G4double crossect = 0.0;
-  if (aMaterialPropertiesTable) {
-     crossect = aMaterialPropertiesTable->GetConstProperty("LOSSCS");
-//     if (crossect == 0.0)
-//       G4cout << "No Loss Cross Section specified" << G4endl;
+  if (aMaterialPropertiesTable)
+  {
+    crossect = aMaterialPropertiesTable->GetConstProperty("LOSSCS");
+    //     if (crossect == 0.0)
+    //       G4cout << "No Loss Cross Section specified" << G4endl;
   }
-//  else G4cout << "No Loss Cross Section specified" << G4endl;
+  //  else G4cout << "No Loss Cross Section specified" << G4endl;
 
-  if (crossect) {
+  if (crossect)
+  {
+    // Calculate a UCN absorption length for this cross section
 
-     // Calculate a UCN absorption length for this cross section
+    G4double density = aMaterial->GetTotNbOfAtomsPerVolume();
 
-     G4double density = aMaterial->GetTotNbOfAtomsPerVolume();
+    // Calculate cross section for a constant loss
 
-     // Calculate cross section for a constant loss 
+    crossect *= barn;
 
-     crossect *= barn;
-  
-     // Attenuation length
+    // Attenuation length
 
-     AttenuationLength = 1./density/crossect;
+    AttenuationLength = 1. / density / crossect;
   }
 
   return AttenuationLength;

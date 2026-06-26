@@ -25,18 +25,18 @@
 //
 //
 //
-// Author: Vladimir Grichine, ~25 October 2014 
+// Author: Vladimir Grichine, ~25 October 2014
 //
 // Class Description
 // Final state production model for theoretical models of hadron inelastic
 // scattering in geant4;
 // To be used in your physics list in case you need this physics.
-// In this case you want to register an object of this class with 
+// In this case you want to register an object of this class with
 // the corresponding process.
 // Note: This class is part of an implementation framework. You need to
-// register corresponding high energy generators and transport codes to 
+// register corresponding high energy generators and transport codes to
 // fill it with life; decay of strong resonances is done directly,
-// in case there is no residual nucleus. 
+// in case there is no residual nucleus.
 // Class Description - End
 //
 // History:
@@ -46,57 +46,50 @@
 //
 //
 
+#ifndef G4LMSDGENERATOR_HH
+#define G4LMSDGENERATOR_HH
 
-
-#ifndef G4LMsdGenerator_h
-#define G4LMsdGenerator_h 1
-
-#include "G4HadronicInteraction.hh"
 #include "G4HadFinalState.hh"
+#include "G4HadronicInteraction.hh"
 
 // class G4ParticleDefinition;
 
-class G4LMsdGenerator : public G4HadronicInteraction 
+class G4LMsdGenerator : public G4HadronicInteraction
 
 {
   public:
 
-  G4LMsdGenerator(const G4String& name = "LMsdGenerator");
-  ~G4LMsdGenerator();
+    G4LMsdGenerator(const G4String& name = "LMsdGenerator");
+    ~G4LMsdGenerator();
 
   private:
 
-  G4LMsdGenerator(const G4LMsdGenerator &right);
-  const G4LMsdGenerator & operator=(const G4LMsdGenerator &right);
-  int operator == (const G4LMsdGenerator &right) const;
-  int operator != (const G4LMsdGenerator &right) const;
+    G4LMsdGenerator(const G4LMsdGenerator& right);
+    const G4LMsdGenerator& operator=(const G4LMsdGenerator& right);
+    int operator==(const G4LMsdGenerator& right) const;
+    int operator!=(const G4LMsdGenerator& right) const;
 
   public:
 
-  G4bool IsApplicable(const G4HadProjectile & thePrimary, 
-                                        G4Nucleus & theNucleus);
+    G4bool IsApplicable(const G4HadProjectile& thePrimary, G4Nucleus& theNucleus);
 
-  G4HadFinalState * ApplyYourself(const G4HadProjectile & thePrimary, 
-                                        G4Nucleus & theNucleus);
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& thePrimary, G4Nucleus& theNucleus);
 
-  G4double SampleMx(const G4HadProjectile* aParticle );
+    G4double SampleMx(const G4HadProjectile* aParticle);
 
-  G4double SampleT( const G4HadProjectile* aParticle, G4double Mx );
+    G4double SampleT(const G4HadProjectile* aParticle, G4double Mx);
 
-  void ModelDescription(std::ostream& outFile) const;
+    void ModelDescription(std::ostream& outFile) const;
 
-  private: 
+  private:
 
-  // G4ParticleDefinition* fParticle;
+    // G4ParticleDefinition* fParticle;
 
-  G4int fPDGencoding;
-  G4int secID;  // Creator model ID for the secondaries created by this model
+    G4int fPDGencoding;
+    G4int secID;  // Creator model ID for the secondaries created by this model
 
-  static const G4double fMxBdata[23][2];
-  static const G4double  fProbMx[60][2];
+    static const G4double fMxBdata[23][2];
+    static const G4double fProbMx[60][2];
 };
 
-
 #endif
-
-

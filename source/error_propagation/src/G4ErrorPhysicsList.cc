@@ -28,51 +28,37 @@
 //      GEANT 4 class implementation file
 // ------------------------------------------------------------
 
-#include "globals.hh"
-
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
-
 #include "G4ErrorPhysicsList.hh"
+
 #include "G4ComptonScattering.hh"
+#include "G4ErrorEnergyLoss.hh"
 #include "G4GammaConversion.hh"
-#include "G4PhotoElectricEffect.hh"
-
-#include "G4eIonisation.hh"
-#include "G4eBremsstrahlung.hh"
-#include "G4eplusAnnihilation.hh"
-
-#include "G4MuIonisation.hh"
-#include "G4MuBremsstrahlung.hh"
-#include "G4MuPairProduction.hh"
-
-#include "G4hIonisation.hh"
-
-#include "G4MuIonisation.hh"
-#include "G4MuBremsstrahlung.hh"
-#include "G4MuPairProduction.hh"
-
-#include "G4hIonisation.hh"
-
-#include "G4ParticleDefinition.hh"
-#include "G4ProcessManager.hh"
-#include "G4ProcessVector.hh"
-#include "G4ParticleTypes.hh"
-#include "G4ParticleTable.hh"
 #include "G4Material.hh"
 #include "G4MaterialTable.hh"
-#include "G4ios.hh"
+#include "G4MuBremsstrahlung.hh"
+#include "G4MuIonisation.hh"
+#include "G4MuPairProduction.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "G4ParticleTypes.hh"
+#include "G4PhotoElectricEffect.hh"
+#include "G4PhysicalConstants.hh"
 #include "G4PhysicsTable.hh"
+#include "G4ProcessManager.hh"
+#include "G4ProcessVector.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4Transportation.hh"
-
-#include "G4ErrorEnergyLoss.hh"
+#include "G4eBremsstrahlung.hh"
+#include "G4eIonisation.hh"
+#include "G4eplusAnnihilation.hh"
+#include "G4hIonisation.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 //------------------------------------------------------------------------
-G4ErrorPhysicsList::G4ErrorPhysicsList()
-  : G4VUserPhysicsList()
+G4ErrorPhysicsList::G4ErrorPhysicsList() : G4VUserPhysicsList()
 {
-  defaultCutValue =
-    1.0E+9 * cm;  // set big step so that AlongStep computes all the energy
+  defaultCutValue = 1.0E+9 * cm;  // set big step so that AlongStep computes all the energy
 }
 
 //------------------------------------------------------------------------
@@ -108,7 +94,7 @@ void G4ErrorPhysicsList::ConstructProcess()
   G4Transportation* theTransportationProcess = new G4Transportation();
 
 #ifdef G4VERBOSE
-  if(verboseLevel >= 4)
+  if (verboseLevel >= 4)
   {
     G4cout << "G4VUserPhysicsList::ConstructProcess()  " << G4endl;
   }
@@ -117,31 +103,28 @@ void G4ErrorPhysicsList::ConstructProcess()
   // loop over all particles in G4ParticleTable
   auto myParticleIterator = GetParticleIterator();
   myParticleIterator->reset();
-  while((*myParticleIterator)())
+  while ((*myParticleIterator)())
   {  // Loop checking, 06.08.2015, G.Cosmo
     G4ParticleDefinition* particle = myParticleIterator->value();
-    G4ProcessManager* pmanager     = particle->GetProcessManager();
-    if(!particle->IsShortLived())
+    G4ProcessManager* pmanager = particle->GetProcessManager();
+    if (!particle->IsShortLived())
     {
       G4cout << particle << "G4ErrorPhysicsList:: particle process manager "
-             << particle->GetParticleName() << " = "
-             << particle->GetProcessManager() << G4endl;
+             << particle->GetParticleName() << " = " << particle->GetProcessManager() << G4endl;
       // Add transportation process for all particles other than  "shortlived"
-      if(pmanager == 0)
+      if (pmanager == 0)
       {
         // Error !! no process manager
         G4String particleName = particle->GetParticleName();
-        G4Exception("G4ErrorPhysicsList::ConstructProcess",
-                    "No process manager", RunMustBeAborted, particleName);
+        G4Exception("G4ErrorPhysicsList::ConstructProcess", "No process manager", RunMustBeAborted,
+                    particleName);
       }
       else
       {
         // add transportation with ordering = ( -1, "first", "first" )
         pmanager->AddProcess(theTransportationProcess);
-        pmanager->SetProcessOrderingToFirst(theTransportationProcess,
-                                            idxAlongStep);
-        pmanager->SetProcessOrderingToFirst(theTransportationProcess,
-                                            idxPostStep);
+        pmanager->SetProcessOrderingToFirst(theTransportationProcess, idxAlongStep);
+        pmanager->SetProcessOrderingToFirst(theTransportationProcess, idxPostStep);
       }
     }
     else
@@ -154,42 +137,32 @@ void G4ErrorPhysicsList::ConstructProcess()
 }
 
 //------------------------------------------------------------------------
-#include "G4eBremsstrahlung.hh"
-#include "G4eIonisation.hh"
-
-#include "G4eIonisation.hh"
-
+#include "G4ErrorMagFieldLimitProcess.hh"
+#include "G4ErrorMessenger.hh"
+#include "G4ErrorStepLengthLimitProcess.hh"
 #include "G4MuBremsstrahlung.hh"
 #include "G4MuIonisation.hh"
 #include "G4MuPairProduction.hh"
-
 #include "G4PhysicsTable.hh"
-
-#include "G4MuIonisation.hh"
-
-#include "G4ErrorStepLengthLimitProcess.hh"
-#include "G4ErrorMagFieldLimitProcess.hh"
-#include "G4ErrorMessenger.hh"
+#include "G4eBremsstrahlung.hh"
+#include "G4eIonisation.hh"
 
 void G4ErrorPhysicsList::ConstructEM()
 {
   G4ErrorEnergyLoss* eLossProcess = new G4ErrorEnergyLoss;
-  G4ErrorStepLengthLimitProcess* stepLengthLimitProcess =
-    new G4ErrorStepLengthLimitProcess;
-  G4ErrorMagFieldLimitProcess* magFieldLimitProcess =
-    new G4ErrorMagFieldLimitProcess;
-  new G4ErrorMessenger(stepLengthLimitProcess, magFieldLimitProcess,
-                       eLossProcess);
+  G4ErrorStepLengthLimitProcess* stepLengthLimitProcess = new G4ErrorStepLengthLimitProcess;
+  G4ErrorMagFieldLimitProcess* magFieldLimitProcess = new G4ErrorMagFieldLimitProcess;
+  new G4ErrorMessenger(stepLengthLimitProcess, magFieldLimitProcess, eLossProcess);
 
   auto myParticleIterator = GetParticleIterator();
   myParticleIterator->reset();
-  while((*myParticleIterator)())
+  while ((*myParticleIterator)())
   {  // Loop checking, 06.08.2015, G.Cosmo
     G4ParticleDefinition* particle = myParticleIterator->value();
-    G4ProcessManager* pmanager     = particle->GetProcessManager();
-    G4String particleName          = particle->GetParticleName();
+    G4ProcessManager* pmanager = particle->GetProcessManager();
+    G4String particleName = particle->GetParticleName();
 
-    if(particleName == "gamma")
+    if (particleName == "gamma")
     {
       // gamma
       pmanager->AddDiscreteProcess(new G4GammaConversion());
@@ -199,7 +172,7 @@ void G4ErrorPhysicsList::ConstructEM()
       //    } else if (particleName == "e-" || particleName == "e+"
       //               || particleName == "mu+" || particleName == "mu-" ) {
     }
-    else if(!particle->IsShortLived() && particle->GetPDGCharge() != 0)
+    else if (!particle->IsShortLived() && particle->GetPDGCharge() != 0)
     {
       pmanager->AddContinuousProcess(eLossProcess, 1);
       pmanager->AddDiscreteProcess(stepLengthLimitProcess, 2);

@@ -26,7 +26,7 @@
 // Author: Christian Velten (2025)
 
 #ifndef G4VUSERMOLECULEREACTIONCOUNTER_HH
-#define G4VUSERMOLECULEREACTIONCOUNTER_HH 1
+#define G4VUSERMOLECULEREACTIONCOUNTER_HH
 
 #include "G4DNAChemistryManager.hh"
 #include "G4MoleculeCounterTemplates.hh"
@@ -39,20 +39,24 @@
 template<class TIndex>
 class G4VUserMoleculeReactionCounter : public G4VMoleculeReactionCounter
 {
-    static_assert(std::is_base_of<G4VMoleculeReactionCounter::G4VMoleculeReactionCounterIndex, TIndex>::value,
+    static_assert(
+      std::is_base_of<G4VMoleculeReactionCounter::G4VMoleculeReactionCounterIndex, TIndex>::value,
       "TIndex must be derived from G4VMoleculeReactionCounter::G4VMoleculeReactionCounterIndex! "
       "No forward declaration is allowed.");
 
   protected:
+
     struct Search;
 
   public:
+
     G4VUserMoleculeReactionCounter();
-    G4VUserMoleculeReactionCounter(const G4String&,
-                                   MoleculeReactionCounterType = MoleculeReactionCounterType::Basic);
+    G4VUserMoleculeReactionCounter(
+      const G4String&, MoleculeReactionCounterType = MoleculeReactionCounterType::Basic);
     ~G4VUserMoleculeReactionCounter() override = default;
 
   public:
+
     void Initialize() final;
     void InitializeUser() override = 0;
     void ResetCounter() override;
@@ -61,17 +65,21 @@ class G4VUserMoleculeReactionCounter : public G4VMoleculeReactionCounter
 
     void AbsorbCounter(const G4VMoleculeCounterInternalBase*) override;
 
-    std::unique_ptr<G4VMoleculeReactionCounterIndex> BuildSimpleIndex(const G4DNAMolecularReactionData*) const override = 0;
+    std::unique_ptr<G4VMoleculeReactionCounterIndex>
+    BuildSimpleIndex(const G4DNAMolecularReactionData*) const override = 0;
 
-    void RecordReaction(std::unique_ptr<G4VMoleculeReactionCounterIndex>, G4double, G4int = 1) override;
+    void RecordReaction(std::unique_ptr<G4VMoleculeReactionCounterIndex>, G4double,
+                        G4int = 1) override;
 
     std::set<const G4DNAMolecularReactionData*> GetRecordedReactions() const override;
     std::set<G4double> GetRecordedTimes() const override;
 
   protected:
+
     std::map<TIndex, InnerCounterMapType> fCounterMap{};
 
   public:
+
     const std::map<TIndex, InnerCounterMapType>& GetCounterMap() const { return fCounterMap; }
     std::vector<TIndex> GetMapIndices() const;
 
@@ -80,8 +88,13 @@ class G4VUserMoleculeReactionCounter : public G4VMoleculeReactionCounter
     virtual std::vector<G4int> GetNbReactionsAtTimes(const TIndex&,
                                                      const std::vector<G4double>&) const;
 
+    G4int GetCountAtIndexAndTime(const G4VMoleculeCounterIndexInterface*,
+                                 G4double) const override final;
+
     //-SEARCH-----------------------------------------------------------------------
+
   protected:
+
     struct Search
     {
         Search() : fLowerBoundSet(false) {}
@@ -123,7 +136,8 @@ void G4VUserMoleculeReactionCounter<TIndex>::Initialize()
 //------------------------------------------------------------------------------
 
 template<typename TIndex>
-G4int G4VUserMoleculeReactionCounter<TIndex>::GetNbReactionsAtTime(const TIndex& index, G4double time) const
+G4int G4VUserMoleculeReactionCounter<TIndex>::GetNbReactionsAtTime(const TIndex& index,
+                                                                   G4double time) const
 {
   Search search = {};
   return GetNbReactionsAtTime(search, index, time);
@@ -156,14 +170,41 @@ std::vector<G4int> G4VUserMoleculeReactionCounter<TIndex>::GetNbReactionsAtTimes
 //------------------------------------------------------------------------------
 
 template<typename TIndex>
+G4int G4VUserMoleculeReactionCounter<TIndex>::GetCountAtIndexAndTime(
+  const G4VMoleculeCounterIndexInterface* index, G4double time) const
+{
+  if (index == nullptr)
+  {
+    G4String origin = "G4VUserMoleculeReactionCounter<"
+                      + G4::MoleculeCounter::GetTemplateTypeName<TIndex>() + ">(" + GetName()
+                      + ")::GetCountAtIndexAndTime";
+    G4Exception(origin, "BAD_REFERENCE", FatalException, "The index is null!");
+  }
+  auto pIndex = dynamic_cast<const TIndex*>(index);
+  if (pIndex == nullptr)
+  {
+    G4String origin = "G4VUserMoleculeReactionCounter<"
+                      + G4::MoleculeCounter::GetTemplateTypeName<TIndex>() + ">(" + GetName()
+                      + ")::GetCountAtIndexAndTime";
+    G4Exception(origin, "BAD_REFERENCE", FatalException,
+                "Could not convert index to expected type!");
+  }
+  return GetNbReactionsAtTime(*pIndex, time);
+}
+
+//------------------------------------------------------------------------------
+
+template<typename TIndex>
 void G4VUserMoleculeReactionCounter<TIndex>::RecordReaction(
   std::unique_ptr<G4VMoleculeReactionCounter::G4VMoleculeReactionCounterIndex> pIndex,
   G4double time, G4int number)
 {
   const TIndex* mapIndex = dynamic_cast<TIndex*>(pIndex.get());
 
-  if (IsTimeAboveUpperBound(time)) {
-    if (fVerbose > 3) {
+  if (IsTimeAboveUpperBound(time))
+  {
+    if (fVerbose > 3)
+    {
       G4cout << "G4VUserMoleculeReactionCounter<"
              << G4::MoleculeCounter::GetTemplateTypeName<TIndex>() << ">(" << GetName()
              << ")::RecordReaction : " << mapIndex->GetReactionData()->GetReactionID()
@@ -172,8 +213,10 @@ void G4VUserMoleculeReactionCounter<TIndex>::RecordReaction(
     }
     return;
   }
-  else if (IsTimeBelowLowerBound(time)) {
-    if (fVerbose > 3) {
+  else if (IsTimeBelowLowerBound(time))
+  {
+    if (fVerbose > 3)
+    {
       G4cout << "G4VUserMoleculeReactionCounter<"
              << G4::MoleculeCounter::GetTemplateTypeName<TIndex>() << ">(" << GetName()
              << ")::RecordReaction : " << mapIndex->GetReactionData()->GetReactionID()
@@ -183,7 +226,8 @@ void G4VUserMoleculeReactionCounter<TIndex>::RecordReaction(
     return;
   }
 
-  if (fVerbose > 2) {
+  if (fVerbose > 2)
+  {
     G4cout << "G4VUserMoleculeReactionCounter<"
            << G4::MoleculeCounter::GetTemplateTypeName<TIndex>() << ">(" << GetName()
            << ")::RecordReaction : " << mapIndex->GetReactionData()->GetReactionID()
@@ -192,17 +236,20 @@ void G4VUserMoleculeReactionCounter<TIndex>::RecordReaction(
 
   auto [it, indexIsNew] = fCounterMap.emplace(*mapIndex, InnerCounterMapType{fTimeComparer});
 
-  if (indexIsNew || it->second.empty()) {
+  if (indexIsNew || it->second.empty())
+  {
     it->second.emplace(time, number);
     // it->second[time] = number;
   }
-  else {
+  else
+  {
     if (G4MoleculeCounterManager::Instance()->GetResetCountersBeforeEvent())
     // can only do consistency check if the counters are cleared before each event
     {
       auto end = it->second.rbegin();
 
-      if ((end->first <= time || std::fabs(end->first - time) <= fTimeComparer.GetPrecisionAtTime(time)))
+      if ((end->first <= time
+           || std::fabs(end->first - time) <= fTimeComparer.GetPrecisionAtTime(time)))
       // Case 1 = new time comes after last recorded data
       // Case 2 = new time is about the same as the last recorded one
       {
@@ -210,7 +257,8 @@ void G4VUserMoleculeReactionCounter<TIndex>::RecordReaction(
         auto [it_time, _] = it->second.emplace(time, end->second);
         it_time->second += number;
       }
-      else {
+      else
+      {
         G4ExceptionDescription errMsg;
         errMsg << "Time of reaction " << mapIndex->GetReactionData()->GetReactionID() << " is "
                << G4BestUnit(time, "Time") << "while the global time is "
@@ -222,7 +270,8 @@ void G4VUserMoleculeReactionCounter<TIndex>::RecordReaction(
                     "TIME_DONT_MATCH", FatalException, errMsg);
       }
     }
-    else {
+    else
+    {
       // since counters are not cleared after chemical run (i.e., after event)
       // there will already be numbers in the map, so...
       // (1) find the closest time
@@ -230,7 +279,8 @@ void G4VUserMoleculeReactionCounter<TIndex>::RecordReaction(
       // (3) add number to all "future" entries as well
       auto it_closest = G4::MoleculeCounter::FindClosestEntryForKey(it->second, time);
       auto [it_new, _] = it->second.emplace(time, it_closest->second);
-      do {
+      do
+      {
         it_new->second += number;
       } while (++it_new != it->second.end());
     }
@@ -242,7 +292,8 @@ void G4VUserMoleculeReactionCounter<TIndex>::RecordReaction(
 template<typename TIndex>
 std::vector<TIndex> G4VUserMoleculeReactionCounter<TIndex>::GetMapIndices() const
 {
-  if (fVerbose > 2) {
+  if (fVerbose > 2)
+  {
     G4cout << "Entering in G4VUserMoleculeReactionCounter::GetMapIndices" << G4endl;
   }
   return G4::MoleculeCounter::GetMapIndices(fCounterMap);
@@ -251,13 +302,16 @@ std::vector<TIndex> G4VUserMoleculeReactionCounter<TIndex>::GetMapIndices() cons
 //------------------------------------------------------------------------------
 
 template<typename T>
-std::set<const G4DNAMolecularReactionData*> G4VUserMoleculeReactionCounter<T>::GetRecordedReactions() const
+std::set<const G4DNAMolecularReactionData*>
+G4VUserMoleculeReactionCounter<T>::GetRecordedReactions() const
 {
-  if (fVerbose > 2) {
+  if (fVerbose > 2)
+  {
     G4cout << "Entering in G4VUserMoleculeReactionCounter::GetRecordedReactions" << G4endl;
   }
   std::set<const G4DNAMolecularReactionData*> output{};
-  for (const auto& it : fCounterMap) {
+  for (const auto& it : fCounterMap)
+  {
     output.insert(it.first.GetReactionData());
   }
   return output;
@@ -291,7 +345,8 @@ void G4VUserMoleculeReactionCounter<T>::DumpCounterMapIndices() const
 template<typename T>
 void G4VUserMoleculeReactionCounter<T>::ResetCounter()
 {
-  if (fVerbose > 1) {
+  if (fVerbose > 1)
+  {
     G4cout << "G4VUserMoleculeReactionCounter<" << G4::MoleculeCounter::GetTemplateTypeName<T>()
            << ">(" << GetName() << ")::ResetCounter" << G4endl;
   }
@@ -301,7 +356,8 @@ void G4VUserMoleculeReactionCounter<T>::ResetCounter()
 //------------------------------------------------------------------------------
 
 template<typename TIndex>
-G4bool G4VUserMoleculeReactionCounter<TIndex>::SearchIndexUpdated(Search& search, const TIndex& index) const
+G4bool G4VUserMoleculeReactionCounter<TIndex>::SearchIndexUpdated(Search& search,
+                                                                  const TIndex& index) const
 {
   if (search.fLowerBoundSet && !(search.fLastIndexSearched->first < index)
       && !(index < search.fLastIndexSearched->first))
@@ -312,11 +368,13 @@ G4bool G4VUserMoleculeReactionCounter<TIndex>::SearchIndexUpdated(Search& search
   auto mol_it = fCounterMap.find(index);
   search.fLastIndexSearched = mol_it;
 
-  if (mol_it != fCounterMap.end()) {
+  if (mol_it != fCounterMap.end())
+  {
     search.fLowerBoundTime = search.fLastIndexSearched->second.end();
     search.fLowerBoundSet = true;
   }
-  else {
+  else
+  {
     search.fLowerBoundSet = false;
   }
 
@@ -326,29 +384,37 @@ G4bool G4VUserMoleculeReactionCounter<TIndex>::SearchIndexUpdated(Search& search
 //------------------------------------------------------------------------------
 
 template<typename T>
-G4int G4VUserMoleculeReactionCounter<T>::SearchUpperBoundTime(Search& search, G4double time, G4bool sameIndex) const
+G4int G4VUserMoleculeReactionCounter<T>::SearchUpperBoundTime(Search& search, G4double time,
+                                                              G4bool sameIndex) const
 {
   auto mol_it = search.fLastIndexSearched;
-  if (mol_it == fCounterMap.end()) {
+  if (mol_it == fCounterMap.end())
+  {
     return 0;
   }
 
   InnerCounterMapType const& timeMap = mol_it->second;
-  if (timeMap.empty()) {
+  if (timeMap.empty())
+  {
     return 0;
   }
 
-  if (sameIndex) {
-    if (search.fLowerBoundSet && search.fLowerBoundTime != timeMap.end()) {
-      if (search.fLowerBoundTime->first < time) {
+  if (sameIndex)
+  {
+    if (search.fLowerBoundSet && search.fLowerBoundTime != timeMap.end())
+    {
+      if (search.fLowerBoundTime->first < time)
+      {
         auto upperToLast = search.fLowerBoundTime;
         upperToLast++;
 
-        if (upperToLast == timeMap.end()) {
+        if (upperToLast == timeMap.end())
+        {
           return search.fLowerBoundTime->second;
         }
 
-        if (upperToLast->first > time) {
+        if (upperToLast->first > time)
+        {
           return search.fLowerBoundTime->second;
         }
       }
@@ -357,11 +423,13 @@ G4int G4VUserMoleculeReactionCounter<T>::SearchUpperBoundTime(Search& search, G4
 
   auto up_time_it = timeMap.upper_bound(time);
 
-  if (up_time_it == timeMap.end()) {
+  if (up_time_it == timeMap.end())
+  {
     auto last_time = timeMap.rbegin();
     return last_time->second;
   }
-  if (up_time_it == timeMap.begin()) {
+  if (up_time_it == timeMap.begin())
+  {
     return 0;
   }
 
@@ -379,7 +447,8 @@ template<typename TIndex>
 void G4VUserMoleculeReactionCounter<TIndex>::AbsorbCounter(
   const G4VMoleculeCounterInternalBase* pCounterBase)
 {
-  if (pCounterBase == nullptr) {
+  if (pCounterBase == nullptr)
+  {
     G4ExceptionDescription errMsg;
     errMsg << "Could not cast the pointer to type G4VUserMoleculeReactionCounter<"
            << G4::MoleculeCounter::GetTemplateTypeName<TIndex>() << ">!\n"
@@ -391,7 +460,8 @@ void G4VUserMoleculeReactionCounter<TIndex>::AbsorbCounter(
 
   auto pCounter = dynamic_cast<G4VUserMoleculeReactionCounter<TIndex> const*>(pCounterBase);
 
-  if (pCounter == nullptr) {
+  if (pCounter == nullptr)
+  {
     G4ExceptionDescription errMsg;
     errMsg << "Could not cast the pointer to type G4VUserMoleculeReactionCounter<"
            << G4::MoleculeCounter::GetTemplateTypeName<TIndex>() << ">!\n"
@@ -401,7 +471,8 @@ void G4VUserMoleculeReactionCounter<TIndex>::AbsorbCounter(
                 "BAD_REFERENCE", FatalException, errMsg);
   }
 
-  if (pCounter->GetType() != GetType()) {
+  if (pCounter->GetType() != GetType())
+  {
     G4ExceptionDescription errMsg;
     errMsg << "You are trying to absorb a counter with different type!" << G4endl;
     G4Exception(G4String("G4VUserMoleculeReactionCounter<"
@@ -409,22 +480,27 @@ void G4VUserMoleculeReactionCounter<TIndex>::AbsorbCounter(
                 "TYPE_DIFF", JustWarning, errMsg);
   }
 
-  for (auto const& worker_it : pCounter->GetCounterMap()) {
+  for (auto const& worker_it : pCounter->GetCounterMap())
+  {
     auto [master_it, indexIsNew] =
       fCounterMap.emplace(worker_it.first, InnerCounterMapType{fTimeComparer});
 
     G4int currentNumber = 0, previousNumber = 0;
-    for (auto const& [time, number] : worker_it.second) {
+    for (auto const& [time, number] : worker_it.second)
+    {
       currentNumber = number - previousNumber;
       previousNumber = number;
 
-      if (master_it->second.empty()) {
+      if (master_it->second.empty())
+      {
         master_it->second.emplace(time, currentNumber);
       }
-      else {  // at least one element exists, so we can try to find the closest key
+      else
+      {  // at least one element exists, so we can try to find the closest key
         auto it_closest = G4::MoleculeCounter::FindClosestEntryForKey(master_it->second, time);
         auto [it, _] = master_it->second.emplace(time, it_closest->second);
-        do {
+        do
+        {
           it->second += currentNumber;
         } while (++it != master_it->second.end());
       }

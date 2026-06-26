@@ -33,17 +33,17 @@
 //
 
 //
-// Description: use Kokoulin's parameterized calculation of virtual 
+// Description: use Kokoulin's parameterized calculation of virtual
 //              photon production cross section and conversion to
 //              real photons.
 
-#ifndef G4KokoulinMuonNuclearXS_h
-#define G4KokoulinMuonNuclearXS_h 1
+#ifndef G4KOKOULINMUONNUCLEARXS_HH
+#define G4KOKOULINMUONNUCLEARXS_HH
 
-#include "G4VCrossSectionDataSet.hh"
 #include "G4DynamicParticle.hh"
 #include "G4Element.hh"
 #include "G4PhysicsVector.hh"
+#include "G4VCrossSectionDataSet.hh"
 
 const G4int MAXZMUN = 93;
 
@@ -51,45 +51,41 @@ class G4PhysicsVector;
 
 class G4KokoulinMuonNuclearXS : public G4VCrossSectionDataSet
 {
-public:
+  public:
 
-  G4KokoulinMuonNuclearXS();
-  virtual ~G4KokoulinMuonNuclearXS();
+    G4KokoulinMuonNuclearXS();
+    virtual ~G4KokoulinMuonNuclearXS();
 
-  static const char* Default_Name() {return "KokoulinMuonNuclearXS";}
+    static const char* Default_Name() { return "KokoulinMuonNuclearXS"; }
 
-  virtual void CrossSectionDescription(std::ostream&) const;
+    virtual void CrossSectionDescription(std::ostream&) const;
 
-  G4bool IsElementApplicable(const G4DynamicParticle* particle, 
-			     G4int Z, const G4Material*);
+    G4bool IsElementApplicable(const G4DynamicParticle* particle, G4int Z, const G4Material*);
 
-  G4double GetElementCrossSection(const G4DynamicParticle* particle,
-				  G4int Z, const G4Material*);
+    G4double GetElementCrossSection(const G4DynamicParticle* particle, G4int Z, const G4Material*);
 
-  void BuildPhysicsTable(const G4ParticleDefinition&);
+    void BuildPhysicsTable(const G4ParticleDefinition&);
 
-  void BuildCrossSectionTable();
+    void BuildCrossSectionTable();
 
-  G4double
-  ComputeDDMicroscopicCrossSection(G4double incidentKE, G4double Z,
-                                   G4double A, G4double epsilon);
+    G4double ComputeDDMicroscopicCrossSection(G4double incidentKE, G4double Z, G4double A,
+                                              G4double epsilon);
 
-private:
+  private:
 
-  G4double
-  ComputeMicroscopicCrossSection(G4double incidentKE, G4double A);
+    G4double ComputeMicroscopicCrossSection(G4double incidentKE, G4double A);
 
-  G4KokoulinMuonNuclearXS & operator=(const G4KokoulinMuonNuclearXS &right);
-  G4KokoulinMuonNuclearXS(const G4KokoulinMuonNuclearXS&);
+    G4KokoulinMuonNuclearXS& operator=(const G4KokoulinMuonNuclearXS& right);
+    G4KokoulinMuonNuclearXS(const G4KokoulinMuonNuclearXS&);
 
-  static G4PhysicsVector* theCrossSection[MAXZMUN];
+    static G4PhysicsVector* theCrossSection[MAXZMUN];
 
-  G4double LowestKineticEnergy;
-  G4double HighestKineticEnergy;
-  G4int    TotBin;
-  G4double CutFixed;
-  G4bool   isInitialized;
-  G4bool   isMaster;
+    G4double LowestKineticEnergy;
+    G4double HighestKineticEnergy;
+    G4int TotBin;
+    G4double CutFixed;
+    G4bool isInitialized;
+    G4bool isMaster;
 };
 
 #endif

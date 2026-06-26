@@ -28,84 +28,84 @@
 // Created by ngoc hoang tran on 03/08/2023.
 //
 
-#ifndef G4ChemEquilibrium_hh
-#define G4ChemEquilibrium_hh 1
-#include "globals.hh"
+#ifndef G4CHEMEQUILIBRIUM_HH
+#define G4CHEMEQUILIBRIUM_HH
 #include "G4MoleculeTable.hh"
 #include "G4UnitsTable.hh"
+#include "globals.hh"
 
 class G4DNAMolecularReactionData;
-class G4ChemEquilibrium //for each Equilibrium process
+class G4ChemEquilibrium  // for each Equilibrium process
 {
-public:
-  using MolType    = const G4MolecularConfiguration*;
-  using Reaction    = const G4DNAMolecularReactionData*;
-  explicit G4ChemEquilibrium(const G4int& type, const G4double& time);
-  ~G4ChemEquilibrium() = default;
-  void Initialize();
-  inline G4bool IsStatusChanged()
-  {
-    if(fStatus == fAddEquilibrium){
-      return false;
-    }else
+  public:
+
+    using MolType = const G4MolecularConfiguration*;
+    using Reaction = const G4DNAMolecularReactionData*;
+    explicit G4ChemEquilibrium(const G4int& type, const G4double& time);
+    ~G4ChemEquilibrium() = default;
+    void Initialize();
+    inline G4bool IsStatusChanged()
     {
-      fStatus = fAddEquilibrium;
-      if(fVerbose > 0)
+      if (fStatus == fAddEquilibrium)
       {
-        PrintInfo();
+        return false;
       }
-      return true;
+      else
+      {
+        fStatus = fAddEquilibrium;
+        if (fVerbose > 0)
+        {
+          PrintInfo();
+        }
+        return true;
+      }
     }
-  }
 
-  inline void Reset()
-  {
-    fStatus = false;
-    fAddEquilibrium = false;
-    fEquilibriumTime = 0;
-    fGlobalTime = 0;
-  }
-
-  inline void SetVerbose(const G4int& verbose)
-  {
-    fVerbose = verbose;
-  }
-
-  inline void SetGlobalTime(const G4double& time)
-  {
-    fGlobalTime = time;
-
-    if(fGlobalTime - fEquilibriumTime > fEquilibriumDuration && fAddEquilibrium)
+    inline void Reset()
     {
+      fStatus = false;
       fAddEquilibrium = false;
-      if(fVerbose) {
-        G4cout << "SetEquilibrium : off " << fRectionType
-               << "  fGlobalTime : " << G4BestUnit(fGlobalTime, "Time")
-               << "  fEquilibriumTime8 : " << G4BestUnit(fEquilibriumTime, "Time")
-               << " fAddEquilibrium : " << fAddEquilibrium << G4endl;
+      fEquilibriumTime = 0;
+      fGlobalTime = 0;
+    }
+
+    inline void SetVerbose(const G4int& verbose) { fVerbose = verbose; }
+
+    inline void SetGlobalTime(const G4double& time)
+    {
+      fGlobalTime = time;
+
+      if (fGlobalTime - fEquilibriumTime > fEquilibriumDuration && fAddEquilibrium)
+      {
+        fAddEquilibrium = false;
+        if (fVerbose)
+        {
+          G4cout << "SetEquilibrium : off " << fRectionType
+                 << "  fGlobalTime : " << G4BestUnit(fGlobalTime, "Time")
+                 << "  fEquilibriumTime8 : " << G4BestUnit(fEquilibriumTime, "Time")
+                 << " fAddEquilibrium : " << fAddEquilibrium << G4endl;
+        }
       }
     }
-  }
-  void SetEquilibrium(Reaction pReaction);
+    void SetEquilibrium(Reaction pReaction);
 
-  inline G4bool GetEquilibriumStatus() const
-  {
-    return fAddEquilibrium;
-  }
+    inline G4bool GetEquilibriumStatus() const { return fAddEquilibrium; }
 
-  void PrintInfo() const;
-private:
-  G4bool fStatus = false;
-  G4bool fAddEquilibrium = false;
-  G4double fEquilibriumTime = 0;
-  const G4double fEquilibriumDuration = 0;
-  G4int fRectionType = 0;
-  MolType fReactant1 = nullptr;
-  MolType fReactant2 = nullptr;
-  MolType fReactantB1 = nullptr;
-  MolType fReactantB2 = nullptr;
-  G4double fGlobalTime = 0;
-  G4int fVerbose = 1;
+    void PrintInfo() const;
+
+  private:
+
+    G4bool fStatus = false;
+    G4bool fAddEquilibrium = false;
+    G4double fEquilibriumTime = 0;
+    const G4double fEquilibriumDuration = 0;
+    G4int fRectionType = 0;
+    MolType fReactant1 = nullptr;
+    MolType fReactant2 = nullptr;
+    MolType fReactantB1 = nullptr;
+    MolType fReactantB2 = nullptr;
+    G4double fGlobalTime = 0;
+    G4int fVerbose = 1;
 };
 
 #endif  //

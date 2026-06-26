@@ -25,25 +25,25 @@
 //
 // G4TrialCounts inline methods implementation
 //
-// Author: John Apostolakis (CERN), 08.12.2006   
+// Author: John Apostolakis (CERN), 08.12.2006
 // -------------------------------------------------------------------
 
-inline void G4TrialsCounter::AccumulateCounts( G4int noTrials )
+inline void G4TrialsCounter::AccumulateCounts(G4int noTrials)
 {
   fTotalNoTrials += noTrials;
   ++fNumberCalls;
 
-  if( noTrials >= fmaxTrials )
+  if (noTrials >= fmaxTrials)
   {
-     if (noTrials > fmaxTrials )
-     { 
-        fmaxTrials = noTrials; 
-        fNoTimesMaxTrials = 1; 
-     }
-     else
-     { 
-        ++fNoTimesMaxTrials; 
-     } 
-  } 
+    if (noTrials > fmaxTrials)
+    {
+      fmaxTrials = noTrials;
+      fNoTimesMaxTrials = 1;
+    }
+    else
+    {
+      ++fNoTimesMaxTrials;
+    }
+  }
   fPrinted = false;  // New statistics
 }

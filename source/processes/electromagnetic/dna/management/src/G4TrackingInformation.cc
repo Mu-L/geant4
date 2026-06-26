@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr) 
+// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr)
 //
 // History:
 // -----------
@@ -33,26 +33,28 @@
 // -------------------------------------------------------------------
 
 #include "G4TrackingInformation.hh"
-#include "G4VITProcess.hh"
-#include "G4ITNavigator.hh"
-//#include "G4Navigator.hh"
 
-G4TrackingInformation::G4TrackingInformation() :
-    
-    fProcessState                   ((size_t)G4VITProcess::GetMaxProcessIndex()) //,0)
+#include "G4ITNavigator.hh"
+#include "G4VITProcess.hh"
+// #include "G4Navigator.hh"
+
+G4TrackingInformation::G4TrackingInformation()
+  :
+
+    fProcessState((size_t)G4VITProcess::GetMaxProcessIndex())  //,0)
 {
-    //ctor
-    fpTrajectory_Lock           = nullptr;
-    fRecordedTrackGlobalTime    = -1;
-    fRecordedTrackLocalTime     = -1;
-    fpStepProcessorState        = nullptr;
-    fNavigatorState = nullptr;
+  // ctor
+  fpTrajectory_Lock = nullptr;
+  fRecordedTrackGlobalTime = -1;
+  fRecordedTrackLocalTime = -1;
+  fpStepProcessorState = nullptr;
+  fNavigatorState = nullptr;
 }
 
 G4TrackingInformation::~G4TrackingInformation()
 {
-    //dtor
-	/*
+  // dtor
+  /*
     for(int i = 0 ; i < (int) fProcessState.size() - 1 ; i++)
     {
         if(fProcessState[i])
@@ -62,32 +64,32 @@ G4TrackingInformation::~G4TrackingInformation()
         }
     }
     */
-    fProcessState.clear();
-    delete fpStepProcessorState;
-    fpStepProcessorState = nullptr;
-    delete fNavigatorState;
-    fNavigatorState = nullptr;
+  fProcessState.clear();
+  delete fpStepProcessorState;
+  fpStepProcessorState = nullptr;
+  delete fNavigatorState;
+  fNavigatorState = nullptr;
 }
 
 // should not be used
-G4TrackingInformation::G4TrackingInformation(const G4TrackingInformation& /*other*/)    
+G4TrackingInformation::G4TrackingInformation(const G4TrackingInformation& /*other*/)
 {
-    //copy ctor
-    fpTrajectory_Lock = nullptr;
-    fRecordedTrackGlobalTime = -1;
-    fRecordedTrackLocalTime = -1;
-    fNavigatorState = nullptr;
+  // copy ctor
+  fpTrajectory_Lock = nullptr;
+  fRecordedTrackGlobalTime = -1;
+  fRecordedTrackLocalTime = -1;
+  fNavigatorState = nullptr;
 }
 
 // should not be used
 G4TrackingInformation& G4TrackingInformation::operator=(const G4TrackingInformation& rhs)
 {
-    if (this == &rhs) return *this; // handle self assignment
-    //assignment operator
-    return *this;
+  if (this == &rhs) return *this;  // handle self assignment
+  // assignment operator
+  return *this;
 }
 //
-//G4ProcessState_Lock* G4TrackingInformation::GetProcessState(size_t index)
+// G4ProcessState_Lock* G4TrackingInformation::GetProcessState(size_t index)
 //{
 //    if(index> G4VITProcess::GetMaxProcessIndex())
 //    {
@@ -103,25 +105,24 @@ G4TrackingInformation& G4TrackingInformation::operator=(const G4TrackingInformat
 
 G4shared_ptr<G4ProcessState_Lock> G4TrackingInformation::GetProcessState(size_t index)
 {
-    if(index> G4VITProcess::GetMaxProcessIndex())
-    {
-        G4ExceptionDescription exceptionDescription ;
-        exceptionDescription << "G4TrackingInformation::GetProcInfo : Wrong process subType : " ;
-        exceptionDescription << index ;
-        G4Exception("G4TrackingInformation::GetProcessState","G4TrackingInformation003",
-                    FatalErrorInArgument,exceptionDescription);
-    }
+  if (index > G4VITProcess::GetMaxProcessIndex())
+  {
+    G4ExceptionDescription exceptionDescription;
+    exceptionDescription << "G4TrackingInformation::GetProcInfo : Wrong process subType : ";
+    exceptionDescription << index;
+    G4Exception("G4TrackingInformation::GetProcessState", "G4TrackingInformation003",
+                FatalErrorInArgument, exceptionDescription);
+  }
 
-    return fProcessState[index];
+  return fProcessState[index];
 }
 
 void G4TrackingInformation::RecordCurrentPositionNTime(G4Track* track)
 {
-    if(track != nullptr)
-    {
-        fRecordedTrackPosition = track->GetPosition();
-        fRecordedTrackLocalTime = track->GetLocalTime();
-        fRecordedTrackGlobalTime = track->GetGlobalTime();
-    }
+  if (track != nullptr)
+  {
+    fRecordedTrackPosition = track->GetPosition();
+    fRecordedTrackLocalTime = track->GetLocalTime();
+    fRecordedTrackGlobalTime = track->GetGlobalTime();
+  }
 }
-

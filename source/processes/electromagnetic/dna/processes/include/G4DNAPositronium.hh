@@ -23,25 +23,25 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4DNAPositronium_h
-#define G4DNAPositronium_h 1
+#ifndef G4DNAPOSITRONIUM_HH
+#define G4DNAPOSITRONIUM_HH
 
 #include "G4VEmProcess.hh"
 
 class G4DNAPositronium : public G4VEmProcess
-{ 
-public:
-  G4DNAPositronium(const G4String& processName ="G4DNAPositronium");
-  ~G4DNAPositronium() override;
+{
+  public:
 
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
-  void InitialiseProcess(const G4ParticleDefinition*) override;
-  virtual void PrintInfo();
-  
-private:
-  G4bool       isInitialised{false};
+    G4DNAPositronium(const G4String& processName = "G4DNAPositronium");
+    ~G4DNAPositronium() override;
 
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+    virtual void PrintInfo();
+
+  private:
+
+    G4bool isInitialised{false};
 };
-
 
 #endif

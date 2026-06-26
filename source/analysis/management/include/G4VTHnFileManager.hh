@@ -28,15 +28,16 @@
 //
 // Author: Ivana Hrivnacova, 15/09/2020  (ivana@ipno.in2p3.fr)
 
-#ifndef G4VTHnFileManager_h
-#define G4VTHnFileManager_h 1
+#ifndef G4VTHNFILEMANAGER_HH
+#define G4VTHNFILEMANAGER_HH
 
 #include "globals.hh"
 
-template <typename HT>
+template<typename HT>
 class G4VTHnFileManager
 {
   public:
+
     G4VTHnFileManager() = default;
     virtual ~G4VTHnFileManager() = default;
 

@@ -26,10 +26,10 @@
 //
 //
 
-#ifndef G4UItcsh_h
-#define G4UItcsh_h 1
+#ifndef G4UITCSH_HH
+#define G4UITCSH_HH
 
-#if ! (defined(WIN32) || defined(__MINGW32__))
+#if !(defined(WIN32) || defined(__MINGW32__))
 
 #  include "G4UIcommand.hh"
 #  include "G4UIcommandTree.hh"
@@ -71,88 +71,90 @@
 
 class G4UItcsh : public G4VUIshell
 {
- public:
-  G4UItcsh(const G4String& prompt = "%s> ", G4int maxhist = 100);
-  ~G4UItcsh() override;
+  public:
 
-  void SetLsColor(TermColorIndex dirColor, TermColorIndex cmdColor) override;
-  G4String GetCommandLineString(const char* msg = nullptr) override;
+    G4UItcsh(const G4String& prompt = "%s> ", G4int maxhist = 100);
+    ~G4UItcsh() override;
 
-  void ResetTerminal() override;
+    void SetLsColor(TermColorIndex dirColor, TermColorIndex cmdColor) override;
+    G4String GetCommandLineString(const char* msg = nullptr) override;
 
- protected:
-  void MakePrompt(const char* msg = nullptr) override;
+    void ResetTerminal() override;
 
-  // Is cursor position at the last of command line ?
-  G4bool IsCursorLast() const;
+  protected:
 
-  void InitializeCommandLine();
-  G4String ReadLine();
+    void MakePrompt(const char* msg = nullptr) override;
 
-  // insert character
-  void InsertCharacter(char cc);
+    // Is cursor position at the last of command line ?
+    G4bool IsCursorLast() const;
 
-  // backspace character
-  void BackspaceCharacter();
+    void InitializeCommandLine();
+    G4String ReadLine();
 
-  // delete character
-  void DeleteCharacter();
+    // insert character
+    void InsertCharacter(char cc);
 
-  // clear command line
-  void ClearLine();
+    // backspace character
+    void BackspaceCharacter();
 
-  // clear after the cursor
-  void ClearAfterCursor();
+    // delete character
+    void DeleteCharacter();
 
-  // clear screen
-  void ClearScreen();
+    // clear command line
+    void ClearLine();
 
-  // move cursor forward
-  void ForwardCursor();
+    // clear after the cursor
+    void ClearAfterCursor();
 
-  // move cursor backward
-  void BackwardCursor();
+    // clear screen
+    void ClearScreen();
 
-  // move cursor to the top
-  void MoveCursorTop();
+    // move cursor forward
+    void ForwardCursor();
 
-  // move cursor to the end
-  void MoveCursorEnd();
+    // move cursor backward
+    void BackwardCursor();
 
-  // next command
-  void NextCommand();
+    // move cursor to the top
+    void MoveCursorTop();
 
-  // previous command
-  void PreviousCommand();
+    // move cursor to the end
+    void MoveCursorEnd();
 
-  // list matched commands
-  void ListMatchedCommand();
+    // next command
+    void NextCommand();
 
-  // complete command
-  void CompleteCommand();
+    // previous command
+    void PreviousCommand();
 
-  // utilities...
-  G4String GetFirstMatchedString(const G4String& str1, const G4String& str2) const;
+    // list matched commands
+    void ListMatchedCommand();
 
-  void StoreHistory(G4String aCommand);
+    // complete command
+    void CompleteCommand();
 
-  // index is global history#
-  G4String RestoreHistory(G4int index);
+    // utilities...
+    G4String GetFirstMatchedString(const G4String& str1, const G4String& str2) const;
 
-  void SetTermToInputMode();
-  void RestoreTerm();
+    void StoreHistory(G4String aCommand);
 
-  G4String commandLine;  // command line string;
-  G4int cursorPosition;  // cursor position
-  G4String commandLineBuf;  // temp. command line;
-  // history functionality  (history# is managed in itself)
-  std::vector<G4String> commandHistory;
-  G4int maxHistory;  // max# of histories stored
-  G4int currentHistoryNo;  // global
-  G4int relativeHistoryIndex;  // local index relative to current history#
-  // (re)set termios
-  termios tios;  // terminal mode (prestatus)
-  G4String clearString;  // "clear code (^L)"
+    // index is global history#
+    G4String RestoreHistory(G4int index);
+
+    void SetTermToInputMode();
+    void RestoreTerm();
+
+    G4String commandLine;  // command line string;
+    G4int cursorPosition;  // cursor position
+    G4String commandLineBuf;  // temp. command line;
+    // history functionality  (history# is managed in itself)
+    std::vector<G4String> commandHistory;
+    G4int maxHistory;  // max# of histories stored
+    G4int currentHistoryNo;  // global
+    G4int relativeHistoryIndex;  // local index relative to current history#
+    // (re)set termios
+    termios tios;  // terminal mode (prestatus)
+    G4String clearString;  // "clear code (^L)"
 };
 
 // ====================================================================

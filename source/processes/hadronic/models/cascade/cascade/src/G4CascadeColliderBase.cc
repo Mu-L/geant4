@@ -40,6 +40,7 @@
 // 20140930  Change name from "const char*" to "const G4String"
 
 #include "G4CascadeColliderBase.hh"
+
 #include "G4CascadeCheckBalance.hh"
 #include "G4CascadeParameters.hh"
 #include "G4CollisionOutput.hh"
@@ -47,45 +48,46 @@
 #include "G4InuclElementaryParticle.hh"
 #include "G4InuclNuclei.hh"
 #include "G4InuclSpecialFunctions.hh"
+
 #include <vector>
 
 using namespace G4InuclSpecialFunctions;
 
-
 // Constructor and destructor
 
 G4CascadeColliderBase::G4CascadeColliderBase(const G4String& name, G4int verbose)
-  : G4VCascadeCollider(name, verbose), balance(0) {
-  if (G4CascadeParameters::checkConservation())
-    balance = new G4CascadeCheckBalance(name);
+  : G4VCascadeCollider(name, verbose), balance(0)
+{
+  if (G4CascadeParameters::checkConservation()) balance = new G4CascadeCheckBalance(name);
 }
 
-G4CascadeColliderBase::~G4CascadeColliderBase() {
+G4CascadeColliderBase::~G4CascadeColliderBase()
+{
   delete balance;
 }
 
-void G4CascadeColliderBase::setVerboseLevel(G4int verbose) {
+void G4CascadeColliderBase::setVerboseLevel(G4int verbose)
+{
   G4VCascadeCollider::setVerboseLevel(verbose);
   if (balance) balance->setVerboseLevel(verbose);
 }
 
-
 // Both bullet and target must be hadrons or photons for this to work
 
-G4bool G4CascadeColliderBase::useEPCollider(G4InuclParticle* bullet, 
-					    G4InuclParticle* target) const {
-  return (dynamic_cast<G4InuclElementaryParticle*>(bullet) &&
-	  dynamic_cast<G4InuclElementaryParticle*>(target));
+G4bool G4CascadeColliderBase::useEPCollider(G4InuclParticle* bullet, G4InuclParticle* target) const
+{
+  return (dynamic_cast<G4InuclElementaryParticle*>(bullet)
+          && dynamic_cast<G4InuclElementaryParticle*>(target));
 }
-
 
 // Decide whether bullet-target interaction is candidate for cascade
 
-G4bool 
-G4CascadeColliderBase::inelasticInteractionPossible(G4InuclParticle* bullet,
-						    G4InuclParticle* target, 
-						    G4double ekin) const {
-  if (verboseLevel) {
+G4bool G4CascadeColliderBase::inelasticInteractionPossible(G4InuclParticle* bullet,
+                                                           G4InuclParticle* target,
+                                                           G4double ekin) const
+{
+  if (verboseLevel)
+  {
     G4cout << " >>> " << theName << "::inelasticInteractionPossible" << G4endl;
   }
 
@@ -95,68 +97,66 @@ G4CascadeColliderBase::inelasticInteractionPossible(G4InuclParticle* bullet,
   // See which one of the two (or both) is a nucleus, get properties
   // FIXME:  Should set a = baryon() for both, but that's not in base
   G4InuclNuclei* nuclei_bullet = dynamic_cast<G4InuclNuclei*>(bullet);
-  G4double ab = nuclei_bullet ? nuclei_bullet->getA() : 1;	// FIXME
+  G4double ab = nuclei_bullet ? nuclei_bullet->getA() : 1;  // FIXME
   G4double zb = nuclei_bullet ? nuclei_bullet->getZ() : bullet->getCharge();
-  
+
   G4InuclNuclei* nuclei_target = dynamic_cast<G4InuclNuclei*>(target);
-  G4double at = nuclei_target ? nuclei_target->getA() : 1;	// FIXME
+  G4double at = nuclei_target ? nuclei_target->getA() : 1;  // FIXME
   G4double zt = nuclei_target ? nuclei_target->getZ() : target->getCharge();
-  
+
   // VCOL (Coulomb barrier) used for testing if elastic collision necessary
   const G4double coeff = 0.001 * 1.2;
 
-  G4double VCOL = coeff * zt * zb / (G4cbrt(at) + G4cbrt(ab)); 
-  
-  G4bool possible = true;	// Force inelastic; should be (ekin >= VCOL)
+  G4double VCOL = coeff * zt * zb / (G4cbrt(at) + G4cbrt(ab));
 
-  if (verboseLevel > 3) {
-    G4cout << " VCOL: " << VCOL << " ekin: " << ekin << " inelastic possible: "
-	   << possible << G4endl;
+  G4bool possible = true;  // Force inelastic; should be (ekin >= VCOL)
+
+  if (verboseLevel > 3)
+  {
+    G4cout << " VCOL: " << VCOL << " ekin: " << ekin << " inelastic possible: " << possible
+           << G4endl;
   }
 
   return possible;
 }
 
-
 // Validate output for energy, momentum conservation, etc.
 
-G4bool G4CascadeColliderBase::validateOutput(G4InuclParticle* bullet,
-					     G4InuclParticle* target,
-					     G4CollisionOutput& output) {
-  if (!balance) return true;		// Skip checks unless requested
+G4bool G4CascadeColliderBase::validateOutput(G4InuclParticle* bullet, G4InuclParticle* target,
+                                             G4CollisionOutput& output)
+{
+  if (!balance) return true;  // Skip checks unless requested
 
-  if (verboseLevel > 1)
-    G4cout << " >>> " << theName << "::validateOutput" << G4endl;
+  if (verboseLevel > 1) G4cout << " >>> " << theName << "::validateOutput" << G4endl;
 
   // Show final state particles
   if (verboseLevel > 2) output.printCollisionOutput();
 
   balance->setVerboseLevel(verboseLevel);
   balance->collide(bullet, target, output);
-  return balance->okay();			// Returns false if violations
+  return balance->okay();  // Returns false if violations
 }
 
-G4bool G4CascadeColliderBase::validateOutput(const G4Fragment& fragment,
-					     G4CollisionOutput& output) {
-  if (!balance) return true;		// Skip checks unless requested
+G4bool G4CascadeColliderBase::validateOutput(const G4Fragment& fragment, G4CollisionOutput& output)
+{
+  if (!balance) return true;  // Skip checks unless requested
 
-  if (verboseLevel > 1)
-    G4cout << " >>> " << theName << "::validateOutput" << G4endl;
+  if (verboseLevel > 1) G4cout << " >>> " << theName << "::validateOutput" << G4endl;
 
   balance->setVerboseLevel(verboseLevel);
   balance->collide(fragment, output);
-  return balance->okay();			// Returns false if violations
+  return balance->okay();  // Returns false if violations
 }
 
-G4bool G4CascadeColliderBase::validateOutput(G4InuclParticle* bullet,
-					     G4InuclParticle* target,
-		     const std::vector<G4InuclElementaryParticle>& particles) {
-  if (!balance) return true;		// Skip checks unless requested
+G4bool
+G4CascadeColliderBase::validateOutput(G4InuclParticle* bullet, G4InuclParticle* target,
+                                      const std::vector<G4InuclElementaryParticle>& particles)
+{
+  if (!balance) return true;  // Skip checks unless requested
 
-  if (verboseLevel > 1)
-    G4cout << " >>> " << theName << "::validateOutput" << G4endl;
+  if (verboseLevel > 1) G4cout << " >>> " << theName << "::validateOutput" << G4endl;
 
   balance->setVerboseLevel(verboseLevel);
   balance->collide(bullet, target, particles);
-  return balance->okay();			// Returns false if violations
+  return balance->okay();  // Returns false if violations
 }

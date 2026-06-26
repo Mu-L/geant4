@@ -29,45 +29,34 @@
 // --------------------------------------------------------------------
 
 #include "G4TwistedTrd.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4Polyhedron.hh"
+
 #include "G4AutoLock.hh"
+#include "G4Polyhedron.hh"
+#include "G4SystemOfUnits.hh"
 
 namespace
 {
-  G4Mutex twtrdMutex = G4MUTEX_INITIALIZER;
+G4Mutex twtrdMutex = G4MUTEX_INITIALIZER;
 }
-
 
 //=====================================================================
 //* Constructor -------------------------------------------------------
 
-G4TwistedTrd::G4TwistedTrd( const G4String& pName,
-                                  G4double  pDx1,
-                                  G4double  pDx2,
-                                  G4double  pDy1,
-                                  G4double  pDy2,
-                                  G4double  pDz,
-                                  G4double  pPhiTwist )
-  : G4VTwistedFaceted( pName, pPhiTwist,pDz,0.,0.,
-                       pDy1, pDx1, pDx1, pDy2, pDx2, pDx2,0.)
-{
-}
+G4TwistedTrd::G4TwistedTrd(const G4String& pName, G4double pDx1, G4double pDx2, G4double pDy1,
+                           G4double pDy2, G4double pDz, G4double pPhiTwist)
+  : G4VTwistedFaceted(pName, pPhiTwist, pDz, 0., 0., pDy1, pDx1, pDx1, pDy2, pDx2, pDx2, 0.)
+{}
 
 //=====================================================================
 // Fake default constructor - sets only member data and allocates memory
 //                            for usage restricted to object persistency.
 
-G4TwistedTrd::G4TwistedTrd( __void__& a )
-  : G4VTwistedFaceted(a)
-{
-}
+G4TwistedTrd::G4TwistedTrd(__void__& a) : G4VTwistedFaceted(a) {}
 
 //=====================================================================
 //* Copy constructor --------------------------------------------------
 
-G4TwistedTrd::G4TwistedTrd(const G4TwistedTrd& rhs)
-  : G4VTwistedFaceted(rhs)
+G4TwistedTrd::G4TwistedTrd(const G4TwistedTrd& rhs) : G4VTwistedFaceted(rhs)
 {
   fpPolyhedron = GetPolyhedron();
 }
@@ -75,18 +64,21 @@ G4TwistedTrd::G4TwistedTrd(const G4TwistedTrd& rhs)
 //=====================================================================
 //* Assignment operator -----------------------------------------------
 
-G4TwistedTrd& G4TwistedTrd::operator = (const G4TwistedTrd& rhs)
+G4TwistedTrd& G4TwistedTrd::operator=(const G4TwistedTrd& rhs)
 {
-   // Check assignment to self
-   //
-   if (this == &rhs)  { return *this; }
+  // Check assignment to self
+  //
+  if (this == &rhs)
+  {
+    return *this;
+  }
 
-   // Copy base class data
-   //
-   G4VTwistedFaceted::operator=(rhs);
-   fpPolyhedron = GetPolyhedron();
+  // Copy base class data
+  //
+  G4VTwistedFaceted::operator=(rhs);
+  fpPolyhedron = GetPolyhedron();
 
-   return *this;
+  return *this;
 }
 
 //=====================================================================
@@ -102,12 +94,12 @@ std::ostream& G4TwistedTrd::StreamInfo(std::ostream& os) const
      << "    ===================================================\n"
      << " Solid type: G4TwistedTrd\n"
      << " Parameters: \n"
-     << "    pDx1 = " << GetX1HalfLength()/cm << " cm" << G4endl
-     << "    pDx2 = " << GetX2HalfLength()/cm << " cm" << G4endl
-     << "    pDy1 = " << GetY1HalfLength()/cm << " cm" << G4endl
-     << "    pDy2 = " << GetY2HalfLength()/cm << " cm" << G4endl
-     << "    pDz = "  << GetZHalfLength()/cm << " cm" << G4endl
-     << "    pPhiTwist = " << GetPhiTwist()/degree << " deg" << G4endl
+     << "    pDx1 = " << GetX1HalfLength() / cm << " cm" << G4endl
+     << "    pDx2 = " << GetX2HalfLength() / cm << " cm" << G4endl
+     << "    pDy1 = " << GetY1HalfLength() / cm << " cm" << G4endl
+     << "    pDy2 = " << GetY2HalfLength() / cm << " cm" << G4endl
+     << "    pDz = " << GetZHalfLength() / cm << " cm" << G4endl
+     << "    pPhiTwist = " << GetPhiTwist() / degree << " deg" << G4endl
      << "-----------------------------------------------------------\n";
 
   return os;
@@ -141,8 +133,8 @@ double G4TwistedTrd::GetCubicVolume()
     G4double x2 = GetX2HalfLength();
     G4double y1 = GetY1HalfLength();
     G4double y2 = GetY2HalfLength();
-    G4double h = 2.*GetZHalfLength();
-    fCubicVolume = h*((x1 + x2)*(y1 + y2) + (x2 - x1)*(y2 - y1)/3.);
+    G4double h = 2. * GetZHalfLength();
+    fCubicVolume = h * ((x1 + x2) * (y1 + y2) + (x2 - x1) * (y2 - y1) / 3.);
     l.unlock();
   }
   return fCubicVolume;
@@ -161,71 +153,72 @@ double G4TwistedTrd::GetSurfaceArea()
     G4double x2 = GetX2HalfLength();
     G4double y1 = GetY1HalfLength();
     G4double y2 = GetY2HalfLength();
-    G4double h = 2.*GetZHalfLength();
-    G4double hh = h*h;
+    G4double h = 2. * GetZHalfLength();
+    G4double hh = h * h;
     G4double delX = x2 - x1;
     G4double delY = y2 - y1;
     if (ang == 0.)
     {
-      G4double hx = std::sqrt(delY*delY + hh);
-      G4double hy = std::sqrt(delX*delX + hh);
-      return fSurfaceArea =
-        2.*(x1 + x2)*hx + 2.*(y1 + y2)*hy + 4.*(x1*y1 + x2*y2);
+      G4double hx = std::sqrt(delY * delY + hh);
+      G4double hy = std::sqrt(delX * delX + hh);
+      return fSurfaceArea = 2. * (x1 + x2) * hx + 2. * (y1 + y2) * hy + 4. * (x1 * y1 + x2 * y2);
     }
 
     // compute area of x-faces
     G4double U1, U2, V1, V2;
     G4double areaX = 0.;
-    U1 = delY + x1*ang;
-    U2 = delY + x2*ang;
-    V1 = delY - x1*ang;
-    V2 = delY - x2*ang;
-    if (std::abs(delX) < kCarTolerance) // case x1 == x2
+    U1 = delY + x1 * ang;
+    U2 = delY + x2 * ang;
+    V1 = delY - x1 * ang;
+    V2 = delY - x2 * ang;
+    if (std::abs(delX) < kCarTolerance)  // case x1 == x2
     {
-      areaX = (U1*std::sqrt(hh + U1*U1) + hh*std::asinh(U1/h) -
-               V1*std::sqrt(hh + V1*V1) - hh*std::asinh(V1/h))/ang;
+      areaX = (U1 * std::sqrt(hh + U1 * U1) + hh * std::asinh(U1 / h) - V1 * std::sqrt(hh + V1 * V1)
+               - hh * std::asinh(V1 / h))
+              / ang;
     }
     else
     {
       // U contribution
-      areaX += ((hh + U2*U2)*std::sqrt(hh + U2*U2) -
-                (hh + U1*U1)*std::sqrt(hh + U1*U1))/3.
-        + hh*(U2*std::asinh(U2/h) - U1*std::asinh(U1/h))
-        - hh*(std::sqrt(hh + U2*U2) - std::sqrt(hh + U1*U1));
+      areaX +=
+        ((hh + U2 * U2) * std::sqrt(hh + U2 * U2) - (hh + U1 * U1) * std::sqrt(hh + U1 * U1)) / 3.
+        + hh * (U2 * std::asinh(U2 / h) - U1 * std::asinh(U1 / h))
+        - hh * (std::sqrt(hh + U2 * U2) - std::sqrt(hh + U1 * U1));
       // V contribution
-      areaX += ((hh + V2*V2)*std::sqrt(hh + V2*V2) -
-                (hh + V1*V1)*std::sqrt(hh + V1*V1))/3.
-        + hh*(V2*std::asinh(V2/h) - V1*std::asinh(V1/h))
-        - hh*(std::sqrt(hh + V2*V2) - std::sqrt(hh + V1*V1));
-      areaX /= delX*ang*ang;
+      areaX +=
+        ((hh + V2 * V2) * std::sqrt(hh + V2 * V2) - (hh + V1 * V1) * std::sqrt(hh + V1 * V1)) / 3.
+        + hh * (V2 * std::asinh(V2 / h) - V1 * std::asinh(V1 / h))
+        - hh * (std::sqrt(hh + V2 * V2) - std::sqrt(hh + V1 * V1));
+      areaX /= delX * ang * ang;
     }
 
     // compute area of y-faces
     G4double areaY = 0.;
-    U1 = delX + y1*ang;
-    U2 = delX + y2*ang;
-    V1 = delX - y1*ang;
-    V2 = delX - y2*ang;
-    if (std::abs(delY) < kCarTolerance) // case y1 == y2
+    U1 = delX + y1 * ang;
+    U2 = delX + y2 * ang;
+    V1 = delX - y1 * ang;
+    V2 = delX - y2 * ang;
+    if (std::abs(delY) < kCarTolerance)  // case y1 == y2
     {
-      areaY = (U1*std::sqrt(hh + U1*U1) + hh*std::asinh(U1/h) -
-               V1*std::sqrt(hh + V1*V1) - hh*std::asinh(V1/h))/ang;
+      areaY = (U1 * std::sqrt(hh + U1 * U1) + hh * std::asinh(U1 / h) - V1 * std::sqrt(hh + V1 * V1)
+               - hh * std::asinh(V1 / h))
+              / ang;
     }
     else
     {
       // U contribution
-      areaY += ((hh + U2*U2)*std::sqrt(hh + U2*U2) -
-                (hh + U1*U1)*std::sqrt(hh + U1*U1))/3.
-        + hh*(U2*std::asinh(U2/h) - U1*std::asinh(U1/h))
-        - hh*(std::sqrt(hh + U2*U2) - std::sqrt(hh + U1*U1));
+      areaY +=
+        ((hh + U2 * U2) * std::sqrt(hh + U2 * U2) - (hh + U1 * U1) * std::sqrt(hh + U1 * U1)) / 3.
+        + hh * (U2 * std::asinh(U2 / h) - U1 * std::asinh(U1 / h))
+        - hh * (std::sqrt(hh + U2 * U2) - std::sqrt(hh + U1 * U1));
       // V contribution
-      areaY += ((hh + V2*V2)*std::sqrt(hh + V2*V2) -
-                (hh + V1*V1)*std::sqrt(hh + V1*V1))/3.
-        + hh*(V2*std::asinh(V2/h) - V1*std::asinh(V1/h))
-        - hh*(std::sqrt(hh + V2*V2) - std::sqrt(hh + V1*V1));
-      areaY /= delY*ang*ang;
+      areaY +=
+        ((hh + V2 * V2) * std::sqrt(hh + V2 * V2) - (hh + V1 * V1) * std::sqrt(hh + V1 * V1)) / 3.
+        + hh * (V2 * std::asinh(V2 / h) - V1 * std::asinh(V1 / h))
+        - hh * (std::sqrt(hh + V2 * V2) - std::sqrt(hh + V1 * V1));
+      areaY /= delY * ang * ang;
     }
-    fSurfaceArea = areaX + areaY + 4.*(x1*y1 + x2*y2);
+    fSurfaceArea = areaX + areaY + 4. * (x1 * y1 + x2 * y2);
     l.unlock();
   }
   return fSurfaceArea;

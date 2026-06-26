@@ -39,8 +39,8 @@
 
 // Author: Youhei Morita, 2001
 // --------------------------------------------------------------------
-#ifndef G4VPersistencyManager_hh
-#define G4VPersistencyManager_hh 1
+#ifndef G4VPERSISTENCYMANAGER_HH
+#define G4VPERSISTENCYMANAGER_HH
 
 #include "globals.hh"
 
@@ -51,6 +51,7 @@ class G4VPhysicalVolume;
 class G4VPersistencyManager
 {
   public:
+
     // Static method to return the pointer to the singleton object.
     // Note that this method does NOT create the singleton itself.
     static G4VPersistencyManager* GetPersistencyManager();
@@ -71,9 +72,11 @@ class G4VPersistencyManager
     virtual G4bool Retrieve(G4VPhysicalVolume*& theWorld) = 0;
 
   protected:
+
     G4VPersistencyManager();
 
   private:
+
     static G4ThreadLocal G4VPersistencyManager* fPersistencyManager;
 };
 

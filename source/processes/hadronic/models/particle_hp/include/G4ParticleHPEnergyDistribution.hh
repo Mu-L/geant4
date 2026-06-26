@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPEnergyDistribution_h
-#define G4ParticleHPEnergyDistribution_h 1
+#ifndef G4PARTICLEHPENERGYDISTRIBUTION_HH
+#define G4PARTICLEHPENERGYDISTRIBUTION_HH
 
 #include "G4ParticleHPArbitaryTab.hh"
 #include "G4ParticleHPEvapSpectrum.hh"
@@ -47,6 +47,7 @@
 class G4ParticleHPEnergyDistribution
 {
   public:
+
     G4ParticleHPEnergyDistribution()
     {
       theEnergyDistribution = nullptr;
@@ -55,8 +56,10 @@ class G4ParticleHPEnergyDistribution
     }
     ~G4ParticleHPEnergyDistribution()
     {
-      if (theEnergyDistribution != nullptr) {
-        for (G4int i = 0; i < theNumberOfPartials; i++) {
+      if (theEnergyDistribution != nullptr)
+      {
+        for (G4int i = 0; i < theNumberOfPartials; i++)
+        {
           delete theEnergyDistribution[i];
         }
         delete[] theEnergyDistribution;
@@ -68,9 +71,11 @@ class G4ParticleHPEnergyDistribution
       G4double dummy;
       theData >> dummy >> theNumberOfPartials;
       theEnergyDistribution = new G4VParticleHPEDis*[theNumberOfPartials];
-      for (G4int i = 0; i < theNumberOfPartials; i++) {
+      for (G4int i = 0; i < theNumberOfPartials; i++)
+      {
         theData >> theRepresentationType;
-        switch (theRepresentationType) {
+        switch (theRepresentationType)
+        {
           case 1:
             theEnergyDistribution[i] = new G4ParticleHPArbitaryTab;
             break;
@@ -89,7 +94,7 @@ class G4ParticleHPEnergyDistribution
           case 12:
             theEnergyDistribution[i] = new G4ParticleHPMadlandNixSpectrum;
             break;
-	default:
+          default:
             theEnergyDistribution[i] = new G4ParticleHPArbitaryTab;
         }
         theEnergyDistribution[i]->Init(theData);
@@ -100,18 +105,21 @@ class G4ParticleHPEnergyDistribution
     {
       G4double result = 0;
       it = 0;
-      if (theNumberOfPartials != 0) {
+      if (theNumberOfPartials != 0)
+      {
         G4double sum = 0;
         auto running = new G4double[theNumberOfPartials];
         running[0] = 0;
         G4int i;
-        for (i = 0; i < theNumberOfPartials; i++) {
+        for (i = 0; i < theNumberOfPartials; i++)
+        {
           if (i != 0) running[i] = running[i - 1];
           running[i] += theEnergyDistribution[i]->GetFractionalProbability(anEnergy);
         }
         sum = running[theNumberOfPartials - 1];
         G4double random = G4UniformRand();
-        for (i = 0; i < theNumberOfPartials; i++) {
+        for (i = 0; i < theNumberOfPartials; i++)
+        {
           it = i;
           if (running[i] / sum > random) break;
         }
@@ -123,6 +131,7 @@ class G4ParticleHPEnergyDistribution
     }
 
   private:
+
     G4int theNumberOfPartials;
     G4int theRepresentationType;
     G4VParticleHPEDis** theEnergyDistribution;

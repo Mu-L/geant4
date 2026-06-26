@@ -32,31 +32,33 @@
 //
 // Modified:
 // 16.11.2005 G.Folger: don't  keep processes as data members, but new these
-// 13.06.2006 G.Folger: (re)move elastic scatterring 
+// 13.06.2006 G.Folger: (re)move elastic scatterring
 // 12.04.2017 A.Dotti move to new design with base class
 //
 //----------------------------------------------------------------------------
 //
 #include "G4PiKBuilder.hh"
+
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
 
 G4PiKBuilder::G4PiKBuilder()
-{  
-  thePionPlusInelastic=new  G4HadronInelasticProcess( "pi+Inelastic",    G4PionPlus::Definition() );
-  thePionMinusInelastic=new G4HadronInelasticProcess( "pi-Inelastic",    G4PionMinus::Definition() );
-  theKaonPlusInelastic=new  G4HadronInelasticProcess( "kaon+Inelastic",  G4KaonPlus::Definition() );
-  theKaonMinusInelastic=new G4HadronInelasticProcess( "kaon-Inelastic",  G4KaonMinus::Definition() );
-  theKaonZeroLInelastic=new G4HadronInelasticProcess( "kaon0LInelastic", G4KaonZeroLong::Definition() );
-  theKaonZeroSInelastic=new G4HadronInelasticProcess( "kaon0SInelastic", G4KaonZeroShort::Definition() );
+{
+  thePionPlusInelastic = new G4HadronInelasticProcess("pi+Inelastic", G4PionPlus::Definition());
+  thePionMinusInelastic = new G4HadronInelasticProcess("pi-Inelastic", G4PionMinus::Definition());
+  theKaonPlusInelastic = new G4HadronInelasticProcess("kaon+Inelastic", G4KaonPlus::Definition());
+  theKaonMinusInelastic = new G4HadronInelasticProcess("kaon-Inelastic", G4KaonMinus::Definition());
+  theKaonZeroLInelastic =
+    new G4HadronInelasticProcess("kaon0LInelastic", G4KaonZeroLong::Definition());
+  theKaonZeroSInelastic =
+    new G4HadronInelasticProcess("kaon0SInelastic", G4KaonZeroShort::Definition());
 }
 
-void G4PiKBuilder::
-Build()
+void G4PiKBuilder::Build()
 {
-  std::vector<G4VPiKBuilder *>::iterator i;
-  for(i=theModelCollections.begin(); i!=theModelCollections.end(); i++)
+  std::vector<G4VPiKBuilder*>::iterator i;
+  for (i = theModelCollections.begin(); i != theModelCollections.end(); i++)
   {
     (*i)->Build(thePionPlusInelastic);
     (*i)->Build(thePionMinusInelastic);
@@ -65,32 +67,35 @@ Build()
     (*i)->Build(theKaonZeroLInelastic);
     (*i)->Build(theKaonZeroSInelastic);
   }
-  G4ProcessManager * theProcMan;
+  G4ProcessManager* theProcMan;
   theProcMan = G4PionPlus::PionPlus()->GetProcessManager();
   theProcMan->AddDiscreteProcess(thePionPlusInelastic);
-  
+
   theProcMan = G4PionMinus::PionMinus()->GetProcessManager();
   theProcMan->AddDiscreteProcess(thePionMinusInelastic);
-  
+
   theProcMan = G4KaonPlus::KaonPlus()->GetProcessManager();
   theProcMan->AddDiscreteProcess(theKaonPlusInelastic);
-  
+
   theProcMan = G4KaonMinus::KaonMinus()->GetProcessManager();
   theProcMan->AddDiscreteProcess(theKaonMinusInelastic);
-  
+
   theProcMan = G4KaonZeroLong::KaonZeroLong()->GetProcessManager();
   theProcMan->AddDiscreteProcess(theKaonZeroLInelastic);
-  
+
   theProcMan = G4KaonZeroShort::KaonZeroShort()->GetProcessManager();
   theProcMan->AddDiscreteProcess(theKaonZeroSInelastic);
 }
 
-void G4PiKBuilder::RegisterMe(G4PhysicsBuilderInterface* aB) {
+void G4PiKBuilder::RegisterMe(G4PhysicsBuilderInterface* aB)
+{
   auto bld = dynamic_cast<G4VPiKBuilder*>(aB);
-  if ( bld != nullptr ) {
-      theModelCollections.push_back(bld);
-  } else {
-      G4PhysicsBuilderInterface::RegisterMe(aB);
+  if (bld != nullptr)
+  {
+    theModelCollections.push_back(bld);
+  }
+  else
+  {
+    G4PhysicsBuilderInterface::RegisterMe(aB);
   }
 }
-

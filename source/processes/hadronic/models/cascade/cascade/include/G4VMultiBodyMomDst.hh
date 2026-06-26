@@ -31,25 +31,29 @@
 //
 // 20130308  M. Kelsey -- Add access to name string for diagnostic utilities
 
-#ifndef G4VMultiBodyMomDst_h
-#define G4VMultiBodyMomDst_h 1
+#ifndef G4VMULTIBODYMOMDST_HH
+#define G4VMULTIBODYMOMDST_HH
 
-#include <vector>
 #include "globals.hh"
 
-class G4VMultiBodyMomDst {
-public:
-  G4VMultiBodyMomDst(const G4String& name, G4int verbose=0);
-  virtual ~G4VMultiBodyMomDst() {;}
-  
-  virtual G4double GetMomentum(G4int ptype, const G4double& ekin) const = 0;
+#include <vector>
 
-  virtual void setVerboseLevel(G4int verbose = 0) { verboseLevel = verbose; }
-  virtual const G4String& GetName() const { return theName; }
+class G4VMultiBodyMomDst
+{
+  public:
 
-protected:
-  G4String theName;
-  G4int verboseLevel;
-};        
+    G4VMultiBodyMomDst(const G4String& name, G4int verbose = 0);
+    virtual ~G4VMultiBodyMomDst() { ; }
 
-#endif	/* G4VMultiBodyMomDst_h */
+    virtual G4double GetMomentum(G4int ptype, const G4double& ekin) const = 0;
+
+    virtual void setVerboseLevel(G4int verbose = 0) { verboseLevel = verbose; }
+    virtual const G4String& GetName() const { return theName; }
+
+  protected:
+
+    G4String theName;
+    G4int verboseLevel;
+};
+
+#endif /* G4VMultiBodyMomDst_h */

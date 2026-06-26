@@ -47,8 +47,8 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4MuonToMuonPairProduction_h
-#define G4MuonToMuonPairProduction_h 1
+#ifndef G4MUONTOMUONPAIRPRODUCTION_HH
+#define G4MUONTOMUONPAIRPRODUCTION_HH
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -56,21 +56,20 @@
 
 class G4MuonToMuonPairProduction : public G4MuPairProduction
 {
-public:
+  public:
 
-  explicit G4MuonToMuonPairProduction(const G4String& processName = "muToMuonPairProd");
+    explicit G4MuonToMuonPairProduction(const G4String& processName = "muToMuonPairProd");
 
-  ~G4MuonToMuonPairProduction() override = default;
+    ~G4MuonToMuonPairProduction() override = default;
 
-  G4MuonToMuonPairProduction & operator=
-  (const G4MuonToMuonPairProduction &right) = delete;
-  G4MuonToMuonPairProduction(const G4MuonToMuonPairProduction&) = delete;
+    G4MuonToMuonPairProduction& operator=(const G4MuonToMuonPairProduction& right) = delete;
+    G4MuonToMuonPairProduction(const G4MuonToMuonPairProduction&) = delete;
 
-  void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
-			           const G4ParticleDefinition*) override;
+    void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
+                                     const G4ParticleDefinition*) override;
 
-  // print description in html
-  void ProcessDescription(std::ostream&) const override;
+    // print description in html
+    void ProcessDescription(std::ostream&) const override;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

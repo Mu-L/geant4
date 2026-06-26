@@ -25,44 +25,44 @@
 //
 //
 //
-#ifndef G4StringModel_h
-#define G4StringModel_h 1
+#ifndef G4STRINGMODEL_HH
+#define G4STRINGMODEL_HH
 
-#include "G4VHighEnergyGenerator.hh"
 #include "G4KineticTrackVector.hh"
+#include "G4VHighEnergyGenerator.hh"
 
 class G4V3DNucleus;
 class G4VStringFragmentation;
 
-
-class G4StringModel : public G4VHighEnergyGenerator 
+class G4StringModel : public G4VHighEnergyGenerator
 {
   public:
+
     G4StringModel();
     ~G4StringModel() override;
 
-    G4StringModel(const G4StringModel &right) = delete;
-    const G4StringModel & operator=(const G4StringModel &right) = delete;
-    G4bool operator==(const G4StringModel &right) const = delete;
-    G4bool operator!=(const G4StringModel &right) const = delete;
+    G4StringModel(const G4StringModel& right) = delete;
+    const G4StringModel& operator=(const G4StringModel& right) = delete;
+    G4bool operator==(const G4StringModel& right) const = delete;
+    G4bool operator!=(const G4StringModel& right) const = delete;
 
-    void Set3DNucleus(G4V3DNucleus *const  value);
-    void SetStringFragmentationModel(G4VStringFragmentation *const  value);
+    void Set3DNucleus(G4V3DNucleus* const value);
+    void SetStringFragmentationModel(G4VStringFragmentation* const value);
 
-  private: 
-    G4V3DNucleus *the3DNucleus;
-    G4VStringFragmentation *theStringFragmentationModel;
+  private:
+
+    G4V3DNucleus* the3DNucleus;
+    G4VStringFragmentation* theStringFragmentationModel;
 };
 
-inline void G4StringModel::Set3DNucleus(G4V3DNucleus *const  value)
+inline void G4StringModel::Set3DNucleus(G4V3DNucleus* const value)
 {
   the3DNucleus = value;
 }
 
-inline void G4StringModel::SetStringFragmentationModel(G4VStringFragmentation *const  value)
+inline void G4StringModel::SetStringFragmentationModel(G4VStringFragmentation* const value)
 {
   theStringFragmentationModel = value;
 }
 
 #endif
-

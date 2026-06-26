@@ -26,32 +26,32 @@
 // 24.11.08 V. Grichine - first implementation
 //
 // 04.09.18 V. Ivantchenko Major revision of interfaces and implementation
-// 27.05.19 V. Ivantchenko Removed obsolete methods and members 
+// 27.05.19 V. Ivantchenko Removed obsolete methods and members
 
 #include "G4ComponentGGNuclNuclXsc.hh"
 
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
+#include "G4ComponentGGHadronNucleusXsc.hh"
+#include "G4HadronNucleonXsc.hh"
+#include "G4NuclearRadii.hh"
 #include "G4NucleiProperties.hh"
 #include "G4ParticleDefinition.hh"
-#include "G4HadronNucleonXsc.hh"
-#include "G4ComponentGGHadronNucleusXsc.hh" 
-#include "G4NuclearRadii.hh"
+#include "G4PhysicalConstants.hh"
 #include "G4Pow.hh"
+#include "G4SystemOfUnits.hh"
 
 namespace
 {
-  const G4double inve = 1./CLHEP::eplus;
+const G4double inve = 1. / CLHEP::eplus;
 }
 
-G4ComponentGGNuclNuclXsc::G4ComponentGGNuclNuclXsc() 
- : G4VComponentCrossSection("Glauber-Gribov Nucl-nucl")
+G4ComponentGGNuclNuclXsc::G4ComponentGGNuclNuclXsc()
+  : G4VComponentCrossSection("Glauber-Gribov Nucl-nucl")
 {
-  theProton   = G4Proton::Proton();
-  theNeutron  = G4Neutron::Neutron();
-  theLambda  = G4Lambda::Lambda();
+  theProton = G4Proton::Proton();
+  theNeutron = G4Neutron::Neutron();
+  theLambda = G4Lambda::Lambda();
   fHNXsc = new G4HadronNucleonXsc();
-  fHadrNucl = new G4ComponentGGHadronNucleusXsc(); 
+  fHadrNucl = new G4ComponentGGHadronNucleusXsc();
 }
 
 G4ComponentGGNuclNuclXsc::~G4ComponentGGNuclNuclXsc()
@@ -61,9 +61,9 @@ G4ComponentGGNuclNuclXsc::~G4ComponentGGNuclNuclXsc()
 
 //////////////////////////////////////////////////////////////////////
 
-G4double G4ComponentGGNuclNuclXsc::GetTotalElementCrossSection(
-         const G4ParticleDefinition* aParticle, G4double kinEnergy, 
-	 G4int Z, G4double A)
+G4double
+G4ComponentGGNuclNuclXsc::GetTotalElementCrossSection(const G4ParticleDefinition* aParticle,
+                                                      G4double kinEnergy, G4int Z, G4double A)
 {
   ComputeCrossSections(aParticle, kinEnergy, Z, G4lrint(A));
   return fTotalXsc;
@@ -71,9 +71,9 @@ G4double G4ComponentGGNuclNuclXsc::GetTotalElementCrossSection(
 
 ////////////////////////////////////////////////////////////////////
 
-G4double G4ComponentGGNuclNuclXsc::GetTotalIsotopeCrossSection(
-         const G4ParticleDefinition* aParticle, G4double kinEnergy,
-	 G4int Z, G4int A)
+G4double
+G4ComponentGGNuclNuclXsc::GetTotalIsotopeCrossSection(const G4ParticleDefinition* aParticle,
+                                                      G4double kinEnergy, G4int Z, G4int A)
 {
   ComputeCrossSections(aParticle, kinEnergy, Z, A);
   return fTotalXsc;
@@ -81,9 +81,9 @@ G4double G4ComponentGGNuclNuclXsc::GetTotalIsotopeCrossSection(
 
 /////////////////////////////////////////////////////////////////////
 
-G4double G4ComponentGGNuclNuclXsc::GetInelasticElementCrossSection(
-         const G4ParticleDefinition* aParticle, G4double kinEnergy, 
-	 G4int Z, G4double A)
+G4double
+G4ComponentGGNuclNuclXsc::GetInelasticElementCrossSection(const G4ParticleDefinition* aParticle,
+                                                          G4double kinEnergy, G4int Z, G4double A)
 {
   ComputeCrossSections(aParticle, kinEnergy, Z, G4lrint(A));
   return fInelasticXsc;
@@ -91,9 +91,9 @@ G4double G4ComponentGGNuclNuclXsc::GetInelasticElementCrossSection(
 
 ////////////////////////////////////////////////////////////////////
 
-G4double G4ComponentGGNuclNuclXsc::GetInelasticIsotopeCrossSection(
-         const G4ParticleDefinition* aParticle, G4double kinEnergy, 
-	 G4int Z, G4int A)
+G4double
+G4ComponentGGNuclNuclXsc::GetInelasticIsotopeCrossSection(const G4ParticleDefinition* aParticle,
+                                                          G4double kinEnergy, G4int Z, G4int A)
 {
   ComputeCrossSections(aParticle, kinEnergy, Z, A);
   return fInelasticXsc;
@@ -101,9 +101,9 @@ G4double G4ComponentGGNuclNuclXsc::GetInelasticIsotopeCrossSection(
 
 //////////////////////////////////////////////////////////////////
 
-G4double G4ComponentGGNuclNuclXsc::GetElasticElementCrossSection(
-         const G4ParticleDefinition* aParticle, G4double kinEnergy, 
-	 G4int Z, G4double A)
+G4double
+G4ComponentGGNuclNuclXsc::GetElasticElementCrossSection(const G4ParticleDefinition* aParticle,
+                                                        G4double kinEnergy, G4int Z, G4double A)
 {
   ComputeCrossSections(aParticle, kinEnergy, Z, G4lrint(A));
   return fElasticXsc;
@@ -111,29 +111,26 @@ G4double G4ComponentGGNuclNuclXsc::GetElasticElementCrossSection(
 
 ///////////////////////////////////////////////////////////////////
 
-G4double G4ComponentGGNuclNuclXsc::GetElasticIsotopeCrossSection(
-         const G4ParticleDefinition* aParticle, G4double kinEnergy, 
-	 G4int Z, G4int A)
+G4double
+G4ComponentGGNuclNuclXsc::GetElasticIsotopeCrossSection(const G4ParticleDefinition* aParticle,
+                                                        G4double kinEnergy, G4int Z, G4int A)
 {
   ComputeCrossSections(aParticle, kinEnergy, Z, A);
   return fElasticXsc;
 }
 
 ////////////////////////////////////////////////////////////////
- 
-G4double G4ComponentGGNuclNuclXsc::ComputeQuasiElasticRatio(
-         const G4ParticleDefinition* aParticle, G4double kinEnergy, 
-	 G4int Z, G4int A)
+
+G4double G4ComponentGGNuclNuclXsc::ComputeQuasiElasticRatio(const G4ParticleDefinition* aParticle,
+                                                            G4double kinEnergy, G4int Z, G4int A)
 {
   ComputeCrossSections(aParticle, kinEnergy, Z, A);
-  return (fInelasticXsc > fProductionXsc) 
-    ? (fInelasticXsc - fProductionXsc)/fInelasticXsc : 0.0;
+  return (fInelasticXsc > fProductionXsc) ? (fInelasticXsc - fProductionXsc) / fInelasticXsc : 0.0;
 }
 
 //////////////////////////////////////////////////////////////////////
- 
-void G4ComponentGGNuclNuclXsc::BuildPhysicsTable(const G4ParticleDefinition&)
-{}
+
+void G4ComponentGGNuclNuclXsc::BuildPhysicsTable(const G4ParticleDefinition&) {}
 
 //////////////////////////////////////////////////////////////////////
 
@@ -150,84 +147,85 @@ void G4ComponentGGNuclNuclXsc::Description(std::ostream& outFile) const
           << "elastic cross sections for nucleus-nucleus collisions using\n"
           << "the Glauber model with Gribov corrections.  It is valid for\n"
           << "all incident energies above 100 keV./n"
-	  << "For the hydrogen target G4HadronNucleonXsc class is used.\n";
+          << "For the hydrogen target G4HadronNucleonXsc class is used.\n";
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-// Calculates total and inelastic Xsc, derives elastic as total - inelastic 
-// accordong to Glauber model with Gribov correction calculated in the dipole 
-// approximation on light cone. Gaussian density of point-like nucleons helps 
+// Calculates total and inelastic Xsc, derives elastic as total - inelastic
+// accordong to Glauber model with Gribov correction calculated in the dipole
+// approximation on light cone. Gaussian density of point-like nucleons helps
 // to calculate rest integrals of the model. [1] B.Z. Kopeliovich,
 // nucl-th/0306044 + simplification above
 
-void G4ComponentGGNuclNuclXsc::ComputeCrossSections(
-     const G4ParticleDefinition* aParticle, G4double kinEnergy, 
-     G4int Z, G4int A)
+void G4ComponentGGNuclNuclXsc::ComputeCrossSections(const G4ParticleDefinition* aParticle,
+                                                    G4double kinEnergy, G4int Z, G4int A)
 {
   // check cache
-  if(aParticle == fParticle && fZ == Z && fA == A && kinEnergy == fEnergy)
-    { return; }
+  if (aParticle == fParticle && fZ == Z && fA == A && kinEnergy == fEnergy)
+  {
+    return;
+  }
   fParticle = aParticle;
   fZ = Z;
   fA = A;
   fEnergy = kinEnergy;
   G4Pow* pG4Pow = G4Pow::GetInstance();
-  
-  G4int pZ = G4lrint(aParticle->GetPDGCharge()*inve);
+
+  G4int pZ = G4lrint(aParticle->GetPDGCharge() * inve);
   G4int pA = aParticle->GetBaryonNumber();
   G4int pL = aParticle->GetNumberOfLambdasInHypernucleus();
   G4bool pHN = aParticle->IsHypernucleus();
   G4double cHN(0.88);
 
   // hydrogen
-  if(1 == Z && 1 == A) {
-    G4double e = kinEnergy*CLHEP::proton_mass_c2/aParticle->GetPDGMass();
-    fHadrNucl->ComputeCrossSections( theProton, e, pZ, pA, pL );
-    fTotalXsc = fHadrNucl->GetTotalGlauberGribovXsc(); 
-    fElasticXsc = fHadrNucl->GetElasticGlauberGribovXsc(); 
-    fInelasticXsc = fHadrNucl->GetInelasticGlauberGribovXsc(); 
-    fProductionXsc = fHadrNucl->GetProductionGlauberGribovXsc(); 
-    fDiffractionXsc = fHadrNucl->GetDiffractionGlauberGribovXsc(); 
+  if (1 == Z && 1 == A)
+  {
+    G4double e = kinEnergy * CLHEP::proton_mass_c2 / aParticle->GetPDGMass();
+    fHadrNucl->ComputeCrossSections(theProton, e, pZ, pA, pL);
+    fTotalXsc = fHadrNucl->GetTotalGlauberGribovXsc();
+    fElasticXsc = fHadrNucl->GetElasticGlauberGribovXsc();
+    fInelasticXsc = fHadrNucl->GetInelasticGlauberGribovXsc();
+    fProductionXsc = fHadrNucl->GetProductionGlauberGribovXsc();
+    fDiffractionXsc = fHadrNucl->GetDiffractionGlauberGribovXsc();
     return;
   }
   static const G4double cofInelastic = 2.4;
   static const G4double cofTotal = 2.0;
 
-  G4double pTkin = kinEnergy/(G4double)pA;
+  G4double pTkin = kinEnergy / (G4double)pA;
 
   G4int pN = pA - pZ;
   G4int tN = A - Z;
 
-  G4double tR = G4NuclearRadii::Radius(Z, A);  
+  G4double tR = G4NuclearRadii::Radius(Z, A);
   G4double pR = G4NuclearRadii::Radius(pZ, pA);
-  
-  if(pHN)
-    pR *= std::sqrt( pG4Pow->Z23( pA - pL ) + cHN*pG4Pow->Z23( pL ) )/pG4Pow->Z13(pA);
-  
+
+  if (pHN) pR *= std::sqrt(pG4Pow->Z23(pA - pL) + cHN * pG4Pow->Z23(pL)) / pG4Pow->Z13(pA);
+
   G4double cB = ComputeCoulombBarier(aParticle, kinEnergy, Z, A, pR, tR);
 
-  if ( cB > 0. ) 
+  if (cB > 0.)
   {
-    G4double sigma = (pZ*Z+pN*tN)*fHNXsc->HadronNucleonXscNS(theProton, theProton, pTkin);
-    if(pHN) sigma += pL*A*fHNXsc->HadronNucleonXsc(theLambda, theProton, pTkin);
+    G4double sigma = (pZ * Z + pN * tN) * fHNXsc->HadronNucleonXscNS(theProton, theProton, pTkin);
+    if (pHN) sigma += pL * A * fHNXsc->HadronNucleonXsc(theLambda, theProton, pTkin);
     G4double ppInXsc = fHNXsc->GetInelasticHadronNucleonXsc();
 
-    sigma += (pZ*tN+pN*Z)*fHNXsc->HadronNucleonXscNS(theNeutron, theProton, pTkin);
+    sigma += (pZ * tN + pN * Z) * fHNXsc->HadronNucleonXscNS(theNeutron, theProton, pTkin);
     G4double npInXsc = fHNXsc->GetInelasticHadronNucleonXsc();
 
-    G4double nucleusSquare = cofTotal*CLHEP::pi*( pR*pR + tR*tR ); // basically 2piRR
+    G4double nucleusSquare = cofTotal * CLHEP::pi * (pR * pR + tR * tR);  // basically 2piRR
 
-    G4double ratio= sigma/nucleusSquare;
-    fTotalXsc     = nucleusSquare*G4Log( 1. + ratio )*cB;
-    fInelasticXsc = nucleusSquare*G4Log( 1. + cofInelastic*ratio )*cB/cofInelastic;
-    fElasticXsc   = std::max(fTotalXsc - fInelasticXsc, 0.0);
+    G4double ratio = sigma / nucleusSquare;
+    fTotalXsc = nucleusSquare * G4Log(1. + ratio) * cB;
+    fInelasticXsc = nucleusSquare * G4Log(1. + cofInelastic * ratio) * cB / cofInelastic;
+    fElasticXsc = std::max(fTotalXsc - fInelasticXsc, 0.0);
 
-    G4double difratio = ratio/(1.+ratio);
-    fDiffractionXsc = 0.5*nucleusSquare*( difratio - G4Log( 1. + difratio ) );
+    G4double difratio = ratio / (1. + ratio);
+    fDiffractionXsc = 0.5 * nucleusSquare * (difratio - G4Log(1. + difratio));
 
-    G4double xratio= ((pZ*Z+pN*tN)*ppInXsc + (pZ*tN+pN*Z)*npInXsc)/nucleusSquare;
-    fProductionXsc = nucleusSquare*G4Log( 1. + cofInelastic*xratio)*cB/cofInelastic;
+    G4double xratio = ((pZ * Z + pN * tN) * ppInXsc + (pZ * tN + pN * Z) * npInXsc) / nucleusSquare;
+    fProductionXsc = nucleusSquare * G4Log(1. + cofInelastic * xratio) * cB / cofInelastic;
     fProductionXsc = std::min(fProductionXsc, fInelasticXsc);
   }
   else
@@ -238,31 +236,30 @@ void G4ComponentGGNuclNuclXsc::ComputeCrossSections(
 
 ///////////////////////////////////////////////////////////////////////////////
 
-G4double G4ComponentGGNuclNuclXsc::ComputeCoulombBarier(
-                     const G4ParticleDefinition* aParticle,
-		     G4double pTkin, G4int Z, G4int A,
-		     G4double pR, G4double tR)
+G4double G4ComponentGGNuclNuclXsc::ComputeCoulombBarier(const G4ParticleDefinition* aParticle,
+                                                        G4double pTkin, G4int Z, G4int A,
+                                                        G4double pR, G4double tR)
 {
-  G4int pZ = aParticle->GetPDGCharge()*inve;
+  G4int pZ = aParticle->GetPDGCharge() * inve;
   G4double pM = aParticle->GetPDGMass();
-  G4double tM = G4NucleiProperties::GetNuclearMass(A, Z); 
+  G4double tM = G4NucleiProperties::GetNuclearMass(A, Z);
   G4double pElab = pTkin + pM;
-  G4double totEcm = std::sqrt(pM*pM + tM*tM + 2.*pElab*tM);
-  G4double totTcm = totEcm - pM -tM;
+  G4double totEcm = std::sqrt(pM * pM + tM * tM + 2. * pElab * tM);
+  G4double totTcm = totEcm - pM - tM;
 
   // 0.5 defines shape of Cross section correction
   // at cB = totTcm it become zero
-  static const G4double qfact = 0.5*CLHEP::elm_coupling; 
-  G4double bC = qfact*pZ*Z/(pR + tR);
+  static const G4double qfact = 0.5 * CLHEP::elm_coupling;
+  G4double bC = qfact * pZ * Z / (pR + tR);
 
-  G4double ratio = (totTcm <= bC) ? 0. : 1. - bC/totTcm;
+  G4double ratio = (totTcm <= bC) ? 0. : 1. - bC / totTcm;
 
 #ifdef G4VERBOSE
-  if (GetVerboseLevel() > 1) { 
-    G4cout << "G4ComponentGGNuclNuclXsc::ComputeCoulombBarier(..)=" <<ratio
-	   << "; pTkin(GeV)=" << pTkin/CLHEP::MeV
-	   << " totTcm= " << totTcm/CLHEP::MeV<< "; bC=" << bC/CLHEP::MeV
-	   << G4endl;
+  if (GetVerboseLevel() > 1)
+  {
+    G4cout << "G4ComponentGGNuclNuclXsc::ComputeCoulombBarier(..)=" << ratio
+           << "; pTkin(GeV)=" << pTkin / CLHEP::MeV << " totTcm= " << totTcm / CLHEP::MeV
+           << "; bC=" << bC / CLHEP::MeV << G4endl;
   }
 #endif
   return ratio;
@@ -272,28 +269,26 @@ G4double G4ComponentGGNuclNuclXsc::ComputeCoulombBarier(
 //
 // Return single-diffraction/inelastic cross-section ratio
 
-G4double G4ComponentGGNuclNuclXsc::GetRatioSD(
-         const G4DynamicParticle* aParticle, G4double tA, G4double tZ)
+G4double G4ComponentGGNuclNuclXsc::GetRatioSD(const G4DynamicParticle* aParticle, G4double tA,
+                                              G4double tZ)
 {
-  ComputeCrossSections(aParticle->GetDefinition(), 
-                       aParticle->GetKineticEnergy(), 
-		       G4lrint(tZ), G4lrint(tA));
+  ComputeCrossSections(aParticle->GetDefinition(), aParticle->GetKineticEnergy(), G4lrint(tZ),
+                       G4lrint(tA));
 
-  return (fInelasticXsc > 0.0) ? fDiffractionXsc/fInelasticXsc : 0.0;
+  return (fInelasticXsc > 0.0) ? fDiffractionXsc / fInelasticXsc : 0.0;
 }
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Return quasi-elastic/inelastic cross-section ratio
 
-G4double G4ComponentGGNuclNuclXsc::GetRatioQE(
-         const G4DynamicParticle* aParticle, G4double tA, G4double tZ)
+G4double G4ComponentGGNuclNuclXsc::GetRatioQE(const G4DynamicParticle* aParticle, G4double tA,
+                                              G4double tZ)
 {
-  ComputeCrossSections(aParticle->GetDefinition(), 
-                       aParticle->GetKineticEnergy(), 
-		       G4lrint(tZ), G4lrint(tA));
+  ComputeCrossSections(aParticle->GetDefinition(), aParticle->GetKineticEnergy(), G4lrint(tZ),
+                       G4lrint(tA));
 
-  return (fInelasticXsc > 0.0) ? 1.0 - fProductionXsc/fInelasticXsc : 0.0;
+  return (fInelasticXsc > 0.0) ? 1.0 - fProductionXsc / fInelasticXsc : 0.0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

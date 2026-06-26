@@ -36,45 +36,40 @@
 //
 
 #include "G4EmStandardPhysics.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4EmParameters.hh"
-#include "G4EmBuilder.hh"
-#include "G4LossTableManager.hh"
 
+#include "G4BuilderType.hh"
 #include "G4ComptonScattering.hh"
-#include "G4KleinNishinaModel.hh"
+#include "G4CoulombScattering.hh"
+#include "G4Electron.hh"
+#include "G4EmBuilder.hh"
+#include "G4EmModelActivator.hh"
+#include "G4EmParameters.hh"
+#include "G4Gamma.hh"
 #include "G4GammaConversion.hh"
-#include "G4PhotoElectricEffect.hh"
-#include "G4RayleighScattering.hh"
+#include "G4GammaGeneralProcess.hh"
+#include "G4GenericIon.hh"
+#include "G4KleinNishinaModel.hh"
 #include "G4LivermorePhotoElectricModel.hh"
 #include "G4LivermorePolarizedRayleighModel.hh"
-#include "G4PhotoElectricAngularGeneratorPolarized.hh"
-#include "G4eplusTo2or3GammaModel.hh"
-
-#include "G4hMultipleScattering.hh"
-#include "G4CoulombScattering.hh"
-#include "G4eCoulombScatteringModel.hh"
-#include "G4WentzelVIModel.hh"
-#include "G4UrbanMscModel.hh"
-
-#include "G4eIonisation.hh"
-#include "G4eBremsstrahlung.hh"
-#include "G4eplusAnnihilation.hh"
-
-#include "G4hIonisation.hh"
-#include "G4ionIonisation.hh"
+#include "G4LossTableManager.hh"
 #include "G4NuclearStopping.hh"
-
-#include "G4Gamma.hh"
-#include "G4Electron.hh"
-#include "G4Positron.hh"
-#include "G4GenericIon.hh"
-
+#include "G4ParticleDefinition.hh"
+#include "G4PhotoElectricAngularGeneratorPolarized.hh"
+#include "G4PhotoElectricEffect.hh"
 #include "G4PhysicsListHelper.hh"
-#include "G4BuilderType.hh"
-#include "G4EmModelActivator.hh"
-#include "G4GammaGeneralProcess.hh"
+#include "G4Positron.hh"
+#include "G4RayleighScattering.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4UrbanMscModel.hh"
+#include "G4WentzelVIModel.hh"
+#include "G4eBremsstrahlung.hh"
+#include "G4eCoulombScatteringModel.hh"
+#include "G4eIonisation.hh"
+#include "G4eplusAnnihilation.hh"
+#include "G4eplusTo2or3GammaModel.hh"
+#include "G4hIonisation.hh"
+#include "G4hMultipleScattering.hh"
+#include "G4ionIonisation.hh"
 
 // factory
 #include "G4PhysicsConstructorFactory.hh"
@@ -111,7 +106,8 @@ void G4EmStandardPhysics::ConstructParticle()
 
 void G4EmStandardPhysics::ConstructProcess()
 {
-  if(verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "### " << GetPhysicsName() << " Construct Processes " << G4endl;
   }
   G4EmBuilder::PrepareEMPhysics();
@@ -125,7 +121,8 @@ void G4EmStandardPhysics::ConstructProcess()
   // nuclear stopping is enabled if th eenergy limit above zero
   G4double nielEnergyLimit = param->MaxNIELEnergy();
   G4NuclearStopping* pnuc = nullptr;
-  if(nielEnergyLimit > 0.0) {
+  if (nielEnergyLimit > 0.0)
+  {
     pnuc = new G4NuclearStopping();
     pnuc->SetMaxKinEnergy(nielEnergyLimit);
   }
@@ -141,23 +138,27 @@ void G4EmStandardPhysics::ConstructProcess()
   G4PhotoElectricEffect* pe = new G4PhotoElectricEffect();
   G4VEmModel* peModel = new G4LivermorePhotoElectricModel();
   pe->SetEmModel(peModel);
-  if(polar) {
+  if (polar)
+  {
     peModel->SetAngularDistribution(new G4PhotoElectricAngularGeneratorPolarized());
   }
 
   // Compton scattering
   G4ComptonScattering* cs = new G4ComptonScattering;
-  if(polar) {
+  if (polar)
+  {
     cs->SetEmModel(new G4KleinNishinaModel());
   }
 
   // default Rayleigh scattering is Livermore
   G4RayleighScattering* rl = new G4RayleighScattering();
-  if(polar) {
+  if (polar)
+  {
     rl->SetEmModel(new G4LivermorePolarizedRayleighModel());
   }
 
-  if(G4EmParameters::Instance()->GeneralProcessActive()) {
+  if (G4EmParameters::Instance()->GeneralProcessActive())
+  {
     G4GammaGeneralProcess* sp = new G4GammaGeneralProcess();
     sp->AddEmProcess(pe);
     sp->AddEmProcess(cs);
@@ -165,8 +166,9 @@ void G4EmStandardPhysics::ConstructProcess()
     sp->AddEmProcess(rl);
     G4LossTableManager::Instance()->SetGammaGeneralProcess(sp);
     ph->RegisterProcess(sp, particle);
-
-  } else {
+  }
+  else
+  {
     ph->RegisterProcess(pe, particle);
     ph->RegisterProcess(cs, particle);
     ph->RegisterProcess(new G4GammaConversion(), particle);
@@ -182,9 +184,9 @@ void G4EmStandardPhysics::ConstructProcess()
   msc2->SetLowEnergyLimit(highEnergyLimit);
   G4EmBuilder::ConstructElectronMscProcess(msc1, msc2, particle);
 
-  G4eCoulombScatteringModel* ssm = new G4eCoulombScatteringModel(); 
+  G4eCoulombScatteringModel* ssm = new G4eCoulombScatteringModel();
   G4CoulombScattering* ss = new G4CoulombScattering();
-  ss->SetEmModel(ssm); 
+  ss->SetEmModel(ssm);
   ss->SetMinKinEnergy(highEnergyLimit);
   ssm->SetLowEnergyLimit(highEnergyLimit);
   ssm->SetActivationLowEnergyLimit(highEnergyLimit);
@@ -202,16 +204,17 @@ void G4EmStandardPhysics::ConstructProcess()
   msc2->SetLowEnergyLimit(highEnergyLimit);
   G4EmBuilder::ConstructElectronMscProcess(msc1, msc2, particle);
 
-  ssm = new G4eCoulombScatteringModel(); 
+  ssm = new G4eCoulombScatteringModel();
   ss = new G4CoulombScattering();
-  ss->SetEmModel(ssm); 
+  ss->SetEmModel(ssm);
   ss->SetMinKinEnergy(highEnergyLimit);
   ssm->SetLowEnergyLimit(highEnergyLimit);
   ssm->SetActivationLowEnergyLimit(highEnergyLimit);
 
   // annihilation
   auto anni = new G4eplusAnnihilation();
-  if (param->Use3GammaAnnihilationOnFly()) {
+  if (param->Use3GammaAnnihilationOnFly())
+  {
     anni->SetEmModel(new G4eplusTo2or3GammaModel());
   }
 
@@ -225,7 +228,10 @@ void G4EmStandardPhysics::ConstructProcess()
   G4ionIonisation* ionIoni = new G4ionIonisation();
   ph->RegisterProcess(hmsc, particle);
   ph->RegisterProcess(ionIoni, particle);
-  if(nullptr != pnuc) { ph->RegisterProcess(pnuc, particle); }
+  if (nullptr != pnuc)
+  {
+    ph->RegisterProcess(pnuc, particle);
+  }
 
   // muons, hadrons ions
   G4EmBuilder::ConstructCharged(hmsc, pnuc);

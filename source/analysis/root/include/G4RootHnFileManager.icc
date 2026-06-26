@@ -28,23 +28,22 @@
 
 #include "G4AnalysisUtilities.hh"
 
-#include "tools/wroot/to"
 #include "tools/wroot/file"
+#include "tools/wroot/to"
 #include "toolx/zlib"
 
 //_____________________________________________________________________________
-template <typename HT>
-G4bool G4RootHnFileManager<HT>::Write(
-  tools::wroot::directory* directory, HT* ht, const G4String& htName)
+template<typename HT>
+G4bool G4RootHnFileManager<HT>::Write(tools::wroot::directory* directory, HT* ht,
+                                      const G4String& htName)
 {
   // write histogram
   return to(*directory, *ht, htName);
 }
 
 //_____________________________________________________________________________
-template <typename HT>
-G4bool G4RootHnFileManager<HT>::WriteExtra(
-  HT* ht, const G4String& htName, const G4String& fileName)
+template<typename HT>
+G4bool G4RootHnFileManager<HT>::WriteExtra(HT* ht, const G4String& htName, const G4String& fileName)
 {
   auto result = true;
 
@@ -68,10 +67,10 @@ G4bool G4RootHnFileManager<HT>::WriteExtra(
   // write file
   unsigned int n;
   result &= rfile->write(n);
-  if ( ! result) {
-    G4Analysis::Warn(
-      "Saving " + G4Analysis::GetHnType<HT>() + " " + htName + " failed",
-      fkClass, "WriteExtra");
+  if (!result)
+  {
+    G4Analysis::Warn("Saving " + G4Analysis::GetHnType<HT>() + " " + htName + " failed", fkClass,
+                     "WriteExtra");
     return false;
   }
 
@@ -81,11 +80,11 @@ G4bool G4RootHnFileManager<HT>::WriteExtra(
 }
 
 //_____________________________________________________________________________
-template <typename HT>
-G4bool G4RootHnFileManager<HT>::Write(
-  HT* ht, const G4String& htName, G4String& fileName)
+template<typename HT>
+G4bool G4RootHnFileManager<HT>::Write(HT* ht, const G4String& htName, G4String& fileName)
 {
-  if ( fileName.empty()) {
+  if (fileName.empty())
+  {
     // should not happen
     G4cerr << "!!! Root file name not defined." << G4endl;
     G4cerr << "!!! Write " << htName << " failed." << G4endl;
@@ -93,10 +92,9 @@ G4bool G4RootHnFileManager<HT>::Write(
   }
 
   auto hdirectory = std::get<1>(*fFileManager->GetTFile(fileName));
-  if ( hdirectory == nullptr ) {
-    G4Analysis::Warn(
-      "Failed to get Root file " + fileName + " histo directory.",
-      fkClass, "Write");
+  if (hdirectory == nullptr)
+  {
+    G4Analysis::Warn("Failed to get Root file " + fileName + " histo directory.", fkClass, "Write");
     return false;
   }
 

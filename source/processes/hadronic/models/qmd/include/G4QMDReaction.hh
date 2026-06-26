@@ -27,30 +27,28 @@
 //      GEANT4 Class file
 //
 //
-//      File name: G4QMDReaction.hh 
+//      File name: G4QMDReaction.hh
 //
-//      Author: Koi, Tatsumi (tkoi@slac.stanford.edu)       
-// 
+//      Author: Koi, Tatsumi (tkoi@slac.stanford.edu)
+//
 //      Creation date: 02 April 2007
 // -----------------------------------------------------------------------------
 //
 // 081107 Add UnUseGEM (then use the default channel of G4Evaporation)
 //            UseFrag (chage criterion of a inelastic reaction)
-// 090331 Change member shenXS and genspaXS object to pointer 
+// 090331 Change member shenXS and genspaXS object to pointer
 //
 
-#ifndef G4QMDReaction_hh
-#define G4QMDReaction_hh
-
-#include "G4QMDSystem.hh"
-#include "G4QMDCollision.hh"
-#include "G4QMDMeanField.hh"
-#include "G4QMDParticipant.hh"
-
-#include "G4HadronicInteraction.hh"
+#ifndef G4QMDREACTION_HH
+#define G4QMDREACTION_HH
 
 #include "G4Evaporation.hh"
 #include "G4ExcitationHandler.hh"
+#include "G4HadronicInteraction.hh"
+#include "G4QMDCollision.hh"
+#include "G4QMDMeanField.hh"
+#include "G4QMDParticipant.hh"
+#include "G4QMDSystem.hh"
 
 class G4VCrossSectionDataSet;
 class G4BGGPionElasticXS;
@@ -59,18 +57,23 @@ class G4BGGPionInelasticXS;
 class G4QMDReaction : public G4HadronicInteraction
 {
   public:
+
     G4QMDReaction();
     ~G4QMDReaction() override;
 
-    std::vector< G4QMDSystem* > GetFinalStates(); 
+    std::vector<G4QMDSystem*> GetFinalStates();
 
-    G4HadFinalState* ApplyYourself(const G4HadProjectile &aTrack,
-                                   G4Nucleus & targetNucleus) override;
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
+                                   G4Nucleus& targetNucleus) override;
 
-    G4ExcitationHandler* GetExcitationHandler() {return excitationHandler;};
+    G4ExcitationHandler* GetExcitationHandler() { return excitationHandler; };
 
-    void UnUseGEM() {gem = false; setEvaporationCh();};
-    void UseFRAG() {frag = true;};
+    void UnUseGEM()
+    {
+      gem = false;
+      setEvaporationCh();
+    };
+    void UseFRAG() { frag = true; };
 
     void SetTMAX(G4int i) { maxTime = i; };
     void SetDT(G4double t) { deltaT = t; };
@@ -78,9 +81,9 @@ class G4QMDReaction : public G4HadronicInteraction
 
     void ModelDescription(std::ostream& outFile) const override;
 
-    //copy is unexpected
+    // copy is unexpected
     G4QMDReaction(const G4QMDReaction& right) = delete;
-    const G4QMDReaction& operator = (const G4QMDReaction& right) = delete;
+    const G4QMDReaction& operator=(const G4QMDReaction& right) = delete;
 
   private:
 
@@ -92,8 +95,8 @@ class G4QMDReaction : public G4HadronicInteraction
     G4QMDCollision* collision;
 
     void doCollision();
-    std::vector< G4QMDSystem* > doClusterJudgment();
-      
+    std::vector<G4QMDSystem*> doClusterJudgment();
+
     G4QMDSystem* system;
     G4double deltaT;
     G4int maxTime;
@@ -101,13 +104,15 @@ class G4QMDReaction : public G4HadronicInteraction
 
     G4ExcitationHandler* excitationHandler;
 
-      //                            b        pd_proj                pd_targ                  z_p     a_p     z_t     a_t      plab       elab
-//      G4double offSetOfCollision( G4double , G4ParticleDefinition* , G4ParticleDefinition* , G4int , G4int , G4int , G4int , G4double , G4double  );  
-      //                           b          pd_proj                 pd_targ                 plab       elab      bmax boostToCM
+    //                            b        pd_proj                pd_targ                  z_p a_p
+    //                            z_t     a_t      plab       elab
+    //      G4double offSetOfCollision( G4double , G4ParticleDefinition* , G4ParticleDefinition* ,
+    //      G4int , G4int , G4int , G4int , G4double , G4double  );
+    //                           b          pd_proj                 pd_targ                 plab
+    //                           elab      bmax boostToCM
 
-    void calcOffSetOfCollision(G4double, const G4ParticleDefinition*,
-                               const G4ParticleDefinition*, G4double,
-                               G4double, G4double, G4ThreeVector);
+    void calcOffSetOfCollision(G4double, const G4ParticleDefinition*, const G4ParticleDefinition*,
+                               G4double, G4double, G4double, G4ThreeVector);
 
     G4double coulomb_collision_gamma_proj;
     G4double coulomb_collision_rx_proj;

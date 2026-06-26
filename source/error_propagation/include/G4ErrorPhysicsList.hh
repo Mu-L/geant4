@@ -39,30 +39,32 @@
 // - Created:   P. Arce
 // ---------------------------------------------------------------------
 
-#ifndef G4ErrorPhysicsList_hh
-#define G4ErrorPhysicsList_hh
+#ifndef G4ERRORPHYSICSLIST_HH
+#define G4ERRORPHYSICSLIST_HH
 
-#include "globals.hh"
 #include "G4VUserPhysicsList.hh"
+#include "globals.hh"
 
 class G4ErrorPhysicsList : public G4VUserPhysicsList
 {
- public:  // with description
-  G4ErrorPhysicsList();
-  virtual ~G4ErrorPhysicsList();
+  public:  // with description
 
- protected:
-  virtual void ConstructParticle();
-  // constructs gamma, e+/-, mu+/- and stable hadrons
+    G4ErrorPhysicsList();
+    virtual ~G4ErrorPhysicsList();
 
-  virtual void ConstructProcess();
-  // construct physical processes
+  protected:
 
-  virtual void SetCuts();
-  // SetCutsWithDefault
+    virtual void ConstructParticle();
+    // constructs gamma, e+/-, mu+/- and stable hadrons
 
-  virtual void ConstructEM();
-  // constructs electromagnetic processes
+    virtual void ConstructProcess();
+    // construct physical processes
+
+    virtual void SetCuts();
+    // SetCutsWithDefault
+
+    virtual void ConstructEM();
+    // constructs electromagnetic processes
 };
 
 #endif

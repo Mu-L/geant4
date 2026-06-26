@@ -36,21 +36,22 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedHype.h>
+#  include "G4Polyhedron.hh"
 
-#include "G4Polyhedron.hh"
+#  include <VecGeom/volumes/UnplacedHype.h>
 
 /**
  * @brief G4UHype is a wrapper class for G4Hype to make use
  * of VecGeom Hyperboloid.
+ * @ingroup geometry_solids_specific
  */
 
 class G4UHype : public G4UAdapter<vecgeom::GenericUnplacedHype>
 {
-  using Shape_t = vecgeom::GenericUnplacedHype;
-  using Base_t  = G4UAdapter<vecgeom::GenericUnplacedHype>;
+    using Shape_t = vecgeom::GenericUnplacedHype;
+    using Base_t = G4UAdapter<vecgeom::GenericUnplacedHype>;
 
   public:
 
@@ -63,12 +64,8 @@ class G4UHype : public G4UAdapter<vecgeom::GenericUnplacedHype>
      *  @param[in] newOuterStereo Outer stereo angle in radians.
      *  @param[in] newHalfLenZ Half length in Z.
      */
-    G4UHype(const G4String& name,
-                  G4double  newInnerRadius,
-                  G4double  newOuterRadius,
-                  G4double  newInnerStereo,
-                  G4double  newOuterStereo,
-                  G4double  newHalfLenZ);
+    G4UHype(const G4String& name, G4double newInnerRadius, G4double newOuterRadius,
+            G4double newInnerStereo, G4double newOuterStereo, G4double newHalfLenZ);
 
     /**
      * Default destructor.
@@ -79,8 +76,7 @@ class G4UHype : public G4UAdapter<vecgeom::GenericUnplacedHype>
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -92,20 +88,20 @@ class G4UHype : public G4UAdapter<vecgeom::GenericUnplacedHype>
     /**
      * Accessors.
      */
-    G4double GetInnerRadius () const;
-    G4double GetOuterRadius () const;
-    G4double GetZHalfLength () const;
-    G4double GetInnerStereo () const;
-    G4double GetOuterStereo () const;
+    G4double GetInnerRadius() const;
+    G4double GetOuterRadius() const;
+    G4double GetZHalfLength() const;
+    G4double GetInnerStereo() const;
+    G4double GetOuterStereo() const;
 
     /**
      * Modifiers.
      */
-    void SetInnerRadius (G4double newIRad);
-    void SetOuterRadius (G4double newORad);
-    void SetZHalfLength (G4double newHLZ);
-    void SetInnerStereo (G4double newISte);
-    void SetOuterStereo (G4double newOSte);
+    void SetInnerRadius(G4double newIRad);
+    void SetOuterRadius(G4double newORad);
+    void SetZHalfLength(G4double newHLZ);
+    void SetInnerStereo(G4double newISte);
+    void SetOuterStereo(G4double newOSte);
 
     /**
      * Returns the type ID, "G4Hype" of the solid.
@@ -129,10 +125,9 @@ class G4UHype : public G4UAdapter<vecgeom::GenericUnplacedHype>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                           G4double& pmin, G4double& pmax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pmin,
+                           G4double& pmax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.
@@ -142,8 +137,8 @@ class G4UHype : public G4UAdapter<vecgeom::GenericUnplacedHype>
     /**
      * Copy constructor and assignment operator.
      */
-    G4UHype( const G4UHype& source );
-    G4UHype& operator=( const G4UHype& source );
+    G4UHype(const G4UHype& source);
+    G4UHype& operator=(const G4UHype& source);
 };
 
 // --------------------------------------------------------------------

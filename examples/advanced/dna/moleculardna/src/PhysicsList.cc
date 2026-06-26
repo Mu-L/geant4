@@ -33,10 +33,10 @@
 #include "ParallelWorldPhysics.hh"
 
 #include "G4DecayPhysics.hh"
-#include "G4EmDNAPhysics.hh"
 #include "G4EmDNAPhysics_option2.hh"
 #include "G4EmDNAPhysics_option4.hh"
 #include "G4EmDNAPhysics_option6.hh"
+#include "G4EmDNAPhysics_option8.hh"
 #include "G4EmParameters.hh"
 #include "G4RadioactiveDecayPhysics.hh"
 #include "G4SystemOfUnits.hh"
@@ -50,10 +50,7 @@ PhysicsList::PhysicsList(G4int phylist, G4int vis)
 
   UseCoupledTransportation();
 
-  if (phylist == 0) {
-    RegisterPhysics(new G4EmDNAPhysics());
-  }
-  else if (phylist == 2) {
+  if (phylist == 2) {
     RegisterPhysics(new G4EmDNAPhysics_option2());
   }
   else if (phylist == 4) {
@@ -62,9 +59,12 @@ PhysicsList::PhysicsList(G4int phylist, G4int vis)
   else if (phylist == 6) {
     RegisterPhysics(new G4EmDNAPhysics_option6());
   }
+  else if (phylist == 8) {
+    RegisterPhysics(new G4EmDNAPhysics_option8());
+  }
   else {
     G4ExceptionDescription errmsg;
-    errmsg << "Recommend to option 2, 4, 6 or default" << G4endl;
+    errmsg << "Recommend to option 2, 4, or 6" << G4endl;
     G4Exception("PhysicsList::PhysicsList", "", FatalException, errmsg);
   }
   RegisterPhysics(new G4DecayPhysics());

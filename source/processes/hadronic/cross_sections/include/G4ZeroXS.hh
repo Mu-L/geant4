@@ -44,36 +44,31 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4ZeroXS_h
-#define G4ZeroXS_h 1
+#ifndef G4ZEROXS_HH
+#define G4ZEROXS_HH
 
-#include "globals.hh"
 #include "G4VCrossSectionDataSet.hh"
+#include "globals.hh"
 
 class G4ZeroXS : public G4VCrossSectionDataSet
 {
+  public:
 
-public:
+    G4ZeroXS();
 
-  G4ZeroXS ();
+    virtual ~G4ZeroXS();
 
-  virtual ~G4ZeroXS();
-   
-  virtual
-  G4bool IsElementApplicable(const G4DynamicParticle*, G4int , 
-			     const G4Material* mat = 0);
+    virtual G4bool IsElementApplicable(const G4DynamicParticle*, G4int, const G4Material* mat = 0);
 
-  virtual
-  G4double GetElementCrossSection(const G4DynamicParticle*, G4int ,
-				  const G4Material* mat = 0);
+    virtual G4double GetElementCrossSection(const G4DynamicParticle*, G4int,
+                                            const G4Material* mat = 0);
 
-  virtual void CrossSectionDescription(std::ostream&) const;
+    virtual void CrossSectionDescription(std::ostream&) const;
 
-private:
+  private:
 
-  G4ZeroXS & operator=(const G4ZeroXS &right);
-  G4ZeroXS(const G4ZeroXS&);
-
+    G4ZeroXS& operator=(const G4ZeroXS& right);
+    G4ZeroXS(const G4ZeroXS&);
 };
 
 #endif

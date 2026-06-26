@@ -28,9 +28,8 @@
 #ifndef G4OPENGLVIEWERMESSENGER_HH
 #define G4OPENGLVIEWERMESSENGER_HH
 
-#include "G4UImessenger.hh"
-
 #include "G4String.hh"
+#include "G4UImessenger.hh"
 
 class G4UIdirectory;
 class G4UIcommand;
@@ -40,27 +39,30 @@ class G4UIcmdWithABool;
 class G4UIcmdWithAString;
 class G4UIcmdWithAnInteger;
 
-class G4OpenGLViewerMessenger: public G4UImessenger {
-public:
-  static G4OpenGLViewerMessenger* GetInstance();  // Singleton constructor.
-  ~G4OpenGLViewerMessenger();
-  void SetNewValue (G4UIcommand*, G4String);
+class G4OpenGLViewerMessenger : public G4UImessenger
+{
+  public:
 
-private:
-  G4OpenGLViewerMessenger();  // Private constructor.
-  static G4OpenGLViewerMessenger* fpInstance;
-  
-  G4UIdirectory* fpDirectory;
-  G4UIcommand*             fpCommandExport;
-  G4UIcommand*             fpCommandFlushAt;
+    static G4OpenGLViewerMessenger* GetInstance();  // Singleton constructor.
+    ~G4OpenGLViewerMessenger();
+    void SetNewValue(G4UIcommand*, G4String);
 
-  G4UIdirectory* fpDirectorySet;
-  G4UIcmdWithoutParameter* fpCommandDisplayListLimit;
-  G4UIcommand*          fpCommandExportFormat;
-  G4UIcommand*          fpCommandPrintFilename;
-  G4UIcmdWithAString*   fpCommandPrintMode;
-  G4UIcommand*          fpCommandPrintSize;
-  G4UIcmdWithABool*     fpCommandTransparency;
+  private:
+
+    G4OpenGLViewerMessenger();  // Private constructor.
+    static G4OpenGLViewerMessenger* fpInstance;
+
+    G4UIdirectory* fpDirectory;
+    G4UIcommand* fpCommandExport;
+    G4UIcommand* fpCommandFlushAt;
+
+    G4UIdirectory* fpDirectorySet;
+    G4UIcmdWithoutParameter* fpCommandDisplayListLimit;
+    G4UIcommand* fpCommandExportFormat;
+    G4UIcommand* fpCommandPrintFilename;
+    G4UIcmdWithAString* fpCommandPrintMode;
+    G4UIcommand* fpCommandPrintSize;
+    G4UIcmdWithABool* fpCommandTransparency;
 };
 
 #endif

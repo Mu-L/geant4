@@ -6,11 +6,23 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-01-30 John Allison (vis_toolssg-V11-03-13)
+## 2026-02-11 Guy Barrand (vis_toolssg-V11-04-02)
+- G4ToolsSGSceneHandler.hh,.cc: add EmptyTrash(), fpTrash group: add a "trash group" logic to
+  handle properly, especially in multi-thread, the deletion of "gstos" (=graphics storage), as textures,
+  stored within the GL_manager handled by the G4ToolsSGViewer in the main thread (if in MT).
+  It fixes a "crash at exit" in MT when using textures, through usage of "font_pixmap"
+  on text_freetype_marker used in G4ToolsSGSceneHandler::AddPrimitive(G4Text).
+- G4ToolsSGViewer::DrawView(): use fpSceneHandler.EmptyTrash() in DrawView() to remove no more used nodes
+  deposited in the "trash" in G4ToolsSceneHandler (deposited from a ClearStore or ClearTransientStore()).
+- G4ToolsSGViewer::~G4ToolsSGViewer: clear the fpSceneHandler [transient,persistent][2D,3D] nodes
+  and use fpSceneHandler.EmptyTrash() so that all nodes (in particular the ones using "gstos") be
+  deleted BEFORE the deletion of the GL_manager, handled in the fSGViewer.
+
+## 2026-01-30 John Allison (vis_toolssg-V11-04-01)
 - G4ToolsSGSceneHandler.cc:
   - Obtain applicable auxiliary edge flag.
 
-## 2026-01-10 John Allison
+## 2026-01-10 John Allison (vis_toolssg-V11-04-00)
 - G4ToolsSGSceneHandler.cc:
   - G4ToolsSGSceneHandler::AddPrimitive (const G4Polymarker& ...
     - Fix Bug #2691: Daughter of cloud-represented volume in wrong position.

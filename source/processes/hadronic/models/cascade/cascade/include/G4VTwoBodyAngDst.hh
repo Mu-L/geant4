@@ -33,24 +33,27 @@
 //		but a local copy.
 // 20130308  M. Kelsey -- Add access to name string for diagnostic utilities
 
-#ifndef G4VTwoBodyAngDst_h
-#define G4VTwoBodyAngDst_h 1
+#ifndef G4VTWOBODYANGDST_HH
+#define G4VTWOBODYANGDST_HH
 
 #include "globals.hh"
 
-class G4VTwoBodyAngDst {
-public:
-  G4VTwoBodyAngDst(const G4String& name, G4int verbose=0);
-  virtual ~G4VTwoBodyAngDst() {;}
-  
-  virtual G4double GetCosTheta(const G4double& ekin, const G4double& pcm) const = 0;
-  
-  virtual void setVerboseLevel(G4int verbose = 0) { verboseLevel = verbose; }
-  virtual const G4String& GetName() const { return theName; }
+class G4VTwoBodyAngDst
+{
+  public:
 
-protected:
-  G4String theName;
-  G4int verboseLevel;
-};        
+    G4VTwoBodyAngDst(const G4String& name, G4int verbose = 0);
+    virtual ~G4VTwoBodyAngDst() { ; }
 
-#endif	/* G4VTwoBodyAngDst_h */
+    virtual G4double GetCosTheta(const G4double& ekin, const G4double& pcm) const = 0;
+
+    virtual void setVerboseLevel(G4int verbose = 0) { verboseLevel = verbose; }
+    virtual const G4String& GetName() const { return theName; }
+
+  protected:
+
+    G4String theName;
+    G4int verboseLevel;
+};
+
+#endif /* G4VTwoBodyAngDst_h */

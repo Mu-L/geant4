@@ -36,24 +36,26 @@
 #ifndef G4TMAG_ERROR_STEPPER_HH
 #define G4TMAG_ERROR_STEPPER_HH
 
-#include "G4Types.hh"
+#include "G4LineSection.hh"
 #include "G4MagIntegratorStepper.hh"
 #include "G4ThreeVector.hh"
-#include "G4LineSection.hh"
+#include "G4Types.hh"
 
 /**
  * @brief G4TMagErrorStepper is a templated version of G4MagErrorStepper.
+ * @ingroup geometry_magneticfield
  */
 
-template <class T_Stepper, class T_Equation, unsigned int N>
+template<class T_Stepper, class T_Equation, unsigned int N>
 class G4TMagErrorStepper : public G4MagIntegratorStepper
 {
   public:
 
-    G4TMagErrorStepper(T_Equation* EqRhs, G4int numberOfVariables,
-                       G4int numStateVariables = 12)
-      : G4MagIntegratorStepper(EqRhs, numberOfVariables, numStateVariables)
-      , fEquation_Rhs(EqRhs) { ; }
+    G4TMagErrorStepper(T_Equation* EqRhs, G4int numberOfVariables, G4int numStateVariables = 12)
+      : G4MagIntegratorStepper(EqRhs, numberOfVariables, numStateVariables), fEquation_Rhs(EqRhs)
+    {
+      ;
+    }
 
     virtual ~G4TMagErrorStepper() = default;
 
@@ -65,9 +67,9 @@ class G4TMagErrorStepper : public G4MagIntegratorStepper
       fEquation_Rhs->T_Equation::RightHandSide(y, dydx);
     }
 
-    inline void Stepper(const G4double yInput[], const G4double dydx[],
-                        G4double hstep, G4double yOutput[], G4double yError[]) override final;
- 
+    inline void Stepper(const G4double yInput[], const G4double dydx[], G4double hstep,
+                        G4double yOutput[], G4double yError[]) override final;
+
     inline G4double DistChord() const override final;
     G4StepperType StepperType() const override { return kTMagErrorStepper; }
 
@@ -91,67 +93,57 @@ class G4TMagErrorStepper : public G4MagIntegratorStepper
 
 // ------------   Implementation -----------------------
 
-template <class T_Stepper, class T_Equation, unsigned int N >
-void G4TMagErrorStepper<T_Stepper,T_Equation,N>::
-Stepper(const G4double yInput[],
-        const G4double dydx[],
-              G4double hstep,
-              G4double yOutput[],
-              G4double yError[])
+template<class T_Stepper, class T_Equation, unsigned int N>
+void G4TMagErrorStepper<T_Stepper, T_Equation, N>::Stepper(const G4double yInput[],
+                                                           const G4double dydx[], G4double hstep,
+                                                           G4double yOutput[], G4double yError[])
 // The stepper for the Runge Kutta integration. The stepsize
 // is fixed, with the Step size given by hstep.
 // Integrates ODE starting values y[0 to N].
 // Outputs yout[] and its estimated error yerr[].
 {
   const unsigned int maxvar = GetNumberOfStateVariables();
-  
+
   //  Saving yInput because yInput and yOutput can be aliases for same array
-  for(unsigned int i = 0; i < N; ++i)
-     yInitial[i] = yInput[i];
-  yInitial[7] =
-     yInput[7];  // Copy the time in case ... even if not really needed
-  yMiddle[7]  = yInput[7];  // Copy the time from initial value
+  for (unsigned int i = 0; i < N; ++i)
+    yInitial[i] = yInput[i];
+  yInitial[7] = yInput[7];  // Copy the time in case ... even if not really needed
+  yMiddle[7] = yInput[7];  // Copy the time from initial value
   yOneStep[7] = yInput[7];  // As it contributes to final value of yOutput ?
   // yOutput[7] = yInput[7];  // -> dumb stepper does it too for RK4
-  for(unsigned int i = N; i < maxvar; ++i)
-     yOutput[i] = yInput[i];
+  for (unsigned int i = N; i < maxvar; ++i)
+    yOutput[i] = yInput[i];
 
   G4double halfStep = hstep * 0.5;
-  
+
   // Do two half steps
-  
-  static_cast<T_Stepper*>(this)->DumbStepper(yInitial, dydx, halfStep,
-                                               yMiddle);
+
+  static_cast<T_Stepper*>(this)->DumbStepper(yInitial, dydx, halfStep, yMiddle);
   this->RightHandSide(yMiddle, dydxMid);
-  static_cast<T_Stepper*>(this)->DumbStepper(yMiddle, dydxMid, halfStep,
-                                             yOutput);
-  
+  static_cast<T_Stepper*>(this)->DumbStepper(yMiddle, dydxMid, halfStep, yOutput);
+
   // Store midpoint, chord calculation
-  
+
   fMidPoint = G4ThreeVector(yMiddle[0], yMiddle[1], yMiddle[2]);
-  
+
   // Do a full Step
   static_cast<T_Stepper*>(this)->DumbStepper(yInitial, dydx, hstep, yOneStep);
-  for(unsigned int i = 0; i < N; ++i)
+  for (unsigned int i = 0; i < N; ++i)
   {
     yError[i] = yOutput[i] - yOneStep[i];
-    yOutput[i] +=
-       yError[i] *
-       T_Stepper::IntegratorCorrection;  // Provides accuracy increased
+    yOutput[i] += yError[i] * T_Stepper::IntegratorCorrection;  // Provides accuracy increased
     // by 1 order via the
     // Richardson Extrapolation
   }
 
   fInitialPoint = G4ThreeVector(yInitial[0], yInitial[1], yInitial[2]);
-  fFinalPoint   = G4ThreeVector(yOutput[0], yOutput[1], yOutput[2]);
-  
+  fFinalPoint = G4ThreeVector(yOutput[0], yOutput[1], yOutput[2]);
+
   return;
 }
 
-
-template <class T_Stepper, class T_Equation, unsigned int N >
-inline G4double
-G4TMagErrorStepper<T_Stepper,T_Equation,N>::DistChord() const
+template<class T_Stepper, class T_Equation, unsigned int N>
+inline G4double G4TMagErrorStepper<T_Stepper, T_Equation, N>::DistChord() const
 {
   // Estimate the maximum distance from the curve to the chord
   //
@@ -163,19 +155,19 @@ G4TMagErrorStepper<T_Stepper,T_Equation,N>::DistChord() const
   //   which generally cannot integrate accurately for large angle deviations.
   G4double distLine, distChord;
 
-  if(fInitialPoint != fFinalPoint)
+  if (fInitialPoint != fFinalPoint)
   {
     distLine = G4LineSection::Distline(fMidPoint, fInitialPoint, fFinalPoint);
     // This is a class method that gives distance of Mid
     //  from the Chord between the Initial and Final points.
-    
+
     distChord = distLine;
   }
   else
   {
-     distChord = (fMidPoint - fInitialPoint).mag();
+    distChord = (fMidPoint - fInitialPoint).mag();
   }
-  
+
   return distChord;
 }
 

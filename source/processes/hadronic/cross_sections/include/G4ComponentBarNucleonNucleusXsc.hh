@@ -33,99 +33,88 @@
 // Modifications: 16.08.2018 V.Ivanchenko major revision
 //
 
-#ifndef G4ComponentBarNucleonNucleusXsc_h
-#define G4ComponentBarNucleonNucleusXsc_h
+#ifndef G4COMPONENTBARNUCLEONNUCLEUSXSC_HH
+#define G4COMPONENTBARNUCLEONNUCLEUSXSC_HH
 
-
-#include "G4VComponentCrossSection.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4DynamicParticle.hh"
-
-#include "globals.hh"
+#include "G4ParticleDefinition.hh"
 #include "G4PiData.hh"
+#include "G4VComponentCrossSection.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4ComponentBarNucleonNucleusXsc : public G4VComponentCrossSection
 {
+  public:
 
-public:
-  
-  G4ComponentBarNucleonNucleusXsc();
-  ~G4ComponentBarNucleonNucleusXsc() override = default;
+    G4ComponentBarNucleonNucleusXsc();
+    ~G4ComponentBarNucleonNucleusXsc() override = default;
 
-  G4double GetTotalIsotopeCrossSection(const G4ParticleDefinition* aParticle,
-				       G4double kinEnergy,
-				       G4int Z, G4int ) final;
+    G4double GetTotalIsotopeCrossSection(const G4ParticleDefinition* aParticle, G4double kinEnergy,
+                                         G4int Z, G4int) final;
 
-  G4double GetTotalElementCrossSection(const G4ParticleDefinition* aParticle,
-				       G4double kinEnergy, 
-				       G4int Z, G4double ) final;
+    G4double GetTotalElementCrossSection(const G4ParticleDefinition* aParticle, G4double kinEnergy,
+                                         G4int Z, G4double) final;
 
-  G4double GetInelasticIsotopeCrossSection(const G4ParticleDefinition* aParticle,
-					   G4double kinEnergy, 
-					   G4int Z, G4int ) final;
+    G4double GetInelasticIsotopeCrossSection(const G4ParticleDefinition* aParticle,
+                                             G4double kinEnergy, G4int Z, G4int) final;
 
-  G4double GetInelasticElementCrossSection(const G4ParticleDefinition* aParticle,
-					   G4double kinEnergy, 
-					   G4int Z, G4double ) final;
+    G4double GetInelasticElementCrossSection(const G4ParticleDefinition* aParticle,
+                                             G4double kinEnergy, G4int Z, G4double) final;
 
-  G4double GetElasticElementCrossSection(const G4ParticleDefinition* aParticle,
-					 G4double kinEnergy, 
-					 G4int Z, G4double ) final;
+    G4double GetElasticElementCrossSection(const G4ParticleDefinition* aParticle,
+                                           G4double kinEnergy, G4int Z, G4double) final;
 
-  G4double GetElasticIsotopeCrossSection(const G4ParticleDefinition* aParticle,
-					 G4double kinEnergy, 
-					 G4int Z, G4int ) final;
+    G4double GetElasticIsotopeCrossSection(const G4ParticleDefinition* aParticle,
+                                           G4double kinEnergy, G4int Z, G4int) final;
 
-  void ComputeCrossSections(const G4ParticleDefinition* aParticle,
-			    G4double kinEnergy, G4int Z);
- 
-  void Description(std::ostream&) const final;
+    void ComputeCrossSections(const G4ParticleDefinition* aParticle, G4double kinEnergy, G4int Z);
 
-  inline G4double GetElementCrossSection(const G4DynamicParticle* aParticle, G4int Z); 
-  inline G4double GetElasticCrossSection(const G4DynamicParticle* aParticle, G4int Z);
+    void Description(std::ostream&) const final;
 
-  inline G4double GetTotalXsc()     { return fTotalXsc;   };
-  inline G4double GetElasticXsc()   { return fElasticXsc; };
-  inline G4double GetInelasticXsc() { return fInelasticXsc; };
+    inline G4double GetElementCrossSection(const G4DynamicParticle* aParticle, G4int Z);
+    inline G4double GetElasticCrossSection(const G4DynamicParticle* aParticle, G4int Z);
 
-  G4ComponentBarNucleonNucleusXsc& operator=
-  (const G4ComponentBarNucleonNucleusXsc &right) = delete;
-  G4ComponentBarNucleonNucleusXsc(const G4ComponentBarNucleonNucleusXsc&) = delete;
+    inline G4double GetTotalXsc() { return fTotalXsc; };
+    inline G4double GetElasticXsc() { return fElasticXsc; };
+    inline G4double GetInelasticXsc() { return fInelasticXsc; };
 
-private:
+    G4ComponentBarNucleonNucleusXsc&
+    operator=(const G4ComponentBarNucleonNucleusXsc& right) = delete;
+    G4ComponentBarNucleonNucleusXsc(const G4ComponentBarNucleonNucleusXsc&) = delete;
 
-  G4double Interpolate(G4int Z1, G4int Z2, G4int Z, G4double x1, G4double x2) const;
+  private:
 
-  void LoadData();
+    G4double Interpolate(G4int Z1, G4int Z2, G4int Z, G4double x1, G4double x2) const;
 
-  // cross sections
-  G4double fTotalXsc{0.0};
-  G4double fInelasticXsc{0.0};
-  G4double fElasticXsc{0.0};
+    void LoadData();
 
-  // particles
-  const G4ParticleDefinition* theProton;
-  const G4ParticleDefinition* theNeutron;
+    // cross sections
+    G4double fTotalXsc{0.0};
+    G4double fInelasticXsc{0.0};
+    G4double fElasticXsc{0.0};
 
-  static G4double A75[93];
-  static const G4int NZ = 17;
-  static G4int theZ[NZ];
-  static std::vector<G4PiData*>* thePData;
-  static std::vector<G4PiData*>* theNData;
+    // particles
+    const G4ParticleDefinition* theProton;
+    const G4ParticleDefinition* theNeutron;
+
+    static G4double A75[93];
+    static const G4int NZ = 17;
+    static G4int theZ[NZ];
+    static std::vector<G4PiData*>* thePData;
+    static std::vector<G4PiData*>* theNData;
 };
 
-inline
-G4double G4ComponentBarNucleonNucleusXsc::GetElementCrossSection(
-         const G4DynamicParticle* dp, G4int Z)
+inline G4double G4ComponentBarNucleonNucleusXsc::GetElementCrossSection(const G4DynamicParticle* dp,
+                                                                        G4int Z)
 {
   ComputeCrossSections(dp->GetDefinition(), dp->GetKineticEnergy(), Z);
   return fInelasticXsc;
 }
 
-inline
-G4double G4ComponentBarNucleonNucleusXsc::GetElasticCrossSection(
-         const G4DynamicParticle* dp, G4int Z)
+inline G4double G4ComponentBarNucleonNucleusXsc::GetElasticCrossSection(const G4DynamicParticle* dp,
+                                                                        G4int Z)
 {
   ComputeCrossSections(dp->GetDefinition(), dp->GetKineticEnergy(), Z);
   return fElasticXsc;

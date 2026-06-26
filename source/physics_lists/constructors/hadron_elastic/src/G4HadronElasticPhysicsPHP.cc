@@ -37,15 +37,16 @@
 // neutron HP model for E < 20 MeV
 
 #include "G4HadronElasticPhysicsPHP.hh"
-#include "G4Neutron.hh"
-#include "G4HadronicProcess.hh"
-#include "G4ProcessManager.hh"
+
 #include "G4HadronElastic.hh"
+#include "G4HadronicParameters.hh"
+#include "G4HadronicProcess.hh"
+#include "G4Neutron.hh"
 #include "G4ParticleHPElastic.hh"
 #include "G4ParticleHPElasticData.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4HadronicParameters.hh"
 #include "G4PhysListUtil.hh"
+#include "G4ProcessManager.hh"
+#include "G4SystemOfUnits.hh"
 
 // factory
 #include "G4PhysicsConstructorFactory.hh"
@@ -56,9 +57,9 @@ G4_DECLARE_PHYSCONSTR_FACTORY(G4HadronElasticPhysicsPHP);
 G4HadronElasticPhysicsPHP::G4HadronElasticPhysicsPHP(G4int ver)
   : G4HadronElasticPhysics(ver, "hElasticPhysics_PHP")
 {
-  if(ver > 1) { 
-    G4cout << "### G4HadronElasticPhysicsPHP: " << GetPhysicsName() 
-	   << G4endl; 
+  if (ver > 1)
+  {
+    G4cout << "### G4HadronElasticPhysicsPHP: " << GetPhysicsName() << G4endl;
   }
   auto param = G4HadronicParameters::Instance();
   // HP is inconsistent with the neutron general process
@@ -70,26 +71,27 @@ void G4HadronElasticPhysicsPHP::ConstructProcess()
   G4HadronElasticPhysics::ConstructProcess();
 
   const G4ParticleDefinition* neutron = G4Neutron::Neutron();
-  G4HadronicProcess* hel = G4PhysListUtil::FindElasticProcess( neutron );
-  if ( nullptr == hel ) {
+  G4HadronicProcess* hel = G4PhysListUtil::FindElasticProcess(neutron);
+  if (nullptr == hel)
+  {
     hel = new G4HadronicProcess();
     neutron->GetProcessManager()->AddDiscreteProcess(hel);
-  } else {
+  }
+  else
+  {
     G4HadronElastic* he = GetElasticModel(neutron);
-    he->SetMinEnergy(19.5*CLHEP::MeV); 
+    he->SetMinEnergy(19.5 * CLHEP::MeV);
   }
   // apply alternative cross section
-  hel->AddDataSet( new G4ParticleHPElasticData() );
+  hel->AddDataSet(new G4ParticleHPElasticData());
 
   // add HP elastic
   auto he = new G4ParticleHPElastic();
-  he->SetMaxEnergy(20*CLHEP::MeV); 
-  hel->RegisterMe( he );
+  he->SetMaxEnergy(20 * CLHEP::MeV);
+  hel->RegisterMe(he);
 
-  if ( G4HadronicParameters::Instance()->GetVerboseLevel() > 1 ) {
-    G4cout << "### HadronElasticPhysicsPHP is constructed " 
-	   << G4endl;
+  if (G4HadronicParameters::Instance()->GetVerboseLevel() > 1)
+  {
+    G4cout << "### HadronElasticPhysicsPHP is constructed " << G4endl;
   }
 }
-
-

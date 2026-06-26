@@ -24,49 +24,49 @@
 // ********************************************************************
 //
 
-
 #include "G4IRTUtils.hh"
-#include "globals.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4ErrorFunction.hh"
-G4double G4IRTUtils::EffectiveDistance(const G4double& rc,
-                                       const G4double& r0)
-{
-    return r0 == 0 ? 0 : - rc / (1 - std::exp( rc / r0 ) );
-}
 
+#include "G4ErrorFunction.hh"
+#include "G4SystemOfUnits.hh"
+#include "globals.hh"
+G4double G4IRTUtils::EffectiveDistance(const G4double& rc, const G4double& r0)
+{
+  return r0 == 0 ? 0 : -rc / (1 - std::exp(rc / r0));
+}
 
 G4double G4IRTUtils::GetRCutOff()
 {
-    G4double tCutOff = 1000 * ns;
-    
-    G4double probabilityOfReaction = 0.01;
-    G4double maximumReactionRadius = 1.45*CLHEP::nm;//??
-    G4double maximumRelativeDiffusionCoefficient = 2.0*9.46e9 *CLHEP::nm*CLHEP::nm/CLHEP::s;//??
-    G4double erfcInv = G4ErrorFunction::erfcInv(probabilityOfReaction);
-    return maximumReactionRadius + 2.0 *
-    std::sqrt(maximumRelativeDiffusionCoefficient * tCutOff) * erfcInv;
-}
+  G4double tCutOff = 1000 * ns;
 
+  G4double probabilityOfReaction = 0.01;
+  G4double maximumReactionRadius = 1.45 * CLHEP::nm;  //??
+  G4double maximumRelativeDiffusionCoefficient =
+    2.0 * 9.46e9 * CLHEP::nm * CLHEP::nm / CLHEP::s;  //??
+  G4double erfcInv = G4ErrorFunction::erfcInv(probabilityOfReaction);
+  return maximumReactionRadius
+         + 2.0 * std::sqrt(maximumRelativeDiffusionCoefficient * tCutOff) * erfcInv;
+}
 
 G4double G4IRTUtils::GetRCutOff(G4double tCutOff)
 {
-    G4double probabilityOfReaction = 0.01;
-    G4double maximumReactionRadius = 1.45*CLHEP::nm;//??
-    G4double maximumRelativeDiffusionCoefficient = 2.0*9.46e9 *CLHEP::nm*CLHEP::nm/CLHEP::s;//??
-    G4double erfcInv = G4ErrorFunction::erfcInv(probabilityOfReaction);
-    return maximumReactionRadius + 2.0 *
-    std::sqrt(maximumRelativeDiffusionCoefficient * tCutOff) * erfcInv;
+  G4double probabilityOfReaction = 0.01;
+  G4double maximumReactionRadius = 1.45 * CLHEP::nm;  //??
+  G4double maximumRelativeDiffusionCoefficient =
+    2.0 * 9.46e9 * CLHEP::nm * CLHEP::nm / CLHEP::s;  //??
+  G4double erfcInv = G4ErrorFunction::erfcInv(probabilityOfReaction);
+  return maximumReactionRadius
+         + 2.0 * std::sqrt(maximumRelativeDiffusionCoefficient * tCutOff) * erfcInv;
 }
 
 G4double G4IRTUtils::GetDNADistanceCutOff()
 {
-    G4double tCutOff = 100 * ps;
-    
-    G4double probabilityOfReaction = 0.01;
-    G4double maximumReactionRadius = 1.45*CLHEP::nm;//??
-    G4double maximumRelativeDiffusionCoefficient = 2.0*9.46e9 *CLHEP::nm*CLHEP::nm/CLHEP::s;//??
-    G4double erfcInv = G4ErrorFunction::erfcInv(probabilityOfReaction);
-    return maximumReactionRadius + 2.0 *
-    std::sqrt(maximumRelativeDiffusionCoefficient * tCutOff) * erfcInv;
+  G4double tCutOff = 100 * ps;
+
+  G4double probabilityOfReaction = 0.01;
+  G4double maximumReactionRadius = 1.45 * CLHEP::nm;  //??
+  G4double maximumRelativeDiffusionCoefficient =
+    2.0 * 9.46e9 * CLHEP::nm * CLHEP::nm / CLHEP::s;  //??
+  G4double erfcInv = G4ErrorFunction::erfcInv(probabilityOfReaction);
+  return maximumReactionRadius
+         + 2.0 * std::sqrt(maximumRelativeDiffusionCoefficient * tCutOff) * erfcInv;
 }

@@ -28,7 +28,6 @@
 #include "ExGflashPrimaryGeneratorAction.hh"
 
 #include "G4Electron.hh"
-#include "G4Event.hh"
 #include "G4GeneralParticleSource.hh"
 #include "G4SystemOfUnits.hh"
 

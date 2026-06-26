@@ -35,7 +35,7 @@
 //
 // Creation date: 21.05.2010
 //
-// Modifications: 
+// Modifications:
 //
 //
 // -------------------------------------------------------------------
@@ -45,6 +45,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "G4BraggIonGasModel.hh"
+
 #include "G4SystemOfUnits.hh"
 #include "G4Track.hh"
 
@@ -52,34 +53,33 @@
 
 using namespace std;
 
-G4BraggIonGasModel::G4BraggIonGasModel(const G4ParticleDefinition* p, 
-  const G4String& nam) : G4BraggModel(p,nam), currentCharge(1.0)
+G4BraggIonGasModel::G4BraggIonGasModel(const G4ParticleDefinition* p, const G4String& nam)
+  : G4BraggModel(p, nam), currentCharge(1.0)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4double G4BraggIonGasModel::ChargeSquareRatio(const G4Track& track)
 {
-  currentCharge = track.GetDynamicParticle()->GetCharge()/eplus;
-  G4double q2 = currentCharge*currentCharge;
-  SetChargeSquareRatio(q2); 
+  currentCharge = track.GetDynamicParticle()->GetCharge() / eplus;
+  G4double q2 = currentCharge * currentCharge;
+  SetChargeSquareRatio(q2);
   return q2;
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......                                                                              
-G4double G4BraggIonGasModel::GetChargeSquareRatio(const G4ParticleDefinition*,
-                                                  const G4Material*, G4double)
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+G4double G4BraggIonGasModel::GetChargeSquareRatio(const G4ParticleDefinition*, const G4Material*,
+                                                  G4double)
 {
-  return currentCharge*currentCharge;
+  return currentCharge * currentCharge;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4BraggIonGasModel::GetParticleCharge(const G4ParticleDefinition*,
-					       const G4Material*, G4double)
+G4double G4BraggIonGasModel::GetParticleCharge(const G4ParticleDefinition*, const G4Material*,
+                                               G4double)
 {
-  return currentCharge*eplus;
+  return currentCharge * eplus;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-

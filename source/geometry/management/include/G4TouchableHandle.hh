@@ -39,12 +39,14 @@
 #ifndef G4TOUCHABLEHANDLE_HH
 #define G4TOUCHABLEHANDLE_HH
 
-#include "G4VTouchable.hh"
 #include "G4ReferenceCountedHandle.hh"
+#include "G4VTouchable.hh"
 
 /**
  * @brief G4TouchableHandle is a type providing reference counting mechanism
  * for any kind of touchable objects.
+ * @ingroup geometry_management
+ *
  * The basic rule for the use of this type is that the handle must always
  * be exchanged by reference and never be dinamically allocated (i.e. never
  * instantiated using 'new').

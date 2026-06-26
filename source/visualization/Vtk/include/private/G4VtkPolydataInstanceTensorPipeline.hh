@@ -35,15 +35,16 @@ class vtkTensorGlyphColor;
 class G4VtkPolydataInstanceTensorPipeline : public G4VtkPolydataInstancePipeline
 {
   public:
+
     G4VtkPolydataInstanceTensorPipeline(G4String name, const G4VtkVisContext& vc);
     ~G4VtkPolydataInstanceTensorPipeline() override = default;
 
     void Print() override;
 
-
     static std::size_t MakeHash(const G4Polyhedron& p, const G4VtkVisContext& vc);
 
   protected:
+
     vtkSmartPointer<vtkPolyData> instancePolydata;
     vtkSmartPointer<vtkTensorGlyphColor> instanceTensorGlyph;
 };

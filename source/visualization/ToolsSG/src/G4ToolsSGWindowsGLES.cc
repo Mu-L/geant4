@@ -25,30 +25,32 @@
 //
 // Guy Barrand 6th March 2021
 
-
 #include "G4ToolsSGWindowsGLES.hh"
 
 #include "G4ToolsSGViewer.hh"
+
 #include <toolx/Windows/sg_viewer>
 
-G4ToolsSGWindowsGLES::G4ToolsSGWindowsGLES():
-parent
-("TOOLSSG_WINDOWS_GLES",
- "TSG_WINDOWS_GLES",
- "TOOLSSG_WINDOWS_GLES is a graphics driver based on the g4tools tools/sg scene graph logic where\n\
+G4ToolsSGWindowsGLES::G4ToolsSGWindowsGLES()
+  : parent(
+      "TOOLSSG_WINDOWS_GLES", "TSG_WINDOWS_GLES",
+      "TOOLSSG_WINDOWS_GLES is a graphics driver based on the g4tools tools/sg scene graph logic where\n\
  the rendering is done with Microsoft GLES and the windowing is done with Microsoft Windows.",
- parent::threeDInteractive)
-,fSGSession(nullptr)
+      parent::threeDInteractive),
+    fSGSession(nullptr)
 {}
 
-G4ToolsSGWindowsGLES::~G4ToolsSGWindowsGLES() {
+G4ToolsSGWindowsGLES::~G4ToolsSGWindowsGLES()
+{
   delete fSGSession;
 }
 
-void G4ToolsSGWindowsGLES::Initialise() {
-  if(fSGSession) return; //done.
+void G4ToolsSGWindowsGLES::Initialise()
+{
+  if (fSGSession) return;  // done.
   fSGSession = new toolx::Windows::session(G4cout);
-  if(!fSGSession->is_valid()) {
+  if (!fSGSession->is_valid())
+  {
     G4cerr << "G4ToolsSGWindowsGLES::Initialise : session::is_valid() failed." << G4endl;
     delete fSGSession;
     fSGSession = nullptr;
@@ -56,31 +58,34 @@ void G4ToolsSGWindowsGLES::Initialise() {
   }
 }
 
-G4VSceneHandler* G4ToolsSGWindowsGLES::CreateSceneHandler(const G4String& a_name) {
+G4VSceneHandler* G4ToolsSGWindowsGLES::CreateSceneHandler(const G4String& a_name)
+{
   G4VSceneHandler* pScene = new G4ToolsSGSceneHandler(*this, a_name);
   return pScene;
 }
 
-G4VViewer* G4ToolsSGWindowsGLES::CreateViewer(G4VSceneHandler& a_scene,const G4String& a_name) {
-  if(!fSGSession) Initialise();
-  if(!fSGSession) return nullptr;
-  G4VViewer* pView =
-    new G4ToolsSGViewer<toolx::Windows::session,toolx::Windows::sg_viewer>(*fSGSession,(G4ToolsSGSceneHandler&)a_scene,a_name);
-  if (pView) {
-    if (pView->GetViewId() < 0) {
-      G4cerr <<
-      "G4ToolsSGWindowsGLES::CreateViewer: ERROR flagged by negative"
-      " view id in G4ToolsSGViewer creation."
-      "\n Destroying view and returning null pointer."
-      << G4endl;
+G4VViewer* G4ToolsSGWindowsGLES::CreateViewer(G4VSceneHandler& a_scene, const G4String& a_name)
+{
+  if (!fSGSession) Initialise();
+  if (!fSGSession) return nullptr;
+  G4VViewer* pView = new G4ToolsSGViewer<toolx::Windows::session, toolx::Windows::sg_viewer>(
+    *fSGSession, (G4ToolsSGSceneHandler&)a_scene, a_name);
+  if (pView)
+  {
+    if (pView->GetViewId() < 0)
+    {
+      G4cerr << "G4ToolsSGWindowsGLES::CreateViewer: ERROR flagged by negative"
+                " view id in G4ToolsSGViewer creation."
+                "\n Destroying view and returning null pointer."
+             << G4endl;
       delete pView;
       pView = nullptr;
     }
   }
-  if (!pView) {
-    G4cerr <<
-    "G4ToolsSGWindowsGLES::CreateViewer: ERROR: null pointer on new G4ToolsSGViewer."
-    << G4endl;
+  if (!pView)
+  {
+    G4cerr << "G4ToolsSGWindowsGLES::CreateViewer: ERROR: null pointer on new G4ToolsSGViewer."
+           << G4endl;
   }
   return pView;
 }

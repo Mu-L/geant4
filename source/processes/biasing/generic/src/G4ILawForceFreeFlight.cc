@@ -28,12 +28,10 @@
 
 #include "G4ILawForceFreeFlight.hh"
 
-G4ILawForceFreeFlight::G4ILawForceFreeFlight(const G4String& name)
-  : G4VBiasingInteractionLaw(name)
+G4ILawForceFreeFlight::G4ILawForceFreeFlight(const G4String& name) : G4VBiasingInteractionLaw(name)
 {}
 
-G4ILawForceFreeFlight::~G4ILawForceFreeFlight()
-{}
+G4ILawForceFreeFlight::~G4ILawForceFreeFlight() {}
 
 G4double G4ILawForceFreeFlight::ComputeEffectiveCrossSectionAt(G4double) const
 {

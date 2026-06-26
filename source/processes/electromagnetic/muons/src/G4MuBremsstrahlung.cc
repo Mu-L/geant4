@@ -63,18 +63,18 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include "G4MuBremsstrahlung.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4EmParameters.hh"
 #include "G4Gamma.hh"
 #include "G4MuBremsstrahlungModel.hh"
-#include "G4EmParameters.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 using namespace std;
 
 G4MuBremsstrahlung::G4MuBremsstrahlung(const G4String& name)
-  : G4VEnergyLossProcess(name),
-    lowestKinEnergy(0.1*CLHEP::GeV)
+  : G4VEnergyLossProcess(name), lowestKinEnergy(0.1 * CLHEP::GeV)
 {
   SetProcessSubType(fBremsstrahlung);
   SetSecondaryParticle(G4Gamma::Gamma());
@@ -90,23 +90,27 @@ G4bool G4MuBremsstrahlung::IsApplicable(const G4ParticleDefinition& p)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double G4MuBremsstrahlung::MinPrimaryEnergy(const G4ParticleDefinition*,
-					      const G4Material*,
-					      G4double)
+G4double G4MuBremsstrahlung::MinPrimaryEnergy(const G4ParticleDefinition*, const G4Material*,
+                                              G4double)
 {
   return lowestKinEnergy;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4MuBremsstrahlung::InitialiseEnergyLossProcess(
-				 const G4ParticleDefinition*,
-				 const G4ParticleDefinition*)
+void G4MuBremsstrahlung::InitialiseEnergyLossProcess(const G4ParticleDefinition*,
+                                                     const G4ParticleDefinition*)
 {
-  if(isInitialised) { return; }
+  if (isInitialised)
+  {
+    return;
+  }
   isInitialised = true;
 
-  if (nullptr == EmModel(0)) { SetEmModel(new G4MuBremsstrahlungModel()); }
+  if (nullptr == EmModel(0))
+  {
+    SetEmModel(new G4MuBremsstrahlungModel());
+  }
 
   G4VEmFluctuationModel* fm = nullptr;
   G4EmParameters* param = G4EmParameters::Instance();

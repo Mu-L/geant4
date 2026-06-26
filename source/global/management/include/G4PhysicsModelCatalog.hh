@@ -36,25 +36,26 @@
 #ifndef G4PHYSICSMODELCATALOG_HH
 #define G4PHYSICSMODELCATALOG_HH
 
-#include <vector>
-
 #include "G4String.hh"
 #include "globals.hh"
 
+#include <vector>
 
-class G4PhysicsModelCatalog {
+class G4PhysicsModelCatalog
+{
   public:
-    static void Initialize();
-    ~G4PhysicsModelCatalog()                              = default;
-    G4PhysicsModelCatalog( const G4PhysicsModelCatalog& ) = delete;
-    G4PhysicsModelCatalog& operator=( const G4PhysicsModelCatalog& ) = delete;
 
-    static const G4String GetModelNameFromID( const G4int modelID );
-    static const G4String GetModelNameFromIndex( const G4int modelIndex );
-    static G4int GetModelID( const G4int modelIndex );
-    static G4int GetModelID( const G4String& modelName );
-    static G4int GetModelIndex( const G4int modelID );
-    static G4int GetModelIndex( const G4String& modelName );
+    static void Initialize();
+    ~G4PhysicsModelCatalog() = default;
+    G4PhysicsModelCatalog(const G4PhysicsModelCatalog&) = delete;
+    G4PhysicsModelCatalog& operator=(const G4PhysicsModelCatalog&) = delete;
+
+    static const G4String GetModelNameFromID(const G4int modelID);
+    static const G4String GetModelNameFromIndex(const G4int modelIndex);
+    static G4int GetModelID(const G4int modelIndex);
+    static G4int GetModelID(const G4String& modelName);
+    static G4int GetModelIndex(const G4int modelID);
+    static G4int GetModelIndex(const G4String& modelName);
     // For Geant4 native (i.e. not custom/user-defined) physics models
     // there are two integer values: the model ID and the model Index.
     // The model ID is a unique integer which identifies not only the
@@ -93,7 +94,7 @@ class G4PhysicsModelCatalog {
     // Returns the two limits, min and max respectively, that the modelID value
     // can have for Geant4 native physics models.
 
-    static G4int RegisterCustomModel( const G4String& modelName );  
+    static G4int RegisterCustomModel(const G4String& modelName);
     // For custom/user-defined physics models, the user is responsible to call
     // this method during initialisation to register them, one by one, by
     // providing their names; the return value of the method is the unique
@@ -125,33 +126,37 @@ class G4PhysicsModelCatalog {
     // physics models - Geant4 native and custom/user-defined; there is no check
     // of the modelIDs of custom/user-defined physics models, because these
     // values are automatically assigned.
-  
+
   private:
+
     G4PhysicsModelCatalog() = default;
 
-    inline static void InsertModel( G4int modelID, G4String modelName );
-  
+    inline static void InsertModel(G4int modelID, G4String modelName);
+
     static G4bool isInitialized;
     static const G4int theMinAllowedModelIDValue = 10000;
     static const G4int theMaxAllowedModelIDValue = 39999;
-  
-    static std::vector< G4int >*    theVectorOfModelIDs;          // Non-contiguous large, positive integers
-    static std::vector< G4String >* theVectorOfModelNames;        // for Geant4 native physics models
-    static std::vector< G4String >* theVectorOfCustomModelNames;  // For custom/user-defined physics models  
+
+    static std::vector<G4int>* theVectorOfModelIDs;  // Non-contiguous large, positive integers
+    static std::vector<G4String>* theVectorOfModelNames;  // for Geant4 native physics models
+    static std::vector<G4String>*
+      theVectorOfCustomModelNames;  // For custom/user-defined physics models
 };
 
-
-inline G4int G4PhysicsModelCatalog::GetMinAllowedModelIDValue() {
+inline G4int G4PhysicsModelCatalog::GetMinAllowedModelIDValue()
+{
   return theMinAllowedModelIDValue;
 }
 
-inline G4int G4PhysicsModelCatalog::GetMaxAllowedModelIDValue() {
+inline G4int G4PhysicsModelCatalog::GetMaxAllowedModelIDValue()
+{
   return theMaxAllowedModelIDValue;
 }
 
-inline void G4PhysicsModelCatalog::InsertModel( G4int modelID, G4String modelName ) {
-  theVectorOfModelIDs->push_back( modelID );
-  theVectorOfModelNames->push_back( modelName );
+inline void G4PhysicsModelCatalog::InsertModel(G4int modelID, G4String modelName)
+{
+  theVectorOfModelIDs->push_back(modelID);
+  theVectorOfModelNames->push_back(modelName);
 }
 
 #endif

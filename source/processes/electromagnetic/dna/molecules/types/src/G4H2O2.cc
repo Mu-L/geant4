@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Author: Mathieu Karamitors 
+// Author: Mathieu Karamitors
 //
 // History:
 // -----------
@@ -33,9 +33,10 @@
 // -------------------------------------------------------------------
 
 #include "G4H2O2.hh"
+
+#include "G4ParticleTable.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4ParticleTable.hh"
 
 // ######################################################################
 // ###                         Peroxyde                               ###
@@ -70,21 +71,21 @@ G4H2O2* G4H2O2::Definition()
     //      );
 
     G4double mass = 34.01468 * g / Avogadro * c_squared;
-    anInstance = new G4MoleculeDefinition(name, mass, 1.4e-9 * (m * m / s), 0, // charge
-                                          8, // number of occupancies
-                                          3 * angstrom, // radius
-                                          4 // number of atoms
-                                          );
+    anInstance = new G4MoleculeDefinition(name, mass, 1.4e-9 * (m * m / s), 0,  // charge
+                                          8,  // number of occupancies
+                                          3 * angstrom,  // radius
+                                          4  // number of atoms
+    );
 
-    ((G4MoleculeDefinition*) anInstance)->SetLevelOccupation(0);
-    ((G4MoleculeDefinition*) anInstance)->SetLevelOccupation(1);
-    ((G4MoleculeDefinition*) anInstance)->SetLevelOccupation(2);
-    ((G4MoleculeDefinition*) anInstance)->SetLevelOccupation(3);
-    ((G4MoleculeDefinition*) anInstance)->SetLevelOccupation(4);
-    ((G4MoleculeDefinition*) anInstance)->SetLevelOccupation(5);
-    ((G4MoleculeDefinition*) anInstance)->SetLevelOccupation(6);
-    ((G4MoleculeDefinition*) anInstance)->SetLevelOccupation(7);
-    ((G4MoleculeDefinition*) anInstance)->SetFormatedName(formatedName);
+    ((G4MoleculeDefinition*)anInstance)->SetLevelOccupation(0);
+    ((G4MoleculeDefinition*)anInstance)->SetLevelOccupation(1);
+    ((G4MoleculeDefinition*)anInstance)->SetLevelOccupation(2);
+    ((G4MoleculeDefinition*)anInstance)->SetLevelOccupation(3);
+    ((G4MoleculeDefinition*)anInstance)->SetLevelOccupation(4);
+    ((G4MoleculeDefinition*)anInstance)->SetLevelOccupation(5);
+    ((G4MoleculeDefinition*)anInstance)->SetLevelOccupation(6);
+    ((G4MoleculeDefinition*)anInstance)->SetLevelOccupation(7);
+    ((G4MoleculeDefinition*)anInstance)->SetFormatedName(formatedName);
   }
   theInstance = static_cast<G4H2O2*>(anInstance);
   return theInstance;

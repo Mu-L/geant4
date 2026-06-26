@@ -32,110 +32,100 @@
 /*--------------------------------------------------------------------------*/
 
 // this :
-#include <HEPVis/nodes/SoImageWriter.h>
-
-#include <Inventor/errors/SoDebugError.h>
-#include <Inventor/elements/SoViewportRegionElement.h>
-#include <Inventor/actions/SoGLRenderAction.h>
-
 #include <HEPVis/SbGL.h>
 #include <HEPVis/SbPainterPS.h>
-//#include <HEPVis/SbGIF.h>
+#include <HEPVis/nodes/SoImageWriter.h>
+#include <Inventor/actions/SoGLRenderAction.h>
+#include <Inventor/elements/SoViewportRegionElement.h>
+#include <Inventor/errors/SoDebugError.h>
+// #include <HEPVis/SbGIF.h>
 
 #include <stdlib.h>
 
-typedef struct {
-  unsigned char red;
-  unsigned char green;
-  unsigned char blue;
+typedef struct
+{
+    unsigned char red;
+    unsigned char green;
+    unsigned char blue;
 } Pixel;
 typedef unsigned char Uchar;
 
-//static void getImagePixels(int,int,float*,int&,
-//                         Uchar*&,Uchar*&,Uchar*&,Uchar*&);
+// static void getImagePixels(int,int,float*,int&,
+//                          Uchar*&,Uchar*&,Uchar*&,Uchar*&);
 
 static int sWidth = 0;
 static int sHeight = 0;
 static float* sImage = 0;
-static int getRGB(unsigned int,unsigned int,double&,double&,double&);
+static int getRGB(unsigned int, unsigned int, double&, double&, double&);
 
 SO_NODE_SOURCE(SoImageWriter)
 //////////////////////////////////////////////////////////////////////////////
-void SoImageWriter::initClass (
-)
+void SoImageWriter::initClass()
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
   static bool first = true;
-  if (first) {
+  if (first)
+  {
     first = false;
-    SO_NODE_INIT_CLASS(SoImageWriter,SoNode,"Node");
+    SO_NODE_INIT_CLASS(SoImageWriter, SoNode, "Node");
   }
 }
 //////////////////////////////////////////////////////////////////////////////
-SoImageWriter::SoImageWriter(
-)
-:fEnabled(FALSE)
-,fStatus(FALSE)
+SoImageWriter::SoImageWriter() : fEnabled(FALSE), fStatus(FALSE)
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
   SO_NODE_CONSTRUCTOR(SoImageWriter);
-  //SO_NODE_ADD_FIELD(format,(POST_SCRIPT));
-  SO_NODE_ADD_FIELD(fileName,("out.ps"));
-  
-  //SO_NODE_DEFINE_ENUM_VALUE(Format,POST_SCRIPT);
-  //SO_NODE_DEFINE_ENUM_VALUE(Format,GIF);
-  
-  //SO_NODE_SET_SF_ENUM_TYPE(format,Format);
+  // SO_NODE_ADD_FIELD(format,(POST_SCRIPT));
+  SO_NODE_ADD_FIELD(fileName, ("out.ps"));
+
+  // SO_NODE_DEFINE_ENUM_VALUE(Format,POST_SCRIPT);
+  // SO_NODE_DEFINE_ENUM_VALUE(Format,GIF);
+
+  // SO_NODE_SET_SF_ENUM_TYPE(format,Format);
 }
 //////////////////////////////////////////////////////////////////////////////
-SoImageWriter::~SoImageWriter (
-)
+SoImageWriter::~SoImageWriter()
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
-{
-}
+{}
 //////////////////////////////////////////////////////////////////////////////
-void SoImageWriter::enable(
-)
+void SoImageWriter::enable()
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
   fEnabled = TRUE;
 }
 //////////////////////////////////////////////////////////////////////////////
-void SoImageWriter::disable(
-)
+void SoImageWriter::disable()
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
   fEnabled = FALSE;
 }
 //////////////////////////////////////////////////////////////////////////////
-SbBool SoImageWriter::getStatus(
-) const
+SbBool SoImageWriter::getStatus() const
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
   return fStatus;
 }
 //////////////////////////////////////////////////////////////////////////////
-void SoImageWriter::GLRender(
- SoGLRenderAction* aAction
-)
+void SoImageWriter::GLRender(SoGLRenderAction* aAction)
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
   fStatus = FALSE;
-  //printf("debug : SoImageWriter::GLRender : enabled : %d\n",fEnabled);
-  if(!fEnabled) return;
+  // printf("debug : SoImageWriter::GLRender : enabled : %d\n",fEnabled);
+  if (!fEnabled) return;
   SbViewportRegion vpr = SoViewportRegionElement::get(aAction->getState());
   const SbVec2s& win = vpr.getWindowSize();
   int w = win[0];
   int h = win[1];
-  if((w*h)<=0) {
-    SoDebugError::postInfo("SoImageWriter::GLRender","null area window !");
+  if ((w * h) <= 0)
+  {
+    SoDebugError::postInfo("SoImageWriter::GLRender", "null area window !");
     return;
   }
 
@@ -143,69 +133,71 @@ void SoImageWriter::GLRender(
   int y = 0;
   int s = 3 * w * h;
   float* image = new float[s];
-  if(!image) return;
+  if (!image) return;
 
-  //printf("debug : SoImageWriter::GLRender : %d %d %d %d\n",x,y,w,h);
+  // printf("debug : SoImageWriter::GLRender : %d %d %d %d\n",x,y,w,h);
 
-  //glReadPixels(x,y,w,h,GL_RGB,GL_UNSIGNED_BYTE,image); Don't work !
-  glReadPixels(x,y,w,h,GL_RGB,GL_FLOAT,image);
+  // glReadPixels(x,y,w,h,GL_RGB,GL_UNSIGNED_BYTE,image); Don't work !
+  glReadPixels(x, y, w, h, GL_RGB, GL_FLOAT, image);
 
-  //Format fm = (Format)format.getValue();
-  //if(fm==GIF) {  
-/*
-    FILE* file = fopen(fileName.getValue().getString(),"wb");
-    if(!file) {
-      SoDebugError::postInfo("SoImageWriter::GLRender",
-        "can't open file \"%s\".",fileName.getValue().getString());
+  // Format fm = (Format)format.getValue();
+  // if(fm==GIF) {
+  /*
+      FILE* file = fopen(fileName.getValue().getString(),"wb");
+      if(!file) {
+        SoDebugError::postInfo("SoImageWriter::GLRender",
+          "can't open file \"%s\".",fileName.getValue().getString());
+      } else {
+        int coln;
+        Uchar* rs;
+        Uchar* gs;
+        Uchar* bs;
+        Uchar* data;
+        getImagePixels(w,h,image,coln,rs,gs,bs,data);
+
+        SbGIF::putBytesInStream(file,data,w,h,coln,rs,gs,bs);
+
+        delete [] data;
+
+        if(rs) free(rs);
+        if(gs) free(gs);
+        if(bs) free(bs);
+
+        fclose(file);
+
+        fStatus = TRUE;
+      }
     } else {
-      int coln;
-      Uchar* rs;
-      Uchar* gs;
-      Uchar* bs;
-      Uchar* data;
-      getImagePixels(w,h,image,coln,rs,gs,bs,data);
-      
-      SbGIF::putBytesInStream(file,data,w,h,coln,rs,gs,bs);
-      
-      delete [] data;
+  */
 
-      if(rs) free(rs);
-      if(gs) free(gs);
-      if(bs) free(bs);
+  SbPainterPS painterPS;
+  painterPS.openFileForWriting(fileName.getValue().getString());
+  if (!painterPS.getStream())
+  {
+    SoDebugError::postInfo("SoImageWriter::GLRender", "can't open file \"%s\".",
+                           fileName.getValue().getString());
+  }
+  else
+  {
+    painterPS.setWindowSize(w, h);
+    // painterPS.setBitsPerPixel(8);
+    painterPS.setBitsPerPixel(4);
+    painterPS.beginTraversal();
+    painterPS.clearColorBuffer(1., 1., 1.);
 
-      fclose(file);
+    sWidth = w;
+    sHeight = h;
+    sImage = image;
+    painterPS.putImageInStream((unsigned int)w, (unsigned int)h, getRGB);
 
-      fStatus = TRUE;
-    }
-  } else {
-*/
+    painterPS.endTraversal();
 
-    SbPainterPS painterPS;
-    painterPS.openFileForWriting(fileName.getValue().getString());
-    if(!painterPS.getStream()) {
-      SoDebugError::postInfo("SoImageWriter::GLRender",
-        "can't open file \"%s\".",fileName.getValue().getString());
-    } else {
-      painterPS.setWindowSize(w,h);
-      //painterPS.setBitsPerPixel(8);
-      painterPS.setBitsPerPixel(4);
-      painterPS.beginTraversal();
-      painterPS.clearColorBuffer(1.,1.,1.);
+    painterPS.closeStream();
 
-      sWidth = w;
-      sHeight = h;
-      sImage = image;
-      painterPS.putImageInStream((unsigned int)w,(unsigned int)h,getRGB);
-      
-      painterPS.endTraversal();
-      
-      painterPS.closeStream();
-      
-      fStatus = TRUE;
-    }
+    fStatus = TRUE;
+  }
   //}
-  delete [] image;
-
+  delete[] image;
 }
 /*
 //////////////////////////////////////////////////////////////////////////////
@@ -250,7 +242,7 @@ void getImagePixels (
   int status = 0;
   for(row=0;row<aHeight;row++) {
     pdata = data + (aHeight - 1 - row) * aWidth;
-    for(col=0;col<aWidth;col++){ 
+    for(col=0;col<aWidth;col++){
       red   = (Uchar)(255 * (*pimag));pimag++;
       green = (Uchar)(255 * (*pimag));pimag++;
       blue  = (Uchar)(255 * (*pimag));pimag++;
@@ -298,8 +290,8 @@ void getImagePixels (
                 if(bs) free(bs);
                 delete [] data;
                 return;
-              } 
-            } 
+              }
+            }
             //printf("debug : SoImageWriter pixeln %d : %d %d %d\n",
             //   pixeln,red,green,blue);
             rs[pixeln] = red;
@@ -317,7 +309,7 @@ void getImagePixels (
       oblue = blue;
     }
   }
-  if(status==1) 
+  if(status==1)
     printf("SoImageWriter : more than 256 colors in picture ; some colors approximated.\n");
   aColorn = pixeln;
   aReds = rs;
@@ -327,21 +319,18 @@ void getImagePixels (
 }
 */
 //////////////////////////////////////////////////////////////////////////////
-int getRGB(
- unsigned int aX
-,unsigned int aY
-,double& aRed
-,double& aGreen
-,double& aBlue
-)
+int getRGB(unsigned int aX, unsigned int aY, double& aRed, double& aGreen, double& aBlue)
 //////////////////////////////////////////////////////////////////////////////
 // OpenGL image is from down to up.
 // PS image is up to down.
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
   float* pimag = sImage + 3 * (sWidth * (sHeight - 1 - aY) + aX);
-  aRed   = *pimag;pimag++;
-  aGreen = *pimag;pimag++;
-  aBlue  = *pimag;pimag++;
+  aRed = *pimag;
+  pimag++;
+  aGreen = *pimag;
+  pimag++;
+  aBlue = *pimag;
+  pimag++;
   return 1;
 }

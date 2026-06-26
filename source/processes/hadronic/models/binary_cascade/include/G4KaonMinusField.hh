@@ -25,47 +25,48 @@
 //
 //
 // -------------------------------------------------------------------
-//      GEANT 4 class header file 
+//      GEANT 4 class header file
 //
 //      CERN, Geneva, Switzerland
 //
 //      File name:     G4KaonMinusField.hh
 //
 //      Author:        Alessandro Brunengo (Alessandro.Brunengo@ge.infn.it)
-// 
+//
 //      Creation date: 5 June 2000
 // -------------------------------------------------------------------
 
-#ifndef G4KaonMinusField_h
-#define  G4KaonMinusField_h 1
+#ifndef G4KAONMINUSFIELD_HH
+#define G4KAONMINUSFIELD_HH
+
+#include "G4V3DNucleus.hh"
+#include "G4VNuclearField.hh"
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
-#include "G4VNuclearField.hh"
-#include "G4V3DNucleus.hh"
-
-class G4KaonMinusField: public G4VNuclearField
+class G4KaonMinusField : public G4VNuclearField
 {
-public:
-  G4KaonMinusField(G4V3DNucleus * nucleus, G4double coeff = 0.35*CLHEP::fermi);
-  virtual ~G4KaonMinusField();
+  public:
 
-private:
-  G4KaonMinusField(const  G4KaonMinusField &right);
-  const G4KaonMinusField & operator=(const G4KaonMinusField & right);
-  G4bool operator==(const G4KaonMinusField & right) const;
-  G4bool operator!=(const G4KaonMinusField & right) const;
+    G4KaonMinusField(G4V3DNucleus* nucleus, G4double coeff = 0.35 * CLHEP::fermi);
+    virtual ~G4KaonMinusField();
 
-public:
-  virtual G4double GetField(const G4ThreeVector & aPosition);
-  virtual G4double GetBarrier();
-  virtual G4double GetCoeff() { return theCoeff; }
+  private:
 
-private:
-  G4double theCoeff;
+    G4KaonMinusField(const G4KaonMinusField& right);
+    const G4KaonMinusField& operator=(const G4KaonMinusField& right);
+    G4bool operator==(const G4KaonMinusField& right) const;
+    G4bool operator!=(const G4KaonMinusField& right) const;
+
+  public:
+
+    virtual G4double GetField(const G4ThreeVector& aPosition);
+    virtual G4double GetBarrier();
+    virtual G4double GetCoeff() { return theCoeff; }
+
+  private:
+
+    G4double theCoeff;
 };
 
 #endif
-
-
-

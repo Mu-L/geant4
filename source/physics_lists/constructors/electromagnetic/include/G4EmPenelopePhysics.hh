@@ -24,8 +24,8 @@
 // ********************************************************************
 //
 
-#ifndef G4EmPenelopePhysics_h
-#define G4EmPenelopePhysics_h 1
+#ifndef G4EMPENELOPEPHYSICS_HH
+#define G4EMPENELOPEPHYSICS_HH
 
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
@@ -34,22 +34,16 @@
 
 class G4EmPenelopePhysics : public G4VPhysicsConstructor
 {
-public:
+  public:
 
-  explicit G4EmPenelopePhysics(G4int ver=1, const G4String& name="");
+    explicit G4EmPenelopePhysics(G4int ver = 1, const G4String& name = "");
 
-  ~G4EmPenelopePhysics() override;
+    ~G4EmPenelopePhysics() override;
 
-  void ConstructParticle() override;
-  void ConstructProcess() override;
+    void ConstructParticle() override;
+    void ConstructProcess() override;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-
-
-
-
-

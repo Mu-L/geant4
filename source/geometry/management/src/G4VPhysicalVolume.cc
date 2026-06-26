@@ -33,8 +33,8 @@
 
 #include "G4VPhysicalVolume.hh"
 
-#include "G4PhysicalVolumeStore.hh"
 #include "G4LogicalVolume.hh"
+#include "G4PhysicalVolumeStore.hh"
 
 // This new field helps to use the class G4PVManager
 //
@@ -51,17 +51,15 @@ G4PVManager G4VPhysicalVolume::subInstanceManager;
 
 // Constructor: init parameters and register in Store
 //
-G4VPhysicalVolume::G4VPhysicalVolume( G4RotationMatrix* pRot,
-                                const G4ThreeVector& tlate,
-                                const G4String& pName,
-                                      G4LogicalVolume* pLogical,
-                                      G4VPhysicalVolume* )
+G4VPhysicalVolume::G4VPhysicalVolume(G4RotationMatrix* pRot, const G4ThreeVector& tlate,
+                                     const G4String& pName, G4LogicalVolume* pLogical,
+                                     G4VPhysicalVolume*)
   : flogical(pLogical), fname(pName)
 {
   instanceID = subInstanceManager.CreateSubInstance();
 
-  this->SetRotation( pRot );       // G4MT_rot = pRot;
-  this->SetTranslation( tlate );   // G4MT_trans = tlate;
+  this->SetRotation(pRot);  // G4MT_rot = pRot;
+  this->SetTranslation(tlate);  // G4MT_trans = tlate;
 
   // Initialize 'Shadow' data structure - for use by object persistency
   pvdata = new G4PVData();
@@ -76,8 +74,7 @@ G4VPhysicalVolume::G4VPhysicalVolume( G4RotationMatrix* pRot,
 // Fake default constructor - sets only member data and allocates memory
 //                            for usage restricted to object persistency.
 //
-G4VPhysicalVolume::G4VPhysicalVolume( __void__& )
-  : fname("")
+G4VPhysicalVolume::G4VPhysicalVolume(__void__&) : fname("")
 {
   // Register to store
   //
@@ -88,7 +85,7 @@ G4VPhysicalVolume::G4VPhysicalVolume( __void__& )
 
 // Destructor -  remove from Store
 //
-G4VPhysicalVolume::~G4VPhysicalVolume() 
+G4VPhysicalVolume::~G4VPhysicalVolume()
 {
   delete pvdata;
   G4PhysicalVolumeStore::DeRegister(this);
@@ -108,15 +105,13 @@ void G4VPhysicalVolume::SetName(const G4String& pName)
 // It does not create a new G4VPhysicalVolume instance.
 // It only assign the value for the fields encapsulated by the class G4PVData.
 //
-void G4VPhysicalVolume::
-InitialiseWorker( G4VPhysicalVolume* /*pMasterObject*/,
-                  G4RotationMatrix *pRot,
-                  const G4ThreeVector &tlate)
+void G4VPhysicalVolume::InitialiseWorker(G4VPhysicalVolume* /*pMasterObject*/,
+                                         G4RotationMatrix* pRot, const G4ThreeVector& tlate)
 {
   subInstanceManager.SlaveCopySubInstanceArray();
 
-  this->SetRotation( pRot );      // G4MT_rot   = pRot;
-  this->SetTranslation( tlate );  // G4MT_trans = tlate;
+  this->SetRotation(pRot);  // G4MT_rot   = pRot;
+  this->SetTranslation(tlate);  // G4MT_trans = tlate;
   //  G4PhysicalVolumeStore::Register(this);
 }
 
@@ -131,9 +126,7 @@ void G4VPhysicalVolume::Clean()
 // thread to achieve the partial effect as that of the master thread.
 // For G4VPhysicalVolume instances, nothing more to do here.
 //
-void G4VPhysicalVolume::TerminateWorker( G4VPhysicalVolume* /*pMasterObject*/)
-{
-}
+void G4VPhysicalVolume::TerminateWorker(G4VPhysicalVolume* /*pMasterObject*/) {}
 
 // Returns the private data instance manager.
 //
@@ -152,9 +145,11 @@ const G4ThreeVector G4VPhysicalVolume::GetTranslation() const
   return G4ThreeVector(G4MT_tx, G4MT_ty, G4MT_tz);
 }
 
-void G4VPhysicalVolume::SetTranslation(const G4ThreeVector &vec)
+void G4VPhysicalVolume::SetTranslation(const G4ThreeVector& vec)
 {
-  G4MT_tx=vec.x(); G4MT_ty=vec.y(); G4MT_tz=vec.z();
+  G4MT_tx = vec.x();
+  G4MT_ty = vec.y();
+  G4MT_tz = vec.z();
 }
 
 const G4RotationMatrix* G4VPhysicalVolume::GetRotation() const
@@ -167,7 +162,7 @@ G4RotationMatrix* G4VPhysicalVolume::GetRotation()
   return G4MT_rot;
 }
 
-void G4VPhysicalVolume::SetRotation(G4RotationMatrix *pRot)
+void G4VPhysicalVolume::SetRotation(G4RotationMatrix* pRot)
 {
   G4MT_rot = pRot;
 }
@@ -180,27 +175,27 @@ G4RotationMatrix* G4VPhysicalVolume::GetObjectRotation() const
   G4RotationMatrix* retval = &IdentityRM;
 
   // Insure against frot being a null pointer
-  if(this->GetRotation() != nullptr)
+  if (this->GetRotation() != nullptr)
   {
-     aRotM = GetRotation()->inverse();
-     retval= &aRotM;
+    aRotM = GetRotation()->inverse();
+    retval = &aRotM;
   }
   return retval;
 }
 
 G4RotationMatrix G4VPhysicalVolume::GetObjectRotationValue() const
 {
-  G4RotationMatrix aRotM;   // Initialised to identity
+  G4RotationMatrix aRotM;  // Initialised to identity
 
   // Insure against G4MT_rot being a null pointer
-  if(G4MT_rot)
+  if (G4MT_rot)
   {
-     aRotM = G4MT_rot->inverse();
+    aRotM = G4MT_rot->inverse();
   }
   return aRotM;
 }
 
-G4ThreeVector  G4VPhysicalVolume::GetObjectTranslation() const
+G4ThreeVector G4VPhysicalVolume::GetObjectTranslation() const
 {
   return {G4MT_tx, G4MT_ty, G4MT_tz};
 }
@@ -210,7 +205,7 @@ const G4RotationMatrix* G4VPhysicalVolume::GetFrameRotation() const
   return G4MT_rot;
 }
 
-G4ThreeVector  G4VPhysicalVolume::GetFrameTranslation() const
+G4ThreeVector G4VPhysicalVolume::GetFrameTranslation() const
 {
   return -G4ThreeVector(G4MT_tx, G4MT_ty, G4MT_tz);
 }

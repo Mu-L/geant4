@@ -31,7 +31,7 @@
 //
 // File name:     G4mplIonisationModel
 //
-// Author:        Vladimir Ivanchenko 
+// Author:        Vladimir Ivanchenko
 //
 // Creation date: 06.09.2005
 //
@@ -45,79 +45,66 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4mplIonisationModel_h
-#define G4mplIonisationModel_h 1
+#ifndef G4MPLIONISATIONMODEL_HH
+#  define G4MPLIONISATIONMODEL_HH
 
-#include "G4VEmModel.hh"
-#include "G4VEmFluctuationModel.hh"
-#include <vector>
+#  include "G4VEmFluctuationModel.hh"
+#  include "G4VEmModel.hh"
+
+#  include <vector>
 
 class G4ParticleChangeForLoss;
 
 class G4mplIonisationModel : public G4VEmModel, public G4VEmFluctuationModel
 {
+  public:
 
-public:
+    explicit G4mplIonisationModel(G4double mCharge, const G4String& nam = "mplIonisation");
 
-  explicit G4mplIonisationModel(G4double mCharge,
-		       const G4String& nam = "mplIonisation");
+    ~G4mplIonisationModel() override;
 
-  ~G4mplIonisationModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                  G4double kineticEnergy, G4double cutEnergy) override;
 
-  G4double ComputeDEDXPerVolume(const G4Material*,
-				const G4ParticleDefinition*,
-				G4double kineticEnergy,
-				G4double cutEnergy) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
+    G4double SampleFluctuations(const G4MaterialCutsCouple*, const G4DynamicParticle*,
+                                const G4double tcut, const G4double tmax, const G4double length,
+                                const G4double meanLoss) override;
 
+    G4double Dispersion(const G4Material*, const G4DynamicParticle*, const G4double tcut,
+                        const G4double tmax, const G4double length) override;
 
-  G4double SampleFluctuations(const G4MaterialCutsCouple*,
-			      const G4DynamicParticle*,
-                              const G4double tcut,
-                              const G4double tmax,
-			      const G4double length,
-			      const G4double meanLoss) override;
+    void SetParticle(const G4ParticleDefinition* p);
 
-  G4double Dispersion(const G4Material*,
-		      const G4DynamicParticle*,
-                      const G4double tcut,
-                      const G4double tmax,
-                      const G4double length) override;
+    // hide assignment operator
+    G4mplIonisationModel& operator=(const G4mplIonisationModel& right) = delete;
+    G4mplIonisationModel(const G4mplIonisationModel&) = delete;
 
-  void SetParticle(const G4ParticleDefinition* p);
+  private:
 
-  // hide assignment operator
-  G4mplIonisationModel & operator=(const  G4mplIonisationModel &right) = delete;
-  G4mplIonisationModel(const  G4mplIonisationModel&) = delete;
+    G4double ComputeDEDXAhlen(const G4Material* material, G4double bg2);
 
-private:
+    const G4ParticleDefinition* monopole = nullptr;
+    G4ParticleChangeForLoss* fParticleChange = nullptr;
 
-  G4double ComputeDEDXAhlen(const G4Material* material, G4double bg2);
+    G4double mass = 0.0;
+    G4double magCharge;
+    G4double twoln10;
+    G4double betalow;
+    G4double betalim;
+    G4double beta2lim;
+    G4double bg2lim;
+    G4double chargeSquare;
+    G4double dedxlim;
+    G4double pi_hbarc2_over_mc2;
 
-  const G4ParticleDefinition* monopole = nullptr;
-  G4ParticleChangeForLoss* fParticleChange = nullptr;
+    G4int nmpl;
 
-  G4double mass = 0.0;
-  G4double magCharge;
-  G4double twoln10;
-  G4double betalow;
-  G4double betalim;
-  G4double beta2lim;
-  G4double bg2lim;
-  G4double chargeSquare;
-  G4double dedxlim;
-  G4double pi_hbarc2_over_mc2;
-
-  G4int    nmpl;
-
-  static std::vector<G4double>* dedx0;
+    static std::vector<G4double>* dedx0;
 };
 
 #endif

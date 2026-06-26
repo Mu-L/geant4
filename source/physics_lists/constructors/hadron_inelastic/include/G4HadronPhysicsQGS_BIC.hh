@@ -36,27 +36,27 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4HadronPhysicsQGS_BIC_h
-#define G4HadronPhysicsQGS_BIC_h 1
+#ifndef G4HADRONPHYSICSQGS_BIC_HH
+#define G4HADRONPHYSICSQGS_BIC_HH
 
 #include "G4HadronPhysicsQGSP_BERT.hh"
 
 class G4HadronPhysicsQGS_BIC : public G4HadronPhysicsQGSP_BERT
 {
-  public: 
+  public:
+
     G4HadronPhysicsQGS_BIC(G4int verbose = 1);
     G4HadronPhysicsQGS_BIC(const G4String& name, G4bool quasiElastic = true);
     ~G4HadronPhysicsQGS_BIC() override = default;
 
     // copy constructor and hide assignment operator
-    G4HadronPhysicsQGS_BIC(G4HadronPhysicsQGS_BIC &) = delete;
-    G4HadronPhysicsQGS_BIC & operator =
-    (const G4HadronPhysicsQGS_BIC &right) = delete;
+    G4HadronPhysicsQGS_BIC(G4HadronPhysicsQGS_BIC&) = delete;
+    G4HadronPhysicsQGS_BIC& operator=(const G4HadronPhysicsQGS_BIC& right) = delete;
 
   protected:
+
     void Neutron() override;
     void Proton() override;
 };
 
 #endif
-

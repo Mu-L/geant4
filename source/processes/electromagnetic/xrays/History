@@ -6,6 +6,12 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-05-04 Makoto Asai (xrays-V11-04-00)
+- G4QuasiScintillation: Skip generating real optical photons if quasi
+  optical photon is created, following the same logic used in G4QuasiCerenkov.
+- G4CerenkovQuasiTrackInfo, G4ScintillationQuasiTrackInfo: Add Clone() method.
+  This method is used when cloning G4Track for sub-event.
+
 ## 2025-11-06 Gabriele Cosmo (xrays-V11-03-06)
 - Fixed compilation warning for implicit type conversion on macOS/XCode
   in G4GeneralCherenkov::BuildPhysicsTable().

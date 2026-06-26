@@ -30,9 +30,12 @@
 
 #include "G4ElectricField.hh"
 
-G4ElectricField& G4ElectricField::operator = (const G4ElectricField& p)
+G4ElectricField& G4ElectricField::operator=(const G4ElectricField& p)
 {
-  if (&p == this) { return *this; }
+  if (&p == this)
+  {
+    return *this;
+  }
   G4ElectroMagneticField::operator=(p);
   return *this;
 }

@@ -37,83 +37,76 @@
 #include "G4VModelFactory.hh"
 #include "G4VTrajectoryModel.hh"
 
-namespace {
-  typedef std::vector<G4UImessenger*> Messengers;
-  typedef std::pair<G4VTrajectoryModel*, Messengers > ModelAndMessengers;
-}
+namespace
+{
+typedef std::vector<G4UImessenger*> Messengers;
+typedef std::pair<G4VTrajectoryModel*, Messengers> ModelAndMessengers;
+}  // namespace
 
-class G4TrajectoryDrawByAttributeFactory : public G4VModelFactory<G4VTrajectoryModel> {
+class G4TrajectoryDrawByAttributeFactory : public G4VModelFactory<G4VTrajectoryModel>
+{
+  public:  // With description
 
-public: // With description
+    G4TrajectoryDrawByAttributeFactory();
 
-  G4TrajectoryDrawByAttributeFactory();
+    virtual ~G4TrajectoryDrawByAttributeFactory();
 
-  virtual ~G4TrajectoryDrawByAttributeFactory();
-  
-  ModelAndMessengers Create(const G4String& placement, const G4String& name);
-    
+    ModelAndMessengers Create(const G4String& placement, const G4String& name);
 };
 
-class G4TrajectoryDrawByChargeFactory : public G4VModelFactory<G4VTrajectoryModel> {
+class G4TrajectoryDrawByChargeFactory : public G4VModelFactory<G4VTrajectoryModel>
+{
+  public:  // With description
 
-public: // With description
+    G4TrajectoryDrawByChargeFactory();
 
-  G4TrajectoryDrawByChargeFactory();
+    virtual ~G4TrajectoryDrawByChargeFactory();
 
-  virtual ~G4TrajectoryDrawByChargeFactory();
-  
-  ModelAndMessengers Create(const G4String& placement, const G4String& name);
-    
+    ModelAndMessengers Create(const G4String& placement, const G4String& name);
 };
 
-class G4TrajectoryGenericDrawerFactory : public G4VModelFactory<G4VTrajectoryModel> {
+class G4TrajectoryGenericDrawerFactory : public G4VModelFactory<G4VTrajectoryModel>
+{
+  public:  // With description
 
-public: // With description
+    G4TrajectoryGenericDrawerFactory();
 
-  G4TrajectoryGenericDrawerFactory();
+    virtual ~G4TrajectoryGenericDrawerFactory();
 
-  virtual ~G4TrajectoryGenericDrawerFactory();
-  
-  ModelAndMessengers Create(const G4String& placement, const G4String& name);
-    
+    ModelAndMessengers Create(const G4String& placement, const G4String& name);
 };
 
-class G4TrajectoryDrawByParticleIDFactory : public G4VModelFactory<G4VTrajectoryModel> {
+class G4TrajectoryDrawByParticleIDFactory : public G4VModelFactory<G4VTrajectoryModel>
+{
+  public:  // With description
 
-public: // With description
+    G4TrajectoryDrawByParticleIDFactory();
 
-  G4TrajectoryDrawByParticleIDFactory();
+    virtual ~G4TrajectoryDrawByParticleIDFactory();
 
-  virtual ~G4TrajectoryDrawByParticleIDFactory();
-  
-  ModelAndMessengers Create(const G4String& placement, const G4String& name);
-    
+    ModelAndMessengers Create(const G4String& placement, const G4String& name);
 };
 
-class G4TrajectoryDrawByOriginVolumeFactory : public G4VModelFactory<G4VTrajectoryModel> {
+class G4TrajectoryDrawByOriginVolumeFactory : public G4VModelFactory<G4VTrajectoryModel>
+{
+  public:  // With description
 
-public: // With description
+    G4TrajectoryDrawByOriginVolumeFactory();
 
-  G4TrajectoryDrawByOriginVolumeFactory();
+    virtual ~G4TrajectoryDrawByOriginVolumeFactory();
 
-  virtual ~G4TrajectoryDrawByOriginVolumeFactory();
-
-  ModelAndMessengers Create(const G4String& placement, const G4String& name);
-
+    ModelAndMessengers Create(const G4String& placement, const G4String& name);
 };
 
-class G4TrajectoryDrawByEncounteredVolumeFactory : public G4VModelFactory<G4VTrajectoryModel> {
+class G4TrajectoryDrawByEncounteredVolumeFactory : public G4VModelFactory<G4VTrajectoryModel>
+{
+  public:  // With description
 
-public: // With description
+    G4TrajectoryDrawByEncounteredVolumeFactory();
 
-  G4TrajectoryDrawByEncounteredVolumeFactory();
+    virtual ~G4TrajectoryDrawByEncounteredVolumeFactory();
 
-  virtual ~G4TrajectoryDrawByEncounteredVolumeFactory();
-
-  ModelAndMessengers Create(const G4String& placement, const G4String& name);
-
+    ModelAndMessengers Create(const G4String& placement, const G4String& name);
 };
 
 #endif
-
-

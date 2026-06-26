@@ -36,19 +36,18 @@
 #ifndef G4NAVIGATIONLEVEL_HH
 #define G4NAVIGATIONLEVEL_HH
 
-#include "G4Types.hh"
-
 #include "G4AffineTransform.hh"
-#include "G4VPhysicalVolume.hh"
-
-#include "G4NavigationLevelRep.hh"
 #include "G4Allocator.hh"
+#include "G4NavigationLevelRep.hh"
+#include "G4Types.hh"
+#include "G4VPhysicalVolume.hh"
 
 #include "geomwdefs.hh"
 
 /**
  * @brief G4NavigationLevel is a utility class for use by G4NavigationHistory.
  * It maintains one level of the geometrical hierarchy.
+ * @ingroup geometry_management
  */
 
 class G4NavigationLevel
@@ -62,15 +61,13 @@ class G4NavigationLevel
      *  @param[in] newVolTp The volume type.
      *  @param[in] newRepNo The replica number.
      */
-    G4NavigationLevel(G4VPhysicalVolume* newPtrPhysVol,
-                      const G4AffineTransform& newT,
-                      EVolume newVolTp,
-                      G4int newRepNo = -1);
+    G4NavigationLevel(G4VPhysicalVolume* newPtrPhysVol, const G4AffineTransform& newT,
+                      EVolume newVolTp, G4int newRepNo = -1);
 
     /**
      * Alternative Constructor for G4NavigationLevel, as the previous
-     * constructor, but instead of giving the new transformation, give 
-     * the affine transformation to the level above and the current level's 
+     * constructor, but instead of giving the new transformation, give
+     * the affine transformation to the level above and the current level's
      * transformation relative to that.
      *  @param[in] newPtrPhysVol Pointer to the new physical volume.
      *  @param[in] levelAbove The affine transformation to the level above.
@@ -78,10 +75,8 @@ class G4NavigationLevel
      *  @param[in] newVolTp The volume type.
      *  @param[in] newRepNo The replica number.
      */
-    G4NavigationLevel(G4VPhysicalVolume* newPtrPhysVol,
-                      const G4AffineTransform& levelAbove,
-                      const G4AffineTransform& relativeCurrent,
-                      EVolume newVolTp,
+    G4NavigationLevel(G4VPhysicalVolume* newPtrPhysVol, const G4AffineTransform& levelAbove,
+                      const G4AffineTransform& relativeCurrent, EVolume newVolTp,
                       G4int newRepNo = -1);
 
     /**
@@ -93,8 +88,8 @@ class G4NavigationLevel
     /**
      * Copy constructor and assignment operator.
      */
-    G4NavigationLevel( const G4NavigationLevel& );
-    G4NavigationLevel& operator=(const G4NavigationLevel& );
+    G4NavigationLevel(const G4NavigationLevel&);
+    G4NavigationLevel& operator=(const G4NavigationLevel&);
 
     /**
      * Returns a pointer to the physical volume at the current level.
@@ -104,19 +99,19 @@ class G4NavigationLevel
     /**
      * Methods to return the associated affine transformation.
      */
-    inline const G4AffineTransform* GetTransformPtr() const ;  // New
-    inline const G4AffineTransform& GetTransform() const ;     // Old
+    inline const G4AffineTransform* GetTransformPtr() const;  // New
+    inline const G4AffineTransform& GetTransform() const;  // Old
     inline const G4AffineTransform* GetPtrTransform() const;
 
     /**
      * Returns the volume type.
      */
-    inline EVolume GetVolumeType() const ;
+    inline EVolume GetVolumeType() const;
 
     /**
      * Returns the replica number.
      */
-    inline G4int GetReplicaNo() const ;
+    inline G4int GetReplicaNo() const;
 
     /**
      * New/delete operator overrides for use by "G4Allocator".
@@ -128,8 +123,9 @@ class G4NavigationLevel
      * New/delete operator overrides for use with STL.
      */
     inline void* operator new(size_t, void*);
-    inline void operator delete(void* ptr, void*); // Not (directly) using
-                                                   // allocator.
+    inline void operator delete(void* ptr, void*);  // Not (directly) using
+                                                    // allocator.
+
   private:
 
     G4NavigationLevelRep* fLevelRep;

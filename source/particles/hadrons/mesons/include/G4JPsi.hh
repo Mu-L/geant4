@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4JPsi_h
-#define G4JPsi_h 1
+#ifndef G4JPSI_HH
+#define G4JPSI_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4JPsi : public G4ParticleDefinition
 {
   public:
+
     static G4JPsi* Definition();
     static G4JPsi* JPsiDefinition();
     static G4JPsi* JPsi();
 
   private:
+
     G4JPsi() {}
     ~G4JPsi() override = default;
 

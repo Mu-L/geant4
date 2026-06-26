@@ -39,37 +39,40 @@
 #ifndef G4CROSSSECTIONFACTORYREGISTRY_HH
 #define G4CROSSSECTIONFACTORYREGISTRY_HH
 
-#include <ostream>
 #include <G4String.hh>
+
 #include <map>
+#include <ostream>
 
 class G4VBaseXSFactory;
 
 class G4CrossSectionFactoryRegistry
 {
-  friend std::ostream& operator<<(std::ostream&, const G4CrossSectionFactoryRegistry&);
-public:
-  static G4CrossSectionFactoryRegistry* Instance();
-  ~G4CrossSectionFactoryRegistry() = default;
+    friend std::ostream& operator<<(std::ostream&, const G4CrossSectionFactoryRegistry&);
 
-  G4VBaseXSFactory* GetFactory( const G4String& name, G4bool abortIfNotFound = true) const;
+  public:
 
-  //Search a cross-section factory by name, by default rise an exception if factory is not found 
-  void Register( const G4String& name, G4VBaseXSFactory* factory );
+    static G4CrossSectionFactoryRegistry* Instance();
+    ~G4CrossSectionFactoryRegistry() = default;
 
-  void DeRegister( G4VBaseXSFactory* factory );
+    G4VBaseXSFactory* GetFactory(const G4String& name, G4bool abortIfNotFound = true) const;
 
-  G4CrossSectionFactoryRegistry(const G4CrossSectionFactoryRegistry&) = delete;
-  G4CrossSectionFactoryRegistry& operator=(const G4CrossSectionFactoryRegistry&) = delete;
+    // Search a cross-section factory by name, by default rise an exception if factory is not found
+    void Register(const G4String& name, G4VBaseXSFactory* factory);
 
-private:
+    void DeRegister(G4VBaseXSFactory* factory);
 
-  G4CrossSectionFactoryRegistry();
-  
-  std::map<G4String, G4VBaseXSFactory*> factories;
-  static G4CrossSectionFactoryRegistry* instance; //Note this is shared among threads
+    G4CrossSectionFactoryRegistry(const G4CrossSectionFactoryRegistry&) = delete;
+    G4CrossSectionFactoryRegistry& operator=(const G4CrossSectionFactoryRegistry&) = delete;
+
+  private:
+
+    G4CrossSectionFactoryRegistry();
+
+    std::map<G4String, G4VBaseXSFactory*> factories;
+    static G4CrossSectionFactoryRegistry* instance;  // Note this is shared among threads
 };
 
-std::ostream&  operator<<(std::ostream& msg, const G4CrossSectionFactoryRegistry& rhs);
+std::ostream& operator<<(std::ostream& msg, const G4CrossSectionFactoryRegistry& rhs);
 
-#endif // G4CROSSSECTIONFACTORYREGISTRY_HH
+#endif  // G4CROSSSECTIONFACTORYREGISTRY_HH

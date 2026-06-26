@@ -30,23 +30,40 @@
 
 #include "G4VGraphicsSystem.hh"
 
-namespace toolx {namespace Windows {class session;}}
+namespace toolx
+{
+namespace Windows
+{
+class session;
+}
+}  // namespace toolx
 
-class G4ToolsSGWindowsGLES: public G4VGraphicsSystem {
-  typedef G4VGraphicsSystem parent;
-public:
-  G4ToolsSGWindowsGLES();
-  virtual ~G4ToolsSGWindowsGLES();
-protected:  
-  G4ToolsSGWindowsGLES(const G4ToolsSGWindowsGLES& a_from):parent(a_from){}
-  G4ToolsSGWindowsGLES& operator=(const G4ToolsSGWindowsGLES&) {return *this;}
-public:  
-  G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
-  G4VViewer* CreateViewer (G4VSceneHandler&, const G4String& name = "");
-protected:  
-  void Initialise();
-protected:
-  toolx::Windows::session* fSGSession;
+class G4ToolsSGWindowsGLES : public G4VGraphicsSystem
+{
+    typedef G4VGraphicsSystem parent;
+
+  public:
+
+    G4ToolsSGWindowsGLES();
+    virtual ~G4ToolsSGWindowsGLES();
+
+  protected:
+
+    G4ToolsSGWindowsGLES(const G4ToolsSGWindowsGLES& a_from) : parent(a_from) {}
+    G4ToolsSGWindowsGLES& operator=(const G4ToolsSGWindowsGLES&) { return *this; }
+
+  public:
+
+    G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
+    G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "");
+
+  protected:
+
+    void Initialise();
+
+  protected:
+
+    toolx::Windows::session* fSGSession;
 };
 
 #endif

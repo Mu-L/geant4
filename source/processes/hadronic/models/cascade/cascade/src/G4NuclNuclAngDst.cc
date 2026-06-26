@@ -31,21 +31,19 @@
 
 #include "G4NuclNuclAngDst.hh"
 
-namespace {
-  static const G4double nnke[9] =
-    { 0.0, 0.44, 0.59, 0.80, 1.00, 2.24, 4.40, 6.15, 10.00};
-  static const G4double nnFrac[9] =
-    {1.0,   1.0, 0.4898, 0.7243, 0.7990, 0.8892, 0.8493, 0.9583,  1.0};
-  static const G4double nnA[9] =
-    { 0.0,   0.34, 2.51,   4.59,   4.2,    5.61,   6.38,   7.93,   8.7};
-  static const G4double nnC[9] =
-    { 0.0,   0.0,  1.21,   1.54,   1.88,   1.24,   1.91,   4.04,   8.7};
-  static const G4double nnCos[9] =
-    {-1.0,  -1.0, 0.4226, 0.4226, 0.4384, 0.7193, 0.8788, 0.9164,  0.95};
-}
+namespace
+{
+static const G4double nnke[9] = {0.0, 0.44, 0.59, 0.80, 1.00, 2.24, 4.40, 6.15, 10.00};
+static const G4double nnFrac[9] = {1.0, 1.0, 0.4898, 0.7243, 0.7990, 0.8892, 0.8493, 0.9583, 1.0};
+static const G4double nnA[9] = {0.0, 0.34, 2.51, 4.59, 4.2, 5.61, 6.38, 7.93, 8.7};
+static const G4double nnC[9] = {0.0, 0.0, 1.21, 1.54, 1.88, 1.24, 1.91, 4.04, 8.7};
+static const G4double nnCos[9] = {-1.0, -1.0, 0.4226, 0.4226, 0.4384, 0.7193, 0.8788, 0.9164, 0.95};
+}  // namespace
 
 // Constructor passes arrays to templated base class
 
 G4NuclNuclAngDst::G4NuclNuclAngDst(G4int verbose)
-  : G4ParamExpTwoBodyAngDst<9>("G4NuclNuclAngDist", nnke, nnFrac,
-			     nnA, nnC, nnCos, verbose) {;}
+  : G4ParamExpTwoBodyAngDst<9>("G4NuclNuclAngDist", nnke, nnFrac, nnA, nnC, nnCos, verbose)
+{
+  ;
+}

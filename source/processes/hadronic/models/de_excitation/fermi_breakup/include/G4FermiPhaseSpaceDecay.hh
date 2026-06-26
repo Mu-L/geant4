@@ -28,15 +28,15 @@
 // by V. Lara
 //
 // Modifications:
-// 01.04.2011 General cleanup by V.Ivanchenko: 
+// 01.04.2011 General cleanup by V.Ivanchenko:
 //          - IsotropicVector is inlined
 //          - Momentum computation return zero or positive value
 //          - DumpProblem method is added providing more information
-//          - Reduced usage of exotic std functions  
+//          - Reduced usage of exotic std functions
 //
 
-#ifndef G4FermiPhaseSpaceDecay_hh
-#define G4FermiPhaseSpaceDecay_hh 1
+#ifndef G4FERMIPHASESPACEDECAY_HH
+#define G4FERMIPHASESPACEDECAY_HH
 
 #include "G4LorentzVector.hh"
 #include "G4ThreeVector.hh"
@@ -48,37 +48,34 @@ class G4Pow;
 
 class G4FermiPhaseSpaceDecay
 {
-public:
+  public:
 
-  G4FermiPhaseSpaceDecay();
-  ~G4FermiPhaseSpaceDecay();
-  
-  std::vector<G4LorentzVector*>* Decay(G4double parent_mass, 
-	const std::vector<G4double>& fragment_masses) const;
+    G4FermiPhaseSpaceDecay();
+    ~G4FermiPhaseSpaceDecay();
 
-private:
+    std::vector<G4LorentzVector*>* Decay(G4double parent_mass,
+                                         const std::vector<G4double>& fragment_masses) const;
 
-  inline G4double PtwoBody(G4double E, G4double P1, G4double P2) const;
-  
-  G4double BetaKopylov(G4int, CLHEP::HepRandomEngine*) const; 
+  private:
 
-  std::vector<G4LorentzVector*> * 
-  KopylovNBodyDecay(G4double, const std::vector<G4double>&) const;
+    inline G4double PtwoBody(G4double E, G4double P1, G4double P2) const;
 
-  G4FermiPhaseSpaceDecay(const G4FermiPhaseSpaceDecay&) = delete;
-  const G4FermiPhaseSpaceDecay & operator=
-  (const G4FermiPhaseSpaceDecay &) = delete; 
-  G4bool operator==(const G4FermiPhaseSpaceDecay&) = delete;
-  G4bool operator!=(const G4FermiPhaseSpaceDecay&) = delete;
+    G4double BetaKopylov(G4int, CLHEP::HepRandomEngine*) const;
 
-  G4Pow* g4calc;
+    std::vector<G4LorentzVector*>* KopylovNBodyDecay(G4double, const std::vector<G4double>&) const;
+
+    G4FermiPhaseSpaceDecay(const G4FermiPhaseSpaceDecay&) = delete;
+    const G4FermiPhaseSpaceDecay& operator=(const G4FermiPhaseSpaceDecay&) = delete;
+    G4bool operator==(const G4FermiPhaseSpaceDecay&) = delete;
+    G4bool operator!=(const G4FermiPhaseSpaceDecay&) = delete;
+
+    G4Pow* g4calc;
 };
 
-inline G4double 
-G4FermiPhaseSpaceDecay::PtwoBody(G4double E, G4double P1, G4double P2) const
+inline G4double G4FermiPhaseSpaceDecay::PtwoBody(G4double E, G4double P1, G4double P2) const
 {
-  G4double P = (E+P1+P2)*(E+P1-P2)*(E-P1+P2)*(E-P1-P2)/(4.0*E*E);
-  return (P>0.0) ? std::sqrt(P) : 0.0; 
+  G4double P = (E + P1 + P2) * (E + P1 - P2) * (E - P1 + P2) * (E - P1 - P2) / (4.0 * E * E);
+  return (P > 0.0) ? std::sqrt(P) : 0.0;
 }
 
 #endif

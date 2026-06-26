@@ -32,23 +32,23 @@
 
 // Author: S.Kamperis - 4 October 2012
 // --------------------------------------------------------------------
-#ifndef G4SmartTrackStack_hh
-#define G4SmartTrackStack_hh 1
-
-#include <array>
+#ifndef G4SMARTTRACKSTACK_HH
+#define G4SMARTTRACKSTACK_HH
 
 #include "G4StackedTrack.hh"
 #include "G4TrackStack.hh"
 #include "globals.hh"
+
+#include <array>
 
 class G4SmartTrackStack
 {
   public:
 
     G4SmartTrackStack();
-   ~G4SmartTrackStack();
+    ~G4SmartTrackStack();
 
-    G4SmartTrackStack & operator=(const G4SmartTrackStack&) = delete;
+    G4SmartTrackStack& operator=(const G4SmartTrackStack&) = delete;
     G4bool operator==(const G4SmartTrackStack&) const = delete;
     G4bool operator!=(const G4SmartTrackStack&) const = delete;
 
@@ -64,10 +64,11 @@ class G4SmartTrackStack
     inline G4int GetMaxNTrack() const { return maxNTracks; }
 
   private:
+
     G4int fTurn = 0;
     static constexpr G4int nTurn{5};
-    std::array<G4double,nTurn> energies;
-    std::array<G4TrackStack*,nTurn> stacks;
+    std::array<G4double, nTurn> energies;
+    std::array<G4TrackStack*, nTurn> stacks;
     // = 0 : all primaries and secondaries except followings
     // = 1 : secondary neutrons
     // = 2 : secondary electrons

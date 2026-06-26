@@ -27,30 +27,31 @@
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
 #include "G4GenericAnalysisManager.hh"
-#include "G4GenericFileManager.hh"
+
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
-#include "G4NtupleBookingManager.hh"
-#include "G4VNtupleFileManager.hh"
-#include "G4ThreadLocalSingleton.hh"
 #include "G4Exception.hh"
+#include "G4GenericFileManager.hh"
+#include "G4NtupleBookingManager.hh"
+#include "G4ThreadLocalSingleton.hh"
+#include "G4VNtupleFileManager.hh"
 
 using namespace G4Analysis;
 using std::to_string;
 
 // mutex in a file scope
 
-namespace {
+namespace
+{
 
 //_____________________________________________________________________________
-void WriteHnWarning(const G4String& hnType, G4int id,
-                    std::string_view inClass,
+void WriteHnWarning(const G4String& hnType, G4int id, std::string_view inClass,
                     std::string_view inFunction)
 {
   Warn("Failed to get " + hnType + " id " + to_string(id), inClass, inFunction);
 }
 
-}
+}  // namespace
 
 //_____________________________________________________________________________
 G4GenericAnalysisManager* G4GenericAnalysisManager::Instance()
@@ -67,10 +68,9 @@ G4bool G4GenericAnalysisManager::IsInstance()
 }
 
 //_____________________________________________________________________________
-G4GenericAnalysisManager::G4GenericAnalysisManager()
- : G4ToolsAnalysisManager("")
+G4GenericAnalysisManager::G4GenericAnalysisManager() : G4ToolsAnalysisManager("")
 {
-  if ( ! G4Threading::IsWorkerThread() ) fgMasterInstance = this;
+  if (!G4Threading::IsWorkerThread()) fgMasterInstance = this;
 
   // File manager
   fFileManager = std::make_shared<G4GenericFileManager>(fState);
@@ -80,7 +80,7 @@ G4GenericAnalysisManager::G4GenericAnalysisManager()
 //_____________________________________________________________________________
 G4GenericAnalysisManager::~G4GenericAnalysisManager()
 {
-  if ( fState.GetIsMaster() ) fgMasterInstance = nullptr;
+  if (fState.GetIsMaster()) fgMasterInstance = nullptr;
   fgIsInstance = false;
 }
 
@@ -91,17 +91,17 @@ G4GenericAnalysisManager::~G4GenericAnalysisManager()
 //_____________________________________________________________________________
 void G4GenericAnalysisManager::CreateNtupleFileManager(const G4String& fileName)
 {
-  if ( fNtupleFileManager ) {
-    Warn("The ntuple file manager already exists.",
-      fkClass, "CreateNtupleFileManager");
+  if (fNtupleFileManager)
+  {
+    Warn("The ntuple file manager already exists.", fkClass, "CreateNtupleFileManager");
     return;
   }
 
   auto fileType = GetExtension(fileName);
   auto output = G4Analysis::GetOutput(fileType);
-  if ( output == G4AnalysisOutput::kNone ) {
-    Warn("The file type " + fileType + "is not supported.",
-      fkClass, "CreateNtupleFileManager");
+  if (output == G4AnalysisOutput::kNone)
+  {
+    Warn("The file type " + fileType + "is not supported.", fkClass, "CreateNtupleFileManager");
     return;
   }
 
@@ -111,20 +111,23 @@ void G4GenericAnalysisManager::CreateNtupleFileManager(const G4String& fileName)
   Message(kVL4, "create", "ntuple file manager", fileType);
 
   fNtupleFileManager = fFileManager->CreateNtupleFileManager(output);
-  if (fNtupleFileManager) {
+  if (fNtupleFileManager)
+  {
     SetNtupleFileManager(fNtupleFileManager);
     fNtupleFileManager->SetBookingManager(fNtupleBookingManager);
 
-    if ( fNtupleFileManager->IsNtupleMergingSupported() ) {
+    if (fNtupleFileManager->IsNtupleMergingSupported())
+    {
       // set merginng
       fNtupleFileManager->SetNtupleMerging(fMergeNtuples, fNofNtupleFiles);
       fNtupleFileManager->SetNtupleRowWise(fNtupleRowWise, fNtupleRowMode);
       fNtupleFileManager->SetBasketSize(fBasketSize);
       fNtupleFileManager->SetBasketEntries(fBasketEntries);
     }
-    else if ( fIsNtupleMergingSet && fMergeNtuples ) {
-      Warn("Ntuple merging is not available with " + fileType + " output.\n" +
-           "Setting is ignored.",
+    else if (fIsNtupleMergingSet && fMergeNtuples)
+    {
+      Warn("Ntuple merging is not available with " + fileType + " output.\n"
+             + "Setting is ignored.",
            fkClass, "CreateNtupleFileManager");
     }
   }
@@ -143,30 +146,36 @@ G4bool G4GenericAnalysisManager::OpenFileImpl(const G4String& fileName)
 
   // Add file name extension, if missing
   auto fullFileName = fileName;
-  if (GetExtension(fileName).size() == 0u) {
+  if (GetExtension(fileName).size() == 0u)
+  {
     auto defaultFileType = fFileManager->GetDefaultFileType();
     // G4cout << "File type is not defined, using default: " << defaultFileType << G4endl;
-    if (defaultFileType.size() == 0u) {
-      G4Exception("G4GenericAnalysisManager::OpenFileImpl", "Analysis_F001",
-        FatalException,
-        G4String("Cannot open file \"" + fileName + "\".\n"
-          "Please, use a file name with an extension or define the default file type\n"
-          "via G4AnalysisManager::SetDefaultFileType()"));
+    if (defaultFileType.size() == 0u)
+    {
+      G4Exception(
+        "G4GenericAnalysisManager::OpenFileImpl", "Analysis_F001", FatalException,
+        G4String("Cannot open file \"" + fileName
+                 + "\".\n"
+                   "Please, use a file name with an extension or define the default file type\n"
+                   "via G4AnalysisManager::SetDefaultFileType()"));
     }
 
     fullFileName = fileName + "." + fFileManager->GetDefaultFileType();
   }
 
   // Create ntuple file manager if there are booked ntuples
-  if (! fNtupleFileManager) {
+  if (!fNtupleFileManager)
+  {
     CreateNtupleFileManager(fullFileName);
   }
 
   auto result = true;
-  if (fNtupleFileManager) {
+  if (fNtupleFileManager)
+  {
     result &= G4ToolsAnalysisManager::OpenFileImpl(fullFileName);
   }
-  else {
+  else
+  {
     // no ntuples (check if this mode is supported)
     result &= fFileManager->OpenFile(fullFileName);
   }
@@ -191,10 +200,11 @@ G4bool G4GenericAnalysisManager::WriteH1(G4int id, const G4String& fileName)
 
   // Do not write histo on worker (redundant and fails in hdf5 )
   // If default file is not used, users have to call Merge from their code
-  if ( G4Threading::IsWorkerThread() ) return false;
+  if (G4Threading::IsWorkerThread()) return false;
 
   auto h1d = GetH1(id, false);
-  if (h1d == nullptr) {
+  if (h1d == nullptr)
+  {
     WriteHnWarning("H1", id, fkClass, "WriteH1");
     return false;
   }
@@ -210,10 +220,11 @@ G4bool G4GenericAnalysisManager::WriteH2(G4int id, const G4String& fileName)
 
   // Do not write histo on worker (redundant and fails in hdf5 )
   // If default file is not used, users have to call Merge from their code
-  if ( G4Threading::IsWorkerThread() ) return false;
+  if (G4Threading::IsWorkerThread()) return false;
 
   auto h2d = GetH2(id, false);
-  if (h2d == nullptr) {
+  if (h2d == nullptr)
+  {
     WriteHnWarning("H2", id, fkClass, "WriteH2");
     return false;
   }
@@ -228,10 +239,11 @@ G4bool G4GenericAnalysisManager::WriteH3(G4int id, const G4String& fileName)
 
   // Do not write histo on worker (redundant and fails in hdf5 )
   // If default file is not used, users have to call Merge from their code
-  if ( G4Threading::IsWorkerThread() ) return false;
+  if (G4Threading::IsWorkerThread()) return false;
 
   auto h3d = GetH3(id, false);
-  if (h3d == nullptr) {
+  if (h3d == nullptr)
+  {
     WriteHnWarning("H3", id, fkClass, "WriteH3");
     return false;
   }
@@ -247,10 +259,11 @@ G4bool G4GenericAnalysisManager::WriteP1(G4int id, const G4String& fileName)
 
   // Do not write histo on worker (redundant and fails in hdf5 )
   // If default file is not used, users have to call Merge from their code
-  if ( G4Threading::IsWorkerThread() ) return false;
+  if (G4Threading::IsWorkerThread()) return false;
 
   auto p1d = GetP1(id, false);
-  if (p1d == nullptr) {
+  if (p1d == nullptr)
+  {
     WriteHnWarning("P1", id, fkClass, "WriteP1");
     return false;
   }
@@ -266,10 +279,11 @@ G4bool G4GenericAnalysisManager::WriteP2(G4int id, const G4String& fileName)
 
   // Do not write histo on worker (redundant and fails in hdf5 )
   // If default file is not used, users have to call Merge from their code
-  if ( G4Threading::IsWorkerThread() ) return false;
+  if (G4Threading::IsWorkerThread()) return false;
 
   auto p2d = GetP2(id, false);
-  if (p2d == nullptr) {
+  if (p2d == nullptr)
+  {
     WriteHnWarning("P2", id, fkClass, "WriteP2");
     return false;
   }
@@ -279,15 +293,14 @@ G4bool G4GenericAnalysisManager::WriteP2(G4int id, const G4String& fileName)
 }
 
 //_____________________________________________________________________________
-tools::ntuple_booking* G4GenericAnalysisManager::GetNtuple(
-  G4bool warn, G4bool onlyIfActive) const
+tools::ntuple_booking* G4GenericAnalysisManager::GetNtuple(G4bool warn, G4bool onlyIfActive) const
 {
   return fNtupleBookingManager->GetNtuple(warn, onlyIfActive);
 }
 
 //_____________________________________________________________________________
-tools::ntuple_booking* G4GenericAnalysisManager::GetNtuple(
-  G4int ntupleId, G4bool warn, G4bool onlyIfActive) const
+tools::ntuple_booking* G4GenericAnalysisManager::GetNtuple(G4int ntupleId, G4bool warn,
+                                                           G4bool onlyIfActive) const
 {
   return fNtupleBookingManager->GetNtuple(ntupleId, warn, onlyIfActive);
 }

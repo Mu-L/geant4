@@ -30,13 +30,13 @@
 //
 // Author:    V.Ivanchenko  28.07.2018
 //
-// Modified: 
+// Modified:
 //
 //---------------------------------------------------------------------------
 //
 
-#ifndef G4IonPhysicsXS_h
-#define G4IonPhysicsXS_h 1
+#ifndef G4IONPHYSICSXS_HH
+#define G4IONPHYSICSXS_HH
 
 #include "G4IonPhysics.hh"
 #include "globals.hh"
@@ -47,27 +47,16 @@ class G4FTFBuilder;
 
 class G4IonPhysicsXS : public G4IonPhysics
 {
-public:
+  public:
 
-  G4IonPhysicsXS(G4int ver = 0);
-  G4IonPhysicsXS(const G4String& nname, G4int ver = 0);
-  ~G4IonPhysicsXS()  override;
+    G4IonPhysicsXS(G4int ver = 0);
+    G4IonPhysicsXS(const G4String& nname, G4int ver = 0);
+    ~G4IonPhysicsXS() override;
 
-private:
+  private:
 
-  void AddProcess(const G4String&, G4ParticleDefinition*,
-		  G4HadronicInteraction*, G4HadronicInteraction*, 
-		  G4VCrossSectionDataSet*) override;
-
+    void AddProcess(const G4String&, G4ParticleDefinition*, G4HadronicInteraction*,
+                    G4HadronicInteraction*, G4VCrossSectionDataSet*) override;
 };
 
-
 #endif
-
-
-
-
-
-
-
-

@@ -37,13 +37,14 @@
 
 namespace
 {
-  static constexpr G4int MAX_Z = 9;
-  static constexpr G4int MAX_A = 17;
-}
+static constexpr G4int MAX_Z = 9;
+static constexpr G4int MAX_A = 17;
+}  // namespace
 
 class G4FermiAtomicMass
 {
   public:
+
     using ValueType = std::uint32_t;
 
     G4FermiAtomicMass() = default;
@@ -77,12 +78,14 @@ class G4FermiAtomicMass
     G4bool operator!=(const G4FermiAtomicMass& other) const { return mass_ != other.mass_; }
 
   private:
+
     ValueType mass_;
 };
 
 class G4FermiChargeNumber
 {
   public:
+
     using ValueType = std::uint32_t;
 
     G4FermiChargeNumber() = default;
@@ -116,6 +119,7 @@ class G4FermiChargeNumber
     G4bool operator!=(const G4FermiChargeNumber& other) const { return charge_ != other.charge_; }
 
   private:
+
     ValueType charge_;
 };
 
@@ -174,13 +178,13 @@ constexpr G4FermiChargeNumber operator""_c(unsigned long long charge)
   return G4FermiChargeNumber(static_cast<std::uint32_t>(charge));
 }
 
-#define FERMI_ASSERT_MSG(COND, MSG)  \
-  if (!(COND)) {                     \
-    G4ExceptionDescription ed;       \
-    ed << "assertion failed: \"" << #COND << '\"' << " at " << __FILE__ << ':' << __LINE__ \
-            << '\n'  \
-            << MSG;  \
-    G4Exception("G4FermiBreakUpAN: ", "fermi03", FatalException, ed, ""); \
-}
+#define FERMI_ASSERT_MSG(COND, MSG)                                                                \
+  if (!(COND))                                                                                     \
+  {                                                                                                \
+    G4ExceptionDescription ed;                                                                     \
+    ed << "assertion failed: \"" << #COND << '\"' << " at " << __FILE__ << ':' << __LINE__ << '\n' \
+       << MSG;                                                                                     \
+    G4Exception("G4FermiBreakUpAN: ", "fermi03", FatalException, ed, "");                          \
+  }
 
 #endif  // G4FERMIDATATYPES_HH

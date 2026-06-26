@@ -28,14 +28,14 @@
 // Date:    1 May 2012
 //
 // Description: model for electron and positron interaction with nuclei
-//              using the equivalent photon spectrum.  A real gamma is 
-//              produced from the virtual photon spectrum and is then 
+//              using the equivalent photon spectrum.  A real gamma is
+//              produced from the virtual photon spectrum and is then
 //              interacted hadronically by the Bertini cascade at low
 //              energies.  At high energies the gamma is converted to a
 //              pi0 and interacted with the FTFP model.
 
-#ifndef G4ElectroVDNuclearModel_h
-#define G4ElectroVDNuclearModel_h 1
+#ifndef G4ELECTROVDNUCLEARMODEL_HH
+#define G4ELECTROVDNUCLEARMODEL_HH
 
 #include "G4HadronicInteraction.hh"
 
@@ -48,23 +48,20 @@ class G4VCrossSectionDataSet;
 
 class G4ElectroVDNuclearModel : public G4HadronicInteraction
 {
-  public: 
+  public:
 
     G4ElectroVDNuclearModel();
     ~G4ElectroVDNuclearModel();
-    
-    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
-                                   G4Nucleus& aTargetNucleus);
+
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& aTargetNucleus);
 
     virtual void ModelDescription(std::ostream& outFile) const;
 
   private:
 
-    G4DynamicParticle* CalculateEMVertex(const G4HadProjectile& aTrack,
-                                         G4Nucleus& aTargetNucleus);
+    G4DynamicParticle* CalculateEMVertex(const G4HadProjectile& aTrack, G4Nucleus& aTargetNucleus);
 
-    void CalculateHadronicVertex(G4DynamicParticle* incident,
-                                 G4Nucleus& target);
+    void CalculateHadronicVertex(G4DynamicParticle* incident, G4Nucleus& target);
 
     G4double leptonKE;
     G4double photonEnergy;

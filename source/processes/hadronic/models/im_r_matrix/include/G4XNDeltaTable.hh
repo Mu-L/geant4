@@ -24,53 +24,47 @@
 // ********************************************************************
 //
 //
-//      
+//
 // Hadron Kinetic Model
 // p p -> Delta Delta cross section tables
 //
 // -------------------------------------------------------------------
 
-#ifndef G4XNDeltaTable_h
-#define G4XNDeltaTable_h
+#ifndef G4XNDELTATABLE_HH
+#define G4XNDELTATABLE_HH
 
-#include "globals.hh"
-#include "G4PhysicsVector.hh"
 #include "G4PhysicsFreeVector.hh"
+#include "G4PhysicsVector.hh"
 #include "G4VXResonanceTable.hh"
-
+#include "globals.hh"
 
 class G4XNDeltaTable : public G4VXResonanceTable
 {
+  public:
 
-public:
+    G4XNDeltaTable();
 
-  G4XNDeltaTable(); 
+    virtual ~G4XNDeltaTable();
 
-  virtual ~G4XNDeltaTable();
+    virtual G4PhysicsVector* CrossSectionTable() const;
 
-  virtual G4PhysicsVector* CrossSectionTable() const;
+    G4bool operator==(const G4XNDeltaTable& right) const;
+    G4bool operator!=(const G4XNDeltaTable& right) const;
 
-  G4bool operator==(const G4XNDeltaTable &right) const;
-  G4bool operator!=(const G4XNDeltaTable &right) const;
+  protected:
 
+  private:
 
-protected:
+    G4XNDeltaTable(const G4XNDeltaTable& right);
+    G4XNDeltaTable& operator=(const G4XNDeltaTable& right);
 
+    // The energies corresponding to the following cross sections
+    static const G4double energyTable[121];
 
-private:  
+    // Cross sections for p p -> N N*
+    static const G4double sigmaND1232[121];
 
-  G4XNDeltaTable(const G4XNDeltaTable &right);
-  G4XNDeltaTable& operator=(const G4XNDeltaTable &right);
-
-  // The energies corresponding to the following cross sections
-  static const G4double energyTable[121];
-
-  // Cross sections for p p -> N N*
-  static const G4double sigmaND1232[121];
-
-  G4int size;
-
+    G4int size;
 };
 
 #endif
-

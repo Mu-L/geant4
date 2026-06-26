@@ -41,10 +41,10 @@
 //
 // Member data:
 //
-//      G4double rxx,rxy,rxz; 
+//      G4double rxx,rxy,rxz;
 //      G4double ryx,ryy,ryz;  A 3x3 rotation matrix - net rotation
 //      G4double rzx,rzy,rzz;
-//      G4double tx,ty,tz;     Net translation 
+//      G4double tx,ty,tz;     Net translation
 
 // Author: Paul R C Kent (CERN), 06.08.1996 - Initial version
 //         E.Tcherniaev (CERN), 19.09.1996, 06.05.2018 - Revised
@@ -52,13 +52,15 @@
 #ifndef G4AFFINETRANSFORM_HH
 #define G4AFFINETRANSFORM_HH
 
-#include "G4Types.hh"
-#include "G4ThreeVector.hh"
 #include "G4RotationMatrix.hh"
+#include "G4ThreeVector.hh"
 #include "G4Transform3D.hh"
+#include "G4Types.hh"
 
 /**
  * @brief G4AffineTransform is a class for geometric affine transformations.
+ * @ingroup geometry_management
+ *
  * It supports efficient arbitrary rotation & transformation of vectors and
  * the computation of compound & inverse transformations. A 'rotation flag'
  * is maintained internally for greater computational efficiency for transforms
@@ -89,15 +91,13 @@ class G4AffineTransform
      * Constructor for Translation and Rotation: under t'form, rotate
      * by 'rot' then translate by 'tlate'.
      */
-    inline G4AffineTransform(const G4RotationMatrix& rot,
-                             const G4ThreeVector& tlate);
+    inline G4AffineTransform(const G4RotationMatrix& rot, const G4ThreeVector& tlate);
 
     /**
      * Alternative Constructor optionally rotating by 'rot' by pointer then
      * translate by 'tlate' - 'rot' may be null.
      */
-    inline G4AffineTransform(const G4RotationMatrix* rot,
-                             const G4ThreeVector& tlate);
+    inline G4AffineTransform(const G4RotationMatrix* rot, const G4ThreeVector& tlate);
 
     /**
      * Copy & move constructor.
@@ -121,14 +121,14 @@ class G4AffineTransform
      *  @param[in] tf Transformation to combine.
      *  @returns The compound transformation of self*tf.
      */
-    inline G4AffineTransform operator * (const G4AffineTransform& tf) const;
+    inline G4AffineTransform operator*(const G4AffineTransform& tf) const;
 
     /**
      * [Modifying] compound Transforms: Multiplies self by 'tf'.
      *  @param[in] tf Transformation to combine.
      *  @returns Returns self reference, i.e. A=AB for a*=b.
      */
-    inline G4AffineTransform& operator *= (const G4AffineTransform& tf);
+    inline G4AffineTransform& operator*=(const G4AffineTransform& tf);
 
     /**
      * [Modifying] Product function, for avoiding (potential) temporaries:
@@ -139,8 +139,7 @@ class G4AffineTransform
      *  @param[in] tf2 Second transformation operand.
      *  @returns Returns Self reference.
      */
-    inline G4AffineTransform& Product(const G4AffineTransform& tf1,
-                                      const G4AffineTransform& tf2);
+    inline G4AffineTransform& Product(const G4AffineTransform& tf1, const G4AffineTransform& tf2);
 
     /**
      * [Modifying] Inverse Product function. Sets self=tf1*(tf2^-1).
@@ -202,19 +201,19 @@ class G4AffineTransform
      * [Modifying] Adjust the net translation by the given vector.
      *  @returns Self reference.
      */
-    inline G4AffineTransform& operator +=(const G4ThreeVector& tlate);
-    inline G4AffineTransform& operator -=(const G4ThreeVector& tlate);
+    inline G4AffineTransform& operator+=(const G4ThreeVector& tlate);
+    inline G4AffineTransform& operator-=(const G4ThreeVector& tlate);
 
     /**
      * Equality and inequality operators.
      */
-    inline G4bool operator == (const G4AffineTransform& tf) const;
-    inline G4bool operator != (const G4AffineTransform& tf) const;
+    inline G4bool operator==(const G4AffineTransform& tf) const;
+    inline G4bool operator!=(const G4AffineTransform& tf) const;
 
     /**
      * Access operator.
      */
-    inline G4double operator [] (const G4int n) const;
+    inline G4double operator[](const G4int n) const;
 
     /**
      * Returns true if transform includes rotation.
@@ -255,31 +254,30 @@ class G4AffineTransform
     /**
      * Conversion operator (cast) to G4Transform3D.
      */
-    inline operator G4Transform3D () const;
+    inline operator G4Transform3D() const;
 
   private:
 
     /**
      * Private components Constructor.
      */
-    inline G4AffineTransform(
-                  const G4double prxx, const G4double prxy, const G4double prxz,
-                  const G4double pryx, const G4double pryy, const G4double pryz,
-                  const G4double przx, const G4double przy, const G4double przz,
-                  const G4double ptx, const G4double pty, const G4double ptz);
+    inline G4AffineTransform(const G4double prxx, const G4double prxy, const G4double prxz,
+                             const G4double pryx, const G4double pryy, const G4double pryz,
+                             const G4double przx, const G4double przy, const G4double przz,
+                             const G4double ptx, const G4double pty, const G4double ptz);
 
   private:
 
-    G4double rxx,rxy,rxz;
-    G4double ryx,ryy,ryz;
-    G4double rzx,rzy,rzz;
-    G4double tx,ty,tz;
+    G4double rxx, rxy, rxz;
+    G4double ryx, ryy, ryz;
+    G4double rzx, rzy, rzz;
+    G4double tx, ty, tz;
 };
 
 /**
  * Streaming operator.
  */
-std::ostream& operator << (std::ostream& os, const G4AffineTransform& transf);
+std::ostream& operator<<(std::ostream& os, const G4AffineTransform& transf);
 
 #include "G4AffineTransform.icc"
 

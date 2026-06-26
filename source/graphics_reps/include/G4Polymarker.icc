@@ -25,13 +25,15 @@
 //
 //
 //
-// 
+//
 // John Allison  November 1996
 
-inline G4Polymarker::MarkerType G4Polymarker::GetMarkerType () const {
+inline G4Polymarker::MarkerType G4Polymarker::GetMarkerType() const
+{
   return fMarkerType;
 }
 
-inline void G4Polymarker::SetMarkerType (MarkerType type) {
+inline void G4Polymarker::SetMarkerType(MarkerType type)
+{
   fMarkerType = type;
 }

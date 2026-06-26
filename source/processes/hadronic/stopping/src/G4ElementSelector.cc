@@ -27,38 +27,36 @@
 // File: G4ElementSelector
 //
 // Author:        V.Ivanchenko (Vladimir.Ivanchenko@cern.ch)
-// 
+//
 // Creation date: 2 April 2000
 //
-// Modifications: 
+// Modifications:
 // 18/08/2000  V.Ivanchenko Update description
 // 17/05/2006  V.Ivanchenko Cleanup
 // 02/10/2007  V.Ivanchenko Fixed typo in computation of Lambda-factor
-//                          proposed by Victor Pec 
+//                          proposed by Victor Pec
 //
 //---------------------------------------------------------------------
 
 #include "G4ElementSelector.hh"
-#include "Randomize.hh" 
+
 #include "G4Material.hh"
 #include "G4Nucleus.hh"
+#include "Randomize.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4ElementSelector::G4ElementSelector()
-{}
+G4ElementSelector::G4ElementSelector() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4ElementSelector::~G4ElementSelector()
-{}
+G4ElementSelector::~G4ElementSelector() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-const G4Element* 
-G4ElementSelector::SelectZandA(const G4Track& track, G4Nucleus* target)
+const G4Element* G4ElementSelector::SelectZandA(const G4Track& track, G4Nucleus* target)
 {
-  // Fermi-Teller Z-low of mu- capture and exceptions 
+  // Fermi-Teller Z-low of mu- capture and exceptions
   // for halogens and oxigen.
   // N.C.Mukhopadhyay Phys. Rep. 30 (1977) 1.
 
@@ -67,37 +65,50 @@ G4ElementSelector::SelectZandA(const G4Track& track, G4Nucleus* target)
   std::size_t numberOfElements = mat->GetNumberOfElements();
   const G4ElementVector* theElementVector = mat->GetElementVector();
 
-  if(1 < numberOfElements) {
-    if(numberOfElements > prob.size()) { prob.resize(numberOfElements, 0.0); }
-    
+  if (1 < numberOfElements)
+  {
+    if (numberOfElements > prob.size())
+    {
+      prob.resize(numberOfElements, 0.0);
+    }
+
     const G4double* theAtomNumDensity = mat->GetAtomicNumDensityVector();
 
     G4double sum = 0.0;
-    for (i=0; i < numberOfElements; ++i) {
-
-      G4int Z = (*theElementVector)[i]->GetZasInt(); 
+    for (i = 0; i < numberOfElements; ++i)
+    {
+      G4int Z = (*theElementVector)[i]->GetZasInt();
 
       // Halogens
-      if( (9 == Z) || (17 == Z) || (35 == Z) || (53 == Z) || (85 == Z) ) {
-	sum += 0.66 * Z * theAtomNumDensity[i]; 
+      if ((9 == Z) || (17 == Z) || (35 == Z) || (53 == Z) || (85 == Z))
+      {
+        sum += 0.66 * Z * theAtomNumDensity[i];
 
-	// Oxigen
-      } else if( 8 == Z ) {
-	sum += 0.56 * Z * theAtomNumDensity[i]; 
+        // Oxigen
+      }
+      else if (8 == Z)
+      {
+        sum += 0.56 * Z * theAtomNumDensity[i];
 
-	// Others
-      } else {
-	sum += Z * theAtomNumDensity[i]; 
+        // Others
+      }
+      else
+      {
+        sum += Z * theAtomNumDensity[i];
       }
       prob[i] = sum;
     }
- 
+
     sum *= G4UniformRand();
-    for (i=0; i < numberOfElements; ++i) {
-      if(sum <= prob[i]) { break; }
+    for (i = 0; i < numberOfElements; ++i)
+    {
+      if (sum <= prob[i])
+      {
+        break;
+      }
     }
   }
-  
+
   const G4Element* elm = (*theElementVector)[i];
   G4int Z = elm->GetZasInt();
 
@@ -106,13 +117,17 @@ G4ElementSelector::SelectZandA(const G4Track& track, G4Nucleus* target)
   std::size_t ni = isv->size();
   i = 0;
 
-  if(1 < ni) {
-
+  if (1 < ni)
+  {
     const G4double* ab = elm->GetRelativeAbundanceVector();
     G4double y = G4UniformRand();
-    for(i=0; i<ni; ++i) {
+    for (i = 0; i < ni; ++i)
+    {
       y -= ab[i];
-      if(y <= 0.0) { break; }
+      if (y <= 0.0)
+      {
+        break;
+      }
     }
   }
 

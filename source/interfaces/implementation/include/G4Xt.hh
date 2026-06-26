@@ -47,22 +47,24 @@
 
 class G4Xt : public G4VInteractorManager
 {
- public:
-  static G4Xt* getInstance();
-  static G4Xt* getInstance(int, char**, char*);
-  void PutStringInResourceDatabase(char*);
-  G4bool Inited();
-  void* GetEvent();
-  void FlushAndWaitExecution();
-  virtual ~G4Xt();
-  // Workaround for gcc8 Coverity cast warning
-  static bool xt_dispatch_event(void* a_event) { return XtDispatchEvent((XEvent*)a_event); }
+  public:
 
- private:
-  G4Xt(const G4Xt&);
-  G4Xt(int, char**, char*);
-  G4Xt& operator=(const G4Xt&);
-  static G4Xt* instance;  // Pointer to single instance.
+    static G4Xt* getInstance();
+    static G4Xt* getInstance(int, char**, char*);
+    void PutStringInResourceDatabase(char*);
+    G4bool Inited();
+    void* GetEvent();
+    void FlushAndWaitExecution();
+    virtual ~G4Xt();
+    // Workaround for gcc8 Coverity cast warning
+    static bool xt_dispatch_event(void* a_event) { return XtDispatchEvent((XEvent*)a_event); }
+
+  private:
+
+    G4Xt(const G4Xt&);
+    G4Xt(int, char**, char*);
+    G4Xt& operator=(const G4Xt&);
+    static G4Xt* instance;  // Pointer to single instance.
 };
 
 #endif

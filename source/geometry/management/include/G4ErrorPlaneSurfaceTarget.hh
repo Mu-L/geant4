@@ -34,16 +34,17 @@
 #ifndef G4ERRORPLANESURFACETARGET_HH
 #define G4ERRORPLANESURFACETARGET_HH
 
-#include "globals.hh"
 #include "G4ErrorSurfaceTarget.hh"
-#include "G4ThreeVector.hh"
 #include "G4Normal3D.hh"
 #include "G4Plane3D.hh"
 #include "G4Point3D.hh"
+#include "G4ThreeVector.hh"
+#include "globals.hh"
 
 /**
  * @brief G4ErrorPlaneSurfaceTarget is an utility class for limiting
  * the step when a track reaches a plane surface.
+ * @ingroup geometry_management
  */
 
 class G4ErrorPlaneSurfaceTarget : public G4ErrorSurfaceTarget, G4Plane3D
@@ -54,23 +55,19 @@ class G4ErrorPlaneSurfaceTarget : public G4ErrorSurfaceTarget, G4Plane3D
      * Constructor for G4ErrorPlaneSurfaceTarget. It constructs a plane
      * by parameters: ax+by+cz+d = 0.
      */
-    G4ErrorPlaneSurfaceTarget(G4double a=0., G4double b=0.,
-                              G4double c=0., G4double d=0.);
+    G4ErrorPlaneSurfaceTarget(G4double a = 0., G4double b = 0., G4double c = 0., G4double d = 0.);
 
     /**
      * Constructor for G4ErrorPlaneSurfaceTarget. It constructs a plane
      * by point 'p' and normal 'n'.
      */
-    G4ErrorPlaneSurfaceTarget(const G4Normal3D& n,
-                              const G4Point3D& p);
+    G4ErrorPlaneSurfaceTarget(const G4Normal3D& n, const G4Point3D& p);
 
     /**
      * Constructor for G4ErrorPlaneSurfaceTarget. It constructs a plane
      * by three points, 'p1', 'p2', 'p3'.
      */
-    G4ErrorPlaneSurfaceTarget(const G4Point3D& p1,
-                              const G4Point3D& p2,
-                              const G4Point3D& p3);
+    G4ErrorPlaneSurfaceTarget(const G4Point3D& p1, const G4Point3D& p2, const G4Point3D& p3);
 
     /**
      * Default Destructor.
@@ -83,36 +80,35 @@ class G4ErrorPlaneSurfaceTarget : public G4ErrorSurfaceTarget, G4Plane3D
      *  @param[in] direc The direction vector.
      *  @returns The intersection point.
      */
-    G4ThreeVector Intersect( const G4ThreeVector& point,
-                             const G4ThreeVector& direc ) const;
-  
+    G4ThreeVector Intersect(const G4ThreeVector& point, const G4ThreeVector& direc) const;
+
     /**
      * Computes the distance from a point to the surface in a given direction.
      *  @param[in] point The point of reference.
      *  @param[in] direc The direction vector.
      *  @returns The distance value.
      */
-    G4double GetDistanceFromPoint( const G4ThreeVector& point,
-                                   const G4ThreeVector& direc ) const override;
+    G4double GetDistanceFromPoint(const G4ThreeVector& point,
+                                  const G4ThreeVector& direc) const override;
 
     /**
      * Computes the minimal distance from a point to surface.
      *  @param[in] point The point of reference.
      *  @returns The distance value.
      */
-    G4double GetDistanceFromPoint( const G4ThreeVector& pt ) const override;
+    G4double GetDistanceFromPoint(const G4ThreeVector& pt) const override;
 
     /**
      * Computes the plane tangent to itself at a given point.
      *  @param[in] point The point of reference.
      *  @returns The tangent plane.
      */
-    G4Plane3D GetTangentPlane( const G4ThreeVector& point ) const override;
+    G4Plane3D GetTangentPlane(const G4ThreeVector& point) const override;
 
     /**
      * Dumps to standard output the surface parameters.
      */
-    void Dump( const G4String& msg ) const override;
+    void Dump(const G4String& msg) const override;
 };
 
 #endif

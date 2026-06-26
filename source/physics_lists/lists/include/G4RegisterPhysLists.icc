@@ -111,9 +111,10 @@ G4_DECLARE_PHYSLIST_FACTORY(ShieldingLEND);
 
 class ShieldingM : public Shielding
 {
-public:
-  explicit ShieldingM(G4int verbose = 1) : Shielding(verbose,"HP","M") { ; }
-  virtual ~ShieldingM() { ; }
+  public:
+
+    explicit ShieldingM(G4int verbose = 1) : Shielding(verbose, "HP", "M") { ; }
+    virtual ~ShieldingM() { ; }
 };
 G4_DECLARE_PHYSLIST_FACTORY(ShieldingM);
 
@@ -140,6 +141,5 @@ G4_DECLARE_PHYSLIST_FACTORY(FTF_BIC);
 #include "QGS_BIC.hh"
 G4_DECLARE_PHYSLIST_FACTORY(QGS_BIC);
 */
-
 
 //

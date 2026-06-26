@@ -31,16 +31,16 @@
 // the Process Manager and UI.
 //
 // /particle/process/   Process Manager control commands
-// Commands : 
+// Commands :
 //     dump * dump process manager information
 //     verbose * Set Verbose Level for Process Manager and/or process
-//     activate * Activate process  
-//     inactivate * Inctivate process  
+//     activate * Activate process
+//     inactivate * Inctivate process
 
 // Author: H.Kurashige, 13 June 1997
 //---------------------------------------------------------------------
-#ifndef G4ProcessManagerMessenger_hh
-#define G4ProcessManagerMessenger_hh 1
+#ifndef G4PROCESSMANAGERMESSENGER_HH
+#define G4PROCESSMANAGERMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -53,7 +53,7 @@ class G4VProcess;
 
 class G4UIdirectory;
 class G4UIcmdWithoutParameter;
-class G4UIcmdWithAnInteger; 
+class G4UIcmdWithAnInteger;
 class G4UIcommand;
 
 class G4ProcessManagerMessenger : public G4UImessenger
@@ -61,35 +61,35 @@ class G4ProcessManagerMessenger : public G4UImessenger
   public:
 
     G4ProcessManagerMessenger(G4ParticleTable* pTable = nullptr);
-      // Constructor
+    // Constructor
 
     virtual ~G4ProcessManagerMessenger();
-      // Destructor 
- 
+    // Destructor
+
     G4ProcessManagerMessenger(const G4ProcessManagerMessenger&) = delete;
     G4ProcessManagerMessenger& operator=(const G4ProcessManagerMessenger&) = delete;
-      // Copy contructor and assignment operator not allowed
+    // Copy contructor and assignment operator not allowed
 
     virtual void SetNewValue(G4UIcommand* command, G4String newValues);
-      // Set new value for command string
+    // Set new value for command string
 
     virtual G4String GetCurrentValue(G4UIcommand* command);
-      // Get current value for command string
-  
+    // Get current value for command string
+
   private:
 
     const G4ParticleDefinition* SetCurrentParticle();
-      // Set particle currently concerned 
-    
+    // Set particle currently concerned
+
     G4ParticleTable* theParticleTable = nullptr;
     const G4ParticleDefinition* currentParticle = nullptr;
     G4VProcess* currentProcess = nullptr;
     G4ProcessManager* theManager = nullptr;
     G4ProcessVector* theProcessList = nullptr;
 
-    G4UIdirectory*        thisDirectory = nullptr;
+    G4UIdirectory* thisDirectory = nullptr;
     G4UIcmdWithAnInteger* dumpCmd = nullptr;
-    G4UIcommand*          verboseCmd = nullptr;
+    G4UIcommand* verboseCmd = nullptr;
     G4UIcmdWithAnInteger* activateCmd = nullptr;
     G4UIcmdWithAnInteger* inactivateCmd = nullptr;
 };

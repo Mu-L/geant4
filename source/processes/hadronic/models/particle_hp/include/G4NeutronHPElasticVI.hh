@@ -26,14 +26,14 @@
 // Geant4 header : G4NeutronHPElasticVI
 //
 // Created:  15 October 2023
-// Author  V.Ivanchenko                                                                                                                                                                                         
+// Author  V.Ivanchenko
 //
 // Class Description:
 // Neutron HP elastic scattering model below 20 MeV
 //
 
-#ifndef G4NeutronHPElasticVI_h
-#define G4NeutronHPElasticVI_h 1
+#ifndef G4NEUTRONHPELASTICVI_HH
+#define G4NEUTRONHPELASTICVI_HH
 
 // Class Description
 // Final state production model for a high precision (based on evaluated data
@@ -53,6 +53,7 @@ class G4ParticleHPManager;
 class G4NeutronHPElasticVI : public G4HadronicInteraction
 {
   public:
+
     G4NeutronHPElasticVI();
 
     ~G4NeutronHPElasticVI() override;
@@ -66,9 +67,8 @@ class G4NeutronHPElasticVI : public G4HadronicInteraction
 
     void ModelDescription(std::ostream& outFile) const override;
 
-    G4NeutronHPElasticVI(G4NeutronHPElasticVI &) = delete;
-    G4NeutronHPElasticVI & operator=
-    (const G4NeutronHPElasticVI &right) = delete;
+    G4NeutronHPElasticVI(G4NeutronHPElasticVI&) = delete;
+    G4NeutronHPElasticVI& operator=(const G4NeutronHPElasticVI& right) = delete;
 
   private:
 
@@ -80,7 +80,7 @@ class G4NeutronHPElasticVI : public G4HadronicInteraction
     G4bool fInitializer{false};
 
     static G4bool fLock;
-    static constexpr G4int ZMAXHPE{101}; // 101 because Z range is 1-100
+    static constexpr G4int ZMAXHPE{101};  // 101 because Z range is 1-100
     static G4ParticleHPChannel* theElastic[ZMAXHPE];
 };
 

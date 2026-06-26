@@ -22,67 +22,70 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // History:
 // -----------
 //  01 Oct 2011   A.M., S.I. - 1st implementation
-// 
+//
 // Class description
 // ----------------
 //  Computation of K, L & M shell ECPSSR ionisation cross sections for protons and alphas
-//  Based on the work of A. Taborda et al. 
+//  Based on the work of A. Taborda et al.
 //  X-Ray Spectrom. 2011, 40, 127-134
 // ---------------------------------------------------------------------------------------
 
-#ifndef G4ecpssrFormFactorMixsModel_HH
-#define G4ecpssrFormFactorMixsModel_HH 1
+#ifndef G4ECPSSRFORMFACTORMIXSMODEL_HH
+#define G4ECPSSRFORMFACTORMIXSMODEL_HH
+
+#include "G4Types.hh"
+#include "G4VecpssrMiModel.hh"
 
 #include <map>
 #include <vector>
-#include "G4Types.hh"
-#include "G4VecpssrMiModel.hh"
 
 class G4VDataSetAlgorithm;
 class G4VEMDataSet;
 
 class G4ecpssrFormFactorMixsModel : public G4VecpssrMiModel
 {
-public:
-  explicit G4ecpssrFormFactorMixsModel();
-  virtual ~G4ecpssrFormFactorMixsModel();
-			     
-  G4double CalculateM1CrossSection (G4int zTarget, 
-				    G4double massIncident, G4double energyIncident) override;
-  G4double CalculateM2CrossSection (G4int zTarget, 
-				    G4double massIncident, G4double energyIncident) override;
-  G4double CalculateM3CrossSection (G4int zTarget, 
-				    G4double massIncident, G4double energyIncident) override;				     
-  G4double CalculateM4CrossSection (G4int zTarget, 
-				    G4double massIncident, G4double energyIncident) override;				     
-  G4double CalculateM5CrossSection (G4int zTarget, 
-				    G4double massIncident, G4double energyIncident) override;				     
-  G4ecpssrFormFactorMixsModel(const G4ecpssrFormFactorMixsModel&) = delete;
-  G4ecpssrFormFactorMixsModel & operator = (const G4ecpssrFormFactorMixsModel &right) = delete;
+  public:
 
-private:
-  G4double CalculateMiCrossSection (G4int zTarget, G4double massIncident, G4double energyIncident, G4int mShellId);
-  G4VDataSetAlgorithm* interpolation;
+    explicit G4ecpssrFormFactorMixsModel();
+    virtual ~G4ecpssrFormFactorMixsModel();
 
-  std::vector< std::map<G4int,G4VEMDataSet*> > protonMiXsVector;
-  std::vector< std::map<G4int,G4VEMDataSet*> > alphaMiXsVector;
+    G4double CalculateM1CrossSection(G4int zTarget, G4double massIncident,
+                                     G4double energyIncident) override;
+    G4double CalculateM2CrossSection(G4int zTarget, G4double massIncident,
+                                     G4double energyIncident) override;
+    G4double CalculateM3CrossSection(G4int zTarget, G4double massIncident,
+                                     G4double energyIncident) override;
+    G4double CalculateM4CrossSection(G4int zTarget, G4double massIncident,
+                                     G4double energyIncident) override;
+    G4double CalculateM5CrossSection(G4int zTarget, G4double massIncident,
+                                     G4double energyIncident) override;
+    G4ecpssrFormFactorMixsModel(const G4ecpssrFormFactorMixsModel&) = delete;
+    G4ecpssrFormFactorMixsModel& operator=(const G4ecpssrFormFactorMixsModel& right) = delete;
 
-  std::map< G4int , G4VEMDataSet* > protonM1DataSetMap;
-  std::map< G4int , G4VEMDataSet* > protonM2DataSetMap;
-  std::map< G4int , G4VEMDataSet* > protonM3DataSetMap;
-  std::map< G4int , G4VEMDataSet* > protonM4DataSetMap;
-  std::map< G4int , G4VEMDataSet* > protonM5DataSetMap;
+  private:
 
-  std::map< G4int , G4VEMDataSet* > alphaM1DataSetMap;
-  std::map< G4int , G4VEMDataSet* > alphaM2DataSetMap;
-  std::map< G4int , G4VEMDataSet* > alphaM3DataSetMap;
-  std::map< G4int , G4VEMDataSet* > alphaM4DataSetMap;
-  std::map< G4int , G4VEMDataSet* > alphaM5DataSetMap;
+    G4double CalculateMiCrossSection(G4int zTarget, G4double massIncident, G4double energyIncident,
+                                     G4int mShellId);
+    G4VDataSetAlgorithm* interpolation;
 
+    std::vector<std::map<G4int, G4VEMDataSet*>> protonMiXsVector;
+    std::vector<std::map<G4int, G4VEMDataSet*>> alphaMiXsVector;
+
+    std::map<G4int, G4VEMDataSet*> protonM1DataSetMap;
+    std::map<G4int, G4VEMDataSet*> protonM2DataSetMap;
+    std::map<G4int, G4VEMDataSet*> protonM3DataSetMap;
+    std::map<G4int, G4VEMDataSet*> protonM4DataSetMap;
+    std::map<G4int, G4VEMDataSet*> protonM5DataSetMap;
+
+    std::map<G4int, G4VEMDataSet*> alphaM1DataSetMap;
+    std::map<G4int, G4VEMDataSet*> alphaM2DataSetMap;
+    std::map<G4int, G4VEMDataSet*> alphaM3DataSetMap;
+    std::map<G4int, G4VEMDataSet*> alphaM4DataSetMap;
+    std::map<G4int, G4VEMDataSet*> alphaM5DataSetMap;
 };
 
 #endif

@@ -37,27 +37,24 @@
 
 // Author: John Apostolakis (CERN), February 2023
 // --------------------------------------------------------------------
-#ifndef G4SafetyCalculator_HH
-#define G4SafetyCalculator_HH 1
+#ifndef G4SAFETYCALCULATOR_HH
+#define G4SAFETYCALCULATOR_HH
 
-#include "geomdefs.hh"
-
-#include "G4ThreeVector.hh"
 #include "G4AffineTransform.hh"
-#include "G4RotationMatrix.hh"
-
-#include "G4LogicalVolume.hh"             // Used in inline methods
-#include "G4TouchableHistoryHandle.hh"
-
+#include "G4LogicalVolume.hh"  // Used in inline methods
 #include "G4NavigationHistory.hh"
 #include "G4NormalNavigation.hh"
-#include "G4VoxelNavigation.hh"
 #include "G4ParameterisedNavigation.hh"
-#include "G4ReplicaNavigation.hh"
 #include "G4RegularNavigation.hh"
+#include "G4ReplicaNavigation.hh"
+#include "G4RotationMatrix.hh"
+#include "G4ThreeVector.hh"
+#include "G4TouchableHistoryHandle.hh"
 #include "G4VExternalNavigation.hh"
-
+#include "G4VoxelNavigation.hh"
 #include "G4VoxelSafety.hh"
+
+#include "geomdefs.hh"
 
 #include <iostream>
 
@@ -67,6 +64,7 @@ class G4VPhysicalVolume;
  * @brief G4SafetyCalculator is a class that provides an estimate of the
  * isotropic safety (the minimum distance from a global point to the nearest
  * boundary of the current volume or the nearest daughter volumes).
+ * @ingroup geometry_navigation
  */
 
 class G4SafetyCalculator
@@ -76,8 +74,7 @@ class G4SafetyCalculator
     /**
      * Constructor, initialisers and setup.
      */
-    G4SafetyCalculator( const G4Navigator& navigator,
-                        const G4NavigationHistory& navHistory );   
+    G4SafetyCalculator(const G4Navigator& navigator, const G4NavigationHistory& navHistory);
 
     /**
      * Copy constructor & assignment operator not allowed.
@@ -92,7 +89,7 @@ class G4SafetyCalculator
 
     /**
      * Calculates the isotropic distance to the nearest boundary from the
-     * specified point in the global coordinate system. 
+     * specified point in the global coordinate system.
      *  @param[in] globalPoint The point in global coordinates; it *must* be
      *             located exactly within the current volume (it also must
      *             *not* be in a daughter volume.
@@ -105,27 +102,23 @@ class G4SafetyCalculator
      *           if complex volumes are involved.
      */
     G4double SafetyInCurrentVolume(const G4ThreeVector& globalpoint,
-                                         G4VPhysicalVolume* physicalVolume,
+                                   G4VPhysicalVolume* physicalVolume,
                                    const G4double pProposedMaxLength = DBL_MAX,
-                                         G4bool verbose = false );
+                                   G4bool verbose = false);
 
     /**
      * Accessor & modifier for custom external navigation.
      */
     G4VExternalNavigation* GetExternalNavigation() const;
     void SetExternalNavigation(G4VExternalNavigation* externalNav);
-   
+
     /**
      * Compares estimates of the safety, and reports if found difference(s).
      */
-    void CompareSafetyValues( G4double oldSafety,
-                              G4double newValue,
-                              G4VPhysicalVolume* motherPhysical,
-                        const G4ThreeVector &globalPoint,
-                              G4bool keepState,
-                              G4double maxLength,
-                              G4bool enteredVolume,
-                              G4bool exitedVolume );
+    void CompareSafetyValues(G4double oldSafety, G4double newValue,
+                             G4VPhysicalVolume* motherPhysical, const G4ThreeVector& globalPoint,
+                             G4bool keepState, G4double maxLength, G4bool enteredVolume,
+                             G4bool exitedVolume);
 
   protected:
 
@@ -136,8 +129,8 @@ class G4SafetyCalculator
      *             in case an external custom navigator is used.
      */
     void QuickLocateWithinVolume(const G4ThreeVector& pointLocal,
-                                       G4VPhysicalVolume* motherPhysical);
-   
+                                 G4VPhysicalVolume* motherPhysical);
+
     /**
      * Computes point in local coordinates system, given a position
      * vector in world coordinate system.
@@ -179,8 +172,8 @@ class G4SafetyCalculator
     // END   -- Tracking Invariants part 1 ------------------------------------
 
     /** Cached tolerance. */
-    G4double fkCarTolerance; 
-   
+    G4double fkCarTolerance;
+
     // BEGIN State information ------------------------------------------------
 
     /** Previous safety origin. */
@@ -189,7 +182,7 @@ class G4SafetyCalculator
     /** Memory of last safety origin & value. Used in ComputeStep() to ensure
         that origin of current Step is in the same volume as the point of the
         last relocation. */
-    G4double fPreviousSafety = 0.0; 
+    G4double fPreviousSafety = 0.0;
 
     /** Helpers/Utility classes - their state can change. */
     G4NormalNavigation fnormalNav;

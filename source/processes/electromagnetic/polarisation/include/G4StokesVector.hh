@@ -36,67 +36,64 @@
 //   - distinguish between boson or fermion state (different transformations)
 //   - provide unique definition of reference frame (cf. G4PolarizationHelper)
 
-#ifndef G4StokesVector_h
-#define G4StokesVector_h 1
+#ifndef G4STOKESVECTOR_HH
+#define G4STOKESVECTOR_HH
 
-#include "G4ThreeVector.hh"
 #include "G4RotationMatrix.hh"
+#include "G4ThreeVector.hh"
 
 class G4StokesVector : public G4ThreeVector
 {
- public:
-  G4StokesVector();
-  explicit G4StokesVector(const G4ThreeVector& v);
-  ~G4StokesVector() = default;
+  public:
 
-  G4bool IsZero() const;
+    G4StokesVector();
+    explicit G4StokesVector(const G4ThreeVector& v);
+    ~G4StokesVector() = default;
 
-  inline G4double p1() const { return x(); }
-  inline G4double p2() const { return y(); }
-  inline G4double p3() const { return z(); }
+    G4bool IsZero() const;
 
-  inline G4double Transverse() const { return perp(); }
+    inline G4double p1() const { return x(); }
+    inline G4double p2() const { return y(); }
+    inline G4double p3() const { return z(); }
 
-  inline G4ThreeVector PolSqr() const
-  {
-    return G4ThreeVector(x() * x(), y() * y(), z() * z());
-  }
-  inline G4ThreeVector PolSqrt() const
-  {
-    return G4ThreeVector(std::sqrt(x()), std::sqrt(y()), std::sqrt(z()));
-  }
-  G4ThreeVector PolError(const G4StokesVector& sum2, long n);
+    inline G4double Transverse() const { return perp(); }
 
-  // Ratio of 3-vectors.
-  G4ThreeVector PolDiv(const G4StokesVector&);
+    inline G4ThreeVector PolSqr() const { return G4ThreeVector(x() * x(), y() * y(), z() * z()); }
+    inline G4ThreeVector PolSqrt() const
+    {
+      return G4ThreeVector(std::sqrt(x()), std::sqrt(y()), std::sqrt(z()));
+    }
+    G4ThreeVector PolError(const G4StokesVector& sum2, long n);
 
-  inline void SetPhoton() { fIsPhoton = true; }
+    // Ratio of 3-vectors.
+    G4ThreeVector PolDiv(const G4StokesVector&);
 
-  void RotateAz(G4ThreeVector nInteractionFrame,
-                G4ThreeVector particleDirection);
-  void InvRotateAz(G4ThreeVector nInteractionFrame,
-                   G4ThreeVector particleDirection);
-  void RotateAz(G4double cosphi, G4double sinphi);
-  G4double GetBeta();
+    inline void SetPhoton() { fIsPhoton = true; }
 
-  void DiceUniform();
-  void DiceP1();
-  void DiceP2();
-  void DiceP3();
+    void RotateAz(G4ThreeVector nInteractionFrame, G4ThreeVector particleDirection);
+    void InvRotateAz(G4ThreeVector nInteractionFrame, G4ThreeVector particleDirection);
+    void RotateAz(G4double cosphi, G4double sinphi);
+    G4double GetBeta();
 
-  void FlipP3();
+    void DiceUniform();
+    void DiceP1();
+    void DiceP2();
+    void DiceP3();
 
-  // standard vectors:
-  static const G4StokesVector ZERO;
-  static const G4StokesVector P1;
-  static const G4StokesVector P2;
-  static const G4StokesVector P3;
-  static const G4StokesVector M1;
-  static const G4StokesVector M2;
-  static const G4StokesVector M3;
+    void FlipP3();
 
- private:
-  G4bool fIsPhoton;
+    // standard vectors:
+    static const G4StokesVector ZERO;
+    static const G4StokesVector P1;
+    static const G4StokesVector P2;
+    static const G4StokesVector P3;
+    static const G4StokesVector M1;
+    static const G4StokesVector M2;
+    static const G4StokesVector M3;
+
+  private:
+
+    G4bool fIsPhoton;
 };
 
 #endif

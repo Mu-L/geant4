@@ -40,11 +40,10 @@
 
 #include "G4ParallelWorldPhysics.hh"
 
+#include "G4ParallelWorldProcess.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ProcessManager.hh"
-
 #include "G4TransportationManager.hh"
-#include "G4ParallelWorldProcess.hh"
 
 // factory
 #include "G4PhysicsConstructorFactory.hh"
@@ -54,41 +53,48 @@ G4_DECLARE_PHYSCONSTR_FACTORY(G4ParallelWorldPhysics);
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4ParallelWorldPhysics::G4ParallelWorldPhysics(const G4String& name, G4bool layeredMass)
-   :  G4VPhysicsConstructor(name), fLayeredMass(layeredMass)
-{;}
+  : G4VPhysicsConstructor(name), fLayeredMass(layeredMass)
+{
+  ;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4ParallelWorldPhysics::~G4ParallelWorldPhysics()
-{;}
+{
+  ;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void G4ParallelWorldPhysics::ConstructParticle()
-{;}
+{
+  ;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void G4ParallelWorldPhysics::ConstructProcess()
 {
   // Make sure the parallel world registered
-  G4TransportationManager::GetTransportationManager()
-   ->GetParallelWorld(namePhysics);
+  G4TransportationManager::GetTransportationManager()->GetParallelWorld(namePhysics);
 
   // Add parallel world process
-  G4ParallelWorldProcess* theParallelWorldProcess
-      = new G4ParallelWorldProcess(namePhysics);
+  G4ParallelWorldProcess* theParallelWorldProcess = new G4ParallelWorldProcess(namePhysics);
   theParallelWorldProcess->SetParallelWorld(namePhysics);
   theParallelWorldProcess->SetLayeredMaterialFlag(fLayeredMass);
 
-  auto myParticleIterator=GetParticleIterator();
+  auto myParticleIterator = GetParticleIterator();
   myParticleIterator->reset();
-  while( (*myParticleIterator)() ){
+  while ((*myParticleIterator)())
+  {
     G4ParticleDefinition* particle = myParticleIterator->value();
     G4ProcessManager* pmanager = particle->GetProcessManager();
     pmanager->AddProcess(theParallelWorldProcess);
-    if(theParallelWorldProcess->IsAtRestRequired(particle))
-    {pmanager->SetProcessOrdering(theParallelWorldProcess, idxAtRest, 9900);}
+    if (theParallelWorldProcess->IsAtRestRequired(particle))
+    {
+      pmanager->SetProcessOrdering(theParallelWorldProcess, idxAtRest, 9900);
+    }
     pmanager->SetProcessOrderingToSecond(theParallelWorldProcess, idxAlongStep);
     pmanager->SetProcessOrdering(theParallelWorldProcess, idxPostStep, 9900);
   }

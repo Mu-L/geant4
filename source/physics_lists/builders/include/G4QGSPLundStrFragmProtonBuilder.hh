@@ -33,43 +33,42 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4QGSPLundStrFragmProtonBuilder_h
-#define G4QGSPLundStrFragmProtonBuilder_h 
+#ifndef G4QGSPLUNDSTRFRAGMPROTONBUILDER_HH
+#define G4QGSPLUNDSTRFRAGMPROTONBUILDER_HH
 
-#include "globals.hh"
-
+#include "G4ExcitedStringDecay.hh"
+#include "G4GeneratorPrecompoundInterface.hh"
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
-#include "G4VProtonBuilder.hh"
-
-#include "G4TheoFSGenerator.hh"
-#include "G4GeneratorPrecompoundInterface.hh"
+#include "G4LundStringFragmentation.hh"
 #include "G4QGSModel.hh"
 #include "G4QGSParticipants.hh"
-#include "G4LundStringFragmentation.hh"
-#include "G4ExcitedStringDecay.hh"
 #include "G4QuasiElasticChannel.hh"
+#include "G4TheoFSGenerator.hh"
+#include "G4VProtonBuilder.hh"
+#include "globals.hh"
 
 class G4QGSPLundStrFragmProtonBuilder : public G4VProtonBuilder
 {
-  public: 
-  
+  public:
+
     // ctor & dtor
-    G4QGSPLundStrFragmProtonBuilder( G4bool quasiElastic=false ); 
+    G4QGSPLundStrFragmProtonBuilder(G4bool quasiElastic = false);
     virtual ~G4QGSPLundStrFragmProtonBuilder();
 
-  public: 
-    virtual void Build(G4HadronElasticProcess *) final override {}
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
+  public:
 
-    using G4VProtonBuilder::Build; //Prevent compiler warning
+    virtual void Build(G4HadronElasticProcess*) final override {}
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
+
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+
+    using G4VProtonBuilder::Build;  // Prevent compiler warning
+
   private:
 
-    G4TheoFSGenerator*               theModel;
-    G4double                         theMin;
+    G4TheoFSGenerator* theModel;
+    G4double theMin;
 };
 
 #endif
-

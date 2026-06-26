@@ -25,15 +25,15 @@
 //
 //
 //
-// 
+//
 
 #include "G4Square.hh"
 
 #include "G4VisAttributes.hh"
 
-G4Square::~G4Square () = default;
+G4Square::~G4Square() = default;
 
-std::ostream& operator<< (std::ostream& os, const G4Square& square)
+std::ostream& operator<<(std::ostream& os, const G4Square& square)
 {
   os << "G4Square: " << (const G4VMarker&)square;
   return os;

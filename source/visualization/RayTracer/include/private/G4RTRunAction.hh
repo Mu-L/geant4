@@ -31,11 +31,11 @@
 //
 
 //////////////////////
-//G4RTRunAction
+// G4RTRunAction
 /////////////////////
 
-#ifndef G4RTRunAction_h
-#define G4RTRunAction_h 1
+#ifndef G4RTRUNACTION_HH
+#define G4RTRUNACTION_HH
 
 #include "G4UserRunAction.hh"
 #include "globals.hh"
@@ -43,6 +43,7 @@
 class G4RTRunAction : public G4UserRunAction
 {
   public:
+
     G4RTRunAction();
     virtual ~G4RTRunAction();
 

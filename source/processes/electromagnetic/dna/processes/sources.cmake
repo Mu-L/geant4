@@ -54,7 +54,6 @@ geant4_add_module(G4emdna-processes
 
 geant4_module_link_libraries(G4emdna-processes
   PUBLIC
-    G4baryons
     G4emdna-man
     G4emdna-models
     G4emdna-molman
@@ -62,6 +61,7 @@ geant4_module_link_libraries(G4emdna-processes
     G4emutils
     G4leptons
   PRIVATE
+    G4baryons
     G4emdna-moltypes
     G4globman
     G4heprandom

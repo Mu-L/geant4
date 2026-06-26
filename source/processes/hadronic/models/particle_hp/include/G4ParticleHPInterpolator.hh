@@ -29,8 +29,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPInterpolator_h
-#define G4ParticleHPInterpolator_h 1
+#ifndef G4PARTICLEHPINTERPOLATOR_HH
+#define G4PARTICLEHPINTERPOLATOR_HH
 
 #include "G4Exp.hh"
 #include "G4HadronicException.hh"
@@ -43,6 +43,7 @@
 class G4ParticleHPInterpolator
 {
   public:
+
     G4ParticleHPInterpolator() = default;
     ~G4ParticleHPInterpolator() = default;
 
@@ -68,6 +69,7 @@ class G4ParticleHPInterpolator
                                     const G4double x2, const G4double y1, const G4double y2);
 
   private:
+
     inline G4double Histogram(G4double x, G4double x1, G4double x2, G4double y1, G4double y2) const;
     inline G4double LinearLinear(G4double x, G4double x1, G4double x2, G4double y1,
                                  G4double y2) const;
@@ -87,7 +89,8 @@ inline G4double G4ParticleHPInterpolator::Interpolate(G4InterpolationScheme aSch
   G4double result(0);
   G4int theScheme = aScheme;
   theScheme = theScheme % CSTART_;
-  switch (theScheme) {
+  switch (theScheme)
+  {
     case 1:
       // 080809
       // result = Histogram(x, x1, x2, y1, y2);
@@ -124,7 +127,8 @@ inline G4double G4ParticleHPInterpolator::Interpolate2(G4InterpolationScheme aSc
   G4double result(0);
   G4int theScheme = aScheme;
   theScheme = theScheme % CSTART_;
-  switch (theScheme) {
+  switch (theScheme)
+  {
     case 1:
       result = Histogram(x, x1, x2, y1, y2);
       break;
@@ -192,7 +196,8 @@ inline G4double G4ParticleHPInterpolator::LogarithmicLinear(G4double x, G4double
   G4double result;
   if (y1 == 0 || y2 == 0)
     result = 0;
-  else {
+  else
+  {
     result = LinearLinear(x, x1, x2, G4Log(y1), G4Log(y2));
     result = G4Exp(result);
   }
@@ -209,7 +214,8 @@ inline G4double G4ParticleHPInterpolator::LogarithmicLogarithmic(G4double x, G4d
   G4double result;
   if (y1 == 0 || y2 == 0)
     result = 0;
-  else {
+  else
+  {
     result = LinearLinear(G4Log(x), G4Log(x1), G4Log(x2), G4Log(y1), G4Log(y2));
     result = G4Exp(result);
   }

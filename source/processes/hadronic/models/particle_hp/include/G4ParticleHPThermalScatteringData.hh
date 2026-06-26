@@ -39,8 +39,8 @@
 // Author: T. Koi (SLAC/SCCS), November-2006 - First implementation.
 //         P. Arce (CIEMAT), June-2014 - Conversion neutron_hp to particle_hp
 // ---------------------------------------------------------------------
-#ifndef G4ParticleHPThermalScatteringData_h
-#define G4ParticleHPThermalScatteringData_h 1
+#ifndef G4PARTICLEHPTHERMALSCATTERINGDATA_HH
+#define G4PARTICLEHPTHERMALSCATTERINGDATA_HH
 
 #include "G4DynamicParticle.hh"
 #include "G4Element.hh"

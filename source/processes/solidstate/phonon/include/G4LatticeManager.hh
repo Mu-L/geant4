@@ -31,10 +31,11 @@
 // 20131115  Drop lattice counters, not used anywhere
 // 20141008  Change to global singleton; must be shared across worker threads
 
-#ifndef G4LatticeManager_h
-#define G4LatticeManager_h 1
+#ifndef G4LATTICEMANAGER_HH
+#define G4LATTICEMANAGER_HH
 
 #include "G4ThreeVector.hh"
+
 #include <map>
 #include <set>
 
@@ -43,63 +44,67 @@ class G4LatticePhysical;
 class G4Material;
 class G4VPhysicalVolume;
 
+class G4LatticeManager
+{
+  private:
 
-class G4LatticeManager {
-private:
-  static G4LatticeManager* fLM;		// Global, shared singleton
+    static G4LatticeManager* fLM;  // Global, shared singleton
 
-public:
-  static G4LatticeManager* GetLatticeManager(); 
+  public:
 
-  void SetVerboseLevel(G4int vb) { verboseLevel = vb; }
+    static G4LatticeManager* GetLatticeManager();
 
-  void Reset();		// Remove and delete all registered lattices
+    void SetVerboseLevel(G4int vb) { verboseLevel = vb; }
 
-  // Users may register physical or logical lattices with volumes
-  G4bool RegisterLattice(G4VPhysicalVolume*, G4LatticePhysical*);
-  G4bool RegisterLattice(G4VPhysicalVolume*, G4LatticeLogical*);
+    void Reset();  // Remove and delete all registered lattices
 
-  // Logical lattices are associated with materials
-  G4bool RegisterLattice(G4Material*, G4LatticeLogical*);
+    // Users may register physical or logical lattices with volumes
+    G4bool RegisterLattice(G4VPhysicalVolume*, G4LatticePhysical*);
+    G4bool RegisterLattice(G4VPhysicalVolume*, G4LatticeLogical*);
 
-  // Logical lattices may be read from <latDir>/config.txt data file
-  G4LatticeLogical* LoadLattice(G4Material*, const G4String& latDir);
-  G4LatticeLogical* GetLattice(G4Material*) const;
-  G4bool HasLattice(G4Material*) const;
+    // Logical lattices are associated with materials
+    G4bool RegisterLattice(G4Material*, G4LatticeLogical*);
 
-  // Combine loading and registration (Material extracted from volume)
-  G4LatticePhysical* LoadLattice(G4VPhysicalVolume*, const G4String& latDir);
+    // Logical lattices may be read from <latDir>/config.txt data file
+    G4LatticeLogical* LoadLattice(G4Material*, const G4String& latDir);
+    G4LatticeLogical* GetLattice(G4Material*) const;
+    G4bool HasLattice(G4Material*) const;
 
-  // NOTE:  Passing Vol==0 will return the default lattice
-  G4LatticePhysical* GetLattice(G4VPhysicalVolume*) const;
-  G4bool HasLattice(G4VPhysicalVolume*) const;
+    // Combine loading and registration (Material extracted from volume)
+    G4LatticePhysical* LoadLattice(G4VPhysicalVolume*, const G4String& latDir);
 
-  G4double MapKtoV(G4VPhysicalVolume*, G4int, const G4ThreeVector &) const;
+    // NOTE:  Passing Vol==0 will return the default lattice
+    G4LatticePhysical* GetLattice(G4VPhysicalVolume*) const;
+    G4bool HasLattice(G4VPhysicalVolume*) const;
 
-  G4ThreeVector MapKtoVDir(G4VPhysicalVolume*, G4int,
-			   const G4ThreeVector&) const;
+    G4double MapKtoV(G4VPhysicalVolume*, G4int, const G4ThreeVector&) const;
 
-protected:
-  void Clear();		// Remove entries from lookup tables w/o deletion
+    G4ThreeVector MapKtoVDir(G4VPhysicalVolume*, G4int, const G4ThreeVector&) const;
 
-protected:
-  G4int verboseLevel;		// Allow users to enable diagnostic messages
+  protected:
 
-  typedef std::map<G4Material*, G4LatticeLogical*> LatticeMatMap;
-  typedef std::set<G4LatticeLogical*> LatticeLogReg;
+    void Clear();  // Remove entries from lookup tables w/o deletion
 
-  LatticeLogReg fLLattices;	// Registry of unique lattice pointers
-  LatticeMatMap fLLatticeList;
+  protected:
 
-  typedef std::map<G4VPhysicalVolume*, G4LatticePhysical*> LatticeVolMap;
-  typedef std::set<G4LatticePhysical*> LatticePhyReg;
+    G4int verboseLevel;  // Allow users to enable diagnostic messages
 
-  LatticePhyReg fPLattices;	// Registry of unique lattice pointers
-  LatticeVolMap fPLatticeList; 
+    typedef std::map<G4Material*, G4LatticeLogical*> LatticeMatMap;
+    typedef std::set<G4LatticeLogical*> LatticeLogReg;
 
-private:
-  G4LatticeManager();
-  virtual ~G4LatticeManager();
+    LatticeLogReg fLLattices;  // Registry of unique lattice pointers
+    LatticeMatMap fLLatticeList;
+
+    typedef std::map<G4VPhysicalVolume*, G4LatticePhysical*> LatticeVolMap;
+    typedef std::set<G4LatticePhysical*> LatticePhyReg;
+
+    LatticePhyReg fPLattices;  // Registry of unique lattice pointers
+    LatticeVolMap fPLatticeList;
+
+  private:
+
+    G4LatticeManager();
+    virtual ~G4LatticeManager();
 };
 
 #endif

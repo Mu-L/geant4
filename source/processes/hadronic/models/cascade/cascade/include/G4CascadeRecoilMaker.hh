@@ -44,90 +44,91 @@
 // 20110722  M. Kelsey -- For IntraNucleiCascader, take G4CollOut as argument
 // 20130620  Address Coverity complaint about missing copy actions
 
-#include <cmath>
-#include <vector>
-#include <CLHEP/Units/SystemOfUnits.h>
-
+#include "G4CollisionOutput.hh"
+#include "G4Fragment.hh"
+#include "G4InuclNuclei.hh"
+#include "G4LorentzVector.hh"
 #include "G4VCascadeCollider.hh"
 #include "globals.hh"
-#include "G4CollisionOutput.hh"
-#include "G4InuclNuclei.hh"
-#include "G4Fragment.hh"
-#include "G4LorentzVector.hh"
+
+#include <CLHEP/Units/SystemOfUnits.h>
+
+#include <cmath>
+#include <vector>
 
 class G4CascadParticle;
 class G4CascadeCheckBalance;
 class G4InuclElementaryParticle;
 class G4InuclParticle;
 
+class G4CascadeRecoilMaker : public G4VCascadeCollider
+{
+  public:
 
-class G4CascadeRecoilMaker : public G4VCascadeCollider {
-public:
-  explicit G4CascadeRecoilMaker(G4double tolerance=0.001*CLHEP::MeV);
-  virtual ~G4CascadeRecoilMaker();
+    explicit G4CascadeRecoilMaker(G4double tolerance = 0.001 * CLHEP::MeV);
+    virtual ~G4CascadeRecoilMaker();
 
-  // Standard Collider interface (non-const output "buffer")
-  void collide(G4InuclParticle* bullet, G4InuclParticle* target,
-	       G4CollisionOutput& output);
+    // Standard Collider interface (non-const output "buffer")
+    void collide(G4InuclParticle* bullet, G4InuclParticle* target, G4CollisionOutput& output);
 
-  // This is for use with G4IntraNucleiCascader
-  void collide(G4InuclParticle* bullet, G4InuclParticle* target,
-	       G4CollisionOutput& output,
-	       const std::vector<G4CascadParticle>& cparticles);
+    // This is for use with G4IntraNucleiCascader
+    void collide(G4InuclParticle* bullet, G4InuclParticle* target, G4CollisionOutput& output,
+                 const std::vector<G4CascadParticle>& cparticles);
 
-  // Modifiable parameters
-  void setTolerance(G4double tolerance) { excTolerance = tolerance; }
+    // Modifiable parameters
+    void setTolerance(G4double tolerance) { excTolerance = tolerance; }
 
-  void setRecoilExcitation(G4double Eexc) { excitationEnergy = Eexc; }
+    void setRecoilExcitation(G4double Eexc) { excitationEnergy = Eexc; }
 
-  // Build nucleus from current parameters, if physically reasonable
-  G4InuclNuclei* makeRecoilNuclei(G4InuclParticle::Model model=G4InuclParticle::DefaultModel);
-  G4Fragment* makeRecoilFragment();	// For use with PreCompound
+    // Build nucleus from current parameters, if physically reasonable
+    G4InuclNuclei* makeRecoilNuclei(G4InuclParticle::Model model = G4InuclParticle::DefaultModel);
+    G4Fragment* makeRecoilFragment();  // For use with PreCompound
 
-  // Attach exciton configuration for use by "nucleus makers"
-  void addExcitonConfiguration(const G4ExitonConfiguration exciton) {
-    theExcitons = exciton;
-  }
+    // Attach exciton configuration for use by "nucleus makers"
+    void addExcitonConfiguration(const G4ExitonConfiguration exciton) { theExcitons = exciton; }
 
-  // Access nuclear configuration parameters
-  G4int getRecoilA() const { return recoilA; }
-  G4int getRecoilZ() const { return recoilZ; }
-  G4double getRecoilExcitation() const { return excitationEnergy; }
-  const G4LorentzVector& getRecoilMomentum() const { return recoilMomentum; }
+    // Access nuclear configuration parameters
+    G4int getRecoilA() const { return recoilA; }
+    G4int getRecoilZ() const { return recoilZ; }
+    G4double getRecoilExcitation() const { return excitationEnergy; }
+    const G4LorentzVector& getRecoilMomentum() const { return recoilMomentum; }
 
-  // Data quality checks
-  G4bool goodFragment() const;		// Verify A, Z both meaningful
-  G4bool goodRecoil() const;		// And sensible four-vector
-  G4bool wholeEvent() const;		// Zero recoil
-  G4bool unphysicalRecoil() const { return !wholeEvent() && !goodRecoil(); }
+    // Data quality checks
+    G4bool goodFragment() const;  // Verify A, Z both meaningful
+    G4bool goodRecoil() const;  // And sensible four-vector
+    G4bool wholeEvent() const;  // Zero recoil
+    G4bool unphysicalRecoil() const { return !wholeEvent() && !goodRecoil(); }
 
-  G4bool goodNucleus() const;	// Ensure that fragment is energetically okay
+    G4bool goodNucleus() const;  // Ensure that fragment is energetically okay
 
-protected:
-  void fillRecoil();		// Set recoil parameters from CheckBalance
-  G4double deltaM() const;	// Mass difference from current parameters
+  protected:
 
-private:
-  G4CascadeCheckBalance* balance;	// Used to do kinematics calculations
+    void fillRecoil();  // Set recoil parameters from CheckBalance
+    G4double deltaM() const;  // Mass difference from current parameters
 
-  G4double excTolerance;	// Minimum excitation energy, rounds to zero
+  private:
 
-  G4double inputEkin;			// Available initial kinetic energy
+    G4CascadeCheckBalance* balance;  // Used to do kinematics calculations
 
-  G4int recoilA;			// Nuclear parameters of recoil
-  G4int recoilZ;
-  G4LorentzVector recoilMomentum;
-  G4double excitationEnergy;
+    G4double excTolerance;  // Minimum excitation energy, rounds to zero
 
-  G4ExitonConfiguration theExcitons;	// Used by G4InuclNuclei and G4Fragment
+    G4double inputEkin;  // Available initial kinetic energy
 
-  G4InuclNuclei theRecoilNuclei;	// Reusable buffers for recoil
-  G4Fragment theRecoilFragment;
+    G4int recoilA;  // Nuclear parameters of recoil
+    G4int recoilZ;
+    G4LorentzVector recoilMomentum;
+    G4double excitationEnergy;
 
-private:
-  // Copying of modules is forbidden
-  G4CascadeRecoilMaker(const G4CascadeRecoilMaker&);
-  G4CascadeRecoilMaker& operator=(const G4CascadeRecoilMaker&);
+    G4ExitonConfiguration theExcitons;  // Used by G4InuclNuclei and G4Fragment
+
+    G4InuclNuclei theRecoilNuclei;  // Reusable buffers for recoil
+    G4Fragment theRecoilFragment;
+
+  private:
+
+    // Copying of modules is forbidden
+    G4CascadeRecoilMaker(const G4CascadeRecoilMaker&);
+    G4CascadeRecoilMaker& operator=(const G4CascadeRecoilMaker&);
 };
 
-#endif	/* G4CASCADE_RECOIL_MAKER_HH */
+#endif /* G4CASCADE_RECOIL_MAKER_HH */

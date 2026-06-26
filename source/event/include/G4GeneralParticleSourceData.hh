@@ -48,7 +48,7 @@
 // Author: Andrew Green, 20.03.2014
 // --------------------------------------------------------------------
 #ifndef G4GPS_DATA_HH
-#define G4GPS_DATA_HH 1
+#define G4GPS_DATA_HH
 
 #include "G4SingleParticleSource.hh"
 #include "G4Threading.hh"
@@ -58,65 +58,54 @@ class G4GeneralParticleSourceData
   public:
 
     static G4GeneralParticleSourceData* Instance();
-    
+
     void AddASource(G4double intensity);
     void DeleteASource(G4int idx);
     void ClearSources();
-    
-    void IntensityNormalise();
-    
-    inline G4bool Normalised() const
-      { return normalised; }
-    
-    G4SingleParticleSource* GetCurrentSource(G4int idx);
-    inline G4SingleParticleSource* GetCurrentSource() const
-      { return currentSource; }
 
-    inline G4int GetSourceVectorSize() const
-      { return G4int(sourceVector.size()); }
-    inline G4int GetIntensityVectorSize() const
-      { return G4int(sourceIntensity.size()); }
-    inline G4double GetIntensity(G4int idx) const
-      { return sourceIntensity.at(idx); }
-    inline G4double GetSourceProbability(G4int idx) const
-      { return sourceProbability.at(idx); }
-    
+    void IntensityNormalise();
+
+    inline G4bool Normalised() const { return normalised; }
+
+    G4SingleParticleSource* GetCurrentSource(G4int idx);
+    inline G4SingleParticleSource* GetCurrentSource() const { return currentSource; }
+
+    inline G4int GetSourceVectorSize() const { return G4int(sourceVector.size()); }
+    inline G4int GetIntensityVectorSize() const { return G4int(sourceIntensity.size()); }
+    inline G4double GetIntensity(G4int idx) const { return sourceIntensity.at(idx); }
+    inline G4double GetSourceProbability(G4int idx) const { return sourceProbability.at(idx); }
+
     void SetCurrentSourceIntensity(G4double);
 
-    inline void SetFlatSampling(G4bool fSamp)
-      { flat_sampling = fSamp; }
-    inline G4bool GetFlatSampling() const
-      { return flat_sampling; }
+    inline void SetFlatSampling(G4bool fSamp) { flat_sampling = fSamp; }
+    inline G4bool GetFlatSampling() const { return flat_sampling; }
 
-    inline void SetMultipleVertex(G4bool flag)
-      { multiple_vertex = flag; }
-    inline G4bool GetMultipleVertex() const
-      { return multiple_vertex; }
+    inline void SetMultipleVertex(G4bool flag) { multiple_vertex = flag; }
+    inline G4bool GetMultipleVertex() const { return multiple_vertex; }
 
-    inline G4int GetCurrentSourceIdx() const
-      { return currentSourceIdx; }
+    inline G4int GetCurrentSourceIdx() const { return currentSourceIdx; }
 
     void SetVerbosityAllSources(G4int vl);
 
     void Lock();
     void Unlock();
-      //Lock/Unlock shared mutex
-    
+    // Lock/Unlock shared mutex
+
   private:
 
     G4GeneralParticleSourceData();
-   ~G4GeneralParticleSourceData(); 
-    
+    ~G4GeneralParticleSourceData();
+
   private:
-    
+
     std::vector<G4SingleParticleSource*> sourceVector;
-    std::vector <G4double> sourceIntensity;
-    std::vector <G4double> sourceProbability;
-    
+    std::vector<G4double> sourceIntensity;
+    std::vector<G4double> sourceProbability;
+
     G4bool multiple_vertex = false;
     G4bool flat_sampling = false;
     G4bool normalised = false;
-    
+
     G4int currentSourceIdx = 0;
     G4SingleParticleSource* currentSource = nullptr;
     G4Mutex mutex;

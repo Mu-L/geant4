@@ -30,42 +30,41 @@
 // This class perform transmission term of volume plasmon excitation,
 // based on Quinn Model, see Phys. Rev. vol 126, number 4 (1962)
 
-#ifndef G4DNAPlasmonExcitation_h
-#define G4DNAPlasmonExcitation_h 1
-
-#include "G4VEmProcess.hh"
+#ifndef G4DNAPLASMONEXCITATION_HH
+#define G4DNAPLASMONEXCITATION_HH
 
 #include "G4DNAQuinnPlasmonExcitationModel.hh"
+#include "G4VEmProcess.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class G4DNAPlasmonExcitation : public G4VEmProcess
 {
-public: 
+  public:
 
-  G4DNAPlasmonExcitation(const G4String& processName ="DNAPlasmonExcitation",
-           G4ProcessType type = fElectromagnetic);
+    G4DNAPlasmonExcitation(const G4String& processName = "DNAPlasmonExcitation",
+                           G4ProcessType type = fElectromagnetic);
 
-  ~G4DNAPlasmonExcitation() override;
+    ~G4DNAPlasmonExcitation() override;
 
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
-  
-  virtual void PrintInfo();
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
 
-  //static G4int ProcessSubType()
-  //{
-  //  return 56;
-  //}
+    virtual void PrintInfo();
 
-protected:
+    // static G4int ProcessSubType()
+    //{
+    //   return 56;
+    // }
 
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+  protected:
 
-private:
-     
-  G4bool       isInitialised{false};
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool isInitialised{false};
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-  
+
 #endif

@@ -25,18 +25,18 @@
 //
 //
 #include "G4DNATransformElectronModel.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4ParticleChangeForGamma.hh"
-#include "G4NistManager.hh"
+
 #include "G4DNAChemistryManager.hh"
 #include "G4DNAMolecularMaterial.hh"
+#include "G4NistManager.hh"
+#include "G4ParticleChangeForGamma.hh"
+#include "G4SystemOfUnits.hh"
 
-//#define MODEL_VERBOSE
+// #define MODEL_VERBOSE
 
-G4DNATransformElectronModel::
-G4DNATransformElectronModel(const G4ParticleDefinition*,
-                            const G4String& nam) :
-    G4VEmModel(nam)
+G4DNATransformElectronModel::G4DNATransformElectronModel(const G4ParticleDefinition*,
+                                                         const G4String& nam)
+  : G4VEmModel(nam)
 {
   fVerboseLevel = 0;
   SetLowEnergyLimit(0. * eV);
@@ -48,20 +48,17 @@ G4DNATransformElectronModel(const G4ParticleDefinition*,
 }
 
 //______________________________________________________________________
-G4DNATransformElectronModel::~G4DNATransformElectronModel()
-= default;
+G4DNATransformElectronModel::~G4DNATransformElectronModel() = default;
 
 //______________________________________________________________________
-void G4DNATransformElectronModel::
-Initialise(const G4ParticleDefinition* particleDefinition,
-           const G4DataVector&)
+void G4DNATransformElectronModel::Initialise(const G4ParticleDefinition* particleDefinition,
+                                             const G4DataVector&)
 {
 #ifdef MODEL_VERBOSE
-  if (fVerboseLevel)
-    G4cout << "Calling G4DNATransformElectronModel::Initialise()" << G4endl;
+  if (fVerboseLevel) G4cout << "Calling G4DNATransformElectronModel::Initialise()" << G4endl;
 #endif
-  
-  if(particleDefinition->GetParticleName() != "e-")
+
+  if (particleDefinition->GetParticleName() != "e-")
   {
     G4ExceptionDescription errMsg;
     errMsg << "Attempting to calculate cross section for wrong particle";
@@ -71,10 +68,10 @@ Initialise(const G4ParticleDefinition* particleDefinition,
   }
 
   // Initialize water density pointer
-  fpWaterDensity = G4DNAMolecularMaterial::Instance()->
-      GetNumMolPerVolTableFor(G4Material::GetMaterial("G4_WATER"));
+  fpWaterDensity = G4DNAMolecularMaterial::Instance()->GetNumMolPerVolTableFor(
+    G4Material::GetMaterial("G4_WATER"));
 
-  if(!fIsInitialised)
+  if (!fIsInitialised)
   {
     fIsInitialised = true;
     fParticleChangeForGamma = GetParticleChangeForGamma();
@@ -82,26 +79,23 @@ Initialise(const G4ParticleDefinition* particleDefinition,
 }
 
 //______________________________________________________________________
-G4double
-G4DNATransformElectronModel::CrossSectionPerVolume(const G4Material* material,
-                                                   const G4ParticleDefinition*,
-                                                   G4double ekin,
-                                                   G4double,
-                                                   G4double)
+G4double G4DNATransformElectronModel::CrossSectionPerVolume(const G4Material* material,
+                                                            const G4ParticleDefinition*,
+                                                            G4double ekin, G4double, G4double)
 {
 #if MODEL_VERBOSE
   if (fVerboseLevel > 1)
     G4cout << "Calling CrossSectionPerVolume() of G4DNATransformElectronModel" << G4endl;
 #endif
-  
-  if(ekin - fEpsilon > HighEnergyLimit())
+
+  if (ekin - fEpsilon > HighEnergyLimit())
   {
     return 0.0;
   }
 
   G4double waterDensity = (*fpWaterDensity)[material->GetIndex()];
 
-  if(waterDensity != 0.0)
+  if (waterDensity != 0.0)
   {
     return DBL_MAX;
   }
@@ -110,12 +104,10 @@ G4DNATransformElectronModel::CrossSectionPerVolume(const G4Material* material,
 }
 
 //______________________________________________________________________
-void
-G4DNATransformElectronModel::SampleSecondaries(std::vector<G4DynamicParticle*>* /*fvect*/,
-                                             const G4MaterialCutsCouple*,
-                                             const G4DynamicParticle* particle,
-                                             G4double,
-                                             G4double)
+void G4DNATransformElectronModel::SampleSecondaries(std::vector<G4DynamicParticle*>* /*fvect*/,
+                                                    const G4MaterialCutsCouple*,
+                                                    const G4DynamicParticle* particle, G4double,
+                                                    G4double)
 {
 #if MODEL_VERBOSE
   if (fVerboseLevel)
@@ -124,11 +116,11 @@ G4DNATransformElectronModel::SampleSecondaries(std::vector<G4DynamicParticle*>* 
 
   G4double k = particle->GetKineticEnergy();
 
-//    if (k - fEpsilon <= HighEnergyLimit()) // should be already checked
-//    {
-  const G4Track * track = fParticleChangeForGamma->GetCurrentTrack();
+  //    if (k - fEpsilon <= HighEnergyLimit()) // should be already checked
+  //    {
+  const G4Track* track = fParticleChangeForGamma->GetCurrentTrack();
   G4DNAChemistryManager::Instance()->CreateSolvatedElectron(track);
   fParticleChangeForGamma->ProposeTrackStatus(fStopAndKill);
   fParticleChangeForGamma->ProposeLocalEnergyDeposit(k);
-//    }
+  //    }
 }

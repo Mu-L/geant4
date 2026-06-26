@@ -36,82 +36,81 @@
 //
 
 ///////////////////
-//G4RayTrajectory.hh
+// G4RayTrajectory.hh
 ///////////////////
 
-#ifndef G4RayTrajectory_h
-#define G4RayTrajectory_h 1
+#ifndef G4RAYTRAJECTORY_HH
+#define G4RAYTRAJECTORY_HH
 
 class G4Step;
 
-#include "G4VTrajectory.hh"
 #include "G4Allocator.hh"
-#include <stdlib.h>
-#include <vector>
-#include "globals.hh"
-#include "G4Track.hh"
 #include "G4RayTrajectoryPoint.hh"
+#include "G4Track.hh"
+#include "G4VTrajectory.hh"
+#include "globals.hh"
 
+#include <stdlib.h>
+
+#include <vector>
 
 class G4RayTrajectory : public G4VTrajectory
 {
-   public:
+  public:
 
-   G4RayTrajectory(); 
-   G4RayTrajectory(G4RayTrajectory & right);
-   virtual ~G4RayTrajectory();
+    G4RayTrajectory();
+    G4RayTrajectory(G4RayTrajectory& right);
+    virtual ~G4RayTrajectory();
 
-   private:
+  private:
 
-   G4RayTrajectory& operator= (const G4RayTrajectory&);
+    G4RayTrajectory& operator=(const G4RayTrajectory&);
 
-   public:
- 
-   inline void* operator new(std::size_t);
-   inline void  operator delete(void*);
-  //   inline int operator == (const G4RayTrajectory& right){return (this==&right);}
+  public:
 
-   virtual void AppendStep(const G4Step*);
-   virtual void ShowTrajectory(std::ostream&) const;
-   virtual void DrawTrajectory() const {;}
-   virtual G4int GetPointEntries() const {return (G4int)positionRecord->size();}
-   virtual G4VTrajectoryPoint* GetPoint(G4int i) const 
-   { return (*positionRecord)[i]; }
-   G4RayTrajectoryPoint* GetPointC(G4int i) const 
-   { return (*positionRecord)[i]; }
-   virtual void MergeTrajectory(G4VTrajectory* secondTrajectory);  
+    inline void* operator new(std::size_t);
+    inline void operator delete(void*);
+    //   inline int operator == (const G4RayTrajectory& right){return (this==&right);}
 
-// Get/Set functions to satisfy pure virtual functions of base class.
-   inline G4int GetTrackID() const { return 0; }
-   inline G4int GetParentID() const { return 0; }
-   inline G4String GetParticleName() const { return ""; }
-   inline G4double GetCharge() const { return 0.; }
-   inline G4int GetPDGEncoding() const { return 0; }
-   inline G4ThreeVector GetInitialMomentum() const { return G4ThreeVector(); }
+    virtual void AppendStep(const G4Step*);
+    virtual void ShowTrajectory(std::ostream&) const;
+    virtual void DrawTrajectory() const { ; }
+    virtual G4int GetPointEntries() const { return (G4int)positionRecord->size(); }
+    virtual G4VTrajectoryPoint* GetPoint(G4int i) const { return (*positionRecord)[i]; }
+    G4RayTrajectoryPoint* GetPointC(G4int i) const { return (*positionRecord)[i]; }
+    virtual void MergeTrajectory(G4VTrajectory* secondTrajectory);
 
-   private:
+    // Get/Set functions to satisfy pure virtual functions of base class.
+    inline G4int GetTrackID() const { return 0; }
+    inline G4int GetParentID() const { return 0; }
+    inline G4String GetParticleName() const { return ""; }
+    inline G4double GetCharge() const { return 0.; }
+    inline G4int GetPDGEncoding() const { return 0; }
+    inline G4ThreeVector GetInitialMomentum() const { return G4ThreeVector(); }
 
-   std::vector<G4RayTrajectoryPoint*>* positionRecord;
+  private:
+
+    std::vector<G4RayTrajectoryPoint*>* positionRecord;
 };
 
 #if defined G4RAYTRACER_ALLOC_EXPORT
-  extern G4DLLEXPORT G4Allocator<G4RayTrajectory>*& rayTrajectoryAllocator();
+extern G4DLLEXPORT G4Allocator<G4RayTrajectory>*& rayTrajectoryAllocator();
 #else
-  extern G4DLLIMPORT G4Allocator<G4RayTrajectory>*& rayTrajectoryAllocator();
+extern G4DLLIMPORT G4Allocator<G4RayTrajectory>*& rayTrajectoryAllocator();
 #endif
 
 inline void* G4RayTrajectory::operator new(std::size_t)
 {
-   if(!rayTrajectoryAllocator())
-   { rayTrajectoryAllocator() = new G4Allocator<G4RayTrajectory>; }
-   return (void*)rayTrajectoryAllocator()->MallocSingle();
+  if (!rayTrajectoryAllocator())
+  {
+    rayTrajectoryAllocator() = new G4Allocator<G4RayTrajectory>;
+  }
+  return (void*)rayTrajectoryAllocator()->MallocSingle();
 }
 
 inline void G4RayTrajectory::operator delete(void* aTrajectory)
 {
-   rayTrajectoryAllocator()->FreeSingle((G4RayTrajectory*)aTrajectory);
+  rayTrajectoryAllocator()->FreeSingle((G4RayTrajectory*)aTrajectory);
 }
 
-
 #endif
-

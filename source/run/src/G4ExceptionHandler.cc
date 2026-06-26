@@ -29,9 +29,9 @@
 // --------------------------------------------------------------------
 
 #include "G4ExceptionHandler.hh"
-#include "G4ExceptionHandlerMessenger.hh"
 
 #include "G4EventManager.hh"
+#include "G4ExceptionHandlerMessenger.hh"
 #include "G4Material.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4RunManager.hh"
@@ -41,8 +41,10 @@
 #include "G4StepPoint.hh"
 #include "G4SteppingManager.hh"
 #include "G4String.hh"
+#include "G4Threading.hh"
 #include "G4Track.hh"
 #include "G4TrackingManager.hh"
+#include "G4UIcommand.hh"
 #include "G4UnitsTable.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4VProcess.hh"
@@ -52,11 +54,17 @@
 
 // --------------------------------------------------------------------
 G4ExceptionHandler::G4ExceptionHandler()
-{ messenger = new G4ExceptionHandlerMessenger(this); }
+{
+  messenger = new G4ExceptionHandlerMessenger(this);
+}
 
 // --------------------------------------------------------------------
 G4ExceptionHandler::~G4ExceptionHandler()
-{ delete messenger; }
+{
+  oFileMap.clear();
+  if (writingToFile) delete allWarningFile;
+  delete messenger;
+}
 
 // --------------------------------------------------------------------
 G4bool G4ExceptionHandler::operator==(const G4ExceptionHandler& right) const
@@ -87,7 +95,8 @@ G4bool G4ExceptionHandler::Notify(const char* originOfException, const char* exc
           << "      issued by : " << originOfException << G4endl << description << G4endl;
   G4bool abortionForCoreDump = false;
   G4ApplicationState aps = G4StateManager::GetStateManager()->GetCurrentState();
-  switch (severity) {
+  switch (severity)
+  {
     case FatalException:
       G4cerr << es_banner << message.str() << "*** Fatal Exception *** core dump ***" << G4endl;
       DumpTrackInfo();
@@ -102,7 +111,8 @@ G4bool G4ExceptionHandler::Notify(const char* originOfException, const char* exc
       abortionForCoreDump = true;
       break;
     case RunMustBeAborted:
-      if (aps == G4State_GeomClosed || aps == G4State_EventProc) {
+      if (aps == G4State_GeomClosed || aps == G4State_EventProc)
+      {
         G4cerr << es_banner << message.str() << "*** Run Must Be Aborted ***" << G4endl;
         DumpTrackInfo();
         G4cerr << ee_banner << G4endl;
@@ -111,7 +121,8 @@ G4bool G4ExceptionHandler::Notify(const char* originOfException, const char* exc
       abortionForCoreDump = false;
       break;
     case EventMustBeAborted:
-      if (aps == G4State_EventProc) {
+      if (aps == G4State_EventProc)
+      {
         G4cerr << es_banner << message.str() << "*** Event Must Be Aborted ***" << G4endl;
         DumpTrackInfo();
         G4cerr << ee_banner << G4endl;
@@ -120,13 +131,22 @@ G4bool G4ExceptionHandler::Notify(const char* originOfException, const char* exc
       abortionForCoreDump = false;
       break;
     case JustWarning:
-      if(IfPrint(exceptionCode))
+      if (IfPrint(exceptionCode))
       {
+        if (allWarningFile == nullptr) allWarningFile = &G4cout;
         std::ostringstream wmessage;
         wmessage << "*** G4Exception : " << exceptionCode << G4endl
-                << "      issued by : " << originOfException << G4endl << description << G4endl;
-        G4cout << ws_banner << wmessage.str() << "*** This is just a warning message. ***" << we_banner
-               << G4endl;
+                 << "      issued by : " << originOfException << G4endl << description << G4endl;
+        if (auto ofl = oFileMap.find(exceptionCode); ofl != oFileMap.end())
+        {
+          *(ofl->second) << ws_banner << wmessage.str() << "*** This is just a warning message. ***"
+                         << we_banner << G4endl;
+        }
+        else
+        {
+          *allWarningFile << ws_banner << wmessage.str()
+                          << "*** This is just a warning message. ***" << we_banner << G4endl;
+        }
       }
       abortionForCoreDump = false;
       break;
@@ -142,82 +162,101 @@ void G4ExceptionHandler::DumpTrackInfo()
 {
   const G4Track* theTrack = nullptr;
   const G4Step* theStep = nullptr;
-  if (G4StateManager::GetStateManager()->GetCurrentState() == G4State_EventProc) {
+  if (G4StateManager::GetStateManager()->GetCurrentState() == G4State_EventProc)
+  {
     G4SteppingManager* steppingMgr =
       G4RunManagerKernel::GetRunManagerKernel()->GetTrackingManager()->GetSteppingManager();
     theTrack = steppingMgr->GetfTrack();
     theStep = steppingMgr->GetfStep();
   }
 
-  if (theTrack == nullptr) {
+  if (theTrack == nullptr)
+  {
     G4cerr << " **** Track information is not available at this moment" << G4endl;
   }
-  else {
+  else
+  {
     G4cerr << "G4Track (" << theTrack << ") - track ID = " << theTrack->GetTrackID()
            << ", parent ID = " << theTrack->GetParentID() << G4endl;
     G4cerr << " Particle type : " << theTrack->GetParticleDefinition()->GetParticleName();
-    if (theTrack->GetCreatorProcess() != nullptr) {
+    if (theTrack->GetCreatorProcess() != nullptr)
+    {
       G4cerr << " - creator process : " << theTrack->GetCreatorProcess()->GetProcessName()
              << ", creator model : " << theTrack->GetCreatorModelName() << G4endl;
     }
-    else {
+    else
+    {
       G4cerr << " - creator process : not available" << G4endl;
     }
     G4cerr << " Kinetic energy : " << G4BestUnit(theTrack->GetKineticEnergy(), "Energy")
            << " - Momentum direction : " << theTrack->GetMomentumDirection() << G4endl;
   }
 
-  if (theStep == nullptr) {
+  if (theStep == nullptr)
+  {
     G4cerr << " **** Step information is not available at this moment" << G4endl;
   }
-  else {
+  else
+  {
     G4cerr << " Step length : " << G4BestUnit(theStep->GetStepLength(), "Length")
            << " - total energy deposit : " << G4BestUnit(theStep->GetTotalEnergyDeposit(), "Energy")
            << G4endl;
     G4cerr << " Pre-step point : " << theStep->GetPreStepPoint()->GetPosition();
     G4cerr << " - Physical volume : ";
-    if (theStep->GetPreStepPoint()->GetPhysicalVolume() != nullptr) {
+    if (theStep->GetPreStepPoint()->GetPhysicalVolume() != nullptr)
+    {
       G4cerr << theStep->GetPreStepPoint()->GetPhysicalVolume()->GetName();
-      if (theStep->GetPreStepPoint()->GetMaterial() != nullptr) {
+      if (theStep->GetPreStepPoint()->GetMaterial() != nullptr)
+      {
         G4cerr << " (" << theStep->GetPreStepPoint()->GetMaterial()->GetName() << ")";
       }
-      else {
+      else
+      {
         G4cerr << " (material not available)";
       }
     }
-    else {
+    else
+    {
       G4cerr << "not available";
     }
     G4cerr << G4endl;
-    if (theStep->GetPreStepPoint()->GetProcessDefinedStep() != nullptr) {
+    if (theStep->GetPreStepPoint()->GetProcessDefinedStep() != nullptr)
+    {
       G4cerr << " - defined by : "
              << theStep->GetPreStepPoint()->GetProcessDefinedStep()->GetProcessName()
              << " - step status : " << theStep->GetPreStepPoint()->GetStepStatus() << G4endl;
     }
-    else {
+    else
+    {
       G4cerr << " - defined by : not available" << G4endl;
     }
     G4cerr << " Post-step point : " << theStep->GetPostStepPoint()->GetPosition();
     G4cerr << " - Physical volume : ";
-    if (theStep->GetPostStepPoint()->GetPhysicalVolume() != nullptr) {
+    if (theStep->GetPostStepPoint()->GetPhysicalVolume() != nullptr)
+    {
       G4cerr << theStep->GetPostStepPoint()->GetPhysicalVolume()->GetName();
-      if (theStep->GetPostStepPoint()->GetMaterial() != nullptr) {
+      if (theStep->GetPostStepPoint()->GetMaterial() != nullptr)
+      {
         G4cerr << " (" << theStep->GetPostStepPoint()->GetMaterial()->GetName() << ")";
       }
-      else {
+      else
+      {
         G4cerr << " (material not available)";
       }
     }
-    else {
+    else
+    {
       G4cerr << "not available";
     }
     G4cerr << G4endl;
-    if (theStep->GetPostStepPoint()->GetProcessDefinedStep() != nullptr) {
+    if (theStep->GetPostStepPoint()->GetProcessDefinedStep() != nullptr)
+    {
       G4cerr << " - defined by : "
              << theStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName()
              << " - step status : " << theStep->GetPostStepPoint()->GetStepStatus() << G4endl;
     }
-    else {
+    else
+    {
       G4cerr << " - defined by : not available" << G4endl;
     }
     G4cerr << " *** Note: Step information might not be properly updated." << G4endl;
@@ -232,36 +271,90 @@ G4bool G4ExceptionHandler::IfPrint(const char* errCode)
   static const G4String we_banner =
     "\n-------- WWWW -------- G4Exception-END --------- WWWW -------\n";
   auto ec = fWarnCount.find(errCode);
-  if(ec!=fWarnCount.end())
+  if (ec != fWarnCount.end())
   {
-    if(ec->second>0)
+    if (ec->second > 0)
     {
-      ec->second--; 
-      if(ec->second==0)
+      ec->second--;
+      if (ec->second == 0)
       {
         std::ostringstream wmessage;
         wmessage << "*** G4Exception " << errCode << " has reached the maximum number." << G4endl
                  << "This warning message won't be displayed any longer.";
-        G4cout << ws_banner << wmessage.str() << we_banner
-               << G4endl;
+        G4cout << ws_banner << wmessage.str() << we_banner << G4endl;
       }
     }
     else
-    { return false; }
+    {
+      return false;
+    }
   }
-  if(fTotalWarnCount>0)
+  if (fTotalWarnCount > 0)
   {
     fTotalWarnCount--;
-    if(fTotalWarnCount==0)
+    if (fTotalWarnCount == 0)
     {
       std::ostringstream wmessage;
       wmessage << "*** G4Exception warning messages reached the maximum number." << G4endl
                << "Warning messages won't be displayed any longer.";
-      G4cout << ws_banner << wmessage.str() << we_banner
-             << G4endl;
+      G4cout << ws_banner << wmessage.str() << we_banner << G4endl;
     }
     return true;
   }
   return false;
 }
 
+// --------------------------------------------------------------------
+void G4ExceptionHandler::SetAllWarningFile(const G4String& fNam)
+{
+  if (allWarningFile != nullptr && allWarningFile != &G4cout)
+  {
+    delete allWarningFile;
+  }
+  if (fNam == "**Screen**")
+  {
+    allWarningFile = &G4cout;
+    writingToFile = false;
+  }
+  else
+  {
+    G4String fileName = ModifyFileName(fNam);
+    allWarningFile = new std::ofstream(fileName);
+    writingToFile = true;
+  }
+}
+
+// --------------------------------------------------------------------
+void G4ExceptionHandler::SetWarningFile(const char* errCode, const G4String& fNam)
+{
+  if (fNam == "**Screen**")
+  {
+    oFileMap.erase(errCode);
+  }
+  else
+  {
+    G4String fileName = ModifyFileName(fNam);
+    oFileMap[errCode] = std::make_unique<std::ofstream>(fileName);
+  }
+}
+
+// --------------------------------------------------------------------
+G4String G4ExceptionHandler::ModifyFileName(const G4String& fNam)
+{
+  G4String fileName = fNam;
+  if (G4Threading::IsMultithreadedApplication() && G4Threading::IsWorkerThread())
+  {
+    std::size_t loc = fNam.find(".");
+    if (loc != std::string::npos)
+    {
+      fileName = fNam.substr(0, loc) + "_t";
+      fileName += G4UIcommand::ConvertToString(G4Threading::G4GetThreadId());
+      fileName += fNam.substr(loc + 1, fNam.length() - loc);
+    }
+    else
+    {
+      fileName = fNam + "_t" + G4UIcommand::ConvertToString(G4Threading::G4GetThreadId());
+    }
+  }
+  return fileName;
+}

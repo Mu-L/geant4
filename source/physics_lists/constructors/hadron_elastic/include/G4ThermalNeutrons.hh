@@ -36,26 +36,20 @@
 //
 // Addition of neutron thermal scattering on top of any PhysicsList
 
-#ifndef G4ThermalNeutrons_h
-#define G4ThermalNeutrons_h
+#ifndef G4THERMALNEUTRONS_HH
+#define G4THERMALNEUTRONS_HH
 
 #include "G4VHadronPhysics.hh"
 #include "globals.hh"
 
-class G4ThermalNeutrons : public G4VHadronPhysics {
+class G4ThermalNeutrons : public G4VHadronPhysics
+{
+  public:
 
-public:
-  explicit G4ThermalNeutrons(G4int ver=1);
-  virtual ~G4ThermalNeutrons();
+    explicit G4ThermalNeutrons(G4int ver = 1);
+    virtual ~G4ThermalNeutrons();
 
-  void ConstructProcess() override;
-
+    void ConstructProcess() override;
 };
 
 #endif
-
-
-
-
-
-

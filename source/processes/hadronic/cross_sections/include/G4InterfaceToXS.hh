@@ -34,8 +34,8 @@
 // Interface to G4PARTICLEXS cross sections for the de_excitation module
 //
 
-#ifndef G4InterfaceToXS_h
-#define G4InterfaceToXS_h 1
+#ifndef G4INTERFACETOXS_HH
+#define G4INTERFACETOXS_HH
 
 #include "globals.hh"
 
@@ -46,28 +46,28 @@ class G4ParticleDefinition;
 
 class G4InterfaceToXS
 {
-public:
+  public:
 
-  G4InterfaceToXS(const G4ParticleDefinition*, G4int index);
+    G4InterfaceToXS(const G4ParticleDefinition*, G4int index);
 
-  ~G4InterfaceToXS() = default;
+    ~G4InterfaceToXS() = default;
 
-  void Initialise();
-  
-  G4double GetElementCrossSection(const G4double ekin, const G4int Z); 
+    void Initialise();
 
-  G4double GetIsoCrossSection(const G4double ekin, const G4int Z, const G4int A); 
+    G4double GetElementCrossSection(const G4double ekin, const G4int Z);
 
-  G4InterfaceToXS(const G4InterfaceToXS& right) = delete;
-  const G4InterfaceToXS& operator = (const G4InterfaceToXS& right) = delete;
+    G4double GetIsoCrossSection(const G4double ekin, const G4int Z, const G4int A);
 
-private:
+    G4InterfaceToXS(const G4InterfaceToXS& right) = delete;
+    const G4InterfaceToXS& operator=(const G4InterfaceToXS& right) = delete;
 
-  G4int index;
-  const G4ParticleDefinition* fParticle;
-  G4GammaNuclearXS* fGammaNuclear{nullptr};
-  G4NeutronInelasticXS* fNeutronNuclear{nullptr};
-  G4ParticleInelasticXS* fParticleNuclear{nullptr};
+  private:
+
+    G4int index;
+    const G4ParticleDefinition* fParticle;
+    G4GammaNuclearXS* fGammaNuclear{nullptr};
+    G4NeutronInelasticXS* fNeutronNuclear{nullptr};
+    G4ParticleInelasticXS* fParticleNuclear{nullptr};
 };
 
 #endif

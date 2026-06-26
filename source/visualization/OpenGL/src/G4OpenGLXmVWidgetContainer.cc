@@ -25,12 +25,10 @@
 //
 //
 //
-//Base class for all Motif container widgets
+// Base class for all Motif container widgets
 
 #include "G4OpenGLXmVWidgetContainer.hh"
 
-G4OpenGLXmVWidgetContainer::G4OpenGLXmVWidgetContainer ()
-{}
+G4OpenGLXmVWidgetContainer::G4OpenGLXmVWidgetContainer() {}
 
-G4OpenGLXmVWidgetContainer::~G4OpenGLXmVWidgetContainer ()
-{}
+G4OpenGLXmVWidgetContainer::~G4OpenGLXmVWidgetContainer() {}

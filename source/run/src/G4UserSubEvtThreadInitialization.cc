@@ -25,6 +25,7 @@
 //
 
 #include "G4UserSubEvtThreadInitialization.hh"
+
 #include "G4WorkerSubEvtRunManager.hh"
 
 //============================================================================//

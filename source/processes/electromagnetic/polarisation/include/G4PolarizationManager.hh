@@ -32,15 +32,15 @@
 // Class Description:
 //   Provides polarization information for logical volumes
 
-#ifndef G4PolarizationManager_h
-#define G4PolarizationManager_h 1
+#ifndef G4POLARIZATIONMANAGER_HH
+#define G4POLARIZATIONMANAGER_HH
 
-#include "globals.hh"
 #include "G4StokesVector.hh"
 #include "G4ThreeVector.hh"
+#include "globals.hh"
 
-#include <vector>
 #include <map>
+#include <vector>
 
 class G4LogicalVolume;
 class G4PolarizationMessenger;
@@ -49,52 +49,51 @@ typedef std::map<G4LogicalVolume*, G4ThreeVector> PolarizationMap;
 
 class G4PolarizationManager
 {
- public:
-  ~G4PolarizationManager();
-  static G4PolarizationManager* GetInstance();
-  static void Dispose();
+  public:
 
-  void ListVolumes();
-  inline void Clean();
+    ~G4PolarizationManager();
+    static G4PolarizationManager* GetInstance();
+    static void Dispose();
 
-  void SetVolumePolarization(G4LogicalVolume* lVol, const G4ThreeVector& pol);
-  void SetVolumePolarization(const G4String& lVolName,
-                             const G4ThreeVector& pol);
+    void ListVolumes();
+    inline void Clean();
 
-  inline const G4StokesVector GetVolumePolarization(
-    G4LogicalVolume* lVol) const;
-  inline bool IsPolarized(G4LogicalVolume* lVol) const;
+    void SetVolumePolarization(G4LogicalVolume* lVol, const G4ThreeVector& pol);
+    void SetVolumePolarization(const G4String& lVolName, const G4ThreeVector& pol);
 
-  inline void SetVerbose(G4int val);
-  inline G4int GetVerbose() const;
+    inline const G4StokesVector GetVolumePolarization(G4LogicalVolume* lVol) const;
+    inline bool IsPolarized(G4LogicalVolume* lVol) const;
 
-  inline void SetActivated(G4bool val);
-  inline bool IsActivated() const;
+    inline void SetVerbose(G4int val);
+    inline G4int GetVerbose() const;
 
-  G4PolarizationManager& operator=(const G4PolarizationManager& right) = delete;
-  G4PolarizationManager(const G4PolarizationManager&)                  = delete;
+    inline void SetActivated(G4bool val);
+    inline bool IsActivated() const;
 
- private:
-  G4PolarizationManager();
-  static G4ThreadLocal G4PolarizationManager* fInstance;
+    G4PolarizationManager& operator=(const G4PolarizationManager& right) = delete;
+    G4PolarizationManager(const G4PolarizationManager&) = delete;
 
-  G4PolarizationMessenger* fMessenger;
+  private:
 
-  PolarizationMap fVolumePolarizations;
+    G4PolarizationManager();
+    static G4ThreadLocal G4PolarizationManager* fInstance;
 
-  G4int fVerboseLevel;
+    G4PolarizationMessenger* fMessenger;
 
-  G4bool fActivated;
+    PolarizationMap fVolumePolarizations;
+
+    G4int fVerboseLevel;
+
+    G4bool fActivated;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-inline const G4StokesVector G4PolarizationManager::GetVolumePolarization(
-  G4LogicalVolume* lVol) const
+inline const G4StokesVector
+G4PolarizationManager::GetVolumePolarization(G4LogicalVolume* lVol) const
 {
-  if(!fActivated)
-    return G4StokesVector::ZERO;
+  if (!fActivated) return G4StokesVector::ZERO;
   PolarizationMap::const_iterator cit = fVolumePolarizations.find(lVol);
-  if(cit != fVolumePolarizations.end())
+  if (cit != fVolumePolarizations.end())
   {
     const G4StokesVector vec = G4StokesVector(cit->second);
     return vec;
@@ -105,8 +104,7 @@ inline const G4StokesVector G4PolarizationManager::GetVolumePolarization(
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 inline bool G4PolarizationManager::IsPolarized(G4LogicalVolume* lVol) const
 {
-  if(!fActivated)
-    return false;
+  if (!fActivated) return false;
   PolarizationMap::const_iterator cit = fVolumePolarizations.find(lVol);
   return (cit != fVolumePolarizations.end());
 }
@@ -116,16 +114,25 @@ inline void G4PolarizationManager::SetVerbose(G4int val)
 {
   fVerboseLevel = val;
 }
-inline G4int G4PolarizationManager::GetVerbose() const { return fVerboseLevel; }
+inline G4int G4PolarizationManager::GetVerbose() const
+{
+  return fVerboseLevel;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 inline void G4PolarizationManager::SetActivated(G4bool val)
 {
   fActivated = val;
 }
-inline bool G4PolarizationManager::IsActivated() const { return fActivated; }
+inline bool G4PolarizationManager::IsActivated() const
+{
+  return fActivated;
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-inline void G4PolarizationManager::Clean() { fVolumePolarizations.clear(); }
+inline void G4PolarizationManager::Clean()
+{
+  fVolumePolarizations.clear();
+}
 
 #endif

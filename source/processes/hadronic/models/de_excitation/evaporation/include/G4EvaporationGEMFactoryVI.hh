@@ -28,26 +28,25 @@
 // by V. Ivanchenko (July 2016)
 //
 
-#ifndef G4EvaporationGEMFactoryVI_hh
-#define G4EvaporationGEMFactoryVI_hh 1
+#ifndef G4EVAPORATIONGEMFACTORYVI_HH
+#define G4EVAPORATIONGEMFACTORYVI_HH
 
 #include "G4VEvaporationFactory.hh"
 
 class G4EvaporationGEMFactoryVI : public G4VEvaporationFactory
 {
-public:
+  public:
 
-  explicit G4EvaporationGEMFactoryVI(G4VEvaporationChannel* ptotoEvaporation);
+    explicit G4EvaporationGEMFactoryVI(G4VEvaporationChannel* ptotoEvaporation);
 
-  ~G4EvaporationGEMFactoryVI() override = default;
+    ~G4EvaporationGEMFactoryVI() override = default;
 
-  std::vector<G4VEvaporationChannel*>* GetChannel() override;
+    std::vector<G4VEvaporationChannel*>* GetChannel() override;
 
-  G4EvaporationGEMFactoryVI(const G4EvaporationGEMFactoryVI & ) = delete;
-  const G4EvaporationGEMFactoryVI & operator=
-  (const G4EvaporationGEMFactoryVI & val) = delete;
-  G4bool operator==(const G4EvaporationGEMFactoryVI & val) const = delete;
-  G4bool operator!=(const G4EvaporationGEMFactoryVI & val) const = delete;
+    G4EvaporationGEMFactoryVI(const G4EvaporationGEMFactoryVI&) = delete;
+    const G4EvaporationGEMFactoryVI& operator=(const G4EvaporationGEMFactoryVI& val) = delete;
+    G4bool operator==(const G4EvaporationGEMFactoryVI& val) const = delete;
+    G4bool operator!=(const G4EvaporationGEMFactoryVI& val) const = delete;
 };
 
 #endif

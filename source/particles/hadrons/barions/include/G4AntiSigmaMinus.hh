@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4AntiSigmaMinus_h
-#define G4AntiSigmaMinus_h 1
+#ifndef G4ANTISIGMAMINUS_HH
+#define G4ANTISIGMAMINUS_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4AntiSigmaMinus : public G4ParticleDefinition
 {
   public:
+
     static G4AntiSigmaMinus* Definition();
     static G4AntiSigmaMinus* AntiSigmaMinusDefinition();
     static G4AntiSigmaMinus* AntiSigmaMinus();
 
   private:
+
     G4AntiSigmaMinus() {}
     ~G4AntiSigmaMinus() override = default;
 

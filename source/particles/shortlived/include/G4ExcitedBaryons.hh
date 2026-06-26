@@ -30,8 +30,8 @@
 //      Hisaya Kurashige, 27 June 1998
 // ----------------------------------------------------------------
 
-#ifndef G4ExcitedBaryons_h
-#define G4ExcitedBaryons_h 1
+#ifndef G4EXCITEDBARYONS_HH
+#define G4EXCITEDBARYONS_HH
 
 #include "G4VShortLivedParticle.hh"
 #include "globals.hh"
@@ -39,6 +39,7 @@
 class G4ExcitedBaryons : public G4VShortLivedParticle
 {
   public:
+
     // clang-format off
    G4ExcitedBaryons(
        const G4String&     aName,        G4double            mass,

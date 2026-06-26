@@ -27,19 +27,21 @@
 //
 //----------------------------------------------------------------------------
 
-#ifndef G4AntiDoubleHyperDoubleNeutron_h
-#define G4AntiDoubleHyperDoubleNeutron_h 1
+#ifndef G4ANTIDOUBLEHYPERDOUBLENEUTRON_HH
+#define G4ANTIDOUBLEHYPERDOUBLENEUTRON_HH
 
 #include "G4Ions.hh"
 
 class G4AntiDoubleHyperDoubleNeutron : public G4Ions
 {
   public:
+
     static G4AntiDoubleHyperDoubleNeutron* Definition();
     static G4AntiDoubleHyperDoubleNeutron* AntiDoubleHyperDoubleNeutronDefinition();
     static G4AntiDoubleHyperDoubleNeutron* AntiDoubleHyperDoubleNeutron();
 
   private:
+
     G4AntiDoubleHyperDoubleNeutron() {}
     ~G4AntiDoubleHyperDoubleNeutron() override = default;
 

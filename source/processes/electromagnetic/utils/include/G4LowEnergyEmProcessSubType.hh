@@ -37,8 +37,8 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4LowEnergyEmProcessSubType_h
-#define G4LowEnergyEmProcessSubType_h 1
+#ifndef G4LOWENERGYEMPROCESSSUBTYPE_HH
+#define G4LOWENERGYEMPROCESSSUBTYPE_HH
 
 enum G4LowEnergyEmProcessSubType
 {

@@ -33,32 +33,34 @@
 //
 // Author:         V.Lara
 //
-// Modified:  
-// 10.02.2009 J. M. Quesada fixed bug in level density of light fragments  
+// Modified:
+// 10.02.2009 J. M. Quesada fixed bug in level density of light fragments
 // 20.08.2010 V.Ivanchenko added G4Pow and G4PreCompoundParameters pointers
 //                         use int Z and A and cleanup
 //
 
 #include "G4PreCompoundIon.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4NuclearLevelData.hh"
-#include "G4DeexPrecoParameters.hh"
 
-G4PreCompoundIon::
-G4PreCompoundIon(const G4ParticleDefinition* part,
-		 G4VCoulombBarrier* aCoulombBarrier)
-  : G4PreCompoundFragment(part,aCoulombBarrier)
+#include "G4DeexPrecoParameters.hh"
+#include "G4NuclearLevelData.hh"
+#include "G4PhysicalConstants.hh"
+
+G4PreCompoundIon::G4PreCompoundIon(const G4ParticleDefinition* part,
+                                   G4VCoulombBarrier* aCoulombBarrier)
+  : G4PreCompoundFragment(part, aCoulombBarrier)
 {
   G4double r0 = theParameters->GetR0();
-  fact = 0.75*CLHEP::millibarn/(CLHEP::pi*r0*r0*r0);
+  fact = 0.75 * CLHEP::millibarn / (CLHEP::pi * r0 * r0 * r0);
 }
 
-G4double G4PreCompoundIon::
-ProbabilityDistributionFunction(G4double eKin, 
-				const G4Fragment& aFragment)
+G4double G4PreCompoundIon::ProbabilityDistributionFunction(G4double eKin,
+                                                           const G4Fragment& aFragment)
 {
   G4double efinal = eKin + theBindingEnergy;
-  if(efinal <= 0.0 ) { return 0.0; } 
+  if (efinal <= 0.0)
+  {
+    return 0.0;
+  }
 
   G4double U = aFragment.GetExcitationEnergy();
   G4int P = aFragment.GetNumberOfParticles();
@@ -66,28 +68,30 @@ ProbabilityDistributionFunction(G4double eKin,
   G4int A = GetA();
   G4int N = P + H;
 
-  static const G4double sixoverpi2 = 6.0/CLHEP::pi2;
-  G4double g0 = sixoverpi2*fNucData->GetLevelDensity(theFragZ, theFragA, U);
-  G4double g1 = sixoverpi2*fNucData->GetLevelDensity(theResZ, theResA, 0.0);
+  static const G4double sixoverpi2 = 6.0 / CLHEP::pi2;
+  G4double g0 = sixoverpi2 * fNucData->GetLevelDensity(theFragZ, theFragA, U);
+  G4double g1 = sixoverpi2 * fNucData->GetLevelDensity(theResZ, theResA, 0.0);
 
   G4double gj = g1;
 
-  G4double E0 = U ;
-  if (E0 <= 0.0) { return 0.0; }
+  G4double E0 = U;
+  if (E0 <= 0.0)
+  {
+    return 0.0;
+  }
 
-  G4double E1 = std::max(0.0,theMaxKinEnergy - eKin); 
+  G4double E1 = std::max(0.0, theMaxKinEnergy - eKin);
 
-  G4double Aj = A*(A+1)/(4.0*gj); 
-  G4double Ej = std::max(0.0,efinal - Aj); 
+  G4double Aj = A * (A + 1) / (4.0 * gj);
+  G4double Ej = std::max(0.0, efinal - Aj);
 
   G4double rj = GetRj(P, aFragment.GetNumberOfCharged());
   G4double xs = CrossSection(eKin);
-  
-  G4double pA = fact*eKin*xs*rj 
-    * CoalescenceFactor(theFragA) * FactorialFactor(N,P)
-    * std::sqrt(2.0/(theReducedMass*efinal)) 
-    * g4calc->powN(g1*E1/(g0*E0), N-A-1)
-    * g4calc->powN(gj*Ej/(g0*E0), A-1)*gj*g1/(g0*g0*E0*theResA); 
-   
+
+  G4double pA = fact * eKin * xs * rj * CoalescenceFactor(theFragA) * FactorialFactor(N, P)
+                * std::sqrt(2.0 / (theReducedMass * efinal))
+                * g4calc->powN(g1 * E1 / (g0 * E0), N - A - 1)
+                * g4calc->powN(gj * Ej / (g0 * E0), A - 1) * gj * g1 / (g0 * g0 * E0 * theResA);
+
   return pA;
 }

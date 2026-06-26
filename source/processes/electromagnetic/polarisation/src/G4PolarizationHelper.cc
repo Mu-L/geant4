@@ -38,8 +38,7 @@
 #include "G4StokesVector.hh"
 #include "Randomize.hh"
 
-G4ThreeVector G4PolarizationHelper::GetFrame(const G4ThreeVector& mom1,
-                                             const G4ThreeVector& mom2)
+G4ThreeVector G4PolarizationHelper::GetFrame(const G4ThreeVector& mom1, const G4ThreeVector& mom2)
 {
   G4ThreeVector normal = (mom1.cross(mom2)).unit();
   return normal;
@@ -47,7 +46,7 @@ G4ThreeVector G4PolarizationHelper::GetFrame(const G4ThreeVector& mom1,
 
 G4ThreeVector G4PolarizationHelper::GetParticleFrameY(const G4ThreeVector& uZ)
 {
-  if(uZ.x() == 0. && uZ.y() == 0.)
+  if (uZ.x() == 0. && uZ.y() == 0.)
   {
     return G4ThreeVector(0., 1., 0.);
   }
@@ -58,14 +57,13 @@ G4ThreeVector G4PolarizationHelper::GetParticleFrameY(const G4ThreeVector& uZ)
 
 G4ThreeVector G4PolarizationHelper::GetParticleFrameX(const G4ThreeVector& uZ)
 {
-  if(uZ.x() == 0. && uZ.y() == 0.)
+  if (uZ.x() == 0. && uZ.y() == 0.)
   {
-    if(uZ.z() >= 0.)
-      return G4ThreeVector(1., 0., 0.);
+    if (uZ.z() >= 0.) return G4ThreeVector(1., 0., 0.);
     return G4ThreeVector(-1., 0., 0.);
   }
 
-  G4double perp    = std::sqrt(sqr(uZ.x()) + sqr(uZ.y()));
+  G4double perp = std::sqrt(sqr(uZ.x()) + sqr(uZ.y()));
   G4double invPerp = uZ.z() / perp;
   return G4ThreeVector(uZ.x() * invPerp, uZ.y() * invPerp, -perp);
 }
@@ -73,23 +71,20 @@ G4ThreeVector G4PolarizationHelper::GetParticleFrameX(const G4ThreeVector& uZ)
 G4ThreeVector G4PolarizationHelper::GetRandomFrame(const G4ThreeVector& mom1)
 {
   G4double phi = 2. * pi * G4UniformRand();
-  G4ThreeVector normal =
-    std::cos(phi) * GetParticleFrameX(mom1) +
-    std::sin(phi) * G4PolarizationHelper::GetParticleFrameY(mom1);
+  G4ThreeVector normal = std::cos(phi) * GetParticleFrameX(mom1)
+                         + std::sin(phi) * G4PolarizationHelper::GetParticleFrameY(mom1);
   return normal;
 }
 
-G4ThreeVector G4PolarizationHelper::GetSpinInPRF(const G4ThreeVector& uZ,
-                                                 const G4ThreeVector& spin)
+G4ThreeVector G4PolarizationHelper::GetSpinInPRF(const G4ThreeVector& uZ, const G4ThreeVector& spin)
 {
-  if(uZ.x() == 0. && uZ.y() == 0.)
+  if (uZ.x() == 0. && uZ.y() == 0.)
   {
-    if(uZ.z() >= 0.)
-      return spin;
+    if (uZ.z() >= 0.) return spin;
     return G4ThreeVector(-spin.x(), spin.y(), -spin.z());
   }
 
-  G4double perp    = std::sqrt(sqr(uZ.x()) + sqr(uZ.y()));
+  G4double perp = std::sqrt(sqr(uZ.x()) + sqr(uZ.y()));
   G4double invPerp = 1. / perp;
 
   G4ThreeVector uX(uZ.x() * uZ.z() * invPerp, uZ.y() * uZ.z() * invPerp, -perp);
@@ -102,14 +97,12 @@ void G4PolarizationHelper::TestPolarizationTransformations()
 {
   G4double theta = 0.;
   G4cout << "========================================\n\n";
-  for(G4int i = 0; i <= 10; ++i)
+  for (G4int i = 0; i <= 10; ++i)
   {
-    theta               = pi * i / 10.;
+    theta = pi * i / 10.;
     G4ThreeVector zAxis = G4ThreeVector(std::sin(theta), 0., std::cos(theta));
-    if(i == 5)
-      zAxis = G4ThreeVector(1., 0., 0.);
-    if(i == 10)
-      zAxis = G4ThreeVector(0., 0., -1.);
+    if (i == 5) zAxis = G4ThreeVector(1., 0., 0.);
+    if (i == 10) zAxis = G4ThreeVector(0., 0., -1.);
     G4ThreeVector yAxis = GetParticleFrameY(zAxis);
 
     G4cout << zAxis << " " << zAxis.mag() << "\n";
@@ -120,14 +113,12 @@ void G4PolarizationHelper::TestPolarizationTransformations()
 
   G4cout << "========================================\n\n";
 
-  for(G4int i = 0; i <= 10; ++i)
+  for (G4int i = 0; i <= 10; ++i)
   {
-    theta               = pi * i / 10.;
+    theta = pi * i / 10.;
     G4ThreeVector zAxis = G4ThreeVector(0., std::sin(theta), std::cos(theta));
-    if(i == 5)
-      zAxis = G4ThreeVector(0., 1., 0.);
-    if(i == 10)
-      zAxis = G4ThreeVector(0., 0., -1.);
+    if (i == 5) zAxis = G4ThreeVector(0., 1., 0.);
+    if (i == 10) zAxis = G4ThreeVector(0., 0., -1.);
     G4ThreeVector yAxis = GetParticleFrameY(zAxis);
 
     G4cout << zAxis << " " << zAxis.mag() << "\n";

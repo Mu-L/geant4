@@ -93,109 +93,109 @@
 // Author: A.Dotti, 28 October 2013
 // --------------------------------------------------------------------
 #ifndef G4TLSSINGLETON_HH
-#define G4TLSSINGLETON_HH 1
+#define G4TLSSINGLETON_HH
 
 #include "G4AutoLock.hh"
 #include "G4Cache.hh"
 #include "G4Threading.hh"
 
+#include <functional>
 #include <list>
 #include <vector>
-#include <functional>
 
 // Forward declaration. See G4AutoDelete.hh
 //
 namespace G4AutoDelete
 {
-  template <class T>
-  void Register(T*);
+template<class T>
+void Register(T*);
 }
 
-template <class T>
+template<class T>
 class G4ThreadLocalSingleton;
 
 // this explicit specialization holds all the callbacks
 // to explicitly invoke the auto-deletion
-template <>
+template<>
 class G4ThreadLocalSingleton<void>
 {
- private:
-  using fvector_t = std::vector<std::function<void()>>;
+  private:
 
-  template <class T>
-  friend class G4ThreadLocalSingleton;
+    using fvector_t = std::vector<std::function<void()>>;
 
-  static fvector_t& GetCallbacks();
-  static G4Mutex& GetMutex();
+    template<class T>
+    friend class G4ThreadLocalSingleton;
 
- public:
-  static void Clear();
+    static fvector_t& GetCallbacks();
+    static G4Mutex& GetMutex();
 
-  template <typename FuncT>
-  static typename fvector_t::iterator Insert(FuncT&& _func)
-  {
-    G4AutoLock _lk{ GetMutex() };
-    return GetCallbacks().emplace(GetCallbacks().end(),
-                                  std::forward<FuncT>(_func));
-  }
+  public:
+
+    static void Clear();
+
+    template<typename FuncT>
+    static typename fvector_t::iterator Insert(FuncT&& _func)
+    {
+      G4AutoLock _lk{GetMutex()};
+      return GetCallbacks().emplace(GetCallbacks().end(), std::forward<FuncT>(_func));
+    }
 };
 
-template <class T>
+template<class T>
 class G4ThreadLocalSingleton : private G4Cache<T*>
 {
-  friend void G4AutoDelete::Register<T>(T*);
+    friend void G4AutoDelete::Register<T>(T*);
 
- public:
-  G4ThreadLocalSingleton();
-  // Creates thread-local singleton manager
+  public:
 
-  ~G4ThreadLocalSingleton() override;
+    G4ThreadLocalSingleton();
+    // Creates thread-local singleton manager
 
-  G4ThreadLocalSingleton(const G4ThreadLocalSingleton&) = delete;
-  G4ThreadLocalSingleton(G4ThreadLocalSingleton&&)      = default;
+    ~G4ThreadLocalSingleton() override;
 
-  G4ThreadLocalSingleton& operator=(const G4ThreadLocalSingleton&) = delete;
-  G4ThreadLocalSingleton& operator=(G4ThreadLocalSingleton&&) = default;
+    G4ThreadLocalSingleton(const G4ThreadLocalSingleton&) = delete;
+    G4ThreadLocalSingleton(G4ThreadLocalSingleton&&) = default;
 
-  T* Instance() const;
-  // Returns a pointer to a thread-private instance of T
+    G4ThreadLocalSingleton& operator=(const G4ThreadLocalSingleton&) = delete;
+    G4ThreadLocalSingleton& operator=(G4ThreadLocalSingleton&&) = default;
 
- private:
-  void Register(T* i) const;
+    T* Instance() const;
+    // Returns a pointer to a thread-private instance of T
 
-  void Clear();
+  private:
 
-  mutable std::list<T*> instances;
-  mutable G4Mutex listm;
+    void Register(T* i) const;
+
+    void Clear();
+
+    mutable std::list<T*> instances;
+    mutable G4Mutex listm;
 };
 
 //=============================================================
 // Inline methods implementation
 //=============================================================
 
-template <class T>
-G4ThreadLocalSingleton<T>::G4ThreadLocalSingleton()
-  : G4Cache<T*>()
+template<class T>
+G4ThreadLocalSingleton<T>::G4ThreadLocalSingleton() : G4Cache<T*>()
 {
   G4MUTEXINIT(listm);
   G4Cache<T*>::Put(nullptr);
-  G4ThreadLocalSingleton<void>::Insert([&]() {
-    this->Clear();
-  });
+  G4ThreadLocalSingleton<void>::Insert([&]() { this->Clear(); });
 }
 
-template <class T>
+template<class T>
 G4ThreadLocalSingleton<T>::~G4ThreadLocalSingleton()
 {
   Clear();
   G4MUTEXDESTROY(listm);
 }
 
-template <class T>
+template<class T>
 T* G4ThreadLocalSingleton<T>::Instance() const
 {
   T* instance = G4Cache<T*>::Get();
-  if(instance == static_cast<T*>(0))
+  if (instance == static_cast<T*>(0))
   {
     instance = new T;
     G4Cache<T*>::Put(instance);
@@ -204,20 +204,19 @@ T* G4ThreadLocalSingleton<T>::Instance() const
   return instance;
 }
 
-template <class T>
+template<class T>
 void G4ThreadLocalSingleton<T>::Register(T* i) const
 {
   G4AutoLock l(&listm);
   instances.push_back(i);
 }
 
-template <class T>
+template<class T>
 void G4ThreadLocalSingleton<T>::Clear()
 {
-  if(instances.empty())
-    return;
+  if (instances.empty()) return;
   G4AutoLock l(&listm);
-  while(!instances.empty())
+  while (!instances.empty())
   {
     T* thisinst = instances.front();
     instances.pop_front();

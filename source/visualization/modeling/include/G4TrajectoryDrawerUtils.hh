@@ -23,15 +23,15 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// 
+//
 // Jane Tinslay, John Allison, Joseph Perl November 2005
 //
 // Class Description
 // Simple trajectory model drawing utility functions
 // Class Description - End:
 
-#ifndef G4TRAJECTORYDRAWERUTILS
-#define G4TRAJECTORYDRAWERUTILS
+#ifndef G4TRAJECTORYDRAWERUTILS_HH
+#define G4TRAJECTORYDRAWERUTILS_HH
 
 #include "globals.hh"
 
@@ -41,14 +41,15 @@ class G4Polymarker;
 class G4VisTrajContext;
 class G4VTrajectory;
 
-namespace G4TrajectoryDrawerUtils {
+namespace G4TrajectoryDrawerUtils
+{
 
-  void GetPoints(const G4VTrajectory& traj, G4Polyline& trajectoryLine,
-		 G4Polymarker& auxiliaryPoints, G4Polymarker& stepPoints);
+void GetPoints(const G4VTrajectory& traj, G4Polyline& trajectoryLine, G4Polymarker& auxiliaryPoints,
+               G4Polymarker& stepPoints);
 
-  // Draw trajectory line and points using G4VisTrajContext object information
-  void DrawLineAndPoints(const G4VTrajectory& traj, const G4VisTrajContext&);
+// Draw trajectory line and points using G4VisTrajContext object information
+void DrawLineAndPoints(const G4VTrajectory& traj, const G4VisTrajContext&);
 
-}
+}  // namespace G4TrajectoryDrawerUtils
 
 #endif

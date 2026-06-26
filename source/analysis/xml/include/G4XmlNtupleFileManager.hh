@@ -28,8 +28,8 @@
 //
 // Author: Ivana Hrivnacova, 15/09/2020 (ivana@ipno.in2p3.fr)
 
-#ifndef G4XmlNtupleFileManager_h
-#define G4XmlNtupleFileManager_h 1
+#ifndef G4XMLNTUPLEFILEMANAGER_HH
+#define G4XMLNTUPLEFILEMANAGER_HH
 
 #include "G4VNtupleFileManager.hh"
 #include "globals.hh"
@@ -45,6 +45,7 @@ class G4XmlNtupleManager;
 class G4XmlNtupleFileManager : public G4VNtupleFileManager
 {
   public:
+
     explicit G4XmlNtupleFileManager(const G4AnalysisManagerState& state);
     G4XmlNtupleFileManager() = delete;
     ~G4XmlNtupleFileManager() override = default;
@@ -62,24 +63,25 @@ class G4XmlNtupleFileManager : public G4VNtupleFileManager
     std::shared_ptr<G4XmlNtupleManager> GetNtupleManager() const;
 
   private:
+
     // Static data members
-    static constexpr std::string_view fkClass { "G4XmlNtupleFileManager" };
+    static constexpr std::string_view fkClass{"G4XmlNtupleFileManager"};
 
     // Data members
-    std::shared_ptr<G4XmlFileManager>  fFileManager { nullptr };
-    std::shared_ptr<G4XmlNtupleManager>  fNtupleManager { nullptr };
+    std::shared_ptr<G4XmlFileManager> fFileManager{nullptr};
+    std::shared_ptr<G4XmlNtupleManager> fNtupleManager{nullptr};
 };
 
 // inline functions
 
-inline void G4XmlNtupleFileManager::SetFileManager(
-  std::shared_ptr<G4XmlFileManager> fileManager)
+inline void G4XmlNtupleFileManager::SetFileManager(std::shared_ptr<G4XmlFileManager> fileManager)
 {
   fFileManager = std::move(fileManager);
 }
 
 inline std::shared_ptr<G4XmlNtupleManager> G4XmlNtupleFileManager::GetNtupleManager() const
-{ return fNtupleManager; }
+{
+  return fNtupleManager;
+}
 
 #endif
-

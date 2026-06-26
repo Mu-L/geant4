@@ -429,12 +429,12 @@
   HB_yield = (Double_t)total_HB / dose / Nbp;
   HS_yield = (Double_t)total_HS / dose / Nbp;
 
-  SD_EB_yield  = total_EB  / dose / Nbp * sqrt(pow(SD_EB  /total_EB  ,2)+pow(SD_dose/dose,2));
-  SD_ES_yield  = total_ES  / dose / Nbp * sqrt(pow(SD_ES  /total_ES  ,2)+pow(SD_dose/dose,2));
-  SD_OHB_yield = total_OHB / dose / Nbp * sqrt(pow(SD_OHB /total_OHB ,2)+pow(SD_dose/dose,2));
-  SD_OHS_yield = total_OHS / dose / Nbp * sqrt(pow(SD_OHS /total_OHS ,2)+pow(SD_dose/dose,2));
-  SD_HB_yield  = total_HB  / dose / Nbp * sqrt(pow(SD_HB  /total_HB  ,2)+pow(SD_dose/dose,2));
-  SD_HS_yield  = total_HS  / dose / Nbp * sqrt(pow(SD_HS  /total_HS  ,2)+pow(SD_dose/dose,2));
+  if(0<total_EB )SD_EB_yield  = total_EB  / dose / Nbp * sqrt(pow(SD_EB  /total_EB  ,2)+pow(SD_dose/dose,2))/EB_yield ;
+  if(0<total_ES )SD_ES_yield  = total_ES  / dose / Nbp * sqrt(pow(SD_ES  /total_ES  ,2)+pow(SD_dose/dose,2))/ES_yield ;
+  if(0<total_OHB)SD_OHB_yield = total_OHB / dose / Nbp * sqrt(pow(SD_OHB /total_OHB ,2)+pow(SD_dose/dose,2))/OHB_yield;
+  if(0<total_OHS)SD_OHS_yield = total_OHS / dose / Nbp * sqrt(pow(SD_OHS /total_OHS ,2)+pow(SD_dose/dose,2))/OHS_yield;
+  if(0<total_HB )SD_HB_yield  = total_HB  / dose / Nbp * sqrt(pow(SD_HB  /total_HB  ,2)+pow(SD_dose/dose,2))/HB_yield ;
+  if(0<total_HS )SD_HS_yield  = total_HS  / dose / Nbp * sqrt(pow(SD_HS  /total_HS  ,2)+pow(SD_dose/dose,2))/HS_yield ;
   //Previous method
   //SD_EB_yield = SD_EB / dose / Nbp;
   //SD_ES_yield = SD_ES / dose / Nbp;
@@ -451,12 +451,12 @@
   DSBp_yield = (Double_t)norm * total_DSBp / dose / Nbp;
   DSBpp_yield = (Double_t)norm * total_DSBpp / dose / Nbp;
 
-  SD_SSB_yield   = norm * total_SSB   / dose / Nbp * sqrt(pow(SD_SSB   /total_SSB   ,2)+pow(SD_dose/dose,2));
-  SD_SSBp_yield  = norm * total_SSBp  / dose / Nbp * sqrt(pow(SD_SSBp  /total_SSBp  ,2)+pow(SD_dose/dose,2));
-  SD_SSB2p_yield = norm * total_SSB2p / dose / Nbp * sqrt(pow(SD_SSB2p /total_SSB2p ,2)+pow(SD_dose/dose,2));
-  SD_DSB_yield   = norm * total_DSB   / dose / Nbp * sqrt(pow(SD_DSB   /total_DSB   ,2)+pow(SD_dose/dose,2));
-  SD_DSBp_yield  = norm * total_DSBp  / dose / Nbp * sqrt(pow(SD_DSBp  /total_DSBp  ,2)+pow(SD_dose/dose,2));
-  SD_DSBpp_yield = norm * total_DSBpp / dose / Nbp * sqrt(pow(SD_DSBpp /total_DSBpp ,2)+pow(SD_dose/dose,2));
+  if(0<total_SSB  )SD_SSB_yield   = norm * total_SSB   / dose / Nbp * sqrt(pow(SD_SSB   /total_SSB   ,2)+pow(SD_dose/dose,2))/SSB_yield  ;
+  if(0<total_SSBp )SD_SSBp_yield  = norm * total_SSBp  / dose / Nbp * sqrt(pow(SD_SSBp  /total_SSBp  ,2)+pow(SD_dose/dose,2))/SSBp_yield ;
+  if(0<total_SSB2p)SD_SSB2p_yield = norm * total_SSB2p / dose / Nbp * sqrt(pow(SD_SSB2p /total_SSB2p ,2)+pow(SD_dose/dose,2))/SSB2p_yield;
+  if(0<total_DSB  )SD_DSB_yield   = norm * total_DSB   / dose / Nbp * sqrt(pow(SD_DSB   /total_DSB   ,2)+pow(SD_dose/dose,2))/DSB_yield  ;
+  if(0<total_DSBp )SD_DSBp_yield  = norm * total_DSBp  / dose / Nbp * sqrt(pow(SD_DSBp  /total_DSBp  ,2)+pow(SD_dose/dose,2))/DSBp_yield ;
+  if(0<total_DSBpp)SD_DSBpp_yield = norm * total_DSBpp / dose / Nbp * sqrt(pow(SD_DSBpp /total_DSBpp ,2)+pow(SD_dose/dose,2))/DSBpp_yield;
   //Previous method
   //SD_SSB_yield = norm * SD_SSB / dose / Nbp;
   //SD_SSBp_yield = norm * SD_SSBp / dose / Nbp;
@@ -476,15 +476,15 @@
   DSBm_yield = (Double_t)norm * total_DSBm / dose / Nbp;
   DSBh_yield = (Double_t)norm * total_DSBh / dose / Nbp;
 
-  SD_sSSB_yield = norm * total_sSSB/ dose / Nbp* sqrt(pow(SD_sSSB /total_sSSB,2)+pow(SD_dose/dose,2));
-  SD_SSBi_yield = norm * total_SSBi/ dose / Nbp* sqrt(pow(SD_SSBi /total_SSBi,2)+pow(SD_dose/dose,2));
-  SD_SSBd_yield = norm * total_SSBd/ dose / Nbp* sqrt(pow(SD_SSBd /total_SSBd,2)+pow(SD_dose/dose,2));
-  SD_SSBm_yield = norm * total_SSBm/ dose / Nbp* sqrt(pow(SD_SSBm /total_SSBm,2)+pow(SD_dose/dose,2));
-  SD_sDSB_yield = norm * total_sDSB/ dose / Nbp* sqrt(pow(SD_sDSB /total_sDSB,2)+pow(SD_dose/dose,2));
-  SD_DSBi_yield = norm * total_DSBi/ dose / Nbp* sqrt(pow(SD_DSBi /total_DSBi,2)+pow(SD_dose/dose,2));
-  SD_DSBd_yield = norm * total_DSBd/ dose / Nbp* sqrt(pow(SD_DSBd /total_DSBd,2)+pow(SD_dose/dose,2));
-  SD_DSBm_yield = norm * total_DSBm/ dose / Nbp* sqrt(pow(SD_DSBm /total_DSBm,2)+pow(SD_dose/dose,2));
-  SD_DSBh_yield = norm * total_DSBh/ dose / Nbp* sqrt(pow(SD_DSBh /total_DSBh,2)+pow(SD_dose/dose,2));
+  if(0<total_sSSB)SD_sSSB_yield = norm * total_sSSB/ dose / Nbp* sqrt(pow(SD_sSSB /total_sSSB,2)+pow(SD_dose/dose,2))/sSSB_yield;
+  if(0<total_SSBi)SD_SSBi_yield = norm * total_SSBi/ dose / Nbp* sqrt(pow(SD_SSBi /total_SSBi,2)+pow(SD_dose/dose,2))/SSBi_yield;
+  if(0<total_SSBd)SD_SSBd_yield = norm * total_SSBd/ dose / Nbp* sqrt(pow(SD_SSBd /total_SSBd,2)+pow(SD_dose/dose,2))/SSBd_yield;
+  if(0<total_SSBm)SD_SSBm_yield = norm * total_SSBm/ dose / Nbp* sqrt(pow(SD_SSBm /total_SSBm,2)+pow(SD_dose/dose,2))/SSBm_yield;
+  if(0<total_sDSB)SD_sDSB_yield = norm * total_sDSB/ dose / Nbp* sqrt(pow(SD_sDSB /total_sDSB,2)+pow(SD_dose/dose,2))/sDSB_yield;
+  if(0<total_DSBi)SD_DSBi_yield = norm * total_DSBi/ dose / Nbp* sqrt(pow(SD_DSBi /total_DSBi,2)+pow(SD_dose/dose,2))/DSBi_yield;
+  if(0<total_DSBd)SD_DSBd_yield = norm * total_DSBd/ dose / Nbp* sqrt(pow(SD_DSBd /total_DSBd,2)+pow(SD_dose/dose,2))/DSBd_yield;
+  if(0<total_DSBm)SD_DSBm_yield = norm * total_DSBm/ dose / Nbp* sqrt(pow(SD_DSBm /total_DSBm,2)+pow(SD_dose/dose,2))/DSBm_yield;
+  if(0<total_DSBh)SD_DSBh_yield = norm * total_DSBh/ dose / Nbp* sqrt(pow(SD_DSBh /total_DSBh,2)+pow(SD_dose/dose,2))/DSBh_yield;
   //Previous method
   //SD_sSSB_yield = norm * SD_sSSB / dose / Nbp;
   //SD_SSBi_yield = norm * SD_SSBi / dose / Nbp;

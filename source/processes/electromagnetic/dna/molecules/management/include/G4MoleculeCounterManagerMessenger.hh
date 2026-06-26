@@ -27,7 +27,7 @@
 // Author: Christian Velten (2025)
 
 #ifndef G4MOLECULECOUNTERMANAGERMESSENGER_HH
-#define G4MOLECULECOUNTERMANAGERMESSENGER_HH 1
+#define G4MOLECULECOUNTERMANAGERMESSENGER_HH
 
 #include "G4UIcmdWithABool.hh"
 #include "G4UIcmdWithAnInteger.hh"
@@ -41,14 +41,17 @@ class G4MoleculeCounterManager;
 class G4MoleculeCounterManagerMessenger : public G4UImessenger
 {
   public:
+
     explicit G4MoleculeCounterManagerMessenger(G4MoleculeCounterManager*);
     ~G4MoleculeCounterManagerMessenger() override = default;
     void SetNewValue(G4UIcommand*, G4String) override;
 
   private:
+
     void InitializeCommands();
 
   private:
+
     G4MoleculeCounterManager* fpManager{nullptr};
     std::unique_ptr<G4UIdirectory> fpManagerDir;
     std::unique_ptr<G4UIcmdWithABool> fpActiveCmd;

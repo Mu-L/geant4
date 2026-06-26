@@ -44,18 +44,16 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include "G4hBremsstrahlung.hh"
+
 #include "G4hBremsstrahlungModel.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4hBremsstrahlung::G4hBremsstrahlung(const G4String& name)
-  : G4MuBremsstrahlung(name)
-{}
+G4hBremsstrahlung::G4hBremsstrahlung(const G4String& name) : G4MuBremsstrahlung(name) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4hBremsstrahlung::~G4hBremsstrahlung()
-{}
+G4hBremsstrahlung::~G4hBremsstrahlung() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -66,11 +64,13 @@ G4bool G4hBremsstrahlung::IsApplicable(const G4ParticleDefinition& p)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4hBremsstrahlung::InitialiseEnergyLossProcess(
-				 const G4ParticleDefinition* part,
-				 const G4ParticleDefinition* bpart)
+void G4hBremsstrahlung::InitialiseEnergyLossProcess(const G4ParticleDefinition* part,
+                                                    const G4ParticleDefinition* bpart)
 {
-  if(nullptr == EmModel(0)) { SetEmModel(new G4hBremsstrahlungModel()); }
+  if (nullptr == EmModel(0))
+  {
+    SetEmModel(new G4hBremsstrahlungModel());
+  }
   G4MuBremsstrahlung::InitialiseEnergyLossProcess(part, bpart);
 }
 

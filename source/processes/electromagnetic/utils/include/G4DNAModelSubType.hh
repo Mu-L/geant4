@@ -36,13 +36,13 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4DNAModelSubType_h
-#define G4DNAModelSubType_h 1
+#ifndef G4DNAMODELSUBTYPE_HH
+#define G4DNAMODELSUBTYPE_HH
 
-enum G4DNAModelSubType 
+enum G4DNAModelSubType
 {
   fDNAUnknownModel = 11000,
-  fRitchie1994eSolvation = 11001, 
+  fRitchie1994eSolvation = 11001,
   fTerrisol1990eSolvation = 11002,
   fMeesungnoen2002eSolvation = 11003,
   fKreipl2009eSolvation = 11004,

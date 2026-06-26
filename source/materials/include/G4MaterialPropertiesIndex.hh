@@ -28,8 +28,8 @@
 // Created:     29-06-2017
 // Author:      Soon Yung Jun
 
-#ifndef G4MaterialPropertiesIndex_h
-#define G4MaterialPropertiesIndex_h 1
+#ifndef G4MATERIALPROPERTIESINDEX_HH
+#define G4MATERIALPROPERTIESINDEX_HH
 
 #include "G4String.hh"
 

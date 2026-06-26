@@ -39,38 +39,38 @@
 // @author J.Perl
 // Class Description - End:
 
+#include "G4AttDef.hh"
+#include "G4AttValue.hh"
 #include "globals.hh"
 
-#include <vector>
 #include <map>
+#include <vector>
 
-#include "G4AttValue.hh"
-#include "G4AttDef.hh"
+class G4AttHolder
+{
+  public:
 
-class G4AttHolder {
+    G4AttHolder() = default;
+    ~G4AttHolder();  // Note: G4AttValues are deleted here.
+    G4AttHolder(const G4AttHolder&) = delete;  // Copy construction not allowed.
+    G4AttHolder& operator=(const G4AttHolder&) = delete;  // Assignment not allowed.
 
-public:
+    const std::vector<const std::vector<G4AttValue>*>& GetAttValues() const { return fValues; }
+    const std::vector<const std::map<G4String, G4AttDef>*>& GetAttDefs() const { return fDefs; }
 
-  G4AttHolder() = default;
-  ~G4AttHolder();  // Note: G4AttValues are deleted here.
-  G4AttHolder(const G4AttHolder&) = delete;  // Copy construction not allowed.
-  G4AttHolder& operator=(const G4AttHolder&) = delete;  // Assignment not allowed.
+    void AddAtts(const std::vector<G4AttValue>* values, const std::map<G4String, G4AttDef>* defs)
+    {
+      fValues.push_back(values);
+      fDefs.push_back(defs);
+    }
+    // Note: G4AttValues are assumed to be expendable - they will be
+    // deleted in the destructor.  G4AttDefs are assumed to have long
+    // life.
 
-  const std::vector<const std::vector<G4AttValue>*>& GetAttValues() const
-  {return fValues;}
-  const std::vector<const std::map<G4String,G4AttDef>*>& GetAttDefs() const
-  {return fDefs;}
+  private:
 
-  void AddAtts(const std::vector<G4AttValue>* values,
-               const std::map<G4String,G4AttDef>* defs)
-  {fValues.push_back(values); fDefs.push_back(defs);}
-  // Note: G4AttValues are assumed to be expendable - they will be
-  // deleted in the destructor.  G4AttDefs are assumed to have long
-  // life.
-
-private:
-  std::vector<const std::vector<G4AttValue>*> fValues;
-  std::vector<const std::map<G4String,G4AttDef>*> fDefs;
+    std::vector<const std::vector<G4AttValue>*> fValues;
+    std::vector<const std::map<G4String, G4AttDef>*> fDefs;
 };
 
-#endif //G4ATTHOLDER_HH
+#endif  // G4ATTHOLDER_HH

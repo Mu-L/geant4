@@ -46,9 +46,8 @@ G4VExternalNavigation::~G4VExternalNavigation() = default;
 // Inside call Inside() of a solid
 // ********************************************************************
 //
-EInside G4VExternalNavigation::Inside( const G4VSolid* solid,
-                                       const G4ThreeVector& pos,
-                                       const G4ThreeVector&    )
+EInside G4VExternalNavigation::Inside(const G4VSolid* solid, const G4ThreeVector& pos,
+                                      const G4ThreeVector&)
 
 {
   return solid->Inside(pos);
@@ -58,8 +57,8 @@ EInside G4VExternalNavigation::Inside( const G4VSolid* solid,
 // RelocateWithinVolume
 // ********************************************************************
 //
-void G4VExternalNavigation::RelocateWithinVolume( G4VPhysicalVolume*   , // motherPhysical,
-                                                  const G4ThreeVector& ) // localPoint )
+void G4VExternalNavigation::RelocateWithinVolume(G4VPhysicalVolume*,  // motherPhysical,
+                                                 const G4ThreeVector&)  // localPoint )
 {
   // Default action is do-nothing
   //   A concrete external navigation class must update any relevant
@@ -68,4 +67,3 @@ void G4VExternalNavigation::RelocateWithinVolume( G4VPhysicalVolume*   , // moth
   //      - which remains in the current (mother) physical volume motherPhysical
   //              ( provided for fast access and/or checking. )
 }
-

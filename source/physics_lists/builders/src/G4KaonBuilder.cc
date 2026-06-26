@@ -37,49 +37,55 @@
 //----------------------------------------------------------------------------
 //
 #include "G4KaonBuilder.hh"
+
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
 
 G4KaonBuilder::G4KaonBuilder()
-{  
-  theKaonPlusInelastic=new  G4HadronInelasticProcess( "kaon+Inelastic",  G4KaonPlus::Definition() );
-  theKaonMinusInelastic=new G4HadronInelasticProcess( "kaon-Inelastic",  G4KaonMinus::Definition() );
-  theKaonZeroLInelastic=new G4HadronInelasticProcess( "kaon0LInelastic", G4KaonZeroLong::Definition() );
-  theKaonZeroSInelastic=new G4HadronInelasticProcess( "kaon0SInelastic", G4KaonZeroShort::Definition() );
+{
+  theKaonPlusInelastic = new G4HadronInelasticProcess("kaon+Inelastic", G4KaonPlus::Definition());
+  theKaonMinusInelastic = new G4HadronInelasticProcess("kaon-Inelastic", G4KaonMinus::Definition());
+  theKaonZeroLInelastic =
+    new G4HadronInelasticProcess("kaon0LInelastic", G4KaonZeroLong::Definition());
+  theKaonZeroSInelastic =
+    new G4HadronInelasticProcess("kaon0SInelastic", G4KaonZeroShort::Definition());
 }
 
-void G4KaonBuilder::
-Build()
+void G4KaonBuilder::Build()
 {
-  std::vector<G4VKaonBuilder *>::iterator i;
-  for(i=theModelCollections.begin(); i!=theModelCollections.end(); i++)
+  std::vector<G4VKaonBuilder*>::iterator i;
+  for (i = theModelCollections.begin(); i != theModelCollections.end(); i++)
   {
     (*i)->Build(theKaonPlusInelastic);
     (*i)->Build(theKaonMinusInelastic);
     (*i)->Build(theKaonZeroLInelastic);
     (*i)->Build(theKaonZeroSInelastic);
   }
-  G4ProcessManager * theProcMan;
- 
+  G4ProcessManager* theProcMan;
+
   theProcMan = G4KaonPlus::KaonPlus()->GetProcessManager();
   theProcMan->AddDiscreteProcess(theKaonPlusInelastic);
-  
+
   theProcMan = G4KaonMinus::KaonMinus()->GetProcessManager();
   theProcMan->AddDiscreteProcess(theKaonMinusInelastic);
-  
+
   theProcMan = G4KaonZeroLong::KaonZeroLong()->GetProcessManager();
   theProcMan->AddDiscreteProcess(theKaonZeroLInelastic);
-  
+
   theProcMan = G4KaonZeroShort::KaonZeroShort()->GetProcessManager();
   theProcMan->AddDiscreteProcess(theKaonZeroSInelastic);
 }
 
-void G4KaonBuilder::RegisterMe(G4PhysicsBuilderInterface* aB) {
+void G4KaonBuilder::RegisterMe(G4PhysicsBuilderInterface* aB)
+{
   auto bld = dynamic_cast<G4VKaonBuilder*>(aB);
-  if ( bld != nullptr ) {
-      theModelCollections.push_back(bld);
-  } else {
-      G4PhysicsBuilderInterface::RegisterMe(aB);
+  if (bld != nullptr)
+  {
+    theModelCollections.push_back(bld);
+  }
+  else
+  {
+    G4PhysicsBuilderInterface::RegisterMe(aB);
   }
 }

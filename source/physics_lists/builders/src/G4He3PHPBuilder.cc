@@ -24,38 +24,34 @@
 // ********************************************************************
 //
 #include "G4He3PHPBuilder.hh"
+
 #include "G4ParticleDefinition.hh"
+#include "G4ParticleHPInelasticData.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4ParticleHPInelasticData.hh"
 #include "G4SystemOfUnits.hh"
 
-G4He3PHPBuilder::
-G4He3PHPBuilder() 
+G4He3PHPBuilder::G4He3PHPBuilder()
 {
   theMin = 0;
-  theMax=200.*MeV;
+  theMax = 200. * MeV;
   theParticlePHPModel = 0;
 }
 
-void G4He3PHPBuilder::
-Build(G4HadronElasticProcess *)
+void G4He3PHPBuilder::Build(G4HadronElasticProcess*)
 {
   G4cout << "Info - G4He3PHPBuilder::Build() not adding elastic" << G4endl;
 }
 
-void G4He3PHPBuilder::
-Build(G4HadronInelasticProcess * aP)
+void G4He3PHPBuilder::Build(G4HadronInelasticProcess* aP)
 {
-  G4ParticleHPInelasticData* theHe3HPInelasticData=new G4ParticleHPInelasticData(G4He3::He3());
+  G4ParticleHPInelasticData* theHe3HPInelasticData = new G4ParticleHPInelasticData(G4He3::He3());
   theHe3HPInelasticData->SetMinKinEnergy(theMin);
   theHe3HPInelasticData->SetMaxKinEnergy(theMax);
   aP->AddDataSet(theHe3HPInelasticData);
 
-  theParticlePHPModel = new G4ParticleHPInelastic(G4He3::He3(),"ParticleHPInelastic");
+  theParticlePHPModel = new G4ParticleHPInelastic(G4He3::He3(), "ParticleHPInelastic");
   theParticlePHPModel->SetMinEnergy(theMin);
   theParticlePHPModel->SetMaxEnergy(theMax);
   aP->RegisterMe(theParticlePHPModel);
-
 }
-

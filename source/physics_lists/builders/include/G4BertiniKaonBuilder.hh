@@ -36,39 +36,39 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4BertiniKaonBuilder_h
-#define G4BertiniKaonBuilder_h 1
+#ifndef G4BERTINIKAONBUILDER_HH
+#define G4BERTINIKAONBUILDER_HH
 
-#include "globals.hh"
-
+#include "G4CascadeInterface.hh"
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
 #include "G4VKaonBuilder.hh"
-
-#include "G4CascadeInterface.hh"   
+#include "globals.hh"
 
 class G4BertiniKaonBuilder : public G4VKaonBuilder
 {
-  public: 
+  public:
+
     G4BertiniKaonBuilder();
     virtual ~G4BertiniKaonBuilder() {}
 
-  public: 
-    virtual void Build(G4HadronElasticProcess *) final override {}
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
+  public:
 
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
-    virtual void SetMaxEnergy(G4double aM) final override {theMax = aM;}
+    virtual void Build(G4HadronElasticProcess*) final override {}
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
-    using G4VKaonBuilder::Build; //Prevent compier warning
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+    virtual void SetMaxEnergy(G4double aM) final override { theMax = aM; }
+
+    using G4VKaonBuilder::Build;  // Prevent compier warning
+
   private:
-    G4VCrossSectionDataSet * kaonCrossSection;
 
-    G4CascadeInterface * theModel;    
+    G4VCrossSectionDataSet* kaonCrossSection;
+
+    G4CascadeInterface* theModel;
     G4double theMin;
     G4double theMax;
-
 };
 
 #endif
-

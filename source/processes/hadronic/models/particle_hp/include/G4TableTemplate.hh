@@ -45,6 +45,7 @@ template<class T>
 class G4TableTemplate
 {
   public:
+
     /** Default constructor */
     G4TableTemplate() = default;
     /** Adds a container to the table */
@@ -61,9 +62,11 @@ class G4TableTemplate
     G4long G4GetNumberOfElements();
 
   private:
+
     std::vector<T*> ContainerTable_;
 
   public:
+
     ~G4TableTemplate();
 };
 
@@ -82,7 +85,8 @@ G4TableTemplate<T>* G4TableTemplate<T>::G4GetTable()
 template<class T>
 T* G4TableTemplate<T>::G4GetContainer(unsigned int WhichContainer)
 {
-  if (WhichContainer < ContainerTable_.size()) {
+  if (WhichContainer < ContainerTable_.size())
+  {
     return ContainerTable_[WhichContainer];
   }
 
@@ -114,7 +118,8 @@ G4long G4TableTemplate<T>::G4GetNumberOfElements()
 template<class T>
 G4TableTemplate<T>::~G4TableTemplate()
 {
-  for (unsigned int i = 0; i < ContainerTable_.size(); i++) {
+  for (unsigned int i = 0; i < ContainerTable_.size(); i++)
+  {
     delete ContainerTable_[i];
   }
 }

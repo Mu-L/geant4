@@ -28,9 +28,10 @@
 // Author: G.Cosmo (CERN), 1997
 // --------------------------------------------------------------------
 #ifndef G4THREEVECTOR_HH
-#define G4THREEVECTOR_HH 1
+#define G4THREEVECTOR_HH
 
 #include "globals.hh"
+
 #include <CLHEP/Vector/ThreeVector.h>
 
 using G4ThreeVector = CLHEP::Hep3Vector;

@@ -31,27 +31,26 @@
 // --------------------------------------------------------------------
 
 #include "G4AdjointStackingAction.hh"
+
 #include "G4AdjointTrackingAction.hh"
 #include "G4Event.hh"
+#include "G4StackManager.hh"
 #include "G4Track.hh"
 #include "G4ios.hh"
-#include "G4StackManager.hh"
 
-G4AdjointStackingAction::
-G4AdjointStackingAction(G4AdjointTrackingAction* anAction)
+G4AdjointStackingAction::G4AdjointStackingAction(G4AdjointTrackingAction* anAction)
 {
   theAdjointTrackingAction = anAction;
 }
 
 // --------------------------------------------------------------------
 //
-G4ClassificationOfNewTrack
-G4AdjointStackingAction::ClassifyNewTrack(const G4Track * aTrack)
+G4ClassificationOfNewTrack G4AdjointStackingAction::ClassifyNewTrack(const G4Track* aTrack)
 {
   G4ClassificationOfNewTrack classification = fUrgent;
   G4String partType = aTrack->GetParticleDefinition()->GetParticleType();
   adjoint_mode = G4StrUtil::contains(partType, "adjoint");
-  if (!adjoint_mode )
+  if (!adjoint_mode)
   {
     if (!reclassification_stage)
     {
@@ -59,11 +58,11 @@ G4AdjointStackingAction::ClassifyNewTrack(const G4Track * aTrack)
     }
     else  // need to check if forwrad tracking can be continued use of
     {
-      if (theAdjointTrackingAction->GetNbOfAdointTracksReachingTheExternalSurface()>0)
+      if (theAdjointTrackingAction->GetNbOfAdointTracksReachingTheExternalSurface() > 0)
       {
         if (theFwdStackingAction != nullptr)
         {
-          classification =  theFwdStackingAction->ClassifyNewTrack(aTrack);
+          classification = theFwdStackingAction->ClassifyNewTrack(aTrack);
         }
       }
       else
@@ -92,14 +91,15 @@ void G4AdjointStackingAction::NewStage()
     }
     stackManager->ReClassify();
   }
-  else if (theFwdStackingAction != nullptr) theFwdStackingAction->NewStage();
+  else if (theFwdStackingAction != nullptr)
+    theFwdStackingAction->NewStage();
   {
     first_reclassification_stage = false;
   }
 }
 
 // --------------------------------------------------------------------
-//    
+//
 void G4AdjointStackingAction::PrepareNewEvent()
 {
   reclassification_stage = false;

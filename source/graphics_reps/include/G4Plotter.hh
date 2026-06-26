@@ -34,57 +34,72 @@
 #include <utility>
 #include <vector>
 
-namespace tools {namespace histo {class h1d;}}
-namespace tools {namespace histo {class h2d;}}
+namespace tools
+{
+namespace histo
+{
+class h1d;
+}
+}  // namespace tools
+namespace tools
+{
+namespace histo
+{
+class h2d;
+}
+}  // namespace tools
 
-class G4Plotter {
-public:  
-  using RegionStyle     = std::pair<unsigned int,G4String>;
-  using Parameter       = std::pair<G4String,G4String>;
-  using RegionParameter = std::pair<unsigned int,Parameter>;
-  using Region_h1d      = std::pair<unsigned int,tools::histo::h1d*>;
-  using Region_h2d      = std::pair<unsigned int,tools::histo::h2d*>;
-  using Region_h1       = std::pair<unsigned int,int>;
-  using Region_h2       = std::pair<unsigned int,int>;
+class G4Plotter
+{
+  public:
 
-  G4Plotter();
-  virtual ~G4Plotter() = default;
-  G4Plotter(const G4Plotter&);
-  G4Plotter& operator = (const G4Plotter&);
+    using RegionStyle = std::pair<unsigned int, G4String>;
+    using Parameter = std::pair<G4String, G4String>;
+    using RegionParameter = std::pair<unsigned int, Parameter>;
+    using Region_h1d = std::pair<unsigned int, tools::histo::h1d*>;
+    using Region_h2d = std::pair<unsigned int, tools::histo::h2d*>;
+    using Region_h1 = std::pair<unsigned int, int>;
+    using Region_h2 = std::pair<unsigned int, int>;
 
-  void SetLayout(unsigned int colums,unsigned int rows);
-  void AddStyle(const G4String& style);
-  void AddRegionStyle(unsigned int region,const G4String& style);
-  void AddRegionParameter(unsigned int region,const G4String& parameter,const G4String& value);
-  void AddRegionHistogram(unsigned int region,tools::histo::h1d* histo);
-  void AddRegionHistogram(unsigned int region,tools::histo::h2d* histo);
-  void AddRegionH1(unsigned int region,int id);
-  void AddRegionH2(unsigned int region,int id);
-  void Reset();
-  void Clear();
-  void ClearRegion(unsigned int region);
+    G4Plotter();
+    virtual ~G4Plotter() = default;
+    G4Plotter(const G4Plotter&);
+    G4Plotter& operator=(const G4Plotter&);
 
-  unsigned int GetColumns() const {return fColumns;}
-  unsigned int GetRows() const {return fRows;}
-  const std::vector<G4String>& GetStyles() const {return fStyles;}
-  const std::vector<RegionStyle>& GetRegionStyles() const {return fRegionStyles;}
-  const std::vector<RegionParameter>& GetRegionParameters() const {return fRegionParameters;}
-  const std::vector<Region_h1d>& GetRegionH1Ds() const {return fRegion_h1ds;}
-  const std::vector<Region_h2d>& GetRegionH2Ds() const {return fRegion_h2ds;}
+    void SetLayout(unsigned int colums, unsigned int rows);
+    void AddStyle(const G4String& style);
+    void AddRegionStyle(unsigned int region, const G4String& style);
+    void AddRegionParameter(unsigned int region, const G4String& parameter, const G4String& value);
+    void AddRegionHistogram(unsigned int region, tools::histo::h1d* histo);
+    void AddRegionHistogram(unsigned int region, tools::histo::h2d* histo);
+    void AddRegionH1(unsigned int region, int id);
+    void AddRegionH2(unsigned int region, int id);
+    void Reset();
+    void Clear();
+    void ClearRegion(unsigned int region);
 
-  const std::vector<Region_h1>& GetRegionH1s() const {return fRegion_h1s;}
-  const std::vector<Region_h2>& GetRegionH2s() const {return fRegion_h2s;}
+    unsigned int GetColumns() const { return fColumns; }
+    unsigned int GetRows() const { return fRows; }
+    const std::vector<G4String>& GetStyles() const { return fStyles; }
+    const std::vector<RegionStyle>& GetRegionStyles() const { return fRegionStyles; }
+    const std::vector<RegionParameter>& GetRegionParameters() const { return fRegionParameters; }
+    const std::vector<Region_h1d>& GetRegionH1Ds() const { return fRegion_h1ds; }
+    const std::vector<Region_h2d>& GetRegionH2Ds() const { return fRegion_h2ds; }
 
-private:
-  unsigned int fColumns{1};
-  unsigned int fRows{1};
-  std::vector<G4String> fStyles;
-  std::vector<RegionStyle> fRegionStyles;
-  std::vector<RegionParameter> fRegionParameters;
-  std::vector<Region_h1d> fRegion_h1ds;
-  std::vector<Region_h2d> fRegion_h2ds;
-  std::vector<Region_h1>  fRegion_h1s;
-  std::vector<Region_h2>  fRegion_h2s;
+    const std::vector<Region_h1>& GetRegionH1s() const { return fRegion_h1s; }
+    const std::vector<Region_h2>& GetRegionH2s() const { return fRegion_h2s; }
+
+  private:
+
+    unsigned int fColumns{1};
+    unsigned int fRows{1};
+    std::vector<G4String> fStyles;
+    std::vector<RegionStyle> fRegionStyles;
+    std::vector<RegionParameter> fRegionParameters;
+    std::vector<Region_h1d> fRegion_h1ds;
+    std::vector<Region_h2d> fRegion_h2ds;
+    std::vector<Region_h1> fRegion_h1s;
+    std::vector<Region_h2> fRegion_h2s;
 };
 
 #endif

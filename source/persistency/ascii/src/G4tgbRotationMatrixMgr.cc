@@ -31,21 +31,18 @@
 #include "G4tgbRotationMatrixMgr.hh"
 
 #include "G4SystemOfUnits.hh"
-#include "G4tgrRotationMatrixFactory.hh"
 #include "G4tgrMessenger.hh"
+#include "G4tgrRotationMatrixFactory.hh"
 
-G4ThreadLocal G4tgbRotationMatrixMgr*
-              G4tgbRotationMatrixMgr::theInstance = nullptr;
+G4ThreadLocal G4tgbRotationMatrixMgr* G4tgbRotationMatrixMgr::theInstance = nullptr;
 
 // --------------------------------------------------------------------
-G4tgbRotationMatrixMgr::G4tgbRotationMatrixMgr()
-{
-}
+G4tgbRotationMatrixMgr::G4tgbRotationMatrixMgr() {}
 
 // --------------------------------------------------------------------
 G4tgbRotationMatrixMgr* G4tgbRotationMatrixMgr::GetInstance()
 {
-  if(theInstance == nullptr)
+  if (theInstance == nullptr)
   {
     theInstance = new G4tgbRotationMatrixMgr;
     theInstance->CopyRotMats();
@@ -56,10 +53,9 @@ G4tgbRotationMatrixMgr* G4tgbRotationMatrixMgr::GetInstance()
 // --------------------------------------------------------------------
 G4tgbRotationMatrixMgr::~G4tgbRotationMatrixMgr()
 {
-  for(auto tgbcite = theTgbRotMats.cbegin();
-           tgbcite != theTgbRotMats.cend(); ++tgbcite)
+  for (auto tgbcite = theTgbRotMats.cbegin(); tgbcite != theTgbRotMats.cend(); ++tgbcite)
   {
-    delete(*tgbcite).second;
+    delete (*tgbcite).second;
   }
   theTgbRotMats.clear();
   delete theInstance;
@@ -68,29 +64,26 @@ G4tgbRotationMatrixMgr::~G4tgbRotationMatrixMgr()
 // --------------------------------------------------------------------
 void G4tgbRotationMatrixMgr::CopyRotMats()
 {
-  G4mstgrrotm tgrRotms =
-    G4tgrRotationMatrixFactory::GetInstance()->GetRotMatMap();
-  for(auto cite = tgrRotms.cbegin(); cite != tgrRotms.cend(); ++cite)
+  G4mstgrrotm tgrRotms = G4tgrRotationMatrixFactory::GetInstance()->GetRotMatMap();
+  for (auto cite = tgrRotms.cbegin(); cite != tgrRotms.cend(); ++cite)
   {
-    G4tgrRotationMatrix* tgr      = (*cite).second;
-    G4tgbRotationMatrix* tgb      = new G4tgbRotationMatrix(tgr);
+    G4tgrRotationMatrix* tgr = (*cite).second;
+    G4tgbRotationMatrix* tgb = new G4tgbRotationMatrix(tgr);
     theTgbRotMats[tgb->GetName()] = tgb;
   }
 }
 
 // --------------------------------------------------------------------
-G4RotationMatrix* G4tgbRotationMatrixMgr::FindOrBuildG4RotMatrix(
-  const G4String& name)
+G4RotationMatrix* G4tgbRotationMatrixMgr::FindOrBuildG4RotMatrix(const G4String& name)
 {
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 2)
+  if (G4tgrMessenger::GetVerboseLevel() >= 2)
   {
-    G4cout << " G4tgbRotationMatrixMgr::FindOrBuildG4RotMatrix() - " << name
-           << G4endl;
+    G4cout << " G4tgbRotationMatrixMgr::FindOrBuildG4RotMatrix() - " << name << G4endl;
   }
 #endif
   G4RotationMatrix* g4rotm = FindG4RotMatrix(name);
-  if(g4rotm == nullptr)
+  if (g4rotm == nullptr)
   {
     G4tgbRotationMatrix* hrotm = FindOrBuildTgbRotMatrix(name);
     // GetRotMatrix() never returns 0, otherwise if not found, it crashes
@@ -105,16 +98,16 @@ G4RotationMatrix* G4tgbRotationMatrixMgr::FindG4RotMatrix(const G4String& name)
   G4RotationMatrix* g4rotm = nullptr;
 
   G4msg4rotm::const_iterator cite = theG4RotMats.find(name);
-  if(cite != theG4RotMats.cend())
+  if (cite != theG4RotMats.cend())
   {
     g4rotm = (*cite).second;
   }
 
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 2)
+  if (G4tgrMessenger::GetVerboseLevel() >= 2)
   {
-    G4cout << " G4tgbRotationMatrixMgr::FindG4RotMatrix(): " << G4endl
-           << "   Name: " << name << " = " << g4rotm << G4endl;
+    G4cout << " G4tgbRotationMatrixMgr::FindG4RotMatrix(): " << G4endl << "   Name: " << name
+           << " = " << g4rotm << G4endl;
   }
 #endif
 
@@ -122,28 +115,26 @@ G4RotationMatrix* G4tgbRotationMatrixMgr::FindG4RotMatrix(const G4String& name)
 }
 
 // --------------------------------------------------------------------
-G4tgbRotationMatrix*
-G4tgbRotationMatrixMgr::FindOrBuildTgbRotMatrix(const G4String& name)
+G4tgbRotationMatrix* G4tgbRotationMatrixMgr::FindOrBuildTgbRotMatrix(const G4String& name)
 {
   G4tgbRotationMatrix* rotm = FindTgbRotMatrix(name);
 
-  if(rotm == nullptr)
+  if (rotm == nullptr)
   {
     G4String ErrMessage = "Rotation Matrix " + name + " not found !";
-    G4Exception("G4tgbRotationMatrixFactory::FindOrBuildRotMatrix()",
-                "InvalidSetup", FatalException, ErrMessage);
+    G4Exception("G4tgbRotationMatrixFactory::FindOrBuildRotMatrix()", "InvalidSetup",
+                FatalException, ErrMessage);
   }
   return rotm;
 }
 
 // --------------------------------------------------------------------
-G4tgbRotationMatrix* G4tgbRotationMatrixMgr::FindTgbRotMatrix(
-  const G4String& name)
+G4tgbRotationMatrix* G4tgbRotationMatrixMgr::FindTgbRotMatrix(const G4String& name)
 {
   G4tgbRotationMatrix* rotm = nullptr;
 
   G4mstgbrotm::const_iterator cite = theTgbRotMats.find(name);
-  if(cite != theTgbRotMats.cend())
+  if (cite != theTgbRotMats.cend())
   {
     rotm = (*cite).second;
   }
@@ -153,8 +144,8 @@ G4tgbRotationMatrix* G4tgbRotationMatrixMgr::FindTgbRotMatrix(
 // --------------------------------------------------------------------
 std::ostream& operator<<(std::ostream& os, const G4RotationMatrix& rot)
 {
-  os << "[ " << rot.thetaX() / deg << '\t' << rot.phiX() / deg << '\t'
-     << rot.thetaY() / deg << '\t' << rot.phiY() / deg << '\t'
-     << rot.thetaZ() / deg << '\t' << rot.phiZ() / deg << " ]" << G4endl;
+  os << "[ " << rot.thetaX() / deg << '\t' << rot.phiX() / deg << '\t' << rot.thetaY() / deg << '\t'
+     << rot.phiY() / deg << '\t' << rot.thetaZ() / deg << '\t' << rot.phiZ() / deg << " ]"
+     << G4endl;
   return os;
 }

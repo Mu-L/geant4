@@ -38,8 +38,8 @@
 //        first version  by P.Mora de Freitas & M.Verderi
 // ------------------------------------------------------------
 
-#ifndef G4FastSimulationMessenger_h
-#define G4FastSimulationMessenger_h 1
+#ifndef G4FASTSIMULATIONMESSENGER_HH
+#define G4FASTSIMULATIONMESSENGER_HH
 
 class G4UIdirectory;
 class G4UIcmdWithAString;
@@ -52,12 +52,14 @@ class G4UIcmdWithoutParameter;
 class G4FastSimulationMessenger : public G4UImessenger
 {
   public:
+
     G4FastSimulationMessenger(G4GlobalFastSimulationManager* theGFSM);
     ~G4FastSimulationMessenger() override;
 
     void SetNewValue(G4UIcommand* command, G4String newValues) override;
 
   private:
+
     G4GlobalFastSimulationManager* fGlobalFastSimulationManager;
 
     // commands

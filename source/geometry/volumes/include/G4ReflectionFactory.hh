@@ -22,7 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // G4ReflectionFactory
 //
 // Class description:
@@ -41,8 +41,9 @@
 #ifndef G4_REFLECTION_FACTORY_HH
 #define G4_REFLECTION_FACTORY_HH
 
-#include "G4Types.hh"
 #include "G4Transform3D.hh"
+#include "G4Types.hh"
+
 #include "geomdefs.hh"
 
 #include <map>
@@ -53,11 +54,13 @@ class G4VSolid;
 class G4VPVDivisionFactory;
 
 using G4PhysicalVolumesPair = std::pair<G4VPhysicalVolume*, G4VPhysicalVolume*>;
-using G4ReflectedVolumesMap = std::map<G4LogicalVolume*, G4LogicalVolume*,  
-                                       std::less<G4LogicalVolume*> >;
+using G4ReflectedVolumesMap =
+  std::map<G4LogicalVolume*, G4LogicalVolume*, std::less<G4LogicalVolume*>>;
 /**
  * @brief G4ReflectionFactory provides functions for volumes placements with
  * a general transfomation that can contain a reflection.
+ * @ingroup geometry_volumes
+ *
  * Reflection is then applied to a solid: a new G4ReflectedSolid instance is
  * created and is placed with a transformation containing pure rotation and
  * translation only.
@@ -67,31 +70,31 @@ using G4ReflectedVolumesMap = std::map<G4LogicalVolume*, G4LogicalVolume*,
  *
  * Decomposition of a general transformation that can include reflection
  * in a "reflection-free" transformation:
- * 
+ *
  * x(inM') = TG*x(inM)         TG - general transformation
  *         = T*(R*x(inM))      T  - "reflection-free" transformation
- *         = T* x(inReflM)   
+ *         = T* x(inReflM)
  *
  * Daughters transformation:
  * When a volume V containing daughter D with transformation TD
  * is placed in mother M with a general tranformation TGV,
  * the TGV is decomposed. New reflected volume ReflV containing
  * a new daughter ReflD with reflected transformation ReflTD is created:
- * 
+ *
  * x(inV) = TD * x(inD);
- * x(inM) = TGV * x(inV) 
- *        = TV * R * x(inV) 
+ * x(inM) = TGV * x(inV)
+ *        = TV * R * x(inV)
  *        = TV * R * TD * x(inD)
  *        = TV * R*TD*R-1 * R*x(inD)
  *        = TV * ReflTD * x(inReflD)
  */
 
-class G4ReflectionFactory 
+class G4ReflectionFactory
 {
-  using LogicalVolumesMapIterator = G4ReflectedVolumesMap::const_iterator;
+    using LogicalVolumesMapIterator = G4ReflectedVolumesMap::const_iterator;
 
   public:
-  
+
     /**
      * Destructor.
      */
@@ -102,7 +105,7 @@ class G4ReflectionFactory
      */
     G4ReflectionFactory(const G4ReflectionFactory&) = delete;
     G4ReflectionFactory& operator=(const G4ReflectionFactory&) = delete;
- 
+
     /**
      * Gets pointer to the instance of the singleton.
      */
@@ -127,13 +130,9 @@ class G4ReflectionFactory
      *           is a placement in a reflected mother or nullptr if mother
      *           logical volume was not reflected.
      */
-    G4PhysicalVolumesPair Place(const G4Transform3D& transform3D,
-                                const G4String&  name,
-                                      G4LogicalVolume* LV,
-                                      G4LogicalVolume* motherLV,
-                                      G4bool isMany, 
-                                      G4int  copyNo,
-                                      G4bool surfCheck = false);
+    G4PhysicalVolumesPair Place(const G4Transform3D& transform3D, const G4String& name,
+                                G4LogicalVolume* LV, G4LogicalVolume* motherLV, G4bool isMany,
+                                G4int copyNo, G4bool surfCheck = false);
 
     /**
      * Creates a replica in the given mother.
@@ -148,13 +147,9 @@ class G4ReflectionFactory
      *           a replica in a reflected mother or nullptr if the mother
      *           logical volume was not reflected.
      */
-    G4PhysicalVolumesPair Replicate(const G4String& name, 
-                                          G4LogicalVolume* LV,
-                                          G4LogicalVolume* motherLV,
-                                          EAxis axis, 
-                                          G4int nofReplicas, 
-                                          G4double width,
-                                          G4double offset = 0.);
+    G4PhysicalVolumesPair Replicate(const G4String& name, G4LogicalVolume* LV,
+                                    G4LogicalVolume* motherLV, EAxis axis, G4int nofReplicas,
+                                    G4double width, G4double offset = 0.);
 
     /**
      * Methods to create a division in the given mother, along with the
@@ -163,25 +158,15 @@ class G4ReflectionFactory
      *           a division in a reflected mother or nullptr if mother
      *           logical volume was not reflected.
      */
-    G4PhysicalVolumesPair Divide(const G4String& name, 
-                                       G4LogicalVolume* LV,
-                                       G4LogicalVolume* motherLV,
-                                       EAxis axis, 
-                                       G4int nofDivisions, 
-                                       G4double width,
-                                       G4double offset);
-    G4PhysicalVolumesPair Divide(const G4String& name, 
-                                       G4LogicalVolume* LV,
-                                       G4LogicalVolume* motherLV,
-                                       EAxis axis, 
-                                       G4int nofDivisions, 
-                                       G4double offset);
-    G4PhysicalVolumesPair Divide(const G4String& name, 
-                                       G4LogicalVolume* LV,
-                                       G4LogicalVolume* motherLV,
-                                       EAxis axis, 
-                                       G4double width,
-                                       G4double offset);
+    G4PhysicalVolumesPair Divide(const G4String& name, G4LogicalVolume* LV,
+                                 G4LogicalVolume* motherLV, EAxis axis, G4int nofDivisions,
+                                 G4double width, G4double offset);
+    G4PhysicalVolumesPair Divide(const G4String& name, G4LogicalVolume* LV,
+                                 G4LogicalVolume* motherLV, EAxis axis, G4int nofDivisions,
+                                 G4double offset);
+    G4PhysicalVolumesPair Divide(const G4String& name, G4LogicalVolume* LV,
+                                 G4LogicalVolume* motherLV, EAxis axis, G4double width,
+                                 G4double offset);
 
     /**
      * Verbosity control.
@@ -239,7 +224,7 @@ class G4ReflectionFactory
      */
     void Clean();
 
-  private:  
+  private:
 
     /**
      * Private singleton constructor.
@@ -261,20 +246,19 @@ class G4ReflectionFactory
     /**
      * Reflects daughters recursively.
      */
-    void ReflectDaughters(G4LogicalVolume* LV,
-                          G4LogicalVolume* refLV, G4bool surfCheck = false);
+    void ReflectDaughters(G4LogicalVolume* LV, G4LogicalVolume* refLV, G4bool surfCheck = false);
 
     /**
      * Copies and transforms daughter of G4PVPlacement type of
      * a constituent volume into a reflected volume.
      */
-    void ReflectPVPlacement(G4VPhysicalVolume* PV,
-                            G4LogicalVolume* refLV, G4bool surfCheck = false);
+    void ReflectPVPlacement(G4VPhysicalVolume* PV, G4LogicalVolume* refLV,
+                            G4bool surfCheck = false);
 
     /**
      * Copies and transforms daughter of G4PVReplica type of
      * a constituent volume into a reflected volume.
-     */ 
+     */
     void ReflectPVReplica(G4VPhysicalVolume* PV, G4LogicalVolume* refLV);
 
     /**
@@ -286,10 +270,10 @@ class G4ReflectionFactory
     /**
      * Not yet implemented.
      * Should copy and transform daughter of G4PVParameterised type of
-     * a constituent volume into a reflected volume. 
+     * a constituent volume into a reflected volume.
      */
-    void ReflectPVParameterised(G4VPhysicalVolume* PV,
-                                G4LogicalVolume* refLV, G4bool surfChk = false);
+    void ReflectPVParameterised(G4VPhysicalVolume* PV, G4LogicalVolume* refLV,
+                                G4bool surfChk = false);
 
     /**
      * Returns true if the scale is negative, false otherwise.
@@ -309,8 +293,8 @@ class G4ReflectionFactory
     /**
      * Dump method, for debugging purpose.
      */
-    void PrintConstituentLVMap() const;  
-  
+    void PrintConstituentLVMap() const;
+
   private:
 
     static G4ThreadLocal G4ReflectionFactory* fInstance;

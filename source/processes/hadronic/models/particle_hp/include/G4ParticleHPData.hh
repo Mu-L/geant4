@@ -30,8 +30,8 @@
 // Has the Cross-section data for all materials.
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPData_h
-#define G4ParticleHPData_h 1
+#ifndef G4PARTICLEHPDATA_HH
+#define G4PARTICLEHPDATA_HH
 
 #include "G4Element.hh"
 #include "G4NeutronHPCaptureData.hh"
@@ -46,6 +46,7 @@
 class G4ParticleHPData
 {
   public:
+
     explicit G4ParticleHPData(G4ParticleDefinition* projectile);
 
     ~G4ParticleHPData();
@@ -80,6 +81,7 @@ class G4ParticleHPData
     static G4ParticleHPData* Instance(G4ParticleDefinition* projectile);
 
   private:
+
     std::vector<G4ParticleHPElementData*> theData;
     G4int numEle;
     void addPhysicsVector();

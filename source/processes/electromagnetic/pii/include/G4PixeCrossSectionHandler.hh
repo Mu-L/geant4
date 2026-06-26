@@ -41,128 +41,105 @@
 // -------------------------------------------------------------------
 
 #ifndef G4PIXECROSSSECTIONHANDLER_HH
-#define G4PIXECROSSSECTIONHANDLER_HH 1
+#define G4PIXECROSSSECTIONHANDLER_HH
+
+#include "G4DataVector.hh"
+#include "G4MaterialCutsCouple.hh"
+#include "globals.hh"
+
+#include <CLHEP/Units/SystemOfUnits.h>
 
 #include <map>
 #include <vector>
-#include <CLHEP/Units/SystemOfUnits.h>
-
-#include "globals.hh"
-#include "G4DataVector.hh"
-#include "G4MaterialCutsCouple.hh"
 
 class G4IInterpolator;
 class G4IDataSet;
 class G4Material;
 class G4Element;
 
-class G4PixeCrossSectionHandler {
+class G4PixeCrossSectionHandler
+{
+  public:
 
-public:
+    G4PixeCrossSectionHandler();
 
-  G4PixeCrossSectionHandler();
+    G4PixeCrossSectionHandler(G4IInterpolator* interpolation, const G4String& modelK = "ecpssr",
+                              const G4String& modelL = "ecpssr", const G4String& modelM = "ecpssr",
+                              G4double minE = 1 * CLHEP::keV, G4double maxE = 0.1 * CLHEP::GeV,
+                              G4int nBins = 200, G4double unitE = CLHEP::MeV,
+                              G4double unitData = CLHEP::barn, G4int minZ = 6, G4int maxZ = 92);
 
-  G4PixeCrossSectionHandler(G4IInterpolator* interpolation,
-			    const G4String& modelK="ecpssr",
-			    const G4String& modelL="ecpssr",
-			    const G4String& modelM="ecpssr",
-			    G4double minE = 1*CLHEP::keV,
-                            G4double maxE = 0.1*CLHEP::GeV,
-			    G4int nBins = 200,
-			    G4double unitE = CLHEP::MeV,
-                            G4double unitData = CLHEP::barn,
-			    G4int minZ = 6, G4int maxZ = 92);
-  
-  virtual ~G4PixeCrossSectionHandler();
+    virtual ~G4PixeCrossSectionHandler();
 
-  void Initialise(G4IInterpolator* interpolation,
-		  const G4String& modelK="ecpssr",
-		  const G4String& modelL="ecpssr",
-		  const G4String& modelM="ecpssr",
-		  G4double minE = 1*CLHEP::keV,
-                  G4double maxE = 0.1*CLHEP::GeV,
-		  G4int nBins = 200,
-		  G4double unitE = CLHEP::MeV,
-                  G4double unitData = CLHEP::barn,
-		  G4int minZ = 6, G4int maxZ = 92);
+    void Initialise(G4IInterpolator* interpolation, const G4String& modelK = "ecpssr",
+                    const G4String& modelL = "ecpssr", const G4String& modelM = "ecpssr",
+                    G4double minE = 1 * CLHEP::keV, G4double maxE = 0.1 * CLHEP::GeV,
+                    G4int nBins = 200, G4double unitE = CLHEP::MeV, G4double unitData = CLHEP::barn,
+                    G4int minZ = 6, G4int maxZ = 92);
 
-  G4int SelectRandomAtom(const G4Material* material, G4double e) const;
+    G4int SelectRandomAtom(const G4Material* material, G4double e) const;
 
-  G4int SelectRandomShell(G4int Z, G4double e) const;
+    G4int SelectRandomShell(G4int Z, G4double e) const;
 
-  G4double FindValue(G4int Z, G4double e) const;
+    G4double FindValue(G4int Z, G4double e) const;
 
-  G4double FindValue(G4int Z, G4double e, G4int shellIndex) const;
+    G4double FindValue(G4int Z, G4double e, G4int shellIndex) const;
 
-  G4double ValueForMaterial(const G4Material* material, G4double e) const;
+    G4double ValueForMaterial(const G4Material* material, G4double e) const;
 
-  // void LoadData(const G4String& dataFile);
+    // void LoadData(const G4String& dataFile);
 
-  void LoadShellData(const G4String& dataFile);
+    void LoadShellData(const G4String& dataFile);
 
-  // Ionisation cross section as in Geant4 Physics Reference Manual
-  G4double MicroscopicCrossSection(const G4ParticleDefinition* particleDef,
-				   G4double kineticEnergy,
-				   G4double Z,
-				   G4double deltaCut) const;
+    // Ionisation cross section as in Geant4 Physics Reference Manual
+    G4double MicroscopicCrossSection(const G4ParticleDefinition* particleDef,
+                                     G4double kineticEnergy, G4double Z, G4double deltaCut) const;
 
-  void PrintData() const;
+    void PrintData() const;
 
-  void Clear();
+    void Clear();
 
-private:
+  private:
 
- // Hide copy constructor and assignment operator
-  G4PixeCrossSectionHandler(const G4PixeCrossSectionHandler&);
-  G4PixeCrossSectionHandler & operator=(const G4PixeCrossSectionHandler &right);
+    // Hide copy constructor and assignment operator
+    G4PixeCrossSectionHandler(const G4PixeCrossSectionHandler&);
+    G4PixeCrossSectionHandler& operator=(const G4PixeCrossSectionHandler& right);
 
-  G4int NumberOfComponents(G4int Z) const;
+    G4int NumberOfComponents(G4int Z) const;
 
-  void ActiveElements();
+    void ActiveElements();
 
-  void BuildForMaterials();
-  // Factory method
-  std::vector<G4IDataSet*>* BuildCrossSectionsForMaterials(const G4DataVector& energyVector);
+    void BuildForMaterials();
+    // Factory method
+    std::vector<G4IDataSet*>* BuildCrossSectionsForMaterials(const G4DataVector& energyVector);
 
-  // Factory method
-  G4IInterpolator* CreateInterpolation();
+    // Factory method
+    G4IInterpolator* CreateInterpolation();
 
-  const G4IInterpolator* GetInterpolation() const { return interpolation; }
- 
-  G4IInterpolator* interpolation;
+    const G4IInterpolator* GetInterpolation() const { return interpolation; }
 
-  G4double eMin;
-  G4double eMax;
-  G4int nBins;
+    G4IInterpolator* interpolation;
 
-  G4double unit1;
-  G4double unit2;
+    G4double eMin;
+    G4double eMax;
+    G4int nBins;
 
-  G4int zMin;
-  G4int zMax;
+    G4double unit1;
+    G4double unit2;
 
-  G4DataVector activeZ;
+    G4int zMin;
+    G4int zMax;
 
-  // Map of PixeShellDataSets with the shell cross sections for each element
-  std::map<G4int,G4IDataSet*,std::less<G4int> > dataMap;
+    G4DataVector activeZ;
 
-  // Vector of composite cross sections for each material in the MaterialTable 
-  // The composite cross section is composed of cross sections for each element in material
-  std::vector<G4IDataSet*>* crossSections;
+    // Map of PixeShellDataSets with the shell cross sections for each element
+    std::map<G4int, G4IDataSet*, std::less<G4int>> dataMap;
 
-  std::vector<G4String> crossModel;
+    // Vector of composite cross sections for each material in the MaterialTable
+    // The composite cross section is composed of cross sections for each element in material
+    std::vector<G4IDataSet*>* crossSections;
 
+    std::vector<G4String> crossModel;
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-

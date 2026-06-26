@@ -32,23 +32,21 @@
 #define POLINFINITY 9.0E99
 #define ITERATION 12  // 20 But 8 is really enough for Newton with a good guess
 
-template <class T, class F>
-G4PolynomialSolver<T, F>::G4PolynomialSolver(T* typeF, F func, F deriv,
-                                             G4double precision)
+template<class T, class F>
+G4PolynomialSolver<T, F>::G4PolynomialSolver(T* typeF, F func, F deriv, G4double precision)
 {
-  Precision     = precision;
+  Precision = precision;
   FunctionClass = typeF;
-  Function      = func;
-  Derivative    = deriv;
+  Function = func;
+  Derivative = deriv;
 }
 
-template <class T, class F>
+template<class T, class F>
 G4PolynomialSolver<T, F>::~G4PolynomialSolver()
 {}
 
-template <class T, class F>
-G4double G4PolynomialSolver<T, F>::solve(G4double IntervalMin,
-                                         G4double IntervalMax)
+template<class T, class F>
+G4double G4PolynomialSolver<T, F>::solve(G4double IntervalMin, G4double IntervalMax)
 {
   return Newton(IntervalMin, IntervalMax);
 }
@@ -59,10 +57,9 @@ G4double G4PolynomialSolver<T, F>::solve(G4double IntervalMin,
 */
 #define NBBEZIER 5
 
-template <class T, class F>
+template<class T, class F>
 G4int G4PolynomialSolver<T, F>::BezierClipping(/*T* typeF,F func,F deriv,*/
-                                               G4double* IntervalMin,
-                                               G4double* IntervalMax)
+                                               G4double* IntervalMin, G4double* IntervalMax)
 {
   /** BezierClipping is a clipping interval Newton method **/
   /** It works by clipping the area where the polynomial is **/
@@ -95,12 +92,12 @@ G4int G4PolynomialSolver<T, F>::BezierClipping(/*T* typeF,F func,F deriv,*/
   P[0][0] = (*IntervalMin);
   P[0][1] = (FunctionClass->*Function)(*IntervalMin);
 
-  if(std::fabs(P[0][1]) < Precision)
+  if (std::fabs(P[0][1]) < Precision)
   {
     return 1;
   }
 
-  if(((*IntervalMax) - (*IntervalMin)) < POLEPSILON)
+  if (((*IntervalMax) - (*IntervalMin)) < POLEPSILON)
   {
     return 1;
   }
@@ -117,10 +114,9 @@ G4int G4PolynomialSolver<T, F>::BezierClipping(/*T* typeF,F func,F deriv,*/
   P[3][1] = P[4][1] - ((*IntervalMax) - (*IntervalMin)) / 4 * D[1];
 
   P[2][0] = ((*IntervalMax) + (*IntervalMin)) / 2;
-  P[2][1] =
-    (16 * (FunctionClass->*Function)(((*IntervalMax) + (*IntervalMin)) / 2) -
-     (P[0][1] + 4 * P[1][1] + 4 * P[3][1] + P[4][1])) /
-    6;
+  P[2][1] = (16 * (FunctionClass->*Function)(((*IntervalMax) + (*IntervalMin)) / 2)
+             - (P[0][1] + 4 * P[1][1] + 4 * P[3][1] + P[4][1]))
+            / 6;
 
   {
     G4double Intersection;
@@ -129,35 +125,34 @@ G4int G4PolynomialSolver<T, F>::BezierClipping(/*T* typeF,F func,F deriv,*/
     NewMin = (*IntervalMax);
     NewMax = (*IntervalMin);
 
-    for(i = 0; i < 5; ++i)
-      for(j = i + 1; j < 5; ++j)
+    for (i = 0; i < 5; ++i)
+      for (j = i + 1; j < 5; ++j)
       {
         /* there is an intersection only if each have different signs */
-        if(((P[j][1] > -Precision) && (P[i][1] < Precision)) ||
-           ((P[j][1] < Precision) && (P[i][1] > -Precision)))
+        if (((P[j][1] > -Precision) && (P[i][1] < Precision))
+            || ((P[j][1] < Precision) && (P[i][1] > -Precision)))
         {
           IntervalIsVoid = 0;
-          Intersection =
-            P[j][0] - P[j][1] * ((P[i][0] - P[j][0]) / (P[i][1] - P[j][1]));
-          if(Intersection < NewMin)
+          Intersection = P[j][0] - P[j][1] * ((P[i][0] - P[j][0]) / (P[i][1] - P[j][1]));
+          if (Intersection < NewMin)
           {
             NewMin = Intersection;
           }
-          if(Intersection > NewMax)
+          if (Intersection > NewMax)
           {
             NewMax = Intersection;
           }
         }
       }
 
-    if(IntervalIsVoid != 1)
+    if (IntervalIsVoid != 1)
     {
       (*IntervalMax) = NewMax;
       (*IntervalMin) = NewMin;
     }
   }
 
-  if(IntervalIsVoid == 1)
+  if (IntervalIsVoid == 1)
   {
     return -1;
   }
@@ -165,14 +160,13 @@ G4int G4PolynomialSolver<T, F>::BezierClipping(/*T* typeF,F func,F deriv,*/
   return 0;
 }
 
-template <class T, class F>
-G4double G4PolynomialSolver<T, F>::Newton(G4double IntervalMin,
-                                          G4double IntervalMax)
+template<class T, class F>
+G4double G4PolynomialSolver<T, F>::Newton(G4double IntervalMin, G4double IntervalMax)
 {
   /* So now we have a good guess and an interval where
      if there are an intersection the root must be */
 
-  G4double Value    = 0;
+  G4double Value = 0;
   G4double Gradient = 0;
   G4double Lambda;
 
@@ -183,20 +177,20 @@ G4double G4PolynomialSolver<T, F>::Newton(G4double IntervalMin,
   {
     G4int NewtonIsSafe;
 
-    while((NewtonIsSafe = BezierClipping(&IntervalMin, &IntervalMax)) == 0)
+    while ((NewtonIsSafe = BezierClipping(&IntervalMin, &IntervalMax)) == 0)
       ;
 
-    if(NewtonIsSafe == -1)
+    if (NewtonIsSafe == -1)
     {
       return POLINFINITY;
     }
   }
 
   Lambda = IntervalMin;
-  Value  = (FunctionClass->*Function)(Lambda);
+  Value = (FunctionClass->*Function)(Lambda);
 
   //  while ((std::fabs(Value) > Precision)) {
-  while(j != -1)
+  while (j != -1)
   {
     Value = (FunctionClass->*Function)(Lambda);
 
@@ -204,10 +198,10 @@ G4double G4PolynomialSolver<T, F>::Newton(G4double IntervalMin,
 
     Lambda = Lambda - Value / Gradient;
 
-    if(std::fabs(Value) <= Precision)
+    if (std::fabs(Value) <= Precision)
     {
       ++j;
-      if(j == 2)
+      if (j == 2)
       {
         j = -1;
       }
@@ -216,8 +210,7 @@ G4double G4PolynomialSolver<T, F>::Newton(G4double IntervalMin,
     {
       ++i;
 
-      if(i > ITERATION)
-        return POLINFINITY;
+      if (i > ITERATION) return POLINFINITY;
     }
   }
   return Lambda;

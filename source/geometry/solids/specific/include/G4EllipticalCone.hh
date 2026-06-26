@@ -70,23 +70,24 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UELLIPTICALCONE 1
+#  define G4GEOM_USE_UELLIPTICALCONE 1
 #endif
 
 #if (defined(G4GEOM_USE_UELLIPTICALCONE) && defined(G4GEOM_USE_SYS_USOLIDS))
-  #define G4UEllipticalCone G4EllipticalCone
-  #include "G4UEllipticalCone.hh"
+#  define G4UEllipticalCone G4EllipticalCone
+#  include "G4UEllipticalCone.hh"
 #else
 
-#include <CLHEP/Units/PhysicalConstants.h>
+#  include "G4Polyhedron.hh"
+#  include "G4VSolid.hh"
 
-#include "G4VSolid.hh"
-#include "G4Polyhedron.hh"
+#  include <CLHEP/Units/PhysicalConstants.h>
 
 /**
  * @brief G4EllipticalCone is a full cone with elliptical base which
- * can be cut in Z. The height in Z corresponds to where the elliptical
- * cone hits the Z-axis if it had no Z cut.
+ * can be cut in Z.
+ * @ingroup geometry_solids_specific
+ * The height in Z corresponds to where the elliptical cone hits the Z-axis if it had no Z cut.
  */
 
 class G4EllipticalCone : public G4VSolid
@@ -101,11 +102,8 @@ class G4EllipticalCone : public G4VSolid
      *  @param[in] zMax The Z-coordinate at the apex.
      *  @param[in] pzTopCut Upper cut plane level.
      */
-    G4EllipticalCone(const G4String& pName,
-                           G4double  pxSemiAxis,
-                           G4double  pySemiAxis,
-                           G4double  zMax,
-                           G4double  pzTopCut);
+    G4EllipticalCone(const G4String& pName, G4double pxSemiAxis, G4double pySemiAxis, G4double zMax,
+                     G4double pzTopCut);
 
     /**
      * Destructor.
@@ -115,18 +113,18 @@ class G4EllipticalCone : public G4VSolid
     /**
      * Accessors.
      */
-    inline G4double GetSemiAxisMin () const;
-    inline G4double GetSemiAxisMax () const;
-    inline G4double GetSemiAxisX () const;
-    inline G4double GetSemiAxisY () const;
+    inline G4double GetSemiAxisMin() const;
+    inline G4double GetSemiAxisMax() const;
+    inline G4double GetSemiAxisX() const;
+    inline G4double GetSemiAxisY() const;
     inline G4double GetZMax() const;
     inline G4double GetZTopCut() const;
 
     /**
      * Modifiers.
      */
-    void SetSemiAxis (G4double x, G4double y, G4double z);
-    void SetZCut (G4double newzTopCut);
+    void SetSemiAxis(G4double x, G4double y, G4double z);
+    void SetZCut(G4double newzTopCut);
 
     /**
      * Returning an estimation of the solid volume (capacity) and
@@ -152,10 +150,9 @@ class G4EllipticalCone : public G4VSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Concrete implementations of the expected query interfaces for
@@ -163,14 +160,11 @@ class G4EllipticalCone : public G4VSolid
      */
     EInside Inside(const G4ThreeVector& p) const override;
     G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
-    G4double DistanceToIn(const G4ThreeVector& p,
-                          const G4ThreeVector& v) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
     G4double DistanceToIn(const G4ThreeVector& p) const override;
-    G4double DistanceToOut(const G4ThreeVector& p,
-                           const G4ThreeVector& v,
-                           const G4bool calcNorm = false,
-                                 G4bool* validNorm = nullptr,
-                                 G4ThreeVector* n = nullptr) const override;
+    G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
     G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
@@ -240,8 +234,8 @@ class G4EllipticalCone : public G4VSolid
     G4double cosAxisMin, invXX, invYY;
 };
 
-#include "G4EllipticalCone.icc"
+#  include "G4EllipticalCone.icc"
 
 #endif  // defined(G4GEOM_USE_UELLIPTICALCONE) && defined(G4GEOM_USE_SYS_USOLIDS)
 
-#endif // G4ELLIPTICALCONE_HH
+#endif  // G4ELLIPTICALCONE_HH

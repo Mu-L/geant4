@@ -28,7 +28,7 @@
 //
 // History:
 // -----------
-// 09 Dec 2009   L. Pandola   1st implementation. 
+// 09 Dec 2009   L. Pandola   1st implementation.
 //
 // -------------------------------------------------------------------
 //
@@ -38,46 +38,46 @@
 // -------------------------------------------------------------------
 
 #ifndef G4PENELOPESAMPLINGDATA_HH
-#define G4PENELOPESAMPLINGDATA_HH 1
+#define G4PENELOPESAMPLINGDATA_HH
 
-#include "globals.hh"
 #include "G4DataVector.hh"
+#include "globals.hh"
 //
-//This is a container of data that are used for sampling algoritm
+// This is a container of data that are used for sampling algoritm
 //
 class G4PenelopeSamplingData
 {
-public:
-  explicit G4PenelopeSamplingData(G4int npoints=150);
-  ~G4PenelopeSamplingData();
+  public:
 
-  void AddPoint(G4double x0,G4double pac0,G4double a0,G4double b0,size_t ITTL0,
-		size_t ITTU0);
-  size_t GetNumberOfStoredPoints();
-  void Clear();
-  void DumpTable();
-  
-  G4double GetX(size_t index);
-  G4double GetPAC(size_t index);
-  G4double GetA(size_t index);
-  G4double GetB(size_t index);
+    explicit G4PenelopeSamplingData(G4int npoints = 150);
+    ~G4PenelopeSamplingData();
 
-  G4double SampleValue(G4double rndm);
+    void AddPoint(G4double x0, G4double pac0, G4double a0, G4double b0, size_t ITTL0, size_t ITTU0);
+    size_t GetNumberOfStoredPoints();
+    void Clear();
+    void DumpTable();
 
-  G4PenelopeSamplingData & operator=(const G4PenelopeSamplingData &right) = delete;
-  G4PenelopeSamplingData(const G4PenelopeSamplingData&) = delete;
-  
-private:  
-  G4DataVector* fX; //grid points, in increasing order
-  G4DataVector* fPAC; //value of the cumulative pdf at x_i
-  G4DataVector* fA; // rational inverse cumulative inverse distribution parameters
-  G4DataVector* fB;
-  
-  std::vector<size_t> *fITTL; //largest j for which pac(j) < (i-1)/(np-1)
-  std::vector<size_t> *fITTU; //smallest k for which pac(k) > i/(np-1)
+    G4double GetX(size_t index);
+    G4double GetPAC(size_t index);
+    G4double GetA(size_t index);
+    G4double GetB(size_t index);
 
-  G4int fNP; //number of grid points
+    G4double SampleValue(G4double rndm);
+
+    G4PenelopeSamplingData& operator=(const G4PenelopeSamplingData& right) = delete;
+    G4PenelopeSamplingData(const G4PenelopeSamplingData&) = delete;
+
+  private:
+
+    G4DataVector* fX;  // grid points, in increasing order
+    G4DataVector* fPAC;  // value of the cumulative pdf at x_i
+    G4DataVector* fA;  // rational inverse cumulative inverse distribution parameters
+    G4DataVector* fB;
+
+    std::vector<size_t>* fITTL;  // largest j for which pac(j) < (i-1)/(np-1)
+    std::vector<size_t>* fITTU;  // smallest k for which pac(k) > i/(np-1)
+
+    G4int fNP;  // number of grid points
 };
 
 #endif
-

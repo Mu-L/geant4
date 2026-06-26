@@ -27,10 +27,11 @@
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
 #include "G4XmlNtupleManager.hh"
-#include "G4XmlFileManager.hh"
+
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
 #include "G4UnitsTable.hh"
+#include "G4XmlFileManager.hh"
 
 #include "tools/ntuple_booking"
 
@@ -38,7 +39,7 @@ using namespace G4Analysis;
 
 //_____________________________________________________________________________
 G4XmlNtupleManager::G4XmlNtupleManager(const G4AnalysisManagerState& state)
- : G4TNtupleManager<tools::waxml::ntuple, std::ofstream>(state)
+  : G4TNtupleManager<tools::waxml::ntuple, std::ofstream>(state)
 {}
 
 //
@@ -46,35 +47,33 @@ G4XmlNtupleManager::G4XmlNtupleManager(const G4AnalysisManagerState& state)
 //
 
 //_____________________________________________________________________________
-void G4XmlNtupleManager::CreateTNtupleFromBooking(
-  XmlNtupleDescription* ntupleDescription)
+void G4XmlNtupleManager::CreateTNtupleFromBooking(XmlNtupleDescription* ntupleDescription)
 {
-    // create a file for this ntuple
-    if ( ! fFileManager->CreateNtupleFile(ntupleDescription) ) return;
+  // create a file for this ntuple
+  if (!fFileManager->CreateNtupleFile(ntupleDescription)) return;
 
-    // create ntuple
-    ntupleDescription->SetNtuple(
-      new tools::waxml::ntuple(
-            *(ntupleDescription->GetFile()), G4cerr,
-            ntupleDescription->GetNtupleBooking()));
+  // create ntuple
+  ntupleDescription->SetNtuple(new tools::waxml::ntuple(*(ntupleDescription->GetFile()), G4cerr,
+                                                        ntupleDescription->GetNtupleBooking()));
 }
 
 //_____________________________________________________________________________
-void G4XmlNtupleManager::FinishTNtuple(
-  XmlNtupleDescription* ntupleDescription,
-  G4bool /*fromBooking*/)
+void G4XmlNtupleManager::FinishTNtuple(XmlNtupleDescription* ntupleDescription,
+                                       G4bool /*fromBooking*/)
 
 {
   // Do nothing if the base file name was not yet defined
   if (fFileManager->GetFileName().size() == 0u) return;
 
   // Create ntuple from booking
-  if (ntupleDescription->GetNtuple() == nullptr) {
+  if (ntupleDescription->GetNtuple() == nullptr)
+  {
     CreateTNtupleFromBooking(ntupleDescription);
   }
 
   // Return if creating ntuple failed
-  if (ntupleDescription->GetNtuple() == nullptr) {
+  if (ntupleDescription->GetNtuple() == nullptr)
+  {
     Warn("Creating ntuple has failed. ", fkClass, "FinishTNtuple");
     return;
   }
@@ -82,7 +81,8 @@ void G4XmlNtupleManager::FinishTNtuple(
   // Update ntuple name if cycle >0
   auto ntupleName = ntupleDescription->GetNtupleBooking().name();
   // if (ntupleDescription->GetCycle() > 0) {
-  if (GetCycle() > 0) {
+  if (GetCycle() > 0)
+  {
     ntupleName.append("_v");
     ntupleName.append(std::to_string(GetCycle()));
   }
@@ -90,8 +90,7 @@ void G4XmlNtupleManager::FinishTNtuple(
   // Write header
   G4String path = "/";
   path.append(fFileManager->GetNtupleDirectoryName());
-  ntupleDescription->GetNtuple()
-    ->write_header(path, ntupleName,
-                   ntupleDescription->GetNtupleBooking().title());
+  ntupleDescription->GetNtuple()->write_header(path, ntupleName,
+                                               ntupleDescription->GetNtupleBooking().title());
   fFileManager->LockDirectoryNames();
 }

@@ -22,20 +22,21 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // Class G4AssemblyVolume - implementation
 //
 // Authors: R.Chytracek, J.Apostolakis, G.Cosmo (CERN), November 2000
 // --------------------------------------------------------------------
 
 #include "G4AssemblyVolume.hh"
-#include "G4AssemblyStore.hh"
-#include "G4PVPlacement.hh"
-#include "G4RotationMatrix.hh"
+
 #include "G4AffineTransform.hh"
+#include "G4AssemblyStore.hh"
 #include "G4LogicalVolume.hh"
-#include "G4VPhysicalVolume.hh"
+#include "G4PVPlacement.hh"
 #include "G4ReflectionFactory.hh"
+#include "G4RotationMatrix.hh"
+#include "G4VPhysicalVolume.hh"
 
 #include <sstream>
 
@@ -47,17 +48,15 @@ G4ThreadLocal unsigned int G4AssemblyVolume::fsInstanceCounter = 0;
 G4AssemblyVolume::G4AssemblyVolume()
 {
   InstanceCountPlus();
-  SetAssemblyID( GetInstanceCount() );
-  SetImprintsCount( 0 );
+  SetAssemblyID(GetInstanceCount());
+  SetImprintsCount(0);
   G4AssemblyStore* aStore = G4AssemblyStore::GetInstance();
-  if (aStore->GetAssembly(fAssemblyID,false) != nullptr)
+  if (aStore->GetAssembly(fAssemblyID, false) != nullptr)
   {
     std::ostringstream message;
-    message << "The assembly has NOT been registered !" << G4endl
-            << "          Assembly " << fAssemblyID
-            << " already existing in store !" << G4endl;
-    G4Exception("G4AssemblyVolume::G4AssemblyVolume()", "GeomVol1001",
-                JustWarning, message);
+    message << "The assembly has NOT been registered !" << G4endl << "          Assembly "
+            << fAssemblyID << " already existing in store !" << G4endl;
+    G4Exception("G4AssemblyVolume::G4AssemblyVolume()", "GeomVol1001", JustWarning, message);
   }
   else
   {
@@ -68,23 +67,20 @@ G4AssemblyVolume::G4AssemblyVolume()
 // --------------------------------------------------------------------
 // Composing constructor
 //
-G4AssemblyVolume::G4AssemblyVolume( G4LogicalVolume* volume,
-                                    G4ThreeVector& translation,
-                                    G4RotationMatrix* rotation )
+G4AssemblyVolume::G4AssemblyVolume(G4LogicalVolume* volume, G4ThreeVector& translation,
+                                   G4RotationMatrix* rotation)
 {
   InstanceCountPlus();
-  SetAssemblyID( GetInstanceCount() );
-  SetImprintsCount( 0 );
+  SetAssemblyID(GetInstanceCount());
+  SetImprintsCount(0);
   AddPlacedVolume(volume, translation, rotation);
   G4AssemblyStore* aStore = G4AssemblyStore::GetInstance();
-  if (aStore->GetAssembly(fAssemblyID,false) != nullptr)
+  if (aStore->GetAssembly(fAssemblyID, false) != nullptr)
   {
     std::ostringstream message;
-    message << "The assembly has NOT been registered !" << G4endl
-            << "          Assembly " << fAssemblyID
-            << " already existing in store !" << G4endl;
-    G4Exception("G4Assembly::G4Assembly()", "GeomVol1001",
-                JustWarning, message);
+    message << "The assembly has NOT been registered !" << G4endl << "          Assembly "
+            << fAssemblyID << " already existing in store !" << G4endl;
+    G4Exception("G4Assembly::G4Assembly()", "GeomVol1001", JustWarning, message);
   }
   else
   {
@@ -98,16 +94,16 @@ G4AssemblyVolume::G4AssemblyVolume( G4LogicalVolume* volume,
 G4AssemblyVolume::~G4AssemblyVolume()
 {
   std::size_t howmany = fTriplets.size();
-  if( howmany != 0 )
+  if (howmany != 0)
   {
-    for( std::size_t i = 0; i < howmany; ++i )
+    for (std::size_t i = 0; i < howmany; ++i)
     {
       G4RotationMatrix* pRotToClean = fTriplets[i].GetRotation();
       delete pRotToClean;
     }
   }
   fTriplets.clear();
-  
+
   // No need to delete physical volumes, as these are deleted
   // by physical-volumes store.
   //
@@ -127,80 +123,88 @@ G4AssemblyVolume::~G4AssemblyVolume()
 // This policy has been adopted since user has no control on the way the
 // rotations are combined.
 //
-void G4AssemblyVolume::AddPlacedVolume( G4LogicalVolume*  pVolume,
-                                        G4ThreeVector&    translation,
-                                        G4RotationMatrix* pRotation )
+void G4AssemblyVolume::AddPlacedVolume(G4LogicalVolume* pVolume, G4ThreeVector& translation,
+                                       G4RotationMatrix* pRotation)
 {
   auto toStore = new G4RotationMatrix;
-  
-  if( pRotation != nullptr )  { *toStore = *pRotation; }
-  
-  G4AssemblyTriplet toAdd( pVolume, translation, toStore );
-  fTriplets.push_back( toAdd );
+
+  if (pRotation != nullptr)
+  {
+    *toStore = *pRotation;
+  }
+
+  G4AssemblyTriplet toAdd(pVolume, translation, toStore);
+  fTriplets.push_back(toAdd);
 }
 
 // --------------------------------------------------------------------
 // Add and place the given volume according to the specified transformation
 //
-void G4AssemblyVolume::AddPlacedVolume( G4LogicalVolume*  pVolume,
-                                        G4Transform3D&    transformation )
+void G4AssemblyVolume::AddPlacedVolume(G4LogicalVolume* pVolume, G4Transform3D& transformation)
 {
   // Decompose transformation
-  G4Scale3D     scale;
-  G4Rotate3D    rotation;
+  G4Scale3D scale;
+  G4Rotate3D rotation;
   G4Translate3D translation;
   transformation.getDecomposition(scale, rotation, translation);
 
   G4ThreeVector v = translation.getTranslation();
   auto r = new G4RotationMatrix;
-      *r = rotation.getRotation();
-  
-  G4bool isReflection = false;
-  if (scale(0,0)*scale(1,1)*scale(2,2) < 0.)  { isReflection = true; }
+  *r = rotation.getRotation();
 
-  G4AssemblyTriplet toAdd( pVolume, v, r, isReflection );
-  fTriplets.push_back( toAdd );
+  G4bool isReflection = false;
+  if (scale(0, 0) * scale(1, 1) * scale(2, 2) < 0.)
+  {
+    isReflection = true;
+  }
+
+  G4AssemblyTriplet toAdd(pVolume, v, r, isReflection);
+  fTriplets.push_back(toAdd);
 }
 
 // --------------------------------------------------------------------
 // Add and place the given assembly volume according to the specified
 // translation and rotation.
 //
-void G4AssemblyVolume::AddPlacedAssembly( G4AssemblyVolume* pAssembly,
-                                          G4ThreeVector&    translation,
-                                          G4RotationMatrix* pRotation )
+void G4AssemblyVolume::AddPlacedAssembly(G4AssemblyVolume* pAssembly, G4ThreeVector& translation,
+                                         G4RotationMatrix* pRotation)
 {
   auto toStore = new G4RotationMatrix;
-  
-  if( pRotation != nullptr )  { *toStore = *pRotation; }
-  
-  G4AssemblyTriplet toAdd( pAssembly, translation, toStore );
-  fTriplets.push_back( toAdd );
+
+  if (pRotation != nullptr)
+  {
+    *toStore = *pRotation;
+  }
+
+  G4AssemblyTriplet toAdd(pAssembly, translation, toStore);
+  fTriplets.push_back(toAdd);
 }
 
 // --------------------------------------------------------------------
-// Add and place the given assembly volume according to the specified 
+// Add and place the given assembly volume according to the specified
 // transformation
 //
-void G4AssemblyVolume::AddPlacedAssembly( G4AssemblyVolume* pAssembly,
-                                          G4Transform3D&    transformation )
+void G4AssemblyVolume::AddPlacedAssembly(G4AssemblyVolume* pAssembly, G4Transform3D& transformation)
 {
   // Decompose transformation
   //
-  G4Scale3D     scale;
-  G4Rotate3D    rotation;
+  G4Scale3D scale;
+  G4Rotate3D rotation;
   G4Translate3D translation;
   transformation.getDecomposition(scale, rotation, translation);
 
-  G4ThreeVector      v = translation.getTranslation();
+  G4ThreeVector v = translation.getTranslation();
   auto r = new G4RotationMatrix;
-      *r = rotation.getRotation();
-  
+  *r = rotation.getRotation();
+
   G4bool isReflection = false;
-  if (scale(0,0)*scale(1,1)*scale(2,2) < 0.)  { isReflection = true; }
-  
-  G4AssemblyTriplet toAdd( pAssembly, v, r, isReflection );
-  fTriplets.push_back( toAdd );
+  if (scale(0, 0) * scale(1, 1) * scale(2, 2) < 0.)
+  {
+    isReflection = true;
+  }
+
+  G4AssemblyTriplet toAdd(pAssembly, v, r, isReflection);
+  fTriplets.push_back(toAdd);
 }
 
 // --------------------------------------------------------------------
@@ -208,19 +212,19 @@ void G4AssemblyVolume::AddPlacedAssembly( G4AssemblyVolume* pAssembly,
 // mother volume. This works analogically to making stamp imprints.
 // This method makes use of the Geant4 affine transformation class.
 // The algorithm is defined as follows:
-//  
+//
 // Having rotation matrix Rm and translation vector Tm to be applied
 // inside the mother and rotation matrix Ra and translation vector Ta
 // to be applied inside the assembly itself for each of the participating
 // volumes the resulting transformation is
-//  
+//
 // Tfinal = Ta * Tm
-//  
+//
 // where Ta and Tm are constructed as
-//  
+//
 //        -1                                     -1
 // Ta = Ra  * Ta           and            Tm = Rm  * Tm
-//  
+//
 // which in words means that we create first the affine transformations
 // by inverse rotation matrices and translations for mother and assembly.
 // The resulting final transformation to be applied to each of the
@@ -229,28 +233,26 @@ void G4AssemblyVolume::AddPlacedAssembly( G4AssemblyVolume* pAssembly,
 // IMPORTANT NOTE!
 // The order of multiplication is reversed when comparing to CLHEP 3D
 // transformation matrix(G4Transform3D class).
-//  
+//
 // The rotation matrix passed in can be 0 = identity or an address even of an
 // object on the upper stack frame. During assembly imprint, it creates anyway
 // a new matrix and keeps track of it so it can delete it later at destruction
 // time.
 // This policy has been adopted since user has no control on the way the
 // rotations are combined.
-// 
+//
 // If the assembly volume contains assembly (a'), the function is called
 // recursively with composed transformation:
 //
 // Tanew =  Ta * Ta'
 //
-void G4AssemblyVolume::MakeImprint( G4AssemblyVolume* pAssembly,
-                                    G4LogicalVolume*  pMotherLV,
-                                    G4Transform3D&    transformation,
-                                    G4int copyNumBase,
-                                    G4bool surfCheck )
+void G4AssemblyVolume::MakeImprint(G4AssemblyVolume* pAssembly, G4LogicalVolume* pMotherLV,
+                                   G4Transform3D& transformation, G4int copyNumBase,
+                                   G4bool surfCheck)
 {
   std::size_t numberOfDaughters;
-    
-  if( copyNumBase == 0 )
+
+  if (copyNumBase == 0)
   {
     numberOfDaughters = pMotherLV->GetNoDaughters();
   }
@@ -264,21 +266,23 @@ void G4AssemblyVolume::MakeImprint( G4AssemblyVolume* pAssembly,
   ++numberOfDaughters;
 
   ImprintsCountPlus();
-  
+
   auto triplets = pAssembly->fTriplets;
 
   // store the transformation in a container (for GDML persistency)
   fImprintsTransf[GetImprintsCount()] = transformation;
 
-  for( std::size_t i = 0; i < triplets.size(); ++i )
+  for (std::size_t i = 0; i < triplets.size(); ++i)
   {
-    G4Transform3D Ta( *(triplets[i].GetRotation()),
-                      triplets[i].GetTranslation() );
-    if ( triplets[i].IsReflection() )  { Ta = Ta * G4ReflectZ3D(); }
+    G4Transform3D Ta(*(triplets[i].GetRotation()), triplets[i].GetTranslation());
+    if (triplets[i].IsReflection())
+    {
+      Ta = Ta * G4ReflectZ3D();
+    }
 
     G4Transform3D Tfinal = transformation * Ta;
-    
-    if ( triplets[i].GetVolume() != nullptr )
+
+    if (triplets[i].GetVolume() != nullptr)
     {
       // Generate the unique name for the next PV instance
       // The name has format:
@@ -291,60 +295,47 @@ void G4AssemblyVolume::MakeImprint( G4AssemblyVolume* pAssembly,
       // ZZZ - the log. volume index inside the assembly volume
       //
       std::stringstream pvName;
-      pvName << "av_"
-             << GetAssemblyID()
-             << "_impr_"
-             << GetImprintsCount()
-             << "_"
-             << triplets[i].GetVolume()->GetName().c_str()
-             << "_pv_"
-             << i
-             << std::ends;
+      pvName << "av_" << GetAssemblyID() << "_impr_" << GetImprintsCount() << "_"
+             << triplets[i].GetVolume()->GetName().c_str() << "_pv_" << i << std::ends;
 
       // Generate a new physical volume instance inside a mother
-      // (as we allow 3D transformation use G4ReflectionFactory to 
+      // (as we allow 3D transformation use G4ReflectionFactory to
       //  take into account eventual reflection)
       //
-      G4PhysicalVolumesPair pvPlaced
-        = G4ReflectionFactory::Instance()->Place( Tfinal,
-                                                  pvName.str().c_str(),
-                                                  triplets[i].GetVolume(),
-                                                  pMotherLV,
-                                                  false,
-                                                  G4int(numberOfDaughters+i),
-                                                  surfCheck );
+      G4PhysicalVolumesPair pvPlaced = G4ReflectionFactory::Instance()->Place(
+        Tfinal, pvName.str().c_str(), triplets[i].GetVolume(), pMotherLV, false,
+        G4int(numberOfDaughters + i), surfCheck);
 
       // Register the physical volume created by us so we can delete it later
       //
-      fPVStore.push_back( pvPlaced.first );
-      if ( pvPlaced.second != nullptr )  { fPVStore.push_back( pvPlaced.second ); }
+      fPVStore.push_back(pvPlaced.first);
+      if (pvPlaced.second != nullptr)
+      {
+        fPVStore.push_back(pvPlaced.second);
+      }
 
-      // Here I want to save the imprint transformation to some container, so I can retrieve the original values later
-      // imprintTrans[GetImprintsCount()] = transformation;
-      
+      // Here I want to save the imprint transformation to some container, so I can retrieve the
+      // original values later imprintTrans[GetImprintsCount()] = transformation;
     }
-    else if ( triplets[i].GetAssembly() != nullptr )
+    else if (triplets[i].GetAssembly() != nullptr)
     {
       // Place volumes in this assembly with composed transformation
       //
-      MakeImprint( triplets[i].GetAssembly(), pMotherLV,
-                   Tfinal, (G4int)i*100+copyNumBase, surfCheck ); 
+      MakeImprint(triplets[i].GetAssembly(), pMotherLV, Tfinal, (G4int)i * 100 + copyNumBase,
+                  surfCheck);
     }
     else
     {
-      G4Exception("G4AssemblyVolume::MakeImprint(..)",
-                  "GeomVol0003", FatalException,
+      G4Exception("G4AssemblyVolume::MakeImprint(..)", "GeomVol0003", FatalException,
                   "Triplet has no volume and no assembly");
-    }  
-  }  
-}    
+    }
+  }
+}
 
 // --------------------------------------------------------------------
-void G4AssemblyVolume::MakeImprint( G4LogicalVolume*  pMotherLV,
-                                    G4ThreeVector&    translationInMother,
-                                    G4RotationMatrix* pRotationInMother,
-                                    G4int copyNumBase,
-                                    G4bool surfCheck )
+void G4AssemblyVolume::MakeImprint(G4LogicalVolume* pMotherLV, G4ThreeVector& translationInMother,
+                                   G4RotationMatrix* pRotationInMother, G4int copyNumBase,
+                                   G4bool surfCheck)
 {
   // If needed user can specify explicitely the base count from which to start
   // off for the generation of phys. vol. copy numbers.
@@ -354,24 +345,20 @@ void G4AssemblyVolume::MakeImprint( G4LogicalVolume*  pMotherLV,
 
   // Compose transformation
   //
-  if( pRotationInMother == nullptr )
+  if (pRotationInMother == nullptr)
   {
     // Make it by default an indentity matrix
     //
-    pRotationInMother =
-      const_cast<G4RotationMatrix*>( &G4RotationMatrix::IDENTITY );
+    pRotationInMother = const_cast<G4RotationMatrix*>(&G4RotationMatrix::IDENTITY);
   }
 
-  G4Transform3D transform( *pRotationInMother,
-                            translationInMother );
+  G4Transform3D transform(*pRotationInMother, translationInMother);
   MakeImprint(this, pMotherLV, transform, copyNumBase, surfCheck);
 }
 
 // --------------------------------------------------------------------
-void G4AssemblyVolume::MakeImprint( G4LogicalVolume*  pMotherLV,
-                                    G4Transform3D&    transformation,
-                                    G4int copyNumBase,
-                                    G4bool surfCheck )
+void G4AssemblyVolume::MakeImprint(G4LogicalVolume* pMotherLV, G4Transform3D& transformation,
+                                   G4int copyNumBase, G4bool surfCheck)
 {
   // If needed user can specify explicitely the base count from which to start
   // off for the generation of phys. vol. copy numbers.
@@ -389,7 +376,7 @@ unsigned int G4AssemblyVolume::GetInstanceCount() const
 }
 
 // --------------------------------------------------------------------
-void G4AssemblyVolume::SetInstanceCount( unsigned int value )
+void G4AssemblyVolume::SetInstanceCount(unsigned int value)
 {
   G4AssemblyVolume::fsInstanceCounter = value;
 }

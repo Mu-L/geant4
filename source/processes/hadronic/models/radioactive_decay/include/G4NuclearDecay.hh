@@ -28,37 +28,35 @@
 //  File:   G4NuclearDecay.hh                                                 //
 //  Author: D.H. Wright (SLAC)                                                //
 //  Date:   11 December 2014                                                  //
-//  Description: base class for all radioactive decay channels                // 
+//  Description: base class for all radioactive decay channels                //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4NuclearDecay_h
-#define G4NuclearDecay_h 1
+#ifndef G4NUCLEARDECAY_HH
+#define G4NUCLEARDECAY_HH
 
-#include "G4VDecayChannel.hh"
-#include "G4RadioactiveDecayMode.hh"
 #include "G4IonTable.hh"
-
+#include "G4RadioactiveDecayMode.hh"
+#include "G4VDecayChannel.hh"
 
 class G4NuclearDecay : public G4VDecayChannel
 {
   public:
-    G4NuclearDecay(const G4String& channelName,
-                   const G4RadioactiveDecayMode& mode,
-                   const G4double& excitation,
-                   const G4Ions::G4FloatLevelBase& floatingLevel);
+
+    G4NuclearDecay(const G4String& channelName, const G4RadioactiveDecayMode& mode,
+                   const G4double& excitation, const G4Ions::G4FloatLevelBase& floatingLevel);
 
     ~G4NuclearDecay() override = default;
 
     G4bool IsOKWithParentMass(G4double parentMass) override;
 
-    G4RadioactiveDecayMode GetDecayMode() const {return theMode;}
+    G4RadioactiveDecayMode GetDecayMode() const { return theMode; }
 
-    G4double GetDaughterExcitation() const {return daughterEx;}
+    G4double GetDaughterExcitation() const { return daughterEx; }
 
-    G4Ions::G4FloatLevelBase GetFloatingLevel() const {return floatingLevel;}
+    G4Ions::G4FloatLevelBase GetFloatingLevel() const { return floatingLevel; }
 
-    G4ParticleDefinition* GetDaughterNucleus() {return GetDaughter(0);}
+    G4ParticleDefinition* GetDaughterNucleus() { return GetDaughter(0); }
 
     virtual void DumpNuclearInfo() = 0;
 
@@ -73,4 +71,3 @@ class G4NuclearDecay : public G4VDecayChannel
     const G4Ions::G4FloatLevelBase floatingLevel;
 };
 #endif
-

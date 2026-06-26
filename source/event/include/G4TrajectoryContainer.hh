@@ -32,15 +32,16 @@
 
 // Author: Makoto Asai (SLAC)
 // --------------------------------------------------------------------
-#ifndef G4TrajectoryContainer_hh
-#define G4TrajectoryContainer_hh 1
+#ifndef G4TRAJECTORYCONTAINER_HH
+#define G4TRAJECTORYCONTAINER_HH
+
+#include "G4Allocator.hh"
+#include "G4VTrajectory.hh"
+#include "globals.hh"
+
+#include "evtdefs.hh"
 
 #include <vector>
-
-#include "globals.hh"
-#include "evtdefs.hh"
-#include "G4VTrajectory.hh"
-#include "G4Allocator.hh"
 
 using TrajectoryVector = std::vector<G4VTrajectory*>;
 
@@ -54,7 +55,7 @@ class G4TrajectoryContainer
     G4TrajectoryContainer(const G4TrajectoryContainer&) = delete;
     G4TrajectoryContainer& operator=(const G4TrajectoryContainer&) = delete;
 
-    inline void *operator new(std::size_t);
+    inline void* operator new(std::size_t);
     inline void operator delete(void* anEvent);
 
     G4bool operator==(const G4TrajectoryContainer& right) const;
@@ -63,10 +64,15 @@ class G4TrajectoryContainer
     inline std::size_t size() const { return vect->size(); }
     inline void push_back(G4VTrajectory* p) { vect->push_back(p); }
     inline std::size_t entries() const { return size(); }
-    inline G4bool insert(G4VTrajectory* p) { push_back(p); return true; }
+    inline G4bool insert(G4VTrajectory* p)
+    {
+      push_back(p);
+      return true;
+    }
     inline void clearAndDestroy()
     {
-      for(std::size_t i=0; i<size(); ++i) delete (*vect)[i];
+      for (std::size_t i = 0; i < size(); ++i)
+        delete (*vect)[i];
       vect->clear();
     }
     inline G4VTrajectory* operator[](std::size_t n) { return (*vect)[n]; }
@@ -77,8 +83,7 @@ class G4TrajectoryContainer
     TrajectoryVector* vect = nullptr;
 };
 
-extern G4EVENT_DLL
-G4Allocator<G4TrajectoryContainer>*& aTrajectoryContainerAllocator();
+extern G4EVENT_DLL G4Allocator<G4TrajectoryContainer>*& aTrajectoryContainerAllocator();
 
 inline void* G4TrajectoryContainer::operator new(std::size_t)
 {
@@ -91,8 +96,7 @@ inline void* G4TrajectoryContainer::operator new(std::size_t)
 
 inline void G4TrajectoryContainer::operator delete(void* aTrajectoryContainer)
 {
-  aTrajectoryContainerAllocator()
-   ->FreeSingle((G4TrajectoryContainer*)aTrajectoryContainer);
+  aTrajectoryContainerAllocator()->FreeSingle((G4TrajectoryContainer*)aTrajectoryContainer);
 }
 
 #endif

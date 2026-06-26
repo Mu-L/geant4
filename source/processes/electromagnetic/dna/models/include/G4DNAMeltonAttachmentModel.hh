@@ -29,63 +29,59 @@
 
 // Created by Z. Francis
 
-#ifndef G4DNAMeltonAttachmentModel_h
-#define G4DNAMeltonAttachmentModel_h 1
+#ifndef G4DNAMELTONATTACHMENTMODEL_HH
+#define G4DNAMELTONATTACHMENTMODEL_HH
 
-#include "G4VEmModel.hh"
-#include "G4ParticleChangeForGamma.hh"
-#include "G4DNAGenericIonsManager.hh"
 #include "G4DNACrossSectionDataSet.hh"
+#include "G4DNAGenericIonsManager.hh"
 #include "G4Electron.hh"
 #include "G4LogLogInterpolation.hh"
 #include "G4NistManager.hh"
+#include "G4ParticleChangeForGamma.hh"
+#include "G4VEmModel.hh"
 
 class G4DNAMeltonAttachmentModel : public G4VEmModel
 {
-public:
-  G4DNAMeltonAttachmentModel(const G4ParticleDefinition* p = nullptr, 
-		             const G4String& nam = "DNAMeltonAttachmentModel");
+  public:
 
-  ~G4DNAMeltonAttachmentModel() override;
+    G4DNAMeltonAttachmentModel(const G4ParticleDefinition* p = nullptr,
+                               const G4String& nam = "DNAMeltonAttachmentModel");
 
-  G4DNAMeltonAttachmentModel & operator=(const  G4DNAMeltonAttachmentModel &right) = delete;
-  G4DNAMeltonAttachmentModel(const  G4DNAMeltonAttachmentModel&) = delete;
+    ~G4DNAMeltonAttachmentModel() override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    G4DNAMeltonAttachmentModel& operator=(const G4DNAMeltonAttachmentModel& right) = delete;
+    G4DNAMeltonAttachmentModel(const G4DNAMeltonAttachmentModel&) = delete;
 
-  G4double CrossSectionPerVolume(const G4Material* material,
-					 const G4ParticleDefinition* p,
-					 G4double ekin,
-					 G4double emin,
-					 G4double emax) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-				 const G4MaterialCutsCouple*,
-				 const G4DynamicParticle*,
-				 G4double tmin,
-				 G4double maxEnergy) override;
+    G4double CrossSectionPerVolume(const G4Material* material, const G4ParticleDefinition* p,
+                                   G4double ekin, G4double emin, G4double emax) override;
 
-  inline void SetDissociationFlag(G4bool);
-  inline G4bool GetDissociationFlag();
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  inline void SelectStationary(G4bool input); 
+    inline void SetDissociationFlag(G4bool);
+    inline G4bool GetDissociationFlag();
 
-protected:
-  G4ParticleChangeForGamma* fParticleChangeForGamma;
+    inline void SelectStationary(G4bool input);
 
-private:
-  G4bool statCode;
+  protected:
 
-  // Water density table
-  const std::vector<G4double>* fpWaterDensity;
+    G4ParticleChangeForGamma* fParticleChangeForGamma;
 
-  G4bool isInitialised{false};
-  G4int verboseLevel;
-  G4bool fDissociationFlag;
-  
-  // Cross section
-  G4DNACrossSectionDataSet* fData;
-  
+  private:
+
+    G4bool statCode;
+
+    // Water density table
+    const std::vector<G4double>* fpWaterDensity;
+
+    G4bool isInitialised{false};
+    G4int verboseLevel;
+    G4bool fDissociationFlag;
+
+    // Cross section
+    G4DNACrossSectionDataSet* fData;
 };
 
 inline void G4DNAMeltonAttachmentModel::SetDissociationFlag(G4bool flag)
@@ -100,10 +96,10 @@ inline G4bool G4DNAMeltonAttachmentModel::GetDissociationFlag()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline void G4DNAMeltonAttachmentModel::SelectStationary (G4bool input)
-{ 
-    statCode = input; 
-}		 
+inline void G4DNAMeltonAttachmentModel::SelectStationary(G4bool input)
+{
+  statCode = input;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 

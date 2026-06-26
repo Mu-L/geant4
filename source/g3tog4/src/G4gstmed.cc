@@ -31,64 +31,64 @@
 //
 // by I.Hrivnacova, 27 Sep 99
 
-#include "G4SystemOfUnits.hh"
 #include "G4LogicalVolume.hh"
-#include "G3toG4.hh"
-#include "G3MatTable.hh"
-#include "G3MedTable.hh"
-#include "G4UserLimits.hh"
 #include "G4MagneticField.hh"
 #include "G4Material.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4UserLimits.hh"
 
-void PG4gstmed(G4String *tokens)
+#include "G3MatTable.hh"
+#include "G3MedTable.hh"
+#include "G3toG4.hh"
+
+void PG4gstmed(G4String* tokens)
 {
-    // fill the parameter containers
-    G3fillParams(tokens,PTgstmed);
+  // fill the parameter containers
+  G3fillParams(tokens, PTgstmed);
 
-    // interpret the parameters
-    G4String name = Spar[0];
-    G4int itmed = Ipar[0];
-    G4int nmat = Ipar[1];
-    G4int isvol = Ipar[2];
-    G4int ifield = Ipar[3];
-    G4int nwbuf = Ipar[4];
-    G4double fieldm = Rpar[0];
-    G4double tmaxfd = Rpar[1];
-    G4double stemax = Rpar[2];
-    G4double deemax = Rpar[3];
-    G4double epsil = Rpar[4];
-    G4double stmin = Rpar[5];
-    G4double *ubuf = &Rpar[6];
+  // interpret the parameters
+  G4String name = Spar[0];
+  G4int itmed = Ipar[0];
+  G4int nmat = Ipar[1];
+  G4int isvol = Ipar[2];
+  G4int ifield = Ipar[3];
+  G4int nwbuf = Ipar[4];
+  G4double fieldm = Rpar[0];
+  G4double tmaxfd = Rpar[1];
+  G4double stemax = Rpar[2];
+  G4double deemax = Rpar[3];
+  G4double epsil = Rpar[4];
+  G4double stmin = Rpar[5];
+  G4double* ubuf = &Rpar[6];
 
-    G4gstmed(itmed,name,nmat,isvol,ifield,fieldm,tmaxfd,stemax,
-             deemax,epsil,stmin,ubuf,nwbuf);
+  G4gstmed(itmed, name, nmat, isvol, ifield, fieldm, tmaxfd, stemax, deemax, epsil, stmin, ubuf,
+           nwbuf);
 }
 
-void G4gstmed(G4int itmed, G4String, G4int nmat, G4int isvol,
-              G4int, G4double, G4double,
-              G4double stemax, G4double, G4double,
-              G4double, G4double*, G4int useG3TMLimits)
+void G4gstmed(G4int itmed, G4String, G4int nmat, G4int isvol, G4int, G4double, G4double,
+              G4double stemax, G4double, G4double, G4double, G4double*, G4int useG3TMLimits)
 {
-    // get the pointer to material nmat
-    G4Material* material = G3Mat.get(nmat);
+  // get the pointer to material nmat
+  G4Material* material = G3Mat.get(nmat);
 
-    // NB. there is the possibility for redundancy in the mag field
-    //     and user limits objects. Who cares.
-    // Generate the mag field object
-    // $$$ G4MagneticField* field = new G4MagneticField(ifield, fieldm, tmaxfd);
-    G4MagneticField* field = 0;
+  // NB. there is the possibility for redundancy in the mag field
+  //     and user limits objects. Who cares.
+  // Generate the mag field object
+  // $$$ G4MagneticField* field = new G4MagneticField(ifield, fieldm, tmaxfd);
+  G4MagneticField* field = 0;
 
-    // Generate the user limits object
-    // !!! only "stemax" has its equivalent in G4
+  // Generate the user limits object
+  // !!! only "stemax" has its equivalent in G4
 
-    G4UserLimits* limits = 0;
-    if (useG3TMLimits) {
-      limits = new G4UserLimits();
-      limits->SetMaxAllowedStep(stemax*cm);
-      // limits->SetG3DefaultCuts();
-         // this is arranged globally by physics manager
-    }
+  G4UserLimits* limits = 0;
+  if (useG3TMLimits)
+  {
+    limits = new G4UserLimits();
+    limits->SetMaxAllowedStep(stemax * cm);
+    // limits->SetG3DefaultCuts();
+    // this is arranged globally by physics manager
+  }
 
-    // Store this medium in the G3Med structure
-    G3Med.put(itmed, material, field, limits, isvol);
+  // Store this medium in the G3Med structure
+  G3Med.put(itmed, material, field, limits, isvol);
 }

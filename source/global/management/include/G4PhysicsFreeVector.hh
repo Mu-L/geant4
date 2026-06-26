@@ -40,58 +40,96 @@
 // - 06 Jun. 1996, K.Amako: Implemented the 1st version
 // Revisions:
 // - 11 Nov. 2000, H.Kurashige: Use STL vector for dataVector and binVector
-// - 04 Feb. 2021, V.Ivanchenko moved implementation of all free vectors 
+// - 04 Feb. 2021, V.Ivanchenko moved implementation of all free vectors
 //                 to this class
 // --------------------------------------------------------------------
-#ifndef G4PhysicsFreeVector_hh
-#define G4PhysicsFreeVector_hh 1
+#ifndef G4PHYSICSFREEVECTOR_HH
+#define G4PHYSICSFREEVECTOR_HH
 
 #include "G4PhysicsVector.hh"
 #include "globals.hh"
+
 #include <vector>
+
+/** Physics vector specialised for general bins
+ * @ingroup global_management
+ * Supports bin edges with any spacing, as long as these are increasing (consecutive edges may be
+ * equal)
+ * @check Interpolation will always select the lower-numbered bin in case consecutive energies are
+ * set equal
+ */
 
 class G4PhysicsFreeVector : public G4PhysicsVector
 {
-public:
+  public:
 
-  // Constructors of a free vector without filling of data.
-  // The vector will be filled using PutValues(..), Retrieve(..), or 
-  // InsertValues(..) methods. 
-  // If length > 0 energy and data vectors are initialized with zeros
-  explicit G4PhysicsFreeVector(G4bool spline = false);
-  explicit G4PhysicsFreeVector(G4int length);
-  explicit G4PhysicsFreeVector(std::size_t length, G4bool spline = false);
+    /** @brief Construct empty vector */
+    explicit G4PhysicsFreeVector(G4bool spline = false);
+    /**  Construct vector of given length initialised to 0 */
+    explicit G4PhysicsFreeVector(G4int length);
+    /**  Construct vector of given length initialised to 0 */
+    explicit G4PhysicsFreeVector(std::size_t length, G4bool spline = false);
 
-  // Obsolete constructor - emin and emax are not used 
-  explicit G4PhysicsFreeVector(std::size_t length, G4double emin,
-                               G4double emax, G4bool spline = false);
+    /** @deprecated Obsolete constructor */
+    explicit G4PhysicsFreeVector(std::size_t length, G4double emin, G4double emax,
+                                 G4bool spline = false);
 
-  // The vector is filled in these constructor;
-  // 'energies' and 'values' need to have the same vector length;
-  // 'energies' assumed to increase, it is allowed to have consequtive
-  // equal energies
-  explicit G4PhysicsFreeVector(const std::vector<G4double>& energies,
-                               const std::vector<G4double>& values,
-                               G4bool spline = false);
-  explicit G4PhysicsFreeVector(const G4double* energies, const G4double* values,
-                               std::size_t length, G4bool spline = false);
+    /** Construct and fill a vector
+     *
+     * @param energies Vector of energy bin values
+     * @param values Vector of corresponding values
+     * @param spline Whether to use spline interpolation
+     * @pre The energies and values vectors are the same length
+     * @pre Energies vector is (non-strictly) increasing
+     * @post Energy and value are filled OR an exception is raised if the lengths do not match
+     */
+    explicit G4PhysicsFreeVector(const std::vector<G4double>& energies,
+                                 const std::vector<G4double>& values, G4bool spline = false);
+    /** Construct and fill a vector
+     *
+     * @param energies Array of energy bin values
+     * @param values Array of corresponding values
+     * @param spline Whether to use spline interpolation
+     * @pre The energies and values pointers are valid arrays of length 'length'
+     * @pre Energies array is (non-strictly) increasing
+     * @post Energy and value are filled
+     */
+    explicit G4PhysicsFreeVector(const G4double* energies, const G4double* values,
+                                 std::size_t length, G4bool spline = false);
 
-  ~G4PhysicsFreeVector() override = default;
+    ~G4PhysicsFreeVector() override = default;
 
-  // Filling of the vector with the check on index and energy
-  void PutValues(const std::size_t index, 
-                 const G4double energy, const G4double value);
+    /** Put data for energy bin and value at a given index
+     * @param index Index in the vector
+     * @param energy Energy value
+     * @param value Data value
+     * @pre index is valid
+     * @post Energy bin and value at the given index are set
+     * @post If the bin is first or last, then edgeMin or edgeMax are updated accordingly
+     */
+    void PutValues(const std::size_t index, const G4double energy, const G4double value);
 
-  // Insert extra pair of energy and value
-  // If energy coincide with previously added energy then
-  // this new pair is added after 
-  void InsertValues(const G4double energy, const G4double value);
+    /** Insert an extra pair of energy and value.
+     *
+     * Inserts energy and value at the appropriate location. If energy is the
+     * same as an existing energy bin value, the new value is added after.
+     * @param energy Energy value
+     * @param value Data value
+     */
+    void InsertValues(const G4double energy, const G4double value);
 
-  void EnableLogBinSearch(const G4int n = 1);
-  
-  // Obsolete method
-  void PutValue(const std::size_t index, const G4double e, const G4double value);
-  
+    /** Enable logarithmic bin search.
+     * @param n Number of bins (default 1)
+     */
+    void EnableLogBinSearch(const G4int n = 1);
+
+    /** Obsolete. Fill the vector with a value at a given index and energy.
+     * @deprecated
+     * @param index Index in the vector
+     * @param e Energy value
+     * @param value Data value
+     */
+    void PutValue(const std::size_t index, const G4double e, const G4double value);
 };
 
 #endif

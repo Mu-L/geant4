@@ -34,45 +34,50 @@
 #ifndef G4_CASCADE_SAMPLER_HH
 #define G4_CASCADE_SAMPLER_HH
 
-#include "globals.hh"
 #include "G4CascadeInterpolator.hh"
+#include "globals.hh"
+
 #include <iosfwd>
 #include <vector>
 
-template <G4int NBINS, G4int NMULT>
-class G4CascadeSampler {
-public:
-  enum { energyBins=NBINS, multBins=NMULT };	// For use in function arguments
+template<G4int NBINS, G4int NMULT>
+class G4CascadeSampler
+{
+  public:
 
-  G4CascadeSampler(const G4double (&ebins)[energyBins]) 
-    : interpolator(ebins), energyScale(ebins) {}
+    enum
+    {
+      energyBins = NBINS,
+      multBins = NMULT
+    };  // For use in function arguments
 
-  virtual ~G4CascadeSampler() {}
+    G4CascadeSampler(const G4double (&ebins)[energyBins]) : interpolator(ebins), energyScale(ebins)
+    {}
 
-  virtual G4double 
-  findCrossSection(G4double ke, const G4double (&xsec)[energyBins]) const;
+    virtual ~G4CascadeSampler() {}
 
-  virtual G4int 
-  findMultiplicity(G4double ke, const G4double xmult[][energyBins]) const;
+    virtual G4double findCrossSection(G4double ke, const G4double (&xsec)[energyBins]) const;
 
-  virtual G4int 
-  findFinalStateIndex(G4int mult, G4double ke, const G4int index[],
-		      const G4double xsec[][energyBins]) const;
+    virtual G4int findMultiplicity(G4double ke, const G4double xmult[][energyBins]) const;
 
-  virtual void print(std::ostream& os) const;
+    virtual G4int findFinalStateIndex(G4int mult, G4double ke, const G4int index[],
+                                      const G4double xsec[][energyBins]) const;
 
-private:
-  // Optional start/stop arguments default to inclusive arrays
-  void fillSigmaBuffer(G4double ke, const G4double x[][energyBins],
-		       G4int startBin=0, G4int stopBin=multBins) const;
+    virtual void print(std::ostream& os) const;
 
-  G4int sampleFlat() const;
+  private:
 
-  G4CascadeInterpolator<NBINS> interpolator;
-  mutable std::vector<G4double> sigmaBuf;
-  const G4double (&energyScale)[energyBins];
+    // Optional start/stop arguments default to inclusive arrays
+    void fillSigmaBuffer(G4double ke, const G4double x[][energyBins], G4int startBin = 0,
+                         G4int stopBin = multBins) const;
+
+    G4int sampleFlat() const;
+
+    G4CascadeInterpolator<NBINS> interpolator;
+    mutable std::vector<G4double> sigmaBuf;
+    const G4double (&energyScale)[energyBins];
 };
 
 #include "G4CascadeSampler.icc"
 
-#endif	/* G4_CASCADE_SAMPLER_HH */
+#endif /* G4_CASCADE_SAMPLER_HH */

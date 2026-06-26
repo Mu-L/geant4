@@ -1,8 +1,16 @@
 # Example chem4 History
 
 See `CONTRIBUTING.rst` for details of **required** info/format for each entry,
-which **must** added in reverse chronological order (newest at the top). It must **not**
-be used as a substitute for writing good git commit messages!
+which **must** added in reverse chronological order (newest at the top).
+It must **not** be used as a substitute for writing good git commit messages!
+
+-------------------------------------------------------------------------------
+
+## 2026-06-16 Gabriele Cosmo (chem4-V11-04-01)
+- Fixed compilation error in plotG.cc.
+
+## 2026-04-19 Sebastien Incerti (chem4-V11-04-00)
+- Reduction of the number of DNA physics constructors in the perspective of Geant4 12
 
 ## 2025-05-05 Hoang Tran (chem4-V11-03-01)
 - Replaced the shared_ptr with unique_ptr and raw for manager counters.

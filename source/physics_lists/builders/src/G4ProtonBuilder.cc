@@ -32,39 +32,42 @@
 //
 // Modified:
 // 16.11.2005 G.Folger: don't  keep processes as data members, but new these
-// 13.06.2006 G.Folger: (re)move elastic scatterring 
+// 13.06.2006 G.Folger: (re)move elastic scatterring
 // 12.04.2017 A.Dotti move to new design with base class
 //
 //----------------------------------------------------------------------------
 //
- #include "G4ProtonBuilder.hh"
- #include "G4ParticleDefinition.hh"
- #include "G4ParticleTable.hh"
- #include "G4ProcessManager.hh"
+#include "G4ProtonBuilder.hh"
 
- 
- void G4ProtonBuilder::Build()
- {
-   std::vector<G4VProtonBuilder *>::iterator i;
-   for(i=theModelCollections.begin(); i!=theModelCollections.end(); i++)
-   {
-     (*i)->Build(theProtonInelastic);
-   }
-   G4ProcessManager * theProcMan = G4Proton::Proton()->GetProcessManager();
-   theProcMan->AddDiscreteProcess(theProtonInelastic);
- }
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "G4ProcessManager.hh"
 
- G4ProtonBuilder::G4ProtonBuilder()
- {
-   theProtonInelastic=new G4HadronInelasticProcess( "protonInelastic", G4Proton::Definition() );
- }
+void G4ProtonBuilder::Build()
+{
+  std::vector<G4VProtonBuilder*>::iterator i;
+  for (i = theModelCollections.begin(); i != theModelCollections.end(); i++)
+  {
+    (*i)->Build(theProtonInelastic);
+  }
+  G4ProcessManager* theProcMan = G4Proton::Proton()->GetProcessManager();
+  theProcMan->AddDiscreteProcess(theProtonInelastic);
+}
 
- void G4ProtonBuilder::RegisterMe(G4PhysicsBuilderInterface* aB) {
-   auto bld = dynamic_cast<G4VProtonBuilder*>(aB);
-   if ( bld != nullptr ) {
-       theModelCollections.push_back(bld);
-   } else {
-       G4PhysicsBuilderInterface::RegisterMe(aB);
-   }
- }
+G4ProtonBuilder::G4ProtonBuilder()
+{
+  theProtonInelastic = new G4HadronInelasticProcess("protonInelastic", G4Proton::Definition());
+}
 
+void G4ProtonBuilder::RegisterMe(G4PhysicsBuilderInterface* aB)
+{
+  auto bld = dynamic_cast<G4VProtonBuilder*>(aB);
+  if (bld != nullptr)
+  {
+    theModelCollections.push_back(bld);
+  }
+  else
+  {
+    G4PhysicsBuilderInterface::RegisterMe(aB);
+  }
+}

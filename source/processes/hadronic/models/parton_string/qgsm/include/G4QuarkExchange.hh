@@ -25,8 +25,8 @@
 //
 //
 
-#ifndef G4QuarkExchange_h
-#define G4QuarkExchange_h 1
+#ifndef G4QUARKEXCHANGE_HH
+#define G4QUARKEXCHANGE_HH
 // ------------------------------------------------------------
 //      GEANT 4 class header file
 //
@@ -34,13 +34,13 @@
 //             by V. Uzhinsky, October 2016.
 //       QuarkExchange is used by strings models.
 //	    Take a projectile and a target.
-//Simulate Q exchange with excitation of projectile or target.
+// Simulate Q exchange with excitation of projectile or target.
 // ------------------------------------------------------------
 
-//#include "G4SystemOfUnits.hh"
-#include "globals.hh"
+// #include "G4SystemOfUnits.hh"
 #include "G4ThreeVector.hh"
-//#include "G4QGSDiffractiveExcitation.hh"
+#include "globals.hh"
+// #include "G4QGSDiffractiveExcitation.hh"
 
 class G4VSplitableHadron;
 class G4ExcitedString;
@@ -48,21 +48,23 @@ class G4ExcitedString;
 class G4QuarkExchange
 {
   public:
-	G4QuarkExchange();
-	~G4QuarkExchange();
 
-	G4bool ExciteParticipants (G4VSplitableHadron *aPartner, G4VSplitableHadron * bPartner) const;
+    G4QuarkExchange();
+    ~G4QuarkExchange();
+
+    G4bool ExciteParticipants(G4VSplitableHadron* aPartner, G4VSplitableHadron* bPartner) const;
 
   private:
-	G4QuarkExchange(const G4QuarkExchange &right);
 
-	G4ThreeVector GaussianPt(G4double widthSquare, G4double maxPtSquare) const;
+    G4QuarkExchange(const G4QuarkExchange& right);
 
-	const G4QuarkExchange & operator=(const G4QuarkExchange &right);
-	G4bool operator==(const G4QuarkExchange &right) const;
-	G4bool operator!=(const G4QuarkExchange &right) const;
+    G4ThreeVector GaussianPt(G4double widthSquare, G4double maxPtSquare) const;
 
-       G4double StrangeSuppress;     // Uzhi June 2020
+    const G4QuarkExchange& operator=(const G4QuarkExchange& right);
+    G4bool operator==(const G4QuarkExchange& right) const;
+    G4bool operator!=(const G4QuarkExchange& right) const;
+
+    G4double StrangeSuppress;  // Uzhi June 2020
 };
 
 #endif

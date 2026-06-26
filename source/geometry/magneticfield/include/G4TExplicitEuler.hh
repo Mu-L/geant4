@@ -39,49 +39,47 @@
 // Author: Josh Xie (CERN, Google Summer of Code 2014), June 2014
 // Supervisors:  Sandro Wenzel, John Apostolakis (CERN)
 // --------------------------------------------------------------------
-#ifndef G4TExplicitEuler_HH
-#define G4TExplicitEuler_HH
+#ifndef G4TEXPLICITEULER_HH
+#define G4TEXPLICITEULER_HH
 
 #include "G4TMagErrorStepper.hh"
 #include "G4ThreeVector.hh"
 
 /**
  * @brief G4TExplicitEuler is a templated version of G4ExplicitEuler stepper.
+ * @ingroup geometry_magneticfield
  */
 
-template <class T_Equation, int N>
-class G4TExplicitEuler
-  : public G4TMagErrorStepper<G4TExplicitEuler<T_Equation, N>, T_Equation, N>
+template<class T_Equation, int N>
+class G4TExplicitEuler : public G4TMagErrorStepper<G4TExplicitEuler<T_Equation, N>, T_Equation, N>
 {
   public:
 
     static constexpr double IntegratorCorrection = 1.;
 
     G4TExplicitEuler(T_Equation* EqRhs, G4int numberOfVariables = N)
-      : G4TMagErrorStepper<G4TExplicitEuler<T_Equation, N>, T_Equation, N>
-                           (EqRhs, numberOfVariables), fEquation_Rhs(EqRhs)
+      : G4TMagErrorStepper<G4TExplicitEuler<T_Equation, N>, T_Equation, N>(EqRhs,
+                                                                           numberOfVariables),
+        fEquation_Rhs(EqRhs)
     {
-      if( numberOfVariables != N )
+      if (numberOfVariables != N)
       {
         G4ExceptionDescription msg;
-        msg << "Equation has an incompatible number of variables." ;
-        msg << "   template N = " << N << " equation-Nvar= "
-            << numberOfVariables;
-        G4Exception("G4TExplicitEuler: constructor", "GeomField0003",
-                    FatalErrorInArgument, msg );
+        msg << "Equation has an incompatible number of variables.";
+        msg << "   template N = " << N << " equation-Nvar= " << numberOfVariables;
+        G4Exception("G4TExplicitEuler: constructor", "GeomField0003", FatalErrorInArgument, msg);
       }
     }
-   
+
     ~G4TExplicitEuler() = default;
 
-    inline void DumbStepper(const G4double yIn[],
-                            const G4double dydx[],
-                            G4double h, G4double yOut[]) // override final
+    inline void DumbStepper(const G4double yIn[], const G4double dydx[], G4double h,
+                            G4double yOut[])  // override final
     {
       // Initialise time to t0, needed when it is not updated by the integration.
       // yOut[7] = yIn[7];   //  Better to set it to NaN;  // TODO
 
-      for(G4int i = 0; i < N; ++i)
+      for (G4int i = 0; i < N; ++i)
       {
         yOut[i] = yIn[i] + h * dydx[i];  // 1st and only Step
       }

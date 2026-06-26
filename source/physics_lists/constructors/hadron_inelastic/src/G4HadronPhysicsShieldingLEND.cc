@@ -26,7 +26,7 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   
+// ClassName:
 //
 // Author: 7 Nov 2017 Tatsumi Koi
 //   created from G4HadronPhysicsShielding
@@ -37,6 +37,7 @@
 //
 
 #include "G4HadronPhysicsShieldingLEND.hh"
+
 #include "G4HadronicParameters.hh"
 
 // factory
@@ -45,34 +46,31 @@
 G4_DECLARE_PHYSCONSTR_FACTORY(G4HadronPhysicsShieldingLEND);
 
 G4HadronPhysicsShieldingLEND::G4HadronPhysicsShieldingLEND(G4int verb)
-  :  G4HadronPhysicsShieldingLEND()
+  : G4HadronPhysicsShieldingLEND()
 {
   G4HadronicParameters::Instance()->SetVerboseLevel(verb);
-} 
+}
 
 G4HadronPhysicsShieldingLEND::G4HadronPhysicsShieldingLEND(const G4String& name)
-  :  G4HadronPhysicsShieldingLEND(name, false)
-{} 
+  : G4HadronPhysicsShieldingLEND(name, false)
+{}
 
-G4HadronPhysicsShieldingLEND::G4HadronPhysicsShieldingLEND(
-                              const G4String& name, G4bool qe)
+G4HadronPhysicsShieldingLEND::G4HadronPhysicsShieldingLEND(const G4String& name, G4bool qe)
   : G4HadronPhysicsShielding(name, qe)
 {
   useLEND_ = true;
 }
 
-G4HadronPhysicsShieldingLEND::G4HadronPhysicsShieldingLEND(
-                              const G4String& name, G4int verb) 
-  :  G4HadronPhysicsShieldingLEND(name, false)
+G4HadronPhysicsShieldingLEND::G4HadronPhysicsShieldingLEND(const G4String& name, G4int verb)
+  : G4HadronPhysicsShieldingLEND(name, false)
 {
   G4HadronicParameters::Instance()->SetVerboseLevel(verb);
-} 
+}
 
-G4HadronPhysicsShieldingLEND::G4HadronPhysicsShieldingLEND(
-                              const G4String& name, G4int verb,
-                              G4double minFTFPEnergy, G4double maxBertiniEnergy)
-  :  G4HadronPhysicsShielding(name, verb, minFTFPEnergy, maxBertiniEnergy)
+G4HadronPhysicsShieldingLEND::G4HadronPhysicsShieldingLEND(const G4String& name, G4int verb,
+                                                           G4double minFTFPEnergy,
+                                                           G4double maxBertiniEnergy)
+  : G4HadronPhysicsShielding(name, verb, minFTFPEnergy, maxBertiniEnergy)
 {
   useLEND_ = true;
 }
-

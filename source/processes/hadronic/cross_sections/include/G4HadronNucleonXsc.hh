@@ -25,7 +25,7 @@
 //
 // Calculation of the total, elastic and inelastic cross-sections
 // based on parametrisations of (proton, pion, kaon, photon) nucleon
-// cross-sections and the hadron-nucleous cross-section model in 
+// cross-sections and the hadron-nucleous cross-section model in
 // the framework of Glauber-Gribov approach
 //
 // 14.03.07 V. Grichine - first implementation
@@ -37,115 +37,130 @@
 // 12.04.19 V. Grichine meson-nucleon xsc for c- and b- hyperons (and s-)
 // 09.05.20 V. Ivanchenko general code clean-up
 
+#ifndef G4HADRONNUCLEONXSC_HH
+#define G4HADRONNUCLEONXSC_HH
 
-#ifndef G4HadronNucleonXsc_h
-#define G4HadronNucleonXsc_h
-
-#include "globals.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4DynamicParticle.hh"
+#include "G4ParticleDefinition.hh"
+#include "globals.hh"
 
 class G4Pow;
 class G4Element;
 
-class G4HadronNucleonXsc 
+class G4HadronNucleonXsc
 {
-public:
+  public:
 
-  G4HadronNucleonXsc();
-  ~G4HadronNucleonXsc() = default;
- 
-  // Xsc parametrisations return total x-section  
-  G4double HadronNucleonXsc(const G4ParticleDefinition* theParticle, 
-			    const G4ParticleDefinition* nucleon, G4double ekin);
-  
-  G4double HadronNucleonXscPDG(const G4ParticleDefinition* theParticle, 
-			       const G4ParticleDefinition* nucleon, G4double ekin);
+    G4HadronNucleonXsc();
+    ~G4HadronNucleonXsc() = default;
 
-  G4double HadronNucleonXscNS(const G4ParticleDefinition* theParticle, 
-			      const G4ParticleDefinition* nucleon, G4double ekin);
+    // Xsc parametrisations return total x-section
+    G4double HadronNucleonXsc(const G4ParticleDefinition* theParticle,
+                              const G4ParticleDefinition* nucleon, G4double ekin);
 
-  G4double KaonNucleonXscNS(const G4ParticleDefinition* theParticle, 
-			    const G4ParticleDefinition* nucleon, G4double ekin);
+    G4double HadronNucleonXscPDG(const G4ParticleDefinition* theParticle,
+                                 const G4ParticleDefinition* nucleon, G4double ekin);
 
-  G4double KaonNucleonXscGG(const G4ParticleDefinition* theParticle, 
-			    const G4ParticleDefinition* nucleon, G4double ekin);
+    G4double HadronNucleonXscNS(const G4ParticleDefinition* theParticle,
+                                const G4ParticleDefinition* nucleon, G4double ekin);
 
-  G4double KaonNucleonXscVG(const G4ParticleDefinition* theParticle, 
-			    const G4ParticleDefinition* nucleon, G4double ekin);
+    G4double KaonNucleonXscNS(const G4ParticleDefinition* theParticle,
+                              const G4ParticleDefinition* nucleon, G4double ekin);
 
-  G4double HyperonNucleonXscNS(const G4ParticleDefinition* theParticle, 
-			    const G4ParticleDefinition* nucleon, G4double ekin);
-  
-  G4double SCBMesonNucleonXscNS(const G4ParticleDefinition* theParticle, 
-				const G4ParticleDefinition* nucleon, G4double ekin );
-  
-  G4double HadronNucleonXscVU(const G4ParticleDefinition* theParticle, 
-			      const G4ParticleDefinition* nucleon, G4double ekin);
+    G4double KaonNucleonXscGG(const G4ParticleDefinition* theParticle,
+                              const G4ParticleDefinition* nucleon, G4double ekin);
 
-  G4double HadronNucleonXscEL(const G4ParticleDefinition* theParticle, 
-			      const G4ParticleDefinition* nucleon, G4double ekin);
+    G4double KaonNucleonXscVG(const G4ParticleDefinition* theParticle,
+                              const G4ParticleDefinition* nucleon, G4double ekin);
 
-  G4double CoulombBarrier(const G4ParticleDefinition* theParticle, 
-			  const G4ParticleDefinition* nucleon, G4double ekin);
+    G4double HyperonNucleonXscNS(const G4ParticleDefinition* theParticle,
+                                 const G4ParticleDefinition* nucleon, G4double ekin);
 
-  // Xsc for G4DynamicParticle projectile
-  inline G4double GetHadronNucleonXscEL(const G4DynamicParticle* dp, 
-					const G4ParticleDefinition* p)
-  { return HadronNucleonXscEL(dp->GetDefinition(), p, dp->GetKineticEnergy()); }
+    G4double SCBMesonNucleonXscNS(const G4ParticleDefinition* theParticle,
+                                  const G4ParticleDefinition* nucleon, G4double ekin);
 
-  inline G4double GetHadronNucleonXscPDG(const G4DynamicParticle* dp, 
-					 const G4ParticleDefinition* p)
-  { return HadronNucleonXscPDG(dp->GetDefinition(), p, dp->GetKineticEnergy()); }
+    G4double HadronNucleonXscVU(const G4ParticleDefinition* theParticle,
+                                const G4ParticleDefinition* nucleon, G4double ekin);
 
-  inline G4double GetHadronNucleonXscNS(const G4DynamicParticle* dp, 
-					const G4ParticleDefinition* p)
-  { return HadronNucleonXscNS(dp->GetDefinition(), p, dp->GetKineticEnergy()); }
+    G4double HadronNucleonXscEL(const G4ParticleDefinition* theParticle,
+                                const G4ParticleDefinition* nucleon, G4double ekin);
 
-  inline G4double GetKaonNucleonXscGG(const G4DynamicParticle* dp, 
-				      const G4ParticleDefinition* p)
-  { return KaonNucleonXscGG(dp->GetDefinition(), p, dp->GetKineticEnergy()); }
+    G4double CoulombBarrier(const G4ParticleDefinition* theParticle,
+                            const G4ParticleDefinition* nucleon, G4double ekin);
 
-  inline G4double GetHyperonNucleonXscNS(const G4DynamicParticle* dp, 
-					const G4ParticleDefinition* p)
-  { return HyperonNucleonXscNS(dp->GetDefinition(), p, dp->GetKineticEnergy()); }
+    // Xsc for G4DynamicParticle projectile
+    inline G4double GetHadronNucleonXscEL(const G4DynamicParticle* dp,
+                                          const G4ParticleDefinition* p)
+    {
+      return HadronNucleonXscEL(dp->GetDefinition(), p, dp->GetKineticEnergy());
+    }
 
-  inline G4double GetHadronNucleonXscVU(const G4DynamicParticle* dp, 
-					const G4ParticleDefinition* p)
-  { return HadronNucleonXscVU(dp->GetDefinition(), p, dp->GetKineticEnergy()); }
+    inline G4double GetHadronNucleonXscPDG(const G4DynamicParticle* dp,
+                                           const G4ParticleDefinition* p)
+    {
+      return HadronNucleonXscPDG(dp->GetDefinition(), p, dp->GetKineticEnergy());
+    }
 
-  inline G4double GetCoulombBarrier(const G4DynamicParticle* dp, 
-				    const G4ParticleDefinition* p)
-  { return CoulombBarrier(dp->GetDefinition(), p, dp->GetKineticEnergy()); }
+    inline G4double GetHadronNucleonXscNS(const G4DynamicParticle* dp,
+                                          const G4ParticleDefinition* p)
+    {
+      return HadronNucleonXscNS(dp->GetDefinition(), p, dp->GetKineticEnergy());
+    }
 
-  // Xsc access
-  inline G4double GetTotalHadronNucleonXsc()     const { return fTotalXsc;     }; 
-  inline G4double GetElasticHadronNucleonXsc()   const { return fElasticXsc;   }; 
-  inline G4double GetInelasticHadronNucleonXsc() const { return fInelasticXsc; }; 
+    inline G4double GetKaonNucleonXscGG(const G4DynamicParticle* dp, const G4ParticleDefinition* p)
+    {
+      return KaonNucleonXscGG(dp->GetDefinition(), p, dp->GetKineticEnergy());
+    }
 
-  void CrossSectionDescription(std::ostream&) const;
+    inline G4double GetHyperonNucleonXscNS(const G4DynamicParticle* dp,
+                                           const G4ParticleDefinition* p)
+    {
+      return HyperonNucleonXscNS(dp->GetDefinition(), p, dp->GetKineticEnergy());
+    }
 
-private:
+    inline G4double GetHadronNucleonXscVU(const G4DynamicParticle* dp,
+                                          const G4ParticleDefinition* p)
+    {
+      return HadronNucleonXscVU(dp->GetDefinition(), p, dp->GetKineticEnergy());
+    }
 
-  inline G4double CalcMandelstamS(G4double ekin1, G4double mass1, G4double mass2)
-  { return mass1*mass1 + mass2*mass2 + 2*mass2*(ekin1 + mass1); }
+    inline G4double GetCoulombBarrier(const G4DynamicParticle* dp, const G4ParticleDefinition* p)
+    {
+      return CoulombBarrier(dp->GetDefinition(), p, dp->GetKineticEnergy());
+    }
 
-  inline G4double CalculateEcmValue(G4double ekin1, G4double mass1, G4double mass2)
-  { return std::sqrt(CalcMandelstamS(ekin1, mass1, mass2)); };
+    // Xsc access
+    inline G4double GetTotalHadronNucleonXsc() const { return fTotalXsc; };
+    inline G4double GetElasticHadronNucleonXsc() const { return fElasticXsc; };
+    inline G4double GetInelasticHadronNucleonXsc() const { return fInelasticXsc; };
 
-  G4double fTotalXsc{0.0};
-  G4double fElasticXsc{0.0};
-  G4double fInelasticXsc{0.0};
-  G4Pow* g4calc;
+    void CrossSectionDescription(std::ostream&) const;
 
-  const G4ParticleDefinition* theProton;
-  const G4ParticleDefinition* theNeutron;
-  const G4ParticleDefinition* thePiPlus;
-  // strange
-  const G4ParticleDefinition* theKPlus;
-  const G4ParticleDefinition* theKMinus;
-  const G4ParticleDefinition* theK0S;
-  const G4ParticleDefinition* theK0L;
+  private:
+
+    inline G4double CalcMandelstamS(G4double ekin1, G4double mass1, G4double mass2)
+    {
+      return mass1 * mass1 + mass2 * mass2 + 2 * mass2 * (ekin1 + mass1);
+    }
+
+    inline G4double CalculateEcmValue(G4double ekin1, G4double mass1, G4double mass2)
+    {
+      return std::sqrt(CalcMandelstamS(ekin1, mass1, mass2));
+    };
+
+    G4double fTotalXsc{0.0};
+    G4double fElasticXsc{0.0};
+    G4double fInelasticXsc{0.0};
+    G4Pow* g4calc;
+
+    const G4ParticleDefinition* theProton;
+    const G4ParticleDefinition* theNeutron;
+    const G4ParticleDefinition* thePiPlus;
+    // strange
+    const G4ParticleDefinition* theKPlus;
+    const G4ParticleDefinition* theKMinus;
+    const G4ParticleDefinition* theK0S;
+    const G4ParticleDefinition* theK0L;
 };
 
 #endif

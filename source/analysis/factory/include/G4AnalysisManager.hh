@@ -26,8 +26,8 @@
 
 // Author: Ivana Hrivnacova, 21/09/2021  (ivana@ipno.in2p3.fr)
 
-#ifndef G4AnalysisManager_h
-#define G4AnalysisManager_h
+#ifndef G4ANALYSISMANAGER_HH
+#define G4ANALYSISMANAGER_HH
 
 #include "G4GenericAnalysisManager.hh"
 

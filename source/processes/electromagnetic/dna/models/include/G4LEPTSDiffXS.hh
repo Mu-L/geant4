@@ -23,44 +23,45 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4LEPTSDiffXS_h
-#define G4LEPTSDiffXS_h 1
+#ifndef G4LEPTSDIFFXS_HH
+#define G4LEPTSDIFFXS_HH
 
+#include "G4String.hh"
 #include "G4Types.hh"
 
 class G4LEPTSDiffXS
 {
- public:
+  public:
 
-  G4LEPTSDiffXS(const G4String&);   // Constructor
+    G4LEPTSDiffXS(const G4String&);  // Constructor
 
-  void readDXS();    // Read file
-  void BuildCDXS();
-  void BuildCDXS(G4double, G4double);
-  void NormalizeCDXS();
-  void InterpolateCDXS();
-  void PrintDXS(G4int);
+    void readDXS();  // Read file
+    void BuildCDXS();
+    void BuildCDXS(G4double, G4double);
+    void NormalizeCDXS();
+    void InterpolateCDXS();
+    void PrintDXS(G4int);
 
-  G4double SampleAngle(G4double);
-  G4double SampleAngleMT(G4double, G4double);
-  G4double SampleAngleEthylene(G4double, G4double);
-  G4bool IsFileFound() const { return bFileFound; }
+    G4double SampleAngle(G4double);
+    G4double SampleAngleMT(G4double, G4double);
+    G4double SampleAngleEthylene(G4double, G4double);
+    G4bool IsFileFound() const { return bFileFound; }
 
- private:
+  private:
 
-  G4String fileName;
-  G4int NumAng;
-  G4int INumAng;
-  G4int NumEn;
-  char DXSTypeName[8];
-  G4int DXSType;
-  G4double Eb[100];
-  //  G4double DXS[100][190], CDXS[100][190], IDXS[100][19000], ICDXS[100][19000];
-  G4double DXS[100][190], CDXS[100][190], ICDXS[100][19000];
-  //  G4double KT[100][190],  CKT[100][190],  IKT[100][19000];
-  G4double KT[100][190],  IKT[100][19000];
+    G4String fileName;
+    G4int NumAng;
+    G4int INumAng;
+    G4int NumEn;
+    char DXSTypeName[8];
+    G4int DXSType;
+    G4double Eb[100];
+    //  G4double DXS[100][190], CDXS[100][190], IDXS[100][19000], ICDXS[100][19000];
+    G4double DXS[100][190], CDXS[100][190], ICDXS[100][19000];
+    //  G4double KT[100][190],  CKT[100][190],  IKT[100][19000];
+    G4double KT[100][190], IKT[100][19000];
 
-  G4bool bFileFound;
+    G4bool bFileFound;
 };
 
 #endif

@@ -30,33 +30,32 @@
 #include "G4AttDef.hh"
 #include "G4AutoLock.hh"
 
-namespace G4AttDefStore {
+namespace G4AttDefStore
+{
 
-std::map<G4String,std::map<G4String,G4AttDef>*> *m_defsmaps = nullptr;
+std::map<G4String, std::map<G4String, G4AttDef>*>* m_defsmaps = nullptr;
 
 G4Mutex mutex = G4MUTEX_INITIALIZER;
 
-std::map<G4String,G4AttDef>*
-GetInstance(const G4String& storeKey, G4bool& isNew)
+std::map<G4String, G4AttDef>* GetInstance(const G4String& storeKey, G4bool& isNew)
 {
   G4AutoLock al(&mutex);
 
-  if (m_defsmaps == nullptr)
-    m_defsmaps = new std::map<G4String,std::map<G4String,G4AttDef>*>;
+  if (m_defsmaps == nullptr) m_defsmaps = new std::map<G4String, std::map<G4String, G4AttDef>*>;
 
   // Allocate the new map if not existing already
   // and return it to the caller
   //
-  std::map<G4String,G4AttDef>* definitions;
-  
+  std::map<G4String, G4AttDef>* definitions;
+
   // NOLINTNEXTLINE(modernize-use-auto): Explicitly want a const_iterator
-  std::map<G4String,std::map<G4String,G4AttDef>*>::const_iterator iDefinitions =
+  std::map<G4String, std::map<G4String, G4AttDef>*>::const_iterator iDefinitions =
     m_defsmaps->find(storeKey);
 
   if (iDefinitions == m_defsmaps->end())
   {
     isNew = true;
-    definitions = new std::map<G4String,G4AttDef>;
+    definitions = new std::map<G4String, G4AttDef>;
     (*m_defsmaps)[storeKey] = definitions;
   }
   else
@@ -67,22 +66,20 @@ GetInstance(const G4String& storeKey, G4bool& isNew)
   return definitions;
 }
 
-G4bool GetStoreKey
-(const std::map<G4String,G4AttDef>* definitions, G4String& key)
+G4bool GetStoreKey(const std::map<G4String, G4AttDef>* definitions, G4String& key)
 {
   G4AutoLock al(&mutex);
 
-  if (m_defsmaps == nullptr)
-    m_defsmaps = new std::map<G4String,std::map<G4String,G4AttDef>*>;
-  std::map<G4String,std::map<G4String,G4AttDef>*>::const_iterator i;
+  if (m_defsmaps == nullptr) m_defsmaps = new std::map<G4String, std::map<G4String, G4AttDef>*>;
+  std::map<G4String, std::map<G4String, G4AttDef>*>::const_iterator i;
   for (i = m_defsmaps->begin(); i != m_defsmaps->end(); ++i)
+  {
+    if (i->second == definitions)
     {
-      if (i->second == definitions)
-        {
-          key = i->first;
-          return true;
-        }
+      key = i->first;
+      return true;
     }
+  }
 
   return false;
 }

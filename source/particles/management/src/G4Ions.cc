@@ -61,7 +61,8 @@ G4Ions::G4Ions(
     theIsomerLevel(isomer)
 // clang-format on
 {
-  if ((aName == "proton") || (aName == "neutron")) {
+  if ((aName == "proton") || (aName == "neutron"))
+  {
     isGeneralIon = false;
   }
   else if ((aName == "GenericIon") || (aName == "alpha") || (aName == "He3")
@@ -88,7 +89,8 @@ G4Ions::G4Ions(
   {
     isGeneralIon = false;
   }
-  else {
+  else
+  {
     isGeneralIon = true;
   }
 
@@ -97,7 +99,8 @@ G4Ions::G4Ions(
   //
   if ((theExcitationEnergy > 0.0) && (isomer == 0)) isomer = 9;
 
-  if (GetAtomicNumber() == 0) {
+  if (GetAtomicNumber() == 0)
+  {
     // AtomicNumber/Mass is positive even for anti_nulceus
     SetAtomicNumber(std::abs(G4int(GetPDGCharge() / eplus)));
     SetAtomicMass(std::abs(GetBaryonNumber()));
@@ -107,7 +110,8 @@ G4Ions::G4Ions(
 G4Ions::G4FloatLevelBase G4Ions::FloatLevelBase(char flbChar)
 {
   G4Ions::G4FloatLevelBase flb = noFloat;
-  switch (flbChar) {
+  switch (flbChar)
+  {
     case 'x':
     case 'X':
       flb = plusX;

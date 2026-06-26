@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,15 +41,16 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
 #ifndef G4KDTREERESULT_HH
 #define G4KDTREERESULT_HH
 
-#include <list>
-#include "globals.hh"
-#include "G4ReferenceCountedHandle.hh"
 #include "G4KDNode.hh"
+#include "G4ReferenceCountedHandle.hh"
+#include "globals.hh"
+
+#include <list>
 
 class G4KDTree;
 class G4KDNode_Base;
@@ -66,55 +67,56 @@ using ResNodeHandle = G4ReferenceCountedHandle<ResNode>;
 
 #define KDTR_parent std::vector<ResNode>
 
-class G4KDTreeResult : protected KDTR_parent//protected std::list<ResNode>
+class G4KDTreeResult : protected KDTR_parent  // protected std::list<ResNode>
 {
-protected:
-  G4KDTree *fTree;
-//  std::list<ResNode>::iterator fIterator;
-  KDTR_parent::iterator fIterator;
+  protected:
 
-public:
-  G4KDTreeResult(G4KDTree*);
-  virtual ~G4KDTreeResult();
-  
-  //  new/delete operators are overloded to use G4Allocator
-  inline void *operator new(size_t);
+    G4KDTree* fTree;
+    //  std::list<ResNode>::iterator fIterator;
+    KDTR_parent::iterator fIterator;
+
+  public:
+
+    G4KDTreeResult(G4KDTree*);
+    virtual ~G4KDTreeResult();
+
+    //  new/delete operators are overloded to use G4Allocator
+    inline void* operator new(size_t);
 #ifdef __IBMCPP__
-  inline void *operator new(size_t sz, void* p)
-  { return p;}
+    inline void* operator new(size_t sz, void* p) { return p; }
 #endif
-  inline void operator delete(void*);
+    inline void operator delete(void*);
 
-  void Insert(double, G4KDNode_Base*);
+    void Insert(double, G4KDNode_Base*);
 
-  void Clear();
+    void Clear();
 
-  void Sort();
+    void Sort();
 
-  /* returns the size of the result set (in elements) */
-  size_t GetSize() const;
+    /* returns the size of the result set (in elements) */
+    size_t GetSize() const;
 
-  size_t size() const;
+    size_t size() const;
 
-  /* rewinds the result set iterator */
-  void Rewind();
+    /* rewinds the result set iterator */
+    void Rewind();
 
-  /* returns non-zero if the set iterator reached the end after the last element*/
-  bool End();
+    /* returns non-zero if the set iterator reached the end after the last element*/
+    bool End();
 
-  /* advances the result set iterator
-   */
-  void Next();
+    /* advances the result set iterator
+     */
+    void Next();
 
-  /* returns the data pointer (can be null) of the current result set item
-   * and optionally sets its position to the pointers(s) if not null.
-   */
-  template<typename PointT>
+    /* returns the data pointer (can be null) of the current result set item
+     * and optionally sets its position to the pointers(s) if not null.
+     */
+    template<typename PointT>
     PointT* GetItem() const;
-  G4KDNode_Base* GetNode() const;
-  template<typename PointT>
+    G4KDNode_Base* GetNode() const;
+    template<typename PointT>
     PointT* GetItemNDistanceSQ(double& /*distance*/) const;
-  double GetDistanceSqr() const;
+    double GetDistanceSqr() const;
 };
 
 //------------------------------------------------------------------------------
@@ -124,29 +126,29 @@ extern G4DLLEXPORT G4Allocator<G4KDTreeResult>*& aKDTreeAllocator();
 extern G4DLLIMPORT G4Allocator<G4KDTreeResult>*& aKDTreeAllocator();
 #endif
 
-inline void * G4KDTreeResult::operator new(size_t)
+inline void* G4KDTreeResult::operator new(size_t)
 {
   if (aKDTreeAllocator() == nullptr) aKDTreeAllocator() = new G4Allocator<G4KDTreeResult>;
-  return (void *) aKDTreeAllocator()->MallocSingle();
+  return (void*)aKDTreeAllocator()->MallocSingle();
 }
 
-inline void G4KDTreeResult::operator delete(void * object)
+inline void G4KDTreeResult::operator delete(void* object)
 {
-  aKDTreeAllocator()->FreeSingle((G4KDTreeResult *) object);
+  aKDTreeAllocator()->FreeSingle((G4KDTreeResult*)object);
 }
 //------------------------------------------------------------------------------
 template<typename PointT>
-  PointT* G4KDTreeResult::GetItem() const
-  {
-    auto  node = (G4KDNode<PointT>*) (GetNode());
-    return node->GetPoint();
-  }
+PointT* G4KDTreeResult::GetItem() const
+{
+  auto node = (G4KDNode<PointT>*)(GetNode());
+  return node->GetPoint();
+}
 
 template<typename PointT>
-  PointT* G4KDTreeResult::GetItemNDistanceSQ(double& dist_sq) const
-  {
-    dist_sq = GetDistanceSqr();
-    return this->GetItem<PointT>();
-  }
+PointT* G4KDTreeResult::GetItemNDistanceSQ(double& dist_sq) const
+{
+  dist_sq = GetDistanceSqr();
+  return this->GetItem<PointT>();
+}
 
-#endif // G4KDTREERESULT_HH
+#endif  // G4KDTREERESULT_HH

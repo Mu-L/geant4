@@ -30,7 +30,7 @@
 // Author: G.Cosmo (CERN), 1995
 // --------------------------------------------------------------------
 #ifndef G4TYPES_HH
-#define G4TYPES_HH 1
+#define G4TYPES_HH
 
 // Fundamental definitions
 #ifndef G4GMAKE
@@ -80,11 +80,11 @@
 // Typedefs to decouple from library classes
 // Typedefs for numeric types
 //
-using G4double  = double;
-using G4float   = float;
-using G4int     = int;
-using G4bool    = bool;
-using G4long    = long;
+using G4double = double;
+using G4float = float;
+using G4int = int;
+using G4bool = bool;
+using G4long = long;
 using G4complex = std::complex<G4double>;
 
 // Forward declation of void type argument for usage in direct object

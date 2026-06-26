@@ -34,18 +34,15 @@
 
 #include "G4ITReactionTable.hh"
 
-G4ITReactionTable::G4ITReactionTable()
-= default;
+G4ITReactionTable::G4ITReactionTable() = default;
 
-G4ITReactionTable::~G4ITReactionTable()
-= default;
+G4ITReactionTable::~G4ITReactionTable() = default;
 
-G4ITReactionTable::G4ITReactionTable(const G4ITReactionTable& /*other*/)
-= default;
+G4ITReactionTable::G4ITReactionTable(const G4ITReactionTable& /*other*/) = default;
 
 G4ITReactionTable& G4ITReactionTable::operator=(const G4ITReactionTable& rhs)
 {
-    if (this == &rhs) return *this; // handle self assignment
-    //assignment operator
-    return *this;
+  if (this == &rhs) return *this;  // handle self assignment
+  // assignment operator
+  return *this;
 }

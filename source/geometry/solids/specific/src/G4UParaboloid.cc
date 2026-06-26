@@ -28,52 +28,52 @@
 // 19.08.2015 Guilherme Lima, FNAL
 // --------------------------------------------------------------------
 
+// Geant4/VecGeom headers must be included in order
+// clang-format off
 #include "G4Paraboloid.hh"
 #include "G4UParaboloid.hh"
+// clang-format on
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include "G4AffineTransform.hh"
-#include "G4VPVParameterisation.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4BoundingEnvelope.hh"
-#include "G4Polyhedron.hh"
+#  include "G4AffineTransform.hh"
+#  include "G4BoundingEnvelope.hh"
+#  include "G4PhysicalConstants.hh"
+#  include "G4Polyhedron.hh"
+#  include "G4VPVParameterisation.hh"
 
 ////////////////////////////////////////////////////////////////////////
 //
 // Constructor - check & set half widths
 
-
-G4UParaboloid::G4UParaboloid(const G4String& pName,
-                                   G4double dz,
-                                   G4double rlo,
-                                   G4double rhi )
+G4UParaboloid::G4UParaboloid(const G4String& pName, G4double dz, G4double rlo, G4double rhi)
   : Base_t(pName, rlo, rhi, dz)
-{ }
+{}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Copy constructor
 
-G4UParaboloid::G4UParaboloid(const G4UParaboloid& rhs)
-  : Base_t(rhs)
-{ }
+G4UParaboloid::G4UParaboloid(const G4UParaboloid& rhs) : Base_t(rhs) {}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Assignment operator
 
-G4UParaboloid& G4UParaboloid::operator = (const G4UParaboloid& rhs)
+G4UParaboloid& G4UParaboloid::operator=(const G4UParaboloid& rhs)
 {
-   // Check assignment to self
-   //
-   if (this == &rhs)  { return *this; }
+  // Check assignment to self
+  //
+  if (this == &rhs)
+  {
+    return *this;
+  }
 
-   // Copy base class data
-   //
-   Base_t::operator=(rhs);
+  // Copy base class data
+  //
+  Base_t::operator=(rhs);
 
-   return *this;
+  return *this;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -127,27 +127,23 @@ G4VSolid* G4UParaboloid::Clone() const
 //
 // Get bounding box
 
-void G4UParaboloid::BoundingLimits(G4ThreeVector& pMin,
-                                   G4ThreeVector& pMax) const
+void G4UParaboloid::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
 {
   static G4bool checkBBox = true;
 
   G4double r2 = GetRadiusPlusZ();
   G4double dz = GetZHalfLength();
-  pMin.set(-r2,-r2,-dz);
-  pMax.set( r2, r2, dz);
+  pMin.set(-r2, -r2, -dz);
+  pMax.set(r2, r2, dz);
 
   // Check correctness of the bounding box
   //
   if (pMin.x() >= pMax.x() || pMin.y() >= pMax.y() || pMin.z() >= pMax.z())
   {
     std::ostringstream message;
-    message << "Bad bounding box (min >= max) for solid: "
-            << GetName() << " !"
-            << "\npMin = " << pMin
-            << "\npMax = " << pMax;
-    G4Exception("G4UParaboloid::BoundingLimits()", "GeomMgt0001",
-                JustWarning, message);
+    message << "Bad bounding box (min >= max) for solid: " << GetName() << " !"
+            << "\npMin = " << pMin << "\npMax = " << pMax;
+    G4Exception("G4UParaboloid::BoundingLimits()", "GeomMgt0001", JustWarning, message);
     StreamInfo(G4cout);
   }
 
@@ -156,21 +152,19 @@ void G4UParaboloid::BoundingLimits(G4ThreeVector& pMin,
   if (checkBBox)
   {
     U3Vector vmin, vmax;
-    Extent(vmin,vmax);
-    if (std::abs(pMin.x()-vmin.x()) > kCarTolerance ||
-        std::abs(pMin.y()-vmin.y()) > kCarTolerance ||
-        std::abs(pMin.z()-vmin.z()) > kCarTolerance ||
-        std::abs(pMax.x()-vmax.x()) > kCarTolerance ||
-        std::abs(pMax.y()-vmax.y()) > kCarTolerance ||
-        std::abs(pMax.z()-vmax.z()) > kCarTolerance)
+    Extent(vmin, vmax);
+    if (std::abs(pMin.x() - vmin.x()) > kCarTolerance
+        || std::abs(pMin.y() - vmin.y()) > kCarTolerance
+        || std::abs(pMin.z() - vmin.z()) > kCarTolerance
+        || std::abs(pMax.x() - vmax.x()) > kCarTolerance
+        || std::abs(pMax.y() - vmax.y()) > kCarTolerance
+        || std::abs(pMax.z() - vmax.z()) > kCarTolerance)
     {
       std::ostringstream message;
-      message << "Inconsistency in bounding boxes for solid: "
-              << GetName() << " !"
+      message << "Inconsistency in bounding boxes for solid: " << GetName() << " !"
               << "\nBBox min: wrapper = " << pMin << " solid = " << vmin
               << "\nBBox max: wrapper = " << pMax << " solid = " << vmax;
-      G4Exception("G4UParaboloid::BoundingLimits()", "GeomMgt0001",
-                  JustWarning, message);
+      G4Exception("G4UParaboloid::BoundingLimits()", "GeomMgt0001", JustWarning, message);
       checkBBox = false;
     }
   }
@@ -180,20 +174,18 @@ void G4UParaboloid::BoundingLimits(G4ThreeVector& pMin,
 //
 // Calculate extent under transform and specified limit
 
-G4bool
-G4UParaboloid::CalculateExtent(const EAxis pAxis,
-                               const G4VoxelLimits& pVoxelLimit,
-                               const G4AffineTransform& pTransform,
-                                     G4double& pMin, G4double& pMax) const
+G4bool G4UParaboloid::CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                                      const G4AffineTransform& pTransform, G4double& pMin,
+                                      G4double& pMax) const
 {
   G4ThreeVector bmin, bmax;
 
   // Get bounding box
-  BoundingLimits(bmin,bmax);
+  BoundingLimits(bmin, bmax);
 
   // Find extent
-  G4BoundingEnvelope bbox(bmin,bmax);
-  return bbox.CalculateExtent(pAxis,pVoxelLimit,pTransform,pMin,pMax);
+  G4BoundingEnvelope bbox(bmin, bmax);
+  return bbox.CalculateExtent(pAxis, pVoxelLimit, pTransform, pMin, pMax);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -202,9 +194,8 @@ G4UParaboloid::CalculateExtent(const EAxis pAxis,
 //
 G4Polyhedron* G4UParaboloid::CreatePolyhedron() const
 {
-  return new G4PolyhedronParaboloid(GetRadiusMinusZ(),
-                                    GetRadiusPlusZ(),
-                                    GetZHalfLength(), 0., twopi);
+  return new G4PolyhedronParaboloid(GetRadiusMinusZ(), GetRadiusPlusZ(), GetZHalfLength(), 0.,
+                                    twopi);
 }
 
 #endif  // G4GEOM_USE_USOLIDS

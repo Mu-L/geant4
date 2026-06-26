@@ -44,79 +44,83 @@
 // - 1st March 1996, K.Amako: modified
 // - 24th February 2001, H.Kurashige: migration to STL vectors
 // --------------------------------------------------------------------
-#ifndef G4PhysicsTable_hh
-#define G4PhysicsTable_hh 1
+#ifndef G4PHYSICSTABLE_HH
+#define G4PHYSICSTABLE_HH
 
 #include "G4PhysicsVector.hh"
 #include "G4ios.hh"
 #include "globals.hh"
+
 #include <vector>
 
 class G4PhysicsTable : public std::vector<G4PhysicsVector*>
 {
-  using G4PhysCollection = std::vector<G4PhysicsVector*>;
-  using G4FlagCollection = std::vector<G4bool>;
+    using G4PhysCollection = std::vector<G4PhysicsVector*>;
+    using G4FlagCollection = std::vector<G4bool>;
 
- public:
-  G4PhysicsTable() = default;
-  // Default constructor
+  public:
 
-  explicit G4PhysicsTable(size_t cap);
-  // Constructor with capacity. Reserves memory for the specified capacity
+    G4PhysicsTable() = default;
+    // Default constructor
 
-  virtual ~G4PhysicsTable();
-  // Destructor. Does not invoke deletion of contained pointed collections
+    explicit G4PhysicsTable(size_t cap);
+    // Constructor with capacity. Reserves memory for the specified capacity
 
-  G4PhysicsTable(const G4PhysicsTable&) = delete;
-  G4PhysicsTable& operator=(const G4PhysicsTable&) = delete;
+    virtual ~G4PhysicsTable();
+    // Destructor. Does not invoke deletion of contained pointed collections
 
-  G4PhysicsVector*& operator()(std::size_t);
-  G4PhysicsVector* const& operator()(std::size_t) const;
-  // Access operators
+    G4PhysicsTable(const G4PhysicsTable&) = delete;
+    G4PhysicsTable& operator=(const G4PhysicsTable&) = delete;
 
-  void clearAndDestroy();
-  // Removes all items and deletes them at the same time
+    G4PhysicsVector*& operator()(std::size_t);
+    G4PhysicsVector* const& operator()(std::size_t) const;
+    // Access operators
 
-  void push_back(G4PhysicsVector*);
-  void insert(G4PhysicsVector*);
-  // Pushes new element to collection
+    void clearAndDestroy();
+    // Removes all items and deletes them at the same time
 
-  void insertAt(std::size_t, G4PhysicsVector*);
-  // Insert element at the specified position in the collection
+    void push_back(G4PhysicsVector*);
+    void insert(G4PhysicsVector*);
+    // Pushes new element to collection
 
-  void resize(std::size_t, G4PhysicsVector* vec = nullptr);
-  // Resize collection
+    void insertAt(std::size_t, G4PhysicsVector*);
+    // Insert element at the specified position in the collection
 
-  std::size_t entries() const;
-  std::size_t length() const;
-  // Return collection's size
+    void resize(std::size_t, G4PhysicsVector* vec = nullptr);
+    // Resize collection
 
-  G4bool isEmpty() const;
-  // Flags if collection is empty or not
+    std::size_t entries() const;
+    std::size_t length() const;
+    // Return collection's size
 
-  G4bool ExistPhysicsTable(const G4String& fileName) const;
-  // Check if the specified file exists or not
+    G4bool isEmpty() const;
+    // Flags if collection is empty or not
 
-  G4bool StorePhysicsTable(const G4String& filename, G4bool ascii = false);
-  // Stores PhysicsTable in a file (returns false in case of failure)
+    G4bool ExistPhysicsTable(const G4String& fileName) const;
+    // Check if the specified file exists or not
 
-  G4bool RetrievePhysicsTable(const G4String& filename, G4bool ascii = false, G4bool spline = false);
-  // Retrieves Physics from a file (returns false in case of failure)
+    G4bool StorePhysicsTable(const G4String& filename, G4bool ascii = false);
+    // Stores PhysicsTable in a file (returns false in case of failure)
 
-  void ResetFlagArray();
-  // Reset the array of flags and all flags are set "true".
-  // This flag is supposed to be used as "recalc-needed" flag
-  // associated with each physics vector
+    G4bool RetrievePhysicsTable(const G4String& filename, G4bool ascii = false,
+                                G4bool spline = false);
+    // Retrieves Physics from a file (returns false in case of failure)
 
-  G4bool GetFlag(std::size_t i) const;
-  void ClearFlag(std::size_t i);
-  // Get/Clear the flag for the 'i-th' physics vector
+    void ResetFlagArray();
+    // Reset the array of flags and all flags are set "true".
+    // This flag is supposed to be used as "recalc-needed" flag
+    // associated with each physics vector
 
-  friend std::ostream& operator<<(std::ostream& out, G4PhysicsTable& table);
+    G4bool GetFlag(std::size_t i) const;
+    void ClearFlag(std::size_t i);
+    // Get/Clear the flag for the 'i-th' physics vector
 
- protected:
-  G4PhysicsVector* CreatePhysicsVector(G4int type, G4bool spline);
-  G4FlagCollection vecFlag;
+    friend std::ostream& operator<<(std::ostream& out, G4PhysicsTable& table);
+
+  protected:
+
+    G4PhysicsVector* CreatePhysicsVector(G4int type, G4bool spline);
+    G4FlagCollection vecFlag;
 };
 
 #include "G4PhysicsTable.icc"

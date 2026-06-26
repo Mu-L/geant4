@@ -36,8 +36,8 @@
 // 12.04.2017 A.Dotti move to new design with base class
 //----------------------------------------------------------------------------
 //
-#ifndef G4VProtonBuilder_h
-#define G4VProtonBuilder_h
+#ifndef G4VPROTONBUILDER_HH
+#define G4VPROTONBUILDER_HH
 
 #include "G4PhysicsBuilderInterface.hh"
 
@@ -46,13 +46,13 @@ class G4HadronElasticProcess;
 
 class G4VProtonBuilder : public G4PhysicsBuilderInterface
 {
-public:
-  G4VProtonBuilder() = default;
-  ~G4VProtonBuilder() override = default;
-  virtual void Build(G4HadronElasticProcess * aP) = 0;
-  virtual void Build(G4HadronInelasticProcess * aP) = 0;
-  using G4PhysicsBuilderInterface::Build; //Prevent compiler warning
+  public:
+
+    G4VProtonBuilder() = default;
+    ~G4VProtonBuilder() override = default;
+    virtual void Build(G4HadronElasticProcess* aP) = 0;
+    virtual void Build(G4HadronInelasticProcess* aP) = 0;
+    using G4PhysicsBuilderInterface::Build;  // Prevent compiler warning
 };
 
 #endif
-

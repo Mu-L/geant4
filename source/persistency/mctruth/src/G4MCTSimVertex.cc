@@ -28,39 +28,27 @@
 // Author: Youhei Morita, 12.09.2001
 // --------------------------------------------------------------------
 
-#include <sstream>
-#include <iomanip>
-
 #include "G4MCTSimVertex.hh"
 
-#include "globals.hh"
+#include "G4MCTSimParticle.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4ios.hh"
-#include "G4MCTSimParticle.hh"
+#include "globals.hh"
+
+#include <iomanip>
+#include <sstream>
 
 // --------------------------------------------------------------------
-G4MCTSimVertex::G4MCTSimVertex()
-{
-}
+G4MCTSimVertex::G4MCTSimVertex() {}
 
 // --------------------------------------------------------------------
-G4MCTSimVertex::G4MCTSimVertex(const G4ThreeVector& x, G4double t)
-  : position(x)
-  , time(t)
-{
-}
+G4MCTSimVertex::G4MCTSimVertex(const G4ThreeVector& x, G4double t) : position(x), time(t) {}
 
 // --------------------------------------------------------------------
-G4MCTSimVertex::G4MCTSimVertex(const G4ThreeVector& x, G4double t,
-                               const G4String& vname, G4int ncopy,
-                               const G4String& pname)
-  : volumeName(vname)
-  , creatorProcessName(pname)
-  , position(x)
-  , time(t)
-  , volumeNumber(ncopy)
-{
-}
+G4MCTSimVertex::G4MCTSimVertex(const G4ThreeVector& x, G4double t, const G4String& vname,
+                               G4int ncopy, const G4String& pname)
+  : volumeName(vname), creatorProcessName(pname), position(x), time(t), volumeNumber(ncopy)
+{}
 
 // --------------------------------------------------------------------
 G4MCTSimVertex::~G4MCTSimVertex()
@@ -73,8 +61,7 @@ void G4MCTSimVertex::Print(std::ostream& ostr) const
 {
   std::ostringstream os;
   char cq = ' ';
-  if(storeFlag)
-    cq = '+';
+  if (storeFlag) cq = '+';
   os << cq << id << '\0';
   std::string sid(os.str());
 
@@ -82,17 +69,16 @@ void G4MCTSimVertex::Print(std::ostream& ostr) const
   ostr.setf(std::ios::scientific | std::ios::right | std::ios::showpoint);
   // ostr << std::setw(4) << id;
   ostr << std::setw(6) << sid;
-  ostr << " : X(" << std::setw(9) << std::setprecision(2) << position.x() / mm
-       << "," << std::setw(9) << std::setprecision(2) << position.y() / mm
-       << "," << std::setw(9) << std::setprecision(2) << position.z() / mm
-       << "," << std::setw(9) << std::setprecision(2) << time / ns << ")";
+  ostr << " : X(" << std::setw(9) << std::setprecision(2) << position.x() / mm << ","
+       << std::setw(9) << std::setprecision(2) << position.y() / mm << "," << std::setw(9)
+       << std::setprecision(2) << position.z() / mm << "," << std::setw(9) << std::setprecision(2)
+       << time / ns << ")";
   ostr.unsetf(std::ios::scientific);
-  ostr << "@" << volumeName << "-" << volumeNumber << "%" << creatorProcessName
-       << G4endl;
+  ostr << "@" << volumeName << "-" << volumeNumber << "%" << creatorProcessName << G4endl;
 
   ostr << "      " << std::setw(4) << inParticleTrackID << "-> ";
   std::size_t np = outParticleTrackIDList.size();
-  for(std::size_t i = 0; i < np; ++i)
+  for (std::size_t i = 0; i < np; ++i)
     ostr << outParticleTrackIDList[i] << ", ";
   ostr << G4endl;
 }

@@ -31,16 +31,12 @@
 #include "G4VPDigitsCollectionIO.hh"
 
 // --------------------------------------------------------------------
-G4VPDigitsCollectionIO::G4VPDigitsCollectionIO(const G4String& detName,
-                                               const G4String& colName)
-  : f_detName(detName)
-  , f_colName(colName)
-{
-}
+G4VPDigitsCollectionIO::G4VPDigitsCollectionIO(const G4String& detName, const G4String& colName)
+  : f_detName(detName), f_colName(colName)
+{}
 
 // --------------------------------------------------------------------
-G4bool G4VPDigitsCollectionIO::operator==(
-  const G4VPDigitsCollectionIO& right) const
+G4bool G4VPDigitsCollectionIO::operator==(const G4VPDigitsCollectionIO& right) const
 {
   return ((f_detName == right.f_detName) && (f_colName == right.f_colName));
 }

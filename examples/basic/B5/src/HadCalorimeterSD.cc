@@ -83,7 +83,7 @@ G4bool HadCalorimeterSD::ProcessHits(G4Step* step, G4TouchableHistory*)
     hit->SetColumnID(columnNo);
     hit->SetRowID(rowNo);
     auto depth = touchable->GetHistory()->GetDepth();
-    auto transform = touchable->GetHistory()->GetTransform(depth - 2);
+    auto transform = touchable->GetHistory()->GetTransform(static_cast<G4int>(depth - 2));
     transform.Invert();
     hit->SetRot(transform.NetRotation());
     hit->SetPos(transform.NetTranslation());

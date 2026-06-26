@@ -36,30 +36,25 @@
 // -------------------------------------------------------------------------
 
 #include "G4HelixSimpleRunge.hh"
+
 #include "G4ThreeVector.hh"
 
-G4HelixSimpleRunge::G4HelixSimpleRunge(G4Mag_EqRhs* EqRhs)
-  : G4MagHelicalStepper(EqRhs)
-{
-}
+G4HelixSimpleRunge::G4HelixSimpleRunge(G4Mag_EqRhs* EqRhs) : G4MagHelicalStepper(EqRhs) {}
 
-void
-G4HelixSimpleRunge::DumbStepper( const G4double      yIn[],
-                                       G4ThreeVector Bfld,
-                                       G4double      h,
-                                       G4double      yOut[] )
+void G4HelixSimpleRunge::DumbStepper(const G4double yIn[], G4ThreeVector Bfld, G4double h,
+                                     G4double yOut[])
 {
-  const G4int nvar = 6 ;
-  G4double yTemp[nvar];   // , yAdd[nvar];
+  const G4int nvar = 6;
+  G4double yTemp[nvar];  // , yAdd[nvar];
   G4ThreeVector Bfld_midpoint;
 
-  AdvanceHelix( yIn, Bfld, 0.5 * h, yTemp);
-  
+  AdvanceHelix(yIn, Bfld, 0.5 * h, yTemp);
+
   // now obtain the new field value at the new point
   //
-  MagFieldEvaluate(yTemp, Bfld_midpoint);      
+  MagFieldEvaluate(yTemp, Bfld_midpoint);
 
-  AdvanceHelix( yIn, Bfld_midpoint, h, yOut);
-  
-  // NormaliseTangentVector( yOut );           
-}  
+  AdvanceHelix(yIn, Bfld_midpoint, h, yOut);
+
+  // NormaliseTangentVector( yOut );
+}

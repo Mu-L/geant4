@@ -33,39 +33,46 @@
 // A correction is given in MeV
 //
 
-#ifndef G4CookShellCorrections_h
-#define G4CookShellCorrections_h 1
+#ifndef G4COOKSHELLCORRECTIONS_HH
+#define G4COOKSHELLCORRECTIONS_HH
 
-#include "globals.hh" 
+#include "globals.hh"
 
 class G4CookShellCorrections
 {
-public:
+  public:
 
-  G4CookShellCorrections();
+    G4CookShellCorrections();
 
-  ~G4CookShellCorrections() = default;
+    ~G4CookShellCorrections() = default;
 
-  inline G4bool GetShellCorrection(G4int N, G4int Z, G4double& result) const
-  {
-    G4bool res = false;
-    if(Z >= ZTableMin && Z <= ZTableMax && N >= NTableMin && N <= NTableMax) { 
-      result = ShellZTable[Z-ZTableMin] + ShellNTable[N-NTableMin];
-      res = true; 
+    inline G4bool GetShellCorrection(G4int N, G4int Z, G4double& result) const
+    {
+      G4bool res = false;
+      if (Z >= ZTableMin && Z <= ZTableMax && N >= NTableMin && N <= NTableMax)
+      {
+        result = ShellZTable[Z - ZTableMin] + ShellNTable[N - NTableMin];
+        res = true;
+      }
+      return res;
     }
-    return res;
-  }
-  
-  enum  { ZTableSize = 68, NTableSize = 118, ZTableMin = 28, ZTableMax = 95,
-	  NTableMin = 33, NTableMax = 150 };
-  
-  G4CookShellCorrections(const G4CookShellCorrections& right) = delete;
-  const G4CookShellCorrections& operator=(const G4CookShellCorrections& right) = delete;
 
-private:
+    enum
+    {
+      ZTableSize = 68,
+      NTableSize = 118,
+      ZTableMin = 28,
+      ZTableMax = 95,
+      NTableMin = 33,
+      NTableMax = 150
+    };
 
-  static G4double ShellZTable[ZTableSize];
-  static G4double ShellNTable[NTableSize];
-  
+    G4CookShellCorrections(const G4CookShellCorrections& right) = delete;
+    const G4CookShellCorrections& operator=(const G4CookShellCorrections& right) = delete;
+
+  private:
+
+    static G4double ShellZTable[ZTableSize];
+    static G4double ShellNTable[NTableSize];
 };
 #endif

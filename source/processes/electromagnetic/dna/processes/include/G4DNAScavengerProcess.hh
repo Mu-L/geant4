@@ -27,8 +27,8 @@
 #ifndef G4DNASCAVENGERPROCESS_HH
 #define G4DNASCAVENGERPROCESS_HH
 
-#include "G4VITProcess.hh"
 #include "G4MoleculeTable.hh"
+#include "G4VITProcess.hh"
 
 class G4DNAMolecularReactionData;
 class G4MolecularConfiguration;
@@ -36,74 +36,67 @@ class G4DNABoundingBox;
 class G4DNAScavengerMaterial;
 class G4DNAScavengerProcess : public G4VITProcess
 {
- public:
-  using MolType = const G4MolecularConfiguration*;
-  using Data    = const G4DNAMolecularReactionData;
-  explicit G4DNAScavengerProcess(const G4String& aName,
-                                 const G4DNABoundingBox& box,
-                                 G4ProcessType type = fUserDefined);
-  ~G4DNAScavengerProcess() override;
-  G4DNAScavengerProcess(const G4DNAScavengerProcess&) = delete;
-  G4DNAScavengerProcess& operator=(const G4DNAScavengerProcess&) = delete;
-  void StartTracking(G4Track*) override;
-  void SetReaction(MolType, Data* pData);
+  public:
 
- public:
-  void BuildPhysicsTable(const G4ParticleDefinition&) override;
+    using MolType = const G4MolecularConfiguration*;
+    using Data = const G4DNAMolecularReactionData;
+    explicit G4DNAScavengerProcess(const G4String& aName, const G4DNABoundingBox& box,
+                                   G4ProcessType type = fUserDefined);
+    ~G4DNAScavengerProcess() override;
+    G4DNAScavengerProcess(const G4DNAScavengerProcess&) = delete;
+    G4DNAScavengerProcess& operator=(const G4DNAScavengerProcess&) = delete;
+    void StartTracking(G4Track*) override;
+    void SetReaction(MolType, Data* pData);
 
-  G4double PostStepGetPhysicalInteractionLength(
-    const G4Track& track, G4double previousStepSize,
-    G4ForceCondition* condition) override;
+  public:
 
-  G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&) override;
+    void BuildPhysicsTable(const G4ParticleDefinition&) override;
 
-  G4double AtRestGetPhysicalInteractionLength(const G4Track&,
-                                              G4ForceCondition*) override
-  {
-    return -1.0;
-  }
+    G4double PostStepGetPhysicalInteractionLength(const G4Track& track, G4double previousStepSize,
+                                                  G4ForceCondition* condition) override;
 
-  G4VParticleChange* AtRestDoIt(const G4Track&, const G4Step&) override
-  {
-    return nullptr;
-  }
+    G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&) override;
 
-  //  no operation in  AlongStepDoIt
-  G4double AlongStepGetPhysicalInteractionLength(const G4Track&, G4double,
-                                                 G4double, G4double&,
-                                                 G4GPILSelection*) override
-  {
-    return -1.0;
-  }
+    G4double AtRestGetPhysicalInteractionLength(const G4Track&, G4ForceCondition*) override
+    {
+      return -1.0;
+    }
 
-  //  no operation in  AlongStepDoIt
-  G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&) override
-  {
-    return nullptr;
-  }
+    G4VParticleChange* AtRestDoIt(const G4Track&, const G4Step&) override { return nullptr; }
 
- protected:
-  struct G4DNAScavengerProcessState : public G4ProcessState
-  {
-    G4DNAScavengerProcessState();
-    ~G4DNAScavengerProcessState() override { ; }
-    G4double fPreviousTimeAtPreStepPoint;
-    G4bool fIsInGoodMaterial;
-  };
+    //  no operation in  AlongStepDoIt
+    G4double AlongStepGetPhysicalInteractionLength(const G4Track&, G4double, G4double, G4double&,
+                                                   G4GPILSelection*) override
+    {
+      return -1.0;
+    }
 
- protected:
-  G4bool fIsInitialized;
-  G4double fReturnedValue;
-  G4ParticleChange fParticleChange;
-  const G4MolecularConfiguration* fpMolecularConfiguration;
-  std::map<MolType /*MolConf*/, std::map<MolType /*molConfMat*/, Data*>>
-    fConfMap;
-  std::vector<MolType> fpMaterialVector;
-  MolType fpMaterialConf;
-  const G4DNABoundingBox* fpBoundingBox;
-  G4DNAScavengerMaterial* fpScavengerMaterial{nullptr};
-  MolType fH3Op = G4MoleculeTable::Instance()->GetConfiguration("H3Op(B)");
-  MolType fH2O = G4MoleculeTable::Instance()->GetConfiguration("H2O");
-  MolType fHOm = G4MoleculeTable::Instance()->GetConfiguration("OHm(B)");
+    //  no operation in  AlongStepDoIt
+    G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&) override { return nullptr; }
+
+  protected:
+
+    struct G4DNAScavengerProcessState : public G4ProcessState
+    {
+        G4DNAScavengerProcessState();
+        ~G4DNAScavengerProcessState() override { ; }
+        G4double fPreviousTimeAtPreStepPoint;
+        G4bool fIsInGoodMaterial;
+    };
+
+  protected:
+
+    G4bool fIsInitialized;
+    G4double fReturnedValue;
+    G4ParticleChange fParticleChange;
+    const G4MolecularConfiguration* fpMolecularConfiguration;
+    std::map<MolType /*MolConf*/, std::map<MolType /*molConfMat*/, Data*>> fConfMap;
+    std::vector<MolType> fpMaterialVector;
+    MolType fpMaterialConf;
+    const G4DNABoundingBox* fpBoundingBox;
+    G4DNAScavengerMaterial* fpScavengerMaterial{nullptr};
+    MolType fH3Op = G4MoleculeTable::Instance()->GetConfiguration("H3Op(B)");
+    MolType fH2O = G4MoleculeTable::Instance()->GetConfiguration("H2O");
+    MolType fHOm = G4MoleculeTable::Instance()->GetConfiguration("OHm(B)");
 };
 #endif  // FLASH1_G4DNASCAVENGERPROCESS_HH

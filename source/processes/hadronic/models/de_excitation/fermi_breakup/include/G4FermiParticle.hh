@@ -36,6 +36,7 @@
 class G4FermiParticle
 {
   public:
+
     G4FermiParticle() = delete;
 
     G4FermiParticle(const G4FermiParticle&) = default;
@@ -58,6 +59,7 @@ class G4FermiParticle
     G4bool IsStable() const;
 
   private:
+
     void RecalculateExcitationEnergy();
 
     G4FermiAtomicMass atomicMass_;

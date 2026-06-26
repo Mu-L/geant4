@@ -30,14 +30,15 @@
  *  Created on: Jul 23, 2019
  *      Author: W. G. Shin
  *              J. Ramos-Mendez and B. Faddegon
-*/
+ */
 
-#pragma once
+#ifndef G4DNAIRTMOLECULEENCOUNTERSTEPPER_HH
+#define G4DNAIRTMOLECULEENCOUNTERSTEPPER_HH
 
-#include "G4VITTimeStepComputer.hh"
-#include "G4KDTreeResult.hh"
 #include "G4ITReaction.hh"
 #include "G4ITTrackHolder.hh"
+#include "G4KDTreeResult.hh"
+#include "G4VITTimeStepComputer.hh"
 
 class G4VDNAReactionModel;
 class G4DNAMolecularReactionTable;
@@ -58,7 +59,8 @@ class G4Molecule;
 
 class G4DNAIRTMoleculeEncounterStepper : public G4VITTimeStepComputer
 {
-public:
+  public:
+
     G4DNAIRTMoleculeEncounterStepper();
     ~G4DNAIRTMoleculeEncounterStepper() override;
     G4DNAIRTMoleculeEncounterStepper(const G4DNAIRTMoleculeEncounterStepper&) = delete;
@@ -75,7 +77,8 @@ public:
     // Final time returned when reaction is available in the reaction table = 1
     // All details = 2
 
-private:
+  private:
+
     void InitializeForNewTrack();
 
     class Utils;
@@ -95,14 +98,12 @@ private:
 
     class Utils
     {
-    public:
+      public:
+
         Utils(const G4Track& tA, const G4MolecularConfiguration* mB);
         ~Utils() = default;
 
-        G4double GetConstant() const
-        {
-            return fConstant;
-        }
+        G4double GetConstant() const { return fConstant; }
 
         const G4Track& fpTrackA;
         const G4MolecularConfiguration* fpMoleculeB;
@@ -112,3 +113,5 @@ private:
         G4double fConstant;
     };
 };
+
+#endif

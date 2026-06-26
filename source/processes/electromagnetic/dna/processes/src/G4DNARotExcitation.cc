@@ -24,11 +24,11 @@
 // ********************************************************************
 //
 #include "G4DNARotExcitation.hh"
+
 #include "G4LEPTSRotExcitationModel.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-G4DNARotExcitation::G4DNARotExcitation(const G4String& processName) 
-  : G4VEmProcess( processName )
+G4DNARotExcitation::G4DNARotExcitation(const G4String& processName) : G4VEmProcess(processName)
 {
   SetBuildTableFlag(false);
 }
@@ -36,21 +36,20 @@ G4DNARotExcitation::G4DNARotExcitation(const G4String& processName)
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 G4bool G4DNARotExcitation::IsApplicable(const G4ParticleDefinition& particleDef)
 {
-  return( &particleDef == G4Electron::Electron() ||
-	  &particleDef == G4Positron::Positron() );
+  return (&particleDef == G4Electron::Electron() || &particleDef == G4Positron::Positron());
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 void G4DNARotExcitation::InitialiseProcess(const G4ParticleDefinition*)
 {
-  if(!isInitialised) 
+  if (!isInitialised)
   {
     isInitialised = true;
-    if(nullptr == EmModel(0)) SetEmModel(new G4LEPTSRotExcitationModel);
-    EmModel(0)->SetLowEnergyLimit(0.1*CLHEP::eV);
-    EmModel(0)->SetHighEnergyLimit(15.*CLHEP::MeV);
+    if (nullptr == EmModel(0)) SetEmModel(new G4LEPTSRotExcitationModel);
+    EmModel(0)->SetLowEnergyLimit(0.1 * CLHEP::eV);
+    EmModel(0)->SetHighEnergyLimit(15. * CLHEP::MeV);
     AddEmModel(1, EmModel(0));
-  } 
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -62,4 +61,3 @@ void G4DNARotExcitation::ProcessDescription(std::ostream& out) const
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-

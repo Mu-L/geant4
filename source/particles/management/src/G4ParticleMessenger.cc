@@ -46,10 +46,12 @@
 G4ParticleMessenger::G4ParticleMessenger(G4ParticleTable* pTable)
 {
   // get the pointer to ParticleTable
-  if (pTable == nullptr) {
+  if (pTable == nullptr)
+  {
     theParticleTable = G4ParticleTable::GetParticleTable();
   }
-  else {
+  else
+  {
     theParticleTable = pTable;
   }
 
@@ -122,7 +124,8 @@ G4ParticleMessenger::~G4ParticleMessenger()
 
 void G4ParticleMessenger::SetNewValue(G4UIcommand* command, G4String newValues)
 {
-  if (command == listCmd) {
+  if (command == listCmd)
+  {
     // Command   /particle/List
     G4int counter = 0;
     G4ParticleTable::G4PTblDicIterator* piter = theParticleTable->GetIterator();
@@ -131,18 +134,22 @@ void G4ParticleMessenger::SetNewValue(G4UIcommand* command, G4String newValues)
     while ((*piter)())  // Loop checking, 09.08.2015, K.Kurashige
     {
       G4ParticleDefinition* particle = piter->value();
-      if ((newValues == "all") || (newValues == particle->GetParticleType())) {
+      if ((newValues == "all") || (newValues == particle->GetParticleType()))
+      {
         G4cout << std::setw(19) << particle->GetParticleName();
-        if ((counter++) % 4 == 3) {
+        if ((counter++) % 4 == 3)
+        {
           G4cout << G4endl;
         }
-        else {
+        else
+        {
           G4cout << ",";
         }
       }
     }
     G4cout << G4endl;
-    if (counter == 0) {
+    if (counter == 0)
+    {
       G4cout << newValues << " is not found " << G4endl;
     }
 
@@ -157,30 +164,37 @@ void G4ParticleMessenger::SetNewValue(G4UIcommand* command, G4String newValues)
     }
     selectCmd->SetCandidates((const char*)(candidates));
   }
-  else if (command == selectCmd) {
+  else if (command == selectCmd)
+  {
     // Command   /particle/select
     theParticleTable->SelectParticle(newValues);
   }
-  else if (command == findCmd) {
+  else if (command == findCmd)
+  {
     // Command   /particle/find
     G4ParticleDefinition* tmp = theParticleTable->FindParticle(findCmd->GetNewIntValue(newValues));
-    if (tmp == nullptr) {
+    if (tmp == nullptr)
+    {
       G4cout << "Unknown particle [" << newValues << "]. Command ignored." << G4endl;
     }
-    else {
+    else
+    {
       G4cout << tmp->GetParticleName() << G4endl;
       tmp->DumpTable();
     }
   }
-  else if (command == createAllIonCmd) {
+  else if (command == createAllIonCmd)
+  {
     // Command   /particle/createAllIon
     theParticleTable->GetIonTable()->CreateAllIon();
   }
-  else if (command == createAllIsomerCmd) {
+  else if (command == createAllIsomerCmd)
+  {
     // Command   /particle/createAllIsomer
     theParticleTable->GetIonTable()->CreateAllIsomer();
   }
-  else if (command == verboseCmd) {
+  else if (command == verboseCmd)
+  {
     // Command   /particle/verbose
     theParticleTable->SetVerboseLevel(verboseCmd->GetNewIntValue(newValues));
   }
@@ -188,7 +202,8 @@ void G4ParticleMessenger::SetNewValue(G4UIcommand* command, G4String newValues)
 
 G4String G4ParticleMessenger::GetCurrentValue(G4UIcommand* command)
 {
-  if (command == selectCmd) {
+  if (command == selectCmd)
+  {
     // Command  /particle/select
     // set candidate List
     G4String candidates("none");
@@ -204,7 +219,8 @@ G4String G4ParticleMessenger::GetCurrentValue(G4UIcommand* command)
     const G4ParticleDefinition* currentParticle = theParticleTable->GetSelectedParticle();
     return (currentParticle == nullptr) ? G4String("none") : currentParticle->GetParticleName();
   }
-  if (command == verboseCmd) {
+  if (command == verboseCmd)
+  {
     // Command   /particle/verbose
     return verboseCmd->ConvertToString(theParticleTable->GetVerboseLevel());
   }

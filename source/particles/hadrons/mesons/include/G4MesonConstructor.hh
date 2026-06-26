@@ -26,17 +26,19 @@
 // --------------------------------------------------------------
 //	GEANT 4 class implementation file
 //
-#ifndef G4MesonConstructor_h
-#define G4MesonConstructor_h 1
+#ifndef G4MESONCONSTRUCTOR_HH
+#define G4MESONCONSTRUCTOR_HH
 
 class G4MesonConstructor
 {
     // This class is a utility class for construction
 
   public:
+
     static void ConstructParticle();
 
   protected:
+
     static void ConstructLightMesons();
     static void ConstructCharmMesons();
     static void ConstructBottomMesons();

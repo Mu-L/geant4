@@ -6,11 +6,17 @@
 
 #include "../typedefs"
 
-namespace tools {
-namespace sg {
+namespace tools
+{
+namespace sg
+{
 
-inline key_code key_shift() {return 0x01000020;}  //same as in Qt qnamespace.h.
+inline key_code key_shift()
+{
+  return 0x01000020;
+}  // same as in Qt qnamespace.h.
 
-}}
+}  // namespace sg
+}  // namespace tools
 
 #endif

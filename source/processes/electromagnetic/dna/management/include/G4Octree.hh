@@ -31,136 +31,130 @@
  *      Author: HoangTran
  */
 
-#ifndef G4Octree_hh
-#define G4Octree_hh 1
-#include <array>
-#include <vector>
-#include <algorithm>
-#include <type_traits>
-#include <utility>
-#include <iterator>
-#include <iostream>
-#include <typeinfo>
-#include <list>
-#include "G4ThreeVector.hh"
-#include "G4DNABoundingBox.hh"
+#ifndef G4OCTREE_HH
+#define G4OCTREE_HH
 #include "G4Allocator.hh"
+#include "G4DNABoundingBox.hh"
+#include "G4ThreeVector.hh"
 
-//using std::vector;
-//using std::array;
-//using namespace std;
+#include <algorithm>
+#include <array>
+#include <iostream>
+#include <iterator>
+#include <list>
+#include <type_traits>
+#include <typeinfo>
+#include <utility>
+#include <vector>
+
+// using std::vector;
+// using std::array;
+// using namespace std;
 
 const size_t max_per_node = 2;
 const size_t max_depth = 100;
 
-template <typename Iterator, class Extractor,typename Point = G4ThreeVector>
-class G4Octree {
-public:
+template<typename Iterator, class Extractor, typename Point = G4ThreeVector>
+class G4Octree
+{
+  public:
+
     G4Octree();
-    G4Octree(Iterator,Iterator);
-    G4Octree(Iterator,Iterator, Extractor);
+    G4Octree(Iterator, Iterator);
+    G4Octree(Iterator, Iterator, Extractor);
 
-    using tree_type = G4Octree<Iterator,Extractor,Point>;
+    using tree_type = G4Octree<Iterator, Extractor, Point>;
 
-    //G4Octree(const tree_type& rhs);
-    G4Octree(tree_type && rhs);
+    // G4Octree(const tree_type& rhs);
+    G4Octree(tree_type&& rhs);
     void swap(tree_type& rhs);
 
-    tree_type& operator = (tree_type rhs);
-    tree_type& operator = (tree_type && rhs);
+    tree_type& operator=(tree_type rhs);
+    tree_type& operator=(tree_type&& rhs);
 
     ~G4Octree();
 
     size_t size() const;
 
-    template <typename OutPutContainer>
-    void radiusNeighbors(const Point& query, const G4double& radius,  OutPutContainer& resultIndices) const;
+    template<typename OutPutContainer>
+    void radiusNeighbors(const Point& query, const G4double& radius,
+                         OutPutContainer& resultIndices) const;
 
-    void *operator new(size_t);
-    void operator delete(void *);
+    void* operator new(size_t);
+    void operator delete(void*);
 
-private:
+  private:
+
     enum NodeTypes
     {
-        DEFAULT,
-        LEAF,
-        MAX_DEPTH_LEAF,
-        INTERNAL
+      DEFAULT,
+      LEAF,
+      MAX_DEPTH_LEAF,
+      INTERNAL
     };
-    
+
     class Node;
 
-    using NodeVector = std::vector<std::pair<Iterator,Point>>;
-    using childNodeArray = std::array<Node*,8>;
+    using NodeVector = std::vector<std::pair<Iterator, Point>>;
+    using childNodeArray = std::array<Node*, 8>;
     struct LeafValues
     {
-        std::array<std::pair<Iterator,Point>,
-        max_per_node> values_;
+        std::array<std::pair<Iterator, Point>, max_per_node> values_;
         size_t size_;
     };
 
     class Node
     {
-    public:
+      public:
+
         Node(const NodeVector& input_values);
-        Node(const NodeVector& input_values,
-             const G4DNABoundingBox& box,
-             size_t current_depth);
+        Node(const NodeVector& input_values, const G4DNABoundingBox& box, size_t current_depth);
         Node() = default;
         Node(const Node&) = delete;
         ~Node();
-        template <typename OutPutContainer>
+        template<typename OutPutContainer>
         G4bool radiusNeighbors(const Point& query, G4double radius,
-                    OutPutContainer& resultIndices) const;
-    private:
+                               OutPutContainer& resultIndices) const;
+
+      private:
+
         void* fpValue;
         G4DNABoundingBox fBigVolume;
         NodeTypes fNodeType;
 
         void init_max_depth_leaf(const NodeVector& input_values);
         void init_leaf(const NodeVector& input_values);
-        void init_internal(
-                const NodeVector& input_values,
-                size_t current_depth);
+        void init_internal(const NodeVector& input_values, size_t current_depth);
         struct InnerIterator
         {
             using wrapped_type = typename NodeVector::const_iterator;
             wrapped_type it__;
-            InnerIterator(wrapped_type it):it__(it)
-            {}
-            Point operator*() const
-            {
-                return ((*it__).second);
-            }
+            InnerIterator(wrapped_type it) : it__(it) {}
+            Point operator*() const { return ((*it__).second); }
             InnerIterator& operator++()
             {
-                ++it__;
-                return *this;
+              ++it__;
+              return *this;
             }
             InnerIterator operator++(G4int)
             {
-                InnerIterator other = *this;
-                ++it__;
-                return other;
+              InnerIterator other = *this;
+              ++it__;
+              return other;
             }
 
-            G4bool operator==(const InnerIterator& rhs) const
-            {
-                return this->it__ == rhs.it__;
-            }
+            G4bool operator==(const InnerIterator& rhs) const { return this->it__ == rhs.it__; }
 
-            G4bool operator!=(const InnerIterator& rhs) const
-            {
-                return !operator==(rhs);
-            }
+            G4bool operator!=(const InnerIterator& rhs) const { return !operator==(rhs); }
         };
     };
-    private:
+
+  private:
+
     Extractor functor_;
     Node* head_;
     size_t size_;
     G4ThreadLocalStatic G4Allocator<tree_type>* fgAllocator;
-    
 };
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 #include "G4Octree.icc"

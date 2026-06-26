@@ -29,8 +29,8 @@
 
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
-#ifndef G4CsvAnalysisManager_h
-#define G4CsvAnalysisManager_h 1
+#ifndef G4CSVANALYSISMANAGER_HH
+#define G4CSVANALYSISMANAGER_HH
 
 #include "G4ToolsAnalysisManager.hh"
 #include "globals.hh"
@@ -42,14 +42,15 @@
 
 class G4CsvAnalysisManager;
 class G4CsvNtupleFileManager;
-template <class T>
+template<class T>
 class G4ThreadLocalSingleton;
 
 class G4CsvAnalysisManager : public G4ToolsAnalysisManager
 {
-  friend class G4ThreadLocalSingleton<G4CsvAnalysisManager>;
+    friend class G4ThreadLocalSingleton<G4CsvAnalysisManager>;
 
   public:
+
     ~G4CsvAnalysisManager() override;
 
     // Static methods
@@ -71,14 +72,15 @@ class G4CsvAnalysisManager : public G4ToolsAnalysisManager
     void SetIsHippoHeader(G4bool isHippoHeader);
 
   private:
+
     G4CsvAnalysisManager();
 
     // Static data members
-    inline static G4ThreadLocal G4bool fgIsInstance { false };
-    static constexpr std::string_view fkClass { "G4CsvAnalysisManager" };
+    inline static G4ThreadLocal G4bool fgIsInstance{false};
+    static constexpr std::string_view fkClass{"G4CsvAnalysisManager"};
 
     // Data members
-    std::shared_ptr<G4CsvNtupleFileManager> fNtupleFileManager { nullptr };
+    std::shared_ptr<G4CsvNtupleFileManager> fNtupleFileManager{nullptr};
 };
 
 #include "G4CsvAnalysisManager.icc"

@@ -51,50 +51,52 @@ the `(Begin|End)Of(Event|Run)Action` methods and call the corresponding
 method on the `G4DNAChemistryManager::Instance()`. See the example's
 `EventAction.hh` and `RunAction.(hh|cc)` on how to do this.
 
-    __Default Method: `BuildMoleculeCounters()`:__
-    * Reset counters before each run but not keep counter values between events
-    * Register a default `G4MoleculeCounter` instance called "Molecules"
-    * Register a default `G4MoleculeReactionCounter` instance called "Reactions"
+__Default Method: `BuildMoleculeCounters()`:__
+* Reset counters before each run but not keep counter values between events
+* Register a default `G4MoleculeCounter` instance called "Molecules"
+* Register a default `G4MoleculeReactionCounter` instance called "Reactions"
 
 
-    __Alternative Method: `BuildMultipleAndCustomMoleculeCounters()`:__
-    * Reset counters before each run but not keep counter values between events
-    * Register a `G4MoleculeCounter` instance called "BasicCounter":
-        * set its time precision to 25 ps
-    * Register a `G4MoleculeCounter` instance called "BasicCounter_Restricted":
-        * set its time precision to 25 ps
-        * activate the counter for global times in [500 ps, 10 ns]
-    * Register a `G4MoleculeCounter` instance called "BasicCounter_VariablePrecision":
-        * set its time precision to vary with global time:
-        ```
-            <= 10 ps: 5 ps
-            <= 100 ps: 50 ps
-            <= 1 ns: 0.5 ns
-            <= 1 µs: 50 ns
-        ```
-        * activate the counter for global times in [500 ps, 10 ns]
-    * Register a custom `MoleculeCounter` instance called "MoleculeCounter"
-        * set its time precision to vary with global time:
-        ```
-            <= 10 ps: 5 ps
-            <= 100 ps: 50 ps
-            <= 1 ns: 0.5 ns
-            <= 1 µs: 50 ns
-        ```
-        * __(important)__ `SetSensitiveToStepping(true)` to change molecule count when traversing geometry boundaries
-        * `SetIgnoreMoleculePosition(false)` if set to `true` the counter behaves like `G4MoleculeCounter`
-        * `SetNegativeCountsAreFatal(true)` to throw a FatalException if any molecule count drops below 0 through misregistration
-    * Register a `G4MoleculeReactionCounter` instance called "Reactions":
-        * set its time precision to 50 ps
-        * activate the counter for global times in [0 ps, 1 µs]
+__Alternative Method: `BuildMultipleAndCustomMoleculeCounters()`:__
+* Reset counters before each run but not keep counter values between events
+* Register a `G4MoleculeCounter` instance called "BasicCounter":
+    * set its time precision to 25 ps
+* Register a `G4MoleculeCounter` instance called "BasicCounter_Restricted":
+    * set its time precision to 25 ps
+    * activate the counter for global times in [500 ps, 10 ns]
+* Register a `G4MoleculeCounter` instance called "BasicCounter_VariablePrecision":
+    * set its time precision to vary with global time:
+    ```
+        <= 10 ps: 5 ps
+        <= 100 ps: 50 ps
+        <= 1 ns: 0.5 ns
+        <= 1 µs: 50 ns
+    ```
+    * activate the counter for global times in [500 ps, 10 ns]
+* Register a custom `MoleculeCounter` instance called "MoleculeCounter"
+    * set its time precision to vary with global time:
+    ```
+        <= 10 ps: 5 ps
+        <= 100 ps: 50 ps
+        <= 1 ns: 0.5 ns
+        <= 1 µs: 50 ns
+    ```
+    * __(important)__ `SetSensitiveToStepping(true)` to change molecule count when traversing geometry boundaries
+    * `SetIgnoreMoleculePosition(false)` if set to `true` the counter behaves like `G4MoleculeCounter`
+    * `SetNegativeCountsAreFatal(true)` to throw a FatalException if any molecule count drops below 0 through misregistration
+* Register a `G4MoleculeReactionCounter` instance called "Reactions":
+    * set its time precision to 50 ps
+    * activate the counter for global times in [0 ps, 1 µs]
 
 ## Execute the code by running:
 
 ```
-./molcounters_basic [simple_sbs.in,simple_irt_syn_react.in]
+./molcounters_basic [-ui,-gui] [simple_sbs.in,simple_irt_syn_react.in]
 ```
 
 The `simple_sbs.in` macro __only__ includes molecule transport (diffusion)!
 
-Contents of the molecule counters are dumped to `stdout`
+**Visualization:** To enable visualization, ensure you include this in the macros and notify the code by using the `-ui/-gui` flags.
+
+**Output:** Contents of the molecule counters are dumped to `stdout`
 at the end of each run by the RunAction::EndOfRunAction()

@@ -43,9 +43,9 @@
 // http://physics.nist.gov/PhysRefData/Compositions/index.html
 
 #include "G4NistManager.hh"
+
 #include "G4AutoLock.hh"
 #include "G4NistMessenger.hh"
-
 
 namespace
 {
@@ -73,30 +73,34 @@ G4NistManager::~G4NistManager()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4Material* G4NistManager::BuildMaterialWithNewDensity(const G4String& name,
-  const G4String& basename, G4double density, G4double temperature, G4double pressure)
+                                                       const G4String& basename, G4double density,
+                                                       G4double temperature, G4double pressure)
 {
   G4Material* bmat = FindOrBuildMaterial(name);
-  if (bmat != nullptr) {
+  if (bmat != nullptr)
+  {
     G4cout << "G4NistManager::BuildMaterialWithNewDensity ERROR: " << G4endl;
     G4cout << " New material <" << name << "> cannot be built because material"
            << " with the same name already exists." << G4endl;
     G4Exception("G4NistManager::BuildMaterialWithNewDensity()", "mat101", FatalException,
-      "Wrong material name");
+                "Wrong material name");
     return nullptr;
   }
   bmat = FindOrBuildMaterial(basename);
-  if (bmat == nullptr) {
+  if (bmat == nullptr)
+  {
     G4cout << "G4NistManager::BuildMaterialWithNewDensity ERROR: " << G4endl;
     G4cout << " New material <" << name << "> cannot be built because " << G4endl;
     G4cout << " base material <" << basename << "> does not exist." << G4endl;
     G4Exception("G4NistManager::BuildMaterialWithNewDensity()", "mat102", FatalException,
-      "Wrong material name");
+                "Wrong material name");
     return nullptr;
   }
   G4double dens = density;
   G4double temp = temperature;
   G4double pres = pressure;
-  if (dens == 0.0) {
+  if (dens == 0.0)
+  {
     dens = bmat->GetDensity();
     temp = bmat->GetTemperature();
     pres = bmat->GetPressure();
@@ -109,10 +113,12 @@ G4Material* G4NistManager::BuildMaterialWithNewDensity(const G4String& name,
 
 void G4NistManager::PrintElement(const G4String& symbol) const
 {
-  if (symbol == "all") {
+  if (symbol == "all")
+  {
     elmBuilder->PrintElement(0);
   }
-  else {
+  else
+  {
     elmBuilder->PrintElement(elmBuilder->GetZ(symbol));
   }
 }
@@ -121,8 +127,10 @@ void G4NistManager::PrintElement(const G4String& symbol) const
 
 void G4NistManager::PrintG4Element(const G4String& name) const
 {
-  for (auto const & elm : *theElementTable) {
-    if (name == elm->GetName() || "all" == name) {
+  for (auto const& elm : *theElementTable)
+  {
+    if (name == elm->GetName() || "all" == name)
+    {
       G4cout << *elm << G4endl;
     }
   }
@@ -132,8 +140,10 @@ void G4NistManager::PrintG4Element(const G4String& name) const
 
 void G4NistManager::PrintG4Material(const G4String& name) const
 {
-  for (auto const & mat : *theMaterialTable) {
-    if (name == mat->GetName() || "all" == name) {
+  for (auto const& mat : *theMaterialTable)
+  {
+    if (name == mat->GetName() || "all" == name)
+    {
       G4cout << *mat << G4endl;
     }
   }
@@ -167,7 +177,8 @@ G4NistManager::G4NistManager()
   g4pow = G4Pow::GetInstance();
 
   // compute frequently used values for mean atomic numbers
-  for (G4int j = 1; j < 101; ++j) {
+  for (G4int j = 1; j < 101; ++j)
+  {
     G4double A = elmBuilder->GetAtomicMassAmu(j);
     POWERA27[j] = std::pow(A, 0.27);
     LOGAZ[j] = std::log(A);
@@ -181,9 +192,11 @@ G4NistManager::G4NistManager()
 
 G4ICRU90StoppingData* G4NistManager::GetICRU90StoppingData()
 {
-  if (fICRU90 == nullptr) {
+  if (fICRU90 == nullptr)
+  {
     G4AutoLock l(&nistManagerMutex);
-    if (fICRU90 == nullptr) {
+    if (fICRU90 == nullptr)
+    {
       fICRU90 = new G4ICRU90StoppingData();
     }
     l.unlock();
@@ -195,12 +208,15 @@ G4ICRU90StoppingData* G4NistManager::GetICRU90StoppingData()
 
 void G4NistManager::SetDensityEffectCalculatorFlag(const G4String& mname, G4bool val)
 {
-  if (mname == "all") {
-    for (auto mat : *theMaterialTable) {
+  if (mname == "all")
+  {
+    for (auto mat : *theMaterialTable)
+    {
       SetDensityEffectCalculatorFlag(mat, val);
     }
   }
-  else {
+  else
+  {
     G4Material* mat = FindMaterial(mname);
     SetDensityEffectCalculatorFlag(mat, val);
   }
@@ -210,7 +226,8 @@ void G4NistManager::SetDensityEffectCalculatorFlag(const G4String& mname, G4bool
 
 void G4NistManager::SetDensityEffectCalculatorFlag(G4Material* mat, G4bool val)
 {
-  if (mat != nullptr) {
+  if (mat != nullptr)
+  {
     mat->ComputeDensityEffectOnFly(val);
   }
 }

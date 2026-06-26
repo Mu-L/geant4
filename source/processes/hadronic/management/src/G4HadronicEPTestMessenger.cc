@@ -25,63 +25,67 @@
 //
 //
 #include "G4HadronicEPTestMessenger.hh"
-#include "G4UIdirectory.hh"
-#include "G4UIcmdWithAnInteger.hh"
+
+#include "G4HadronicException.hh"
 #include "G4UIcmdWithADouble.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
-#include "G4HadronicException.hh"
-
+#include "G4UIcmdWithAnInteger.hh"
+#include "G4UIdirectory.hh"
 
 G4HadronicEPTestMessenger::G4HadronicEPTestMessenger(G4HadronicProcessStore* theStore)
- :theProcessStore(theStore)
+  : theProcessStore(theStore)
 {
   // Main directory for control of the e/p test
   heptstDirectory = new G4UIdirectory("/process/had/heptst/");
   heptstDirectory->SetGuidance("Controls for the hadronic energy/momentum test");
-  
+
   // Command to set level of detail reported upon e/p non-conservation
-  reportLvlCmd = new G4UIcmdWithAnInteger("/process/had/heptst/reportLevel",this);
+  reportLvlCmd = new G4UIcmdWithAnInteger("/process/had/heptst/reportLevel", this);
   reportLvlCmd->SetGuidance("Set level of detail reported upon E/p non-conservation");
-  reportLvlCmd->SetGuidance(" 0 - (default) no reporting "); 
-  reportLvlCmd->SetGuidance(" 1 - report only when E/p not conserved "); 
-  reportLvlCmd->SetGuidance(" 2 - report regardless of E/p conservation "); 
-  reportLvlCmd->SetGuidance(" 3 - report only when E/p not conserved, with names, limits "); 
-  reportLvlCmd->SetGuidance(" 4 - report regardless of E/p conservation, with names, limits "); 
-  reportLvlCmd->SetParameterName("ReportLevel",true);
+  reportLvlCmd->SetGuidance(" 0 - (default) no reporting ");
+  reportLvlCmd->SetGuidance(" 1 - report only when E/p not conserved ");
+  reportLvlCmd->SetGuidance(" 2 - report regardless of E/p conservation ");
+  reportLvlCmd->SetGuidance(" 3 - report only when E/p not conserved, with names, limits ");
+  reportLvlCmd->SetGuidance(" 4 - report regardless of E/p conservation, with names, limits ");
+  reportLvlCmd->SetParameterName("ReportLevel", true);
   reportLvlCmd->SetDefaultValue(0);
   reportLvlCmd->SetRange("ReportLevel >= 0 && ReportLevel < 5");
-  
+
   // Set the relative energy non-conservation level for the process
-  procRelLvlCmd = new G4UIcmdWithADouble("/process/had/heptst/processRelLevel",this);
+  procRelLvlCmd = new G4UIcmdWithADouble("/process/had/heptst/processRelLevel", this);
   procRelLvlCmd->SetGuidance("Set relative level of allowed energy non-conservation");
-  procRelLvlCmd->SetParameterName("ProcessRelLevel",true);
+  procRelLvlCmd->SetParameterName("ProcessRelLevel", true);
   procRelLvlCmd->SetDefaultValue(-1.0);
 
   // Set the absolute energy non-conservation level for the process
-  procAbsLvlCmd = new G4UIcmdWithADoubleAndUnit("/process/had/heptst/processAbsLevel",this);
-  procAbsLvlCmd->SetGuidance("Set absolute energy level (with unit) of allowed energy non-conservation");
-  procAbsLvlCmd->SetParameterName("ProcessAbsLevel",true);
+  procAbsLvlCmd = new G4UIcmdWithADoubleAndUnit("/process/had/heptst/processAbsLevel", this);
+  procAbsLvlCmd->SetGuidance(
+    "Set absolute energy level (with unit) of allowed energy non-conservation");
+  procAbsLvlCmd->SetParameterName("ProcessAbsLevel", true);
   procAbsLvlCmd->SetDefaultValue(-1.0);
   procAbsLvlCmd->SetUnitCategory("Energy");
 }
 
-
 G4HadronicEPTestMessenger::~G4HadronicEPTestMessenger()
 {
-  delete     heptstDirectory;
-  delete     reportLvlCmd;
-  delete     procRelLvlCmd;
-  delete     procAbsLvlCmd; 
+  delete heptstDirectory;
+  delete reportLvlCmd;
+  delete procRelLvlCmd;
+  delete procAbsLvlCmd;
 }
-
 
 void G4HadronicEPTestMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
-  if ( command == reportLvlCmd ) {
-    theProcessStore->SetEpReportLevel( reportLvlCmd->GetNewIntValue( newValue ) );
-  } else if ( command == procRelLvlCmd ) {
-    theProcessStore->SetProcessRelLevel( procRelLvlCmd->GetNewDoubleValue( newValue ) );
-  } else if ( command == procAbsLvlCmd ) {
-    theProcessStore->SetProcessAbsLevel( procAbsLvlCmd->GetNewDoubleValue( newValue ) );
+  if (command == reportLvlCmd)
+  {
+    theProcessStore->SetEpReportLevel(reportLvlCmd->GetNewIntValue(newValue));
+  }
+  else if (command == procRelLvlCmd)
+  {
+    theProcessStore->SetProcessRelLevel(procRelLvlCmd->GetNewDoubleValue(newValue));
+  }
+  else if (command == procAbsLvlCmd)
+  {
+    theProcessStore->SetProcessAbsLevel(procAbsLvlCmd->GetNewDoubleValue(newValue));
   }
 }

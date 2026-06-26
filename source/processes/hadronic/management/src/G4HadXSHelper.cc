@@ -30,26 +30,28 @@
 //
 
 #include "G4HadXSHelper.hh"
+
+#include "G4Exp.hh"
+#include "G4Log.hh"
 #include "G4Material.hh"
 #include "G4MaterialTable.hh"
-#include "G4Log.hh"
-#include "G4Exp.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-static const G4double scale = 10./G4Log(10.);
+static const G4double scale = 10. / G4Log(10.);
 
-std::vector<G4double>* 
-G4HadXSHelper::FindCrossSectionMax(G4HadronicProcess* p,
-                                   const G4ParticleDefinition* part,
-                                   const G4double emin,
-                                   const G4double emax)
+std::vector<G4double>* G4HadXSHelper::FindCrossSectionMax(G4HadronicProcess* p,
+                                                          const G4ParticleDefinition* part,
+                                                          const G4double emin, const G4double emax)
 {
   std::vector<G4double>* ptr = nullptr;
-  if(nullptr == p || nullptr == part) { return ptr; }
+  if (nullptr == p || nullptr == part)
+  {
+    return ptr;
+  }
   /*
   G4cout << "G4HadXSHelper::FindCrossSectionMax for "
-	 << p->GetProcessName() << " and " << part->GetParticleName() << G4endl;
+   << p->GetProcessName() << " and " << part->GetParticleName() << G4endl;
   */
 
   const G4MaterialTable* theMatTable = G4Material::GetMaterialTable();
@@ -58,33 +60,42 @@ G4HadXSHelper::FindCrossSectionMax(G4HadronicProcess* p,
   ptr->resize(n, DBL_MAX);
 
   G4bool isPeak = false;
-  G4double ee = G4Log(emax/emin);
-  G4int nbin = G4lrint(ee*scale);
-  if(nbin < 4) { nbin = 4; }
-  G4double x = G4Exp(ee/nbin);
+  G4double ee = G4Log(emax / emin);
+  G4int nbin = G4lrint(ee * scale);
+  if (nbin < 4)
+  {
+    nbin = 4;
+  }
+  G4double x = G4Exp(ee / nbin);
 
   // first loop on existing vectors
-  for (size_t i=0; i<n; ++i) {
+  for (size_t i = 0; i < n; ++i)
+  {
     auto mat = (*theMatTable)[i];
     G4double sm = 0.0;
     G4double em = 0.0;
     G4double e = emin;
-    for(G4int j=0; j<=nbin; ++j) {
+    for (G4int j = 0; j <= nbin; ++j)
+    {
       G4double sig = p->ComputeCrossSection(part, mat, e);
-      if(sig >= sm) {
-	em = e;
-	sm = sig;
-	e = (j+1 < nbin) ? e*x : emax;
-      } else {
-	isPeak = true;
-	(*ptr)[i] = em;
-	break;
+      if (sig >= sm)
+      {
+        em = e;
+        sm = sig;
+        e = (j + 1 < nbin) ? e * x : emax;
+      }
+      else
+      {
+        isPeak = true;
+        (*ptr)[i] = em;
+        break;
       }
     }
-    //G4cout << i << ".  em=" << em << " sm=" << sm << G4endl;
+    // G4cout << i << ".  em=" << em << " sm=" << sm << G4endl;
   }
   // there is no peak for any couple
-  if(!isPeak) {
+  if (!isPeak)
+  {
     delete ptr;
     ptr = nullptr;
   }
@@ -93,18 +104,20 @@ G4HadXSHelper::FindCrossSectionMax(G4HadronicProcess* p,
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-std::vector<G4TwoPeaksHadXS*>* 
-G4HadXSHelper::FillPeaksStructure(G4HadronicProcess* p,
-				  const G4ParticleDefinition* part,
-				  const G4double emin,
-				  const G4double emax)
+std::vector<G4TwoPeaksHadXS*>* G4HadXSHelper::FillPeaksStructure(G4HadronicProcess* p,
+                                                                 const G4ParticleDefinition* part,
+                                                                 const G4double emin,
+                                                                 const G4double emax)
 {
   std::vector<G4TwoPeaksHadXS*>* ptr = nullptr;
-  if(nullptr == p) { return ptr; }
+  if (nullptr == p)
+  {
+    return ptr;
+  }
 
   /*
   G4cout << "G4HadXSHelper::FillPeaksStructure for "
-	 << p->GetProcessName() << " and " << part->GetParticleName() << G4endl;
+   << p->GetProcessName() << " and " << part->GetParticleName() << G4endl;
   */
   const G4MaterialTable* theMatTable = G4Material::GetMaterialTable();
   size_t n = G4Material::GetNumberOfMaterials();
@@ -114,75 +127,101 @@ G4HadXSHelper::FillPeaksStructure(G4HadronicProcess* p,
   G4double e1peak, e1deep, e2peak, e2deep, e3peak;
   G4bool isDeep = false;
 
-  G4double ee = G4Log(emax/emin);
-  G4int nbin = G4lrint(ee*scale);
-  if(nbin < 4) { nbin = 4; }
-  G4double fact = G4Exp(ee/nbin);
+  G4double ee = G4Log(emax / emin);
+  G4int nbin = G4lrint(ee * scale);
+  if (nbin < 4)
+  {
+    nbin = 4;
+  }
+  G4double fact = G4Exp(ee / nbin);
 
-  for (size_t i=0; i<n; ++i) {
+  for (size_t i = 0; i < n; ++i)
+  {
     auto mat = (*theMatTable)[i];
-    G4double e = emin/fact;
+    G4double e = emin / fact;
 
     G4double xs = 0.0;
     e1peak = e1deep = e2peak = e2deep = e3peak = DBL_MAX;
-    for(G4int j=0; j<=nbin; ++j) {
-      e = (j+1 < nbin) ? e*fact : emax;
+    for (G4int j = 0; j <= nbin; ++j)
+    {
+      e = (j + 1 < nbin) ? e * fact : emax;
       G4double ss = p->ComputeCrossSection(part, mat, e);
       // find out 1st peak
-      if(e1peak == DBL_MAX) {
-	if(ss >= xs) {
-	  xs = ss;
-	  ee = e;
-	  continue;
-	} else {
-	  e1peak = ee;
-	}
+      if (e1peak == DBL_MAX)
+      {
+        if (ss >= xs)
+        {
+          xs = ss;
+          ee = e;
+          continue;
+        }
+        else
+        {
+          e1peak = ee;
+        }
       }
       // find out the deep
-      if(e1deep == DBL_MAX) {
-	if(ss <= xs) {
-	  xs = ss;
-	  ee = e;
-	  continue;
-	} else {
-	  e1deep = ee;
-	  isDeep = true;
-	}
+      if (e1deep == DBL_MAX)
+      {
+        if (ss <= xs)
+        {
+          xs = ss;
+          ee = e;
+          continue;
+        }
+        else
+        {
+          e1deep = ee;
+          isDeep = true;
+        }
       }
       // find out 2nd peak
-      if(e2peak == DBL_MAX) {
-	if(ss >= xs) {
-	  xs = ss;
-	  ee = e;
-	  continue;
-	} else {
-	  e2peak = ee;
-	}
+      if (e2peak == DBL_MAX)
+      {
+        if (ss >= xs)
+        {
+          xs = ss;
+          ee = e;
+          continue;
+        }
+        else
+        {
+          e2peak = ee;
+        }
       }
-      if(e2deep == DBL_MAX) {
-	if(ss <= xs) {
-	  xs = ss;
-	  ee = e;
-	  continue;
-	} else {
-	  e2deep = ee;
-	  break;
-	}
+      if (e2deep == DBL_MAX)
+      {
+        if (ss <= xs)
+        {
+          xs = ss;
+          ee = e;
+          continue;
+        }
+        else
+        {
+          e2deep = ee;
+          break;
+        }
       }
       // find out 3d peak
-      if(e3peak == DBL_MAX) {
-	if(ss >= xs) {
-	  xs = ss;
-	  ee = e;
-	  continue;
-	} else {
-	  e3peak = ee;
-	}
+      if (e3peak == DBL_MAX)
+      {
+        if (ss >= xs)
+        {
+          xs = ss;
+          ee = e;
+          continue;
+        }
+        else
+        {
+          e3peak = ee;
+        }
       }
     }
     G4TwoPeaksHadXS* x = (*ptr)[i];
-    if(nullptr == x) { 
-      x = new G4TwoPeaksHadXS(); 
+    if (nullptr == x)
+    {
+      x = new G4TwoPeaksHadXS();
       (*ptr)[i] = x;
     }
     x->e1peak = e1peak;
@@ -190,12 +229,14 @@ G4HadXSHelper::FillPeaksStructure(G4HadronicProcess* p,
     x->e2peak = e2peak;
     x->e2deep = e2deep;
     x->e3peak = e3peak;
-    //G4cout << "coupleIdx=" << i << " " << e1peak << " " << e1deep
-    //  << " " << e2peak << " " << e2deep << " " << e3peak << G4endl;
+    // G4cout << "coupleIdx=" << i << " " << e1peak << " " << e1deep
+    //   << " " << e2peak << " " << e2deep << " " << e3peak << G4endl;
   }
   // case of no 1st peak in all vectors
-  if(!isDeep) {
-    for (auto& x : *ptr) {
+  if (!isDeep)
+  {
+    for (auto& x : *ptr)
+    {
       delete x;
     }
     delete ptr;

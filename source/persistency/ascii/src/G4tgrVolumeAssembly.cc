@@ -29,23 +29,20 @@
 // --------------------------------------------------------------------
 
 #include "G4tgrVolumeAssembly.hh"
-#include "G4tgrUtils.hh"
-#include "G4tgrVolumeMgr.hh"
-#include "G4tgrPlaceSimple.hh"
-#include "G4tgrPlaceDivRep.hh"
-#include "G4tgrPlaceParameterisation.hh"
+
 #include "G4tgrFileReader.hh"
 #include "G4tgrMessenger.hh"
+#include "G4tgrPlaceDivRep.hh"
+#include "G4tgrPlaceParameterisation.hh"
+#include "G4tgrPlaceSimple.hh"
+#include "G4tgrUtils.hh"
+#include "G4tgrVolumeMgr.hh"
 
 // --------------------------------------------------------------------
-G4tgrVolumeAssembly::G4tgrVolumeAssembly()
-{
-}
+G4tgrVolumeAssembly::G4tgrVolumeAssembly() {}
 
 // --------------------------------------------------------------------
-G4tgrVolumeAssembly::~G4tgrVolumeAssembly()
-{
-}
+G4tgrVolumeAssembly::~G4tgrVolumeAssembly() {}
 
 // --------------------------------------------------------------------
 G4tgrVolumeAssembly::G4tgrVolumeAssembly(const std::vector<G4String>& wl)
@@ -57,13 +54,12 @@ G4tgrVolumeAssembly::G4tgrVolumeAssembly(const std::vector<G4String>& wl)
 
   G4int nVol = G4tgrUtils::GetInt(wl[2]);
 
-  G4tgrUtils::CheckWLsize(wl, 3 + nVol * 5, WLSIZE_GE,
-                          "G4tgrVolumeAssembly::G4tgrVolumeAssembly");
+  G4tgrUtils::CheckWLsize(wl, 3 + nVol * 5, WLSIZE_GE, "G4tgrVolumeAssembly::G4tgrVolumeAssembly");
 
-  for(G4int ii = 0; ii < nVol * 5; ii += 5)
+  for (G4int ii = 0; ii < nVol * 5; ii += 5)
   {
 #ifdef G4VERBOSE
-    if(G4tgrMessenger::GetVerboseLevel() >= 2)
+    if (G4tgrMessenger::GetVerboseLevel() >= 2)
     {
       G4cout << " G4tgrVolumeAssembly::G4tgrVolumeAssembly() -"
              << " Adding component: " << ii << " - " << wl[ii + 3] << G4endl;
@@ -71,14 +67,13 @@ G4tgrVolumeAssembly::G4tgrVolumeAssembly(const std::vector<G4String>& wl)
 #endif
     theComponentNames.push_back(G4tgrUtils::GetString(wl[3 + ii + 0]));
     theComponentRMs.push_back(G4tgrUtils::GetString(wl[3 + ii + 1]));
-    theComponentPos.push_back(
-      G4ThreeVector(G4tgrUtils::GetDouble(wl[3 + ii + 2]),
-                    G4tgrUtils::GetDouble(wl[3 + ii + 3]),
-                    G4tgrUtils::GetDouble(wl[3 + ii + 4])));
+    theComponentPos.push_back(G4ThreeVector(G4tgrUtils::GetDouble(wl[3 + ii + 2]),
+                                            G4tgrUtils::GetDouble(wl[3 + ii + 3]),
+                                            G4tgrUtils::GetDouble(wl[3 + ii + 4])));
   }
   theVisibility = 1;
-  theRGBColour  = new G4double[4];
-  for(std::size_t ii = 0; ii < 4; ++ii)
+  theRGBColour = new G4double[4];
+  for (std::size_t ii = 0; ii < 4; ++ii)
   {
     theRGBColour[ii] = -1.;
   }
@@ -86,7 +81,7 @@ G4tgrVolumeAssembly::G4tgrVolumeAssembly(const std::vector<G4String>& wl)
   theSolid = nullptr;
 
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 1)
+  if (G4tgrMessenger::GetVerboseLevel() >= 1)
   {
     G4cout << " Created " << *this << G4endl;
   }
@@ -106,11 +101,10 @@ G4tgrPlace* G4tgrVolumeAssembly::AddPlace(const std::vector<G4String>& wl)
   thePlacements.push_back(pl);
 
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 2)
+  if (G4tgrMessenger::GetVerboseLevel() >= 2)
   {
-    G4cout << "   New placement: " << thePlacements.size()
-           << " added for Volume " << theName << " inside "
-           << pl->GetParentName() << " type " << pl->GetType() << G4endl;
+    G4cout << "   New placement: " << thePlacements.size() << " added for Volume " << theName
+           << " inside " << pl->GetParentName() << " type " << pl->GetType() << G4endl;
   }
 #endif
   //---------- register parent - child
@@ -124,12 +118,11 @@ std::ostream& operator<<(std::ostream& os, const G4tgrVolumeAssembly& obj)
 {
   os << "G4tgrVolumeAssembly= " << obj.theName;
 
-  for(std::size_t ii = 0; ii < obj.theComponentNames.size(); ++ii)
+  for (std::size_t ii = 0; ii < obj.theComponentNames.size(); ++ii)
   {
-    os << obj.theComponentNames[ii]
-       << " RotMatName= " << obj.theComponentRMs[ii]
-       << " Position= " << obj.theComponentPos[ii].x() << " "
-       << obj.theComponentPos[ii].y() << " " << obj.theComponentPos[ii].z();
+    os << obj.theComponentNames[ii] << " RotMatName= " << obj.theComponentRMs[ii]
+       << " Position= " << obj.theComponentPos[ii].x() << " " << obj.theComponentPos[ii].y() << " "
+       << obj.theComponentPos[ii].z();
   }
   os << G4endl;
 

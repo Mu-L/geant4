@@ -33,24 +33,26 @@
 //
 //
 
-#ifndef G4PSVolumeFlux3D_h
-#define G4PSVolumeFlux3D_h 1
+#ifndef G4PSVOLUMEFLUX3D_HH
+#define G4PSVOLUMEFLUX3D_HH
 
 #include "G4PSVolumeFlux.hh"
 
 class G4PSVolumeFlux3D : public G4PSVolumeFlux
 {
- public:
-  G4PSVolumeFlux3D(const G4String& name, G4int direction = 1, G4int ni = 1,
-                   G4int nj = 1, G4int nk = 1, G4int depi = 2, G4int depj = 1,
-                   G4int depk = 0);
+  public:
 
-  ~G4PSVolumeFlux3D() override = default;
+    G4PSVolumeFlux3D(const G4String& name, G4int direction = 1, G4int ni = 1, G4int nj = 1,
+                     G4int nk = 1, G4int depi = 2, G4int depj = 1, G4int depk = 0);
 
- protected:
-  G4int GetIndex(G4Step*) override;
+    ~G4PSVolumeFlux3D() override = default;
 
- private:
-  G4int fDepthi, fDepthj, fDepthk;
+  protected:
+
+    G4int GetIndex(G4Step*) override;
+
+  private:
+
+    G4int fDepthi, fDepthj, fDepthk;
 };
 #endif

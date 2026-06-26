@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4Eta_h
-#define G4Eta_h 1
+#ifndef G4ETA_HH
+#define G4ETA_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4Eta : public G4ParticleDefinition
 {
   public:
+
     static G4Eta* Definition();
     static G4Eta* EtaDefinition();
     static G4Eta* Eta();
 
   private:
+
     G4Eta() {}
     ~G4Eta() override = default;
 

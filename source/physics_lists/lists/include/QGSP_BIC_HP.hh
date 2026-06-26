@@ -35,25 +35,22 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef QGSP_BIC_HP_h
-#define QGSP_BIC_HP_h 1
+#ifndef QGSP_BIC_HP_HH
+#define QGSP_BIC_HP_HH
 
-#include "globals.hh"
 #include "G4VModularPhysicsList.hh"
+#include "globals.hh"
 
 class QGSP_BIC_HP : public G4VModularPhysicsList
 {
-public:
-  QGSP_BIC_HP(G4int ver = 1);
-  virtual ~QGSP_BIC_HP()=default;
+  public:
 
-  // delete copy constructor and assignment operator
-  QGSP_BIC_HP(const QGSP_BIC_HP &)=delete;
-  QGSP_BIC_HP & operator=(const QGSP_BIC_HP &right)=delete;
+    QGSP_BIC_HP(G4int ver = 1);
+    virtual ~QGSP_BIC_HP() = default;
 
+    // delete copy constructor and assignment operator
+    QGSP_BIC_HP(const QGSP_BIC_HP&) = delete;
+    QGSP_BIC_HP& operator=(const QGSP_BIC_HP& right) = delete;
 };
 
 #endif
-
-
-

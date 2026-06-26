@@ -28,11 +28,11 @@
 
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
-#ifndef G4CsvFileManager_h
-#define G4CsvFileManager_h 1
+#ifndef G4CSVFILEMANAGER_HH
+#define G4CSVFILEMANAGER_HH
 
-#include "G4VTFileManager.hh"
 #include "G4TNtupleDescription.hh"
+#include "G4VTFileManager.hh"
 #include "globals.hh"
 
 #include "tools/wcsv_ntuple"
@@ -45,6 +45,7 @@ using CsvNtupleDescription = G4TNtupleDescription<tools::wcsv::ntuple, std::ofst
 class G4CsvFileManager : public G4VTFileManager<std::ofstream>
 {
   public:
+
     explicit G4CsvFileManager(const G4AnalysisManagerState& state);
     G4CsvFileManager() = delete;
     ~G4CsvFileManager() override = default;
@@ -70,29 +71,35 @@ class G4CsvFileManager : public G4VTFileManager<std::ofstream>
     G4bool IsNtupleDirectory() const;
 
   protected:
+
     // Methods derived from templated base class
     std::shared_ptr<std::ofstream> CreateFileImpl(const G4String& fileName) final;
     G4bool WriteFileImpl(std::shared_ptr<std::ofstream> file) final;
     G4bool CloseFileImpl(std::shared_ptr<std::ofstream> file) final;
 
   private:
+
     // Utility method
     G4String GetNtupleFileName(CsvNtupleDescription* ntupleDescription);
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4CsvFileManager" };
+    static constexpr std::string_view fkClass{"G4CsvFileManager"};
 
     // Data members
-    G4bool fIsHistoDirectory { false };
-    G4bool fIsNtupleDirectory { false };
+    G4bool fIsHistoDirectory{false};
+    G4bool fIsNtupleDirectory{false};
 };
 
 // inline functions
 
 inline G4bool G4CsvFileManager::IsHistoDirectory() const
-{ return fIsHistoDirectory; }
+{
+  return fIsHistoDirectory;
+}
 
 inline G4bool G4CsvFileManager::IsNtupleDirectory() const
-{ return fIsNtupleDirectory; }
+{
+  return fIsNtupleDirectory;
+}
 
 #endif

@@ -38,35 +38,38 @@
 #include "G4InuclElementaryParticle.hh"
 
 #ifdef G4CASCADE_DEBUG_SORT
-#include "G4ios.hh"
+#  include "G4ios.hh"
 #endif
 
-class G4ParticleLargerEkin {
-public:
-  G4bool operator() (const G4InuclElementaryParticle& part1,
-		     const G4InuclElementaryParticle& part2) {
+class G4ParticleLargerEkin
+{
+  public:
+
+    G4bool operator()(const G4InuclElementaryParticle& part1,
+                      const G4InuclElementaryParticle& part2)
+    {
 #ifdef G4CASCADE_DEBUG_SORT
-    G4cout << "part1 @ " << &part1 << ": " << part1
-	   << "part2 @ " << &part2 << ": " << part2
-	   << G4endl;
+      G4cout << "part1 @ " << &part1 << ": " << part1 << "part2 @ " << &part2 << ": " << part2
+             << G4endl;
 #endif
-    return (part1.getKineticEnergy() > part2.getKineticEnergy());
-  }
- 
-  G4bool operator() (const G4InuclElementaryParticle* part1,
-		     const G4InuclElementaryParticle* part2) {
-    return (part1 && part2 && operator()(*part1, *part2));
-  }
+      return (part1.getKineticEnergy() > part2.getKineticEnergy());
+    }
 
-  G4bool operator() (const G4CascadParticle& part1,
-		     const G4CascadParticle& part2) {
-    return (operator()(part1.getParticle(), part2.getParticle()));
-  }
+    G4bool operator()(const G4InuclElementaryParticle* part1,
+                      const G4InuclElementaryParticle* part2)
+    {
+      return (part1 && part2 && operator()(*part1, *part2));
+    }
 
-  G4bool operator() (const G4CascadParticle* part1,
-		     const G4CascadParticle* part2) {
-    return (part1 && part2 && operator()(*part1, *part2));
-  }
+    G4bool operator()(const G4CascadParticle& part1, const G4CascadParticle& part2)
+    {
+      return (operator()(part1.getParticle(), part2.getParticle()));
+    }
+
+    G4bool operator()(const G4CascadParticle* part1, const G4CascadParticle* part2)
+    {
+      return (part1 && part2 && operator()(*part1, *part2));
+    }
 };
 
-#endif // G4PARTICLE_LARGER_EKIN_HH
+#endif  // G4PARTICLE_LARGER_EKIN_HH

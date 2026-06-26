@@ -27,11 +27,11 @@
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 // V. Ivanchenko, July-2023 Basic revision of particle HP classes
 //
-#ifndef G4ParticleHPNames_h
-#define G4ParticleHPNames_h 1
+#ifndef G4PARTICLEHPNAMES_HH
+#define G4PARTICLEHPNAMES_HH
 
-#include "globals.hh"
 #include "G4ParticleHPDataUsed.hh"
+#include "globals.hh"
 
 class G4ParticleHPManager;
 
@@ -42,13 +42,13 @@ class G4ParticleHPNames
     explicit G4ParticleHPNames(G4int maxOffSet = 5);
     ~G4ParticleHPNames() = default;
 
-    G4ParticleHPDataUsed GetName(G4int A, G4int Z, const G4String& base,
-                                 const G4String& rest, G4bool& active) const
+    G4ParticleHPDataUsed GetName(G4int A, G4int Z, const G4String& base, const G4String& rest,
+                                 G4bool& active) const
     {
       return GetName(A, Z, 0, base, rest, active);
     }
-    G4ParticleHPDataUsed GetName(G4int A, G4int Z, G4int M,
-                                 const G4String& base, const G4String& rest, G4bool& active) const;
+    G4ParticleHPDataUsed GetName(G4int A, G4int Z, G4int M, const G4String& base,
+                                 const G4String& rest, G4bool& active) const;
     G4String GetName(G4int i) const;
 
     G4String itoa(G4int current) const;
@@ -56,7 +56,7 @@ class G4ParticleHPNames
     void SetMaxOffSet(G4int anOffset) { theMaxOffSet = anOffset; }
 
     G4ParticleHPNames(G4ParticleHPNames&) = delete;
-    G4ParticleHPNames& operator=(const G4ParticleHPNames &right) = delete;
+    G4ParticleHPNames& operator=(const G4ParticleHPNames& right) = delete;
 
   private:
 

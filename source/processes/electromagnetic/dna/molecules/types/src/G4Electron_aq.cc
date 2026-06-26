@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Author: Mathieu Karamitors 
+// Author: Mathieu Karamitors
 //
 // History:
 // -----------
@@ -33,9 +33,10 @@
 // -------------------------------------------------------------------
 
 #include "G4Electron_aq.hh"
+
+#include "G4ParticleTable.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4ParticleTable.hh"
 
 // ######################################################################
 // ###                         Electron_aq                            ###
@@ -51,7 +52,6 @@ G4Electron_aq* G4Electron_aq::Definition()
   G4ParticleDefinition* anInstance = pTable->FindParticle(name);
   if (anInstance == nullptr)
   {
-
     const G4String formatedName = "e_{aq}";
     // create molecule
     //
@@ -68,13 +68,11 @@ G4Electron_aq* G4Electron_aq::Definition()
     //      );
 
     G4double mass = 1 * g / Avogadro * c_squared;
-    anInstance = new G4MoleculeDefinition(name, mass, 4.9e-9 * (m * m / s), -1,
-                                          1, 0.23 * nm);
+    anInstance = new G4MoleculeDefinition(name, mass, 4.9e-9 * (m * m / s), -1, 1, 0.23 * nm);
     // radius from K.D. Jordan, Sciencem vol. 306 p.618
 
-    ((G4MoleculeDefinition*) anInstance)->SetLevelOccupation(0, 1);
-    ((G4MoleculeDefinition*) anInstance)->SetFormatedName(formatedName);
-
+    ((G4MoleculeDefinition*)anInstance)->SetLevelOccupation(0, 1);
+    ((G4MoleculeDefinition*)anInstance)->SetFormatedName(formatedName);
   }
   theInstance = static_cast<G4Electron_aq*>(anInstance);
   return theInstance;

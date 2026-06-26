@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4AntiSigmaZero_h
-#define G4AntiSigmaZero_h 1
+#ifndef G4ANTISIGMAZERO_HH
+#define G4ANTISIGMAZERO_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4AntiSigmaZero : public G4ParticleDefinition
 {
   public:
+
     static G4AntiSigmaZero* Definition();
     static G4AntiSigmaZero* AntiSigmaZeroDefinition();
     static G4AntiSigmaZero* AntiSigmaZero();
 
   private:
+
     G4AntiSigmaZero() {}
     ~G4AntiSigmaZero() override = default;
 

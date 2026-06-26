@@ -32,56 +32,54 @@
 // Author: Youhei Morita, 12.09.2001
 // --------------------------------------------------------------------
 #ifndef G4HCIOENTRYT_HH
-#define G4HCIOENTRYT_HH 1
+#define G4HCIOENTRYT_HH
 
 #include "G4Types.hh"
+#include "G4VHCIOentry.hh"
 #include "G4VPHitsCollectionIO.hh"
 
-#include "G4VHCIOentry.hh"
-
-template <class T>
+template<class T>
 class G4HCIOentryT : public G4VHCIOentry
 {
   public:
 
     G4HCIOentryT<T>(const G4String& n) : G4VHCIOentry(n)
     {
-      if(m_verbose > 2)
+      if (m_verbose > 2)
       {
         G4cout << "G4HCIOentryT: Registering HitsCollection IO manager"
                << " for \"" << n << "\"" << G4endl;
       }
     }
-      // Constructor
+    // Constructor
 
     ~G4HCIOentryT() {}
-      // Destructor
+    // Destructor
 
     void CreateHCIOmanager(const G4String& detName, const G4String& colName)
     {
-      if(f_manager == nullptr)
+      if (f_manager == nullptr)
       {
         f_manager = new T(detName, colName);
-        if(m_verbose > 2)
+        if (m_verbose > 2)
         {
           G4cout << "G4HCIOentryT: Constructing HitsCollection IO manager"
                  << " for \"" << detName << "\" " << f_manager << G4endl;
         }
         G4HCIOcatalog::GetHCIOcatalog()->RegisterHCIOmanager(f_manager);
-        if(m_verbose > 2)
+        if (m_verbose > 2)
         {
           G4HCIOcatalog::GetHCIOcatalog()->PrintHCIOmanager();
         }
       }
     }
-      // Create a new hits collection I/O manager
+    // Create a new hits collection I/O manager
 
     void DeleteHCIOmanager()
     {
-      if(f_manager != nullptr)
-        delete f_manager;
+      if (f_manager != nullptr) delete f_manager;
     }
-      // Delete a hits collection I/O manager
+    // Delete a hits collection I/O manager
 
   private:
 

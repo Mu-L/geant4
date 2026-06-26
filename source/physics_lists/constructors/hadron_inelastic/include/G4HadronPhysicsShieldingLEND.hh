@@ -26,7 +26,7 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   
+// ClassName:
 //
 // Author: 7 Nov 2017 Tatsumi Koi
 //   created from G4HadronPhysicsShielding
@@ -35,31 +35,28 @@
 //            utilities; use explicit constructors
 //----------------------------------------------------------------------------
 //
-#ifndef G4HadronPhysicsShieldingLEND_h
-#define G4HadronPhysicsShieldingLEND_h 1
+#ifndef G4HADRONPHYSICSSHIELDINGLEND_HH
+#define G4HADRONPHYSICSSHIELDINGLEND_HH
 
 #include "G4HadronPhysicsShielding.hh"
 
 class G4HadronPhysicsShieldingLEND : public G4HadronPhysicsShielding
 {
   public:
+
     explicit G4HadronPhysicsShieldingLEND(G4int verbose);
     explicit G4HadronPhysicsShieldingLEND(const G4String& name);
     explicit G4HadronPhysicsShieldingLEND(const G4String& name = "hInelastic ShieldingLEND",
-                                      G4bool qe = false);
+                                          G4bool qe = false);
     explicit G4HadronPhysicsShieldingLEND(const G4String& name, G4int verbose);
     explicit G4HadronPhysicsShieldingLEND(const G4String& name, G4int verbose,
-                                          G4double minFTFPEnergy, 
-                                          G4double maxBertiniEnergy);
+                                          G4double minFTFPEnergy, G4double maxBertiniEnergy);
 
     ~G4HadronPhysicsShieldingLEND() override = default;
 
     // copy constructor and hide assignment operator
-    G4HadronPhysicsShieldingLEND(G4HadronPhysicsShieldingLEND &) = delete;
-    G4HadronPhysicsShieldingLEND & operator =
-    (const G4HadronPhysicsShieldingLEND &right) = delete;
-
+    G4HadronPhysicsShieldingLEND(G4HadronPhysicsShieldingLEND&) = delete;
+    G4HadronPhysicsShieldingLEND& operator=(const G4HadronPhysicsShieldingLEND& right) = delete;
 };
 
 #endif
-

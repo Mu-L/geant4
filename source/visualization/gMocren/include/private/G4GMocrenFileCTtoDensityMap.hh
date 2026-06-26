@@ -26,36 +26,40 @@
 //
 //
 //
-// Created:  Oct. 12, 2009  Akinori Kimura  
+// Created:  Oct. 12, 2009  Akinori Kimura
 //
 // mapping data of  CT values [H.U.] to densities [g/cm3]
 //
-#ifndef G4GMocrenFile_CTtoDensity_MAP_HH
-#define G4GMocrenFile_CTtoDensity_MAP_HH
+#ifndef G4GMOCRENFILE_CTTODENSITY_MAP_HH
+#define G4GMOCRENFILE_CTTODENSITY_MAP_HH
 
 #include "globals.hh"
 
-class G4GMocrenFileCTtoDensityMap {
-public:
-  G4GMocrenFileCTtoDensityMap();
-  ~G4GMocrenFileCTtoDensityMap();
+class G4GMocrenFileCTtoDensityMap
+{
+  public:
 
-  // get min. CT value
-  G4int GetMinCT() const {return kCTMinMax[0];}
-  // get max. CT value
-  G4int GetMaxCT() const {return kCTMinMax[1];}
-  // get density corresponding to CT value
-  G4double GetDensity(G4int & _ct) const;
+    G4GMocrenFileCTtoDensityMap();
+    ~G4GMocrenFileCTtoDensityMap();
 
-protected:
-  G4int kCTMinMax[2];
-  G4double * kDensity;
-  G4int kSize;
+    // get min. CT value
+    G4int GetMinCT() const { return kCTMinMax[0]; }
+    // get max. CT value
+    G4int GetMaxCT() const { return kCTMinMax[1]; }
+    // get density corresponding to CT value
+    G4double GetDensity(G4int& _ct) const;
 
-private:
-  // Private copy constructor and assigment operator - copying and
-  // assignment not allowed.  Keeps Coverity happy.
-  G4GMocrenFileCTtoDensityMap (const G4GMocrenFileCTtoDensityMap&);
-  G4GMocrenFileCTtoDensityMap& operator = (const G4GMocrenFileCTtoDensityMap&);
+  protected:
+
+    G4int kCTMinMax[2];
+    G4double* kDensity;
+    G4int kSize;
+
+  private:
+
+    // Private copy constructor and assigment operator - copying and
+    // assignment not allowed.  Keeps Coverity happy.
+    G4GMocrenFileCTtoDensityMap(const G4GMocrenFileCTtoDensityMap&);
+    G4GMocrenFileCTtoDensityMap& operator=(const G4GMocrenFileCTtoDensityMap&);
 };
 #endif

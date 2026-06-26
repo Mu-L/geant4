@@ -38,7 +38,7 @@
 // Modifications:
 // 08-04-05 Major optimisation of internal interfaces (V.Ivantchenko)
 // 26-09-07 Fixed tmax computation (V.Ivantchenko)
-// 19.08.13 V.Ivanchenko extract data handling to G4PAIModelData class 
+// 19.08.13 V.Ivanchenko extract data handling to G4PAIModelData class
 //          added sharing of internal data between threads (MT migration)
 //
 //
@@ -50,14 +50,15 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4PAIModel_h
-#define G4PAIModel_h 1
+#ifndef G4PAIMODEL_HH
+#define G4PAIMODEL_HH
+
+#include "G4VEmFluctuationModel.hh"
+#include "G4VEmModel.hh"
+#include "globals.hh"
 
 #include <CLHEP/Units/PhysicalConstants.h>
 
-#include "G4VEmModel.hh"
-#include "G4VEmFluctuationModel.hh"
-#include "globals.hh"
 #include <vector>
 
 class G4Region;
@@ -67,89 +68,75 @@ class G4PAIModelData;
 
 class G4PAIModel final : public G4VEmModel, public G4VEmFluctuationModel
 {
+  public:
 
-public:
+    explicit G4PAIModel(const G4ParticleDefinition* p = nullptr, const G4String& nam = "PAI");
 
-  explicit G4PAIModel(const G4ParticleDefinition* p = nullptr, 
-		      const G4String& nam = "PAI");
+    ~G4PAIModel() final;
 
-  ~G4PAIModel() final;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) final;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) final;
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel* masterModel) final;
 
-  void InitialiseLocal(const G4ParticleDefinition*, 
-                       G4VEmModel* masterModel) final;
+    G4double MinEnergyCut(const G4ParticleDefinition*, const G4MaterialCutsCouple* couple) final;
 
-  G4double MinEnergyCut(const G4ParticleDefinition*,
-                        const G4MaterialCutsCouple* couple) final;
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                  G4double kineticEnergy, G4double cutEnergy) final;
 
-  G4double ComputeDEDXPerVolume(const G4Material*,
-			        const G4ParticleDefinition*,
-			        G4double kineticEnergy,
-			        G4double cutEnergy) final;
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy,
+                                   G4double maxEnergy) final;
 
-  G4double CrossSectionPerVolume(const G4Material*,
-			         const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy) final;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) final;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-				 const G4MaterialCutsCouple*,
-				 const G4DynamicParticle*,
-				 G4double tmin,
-				 G4double maxEnergy) final;
+    G4double SampleFluctuations(const G4MaterialCutsCouple*, const G4DynamicParticle*,
+                                const G4double, const G4double, const G4double,
+                                const G4double) final;
 
-  G4double SampleFluctuations(const G4MaterialCutsCouple*,
-			      const G4DynamicParticle*,
-			      const G4double, const G4double,
-                              const G4double, const G4double) final;
+    G4double Dispersion(const G4Material*, const G4DynamicParticle*, const G4double, const G4double,
+                        const G4double) final;
 
-  G4double Dispersion(const G4Material*, const G4DynamicParticle*,
-		      const G4double, const G4double, 
-                      const G4double) final;
+    void DefineForRegion(const G4Region* r) final;
 
-  void DefineForRegion(const G4Region* r) final;
+    inline G4PAIModelData* GetPAIModelData();
 
-  inline G4PAIModelData* GetPAIModelData();
+    inline const std::vector<const G4MaterialCutsCouple*>& GetVectorOfCouples();
 
-  inline const std::vector<const G4MaterialCutsCouple*>& GetVectorOfCouples();
+    inline G4double ComputeMaxEnergy(G4double scaledEnergy);
 
-  inline G4double ComputeMaxEnergy(G4double scaledEnergy);
+    inline void SetVerboseLevel(G4int verbose);
 
-  inline void SetVerboseLevel(G4int verbose);
+    // hide assignment operator
+    G4PAIModel& operator=(const G4PAIModel& right) = delete;
+    G4PAIModel(const G4PAIModel&) = delete;
 
-  // hide assignment operator 
-  G4PAIModel & operator=(const  G4PAIModel &right) = delete;
-  G4PAIModel(const  G4PAIModel&) = delete;
+  protected:
 
-protected:
+    G4double MaxSecondaryEnergy(const G4ParticleDefinition*, G4double kinEnergy) final;
 
-  G4double MaxSecondaryEnergy(const G4ParticleDefinition*, 
-                              G4double kinEnergy) final;
+  private:
 
-private:
+    inline G4int FindCoupleIndex(const G4MaterialCutsCouple*);
 
-  inline G4int FindCoupleIndex(const G4MaterialCutsCouple*);
+    inline void SetParticle(const G4ParticleDefinition* p);
 
-  inline void SetParticle(const G4ParticleDefinition* p);
+    G4int fVerbose;
 
-  G4int                       fVerbose; 
+    G4PAIModelData* fModelData;
 
-  G4PAIModelData*             fModelData; 
+    std::vector<const G4MaterialCutsCouple*> fMaterialCutsCoupleVector;
+    std::vector<const G4Region*> fPAIRegionVector;
 
-  std::vector<const G4MaterialCutsCouple*> fMaterialCutsCoupleVector;
-  std::vector<const G4Region*>      fPAIRegionVector;
+    const G4ParticleDefinition* fParticle;
+    const G4ParticleDefinition* fElectron;
+    const G4ParticleDefinition* fPositron;
+    G4ParticleChangeForLoss* fParticleChange;
 
-  const G4ParticleDefinition* fParticle;
-  const G4ParticleDefinition* fElectron;
-  const G4ParticleDefinition* fPositron;
-  G4ParticleChangeForLoss*    fParticleChange;
-
-  G4double fMass;
-  G4double fRatio;
-  G4double fChargeSquare;
-  G4double fLowestTcut;
+    G4double fMass;
+    G4double fRatio;
+    G4double fChargeSquare;
+    G4double fLowestTcut;
 };
 
 inline G4PAIModelData* G4PAIModel::GetPAIModelData()
@@ -157,30 +144,31 @@ inline G4PAIModelData* G4PAIModel::GetPAIModelData()
   return fModelData;
 }
 
-inline const std::vector<const G4MaterialCutsCouple*>& 
-G4PAIModel::GetVectorOfCouples()
+inline const std::vector<const G4MaterialCutsCouple*>& G4PAIModel::GetVectorOfCouples()
 {
   return fMaterialCutsCoupleVector;
 }
 
 inline G4double G4PAIModel::ComputeMaxEnergy(G4double scaledEnergy)
 {
-  return MaxSecondaryEnergy(fParticle, scaledEnergy/fRatio);
+  return MaxSecondaryEnergy(fParticle, scaledEnergy / fRatio);
 }
 
-inline void G4PAIModel::SetVerboseLevel(G4int verbose) 
-{ 
-  fVerbose=verbose; 
+inline void G4PAIModel::SetVerboseLevel(G4int verbose)
+{
+  fVerbose = verbose;
 }
 
 inline G4int G4PAIModel::FindCoupleIndex(const G4MaterialCutsCouple* couple)
 {
   G4int idx = -1;
   G4int jMatMax = (G4int)fMaterialCutsCoupleVector.size();
-  for(G4int jMat = 0;jMat < jMatMax; ++jMat) { 
-    if(couple == fMaterialCutsCoupleVector[jMat]) {
-      idx = jMat; 
-      break; 
+  for (G4int jMat = 0; jMat < jMatMax; ++jMat)
+  {
+    if (couple == fMaterialCutsCoupleVector[jMat])
+    {
+      idx = jMat;
+      break;
     }
   }
   return idx;
@@ -188,12 +176,13 @@ inline G4int G4PAIModel::FindCoupleIndex(const G4MaterialCutsCouple* couple)
 
 inline void G4PAIModel::SetParticle(const G4ParticleDefinition* p)
 {
-  if(fParticle != p) {
+  if (fParticle != p)
+  {
     fParticle = p;
     fMass = fParticle->GetPDGMass();
-    fRatio = CLHEP::proton_mass_c2/fMass;
-    G4double q = fParticle->GetPDGCharge()/CLHEP::eplus;
-    fChargeSquare = q*q;
+    fRatio = CLHEP::proton_mass_c2 / fMass;
+    G4double q = fParticle->GetPDGCharge() / CLHEP::eplus;
+    fChargeSquare = q * q;
   }
 }
 

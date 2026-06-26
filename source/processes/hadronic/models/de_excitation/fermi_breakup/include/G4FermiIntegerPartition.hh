@@ -32,6 +32,7 @@
 #define G4INTEGERPARTITION_HH
 
 #include "globals.hh"
+
 #include <vector>
 
 using G4FermiPartition = std::vector<std::uint32_t>;
@@ -39,6 +40,7 @@ using G4FermiPartition = std::vector<std::uint32_t>;
 class G4integerPartition
 {
   public:
+
     class Iterator;
 
     Iterator begin() const;
@@ -48,6 +50,7 @@ class G4integerPartition
     G4integerPartition(std::uint32_t number, std::uint32_t termsCount, std::uint32_t base = 1);
 
   private:
+
     std::uint32_t number_;
     std::uint32_t termsCount_;
     std::uint32_t base_;
@@ -56,6 +59,7 @@ class G4integerPartition
 class G4integerPartition::Iterator
 {
   public:
+
     friend class G4integerPartition;
 
     using difference_type = std::int64_t;
@@ -81,6 +85,7 @@ class G4integerPartition::Iterator
     G4bool operator!=(const Iterator& other) const;
 
   private:
+
     // represents end partition
     Iterator() = default;
 

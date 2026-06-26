@@ -25,8 +25,8 @@
 //
 //
 //
-// 
-//Four arrow buttons class. Inherits from G4OpenGLXmVWidgetComponent
+//
+// Four arrow buttons class. Inherits from G4OpenGLXmVWidgetComponent
 
 #ifndef G4OPENGLXMFOURARROWBUTTONS_HH
 #define G4OPENGLXMFOURARROWBUTTONS_HH
@@ -35,30 +35,32 @@
 
 class G4OpenGLXmFourArrowButtons : public G4OpenGLXmVWidgetComponent
 {
+  public:
 
-public:
-  G4OpenGLXmFourArrowButtons (XtCallbackRec** = NULL); // array of 4 callbacks
-                                                       //constructor
-  virtual ~G4OpenGLXmFourArrowButtons ();              //destructor
+    G4OpenGLXmFourArrowButtons(XtCallbackRec** = NULL);  // array of 4 callbacks
+                                                         // constructor
+    virtual ~G4OpenGLXmFourArrowButtons();  // destructor
 
-  void SetName (char*);
- 
-  char* GetName ();
+    void SetName(char*);
 
-  void AddYourselfTo (G4OpenGLXmVWidgetContainer*);
+    char* GetName();
 
-  Widget* GetPointerToParent ();
-  Widget* GetPointerToWidget ();
+    void AddYourselfTo(G4OpenGLXmVWidgetContainer*);
 
-private:
-  XtCallbackRec** callback;
-  Widget arrow_form;
-  Widget arrow;
-  Widget* parent;
+    Widget* GetPointerToParent();
+    Widget* GetPointerToWidget();
 
-private:
-  G4OpenGLXmFourArrowButtons (const G4OpenGLXmFourArrowButtons&);
-  G4OpenGLXmFourArrowButtons& operator = (const G4OpenGLXmFourArrowButtons&);
+  private:
+
+    XtCallbackRec** callback;
+    Widget arrow_form;
+    Widget arrow;
+    Widget* parent;
+
+  private:
+
+    G4OpenGLXmFourArrowButtons(const G4OpenGLXmFourArrowButtons&);
+    G4OpenGLXmFourArrowButtons& operator=(const G4OpenGLXmFourArrowButtons&);
 };
 
 #endif

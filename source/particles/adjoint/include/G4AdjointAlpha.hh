@@ -36,19 +36,21 @@
 //		The use of adjoint particles instead of "normal" particles during a reverse simulation
 //		is based on an idea of M. Asai.
 //
-#ifndef G4AdjointAlpha_h
-#define G4AdjointAlpha_h 1
+#ifndef G4ADJOINTALPHA_HH
+#define G4ADJOINTALPHA_HH
 
 #include "G4AdjointIons.hh"
 
 class G4AdjointAlpha : public G4AdjointIons
 {
   public:
+
     static G4AdjointAlpha* Definition();
     static G4AdjointAlpha* AlphaDefinition();
     static G4AdjointAlpha* Alpha();
 
   private:
+
     G4AdjointAlpha() {}
     ~G4AdjointAlpha() override = default;
 

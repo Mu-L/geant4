@@ -37,12 +37,13 @@
 
 // Author: M.Asai (SLAC)
 // --------------------------------------------------------------------
-#ifndef G4VUserPrimaryVertexInformation_hh
-#define G4VUserPrimaryVertexInformation_hh 1
+#ifndef G4VUSERPRIMARYVERTEXINFORMATION_HH
+#define G4VUSERPRIMARYVERTEXINFORMATION_HH
 
 class G4VUserPrimaryVertexInformation
 {
   public:
+
     G4VUserPrimaryVertexInformation() = default;
     virtual ~G4VUserPrimaryVertexInformation() = default;
 

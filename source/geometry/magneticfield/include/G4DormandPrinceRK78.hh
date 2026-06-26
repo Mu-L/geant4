@@ -47,6 +47,7 @@
  * @brief G4DormandPrinceRK78 implements the Dormand-Prince 8(7)13M non-FSAL
  * Runge-Kutta method, a 13 stage embedded explicit Runge-Kutta method, using
  * a pair of 7th and 8th order formulae.
+ * @ingroup geometry_magneticfield
  */
 
 class G4DormandPrinceRK78 : public G4MagIntegratorStepper
@@ -59,15 +60,14 @@ class G4DormandPrinceRK78 : public G4MagIntegratorStepper
      *  @param[in] numberOfVariables The number of integration variables.
      *  @param[in] primary Flag for initialisation of the auxiliary stepper.
      */
-    G4DormandPrinceRK78(G4EquationOfMotion* EqRhs,
-                        G4int numberOfVariables = 6,
+    G4DormandPrinceRK78(G4EquationOfMotion* EqRhs, G4int numberOfVariables = 6,
                         G4bool primary = true);
 
     /**
      * Destructor.
      */
     ~G4DormandPrinceRK78() override;
-    
+
     /**
      * Copy constructor and assignment operator not allowed.
      */
@@ -85,16 +85,13 @@ class G4DormandPrinceRK78 : public G4MagIntegratorStepper
      *  @param[out] yout Integration output.
      *  @param[out] yerr The estimated error.
      */
-    void Stepper( const G4double y[],
-                  const G4double dydx[],
-                        G4double h,
-                        G4double yout[],
-                        G4double yerr[]) override ;
+    void Stepper(const G4double y[], const G4double dydx[], G4double h, G4double yout[],
+                 G4double yerr[]) override;
 
     /**
      * Returns the distance from chord line.
      */
-    G4double  DistChord() const override;
+    G4double DistChord() const override;
 
     /**
      * Returns the order, 7, of integration.
@@ -105,18 +102,16 @@ class G4DormandPrinceRK78 : public G4MagIntegratorStepper
      * Returns the stepper type-ID, "kDormandPrinceRK78".
      */
     inline G4StepperType StepperType() const override { return kDormandPrinceRK78; }
-    
-  private :  
-    
-    G4double *ak2,   *ak3,  *ak4,  *ak5,  *ak6,  *ak7, *ak8,
-             *ak9,   *ak10, *ak11, *ak12, *ak13,
-             *yTemp, *yIn;
+
+  private:
+
+    G4double *ak2, *ak3, *ak4, *ak5, *ak6, *ak7, *ak8, *ak9, *ak10, *ak11, *ak12, *ak13, *yTemp,
+      *yIn;
 
     G4double fLastStepLength = -1.0;
 
     /** For DistChord() calculations. */
-    G4double *fLastInitialVector, *fLastFinalVector,
-             *fLastDyDx, *fMidVector, *fMidError;
+    G4double *fLastInitialVector, *fLastFinalVector, *fLastDyDx, *fMidVector, *fMidError;
 
     G4DormandPrinceRK78* fAuxStepper = nullptr;
 };

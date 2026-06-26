@@ -33,7 +33,7 @@
 //  Date:   15 June 2000
 //
 //  9 August 2017 D.H. Wright (SLAC) introduced multi-threaded mode
-//  30 May 2024   V. Ivanchenko rename the class 
+//  30 May 2024   V. Ivanchenko rename the class
 //
 //  Description: This class is the base for simulation of radioactive
 //               decays. It performs alpha, beta, gamma, electron capture,
@@ -41,21 +41,21 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4VRadioactiveDecay_h
-#define G4VRadioactiveDecay_h 1
-
-#include <vector>
-#include <map>
-#include <CLHEP/Units/SystemOfUnits.h>
-
-#include "G4ios.hh"
-#include "globals.hh"
-#include "G4VRestDiscreteProcess.hh"
-#include "G4ParticleChangeForRadDecay.hh"
+#ifndef G4VRADIOACTIVEDECAY_HH
+#define G4VRADIOACTIVEDECAY_HH
 
 #include "G4NucleusLimits.hh"
-#include "G4ThreeVector.hh"
+#include "G4ParticleChangeForRadDecay.hh"
 #include "G4RadioactiveDecayMode.hh"
+#include "G4ThreeVector.hh"
+#include "G4VRestDiscreteProcess.hh"
+#include "G4ios.hh"
+#include "globals.hh"
+
+#include <CLHEP/Units/SystemOfUnits.h>
+
+#include <map>
+#include <vector>
 
 class G4Fragment;
 class G4RadioactiveDecayMessenger;
@@ -66,22 +66,22 @@ class G4ITDecay;
 
 typedef std::map<G4String, G4DecayTable*> DecayTableMap;
 
-class G4VRadioactiveDecay : public G4VRestDiscreteProcess 
+class G4VRadioactiveDecay : public G4VRestDiscreteProcess
 {
-  // class description
+    // class description
 
-  // Implementation of the radioactive decay process which simulates the
-  // decays of radioactive nuclei.  These nuclei are submitted to RDM as
-  // G4Ions.  The required half-lives and decay schemes are retrieved from
-  // the Radioactivity database which was derived from ENSDF.
-  // All decay products are submitted back to the particle tracking process
-  // through the G4ParticleChangeForRadDecay object.
-  // class description - end 
+    // Implementation of the radioactive decay process which simulates the
+    // decays of radioactive nuclei.  These nuclei are submitted to RDM as
+    // G4Ions.  The required half-lives and decay schemes are retrieved from
+    // the Radioactivity database which was derived from ENSDF.
+    // All decay products are submitted back to the particle tracking process
+    // through the G4ParticleChangeForRadDecay object.
+    // class description - end
 
-  public: // with description
+  public:  // with description
 
-    G4VRadioactiveDecay(const G4String& processName="RadioactiveDecay",
-                        const G4double timeThreshold=-1.0);
+    G4VRadioactiveDecay(const G4String& processName = "RadioactiveDecay",
+                        const G4double timeThreshold = -1.0);
     ~G4VRadioactiveDecay() override;
 
     G4bool IsApplicable(const G4ParticleDefinition&) override;
@@ -89,18 +89,15 @@ class G4VRadioactiveDecay : public G4VRestDiscreteProcess
     //  1) defined as "nucleus" and
     //  2) it is within theNucleusLimit
 
-    G4VParticleChange* AtRestDoIt(const G4Track& theTrack,
-                                  const G4Step& theStep) override;
+    G4VParticleChange* AtRestDoIt(const G4Track& theTrack, const G4Step& theStep) override;
 
-    G4VParticleChange* PostStepDoIt(const G4Track& theTrack,
-                                    const G4Step& theStep) override;
+    G4VParticleChange* PostStepDoIt(const G4Track& theTrack, const G4Step& theStep) override;
 
-    void BuildPhysicsTable(const G4ParticleDefinition &) override;
+    void BuildPhysicsTable(const G4ParticleDefinition&) override;
 
     void ProcessDescription(std::ostream& outFile) const override;
 
-    virtual G4VParticleChange* DecayIt(const G4Track& theTrack,
-                                       const G4Step& theStep);
+    virtual G4VParticleChange* DecayIt(const G4Track& theTrack, const G4Step& theStep);
 
     // Return decay table if it exists, if not, load it from file
     G4DecayTable* GetDecayTable(const G4ParticleDefinition*);
@@ -120,15 +117,14 @@ class G4VRadioactiveDecay : public G4VRestDiscreteProcess
     // Enable/disable ARM
     inline void SetARM(G4bool arm) { applyARM = arm; }
 
-    G4DecayTable* LoadDecayTable(const G4Ions*);
-    // Load the decay data of isotope theParentNucleus
-
     void AddUserDecayDataFile(G4int Z, G4int A, const G4String& filename);
     // Allow the user to replace the radio-active decay data provided in Geant4
     // by its own data file for a given isotope
 
     inline void SetNucleusLimits(G4NucleusLimits theNucleusLimits1)
-      { theNucleusLimits = theNucleusLimits1; }
+    {
+      theNucleusLimits = theNucleusLimits1;
+    }
     // Sets theNucleusLimits which specifies the range of isotopes
     // the G4VRadioactiveDecay applies.
 
@@ -136,16 +132,16 @@ class G4VRadioactiveDecay : public G4VRestDiscreteProcess
     // by G4VRadioactiveDecay
     inline G4NucleusLimits GetNucleusLimits() const { return theNucleusLimits; }
 
-    inline void SetDecayDirection(const G4ThreeVector& theDir) {
+    inline void SetDecayDirection(const G4ThreeVector& theDir)
+    {
       forceDecayDirection = theDir.unit();
     }
 
-    inline const G4ThreeVector& GetDecayDirection() const {
-      return forceDecayDirection; 
-    }
+    inline const G4ThreeVector& GetDecayDirection() const { return forceDecayDirection; }
 
-    inline void SetDecayHalfAngle(G4double halfAngle=0.*CLHEP::deg) {
-      forceDecayHalfAngle = std::min(std::max(0.*CLHEP::deg,halfAngle),180.*CLHEP::deg);
+    inline void SetDecayHalfAngle(G4double halfAngle = 0. * CLHEP::deg)
+    {
+      forceDecayHalfAngle = std::min(std::max(0. * CLHEP::deg, halfAngle), 180. * CLHEP::deg);
     }
 
     inline G4double GetDecayHalfAngle() const { return forceDecayHalfAngle; }
@@ -153,17 +149,20 @@ class G4VRadioactiveDecay : public G4VRestDiscreteProcess
     // Force direction (random within half-angle) for "visible" daughters
     // (applies to electrons, positrons, gammas, neutrons, protons or alphas)
     inline void SetDecayCollimation(const G4ThreeVector& theDir,
-                                    G4double halfAngle = 0.*CLHEP::deg) {
+                                    G4double halfAngle = 0. * CLHEP::deg)
+    {
       SetDecayDirection(theDir);
       SetDecayHalfAngle(halfAngle);
     }
 
     // Ignore radioactive decays at rest of nuclides happening
     // after this (very long) time threshold
-    inline void SetThresholdForVeryLongDecayTime(const G4double inputThreshold) {
-      fThresholdForVeryLongDecayTime = std::max( 0.0, inputThreshold );
+    inline void SetThresholdForVeryLongDecayTime(const G4double inputThreshold)
+    {
+      fThresholdForVeryLongDecayTime = std::max(0.0, inputThreshold);
     }
-    inline G4double GetThresholdForVeryLongDecayTime() const {
+    inline G4double GetThresholdForVeryLongDecayTime() const
+    {
       return fThresholdForVeryLongDecayTime;
     }
 
@@ -177,10 +176,9 @@ class G4VRadioactiveDecay : public G4VRestDiscreteProcess
     G4double GetMeanFreePath(const G4Track& theTrack, G4double previousStepSize,
                              G4ForceCondition* condition) override;
 
-    G4double GetMeanLifeTime(const G4Track& theTrack,
-                             G4ForceCondition* condition) override;
+    G4double GetMeanLifeTime(const G4Track& theTrack, G4ForceCondition* condition) override;
 
-    // sampling of products 
+    // sampling of products
     void DecayAnalog(const G4Track& theTrack, G4DecayTable*);
 
     // sampling products at rest
@@ -190,6 +188,13 @@ class G4VRadioactiveDecay : public G4VRestDiscreteProcess
     void CollimateDecay(G4DecayProducts* products);
     void CollimateDecayProduct(G4DynamicParticle* product);
     G4ThreeVector ChooseCollimationDirection() const;
+
+  private:
+
+    G4DecayTable* LoadDecayTable(const G4Ions*);
+    // Load the decay data of isotope theParentNucleus
+
+  protected:
 
     // ParticleChange for decay process
     G4ParticleChangeForRadDecay fParticleChangeForRadDecay;
@@ -216,9 +221,9 @@ class G4VRadioactiveDecay : public G4VRestDiscreteProcess
     // Parameters for pre-collimated (biased) decay products
     G4ThreeVector forceDecayDirection{G4ThreeVector(0., 0., 0.)};
     G4double forceDecayHalfAngle{0.0};
-    static const G4ThreeVector origin;	// (0,0,0) for convenience
+    static const G4ThreeVector origin;  // (0,0,0) for convenience
 
-    // Radioactive decay database directory path 
+    // Radioactive decay database directory path
     static G4String dirPath;
 
     // User define radioactive decay data files replacing some files in the G4RADECAY database
@@ -226,10 +231,9 @@ class G4VRadioactiveDecay : public G4VRestDiscreteProcess
 
     // The last RadDecayMode
     G4RadioactiveDecayMode theRadDecayMode{G4RadioactiveDecayMode::IT};
- 
+
     // Ignore radioactive decays at rest of nuclides happening after this (very long) time threshold
     G4double fThresholdForVeryLongDecayTime;
 };
 
 #endif
-

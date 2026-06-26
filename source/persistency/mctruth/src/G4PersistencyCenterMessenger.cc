@@ -31,12 +31,10 @@
 #include "G4PersistencyCenterMessenger.hh"
 
 // --------------------------------------------------------------------
-G4PersistencyCenterMessenger::
-G4PersistencyCenterMessenger(G4PersistencyCenter* p)
-  : pc(p)
+G4PersistencyCenterMessenger::G4PersistencyCenterMessenger(G4PersistencyCenter* p) : pc(p)
 {
   G4String name = "/persistency/";
-  directory        = new G4UIdirectory(name.c_str());
+  directory = new G4UIdirectory(name.c_str());
   directory->SetGuidance("Control commands for Persistency package");
 
   G4String cmd = name + "verbose";
@@ -53,7 +51,7 @@ G4PersistencyCenterMessenger(G4PersistencyCenter* p)
 
   G4String vname = name + "select";
 
-  cmd    = vname;
+  cmd = vname;
   select = new G4UIcmdWithAString(cmd.c_str(), this);
   select->SetGuidance("Selection of a persistency package");
   select->SetParameterName("Persistency package name", true, true);
@@ -71,13 +69,13 @@ G4PersistencyCenterMessenger(G4PersistencyCenter* p)
   G4String guidance;
   G4int i;
 
-  for(i = 0; i < 3; ++i)
+  for (i = 0; i < 3; ++i)
   {
-    cmd      = vname + wrObj[i];
+    cmd = vname + wrObj[i];
     guidance = "Store " + wrObj[i] + " objects for output";
     storeObj.push_back(new G4UIcmdWithAString(cmd.c_str(), this));
     storeObj[i]->SetGuidance(guidance.c_str());
-    if(wrObj[i] == "HepMC")
+    if (wrObj[i] == "HepMC")
     {
       storeObj[i]->SetCandidates("on off recycle");
     }
@@ -91,12 +89,12 @@ G4PersistencyCenterMessenger(G4PersistencyCenter* p)
   subdir2 = new G4UIdirectory(vname.c_str());
   subdir2->SetGuidance("Select I/O manager for store");
 
-  cmd      = vname + "hitIO";
+  cmd = vname + "hitIO";
   regHitIO = new G4UIcmdWithAString(cmd.c_str(), this);
   regHitIO->SetGuidance("Resiter Hits I/O Manager");
   regHitIO->SetParameterName("Name of Hits I/O Manager", true, true);
 
-  vname   = name + "set/";
+  vname = name + "set/";
   subdir3 = new G4UIdirectory(vname.c_str());
   subdir3->SetGuidance("Set various parameters");
 
@@ -104,28 +102,28 @@ G4PersistencyCenterMessenger(G4PersistencyCenter* p)
   subdir4 = new G4UIdirectory(vname.c_str());
   subdir4->SetGuidance("Set output file names for object types");
 
-  for(i = 0; i < 3; ++i)
+  for (i = 0; i < 3; ++i)
   {
-    cmd      = vname + wrObj[i];
+    cmd = vname + wrObj[i];
     guidance = "Set an output file name for " + wrObj[i] + ".";
     setWrFile.push_back(new G4UIcmdWithAString(cmd.c_str(), this));
     setWrFile[i]->SetGuidance(guidance.c_str());
     setWrFile[i]->SetParameterName("file name", true, true);
   }
 
-  vname   = name + "set/ReadFile/";
+  vname = name + "set/ReadFile/";
   subdir5 = new G4UIdirectory(vname.c_str());
   subdir5->SetGuidance("Set input file names for object types");
 
   rdObj.push_back("Hits");
 
-  cmd      = vname + rdObj[0];
+  cmd = vname + rdObj[0];
   guidance = "Set an input file name for " + rdObj[0] + ".";
   setRdFile.push_back(new G4UIcmdWithAString(cmd.c_str(), this));
   setRdFile[0]->SetGuidance(guidance.c_str());
   setRdFile[0]->SetParameterName("file name", true, true);
 
-  cmd      = name + "printall";
+  cmd = name + "printall";
   printAll = new G4UIcmdWithoutParameter(cmd.c_str(), this);
   printAll->SetGuidance("Print all parameters.");
 }
@@ -142,7 +140,7 @@ G4PersistencyCenterMessenger::~G4PersistencyCenterMessenger()
   delete verboseCmd;
   delete select;
   delete regHitIO;
-  for(G4int i = 0; i < 3; ++i)
+  for (G4int i = 0; i < 3; ++i)
   {
     delete storeObj[i];
     delete setWrFile[i];
@@ -152,45 +150,44 @@ G4PersistencyCenterMessenger::~G4PersistencyCenterMessenger()
 }
 
 // --------------------------------------------------------------------
-void G4PersistencyCenterMessenger::SetNewValue(G4UIcommand* command,
-                                               G4String newValues)
+void G4PersistencyCenterMessenger::SetNewValue(G4UIcommand* command, G4String newValues)
 {
-  if(command == verboseCmd)
+  if (command == verboseCmd)
   {
     pc->SetVerboseLevel(verboseCmd->GetNewIntValue(newValues));
   }
-  else if(command == select)
+  else if (command == select)
   {
     pc->SelectSystem(newValues);
   }
-  else if(command == regHitIO)
+  else if (command == regHitIO)
   {
     pc->AddHCIOmanager(PopWord(newValues, 1, " "), PopWord(newValues, 2, " "));
   }
-  else if(command == setRdFile[0])
+  else if (command == setRdFile[0])
   {
     pc->SetReadFile(rdObj[0], newValues);
   }
-  else if(command == printAll)
+  else if (command == printAll)
   {
     pc->PrintAll();
   }
   else
   {
-    for(G4int i = 0; i < 3; ++i)
+    for (G4int i = 0; i < 3; ++i)
     {
-      if(command == storeObj[i])
+      if (command == storeObj[i])
       {
         StoreMode mode = kOff;
-        if(newValues == "on")
+        if (newValues == "on")
         {
           mode = kOn;
         }
-        else if(newValues == "off")
+        else if (newValues == "off")
         {
           mode = kOff;
         }
-        else if(newValues == "recycle")
+        else if (newValues == "recycle")
         {
           mode = kRecycle;
         }
@@ -201,7 +198,7 @@ void G4PersistencyCenterMessenger::SetNewValue(G4UIcommand* command,
         pc->SetStoreMode(wrObj[i], mode);
         break;
       }
-      else if(command == setWrFile[i])
+      else if (command == setWrFile[i])
       {
         pc->SetWriteFile(wrObj[i], newValues);
         break;
@@ -215,29 +212,29 @@ G4String G4PersistencyCenterMessenger::GetCurrentValue(G4UIcommand* command)
 {
   G4String ustr = "Undefined";
 
-  if(command == verboseCmd)
+  if (command == verboseCmd)
   {
     return G4UIcommand::ConvertToString(pc->VerboseLevel());
   }
-  else if(command == select)
+  else if (command == select)
   {
     return pc->CurrentSystem();
   }
-  else if(command == regHitIO)
+  else if (command == regHitIO)
   {
     return pc->CurrentHCIOmanager();
   }
-  else if(command == setRdFile[0])
+  else if (command == setRdFile[0])
   {
     return pc->CurrentReadFile(rdObj[0]);
   }
   else
   {
-    for(G4int i = 0; i < 3; ++i)
+    for (G4int i = 0; i < 3; ++i)
     {
-      if(command == storeObj[i])
+      if (command == storeObj[i])
       {
-        switch(pc->CurrentStoreMode(wrObj[i]))
+        switch (pc->CurrentStoreMode(wrObj[i]))
         {
           case kOn:
             return "on";
@@ -253,7 +250,7 @@ G4String G4PersistencyCenterMessenger::GetCurrentValue(G4UIcommand* command)
             break;
         };
       }
-      else if(command == setWrFile[i])
+      else if (command == setWrFile[i])
       {
         return pc->CurrentWriteFile(wrObj[i]);
       }
@@ -264,32 +261,28 @@ G4String G4PersistencyCenterMessenger::GetCurrentValue(G4UIcommand* command)
 }
 
 // --------------------------------------------------------------------
-G4String G4PersistencyCenterMessenger::PopWord(const G4String& text, G4int n,
-                                               const G4String& delim)
+G4String G4PersistencyCenterMessenger::PopWord(const G4String& text, G4int n, const G4String& delim)
 {
-  if(text.length() <= 0)
-    return "";
+  if (text.length() <= 0) return "";
   std::size_t p = 0, p0 = 0;
   std::size_t p1 = 0;
-  for(G4int i = 0; i < n; ++i)
+  for (G4int i = 0; i < n; ++i)
   {
     p1 = text.find_first_of(delim, p0 + 1);
-    while(p1 == p0 + 1)
+    while (p1 == p0 + 1)
     {
       p0 = p1;
       p1 = text.find_first_of(delim, p0 + 1);
     }
     p = p0;
-    if(p1 == G4String::npos)
+    if (p1 == G4String::npos)
     {
-      if(i + 1 < n)
-        return "";
+      if (i + 1 < n) return "";
       p1 = text.length();
       break;
     }
     p0 = p1;
   }
-  if(p > 0)
-    ++p;
+  if (p > 0) ++p;
   return text.substr(p, p1 - p);
 }

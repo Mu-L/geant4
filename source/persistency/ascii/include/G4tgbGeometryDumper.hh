@@ -31,15 +31,15 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgbGeometryDumper_hh
-#define G4tgbGeometryDumper_hh 1
+#ifndef G4TGBGEOMETRYDUMPER_HH
+#define G4TGBGEOMETRYDUMPER_HH
+
+#include "G4RotationMatrix.hh"
+#include "globals.hh"
 
 #include <fstream>
 #include <map>
 #include <vector>
-
-#include "globals.hh"
-#include "G4RotationMatrix.hh"
 
 class G4Material;
 class G4Element;
@@ -60,8 +60,7 @@ class G4tgbGeometryDumper
     void DumpGeometry(const G4String& fname);
     G4VPhysicalVolume* GetTopPhysVol();
     void DumpPhysVol(G4VPhysicalVolume* pv);
-    void DumpPVPlacement(G4VPhysicalVolume* pv, const G4String& lvName,
-                         G4int copyNo = -999);
+    void DumpPVPlacement(G4VPhysicalVolume* pv, const G4String& lvName, G4int copyNo = -999);
     void DumpPVParameterised(G4PVParameterised* pv);
     void DumpPVReplica(G4PVReplica* pv, const G4String& lvName);
     G4String DumpLogVol(G4LogicalVolume* lv, const G4String& extraName = "",
@@ -71,12 +70,11 @@ class G4tgbGeometryDumper
     void DumpIsotope(G4Isotope* ele);
     G4String DumpSolid(G4VSolid* solid, const G4String& extraName = "");
     void DumpBooleanVolume(const G4String& solidType, G4VSolid* so);
-    void DumpMultiUnionVolume(  G4VSolid* so);
-    void DumpScaledVolume( G4VSolid* so);
+    void DumpMultiUnionVolume(G4VSolid* so);
+    void DumpScaledVolume(G4VSolid* so);
     void DumpSolidParams(G4VSolid* so);
     std::vector<G4double> GetSolidParams(const G4VSolid* so);
-    void DumpPolySections(G4int zPlanes, G4double* z, G4double* rmin,
-                          G4double* rmax);
+    void DumpPolySections(G4int zPlanes, G4double* z, G4double* rmin, G4double* rmax);
     G4String DumpRotationMatrix(G4RotationMatrix* rotm);
 
   private:
@@ -90,8 +88,8 @@ class G4tgbGeometryDumper
     G4String AddQuotes(const G4String& str);
 
     G4String GetIsotopeName(G4Isotope*);
-    template <class TYP>
-      G4String GetObjectName(TYP* obj, std::map<G4String, TYP*> objectsDumped);
+    template<class TYP>
+    G4String GetObjectName(TYP* obj, std::map<G4String, TYP*> objectsDumped);
     G4bool CheckIfLogVolExists(const G4String& name, G4LogicalVolume* pt);
     G4bool CheckIfPhysVolExists(const G4String& name, G4VPhysicalVolume*);
     G4String LookForExistingRotation(const G4RotationMatrix* rotm);

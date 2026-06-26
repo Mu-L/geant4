@@ -29,8 +29,8 @@
 
 // Author: Ivana Hrivnacova, 05/09/2014 (ivana@ipno.in2p3.fr)
 
-#ifndef G4CsvAnalysisReader_h
-#define G4CsvAnalysisReader_h 1
+#ifndef G4CSVANALYSISREADER_HH
+#define G4CSVANALYSISREADER_HH
 
 #include "G4ToolsAnalysisReader.hh"
 #include "globals.hh"
@@ -43,14 +43,15 @@
 class G4CsvAnalysisReader;
 class G4CsvRNtupleManager;
 class G4CsvRFileManager;
-template <class T>
+template<class T>
 class G4ThreadLocalSingleton;
 
 class G4CsvAnalysisReader : public G4ToolsAnalysisReader
 {
-  friend class G4ThreadLocalSingleton<G4CsvAnalysisReader>;
+    friend class G4ThreadLocalSingleton<G4CsvAnalysisReader>;
 
   public:
+
     ~G4CsvAnalysisReader() override;
 
     // Static methods
@@ -62,27 +63,28 @@ class G4CsvAnalysisReader : public G4ToolsAnalysisReader
     using G4VAnalysisReader::GetNtuple;
 
   protected:
+
     // Virtual methods from base class
     G4bool CloseFilesImpl(G4bool reset) final;
 
   private:
+
     G4CsvAnalysisReader();
 
     // Static data members
-    inline static G4CsvAnalysisReader* fgMasterInstance { nullptr };
+    inline static G4CsvAnalysisReader* fgMasterInstance{nullptr};
 
     // Methods
     G4bool Reset();
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4CsvAnalysisReader" };
+    static constexpr std::string_view fkClass{"G4CsvAnalysisReader"};
 
     // Data members
-    std::shared_ptr<G4CsvRNtupleManager> fNtupleManager { nullptr };
-    std::shared_ptr<G4CsvRFileManager>   fFileManager { nullptr };
+    std::shared_ptr<G4CsvRNtupleManager> fNtupleManager{nullptr};
+    std::shared_ptr<G4CsvRFileManager> fFileManager{nullptr};
 };
 
 #include "G4CsvAnalysisReader.icc"
 
 #endif
-

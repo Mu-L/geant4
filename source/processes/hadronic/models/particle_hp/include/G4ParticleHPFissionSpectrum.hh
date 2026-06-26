@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPFissionSpectrum_h
-#define G4ParticleHPFissionSpectrum_h 1
+#ifndef G4PARTICLEHPFISSIONSPECTRUM_HH
+#define G4PARTICLEHPFISSIONSPECTRUM_HH
 
 #include "G4Exp.hh"
 #include "G4ParticleHPVector.hh"
@@ -45,6 +45,7 @@
 class G4ParticleHPFissionSpectrum : public G4VParticleHPEDis
 {
   public:
+
     G4ParticleHPFissionSpectrum() { expm1 = G4Exp(-1.); }
     ~G4ParticleHPFissionSpectrum() override = default;
 
@@ -70,9 +71,11 @@ class G4ParticleHPFissionSpectrum : public G4VParticleHPEDis
       G4double value;
       G4int icounter = 0;
       G4int icounter_max = 1024;
-      do {
+      do
+      {
         icounter++;
-        if (icounter > icounter_max) {
+        if (icounter > icounter_max)
+        {
           G4cout << "Loop-counter exceeded the threshold value at " << __LINE__ << "th line of "
                  << __FILE__ << "." << G4endl;
           break;
@@ -85,6 +88,7 @@ class G4ParticleHPFissionSpectrum : public G4VParticleHPEDis
     }
 
   private:
+
     // this is the function to sample from.
     inline G4double Maxwell(G4double anEnergy, G4double theta)
     {
@@ -93,6 +97,7 @@ class G4ParticleHPFissionSpectrum : public G4VParticleHPEDis
     }
 
   private:
+
     G4double expm1;
 
     G4ParticleHPVector theFractionalProb;

@@ -58,22 +58,25 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UTUBS 1
+#  define G4GEOM_USE_UTUBS 1
 #endif
 
 #if defined(G4GEOM_USE_UTUBS)
-  #define G4UTubs G4Tubs
-  #include "G4UTubs.hh"
+#  define G4UTubs G4Tubs
+#  include "G4UTubs.hh"
 #else
 
-#include <CLHEP/Units/PhysicalConstants.h>
+#  include "G4CSGSolid.hh"
+#  include "G4Polyhedron.hh"
 
-#include "G4CSGSolid.hh"
-#include "G4Polyhedron.hh"
+#  include <CLHEP/Units/PhysicalConstants.h>
 
 /**
  * @brief G4Tubs is a tube or tube segment with curved sides parallel to
- * the Z-axis. The tube has a specified half-length along the Z-axis, about
+ * the Z-axis.
+ * @ingroup geometry_solids_csg
+ *
+ * The tube has a specified half-length along the Z-axis, about
  * which it is centered, and a given minimum and maximum radius. A minimum
  * radius of 0 corresponds to filled tube/cylinder. The tube segment is
  * specified by starting and delta angles for phi, with 0 being the +x axis,
@@ -96,12 +99,8 @@ class G4Tubs : public G4CSGSolid
      *  @param[in] pSPhi Starting phi angle in radians.
      *  @param[in] pDPhi Angle of the segment in radians.
      */
-    G4Tubs( const G4String& pName,
-                  G4double pRMin,
-                  G4double pRMax,
-                  G4double pDz,
-                  G4double pSPhi,
-                  G4double pDPhi );
+    G4Tubs(const G4String& pName, G4double pRMin, G4double pRMax, G4double pDz, G4double pSPhi,
+           G4double pDPhi);
 
     /**
      * Default destructor.
@@ -111,24 +110,24 @@ class G4Tubs : public G4CSGSolid
     /**
      * Accessors.
      */
-    inline G4double GetInnerRadius   () const;
-    inline G4double GetOuterRadius   () const;
-    inline G4double GetZHalfLength   () const;
-    inline G4double GetStartPhiAngle () const;
-    inline G4double GetDeltaPhiAngle () const;
-    inline G4double GetSinStartPhi   () const;
-    inline G4double GetCosStartPhi   () const;
-    inline G4double GetSinEndPhi     () const;
-    inline G4double GetCosEndPhi     () const;
+    inline G4double GetInnerRadius() const;
+    inline G4double GetOuterRadius() const;
+    inline G4double GetZHalfLength() const;
+    inline G4double GetStartPhiAngle() const;
+    inline G4double GetDeltaPhiAngle() const;
+    inline G4double GetSinStartPhi() const;
+    inline G4double GetCosStartPhi() const;
+    inline G4double GetSinEndPhi() const;
+    inline G4double GetCosEndPhi() const;
 
     /**
      * Modifiers.
      */
-    inline void SetInnerRadius   (G4double newRMin);
-    inline void SetOuterRadius   (G4double newRMax);
-    inline void SetZHalfLength   (G4double newDz);
-    inline void SetStartPhiAngle (G4double newSPhi, G4bool trig=true);
-    inline void SetDeltaPhiAngle (G4double newDPhi);
+    inline void SetInnerRadius(G4double newRMin);
+    inline void SetOuterRadius(G4double newRMax);
+    inline void SetZHalfLength(G4double newDz);
+    inline void SetStartPhiAngle(G4double newSPhi, G4bool trig = true);
+    inline void SetDeltaPhiAngle(G4double newDPhi);
 
     /**
      * Returning an estimation of the solid volume (capacity) and
@@ -141,9 +140,8 @@ class G4Tubs : public G4CSGSolid
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions( G4VPVParameterisation* p,
-                            const G4int n,
-                            const G4VPhysicalVolume* pRep ) override;
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
+                           const G4VPhysicalVolume* pRep) override;
 
     /**
      * Computes the bounding limits of the solid.
@@ -162,24 +160,21 @@ class G4Tubs : public G4CSGSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pmin, G4double& pmax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pmin,
+                           G4double& pmax) const override;
 
     /**
      * Concrete implementations of the expected query interfaces for
      * solids, as defined in the base class G4VSolid.
      */
-    EInside Inside( const G4ThreeVector& p ) const override;
-    G4ThreeVector SurfaceNormal( const G4ThreeVector& p ) const override;
-    G4double DistanceToIn(const G4ThreeVector& p,
-                          const G4ThreeVector& v) const override;
+    EInside Inside(const G4ThreeVector& p) const override;
+    G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
     G4double DistanceToIn(const G4ThreeVector& p) const override;
     G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
-                           const G4bool calcNorm = false,
-                                 G4bool* validNorm = nullptr,
-                                 G4ThreeVector* n = nullptr) const override;
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
     G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
@@ -202,13 +197,13 @@ class G4Tubs : public G4CSGSolid
     /**
      * Streams the object contents to an output stream.
      */
-    std::ostream& StreamInfo( std::ostream& os ) const override;
+    std::ostream& StreamInfo(std::ostream& os) const override;
 
     /**
      * Methods for creating graphical representations (i.e. for visualisation).
      */
-    void DescribeYourselfTo (G4VGraphicsScene& scene) const override;
-    G4Polyhedron* CreatePolyhedron () const override;
+    void DescribeYourselfTo(G4VGraphicsScene& scene) const override;
+    G4Polyhedron* CreatePolyhedron() const override;
 
     /**
      * Fake default constructor for usage restricted to direct object
@@ -229,7 +224,7 @@ class G4Tubs : public G4CSGSolid
      * Resets the relevant values to zero.
      */
     inline void Initialize();
- 
+
     /**
      * Methods resetting relevant flags and angle values.
      */
@@ -247,14 +242,14 @@ class G4Tubs : public G4CSGSolid
      * be on a cylindrical surface. Ensures that surface normal vector
      * produced has magnitude with 'normalTolerance' of unit.
      */
-    inline G4double FastInverseRxy( const G4ThreeVector& pos, G4double invRad,
-                                    G4double normalTolerance ) const;
+    inline G4double FastInverseRxy(const G4ThreeVector& pos, G4double invRad,
+                                   G4double normalTolerance) const;
 
     /**
      * Algorithm for SurfaceNormal() following the original specification
      * for points not on the surface.
      */
-    G4ThreeVector ApproxSurfaceNormal( const G4ThreeVector& p ) const;
+    G4ThreeVector ApproxSurfaceNormal(const G4ThreeVector& p) const;
 
   protected:
 
@@ -268,8 +263,7 @@ class G4Tubs : public G4CSGSolid
     G4double fRMin, fRMax, fDz, fSPhi, fDPhi;
 
     /** Cached trigonometric values. */
-    G4double sinCPhi, cosCPhi, cosHDPhi, cosHDPhiOT, cosHDPhiIT,
-             sinSPhi, cosSPhi, sinEPhi, cosEPhi;
+    G4double sinCPhi, cosCPhi, cosHDPhi, cosHDPhiOT, cosHDPhiIT, sinSPhi, cosSPhi, sinEPhi, cosEPhi;
 
     /** Flag for identification of section or full tube. */
     G4bool fPhiFullTube;
@@ -281,7 +275,7 @@ class G4Tubs : public G4CSGSolid
     G4double halfCarTolerance, halfRadTolerance, halfAngTolerance;
 };
 
-#include "G4Tubs.icc"
+#  include "G4Tubs.icc"
 
 #endif
 

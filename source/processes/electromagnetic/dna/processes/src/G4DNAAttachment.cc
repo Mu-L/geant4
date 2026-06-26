@@ -25,26 +25,25 @@
 //
 
 #include "G4DNAAttachment.hh"
+
 #include "G4LEPTSAttachmentModel.hh"
 #include "G4LowEnergyEmProcessSubType.hh"
-
-#include "G4SystemOfUnits.hh"
 #include "G4Positron.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 using namespace std;
 
-G4DNAAttachment::G4DNAAttachment(const G4String& processName,
-  G4ProcessType type):G4VEmProcess (processName, type) 
+G4DNAAttachment::G4DNAAttachment(const G4String& processName, G4ProcessType type)
+  : G4VEmProcess(processName, type)
 {
   SetProcessSubType(fLowEnergyAttachment);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
- 
-G4DNAAttachment::~G4DNAAttachment()
-= default;
+
+G4DNAAttachment::~G4DNAAttachment() = default;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -57,43 +56,41 @@ G4bool G4DNAAttachment::IsApplicable(const G4ParticleDefinition& p)
 
 void G4DNAAttachment::InitialiseProcess(const G4ParticleDefinition* p)
 {
-  if(!isInitialised) 
+  if (!isInitialised)
   {
     isInitialised = true;
     SetBuildTableFlag(false);
 
     G4String name = p->GetParticleName();
 
-    if(name == "e-" )
+    if (name == "e-")
     {
-      if(EmModel() == nullptr)
+      if (EmModel() == nullptr)
       {
         SetEmModel(new G4DNAMeltonAttachmentModel);
-        EmModel()->SetLowEnergyLimit(4.*eV);
-        EmModel()->SetHighEnergyLimit(13.*eV);
+        EmModel()->SetLowEnergyLimit(4. * eV);
+        EmModel()->SetHighEnergyLimit(13. * eV);
       }
-      AddEmModel(1, EmModel());   
+      AddEmModel(1, EmModel());
     }
-    else if(name == "e+" )
+    else if (name == "e+")
     {
-      if(EmModel() == nullptr)
+      if (EmModel() == nullptr)
       {
         SetEmModel(new G4LEPTSAttachmentModel);
-        EmModel()->SetLowEnergyLimit(1.*eV);
-        EmModel()->SetHighEnergyLimit(1.*MeV);
+        EmModel()->SetLowEnergyLimit(1. * eV);
+        EmModel()->SetHighEnergyLimit(1. * MeV);
       }
-      AddEmModel(1, EmModel());   
+      AddEmModel(1, EmModel());
     }
-  } 
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void G4DNAAttachment::PrintInfo()
 {
-  G4cout << " Total cross sections computed from "
-         << EmModel()->GetName()
-         << G4endl;
-}         
+  G4cout << " Total cross sections computed from " << EmModel()->GetName() << G4endl;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -26,7 +26,7 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   
+// ClassName:
 //
 // Author: 7 Nov 2017  Tatsumi Koi
 //   created from Shielding
@@ -35,24 +35,23 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef ShieldingLEND_h
-#define ShieldingLEND_h 1
+#ifndef SHIELDINGLEND_HH
+#define SHIELDINGLEND_HH
+
+#include "globals.hh"
 
 #include "Shielding.hh"
-#include "globals.hh"
 
 class ShieldingLEND : public Shielding
 {
-public:
-  explicit ShieldingLEND(G4int ver = 1) : Shielding(ver,"LEND","") {};
-  virtual ~ShieldingLEND()=default;
+  public:
 
-  // copy constructor and hide assignment operator
-  ShieldingLEND(const ShieldingLEND &)=delete;
-  ShieldingLEND & operator=(const ShieldingLEND &right)=delete;
+    explicit ShieldingLEND(G4int ver = 1) : Shielding(ver, "LEND", "") {};
+    virtual ~ShieldingLEND() = default;
+
+    // copy constructor and hide assignment operator
+    ShieldingLEND(const ShieldingLEND&) = delete;
+    ShieldingLEND& operator=(const ShieldingLEND& right) = delete;
 };
 
 #endif
-
-
-

@@ -32,8 +32,8 @@
 //
 // Author: Tsukasa Aso (KEK), September 2007
 // --------------------------------------------------------------------
-#ifndef G4ScoreQuantityMessenger_h
-#define G4ScoreQuantityMessenger_h 1
+#ifndef G4SCOREQUANTITYMESSENGER_HH
+#define G4SCOREQUANTITYMESSENGER_HH
 
 #include "G4String.hh"
 #include "G4UImessenger.hh"
@@ -51,71 +51,70 @@ using G4TokenVec = std::vector<G4String>;
 
 class G4ScoreQuantityMessenger : public G4UImessenger
 {
- public:
+  public:
 
-  G4ScoreQuantityMessenger(G4ScoringManager* SManager);
+    G4ScoreQuantityMessenger(G4ScoringManager* SManager);
 
-  ~G4ScoreQuantityMessenger() override;
+    ~G4ScoreQuantityMessenger() override;
 
-  void SetNewValue(G4UIcommand* command, G4String newValues) override;
+    void SetNewValue(G4UIcommand* command, G4String newValues) override;
 
-  G4String GetCurrentValue(G4UIcommand*) override;
+    G4String GetCurrentValue(G4UIcommand*) override;
 
- protected:
+  protected:
 
-  void FillTokenVec(const G4String& newValues, G4TokenVec& token);
+    void FillTokenVec(const G4String& newValues, G4TokenVec& token);
 
-  void FParticleCommand(G4VScoringMesh* mesh, G4TokenVec& token);
-  void FParticleWithEnergyCommand(G4VScoringMesh* mesh, G4TokenVec& token);
+    void FParticleCommand(G4VScoringMesh* mesh, G4TokenVec& token);
+    void FParticleWithEnergyCommand(G4VScoringMesh* mesh, G4TokenVec& token);
 
-  G4bool CheckMeshPS(G4VScoringMesh* mesh, const G4String& psname,
-                     G4UIcommand* command);
+    G4bool CheckMeshPS(G4VScoringMesh* mesh, const G4String& psname, G4UIcommand* command);
 
- private:
+  private:
 
-  void QuantityCommands();
-  void FilterCommands();
+    void QuantityCommands();
+    void FilterCommands();
 
- private:
+  private:
 
-  G4ScoringManager* fSMan;
-  //
-  // Quantity commands
-  G4UIdirectory* quantityDir;
-  G4UIcmdWithAString* qTouchCmd;
-  G4UIcmdWithoutParameter* qGetUnitCmd;
-  G4UIcmdWithAString* qSetUnitCmd;
-  //
-  G4UIcommand* qCellChgCmd;
-  G4UIcommand* qCellFluxCmd;
-  G4UIcommand* qPassCellFluxCmd;
-  G4UIcommand* qeDepCmd;
-  G4UIcommand* qdoseDepCmd;
-  G4UIcommand* qnOfStepCmd;
-  G4UIcommand* qnOfSecondaryCmd;
-  //
-  G4UIcommand* qTrackLengthCmd;
-  G4UIcommand* qPassCellCurrCmd;
-  G4UIcommand* qPassTrackLengthCmd;
-  G4UIcommand* qFlatSurfCurrCmd;
-  G4UIcommand* qFlatSurfFluxCmd;
-  G4UIcommand* qVolFluxCmd;
-  G4UIcommand* qNofCollisionCmd;
-  G4UIcommand* qPopulationCmd;
-  G4UIcommand* qTrackCountCmd;
-  G4UIcommand* qTerminationCmd;
-  G4UIcommand* qMinKinEAtGeneCmd;
-  G4UIcommand* qStepCheckerCmd;
+    G4ScoringManager* fSMan;
+    //
+    // Quantity commands
+    G4UIdirectory* quantityDir;
+    G4UIcmdWithAString* qTouchCmd;
+    G4UIcmdWithoutParameter* qGetUnitCmd;
+    G4UIcmdWithAString* qSetUnitCmd;
+    //
+    G4UIcommand* qCellChgCmd;
+    G4UIcommand* qCellFluxCmd;
+    G4UIcommand* qPassCellFluxCmd;
+    G4UIcommand* qeDepCmd;
+    G4UIcommand* qdoseDepCmd;
+    G4UIcommand* qnOfStepCmd;
+    G4UIcommand* qnOfSecondaryCmd;
+    //
+    G4UIcommand* qTrackLengthCmd;
+    G4UIcommand* qPassCellCurrCmd;
+    G4UIcommand* qPassTrackLengthCmd;
+    G4UIcommand* qFlatSurfCurrCmd;
+    G4UIcommand* qFlatSurfFluxCmd;
+    G4UIcommand* qVolFluxCmd;
+    G4UIcommand* qNofCollisionCmd;
+    G4UIcommand* qPopulationCmd;
+    G4UIcommand* qTrackCountCmd;
+    G4UIcommand* qTerminationCmd;
+    G4UIcommand* qMinKinEAtGeneCmd;
+    G4UIcommand* qStepCheckerCmd;
 
-  //
-  // Filter commands
-  G4UIdirectory* filterDir;
-  G4UIcmdWithAString* fchargedCmd;
-  G4UIcmdWithAString* fneutralCmd;
-  G4UIcommand* fkinECmd;
-  G4UIcommand* fparticleCmd;
-  G4UIcommand* fparticleKinECmd;
-  //
+    //
+    // Filter commands
+    G4UIdirectory* filterDir;
+    G4UIcmdWithAString* fchargedCmd;
+    G4UIcmdWithAString* fneutralCmd;
+    G4UIcommand* fkinECmd;
+    G4UIcommand* fparticleCmd;
+    G4UIcommand* fparticleKinECmd;
+    //
 };
 
 #endif

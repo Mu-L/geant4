@@ -34,18 +34,18 @@
 
 void G4MultiTrackingAction::SetTrackingManagerPointer(G4TrackingManager* pVal)
 {
-  std::for_each(
-    begin(), end(), [pVal](G4UserTrackingActionUPtr& e) { e->SetTrackingManagerPointer(pVal); });
+  std::for_each(begin(), end(),
+                [pVal](G4UserTrackingActionUPtr& e) { e->SetTrackingManagerPointer(pVal); });
 }
 
 void G4MultiTrackingAction::PreUserTrackingAction(const G4Track* trk)
 {
-  std::for_each(
-    begin(), end(), [trk](G4UserTrackingActionUPtr& e) { e->PreUserTrackingAction(trk); });
+  std::for_each(begin(), end(),
+                [trk](G4UserTrackingActionUPtr& e) { e->PreUserTrackingAction(trk); });
 }
 
 void G4MultiTrackingAction::PostUserTrackingAction(const G4Track* trk)
 {
-  std::for_each(
-    begin(), end(), [trk](G4UserTrackingActionUPtr& e) { e->PostUserTrackingAction(trk); });
+  std::for_each(begin(), end(),
+                [trk](G4UserTrackingActionUPtr& e) { e->PostUserTrackingAction(trk); });
 }

@@ -31,12 +31,12 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrFileIn_hh
-#define G4tgrFileIn_hh 1
-
-#include <vector>
+#ifndef G4TGRFILEIN_HH
+#define G4TGRFILEIN_HH
 
 #include "globals.hh"
+
+#include <vector>
 
 class G4tgrFileIn
 {
@@ -46,16 +46,16 @@ class G4tgrFileIn
     ~G4tgrFileIn();
 
     static G4tgrFileIn& GetInstance(const G4String& name);
-      // Get the only instance opening the file
+    // Get the only instance opening the file
 
     static G4tgrFileIn& GetInstanceOpened(const G4String& name);
-      // Get the only instance when file should be already opened
+    // Get the only instance when file should be already opened
 
     G4int GetWordsInLine(std::vector<G4String>& wl);
-      // Read a line and transform it to a vector of words
+    // Read a line and transform it to a vector of words
 
     void ErrorInLine();
-      // Print out an error message indicating the line being read
+    // Print out an error message indicating the line being read
 
     // Access data members
 
@@ -77,18 +77,18 @@ class G4tgrFileIn
     std::vector<std::ifstream*> theFiles;
 
     std::vector<G4int> theLineNo;
-      // Number of line being read
+    // Number of line being read
 
     std::vector<G4String> theNames;
 
     G4int theCurrentFile = -1;
-      // Index of file being read in theFiles
+    // Index of file being read in theFiles
 
     static G4ThreadLocal std::vector<G4tgrFileIn*>* theInstances;
-      // Vector of class instances (each one identified by its name)
+    // Vector of class instances (each one identified by its name)
 
     G4String theName = "";
-      // Name of file
+    // Name of file
 };
 
 #endif

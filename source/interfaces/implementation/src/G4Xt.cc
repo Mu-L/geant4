@@ -62,7 +62,8 @@ G4Xt* G4Xt::getInstance(int a_argn, char** a_args, char* a_class)
 /***************************************************************************/
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 {
-  if (instance == NULL) {
+  if (instance == NULL)
+  {
     instance = new G4Xt(a_argn, a_args, a_class);
   }
   return instance;
@@ -72,12 +73,16 @@ G4Xt::G4Xt(int a_argn, char** a_args, char* a_class)
 /***************************************************************************/
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 {
-  if (XtInited == false) {  // Xt should be Inited once !
-    if (a_argn != 0) {  // Save args.
+  if (XtInited == false)
+  {  // Xt should be Inited once !
+    if (a_argn != 0)
+    {  // Save args.
       args = (char**)malloc(a_argn * sizeof(char*));
-      if (args != NULL) {
+      if (args != NULL)
+      {
         argn = a_argn;
-        for (int argi = 0; argi < a_argn; argi++) {
+        for (int argi = 0; argi < a_argn; argi++)
+        {
           args[argi] = (char*)NewString(a_args[argi]);
         }
       }
@@ -93,12 +98,15 @@ G4Xt::G4Xt(int a_argn, char** a_args, char* a_class)
     XtSetArg(xargs[0], XtNgeometry, "100x100");
     topWidget =
       XtAppInitialize(&appContext, a_class, NULL, (Cardinal)0, &narg, a_args, NULL, xargs, 1);
-    if (topWidget == NULL) {
+    if (topWidget == NULL)
+    {
       G4cout << "G4Xt : Unable to init Xt." << G4endl;
     }
     // Restore a_args. XtAppInitialize corrupts the given ones !!!
-    if ((a_argn != 0) && (args != NULL)) {
-      for (int argi = 0; argi < a_argn; argi++) {
+    if ((a_argn != 0) && (args != NULL))
+    {
+      for (int argi = 0; argi < a_argn; argi++)
+      {
         if (args[argi] != NULL)
           strcpy(a_args[argi], args[argi]);
         else
@@ -121,7 +129,8 @@ G4Xt::~G4Xt()
 /***************************************************************************/
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 {
-  if (this == instance) {
+  if (this == instance)
+  {
     instance = NULL;
   }
 }
@@ -154,10 +163,12 @@ void G4Xt::PutStringInResourceDatabase(char* a_string)
   XrmDatabase dbres = XrmGetStringDatabase(a_string);
   if (dbres == NULL) return;
   XrmDatabase database = XrmGetDatabase(dpy);
-  if (database != NULL) {
+  if (database != NULL)
+  {
     XrmMergeDatabases(dbres, &database);
   }
-  else {
+  else
+  {
     XrmSetDatabase(dpy, dbres);
   }
 }

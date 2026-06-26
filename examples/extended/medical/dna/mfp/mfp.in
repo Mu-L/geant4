@@ -8,10 +8,10 @@
 /mfp/det/setRadius 10 m
 #
 # Physics constructor
-#/mfp/phys/addPhysics  dna
 /mfp/phys/addPhysics  dna_opt2
 #/mfp/phys/addPhysics  dna_opt4
 #/mfp/phys/addPhysics  dna_opt6
+#/mfp/phys/addPhysics  dna_opt8
 #
 # Run initialization
 /run/initialize

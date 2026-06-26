@@ -30,7 +30,4 @@
 
 #include "G4EquationOfMotion.hh"
 
-G4EquationOfMotion::G4EquationOfMotion(G4Field* pField) 
-  : itsField(pField)
-{
-}
+G4EquationOfMotion::G4EquationOfMotion(G4Field* pField) : itsField(pField) {}

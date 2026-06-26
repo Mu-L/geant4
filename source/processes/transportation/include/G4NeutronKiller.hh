@@ -36,30 +36,30 @@
 //
 // Class description:
 //
-// G4NeutronKiller allows to remove unwanted neutrons from simulation in 
+// G4NeutronKiller allows to remove unwanted neutrons from simulation in
 // order to improve CPU performance. There are two parameters:
-//                 
+//
 // 1) low energy threshold for neutron kinetic energy (default 0)
-// 2) time limit for neutron track (default DBL_MAX) 
-// 
+// 2) time limit for neutron track (default DBL_MAX)
+//
 // These parameters can be changed via Set methods or by UI commands:
 //   /physics_engine/neutron/energyCut
 //   /physics_engine/neutron/timeLimit
 //
-// If a neutron track is killed no energy deposition is added to the step 
+// If a neutron track is killed no energy deposition is added to the step
 //
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef NeutronKiller_h
-#define NeutronKiller_h 1
+#ifndef G4NEUTRONKILLER_HH
+#define G4NEUTRONKILLER_HH
 
-#include "globals.hh"
-#include "G4VDiscreteProcess.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4Step.hh"
 #include "G4Track.hh"
+#include "G4VDiscreteProcess.hh"
+#include "globals.hh"
 
 class G4NeutronKillerMessenger;
 
@@ -67,40 +67,38 @@ class G4NeutronKillerMessenger;
 
 class G4NeutronKiller : public G4VDiscreteProcess
 {
-public:
+  public:
 
-  G4NeutronKiller(const G4String& processName = "nKiller",
-		  G4ProcessType   aType =  fGeneral );
+    G4NeutronKiller(const G4String& processName = "nKiller", G4ProcessType aType = fGeneral);
 
-  virtual ~G4NeutronKiller();
+    virtual ~G4NeutronKiller();
 
-  virtual G4bool IsApplicable(const G4ParticleDefinition&);
+    virtual G4bool IsApplicable(const G4ParticleDefinition&);
 
-  void  SetTimeLimit(G4double);
+    void SetTimeLimit(G4double);
 
-  void  SetKinEnergyLimit(G4double);
+    void SetKinEnergyLimit(G4double);
 
-  virtual G4double PostStepGetPhysicalInteractionLength( const G4Track& track,
-							 G4double previousStepSize,
-							 G4ForceCondition* condition);
+    virtual G4double PostStepGetPhysicalInteractionLength(const G4Track& track,
+                                                          G4double previousStepSize,
+                                                          G4ForceCondition* condition);
 
-  virtual G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&);
+    virtual G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&);
 
-  virtual G4double GetMeanFreePath(const G4Track&, G4double,G4ForceCondition*);
+    virtual G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*);
 
-private:
+  private:
 
-  // hide assignment operator as private
-  G4NeutronKiller(const G4NeutronKiller&);
-  G4NeutronKiller& operator = (const G4NeutronKiller &right);
+    // hide assignment operator as private
+    G4NeutronKiller(const G4NeutronKiller&);
+    G4NeutronKiller& operator=(const G4NeutronKiller& right);
 
-  G4double kinEnergyThreshold;
-  G4double timeThreshold;
-     
-  G4NeutronKillerMessenger* pMess;
+    G4double kinEnergyThreshold;
+    G4double timeThreshold;
+
+    G4NeutronKillerMessenger* pMess;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

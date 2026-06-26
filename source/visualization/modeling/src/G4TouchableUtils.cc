@@ -34,25 +34,26 @@
 #include "G4TouchablePropertiesScene.hh"
 #include "G4TransportationManager.hh"
 
-G4PhysicalVolumeModel::TouchableProperties G4TouchableUtils::FindTouchableProperties
-(G4ModelingParameters::PVNameCopyNoPath path)
+G4PhysicalVolumeModel::TouchableProperties
+G4TouchableUtils::FindTouchableProperties(G4ModelingParameters::PVNameCopyNoPath path)
 {
   // If the search is not successful properties.fpTouchablePV will be null.
   G4PhysicalVolumeModel::TouchableProperties properties;
   G4TransportationManager* transportationManager =
-  G4TransportationManager::GetTransportationManager ();
+    G4TransportationManager::GetTransportationManager();
   size_t nWorlds = transportationManager->GetNoWorlds();
-  std::vector<G4VPhysicalVolume*>::iterator iterWorld =
-  transportationManager->GetWorldsIterator();
-  for (size_t i = 0; i < nWorlds; ++i, ++iterWorld) {
-    G4PhysicalVolumeModel pvModel (*iterWorld);  // Unlimited depth.
+  std::vector<G4VPhysicalVolume*>::iterator iterWorld = transportationManager->GetWorldsIterator();
+  for (size_t i = 0; i < nWorlds; ++i, ++iterWorld)
+  {
+    G4PhysicalVolumeModel pvModel(*iterWorld);  // Unlimited depth.
     G4ModelingParameters mp;  // Default - no culling.
-    pvModel.SetModelingParameters (&mp);
-    G4TouchablePropertiesScene scene (&pvModel,path);
-    pvModel.DescribeYourselfTo (scene);  // Initiate geometry tree traversal.
-    if (scene.GetFoundTouchableProperties().fpTouchablePV) {
+    pvModel.SetModelingParameters(&mp);
+    G4TouchablePropertiesScene scene(&pvModel, path);
+    pvModel.DescribeYourselfTo(scene);  // Initiate geometry tree traversal.
+    if (scene.GetFoundTouchableProperties().fpTouchablePV)
+    {
       properties = scene.GetFoundTouchableProperties();
-      break; // Found, so no need to scan more worlds.
+      break;  // Found, so no need to scan more worlds.
     }
   }
   return properties;

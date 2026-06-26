@@ -25,31 +25,31 @@
 //
 //
 // Hadronic Process: Nuclear De-excitations
-// by V. Lara (Nov 1999) 
+// by V. Lara (Nov 1999)
 //
 
-#ifndef G4Na22GEMProbability_h
-#define G4Na22GEMProbability_h 1
+#ifndef G4NA22GEMPROBABILITY_HH
+#define G4NA22GEMPROBABILITY_HH
 
 #include "G4GEMProbability.hh"
 
 class G4Na22GEMProbability : public G4GEMProbability
 {
-public:
-  // Only available constructor
-  G4Na22GEMProbability();
-    
-  ~G4Na22GEMProbability();
+  public:
 
-private:  
-  // Copy constructor
-  G4Na22GEMProbability(const G4Na22GEMProbability &right);
-    
-  const G4Na22GEMProbability & operator=(const G4Na22GEMProbability &right);
-  G4bool operator==(const G4Na22GEMProbability &right) const;
-  G4bool operator!=(const G4Na22GEMProbability &right) const;
-  
+    // Only available constructor
+    G4Na22GEMProbability();
+
+    ~G4Na22GEMProbability();
+
+  private:
+
+    // Copy constructor
+    G4Na22GEMProbability(const G4Na22GEMProbability& right);
+
+    const G4Na22GEMProbability& operator=(const G4Na22GEMProbability& right);
+    G4bool operator==(const G4Na22GEMProbability& right) const;
+    G4bool operator!=(const G4Na22GEMProbability& right) const;
 };
-
 
 #endif

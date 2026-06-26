@@ -31,12 +31,12 @@
 
 // Author: Makoto Asai, 2003
 // --------------------------------------------------------------------
-#ifndef G4StackChecker_hh
-#define G4StackChecker_hh 1
+#ifndef G4STACKCHECKER_HH
+#define G4STACKCHECKER_HH
 
-#include "G4UserStackingAction.hh"
 #include "G4ClassificationOfNewTrack.hh"
 #include "G4ThreeVector.hh"
+#include "G4UserStackingAction.hh"
 
 class G4Track;
 
@@ -51,7 +51,7 @@ class G4StackChecker : public G4UserStackingAction
 
   private:
 
-    G4ThreeVector nullDirection{0.0,0.0,0.0};
+    G4ThreeVector nullDirection{0.0, 0.0, 0.0};
 };
 
 #endif

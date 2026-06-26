@@ -26,30 +26,31 @@
 //
 // -------------------------------------------------------------------
 //
-//      Geant4 header file 
+//      Geant4 header file
 //
 //      File name: G4ParticleHPProbabilityTablesStore.hh
 //
 //      Authors: Marek Zmeskal (CTU, Czech Technical University in Prague, Czech Republic)
 //	         Loic Thulliez (CEA France)
-// 
+//
 //      Creation date: 4 June 2024
 //
 //      Description: Class to store all probability tables for different isotopes
 //                   and in future also for different temperatures.
 //
 //      Modifications:
-//      
+//
 // -------------------------------------------------------------------
 //
 //
-#ifndef G4ParticleHPProbabilityTablesStore_h
-#define G4ParticleHPProbabilityTablesStore_h 1
+#ifndef G4PARTICLEHPPROBABILITYTABLESSTORE_HH
+#define G4PARTICLEHPPROBABILITYTABLESSTORE_HH
 
 #include "globals.hh"
+
 #include <map>
-#include <vector>
 #include <thread>
+#include <vector>
 
 class G4Material;
 class G4Element;
@@ -57,36 +58,42 @@ class G4Isotope;
 class G4DynamicParticle;
 class G4ParticleHPIsoProbabilityTable;
 
+class G4ParticleHPProbabilityTablesStore
+{
+  public:
 
-class G4ParticleHPProbabilityTablesStore {
-public:
-  static G4ParticleHPProbabilityTablesStore * GetInstance();
+    static G4ParticleHPProbabilityTablesStore* GetInstance();
 
-  void Init();
-  void InitURRlimits();
+    void Init();
+    void InitURRlimits();
 
-  std::vector< std::map< G4int, G4ParticleHPIsoProbabilityTable* > >* GetProbabilityTables() { return ProbabilityTables; };
-  std::vector< std::pair< G4double, G4double > >* GetURRlimits(){ return URRlimits; };
-  G4double GetIsoCrossSectionPT( const G4DynamicParticle*, G4int, const G4Isotope*, const G4Element*, const G4Material* );
+    std::vector<std::map<G4int, G4ParticleHPIsoProbabilityTable*>>* GetProbabilityTables()
+    {
+      return ProbabilityTables;
+    };
+    std::vector<std::pair<G4double, G4double>>* GetURRlimits() { return URRlimits; };
+    G4double GetIsoCrossSectionPT(const G4DynamicParticle*, G4int, const G4Isotope*,
+                                  const G4Element*, const G4Material*);
 
-  std::vector< std::map< std::thread::id, G4double > > random_number_cache;
+    std::vector<std::map<std::thread::id, G4double>> random_number_cache;
 
-private:
-  static G4ParticleHPProbabilityTablesStore* instance;
+  private:
 
-  G4ParticleHPProbabilityTablesStore();
-  G4ParticleHPProbabilityTablesStore( const G4ParticleHPProbabilityTablesStore& ){};
-  ~G4ParticleHPProbabilityTablesStore();
+    static G4ParticleHPProbabilityTablesStore* instance;
 
-  std::vector< std::vector< G4int > >* Temperatures;
-  std::vector< std::map< G4int, G4ParticleHPIsoProbabilityTable* > >* ProbabilityTables;
-  std::vector< std::pair< G4double, G4double > >* URRlimits;
-  std::vector< std::map< std::thread::id, G4double > > energy_cache;
-  G4String dirName;
-  G4String filename;
-  G4int numIso;
-  G4bool usedNjoy;
-  G4bool usedCalendf;
+    G4ParticleHPProbabilityTablesStore();
+    G4ParticleHPProbabilityTablesStore(const G4ParticleHPProbabilityTablesStore&) {};
+    ~G4ParticleHPProbabilityTablesStore();
+
+    std::vector<std::vector<G4int>>* Temperatures;
+    std::vector<std::map<G4int, G4ParticleHPIsoProbabilityTable*>>* ProbabilityTables;
+    std::vector<std::pair<G4double, G4double>>* URRlimits;
+    std::vector<std::map<std::thread::id, G4double>> energy_cache;
+    G4String dirName;
+    G4String filename;
+    G4int numIso;
+    G4bool usedNjoy;
+    G4bool usedCalendf;
 };
 
 #endif

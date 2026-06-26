@@ -30,8 +30,8 @@
 // Description: messenger class for the class G4HadronicParameters
 //---------------------------------------------------------------------------
 
-#ifndef G4HadronicParametersMessenger_h
-#define G4HadronicParametersMessenger_h 1
+#ifndef G4HADRONICPARAMETERSMESSENGER_HH
+#define G4HADRONICPARAMETERSMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -43,13 +43,16 @@ class G4UIcmdWithADoubleAndUnit;
 class G4UIcmdWithABool;
 class G4HadronicParameters;
 
-
-class G4HadronicParametersMessenger : public G4UImessenger {
+class G4HadronicParametersMessenger : public G4UImessenger
+{
   public:
-    explicit G4HadronicParametersMessenger( G4HadronicParameters* inputHadParam );
+
+    explicit G4HadronicParametersMessenger(G4HadronicParameters* inputHadParam);
     ~G4HadronicParametersMessenger();
-    void SetNewValue ( G4UIcommand *command, G4String newValues ) override;
+    void SetNewValue(G4UIcommand* command, G4String newValues) override;
+
   private:
+
     G4HadronicParameters* theHadronicParameters;
     G4UIdirectory* theDirectory;
     G4UIcmdWithAnInteger* theVerboseCmd;

@@ -34,16 +34,14 @@
 //
 // Makoto Asai (JLab) - Oct.2024
 // --------------------------------------------------------------------
-#ifndef G4ClonedRichTrajectoryPoint_HH 
-#define G4ClonedRichTrajectoryPoint_HH 1
+#ifndef G4CLONEDRICHTRAJECTORYPOINT_HH
+#define G4CLONEDRICHTRAJECTORYPOINT_HH
 
 #include "G4StepStatus.hh"
 #include "G4ThreeVector.hh"
 #include "G4TouchableHandle.hh"
 #include "G4VTrajectoryPoint.hh"
 #include "globals.hh"  // Include from 'global'
-
-#include "trkgdefs.hh"
 
 #include "trkgdefs.hh"
 
@@ -56,55 +54,59 @@ class G4RichTrajectoryPoint;
 
 class G4ClonedRichTrajectoryPoint : public G4VTrajectoryPoint
 {
- public:  // without description
-  // Constructors/Destructor
-  //
-  G4ClonedRichTrajectoryPoint() = default;
-  G4ClonedRichTrajectoryPoint(const G4Track*);  // For first point.
-  G4ClonedRichTrajectoryPoint(const G4Step*);  // For subsequent points.
-  G4ClonedRichTrajectoryPoint(const G4RichTrajectoryPoint& right);
-  ~G4ClonedRichTrajectoryPoint() override;
+  public:  // without description
 
-  // Operators
-  //
-  G4ClonedRichTrajectoryPoint& operator=(const G4ClonedRichTrajectoryPoint&) = delete;
-  inline G4bool operator==(const G4ClonedRichTrajectoryPoint& right) const;
-  inline void* operator new(size_t);
-  inline void operator delete(void* aRichTrajectoryPoint);
+    // Constructors/Destructor
+    //
+    G4ClonedRichTrajectoryPoint() = default;
+    G4ClonedRichTrajectoryPoint(const G4Track*);  // For first point.
+    G4ClonedRichTrajectoryPoint(const G4Step*);  // For subsequent points.
+    G4ClonedRichTrajectoryPoint(const G4RichTrajectoryPoint& right);
+    ~G4ClonedRichTrajectoryPoint() override;
 
-  // Get/Set functions
-  //
+    // Operators
+    //
+    G4ClonedRichTrajectoryPoint& operator=(const G4ClonedRichTrajectoryPoint&) = delete;
+    inline G4bool operator==(const G4ClonedRichTrajectoryPoint& right) const;
+    inline void* operator new(size_t);
+    inline void operator delete(void* aRichTrajectoryPoint);
 
-  inline const G4ThreeVector GetPosition() const override { return fPosition; }
+    // Get/Set functions
+    //
 
-  inline const std::vector<G4ThreeVector>* GetAuxiliaryPoints() const override;
-  const std::map<G4String, G4AttDef>* GetAttDefs() const override;
-  std::vector<G4AttValue>* CreateAttValues() const override;
+    inline const G4ThreeVector GetPosition() const override { return fPosition; }
 
- private:
-  G4ThreeVector fPosition{0., 0., 0.};
+    inline const std::vector<G4ThreeVector>* GetAuxiliaryPoints() const override;
+    const std::map<G4String, G4AttDef>* GetAttDefs() const override;
+    std::vector<G4AttValue>* CreateAttValues() const override;
 
-  // Extended member data
-  //
-  std::vector<G4ThreeVector>* fpAuxiliaryPointVector = nullptr;
-  G4double fTotEDep = 0.0;
-  G4double fRemainingEnergy = 0.0;
-  const G4VProcess* fpProcess = nullptr;
-  G4StepStatus fPreStepPointStatus = fUndefined;
-  G4StepStatus fPostStepPointStatus = fUndefined;
-  G4double fPreStepPointGlobalTime = 0.0;
-  G4double fPostStepPointGlobalTime = 0.0;
-  G4TouchableHandle fpPreStepPointVolume;
-  G4TouchableHandle fpPostStepPointVolume;
-  G4double fPreStepPointWeight = 0.0;
-  G4double fPostStepPointWeight = 0.0;
+  private:
+
+    G4ThreeVector fPosition{0., 0., 0.};
+
+    // Extended member data
+    //
+    std::vector<G4ThreeVector>* fpAuxiliaryPointVector = nullptr;
+    G4double fTotEDep = 0.0;
+    G4double fRemainingEnergy = 0.0;
+    const G4VProcess* fpProcess = nullptr;
+    G4StepStatus fPreStepPointStatus = fUndefined;
+    G4StepStatus fPostStepPointStatus = fUndefined;
+    G4double fPreStepPointGlobalTime = 0.0;
+    G4double fPostStepPointGlobalTime = 0.0;
+    G4TouchableHandle fpPreStepPointVolume;
+    G4TouchableHandle fpPostStepPointVolume;
+    G4double fPreStepPointWeight = 0.0;
+    G4double fPostStepPointWeight = 0.0;
 };
 
-extern G4TRACKING_DLL G4Allocator<G4ClonedRichTrajectoryPoint>*& aClonedRichTrajectoryPointAllocator();
+extern G4TRACKING_DLL G4Allocator<G4ClonedRichTrajectoryPoint>*&
+aClonedRichTrajectoryPointAllocator();
 
 inline void* G4ClonedRichTrajectoryPoint::operator new(size_t)
 {
-  if (aClonedRichTrajectoryPointAllocator() == nullptr) {
+  if (aClonedRichTrajectoryPointAllocator() == nullptr)
+  {
     aClonedRichTrajectoryPointAllocator() = new G4Allocator<G4ClonedRichTrajectoryPoint>;
   }
   return (void*)aClonedRichTrajectoryPointAllocator()->MallocSingle();
@@ -112,7 +114,8 @@ inline void* G4ClonedRichTrajectoryPoint::operator new(size_t)
 
 inline void G4ClonedRichTrajectoryPoint::operator delete(void* aRichTrajectoryPoint)
 {
-  aClonedRichTrajectoryPointAllocator()->FreeSingle((G4ClonedRichTrajectoryPoint*)aRichTrajectoryPoint);
+  aClonedRichTrajectoryPointAllocator()->FreeSingle(
+    (G4ClonedRichTrajectoryPoint*)aRichTrajectoryPoint);
 }
 
 inline G4bool G4ClonedRichTrajectoryPoint::operator==(const G4ClonedRichTrajectoryPoint& r) const

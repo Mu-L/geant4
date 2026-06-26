@@ -30,23 +30,25 @@
 
 // A. Dotti 2-May-2013: Re-write caching logic and optimizations
 
-#ifndef G4ElectroNuclearCrossSection_h
-#define G4ElectroNuclearCrossSection_h 1
+#ifndef G4ELECTRONUCLEARCROSSSECTION_HH
+#define G4ELECTRONUCLEARCROSSSECTION_HH
 
-#include "G4VCrossSectionDataSet.hh"
 #include "G4DynamicParticle.hh"
-#include "G4Element.hh"
-#include "G4ParticleTable.hh"
-#include "G4NucleiProperties.hh"
-#include "G4NistManager.hh"
-#include <vector>
-#include "Randomize.hh"
 #include "G4Electron.hh"
+#include "G4Element.hh"
+#include "G4NistManager.hh"
+#include "G4NucleiProperties.hh"
+#include "G4ParticleTable.hh"
 #include "G4Positron.hh"
-#include <map>
+#include "G4VCrossSectionDataSet.hh"
+#include "Randomize.hh"
 
-//A cache element
-struct cacheEl_t {
+#include <map>
+#include <vector>
+
+// A cache element
+struct cacheEl_t
+{
     G4int F;
     G4double* J1;
     G4double* J2;
@@ -57,59 +59,60 @@ struct cacheEl_t {
 
 class G4ElectroNuclearCrossSection : public G4VCrossSectionDataSet
 {
-public:
+  public:
 
-  G4ElectroNuclearCrossSection();
-  ~G4ElectroNuclearCrossSection() override;
-    
-  static const char* Default_Name() {return "ElectroNuclearXS";}
+    G4ElectroNuclearCrossSection();
+    ~G4ElectroNuclearCrossSection() override;
 
-  void CrossSectionDescription(std::ostream&) const override;
+    static const char* Default_Name() { return "ElectroNuclearXS"; }
 
-  G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z,
-                             const G4Material*) override;
-  G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z,
-                                  const G4Material* mat) override;
+    void CrossSectionDescription(std::ostream&) const override;
 
-  G4double GetEquivalentPhotonEnergy();
+    G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z, const G4Material*) override;
+    G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z,
+                                    const G4Material* mat) override;
 
-  G4double GetVirtualFactor(G4double nu, G4double Q2);
+    G4double GetEquivalentPhotonEnergy();
 
-  G4double GetEquivalentPhotonQ2(G4double nu);
+    G4double GetVirtualFactor(G4double nu, G4double Q2);
 
-  G4ElectroNuclearCrossSection& operator=
-  (const G4ElectroNuclearCrossSection &right) = delete;
-  G4ElectroNuclearCrossSection(const G4ElectroNuclearCrossSection&) = delete;
+    G4double GetEquivalentPhotonQ2(G4double nu);
 
-private:
-  G4int    GetFunctions(G4double a, G4double* x, G4double* y, G4double* z);
+    G4ElectroNuclearCrossSection& operator=(const G4ElectroNuclearCrossSection& right) = delete;
+    G4ElectroNuclearCrossSection(const G4ElectroNuclearCrossSection&) = delete;
 
-  G4double ThresholdEnergy(G4int Z, G4int N);
-  G4double SolveTheEquation(G4double f);
-  G4double Fun(G4double x);
-  G4double DFun(G4double x);
-    
-  G4double HighEnergyJ1(G4double lE);
-  G4double HighEnergyJ2(G4double lE, G4double E);
-  G4double HighEnergyJ3(G4double lE, G4double E2);
+  private:
 
-// Body
-private:
+    G4int GetFunctions(G4double a, G4double* x, G4double* y, G4double* z);
+
+    G4double ThresholdEnergy(G4int Z, G4int N);
+    G4double SolveTheEquation(G4double f);
+    G4double Fun(G4double x);
+    G4double DFun(G4double x);
+
+    G4double HighEnergyJ1(G4double lE);
+    G4double HighEnergyJ2(G4double lE, G4double E);
+    G4double HighEnergyJ3(G4double lE, G4double E2);
+
+    // Body
+
+  private:
+
     G4int currentN;
     G4int currentZ;
-    
-    //Cache structure
+
+    // Cache structure
     G4int lastZ;
     std::vector<cacheEl_t*> cache;
     cacheEl_t* lastUsedCacheEl;
     G4NistManager* nistmngr;
-        
-    //Cache values for XS
-    G4double lastE ; //Last used energy value
-    G4double lastSig; //Last used XS value
-    G4double lastG; //Last value of gamma=lnE-ln(me)
-    G4int    lastL; //Last used in the cross section TheLastBin
-    
+
+    // Cache values for XS
+    G4double lastE;  // Last used energy value
+    G4double lastSig;  // Last used XS value
+    G4double lastG;  // Last value of gamma=lnE-ln(me)
+    G4int lastL;  // Last used in the cross section TheLastBin
+
     const G4double mNeut;
     const G4double mProt;
 };

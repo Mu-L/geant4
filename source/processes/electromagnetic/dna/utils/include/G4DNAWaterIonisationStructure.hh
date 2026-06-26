@@ -24,33 +24,32 @@
 // ********************************************************************
 
 #ifndef G4DNAWATERIONISATIONSTRUCTURE_HH
-#define G4DNAWATERIONISATIONSTRUCTURE_HH 1
- 
+#define G4DNAWATERIONISATIONSTRUCTURE_HH
+
 #include "globals.hh"
+
 #include <vector>
 
- 
 class G4DNAWaterIonisationStructure
 {
-public:
-  
-  G4DNAWaterIonisationStructure();
-  
-  virtual ~G4DNAWaterIonisationStructure();
-  
-  G4double IonisationEnergy(G4int level);
+  public:
 
-  G4int NumberOfLevels() { return nLevels; }
-  
-  // Copy constructor and assignment operator to be added here
-    
-private:
-   
- // Number of Ionisation levels of the water molecule
- G4int nLevels{5};
+    G4DNAWaterIonisationStructure();
 
-  std::vector<G4double> energyConstant;
-  
+    virtual ~G4DNAWaterIonisationStructure();
+
+    G4double IonisationEnergy(G4int level);
+
+    G4int NumberOfLevels() { return nLevels; }
+
+    // Copy constructor and assignment operator to be added here
+
+  private:
+
+    // Number of Ionisation levels of the water molecule
+    G4int nLevels{5};
+
+    std::vector<G4double> energyConstant;
 };
 
 #endif

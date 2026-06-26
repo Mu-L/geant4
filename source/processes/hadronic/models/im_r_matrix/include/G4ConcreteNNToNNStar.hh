@@ -25,39 +25,40 @@
 //
 //
 
-#ifndef G4ConcreteNNToNNStar_h
-#define G4ConcreteNNToNNStar_h
+#ifndef G4CONCRETENNTONNSTAR_HH
+#define G4CONCRETENNTONNSTAR_HH
 
-#include "globals.hh"
-#include "G4VScatteringCollision.hh"
-#include "G4VCrossSectionSource.hh"
-#include "G4VAngularDistribution.hh"
-#include "G4KineticTrackVector.hh"
-#include <vector>
-#include "G4XNNstarTable.hh"
 #include "G4ConcreteNNTwoBodyResonance.hh"
+#include "G4KineticTrackVector.hh"
+#include "G4VAngularDistribution.hh"
+#include "G4VCrossSectionSource.hh"
+#include "G4VScatteringCollision.hh"
+#include "G4XNNstarTable.hh"
+#include "globals.hh"
 
-//class G4KineticTrack;
+#include <vector>
+
+// class G4KineticTrack;
 
 class G4ConcreteNNToNNStar : public G4ConcreteNNTwoBodyResonance
 {
-public:
-  G4ConcreteNNToNNStar(const G4ParticleDefinition* aPrimary,
-		       const G4ParticleDefinition* bPriamry,
-		       const G4ParticleDefinition* aSecondary,
-		       const G4ParticleDefinition* bSecondary);
+  public:
 
-  virtual ~G4ConcreteNNToNNStar();  
-  virtual G4String GetName() const { return "ConcreteNNToNNStar"; }
+    G4ConcreteNNToNNStar(const G4ParticleDefinition* aPrimary, const G4ParticleDefinition* bPriamry,
+                         const G4ParticleDefinition* aSecondary,
+                         const G4ParticleDefinition* bSecondary);
 
-private:
-  G4ConcreteNNToNNStar(const G4ConcreteNNToNNStar &);
-  G4ConcreteNNToNNStar & operator= (const G4ConcreteNNToNNStar &);
+    virtual ~G4ConcreteNNToNNStar();
+    virtual G4String GetName() const { return "ConcreteNNToNNStar"; }
 
-private:  
+  private:
 
-  static G4ThreadLocal G4XNNstarTable *theSigmaTable_G4MT_TLS_;
+    G4ConcreteNNToNNStar(const G4ConcreteNNToNNStar&);
+    G4ConcreteNNToNNStar& operator=(const G4ConcreteNNToNNStar&);
 
+  private:
+
+    static G4ThreadLocal G4XNNstarTable* theSigmaTable_G4MT_TLS_;
 };
 
 #endif

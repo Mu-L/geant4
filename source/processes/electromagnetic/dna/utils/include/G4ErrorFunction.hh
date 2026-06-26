@@ -29,7 +29,7 @@
  *  Created on: Jul 23, 2019
  *      Author: W. G. Shin
  *              J. Ramos-Mendez and B. Faddegon
-*/
+ */
 
 /*
  Extracted from http://ab-initio.mit.edu/Faddeeva
@@ -49,13 +49,15 @@
  included in all copies or substantial portions of the Software.
 */
 
-#ifndef G4ERRORFUNCTION_HH_
-#define G4ERRORFUNCTION_HH_
+#ifndef G4ERRORFUNCTION_HH
+#define G4ERRORFUNCTION_HH
 
 #include "globals.hh"
 
-class G4ErrorFunction {
-public:
+class G4ErrorFunction
+{
+  public:
+
     G4ErrorFunction();
     virtual ~G4ErrorFunction();
 

@@ -25,48 +25,40 @@
 //
 //
 
-
 // Class Description:
 // G4Polyhedron placed in the real world.
 // It has information of its location and orientation.
 // Class Description - End:
-
 
 #ifndef G4PLACEDPOLYHEDRON_HH
 #define G4PLACEDPOLYHEDRON_HH
 
 #include "G4Polyhedron.hh"
 #include "G4Transform3D.hh"
+
 #include <vector>
 
-class G4PlacedPolyhedron {
+class G4PlacedPolyhedron
+{
+  public:  // With description
 
-public: // With description
+    G4PlacedPolyhedron();
+    G4PlacedPolyhedron(const G4Polyhedron&, const G4Transform3D&);
 
-  G4PlacedPolyhedron ();
-  G4PlacedPolyhedron (const G4Polyhedron&, const G4Transform3D&);
+    // Uses default copy constructor, destructor and assignment.
 
-  // Uses default copy constructor, destructor and assignment.
+    G4bool operator==(const G4PlacedPolyhedron& right) const { return this == &right; }
 
-  G4bool operator == (const G4PlacedPolyhedron& right) const {
-    return this == &right;
-  }
+    const G4Polyhedron& GetPolyhedron() const { return fPolyhedron; }
+    const G4Transform3D& GetTransform() const { return fTransform; }
 
-  const G4Polyhedron&  GetPolyhedron () const {return fPolyhedron;}
-  const G4Transform3D& GetTransform  () const {return fTransform;}
+    void SetPolyhedron(const G4Polyhedron& polyhedron) { fPolyhedron = polyhedron; }
+    void SetTransform(const G4Transform3D& transform) { fTransform = transform; }
 
-  void SetPolyhedron (const G4Polyhedron& polyhedron) {
-    fPolyhedron = polyhedron;
-  }
-  void SetTransform  (const G4Transform3D& transform) {
-    fTransform = transform;
-  }
+  private:
 
-private:
-
-  G4Polyhedron fPolyhedron;
-  G4Transform3D fTransform;
-
+    G4Polyhedron fPolyhedron;
+    G4Transform3D fTransform;
 };
 
 using G4PlacedPolyhedronList = std::vector<G4PlacedPolyhedron>;

@@ -37,14 +37,14 @@
 //
 // --------------------------------------------------------------------
 
-#ifndef G4GeneralCerenkov_h
-#define G4GeneralCerenkov_h 1
+#ifndef G4GENERALCERENKOV_HH
+#define G4GENERALCERENKOV_HH
 
-#include "globals.hh"
 #include "G4ForceCondition.hh"
 #include "G4LogicalVolume.hh"
-#include "G4VXRayModel.hh"
 #include "G4VDiscreteProcess.hh"
+#include "G4VXRayModel.hh"
+#include "globals.hh"
 
 #include <vector>
 
@@ -57,98 +57,97 @@ class G4VParticleChange;
 
 class G4GeneralCerenkov : public G4VDiscreteProcess
 {
- public:
-  explicit G4GeneralCerenkov(const G4String& processName = "Cerenkov",
-                             G4ProcessType type = fElectromagnetic);
-  ~G4GeneralCerenkov() override;
+  public:
 
-  G4GeneralCerenkov(const G4GeneralCerenkov& right) = delete;
-  G4GeneralCerenkov& operator=(const G4GeneralCerenkov& right) = delete;
+    explicit G4GeneralCerenkov(const G4String& processName = "Cerenkov",
+                               G4ProcessType type = fElectromagnetic);
+    ~G4GeneralCerenkov() override;
 
-  G4bool IsApplicable(const G4ParticleDefinition& aParticleType) override;
+    G4GeneralCerenkov(const G4GeneralCerenkov& right) = delete;
+    G4GeneralCerenkov& operator=(const G4GeneralCerenkov& right) = delete;
 
-  void PreparePhysicsTable(const G4ParticleDefinition& part) override;
+    G4bool IsApplicable(const G4ParticleDefinition& aParticleType) override;
 
-  void BuildPhysicsTable(const G4ParticleDefinition& aParticleType) override;
+    void PreparePhysicsTable(const G4ParticleDefinition& part) override;
 
-  G4double PostStepGetPhysicalInteractionLength(const G4Track& aTrack, G4double,
-                                                G4ForceCondition*) override;
-  // Returns the discrete step limit and sets the 'StronglyForced'
-  // condition for the DoIt to be invoked at every step.
+    void BuildPhysicsTable(const G4ParticleDefinition& aParticleType) override;
 
-  G4VParticleChange* PostStepDoIt(const G4Track& aTrack,
-                                  const G4Step& aStep) override;
-  // This is the method implementing the Cerenkov process.
+    G4double PostStepGetPhysicalInteractionLength(const G4Track& aTrack, G4double,
+                                                  G4ForceCondition*) override;
+    // Returns the discrete step limit and sets the 'StronglyForced'
+    // condition for the DoIt to be invoked at every step.
 
-  void AddModelForVolume(G4VXRayModel*, const G4String& nameLogVolume);
-  // explicit addition of a custom Cerenkov model to a logical volume
+    G4VParticleChange* PostStepDoIt(const G4Track& aTrack, const G4Step& aStep) override;
+    // This is the method implementing the Cerenkov process.
 
-  void DumpInfo() const override { ProcessDescription(G4cout); };
-  void ProcessDescription(std::ostream& out) const override;
+    void AddModelForVolume(G4VXRayModel*, const G4String& nameLogVolume);
+    // explicit addition of a custom Cerenkov model to a logical volume
 
-  G4double GetMeanFreePath(const G4Track&, G4double,
-			   G4ForceCondition*) override;
-  
-  // Obsolete methods to be removed for the next major release
-  
-  void SetTrackSecondariesFirst(const G4bool state);
-  // If set, the primary particle tracking is interrupted and any
-  // produced Cerenkov photons are tracked next. When all have
-  // been tracked, the tracking of the primary resumes.
+    void DumpInfo() const override { ProcessDescription(G4cout); };
+    void ProcessDescription(std::ostream& out) const override;
 
-  void SetMaxBetaChangePerStep(const G4double d);
-  // Set the maximum allowed change in beta = v/c in % (perCent) per step.
+    G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*) override;
 
-  void SetMaxNumPhotonsPerStep(const G4int NumPhotons);
-  // Set the maximum number of Cerenkov photons allowed to be generated during
-  // a tracking step. This is an average ONLY; the actual number will vary
-  // around this average. If invoked, the maximum photon stack will roughly be
-  // of the size set. If not called, the step is not limited by the number of
-  // photons generated.
+    // Obsolete methods to be removed for the next major release
 
-  void SetStackPhotons(const G4bool);
-  // Call by the user to set the flag for stacking the Cerenkov photons
+    void SetTrackSecondariesFirst(const G4bool state);
+    // If set, the primary particle tracking is interrupted and any
+    // produced Cerenkov photons are tracked next. When all have
+    // been tracked, the tracking of the primary resumes.
 
-  void SetVerboseLevel(G4int);
+    void SetMaxBetaChangePerStep(const G4double d);
+    // Set the maximum allowed change in beta = v/c in % (perCent) per step.
 
-private:
+    void SetMaxNumPhotonsPerStep(const G4int NumPhotons);
+    // Set the maximum number of Cerenkov photons allowed to be generated during
+    // a tracking step. This is an average ONLY; the actual number will vary
+    // around this average. If invoked, the maximum photon stack will roughly be
+    // of the size set. If not called, the step is not limited by the number of
+    // photons generated.
 
-  const G4LogicalVolume* fCurrentLV{nullptr};
-  G4VXRayModel* fCurrentModel{nullptr};
+    void SetStackPhotons(const G4bool);
+    // Call by the user to set the flag for stacking the Cerenkov photons
 
-  G4double fMaxBetaChange{0.1};
-  G4double fBetaMin{1.0};
-  G4double fPreStepBeta{0.0};
-  
-  G4int fMaxPhotons{100};
+    void SetVerboseLevel(G4int);
 
-  G4bool fStackingFlag{true};
-  G4bool fTrackSecondariesFirst{true};
-  G4bool isInitializer{false};
-  G4bool isPrepared{false};
-  G4bool isBuilt{false};
+  private:
 
-  G4int secID{-1};  // creator modelID
-  G4int nModels{0};
+    const G4LogicalVolume* fCurrentLV{nullptr};
+    G4VXRayModel* fCurrentModel{nullptr};
 
-  // map includes logical volume pointer and index of the model
-  static std::vector<std::vector<const G4LogicalVolume*>* >* fLV;
+    G4double fMaxBetaChange{0.1};
+    G4double fBetaMin{1.0};
+    G4double fPreStepBeta{0.0};
 
-  // vector is used only at initialisation
-  // these models are destructed by G4LossTableManager
-  static std::vector<G4VXRayModel*>* fSharedModels;
+    G4int fMaxPhotons{100};
 
-  // vector of names of logical volumes for master used for initilisation
-  // not filled for a worker thread
-  std::vector<G4String>* fLVNames{nullptr};
-  
-  // models used in run time - they are thread local, are
-  // instantiated in worker thread, and are cloned from fSharedModels
-  // these models are destructed by G4LossTableManager
-  std::vector<G4VXRayModel*> fModels;
+    G4bool fStackingFlag{true};
+    G4bool fTrackSecondariesFirst{true};
+    G4bool isInitializer{false};
+    G4bool isPrepared{false};
+    G4bool isBuilt{false};
 
-  // buffer for X-Rays
-  std::vector<G4Track*> fSecondaries;
+    G4int secID{-1};  // creator modelID
+    G4int nModels{0};
+
+    // map includes logical volume pointer and index of the model
+    static std::vector<std::vector<const G4LogicalVolume*>*>* fLV;
+
+    // vector is used only at initialisation
+    // these models are destructed by G4LossTableManager
+    static std::vector<G4VXRayModel*>* fSharedModels;
+
+    // vector of names of logical volumes for master used for initilisation
+    // not filled for a worker thread
+    std::vector<G4String>* fLVNames{nullptr};
+
+    // models used in run time - they are thread local, are
+    // instantiated in worker thread, and are cloned from fSharedModels
+    // these models are destructed by G4LossTableManager
+    std::vector<G4VXRayModel*> fModels;
+
+    // buffer for X-Rays
+    std::vector<G4Track*> fSecondaries;
 };
 
 #endif

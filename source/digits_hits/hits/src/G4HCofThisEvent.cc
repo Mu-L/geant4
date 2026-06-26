@@ -34,7 +34,10 @@ G4Allocator<G4HCofThisEvent>*& anHCoTHAllocator_G4MT_TLS_()
   return _instance;
 }
 
-G4HCofThisEvent::G4HCofThisEvent() { HC = new std::vector<G4VHitsCollection*>; }
+G4HCofThisEvent::G4HCofThisEvent()
+{
+  HC = new std::vector<G4VHitsCollection*>;
+}
 
 G4HCofThisEvent::G4HCofThisEvent(G4int cap)
 {
@@ -43,7 +46,8 @@ G4HCofThisEvent::G4HCofThisEvent(G4int cap)
 
 G4HCofThisEvent::~G4HCofThisEvent()
 {
-  for (const G4VHitsCollection* h : *HC) {
+  for (const G4VHitsCollection* h : *HC)
+  {
     delete h;
   }
   delete HC;
@@ -51,7 +55,8 @@ G4HCofThisEvent::~G4HCofThisEvent()
 
 void G4HCofThisEvent::AddHitsCollection(G4int HCID, G4VHitsCollection* aHC)
 {
-  if (HCID >= 0 && HCID < G4int(HC->size())) {
+  if (HCID >= 0 && HCID < G4int(HC->size()))
+  {
     aHC->SetColID(HCID);
     (*HC)[HCID] = aHC;
   }
@@ -68,7 +73,8 @@ G4HCofThisEvent& G4HCofThisEvent::operator=(const G4HCofThisEvent& rhs)
 {
   if (this == &rhs) return *this;
 
-  for (const G4VHitsCollection* it : *HC) {
+  for (const G4VHitsCollection* it : *HC)
+  {
     delete it;
   }
   HC->resize(rhs.HC->size());

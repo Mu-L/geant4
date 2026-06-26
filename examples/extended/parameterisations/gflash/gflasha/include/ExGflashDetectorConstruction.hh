@@ -28,22 +28,14 @@
 #ifndef ExGflashDetectorConstruction_h
 #define ExGflashDetectorConstruction_h 1
 
-#include "ExGflashSensitiveDetector.hh"
-
-#include "G4Cache.hh"
+#include "G4Threading.hh"
 #include "G4ThreeVector.hh"
 #include "G4VUserDetectorConstruction.hh"
-#include "globals.hh"
 
 class G4LogicalVolume;
-class G4VPhysicalVolume;
 class G4Material;
 class G4Region;
 
-class GFlashHomoShowerParameterisation;
-class GFlashShowerModel;
-class GFlashHitMaker;
-class GFlashParticleBounds;
 class ExGflashMessenger;
 
 class ExGflashDetectorConstruction : public G4VUserDetectorConstruction
@@ -105,11 +97,6 @@ class ExGflashDetectorConstruction : public G4VUserDetectorConstruction
     G4double fDLradl{0.25}, fDRradl{0.05};  // bin thickness (in fraction of radl)
 
     ExGflashMessenger* fGflashMessenger{nullptr};
-
-    inline static G4ThreadLocal GFlashShowerModel* fFastShowerModel = nullptr;
-    inline static G4ThreadLocal GFlashHomoShowerParameterisation* fParameterisation = nullptr;
-    inline static G4ThreadLocal GFlashParticleBounds* fParticleBounds = nullptr;
-    inline static G4ThreadLocal GFlashHitMaker* fHitMaker = nullptr;
 };
 
 #endif

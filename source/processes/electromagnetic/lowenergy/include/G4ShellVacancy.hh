@@ -43,9 +43,10 @@
 // -------------------------------------------------------------------
 
 #ifndef G4SHELLVACANCY_HH
-#define G4SHELLVACANCY_HH 1
+#define G4SHELLVACANCY_HH
 
 #include "globals.hh"
+
 #include <vector>
 
 class G4VEMDataSet;
@@ -53,26 +54,21 @@ class G4MaterialCutsCouple;
 class G4Element;
 class G4ShellVacancy
 {
-public:
-  explicit G4ShellVacancy();
-  ~G4ShellVacancy();
+  public:
 
-  std::vector<G4int> GenerateNumberOfIonisations(const G4MaterialCutsCouple* couple,
-						   G4double incidentEnergy,
-						   G4double eLoss) const;
-  void AddXsiTable(G4VEMDataSet* p);
+    explicit G4ShellVacancy();
+    ~G4ShellVacancy();
 
-private:
-  G4double AverageNOfIonisations(const G4MaterialCutsCouple* couple,
-			               G4int index, 
-			               G4double energy, 
-			               G4double eLoss) const;
-  
-  std::vector<G4VEMDataSet*> xsis;
+    std::vector<G4int> GenerateNumberOfIonisations(const G4MaterialCutsCouple* couple,
+                                                   G4double incidentEnergy, G4double eLoss) const;
+    void AddXsiTable(G4VEMDataSet* p);
+
+  private:
+
+    G4double AverageNOfIonisations(const G4MaterialCutsCouple* couple, G4int index, G4double energy,
+                                   G4double eLoss) const;
+
+    std::vector<G4VEMDataSet*> xsis;
 };
 
 #endif
-
-
-
-

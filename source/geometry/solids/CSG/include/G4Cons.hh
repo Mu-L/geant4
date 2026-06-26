@@ -60,22 +60,24 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UCONS 1
+#  define G4GEOM_USE_UCONS 1
 #endif
 
 #if defined(G4GEOM_USE_UCONS)
-  #define G4UCons G4Cons
-  #include "G4UCons.hh"
+#  define G4UCons G4Cons
+#  include "G4UCons.hh"
 #else
 
-#include <CLHEP/Units/PhysicalConstants.h>
+#  include "G4CSGSolid.hh"
+#  include "G4Polyhedron.hh"
 
-#include "G4CSGSolid.hh"
-#include "G4Polyhedron.hh"
+#  include <CLHEP/Units/PhysicalConstants.h>
 
 /**
  * @brief G4Cons is, in the general case, a Phi segment of a cone, with
  * half-length fDz, inner and outer radii specified at -fDz and +fDz.
+ * @ingroup geometry_solids_csg
+ *
  * The Phi segment is described by a starting fSPhi angle, and the
  * +fDPhi delta angle for the shape.
  * If the delta angle is >=2*pi, the shape is treated as continuous in Phi.
@@ -96,11 +98,8 @@ class G4Cons : public G4CSGSolid
      *  @param[in] pSPhi Starting angle of the segment in radians.
      *  @param[in] pDPhi Delta angle of the segment in radians.
      */
-    G4Cons(const G4String& pName,
-                 G4double pRmin1, G4double pRmax1,
-                 G4double pRmin2, G4double pRmax2,
-                 G4double pDz,
-                 G4double pSPhi, G4double pDPhi);
+    G4Cons(const G4String& pName, G4double pRmin1, G4double pRmax1, G4double pRmin2,
+           G4double pRmax2, G4double pDz, G4double pSPhi, G4double pDPhi);
 
     /**
      * Default destructor.
@@ -112,26 +111,26 @@ class G4Cons : public G4CSGSolid
      */
     inline G4double GetInnerRadiusMinusZ() const;
     inline G4double GetOuterRadiusMinusZ() const;
-    inline G4double GetInnerRadiusPlusZ()  const;
-    inline G4double GetOuterRadiusPlusZ()  const;
-    inline G4double GetZHalfLength()       const;
-    inline G4double GetStartPhiAngle()     const;
-    inline G4double GetDeltaPhiAngle()     const;
-    inline G4double GetSinStartPhi()       const;
-    inline G4double GetCosStartPhi()       const;
-    inline G4double GetSinEndPhi()         const;
-    inline G4double GetCosEndPhi()         const;
+    inline G4double GetInnerRadiusPlusZ() const;
+    inline G4double GetOuterRadiusPlusZ() const;
+    inline G4double GetZHalfLength() const;
+    inline G4double GetStartPhiAngle() const;
+    inline G4double GetDeltaPhiAngle() const;
+    inline G4double GetSinStartPhi() const;
+    inline G4double GetCosStartPhi() const;
+    inline G4double GetSinEndPhi() const;
+    inline G4double GetCosEndPhi() const;
 
     /**
      * Modifiers.
      */
-    inline void SetInnerRadiusMinusZ (G4double Rmin1 );
-    inline void SetOuterRadiusMinusZ (G4double Rmax1 );
-    inline void SetInnerRadiusPlusZ  (G4double Rmin2 );
-    inline void SetOuterRadiusPlusZ  (G4double Rmax2 );
-    inline void SetZHalfLength       (G4double newDz );
-    inline void SetStartPhiAngle     (G4double newSPhi, G4bool trig=true);
-    inline void SetDeltaPhiAngle     (G4double newDPhi);
+    inline void SetInnerRadiusMinusZ(G4double Rmin1);
+    inline void SetOuterRadiusMinusZ(G4double Rmax1);
+    inline void SetInnerRadiusPlusZ(G4double Rmin2);
+    inline void SetOuterRadiusPlusZ(G4double Rmax2);
+    inline void SetZHalfLength(G4double newDz);
+    inline void SetStartPhiAngle(G4double newSPhi, G4bool trig = true);
+    inline void SetDeltaPhiAngle(G4double newDPhi);
 
     /**
      * Returning an estimation of the solid volume (capacity) and
@@ -144,8 +143,7 @@ class G4Cons : public G4CSGSolid
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -165,25 +163,21 @@ class G4Cons : public G4CSGSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Concrete implementations of the expected query interfaces for
      * solids, as defined in the base class G4VSolid.
      */
-    EInside Inside( const G4ThreeVector& p ) const override;
-    G4ThreeVector SurfaceNormal( const G4ThreeVector& p ) const override;
-    G4double DistanceToIn (const G4ThreeVector& p,
-                           const G4ThreeVector& v) const override;
-    G4double DistanceToIn (const G4ThreeVector& p) const override;
-    G4double DistanceToOut(const G4ThreeVector& p,
-                           const G4ThreeVector& v,
-                           const G4bool calcNorm = false,
-                                 G4bool* validNorm = nullptr,
-                                 G4ThreeVector* n = nullptr) const override;
+    EInside Inside(const G4ThreeVector& p) const override;
+    G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
+    G4double DistanceToIn(const G4ThreeVector& p) const override;
+    G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
     G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
@@ -211,7 +205,7 @@ class G4Cons : public G4CSGSolid
     /**
      * Methods for creating graphical representations (i.e. for visualisation).
      */
-    void DescribeYourselfTo( G4VGraphicsScene& scene ) const override;
+    void DescribeYourselfTo(G4VGraphicsScene& scene) const override;
     G4Polyhedron* CreatePolyhedron() const override;
 
     /**
@@ -261,8 +255,7 @@ class G4Cons : public G4CSGSolid
     G4double fRmin1, fRmin2, fRmax1, fRmax2, fDz, fSPhi, fDPhi;
 
     /** Cached trigonometric values. */
-    G4double sinCPhi, cosCPhi, cosHDPhi, cosHDPhiOT, cosHDPhiIT,
-             sinSPhi, cosSPhi, sinEPhi, cosEPhi;
+    G4double sinCPhi, cosCPhi, cosHDPhi, cosHDPhiOT, cosHDPhiIT, sinSPhi, cosSPhi, sinEPhi, cosEPhi;
 
     /** Flag for identification of section or full cone. */
     G4bool fPhiFullCone = false;
@@ -271,7 +264,7 @@ class G4Cons : public G4CSGSolid
     G4double halfCarTolerance, halfRadTolerance, halfAngTolerance;
 };
 
-#include "G4Cons.icc"
+#  include "G4Cons.icc"
 
 #endif
 

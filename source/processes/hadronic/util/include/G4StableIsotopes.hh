@@ -25,14 +25,13 @@
 //
 //
 //
-#ifndef G4StableIsotopes_h
-#define G4StableIsotopes_h 1
+#ifndef G4STABLEISOTOPES_HH
+#define G4STABLEISOTOPES_HH
 
 // Class Description
 // class utility that knows about all naturally occuring isotopes.;
 // to be used in your process implementation in case you need this.
 // Class Description - End
-
 
 // class, that knows the stable isotopes for all elements.
 // H.P. Wellisch, 21. Nov. 1997
@@ -49,24 +48,23 @@
 
 class G4StableIsotopes
 {
+  public:
 
-public:
+    G4String GetName(G4int Z);
+    G4int GetNumberOfIsotopes(G4int Z);
+    G4int GetFirstIsotope(G4int Z);
+    G4int GetIsotopeNucleonCount(G4int number);
+    G4double GetAbundance(G4int number);
+    G4int GetProtonCount(G4int Z);
 
-G4String GetName(G4int Z);
-G4int GetNumberOfIsotopes(G4int Z);
-G4int GetFirstIsotope(G4int Z);
-G4int GetIsotopeNucleonCount(G4int number);
-G4double GetAbundance(G4int number);
-G4int GetProtonCount(G4int Z);
+  private:
 
-private:
-
-static const G4int protonCount[92];
-static const G4String elementName[92];
-static const G4int nIsotopes[92];
-static const G4int start[92];
-static const G4int nucleonCount[287];
-static const G4double abundance[287];
+    static const G4int protonCount[92];
+    static const G4String elementName[92];
+    static const G4int nIsotopes[92];
+    static const G4int start[92];
+    static const G4int nucleonCount[287];
+    static const G4double abundance[287];
 };
 
 #endif

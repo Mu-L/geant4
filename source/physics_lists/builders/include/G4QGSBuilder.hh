@@ -34,36 +34,33 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4QGSBuilder_h
-#define G4QGSBuilder_h 1
+#ifndef G4QGSBUILDER_HH
+#define G4QGSBUILDER_HH
 
-#include "globals.hh"
 #include "G4VHadronModelBuilder.hh"
+#include "globals.hh"
 
 class G4PreCompoundModel;
 
 class G4QGSBuilder : public G4VHadronModelBuilder
 {
-public: 
+  public:
 
-  G4QGSBuilder(const G4String& name ="",
-	       G4PreCompoundModel* p = 0,
-	       G4bool quasiElastic=true);
+    G4QGSBuilder(const G4String& name = "", G4PreCompoundModel* p = 0, G4bool quasiElastic = true);
 
-  virtual ~G4QGSBuilder();
+    virtual ~G4QGSBuilder();
 
-protected:
+  protected:
 
-  virtual G4HadronicInteraction* BuildModel();
+    virtual G4HadronicInteraction* BuildModel();
 
-private:
+  private:
 
-  // copy constructor and hide assignment operator
-  G4QGSBuilder(G4QGSBuilder &);
-  G4QGSBuilder & operator=(const G4QGSBuilder &right);
+    // copy constructor and hide assignment operator
+    G4QGSBuilder(G4QGSBuilder&);
+    G4QGSBuilder& operator=(const G4QGSBuilder& right);
 
-  G4bool quasielFlag;
+    G4bool quasielFlag;
 };
 
 #endif
-

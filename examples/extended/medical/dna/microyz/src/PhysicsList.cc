@@ -43,14 +43,9 @@
 #include "G4BaryonConstructor.hh"
 #include "G4BosonConstructor.hh"
 #include "G4DNAGenericIonsManager.hh"
-#include "G4EmDNAPhysics.hh"
-#include "G4EmDNAPhysics_option1.hh"
 #include "G4EmDNAPhysics_option2.hh"
-#include "G4EmDNAPhysics_option3.hh"
 #include "G4EmDNAPhysics_option4.hh"
-#include "G4EmDNAPhysics_option5.hh"
 #include "G4EmDNAPhysics_option6.hh"
-#include "G4EmDNAPhysics_option7.hh"
 #include "G4EmDNAPhysics_option8.hh"
 #include "G4EmLivermorePhysics.hh"
 #include "G4EmPenelopePhysics.hh"
@@ -134,37 +129,17 @@ void PhysicsList::AddPhysicsList(const G4String& name)
 
   if (name == fEmName) return;
 
-  if (name == "dna") {
-    fEmName = name;
-    fEmPhysicsList = std::make_unique<G4EmDNAPhysics>();
-  }
-  else if (name == "dna_opt1") {
-    fEmName = name;
-    fEmPhysicsList = std::make_unique<G4EmDNAPhysics_option1>();
-  }
-  else if (name == "dna_opt2") {
+  if (name == "dna_opt2") {
     fEmName = name;
     fEmPhysicsList = std::make_unique<G4EmDNAPhysics_option2>();
-  }
-  else if (name == "dna_opt3") {
-    fEmName = name;
-    fEmPhysicsList = std::make_unique<G4EmDNAPhysics_option3>();
   }
   else if (name == "dna_opt4") {
     fEmName = name;
     fEmPhysicsList = std::make_unique<G4EmDNAPhysics_option4>();
   }
-  else if (name == "dna_opt5") {
-    fEmName = name;
-    fEmPhysicsList = std::make_unique<G4EmDNAPhysics_option5>();
-  }
   else if (name == "dna_opt6") {
     fEmName = name;
     fEmPhysicsList = std::make_unique<G4EmDNAPhysics_option6>();
-  }
-  else if (name == "dna_opt7") {
-    fEmName = name;
-    fEmPhysicsList = std::make_unique<G4EmDNAPhysics_option7>();
   }
   else if (name == "dna_opt8") {
     fEmName = name;

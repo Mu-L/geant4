@@ -6,6 +6,9 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-04-17 Sebastien Incerti (testem5-V11-04-00)
+- Reduction of the number of DNA physics constructors in the perspective of Geant4 12
+
 ## 2025-08-21 Dmitri Konstantinov (testem5-V11-03-00)
 - TrackingAction: fixed reflect condition for negative X beam.
   Use position.x() >= fXendAbs when fDirX < 0 (was <=)

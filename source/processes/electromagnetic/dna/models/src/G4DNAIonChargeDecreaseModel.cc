@@ -26,15 +26,16 @@
 //
 
 #include "G4DNAIonChargeDecreaseModel.hh"
+
+#include "G4DummyModel.hh"
+#include "G4GenericIon.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4GenericIon.hh"
-#include "G4DummyModel.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4DNAIonChargeDecreaseModel::G4DNAIonChargeDecreaseModel(
-	    const G4ParticleDefinition*, const G4String& nam)
+G4DNAIonChargeDecreaseModel::G4DNAIonChargeDecreaseModel(const G4ParticleDefinition*,
+                                                         const G4String& nam)
   : G4VEmModel(nam)
 {
   // dummy for the time being
@@ -44,19 +45,19 @@ G4DNAIonChargeDecreaseModel::G4DNAIonChargeDecreaseModel(
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void G4DNAIonChargeDecreaseModel::Initialise(const G4ParticleDefinition* part,
-                                                const G4DataVector& v)
+                                             const G4DataVector& v)
 {
-  if (part != G4GenericIon::GenericIon()) {
+  if (part != G4GenericIon::GenericIon())
+  {
     G4ExceptionDescription ed;
-    ed << "Wrong particle type <" << part->GetParticleName()
-       << "> - only G4GenericIon is allowed";  
-    G4Exception("G4DNAIonChargeDecreaseModel::Initialise(...)",
-                 "em2001", FatalException, ed);
+    ed << "Wrong particle type <" << part->GetParticleName() << "> - only G4GenericIon is allowed";
+    G4Exception("G4DNAIonChargeDecreaseModel::Initialise(...)", "em2001", FatalException, ed);
   }
-  
+
   // this pointer should defined once before initialisation of
   // concrete models
-  if (nullptr == fParticleChangeForGamma) {
+  if (nullptr == fParticleChangeForGamma)
+  {
     fParticleChangeForGamma = GetParticleChangeForGamma();
 
     // should be set once for each model
@@ -78,12 +79,14 @@ void G4DNAIonChargeDecreaseModel::StartTracking(G4Track* track)
 
 G4double G4DNAIonChargeDecreaseModel::CrossSectionPerVolume(const G4Material* mat,
                                                             const G4ParticleDefinition* p,
-							    G4double ekin,
-							    G4double, G4double)
+                                                            G4double ekin, G4double, G4double)
 {
-  G4int Q = G4lrint(fDynParticle->GetCharge()/CLHEP::eplus);
+  G4int Q = G4lrint(fDynParticle->GetCharge() / CLHEP::eplus);
 
-  if (Q <= 0) { return 0.0; }
+  if (Q <= 0)
+  {
+    return 0.0;
+  }
 
   // select model
   fCurrentModel = fDummy;
@@ -96,8 +99,7 @@ G4double G4DNAIonChargeDecreaseModel::CrossSectionPerVolume(const G4Material* ma
 
 void G4DNAIonChargeDecreaseModel::SampleSecondaries(std::vector<G4DynamicParticle*>* fvect,
                                                     const G4MaterialCutsCouple* couple,
-                                                    const G4DynamicParticle* dp,
-                                                    G4double, G4double)
+                                                    const G4DynamicParticle* dp, G4double, G4double)
 {
   // sample secondaries by the selected model
   fCurrentModel->SampleSecondaries(fvect, couple, dp);

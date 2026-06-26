@@ -43,6 +43,8 @@ class G4VPhysicalVolume;
 
 /**
  * @brief G4GeometryCell is used for scoring and importance sampling.
+ * @ingroup geometry_biasing
+ *
  * It defines a "cell", which, similar to the concept of "touchable",
  + is identified by a reference to a G4VPhysicalVolume and a number
  * (replica number).
@@ -69,7 +71,7 @@ class G4GeometryCell
      * Default Destructor.
      */
     ~G4GeometryCell() = default;
-  
+
     /**
      * Returns the physical volume of the cell.
      */
@@ -79,7 +81,7 @@ class G4GeometryCell
      * Returns the replica number of the cell.
      */
     G4int GetReplicaNumber() const;
- 
+
   private:
 
     /** Pointer to the physical volume of the "cell"; treated as identifier. */

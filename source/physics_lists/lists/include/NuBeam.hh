@@ -26,32 +26,27 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   
+// ClassName:
 //
 // Author: Julia Yarba (2013)
 //
 //----------------------------------------------------------------------------
 //
-#ifndef NuBeam_h
-#define NuBeam_h 1
+#ifndef NUBEAM_HH
+#define NUBEAM_HH
 
-#include "globals.hh"
 #include "G4VModularPhysicsList.hh"
+#include "globals.hh"
 
 class NuBeam : public G4VModularPhysicsList
 {
+  public:
 
-public:
+    NuBeam(G4int ver = 1);
+    virtual ~NuBeam() = default;
 
-  NuBeam(G4int ver = 1);
-  virtual ~NuBeam()=default;
-  
-  NuBeam(const NuBeam &) = delete;
-  NuBeam & operator=(const NuBeam &)=delete;
-    
+    NuBeam(const NuBeam&) = delete;
+    NuBeam& operator=(const NuBeam&) = delete;
 };
 
 #endif
-
-
-

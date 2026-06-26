@@ -29,22 +29,23 @@
 // --------------------------------------------------------------------
 
 #include "G4GeneralParticleSourceData.hh"
-#include "G4Threading.hh"
+
 #include "G4AutoLock.hh"
+#include "G4Threading.hh"
 
 namespace
 {
-  G4Mutex singMutex = G4MUTEX_INITIALIZER; // Protects singleton access
+G4Mutex singMutex = G4MUTEX_INITIALIZER;  // Protects singleton access
 }
 
 G4GeneralParticleSourceData::G4GeneralParticleSourceData()
 {
   G4MUTEXINIT(mutex);
-    
+
   sourceVector.clear();
   sourceIntensity.clear();
   sourceProbability.clear();
-    
+
   currentSource = new G4SingleParticleSource();
   sourceVector.push_back(currentSource);
   sourceIntensity.push_back(1.);
@@ -69,29 +70,29 @@ G4GeneralParticleSourceData* G4GeneralParticleSourceData::Instance()
 
 void G4GeneralParticleSourceData::IntensityNormalise()
 {
-  G4double total  = 0.;
-  std::size_t i = 0 ;
+  G4double total = 0.;
+  std::size_t i = 0;
   for (i = 0; i < sourceIntensity.size(); ++i)
   {
-    total += sourceIntensity[i] ;
+    total += sourceIntensity[i];
   }
   sourceProbability.clear();
-  std::vector <G4double> sourceNormalizedIntensity;
+  std::vector<G4double> sourceNormalizedIntensity;
   sourceNormalizedIntensity.clear();
-    
-  sourceNormalizedIntensity.push_back(sourceIntensity[0]/total);
+
+  sourceNormalizedIntensity.push_back(sourceIntensity[0] / total);
   sourceProbability.push_back(sourceNormalizedIntensity[0]);
 
-  for (i = 1 ;  i < sourceIntensity.size(); ++i)
+  for (i = 1; i < sourceIntensity.size(); ++i)
   {
-    sourceNormalizedIntensity.push_back(sourceIntensity[i]/total);
-    sourceProbability.push_back(sourceNormalizedIntensity[i]+sourceProbability[i-1]);
+    sourceNormalizedIntensity.push_back(sourceIntensity[i] / total);
+    sourceProbability.push_back(sourceNormalizedIntensity[i] + sourceProbability[i - 1]);
   }
 
   // set source weights here based on sampling scheme (analog/flat)
   // and intensities
   //
-  for (i = 0 ;  i < sourceIntensity.size(); ++i)
+  for (i = 0; i < sourceIntensity.size(); ++i)
   {
     if (!flat_sampling)
     {
@@ -99,8 +100,8 @@ void G4GeneralParticleSourceData::IntensityNormalise()
     }
     else
     {
-      GetCurrentSource((G4int)i)->GetBiasRndm()
-      ->SetIntensityWeight(sourceNormalizedIntensity[i]*sourceIntensity.size());
+      GetCurrentSource((G4int)i)->GetBiasRndm()->SetIntensityWeight(sourceNormalizedIntensity[i]
+                                                                    * sourceIntensity.size());
     }
   }
   normalised = true;
@@ -125,11 +126,11 @@ void G4GeneralParticleSourceData::DeleteASource(G4int idx)
 {
   delete sourceVector[idx];
   sourceVector.erase(sourceVector.begin() + idx);
-  sourceIntensity.erase(sourceIntensity.begin()+idx);
-  normalised = false ;
-  if (currentSourceIdx == idx )
+  sourceIntensity.erase(sourceIntensity.begin() + idx);
+  normalised = false;
+  if (currentSourceIdx == idx)
   {
-    if ( GetIntensityVectorSize() > 0 )
+    if (GetIntensityVectorSize() > 0)
     {
       currentSource = GetCurrentSource(0);
       currentSourceIdx = 0;

@@ -26,20 +26,20 @@
 /// \file ExGflasha.cc
 /// \brief Main program of the gflash/gflasha example
 
-// G4 includes
-#include "G4PhysListFactory.hh"
-#include "G4RunManagerFactory.hh"
-#include "G4Timer.hh"
-#include "G4Types.hh"
-#include "G4UImanager.hh"
-#include "G4ios.hh"
+#include <cstdlib>
+#include <cstring>
 
 // my project
 #include "ExGflashActionInitialization.hh"
 #include "ExGflashDetectorConstruction.hh"
 
+// G4 includes
 #include "G4FastSimulationPhysics.hh"
+#include "G4PhysListFactory.hh"
+#include "G4RunManagerFactory.hh"
+#include "G4Timer.hh"
 #include "G4UIExecutive.hh"
+#include "G4UImanager.hh"
 #include "G4VisExecutive.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -48,7 +48,8 @@ int main(int argc, char** argv)
 {
   // Instantiate G4UIExecutive if interactive mode
   G4UIExecutive* ui = nullptr;
-  if (argc == 1) {
+  if (argc == 1)
+  {
     ui = new G4UIExecutive(argc, argv);
   }
 
@@ -72,10 +73,12 @@ int main(int argc, char** argv)
   G4PhysListFactory listFactory;
   G4String name;
   auto list_name = std::getenv("PHYSLIST");
-  if (list_name == nullptr || std::strlen(list_name) == 0) {
+  if (list_name == nullptr || std::strlen(list_name) == 0)
+  {
     name = "FTFP_BERT";
   }
-  else {
+  else
+  {
     name = list_name;
   }
   G4VModularPhysicsList* physicsList = listFactory.GetReferencePhysList(name);

@@ -33,22 +33,20 @@
 
 #if !(defined(G4GEOM_USE_UELLIPTICALTUBE) && defined(G4GEOM_USE_SYS_USOLIDS))
 
-#include "G4GeomTools.hh"
-#include "G4AffineTransform.hh"
-#include "G4VoxelLimits.hh"
-#include "G4BoundingEnvelope.hh"
-#include "G4QuickRand.hh"
-
-#include "G4VGraphicsScene.hh"
-#include "G4VisExtent.hh"
-
-#include "G4AutoLock.hh"
+#  include "G4AffineTransform.hh"
+#  include "G4AutoLock.hh"
+#  include "G4BoundingEnvelope.hh"
+#  include "G4GeomTools.hh"
+#  include "G4QuickRand.hh"
+#  include "G4VGraphicsScene.hh"
+#  include "G4VisExtent.hh"
+#  include "G4VoxelLimits.hh"
 
 namespace
 {
-  G4Mutex polyhedronMutex = G4MUTEX_INITIALIZER;
-  G4Mutex eltubeMutex = G4MUTEX_INITIALIZER;
-}
+G4Mutex polyhedronMutex = G4MUTEX_INITIALIZER;
+G4Mutex eltubeMutex = G4MUTEX_INITIALIZER;
+}  // namespace
 
 using namespace CLHEP;
 
@@ -56,10 +54,7 @@ using namespace CLHEP;
 //
 // Constructor
 
-G4EllipticalTube::G4EllipticalTube( const G4String &name,
-                                          G4double Dx,
-                                          G4double Dy,
-                                          G4double Dz )
+G4EllipticalTube::G4EllipticalTube(const G4String& name, G4double Dx, G4double Dy, G4double Dz)
   : G4VSolid(name), fDx(Dx), fDy(Dy), fDz(Dz)
 {
   CheckParameters();
@@ -71,12 +66,22 @@ G4EllipticalTube::G4EllipticalTube( const G4String &name,
 // Fake default constructor - sets only member data and allocates memory
 //                            for usage restricted to object persistency.
 
-G4EllipticalTube::G4EllipticalTube( __void__& a )
-  : G4VSolid(a), halfTolerance(0.), fDx(0.), fDy(0.), fDz(0.),
-    fRsph(0.), fDDx(0.), fDDy(0.), fSx(0.), fSy(0.), fR(0.),
-    fQ1(0.), fQ2(0.), fScratch(0.)
-{
-}
+G4EllipticalTube::G4EllipticalTube(__void__& a)
+  : G4VSolid(a),
+    halfTolerance(0.),
+    fDx(0.),
+    fDy(0.),
+    fDz(0.),
+    fRsph(0.),
+    fDDx(0.),
+    fDDy(0.),
+    fSx(0.),
+    fSy(0.),
+    fR(0.),
+    fQ1(0.),
+    fQ2(0.),
+    fScratch(0.)
+{}
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -84,7 +89,8 @@ G4EllipticalTube::G4EllipticalTube( __void__& a )
 
 G4EllipticalTube::~G4EllipticalTube()
 {
-  delete fpPolyhedron; fpPolyhedron = nullptr;
+  delete fpPolyhedron;
+  fpPolyhedron = nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -92,52 +98,65 @@ G4EllipticalTube::~G4EllipticalTube()
 // Copy constructor
 
 G4EllipticalTube::G4EllipticalTube(const G4EllipticalTube& rhs)
-  : G4VSolid(rhs), halfTolerance(rhs.halfTolerance),
-    fDx(rhs.fDx), fDy(rhs.fDy), fDz(rhs.fDz),
-    fCubicVolume(rhs.fCubicVolume), fSurfaceArea(rhs.fSurfaceArea),
-    fRsph(rhs.fRsph), fDDx(rhs.fDDx), fDDy(rhs.fDDy),
-    fSx(rhs.fSx), fSy(rhs.fSy), fR(rhs.fR),
-    fQ1(rhs.fQ1), fQ2(rhs.fQ2), fScratch(rhs.fScratch)
-{
-}
+  : G4VSolid(rhs),
+    halfTolerance(rhs.halfTolerance),
+    fDx(rhs.fDx),
+    fDy(rhs.fDy),
+    fDz(rhs.fDz),
+    fCubicVolume(rhs.fCubicVolume),
+    fSurfaceArea(rhs.fSurfaceArea),
+    fRsph(rhs.fRsph),
+    fDDx(rhs.fDDx),
+    fDDy(rhs.fDDy),
+    fSx(rhs.fSx),
+    fSy(rhs.fSy),
+    fR(rhs.fR),
+    fQ1(rhs.fQ1),
+    fQ2(rhs.fQ2),
+    fScratch(rhs.fScratch)
+{}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Assignment operator
 
-G4EllipticalTube& G4EllipticalTube::operator = (const G4EllipticalTube& rhs)
+G4EllipticalTube& G4EllipticalTube::operator=(const G4EllipticalTube& rhs)
 {
-   // Check assignment to self
-   //
-   if (this == &rhs)  { return *this; }
+  // Check assignment to self
+  //
+  if (this == &rhs)
+  {
+    return *this;
+  }
 
-   // Copy base class data
-   //
-   G4VSolid::operator=(rhs);
+  // Copy base class data
+  //
+  G4VSolid::operator=(rhs);
 
-   // Copy data
-   //
-   halfTolerance = rhs.halfTolerance;
-   fDx = rhs.fDx;
-   fDy = rhs.fDy;
-   fDz = rhs.fDz;
-   fCubicVolume = rhs.fCubicVolume;
-   fSurfaceArea = rhs.fSurfaceArea;
+  // Copy data
+  //
+  halfTolerance = rhs.halfTolerance;
+  fDx = rhs.fDx;
+  fDy = rhs.fDy;
+  fDz = rhs.fDz;
+  fCubicVolume = rhs.fCubicVolume;
+  fSurfaceArea = rhs.fSurfaceArea;
 
-   fRsph = rhs.fRsph;
-   fDDx  = rhs.fDDx;
-   fDDy  = rhs.fDDy;
-   fSx   = rhs.fSx;
-   fSy   = rhs.fSy;
-   fR    = rhs.fR;
-   fQ1   = rhs.fQ1;
-   fQ2   = rhs.fQ2;
-   fScratch = rhs.fScratch;
+  fRsph = rhs.fRsph;
+  fDDx = rhs.fDDx;
+  fDDy = rhs.fDDy;
+  fSx = rhs.fSx;
+  fSy = rhs.fSy;
+  fR = rhs.fR;
+  fQ1 = rhs.fQ1;
+  fQ2 = rhs.fQ2;
+  fScratch = rhs.fScratch;
 
-   fRebuildPolyhedron = false;
-   delete fpPolyhedron; fpPolyhedron = nullptr;
+  fRebuildPolyhedron = false;
+  delete fpPolyhedron;
+  fpPolyhedron = nullptr;
 
-   return *this;
+  return *this;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -148,34 +167,30 @@ void G4EllipticalTube::CheckParameters()
 {
   // Check dimensions
   //
-  halfTolerance = 0.5*kCarTolerance; // half tolerance
-  G4double dmin = 2*kCarTolerance;
+  halfTolerance = 0.5 * kCarTolerance;  // half tolerance
+  G4double dmin = 2 * kCarTolerance;
   if (fDx < dmin || fDy < dmin || fDz < dmin)
   {
     std::ostringstream message;
-    message << "Invalid (too small or negative) dimensions for Solid: "
-            << GetName()
-            << "\n  Dx = " << fDx
-            << "\n  Dy = " << fDy
-            << "\n  Dz = " << fDz;
-    G4Exception("G4EllipticalTube::CheckParameters()", "GeomSolids0002",
-	        FatalException, message);
+    message << "Invalid (too small or negative) dimensions for Solid: " << GetName()
+            << "\n  Dx = " << fDx << "\n  Dy = " << fDy << "\n  Dz = " << fDz;
+    G4Exception("G4EllipticalTube::CheckParameters()", "GeomSolids0002", FatalException, message);
   }
 
   // Set pre-calculatated values
   //
-  halfTolerance = 0.5*kCarTolerance; // half tolerance
-  fRsph = std::sqrt(fDx * fDx + fDy * fDy + fDz * fDz); // radius of surrounding sphere
-  fDDx = fDx * fDx; // X semi-axis squared
-  fDDy = fDy * fDy; // Y semi-axis squared
+  halfTolerance = 0.5 * kCarTolerance;  // half tolerance
+  fRsph = std::sqrt(fDx * fDx + fDy * fDy + fDz * fDz);  // radius of surrounding sphere
+  fDDx = fDx * fDx;  // X semi-axis squared
+  fDDy = fDy * fDy;  // Y semi-axis squared
 
-  fR = std::min(fDx, fDy); // resulting radius, after scaling elipse to circle
-  fSx = fR / fDx; // X scale factor
-  fSy = fR / fDy; // Y scale factor
+  fR = std::min(fDx, fDy);  // resulting radius, after scaling elipse to circle
+  fSx = fR / fDx;  // X scale factor
+  fSy = fR / fDy;  // Y scale factor
 
-  fQ1 = 0.5 / fR; // distance approxiamtion dist = Q1 * (x^2 + y^2) - Q2
+  fQ1 = 0.5 / fR;  // distance approxiamtion dist = Q1 * (x^2 + y^2) - Q2
   fQ2 = 0.5 * (fR + halfTolerance * halfTolerance / fR);
-  fScratch = 2. * fR * fR * DBL_EPSILON; // scratch within calculation error thickness
+  fScratch = 2. * fR * fR * DBL_EPSILON;  // scratch within calculation error thickness
   // fScratch = (B * B / A) * (2. + halfTolerance / A) * halfTolerance; // alternative
 }
 
@@ -183,33 +198,30 @@ void G4EllipticalTube::CheckParameters()
 //
 // Get bounding box
 
-void G4EllipticalTube::BoundingLimits( G4ThreeVector& pMin,
-                                       G4ThreeVector& pMax ) const
+void G4EllipticalTube::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
 {
-  pMin.set(-fDx,-fDy,-fDz);
-  pMax.set( fDx, fDy, fDz);
+  pMin.set(-fDx, -fDy, -fDz);
+  pMax.set(fDx, fDy, fDz);
 }
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Calculate extent under transform and specified limit
 
-G4bool
-G4EllipticalTube::CalculateExtent( const EAxis pAxis,
-                                   const G4VoxelLimits& pVoxelLimit,
-                                   const G4AffineTransform& pTransform,
-                                         G4double& pMin, G4double& pMax ) const
+G4bool G4EllipticalTube::CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                                         const G4AffineTransform& pTransform, G4double& pMin,
+                                         G4double& pMax) const
 {
   G4ThreeVector bmin, bmax;
   G4bool exist;
 
   // Check bounding box (bbox)
   //
-  BoundingLimits(bmin,bmax);
-  G4BoundingEnvelope bbox(bmin,bmax);
-#ifdef G4BBOX_EXTENT
-  return bbox.CalculateExtent(pAxis,pVoxelLimit, pTransform, pMin, pMax);
-#endif
+  BoundingLimits(bmin, bmax);
+  G4BoundingEnvelope bbox(bmin, bmax);
+#  ifdef G4BBOX_EXTENT
+  return bbox.CalculateExtent(pAxis, pVoxelLimit, pTransform, pMin, pMax);
+#  endif
   if (bbox.BoundingBoxVsVoxelLimits(pAxis, pVoxelLimit, pTransform, pMin, pMax))
   {
     return exist = pMin < pMax;
@@ -221,30 +233,30 @@ G4EllipticalTube::CalculateExtent( const EAxis pAxis,
 
   // Set bounding envelope (benv) and calculate extent
   //
-  const G4int NSTEPS = 24; // number of steps for whole circle
-  G4double ang = twopi/NSTEPS;
+  const G4int NSTEPS = 24;  // number of steps for whole circle
+  G4double ang = twopi / NSTEPS;
 
-  G4double sinHalf = std::sin(0.5*ang);
-  G4double cosHalf = std::cos(0.5*ang);
-  G4double sinStep = 2.*sinHalf*cosHalf;
-  G4double cosStep = 1. - 2.*sinHalf*sinHalf;
-  G4double sx = dx/cosHalf;
-  G4double sy = dy/cosHalf;
+  G4double sinHalf = std::sin(0.5 * ang);
+  G4double cosHalf = std::cos(0.5 * ang);
+  G4double sinStep = 2. * sinHalf * cosHalf;
+  G4double cosStep = 1. - 2. * sinHalf * sinHalf;
+  G4double sx = dx / cosHalf;
+  G4double sy = dy / cosHalf;
 
   G4double sinCur = sinHalf;
   G4double cosCur = cosHalf;
-  G4ThreeVectorList baseA(NSTEPS),baseB(NSTEPS);
-  for (G4int k=0; k<NSTEPS; ++k)
+  G4ThreeVectorList baseA(NSTEPS), baseB(NSTEPS);
+  for (G4int k = 0; k < NSTEPS; ++k)
   {
-    baseA[k].set(sx*cosCur,sy*sinCur,-dz);
-    baseB[k].set(sx*cosCur,sy*sinCur, dz);
+    baseA[k].set(sx * cosCur, sy * sinCur, -dz);
+    baseB[k].set(sx * cosCur, sy * sinCur, dz);
 
     G4double sinTmp = sinCur;
-    sinCur = sinCur*cosStep + cosCur*sinStep;
-    cosCur = cosCur*cosStep - sinTmp*sinStep;
+    sinCur = sinCur * cosStep + cosCur * sinStep;
+    cosCur = cosCur * cosStep - sinTmp * sinStep;
   }
 
-  std::vector<const G4ThreeVectorList *> polygons(2);
+  std::vector<const G4ThreeVectorList*> polygons(2);
   polygons[0] = &baseA;
   polygons[1] = &baseB;
   G4BoundingEnvelope benv(bmin, bmax, polygons);
@@ -257,7 +269,7 @@ G4EllipticalTube::CalculateExtent( const EAxis pAxis,
 // Determine where is point: inside, outside or on surface
 //
 
-EInside G4EllipticalTube::Inside( const G4ThreeVector& p ) const
+EInside G4EllipticalTube::Inside(const G4ThreeVector& p) const
 {
   G4double x = p.x() * fSx;
   G4double y = p.y() * fSy;
@@ -265,7 +277,10 @@ EInside G4EllipticalTube::Inside( const G4ThreeVector& p ) const
   G4double distZ = std::abs(p.z()) - fDz;
   G4double dist = std::max(distR, distZ);
 
-  if (dist > halfTolerance) { return kOutside; }
+  if (dist > halfTolerance)
+  {
+    return kOutside;
+  }
   return (dist > -halfTolerance) ? kSurface : kInside;
 }
 
@@ -273,7 +288,7 @@ EInside G4EllipticalTube::Inside( const G4ThreeVector& p ) const
 //
 // Return unit normal at surface closest to p
 
-G4ThreeVector G4EllipticalTube::SurfaceNormal( const G4ThreeVector& p ) const
+G4ThreeVector G4EllipticalTube::SurfaceNormal(const G4ThreeVector& p) const
 {
   G4ThreeVector norm(0, 0, 0);
   G4int nsurf = 0;
@@ -303,25 +318,23 @@ G4ThreeVector G4EllipticalTube::SurfaceNormal( const G4ThreeVector& p ) const
   }
   if (nsurf > 1)
   {
-    return norm.unit(); // edge
+    return norm.unit();  // edge
   }
 
   // Point is not on the surface
   //
-#ifdef G4SPECDEBUG
+#  ifdef G4SPECDEBUG
   std::ostringstream message;
   G4long oldprc = message.precision(16);
-  message << "Point p is not on surface (!?) of solid: "
-          << GetName() << G4endl;
+  message << "Point p is not on surface (!?) of solid: " << GetName() << G4endl;
   message << "Position:\n";
-  message << "   p.x() = " << p.x()/mm << " mm\n";
-  message << "   p.y() = " << p.y()/mm << " mm\n";
-  message << "   p.z() = " << p.z()/mm << " mm";
+  message << "   p.x() = " << p.x() / mm << " mm\n";
+  message << "   p.y() = " << p.y() / mm << " mm\n";
+  message << "   p.z() = " << p.z() / mm << " mm";
   G4cout.precision(oldprc);
-  G4Exception("G4EllipticalTube::SurfaceNormal(p)", "GeomSolids1002",
-              JustWarning, message );
+  G4Exception("G4EllipticalTube::SurfaceNormal(p)", "GeomSolids1002", JustWarning, message);
   DumpInfo();
-#endif
+#  endif
   return ApproxSurfaceNormal(p);
 }
 
@@ -331,8 +344,7 @@ G4ThreeVector G4EllipticalTube::SurfaceNormal( const G4ThreeVector& p ) const
 // The algorithm is similar to the algorithm used in Inside().
 // This method normally should not be called.
 
-G4ThreeVector
-G4EllipticalTube::ApproxSurfaceNormal( const G4ThreeVector& p ) const
+G4ThreeVector G4EllipticalTube::ApproxSurfaceNormal(const G4ThreeVector& p) const
 {
   G4double x = p.x() * fSx;
   G4double y = p.y() * fSy;
@@ -350,8 +362,7 @@ G4EllipticalTube::ApproxSurfaceNormal( const G4ThreeVector& p ) const
 // Calculate distance to shape from outside, along normalised vector,
 // return kInfinity if no intersection, or distance < halfTolerance
 
-G4double G4EllipticalTube::DistanceToIn( const G4ThreeVector& p,
-                                         const G4ThreeVector& v ) const
+G4double G4EllipticalTube::DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const
 {
   G4double offset = 0.;
   G4ThreeVector pcur = p;
@@ -362,9 +373,18 @@ G4double G4EllipticalTube::DistanceToIn( const G4ThreeVector& p,
   G4double safey = std::abs(pcur.y()) - fDy;
   G4double safez = std::abs(pcur.z()) - fDz;
 
-  if (safez >= -halfTolerance && pcur.z() * v.z() >= 0.) { return kInfinity; }
-  if (safey >= -halfTolerance && pcur.y() * v.y() >= 0.) { return kInfinity; }
-  if (safex >= -halfTolerance && pcur.x() * v.x() >= 0.) { return kInfinity; }
+  if (safez >= -halfTolerance && pcur.z() * v.z() >= 0.)
+  {
+    return kInfinity;
+  }
+  if (safey >= -halfTolerance && pcur.y() * v.y() >= 0.)
+  {
+    return kInfinity;
+  }
+  if (safex >= -halfTolerance && pcur.x() * v.x() >= 0.)
+  {
+    return kInfinity;
+  }
 
   // Relocate point, if required
   //
@@ -389,21 +409,24 @@ G4double G4EllipticalTube::DistanceToIn( const G4ThreeVector& p,
   // Set coefficients of quadratic equation: A t^2 + 2B t + C = 0
   //
   G4double rr = px * px + py * py;
-  G4double A  = vx * vx + vy * vy;
-  G4double B  = px * vx + py * vy;
-  G4double C  = rr - fR * fR;
-  G4double D  = B * B - A * C;
+  G4double A = vx * vx + vy * vy;
+  G4double B = px * vx + py * vy;
+  G4double C = rr - fR * fR;
+  G4double D = B * B - A * C;
 
   // Check if point is flying away relative to lateral surface
   //
-  G4double distR  = fQ1 * rr - fQ2;
+  G4double distR = fQ1 * rr - fQ2;
   G4bool parallelToZ = (A < DBL_EPSILON || std::abs(vz) >= 1.);
-  if (distR >= -halfTolerance && (B >= 0. || parallelToZ)) { return kInfinity; }
+  if (distR >= -halfTolerance && (B >= 0. || parallelToZ))
+  {
+    return kInfinity;
+  }
 
   // Find intersection with Z planes
   //
-  G4double invz  = (vz == 0) ? DBL_MAX : -1./vz;
-  G4double dz    = std::copysign(fDz, invz);
+  G4double invz = (vz == 0) ? DBL_MAX : -1. / vz;
+  G4double dz = std::copysign(fDz, invz);
   G4double tzmin = (pz - dz) * invz;
   G4double tzmax = (pz + dz) * invz;
 
@@ -413,9 +436,12 @@ G4double G4EllipticalTube::DistanceToIn( const G4ThreeVector& p,
   //
   if (parallelToZ)
   {
-    return (tzmin<halfTolerance) ? offset : tzmin + offset;  // 1)
+    return (tzmin < halfTolerance) ? offset : tzmin + offset;  // 1)
   }
-  if (D <= A * A * fScratch) { return kInfinity; } // 2)
+  if (D <= A * A * fScratch)
+  {
+    return kInfinity;
+  }  // 2)
 
   // Find roots of quadratic equation
   G4double tmp = -B - std::copysign(std::sqrt(D), B);
@@ -425,12 +451,15 @@ G4double G4EllipticalTube::DistanceToIn( const G4ThreeVector& p,
   G4double trmax = std::max(t1, t2);
 
   // Return distance
-  G4double tin  = std::max(tzmin, trmin);
+  G4double tin = std::max(tzmin, trmin);
   G4double tout = std::min(tzmax, trmax);
 
-  if (tout <= tin + halfTolerance) { return kInfinity; } // touch or no hit
+  if (tout <= tin + halfTolerance)
+  {
+    return kInfinity;
+  }  // touch or no hit
 
-  return (tin<halfTolerance) ? offset : tin + offset;
+  return (tin < halfTolerance) ? offset : tin + offset;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -438,7 +467,7 @@ G4double G4EllipticalTube::DistanceToIn( const G4ThreeVector& p,
 // Estimate distance to the surface from outside,
 // returns 0 if point is inside
 
-G4double G4EllipticalTube::DistanceToIn( const G4ThreeVector& p ) const
+G4double G4EllipticalTube::DistanceToIn(const G4ThreeVector& p) const
 {
   // safety distance to bounding box
   G4double distX = std::abs(p.x()) - fDx;
@@ -463,11 +492,9 @@ G4double G4EllipticalTube::DistanceToIn( const G4ThreeVector& p ) const
 // at exit point, if required
 // - when leaving the surface, return 0
 
-G4double G4EllipticalTube::DistanceToOut( const G4ThreeVector& p,
-                                          const G4ThreeVector& v,
-                                          const G4bool calcNorm,
-                                                G4bool* validNorm,
-                                                G4ThreeVector* n ) const
+G4double G4EllipticalTube::DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                                         const G4bool calcNorm, G4bool* validNorm,
+                                         G4ThreeVector* n) const
 {
   // Check if point flying away relative to Z planes
   //
@@ -495,8 +522,8 @@ G4double G4EllipticalTube::DistanceToOut( const G4ThreeVector& p,
   // Check if point is flying away relative to lateral surface
   //
   G4double rr = px * px + py * py;
-  G4double B  = px * vx + py * vy;
-  G4double distR  = fQ1 * rr - fQ2;
+  G4double B = px * vx + py * vy;
+  G4double distR = fQ1 * rr - fQ2;
   if (distR >= -halfTolerance && B > 0.)
   {
     if (calcNorm)
@@ -511,18 +538,17 @@ G4double G4EllipticalTube::DistanceToOut( const G4ThreeVector& p,
   //
   if (std::max(distZ, distR) > halfTolerance)
   {
-#ifdef G4SPECDEBUG
+#  ifdef G4SPECDEBUG
     std::ostringstream message;
     G4long oldprc = message.precision(16);
-    message << "Point p is outside (!?) of solid: "
-            << GetName() << G4endl;
-    message << "Position:  " << p << G4endl;;
+    message << "Point p is outside (!?) of solid: " << GetName() << G4endl;
+    message << "Position:  " << p << G4endl;
+    ;
     message << "Direction: " << v;
     G4cout.precision(oldprc);
-    G4Exception("G4EllipticalTube::DistanceToOut(p,v)", "GeomSolids1002",
-                JustWarning, message );
+    G4Exception("G4EllipticalTube::DistanceToOut(p,v)", "GeomSolids1002", JustWarning, message);
     DumpInfo();
-#endif
+#  endif
     if (calcNorm)
     {
       *validNorm = true;
@@ -533,16 +559,16 @@ G4double G4EllipticalTube::DistanceToOut( const G4ThreeVector& p,
 
   // Set coefficients of quadratic equation: A t^2 + 2B t + C = 0
   //
-  G4double A  = vx * vx + vy * vy;
-  G4double C  = rr - fR * fR;
-  G4double D  = B * B - A * C;
+  G4double A = vx * vx + vy * vy;
+  G4double C = rr - fR * fR;
+  G4double D = B * B - A * C;
 
   // Solve qudratic equation. There are two special cases where D <= 0:
   //   1) trajectory parallel to Z axis (A = 0, B = 0, C - any, D = 0)
   //   2) touch (D = 0) or no intersection (D < 0) with lateral surface
   //
   G4bool parallelToZ = (A < DBL_EPSILON || std::abs(vz) >= 1.);
-  if (parallelToZ) // 1)
+  if (parallelToZ)  // 1)
   {
     if (calcNorm)
     {
@@ -551,7 +577,7 @@ G4double G4EllipticalTube::DistanceToOut( const G4ThreeVector& p,
     }
     return tzmax;
   }
-  if (D <= A * A * fScratch) // 2)
+  if (D <= A * A * fScratch)  // 2)
   {
     if (calcNorm)
     {
@@ -594,24 +620,23 @@ G4double G4EllipticalTube::DistanceToOut( const G4ThreeVector& p,
 // returns 0 if point is outside
 //
 
-G4double G4EllipticalTube::DistanceToOut( const G4ThreeVector& p ) const
+G4double G4EllipticalTube::DistanceToOut(const G4ThreeVector& p) const
 {
-#ifdef G4SPECDEBUG
-  if( Inside(p) == kOutside )
+#  ifdef G4SPECDEBUG
+  if (Inside(p) == kOutside)
   {
     std::ostringstream message;
     G4long oldprc = message.precision(16);
     message << "Point p is outside (!?) of solid: " << GetName() << "\n"
             << "Position:\n"
-            << "   p.x() = "  << p.x()/mm << " mm\n"
-            << "   p.y() = "  << p.y()/mm << " mm\n"
-            << "   p.z() = "  << p.z()/mm << " mm";
-    message.precision(oldprc) ;
-    G4Exception("G4ElliptocalTube::DistanceToOut(p)", "GeomSolids1002",
-                JustWarning, message);
+            << "   p.x() = " << p.x() / mm << " mm\n"
+            << "   p.y() = " << p.y() / mm << " mm\n"
+            << "   p.z() = " << p.z() / mm << " mm";
+    message.precision(oldprc);
+    G4Exception("G4ElliptocalTube::DistanceToOut(p)", "GeomSolids1002", JustWarning, message);
     DumpInfo();
   }
-#endif
+#  endif
   // safety distance to Z-bases
   G4double distZ = fDz - std::abs(p.z());
 
@@ -658,7 +683,7 @@ G4double G4EllipticalTube::GetCachedSurfaceArea() const
     cached_Dx = fDx;
     cached_Dy = fDy;
     cached_Dz = fDz;
-    cached_area = 2.*(pi*fDx*fDy + G4GeomTools::EllipsePerimeter(fDx, fDy)*fDz);
+    cached_area = 2. * (pi * fDx * fDy + G4GeomTools::EllipsePerimeter(fDx, fDy) * fDz);
   }
   return cached_area;
 }
@@ -684,7 +709,7 @@ G4double G4EllipticalTube::GetCubicVolume()
 
 G4double G4EllipticalTube::GetSurfaceArea()
 {
-  if(fSurfaceArea == 0)
+  if (fSurfaceArea == 0)
   {
     G4AutoLock l(&eltubeMutex);
     fSurfaceArea = GetCachedSurfaceArea();
@@ -705,7 +730,7 @@ std::ostream& G4EllipticalTube::StreamInfo(std::ostream& os) const
      << "    ===================================================\n"
      << " Solid type: G4EllipticalTube\n"
      << " Parameters: \n"
-     << "    length Z: " << fDz/mm << " mm \n"
+     << "    length Z: " << fDz / mm << " mm \n"
      << "    lateral surface equation: \n"
      << "       (X / " << fDx << ")^2 + (Y / " << fDy << ")^2 = 1 \n"
      << "-----------------------------------------------------------\n";
@@ -713,7 +738,6 @@ std::ostream& G4EllipticalTube::StreamInfo(std::ostream& os) const
 
   return os;
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -723,11 +747,11 @@ G4ThreeVector G4EllipticalTube::GetPointOnSurface() const
 {
   // Pick random point on selected surface
   //
-  G4double sbase = pi * fDx * fDy; // base area
+  G4double sbase = pi * fDx * fDy;  // base area
   G4double select = fSurfaceArea * G4QuickRand();
   G4double x, y, z;
   if (select < 2. * sbase)
-  { // base (ellipse)
+  {  // base (ellipse)
     G4double phi = CLHEP::twopi * G4QuickRand();
     G4double rho = std::sqrt(G4QuickRand());
     x = rho * std::cos(phi);
@@ -735,7 +759,7 @@ G4ThreeVector G4EllipticalTube::GetPointOnSurface() const
     z = (select < sbase) ? fDz : -fDz;
   }
   else
-  { // lateral surface (rejection sampling)
+  {  // lateral surface (rejection sampling)
     G4double s_max = std::max(fDx, fDy);
     for (auto i = 0; i < 10000; ++i)
     {
@@ -743,13 +767,15 @@ G4ThreeVector G4EllipticalTube::GetPointOnSurface() const
       x = std::cos(phi);
       y = std::sin(phi);
       G4double ss = sqr(fDy * x) + sqr(fDx * y);
-      if (sqr(s_max*G4QuickRand()) <= ss) { break; }
+      if (sqr(s_max * G4QuickRand()) <= ss)
+      {
+        break;
+      }
     }
     z = (2. * G4QuickRand() - 1.) * fDz;
   }
-  return { fDx * x, fDy * y, z };
+  return {fDx * x, fDy * y, z};
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -771,12 +797,11 @@ G4Polyhedron* G4EllipticalTube::CreatePolyhedron() const
 //
 // GetPolyhedron
 
-G4Polyhedron* G4EllipticalTube::GetPolyhedron () const
+G4Polyhedron* G4EllipticalTube::GetPolyhedron() const
 {
-  if (fpPolyhedron == nullptr ||
-      fRebuildPolyhedron ||
-      fpPolyhedron->GetNumberOfRotationStepsAtTimeOfCreation() !=
-      fpPolyhedron->GetNumberOfRotationSteps())
+  if (fpPolyhedron == nullptr || fRebuildPolyhedron
+      || fpPolyhedron->GetNumberOfRotationStepsAtTimeOfCreation()
+           != fpPolyhedron->GetNumberOfRotationSteps())
   {
     G4AutoLock l(&polyhedronMutex);
     delete fpPolyhedron;
@@ -791,9 +816,9 @@ G4Polyhedron* G4EllipticalTube::GetPolyhedron () const
 //
 // DescribeYourselfTo
 
-void G4EllipticalTube::DescribeYourselfTo( G4VGraphicsScene& scene ) const
+void G4EllipticalTube::DescribeYourselfTo(G4VGraphicsScene& scene) const
 {
-  scene.AddSolid (*this);
+  scene.AddSolid(*this);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -802,7 +827,7 @@ void G4EllipticalTube::DescribeYourselfTo( G4VGraphicsScene& scene ) const
 
 G4VisExtent G4EllipticalTube::GetExtent() const
 {
-  return { -fDx, fDx, -fDy, fDy, -fDz, fDz };
+  return {-fDx, fDx, -fDy, fDy, -fDz, fDz};
 }
 
-#endif // !defined(G4GEOM_USE_UELLIPTICALTUBE) || !defined(G4GEOM_USE_SYS_USOLIDS)
+#endif  // !defined(G4GEOM_USE_UELLIPTICALTUBE) || !defined(G4GEOM_USE_SYS_USOLIDS)

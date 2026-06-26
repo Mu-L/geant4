@@ -47,16 +47,19 @@
 #ifndef G4SMARTVOXELNODE_HH
 #define G4SMARTVOXELNODE_HH
 
-#include <vector>
+#include "G4Types.hh"
 
 #include "geomwdefs.hh"
-#include "G4Types.hh"
+
+#include <vector>
 
 using G4SliceVector = std::vector<G4int>;
 
 /**
  * @brief G4SmartVoxelNode defines a node in the smart voxel hierarchy, i.e.
  * a 'slice' of space along a given axis between given minima and maxima.
+ * @ingroup geometry_management
+ *
  * The node is not aware of its position - this information being
  * available/derivable by the node's owner(s), the voxel headers.
  */
@@ -77,12 +80,12 @@ class G4SmartVoxelNode
      * Default destructor.
      */
     ~G4SmartVoxelNode() = default;
-      // Destructor. No actions.
+    // Destructor. No actions.
 
     /**
      * Equality operator.
      */
-    G4bool operator == (const G4SmartVoxelNode& v) const;
+    G4bool operator==(const G4SmartVoxelNode& v) const;
 
     /**
      * Returns the contained volume number 'pVolumeNo'.

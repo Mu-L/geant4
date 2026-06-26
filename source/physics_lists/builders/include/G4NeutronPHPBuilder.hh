@@ -23,58 +23,52 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4NeutronPHPBuilder_h
-#define G4NeutronPHPBuilder_h 1
-
-#include "globals.hh"
+#ifndef G4NEUTRONPHPBUILDER_HH
+#define G4NEUTRONPHPBUILDER_HH
 
 #include "G4HadronElasticProcess.hh"
-#include "G4NeutronFissionProcess.hh"
-#include "G4NeutronCaptureProcess.hh"
 #include "G4HadronInelasticProcess.hh"
-#include "G4VNeutronBuilder.hh"
-
-#include "G4ParticleHPElasticData.hh"
+#include "G4NeutronCaptureProcess.hh"
+#include "G4NeutronFissionProcess.hh"
+#include "G4NeutronHPCaptureData.hh"
+#include "G4NeutronRadCaptureHP.hh"
 #include "G4ParticleHPElastic.hh"
-#include "G4ParticleHPInelastic.hh"
-#include "G4ParticleHPInelasticData.hh"
+#include "G4ParticleHPElasticData.hh"
 #include "G4ParticleHPFission.hh"
 #include "G4ParticleHPFissionData.hh"
-#include "G4NeutronRadCaptureHP.hh"
-#include "G4NeutronHPCaptureData.hh"
+#include "G4ParticleHPInelastic.hh"
+#include "G4ParticleHPInelasticData.hh"
+#include "G4VNeutronBuilder.hh"
+#include "globals.hh"
 
 class G4NeutronPHPBuilder : public G4VNeutronBuilder
 {
-  public: 
+  public:
+
     G4NeutronPHPBuilder();
     ~G4NeutronPHPBuilder() override = default;
 
-  public: 
-    virtual void Build(G4HadronElasticProcess * aP) final override;
-    virtual void Build(G4NeutronFissionProcess * aP) final override;
-    virtual void Build(G4NeutronCaptureProcess * aP) final override;
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
+  public:
+
+    virtual void Build(G4HadronElasticProcess* aP) final override;
+    virtual void Build(G4NeutronFissionProcess* aP) final override;
+    virtual void Build(G4NeutronCaptureProcess* aP) final override;
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
     virtual void SetMinEnergy(G4double aM) final override
     {
-      theMin=aM;
+      theMin = aM;
       theIMin = theMin;
     }
-    void SetMinInelasticEnergy(G4double aM) 
-    {
-      theIMin=aM;
-    }
+    void SetMinInelasticEnergy(G4double aM) { theIMin = aM; }
     virtual void SetMaxEnergy(G4double aM) final override
     {
       theIMax = aM;
-      theMax=aM;
+      theMax = aM;
     }
-    void SetMaxInelasticEnergy(G4double aM)
-    {
-      theIMax = aM;
-    }
+    void SetMaxInelasticEnergy(G4double aM) { theIMax = aM; }
 
-    using G4VNeutronBuilder::Build; //Prevent compiler warning
+    using G4VNeutronBuilder::Build;  // Prevent compiler warning
 
   private:
 
@@ -83,16 +77,14 @@ class G4NeutronPHPBuilder : public G4VNeutronBuilder
     G4double theMax;
     G4double theIMax;
 
-    G4ParticleHPElastic * theHPElastic;
-    G4ParticleHPElasticData * theHPElasticData;
-    G4ParticleHPInelastic * theHPInelastic;
-    G4ParticleHPInelasticData * theHPInelasticData;
-    G4ParticleHPFission * theHPFission;
-    G4ParticleHPFissionData * theHPFissionData;
+    G4ParticleHPElastic* theHPElastic;
+    G4ParticleHPElasticData* theHPElasticData;
+    G4ParticleHPInelastic* theHPInelastic;
+    G4ParticleHPInelasticData* theHPInelasticData;
+    G4ParticleHPFission* theHPFission;
+    G4ParticleHPFissionData* theHPFissionData;
     G4NeutronRadCaptureHP* theHPCapture;
     G4NeutronHPCaptureData* theHPCaptureData;
-
 };
 
 #endif
-

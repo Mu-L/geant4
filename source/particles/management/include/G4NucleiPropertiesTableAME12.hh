@@ -39,8 +39,8 @@
 
 // Author: Tatsumi Koi, SLAC - August 2016
 // --------------------------------------------------------------------
-#ifndef G4NucleiPropertiesTableAME12_hh
-#define G4NucleiPropertiesTableAME12_hh 1
+#ifndef G4NUCLEIPROPERTIESTABLEAME12_HH
+#define G4NUCLEIPROPERTIESTABLEAME12_HH
 
 #include "globals.hh"
 
@@ -51,6 +51,7 @@ class G4NucleiProperties;
 class G4NucleiPropertiesTableAME12
 {
   public:
+
     // Destructor
     ~G4NucleiPropertiesTableAME12() = default;
 
@@ -66,6 +67,7 @@ class G4NucleiPropertiesTableAME12
     // All methods are private and can be used only by G4NucleiProperties
 
   private:
+
     // Default constructor - this class should only be created once!
     G4NucleiPropertiesTableAME12() = default;
 

@@ -80,7 +80,8 @@ G4VPhysicsConstructor::PhysicsBuilder_V G4VPhysicsConstructor::GetBuilders() con
   const auto& tls = *((subInstanceManager.offset[g4vpcInstanceID])._builders);
   PhysicsBuilder_V copy(tls.size());
   G4int i = 0;
-  for (const auto& el : tls) {
+  for (const auto& el : tls)
+  {
     copy[i++] = el;
   }
   return copy;
@@ -95,7 +96,8 @@ void G4VPhysicsConstructor::AddBuilder(G4PhysicsBuilderInterface* bld)
 // --------------------------------------------------------------------
 void G4VPhysicsConstructor::TerminateWorker()
 {
-  if (subInstanceManager.offset[g4vpcInstanceID]._builders != nullptr) {
+  if (subInstanceManager.offset[g4vpcInstanceID]._builders != nullptr)
+  {
     std::for_each(subInstanceManager.offset[g4vpcInstanceID]._builders->begin(),
                   subInstanceManager.offset[g4vpcInstanceID]._builders->end(),
                   [](PhysicsBuilder_V::value_type bld) { delete bld; });

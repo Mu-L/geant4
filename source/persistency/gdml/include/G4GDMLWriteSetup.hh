@@ -32,7 +32,7 @@
 // Author: Zoltan Torzsok, November 2007
 // --------------------------------------------------------------------
 #ifndef G4GDMLWRITESETUP_HH
-#define G4GDMLWRITESETUP_HH 1
+#define G4GDMLWRITESETUP_HH
 
 #include "G4GDMLWriteSolids.hh"
 

@@ -23,7 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 
-#pragma once
+#ifndef G4VTKOFFSCREENVIEWER_HH
+#define G4VTKOFFSCREENVIEWER_HH
 
 #include "G4VViewer.hh"
 #include "G4VtkViewer.hh"
@@ -31,9 +32,12 @@
 class G4VtkOffscreenViewer : public G4VtkViewer
 {
   public:
+
     G4VtkOffscreenViewer(G4VSceneHandler&, const G4String& name);
     ~G4VtkOffscreenViewer() override;
     void Initialise() override;
 
     void FinishView() override;
 };
+
+#endif

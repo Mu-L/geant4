@@ -41,14 +41,13 @@
 #include "G4VTRModel.hh"
 
 ///////////////////////////////////////////////////////////////////////
-G4VTransitionRadiation::G4VTransitionRadiation(const G4String& processName,
-                                               G4ProcessType type)
-  : G4VDiscreteProcess(processName, type)
-  , region(nullptr)
-  , model(nullptr)
-  , gammaMin(100.)
-  , cosDThetaMax(std::cos(0.1))
-  , nSteps(0)
+G4VTransitionRadiation::G4VTransitionRadiation(const G4String& processName, G4ProcessType type)
+  : G4VDiscreteProcess(processName, type),
+    region(nullptr),
+    model(nullptr),
+    gammaMin(100.),
+    cosDThetaMax(std::cos(0.1)),
+    nSteps(0)
 {
   SetProcessSubType(fTransitionRadiation);
   Clear();
@@ -67,8 +66,7 @@ void G4VTransitionRadiation::ProcessDescription(std::ostream& out) const
 {
   out << "Generic process of transition radiation.\n";
 
-  if(model)
-    model->PrintInfo();
+  if (model) model->PrintInfo();
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -81,34 +79,33 @@ void G4VTransitionRadiation::Clear()
 }
 
 ///////////////////////////////////////////////////////////////////////
-G4VParticleChange* G4VTransitionRadiation::PostStepDoIt(const G4Track& track,
-                                                        const G4Step& step)
+G4VParticleChange* G4VTransitionRadiation::PostStepDoIt(const G4Track& track, const G4Step& step)
 {
   // Fill temporary vectors
   const G4Material* material = track.GetMaterial();
-  G4double length            = step.GetStepLength();
-  G4ThreeVector direction    = track.GetMomentumDirection();
+  G4double length = step.GetStepLength();
+  G4ThreeVector direction = track.GetMomentumDirection();
 
-  if(nSteps == 0)
+  if (nSteps == 0)
   {
     nSteps = 1;
     materials.push_back(material);
     steps.push_back(length);
     const G4StepPoint* point = step.GetPreStepPoint();
-    startingPosition         = point->GetPosition();
-    startingDirection        = point->GetMomentumDirection();
-    G4bool valid             = true;
+    startingPosition = point->GetPosition();
+    startingDirection = point->GetMomentumDirection();
+    G4bool valid = true;
     G4ThreeVector n = G4TransportationManager::GetTransportationManager()
                         ->GetNavigatorForTracking()
                         ->GetLocalExitNormal(&valid);
-    if(valid)
+    if (valid)
       normals.push_back(n);
     else
       normals.push_back(direction);
   }
   else
   {
-    if(material == materials[nSteps - 1])
+    if (material == materials[nSteps - 1])
     {
       steps[nSteps - 1] += length;
     }
@@ -117,11 +114,11 @@ G4VParticleChange* G4VTransitionRadiation::PostStepDoIt(const G4Track& track,
       ++nSteps;
       materials.push_back(material);
       steps.push_back(length);
-      G4bool valid    = true;
+      G4bool valid = true;
       G4ThreeVector n = G4TransportationManager::GetTransportationManager()
                           ->GetNavigatorForTracking()
                           ->GetLocalExitNormal(&valid);
-      if(valid)
+      if (valid)
         normals.push_back(n);
       else
         normals.push_back(direction);
@@ -129,17 +126,16 @@ G4VParticleChange* G4VTransitionRadiation::PostStepDoIt(const G4Track& track,
   }
 
   // Check PostStepPoint condition
-  if(track.GetTrackStatus() == fStopAndKill ||
-     track.GetVolume()->GetLogicalVolume()->GetRegion() != region ||
-     startingDirection.x() * direction.x() +
-         startingDirection.y() * direction.y() +
-         startingDirection.z() * direction.z() <
-       cosDThetaMax)
+  if (track.GetTrackStatus() == fStopAndKill
+      || track.GetVolume()->GetLogicalVolume()->GetRegion() != region
+      || startingDirection.x() * direction.x() + startingDirection.y() * direction.y()
+             + startingDirection.z() * direction.z()
+           < cosDThetaMax)
   {
-    if(model)
+    if (model)
     {
-      model->GenerateSecondaries(*pParticleChange, materials, steps, normals,
-                                 startingPosition, track);
+      model->GenerateSecondaries(*pParticleChange, materials, steps, normals, startingPosition,
+                                 track);
     }
     Clear();
   }
@@ -148,32 +144,36 @@ G4VParticleChange* G4VTransitionRadiation::PostStepDoIt(const G4Track& track,
 }
 
 ///////////////////////////////////////////////////////////////////////
-G4bool G4VTransitionRadiation::IsApplicable(
-  const G4ParticleDefinition& aParticle)
+G4bool G4VTransitionRadiation::IsApplicable(const G4ParticleDefinition& aParticle)
 {
   return (aParticle.GetPDGCharge() != 0.0);
 }
 
 ///////////////////////////////////////////////////////////////////////
-void G4VTransitionRadiation::SetRegion(const G4Region* reg) { region = reg; }
+void G4VTransitionRadiation::SetRegion(const G4Region* reg)
+{
+  region = reg;
+}
 
 ///////////////////////////////////////////////////////////////////////
-void G4VTransitionRadiation::SetModel(G4VTRModel* mod) { model = mod; }
+void G4VTransitionRadiation::SetModel(G4VTRModel* mod)
+{
+  model = mod;
+}
 
 ///////////////////////////////////////////////////////////////////////
 G4double G4VTransitionRadiation::GetMeanFreePath(const G4Track& track, G4double,
                                                  G4ForceCondition* condition)
 {
-  if(nSteps > 0)
+  if (nSteps > 0)
   {
     *condition = StronglyForced;
   }
   else
   {
     *condition = NotForced;
-    if(track.GetKineticEnergy() / track.GetDefinition()->GetPDGMass() + 1.0 >
-         gammaMin &&
-       track.GetVolume()->GetLogicalVolume()->GetRegion() == region)
+    if (track.GetKineticEnergy() / track.GetDefinition()->GetPDGMass() + 1.0 > gammaMin
+        && track.GetVolume()->GetLogicalVolume()->GetRegion() == region)
     {
       *condition = StronglyForced;
     }

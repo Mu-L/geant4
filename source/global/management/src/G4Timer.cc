@@ -30,8 +30,9 @@
 // --------------------------------------------------------------------
 
 #include "G4Timer.hh"
-#include "G4ios.hh"
+
 #include "G4Exception.hh"
+#include "G4ios.hh"
 
 #include <iomanip>
 
@@ -48,7 +49,7 @@
 // extract milliseconds time unit
 G4int sysconf(G4int a)
 {
-  if(a == _SC_CLK_TCK)
+  if (a == _SC_CLK_TCK)
     return 1000;
   else
     return 0;
@@ -56,19 +57,18 @@ G4int sysconf(G4int a)
 
 static clock_t filetime2msec(FILETIME* t)
 {
-  return (clock_t)((((G4float) t->dwHighDateTime) * 429496.7296) +
-                   (((G4float) t->dwLowDateTime) * .0001));
+  return (clock_t)((((G4float)t->dwHighDateTime) * 429496.7296)
+                   + (((G4float)t->dwLowDateTime) * .0001));
 }
 
 clock_t times(struct tms* t)
 {
-  FILETIME ct = { 0, 0 }, et = { 0, 0 }, st = { 0, 0 }, ut = { 0, 0 },
-           rt = { 0, 0 };
+  FILETIME ct = {0, 0}, et = {0, 0}, st = {0, 0}, ut = {0, 0}, rt = {0, 0};
   SYSTEMTIME realtime;
 
   GetSystemTime(&realtime);
   SystemTimeToFileTime(&realtime, &rt);  // get real time in 10^-9 sec
-  if(t != 0)
+  if (t != 0)
   {
     GetProcessTimes(GetCurrentProcess(), &ct, &et, &st, &ut);
     // get process time in 10^-9 sec
@@ -86,16 +86,15 @@ std::ostream& operator<<(std::ostream& os, const G4Timer& t)
   // so fixed doesn't propagate
   std::stringstream ss;
   ss << std::fixed;
-  if(t.IsValid())
+  if (t.IsValid())
   {
     ss << "User=" << t.GetUserElapsed() << "s Real=" << t.GetRealElapsed()
        << "s Sys=" << t.GetSystemElapsed() << "s";
 #ifdef G4MULTITHREADED
     // avoid possible FPE error
-    if(t.GetRealElapsed() > 1.0e-6)
+    if (t.GetRealElapsed() > 1.0e-6)
     {
-      G4double cpu_util = (t.GetUserElapsed() + t.GetSystemElapsed()) /
-                          t.GetRealElapsed() * 100.0;
+      G4double cpu_util = (t.GetUserElapsed() + t.GetSystemElapsed()) / t.GetRealElapsed() * 100.0;
       ss << std::setprecision(1);
       ss << " [Cpu=" << std::setprecision(1) << cpu_util << "%]";
     }
@@ -112,7 +111,7 @@ std::ostream& operator<<(std::ostream& os, const G4Timer& t)
 
 G4double G4Timer::GetRealElapsed() const
 {
-  if(!fValidTimes)
+  if (!fValidTimes)
   {
     G4Exception("G4Timer::GetRealElapsed()", "InvalidCondition", FatalException,
                 "Timer not stopped or times not recorded!");
@@ -123,10 +122,10 @@ G4double G4Timer::GetRealElapsed() const
 
 G4double G4Timer::GetSystemElapsed() const
 {
-  if(!fValidTimes)
+  if (!fValidTimes)
   {
-    G4Exception("G4Timer::GetSystemElapsed()", "InvalidCondition",
-                FatalException, "Timer not stopped or times not recorded!");
+    G4Exception("G4Timer::GetSystemElapsed()", "InvalidCondition", FatalException,
+                "Timer not stopped or times not recorded!");
   }
   G4double diff = fEndTimes.tms_stime - fStartTimes.tms_stime;
   return diff / sysconf(_SC_CLK_TCK);
@@ -134,7 +133,7 @@ G4double G4Timer::GetSystemElapsed() const
 
 G4double G4Timer::GetUserElapsed() const
 {
-  if(!fValidTimes)
+  if (!fValidTimes)
   {
     G4Exception("G4Timer::GetUserElapsed()", "InvalidCondition", FatalException,
                 "Timer not stopped or times not recorded");

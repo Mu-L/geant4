@@ -31,7 +31,7 @@
 //
 // File name:     G4CoulombScattering
 //
-// Author:        Vladimir Ivanchenko 
+// Author:        Vladimir Ivanchenko
 //
 // Creation date: 12.03.2006
 //
@@ -45,52 +45,50 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4CoulombScattering_h
-#define G4CoulombScattering_h 1
+#ifndef G4COULOMBSCATTERING_HH
+#define G4COULOMBSCATTERING_HH
 
-#include "G4VEmProcess.hh"
 #include "G4VEmModel.hh"
+#include "G4VEmProcess.hh"
 
 class G4CoulombScattering : public G4VEmProcess
 {
+  public:
 
-public:
+    explicit G4CoulombScattering(const G4String& name, G4bool combined);
 
-  explicit G4CoulombScattering(const G4String& name, G4bool combined);
+    // for pure single scattering use combined=false
+    G4CoulombScattering(G4bool combined = true);
 
-  // for pure single scattering use combined=false
-  G4CoulombScattering(G4bool combined = true);
+    // for pure single scattering use SetIsCombined(false) method
+    G4CoulombScattering(const G4String& name);
 
-  // for pure single scattering use SetIsCombined(false) method 
-  G4CoulombScattering(const G4String& name);
+    ~G4CoulombScattering() override;
 
-  ~G4CoulombScattering() override;
+    G4bool IsApplicable(const G4ParticleDefinition& p) final;
 
-  G4bool IsApplicable(const G4ParticleDefinition& p) final;
+    // print documentation in html format
+    void ProcessDescription(std::ostream&) const override;
 
-  // print documentation in html format
-  void ProcessDescription(std::ostream&) const override;
+    inline void SetIsCombined(G4bool val) { isCombined = val; }
 
-  inline void SetIsCombined(G4bool val) { isCombined = val; }
+    G4CoulombScattering& operator=(const G4CoulombScattering& right) = delete;
+    G4CoulombScattering(const G4CoulombScattering&) = delete;
 
-  G4CoulombScattering & operator=(const G4CoulombScattering &right) = delete;
-  G4CoulombScattering(const G4CoulombScattering&) = delete;
+  protected:
 
-protected:
+    // Print out of the class parameters
+    void StreamProcessInfo(std::ostream& outFile) const override;
 
-  // Print out of the class parameters
-  void StreamProcessInfo(std::ostream& outFile) const override;
+    void InitialiseProcess(const G4ParticleDefinition*) override;
 
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+    G4double MinPrimaryEnergy(const G4ParticleDefinition*, const G4Material*) final;
 
-  G4double MinPrimaryEnergy(const G4ParticleDefinition*,
-			    const G4Material*) final;
+  private:
 
-private:
-  
-  G4double q2Max;
-  G4bool isInitialised = false;
-  G4bool isCombined;
+    G4double q2Max;
+    G4bool isInitialised = false;
+    G4bool isCombined;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

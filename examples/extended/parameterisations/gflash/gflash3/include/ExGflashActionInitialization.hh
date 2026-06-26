@@ -37,6 +37,7 @@
 class ExGflashActionInitialization : public G4VUserActionInitialization
 {
   public:
+
     ExGflashActionInitialization();
     ~ExGflashActionInitialization() override;
 

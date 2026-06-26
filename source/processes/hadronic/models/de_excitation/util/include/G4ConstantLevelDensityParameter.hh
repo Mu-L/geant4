@@ -26,31 +26,28 @@
 //
 //
 // Hadronic Process: Nuclear De-excitations (photon evaporation)
-// by C. Dallapiccola (Nov 1998) 
+// by C. Dallapiccola (Nov 1998)
 //
 
-#ifndef G4ConstantLevelDensityParameter_h
-#define G4ConstantLevelDensityParameter_h 1
+#ifndef G4CONSTANTLEVELDENSITYPARAMETER_HH
+#define G4CONSTANTLEVELDENSITYPARAMETER_HH
 
 #include "G4VLevelDensityParameter.hh"
 
 class G4ConstantLevelDensityParameter : public G4VLevelDensityParameter
 {
-public:
+  public:
 
-  G4ConstantLevelDensityParameter() = default;
-  ~G4ConstantLevelDensityParameter() = default;
+    G4ConstantLevelDensityParameter() = default;
+    ~G4ConstantLevelDensityParameter() = default;
 
-  G4double LevelDensityParameter(G4int A, G4int, G4double) const final
-  { 
-    return 0.1*A;
-  }
+    G4double LevelDensityParameter(G4int A, G4int, G4double) const final { return 0.1 * A; }
 
-  G4ConstantLevelDensityParameter(const G4ConstantLevelDensityParameter &right) = delete;
-  const G4ConstantLevelDensityParameter& operator=
-  (const G4ConstantLevelDensityParameter &right) = delete;
-  G4bool operator==(const G4ConstantLevelDensityParameter &right) const = delete;
-  G4bool operator!=(const G4ConstantLevelDensityParameter &right) const = delete;
+    G4ConstantLevelDensityParameter(const G4ConstantLevelDensityParameter& right) = delete;
+    const G4ConstantLevelDensityParameter&
+    operator=(const G4ConstantLevelDensityParameter& right) = delete;
+    G4bool operator==(const G4ConstantLevelDensityParameter& right) const = delete;
+    G4bool operator!=(const G4ConstantLevelDensityParameter& right) const = delete;
 };
 
 #endif

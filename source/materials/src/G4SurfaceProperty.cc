@@ -63,7 +63,10 @@ const G4SurfacePropertyTable* G4SurfaceProperty::GetSurfacePropertyTable()
   return &theSurfacePropertyTable;
 }
 
-size_t G4SurfaceProperty::GetNumberOfSurfaceProperties() { return theSurfacePropertyTable.size(); }
+size_t G4SurfaceProperty::GetNumberOfSurfaceProperties()
+{
+  return theSurfacePropertyTable.size();
+}
 
 // Dump info for known surface properties
 void G4SurfaceProperty::DumpTableInfo()
@@ -71,7 +74,8 @@ void G4SurfaceProperty::DumpTableInfo()
   G4cout << "***** Surface Property Table : Nb of Surface Properties = "
          << GetNumberOfSurfaceProperties() << " *****" << G4endl;
 
-  for (auto pSurfaceProperty : theSurfacePropertyTable) {
+  for (auto pSurfaceProperty : theSurfacePropertyTable)
+  {
     G4cout << pSurfaceProperty->GetName() << " : " << G4endl
            << "  Surface Property type   = " << pSurfaceProperty->GetType() << G4endl;
   }
@@ -82,8 +86,10 @@ void G4SurfaceProperty::CleanSurfacePropertyTable()
 {
   DumpTableInfo();
   G4SurfacePropertyTable::iterator pos;
-  for (pos = theSurfacePropertyTable.begin(); pos != theSurfacePropertyTable.end(); pos++) {
-    if (*pos != nullptr) {
+  for (pos = theSurfacePropertyTable.begin(); pos != theSurfacePropertyTable.end(); pos++)
+  {
+    if (*pos != nullptr)
+    {
       delete *pos;
     }
   }

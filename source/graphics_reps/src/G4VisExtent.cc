@@ -25,64 +25,73 @@
 //
 //
 //
-// 
+//
 // A.Walkden 28/11/95
 // G4VisExtent.cc - to return parameters useful to the drawing window
-// employed by Visualization code. 
+// employed by Visualization code.
 
 #include "G4VisExtent.hh"
 
 #include "G4ThreeVector.hh"
 
-G4VisExtent::G4VisExtent (G4double xmin, G4double xmax,
-                          G4double ymin, G4double ymax, 
-                          G4double zmin, G4double zmax):
-  fXmin(xmin), fXmax(xmax), fYmin(ymin), fYmax(ymax), fZmin(zmin), fZmax(zmax),
-  fRadiusCached(false), fCentreCached(false), fRadius(0.)
+G4VisExtent::G4VisExtent(G4double xmin, G4double xmax, G4double ymin, G4double ymax, G4double zmin,
+                         G4double zmax)
+  : fXmin(xmin),
+    fXmax(xmax),
+    fYmin(ymin),
+    fYmax(ymax),
+    fZmin(zmin),
+    fZmax(zmax),
+    fRadiusCached(false),
+    fCentreCached(false),
+    fRadius(0.)
 {}
 
-G4VisExtent::G4VisExtent (const G4Point3D& centre, G4double radius):
-  fRadiusCached(true), fCentreCached(true),
-  fRadius(radius), fCentre(centre)
+G4VisExtent::G4VisExtent(const G4Point3D& centre, G4double radius)
+  : fRadiusCached(true), fCentreCached(true), fRadius(radius), fCentre(centre)
 {
   // Use exscribed radius ... see comments in header file.
-  G4double halfSide (radius / std::sqrt (3.));
-  fXmin = centre.x () - halfSide;
-  fXmax = centre.x () + halfSide;
-  fYmin = centre.y () - halfSide;
-  fYmax = centre.y () + halfSide;
-  fZmin = centre.z () - halfSide;
-  fZmax = centre.z () + halfSide;
+  G4double halfSide(radius / std::sqrt(3.));
+  fXmin = centre.x() - halfSide;
+  fXmax = centre.x() + halfSide;
+  fYmin = centre.y() - halfSide;
+  fYmax = centre.y() + halfSide;
+  fZmin = centre.z() - halfSide;
+  fZmax = centre.z() + halfSide;
 }
 
-G4VisExtent::~G4VisExtent () = default;
+G4VisExtent::~G4VisExtent() = default;
 
-const G4VisExtent& G4VisExtent::GetNullExtent () {
+const G4VisExtent& G4VisExtent::GetNullExtent()
+{
   static const G4VisExtent nullExtent = G4VisExtent();
   return nullExtent;
 }
 
-const G4Point3D& G4VisExtent::GetExtentCentre () const {
-  if (!fCentreCached) {
-    fCentre = G4Point3D (((fXmin + fXmax) / 2.),
-                         ((fYmin + fYmax) / 2.),
-                         ((fZmin + fZmax) / 2.));
+const G4Point3D& G4VisExtent::GetExtentCentre() const
+{
+  if (!fCentreCached)
+  {
+    fCentre = G4Point3D(((fXmin + fXmax) / 2.), ((fYmin + fYmax) / 2.), ((fZmin + fZmax) / 2.));
     fCentreCached = true;
   }
   return fCentre;
 }
 
-G4double G4VisExtent::GetExtentRadius () const {
-  if (!fRadiusCached) {
-    fRadius = std::sqrt (((fXmax - fXmin) * (fXmax - fXmin)) +
-                         ((fYmax - fYmin) * (fYmax - fYmin)) +
-                         ((fZmax - fZmin) * (fZmax - fZmin))) / 2.;
+G4double G4VisExtent::GetExtentRadius() const
+{
+  if (!fRadiusCached)
+  {
+    fRadius = std::sqrt(((fXmax - fXmin) * (fXmax - fXmin)) + ((fYmax - fYmin) * (fYmax - fYmin))
+                        + ((fZmax - fZmin) * (fZmax - fZmin)))
+              / 2.;
     fRadiusCached = true;
   }
   return fRadius;
 }
 
-std::ostream& operator << (std::ostream& os, const G4VisExtent& e) {
+std::ostream& operator<<(std::ostream& os, const G4VisExtent& e)
+{
   os << "G4VisExtent (bounding box):";
   os << "\n  X limits: " << e.fXmin << ' ' << e.fXmax;
   os << "\n  Y limits: " << e.fYmin << ' ' << e.fYmax;
@@ -90,25 +99,22 @@ std::ostream& operator << (std::ostream& os, const G4VisExtent& e) {
   return os;
 }
 
-G4bool G4VisExtent::operator != (const G4VisExtent& e) const {
-  return ((fXmin != e.fXmin) ||
-          (fXmax != e.fXmax) ||
-          (fYmin != e.fYmin) ||
-          (fYmax != e.fYmax) ||
-          (fZmin != e.fZmin) ||
-          (fZmax != e.fZmax));
+G4bool G4VisExtent::operator!=(const G4VisExtent& e) const
+{
+  return ((fXmin != e.fXmin) || (fXmax != e.fXmax) || (fYmin != e.fYmin) || (fYmax != e.fYmax)
+          || (fZmin != e.fZmin) || (fZmax != e.fZmax));
 }
 
-G4VisExtent& G4VisExtent::Transform (const G4Transform3D& transform)
+G4VisExtent& G4VisExtent::Transform(const G4Transform3D& transform)
 {
-  G4ThreeVector nnn(fXmin,fYmin,fZmin);
-  G4ThreeVector nnx(fXmin,fYmin,fZmax);
-  G4ThreeVector nxn(fXmin,fYmax,fZmin);
-  G4ThreeVector nxx(fXmin,fYmax,fZmax);
-  G4ThreeVector xnn(fXmax,fYmin,fZmin);
-  G4ThreeVector xnx(fXmax,fYmin,fZmax);
-  G4ThreeVector xxn(fXmax,fYmax,fZmin);
-  G4ThreeVector xxx(fXmax,fYmax,fZmax);
+  G4ThreeVector nnn(fXmin, fYmin, fZmin);
+  G4ThreeVector nnx(fXmin, fYmin, fZmax);
+  G4ThreeVector nxn(fXmin, fYmax, fZmin);
+  G4ThreeVector nxx(fXmin, fYmax, fZmax);
+  G4ThreeVector xnn(fXmax, fYmin, fZmin);
+  G4ThreeVector xnx(fXmax, fYmin, fZmax);
+  G4ThreeVector xxn(fXmax, fYmax, fZmin);
+  G4ThreeVector xxx(fXmax, fYmax, fZmax);
 
   const auto& rotation = transform.getRotation();
   const auto& translation = transform.getTranslation();
@@ -133,7 +139,8 @@ G4VisExtent& G4VisExtent::Transform (const G4Transform3D& transform)
   fXmax = -DBL_MAX;
   fYmax = -DBL_MAX;
   fZmax = -DBL_MAX;
-  for (const auto& corner: {nnn,nnx,nxn,nxx,xnn,xnx,xxn,xxx}) {
+  for (const auto& corner : {nnn, nnx, nxn, nxx, xnn, xnx, xxn, xxx})
+  {
     if (fXmin > corner.getX()) fXmin = corner.getX();
     if (fYmin > corner.getY()) fYmin = corner.getY();
     if (fZmin > corner.getZ()) fZmin = corner.getZ();

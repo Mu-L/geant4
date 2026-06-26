@@ -48,8 +48,8 @@
 // J. Comput. Phys. 274 (2014) 841-882
 // Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#ifndef G4ITSTEPPINGMESSENGER_H
-#define G4ITSTEPPINGMESSENGER_H
+#ifndef G4SCHEDULERMESSENGER_HH
+#define G4SCHEDULERMESSENGER_HH
 
 class G4Scheduler;
 class G4UIdirectory;
@@ -64,27 +64,30 @@ class G4UIcmdWithAString;
 
 class G4SchedulerMessenger : public G4UImessenger
 {
- public:
-  explicit G4SchedulerMessenger(G4Scheduler* runMgr);
-  ~G4SchedulerMessenger() override;
-  void SetNewValue(G4UIcommand* command, G4String newValues) override;
-  G4String GetCurrentValue(G4UIcommand* command) override;
+  public:
 
- private:
-  G4Scheduler* fScheduler;
+    explicit G4SchedulerMessenger(G4Scheduler* runMgr);
+    ~G4SchedulerMessenger() override;
+    void SetNewValue(G4UIcommand* command, G4String newValues) override;
+    G4String GetCurrentValue(G4UIcommand* command) override;
 
- private:  // commands
-  std::unique_ptr<G4UIdirectory> fITDirectory;
-  std::unique_ptr<G4UIcmdWithADoubleAndUnit> fEndTime;
-  std::unique_ptr<G4UIcmdWithADoubleAndUnit> fTimeTolerance;
-  std::unique_ptr<G4UIcmdWithAnInteger> fVerboseCmd;
-  std::unique_ptr<G4UIcmdWithAnInteger> fMaxStepNumber;
-  std::unique_ptr<G4UIcmdWithoutParameter> fInitCmd;
-  std::unique_ptr<G4UIcmdWithoutParameter> fProcessCmd;
-  std::unique_ptr<G4UIcmdWithAnInteger> fMaxNULLTimeSteps;
-  std::unique_ptr<G4UIcmdWithoutParameter> fWhyDoYouStop;
-  std::unique_ptr<G4UIcmdWithABool> fUseDefaultTimeSteps;
-  std::unique_ptr<G4UIcmdWithABool> fResetScavenger;
+  private:
+
+    G4Scheduler* fScheduler;
+
+  private:  // commands
+
+    std::unique_ptr<G4UIdirectory> fITDirectory;
+    std::unique_ptr<G4UIcmdWithADoubleAndUnit> fEndTime;
+    std::unique_ptr<G4UIcmdWithADoubleAndUnit> fTimeTolerance;
+    std::unique_ptr<G4UIcmdWithAnInteger> fVerboseCmd;
+    std::unique_ptr<G4UIcmdWithAnInteger> fMaxStepNumber;
+    std::unique_ptr<G4UIcmdWithoutParameter> fInitCmd;
+    std::unique_ptr<G4UIcmdWithoutParameter> fProcessCmd;
+    std::unique_ptr<G4UIcmdWithAnInteger> fMaxNULLTimeSteps;
+    std::unique_ptr<G4UIcmdWithoutParameter> fWhyDoYouStop;
+    std::unique_ptr<G4UIcmdWithABool> fUseDefaultTimeSteps;
+    std::unique_ptr<G4UIcmdWithABool> fResetScavenger;
 };
 
 #endif  // G4ITSTEPPINGMESSENGER_H

@@ -32,8 +32,8 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4VAlphaBuilder_h
-#define G4VAlphaBuilder_h
+#ifndef G4VALPHABUILDER_HH
+#define G4VALPHABUILDER_HH
 
 #include "G4PhysicsBuilderInterface.hh"
 
@@ -42,13 +42,13 @@ class G4HadronElasticProcess;
 
 class G4VAlphaBuilder : public G4PhysicsBuilderInterface
 {
-public:
-  G4VAlphaBuilder() = default;
-  virtual ~G4VAlphaBuilder() {} 
-  virtual void Build(G4HadronElasticProcess * aP) = 0;
-  virtual void Build(G4HadronInelasticProcess * aP) = 0;
-  using G4PhysicsBuilderInterface::Build;
+  public:
+
+    G4VAlphaBuilder() = default;
+    virtual ~G4VAlphaBuilder() {}
+    virtual void Build(G4HadronElasticProcess* aP) = 0;
+    virtual void Build(G4HadronInelasticProcess* aP) = 0;
+    using G4PhysicsBuilderInterface::Build;
 };
 
 #endif
-

@@ -31,31 +31,26 @@
 #include "G4GDMLReadSetup.hh"
 
 // --------------------------------------------------------------------
-G4GDMLReadSetup::G4GDMLReadSetup()
-  : G4GDMLReadSolids()
-{
-}
+G4GDMLReadSetup::G4GDMLReadSetup() : G4GDMLReadSolids() {}
 
 // --------------------------------------------------------------------
-G4GDMLReadSetup::~G4GDMLReadSetup()
-{
-}
+G4GDMLReadSetup::~G4GDMLReadSetup() {}
 
 // --------------------------------------------------------------------
 G4String G4GDMLReadSetup::GetSetup(const G4String& ref)
 {
-  if(setupMap.size() == 1)  // If there is only one setup defined,
-  {                         // no matter how it is named
+  if (setupMap.size() == 1)  // If there is only one setup defined,
+  {  // no matter how it is named
     return setupMap.cbegin()->second;
   }
 
-  if(setupMap.find(ref) == setupMap.cend())
+  if (setupMap.find(ref) == setupMap.cend())
   {
 #ifdef G4VERBOSE
     std::ostringstream message;
     message << "Referenced setup '" << ref << "' was not found!";
-    G4Exception("G4GDMLReadSetup::getSetup()", "NullSetup", JustWarning,
-                message, "Returning NULL pointer!");
+    G4Exception("G4GDMLReadSetup::getSetup()", "NullSetup", JustWarning, message,
+                "Returning NULL pointer!");
 #endif
     return "";
   }
@@ -72,54 +67,50 @@ void G4GDMLReadSetup::SetupRead(const xercesc::DOMElement* const element)
   G4String name;
 
   const xercesc::DOMNamedNodeMap* const attributes = element->getAttributes();
-  XMLSize_t attributeCount                         = attributes->getLength();
+  XMLSize_t attributeCount = attributes->getLength();
 
-  for(XMLSize_t attribute_index = 0; attribute_index < attributeCount;
-      ++attribute_index)
+  for (XMLSize_t attribute_index = 0; attribute_index < attributeCount; ++attribute_index)
   {
     xercesc::DOMNode* attribute_node = attributes->item(attribute_index);
 
-    if(attribute_node->getNodeType() != xercesc::DOMNode::ATTRIBUTE_NODE)
+    if (attribute_node->getNodeType() != xercesc::DOMNode::ATTRIBUTE_NODE)
     {
       continue;
     }
 
-    const xercesc::DOMAttr* const attribute =
-      dynamic_cast<xercesc::DOMAttr*>(attribute_node);
-    if(attribute == nullptr)
+    const xercesc::DOMAttr* const attribute = dynamic_cast<xercesc::DOMAttr*>(attribute_node);
+    if (attribute == nullptr)
     {
       G4Exception("G4GDMLReadSetup::SetupRead()", "InvalidRead", FatalException,
                   "No attribute found!");
       return;
     }
-    const G4String attName  = Transcode(attribute->getName());
+    const G4String attName = Transcode(attribute->getName());
     const G4String attValue = Transcode(attribute->getValue());
 
-    if(attName == "name")
+    if (attName == "name")
     {
       name = attValue;
     }
   }
 
-  for(xercesc::DOMNode* iter = element->getFirstChild(); iter != nullptr;
-      iter                   = iter->getNextSibling())
+  for (xercesc::DOMNode* iter = element->getFirstChild(); iter != nullptr;
+       iter = iter->getNextSibling())
   {
-    if(iter->getNodeType() != xercesc::DOMNode::ELEMENT_NODE)
+    if (iter->getNodeType() != xercesc::DOMNode::ELEMENT_NODE)
     {
       continue;
     }
 
-    const xercesc::DOMElement* const child =
-      dynamic_cast<xercesc::DOMElement*>(iter);
-    if(child == nullptr)
+    const xercesc::DOMElement* const child = dynamic_cast<xercesc::DOMElement*>(iter);
+    if (child == nullptr)
     {
-      G4Exception("G4GDMLReadSetup::SetupRead()", "InvalidRead", FatalException,
-                  "No child found!");
+      G4Exception("G4GDMLReadSetup::SetupRead()", "InvalidRead", FatalException, "No child found!");
       return;
     }
     const G4String tag = Transcode(child->getTagName());
 
-    if(tag == "world")
+    if (tag == "world")
     {
       setupMap[name] = GenerateName(RefRead(child));
     }

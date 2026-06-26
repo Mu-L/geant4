@@ -27,16 +27,17 @@
 // Author: Ivana Hrivnacova, 15/09/2020  (ivana@ipno.in2p3.fr)
 
 #include "G4CsvNtupleFileManager.hh"
-#include "G4CsvNtupleManager.hh"
-#include "G4CsvFileManager.hh"
+
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
+#include "G4CsvFileManager.hh"
+#include "G4CsvNtupleManager.hh"
 
 using namespace G4Analysis;
 
 //_____________________________________________________________________________
 G4CsvNtupleFileManager::G4CsvNtupleFileManager(const G4AnalysisManagerState& state)
- : G4VNtupleFileManager(state, "csv")
+  : G4VNtupleFileManager(state, "csv")
 {}
 
 //
@@ -61,8 +62,7 @@ G4bool G4CsvNtupleFileManager::ActionAtOpenFile(const G4String& /*fileName*/)
 
   // Create ntuples if they are booked
   // (The files will be created with creating ntuples)
-  fNtupleManager->CreateNtuplesFromBooking(
-    fBookingManager->GetNtupleBookingVector());
+  fNtupleManager->CreateNtuplesFromBooking(fBookingManager->GetNtupleBookingVector());
 
   return true;
 }
@@ -74,8 +74,10 @@ G4bool G4CsvNtupleFileManager::ActionAtWrite()
 
   auto ntupleVector = fNtupleManager->GetNtupleDescriptionVector();
 
-  for ( auto ntupleDescription : ntupleVector ) {
-    if (ntupleDescription->GetNtuple() != nullptr) {
+  for (auto ntupleDescription : ntupleVector)
+  {
+    if (ntupleDescription->GetNtuple() != nullptr)
+    {
       // Notify not empty file
       result &= fFileManager->NotifyNtupleFile(ntupleDescription);
     }
@@ -91,7 +93,8 @@ G4bool G4CsvNtupleFileManager::ActionAtCloseFile()
 
   // Close ntuple files
   auto ntupleVector = fNtupleManager->GetNtupleDescriptionVector();
-  for ( auto ntupleDescription : ntupleVector) {
+  for (auto ntupleDescription : ntupleVector)
+  {
     result &= fFileManager->CloseNtupleFile(ntupleDescription);
   }
 

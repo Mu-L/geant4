@@ -30,7 +30,7 @@
 // Simple Heum stepper for magnetic field:
 //        x_1 = x_0  +
 //              h * 1/4 * dx(t0,x0)  +
-//                  3/4 * dx(t0+2/3*h, x0+2/3*h*(dx(t0+h/3,x0+h/3*dx(t0,x0)))) 
+//                  3/4 * dx(t0+2/3*h, x0+2/3*h*(dx(t0+h/3,x0+h/3*dx(t0,x0))))
 //
 // Third order solver.
 
@@ -44,6 +44,7 @@
 /**
  * @brief G4SimpleHeum implements a simple Heum stepper for magnetic field
  * with 3rd order solver.
+ * @ingroup geometry_magneticfield
  */
 
 class G4SimpleHeum : public G4MagErrorStepper
@@ -55,8 +56,7 @@ class G4SimpleHeum : public G4MagErrorStepper
      *  @param[in] EqRhs Pointer to the provided equation of motion.
      *  @param[in] num_variables The number of integration variables.
      */
-    G4SimpleHeum(G4EquationOfMotion* EqRhs,
-                 G4int num_variables = 6);
+    G4SimpleHeum(G4EquationOfMotion* EqRhs, G4int num_variables = 6);
 
     /**
      * Destructor.
@@ -77,11 +77,9 @@ class G4SimpleHeum : public G4MagErrorStepper
      *  @param[in] h The given step size.
      *  @param[out] yout Integration output.
      */
-    void DumbStepper( const G4double y[],
-                      const G4double dydx[],
-                            G4double h,
-                            G4double yout[] ) override;
-  
+    void DumbStepper(const G4double y[], const G4double dydx[], G4double h,
+                     G4double yout[]) override;
+
     /**
      * Returns the order, 3, of integration.
      */

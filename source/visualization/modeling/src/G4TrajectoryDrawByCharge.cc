@@ -26,13 +26,15 @@
 //
 // Jane Tinslay, John Allison, Joseph Perl November 2005
 #include "G4TrajectoryDrawByCharge.hh"
+
 #include "G4TrajectoryDrawerUtils.hh"
-#include "G4VisTrajContext.hh"
 #include "G4VTrajectory.hh"
+#include "G4VisTrajContext.hh"
+
 #include <sstream>
 
 G4TrajectoryDrawByCharge::G4TrajectoryDrawByCharge(const G4String& name, G4VisTrajContext* context)
-  :G4VTrajectoryModel(name, context)
+  : G4VTrajectoryModel(name, context)
 {
   // Default configuration
   fMap[Positive] = G4Colour::Blue();
@@ -40,11 +42,10 @@ G4TrajectoryDrawByCharge::G4TrajectoryDrawByCharge(const G4String& name, G4VisTr
   fMap[Neutral] = G4Colour::Green();
 }
 
-G4TrajectoryDrawByCharge::G4TrajectoryDrawByCharge(const G4String& name,
-						   const G4Colour& positive,
-						   const G4Colour& negative,
-						   const G4Colour& neutral)
-  :G4VTrajectoryModel(name)
+G4TrajectoryDrawByCharge::G4TrajectoryDrawByCharge(const G4String& name, const G4Colour& positive,
+                                                   const G4Colour& negative,
+                                                   const G4Colour& neutral)
+  : G4VTrajectoryModel(name)
 {
   fMap[Positive] = positive;
   fMap[Negative] = negative;
@@ -53,105 +54,105 @@ G4TrajectoryDrawByCharge::G4TrajectoryDrawByCharge(const G4String& name,
 
 G4TrajectoryDrawByCharge::~G4TrajectoryDrawByCharge() {}
 
-void
-G4TrajectoryDrawByCharge::Draw(const G4VTrajectory& traj, const G4bool& /*visible*/) const
+void G4TrajectoryDrawByCharge::Draw(const G4VTrajectory& traj, const G4bool& /*visible*/) const
 {
   G4Colour colour;
 
   const G4double charge = traj.GetCharge();
 
-  if(charge>0.)      fMap.GetColour(Positive, colour); 
-  else if(charge<0.) fMap.GetColour(Negative, colour); 
-  else               fMap.GetColour(Neutral, colour); 
+  if (charge > 0.)
+    fMap.GetColour(Positive, colour);
+  else if (charge < 0.)
+    fMap.GetColour(Negative, colour);
+  else
+    fMap.GetColour(Neutral, colour);
 
   G4VisTrajContext myContext(GetContext());
 
   myContext.SetLineColour(colour);
 
-  if (GetVerbose()) {
-    G4cout<<"G4TrajectoryDrawByCharge drawer named "<<Name();
-    G4cout<<", drawing trajectory with charge, "<<charge<<G4endl;
-    G4cout<<", with configuration:"<<G4endl;
+  if (GetVerbose())
+  {
+    G4cout << "G4TrajectoryDrawByCharge drawer named " << Name();
+    G4cout << ", drawing trajectory with charge, " << charge << G4endl;
+    G4cout << ", with configuration:" << G4endl;
     myContext.Print(G4cout);
   }
 
   G4TrajectoryDrawerUtils::DrawLineAndPoints(traj, myContext);
 }
 
-void
-G4TrajectoryDrawByCharge::Print(std::ostream& ostr) const
+void G4TrajectoryDrawByCharge::Print(std::ostream& ostr) const
 {
-  ostr<<"G4TrajectoryDrawByCharge model "<< Name() <<" colour scheme: "<<std::endl;
+  ostr << "G4TrajectoryDrawByCharge model " << Name() << " colour scheme: " << std::endl;
   fMap.Print(ostr);
-  ostr<<"Default configuration:"<<G4endl;
+  ostr << "Default configuration:" << G4endl;
   GetContext().Print(G4cout);
 }
 
-void
-G4TrajectoryDrawByCharge::Set(const Charge& charge, const G4String& colour)
+void G4TrajectoryDrawByCharge::Set(const Charge& charge, const G4String& colour)
 {
   fMap.Set(charge, colour);
 }
 
-void
-G4TrajectoryDrawByCharge::Set(const Charge& charge, const G4Colour& colour)
+void G4TrajectoryDrawByCharge::Set(const Charge& charge, const G4Colour& colour)
 {
   fMap[charge] = colour;
 }
 
-void
-G4TrajectoryDrawByCharge::Set(const G4String& charge, const G4String& colour)
-{  
+void G4TrajectoryDrawByCharge::Set(const G4String& charge, const G4String& colour)
+{
   Charge myCharge;
-  
-  if (!ConvertToCharge(charge, myCharge)) {
+
+  if (!ConvertToCharge(charge, myCharge))
+  {
     G4ExceptionDescription ed;
-    ed << "Invalid charge "<<charge;
-    G4Exception   
-      ("G4TrajectoryDrawByCharge::Set(const G4int& charge, const G4String& colour)", "modeling0121", JustWarning, ed);
+    ed << "Invalid charge " << charge;
+    G4Exception("G4TrajectoryDrawByCharge::Set(const G4int& charge, const G4String& colour)",
+                "modeling0121", JustWarning, ed);
     return;
   }
 
   return Set(myCharge, colour);
 }
 
-void
-G4TrajectoryDrawByCharge::Set(const G4String& charge, const G4Colour& colour)
-{  
+void G4TrajectoryDrawByCharge::Set(const G4String& charge, const G4Colour& colour)
+{
   Charge myCharge;
-  
-  if (!ConvertToCharge(charge, myCharge)) {
+
+  if (!ConvertToCharge(charge, myCharge))
+  {
     G4ExceptionDescription ed;
-    ed << "Invalid charge "<<charge;
-    G4Exception   
-      ("G4TrajectoryDrawByCharge::Set(const G4int& charge, const G4Colour& colour)", "modeling0122", JustWarning, ed);
+    ed << "Invalid charge " << charge;
+    G4Exception("G4TrajectoryDrawByCharge::Set(const G4int& charge, const G4Colour& colour)",
+                "modeling0122", JustWarning, ed);
   }
 
   return Set(myCharge, colour);
 }
 
-G4bool
-G4TrajectoryDrawByCharge::ConvertToCharge(const G4String& string, Charge& myCharge)
+G4bool G4TrajectoryDrawByCharge::ConvertToCharge(const G4String& string, Charge& myCharge)
 {
   bool result(true);
- 
+
   G4int charge;
   std::istringstream is(string.c_str());
   is >> charge;
 
-  switch (charge) {
-  case 1:
-    myCharge = G4TrajectoryDrawByCharge::Positive;
-    break;
-  case 0:
-    myCharge = G4TrajectoryDrawByCharge::Neutral;  
-    break;
-  case -1:
-    myCharge = G4TrajectoryDrawByCharge::Negative;   
-    break;
-  default:
-    result = false;
+  switch (charge)
+  {
+    case 1:
+      myCharge = G4TrajectoryDrawByCharge::Positive;
+      break;
+    case 0:
+      myCharge = G4TrajectoryDrawByCharge::Neutral;
+      break;
+    case -1:
+      myCharge = G4TrajectoryDrawByCharge::Negative;
+      break;
+    default:
+      result = false;
   }
-  
+
   return result;
 }

@@ -29,8 +29,8 @@
 // by D. Mancusi (6th October 2014)
 //
 
-#ifndef G4FissionLevelDensityParameterINCLXX_h
-#define G4FissionLevelDensityParameterINCLXX_h 1
+#ifndef G4FISSIONLEVELDENSITYPARAMETERINCLXX_HH
+#define G4FISSIONLEVELDENSITYPARAMETERINCLXX_HH
 
 #include "G4VLevelDensityParameter.hh"
 
@@ -56,40 +56,57 @@ class G4NuclearLevelData;
 
 class G4FissionLevelDensityParameterINCLXX : public G4VLevelDensityParameter
 {
-public:
-  explicit G4FissionLevelDensityParameterINCLXX();
-  virtual ~G4FissionLevelDensityParameterINCLXX();
+  public:
 
-private:  
-  G4FissionLevelDensityParameterINCLXX(const G4FissionLevelDensityParameterINCLXX &right);
-  const G4FissionLevelDensityParameterINCLXX & operator=
-  (const G4FissionLevelDensityParameterINCLXX &right);
-  G4bool operator==(const G4FissionLevelDensityParameterINCLXX &right) const;
-  G4bool operator!=(const G4FissionLevelDensityParameterINCLXX &right) const;
-  
-public:
-  G4double LevelDensityParameter(G4int A, G4int Z, G4double U) const final;
+    explicit G4FissionLevelDensityParameterINCLXX();
+    virtual ~G4FissionLevelDensityParameterINCLXX();
 
-  void setAfanLow(const double a) { afanLow = a; UpdateAfanSlope(); }
-  void setAfanHigh(const double a) { afanHigh = a; UpdateAfanSlope(); }
-  void setZLow(const int z) { ZLow = z; UpdateAfanSlope(); }
-  void setZHigh(const int z) { ZHigh = z; UpdateAfanSlope(); }
-  double getAfanLow() const { return afanLow; }
-  double getAfanHigh() const { return afanHigh; }
-  int getZLow() const { return ZLow; }
-  int getZHigh() const { return ZHigh; }
+  private:
 
-private:
-  
-  void UpdateAfanSlope();
+    G4FissionLevelDensityParameterINCLXX(const G4FissionLevelDensityParameterINCLXX& right);
+    const G4FissionLevelDensityParameterINCLXX&
+    operator=(const G4FissionLevelDensityParameterINCLXX& right);
+    G4bool operator==(const G4FissionLevelDensityParameterINCLXX& right) const;
+    G4bool operator!=(const G4FissionLevelDensityParameterINCLXX& right) const;
 
-  G4NuclearLevelData* fNucData;
+  public:
 
-  double afanLow, afanHigh;
-  int ZLow, ZHigh;
-  double afanSlope;
+    G4double LevelDensityParameter(G4int A, G4int Z, G4double U) const final;
 
+    void setAfanLow(const double a)
+    {
+      afanLow = a;
+      UpdateAfanSlope();
+    }
+    void setAfanHigh(const double a)
+    {
+      afanHigh = a;
+      UpdateAfanSlope();
+    }
+    void setZLow(const int z)
+    {
+      ZLow = z;
+      UpdateAfanSlope();
+    }
+    void setZHigh(const int z)
+    {
+      ZHigh = z;
+      UpdateAfanSlope();
+    }
+    double getAfanLow() const { return afanLow; }
+    double getAfanHigh() const { return afanHigh; }
+    int getZLow() const { return ZLow; }
+    int getZHigh() const { return ZHigh; }
+
+  private:
+
+    void UpdateAfanSlope();
+
+    G4NuclearLevelData* fNucData;
+
+    double afanLow, afanHigh;
+    int ZLow, ZHigh;
+    double afanSlope;
 };
-
 
 #endif

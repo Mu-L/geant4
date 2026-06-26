@@ -28,22 +28,22 @@
 //
 // Author: Ivana Hrivnacova, IJCLab IN2P3/CNRS, 12/07/2024
 
-#ifndef G4AccVector_h
-#define G4AccVector_h 1
+#ifndef G4ACCVECTOR_HH
+#define G4ACCVECTOR_HH
 
-#include "G4VAccumulable.hh"
 #include "G4MergeMode.hh"
-
+#include "G4VAccumulable.hh"
 #include "globals.hh"
 
 #include <vector>
 
 // using vector_std::size_t = std::vector::std::size_t;
 
-template <class T, class Allocator = std::allocator<T>>
+template<class T, class Allocator = std::allocator<T>>
 class G4AccVector : public G4VAccumulable
 {
   public:
+
     // ctors to be supported
     // (https://en.cppreference.com/w/cpp/container/vector/vector)
     // 1) Default constructor. Constructs an empty container with a default-constructed allocator.
@@ -57,26 +57,22 @@ class G4AccVector : public G4VAccumulable
     //         const Allocator& alloc = Allocator() );
     // 6) Copy constructor. Constructs the container with the copy of the contents of other.
     // vector( const vector& other );
-    // 8) Move constructor. Constructs the container with the contents of other using move semantics.
-    // vector( vector&& other );
-    // 10) Constructs the container with the contents of the initializer list init.
-    // vector( std::initializer_list<T> init,
+    // 8) Move constructor. Constructs the container with the contents of other using move
+    // semantics. vector( vector&& other ); 10) Constructs the container with the contents of the
+    // initializer list init. vector( std::initializer_list<T> init,
     //    const Allocator& alloc = Allocator() );
 
     // Default constructor (1)
     // Constructs an empty container with a default-constructed allocator.
-    G4AccVector(const G4String& name = "",
-                G4MergeMode mergeMode = G4MergeMode::kAddition);
+    G4AccVector(const G4String& name = "", G4MergeMode mergeMode = G4MergeMode::kAddition);
 
     // Constructor (2)
     // Constructs an empty container with the given allocator alloc.
-    G4AccVector(const Allocator& alloc,
-                G4MergeMode mergeMode = G4MergeMode::kAddition);
+    G4AccVector(const Allocator& alloc, G4MergeMode mergeMode = G4MergeMode::kAddition);
 
     // Constructor (2) with name
     // Constructs an empty container with the given allocator alloc.
-    G4AccVector(const G4String& name,
-                const Allocator& alloc,
+    G4AccVector(const G4String& name, const Allocator& alloc,
                 G4MergeMode mergeMode = G4MergeMode::kAddition);
 
     // Constructor (3)
@@ -84,8 +80,7 @@ class G4AccVector : public G4VAccumulable
     // with a default-constructed allocator.
     // G4AccVector(std::size_t count, const T& value,
     //                     const Allocator& alloc = Allocator());
-    G4AccVector(std::size_t count, const T& value,
-                G4MergeMode mergeMode = G4MergeMode::kAddition,
+    G4AccVector(std::size_t count, const T& value, G4MergeMode mergeMode = G4MergeMode::kAddition,
                 const Allocator& allocator = Allocator());
 
     // Constructor (3) with name
@@ -93,8 +88,7 @@ class G4AccVector : public G4VAccumulable
     // with a default-constructed allocator.
     // G4AccVector(std::size_t count, const T& value,
     //                     const Allocator& alloc = Allocator());
-    G4AccVector(const G4String& name,
-                std::size_t count, const T& value,
+    G4AccVector(const G4String& name, std::size_t count, const T& value,
                 G4MergeMode mergeMode = G4MergeMode::kAddition,
                 const Allocator& allocator = Allocator());
     // Constructor (4)
@@ -102,8 +96,7 @@ class G4AccVector : public G4VAccumulable
     // No copies are made.
     // G4AccVector(std::size_t count,
     //                     const Allocator& alloc = Allocator() );
-    G4AccVector(std::size_t count,
-                G4MergeMode mergeMode = G4MergeMode::kAddition,
+    G4AccVector(std::size_t count, G4MergeMode mergeMode = G4MergeMode::kAddition,
                 const Allocator& allocator = Allocator());
 
     // Constructor (4) with name
@@ -111,8 +104,7 @@ class G4AccVector : public G4VAccumulable
     // No copies are made.
     // G4AccVector(std::size_t count,
     //                     const Allocator& alloc = Allocator() );
-    G4AccVector(const G4String& name,
-                std::size_t count,
+    G4AccVector(const G4String& name, std::size_t count,
                 G4MergeMode mergeMode = G4MergeMode::kAddition,
                 const Allocator& allocator = Allocator());
 
@@ -120,16 +112,14 @@ class G4AccVector : public G4VAccumulable
     // Constructs the container with the contents of the initializer list init.
     // G4AccVector(std::initializer_list<T> init,
     //                     const Allocator& alloc = Allocator() );
-    G4AccVector(std::initializer_list<T> init,
-                G4MergeMode mergeMode = G4MergeMode::kAddition,
+    G4AccVector(std::initializer_list<T> init, G4MergeMode mergeMode = G4MergeMode::kAddition,
                 const Allocator& allocator = Allocator());
 
     // Constructor (10) with name
     // Constructs the container with the contents of the initializer list init.
     // G4AccVector(std::initializer_list<T> init,
     //                     const Allocator& alloc = Allocator() );
-    G4AccVector(const G4String& name,
-                std::initializer_list<T> init,
+    G4AccVector(const G4String& name, std::initializer_list<T> init,
                 G4MergeMode mergeMode = G4MergeMode::kAddition,
                 const Allocator& allocator = Allocator());
 
@@ -162,12 +152,18 @@ class G4AccVector : public G4VAccumulable
     inline void clear() { fVector.clear(); }
     // push_back
     inline void push_back(const T& value) { fVector.push_back(value); }
-    inline void push_back(T&& value ) { fVector.push_back(std::move(value)); }
+    inline void push_back(T&& value) { fVector.push_back(std::move(value)); }
     // emplace_back
-    template< class... Args >
-    inline void emplace_back(Args&&... args ) { fVector.emplace_back(args...); }
-    template< class... Args >
-    inline T& emplace_back(Args&&... args ) { return fVector.emplace_back(args...); }
+    template<class... Args>
+    inline void emplace_back(Args&&... args)
+    {
+      fVector.emplace_back(args...);
+    }
+    template<class... Args>
+    inline T& emplace_back(Args&&... args)
+    {
+      return fVector.emplace_back(args...);
+    }
     // pop_back
     inline void pop_back() { fVector.pop_back(); }
 
@@ -183,11 +179,12 @@ class G4AccVector : public G4VAccumulable
     const std::vector<T>& GetVector() const;
 
   private:
+
     // Data members
-    std::vector<T> fVector {};
+    std::vector<T> fVector{};
     T fInitValue = 0;
     G4MergeFunction<T> fMergeFunction;
- };
+};
 
 // inline functions
 

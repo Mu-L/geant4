@@ -23,29 +23,29 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4DNARotExcitation_h
-#define G4DNARotExcitation_h 1
+#ifndef G4DNAROTEXCITATION_HH
+#define G4DNAROTEXCITATION_HH
 
 #include "G4VEmProcess.hh"
 
 class G4DNARotExcitation : public G4VEmProcess
-{ 
-public:
-  G4DNARotExcitation(const G4String& processName ="G4DNARotExcitation");
-  ~G4DNARotExcitation() override = default;
+{
+  public:
 
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
-  
-  void ProcessDescription(std::ostream& outFile) const override;
+    G4DNARotExcitation(const G4String& processName = "G4DNARotExcitation");
+    ~G4DNARotExcitation() override = default;
 
-protected:
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
 
-  void InitialiseProcess(const G4ParticleDefinition*) override;
-  
-private:
+    void ProcessDescription(std::ostream& outFile) const override;
 
-  G4bool isInitialised{false};
+  protected:
+
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool isInitialised{false};
 };
-
 
 #endif

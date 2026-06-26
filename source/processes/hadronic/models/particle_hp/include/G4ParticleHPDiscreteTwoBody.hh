@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPDiscreteTwoBody_h
-#define G4ParticleHPDiscreteTwoBody_h 1
+#ifndef G4PARTICLEHPDISCRETETWOBODY_HH
+#define G4PARTICLEHPDISCRETETWOBODY_HH
 
 // 101110 Bug fix in MF=6, LAW=2 case; contribution from E. Mendoza, D. Cano-Ott (CIEMAT)
 
@@ -42,24 +42,26 @@
 
 class G4ParticleHPDiscreteTwoBody : public G4VParticleHPEnergyAngular
 {
-public:
-  G4ParticleHPDiscreteTwoBody();
-  ~G4ParticleHPDiscreteTwoBody() override;
+  public:
 
-  void Init(std::istream& aDataFile) override;
+    G4ParticleHPDiscreteTwoBody();
+    ~G4ParticleHPDiscreteTwoBody() override;
 
-  G4ReactionProduct* Sample(G4double anEnergy, G4double massCode, G4double mass) override;
-  G4double MeanEnergyOfThisInteraction() override { return -1.0; }
+    void Init(std::istream& aDataFile) override;
 
-private:
-  G4int nEnergy{0};
-  G4ParticleHPLegendreTable* theCoeff{nullptr};
-  G4bool bCheckDiffCoeffRepr{true};
-  // for example ENDF-VII0_proton/Inelastic/F01/4_9_Beryllium has 0
-  // for energy 7.5E+07 and 12 for energy 1.e+08
+    G4ReactionProduct* Sample(G4double anEnergy, G4double massCode, G4double mass) override;
+    G4double MeanEnergyOfThisInteraction() override { return -1.0; }
 
-  G4InterpolationManager theManager;  // knows the interpolation between stores
-  G4ParticleHPInterpolator theInt;
+  private:
+
+    G4int nEnergy{0};
+    G4ParticleHPLegendreTable* theCoeff{nullptr};
+    G4bool bCheckDiffCoeffRepr{true};
+    // for example ENDF-VII0_proton/Inelastic/F01/4_9_Beryllium has 0
+    // for energy 7.5E+07 and 12 for energy 1.e+08
+
+    G4InterpolationManager theManager;  // knows the interpolation between stores
+    G4ParticleHPInterpolator theInt;
 };
 
 #endif

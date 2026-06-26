@@ -40,8 +40,8 @@
 // This class provides construction of default EM standard physics
 //
 
-#ifndef G4EmStandardPhysics_h
-#define G4EmStandardPhysics_h 1
+#ifndef G4EMSTANDARDPHYSICS_HH
+#define G4EMSTANDARDPHYSICS_HH
 
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
@@ -50,23 +50,16 @@
 
 class G4EmStandardPhysics : public G4VPhysicsConstructor
 {
-public:
+  public:
 
-  explicit G4EmStandardPhysics(G4int ver=1, const G4String& name="");
+    explicit G4EmStandardPhysics(G4int ver = 1, const G4String& name = "");
 
-  ~G4EmStandardPhysics() override;
+    ~G4EmStandardPhysics() override;
 
-  void ConstructParticle() override;
-  void ConstructProcess() override;
-
+    void ConstructParticle() override;
+    void ConstructProcess() override;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-
-
-
-
-

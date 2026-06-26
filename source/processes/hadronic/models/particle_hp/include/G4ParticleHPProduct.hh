@@ -27,13 +27,13 @@
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 // V. Ivanchenko, July-2023 Basic revision of particle HP classes
 //
-#ifndef G4ParticleHPProduct_h
-#define G4ParticleHPProduct_h 1
+#ifndef G4PARTICLEHPPRODUCT_HH
+#define G4PARTICLEHPPRODUCT_HH
 
 #include "G4Cache.hh"
+#include "G4ParticleHPVector.hh"
 #include "G4ReactionProductVector.hh"
 #include "G4VParticleHPEnergyAngular.hh"
-#include "G4ParticleHPVector.hh"
 #include "G4ios.hh"
 #include "globals.hh"
 
@@ -58,6 +58,7 @@ class G4ParticleHPProduct
     };
 
   public:
+
     G4ParticleHPProduct();
     ~G4ParticleHPProduct();
 
@@ -82,7 +83,8 @@ class G4ParticleHPProduct
     inline G4double MeanEnergyOfThisInteraction()
     {
       G4double result = 0.0;
-      if (theDist != nullptr) {
+      if (theDist != nullptr)
+      {
         result = theDist->MeanEnergyOfThisInteraction();
         result *= fCache.Get().theCurrentMultiplicity;
       }
@@ -97,6 +99,7 @@ class G4ParticleHPProduct
     G4double GetMass() { return theMass; }
 
   private:
+
     G4double theMassCode{0.0};
     G4double theMass{0.0};
     G4double theGroundStateQValue{0.0};

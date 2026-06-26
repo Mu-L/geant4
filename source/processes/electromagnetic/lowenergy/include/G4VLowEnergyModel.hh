@@ -32,22 +32,22 @@
 // File name:     G4VLowEnergyModel
 //
 // Author:        Maria Grazia Pia (MariaGrazia.Pia@ge.infn.it)
-// 
+//
 // Creation date: 7 May 2000
 //
-// Modifications: 
+// Modifications:
 // 22/05/2000  MGP          Version compliant with design
 // 20/07/2000  V.Ivanchenko First implementation
 //
-// Class Description: 
+// Class Description:
 //
 // Abstract class for Low Energy Electromagnetic models
 // Further documentation available from http://www.ge.infn.it/geant4/lowE
 // -------------------------------------------------------------------
 //
 
-#ifndef G4VLowEnergyModel_h
-#define G4VLowEnergyModel_h 1
+#ifndef G4VLOWENERGYMODEL_HH
+#define G4VLOWENERGYMODEL_HH
 
 #include "G4ios.hh"
 #include "globals.hh"
@@ -56,39 +56,35 @@ class G4ParticleDefinition;
 class G4DynamicParticle;
 class G4Material;
 
-class G4VLowEnergyModel 
+class G4VLowEnergyModel
 {
-public:
-  explicit G4VLowEnergyModel(const G4String& name);
-  virtual ~G4VLowEnergyModel();
+  public:
 
-  virtual G4double TheValue(const G4DynamicParticle* particle,
-			    const G4Material* material)  = 0;
+    explicit G4VLowEnergyModel(const G4String& name);
+    virtual ~G4VLowEnergyModel();
 
-  virtual G4double TheValue(const G4ParticleDefinition* aParticle,
-			    const G4Material* material,
-                                  G4double kineticEnergy) = 0;
+    virtual G4double TheValue(const G4DynamicParticle* particle, const G4Material* material) = 0;
 
-  virtual G4double HighEnergyLimit(const G4ParticleDefinition* aParticle,
-                                   const G4Material* material) const = 0;
- 
-  virtual G4double LowEnergyLimit(const G4ParticleDefinition* aParticle,
-                                  const G4Material* material) const = 0;
+    virtual G4double TheValue(const G4ParticleDefinition* aParticle, const G4Material* material,
+                              G4double kineticEnergy) = 0;
 
-  virtual G4double HighEnergyLimit(const G4ParticleDefinition* aParticle)
-                                  const = 0;
- 
-  virtual G4double LowEnergyLimit(const G4ParticleDefinition* aParticle) 
-                                  const = 0;
- 
-  virtual G4bool IsInCharge(const G4DynamicParticle* particle,
-			    const G4Material* material) const = 0;
- 
-  virtual G4bool IsInCharge(const G4ParticleDefinition* aParticle,
-			    const G4Material* material) const = 0;
+    virtual G4double HighEnergyLimit(const G4ParticleDefinition* aParticle,
+                                     const G4Material* material) const = 0;
 
-  G4VLowEnergyModel & operator=(const  G4VLowEnergyModel &right) = delete;
-  G4VLowEnergyModel(const  G4VLowEnergyModel&) = delete;
+    virtual G4double LowEnergyLimit(const G4ParticleDefinition* aParticle,
+                                    const G4Material* material) const = 0;
+
+    virtual G4double HighEnergyLimit(const G4ParticleDefinition* aParticle) const = 0;
+
+    virtual G4double LowEnergyLimit(const G4ParticleDefinition* aParticle) const = 0;
+
+    virtual G4bool IsInCharge(const G4DynamicParticle* particle,
+                              const G4Material* material) const = 0;
+
+    virtual G4bool IsInCharge(const G4ParticleDefinition* aParticle,
+                              const G4Material* material) const = 0;
+
+    G4VLowEnergyModel& operator=(const G4VLowEnergyModel& right) = delete;
+    G4VLowEnergyModel(const G4VLowEnergyModel&) = delete;
 };
 #endif
-

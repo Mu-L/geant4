@@ -31,8 +31,8 @@
 
 // Author: H.Kurashige, 27 July 1996
 // --------------------------------------------------------------------
-#ifndef G4PhaseSpaceDecayChannel_hh
-#define G4PhaseSpaceDecayChannel_hh 1
+#ifndef G4PHASESPACEDECAYCHANNEL_HH
+#define G4PHASESPACEDECAYCHANNEL_HH
 
 #include "G4Cache.hh"
 #include "G4VDecayChannel.hh"
@@ -42,6 +42,7 @@
 class G4PhaseSpaceDecayChannel : public G4VDecayChannel
 {
   public:
+
     enum
     {
       MAX_N_DAUGHTERS = 5
@@ -71,6 +72,7 @@ class G4PhaseSpaceDecayChannel : public G4VDecayChannel
     static G4double Pmx(G4double e, G4double p1, G4double p2);
 
   private:
+
     G4DecayProducts* OneBodyDecayIt();
     G4DecayProducts* TwoBodyDecayIt();
     G4DecayProducts* ThreeBodyDecayIt();

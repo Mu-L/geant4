@@ -34,16 +34,15 @@ G4VAdjointReverseReaction::G4VAdjointReverseReaction(const G4String& process_nam
                                                      G4bool whichScatCase)
   : G4VDiscreteProcess(process_name)
 {
-  fCSManager        = G4AdjointCSManager::GetAdjointCSManager();
+  fCSManager = G4AdjointCSManager::GetAdjointCSManager();
   fIsScatProjToProj = whichScatCase;
-  fParticleChange   = new G4ParticleChange();
+  fParticleChange = new G4ParticleChange();
 }
 
 //////////////////////////////////////////////////////////////////////////////
 G4VAdjointReverseReaction::~G4VAdjointReverseReaction()
 {
-  if(fParticleChange)
-    delete fParticleChange;
+  if (fParticleChange) delete fParticleChange;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -54,8 +53,7 @@ void G4VAdjointReverseReaction::BuildPhysicsTable(const G4ParticleDefinition&)
 }
 
 //////////////////////////////////////////////////////////////////////////////
-G4VParticleChange* G4VAdjointReverseReaction::PostStepDoIt(const G4Track& track,
-                                                           const G4Step&)
+G4VParticleChange* G4VAdjointReverseReaction::PostStepDoIt(const G4Track& track, const G4Step&)
 {
   fParticleChange->Initialize(track);
   fAdjointModel->SampleSecondaries(track, fIsScatProjToProj, fParticleChange);
@@ -65,25 +63,23 @@ G4VParticleChange* G4VAdjointReverseReaction::PostStepDoIt(const G4Track& track,
 }
 
 //////////////////////////////////////////////////////////////////////////////
-G4double G4VAdjointReverseReaction::GetMeanFreePath(const G4Track& track,
-                                                    G4double,
+G4double G4VAdjointReverseReaction::GetMeanFreePath(const G4Track& track, G4double,
                                                     G4ForceCondition* condition)
 {
-  *condition                = NotForced;
+  *condition = NotForced;
   G4double preStepKinEnergy = track.GetKineticEnergy();
 
-  if(track.GetTrackID() != fTrackId)
+  if (track.GetTrackID() != fTrackId)
   {
     fTrackId = track.GetTrackID();
   }
-  G4double sigma = fAdjointModel->AdjointCrossSection(
-    track.GetMaterialCutsCouple(), preStepKinEnergy, fIsScatProjToProj);
+  G4double sigma = fAdjointModel->AdjointCrossSection(track.GetMaterialCutsCouple(),
+                                                      preStepKinEnergy, fIsScatProjToProj);
 
   G4double corr = fCSManager->GetCrossSectionCorrection(
-    track.GetDefinition(), preStepKinEnergy, track.GetMaterialCutsCouple(),
-    fIsFwdCSUsed);
+    track.GetDefinition(), preStepKinEnergy, track.GetMaterialCutsCouple(), fIsFwdCSUsed);
 
-  if(std::fabs(corr) > 100.)
+  if (std::fabs(corr) > 100.)
   {
     sigma = 0.0;
   }
@@ -93,8 +89,7 @@ G4double G4VAdjointReverseReaction::GetMeanFreePath(const G4Track& track,
   }
 
   G4double mean_free_path = 1.e60;
-  if(sigma > 0.)
-    mean_free_path = 1. / sigma;
+  if (sigma > 0.) mean_free_path = 1. / sigma;
 
   return mean_free_path;
 }

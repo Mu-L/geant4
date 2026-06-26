@@ -32,8 +32,8 @@
 
 // Author: Makoto Asai, 1998
 // --------------------------------------------------------------------
-#ifndef G4UIsession_hh
-#define G4UIsession_hh 1
+#ifndef G4UISESSION_HH
+#define G4UISESSION_HH
 
 #include "G4coutDestination.hh"
 #include "globals.hh"
@@ -43,6 +43,7 @@
 class G4UIsession : public G4coutDestination
 {
   public:
+
     G4UIsession();
     G4UIsession(G4int iBatch);
     ~G4UIsession() override;
@@ -64,6 +65,7 @@ class G4UIsession : public G4coutDestination
     inline G4int GetLastReturnCode() const { return lastRC; }
 
   protected:
+
     G4ICOMS_DLL static G4int inSession;
     G4int ifBatch = 0;
     G4int lastRC = 0;

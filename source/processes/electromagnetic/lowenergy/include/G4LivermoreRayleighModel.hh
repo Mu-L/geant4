@@ -28,8 +28,8 @@
 //         on base of G4LivermoreRayleighModel
 //
 
-#ifndef G4LivermoreRayleighModel_h
-#define G4LivermoreRayleighModel_h 1
+#ifndef G4LIVERMORERAYLEIGHMODEL_HH
+#define G4LIVERMORERAYLEIGHMODEL_HH
 
 #include "G4ParticleChangeForGamma.hh"
 #include "G4PhysicsFreeVector.hh"
@@ -38,39 +38,41 @@
 
 class G4LivermoreRayleighModel : public G4VEmModel
 {
-public:
-  explicit G4LivermoreRayleighModel();
-  ~G4LivermoreRayleighModel() override;
+  public:
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
-  void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel* masterModel) override;
-  void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
+    explicit G4LivermoreRayleighModel();
+    ~G4LivermoreRayleighModel() override;
 
-  G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
-                                      G4double A = 0, G4double cut = 0,
-                                      G4double emax = DBL_MAX) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel* masterModel) override;
+    void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
-                         const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A = 0, G4double cut = 0,
+                                        G4double emax = DBL_MAX) override;
 
-  [[maybe_unused]] inline void SetLowEnergyThreshold(G4double);
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  G4LivermoreRayleighModel& operator=(const G4LivermoreRayleighModel& right) = delete;
-  G4LivermoreRayleighModel(const G4LivermoreRayleighModel&) = delete;
+    [[maybe_unused]] inline void SetLowEnergyThreshold(G4double);
 
-private:
-  void ReadData(const G4int ZZ);
-  const G4String& FindDirectoryPath();
+    G4LivermoreRayleighModel& operator=(const G4LivermoreRayleighModel& right) = delete;
+    G4LivermoreRayleighModel(const G4LivermoreRayleighModel&) = delete;
 
-  G4ParticleChangeForGamma* fParticleChange;
+  private:
 
-  static G4PhysicsFreeVector* dataCS[101];  // 101 because Z range is 1-100
-  static G4String gDataDirectory;
+    void ReadData(const G4int ZZ);
+    const G4String& FindDirectoryPath();
 
-  G4double lowEnergyLimit;
-  G4int verboseLevel;
-  G4int maxZ = 100;
-  G4bool isInitialised = false;
+    G4ParticleChangeForGamma* fParticleChange;
+
+    static G4PhysicsFreeVector* dataCS[101];  // 101 because Z range is 1-100
+    static G4String gDataDirectory;
+
+    G4double lowEnergyLimit;
+    G4int verboseLevel;
+    G4int maxZ = 100;
+    G4bool isInitialised = false;
 };
 
 [[maybe_unused]] inline void G4LivermoreRayleighModel::SetLowEnergyThreshold(G4double val)

@@ -26,13 +26,13 @@
 //
 // -------------------------------------------------------------------
 //
-//      Geant4 header file 
+//      Geant4 header file
 //
 //      File name: G4ParticleHPElasticDataPT.hh
 //
 //      Authors: Marek Zmeskal (CTU, Czech Technical University in Prague, Czech Republic)
 //	         Loic Thulliez (CEA France)
-// 
+//
 //      Creation date: 4 June 2024
 //
 //      Description: Class for utilization of cross-sections from
@@ -47,38 +47,42 @@
 //                   class with the corresponding process.
 //
 //      Modifications:
-//      
+//
 // -------------------------------------------------------------------
 //
 //
-#ifndef G4ParticleHPElasticDataPT_h
-#define G4ParticleHPElasticDataPT_h 1
+#ifndef G4PARTICLEHPELASTICDATAPT_HH
+#define G4PARTICLEHPELASTICDATAPT_HH
 
 #include "G4VCrossSectionDataSet.hh"
+
 #include <vector>
 
 class G4DynamicParticle;
 class G4ParticleDefinition;
 class G4Element;
 
-
-class G4ParticleHPElasticDataPT : public G4VCrossSectionDataSet {
+class G4ParticleHPElasticDataPT : public G4VCrossSectionDataSet
+{
   public:
+
     G4ParticleHPElasticDataPT();
     ~G4ParticleHPElasticDataPT();
 
-    void BuildPhysicsTable( const G4ParticleDefinition& );
-    G4bool IsIsoApplicable( const G4DynamicParticle* , G4int /*Z*/ , G4int /*A*/ ,
-                            const G4Element* /*elm*/ , const G4Material* /*mat*/ );
-    G4double GetIsoCrossSection( const G4DynamicParticle* , G4int /*Z*/ , G4int /*A*/ ,
-                                 const G4Isotope* /*iso*/ , const G4Element* /*elm*/ , const G4Material* /*mat*/ );
+    void BuildPhysicsTable(const G4ParticleDefinition&);
+    G4bool IsIsoApplicable(const G4DynamicParticle*, G4int /*Z*/, G4int /*A*/,
+                           const G4Element* /*elm*/, const G4Material* /*mat*/);
+    G4double GetIsoCrossSection(const G4DynamicParticle*, G4int /*Z*/, G4int /*A*/,
+                                const G4Isotope* /*iso*/, const G4Element* /*elm*/,
+                                const G4Material* /*mat*/);
 
-    void SetVerboseLevel( G4int );
+    void SetVerboseLevel(G4int);
     G4int GetVerboseLevel() const;
-    virtual void CrossSectionDescription( std::ostream& ) const;
+    virtual void CrossSectionDescription(std::ostream&) const;
 
-   private:
-      std::vector< std::pair< G4double, G4double > >* URRlimits;
+  private:
+
+    std::vector<std::pair<G4double, G4double>>* URRlimits;
 };
 
 #endif

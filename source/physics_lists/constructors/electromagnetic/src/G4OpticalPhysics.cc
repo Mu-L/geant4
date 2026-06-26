@@ -39,16 +39,16 @@
 #include "G4OpticalPhysics.hh"
 
 #include "G4Cerenkov.hh"
-#include "G4GeneralCerenkov.hh"
 #include "G4EmSaturation.hh"
+#include "G4GeneralCerenkov.hh"
 #include "G4LossTableManager.hh"
 #include "G4OpAbsorption.hh"
 #include "G4OpBoundaryProcess.hh"
-#include "G4OpRayleigh.hh"
 #include "G4OpMieHG.hh"
-#include "G4OpticalParameters.hh"
+#include "G4OpRayleigh.hh"
 #include "G4OpWLS.hh"
 #include "G4OpWLS2.hh"
+#include "G4OpticalParameters.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ProcessManager.hh"
 #include "G4QuasiOpticalPhoton.hh"
@@ -83,15 +83,13 @@ void G4OpticalPhysics::ConstructParticle()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 void G4OpticalPhysics::ConstructProcess()
 {
-  if(verboseLevel > 0)
-    G4cout << "G4OpticalPhysics:: Add Optical Physics Processes" << G4endl;
+  if (verboseLevel > 0) G4cout << "G4OpticalPhysics:: Add Optical Physics Processes" << G4endl;
 
   auto params = G4OpticalParameters::Instance();
 
   // Add Optical Processes
 
-  G4ProcessManager* pManager =
-    G4OpticalPhoton::OpticalPhoton()->GetProcessManager();
+  G4ProcessManager* pManager = G4OpticalPhoton::OpticalPhoton()->GetProcessManager();
   if (nullptr == pManager)
   {
     G4ExceptionDescription ed;
@@ -100,48 +98,57 @@ void G4OpticalPhysics::ConstructProcess()
     return;
   }
 
-  if (params->GetProcessActivation("OpAbsorption")) {
+  if (params->GetProcessActivation("OpAbsorption"))
+  {
     auto absorption = new G4OpAbsorption();
     pManager->AddDiscreteProcess(absorption);
   }
 
-  if (params->GetProcessActivation("OpRayleigh")) {
+  if (params->GetProcessActivation("OpRayleigh"))
+  {
     auto rayleigh = new G4OpRayleigh();
     pManager->AddDiscreteProcess(rayleigh);
   }
 
-  if (params->GetProcessActivation("OpMieHG")) {
+  if (params->GetProcessActivation("OpMieHG"))
+  {
     auto mie = new G4OpMieHG();
     pManager->AddDiscreteProcess(mie);
   }
 
-  if (params->GetProcessActivation("OpBoundary")) {
+  if (params->GetProcessActivation("OpBoundary"))
+  {
     auto boundary = new G4OpBoundaryProcess();
     pManager->AddDiscreteProcess(boundary);
   }
 
-  if (params->GetProcessActivation("OpWLS")) {
+  if (params->GetProcessActivation("OpWLS"))
+  {
     auto wls = new G4OpWLS();
     pManager->AddDiscreteProcess(wls);
   }
 
-  if (params->GetProcessActivation("OpWLS2")) {
+  if (params->GetProcessActivation("OpWLS2"))
+  {
     auto wls2 = new G4OpWLS2();
     pManager->AddDiscreteProcess(wls2);
   }
 
   G4VProcess* theCerenkov{nullptr};
-  if (params->CerenkovGeneral()) {
+  if (params->CerenkovGeneral())
+  {
     auto ptr = new G4GeneralCerenkov();
     theCerenkov = ptr;
   }
-  else if (params->GetProcessActivation("Cerenkov")) {
+  else if (params->GetProcessActivation("Cerenkov"))
+  {
     auto ptr = new G4Cerenkov();
     theCerenkov = ptr;
   }
 
   G4VProcess* theScint{nullptr};
-  if (params->GetProcessActivation("Scintillation")) {
+  if (params->GetProcessActivation("Scintillation"))
+  {
     auto scint = new G4Scintillation();
     G4EmSaturation* emSaturation = G4LossTableManager::Instance()->EmSaturation();
     scint->AddSaturation(emSaturation);
@@ -151,33 +158,36 @@ void G4OpticalPhysics::ConstructProcess()
   auto myParticleIterator = GetParticleIterator();
   myParticleIterator->reset();
 
-  while((*myParticleIterator)())
+  while ((*myParticleIterator)())
   {
     auto particle = myParticleIterator->value();
-    if (particle->IsShortLived()) { continue; }
+    if (particle->IsShortLived())
+    {
+      continue;
+    }
 
     pManager = particle->GetProcessManager();
-    if (nullptr == pManager) {
+    if (nullptr == pManager)
+    {
       G4ExceptionDescription ed;
       ed << "Particle " << particle->GetParticleName() << "without a Process Manager";
-      G4Exception("G4OpticalPhysics::ConstructProcess()", "", FatalException,
-                  ed);
+      G4Exception("G4OpticalPhysics::ConstructProcess()", "", FatalException, ed);
       return;  // else coverity complains for pManager use below
     }
 
-    if (nullptr != theCerenkov && theCerenkov->IsApplicable(*particle)) {
+    if (nullptr != theCerenkov && theCerenkov->IsApplicable(*particle))
+    {
       pManager->AddDiscreteProcess(theCerenkov);
     }
-    
-    if (nullptr != theScint && theScint->IsApplicable(*particle)) {
+
+    if (nullptr != theScint && theScint->IsApplicable(*particle))
+    {
       pManager->AddProcess(theScint);
       pManager->SetProcessOrderingToLast(theScint, idxAtRest);
       pManager->SetProcessOrderingToLast(theScint, idxPostStep);
     }
   }
 
-  if(verboseLevel > 1)
-    PrintStatistics();
-  if(verboseLevel > 0)
-    G4cout << "### " << namePhysics << " physics constructed." << G4endl;
+  if (verboseLevel > 1) PrintStatistics();
+  if (verboseLevel > 0) G4cout << "### " << namePhysics << " physics constructed." << G4endl;
 }

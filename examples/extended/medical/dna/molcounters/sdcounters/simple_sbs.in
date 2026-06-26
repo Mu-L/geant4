@@ -37,9 +37,8 @@
 /scheduler/verbose 0
 /scheduler/endTime 0.001 microsecond
 
-/scorer/BasicMoleculeCounts/nOfTimeBins 10
-/scorer/BasicCounter_VariablePrecision/nOfTimeBins 10
-/scorer/basicreactioncounts/nOfTimeBins 10
+/scorer/BasicMoleculeCounts/setNbOfTimeBins 10
+/scorer/BasicCounter_VariablePrecision/setNbOfTimeBins 10
 
 /run/verbose 1
 /run/printProgress 1

@@ -45,46 +45,43 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4eeToPGammaModel_h
-#define G4eeToPGammaModel_h 1
+#ifndef G4EETOPGAMMAMODEL_HH
+#define G4EETOPGAMMAMODEL_HH
 
-#include "G4Vee2hadrons.hh"
-#include "globals.hh"
-#include "G4eeCrossSections.hh"
 #include "G4ParticleDefinition.hh"
+#include "G4Vee2hadrons.hh"
+#include "G4eeCrossSections.hh"
+#include "globals.hh"
 
 class G4DynamicParticle;
 class G4PhysicsVector;
 
 class G4eeToPGammaModel : public G4Vee2hadrons
 {
+  public:
 
-public:
+    explicit G4eeToPGammaModel(G4eeCrossSections*, const G4String&, G4double, G4double);
 
-  explicit G4eeToPGammaModel(G4eeCrossSections*, const G4String&,
-                             G4double,G4double);
+    ~G4eeToPGammaModel() override;
 
-  ~G4eeToPGammaModel() override;
+    G4double PeakEnergy() const override;
 
-  G4double PeakEnergy() const override;
+    G4double ComputeCrossSection(G4double) const override;
 
-  G4double ComputeCrossSection(G4double) const override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, G4double,
+                           const G4ThreeVector&) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-              G4double, const G4ThreeVector&) override;
+    // hide assignment operator
+    G4eeToPGammaModel& operator=(const G4eeToPGammaModel& right) = delete;
+    G4eeToPGammaModel(const G4eeToPGammaModel&) = delete;
 
-  // hide assignment operator
-  G4eeToPGammaModel & operator=(const  G4eeToPGammaModel &right) = delete;
-  G4eeToPGammaModel(const  G4eeToPGammaModel&) = delete;
+  private:
 
-private:
+    const G4ParticleDefinition* particle;
+    const G4ParticleDefinition* pi0;
 
-  const G4ParticleDefinition* particle;
-  const G4ParticleDefinition* pi0;
-
-  G4double massP;
-  G4double massR;
-
+    G4double massP;
+    G4double massR;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

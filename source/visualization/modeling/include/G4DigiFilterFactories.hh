@@ -33,25 +33,23 @@
 #ifndef G4DIGIFILTERFACTORIES_HH
 #define G4DIGIFILTERFACTORIES_HH
 
+#include "G4VDigi.hh"
 #include "G4VFilter.hh"
 #include "G4VModelFactory.hh"
-#include "G4VDigi.hh"
 
 // Attribute filter
-class G4DigiAttributeFilterFactory : public G4VModelFactory< G4VFilter<G4VDigi>  > {
+class G4DigiAttributeFilterFactory : public G4VModelFactory<G4VFilter<G4VDigi>>
+{
+  public:  // With description
 
-public: // With description
+    typedef std::vector<G4UImessenger*> Messengers;
+    typedef std::pair<G4VFilter<G4VDigi>*, Messengers> ModelAndMessengers;
 
-  typedef std::vector<G4UImessenger*> Messengers;
-  typedef std::pair< G4VFilter<G4VDigi> *, Messengers > ModelAndMessengers;
+    G4DigiAttributeFilterFactory();
 
-  G4DigiAttributeFilterFactory();
+    virtual ~G4DigiAttributeFilterFactory();
 
-  virtual ~G4DigiAttributeFilterFactory();
-  
-  ModelAndMessengers Create(const G4String& placement, const G4String& name);
-    
+    ModelAndMessengers Create(const G4String& placement, const G4String& name);
 };
 
 #endif
-

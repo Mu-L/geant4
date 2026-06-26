@@ -26,17 +26,17 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPIsoData_h
-#define G4ParticleHPIsoData_h 1
+#ifndef G4PARTICLEHPISODATA_HH
+#define G4PARTICLEHPISODATA_HH
 
 // Hadronic Process: Very Low Energy Neutron X-Sections
 // original by H.P. Wellisch, TRIUMF, 14-Feb-97
 // Has the Cross-section data for on isotope.
 
-#include "G4ios.hh"
-#include "globals.hh"
 #include "G4ParticleHPNames.hh"
 #include "G4ParticleHPVector.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 
@@ -58,7 +58,8 @@ class G4ParticleHPIsoData
       return Init(A, Z, 0, abun, dirName, aFSType);
     }
 
-    G4bool Init(G4int A, G4int Z, G4int M, G4double abun, const G4String& dirName, const G4String& aFSType);
+    G4bool Init(G4int A, G4int Z, G4int M, G4double abun, const G4String& dirName,
+                const G4String& aFSType);
 
     void Init(G4int A, G4int Z, G4double abun, G4ParticleDefinition* projectile,
               const char* dataDirVariable)

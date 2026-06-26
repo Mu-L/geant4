@@ -30,8 +30,7 @@
 
 #include "G4IdentityTrajectoryFilter.hh"
 
-void
-G4IdentityTrajectoryFilter::TakeIntermediatePoint( G4ThreeVector newPoint )
+void G4IdentityTrajectoryFilter::TakeIntermediatePoint(G4ThreeVector newPoint)
 {
   // Just store every single point, initially. (jacek 30/10/2002)
   // Implement more sophisticated filters later.  Copy by value into
@@ -39,5 +38,5 @@ G4IdentityTrajectoryFilter::TakeIntermediatePoint( G4ThreeVector newPoint )
   // the final version, will probably want to create the intermediate
   // points at this stage.
   //
-  fpFilteredPoints->push_back( newPoint );
+  fpFilteredPoints->push_back(newPoint);
 }

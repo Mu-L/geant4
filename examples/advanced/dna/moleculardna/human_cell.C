@@ -342,7 +342,7 @@ f->Close();
 
 // Calculate the absorbed dose
 dose = acc_edep * eVtoJ / mass;
-SD_dose = sqrt(abs(((acc_edep2 / totnentries) - pow(acc_edep / totnentries,2)))/(totnentries -1))* eVtoJ / mass;
+SD_dose = totnentries*sqrt(abs(((acc_edep2 / totnentries) - pow(acc_edep / totnentries,2)))/(totnentries -1))* eVtoJ / mass;
 
 // This is a normalization factor to produce the output in Gy-1 Gbp-1, or else.
 // Default value is 1 to produce the result in Gy-1 Mbp-1
@@ -357,19 +357,12 @@ OHS_yield = (Double_t) total_OHS / dose / Nbp;
 HB_yield  = (Double_t) total_HB  / dose / Nbp;
 HS_yield  = (Double_t) total_HS  / dose / Nbp;
 
-SD_EB_yield  = total_EB  / dose / Nbp * sqrt(pow(SD_EB  /total_EB  ,2)+pow(SD_dose/dose,2));
-SD_ES_yield  = total_ES  / dose / Nbp * sqrt(pow(SD_ES  /total_ES  ,2)+pow(SD_dose/dose,2));
-SD_OHB_yield = total_OHB / dose / Nbp * sqrt(pow(SD_OHB /total_OHB ,2)+pow(SD_dose/dose,2));
-SD_OHS_yield = total_OHS / dose / Nbp * sqrt(pow(SD_OHS /total_OHS ,2)+pow(SD_dose/dose,2));
-SD_HB_yield  = total_HB  / dose / Nbp * sqrt(pow(SD_HB  /total_HB  ,2)+pow(SD_dose/dose,2));
-SD_HS_yield  = total_HS  / dose / Nbp * sqrt(pow(SD_HS  /total_HS  ,2)+pow(SD_dose/dose,2));
-//Previous method
-//SD_EB_yield  = SD_EB  / dose / Nbp;
-//SD_ES_yield  = SD_ES  / dose / Nbp;
-//SD_OHB_yield = SD_OHB / dose / Nbp;
-//SD_OHS_yield = SD_OHS / dose / Nbp;
-//SD_HB_yield  = SD_HB  / dose / Nbp;
-//SD_HS_yield  = SD_HS  / dose / Nbp;
+if(0<total_EB  )SD_EB_yield  = total_EB  / dose / Nbp * sqrt(pow(SD_EB  /total_EB  ,2)+pow(SD_dose/dose,2))/EB_yield ;
+if(0<total_ES  )SD_ES_yield  = total_ES  / dose / Nbp * sqrt(pow(SD_ES  /total_ES  ,2)+pow(SD_dose/dose,2))/ES_yield ;
+if(0<total_OHB )SD_OHB_yield = total_OHB / dose / Nbp * sqrt(pow(SD_OHB /total_OHB ,2)+pow(SD_dose/dose,2))/OHB_yield;
+if(0<total_OHS )SD_OHS_yield = total_OHS / dose / Nbp * sqrt(pow(SD_OHS /total_OHS ,2)+pow(SD_dose/dose,2))/OHS_yield;
+if(0<total_HB  )SD_HB_yield  = total_HB  / dose / Nbp * sqrt(pow(SD_HB  /total_HB  ,2)+pow(SD_dose/dose,2))/HB_yield ;
+if(0<total_HS  )SD_HS_yield  = total_HS  / dose / Nbp * sqrt(pow(SD_HS  /total_HS  ,2)+pow(SD_dose/dose,2))/HS_yield ;
 
 SSB_yield   = (Double_t) norm * total_SSB   / dose / Nbp;
 SSBp_yield  = (Double_t) norm * total_SSBp  / dose / Nbp;
@@ -378,19 +371,12 @@ DSB_yield   = (Double_t) norm * total_DSB   / dose / Nbp;
 DSBp_yield  = (Double_t) norm * total_DSBp  / dose / Nbp;
 DSBpp_yield = (Double_t) norm * total_DSBpp / dose / Nbp;
 
-SD_SSB_yield   = norm * total_SSB   / dose / Nbp * sqrt(pow(SD_SSB   /total_SSB   ,2)+pow(SD_dose/dose,2));
-SD_SSBp_yield  = norm * total_SSBp  / dose / Nbp * sqrt(pow(SD_SSBp  /total_SSBp  ,2)+pow(SD_dose/dose,2));
-SD_SSB2p_yield = norm * total_SSB2p / dose / Nbp * sqrt(pow(SD_SSB2p /total_SSB2p ,2)+pow(SD_dose/dose,2));
-SD_DSB_yield   = norm * total_DSB   / dose / Nbp * sqrt(pow(SD_DSB   /total_DSB   ,2)+pow(SD_dose/dose,2));
-SD_DSBp_yield  = norm * total_DSBp  / dose / Nbp * sqrt(pow(SD_DSBp  /total_DSBp  ,2)+pow(SD_dose/dose,2));
-SD_DSBpp_yield = norm * total_DSBpp / dose / Nbp * sqrt(pow(SD_DSBpp /total_DSBpp ,2)+pow(SD_dose/dose,2));
-//Previous method
-//SD_SSB_yield   = norm * SD_SSB   / dose / Nbp;
-//SD_SSBp_yield  = norm * SD_SSBp  / dose / Nbp;
-//SD_SSB2p_yield = norm * SD_SSB2p / dose / Nbp;
-//SD_DSB_yield   = norm * SD_DSB   / dose / Nbp;
-//SD_DSBp_yield  = norm * SD_DSBp  / dose / Nbp;
-//SD_DSBpp_yield = norm * SD_DSBpp / dose / Nbp;
+if(0<total_SSB   )SD_SSB_yield   = norm * total_SSB   / dose / Nbp * sqrt(pow(SD_SSB   /total_SSB   ,2)+pow(SD_dose/dose,2))/SSB_yield  ;
+if(0<total_SSBp  )SD_SSBp_yield  = norm * total_SSBp  / dose / Nbp * sqrt(pow(SD_SSBp  /total_SSBp  ,2)+pow(SD_dose/dose,2))/SSBp_yield ;
+if(0<total_SSB2p )SD_SSB2p_yield = norm * total_SSB2p / dose / Nbp * sqrt(pow(SD_SSB2p /total_SSB2p ,2)+pow(SD_dose/dose,2))/SSB2p_yield;
+if(0<total_DSB   )SD_DSB_yield   = norm * total_DSB   / dose / Nbp * sqrt(pow(SD_DSB   /total_DSB   ,2)+pow(SD_dose/dose,2))/DSB_yield  ;
+if(0<total_DSBp  )SD_DSBp_yield  = norm * total_DSBp  / dose / Nbp * sqrt(pow(SD_DSBp  /total_DSBp  ,2)+pow(SD_dose/dose,2))/DSBp_yield ;
+if(0<total_DSBpp )SD_DSBpp_yield = norm * total_DSBpp / dose / Nbp * sqrt(pow(SD_DSBpp /total_DSBpp ,2)+pow(SD_dose/dose,2))/DSBpp_yield;
 
 sSSB_yield = (Double_t) norm * total_sSSB / dose / Nbp;
 SSBi_yield = (Double_t) norm * total_SSBi / dose / Nbp;
@@ -402,64 +388,55 @@ DSBd_yield = (Double_t) norm * total_DSBd / dose / Nbp;
 DSBm_yield = (Double_t) norm * total_DSBm / dose / Nbp;
 DSBh_yield = (Double_t) norm * total_DSBh / dose / Nbp;
 
-SD_sSSB_yield = norm * total_sSSB/ dose / Nbp* sqrt(pow(SD_sSSB /total_sSSB,2)+pow(SD_dose/dose,2));
-SD_SSBi_yield = norm * total_SSBi/ dose / Nbp* sqrt(pow(SD_SSBi /total_SSBi,2)+pow(SD_dose/dose,2));
-SD_SSBd_yield = norm * total_SSBd/ dose / Nbp* sqrt(pow(SD_SSBd /total_SSBd,2)+pow(SD_dose/dose,2));
-SD_SSBm_yield = norm * total_SSBm/ dose / Nbp* sqrt(pow(SD_SSBm /total_SSBm,2)+pow(SD_dose/dose,2));
-SD_sDSB_yield = norm * total_sDSB/ dose / Nbp* sqrt(pow(SD_sDSB /total_sDSB,2)+pow(SD_dose/dose,2));
-SD_DSBi_yield = norm * total_DSBi/ dose / Nbp* sqrt(pow(SD_DSBi /total_DSBi,2)+pow(SD_dose/dose,2));
-SD_DSBd_yield = norm * total_DSBd/ dose / Nbp* sqrt(pow(SD_DSBd /total_DSBd,2)+pow(SD_dose/dose,2));
-SD_DSBm_yield = norm * total_DSBm/ dose / Nbp* sqrt(pow(SD_DSBm /total_DSBm,2)+pow(SD_dose/dose,2));
-SD_DSBh_yield = norm * total_DSBh/ dose / Nbp* sqrt(pow(SD_DSBh /total_DSBh,2)+pow(SD_dose/dose,2));
-//Previous method
-//SD_sSSB_yield = norm * SD_sSSB / dose / Nbp;
-//SD_SSBi_yield = norm * SD_SSBi / dose / Nbp;
-//SD_SSBd_yield = norm * SD_SSBd / dose / Nbp;
-//SD_SSBm_yield = norm * SD_SSBm / dose / Nbp;
-//SD_sDSB_yield = norm * SD_sDSB / dose / Nbp;
-//SD_DSBi_yield = norm * SD_DSBi / dose / Nbp;
-//SD_DSBd_yield = norm * SD_DSBd / dose / Nbp;
-//SD_DSBm_yield = norm * SD_DSBm / dose / Nbp;
-//SD_DSBh_yield = norm * SD_DSBh / dose / Nbp;
+if(0<total_sSSB )SD_sSSB_yield = norm * total_sSSB/ dose / Nbp* sqrt(pow(SD_sSSB /total_sSSB,2)+pow(SD_dose/dose,2))/sSSB_yield;
+if(0<total_SSBi )SD_SSBi_yield = norm * total_SSBi/ dose / Nbp* sqrt(pow(SD_SSBi /total_SSBi,2)+pow(SD_dose/dose,2))/SSBi_yield;
+if(0<total_SSBd )SD_SSBd_yield = norm * total_SSBd/ dose / Nbp* sqrt(pow(SD_SSBd /total_SSBd,2)+pow(SD_dose/dose,2))/SSBd_yield;
+if(0<total_SSBm )SD_SSBm_yield = norm * total_SSBm/ dose / Nbp* sqrt(pow(SD_SSBm /total_SSBm,2)+pow(SD_dose/dose,2))/SSBm_yield;
+if(0<total_sDSB )SD_sDSB_yield = norm * total_sDSB/ dose / Nbp* sqrt(pow(SD_sDSB /total_sDSB,2)+pow(SD_dose/dose,2))/sDSB_yield;
+if(0<total_DSBi )SD_DSBi_yield = norm * total_DSBi/ dose / Nbp* sqrt(pow(SD_DSBi /total_DSBi,2)+pow(SD_dose/dose,2))/DSBi_yield;
+if(0<total_DSBd )SD_DSBd_yield = norm * total_DSBd/ dose / Nbp* sqrt(pow(SD_DSBd /total_DSBd,2)+pow(SD_dose/dose,2))/DSBd_yield;
+if(0<total_DSBm )SD_DSBm_yield = norm * total_DSBm/ dose / Nbp* sqrt(pow(SD_DSBm /total_DSBm,2)+pow(SD_dose/dose,2))/DSBm_yield;
+if(0<total_DSBh )SD_DSBh_yield = norm * total_DSBh/ dose / Nbp* sqrt(pow(SD_DSBh /total_DSBh,2)+pow(SD_dose/dose,2))/DSBh_yield;
 
 // Print output in terminal
 
-float total_SSB_totalYield = SSB_yield + SSBp_yield + SSB2p_yield;
-float total_DSB_totalYield = DSB_yield + DSBp_yield + DSBpp_yield;
+float SSB_totalYield = SSB_yield + SSBp_yield + SSB2p_yield;
+float DSB_totalYield = DSB_yield + DSBp_yield + DSBpp_yield;
 
-cout<<"\n"                      <<ifile         <<'\n'
-    <<"\nDose Absorbed (Gy): "  <<dose          <<'\n'
+cout<<"\n"                      <<ifile         <<'\n'<<'\n'
     <<"Particle : "             <<primaryName   <<'\t'
     <<"Energy (MeV) : "         <<Energy        <<'\t'
-    <<"Number of Primaries : "  <<number        <<'\n'
+    <<"Number of Primaries : "  <<number        <<'\t'<<'\n'
+    <<"Dose Absorbed (Gy): "  <<dose            <<" +- "<< SD_dose <<'\n'<<'\n'
     <<"  Output Damage : "                      <<'\n'<<'\t'
     <<"     Species Hits (Gy-1 Mbp-1) "      <<'\n'<<'\t'
-    <<"EaqBaseHits   : "     <<EB_yield     <<"   \t"      <<" error %: "   <<100*SD_EB_yield/EB_yield        <<'\n'<<'\t'
-    <<"EaqStrandHits : "     <<ES_yield     <<"   \t"      <<" error %: "   <<100*SD_ES_yield/ES_yield        <<'\n'<<'\t'
-    <<"OHBaseHits    : "     <<OHB_yield    <<"   \t"      <<" error %: "   <<100*SD_OHB_yield/OHB_yield      <<'\n'<<'\t'
-    <<"OHStrandHits  : "     <<OHS_yield    <<"   \t"      <<" error %: "   <<100*SD_OHS_yield/OHS_yield      <<'\n'<<'\t'
-    <<"HBaseHits     : "     <<HB_yield     <<"   \t"      <<" error %: "   <<100*SD_HB_yield/HB_yield        <<'\n'<<'\t'
-    <<"HStrandHits   : "     <<HS_yield     <<"   \t"      <<" error %: "   <<100*SD_HS_yield/HS_yield        <<'\n'<<'\n'<<'\t'
+    <<"EaqBaseHits   : "     <<EB_yield     <<"   \t"      <<" error %: "   <<100*SD_EB_yield     <<'\n'<<'\t'
+    <<"EaqStrandHits : "     <<ES_yield     <<"   \t"      <<" error %: "   <<100*SD_ES_yield     <<'\n'<<'\t'
+    <<"OHBaseHits    : "     <<OHB_yield    <<"   \t"      <<" error %: "   <<100*SD_OHB_yield    <<'\n'<<'\t'
+    <<"OHStrandHits  : "     <<OHS_yield    <<"   \t"      <<" error %: "   <<100*SD_OHS_yield    <<'\n'<<'\t'
+    <<"HBaseHits     : "     <<HB_yield     <<"   \t"      <<" error %: "   <<100*SD_HB_yield     <<'\n'<<'\t'
+    <<"HStrandHits   : "     <<HS_yield     <<"   \t"      <<" error %: "   <<100*SD_HS_yield     <<'\n'<<'\t'
     <<"     Damage yield (Gy-1 Gbp-1) "      <<'\n'<<'\t'
-    <<"SSB           : "     <<SSB_yield    <<"   \t"      <<" error %: "   <<100*SD_SSB_yield/SSB_yield      <<'\n'<<'\t'
-    <<"SSB+          : "     <<SSBp_yield   <<"   \t"      <<" error %: "   <<100*SD_SSBp_yield/SSBp_yield    <<'\n'<<'\t'
-    <<"2SSB          : "     <<SSB2p_yield  <<"   \t"      <<" error %: "   <<100*SD_SSB2p_yield/SSB2p_yield  <<'\n'<<'\t'
-    <<"SSB total     : "     <<total_SSB_totalYield        <<'\n'<<'\t'
-    <<"DSB           : "     <<DSB_yield    <<"   \t"      <<" error %: "   <<100*SD_DSB_yield/DSB_yield     <<'\n'<<'\t'
-    <<"DSB+          : "     <<DSBp_yield   <<"   \t"      <<" error %: "   <<100*SD_DSBp_yield/DSBp_yield   <<'\n'<<'\t'
-    <<"DSB++         : "     <<DSBpp_yield  <<"   \t"      <<" error %: "   <<100*SD_DSBpp_yield/DSBpp_yield <<'\n'<<'\t'
-    <<"DSB total     : "     <<total_DSB_totalYield        <<'\n'<<'\n'<<'\t'
+    <<"SSB           : "     <<SSB_yield    <<"   \t"      <<" error %: "   <<100*SD_SSB_yield    <<'\n'<<'\t'
+    <<"SSB+          : "     <<SSBp_yield   <<"   \t"      <<" error %: "   <<100*SD_SSBp_yield   <<'\n'<<'\t'
+    <<"2SSB          : "     <<SSB2p_yield  <<"   \t"      <<" error %: "   <<100*SD_SSB2p_yield  <<'\n'<<'\t'
+    <<"SSB total     : "     <<SSB_totalYield<<'\n'<<'\t'
+    <<"DSB           : "     <<DSB_yield    <<"   \t"      <<" error %: "   <<100*SD_DSB_yield    <<'\n'<<'\t'
+    <<"DSB+          : "     <<DSBp_yield   <<"   \t"      <<" error %: "   <<100*SD_DSBp_yield   <<'\n'<<'\t'
+    <<"DSB++         : "     <<DSBpp_yield  <<"   \t"      <<" error %: "   <<100*SD_DSBpp_yield  <<'\n'<<'\t'
+    <<"DSB total     : "     <<DSB_totalYield<<'\n'<<'\t'
     <<"     Breaks yield (Gy-1 Gbp-1) "      <<'\n'<<'\t'
-    <<"SSB direct    : "     <<SSBd_yield   <<"   \t"      <<" error %: "   <<100*SD_SSBd_yield/SSBd_yield   <<'\n'<<'\t'
-    <<"SSB indirect  : "     <<SSBi_yield   <<"   \t"      <<" error %: "   <<100*SD_SSBi_yield/SSBi_yield   <<'\n'<<'\t'
-    <<"SSB mixed     : "     <<SSBm_yield   <<"   \t"      <<" error %: "   <<100*SD_SSBm_yield/SSBm_yield   <<'\n'<<'\t'
-    <<"SSB total     : "     <<sSSB_yield   <<"   \t"      <<" error %: "   <<100*SD_sSSB_yield/sSSB_yield   <<'\n'<<'\t'
-    <<"DSB direct    : "     <<DSBd_yield   <<"   \t"      <<" error %: "   <<100*SD_DSBd_yield/DSBd_yield   <<'\n'<<'\t'
-    <<"DSB indirect  : "     <<DSBi_yield   <<"   \t"      <<" error %: "   <<100*SD_DSBi_yield/DSBi_yield   <<'\n'<<'\t'
-    <<"DSB mixed     : "     <<DSBm_yield   <<"   \t"      <<" error %: "   <<100*SD_DSBm_yield/DSBm_yield   <<'\n'<<'\t'
-    <<"DSB hybrid    : "     <<DSBh_yield   <<"   \t"      <<" error %: "   <<100*SD_DSBh_yield/DSBh_yield   <<'\n'<<'\t'
-    <<"DSB total     : "     <<sDSB_yield   <<"   \t"      <<" error %: "   <<100*SD_sDSB_yield/sDSB_yield   <<'\n'<<'\n'<<'\t'
-    <<"SSB/DSB       : "     <<sSSB_yield/sDSB_yield       <<'\n'<<'\n';
+    <<"SSB direct    : "     <<SSBd_yield   <<"   \t"      <<" error %: "   <<100*SD_SSBd_yield   <<'\n'<<'\t'
+    <<"SSB indirect  : "     <<SSBi_yield   <<"   \t"      <<" error %: "   <<100*SD_SSBi_yield   <<'\n'<<'\t'
+    <<"SSB mixed     : "     <<SSBm_yield   <<"   \t"      <<" error %: "   <<100*SD_SSBm_yield   <<'\n'<<'\t'
+    <<"SSB total     : "     <<sSSB_yield   <<"   \t"      <<" error %: "   <<100*SD_sSSB_yield   <<'\n'<<'\t'
+    <<"DSB direct    : "     <<DSBd_yield   <<"   \t"      <<" error %: "   <<100*SD_DSBd_yield   <<'\n'<<'\t'
+    <<"DSB indirect  : "     <<DSBi_yield   <<"   \t"      <<" error %: "   <<100*SD_DSBi_yield   <<'\n'<<'\t'
+    <<"DSB mixed     : "     <<DSBm_yield   <<"   \t"      <<" error %: "   <<100*SD_DSBm_yield   <<'\n'<<'\t'
+    <<"DSB hybrid    : "     <<DSBh_yield   <<"   \t"      <<" error %: "   <<100*SD_DSBh_yield   <<'\n'<<'\t'
+    <<"DSB total     : "     <<sDSB_yield   <<"   \t"      <<" error %: "   <<100*SD_sDSB_yield   <<'\n'<<'\n'<<'\t'
+
+    <<"SSB total /DSB total : "     <<sSSB_yield/DSB_yield<<"   \t"      <<" error %:  "<<100*sqrt(SD_sSSB_yield*SD_sSSB_yield+SD_sDSB_yield *SD_sDSB_yield ) <<'\n'<<'\n';
 
 // Plot Histograms
 
@@ -482,7 +459,7 @@ pad1->cd();
 const Int_t n = 6;
 Double_t x[n] = {1,2,3,4,5,6};
 Double_t y[n] = {EB_yield,ES_yield,OHB_yield,OHS_yield,HB_yield,HS_yield};
-Double_t err_y[n] = {SD_EB_yield,SD_ES_yield,SD_OHB_yield,SD_OHS_yield,SD_HB_yield,SD_HS_yield};
+Double_t err_y[n] = {EB_yield*SD_EB_yield,ES_yield*SD_ES_yield,OHB_yield*SD_OHB_yield,OHS_yield*SD_OHS_yield,HB_yield*SD_HB_yield,HS_yield*SD_HS_yield};
 TGraph* gr = new TGraphErrors(n,x,y,0,err_y);
 gr->SetTitle("Species");
 gr->GetXaxis()->SetBinLabel(9, "EaqBaseHits");
@@ -501,7 +478,7 @@ gr->Draw("ba");
 pad2->cd();
 Double_t x2[n] = {1,2,3,4,5,6};
 Double_t y2[n] = {SSBp_yield,SSB2p_yield,SSB_yield,DSBp_yield,DSBpp_yield,DSB_yield};
-Double_t err_y2[n] = {SD_SSBp_yield,SD_SSB2p_yield,SD_SSB_yield,SD_DSBp_yield,SD_DSBpp_yield,SD_DSB_yield};
+Double_t err_y2[n] = {SSBp_yield*SD_SSBp_yield,SSB2p_yield*SD_SSB2p_yield,SSB_yield*SD_SSB_yield,DSBp_yield*SD_DSBp_yield,DSBpp_yield*SD_DSBpp_yield,DSB_yield*SD_DSB_yield};
 TGraph* gr2 = new TGraphErrors(n,x2,y2,0,err_y2);
 gr2->SetTitle("Damage Yield");
 gr2->GetXaxis()->SetBinLabel(9, "SSB+");
@@ -522,7 +499,7 @@ pad3->cd();
 const Int_t m = 4;
 Double_t x3[m] = {1,2,3,4};
 Double_t y3[m] = {SSBd_yield,SSBi_yield,SSBm_yield,sSSB_yield};
-Double_t err_y3[m] = {SD_SSBd_yield,SD_SSBi_yield,SD_SSBm_yield,SD_sSSB_yield};
+Double_t err_y3[m] = {SSBd_yield*SD_SSBd_yield,SSBi_yield*SD_SSBi_yield,SSBm_yield*SD_SSBm_yield,sSSB_yield*SD_sSSB_yield};
 TGraph* gr3 = new TGraphErrors(m,x3,y3,0,err_y3);
 gr3->SetTitle("Breaks Yield");
 gr3->GetXaxis()->SetBinLabel(8, "SSB direct");
@@ -541,7 +518,7 @@ pad4->cd();
 const Int_t k = 5;
 Double_t x4[k] = {1,2,3,4,5};
 Double_t y4[k] = {DSBd_yield,DSBi_yield,DSBm_yield,DSBh_yield,sDSB_yield};
-Double_t err_y4[k] = {SD_DSBd_yield,SD_DSBi_yield,SD_DSBm_yield,SD_DSBh_yield,SD_sDSB_yield};
+Double_t err_y4[k] = {DSBd_yield*SD_DSBd_yield,DSBi_yield*SD_DSBi_yield,DSBm_yield*SD_DSBm_yield,DSBh_yield*SD_DSBh_yield,sDSB_yield*SD_sDSB_yield};
 TGraph* gr4 = new TGraphErrors(k,x4,y4,0,err_y4);
 gr4->SetTitle("Breaks Yield");
 gr4->GetXaxis()->SetBinLabel(8,"DSB direct");

@@ -43,13 +43,14 @@
 
 class G4MasterForwardcoutDestination : public G4coutDestination
 {
- public:
-  G4MasterForwardcoutDestination() = default;
+  public:
 
-  ~G4MasterForwardcoutDestination() override = default;
-  G4int ReceiveG4debug(const G4String& msg) override;
-  G4int ReceiveG4cout(const G4String& msg) override;
-  G4int ReceiveG4cerr(const G4String& msg) override;
+    G4MasterForwardcoutDestination() = default;
+
+    ~G4MasterForwardcoutDestination() override = default;
+    G4int ReceiveG4debug(const G4String& msg) override;
+    G4int ReceiveG4cout(const G4String& msg) override;
+    G4int ReceiveG4cerr(const G4String& msg) override;
 };
 
 #endif

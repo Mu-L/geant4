@@ -30,7 +30,8 @@
 
 void G4SimplePPReporter::Print(const G4String&)
 {
-  for (const auto ptr : pList) {
+  for (const auto ptr : pList)
+  {
     ptr->Print();
     G4cout << G4endl;
   }

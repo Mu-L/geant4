@@ -31,43 +31,38 @@
 
 #include "G4ErrorPropagatorManager.hh"
 
-#include "G4SystemOfUnits.hh"
-#include "G4MagIntegratorStepper.hh"
-#include "G4Mag_UsualEqRhs.hh"
-#include "G4Mag_EqRhs.hh"
-#include "G4MagIntegratorDriver.hh"
-
-#include "G4ClassicalRK4.hh"
-#include "G4ExactHelixStepper.hh"
-#include "G4HelixExplicitEuler.hh"
-
-#include "G4EventManager.hh"
-#include "G4ErrorRunManagerHelper.hh"
-#include "G4ErrorPropagator.hh"
-#include "G4ErrorMag_UsualEqRhs.hh"
-
-#include "G4VParticleChange.hh"
-#include "G4ParticleChangeForMSC.hh"
-#include "G4ParticleChange.hh"
-#include "G4Track.hh"
-#include "G4TransportationManager.hh"
-#include "G4ErrorPropagationNavigator.hh"
-#include "G4GeometryManager.hh"
-#include "G4StateManager.hh"
 #include "G4ChordFinder.hh"
+#include "G4ClassicalRK4.hh"
 #include "G4EquationOfMotion.hh"
+#include "G4ErrorMag_UsualEqRhs.hh"
+#include "G4ErrorPropagationNavigator.hh"
+#include "G4ErrorPropagator.hh"
+#include "G4ErrorRunManagerHelper.hh"
+#include "G4EventManager.hh"
+#include "G4ExactHelixStepper.hh"
 #include "G4FieldManager.hh"
+#include "G4GeometryManager.hh"
+#include "G4HelixExplicitEuler.hh"
+#include "G4MagIntegratorDriver.hh"
+#include "G4MagIntegratorStepper.hh"
+#include "G4Mag_EqRhs.hh"
+#include "G4Mag_UsualEqRhs.hh"
+#include "G4ParticleChange.hh"
+#include "G4ParticleChangeForMSC.hh"
 #include "G4PropagatorInField.hh"
 #include "G4RunManager.hh"
+#include "G4StateManager.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4Track.hh"
+#include "G4TransportationManager.hh"
 #include "G4VParticleChange.hh"
 
-G4ThreadLocal G4ErrorPropagatorManager*
-  G4ErrorPropagatorManager::theG4ErrorPropagatorManager = 0;
+G4ThreadLocal G4ErrorPropagatorManager* G4ErrorPropagatorManager::theG4ErrorPropagatorManager = 0;
 
 //-----------------------------------------------------------------------
 G4ErrorPropagatorManager* G4ErrorPropagatorManager::GetErrorPropagatorManager()
 {
-  if(theG4ErrorPropagatorManager == NULL)
+  if (theG4ErrorPropagatorManager == NULL)
   {
     theG4ErrorPropagatorManager = new G4ErrorPropagatorManager;
   }
@@ -82,7 +77,7 @@ G4ErrorPropagatorManager::G4ErrorPropagatorManager()
   // o  theG4ErrorPropagatorManager = this;
 
   char* g4emverb = std::getenv("G4EVERBOSE");
-  if(!g4emverb)
+  if (!g4emverb)
   {
     G4ErrorPropagatorData::GetErrorPropagatorData()->SetVerbose(0);
   }
@@ -97,8 +92,7 @@ G4ErrorPropagatorManager::G4ErrorPropagatorManager()
 
   StartG4ErrorRunManagerHelper();
 
-  G4ErrorPropagatorData::GetErrorPropagatorData()->SetState(
-    G4ErrorState_PreInit);
+  G4ErrorPropagatorData::GetErrorPropagatorData()->SetState(G4ErrorState_PreInit);
 
   theG4ErrorPropagationNavigator = 0;
 
@@ -121,23 +115,23 @@ void G4ErrorPropagatorManager::StartG4ErrorRunManagerHelper()
   //----- Initialize G4ErrorRunManagerHelper
   theG4ErrorRunManagerHelper = G4ErrorRunManagerHelper::GetRunManagerKernel();
 
-  if(theG4ErrorRunManagerHelper == 0)
+  if (theG4ErrorRunManagerHelper == 0)
   {
     theG4ErrorRunManagerHelper = new G4ErrorRunManagerHelper();
   }
 
   //----- User Initialization classes
   //--- GEANT4e PhysicsList
-  if(G4ErrorPropagatorData::verbose() >= 4)
-    G4cout << " G4ErrorPropagatorManager::StartG4eRunManager() done "
-           << theG4ErrorRunManagerHelper << G4endl;
+  if (G4ErrorPropagatorData::verbose() >= 4)
+    G4cout << " G4ErrorPropagatorManager::StartG4eRunManager() done " << theG4ErrorRunManagerHelper
+           << G4endl;
   //-  theG4eRunManager->SetUserInitialization(new G4ErrorPhysicsList);
 }
 
 //-----------------------------------------------------------------------
 void G4ErrorPropagatorManager::StartNavigator()
 {
-  if(theG4ErrorPropagationNavigator == 0)
+  if (theG4ErrorPropagationNavigator == 0)
   {
     G4TransportationManager* transportationManager =
       G4TransportationManager::GetTransportationManager();
@@ -145,50 +139,44 @@ void G4ErrorPropagatorManager::StartNavigator()
     G4Navigator* g4navi = transportationManager->GetNavigatorForTracking();
 
     G4VPhysicalVolume* world = g4navi->GetWorldVolume();
-    G4int verb               = g4navi->GetVerboseLevel();
+    G4int verb = g4navi->GetVerboseLevel();
     delete g4navi;
 
     theG4ErrorPropagationNavigator = new G4ErrorPropagationNavigator();
 
-    if(world != 0)
+    if (world != 0)
     {
       theG4ErrorPropagationNavigator->SetWorldVolume(world);
     }
     theG4ErrorPropagationNavigator->SetVerboseLevel(verb);
 
-    transportationManager->SetNavigatorForTracking(
+    transportationManager->SetNavigatorForTracking(theG4ErrorPropagationNavigator);
+    transportationManager->GetPropagatorInField()->GetIntersectionLocator()->SetNavigatorFor(
       theG4ErrorPropagationNavigator);
-    transportationManager->GetPropagatorInField()
-      ->GetIntersectionLocator()
-      ->SetNavigatorFor(theG4ErrorPropagationNavigator);
-    G4EventManager::GetEventManager()
-      ->GetTrackingManager()
-      ->GetSteppingManager()
-      ->SetNavigator(theG4ErrorPropagationNavigator);
+    G4EventManager::GetEventManager()->GetTrackingManager()->GetSteppingManager()->SetNavigator(
+      theG4ErrorPropagationNavigator);
     //  G4ThreeVector center(0,0,0);
     //  theG4ErrorPropagationNavigator->LocateGlobalPointAndSetup(center,0,false);
   }
 
-  if(G4ErrorPropagatorData::verbose() >= 2)
+  if (G4ErrorPropagatorData::verbose() >= 2)
     G4cout << " theState at StartNavigator " << PrintG4ErrorState() << G4endl;
 }
 
 //-----------------------------------------------------------------------
 void G4ErrorPropagatorManager::InitGeant4e()
 {
-  if(G4ErrorPropagatorData::verbose() >= 1)
+  if (G4ErrorPropagatorData::verbose() >= 1)
     G4cout << "InitGeant4e GEANT4e State= " << PrintG4ErrorState()
            << " GEANT4 State= " << PrintG4State() << G4endl;
-  G4ApplicationState currentState =
-    G4StateManager::GetStateManager()->GetCurrentState();
+  G4ApplicationState currentState = G4StateManager::GetStateManager()->GetCurrentState();
   //----- Initialize run
   //  if( G4StateManager::GetStateManager()->GetCurrentState() ==
   //  G4State_PreInit) {
 
-  if(G4ErrorPropagatorData::GetErrorPropagatorData()->GetState() ==
-     G4ErrorState_PreInit)
+  if (G4ErrorPropagatorData::GetErrorPropagatorData()->GetState() == G4ErrorState_PreInit)
   {
-    if(currentState == G4State_PreInit || currentState == G4State_Idle)
+    if (currentState == G4State_PreInit || currentState == G4State_Idle)
     {
       //    G4eRunManager::GetRunManager()->Initialize();
       theG4ErrorRunManagerHelper->InitializeGeometry();
@@ -199,17 +187,16 @@ void G4ErrorPropagatorManager::InitGeant4e()
 
     //-    G4StateManager::GetStateManager()->SetNewState(G4State_Idle);
 
-    if(G4ErrorPropagatorData::verbose() >= 4)
+    if (G4ErrorPropagatorData::verbose() >= 4)
       G4cout << " bef  theG4ErrorPropagatorManager->RunInitialization() "
              << G4StateManager::GetStateManager()->GetCurrentState() << G4endl;
     theG4ErrorRunManagerHelper->RunInitialization();
-    if(G4ErrorPropagatorData::verbose() >= 4)
+    if (G4ErrorPropagatorData::verbose() >= 4)
       G4cout << " aft  theG4ErrorPropagatorManager->RunInitialization() "
              << G4StateManager::GetStateManager()->GetCurrentState() << G4endl;
 
-    if(!thePropagator)
-      thePropagator =
-        new G4ErrorPropagator();  // currently the only propagator possible
+    if (!thePropagator)
+      thePropagator = new G4ErrorPropagator();  // currently the only propagator possible
 
     InitTrackPropagation();
   }
@@ -217,8 +204,7 @@ void G4ErrorPropagatorManager::InitGeant4e()
   {
     std::ostringstream message;
     message << "Illegal GEANT4e State= " << PrintG4ErrorState();
-    G4Exception("G4ErrorPropagatorManager::InitGeant4e()", "IllegalState",
-                JustWarning, message);
+    G4Exception("G4ErrorPropagatorManager::InitGeant4e()", "IllegalState", JustWarning, message);
   }
 
   //----- Set the tracking geometry for this propagation
@@ -229,7 +215,7 @@ void G4ErrorPropagatorManager::InitGeant4e()
   // t  SetFieldPropagationParameters();
   G4ErrorPropagatorData::GetErrorPropagatorData()->SetState(G4ErrorState_Init);
 
-  if(G4ErrorPropagatorData::verbose() >= 2)
+  if (G4ErrorPropagatorData::verbose() >= 2)
     G4cout << "End InitGeant4e GEANT4e State= " << PrintG4ErrorState()
            << " GEANT4 State= " << PrintG4State() << G4endl;
 }
@@ -239,56 +225,48 @@ void G4ErrorPropagatorManager::InitTrackPropagation()
 {
   thePropagator->SetStepN(0);
 
-  G4ErrorPropagatorData::GetErrorPropagatorData()->SetState(
-    G4ErrorState_Propagating);
+  G4ErrorPropagatorData::GetErrorPropagatorData()->SetState(G4ErrorState_Propagating);
 }
 
 //-----------------------------------------------------------------------
 G4bool G4ErrorPropagatorManager::InitFieldForBackwards()
 {
-  if(G4ErrorPropagatorData::verbose() >= 4)
+  if (G4ErrorPropagatorData::verbose() >= 4)
     G4cout << " G4ErrorPropagatorManager::InitFieldForBackwards() " << G4endl;
   //----- Gets the current equation of motion
-  G4FieldManager* fieldMgr =
-    G4TransportationManager::GetTransportationManager()->GetFieldManager();
+  G4FieldManager* fieldMgr = G4TransportationManager::GetTransportationManager()->GetFieldManager();
   //  G4cout << " fieldMgr " << fieldMgr << G4endl;
-  if(!fieldMgr)
-    return 0;
+  if (!fieldMgr) return 0;
 
   //  G4Field* myfield = fieldMgr->GetDetectorField();
   G4ChordFinder* cf = fieldMgr->GetChordFinder();
-  if(!cf)
-    return 0;
+  if (!cf) return 0;
   auto driver = cf->GetIntegrationDriver();
-  if(!driver)
-    return 0;
+  if (!driver) return 0;
   auto equation = driver->GetEquationOfMotion();
 
   //----- Replaces the equation by a G4ErrorMag_UsualEqRhs to handle backwards
-  //tracking
-  if(!dynamic_cast<G4ErrorMag_UsualEqRhs*>(equation))
+  // tracking
+  if (!dynamic_cast<G4ErrorMag_UsualEqRhs*>(equation))
   {
-    G4MagneticField* myfield = (G4MagneticField*) fieldMgr->GetDetectorField();
+    G4MagneticField* myfield = (G4MagneticField*)fieldMgr->GetDetectorField();
 
     //    G4Mag_UsualEqRhs* fEquation_usual =
     //    dynamic_cast<G4Mag_UsualEqRhs*>(equation);
-    if(theEquationOfMotion == 0)
-      theEquationOfMotion = new G4ErrorMag_UsualEqRhs(myfield);
+    if (theEquationOfMotion == 0) theEquationOfMotion = new G4ErrorMag_UsualEqRhs(myfield);
 
     //---- Pass the equation of motion to the G4MagIntegratorStepper
     driver->SetEquationOfMotion(theEquationOfMotion);
 
     //--- change stepper for speed tests
-    G4MagIntegratorStepper* g4eStepper =
-      new G4ClassicalRK4(theEquationOfMotion);
+    G4MagIntegratorStepper* g4eStepper = new G4ClassicalRK4(theEquationOfMotion);
     // G4MagIntegratorStepper* g4eStepper = new
     // G4ExactHelixStepper(theEquationOfMotion);
 
     //----
-    G4MagneticField* field = static_cast<G4MagneticField*>(
-      const_cast<G4Field*>(fieldMgr->GetDetectorField()));
-    G4ChordFinder* pChordFinder =
-      new G4ChordFinder(field, 1.0e-2 * mm, g4eStepper);
+    G4MagneticField* field =
+      static_cast<G4MagneticField*>(const_cast<G4Field*>(fieldMgr->GetDetectorField()));
+    G4ChordFinder* pChordFinder = new G4ChordFinder(field, 1.0e-2 * mm, g4eStepper);
 
     fieldMgr->SetChordFinder(pChordFinder);
   }
@@ -297,14 +275,12 @@ G4bool G4ErrorPropagatorManager::InitFieldForBackwards()
 }
 
 //-----------------------------------------------------------------------
-G4int G4ErrorPropagatorManager::Propagate(G4ErrorTrajState* currentTS,
-                                          const G4ErrorTarget* target,
+G4int G4ErrorPropagatorManager::Propagate(G4ErrorTrajState* currentTS, const G4ErrorTarget* target,
                                           G4ErrorMode mode)
 {
   G4ErrorPropagatorData::GetErrorPropagatorData()->SetMode(mode);
-  if(!thePropagator)
-    thePropagator =
-      new G4ErrorPropagator();  // currently the only propagator possible
+  if (!thePropagator)
+    thePropagator = new G4ErrorPropagator();  // currently the only propagator possible
 
   SetSteppingManagerVerboseLevel();
   InitTrackPropagation();
@@ -317,14 +293,12 @@ G4int G4ErrorPropagatorManager::Propagate(G4ErrorTrajState* currentTS,
 }
 
 //-----------------------------------------------------------------------
-G4int G4ErrorPropagatorManager::PropagateOneStep(G4ErrorTrajState* currentTS,
-                                                 G4ErrorMode mode)
+G4int G4ErrorPropagatorManager::PropagateOneStep(G4ErrorTrajState* currentTS, G4ErrorMode mode)
 {
   G4ErrorPropagatorData::GetErrorPropagatorData()->SetMode(mode);
 
-  if(!thePropagator)
-    thePropagator =
-      new G4ErrorPropagator();  // currently the only propagator possible
+  if (!thePropagator)
+    thePropagator = new G4ErrorPropagator();  // currently the only propagator possible
 
   SetSteppingManagerVerboseLevel();
 
@@ -336,7 +310,7 @@ G4bool G4ErrorPropagatorManager::CloseGeometry()
 {
   G4GeometryManager* geomManager = G4GeometryManager::GetInstance();
   geomManager->OpenGeometry();
-  if(G4StateManager::GetStateManager()->GetCurrentState() != G4State_GeomClosed)
+  if (G4StateManager::GetStateManager()->GetCurrentState() != G4State_GeomClosed)
   {
     G4StateManager::GetStateManager()->SetNewState(G4State_Quit);
   }
@@ -345,22 +319,19 @@ G4bool G4ErrorPropagatorManager::CloseGeometry()
 }
 
 //---------------------------------------------------------------------------
-void G4ErrorPropagatorManager::SetUserInitialization(
-  G4VUserDetectorConstruction* userInit)
+void G4ErrorPropagatorManager::SetUserInitialization(G4VUserDetectorConstruction* userInit)
 {
   theG4ErrorRunManagerHelper->SetUserInitialization(userInit);
 }
 
 //---------------------------------------------------------------------------
-void G4ErrorPropagatorManager::SetUserInitialization(
-  G4VPhysicalVolume* userInit)
+void G4ErrorPropagatorManager::SetUserInitialization(G4VPhysicalVolume* userInit)
 {
   theG4ErrorRunManagerHelper->SetUserInitialization(userInit);
 }
 
 //---------------------------------------------------------------------------
-void G4ErrorPropagatorManager::SetUserInitialization(
-  G4VUserPhysicsList* userInit)
+void G4ErrorPropagatorManager::SetUserInitialization(G4VUserPhysicsList* userInit)
 {
   theG4ErrorRunManagerHelper->SetUserInitialization(userInit);
 }
@@ -380,8 +351,7 @@ void G4ErrorPropagatorManager::SetUserAction(G4UserSteppingAction* userAction)
 //---------------------------------------------------------------------------
 void G4ErrorPropagatorManager::SetSteppingManagerVerboseLevel()
 {
-  G4TrackingManager* trkmgr =
-    G4EventManager::GetEventManager()->GetTrackingManager();
+  G4TrackingManager* trkmgr = G4EventManager::GetEventManager()->GetTrackingManager();
   trkmgr->GetSteppingManager()->SetVerboseLevel(trkmgr->GetVerboseLevel());
 }
 
@@ -394,23 +364,21 @@ void G4ErrorPropagatorManager::EventTermination()
 //---------------------------------------------------------------------------
 void G4ErrorPropagatorManager::RunTermination()
 {
-  G4ErrorPropagatorData::GetErrorPropagatorData()->SetState(
-    G4ErrorState_PreInit);
+  G4ErrorPropagatorData::GetErrorPropagatorData()->SetState(G4ErrorState_PreInit);
   theG4ErrorRunManagerHelper->RunTermination();
 }
 
 //---------------------------------------------------------------------------
 G4String G4ErrorPropagatorManager::PrintG4ErrorState()
 {
-  return PrintG4ErrorState(
-    G4ErrorPropagatorData::GetErrorPropagatorData()->GetState());
+  return PrintG4ErrorState(G4ErrorPropagatorData::GetErrorPropagatorData()->GetState());
 }
 
 //---------------------------------------------------------------------------
 G4String G4ErrorPropagatorManager::PrintG4ErrorState(G4ErrorState state)
 {
   G4String nam = "";
-  switch(state)
+  switch (state)
   {
     case G4ErrorState_PreInit:
       nam = "G4ErrorState_PreInit";
@@ -442,7 +410,7 @@ G4String G4ErrorPropagatorManager::PrintG4State()
 G4String G4ErrorPropagatorManager::PrintG4State(G4ApplicationState state)
 {
   G4String nam = "";
-  switch(state)
+  switch (state)
   {
     case G4State_PreInit:
       nam = "G4State_PreInit";

@@ -28,14 +28,15 @@
 // 17-Aug-2012 V.Ivanchenko added hadronic model factories
 
 #include "G4NuclearPolarizationStore.hh"
+
 #include "G4SystemOfUnits.hh"
 
-G4ThreadLocal G4NuclearPolarizationStore* 
-G4NuclearPolarizationStore::instance = nullptr;
+G4ThreadLocal G4NuclearPolarizationStore* G4NuclearPolarizationStore::instance = nullptr;
 
 G4NuclearPolarizationStore* G4NuclearPolarizationStore::GetInstance()
 {
-  if(nullptr == instance) {
+  if (nullptr == instance)
+  {
     static G4ThreadLocalSingleton<G4NuclearPolarizationStore> inst;
     instance = inst.Instance();
   }
@@ -44,26 +45,38 @@ G4NuclearPolarizationStore* G4NuclearPolarizationStore::GetInstance()
 
 G4NuclearPolarizationStore::G4NuclearPolarizationStore()
 {
-  for(G4int i=0; i<maxNumStates; ++i) { nuclist[i] = nullptr; }
+  for (G4int i = 0; i < maxNumStates; ++i)
+  {
+    nuclist[i] = nullptr;
+  }
   oldIdx = 0;
 }
 
 G4NuclearPolarizationStore::~G4NuclearPolarizationStore()
 {
-  for(G4int i=0; i<maxNumStates; ++i) { 
+  for (G4int i = 0; i < maxNumStates; ++i)
+  {
     delete nuclist[i];
-    nuclist[i] = nullptr; 
+    nuclist[i] = nullptr;
   }
 }
 
 void G4NuclearPolarizationStore::Register(G4NuclearPolarization* ptr)
 {
   G4int idx = -1;
-  for(G4int i=0; i<maxNumStates; ++i) { 
-    if(ptr == nuclist[i]) { return; }
-    if(nullptr == nuclist[i]) { idx = i; }
+  for (G4int i = 0; i < maxNumStates; ++i)
+  {
+    if (ptr == nuclist[i])
+    {
+      return;
+    }
+    if (nullptr == nuclist[i])
+    {
+      idx = i;
+    }
   }
-  if(idx >= 0) {
+  if (idx >= 0)
+  {
     nuclist[idx] = ptr;
     return;
   }
@@ -72,40 +85,49 @@ void G4NuclearPolarizationStore::Register(G4NuclearPolarization* ptr)
   nuclist[oldIdx] = ptr;
   // redefine oldIdx
   ++oldIdx;
-  if(oldIdx >= maxNumStates) { oldIdx = 0; }
+  if (oldIdx >= maxNumStates)
+  {
+    oldIdx = 0;
+  }
 }
 
-G4NuclearPolarization* 
-G4NuclearPolarizationStore::FindOrBuild(G4int Z, G4int A, G4double Eexc)
+G4NuclearPolarization* G4NuclearPolarizationStore::FindOrBuild(G4int Z, G4int A, G4double Eexc)
 {
-  static const G4double tolerance = 10.*CLHEP::eV;
-  for(G4int i=0; i<maxNumStates; ++i) { 
+  static const G4double tolerance = 10. * CLHEP::eV;
+  for (G4int i = 0; i < maxNumStates; ++i)
+  {
     auto nucp = nuclist[i];
-    if(nucp && Z == nucp->GetZ() && A == nucp->GetA() && 
-       std::abs(Eexc - nucp->GetExcitationEnergy()) < tolerance) { 
-      return nucp; 
+    if (nucp && Z == nucp->GetZ() && A == nucp->GetA()
+        && std::abs(Eexc - nucp->GetExcitationEnergy()) < tolerance)
+    {
+      return nucp;
     }
   }
   G4NuclearPolarization* ptr = new G4NuclearPolarization(Z, A, Eexc);
   Register(ptr);
-  return ptr;   
+  return ptr;
 }
 
 void G4NuclearPolarizationStore::RemoveMe(G4NuclearPolarization* ptr)
 {
-  for(G4int i=0; i<maxNumStates; ++i) { 
-    if(ptr == nuclist[i]) { 
+  for (G4int i = 0; i < maxNumStates; ++i)
+  {
+    if (ptr == nuclist[i])
+    {
       delete ptr;
       nuclist[i] = nullptr;
       // do we need redefine oldIdx?
-      if(i == oldIdx) {
-	for(G4int j=0; j<maxNumStates; ++j) { 
-	  if(j != i && nullptr != nuclist[j]) { 
-	    oldIdx = j;
+      if (i == oldIdx)
+      {
+        for (G4int j = 0; j < maxNumStates; ++j)
+        {
+          if (j != i && nullptr != nuclist[j])
+          {
+            oldIdx = j;
             return;
-	  }
-	}
-	oldIdx = i;   
+          }
+        }
+        oldIdx = i;
       }
       return;
     }

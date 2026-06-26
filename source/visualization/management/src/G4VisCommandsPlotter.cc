@@ -39,65 +39,74 @@
 /////////////////////////////////////////////////////////////////////////////
 ////////////// /vis/plotter/create //////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
-G4VisCommandPlotterCreate::G4VisCommandPlotterCreate () {
+G4VisCommandPlotterCreate::G4VisCommandPlotterCreate()
+{
   fpCommand = new G4UIcommand("/vis/plotter/create", this);
   fpCommand->SetGuidance("Create a named G4Plotter.");
 
   G4UIparameter* parameter;
-  parameter = new G4UIparameter("name",'s',false);
-  fpCommand->SetParameter (parameter);
+  parameter = new G4UIparameter("name", 's', false);
+  fpCommand->SetParameter(parameter);
 }
 
-G4VisCommandPlotterCreate::~G4VisCommandPlotterCreate () {delete fpCommand;}
+G4VisCommandPlotterCreate::~G4VisCommandPlotterCreate()
+{
+  delete fpCommand;
+}
 
-void G4VisCommandPlotterCreate::SetNewValue (G4UIcommand*, G4String newValue)
+void G4VisCommandPlotterCreate::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4Plotter& _plotter = G4PlotterManager::GetInstance().GetPlotter(newValue);
   _plotter.Reset();
   G4Scene* pScene = fpVisManager->GetCurrentScene();
-  if(pScene) CheckSceneAndNotifyHandlers (pScene);
+  if (pScene) CheckSceneAndNotifyHandlers(pScene);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 ////////////// /vis/plotter/setLayout ///////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
-G4VisCommandPlotterSetLayout::G4VisCommandPlotterSetLayout () {
+G4VisCommandPlotterSetLayout::G4VisCommandPlotterSetLayout()
+{
   fpCommand = new G4UIcommand("/vis/plotter/setLayout", this);
   fpCommand->SetGuidance("Set plotter grid layout.");
 
   G4UIparameter* parameter;
-  parameter = new G4UIparameter("plotter",'s',false);
-  fpCommand->SetParameter (parameter);
-  
-  parameter = new G4UIparameter("columns",'i',true);
-  parameter->SetDefaultValue(1);
-  fpCommand->SetParameter (parameter);
+  parameter = new G4UIparameter("plotter", 's', false);
+  fpCommand->SetParameter(parameter);
 
-  parameter = new G4UIparameter("rows",'i',true);
+  parameter = new G4UIparameter("columns", 'i', true);
   parameter->SetDefaultValue(1);
-  fpCommand->SetParameter (parameter);
+  fpCommand->SetParameter(parameter);
+
+  parameter = new G4UIparameter("rows", 'i', true);
+  parameter->SetDefaultValue(1);
+  fpCommand->SetParameter(parameter);
 }
 
-G4VisCommandPlotterSetLayout::~G4VisCommandPlotterSetLayout () {delete fpCommand;}
+G4VisCommandPlotterSetLayout::~G4VisCommandPlotterSetLayout()
+{
+  delete fpCommand;
+}
 
-void G4VisCommandPlotterSetLayout::SetNewValue (G4UIcommand*, G4String newValue)
+void G4VisCommandPlotterSetLayout::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4String plotter;
-  G4int cols,rows;
+  G4int cols, rows;
   std::istringstream is(newValue);
   is >> plotter >> cols >> rows;
-  
+
   G4Plotter& _plotter = G4PlotterManager::GetInstance().GetPlotter(plotter);
-  _plotter.SetLayout(cols,rows);
+  _plotter.SetLayout(cols, rows);
 
   G4Scene* pScene = fpVisManager->GetCurrentScene();
-  if(pScene) CheckSceneAndNotifyHandlers (pScene);
+  if (pScene) CheckSceneAndNotifyHandlers(pScene);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 ////////////// /vis/plotter/addStyle ////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
-G4VisCommandPlotterAddStyle::G4VisCommandPlotterAddStyle () {
+G4VisCommandPlotterAddStyle::G4VisCommandPlotterAddStyle()
+{
   fpCommand = new G4UIcommand("/vis/plotter/addStyle", this);
   fpCommand->SetGuidance("Add a style for a plotter.");
   fpCommand->SetGuidance("It is applied on all regions/plots of the plotter.");
@@ -105,55 +114,62 @@ G4VisCommandPlotterAddStyle::G4VisCommandPlotterAddStyle () {
   fpCommand->SetGuidance("reset is a keyword used to reset regions style.");
 
   G4UIparameter* parameter;
-  parameter = new G4UIparameter("plotter",'s',false);
-  fpCommand->SetParameter (parameter);
-  
-  parameter = new G4UIparameter("style",'s',true);
+  parameter = new G4UIparameter("plotter", 's', false);
+  fpCommand->SetParameter(parameter);
+
+  parameter = new G4UIparameter("style", 's', true);
   parameter->SetDefaultValue("default");
-  fpCommand->SetParameter (parameter);
+  fpCommand->SetParameter(parameter);
 }
 
-G4VisCommandPlotterAddStyle::~G4VisCommandPlotterAddStyle () {delete fpCommand;}
+G4VisCommandPlotterAddStyle::~G4VisCommandPlotterAddStyle()
+{
+  delete fpCommand;
+}
 
-void G4VisCommandPlotterAddStyle::SetNewValue (G4UIcommand*, G4String newValue)
+void G4VisCommandPlotterAddStyle::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4String plotter;
   G4String style;
   std::istringstream is(newValue);
   is >> plotter >> style;
-  
+
   G4Plotter& _plotter = G4PlotterManager::GetInstance().GetPlotter(plotter);
   _plotter.AddStyle(style);
-  
+
   G4Scene* pScene = fpVisManager->GetCurrentScene();
-  if(pScene) CheckSceneAndNotifyHandlers (pScene);
+  if (pScene) CheckSceneAndNotifyHandlers(pScene);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 ////////////// /vis/plotter/addRegionStyle //////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
-G4VisCommandPlotterAddRegionStyle::G4VisCommandPlotterAddRegionStyle () {
+G4VisCommandPlotterAddRegionStyle::G4VisCommandPlotterAddRegionStyle()
+{
   fpCommand = new G4UIcommand("/vis/plotter/addRegionStyle", this);
   fpCommand->SetGuidance("Add a style to be applied on a region.");
   fpCommand->SetGuidance("default, ROOT_default, hippodraw are known embedded styles.");
   fpCommand->SetGuidance("reset is a keyword used to reset a region style.");
 
   G4UIparameter* parameter;
-  parameter = new G4UIparameter("plotter",'s',false);
-  fpCommand->SetParameter (parameter);
-  
-  parameter = new G4UIparameter("region",'i',false);
-//parameter->SetDefaultValue(0);
-  fpCommand->SetParameter (parameter);
-  
-  parameter = new G4UIparameter("style",'s',true);
+  parameter = new G4UIparameter("plotter", 's', false);
+  fpCommand->SetParameter(parameter);
+
+  parameter = new G4UIparameter("region", 'i', false);
+  // parameter->SetDefaultValue(0);
+  fpCommand->SetParameter(parameter);
+
+  parameter = new G4UIparameter("style", 's', true);
   parameter->SetDefaultValue("default");
-  fpCommand->SetParameter (parameter);
+  fpCommand->SetParameter(parameter);
 }
 
-G4VisCommandPlotterAddRegionStyle::~G4VisCommandPlotterAddRegionStyle () {delete fpCommand;}
+G4VisCommandPlotterAddRegionStyle::~G4VisCommandPlotterAddRegionStyle()
+{
+  delete fpCommand;
+}
 
-void G4VisCommandPlotterAddRegionStyle::SetNewValue (G4UIcommand*, G4String newValue)
+void G4VisCommandPlotterAddRegionStyle::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4VisManager::Verbosity verbosity = fpVisManager->GetVerbosity();
 
@@ -162,52 +178,60 @@ void G4VisCommandPlotterAddRegionStyle::SetNewValue (G4UIcommand*, G4String newV
   G4String style;
   std::istringstream is(newValue);
   is >> plotter >> region >> style;
-  if(region<0) {
-    if (verbosity >= G4VisManager::errors) {
-      G4warn <<	"ERROR: bad region index " << region << "." << G4endl;
+  if (region < 0)
+  {
+    if (verbosity >= G4VisManager::errors)
+    {
+      G4warn << "ERROR: bad region index " << region << "." << G4endl;
     }
     return;
   }
-  
+
   G4Plotter& _plotter = G4PlotterManager::GetInstance().GetPlotter(plotter);
-  _plotter.AddRegionStyle(region,style);
-  
+  _plotter.AddRegionStyle(region, style);
+
   G4Scene* pScene = fpVisManager->GetCurrentScene();
-  if(pScene) CheckSceneAndNotifyHandlers (pScene);
+  if (pScene) CheckSceneAndNotifyHandlers(pScene);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 ////////////// /vis/plotter/addRegionParameter //////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
-G4VisCommandPlotterAddRegionParameter::G4VisCommandPlotterAddRegionParameter () {
+G4VisCommandPlotterAddRegionParameter::G4VisCommandPlotterAddRegionParameter()
+{
   fpCommand = new G4UIcommand("/vis/plotter/addRegionParameter", this);
   fpCommand->SetGuidance("Add a parameter to be set on a region.");
 
   G4UIparameter* parameter;
-  parameter = new G4UIparameter("plotter",'s',false);
-  fpCommand->SetParameter (parameter);
-  
-  parameter = new G4UIparameter("region",'i',false);
-  fpCommand->SetParameter (parameter);
-  
-  parameter = new G4UIparameter("parameter",'s',false);
-  fpCommand->SetParameter (parameter);
-  
-  parameter = new G4UIparameter("value",'s',false);
-  fpCommand->SetParameter (parameter);
+  parameter = new G4UIparameter("plotter", 's', false);
+  fpCommand->SetParameter(parameter);
+
+  parameter = new G4UIparameter("region", 'i', false);
+  fpCommand->SetParameter(parameter);
+
+  parameter = new G4UIparameter("parameter", 's', false);
+  fpCommand->SetParameter(parameter);
+
+  parameter = new G4UIparameter("value", 's', false);
+  fpCommand->SetParameter(parameter);
 }
 
-G4VisCommandPlotterAddRegionParameter::~G4VisCommandPlotterAddRegionParameter () {delete fpCommand;}
+G4VisCommandPlotterAddRegionParameter::~G4VisCommandPlotterAddRegionParameter()
+{
+  delete fpCommand;
+}
 
-void G4VisCommandPlotterAddRegionParameter::SetNewValue (G4UIcommand* command, G4String newValue)
+void G4VisCommandPlotterAddRegionParameter::SetNewValue(G4UIcommand* command, G4String newValue)
 {
   G4VisManager::Verbosity verbosity = fpVisManager->GetVerbosity();
 
   std::vector<std::string> args;
   tools::double_quotes_tokenize(newValue, args);
-  if ( args.size() != command->GetParameterEntries() ) { // check consistency.
-    if (verbosity >= G4VisManager::errors) {
-      G4warn <<	"ERROR: tokenize value problem." << G4endl;
+  if (args.size() != command->GetParameterEntries())
+  {  // check consistency.
+    if (verbosity >= G4VisManager::errors)
+    {
+      G4warn << "ERROR: tokenize value problem." << G4endl;
     }
     return;
   }
@@ -216,62 +240,72 @@ void G4VisCommandPlotterAddRegionParameter::SetNewValue (G4UIcommand* command, G
   int region = G4UIcommand::ConvertToInt(args[1].c_str());
   std::string parameter = args[2];
   std::string value = args[3];
-  if(region<0) {
-    if (verbosity >= G4VisManager::errors) {
-      G4warn <<	"ERROR: bad region index " << region << "." << G4endl;
+  if (region < 0)
+  {
+    if (verbosity >= G4VisManager::errors)
+    {
+      G4warn << "ERROR: bad region index " << region << "." << G4endl;
     }
     return;
   }
-  
+
   G4Plotter& _plotter = G4PlotterManager::GetInstance().GetPlotter(plotter);
-  _plotter.AddRegionParameter(region,parameter,value);
-  
+  _plotter.AddRegionParameter(region, parameter, value);
+
   G4Scene* pScene = fpVisManager->GetCurrentScene();
-  if(pScene) CheckSceneAndNotifyHandlers (pScene);
+  if (pScene) CheckSceneAndNotifyHandlers(pScene);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 ////////////// /vis/plotter/clear ///////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
-G4VisCommandPlotterClear::G4VisCommandPlotterClear () {
+G4VisCommandPlotterClear::G4VisCommandPlotterClear()
+{
   fpCommand = new G4UIcommand("/vis/plotter/clear", this);
   fpCommand->SetGuidance("Remove plottables from all regions.");
 
   G4UIparameter* parameter;
-  parameter = new G4UIparameter("plotter",'s',false);
-  fpCommand->SetParameter (parameter);
+  parameter = new G4UIparameter("plotter", 's', false);
+  fpCommand->SetParameter(parameter);
 }
 
-G4VisCommandPlotterClear::~G4VisCommandPlotterClear () {delete fpCommand;}
+G4VisCommandPlotterClear::~G4VisCommandPlotterClear()
+{
+  delete fpCommand;
+}
 
-void G4VisCommandPlotterClear::SetNewValue (G4UIcommand*, G4String newValue)
+void G4VisCommandPlotterClear::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4Plotter& _plotter = G4PlotterManager::GetInstance().GetPlotter(newValue);
   _plotter.Clear();
-  
+
   G4Scene* pScene = fpVisManager->GetCurrentScene();
-  if(pScene) CheckSceneAndNotifyHandlers (pScene);
+  if (pScene) CheckSceneAndNotifyHandlers(pScene);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 ////////////// /vis/plotter/clearRegion /////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
-G4VisCommandPlotterClearRegion::G4VisCommandPlotterClearRegion () {
+G4VisCommandPlotterClearRegion::G4VisCommandPlotterClearRegion()
+{
   fpCommand = new G4UIcommand("/vis/plotter/clearRegion", this);
   fpCommand->SetGuidance("Remove plottables a region.");
 
   G4UIparameter* parameter;
-  parameter = new G4UIparameter("plotter",'s',false);
-  fpCommand->SetParameter (parameter);
-  
-  parameter = new G4UIparameter("region",'i',false);
-//parameter->SetDefaultValue(0);
-  fpCommand->SetParameter (parameter);
+  parameter = new G4UIparameter("plotter", 's', false);
+  fpCommand->SetParameter(parameter);
+
+  parameter = new G4UIparameter("region", 'i', false);
+  // parameter->SetDefaultValue(0);
+  fpCommand->SetParameter(parameter);
 }
 
-G4VisCommandPlotterClearRegion::~G4VisCommandPlotterClearRegion () {delete fpCommand;}
+G4VisCommandPlotterClearRegion::~G4VisCommandPlotterClearRegion()
+{
+  delete fpCommand;
+}
 
-void G4VisCommandPlotterClearRegion::SetNewValue (G4UIcommand*, G4String newValue)
+void G4VisCommandPlotterClearRegion::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4VisManager::Verbosity verbosity = fpVisManager->GetVerbosity();
 
@@ -279,31 +313,37 @@ void G4VisCommandPlotterClearRegion::SetNewValue (G4UIcommand*, G4String newValu
   int region;
   std::istringstream is(newValue);
   is >> plotter >> region;
-  if(region<0) {
-    if (verbosity >= G4VisManager::errors) {
-      G4warn <<	"ERROR: bad region index " << region << "." << G4endl;
+  if (region < 0)
+  {
+    if (verbosity >= G4VisManager::errors)
+    {
+      G4warn << "ERROR: bad region index " << region << "." << G4endl;
     }
     return;
   }
-  
+
   G4Plotter& _plotter = G4PlotterManager::GetInstance().GetPlotter(plotter);
   _plotter.ClearRegion(region);
-  
+
   G4Scene* pScene = fpVisManager->GetCurrentScene();
-  if(pScene) CheckSceneAndNotifyHandlers (pScene);
+  if (pScene) CheckSceneAndNotifyHandlers(pScene);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 ////////////// /vis/plotter/list ////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
-G4VisCommandPlotterList::G4VisCommandPlotterList () {
+G4VisCommandPlotterList::G4VisCommandPlotterList()
+{
   fpCommand = new G4UIcommand("/vis/plotter/list", this);
   fpCommand->SetGuidance("List plotters in the scene.");
 }
 
-G4VisCommandPlotterList::~G4VisCommandPlotterList () {delete fpCommand;}
+G4VisCommandPlotterList::~G4VisCommandPlotterList()
+{
+  delete fpCommand;
+}
 
-void G4VisCommandPlotterList::SetNewValue (G4UIcommand*, G4String)
+void G4VisCommandPlotterList::SetNewValue(G4UIcommand*, G4String)
 {
   G4PlotterManager::GetInstance().List();
 }
@@ -311,25 +351,29 @@ void G4VisCommandPlotterList::SetNewValue (G4UIcommand*, G4String)
 /////////////////////////////////////////////////////////////////////////////
 ////////////// /vis/plotter/add/h1 //////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
-G4VisCommandPlotterAddRegionH1::G4VisCommandPlotterAddRegionH1 () {
+G4VisCommandPlotterAddRegionH1::G4VisCommandPlotterAddRegionH1()
+{
   fpCommand = new G4UIcommand("/vis/plotter/add/h1", this);
   fpCommand->SetGuidance("Attach a 1D histogram to a plotter region.");
 
   G4UIparameter* parameter;
-  parameter = new G4UIparameter("histo",'i',false);
-  fpCommand->SetParameter (parameter);
-  
-  parameter = new G4UIparameter("plotter",'s',false);
-  fpCommand->SetParameter (parameter);
-  
-  parameter = new G4UIparameter("region",'i',true);
+  parameter = new G4UIparameter("histo", 'i', false);
+  fpCommand->SetParameter(parameter);
+
+  parameter = new G4UIparameter("plotter", 's', false);
+  fpCommand->SetParameter(parameter);
+
+  parameter = new G4UIparameter("region", 'i', true);
   parameter->SetDefaultValue(0);
-  fpCommand->SetParameter (parameter);
+  fpCommand->SetParameter(parameter);
 }
 
-G4VisCommandPlotterAddRegionH1::~G4VisCommandPlotterAddRegionH1 () {delete fpCommand;}
+G4VisCommandPlotterAddRegionH1::~G4VisCommandPlotterAddRegionH1()
+{
+  delete fpCommand;
+}
 
-void G4VisCommandPlotterAddRegionH1::SetNewValue (G4UIcommand*, G4String newValue)
+void G4VisCommandPlotterAddRegionH1::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4VisManager::Verbosity verbosity = fpVisManager->GetVerbosity();
 
@@ -338,43 +382,49 @@ void G4VisCommandPlotterAddRegionH1::SetNewValue (G4UIcommand*, G4String newValu
   int region;
   std::istringstream is(newValue);
   is >> hid >> plotter >> region;
-  
-  if(region<0) {
-    if (verbosity >= G4VisManager::errors) {
-      G4warn <<	"ERROR: bad region index " << region << "." << G4endl;
+
+  if (region < 0)
+  {
+    if (verbosity >= G4VisManager::errors)
+    {
+      G4warn << "ERROR: bad region index " << region << "." << G4endl;
     }
     return;
   }
-  
+
   G4Plotter& _plotter = G4PlotterManager::GetInstance().GetPlotter(plotter);
-  _plotter.AddRegionH1(region,hid);
-  
+  _plotter.AddRegionH1(region, hid);
+
   G4Scene* pScene = fpVisManager->GetCurrentScene();
-  if(pScene) CheckSceneAndNotifyHandlers (pScene);
+  if (pScene) CheckSceneAndNotifyHandlers(pScene);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 ////////////// /vis/plotter/add/h2 //////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
-G4VisCommandPlotterAddRegionH2::G4VisCommandPlotterAddRegionH2 () {
+G4VisCommandPlotterAddRegionH2::G4VisCommandPlotterAddRegionH2()
+{
   fpCommand = new G4UIcommand("/vis/plotter/add/h2", this);
   fpCommand->SetGuidance("Attach a 2D histogram to a plotter region.");
 
   G4UIparameter* parameter;
-  parameter = new G4UIparameter("histo",'i',false);
-  fpCommand->SetParameter (parameter);
-  
-  parameter = new G4UIparameter("plotter",'s',false);
-  fpCommand->SetParameter (parameter);
-  
-  parameter = new G4UIparameter("region",'i',true);
+  parameter = new G4UIparameter("histo", 'i', false);
+  fpCommand->SetParameter(parameter);
+
+  parameter = new G4UIparameter("plotter", 's', false);
+  fpCommand->SetParameter(parameter);
+
+  parameter = new G4UIparameter("region", 'i', true);
   parameter->SetDefaultValue(0);
-  fpCommand->SetParameter (parameter);
+  fpCommand->SetParameter(parameter);
 }
 
-G4VisCommandPlotterAddRegionH2::~G4VisCommandPlotterAddRegionH2 () {delete fpCommand;}
+G4VisCommandPlotterAddRegionH2::~G4VisCommandPlotterAddRegionH2()
+{
+  delete fpCommand;
+}
 
-void G4VisCommandPlotterAddRegionH2::SetNewValue (G4UIcommand*, G4String newValue)
+void G4VisCommandPlotterAddRegionH2::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4VisManager::Verbosity verbosity = fpVisManager->GetVerbosity();
 
@@ -383,18 +433,19 @@ void G4VisCommandPlotterAddRegionH2::SetNewValue (G4UIcommand*, G4String newValu
   int region;
   std::istringstream is(newValue);
   is >> hid >> plotter >> region;
-  
-  if(region<0) {
-    if (verbosity >= G4VisManager::errors) {
-      G4warn <<	"ERROR: bad region index " << region << "." << G4endl;
+
+  if (region < 0)
+  {
+    if (verbosity >= G4VisManager::errors)
+    {
+      G4warn << "ERROR: bad region index " << region << "." << G4endl;
     }
     return;
   }
-  
-  G4Plotter& _plotter = G4PlotterManager::GetInstance().GetPlotter(plotter);
-  _plotter.AddRegionH2(region,hid);
-  
-  G4Scene* pScene = fpVisManager->GetCurrentScene();
-  if(pScene) CheckSceneAndNotifyHandlers (pScene);
-}
 
+  G4Plotter& _plotter = G4PlotterManager::GetInstance().GetPlotter(plotter);
+  _plotter.AddRegionH2(region, hid);
+
+  G4Scene* pScene = fpVisManager->GetCurrentScene();
+  if (pScene) CheckSceneAndNotifyHandlers(pScene);
+}

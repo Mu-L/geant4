@@ -30,7 +30,7 @@
 // G4HelixMixedStepper split the Method used for Integration in two:
 //
 // If Stepping Angle ( h / R_curve) < pi/3 : use Stepper for small step
-// 
+//
 // Else use  HelixExplicitEuler Stepper
 //
 // Stepper for the small step is G4ClassicalRK4 by default, but
@@ -38,11 +38,11 @@
 // by setting StepperNumber : new HelixMixedStepper(EqRhs,N)
 //
 //  N=2  G4SimpleRunge;            N=3  G4SimpleHeum;
-//  N=4  G4ClassicalRK4;      
+//  N=4  G4ClassicalRK4;
 //  N=6  G4HelixImplicitEuler;     N=7  G4HelixSimpleRunge;
 //  N=8  G4CashKarpRK45;           N=9  G4ExactHelixStepper;
 //  N=10 G4RKG3_Stepper;           N=13 G4NystromRK4
-//  N=23 BogackiShampine23         N=145 TsitourasRK45 
+//  N=23 BogackiShampine23         N=145 TsitourasRK45
 //  N=45 BogackiShampine45         N=745 DormandPrince745 (ie DoPri5)
 //
 // For completeness also available are:
@@ -65,11 +65,12 @@
  * if the stepping angle ( h / R_curve) is less than pi/3, use a RK stepper
  * for small step, else use G4HelixExplicitEuler stepper.
  * Like other helix steppers, it is only applicable in pure magnetic field.
+ * @ingroup geometry_magneticfield
  */
 
 class G4HelixMixedStepper : public G4MagHelicalStepper
 {
-  public:  
+  public:
 
     /**
      * Constructor for G4ExactHelixStepper.
@@ -79,8 +80,7 @@ class G4HelixMixedStepper : public G4MagHelicalStepper
      *  @param[in] Angle_threshold The stepping angle threshold; default (-1)
      *             is (1/3)*pi.
      */
-    G4HelixMixedStepper(G4Mag_EqRhs* EqRhs,
-                        G4int StepperNumber = -1,
+    G4HelixMixedStepper(G4Mag_EqRhs* EqRhs, G4int StepperNumber = -1,
                         G4double Angle_threshold = -1.0);
 
     /**
@@ -100,11 +100,8 @@ class G4HelixMixedStepper : public G4MagHelicalStepper
      *  @param[out] yout Integration output.
      *  @param[out] yerr The estimated error.
      */
-    void Stepper( const G4double y[],
-                  const G4double dydx[],
-                        G4double h,
-                        G4double yout[],
-                        G4double yerr[] ) override;
+    void Stepper(const G4double y[], const G4double dydx[], G4double h, G4double yout[],
+                 G4double yerr[]) override;
 
     /**
      * Same as Stepper() function above, but should perform a 'dump' step
@@ -115,25 +112,22 @@ class G4HelixMixedStepper : public G4MagHelicalStepper
      *  @param[in] h The given step size.
      *  @param[out] yout Integration output.
      */
-    void DumbStepper( const G4double y[],
-                            G4ThreeVector Bfld,
-                            G4double h,
-                            G4double yout[] ) override;
+    void DumbStepper(const G4double y[], G4ThreeVector Bfld, G4double h, G4double yout[]) override;
 
     /**
      * Estimates the maximum distance of curved solution and chord.
      */
     G4double DistChord() const override;
-    
+
     /**
      * Sets the verbosity level.
      */
-    inline void SetVerbose (G4int newvalue) { fVerbose = newvalue; }
-  
+    inline void SetVerbose(G4int newvalue) { fVerbose = newvalue; }
+
     /**
      * Setter and getter for the stepping angle threshold.
      */
-    inline void SetAngleThreshold( G4double val ) { fAngle_threshold = val; }
+    inline void SetAngleThreshold(G4double val) { fAngle_threshold = val; }
     inline G4double GetAngleThreshold() { return fAngle_threshold; }
 
     /**
@@ -161,13 +155,13 @@ class G4HelixMixedStepper : public G4MagHelicalStepper
     /** Mixed Integration RK4 for 'small' steps. */
     G4MagIntegratorStepper* fRK4Stepper = nullptr;
 
-    /** Int ID of Runge-Kutta stepper. */ 
+    /** Int ID of Runge-Kutta stepper. */
     G4int fStepperNumber = -1;
 
     /** Threshold angle (in radians ); above it, the Helical stepper is used. */
     G4double fAngle_threshold = -1.0;
 
-    /** Verbosity level. */ 
+    /** Verbosity level. */
     G4int fVerbose = 0;
 
     /** Used for statistic, i.e. how many calls to different steppers. */

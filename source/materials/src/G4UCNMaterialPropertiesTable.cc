@@ -83,7 +83,10 @@ G4UCNMaterialPropertiesTable::~G4UCNMaterialPropertiesTable()
   delete maxMicroRoughnessTransTable;
 }
 
-G4double* G4UCNMaterialPropertiesTable::GetMicroRoughnessTable() { return theMicroRoughnessTable; }
+G4double* G4UCNMaterialPropertiesTable::GetMicroRoughnessTable()
+{
+  return theMicroRoughnessTable;
+}
 
 G4double* G4UCNMaterialPropertiesTable::GetMicroRoughnessTransTable()
 {
@@ -91,8 +94,9 @@ G4double* G4UCNMaterialPropertiesTable::GetMicroRoughnessTransTable()
 }
 
 void G4UCNMaterialPropertiesTable::LoadMicroRoughnessTables(G4double* pMicroRoughnessTable,
-  G4double* pmaxMicroRoughnessTable, G4double* pMicroRoughnessTransTable,
-  G4double* pmaxMicroRoughnessTransTable)
+                                                            G4double* pmaxMicroRoughnessTable,
+                                                            G4double* pMicroRoughnessTransTable,
+                                                            G4double* pmaxMicroRoughnessTransTable)
 {
   theMicroRoughnessTable = pMicroRoughnessTable;
   maxMicroRoughnessTable = pmaxMicroRoughnessTable;
@@ -107,20 +111,23 @@ void G4UCNMaterialPropertiesTable::InitMicroRoughnessTables()
 
   // Checks if the number of angles is available and stores it
 
-  if (ConstPropertyExists("MR_NBTHETA")) {
+  if (ConstPropertyExists("MR_NBTHETA"))
+  {
     Nthetadim = G4int(GetConstProperty("MR_NBTHETA") + 0.1);
   }
 
   // Checks if the number of energies is available and stores it
 
-  if (ConstPropertyExists("MR_NBE")) {
+  if (ConstPropertyExists("MR_NBE"))
+  {
     NEdim = G4int(GetConstProperty("MR_NBE") + 0.1);
   }
 
   // If both dimensions of the lookup-table are non-trivial:
   // delete old tables if existing and allocate memory for new tables
 
-  if (Nthetadim * NEdim > 0) {
+  if (Nthetadim * NEdim > 0)
+  {
     delete theMicroRoughnessTable;
     theMicroRoughnessTable = new G4double[Nthetadim * NEdim];
     delete maxMicroRoughnessTable;
@@ -177,15 +184,19 @@ void G4UCNMaterialPropertiesTable::ComputeMicroRoughnessTables()
 
   // G4cout << theMicroRoughnessTable << G4endl;
 
-  for (theta_i = theta_i_min; theta_i <= theta_i_max + 1e-6; theta_i += theta_i_step) {
+  for (theta_i = theta_i_min; theta_i <= theta_i_max + 1e-6; theta_i += theta_i_step)
+  {
     // Calculation for each cell in the lookup-table
-    for (E = Emin; E <= Emax; E += E_step) {
-      *(theMicroRoughnessTable + counter) = G4UCNMicroRoughnessHelper::GetInstance()->IntIplus(E,
-        fermipot, theta_i, AngNoTheta, AngNoPhi, b2, w2, maxMicroRoughnessTable + counter, AngCut);
+    for (E = Emin; E <= Emax; E += E_step)
+    {
+      *(theMicroRoughnessTable + counter) = G4UCNMicroRoughnessHelper::GetInstance()->IntIplus(
+        E, fermipot, theta_i, AngNoTheta, AngNoPhi, b2, w2, maxMicroRoughnessTable + counter,
+        AngCut);
 
       *(theMicroRoughnessTransTable + counter) =
-        G4UCNMicroRoughnessHelper::GetInstance()->IntIminus(E, fermipot, theta_i, AngNoTheta,
-          AngNoPhi, b2, w2, maxMicroRoughnessTransTable + counter, AngCut);
+        G4UCNMicroRoughnessHelper::GetInstance()->IntIminus(
+          E, fermipot, theta_i, AngNoTheta, AngNoPhi, b2, w2, maxMicroRoughnessTransTable + counter,
+          AngCut);
 
       dateir << *(theMicroRoughnessTable + counter) << G4endl;
       dateit << *(theMicroRoughnessTransTable + counter) << G4endl;
@@ -203,8 +214,10 @@ void G4UCNMaterialPropertiesTable::ComputeMicroRoughnessTables()
   std::ofstream dateimr("MRmaxrefl.dat", std::ios::out);
   std::ofstream dateimt("MRmaxtrans.dat", std::ios::out);
 
-  for (theta_i = theta_i_min; theta_i <= theta_i_max + 1e-6; theta_i += theta_i_step) {
-    for (E = Emin; E <= Emax; E += E_step) {
+  for (theta_i = theta_i_min; theta_i <= theta_i_max + 1e-6; theta_i += theta_i_step)
+  {
+    for (E = Emin; E <= Emax; E += E_step)
+    {
       // tests the GetXXProbability functions by writing the entries
       // of the lookup tables to files
 
@@ -221,14 +234,16 @@ void G4UCNMaterialPropertiesTable::ComputeMicroRoughnessTables()
 
 G4double G4UCNMaterialPropertiesTable::GetMRIntProbability(G4double theta_i, G4double Energy)
 {
-  if (theMicroRoughnessTable == nullptr) {
+  if (theMicroRoughnessTable == nullptr)
+  {
     G4cout << "Do not have theMicroRoughnessTable" << G4endl;
     return 0.;
   }
 
   // if theta_i or energy outside the range for which the lookup table is
   // calculated, the probability is set to zero
-  if (theta_i < theta_i_min || theta_i > theta_i_max || Energy < Emin || Energy > Emax) {
+  if (theta_i < theta_i_min || theta_i > theta_i_max || Energy < Emin || Energy > Emax)
+  {
     return 0.;
   }
 
@@ -245,14 +260,16 @@ G4double G4UCNMaterialPropertiesTable::GetMRIntProbability(G4double theta_i, G4d
 
 G4double G4UCNMaterialPropertiesTable::GetMRIntTransProbability(G4double theta_i, G4double Energy)
 {
-  if (theMicroRoughnessTransTable == nullptr) {
+  if (theMicroRoughnessTransTable == nullptr)
+  {
     return 0.;
   }
 
   // if theta_i or energy outside the range for which the lookup table
   // is calculated, the probability is set to zero
 
-  if (theta_i < theta_i_min || theta_i > theta_i_max || Energy < Emin || Energy > Emax) {
+  if (theta_i < theta_i_min || theta_i > theta_i_max || Energy < Emin || Energy > Emax)
+  {
     return 0.;
   }
 
@@ -270,14 +287,16 @@ G4double G4UCNMaterialPropertiesTable::GetMRIntTransProbability(G4double theta_i
 
 G4double G4UCNMaterialPropertiesTable::GetMRMaxProbability(G4double theta_i, G4double Energy)
 {
-  if (maxMicroRoughnessTable == nullptr) {
+  if (maxMicroRoughnessTable == nullptr)
+  {
     return 0.;
   }
 
   // if theta_i or energy outside the range for which the lookup table
   // is calculated, the probability is set to zero
 
-  if (theta_i < theta_i_min || theta_i > theta_i_max || Energy < Emin || Energy > Emax) {
+  if (theta_i < theta_i_min || theta_i > theta_i_max || Energy < Emin || Energy > Emax)
+  {
     return 0.;
   }
 
@@ -293,13 +312,15 @@ G4double G4UCNMaterialPropertiesTable::GetMRMaxProbability(G4double theta_i, G4d
   return *(maxMicroRoughnessTable + E_pos + theta_i_pos * noE);
 }
 
-void G4UCNMaterialPropertiesTable::SetMRMaxProbability(
-  G4double theta_i, G4double Energy, G4double value)
+void G4UCNMaterialPropertiesTable::SetMRMaxProbability(G4double theta_i, G4double Energy,
+                                                       G4double value)
 {
-  if (maxMicroRoughnessTable != nullptr) {
-    if (theta_i < theta_i_min || theta_i > theta_i_max || Energy < Emin || Energy > Emax) {
-    }
-    else {
+  if (maxMicroRoughnessTable != nullptr)
+  {
+    if (theta_i < theta_i_min || theta_i > theta_i_max || Energy < Emin || Energy > Emax)
+    {}
+    else
+    {
       // Determines the nearest cell in the lookup table which contains
       // the probability
 
@@ -316,14 +337,16 @@ void G4UCNMaterialPropertiesTable::SetMRMaxProbability(
 
 G4double G4UCNMaterialPropertiesTable::GetMRMaxTransProbability(G4double theta_i, G4double Energy)
 {
-  if (maxMicroRoughnessTransTable == nullptr) {
+  if (maxMicroRoughnessTransTable == nullptr)
+  {
     return 0.;
   }
 
   // if theta_i or energy outside the range for which the lookup table
   // is calculated, the probability is set to zero
 
-  if (theta_i < theta_i_min || theta_i > theta_i_max || Energy < Emin || Energy > Emax) {
+  if (theta_i < theta_i_min || theta_i > theta_i_max || Energy < Emin || Energy > Emax)
+  {
     return 0.;
   }
 
@@ -339,13 +362,15 @@ G4double G4UCNMaterialPropertiesTable::GetMRMaxTransProbability(G4double theta_i
   return *(maxMicroRoughnessTransTable + E_pos + theta_i_pos * noE);
 }
 
-void G4UCNMaterialPropertiesTable::SetMRMaxTransProbability(
-  G4double theta_i, G4double Energy, G4double value)
+void G4UCNMaterialPropertiesTable::SetMRMaxTransProbability(G4double theta_i, G4double Energy,
+                                                            G4double value)
 {
-  if (maxMicroRoughnessTransTable != nullptr) {
-    if (theta_i < theta_i_min || theta_i > theta_i_max || Energy < Emin || Energy > Emax) {
-    }
-    else {
+  if (maxMicroRoughnessTransTable != nullptr)
+  {
+    if (theta_i < theta_i_min || theta_i > theta_i_max || Energy < Emin || Energy > Emax)
+    {}
+    else
+    {
       // Determines the nearest cell in the lookup table which contains
       // the probability
 
@@ -360,18 +385,20 @@ void G4UCNMaterialPropertiesTable::SetMRMaxTransProbability(
   }
 }
 
-G4double G4UCNMaterialPropertiesTable::GetMRProbability(
-  G4double theta_i, G4double Energy, G4double fermipot, G4double theta_o, G4double phi_o)
+G4double G4UCNMaterialPropertiesTable::GetMRProbability(G4double theta_i, G4double Energy,
+                                                        G4double fermipot, G4double theta_o,
+                                                        G4double phi_o)
 {
-  return G4UCNMicroRoughnessHelper::GetInstance()->ProbIplus(
-    Energy, fermipot, theta_i, theta_o, phi_o, b, w, AngCut);
+  return G4UCNMicroRoughnessHelper::GetInstance()->ProbIplus(Energy, fermipot, theta_i, theta_o,
+                                                             phi_o, b, w, AngCut);
 }
 
-G4double G4UCNMaterialPropertiesTable::GetMRTransProbability(
-  G4double theta_i, G4double Energy, G4double fermipot, G4double theta_o, G4double phi_o)
+G4double G4UCNMaterialPropertiesTable::GetMRTransProbability(G4double theta_i, G4double Energy,
+                                                             G4double fermipot, G4double theta_o,
+                                                             G4double phi_o)
 {
-  return G4UCNMicroRoughnessHelper::GetInstance()->ProbIminus(
-    Energy, fermipot, theta_i, theta_o, phi_o, b, w, AngCut);
+  return G4UCNMicroRoughnessHelper::GetInstance()->ProbIminus(Energy, fermipot, theta_i, theta_o,
+                                                              phi_o, b, w, AngCut);
 }
 
 G4bool G4UCNMaterialPropertiesTable::ConditionsValid(G4double E, G4double VFermi, G4double theta_i)
@@ -383,13 +410,14 @@ G4bool G4UCNMaterialPropertiesTable::ConditionsValid(G4double E, G4double VFermi
   return 2 * b * k * std::cos(theta_i) < 1 && 2 * b * k_l < 1;
 }
 
-G4bool G4UCNMaterialPropertiesTable::TransConditionsValid(
-  G4double E, G4double VFermi, G4double theta_i)
+G4bool G4UCNMaterialPropertiesTable::TransConditionsValid(G4double E, G4double VFermi,
+                                                          G4double theta_i)
 {
   G4double k2 = 2 * neutron_mass_c2 * E / hbarc_squared;
   G4double k_l2 = 2 * neutron_mass_c2 * VFermi / hbarc_squared;
 
-  if (E * (std::cos(theta_i) * std::cos(theta_i)) < VFermi) {
+  if (E * (std::cos(theta_i) * std::cos(theta_i)) < VFermi)
+  {
     return false;
   }
 
@@ -399,12 +427,13 @@ G4bool G4UCNMaterialPropertiesTable::TransConditionsValid(
   return 2 * b * std::sqrt(kS2) * std::cos(theta_i) < 1 && 2 * b * std::sqrt(k_l2) < 1;
 }
 
-void G4UCNMaterialPropertiesTable::SetMicroRoughnessParameters(G4double ww, G4double bb,
-  G4int no_theta, G4int no_E, G4double theta_min, G4double theta_max, G4double E_min,
-  G4double E_max, G4int AngNoTheta, G4int AngNoPhi, G4double AngularCut)
+void G4UCNMaterialPropertiesTable::SetMicroRoughnessParameters(
+  G4double ww, G4double bb, G4int no_theta, G4int no_E, G4double theta_min, G4double theta_max,
+  G4double E_min, G4double E_max, G4int AngNoTheta, G4int AngNoPhi, G4double AngularCut)
 {
   // Removes an existing RMS roughness
-  if (ConstPropertyExists("MR_RRMS")) {
+  if (ConstPropertyExists("MR_RRMS"))
+  {
     RemoveConstProperty("MR_RRMS");
   }
 
@@ -412,7 +441,8 @@ void G4UCNMaterialPropertiesTable::SetMicroRoughnessParameters(G4double ww, G4do
   AddConstProperty("MR_RRMS", bb);
 
   // Removes an existing correlation length
-  if (ConstPropertyExists("MR_CORRLEN")) {
+  if (ConstPropertyExists("MR_CORRLEN"))
+  {
     RemoveConstProperty("MR_CORRLEN");
   }
 
@@ -420,7 +450,8 @@ void G4UCNMaterialPropertiesTable::SetMicroRoughnessParameters(G4double ww, G4do
   AddConstProperty("MR_CORRLEN", ww);
 
   // Removes an existing number of thetas
-  if (ConstPropertyExists("MR_NBTHETA")) {
+  if (ConstPropertyExists("MR_NBTHETA"))
+  {
     RemoveConstProperty("MR_NBTHETA");
   }
 
@@ -428,7 +459,8 @@ void G4UCNMaterialPropertiesTable::SetMicroRoughnessParameters(G4double ww, G4do
   AddConstProperty("MR_NBTHETA", (G4double)no_theta);
 
   // Removes an existing number of Energies
-  if (ConstPropertyExists("MR_NBE")) {
+  if (ConstPropertyExists("MR_NBE"))
+  {
     RemoveConstProperty("MR_NBE");
   }
 
@@ -436,7 +468,8 @@ void G4UCNMaterialPropertiesTable::SetMicroRoughnessParameters(G4double ww, G4do
   AddConstProperty("MR_NBE", (G4double)no_E);
 
   // Removes an existing minimum theta
-  if (ConstPropertyExists("MR_THETAMIN")) {
+  if (ConstPropertyExists("MR_THETAMIN"))
+  {
     RemoveConstProperty("MR_THETAMIN");
   }
 
@@ -444,7 +477,8 @@ void G4UCNMaterialPropertiesTable::SetMicroRoughnessParameters(G4double ww, G4do
   AddConstProperty("MR_THETAMIN", theta_min);
 
   // Removes an existing maximum theta
-  if (ConstPropertyExists("MR_THETAMAX")) {
+  if (ConstPropertyExists("MR_THETAMAX"))
+  {
     RemoveConstProperty("MR_THETAMAX");
   }
 
@@ -452,7 +486,8 @@ void G4UCNMaterialPropertiesTable::SetMicroRoughnessParameters(G4double ww, G4do
   AddConstProperty("MR_THETAMAX", theta_max);
 
   // Removes an existing minimum energy
-  if (ConstPropertyExists("MR_EMIN")) {
+  if (ConstPropertyExists("MR_EMIN"))
+  {
     RemoveConstProperty("MR_EMIN");
   }
 
@@ -460,7 +495,8 @@ void G4UCNMaterialPropertiesTable::SetMicroRoughnessParameters(G4double ww, G4do
   AddConstProperty("MR_EMIN", E_min);
 
   // Removes an existing maximum energy
-  if (ConstPropertyExists("MR_EMAX")) {
+  if (ConstPropertyExists("MR_EMAX"))
+  {
     RemoveConstProperty("MR_EMAX");
   }
 
@@ -468,7 +504,8 @@ void G4UCNMaterialPropertiesTable::SetMicroRoughnessParameters(G4double ww, G4do
   AddConstProperty("MR_EMAX", E_max);
 
   // Removes an existing Theta angle number
-  if (ConstPropertyExists("MR_ANGNOTHETA")) {
+  if (ConstPropertyExists("MR_ANGNOTHETA"))
+  {
     RemoveConstProperty("MR_ANGNOTHETA");
   }
 
@@ -476,7 +513,8 @@ void G4UCNMaterialPropertiesTable::SetMicroRoughnessParameters(G4double ww, G4do
   AddConstProperty("MR_ANGNOTHETA", (G4double)AngNoTheta);
 
   // Removes an existing Phi angle number
-  if (ConstPropertyExists("MR_ANGNOPHI")) {
+  if (ConstPropertyExists("MR_ANGNOPHI"))
+  {
     RemoveConstProperty("MR_ANGNOPHI");
   }
 
@@ -484,7 +522,8 @@ void G4UCNMaterialPropertiesTable::SetMicroRoughnessParameters(G4double ww, G4do
   AddConstProperty("MR_ANGNOPHI", (G4double)AngNoPhi);
 
   // Removes an existing angular cut
-  if (ConstPropertyExists("MR_ANGCUT")) {
+  if (ConstPropertyExists("MR_ANGCUT"))
+  {
     RemoveConstProperty("MR_ANGCUT");
   }
 

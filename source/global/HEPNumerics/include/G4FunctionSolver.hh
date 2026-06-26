@@ -42,109 +42,125 @@
 // methods.
 //
 // Created 04.10.2025 V.Ivanchenko
-//  
+//
 
-#ifndef G4FunctionSolver_h
-#define G4FunctionSolver_h 1
+#ifndef G4FUNCTIONSOLVER_HH
+#define G4FUNCTIONSOLVER_HH
 
 #include "globals.hh"
 
-template <class T_Function> class G4FunctionSolver 
+template<class T_Function>
+class G4FunctionSolver
 {
-public:
-	
-  G4FunctionSolver(T_Function* ff, const G4int iterations, const G4double tol)
-    : maxIter(iterations), tolerance(tol), tF(ff) {};
+  public:
 
-  // copy constructor	
-  G4FunctionSolver(const G4FunctionSolver& right) = delete;
+    G4FunctionSolver(T_Function* ff, const G4int iterations, const G4double tol)
+      : maxIter(iterations), tolerance(tol), tF(ff) {};
 
-  // destructor
-  ~G4FunctionSolver() = default;
-	
-  // operators
-  G4FunctionSolver& operator=(const G4FunctionSolver& right) = delete;
-  G4bool operator==(const G4FunctionSolver& right) const = delete;
-  G4bool operator!=(const G4FunctionSolver& right) const = delete;
+    // copy constructor
+    G4FunctionSolver(const G4FunctionSolver& right) = delete;
 
-  inline void SetMaxIterations(const G4int iterations)
-  { maxIter = iterations; }
+    // destructor
+    ~G4FunctionSolver() = default;
 
-  inline void SetTolerance(const G4double epsilon)
-  { tolerance = epsilon; }
+    // operators
+    G4FunctionSolver& operator=(const G4FunctionSolver& right) = delete;
+    G4bool operator==(const G4FunctionSolver& right) const = delete;
+    G4bool operator!=(const G4FunctionSolver& right) const = delete;
 
-  inline void SetIntervalLimits(const G4double Limit1, const G4double Limit2)
-  {
-    aa = std::min(Limit1, Limit2);
-    bb = std::max(Limit1, Limit2);
-  }
+    inline void SetMaxIterations(const G4int iterations) { maxIter = iterations; }
 
-  // Calculates the root of the equation Function(x)=0
-  inline G4bool FindRoot(G4double& x)
-  {
-    G4double a = aa;
-    G4double b = bb;
+    inline void SetTolerance(const G4double epsilon) { tolerance = epsilon; }
 
-    // check the interval before the start
-    x = std::min(std::max(x, a), b);
-
-    // check initial function
-    G4double fc = tF->Function(x);
-    if (0.0 == fc) { return true; }
-
-    // define accuracy in X
-    G4double epsX = tolerance*x;
-    // define accuracy in Y
-    G4double epsY = tolerance*fc;
-
-    // the interval is too small
-    if (std::abs(a - b) <= epsX)
+    inline void SetIntervalLimits(const G4double Limit1, const G4double Limit2)
     {
-      x = 0.5*(a + b);
-      return true;
+      aa = std::min(Limit1, Limit2);
+      bb = std::max(Limit1, Limit2);
     }
 
-    // check edges
-    G4double fa = tF->Function(a);
-    G4double fb = tF->Function(b);
-
-    // root should be inside interval
-    if (fa*fb >= 0.0)
+    // Calculates the root of the equation Function(x)=0
+    inline G4bool FindRoot(G4double& x)
     {
-      x = (std::abs(fa) <= std::abs(fb)) ? a : b;
-      return (std::min(std::abs(fa), std::abs(fb)) < epsY);
+      G4double a = aa;
+      G4double b = bb;
+
+      // check the interval before the start
+      x = std::min(std::max(x, a), b);
+
+      // check initial function
+      G4double fc = tF->Function(x);
+      if (0.0 == fc)
+      {
+        return true;
+      }
+
+      // define accuracy in X
+      G4double epsX = tolerance * x;
+      // define accuracy in Y
+      G4double epsY = tolerance * fc;
+
+      // the interval is too small
+      if (std::abs(a - b) <= epsX)
+      {
+        x = 0.5 * (a + b);
+        return true;
+      }
+
+      // check edges
+      G4double fa = tF->Function(a);
+      G4double fb = tF->Function(b);
+
+      // root should be inside interval
+      if (fa * fb >= 0.0)
+      {
+        x = (std::abs(fa) <= std::abs(fb)) ? a : b;
+        return (std::min(std::abs(fa), std::abs(fb)) < epsY);
+      }
+
+      // fa*fb < 0.0 - finding the root by iterative procedure,
+      // the loop is completed if function is below epsY
+      // or if x become close to edges with accuracy epsX
+      for (G4int i = 0; i < maxIter; ++i)
+      {
+        x = (a * fb - b * fa) / (fb - fa);
+        fc = tF->Function(x);
+        if (std::abs(fc) < epsY)
+        {
+          return true;
+        }
+
+        G4double delta = std::min((x - a), (b - x));
+        if (delta < epsX)
+        {
+          return true;
+        }
+        else if (fa * fc < 0.0)
+        {
+          b = x;
+          fb = fc;
+        }
+        else
+        {
+          a = x;
+          fa = fc;
+        }
+      }
+      // number of iterations exceed the limit
+      return false;
     }
 
-    // fa*fb < 0.0 - finding the root by iterative procedure, 
-    // the loop is completed if function is below epsY
-    // or if x become close to edges with accuracy epsX 
-    for (G4int i = 0; i < maxIter; ++i)
-    {
-      x = (a*fb - b*fa)/(fb - fa);
-      fc = tF->Function(x);
-      if (std::abs(fc) < epsY) { return true; }
+  private:
 
-      G4double delta = std::min((x - a), (b - x));
-      if (delta < epsX) { return true; }
-      else if (fa*fc < 0.0) { b = x; fb = fc; }
-      else { a = x; fa = fc; }
-    }
-    // number of iterations exceed the limit
-    return false;
-  }
+    // maximum number of iterations
+    G4int maxIter;
+    // relative accuracy in X and Y
+    G4double tolerance;
 
-private:
+    // interval limits [a,b]
+    G4double aa{0.0};
+    G4double bb{0.0};
 
-  // maximum number of iterations
-  G4int maxIter;
-  // relative accuracy in X and Y
-  G4double tolerance;
-
-  // interval limits [a,b] 
-  G4double aa{0.0};
-  G4double bb{0.0};
-
-  T_Function* tF;
+    T_Function* tF;
 };
 
 #endif

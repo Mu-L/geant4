@@ -30,32 +30,38 @@
 //
 // Author:	Michael Kelsey (SLAC) <kelsey@slac.stanford.edu>
 
-#ifndef G4VHadPhaseSpaceAlgorithm_HH
-#define G4VHadPhaseSpaceAlgorithm_HH 1
+#ifndef G4VHADPHASESPACEALGORITHM_HH
+#define G4VHADPHASESPACEALGORITHM_HH
 
-#include "globals.hh"
-#include "G4VHadDecayAlgorithm.hh"
 #include "G4LorentzVector.hh"
 #include "G4ThreeVector.hh"
-#include <vector>
+#include "G4VHadDecayAlgorithm.hh"
+#include "globals.hh"
+
 #include <iosfwd>
+#include <vector>
 
-class G4VHadPhaseSpaceAlgorithm : public G4VHadDecayAlgorithm {
-public:
-  G4VHadPhaseSpaceAlgorithm(const G4String& algName, G4int verbose=0)
-    : G4VHadDecayAlgorithm(algName, verbose) {;}
-  virtual ~G4VHadPhaseSpaceAlgorithm() {;}
+class G4VHadPhaseSpaceAlgorithm : public G4VHadDecayAlgorithm
+{
+  public:
 
-protected:
-  // Multi-body function remains pure-virtual from base class
+    G4VHadPhaseSpaceAlgorithm(const G4String& algName, G4int verbose = 0)
+      : G4VHadDecayAlgorithm(algName, verbose)
+    {
+      ;
+    }
+    virtual ~G4VHadPhaseSpaceAlgorithm() { ; }
 
-  // Two-body uniform distribution is common to all algorithms
-  virtual void GenerateTwoBody(G4double initialMass,
-			       const std::vector<G4double>& masses,
-			       std::vector<G4LorentzVector>& finalState);
+  protected:
 
-  // Sample spherical distribution
-  G4ThreeVector UniformVector(G4double mag=1.) const;
+    // Multi-body function remains pure-virtual from base class
+
+    // Two-body uniform distribution is common to all algorithms
+    virtual void GenerateTwoBody(G4double initialMass, const std::vector<G4double>& masses,
+                                 std::vector<G4LorentzVector>& finalState);
+
+    // Sample spherical distribution
+    G4ThreeVector UniformVector(G4double mag = 1.) const;
 };
 
-#endif	/* G4VHadPhaseSpaceAlgorithm_HH */
+#endif /* G4VHadPhaseSpaceAlgorithm_HH */

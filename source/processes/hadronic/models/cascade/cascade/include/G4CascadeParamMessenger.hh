@@ -32,8 +32,8 @@
 // 20141030  M. Kelsey -- Add flag to enable direct pi-N absorption
 // 20141211  M. Kelsey -- Change PIN_ABSORPTION flag to double, for energy cut
 
-#ifndef G4CascadeParamMessenger_hh
-#define G4CascadeParamMessenger_hh
+#ifndef G4CASCADEPARAMMESSENGER_HH
+#define G4CASCADEPARAMMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -47,46 +47,48 @@ class G4UIcmdWithoutParameter;
 class G4UIcommand;
 class G4UIdirectory;
 
+class G4CascadeParamMessenger : public G4UImessenger
+{
+  public:
 
-class G4CascadeParamMessenger : public G4UImessenger {
-public:
-  G4CascadeParamMessenger(G4CascadeParameters* params);
-  ~G4CascadeParamMessenger() override;
+    G4CascadeParamMessenger(G4CascadeParameters* params);
+    ~G4CascadeParamMessenger() override;
 
-  // Interface command needed by G4UImanager -- subclasses should call back!
-  void SetNewValue(G4UIcommand* command, G4String newValue) override;
+    // Interface command needed by G4UImanager -- subclasses should call back!
+    void SetNewValue(G4UIcommand* command, G4String newValue) override;
 
-protected:
+  protected:
 
-  template <class T>
-  T* CreateCommand(const G4String& cmd, const G4String& desc);
+    template<class T>
+    T* CreateCommand(const G4String& cmd, const G4String& desc);
 
-private:
-  G4CascadeParameters*  theParams;
-  G4UIdirectory* cmdDir;
+  private:
 
-  G4UIcmdWithAnInteger* verboseCmd;
-  G4UIcmdWithoutParameter* reportCmd;
-  G4UIcmdWithABool*	balanceCmd;
-  G4UIcmdWithABool*     usePreCoCmd;
-  G4UIcmdWithABool*     doCoalCmd;
-  G4UIcmdWithADouble*   piNAbsCmd;
-  G4UIcmdWithABool*     historyCmd;
-  G4UIcmdWithABool*     use3BodyCmd;
-  G4UIcmdWithABool*     usePSCmd;
-  G4UIcmdWithAString*   randomFileCmd;
-  G4UIcmdWithABool*     nucUseBestCmd;
-  G4UIcmdWithADouble*   nucRad2parCmd;
-  G4UIcmdWithADouble*   nucRadScaleCmd;
-  G4UIcmdWithADouble*   nucRadSmallCmd;
-  G4UIcmdWithADouble*   nucRadAlphaCmd;
-  G4UIcmdWithADouble*   nucRadTrailingCmd;
-  G4UIcmdWithADouble*   nucFermiScaleCmd;
-  G4UIcmdWithADouble*   nucXsecScaleCmd;
-  G4UIcmdWithADouble*   nucGammaQDCmd;
-  G4UIcmdWithADouble*   coalDPmax2Cmd;
-  G4UIcmdWithADouble*   coalDPmax3Cmd;
-  G4UIcmdWithADouble*   coalDPmax4Cmd;
+    G4CascadeParameters* theParams;
+    G4UIdirectory* cmdDir;
+
+    G4UIcmdWithAnInteger* verboseCmd;
+    G4UIcmdWithoutParameter* reportCmd;
+    G4UIcmdWithABool* balanceCmd;
+    G4UIcmdWithABool* usePreCoCmd;
+    G4UIcmdWithABool* doCoalCmd;
+    G4UIcmdWithADouble* piNAbsCmd;
+    G4UIcmdWithABool* historyCmd;
+    G4UIcmdWithABool* use3BodyCmd;
+    G4UIcmdWithABool* usePSCmd;
+    G4UIcmdWithAString* randomFileCmd;
+    G4UIcmdWithABool* nucUseBestCmd;
+    G4UIcmdWithADouble* nucRad2parCmd;
+    G4UIcmdWithADouble* nucRadScaleCmd;
+    G4UIcmdWithADouble* nucRadSmallCmd;
+    G4UIcmdWithADouble* nucRadAlphaCmd;
+    G4UIcmdWithADouble* nucRadTrailingCmd;
+    G4UIcmdWithADouble* nucFermiScaleCmd;
+    G4UIcmdWithADouble* nucXsecScaleCmd;
+    G4UIcmdWithADouble* nucGammaQDCmd;
+    G4UIcmdWithADouble* coalDPmax2Cmd;
+    G4UIcmdWithADouble* coalDPmax3Cmd;
+    G4UIcmdWithADouble* coalDPmax4Cmd;
 };
 
 // Templated function implementation below

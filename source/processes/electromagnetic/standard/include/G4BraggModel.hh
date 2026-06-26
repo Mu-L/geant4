@@ -43,24 +43,24 @@
 // 11-04-05 Major optimisation of internal interfaces (V.Ivantchenko)
 // 15-02-06 ComputeCrossSectionPerElectron, ComputeCrossSectionPerAtom (mma)
 // 25-04-06 Added stopping data from PSTAR (V.Ivanchenko)
-// 12-08-08 Added methods GetParticleCharge, GetChargeSquareRatio, 
+// 12-08-08 Added methods GetParticleCharge, GetChargeSquareRatio,
 //          CorrectionsAlongStep needed for ions(V.Ivanchenko)
 
 //
 // Class Description:
 //
 // Implementation of energy loss and delta-electron production
-// by heavy slow charged particles using ICRU'49 and NIST evaluated data 
+// by heavy slow charged particles using ICRU'49 and NIST evaluated data
 // for protons
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4BraggModel_h
-#define G4BraggModel_h 1
+#ifndef G4BRAGGMODEL_HH
+#define G4BRAGGMODEL_HH
 
-#include "G4VEmModel.hh"
 #include "G4PSTARStopping.hh"
+#include "G4VEmModel.hh"
 
 class G4ParticleChangeForLoss;
 class G4EmCorrections;
@@ -69,119 +69,98 @@ class G4PSTARStopping;
 
 class G4BraggModel : public G4VEmModel
 {
+  public:
 
-public:
+    explicit G4BraggModel(const G4ParticleDefinition* p = nullptr, const G4String& nam = "Bragg");
 
-  explicit G4BraggModel(const G4ParticleDefinition* p = nullptr,
-			const G4String& nam = "Bragg");
+    ~G4BraggModel() override;
 
-  ~G4BraggModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    G4double MinEnergyCut(const G4ParticleDefinition*, const G4MaterialCutsCouple* couple) override;
 
-  G4double MinEnergyCut(const G4ParticleDefinition*,
-			const G4MaterialCutsCouple* couple) override;
+    G4double ComputeCrossSectionPerElectron(const G4ParticleDefinition*, G4double kineticEnergy,
+                                            G4double cutEnergy, G4double maxEnergy);
 
-  G4double ComputeCrossSectionPerElectron(
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy);
-				 
-  G4double ComputeCrossSectionPerAtom(
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double Z, G4double A,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
-				 				 
-  G4double CrossSectionPerVolume(const G4Material*,
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
-				 
-  G4double ComputeDEDXPerVolume(const G4Material*,
-				const G4ParticleDefinition*,
-				G4double kineticEnergy,
-				G4double cutEnergy) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kineticEnergy,
+                                        G4double Z, G4double A, G4double cutEnergy,
+                                        G4double maxEnergy) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy,
+                                   G4double maxEnergy) override;
 
-  // Compute ion charge 
-  G4double GetChargeSquareRatio(const G4ParticleDefinition*,
-				const G4Material*,
-				G4double kineticEnergy) override;
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                  G4double kineticEnergy, G4double cutEnergy) override;
 
-  G4double GetParticleCharge(const G4ParticleDefinition* p,
-			     const G4Material* mat,
-			     G4double kineticEnergy) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  inline void SetChargeSquareRatio(G4double val);
+    // Compute ion charge
+    G4double GetChargeSquareRatio(const G4ParticleDefinition*, const G4Material*,
+                                  G4double kineticEnergy) override;
 
-  // hide assignment operator
-  G4BraggModel & operator=(const  G4BraggModel &right) = delete;
-  G4BraggModel(const  G4BraggModel&) = delete;
+    G4double GetParticleCharge(const G4ParticleDefinition* p, const G4Material* mat,
+                               G4double kineticEnergy) override;
 
-protected:
+    inline void SetChargeSquareRatio(G4double val);
 
-  void SetParticle(const G4ParticleDefinition* p);
+    // hide assignment operator
+    G4BraggModel& operator=(const G4BraggModel& right) = delete;
+    G4BraggModel(const G4BraggModel&) = delete;
 
-  G4double MaxSecondaryEnergy(const G4ParticleDefinition*,
-			      G4double kinEnergy) final;
+  protected:
 
-private:
+    void SetParticle(const G4ParticleDefinition* p);
 
-  void HasMaterial(const G4Material* material);
+    G4double MaxSecondaryEnergy(const G4ParticleDefinition*, G4double kinEnergy) final;
 
-  G4double StoppingPower(const G4Material* material,
-			 G4double kineticEnergy);
+  private:
 
-  G4double ElectronicStoppingPower(G4double z,
-                                   G4double kineticEnergy) const;
+    void HasMaterial(const G4Material* material);
 
-  G4double DEDX(const G4Material* material, G4double kineticEnergy);
+    G4double StoppingPower(const G4Material* material, G4double kineticEnergy);
 
-  G4bool MolecIsInZiegler1988(const G4Material* material);
+    G4double ElectronicStoppingPower(G4double z, G4double kineticEnergy) const;
 
-  G4double ChemicalFactor(G4double kineticEnergy, G4double eloss125) const;
+    G4double DEDX(const G4Material* material, G4double kineticEnergy);
 
-protected:
+    G4bool MolecIsInZiegler1988(const G4Material* material);
 
-  const G4ParticleDefinition* particle = nullptr;
-  G4ParticleDefinition* theElectron = nullptr;
-  G4ParticleChangeForLoss* fParticleChange = nullptr;
+    G4double ChemicalFactor(G4double kineticEnergy, G4double eloss125) const;
 
-  const G4Material* currentMaterial = nullptr;
-  const G4Material* baseMaterial = nullptr;
+  protected:
 
-  G4EmCorrections* corr = nullptr;
+    const G4ParticleDefinition* particle = nullptr;
+    G4ParticleDefinition* theElectron = nullptr;
+    G4ParticleChangeForLoss* fParticleChange = nullptr;
 
-  static G4ICRU90StoppingData* fICRU90;
-  static G4PSTARStopping* fPSTAR;
+    const G4Material* currentMaterial = nullptr;
+    const G4Material* baseMaterial = nullptr;
 
-  G4double mass = 0.0;
-  G4double spin = 0.0;
-  G4double chargeSquareRatio = 1.0;
-  G4double massRate = 1.0;
-  G4double ratio = 1.0;
-  G4double protonMassAMU = 1.007276;
-  G4double lowestKinEnergy;
-  G4double theZieglerFactor;
-  G4double expStopPower125;  // Experimental Stopping power at 125keV
+    G4EmCorrections* corr = nullptr;
 
-  G4int iMolecula = -1;   // index in the molecula's table
-  G4int iPSTAR = -1;      // index in NIST PSTAR
-  G4int iICRU90 = -1;
+    static G4ICRU90StoppingData* fICRU90;
+    static G4PSTARStopping* fPSTAR;
 
-private:
+    G4double mass = 0.0;
+    G4double spin = 0.0;
+    G4double chargeSquareRatio = 1.0;
+    G4double massRate = 1.0;
+    G4double ratio = 1.0;
+    G4double protonMassAMU = 1.007276;
+    G4double lowestKinEnergy;
+    G4double theZieglerFactor;
+    G4double expStopPower125;  // Experimental Stopping power at 125keV
 
-  G4bool isIon = false;
-  G4bool isFirst = false;
+    G4int iMolecula = -1;  // index in the molecula's table
+    G4int iPSTAR = -1;  // index in NIST PSTAR
+    G4int iICRU90 = -1;
+
+  private:
+
+    G4bool isIon = false;
+    G4bool isFirst = false;
 };
 
 inline void G4BraggModel::SetChargeSquareRatio(G4double val)

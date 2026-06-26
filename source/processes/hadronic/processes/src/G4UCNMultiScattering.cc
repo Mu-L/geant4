@@ -42,34 +42,32 @@
 //
 ///////////////////////////////////////////////////////////////////////
 
-#include "G4UCNProcessSubType.hh"
-
 #include "G4UCNMultiScattering.hh"
 
-#include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4UCNProcessSubType.hh"
 
 /////////////////////////
 // Class Implementation
 /////////////////////////
 
-        //////////////
-        // Operators
-        //////////////
- 
-        // G4UCNMultiScattering::operator=(const G4UCNMultiScattering &right)
-        // {
-        // }
+//////////////
+// Operators
+//////////////
 
-        /////////////////
-        // Constructors
-        /////////////////
+// G4UCNMultiScattering::operator=(const G4UCNMultiScattering &right)
+// {
+// }
 
-G4UCNMultiScattering::G4UCNMultiScattering(const G4String& processName,
-                                           G4ProcessType type)
-                    : G4VDiscreteProcess(processName, type)
+/////////////////
+// Constructors
+/////////////////
+
+G4UCNMultiScattering::G4UCNMultiScattering(const G4String& processName, G4ProcessType type)
+  : G4VDiscreteProcess(processName, type)
 {
-  if (verboseLevel>0) G4cout << GetProcessName() << " is created " << G4endl;
+  if (verboseLevel > 0) G4cout << GetProcessName() << " is created " << G4endl;
 
   SetProcessSubType(fUCNMultiScattering);
 }
@@ -78,34 +76,31 @@ G4UCNMultiScattering::G4UCNMultiScattering(const G4String& processName,
 // {
 // }
 
-        ////////////////
-        // Destructors
-        ////////////////
+////////////////
+// Destructors
+////////////////
 
-G4UCNMultiScattering::~G4UCNMultiScattering(){}
+G4UCNMultiScattering::~G4UCNMultiScattering() {}
 
-        ////////////
-        // Methods
-        ////////////
+////////////
+// Methods
+////////////
 
 // PostStepDoIt
 // ------------
 
-G4VParticleChange*
-G4UCNMultiScattering::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
+G4VParticleChange* G4UCNMultiScattering::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 {
   aParticleChange.Initialize(aTrack);
 
-  if ( verboseLevel > 0 ) G4cout << "UCNMULTISCATTER at: "
-     << aTrack.GetProperTime()/s << "s, "
-     << aTrack.GetGlobalTime()/s << "s. "
-     << ", after track length " << aTrack.GetTrackLength()/cm << "cm, "
-           << "in volume "
-           << aStep.GetPostStepPoint()->GetPhysicalVolume()->GetName()
-           << G4endl;
+  if (verboseLevel > 0)
+    G4cout << "UCNMULTISCATTER at: " << aTrack.GetProperTime() / s << "s, "
+           << aTrack.GetGlobalTime() / s << "s. "
+           << ", after track length " << aTrack.GetTrackLength() / cm << "cm, "
+           << "in volume " << aStep.GetPostStepPoint()->GetPhysicalVolume()->GetName() << G4endl;
 
   G4ThreeVector scattered = Scatter();
-      
+
   aParticleChange.ProposeMomentumDirection(-scattered);
 
   return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
@@ -114,34 +109,32 @@ G4UCNMultiScattering::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 // GetMeanFreePath
 // ---------------
 
-G4double G4UCNMultiScattering::GetMeanFreePath(const G4Track& aTrack,
-                                               G4double ,
-                                               G4ForceCondition*)
+G4double G4UCNMultiScattering::GetMeanFreePath(const G4Track& aTrack, G4double, G4ForceCondition*)
 {
   G4double AttenuationLength = DBL_MAX;
 
   const G4Material* aMaterial = aTrack.GetMaterial();
-  G4MaterialPropertiesTable* aMaterialPropertiesTable =
-                                     aMaterial->GetMaterialPropertiesTable();
+  G4MaterialPropertiesTable* aMaterialPropertiesTable = aMaterial->GetMaterialPropertiesTable();
 
   G4double crossect = 0.0;
-  if (aMaterialPropertiesTable) {
-     crossect = aMaterialPropertiesTable->GetConstProperty("SCATCS");
-//     if(crossect == 0.0)
-//       G4cout << "No UCN MultiScattering length specified" << G4endl;
+  if (aMaterialPropertiesTable)
+  {
+    crossect = aMaterialPropertiesTable->GetConstProperty("SCATCS");
+    //     if(crossect == 0.0)
+    //       G4cout << "No UCN MultiScattering length specified" << G4endl;
   }
-//  else G4cout << "No UCN MultiScattering length specified" << G4endl;
+  //  else G4cout << "No UCN MultiScattering length specified" << G4endl;
 
-  if (crossect) {
-
+  if (crossect)
+  {
     // Calculate a UCN MultiScattering length for this cross section
 
     G4double density = aMaterial->GetTotNbOfAtomsPerVolume();
 
     crossect *= barn;
-  
+
     // attenuation length in mm
-    AttenuationLength = 1./density/crossect; 
+    AttenuationLength = 1. / density / crossect;
   }
 
   return AttenuationLength;
@@ -149,13 +142,12 @@ G4double G4UCNMultiScattering::GetMeanFreePath(const G4Track& aTrack,
 
 G4ThreeVector G4UCNMultiScattering::Scatter()
 {
-
-  G4ThreeVector final(0.,0.,1.);
+  G4ThreeVector final(0., 0., 1.);
 
   // Make a simple uniform distribution in 4 pi
   // apply scattering, calculate angle phi, theta
 
-  G4double theta = std::acos(2*G4UniformRand()-1);
+  G4double theta = std::acos(2 * G4UniformRand() - 1);
   G4double phi = G4UniformRand() * 2 * pi;
 
   final.rotateY(theta);

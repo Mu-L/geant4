@@ -353,10 +353,13 @@ G4int G4NRESP71M03::ApplyMechanismABE(G4ReactionProduct& neut, G4ReactionProduct
   G4double CosThetaCMAlpha = 0.;  // Cosine of the angle of emission of the alpha particle (theta).
 
   G4double Kn = neut.GetKineticEnergy();  // Neutron energy in the center of mass system.
-  if (Kn > 5.7 * MeV) {
+  if (Kn > 5.7 * MeV)
+  {
     // Sorting.
-    for (G4int i = 1; i < ndist; i++) {
-      if (BEN2[i] >= Kn / keV) {
+    for (G4int i = 1; i < ndist; i++)
+    {
+      if (BEN2[i] >= Kn / keV)
+      {
         // Ok. The neutron energy is between values i-1 and i of BEN2. Taking them.
         G4double BE1 = BEN2[i - 1];
         G4double BE2 = BEN2[i];
@@ -395,7 +398,8 @@ G4int G4NRESP71M03::ApplyMechanismABE(G4ReactionProduct& neut, G4ReactionProduct
       }
     }
   }
-  else {
+  else
+  {
     // Isotropic distribution in CM.
     CosThetaCMAlpha = 1. - 2. * G4UniformRand();
   }

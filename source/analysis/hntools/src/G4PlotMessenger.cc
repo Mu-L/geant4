@@ -27,13 +27,13 @@
 // Author: Ivana Hrivnacova, 21/10/2015  (ivana@ipno.in2p3.fr)
 
 #include "G4PlotMessenger.hh"
-#include "G4PlotParameters.hh"
-#include "G4AnalysisUtilities.hh"
 
-#include "G4UIdirectory.hh"
-#include "G4UIcommand.hh"
-#include "G4UIparameter.hh"
+#include "G4AnalysisUtilities.hh"
+#include "G4PlotParameters.hh"
 #include "G4UIcmdWithAString.hh"
+#include "G4UIcommand.hh"
+#include "G4UIdirectory.hh"
+#include "G4UIparameter.hh"
 
 #include <vector>
 
@@ -41,8 +41,7 @@ using namespace G4Analysis;
 using std::to_string;
 
 //_____________________________________________________________________________
-G4PlotMessenger::G4PlotMessenger(G4PlotParameters* plotParameters)
-  : fPlotParameters(plotParameters)
+G4PlotMessenger::G4PlotMessenger(G4PlotParameters* plotParameters) : fPlotParameters(plotParameters)
 {
   fDirectory = std::make_unique<G4UIdirectory>("/analysis/plot/");
   fDirectory->SetGuidance("Analysis batch plotting control");
@@ -60,12 +59,13 @@ G4PlotMessenger::~G4PlotMessenger() = default;
 //
 
 //_____________________________________________________________________________
-void G4PlotMessenger::AddIntParameter(
-  G4UIcommand& command, G4String name, G4String guidance, G4String range)
+void G4PlotMessenger::AddIntParameter(G4UIcommand& command, G4String name, G4String guidance,
+                                      G4String range)
 {
   auto param = new G4UIparameter(name.c_str(), 'i', false);
   param->SetGuidance(guidance.c_str());
-  if (! range.empty()) {
+  if (!range.empty())
+  {
     param->SetParameterRange(range);
   }
   command.SetParameter(param);
@@ -82,14 +82,12 @@ void G4PlotMessenger::SetStyleCmd()
     "  ROOT_default:  ROOT style with high resolution fonts\n"
     "  hippodraw:     hippodraw style with high resolution fonts\n"
     "  inlib_default: PAW style with low resolution fonts";
-  candidates =
-    "ROOT_default hippodraw inlib_default";
+  candidates = "ROOT_default hippodraw inlib_default";
 #else
   guidance =
     "Only one plotting style is available in low resolution: \n"
     "  inlib_default: PAW style with low resolution fonts";
-  candidates =
-    "inlib_default";
+  candidates = "inlib_default";
 #endif
 
   fSetStyleCmd = CreateCommand<G4UIcmdWithAString>("setStyle", std::move(guidance));
@@ -100,27 +98,24 @@ void G4PlotMessenger::SetStyleCmd()
 //_____________________________________________________________________________
 void G4PlotMessenger::SetLayoutCmd()
 {
-  fSetLayoutCmd = CreateCommand<G4UIcommand>(
-    "setLayout",
-    "Set page layout (number of columns and rows per page).\n"
-    "   Supported layouts:\n"
-    "   columns = 1 .. maxValueAllowed\n"
-    "   rows    = 1 .. maxValueAllowed, and >= columns\"");
+  fSetLayoutCmd =
+    CreateCommand<G4UIcommand>("setLayout",
+                               "Set page layout (number of columns and rows per page).\n"
+                               "   Supported layouts:\n"
+                               "   columns = 1 .. maxValueAllowed\n"
+                               "   rows    = 1 .. maxValueAllowed, and >= columns\"");
 
-  AddIntParameter(*fSetLayoutCmd, "columns",
-     "The number of columns in the page layout.",
-     "columns>=1 && columns<=" + std::to_string(fPlotParameters->GetMaxColumns()));
-  AddIntParameter(*fSetLayoutCmd, "rows",
-    "The number of rows in the page layout.",
-    "rows>=1 && rows<=" + std::to_string(fPlotParameters->GetMaxRows()));
+  AddIntParameter(*fSetLayoutCmd, "columns", "The number of columns in the page layout.",
+                  "columns>=1 && columns<=" + std::to_string(fPlotParameters->GetMaxColumns()));
+  AddIntParameter(*fSetLayoutCmd, "rows", "The number of rows in the page layout.",
+                  "rows>=1 && rows<=" + std::to_string(fPlotParameters->GetMaxRows()));
 }
 
 //_____________________________________________________________________________
 void G4PlotMessenger::SetDimensionsCmd()
 {
   fSetDimensionsCmd = CreateCommand<G4UIcommand>(
-    "setDimensions",
-    "Set the plotter window size (width and height) in pixels.");
+    "setDimensions", "Set the plotter window size (width and height) in pixels.");
 
   AddIntParameter(*fSetDimensionsCmd, "width", "The page width.");
   AddIntParameter(*fSetDimensionsCmd, "height", "The page height.");
@@ -137,32 +132,35 @@ void G4PlotMessenger::SetNewValue(G4UIcommand* command, G4String newValues)
   std::vector<G4String> parameters;
   G4Analysis::Tokenize(newValues, parameters);
   // check consistency
-  if ( parameters.size() != command->GetParameterEntries() ) {
+  if (parameters.size() != command->GetParameterEntries())
+  {
     // Should never happen but let's check anyway for consistency
-    G4Analysis::Warn(
-      "Got wrong number of \"" + command->GetCommandName() +
-      "\" parameters: " + to_string(parameters.size()) +
-      " instead of " + to_string(command->GetParameterEntries()) + " expected",
-      fkClass, "WarnAboutParameters");
+    G4Analysis::Warn("Got wrong number of \"" + command->GetCommandName()
+                       + "\" parameters: " + to_string(parameters.size()) + " instead of "
+                       + to_string(command->GetParameterEntries()) + " expected",
+                     fkClass, "WarnAboutParameters");
     return;
   }
 
   auto counter = 0;
-  if ( command == fSetLayoutCmd.get() ) {
+  if (command == fSetLayoutCmd.get())
+  {
     auto columns = G4UIcommand::ConvertToInt(parameters[counter++]);
     auto rows = G4UIcommand::ConvertToInt(parameters[counter++]);
     fPlotParameters->SetLayout(columns, rows);
     return;
   }
 
-  if ( command == fSetDimensionsCmd.get() ) {
+  if (command == fSetDimensionsCmd.get())
+  {
     auto width = G4UIcommand::ConvertToInt(parameters[counter++]);
     auto height = G4UIcommand::ConvertToInt(parameters[counter++]);
     fPlotParameters->SetDimensions(width, height);
     return;
   }
 
-  if ( command == fSetStyleCmd.get() ) {
+  if (command == fSetStyleCmd.get())
+  {
     fPlotParameters->SetStyle(newValues);
     return;
   }

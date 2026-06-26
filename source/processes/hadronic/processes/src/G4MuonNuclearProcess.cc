@@ -26,43 +26,38 @@
 //
 // Author:   D.H. Wright
 // Date:     2 February 2011
-// 
+//
 // Description: muon interacts with nucleus by exchange of virtual
-//              boson, which then interacts hadronically.  Either 
+//              boson, which then interacts hadronically.  Either
 //              electromagnetic or weak interaction models can be
 //              assigned to this process.
 //
 // 14-Sep-12 M.Kelsey -- Pass subType code to base ctor
 
-
 #include "G4MuonNuclearProcess.hh"
+
+#include "G4KokoulinMuonNuclearXS.hh"
 #include "G4MuonMinus.hh"
 #include "G4MuonPlus.hh"
-#include "G4KokoulinMuonNuclearXS.hh"
+
 #include <iostream>
 
-
 G4MuonNuclearProcess::G4MuonNuclearProcess(const G4String& processName)
-  : G4HadronicProcess(processName, fHadronInelastic) {
+  : G4HadronicProcess(processName, fHadronInelastic)
+{
   G4HadronicProcess::AddDataSet(new G4KokoulinMuonNuclearXS());
 }
 
+G4MuonNuclearProcess::~G4MuonNuclearProcess() {}
 
-G4MuonNuclearProcess::~G4MuonNuclearProcess()
-{}
-
-
-G4bool
-G4MuonNuclearProcess::IsApplicable(const G4ParticleDefinition& aParticleType)
+G4bool G4MuonNuclearProcess::IsApplicable(const G4ParticleDefinition& aParticleType)
 {
-  return (&aParticleType == G4MuonMinus::MuonMinus() ) ||
-         (&aParticleType == G4MuonPlus::MuonPlus() );
+  return (&aParticleType == G4MuonMinus::MuonMinus()) || (&aParticleType == G4MuonPlus::MuonPlus());
 }
-
 
 void G4MuonNuclearProcess::ProcessDescription(std::ostream& outFile) const
 {
-  outFile << "G4MuonNuclearProcess handles inelastic muon scattering from\n" 
+  outFile << "G4MuonNuclearProcess handles inelastic muon scattering from\n"
           << "nuclei by invoking one or more hadronic models and one\n"
           << "or more hadronic cross section sets.\n";
 }

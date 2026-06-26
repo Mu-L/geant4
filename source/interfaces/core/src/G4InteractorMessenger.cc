@@ -36,12 +36,13 @@
 
 #define STRDUP(str) \
   ((str) != NULL ? (strcpy((char*)malloc((unsigned)strlen(str) + 1), str)) : (char*)NULL)
-#define STRDEL(str)      \
-  {                      \
-    if ((str) != NULL) { \
-      free(str);         \
-      str = NULL;        \
-    }                    \
+#define STRDEL(str)    \
+  {                    \
+    if ((str) != NULL) \
+    {                  \
+      free(str);       \
+      str = NULL;      \
+    }                  \
   }
 
 static G4bool GetValues(G4String, G4int, G4String*);
@@ -153,7 +154,8 @@ G4InteractorMessenger::G4InteractorMessenger(G4VInteractiveSession* a_session)
   parameter = new G4UIparameter("destination", 's', true);  // Omitable
   const auto& outputStyles = session->GetOutputStyles();
   G4String candidates;
-  for (const auto& style : outputStyles) {
+  for (const auto& style : outputStyles)
+  {
     candidates += style.first + ' ';
   }
   candidates += "all";
@@ -195,32 +197,41 @@ void G4InteractorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
   const auto paramn = command->GetParameterEntries();
   auto params = new G4String[paramn];
-  if (GetValues(newValue, (G4int)paramn, params)) {
-    if (command == addMenu) {
+  if (GetValues(newValue, (G4int)paramn, params))
+  {
+    if (command == addMenu)
+    {
       session->AddMenu((const char*)params[0], (const char*)params[1]);
     }
-    else if (command == addButton) {
+    else if (command == addButton)
+    {
       session->AddButton((const char*)params[0], (const char*)params[1], (const char*)params[2]);
     }
-    else if (command == addIcon) {
+    else if (command == addIcon)
+    {
       session->AddIcon((const char*)params[0], (const char*)params[1], (const char*)params[2],
-        (const char*)params[3]);
+                       (const char*)params[3]);
     }
-    else if (command == defaultIcons) {
+    else if (command == defaultIcons)
+    {
       session->DefaultIcons(command->ConvertToBool(newValue));
     }
-    else if (command == sys) {
+    else if (command == sys)
+    {
       G4int rc = system((const char*)params[0]);
-      if (rc < 0) {
-      }
+      if (rc < 0)
+      {}
     }
-    else if (command == outputStyle) {
+    else if (command == outputStyle)
+    {
       session->SetOutputStyle((const char*)params[0], (const char*)params[1]);
     }
-    else if (command == nativeMenu) {
+    else if (command == nativeMenu)
+    {
       session->NativeMenu(command->ConvertToBool(newValue));
     }
-    else if (command == clearMenu) {
+    else if (command == clearMenu)
+    {
       session->ClearMenu();
     }
   }
@@ -231,16 +242,21 @@ G4bool GetValues(G4String newValue, G4int paramn, G4String* params)
   char* value = STRDUP(newValue.data());
   if (value == nullptr) return false;
   char* tok = strtok(value, " ");
-  for (G4int i = 0; i < paramn; ++i) {
-    if (tok == nullptr) {
+  for (G4int i = 0; i < paramn; ++i)
+  {
+    if (tok == nullptr)
+    {
       STRDEL(value);
       return false;
     }
     G4String token = tok;
-    if (token[0] == '"') {
-      while (token.back() != '"') {
+    if (token[0] == '"')
+    {
+      while (token.back() != '"')
+      {
         tok = strtok(nullptr, " ");
-        if ((tok == nullptr) || (*tok == '\0')) {
+        if ((tok == nullptr) || (*tok == '\0'))
+        {
           STRDEL(value);
           return false;
         }
@@ -249,7 +265,8 @@ G4bool GetValues(G4String newValue, G4int paramn, G4String* params)
       }
       G4StrUtil::strip(token, '"');
     }
-    if (token.empty()) {
+    if (token.empty())
+    {
       STRDEL(value);
       return false;
     }

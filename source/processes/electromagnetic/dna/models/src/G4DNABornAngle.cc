@@ -32,89 +32,87 @@
 // File name:     G4DNABornAngle
 //
 // Author:        Vladimir Ivantcheko
-// 
+//
 // Creation date: 23 August 2013
 //
-// Modifications: 
+// Modifications:
 //
-// Class Description: 
+// Class Description:
 //
-// Delta-electron Angular Distribution Generation 
+// Delta-electron Angular Distribution Generation
 //
-// Class Description: End 
+// Class Description: End
 //
 // -------------------------------------------------------------------
 //
 
 #include "G4DNABornAngle.hh"
-#include "G4PhysicalConstants.hh"
-#include "Randomize.hh"
-#include "G4ParticleDefinition.hh"
+
 #include "G4Electron.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
+#include "Randomize.hh"
 
 using namespace std;
 
-G4DNABornAngle::G4DNABornAngle(const G4String&)
-  : G4VEmAngularDistribution("deltaBorn")
+G4DNABornAngle::G4DNABornAngle(const G4String&) : G4VEmAngularDistribution("deltaBorn")
 {
   fElectron = G4Electron::Electron();
-}    
+}
 
-G4DNABornAngle::~G4DNABornAngle() 
-= default;
+G4DNABornAngle::~G4DNABornAngle() = default;
 
-G4ThreeVector& 
-G4DNABornAngle::SampleDirectionForShell(const G4DynamicParticle* dp,
-					G4double secKinetic, G4int, 
-					G4int, 
-					const G4Material*)
+G4ThreeVector& G4DNABornAngle::SampleDirectionForShell(const G4DynamicParticle* dp,
+                                                       G4double secKinetic, G4int, G4int,
+                                                       const G4Material*)
 {
   G4double k = dp->GetKineticEnergy();
   G4double cosTheta = 1.0;
- 
+
   if (dp->GetDefinition() == fElectron)
+  {
+    if (secKinetic < 50. * eV)
+      cosTheta = (2. * G4UniformRand()) - 1.;
+    else if (secKinetic <= 200. * eV)
     {
-      if (secKinetic < 50.*eV) cosTheta = (2.*G4UniformRand())-1.;
-      else if (secKinetic <= 200.*eV)
-	{
-	  if (G4UniformRand() <= 0.1) cosTheta = (2.*G4UniformRand())-1.;
-	  else cosTheta = G4UniformRand()*(std::sqrt(2.)/2);
-	}
+      if (G4UniformRand() <= 0.1)
+        cosTheta = (2. * G4UniformRand()) - 1.;
       else
-	{
-	  G4double sin2O = 
-	    (1.-secKinetic/k)/(1.+secKinetic/(2.*electron_mass_c2));
-	  cosTheta = std::sqrt(1.-sin2O);
-	}
+        cosTheta = G4UniformRand() * (std::sqrt(2.) / 2);
     }
-  else 
+    else
     {
-      G4double tau = k/dp->GetDefinition()->GetPDGMass();
-      G4double maxSecKinetic = 2.* electron_mass_c2*tau*(tau + 2.0);
-
-      // Restriction below 100 eV from Emfietzoglou (2000)
-
-      if (secKinetic>100*eV) cosTheta = std::min(std::sqrt(secKinetic / maxSecKinetic), 1.0);
-      else cosTheta = (2.*G4UniformRand())-1.;
+      G4double sin2O = (1. - secKinetic / k) / (1. + secKinetic / (2. * electron_mass_c2));
+      cosTheta = std::sqrt(1. - sin2O);
     }
+  }
+  else
+  {
+    G4double tau = k / dp->GetDefinition()->GetPDGMass();
+    G4double maxSecKinetic = 2. * electron_mass_c2 * tau * (tau + 2.0);
 
-  G4double sint = sqrt((1.0 - cosTheta)*(1.0 + cosTheta));
-  G4double phi  = twopi*G4UniformRand(); 
+    // Restriction below 100 eV from Emfietzoglou (2000)
 
-  fLocalDirection.set(sint*cos(phi), sint*sin(phi), cosTheta);
+    if (secKinetic > 100 * eV)
+      cosTheta = std::min(std::sqrt(secKinetic / maxSecKinetic), 1.0);
+    else
+      cosTheta = (2. * G4UniformRand()) - 1.;
+  }
+
+  G4double sint = sqrt((1.0 - cosTheta) * (1.0 + cosTheta));
+  G4double phi = twopi * G4UniformRand();
+
+  fLocalDirection.set(sint * cos(phi), sint * sin(phi), cosTheta);
   fLocalDirection.rotateUz(dp->GetMomentumDirection());
 
   return fLocalDirection;
 }
 
-G4ThreeVector& 
-G4DNABornAngle::SampleDirection(const G4DynamicParticle* dp,
-				G4double secEkin, G4int Z, 
-				const G4Material* mat)
+G4ThreeVector& G4DNABornAngle::SampleDirection(const G4DynamicParticle* dp, G4double secEkin,
+                                               G4int Z, const G4Material* mat)
 {
   return SampleDirectionForShell(dp, secEkin, Z, 0, mat);
 }
 
-void G4DNABornAngle::PrintGeneratorInformation() const
-{} 
+void G4DNABornAngle::PrintGeneratorInformation() const {}

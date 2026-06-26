@@ -31,33 +31,32 @@
 //
 // new hybrid Default-GEM evaporation model:
 //      - default evaporation for n,p,d,t and alpha particles
-//      - GEM evaporation for light nuclei evaporation (2<Z<13,4<A<29) 
+//      - GEM evaporation for light nuclei evaporation (2<Z<13,4<A<29)
 //
 // Modifications:
-// 23 January 2012 by V.Ivanchenko added pointer of G4VPhotonEvaporation to 
+// 23 January 2012 by V.Ivanchenko added pointer of G4VPhotonEvaporation to
 //    the constructor
 
-
-#ifndef G4EvaporationDefaultGEMFactory_h
-#define G4EvaporationDefaultGEMFactory_h 1
+#ifndef G4EVAPORATIONDEFAULTGEMFACTORY_HH
+#define G4EVAPORATIONDEFAULTGEMFACTORY_HH
 
 #include "G4VEvaporationFactory.hh"
 
 class G4EvaporationDefaultGEMFactory : public G4VEvaporationFactory
 {
-public:
+  public:
 
-  explicit G4EvaporationDefaultGEMFactory(G4VEvaporationChannel* photoEvaporation);
+    explicit G4EvaporationDefaultGEMFactory(G4VEvaporationChannel* photoEvaporation);
 
-  ~G4EvaporationDefaultGEMFactory() override = default;
+    ~G4EvaporationDefaultGEMFactory() override = default;
 
-  std::vector<G4VEvaporationChannel*>* GetChannel() override;
+    std::vector<G4VEvaporationChannel*>* GetChannel() override;
 
-  G4EvaporationDefaultGEMFactory(const G4EvaporationDefaultGEMFactory&) = delete;
-  const G4EvaporationDefaultGEMFactory& operator=
-  (const G4EvaporationDefaultGEMFactory& val) = delete;
-  G4bool operator==(const G4EvaporationDefaultGEMFactory& val) const = delete;
-  G4bool operator!=(const G4EvaporationDefaultGEMFactory& val) const = delete;
+    G4EvaporationDefaultGEMFactory(const G4EvaporationDefaultGEMFactory&) = delete;
+    const G4EvaporationDefaultGEMFactory&
+    operator=(const G4EvaporationDefaultGEMFactory& val) = delete;
+    G4bool operator==(const G4EvaporationDefaultGEMFactory& val) const = delete;
+    G4bool operator!=(const G4EvaporationDefaultGEMFactory& val) const = delete;
 };
 
 #endif

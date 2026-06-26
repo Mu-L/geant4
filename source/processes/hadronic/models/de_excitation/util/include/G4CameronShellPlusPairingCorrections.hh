@@ -30,39 +30,43 @@
 // Modified:
 // 21.03.2013 V.Ivanchenko redesigned and cleaned up
 
-#ifndef G4CameronShellPlusPairingCorrections_h
-#define G4CameronShellPlusPairingCorrections_h 1
+#ifndef G4CAMERONSHELLPLUSPAIRINGCORRECTIONS_HH
+#define G4CAMERONSHELLPLUSPAIRINGCORRECTIONS_HH
 
 #include "globals.hh"
 
 class G4CameronShellPlusPairingCorrections
 {
-public:
+  public:
 
-  explicit G4CameronShellPlusPairingCorrections();
+    explicit G4CameronShellPlusPairingCorrections();
 
-  ~G4CameronShellPlusPairingCorrections() = default;
+    ~G4CameronShellPlusPairingCorrections() = default;
 
-  inline G4bool GetPairingCorrection(G4int N, G4int Z, G4double& result) const
-  {
-    G4bool res = false;
-    if(Z <= TableSize && N <= TableSize) { 
-      result = SPZTable[Z-1] + SPNTable[N-1];
-      res = true; 
+    inline G4bool GetPairingCorrection(G4int N, G4int Z, G4double& result) const
+    {
+      G4bool res = false;
+      if (Z <= TableSize && N <= TableSize)
+      {
+        result = SPZTable[Z - 1] + SPNTable[N - 1];
+        res = true;
+      }
+      return res;
     }
-    return res;
-  }
-  
-  enum  { TableSize = 200 };
-  
-  G4CameronShellPlusPairingCorrections(const G4CameronShellPlusPairingCorrections & right) = delete;
-  const G4CameronShellPlusPairingCorrections & operator=
-  (const G4CameronShellPlusPairingCorrections & right) = delete;
 
-private:
+    enum
+    {
+      TableSize = 200
+    };
 
-  static G4double SPZTable[TableSize];
-  static G4double SPNTable[TableSize];
-  
+    G4CameronShellPlusPairingCorrections(const G4CameronShellPlusPairingCorrections& right) =
+      delete;
+    const G4CameronShellPlusPairingCorrections&
+    operator=(const G4CameronShellPlusPairingCorrections& right) = delete;
+
+  private:
+
+    static G4double SPZTable[TableSize];
+    static G4double SPNTable[TableSize];
 };
 #endif

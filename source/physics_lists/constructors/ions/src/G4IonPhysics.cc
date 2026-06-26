@@ -30,35 +30,33 @@
 //
 // Author:      A.Ivanchenko 02.03.2011
 //
-// Modified: 
-// 16.10.2012 A.Ribon: renamed G4IonFTFPBinaryCascadePhysics as G4IonPhysics     
+// Modified:
+// 16.10.2012 A.Ribon: renamed G4IonFTFPBinaryCascadePhysics as G4IonPhysics
 //
 //---------------------------------------------------------------------------
 
 #include "G4IonPhysics.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4ProcessManager.hh"
-#include "G4Deuteron.hh"
-#include "G4Triton.hh"
-#include "G4He3.hh"
-#include "G4Alpha.hh"
-#include "G4GenericIon.hh"
-#include "G4IonConstructor.hh"
 
-#include "G4HadronInelasticProcess.hh"
+#include "G4Alpha.hh"
 #include "G4BinaryLightIonReaction.hh"
+#include "G4BuilderType.hh"
 #include "G4ComponentGGNuclNuclXsc.hh"
 #include "G4CrossSectionInelastic.hh"
-
-#include "G4PreCompoundModel.hh"
+#include "G4Deuteron.hh"
 #include "G4ExcitationHandler.hh"
 #include "G4FTFBuilder.hh"
+#include "G4GenericIon.hh"
+#include "G4HadronInelasticProcess.hh"
 #include "G4HadronicInteraction.hh"
-#include "G4BuilderType.hh"
 #include "G4HadronicInteractionRegistry.hh"
-
 #include "G4HadronicParameters.hh"
+#include "G4He3.hh"
+#include "G4IonConstructor.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4PreCompoundModel.hh"
+#include "G4ProcessManager.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4Triton.hh"
 
 using namespace std;
 
@@ -69,23 +67,23 @@ G4_DECLARE_PHYSCONSTR_FACTORY(G4IonPhysics);
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4IonPhysics::G4IonPhysics(G4int ver)
-  : G4IonPhysics("ionInelasticFTFP_BIC", ver)
-{}
+G4IonPhysics::G4IonPhysics(G4int ver) : G4IonPhysics("ionInelasticFTFP_BIC", ver) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4IonPhysics::G4IonPhysics(const G4String& nname, G4int ver)
-  : G4VPhysicsConstructor(nname),verbose(ver)
+  : G4VPhysicsConstructor(nname), verbose(ver)
 {
   SetPhysicsType(bIons);
-  if(verbose > 1) { G4cout << "### IonPhysics: " << nname << G4endl; }
+  if (verbose > 1)
+  {
+    G4cout << "### IonPhysics: " << nname << G4endl;
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4IonPhysics::~G4IonPhysics()
-{}
+G4IonPhysics::~G4IonPhysics() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -102,62 +100,60 @@ void G4IonPhysics::ConstructProcess()
 {
   G4double emax = G4HadronicParameters::Instance()->GetMaxEnergy();
 
-  G4HadronicInteraction* p =
-    G4HadronicInteractionRegistry::Instance()->FindModel("PRECO");
-  G4PreCompoundModel* thePreCompound = static_cast<G4PreCompoundModel*>(p); 
-  if(!thePreCompound) { thePreCompound = new G4PreCompoundModel; }
+  G4HadronicInteraction* p = G4HadronicInteractionRegistry::Instance()->FindModel("PRECO");
+  G4PreCompoundModel* thePreCompound = static_cast<G4PreCompoundModel*>(p);
+  if (!thePreCompound)
+  {
+    thePreCompound = new G4PreCompoundModel;
+  }
 
   // Binary Cascade
-  G4HadronicInteraction* theIonBC = 
-    new G4BinaryLightIonReaction(thePreCompound);
-  theIonBC->SetMinEnergy( 0.0 );
-  theIonBC->SetMaxEnergy( G4HadronicParameters::Instance()->GetMaxEnergyTransitionFTF_Cascade() );
+  G4HadronicInteraction* theIonBC = new G4BinaryLightIonReaction(thePreCompound);
+  theIonBC->SetMinEnergy(0.0);
+  theIonBC->SetMaxEnergy(G4HadronicParameters::Instance()->GetMaxEnergyTransitionFTF_Cascade());
 
   // FTFP
   G4HadronicInteraction* theFTFP = nullptr;
-  if(emax > theIonBC->GetMaxEnergy()) {
-    G4FTFBuilder theBuilder("FTFP",thePreCompound);
+  if (emax > theIonBC->GetMaxEnergy())
+  {
+    G4FTFBuilder theBuilder("FTFP", thePreCompound);
     theFTFP = theBuilder.GetModel();
-    theFTFP->SetMinEnergy( G4HadronicParameters::Instance()->GetMinEnergyTransitionFTF_Cascade() );
-    theFTFP->SetMaxEnergy( emax );
+    theFTFP->SetMinEnergy(G4HadronicParameters::Instance()->GetMinEnergyTransitionFTF_Cascade());
+    theFTFP->SetMaxEnergy(emax);
   }
 
-  G4CrossSectionInelastic* theNuclNuclData = 
+  G4CrossSectionInelastic* theNuclNuclData =
     new G4CrossSectionInelastic(new G4ComponentGGNuclNuclXsc());
 
-  AddProcess("dInelastic", G4Deuteron::Deuteron(),theIonBC,theFTFP,
-	     theNuclNuclData);
-  AddProcess("tInelastic",G4Triton::Triton(),theIonBC,theFTFP,
-	     theNuclNuclData);
-  AddProcess("He3Inelastic",G4He3::He3(),theIonBC,theFTFP,
-	     theNuclNuclData);
-  AddProcess("alphaInelastic", G4Alpha::Alpha(),theIonBC,theFTFP,
-	     theNuclNuclData);
-  AddProcess("ionInelastic",G4GenericIon::GenericIon(),theIonBC,theFTFP,
-	     theNuclNuclData);
+  AddProcess("dInelastic", G4Deuteron::Deuteron(), theIonBC, theFTFP, theNuclNuclData);
+  AddProcess("tInelastic", G4Triton::Triton(), theIonBC, theFTFP, theNuclNuclData);
+  AddProcess("He3Inelastic", G4He3::He3(), theIonBC, theFTFP, theNuclNuclData);
+  AddProcess("alphaInelastic", G4Alpha::Alpha(), theIonBC, theFTFP, theNuclNuclData);
+  AddProcess("ionInelastic", G4GenericIon::GenericIon(), theIonBC, theFTFP, theNuclNuclData);
 
-  if(verbose > 1) {
-    G4cout << "G4IonPhysics::ConstructProcess done! " 
-	   << G4endl;
+  if (verbose > 1)
+  {
+    G4cout << "G4IonPhysics::ConstructProcess done! " << G4endl;
   }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void G4IonPhysics::AddProcess(const G4String& name, 
-			      G4ParticleDefinition* part,
-			      G4HadronicInteraction* theIonBC,
-			      G4HadronicInteraction* theFTFP,
-			      G4VCrossSectionDataSet* xs)
+void G4IonPhysics::AddProcess(const G4String& name, G4ParticleDefinition* part,
+                              G4HadronicInteraction* theIonBC, G4HadronicInteraction* theFTFP,
+                              G4VCrossSectionDataSet* xs)
 {
   G4HadronInelasticProcess* hadi = new G4HadronInelasticProcess(name, part);
   G4ProcessManager* pManager = part->GetProcessManager();
   pManager->AddDiscreteProcess(hadi);
-    
+
   hadi->AddDataSet(xs);
-    
+
   hadi->RegisterMe(theIonBC);
-  if(theFTFP) { hadi->RegisterMe(theFTFP); }
+  if (theFTFP)
+  {
+    hadi->RegisterMe(theFTFP);
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

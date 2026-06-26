@@ -72,6 +72,8 @@
 // 20150608  M. Kelsey -- Label all while loops as terminating.
 
 #include "G4InuclCollider.hh"
+
+#include "G4AblaDeexcitation.hh"
 #include "G4CascadeChannelTables.hh"
 #include "G4CascadeCheckBalance.hh"
 #include "G4CascadeDeexcitation.hh"
@@ -82,24 +84,24 @@
 #include "G4InuclNuclei.hh"
 #include "G4LorentzConvertor.hh"
 #include "G4PreCompoundDeexcitation.hh"
-#include "G4AblaDeexcitation.hh"
-
 
 G4InuclCollider::G4InuclCollider()
   : G4CascadeColliderBase("G4InuclCollider"),
     theElementaryParticleCollider(new G4ElementaryParticleCollider),
     theIntraNucleiCascader(new G4IntraNucleiCascader),
-    theDeexcitation(new G4PreCompoundDeexcitation) {}
+    theDeexcitation(new G4PreCompoundDeexcitation)
+{}
 
-G4InuclCollider::~G4InuclCollider() {
+G4InuclCollider::~G4InuclCollider()
+{
   delete theElementaryParticleCollider;
   delete theIntraNucleiCascader;
   delete theDeexcitation;
 }
 
-
 // Set verbosity and pass on to member objects
-void G4InuclCollider::setVerboseLevel(G4int verbose) {
+void G4InuclCollider::setVerboseLevel(G4int verbose)
+{
   G4CascadeColliderBase::setVerboseLevel(verbose);
 
   theElementaryParticleCollider->setVerboseLevel(verboseLevel);
@@ -110,53 +112,56 @@ void G4InuclCollider::setVerboseLevel(G4int verbose) {
   DEXoutput.setVerboseLevel(verboseLevel);
 }
 
-
 // Select post-cascade processing (default will be CascadeDeexcitation)
 
-void G4InuclCollider::useCascadeDeexcitation() {
+void G4InuclCollider::useCascadeDeexcitation()
+{
   delete theDeexcitation;
   theDeexcitation = new G4CascadeDeexcitation;
   theDeexcitation->setVerboseLevel(verboseLevel);
 }
 
-void G4InuclCollider::usePreCompoundDeexcitation() {
+void G4InuclCollider::usePreCompoundDeexcitation()
+{
   delete theDeexcitation;
   theDeexcitation = new G4PreCompoundDeexcitation;
   theDeexcitation->setVerboseLevel(verboseLevel);
 }
 
-void G4InuclCollider::useAblaDeexcitation() {
+void G4InuclCollider::useAblaDeexcitation()
+{
   delete theDeexcitation;
   theDeexcitation = new G4AblaDeexcitation;
   theDeexcitation->setVerboseLevel(verboseLevel);
 }
 
-
 // Main action
 
 void G4InuclCollider::collide(G4InuclParticle* bullet, G4InuclParticle* target,
-			      G4CollisionOutput& globalOutput) {
+                              G4CollisionOutput& globalOutput)
+{
   if (verboseLevel) G4cout << " >>> G4InuclCollider::collide" << G4endl;
 
   const G4int itry_max = 100;
 
   // Particle-on-particle collision; no nucleus involved
-  if (useEPCollider(bullet,target)) {
-    if (verboseLevel > 2)
-      G4cout << " InuclCollider -> particle on particle collision" << G4endl;
- 
+  if (useEPCollider(bullet, target))
+  {
+    if (verboseLevel > 2) G4cout << " InuclCollider -> particle on particle collision" << G4endl;
+
     theElementaryParticleCollider->collide(bullet, target, globalOutput);
     return;
   }
-  
-  interCase.set(bullet,target);		// Classify collision type
-  if (verboseLevel > 2) {
+
+  interCase.set(bullet, target);  // Classify collision type
+  if (verboseLevel > 2)
+  {
     G4cout << " InuclCollider -> inter case " << interCase.code() << G4endl;
   }
 
-  if (!interCase.valid()) {
-    if (verboseLevel > 1)
-      G4cerr << " InuclCollider -> no collision possible " << G4endl;
+  if (!interCase.valid())
+  {
+    if (verboseLevel > 1) G4cerr << " InuclCollider -> no collision possible " << G4endl;
 
     globalOutput.trivialise(bullet, target);
     return;
@@ -164,7 +169,8 @@ void G4InuclCollider::collide(G4InuclParticle* bullet, G4InuclParticle* target,
 
   // Target must be a nucleus
   G4InuclNuclei* ntarget = dynamic_cast<G4InuclNuclei*>(interCase.getTarget());
-  if (!ntarget) {
+  if (!ntarget)
+  {
     G4cerr << " InuclCollider -> ERROR target is not a nucleus " << G4endl;
 
     globalOutput.trivialise(bullet, target);
@@ -174,47 +180,53 @@ void G4InuclCollider::collide(G4InuclParticle* bullet, G4InuclParticle* target,
   G4int btype = 0;
   G4int ab = 0;
   G4int zb = 0;
-  
-  if (interCase.hadNucleus()) { 	// particle with nuclei
-    G4InuclElementaryParticle* pbullet = 
+
+  if (interCase.hadNucleus())
+  {  // particle with nuclei
+    G4InuclElementaryParticle* pbullet =
       dynamic_cast<G4InuclElementaryParticle*>(interCase.getBullet());
 
-    if (!pbullet) {
+    if (!pbullet)
+    {
       G4cerr << " InuclCollider -> ERROR bullet is not a hadron " << G4endl;
       globalOutput.trivialise(bullet, target);
       return;
     }
 
-    if (!G4CascadeChannelTables::GetTable(pbullet->type())) {
+    if (!G4CascadeChannelTables::GetTable(pbullet->type()))
+    {
       G4cerr << " InuclCollider -> ERROR can not collide with "
-	     << pbullet->getDefinition()->GetParticleName() << G4endl;
+             << pbullet->getDefinition()->GetParticleName() << G4endl;
       globalOutput.trivialise(bullet, target);
       return;
     }
 
     btype = pbullet->type();
-  } else { 				// nuclei with nuclei
-    G4InuclNuclei* nbullet = 
-      dynamic_cast<G4InuclNuclei*>(interCase.getBullet());
-    if (!nbullet) {
+  }
+  else
+  {  // nuclei with nuclei
+    G4InuclNuclei* nbullet = dynamic_cast<G4InuclNuclei*>(interCase.getBullet());
+    if (!nbullet)
+    {
       G4cerr << " InuclCollider -> ERROR bullet is not a nucleus " << G4endl;
       globalOutput.trivialise(bullet, target);
       return;
     }
-    
+
     ab = nbullet->getA();
     zb = nbullet->getZ();
   }
 
   G4LorentzConvertor convertToTargetRestFrame(bullet, ntarget);
   G4double ekin = convertToTargetRestFrame.getKinEnergyInTheTRS();
-  
+
   if (verboseLevel > 3) G4cout << " ekin in trs " << ekin << G4endl;
 
-  if (!inelasticInteractionPossible(bullet, target, ekin)) {
+  if (!inelasticInteractionPossible(bullet, target, ekin))
+  {
     if (verboseLevel > 3)
       G4cout << " InuclCollider -> inelastic interaction is impossible\n"
-	     << " due to the coulomb barirer " << G4endl;
+             << " due to the coulomb barirer " << G4endl;
 
     globalOutput.trivialise(bullet, target);
     return;
@@ -222,12 +234,12 @@ void G4InuclCollider::collide(G4InuclParticle* bullet, G4InuclParticle* target,
 
   // Generate interaction secondaries in rest frame of target nucleus
   convertToTargetRestFrame.toTheTargetRestFrame();
-  if (verboseLevel > 3) {
-    G4cout << " degenerated? " << convertToTargetRestFrame.trivial()
-	   << G4endl;
+  if (verboseLevel > 3)
+  {
+    G4cout << " degenerated? " << convertToTargetRestFrame.trivial() << G4endl;
   }
-  
-  G4LorentzVector bmom;			// Bullet is along local Z
+
+  G4LorentzVector bmom;  // Bullet is along local Z
   bmom.setZ(convertToTargetRestFrame.getTRSMomentum());
 
   // Need to make copy of bullet with momentum realigned
@@ -238,15 +250,16 @@ void G4InuclCollider::collide(G4InuclParticle* bullet, G4InuclParticle* target,
     zbullet = new G4InuclNuclei(bmom, ab, zb);
 
   G4int itry = 0;
-  while (itry < itry_max) {	/* Loop checking 08.06.2015 MHK */
+  while (itry < itry_max)
+  { /* Loop checking 08.06.2015 MHK */
     itry++;
     if (verboseLevel > 2) G4cout << " InuclCollider itry " << itry << G4endl;
 
-    globalOutput.reset();		// Clear buffers for this attempt
+    globalOutput.reset();  // Clear buffers for this attempt
     output.reset();
 
     theIntraNucleiCascader->collide(zbullet, target, output);
-    
+
     if (verboseLevel > 1) G4cout << " After Cascade " << G4endl;
 
     deexcite(output.getRecoilFragment(), output);
@@ -256,8 +269,7 @@ void G4InuclCollider::collide(G4InuclParticle* bullet, G4InuclParticle* target,
     if (std::getenv("G4CASCADE_CHECK_PHOTONUCLEAR"))
       if (!photonuclearOkay(output)) continue;
 
-    if (verboseLevel > 2)
-      G4cout << " itry " << itry << " finished, moving to lab frame" << G4endl;
+    if (verboseLevel > 2) G4cout << " itry " << itry << " finished, moving to lab frame" << G4endl;
 
     // convert to the LAB frame and add to final result
     output.boostToLabFrame(convertToTargetRestFrame);
@@ -267,68 +279,66 @@ void G4InuclCollider::collide(G4InuclParticle* bullet, G4InuclParticle* target,
     // Adjust final state particles to balance momentum and energy
     // FIXME:  This should no longer be necessary!
     globalOutput.setOnShell(bullet, target);
-    if (globalOutput.acceptable()) {
-      if (verboseLevel) 
-	G4cout << " InuclCollider output after trials " << itry << G4endl;
+    if (globalOutput.acceptable())
+    {
+      if (verboseLevel) G4cout << " InuclCollider output after trials " << itry << G4endl;
       delete zbullet;
       return;
-    } else {
-      if (verboseLevel>2)
-	G4cerr << " InuclCollider setOnShell failed." << G4endl;
     }
-  }	// while (itry < itry_max)
-  
-  if (verboseLevel) {
-    G4cout << " InuclCollider -> can not generate acceptable inter. after " 
-	   << itry_max << " attempts " << G4endl;
+    else
+    {
+      if (verboseLevel > 2) G4cerr << " InuclCollider setOnShell failed." << G4endl;
+    }
+  }  // while (itry < itry_max)
+
+  if (verboseLevel)
+  {
+    G4cout << " InuclCollider -> can not generate acceptable inter. after " << itry_max
+           << " attempts " << G4endl;
   }
-  
+
   globalOutput.trivialise(bullet, target);
 
   delete zbullet;
   return;
 }
 
-
 // For use with Propagate to preload a set of secondaries
 
-void G4InuclCollider::rescatter(G4InuclParticle* bullet,
-				G4KineticTrackVector* theSecondaries,
-				G4V3DNucleus* theNucleus,
-				G4CollisionOutput& globalOutput) {
+void G4InuclCollider::rescatter(G4InuclParticle* bullet, G4KineticTrackVector* theSecondaries,
+                                G4V3DNucleus* theNucleus, G4CollisionOutput& globalOutput)
+{
   if (verboseLevel) G4cout << " >>> G4InuclCollider::rescatter" << G4endl;
 
-  G4int itry=1;		// For diagnostic post-processing only
+  G4int itry = 1;  // For diagnostic post-processing only
   if (verboseLevel > 2) G4cout << " InuclCollider itry " << itry << G4endl;
 
-  globalOutput.reset();		// Clear buffers for this attempt
+  globalOutput.reset();  // Clear buffers for this attempt
   output.reset();
 
-  theIntraNucleiCascader->rescatter(bullet, theSecondaries, theNucleus, 
-				    output);
+  theIntraNucleiCascader->rescatter(bullet, theSecondaries, theNucleus, output);
 
   if (verboseLevel > 1) G4cout << " After Rescatter" << G4endl;
 
   deexcite(output.getRecoilFragment(), output);
   output.removeRecoilFragment();
 
-  globalOutput.add(output);	// Add local results to global output
+  globalOutput.add(output);  // Add local results to global output
 
-  if (verboseLevel) 
-    G4cout << " InuclCollider output after trials " << itry << G4endl;
+  if (verboseLevel) G4cout << " InuclCollider output after trials " << itry << G4endl;
 }
 
-
 // De-excite nuclear fragment to ground state
-void G4InuclCollider::deexcite(const G4Fragment& fragment,
-			       G4CollisionOutput& globalOutput) {
-  if (fragment.GetA_asInt() <= 1) return;	// Nothing real to be de-excited
+void G4InuclCollider::deexcite(const G4Fragment& fragment, G4CollisionOutput& globalOutput)
+{
+  if (fragment.GetA_asInt() <= 1) return;  // Nothing real to be de-excited
 
   if (verboseLevel) G4cout << " >>> G4InuclCollider::deexcite" << G4endl;
 
-  const G4int itry_max = 10;		// Maximum number of attempts
+  const G4int itry_max = 10;  // Maximum number of attempts
   G4int itry = 0;
-  do {					/* Loop checking 08.06.2015 MHK */
+  do
+  { /* Loop checking 08.06.2015 MHK */
     if (verboseLevel > 2) G4cout << " deexcite itry " << itry << G4endl;
 
     DEXoutput.reset();
@@ -339,29 +349,30 @@ void G4InuclCollider::deexcite(const G4Fragment& fragment,
   globalOutput.add(DEXoutput);
 }
 
-
 // Looks for non-gamma final state in photonuclear or leptonuclear
 
-G4bool G4InuclCollider::photonuclearOkay(G4CollisionOutput& checkOutput) const {
-  if (interCase.twoNuclei()) return true;	// A-A is not photonuclear
+G4bool G4InuclCollider::photonuclearOkay(G4CollisionOutput& checkOutput) const
+{
+  if (interCase.twoNuclei()) return true;  // A-A is not photonuclear
 
   G4InuclElementaryParticle* bullet =
     dynamic_cast<G4InuclElementaryParticle*>(interCase.getBullet());
   if (!bullet || !(bullet->isPhoton() || bullet->isElectron())) return true;
 
-  if (verboseLevel>1)
-    G4cout << " >>> G4InuclCollider::photonuclearOkay" << G4endl;
+  if (verboseLevel > 1) G4cout << " >>> G4InuclCollider::photonuclearOkay" << G4endl;
 
   if (bullet->getKineticEnergy() > 0.050) return true;
 
-  if (verboseLevel>2) {
-    if (checkOutput.numberOfOutgoingNuclei() > 0) {
+  if (verboseLevel > 2)
+  {
+    if (checkOutput.numberOfOutgoingNuclei() > 0)
+    {
       G4cout << " comparing final nucleus with initial target:\n"
-             << checkOutput.getOutgoingNuclei()[0] << G4endl
-             << *(interCase.getTarget()) << G4endl;
-    } else {
-      G4cout << " no final nucleus remains when target was "
-             << *(interCase.getTarget()) << G4endl;
+             << checkOutput.getOutgoingNuclei()[0] << G4endl << *(interCase.getTarget()) << G4endl;
+    }
+    else
+    {
+      G4cout << " no final nucleus remains when target was " << *(interCase.getTarget()) << G4endl;
     }
   }
 
@@ -370,10 +381,9 @@ G4bool G4InuclCollider::photonuclearOkay(G4CollisionOutput& checkOutput) const {
   if (checkOutput.numberOfOutgoingNuclei() > 0)
     mfinalNuc = checkOutput.getOutgoingNuclei()[0].getMass();
   G4double mtargetNuc = interCase.getTarget()->getMass();
-  if (mfinalNuc != mtargetNuc) return true;	// Mass from G4Ions is fixed
-  
-  if (verboseLevel>2)
-    G4cout << " photonuclear produced only gammas.  Try again." << G4endl;
+  if (mfinalNuc != mtargetNuc) return true;  // Mass from G4Ions is fixed
 
-  return false;		// Final state is entirely de-excitation photons
+  if (verboseLevel > 2) G4cout << " photonuclear produced only gammas.  Try again." << G4endl;
+
+  return false;  // Final state is entirely de-excitation photons
 }

@@ -26,7 +26,7 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   
+// ClassName:
 //
 // Author: 2007 Gunter Folger
 //   created from G4HadronPhysicsFTFP
@@ -35,54 +35,47 @@
 //
 //----------------------------------------------------------------------------
 //
-#include <iomanip>   
-
 #include "G4HadronPhysicsFTFP_BERT.hh"
 
-#include "globals.hh"
-#include "G4ios.hh"
-#include "G4SystemOfUnits.hh"
+#include "G4BaryonConstructor.hh"
+#include "G4BertiniKaonBuilder.hh"
+#include "G4BertiniNeutronBuilder.hh"
+#include "G4BertiniPionBuilder.hh"
+#include "G4BertiniProtonBuilder.hh"
+#include "G4BuilderType.hh"
+#include "G4FTFPKaonBuilder.hh"
+#include "G4FTFPNeutronBuilder.hh"
+#include "G4FTFPPionBuilder.hh"
+#include "G4FTFPProtonBuilder.hh"
+#include "G4HadParticles.hh"
+#include "G4HadronicBuilder.hh"
+#include "G4HadronicParameters.hh"
+#include "G4IonConstructor.hh"
+#include "G4KaonBuilder.hh"
+#include "G4MesonConstructor.hh"
+#include "G4NeutronBuilder.hh"
+#include "G4NeutronCaptureXS.hh"
+#include "G4NeutronInelasticXS.hh"
+#include "G4NeutronRadCapture.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
-#include "G4PionBuilder.hh"
-#include "G4BertiniPionBuilder.hh"
-#include "G4FTFPPionBuilder.hh"
-
-#include "G4KaonBuilder.hh"
-#include "G4BertiniKaonBuilder.hh"
-#include "G4FTFPKaonBuilder.hh"
-
-#include "G4ProtonBuilder.hh"
-#include "G4BertiniProtonBuilder.hh"
-#include "G4FTFPNeutronBuilder.hh"
-#include "G4FTFPProtonBuilder.hh"
-
-#include "G4NeutronBuilder.hh"
-#include "G4BertiniNeutronBuilder.hh"
-#include "G4FTFPNeutronBuilder.hh"
-
-#include "G4MesonConstructor.hh"
-#include "G4BaryonConstructor.hh"
-#include "G4ShortLivedConstructor.hh"
-#include "G4IonConstructor.hh"
-
-#include "G4NeutronRadCapture.hh"
-#include "G4NeutronInelasticXS.hh"
-#include "G4NeutronCaptureXS.hh"
-
 #include "G4PhysListUtil.hh"
-#include "G4HadParticles.hh"
-#include "G4HadronicParameters.hh"
-#include "G4HadronicBuilder.hh"
-#include "G4BuilderType.hh"
+#include "G4PionBuilder.hh"
+#include "G4ProtonBuilder.hh"
+#include "G4ShortLivedConstructor.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4ios.hh"
+#include "globals.hh"
+
+#include <iomanip>
 
 // factory
 #include "G4PhysicsConstructorFactory.hh"
 //
 G4_DECLARE_PHYSCONSTR_FACTORY(G4HadronPhysicsFTFP_BERT);
 
-G4HadronPhysicsFTFP_BERT::G4HadronPhysicsFTFP_BERT(G4int verb) :
-  G4HadronPhysicsFTFP_BERT("hInelastic FTFP_BERT",false) 
+G4HadronPhysicsFTFP_BERT::G4HadronPhysicsFTFP_BERT(G4int verb)
+  : G4HadronPhysicsFTFP_BERT("hInelastic FTFP_BERT", false)
 {
   G4HadronicParameters::Instance()->SetVerboseLevel(verb);
 }
@@ -121,13 +114,13 @@ void G4HadronPhysicsFTFP_BERT::ConstructParticle()
 
 void G4HadronPhysicsFTFP_BERT::DumpBanner()
 {
-  G4cout << G4endl
-       << " " << GetPhysicsName() << " : threshold between BERT and FTFP is over the interval " << G4endl
-       << " for pions :   " << minFTFP_pion/GeV << " to " << maxBERT_pion/GeV  << " GeV" << G4endl
-       << " for kaons :   " << minFTFP_kaon/GeV << " to " << maxBERT_kaon/GeV  << " GeV" << G4endl
-       << " for proton :  " << minFTFP_proton/GeV << " to " << maxBERT_proton/GeV  << " GeV" << G4endl
-       << " for neutron : " << minFTFP_neutron/GeV << " to " << maxBERT_neutron/GeV  << " GeV" << G4endl
-       << G4endl;
+  G4cout << G4endl << " " << GetPhysicsName()
+         << " : threshold between BERT and FTFP is over the interval " << G4endl
+         << " for pions :   " << minFTFP_pion / GeV << " to " << maxBERT_pion / GeV << " GeV"
+         << G4endl << " for kaons :   " << minFTFP_kaon / GeV << " to " << maxBERT_kaon / GeV
+         << " GeV" << G4endl << " for proton :  " << minFTFP_proton / GeV << " to "
+         << maxBERT_proton / GeV << " GeV" << G4endl << " for neutron : " << minFTFP_neutron / GeV
+         << " to " << maxBERT_neutron / GeV << " GeV" << G4endl << G4endl;
 }
 
 void G4HadronPhysicsFTFP_BERT::CreateModels()
@@ -137,21 +130,21 @@ void G4HadronPhysicsFTFP_BERT::CreateModels()
   Pion();
   Kaon();
   Others();
-} 
+}
 
 void G4HadronPhysicsFTFP_BERT::Neutron()
 {
   G4HadronicParameters* param = G4HadronicParameters::Instance();
   G4bool useFactorXS = param->ApplyFactorXS();
-  //General schema:
-  // 1) Create a builder
-  // 2) Call AddBuilder
-  // 3) Configure the builder, possibly with sub-builders
-  // 4) Call builder->Build()
+  // General schema:
+  //  1) Create a builder
+  //  2) Call AddBuilder
+  //  3) Configure the builder, possibly with sub-builders
+  //  4) Call builder->Build()
   auto neu = new G4NeutronBuilder;
   AddBuilder(neu);
   auto ftfpn = new G4FTFPNeutronBuilder(QuasiElastic);
-  AddBuilder( ftfpn );
+  AddBuilder(ftfpn);
   neu->RegisterMe(ftfpn);
   ftfpn->SetMinEnergy(minFTFP_neutron);
   auto bertn = new G4BertiniNeutronBuilder;
@@ -163,12 +156,14 @@ void G4HadronPhysicsFTFP_BERT::Neutron()
 
   const G4ParticleDefinition* neutron = G4Neutron::Neutron();
   G4HadronicProcess* inel = G4PhysListUtil::FindInelasticProcess(neutron);
-  if(nullptr != inel) { 
-    inel->AddDataSet(new G4NeutronInelasticXS()); 
-    if( useFactorXS ) inel->MultiplyCrossSectionBy( param->XSFactorNucleonInelastic() );
+  if (nullptr != inel)
+  {
+    inel->AddDataSet(new G4NeutronInelasticXS());
+    if (useFactorXS) inel->MultiplyCrossSectionBy(param->XSFactorNucleonInelastic());
   }
   G4HadronicProcess* capture = G4PhysListUtil::FindCaptureProcess(neutron);
-  if (nullptr != capture) {
+  if (nullptr != capture)
+  {
     capture->RegisterMe(new G4NeutronRadCapture());
   }
 }
@@ -193,8 +188,9 @@ void G4HadronPhysicsFTFP_BERT::Proton()
 
   const G4ParticleDefinition* proton = G4Proton::Proton();
   G4HadronicProcess* inel = G4PhysListUtil::FindInelasticProcess(proton);
-  if(nullptr != inel) { 
-    if( useFactorXS ) inel->MultiplyCrossSectionBy( param->XSFactorNucleonInelastic() );
+  if (nullptr != inel)
+  {
+    if (useFactorXS) inel->MultiplyCrossSectionBy(param->XSFactorNucleonInelastic());
   }
 }
 
@@ -216,16 +212,19 @@ void G4HadronPhysicsFTFP_BERT::Pion()
   pi->Build();
 
   // add cross section factor
-  if( useFactorXS ) {
+  if (useFactorXS)
+  {
     const G4ParticleDefinition* pion = G4PionPlus::PionPlus();
     G4HadronicProcess* inel = G4PhysListUtil::FindInelasticProcess(pion);
-    if(nullptr != inel) {
-      inel->MultiplyCrossSectionBy( param->XSFactorPionInelastic() );
+    if (nullptr != inel)
+    {
+      inel->MultiplyCrossSectionBy(param->XSFactorPionInelastic());
     }
     pion = G4PionMinus::PionMinus();
     inel = G4PhysListUtil::FindInelasticProcess(pion);
-    if(nullptr != inel) { 
-      inel->MultiplyCrossSectionBy( param->XSFactorPionInelastic() );
+    if (nullptr != inel)
+    {
+      inel->MultiplyCrossSectionBy(param->XSFactorPionInelastic());
     }
   }
 }
@@ -241,21 +240,27 @@ void G4HadronPhysicsFTFP_BERT::Kaon()
   AddBuilder(ftfpk);
   k->RegisterMe(ftfpk);
   ftfpk->SetMinEnergy(minFTFP_kaon);
-  auto bertk  = new G4BertiniKaonBuilder;
+  auto bertk = new G4BertiniKaonBuilder;
   AddBuilder(bertk);
   k->RegisterMe(bertk);
   bertk->SetMaxEnergy(maxBERT_kaon);
   k->Build();
 
   // add cross section factor
-  if( useFactorXS ) {
+  if (useFactorXS)
+  {
     G4ParticleTable* table = G4ParticleTable::GetParticleTable();
-    for( auto & pdg : G4HadParticles::GetKaons() ) {
-      auto part = table->FindParticle( pdg );
-      if ( part == nullptr ) { continue; }
+    for (auto& pdg : G4HadParticles::GetKaons())
+    {
+      auto part = table->FindParticle(pdg);
+      if (part == nullptr)
+      {
+        continue;
+      }
       G4HadronicProcess* inel = G4PhysListUtil::FindInelasticProcess(part);
-      if(nullptr != inel) { 
-        inel->MultiplyCrossSectionBy( param->XSFactorHadronInelastic() );
+      if (nullptr != inel)
+      {
+        inel->MultiplyCrossSectionBy(param->XSFactorHadronInelastic());
       }
     }
   }
@@ -266,8 +271,8 @@ void G4HadronPhysicsFTFP_BERT::Others()
   G4HadronicParameters* param = G4HadronicParameters::Instance();
 
   // high energy particles
-  if( param->GetMaxEnergy() > param->EnergyThresholdForHeavyHadrons() ) {
-
+  if (param->GetMaxEnergy() > param->EnergyThresholdForHeavyHadrons())
+  {
     // anti light ions
     G4HadronicBuilder::BuildAntiLightIonsFTFP();
 
@@ -275,12 +280,14 @@ void G4HadronPhysicsFTFP_BERT::Others()
     G4HadronicBuilder::BuildHyperonsFTFP_BERT();
 
     // b-, c- baryons and mesons
-    if( param->EnableBCParticles() ) {
+    if (param->EnableBCParticles())
+    {
       G4HadronicBuilder::BuildBCHadronsFTFP_BERT();
     }
 
     // light hypernuclei and anti-hypernuclei
-    if ( param->EnableHyperNuclei() ) {
+    if (param->EnableHyperNuclei())
+    {
       G4HadronicBuilder::BuildHyperNucleiFTFP_BERT();
       G4HadronicBuilder::BuildHyperAntiNucleiFTFP_BERT();
     }
@@ -300,7 +307,8 @@ void G4HadronPhysicsFTFP_BERT::ConstructProcess()
   minFTFP_neutron = param->GetMinEnergyTransitionFTF_Cascade();
   maxBERT_neutron = param->GetMaxEnergyTransitionFTF_Cascade();
 
-  if (G4Threading::IsMasterThread() && param->GetVerboseLevel() > 0) {
+  if (G4Threading::IsMasterThread() && param->GetVerboseLevel() > 0)
+  {
     DumpBanner();
   }
   CreateModels();

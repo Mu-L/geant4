@@ -26,26 +26,27 @@
 // Authors: S. Meylan and C. Villagrasa (IRSN, France)
 // Models come from
 // M. Bug et al, Rad. Phys and Chem. 130, 459-479 (2017)
-// 
+//
 //
 // -------------------------------------------------------------------
 //
 // Geant4 Header G4DNAPTBAugerModel
-//  
+//
 // -------------------------------------------------------------------
 //
 // Class description:
-// Implementation of atomic deexcitation 
+// Implementation of atomic deexcitation
 //
 // -------------------------------------------------------------------
 
-#ifndef G4DNAPTBAugerModel_h
-#define G4DNAPTBAugerModel_h 1
+#ifndef G4DNAPTBAUGERMODEL_HH
+#define G4DNAPTBAUGERMODEL_HH
 
-#include "G4VAtomDeexcitation.hh"
 #include "G4AtomicShell.hh"
-#include "globals.hh"
 #include "G4DynamicParticle.hh"
+#include "G4VAtomDeexcitation.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4AtomicTransitionManager;
@@ -58,83 +59,79 @@ class G4Material;
  * Implement the PTB Auger model
  */
 class G4DNAPTBAugerModel
-{  
-public: 
-  
-   /*!
-   * \brief G4DNAPTBAugerModel
-   * Constructor
-   * \param modelName
-   */
-  G4DNAPTBAugerModel(const G4String &modelName);
+{
+  public:
 
-  /*!
-   * \brief ~G4DNAPTBAugerModel
-   * Destructor
-   */
-  virtual ~G4DNAPTBAugerModel();
-   
-  G4DNAPTBAugerModel(G4DNAPTBAugerModel &) = delete;  // prevent copy-construction
-  G4DNAPTBAugerModel & operator=(const G4DNAPTBAugerModel &right) = delete;  // prevent assignement
- 
-  /*!
-   * \brief Initialise
-   * Set the verbose value
-   */
-  virtual void Initialise();
+    /*!
+     * \brief G4DNAPTBAugerModel
+     * Constructor
+     * \param modelName
+     */
+    G4DNAPTBAugerModel(const G4String& modelName);
 
-  /*!
-   * \brief SetCutForAugerElectrons
-   * Set the cut for the auger electrons production
-   * \param cut
-   */
-  void SetCutForAugerElectrons(G4double cut);
+    /*!
+     * \brief ~G4DNAPTBAugerModel
+     * Destructor
+     */
+    virtual ~G4DNAPTBAugerModel();
 
-  /*!
-   * \brief ComputeAugerEffect
-   * Main method to be called by the ionisation model.
-   * \param fvect
-   * \param materialNameIni
-   * \param bindingEnergy
-   */
-  void ComputeAugerEffect(std::vector<G4DynamicParticle *> *fvect, const G4String& materialNameIni, G4double bindingEnergy);
+    G4DNAPTBAugerModel(G4DNAPTBAugerModel&) = delete;  // prevent copy-construction
+    G4DNAPTBAugerModel& operator=(const G4DNAPTBAugerModel& right) = delete;  // prevent assignement
 
-private:
- 
-  const G4String modelName; ///< name of the auger model
+    /*!
+     * \brief Initialise
+     * Set the verbose value
+     */
+    virtual void Initialise();
 
-  G4int verboseLevel;
-  G4double minElectronEnergy;
+    /*!
+     * \brief SetCutForAugerElectrons
+     * Set the cut for the auger electrons production
+     * \param cut
+     */
+    void SetCutForAugerElectrons(G4double cut);
 
-  /*!
-   * \brief GenerateAugerWithRandomDirection
-   * Generates the auger particle
-   * \param fvect
-   * \param kineticEnergy
-   */
-  void GenerateAugerWithRandomDirection(std::vector<G4DynamicParticle*>* fvect, G4double kineticEnergy);
+    /*!
+     * \brief ComputeAugerEffect
+     * Main method to be called by the ionisation model.
+     * \param fvect
+     * \param materialNameIni
+     * \param bindingEnergy
+     */
+    void ComputeAugerEffect(std::vector<G4DynamicParticle*>* fvect, const G4String& materialNameIni,
+                            G4double bindingEnergy);
 
-  /*!
-   * \brief CalculAugerEnergyFor
-   * \param atomId
-   * \return the auger particle energy
-   */
-  G4double CalculAugerEnergyFor(G4int atomId);
+  private:
 
-  /*!
-   * \brief DetermineIonisedAtom
-   * \param atomId
-   * \param materialName
-   * \param bindingEnergy
-   * \return the id of the chosen ionised atom
-   */
-  G4int DetermineIonisedAtom(G4int atomId, const G4String &materialName, G4double bindingEnergy);
+    const G4String modelName;  ///< name of the auger model
 
+    G4int verboseLevel;
+    G4double minElectronEnergy;
 
+    /*!
+     * \brief GenerateAugerWithRandomDirection
+     * Generates the auger particle
+     * \param fvect
+     * \param kineticEnergy
+     */
+    void GenerateAugerWithRandomDirection(std::vector<G4DynamicParticle*>* fvect,
+                                          G4double kineticEnergy);
+
+    /*!
+     * \brief CalculAugerEnergyFor
+     * \param atomId
+     * \return the auger particle energy
+     */
+    G4double CalculAugerEnergyFor(G4int atomId);
+
+    /*!
+     * \brief DetermineIonisedAtom
+     * \param atomId
+     * \param materialName
+     * \param bindingEnergy
+     * \return the id of the chosen ionised atom
+     */
+    G4int DetermineIonisedAtom(G4int atomId, const G4String& materialName, G4double bindingEnergy);
 };
 
 #endif
-
-
-
-

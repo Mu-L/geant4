@@ -27,12 +27,12 @@
 //
 // Class description:
 //
-// An abstraction of a geometrical surface, it is an abstract 
+// An abstraction of a geometrical surface, it is an abstract
 // base class for different implementations of surfaces.
 // Its primary function is to hold pointers to objects that describe the
 // surface's physical properties. For example it holds a pointer to a
 // surface's optical properties, and because of this it is used in processes
-// like G4OpBoundaryProcess. 
+// like G4OpBoundaryProcess.
 //
 // Methods:
 //   G4SurfaceProperty*  GetSurfaceProperty() const
@@ -54,8 +54,8 @@
 #ifndef G4LOGICALSURFACE_HH
 #define G4LOGICALSURFACE_HH
 
-#include "G4Types.hh"
 #include "G4String.hh"
+#include "G4Types.hh"
 
 class G4SurfaceProperty;
 class G4TransitionRadiationSurface;
@@ -63,6 +63,8 @@ class G4TransitionRadiationSurface;
 /**
  * @brief G4LogicalSurface is an abstraction of a geometrical surface, it is
  * an abstract base class for different implementations of surfaces.
+ * @ingroup geometry_management
+ *
  * Its primary function is to hold pointers to objects that describe the
  * surface's physical properties. For example it holds a pointer to a
  * surface's optical properties, and because of this it is used in processes
@@ -105,15 +107,15 @@ class G4LogicalSurface
     /**
      * Equality and disequality operators.
      */
-    inline G4bool operator==(const G4LogicalSurface &right) const;
-    inline G4bool operator!=(const G4LogicalSurface &right) const;
+    inline G4bool operator==(const G4LogicalSurface& right) const;
+    inline G4bool operator!=(const G4LogicalSurface& right) const;
 
   protected:
 
     /**
      * Protected constructor. There should be no free instances of this class.
      */
-    G4LogicalSurface(const G4String& name, G4SurfaceProperty* prop); 
+    G4LogicalSurface(const G4String& name, G4SurfaceProperty* prop);
 
   private:
 

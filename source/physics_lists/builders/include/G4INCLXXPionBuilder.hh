@@ -23,17 +23,15 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4INCLXXPionBuilder_h
-#define G4INCLXXPionBuilder_h 1
+#ifndef G4INCLXXPIONBUILDER_HH
+#define G4INCLXXPIONBUILDER_HH
 
-#include "globals.hh"
-
+#include "G4CascadeInterface.hh"
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
+#include "G4INCLXXInterface.hh"
 #include "G4VPionBuilder.hh"
-
-#include "G4INCLXXInterface.hh"   
-#include "G4CascadeInterface.hh"
+#include "globals.hh"
 
 /**
  * Builder for pion processes using the INCL++ intra-nuclear
@@ -50,25 +48,26 @@
  * @see G4INCLXXNeutronBuilder
  */
 
-
 class G4INCLXXPionBuilder : public G4VPionBuilder
 {
-  public: 
+  public:
+
     G4INCLXXPionBuilder();
     virtual ~G4INCLXXPionBuilder() {}
 
-    virtual void Build(G4HadronElasticProcess *) final override {}
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
+    virtual void Build(G4HadronElasticProcess*) final override {}
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
-    virtual void SetMaxEnergy(G4double aM) final override {theMax = aM;}
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+    virtual void SetMaxEnergy(G4double aM) final override { theMax = aM; }
 
-    using G4VPionBuilder::Build; //Prevent compiler warning
+    using G4VPionBuilder::Build;  // Prevent compiler warning
+
   private:
-    G4INCLXXInterface * theModel;    
+
+    G4INCLXXInterface* theModel;
     G4double theMin;
     G4double theMax;
 };
 
 #endif
-

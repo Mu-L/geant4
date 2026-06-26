@@ -56,47 +56,48 @@ class G4KineticTrackVector;
 class G4V3DNucleus;
 class G4VCascadeDeexcitation;
 
+class G4InuclCollider : public G4CascadeColliderBase
+{
+  public:
 
-class G4InuclCollider : public G4CascadeColliderBase {
-public:
-  G4InuclCollider();
-  virtual ~G4InuclCollider();
+    G4InuclCollider();
+    virtual ~G4InuclCollider();
 
-  void collide(G4InuclParticle* bullet, G4InuclParticle* target,
-	       G4CollisionOutput& globalOutput);
+    void collide(G4InuclParticle* bullet, G4InuclParticle* target, G4CollisionOutput& globalOutput);
 
-  // For use with top-level Propagate to preload a set of secondaries
-  void rescatter(G4InuclParticle* bullet, G4KineticTrackVector* theSecondaries,
-		 G4V3DNucleus* theNucleus, G4CollisionOutput& globalOutput);
+    // For use with top-level Propagate to preload a set of secondaries
+    void rescatter(G4InuclParticle* bullet, G4KineticTrackVector* theSecondaries,
+                   G4V3DNucleus* theNucleus, G4CollisionOutput& globalOutput);
 
-  void setVerboseLevel(G4int verbose=0);
+    void setVerboseLevel(G4int verbose = 0);
 
-  // Select betweeen different post-cascade de-excitation models
-  void useCascadeDeexcitation();
-  void usePreCompoundDeexcitation();
-  void useAblaDeexcitation();
+    // Select betweeen different post-cascade de-excitation models
+    void useCascadeDeexcitation();
+    void usePreCompoundDeexcitation();
+    void useAblaDeexcitation();
 
-protected:
-  void deexcite(const G4Fragment& fragment, G4CollisionOutput& globalOutput);
+  protected:
 
-  // Looks for non-gamma final state in photonuclear or leptonuclear
-  G4bool photonuclearOkay(G4CollisionOutput& checkOutput) const;
+    void deexcite(const G4Fragment& fragment, G4CollisionOutput& globalOutput);
 
-private: 
-  G4ElementaryParticleCollider* theElementaryParticleCollider;
-  G4IntraNucleiCascader* theIntraNucleiCascader;
+    // Looks for non-gamma final state in photonuclear or leptonuclear
+    G4bool photonuclearOkay(G4CollisionOutput& checkOutput) const;
 
-  G4VCascadeDeexcitation* theDeexcitation;	// User switchable!
+  private:
 
-  G4CollisionOutput output;		// Secondaries from main cascade
-  G4CollisionOutput DEXoutput;		// Secondaries from de-excitation
+    G4ElementaryParticleCollider* theElementaryParticleCollider;
+    G4IntraNucleiCascader* theIntraNucleiCascader;
 
-private:
-  // Copying of modules is forbidden
-  G4InuclCollider(const G4InuclCollider&);
-  G4InuclCollider& operator=(const G4InuclCollider&);
-};        
+    G4VCascadeDeexcitation* theDeexcitation;  // User switchable!
+
+    G4CollisionOutput output;  // Secondaries from main cascade
+    G4CollisionOutput DEXoutput;  // Secondaries from de-excitation
+
+  private:
+
+    // Copying of modules is forbidden
+    G4InuclCollider(const G4InuclCollider&);
+    G4InuclCollider& operator=(const G4InuclCollider&);
+};
 
 #endif /* G4INUCL_COLLIDER_HH */
-
-

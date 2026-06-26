@@ -28,35 +28,33 @@
 // Author: John Apostolakis (CERN), 24.02.2005 - First created version
 // --------------------------------------------------------------------
 
-#include "G4VNestedParameterisation.hh" 
+#include "G4VNestedParameterisation.hh"
 
-#include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
+#include "G4VPhysicalVolume.hh"
 
 // --------------------------------------------------------------------
-G4VSolid* G4VNestedParameterisation::ComputeSolid(const G4int, 
-                                                  G4VPhysicalVolume* pvol)
-{ 
-  return pvol->GetLogicalVolume()->GetSolid(); 
+G4VSolid* G4VNestedParameterisation::ComputeSolid(const G4int, G4VPhysicalVolume* pvol)
+{
+  return pvol->GetLogicalVolume()->GetSolid();
 }
 
 // --------------------------------------------------------------------
-G4bool G4VNestedParameterisation::IsNested() const 
-{ 
+G4bool G4VNestedParameterisation::IsNested() const
+{
   return true;
 }
 
 // --------------------------------------------------------------------
-G4VVolumeMaterialScanner* G4VNestedParameterisation::GetMaterialScanner() 
-{ 
-  return this; 
-} 
+G4VVolumeMaterialScanner* G4VNestedParameterisation::GetMaterialScanner()
+{
+  return this;
+}
 
 // --------------------------------------------------------------------
-G4Material* 
-G4VNestedParameterisation::ComputeMaterial(const G4int repNo, 
-                                                 G4VPhysicalVolume* currentVol,
-                                           const G4VTouchable* parentTouch)
+G4Material* G4VNestedParameterisation::ComputeMaterial(const G4int repNo,
+                                                       G4VPhysicalVolume* currentVol,
+                                                       const G4VTouchable* parentTouch)
 {
-  return ComputeMaterial( currentVol, repNo, parentTouch );
+  return ComputeMaterial(currentVol, repNo, parentTouch);
 }

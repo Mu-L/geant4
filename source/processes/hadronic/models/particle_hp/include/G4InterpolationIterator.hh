@@ -25,8 +25,8 @@
 //
 //
 //
-#ifndef G4InterpolationIterator_h
-#define G4InterpolationIterator_h 1
+#ifndef G4INTERPOLATIONITERATOR_HH
+#define G4INTERPOLATIONITERATOR_HH
 
 #include "G4HadronicException.hh"
 #include "G4InterpolationManager.hh"
@@ -34,9 +34,11 @@
 class G4InterpolationIterator
 {
   private:
+
     G4InterpolationIterator() {}
 
   public:
+
     G4InterpolationIterator(G4InterpolationManager* aManager)
     {
       started = false;
@@ -47,7 +49,8 @@ class G4InterpolationIterator
 
     inline G4bool Fetch()
     {
-      if (!started) {
+      if (!started)
+      {
         started = true;
         counter = -1;
         current = 0;
@@ -67,6 +70,7 @@ class G4InterpolationIterator
     }
 
   private:
+
     G4InterpolationManager* theManager;
     G4int current;
     G4int counter;

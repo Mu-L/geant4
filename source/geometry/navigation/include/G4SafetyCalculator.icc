@@ -30,33 +30,29 @@
 
 // Return  local coordinates given point in the world coord system.
 //
-inline G4ThreeVector
-G4SafetyCalculator::ComputeLocalPoint(const G4ThreeVector& pGlobalPoint) const
+inline G4ThreeVector G4SafetyCalculator::ComputeLocalPoint(const G4ThreeVector& pGlobalPoint) const
 {
   return fNavHistory.GetTopTransform().TransformPoint(pGlobalPoint);
 }
 
 // Returns local direction given vector direction in world coord system.
 //
-inline G4ThreeVector
-G4SafetyCalculator::ComputeLocalAxis(const G4ThreeVector& pVec) const
+inline G4ThreeVector G4SafetyCalculator::ComputeLocalAxis(const G4ThreeVector& pVec) const
 {
   return fNavHistory.GetTopTransform().TransformAxis(pVec);
 }
 
-inline EVolume
-G4SafetyCalculator::CharacteriseDaughters(const G4LogicalVolume* pLog) const
+inline EVolume G4SafetyCalculator::CharacteriseDaughters(const G4LogicalVolume* pLog) const
 {
   return pLog->CharacteriseDaughters();
 }
 
-inline G4int
-G4SafetyCalculator::GetDaughtersRegularStructureId(const G4LogicalVolume* pLog) const
+inline G4int G4SafetyCalculator::GetDaughtersRegularStructureId(const G4LogicalVolume* pLog) const
 {
   G4int regId = 0;
-  G4VPhysicalVolume *pVol;
+  G4VPhysicalVolume* pVol;
 
-  if ( pLog->GetNoDaughters() == 1 )
+  if (pLog->GetNoDaughters() == 1)
   {
     pVol = pLog->GetDaughter(0);
     regId = pVol->GetRegularStructureId();

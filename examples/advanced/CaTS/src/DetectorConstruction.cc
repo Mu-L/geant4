@@ -29,7 +29,6 @@
 //          (Fermi National Accelerator Laboratory)
 //
 // History: October 18th, 2021 : first implementation
-//
 // ********************************************************************
 //
 /// \file DetectorConstruction.cc
@@ -55,6 +54,7 @@
 DetectorConstruction::DetectorConstruction(G4String fname)
   : G4VUserDetectorConstruction()
   , gdmlFile(fname)
+  , fDetectIds {}
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -194,6 +194,7 @@ void DetectorConstruction::ReadGDML()
   G4VPhysicalVolume* World = parser->GetWorldVolume();
   //----- GDML parser makes world invisible, this is a hack to make it
   // visible again...
+
   G4LogicalVolume* pWorldLogical = World->GetLogicalVolume();
   pWorldLogical->SetVisAttributes(0);
   G4cout << World->GetTranslation() << G4endl << G4endl;

@@ -38,8 +38,8 @@
 #include "G4NeutronHPCaptureFS.hh"
 #include "G4ParticleHPDeExGammas.hh"
 #include "G4ParticleHPManager.hh"
-#include "G4ParticleTable.hh"
 #include "G4ParticleHPThermalBoost.hh"
+#include "G4ParticleTable.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4Threading.hh"
 
@@ -51,9 +51,12 @@ G4NeutronHPCapture::G4NeutronHPCapture() : G4HadronicInteraction("NeutronHPCaptu
 
 G4NeutronHPCapture::~G4NeutronHPCapture()
 {
-  if (!G4Threading::IsWorkerThread()) {
-    if (theCapture != nullptr) {
-      for (auto& ite : *theCapture) {
+  if (!G4Threading::IsWorkerThread())
+  {
+    if (theCapture != nullptr)
+    {
+      for (auto& ite : *theCapture)
+      {
         delete ite;
       }
       theCapture->clear();
@@ -61,33 +64,35 @@ G4NeutronHPCapture::~G4NeutronHPCapture()
   }
 }
 
-G4HadFinalState*
-G4NeutronHPCapture::ApplyYourself(const G4HadProjectile& aTrack,
-                                  G4Nucleus& aNucleus)
+G4HadFinalState* G4NeutronHPCapture::ApplyYourself(const G4HadProjectile& aTrack,
+                                                   G4Nucleus& aNucleus)
 {
   G4ParticleHPManager::GetInstance()->OpenReactionWhiteBoard();
   const G4Material* theMaterial = aTrack.GetMaterial();
   auto n = (G4int)theMaterial->GetNumberOfElements();
   std::size_t index = theMaterial->GetElement(0)->GetIndex();
-  if (n != 1) {
+  if (n != 1)
+  {
     auto xSec = new G4double[n];
     G4double sum = 0;
     G4int i;
     const G4double* NumAtomsPerVolume = theMaterial->GetVecNbOfAtomsPerVolume();
     G4double rWeight;
     G4ParticleHPThermalBoost aThermalE;
-    for (i = 0; i < n; ++i) {
+    for (i = 0; i < n; ++i)
+    {
       index = theMaterial->GetElement(i)->GetIndex();
       rWeight = NumAtomsPerVolume[i];
-      xSec[i] = ((*theCapture)[index])->GetXsec(
-        aThermalE.GetThermalEnergy(aTrack, theMaterial->GetElement(i),
-                                   theMaterial->GetTemperature()));
+      xSec[i] = ((*theCapture)[index])
+                  ->GetXsec(aThermalE.GetThermalEnergy(aTrack, theMaterial->GetElement(i),
+                                                       theMaterial->GetTemperature()));
       xSec[i] *= rWeight;
       sum += xSec[i];
     }
     G4double random = G4UniformRand();
     G4double running = 0;
-    for (i = 0; i < n; ++i) {
+    for (i = 0; i < n; ++i)
+    {
       running += xSec[i];
       index = theMaterial->GetElement(i)->GetIndex();
       // if(random<=running/sum) break;
@@ -105,7 +110,8 @@ G4NeutronHPCapture::ApplyYourself(const G4HadProjectile& aTrack,
   const G4Element* target_element = (*G4Element::GetElementTable())[index];
   const G4Isotope* target_isotope = nullptr;
   auto iele = (G4int)target_element->GetNumberOfIsotopes();
-  for (G4int j = 0; j != iele; ++j) {
+  for (G4int j = 0; j != iele; ++j)
+  {
     target_isotope = target_element->GetIsotope(j);
     if (target_isotope->GetN()
         == G4ParticleHPManager::GetInstance()->GetReactionWhiteBoard()->GetTargA())
@@ -120,8 +126,7 @@ G4NeutronHPCapture::ApplyYourself(const G4HadProjectile& aTrack,
   return result;
 }
 
-const std::pair<G4double, G4double>
-G4NeutronHPCapture::GetFatalEnergyCheckLevels() const
+const std::pair<G4double, G4double> G4NeutronHPCapture::GetFatalEnergyCheckLevels() const
 {
   // max energy non-conservation is mass of heavy nucleus
   return std::pair<G4double, G4double>(10.0 * perCent, 350.0 * CLHEP::GeV);
@@ -143,13 +148,14 @@ void G4NeutronHPCapture::BuildPhysicsTable(const G4ParticleDefinition&)
 
   theCapture = hpmanager->GetCaptureFinalStates();
 
-  if (G4Threading::IsMasterThread()) {
-    if (theCapture == nullptr)
-      theCapture = new std::vector<G4ParticleHPChannel*>;
+  if (G4Threading::IsMasterThread())
+  {
+    if (theCapture == nullptr) theCapture = new std::vector<G4ParticleHPChannel*>;
 
     if (numEle == (G4int)G4Element::GetNumberOfElements()) return;
 
-    if (theCapture->size() == G4Element::GetNumberOfElements()) {
+    if (theCapture->size() == G4Element::GetNumberOfElements())
+    {
       numEle = (G4int)G4Element::GetNumberOfElements();
       return;
     }
@@ -163,7 +169,8 @@ void G4NeutronHPCapture::BuildPhysicsTable(const G4ParticleDefinition&)
     dirName = dirName + tString;
 
     auto theFS = new G4NeutronHPCaptureFS;
-    for (G4int i = numEle; i < (G4int)G4Element::GetNumberOfElements(); ++i) {
+    for (G4int i = numEle; i < (G4int)G4Element::GetNumberOfElements(); ++i)
+    {
       theCapture->push_back(new G4ParticleHPChannel);
       ((*theCapture)[i])->Init((*(G4Element::GetElementTable()))[i], dirName);
       ((*theCapture)[i])->Register(theFS);

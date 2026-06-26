@@ -53,6 +53,7 @@
 class G4FissionFragmentGenerator
 {
   public:
+
     // Constructor definition
     /** Default constructor
      *  - Usage: No arguments required
@@ -92,10 +93,12 @@ class G4FissionFragmentGenerator
     G4FissionFragmentGenerator(G4int Verbosity);
 
   protected:
+
     /** Initialize is a common function called by all constructors. */
     void Initialize();
 
   public:
+
     // Functions
     /** Generates a single fission event
      *  - Usage: No arguments required
@@ -240,6 +243,7 @@ class G4FissionFragmentGenerator
     void G4SetVerbosity(G4int WhatVerbosity);
 
   protected:
+
     // Variables
     // Class descriptor variables
     /** Number in ZZZAAA format of the isotope that
@@ -280,7 +284,9 @@ class G4FissionFragmentGenerator
     G4FissionProductYieldDist* YieldData_;
 
     // Destructor function(s)
+
   public:
+
     /** Default deconstructor */
     ~G4FissionFragmentGenerator();
 };

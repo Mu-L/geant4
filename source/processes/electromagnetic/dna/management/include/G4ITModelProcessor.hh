@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,14 +41,16 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#pragma once
+#ifndef G4ITMODELPROCESSOR_HH
+#define G4ITMODELPROCESSOR_HH
 
-#include "G4ITReactionChange.hh"
-#include "G4ITType.hh"
 #include "G4ITModelHandler.hh"
+#include "G4ITReactionChange.hh"
 #include "G4ITStepStatus.hh"
+#include "G4ITType.hh"
+
 #include <vector>
 
 class G4VITTimeStepComputer;
@@ -70,7 +72,8 @@ class G4ITTrackHolder;
  */
 class G4ITModelProcessor
 {
-public:
+  public:
+
     G4ITModelProcessor();
     G4ITModelProcessor(const G4ITModelProcessor& other) = delete;
     G4ITModelProcessor& operator=(const G4ITModelProcessor& other) = delete;
@@ -86,27 +89,23 @@ public:
     /** Restore the original state. This method should be called only by G4Scheduler */
     void CleanProcessor();
 
-    G4double CalculateMinTimeStep(G4double currentGlobalTime,
-                                  G4double definedMinTimeStep);
+    G4double CalculateMinTimeStep(G4double currentGlobalTime, G4double definedMinTimeStep);
 
-    void ComputeTrackReaction(G4ITStepStatus fITStepStatus,
-                              G4double fGlobalTime,
-                              G4double currentTimeStep,
-                              G4double previousTimeStep,
-                              G4bool reachedUserTimeLimit,
-                              G4double fTimeTolerance,
-                              G4UserTimeStepAction* fpUserTimeStepAction,
-                              G4int fVerbose);
+    void ComputeTrackReaction(G4ITStepStatus fITStepStatus, G4double fGlobalTime,
+                              G4double currentTimeStep, G4double previousTimeStep,
+                              G4bool reachedUserTimeLimit, G4double fTimeTolerance,
+                              G4UserTimeStepAction* fpUserTimeStepAction, G4int fVerbose);
 
-    void InitializeStepper(G4double currentGlobalTime,
-                           G4double userMinTime);
+    void InitializeStepper(G4double currentGlobalTime, G4double userMinTime);
 
     bool GetComputeTimeStep() const;
 
-public:
+  public:
+
     const G4Track* GetTrack() const;
 
-protected:
+  protected:
+
     void SetTrack(const G4Track*);
 
     G4double fTSTimeStep;
@@ -129,3 +128,4 @@ protected:
     bool fComputeReaction;
 };
 
+#endif

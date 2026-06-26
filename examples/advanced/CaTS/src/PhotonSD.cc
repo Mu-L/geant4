@@ -33,7 +33,7 @@
 //
 // History
 //   October 18th, 2021 : first implementation
-//
+//   March 28th 2026: Modified by Ilker Parmaksiz for latest Opticks
 // ********************************************************************
 //
 /// \file PhotonSD.cc
@@ -49,11 +49,11 @@
 // project headers
 #include "PhotonSD.hh"
 #ifdef WITH_G4OPTICKS
-#  include "G4Opticks.hh"
-#  include "TrackInfo.hh"
-#  include "OpticksGenstep.h"
-#  include "OpticksFlags.hh"
-#  include "G4OpticksHit.hh"
+#include "scuda.h"
+#include "SEvt.hh"
+#include "G4CXOpticks.hh"
+#include "NP.hh"
+#include "Opticks/OpticksHitHandler.hh"
 #endif
 
 PhotonSD::PhotonSD(G4String name)
@@ -131,24 +131,27 @@ void PhotonSD::EndOfEvent(G4HCofThisEvent*)
 #ifdef WITH_G4OPTICKS
 void PhotonSD::AddOpticksHits()
 {
-  G4Opticks* g4ok   = G4Opticks::Get();
-  bool way_enabled  = g4ok->isWayEnabled();
-  unsigned num_hits = g4ok->getNumHit();
-  if(verbose)
-    G4cout << "PhotonSD::AddOpticksHits PhotonHits:  " << num_hits << G4endl;
-  G4OpticksHit hit;
-  G4OpticksHitExtra hit_extra;
-  G4OpticksHitExtra* hit_extra_ptr = way_enabled ? &hit_extra : NULL;
-  for(unsigned i = 0; i < num_hits; i++)
+  auto hitHandler= OpticksHitHandler::getInstance();
+  hitHandler->CollectHits();
+
+  auto hits = hitHandler->GetHits();
+
+  for(auto& hit : hits)
   {
-    g4ok->getHit(i, &hit, hit_extra_ptr);
-    PhotonHit* newHit =
-      new PhotonHit(i, 0, hit.wavelength, hit.time, hit.global_position,
-                    hit.global_direction, hit.global_polarization);
+    PhotonHit* newHit = new PhotonHit(hit.sensor_id, hit.creationId, hit.wavelength,
+                                      hit.time, hit.position, hit.direction, hit.polarization);
     fPhotonHitsCollection->insert(newHit);
+    if(ConfigurationManager::getInstance()->isEnable_verbose())
+    {
+      G4cout << " Process ID: " << hit.creationId << " PhotonSD  pos.:" << hit.position.x() << "  "
+             << hit.position.y() << "  "
+             << "  " << hit.position.z() << "  mom.:  " << hit.direction.x() << "  " << hit.direction.y() << "  "
+             << hit.direction.z() << "  pol.:  " << hit.polarization.x() << "  "
+             << "  " << hit.polarization.y() << "  " << hit.polarization.z() << " iiindex: " << hit.iindex << "  "
+             << "  wavel.:  " << hit.wavelength << "  time:  " << hit.time
+             << "  boundary flag:  " << hit.boundary_flag << "  identy:  " << hit.sensor_id
+             << "  orient_idx: " << hit.orient << "  flagmask:  " << hit.flag_mask << G4endl;
+    }
   }
-  if(verbose)
-    G4cout << "AddOpticksHits size:  " << fPhotonHitsCollection->entries()
-           << G4endl;
 }
 #endif

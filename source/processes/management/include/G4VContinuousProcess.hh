@@ -34,87 +34,71 @@
 // - 2 December 1995, G.Cosmo - First implementation, based on object model
 // - 18 December 1996, H.Kurashige - New Physics scheme
 // --------------------------------------------------------------------
-#ifndef G4VContinuousProcess_hh
-#define G4VContinuousProcess_hh 1
-
-#include "globals.hh"
-#include "G4ios.hh"
+#ifndef G4VCONTINUOUSPROCESS_HH
+#define G4VCONTINUOUSPROCESS_HH
 
 #include "G4VProcess.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
-class G4VContinuousProcess : public G4VProcess 
+class G4VContinuousProcess : public G4VProcess
 {
-  public:     
+  public:
 
-    G4VContinuousProcess(const G4String& aName,
-                         G4ProcessType aType = fNotDefined );
-    G4VContinuousProcess(G4VContinuousProcess &);
+    G4VContinuousProcess(const G4String& aName, G4ProcessType aType = fNotDefined);
+    G4VContinuousProcess(G4VContinuousProcess&);
 
     virtual ~G4VContinuousProcess();
 
     G4VContinuousProcess& operator=(const G4VContinuousProcess&) = delete;
 
-    virtual G4double AlongStepGetPhysicalInteractionLength(
-                             const G4Track& track,
-                             G4double  previousStepSize,
-                             G4double  currentMinimumStep,
-                             G4double& proposedSafety,
-                             G4GPILSelection* selection
-                            );
+    virtual G4double AlongStepGetPhysicalInteractionLength(const G4Track& track,
+                                                           G4double previousStepSize,
+                                                           G4double currentMinimumStep,
+                                                           G4double& proposedSafety,
+                                                           G4GPILSelection* selection);
 
-    virtual G4VParticleChange* AlongStepDoIt(
-                             const G4Track& ,
-                             const G4Step& 
-                            );
+    virtual G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&);
 
     // no operation in AtRestDoIt and PostStepDoIt
     //
-    virtual G4double PostStepGetPhysicalInteractionLength(
-                             const G4Track&,
-                             G4double,
-                             G4ForceCondition* 
-                            ) { return -1.0; }
+    virtual G4double PostStepGetPhysicalInteractionLength(const G4Track&, G4double,
+                                                          G4ForceCondition*)
+    {
+      return -1.0;
+    }
 
-    virtual G4double AtRestGetPhysicalInteractionLength(
-                             const G4Track& ,
-                             G4ForceCondition* 
-                            ) { return -1.0; }
+    virtual G4double AtRestGetPhysicalInteractionLength(const G4Track&, G4ForceCondition*)
+    {
+      return -1.0;
+    }
 
     // no operation in AtRestDoIt and PostStepDoIt
     //
-    virtual G4VParticleChange* AtRestDoIt(
-                             const G4Track& ,
-                             const G4Step&
-                            ) { return 0; }
+    virtual G4VParticleChange* AtRestDoIt(const G4Track&, const G4Step&) { return 0; }
 
-    virtual G4VParticleChange* PostStepDoIt(
-                             const G4Track& ,
-                             const G4Step& 
-                            ) { return 0; }
- 
+    virtual G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&) { return 0; }
+
   protected:
 
-    virtual G4double GetContinuousStepLimit( const G4Track& aTrack,
-                                             G4double previousStepSize,
-                                             G4double currentMinimumStep,
-                                             G4double& currentSafety ) = 0;
-      // This pure virtual function is used to calculate step limit
-      // for AlongStep in the derived processes  
+    virtual G4double GetContinuousStepLimit(const G4Track& aTrack, G4double previousStepSize,
+                                            G4double currentMinimumStep,
+                                            G4double& currentSafety) = 0;
+    // This pure virtual function is used to calculate step limit
+    // for AlongStep in the derived processes
 
-    inline void SetGPILSelection(G4GPILSelection selection)
-      { valueGPILSelection = selection; }
+    inline void SetGPILSelection(G4GPILSelection selection) { valueGPILSelection = selection; }
 
-    inline G4GPILSelection GetGPILSelection() const
-      { return valueGPILSelection; }
+    inline G4GPILSelection GetGPILSelection() const { return valueGPILSelection; }
 
   private:
 
     G4VContinuousProcess();
-      // Hidden default constructor
+    // Hidden default constructor
 
     G4GPILSelection valueGPILSelection = CandidateForSelection;
-      // The returned value of G4GPILSelection in 
-      // the arguments of AlongStepGPIL()
+    // The returned value of G4GPILSelection in
+    // the arguments of AlongStepGPIL()
 };
 
 #endif

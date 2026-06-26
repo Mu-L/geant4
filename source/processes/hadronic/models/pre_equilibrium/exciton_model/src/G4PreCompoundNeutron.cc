@@ -33,37 +33,35 @@
 //
 // Author:         V.Lara
 //
-// Modified:  
-// 21.08.2008 J. M. Quesada add choice of options  
+// Modified:
+// 21.08.2008 J. M. Quesada add choice of options
 // 10.02.2009 J. M. Quesada set default opt3
 // 20.08.2010 V.Ivanchenko added G4Pow and G4PreCompoundParameters pointers
 //                         use int Z and A and cleanup
-// 
+//
 
 #include "G4PreCompoundNeutron.hh"
+
 #include "G4Neutron.hh"
 
-G4PreCompoundNeutron::G4PreCompoundNeutron()
-  : G4PreCompoundNucleon(G4Neutron::Neutron())
-{}
+G4PreCompoundNeutron::G4PreCompoundNeutron() : G4PreCompoundNucleon(G4Neutron::Neutron()) {}
 
 G4double G4PreCompoundNeutron::GetRj(G4int nParticles, G4int nCharged) const
 {
   G4double rj = 0.0;
-  if(nParticles > 0) { 
-    rj = static_cast<G4double>(nParticles - nCharged)/
-      static_cast<G4double>(nParticles);
+  if (nParticles > 0)
+  {
+    rj = static_cast<G4double>(nParticles - nCharged) / static_cast<G4double>(nParticles);
   }
   return rj;
 }
 
 G4double G4PreCompoundNeutron::GetAlpha() const
 {
-  return 0.76+2.2/theResA13;
+  return 0.76 + 2.2 / theResA13;
 }
 
 G4double G4PreCompoundNeutron::GetBeta() const
 {
-  return (2.12/(theResA13*theResA13)-0.05)/GetAlpha(); // in MeV
+  return (2.12 / (theResA13 * theResA13) - 0.05) / GetAlpha();  // in MeV
 }
-

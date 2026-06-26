@@ -34,9 +34,9 @@ G4ThreadLocal G4VPVDivisionFactory* G4VPVDivisionFactory::fgInstance = nullptr;
 
 //_____________________________________________________________________________
 
-G4VPVDivisionFactory* G4VPVDivisionFactory::Instance() 
+G4VPVDivisionFactory* G4VPVDivisionFactory::Instance()
 {
   // Static singleton access method.
   // ---
   return fgInstance;
-}  
+}

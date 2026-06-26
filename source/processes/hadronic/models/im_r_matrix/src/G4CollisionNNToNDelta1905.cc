@@ -25,21 +25,19 @@
 //
 //
 
-#include "globals.hh"
 #include "G4CollisionNNToNDelta1905.hh"
+
 #include "G4ConcreteNNToNDeltaStar.hh"
+#include "globals.hh"
 
 G4CollisionNNToNDelta1905::G4CollisionNNToNDelta1905()
-{ 
-	components=0;
-	MakeNNToNDelta<Dm_1905PC, D0_1905PC, Dp_1905PC, Dpp_1905PC, G4ConcreteNNToNDeltaStar>::Make(this);
+{
+  components = 0;
+  MakeNNToNDelta<Dm_1905PC, D0_1905PC, Dp_1905PC, Dpp_1905PC, G4ConcreteNNToNDeltaStar>::Make(this);
 }
 
 G4CollisionNNToNDelta1905::~G4CollisionNNToNDelta1905()
 {
-	if (components) delete components;
-	components=0;
+  if (components) delete components;
+  components = 0;
 }
-
-
-

@@ -31,23 +31,24 @@
 //  Adjoint/reverse discrete ionisation for proton
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4hInverseIonisation_h
-#define G4hInverseIonisation_h 1
+#ifndef G4HINVERSEIONISATION_HH
+#define G4HINVERSEIONISATION_HH
 
-#include "globals.hh"
 #include "G4VAdjointReverseReaction.hh"
+#include "globals.hh"
 
 class G4AdjointhIonisationModel;
 
 class G4hInverseIonisation : public G4VAdjointReverseReaction
 {
- public:
-  explicit G4hInverseIonisation(G4bool whichScatCase, const G4String& process_name,
-                                G4AdjointhIonisationModel* aEmAdjointModel);
-  ~G4hInverseIonisation() override = default;
+  public:
 
-  G4hInverseIonisation(G4hInverseIonisation&) = delete;
-  G4hInverseIonisation& operator=(const G4hInverseIonisation& right) = delete;
+    explicit G4hInverseIonisation(G4bool whichScatCase, const G4String& process_name,
+                                  G4AdjointhIonisationModel* aEmAdjointModel);
+    ~G4hInverseIonisation() override = default;
+
+    G4hInverseIonisation(G4hInverseIonisation&) = delete;
+    G4hInverseIonisation& operator=(const G4hInverseIonisation& right) = delete;
 };
 
 #endif

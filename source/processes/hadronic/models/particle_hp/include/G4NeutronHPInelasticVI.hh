@@ -32,8 +32,8 @@
 // Neutron HP inelastic scattering model below 20 MeV
 //
 
-#ifndef G4NeutronHPInelasticVI_h
-#define G4NeutronHPInelasticVI_h 1
+#ifndef G4NEUTRONHPINELASTICVI_HH
+#define G4NEUTRONHPINELASTICVI_HH
 
 // Final state production model for a high precision (based on evaluated data
 // libraries) description of neutron inelastic scattering below 20 MeV or
@@ -41,13 +41,14 @@
 // 36 exclusive final states are consideded.
 
 #include "G4HadronicInteraction.hh"
-#include "G4ParticleHPChannelList.hh"
 #include "G4ParticleDefinition.hh"
+#include "G4ParticleHPChannelList.hh"
 #include "globals.hh"
 
 class G4NeutronHPInelasticVI : public G4HadronicInteraction
 {
   public:
+
     G4NeutronHPInelasticVI();
 
     ~G4NeutronHPInelasticVI() override;
@@ -61,11 +62,10 @@ class G4NeutronHPInelasticVI : public G4HadronicInteraction
 
     void ModelDescription(std::ostream& outFile) const override;
 
-    G4NeutronHPInelasticVI(G4NeutronHPInelasticVI &) = delete;
-    G4NeutronHPInelasticVI & operator=
-    (const G4NeutronHPInelasticVI &right) = delete;
+    G4NeutronHPInelasticVI(G4NeutronHPInelasticVI&) = delete;
+    G4NeutronHPInelasticVI& operator=(const G4NeutronHPInelasticVI& right) = delete;
 
-private:
+  private:
 
     void InitialiseOnFly();
 
@@ -75,7 +75,7 @@ private:
     G4bool fInitializer{false};
 
     static G4bool fLock;
-    static constexpr G4int ZMAXHPI{101}; // 101 because Z range is 1-100
+    static constexpr G4int ZMAXHPI{101};  // 101 because Z range is 1-100
     static G4ParticleHPChannelList* theChannels[ZMAXHPI];
 };
 

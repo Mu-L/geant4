@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 
-#ifndef G4VParticlePropertyRetriever_h
-#define G4VParticlePropertyRetriever_h 1
+#ifndef G4VPARTICLEPROPERTYRETRIEVER_HH
+#define G4VPARTICLEPROPERTYRETRIEVER_HH
 
 #include "G4ParticlePropertyData.hh"
 #include "G4ParticlePropertyTable.hh"
@@ -36,6 +36,7 @@
 class G4VParticlePropertyRetriever
 {
   public:
+
     // constructors
     G4VParticlePropertyRetriever();
 
@@ -51,6 +52,7 @@ class G4VParticlePropertyRetriever
     virtual void Retrieve(const G4String& option) = 0;
 
   protected:
+
     G4ParticlePropertyTable* pPropertyTable;
 };
 

@@ -67,8 +67,8 @@
 
 // Author: Makoto Asai, SLAC - 2001
 // --------------------------------------------------------------------
-#ifndef G4UIcontrolMessenger_hh
-#define G4UIcontrolMessenger_hh 1
+#ifndef G4UICONTROLMESSENGER_HH
+#define G4UICONTROLMESSENGER_HH
 
 #include "G4UImessenger.hh"
 
@@ -82,12 +82,14 @@ class G4UIcommand;
 class G4UIcontrolMessenger : public G4UImessenger
 {
   public:
+
     G4UIcontrolMessenger();
     ~G4UIcontrolMessenger() override;
     void SetNewValue(G4UIcommand* command, G4String newValue) override;
     G4String GetCurrentValue(G4UIcommand* command) override;
 
   private:
+
     G4UIdirectory* controlDirectory = nullptr;
     G4UIcmdWithAString* macroPathCommand = nullptr;
     G4UIcmdWithAString* ExecuteCommand = nullptr;

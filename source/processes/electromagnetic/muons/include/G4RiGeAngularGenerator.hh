@@ -32,60 +32,52 @@
 // File name:  G4RiGeAngularGenerator
 //
 // Authors:       Gerardo Depaola & Ricardo Pacheco
-// 
+//
 // Creation date: 29 October 2024
 //
 // -------------------------------------------------------------------
 //
 
-#ifndef G4RiGeAngularGenerator_h
-#define G4RiGeAngularGenerator_h 1
+#ifndef G4RIGEANGULARGENERATOR_HH
+#define G4RIGEANGULARGENERATOR_HH
 
+#include "G4LorentzVector.hh"
+#include "G4VEmAngularDistribution.hh"
 #include "G4ios.hh"
 #include "globals.hh"
-#include "G4VEmAngularDistribution.hh"
-#include "G4LorentzVector.hh"
 
 class G4RiGeAngularGenerator : public G4VEmAngularDistribution
 {
+  public:
 
-public:
+    G4RiGeAngularGenerator();
 
-  G4RiGeAngularGenerator();
+    ~G4RiGeAngularGenerator() override = default;
 
-  ~G4RiGeAngularGenerator() override = default;
+    G4ThreeVector& SampleDirection(const G4DynamicParticle* dp, G4double gEnergy, G4int Z,
+                                   const G4Material* mat = nullptr) override;
 
-  G4ThreeVector& SampleDirection(const G4DynamicParticle* dp,
-                                 G4double gEnergy, G4int Z,
-                                 const G4Material* mat = nullptr) override;
+    void Sample5DPairDirections(const G4DynamicParticle* dp, G4ThreeVector& dirElectron,
+                                G4ThreeVector& dirPositron, const G4double gEnergy,
+                                const G4double q2, const G4double gMomentum,
+                                G4double muFinalMomentum, G4double muFinalEnergy,
+                                const G4double* randNumbs, const G4double* W);
 
-  void Sample5DPairDirections(const G4DynamicParticle* dp,
-			      G4ThreeVector& dirElectron,
-			      G4ThreeVector& dirPositron,
-			      const G4double gEnergy, const G4double q2,
-			      const G4double gMomentum,
-			      G4double muFinalMomentum,
-			      G4double muFinalEnergy,
-			      const G4double* randNumbs,
-			      const G4double* W);
+    void PhiRotation(G4ThreeVector& dir, G4double phi);
 
-  void PhiRotation(G4ThreeVector& dir, G4double phi);
+    G4LorentzVector eDP2(G4double x1, G4double x2, G4double x3, G4double x4, G4double x5);
 
-  G4LorentzVector eDP2(G4double x1, G4double x2, G4double x3, G4double x4, G4double x5);
+    G4LorentzVector pDP2(G4double x3, const G4LorentzVector& x6);
 
-  G4LorentzVector pDP2(G4double x3, const G4LorentzVector& x6);
+    void PrintGeneratorInformation() const override;
 
-  void PrintGeneratorInformation() const override;
+    // hide assignment operator
+    G4RiGeAngularGenerator& operator=(const G4RiGeAngularGenerator& right) = delete;
+    G4RiGeAngularGenerator(const G4RiGeAngularGenerator&) = delete;
 
-  // hide assignment operator 
-  G4RiGeAngularGenerator& operator=(const G4RiGeAngularGenerator& right) = delete;
-  G4RiGeAngularGenerator(const G4RiGeAngularGenerator&) = delete;
+  private:
 
-private:
-
-  G4double SampleCosTheta(G4double primKinEnergy, G4double gEnergy, G4double mass);
-
+    G4double SampleCosTheta(G4double primKinEnergy, G4double gEnergy, G4double mass);
 };
 
 #endif
-

@@ -31,8 +31,8 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrLineProcessor_hh
-#define G4tgrLineProcessor_hh 1
+#ifndef G4TGRLINEPROCESSOR_HH
+#define G4TGRLINEPROCESSOR_HH
 
 #include "globals.hh"
 

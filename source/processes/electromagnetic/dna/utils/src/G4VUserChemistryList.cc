@@ -32,14 +32,14 @@
 
 #include "G4VUserChemistryList.hh"
 
-#include <G4VScheduler.hh>
-#include "G4MoleculeTable.hh"
-#include "G4MoleculeDefinition.hh"
-#include "G4ProcessManager.hh"
 #include "G4DNAChemistryManager.hh"
+#include "G4MoleculeDefinition.hh"
+#include "G4MoleculeTable.hh"
+#include "G4ProcessManager.hh"
 
-G4VUserChemistryList::G4VUserChemistryList(G4bool flag) :
-fIsPhysicsConstructor(flag)
+#include <G4VScheduler.hh>
+
+G4VUserChemistryList::G4VUserChemistryList(G4bool flag) : fIsPhysicsConstructor(flag)
 {
   verboseLevel = 1;
 }
@@ -63,8 +63,7 @@ void G4VUserChemistryList::BuildPhysicsTable()
 {
   G4MoleculeTable* theMoleculeTable = G4MoleculeTable::Instance();
 
-  G4MoleculeDefinitionIterator iterator =
-      theMoleculeTable->GetDefintionIterator();
+  G4MoleculeDefinitionIterator iterator = theMoleculeTable->GetDefintionIterator();
 
   iterator.reset();
   while (iterator())
@@ -76,7 +75,7 @@ void G4VUserChemistryList::BuildPhysicsTable()
 
 void G4VUserChemistryList::BuildPhysicsTable(G4MoleculeDefinition* moleculeDef)
 {
-  //Get processes from master thread;
+  // Get processes from master thread;
   G4ProcessManager* pManager = moleculeDef->GetProcessManager();
 
   if (pManager == nullptr)
@@ -85,15 +84,13 @@ void G4VUserChemistryList::BuildPhysicsTable(G4MoleculeDefinition* moleculeDef)
     if (verboseLevel > 0)
     {
       G4cout << "G4VUserPhysicsList::BuildPhysicsTable "
-             << " : No Process Manager for " << moleculeDef->GetParticleName()
+             << " : No Process Manager for " << moleculeDef->GetParticleName() << G4endl;
+      G4cout << moleculeDef->GetParticleName() << " should be created in your PhysicsList"
              << G4endl;
-      G4cout << moleculeDef->GetParticleName()
-      << " should be created in your PhysicsList" <<G4endl;
     }
 #endif
-    G4Exception("G4VUserChemistryList::BuildPhysicsTable",
-        "Run0271", FatalException,
-        "No process manager");
+    G4Exception("G4VUserChemistryList::BuildPhysicsTable", "Run0271", FatalException,
+                "No process manager");
     return;
   }
 
@@ -105,44 +102,39 @@ void G4VUserChemistryList::BuildPhysicsTable(G4MoleculeDefinition* moleculeDef)
     if (verboseLevel > 0)
     {
       G4cout << "G4VUserChemistryList::BuildPhysicsTable  "
-             << " : No Process Vector for " << moleculeDef->GetParticleName()
-             << G4endl;
+             << " : No Process Vector for " << moleculeDef->GetParticleName() << G4endl;
     }
 #endif
-    G4Exception("G4VUserChemistryList::BuildPhysicsTable",
-        "Run0272", FatalException,
-        "No process Vector");
+    G4Exception("G4VUserChemistryList::BuildPhysicsTable", "Run0272", FatalException,
+                "No process Vector");
     return;
   }
 #ifdef G4VERBOSE
   if (verboseLevel > 2)
   {
-    G4cout << "G4VUserChemistryList::BuildPhysicsTable %%%%%% "
-           << moleculeDef->GetParticleName() << G4endl;
-    G4cout << " ProcessManager : " << pManager
-           << " ProcessManagerShadow : " << pManagerShadow << G4endl;
-    for(G4int iv1=0;iv1<(G4int)pVector->size();++iv1)
+    G4cout << "G4VUserChemistryList::BuildPhysicsTable %%%%%% " << moleculeDef->GetParticleName()
+           << G4endl;
+    G4cout << " ProcessManager : " << pManager << " ProcessManagerShadow : " << pManagerShadow
+           << G4endl;
+    for (G4int iv1 = 0; iv1 < (G4int)pVector->size(); ++iv1)
     {
-      G4cout << "  " << iv1 << " - " << (*pVector)[iv1]->GetProcessName()
-          << G4endl;
+      G4cout << "  " << iv1 << " - " << (*pVector)[iv1]->GetProcessName() << G4endl;
     }
-    G4cout << "--------------------------------------------------------------"
-        << G4endl;
+    G4cout << "--------------------------------------------------------------" << G4endl;
     G4ProcessVector* pVectorShadow = pManagerShadow->GetProcessList();
 
-    for(G4int iv2=0;iv2<(G4int)pVectorShadow->size();++iv2)
+    for (G4int iv2 = 0; iv2 < (G4int)pVectorShadow->size(); ++iv2)
     {
-      G4cout << "  " << iv2 << " - " << (*pVectorShadow)[iv2]->GetProcessName()
-      << G4endl;
+      G4cout << "  " << iv2 << " - " << (*pVectorShadow)[iv2]->GetProcessName() << G4endl;
     }
   }
 #endif
   for (G4int j = 0; j < (G4int)pVector->size(); ++j)
   {
-    //Andrea July 16th 2013 : migration to new interface...
-    //Infer if we are in a worker thread or master thread
-    //Master thread is the one in which the process manager
-    // and process manager shadow pointers are the same
+    // Andrea July 16th 2013 : migration to new interface...
+    // Infer if we are in a worker thread or master thread
+    // Master thread is the one in which the process manager
+    //  and process manager shadow pointers are the same
     if (pManagerShadow == pManager)
     {
       (*pVector)[j]->BuildPhysicsTable(*moleculeDef);
@@ -151,6 +143,5 @@ void G4VUserChemistryList::BuildPhysicsTable(G4MoleculeDefinition* moleculeDef)
     {
       (*pVector)[j]->BuildWorkerPhysicsTable(*moleculeDef);
     }
-
   }
 }

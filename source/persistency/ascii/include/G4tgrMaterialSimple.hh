@@ -31,15 +31,14 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrMaterialSimple_hh
-#define G4tgrMaterialSimple_hh 1
-
-#include "globals.hh"
-
-#include <vector>
-#include <iostream>
+#ifndef G4TGRMATERIALSIMPLE_HH
+#define G4TGRMATERIALSIMPLE_HH
 
 #include "G4tgrMaterial.hh"
+#include "globals.hh"
+
+#include <iostream>
+#include <vector>
 
 class G4tgrMaterialSimple : public G4tgrMaterial
 {
@@ -48,9 +47,8 @@ class G4tgrMaterialSimple : public G4tgrMaterial
     G4tgrMaterialSimple();
     ~G4tgrMaterialSimple();
 
-    G4tgrMaterialSimple(const G4String& matType,
-                        const std::vector<G4String>& wl);
-      // Fill the data interpreting the list of words read 'wl'
+    G4tgrMaterialSimple(const G4String& matType, const std::vector<G4String>& wl);
+    // Fill the data interpreting the list of words read 'wl'
 
     friend std::ostream& operator<<(std::ostream&, const G4tgrMaterialSimple&);
 

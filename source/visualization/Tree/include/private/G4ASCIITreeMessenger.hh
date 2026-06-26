@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  5th April 2001
 // A scene handler to dump geometry hierarchy to standard output as
 //   ASCII stream.
@@ -41,18 +41,22 @@ class G4UIcommand;
 class G4UIcmdWithAnInteger;
 class G4UIcmdWithAString;
 
-class G4ASCIITreeMessenger: public G4UImessenger {
-public:
-  G4ASCIITreeMessenger(G4ASCIITree*);
-  virtual ~G4ASCIITreeMessenger();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4ASCIITree* fpASCIITree;
-  G4UIcommand* fpDirectory;
-  G4UIcommand* fpDirectorySet;
-  G4UIcmdWithAnInteger* fpCommandVerbose;
-  G4UIcmdWithAString* fpCommandSetOutFile;
+class G4ASCIITreeMessenger : public G4UImessenger
+{
+  public:
+
+    G4ASCIITreeMessenger(G4ASCIITree*);
+    virtual ~G4ASCIITreeMessenger();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4ASCIITree* fpASCIITree;
+    G4UIcommand* fpDirectory;
+    G4UIcommand* fpDirectorySet;
+    G4UIcmdWithAnInteger* fpCommandVerbose;
+    G4UIcmdWithAString* fpCommandSetOutFile;
 };
 
 #endif

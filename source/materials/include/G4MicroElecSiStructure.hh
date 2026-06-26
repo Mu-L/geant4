@@ -38,7 +38,7 @@
 //	    heavy ions in Si, NIM B, vol. 287, pp. 124-129, 2012.
 
 #ifndef G4MICROELECSISTRUCTURE_HH
-#define G4MICROELECSISTRUCTURE_HH 1
+#define G4MICROELECSISTRUCTURE_HH
 
 #include "globals.hh"
 
@@ -46,19 +46,21 @@
 
 class G4MicroElecSiStructure
 {
- public:
-  G4MicroElecSiStructure();
+  public:
 
-  virtual ~G4MicroElecSiStructure() = default;
+    G4MicroElecSiStructure();
 
-  G4double Energy(G4int level);
+    virtual ~G4MicroElecSiStructure() = default;
 
-  G4int NumberOfLevels() { return nLevels; }
+    G4double Energy(G4int level);
 
- private:
-  G4int nLevels{6};  // Number of levels of silicon
+    G4int NumberOfLevels() { return nLevels; }
 
-  std::vector<G4double> energyConstant;
+  private:
+
+    G4int nLevels{6};  // Number of levels of silicon
+
+    std::vector<G4double> energyConstant;
 };
 
 #endif

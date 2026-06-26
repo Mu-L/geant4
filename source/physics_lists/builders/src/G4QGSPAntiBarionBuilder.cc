@@ -32,70 +32,74 @@
 //---------------------------------------------------------------------------
 
 #include "G4QGSPAntiBarionBuilder.hh"
+
+#include "G4ComponentAntiNuclNuclearXS.hh"
+#include "G4CrossSectionDataSetRegistry.hh"
+#include "G4CrossSectionInelastic.hh"
+#include "G4ExcitedStringDecay.hh"
+#include "G4FTFModel.hh"
+#include "G4GeneratorPrecompoundInterface.hh"
 #include "G4HadronInelasticProcess.hh"
-#include "G4SystemOfUnits.hh"
+#include "G4HadronicParameters.hh"
+#include "G4LundStringFragmentation.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4ComponentAntiNuclNuclearXS.hh"
-#include "G4CrossSectionInelastic.hh"
-#include "G4CrossSectionDataSetRegistry.hh"
-#include "G4HadronicParameters.hh"
-#include "G4TheoFSGenerator.hh"
-#include "G4GeneratorPrecompoundInterface.hh"
+#include "G4QGSMFragmentation.hh"
 #include "G4QGSModel.hh"
 #include "G4QGSParticipants.hh"
-#include "G4QGSMFragmentation.hh"
-#include "G4ExcitedStringDecay.hh"
-#include "G4FTFModel.hh"
-#include "G4LundStringFragmentation.hh"
 #include "G4QuasiElasticChannel.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4TheoFSGenerator.hh"
 
-
-G4QGSPAntiBarionBuilder::G4QGSPAntiBarionBuilder( G4bool quasiElastic ) {
+G4QGSPAntiBarionBuilder::G4QGSPAntiBarionBuilder(G4bool quasiElastic)
+{
   G4CrossSectionDataSetRegistry* xsreg = G4CrossSectionDataSetRegistry::Instance();
-  G4VComponentCrossSection* theAntiNucleonXS = xsreg->GetComponentCrossSection( "AntiAGlauber" );
-  if ( ! theAntiNucleonXS ) theAntiNucleonXS = new G4ComponentAntiNuclNuclearXS;
-  theAntiNucleonData = new G4CrossSectionInelastic( theAntiNucleonXS );
+  G4VComponentCrossSection* theAntiNucleonXS = xsreg->GetComponentCrossSection("AntiAGlauber");
+  if (!theAntiNucleonXS) theAntiNucleonXS = new G4ComponentAntiNuclNuclearXS;
+  theAntiNucleonData = new G4CrossSectionInelastic(theAntiNucleonXS);
   theMin = G4HadronicParameters::Instance()->GetMinEnergyTransitionQGS_FTF();  // Safe choice
   theMax = G4HadronicParameters::Instance()->GetMaxEnergy();
-  // The main model, QGSP, applicable only for anti_proton and anti_neutron  
-  theQGSmodel = new G4TheoFSGenerator( "QGSP" );
-  G4QGSModel< G4QGSParticipants >* theStringModel = new G4QGSModel< G4QGSParticipants >;
-  G4ExcitedStringDecay* theStringDecay = new G4ExcitedStringDecay( new G4QGSMFragmentation );
-  theStringModel->SetFragmentationModel( theStringDecay );
+  // The main model, QGSP, applicable only for anti_proton and anti_neutron
+  theQGSmodel = new G4TheoFSGenerator("QGSP");
+  G4QGSModel<G4QGSParticipants>* theStringModel = new G4QGSModel<G4QGSParticipants>;
+  G4ExcitedStringDecay* theStringDecay = new G4ExcitedStringDecay(new G4QGSMFragmentation);
+  theStringModel->SetFragmentationModel(theStringDecay);
   G4GeneratorPrecompoundInterface* theCascade = new G4GeneratorPrecompoundInterface();
-  theQGSmodel->SetTransport( theCascade );
-  theQGSmodel->SetHighEnergyGenerator( theStringModel );
-  if ( quasiElastic ) theQGSmodel->SetQuasiElasticChannel( new G4QuasiElasticChannel );
   theQGSmodel->SetTransport(theCascade);
-  theQGSmodel->SetMinEnergy( theMin );
-  theQGSmodel->SetMaxEnergy( theMax );
+  theQGSmodel->SetHighEnergyGenerator(theStringModel);
+  if (quasiElastic) theQGSmodel->SetQuasiElasticChannel(new G4QuasiElasticChannel);
+  theQGSmodel->SetTransport(theCascade);
+  theQGSmodel->SetMinEnergy(theMin);
+  theQGSmodel->SetMaxEnergy(theMax);
   // The auxilary model, FTFP, needed for anti_deuteron, anti_triton, anti_He3 and anti_alpha
-  theFTFmodel = new G4TheoFSGenerator( "FTFP" );
+  theFTFmodel = new G4TheoFSGenerator("FTFP");
   G4FTFModel* theStringModel2 = new G4FTFModel;
-  theStringModel2->SetFragmentationModel( new G4ExcitedStringDecay );
+  theStringModel2->SetFragmentationModel(new G4ExcitedStringDecay);
   G4GeneratorPrecompoundInterface* theCascade2 = new G4GeneratorPrecompoundInterface;
-  theFTFmodel->SetHighEnergyGenerator( theStringModel2 );
+  theFTFmodel->SetHighEnergyGenerator(theStringModel2);
   G4double quasiElasticFTF = false;  // Use built-in quasi-elastic (not add-on)
-  if ( quasiElasticFTF ) theFTFmodel->SetQuasiElasticChannel( new G4QuasiElasticChannel );
-  theFTFmodel->SetTransport( theCascade2 );
-  theFTFmodel->SetMinEnergy( theMin );
-  theFTFmodel->SetMaxEnergy( theMax );
+  if (quasiElasticFTF) theFTFmodel->SetQuasiElasticChannel(new G4QuasiElasticChannel);
+  theFTFmodel->SetTransport(theCascade2);
+  theFTFmodel->SetMinEnergy(theMin);
+  theFTFmodel->SetMaxEnergy(theMax);
 }
 
-
-void G4QGSPAntiBarionBuilder::Build( G4HadronInelasticProcess* aP ) {
-  if ( aP->GetParticleDefinition()  &&  aP->GetParticleDefinition()->GetBaryonNumber() < -1 ) {
+void G4QGSPAntiBarionBuilder::Build(G4HadronInelasticProcess* aP)
+{
+  if (aP->GetParticleDefinition() && aP->GetParticleDefinition()->GetBaryonNumber() < -1)
+  {
     // Light anti-ions: for the time being QGSP cannot be applied, use FTFP
-    theFTFmodel->SetMinEnergy( theMin );
-    theFTFmodel->SetMaxEnergy( theMax );
-    aP->RegisterMe( theFTFmodel );
-  } else {
-    // Anti-proton and anti-neutron: use QGSP
-    theQGSmodel->SetMinEnergy( theMin );
-    theQGSmodel->SetMaxEnergy( theMax );
-    aP->RegisterMe( theQGSmodel );
+    theFTFmodel->SetMinEnergy(theMin);
+    theFTFmodel->SetMaxEnergy(theMax);
+    aP->RegisterMe(theFTFmodel);
   }
-  aP->AddDataSet( theAntiNucleonData );
+  else
+  {
+    // Anti-proton and anti-neutron: use QGSP
+    theQGSmodel->SetMinEnergy(theMin);
+    theQGSmodel->SetMaxEnergy(theMax);
+    aP->RegisterMe(theQGSmodel);
+  }
+  aP->AddDataSet(theAntiNucleonData);
 }

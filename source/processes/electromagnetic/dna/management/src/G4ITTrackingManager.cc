@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr) 
+// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr)
 //
 // History:
 // -----------
@@ -33,20 +33,21 @@
 // -------------------------------------------------------------------
 
 #include "G4ITTrackingManager.hh"
-#include "G4Track.hh"
-#include "G4ProcessManager.hh"
+
 #include "G4IT.hh"
-#include "G4TrackingInformation.hh"
-#include "G4ITTrackingInteractivity.hh"
-#include "G4VITSteppingVerbose.hh"
 #include "G4ITTrackHolder.hh"
+#include "G4ITTrackingInteractivity.hh"
+#include "G4ProcessManager.hh"
+#include "G4Track.hh"
+#include "G4TrackingInformation.hh"
+#include "G4VITSteppingVerbose.hh"
 
 G4ITTrackingManager::G4ITTrackingManager()
 {
   fpTrackingInteractivity = nullptr;
 }
 //___________________________________________________
-//void G4ITTrackingManager::Initialize()
+// void G4ITTrackingManager::Initialize()
 //{
 //    if(fpTrackingInteractivity) fpTrackingInteractivity->Initialize();
 //}

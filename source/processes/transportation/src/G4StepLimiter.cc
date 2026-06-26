@@ -32,81 +32,55 @@
 // --------------------------------------------------------------
 
 #include "G4StepLimiter.hh"
-#include "G4TransportationProcessType.hh"
 
 #include "G4Step.hh"
+#include "G4TransportationProcessType.hh"
 #include "G4UserLimits.hh"
 #include "G4VParticleChange.hh"
 
-
 ////////////////////////////////////
-G4StepLimiter::G4StepLimiter(const G4String& aName)
-  : G4VProcess(aName, fGeneral )
+G4StepLimiter::G4StepLimiter(const G4String& aName) : G4VProcess(aName, fGeneral)
 {
   // set Process Sub Type
   SetProcessSubType(static_cast<int>(STEP_LIMITER));
 
-  if (verboseLevel>1) {
-     G4cout << GetProcessName() << " is created "<< G4endl;
-   }
+  if (verboseLevel > 1)
+  {
+    G4cout << GetProcessName() << " is created " << G4endl;
+  }
 }
-
 
 ////////////////////////
-G4StepLimiter::~G4StepLimiter()
-{
-}
-
+G4StepLimiter::~G4StepLimiter() {}
 
 ////////////////////////
-G4StepLimiter::G4StepLimiter(G4StepLimiter& right)
-  : G4VProcess(right)
-{
-}
+G4StepLimiter::G4StepLimiter(G4StepLimiter& right) : G4VProcess(right) {}
 
- 
 ////////////////
-G4double 
-  G4StepLimiter::PostStepGetPhysicalInteractionLength( 
-				       const G4Track& aTrack,
-				       G4double, // previousStepSize
-				       G4ForceCondition* condition  )
+G4double G4StepLimiter::PostStepGetPhysicalInteractionLength(const G4Track& aTrack,
+                                                             G4double,  // previousStepSize
+                                                             G4ForceCondition* condition)
 {
   // condition is set to "Not Forced"
   *condition = NotForced;
 
-   G4double proposedStep = DBL_MAX;
-   G4UserLimits* pUserLimits =
-                 aTrack.GetVolume()->GetLogicalVolume()->GetUserLimits();
-   if (pUserLimits) {
-     // max allowed step length
-     //
-     proposedStep = pUserLimits->GetMaxAllowedStep(aTrack);
-     if (proposedStep < 0.) proposedStep =0.; 
-   }
-   return proposedStep;
+  G4double proposedStep = DBL_MAX;
+  G4UserLimits* pUserLimits = aTrack.GetVolume()->GetLogicalVolume()->GetUserLimits();
+  if (pUserLimits)
+  {
+    // max allowed step length
+    //
+    proposedStep = pUserLimits->GetMaxAllowedStep(aTrack);
+    if (proposedStep < 0.) proposedStep = 0.;
+  }
+  return proposedStep;
 }
 
 ///////////////
-G4VParticleChange*
-  G4StepLimiter::PostStepDoIt( const G4Track& aTrack,
-                                 const G4Step&  )
+G4VParticleChange* G4StepLimiter::PostStepDoIt(const G4Track& aTrack, const G4Step&)
 // Do Nothing
 //
 {
-   aParticleChange.Initialize(aTrack);
-   return &aParticleChange;
+  aParticleChange.Initialize(aTrack);
+  return &aParticleChange;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

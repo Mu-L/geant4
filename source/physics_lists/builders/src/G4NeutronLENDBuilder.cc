@@ -24,99 +24,97 @@
 // ********************************************************************
 //
 #include "G4NeutronLENDBuilder.hh"
-#include "G4SystemOfUnits.hh"
+
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
+#include "G4SystemOfUnits.hh"
 
-G4NeutronLENDBuilder::
-G4NeutronLENDBuilder(const G4String& eva ) 
+G4NeutronLENDBuilder::G4NeutronLENDBuilder(const G4String& eva)
 {
   theLENDElastic = 0;
   theLENDElasticCrossSection = 0;
-  
+
   theLENDFission = 0;
   theLENDFissionCrossSection = 0;
-  
+
   theLENDCapture = 0;
   theLENDCaptureCrossSection = 0;
-  
+
   theLENDInelastic = 0;
   theLENDInelasticCrossSection = 0;
 
   theMin = 0;
   theIMin = theMin;
-  theMax = 20*MeV;
+  theMax = 20 * MeV;
   theIMax = theMax;
   evaluation = eva;
-
 }
-void G4NeutronLENDBuilder::
-Build(G4HadronElasticProcess * aP)
+void G4NeutronLENDBuilder::Build(G4HadronElasticProcess* aP)
 {
-  if(theLENDElastic==0) theLENDElastic = new G4LENDElastic( G4Neutron::Neutron() );
+  if (theLENDElastic == 0) theLENDElastic = new G4LENDElastic(G4Neutron::Neutron());
   theLENDElastic->SetMinEnergy(theMin);
   theLENDElastic->SetMaxEnergy(theMax);
 
-  if ( evaluation != "" ) theLENDElastic->ChangeDefaultEvaluation( evaluation );
+  if (evaluation != "") theLENDElastic->ChangeDefaultEvaluation(evaluation);
   theLENDElastic->AllowNaturalAbundanceTarget();
-  //theLENDElastic->AllowAnyCandidateTarget();
-  if(theLENDElasticCrossSection == 0) theLENDElasticCrossSection = new G4LENDElasticCrossSection( G4Neutron::Neutron() );
-  if ( evaluation != "" ) theLENDElasticCrossSection->ChangeDefaultEvaluation( evaluation );
+  // theLENDElastic->AllowAnyCandidateTarget();
+  if (theLENDElasticCrossSection == 0)
+    theLENDElasticCrossSection = new G4LENDElasticCrossSection(G4Neutron::Neutron());
+  if (evaluation != "") theLENDElasticCrossSection->ChangeDefaultEvaluation(evaluation);
   theLENDElasticCrossSection->AllowNaturalAbundanceTarget();
-  //theLENDElasticCrossSection->AllowAnyCandidateTarget();
+  // theLENDElasticCrossSection->AllowAnyCandidateTarget();
   aP->AddDataSet(theLENDElasticCrossSection);
   aP->RegisterMe(theLENDElastic);
 }
 
-void G4NeutronLENDBuilder::
-Build(G4NeutronFissionProcess * aP)
+void G4NeutronLENDBuilder::Build(G4NeutronFissionProcess* aP)
 {
-  if(theLENDFission == 0) theLENDFission = new G4LENDFission( G4Neutron::Neutron() );
+  if (theLENDFission == 0) theLENDFission = new G4LENDFission(G4Neutron::Neutron());
   theLENDFission->SetMinEnergy(theMin);
   theLENDFission->SetMaxEnergy(theMax);
-  if ( evaluation != "" ) theLENDFission->ChangeDefaultEvaluation( evaluation );
-  //theLENDFission->AllowNaturalAbundanceTarget();
-  //theLENDFission->AllowAnyCandidateTarget();
-  if(theLENDFissionCrossSection==0) theLENDFissionCrossSection=new G4LENDFissionCrossSection( G4Neutron::Neutron() );
-  if ( evaluation != "" ) theLENDFissionCrossSection->ChangeDefaultEvaluation( evaluation );
-  //theLENDFissionCrossSection->AllowNaturalAbundanceTarget();
-  //theLENDFissionCrossSection->AllowAnyCandidateTarget();
+  if (evaluation != "") theLENDFission->ChangeDefaultEvaluation(evaluation);
+  // theLENDFission->AllowNaturalAbundanceTarget();
+  // theLENDFission->AllowAnyCandidateTarget();
+  if (theLENDFissionCrossSection == 0)
+    theLENDFissionCrossSection = new G4LENDFissionCrossSection(G4Neutron::Neutron());
+  if (evaluation != "") theLENDFissionCrossSection->ChangeDefaultEvaluation(evaluation);
+  // theLENDFissionCrossSection->AllowNaturalAbundanceTarget();
+  // theLENDFissionCrossSection->AllowAnyCandidateTarget();
   aP->AddDataSet(theLENDFissionCrossSection);
   aP->RegisterMe(theLENDFission);
 }
 
-void G4NeutronLENDBuilder::
-Build(G4NeutronCaptureProcess * aP)
+void G4NeutronLENDBuilder::Build(G4NeutronCaptureProcess* aP)
 {
-  if(theLENDCapture==0) theLENDCapture = new G4LENDCapture( G4Neutron::Neutron() );
+  if (theLENDCapture == 0) theLENDCapture = new G4LENDCapture(G4Neutron::Neutron());
   theLENDCapture->SetMinEnergy(theMin);
   theLENDCapture->SetMaxEnergy(theMax);
-  if ( evaluation != "" ) theLENDCapture->ChangeDefaultEvaluation( evaluation );
+  if (evaluation != "") theLENDCapture->ChangeDefaultEvaluation(evaluation);
   theLENDCapture->AllowNaturalAbundanceTarget();
-  //theLENDCapture->AllowAnyCandidateTarget();
-  if(theLENDCaptureCrossSection==0) theLENDCaptureCrossSection = new G4LENDCaptureCrossSection( G4Neutron::Neutron() );
-  if ( evaluation != "" ) theLENDCaptureCrossSection->ChangeDefaultEvaluation( evaluation );
+  // theLENDCapture->AllowAnyCandidateTarget();
+  if (theLENDCaptureCrossSection == 0)
+    theLENDCaptureCrossSection = new G4LENDCaptureCrossSection(G4Neutron::Neutron());
+  if (evaluation != "") theLENDCaptureCrossSection->ChangeDefaultEvaluation(evaluation);
   theLENDCaptureCrossSection->AllowNaturalAbundanceTarget();
-  //theLENDCaptureCrossSection->AllowAnyCandidateTarget();
+  // theLENDCaptureCrossSection->AllowAnyCandidateTarget();
   aP->AddDataSet(theLENDCaptureCrossSection);
   aP->RegisterMe(theLENDCapture);
 }
 
-void G4NeutronLENDBuilder::
-Build(G4HadronInelasticProcess * aP)
+void G4NeutronLENDBuilder::Build(G4HadronInelasticProcess* aP)
 {
-  if(theLENDInelastic==0) theLENDInelastic = new G4LENDInelastic( G4Neutron::Neutron() );
+  if (theLENDInelastic == 0) theLENDInelastic = new G4LENDInelastic(G4Neutron::Neutron());
   theLENDInelastic->SetMinEnergy(theIMin);
   theLENDInelastic->SetMaxEnergy(theIMax);
-  if ( evaluation != "" ) theLENDInelastic->ChangeDefaultEvaluation( evaluation );
+  if (evaluation != "") theLENDInelastic->ChangeDefaultEvaluation(evaluation);
   theLENDInelastic->AllowNaturalAbundanceTarget();
-  //theLENDInelastic->AllowAnyCandidateTarget();
-  if(theLENDInelasticCrossSection==0) theLENDInelasticCrossSection = new G4LENDInelasticCrossSection( G4Neutron::Neutron() );
-  if ( evaluation != "" ) theLENDInelasticCrossSection->ChangeDefaultEvaluation( evaluation );
+  // theLENDInelastic->AllowAnyCandidateTarget();
+  if (theLENDInelasticCrossSection == 0)
+    theLENDInelasticCrossSection = new G4LENDInelasticCrossSection(G4Neutron::Neutron());
+  if (evaluation != "") theLENDInelasticCrossSection->ChangeDefaultEvaluation(evaluation);
   theLENDInelasticCrossSection->AllowNaturalAbundanceTarget();
-  //theLENDInelasticCrossSection->AllowAnyCandidateTarget();
+  // theLENDInelasticCrossSection->AllowAnyCandidateTarget();
   aP->AddDataSet(theLENDInelasticCrossSection);
   aP->RegisterMe(theLENDInelastic);
 }
-

@@ -26,7 +26,7 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   
+// ClassName:
 //
 // Author: 2007  Gunter Folger
 //   created from G4HadronPhysicsFTFP
@@ -38,29 +38,29 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4HadronPhysicsFTFP_BERT_h
-#define G4HadronPhysicsFTFP_BERT_h 1
-
-#include "globals.hh"
+#ifndef G4HADRONPHYSICSFTFP_BERT_HH
+#define G4HADRONPHYSICSFTFP_BERT_HH
 
 #include "G4VPhysicsConstructor.hh"
+#include "globals.hh"
 
 class G4HadronPhysicsFTFP_BERT : public G4VPhysicsConstructor
 {
-  public: 
-    G4HadronPhysicsFTFP_BERT(G4int verbose =1);
-    G4HadronPhysicsFTFP_BERT(const G4String& name, G4bool quasiElastic=false);
+  public:
+
+    G4HadronPhysicsFTFP_BERT(G4int verbose = 1);
+    G4HadronPhysicsFTFP_BERT(const G4String& name, G4bool quasiElastic = false);
     ~G4HadronPhysicsFTFP_BERT() override = default;
 
     void ConstructParticle() override;
     void ConstructProcess() override;
 
     // copy constructor and hide assignment operator
-    G4HadronPhysicsFTFP_BERT(G4HadronPhysicsFTFP_BERT &) = delete;
-    G4HadronPhysicsFTFP_BERT & operator =
-    (const G4HadronPhysicsFTFP_BERT &right) = delete;
+    G4HadronPhysicsFTFP_BERT(G4HadronPhysicsFTFP_BERT&) = delete;
+    G4HadronPhysicsFTFP_BERT& operator=(const G4HadronPhysicsFTFP_BERT& right) = delete;
 
   protected:
+
     void CreateModels();
     virtual void Neutron();
     virtual void Proton();
@@ -83,4 +83,3 @@ class G4HadronPhysicsFTFP_BERT : public G4VPhysicsConstructor
 };
 
 #endif
-

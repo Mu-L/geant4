@@ -25,108 +25,104 @@
 //
 //
 
-#ifndef G4DNADingfelderChargeDecreaseModel_h
-#define G4DNADingfelderChargeDecreaseModel_h 1
+#ifndef G4DNADINGFELDERCHARGEDECREASEMODEL_HH
+#define G4DNADINGFELDERCHARGEDECREASEMODEL_HH
 
-#include "G4VEmModel.hh"
-#include "G4ParticleChangeForGamma.hh"
-#include "G4ProductionCutsTable.hh"
-
-#include "G4Proton.hh"
 #include "G4DNAGenericIonsManager.hh"
 #include "G4NistManager.hh"
+#include "G4ParticleChangeForGamma.hh"
+#include "G4ProductionCutsTable.hh"
+#include "G4Proton.hh"
+#include "G4VEmModel.hh"
 
 class G4DNADingfelderChargeDecreaseModel : public G4VEmModel
 {
+  public:
 
-public:
+    G4DNADingfelderChargeDecreaseModel(const G4ParticleDefinition* p = nullptr,
+                                       const G4String& nam = "DNADingfelderChargeDecreaseModel");
 
-  G4DNADingfelderChargeDecreaseModel(const G4ParticleDefinition* p = nullptr, 
-		          const G4String& nam = "DNADingfelderChargeDecreaseModel");
+    ~G4DNADingfelderChargeDecreaseModel() override = default;
 
-  ~G4DNADingfelderChargeDecreaseModel() override = default;
+    G4DNADingfelderChargeDecreaseModel&
+    operator=(const G4DNADingfelderChargeDecreaseModel& right) = delete;
+    G4DNADingfelderChargeDecreaseModel(const G4DNADingfelderChargeDecreaseModel&) = delete;
 
-  G4DNADingfelderChargeDecreaseModel & operator=(const  G4DNADingfelderChargeDecreaseModel &right) = delete;
-  G4DNADingfelderChargeDecreaseModel(const  G4DNADingfelderChargeDecreaseModel&) = delete;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    G4double CrossSectionPerVolume(const G4Material* material, const G4ParticleDefinition* p,
+                                   G4double ekin, G4double emin, G4double emax) override;
 
-  G4double CrossSectionPerVolume(const G4Material* material,
-					   const G4ParticleDefinition* p,
-					   G4double ekin,
-					   G4double emin,
-					   G4double emax) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-				 const G4MaterialCutsCouple*,
-				 const G4DynamicParticle*,
-				 G4double tmin,
-				 G4double maxEnergy) override;
+    inline void SelectStationary(G4bool input);
 
-  inline void SelectStationary(G4bool input); 
+  protected:
 
-protected:
+    G4ParticleChangeForGamma* fParticleChangeForGamma = nullptr;
 
-  G4ParticleChangeForGamma* fParticleChangeForGamma = nullptr;
+  private:
 
-private:
+    G4bool statCode;
 
-  G4bool statCode;
+    // Water density table
+    const std::vector<G4double>* fpMolWaterDensity = nullptr;
 
-  // Water density table
-  const std::vector<G4double>* fpMolWaterDensity = nullptr;
+    std::map<G4String, G4double, std::less<G4String>> lowEnergyLimit;
+    std::map<G4String, G4double, std::less<G4String>> highEnergyLimit;
 
-  std::map<G4String,G4double,std::less<G4String> > lowEnergyLimit;
-  std::map<G4String,G4double,std::less<G4String> > highEnergyLimit;
+    G4bool isInitialised{false};
+    G4int verboseLevel;
 
-  G4bool isInitialised{false};
-  G4int verboseLevel;
-  
-  // Partial cross section
+    // Partial cross section
 
-  G4double PartialCrossSection(G4double energy, G4int level, const G4ParticleDefinition* particle);
+    G4double PartialCrossSection(G4double energy, G4int level,
+                                 const G4ParticleDefinition* particle);
 
-  G4double Sum(G4double energy, const G4ParticleDefinition* particle);
+    G4double Sum(G4double energy, const G4ParticleDefinition* particle);
 
-  G4int RandomSelect(G4double energy, const G4ParticleDefinition* particle);
-  
-  G4int numberOfPartialCrossSections[3]; // 3 is the particle type index
+    G4int RandomSelect(G4double energy, const G4ParticleDefinition* particle);
 
-  G4double f0[2][3];
-  G4double a0[2][3];
-  G4double a1[2][3];
-  G4double b0[2][3];
-  G4double b1[2][3];
-  G4double c0[2][3];
-  G4double d0[2][3];
-  G4double x0[2][3];
-  G4double x1[2][3];
+    G4int numberOfPartialCrossSections[3];  // 3 is the particle type index
 
-  // Final state
+    G4double f0[2][3];
+    G4double a0[2][3];
+    G4double a1[2][3];
+    G4double b0[2][3];
+    G4double b1[2][3];
+    G4double c0[2][3];
+    G4double d0[2][3];
+    G4double x0[2][3];
+    G4double x1[2][3];
 
-  G4int NumberOfFinalStates(G4ParticleDefinition* particleDefinition, G4int finalStateIndex);
-   
-  G4ParticleDefinition* OutgoingParticleDefinition(G4ParticleDefinition* particleDefinition, G4int finalStateIndex);
-   
-  G4double WaterBindingEnergyConstant(G4ParticleDefinition* particleDefinition, G4int finalStateIndex);
-   
-  G4double OutgoingParticleBindingEnergyConstant(G4ParticleDefinition* particleDefinition, G4int finalStateIndex);
-  
-  // Reusable particle definitions
-  G4ParticleDefinition* protonDef = nullptr;
-  G4ParticleDefinition* alphaPlusPlusDef = nullptr;
-  G4ParticleDefinition* alphaPlusDef = nullptr;
-  G4ParticleDefinition* hydrogenDef = nullptr;
-  G4ParticleDefinition* heliumDef = nullptr;
+    // Final state
 
+    G4int NumberOfFinalStates(G4ParticleDefinition* particleDefinition, G4int finalStateIndex);
+
+    G4ParticleDefinition* OutgoingParticleDefinition(G4ParticleDefinition* particleDefinition,
+                                                     G4int finalStateIndex);
+
+    G4double WaterBindingEnergyConstant(G4ParticleDefinition* particleDefinition,
+                                        G4int finalStateIndex);
+
+    G4double OutgoingParticleBindingEnergyConstant(G4ParticleDefinition* particleDefinition,
+                                                   G4int finalStateIndex);
+
+    // Reusable particle definitions
+    G4ParticleDefinition* protonDef = nullptr;
+    G4ParticleDefinition* alphaPlusPlusDef = nullptr;
+    G4ParticleDefinition* alphaPlusDef = nullptr;
+    G4ParticleDefinition* hydrogenDef = nullptr;
+    G4ParticleDefinition* heliumDef = nullptr;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline void G4DNADingfelderChargeDecreaseModel::SelectStationary (G4bool input)
-{ 
-    statCode = input; 
-}		 
+inline void G4DNADingfelderChargeDecreaseModel::SelectStationary(G4bool input)
+{
+  statCode = input;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 

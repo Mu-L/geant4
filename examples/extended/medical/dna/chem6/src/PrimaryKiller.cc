@@ -42,11 +42,11 @@
 
 #include "PrimaryKiller.hh"
 
-#include <G4Event.hh>
-#include <G4RunManager.hh>
-#include <G4UIcmdWith3VectorAndUnit.hh>
-#include <G4UIcmdWithADoubleAndUnit.hh>
-#include <G4UnitsTable.hh>
+#include "G4Event.hh"
+#include "G4RunManager.hh"
+#include "G4UIcmdWith3VectorAndUnit.hh"
+#include "G4UIcmdWithADoubleAndUnit.hh"
+#include "G4LowEnergyEmProcessSubType.hh"
 
 /** \file PrimaryKiller.cc
     \class PrimaryKiller
@@ -95,9 +95,21 @@ G4bool PrimaryKiller::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
     return false;
   }
 
-  if (track->GetTrackID() != 1 || track->GetParticleDefinition()->GetPDGEncoding() != 11) {
-    return FALSE;
+  if (!fKillPrimary) { return false; }
+
+  G4int primaryTrackID{1};
+  if (track->GetTrackID() != 1 &&
+      track->GetParticleDefinition()->GetPDGEncoding() != 11) {
+    G4int subType = track->GetCreatorProcess()->GetProcessSubType();
+    // Treat secondary tracks with increased/decreased charge as primary tracks.
+    if (subType == fLowEnergyChargeDecrease ||
+        subType == fLowEnergyChargeIncrease) {
+      primaryTrackID = track->GetTrackID();
+    }
   }
+
+  // Ignore the step if not primary track.
+  if (track->GetTrackID() != primaryTrackID) { return false; }
 
   //-------------------
 
@@ -141,5 +153,12 @@ G4bool PrimaryKiller::ProcessHits(G4Step *aStep, G4TouchableHistory *) {
 
   return TRUE;
 }
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
+
+void PrimaryKiller::Initialize(G4HCofThisEvent *) {
+  if (fELossRange_Min < fELossRange_Max) { fKillPrimary = true; }
+  fELoss = 0.;
+};
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....

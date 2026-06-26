@@ -27,15 +27,12 @@
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara (Nov 1999)
 //
-// J.M. Quesada (July 2009) C's and k's  values according to Furihata's paper 
+// J.M. Quesada (July 2009) C's and k's  values according to Furihata's paper
 // (based on notes added on proof in Dostrovskii's paper)
 
 #include "G4DeuteronGEMProbability.hh"
 
-G4DeuteronGEMProbability::G4DeuteronGEMProbability() :
-  G4GEMProbability(2,1,1.0) // A,Z,Gamma
+G4DeuteronGEMProbability::G4DeuteronGEMProbability() : G4GEMProbability(2, 1, 1.0)  // A,Z,Gamma
 {}
 
-G4DeuteronGEMProbability::~G4DeuteronGEMProbability()
-{}
-
+G4DeuteronGEMProbability::~G4DeuteronGEMProbability() {}

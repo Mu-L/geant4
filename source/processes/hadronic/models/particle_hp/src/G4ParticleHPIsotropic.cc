@@ -53,33 +53,41 @@ G4ReactionProduct* G4ParticleHPIsotropic::Sample(G4double anEnergy, G4double mas
   auto Z = static_cast<G4int>(massCode / 1000);
   auto A = static_cast<G4int>(massCode - 1000 * Z);
 
-  if (massCode == 0) {
+  if (massCode == 0)
+  {
     result->SetDefinition(G4Gamma::Gamma());
   }
-  else if (A == 0) {
+  else if (A == 0)
+  {
     result->SetDefinition(G4Electron::Electron());
     if (Z == 1) result->SetDefinition(G4Positron::Positron());
   }
-  else if (A == 1) {
+  else if (A == 1)
+  {
     result->SetDefinition(G4Neutron::Neutron());
     if (Z == 1) result->SetDefinition(G4Proton::Proton());
   }
-  else if (A == 2) {
+  else if (A == 2)
+  {
     result->SetDefinition(G4Deuteron::Deuteron());
   }
-  else if (A == 3) {
+  else if (A == 3)
+  {
     result->SetDefinition(G4Triton::Triton());
     if (Z == 2) result->SetDefinition(G4He3::He3());
   }
-  else if (A == 4) {
+  else if (A == 4)
+  {
     result->SetDefinition(G4Alpha::Alpha());
     // 110607 TK modified following parts for migration to G4NDL3.15 (ENDF VII.r0)
     // if(Z!=2) throw G4HadronicException(__FILE__, __LINE__, "Unknown ion case 1");
-    if (Z != 2) {
+    if (Z != 2)
+    {
       result->SetDefinition(G4IonTable::GetIonTable()->GetIon(Z, A, 0.0));
     }
   }
-  else {
+  else
+  {
     // 110607 TK modified following parts for migration to G4NDL3.15 (ENDF VII.r0)
     result->SetDefinition(G4IonTable::GetIonTable()->GetIon(Z, A, 0.0));
     // throw G4HadronicException(__FILE__, __LINE__, "G4ParticleHPIsotropic: Unknown ion case 2");

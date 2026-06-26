@@ -35,8 +35,8 @@
 //
 // Author: Makoto Asai
 // --------------------------------------------------------------------
-#ifndef G4MULTISENSITIVEDETECTOR_H
-#define G4MULTISENSITIVEDETECTOR_H 1
+#ifndef G4MULTISENSITIVEDETECTOR_HH
+#define G4MULTISENSITIVEDETECTOR_HH
 
 #include "G4VSensitiveDetector.hh"
 
@@ -44,51 +44,56 @@
 
 class G4MultiSensitiveDetector : public G4VSensitiveDetector
 {
- public:
-  using sds_t = std::vector<G4VSensitiveDetector*>;
-  using sdsConstIter = sds_t::const_iterator;
+  public:
 
- public:
-  using G4VSensitiveDetector::G4VSensitiveDetector;
-  ~G4MultiSensitiveDetector() override = default;
+    using sds_t = std::vector<G4VSensitiveDetector*>;
+    using sdsConstIter = sds_t::const_iterator;
 
-  G4MultiSensitiveDetector(const G4MultiSensitiveDetector& rhs) = default;
-  G4MultiSensitiveDetector& operator=(const G4MultiSensitiveDetector& rhs) = default;
+  public:
 
- public:
-  // interface from G4VSensitiveDetector starts here.
-  // See G4VSensitiveDetector for documentation.
-  // All these methods forward the call to each of the SD
-  // attached to this proxy.
-  void Initialize(G4HCofThisEvent*) override;
-  void EndOfEvent(G4HCofThisEvent*) override;
-  void clear() override;
-  void DrawAll() override;
-  void PrintAll() override;
+    using G4VSensitiveDetector::G4VSensitiveDetector;
+    ~G4MultiSensitiveDetector() override = default;
 
-  // Return clone of this detector
-  // Requires all held SDs to be cloneable
-  G4VSensitiveDetector* Clone() const override;
+    G4MultiSensitiveDetector(const G4MultiSensitiveDetector& rhs) = default;
+    G4MultiSensitiveDetector& operator=(const G4MultiSensitiveDetector& rhs) = default;
 
-  G4VSensitiveDetector* GetSD(const int i) const { return fSensitiveDetectors[i]; }
+  public:
 
-  sds_t::size_type GetSize() const { return fSensitiveDetectors.size(); }
-  sdsConstIter GetBegin() const { return fSensitiveDetectors.begin(); }
-  sdsConstIter GetEnd() const { return fSensitiveDetectors.end(); }
-  void ClearSDs() { fSensitiveDetectors.clear(); }
-  void AddSD(G4VSensitiveDetector* sd) { fSensitiveDetectors.push_back(sd); }
+    // interface from G4VSensitiveDetector starts here.
+    // See G4VSensitiveDetector for documentation.
+    // All these methods forward the call to each of the SD
+    // attached to this proxy.
+    void Initialize(G4HCofThisEvent*) override;
+    void EndOfEvent(G4HCofThisEvent*) override;
+    void clear() override;
+    void DrawAll() override;
+    void PrintAll() override;
 
- protected:
-  // The return value is an AND of the called SDs return values.
-  // This method will call the "Hit(G4Step*)" method of all
-  // added SDs. Note that the ROhist of this method is not used
-  G4bool ProcessHits(G4Step* aStep, G4TouchableHistory* ROhist) override;
+    // Return clone of this detector
+    // Requires all held SDs to be cloneable
+    G4VSensitiveDetector* Clone() const override;
 
-  // The following method does not have a meaning for this concrete class
-  G4int GetCollectionID(G4int i) final;
+    G4VSensitiveDetector* GetSD(const int i) const { return fSensitiveDetectors[i]; }
 
- private:
-  sds_t fSensitiveDetectors;
+    sds_t::size_type GetSize() const { return fSensitiveDetectors.size(); }
+    sdsConstIter GetBegin() const { return fSensitiveDetectors.begin(); }
+    sdsConstIter GetEnd() const { return fSensitiveDetectors.end(); }
+    void ClearSDs() { fSensitiveDetectors.clear(); }
+    void AddSD(G4VSensitiveDetector* sd) { fSensitiveDetectors.push_back(sd); }
+
+  protected:
+
+    // The return value is an AND of the called SDs return values.
+    // This method will call the "Hit(G4Step*)" method of all
+    // added SDs. Note that the ROhist of this method is not used
+    G4bool ProcessHits(G4Step* aStep, G4TouchableHistory* ROhist) override;
+
+    // The following method does not have a meaning for this concrete class
+    G4int GetCollectionID(G4int i) final;
+
+  private:
+
+    sds_t fSensitiveDetectors;
 };
 
 #endif  // G4MULTISENSITIVEDETECTOR_H

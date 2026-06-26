@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  5th April 2001
 // A scene handler to dump geometry hierarchy in readable ASCII.
 // Based on a provisional G4ASCIITreeGraphicsScene (was in modeling).
@@ -33,65 +33,58 @@
 #include "G4ASCIITreeMessenger.hh"
 
 #include "G4ASCIITree.hh"
+#include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithAnInteger.hh"
 #include "G4UIcommand.hh"
 #include "G4UIdirectory.hh"
-#include "G4UIcmdWithAnInteger.hh"
-#include "G4UIcmdWithAString.hh"
 
-G4ASCIITreeMessenger::G4ASCIITreeMessenger
-(G4ASCIITree* ASCIITree):
-fpASCIITree(ASCIITree) {
-
+G4ASCIITreeMessenger::G4ASCIITreeMessenger(G4ASCIITree* ASCIITree) : fpASCIITree(ASCIITree)
+{
   G4bool omitable;
 
-  fpDirectory = new G4UIdirectory ("/vis/ASCIITree/");
-  fpDirectory -> SetGuidance ("Commands for ASCIITree control.");
+  fpDirectory = new G4UIdirectory("/vis/ASCIITree/");
+  fpDirectory->SetGuidance("Commands for ASCIITree control.");
 
-  fpDirectorySet = new G4UIdirectory ("/vis/ASCIITree/set/");
-  fpDirectorySet -> SetGuidance ("Settings for ASCIITree control.");
+  fpDirectorySet = new G4UIdirectory("/vis/ASCIITree/set/");
+  fpDirectorySet->SetGuidance("Settings for ASCIITree control.");
 
-  fpCommandVerbose = new G4UIcmdWithAnInteger ("/vis/ASCIITree/verbose", this);
-  for (size_t i = 0; i < fpASCIITree->GetVerbosityGuidance().size(); ++i) {
-    fpCommandVerbose -> SetGuidance(fpASCIITree->GetVerbosityGuidance()[i]);
+  fpCommandVerbose = new G4UIcmdWithAnInteger("/vis/ASCIITree/verbose", this);
+  for (size_t i = 0; i < fpASCIITree->GetVerbosityGuidance().size(); ++i)
+  {
+    fpCommandVerbose->SetGuidance(fpASCIITree->GetVerbosityGuidance()[i]);
   }
-  fpCommandVerbose -> SetParameterName ("verbosity",omitable = true);
-  fpCommandVerbose -> SetDefaultValue(1);
+  fpCommandVerbose->SetParameterName("verbosity", omitable = true);
+  fpCommandVerbose->SetDefaultValue(1);
 
-  fpCommandSetOutFile = new G4UIcmdWithAString ("/vis/ASCIITree/set/outFile", this
-);
-  fpCommandSetOutFile -> SetGuidance ("Set name of output file.");
-  fpCommandSetOutFile -> SetParameterName ("out-filename",
-					   omitable = true);
-  fpCommandSetOutFile -> SetDefaultValue ("G4cout");
+  fpCommandSetOutFile = new G4UIcmdWithAString("/vis/ASCIITree/set/outFile", this);
+  fpCommandSetOutFile->SetGuidance("Set name of output file.");
+  fpCommandSetOutFile->SetParameterName("out-filename", omitable = true);
+  fpCommandSetOutFile->SetDefaultValue("G4cout");
 }
 
-G4ASCIITreeMessenger::~G4ASCIITreeMessenger() {
+G4ASCIITreeMessenger::~G4ASCIITreeMessenger()
+{
   delete fpCommandSetOutFile;
   delete fpDirectorySet;
   delete fpCommandVerbose;
   delete fpDirectory;
 }
 
-G4String G4ASCIITreeMessenger::GetCurrentValue(G4UIcommand*) {
+G4String G4ASCIITreeMessenger::GetCurrentValue(G4UIcommand*)
+{
   return "";
 }
 
-void G4ASCIITreeMessenger::SetNewValue
-(G4UIcommand* command,
- G4String newValue) {
+void G4ASCIITreeMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
+{
   if (command == fpCommandVerbose)
-    {
-      fpASCIITree->SetVerbosity
-	(fpCommandVerbose->GetNewIntValue(newValue));
-      G4cout << "G4ASCIITree verbosity now "
-	     << fpASCIITree->GetVerbosity()
-	     << G4endl;
-    }
+  {
+    fpASCIITree->SetVerbosity(fpCommandVerbose->GetNewIntValue(newValue));
+    G4cout << "G4ASCIITree verbosity now " << fpASCIITree->GetVerbosity() << G4endl;
+  }
   else if (command == fpCommandSetOutFile)
-    {
-      fpASCIITree -> SetOutFileName (newValue);      
-      G4cout << "G4ASCIITree out filename now "
-             << fpASCIITree -> GetOutFileName()
-             << G4endl;  
-    }
+  {
+    fpASCIITree->SetOutFileName(newValue);
+    G4cout << "G4ASCIITree out filename now " << fpASCIITree->GetOutFileName() << G4endl;
+  }
 }

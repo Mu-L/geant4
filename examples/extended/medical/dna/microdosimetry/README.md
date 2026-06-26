@@ -65,7 +65,7 @@ where X is any EM physics list, such as emstandard_opt4 (see PhysicsList.cc).
 /process/em/AddDNARegion regionTarget DNA_OptY
 ```
 
-where Y = 0, 2, 4, or 6.
+where Y = 2, 4, 6 or 8.
 
 3) In addition to 1) or 2), to enable radioactive decay, one can use:
 

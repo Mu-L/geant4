@@ -27,60 +27,67 @@
 //      GEANT4 Class file
 //
 //
-//      File name:    G4QMDCollision.hh 
+//      File name:    G4QMDCollision.hh
 //
-//      Author: Koi, Tatsumi (tkoi@slac.stanford.edu)       
-// 
+//      Author: Koi, Tatsumi (tkoi@slac.stanford.edu)
+//
 //      Creation date: 9 April 2007
 // -----------------------------------------------------------------------------
 //
 // 081120 Add deltaT in signature of CalKinematicsOfBinaryCollisions
 
-#ifndef G4QMDCollision_hh
-#define G4QMDCollision_hh
+#ifndef G4QMDCOLLISION_HH
+#define G4QMDCOLLISION_HH
 
-#include "G4QMDSystem.hh"
 #include "G4QMDMeanField.hh"
-
+#include "G4QMDSystem.hh"
 #include "G4Scatterer.hh"
 
-class G4QMDCollision 
+class G4QMDCollision
 {
-   public:
-      G4QMDCollision();
-      ~G4QMDCollision();
+  public:
 
-      void CalKinematicsOfBinaryCollisions( G4double );
-      G4bool CalFinalStateOfTheBinaryCollision( G4int , G4int );
-      G4bool CalFinalStateOfTheBinaryCollisionJQMD( G4double , G4double , G4ThreeVector , G4double , G4double , G4ThreeVector , G4double , G4int , G4int );
-      //     CalFinalStateOfTheBinaryCollision ( sig , cutoff , pcm , prcm , srt, beta , gamma , i , j );
+    G4QMDCollision();
+    ~G4QMDCollision();
 
-      void SetMeanField ( G4QMDMeanField* meanfield ){ theMeanField = meanfield; theSystem = meanfield->GetSystem(); }
+    void CalKinematicsOfBinaryCollisions(G4double);
+    G4bool CalFinalStateOfTheBinaryCollision(G4int, G4int);
+    G4bool CalFinalStateOfTheBinaryCollisionJQMD(G4double, G4double, G4ThreeVector, G4double,
+                                                 G4double, G4ThreeVector, G4double, G4int, G4int);
+    //     CalFinalStateOfTheBinaryCollision ( sig , cutoff , pcm , prcm , srt, beta , gamma , i , j
+    //     );
 
-      // Get, Set method of parameters; For expert only 
-      void deltar( G4double x ){ fdeltar = x; };
-      G4double deltar(){ return fdeltar; };
-      void bcmax0( G4double x ){ fbcmax0 = x; };
-      G4double bcmax0(){ return fbcmax0; };
-      void bcmax1( G4double x ){ fbcmax1 = x; };
-      G4double bcmax1(){ return fbcmax1; };
-      void epse( G4double x ){ fepse = x; };
-      G4double epse(){ return fepse; };
+    void SetMeanField(G4QMDMeanField* meanfield)
+    {
+      theMeanField = meanfield;
+      theSystem = meanfield->GetSystem();
+    }
 
-   private:
-      //copy is unexpeced
-      G4QMDCollision( const G4QMDCollision& ){;};
-      const G4QMDCollision& operator= ( const G4QMDCollision& );
+    // Get, Set method of parameters; For expert only
+    void deltar(G4double x) { fdeltar = x; };
+    G4double deltar() { return fdeltar; };
+    void bcmax0(G4double x) { fbcmax0 = x; };
+    G4double bcmax0() { return fbcmax0; };
+    void bcmax1(G4double x) { fbcmax1 = x; };
+    G4double bcmax1() { return fbcmax1; };
+    void epse(G4double x) { fepse = x; };
+    G4double epse() { return fepse; };
 
-      G4QMDSystem* theSystem;
-      G4QMDMeanField* theMeanField;
+  private:
 
-      G4double fdeltar;
-      G4double fbcmax0 , fbcmax1;
-      //G4double sig0 , sig1;
-      G4double fepse; 
+    // copy is unexpeced
+    G4QMDCollision(const G4QMDCollision&) { ; };
+    const G4QMDCollision& operator=(const G4QMDCollision&);
 
-      G4Scatterer* theScatterer;
+    G4QMDSystem* theSystem;
+    G4QMDMeanField* theMeanField;
+
+    G4double fdeltar;
+    G4double fbcmax0, fbcmax1;
+    // G4double sig0 , sig1;
+    G4double fepse;
+
+    G4Scatterer* theScatterer;
 };
 
 #endif

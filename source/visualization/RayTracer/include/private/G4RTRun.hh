@@ -31,16 +31,16 @@
 //
 
 //////////////////////
-//G4RTRun
+// G4RTRun
 /////////////////////
 
-#ifndef G4RTRun_h
-#define G4RTRun_h 1
+#ifndef G4RTRUN_HH
+#define G4RTRUN_HH
 
-#include "globals.hh"
+#include "G4Colour.hh"
 #include "G4Run.hh"
 #include "G4THitsMap.hh"
-#include "G4Colour.hh"
+#include "globals.hh"
 
 class G4Event;
 class G4TheMTRayTracer;
@@ -50,6 +50,7 @@ class G4RayTrajectoryPoint;
 class G4RTRun : public G4Run
 {
   public:
+
     G4RTRun();
     virtual ~G4RTRun();
 
@@ -57,20 +58,24 @@ class G4RTRun : public G4Run
     virtual void Merge(const G4Run*);
 
   private:
+
     G4THitsMap<G4Colour>* colorMap;
 
   public:
+
     G4THitsMap<G4Colour>* GetMap() const { return colorMap; }
 
   private:
+
     G4Colour backgroundColour;
     G4ThreeVector lightDirection;
     G4double attenuationLength;
 
   private:
+
     G4Colour GetSurfaceColour(G4RayTrajectoryPoint*);
-    G4Colour GetMixedColour(G4Colour,G4Colour,G4double);
-    G4Colour Attenuate(G4RayTrajectoryPoint*,G4Colour);
+    G4Colour GetMixedColour(G4Colour, G4Colour, G4double);
+    G4Colour Attenuate(G4RayTrajectoryPoint*, G4Colour);
     G4bool ValidColour(const G4VisAttributes*);
 };
 

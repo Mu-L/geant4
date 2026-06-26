@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPHash_h
-#define G4ParticleHPHash_h
+#ifndef G4PARTICLEHPHASH_HH
+#define G4PARTICLEHPHASH_HH
 
 #include "G4ParticleHPDataPoint.hh"
 #include "globals.hh"
@@ -37,6 +37,7 @@
 class G4ParticleHPHash
 {
   public:
+
     G4ParticleHPHash()
     {
       theUpper = nullptr;
@@ -50,23 +51,28 @@ class G4ParticleHPHash
       theIndex = aHash.theIndex;
       theData = aHash.theData;
       prepared = aHash.prepared;
-      if (aHash.theUpper != nullptr) {
+      if (aHash.theUpper != nullptr)
+      {
         theUpper = new G4ParticleHPHash(*(aHash.theUpper));
       }
-      else {
+      else
+      {
         theUpper = nullptr;
       }
     }
 
     G4ParticleHPHash& operator=(const G4ParticleHPHash& aHash)
     {
-      if (&aHash != this) {
+      if (&aHash != this)
+      {
         theIndex = aHash.theIndex;
         theData = aHash.theData;
-        if (aHash.theUpper != nullptr) {
+        if (aHash.theUpper != nullptr)
+        {
           theUpper = new G4ParticleHPHash(*(aHash.theUpper));
         }
-        else {
+        else
+        {
           theUpper = nullptr;
         }
       }
@@ -75,7 +81,8 @@ class G4ParticleHPHash
 
     void Clear()
     {
-      if (theUpper != nullptr) {
+      if (theUpper != nullptr)
+      {
         theUpper->Clear();
         delete theUpper;
         theUpper = nullptr;
@@ -93,7 +100,8 @@ class G4ParticleHPHash
       aPoint.SetData(x, y);
       theData.push_back(aPoint);
       theIndex.push_back(index);
-      if (0 == theData.size() % 10 && !theData.empty()) {
+      if (0 == theData.size() % 10 && !theData.empty())
+      {
         if (nullptr == theUpper) theUpper = new G4ParticleHPHash();
         theUpper->SetData(static_cast<G4int>(theData.size()) - 1, x, y);
       }
@@ -106,12 +114,15 @@ class G4ParticleHPHash
       if (theData[0].GetX() > e) return 0;
 
       G4int lower = 0;
-      if (theUpper != nullptr) {
+      if (theUpper != nullptr)
+      {
         lower = theUpper->GetMinIndex(e);
       }
       unsigned int i;
-      for (i = lower; i < theData.size(); i++) {
-        if (theData[i].GetX() > e) {
+      for (i = lower; i < theData.size(); i++)
+      {
+        if (theData[i].GetX() > e)
+        {
           result = theIndex[i - 1];
           break;
         }
@@ -121,6 +132,7 @@ class G4ParticleHPHash
     }
 
   private:
+
     G4bool prepared;
     G4ParticleHPHash* theUpper;
     std::vector<int> theIndex;

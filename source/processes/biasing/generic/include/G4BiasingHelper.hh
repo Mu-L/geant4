@@ -28,11 +28,11 @@
 // Class Description:
 //
 // A utility class to help configuring code for biasing.
-//    
+//
 // Author: Marc Verderi, September 2013.
 // --------------------------------------------------------------------
-#ifndef G4BiasingHelper_h
-#define G4BiasingHelper_h 1
+#ifndef G4BIASINGHELPER_HH
+#define G4BIASINGHELPER_HH
 
 #include "globals.hh"
 
@@ -54,18 +54,17 @@ class G4BiasingHelper
     // -- e.g. for process "phot" this will be "biasWrapper(phot)").
     static G4bool ActivatePhysicsBiasing(G4ProcessManager* pmanager,
                                          const G4String& physicsProcessToBias,
-					 const G4String& wrappedName = "");
+                                         const G4String& wrappedName = "");
     // -- Insert, in the process manager passed, a G4BiasingProcessInterface process that
     // -- will deal with non-modifying physics biasing (splitting, killing). A name for
     // -- this process can be passed, otherwise the default name "biasWrapper(0)" is used.
     static void ActivateNonPhysicsBiasing(G4ProcessManager* pmanager,
-					  const G4String& nonPhysicsProcessName = "");
+                                          const G4String& nonPhysicsProcessName = "");
 
     // -- Add a G4ParallelGeometriesLimiterProcess instance to the given process manager
     // -- The pointer of the added process is returned.
     static G4ParallelGeometriesLimiterProcess*
-           AddLimiterProcess(G4ProcessManager* pmanager,
-                             const G4String& processName = "biasLimiter");
+    AddLimiterProcess(G4ProcessManager* pmanager, const G4String& processName = "biasLimiter");
 };
 
 #endif

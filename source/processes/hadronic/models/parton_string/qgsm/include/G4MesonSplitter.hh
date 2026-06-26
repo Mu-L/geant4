@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4MesonSplitter_h
-#define G4MesonSplitter_h
+#ifndef G4MESONSPLITTER_HH
+#define G4MESONSPLITTER_HH
 
 // HPW Feb 1999, based on Annihilator prototype.
 // Simple class to split a meson, only one trivial method at the moment
@@ -36,8 +36,8 @@
 class G4MesonSplitter
 {
   public:
-    G4bool SplitMeson(G4int PDGcode, G4int & aEnd, G4int & bEnd);
+
+    G4bool SplitMeson(G4int PDGcode, G4int& aEnd, G4int& bEnd);
 };
 
 #endif
-

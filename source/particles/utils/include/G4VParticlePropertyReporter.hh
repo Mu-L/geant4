@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 
-#ifndef G4VParticlePropertyReporter_h
-#define G4VParticlePropertyReporter_h 1
+#ifndef G4VPARTICLEPROPERTYREPORTER_HH
+#define G4VPARTICLEPROPERTYREPORTER_HH
 
 #include "G4ParticlePropertyData.hh"
 #include "G4ParticlePropertyTable.hh"
@@ -35,9 +35,11 @@
 class G4VParticlePropertyReporter
 {
   public:
+
     using G4PPDContainer = std::vector<G4ParticlePropertyData*>;
 
   public:
+
     // constructors
     G4VParticlePropertyReporter();
 
@@ -62,6 +64,7 @@ class G4VParticlePropertyReporter
     const G4PPDContainer& GetList() const { return pList; }
 
   protected:
+
     G4PPDContainer pList;
     G4ParticlePropertyTable* pPropertyTable;
 };

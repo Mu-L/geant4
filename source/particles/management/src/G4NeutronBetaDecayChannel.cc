@@ -44,7 +44,8 @@ G4NeutronBetaDecayChannel::G4NeutronBetaDecayChannel(const G4String& theParentNa
   : G4VDecayChannel("Neutron Decay")
 {
   // set names for daughter particles
-  if (theParentName == "neutron") {
+  if (theParentName == "neutron")
+  {
     SetBR(theBR);
     SetParent("neutron");
     SetNumberOfDaughters(3);
@@ -52,7 +53,8 @@ G4NeutronBetaDecayChannel::G4NeutronBetaDecayChannel(const G4String& theParentNa
     SetDaughter(1, "anti_nu_e");
     SetDaughter(2, "proton");
   }
-  else if (theParentName == "anti_neutron") {
+  else if (theParentName == "anti_neutron")
+  {
     SetBR(theBR);
     SetParent("anti_neutron");
     SetNumberOfDaughters(3);
@@ -60,9 +62,11 @@ G4NeutronBetaDecayChannel::G4NeutronBetaDecayChannel(const G4String& theParentNa
     SetDaughter(1, "nu_e");
     SetDaughter(2, "anti_proton");
   }
-  else {
+  else
+  {
 #ifdef G4VERBOSE
-    if (GetVerboseLevel() > 0) {
+    if (GetVerboseLevel() > 0)
+    {
       G4cout << "G4NeutronBetaDecayChannel:: constructor :";
       G4cout << " parent particle is not neutron but ";
       G4cout << theParentName << G4endl;
@@ -78,7 +82,8 @@ G4NeutronBetaDecayChannel::G4NeutronBetaDecayChannel(const G4NeutronBetaDecayCha
 G4NeutronBetaDecayChannel&
 G4NeutronBetaDecayChannel::operator=(const G4NeutronBetaDecayChannel& right)
 {
-  if (this != &right) {
+  if (this != &right)
+  {
     kinematics_name = right.kinematics_name;
     verboseLevel = right.verboseLevel;
     rbranch = right.rbranch;
@@ -92,10 +97,12 @@ G4NeutronBetaDecayChannel::operator=(const G4NeutronBetaDecayChannel& right)
 
     // recreate array
     numberOfDaughters = right.numberOfDaughters;
-    if (numberOfDaughters > 0) {
+    if (numberOfDaughters > 0)
+    {
       daughters_name = new G4String*[numberOfDaughters];
       // copy daughters name
-      for (G4int index = 0; index < numberOfDaughters; ++index) {
+      for (G4int index = 0; index < numberOfDaughters; ++index)
+      {
         daughters_name[index] = new G4String(*right.daughters_name[index]);
       }
     }
@@ -122,7 +129,8 @@ G4DecayProducts* G4NeutronBetaDecayChannel::DecayIt(G4double)
   // daughters'mass
   G4double daughtermass[3];
   G4double sumofdaughtermass = 0.0;
-  for (G4int index = 0; index < 3; ++index) {
+  for (G4int index = 0; index < 3; ++index)
+  {
     daughtermass[index] = G4MT_daughters[index]->GetPDGMass();
     sumofdaughtermass += daughtermass[index];
   }
@@ -147,7 +155,8 @@ G4DecayProducts* G4NeutronBetaDecayChannel::DecayIt(G4double)
   G4double r;
   G4double r0;
   const std::size_t MAX_LOOP = 10000;
-  for (std::size_t loop_counter = 0; loop_counter < MAX_LOOP; ++loop_counter) {
+  for (std::size_t loop_counter = 0; loop_counter < MAX_LOOP; ++loop_counter)
+  {
     x = xmax * G4UniformRand();
     p = std::sqrt(x * (x + 2.0 * dm));
     w = 1.0 - 2.0 * G4UniformRand();
@@ -201,7 +210,8 @@ G4DecayProducts* G4NeutronBetaDecayChannel::DecayIt(G4double)
 
   // output message
 #ifdef G4VERBOSE
-  if (GetVerboseLevel() > 1) {
+  if (GetVerboseLevel() > 1)
+  {
     G4cout << "G4NeutronBetaDecayChannel::DecayIt ";
     G4cout << "  create decay products in rest frame " << G4endl;
     products->DumpInfo();

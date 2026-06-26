@@ -28,67 +28,58 @@
 // Author: Maria Grazia Pia, INFN Genova - April 1999
 // -------------------------------------------------------------------
 
-#include "globals.hh"
-#include "G4VCrossSectionSource.hh"
 #include "G4CrossSectionSourcePtr.hh"
 
-G4CrossSectionSourcePtr::
-G4CrossSectionSourcePtr(G4VCrossSectionSource* x)
- : x_(x)
-{
-}
+#include "G4VCrossSectionSource.hh"
+#include "globals.hh"
 
-G4CrossSectionSourcePtr::
-G4CrossSectionSourcePtr(const G4CrossSectionSourcePtr& right)
- : x_(right.x_)
-{
-}
+G4CrossSectionSourcePtr::G4CrossSectionSourcePtr(G4VCrossSectionSource* x) : x_(x) {}
 
-G4CrossSectionSourcePtr::
-G4CrossSectionSourcePtr(G4CrossSectionSourcePtr&& right)
-  : x_( right.x_ )
+G4CrossSectionSourcePtr::G4CrossSectionSourcePtr(const G4CrossSectionSourcePtr& right)
+  : x_(right.x_)
+{}
+
+G4CrossSectionSourcePtr::G4CrossSectionSourcePtr(G4CrossSectionSourcePtr&& right) : x_(right.x_)
 {
   right.x_ = nullptr;
 }
 
-G4CrossSectionSourcePtr& G4CrossSectionSourcePtr::
-operator= (const G4CrossSectionSourcePtr& xw)
+G4CrossSectionSourcePtr& G4CrossSectionSourcePtr::operator=(const G4CrossSectionSourcePtr& xw)
 {
   if (this != &xw)
   {
     x_ = xw.x_;
   }
-  return *this; 
+  return *this;
 }
 
-G4CrossSectionSourcePtr& G4CrossSectionSourcePtr::
-operator=(G4CrossSectionSourcePtr&& right) noexcept
-{ 
+G4CrossSectionSourcePtr&
+G4CrossSectionSourcePtr::operator=(G4CrossSectionSourcePtr&& right) noexcept
+{
   if (this != &right)
   {
     // De not release our own resources, as not owning them!
-  
-    // Simply transfer pointer from 'right' to 'this' 
+
+    // Simply transfer pointer from 'right' to 'this'
     x_ = right.x_;
-  
-    // Reset 'right' to a valid state 
+
+    // Reset 'right' to a valid state
     right.x_ = nullptr;
   }
   return *this;
 }
 
-G4bool G4CrossSectionSourcePtr::
-operator==(const G4CrossSectionSourcePtr& right) const
+G4bool G4CrossSectionSourcePtr::operator==(const G4CrossSectionSourcePtr& right) const
 {
-  return *(this->operator()()) == *right(); 
+  return *(this->operator()()) == *right();
 }
 
-const G4VCrossSectionSource* G4CrossSectionSourcePtr::operator() () const 
+const G4VCrossSectionSource* G4CrossSectionSourcePtr::operator()() const
 {
   return x_;
 }
 
-G4VCrossSectionSource* G4CrossSectionSourcePtr::operator() ()
+G4VCrossSectionSource* G4CrossSectionSourcePtr::operator()()
 {
   return x_;
 }

@@ -59,10 +59,12 @@ class G4MTRunManager : public G4RunManager
     friend class G4RunManagerFactory;
 
   public:
+
     // Map of defined worlds.
     using masterWorlds_t = std::map<G4int, G4VPhysicalVolume*>;
 
   public:
+
     G4MTRunManager();
     ~G4MTRunManager() override;
 
@@ -191,7 +193,10 @@ class G4MTRunManager : public G4RunManager
     static G4int SeedOncePerCommunication();
     static void SetSeedOncePerCommunication(G4int val);
 
+    void InitializeEventSeeds(G4int nevts);
+
   protected:
+
     // Initialize the seeds list, if derived class does not implement this
     // method, a default generation will be used (nevents*2 random seeds).
     // Return true if initialization is done.
@@ -225,6 +230,7 @@ class G4MTRunManager : public G4RunManager
     virtual void RefillSeeds();
 
   protected:
+
     // Number of worker threads. To be set by SetNumberOfThreads() method.
     G4int nworkers = 2;
 
@@ -273,6 +279,7 @@ class G4MTRunManager : public G4RunManager
     G4MTBarrier processUIBarrier;
 
   protected:
+
     // List of workers (i.e. thread)
     using G4ThreadsList = std::list<G4Thread*>;
 

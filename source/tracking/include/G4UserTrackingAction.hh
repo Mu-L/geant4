@@ -35,28 +35,30 @@
 //     Katsuya Amako  (e-mail: Katsuya.Amako@kek.jp)
 //     Takashi Sasaki (e-mail: Takashi.Sasaki@kek.jp)
 // --------------------------------------------------------------------
-#ifndef G4UserTrackingAction_hh
-#define G4UserTrackingAction_hh 1
+#ifndef G4USERTRACKINGACTION_HH
+#define G4USERTRACKINGACTION_HH
 
 class G4TrackingManager;
 class G4Track;
 
 class G4UserTrackingAction
 {
- public:
-  // Constructor & Destructor
+  public:
 
-  G4UserTrackingAction();
-  virtual ~G4UserTrackingAction() = default;
+    // Constructor & Destructor
 
-  // Member functions
+    G4UserTrackingAction();
+    virtual ~G4UserTrackingAction() = default;
 
-  virtual void SetTrackingManagerPointer(G4TrackingManager* pValue);
-  virtual void PreUserTrackingAction(const G4Track*) {}
-  virtual void PostUserTrackingAction(const G4Track*) {}
+    // Member functions
 
- protected:
-  G4TrackingManager* fpTrackingManager = nullptr;
+    virtual void SetTrackingManagerPointer(G4TrackingManager* pValue);
+    virtual void PreUserTrackingAction(const G4Track*) {}
+    virtual void PostUserTrackingAction(const G4Track*) {}
+
+  protected:
+
+    G4TrackingManager* fpTrackingManager = nullptr;
 };
 
 #endif

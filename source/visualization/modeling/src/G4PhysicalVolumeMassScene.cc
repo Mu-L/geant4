@@ -25,37 +25,36 @@
 //
 //
 //
-// 
+//
 // John Allison  10th August 1998.
 // An artificial scene to find physical volumes.
 
 #include "G4PhysicalVolumeMassScene.hh"
 
+#include "G4LogicalVolume.hh"
+#include "G4Material.hh"
+#include "G4PhysicalVolumeModel.hh"
+#include "G4Polyhedron.hh"
+#include "G4UnitsTable.hh"
+#include "G4VPVParameterisation.hh"
 #include "G4VSolid.hh"
 #include "G4Vector3D.hh"
-#include "G4PhysicalVolumeModel.hh"
-#include "G4LogicalVolume.hh"
-#include "G4Polyhedron.hh"
-#include "G4Material.hh"
-#include "G4VPVParameterisation.hh"
-#include "G4UnitsTable.hh"
 
 #define G4warn G4cout
 
-G4PhysicalVolumeMassScene::G4PhysicalVolumeMassScene
-(G4PhysicalVolumeModel* pPVModel):
-  fpPVModel (pPVModel),
-  fVolume (0.),
-  fMass (0.),
-  fpLastPV (0),
-  fPVPCount (0),
-  fLastDepth (0),
-  fLastDensity (0.)
+G4PhysicalVolumeMassScene::G4PhysicalVolumeMassScene(G4PhysicalVolumeModel* pPVModel)
+  : fpPVModel(pPVModel),
+    fVolume(0.),
+    fMass(0.),
+    fpLastPV(0),
+    fPVPCount(0),
+    fLastDepth(0),
+    fLastDensity(0.)
 {}
 
-G4PhysicalVolumeMassScene::~G4PhysicalVolumeMassScene () {}
+G4PhysicalVolumeMassScene::~G4PhysicalVolumeMassScene() {}
 
-void G4PhysicalVolumeMassScene::Reset ()
+void G4PhysicalVolumeMassScene::Reset()
 {
   fVolume = 0.;
   fMass = 0.;
@@ -66,30 +65,31 @@ void G4PhysicalVolumeMassScene::Reset ()
   fDensityStack.clear();
 }
 
-void G4PhysicalVolumeMassScene::ProcessVolume (const G4VSolid& solid)
+void G4PhysicalVolumeMassScene::ProcessVolume(const G4VSolid& solid)
 {
   G4int currentDepth = fpPVModel->GetCurrentDepth();
   G4VPhysicalVolume* pCurrentPV = fpPVModel->GetCurrentPV();
-  //G4LogicalVolume* pCurrentLV = fpPVModel->GetCurrentLV();
+  // G4LogicalVolume* pCurrentLV = fpPVModel->GetCurrentLV();
   G4Material* pCurrentMaterial = fpPVModel->GetCurrentMaterial();
 
-  if (pCurrentPV != fpLastPV) {
+  if (pCurrentPV != fpLastPV)
+  {
     fpLastPV = pCurrentPV;
     fPVPCount = 0;
   }
 
   G4double currentVolume = ((G4VSolid&)solid).GetCubicVolume();
-  G4double currentDensity = pCurrentMaterial? pCurrentMaterial->GetDensity() : 0.;
+  G4double currentDensity = pCurrentMaterial ? pCurrentMaterial->GetDensity() : 0.;
   /* Using G4Polyhedron... (gives slightly different answers on Tubs, e.g.).
   G4Polyhedron* pPolyhedron = solid.GetPolyhedron();
   if (!pPolyhedron) {
-    G4cout << 
+    G4cout <<
       "G4PhysicalVolumeMassScene::AccrueMass: WARNING:"
       "\n  No G4Polyhedron for" << solid.GetEntityType() <<
       ".  \"" << solid.GetName() << "\" will not be accounted."
       "\n  It will be as though not there, i.e., the density as its mother."
       "\n  Its daughters will still be found and accounted."
-	   << G4endl;
+     << G4endl;
     currentVolume = 0.;
     currentDensity = 0.;
   }
@@ -97,9 +97,12 @@ void G4PhysicalVolumeMassScene::ProcessVolume (const G4VSolid& solid)
 
   if (currentDepth == 0) fVolume = currentVolume;
 
-  if (currentDepth > fLastDepth) {
-    fDensityStack.push_back (fLastDensity);
-  } else if (currentDepth < fLastDepth) {
+  if (currentDepth > fLastDepth)
+  {
+    fDensityStack.push_back(fLastDensity);
+  }
+  else if (currentDepth < fLastDepth)
+  {
     fDensityStack.pop_back();
   }
   fLastDepth = currentDepth;
@@ -113,25 +116,22 @@ void G4PhysicalVolumeMassScene::ProcessVolume (const G4VSolid& solid)
   fMass += addedMass;
   /* Debug
   G4cout << "current vol = "
-	 << G4BestUnit (currentVolume,"Volume")
-	 << ", current density = "
-	 << G4BestUnit (currentDensity, "Volumic Mass")
-	 << ", mother density = "
-	 << G4BestUnit (motherDensity, "Volumic Mass")
-	 << G4endl;
+   << G4BestUnit (currentVolume,"Volume")
+   << ", current density = "
+   << G4BestUnit (currentDensity, "Volumic Mass")
+   << ", mother density = "
+   << G4BestUnit (motherDensity, "Volumic Mass")
+   << G4endl;
   G4cout << "Subtracted mass = " << G4BestUnit (subtractedMass, "Mass")
-	 << ", added mass = " << G4BestUnit (addedMass, "Mass")
-	 << ", new mass = " << G4BestUnit (fMass, "Mass")
-	 << G4endl;
+   << ", added mass = " << G4BestUnit (addedMass, "Mass")
+   << ", new mass = " << G4BestUnit (fMass, "Mass")
+   << G4endl;
   */
-  if (fMass < 0.) {
-    G4warn <<
-      "G4PhysicalVolumeMassScene::AccrueMass: WARNING:"
-      "\n  Mass going negative for \""
-	   << pCurrentPV->GetName() <<
-      "\", copy "
-	   << pCurrentPV->GetCopyNo() <<
-      ".  Larger than mother?"
-	   << G4endl;
+  if (fMass < 0.)
+  {
+    G4warn << "G4PhysicalVolumeMassScene::AccrueMass: WARNING:"
+              "\n  Mass going negative for \""
+           << pCurrentPV->GetName() << "\", copy " << pCurrentPV->GetCopyNo()
+           << ".  Larger than mother?" << G4endl;
   }
 }

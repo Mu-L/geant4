@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,10 +41,10 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#ifndef G4ITBROWNIANTRANSPORTATION_H
-#define G4ITBROWNIANTRANSPORTATION_H
+#ifndef G4ITBROWNIANTRANSPORTATION_HH
+#define G4ITBROWNIANTRANSPORTATION_HH
 
 #include "G4ITTransportation.hh"
 
@@ -55,18 +55,17 @@ class G4VUserBrownianAction;
 // experimental
 class G4BrownianAction
 {
-public:
-  G4BrownianAction()= default;
-  virtual ~G4BrownianAction()= default;
+  public:
 
-//  virtual G4double GetDiffusionCoefficient(G4Material*,
-//                                           G4Molecule*) { return 0;}
+    G4BrownianAction() = default;
+    virtual ~G4BrownianAction() = default;
 
-  // If returns true: track is killed
-  virtual void Transport(const G4Track&,
-                         G4ParticleChangeForTransport&) = 0;
+    //  virtual G4double GetDiffusionCoefficient(G4Material*,
+    //                                           G4Molecule*) { return 0;}
+
+    // If returns true: track is killed
+    virtual void Transport(const G4Track&, G4ParticleChangeForTransport&) = 0;
 };
-
 
 /* \brief {The transportation method implemented is the one from
  *  Ermak-McCammon : J. Chem. Phys. 69, 1352 (1978).
@@ -108,149 +107,135 @@ public:
 
 class G4DNABrownianTransportation : public G4ITTransportation
 {
-public:
-  G4DNABrownianTransportation(const G4String& aName =
-                              "DNABrownianTransportation",
-                              G4int verbosityLevel = 0);
-  ~G4DNABrownianTransportation() override;
-  G4DNABrownianTransportation(const G4DNABrownianTransportation&) = delete;
-  G4DNABrownianTransportation& operator=(const G4DNABrownianTransportation&) = delete;
-
-  inline void SetBrownianAction(G4BrownianAction*);
-  inline void SetUserBrownianAction(G4VUserBrownianAction*);
-
-  void BuildPhysicsTable(const G4ParticleDefinition&) override;
-
-  void StartTracking(G4Track* aTrack) override;
-
-  void ComputeStep(const G4Track&,
-                           const G4Step&,
-                           const G4double,
-                           G4double&) override;
-
-  G4double
-  AlongStepGetPhysicalInteractionLength(const G4Track& /*track*/,
-                                        G4double /*previousStepSize*/,
-                                        G4double /*currentMinimumStep*/,
-                                        G4double& /*currentSafety*/,
-                                        G4GPILSelection* /*selection*/) override;
-  
-  G4VParticleChange* PostStepDoIt(const G4Track& track, const G4Step&) override;
-
-  G4VParticleChange* AlongStepDoIt(const G4Track& track, const G4Step&) override;
-
-  // Boundary is crossed at time at which:
-  // * either 5% of the distribution might be over boundary - the last position
-  //   is adjusted on boundary
-  // * or if speedUp (from level 1) is activated - 50% of the distribution might
-  //   be over boundary, the particles are also allowed to jump over boundary
-  inline void UseMaximumTimeBeforeReachingBoundary(bool flag = true)
-  {
-    fUseMaximumTimeBeforeReachingBoundary = flag;
-  }
-
-  // Random sampling time at which boundary is crossed
-  // WARNING: For release 10.1, this is a 1D approximation for sampling time
-  // but 3D for diffusion
-  // If speed up IS activated, particles are allowed jump over barrier
-  inline void UseCumulativeDensitFunction(bool flag = true)
-  {
-    if(flag)
-    {
-      fUseMaximumTimeBeforeReachingBoundary = false;
-      return;
-    }
-    fUseMaximumTimeBeforeReachingBoundary = true;
-  }
-
-  // Use limiting time steps defined in the scheduler
-  inline void UseLimitingTimeSteps(bool flag = true)
-  {
-    fUseSchedulerMinTimeSteps = flag;
-  }
-
-  inline void SpeedLevel(int level)
-  {
-    if(level < 0) level =0;
-    else if(level > 2) level = 2;
-
-    switch(level)
-    {
-      case 0:
-        fSpeedMeUp = false;
-        fUseSchedulerMinTimeSteps = false;
-        return;
-
-      case 1:
-        fSpeedMeUp = true;
-        fUseSchedulerMinTimeSteps = false;
-        return;
-
-      case 2:
-        //======================================================================
-        // NB: BE AWARE THAT IF NO MIN TIME STEPS NO TIME STEPS HAVE BEEN
-        // PROVIDED TO G4Scheduler THIS LEVEL MIGHT BE SLOWER THAN LEVEL 1
-        //======================================================================
-        fSpeedMeUp = true;
-        fUseSchedulerMinTimeSteps = true;
-        return;
-    }
-  }
-
-protected:
-
-  G4double ComputeGeomLimit(const G4Track& track,
-                            G4double& presafety,
-                            G4double limit);
-
-  void Diffusion(const G4Track& track);
-
-  //________________________________________________________________
-  // Process information
-  struct G4ITBrownianState : public G4ITTransportationState
-  {
   public:
-    G4ITBrownianState();
-    ~G4ITBrownianState() override
+
+    G4DNABrownianTransportation(const G4String& aName = "DNABrownianTransportation",
+                                G4int verbosityLevel = 0);
+    ~G4DNABrownianTransportation() override;
+    G4DNABrownianTransportation(const G4DNABrownianTransportation&) = delete;
+    G4DNABrownianTransportation& operator=(const G4DNABrownianTransportation&) = delete;
+
+    inline void SetBrownianAction(G4BrownianAction*);
+    inline void SetUserBrownianAction(G4VUserBrownianAction*);
+
+    void BuildPhysicsTable(const G4ParticleDefinition&) override;
+
+    void StartTracking(G4Track* aTrack) override;
+
+    void ComputeStep(const G4Track&, const G4Step&, const G4double, G4double&) override;
+
+    G4double AlongStepGetPhysicalInteractionLength(const G4Track& /*track*/,
+                                                   G4double /*previousStepSize*/,
+                                                   G4double /*currentMinimumStep*/,
+                                                   G4double& /*currentSafety*/,
+                                                   G4GPILSelection* /*selection*/) override;
+
+    G4VParticleChange* PostStepDoIt(const G4Track& track, const G4Step&) override;
+
+    G4VParticleChange* AlongStepDoIt(const G4Track& track, const G4Step&) override;
+
+    // Boundary is crossed at time at which:
+    // * either 5% of the distribution might be over boundary - the last position
+    //   is adjusted on boundary
+    // * or if speedUp (from level 1) is activated - 50% of the distribution might
+    //   be over boundary, the particles are also allowed to jump over boundary
+    inline void UseMaximumTimeBeforeReachingBoundary(bool flag = true)
     {
-      ;
+      fUseMaximumTimeBeforeReachingBoundary = flag;
     }
-    G4String GetType() override
+
+    // Random sampling time at which boundary is crossed
+    // WARNING: For release 10.1, this is a 1D approximation for sampling time
+    // but 3D for diffusion
+    // If speed up IS activated, particles are allowed jump over barrier
+    inline void UseCumulativeDensitFunction(bool flag = true)
     {
-      return "G4ITBrownianState";
+      if (flag)
+      {
+        fUseMaximumTimeBeforeReachingBoundary = false;
+        return;
+      }
+      fUseMaximumTimeBeforeReachingBoundary = true;
     }
 
-    G4bool fPathLengthWasCorrected;
-    G4bool fTimeStepReachedLimit;
-    G4bool fComputeLastPosition;
-    G4double  fRandomNumber;
-  };
+    // Use limiting time steps defined in the scheduler
+    inline void UseLimitingTimeSteps(bool flag = true) { fUseSchedulerMinTimeSteps = flag; }
 
-  G4bool fUseMaximumTimeBeforeReachingBoundary;
-  G4Material* fNistWater;
+    inline void SpeedLevel(int level)
+    {
+      if (level < 0)
+        level = 0;
+      else if (level > 2)
+        level = 2;
 
-  G4bool fUseSchedulerMinTimeSteps;
-  G4double  fInternalMinTimeStep;
-  G4bool fSpeedMeUp;
+      switch (level)
+      {
+        case 0:
+          fSpeedMeUp = false;
+          fUseSchedulerMinTimeSteps = false;
+          return;
 
-  // Water density table
-  const std::vector<G4double>* fpWaterDensity;
+        case 1:
+          fSpeedMeUp = true;
+          fUseSchedulerMinTimeSteps = false;
+          return;
 
-  G4BrownianAction* fpBrownianAction;
-  G4VUserBrownianAction *fpUserBrownianAction;
+        case 2:
+          //======================================================================
+          // NB: BE AWARE THAT IF NO MIN TIME STEPS NO TIME STEPS HAVE BEEN
+          // PROVIDED TO G4Scheduler THIS LEVEL MIGHT BE SLOWER THAN LEVEL 1
+          //======================================================================
+          fSpeedMeUp = true;
+          fUseSchedulerMinTimeSteps = true;
+          return;
+      }
+    }
 
+  protected:
+
+    G4double ComputeGeomLimit(const G4Track& track, G4double& presafety, G4double limit);
+
+    void Diffusion(const G4Track& track);
+
+    //________________________________________________________________
+    // Process information
+    struct G4ITBrownianState : public G4ITTransportationState
+    {
+      public:
+
+        G4ITBrownianState();
+        ~G4ITBrownianState() override { ; }
+        G4String GetType() override { return "G4ITBrownianState"; }
+
+        G4bool fPathLengthWasCorrected;
+        G4bool fTimeStepReachedLimit;
+        G4bool fComputeLastPosition;
+        G4double fRandomNumber;
+    };
+
+    G4bool fUseMaximumTimeBeforeReachingBoundary;
+    G4Material* fNistWater;
+
+    G4bool fUseSchedulerMinTimeSteps;
+    G4double fInternalMinTimeStep;
+    G4bool fSpeedMeUp;
+
+    // Water density table
+    const std::vector<G4double>* fpWaterDensity;
+
+    G4BrownianAction* fpBrownianAction;
+    G4VUserBrownianAction* fpUserBrownianAction;
 };
-
 
 inline void G4DNABrownianTransportation::SetBrownianAction(G4BrownianAction* brownianAction)
 {
   fpBrownianAction = brownianAction;
 }
 
-inline void G4DNABrownianTransportation::SetUserBrownianAction(G4VUserBrownianAction* brownianAction)
+inline void
+G4DNABrownianTransportation::SetUserBrownianAction(G4VUserBrownianAction* brownianAction)
 {
   fpUserBrownianAction = brownianAction;
 }
 
-
-#endif // G4ITBROWNIANTRANSPORTATION_H
+#endif  // G4ITBROWNIANTRANSPORTATION_H

@@ -23,11 +23,10 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4NeutronHPBuilder_h
-#define G4NeutronHPBuilder_h 1
+#ifndef G4NEUTRONHPBUILDER_HH
+#define G4NEUTRONHPBUILDER_HH
 
 #include "G4NeutronPHPBuilder.hh"
 using G4NeutronHPBuilder = G4NeutronPHPBuilder;
 
 #endif
-

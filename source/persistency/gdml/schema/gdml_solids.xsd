@@ -145,6 +145,32 @@
   </xs:element>
   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
+  <xs:element name="displacedSolid" substitutionGroup="Solid">
+    <xs:annotation>
+      <xs:documentation>Displaced solid:
+        The referenced solid is moved by the specified position and rotation.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:complexContent>
+	<xs:extension base="SolidType">
+	  <xs:sequence>
+	    <xs:element name="solidref" type="ReferenceType"></xs:element>
+            <xs:choice minOccurs="0">
+              <xs:element name="position" type="positionType"></xs:element>
+              <xs:element name="positionref" type="ReferenceType"></xs:element>
+            </xs:choice>
+            <xs:choice minOccurs="0">
+              <xs:element name="rotation" type="rotationType"></xs:element>
+              <xs:element name="rotationref" type="ReferenceType"></xs:element>
+            </xs:choice>
+	  </xs:sequence>
+	</xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
   <xs:group name="OpticalSurfacePropertiesGroup">
     <xs:annotation>

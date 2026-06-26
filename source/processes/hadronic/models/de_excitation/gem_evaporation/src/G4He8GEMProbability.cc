@@ -30,9 +30,7 @@
 
 #include "G4He8GEMProbability.hh"
 
-G4He8GEMProbability::G4He8GEMProbability() :
-  G4GEMProbability(8,2,0.0) // A,Z,Spin
+G4He8GEMProbability::G4He8GEMProbability() : G4GEMProbability(8, 2, 0.0)  // A,Z,Spin
 {}
 
-G4He8GEMProbability::~G4He8GEMProbability()
-{}
+G4He8GEMProbability::~G4He8GEMProbability() {}

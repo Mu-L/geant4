@@ -28,87 +28,111 @@
 #ifndef G4TOOLSSGQTZBVIEWER_HH
 #define G4TOOLSSGQTZBVIEWER_HH
 
-#include "G4ToolsSGViewer.hh"
-
 #include "G4Qt.hh"
+#include "G4ToolsSGViewer.hh"
 #include "G4UIQt.hh"
 #include "G4UImanager.hh"
 
-#include <toolx/Qt/zb_viewer>
-
 #include <qmainwindow.h>
 
-class G4ToolsSGQtZBDestroyCallback : public QObject {
-  Q_OBJECT
-public:
-  G4ToolsSGQtZBDestroyCallback(G4VViewer* a_viewer):fViewer(a_viewer) {}
-  virtual ~G4ToolsSGQtZBDestroyCallback() {}
-private:
-  G4ToolsSGQtZBDestroyCallback(const G4ToolsSGQtZBDestroyCallback&);
-  G4ToolsSGQtZBDestroyCallback& operator=(const G4ToolsSGQtZBDestroyCallback&);
-public slots:
-  void execute(){
-    delete fViewer;
-  }
-private:
-  G4VViewer* fViewer;
+#include <toolx/Qt/zb_viewer>
+
+class G4ToolsSGQtZBDestroyCallback : public QObject
+{
+    Q_OBJECT
+
+  public:
+
+    G4ToolsSGQtZBDestroyCallback(G4VViewer* a_viewer) : fViewer(a_viewer) {}
+    virtual ~G4ToolsSGQtZBDestroyCallback() {}
+
+  private:
+
+    G4ToolsSGQtZBDestroyCallback(const G4ToolsSGQtZBDestroyCallback&);
+    G4ToolsSGQtZBDestroyCallback& operator=(const G4ToolsSGQtZBDestroyCallback&);
+  public slots:
+    void execute() { delete fViewer; }
+
+  private:
+
+    G4VViewer* fViewer;
 };
 
-class G4ToolsSGQtZBViewer : public G4ToolsSGViewer<toolx::Qt::session,toolx::Qt::zb_viewer> {
-  using parent = G4ToolsSGViewer<toolx::Qt::session,toolx::Qt::zb_viewer>;
-public:
-  G4ToolsSGQtZBViewer(toolx::Qt::session& a_session,G4ToolsSGSceneHandler& a_scene_handler, const G4String& a_name)
-  :parent(a_session,a_scene_handler,a_name)
-  ,fSGQWidget(nullptr)
-  ,fDestroyCallback(0)
-  {
-    fDestroyCallback = new G4ToolsSGQtZBDestroyCallback(this);
-  }
-  virtual ~G4ToolsSGQtZBViewer() {
-    delete fDestroyCallback; //it will remove the below signal/slot connection.
-  }
-protected:
-  G4ToolsSGQtZBViewer(const G4ToolsSGQtZBViewer& a_from):parent(a_from){}
-  G4ToolsSGQtZBViewer& operator=(const G4ToolsSGQtZBViewer&) {return *this;}
-public:  
-  virtual void Initialise() {
-    if(fSGQWidget) return; //done.
-    parent::Initialise();
-    if(!fSGViewer) {
-      G4cerr << "G4ToolsSGQtZBViewer::Initialise: ERROR: G4ToolsSGQtZBViewer has no toolx::Qt::zb_viewer." << G4endl;
-      return;
+class G4ToolsSGQtZBViewer : public G4ToolsSGViewer<toolx::Qt::session, toolx::Qt::zb_viewer>
+{
+    using parent = G4ToolsSGViewer<toolx::Qt::session, toolx::Qt::zb_viewer>;
+
+  public:
+
+    G4ToolsSGQtZBViewer(toolx::Qt::session& a_session, G4ToolsSGSceneHandler& a_scene_handler,
+                        const G4String& a_name)
+      : parent(a_session, a_scene_handler, a_name), fSGQWidget(nullptr), fDestroyCallback(0)
+    {
+      fDestroyCallback = new G4ToolsSGQtZBDestroyCallback(this);
     }
-    fSGQWidget = fSGViewer->shell();
-    if (!fSGQWidget) {
-      G4cerr << "G4ToolsSGQtZBViewer::Initialise: ERROR: toolx::Qt::zb_viewer has no QWidget shell." << G4endl;
-      return;
+    virtual ~G4ToolsSGQtZBViewer()
+    {
+      delete fDestroyCallback;  // it will remove the below signal/slot connection.
     }
 
-   {G4UImanager* ui = G4UImanager::GetUIpointer();
-    G4UIsession* session = ui->GetG4UIWindow();
-     fUIQt = session? dynamic_cast<G4UIQt*>(session) :nullptr;
-    if(fUIQt) {
-      G4Qt* interactorManager = G4Qt::getInstance ();
-      if (!interactorManager->IsExternalApp()) {
-        fSGViewer->set_own_shell(false);
-        fUIQt->AddTabWidget(fSGQWidget,QString(GetName()));
-        QObject::connect(fSGQWidget,SIGNAL(destroyed()),fDestroyCallback,SLOT(execute()));
+  protected:
 
-        QMainWindow* main_window = fUIQt->GetMainWindow();
-        if(main_window) {
-          main_window->show();
-          interactorManager->FlushAndWaitExecution();
+    G4ToolsSGQtZBViewer(const G4ToolsSGQtZBViewer& a_from) : parent(a_from) {}
+    G4ToolsSGQtZBViewer& operator=(const G4ToolsSGQtZBViewer&) { return *this; }
+
+  public:
+
+    virtual void Initialise()
+    {
+      if (fSGQWidget) return;  // done.
+      parent::Initialise();
+      if (!fSGViewer)
+      {
+        G4cerr << "G4ToolsSGQtZBViewer::Initialise: ERROR: G4ToolsSGQtZBViewer has no "
+                  "toolx::Qt::zb_viewer."
+               << G4endl;
+        return;
+      }
+      fSGQWidget = fSGViewer->shell();
+      if (!fSGQWidget)
+      {
+        G4cerr
+          << "G4ToolsSGQtZBViewer::Initialise: ERROR: toolx::Qt::zb_viewer has no QWidget shell."
+          << G4endl;
+        return;
+      }
+
+      {
+        G4UImanager* ui = G4UImanager::GetUIpointer();
+        G4UIsession* session = ui->GetG4UIWindow();
+        fUIQt = session ? dynamic_cast<G4UIQt*>(session) : nullptr;
+        if (fUIQt)
+        {
+          G4Qt* interactorManager = G4Qt::getInstance();
+          if (!interactorManager->IsExternalApp())
+          {
+            fSGViewer->set_own_shell(false);
+            fUIQt->AddTabWidget(fSGQWidget, QString(GetName()));
+            QObject::connect(fSGQWidget, SIGNAL(destroyed()), fDestroyCallback, SLOT(execute()));
+
+            QMainWindow* main_window = fUIQt->GetMainWindow();
+            if (main_window)
+            {
+              main_window->show();
+              interactorManager->FlushAndWaitExecution();
+            }
+          }
         }
       }
-    }}
 
-    fSGViewer->enable_keyboard_focus();
-  }
-  
-protected:
-  G4UIQt* fUIQt = nullptr;
-  QWidget* fSGQWidget;
-  G4ToolsSGQtZBDestroyCallback* fDestroyCallback;
+      fSGViewer->enable_keyboard_focus();
+    }
+
+  protected:
+
+    G4UIQt* fUIQt = nullptr;
+    QWidget* fSGQWidget;
+    G4ToolsSGQtZBDestroyCallback* fDestroyCallback;
 };
 
 #endif

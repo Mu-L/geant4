@@ -27,20 +27,18 @@
 
 #include "G4RayTracerViewer.hh"
 
-#include "G4Timer.hh"
-
-#include "G4ios.hh"
-#include <sstream>
-#include <iomanip>
-
-#include "G4SystemOfUnits.hh"
-
-#include "G4VSceneHandler.hh"
 #include "G4Scene.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4Timer.hh"
+#include "G4VSceneHandler.hh"
+#include "G4ios.hh"
+
+#include <iomanip>
+#include <sstream>
 #ifdef G4MULTITHREADED
-#include "G4TheMTRayTracer.hh"
+#  include "G4TheMTRayTracer.hh"
 #else
-#include "G4TheRayTracer.hh"
+#  include "G4TheRayTracer.hh"
 #endif
 #include "G4RTJpegMaker.hh"
 #include "G4RTSimpleScanner.hh"
@@ -48,19 +46,21 @@
 
 #define G4warn G4cout
 
-G4RayTracerViewer::G4RayTracerViewer
-(G4VSceneHandler& sceneHandler,
- const G4String& name,
- G4TheRayTracer* aTracer)
-: G4VViewer(sceneHandler, sceneHandler.IncrementViewCount(), name)
-, fFileCount(0)
+G4RayTracerViewer::G4RayTracerViewer(G4VSceneHandler& sceneHandler, const G4String& name,
+                                     G4TheRayTracer* aTracer)
+  : G4VViewer(sceneHandler, sceneHandler.IncrementViewCount(), name),
+    fFileCount(0)
 #ifdef G4MULTITHREADED
-, theTracer(aTracer? aTracer: G4TheMTRayTracer::Instance(new G4RTJpegMaker, new G4RTSimpleScanner))
+    ,
+    theTracer(aTracer ? aTracer
+                      : G4TheMTRayTracer::Instance(new G4RTJpegMaker, new G4RTSimpleScanner))
 #else
-, theTracer(aTracer? aTracer: new G4TheRayTracer(new G4RTJpegMaker, new G4RTSimpleScanner))
+    ,
+    theTracer(aTracer ? aTracer : new G4TheRayTracer(new G4RTJpegMaker, new G4RTSimpleScanner))
 #endif
 {
-  if (!theTracer) {
+  if (!theTracer)
+  {
     G4warn << "G4RayTracerViewer::Initialise: No tracer" << G4endl;
     fViewId = -1;  // This flags an error.
     return;
@@ -79,27 +79,24 @@ void G4RayTracerViewer::SetView()
 {
   // Get radius of scene, etc.  (See G4OpenGLViewer::SetView().)
   // Note that this procedure properly takes into account zoom, dolly and pan.
-  const G4Point3D& targetPoint
-    = fSceneHandler.GetScene()->GetStandardTargetPoint()
-    + fVP.GetCurrentTargetPoint();
+  const G4Point3D& targetPoint =
+    fSceneHandler.GetScene()->GetStandardTargetPoint() + fVP.GetCurrentTargetPoint();
   G4double radius =  // See G4ViewParameters for following procedure.
     fSceneHandler.GetScene()->GetExtent().GetExtentRadius();
-  if(radius<=0.) radius = 1.;
+  if (radius <= 0.) radius = 1.;
   const G4double cameraDistance = fVP.GetCameraDistance(radius);
   const G4Point3D cameraPosition =
     targetPoint + cameraDistance * fVP.GetViewpointDirection().unit();
-  const G4double nearDistance  = fVP.GetNearDistance(cameraDistance,radius);
-  const G4double frontHalfHeight = fVP.GetFrontHalfHeight(nearDistance,radius);
+  const G4double nearDistance = fVP.GetNearDistance(cameraDistance, radius);
+  const G4double frontHalfHeight = fVP.GetFrontHalfHeight(nearDistance, radius);
   const G4double frontHalfAngle = std::atan(frontHalfHeight / nearDistance);
 
   // Calculate and set ray tracer parameters.
-  theTracer->
-    SetViewSpan(200. * frontHalfAngle / theTracer->GetNColumn());
+  theTracer->SetViewSpan(200. * frontHalfAngle / theTracer->GetNColumn());
   theTracer->SetTargetPosition(targetPoint);
   theTracer->SetEyePosition(cameraPosition);
   theTracer->SetUpVector(fVP.GetUpVector());
-  const G4Vector3D
-    actualLightpointDirection(-fVP.GetActualLightpointDirection());
+  const G4Vector3D actualLightpointDirection(-fVP.GetActualLightpointDirection());
   theTracer->SetLightDirection(actualLightpointDirection);
   theTracer->SetBackgroundColour(fVP.GetBackgroundColour());
 }
@@ -113,21 +110,20 @@ void G4RayTracerViewer::DrawView()
   if (called) return;
   called = true;
 
-  if (fVP.GetFieldHalfAngle() == 0.) { // Orthogonal (parallel) projection.
+  if (fVP.GetFieldHalfAngle() == 0.)
+  {  // Orthogonal (parallel) projection.
     G4double fieldHalfAngle = perMillion;
     fVP.SetFieldHalfAngle(fieldHalfAngle);
-    G4warn <<
-      "WARNING: G4RayTracerViewer::DrawView: true orthogonal projection"
-      "\n  not yet implemented.  Doing a \"long shot\", i.e., a perspective"
-      "\n  projection with a half field angle of "
-	   << fieldHalfAngle <<
-      " radians."
-	   << G4endl;
+    G4warn << "WARNING: G4RayTracerViewer::DrawView: true orthogonal projection"
+              "\n  not yet implemented.  Doing a \"long shot\", i.e., a perspective"
+              "\n  projection with a half field angle of "
+           << fieldHalfAngle << " radians." << G4endl;
     SetView();  // With this fieldHalfAngle
     ProcessView();
     fVP.SetFieldHalfAngle(0.);
   }
-  else {
+  else
+  {
     ProcessView();
   }
 
@@ -135,8 +131,8 @@ void G4RayTracerViewer::DrawView()
   G4Timer timer;
   timer.Start();
   std::ostringstream filename;
-  filename << "g4RayTracer." << fShortName << '_'
-  << std::setw(4) << std::setfill('0') << fFileCount++ << ".jpeg";
+  filename << "g4RayTracer." << fShortName << '_' << std::setw(4) << std::setfill('0')
+           << fFileCount++ << ".jpeg";
   theTracer->Trace(filename.str());
   timer.Stop();
   fKernelVisitElapsedTimeSeconds = timer.GetRealElapsed();

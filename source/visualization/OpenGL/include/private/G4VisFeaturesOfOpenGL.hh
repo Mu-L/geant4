@@ -25,20 +25,20 @@
 //
 //
 //
-// 
+//
 
 #ifndef G4VISFEATURESOFOPENGL_HH
 #define G4VISFEATURESOFOPENGL_HH
 
 #include "globals.hh"
 
-G4String G4VisFeaturesOfOpenGLIX ();
-G4String G4VisFeaturesOfOpenGLSX ();
-G4String G4VisFeaturesOfOpenGLIXm ();
-G4String G4VisFeaturesOfOpenGLSXm ();
-G4String G4VisFeaturesOfOpenGLIWin32 ();
-G4String G4VisFeaturesOfOpenGLSWin32 ();
-G4String G4VisFeaturesOfOpenGLIQt ();
-G4String G4VisFeaturesOfOpenGLSQt ();
+G4String G4VisFeaturesOfOpenGLIX();
+G4String G4VisFeaturesOfOpenGLSX();
+G4String G4VisFeaturesOfOpenGLIXm();
+G4String G4VisFeaturesOfOpenGLSXm();
+G4String G4VisFeaturesOfOpenGLIWin32();
+G4String G4VisFeaturesOfOpenGLSWin32();
+G4String G4VisFeaturesOfOpenGLIQt();
+G4String G4VisFeaturesOfOpenGLSQt();
 
 #endif

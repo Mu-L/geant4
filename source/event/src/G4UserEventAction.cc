@@ -29,6 +29,7 @@
 // --------------------------------------------------------------------
 
 #include "G4UserEventAction.hh"
+
 #include "G4Event.hh"
 #include "G4EventManager.hh"
 #include "G4ParticleTable.hh"
@@ -36,18 +37,17 @@
 
 G4UserEventAction::G4UserEventAction()
 {
- if(!(G4ParticleTable::GetParticleTable()->GetReadiness()))
- {
-   G4String msg;
-   msg =  " You are instantiating G4UserEventAction BEFORE your\n";
-   msg += "G4VUserPhysicsList is instantiated and assigned to G4RunManager.\n";
-   msg += " Such an instantiation is prohibited by Geant4 version 8.0. To fix this problem,\n";
-   msg += "please make sure that your main() instantiates G4VUserPhysicsList AND\n";
-   msg += "set it to G4RunManager before instantiating other user action classes\n";
-   msg += "such as G4UserEventAction.";
-   G4Exception("G4UserEventAction::G4UserEventAction()",
-              "Event0032",FatalException,msg);
- }
+  if (!(G4ParticleTable::GetParticleTable()->GetReadiness()))
+  {
+    G4String msg;
+    msg = " You are instantiating G4UserEventAction BEFORE your\n";
+    msg += "G4VUserPhysicsList is instantiated and assigned to G4RunManager.\n";
+    msg += " Such an instantiation is prohibited by Geant4 version 8.0. To fix this problem,\n";
+    msg += "please make sure that your main() instantiates G4VUserPhysicsList AND\n";
+    msg += "set it to G4RunManager before instantiating other user action classes\n";
+    msg += "such as G4UserEventAction.";
+    G4Exception("G4UserEventAction::G4UserEventAction()", "Event0032", FatalException, msg);
+  }
 }
 
 void G4UserEventAction::SetEventManager(G4EventManager* value)
@@ -55,11 +55,8 @@ void G4UserEventAction::SetEventManager(G4EventManager* value)
   fpEventManager = value;
 }
 
-void G4UserEventAction::BeginOfEventAction(const G4Event*)
-{}
+void G4UserEventAction::BeginOfEventAction(const G4Event*) {}
 
-void G4UserEventAction::EndOfEventAction(const G4Event*)
-{}
+void G4UserEventAction::EndOfEventAction(const G4Event*) {}
 
-void G4UserEventAction::MergeSubEvent(G4Event*, const G4Event*)
-{}
+void G4UserEventAction::MergeSubEvent(G4Event*, const G4Event*) {}

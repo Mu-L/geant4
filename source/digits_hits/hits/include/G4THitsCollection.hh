@@ -37,8 +37,8 @@
 //
 // Author: Makoto Asai
 // --------------------------------------------------------------------
-#ifndef G4THitsCollection_h
-#define G4THitsCollection_h 1
+#ifndef G4THITSCOLLECTION_HH
+#define G4THITSCOLLECTION_HH
 
 #include "G4Allocator.hh"
 #include "G4VHitsCollection.hh"
@@ -65,7 +65,7 @@ extern G4DLLEXPORT G4Allocator<G4HitsCollection>*& anHCAllocator_G4MT_TLS_();
 extern G4DLLIMPORT G4Allocator<G4HitsCollection>*& anHCAllocator_G4MT_TLS_();
 #endif
 
-template <class T>
+template<class T>
 class G4THitsCollection : public G4HitsCollection
 {
   public:
@@ -114,29 +114,30 @@ class G4THitsCollection : public G4HitsCollection
     std::size_t GetSize() const override { return ((std::vector<T*>*)theCollection)->size(); }
 };
 
-template <class T>
+template<class T>
 inline void* G4THitsCollection<T>::operator new(std::size_t)
 {
-  if (anHCAllocator_G4MT_TLS_() == nullptr) {
+  if (anHCAllocator_G4MT_TLS_() == nullptr)
+  {
     anHCAllocator_G4MT_TLS_() = new G4Allocator<G4HitsCollection>;
   }
   return (void*)anHCAllocator_G4MT_TLS_()->MallocSingle();
 }
 
-template <class T>
+template<class T>
 inline void G4THitsCollection<T>::operator delete(void* anHC)
 {
   anHCAllocator_G4MT_TLS_()->FreeSingle((G4HitsCollection*)anHC);
 }
 
-template <class T>
+template<class T>
 G4THitsCollection<T>::G4THitsCollection()
 {
   auto theHitsCollection = new std::vector<T*>;
   theCollection = (void*)theHitsCollection;
 }
 
-template <class T>
+template<class T>
 G4THitsCollection<T>::G4THitsCollection(const G4String& detName, const G4String& colNam)
   : G4HitsCollection(detName, colNam)
 {
@@ -144,37 +145,40 @@ G4THitsCollection<T>::G4THitsCollection(const G4String& detName, const G4String&
   theCollection = (void*)theHitsCollection;
 }
 
-template <class T>
+template<class T>
 G4THitsCollection<T>::~G4THitsCollection()
 {
   auto theHitsCollection = (std::vector<T*>*)theCollection;
-  for (const auto* hit : *theHitsCollection) {
+  for (const auto* hit : *theHitsCollection)
+  {
     delete hit;
   }
   theHitsCollection->clear();
   delete theHitsCollection;
 }
 
-template <class T>
+template<class T>
 G4bool G4THitsCollection<T>::operator==(const G4THitsCollection<T>& right) const
 {
   return (collectionName == right.collectionName);
 }
 
-template <class T>
+template<class T>
 void G4THitsCollection<T>::DrawAllHits()
 {
   auto theHitsCollection = (std::vector<T*>*)theCollection;
-  for (auto* hit : *theHitsCollection) {
+  for (auto* hit : *theHitsCollection)
+  {
     hit->Draw();
   }
 }
 
-template <class T>
+template<class T>
 void G4THitsCollection<T>::PrintAllHits()
 {
   auto theHitsCollection = (std::vector<T*>*)theCollection;
-  for (auto* hit : *theHitsCollection) {
+  for (auto* hit : *theHitsCollection)
+  {
     hit->Print();
   }
 }

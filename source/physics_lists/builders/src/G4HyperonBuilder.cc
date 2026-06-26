@@ -31,74 +31,87 @@
 //---------------------------------------------------------------------------
 
 #include "G4HyperonBuilder.hh"
+
+#include "G4HadronInelasticProcess.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4HadronInelasticProcess.hh"
 
-
-G4HyperonBuilder::G4HyperonBuilder() {  
-  theLambdaInelastic         = new G4HadronInelasticProcess( "lambdaInelastic", G4Lambda::Definition() );
-  theAntiLambdaInelastic     = new G4HadronInelasticProcess( "anti-lambdaInelastic", G4AntiLambda::Definition() );
-  theSigmaMinusInelastic     = new G4HadronInelasticProcess( "sigma-Inelastic", G4SigmaMinus::Definition() );
-  theAntiSigmaMinusInelastic = new G4HadronInelasticProcess( "anti_sigma-Inelastic", G4AntiSigmaMinus::Definition() );
-  theSigmaPlusInelastic      = new G4HadronInelasticProcess( "sigma+Inelastic", G4SigmaPlus::Definition() );
-  theAntiSigmaPlusInelastic  = new G4HadronInelasticProcess( "anti_sigma+Inelastic", G4AntiSigmaPlus::Definition() );
-  theXiMinusInelastic        = new G4HadronInelasticProcess( "xi-Inelastic", G4XiMinus::Definition() );
-  theAntiXiMinusInelastic    = new G4HadronInelasticProcess( "anti_xi-Inelastic", G4AntiXiMinus::Definition() );
-  theXiZeroInelastic         = new G4HadronInelasticProcess( "xi0Inelastic", G4XiZero::Definition() );
-  theAntiXiZeroInelastic     = new G4HadronInelasticProcess( "anti_xi0Inelastic", G4AntiXiZero::Definition() );
-  theOmegaMinusInelastic     = new G4HadronInelasticProcess( "omega-Inelastic", G4OmegaMinus::Definition() );
-  theAntiOmegaMinusInelastic = new G4HadronInelasticProcess( "anti_omega-Inelastic", G4AntiOmegaMinus::Definition() );
+G4HyperonBuilder::G4HyperonBuilder()
+{
+  theLambdaInelastic = new G4HadronInelasticProcess("lambdaInelastic", G4Lambda::Definition());
+  theAntiLambdaInelastic =
+    new G4HadronInelasticProcess("anti-lambdaInelastic", G4AntiLambda::Definition());
+  theSigmaMinusInelastic =
+    new G4HadronInelasticProcess("sigma-Inelastic", G4SigmaMinus::Definition());
+  theAntiSigmaMinusInelastic =
+    new G4HadronInelasticProcess("anti_sigma-Inelastic", G4AntiSigmaMinus::Definition());
+  theSigmaPlusInelastic =
+    new G4HadronInelasticProcess("sigma+Inelastic", G4SigmaPlus::Definition());
+  theAntiSigmaPlusInelastic =
+    new G4HadronInelasticProcess("anti_sigma+Inelastic", G4AntiSigmaPlus::Definition());
+  theXiMinusInelastic = new G4HadronInelasticProcess("xi-Inelastic", G4XiMinus::Definition());
+  theAntiXiMinusInelastic =
+    new G4HadronInelasticProcess("anti_xi-Inelastic", G4AntiXiMinus::Definition());
+  theXiZeroInelastic = new G4HadronInelasticProcess("xi0Inelastic", G4XiZero::Definition());
+  theAntiXiZeroInelastic =
+    new G4HadronInelasticProcess("anti_xi0Inelastic", G4AntiXiZero::Definition());
+  theOmegaMinusInelastic =
+    new G4HadronInelasticProcess("omega-Inelastic", G4OmegaMinus::Definition());
+  theAntiOmegaMinusInelastic =
+    new G4HadronInelasticProcess("anti_omega-Inelastic", G4AntiOmegaMinus::Definition());
 }
 
-
-void G4HyperonBuilder::RegisterMe( G4PhysicsBuilderInterface* aB ) {
-  auto bld = dynamic_cast< G4VHyperonBuilder* >( aB );
-  if ( bld != nullptr ) theModelCollections.push_back( bld );
-  else                  G4PhysicsBuilderInterface::RegisterMe( aB );
+void G4HyperonBuilder::RegisterMe(G4PhysicsBuilderInterface* aB)
+{
+  auto bld = dynamic_cast<G4VHyperonBuilder*>(aB);
+  if (bld != nullptr)
+    theModelCollections.push_back(bld);
+  else
+    G4PhysicsBuilderInterface::RegisterMe(aB);
 }
 
-
-void G4HyperonBuilder::Build() {
-  for ( std::vector< G4VHyperonBuilder* >::iterator i = theModelCollections.begin();
-	i != theModelCollections.end(); ++i ) {
-    (*i)->Build( theLambdaInelastic );
-    (*i)->Build( theAntiLambdaInelastic );
-    (*i)->Build( theSigmaMinusInelastic );
-    (*i)->Build( theAntiSigmaMinusInelastic );
-    (*i)->Build( theSigmaPlusInelastic );
-    (*i)->Build( theAntiSigmaPlusInelastic );
-    (*i)->Build( theXiMinusInelastic );
-    (*i)->Build( theAntiXiMinusInelastic );
-    (*i)->Build( theXiZeroInelastic );
-    (*i)->Build( theAntiXiZeroInelastic );
-    (*i)->Build( theOmegaMinusInelastic );
-    (*i)->Build( theAntiOmegaMinusInelastic );
+void G4HyperonBuilder::Build()
+{
+  for (std::vector<G4VHyperonBuilder*>::iterator i = theModelCollections.begin();
+       i != theModelCollections.end(); ++i)
+  {
+    (*i)->Build(theLambdaInelastic);
+    (*i)->Build(theAntiLambdaInelastic);
+    (*i)->Build(theSigmaMinusInelastic);
+    (*i)->Build(theAntiSigmaMinusInelastic);
+    (*i)->Build(theSigmaPlusInelastic);
+    (*i)->Build(theAntiSigmaPlusInelastic);
+    (*i)->Build(theXiMinusInelastic);
+    (*i)->Build(theAntiXiMinusInelastic);
+    (*i)->Build(theXiZeroInelastic);
+    (*i)->Build(theAntiXiZeroInelastic);
+    (*i)->Build(theOmegaMinusInelastic);
+    (*i)->Build(theAntiOmegaMinusInelastic);
   }
   G4ProcessManager* aProcMan = nullptr;
   aProcMan = G4Lambda::Lambda()->GetProcessManager();
-  aProcMan->AddDiscreteProcess( theLambdaInelastic );
+  aProcMan->AddDiscreteProcess(theLambdaInelastic);
   aProcMan = G4AntiLambda::AntiLambda()->GetProcessManager();
-  aProcMan->AddDiscreteProcess( theAntiLambdaInelastic );
+  aProcMan->AddDiscreteProcess(theAntiLambdaInelastic);
   aProcMan = G4SigmaMinus::SigmaMinus()->GetProcessManager();
-  aProcMan->AddDiscreteProcess( theSigmaMinusInelastic );
+  aProcMan->AddDiscreteProcess(theSigmaMinusInelastic);
   aProcMan = G4AntiSigmaMinus::AntiSigmaMinus()->GetProcessManager();
-  aProcMan->AddDiscreteProcess( theAntiSigmaMinusInelastic );
+  aProcMan->AddDiscreteProcess(theAntiSigmaMinusInelastic);
   aProcMan = G4SigmaPlus::SigmaPlus()->GetProcessManager();
-  aProcMan->AddDiscreteProcess( theSigmaPlusInelastic );
+  aProcMan->AddDiscreteProcess(theSigmaPlusInelastic);
   aProcMan = G4AntiSigmaPlus::AntiSigmaPlus()->GetProcessManager();
-  aProcMan->AddDiscreteProcess( theAntiSigmaPlusInelastic );
+  aProcMan->AddDiscreteProcess(theAntiSigmaPlusInelastic);
   aProcMan = G4XiMinus::XiMinus()->GetProcessManager();
-  aProcMan->AddDiscreteProcess( theXiMinusInelastic );
+  aProcMan->AddDiscreteProcess(theXiMinusInelastic);
   aProcMan = G4AntiXiMinus::AntiXiMinus()->GetProcessManager();
-  aProcMan->AddDiscreteProcess( theAntiXiMinusInelastic );
+  aProcMan->AddDiscreteProcess(theAntiXiMinusInelastic);
   aProcMan = G4XiZero::XiZero()->GetProcessManager();
-  aProcMan->AddDiscreteProcess( theXiZeroInelastic );
+  aProcMan->AddDiscreteProcess(theXiZeroInelastic);
   aProcMan = G4AntiXiZero::AntiXiZero()->GetProcessManager();
-  aProcMan->AddDiscreteProcess( theAntiXiZeroInelastic );
+  aProcMan->AddDiscreteProcess(theAntiXiZeroInelastic);
   aProcMan = G4OmegaMinus::OmegaMinus()->GetProcessManager();
-  aProcMan->AddDiscreteProcess( theOmegaMinusInelastic );
+  aProcMan->AddDiscreteProcess(theOmegaMinusInelastic);
   aProcMan = G4AntiOmegaMinus::AntiOmegaMinus()->GetProcessManager();
-  aProcMan->AddDiscreteProcess( theAntiOmegaMinusInelastic );  
+  aProcMan->AddDiscreteProcess(theAntiOmegaMinusInelastic);
 }

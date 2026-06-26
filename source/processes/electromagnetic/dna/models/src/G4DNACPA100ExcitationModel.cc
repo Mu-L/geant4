@@ -73,15 +73,19 @@ G4DNACPA100ExcitationModel::G4DNACPA100ExcitationModel(const G4ParticleDefinitio
 void G4DNACPA100ExcitationModel::Initialise(const G4ParticleDefinition* p,
                                             const G4DataVector& /*cuts*/)
 {
-  if (isInitialised) {
+  if (isInitialised)
+  {
     return;
   }
-  if (verboseLevel > 3) {
+  if (verboseLevel > 3)
+  {
     G4cout << "Calling G4DNACPA100ExcitationModel::Initialise()" << G4endl;
   }
 
-  if (!G4DNAMaterialManager::Instance()->IsLocked()) {
-    if (p != fpParticle) {
+  if (!G4DNAMaterialManager::Instance()->IsLocked())
+  {
+    if (p != fpParticle)
+    {
       std::ostringstream oss;
       oss << " Model is not applied for this particle " << p->GetParticleName();
       G4Exception("G4DNACPA100ExcitationModel::G4DNACPA100ExcitationModel", "CPA001",
@@ -90,50 +94,58 @@ void G4DNACPA100ExcitationModel::Initialise(const G4ParticleDefinition* p,
 
     const char* path = G4FindDataDir("G4LEDATA");
 
-    if (path == nullptr) {
+    if (path == nullptr)
+    {
       G4Exception("G4DNACPA100ExcitationModel::Initialise", "em0006", FatalException,
                   "G4LEDATA environment variable not set.");
       return;
     }
 
     std::size_t index;
-    if (fpG4_WATER != nullptr) {
+    if (fpG4_WATER != nullptr)
+    {
       index = fpG4_WATER->GetIndex();
       AddCrossSectionData(index, p, "dna/sigma_excitation_e_cpa100", 1.e-20 * m * m);
       SetLowELimit(index, p, 11 * eV);
       SetHighELimit(index, p, 255955 * eV);
     }
-    if (fpGuanine != nullptr) {
+    if (fpGuanine != nullptr)
+    {
       index = fpGuanine->GetIndex();
       AddCrossSectionData(index, p, "dna/sigma_excitation_e_cpa100_guanine", 1. * cm * cm);
       SetLowELimit(index, p, 11 * eV);
       SetHighELimit(index, p, 1 * MeV);
     }
-    if (fpDeoxyribose != nullptr) {
+    if (fpDeoxyribose != nullptr)
+    {
       index = fpDeoxyribose->GetIndex();
       AddCrossSectionData(index, p, "dna/sigma_excitation_e_cpa100_deoxyribose", 1. * cm * cm);
       SetLowELimit(index, p, 11 * eV);
       SetHighELimit(index, p, 1 * MeV);
     }
-    if (fpCytosine != nullptr) {
+    if (fpCytosine != nullptr)
+    {
       index = fpCytosine->GetIndex();
       AddCrossSectionData(index, p, "dna/sigma_excitation_e_cpa100_cytosine", 1. * cm * cm);
       SetLowELimit(index, p, 11 * eV);
       SetHighELimit(index, p, 1 * MeV);
     }
-    if (fpThymine != nullptr) {
+    if (fpThymine != nullptr)
+    {
       index = fpThymine->GetIndex();
       AddCrossSectionData(index, p, "dna/sigma_excitation_e_cpa100_thymine", 1. * cm * cm);
       SetLowELimit(index, p, 11 * eV);
       SetHighELimit(index, p, 1 * MeV);
     }
-    if (fpAdenine != nullptr) {
+    if (fpAdenine != nullptr)
+    {
       index = fpAdenine->GetIndex();
       AddCrossSectionData(index, p, "dna/sigma_excitation_e_cpa100_adenine", 1. * cm * cm);
       SetLowELimit(index, p, 11 * eV);
       SetHighELimit(index, p, 1 * MeV);
     }
-    if (fpPhosphate != nullptr) {
+    if (fpPhosphate != nullptr)
+    {
       index = fpPhosphate->GetIndex();
       AddCrossSectionData(index, p, "dna/sigma_excitation_e_cpa100_phosphoric_acid", 1. * cm * cm);
       SetLowELimit(index, p, 11 * eV);
@@ -144,10 +156,12 @@ void G4DNACPA100ExcitationModel::Initialise(const G4ParticleDefinition* p,
     G4DNAMaterialManager::Instance()->SetMasterDataModel(DNAModelType::fDNAExcitation, this);
     fpModelData = this;
   }
-  else {
+  else
+  {
     auto dataModel = dynamic_cast<G4DNACPA100ExcitationModel*>(
       G4DNAMaterialManager::Instance()->GetModel(DNAModelType::fDNAExcitation));
-    if (dataModel == nullptr) {
+    if (dataModel == nullptr)
+    {
       G4cout << "G4DNACPA100ExcitationModel::CrossSectionPerVolume:: not good modelData" << G4endl;
       throw;
     }
@@ -178,18 +192,21 @@ G4double G4DNACPA100ExcitationModel::CrossSectionPerVolume(const G4Material* mat
   highLim = fpModelData->GetHighELimit(MatID, p);
 
   // Check that we are in the correct energy range
-  if (ekin >= lowLim && ekin < highLim) {
+  if (ekin >= lowLim && ekin < highLim)
+  {
     // Get the map with all the data tables
     auto Data = fpModelData->GetData();
 
-    if ((*Data)[MatID][p] == nullptr) {
+    if ((*Data)[MatID][p] == nullptr)
+    {
       G4Exception("G4DNACPA100ExcitationModel::CrossSectionPerVolume", "em00236", FatalException,
                   "No model is registered");
     }
     // Retrieve the cross section value
     sigma = (*Data)[MatID][p]->FindValue(ekin);
 
-    if (verboseLevel > 2) {
+    if (verboseLevel > 2)
+    {
       auto MolDensity =
         (*G4DNAMolecularMaterial::Instance()->GetNumMolPerVolTableFor(material))[MatID];
       G4cout << "__________________________________" << G4endl;
@@ -224,23 +241,28 @@ void G4DNACPA100ExcitationModel::SampleSecondaries(std::vector<G4DynamicParticle
   G4double highLim = fpModelData->GetHighELimit(materialID, particle);
 
   // Check if we are in the correct energy range
-  if (k >= lowLim && k < highLim) {
+  if (k >= lowLim && k < highLim)
+  {
     G4int level;
     G4double excitationEnergy;
     G4double newEnergy;
-    if (materialID == fpG4_WATER->GetIndex()) {
+    if (materialID == fpG4_WATER->GetIndex())
+    {
       level = fpModelData->RandomSelectShell(k, particle, materialID);
       excitationEnergy = eStructure.ExcitationEnergy(level, materialID);
     }
-    else {
-      do {
+    else
+    {
+      do
+      {
         level = eStructure.NumberOfLevels(materialID) * G4UniformRand();
         excitationEnergy = eStructure.ExcitationEnergy(level, materialID);
       } while ((k - eStructure.ExcitationEnergy(level, materialID)) < 0);
     }
     newEnergy = k - excitationEnergy;
 
-    if (k - newEnergy <= 0) {
+    if (k - newEnergy <= 0)
+    {
       G4cout << "k : " << k << "  newEnergy : " << newEnergy << G4endl;
       G4cout << "newEnergy : " << newEnergy << " k : " << k
              << "  excitationEnergy: " << excitationEnergy << G4endl;
@@ -252,7 +274,8 @@ void G4DNACPA100ExcitationModel::SampleSecondaries(std::vector<G4DynamicParticle
       abort();
     }
 
-    if (newEnergy >= 0) {
+    if (newEnergy >= 0)
+    {
       // We take into account direction change as described page 87 (II.92) in thesis by S. Edel
 
       G4double cosTheta =
@@ -280,7 +303,8 @@ void G4DNACPA100ExcitationModel::SampleSecondaries(std::vector<G4DynamicParticle
       CT2 = CT1 * cosTheta - ST1 * A3;
       ST2 = std::sqrt(1. - CT2 * CT2);
 
-      if (ST2 == 0) {
+      if (ST2 == 0)
+      {
         ST2 = 1E-6;
       }
       CF2 = A1 / ST2;
@@ -288,23 +312,27 @@ void G4DNACPA100ExcitationModel::SampleSecondaries(std::vector<G4DynamicParticle
 
       G4ThreeVector zPrimeVers(ST2 * CF2, ST2 * SF2, CT2);
       fParticleChangeForGamma->ProposeMomentumDirection(zPrimeVers.unit());
-      if (!statCode) {
+      if (!statCode)
+      {
         fParticleChangeForGamma->SetProposedKineticEnergy(newEnergy);
       }
-      else {
+      else
+      {
         fParticleChangeForGamma->SetProposedKineticEnergy(k);
       }
 
       fParticleChangeForGamma->ProposeLocalEnergyDeposit(excitationEnergy);
 
       // Chemistry only for water;
-      if (materialID == fpG4_WATER->GetIndex()) {
+      if (materialID == fpG4_WATER->GetIndex())
+      {
         const G4Track* theIncomingTrack = fParticleChangeForGamma->GetCurrentTrack();
         G4DNAChemistryManager::Instance()->CreateWaterMolecule(eExcitedMolecule, level,
                                                                theIncomingTrack);
       }
     }
-    else {
+    else
+    {
       G4cerr << "newEnergy : " << newEnergy << " k : " << k
              << "  excitationEnergy: " << excitationEnergy << G4endl;
       G4cerr << "G4DNACPA100ExcitationModel::level : " << eStructure.NumberOfLevels(materialID)
@@ -316,7 +344,8 @@ void G4DNACPA100ExcitationModel::SampleSecondaries(std::vector<G4DynamicParticle
                   "model is not registered for this energy");
     }
   }
-  else {
+  else
+  {
     G4cerr << "k : " << k << "  lowLim : " << lowLim << "  highLim : " << highLim << G4endl;
     G4Exception("G4DNACPA100ExcitationModel::SampleSecondaries", "em00236", FatalException,
                 "model is not registered for this energy");

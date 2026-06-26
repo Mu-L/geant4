@@ -27,17 +27,18 @@
 // by V. Lara
 //
 // Modified:
-// 23.08.2010 V.Ivanchenko general cleanup, move constructor and destructor 
+// 23.08.2010 V.Ivanchenko general cleanup, move constructor and destructor
 //            the source, use G4Pow
 //
 
 #include "G4HETCChargedFragment.hh"
+
+#include "G4NuclearLevelData.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4VCoulombBarrier.hh"
-#include "G4NuclearLevelData.hh"
 
-G4HETCChargedFragment::G4HETCChargedFragment(
-  const G4ParticleDefinition* pd, G4VCoulombBarrier* aCoulombBarrier)
+G4HETCChargedFragment::G4HETCChargedFragment(const G4ParticleDefinition* pd,
+                                             G4VCoulombBarrier* aCoulombBarrier)
   : G4HETCFragment(pd, aCoulombBarrier)
 {}
 
@@ -46,12 +47,12 @@ G4double G4HETCChargedFragment::SampleKineticEnergy(const G4Fragment& fr)
   G4int Pb = fr.GetNumberOfParticles();
   G4int H = fr.GetNumberOfHoles();
 
-  G4double g0 = (6.0/pi2)*fNucData->GetLevelDensity(theFragZ, theFragA,
-                fr.GetExcitationEnergy());
+  G4double g0 =
+    (6.0 / pi2) * fNucData->GetLevelDensity(theFragZ, theFragA, fr.GetExcitationEnergy());
 
-  G4double Ab = std::max(0.0,G4double(Pb*Pb+H*H+Pb-3*H)/(4.0*g0));
+  G4double Ab = std::max(0.0, G4double(Pb * Pb + H * H + Pb - 3 * H) / (4.0 * g0));
   G4double Emax = theMaxKinEnergy - Ab;
 
   G4double x = BetaRand(Pb + H, 2);
-  return Emax - (Emax - theCoulombBarrier)*x;
+  return Emax - (Emax - theCoulombBarrier) * x;
 }

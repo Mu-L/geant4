@@ -29,8 +29,8 @@
 //      History: first implementation, based on object model of
 //      10 oct 1998  H.Kurashige
 // ---------------------------------------------------------------
-#ifndef G4ExcitedSigmaConstructor_h
-#define G4ExcitedSigmaConstructor_h 1
+#ifndef G4EXCITEDSIGMACONSTRUCTOR_HH
+#define G4EXCITEDSIGMACONSTRUCTOR_HH
 
 #include "G4ExcitedBaryonConstructor.hh"
 #include "globals.hh"
@@ -39,7 +39,9 @@ class G4ExcitedSigmaConstructor : public G4ExcitedBaryonConstructor
 {
     // This class is a utility class for construction
     // short lived particles
+
   public:
+
     enum
     {
       NStates = 8
@@ -51,10 +53,12 @@ class G4ExcitedSigmaConstructor : public G4ExcitedBaryonConstructor
     };
 
   public:
+
     G4ExcitedSigmaConstructor();
     ~G4ExcitedSigmaConstructor() override = default;
 
   protected:
+
     G4bool Exist(G4int) override { return true; }
 
     G4int GetQuarkContents(G4int, G4int) override;
@@ -70,6 +74,7 @@ class G4ExcitedSigmaConstructor : public G4ExcitedBaryonConstructor
                                    G4bool fAnti = false) override;
 
   private:
+
     G4DecayTable* AddNKMode(G4DecayTable* table, const G4String& name, G4double br, G4int iIso3,
                             G4bool fAnti);
     G4DecayTable* AddNKStarMode(G4DecayTable* table, const G4String& name, G4double br, G4int iIso3,
@@ -88,6 +93,7 @@ class G4ExcitedSigmaConstructor : public G4ExcitedBaryonConstructor
                                 G4bool fAnti);
 
   private:
+
     enum
     {
       SigmaIsoSpin = 2
@@ -133,26 +139,33 @@ inline G4int G4ExcitedSigmaConstructor::GetEncodingOffset(G4int iState)
 inline G4int G4ExcitedSigmaConstructor::GetQuarkContents(G4int iQ, G4int iIso3)
 {
   G4int quark = 0;
-  if (iQ == 0) {
+  if (iQ == 0)
+  {
     // s-quark
     quark = 3;
   }
-  else if (iQ == 1) {
-    if (iIso3 == -2) {
+  else if (iQ == 1)
+  {
+    if (iIso3 == -2)
+    {
       // d-quark
       quark = 1;
     }
-    else {
+    else
+    {
       // u-quark
       quark = 2;
     }
   }
-  else if (iQ == 2) {
-    if (iIso3 == +2) {
+  else if (iQ == 2)
+  {
+    if (iIso3 == +2)
+    {
       // u-quark
       quark = 2;
     }
-    else {
+    else
+    {
       // d-quark
       quark = 1;
     }
@@ -168,13 +181,16 @@ inline G4String G4ExcitedSigmaConstructor::GetMultipletName(G4int iState)
 inline G4String G4ExcitedSigmaConstructor::GetName(G4int iIso3, G4int iState)
 {
   G4String particle = name[iState];
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     particle += "+";
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     particle += "0";
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     particle += "-";
   }
   return particle;

@@ -29,50 +29,45 @@
 // Concrete model of ion ionisation is selected on fly.
 //
 
-#ifndef G4DNAIonChargeIncreaseModel_h
-#define G4DNAIonChargeIncreaseModel_h 1
+#ifndef G4DNAIONCHARGEINCREASEMODEL_HH
+#define G4DNAIONCHARGEINCREASEMODEL_HH
 
-#include "G4VEmModel.hh"
 #include "G4ParticleChangeForGamma.hh"
+#include "G4VEmModel.hh"
 
 class G4DNAIonChargeIncreaseModel : public G4VEmModel
 {
-public:
+  public:
 
-  G4DNAIonChargeIncreaseModel(const G4ParticleDefinition* p = nullptr, 
-		              const G4String& nam = "DNAIonChargeIncrease");
+    G4DNAIonChargeIncreaseModel(const G4ParticleDefinition* p = nullptr,
+                                const G4String& nam = "DNAIonChargeIncrease");
 
-  ~G4DNAIonChargeIncreaseModel() override = default;
+    ~G4DNAIonChargeIncreaseModel() override = default;
 
-  G4DNAIonChargeIncreaseModel & operator=
-  (const  G4DNAIonChargeIncreaseModel &right) = delete;
-  G4DNAIonChargeIncreaseModel(const G4DNAIonChargeIncreaseModel&) = delete;
+    G4DNAIonChargeIncreaseModel& operator=(const G4DNAIonChargeIncreaseModel& right) = delete;
+    G4DNAIonChargeIncreaseModel(const G4DNAIonChargeIncreaseModel&) = delete;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  G4double CrossSectionPerVolume(const G4Material* material,
-				 const G4ParticleDefinition* p,
-				 G4double ekin, G4double,
-				 G4double) override;
+    G4double CrossSectionPerVolume(const G4Material* material, const G4ParticleDefinition* p,
+                                   G4double ekin, G4double, G4double) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double, G4double) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double, G4double) override;
 
-  void StartTracking(G4Track*) override;
+    void StartTracking(G4Track*) override;
 
-protected:
+  protected:
 
-  G4ParticleChangeForGamma* fParticleChangeForGamma{nullptr};
+    G4ParticleChangeForGamma* fParticleChangeForGamma{nullptr};
 
-private:
+  private:
 
-  const G4DynamicParticle* fDynParticle{nullptr};
-  G4VEmModel* fCurrentModel{nullptr};
+    const G4DynamicParticle* fDynParticle{nullptr};
+    G4VEmModel* fCurrentModel{nullptr};
 
-  // list of concrete ion ionisation models, put extra here
-  G4VEmModel* fDummy;
+    // list of concrete ion ionisation models, put extra here
+    G4VEmModel* fDummy;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

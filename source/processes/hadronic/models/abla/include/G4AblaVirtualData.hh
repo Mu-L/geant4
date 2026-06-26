@@ -45,6 +45,7 @@
 class G4AblaVirtualData
 {
   protected:
+
     /**
      * Constructor, destructor
      */
@@ -53,6 +54,7 @@ class G4AblaVirtualData
     virtual ~G4AblaVirtualData() = default;
 
   public:
+
     /**
      * Set the value of Alpha.
      */
@@ -136,6 +138,7 @@ class G4AblaVirtualData
     virtual G4bool readData() = 0;
 
   private:
+
     static const G4int sRows = 180;
     static const G4int sCols = 122;
 

@@ -58,7 +58,8 @@ G4double G4MicroElecSiStructure::Energy(G4int level)
 {
   G4double energ = 0.;
 
-  if (level >= 0 && level < nLevels) {
+  if (level >= 0 && level < nLevels)
+  {
     energ = energyConstant[level];
   }
 

@@ -34,12 +34,12 @@
 //
 // Author: Marc Verderi, November 2013.
 // --------------------------------------------------------------------
-#ifndef G4ILawCommonTruncatedExp_hh
-#define G4ILawCommonTruncatedExp_hh 1
+#ifndef G4ILAWCOMMONTRUNCATEDEXP_HH
+#define G4ILAWCOMMONTRUNCATEDEXP_HH
 
-#include "G4VBiasingInteractionLaw.hh"
 #include "G4ILawTruncatedExp.hh"
 #include "G4ThreeVector.hh"
+#include "G4VBiasingInteractionLaw.hh"
 
 class G4ILawCommonTruncatedExp : public G4VBiasingInteractionLaw
 {
@@ -47,27 +47,22 @@ class G4ILawCommonTruncatedExp : public G4VBiasingInteractionLaw
 
     G4ILawCommonTruncatedExp(const G4String& name = "expSharedForceInteractionLaw");
     virtual ~G4ILawCommonTruncatedExp();
-  
-    virtual G4bool IsSingular() const
-      { return fExpInteractionLaw.IsSingular(); }
+
+    virtual G4bool IsSingular() const { return fExpInteractionLaw.IsSingular(); }
     virtual G4bool IsEffectiveCrossSectionInfinite() const
-      { return fExpInteractionLaw.IsEffectiveCrossSectionInfinite(); }
+    {
+      return fExpInteractionLaw.IsEffectiveCrossSectionInfinite();
+    }
 
     virtual G4double ComputeEffectiveCrossSectionAt(G4double length) const;
     virtual G4double ComputeNonInteractionProbabilityAt(G4double length) const;
 
-    void SetForceCrossSection( G4double xs )
-      { fExpInteractionLaw.SetForceCrossSection( xs ); }
-    void SetSelectedProcessXSfraction( G4double fXS )
-      { fSelectedProcessXSfraction = fXS; }
-    G4double SetSelectedProcessXSfraction() const
-      { return fSelectedProcessXSfraction; }
-    void SetMaximumDistance(G4double d)
-      { fExpInteractionLaw.SetMaximumDistance(d); }
-    G4double GetMaximumDistance() const
-      { return fExpInteractionLaw.GetMaximumDistance(); }
-   G4double GetInteractionDistance() const
-      { return fExpInteractionLaw.GetInteractionDistance(); }
+    void SetForceCrossSection(G4double xs) { fExpInteractionLaw.SetForceCrossSection(xs); }
+    void SetSelectedProcessXSfraction(G4double fXS) { fSelectedProcessXSfraction = fXS; }
+    G4double SetSelectedProcessXSfraction() const { return fSelectedProcessXSfraction; }
+    void SetMaximumDistance(G4double d) { fExpInteractionLaw.SetMaximumDistance(d); }
+    G4double GetMaximumDistance() const { return fExpInteractionLaw.GetMaximumDistance(); }
+    G4double GetInteractionDistance() const { return fExpInteractionLaw.GetInteractionDistance(); }
 
   private:
 

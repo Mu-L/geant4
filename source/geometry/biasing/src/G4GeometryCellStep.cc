@@ -30,10 +30,7 @@
 
 #include "G4GeometryCellStep.hh"
 
-G4GeometryCellStep::G4GeometryCellStep(const G4GeometryCell& preCell, 
+G4GeometryCellStep::G4GeometryCellStep(const G4GeometryCell& preCell,
                                        const G4GeometryCell& postCell)
   : fPreGeometryCell(preCell), fPostGeometryCell(postCell)
-{
-}
-
-
+{}

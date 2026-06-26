@@ -35,58 +35,56 @@
 // energy region [9, 12] GeV (instead of [3, 6] GeV as in FTFP_BERT).
 //----------------------------------------------------------------------------
 //
-#include <iomanip>   
-
-#include "globals.hh"
-#include "G4ios.hh"
+#include "FTFP_BERT_ATL.hh"
 
 #include "G4DecayPhysics.hh"
-#include "G4EmStandardPhysics.hh"
 #include "G4EmExtraPhysics.hh"
-#include "G4IonPhysics.hh"
-#include "G4StoppingPhysics.hh"
-#include "G4HadronElasticPhysics.hh"
-#include "G4NeutronTrackingCut.hh"
-
-#include "FTFP_BERT_ATL.hh"
-#include "G4HadronPhysicsFTFP_BERT_ATL.hh"
-
-#include "G4WarnPLStatus.hh"
+#include "G4EmStandardPhysics.hh"
 #include "G4FTFTunings.hh"
+#include "G4HadronElasticPhysics.hh"
+#include "G4HadronPhysicsFTFP_BERT_ATL.hh"
+#include "G4IonPhysics.hh"
+#include "G4NeutronTrackingCut.hh"
+#include "G4StoppingPhysics.hh"
+#include "G4WarnPLStatus.hh"
+#include "G4ios.hh"
+#include "globals.hh"
+
+#include <iomanip>
 
 FTFP_BERT_ATL::FTFP_BERT_ATL(G4int ver)
 {
-  if(ver > 0) {
-    G4cout << "<<< Geant4 Physics List simulation engine: FTFP_BERT_ATL"<<G4endl;
-    G4cout <<G4endl;
+  if (ver > 0)
+  {
+    G4cout << "<<< Geant4 Physics List simulation engine: FTFP_BERT_ATL" << G4endl;
+    G4cout << G4endl;
     G4WarnPLStatus exp;
     exp.Experimental("FTFP_BERT_ATL");
   }
-  defaultCutValue = 0.7*CLHEP::mm;  
+  defaultCutValue = 0.7 * CLHEP::mm;
   SetVerboseLevel(ver);
 
   // EM Physics
-  RegisterPhysics( new G4EmStandardPhysics(ver));
+  RegisterPhysics(new G4EmStandardPhysics(ver));
 
   // Synchroton Radiation & GN Physics
-  RegisterPhysics( new G4EmExtraPhysics(ver) );
+  RegisterPhysics(new G4EmExtraPhysics(ver));
 
-  // Decays 
-  RegisterPhysics( new G4DecayPhysics(ver) );
+  // Decays
+  RegisterPhysics(new G4DecayPhysics(ver));
 
-   // Hadron Elastic scattering
-  RegisterPhysics( new G4HadronElasticPhysics(ver) );
+  // Hadron Elastic scattering
+  RegisterPhysics(new G4HadronElasticPhysics(ver));
 
-   // Hadron Physics
-  RegisterPhysics( new G4HadronPhysicsFTFP_BERT_ATL(ver) );
+  // Hadron Physics
+  RegisterPhysics(new G4HadronPhysicsFTFP_BERT_ATL(ver));
 
   // Stopping Physics
-  RegisterPhysics( new G4StoppingPhysics(ver) );
+  RegisterPhysics(new G4StoppingPhysics(ver));
 
   // Ion Physics
-  RegisterPhysics( new G4IonPhysics(ver));
-  
-  // Neutron tracking cut
-  RegisterPhysics( new G4NeutronTrackingCut(ver));
-}
+  RegisterPhysics(new G4IonPhysics(ver));
 
+  // Neutron tracking cut
+  RegisterPhysics(new G4NeutronTrackingCut(ver));
+}

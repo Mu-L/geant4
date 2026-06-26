@@ -29,39 +29,36 @@
  *  Created on: Jul 23, 2019
  *      Author: W. G. Shin
  *              J. Ramos-Mendez and B. Faddegon
-*/
+ */
 
-#ifndef G4EmDNAChemistry_option3_hh
-#define G4EmDNAChemistry_option3_hh 1
+#ifndef G4EMDNACHEMISTRY_OPTION3_HH
+#define G4EMDNACHEMISTRY_OPTION3_HH
 
+#include "G4ChemTimeStepModel.hh"
 #include "G4VPhysicsConstructor.hh"
 #include "G4VUserChemistryList.hh"
 #include "globals.hh"
-#include "G4ChemTimeStepModel.hh"
 class G4DNAMolecularReactionTable;
 class G4DNAMolecularReactionData;
 
-class G4EmDNAChemistry_option3 : public G4VUserChemistryList,
-                         public G4VPhysicsConstructor
+class G4EmDNAChemistry_option3 : public G4VUserChemistryList, public G4VPhysicsConstructor
 {
+  public:
 
-public:
+    G4EmDNAChemistry_option3();
+    ~G4EmDNAChemistry_option3() override = default;
 
-  G4EmDNAChemistry_option3();
-  ~G4EmDNAChemistry_option3() override = default;
+    void ConstructParticle() override { ConstructMolecule(); }
+    void ConstructMolecule() override;
+    void ConstructProcess() override;
 
-  void ConstructParticle() override
-  {
-    ConstructMolecule();
-  }
-  void ConstructMolecule() override;
-  void ConstructProcess() override;
+    void ConstructDissociationChannels() override;
+    void ConstructReactionTable(G4DNAMolecularReactionTable* reactionTable) override;
+    void ConstructTimeStepModel(G4DNAMolecularReactionTable* reactionTable) override;
 
-  void ConstructDissociationChannels() override;
-  void ConstructReactionTable(G4DNAMolecularReactionTable* reactionTable) override;
-  void ConstructTimeStepModel(G4DNAMolecularReactionTable* reactionTable) override;
- private:
-   static void SetReactionType(G4DNAMolecularReactionData* pData, G4ChemTimeStepModel model);
+  private:
+
+    static void SetReactionType(G4DNAMolecularReactionData* pData, G4ChemTimeStepModel model);
 };
 
 #endif

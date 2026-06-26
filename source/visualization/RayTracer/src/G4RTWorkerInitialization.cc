@@ -27,46 +27,51 @@
 //
 
 #include "G4RTWorkerInitialization.hh"
-#include "G4UserRunAction.hh"
-#include "G4VUserPrimaryGeneratorAction.hh"
-#include "G4UserEventAction.hh"
-#include "G4UserStackingAction.hh"
-#include "G4UserTrackingAction.hh"
-#include "G4UserSteppingAction.hh"
 
-#include "G4RTRunAction.hh"
 #include "G4RTPrimaryGeneratorAction.hh"
-#include "G4RTTrackingAction.hh"
+#include "G4RTRunAction.hh"
 #include "G4RTSteppingAction.hh"
+#include "G4RTTrackingAction.hh"
+#include "G4UserEventAction.hh"
+#include "G4UserRunAction.hh"
+#include "G4UserStackingAction.hh"
+#include "G4UserSteppingAction.hh"
+#include "G4UserTrackingAction.hh"
+#include "G4VUserPrimaryGeneratorAction.hh"
 
-G4ThreadLocal const G4UserRunAction * G4RTWorkerInitialization::theUserRunAction = 0;
-G4ThreadLocal const G4VUserPrimaryGeneratorAction * G4RTWorkerInitialization::theUserPrimaryGeneratorAction = 0;
-G4ThreadLocal const G4UserEventAction * G4RTWorkerInitialization::theUserEventAction = 0;
-G4ThreadLocal const G4UserStackingAction * G4RTWorkerInitialization::theUserStackingAction = 0;
-G4ThreadLocal const G4UserTrackingAction * G4RTWorkerInitialization::theUserTrackingAction = 0;
-G4ThreadLocal const G4UserSteppingAction * G4RTWorkerInitialization::theUserSteppingAction = 0;
+G4ThreadLocal const G4UserRunAction* G4RTWorkerInitialization::theUserRunAction = 0;
+G4ThreadLocal const G4VUserPrimaryGeneratorAction*
+  G4RTWorkerInitialization::theUserPrimaryGeneratorAction = 0;
+G4ThreadLocal const G4UserEventAction* G4RTWorkerInitialization::theUserEventAction = 0;
+G4ThreadLocal const G4UserStackingAction* G4RTWorkerInitialization::theUserStackingAction = 0;
+G4ThreadLocal const G4UserTrackingAction* G4RTWorkerInitialization::theUserTrackingAction = 0;
+G4ThreadLocal const G4UserSteppingAction* G4RTWorkerInitialization::theUserSteppingAction = 0;
 
-G4ThreadLocal G4RTRunAction * G4RTWorkerInitialization::theRTRunAction = 0;
-G4ThreadLocal G4RTPrimaryGeneratorAction * G4RTWorkerInitialization::theRTPrimaryGeneratorAction = 0;
-G4ThreadLocal G4RTTrackingAction * G4RTWorkerInitialization::theRTTrackingAction = 0;
-G4ThreadLocal G4RTSteppingAction * G4RTWorkerInitialization::theRTSteppingAction = 0;
+G4ThreadLocal G4RTRunAction* G4RTWorkerInitialization::theRTRunAction = 0;
+G4ThreadLocal G4RTPrimaryGeneratorAction* G4RTWorkerInitialization::theRTPrimaryGeneratorAction = 0;
+G4ThreadLocal G4RTTrackingAction* G4RTWorkerInitialization::theRTTrackingAction = 0;
+G4ThreadLocal G4RTSteppingAction* G4RTWorkerInitialization::theRTSteppingAction = 0;
 
 #include "G4WorkerRunManager.hh"
 
 G4RTWorkerInitialization::G4RTWorkerInitialization()
-{;}
+{
+  ;
+}
 
 G4RTWorkerInitialization::~G4RTWorkerInitialization()
-{;}
+{
+  ;
+}
 
 void G4RTWorkerInitialization::WorkerRunStart() const
 {
-  if(!theRTRunAction) theRTRunAction = new G4RTRunAction;
-  if(!theRTPrimaryGeneratorAction) theRTPrimaryGeneratorAction = new G4RTPrimaryGeneratorAction;
-  if(!theRTTrackingAction) theRTTrackingAction = new G4RTTrackingAction;
-  if(!theRTSteppingAction) theRTSteppingAction = new G4RTSteppingAction;
-  
-  G4WorkerRunManager* runMan = G4WorkerRunManager::GetWorkerRunManager(); 
+  if (!theRTRunAction) theRTRunAction = new G4RTRunAction;
+  if (!theRTPrimaryGeneratorAction) theRTPrimaryGeneratorAction = new G4RTPrimaryGeneratorAction;
+  if (!theRTTrackingAction) theRTTrackingAction = new G4RTTrackingAction;
+  if (!theRTSteppingAction) theRTSteppingAction = new G4RTSteppingAction;
+
+  G4WorkerRunManager* runMan = G4WorkerRunManager::GetWorkerRunManager();
 
   theUserRunAction = runMan->GetUserRunAction();
   theUserPrimaryGeneratorAction = runMan->GetUserPrimaryGeneratorAction();
@@ -74,25 +79,24 @@ void G4RTWorkerInitialization::WorkerRunStart() const
   theUserStackingAction = runMan->GetUserStackingAction();
   theUserTrackingAction = runMan->GetUserTrackingAction();
   theUserSteppingAction = runMan->GetUserSteppingAction();
-  
-  runMan->SetUserAction(theRTRunAction);  
-  runMan->SetUserAction(theRTPrimaryGeneratorAction);  
-  runMan->SetUserAction(static_cast<G4UserEventAction*>(0));  
-  runMan->SetUserAction(static_cast<G4UserStackingAction*>(0));  
-  runMan->SetUserAction(theRTTrackingAction);  
-  runMan->SetUserAction(theRTSteppingAction);  
+
+  runMan->SetUserAction(theRTRunAction);
+  runMan->SetUserAction(theRTPrimaryGeneratorAction);
+  runMan->SetUserAction(static_cast<G4UserEventAction*>(0));
+  runMan->SetUserAction(static_cast<G4UserStackingAction*>(0));
+  runMan->SetUserAction(theRTTrackingAction);
+  runMan->SetUserAction(theRTSteppingAction);
 
   theRTPrimaryGeneratorAction->SetUp();
 }
 
 void G4RTWorkerInitialization::WorkerRunEnd() const
 {
-  G4WorkerRunManager* runMan = G4WorkerRunManager::GetWorkerRunManager(); 
-  runMan->SetUserAction(const_cast<G4UserRunAction*>(theUserRunAction));  
-  runMan->SetUserAction(const_cast<G4VUserPrimaryGeneratorAction*>(theUserPrimaryGeneratorAction));  
-  runMan->SetUserAction(const_cast<G4UserEventAction*>(theUserEventAction));  
-  runMan->SetUserAction(const_cast<G4UserStackingAction*>(theUserStackingAction));  
-  runMan->SetUserAction(const_cast<G4UserTrackingAction*>(theUserTrackingAction));  
-  runMan->SetUserAction(const_cast<G4UserSteppingAction*>(theUserSteppingAction));  
+  G4WorkerRunManager* runMan = G4WorkerRunManager::GetWorkerRunManager();
+  runMan->SetUserAction(const_cast<G4UserRunAction*>(theUserRunAction));
+  runMan->SetUserAction(const_cast<G4VUserPrimaryGeneratorAction*>(theUserPrimaryGeneratorAction));
+  runMan->SetUserAction(const_cast<G4UserEventAction*>(theUserEventAction));
+  runMan->SetUserAction(const_cast<G4UserStackingAction*>(theUserStackingAction));
+  runMan->SetUserAction(const_cast<G4UserTrackingAction*>(theUserTrackingAction));
+  runMan->SetUserAction(const_cast<G4UserSteppingAction*>(theUserSteppingAction));
 }
-

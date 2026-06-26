@@ -28,77 +28,72 @@
 //
 // History:
 // -----------
-// 29 Oct 2008   L. Pandola   1st implementation. Migration from EM process 
+// 29 Oct 2008   L. Pandola   1st implementation. Migration from EM process
 //                            to EM model
 // 02 Oct 2013   L. Pandola   Migration to MT paradigm
 //
 // -------------------------------------------------------------------
 //
 // Class description:
-// Low Energy Electromagnetic Physics, Positron Annihilation 
+// Low Energy Electromagnetic Physics, Positron Annihilation
 // with Penelope Model
 // -------------------------------------------------------------------
 
 #ifndef G4PENELOPEANNIHILATIONMODEL_HH
-#define G4PENELOPEANNIHILATIONMODEL_HH 1
+#define G4PENELOPEANNIHILATIONMODEL_HH
 
-#include "globals.hh"
-#include "G4VEmModel.hh"
 #include "G4DataVector.hh"
 #include "G4ParticleChangeForGamma.hh"
+#include "G4VEmModel.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 class G4DynamicParticle;
 class G4MaterialCutsCouple;
 class G4Material;
 
-class G4PenelopeAnnihilationModel : public G4VEmModel 
+class G4PenelopeAnnihilationModel : public G4VEmModel
 {
-public:
-  explicit G4PenelopeAnnihilationModel(const G4ParticleDefinition* p=nullptr,
-				       const G4String& processName ="PenAnnih");
-  virtual ~G4PenelopeAnnihilationModel();
+  public:
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
-  void InitialiseLocal(const G4ParticleDefinition*,
-                               G4VEmModel* ) override;
+    explicit G4PenelopeAnnihilationModel(const G4ParticleDefinition* p = nullptr,
+                                         const G4String& processName = "PenAnnih");
+    virtual ~G4PenelopeAnnihilationModel();
 
-  G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
-				      G4double kinEnergy,
-				      G4double Z,
-				      G4double A=0,
-				      G4double cut=0,
-				      G4double emax=DBL_MAX) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel*) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
-  
-  void SetVerbosityLevel(G4int lev){fVerboseLevel = lev;};
-  G4int GetVerbosityLevel(){return fVerboseLevel;};
-  
-  G4PenelopeAnnihilationModel & operator=(const G4PenelopeAnnihilationModel &right) = delete;
-  G4PenelopeAnnihilationModel(const G4PenelopeAnnihilationModel&) = delete;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A = 0, G4double cut = 0,
+                                        G4double emax = DBL_MAX) override;
 
-protected:
-  G4ParticleChangeForGamma* fParticleChange;
-  const G4ParticleDefinition* fParticle;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-private:
-  G4double ComputeCrossSectionPerElectron(G4double energy);
-  void SetParticle(const G4ParticleDefinition*);
+    void SetVerbosityLevel(G4int lev) { fVerboseLevel = lev; };
+    G4int GetVerbosityLevel() { return fVerboseLevel; };
 
-  //Stored here so it is not recalculated every time
-  static G4double fPielr2;
- 
-  G4double fIntrinsicLowEnergyLimit;
-  G4double fIntrinsicHighEnergyLimit;
-  
-  G4int fVerboseLevel;
-  G4bool fIsInitialised; 
+    G4PenelopeAnnihilationModel& operator=(const G4PenelopeAnnihilationModel& right) = delete;
+    G4PenelopeAnnihilationModel(const G4PenelopeAnnihilationModel&) = delete;
+
+  protected:
+
+    G4ParticleChangeForGamma* fParticleChange;
+    const G4ParticleDefinition* fParticle;
+
+  private:
+
+    G4double ComputeCrossSectionPerElectron(G4double energy);
+    void SetParticle(const G4ParticleDefinition*);
+
+    // Stored here so it is not recalculated every time
+    static G4double fPielr2;
+
+    G4double fIntrinsicLowEnergyLimit;
+    G4double fIntrinsicHighEnergyLimit;
+
+    G4int fVerboseLevel;
+    G4bool fIsInitialised;
 };
 
 #endif
-

@@ -33,44 +33,39 @@
 //
 // Author:     Vladimir Ivanchenko using Michel Maire algorithm
 //             developed for Geant3
-// 
+//
 // Creation date: 23 July 2012
 //
-// Class Description: 
+// Class Description:
 //
-// Photoelectric Angular Distribution Generation 
+// Photoelectric Angular Distribution Generation
 // The Sauter-Gavrila distribution for the K-shell is used.
 //
 // -------------------------------------------------------------------
 //
 
-#ifndef G4SauterGavrilaAngularDistribution_h
-#define G4SauterGavrilaAngularDistribution_h 1
+#ifndef G4SAUTERGAVRILAANGULARDISTRIBUTION_HH
+#define G4SAUTERGAVRILAANGULARDISTRIBUTION_HH
 
 #include "G4VEmAngularDistribution.hh"
 
 class G4SauterGavrilaAngularDistribution : public G4VEmAngularDistribution
 {
+  public:
 
-public:
+    explicit G4SauterGavrilaAngularDistribution();
 
-  explicit G4SauterGavrilaAngularDistribution();
+    ~G4SauterGavrilaAngularDistribution() override;
 
-  ~G4SauterGavrilaAngularDistribution() override;
+    G4ThreeVector& SampleDirection(const G4DynamicParticle* dp, G4double e = 0.0, G4int shellId = 0,
+                                   const G4Material* mat = nullptr) final;
 
-  G4ThreeVector& SampleDirection(const G4DynamicParticle* dp,
-                                 G4double e = 0.0,
-                                 G4int shellId = 0,
-                                 const G4Material* mat = nullptr) final;
+    void PrintGeneratorInformation() const override;
 
-  void PrintGeneratorInformation() const override;
-
-  // hide assignment operator 
-  G4SauterGavrilaAngularDistribution & operator=
-  (const  G4SauterGavrilaAngularDistribution &right) = delete;
-  G4SauterGavrilaAngularDistribution(const  G4SauterGavrilaAngularDistribution&) = delete;
-
+    // hide assignment operator
+    G4SauterGavrilaAngularDistribution&
+    operator=(const G4SauterGavrilaAngularDistribution& right) = delete;
+    G4SauterGavrilaAngularDistribution(const G4SauterGavrilaAngularDistribution&) = delete;
 };
 
 #endif
-

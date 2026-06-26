@@ -126,7 +126,8 @@ void G4TaskRunManagerKernel::InitializeWorker()
   if (context() && workerRM()) return;
 
   G4TaskRunManager* mrm = G4TaskRunManager::GetMasterRunManager();
-  if (G4MTRunManager::GetMasterThreadId() == G4ThisThread::get_id()) {
+  if (G4MTRunManager::GetMasterThreadId() == G4ThisThread::get_id())
+  {
     G4TaskManager* taskManager = mrm->GetTaskManager();
     auto _fut = taskManager->async(InitializeWorker);
     _fut->wait();
@@ -178,7 +179,8 @@ void G4TaskRunManagerKernel::InitializeWorker()
   if (mrm->GetUserWorkerInitialization() != nullptr)
     mrm->GetUserWorkerInitialization()->WorkerInitialize();
 
-  if (mrm->GetUserActionInitialization() != nullptr) {
+  if (mrm->GetUserActionInitialization() != nullptr)
+  {
     G4VSteppingVerbose* sv = mrm->GetUserActionInitialization()->InitializeSteppingVerbose();
     if (sv != nullptr) G4VSteppingVerbose::SetInstance(sv);
   }
@@ -219,7 +221,8 @@ void G4TaskRunManagerKernel::InitializeWorker()
 void G4TaskRunManagerKernel::ExecuteWorkerInit()
 {
   // because of TBB
-  if (G4MTRunManager::GetMasterThreadId() == G4ThisThread::get_id()) {
+  if (G4MTRunManager::GetMasterThreadId() == G4ThisThread::get_id())
+  {
     G4TaskManager* taskManager = G4TaskRunManager::GetMasterRunManager()->GetTaskManager();
     auto _fut = taskManager->async(ExecuteWorkerInit);
     return _fut->get();
@@ -239,7 +242,8 @@ void G4TaskRunManagerKernel::ExecuteWorkerInit()
 void G4TaskRunManagerKernel::ExecuteWorkerTask()
 {
   // because of TBB
-  if (G4MTRunManager::GetMasterThreadId() == G4ThisThread::get_id()) {
+  if (G4MTRunManager::GetMasterThreadId() == G4ThisThread::get_id())
+  {
     G4TaskManager* taskManager = G4TaskRunManager::GetMasterRunManager()->GetTaskManager();
     auto _fut = taskManager->async(ExecuteWorkerTask);
     return _fut->get();
@@ -303,11 +307,14 @@ void G4TaskRunManagerKernel::SetUpDecayChannels()
 {
   G4ParticleTable::G4PTblDicIterator* pItr = G4ParticleTable::GetParticleTable()->GetIterator();
   pItr->reset();
-  while ((*pItr)()) {
+  while ((*pItr)())
+  {
     G4DecayTable* dt = pItr->value()->GetDecayTable();
-    if (dt != nullptr) {
+    if (dt != nullptr)
+    {
       G4int nCh = dt->entries();
-      for (G4int i = 0; i < nCh; i++) {
+      for (G4int i = 0; i < nCh; i++)
+      {
         dt->GetDecayChannel(i)->GetDaughter(0);
       }
     }

@@ -31,9 +31,8 @@
 
 #include "globals.hh"
 
-
-#ifndef G4BetaDecayType_h
-#define G4BetaDecayType_h 1
+#ifndef G4BETADECAYTYPE_HH
+#  define G4BETADECAYTYPE_HH
 
 enum G4BetaDecayType
 {
@@ -47,7 +46,6 @@ enum G4BetaDecayType
   notImplemented
 };
 
-std::istream &operator >> (std::istream &s, G4BetaDecayType &q);
+std::istream& operator>>(std::istream& s, G4BetaDecayType& q);
 
 #endif
-

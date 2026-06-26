@@ -27,12 +27,13 @@
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
 #include "G4XmlAnalysisManager.hh"
-#include "G4XmlFileManager.hh"
-#include "G4XmlNtupleFileManager.hh"
+
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
 #include "G4ThreadLocalSingleton.hh"
 #include "G4Threading.hh"
+#include "G4XmlFileManager.hh"
+#include "G4XmlNtupleFileManager.hh"
 
 using namespace G4Analysis;
 using std::make_shared;
@@ -52,8 +53,7 @@ G4bool G4XmlAnalysisManager::IsInstance()
 }
 
 //_____________________________________________________________________________
-G4XmlAnalysisManager::G4XmlAnalysisManager()
- : G4ToolsAnalysisManager("Xml")
+G4XmlAnalysisManager::G4XmlAnalysisManager() : G4ToolsAnalysisManager("Xml")
 {
   // File Manager
   auto fileManager = std::make_shared<G4XmlFileManager>(fState);

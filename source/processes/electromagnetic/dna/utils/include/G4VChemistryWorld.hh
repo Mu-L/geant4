@@ -28,15 +28,17 @@
 #ifndef G4VCHEMISTRYWORLD_HH
 #define G4VCHEMISTRYWORLD_HH
 
-#include <memory>
-#include <map>
 #include "globals.hh"
+
+#include <map>
+#include <memory>
 class G4DNABoundingBox;
 class G4Material;
 class G4MolecularConfiguration;
 class G4VChemistryWorld
 {
- public:
+  public:
+
     using MolType = const G4MolecularConfiguration*;
     G4VChemistryWorld() = default;
     virtual ~G4VChemistryWorld() = default;
@@ -44,43 +46,24 @@ class G4VChemistryWorld
     virtual void ConstructChemistryBoundary() = 0;
     virtual void ConstructChemistryComponents() = 0;
 
-    std::map<MolType,double>::iterator begin()
-    {
-        return fpChemicalComponent.begin();
-    }
+    std::map<MolType, double>::iterator begin() { return fpChemicalComponent.begin(); }
 
-    std::map<MolType,double>::iterator end()
-    {
-      return fpChemicalComponent.end();
-    }
+    std::map<MolType, double>::iterator end() { return fpChemicalComponent.end(); }
 
-    size_t size()
-    {
-        return fpChemicalComponent.size();
-    }
+    size_t size() { return fpChemicalComponent.size(); }
 
-    std::map<MolType,double>::const_iterator begin_const()
-    {
-        return fpChemicalComponent.begin();
-    }
+    std::map<MolType, double>::const_iterator begin_const() { return fpChemicalComponent.begin(); }
 
-    std::map<MolType,double>::const_iterator end_const()
-    {
-        return fpChemicalComponent.end();
-    }
+    std::map<MolType, double>::const_iterator end_const() { return fpChemicalComponent.end(); }
 
-    G4DNABoundingBox* GetChemistryBoundary() const
-    {
-        return fpChemistryBoundary.get();
-    }
+    G4DNABoundingBox* GetChemistryBoundary() const { return fpChemistryBoundary.get(); }
 
-    std::map<MolType,G4double> GetChemicalComponent() const
-    {
-      return fpChemicalComponent;
-    }
-   protected:
+    std::map<MolType, G4double> GetChemicalComponent() const { return fpChemicalComponent; }
+
+  protected:
+
     std::unique_ptr<G4DNABoundingBox> fpChemistryBoundary;
-    std::map<MolType,G4double> fpChemicalComponent;
+    std::map<MolType, G4double> fpChemicalComponent;
 };
 
 #endif

@@ -37,16 +37,18 @@
 //
 
 #include "G4DNARPWBAExcitationModel.hh"
-#include "G4SystemOfUnits.hh"
+
 #include "G4DNAChemistryManager.hh"
 #include "G4DNAMolecularMaterial.hh"
+#include "G4SystemOfUnits.hh"
+
 #include <map>
 using namespace std;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4DNARPWBAExcitationModel::G4DNARPWBAExcitationModel(
-  const G4ParticleDefinition*, const G4String& nam)
+G4DNARPWBAExcitationModel::G4DNARPWBAExcitationModel(const G4ParticleDefinition*,
+                                                     const G4String& nam)
   : G4VEmModel(nam)
 {
   // Verbosity scale:
@@ -55,7 +57,7 @@ G4DNARPWBAExcitationModel::G4DNARPWBAExcitationModel(
   // 2 = details of energy budget
   // 3 = calculation of cross sections, file openings, sampling of atoms
   // 4 = entering in methods
-  if(verboseLevel > 0)
+  if (verboseLevel > 0)
   {
     G4cout << "RPWBA excitation model is constructed " << G4endl;
   }
@@ -70,84 +72,81 @@ G4DNARPWBAExcitationModel::~G4DNARPWBAExcitationModel() = default;
 void G4DNARPWBAExcitationModel::Initialise(const G4ParticleDefinition* particle,
                                            const G4DataVector& /*cuts*/)
 {
-  if(isInitialised)
+  if (isInitialised)
   {
     return;
   }
-  if(verboseLevel > 3)
+  if (verboseLevel > 3)
   {
     G4cout << "Calling G4DNARPWBAExcitationModel::Initialise()" << G4endl;
   }
 
-  if(fParticleDefinition != nullptr && fParticleDefinition != particle)
+  if (fParticleDefinition != nullptr && fParticleDefinition != particle)
   {
-    G4Exception("G4DNARPWBAExcitationModel::Initialise", "em0001",
-                FatalException,
+    G4Exception("G4DNARPWBAExcitationModel::Initialise", "em0001", FatalException,
                 "Model already initialized for another particle type.");
   }
 
-  fTableFile  = "dna/sigma_excitation_p_RPWBA";
-  fLowEnergy  = 100. * MeV;
+  fTableFile = "dna/sigma_excitation_p_RPWBA";
+  fLowEnergy = 100. * MeV;
   fHighEnergy = 300. * MeV;
 
-  if(LowEnergyLimit() < fLowEnergy || HighEnergyLimit() > fHighEnergy)
+  if (LowEnergyLimit() < fLowEnergy || HighEnergyLimit() > fHighEnergy)
   {
     G4ExceptionDescription ed;
-    ed << "Model is applicable from "<<fLowEnergy<<" to "<<fHighEnergy;
-    G4Exception("G4DNARPWBAExcitationModel::Initialise", "em0004",
-      FatalException, ed);
+    ed << "Model is applicable from " << fLowEnergy << " to " << fHighEnergy;
+    G4Exception("G4DNARPWBAExcitationModel::Initialise", "em0004", FatalException, ed);
   }
 
   G4double scaleFactor = 1 * cm * cm;
-  fTableData = make_unique<G4DNACrossSectionDataSet>(new G4LogLogInterpolation,
-                                                     eV, scaleFactor);
+  fTableData = make_unique<G4DNACrossSectionDataSet>(new G4LogLogInterpolation, eV, scaleFactor);
   fTableData->LoadData(fTableFile);
 
-  if(verboseLevel > 0)
+  if (verboseLevel > 0)
   {
     G4cout << "RPWBA excitation model is initialized " << G4endl
-           << "Energy range: " << LowEnergyLimit() / eV << " eV - "
-           << HighEnergyLimit() / keV << " keV for "
-           << particle->GetParticleName() << G4endl;
+           << "Energy range: " << LowEnergyLimit() / eV << " eV - " << HighEnergyLimit() / keV
+           << " keV for " << particle->GetParticleName() << G4endl;
   }
 
   // Initialize water density pointer
-  if(G4Material::GetMaterial("G4_WATER") != nullptr){
-    fpMolWaterDensity =
-      G4DNAMolecularMaterial::Instance()->GetNumMolPerVolTableFor(
-        G4Material::GetMaterial("G4_WATER"));
-  }else{
+  if (G4Material::GetMaterial("G4_WATER") != nullptr)
+  {
+    fpMolWaterDensity = G4DNAMolecularMaterial::Instance()->GetNumMolPerVolTableFor(
+      G4Material::GetMaterial("G4_WATER"));
+  }
+  else
+  {
     G4ExceptionDescription exceptionDescription;
     exceptionDescription << "G4_WATER does not exist :";
-    G4Exception("G4DNARPWBAIonisationModel::Initialise", "em00020",
-                FatalException, exceptionDescription);
+    G4Exception("G4DNARPWBAIonisationModel::Initialise", "em00020", FatalException,
+                exceptionDescription);
   }
   fParticleChangeForGamma = GetParticleChangeForGamma();
-  isInitialised           = true;
+  isInitialised = true;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double G4DNARPWBAExcitationModel::CrossSectionPerVolume(
-  const G4Material* material, const G4ParticleDefinition* particleDefinition,
-  G4double ekin, G4double, G4double)
+G4double
+G4DNARPWBAExcitationModel::CrossSectionPerVolume(const G4Material* material,
+                                                 const G4ParticleDefinition* particleDefinition,
+                                                 G4double ekin, G4double, G4double)
 {
-  if(verboseLevel > 3)
+  if (verboseLevel > 3)
   {
-    G4cout << "Calling CrossSectionPerVolume() of G4DNARPWBAExcitationModel"
-           << G4endl;
+    G4cout << "Calling CrossSectionPerVolume() of G4DNARPWBAExcitationModel" << G4endl;
   }
 
-  if(fTableData == nullptr)
+  if (fTableData == nullptr)
   {
     G4ExceptionDescription exceptionDescription;
     exceptionDescription << "No cross section data ";
-    G4Exception("G4DNARPWBAIonisationModel::CrossSectionPerVolume", "em00120",
-                FatalException, exceptionDescription);
+    G4Exception("G4DNARPWBAIonisationModel::CrossSectionPerVolume", "em00120", FatalException,
+                exceptionDescription);
   }
 
-  if(particleDefinition != fParticleDefinition)
-    return 0;
+  if (particleDefinition != fParticleDefinition) return 0;
 
   // Calculate total cross section for model
 
@@ -155,21 +154,20 @@ G4double G4DNARPWBAExcitationModel::CrossSectionPerVolume(
 
   G4double waterDensity = (*fpMolWaterDensity)[material->GetIndex()];
 
-  if(ekin >= fLowEnergy && ekin <= fHighEnergy)
+  if (ekin >= fLowEnergy && ekin <= fHighEnergy)
   {
     sigma = fTableData->FindValue(ekin);
   }
 
-  if(verboseLevel > 2)
+  if (verboseLevel > 2)
   {
     G4cout << "__________________________________" << G4endl;
     G4cout << "G4DNARPWBAExcitationModel - XS INFO START" << G4endl;
     G4cout << "Kinetic energy(eV)=" << ekin / eV
            << " particle : " << particleDefinition->GetParticleName() << G4endl;
-    G4cout << "Cross section per water molecule (cm^2)=" << sigma / cm / cm
+    G4cout << "Cross section per water molecule (cm^2)=" << sigma / cm / cm << G4endl;
+    G4cout << "Cross section per water molecule (cm^-1)=" << sigma * waterDensity / (1. / cm)
            << G4endl;
-    G4cout << "Cross section per water molecule (cm^-1)="
-           << sigma * waterDensity / (1. / cm) << G4endl;
     G4cout << "G4DNARPWBAExcitationModel - XS INFO END" << G4endl;
   }
 
@@ -178,53 +176,51 @@ G4double G4DNARPWBAExcitationModel::CrossSectionPerVolume(
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4DNARPWBAExcitationModel::SampleSecondaries(
-  std::vector<G4DynamicParticle*>* /*fvect*/,
-  const G4MaterialCutsCouple* /*couple*/,
-  const G4DynamicParticle* aDynamicParticle, G4double, G4double)
+void G4DNARPWBAExcitationModel::SampleSecondaries(std::vector<G4DynamicParticle*>* /*fvect*/,
+                                                  const G4MaterialCutsCouple* /*couple*/,
+                                                  const G4DynamicParticle* aDynamicParticle,
+                                                  G4double, G4double)
 {
-  if(verboseLevel > 3)
+  if (verboseLevel > 3)
   {
-    G4cout << "Calling SampleSecondaries() of G4DNARPWBAExcitationModel"
-           << G4endl;
+    G4cout << "Calling SampleSecondaries() of G4DNARPWBAExcitationModel" << G4endl;
   }
 
   G4double k = aDynamicParticle->GetKineticEnergy();
 
-  G4int level               = RandomSelect(k);
+  G4int level = RandomSelect(k);
   G4double excitationEnergy = waterStructure.ExcitationEnergy(level);
-  G4double newEnergy        = k - excitationEnergy;
+  G4double newEnergy = k - excitationEnergy;
 
-  if(newEnergy > 0)
+  if (newEnergy > 0)
   {
-    fParticleChangeForGamma->ProposeMomentumDirection(
-      aDynamicParticle->GetMomentumDirection());
+    fParticleChangeForGamma->ProposeMomentumDirection(aDynamicParticle->GetMomentumDirection());
 
-    if(!statCode){
+    if (!statCode)
+    {
       fParticleChangeForGamma->SetProposedKineticEnergy(newEnergy);
     }
-    else{
+    else
+    {
       fParticleChangeForGamma->SetProposedKineticEnergy(k);
     }
     fParticleChangeForGamma->ProposeLocalEnergyDeposit(excitationEnergy);
   }
 
   const G4Track* theIncomingTrack = fParticleChangeForGamma->GetCurrentTrack();
-  G4DNAChemistryManager::Instance()->CreateWaterMolecule(
-    eExcitedMolecule, level, theIncomingTrack);
+  G4DNAChemistryManager::Instance()->CreateWaterMolecule(eExcitedMolecule, level, theIncomingTrack);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4DNARPWBAExcitationModel::GetPartialCrossSection(
-  const G4Material*, G4int level, const G4ParticleDefinition* particle,
-  G4double kineticEnergy)
+G4double G4DNARPWBAExcitationModel::GetPartialCrossSection(const G4Material*, G4int level,
+                                                           const G4ParticleDefinition* particle,
+                                                           G4double kineticEnergy)
 {
-  if(fParticleDefinition != particle)
+  if (fParticleDefinition != particle)
   {
-    G4Exception("G4DNARPWBAExcitationModel::GetPartialCrossSection",
-                "RPWBAParticleType", FatalException,
-                "Model initialized for another particle type.");
+    G4Exception("G4DNARPWBAExcitationModel::GetPartialCrossSection", "RPWBAParticleType",
+                FatalException, "Model initialized for another particle type.");
   }
 
   return fTableData->GetComponent(level)->FindValue(kineticEnergy);
@@ -236,12 +232,12 @@ G4int G4DNARPWBAExcitationModel::RandomSelect(G4double k)
 {
   G4int level = 0;
 
-  auto  valuesBuffer = new G4double[fTableData->NumberOfComponents()];
-  const auto  n = (G4int)fTableData->NumberOfComponents();
+  auto valuesBuffer = new G4double[fTableData->NumberOfComponents()];
+  const auto n = (G4int)fTableData->NumberOfComponents();
   G4int i(n);
   G4double value = 0.;
 
-  while(i > 0)
+  while (i > 0)
   {
     --i;
     valuesBuffer[i] = fTableData->GetComponent(i)->FindValue(k);
@@ -251,11 +247,11 @@ G4int G4DNARPWBAExcitationModel::RandomSelect(G4double k)
   value *= G4UniformRand();
   i = n;
 
-  while(i > 0)
+  while (i > 0)
   {
     --i;
 
-    if(valuesBuffer[i] > value)
+    if (valuesBuffer[i] > value)
     {
       delete[] valuesBuffer;
       return i;

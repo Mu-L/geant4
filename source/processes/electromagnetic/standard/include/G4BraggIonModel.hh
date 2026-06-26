@@ -40,21 +40,21 @@
 // 11-05-05 Major optimisation of internal interfaces (V.Ivantchenko)
 // 15-02-06 ComputeCrossSectionPerElectron, ComputeCrossSectionPerAtom (mma)
 // 25-04-06 Add stopping data from ASTAR (V.Ivanchenko)
-// 12-08-08 Added methods GetParticleCharge, GetChargeSquareRatio, 
+// 12-08-08 Added methods GetParticleCharge, GetChargeSquareRatio,
 //          CorrectionsAlongStep needed for ions(V.Ivanchenko)
 
 //
 // Class Description:
 //
 // Implementation of energy loss and delta-electron production
-// by heavy slow charged particles using ICRU'49, NIST, and ICRU90 
+// by heavy slow charged particles using ICRU'49, NIST, and ICRU90
 // evaluated data for alpha and protons
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4BraggIonModel_h
-#define G4BraggIonModel_h 1
+#ifndef G4BRAGGIONMODEL_HH
+#define G4BRAGGIONMODEL_HH
 
 #include "G4BraggModel.hh"
 
@@ -62,74 +62,60 @@ class G4ASTARStopping;
 
 class G4BraggIonModel : public G4BraggModel
 {
+  public:
 
-public:
+    explicit G4BraggIonModel(const G4ParticleDefinition* p = nullptr,
+                             const G4String& nam = "BraggIon");
 
-  explicit G4BraggIonModel(const G4ParticleDefinition* p = nullptr,
-			   const G4String& nam = "BraggIon");
+    ~G4BraggIonModel() override;
 
-  ~G4BraggIonModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, 
-		  const G4DataVector&) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kineticEnergy,
+                                        G4double Z, G4double A, G4double cutEnergy,
+                                        G4double maxEnergy) override;
 
-  G4double ComputeCrossSectionPerAtom(
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double Z, G4double A,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy,
+                                   G4double maxEnergy) override;
 
-  G4double CrossSectionPerVolume(const G4Material*,
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                  G4double kineticEnergy, G4double cutEnergy) override;
 
-  G4double ComputeDEDXPerVolume(const G4Material*,
-                                const G4ParticleDefinition*,
-                                G4double kineticEnergy,
-                                G4double cutEnergy) override;
+    // Compute ion charge not applied to alpha
+    G4double GetChargeSquareRatio(const G4ParticleDefinition*, const G4Material*,
+                                  G4double kineticEnergy) override;
 
-  // Compute ion charge not applied to alpha
-  G4double GetChargeSquareRatio(const G4ParticleDefinition*,
-				const G4Material*,
-				G4double kineticEnergy) override;
+    // add correction to energy loss and ompute non-ionizing energy loss
+    void CorrectionsAlongStep(const G4Material*, const G4ParticleDefinition*,
+                              const G4double kinEnergy, const G4double cutEnergy,
+                              const G4double& length, G4double& eloss) override;
 
-  // add correction to energy loss and ompute non-ionizing energy loss
-  void CorrectionsAlongStep(const G4Material*,
-			    const G4ParticleDefinition*,
-			    const G4double kinEnergy,
-			    const G4double cutEnergy,
-			    const G4double& length,
-			    G4double& eloss) override;
+    // hide assignment operator
+    G4BraggIonModel& operator=(const G4BraggIonModel& right) = delete;
+    G4BraggIonModel(const G4BraggIonModel&) = delete;
 
-  // hide assignment operator
-  G4BraggIonModel & operator=(const  G4BraggIonModel &right) = delete;
-  G4BraggIonModel(const  G4BraggIonModel&) = delete;
+  private:
 
-private:
+    G4double HeEffChargeSquare(const G4double z, const G4double kinEnergyInMeV) const;
 
-  G4double HeEffChargeSquare(const G4double z, 
-                             const G4double kinEnergyInMeV) const;
+    G4int HasMaterialForHe(const G4Material* material) const;
 
-  G4int HasMaterialForHe(const G4Material* material) const;
+    G4double HeStoppingPower(const G4double kinEnergy) const;
 
-  G4double HeStoppingPower(const G4double kinEnergy) const;
+    G4double HeElectronicStoppingPower(const G4int z, const G4double kinEnergy) const;
 
-  G4double HeElectronicStoppingPower(const G4int z, const G4double kinEnergy) const;
+    G4double HeDEDX(const G4Material* material, const G4double kinEnergy);
 
-  G4double HeDEDX(const G4Material* material, const G4double kinEnergy);
+    static G4ASTARStopping* fASTAR;
 
-  static G4ASTARStopping* fASTAR;
+    G4double heChargeSquare = 4.0;
+    G4double HeMass;
+    G4double massFactor;
 
-  G4double heChargeSquare = 4.0;
-  G4double HeMass;
-  G4double massFactor;
-
-  G4int iASTAR = -1;    // index in ASTAR
-  G4bool isAlpha = false;
-  G4bool isFirstAlpha = false;
+    G4int iASTAR = -1;  // index in ASTAR
+    G4bool isAlpha = false;
+    G4bool isFirstAlpha = false;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

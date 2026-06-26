@@ -29,40 +29,38 @@
 //
 
 #include "G4Li7GEMProbability.hh"
+
 #include "G4SystemOfUnits.hh"
 
-G4Li7GEMProbability::G4Li7GEMProbability() :
-  G4GEMProbability(7,3,3.0/2.0) // A,Z,Spin
+G4Li7GEMProbability::G4Li7GEMProbability() : G4GEMProbability(7, 3, 3.0 / 2.0)  // A,Z,Spin
 {
-  ExcitEnergies.push_back(477.612*keV);
-  ExcitSpins.push_back(1.0/2.0);
-  ExcitLifetimes.push_back(73.0E-15*second);
-  
-  ExcitEnergies.push_back(4630.0*keV);
-  ExcitSpins.push_back(7.0/2.0);
-  ExcitLifetimes.push_back(fPlanck/(93.0*keV));
+  ExcitEnergies.push_back(477.612 * keV);
+  ExcitSpins.push_back(1.0 / 2.0);
+  ExcitLifetimes.push_back(73.0E-15 * second);
 
-  ExcitEnergies.push_back(6680.0*keV);
-  ExcitSpins.push_back(5.0/2.0);
-  ExcitLifetimes.push_back(fPlanck/(0.9*MeV));
+  ExcitEnergies.push_back(4630.0 * keV);
+  ExcitSpins.push_back(7.0 / 2.0);
+  ExcitLifetimes.push_back(fPlanck / (93.0 * keV));
 
-  ExcitEnergies.push_back(7459.7*keV);
-  ExcitSpins.push_back(5.0/2.0);
-  ExcitLifetimes.push_back(fPlanck/(89.0*keV));
+  ExcitEnergies.push_back(6680.0 * keV);
+  ExcitSpins.push_back(5.0 / 2.0);
+  ExcitLifetimes.push_back(fPlanck / (0.9 * MeV));
 
-  ExcitEnergies.push_back(9.67E+3*keV);
-  ExcitSpins.push_back(7.0/2.0);
-  ExcitLifetimes.push_back(fPlanck/(400.0*keV));
+  ExcitEnergies.push_back(7459.7 * keV);
+  ExcitSpins.push_back(5.0 / 2.0);
+  ExcitLifetimes.push_back(fPlanck / (89.0 * keV));
 
-  ExcitEnergies.push_back(98500.0*keV);
-  ExcitSpins.push_back(3.0/2.0);
-  ExcitLifetimes.push_back(fPlanck/(1200.0*keV));
+  ExcitEnergies.push_back(9.67E+3 * keV);
+  ExcitSpins.push_back(7.0 / 2.0);
+  ExcitLifetimes.push_back(fPlanck / (400.0 * keV));
 
-  ExcitEnergies.push_back(11240.0*keV);
-  ExcitSpins.push_back(3.0/2.0);
-  ExcitLifetimes.push_back(fPlanck/(260.0*keV));
+  ExcitEnergies.push_back(98500.0 * keV);
+  ExcitSpins.push_back(3.0 / 2.0);
+  ExcitLifetimes.push_back(fPlanck / (1200.0 * keV));
+
+  ExcitEnergies.push_back(11240.0 * keV);
+  ExcitSpins.push_back(3.0 / 2.0);
+  ExcitLifetimes.push_back(fPlanck / (260.0 * keV));
 }
 
-G4Li7GEMProbability::~G4Li7GEMProbability()
-{}
-
+G4Li7GEMProbability::~G4Li7GEMProbability() {}

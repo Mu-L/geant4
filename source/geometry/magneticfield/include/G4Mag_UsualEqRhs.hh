@@ -37,14 +37,15 @@
 #ifndef G4MAG_USUAL_EQRHS
 #define G4MAG_USUAL_EQRHS
 
-#include "G4Mag_EqRhs.hh"
 #include "G4ChargeState.hh"
+#include "G4Mag_EqRhs.hh"
 
 class G4MagneticField;
 
 /**
  * @brief G4Mag_UsualEqRhs defines the standard right-hand side
  * for equation of motion.
+ * @ingroup geometry_magneticfield
  */
 
 class G4Mag_UsualEqRhs : public G4Mag_EqRhs
@@ -55,13 +56,13 @@ class G4Mag_UsualEqRhs : public G4Mag_EqRhs
      * Constructor for G4Mag_UsualEqRhs.
      *  @param[in] MagField Pointer to the associated magnetic field.
      */
-    G4Mag_UsualEqRhs( G4MagneticField* MagField );
+    G4Mag_UsualEqRhs(G4MagneticField* MagField);
 
     /**
      * Default Destructor.
      */
     ~G4Mag_UsualEqRhs() override = default;
-      // Constructor and destructor. No actions.
+    // Constructor and destructor. No actions.
 
     /**
      * Calculates the value of the derivative, given the value of the field.
@@ -69,16 +70,13 @@ class G4Mag_UsualEqRhs : public G4Mag_EqRhs
      *  @param[in] B Field value.
      *  @param[out] dydx Derivatives array.
      */
-    void EvaluateRhsGivenB( const G4double y[],
-                            const G4double B[3],
-                                  G4double dydx[] ) const override;
+    void EvaluateRhsGivenB(const G4double y[], const G4double B[3], G4double dydx[]) const override;
 
     /**
      * Sets the charge momentum mass value.
      */
-    void SetChargeMomentumMass( G4ChargeState particleCharge,
-                                G4double MomentumXc,
-                                G4double mass ) override;
+    void SetChargeMomentumMass(G4ChargeState particleCharge, G4double MomentumXc,
+                               G4double mass) override;
 
     /**
      * Returns the equation of motion type ID, i.e. "kEqMagnetic".

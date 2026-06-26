@@ -48,18 +48,18 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include "G4eeToHadrons.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4MaterialCutsCouple.hh"
+
 #include "G4Gamma.hh"
+#include "G4MaterialCutsCouple.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 using namespace std;
 
-G4eeToHadrons::G4eeToHadrons(const G4String& name)
-  : G4VEmProcess(name)
+G4eeToHadrons::G4eeToHadrons(const G4String& name) : G4VEmProcess(name)
 {
-  //SetVerboseLevel(2);
+  // SetVerboseLevel(2);
   SetProcessSubType(fAnnihilationToHadrons);
   SetBuildTableFlag(false);
   SetCrossSectionType(fEmOnePeak);
@@ -68,8 +68,7 @@ G4eeToHadrons::G4eeToHadrons(const G4String& name)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4eeToHadrons::~G4eeToHadrons()
-{}
+G4eeToHadrons::~G4eeToHadrons() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -82,13 +81,14 @@ G4bool G4eeToHadrons::IsApplicable(const G4ParticleDefinition& p)
 
 void G4eeToHadrons::InitialiseProcess(const G4ParticleDefinition*)
 {
-  if(!isInitialised) {
+  if (!isInitialised)
+  {
     isInitialised = true;
 
     SetParticle(G4Positron::Positron());
 
     multimodel = new G4eeToHadronsMultiModel(verboseLevel);
-    if(csFactor > 1.0) multimodel->SetCrossSecFactor(csFactor);
+    if (csFactor > 1.0) multimodel->SetCrossSecFactor(csFactor);
     SetEmModel(multimodel);
     AddEmModel(1, multimodel);
   }
@@ -105,7 +105,7 @@ void G4eeToHadrons::StreamProcessInfo(std::ostream& outFile) const
 
 void G4eeToHadrons::SetCrossSecFactor(G4double fac)
 {
-  if(multimodel) multimodel->SetCrossSecFactor(fac);
+  if (multimodel) multimodel->SetCrossSecFactor(fac);
   csFactor = fac;
 }
 

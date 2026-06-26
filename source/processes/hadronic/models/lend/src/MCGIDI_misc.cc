@@ -26,6 +26,7 @@ LUPI_HOST SetupInfo::SetupInfo( ProtareSingle &a_protare, GIDI::ProtareSingle co
         m_pops( a_pops ),
         m_neutronIndex( MCGIDI_popsIndex( a_popsUser, PoPI::IDs::neutron ) ),
         m_photonIndex( MCGIDI_popsIndex( a_popsUser, PoPI::IDs::photon ) ),
+        m_twobodyFirstProductDistribution( nullptr ),
         m_initialStateIndex( -1 ),
         m_GRIN_continuumGammas( nullptr ) {
 
@@ -130,7 +131,6 @@ LUPI_HOST_DEVICE double particleKineticEnergy( double a_mass_unitOfEnergy, doubl
 
     return( a_mass_unitOfEnergy * ( 1.0 / sqrt( 1.0 - a_particleBeta * a_particleBeta ) - 1.0 ) );
 }
-
 
 /* *********************************************************************************************************//**
  * This function is like particleKineticEnergy except that *a_particleBeta2* is beta squared (i.e., (v/c)^2).
@@ -455,7 +455,6 @@ LUPI_HOST_DEVICE void serializeQs( LUPI::DataBuffer &a_buffer, LUPI::DataBuffer:
         a_Qs[vectorIndex] = serializeFunction1d_d1( a_buffer, a_mode, a_Qs[vectorIndex] );
     }
 }
-
 
 /* *********************************************************************************************************//**
  * 

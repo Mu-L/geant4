@@ -43,14 +43,17 @@
 #ifndef G4SURFBITS_HH
 #define G4SURFBITS_HH
 
-#include <cstring>
-
 #include "G4Types.hh"
+
+#include <cstring>
 
 /**
  * @brief G4SurfBits provides a simple container of bits, to be used for
- * optimization of tessellated surfaces. The size of the container is
- * automatically extended when a bit number is either set or tested.
+ * optimization of tessellated surfaces.
+ * @ingroup geometry_solids_specific
+ *
+ * The size of the container is automatically extended when a bit number
+ * is either set or tested.
  */
 
 class G4SurfBits
@@ -66,7 +69,7 @@ class G4SurfBits
     /**
      * Destructor. Clears all allocated bits.
      */
-   ~G4SurfBits();
+    ~G4SurfBits();
 
     /**
      * Copy constructor and assignment operator.
@@ -113,7 +116,7 @@ class G4SurfBits
      * Utilities to clear or reduce the space used.
      */
     void Clear();
-    void Compact();               // Reduce the space used.
+    void Compact();  // Reduce the space used.
 
     /**
      * Accessors.
@@ -125,11 +128,11 @@ class G4SurfBits
      * Logging functions.
      */
     void Print() const;  // to show the list of active bits
-    void Output(std::ostream &) const;
+    void Output(std::ostream&) const;
 
   public:
 
-    unsigned char* fAllBits = nullptr; // [fNBytes] array of UChars
+    unsigned char* fAllBits = nullptr;  // [fNBytes] array of UChars
 
   private:
 
@@ -137,8 +140,8 @@ class G4SurfBits
 
   private:
 
-    unsigned int fNBits;         // Highest bit set + 1
-    unsigned int fNBytes;        // Number of UChars in fAllBits
+    unsigned int fNBits;  // Highest bit set + 1
+    unsigned int fNBytes;  // Number of UChars in fAllBits
 };
 
 // inline functions...

@@ -26,13 +26,12 @@
 //
 //
 
-#ifndef G4PSTrackCounter_h
-#define G4PSTrackCounter_h 1
-
-#include "G4VPrimitivePlotter.hh"
-#include "G4THitsMap.hh"
+#ifndef G4PSTRACKCOUNTER_HH
+#define G4PSTRACKCOUNTER_HH
 
 #include "G4PSDirectionFlag.hh"
+#include "G4THitsMap.hh"
+#include "G4VPrimitivePlotter.hh"
 
 ///////////////////////////////////////////////////////////////////////////////
 // (Description)
@@ -47,27 +46,30 @@
 
 class G4PSTrackCounter : public G4VPrimitivePlotter
 {
- public: 
-  G4PSTrackCounter(const G4String& name, G4int direction, G4int depth = 0);
-  ~G4PSTrackCounter() override = default;
+  public:
 
-  inline void Weighted(G4bool flg = true) { weighted = flg; }
-  // Multiply track weight
+    G4PSTrackCounter(const G4String& name, G4int direction, G4int depth = 0);
+    ~G4PSTrackCounter() override = default;
 
-  void Initialize(G4HCofThisEvent*) override;
-  void clear() override;
-  void PrintAll() override;
+    inline void Weighted(G4bool flg = true) { weighted = flg; }
+    // Multiply track weight
 
-  virtual void SetUnit(const G4String& unit);
+    void Initialize(G4HCofThisEvent*) override;
+    void clear() override;
+    void PrintAll() override;
 
- protected:
-  G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+    virtual void SetUnit(const G4String& unit);
 
- private:
-  G4int HCID{-1};
-  G4int fDirection;
-  G4THitsMap<G4double>* EvtMap{nullptr};
-  G4bool weighted{false};
+  protected:
+
+    G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+
+  private:
+
+    G4int HCID{-1};
+    G4int fDirection;
+    G4THitsMap<G4double>* EvtMap{nullptr};
+    G4bool weighted{false};
 };
 
 #endif

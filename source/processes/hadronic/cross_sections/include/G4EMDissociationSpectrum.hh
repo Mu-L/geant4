@@ -33,8 +33,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4EMDissociationSpectrum_h
-#define G4EMDissociationSpectrum_h 1
+#ifndef G4EMDISSOCIATIONSPECTRUM_HH
+#define G4EMDISSOCIATIONSPECTRUM_HH
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //
 // MODULE:              G4EMDissociationSpectrum.hh
@@ -67,15 +67,16 @@
 class G4EMDissociationSpectrum
 {
   public:
-    G4EMDissociationSpectrum ();
-    ~G4EMDissociationSpectrum ();
-     G4double GetGeneralE1Spectrum (G4double, G4double, G4double);
-     G4double GetGeneralE2Spectrum (G4double, G4double, G4double);
-     G4double GetClosestApproach
-       (const G4double, const G4double, G4double, G4double, G4double);
+
+    G4EMDissociationSpectrum();
+    ~G4EMDissociationSpectrum();
+    G4double GetGeneralE1Spectrum(G4double, G4double, G4double);
+    G4double GetGeneralE2Spectrum(G4double, G4double, G4double);
+    G4double GetClosestApproach(const G4double, const G4double, G4double, G4double, G4double);
 
   private:
-    G4Bessel *bessel;
+
+    G4Bessel* bessel;
 };
 ////////////////////////////////////////////////////////////////////////////////
 //

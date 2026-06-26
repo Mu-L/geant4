@@ -28,14 +28,15 @@
 //
 // June-2019 - E. Mendoza --> perform some corrections
 
-#ifndef G4ParticleHPKallbachMannSyst_h
-#define G4ParticleHPKallbachMannSyst_h 1
+#ifndef G4PARTICLEHPKALLBACHMANNSYST_HH
+#define G4PARTICLEHPKALLBACHMANNSYST_HH
 
 #include "globals.hh"
 
 class G4ParticleHPKallbachMannSyst
 {
   public:
+
     G4ParticleHPKallbachMannSyst(G4double aCompoundFraction, G4double anIncidentEnergy,
                                  G4double anIncidentMass, G4double aProductEnergy,
                                  G4double aProductMass, G4double aResidualMass, G4int aResidualA,
@@ -74,6 +75,7 @@ class G4ParticleHPKallbachMannSyst
                               G4int Zbinding);
 
   private:
+
     G4double theCompoundFraction;
     G4double theIncidentEnergy;
     G4double theIncidentMass;

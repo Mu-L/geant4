@@ -29,8 +29,8 @@
 //      History: first implementation, based on object model of
 //      10 oct 1998  H.Kurashige
 // ---------------------------------------------------------------
-#ifndef G4ExcitedDeltaConstructor_h
-#define G4ExcitedDeltaConstructor_h 1
+#ifndef G4EXCITEDDELTACONSTRUCTOR_HH
+#define G4EXCITEDDELTACONSTRUCTOR_HH
 
 #include "G4ExcitedBaryonConstructor.hh"
 #include "globals.hh"
@@ -39,7 +39,9 @@ class G4ExcitedDeltaConstructor : public G4ExcitedBaryonConstructor
 {
     // This class is a utility class for construction
     // short lived particles
+
   public:
+
     enum
     {
       NStates = 9
@@ -51,10 +53,12 @@ class G4ExcitedDeltaConstructor : public G4ExcitedBaryonConstructor
     };
 
   public:
+
     G4ExcitedDeltaConstructor();
     ~G4ExcitedDeltaConstructor() override = default;
 
   protected:
+
     G4int GetEncoding(G4int iIsoSpin3, G4int idxState) override;
 
     G4bool Exist(G4int) override { return true; }
@@ -73,6 +77,7 @@ class G4ExcitedDeltaConstructor : public G4ExcitedBaryonConstructor
                                    G4bool fAnti = false) override;
 
   private:
+
     G4DecayTable* AddNGammaMode(G4DecayTable* table, const G4String& name, G4double br, G4int iIso3,
                                 G4bool fAnti);
     G4DecayTable* AddNPiMode(G4DecayTable* table, const G4String& name, G4double br, G4int iIso3,
@@ -85,6 +90,7 @@ class G4ExcitedDeltaConstructor : public G4ExcitedBaryonConstructor
                                  G4int iIso3, G4bool fAnti);
 
   private:
+
     enum
     {
       DeltaIsoSpin = 3
@@ -142,32 +148,41 @@ inline G4int G4ExcitedDeltaConstructor::GetQuarkContents(G4int iQ, G4int iIso3)
   //    iIso3 = -1 : udd
   //    iIso3 = -3 : ddd
   G4int quark = 0;
-  if (iQ == 0) {
-    if (iIso3 == -3) {
+  if (iQ == 0)
+  {
+    if (iIso3 == -3)
+    {
       // d-quark
       quark = 1;
     }
-    else {
+    else
+    {
       // u-quark
       quark = 2;
     }
   }
-  else if (iQ == 2) {
-    if (iIso3 == +3) {
+  else if (iQ == 2)
+  {
+    if (iIso3 == +3)
+    {
       // u-quark
       quark = 2;
     }
-    else {
+    else
+    {
       // d-quark
       quark = 1;
     }
   }
-  else {
-    if ((iIso3 == -1) || (iIso3 == -3)) {
+  else
+  {
+    if ((iIso3 == -1) || (iIso3 == -3))
+    {
       // d-quark
       quark = 1;
     }
-    else {
+    else
+    {
       // u-quark
       quark = 2;
     }
@@ -183,16 +198,20 @@ inline G4String G4ExcitedDeltaConstructor::GetMultipletName(G4int iState)
 inline G4String G4ExcitedDeltaConstructor::GetName(G4int iIso3, G4int iState)
 {
   G4String particle = name[iState];
-  if (iIso3 == -3) {
+  if (iIso3 == -3)
+  {
     particle += "-";
   }
-  else if (iIso3 == -1) {
+  else if (iIso3 == -1)
+  {
     particle += "0";
   }
-  else if (iIso3 == +1) {
+  else if (iIso3 == +1)
+  {
     particle += "+";
   }
-  else {
+  else
+  {
     particle += "++";
   }
   return particle;

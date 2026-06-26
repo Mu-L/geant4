@@ -59,12 +59,10 @@ G4VtkQtViewer::G4VtkQtViewer(G4VSceneHandler& sceneHandler, const G4String& name
   : G4VtkViewer(sceneHandler, name)
 {
   G4Qt::getInstance();
-  //this->setFormat(QVTKOpenGLNativeWidget::defaultFormat());
+  // this->setFormat(QVTKOpenGLNativeWidget::defaultFormat());
 }
 
-G4VtkQtViewer::~G4VtkQtViewer()
-{
-}
+G4VtkQtViewer::~G4VtkQtViewer() {}
 
 void G4VtkQtViewer::Initialise()
 {
@@ -86,8 +84,7 @@ void G4VtkQtViewer::Initialise()
   // Shadows
   renderer->SetUseShadows(0);
 
-  vtkSmartPointer<G4VtkInteractorStyle> style =
-    vtkSmartPointer<G4VtkInteractorStyle>::New();
+  vtkSmartPointer<G4VtkInteractorStyle> style = vtkSmartPointer<G4VtkInteractorStyle>::New();
   this->interactor()->SetInteractorStyle(style);
 }
 
@@ -103,13 +100,14 @@ void G4VtkQtViewer::CreateMainWindow(QVTKOpenGLNativeWidget* vtkWidget, const QS
 
 #ifdef G4MULTITHREADED
 
-namespace {
-  G4Mutex visSubThreadMutex = G4MUTEX_INITIALIZER;
-  G4Condition waitForVisSubThreadInitialized = G4CONDITION_INITIALIZER;
-  G4bool visSubThreadEstablished = false;
-  G4bool qObjectsSwitched = false;
-  QVTKOpenGLNativeWidget* qVtkW = nullptr;
-}
+namespace
+{
+G4Mutex visSubThreadMutex = G4MUTEX_INITIALIZER;
+G4Condition waitForVisSubThreadInitialized = G4CONDITION_INITIALIZER;
+G4bool visSubThreadEstablished = false;
+G4bool qObjectsSwitched = false;
+QVTKOpenGLNativeWidget* qVtkW = nullptr;
+}  // namespace
 
 void G4VtkQtViewer::DoneWithMasterThread()
 {
@@ -134,12 +132,13 @@ void G4VtkQtViewer::MovingToVisSubThread()
 
   // Wait until SwitchToVisSubThread has found vis sub-thread QThread
   {
-  G4AutoLock lock(&visSubThreadMutex);
-  G4CONDITIONWAITLAMBDA(&waitForVisSubThreadInitialized, &lock, []{return visSubThreadEstablished;})
+    G4AutoLock lock(&visSubThreadMutex);
+    G4CONDITIONWAITLAMBDA(&waitForVisSubThreadInitialized, &lock,
+                          [] { return visSubThreadEstablished; })
   }
 
   // Move stuff to sub-thread
-  if(qVtkW->context()) qVtkW->context()->moveToThread(fQVtkContextVisSubThread);
+  if (qVtkW->context()) qVtkW->context()->moveToThread(fQVtkContextVisSubThread);
 
   // Inform sub-thread
   G4AutoLock lock(&visSubThreadMutex);
@@ -158,15 +157,15 @@ void G4VtkQtViewer::SwitchToVisSubThread()
 
   // Let MovingToVisSubThread know we have the QThread
   {
-  G4AutoLock lock(&visSubThreadMutex);
-  visSubThreadEstablished = true;
-  G4CONDITIONBROADCAST(&waitForVisSubThreadInitialized);
+    G4AutoLock lock(&visSubThreadMutex);
+    visSubThreadEstablished = true;
+    G4CONDITIONBROADCAST(&waitForVisSubThreadInitialized);
   }
 
   // Wait until MovingToVisSubThread has moved stuff
   {
-  G4AutoLock lock(&visSubThreadMutex);
-  G4CONDITIONWAITLAMBDA(&waitForVisSubThreadInitialized, &lock, []{return qObjectsSwitched;})
+    G4AutoLock lock(&visSubThreadMutex);
+    G4CONDITIONWAITLAMBDA(&waitForVisSubThreadInitialized, &lock, [] { return qObjectsSwitched; })
   }
 
   // make context current
@@ -183,7 +182,7 @@ void G4VtkQtViewer::DoneWithVisSubThread()
   qVtkW->doneCurrent();
 
   // and move it back to the main thread
-  if(qVtkW->context()) qVtkW->context()->moveToThread(fQVtkContextMainThread);
+  if (qVtkW->context()) qVtkW->context()->moveToThread(fQVtkContextMainThread);
 }
 
 void G4VtkQtViewer::SwitchToMasterThread()

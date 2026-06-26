@@ -33,77 +33,77 @@
 // Author: V.Ivanchenko 09.09.2025
 //
 // --------------------------------------------------------------------
-#ifndef G4ExtendedPhysicsVector_hh
-#define G4ExtendedPhysicsVector_hh 1
+#ifndef G4EXTENDEDPHYSICSVECTOR_HH
+#define G4EXTENDEDPHYSICSVECTOR_HH
+
+#include "G4PhysicsVector.hh"
+#include "globals.hh"
 
 #include <vector>
 
-#include "globals.hh"
-#include "G4PhysicsVector.hh"
-
 class G4ExtendedPhysicsVector
 {
-public:
- 
-  explicit G4ExtendedPhysicsVector(G4PhysicsVector*, G4int nxsec = 0);
-  virtual ~G4ExtendedPhysicsVector();
+  public:
 
-  // Copy constructor and assignment operator
-  G4ExtendedPhysicsVector(const G4ExtendedPhysicsVector&) = default;
-  G4ExtendedPhysicsVector& operator=(const G4ExtendedPhysicsVector&) = default;
+    explicit G4ExtendedPhysicsVector(G4PhysicsVector*, G4int nxsec = 0);
+    virtual ~G4ExtendedPhysicsVector();
 
-  // not used operators
-  G4ExtendedPhysicsVector(const G4ExtendedPhysicsVector&&) = delete;
-  G4ExtendedPhysicsVector& operator=(const G4ExtendedPhysicsVector&&) = delete;
-  G4bool operator==(const G4ExtendedPhysicsVector& right) const = delete;
+    // Copy constructor and assignment operator
+    G4ExtendedPhysicsVector(const G4ExtendedPhysicsVector&) = default;
+    G4ExtendedPhysicsVector& operator=(const G4ExtendedPhysicsVector&) = default;
 
-  // get G4PhysicsVector with total cross section
-  inline const G4PhysicsVector* GetPhysicsVector() const;
-  
-  // Get the value from the total x-section using interpolation defined
-  // in the G4PhysicsVector object. Consumer code gets changed
-  // index and may reuse it for the next call to save CPU for bin location.
-  inline G4double Value(const G4double energy, std::size_t& lastidx) const;
-  
-  // Get the cross-section/energy-loss value corresponding to the
-  // given energy using log-log interpolation. Consumer code gets changed
-  // index and may reuse it for the next call to save CPU for bin location.
-  // Spline is not used in this method.
-  G4double LogLogValue(const G4double energy, std::size_t& lastidx) const;
+    // not used operators
+    G4ExtendedPhysicsVector(const G4ExtendedPhysicsVector&&) = delete;
+    G4ExtendedPhysicsVector& operator=(const G4ExtendedPhysicsVector&&) = delete;
+    G4bool operator==(const G4ExtendedPhysicsVector& right) const = delete;
 
-  // This method may be applied only once.
-  // Force length of data using std::vector::resize() with the
-  // the default value 0; partial cross section vector is resized
-  // only if the number of partial x-sections is above zero.
-  void SetDataLength(G4int dlength);
-  
-  // Filled partial cross sections by energy index (0 <= idx < numberOfNodes)
-  // It is assumed that the array y does not have negative values.
-  void PutPartialXSData(const std::size_t idx, const G4double* y);
+    // get G4PhysicsVector with total cross section
+    inline const G4PhysicsVector* GetPhysicsVector() const;
 
-  // Sample partial reaction channel for given energy, rand - uniform
-  // random number, lastidx is the cache allowing to reduce CPU for energy
-  // bin location. Data are stored as float but computations are in double.
-  G4int SampleReactionChannel(const G4double energy, const G4double rand,
-                              std::size_t& lastidx) const;
-  
-  // randomly select partial cross section using Log-Log interpolation
-  G4int SampleReactionChannelLogLog(const G4double energy, const G4double rand,
-                                    std::size_t& lastidx) const;
-  
-  // Print data
-  void DumpValues(G4double unitE = 1.0, G4double unitV = 1.0) const;
+    // Get the value from the total x-section using interpolation defined
+    // in the G4PhysicsVector object. Consumer code gets changed
+    // index and may reuse it for the next call to save CPU for bin location.
+    inline G4double Value(const G4double energy, std::size_t& lastidx) const;
 
-private:
+    // Get the cross-section/energy-loss value corresponding to the
+    // given energy using log-log interpolation. Consumer code gets changed
+    // index and may reuse it for the next call to save CPU for bin location.
+    // Spline is not used in this method.
+    G4double LogLogValue(const G4double energy, std::size_t& lastidx) const;
 
-  G4int verboseLevel = 0;
-  G4int nPartialXS = 0;
-  std::size_t idxmax = 0;
-  std::size_t numberOfNodes = 0;
+    // This method may be applied only once.
+    // Force length of data using std::vector::resize() with the
+    // the default value 0; partial cross section vector is resized
+    // only if the number of partial x-sections is above zero.
+    void SetDataLength(G4int dlength);
 
-  // The partial cumulative x-sections normalized to the sum    
-  std::vector<std::vector<G4float>* >* dataPartialXS = nullptr;
-  G4PhysicsVector* totalData = nullptr;
+    // Filled partial cross sections by energy index (0 <= idx < numberOfNodes)
+    // It is assumed that the array y does not have negative values.
+    void PutPartialXSData(const std::size_t idx, const G4double* y);
+
+    // Sample partial reaction channel for given energy, rand - uniform
+    // random number, lastidx is the cache allowing to reduce CPU for energy
+    // bin location. Data are stored as float but computations are in double.
+    G4int SampleReactionChannel(const G4double energy, const G4double rand,
+                                std::size_t& lastidx) const;
+
+    // randomly select partial cross section using Log-Log interpolation
+    G4int SampleReactionChannelLogLog(const G4double energy, const G4double rand,
+                                      std::size_t& lastidx) const;
+
+    // Print data
+    void DumpValues(G4double unitE = 1.0, G4double unitV = 1.0) const;
+
+  private:
+
+    G4int verboseLevel = 0;
+    G4int nPartialXS = 0;
+    std::size_t idxmax = 0;
+    std::size_t numberOfNodes = 0;
+
+    // The partial cumulative x-sections normalized to the sum
+    std::vector<std::vector<G4float>*>* dataPartialXS = nullptr;
+    G4PhysicsVector* totalData = nullptr;
 };
 
 inline const G4PhysicsVector* G4ExtendedPhysicsVector::GetPhysicsVector() const

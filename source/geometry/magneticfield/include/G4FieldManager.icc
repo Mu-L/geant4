@@ -23,111 +23,97 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// G4FieldManager inline implementation 
+// G4FieldManager inline implementation
 //
 // Author: John Apostolakis (CERN), 10.03.1997 - Design and implementation
 // -------------------------------------------------------------------
 
-inline
-const G4Field* G4FieldManager::GetDetectorField() const
-{ 
-   // If pointer is null, should this raise an exception ??
-
-   return fDetectorField;
-} 
-
-inline
-G4bool G4FieldManager::DoesFieldExist() const
-{ 
-   return (fDetectorField != nullptr);
-} 
-
-inline  
-void G4FieldManager::SetChordFinder(G4ChordFinder* aChordFinder)
+inline const G4Field* G4FieldManager::GetDetectorField() const
 {
-   fChordFinder= aChordFinder;
+  // If pointer is null, should this raise an exception ??
+
+  return fDetectorField;
 }
 
-inline  
-G4ChordFinder* G4FieldManager::GetChordFinder()
-{  
-   return fChordFinder;
-}
-
-inline  
-const G4ChordFinder* G4FieldManager::GetChordFinder() const
+inline G4bool G4FieldManager::DoesFieldExist() const
 {
-   return fChordFinder;
+  return (fDetectorField != nullptr);
 }
 
-inline
-G4double G4FieldManager::GetDeltaIntersection() const
+inline void G4FieldManager::SetChordFinder(G4ChordFinder* aChordFinder)
 {
-   return fDelta_Intersection_Val;
+  fChordFinder = aChordFinder;
 }
 
-inline
-G4double G4FieldManager::GetDeltaOneStep() const
+inline G4ChordFinder* G4FieldManager::GetChordFinder()
 {
-   return fDelta_One_Step_Value;
+  return fChordFinder;
 }
 
-inline
-void G4FieldManager::SetDeltaOneStep(G4double valDeltaOneStep)
-{ 
-   fDelta_One_Step_Value= valDeltaOneStep;  
-}
-
-inline
-void G4FieldManager::SetDeltaIntersection(G4double valDeltaIntersection)
+inline const G4ChordFinder* G4FieldManager::GetChordFinder() const
 {
-   fDelta_Intersection_Val = valDeltaIntersection;
+  return fChordFinder;
 }
 
-inline
-void G4FieldManager::SetAccuraciesWithDeltaOneStep(G4double valDeltaOneStep)
-{ 
-   fDelta_One_Step_Value= valDeltaOneStep;  
-   fDelta_Intersection_Val = 0.4 * fDelta_One_Step_Value;
+inline G4double G4FieldManager::GetDeltaIntersection() const
+{
+  return fDelta_Intersection_Val;
+}
+
+inline G4double G4FieldManager::GetDeltaOneStep() const
+{
+  return fDelta_One_Step_Value;
+}
+
+inline void G4FieldManager::SetDeltaOneStep(G4double valDeltaOneStep)
+{
+  fDelta_One_Step_Value = valDeltaOneStep;
+}
+
+inline void G4FieldManager::SetDeltaIntersection(G4double valDeltaIntersection)
+{
+  fDelta_Intersection_Val = valDeltaIntersection;
+}
+
+inline void G4FieldManager::SetAccuraciesWithDeltaOneStep(G4double valDeltaOneStep)
+{
+  fDelta_One_Step_Value = valDeltaOneStep;
+  fDelta_Intersection_Val = 0.4 * fDelta_One_Step_Value;
 }
 
 inline G4bool G4FieldManager::DoesFieldChangeEnergy() const
 {
-   return fFieldChangesEnergy;
+  return fFieldChangesEnergy;
 }
 
 inline void G4FieldManager::SetFieldChangesEnergy(G4bool value)
 {
-   fFieldChangesEnergy = value;
+  fFieldChangesEnergy = value;
 }
 
 // Minimum for Relative accuracy of any Step
 //
-inline 
-G4double G4FieldManager::GetMinimumEpsilonStep() const
+inline G4double G4FieldManager::GetMinimumEpsilonStep() const
 {
-   return fEpsilonMin; 
+  return fEpsilonMin;
 }
 
 // Maximum for Relative accuracy of any Step
 //
-inline 
-G4double G4FieldManager::GetMaximumEpsilonStep() const
+inline G4double G4FieldManager::GetMaximumEpsilonStep() const
 {
-   return fEpsilonMax; 
+  return fEpsilonMax;
 }
 
-inline
-void G4FieldManager::ChangeDetectorField(G4Field* detectorField)
+inline void G4FieldManager::ChangeDetectorField(G4Field* detectorField)
 {
-   G4int errorType = 2; // Fatal !
-   SetDetectorField( detectorField, errorType ); 
+  G4int errorType = 2;  // Fatal !
+  SetDetectorField(detectorField, errorType);
 }
 
-inline
-void G4FieldManager::ProposeDetectorField(G4Field* detectorField)
+inline void G4FieldManager::ProposeDetectorField(G4Field* detectorField)
 {
-  // Note: this is equivalent to 
+  // Note: this is equivalent to
   //       this->SetDetectorField( detectorField, 0 );
   //       but simpler!
 
@@ -135,14 +121,12 @@ void G4FieldManager::ProposeDetectorField(G4Field* detectorField)
   InitialiseFieldChangesEnergy();
 }
 
-inline
-void G4FieldManager::SetGlobalFieldManager(G4FieldManager* fieldManager)
+inline void G4FieldManager::SetGlobalFieldManager(G4FieldManager* fieldManager)
 {
-   fGlobalFieldManager = fieldManager;
+  fGlobalFieldManager = fieldManager;
 }
 
-inline
-G4FieldManager* G4FieldManager::GetGlobalFieldManager()
+inline G4FieldManager* G4FieldManager::GetGlobalFieldManager()
 {
-   return fGlobalFieldManager;
+  return fGlobalFieldManager;
 }

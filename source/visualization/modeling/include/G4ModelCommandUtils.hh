@@ -31,40 +31,41 @@
 #ifndef G4MODELCOMMANDUTILS_HH
 #define G4MODELCOMMANDUTILS_HH
 
-#include "G4String.hh"
 #include "G4ModelCommandsT.hh"
+#include "G4String.hh"
 #include "G4UImessenger.hh"
 #include "G4VisTrajContext.hh"
 
-namespace G4ModelCommandUtils {
+namespace G4ModelCommandUtils
+{
 
-  void AddContextMsgrs(G4VisTrajContext* context, std::vector<G4UImessenger*>& messengers,
-		       const G4String& placement)
-  {
-    messengers.push_back(new G4ModelCmdCreateContextDir<G4VisTrajContext>(context, placement));
-    messengers.push_back(new G4ModelCmdSetDrawLine<G4VisTrajContext>(context, placement));
-    messengers.push_back(new G4ModelCmdSetLineVisible<G4VisTrajContext>(context, placement));
-    messengers.push_back(new G4ModelCmdSetLineColour<G4VisTrajContext>(context, placement));
-    messengers.push_back(new G4ModelCmdSetLineWidth<G4VisTrajContext>(context, placement));
+void AddContextMsgrs(G4VisTrajContext* context, std::vector<G4UImessenger*>& messengers,
+                     const G4String& placement)
+{
+  messengers.push_back(new G4ModelCmdCreateContextDir<G4VisTrajContext>(context, placement));
+  messengers.push_back(new G4ModelCmdSetDrawLine<G4VisTrajContext>(context, placement));
+  messengers.push_back(new G4ModelCmdSetLineVisible<G4VisTrajContext>(context, placement));
+  messengers.push_back(new G4ModelCmdSetLineColour<G4VisTrajContext>(context, placement));
+  messengers.push_back(new G4ModelCmdSetLineWidth<G4VisTrajContext>(context, placement));
 
-    messengers.push_back(new G4ModelCmdSetDrawStepPts<G4VisTrajContext>(context, placement));
-    messengers.push_back(new G4ModelCmdSetStepPtsVisible<G4VisTrajContext>(context, placement));
-    messengers.push_back(new G4ModelCmdSetStepPtsColour<G4VisTrajContext>(context, placement));
-    messengers.push_back(new G4ModelCmdSetStepPtsSize<G4VisTrajContext>(context, placement));
-    messengers.push_back(new G4ModelCmdSetStepPtsSizeType<G4VisTrajContext>(context, placement));
-    messengers.push_back(new G4ModelCmdSetStepPtsType<G4VisTrajContext>(context, placement));
-    messengers.push_back(new G4ModelCmdSetStepPtsFillStyle<G4VisTrajContext>(context, placement));
-    
-    messengers.push_back(new G4ModelCmdSetDrawAuxPts<G4VisTrajContext>(context, placement));
-    messengers.push_back(new G4ModelCmdSetAuxPtsVisible<G4VisTrajContext>(context, placement));
-    messengers.push_back(new G4ModelCmdSetAuxPtsColour<G4VisTrajContext>(context, placement));
-    messengers.push_back(new G4ModelCmdSetAuxPtsSize<G4VisTrajContext>(context, placement));
-    messengers.push_back(new G4ModelCmdSetAuxPtsSizeType<G4VisTrajContext>(context, placement));
-    messengers.push_back(new G4ModelCmdSetAuxPtsType<G4VisTrajContext>(context, placement));
-    messengers.push_back(new G4ModelCmdSetAuxPtsFillStyle<G4VisTrajContext>(context, placement));
+  messengers.push_back(new G4ModelCmdSetDrawStepPts<G4VisTrajContext>(context, placement));
+  messengers.push_back(new G4ModelCmdSetStepPtsVisible<G4VisTrajContext>(context, placement));
+  messengers.push_back(new G4ModelCmdSetStepPtsColour<G4VisTrajContext>(context, placement));
+  messengers.push_back(new G4ModelCmdSetStepPtsSize<G4VisTrajContext>(context, placement));
+  messengers.push_back(new G4ModelCmdSetStepPtsSizeType<G4VisTrajContext>(context, placement));
+  messengers.push_back(new G4ModelCmdSetStepPtsType<G4VisTrajContext>(context, placement));
+  messengers.push_back(new G4ModelCmdSetStepPtsFillStyle<G4VisTrajContext>(context, placement));
 
-    messengers.push_back(new G4ModelCmdSetTimeSliceInterval<G4VisTrajContext>(context, placement));
-  }  
+  messengers.push_back(new G4ModelCmdSetDrawAuxPts<G4VisTrajContext>(context, placement));
+  messengers.push_back(new G4ModelCmdSetAuxPtsVisible<G4VisTrajContext>(context, placement));
+  messengers.push_back(new G4ModelCmdSetAuxPtsColour<G4VisTrajContext>(context, placement));
+  messengers.push_back(new G4ModelCmdSetAuxPtsSize<G4VisTrajContext>(context, placement));
+  messengers.push_back(new G4ModelCmdSetAuxPtsSizeType<G4VisTrajContext>(context, placement));
+  messengers.push_back(new G4ModelCmdSetAuxPtsType<G4VisTrajContext>(context, placement));
+  messengers.push_back(new G4ModelCmdSetAuxPtsFillStyle<G4VisTrajContext>(context, placement));
+
+  messengers.push_back(new G4ModelCmdSetTimeSliceInterval<G4VisTrajContext>(context, placement));
 }
+}  // namespace G4ModelCommandUtils
 
 #endif

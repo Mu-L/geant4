@@ -26,48 +26,44 @@
 //
 
 #include "G4RayTracer.hh"
+
 #include "G4RayTracerFeatures.hh"
 #include "G4RayTracerSceneHandler.hh"
 #include "G4RayTracerViewer.hh"
 
 #define G4warn G4cout
 
-G4RayTracer::G4RayTracer():
-  G4VGraphicsSystem("RayTracer",
-		     "RT",
-		     RAYTRACER_FEATURES,
-		     G4VGraphicsSystem::threeD)
-, theRayTracer(nullptr)
-{
-}
-
-G4RayTracer::~G4RayTracer()
+G4RayTracer::G4RayTracer()
+  : G4VGraphicsSystem("RayTracer", "RT", RAYTRACER_FEATURES, G4VGraphicsSystem::threeD),
+    theRayTracer(nullptr)
 {}
 
-G4VSceneHandler* G4RayTracer::CreateSceneHandler (const G4String& name) {
-  G4VSceneHandler* pScene = new G4RayTracerSceneHandler (*this, name);
+G4RayTracer::~G4RayTracer() {}
+
+G4VSceneHandler* G4RayTracer::CreateSceneHandler(const G4String& name)
+{
+  G4VSceneHandler* pScene = new G4RayTracerSceneHandler(*this, name);
   return pScene;
 }
 
-G4VViewer* G4RayTracer::CreateViewer (G4VSceneHandler& sceneHandler,
-				      const G4String& name) {
-  G4VViewer* pViewer = new G4RayTracerViewer
-  (sceneHandler, name, theRayTracer);
-  if (pViewer) {
-    if (pViewer->GetViewId() < 0) {
-      G4warn <<
-        "G4RayTracer::CreateViewer: ERROR flagged by negative"
-        " view id in G4RayTracerViewer creation."
-        "\n Destroying view and returning null pointer."
+G4VViewer* G4RayTracer::CreateViewer(G4VSceneHandler& sceneHandler, const G4String& name)
+{
+  G4VViewer* pViewer = new G4RayTracerViewer(sceneHandler, name, theRayTracer);
+  if (pViewer)
+  {
+    if (pViewer->GetViewId() < 0)
+    {
+      G4warn << "G4RayTracer::CreateViewer: ERROR flagged by negative"
+                " view id in G4RayTracerViewer creation."
+                "\n Destroying view and returning null pointer."
              << G4endl;
       delete pViewer;
       pViewer = 0;
     }
   }
-  else {
-    G4warn <<
-      "G4RayTracer::CreateViewer: ERROR: null pointer on new G4RayTracerViewer."
-           << G4endl;
+  else
+  {
+    G4warn << "G4RayTracer::CreateViewer: ERROR: null pointer on new G4RayTracerViewer." << G4endl;
   }
   return pViewer;
 }

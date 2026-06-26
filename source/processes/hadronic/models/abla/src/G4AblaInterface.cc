@@ -100,7 +100,8 @@ G4HadFinalState* G4AblaInterface::ApplyYourself(const G4HadProjectile& thePrimar
   // creating a "compound" nucleus made by the system "target nucleus +
   // projectile", before calling the DeExcite method.
   const G4ParticleDefinition* primary = thePrimary.GetDefinition();
-  if (primary != G4Neutron::Definition() && primary != G4Proton::Definition()) {
+  if (primary != G4Neutron::Definition() && primary != G4Proton::Definition())
+  {
     G4ExceptionDescription ed;
     ed << "G4AblaModel is used for ";
     if (primary) ed << primary->GetParticleName();
@@ -128,7 +129,8 @@ G4HadFinalState* G4AblaInterface::ApplyYourself(const G4HadProjectile& thePrimar
 
   applyYourselfResult.Clear();
   applyYourselfResult.SetStatusChange(stopAndKill);
-  for (auto const& prod : *deExciteResult) {
+  for (auto const& prod : *deExciteResult)
+  {
     G4DynamicParticle* aNewDP =
       new G4DynamicParticle(prod->GetDefinition(), prod->GetTotalEnergy(), prod->GetMomentum());
     G4HadSecondary aNew = G4HadSecondary(aNewDP);
@@ -165,11 +167,13 @@ G4ReactionProductVector* G4AblaInterface::DeExcite(G4Fragment& aFragment)
 
   G4ReactionProductVector* result = new G4ReactionProductVector;
 
-  for (G4int j = 0; j < ablaResult->ntrack; ++j) {  // Copy ABLA result to the EventInfo
+  for (G4int j = 0; j < ablaResult->ntrack; ++j)
+  {  // Copy ABLA result to the EventInfo
     G4ReactionProduct* product =
       toG4Particle(ablaResult->avv[j], ablaResult->zvv[j], ablaResult->svv[j], ablaResult->enerj[j],
                    ablaResult->pxlab[j], ablaResult->pylab[j], ablaResult->pzlab[j]);
-    if (product) {
+    if (product)
+    {
       product->SetCreatorModelID(secID);
       result->push_back(product);
     }
@@ -213,18 +217,21 @@ G4ParticleDefinition* G4AblaInterface::toG4ParticleDefinition(G4int A, G4int Z, 
     return G4DoubleHyperDoubleNeutron::Definition();
   else if (A == 5 && Z == 2 && S == -1)
     return G4HyperHe5::Definition();
-  else if (A > 0 && Z > 0 && A > Z) {  // Returns ground state ion definition.
+  else if (A > 0 && Z > 0 && A > Z)
+  {  // Returns ground state ion definition.
     auto ionfromtable =
       G4IonTable::GetIonTable()->GetIon(Z, A, std::abs(S), 0);  // S is the number of lambdas
     if (ionfromtable)
       return ionfromtable;
-    else {
+    else
+    {
       G4cout << "Can't convert particle with A=" << A << ", Z=" << Z << ", S=" << S
              << " to G4ParticleDefinition, trouble ahead" << G4endl;
       return 0;
     }
   }
-  else {  // Error, unrecognized particle
+  else
+  {  // Error, unrecognized particle
     G4cout << "Can't convert particle with A=" << A << ", Z=" << Z << ", S=" << S
            << " to G4ParticleDefinition, trouble ahead" << G4endl;
     return 0;
@@ -235,7 +242,8 @@ G4ReactionProduct* G4AblaInterface::toG4Particle(G4int A, G4int Z, G4int S, G4do
                                                  G4double px, G4double py, G4double pz) const
 {
   G4ParticleDefinition* def = toG4ParticleDefinition(A, Z, S);
-  if (def == 0) {  // Check if we have a valid particle definition
+  if (def == 0)
+  {  // Check if we have a valid particle definition
     return 0;
   }
 

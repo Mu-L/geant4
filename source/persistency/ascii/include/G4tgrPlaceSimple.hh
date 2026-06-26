@@ -32,14 +32,14 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrPlaceSimple_hh
-#define G4tgrPlaceSimple_hh 1
+#ifndef G4TGRPLACESIMPLE_HH
+#define G4TGRPLACESIMPLE_HH
 
-#include <vector>
-
-#include "globals.hh"
 #include "G4ThreeVector.hh"
 #include "G4tgrPlace.hh"
+#include "globals.hh"
+
+#include <vector>
 
 class G4tgrPlaceSimple : public G4tgrPlace
 {
@@ -55,17 +55,16 @@ class G4tgrPlaceSimple : public G4tgrPlace
     const G4String& GetRotMatName() const { return theRotMatName; }
     G4ThreeVector GetPlacement() const { return thePlace; }
 
-    friend std::ostream& operator<<(std::ostream& os,
-                                    const G4tgrPlaceSimple& obj);
+    friend std::ostream& operator<<(std::ostream& os, const G4tgrPlaceSimple& obj);
 
   protected:
 
     G4ThreeVector thePlace;
-      // The position with respect to parent
+    // The position with respect to parent
 
     G4String theRotMatName;
-      // The rotation matrix (by name, as the rotations
-      // matrices are not yet created)
+    // The rotation matrix (by name, as the rotations
+    // matrices are not yet created)
 };
 
 #endif

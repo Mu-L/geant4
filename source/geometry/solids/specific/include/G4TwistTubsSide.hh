@@ -41,12 +41,13 @@
 /**
  * @brief G4TwistTubsFlatSide describes a twisted boundary surface for
  * a cylinder.
+ * @ingroup geometry_solids_specific
  */
 
 class G4TwistTubsSide : public G4VTwistSurface
 {
   public:
-   
+
     /**
      * Constructs a cylinder twisted boundary surface, given its parameters.
      *  @param[in] name The surface name.
@@ -61,17 +62,14 @@ class G4TwistTubsSide : public G4VTwistSurface
      *  @param[in] axis0max Maximum in X.
      *  @param[in] axis1max Maximum in Z.
      */
-    G4TwistTubsSide(const G4String&         name,
-                    const G4RotationMatrix& rot,   // 0.5*(phi-width segment)
-                    const G4ThreeVector&    tlate,
-                          G4int    handedness, // R-hand = 1, L-hand = -1
-                    const G4double kappa,      // tan(TwistAngle/2)/fZHalfLen
-                    const EAxis    axis0 = kXAxis,
-                    const EAxis    axis1 = kZAxis,
-                          G4double axis0min = -kInfinity,
-                          G4double axis1min = -kInfinity,
-                          G4double axis0max = kInfinity,
-                          G4double axis1max = kInfinity );
+    G4TwistTubsSide(const G4String& name,
+                    const G4RotationMatrix& rot,  // 0.5*(phi-width segment)
+                    const G4ThreeVector& tlate,
+                    G4int handedness,  // R-hand = 1, L-hand = -1
+                    const G4double kappa,  // tan(TwistAngle/2)/fZHalfLen
+                    const EAxis axis0 = kXAxis, const EAxis axis1 = kZAxis,
+                    G4double axis0min = -kInfinity, G4double axis1min = -kInfinity,
+                    G4double axis0max = kInfinity, G4double axis1max = kInfinity);
 
     /**
      * Alternative Construct for a cylinder twisted boundary surface.
@@ -86,16 +84,9 @@ class G4TwistTubsSide : public G4VTwistSurface
      *  @param[in] Kappa Kappa=tan(TwistAngle/2)/fZHalfLen.
      *  @param[in] handedness Orientation: R-hand = 1, L-hand = -1.
      */
-    G4TwistTubsSide(const G4String& name,
-                          G4double  EndInnerRadius[2],
-                          G4double  EndOuterRadius[2],
-                          G4double  DPhi,
-                          G4double  EndPhi[2],
-                          G4double  EndZ[2], 
-                          G4double  InnerRadius,
-                          G4double  OuterRadius,
-                          G4double  Kappa,
-                          G4int     handedness);
+    G4TwistTubsSide(const G4String& name, G4double EndInnerRadius[2], G4double EndOuterRadius[2],
+                    G4double DPhi, G4double EndPhi[2], G4double EndZ[2], G4double InnerRadius,
+                    G4double OuterRadius, G4double Kappa, G4int handedness);
 
     /**
      * Default destructor.
@@ -109,8 +100,7 @@ class G4TwistTubsSide : public G4VTwistSurface
      *  @param[in] isGlobal If true, it returns the normal in global coordinates.
      *  @returns The normal vector.
      */
-    G4ThreeVector GetNormal(const G4ThreeVector& p,
-                                  G4bool isGlobal = false) override ;   
+    G4ThreeVector GetNormal(const G4ThreeVector& p, G4bool isGlobal = false) override;
 
     /**
      * Returns the distance to surface, given point 'gp' and direction 'gv'.
@@ -123,12 +113,8 @@ class G4TwistTubsSide : public G4VTwistSurface
      *  @param[in] validate Adopted validation criteria.
      *  @returns The number of solutions.
      */
-    G4int DistanceToSurface(const G4ThreeVector& gp,
-                            const G4ThreeVector& gv,
-                                  G4ThreeVector  gxx[],
-                                  G4double  distance[],
-                                  G4int     areacode[],
-                                  G4bool    isvalid[],
+    G4int DistanceToSurface(const G4ThreeVector& gp, const G4ThreeVector& gv, G4ThreeVector gxx[],
+                            G4double distance[], G4int areacode[], G4bool isvalid[],
                             EValidate validate = kValidateWithTol) override;
 
     /**
@@ -139,117 +125,108 @@ class G4TwistTubsSide : public G4VTwistSurface
      *  @param[out] areacode The location vector based on number of solutions.
      *  @returns The number of solutions.
      */
-    G4int DistanceToSurface(const G4ThreeVector& gp,
-                                  G4ThreeVector  gxx[],
-                                  G4double       distance[],
-                                  G4int          areacode[]) override;
+    G4int DistanceToSurface(const G4ThreeVector& gp, G4ThreeVector gxx[], G4double distance[],
+                            G4int areacode[]) override;
 
     /**
      * Get projection at p.z() on the surface.
      */
-    inline G4ThreeVector ProjectAtPXPZ(const G4ThreeVector& p,
-                                             G4bool isglobal = false) const ;
+    inline G4ThreeVector ProjectAtPXPZ(const G4ThreeVector& p, G4bool isglobal = false) const;
 
     G4TwistTubsSide(__void__&);
-      // Fake default constructor for usage restricted to direct object
-      // persistency for clients requiring preallocation of memory for
-      // persistifiable objects.
+    // Fake default constructor for usage restricted to direct object
+    // persistency for clients requiring preallocation of memory for
+    // persistifiable objects.
 
   private:
 
     /**
      * Returns point on surface given 'x' and 'z'.
      */
-    inline G4ThreeVector SurfacePoint(G4double x, G4double z,
-                                      G4bool isGlobal = false) override ;  
+    inline G4ThreeVector SurfacePoint(G4double x, G4double z, G4bool isGlobal = false) override;
 
     /**
      * Internal accessors.
      */
-    inline G4double GetBoundaryMin(G4double phi) override ;
-    inline G4double GetBoundaryMax(G4double phi) override ;
-    inline G4double GetSurfaceArea() override ;
-    void GetFacets( G4int m, G4int n, G4double xyz[][3],
-                    G4int faces[][4], G4int iside ) override ;
+    inline G4double GetBoundaryMin(G4double phi) override;
+    inline G4double GetBoundaryMax(G4double phi) override;
+    inline G4double GetSurfaceArea() override;
+    void GetFacets(G4int m, G4int n, G4double xyz[][3], G4int faces[][4], G4int iside) override;
 
     /**
      * Internal method to compute the distance to a plane.
      */
-    G4double DistanceToPlane(const G4ThreeVector& p,
-                             const G4ThreeVector& A,
-                             const G4ThreeVector& B,
-                             const G4ThreeVector& C,
-                             const G4ThreeVector& D,
-                             const G4int parity,
-                                   G4ThreeVector& xx,
-                                   G4ThreeVector& n);
+    G4double DistanceToPlane(const G4ThreeVector& p, const G4ThreeVector& A, const G4ThreeVector& B,
+                             const G4ThreeVector& C, const G4ThreeVector& D, const G4int parity,
+                             G4ThreeVector& xx, G4ThreeVector& n);
 
     /**
      * Returns the area code for point 'xx' using or not surface tolerance.
      */
-    G4int GetAreaCode(const G4ThreeVector& xx, 
-                            G4bool withTol = true) override;
+    G4int GetAreaCode(const G4ThreeVector& xx, G4bool withTol = true) override;
 
     /**
      * Setters.
      */
     void SetCorners() override;
-    void SetCorners( G4double endInnerRad[2],
-                     G4double endOuterRad[2],
-                     G4double endPhi[2],
-                     G4double endZ[2] ) ;
+    void SetCorners(G4double endInnerRad[2], G4double endOuterRad[2], G4double endPhi[2],
+                    G4double endZ[2]);
     void SetBoundaries() override;
 
   private:
 
-    G4double fKappa; // std::tan(TwistedAngle/2)/HalfLenZ;
-};   
-
+    G4double fKappa;  // std::tan(TwistedAngle/2)/HalfLenZ;
+};
 
 //========================================================
 // inline functions
 //========================================================
 
-inline
-G4ThreeVector G4TwistTubsSide::ProjectAtPXPZ(const G4ThreeVector& p, 
-                                                   G4bool isglobal) const 
+inline G4ThreeVector G4TwistTubsSide::ProjectAtPXPZ(const G4ThreeVector& p, G4bool isglobal) const
 {
   // Get Rho at p.z() on Hyperbolic Surface.
   G4ThreeVector tmpp;
-  if (isglobal) { tmpp = fRot.inverse()*p - fTrans; }
-  else          { tmpp = p; }
+  if (isglobal)
+  {
+    tmpp = fRot.inverse() * p - fTrans;
+  }
+  else
+  {
+    tmpp = p;
+  }
   G4ThreeVector xx(p.x(), p.x() * fKappa * p.z(), p.z());
-  if (isglobal) { return (fRot * xx + fTrans); }
+  if (isglobal)
+  {
+    return (fRot * xx + fTrans);
+  }
   return xx;
 }
 
-inline
-G4ThreeVector
-G4TwistTubsSide::SurfacePoint(G4double x, G4double z, G4bool isGlobal)
+inline G4ThreeVector G4TwistTubsSide::SurfacePoint(G4double x, G4double z, G4bool isGlobal)
 {
-  G4ThreeVector SurfPoint( x , x * fKappa * z , z ) ;
+  G4ThreeVector SurfPoint(x, x * fKappa * z, z);
 
-  if (isGlobal) { return (fRot * SurfPoint + fTrans); }
+  if (isGlobal)
+  {
+    return (fRot * SurfPoint + fTrans);
+  }
   return SurfPoint;
 }
 
-inline
-G4double G4TwistTubsSide::GetBoundaryMin(G4double)
+inline G4double G4TwistTubsSide::GetBoundaryMin(G4double)
 {
-  return  fAxisMin[0] ;  // inner radius at z = 0
+  return fAxisMin[0];  // inner radius at z = 0
 }
 
-inline
-G4double G4TwistTubsSide::GetBoundaryMax(G4double)
+inline G4double G4TwistTubsSide::GetBoundaryMax(G4double)
 {
-  return  fAxisMax[0] ;  // outer radius at z = 0
+  return fAxisMax[0];  // outer radius at z = 0
 }
 
-inline
-G4double G4TwistTubsSide::GetSurfaceArea()
+inline G4double G4TwistTubsSide::GetSurfaceArea()
 {
   // approximation only
-  return ( fAxisMax[0] - fAxisMin[0] ) * ( fAxisMax[1] - fAxisMin[1] ) ;
+  return (fAxisMax[0] - fAxisMin[0]) * (fAxisMax[1] - fAxisMin[1]);
 }
 
 #endif

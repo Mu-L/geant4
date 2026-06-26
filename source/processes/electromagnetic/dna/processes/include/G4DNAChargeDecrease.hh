@@ -26,8 +26,8 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4DNAChargeDecrease_h
-#define G4DNAChargeDecrease_h 1
+#ifndef G4DNACHARGEDECREASE_HH
+#define G4DNACHARGEDECREASE_HH
 
 #include "G4VEmProcess.hh"
 
@@ -35,26 +35,26 @@
 
 class G4DNAChargeDecrease : public G4VEmProcess
 {
-public: 
+  public:
 
-  G4DNAChargeDecrease(const G4String& processName ="DNAChargeDecrease",
-		      G4ProcessType type = fElectromagnetic);
+    G4DNAChargeDecrease(const G4String& processName = "DNAChargeDecrease",
+                        G4ProcessType type = fElectromagnetic);
 
-  ~G4DNAChargeDecrease() override = default;
+    ~G4DNAChargeDecrease() override = default;
 
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
-  
-  void ProcessDescription(std::ostream& outFile) const override;
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
 
-protected:
+    void ProcessDescription(std::ostream& outFile) const override;
 
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+  protected:
 
-private:
-     
-  G4bool isInitialised{false};
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool isInitialised{false};
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-  
+
 #endif

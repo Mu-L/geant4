@@ -37,162 +37,145 @@
 //
 // Class Description:
 //
-// Implementation of ATIMA model of energy loss 
+// Implementation of ATIMA model of energy loss
 // by heavy charged particles
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4AtimaEnergyLossModel_h
-#define G4AtimaEnergyLossModel_h 1
+#ifndef G4ATIMAENERGYLOSSMODEL_HH
+#define G4ATIMAENERGYLOSSMODEL_HH
+
+#include "G4NistManager.hh"
+#include "G4VEmModel.hh"
 
 #include <CLHEP/Units/SystemOfUnits.h>
-
-#include "G4VEmModel.hh"
-#include "G4NistManager.hh"
 
 class G4EmCorrections;
 class G4ParticleChangeForLoss;
 
 class G4AtimaEnergyLossModel : public G4VEmModel
 {
+  public:
 
-public:
+    explicit G4AtimaEnergyLossModel(const G4ParticleDefinition* p = nullptr,
+                                    const G4String& nam = "Atima");
 
-  explicit G4AtimaEnergyLossModel(const G4ParticleDefinition* p = nullptr,
-                                  const G4String& nam = "Atima");
+    ~G4AtimaEnergyLossModel() override;
 
-  ~G4AtimaEnergyLossModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    G4double MinEnergyCut(const G4ParticleDefinition*, const G4MaterialCutsCouple* couple) override;
 
-  G4double MinEnergyCut(const G4ParticleDefinition*,
-			const G4MaterialCutsCouple* couple) override;
+    G4double ComputeCrossSectionPerElectron(const G4ParticleDefinition*, G4double kineticEnergy,
+                                            G4double cutEnergy, G4double maxEnergy);
 
-  G4double ComputeCrossSectionPerElectron(
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy);
-				 
-  G4double ComputeCrossSectionPerAtom(
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double Z, G4double A,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
-				 				 
-  G4double CrossSectionPerVolume(const G4Material*,
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
-				 
-  G4double ComputeDEDXPerVolume(const G4Material*,
-				const G4ParticleDefinition*,
-				G4double kineticEnergy,
-				G4double) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kineticEnergy,
+                                        G4double Z, G4double A, G4double cutEnergy,
+                                        G4double maxEnergy) override;
 
-  G4double GetChargeSquareRatio(const G4ParticleDefinition* p,
-				const G4Material* mat,
-				G4double kineticEnergy) override;
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy,
+                                   G4double maxEnergy) override;
 
-  G4double GetParticleCharge(const G4ParticleDefinition* p,
-			     const G4Material* mat,
-			     G4double kineticEnergy) override;
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                  G4double kineticEnergy, G4double) override;
 
-  void CorrectionsAlongStep(const G4Material*,
-			    const G4ParticleDefinition*,
-			    const G4double kinEnergy,
-			    const G4double cutEnergy,
-			    const G4double& length,
-			    G4double&) override;
+    G4double GetChargeSquareRatio(const G4ParticleDefinition* p, const G4Material* mat,
+                                  G4double kineticEnergy) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
+    G4double GetParticleCharge(const G4ParticleDefinition* p, const G4Material* mat,
+                               G4double kineticEnergy) override;
 
-protected:
+    void CorrectionsAlongStep(const G4Material*, const G4ParticleDefinition*,
+                              const G4double kinEnergy, const G4double cutEnergy,
+                              const G4double& length, G4double&) override;
 
-  G4double MaxSecondaryEnergy(const G4ParticleDefinition*,
-			      G4double kinEnergy) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  inline G4double GetChargeSquareRatio() const;
+  protected:
 
-  inline void SetChargeSquareRatio(G4double val);
+    G4double MaxSecondaryEnergy(const G4ParticleDefinition*, G4double kinEnergy) override;
 
-private:
+    inline G4double GetChargeSquareRatio() const;
 
-  void SetupParameters();
+    inline void SetChargeSquareRatio(G4double val);
 
-  inline void SetParticle(const G4ParticleDefinition* p);
+  private:
 
-  inline void SetGenericIon(const G4ParticleDefinition* p);
+    void SetupParameters();
 
-  G4double StoppingPower(G4double ap, G4double zp, G4double ep, G4double at, G4double zt);
-  G4double Bethek_dedx_e(G4double ap,G4double zp,G4double ep,G4double at,G4double zt);
-  G4double dedx_n(const G4double ap, const G4double zp, const G4double ep, const G4double at, const G4double zt);
-  G4double sezi_dedx_e(const G4double zp, const G4double ep, const G4double at, const G4double zt);
-  G4double sezi_p_se(const G4double energy, const G4double at, const G4double zt);
-  G4double EnergyTable_interpolate(G4double xval, const G4double* y);
+    inline void SetParticle(const G4ParticleDefinition* p);
 
-  // hide assignment operator
-  G4AtimaEnergyLossModel & operator=(const  G4AtimaEnergyLossModel &right) = delete;
-  G4AtimaEnergyLossModel(const  G4AtimaEnergyLossModel&) = delete;
+    inline void SetGenericIon(const G4ParticleDefinition* p);
 
-  const G4ParticleDefinition* particle;
-  const G4ParticleDefinition* theElectron;
-  G4EmCorrections*            corr;
-  G4ParticleChangeForLoss*    fParticleChange;
-  G4NistManager*              nist;
-  G4Pow* g4calc;
+    G4double StoppingPower(G4double ap, G4double zp, G4double ep, G4double at, G4double zt);
+    G4double Bethek_dedx_e(G4double ap, G4double zp, G4double ep, G4double at, G4double zt);
+    G4double dedx_n(const G4double ap, const G4double zp, const G4double ep, const G4double at,
+                    const G4double zt);
+    G4double sezi_dedx_e(const G4double zp, const G4double ep, const G4double at,
+                         const G4double zt);
+    G4double sezi_p_se(const G4double energy, const G4double at, const G4double zt);
+    G4double EnergyTable_interpolate(G4double xval, const G4double* y);
 
-  G4double mass = 0.0;
-  G4double tlimit = DBL_MAX;
-  G4double spin = 0.0;
-  G4double magMoment2 = 0.0;
-  G4double chargeSquare = 1.0;
-  G4double ratio = 1.0;
-  G4double formfact = 0.0;
-  G4double corrFactor = 1.0;
-  G4double MLN10;
-  G4double atomic_mass_unit;
-  G4double dedx_constant;
-  G4double electron_mass;
-  G4double fine_structure;
-  G4double domega2dx_constant;
+    // hide assignment operator
+    G4AtimaEnergyLossModel& operator=(const G4AtimaEnergyLossModel& right) = delete;
+    G4AtimaEnergyLossModel(const G4AtimaEnergyLossModel&) = delete;
 
-  G4bool   isIon = false;
+    const G4ParticleDefinition* particle;
+    const G4ParticleDefinition* theElectron;
+    G4EmCorrections* corr;
+    G4ParticleChangeForLoss* fParticleChange;
+    G4NistManager* nist;
+    G4Pow* g4calc;
 
-  static G4double stepE;
-  static G4double tableE[200];
-  static const G4double element_atomic_weights[110];
-  static const G4double ls_coefficients_a[110][200];
-  static const G4double ls_coefficients_ahi[110][200];
-  static const G4double proton_stopping_coef[92][8];
-  static const G4double ionisation_potentials_z[121];
+    G4double mass = 0.0;
+    G4double tlimit = DBL_MAX;
+    G4double spin = 0.0;
+    G4double magMoment2 = 0.0;
+    G4double chargeSquare = 1.0;
+    G4double ratio = 1.0;
+    G4double formfact = 0.0;
+    G4double corrFactor = 1.0;
+    G4double MLN10;
+    G4double atomic_mass_unit;
+    G4double dedx_constant;
+    G4double electron_mass;
+    G4double fine_structure;
+    G4double domega2dx_constant;
 
-  static const G4double atima_vfermi[92];
-  static const G4double atima_lambda_screening[92];
-  static const G4double x0[92];
-  static const G4double x1[92];
-  static const G4double afermi[92];
-  static const G4double c[92];
-  static const G4double m0[92];
-  static const G4double del_0[92];
+    G4bool isIon = false;
 
+    static G4double stepE;
+    static G4double tableE[200];
+    static const G4double element_atomic_weights[110];
+    static const G4double ls_coefficients_a[110][200];
+    static const G4double ls_coefficients_ahi[110][200];
+    static const G4double proton_stopping_coef[92][8];
+    static const G4double ionisation_potentials_z[121];
+
+    static const G4double atima_vfermi[92];
+    static const G4double atima_lambda_screening[92];
+    static const G4double x0[92];
+    static const G4double x1[92];
+    static const G4double afermi[92];
+    static const G4double c[92];
+    static const G4double m0[92];
+    static const G4double del_0[92];
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 inline void G4AtimaEnergyLossModel::SetParticle(const G4ParticleDefinition* p)
 {
-  if(particle != p) {
+  if (particle != p)
+  {
     particle = p;
-    if(p->GetBaryonNumber() > 3 || p->GetPDGCharge() > CLHEP::eplus) 
-      { isIon = true; } 
+    if (p->GetBaryonNumber() > 3 || p->GetPDGCharge() > CLHEP::eplus)
+    {
+      isIon = true;
+    }
     SetupParameters();
   }
 }
@@ -201,7 +184,10 @@ inline void G4AtimaEnergyLossModel::SetParticle(const G4ParticleDefinition* p)
 
 inline void G4AtimaEnergyLossModel::SetGenericIon(const G4ParticleDefinition* p)
 {
-  if(p && p->GetParticleName() == "GenericIon") { isIon = true; }
+  if (p && p->GetParticleName() == "GenericIon")
+  {
+    isIon = true;
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

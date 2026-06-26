@@ -30,175 +30,177 @@
 //
 
 #include "G4HadronicBuilder.hh"
-#include "G4HadParticles.hh"
-#include "G4HadProcesses.hh"
-
-#include "G4ParticleDefinition.hh"
-#include "G4ParticleTable.hh"
-#include "G4PhysicsListHelper.hh"
-#include "G4SystemOfUnits.hh"
-
-#include "G4HadronicParameters.hh"
-
-#include "G4TheoFSGenerator.hh"
-#include "G4FTFModel.hh"
-#include "G4ExcitedStringDecay.hh"
-#include "G4GeneratorPrecompoundInterface.hh"
-
-#include "G4QGSModel.hh"
-#include "G4QGSParticipants.hh"
-#include "G4QGSMFragmentation.hh"
-#include "G4QuasiElasticChannel.hh"
 
 #include "G4CascadeInterface.hh"
+#include "G4ComponentAntiNuclNuclearXS.hh"
 #include "G4CrossSectionDataSetRegistry.hh"
-#include "G4CrossSectionInelastic.hh"
 #include "G4CrossSectionElastic.hh"
+#include "G4CrossSectionInelastic.hh"
+#include "G4DecayTable.hh"
+#include "G4ExcitedStringDecay.hh"
+#include "G4FTFModel.hh"
+#include "G4GeneratorPrecompoundInterface.hh"
+#include "G4HadParticles.hh"
+#include "G4HadProcesses.hh"
 #include "G4HadronElastic.hh"
-#include "G4CrossSectionDataSetRegistry.hh"
-
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
-
-#include "G4DecayTable.hh"
-#include "G4VDecayChannel.hh"
-#include "G4PhaseSpaceDecayChannel.hh"
-
-#include "G4PreCompoundModel.hh"
+#include "G4HadronicParameters.hh"
 #include "G4INCLXXInterface.hh"
-#include "G4ComponentAntiNuclNuclearXS.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "G4PhaseSpaceDecayChannel.hh"
+#include "G4PhysicsListHelper.hh"
+#include "G4PreCompoundModel.hh"
+#include "G4QGSMFragmentation.hh"
+#include "G4QGSModel.hh"
+#include "G4QGSParticipants.hh"
+#include "G4QuasiElasticChannel.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4TheoFSGenerator.hh"
+#include "G4VDecayChannel.hh"
 
-
-
-void G4HadronicBuilder::BuildFTFP_BERT(const std::vector<G4int>& partList,
-                                       G4bool bert, const G4String& xsName) {
-
+void G4HadronicBuilder::BuildFTFP_BERT(const std::vector<G4int>& partList, G4bool bert,
+                                       const G4String& xsName)
+{
   G4HadronicParameters* param = G4HadronicParameters::Instance();
   G4PhysicsListHelper* ph = G4PhysicsListHelper::GetPhysicsListHelper();
 
   auto theModel = new G4TheoFSGenerator("FTFP");
   auto theStringModel = new G4FTFModel();
   theStringModel->SetFragmentationModel(new G4ExcitedStringDecay());
-  theModel->SetHighEnergyGenerator( theStringModel );
-  theModel->SetTransport( new G4GeneratorPrecompoundInterface() );
-  theModel->SetMaxEnergy( param->GetMaxEnergy() );
+  theModel->SetHighEnergyGenerator(theStringModel);
+  theModel->SetTransport(new G4GeneratorPrecompoundInterface());
+  theModel->SetMaxEnergy(param->GetMaxEnergy());
 
   G4CascadeInterface* theCascade = nullptr;
-  if(bert) {
+  if (bert)
+  {
     theCascade = new G4CascadeInterface();
-    theCascade->SetMaxEnergy( param->GetMaxEnergyTransitionFTF_Cascade() );
-    theModel->SetMinEnergy( param->GetMinEnergyTransitionFTF_Cascade() );
+    theCascade->SetMaxEnergy(param->GetMaxEnergyTransitionFTF_Cascade());
+    theModel->SetMinEnergy(param->GetMinEnergyTransitionFTF_Cascade());
   }
 
-  auto xsinel = G4HadProcesses::InelasticXS( xsName );
+  auto xsinel = G4HadProcesses::InelasticXS(xsName);
 
   G4ParticleTable* table = G4ParticleTable::GetParticleTable();
-  for( auto & pdg : partList ) {
+  for (auto& pdg : partList)
+  {
+    auto part = table->FindParticle(pdg);
+    if (part == nullptr)
+    {
+      continue;
+    }
 
-    auto part = table->FindParticle( pdg );
-    if ( part == nullptr ) { continue; }
-
-    auto hadi = new G4HadronInelasticProcess( part->GetParticleName()+"Inelastic", part );
-    hadi->AddDataSet( xsinel );
-    hadi->RegisterMe( theModel );
-    if( theCascade != nullptr ) hadi->RegisterMe( theCascade );
-    if( param->ApplyFactorXS() ) hadi->MultiplyCrossSectionBy( param->XSFactorHadronInelastic() );
+    auto hadi = new G4HadronInelasticProcess(part->GetParticleName() + "Inelastic", part);
+    hadi->AddDataSet(xsinel);
+    hadi->RegisterMe(theModel);
+    if (theCascade != nullptr) hadi->RegisterMe(theCascade);
+    if (param->ApplyFactorXS()) hadi->MultiplyCrossSectionBy(param->XSFactorHadronInelastic());
     ph->RegisterProcess(hadi, part);
   }
 }
 
-void G4HadronicBuilder::BuildFTFQGSP_BERT(const std::vector<G4int>& partList,
-                                          G4bool bert, const G4String& xsName) {
-
+void G4HadronicBuilder::BuildFTFQGSP_BERT(const std::vector<G4int>& partList, G4bool bert,
+                                          const G4String& xsName)
+{
   G4HadronicParameters* param = G4HadronicParameters::Instance();
   G4PhysicsListHelper* ph = G4PhysicsListHelper::GetPhysicsListHelper();
 
   auto theModel = new G4TheoFSGenerator("FTFQGSP");
   auto theStringModel = new G4FTFModel();
-  theStringModel->SetFragmentationModel(new G4ExcitedStringDecay( new G4QGSMFragmentation() ) );
-  theModel->SetHighEnergyGenerator( theStringModel );
-  theModel->SetTransport( new G4GeneratorPrecompoundInterface() );
-  theModel->SetMaxEnergy( param->GetMaxEnergy() );
+  theStringModel->SetFragmentationModel(new G4ExcitedStringDecay(new G4QGSMFragmentation()));
+  theModel->SetHighEnergyGenerator(theStringModel);
+  theModel->SetTransport(new G4GeneratorPrecompoundInterface());
+  theModel->SetMaxEnergy(param->GetMaxEnergy());
 
   G4CascadeInterface* theCascade = nullptr;
-  if(bert) {
+  if (bert)
+  {
     theCascade = new G4CascadeInterface();
-    theCascade->SetMaxEnergy( param->GetMaxEnergyTransitionFTF_Cascade() );
-    theModel->SetMinEnergy( param->GetMinEnergyTransitionFTF_Cascade() );
+    theCascade->SetMaxEnergy(param->GetMaxEnergyTransitionFTF_Cascade());
+    theModel->SetMinEnergy(param->GetMinEnergyTransitionFTF_Cascade());
   }
 
-  auto xsinel = G4HadProcesses::InelasticXS( xsName );
+  auto xsinel = G4HadProcesses::InelasticXS(xsName);
 
   G4ParticleTable* table = G4ParticleTable::GetParticleTable();
-  for( auto & pdg : partList ) {
+  for (auto& pdg : partList)
+  {
+    auto part = table->FindParticle(pdg);
+    if (part == nullptr)
+    {
+      continue;
+    }
 
-    auto part = table->FindParticle( pdg );
-    if ( part == nullptr ) { continue; }
-
-    auto hadi = new G4HadronInelasticProcess( part->GetParticleName()+"Inelastic", part );
-    hadi->AddDataSet( xsinel );
-    hadi->RegisterMe( theModel );
-    if( theCascade != nullptr ) hadi->RegisterMe( theCascade );
-    if( param->ApplyFactorXS() ) hadi->MultiplyCrossSectionBy( param->XSFactorHadronInelastic() );
+    auto hadi = new G4HadronInelasticProcess(part->GetParticleName() + "Inelastic", part);
+    hadi->AddDataSet(xsinel);
+    hadi->RegisterMe(theModel);
+    if (theCascade != nullptr) hadi->RegisterMe(theCascade);
+    if (param->ApplyFactorXS()) hadi->MultiplyCrossSectionBy(param->XSFactorHadronInelastic());
     ph->RegisterProcess(hadi, part);
   }
 }
 
-void G4HadronicBuilder::BuildQGSP_FTFP_BERT(const std::vector<G4int>& partList, 
-                                            G4bool bert, G4bool quasiElastic,
-                                            const G4String& xsName) {
-
+void G4HadronicBuilder::BuildQGSP_FTFP_BERT(const std::vector<G4int>& partList, G4bool bert,
+                                            G4bool quasiElastic, const G4String& xsName)
+{
   G4HadronicParameters* param = G4HadronicParameters::Instance();
   G4PhysicsListHelper* ph = G4PhysicsListHelper::GetPhysicsListHelper();
 
   auto theTransport = new G4GeneratorPrecompoundInterface();
 
   auto theHEModel = new G4TheoFSGenerator("QGSP");
-  G4QGSModel< G4QGSParticipants >* theQGSModel = new G4QGSModel< G4QGSParticipants >;
-  theQGSModel->SetFragmentationModel( new G4ExcitedStringDecay( new G4QGSMFragmentation() ) );
-  theHEModel->SetTransport( theTransport );
-  theHEModel->SetHighEnergyGenerator( theQGSModel );
-  if (quasiElastic) {
+  G4QGSModel<G4QGSParticipants>* theQGSModel = new G4QGSModel<G4QGSParticipants>;
+  theQGSModel->SetFragmentationModel(new G4ExcitedStringDecay(new G4QGSMFragmentation()));
+  theHEModel->SetTransport(theTransport);
+  theHEModel->SetHighEnergyGenerator(theQGSModel);
+  if (quasiElastic)
+  {
     theHEModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
   }
-  theHEModel->SetMinEnergy( param->GetMinEnergyTransitionQGS_FTF() );
-  theHEModel->SetMaxEnergy( param->GetMaxEnergy() );
+  theHEModel->SetMinEnergy(param->GetMinEnergyTransitionQGS_FTF());
+  theHEModel->SetMaxEnergy(param->GetMaxEnergy());
 
   auto theLEModel = new G4TheoFSGenerator("FTFP");
   auto theFTFModel = new G4FTFModel();
   theFTFModel->SetFragmentationModel(new G4ExcitedStringDecay());
-  theLEModel->SetHighEnergyGenerator( theFTFModel );
-  theLEModel->SetTransport( theTransport );
-  theLEModel->SetMaxEnergy( param->GetMaxEnergyTransitionQGS_FTF() );
+  theLEModel->SetHighEnergyGenerator(theFTFModel);
+  theLEModel->SetTransport(theTransport);
+  theLEModel->SetMaxEnergy(param->GetMaxEnergyTransitionQGS_FTF());
 
   G4CascadeInterface* theCascade = nullptr;
-  if(bert) {
+  if (bert)
+  {
     theCascade = new G4CascadeInterface();
-    theCascade->SetMaxEnergy( param->GetMaxEnergyTransitionFTF_Cascade() );
-    theLEModel->SetMinEnergy( param->GetMinEnergyTransitionFTF_Cascade() );
+    theCascade->SetMaxEnergy(param->GetMaxEnergyTransitionFTF_Cascade());
+    theLEModel->SetMinEnergy(param->GetMinEnergyTransitionFTF_Cascade());
   }
 
-  auto xsinel = G4HadProcesses::InelasticXS( xsName );
+  auto xsinel = G4HadProcesses::InelasticXS(xsName);
 
   G4ParticleTable* table = G4ParticleTable::GetParticleTable();
-  for( auto & pdg : partList ) {
+  for (auto& pdg : partList)
+  {
+    auto part = table->FindParticle(pdg);
+    if (part == nullptr)
+    {
+      continue;
+    }
 
-    auto part = table->FindParticle( pdg );
-    if ( part == nullptr ) { continue; }
-
-    auto hadi = new G4HadronInelasticProcess( part->GetParticleName()+"Inelastic", part );
-    hadi->AddDataSet( xsinel );
-    hadi->RegisterMe( theHEModel );
-    hadi->RegisterMe( theLEModel );
-    if(theCascade != nullptr) hadi->RegisterMe( theCascade );
-    if( param->ApplyFactorXS() ) hadi->MultiplyCrossSectionBy( param->XSFactorHadronInelastic() );
+    auto hadi = new G4HadronInelasticProcess(part->GetParticleName() + "Inelastic", part);
+    hadi->AddDataSet(xsinel);
+    hadi->RegisterMe(theHEModel);
+    hadi->RegisterMe(theLEModel);
+    if (theCascade != nullptr) hadi->RegisterMe(theCascade);
+    if (param->ApplyFactorXS()) hadi->MultiplyCrossSectionBy(param->XSFactorHadronInelastic());
     ph->RegisterProcess(hadi, part);
   }
 }
 
-void G4HadronicBuilder::BuildINCLXX(const std::vector<G4int>& partList,
-                                       G4bool bert, const G4String& xsName) {
-
+void G4HadronicBuilder::BuildINCLXX(const std::vector<G4int>& partList, G4bool bert,
+                                    const G4String& xsName)
+{
   // FTF
   G4HadronicParameters* param = G4HadronicParameters::Instance();
   G4PhysicsListHelper* ph = G4PhysicsListHelper::GetPhysicsListHelper();
@@ -206,86 +208,99 @@ void G4HadronicBuilder::BuildINCLXX(const std::vector<G4int>& partList,
   auto theModel = new G4TheoFSGenerator("FTFP");
   auto theStringModel = new G4FTFModel();
   theStringModel->SetFragmentationModel(new G4ExcitedStringDecay());
-  theModel->SetHighEnergyGenerator( theStringModel );
-  theModel->SetTransport( new G4GeneratorPrecompoundInterface() );
-  theModel->SetMaxEnergy( param->GetMaxEnergy() );
+  theModel->SetHighEnergyGenerator(theStringModel);
+  theModel->SetTransport(new G4GeneratorPrecompoundInterface());
+  theModel->SetMaxEnergy(param->GetMaxEnergy());
 
   G4CascadeInterface* theCascade = nullptr;
-  if(bert) {
+  if (bert)
+  {
     theCascade = new G4CascadeInterface();
-    theCascade->SetMaxEnergy( param->GetMaxEnergyTransitionFTF_Cascade() );
-    theModel->SetMinEnergy( param->GetMinEnergyTransitionFTF_Cascade() );
+    theCascade->SetMaxEnergy(param->GetMaxEnergyTransitionFTF_Cascade());
+    theModel->SetMinEnergy(param->GetMinEnergyTransitionFTF_Cascade());
   }
 
   // INCLXX
   auto theModelINCLXX = new G4INCLXXInterface();
-  theModelINCLXX->SetMinEnergy( param->GetMinEnergyINCLXX_Pbar() );
-  theModelINCLXX->SetMaxEnergy( param->GetMaxEnergyINCLXX_Pbar() ); 
+  theModelINCLXX->SetMinEnergy(param->GetMinEnergyINCLXX_Pbar());
+  theModelINCLXX->SetMaxEnergy(param->GetMaxEnergyINCLXX_Pbar());
 
   //
-  auto xsinel = G4HadProcesses::InelasticXS( xsName );
+  auto xsinel = G4HadProcesses::InelasticXS(xsName);
 
   G4ParticleTable* table = G4ParticleTable::GetParticleTable();
-  for( auto & pdg : partList ) {
+  for (auto& pdg : partList)
+  {
+    auto part = table->FindParticle(pdg);
+    if (part == nullptr)
+    {
+      continue;
+    }
 
-    auto part = table->FindParticle( pdg );
-    if ( part == nullptr ) { continue; }
-
-    auto hadi = new G4HadronInelasticProcess( part->GetParticleName()+"Inelastic", part );
-    if( pdg == -2212 || pdg == -2112) { // pbar and nbar use INCLXX
-      hadi->AddDataSet( xsinel );
-      hadi->RegisterMe( theModelINCLXX );
-      if( param->ApplyFactorXS() ) hadi->MultiplyCrossSectionBy( param->XSFactorHadronInelastic() );
+    auto hadi = new G4HadronInelasticProcess(part->GetParticleName() + "Inelastic", part);
+    if (pdg == -2212 || pdg == -2112)
+    {  // pbar and nbar use INCLXX
+      hadi->AddDataSet(xsinel);
+      hadi->RegisterMe(theModelINCLXX);
+      if (param->ApplyFactorXS()) hadi->MultiplyCrossSectionBy(param->XSFactorHadronInelastic());
       ph->RegisterProcess(hadi, part);
-    } else { // other anti-X use FTF
-    hadi->AddDataSet( xsinel );
-    hadi->RegisterMe( theModel );
-    if( theCascade != nullptr ) hadi->RegisterMe( theCascade );
-    if( param->ApplyFactorXS() ) hadi->MultiplyCrossSectionBy( param->XSFactorHadronInelastic() );
-    ph->RegisterProcess(hadi, part);
-  }
+    }
+    else
+    {  // other anti-X use FTF
+      hadi->AddDataSet(xsinel);
+      hadi->RegisterMe(theModel);
+      if (theCascade != nullptr) hadi->RegisterMe(theCascade);
+      if (param->ApplyFactorXS()) hadi->MultiplyCrossSectionBy(param->XSFactorHadronInelastic());
+      ph->RegisterProcess(hadi, part);
+    }
   }
 }
 
-void G4HadronicBuilder::BuildElastic(const std::vector<G4int>& partList) {
-
+void G4HadronicBuilder::BuildElastic(const std::vector<G4int>& partList)
+{
   G4HadronicParameters* param = G4HadronicParameters::Instance();
   G4PhysicsListHelper* ph = G4PhysicsListHelper::GetPhysicsListHelper();
 
   auto xsel = G4HadProcesses::ElasticXS("Glauber-Gribov");
 
   auto elModel = new G4HadronElastic();
-  elModel->SetMaxEnergy( param->GetMaxEnergy() );
+  elModel->SetMaxEnergy(param->GetMaxEnergy());
 
   G4ParticleTable* table = G4ParticleTable::GetParticleTable();
-  for( auto & pdg : partList ) {
-
-    auto part = table->FindParticle( pdg );
-    if ( part == nullptr ) { continue; }
+  for (auto& pdg : partList)
+  {
+    auto part = table->FindParticle(pdg);
+    if (part == nullptr)
+    {
+      continue;
+    }
 
     auto hade = new G4HadronElasticProcess();
-    hade->AddDataSet( xsel );
-    hade->RegisterMe( elModel );
-    if( param->ApplyFactorXS() ) hade->MultiplyCrossSectionBy( param->XSFactorHadronElastic() );
+    hade->AddDataSet(xsel);
+    hade->RegisterMe(elModel);
+    if (param->ApplyFactorXS()) hade->MultiplyCrossSectionBy(param->XSFactorHadronElastic());
     ph->RegisterProcess(hade, part);
   }
 }
 
-void G4HadronicBuilder::BuildHyperonsFTFP_BERT() {
+void G4HadronicBuilder::BuildHyperonsFTFP_BERT()
+{
   // For hyperons, Bertini is used at low energies;
   // for anti-hyperons, FTFP can be used down to zero kinetic energy.
   BuildFTFP_BERT(G4HadParticles::GetHyperons(), true, "Glauber-Gribov");
   BuildFTFP_BERT(G4HadParticles::GetAntiHyperons(), false, "Glauber-Gribov");
 }
 
-void G4HadronicBuilder::BuildHyperonsFTFQGSP_BERT() {
+void G4HadronicBuilder::BuildHyperonsFTFQGSP_BERT()
+{
   // For hyperons, Bertini is used at low energies;
   // for anti-hyperons, FTFP can be used down to zero kinetic energy.
   BuildFTFQGSP_BERT(G4HadParticles::GetHyperons(), true, "Glauber-Gribov");
   BuildFTFQGSP_BERT(G4HadParticles::GetAntiHyperons(), false, "Glauber-Gribov");
 }
 
-void G4HadronicBuilder::BuildHyperonsQGSP_FTFP_BERT(G4bool qElastic) {
+void G4HadronicBuilder::BuildHyperonsQGSP_FTFP_BERT(G4bool qElastic)
+{
   // For hyperons, Bertini is used at low energies;
   // for anti-hyperons, FTFP can be used down to zero kinetic energy.
   // QGSP is used at high energies in all cases.
@@ -293,33 +308,40 @@ void G4HadronicBuilder::BuildHyperonsQGSP_FTFP_BERT(G4bool qElastic) {
   BuildQGSP_FTFP_BERT(G4HadParticles::GetAntiHyperons(), false, qElastic, "Glauber-Gribov");
 }
 
-void G4HadronicBuilder::BuildKaonsFTFP_BERT() {
+void G4HadronicBuilder::BuildKaonsFTFP_BERT()
+{
   BuildFTFP_BERT(G4HadParticles::GetKaons(), true, "Glauber-Gribov");
 }
 
-void G4HadronicBuilder::BuildKaonsFTFQGSP_BERT() {
+void G4HadronicBuilder::BuildKaonsFTFQGSP_BERT()
+{
   BuildFTFQGSP_BERT(G4HadParticles::GetKaons(), true, "Glauber-Gribov");
 }
 
-void G4HadronicBuilder::BuildKaonsQGSP_FTFP_BERT(G4bool qElastic) {
+void G4HadronicBuilder::BuildKaonsQGSP_FTFP_BERT(G4bool qElastic)
+{
   BuildQGSP_FTFP_BERT(G4HadParticles::GetKaons(), true, qElastic, "Glauber-Gribov");
 }
 
-void G4HadronicBuilder::BuildAntiLightIonsFTFP() {
+void G4HadronicBuilder::BuildAntiLightIonsFTFP()
+{
   BuildFTFP_BERT(G4HadParticles::GetLightAntiIons(), false, "AntiAGlauber");
 }
 
-//void G4HadronicBuilder::BuildAntiLightIonsQGSP_FTFP(G4bool qElastic) {
-// Note: currently QGSP cannot be applied for any ion or anti-ion!
-//  BuildQGSP_FTFP_BERT(G4HadParticles::GetLightAntiIons(), false, qElastic, "AntiAGlauber");
-//}
+// void G4HadronicBuilder::BuildAntiLightIonsQGSP_FTFP(G4bool qElastic) {
+//  Note: currently QGSP cannot be applied for any ion or anti-ion!
+//   BuildQGSP_FTFP_BERT(G4HadParticles::GetLightAntiIons(), false, qElastic, "AntiAGlauber");
+// }
 
-void G4HadronicBuilder::BuildAntiLightIonsINCLXX() {
+void G4HadronicBuilder::BuildAntiLightIonsINCLXX()
+{
   BuildINCLXX(G4HadParticles::GetLightAntiIons(), false, "AntiAGlauber");
 }
 
-void G4HadronicBuilder::BuildBCHadronsFTFP_BERT() {
-  if( G4HadronicParameters::Instance()->EnableBCParticles() ) {
+void G4HadronicBuilder::BuildBCHadronsFTFP_BERT()
+{
+  if (G4HadronicParameters::Instance()->EnableBCParticles())
+  {
     // Bertini is not applicable for charm and bottom hadrons, therefore FTFP is used
     // down to zero kinetic energy (but at very low energies, a dummy model is used
     // that returns the projectile heavy hadron in the final state).
@@ -328,8 +350,10 @@ void G4HadronicBuilder::BuildBCHadronsFTFP_BERT() {
   }
 }
 
-void G4HadronicBuilder::BuildBCHadronsFTFQGSP_BERT() {
-  if( G4HadronicParameters::Instance()->EnableBCParticles() ) {
+void G4HadronicBuilder::BuildBCHadronsFTFQGSP_BERT()
+{
+  if (G4HadronicParameters::Instance()->EnableBCParticles())
+  {
     // Bertini is not applicable for charm and bottom hadrons, therefore FTFP is used
     // down to zero kinetic energy (but at very low energies, a dummy model is used
     // that returns the projectile heavy hadron in the final state).
@@ -338,8 +362,10 @@ void G4HadronicBuilder::BuildBCHadronsFTFQGSP_BERT() {
   }
 }
 
-void G4HadronicBuilder::BuildBCHadronsQGSP_FTFP_BERT(G4bool qElastic) {
-  if( G4HadronicParameters::Instance()->EnableBCParticles() ) {
+void G4HadronicBuilder::BuildBCHadronsQGSP_FTFP_BERT(G4bool qElastic)
+{
+  if (G4HadronicParameters::Instance()->EnableBCParticles())
+  {
     // Bertini is not applicable for charm and bottom hadrons, therefore FTFP is used
     // down to zero kinetic energy (but at very low energies, a dummy model is used
     // that returns the projectile heavy hadron in the final state).
@@ -349,7 +375,8 @@ void G4HadronicBuilder::BuildBCHadronsQGSP_FTFP_BERT(G4bool qElastic) {
   }
 }
 
-void G4HadronicBuilder::BuildDecayTableForBCHadrons() {
+void G4HadronicBuilder::BuildDecayTableForBCHadrons()
+{
   // Geant4 does not define the decay of most of charmed and bottom hadrons.
   // The reason is that most of these heavy hadrons have many different
   // decay channels, with a complex dynamics, quite different from the flat
@@ -395,217 +422,243 @@ void G4HadronicBuilder::BuildDecayTableForBCHadrons() {
   // bottom tracks made by the HEP experiments. In fact, pre-assign decays
   // have priority over (i.e. override) decay tables.
   static G4bool isFirstCall = true;
-  if ( ! isFirstCall ) return;
+  if (!isFirstCall) return;
   isFirstCall = false;
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-  for ( auto & pdg : G4HadParticles::GetBCHadrons() ) {
-    auto part = particleTable->FindParticle( pdg );
-    if ( part == nullptr ) {
-      G4cout << "G4HadronicBuilder::BuildDecayTableForBCHadrons : ERROR ! particlePDG="
-             << pdg << " is not defined !" << G4endl;
+  for (auto& pdg : G4HadParticles::GetBCHadrons())
+  {
+    auto part = particleTable->FindParticle(pdg);
+    if (part == nullptr)
+    {
+      G4cout << "G4HadronicBuilder::BuildDecayTableForBCHadrons : ERROR ! particlePDG=" << pdg
+             << " is not defined !" << G4endl;
       continue;
     }
-    if ( part->GetDecayTable() ) {
-      G4cout << "G4HadronicBuilder::BuildDecayTableForBCHadrons : WARNING ! particlePDG="
-             << pdg << " has already a decay table defined !" << G4endl;
+    if (part->GetDecayTable())
+    {
+      G4cout << "G4HadronicBuilder::BuildDecayTableForBCHadrons : WARNING ! particlePDG=" << pdg
+             << " has already a decay table defined !" << G4endl;
       continue;
     }
     G4DecayTable* decayTable = new G4DecayTable;
     const G4int numberDecayChannels = 1;
-    G4VDecayChannel** mode = new G4VDecayChannel*[ numberDecayChannels ];
-    for ( G4int i = 0; i < numberDecayChannels; ++i ) mode[i] = nullptr;
-    switch ( pdg ) {
+    G4VDecayChannel** mode = new G4VDecayChannel*[numberDecayChannels];
+    for (G4int i = 0; i < numberDecayChannels; ++i)
+      mode[i] = nullptr;
+    switch (pdg)
+    {
       // Charmed mesons
-      case  411 :  // D+ 
-        mode[0] = new G4PhaseSpaceDecayChannel( "D+", 1.0, 3, "kaon-", "pi+", "pi+" );
+      case 411:  // D+
+        mode[0] = new G4PhaseSpaceDecayChannel("D+", 1.0, 3, "kaon-", "pi+", "pi+");
         break;
-      case -411 :  // D- 
-        mode[0] = new G4PhaseSpaceDecayChannel( "D-", 1.0, 3, "kaon+", "pi-", "pi-" );
+      case -411:  // D-
+        mode[0] = new G4PhaseSpaceDecayChannel("D-", 1.0, 3, "kaon+", "pi-", "pi-");
         break;
-      case  421 :  // D0
-        mode[0] = new G4PhaseSpaceDecayChannel( "D0", 1.0, 3, "kaon-", "pi+", "pi0" );
+      case 421:  // D0
+        mode[0] = new G4PhaseSpaceDecayChannel("D0", 1.0, 3, "kaon-", "pi+", "pi0");
         break;
-      case -421 :  // anti_D0
-        mode[0] = new G4PhaseSpaceDecayChannel( "anti_D0", 1.0, 3, "kaon+", "pi-", "pi0" );
+      case -421:  // anti_D0
+        mode[0] = new G4PhaseSpaceDecayChannel("anti_D0", 1.0, 3, "kaon+", "pi-", "pi0");
         break;
-      case  431 :  // Ds+ 
-        mode[0] = new G4PhaseSpaceDecayChannel( "Ds+", 1.0, 3, "kaon+", "kaon-", "pi+" );
+      case 431:  // Ds+
+        mode[0] = new G4PhaseSpaceDecayChannel("Ds+", 1.0, 3, "kaon+", "kaon-", "pi+");
         break;
-      case -431 :  // Ds- 
-        mode[0] = new G4PhaseSpaceDecayChannel( "Ds-", 1.0, 3, "kaon-", "kaon+", "pi-" );
+      case -431:  // Ds-
+        mode[0] = new G4PhaseSpaceDecayChannel("Ds-", 1.0, 3, "kaon-", "kaon+", "pi-");
         break;
-      // Bottom mesons  
-      case  521 :  // B+ 
-        mode[0] = new G4PhaseSpaceDecayChannel( "B+", 1.0, 3, "anti_D0", "pi+", "pi0" );
+      // Bottom mesons
+      case 521:  // B+
+        mode[0] = new G4PhaseSpaceDecayChannel("B+", 1.0, 3, "anti_D0", "pi+", "pi0");
         break;
-      case -521 :  // B- 
-        mode[0] = new G4PhaseSpaceDecayChannel( "B-", 1.0, 3, "D0", "pi-", "pi0" );
+      case -521:  // B-
+        mode[0] = new G4PhaseSpaceDecayChannel("B-", 1.0, 3, "D0", "pi-", "pi0");
         break;
-      case  511 :  // B0
-        mode[0] = new G4PhaseSpaceDecayChannel( "B0", 1.0, 3, "D-", "pi+", "pi0" );
+      case 511:  // B0
+        mode[0] = new G4PhaseSpaceDecayChannel("B0", 1.0, 3, "D-", "pi+", "pi0");
         break;
-      case -511 :  // anti_B0
-        mode[0] = new G4PhaseSpaceDecayChannel( "anti_B0", 1.0, 3, "D+", "pi-", "pi0" );
+      case -511:  // anti_B0
+        mode[0] = new G4PhaseSpaceDecayChannel("anti_B0", 1.0, 3, "D+", "pi-", "pi0");
         break;
-      case  531 :  // Bs0
-        mode[0] = new G4PhaseSpaceDecayChannel( "Bs0", 1.0, 3, "Ds-", "pi+", "pi0" );
+      case 531:  // Bs0
+        mode[0] = new G4PhaseSpaceDecayChannel("Bs0", 1.0, 3, "Ds-", "pi+", "pi0");
         break;
-      case -531 :  // anti_Bs0
-        mode[0] = new G4PhaseSpaceDecayChannel( "anti_Bs0", 1.0, 3, "Ds+", "pi-", "pi0" );
+      case -531:  // anti_Bs0
+        mode[0] = new G4PhaseSpaceDecayChannel("anti_Bs0", 1.0, 3, "Ds+", "pi-", "pi0");
         break;
-      case  541 :  // Bc+ 
-        mode[0] = new G4PhaseSpaceDecayChannel( "Bc+", 1.0, 2, "J/psi", "pi+" );
+      case 541:  // Bc+
+        mode[0] = new G4PhaseSpaceDecayChannel("Bc+", 1.0, 2, "J/psi", "pi+");
         break;
-      case -541 :  // Bc- 
-        mode[0] = new G4PhaseSpaceDecayChannel( "Bc-", 1.0, 2, "J/psi", "pi-" );
+      case -541:  // Bc-
+        mode[0] = new G4PhaseSpaceDecayChannel("Bc-", 1.0, 2, "J/psi", "pi-");
         break;
       // Charmed baryons (and anti-baryons)
-      case  4122 :  // lambda_c+ 
-        mode[0] = new G4PhaseSpaceDecayChannel( "lambda_c+", 1.0, 3, "proton", "kaon-", "pi+" );
+      case 4122:  // lambda_c+
+        mode[0] = new G4PhaseSpaceDecayChannel("lambda_c+", 1.0, 3, "proton", "kaon-", "pi+");
         break;
-      case -4122 :  // anti_lambda_c+ 
-        mode[0] = new G4PhaseSpaceDecayChannel( "anti_lambda_c+", 1.0, 3, "anti_proton", "kaon+", "pi-" );
+      case -4122:  // anti_lambda_c+
+        mode[0] =
+          new G4PhaseSpaceDecayChannel("anti_lambda_c+", 1.0, 3, "anti_proton", "kaon+", "pi-");
         break;
-      case  4232 :  // xi_c+ 
-        mode[0] = new G4PhaseSpaceDecayChannel( "xi_c+", 1.0, 3, "sigma+", "kaon-", "pi+" );
+      case 4232:  // xi_c+
+        mode[0] = new G4PhaseSpaceDecayChannel("xi_c+", 1.0, 3, "sigma+", "kaon-", "pi+");
         break;
-      case -4232 :  // anti_xi_c+ 
-        mode[0] = new G4PhaseSpaceDecayChannel( "anti_xi_c+", 1.0, 3, "anti_sigma+", "kaon+", "pi-" );
+      case -4232:  // anti_xi_c+
+        mode[0] = new G4PhaseSpaceDecayChannel("anti_xi_c+", 1.0, 3, "anti_sigma+", "kaon+", "pi-");
         break;
-      case  4132 :  // xi_c0 
-        mode[0] = new G4PhaseSpaceDecayChannel( "xi_c0", 1.0, 3, "lambda", "kaon-", "pi+" );
+      case 4132:  // xi_c0
+        mode[0] = new G4PhaseSpaceDecayChannel("xi_c0", 1.0, 3, "lambda", "kaon-", "pi+");
         break;
-      case -4132 :  // anti_xi_c0 
-        mode[0] = new G4PhaseSpaceDecayChannel( "anti_xi_c0", 1.0, 3, "anti_lambda", "kaon+", "pi-" );
+      case -4132:  // anti_xi_c0
+        mode[0] = new G4PhaseSpaceDecayChannel("anti_xi_c0", 1.0, 3, "anti_lambda", "kaon+", "pi-");
         break;
-      case  4332 :  // omega_c0
-        mode[0] = new G4PhaseSpaceDecayChannel( "omega_c0", 1.0, 3, "xi0", "kaon-", "pi+" );
+      case 4332:  // omega_c0
+        mode[0] = new G4PhaseSpaceDecayChannel("omega_c0", 1.0, 3, "xi0", "kaon-", "pi+");
         break;
-      case -4332 :  // anti_omega_c0
-        mode[0] = new G4PhaseSpaceDecayChannel( "anti_omega_c0", 1.0, 3, "anti_xi0", "kaon+", "pi-" );
+      case -4332:  // anti_omega_c0
+        mode[0] = new G4PhaseSpaceDecayChannel("anti_omega_c0", 1.0, 3, "anti_xi0", "kaon+", "pi-");
         break;
       // Bottom baryons (and anti-baryons)
-      case  5122 :  // lambda_b
-        mode[0] = new G4PhaseSpaceDecayChannel( "lambda_b", 1.0, 4, "lambda_c+", "pi+", "pi-", "pi-" );
+      case 5122:  // lambda_b
+        mode[0] =
+          new G4PhaseSpaceDecayChannel("lambda_b", 1.0, 4, "lambda_c+", "pi+", "pi-", "pi-");
         break;
-      case -5122 :  // anti_lambda_b
-        mode[0] = new G4PhaseSpaceDecayChannel( "anti_lambda_b", 1.0, 4, "anti_lambda_c+", "pi-", "pi+", "pi+" );
+      case -5122:  // anti_lambda_b
+        mode[0] = new G4PhaseSpaceDecayChannel("anti_lambda_b", 1.0, 4, "anti_lambda_c+", "pi-",
+                                               "pi+", "pi+");
         break;
-      case  5232 :  // xi_b0
-        mode[0] = new G4PhaseSpaceDecayChannel( "xi_b0", 1.0, 3, "lambda_c+", "kaon-", "pi0" );
+      case 5232:  // xi_b0
+        mode[0] = new G4PhaseSpaceDecayChannel("xi_b0", 1.0, 3, "lambda_c+", "kaon-", "pi0");
         break;
-      case -5232 :  // anti_xi_b0
-        mode[0] = new G4PhaseSpaceDecayChannel( "anti_xi_b0", 1.0, 3, "anti_lambda_c+", "kaon+", "pi0" );
+      case -5232:  // anti_xi_b0
+        mode[0] =
+          new G4PhaseSpaceDecayChannel("anti_xi_b0", 1.0, 3, "anti_lambda_c+", "kaon+", "pi0");
         break;
-      case  5132 :  // xi_b-
-        mode[0] = new G4PhaseSpaceDecayChannel( "xi_b-", 1.0, 3, "lambda_c+", "kaon-", "pi-" );
+      case 5132:  // xi_b-
+        mode[0] = new G4PhaseSpaceDecayChannel("xi_b-", 1.0, 3, "lambda_c+", "kaon-", "pi-");
         break;
-      case -5132 :  // anti_xi_b-
-        mode[0] = new G4PhaseSpaceDecayChannel( "anti_xi_b-", 1.0, 3, "anti_lambda_c+", "kaon+", "pi+" );
+      case -5132:  // anti_xi_b-
+        mode[0] =
+          new G4PhaseSpaceDecayChannel("anti_xi_b-", 1.0, 3, "anti_lambda_c+", "kaon+", "pi+");
         break;
-      case  5332 :  // omega_b-
-        mode[0] = new G4PhaseSpaceDecayChannel( "omega_b-", 1.0, 3, "xi_c+", "kaon-", "pi-" );
+      case 5332:  // omega_b-
+        mode[0] = new G4PhaseSpaceDecayChannel("omega_b-", 1.0, 3, "xi_c+", "kaon-", "pi-");
         break;
-      case -5332 :  // anti_omega_b-
-        mode[0] = new G4PhaseSpaceDecayChannel( "anti_omega_b-", 1.0, 3, "anti_xi_c+", "kaon+", "pi+" );
+      case -5332:  // anti_omega_b-
+        mode[0] =
+          new G4PhaseSpaceDecayChannel("anti_omega_b-", 1.0, 3, "anti_xi_c+", "kaon+", "pi+");
         break;
-      default :
-        G4cout << "G4HadronicBuilder::BuildDecayTableForBCHadrons : UNKNOWN particlePDG=" << pdg << G4endl;
+      default:
+        G4cout << "G4HadronicBuilder::BuildDecayTableForBCHadrons : UNKNOWN particlePDG=" << pdg
+               << G4endl;
     }  // End of the switch
 
-    for ( G4int index = 0; index < numberDecayChannels; ++index ) decayTable->Insert( mode[index] );
-    delete [] mode;
-    part->SetDecayTable( decayTable );
+    for (G4int index = 0; index < numberDecayChannels; ++index)
+      decayTable->Insert(mode[index]);
+    delete[] mode;
+    part->SetDecayTable(decayTable);
   }  // End of the for loop over heavy hadrons
   // Add now the decay for etac, JPsi and Upsilon because these can be produced as
   // secondaries in hadronic interactions, while they are not part of the heavy
   // hadrons included in G4HadParticles::GetBCHadrons() because they live too shortly
   // and therefore their hadronic interactions can be neglected (as we do for pi0 and sigma0).
-  if ( ! G4Etac::Definition()->GetDecayTable() ) {
+  if (!G4Etac::Definition()->GetDecayTable())
+  {
     G4DecayTable* decayTable = new G4DecayTable;
     const G4int numberDecayChannels = 1;
-    G4VDecayChannel** mode = new G4VDecayChannel*[ numberDecayChannels ];
-    for ( G4int i = 0; i < numberDecayChannels; ++i ) mode[i] = nullptr;
-    mode[0] = new G4PhaseSpaceDecayChannel( "etac", 1.0, 3, "eta", "pi+", "pi-" );
-    for ( G4int index = 0; index < numberDecayChannels; ++index ) decayTable->Insert( mode[index] );
-    delete [] mode;
-    G4Etac::Definition()->SetDecayTable( decayTable );
+    G4VDecayChannel** mode = new G4VDecayChannel*[numberDecayChannels];
+    for (G4int i = 0; i < numberDecayChannels; ++i)
+      mode[i] = nullptr;
+    mode[0] = new G4PhaseSpaceDecayChannel("etac", 1.0, 3, "eta", "pi+", "pi-");
+    for (G4int index = 0; index < numberDecayChannels; ++index)
+      decayTable->Insert(mode[index]);
+    delete[] mode;
+    G4Etac::Definition()->SetDecayTable(decayTable);
   }
-  if ( ! G4JPsi::Definition()->GetDecayTable() ) {
+  if (!G4JPsi::Definition()->GetDecayTable())
+  {
     G4DecayTable* decayTable = new G4DecayTable;
     const G4int numberDecayChannels = 1;
-    G4VDecayChannel** mode = new G4VDecayChannel*[ numberDecayChannels ];
-    for ( G4int i = 0; i < numberDecayChannels; ++i ) mode[i] = nullptr;
-    mode[0] = new G4PhaseSpaceDecayChannel( "J/psi", 1.0, 3, "pi0", "pi+", "pi-" );
-    for ( G4int index = 0; index < numberDecayChannels; ++index ) decayTable->Insert( mode[index] );
-    delete [] mode;
-    G4JPsi::Definition()->SetDecayTable( decayTable );
+    G4VDecayChannel** mode = new G4VDecayChannel*[numberDecayChannels];
+    for (G4int i = 0; i < numberDecayChannels; ++i)
+      mode[i] = nullptr;
+    mode[0] = new G4PhaseSpaceDecayChannel("J/psi", 1.0, 3, "pi0", "pi+", "pi-");
+    for (G4int index = 0; index < numberDecayChannels; ++index)
+      decayTable->Insert(mode[index]);
+    delete[] mode;
+    G4JPsi::Definition()->SetDecayTable(decayTable);
   }
-  if ( ! G4Upsilon::Definition()->GetDecayTable() ) {
+  if (!G4Upsilon::Definition()->GetDecayTable())
+  {
     G4DecayTable* decayTable = new G4DecayTable;
     const G4int numberDecayChannels = 1;
-    G4VDecayChannel** mode = new G4VDecayChannel*[ numberDecayChannels ];
-    for ( G4int i = 0; i < numberDecayChannels; ++i ) mode[i] = nullptr;
-    mode[0] = new G4PhaseSpaceDecayChannel( "Upsilon", 1.0, 3, "eta_prime", "pi+", "pi-" );
-    for ( G4int index = 0; index < numberDecayChannels; ++index ) decayTable->Insert( mode[index] );
-    delete [] mode;
-    G4Upsilon::Definition()->SetDecayTable( decayTable );
-  }  
+    G4VDecayChannel** mode = new G4VDecayChannel*[numberDecayChannels];
+    for (G4int i = 0; i < numberDecayChannels; ++i)
+      mode[i] = nullptr;
+    mode[0] = new G4PhaseSpaceDecayChannel("Upsilon", 1.0, 3, "eta_prime", "pi+", "pi-");
+    for (G4int index = 0; index < numberDecayChannels; ++index)
+      decayTable->Insert(mode[index]);
+    delete[] mode;
+    G4Upsilon::Definition()->SetDecayTable(decayTable);
+  }
 }
 
-
-void G4HadronicBuilder::BuildHyperNucleiFTFP_BERT() {
-  if ( G4HadronicParameters::Instance()->EnableHyperNuclei() ) {
+void G4HadronicBuilder::BuildHyperNucleiFTFP_BERT()
+{
+  if (G4HadronicParameters::Instance()->EnableHyperNuclei())
+  {
     // Bertini intra-nuclear cascade model is currently not applicable for light
     // hypernuclei, therefore FTFP is used down to zero kinetic energy (but at
     // very low energies, a dummy model is used that simply returns the projectile
     // hypernucleus in the final state).
-    BuildFTFP_BERT( G4HadParticles::GetHyperNuclei(), false, "Glauber-Gribov" );
+    BuildFTFP_BERT(G4HadParticles::GetHyperNuclei(), false, "Glauber-Gribov");
   }
 }
 
-
-void G4HadronicBuilder::BuildHyperAntiNucleiFTFP_BERT() {
-  if ( G4HadronicParameters::Instance()->EnableHyperNuclei() ) {
+void G4HadronicBuilder::BuildHyperAntiNucleiFTFP_BERT()
+{
+  if (G4HadronicParameters::Instance()->EnableHyperNuclei())
+  {
     // FTFP can be used down to zero kinetic energy.
-    BuildFTFP_BERT( G4HadParticles::GetHyperAntiNuclei(), false, "AntiAGlauber" );
-  }
-}
- 
-
-void G4HadronicBuilder::BuildHyperNucleiFTFP_INCLXX() {
-  if ( G4HadronicParameters::Instance()->EnableHyperNuclei() ) {
-    BuildFTFP_INCLXX( G4HadParticles::GetHyperNuclei(), "Glauber-Gribov" );
+    BuildFTFP_BERT(G4HadParticles::GetHyperAntiNuclei(), false, "AntiAGlauber");
   }
 }
 
+void G4HadronicBuilder::BuildHyperNucleiFTFP_INCLXX()
+{
+  if (G4HadronicParameters::Instance()->EnableHyperNuclei())
+  {
+    BuildFTFP_INCLXX(G4HadParticles::GetHyperNuclei(), "Glauber-Gribov");
+  }
+}
 
-void G4HadronicBuilder::BuildFTFP_INCLXX( const std::vector< G4int >& partList, const G4String& xsName ) {
+void G4HadronicBuilder::BuildFTFP_INCLXX(const std::vector<G4int>& partList, const G4String& xsName)
+{
   G4HadronicParameters* param = G4HadronicParameters::Instance();
   G4PhysicsListHelper* ph = G4PhysicsListHelper::GetPhysicsListHelper();
-  auto theTheoFSModel = new G4TheoFSGenerator( "FTFP" );
+  auto theTheoFSModel = new G4TheoFSGenerator("FTFP");
   auto theStringModel = new G4FTFModel;
-  theStringModel->SetFragmentationModel( new G4ExcitedStringDecay );
-  theTheoFSModel->SetHighEnergyGenerator( theStringModel );
-  theTheoFSModel->SetTransport( new G4GeneratorPrecompoundInterface );
-  theTheoFSModel->SetMaxEnergy( param->GetMaxEnergy() );
-  theTheoFSModel->SetMinEnergy( 15.0*CLHEP::GeV );
+  theStringModel->SetFragmentationModel(new G4ExcitedStringDecay);
+  theTheoFSModel->SetHighEnergyGenerator(theStringModel);
+  theTheoFSModel->SetTransport(new G4GeneratorPrecompoundInterface);
+  theTheoFSModel->SetMaxEnergy(param->GetMaxEnergy());
+  theTheoFSModel->SetMinEnergy(15.0 * CLHEP::GeV);
   G4VPreCompoundModel* thePrecoModel = new G4PreCompoundModel;
-  thePrecoModel->SetMinEnergy( 0.0 );
-  thePrecoModel->SetMaxEnergy( 2.0*CLHEP::MeV );
-  G4INCLXXInterface* theINCLXXModel = new G4INCLXXInterface( thePrecoModel );
-  theINCLXXModel->SetMinEnergy( 1.0*CLHEP::MeV );
-  theINCLXXModel->SetMaxEnergy( 20.0*CLHEP::GeV );
-  auto xsinel = G4HadProcesses::InelasticXS( xsName );
+  thePrecoModel->SetMinEnergy(0.0);
+  thePrecoModel->SetMaxEnergy(2.0 * CLHEP::MeV);
+  G4INCLXXInterface* theINCLXXModel = new G4INCLXXInterface(thePrecoModel);
+  theINCLXXModel->SetMinEnergy(1.0 * CLHEP::MeV);
+  theINCLXXModel->SetMaxEnergy(20.0 * CLHEP::GeV);
+  auto xsinel = G4HadProcesses::InelasticXS(xsName);
   G4ParticleTable* table = G4ParticleTable::GetParticleTable();
-  for ( auto & pdg : partList ) {
-    auto part = table->FindParticle( pdg );
-    if ( part == nullptr ) continue;
-    auto hadi = new G4HadronInelasticProcess( part->GetParticleName()+"Inelastic", part );
-    hadi->AddDataSet( xsinel );
-    hadi->RegisterMe( theTheoFSModel );
-    hadi->RegisterMe( theINCLXXModel );
-    if ( param->ApplyFactorXS() ) hadi->MultiplyCrossSectionBy( param->XSFactorHadronInelastic() );
-    ph->RegisterProcess( hadi, part );
+  for (auto& pdg : partList)
+  {
+    auto part = table->FindParticle(pdg);
+    if (part == nullptr) continue;
+    auto hadi = new G4HadronInelasticProcess(part->GetParticleName() + "Inelastic", part);
+    hadi->AddDataSet(xsinel);
+    hadi->RegisterMe(theTheoFSModel);
+    hadi->RegisterMe(theINCLXXModel);
+    if (param->ApplyFactorXS()) hadi->MultiplyCrossSectionBy(param->XSFactorHadronInelastic());
+    ph->RegisterProcess(hadi, part);
   }
 }

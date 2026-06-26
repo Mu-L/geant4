@@ -42,10 +42,11 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include "G4eIonisation.hh"
+
 #include "G4Electron.hh"
-#include "G4MollerBhabhaModel.hh"
 #include "G4EmParameters.hh"
 #include "G4EmStandUtil.hh"
+#include "G4MollerBhabhaModel.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -65,12 +66,11 @@ G4eIonisation::~G4eIonisation() = default;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double G4eIonisation::MinPrimaryEnergy(const G4ParticleDefinition*,
-					 const G4Material*,
-					 G4double cut)
+G4double G4eIonisation::MinPrimaryEnergy(const G4ParticleDefinition*, const G4Material*,
+                                         G4double cut)
 {
   G4double x = cut;
-  if(isElectron) x += cut;
+  if (isElectron) x += cut;
   return x;
 }
 
@@ -83,17 +83,24 @@ G4bool G4eIonisation::IsApplicable(const G4ParticleDefinition& p)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4eIonisation::InitialiseEnergyLossProcess(
-		    const G4ParticleDefinition* part,
-		    const G4ParticleDefinition*)
+void G4eIonisation::InitialiseEnergyLossProcess(const G4ParticleDefinition* part,
+                                                const G4ParticleDefinition*)
 {
-  if(!isInitialised) {
-    if(part != theElectron) { isElectron = false; }
-    if (nullptr == EmModel(0)) { SetEmModel(new G4MollerBhabhaModel()); }
+  if (!isInitialised)
+  {
+    if (part != theElectron)
+    {
+      isElectron = false;
+    }
+    if (nullptr == EmModel(0))
+    {
+      SetEmModel(new G4MollerBhabhaModel());
+    }
     G4EmParameters* param = G4EmParameters::Instance();
     EmModel(0)->SetLowEnergyLimit(param->MinKinEnergy());
     EmModel(0)->SetHighEnergyLimit(param->MaxKinEnergy());
-    if (nullptr == FluctModel()) {
+    if (nullptr == FluctModel())
+    {
       SetFluctModel(G4EmStandUtil::ModelOfFluctuations());
     }
     AddEmModel(1, EmModel(), FluctModel());

@@ -30,37 +30,43 @@
 //
 
 #include "G4FissionLevelDensityParameterINCLXX.hh"
+
 #include "G4NuclearLevelData.hh"
 
-G4FissionLevelDensityParameterINCLXX::G4FissionLevelDensityParameterINCLXX() :
-  afanLow(1.03),
-  afanHigh(1.05),
-  ZLow(84),
-  ZHigh(89)
+G4FissionLevelDensityParameterINCLXX::G4FissionLevelDensityParameterINCLXX()
+  : afanLow(1.03), afanHigh(1.05), ZLow(84), ZHigh(89)
 {
   UpdateAfanSlope();
   fNucData = G4NuclearLevelData::GetInstance();
 }
 
-G4FissionLevelDensityParameterINCLXX::~G4FissionLevelDensityParameterINCLXX()
-{}
+G4FissionLevelDensityParameterINCLXX::~G4FissionLevelDensityParameterINCLXX() {}
 
-G4double G4FissionLevelDensityParameterINCLXX::
-LevelDensityParameter(G4int A, G4int Z, G4double U) const 
+G4double G4FissionLevelDensityParameterINCLXX::LevelDensityParameter(G4int A, G4int Z,
+                                                                     G4double U) const
 {
-  G4double EvapLDP = fNucData->GetLevelDensity(Z, A, U); 
+  G4double EvapLDP = fNucData->GetLevelDensity(Z, A, U);
 
-  if(Z >= ZHigh)     { EvapLDP *= afanHigh; }
-  else if(Z <= ZLow) { EvapLDP *= afanLow; }
-  else               { EvapLDP *= (afanLow + afanSlope*(Z-ZLow)); }
+  if (Z >= ZHigh)
+  {
+    EvapLDP *= afanHigh;
+  }
+  else if (Z <= ZLow)
+  {
+    EvapLDP *= afanLow;
+  }
+  else
+  {
+    EvapLDP *= (afanLow + afanSlope * (Z - ZLow));
+  }
 
   return EvapLDP;
-
 }
 
-void G4FissionLevelDensityParameterINCLXX::UpdateAfanSlope() {
-  if(ZHigh!=ZLow)
-    afanSlope = (afanHigh-afanLow)/((G4double)(ZHigh-ZLow));
+void G4FissionLevelDensityParameterINCLXX::UpdateAfanSlope()
+{
+  if (ZHigh != ZLow)
+    afanSlope = (afanHigh - afanLow) / ((G4double)(ZHigh - ZLow));
   else
     afanSlope = 0.;
 }

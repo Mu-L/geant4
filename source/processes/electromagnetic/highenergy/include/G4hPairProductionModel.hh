@@ -32,7 +32,7 @@
 // File name:     G4hPairProductionModel
 //
 // Author:        Vladimir Ivanchenko on base of G4MuPairProductionModel
-// 
+//
 // Creation date: 28.02.2008
 //
 // Modifications:
@@ -47,26 +47,23 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4hPairProductionModel_h
-#define G4hPairProductionModel_h 1
+#ifndef G4HPAIRPRODUCTIONMODEL_HH
+#define G4HPAIRPRODUCTIONMODEL_HH
 
 #include "G4MuPairProductionModel.hh"
 
 class G4hPairProductionModel : public G4MuPairProductionModel
 {
+  public:
 
-public:
+    explicit G4hPairProductionModel(const G4ParticleDefinition* p = nullptr,
+                                    const G4String& nam = "hPairProd");
 
-  explicit G4hPairProductionModel(const G4ParticleDefinition* p = nullptr,
-			 const G4String& nam = "hPairProd");
+    ~G4hPairProductionModel() = default;
 
-  ~G4hPairProductionModel() = default;
-
-  // hide assignment operator
-  G4hPairProductionModel & 
-    operator=(const  G4hPairProductionModel &right) = delete;
-  G4hPairProductionModel(const  G4hPairProductionModel&) = delete;
-
+    // hide assignment operator
+    G4hPairProductionModel& operator=(const G4hPairProductionModel& right) = delete;
+    G4hPairProductionModel(const G4hPairProductionModel&) = delete;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

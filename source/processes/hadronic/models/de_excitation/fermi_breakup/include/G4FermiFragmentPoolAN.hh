@@ -38,15 +38,19 @@
 class G4FermiFragmentPoolAN
 {
   private:
+
     using Container = std::vector<const G4VFermiFragmentAN*>;
 
   public:
+
     class DefaultPoolANSource : private std::vector<G4VFermiFragmentAN*>
     {
       private:
+
         using PoolANContainer = std::vector<G4VFermiFragmentAN*>;
 
       public:
+
         DefaultPoolANSource();
 
         void Initialize();
@@ -60,6 +64,7 @@ class G4FermiFragmentPoolAN
     class IteratorRange
     {
       public:
+
         using const_iterator = Container::const_iterator;
 
         IteratorRange(const_iterator begin, const_iterator end) : begin_(begin), end_(end) {}
@@ -68,6 +73,7 @@ class G4FermiFragmentPoolAN
         const_iterator end() const { return end_; }
 
       private:
+
         const_iterator begin_;
         const_iterator end_;
     };
@@ -100,7 +106,8 @@ class G4FermiFragmentPoolAN
       static_assert(
         std::is_same_v<std::remove_const_t<typename Iter::value_type>, G4VFermiFragmentAN*>,
         "invalid iterator");
-      for (auto it = begin; it != end; ++it) {
+      for (auto it = begin; it != end; ++it)
+      {
         AddFragment(**it);
       }
     }
@@ -114,8 +121,9 @@ class G4FermiFragmentPoolAN
     }
 
   private:
+
     G4FermiFragmentPoolAN();
-  
+
     static inline const Container EmptyContainer_ = {};
 
     std::vector<Container> fragments_;

@@ -32,19 +32,21 @@
 //  New impelemenataion as an utility class  H.Kurashige, 14 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4Geantino_h
-#define G4Geantino_h 1
+#ifndef G4GEANTINO_HH
+#define G4GEANTINO_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4Geantino : public G4ParticleDefinition
 {
   public:
+
     static G4Geantino* Definition();
     static G4Geantino* GeantinoDefinition();
     static G4Geantino* Geantino();
 
   private:
+
     G4Geantino() {}
     ~G4Geantino() override = default;
 

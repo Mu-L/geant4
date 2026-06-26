@@ -25,71 +25,62 @@
 //
 // Author: G.Depaola & F.Longo
 
-#ifndef G4BoldyshevTripletModel_h
-#define G4BoldyshevTripletModel_h 1
+#ifndef G4BOLDYSHEVTRIPLETMODEL_HH
+#define G4BOLDYSHEVTRIPLETMODEL_HH
 
-#include "G4VEmModel.hh"
 #include "G4Electron.hh"
-#include "G4Positron.hh"
+#include "G4Log.hh"
 #include "G4ParticleChangeForGamma.hh"
 #include "G4PhysicsFreeVector.hh"
+#include "G4Positron.hh"
 #include "G4ProductionCutsTable.hh"
-#include "G4Log.hh"
+#include "G4VEmModel.hh"
 
 class G4BoldyshevTripletModel : public G4VEmModel
 {
-public:
-  explicit G4BoldyshevTripletModel(const G4ParticleDefinition* p = nullptr, 
-				   const G4String& nam = "BoldyshevTripletConversion");
-  
-  virtual ~G4BoldyshevTripletModel();
-  
-  virtual void Initialise(const G4ParticleDefinition*, 
-                          const G4DataVector&);
+  public:
 
-  virtual void InitialiseForElement(const G4ParticleDefinition*, G4int Z);
+    explicit G4BoldyshevTripletModel(const G4ParticleDefinition* p = nullptr,
+                                     const G4String& nam = "BoldyshevTripletConversion");
 
-  virtual G4double ComputeCrossSectionPerAtom(
-                                const G4ParticleDefinition*,
-                                      G4double kinEnergy, 
-                                      G4double Z, 
-                                      G4double A=0., 
-                                      G4double cut=0.,
-                                      G4double emax=DBL_MAX);
+    virtual ~G4BoldyshevTripletModel();
 
-  virtual void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-				 const G4MaterialCutsCouple*,
-				 const G4DynamicParticle*,
-				       G4double tmin,
-				       G4double maxEnergy);
+    virtual void Initialise(const G4ParticleDefinition*, const G4DataVector&);
 
-  virtual G4double MinPrimaryEnergy(const G4Material*,
-				    const G4ParticleDefinition*,
-				    G4double);
+    virtual void InitialiseForElement(const G4ParticleDefinition*, G4int Z);
 
-private:
-  void ReadData(size_t Z, const char* path = nullptr);
+    virtual G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy,
+                                                G4double Z, G4double A = 0., G4double cut = 0.,
+                                                G4double emax = DBL_MAX);
 
-  G4double ScreenFunction1(G4double screenVariable);
-  G4double ScreenFunction2(G4double screenVariable);
+    virtual void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                                   const G4DynamicParticle*, G4double tmin, G4double maxEnergy);
 
-  G4BoldyshevTripletModel & operator=(const  G4BoldyshevTripletModel &right) = delete;
-  G4BoldyshevTripletModel(const  G4BoldyshevTripletModel&) = delete;
+    virtual G4double MinPrimaryEnergy(const G4Material*, const G4ParticleDefinition*, G4double);
 
-  static const G4int maxZ = 99;
-  static G4PhysicsFreeVector* data[maxZ+1]; // 100 because Z range is 1-99
-  
-  G4ParticleChangeForGamma* fParticleChange;
+  private:
 
-  G4double lowEnergyLimit;  
-  G4double smallEnergy;
-  G4double energyThreshold;
-  G4double momentumThreshold_c;
-  G4double xb;
-  G4double xn;
-  
-  G4int verboseLevel;
+    void ReadData(size_t Z, const char* path = nullptr);
 
+    G4double ScreenFunction1(G4double screenVariable);
+    G4double ScreenFunction2(G4double screenVariable);
+
+    G4BoldyshevTripletModel& operator=(const G4BoldyshevTripletModel& right) = delete;
+    G4BoldyshevTripletModel(const G4BoldyshevTripletModel&) = delete;
+
+    static const G4int maxZ = 99;
+    static G4PhysicsFreeVector* data[maxZ + 1];  // 100 because Z range is 1-99
+
+    G4ParticleChangeForGamma* fParticleChange;
+
+    G4double lowEnergyLimit;
+    G4double smallEnergy;
+    G4double energyThreshold;
+    G4double momentumThreshold_c;
+    G4double xb;
+    G4double xn;
+
+    G4int verboseLevel;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

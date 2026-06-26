@@ -33,11 +33,10 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef QGSP_INCLXX_h
-#define QGSP_INCLXX_h 1
+#ifndef QGSP_INCLXX_HH
+#define QGSP_INCLXX_HH
 
 #include "INCLXXPhysicsListHelper.hh"
-typedef TINCLXXPhysicsListHelper<G4VModularPhysicsList,false,false> QGSP_INCLXX;
+typedef TINCLXXPhysicsListHelper<G4VModularPhysicsList, false, false> QGSP_INCLXX;
 
-#endif // QGSP_INCLXX_h
-
+#endif  // QGSP_INCLXX_h

@@ -30,8 +30,8 @@
  *      Author: mkaramit
  */
 
-#ifndef SOURCE_PROCESSES_ELECTROMAGNETIC_DNA_MANAGEMENT_INCLUDE_G4ITLEADINGTRACKS_HH_
-#define SOURCE_PROCESSES_ELECTROMAGNETIC_DNA_MANAGEMENT_INCLUDE_G4ITLEADINGTRACKS_HH_
+#ifndef G4ITLEADINGTRACKS_HH
+#define G4ITLEADINGTRACKS_HH
 
 #include <vector>
 
@@ -39,17 +39,19 @@ class G4Track;
 
 class G4ITLeadingTracks
 {
-public:
-  G4ITLeadingTracks();
-  virtual ~G4ITLeadingTracks();
+  public:
 
-  void Reset();
-  void Push(G4Track*);
+    G4ITLeadingTracks();
+    virtual ~G4ITLeadingTracks();
 
-  void PrepareLeadingTracks();
+    void Reset();
+    void Push(G4Track*);
 
-protected:
-  std::vector<G4Track*> fLeadingTracks;
+    void PrepareLeadingTracks();
+
+  protected:
+
+    std::vector<G4Track*> fLeadingTracks;
 };
 
 #endif /* SOURCE_PROCESSES_ELECTROMAGNETIC_DNA_MANAGEMENT_INCLUDE_G4ITLEADINGTRACKS_HH_ */

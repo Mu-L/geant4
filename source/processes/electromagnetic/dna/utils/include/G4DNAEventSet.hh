@@ -24,92 +24,98 @@
 // ********************************************************************
 //
 //
-#ifndef G4DNAEventSet_hh
-#define G4DNAEventSet_hh 1
+#ifndef G4DNAEVENTSET_HH
+#define G4DNAEVENTSET_HH
+#include "G4DNAMesh.hh"
+
+#include <G4memory.hh>
+
 #include <list>
 #include <map>
-#include <G4memory.hh>
 #include <set>
-#include "G4DNAMesh.hh"
 #include <variant>
 class G4DNAMolecularReactionTable;
 class G4DNAMolecularReactionData;
 class Event
 {
- public:
-  using Index        = G4VDNAMesh::Index;
-  using MolType      = const G4MolecularConfiguration*;
-  using JumpingData  = std::pair<MolType, Index>;
-  using ReactionData = const G4DNAMolecularReactionData;
+  public:
 
-  // to test C++17
-  // using Data = std::variant<std::unique_ptr<JumpingData>, ReactionData*>
-  using Data = std::pair<std::unique_ptr<JumpingData>, ReactionData*>;
+    using Index = G4VDNAMesh::Index;
+    using MolType = const G4MolecularConfiguration*;
+    using JumpingData = std::pair<MolType, Index>;
+    using ReactionData = const G4DNAMolecularReactionData;
 
-  Event(const G4double& time, const Index& index, ReactionData*);
-  Event(const G4double& time, const Index& index, std::unique_ptr<JumpingData>&&);
+    // to test C++17
+    // using Data = std::variant<std::unique_ptr<JumpingData>, ReactionData*>
+    using Data = std::pair<std::unique_ptr<JumpingData>, ReactionData*>;
 
-  virtual ~Event();
-  inline G4double GetTime() const { return fTimeStep; }
-  inline Index GetIndex() const { return fIndex; }
-  void PrintEvent() const;
-  JumpingData* GetJumpingData() const { return std::get<0>(fData).get(); }
-  ReactionData* GetReactionData() const { return std::get<1>(fData); }
+    Event(const G4double& time, const Index& index, ReactionData*);
+    Event(const G4double& time, const Index& index, std::unique_ptr<JumpingData>&&);
 
- private:
-  G4double fTimeStep;
-  Index fIndex;
-  Data fData;
+    virtual ~Event();
+    inline G4double GetTime() const { return fTimeStep; }
+    inline Index GetIndex() const { return fIndex; }
+    void PrintEvent() const;
+    JumpingData* GetJumpingData() const { return std::get<0>(fData).get(); }
+    ReactionData* GetReactionData() const { return std::get<1>(fData); }
+
+  private:
+
+    G4double fTimeStep;
+    Index fIndex;
+    Data fData;
 };
 
 struct comparatorEventSet
 {
-  G4bool operator()(std::unique_ptr<Event> const& rhs,
-                    std::unique_ptr<Event> const& lhs) const;
+    G4bool operator()(std::unique_ptr<Event> const& rhs, std::unique_ptr<Event> const& lhs) const;
 };
 
 class IEventSet
 {
- public:
-  IEventSet()  = default;
-  ~IEventSet() = default;
+  public:
+
+    IEventSet() = default;
+    ~IEventSet() = default;
 };
 
 class G4DNAEventSet : public IEventSet
 {
- public:
-  using Index        = G4VDNAMesh::Index;
-  using EventSet = std::set<std::unique_ptr<Event>, comparatorEventSet>;
-  using EventMap = std::unordered_map<Index, EventSet::iterator,G4VDNAMesh::hashFunc>;
-  G4DNAEventSet();
-  virtual ~G4DNAEventSet();
+  public:
 
-  void CreateEvent(const G4double& time, const Index& index,
-                   Event::ReactionData* pReactionData);
-  void CreateEvent(const G4double& time, const Index& index,
-                   std::unique_ptr<Event::JumpingData> jum);
+    using Index = G4VDNAMesh::Index;
+    using EventSet = std::set<std::unique_ptr<Event>, comparatorEventSet>;
+    using EventMap = std::unordered_map<Index, EventSet::iterator, G4VDNAMesh::hashFunc>;
+    G4DNAEventSet();
+    virtual ~G4DNAEventSet();
 
-  void AddEvent(std::unique_ptr<Event> pEvent);
-  void RemoveEventSet()
-  {
-    fEventSet.clear();
-    fEventMap.clear();
-  }
-  void RemoveEventOfVoxel(const Index& key);
+    void CreateEvent(const G4double& time, const Index& index, Event::ReactionData* pReactionData);
+    void CreateEvent(const G4double& time, const Index& index,
+                     std::unique_ptr<Event::JumpingData> jum);
 
-  EventSet::iterator end() { return fEventSet.end(); }
-  EventSet::iterator begin() { return fEventSet.begin(); }
+    void AddEvent(std::unique_ptr<Event> pEvent);
+    void RemoveEventSet()
+    {
+      fEventSet.clear();
+      fEventMap.clear();
+    }
+    void RemoveEventOfVoxel(const Index& key);
 
-  EventSet::reverse_iterator rend() { return fEventSet.rend(); }
-  EventSet::reverse_iterator rbegin() { return fEventSet.rbegin(); }
-  EventSet::const_iterator end() const { return fEventSet.end(); }
-  EventSet::const_iterator begin() const { return fEventSet.begin(); }
-  size_t size() { return fEventSet.size(); }
-  G4bool Empty() { return fEventSet.empty(); }
-  void RemoveEvent(EventSet::iterator iter);
-  void PrintEventSet();
- private:
-  EventSet fEventSet;
-  EventMap fEventMap;
+    EventSet::iterator end() { return fEventSet.end(); }
+    EventSet::iterator begin() { return fEventSet.begin(); }
+
+    EventSet::reverse_iterator rend() { return fEventSet.rend(); }
+    EventSet::reverse_iterator rbegin() { return fEventSet.rbegin(); }
+    EventSet::const_iterator end() const { return fEventSet.end(); }
+    EventSet::const_iterator begin() const { return fEventSet.begin(); }
+    size_t size() { return fEventSet.size(); }
+    G4bool Empty() { return fEventSet.empty(); }
+    void RemoveEvent(EventSet::iterator iter);
+    void PrintEventSet();
+
+  private:
+
+    EventSet fEventSet;
+    EventMap fEventMap;
 };
 #endif

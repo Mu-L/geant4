@@ -38,69 +38,65 @@
 //   * phi denotes the angle between the scattering plane and
 //     X axis of incoming partice reference frame (PRF)
 
-#ifndef G4PolarizedAnnihilationXS_h
-#define G4PolarizedAnnihilationXS_h 1
+#ifndef G4POLARIZEDANNIHILATIONXS_HH
+#define G4POLARIZEDANNIHILATIONXS_HH
 
 #include "G4StokesVector.hh"
 #include "G4VPolarizedXS.hh"
 
 class G4PolarizedAnnihilationXS : public G4VPolarizedXS
 {
- public:
-  G4PolarizedAnnihilationXS();
-  virtual ~G4PolarizedAnnihilationXS() override;
+  public:
 
-  virtual void Initialize(G4double eps, G4double gamma, G4double phi,
-                          const G4StokesVector& p0, const G4StokesVector& p1,
-                          G4int flag = 0) override;
+    G4PolarizedAnnihilationXS();
+    virtual ~G4PolarizedAnnihilationXS() override;
 
-  G4double DiceEpsilon();
+    virtual void Initialize(G4double eps, G4double gamma, G4double phi, const G4StokesVector& p0,
+                            const G4StokesVector& p1, G4int flag = 0) override;
 
-  virtual G4double XSection(const G4StokesVector& pol2,
-                            const G4StokesVector& pol3) override;
+    G4double DiceEpsilon();
 
-  virtual G4double TotalXSection(G4double xmin, G4double xmax, G4double y,
-                                 const G4StokesVector& pol0,
-                                 const G4StokesVector& pol1) override;
+    virtual G4double XSection(const G4StokesVector& pol2, const G4StokesVector& pol3) override;
 
-  // return expected mean polarisation
-  virtual G4StokesVector GetPol2() override;
-  virtual G4StokesVector GetPol3() override;
+    virtual G4double TotalXSection(G4double xmin, G4double xmax, G4double y,
+                                   const G4StokesVector& pol0, const G4StokesVector& pol1) override;
 
-  // minimal energy fraction in TotalXSection
-  virtual G4double GetXmin(G4double y) override;
-  // maximal energy fraction in TotalXSection
-  virtual G4double GetXmax(G4double y) override;
+    // return expected mean polarisation
+    virtual G4StokesVector GetPol2() override;
+    virtual G4StokesVector GetPol3() override;
 
-  G4double getVar(G4int);
-  // test routine
-  void getCoeff();
+    // minimal energy fraction in TotalXSection
+    virtual G4double GetXmin(G4double y) override;
+    // maximal energy fraction in TotalXSection
+    virtual G4double GetXmax(G4double y) override;
 
-  G4PolarizedAnnihilationXS& operator=(const G4PolarizedAnnihilationXS& right) =
-    delete;
-  G4PolarizedAnnihilationXS(const G4PolarizedAnnihilationXS&) = delete;
+    G4double getVar(G4int);
+    // test routine
+    void getCoeff();
 
- private:
-  void TotalXS();
-  void DefineCoefficients(const G4StokesVector& pol0,
-                          const G4StokesVector& pol1);
+    G4PolarizedAnnihilationXS& operator=(const G4PolarizedAnnihilationXS& right) = delete;
+    G4PolarizedAnnihilationXS(const G4PolarizedAnnihilationXS&) = delete;
 
-  static constexpr G4double re2 =
-    CLHEP::classic_electr_radius * CLHEP::classic_electr_radius;
+  private:
 
-  // - part depending on the polarization of the final positron
-  G4ThreeVector fPhi2;
+    void TotalXS();
+    void DefineCoefficients(const G4StokesVector& pol0, const G4StokesVector& pol1);
 
-  // - part depending on the polarization of the final electron
-  G4ThreeVector fPhi3;
+    static constexpr G4double re2 = CLHEP::classic_electr_radius * CLHEP::classic_electr_radius;
 
-  G4double polxx, polyy, polzz, polxz, polzx, polxy, polyx, polyz, polzy;
+    // - part depending on the polarization of the final positron
+    G4ThreeVector fPhi2;
 
-  // - unpolarised + part depending on the polarization of the initial pair
-  G4double fPhi0;
+    // - part depending on the polarization of the final electron
+    G4ThreeVector fPhi3;
 
-  G4double fDice;
-  G4double fPolXS, fUnpXS;
-  G4double ISPxx, ISPyy, ISPzz, ISPnd;
+    G4double polxx, polyy, polzz, polxz, polzx, polxy, polyx, polyz, polzy;
+
+    // - unpolarised + part depending on the polarization of the initial pair
+    G4double fPhi0;
+
+    G4double fDice;
+    G4double fPolXS, fUnpXS;
+    G4double ISPxx, ISPyy, ISPzz, ISPnd;
 };
 #endif

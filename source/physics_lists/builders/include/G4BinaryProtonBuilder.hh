@@ -35,37 +35,35 @@
 // 12.04.2017 A.Dotti move to new design with base class
 //----------------------------------------------------------------------------
 //
-#ifndef G4BinaryProtonBuilder_h
-#define G4BinaryProtonBuilder_h 
+#ifndef G4BINARYPROTONBUILDER_HH
+#define G4BINARYPROTONBUILDER_HH
 
-#include "globals.hh"
-
+#include "G4BinaryCascade.hh"
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
 #include "G4VProtonBuilder.hh"
-
-#include "G4BinaryCascade.hh"   
+#include "globals.hh"
 
 class G4BinaryProtonBuilder : public G4VProtonBuilder
 {
-  public: 
+  public:
+
     G4BinaryProtonBuilder();
     virtual ~G4BinaryProtonBuilder() {}
 
-    virtual void Build(G4HadronElasticProcess *) final override {};
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
-    virtual void SetMaxEnergy(G4double aM) final override {theMax = aM;}
+    virtual void Build(G4HadronElasticProcess*) final override {};
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
-    using G4VProtonBuilder::Build; //Prevent compiler warning
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+    virtual void SetMaxEnergy(G4double aM) final override { theMax = aM; }
+
+    using G4VProtonBuilder::Build;  // Prevent compiler warning
 
   private:
 
-    G4BinaryCascade * theModel;    
+    G4BinaryCascade* theModel;
     G4double theMin;
     G4double theMax;
 };
 
 #endif
-

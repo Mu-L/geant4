@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,16 +41,16 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#ifndef G4IT_h
-#define G4IT_h 1
+#ifndef G4IT_HH
+#define G4IT_HH
 
-#include "globals.hh"
 #include "G4ITType.hh"
+#include "G4KDNode.hh"
 #include "G4ThreeVector.hh"
 #include "G4VUserTrackInformation.hh"
-#include "G4KDNode.hh"
+#include "globals.hh"
 
 ///
 // To implement your own IT class, you should use
@@ -64,7 +64,7 @@ template<>
 G4KDNode<G4IT>::~G4KDNode();
 
 class G4TrackingInformation;
-//template<typename PointT> class G4KDNode;
+// template<typename PointT> class G4KDNode;
 class G4KDNode_Base;
 class G4ITBox;
 class G4Track;
@@ -72,7 +72,8 @@ class G4Track;
 G4IT* GetIT(const G4Track* track);
 G4IT* GetIT(const G4Track& track);
 
-template<class OBJECT> class G4FastListNode;
+template<class OBJECT>
+class G4FastListNode;
 using G4TrackListNode = G4FastListNode<G4Track>;
 
 /**
@@ -86,97 +87,85 @@ using G4TrackListNode = G4FastListNode<G4Track>;
 
 class G4IT : public virtual G4VUserTrackInformation
 {
-public:
-  G4IT();
-  G4IT(G4Track*);
-  ~G4IT() override;
+  public:
 
-//  inline void *operator new(size_t);
-//  inline void operator delete(void *aIT);
+    G4IT();
+    G4IT(G4Track*);
+    ~G4IT() override;
 
-  void Print() const override
-  {
-    ;
-  }
-  virtual const G4String& GetName() const = 0;
+    //  inline void *operator new(size_t);
+    //  inline void operator delete(void *aIT);
 
-  ///
-  // You should not worried of implementing diff, equal
-  // and GetType.
-  // When using ITDef(MyClass) this will be done.
-  // However, you need to implement in the concrete class
-  // even fake operators for < and ==
-  // They will be used by diff and equal.
-  ///
-  virtual G4bool diff(const G4IT& right) const = 0;
-  virtual G4bool equal(const G4IT& right) const = 0;
-  G4bool operator<(const G4IT& right) const;
-  G4bool operator==(const G4IT& right) const;
-  G4bool operator!=(const G4IT& right) const;
+    void Print() const override { ; }
+    virtual const G4String& GetName() const = 0;
 
-  void SetTrack(G4Track*);
-  inline G4Track* GetTrack();
-  inline const G4Track* GetTrack() const;
+    ///
+    // You should not worried of implementing diff, equal
+    // and GetType.
+    // When using ITDef(MyClass) this will be done.
+    // However, you need to implement in the concrete class
+    // even fake operators for < and ==
+    // They will be used by diff and equal.
+    ///
+    virtual G4bool diff(const G4IT& right) const = 0;
+    virtual G4bool equal(const G4IT& right) const = 0;
+    G4bool operator<(const G4IT& right) const;
+    G4bool operator==(const G4IT& right) const;
+    G4bool operator!=(const G4IT& right) const;
 
-  void RecordCurrentPositionNTime();
-  const G4ThreeVector& GetPosition() const;
-  double operator[](int i) const;
-  const G4ThreeVector& GetPreStepPosition() const;
-  G4double GetPreStepLocalTime() const;
-  G4double GetPreStepGlobalTime() const;
+    void SetTrack(G4Track*);
+    inline G4Track* GetTrack();
+    inline const G4Track* GetTrack() const;
 
-  inline void SetPrevious(G4IT*);
-  inline void SetNext(G4IT*);
-  inline G4IT* GetPrevious();
-  inline G4IT* GetNext();
-  inline const G4IT* GetPrevious() const;
-  inline const G4IT* GetNext() const;
-  inline void SetITBox(G4ITBox*);
-  inline const G4ITBox* GetITBox() const;
-  void TakeOutBox();
-  inline void SetNode(G4KDNode_Base*);
-  inline G4KDNode_Base* GetNode() const;
+    void RecordCurrentPositionNTime();
+    const G4ThreeVector& GetPosition() const;
+    double operator[](int i) const;
+    const G4ThreeVector& GetPreStepPosition() const;
+    G4double GetPreStepLocalTime() const;
+    G4double GetPreStepGlobalTime() const;
 
-  inline void SetParentID(int, int);
-  inline void GetParentID(int&, int&);
+    inline void SetPrevious(G4IT*);
+    inline void SetNext(G4IT*);
+    inline G4IT* GetPrevious();
+    inline G4IT* GetNext();
+    inline const G4IT* GetPrevious() const;
+    inline const G4IT* GetNext() const;
+    inline void SetITBox(G4ITBox*);
+    inline const G4ITBox* GetITBox() const;
+    void TakeOutBox();
+    inline void SetNode(G4KDNode_Base*);
+    inline G4KDNode_Base* GetNode() const;
 
-  inline G4TrackingInformation* GetTrackingInfo()
-  {
-    return fpTrackingInformation;
-  }
+    inline void SetParentID(int, int);
+    inline void GetParentID(int&, int&);
 
-  inline G4TrackListNode* GetListNode()
-  {
-    return fpTrackNode;
-  }
-  inline void SetListNode(G4TrackListNode* node)
-  {
-    fpTrackNode = node;
-  }
+    inline G4TrackingInformation* GetTrackingInfo() { return fpTrackingInformation; }
 
-  virtual const G4ITType GetITType() const = 0;
+    inline G4TrackListNode* GetListNode() { return fpTrackNode; }
+    inline void SetListNode(G4TrackListNode* node) { fpTrackNode = node; }
 
-  virtual G4ITType GetITSubType() const
-  {
-    return 0;
-  }
+    virtual const G4ITType GetITType() const = 0;
 
-protected:
-  G4IT(const G4IT&);
-  G4IT& operator=(const G4IT&);
-  G4Track* fpTrack;
+    virtual G4ITType GetITSubType() const { return 0; }
 
-private:
-  G4ITBox * fpITBox;
-  G4IT* fpPreviousIT;
-  G4IT* fpNextIT;
-  G4KDNode_Base* fpKDNode;
+  protected:
 
-  int fParentID_A;
-  int fParentID_B;
+    G4IT(const G4IT&);
+    G4IT& operator=(const G4IT&);
+    G4Track* fpTrack;
 
-  G4TrackingInformation* fpTrackingInformation;
-  G4TrackListNode* fpTrackNode;
+  private:
+
+    G4ITBox* fpITBox;
+    G4IT* fpPreviousIT;
+    G4IT* fpNextIT;
+    G4KDNode_Base* fpKDNode;
+
+    int fParentID_A;
+    int fParentID_B;
+
+    G4TrackingInformation* fpTrackingInformation;
+    G4TrackListNode* fpTrackNode;
 };
 //------------------------------------------------------------------------------
 
@@ -185,7 +174,7 @@ inline const G4ITBox* G4IT::GetITBox() const
   return fpITBox;
 }
 
-inline void G4IT::SetITBox(G4ITBox * aITBox)
+inline void G4IT::SetITBox(G4ITBox* aITBox)
 {
   fpITBox = aITBox;
 }
@@ -231,7 +220,7 @@ inline void G4IT::SetParentID(int p_a, int p_b)
   fParentID_B = p_b;
 }
 
-inline void G4IT::GetParentID(int& p_a, int&p_b)
+inline void G4IT::GetParentID(int& p_a, int& p_b)
 {
   p_a = fParentID_A;
   p_b = fParentID_B;

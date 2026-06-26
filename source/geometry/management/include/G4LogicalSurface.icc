@@ -28,51 +28,43 @@
 // Authors: John Apostolakis (CERN) & Peter Gumplinger (TRIUMF), 26.06.1997
 // ------------------------------------------------------------------------
 
-inline G4SurfaceProperty*
-G4LogicalSurface::GetSurfaceProperty() const
+inline G4SurfaceProperty* G4LogicalSurface::GetSurfaceProperty() const
 {
   return theSurfaceProperty;
-} 
+}
 
-inline void
-G4LogicalSurface::SetSurfaceProperty(G4SurfaceProperty* ptrSurfaceProperty) 
+inline void G4LogicalSurface::SetSurfaceProperty(G4SurfaceProperty* ptrSurfaceProperty)
 {
   theSurfaceProperty = ptrSurfaceProperty;
-} 
+}
 
-inline const G4String&
-G4LogicalSurface::GetName() const
+inline const G4String& G4LogicalSurface::GetName() const
 {
   return theName;
 }
 
-inline void
-G4LogicalSurface::SetName(const G4String& name)
+inline void G4LogicalSurface::SetName(const G4String& name)
 {
   theName = name;
 }
 
-inline G4TransitionRadiationSurface*
-G4LogicalSurface::GetTransitionRadiationSurface() const
+inline G4TransitionRadiationSurface* G4LogicalSurface::GetTransitionRadiationSurface() const
 {
   return theTransRadSurface;
-} 
-
-inline void
-G4LogicalSurface::SetTransitionRadiationSurface(G4TransitionRadiationSurface*
-                                                transRadSurf )
-{
-  theTransRadSurface = transRadSurf;
-} 
-
-inline G4bool
-G4LogicalSurface::operator==(const G4LogicalSurface &right) const
-{
-  return (this == (G4LogicalSurface *) &right);
 }
 
-inline G4bool
-G4LogicalSurface::operator!=(const G4LogicalSurface &right) const
+inline void
+G4LogicalSurface::SetTransitionRadiationSurface(G4TransitionRadiationSurface* transRadSurf)
 {
-  return (this != (G4LogicalSurface *) &right);
+  theTransRadSurface = transRadSurf;
+}
+
+inline G4bool G4LogicalSurface::operator==(const G4LogicalSurface& right) const
+{
+  return (this == (G4LogicalSurface*)&right);
+}
+
+inline G4bool G4LogicalSurface::operator!=(const G4LogicalSurface& right) const
+{
+  return (this != (G4LogicalSurface*)&right);
 }

@@ -28,11 +28,11 @@
 //
 // Author: Ivana Hrivnacova, 19/06/2015  (ivana@ipno.in2p3.fr)
 
-#ifndef G4NtupleBookingManager_h
-#define G4NtupleBookingManager_h 1
+#ifndef G4NTUPLEBOOKINGMANAGER_HH
+#define G4NTUPLEBOOKINGMANAGER_HH
 
-#include "G4BaseAnalysisManager.hh"
 #include "G4AnalysisUtilities.hh"
+#include "G4BaseAnalysisManager.hh"
 #include "globals.hh"
 
 #include "tools/ntuple_booking"
@@ -43,38 +43,40 @@
 
 struct G4NtupleBooking
 {
-  G4NtupleBooking() = default;
-  ~G4NtupleBooking() = default;
+    G4NtupleBooking() = default;
+    ~G4NtupleBooking() = default;
 
-  void SetDeleted(G4bool deleted, G4bool keepSetting) {
-    fDeleted = std::make_pair(deleted, keepSetting);
-  }
-  G4bool GetDeleted() const {
-    return fDeleted.first;
-  }
-  void Reset() {
-    if (! fDeleted.second) {
-      // Reset information unless "keepSetting" option is true
-      fFileName.clear();
-      fActivation = true;
+    void SetDeleted(G4bool deleted, G4bool keepSetting)
+    {
+      fDeleted = std::make_pair(deleted, keepSetting);
     }
-    SetDeleted(false, false);
-  }
+    G4bool GetDeleted() const { return fDeleted.first; }
+    void Reset()
+    {
+      if (!fDeleted.second)
+      {
+        // Reset information unless "keepSetting" option is true
+        fFileName.clear();
+        fActivation = true;
+      }
+      SetDeleted(false, false);
+    }
 
-  tools::ntuple_booking fNtupleBooking;
-  G4int fNtupleId { G4Analysis::kInvalidId };
-  G4String fFileName;
-  G4bool fActivation { true };
-  std::pair<G4bool, G4bool> fDeleted { false, false };
+    tools::ntuple_booking fNtupleBooking;
+    G4int fNtupleId{G4Analysis::kInvalidId};
+    G4String fFileName;
+    G4bool fActivation{true};
+    std::pair<G4bool, G4bool> fDeleted{false, false};
 };
 
 class G4NtupleBookingManager : public G4BaseAnalysisManager
 {
-  // Disable using the object managers outside G4VAnalysisManager and
-  // its messenger
-  friend class G4VAnalysisManager;
+    // Disable using the object managers outside G4VAnalysisManager and
+    // its messenger
+    friend class G4VAnalysisManager;
 
   public:
+
     explicit G4NtupleBookingManager(const G4AnalysisManagerState& state);
     G4NtupleBookingManager() = delete;
     ~G4NtupleBookingManager() override;
@@ -88,54 +90,46 @@ class G4NtupleBookingManager : public G4BaseAnalysisManager
     G4bool IsEmpty() const;
 
     // Access methods
-    tools::ntuple_booking* GetNtuple(G4bool warn,
-                             G4bool onlyIfActive) const;
-    tools::ntuple_booking* GetNtuple(G4int ntupleId, G4bool warn,
-                              G4bool onlyIfActive) const;
+    tools::ntuple_booking* GetNtuple(G4bool warn, G4bool onlyIfActive) const;
+    tools::ntuple_booking* GetNtuple(G4int ntupleId, G4bool warn, G4bool onlyIfActive) const;
 
   protected:
+
     // Methods to create ntuples
     //
     G4int CreateNtuple(const G4String& name, const G4String& title);
 
     // Create columns in the last created ntuple (from base class)
     // Create columns in the last created ntuple
-    G4int CreateNtupleIColumn(const G4String& name,
-                              std::vector<int>* vector);
-    G4int CreateNtupleFColumn(const G4String& name,
-                              std::vector<float>* vector) ;
-    G4int CreateNtupleDColumn(const G4String& name,
-                              std::vector<double>* vector);
-    G4int CreateNtupleSColumn(const G4String& name,
-                              std::vector<std::string>* vector);
-    G4NtupleBooking*  FinishNtuple() ;
+    G4int CreateNtupleIColumn(const G4String& name, std::vector<int>* vector);
+    G4int CreateNtupleFColumn(const G4String& name, std::vector<float>* vector);
+    G4int CreateNtupleDColumn(const G4String& name, std::vector<double>* vector);
+    G4int CreateNtupleSColumn(const G4String& name, std::vector<std::string>* vector);
+    G4NtupleBooking* FinishNtuple();
 
     // Create columns in the ntuple with given id
-    G4int CreateNtupleIColumn(G4int ntupleId,
-                    const G4String& name, std::vector<int>* vector);
-    G4int CreateNtupleFColumn(G4int ntupleId,
-                    const G4String& name, std::vector<float>* vector);
-    G4int CreateNtupleDColumn(G4int ntupleId,
-                    const G4String& name, std::vector<double>* vector);
-    G4int CreateNtupleSColumn(G4int ntupleId,
-                    const G4String& name, std::vector<std::string>* vector);
-    G4NtupleBooking*  FinishNtuple(G4int ntupleId);
+    G4int CreateNtupleIColumn(G4int ntupleId, const G4String& name, std::vector<int>* vector);
+    G4int CreateNtupleFColumn(G4int ntupleId, const G4String& name, std::vector<float>* vector);
+    G4int CreateNtupleDColumn(G4int ntupleId, const G4String& name, std::vector<double>* vector);
+    G4int CreateNtupleSColumn(G4int ntupleId, const G4String& name,
+                              std::vector<std::string>* vector);
+    G4NtupleBooking* FinishNtuple(G4int ntupleId);
 
     // The ntuple column ids are generated automatically starting from 0;
     // with the following function it is possible to change it
     // to start from another value
     G4bool SetFirstNtupleColumnId(G4int firstId);
-    G4int  GetFirstNtupleColumnId() const;
+    G4int GetFirstNtupleColumnId() const;
 
     // Activation option
     //
-    void  SetActivation(G4bool activation);
-    void  SetActivation(G4int ntupleId, G4bool activation);
-    G4bool  GetActivation(G4int ntupleId) const;
+    void SetActivation(G4bool activation);
+    void SetActivation(G4int ntupleId, G4bool activation);
+    G4bool GetActivation(G4int ntupleId) const;
 
     // // File name option
-    void  SetFileName(const G4String& fileName);
-    void  SetFileName(G4int id, const G4String& fileName);
+    void SetFileName(const G4String& fileName);
+    void SetFileName(G4int id, const G4String& fileName);
     G4String GetFileName(G4int id) const;
 
     // Access methods
@@ -155,27 +149,25 @@ class G4NtupleBookingManager : public G4BaseAnalysisManager
     std::set<G4int> fFreeIds;
 
   private:
+
     // Methods
     // Common implementation
-    G4NtupleBooking*  GetNtupleBookingInFunction(
-                                        G4int id,
-                                        std::string_view function,
-                                        G4bool warn = true) const;
+    G4NtupleBooking* GetNtupleBookingInFunction(G4int id, std::string_view function,
+                                                G4bool warn = true) const;
 
     G4bool CheckName(const G4String& name, const G4String& objectType) const;
-    template <typename T>
-    G4int CreateNtupleTColumn(G4int ntupleId,
-                    const G4String& name, std::vector<T>* vector);
+    template<typename T>
+    G4int CreateNtupleTColumn(G4int ntupleId, const G4String& name, std::vector<T>* vector);
     G4int GetCurrentNtupleId() const;
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4NtupleBookingManager" };
+    static constexpr std::string_view fkClass{"G4NtupleBookingManager"};
 
     // Data members
     G4String fFileType;
-    G4int    fFirstNtupleColumnId { 0 };
-    G4bool   fLockFirstNtupleColumnId { false };
-    G4int    fCurrentNtupleId { G4Analysis::kInvalidId };
+    G4int fFirstNtupleColumnId{0};
+    G4bool fLockFirstNtupleColumnId{false};
+    G4int fCurrentNtupleId{G4Analysis::kInvalidId};
 };
 
 #include "G4NtupleBookingManager.icc"

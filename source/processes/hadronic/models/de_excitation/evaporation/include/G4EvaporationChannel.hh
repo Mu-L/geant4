@@ -23,18 +23,18 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-//J.M. Quesada (August2008). Based on:
+// J.M. Quesada (August2008). Based on:
 //
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara (Oct 1998)
 //
-// 17-11-2010 V.Ivanchenko in constructor replace G4VEmissionProbability by 
+// 17-11-2010 V.Ivanchenko in constructor replace G4VEmissionProbability by
 //            G4EvaporationProbability and do not new and delete probability
 //            object at each call; use G4Pow
-// 16-07-2019 V.Ivanchenko use C++11 
+// 16-07-2019 V.Ivanchenko use C++11
 
-#ifndef G4EvaporationChannel_h
-#define G4EvaporationChannel_h 1
+#ifndef G4EVAPORATIONCHANNEL_HH
+#define G4EVAPORATIONCHANNEL_HH
 
 #include "G4VEvaporationChannel.hh"
 
@@ -44,61 +44,58 @@ class G4NuclearLevelData;
 
 class G4EvaporationChannel : public G4VEvaporationChannel
 {
-public:
+  public:
 
-  explicit G4EvaporationChannel(G4int A, G4int Z, 
-		                G4EvaporationProbability*);
+    explicit G4EvaporationChannel(G4int A, G4int Z, G4EvaporationProbability*);
 
-  ~G4EvaporationChannel() override;
+    ~G4EvaporationChannel() override;
 
-  void Initialise() override;
+    void Initialise() override;
 
-  G4double GetEmissionProbability(G4Fragment* fragment) override; 
-  
-  G4Fragment* EmittedFragment(G4Fragment* theNucleus) override;
+    G4double GetEmissionProbability(G4Fragment* fragment) override;
 
-  G4double ComputeInverseXSection(G4Fragment*, G4double kinEnergy) override;
+    G4Fragment* EmittedFragment(G4Fragment* theNucleus) override;
 
-  G4double ComputeProbability(G4Fragment*, G4double kinEnergy) override;
+    G4double ComputeInverseXSection(G4Fragment*, G4double kinEnergy) override;
 
-  inline G4int GetZ() const { return theZ; };
+    G4double ComputeProbability(G4Fragment*, G4double kinEnergy) override;
 
-  inline G4int GetA() const { return theA; };
+    inline G4int GetZ() const { return theZ; };
 
-  inline G4EvaporationProbability* GetEvaporationProbability()
-  { return theProbability; }
+    inline G4int GetA() const { return theA; };
 
-  G4EvaporationChannel(const G4EvaporationChannel & right) = delete;
-  const G4EvaporationChannel & operator=
-  (const G4EvaporationChannel & right) = delete;
-  G4bool operator==(const G4EvaporationChannel & right) const = delete;
-  G4bool operator!=(const G4EvaporationChannel & right) const = delete;
+    inline G4EvaporationProbability* GetEvaporationProbability() { return theProbability; }
 
-private: 
+    G4EvaporationChannel(const G4EvaporationChannel& right) = delete;
+    const G4EvaporationChannel& operator=(const G4EvaporationChannel& right) = delete;
+    G4bool operator==(const G4EvaporationChannel& right) const = delete;
+    G4bool operator!=(const G4EvaporationChannel& right) const = delete;
 
-  G4NuclearLevelData* theLevelData;
+  private:
 
-  // For evaporation probability calcualation
-  G4EvaporationProbability* theProbability;
+    G4NuclearLevelData* theLevelData;
 
-  // For Coulomb Barrier calculation
-  G4CoulombBarrier* theCoulombBarrier;
+    // For evaporation probability calcualation
+    G4EvaporationProbability* theProbability;
 
-  // This data member define the channel. 
-  // They are initialised at object creation (constructor) time.
-  G4int theA;
-  G4int theZ;
-  G4int resA = 0;
-  G4int resZ = 0;
+    // For Coulomb Barrier calculation
+    G4CoulombBarrier* theCoulombBarrier;
 
-  G4int secID;  // Creator model ID for this model
-  
-  G4double mass = 0.0;
-  G4double resMass = 0.0;
-  G4double ekinmax = 0.0;
-  G4double bCoulomb = 0.0;
-  G4double evapMass;
-  G4double evapMass2;
+    // This data member define the channel.
+    // They are initialised at object creation (constructor) time.
+    G4int theA;
+    G4int theZ;
+    G4int resA = 0;
+    G4int resZ = 0;
+
+    G4int secID;  // Creator model ID for this model
+
+    G4double mass = 0.0;
+    G4double resMass = 0.0;
+    G4double ekinmax = 0.0;
+    G4double bCoulomb = 0.0;
+    G4double evapMass;
+    G4double evapMass2;
 };
 
 #endif

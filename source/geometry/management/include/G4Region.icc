@@ -22,7 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // G4Region inline implementation
 //
 // Author: Gabriele Cosmo (CERN), 18.09.2002
@@ -32,38 +32,34 @@
 // Equality operator, defined by address only
 // ********************************************************************
 //
-inline
-G4bool G4Region::operator==(const G4Region& rg) const
+inline G4bool G4Region::operator==(const G4Region& rg) const
 {
-  return this==&rg;
+  return this == &rg;
 }
 
 // ********************************************************************
 // GetInstanceID
 // ********************************************************************
 //
-inline
-G4int G4Region::GetInstanceID() const
+inline G4int G4Region::GetInstanceID() const
 {
   return instanceID;
 }
-    
+
 // ********************************************************************
 // GetName
 // ********************************************************************
 //
-inline
-const G4String& G4Region::GetName() const
+inline const G4String& G4Region::GetName() const
 {
   return fName;
 }
-    
+
 // ********************************************************************
 // RegionModified
 // ********************************************************************
 //
-inline
-void G4Region::RegionModified(G4bool flag)
+inline void G4Region::RegionModified(G4bool flag)
 {
   fRegionMod = flag;
 }
@@ -72,8 +68,7 @@ void G4Region::RegionModified(G4bool flag)
 // IsModified
 // ********************************************************************
 //
-inline
-G4bool G4Region::IsModified() const
+inline G4bool G4Region::IsModified() const
 {
   return fRegionMod;
 }
@@ -82,8 +77,7 @@ G4bool G4Region::IsModified() const
 // SetProductionCuts
 // ********************************************************************
 //
-inline
-void G4Region::SetProductionCuts(G4ProductionCuts* cut)
+inline void G4Region::SetProductionCuts(G4ProductionCuts* cut)
 {
   fCut = cut;
   fRegionMod = true;
@@ -93,8 +87,7 @@ void G4Region::SetProductionCuts(G4ProductionCuts* cut)
 // GetProductionCuts
 // ********************************************************************
 //
-inline
-G4ProductionCuts* G4Region::GetProductionCuts() const
+inline G4ProductionCuts* G4Region::GetProductionCuts() const
 {
   return fCut;
 }
@@ -103,9 +96,7 @@ G4ProductionCuts* G4Region::GetProductionCuts() const
 // GetLogicalVolumeIterator
 // ********************************************************************
 //
-inline
-std::vector<G4LogicalVolume*>::iterator
-G4Region::GetRootLogicalVolumeIterator()
+inline std::vector<G4LogicalVolume*>::iterator G4Region::GetRootLogicalVolumeIterator()
 {
   return G4RootLVList::iterator(fRootVolumes.begin());
 }
@@ -114,9 +105,7 @@ G4Region::GetRootLogicalVolumeIterator()
 // GetMaterialIterator
 // ********************************************************************
 //
-inline
-std::vector<G4Material*>::const_iterator
-G4Region::GetMaterialIterator() const
+inline std::vector<G4Material*>::const_iterator G4Region::GetMaterialIterator() const
 {
   return fMaterials.cbegin();
 }
@@ -125,8 +114,7 @@ G4Region::GetMaterialIterator() const
 // GetNumberOfMaterials
 // ********************************************************************
 //
-inline
-std::size_t G4Region::GetNumberOfMaterials() const
+inline std::size_t G4Region::GetNumberOfMaterials() const
 {
   return fMaterials.size();
 }
@@ -135,8 +123,7 @@ std::size_t G4Region::GetNumberOfMaterials() const
 // GetNumberOfRootVolumes
 // ********************************************************************
 //
-inline
-std::size_t G4Region::GetNumberOfRootVolumes() const
+inline std::size_t G4Region::GetNumberOfRootVolumes() const
 {
   return fRootVolumes.size();
 }
@@ -145,8 +132,7 @@ std::size_t G4Region::GetNumberOfRootVolumes() const
 // SetUserInformation
 // ********************************************************************
 //
-inline
-void G4Region::SetUserInformation(G4VUserRegionInformation* ui)
+inline void G4Region::SetUserInformation(G4VUserRegionInformation* ui)
 {
   fUserInfo = ui;
 }
@@ -155,8 +141,7 @@ void G4Region::SetUserInformation(G4VUserRegionInformation* ui)
 // GetUserInformation
 // ********************************************************************
 //
-inline
-G4VUserRegionInformation* G4Region::GetUserInformation() const
+inline G4VUserRegionInformation* G4Region::GetUserInformation() const
 {
   return fUserInfo;
 }
@@ -165,8 +150,7 @@ G4VUserRegionInformation* G4Region::GetUserInformation() const
 // SetUserLimits
 // ********************************************************************
 //
-inline
-void G4Region::SetUserLimits(G4UserLimits* ul)
+inline void G4Region::SetUserLimits(G4UserLimits* ul)
 {
   fUserLimits = ul;
 }
@@ -175,8 +159,7 @@ void G4Region::SetUserLimits(G4UserLimits* ul)
 // GetUserLimits
 // ********************************************************************
 //
-inline
-G4UserLimits* G4Region::GetUserLimits() const
+inline G4UserLimits* G4Region::GetUserLimits() const
 {
   return fUserLimits;
 }
@@ -185,14 +168,13 @@ G4UserLimits* G4Region::GetUserLimits() const
 // ClearMap
 // ********************************************************************
 //
-inline
-void G4Region::ClearMap()
+inline void G4Region::ClearMap()
 {
-  if(!(fMaterialCoupleMap.empty()))
+  if (!(fMaterialCoupleMap.empty()))
   {
     auto b = fMaterialCoupleMap.cbegin();
     auto e = fMaterialCoupleMap.cend();
-    fMaterialCoupleMap.erase(b,e);
+    fMaterialCoupleMap.erase(b, e);
   }
 }
 
@@ -200,23 +182,23 @@ void G4Region::ClearMap()
 // RegisterMateralCouplePair
 // ********************************************************************
 //
-inline
-void G4Region::RegisterMaterialCouplePair(G4Material* mat,
-                                          G4MaterialCutsCouple* couple)
+inline void G4Region::RegisterMaterialCouplePair(G4Material* mat, G4MaterialCutsCouple* couple)
 {
-  fMaterialCoupleMap.insert(G4MaterialCouplePair(mat,couple));
+  fMaterialCoupleMap.insert(G4MaterialCouplePair(mat, couple));
 }
 
 // ********************************************************************
 // FindCouple
 // ********************************************************************
 //
-inline
-G4MaterialCutsCouple* G4Region::FindCouple(G4Material* mat)
+inline G4MaterialCutsCouple* G4Region::FindCouple(G4Material* mat)
 {
   auto c = fMaterialCoupleMap.find(mat);
   G4MaterialCutsCouple* couple = nullptr;
-  if(c!=fMaterialCoupleMap.cend()) { couple = (*c).second; }
+  if (c != fMaterialCoupleMap.cend())
+  {
+    couple = (*c).second;
+  }
   return couple;
 }
 
@@ -224,8 +206,7 @@ G4MaterialCutsCouple* G4Region::FindCouple(G4Material* mat)
 // GetFieldManager
 // ********************************************************************
 //
-inline 
-G4FieldManager* G4Region::GetFieldManager() const
+inline G4FieldManager* G4Region::GetFieldManager() const
 {
   return fFieldManager;
 }
@@ -234,8 +215,7 @@ G4FieldManager* G4Region::GetFieldManager() const
 // SetFieldManager
 // ********************************************************************
 //
-inline
-void G4Region::SetFieldManager(G4FieldManager* fm)
+inline void G4Region::SetFieldManager(G4FieldManager* fm)
 {
   fFieldManager = fm;
 }
@@ -244,8 +224,7 @@ void G4Region::SetFieldManager(G4FieldManager* fm)
 // GetWorldPhysical
 // ********************************************************************
 //
-inline
-G4VPhysicalVolume* G4Region::GetWorldPhysical() const
+inline G4VPhysicalVolume* G4Region::GetWorldPhysical() const
 {
   return fWorldPhys;
 }
@@ -254,10 +233,9 @@ G4VPhysicalVolume* G4Region::GetWorldPhysical() const
 // AddMaterial
 // ********************************************************************
 //
-inline
-void G4Region::AddMaterial(G4Material* aMaterial)
+inline void G4Region::AddMaterial(G4Material* aMaterial)
 {
-  auto pos = std::find(fMaterials.cbegin(),fMaterials.cend(),aMaterial);
+  auto pos = std::find(fMaterials.cbegin(), fMaterials.cend(), aMaterial);
   if (pos == fMaterials.cend())
   {
     fMaterials.push_back(aMaterial);
@@ -269,8 +247,7 @@ void G4Region::AddMaterial(G4Material* aMaterial)
 // UsedInMassGeometry
 // ********************************************************************
 //
-inline 
-void G4Region::UsedInMassGeometry(G4bool val)
+inline void G4Region::UsedInMassGeometry(G4bool val)
 {
   fInMassGeometry = val;
 }
@@ -279,8 +256,7 @@ void G4Region::UsedInMassGeometry(G4bool val)
 // UsedInParallelGeometry
 // ********************************************************************
 //
-inline 
-void G4Region::UsedInParallelGeometry(G4bool val)
+inline void G4Region::UsedInParallelGeometry(G4bool val)
 {
   fInParallelGeometry = val;
 }
@@ -289,8 +265,7 @@ void G4Region::UsedInParallelGeometry(G4bool val)
 // IsInMassGeometry
 // ********************************************************************
 //
-inline 
-G4bool G4Region::IsInMassGeometry() const
+inline G4bool G4Region::IsInMassGeometry() const
 {
   return fInMassGeometry;
 }
@@ -299,8 +274,7 @@ G4bool G4Region::IsInMassGeometry() const
 // IsInParallelGeometry
 // ********************************************************************
 //
-inline 
-G4bool G4Region::IsInParallelGeometry() const
+inline G4bool G4Region::IsInParallelGeometry() const
 {
   return fInParallelGeometry;
 }

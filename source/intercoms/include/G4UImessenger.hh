@@ -36,8 +36,8 @@
 
 // Author: Makoto Asai, 1998
 // --------------------------------------------------------------------
-#ifndef G4UImessenger_hh
-#define G4UImessenger_hh 1
+#ifndef G4UIMESSENGER_HH
+#define G4UIMESSENGER_HH
 
 #include "G4UIdirectory.hh"
 #include "G4ios.hh"
@@ -46,6 +46,7 @@
 class G4UImessenger
 {
   public:
+
     // Constructor. In the implementation of the concrete messenger,
     // all commands related to the messenger must be constructed
     G4UImessenger() = default;
@@ -72,6 +73,7 @@ class G4UImessenger
     inline G4bool CommandsShouldBeInMaster() const { return commandsShouldBeInMaster; }
 
   protected:
+
     G4String ItoS(G4int i);
     G4String LtoS(G4long l);
     G4String DtoS(G4double a);
@@ -90,6 +92,7 @@ class G4UImessenger
     T* CreateCommand(const G4String& cname, const G4String& dsc);
 
   protected:
+
     G4UIdirectory* baseDir = nullptr;  // used if new object is created
     G4String baseDirName = "";  // used if dir already exists
     G4bool commandsShouldBeInMaster = false;
@@ -101,9 +104,11 @@ template<typename T>
 T* G4UImessenger::CreateCommand(const G4String& cname, const G4String& dsc)
 {
   G4String path;
-  if (cname[0] != '/') {
+  if (cname[0] != '/')
+  {
     path = baseDirName + cname;
-    if (path[0] != '/') {
+    if (path[0] != '/')
+    {
       path = "/" + path;
     }
   }

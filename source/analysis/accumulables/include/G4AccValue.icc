@@ -31,26 +31,25 @@
 //
 
 //_____________________________________________________________________________
-template <typename T>
-G4AccValue<T>::G4AccValue(
-  const G4String& name, T initValue, G4MergeMode mergeMode)
- : G4VAccumulable(name, mergeMode),
-   fValue(initValue),
-   fInitValue(initValue),
-   fMergeFunction(G4Accumulables::GetMergeFunction<T>(mergeMode))
+template<typename T>
+G4AccValue<T>::G4AccValue(const G4String& name, T initValue, G4MergeMode mergeMode)
+  : G4VAccumulable(name, mergeMode),
+    fValue(initValue),
+    fInitValue(initValue),
+    fMergeFunction(G4Accumulables::GetMergeFunction<T>(mergeMode))
 {}
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 G4AccValue<T>::G4AccValue(T initValue, G4MergeMode mergeMode)
- : G4VAccumulable(),
-   fValue(initValue),
-   fInitValue(initValue),
-   fMergeFunction(G4Accumulables::GetMergeFunction<T>(mergeMode))
+  : G4VAccumulable(),
+    fValue(initValue),
+    fInitValue(initValue),
+    fMergeFunction(G4Accumulables::GetMergeFunction<T>(mergeMode))
 {}
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 G4AccValue<T>::G4AccValue(const G4AccValue& rhs)
   : G4VAccumulable(rhs),
     fValue(rhs.fValue),
@@ -59,7 +58,7 @@ G4AccValue<T>::G4AccValue(const G4AccValue& rhs)
 {}
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 G4AccValue<T>::G4AccValue(G4AccValue&& rhs) noexcept
   : G4VAccumulable(std::move(rhs)),
     fValue(std::move(rhs.fValue)),
@@ -68,12 +67,12 @@ G4AccValue<T>::G4AccValue(G4AccValue&& rhs) noexcept
 {}
 
 //_____________________________________________________________________________
-template <typename T>
-G4AccValue<T>&
-G4AccValue<T>::operator=(const G4AccValue<T>& rhs)
+template<typename T>
+G4AccValue<T>& G4AccValue<T>::operator=(const G4AccValue<T>& rhs)
 {
   // check assignment to self
-  if (this == &rhs) {
+  if (this == &rhs)
+  {
     return *this;
   }
 
@@ -89,11 +88,12 @@ G4AccValue<T>::operator=(const G4AccValue<T>& rhs)
 }
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 G4AccValue<T>& G4AccValue<T>::operator=(G4AccValue<T>&& rhs) noexcept
 {
   // check assignment to self
-  if (this == &rhs) {
+  if (this == &rhs)
+  {
     return *this;
   }
 
@@ -109,9 +109,8 @@ G4AccValue<T>& G4AccValue<T>::operator=(G4AccValue<T>&& rhs) noexcept
 }
 
 //_____________________________________________________________________________
-template <typename T>
-G4AccValue<T>&
-G4AccValue<T>::operator+=(const G4AccValue<T>& rhs)
+template<typename T>
+G4AccValue<T>& G4AccValue<T>::operator+=(const G4AccValue<T>& rhs)
 {
   // only update the value from rhs
   fValue += rhs.fValue;
@@ -119,9 +118,8 @@ G4AccValue<T>::operator+=(const G4AccValue<T>& rhs)
 }
 
 //_____________________________________________________________________________
-template <typename T>
-G4AccValue<T>&
-G4AccValue<T>::operator*=(const G4AccValue<T>& rhs)
+template<typename T>
+G4AccValue<T>& G4AccValue<T>::operator*=(const G4AccValue<T>& rhs)
 {
   // only update the value from rhs
   fValue *= rhs.fValue;
@@ -129,9 +127,8 @@ G4AccValue<T>::operator*=(const G4AccValue<T>& rhs)
 }
 
 //_____________________________________________________________________________
-template <typename T>
-G4AccValue<T>&
-G4AccValue<T>::operator=(const T& value)
+template<typename T>
+G4AccValue<T>& G4AccValue<T>::operator=(const T& value)
 {
   // only update the value
   fValue = value;
@@ -139,9 +136,8 @@ G4AccValue<T>::operator=(const T& value)
 }
 
 //_____________________________________________________________________________
-template <typename T>
-G4AccValue<T>&
-G4AccValue<T>::operator+=(const T& value)
+template<typename T>
+G4AccValue<T>& G4AccValue<T>::operator+=(const T& value)
 {
   // only update the value
   fValue += value;
@@ -149,9 +145,8 @@ G4AccValue<T>::operator+=(const T& value)
 }
 
 //_____________________________________________________________________________
-template <typename T>
-G4AccValue<T>&
-G4AccValue<T>::operator*=(const T& value)
+template<typename T>
+G4AccValue<T>& G4AccValue<T>::operator*=(const T& value)
 {
   // only update the value from rhs
   fValue *= value;
@@ -159,9 +154,8 @@ G4AccValue<T>::operator*=(const T& value)
 }
 
 //_____________________________________________________________________________
-template <typename T>
-G4AccValue<T>
-G4AccValue<T>::operator++(int)
+template<typename T>
+G4AccValue<T> G4AccValue<T>::operator++(int)
 {
   // postfix increment
   G4AccValue<T> temp = *this;
@@ -170,9 +164,8 @@ G4AccValue<T>::operator++(int)
 }
 
 //_____________________________________________________________________________
-template <typename T>
-G4AccValue<T>&
-G4AccValue<T>::operator++()
+template<typename T>
+G4AccValue<T>& G4AccValue<T>::operator++()
 {
   // prefix increment
   fValue++;
@@ -180,34 +173,37 @@ G4AccValue<T>::operator++()
 }
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 void G4AccValue<T>::Merge(const G4VAccumulable& other)
 {
-  if (G4Accumulables::VerboseLevel > 2 ) {
+  if (G4Accumulables::VerboseLevel > 2)
+  {
     G4cout << "Merging other: " << other.GetName() << " "
-            << static_cast<const G4AccValue<T>&>(other).fValue << G4endl;
+           << static_cast<const G4AccValue<T>&>(other).fValue << G4endl;
     G4cout << "    to master: " << fName << " " << fValue << G4endl;
   }
 
   fValue = fMergeFunction(fValue, static_cast<const G4AccValue<T>&>(other).fValue);
 
-  if (G4Accumulables::VerboseLevel > 2 ) {
+  if (G4Accumulables::VerboseLevel > 2)
+  {
     G4cout << "    new value: " << fName << " " << fValue << G4endl;
   }
 }
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 void G4AccValue<T>::Reset()
 {
   fValue = fInitValue;
 }
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 void G4AccValue<T>::Print(G4PrintOptions options) const
 {
-  if (options.Has(G4PrintOptions::kType)) {
+  if (options.Has(G4PrintOptions::kType))
+  {
     G4cout << typeid(T).name() << ": ";
   }
 
@@ -217,16 +213,16 @@ void G4AccValue<T>::Print(G4PrintOptions options) const
 }
 
 //_____________________________________________________________________________
-template <class T>
-void  G4AccValue<T>::SetMergeMode(G4MergeMode value)
+template<class T>
+void G4AccValue<T>::SetMergeMode(G4MergeMode value)
 {
   G4VAccumulable::SetMergeMode(value);
   fMergeFunction = G4Accumulables::GetMergeFunction<T>(fMergeMode);
 }
 
 //_____________________________________________________________________________
-template <typename T>
-T  G4AccValue<T>::GetValue() const
+template<typename T>
+T G4AccValue<T>::GetValue() const
 {
   return fValue;
 }

@@ -41,6 +41,11 @@
 #ifndef G4ENVIRONMENTUTILS_HH
 #define G4ENVIRONMENTUTILS_HH
 
+#include "G4Exception.hh"
+#include "G4ExceptionSeverity.hh"
+#include "G4String.hh"
+#include "G4ios.hh"
+
 #include <cstdlib>
 #include <iomanip>
 #include <iostream>
@@ -49,61 +54,58 @@
 #include <sstream>
 #include <string>
 
-#include "G4Exception.hh"
-#include "G4ExceptionSeverity.hh"
-#include "G4String.hh"
-#include "G4ios.hh"
-
 class G4EnvSettings
 {
-  // Static singleton class storing environment variables and
-  // their values that were used by Geant4 in the simulation
+    // Static singleton class storing environment variables and
+    // their values that were used by Geant4 in the simulation
 
- public:
-  using string_t   = std::string;
-  using env_map_t  = std::map<string_t, string_t>;
-  using env_pair_t = std::pair<string_t, string_t>;
+  public:
 
-  static G4EnvSettings* GetInstance()
-  {
-    static auto* _instance = new G4EnvSettings();
-    return _instance;
-  }
+    using string_t = std::string;
+    using env_map_t = std::map<string_t, string_t>;
+    using env_pair_t = std::pair<string_t, string_t>;
 
-  template <typename _Tp>
-  void insert(const std::string& env_id, _Tp val)
-  {
-    std::stringstream ss;
-    ss << val;
-    // lock for MT mode, use C++ type not Geant4 because this file
-    // is included by the those headers
-    static std::mutex _mutex;
-    _mutex.lock();
-    m_env.insert(env_pair_t(env_id, ss.str()));
-    _mutex.unlock();
-  }
-
-  const env_map_t& get() const { return m_env; }
-
-  friend std::ostream& operator<<(std::ostream& os, const G4EnvSettings& env)
-  {
-    std::stringstream filler;
-    filler.fill('#');
-    filler << std::setw(90) << "";
-    std::stringstream ss;
-    ss << filler.str() << "\n# Environment settings:\n";
-    for(const auto& itr : env.get())
+    static G4EnvSettings* GetInstance()
     {
-      ss << "# " << std::setw(35) << std::right << itr.first << "\t = \t"
-         << std::left << itr.second << "\n";
+      static auto* _instance = new G4EnvSettings();
+      return _instance;
     }
-    ss << filler.str();
-    os << ss.str() << std::endl;
-    return os;
-  }
 
- private:
-  env_map_t m_env;
+    template<typename _Tp>
+    void insert(const std::string& env_id, _Tp val)
+    {
+      std::stringstream ss;
+      ss << val;
+      // lock for MT mode, use C++ type not Geant4 because this file
+      // is included by the those headers
+      static std::mutex _mutex;
+      _mutex.lock();
+      m_env.insert(env_pair_t(env_id, ss.str()));
+      _mutex.unlock();
+    }
+
+    const env_map_t& get() const { return m_env; }
+
+    friend std::ostream& operator<<(std::ostream& os, const G4EnvSettings& env)
+    {
+      std::stringstream filler;
+      filler.fill('#');
+      filler << std::setw(90) << "";
+      std::stringstream ss;
+      ss << filler.str() << "\n# Environment settings:\n";
+      for (const auto& itr : env.get())
+      {
+        ss << "# " << std::setw(35) << std::right << itr.first << "\t = \t" << std::left
+           << itr.second << "\n";
+      }
+      ss << filler.str();
+      os << ss.str() << std::endl;
+      return os;
+    }
+
+  private:
+
+    env_map_t m_env;
 };
 
 // ---------------------------------------------------------------------------
@@ -112,11 +114,11 @@ class G4EnvSettings
 //      int num_threads =
 //          G4GetEnv<int>("G4FORCENUMBEROFTHREADS",
 //                        std::thread::hardware_concurrency());
-template <typename _Tp>
+template<typename _Tp>
 _Tp G4GetEnv(const std::string& env_id, _Tp _default = _Tp())
 {
   char* env_var = std::getenv(env_id.c_str());
-  if(env_var)
+  if (env_var)
   {
     std::string str_var = std::string(env_var);
     std::istringstream iss(str_var);
@@ -139,11 +141,11 @@ _Tp G4GetEnv(const std::string& env_id, _Tp _default = _Tp())
 //      int num_threads =
 //          GetEnv<int>("FORCENUMBEROFTHREADS",
 //                      std::thread::hardware_concurrency());
-template <>
+template<>
 inline G4bool G4GetEnv(const std::string& env_id, bool _default)
 {
   char* env_var = std::getenv(env_id.c_str());
-  if(env_var != nullptr)
+  if (env_var != nullptr)
   {
     // record value defined by environment
     G4EnvSettings::GetInstance()->insert<bool>(env_id, true);
@@ -163,11 +165,11 @@ inline G4bool G4GetEnv(const std::string& env_id, bool _default)
 //          G4GetEnv<int>("G4FORCENUMBEROFTHREADS",
 //                        std::thread::hardware_concurrency(),
 //                        "Forcing number of threads");
-template <typename _Tp>
+template<typename _Tp>
 _Tp G4GetEnv(const std::string& env_id, _Tp _default, const std::string& msg)
 {
   char* env_var = std::getenv(env_id.c_str());
-  if(env_var)
+  if (env_var)
   {
     std::string str_var = std::string(env_var);
     std::istringstream iss(str_var);
@@ -195,14 +197,12 @@ _Tp G4GetEnv(const std::string& env_id, _Tp _default, const std::string& msg)
 //                                       FatalException,
 //                                       "G4ENSDFSTATEDATA environment variable"
 //                                       " must be set");
-inline G4String G4GetDataEnv(const std::string& env_id,
-                             const char* originOfException,
-                             const char* exceptionCode,
-                             G4ExceptionSeverity severity,
+inline G4String G4GetDataEnv(const std::string& env_id, const char* originOfException,
+                             const char* exceptionCode, G4ExceptionSeverity severity,
                              const char* description)
 {
   char* env_var = std::getenv(env_id.c_str());
-  if(env_var != nullptr)
+  if (env_var != nullptr)
   {
     std::string str_var = std::string(env_var);
     std::istringstream iss(str_var);

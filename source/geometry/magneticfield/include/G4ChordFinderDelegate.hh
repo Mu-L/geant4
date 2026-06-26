@@ -27,23 +27,25 @@
 //
 // Class description:
 //
-// Implementation of common algorithm of finding step size 
-// with distance to chord less than provided value. 
+// Implementation of common algorithm of finding step size
+// with distance to chord less than provided value.
 
 // Author: Dmitry Sorokin (CERN, Google Summer of Code 2017), 12.09.2018
 // --------------------------------------------------------------------
 #ifndef G4CHORD_FINDER_DELEGATE_HH
 #define G4CHORD_FINDER_DELEGATE_HH
 
-#include <iomanip>
 #include "G4VIntegrationDriver.hh"
+
+#include <iomanip>
 
 /**
  * @brief G4ChordFinderDelegate is a templated class for a common algorithm
  * of finding step size with distance to the chord less than the provided value.
+ * @ingroup geometry_magneticfield
  */
 
-template <class Driver>
+template<class Driver>
 class G4ChordFinderDelegate
 {
   public:
@@ -61,9 +63,7 @@ class G4ChordFinderDelegate
      *  @param[in] chordDistance Maximum sagitta distance.
      *  @returns The length of step taken.
      */
-    G4double AdvanceChordLimitedImpl(G4FieldTrack& track,
-                                     G4double hstep,
-                                     G4double eps,
+    G4double AdvanceChordLimitedImpl(G4FieldTrack& track, G4double hstep, G4double eps,
                                      G4double chordDistance);
 
     /**
@@ -74,59 +74,53 @@ class G4ChordFinderDelegate
     /**
      * Getter and setter for step estimate.
      */
-    G4double GetLastStepEstimateUnc(); 
+    G4double GetLastStepEstimateUnc();
     void SetLastStepEstimateUnc(G4double stepEst);
 
     /**
      * Gets statistics about number of calls & trials in FindNextChord().
      */
-    G4int GetNoCalls(); 
-    G4int GetNoTrials();        // Total number of trials
-    G4int GetNoMaxTrials();     // Maximum # of trials for one call
+    G4int GetNoCalls();
+    G4int GetNoTrials();  // Total number of trials
+    G4int GetNoMaxTrials();  // Maximum # of trials for one call
 
     /**
      * Setters of performance parameters... change with great care!
      */
-    void SetFractions_Last_Next(G4double fractLast = 0.90, 
-                                G4double fractNext = 0.95); 
+    void SetFractions_Last_Next(G4double fractLast = 0.90, G4double fractNext = 0.95);
     void SetFirstFraction(G4double fractFirst);
 
     /**
      * Printing for monitoring ...
      */
-    G4double GetFirstFraction();         // Originally 0.999
-    G4double GetFractionLast();          // Originally 1.000
+    G4double GetFirstFraction();  // Originally 0.999
+    G4double GetFractionLast();  // Originally 1.000
     G4double GetFractionNextEstimate();  // Originally 0.980
 
     /**
      * Writes out to stream the parameters/state of the driver.
      */
-    void StreamDelegateInfo( std::ostream& os ) const;
-   
+    void StreamDelegateInfo(std::ostream& os) const;
+
     /**
      * statistics printout for testing.
      */
-    void TestChordPrint(G4int noTrials, 
-                        G4int lastStepTrial, 
-                        G4double dChordStep, 
-                        G4double fDeltaChord,
-                        G4double nextStepTrial);
+    void TestChordPrint(G4int noTrials, G4int lastStepTrial, G4double dChordStep,
+                        G4double fDeltaChord, G4double nextStepTrial);
+
   private:
 
     Driver& GetDriver();
 
-    G4double FindNextChord(const G4FieldTrack& yStart,
-                           G4double stepMax,
-                           G4double epsStep,
+    G4double FindNextChord(const G4FieldTrack& yStart, G4double stepMax, G4double epsStep,
                            G4double chordDistance,
-                           G4FieldTrack& yEnd, // Endpoint
-                           G4double& dyErrPos, // Error of endpoint
+                           G4FieldTrack& yEnd,  // Endpoint
+                           G4double& dyErrPos,  // Error of endpoint
                            G4double& pStepForAccuracy);
 
-    G4double NewStep(G4double stepTrialOld, 
-                     G4double dChordStep, // Curr. dchord achieved
-                     G4double fDeltaChord,
-                     G4double& stepEstimate_Unconstrained);
+    G4double NewStep(G4double stepTrialOld,
+                     G4double dChordStep,  // Curr. dchord achieved
+                     G4double fDeltaChord, G4double& stepEstimate_Unconstrained);
 
     void AccumulateStatistics(G4int noTrials);
 

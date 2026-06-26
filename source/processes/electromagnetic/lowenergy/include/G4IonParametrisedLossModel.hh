@@ -30,51 +30,51 @@
 // Class:                G4IonParametrisedLossModel
 //
 // Base class:           G4VEmModel (utils)
-// 
+//
 // Author:               Anton Lechner (Anton.Lechner@cern.ch)
 //
 // First implementation: 10. 11. 2008
 //
 // Modifications: 03. 02. 2009 - Bug fix iterators (AL)
 //                11. 03. 2009 - Introduced new table handler(G4IonDEDXHandler)
-//                               and modified method to add/remove tables 
+//                               and modified method to add/remove tables
 //                               (tables are now built in init. phase),
-//                               Minor bug fix in ComputeDEDXPerVolume (AL) 
-//                12. 11. 2009 - Added function for switching off scaling 
+//                               Minor bug fix in ComputeDEDXPerVolume (AL)
+//                12. 11. 2009 - Added function for switching off scaling
 //                               of heavy ions from ICRU 73 data
 //                20. 11. 2009 - Added set-method for energy loss limit (AL)
-//                24. 11. 2009 - Bug fix: Range calculation corrected if same 
+//                24. 11. 2009 - Bug fix: Range calculation corrected if same
 //                               materials appears with different cuts in diff.
 //                               regions (added UpdateRangeCache function and
 //                               modified BuildRangeVector, ComputeLossForStep
 //                               functions accordingly, added new cache param.,
 //                               changed typdef of IonMatCouple).
-//                             - Removed GetRange function (AL)  
+//                             - Removed GetRange function (AL)
 //
 // Class description:
-//    Model for computing the energy loss of ions by employing a 
-//    parameterisation of dE/dx tables (default ICRU 73 tables). For 
-//    ion-material combinations and/or projectile energies not covered 
+//    Model for computing the energy loss of ions by employing a
+//    parameterisation of dE/dx tables (default ICRU 73 tables). For
+//    ion-material combinations and/or projectile energies not covered
 //    by this model, the G4BraggIonModel and G4BetheBloch models are
 //    employed.
 //
 // Comments:
 //
-// =========================================================================== 
-
+// ===========================================================================
 
 #ifndef G4IONPARAMETRISEDLOSSMODEL_HH
 #define G4IONPARAMETRISEDLOSSMODEL_HH
+
+#include "G4EmCorrections.hh"
+#include "G4IonDEDXHandler.hh"
+#include "G4VEmModel.hh"
+
+#include <CLHEP/Units/PhysicalConstants.h>
 
 #include <iomanip>
 #include <list>
 #include <map>
 #include <utility>
-#include <CLHEP/Units/PhysicalConstants.h>
-
-#include "G4VEmModel.hh"
-#include "G4EmCorrections.hh"
-#include "G4IonDEDXHandler.hh"
 
 class G4BraggIonModel;
 class G4BetheBlochModel;
@@ -85,276 +85,254 @@ class G4PhysicsFreeVector;
 class G4MaterialCutsCouple;
 
 typedef std::list<G4IonDEDXHandler*> LossTableList;
-typedef std::pair<const G4ParticleDefinition*, 
-                  const G4MaterialCutsCouple*> IonMatCouple;
+typedef std::pair<const G4ParticleDefinition*, const G4MaterialCutsCouple*> IonMatCouple;
 
-class G4IonParametrisedLossModel : public G4VEmModel {
+class G4IonParametrisedLossModel : public G4VEmModel
+{
+  public:
 
- public:
-   explicit G4IonParametrisedLossModel(const G4ParticleDefinition* particle = nullptr,
-				       const G4String& name = "ParamICRU73");
+    explicit G4IonParametrisedLossModel(const G4ParticleDefinition* particle = nullptr,
+                                        const G4String& name = "ParamICRU73");
 
-   virtual ~G4IonParametrisedLossModel();
+    virtual ~G4IonParametrisedLossModel();
 
-  void Initialise(
-		  const G4ParticleDefinition*, // Projectile
-		  const G4DataVector&) override; // Cut energies
+    void Initialise(const G4ParticleDefinition*,  // Projectile
+                    const G4DataVector&) override;  // Cut energies
 
-  G4double MinEnergyCut(
-			const G4ParticleDefinition*,  // Projectile
-			const G4MaterialCutsCouple*) override;
-  
-  G4double ComputeCrossSectionPerAtom(
-				      const G4ParticleDefinition*, // Projectile
-				      G4double,  // Kinetic energy of projectile
-				      G4double,  // Atomic number
-				      G4double,  // Mass number
-				      G4double,  // Energy cut for secondary prod.
-				      G4double) override; // Maximum energy of secondaries
-  
-  G4double CrossSectionPerVolume(
-                                 const G4Material*,  // Target material
-				 const G4ParticleDefinition*, // Projectile
-				 G4double,  // Kinetic energy
-				 G4double,  // Energy cut for secondary prod.
-				 G4double) override; // Maximum energy of secondaries
-				 
-  G4double ComputeDEDXPerVolume(
-				const G4Material*, // Target material
-				const G4ParticleDefinition*, // Projectile
-				G4double,  // Kinetic energy of projectile
-				G4double) override; // Energy cut for secondary prod.
-  
-   // Function, which computes the continuous energy loss (due to electronic
-   // stopping) for a given pre-step energy and step length by using
-   // range vs energy (and energy vs range) tables  
-   G4double ComputeLossForStep(
-                                 const G4MaterialCutsCouple*, // Mat-cuts couple
-				 const G4ParticleDefinition*, // Projectile
-				 G4double,  // Kinetic energy of projectile
-				 G4double); // Length of current step
+    G4double MinEnergyCut(const G4ParticleDefinition*,  // Projectile
+                          const G4MaterialCutsCouple*) override;
 
-   // Function, which computes the mean energy transfer rate to delta rays 
-   inline G4double DeltaRayMeanEnergyTransferRate(
-                                 const G4Material*, // Target Material
-			         const G4ParticleDefinition*, // Projectile
-				 G4double,  // Kinetic energy of projectile
-				 G4double); // Energy cut for secondary prod.
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*,  // Projectile
+                                        G4double,  // Kinetic energy of projectile
+                                        G4double,  // Atomic number
+                                        G4double,  // Mass number
+                                        G4double,  // Energy cut for secondary prod.
+                                        G4double) override;  // Maximum energy of secondaries
 
+    G4double CrossSectionPerVolume(const G4Material*,  // Target material
+                                   const G4ParticleDefinition*,  // Projectile
+                                   G4double,  // Kinetic energy
+                                   G4double,  // Energy cut for secondary prod.
+                                   G4double) override;  // Maximum energy of secondaries
 
-   void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			  const G4MaterialCutsCouple*,
-			  const G4DynamicParticle*,
-			  G4double,  // Energy cut for secondary prod.
-			  G4double) override; // Maximum energy of secondaries
+    G4double ComputeDEDXPerVolume(const G4Material*,  // Target material
+                                  const G4ParticleDefinition*,  // Projectile
+                                  G4double,  // Kinetic energy of projectile
+                                  G4double) override;  // Energy cut for secondary prod.
 
-   G4double GetChargeSquareRatio(
-                                 const G4ParticleDefinition*, // Projectile
-		 	 	 const G4Material*,  // Target Material
-				 G4double) override; // Kinetic energy of projectile
+    // Function, which computes the continuous energy loss (due to electronic
+    // stopping) for a given pre-step energy and step length by using
+    // range vs energy (and energy vs range) tables
+    G4double ComputeLossForStep(const G4MaterialCutsCouple*,  // Mat-cuts couple
+                                const G4ParticleDefinition*,  // Projectile
+                                G4double,  // Kinetic energy of projectile
+                                G4double);  // Length of current step
 
-   G4double GetParticleCharge(
-			      const G4ParticleDefinition*, // Projectile
-			      const G4Material*,  // Target Material
-			      G4double) override; // Kinetic energy of projectile 
+    // Function, which computes the mean energy transfer rate to delta rays
+    inline G4double DeltaRayMeanEnergyTransferRate(const G4Material*,  // Target Material
+                                                   const G4ParticleDefinition*,  // Projectile
+                                                   G4double,  // Kinetic energy of projectile
+                                                   G4double);  // Energy cut for secondary prod.
 
-   void CorrectionsAlongStep(const G4Material*,
-			     const G4ParticleDefinition*,
-			     const G4double kinEnergy,
-			     const G4double cutEnergy,
-			     const G4double& length,
-			     G4double& eloss) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*,
+                           G4double,  // Energy cut for secondary prod.
+                           G4double) override;  // Maximum energy of secondaries
 
-   // Function which allows to add additional stopping power tables
-   // in combination with a scaling algorithm, which may depend on dynamic
-   // information like the current particle energy (the table and scaling 
-   // algorithm are used via a handler class, which performs e.g.caching or
-   // which applies the scaling of energy and dE/dx values)
-   G4bool AddDEDXTable(const G4String& name,
-                     G4VIonDEDXTable* table, 
-                     G4VIonDEDXScalingAlgorithm* algorithm = nullptr); 
+    G4double GetChargeSquareRatio(const G4ParticleDefinition*,  // Projectile
+                                  const G4Material*,  // Target Material
+                                  G4double) override;  // Kinetic energy of projectile
 
-   G4bool RemoveDEDXTable(const G4String& name); 
+    G4double GetParticleCharge(const G4ParticleDefinition*,  // Projectile
+                               const G4Material*,  // Target Material
+                               G4double) override;  // Kinetic energy of projectile
 
-   // Function which allows to switch off scaling of stopping powers of heavy
-   // ions from existing ICRU 73 data
-   // void DeactivateICRU73Scaling();
+    void CorrectionsAlongStep(const G4Material*, const G4ParticleDefinition*,
+                              const G4double kinEnergy, const G4double cutEnergy,
+                              const G4double& length, G4double& eloss) override;
 
-   // Function checking the applicability of physics tables to ion-material
-   // combinations (Note: the energy range of tables is not checked)
-   inline LossTableList::iterator IsApplicable(
-                      const G4ParticleDefinition*,  // Projectile (ion) 
-                      const G4Material*);           // Target material
+    // Function which allows to add additional stopping power tables
+    // in combination with a scaling algorithm, which may depend on dynamic
+    // information like the current particle energy (the table and scaling
+    // algorithm are used via a handler class, which performs e.g.caching or
+    // which applies the scaling of energy and dE/dx values)
+    G4bool AddDEDXTable(const G4String& name, G4VIonDEDXTable* table,
+                        G4VIonDEDXScalingAlgorithm* algorithm = nullptr);
 
-   // Function printing a dE/dx table for a given ion-material combination
-   // and a specified energy grid 
-   void PrintDEDXTable(
-                      const G4ParticleDefinition*,  // Projectile (ion) 
-                      const G4Material*, // Absorber material
-                      G4double,          // Minimum energy per nucleon
-                      G4double,          // Maximum energy per nucleon
-                      G4int,             // Number of bins
-                      G4bool);           // Logarithmic scaling of energy
+    G4bool RemoveDEDXTable(const G4String& name);
 
-   // Function printing a dE/dx table for a given ion-material combination
-   // and a specified energy grid 
-   void PrintDEDXTableHandlers(
-                      const G4ParticleDefinition*,  // Projectile (ion) 
-                      const G4Material*, // Absorber material
-                      G4double,          // Minimum energy per nucleon
-                      G4double,          // Maximum energy per nucleon
-                      G4int,             // Number of bins
-                      G4bool);           // Logarithmic scaling of energy
-   
-   // Function for setting energy loss limit for stopping power integration
-   inline void SetEnergyLossLimit(G4double ionEnergyLossLimit); 
+    // Function which allows to switch off scaling of stopping powers of heavy
+    // ions from existing ICRU 73 data
+    // void DeactivateICRU73Scaling();
 
- protected:
-   G4double MaxSecondaryEnergy(const G4ParticleDefinition*,
-			       G4double) override;   // Kinetic energy of projectile
+    // Function checking the applicability of physics tables to ion-material
+    // combinations (Note: the energy range of tables is not checked)
+    inline LossTableList::iterator IsApplicable(const G4ParticleDefinition*,  // Projectile (ion)
+                                                const G4Material*);  // Target material
 
- private:
-   // Function which updates parameters concerning the dE/dx calculation
-   // (the parameters are only updated if the particle, the material or 
-   // the associated energy cut has changed)
-   void UpdateDEDXCache(
-                  const G4ParticleDefinition*,   // Projectile (ion) 
-                  const G4Material*,             // Target material
-                  G4double cutEnergy);           // Energy cut
+    // Function printing a dE/dx table for a given ion-material combination
+    // and a specified energy grid
+    void PrintDEDXTable(const G4ParticleDefinition*,  // Projectile (ion)
+                        const G4Material*,  // Absorber material
+                        G4double,  // Minimum energy per nucleon
+                        G4double,  // Maximum energy per nucleon
+                        G4int,  // Number of bins
+                        G4bool);  // Logarithmic scaling of energy
 
-   // Function which updates parameters concerning the range calculation
-   // (the parameters are only updated if the particle, the material or 
-   // the associated energy cut has changed)
-   void UpdateRangeCache(
-                  const G4ParticleDefinition*,   // Projectile (ion) 
-                  const G4MaterialCutsCouple*);  // Target material
+    // Function printing a dE/dx table for a given ion-material combination
+    // and a specified energy grid
+    void PrintDEDXTableHandlers(const G4ParticleDefinition*,  // Projectile (ion)
+                                const G4Material*,  // Absorber material
+                                G4double,  // Minimum energy per nucleon
+                                G4double,  // Maximum energy per nucleon
+                                G4int,  // Number of bins
+                                G4bool);  // Logarithmic scaling of energy
 
-   // Function, which updates parameters concering particle properties
-   inline void UpdateCache(
-                  const G4ParticleDefinition*);  // Projectile (ion) 
- 
-   // Function, which builds range vs energy (and energy vs range) vectors
-   // for a given particle, material and energy cut   
-   void BuildRangeVector(
-                  const G4ParticleDefinition*,   // Projectile (ion) 
-                  const G4MaterialCutsCouple*);  // Material cuts couple
+    // Function for setting energy loss limit for stopping power integration
+    inline void SetEnergyLossLimit(G4double ionEnergyLossLimit);
 
-   // Assignment operator and copy constructor are hidden:
-   G4IonParametrisedLossModel & operator=(
-                              const G4IonParametrisedLossModel &right);
-   G4IonParametrisedLossModel(const G4IonParametrisedLossModel &);
-   
-   // ######################################################################
-   // # Models and dE/dx tables for computing the energy loss 
-   // # 
-   // ######################################################################
+  protected:
 
-   // G4BraggIonModel and G4BetheBlochModel are used for ion-target
-   // combinations and/or projectile energies not covered by parametrisations
-   // adopted by this model:
-   G4BraggIonModel* braggIonModel;
-   G4BetheBlochModel* betheBlochModel;
+    G4double MaxSecondaryEnergy(const G4ParticleDefinition*,
+                                G4double) override;  // Kinetic energy of projectile
 
-   // List of dE/dx tables plugged into the model
-   LossTableList lossTableList;
+  private:
 
-   // ######################################################################
-   // # Maps of Range vs Energy and Energy vs Range vectors
-   // # 
-   // ######################################################################
+    // Function which updates parameters concerning the dE/dx calculation
+    // (the parameters are only updated if the particle, the material or
+    // the associated energy cut has changed)
+    void UpdateDEDXCache(const G4ParticleDefinition*,  // Projectile (ion)
+                         const G4Material*,  // Target material
+                         G4double cutEnergy);  // Energy cut
 
-   typedef std::map<IonMatCouple, G4PhysicsFreeVector*> RangeEnergyTable; 
-   RangeEnergyTable r;
+    // Function which updates parameters concerning the range calculation
+    // (the parameters are only updated if the particle, the material or
+    // the associated energy cut has changed)
+    void UpdateRangeCache(const G4ParticleDefinition*,  // Projectile (ion)
+                          const G4MaterialCutsCouple*);  // Target material
 
-   typedef std::map<IonMatCouple, G4PhysicsFreeVector*> EnergyRangeTable; 
-   EnergyRangeTable E;
+    // Function, which updates parameters concering particle properties
+    inline void UpdateCache(const G4ParticleDefinition*);  // Projectile (ion)
 
-   // ######################################################################
-   // # Energy grid definitions (e.g. used for computing range-energy 
-   // # tables)
-   // ######################################################################
+    // Function, which builds range vs energy (and energy vs range) vectors
+    // for a given particle, material and energy cut
+    void BuildRangeVector(const G4ParticleDefinition*,  // Projectile (ion)
+                          const G4MaterialCutsCouple*);  // Material cuts couple
 
-   G4double lowerEnergyEdgeIntegr;
-   G4double upperEnergyEdgeIntegr;
+    // Assignment operator and copy constructor are hidden:
+    G4IonParametrisedLossModel& operator=(const G4IonParametrisedLossModel& right);
+    G4IonParametrisedLossModel(const G4IonParametrisedLossModel&);
 
-   size_t nmbBins;
-   size_t nmbSubBins;
+    // ######################################################################
+    // # Models and dE/dx tables for computing the energy loss
+    // #
+    // ######################################################################
 
-   // ######################################################################
-   // # Particle change for loss
-   // # 
-   // ######################################################################
+    // G4BraggIonModel and G4BetheBlochModel are used for ion-target
+    // combinations and/or projectile energies not covered by parametrisations
+    // adopted by this model:
+    G4BraggIonModel* braggIonModel;
+    G4BetheBlochModel* betheBlochModel;
 
-   // Pointer to particle change object, which is used to set e.g. the
-   // energy loss and secondary delta-electron
-   // used indicating if model is initialized  
-   G4ParticleChangeForLoss* particleChangeLoss;
+    // List of dE/dx tables plugged into the model
+    LossTableList lossTableList;
 
-   // ######################################################################
-   // # Corrections and energy loss limit
-   // # 
-   // ######################################################################
-   
-   // Pointer to an G4EmCorrections object, which is used to compute the
-   // effective ion charge, and other corrections (like high order corrections
-   // to stopping powers) 
-   G4EmCorrections* corrections;
+    // ######################################################################
+    // # Maps of Range vs Energy and Energy vs Range vectors
+    // #
+    // ######################################################################
 
-   // Effective charge, computed for each particle step
-   G4double chargeSquareRatio;
+    typedef std::map<IonMatCouple, G4PhysicsFreeVector*> RangeEnergyTable;
+    RangeEnergyTable r;
 
-   // Parameter indicating the maximal fraction of kinetic energy, which
-   // a particle may loose along a step, in order that the simple relation
-   // (dE/dx)*l can still be applied to compute the energy loss (l = step 
-   // length)
-   G4double energyLossLimit;
+    typedef std::map<IonMatCouple, G4PhysicsFreeVector*> EnergyRangeTable;
+    EnergyRangeTable E;
 
-   // ######################################################################
-   // # Cut energies and properties of generic ion
-   // # 
-   // ######################################################################
+    // ######################################################################
+    // # Energy grid definitions (e.g. used for computing range-energy
+    // # tables)
+    // ######################################################################
 
-   // Vector containing the current cut energies (the vector index matches
-   // the material-cuts couple index):
-   G4DataVector cutEnergies;
+    G4double lowerEnergyEdgeIntegr;
+    G4double upperEnergyEdgeIntegr;
 
-   // Pointer to generic ion and mass of generic ion
-   const G4ParticleDefinition* genericIon;
-   G4double genericIonPDGMass;
+    size_t nmbBins;
+    size_t nmbSubBins;
 
-   // ######################################################################
-   // # "Most-recently-used" cache parameters
-   // #
-   // ######################################################################
+    // ######################################################################
+    // # Particle change for loss
+    // #
+    // ######################################################################
 
-   // Cached key (particle) and value information for a faster 
-   // access of particle-related information
-   const G4ParticleDefinition* cacheParticle; // Key: Current projectile
-   G4double cacheMass;                        // Projectile mass
-   G4double cacheElecMassRatio;               // Electron-mass ratio
-   G4double cacheChargeSquare;                // Charge squared
+    // Pointer to particle change object, which is used to set e.g. the
+    // energy loss and secondary delta-electron
+    // used indicating if model is initialized
+    G4ParticleChangeForLoss* particleChangeLoss;
 
-   // Cached parameters needed during range computations:
-   const G4ParticleDefinition* rangeCacheParticle; // Key: 1) Current ion,
-   const G4MaterialCutsCouple* rangeCacheMatCutsCouple; // 2) Mat-cuts-couple
-   G4PhysicsVector* rangeCacheEnergyRange;         // Energy vs range vector
-   G4PhysicsVector* rangeCacheRangeEnergy;         // Range vs energy vector
+    // ######################################################################
+    // # Corrections and energy loss limit
+    // #
+    // ######################################################################
 
-   // Cached parameters needed during dE/dx computations:
-   const G4ParticleDefinition* dedxCacheParticle; // Key: 1) Current ion,
-   const G4Material* dedxCacheMaterial;           //      2) material and
-   G4double dedxCacheEnergyCut;                   //      3) cut energy 
-   LossTableList::iterator dedxCacheIter;         // Responsible dE/dx table
-   G4double dedxCacheTransitionEnergy;      // Transition energy between
-                                            // parameterization and 
-                                            // Bethe-Bloch model
-   G4double dedxCacheTransitionFactor;      // Factor for smoothing the dE/dx
-                                            // values in the transition region
-   G4double dedxCacheGenIonMassRatio;       // Ratio of generic ion mass       
-                                            // and current particle mass
-   G4bool isInitialised;
+    // Pointer to an G4EmCorrections object, which is used to compute the
+    // effective ion charge, and other corrections (like high order corrections
+    // to stopping powers)
+    G4EmCorrections* corrections;
+
+    // Effective charge, computed for each particle step
+    G4double chargeSquareRatio;
+
+    // Parameter indicating the maximal fraction of kinetic energy, which
+    // a particle may loose along a step, in order that the simple relation
+    // (dE/dx)*l can still be applied to compute the energy loss (l = step
+    // length)
+    G4double energyLossLimit;
+
+    // ######################################################################
+    // # Cut energies and properties of generic ion
+    // #
+    // ######################################################################
+
+    // Vector containing the current cut energies (the vector index matches
+    // the material-cuts couple index):
+    G4DataVector cutEnergies;
+
+    // Pointer to generic ion and mass of generic ion
+    const G4ParticleDefinition* genericIon;
+    G4double genericIonPDGMass;
+
+    // ######################################################################
+    // # "Most-recently-used" cache parameters
+    // #
+    // ######################################################################
+
+    // Cached key (particle) and value information for a faster
+    // access of particle-related information
+    const G4ParticleDefinition* cacheParticle;  // Key: Current projectile
+    G4double cacheMass;  // Projectile mass
+    G4double cacheElecMassRatio;  // Electron-mass ratio
+    G4double cacheChargeSquare;  // Charge squared
+
+    // Cached parameters needed during range computations:
+    const G4ParticleDefinition* rangeCacheParticle;  // Key: 1) Current ion,
+    const G4MaterialCutsCouple* rangeCacheMatCutsCouple;  // 2) Mat-cuts-couple
+    G4PhysicsVector* rangeCacheEnergyRange;  // Energy vs range vector
+    G4PhysicsVector* rangeCacheRangeEnergy;  // Range vs energy vector
+
+    // Cached parameters needed during dE/dx computations:
+    const G4ParticleDefinition* dedxCacheParticle;  // Key: 1) Current ion,
+    const G4Material* dedxCacheMaterial;  //      2) material and
+    G4double dedxCacheEnergyCut;  //      3) cut energy
+    LossTableList::iterator dedxCacheIter;  // Responsible dE/dx table
+    G4double dedxCacheTransitionEnergy;  // Transition energy between
+                                         // parameterization and
+                                         // Bethe-Bloch model
+    G4double dedxCacheTransitionFactor;  // Factor for smoothing the dE/dx
+                                         // values in the transition region
+    G4double dedxCacheGenIonMassRatio;  // Ratio of generic ion mass
+                                        // and current particle mass
+    G4bool isInitialised;
 };
-
 
 #include "G4IonParametrisedLossModel.icc"
 

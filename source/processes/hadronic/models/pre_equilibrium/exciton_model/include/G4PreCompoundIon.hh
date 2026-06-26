@@ -24,49 +24,46 @@
 // ********************************************************************
 //
 //
-// J. M. Quesada (August 2008).  
+// J. M. Quesada (August 2008).
 // Based  on previous work by V. Lara
 //
 // Modified:
-// 20.08.2010 V.Ivanchenko added int Z and A and cleanup; added 
+// 20.08.2010 V.Ivanchenko added int Z and A and cleanup; added
 //                        G4ParticleDefinition to constructor,
 //                        moved constructor and destructor to source,
 //                        added inline methods
 
-#ifndef G4PreCompoundIon_h
-#define G4PreCompoundIon_h 1
+#ifndef G4PRECOMPOUNDION_HH
+#define G4PRECOMPOUNDION_HH
 
 #include "G4PreCompoundFragment.hh"
 
 class G4PreCompoundIon : public G4PreCompoundFragment
 {
-public:
+  public:
 
-  G4PreCompoundIon(const G4ParticleDefinition*,
-		   G4VCoulombBarrier* aCoulombBarrier);
-  
-  ~G4PreCompoundIon() override = default;
+    G4PreCompoundIon(const G4ParticleDefinition*, G4VCoulombBarrier* aCoulombBarrier);
 
-  G4PreCompoundIon(const G4PreCompoundIon &right) = delete;
-  const G4PreCompoundIon& operator =
-  (const G4PreCompoundIon &right) = delete;
-  G4bool operator==(const G4PreCompoundIon &right) const = delete;
-  G4bool operator!=(const G4PreCompoundIon &right) const = delete;
+    ~G4PreCompoundIon() override = default;
 
-protected:
+    G4PreCompoundIon(const G4PreCompoundIon& right) = delete;
+    const G4PreCompoundIon& operator=(const G4PreCompoundIon& right) = delete;
+    G4bool operator==(const G4PreCompoundIon& right) const = delete;
+    G4bool operator!=(const G4PreCompoundIon& right) const = delete;
 
-  G4double ProbabilityDistributionFunction(G4double eKin, 
-					   const G4Fragment&) override;
+  protected:
 
-  virtual G4double GetRj(G4int NumberParticles, G4int NumberCharged) const = 0;
-          
-  virtual G4double FactorialFactor(G4int N, G4int P) const = 0;
+    G4double ProbabilityDistributionFunction(G4double eKin, const G4Fragment&) override;
 
-  virtual G4double CoalescenceFactor(G4int A) const = 0; 
+    virtual G4double GetRj(G4int NumberParticles, G4int NumberCharged) const = 0;
 
-private:
+    virtual G4double FactorialFactor(G4int N, G4int P) const = 0;
 
-  G4double fact;
+    virtual G4double CoalescenceFactor(G4int A) const = 0;
+
+  private:
+
+    G4double fact;
 };
 
 #endif

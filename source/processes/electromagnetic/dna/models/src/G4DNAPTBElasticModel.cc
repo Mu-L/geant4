@@ -40,7 +40,8 @@ G4DNAPTBElasticModel::G4DNAPTBElasticModel(const G4String& applyToMaterial,
                                            const G4ParticleDefinition*, const G4String& nam)
   : G4VDNAModel(nam, applyToMaterial)
 {
-  if (verboseLevel > 0) {
+  if (verboseLevel > 0)
+  {
     G4cout << "PTB Elastic model is constructed : " << G4endl;
   }
   fpTHF = G4Material::GetMaterial("THF", false);
@@ -62,14 +63,16 @@ G4DNAPTBElasticModel::G4DNAPTBElasticModel(const G4String& applyToMaterial,
 void G4DNAPTBElasticModel::Initialise(const G4ParticleDefinition* particle,
                                       const G4DataVector& /*cuts*/)
 {
-  if (isInitialised) {
+  if (isInitialised)
+  {
     return;
   }
   if (verboseLevel > 3)
   {
     G4cout << "Calling G4DNAPTBElasticModel::Initialise()" << G4endl;
   }
-  if (particle != G4Electron::ElectronDefinition()) {
+  if (particle != G4Electron::ElectronDefinition())
+  {
     std::ostringstream oss;
     oss << " Model is not applied for this particle " << particle->GetParticleName();
     G4Exception("G4DNAPTBElasticModel::G4DNAPTBElasticModel", "PTB001", FatalException,
@@ -82,7 +85,8 @@ void G4DNAPTBElasticModel::Initialise(const G4ParticleDefinition* particle,
 
   std::size_t index;
   // MPietrzak, adding paths for N2
-  if (fpN2 != nullptr) {
+  if (fpN2 != nullptr)
+  {
     index = fpN2->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_elastic_e-_PTB_N2",
                         "dna/sigmadiff_cumulated_elastic_e-_PTB_N2", scaleFactor);
@@ -91,7 +95,8 @@ void G4DNAPTBElasticModel::Initialise(const G4ParticleDefinition* particle,
   }
   // MPietrzak
 
-  if (fpTHF != nullptr) {
+  if (fpTHF != nullptr)
+  {
     index = fpTHF->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_elastic_e-_PTB_THF",
                         "dna/sigmadiff_cumulated_elastic_e-_PTB_THF", scaleFactor);
@@ -99,7 +104,8 @@ void G4DNAPTBElasticModel::Initialise(const G4ParticleDefinition* particle,
     SetHighELimit(index, particle, 1 * keV);
   }
 
-  if (fpPY != nullptr) {
+  if (fpPY != nullptr)
+  {
     index = fpPY->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_elastic_e-_PTB_PY",
                         "dna/sigmadiff_cumulated_elastic_e-_PTB_PY", scaleFactor);
@@ -107,7 +113,8 @@ void G4DNAPTBElasticModel::Initialise(const G4ParticleDefinition* particle,
     SetHighELimit(index, particle, 1 * keV);
   }
 
-  if (fpPU != nullptr) {
+  if (fpPU != nullptr)
+  {
     index = fpPU->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_elastic_e-_PTB_PU",
                         "dna/sigmadiff_cumulated_elastic_e-_PTB_PU", scaleFactor);
@@ -115,7 +122,8 @@ void G4DNAPTBElasticModel::Initialise(const G4ParticleDefinition* particle,
     SetHighELimit(index, particle, 1 * keV);
   }
 
-  if (fpTMP != nullptr) {
+  if (fpTMP != nullptr)
+  {
     index = fpTMP->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_elastic_e-_PTB_TMP",
                         "dna/sigmadiff_cumulated_elastic_e-_PTB_TMP", scaleFactor);
@@ -123,7 +131,8 @@ void G4DNAPTBElasticModel::Initialise(const G4ParticleDefinition* particle,
     SetHighELimit(index, particle, 1 * keV);
   }
   //????
-  if (fpG4_WATER != nullptr) {
+  if (fpG4_WATER != nullptr)
+  {
     index = fpG4_WATER->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_elastic_e_champion",
                         "dna/sigmadiff_cumulated_elastic_e_champion", scaleFactor);
@@ -132,7 +141,8 @@ void G4DNAPTBElasticModel::Initialise(const G4ParticleDefinition* particle,
   }
   // DNA materials
   //
-  if (fpBackbone_THF != nullptr) {
+  if (fpBackbone_THF != nullptr)
+  {
     index = fpBackbone_THF->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_elastic_e-_PTB_THF",
                         "dna/sigmadiff_cumulated_elastic_e-_PTB_THF", scaleFactor * 33. / 30);
@@ -140,7 +150,8 @@ void G4DNAPTBElasticModel::Initialise(const G4ParticleDefinition* particle,
     SetHighELimit(index, particle, 1 * keV);
   }
 
-  if (fpCytosine_PY != nullptr) {
+  if (fpCytosine_PY != nullptr)
+  {
     index = fpCytosine_PY->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_elastic_e-_PTB_PY",
                         "dna/sigmadiff_cumulated_elastic_e-_PTB_PY", scaleFactor * 42. / 30);
@@ -148,7 +159,8 @@ void G4DNAPTBElasticModel::Initialise(const G4ParticleDefinition* particle,
     SetHighELimit(index, particle, 1 * keV);
   }
 
-  if (fpThymine_PY != nullptr) {
+  if (fpThymine_PY != nullptr)
+  {
     index = fpThymine_PY->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_elastic_e-_PTB_PY",
                         "dna/sigmadiff_cumulated_elastic_e-_PTB_PY", scaleFactor * 48. / 30);
@@ -156,14 +168,16 @@ void G4DNAPTBElasticModel::Initialise(const G4ParticleDefinition* particle,
     SetHighELimit(index, particle, 1 * keV);
   }
 
-  if (fpAdenine_PU != nullptr) {
+  if (fpAdenine_PU != nullptr)
+  {
     index = fpAdenine_PU->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_elastic_e-_PTB_PU",
                         "dna/sigmadiff_cumulated_elastic_e-_PTB_PU", scaleFactor * 50. / 44);
     SetLowELimit(index, particle, 10 * eV);
     SetHighELimit(index, particle, 1 * keV);
   }
-  if (fpGuanine_PU != nullptr) {
+  if (fpGuanine_PU != nullptr)
+  {
     index = fpGuanine_PU->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_elastic_e-_PTB_PU",
                         "dna/sigmadiff_cumulated_elastic_e-_PTB_PU", scaleFactor * 56. / 44);
@@ -171,7 +185,8 @@ void G4DNAPTBElasticModel::Initialise(const G4ParticleDefinition* particle,
     SetHighELimit(index, particle, 1 * keV);
   }
 
-  if (fpBackbone_TMP != nullptr) {
+  if (fpBackbone_TMP != nullptr)
+  {
     index = fpBackbone_TMP->GetIndex();
     AddCrossSectionData(index, particle, "dna/sigma_elastic_e-_PTB_TMP",
                         "dna/sigmadiff_cumulated_elastic_e-_PTB_TMP", scaleFactor * 33. / 50);
@@ -179,26 +194,31 @@ void G4DNAPTBElasticModel::Initialise(const G4ParticleDefinition* particle,
     SetHighELimit(index, particle, 1 * keV);
   }
 
-  if (!G4DNAMaterialManager::Instance()->IsLocked()) {
+  if (!G4DNAMaterialManager::Instance()->IsLocked())
+  {
     // Load the data
     LoadCrossSectionData(particle);
     G4DNAMaterialManager::Instance()->SetMasterDataModel(DNAModelType::fDNAElastics, this);
     fpModelData = this;
   }
-  else {
+  else
+  {
     auto dataModel = dynamic_cast<G4DNAPTBElasticModel*>(
       G4DNAMaterialManager::Instance()->GetModel(DNAModelType::fDNAElastics));
-    if (dataModel == nullptr) {
+    if (dataModel == nullptr)
+    {
       G4cout << "G4DNAPTBElasticModel::Initialise:: not good modelData" << G4endl;
       G4Exception("G4DNAPTBElasticModel::Initialise", "PTB0006", FatalException,
                   "not good modelData");
     }
-    else {
+    else
+    {
       fpModelData = dataModel;
     }
   }
 
-  if (verboseLevel > 2) {
+  if (verboseLevel > 2)
+  {
     G4cout << "Loaded cross section files for PTB Elastic model" << G4endl;
   }
 
@@ -218,7 +238,8 @@ void G4DNAPTBElasticModel::ReadDiffCSFile(const std::size_t& materialName,
   // get the path of the G4LEDATA data folder
   const char* path = G4FindDataDir("G4LEDATA");
   // if it is not found then quit and print error message
-  if (path == nullptr) {
+  if (path == nullptr)
+  {
     G4Exception("G4DNAPTBElasticModel::ReadAllDiffCSFiles", "em0006", FatalException,
                 "G4LEDATA environment variable not set.");
     return;
@@ -232,7 +253,8 @@ void G4DNAPTBElasticModel::ReadDiffCSFile(const std::size_t& materialName,
   std::ifstream diffCrossSection(fullFileName.str().c_str());
   // error if file is not there
   std::stringstream endPath;
-  if (!diffCrossSection) {
+  if (!diffCrossSection)
+  {
     endPath << "Missing data file: " << file;
     G4Exception("G4DNAPTBElasticModel::Initialise", "em0003", FatalException,
                 endPath.str().c_str());
@@ -243,19 +265,22 @@ void G4DNAPTBElasticModel::ReadDiffCSFile(const std::size_t& materialName,
   G4String line;
 
   // read the file line by line until we reach the end of file point
-  while (std::getline(diffCrossSection, line)) {
+  while (std::getline(diffCrossSection, line))
+  {
     // check if the line is comment or empty
     //
     std::istringstream testIss(line);
     G4String test;
     testIss >> test;
     // check first caracter to determine if following information is data or comments
-    if (test == "#") {
+    if (test == "#")
+    {
       // skip the line by beginning a new while loop.
       continue;
     }
     // check if line is empty
-    if (line.empty()) {
+    if (line.empty())
+    {
       // skip the line by beginning a new while loop.
       continue;
     }
@@ -282,7 +307,8 @@ void G4DNAPTBElasticModel::ReadDiffCSFile(const std::size_t& materialName,
     //
     // Check if we already have the current T value in the vector.
     // If not then add it
-    if (tDummy != tValuesVec[materialName][particleName].back()) {
+    if (tDummy != tValuesVec[materialName][particleName].back())
+    {
       // Add the current T value
       tValuesVec[materialName][particleName].push_back(tDummy);
       // Make it correspond to a default zero E value
@@ -295,7 +321,8 @@ void G4DNAPTBElasticModel::ReadDiffCSFile(const std::size_t& materialName,
 
     // If the current E value (eDummy) is different from the one already registered in the eVector
     // then add it to the vector
-    if (eDummy != eValuesVect[materialName][particleName][tDummy].back()) {
+    if (eDummy != eValuesVect[materialName][particleName][tDummy].back())
+    {
       eValuesVect[materialName][particleName][tDummy].push_back(eDummy);
     }
   }
@@ -307,7 +334,8 @@ G4double G4DNAPTBElasticModel::CrossSectionPerVolume(const G4Material* pMaterial
                                                      const G4ParticleDefinition* p, G4double ekin,
                                                      G4double /*emin*/, G4double /*emax*/)
 {
-  if (verboseLevel > 3){
+  if (verboseLevel > 3)
+  {
     G4cout << "Calling CrossSectionPerVolume() of G4DNAPTBElasticModel" << G4endl;
   }
 
@@ -321,20 +349,23 @@ G4double G4DNAPTBElasticModel::CrossSectionPerVolume(const G4Material* pMaterial
   G4double sigma = 0.;
 
   // check if we are below the high energy limit
-  if (ekin < fpModelData->GetHighELimit(materialID, p)) {
+  if (ekin < fpModelData->GetHighELimit(materialID, p))
+  {
     // This is used to kill the particle if its kinetic energy is below fKillBelowEnergy.
     // If the energy is lower then we return a maximum cross section and thus the SampleSecondaries
     // method will be called for sure. SampleSecondaries will remove the particle from the
     // simulation.
     //
     // SI : XS must not be zero otherwise sampling of secondaries method ignored
-    if (ekin < fKillBelowEnergy) {
+    if (ekin < fKillBelowEnergy)
+    {
       return DBL_MAX;
     }
 
     // Get the tables with the cross section data
     auto tableData = fpModelData->GetData();
-    if ((*tableData)[materialID][p] == nullptr) {
+    if ((*tableData)[materialID][p] == nullptr)
+    {
       G4Exception("G4DNAPTBElasticModel::CrossSectionPerVolume", "em00236", FatalException,
                   "No model is registered");
     }
@@ -342,7 +373,8 @@ G4double G4DNAPTBElasticModel::CrossSectionPerVolume(const G4Material* pMaterial
     sigma = (*tableData)[materialID][p]->FindValue(ekin);
   }
 
-  if (verboseLevel > 2) {
+  if (verboseLevel > 2)
+  {
     G4cout << "__________________________________" << G4endl;
     G4cout << "°°° G4DNAPTBElasticModel - XS INFO START" << G4endl;
     G4cout << "°°° Kinetic energy(eV)=" << ekin / eV << " particle : " << particleName << G4endl;
@@ -363,7 +395,8 @@ void G4DNAPTBElasticModel::SampleSecondaries(std::vector<G4DynamicParticle*>* /*
                                              const G4DynamicParticle* aDynamicElectron,
                                              G4double /*tmin*/, G4double /*tmax*/)
 {
-  if (verboseLevel > 3) {
+  if (verboseLevel > 3)
+  {
     G4cout << "Calling SampleSecondaries() of G4DNAPTBElasticModel" << G4endl;
   }
 
@@ -376,13 +409,15 @@ void G4DNAPTBElasticModel::SampleSecondaries(std::vector<G4DynamicParticle*>* /*
 
   // If the particle (electron here) energy is below the kill limit then we remove it from the
   // simulation
-  if (electronEnergy0 < fKillBelowEnergy) {
+  if (electronEnergy0 < fKillBelowEnergy)
+  {
     fParticleChangeForGamma->SetProposedKineticEnergy(0.);
     fParticleChangeForGamma->ProposeTrackStatus(fStopAndKill);
     fParticleChangeForGamma->ProposeLocalEnergyDeposit(electronEnergy0);
   }
   // If we are above the kill limite and below the high limit then we proceed
-  else if (electronEnergy0 >= fKillBelowEnergy && electronEnergy0 < GetHighELimit(materialID, p)) {
+  else if (electronEnergy0 >= fKillBelowEnergy && electronEnergy0 < GetHighELimit(materialID, p))
+  {
     // Random sampling of the cosTheta
     G4double cosTheta = fpModelData->RandomizeCosTheta(electronEnergy0, materialID);
 
@@ -425,7 +460,8 @@ G4double G4DNAPTBElasticModel::Theta(const G4ParticleDefinition* p, G4double k, 
   G4double xs12 = 0;
   G4double xs21 = 0;
   G4double xs22 = 0;
-  if (p == G4Electron::ElectronDefinition()) {
+  if (p == G4Electron::ElectronDefinition())
+  {
     auto t2 =
       std::upper_bound(tValuesVec[materialID][p].begin(), tValuesVec[materialID][p].end(), k);
     auto t1 = t2 - 1;
@@ -451,7 +487,8 @@ G4double G4DNAPTBElasticModel::Theta(const G4ParticleDefinition* p, G4double k, 
     xs22 = diffCrossSectionData[materialID][p][valueT2][valueE22];
   }
 
-  if (xs11 == 0 && xs12 == 0 && xs21 == 0 && xs22 == 0) {
+  if (xs11 == 0 && xs12 == 0 && xs21 == 0 && xs22 == 0)
+  {
     return (0.);
   }
 

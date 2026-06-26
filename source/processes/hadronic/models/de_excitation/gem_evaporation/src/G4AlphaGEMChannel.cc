@@ -30,5 +30,3 @@
 //
 
 #include "G4AlphaGEMChannel.hh"
-
-

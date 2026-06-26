@@ -34,13 +34,14 @@
 #ifndef G4MODIFIED_MIDPOINT_HH
 #define G4MODIFIED_MIDPOINT_HH
 
-#include "G4Types.hh"
 #include "G4EquationOfMotion.hh"
 #include "G4FieldTrack.hh"
+#include "G4Types.hh"
 
 /**
  * @brief G4ModifiedMidpoint implements a midpoint method adapted from
  * Boost odeint.
+ * @ingroup geometry_magneticfield
  */
 
 class G4ModifiedMidpoint
@@ -53,8 +54,7 @@ class G4ModifiedMidpoint
      *  @param[in] nvar The number of integration variables.
      *  @param[in] steps The minimum number of steps.
      */
-    G4ModifiedMidpoint( G4EquationOfMotion* equation,
-                        G4int nvar = 6, G4int steps = 2 );
+    G4ModifiedMidpoint(G4EquationOfMotion* equation, G4int nvar = 6, G4int steps = 2);
 
     /**
      * Default Destructor.
@@ -68,8 +68,8 @@ class G4ModifiedMidpoint
      *  @param[out] yOut Integration output.
      *  @param[in] hstep The given step size.
      */
-    void DoStep( const G4double yIn[], const G4double dydxIn[],
-                 G4double yOut[], G4double hstep) const;
+    void DoStep(const G4double yIn[], const G4double dydxIn[], G4double yOut[],
+                G4double hstep) const;
 
     /**
      * Computes one step, as above but using also intermediate values.
@@ -80,9 +80,8 @@ class G4ModifiedMidpoint
      *  @param[in] yMid Mid point integration variables.
      *  @param[in] derivs Intermediate derivatives.
      */
-    void DoStep( const G4double yIn[], const G4double dydxIn[],
-                 G4double yOut[], G4double hstep, G4double yMid[],
-                 G4double derivs[][G4FieldTrack::ncompSVEC]) const;
+    void DoStep(const G4double yIn[], const G4double dydxIn[], G4double yOut[], G4double hstep,
+                G4double yMid[], G4double derivs[][G4FieldTrack::ncompSVEC]) const;
 
     /**
      * Setter and getter for steps.

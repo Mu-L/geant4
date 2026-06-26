@@ -26,24 +26,24 @@
 // G4PartialPhantomParameterisation
 //
 // Class description:
-// 
-// Describes partial regular parameterisations, i.e. the voxels do not 
+//
+// Describes partial regular parameterisations, i.e. the voxels do not
 // completely fill the container in the three dimensions.
 
 // Author: Pedro Arce (CIEMAT), September 2010
 // --------------------------------------------------------------------
-#ifndef G4PartialPhantomParameterisation_hh
-#define G4PartialPhantomParameterisation_hh 1
+#ifndef G4PARTIALPHANTOMPARAMETERISATION_HH
+#define G4PARTIALPHANTOMPARAMETERISATION_HH
+
+#include "G4AffineTransform.hh"
+#include "G4PhantomParameterisation.hh"
+#include "G4Types.hh"
+#include "G4VTouchable.hh"
 
 #include <map>
 #include <set>
 #include <utility>
 #include <vector>
-
-#include "G4Types.hh"
-#include "G4PhantomParameterisation.hh"
-#include "G4AffineTransform.hh"
-#include "G4VTouchable.hh"
 
 class G4VPhysicalVolume;
 class G4VSolid;
@@ -53,6 +53,7 @@ class G4Material;
  * @brief G4PartialPhantomParameterisation describes partial regular
  * parameterisations, i.e. the voxels do not completely fill the container
  * in the three dimensions.
+ * @ingroup geometry_navigation
  */
 
 class G4PartialPhantomParameterisation : public G4PhantomParameterisation
@@ -63,13 +64,12 @@ class G4PartialPhantomParameterisation : public G4PhantomParameterisation
      * Default Constructor and Destructor.
      */
     G4PartialPhantomParameterisation() = default;
-   ~G4PartialPhantomParameterisation() override = default;
+    ~G4PartialPhantomParameterisation() override = default;
 
-    void ComputeTransformation(const G4int, G4VPhysicalVolume *) const override;
-  
-    G4Material* ComputeMaterial(const G4int repNo, 
-                                      G4VPhysicalVolume *currentVol,
-                                const G4VTouchable *parentTouch = nullptr) override;
+    void ComputeTransformation(const G4int, G4VPhysicalVolume*) const override;
+
+    G4Material* ComputeMaterial(const G4int repNo, G4VPhysicalVolume* currentVol,
+                                const G4VTouchable* parentTouch = nullptr) override;
 
     /**
      * Gets the voxel number corresponding to the point in the container
@@ -78,23 +78,19 @@ class G4PartialPhantomParameterisation : public G4PhantomParameterisation
      *  @param[in] localDir Local direction to overcome precision issues.
      *  @returns The voxel number for the specified point.
      */
-    G4int GetReplicaNo( const G4ThreeVector& localPoint,
-                        const G4ThreeVector& localDir ) override;
+    G4int GetReplicaNo(const G4ThreeVector& localPoint, const G4ThreeVector& localDir) override;
 
-    G4ThreeVector GetTranslation(const G4int copyNo ) const;
+    G4ThreeVector GetTranslation(const G4int copyNo) const;
 
-    std::size_t GetMaterialIndex( std::size_t nx, std::size_t ny, std::size_t nz) const;
-    std::size_t GetMaterialIndex( std::size_t copyNo) const;
+    std::size_t GetMaterialIndex(std::size_t nx, std::size_t ny, std::size_t nz) const;
+    std::size_t GetMaterialIndex(std::size_t copyNo) const;
 
-    G4Material* GetMaterial( std::size_t nx, std::size_t ny, std::size_t nz) const;
-    G4Material* GetMaterial( std::size_t copyNo ) const;
+    G4Material* GetMaterial(std::size_t nx, std::size_t ny, std::size_t nz) const;
+    G4Material* GetMaterial(std::size_t copyNo) const;
 
-    inline void SetFilledIDs( std::multimap<G4int,G4int> fid )
-    {
-      fFilledIDs = std::move(fid); 
-    }
+    inline void SetFilledIDs(std::multimap<G4int, G4int> fid) { fFilledIDs = std::move(fid); }
 
-    inline void SetFilledMins( std::map< G4int, std::map<G4int,G4int> > fmins )
+    inline void SetFilledMins(std::map<G4int, std::map<G4int, G4int>> fmins)
     {
       fFilledMins = std::move(fmins);
     }
@@ -106,18 +102,18 @@ class G4PartialPhantomParameterisation : public G4PhantomParameterisation
     /**
      * Converts the copyNo to voxel numbers in x, y and z.
      */
-    void ComputeVoxelIndices(const G4int copyNo, std::size_t& nx,
-                                   std::size_t& ny, std::size_t& nz ) const;
+    void ComputeVoxelIndices(const G4int copyNo, std::size_t& nx, std::size_t& ny,
+                             std::size_t& nz) const;
 
     /**
      * Checks that the copy number is within limits.
      */
-    void CheckCopyNo( const G4long copyNo ) const;
+    void CheckCopyNo(const G4long copyNo) const;
 
   private:
 
-    std::multimap<G4int,G4int> fFilledIDs;
-    std::map< G4int, std::map<G4int,G4int> > fFilledMins;
+    std::multimap<G4int, G4int> fFilledIDs;
+    std::map<G4int, std::map<G4int, G4int>> fFilledMins;
 };
 
 #endif

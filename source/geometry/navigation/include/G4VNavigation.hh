@@ -32,7 +32,7 @@
 // Author: Guilherme Amadio (CERN), March 2022
 // --------------------------------------------------------------------
 #ifndef G4VNAVIGATION_HH
-#define G4VNAVIGATION_HH 1
+#define G4VNAVIGATION_HH
 
 #include "G4ThreeVector.hh"
 
@@ -43,6 +43,7 @@ class G4NavigationHistory;
 /**
  * @brief G4VNavigation class holds the common navigation interface
  * for all geometry navigator types.
+ * @ingroup geometry_navigation
  */
 
 class G4VNavigation
@@ -66,12 +67,9 @@ class G4VNavigation
      *  @param[in,out] localPoint Point in local coordinates system.
      *  @returns Whether a containing volume has been found.
      */
-    virtual G4bool LevelLocate(G4NavigationHistory& history,
-                         const G4VPhysicalVolume* blockedVol,
-                         const G4int blockedNum,
-                         const G4ThreeVector& globalPoint,
-                         const G4ThreeVector* globalDirection,
-                         const G4bool pLocatedOnEdge,
+    virtual G4bool LevelLocate(G4NavigationHistory& history, const G4VPhysicalVolume* blockedVol,
+                               const G4int blockedNum, const G4ThreeVector& globalPoint,
+                               const G4ThreeVector* globalDirection, const G4bool pLocatedOnEdge,
                                G4ThreeVector& localPoint) = 0;
 
     /**
@@ -97,15 +95,11 @@ class G4VNavigation
      */
     virtual G4double ComputeStep(const G4ThreeVector& localPoint,
                                  const G4ThreeVector& localDirection,
-                                 const G4double currentProposedStepLength,
-                                       G4double& newSafety,
-                                       G4NavigationHistory& history,
-                                       G4bool& validExitNormal,
-                                       G4ThreeVector& exitNormal,
-                                       G4bool& exiting,
-                                       G4bool& entering,
-                                       G4VPhysicalVolume*(*pBlockedPhysical),
-                                       G4int& blockedReplicaNo) = 0;
+                                 const G4double currentProposedStepLength, G4double& newSafety,
+                                 G4NavigationHistory& history, G4bool& validExitNormal,
+                                 G4ThreeVector& exitNormal, G4bool& exiting, G4bool& entering,
+                                 G4VPhysicalVolume*(*pBlockedPhysical),
+                                 G4int& blockedReplicaNo) = 0;
 
     /**
      * Computes the distance to the closest surface.

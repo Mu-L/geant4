@@ -23,46 +23,47 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4CollisionNNToNDelta1910_h
-#define G4CollisionNNToNDelta1910_h
+#ifndef G4COLLISIONNNTONDELTA1910_HH
+#define G4COLLISIONNNTONDELTA1910_HH
 
-#include "globals.hh"
 #include "G4GeneralNNCollision.hh"
-#include "G4VCrossSectionSource.hh"
-#include "G4VAngularDistribution.hh"
 #include "G4KineticTrackVector.hh"
+#include "G4VAngularDistribution.hh"
+#include "G4VCrossSectionSource.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4CollisionNNToNDelta1910 : public G4GeneralNNCollision
 {
+  public:
 
-public:
+    G4CollisionNNToNDelta1910();
 
-  G4CollisionNNToNDelta1910();
+    virtual ~G4CollisionNNToNDelta1910();
 
-  virtual ~G4CollisionNNToNDelta1910();
+    virtual G4String GetName() const { return "NN -> N Delta(1910) Collision"; }
+    virtual const std::vector<G4String>& GetListOfColliders(G4int) const
+    {
+      throw G4HadronicException(
+        __FILE__, __LINE__,
+        "Tried to call G4CollisionNNToNDelta1910::GetListOfColliders. Please find out why!");
+      std::vector<G4String>* aList = new std::vector<G4String>;
+      return *aList;
+    }
 
+  private:
 
-  virtual G4String GetName() const { return "NN -> N Delta(1910) Collision"; }
-  virtual const std::vector<G4String>& GetListOfColliders(G4int ) const
-  {
-    throw G4HadronicException(__FILE__, __LINE__, "Tried to call G4CollisionNNToNDelta1910::GetListOfColliders. Please find out why!");
-    std::vector<G4String> * aList = new std::vector<G4String>;
-    return *aList;
-  } 
-  
-private:
-  G4CollisionNNToNDelta1910(const G4CollisionNNToNDelta1910 &);
-  G4CollisionNNToNDelta1910 & operator= (const G4CollisionNNToNDelta1910 &);
+    G4CollisionNNToNDelta1910(const G4CollisionNNToNDelta1910&);
+    G4CollisionNNToNDelta1910& operator=(const G4CollisionNNToNDelta1910&);
 
-protected:
-  
-  virtual const G4CollisionVector* GetComponents() const { return components; } 
+  protected:
 
-private:  
+    virtual const G4CollisionVector* GetComponents() const { return components; }
 
-  G4CollisionVector* components;
+  private:
 
+    G4CollisionVector* components;
 };
 
 #endif

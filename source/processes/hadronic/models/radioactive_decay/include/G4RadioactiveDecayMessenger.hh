@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4RadioactiveDecayMessenger_h
-#define G4RadioactiveDecayMessenger_h 1
+#ifndef G4RADIOACTIVEDECAYMESSENGER_HH
+#define G4RADIOACTIVEDECAYMESSENGER_HH
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -41,33 +41,34 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "G4UImessenger.hh"
-#include "G4UIdirectory.hh"
-#include "G4UIcommand.hh"
-#include "G4UIcmdWith3VectorAndUnit.hh"
 #include "G4UIcmdWith3Vector.hh"
+#include "G4UIcmdWith3VectorAndUnit.hh"
 #include "G4UIcmdWithABool.hh"
-#include "G4UIcmdWithAnInteger.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWithAString.hh"
-#include "G4UIcmdWithoutParameter.hh"
-#include "globals.hh"
-
+#include "G4UIcmdWithAnInteger.hh"
 #include "G4UIcmdWithNucleusLimits.hh"
+#include "G4UIcmdWithoutParameter.hh"
+#include "G4UIcommand.hh"
+#include "G4UIdirectory.hh"
+#include "G4UImessenger.hh"
+#include "globals.hh"
 
 class G4VRadioactiveDecay;
 
-class G4RadioactiveDecayMessenger: public G4UImessenger
+class G4RadioactiveDecayMessenger : public G4UImessenger
 {
-  public: //with description
+  public:  // with description
+
     G4RadioactiveDecayMessenger(G4VRadioactiveDecay*);
     ~G4RadioactiveDecayMessenger() override;
 
-    void SetNewValue (G4UIcommand *command, G4String newValues) override;
+    void SetNewValue(G4UIcommand* command, G4String newValues) override;
 
   private:
+
     G4VRadioactiveDecay* theRadDecay;
-  
+
     G4UIdirectory* rdmDirectory;
     G4UIcmdWithNucleusLimits* nucleuslimitsCmd;
     G4UIcmdWithAnInteger* verboseCmd;
@@ -84,4 +85,3 @@ class G4RadioactiveDecayMessenger: public G4UImessenger
 };
 
 #endif
-

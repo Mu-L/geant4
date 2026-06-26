@@ -39,17 +39,18 @@
 //
 // Class Description:
 //
-// Implementation of gamma Compton scattering with atomic effects 
-// 
+// Implementation of gamma Compton scattering with atomic effects
+//
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4KleinNishinaModel_h
-#define G4KleinNishinaModel_h 1
+#ifndef G4KLEINNISHINAMODEL_HH
+#define G4KLEINNISHINAMODEL_HH
 
-#include "G4VEmModel.hh"
 #include "G4LorentzVector.hh"
+#include "G4VEmModel.hh"
+
 #include <vector>
 
 class G4ParticleChangeForGamma;
@@ -57,51 +58,41 @@ class G4VAtomDeexcitation;
 
 class G4KleinNishinaModel : public G4VEmModel
 {
+  public:
 
-public:
+    explicit G4KleinNishinaModel(const G4String& nam = "KleinNishina");
 
-  explicit G4KleinNishinaModel(const G4String& nam = "KleinNishina");
+    ~G4KleinNishinaModel() override;
 
-  ~G4KleinNishinaModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel* masterModel) override;
 
-  void InitialiseLocal(const G4ParticleDefinition*, 
-		       G4VEmModel* masterModel) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A, G4double cut, G4double emax) override;
 
-  G4double ComputeCrossSectionPerAtom(
-                                const G4ParticleDefinition*,
-                                      G4double kinEnergy, 
-                                      G4double Z, 
-                                      G4double A, 
-                                      G4double cut,
-                                      G4double emax) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
+    // hide assignment operator
+    G4KleinNishinaModel& operator=(const G4KleinNishinaModel& right) = delete;
+    G4KleinNishinaModel(const G4KleinNishinaModel&) = delete;
 
-  // hide assignment operator
-  G4KleinNishinaModel & operator=(const  G4KleinNishinaModel &right) = delete;
-  G4KleinNishinaModel(const  G4KleinNishinaModel&) = delete;
- 
-protected:
+  protected:
 
-  G4ParticleDefinition*     theGamma;
-  G4ParticleDefinition*     theElectron;
-  G4ParticleChangeForGamma* fParticleChange;
-  G4double                  lowestSecondaryEnergy;
+    G4ParticleDefinition* theGamma;
+    G4ParticleDefinition* theElectron;
+    G4ParticleChangeForGamma* fParticleChange;
+    G4double lowestSecondaryEnergy;
 
-private:
+  private:
 
-  G4LorentzVector lv1, lv2;
-  G4ThreeVector bst;
+    G4LorentzVector lv1, lv2;
+    G4ThreeVector bst;
 
-  G4VAtomDeexcitation*      fAtomDeexcitation;
-  G4double                  limitFactor;
-  std::vector<G4double>     fProbabilities;
+    G4VAtomDeexcitation* fAtomDeexcitation;
+    G4double limitFactor;
+    std::vector<G4double> fProbabilities;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

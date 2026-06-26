@@ -30,12 +30,12 @@
 //
 // File name:     G4DecayStrongResonances
 //
-// Modified:  
-// 02.11.2010 V.Ivanchenko moved constructor and destructor to source; 
+// Modified:
+// 02.11.2010 V.Ivanchenko moved constructor and destructor to source;
 //                         removed unused variable
 
-#ifndef G4DecayStrongResonances_h
-#define G4DecayStrongResonances_h 1
+#ifndef G4DECAYSTRONGRESONANCES_HH
+#define G4DECAYSTRONGRESONANCES_HH
 
 #include "G4KineticTrackVector.hh"
 #include "G4ReactionProductVector.hh"
@@ -44,19 +44,19 @@ class G4V3DNucleus;
 
 class G4DecayStrongResonances
 {
-public:
-  G4DecayStrongResonances();
-  ~G4DecayStrongResonances();
+  public:
 
-private:
-   G4bool operator==(G4DecayStrongResonances& right) {return (this == &right);}
-   G4bool operator!=(G4DecayStrongResonances& right) {return (this != &right);}
-      
-public:
-   G4ReactionProductVector* Propagate(G4KineticTrackVector* theSecondaries,
-                                      G4V3DNucleus* );
+    G4DecayStrongResonances() = default;
+    ~G4DecayStrongResonances() = default;
+
+  private:
+
+    G4bool operator==(G4DecayStrongResonances& right) { return (this == &right); }
+    G4bool operator!=(G4DecayStrongResonances& right) { return (this != &right); }
+
+  public:
+
+    G4ReactionProductVector* Propagate(G4KineticTrackVector* theSecondaries, G4V3DNucleus*);
 };
 
-#endif // G4DecayStrongResonances_h
-
-
+#endif  // G4DecayStrongResonances_h

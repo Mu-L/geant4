@@ -29,9 +29,22 @@ if(NOT Geant4_shared_FOUND)
 endif()
 
 if(WITH_G4OPTICKS)
-  message(STATUS "WITH_G4OPTICKS is set")
-  include(OpticksBuildOptions)
-  find_package( G4OK CONFIG REQUIRED )
+    message(STATUS "WITH_G4OPTICKS is set")
+
+    #Add Opticks CMake modules to the search path
+    list(APPEND CMAKE_MODULE_PATH "$ENV{OPTICKS_HOME}/cmake/Modules")
+    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/modules")
+    set(OPTICKS_PREFIX "$ENV{OPTICKS_PREFIX}")
+
+    #Print debug information about CMAKE_MODULE_PATH and OPTICKS_HOME
+    message(STATUS "*************************************************************")
+    message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
+    message(STATUS "OPTICKS_HOME:  $ENV{OPTICKS_HOME}")
+    message(STATUS "*************************************************************")
+
+    include(OpticksBuildOptions)
+    find_package(G4CX REQUIRED CONFIG)
+    find_package(U4 REQUIRED CONFIG)
 else()
   message(STATUS "WITH_G4OPTICKS is not set")
   list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/modules")
@@ -54,6 +67,12 @@ if(WITH_ROOT)
      include("${ROOT_DIR}/modules/RootNewMacros.cmake")
    endif()
 endif()
+
+if (WITH_G4OPTICKS)
+    file(GLOB OpRHDRS ${PROJECT_SOURCE_DIR}/include/Opticks/*.hh)
+    file(GLOB OpSRCS ${PROJECT_SOURCE_DIR}/src/Opticks/*.cc)
+endif()
+
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 if(WITH_ROOT)
@@ -84,11 +103,12 @@ file(GLOB macros ${PROJECT_SOURCE_DIR}/macros/*.mac)
 file(GLOB runscripts ${PROJECT_SOURCE_DIR}/scripts/run.sh  ${PROJECT_SOURCE_DIR}/scripts/check.sh)
 
 if(WITH_G4OPTICKS)
-   add_executable(${name} ${name}.cc ${sources} ${headers}) 
+   add_executable(${name} ${name}.cc ${sources} ${headers} ${OpRHDRS} ${OpSRCS})
    target_compile_definitions( ${name} PRIVATE WITH_G4OPTICKS WITH_ROOT)
-   target_link_libraries(${name}  CaTSClassesDict Opticks::G4OK ${Geant4_LIBRARIES} ${ROOT_LIBRARIES}  )
+   target_link_libraries(${name}  CaTSClassesDict Opticks::G4CX Opticks::U4   ${Geant4_LIBRARIES} ${ROOT_LIBRARIES}  )
 else()
-  add_executable(${name} ${name}.cc ${sources} ${headers})  
+  add_executable(${name} ${name}.cc ${sources} ${headers}
+          include/SteppingAction.hh)
   target_compile_definitions( ${name} PRIVATE  WITH_ROOT)
   target_link_libraries(${name}  CaTSClassesDict ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} )
 endif()
@@ -109,6 +129,16 @@ install(FILES ${detectors} ${schemas}  ${scripts} ${macros}  DESTINATION bin)
 install(FILES ${detectors} DESTINATION bin/gdml)
 install(FILES ${macros} DESTINATION bin/macros)
 install(PROGRAMS ${runscripts}  DESTINATION bin)
+
+
+if(WITH_G4OPTICKS)
+    # Environment variables for Opticks
+    # Sets the maximum number of photons to simulate on the GPU
+    # Selects which GPU to use
+    # Enables or disables debugging
+    install(FILES OptickEnv DESTINATION bin)
+endif ()
+
 if(WITH_ROOT)
   install(TARGETS CaTSClassesDict DESTINATION bin)
   install(TARGETS readPhotonHits DESTINATION bin)
@@ -119,5 +149,5 @@ if(WITH_ROOT)
 endif()
 
 message(STATUS "G4ANALYSIS_USE: ${G4ANALYSIS_USE}")
-message(STATUS "WITH_G4OPTICKS: ${G4OPTICKS}")
-message(STATUS "WITH_ROOT:  ${ROOT}")
+message(STATUS "WITH_G4OPTICKS: ${WITH_G4OPTICKS}")
+message(STATUS "WITH_ROOT:  ${WITH_ROOT}")

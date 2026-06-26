@@ -51,6 +51,7 @@
 class G4FPYSamplingOps
 {
   public:
+
     // Constructor definition
     /** Default constructor
      *  - Usage: No arguments required
@@ -65,10 +66,12 @@ class G4FPYSamplingOps
     G4FPYSamplingOps(G4int Verbosity);
 
   protected:
+
     /** Initialize is a common function called by all constructors. */
     void Initialize();
 
   public:
+
     // Functions
     /** Returns an integer value taken from a Gaussian distribution.
      *  This overloaded version assumes that the range is not restricted to
@@ -166,6 +169,7 @@ class G4FPYSamplingOps
     void G4SetVerbosity(G4int WhatVerbosity);
 
   protected:
+
     // Variables
     // Class descriptor variables
     /** Mean for sampling a Gaussian distribution */
@@ -231,7 +235,9 @@ class G4FPYSamplingOps
     void ShiftParameters(G4FFGEnumerations::GaussianReturnType Type);
 
     // Destructor function(s)
+
   public:
+
     /** Default deconstructor. */
     ~G4FPYSamplingOps();
 };

@@ -32,16 +32,17 @@
 
 // Author: Vladimir Grichine (CERN), 23.07.2001 - Created
 // --------------------------------------------------------------------
-#ifndef G4ReflectedSolid_hh
-#define G4ReflectedSolid_hh
+#ifndef G4REFLECTEDSOLID_HH
+#define G4REFLECTEDSOLID_HH
 
-#include "G4VSolid.hh"
 #include "G4ThreeVector.hh"
 #include "G4Transform3D.hh"
+#include "G4VSolid.hh"
 
 /**
  * @brief G4ReflectedSolid is a solid that has been shifted from its original
  * frame of reference to a new reflected one.
+ * @ingroup geometry_management
  */
 
 class G4ReflectedSolid : public G4VSolid
@@ -55,9 +56,7 @@ class G4ReflectedSolid : public G4VSolid
      *  @param[in] pSolid The original primitive being reflected.
      *  @param[in] transform The associated transformation.
      */
-    G4ReflectedSolid( const G4String& pName,
-                            G4VSolid* pSolid ,
-                      const G4Transform3D& transform ) ;
+    G4ReflectedSolid(const G4String& pName, G4VSolid* pSolid, const G4Transform3D& transform);
 
     /**
      * Destructor.
@@ -83,34 +82,29 @@ class G4ReflectedSolid : public G4VSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent( const EAxis pAxis,
-                            const G4VoxelLimits& pVoxelLimit,
-                            const G4AffineTransform& pTransform,
-                                  G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Concrete implementations of the expected query interfaces for
      * solids, as defined in the base class G4VSolid.
      */
-    EInside Inside( const G4ThreeVector& p ) const override; 
-    G4ThreeVector SurfaceNormal( const G4ThreeVector& p ) const override;
-    G4double DistanceToIn( const G4ThreeVector& p,
-                           const G4ThreeVector& v ) const override;
-    G4double DistanceToIn( const G4ThreeVector& p) const override;
-    G4double DistanceToOut( const G4ThreeVector& p,
-                            const G4ThreeVector& v,
-                            const G4bool calcNorm = false,
-                                  G4bool* validNorm = nullptr,
-                                  G4ThreeVector* n = nullptr ) const override;
-    G4double DistanceToOut( const G4ThreeVector& p ) const override;
+    EInside Inside(const G4ThreeVector& p) const override;
+    G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
+    G4double DistanceToIn(const G4ThreeVector& p) const override;
+    G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
+    G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions( G4VPVParameterisation* p,
-                            const G4int n,
-                            const G4VPhysicalVolume* pRep ) override;
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
+                           const G4VPhysicalVolume* pRep) override;
 
     /**
      * Returning an estimation of the solid volume (capacity) and
@@ -145,7 +139,7 @@ class G4ReflectedSolid : public G4VSolid
      * Returns a random point located and uniformly distributed on the
      * surface of the solid.
      */
-    G4GeometryType  GetEntityType() const override;
+    G4GeometryType GetEntityType() const override;
 
     /**
      * If the Solid is a G4ReflectedSolid, return a self pointer else
@@ -162,8 +156,8 @@ class G4ReflectedSolid : public G4VSolid
     /**
      * Accessors and modifier for the transformation.
      */
-    G4Transform3D GetTransform3D() const; 
-    G4Transform3D GetDirectTransform3D() const; 
+    G4Transform3D GetTransform3D() const;
+    G4Transform3D GetDirectTransform3D() const;
     void SetDirectTransform3D(G4Transform3D&);
 
     /**
@@ -186,8 +180,8 @@ class G4ReflectedSolid : public G4VSolid
 
   protected:
 
-    G4VSolid*          fPtrSolid = nullptr;
-    G4Transform3D*     fDirectTransform3D = nullptr;
+    G4VSolid* fPtrSolid = nullptr;
+    G4Transform3D* fDirectTransform3D = nullptr;
 
     /** Caches for the reflected G4Polyhedron. */
     mutable G4bool fRebuildPolyhedron = false;

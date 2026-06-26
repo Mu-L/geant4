@@ -4,6 +4,8 @@ See `CONTRIBUTING.rst` for details of **required** info/format for each entry,
 which **must** added in reverse chronological order (newest at the top). It must **not**
 be used as a substitute for writing good git commit messages!
 
+## 2026-04-19 Sebastien Incerti (chem2-V11-04-00)
+- Reduction of the number of DNA physics constructors in the perspective of Geant4 12
 
 ## 2024-09-19 Ivana Hrivnacova (chem2-V11-02-00)
 - Added HOW TO START section in README with

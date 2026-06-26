@@ -69,16 +69,20 @@ G4SDmessenger::~G4SDmessenger()
 
 void G4SDmessenger::SetNewValue(G4UIcommand* command, G4String newVal)
 {
-  if (command == listCmd) {
+  if (command == listCmd)
+  {
     fSDMan->ListTree();
   }
-  if (command == activeCmd) {
+  if (command == activeCmd)
+  {
     fSDMan->Activate(newVal, true);
   }
-  if (command == inactiveCmd) {
+  if (command == inactiveCmd)
+  {
     fSDMan->Activate(newVal, false);
   }
-  if (command == verboseCmd) {
+  if (command == verboseCmd)
+  {
     fSDMan->SetVerboseLevel(verboseCmd->GetNewIntValue(newVal));
   }
   return;

@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPFSFissionFS_h
-#define G4ParticleHPFSFissionFS_h 1
+#ifndef G4PARTICLEHPFSFISSIONFS_HH
+#define G4PARTICLEHPFSFISSIONFS_HH
 
 #include "G4Cache.hh"
 #include "G4DynamicParticleVector.hh"
@@ -56,8 +56,8 @@ class G4ParticleHPFSFissionFS : public G4ParticleHPFinalState
     G4ParticleHPFSFissionFS() { hasXsec = true; }
     ~G4ParticleHPFSFissionFS() override = default;
 
-    void Init(G4double A, G4double Z, G4int M, const G4String& dirName,
-              const G4String& aFSType, G4ParticleDefinition*) override;
+    void Init(G4double A, G4double Z, G4int M, const G4String& dirName, const G4String& aFSType,
+              G4ParticleDefinition*) override;
 
     G4DynamicParticleVector* ApplyYourself(G4int Prompt, G4int delayed, G4double* decayconst);
 

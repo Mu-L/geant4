@@ -43,38 +43,41 @@
 // Author: David C. Williams (UCSC), 1998
 // --------------------------------------------------------------------
 #ifndef G4POLYPHIFACE_HH
-#define G4POLYPHIFACE_HH 1
+#define G4POLYPHIFACE_HH
 
-#include "G4VCSGface.hh"
 #include "G4TwoVector.hh"
+#include "G4VCSGface.hh"
 
 class G4ReduciblePolygon;
 
 struct G4PolyPhiFaceVertex
 {
-  G4double x, y, r, z;   // position
-  G4double rNorm, 
-           zNorm;        // r/z normal
-  G4ThreeVector norm3D;  // 3D normal
+    G4double x, y, r, z;  // position
+    G4double rNorm,
+      zNorm;  // r/z normal
+    G4ThreeVector norm3D;  // 3D normal
 
-  // Needed for Triangulation Algorithm
-  //
-  G4bool ear;
-  G4PolyPhiFaceVertex *next,*prev;
+    // Needed for Triangulation Algorithm
+    //
+    G4bool ear;
+    G4PolyPhiFaceVertex *next, *prev;
 };
 
 struct G4PolyPhiFaceEdge
 {
-  G4PolyPhiFaceEdge() = default;
-  G4PolyPhiFaceVertex  *v0{nullptr}, *v1{nullptr};  // Corners
-  G4double tr{.0}, tz{0.},        // Unit vector along edge
-           length{0.};            // Length of edge
-  G4ThreeVector norm3D;           // 3D edge normal vector
+    G4PolyPhiFaceEdge() = default;
+    G4PolyPhiFaceVertex *v0{nullptr}, *v1{nullptr};  // Corners
+    G4double tr{.0}, tz{0.},  // Unit vector along edge
+      length{0.};  // Length of edge
+    G4ThreeVector norm3D;  // 3D edge normal vector
 };
 
 /**
  * @brief G4PolyPhiFace is a face that bounds a polycone or polyhedra when
- * it has a phi opening. Specifically, it is a face that lies on a plane that
+ * it has a phi opening.
+ * @ingroup geometry_solids_specific
+ *
+ * Specifically, it is a face that lies on a plane that
  * passes through the Z axis, having boundaries that are straight lines of
  * arbitrary length and direction, but with corners aways on the same side of
  * the Z axis.
@@ -82,7 +85,6 @@ struct G4PolyPhiFaceEdge
 
 class G4PolyPhiFace : public G4VCSGface
 {
-
   public:
 
     /**
@@ -98,8 +100,7 @@ class G4PolyPhiFace : public G4VCSGface
      *  @param[in] deltaPhi Total Phi angle.
      *  @param[in] phiOther Phi angle of next section.
      */
-    G4PolyPhiFace( const G4ReduciblePolygon* rz,
-                         G4double phi, G4double deltaPhi, G4double phiOther );
+    G4PolyPhiFace(const G4ReduciblePolygon* rz, G4double phi, G4double deltaPhi, G4double phiOther);
 
     /**
      * Destructor. Removes edges and corners.
@@ -109,8 +110,8 @@ class G4PolyPhiFace : public G4VCSGface
     /**
      * Copy constructor and assignment operator.
      */
-    G4PolyPhiFace( const G4PolyPhiFace& source );
-    G4PolyPhiFace& operator=( const G4PolyPhiFace& source );
+    G4PolyPhiFace(const G4PolyPhiFace& source);
+    G4PolyPhiFace& operator=(const G4PolyPhiFace& source);
 
     /**
      * Determines the distance along a line to the face.
@@ -126,10 +127,9 @@ class G4PolyPhiFace : public G4VCSGface
      *  @param[out] allBehind Flag, true, if entire surface is behind normal.
      *  @returns true if there is an intersection, false otherwise.
      */
-    G4bool Intersect( const G4ThreeVector& p, const G4ThreeVector& v,
-                            G4bool outgoing, G4double surfTolerance,
-                            G4double& distance, G4double& distFromSurface,
-                            G4ThreeVector& normal, G4bool& allBehind ) override;
+    G4bool Intersect(const G4ThreeVector& p, const G4ThreeVector& v, G4bool outgoing,
+                     G4double surfTolerance, G4double& distance, G4double& distFromSurface,
+                     G4ThreeVector& normal, G4bool& allBehind) override;
 
     /**
      * Determines the distance of a point from either the inside or outside
@@ -140,8 +140,8 @@ class G4PolyPhiFace : public G4VCSGface
      *  @returns The distance to the closest surface satisfying requirements
      *           or kInfinity if no such surface exists.
      */
-    G4double Distance( const G4ThreeVector& p, G4bool outgoing ) override;
-  
+    G4double Distance(const G4ThreeVector& p, G4bool outgoing) override;
+
     /**
      * Determines whether a point is inside, outside, or on the surface of
      * the face.
@@ -153,25 +153,23 @@ class G4PolyPhiFace : public G4VCSGface
      *           kOutside if the point is closest to the outside surface;
      *           kSurface if the point is withing tolerance of the surface.
      */
-    EInside Inside( const G4ThreeVector& p, G4double tolerance, 
-                          G4double* bestDistance ) override;
-    
+    EInside Inside(const G4ThreeVector& p, G4double tolerance, G4double* bestDistance) override;
+
     /**
      * Returns the normal of surface closest to the point.
      *  @param[in] p Position.
      *  @param[out] bestDistance Distance to the closest surface (in or out).
      *  @returns The normal of the surface nearest the point.
      */
-    G4ThreeVector Normal( const G4ThreeVector& p,
-                                G4double* bestDistance ) override;
+    G4ThreeVector Normal(const G4ThreeVector& p, G4double* bestDistance) override;
 
     /**
      * Returns the face extent along the axis.
      *  @param[in] axis Unit vector defining the direction.
      *  @returns The largest point along the given axis of the face's extent.
      */
-    G4double Extent( const G4ThreeVector axis ) override;
-  
+    G4double Extent(const G4ThreeVector axis) override;
+
     /**
      * Calculates the extent of the face for the voxel navigator.
      *  @param[in] axis The axis in which to check the shapes 3D extent against.
@@ -180,10 +178,8 @@ class G4PolyPhiFace : public G4VCSGface
      *             the shape before testing.
      *  @param[out] extentList The list of (voxel) extents along the axis.
      */
-    void CalculateExtent( const EAxis axis, 
-                          const G4VoxelLimits &voxelLimit,
-                          const G4AffineTransform& tranform,
-                                G4SolidExtentList& extentList ) override;
+    void CalculateExtent(const EAxis axis, const G4VoxelLimits& voxelLimit,
+                         const G4AffineTransform& tranform, G4SolidExtentList& extentList) override;
 
     /**
      * Method invoked by the copy constructor or the assignment operator.
@@ -207,16 +203,16 @@ class G4PolyPhiFace : public G4VCSGface
      * Throws an exception if something is found inconsistent with the solid.
      * For debugging purposes only.
      */
-    void Diagnose( G4VSolid* solid );
+    void Diagnose(G4VSolid* solid);
 
   private:
 
     /**
-     * Calculates the surface area of a triangle. 
+     * Calculates the surface area of a triangle.
      * At the same time a random point in the triangle is given.
      */
-    G4double SurfaceTriangle( const G4ThreeVector& p1, const G4ThreeVector& p2,
-                              const G4ThreeVector& p3, G4ThreeVector* p4);
+    G4double SurfaceTriangle(const G4ThreeVector& p1, const G4ThreeVector& p2,
+                             const G4ThreeVector& p3, G4ThreeVector* p4);
 
     /**
      * Auxiliary method for GetPointOnSurface().
@@ -227,32 +223,30 @@ class G4PolyPhiFace : public G4VCSGface
      * Decides if the point in r,z is inside the edges of a face,
      * **but** do so consistently with other faces.
      */
-    G4bool InsideEdgesExact( G4double r, G4double z, G4double normSign,
-                             const G4ThreeVector& p, const G4ThreeVector& v );
+    G4bool InsideEdgesExact(G4double r, G4double z, G4double normSign, const G4ThreeVector& p,
+                            const G4ThreeVector& v);
 
     /**
      * Methods to decide if the point in r,z is inside the edges of a face.
      */
-    G4bool InsideEdges( G4double r, G4double z );
-    G4bool InsideEdges( G4double r, G4double z, G4double* distRZ2,
-                        G4PolyPhiFaceVertex** base3Dnorm = nullptr,
-                        G4ThreeVector** head3Dnorm = nullptr );
+    G4bool InsideEdges(G4double r, G4double z);
+    G4bool InsideEdges(G4double r, G4double z, G4double* distRZ2,
+                       G4PolyPhiFaceVertex** base3Dnorm = nullptr,
+                       G4ThreeVector** head3Dnorm = nullptr);
 
     /**
      * Decides precisely whether a trajectory passes to the left, right,
      * or exactly passes through the Z position of a vertex point in face.
      */
-    inline G4double ExactZOrder( G4double z, 
-                                 G4double qx, G4double qy, G4double qz, 
-                           const G4ThreeVector& v, 
-                                 G4double normSign,
-                           const G4PolyPhiFaceVertex* vert ) const;
+    inline G4double ExactZOrder(G4double z, G4double qx, G4double qy, G4double qz,
+                                const G4ThreeVector& v, G4double normSign,
+                                const G4PolyPhiFaceVertex* vert) const;
 
     /**
      * Copies parameters from other object; used in copy constructor and
      * assignment operator.
      */
-    void CopyStuff( const G4PolyPhiFace& source );
+    void CopyStuff(const G4PolyPhiFace& source);
 
     // Functions used for Triangulation in Case of generic Polygone.
     // The triangulation is used for GetPointOnFace()
@@ -260,52 +254,52 @@ class G4PolyPhiFace : public G4VCSGface
     /**
      * Calculates of 2*Area of Triangle with Sign.
      */
-    G4double Area2( const G4TwoVector& a, const G4TwoVector& b, const G4TwoVector& c);
+    G4double Area2(const G4TwoVector& a, const G4TwoVector& b, const G4TwoVector& c);
 
     /**
      * Boolean functions for sign of Surface.
      */
-    G4bool Left( const G4TwoVector& a, const G4TwoVector& b, const G4TwoVector& c );
-    G4bool LeftOn( const G4TwoVector& a, const G4TwoVector& b, const G4TwoVector& c );
-    G4bool Collinear( const G4TwoVector& a, const G4TwoVector& b, const G4TwoVector& c );
+    G4bool Left(const G4TwoVector& a, const G4TwoVector& b, const G4TwoVector& c);
+    G4bool LeftOn(const G4TwoVector& a, const G4TwoVector& b, const G4TwoVector& c);
+    G4bool Collinear(const G4TwoVector& a, const G4TwoVector& b, const G4TwoVector& c);
 
     /**
      * Boolean function for finding proper intersection of two
      * line segments (a,b) and (c,d).
      */
-    G4bool IntersectProp( const G4TwoVector& a, const G4TwoVector& b,
-                          const G4TwoVector& c, const G4TwoVector& d );
+    G4bool IntersectProp(const G4TwoVector& a, const G4TwoVector& b, const G4TwoVector& c,
+                         const G4TwoVector& d);
 
     /**
      * Boolean function for determining if point c is between a and b
      * where the three points (a,b,c) are on the same line.
      */
-    G4bool Between( const G4TwoVector& a, const G4TwoVector& b, const G4TwoVector& c );
+    G4bool Between(const G4TwoVector& a, const G4TwoVector& b, const G4TwoVector& c);
 
     /**
      * Boolean function for finding proper intersection or not
      * of two line segments (a,b) and (c,d).
      */
-    G4bool Intersect( const G4TwoVector& a, const G4TwoVector& b,
-                      const G4TwoVector& c, const G4TwoVector& d );
+    G4bool Intersect(const G4TwoVector& a, const G4TwoVector& b, const G4TwoVector& c,
+                     const G4TwoVector& d);
 
     /**
      * Boolean Diagonalie help to determine if diagonal s
      * of segment (a,b) is convex or reflex.
      */
-    G4bool Diagonalie( G4PolyPhiFaceVertex* a, G4PolyPhiFaceVertex* b );
+    G4bool Diagonalie(G4PolyPhiFaceVertex* a, G4PolyPhiFaceVertex* b);
 
     /**
      * Boolean function for determining if b is inside the cone (a0,a,a1)
      * where a is the center of the cone.
      */
-    G4bool InCone( G4PolyPhiFaceVertex *a, G4PolyPhiFaceVertex *b );
+    G4bool InCone(G4PolyPhiFaceVertex* a, G4PolyPhiFaceVertex* b);
 
     /**
      * Boolean function for determining if Diagonal is possible
      * inside Polycone or PolyHedra.
      */
-    G4bool Diagonal( G4PolyPhiFaceVertex* a, G4PolyPhiFaceVertex* b );
+    G4bool Diagonal(G4PolyPhiFaceVertex* a, G4PolyPhiFaceVertex* b);
 
     /**
      * Initialisation for Triangulisation by ear tips.
@@ -325,22 +319,22 @@ class G4PolyPhiFace : public G4VCSGface
   private:
 
     G4int numEdges = 0;  // Number of edges
-    G4PolyPhiFaceEdge* edges = nullptr;       // The edges of the face
-    G4PolyPhiFaceVertex* corners = nullptr;   // And the corners
-    G4ThreeVector normal;        // Normal unit vector
-    G4ThreeVector radial;        // Unit vector along radial direction
-    G4ThreeVector surface;       // Point on surface
-    G4ThreeVector surface_point; // Auxiliary point on surface used for
-                                 // method GetPointOnFace() 
-    G4double rMin, rMax, // Extent in r
-             zMin, zMax; // Extent in z
-    G4bool allBehind = false; // True if the polycone/polyhedra
-                              // is behind the place of this face
-    G4double kCarTolerance;      // Surface thickness
-    G4double fSurfaceArea = 0.0; // Surface Area of PolyPhiFace 
+    G4PolyPhiFaceEdge* edges = nullptr;  // The edges of the face
+    G4PolyPhiFaceVertex* corners = nullptr;  // And the corners
+    G4ThreeVector normal;  // Normal unit vector
+    G4ThreeVector radial;  // Unit vector along radial direction
+    G4ThreeVector surface;  // Point on surface
+    G4ThreeVector surface_point;  // Auxiliary point on surface used for
+                                  // method GetPointOnFace()
+    G4double rMin, rMax,  // Extent in r
+      zMin, zMax;  // Extent in z
+    G4bool allBehind = false;  // True if the polycone/polyhedra
+                               // is behind the place of this face
+    G4double kCarTolerance;  // Surface thickness
+    G4double fSurfaceArea = 0.0;  // Surface Area of PolyPhiFace
 
-     /** Auxiliary pointer to 'corners' used for triangulation.
-         Copy structure, changing the structure of 'corners' (ear removal). */
+    /** Auxiliary pointer to 'corners' used for triangulation.
+        Copy structure, changing the structure of 'corners' (ear removal). */
     G4PolyPhiFaceVertex* triangles = nullptr;
 };
 

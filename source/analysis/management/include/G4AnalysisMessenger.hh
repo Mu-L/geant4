@@ -40,8 +40,8 @@
 //
 // Author: Ivana Hrivnacova, 24/06/2013  (ivana@ipno.in2p3.fr)
 
-#ifndef G4AnalysisMessenger_h
-#define G4AnalysisMessenger_h 1
+#ifndef G4ANALYSISMESSENGER_HH
+#define G4ANALYSISMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -60,6 +60,7 @@ class G4UIcmdWithoutParameter;
 class G4AnalysisMessenger : public G4UImessenger
 {
   public:
+
     explicit G4AnalysisMessenger(G4VAnalysisManager* manager);
     G4AnalysisMessenger() = delete;
     ~G4AnalysisMessenger() override;
@@ -68,38 +69,38 @@ class G4AnalysisMessenger : public G4UImessenger
     void SetNewValue(G4UIcommand* command, G4String value) final;
 
   private:
-    template <typename CMD>
-    std::unique_ptr<CMD> CreateCommand(
-      G4String name, G4String guidance, G4String paremeterName,
-      G4bool ommitable = false);
-    std::unique_ptr<G4UIcmdWithoutParameter> CreateCommandWithoutParameter(
-      G4String name, G4String guidance);
+
+    template<typename CMD>
+    std::unique_ptr<CMD> CreateCommand(G4String name, G4String guidance, G4String paremeterName,
+                                       G4bool ommitable = false);
+    std::unique_ptr<G4UIcmdWithoutParameter> CreateCommandWithoutParameter(G4String name,
+                                                                           G4String guidance);
 
     // Data members
-    G4VAnalysisManager* fManager { nullptr }; ///< Associated class
-    std::unique_ptr<G4NtupleMessenger>  fNtupleMessenger;
+    G4VAnalysisManager* fManager{nullptr};  ///< Associated class
+    std::unique_ptr<G4NtupleMessenger> fNtupleMessenger;
 
-    std::unique_ptr<G4UIdirectory>         fAnalysisDir;
-    std::unique_ptr<G4UIcmdWithAString>    fOpenFileCmd;
-    std::unique_ptr<G4UIcmdWithoutParameter>  fWriteCmd;
-    std::unique_ptr<G4UIcmdWithoutParameter>  fResetCmd;
-         // These command need to revert order of execution master-worker
-         // To be investigated
-    std::unique_ptr<G4UIcmdWithABool>      fCloseFileCmd;
-    std::unique_ptr<G4UIcmdWithABool>      fListCmd;
-    std::unique_ptr<G4UIcmdWithAString>    fSetDefaultFileTypeCmd;
-    std::unique_ptr<G4UIcmdWithABool>      fSetActivationCmd;
-    std::unique_ptr<G4UIcmdWithAnInteger>  fVerboseCmd;
-    std::unique_ptr<G4UIcmdWithAnInteger>  fCompressionCmd;
-    std::unique_ptr<G4UIcmdWithAString>    fSetFileNameCmd;
-    std::unique_ptr<G4UIcmdWithAString>    fSetHistoDirNameCmd;
-    std::unique_ptr<G4UIcmdWithAString>    fSetNtupleDirNameCmd;
+    std::unique_ptr<G4UIdirectory> fAnalysisDir;
+    std::unique_ptr<G4UIcmdWithAString> fOpenFileCmd;
+    std::unique_ptr<G4UIcmdWithoutParameter> fWriteCmd;
+    std::unique_ptr<G4UIcmdWithoutParameter> fResetCmd;
+    // These command need to revert order of execution master-worker
+    // To be investigated
+    std::unique_ptr<G4UIcmdWithABool> fCloseFileCmd;
+    std::unique_ptr<G4UIcmdWithABool> fListCmd;
+    std::unique_ptr<G4UIcmdWithAString> fSetDefaultFileTypeCmd;
+    std::unique_ptr<G4UIcmdWithABool> fSetActivationCmd;
+    std::unique_ptr<G4UIcmdWithAnInteger> fVerboseCmd;
+    std::unique_ptr<G4UIcmdWithAnInteger> fCompressionCmd;
+    std::unique_ptr<G4UIcmdWithAString> fSetFileNameCmd;
+    std::unique_ptr<G4UIcmdWithAString> fSetHistoDirNameCmd;
+    std::unique_ptr<G4UIcmdWithAString> fSetNtupleDirNameCmd;
 };
 
 //_____________________________________________________________________________
-template <typename CMD>
-std::unique_ptr<CMD> G4AnalysisMessenger::CreateCommand(
-  G4String name, G4String guidance, G4String paremeterName, G4bool ommitable)
+template<typename CMD>
+std::unique_ptr<CMD> G4AnalysisMessenger::CreateCommand(G4String name, G4String guidance,
+                                                        G4String paremeterName, G4bool ommitable)
 {
   G4String fullName = "/analysis/" + name;
 

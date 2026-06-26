@@ -68,19 +68,23 @@ G4KL3DecayChannel::G4KL3DecayChannel(const G4String& theParentName, G4double the
     pLambda = 0.033;
     pXi0 = -0.35;
   }
-  else if ((theParentName == K_L) && ((theLeptonName == E_plus) || (theLeptonName == E_minus))) {
+  else if ((theParentName == K_L) && ((theLeptonName == E_plus) || (theLeptonName == E_minus)))
+  {
     // K0L (Ke3)
     pLambda = 0.0300;
     pXi0 = -0.11;
   }
-  else if ((theParentName == K_L) && ((theLeptonName == Mu_plus) || (theLeptonName == Mu_minus))) {
+  else if ((theParentName == K_L) && ((theLeptonName == Mu_plus) || (theLeptonName == Mu_minus)))
+  {
     // K0L (Kmu3)
     pLambda = 0.034;
     pXi0 = -0.11;
   }
-  else {
+  else
+  {
 #ifdef G4VERBOSE
-    if (GetVerboseLevel() > 2) {
+    if (GetVerboseLevel() > 2)
+    {
       G4cout << "G4KL3DecayChannel:: constructor :";
       G4cout << "illegal arguments " << G4endl;
       ;
@@ -95,7 +99,8 @@ G4KL3DecayChannel::G4KL3DecayChannel(const G4String& theParentName, G4double the
 
 G4KL3DecayChannel& G4KL3DecayChannel::operator=(const G4KL3DecayChannel& right)
 {
-  if (this != &right) {
+  if (this != &right)
+  {
     kinematics_name = right.kinematics_name;
     verboseLevel = right.verboseLevel;
     rbranch = right.rbranch;
@@ -108,11 +113,13 @@ G4KL3DecayChannel& G4KL3DecayChannel::operator=(const G4KL3DecayChannel& right)
 
     // recreate array
     numberOfDaughters = right.numberOfDaughters;
-    if (numberOfDaughters > 0) {
+    if (numberOfDaughters > 0)
+    {
       if (daughters_name != nullptr) ClearDaughtersName();
       daughters_name = new G4String*[numberOfDaughters];
       // copy daughters name
-      for (G4int index = 0; index < numberOfDaughters; ++index) {
+      for (G4int index = 0; index < numberOfDaughters; ++index)
+      {
         daughters_name[index] = new G4String(*right.daughters_name[index]);
       }
     }
@@ -147,7 +154,8 @@ G4DecayProducts* G4KL3DecayChannel::DecayIt(G4double)
   G4double w;
   G4double r;
   const size_t MAX_LOOP = 10000;
-  for (std::size_t loop_counter = 0; loop_counter < MAX_LOOP; ++loop_counter) {
+  for (std::size_t loop_counter = 0; loop_counter < MAX_LOOP; ++loop_counter)
+  {
     r = G4UniformRand();
     PhaseSpace(massK, &daughterM[0], &daughterE[0], &daughterP[0]);
     w = DalitzDensity(massK, daughterE[idPi], daughterE[idLepton], daughterE[idNutrino],
@@ -157,7 +165,8 @@ G4DecayProducts* G4KL3DecayChannel::DecayIt(G4double)
 
   // output message
 #ifdef G4VERBOSE
-  if (GetVerboseLevel() > 1) {
+  if (GetVerboseLevel() > 1)
+  {
     G4cout << *daughters_name[0] << ":" << daughterP[0] / GeV << "[GeV/c]" << G4endl;
     G4cout << *daughters_name[1] << ":" << daughterP[1] / GeV << "[GeV/c]" << G4endl;
     G4cout << *daughters_name[2] << ":" << daughterP[2] / GeV << "[GeV/c]" << G4endl;
@@ -212,7 +221,8 @@ G4DecayProducts* G4KL3DecayChannel::DecayIt(G4double)
   products->PushProducts(daughterparticle);
 
 #ifdef G4VERBOSE
-  if (GetVerboseLevel() > 1) {
+  if (GetVerboseLevel() > 1)
+  {
     G4cout << "G4KL3DecayChannel::DecayIt ";
     G4cout << "  create decay products in rest frame " << G4endl;
     G4cout << "  decay products address=" << products << G4endl;
@@ -232,7 +242,8 @@ void G4KL3DecayChannel::PhaseSpace(G4double parentM, const G4double* M, G4double
   G4int index;
   const G4int N_DAUGHTER = 3;
 
-  for (index = 0; index < N_DAUGHTER; ++index) {
+  for (index = 0; index < N_DAUGHTER; ++index)
+  {
     sumofdaughtermass += M[index];
   }
 
@@ -241,10 +252,12 @@ void G4KL3DecayChannel::PhaseSpace(G4double parentM, const G4double* M, G4double
   G4double momentummax = 0.0, momentumsum = 0.0;
   G4double energy;
   const size_t MAX_LOOP = 10000;
-  for (std::size_t loop_counter = 0; loop_counter < MAX_LOOP; ++loop_counter) {
+  for (std::size_t loop_counter = 0; loop_counter < MAX_LOOP; ++loop_counter)
+  {
     rd1 = G4UniformRand();
     rd2 = G4UniformRand();
-    if (rd2 > rd1) {
+    if (rd2 > rd1)
+    {
       rd = rd1;
       rd1 = rd2;
       rd2 = rd;
@@ -272,10 +285,12 @@ void G4KL3DecayChannel::PhaseSpace(G4double parentM, const G4double* M, G4double
     if (momentummax <= momentumsum - momentummax) break;
   }
 #ifdef G4VERBOSE
-  if (GetVerboseLevel() > 2) {
+  if (GetVerboseLevel() > 2)
+  {
     G4cout << "G4KL3DecayChannel::PhaseSpace    ";
     G4cout << "Kon mass:" << parentM / GeV << "GeV/c/c" << G4endl;
-    for (index = 0; index < 3; ++index) {
+    for (index = 0; index < 3; ++index)
+    {
       G4cout << index << " : " << M[index] / GeV << "GeV/c/c  ";
       G4cout << " : " << E[index] / GeV << "GeV  ";
       G4cout << " : " << P[index] / GeV << "GeV/c " << G4endl;
@@ -325,7 +340,8 @@ G4double G4KL3DecayChannel::DalitzDensity(G4double massK, G4double Epi, G4double
   G4double Rho = (F * F) * (coeffA + coeffB * Xi + coeffC * Xi * Xi);
 
 #ifdef G4VERBOSE
-  if (GetVerboseLevel() > 2) {
+  if (GetVerboseLevel() > 2)
+  {
     G4cout << "G4KL3DecayChannel::DalitzDensity  " << G4endl;
     G4cout << " Pi[" << massPi / GeV << "GeV/c/c] :" << Epi / GeV << "GeV" << G4endl;
     G4cout << " L[" << massL / GeV << "GeV/c/c] :" << El / GeV << "GeV" << G4endl;

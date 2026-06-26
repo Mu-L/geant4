@@ -29,27 +29,28 @@
 // --------------------------------------------------------------------
 
 #include "G4ProductionCuts.hh"
-#include "G4ProductionCutsTable.hh"
+
 #include "G4AutoLock.hh"
+#include "G4ProductionCutsTable.hh"
 
 #include <sstream>
 
 namespace
 {
-  G4Mutex productionCutsMutex = G4MUTEX_INITIALIZER;
+G4Mutex productionCutsMutex = G4MUTEX_INITIALIZER;
 }
 
 G4ProductionCuts::G4ProductionCuts()
 {
-  for (G4int i=0; i<NumberOfG4CutIndex; ++i)
+  for (G4int i = 0; i < NumberOfG4CutIndex; ++i)
   {
     fRangeCuts.push_back(0.0);
   }
 }
 
-G4ProductionCuts::G4ProductionCuts(const G4ProductionCuts& right) 
+G4ProductionCuts::G4ProductionCuts(const G4ProductionCuts& right)
 {
-  for (G4int i=0; i<NumberOfG4CutIndex; ++i)
+  for (G4int i = 0; i < NumberOfG4CutIndex; ++i)
   {
     fRangeCuts.push_back(0.0);
   }
@@ -63,10 +64,10 @@ G4ProductionCuts::~G4ProductionCuts()
 
 G4ProductionCuts& G4ProductionCuts::operator=(const G4ProductionCuts& right)
 {
-  if (&right==this) return *this;
+  if (&right == this) return *this;
 
   G4AutoLock lock(productionCutsMutex);
-  for (G4int i=0; i<NumberOfG4CutIndex; ++i)
+  for (G4int i = 0; i < NumberOfG4CutIndex; ++i)
   {
     fRangeCuts[i] = right.fRangeCuts[i];
   }
@@ -86,7 +87,7 @@ G4bool G4ProductionCuts::operator!=(const G4ProductionCuts& right) const
 
 void G4ProductionCuts::SetProductionCut(G4double cut, G4int index)
 {
-  if(index >= 0 && index < NumberOfG4CutIndex)
+  if (index >= 0 && index < NumberOfG4CutIndex)
   {
     G4AutoLock lock(productionCutsMutex);
     fRangeCuts[index] = cut;
@@ -97,15 +98,14 @@ void G4ProductionCuts::SetProductionCut(G4double cut, G4int index)
     std::ostringstream os;
     os << "Setting cuts for particles other than photon, e-, e+ or proton has "
           "no effect.";
-    G4Exception("G4ProductionCuts::SetProductionCut", "ProcCuts110",
-                JustWarning, os.str().c_str());
+    G4Exception("G4ProductionCuts::SetProductionCut", "ProcCuts110", JustWarning, os.str().c_str());
   }
 }
 
 void G4ProductionCuts::SetProductionCut(G4double cut)
 {
   G4AutoLock lock(productionCutsMutex);
-  for(G4int i = 0; i < NumberOfG4CutIndex; ++i)
+  for (G4int i = 0; i < NumberOfG4CutIndex; ++i)
   {
     fRangeCuts[i] = cut;
   }
@@ -125,7 +125,7 @@ void G4ProductionCuts::SetProductionCut(G4double cut, const G4String& pName)
 G4double G4ProductionCuts::GetProductionCut(G4int index) const
 {
   G4double cut = -1.0;
-  if (index>=0 && index<NumberOfG4CutIndex)
+  if (index >= 0 && index < NumberOfG4CutIndex)
   {
     G4AutoLock lock(productionCutsMutex);
     cut = fRangeCuts[index];
@@ -158,29 +158,52 @@ void G4ProductionCuts::PhysicsTableUpdated()
 G4int G4ProductionCuts::GetIndex(const G4String& name)
 {
   G4int index = -1;
-  if ( name == "gamma" ) { index = 0; }
-  else if ( name == "e-" ) { index = 1; }
-  else if ( name == "e+" ) { index = 2; }
-  else if ( name == "proton" ) { index = 3; }
+  if (name == "gamma")
+  {
+    index = 0;
+  }
+  else if (name == "e-")
+  {
+    index = 1;
+  }
+  else if (name == "e+")
+  {
+    index = 2;
+  }
+  else if (name == "proton")
+  {
+    index = 3;
+  }
 
   return index;
 }
-
 
 G4int G4ProductionCuts::GetIndex(const G4ParticleDefinition* ptr)
 {
   G4int pdg = (nullptr == ptr) ? 0 : ptr->GetPDGEncoding();
   G4int index = -1;
-  if (pdg == 22) { index = 0; }
-  else if (pdg == 11) { index = 1; }
-  else if (pdg == -11) { index = 2; }
-  else if (pdg == 2212) { index = 3; }
+  if (pdg == 22)
+  {
+    index = 0;
+  }
+  else if (pdg == 11)
+  {
+    index = 1;
+  }
+  else if (pdg == -11)
+  {
+    index = 2;
+  }
+  else if (pdg == 2212)
+  {
+    index = 3;
+  }
 
   return index;
 }
 
 void G4ProductionCuts::SetProductionCuts(std::vector<G4double>& cut)
-{  
+{
   G4int vSize = (G4int)cut.size();
   if (vSize != NumberOfG4CutIndex)
   {
@@ -189,17 +212,18 @@ void G4ProductionCuts::SetProductionCuts(std::vector<G4double>& cut)
     {
       G4cout << "G4ProductionCuts::SetProductionCuts ";
       G4cout << " The size of given cut value vector [=" << vSize << "]  "
-             << " is not consistent with number of CutIndex [="  
-             << NumberOfG4CutIndex << G4endl;
+             << " is not consistent with number of CutIndex [=" << NumberOfG4CutIndex << G4endl;
     }
 #endif
-    G4Exception( "G4ProductionCuts::SetProductionCuts ",
-                 "ProcCuts108",
-                 JustWarning, "Given vector size is inconsistent ");
-    if (NumberOfG4CutIndex<vSize)  { vSize = NumberOfG4CutIndex; }
+    G4Exception("G4ProductionCuts::SetProductionCuts ", "ProcCuts108", JustWarning,
+                "Given vector size is inconsistent ");
+    if (NumberOfG4CutIndex < vSize)
+    {
+      vSize = NumberOfG4CutIndex;
+    }
   }
   G4AutoLock lock(productionCutsMutex);
-  for(G4int i = 0; i<vSize; ++i)
+  for (G4int i = 0; i < vSize; ++i)
   {
     fRangeCuts[i] = cut[i];
   }

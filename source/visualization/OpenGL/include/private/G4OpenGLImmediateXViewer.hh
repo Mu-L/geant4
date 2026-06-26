@@ -25,31 +25,29 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  7th February 1997
 // Class G4OpenGLImmediateXViewer : a class derived from G4OpenGLXViewer and
 //                                  G4OpenGLImmediateViewer.
 
-#ifndef G4OpenGLIMMEDIATEXVIEWER_HH
-#define G4OpenGLIMMEDIATEXVIEWER_HH
+#ifndef G4OPENGLIMMEDIATEXVIEWER_HH
+#define G4OPENGLIMMEDIATEXVIEWER_HH
 
 #include "G4OpenGLImmediateViewer.hh"
 #include "G4OpenGLXViewer.hh"
-
 #include "globals.hh"
 
 class G4OpenGLImmediateSceneHandler;
 
-class G4OpenGLImmediateXViewer:
-public G4OpenGLXViewer, public G4OpenGLImmediateViewer{
-  
-public:
-  G4OpenGLImmediateXViewer (G4OpenGLImmediateSceneHandler& scene,
-			  const G4String& name = "");
-  virtual ~G4OpenGLImmediateXViewer ();
-  void Initialise ();
-  void DrawView ();
-  void FinishView ();
+class G4OpenGLImmediateXViewer : public G4OpenGLXViewer, public G4OpenGLImmediateViewer
+{
+  public:
+
+    G4OpenGLImmediateXViewer(G4OpenGLImmediateSceneHandler& scene, const G4String& name = "");
+    virtual ~G4OpenGLImmediateXViewer();
+    void Initialise();
+    void DrawView();
+    void FinishView();
 };
 
 #endif

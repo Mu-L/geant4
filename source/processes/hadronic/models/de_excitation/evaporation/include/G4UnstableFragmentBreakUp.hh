@@ -37,53 +37,53 @@
 //      Creation date: 7 May 2010
 //
 //  Modifications:
-// 
+//
 // -------------------------------------------------------------------
-//  This class providing decay of any fragment on light nucleons using 
+//  This class providing decay of any fragment on light nucleons using
 //  taking into account only binding energy, for example, it may decay
-//  2n -> n + n or 2p -> p + p      
+//  2n -> n + n or 2p -> p + p
 //
 
-#ifndef G4UnstableFragmentBreakUp_h
-#define G4UnstableFragmentBreakUp_h 1
+#ifndef G4UNSTABLEFRAGMENTBREAKUP_HH
+#define G4UNSTABLEFRAGMENTBREAKUP_HH
 
-#include "globals.hh"
 #include "G4VEvaporationChannel.hh"
+#include "globals.hh"
 
 class G4Fragment;
 class G4NuclearLevelData;
 
-class G4UnstableFragmentBreakUp : public G4VEvaporationChannel 
+class G4UnstableFragmentBreakUp : public G4VEvaporationChannel
 {
+  public:
 
-public:
+    G4UnstableFragmentBreakUp();
 
-  explicit G4UnstableFragmentBreakUp();
+    ~G4UnstableFragmentBreakUp() override = default;
 
-  virtual ~G4UnstableFragmentBreakUp();
+    G4bool BreakUpChain(G4FragmentVector*, G4Fragment*) override;
 
-  virtual G4bool BreakUpChain(G4FragmentVector*, G4Fragment*) final;
+    G4double GetEmissionProbability(G4Fragment* fragment) override;
 
-  virtual G4double GetEmissionProbability(G4Fragment* fragment) final;
+    inline void SetVerbose(G4int val) { fVerbose = val; }
 
-  inline void SetVerbose(G4int val) { fVerbose = val; }
+    G4UnstableFragmentBreakUp(const G4UnstableFragmentBreakUp& right);
+    const G4UnstableFragmentBreakUp& operator=(const G4UnstableFragmentBreakUp& right);
+    G4bool operator==(const G4UnstableFragmentBreakUp& right) const;
+    G4bool operator!=(const G4UnstableFragmentBreakUp& right) const;
 
-private:
+  private:
 
-  G4UnstableFragmentBreakUp(const G4UnstableFragmentBreakUp & right);
-  const G4UnstableFragmentBreakUp & operator = 
-  (const G4UnstableFragmentBreakUp & right);
-  G4bool operator == (const G4UnstableFragmentBreakUp & right) const;
-  G4bool operator != (const G4UnstableFragmentBreakUp & right) const;
+    static const G4int Zfr[6];
+    static const G4int Afr[6];
+    static G4double masses[6];
 
-  static const G4int Zfr[6];
-  static const G4int Afr[6];
-  G4double masses[6];
+    G4double prob[6];
+    G4double mrec[6];
 
-  G4NuclearLevelData* fLevelData;
-  G4int fVerbose;
-
-  G4int fSecID;  // Creator model ID for the secondaries created by this model  
+    G4NuclearLevelData* fLevelData;
+    G4int fVerbose{0};
+    G4int fSecID;  // Creator model ID for the secondaries created by this model
 };
 
 #endif

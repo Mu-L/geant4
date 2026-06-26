@@ -25,13 +25,13 @@
 //
 //
 //
-// 
+//
 
 #ifndef G4VISFEATURESOFOPENINVENTOR_HH
 #define G4VISFEATURESOFOPENINVENTOR_HH
 
 #include "globals.hh"
 
-G4String G4VisFeaturesOfOpenInventor ();
+G4String G4VisFeaturesOfOpenInventor();
 
 #endif

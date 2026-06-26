@@ -41,12 +41,13 @@
 #define G4QUADRUPOLEMAGFIELD_HH
 
 #include "G4MagneticField.hh"
-#include "G4ThreeVector.hh"
 #include "G4RotationMatrix.hh"
+#include "G4ThreeVector.hh"
 
 /**
  * @brief G4QuadrupoleMagField allows for the creation of quadrupole magnetic
  * field, given the gradient value for quadrupole magnetic lense.
+ * @ingroup geometry_magneticfield
  */
 
 class G4QuadrupoleMagField : public G4MagneticField
@@ -65,8 +66,7 @@ class G4QuadrupoleMagField : public G4MagneticField
      *  @param[in] pOrigin Origin position.
      *  @param[in] pMatrix Rotation matrix.
      */
-    G4QuadrupoleMagField(G4double pGradient, 
-                         const G4ThreeVector& pOrigin, 
+    G4QuadrupoleMagField(G4double pGradient, const G4ThreeVector& pOrigin,
                          G4RotationMatrix* pMatrix);
 
     /**
@@ -88,8 +88,8 @@ class G4QuadrupoleMagField : public G4MagneticField
 
   private:
 
-    G4double          fGradient = 0.0;
-    G4ThreeVector     fOrigin = G4ThreeVector(0.0, 0.0, 0.0);
+    G4double fGradient = 0.0;
+    G4ThreeVector fOrigin = G4ThreeVector(0.0, 0.0, 0.0);
     G4RotationMatrix* fpMatrix = nullptr;
 };
 

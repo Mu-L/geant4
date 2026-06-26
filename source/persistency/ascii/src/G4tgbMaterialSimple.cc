@@ -35,22 +35,18 @@
 #include "G4tgrMessenger.hh"
 
 // --------------------------------------------------------------------
-G4tgbMaterialSimple::G4tgbMaterialSimple()
-{
-}
+G4tgbMaterialSimple::G4tgbMaterialSimple() {}
 
 // --------------------------------------------------------------------
-G4tgbMaterialSimple::~G4tgbMaterialSimple()
-{
-}
+G4tgbMaterialSimple::~G4tgbMaterialSimple() {}
 
 // --------------------------------------------------------------------
 G4tgbMaterialSimple::G4tgbMaterialSimple(G4tgrMaterial* hgmate)
 {
-  theTgrMate                    = hgmate;
+  theTgrMate = hgmate;
   G4tgrMaterialSimple* matesimp = static_cast<G4tgrMaterialSimple*>(hgmate);
-  theZ                          = matesimp->GetZ();
-  theA                          = matesimp->GetA();
+  theZ = matesimp->GetZ();
+  theA = matesimp->GetA();
 }
 
 // --------------------------------------------------------------------
@@ -58,12 +54,11 @@ G4Material* G4tgbMaterialSimple::BuildG4Material()
 {
   //----- construct new G4Material with no components (only itself)
 
-  G4Material* mate =
-    new G4Material(GetName(), GetZ(), GetA(), theTgrMate->GetDensity(),
-                   kStateUndefined, NTP_Temperature);
+  G4Material* mate = new G4Material(GetName(), GetZ(), GetA(), theTgrMate->GetDensity(),
+                                    kStateUndefined, NTP_Temperature);
 
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 2)
+  if (G4tgrMessenger::GetVerboseLevel() >= 2)
   {
     G4cout << "  Constructing new G4Material simple: " << *mate << G4endl;
   }
@@ -75,8 +70,7 @@ G4Material* G4tgbMaterialSimple::BuildG4Material()
 // --------------------------------------------------------------------
 std::ostream& operator<<(std::ostream& os, const G4tgbMaterialSimple& mate)
 {
-  os << "Simple Material: " << mate.GetName() << G4endl
-     << " Z = " << mate.GetZ() << " A = " << mate.GetA()
-     << " density = " << mate.GetDensity() << G4endl;
+  os << "Simple Material: " << mate.GetName() << G4endl << " Z = " << mate.GetZ()
+     << " A = " << mate.GetA() << " density = " << mate.GetDensity() << G4endl;
   return os;
 }

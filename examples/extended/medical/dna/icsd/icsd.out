@@ -11,7 +11,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -19,7 +19,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
                              WWW : http://geant4.org/
 **************************************************************
 
-##### Create analysis manager   0x18e8530
+##### Create analysis manager   0xe4d260
 Using  analysis manager
 e-_G4DNAPTBAugerModel is constructed
 =======================================================================
@@ -67,6 +67,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 0
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -111,13 +112,13 @@ Screening factor                                   1
 ==========================================================================================================================================
 =======================================               Materials of DNA_e-_excitation      ================================================
       Material#     Particle                              Model    LowLimit(MeV)   HighLimit(MeV)         Fast   Stationary    Chemistry
-       G4_WATER           e-     DNAEmfietzoglouExcitationModel            8e-06             0.01           no           no           no
+       G4_WATER           e-     DNAEmfietzoglouExcitationModel            8e-06               10           no           no           no
             THF           e-              DNAPTBExcitationModel            9e-06            0.001           no           no           no
              N2           e-              DNAPTBExcitationModel          1.3e-05             1.02           no           no           no
 ==========================================================================================================================================
 =======================================               Materials of DNA_e-_ionisation      ================================================
       Material#     Particle                              Model    LowLimit(MeV)   HighLimit(MeV)         Fast   Stationary    Chemistry
-       G4_WATER           e-     DNAEmfietzoglouIonisationModel            1e-05             0.01           no           no           no
+       G4_WATER           e-     DNAEmfietzoglouIonisationModel            1e-05               10           no           no           no
             THF           e-              DNAPTBIonisationModel          1.2e-05            0.001           no           no           no
              N2           e-              DNAPTBIonisationModel         1.55e-05             1.02           no           no           no
 ==========================================================================================================================================

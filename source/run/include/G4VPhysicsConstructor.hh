@@ -46,8 +46,8 @@
 
 // Original author: H.Kurashige (Kobe University), 12 November 2000
 // --------------------------------------------------------------------
-#ifndef G4VPhysicsConstructor_hh
-#define G4VPhysicsConstructor_hh 1
+#ifndef G4VPHYSICSCONSTRUCTOR_HH
+#define G4VPHYSICSCONSTRUCTOR_HH
 
 #include "G4ParticleTable.hh"
 #include "G4PhysicsListHelper.hh"
@@ -67,6 +67,7 @@ class G4VPCData
     // that are per-thread.
 
   public:
+
     using PhysicsBuilders_V = std::vector<G4PhysicsBuilderInterface*>;
     void initialize();
     G4ParticleTable::G4PTblDicIterator* _aParticleIterator;
@@ -108,6 +109,7 @@ using G4VPhyscicsConstructorManager = G4VPCManager;
 class G4VPhysicsConstructor
 {
   public:
+
     G4VPhysicsConstructor(const G4String& = "");
     G4VPhysicsConstructor(const G4String& name, G4int physics_type);
     virtual ~G4VPhysicsConstructor();
@@ -144,6 +146,7 @@ class G4VPhysicsConstructor
     inline G4int GetVerboseLevel() const;
 
   protected:
+
     using PhysicsBuilder_V = G4VPCData::PhysicsBuilders_V;
 
     // Register a process to the particle type according to the ordering
@@ -159,6 +162,7 @@ class G4VPhysicsConstructor
     void AddBuilder(G4PhysicsBuilderInterface* bld);
 
   protected:
+
     G4int verboseLevel = 0;
     G4String namePhysics = "";
     G4int typePhysics = 0;
@@ -192,7 +196,8 @@ inline const G4String& G4VPhysicsConstructor::GetPhysicsName() const
 
 inline void G4VPhysicsConstructor::SetPhysicsType(G4int val)
 {
-  if (val > 0) {
+  if (val > 0)
+  {
     typePhysics = val;
   }
 }

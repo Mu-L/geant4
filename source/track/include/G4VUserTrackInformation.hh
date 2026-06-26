@@ -46,8 +46,8 @@
 
 // Author: Makoto Asai, 2 June 2000
 // --------------------------------------------------------------------
-#ifndef G4VUserTrackInformation_hh
-#define G4VUserTrackInformation_hh 1
+#ifndef G4VUSERTRACKINFORMATION_HH
+#define G4VUSERTRACKINFORMATION_HH
 
 #include "globals.hh"
 
@@ -57,8 +57,8 @@ class G4VUserTrackInformation
 
     G4VUserTrackInformation() = default;
     G4VUserTrackInformation(const G4String& infoType);
-      // String is provided to indicate the Type of UserTrackInfo class
-      // User is recommended to set the type of his/her class
+    // String is provided to indicate the Type of UserTrackInfo class
+    // User is recommended to set the type of his/her class
 
     G4VUserTrackInformation(const G4VUserTrackInformation&);
     G4VUserTrackInformation& operator=(const G4VUserTrackInformation&);
@@ -68,7 +68,7 @@ class G4VUserTrackInformation
     virtual void Print() const {};
 
     const G4String& GetType() const;
-      // Get Type of this UserTrackInfo
+    // Get Type of this UserTrackInfo
 
   protected:
 

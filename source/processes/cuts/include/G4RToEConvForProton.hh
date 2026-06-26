@@ -31,27 +31,26 @@
 
 // Author: H.Kurashige, 05 October 2002 - First implementation
 // --------------------------------------------------------------------
-#ifndef G4RToEConvForProton_hh
-#define G4RToEConvForProton_hh 1
+#ifndef G4RTOECONVFORPROTON_HH
+#define G4RTOECONVFORPROTON_HH
 
-#include "globals.hh"
 #include "G4VRangeToEnergyConverter.hh"
+#include "globals.hh"
 
 class G4RToEConvForProton : public G4VRangeToEnergyConverter
 {
-public:
+  public:
 
-  explicit G4RToEConvForProton();
+    explicit G4RToEConvForProton();
 
-  virtual ~G4RToEConvForProton();
+    virtual ~G4RToEConvForProton();
 
-  // Calculate energy cut from given range cut for the material
-  G4double Convert(const G4double rangeCut, const G4Material* material) final;
+    // Calculate energy cut from given range cut for the material
+    G4double Convert(const G4double rangeCut, const G4Material* material) final;
 
-protected:
+  protected:
 
-  G4double ComputeValue(const G4int Z, const G4double kinEnergy) final;
-
+    G4double ComputeValue(const G4int Z, const G4double kinEnergy) final;
 };
 
 #endif

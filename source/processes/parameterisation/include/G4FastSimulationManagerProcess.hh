@@ -47,8 +47,8 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4FastSimulationManagerProcess_hh
-#define G4FastSimulationManagerProcess_hh
+#ifndef G4FASTSIMULATIONMANAGERPROCESS_HH
+#define G4FASTSIMULATIONMANAGERPROCESS_HH
 
 #include "G4FastSimulationManager.hh"
 #include "G4FastSimulationProcessType.hh"
@@ -75,6 +75,7 @@ class G4TransportationManager;
 class G4FastSimulationManagerProcess : public G4VProcess
 {
   public:
+
     // Constructor for parameterisation in mass geometry
     G4FastSimulationManagerProcess(const G4String& processName = "G4FastSimulationManagerProcess",
                                    G4ProcessType theType = fParameterisation);
@@ -128,6 +129,7 @@ class G4FastSimulationManagerProcess : public G4VProcess
     [[deprecated("obsolete: will be remove in next major release")]] void Verbose() const {}
 
   private:
+
     //-- would be better to my taste to have "const G4VPhysicalVolume* fWorldVolume;", but clashes
     // at compilation
     G4VPhysicalVolume* fWorldVolume;

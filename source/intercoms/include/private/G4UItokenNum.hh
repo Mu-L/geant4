@@ -31,8 +31,8 @@
 
 // Author: Makoto Asai, 1998
 // --------------------------------------------------------------------
-#ifndef G4UItokenNum_hh
-#define G4UItokenNum_hh 1
+#ifndef G4UITOKENNUM_HH
+#define G4UITOKENNUM_HH
 
 #include "globals.hh"
 

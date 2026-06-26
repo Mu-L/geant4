@@ -29,7 +29,7 @@
 //
 // Author: 23-Nov-2012 A. Ribon
 //
-// Description: Modified version of the class G4HadronPhysicsFTFP_BERT 
+// Description: Modified version of the class G4HadronPhysicsFTFP_BERT
 //              to include neutron HP
 //
 // Modified:
@@ -37,20 +37,22 @@
 // 22.09.2020: V.Ivanchenko change design using G4HadProcess utility
 //----------------------------------------------------------------------------
 //
-#ifndef G4HadronPhysicsFTFP_BERT_HP_h
-#define G4HadronPhysicsFTFP_BERT_HP_h 1
+#ifndef G4HADRONPHYSICSFTFP_BERT_HP_HH
+#define G4HADRONPHYSICSFTFP_BERT_HP_HH
 
 #include "G4HadronPhysicsFTFP_BERT.hh"
 
 class G4HadronPhysicsFTFP_BERT_HP : public G4HadronPhysicsFTFP_BERT
 {
-  public: 
-    G4HadronPhysicsFTFP_BERT_HP(G4int verbose =1);
-    G4HadronPhysicsFTFP_BERT_HP(const G4String& name, G4bool quasiElastic=false);
+  public:
+
+    G4HadronPhysicsFTFP_BERT_HP(G4int verbose = 1);
+    G4HadronPhysicsFTFP_BERT_HP(const G4String& name, G4bool quasiElastic = false);
     ~G4HadronPhysicsFTFP_BERT_HP() override = default;
 
   protected:
-    //Modify the minimum needed
+
+    // Modify the minimum needed
     void Neutron() override;
 };
 

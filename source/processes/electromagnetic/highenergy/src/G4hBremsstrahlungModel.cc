@@ -48,58 +48,58 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "G4hBremsstrahlungModel.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
+
 #include "G4Log.hh"
 #include "G4NistManager.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
 
 using namespace std;
 
-G4hBremsstrahlungModel::G4hBremsstrahlungModel(const G4ParticleDefinition* p,
-					       const G4String& nam)
+G4hBremsstrahlungModel::G4hBremsstrahlungModel(const G4ParticleDefinition* p, const G4String& nam)
   : G4MuBremsstrahlungModel(p, nam)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4hBremsstrahlungModel::~G4hBremsstrahlungModel()
-{}
+G4hBremsstrahlungModel::~G4hBremsstrahlungModel() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4hBremsstrahlungModel::ComputeDMicroscopicCrossSection(
-                                           G4double tkin,
-                                           G4double Z,
-                                           G4double gammaEnergy)
+G4double G4hBremsstrahlungModel::ComputeDMicroscopicCrossSection(G4double tkin, G4double Z,
+                                                                 G4double gammaEnergy)
 //  differential cross section
 {
   G4double dxsection = 0.;
 
-  if(gammaEnergy > tkin) return dxsection;
-  //  G4cout << "G4hBremsstrahlungModel m= " << mass 
+  if (gammaEnergy > tkin) return dxsection;
+  //  G4cout << "G4hBremsstrahlungModel m= " << mass
   //	 << "  " << particle->GetParticleName() << G4endl;
-  G4double E = tkin + mass ;
-  G4double v = gammaEnergy/E ;
-  G4double delta = 0.5*mass*mass*v/(E-gammaEnergy);
-  G4double rab0=delta*sqrte ;
+  G4double E = tkin + mass;
+  G4double v = gammaEnergy / E;
+  G4double delta = 0.5 * mass * mass * v / (E - gammaEnergy);
+  G4double rab0 = delta * sqrte;
 
   G4int iz = std::max(G4lrint(Z), 1);
 
-  G4double z13 = 1.0/nist->GetZ13(iz);
-  G4double dn  = mass*nist->GetA27(iz)/(70.*MeV);
+  G4double z13 = 1.0 / nist->GetZ13(iz);
+  G4double dn = mass * nist->GetA27(iz) / (70. * MeV);
 
   G4double b = (1 == iz) ? bh : btf;
 
   // nucleus contribution logarithm
-  G4double rab1=b*z13;
-  G4double fn=G4Log(rab1/(dn*(electron_mass_c2+rab0*rab1))*
-              (mass+delta*(dn*sqrte-2.))) ;
+  G4double rab1 = b * z13;
+  G4double fn =
+    G4Log(rab1 / (dn * (electron_mass_c2 + rab0 * rab1)) * (mass + delta * (dn * sqrte - 2.)));
   fn = std::max(fn, 0.0);
 
   G4double x = 1.0 - v;
-  if(particle->GetPDGSpin() != 0) { x += 0.75*v*v; }
+  if (particle->GetPDGSpin() != 0)
+  {
+    x += 0.75 * v * v;
+  }
 
-  dxsection = coeff*x*Z*Z*fn/gammaEnergy;
+  dxsection = coeff * x * Z * Z * fn / gammaEnergy;
 
   return dxsection;
 }

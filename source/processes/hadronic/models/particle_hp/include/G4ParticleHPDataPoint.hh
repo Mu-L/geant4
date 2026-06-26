@@ -27,14 +27,15 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPDataPoint_h
-#define G4ParticleHPDataPoint_h 1
+#ifndef G4PARTICLEHPDATAPOINT_HH
+#define G4PARTICLEHPDATAPOINT_HH
 
 #include "globals.hh"
 
 class G4ParticleHPDataPoint
 {
   public:
+
     G4ParticleHPDataPoint()
     {
       energy = 0;
@@ -65,6 +66,7 @@ class G4ParticleHPDataPoint
     }
 
   private:
+
     G4double energy;
     G4double xSec;
 };

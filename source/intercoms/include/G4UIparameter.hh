@@ -36,14 +36,15 @@
 
 // Author: Makoto Asai, 1997
 // --------------------------------------------------------------------
-#ifndef G4UIparameter_hh
-#define G4UIparameter_hh 1
+#ifndef G4UIPARAMETER_HH
+#define G4UIPARAMETER_HH
 
 #include "globals.hh"
 
 class G4UIparameter
 {
   public:
+
     // Default constructor
     G4UIparameter() = default;
 
@@ -108,10 +109,12 @@ class G4UIparameter
     inline void SetGuidance(const char* theGuidance) { parameterGuidance = theGuidance; }
 
   private:
+
     G4bool TypeCheck(const char* newValue);
     G4bool CandidateCheck(const char* newValue);
 
   private:
+
     G4String parameterName;
     G4String parameterGuidance;
     G4String defaultValue;

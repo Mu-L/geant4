@@ -28,27 +28,30 @@
 // by J.P Wellisch, Sun Sep 15 2002.
 
 #include "G4PiData.hh"
+
 #include "G4SystemOfUnits.hh"
 
 ///////////////////////////////////////////////////////////////////////
 
-G4PiData::G4PiData(const G4double * aT, const G4double * aIn, 
-                   const G4double * anE, G4int nP)
+G4PiData::G4PiData(const G4double* aT, const G4double* aIn, const G4double* anE, G4int nP)
 {
-  for(G4int i = 0; i < nP; ++i )
+  for (G4int i = 0; i < nP; ++i)
   {
     std::pair<G4double, G4double> x;
-    x.first=aT[i]*millibarn;
-    x.second=aIn[i]*millibarn;
-    std::pair<G4double, std::pair<G4double, G4double > > aP;
-    aP.first=anE[i]*GeV;
-    aP.second=x;
+    x.first = aT[i] * millibarn;
+    x.second = aIn[i] * millibarn;
+    std::pair<G4double, std::pair<G4double, G4double>> aP;
+    aP.first = anE[i] * GeV;
+    aP.second = x;
     push_back(aP);
-    if (i == 0) {
+    if (i == 0)
+    {
       fMinE = aP.first;
       fTot0 = x.first;
       fInel0 = x.second;
-    } else if (i+1 == nP) {
+    }
+    else if (i + 1 == nP)
+    {
       fMaxE = aP.first;
       fTot1 = x.first;
       fInel1 = x.second;
@@ -60,73 +63,100 @@ G4PiData::G4PiData(const G4double * aT, const G4double * aIn,
 
 G4double G4PiData::ReactionXSection(G4double kineticEnergy)
 {
-  if (kineticEnergy <= fMinE) { return fInel0; }
-  if (kineticEnergy >= fMaxE) { return fInel1; }
+  if (kineticEnergy <= fMinE)
+  {
+    return fInel0;
+  }
+  if (kineticEnergy >= fMaxE)
+  {
+    return fInel1;
+  }
 
-  G4PiData::iterator it=begin();
-  while(it!=end()&&kineticEnergy>(*it).first) {++it;}  /* Loop checking, 08.01.2016, W. Pokorski */
-  if(it==end()) 
+  G4PiData::iterator it = begin();
+  while (it != end() && kineticEnergy > (*it).first)
+  {
+    ++it;
+  } /* Loop checking, 08.01.2016, W. Pokorski */
+  if (it == end())
   {
     G4ExceptionDescription ed;
     ed << "This cross section is applied for E(MeV)= " << kineticEnergy
-       << " outside allowed energy interval" << G4endl; 
+       << " outside allowed energy interval" << G4endl;
     G4Exception("G4PiData::ReactionXSection", "had001", FatalException, ed);
   }
-  if(it==begin()) it++;
-  G4double x1,x2,e1,e2;
-  e1=(*(it-1)).first;
-  x1=(*(it-1)).second.second;
-  e2=(*(it)).first;
-  x2=(*(it)).second.second;
-  return std::max(0., x1 + (kineticEnergy-e1)*(x2-x1)/(e2-e1));
+  if (it == begin()) it++;
+  G4double x1, x2, e1, e2;
+  e1 = (*(it - 1)).first;
+  x1 = (*(it - 1)).second.second;
+  e2 = (*(it)).first;
+  x2 = (*(it)).second.second;
+  return std::max(0., x1 + (kineticEnergy - e1) * (x2 - x1) / (e2 - e1));
 }
 
 ////////////////////////////////////////////////////////////////////////////
 
 G4double G4PiData::ElasticXSection(G4double kineticEnergy)
 {
-  if (kineticEnergy <= fMinE) { return fTot0 - fInel0; }
-  if (kineticEnergy >= fMaxE) { return fTot1 - fInel1; }
+  if (kineticEnergy <= fMinE)
+  {
+    return fTot0 - fInel0;
+  }
+  if (kineticEnergy >= fMaxE)
+  {
+    return fTot1 - fInel1;
+  }
 
-  G4PiData::iterator it=begin();
-  while(it!=end()&&kineticEnergy>(*it).first) {it++;}  /* Loop checking, 08.01.2016, W. Pokorski */
-  if(it==end()) 
+  G4PiData::iterator it = begin();
+  while (it != end() && kineticEnergy > (*it).first)
+  {
+    it++;
+  } /* Loop checking, 08.01.2016, W. Pokorski */
+  if (it == end())
   {
     G4ExceptionDescription ed;
     ed << "This cross section is applied for E(MeV)= " << kineticEnergy
-       << " outside allowed energy interval" << G4endl; 
+       << " outside allowed energy interval" << G4endl;
     G4Exception("G4PiData::ElasticXSection", "had001", FatalException, ed);
   }
-  if(it==begin()) it++;
-  G4double x1,x2,e1,e2;
-  e1=(*(it-1)).first;
-  x1=(*(it-1)).second.first - (*(it-1)).second.second;
-  e2=(*(it)).first;
-  x2=(*(it)).second.first - (*(it)).second.second;
-  return std::max(0., x1 + (kineticEnergy-e1)*(x2-x1)/(e2-e1));
+  if (it == begin()) it++;
+  G4double x1, x2, e1, e2;
+  e1 = (*(it - 1)).first;
+  x1 = (*(it - 1)).second.first - (*(it - 1)).second.second;
+  e2 = (*(it)).first;
+  x2 = (*(it)).second.first - (*(it)).second.second;
+  return std::max(0., x1 + (kineticEnergy - e1) * (x2 - x1) / (e2 - e1));
 }
 
 ////////////////////////////////////////////////////////////////////////////
 
 G4double G4PiData::TotalXSection(G4double kineticEnergy)
 {
-  if (kineticEnergy <= fMinE) { return fTot0; }
-  if (kineticEnergy >= fMaxE) { return fTot1; }
+  if (kineticEnergy <= fMinE)
+  {
+    return fTot0;
+  }
+  if (kineticEnergy >= fMaxE)
+  {
+    return fTot1;
+  }
 
-  G4PiData::iterator it=begin();
-  while(it!=end()&&kineticEnergy>(*it).first) {it++;}  /* Loop checking, 08.01.2016, W. Pokorski */
-  if(it==end()) 
+  G4PiData::iterator it = begin();
+  while (it != end() && kineticEnergy > (*it).first)
+  {
+    it++;
+  } /* Loop checking, 08.01.2016, W. Pokorski */
+  if (it == end())
   {
     G4ExceptionDescription ed;
     ed << "This cross section is applied for E(MeV)= " << kineticEnergy
-       << " outside allowed energy interval" << G4endl; 
+       << " outside allowed energy interval" << G4endl;
     G4Exception("G4PiData::TotalXSection", "had001", FatalException, ed);
   }
-  if(it==begin()) it++;
-  G4double x1,x2,e1,e2;
-  e1=(*(it-1)).first;
-  x1=(*(it-1)).second.first;
-  e2=(*(it)).first;
-  x2=(*(it)).second.first;
-  return std::max(0., x1 + (kineticEnergy-e1)*(x2-x1)/(e2-e1));
+  if (it == begin()) it++;
+  G4double x1, x2, e1, e2;
+  e1 = (*(it - 1)).first;
+  x1 = (*(it - 1)).second.first;
+  e2 = (*(it)).first;
+  x2 = (*(it)).second.first;
+  return std::max(0., x1 + (kineticEnergy - e1) * (x2 - x1) / (e2 - e1));
 }

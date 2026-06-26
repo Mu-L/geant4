@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,67 +41,76 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
-
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
 #ifndef G4ITTYPE_HH
-#define G4ITTYPE_HH 1
+#define G4ITTYPE_HH
 
-#include <cstddef>
 #include "G4Types.hh"
 
+#include <cstddef>
+
 /**
-  * Tag the G4IT
-  * Should be automatically setup by G4IT
-  * using : ITDef(MyIT) and ITImp(MyIT)
-  */
+ * Tag the G4IT
+ * Should be automatically setup by G4IT
+ * using : ITDef(MyIT) and ITImp(MyIT)
+ */
 
 struct G4ITType
 {
-private :
-    friend G4ITType operator +(const G4ITType& left,const int& right);
-    friend G4ITType operator -(const G4ITType& left,const int& right);
+  private:
+
+    friend G4ITType operator+(const G4ITType& left, const int& right);
+    friend G4ITType operator-(const G4ITType& left, const int& right);
     int fValue;
 
-public :
+  public:
 
     static size_t size();
 
     G4ITType(const int d_ = 0) : fValue(d_) {}
-    G4ITType(const G4ITType & d_)  = default;
-    G4ITType & operator=(const G4ITType & rhs);
-    inline G4ITType & operator=(const int & rhs) { fValue = rhs; return *this;}
-    inline operator int & () { return fValue; }
-    inline operator const int & () const { return fValue; }
-    inline G4bool operator==(const G4ITType & rhs) const { return fValue == rhs.fValue; }
-    inline G4bool operator==(const int & rhs) const { return fValue == rhs; }
-    inline G4bool operator<(const G4ITType & rhs) const { return fValue < rhs.fValue; }
+    G4ITType(const G4ITType& d_) = default;
+    G4ITType& operator=(const G4ITType& rhs);
+    inline G4ITType& operator=(const int& rhs)
+    {
+      fValue = rhs;
+      return *this;
+    }
+    inline operator int&() { return fValue; }
+    inline operator const int&() const { return fValue; }
+    inline G4bool operator==(const G4ITType& rhs) const { return fValue == rhs.fValue; }
+    inline G4bool operator==(const int& rhs) const { return fValue == rhs; }
+    inline G4bool operator<(const G4ITType& rhs) const { return fValue < rhs.fValue; }
     inline void operator++() { fValue++; }
 };
 
-inline G4ITType operator +(const G4ITType& left,const int& right) {
-    G4ITType output( left.fValue + right );
-    return output;
+inline G4ITType operator+(const G4ITType& left, const int& right)
+{
+  G4ITType output(left.fValue + right);
+  return output;
 }
 
-inline G4ITType operator -(const G4ITType& left,const int& right) {
-    G4ITType output( left.fValue - right );
-    return output;
+inline G4ITType operator-(const G4ITType& left, const int& right)
+{
+  G4ITType output(left.fValue - right);
+  return output;
 }
 
 class G4ITTypeManager
 {
-private:
-    static /*G4ThreadLocal*/ G4ITTypeManager* fgInstance ;
-    static G4ThreadLocal G4ITTypeManager* fgInstance_local ;
+  private:
+
+    static /*G4ThreadLocal*/ G4ITTypeManager* fgInstance;
+    static G4ThreadLocal G4ITTypeManager* fgInstance_local;
     G4ITType fLastType;
     G4ITTypeManager();
     virtual ~G4ITTypeManager();
 
     size_t fRessource;
 
-public :
-    G4ITType NewType() ;
+  public:
+
+    G4ITType NewType();
     size_t size() const;
     static G4ITTypeManager* Instance();
     static void DeleteInstance();
@@ -110,26 +119,28 @@ public :
     void ReleaseRessource();
 };
 
-#define ITDef(T)\
-public:\
-inline static G4ITType fType= G4ITTypeManager::Instance()->NewType();\
-static const G4ITType ITType()\
-{\
-    return fType;\
-}\
-const G4ITType GetITType() const override\
-{\
-    return fType;\
-}\
-G4bool equal(const G4IT &right) const override\
-{\
-    const T& right_mol = (const T&)right ;\
-    return (this->operator==(right_mol));\
-}\
-G4bool diff(const G4IT &right) const override\
-{\
-    const T& right_mol = (const T&)right ;\
-    return (this->operator<(right_mol));\
-}
+#define ITDef(T)                                                         \
+                                                                         \
+public:                                                                  \
+                                                                         \
+  inline static G4ITType fType = G4ITTypeManager::Instance()->NewType(); \
+  static const G4ITType ITType()                                         \
+  {                                                                      \
+    return fType;                                                        \
+  }                                                                      \
+  const G4ITType GetITType() const override                              \
+  {                                                                      \
+    return fType;                                                        \
+  }                                                                      \
+  G4bool equal(const G4IT& right) const override                         \
+  {                                                                      \
+    const T& right_mol = (const T&)right;                                \
+    return (this->operator==(right_mol));                                \
+  }                                                                      \
+  G4bool diff(const G4IT& right) const override                          \
+  {                                                                      \
+    const T& right_mol = (const T&)right;                                \
+    return (this->operator<(right_mol));                                 \
+  }
 
-#endif // G4ITTYPE_HH
+#endif  // G4ITTYPE_HH

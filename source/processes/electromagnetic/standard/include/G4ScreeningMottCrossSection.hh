@@ -61,13 +61,14 @@
 // -----------------------------------------------------------------------------
 
 //
-#ifndef G4ScreeningMottCrossSection_h
-#define G4ScreeningMottCrossSection_h 1
+#ifndef G4SCREENINGMOTTCROSSSECTION_HH
+#define G4SCREENINGMOTTCROSSSECTION_HH
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "globals.hh"
 #include "G4ParticleDefinition.hh"
+#include "globals.hh"
+
 #include <vector>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -79,99 +80,98 @@ class G4Pow;
 
 class G4ScreeningMottCrossSection
 {
+  public:
 
-public:
+    explicit G4ScreeningMottCrossSection();
 
-  explicit G4ScreeningMottCrossSection();
+    ~G4ScreeningMottCrossSection();
 
-  ~G4ScreeningMottCrossSection();
+    void Initialise(const G4ParticleDefinition*, G4double cosThetaLim);
 
-  void Initialise(const G4ParticleDefinition*, G4double cosThetaLim);
+    void SetupKinematic(G4double kinEnergy, G4int Z);
 
-  void SetupKinematic(G4double kinEnergy, G4int Z);
+    G4double NuclearCrossSection(G4int form, G4int fast);
+    G4double GetScatteringAngle(G4int form, G4int fast);
 
-  G4double NuclearCrossSection(G4int form, G4int fast);
-  G4double GetScatteringAngle(G4int form, G4int fast);
+    G4double RatioMottRutherford(G4double tet);
+    G4double RatioMottRutherfordCosT(G4double sin2t2);
 
-  G4double RatioMottRutherford(G4double tet);
-  G4double RatioMottRutherfordCosT(G4double sin2t2);
+    G4double McFcorrection(G4double sin2t2);
+    inline void SetupParticle(const G4ParticleDefinition*);
 
-  G4double McFcorrection(G4double sin2t2);
-  inline void SetupParticle(const G4ParticleDefinition*);
+    G4ScreeningMottCrossSection& operator=(const G4ScreeningMottCrossSection& right) = delete;
+    G4ScreeningMottCrossSection(const G4ScreeningMottCrossSection&) = delete;
 
-  G4ScreeningMottCrossSection & operator=
-  (const G4ScreeningMottCrossSection &right) = delete;
-  G4ScreeningMottCrossSection(const G4ScreeningMottCrossSection&) = delete;
+  private:
 
-private:
+    G4double ComputeAngle(G4int idx, G4double& rand);
 
-  G4double ComputeAngle(G4int idx, G4double& rand);
+    G4double FormFactor2ExpHof(G4double sin2t2);
+    G4double FormFactor2Gauss(G4double sin2t2);
+    G4double FormFactor2UniformHelm(G4double sin2t2);
+    G4double DifferentialXSection(G4int idx, G4int form);
 
-  G4double FormFactor2ExpHof(G4double sin2t2);
-  G4double FormFactor2Gauss(G4double sin2t2);
-  G4double FormFactor2UniformHelm(G4double sin2t2);
-  G4double DifferentialXSection(G4int idx, G4int form);
+    G4double GetTransitionRandom();
 
-  G4double  GetTransitionRandom();
+    G4NistManager* fNistManager;
+    G4Pow* fG4pow;
 
-  G4NistManager*  fNistManager;
-  G4Pow*          fG4pow;
+    const G4ParticleDefinition* particle;
 
-  const G4ParticleDefinition* particle;
+    G4double fTotalCross;
+    // cost - min - max
+    G4double cosThetaMin;  // def 1.0
+    G4double cosThetaMax;  // def -1.0
 
-  G4double 	        fTotalCross;
-  //cost - min - max
-  G4double              cosThetaMin;// def 1.0
-  G4double              cosThetaMax;// def -1.0
+    G4double cosTetMinNuc;
+    G4double cosTetMaxNuc;
 
-  G4double      	cosTetMinNuc;
-  G4double	        cosTetMaxNuc;
+    // energy cut
+    G4double ecut;
+    G4double etag;
 
-  //energy cut
-  G4double              ecut;
-  G4double              etag;
+    G4double spin;
+    G4double mass;
 
-  G4double              spin;
-  G4double              mass;
+    // lab of incedent particle
+    G4double tkinLab;
+    G4double momLab2;
+    G4double invbetaLab2;
 
-  //lab of incedent particle
-  G4double              tkinLab;
-  G4double              momLab2;
-  G4double              invbetaLab2;
+    // relative system with nucleus
+    G4double mu_rel;
+    G4double tkin;
+    G4double mom2;
+    G4double invbeta2;
+    G4double beta;
+    G4double gamma;
 
-  //relative system with nucleus
-  G4double 		mu_rel;
-  G4double              tkin;
-  G4double              mom2;
-  G4double              invbeta2;
-  G4double		beta;
-  G4double		gamma;
+    // constants
+    G4double alpha;
+    G4double htc2;
+    G4double e2;
 
-  //constants
-  G4double              alpha;
-  G4double              htc2;
-  G4double              e2;
+    // target nucleus
+    G4double targetMass;
+    G4double As;
+    G4int targetZ;
+    G4int targetA;
 
-  // target nucleus
-  G4double              targetMass;
-  G4double 		As;
-  G4int                 targetZ;
-  G4int 	        targetA;
-
-  // working array
-  std::vector<G4double> cross;
+    // working array
+    std::vector<G4double> cross;
 };
-
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline 
-void G4ScreeningMottCrossSection::SetupParticle(const G4ParticleDefinition* p)
+inline void G4ScreeningMottCrossSection::SetupParticle(const G4ParticleDefinition* p)
 {
   particle = p;
   mass = particle->GetPDGMass();
   spin = particle->GetPDGSpin();
-  if(0.0 != spin) { spin = 0.5; }
+  if (0.0 != spin)
+  {
+    spin = 0.5;
+  }
   tkin = 0.0;
 }
 

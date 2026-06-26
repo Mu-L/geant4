@@ -27,8 +27,9 @@
 // Author: Ivana Hrivnacova, 21/10/2015  (ivana@ipno.in2p3.fr)
 
 #include "G4PlotParameters.hh"
-#include "G4PlotMessenger.hh"
+
 #include "G4AnalysisUtilities.hh"
+#include "G4PlotMessenger.hh"
 #include "globals.hh"
 
 using namespace G4Analysis;
@@ -36,17 +37,17 @@ using std::to_string;
 
 //_____________________________________________________________________________
 G4PlotParameters::G4PlotParameters()
- : fMessenger(nullptr),
+  : fMessenger(nullptr),
 #if defined(TOOLS_USE_FREETYPE)
-   fDefaultStyle("ROOT_default"),
-   fAvailableStyles("ROOT_default hippodrow inlib_default"),
+    fDefaultStyle("ROOT_default"),
+    fAvailableStyles("ROOT_default hippodrow inlib_default"),
 #else
-   fDefaultStyle("inlib_default"),
-   fAvailableStyles("inlib_default"),
+    fDefaultStyle("inlib_default"),
+    fAvailableStyles("inlib_default"),
 #endif
-   fStyle(fDefaultStyle)
+    fStyle(fDefaultStyle)
 {
-   fMessenger = std::make_unique<G4PlotMessenger>(this);
+  fMessenger = std::make_unique<G4PlotMessenger>(this);
 }
 
 //
@@ -56,9 +57,8 @@ G4PlotParameters::G4PlotParameters()
 //_____________________________________________________________________________
 void G4PlotParameters::SetLayout(G4int columns, G4int rows)
 {
-  if ( columns > rows ||
-       columns < 1 || columns > fkMaxColumns ||
-       rows < 1 || rows > fkMaxRows ) {
+  if (columns > rows || columns < 1 || columns > fkMaxColumns || rows < 1 || rows > fkMaxRows)
+  {
     Warn("Layout: " + to_string(columns) + " x " + to_string(rows) +
          " was ignored.\n"
          "Supported layouts (columns <= rows): \n" +
@@ -81,20 +81,23 @@ void G4PlotParameters::SetDimensions(G4int width, G4int height)
 //_____________________________________________________________________________
 void G4PlotParameters::SetStyle(const G4String& style)
 {
-// Set style and update scale according to the style selected
+  // Set style and update scale according to the style selected
 
-  if ( fAvailableStyles.find(style) == std::string::npos ) {
-    Warn("Style: " + style + " was ignored.\n" +
-         "Supported styles: " + fAvailableStyles,
-         fkClass, "SetStyle");
+  if (fAvailableStyles.find(style) == std::string::npos)
+  {
+    Warn("Style: " + style + " was ignored.\n" + "Supported styles: " + fAvailableStyles, fkClass,
+         "SetStyle");
     return;
   }
 
   fStyle = style;
 
-  if ( fStyle == "ROOT_default" ) {
+  if (fStyle == "ROOT_default")
+  {
     fScale = fkDefaultScale;
-  } else {
+  }
+  else
+  {
     fScale = 1.f;
   }
 }

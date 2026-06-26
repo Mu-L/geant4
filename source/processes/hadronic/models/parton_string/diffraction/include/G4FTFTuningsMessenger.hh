@@ -30,8 +30,8 @@
 // Description: messenger class for the class G4FTFTunings
 //---------------------------------------------------------------------------
 
-#ifndef G4FTFTuningsMessenger_h
-#define G4FTFTuningsMessenger_h 1
+#ifndef G4FTFTUNINGSMESSENGER_HH
+#define G4FTFTUNINGSMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -40,13 +40,16 @@ class G4UIcommand;
 class G4UIcmdWithAnInteger;
 class G4UIcmdWithAString;
 
-
-class G4FTFTuningsMessenger : public G4UImessenger {
+class G4FTFTuningsMessenger : public G4UImessenger
+{
   public:
+
     explicit G4FTFTuningsMessenger();
     ~G4FTFTuningsMessenger();
-    void SetNewValue ( G4UIcommand *command, G4String newValues ) override;
+    void SetNewValue(G4UIcommand* command, G4String newValues) override;
+
   private:
+
     G4UIcmdWithAnInteger* theFTFTuneIndexCmd;
     G4UIcmdWithAString* theFTFTuneNameCmd;
 };

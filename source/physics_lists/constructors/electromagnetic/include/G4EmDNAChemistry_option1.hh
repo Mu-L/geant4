@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4EmDNAChemistry_option1_hh
-#define G4EmDNAChemistry_option1_hh 1
+#ifndef G4EMDNACHEMISTRY_OPTION1_HH
+#define G4EMDNACHEMISTRY_OPTION1_HH
 
 #include "G4VPhysicsConstructor.hh"
 #include "G4VUserChemistryList.hh"
@@ -34,20 +34,18 @@ class G4DNAMolecularReactionTable;
 
 class G4EmDNAChemistry_option1 : public G4VUserChemistryList, public G4VPhysicsConstructor
 {
- public:
-  G4EmDNAChemistry_option1();
-  ~G4EmDNAChemistry_option1() override = default;
+  public:
 
-  void ConstructParticle() override
-  {
-    ConstructMolecule();
-  }
-  void ConstructMolecule() override;
-  void ConstructProcess() override;
+    G4EmDNAChemistry_option1();
+    ~G4EmDNAChemistry_option1() override = default;
 
-  void ConstructDissociationChannels() override;
-  void ConstructReactionTable(G4DNAMolecularReactionTable* reactionTable) override;
-  void ConstructTimeStepModel(G4DNAMolecularReactionTable* reactionTable) override;
+    void ConstructParticle() override { ConstructMolecule(); }
+    void ConstructMolecule() override;
+    void ConstructProcess() override;
+
+    void ConstructDissociationChannels() override;
+    void ConstructReactionTable(G4DNAMolecularReactionTable* reactionTable) override;
+    void ConstructTimeStepModel(G4DNAMolecularReactionTable* reactionTable) override;
 };
 
 #endif

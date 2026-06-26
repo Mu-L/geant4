@@ -43,7 +43,7 @@
 #include "G4Electron.hh"
 #include "G4EmConfigurator.hh"
 #include "G4EmDataHandler.hh"
-#include "G4LossTableBuilder.hh"
+#include "G4EmDataRegistry.hh"
 #include "G4LossTableManager.hh"
 #include "G4ParticleChangeForGamma.hh"
 #include "G4ParticleChangeForMSC.hh"
@@ -75,10 +75,12 @@ G4TransportationWithMsc::G4TransportationWithMsc(ScatteringType type, G4int verb
   fEmManager = G4LossTableManager::Instance();
   fModelManager = new G4EmModelManager;
 
-  if (type == ScatteringType::MultipleScattering) {
+  if (type == ScatteringType::MultipleScattering)
+  {
     fParticleChangeForMSC = new G4ParticleChangeForMSC;
   }
-  else if (type == ScatteringType::SingleScattering) {
+  else if (type == ScatteringType::SingleScattering)
+  {
     fParticleChangeForSS = new G4ParticleChangeForGamma;
     fSecondariesSS = new std::vector<G4DynamicParticle*>;
   }
@@ -110,7 +112,8 @@ G4TransportationWithMsc::~G4TransportationWithMsc()
 void G4TransportationWithMsc::AddMscModel(G4VMscModel* mscModel, G4int order,
                                           const G4Region* region)
 {
-  if (fType != ScatteringType::MultipleScattering) {
+  if (fType != ScatteringType::MultipleScattering)
+  {
     G4Exception("G4TransportationWithMsc::AddMscModel", "em0051", FatalException,
                 "not allowed unless type == MultipleScattering");
   }
@@ -123,7 +126,8 @@ void G4TransportationWithMsc::AddMscModel(G4VMscModel* mscModel, G4int order,
 
 void G4TransportationWithMsc::AddSSModel(G4VEmModel* model, G4int order, const G4Region* region)
 {
-  if (fType != ScatteringType::SingleScattering) {
+  if (fType != ScatteringType::SingleScattering)
+  {
     G4Exception("G4TransportationWithMsc::AddSSModel", "em0051", FatalException,
                 "not allowed unless type == SingleScattering");
   }
@@ -137,29 +141,36 @@ void G4TransportationWithMsc::AddSSModel(G4VEmModel* model, G4int order, const G
 
 void G4TransportationWithMsc::PreparePhysicsTable(const G4ParticleDefinition& part)
 {
-  if (nullptr == fFirstParticle) {
+  if (nullptr == fFirstParticle)
+  {
     fFirstParticle = &part;
     G4VMultipleScattering* ptr = nullptr;
     auto emConfigurator = fEmManager->EmConfigurator();
     emConfigurator->PrepareModels(&part, ptr, this);
   }
 
-  if (fFirstParticle == &part) {
+  if (fFirstParticle == &part)
+  {
     G4bool master = fEmManager->IsMaster();
-    G4LossTableBuilder* bld = fEmManager->GetTableBuilder();
-    G4bool baseMat = bld->GetBaseMaterialFlag();
+    auto registry = G4EmDataRegistry::Instance();
     const auto* theParameters = G4EmParameters::Instance();
 
-    if (master) {
+    if (master)
+    {
+      fEmManager->ResetParameters();
       SetVerboseLevel(theParameters->Verbose());
     }
-    else {
+    else
+    {
       SetVerboseLevel(theParameters->WorkerVerbose());
     }
+    G4bool baseMat = registry->GetBaseMaterialFlag();
 
     const G4int numberOfModels = fModelManager->NumberOfModels();
-    if (fType == ScatteringType::MultipleScattering) {
-      for (G4int i = 0; i < numberOfModels; ++i) {
+    if (fType == ScatteringType::MultipleScattering)
+    {
+      for (G4int i = 0; i < numberOfModels; ++i)
+      {
         auto msc = static_cast<G4VMscModel*>(fModelManager->GetModel(i));
         msc->SetPolarAngleLimit(theParameters->MscThetaLimit());
         G4double emax = std::min(msc->HighEnergyLimit(), theParameters->MaxKinEnergy());
@@ -167,14 +178,16 @@ void G4TransportationWithMsc::PreparePhysicsTable(const G4ParticleDefinition& pa
         msc->SetUseBaseMaterials(baseMat);
       }
     }
-    else if (fType == ScatteringType::SingleScattering) {
-      if (master) {
-        if (fEmData == nullptr) {
+    else if (fType == ScatteringType::SingleScattering)
+    {
+      if (master)
+      {
+        if (fEmData == nullptr)
+        {
           fEmData = new G4EmDataHandler(2);
         }
 
         fLambdaTable = fEmData->MakeTable(0);
-        bld->InitialiseBaseMaterials(fLambdaTable);
       }
     }
 
@@ -186,13 +199,16 @@ void G4TransportationWithMsc::PreparePhysicsTable(const G4ParticleDefinition& pa
 
 void G4TransportationWithMsc::BuildPhysicsTable(const G4ParticleDefinition& part)
 {
-  if (fFirstParticle == &part) {
+  if (fFirstParticle == &part)
+  {
     fEmManager->BuildPhysicsTable(fFirstParticle);
 
-    if (fEmManager->IsMaster()) {
-      if (fType == ScatteringType::SingleScattering) {
+    if (fEmManager->IsMaster())
+    {
+      if (fType == ScatteringType::SingleScattering)
+      {
         const auto* theParameters = G4EmParameters::Instance();
-        G4LossTableBuilder* bld = fEmManager->GetTableBuilder();
+        auto registry = G4EmDataRegistry::Instance();
         const G4ProductionCutsTable* theCoupleTable =
           G4ProductionCutsTable::GetProductionCutsTable();
         std::size_t numOfCouples = theCoupleTable->GetTableSize();
@@ -207,8 +223,9 @@ void G4TransportationWithMsc::BuildPhysicsTable(const G4ParticleDefinition& part
         G4int bin = G4lrint(scale * G4Log(emax / emin));
         bin = std::max(bin, 5);
 
-        for (std::size_t i = 0; i < numOfCouples; ++i) {
-          if (!bld->GetFlag(i)) continue;
+        for (std::size_t i = 0; i < numOfCouples; ++i)
+        {
+          if (!registry->GetFlag(i)) continue;
 
           // Create physics vector and fill it
           const G4MaterialCutsCouple* couple = theCoupleTable->GetMaterialCutsCouple((G4int)i);
@@ -220,29 +237,35 @@ void G4TransportationWithMsc::BuildPhysicsTable(const G4ParticleDefinition& part
         }
       }
     }
-    else {
+    else
+    {
       const auto masterProcess = static_cast<const G4TransportationWithMsc*>(GetMasterProcess());
 
       // Initialisation of models.
       const G4int numberOfModels = fModelManager->NumberOfModels();
-      if (fType == ScatteringType::MultipleScattering) {
-        for (G4int i = 0; i < numberOfModels; ++i) {
+      if (fType == ScatteringType::MultipleScattering)
+      {
+        for (G4int i = 0; i < numberOfModels; ++i)
+        {
           auto msc = static_cast<G4VMscModel*>(fModelManager->GetModel(i));
           auto msc0 = static_cast<G4VMscModel*>(masterProcess->fModelManager->GetModel(i));
           msc->SetCrossSectionTable(msc0->GetCrossSectionTable(), false);
           msc->InitialiseLocal(fFirstParticle, msc0);
         }
       }
-      else if (fType == ScatteringType::SingleScattering) {
+      else if (fType == ScatteringType::SingleScattering)
+      {
         this->fLambdaTable = masterProcess->fLambdaTable;
       }
     }
   }
 
-  if (!G4EmParameters::Instance()->IsPrintLocked() && verboseLevel > 0) {
+  if (!G4EmParameters::Instance()->IsPrintLocked() && verboseLevel > 0)
+  {
     G4cout << G4endl;
     G4cout << GetProcessName() << ": for " << part.GetParticleName();
-    if (fMultipleSteps) {
+    if (fMultipleSteps)
+    {
       G4cout << " (multipleSteps: 1)";
     }
     G4cout << G4endl;
@@ -260,8 +283,10 @@ void G4TransportationWithMsc::StartTracking(G4Track* track)
   fSubStepDynamicParticle->SetDefinition(currParticle);
 
   const G4int numberOfModels = fModelManager->NumberOfModels();
-  if (fType == ScatteringType::MultipleScattering) {
-    for (G4int i = 0; i < numberOfModels; ++i) {
+  if (fType == ScatteringType::MultipleScattering)
+  {
+    for (G4int i = 0; i < numberOfModels; ++i)
+    {
       auto msc = static_cast<G4VMscModel*>(fModelManager->GetModel(i));
       msc->StartTracking(track);
       msc->SetIonisation(fIonisation, currParticle);
@@ -284,28 +309,34 @@ G4double G4TransportationWithMsc::AlongStepGetPhysicalInteractionLength(const G4
 
   const G4double physStepLimit = currentMinimumStep;
 
-  switch (fType) {
+  switch (fType)
+  {
     case ScatteringType::MultipleScattering: {
       // Select the MSC model for the current kinetic energy.
       G4VMscModel* mscModel = nullptr;
       const G4double ekin = track.GetKineticEnergy();
       const auto* couple = track.GetMaterialCutsCouple();
       const auto* particleDefinition = track.GetParticleDefinition();
-      if (physStepLimit > kGeomMin) {
+      if (physStepLimit > kGeomMin)
+      {
         G4double ekinForSelection = ekin;
         G4double pdgMass = particleDefinition->GetPDGMass();
-        if (pdgMass > CLHEP::GeV) {
+        if (pdgMass > CLHEP::GeV)
+        {
           ekinForSelection *= proton_mass_c2 / pdgMass;
         }
 
-        if (ekinForSelection >= kLowestKinEnergy) {
+        if (ekinForSelection >= kLowestKinEnergy)
+        {
           mscModel = static_cast<G4VMscModel*>(
             fModelManager->SelectModel(ekinForSelection, couple->GetIndex()));
-          if (mscModel == nullptr) {
+          if (mscModel == nullptr)
+          {
             G4Exception("G4TransportationWithMsc::AlongStepGPIL", "em0052", FatalException,
                         "no MSC model found");
           }
-          if (!mscModel->IsActive(ekinForSelection)) {
+          if (!mscModel->IsActive(ekinForSelection))
+          {
             mscModel = nullptr;
           }
         }
@@ -313,7 +344,8 @@ G4double G4TransportationWithMsc::AlongStepGetPhysicalInteractionLength(const G4
 
       // Call the MSC model to potentially limit the step and convert to
       // geometric path length.
-      if (mscModel != nullptr) {
+      if (mscModel != nullptr)
+      {
         mscModel->SetCurrentCouple(couple);
 
         // Use the provided track for the first step.
@@ -326,17 +358,20 @@ G4double G4TransportationWithMsc::AlongStepGetPhysicalInteractionLength(const G4
         G4double totalGeometryStepLength = 0, totalTruePathLength = 0;
         G4bool firstStep = true, continueStepping = fMultipleSteps;
 
-        do {
+        do
+        {
           G4double gPathLength = stepLimitLeft;
           G4double tPathLength =
             mscModel->ComputeTruePathLengthLimit(*currentTrackPtr, gPathLength);
           G4bool mscLimitsStep = (tPathLength < stepLimitLeft);
-          if (!fMultipleSteps && mscLimitsStep) {
+          if (!fMultipleSteps && mscLimitsStep)
+          {
             // MSC limits the step.
             *selection = CandidateForSelection;
           }
 
-          if (!firstStep) {
+          if (!firstStep)
+          {
             // Move the navigator to where the previous step ended.
             fLinearNavigator->LocateGlobalPointWithinVolume(fTransportEndPosition);
           }
@@ -344,18 +379,21 @@ G4double G4TransportationWithMsc::AlongStepGetPhysicalInteractionLength(const G4
           G4GPILSelection transportSelection;
           G4double geometryStepLength = G4Transportation::AlongStepGetPhysicalInteractionLength(
             *currentTrackPtr, previousStepSize, gPathLength, currentSafety, &transportSelection);
-          if (geometryStepLength < gPathLength) {
+          if (geometryStepLength < gPathLength)
+          {
             // Transportation limits the step, ie the track hit a boundary.
             *selection = CandidateForSelection;
             continueStepping = false;
           }
-          if (fTransportEndKineticEnergy != currentEnergy) {
+          if (fTransportEndKineticEnergy != currentEnergy)
+          {
             // Field propagation changed the energy, it's not possible to
             // estimate the continuous energy loss and continue stepping.
             continueStepping = false;
           }
 
-          if (firstStep) {
+          if (firstStep)
+          {
             proposedSafety = currentSafety;
           }
           totalGeometryStepLength += geometryStepLength;
@@ -369,21 +407,25 @@ G4double G4TransportationWithMsc::AlongStepGetPhysicalInteractionLength(const G4
           tPathLength = std::min(tPathLength, stepLimitLeft);
 
           totalTruePathLength += tPathLength;
-          if (*selection != CandidateForSelection && !mscLimitsStep) {
+          if (*selection != CandidateForSelection && !mscLimitsStep)
+          {
             // If neither MSC nor transportation limits the step, we got the
             // distance we want - make sure we exit the loop.
             continueStepping = false;
           }
-          else if (tPathLength >= range) {
+          else if (tPathLength >= range)
+          {
             // The particle will stop, exit the loop.
             continueStepping = false;
           }
-          else {
+          else
+          {
             stepLimitLeft -= tPathLength;
           }
 
           // Do not sample scattering at the last or at a small step.
-          if (tPathLength < range && tPathLength > kGeomMin) {
+          if (tPathLength < range && tPathLength > kGeomMin)
+          {
             static constexpr G4double minSafety = 1.20 * CLHEP::nm;
             static constexpr G4double sFact = 0.99;
 
@@ -398,46 +440,56 @@ G4double G4TransportationWithMsc::AlongStepGetPhysicalInteractionLength(const G4
             fTransportEndMomentumDir = *fParticleChangeForMSC->GetProposedMomentumDirection();
 
             const G4double r2 = displacement.mag2();
-            if (r2 > kMinDisplacement2) {
+            if (r2 > kMinDisplacement2)
+            {
               G4bool positionChanged = true;
               G4double dispR = std::sqrt(r2);
               G4double postSafety =
                 sFact * fpSafetyHelper->ComputeSafety(fTransportEndPosition, dispR);
 
               // Far away from geometry boundary
-              if (postSafety > 0.0 && dispR <= postSafety) {
+              if (postSafety > 0.0 && dispR <= postSafety)
+              {
                 fTransportEndPosition += displacement;
 
                 // Near the boundary
               }
-              else {
+              else
+              {
                 // displaced point is definitely within the volume
-                if (dispR < postSafety) {
+                if (dispR < postSafety)
+                {
                   fTransportEndPosition += displacement;
 
                   // reduced displacement
                 }
-                else if (postSafety > kGeomMin) {
+                else if (postSafety > kGeomMin)
+                {
                   fTransportEndPosition += displacement * (postSafety / dispR);
 
                   // very small postSafety
                 }
-                else {
+                else
+                {
                   positionChanged = false;
                 }
               }
-              if (positionChanged) {
+              if (positionChanged)
+              {
                 fpSafetyHelper->ReLocateWithinVolume(fTransportEndPosition);
               }
             }
           }
 
-          if (continueStepping) {
+          if (continueStepping)
+          {
             // Update safety according to the geometry distance.
-            if (currentSafety < fEndPointDistance) {
+            if (currentSafety < fEndPointDistance)
+            {
               currentSafety = 0;
             }
-            else {
+            else
+            {
               currentSafety -= fEndPointDistance;
             }
 
@@ -464,7 +516,8 @@ G4double G4TransportationWithMsc::AlongStepGetPhysicalInteractionLength(const G4
         // In case field propagation changed the energy, this flag is
         // immediately set to false and currentEnergy is still equal to the
         // initial kinetic energy stored in ekin.
-        if (currentEnergy != ekin) {
+        if (currentEnergy != ekin)
+        {
           // If field propagation didn't change the energy and we potentially
           // did multiple steps, reset the energy that G4Transportation will
           // propose to not subtract the energy loss twice.
@@ -496,27 +549,32 @@ G4double G4TransportationWithMsc::AlongStepGetPhysicalInteractionLength(const G4
 
       G4double ekinForSelection = ekin;
       G4double pdgMass = particleDefinition->GetPDGMass();
-      if (pdgMass > CLHEP::GeV) {
+      if (pdgMass > CLHEP::GeV)
+      {
         ekinForSelection *= proton_mass_c2 / pdgMass;
       }
 
       G4VEmModel* currentModel = fModelManager->SelectModel(ekinForSelection, couple->GetIndex());
-      if (currentModel == nullptr) {
+      if (currentModel == nullptr)
+      {
         G4Exception("G4TransportationWithMsc::AlongStepGPIL", "em0052", FatalException,
                     "no scattering model found");
       }
-      if (!currentModel->IsActive(ekinForSelection)) {
+      if (!currentModel->IsActive(ekinForSelection))
+      {
         currentModel = nullptr;
       }
 
-      if (currentModel != nullptr) {
+      if (currentModel != nullptr)
+      {
         currentModel->SetCurrentCouple(couple);
         G4int coupleIndex = couple->GetIndex();
 
         // Compute mean free path.
         G4double logEkin = track.GetDynamicParticle()->GetLogKineticEnergy();
         G4double lambda = ((*fLambdaTable)[coupleIndex])->LogVectorValue(ekin, logEkin);
-        if (lambda > 0.0) {
+        if (lambda > 0.0)
+        {
           // Assume that the mean free path and dE/dx are constant along the
           // step, which is a valid approximation for most cases.
           G4double meanFreePath = 1.0 / lambda;
@@ -532,20 +590,24 @@ G4double G4TransportationWithMsc::AlongStepGetPhysicalInteractionLength(const G4
           G4double totalStepLength = 0;
           G4bool firstStep = true, continueStepping = fMultipleSteps;
 
-          do {
+          do
+          {
             G4double interactionLength = meanFreePath * -G4Log(G4UniformRand());
 
             G4bool ssLimitsStep = (interactionLength < stepLimitLeft);
             G4double gPathLength = stepLimitLeft;
-            if (ssLimitsStep) {
-              if (!fMultipleSteps) {
+            if (ssLimitsStep)
+            {
+              if (!fMultipleSteps)
+              {
                 // Scattering limits the step.
                 *selection = CandidateForSelection;
               }
               gPathLength = interactionLength;
             }
 
-            if (!firstStep) {
+            if (!firstStep)
+            {
               // Move the navigator to where the previous step ended.
               fLinearNavigator->LocateGlobalPointWithinVolume(fTransportEndPosition);
             }
@@ -553,37 +615,42 @@ G4double G4TransportationWithMsc::AlongStepGetPhysicalInteractionLength(const G4
             G4GPILSelection transportSelection;
             G4double geometryStepLength = G4Transportation::AlongStepGetPhysicalInteractionLength(
               *currentTrackPtr, previousStepSize, gPathLength, currentSafety, &transportSelection);
-            if (geometryStepLength < gPathLength) {
+            if (geometryStepLength < gPathLength)
+            {
               // Transportation limits the step, ie the track hit a boundary.
               *selection = CandidateForSelection;
               ssLimitsStep = false;
               continueStepping = false;
             }
-            if (fTransportEndKineticEnergy != currentEnergy) {
+            if (fTransportEndKineticEnergy != currentEnergy)
+            {
               // Field propagation changed the energy, it's not possible to
               // estimate the continuous energy loss and continue stepping.
               continueStepping = false;
             }
 
-            if (firstStep) {
+            if (firstStep)
+            {
               proposedSafety = currentSafety;
             }
             totalStepLength += geometryStepLength;
 
-            if (*selection != CandidateForSelection && !ssLimitsStep) {
+            if (*selection != CandidateForSelection && !ssLimitsStep)
+            {
               // If neither scattering nor transportation limits the step, we
               // got the distance we want - make sure we exit the loop.
               continueStepping = false;
             }
-            else {
+            else
+            {
               stepLimitLeft -= geometryStepLength;
             }
 
             // Update the kinetic energy according to the continuous loss.
-            G4double energyAfterLinearLoss =
-              fTransportEndKineticEnergy - geometryStepLength * dedx;
+            G4double energyAfterLinearLoss = fTransportEndKineticEnergy - geometryStepLength * dedx;
 
-            if (ssLimitsStep) {
+            if (ssLimitsStep)
+            {
               fSubStepDynamicParticle->SetKineticEnergy(energyAfterLinearLoss);
 
               // The call to SampleSecondaries() directly fills in the changed
@@ -599,22 +666,27 @@ G4double G4TransportationWithMsc::AlongStepGetPhysicalInteractionLength(const G4
               // Check that the model neither created secondaries nor proposed
               // a local energy deposit because this process does not know how
               // to handle these cases.
-              if (fSecondariesSS->size() > 0) {
+              if (fSecondariesSS->size() > 0)
+              {
                 G4Exception("G4TransportationWithMsc::AlongStepGPIL", "em0053", FatalException,
                             "scattering model created secondaries");
               }
-              if (fParticleChangeForSS->GetLocalEnergyDeposit() > 0) {
+              if (fParticleChangeForSS->GetLocalEnergyDeposit() > 0)
+              {
                 G4Exception("G4TransportationWithMsc::AlongStepGPIL", "em0053", FatalException,
                             "scattering model proposed energy deposit");
               }
             }
 
-            if (continueStepping) {
+            if (continueStepping)
+            {
               // Update safety according to the geometry distance.
-              if (currentSafety < fEndPointDistance) {
+              if (currentSafety < fEndPointDistance)
+              {
                 currentSafety = 0;
               }
-              else {
+              else
+              {
                 currentSafety -= fEndPointDistance;
               }
 
@@ -641,7 +713,8 @@ G4double G4TransportationWithMsc::AlongStepGetPhysicalInteractionLength(const G4
           // In case field propagation changed the energy, this flag is
           // immediately set to false and currentEnergy is still equal to the
           // initial kinetic energy stored in ekin.
-          if (currentEnergy != ekin) {
+          if (currentEnergy != ekin)
+          {
             // If field propagation didn't change the energy and we potentially
             // did multiple steps, reset the energy that G4Transportation will
             // propose to not subtract the energy loss twice.

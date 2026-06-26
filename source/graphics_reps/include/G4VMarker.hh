@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // G4VMarker - base class for markers - circles, squares, etc.
 // John Allison  17/11/96.
 
@@ -57,7 +57,7 @@
 //
 // void G4XXXGraphicsSceneHandler::AddPrimitive (const G4Circle& circle) {
 //   G4bool hidden = !(fpView -> GetViewParameters().IsMarkerNotHidden());
-//   const G4Colour&     colour = GetColour (circle);  
+//   const G4Colour&     colour = GetColour (circle);
 //                                   // Base class GetColour.
 //   G4VMarker::FillStyle style = circle.GetFillStyle();
 //   const G4Point3D&    centre = circle.GetPosition();
@@ -77,77 +77,87 @@
 // }
 // Class Description - End:
 
-
 #ifndef G4VMARKER_HH
 #define G4VMARKER_HH
 
-#include "globals.hh"
-#include "G4Visible.hh"
-#include "G4Point3D.hh"
-#include "G4Colour.hh"
 #include "G4Color.hh"
+#include "G4Colour.hh"
+#include "G4Point3D.hh"
+#include "G4Visible.hh"
+#include "globals.hh"
 
-class G4VMarker: public G4Visible {
+class G4VMarker : public G4Visible
+{
+    friend std::ostream& operator<<(std::ostream& os, const G4VMarker&);
 
-  friend std::ostream& operator << (std::ostream& os, const G4VMarker&);
+  public:  // With description
 
-public: // With description
+    enum FillStyle
+    {
+      noFill,
+      hashed,
+      filled
+    };
+    enum SizeType
+    {
+      none,
+      world,
+      screen
+    };
 
-  enum FillStyle {noFill, hashed, filled};
-  enum SizeType {none, world, screen};
+    //////////////////////////////////////////////////////
+    // Constructors...
+    G4VMarker();
+    G4VMarker(const G4VMarker&) = default;
+    G4VMarker(G4VMarker&&) = default;
+    G4VMarker(const G4Point3D& position);
 
-  //////////////////////////////////////////////////////
-  // Constructors...
-  G4VMarker ();
-  G4VMarker (const G4VMarker&) = default;
-  G4VMarker (G4VMarker&& ) = default;
-  G4VMarker (const G4Point3D& position);
+    //////////////////////////////////////////////////////
+    // Destructor...
+    ~G4VMarker() override;
 
-  //////////////////////////////////////////////////////
-  // Destructor...
-  ~G4VMarker () override;
+    //////////////////////////////////////////////////////
+    // Assignment...
+    G4VMarker& operator=(const G4VMarker&) = default;
+    G4VMarker& operator=(G4VMarker&&) = default;
 
-  //////////////////////////////////////////////////////
-  // Assignment...
-  G4VMarker& operator = (const G4VMarker&) = default;
-  G4VMarker& operator = (G4VMarker&&) = default;
+    //////////////////////////////////////////////////////
+    // Logical...
+    G4bool operator!=(const G4VMarker&) const;
+    G4bool operator==(const G4VMarker&) const;
 
-  //////////////////////////////////////////////////////
-  // Logical...
-  G4bool operator != (const G4VMarker&) const;
-  G4bool operator == (const G4VMarker&) const;
+    /////////////////////////////////////////////////////
+    // Get functions...
+    G4Point3D GetPosition() const;
+    SizeType GetSizeType() const;
+    G4double GetWorldSize() const;
+    G4double GetWorldDiameter() const;
+    G4double GetWorldRadius() const;
+    G4double GetScreenSize() const;
+    G4double GetScreenDiameter() const;
+    G4double GetScreenRadius() const;
+    FillStyle GetFillStyle() const;
 
-  /////////////////////////////////////////////////////
-  // Get functions...
-  G4Point3D GetPosition       () const;
-  SizeType  GetSizeType       () const;
-  G4double  GetWorldSize      () const;
-  G4double  GetWorldDiameter  () const;
-  G4double  GetWorldRadius    () const;
-  G4double  GetScreenSize     () const;
-  G4double  GetScreenDiameter () const;
-  G4double  GetScreenRadius   () const;
-  FillStyle GetFillStyle      () const;
+    /////////////////////////////////////////////////////
+    // Set functions...
+    void SetPosition(const G4Point3D&);
+    void SetSize(SizeType, G4double);
+    void SetDiameter(SizeType, G4double);
+    void SetRadius(SizeType, G4double);
+    void SetWorldSize(G4double);
+    void SetWorldDiameter(G4double);
+    void SetWorldRadius(G4double);
+    void SetScreenSize(G4double);
+    void SetScreenDiameter(G4double);
+    void SetScreenRadius(G4double);
+    void SetFillStyle(FillStyle);
 
-  /////////////////////////////////////////////////////
-  // Set functions...
-  void SetPosition       (const G4Point3D&);
-  void SetSize           (SizeType, G4double);
-  void SetDiameter       (SizeType, G4double);
-  void SetRadius         (SizeType, G4double);
-  void SetWorldSize      (G4double);
-  void SetWorldDiameter  (G4double);
-  void SetWorldRadius    (G4double);
-  void SetScreenSize     (G4double);
-  void SetScreenDiameter (G4double);
-  void SetScreenRadius   (G4double);
-  void SetFillStyle      (FillStyle);
+  private:
 
-private:
-  G4Point3D fPosition;
-  G4double  fWorldSize;   // Default 0. means use screen size.
-  G4double  fScreenSize;  // Default 0. means use global default.
-  FillStyle fFillStyle;
+    G4Point3D fPosition;
+    G4double fWorldSize;  // Default 0. means use screen size.
+    G4double fScreenSize;  // Default 0. means use global default.
+    FillStyle fFillStyle;
 };
 
 #include "G4VMarker.icc"

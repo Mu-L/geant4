@@ -6,7 +6,11 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2025-12-07 Vladimir Ivanchenko (phys-list-V11-03-06)
+## 2026-03-27 Makoto Asai (phys-list-V11-04-01)
+- Add G4biasing_mgr to sources.cmake.
+  Co-working with phys-ctor-limiters-V11-04-00, proc-biasmng-V11-04-00
+
+## 2025-12-07 Vladimir Ivanchenko (phys-list-V11-04-00)
 - G4PhysListFactory - fixed trivial Coverity warning
 
 ## 2025-11-12 Vladimir Ivanchenko (phys-list-V11-03-05)

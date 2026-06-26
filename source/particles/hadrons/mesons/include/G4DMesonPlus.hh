@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4DMesonPlus_h
-#define G4DMesonPlus_h 1
+#ifndef G4DMESONPLUS_HH
+#define G4DMESONPLUS_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4DMesonPlus : public G4ParticleDefinition
 {
   public:
+
     static G4DMesonPlus* Definition();
     static G4DMesonPlus* DMesonPlusDefinition();
     static G4DMesonPlus* DMesonPlus();
 
   private:
+
     G4DMesonPlus() {}
     ~G4DMesonPlus() override = default;
 

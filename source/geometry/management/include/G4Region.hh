@@ -34,15 +34,15 @@
 // Author: Gabriele Cosmo (CERN), 18.09.2002
 // --------------------------------------------------------------------
 #ifndef G4REGION_HH
-#define G4REGION_HH 1
+#define G4REGION_HH
 
-#include <vector>
-#include <map>
-#include <algorithm>
-
-#include "G4Types.hh"
-#include "G4String.hh"
 #include "G4GeomSplitter.hh"
+#include "G4String.hh"
+#include "G4Types.hh"
+
+#include <algorithm>
+#include <map>
+#include <vector>
 
 class G4ProductionCuts;
 class G4LogicalVolume;
@@ -58,6 +58,7 @@ class G4UserSteppingAction;
 /**
  * @brief G4RegionData encapsulates the fields associated to the class
  * G4Region that may not be read-only..
+ * @ingroup geometry_management
  */
 
 class G4RegionData
@@ -84,6 +85,7 @@ using G4RegionManager = G4GeomSplitter<G4RegionData>;
  * @brief G4Region defines a region or a group of regions in the detector
  * geometry setup, sharing properties associated to materials or production
  * cuts which may affect or bias specific physics processes.
+ * @ingroup geometry_management
  */
 
 class G4Region
@@ -121,7 +123,7 @@ class G4Region
      *  @param[in] lv Pointer to the logical volume to act as root region.
      *  @param[in] search To enable/disable search in the tree (default true).
      */
-    void AddRootLogicalVolume(G4LogicalVolume* lv, G4bool search=true);
+    void AddRootLogicalVolume(G4LogicalVolume* lv, G4bool search = true);
 
     /**
      * Removes a root logical volume and resets its daughters flags as regions.
@@ -130,7 +132,7 @@ class G4Region
      *  @param[in] lv Pointer to the logical volume to remove as root region.
      *  @param[in] scan To enable/disable scanning the tree (default true).
      */
-    void RemoveRootLogicalVolume(G4LogicalVolume* lv, G4bool scan=true);
+    void RemoveRootLogicalVolume(G4LogicalVolume* lv, G4bool scan = true);
 
     /**
      * Setter/getter for the region's name.
@@ -155,10 +157,8 @@ class G4Region
      * Methods to return iterators to the lists of root logical volumes
      * and materials.
      */
-    inline std::vector<G4LogicalVolume*>::iterator
-           GetRootLogicalVolumeIterator();
-    inline std::vector<G4Material*>::const_iterator
-           GetMaterialIterator() const;
+    inline std::vector<G4LogicalVolume*>::iterator GetRootLogicalVolumeIterator();
+    inline std::vector<G4Material*>::const_iterator GetMaterialIterator() const;
 
     /**
      * Methods to return the number of elements in the lists of materials and
@@ -206,8 +206,7 @@ class G4Region
      * Method invoked by G4ProductionCutsTable to register the material-cuts
      * couple pair.
      */
-    inline void RegisterMaterialCouplePair(G4Material* mat,
-                                           G4MaterialCutsCouple* couple);
+    inline void RegisterMaterialCouplePair(G4Material* mat, G4MaterialCutsCouple* couple);
 
     /**
      * Finds a G4MaterialCutsCouple which corresponds to the material 'mat'
@@ -222,7 +221,7 @@ class G4Region
      */
     void SetFastSimulationManager(G4FastSimulationManager* fsm);
     G4FastSimulationManager* GetFastSimulationManager() const;
-    
+
     /**
      * Sets the G4FastSimulationManager pointer to the one for the parent
      * region if it exists, otherwise it sets it to null.
@@ -311,7 +310,7 @@ class G4Region
      * Searchs the specified material 'aMaterial' in the material table and
      * if not present adds it.
      */
-    inline void AddMaterial (G4Material* aMaterial);
+    inline void AddMaterial(G4Material* aMaterial);
 
   private:
 

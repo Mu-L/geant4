@@ -25,24 +25,25 @@
 //
 //
 
-#ifndef G4OctreeFinder_hh
-#define G4OctreeFinder_hh 1
+#ifndef G4OCTREEFINDER_HH
+#define G4OCTREEFINDER_HH
 
-#include "globals.hh"
+#include "G4ITType.hh"
 #include "G4Octree.hh"
 #include "G4Track.hh"
-#include "G4ITType.hh"
-#include "G4memory.hh"
 #include "G4TrackList.hh"
+#include "G4memory.hh"
+#include "globals.hh"
 
-#include <map>
 #include <functional>
+#include <map>
 
 #undef DEBUG
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 class G4VFinder
 {
-public:
+  public:
+
     G4VFinder() = default;
     virtual ~G4VFinder() = default;
     virtual void Clear() = 0;
@@ -53,35 +54,31 @@ public:
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #ifndef _Extractor_
-#define _Extractor_
+#  define _Extractor_
 template<typename CONTAINER>
 class Extractor
 {
-public:
-    const G4ThreeVector operator () (typename CONTAINER::iterator it)
-    {
-	  return (*it)->GetPosition();
-    }
-    std::function<G4bool(const std::pair<typename CONTAINER::iterator,G4double>,
-                         const std::pair<typename CONTAINER::iterator,G4double>)>
-    compareInterval = [](const std::pair<typename CONTAINER::iterator,G4double>& iter1,
-                         const std::pair<typename CONTAINER::iterator,G4double>& iter2)
-    -> G4bool
-    {
-        return (std::get<1>(iter1) < std::get<1>(iter2));
+  public:
+
+    const G4ThreeVector operator()(typename CONTAINER::iterator it) { return (*it)->GetPosition(); }
+    std::function<G4bool(const std::pair<typename CONTAINER::iterator, G4double>,
+                         const std::pair<typename CONTAINER::iterator, G4double>)>
+      compareInterval =
+        [](const std::pair<typename CONTAINER::iterator, G4double>& iter1,
+           const std::pair<typename CONTAINER::iterator, G4double>& iter2) -> G4bool {
+      return (std::get<1>(iter1) < std::get<1>(iter2));
     };
-    
 };
 #endif
-template<class T,typename CONTAINER>
-class G4OctreeFinder: public G4VFinder
+template<class T, typename CONTAINER>
+class G4OctreeFinder : public G4VFinder
 {
-    using Octree = G4Octree<typename CONTAINER::iterator,
-    Extractor<CONTAINER> >;
+    using Octree = G4Octree<typename CONTAINER::iterator, Extractor<CONTAINER>>;
     using OctreeHandle = G4shared_ptr<Octree>;
     using TreeMap = std::map<int, OctreeHandle>;
-    
-private:
+
+  private:
+
     static G4ThreadLocal G4OctreeFinder* fInstance;
     G4OctreeFinder();
     int fVerbose{0};
@@ -90,59 +87,40 @@ private:
     Extractor<CONTAINER> fExtractor;
     TreeMap fTreeMap;
     OctreeHandle fTree;
-public:
-    static G4OctreeFinder * Instance();
-    
+
+  public:
+
+    static G4OctreeFinder* Instance();
+
     void SetOctreeUsed(G4bool used);
     G4bool IsOctreeUsed() const;
-    
+
     void SetOctreeBuilt(G4bool used);
     G4bool IsOctreeBuilt() const;
-    
+
     ~G4OctreeFinder() override;
     void Clear() override;
 
-    void SetVerboseLevel(G4int level) override
-    {
-        fVerbose = level;
-    }
+    void SetVerboseLevel(G4int level) override { fVerbose = level; }
 
-    G4int GetVerboseLevel() override
-    {
-        return fVerbose;
-    }
+    G4int GetVerboseLevel() override { return fVerbose; }
 
-    G4ITType GetITType() override
-    {
-        return T::ITType();
-    }
-    void BuildTreeMap(const std::map<G4int,CONTAINER*>& listMap);
-    void FindNearestInRange(const G4Track& track,
-                            const int& key,
-                            G4double R,
-                            std::vector<std::pair<typename
-                            CONTAINER::iterator,G4double>>& result,
+    G4ITType GetITType() override { return T::ITType(); }
+    void BuildTreeMap(const std::map<G4int, CONTAINER*>& listMap);
+    void FindNearestInRange(const G4Track& track, const int& key, G4double R,
+                            std::vector<std::pair<typename CONTAINER::iterator, G4double>>& result,
                             G4bool isSort = false) const;
 
-    void FindNearest(const G4Track& track,
-                            const int& key,
-                            G4double R,
-                            std::vector<std::pair<typename
-                            CONTAINER::iterator,G4double>>& result,
-                            G4bool isSort = false) const;
-    
-    void FindNearestInRange(const G4ThreeVector& position,
-                            const G4int& key,
-                            G4double R,
-                            std::vector<std::pair<typename
-                            CONTAINER::iterator,G4double>>& result,
+    void FindNearest(const G4Track& track, const int& key, G4double R,
+                     std::vector<std::pair<typename CONTAINER::iterator, G4double>>& result,
+                     G4bool isSort = false) const;
+
+    void FindNearestInRange(const G4ThreeVector& position, const G4int& key, G4double R,
+                            std::vector<std::pair<typename CONTAINER::iterator, G4double>>& result,
                             G4bool isSort = false) const;
 
-    void FindNearestInRange(const G4ThreeVector& /*from this point*/,
-                            G4double R,
-                            std::vector<std::pair<
-                            typename CONTAINER::iterator,G4double> >&
-                            result,
+    void FindNearestInRange(const G4ThreeVector& /*from this point*/, G4double R,
+                            std::vector<std::pair<typename CONTAINER::iterator, G4double>>& result,
                             G4bool isSorted) const;
 };
 

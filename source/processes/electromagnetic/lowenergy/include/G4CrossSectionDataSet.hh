@@ -42,85 +42,89 @@
 // A strategy pattern is used to encapsulate algorithms for data interpolation
 // -------------------------------------------------------------------
 
-#ifndef  G4CrossSectionDataSet_HH
-#define  G4CrossSectionDataSet_HH 1
-
-#include <CLHEP/Units/SystemOfUnits.h>
+#ifndef G4CROSSSECTIONDATASET_HH
+#define G4CROSSSECTIONDATASET_HH
 
 #include "G4ShellEMDataSet.hh"
 
+#include <CLHEP/Units/SystemOfUnits.h>
+
 class G4CrossSectionDataSet : public G4VEMDataSet
-{ 
+{
+  public:
 
-public:
-  explicit G4CrossSectionDataSet(G4VDataSetAlgorithm* algo, 
-				 G4double xUnit=CLHEP::MeV, 
-				 G4double dataUnit=CLHEP::barn);
+    explicit G4CrossSectionDataSet(G4VDataSetAlgorithm* algo, G4double xUnit = CLHEP::MeV,
+                                   G4double dataUnit = CLHEP::barn);
 
-  virtual ~G4CrossSectionDataSet();
+    virtual ~G4CrossSectionDataSet();
 
-  virtual G4double FindValue(G4double e, G4int componentId=0) const;
-  
-  virtual void PrintData(void) const;
+    virtual G4double FindValue(G4double e, G4int componentId = 0) const;
 
-  virtual const G4VEMDataSet*  GetComponent(G4int componentId) const 
-  { return components[componentId]; }
+    virtual void PrintData(void) const;
 
-  virtual void AddComponent(G4VEMDataSet* dataSet) 
-  { components.push_back(dataSet); }
+    virtual const G4VEMDataSet* GetComponent(G4int componentId) const
+    {
+      return components[componentId];
+    }
 
-  virtual size_t NumberOfComponents(void) const 
-  { return components.size(); }
+    virtual void AddComponent(G4VEMDataSet* dataSet) { components.push_back(dataSet); }
 
-  virtual const G4DataVector& GetEnergies(G4int componentId) const 
-  { return GetComponent(componentId)->GetEnergies(0); }
+    virtual size_t NumberOfComponents(void) const { return components.size(); }
 
-  virtual const G4DataVector& GetData(G4int componentId) const 
-  { return GetComponent(componentId)->GetData(0); }
+    virtual const G4DataVector& GetEnergies(G4int componentId) const
+    {
+      return GetComponent(componentId)->GetEnergies(0);
+    }
 
-  virtual const G4DataVector& GetLogEnergies(G4int componentId) const 
-  { return GetComponent(componentId)->GetLogEnergies(0); }
+    virtual const G4DataVector& GetData(G4int componentId) const
+    {
+      return GetComponent(componentId)->GetData(0);
+    }
 
-  virtual const G4DataVector& GetLogData(G4int componentId) const 
-  { return GetComponent(componentId)->GetLogData(0); }
+    virtual const G4DataVector& GetLogEnergies(G4int componentId) const
+    {
+      return GetComponent(componentId)->GetLogEnergies(0);
+    }
 
-  virtual void SetEnergiesData(G4DataVector* x, G4DataVector* values, G4int componentId);
+    virtual const G4DataVector& GetLogData(G4int componentId) const
+    {
+      return GetComponent(componentId)->GetLogData(0);
+    }
 
-  virtual void SetLogEnergiesData(G4DataVector* x,
-                                  G4DataVector* values,
-                                  G4DataVector* log_x, 
-                                  G4DataVector* log_values,
-                                  G4int componentId);
+    virtual void SetEnergiesData(G4DataVector* x, G4DataVector* values, G4int componentId);
 
-  virtual G4bool LoadData(const G4String & argFileName);
-  virtual G4bool LoadNonLogData(const G4String & argFileName);
+    virtual void SetLogEnergiesData(G4DataVector* x, G4DataVector* values, G4DataVector* log_x,
+                                    G4DataVector* log_values, G4int componentId);
 
-  virtual G4bool SaveData(const G4String & argFileName) const;
- 
-  virtual G4double RandomSelect(G4int /*componentId */) const { return -1.; };
+    virtual G4bool LoadData(const G4String& argFileName);
+    virtual G4bool LoadNonLogData(const G4String& argFileName);
 
-private:
+    virtual G4bool SaveData(const G4String& argFileName) const;
 
-  G4String FullFileName(const G4String & argFileName) const;
+    virtual G4double RandomSelect(G4int /*componentId */) const { return -1.; };
 
-  // Hide copy constructor and assignment operator 
-  explicit G4CrossSectionDataSet();
-  G4CrossSectionDataSet(const G4CrossSectionDataSet & copy) = delete;
-  G4CrossSectionDataSet& operator=(const G4CrossSectionDataSet & right) = delete;
+  private:
 
-  G4double GetUnitEnergies() const { return unitEnergies; }
-  G4double GetUnitData() const { return unitData; }
-  const G4VDataSetAlgorithm* GetAlgorithm() const { return algorithm; }
-   
-  void CleanUpComponents(void);
+    G4String FullFileName(const G4String& argFileName) const;
 
-  std::vector<G4VEMDataSet*> components;          // Owned pointers
+    // Hide copy constructor and assignment operator
+    explicit G4CrossSectionDataSet();
+    G4CrossSectionDataSet(const G4CrossSectionDataSet& copy) = delete;
+    G4CrossSectionDataSet& operator=(const G4CrossSectionDataSet& right) = delete;
 
-  G4VDataSetAlgorithm* algorithm;           // Owned pointer 
-  
-  G4double unitEnergies;
-  G4double unitData; 
+    G4double GetUnitEnergies() const { return unitEnergies; }
+    G4double GetUnitData() const { return unitData; }
+    const G4VDataSetAlgorithm* GetAlgorithm() const { return algorithm; }
 
-  G4int z = 0;
+    void CleanUpComponents(void);
+
+    std::vector<G4VEMDataSet*> components;  // Owned pointers
+
+    G4VDataSetAlgorithm* algorithm;  // Owned pointer
+
+    G4double unitEnergies;
+    G4double unitData;
+
+    G4int z = 0;
 };
 #endif /* G4CrossSectionDataSet_HH */

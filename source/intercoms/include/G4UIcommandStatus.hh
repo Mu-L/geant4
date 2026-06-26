@@ -31,8 +31,8 @@
 
 // Author: Makoto Asai (SLAC), 1998
 // --------------------------------------------------------------------
-#ifndef G4UIcommandStatus_hh
-#define G4UIcommandStatus_hh 1
+#ifndef G4UICOMMANDSTATUS_HH
+#define G4UICOMMANDSTATUS_HH
 
 enum G4UIcommandStatus
 {

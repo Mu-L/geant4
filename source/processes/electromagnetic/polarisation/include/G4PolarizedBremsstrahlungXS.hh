@@ -34,38 +34,37 @@
 //   in a bremsstrahlung scattering process employing the differential
 //   cross section by Olsen and Maximon
 
-#ifndef G4PolarizedBremsstrahlungXS_h
-#define G4PolarizedBremsstrahlungXS_h 1
+#ifndef G4POLARIZEDBREMSSTRAHLUNGXS_HH
+#define G4POLARIZEDBREMSSTRAHLUNGXS_HH
 
-#include "globals.hh"
 #include "G4StokesVector.hh"
 #include "G4VPolarizedXS.hh"
+#include "globals.hh"
 
 class G4PolarizedBremsstrahlungXS : public G4VPolarizedXS
 {
- public:
-  G4PolarizedBremsstrahlungXS();
-  ~G4PolarizedBremsstrahlungXS() override;
+  public:
 
-  void Initialize(G4double eps, G4double X, G4double phi,
-                  const G4StokesVector& p0, const G4StokesVector& p1,
-                  G4int flag = 0) override;
-  G4double XSection(const G4StokesVector& pol2,
-                    const G4StokesVector& pol3) override;
+    G4PolarizedBremsstrahlungXS();
+    ~G4PolarizedBremsstrahlungXS() override;
 
-  // return expected mean polarisation
-  G4StokesVector GetPol2() override;  // electron/positron
-  G4StokesVector GetPol3() override;  // photon
+    void Initialize(G4double eps, G4double X, G4double phi, const G4StokesVector& p0,
+                    const G4StokesVector& p1, G4int flag = 0) override;
+    G4double XSection(const G4StokesVector& pol2, const G4StokesVector& pol3) override;
 
-  G4PolarizedBremsstrahlungXS& operator                           =(
-    const G4PolarizedBremsstrahlungXS& right) = delete;
-  G4PolarizedBremsstrahlungXS(const G4PolarizedBremsstrahlungXS&) = delete;
+    // return expected mean polarisation
+    G4StokesVector GetPol2() override;  // electron/positron
+    G4StokesVector GetPol3() override;  // photon
 
- private:
-  static G4double SCRN[2][19];  // screening function lookup table
+    G4PolarizedBremsstrahlungXS& operator=(const G4PolarizedBremsstrahlungXS& right) = delete;
+    G4PolarizedBremsstrahlungXS(const G4PolarizedBremsstrahlungXS&) = delete;
 
-  G4StokesVector fFinalLeptonPolarization;
-  G4StokesVector fFinalGammaPolarization;
+  private:
+
+    static G4double SCRN[2][19];  // screening function lookup table
+
+    G4StokesVector fFinalLeptonPolarization;
+    G4StokesVector fFinalGammaPolarization;
 };
 
 #endif

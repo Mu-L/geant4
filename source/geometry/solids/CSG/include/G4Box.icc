@@ -26,20 +26,17 @@
 // Implementation of inline methods of G4Box
 // --------------------------------------------------------------------
 
-inline
-G4double G4Box::GetXHalfLength() const
+inline G4double G4Box::GetXHalfLength() const
 {
   return fDx;
 }
 
-inline    
-G4double G4Box::GetYHalfLength() const
+inline G4double G4Box::GetYHalfLength() const
 {
   return fDy;
 }
 
-inline
-G4double G4Box::GetZHalfLength() const
+inline G4double G4Box::GetZHalfLength() const
 {
   return fDz;
 }

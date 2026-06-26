@@ -36,18 +36,18 @@
 // Makoto Asai (JLab) - Oct.2024
 // --------------------------------------------------------------------
 //
-#ifndef G4ClonedTrajectory_hh
-#define G4ClonedTrajectory_hh 1
+#ifndef G4CLONEDTRAJECTORY_HH
+#define G4CLONEDTRAJECTORY_HH
 
 #include "G4Allocator.hh"
+#include "G4ClonedTrajectoryPoint.hh"  // Include from 'tracking'
 #include "G4ParticleDefinition.hh"  // Include from 'particle+matter'
 #include "G4Step.hh"
+#include "G4Threading.hh"
 #include "G4Track.hh"
-#include "G4ClonedTrajectoryPoint.hh"  // Include from 'tracking'
 #include "G4VTrajectory.hh"
 #include "G4ios.hh"  // Include from 'system'
 #include "globals.hh"  // Include from 'global'
-#include "G4Threading.hh"
 
 #include "trkgdefs.hh"
 #include <stdlib.h>  // Include from 'system'
@@ -59,61 +59,64 @@ class G4Trajectory;
 
 class G4ClonedTrajectory : public G4VTrajectory
 {
-  using G4ClonedTrajectoryPointContainer = std::vector<G4VTrajectoryPoint*>;
+    using G4ClonedTrajectoryPointContainer = std::vector<G4VTrajectoryPoint*>;
 
- public:
-  // Constructors/Destructor
+  public:
 
-  G4ClonedTrajectory() = default;
-  G4ClonedTrajectory(const G4Trajectory&);
-  ~G4ClonedTrajectory() override;
+    // Constructors/Destructor
 
-  // Operators
+    G4ClonedTrajectory() = default;
+    G4ClonedTrajectory(const G4Trajectory&);
+    ~G4ClonedTrajectory() override;
 
-  inline void* operator new(size_t);
-  inline void operator delete(void*);
-  inline G4bool operator==(const G4ClonedTrajectory& r) const;
+    // Operators
 
-  // Get/Set functions
+    inline void* operator new(size_t);
+    inline void operator delete(void*);
+    inline G4bool operator==(const G4ClonedTrajectory& r) const;
 
-  inline G4int GetTrackID() const override { return fTrackID; }
-  inline G4int GetParentID() const override { return fParentID; }
-  inline G4String GetParticleName() const override { return ParticleName; }
-  inline G4double GetCharge() const override { return PDGCharge; }
-  inline G4int GetPDGEncoding() const override { return PDGEncoding; }
-  inline G4double GetInitialKineticEnergy() const { return initialKineticEnergy; }
-  inline G4ThreeVector GetInitialMomentum() const override { return initialMomentum; }
+    // Get/Set functions
 
-  // Other member functions
+    inline G4int GetTrackID() const override { return fTrackID; }
+    inline G4int GetParentID() const override { return fParentID; }
+    inline G4String GetParticleName() const override { return ParticleName; }
+    inline G4double GetCharge() const override { return PDGCharge; }
+    inline G4int GetPDGEncoding() const override { return PDGEncoding; }
+    inline G4double GetInitialKineticEnergy() const { return initialKineticEnergy; }
+    inline G4ThreeVector GetInitialMomentum() const override { return initialMomentum; }
 
-  void ShowTrajectory(std::ostream& os = G4cout) const override;
-  void DrawTrajectory() const override;
-  void AppendStep(const G4Step* aStep) override;
-  G4int GetPointEntries() const override { return G4int(positionRecord->size()); }
-  G4VTrajectoryPoint* GetPoint(G4int i) const override { return (*positionRecord)[i]; }
-  void MergeTrajectory(G4VTrajectory* secondTrajectory) override;
+    // Other member functions
 
-  G4ParticleDefinition* GetParticleDefinition();
+    void ShowTrajectory(std::ostream& os = G4cout) const override;
+    void DrawTrajectory() const override;
+    void AppendStep(const G4Step* aStep) override;
+    G4int GetPointEntries() const override { return G4int(positionRecord->size()); }
+    G4VTrajectoryPoint* GetPoint(G4int i) const override { return (*positionRecord)[i]; }
+    void MergeTrajectory(G4VTrajectory* secondTrajectory) override;
 
-  const std::map<G4String, G4AttDef>* GetAttDefs() const override;
-  std::vector<G4AttValue>* CreateAttValues() const override;
+    G4ParticleDefinition* GetParticleDefinition();
 
- private:
-  G4ClonedTrajectoryPointContainer* positionRecord = nullptr;
-  G4int fTrackID = 0;
-  G4int fParentID = 0;
-  G4int PDGEncoding = 0;
-  G4double PDGCharge = 0.0;
-  G4String ParticleName = "dummy";
-  G4double initialKineticEnergy = 0.0;
-  G4ThreeVector initialMomentum;
+    const std::map<G4String, G4AttDef>* GetAttDefs() const override;
+    std::vector<G4AttValue>* CreateAttValues() const override;
+
+  private:
+
+    G4ClonedTrajectoryPointContainer* positionRecord = nullptr;
+    G4int fTrackID = 0;
+    G4int fParentID = 0;
+    G4int PDGEncoding = 0;
+    G4double PDGCharge = 0.0;
+    G4String ParticleName = "dummy";
+    G4double initialKineticEnergy = 0.0;
+    G4ThreeVector initialMomentum;
 };
 
 extern G4TRACKING_DLL G4Allocator<G4ClonedTrajectory>*& aClonedTrajectoryAllocator();
 
 inline void* G4ClonedTrajectory::operator new(size_t)
 {
-  if (aClonedTrajectoryAllocator() == nullptr) {
+  if (aClonedTrajectoryAllocator() == nullptr)
+  {
     aClonedTrajectoryAllocator() = new G4Allocator<G4ClonedTrajectory>;
   }
   return (void*)aClonedTrajectoryAllocator()->MallocSingle();
@@ -124,6 +127,9 @@ inline void G4ClonedTrajectory::operator delete(void* aTrajectory)
   aClonedTrajectoryAllocator()->FreeSingle((G4ClonedTrajectory*)aTrajectory);
 }
 
-inline G4bool G4ClonedTrajectory::operator==(const G4ClonedTrajectory& r) const { return (this == &r); }
+inline G4bool G4ClonedTrajectory::operator==(const G4ClonedTrajectory& r) const
+{
+  return (this == &r);
+}
 
 #endif

@@ -31,31 +31,29 @@
 // Modified:
 // 21.03.2013 V.Ivanchenko redesigned and cleaned up
 
-#ifndef G4PairingCorrection_h
-#define G4PairingCorrection_h 1
+#ifndef G4PAIRINGCORRECTION_HH
+#define G4PAIRINGCORRECTION_HH
 
-#include "globals.hh"
 #include "G4CameronGilbertPairingCorrections.hh"
+#include "globals.hh"
 
 class G4PairingCorrection
 {
-public:
-	
-  G4PairingCorrection();
-  
-  ~G4PairingCorrection() = default;
+  public:
 
-  G4double GetPairingCorrection(G4int A, G4int Z) const;
+    G4PairingCorrection();
 
-  G4double GetFissionPairingCorrection(G4int A, G4int Z) const;
+    ~G4PairingCorrection() = default;
 
-  G4PairingCorrection(const G4PairingCorrection & right) = delete;
-  const G4PairingCorrection & operator=
-  (const G4PairingCorrection & right) = delete;
+    G4double GetPairingCorrection(G4int A, G4int Z) const;
 
-private:
+    G4double GetFissionPairingCorrection(G4int A, G4int Z) const;
 
-  G4CameronGilbertPairingCorrections theCameronGilbertPairingCorrections;
+    G4PairingCorrection(const G4PairingCorrection& right) = delete;
+    const G4PairingCorrection& operator=(const G4PairingCorrection& right) = delete;
 
+  private:
+
+    G4CameronGilbertPairingCorrections theCameronGilbertPairingCorrections;
 };
 #endif

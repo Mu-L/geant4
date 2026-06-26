@@ -36,6 +36,7 @@ class vtkDoubleArray;
 class G4VtkPolydataInstancePipeline : public G4VtkPolydataPipeline
 {
   public:
+
     G4VtkPolydataInstancePipeline(G4String name, const G4VtkVisContext& vc);
     ~G4VtkPolydataInstancePipeline() override = default;
 
@@ -49,6 +50,7 @@ class G4VtkPolydataInstancePipeline : public G4VtkPolydataPipeline
     virtual void removeInstance(const G4String& name);
 
   protected:
+
     vtkSmartPointer<vtkDoubleArray> instanceColour;
     vtkSmartPointer<vtkPoints> instancePosition;
     vtkSmartPointer<vtkDoubleArray> instanceTransform;

@@ -26,93 +26,94 @@
 // Author:      Alexei Sytov
 // Co-author:   Gianfranco Paternò (modifications & testing)
 
-#ifndef G4ChannelingFastSimCrystalData_h
-#define G4ChannelingFastSimCrystalData_h 1
+#ifndef G4CHANNELINGFASTSIMCRYSTALDATA_HH
+#define G4CHANNELINGFASTSIMCRYSTALDATA_HH
 
-
-#include "globals.hh"
-#include "G4ios.hh"
-#include "G4ThreeVector.hh"
 #include "G4Material.hh"
+#include "G4ThreeVector.hh"
 #include "G4VChannelingFastSimCrystalData.hh"
-
+#include "G4ios.hh"
+#include "globals.hh"
 
 /** \file G4ChannelingFastSimCrystalData.hh
-* \brief Definition of the G4ChannelingFastSimCrystalData class
-* The class inherits G4VChannelingFastSimCrystalData containing the data and properties
-* related to the crystal lattice.
-* The functions related to the crystal geometry (transformation of coordinates and angles
-* from the reference system of the bounding box of the local volume to
-* the crystal lattice co-rotating reference system and vice versa) and
-* initialization function SetMaterialProperties are compiled in this class.
-*/
+ * \brief Definition of the G4ChannelingFastSimCrystalData class
+ * The class inherits G4VChannelingFastSimCrystalData containing the data and properties
+ * related to the crystal lattice.
+ * The functions related to the crystal geometry (transformation of coordinates and angles
+ * from the reference system of the bounding box of the local volume to
+ * the crystal lattice co-rotating reference system and vice versa) and
+ * initialization function SetMaterialProperties are compiled in this class.
+ */
 
-class G4ChannelingFastSimCrystalData  : public G4VChannelingFastSimCrystalData
+class G4ChannelingFastSimCrystalData : public G4VChannelingFastSimCrystalData
 {
-public:
+  public:
 
     G4ChannelingFastSimCrystalData() = default;
     ~G4ChannelingFastSimCrystalData() = default;
 
-    ///find and upload crystal lattice input files, calculate all the basic values
+    /// find and upload crystal lattice input files, calculate all the basic values
     ///(to do only once)
-    void SetMaterialProperties(const G4Material* crystal,
-                               const G4String &lattice,
-                               const G4String &filePath);
+    void SetMaterialProperties(const G4Material* crystal, const G4String& lattice,
+                               const G4String& filePath);
 
-    ///calculate the coordinates in the co-rotating reference system
-    ///within a channel (periodic cell)
+    /// calculate the coordinates in the co-rotating reference system
+    /// within a channel (periodic cell)
     ///(connected with crystal planes/axes either bent or straight)
-    G4ThreeVector CoordinatesFromBoxToLattice(const G4ThreeVector &pos0);
+    G4ThreeVector CoordinatesFromBoxToLattice(const G4ThreeVector& pos0);
 
-    ///calculate the coordinates in the Box reference system
+    /// calculate the coordinates in the Box reference system
     ///(connected with the bounding box of the volume)
-    G4ThreeVector CoordinatesFromLatticeToBox(const G4ThreeVector &pos);
+    G4ThreeVector CoordinatesFromLatticeToBox(const G4ThreeVector& pos);
 
-    ///change the channel if necessary, recalculate x o y
-    G4ThreeVector ChannelChange(G4double &x, G4double &y, G4double &z);
+    /// change the channel if necessary, recalculate x o y
+    G4ThreeVector ChannelChange(G4double& x, G4double& y, G4double& z);
 
-    ///calculate the horizontal angle in the co-rotating reference system
-    ///within a channel (periodic cell)
+    /// calculate the horizontal angle in the co-rotating reference system
+    /// within a channel (periodic cell)
     ///(connected with crystal planes/axes either bent or straight)
     G4double AngleXFromBoxToLattice(G4double tx, G4double z)
-    {return tx-AngleXShift(z)-GetCUtetax(z);}
+    {
+      return tx - AngleXShift(z) - GetCUtetax(z);
+    }
 
-    ///calculate the horizontal angle in the Box reference system
+    /// calculate the horizontal angle in the Box reference system
     ///(connected with the bounding box of the volume)
     G4double AngleXFromLatticeToBox(G4double tx, G4double z)
-    {return tx+AngleXShift(z)+GetCUtetax(z);}
+    {
+      return tx + AngleXShift(z) + GetCUtetax(z);
+    }
 
-    ///auxialiary function to transform the horizontal angle
-    G4double AngleXShift(G4double z){return fMiscutAngle + z*fCurv;}
+    /// auxialiary function to transform the horizontal angle
+    G4double AngleXShift(G4double z) { return fMiscutAngle + z * fCurv; }
 
-    ///get channel width in x and y
-    G4double GetChannelWidthX(){return fDx;}
-    G4double GetChannelWidthY(){return fDy;}
+    /// get channel width in x and y
+    G4double GetChannelWidthX() { return fDx; }
+    G4double GetChannelWidthY() { return fDy; }
 
-private:
+  private:
 
-    ///variables
-    G4int fNsteps=353;//number of steps per channeling oscillation
-    G4double fR0=1.1*CLHEP::fermi;//*A^(1/3) - radius of nucleus
+    /// variables
+    G4int fNsteps = 353;  // number of steps per channeling oscillation
+    G4double fR0 = 1.1 * CLHEP::fermi;  //*A^(1/3) - radius of nucleus
 
-    ///Values related to coordinate transformation
-    long long int fNChannelx=0;//horizontal number of channel
-                             //(either straight of bent) inside the box
-    long long int fNChannely=0;//vertical number of channel (either straight of bent)
-                             //inside the box; =0 in the case of planes
+    /// Values related to coordinate transformation
+    long long int fNChannelx = 0;  // horizontal number of channel
+                                   //(either straight of bent) inside the box
+    long long int fNChannely = 0;  // vertical number of channel (either straight of bent)
+                                   // inside the box; =0 in the case of planes
 
-    ///values related to the crystal lattice
-    G4int fNpointsx=0,fNpointsy=0;// number of horizontal and vertical nodes of
-                                  // interpolation
-    G4double fDx=0, fDy=0;// channel (periodic cell)
-                      //horizontal and vertical dimensions
+    /// values related to the crystal lattice
+    G4int fNpointsx = 0, fNpointsy = 0;  // number of horizontal and vertical nodes of
+                                         // interpolation
+    G4double fDx = 0, fDy = 0;  // channel (periodic cell)
+                                // horizontal and vertical dimensions
 
-    ///fundamental constants of material
-    std::vector <G4double> fN0; // nuclear concentration
-    std::vector <G4double> fU1; // amplitude of thermal oscillations
-    std::vector <G4double> fZ1;//atomic number of each element
-    std::vector <G4double> fAN; //atomic mass of each element
+    /// fundamental constants of material
+    std::vector<G4double> fN0;  // nuclear concentration
+    std::vector<G4double> fU1;  // amplitude of thermal oscillations
+    std::vector<G4double> fZ1;  // atomic number of each element
+    std::vector<G4double> fAN;  // atomic mass of each element
 };
 
 #endif

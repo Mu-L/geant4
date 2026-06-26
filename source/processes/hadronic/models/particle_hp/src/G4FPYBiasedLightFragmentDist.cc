@@ -80,9 +80,11 @@ G4Ions* G4FPYBiasedLightFragmentDist::GetFissionProduct()
   G4int Counter;
 
   Counter = 0;
-  do {
+  do
+  {
     // If we have sampled too many times then we may need to do something else
-    if (Counter == 1000) {
+    if (Counter == 1000)
+    {
       Particle = nullptr;
       break;
     }
@@ -100,7 +102,8 @@ G4Ions* G4FPYBiasedLightFragmentDist::GetFissionProduct()
   } while (IsHeavy || IsNotFeasable);  // Loop checking, 11.05.2015, T. Koi
 
   // Something went wrong, so figure out how to fix it
-  if (Particle == nullptr) {
+  if (Particle == nullptr)
+  {
     /// \todo   Figure out what to do if a suitable particle is not found in 1000 iterations
   }
 

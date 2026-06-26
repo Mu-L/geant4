@@ -27,26 +27,24 @@
 
 #include "G4RayTracerXViewer.hh"
 
-#include "G4VSceneHandler.hh"
-#include "G4Scene.hh"
-#include "G4TheMTRayTracer.hh"
 #include "G4RTJpegMaker.hh"
 #include "G4RTXScanner.hh"
+#include "G4Scene.hh"
+#include "G4TheMTRayTracer.hh"
 #include "G4UImanager.hh"
+#include "G4VSceneHandler.hh"
 
 #include <cstdlib>
 
-G4RayTracerXViewer::G4RayTracerXViewer
-(G4VSceneHandler& sceneHandler, const G4String& name):
-  G4RayTracerViewer(sceneHandler,
-		    name,
-		    G4TheMTRayTracer::Instance(new G4RTJpegMaker, new G4RTXScanner))
+G4RayTracerXViewer::G4RayTracerXViewer(G4VSceneHandler& sceneHandler, const G4String& name)
+  : G4RayTracerViewer(sceneHandler, name,
+                      G4TheMTRayTracer::Instance(new G4RTJpegMaker, new G4RTXScanner))
 {}
 
 G4RayTracerXViewer::~G4RayTracerXViewer() {}
 
-void G4RayTracerXViewer::Initialise() {
-
+void G4RayTracerXViewer::Initialise()
+{
   G4RayTracerViewer::Initialise();
 
   fVP.SetAutoRefresh(true);
@@ -54,7 +52,8 @@ void G4RayTracerXViewer::Initialise() {
 
   // Set up X Window...
   G4RTXScanner* theXScanner = (G4RTXScanner*)theTracer->GetScanner();
-  if (!theXScanner->GetXWindow(fName,fVP)) {
+  if (!theXScanner->GetXWindow(fName, fVP))
+  {
     G4cerr << "G4RayTracerXViewer::Initialise: No scanner" << G4endl;
     fViewId = -1;  // This flags an error.
     return;

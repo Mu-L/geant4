@@ -30,8 +30,8 @@
 // Class Description:
 //
 
-#ifndef G4CrystalBravaisLattices_H
-#define G4CrystalBravaisLattices_H 1
+#ifndef G4CRYSTALBRAVAISLATTICES_HH
+#define G4CRYSTALBRAVAISLATTICES_HH
 
 // Bravais Lattices
 enum theBravaisLatticeType

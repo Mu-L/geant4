@@ -25,65 +25,71 @@
 //
 //
 //
-#include "globals.hh"
 #include "G3DetTable.hh"
 
-typedef std::map<G4String, G3DetTableEntry*, std::less<G4String> >
-::iterator DTDiterator;
+#include "globals.hh"
 
-G4String 
-G3DetTable::MakeHash(G4String& set, G4String& det){;
-  return set+" "+det;
+typedef std::map<G4String, G3DetTableEntry*, std::less<G4String>>::iterator DTDiterator;
+
+G4String G3DetTable::MakeHash(G4String& set, G4String& det)
+{
+  ;
+  return set + " " + det;
 }
 
-G3DetTable::G3DetTable(){
-}
+G3DetTable::G3DetTable() {}
 
-G3DetTable::~G3DetTable(){
-  if (DTD.size() > 0) {
+G3DetTable::~G3DetTable()
+{
+  if (DTD.size() > 0)
+  {
     //    G4cout << "Deleting DTD" << G4endl;
-    for (DTDiterator i=DTD.begin(); i != DTD.end(); i++) {
+    for (DTDiterator i = DTD.begin(); i != DTD.end(); i++)
+    {
       delete (*i).second;
     }
     DTD.clear();
   }
 }
 
-G4VSensitiveDetector* 
-G3DetTable::GetSD(G4String& set, G4String& det){
-
+G4VSensitiveDetector* G3DetTable::GetSD(G4String& set, G4String& det)
+{
   // make hash ID
   const G4String ShashID = MakeHash(set, det);
 
   // search the map
   DTDiterator i = DTD.find(ShashID);
   G3DetTableEntry* DTE = (*i).second;
-  if (DTE != 0) {
+  if (DTE != 0)
+  {
     return DTE->GetSD();
-  } else {
+  }
+  else
+  {
     return 0;
-  }  
+  }
 }
 
-G4int 
-G3DetTable::GetID(G4String& set, G4String& det){
-
+G4int G3DetTable::GetID(G4String& set, G4String& det)
+{
   // make hash ID
   G4String ShashID = MakeHash(set, det);
 
   // search the Hash Dictionary
   DTDiterator i = DTD.find(ShashID);
   G3DetTableEntry* DTE = (*i).second;
-  if (DTE != 0) {
+  if (DTE != 0)
+  {
     return DTE->GetID();
-  } else {
+  }
+  else
+  {
     return 0;
   }
 }
 
-void 
-G3DetTable::Put(G4String& set, G4String& det, G4int id, 
-		G4VSensitiveDetector* D){
+void G3DetTable::Put(G4String& set, G4String& det, G4int id, G4VSensitiveDetector* D)
+{
   // make hash ID
   G4String ShashID = MakeHash(set, det);
   G3DetTableEntry* DTE = new G3DetTableEntry(set, det, id, D);
@@ -91,21 +97,18 @@ G3DetTable::Put(G4String& set, G4String& det, G4int id,
   DTD[ShashID] = DTE;
 }
 
-void
-G3DetTable::PrintAll(){
-  if (DTD.size()>0){
-    G4int count=0;
+void G3DetTable::PrintAll()
+{
+  if (DTD.size() > 0)
+  {
+    G4int count = 0;
     G4cout << "Dump of DTD - " << DTD.size() << " entries:" << G4endl;
-    for (DTDiterator i=DTD.begin(); i != DTD.end(); i++) {
+    for (DTDiterator i = DTD.begin(); i != DTD.end(); i++)
+    {
       count++;
       G3DetTableEntry* DTE = (*i).second;
-      G4cout << "DTD entry " << std::setw(3) << count << " sensitive detector name: " 
-	     << DTE->GetSD()->GetName() << G4endl;
+      G4cout << "DTD entry " << std::setw(3) << count
+             << " sensitive detector name: " << DTE->GetSD()->GetName() << G4endl;
     }
   }
 }
-
-
-
-
-

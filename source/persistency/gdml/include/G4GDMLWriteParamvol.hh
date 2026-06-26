@@ -32,7 +32,7 @@
 // Author: Zoltan Torzsok, November 2007
 // --------------------------------------------------------------------
 #ifndef G4GDMLWRITEPARAMVOL_HH
-#define G4GDMLWRITEPARAMVOL_HH 1
+#define G4GDMLWRITEPARAMVOL_HH
 
 #include "G4GDMLWriteSetup.hh"
 
@@ -55,10 +55,9 @@ class G4GDMLWriteParamvol : public G4GDMLWriteSetup
 {
   public:
 
-    virtual void ParamvolWrite(xercesc::DOMElement*,
-                               const G4VPhysicalVolume* const);
+    virtual void ParamvolWrite(xercesc::DOMElement*, const G4VPhysicalVolume* const);
     virtual void ParamvolAlgorithmWrite(xercesc::DOMElement* paramvolElement,
-                               const G4VPhysicalVolume* const paramvol);
+                                        const G4VPhysicalVolume* const paramvol);
 
   protected:
 
@@ -73,16 +72,12 @@ class G4GDMLWriteParamvol : public G4GDMLWriteSetup
     void Sphere_dimensionsWrite(xercesc::DOMElement*, const G4Sphere* const);
     void Orb_dimensionsWrite(xercesc::DOMElement*, const G4Orb* const);
     void Torus_dimensionsWrite(xercesc::DOMElement*, const G4Torus* const);
-    void Ellipsoid_dimensionsWrite(xercesc::DOMElement*,
-                                   const G4Ellipsoid* const);
+    void Ellipsoid_dimensionsWrite(xercesc::DOMElement*, const G4Ellipsoid* const);
     void Para_dimensionsWrite(xercesc::DOMElement*, const G4Para* const);
     void Hype_dimensionsWrite(xercesc::DOMElement*, const G4Hype* const);
-    void Polycone_dimensionsWrite(xercesc::DOMElement*,
-                                  const G4Polycone* const);
-    void Polyhedra_dimensionsWrite(xercesc::DOMElement*,
-                                   const G4Polyhedra* const);
-    void ParametersWrite(xercesc::DOMElement*, const G4VPhysicalVolume* const,
-                         const G4int&);
+    void Polycone_dimensionsWrite(xercesc::DOMElement*, const G4Polycone* const);
+    void Polyhedra_dimensionsWrite(xercesc::DOMElement*, const G4Polyhedra* const);
+    void ParametersWrite(xercesc::DOMElement*, const G4VPhysicalVolume* const, const G4int&);
 };
 
 #endif

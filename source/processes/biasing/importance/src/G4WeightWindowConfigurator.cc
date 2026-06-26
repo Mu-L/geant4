@@ -29,28 +29,27 @@
 // --------------------------------------------------------------------
 
 #include "G4WeightWindowConfigurator.hh"
+
 #include "G4WeightWindowAlgorithm.hh"
 #include "G4WeightWindowProcess.hh"
 
-G4WeightWindowConfigurator::
-G4WeightWindowConfigurator(const G4VPhysicalVolume* worldvolume,
-			   const G4String& particlename,
-                                 G4VWeightWindowStore &wwstore,
-                           const G4VWeightWindowAlgorithm* wwAlg,
-                                 G4PlaceOfAction placeOfAction,
-                                 G4bool para)
+G4WeightWindowConfigurator::G4WeightWindowConfigurator(const G4VPhysicalVolume* worldvolume,
+                                                       const G4String& particlename,
+                                                       G4VWeightWindowStore& wwstore,
+                                                       const G4VWeightWindowAlgorithm* wwAlg,
+                                                       G4PlaceOfAction placeOfAction, G4bool para)
   : fWorld(worldvolume),
     fPlacer(particlename),
     fWeightWindowStore(wwstore),
-    fDeleteWWalg( ( ! wwAlg) ),
-    fWWalgorithm(( fDeleteWWalg ? new G4WeightWindowAlgorithm(5,3,5) : wwAlg )),
+    fDeleteWWalg((!wwAlg)),
+    fWWalgorithm((fDeleteWWalg ? new G4WeightWindowAlgorithm(5, 3, 5) : wwAlg)),
     fPlaceOfAction(placeOfAction)
 {
   paraflag = para;
 }
 
 G4WeightWindowConfigurator::~G4WeightWindowConfigurator()
-{  
+{
   if (fWeightWindowProcess)
   {
     fPlacer.RemoveProcess(fWeightWindowProcess);
@@ -65,22 +64,24 @@ G4WeightWindowConfigurator::~G4WeightWindowConfigurator()
 void G4WeightWindowConfigurator::Configure(G4VSamplerConfigurator* preConf)
 {
   G4cout << " entering weight window configure " << G4endl;
-  const G4VTrackTerminator *terminator = 0;
+  const G4VTrackTerminator* terminator = 0;
   if (preConf)
   {
     terminator = preConf->GetTrackTerminator();
   }
 
-  fWeightWindowProcess = 
-    new G4WeightWindowProcess(*fWWalgorithm, fWeightWindowStore, terminator,
-                              fPlaceOfAction, "WeightWindowProcess", paraflag);
+  fWeightWindowProcess = new G4WeightWindowProcess(*fWWalgorithm, fWeightWindowStore, terminator,
+                                                   fPlaceOfAction, "WeightWindowProcess", paraflag);
 
-  if(paraflag) { fWeightWindowProcess->SetParallelWorld(fWorld->GetName()); }
+  if (paraflag)
+  {
+    fWeightWindowProcess->SetParallelWorld(fWorld->GetName());
+  }
 
   fPlacer.AddProcessAsSecondDoIt(fWeightWindowProcess);
 }
 
-const G4VTrackTerminator* G4WeightWindowConfigurator::GetTrackTerminator() const 
+const G4VTrackTerminator* G4WeightWindowConfigurator::GetTrackTerminator() const
 {
   return fWeightWindowProcess;
 }

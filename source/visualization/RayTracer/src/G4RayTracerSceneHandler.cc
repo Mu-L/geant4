@@ -33,18 +33,19 @@
 
 G4int G4RayTracerSceneHandler::fSceneIdCount = 0;
 
-G4RayTracerSceneHandler::G4RayTracerSceneHandler(G4VGraphicsSystem& system,
-						 const G4String& name)
-: G4VSceneHandler(system, fSceneIdCount++, name)
+G4RayTracerSceneHandler::G4RayTracerSceneHandler(G4VGraphicsSystem& system, const G4String& name)
+  : G4VSceneHandler(system, fSceneIdCount++, name)
 {
   // Keep vis manager happy when someone opens a ray tracer with "/vis/open
   // RayTracer" but uses the ray tracer with "/vis/rayTracer" commands
   // before creating any scenes, for example, instead of using
   // "/vis/drawVolume"...
   G4VisManager* visManager = G4VisManager::GetInstance();
-  if(visManager) {
+  if (visManager)
+  {
     G4Scene* pScene = visManager->GetCurrentScene();
-    if (!pScene) {
+    if (!pScene)
+    {
       // Create new scene like /vis/scene/create...
       fpScene = new G4Scene("dummy-ray-tracer-scene");
       // Add dummy run-duration model to avoid world being added and
@@ -58,22 +59,22 @@ G4RayTracerSceneHandler::G4RayTracerSceneHandler(G4VGraphicsSystem& system,
   }
 }
 
-G4RayTracerSceneHandler::~G4RayTracerSceneHandler()
-{}
+G4RayTracerSceneHandler::~G4RayTracerSceneHandler() {}
 
 void G4RayTracerSceneHandler::ClearStore()
 {
   fSceneVisAttsMap.clear();
 }
 
-G4bool G4RayTracerSceneHandler::PathLessThan::operator()
-  (const G4ModelingParameters::PVPointerCopyNoPath& a,
-   const G4ModelingParameters::PVPointerCopyNoPath& b) const
+G4bool G4RayTracerSceneHandler::PathLessThan::operator()(
+  const G4ModelingParameters::PVPointerCopyNoPath& a,
+  const G4ModelingParameters::PVPointerCopyNoPath& b) const
 {
   if (a.size() != b.size()) return a.size() < b.size();
   auto ia = a.begin();
   auto ib = b.begin();
-  for (; ia != a.end(); ++ia, ++ib) {
+  for (; ia != a.end(); ++ia, ++ib)
+  {
     if (ia->GetPVPointer() < ib->GetPVPointer()) return true;
     if (ia->GetPVPointer() > ib->GetPVPointer()) return false;
     // Pointers equal
@@ -85,25 +86,29 @@ G4bool G4RayTracerSceneHandler::PathLessThan::operator()
   return false;
 }
 
-void G4RayTracerSceneHandler::BuildVisAttsMap (const G4VSolid&)
+void G4RayTracerSceneHandler::BuildVisAttsMap(const G4VSolid&)
 {
   // Build map of vis attributes
 
   G4PhysicalVolumeModel* fpPVModel = dynamic_cast<G4PhysicalVolumeModel*>(fpModel);
-  if (fpPVModel) {
+  if (fpPVModel)
+  {
     G4ModelingParameters::PVPointerCopyNoPath temp;
-    for (const auto& nodeID: fpPVModel->GetFullPVPath()) {
+    for (const auto& nodeID : fpPVModel->GetFullPVPath())
+    {
       // Build an element from the nodeid.
-      temp.push_back(G4ModelingParameters::PVPointerCopyNo(nodeID.GetPhysicalVolume(),nodeID.GetCopyNo()));
+      temp.push_back(
+        G4ModelingParameters::PVPointerCopyNo(nodeID.GetPhysicalVolume(), nodeID.GetCopyNo()));
     }
     const G4VisAttributes* pVisAtts = fpVisAttribs;
-    if (!pVisAtts) {
+    if (!pVisAtts)
+    {
       // Shouldn't happen.
-      if (G4VisManager::GetInstance()->GetVerbosity() >= G4VisManager::warnings) {
-        G4warn <<
-        "WARNING: G4RayTracerSceneHandler::BuildVisAttsMap: null vis atts pointer."
-        "\n  Using a default vis atts."
-        << G4endl;
+      if (G4VisManager::GetInstance()->GetVerbosity() >= G4VisManager::warnings)
+      {
+        G4warn << "WARNING: G4RayTracerSceneHandler::BuildVisAttsMap: null vis atts pointer."
+                  "\n  Using a default vis atts."
+               << G4endl;
       }
       static const G4VisAttributes defaultVisAtts;
       pVisAtts = &defaultVisAtts;
@@ -112,4 +117,3 @@ void G4RayTracerSceneHandler::BuildVisAttsMap (const G4VSolid&)
     fSceneVisAttsMap[temp] = *pVisAtts;
   }
 }
-

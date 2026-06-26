@@ -40,59 +40,58 @@
 // 06-Aug-15 A.Ribon migrating to G4Pow
 
 #include "G4ChargeExchangeProcess.hh"
-#include "globals.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4ComponentGGHadronNucleusXsc.hh"
 #include "G4CrossSectionDataStore.hh"
 #include "G4CrossSectionElastic.hh"
-#include "G4ComponentGGHadronNucleusXsc.hh"
 #include "G4Element.hh"
 #include "G4ElementVector.hh"
 #include "G4IsotopeVector.hh"
 #include "G4Neutron.hh"
-#include "G4Proton.hh"
 #include "G4PhysicsLinearVector.hh"
-
 #include "G4Pow.hh"
-
+#include "G4Proton.hh"
+#include "G4SystemOfUnits.hh"
+#include "globals.hh"
 
 G4ChargeExchangeProcess::G4ChargeExchangeProcess(const G4String& procName)
-  : G4HadronicProcess(procName,fChargeExchange), first(true)
+  : G4HadronicProcess(procName, fChargeExchange), first(true)
 {
   G4cout << "###=== The class G4ChargeExchangeProcess is obsolete!!!" << G4endl;
   G4cout << "###=== It will be removed at the next public release" << G4endl;
-  thEnergy = 20.*MeV;
+  thEnergy = 20. * MeV;
   pPDG = 0;
-  verboseLevel= 1;
-  AddDataSet( new G4CrossSectionElastic( new G4ComponentGGHadronNucleusXsc ) );
-  theProton   = G4Proton::Proton();
-  theNeutron  = G4Neutron::Neutron();
-  theAProton  = G4AntiProton::AntiProton();
+  verboseLevel = 1;
+  AddDataSet(new G4CrossSectionElastic(new G4ComponentGGHadronNucleusXsc));
+  theProton = G4Proton::Proton();
+  theNeutron = G4Neutron::Neutron();
+  theAProton = G4AntiProton::AntiProton();
   theANeutron = G4AntiNeutron::AntiNeutron();
-  thePiPlus   = G4PionPlus::PionPlus();
-  thePiMinus  = G4PionMinus::PionMinus();
-  thePiZero   = G4PionZero::PionZero();
-  theKPlus    = G4KaonPlus::KaonPlus();
-  theKMinus   = G4KaonMinus::KaonMinus();
-  theK0S      = G4KaonZeroShort::KaonZeroShort();
-  theK0L      = G4KaonZeroLong::KaonZeroLong();
-  theL        = G4Lambda::Lambda();
-  theAntiL    = G4AntiLambda::AntiLambda();
-  theSPlus    = G4SigmaPlus::SigmaPlus();
-  theASPlus   = G4AntiSigmaPlus::AntiSigmaPlus();
-  theSMinus   = G4SigmaMinus::SigmaMinus();
-  theASMinus  = G4AntiSigmaMinus::AntiSigmaMinus();
-  theS0       = G4SigmaZero::SigmaZero();
-  theAS0      = G4AntiSigmaZero::AntiSigmaZero();
-  theXiMinus  = G4XiMinus::XiMinus();
-  theXi0      = G4XiZero::XiZero();
+  thePiPlus = G4PionPlus::PionPlus();
+  thePiMinus = G4PionMinus::PionMinus();
+  thePiZero = G4PionZero::PionZero();
+  theKPlus = G4KaonPlus::KaonPlus();
+  theKMinus = G4KaonMinus::KaonMinus();
+  theK0S = G4KaonZeroShort::KaonZeroShort();
+  theK0L = G4KaonZeroLong::KaonZeroLong();
+  theL = G4Lambda::Lambda();
+  theAntiL = G4AntiLambda::AntiLambda();
+  theSPlus = G4SigmaPlus::SigmaPlus();
+  theASPlus = G4AntiSigmaPlus::AntiSigmaPlus();
+  theSMinus = G4SigmaMinus::SigmaMinus();
+  theASMinus = G4AntiSigmaMinus::AntiSigmaMinus();
+  theS0 = G4SigmaZero::SigmaZero();
+  theAS0 = G4AntiSigmaZero::AntiSigmaZero();
+  theXiMinus = G4XiMinus::XiMinus();
+  theXi0 = G4XiZero::XiZero();
   theAXiMinus = G4AntiXiMinus::AntiXiMinus();
-  theAXi0     = G4AntiXiZero::AntiXiZero();
-  theOmega    = G4OmegaMinus::OmegaMinus();
-  theAOmega   = G4AntiOmegaMinus::AntiOmegaMinus();
-  theD        = G4Deuteron::Deuteron();
-  theT        = G4Triton::Triton();
-  theA        = G4Alpha::Alpha();
-  theHe3      = G4He3::He3();
+  theAXi0 = G4AntiXiZero::AntiXiZero();
+  theOmega = G4OmegaMinus::OmegaMinus();
+  theAOmega = G4AntiOmegaMinus::AntiOmegaMinus();
+  theD = G4Deuteron::Deuteron();
+  theT = G4Triton::Triton();
+  theA = G4Alpha::Alpha();
+  theHe3 = G4He3::He3();
 }
 
 G4ChargeExchangeProcess::~G4ChargeExchangeProcess()
@@ -100,10 +99,10 @@ G4ChargeExchangeProcess::~G4ChargeExchangeProcess()
   if (factors) delete factors;
 }
 
-void G4ChargeExchangeProcess::
-BuildPhysicsTable(const G4ParticleDefinition& aParticleType)
+void G4ChargeExchangeProcess::BuildPhysicsTable(const G4ParticleDefinition& aParticleType)
 {
-  if(first) {
+  if (first)
+  {
     first = false;
     theParticle = &aParticleType;
     pPDG = theParticle->GetPDGEncoding();
@@ -111,33 +110,35 @@ BuildPhysicsTable(const G4ParticleDefinition& aParticleType)
     store = G4HadronicProcess::GetCrossSectionDataStore();
 
     const size_t n = 10;
-    if(theParticle == thePiPlus || theParticle == thePiMinus ||
-       theParticle == theKPlus  || theParticle == theKMinus ||
-       theParticle == theK0S    || theParticle == theK0L) {
-
-      G4double F[n] = {0.33,0.27,0.29,0.31,0.27,0.18,0.13,0.1,0.09,0.07};
-      factors = new G4PhysicsLinearVector(0.0,2.0*GeV,n);
-      for(size_t i=0; i<n; i++) {factors->PutValue(i,F[i]);}
-
-    } else {
-
-      G4double F[n] = {0.50,0.45,0.40,0.35,0.30,0.25,0.06,0.04,0.005,0.0};
-      factors = new G4PhysicsLinearVector(0.0,4.0*GeV,n);
-      for(size_t i=0; i<n; i++) {factors->PutValue(i,F[i]);}
+    if (theParticle == thePiPlus || theParticle == thePiMinus || theParticle == theKPlus
+        || theParticle == theKMinus || theParticle == theK0S || theParticle == theK0L)
+    {
+      G4double F[n] = {0.33, 0.27, 0.29, 0.31, 0.27, 0.18, 0.13, 0.1, 0.09, 0.07};
+      factors = new G4PhysicsLinearVector(0.0, 2.0 * GeV, n);
+      for (size_t i = 0; i < n; i++)
+      {
+        factors->PutValue(i, F[i]);
+      }
+    }
+    else
+    {
+      G4double F[n] = {0.50, 0.45, 0.40, 0.35, 0.30, 0.25, 0.06, 0.04, 0.005, 0.0};
+      factors = new G4PhysicsLinearVector(0.0, 4.0 * GeV, n);
+      for (size_t i = 0; i < n; i++)
+      {
+        factors->PutValue(i, F[i]);
+      }
     }
 
-    if(verboseLevel>1)
-      G4cout << "G4ChargeExchangeProcess for "
-	     << theParticle->GetParticleName()
-	     << G4endl;
+    if (verboseLevel > 1)
+      G4cout << "G4ChargeExchangeProcess for " << theParticle->GetParticleName() << G4endl;
   }
   G4HadronicProcess::BuildPhysicsTable(aParticleType);
 }
 
-G4double G4ChargeExchangeProcess::GetElementCrossSection(
-                                  const G4DynamicParticle* dp,
-				  const G4Element* elm,
-				  const G4Material* mat)
+G4double G4ChargeExchangeProcess::GetElementCrossSection(const G4DynamicParticle* dp,
+                                                         const G4Element* elm,
+                                                         const G4Material* mat)
 {
   // gives the microscopic cross section in GEANT4 internal units
   G4double Z = elm->GetZ();
@@ -145,56 +146,51 @@ G4double G4ChargeExchangeProcess::GetElementCrossSection(
   G4double x = 0.0;
 
   // The process is effective only above the threshold
-  if(iz == 1 || dp->GetKineticEnergy() < thEnergy) return x;
+  if (iz == 1 || dp->GetKineticEnergy() < thEnergy) return x;
 
-  if(verboseLevel>1)
-    G4cout << "G4ChargeExchangeProcess compute GHAD CS for element "
-	   << elm->GetName()
-	   << G4endl;
+  if (verboseLevel > 1)
+    G4cout << "G4ChargeExchangeProcess compute GHAD CS for element " << elm->GetName() << G4endl;
   x = store->GetCrossSection(dp, elm, mat);
 
-  if(verboseLevel>1)
-    G4cout << "G4ChargeExchangeProcess cross(mb)= " << x/millibarn
-           << "  E(MeV)= " << dp->GetKineticEnergy()
-	   << "  " << theParticle->GetParticleName()
-           << "  in Z= " << iz
-	   << G4endl;
+  if (verboseLevel > 1)
+    G4cout << "G4ChargeExchangeProcess cross(mb)= " << x / millibarn
+           << "  E(MeV)= " << dp->GetKineticEnergy() << "  " << theParticle->GetParticleName()
+           << "  in Z= " << iz << G4endl;
   G4bool b;
   G4double A = elm->GetN();
   G4double ptot = dp->GetTotalMomentum();
-  x *= factors->GetValue(ptot, b)/G4Pow::GetInstance()->powA(A, 0.42);
-  if(theParticle == thePiPlus || theParticle == theProton ||
-     theParticle == theKPlus  || theParticle == theANeutron)
-    { x *= (1.0 - Z/A); }
-
-  else if(theParticle == thePiMinus || theParticle == theNeutron ||
-          theParticle == theKMinus  || theParticle == theAProton)
-    { x *= Z/A; }
-
-  if(theParticle->GetPDGMass() < GeV) {
-    if(ptot > 2.*GeV) x *= 4.0*GeV*GeV/(ptot*ptot);
+  x *= factors->GetValue(ptot, b) / G4Pow::GetInstance()->powA(A, 0.42);
+  if (theParticle == thePiPlus || theParticle == theProton || theParticle == theKPlus
+      || theParticle == theANeutron)
+  {
+    x *= (1.0 - Z / A);
   }
 
-  if(verboseLevel>1) 
-    G4cout << "Corrected cross(mb)= " << x/millibarn << G4endl;
+  else if (theParticle == thePiMinus || theParticle == theNeutron || theParticle == theKMinus
+           || theParticle == theAProton)
+  {
+    x *= Z / A;
+  }
+
+  if (theParticle->GetPDGMass() < GeV)
+  {
+    if (ptot > 2. * GeV) x *= 4.0 * GeV * GeV / (ptot * ptot);
+  }
+
+  if (verboseLevel > 1) G4cout << "Corrected cross(mb)= " << x / millibarn << G4endl;
 
   return x;
 }
 
-G4bool G4ChargeExchangeProcess::
-IsApplicable(const G4ParticleDefinition& aParticleType)
+G4bool G4ChargeExchangeProcess::IsApplicable(const G4ParticleDefinition& aParticleType)
 {
   const G4ParticleDefinition* p = &aParticleType;
-  return (p == thePiPlus || p == thePiMinus ||
-          p == theProton || p == theNeutron ||
-          p == theAProton|| p == theANeutron||
-	  p == theKPlus  || p == theKMinus  ||
-	  p == theK0S    || p == theK0L     ||
-	  p == theL);
+  return (p == thePiPlus || p == thePiMinus || p == theProton || p == theNeutron || p == theAProton
+          || p == theANeutron || p == theKPlus || p == theKMinus || p == theK0S || p == theK0L
+          || p == theL);
 }
 
-void G4ChargeExchangeProcess::
-DumpPhysicsTable(const G4ParticleDefinition& aParticleType)
+void G4ChargeExchangeProcess::DumpPhysicsTable(const G4ParticleDefinition& aParticleType)
 {
   store->DumpPhysicsTable(aParticleType);
 }

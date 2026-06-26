@@ -24,58 +24,52 @@
 // ********************************************************************
 //
 
-#ifndef G4ecpssrBaseKxsModel_hh
-#define G4ecpssrBaseKxsModel_hh 1
+#ifndef G4ECPSSRBASEKXSMODEL_HH
+#define G4ECPSSRBASEKXSMODEL_HH
 
+#include "G4CrossSectionDataSet.hh"
 #include "G4VecpssrKModel.hh"
 #include "globals.hh"
+
 #include <map>
 #include <vector>
 
-#include "G4CrossSectionDataSet.hh"
-
 class G4ecpssrBaseKxsModel : public G4VecpssrKModel
 {
-public:
-  explicit G4ecpssrBaseKxsModel();
-  ~G4ecpssrBaseKxsModel();
-			       
-  G4double CalculateCrossSection(G4int, G4double, G4double) override;//according to W.Brandt and G.Lapicki, Phys.Rev.A23(1981)
-  G4double  ExpIntFunction(G4int n,G4double x);//Exponential Integral Function
+  public:
 
-  G4ecpssrBaseKxsModel(const G4ecpssrBaseKxsModel&) = delete;
-  G4ecpssrBaseKxsModel & operator = (const G4ecpssrBaseKxsModel &right) = delete;
+    explicit G4ecpssrBaseKxsModel();
+    ~G4ecpssrBaseKxsModel();
 
-private:
-  G4double FunctionFK(G4double k, G4double theta);
-  G4double LogLogInterpolate(G4double e1, G4double e2, G4double e, G4double xs1, G4double xs2);
-  G4double LinLogInterpolate(G4double e1, G4double e2, G4double e, G4double xs1, G4double xs2);
-   
-  G4double QuadInterpolator(G4double e11, 
- 		            G4double e12, 
-			    G4double e21, 
-			    G4double e22, 
-			    G4double x11,
-			    G4double x12, 
-			    G4double x21, 
-			    G4double x22, 
-			    G4double t1, 
-			    G4double t2, 
-			    G4double t, 
-			    G4double e);
+    G4double CalculateCrossSection(G4int, G4double, G4double)
+      override;  // according to W.Brandt and G.Lapicki, Phys.Rev.A23(1981)
+    G4double ExpIntFunction(G4int n, G4double x);  // Exponential Integral Function
 
-  typedef std::map<G4double, std::map<G4double, G4double> > TriDimensionMap;
-  TriDimensionMap FKData;
-  std::vector<G4double> dummyVec;
+    G4ecpssrBaseKxsModel(const G4ecpssrBaseKxsModel&) = delete;
+    G4ecpssrBaseKxsModel& operator=(const G4ecpssrBaseKxsModel& right) = delete;
 
-  typedef std::map<G4double, std::vector<G4double> > VecMap;
-  VecMap aVecMap;
+  private:
 
-  G4CrossSectionDataSet* tableC1;
-  G4CrossSectionDataSet* tableC2;
-  G4CrossSectionDataSet* tableC3;
+    G4double FunctionFK(G4double k, G4double theta);
+    G4double LogLogInterpolate(G4double e1, G4double e2, G4double e, G4double xs1, G4double xs2);
+    G4double LinLogInterpolate(G4double e1, G4double e2, G4double e, G4double xs1, G4double xs2);
 
-  G4int verboseLevel;
+    G4double QuadInterpolator(G4double e11, G4double e12, G4double e21, G4double e22, G4double x11,
+                              G4double x12, G4double x21, G4double x22, G4double t1, G4double t2,
+                              G4double t, G4double e);
+
+    typedef std::map<G4double, std::map<G4double, G4double>> TriDimensionMap;
+    TriDimensionMap FKData;
+    std::vector<G4double> dummyVec;
+
+    typedef std::map<G4double, std::vector<G4double>> VecMap;
+    VecMap aVecMap;
+
+    G4CrossSectionDataSet* tableC1;
+    G4CrossSectionDataSet* tableC2;
+    G4CrossSectionDataSet* tableC3;
+
+    G4int verboseLevel;
 };
-  
+
 #endif

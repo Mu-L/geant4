@@ -31,7 +31,7 @@
 // order method (giving fifth-order accuracy) for the solution of an ODE.
 // Two different fourth order estimates are calculated; their difference
 // gives an error estimate. [ref. Numerical Recipes in C, 2nd Edition]
-// It is used to integrate the equations of the motion of a particle 
+// It is used to integrate the equations of the motion of a particle
 // in a magnetic field.
 
 // Authors: J.Apostolakis, V.Grichine (CERN), 30.01.1997
@@ -44,9 +44,12 @@
 /**
  * @brief G4CashKarpRKF45 implements the Cash-Karp Runge-Kutta-Fehlberg
  * 4/5 method, an embedded fourth order method (giving fifth-order accuracy)
- * for the solution of an ODE. Two different fourth order estimates are
- * calculated; their difference gives an error estimate. 
- * It is used to integrate the equations of the motion of a particle 
+ * for the solution of an ODE.
+ * @ingroup geometry_magneticfield
+ *
+ * Two different fourth order estimates are
+ * calculated; their difference gives an error estimate.
+ * It is used to integrate the equations of the motion of a particle
  * in a magnetic field.
  */
 
@@ -60,9 +63,7 @@ class G4CashKarpRKF45 : public G4MagIntegratorStepper
      *  @param[in] numberOfVariables The number of integration variables.
      *  @param[in] primary Flag for initialisation of the auxiliary stepper.
      */
-    G4CashKarpRKF45( G4EquationOfMotion* EqRhs,
-                     G4int numberOfVariables = 6,
-                     G4bool primary = true );
+    G4CashKarpRKF45(G4EquationOfMotion* EqRhs, G4int numberOfVariables = 6, G4bool primary = true);
 
     /**
      * Destructor.
@@ -74,7 +75,7 @@ class G4CashKarpRKF45 : public G4MagIntegratorStepper
      */
     G4CashKarpRKF45(const G4CashKarpRKF45&) = delete;
     G4CashKarpRKF45& operator=(const G4CashKarpRKF45&) = delete;
- 
+
     /**
      * The stepper for the Runge Kutta integration.
      * The stepsize is fixed, with the step size given by 'h'.
@@ -86,16 +87,13 @@ class G4CashKarpRKF45 : public G4MagIntegratorStepper
      *  @param[out] yout Integration output.
      *  @param[out] yerr The estimated error.
      */
-    void Stepper( const G4double y[],
-                  const G4double dydx[],
-                        G4double h,
-                        G4double yout[],
-                        G4double yerr[] ) override;
+    void Stepper(const G4double y[], const G4double dydx[], G4double h, G4double yout[],
+                 G4double yerr[]) override;
 
     /**
      * Returns the distance from chord line.
      */
-    G4double DistChord() const override; 
+    G4double DistChord() const override;
 
     /**
      * Returns the order, 4, of integration.
@@ -115,8 +113,7 @@ class G4CashKarpRKF45 : public G4MagIntegratorStepper
     G4double fLastStepLength = 0.0;
 
     /** For DistChord calculations. */
-    G4double *fLastInitialVector, *fLastFinalVector,
-             *fLastDyDx, *fMidVector, *fMidError;
+    G4double *fLastInitialVector, *fLastFinalVector, *fLastDyDx, *fMidVector, *fMidError;
 
     G4CashKarpRKF45* fAuxStepper = nullptr;
 };

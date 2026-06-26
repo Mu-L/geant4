@@ -26,8 +26,8 @@
 //
 //
 
-#ifndef G4FTFParticipants_h
-#define G4FTFParticipants_h 1
+#ifndef G4FTFPARTICIPANTS_HH
+#define G4FTFPARTICIPANTS_HH
 
 // ------------------------------------------------------------
 //      GEANT 4 class header file
@@ -37,25 +37,27 @@
 //       class finding colliding particles in FTFPartonStringModel
 // ------------------------------------------------------------
 
-#include "G4VParticipants.hh"
 #include "G4FTFParameters.hh"
-#include <vector>
-#include "G4Nucleon.hh"
-#include "G4V3DNucleus.hh"
 #include "G4Fancy3DNucleus.hh"
-#include "G4ReactionProduct.hh"
 #include "G4InteractionContent.hh"
+#include "G4Nucleon.hh"
+#include "G4ReactionProduct.hh"
+#include "G4V3DNucleus.hh"
+#include "G4VParticipants.hh"
 
+#include <vector>
 
-class G4FTFParticipants : public G4VParticipants {
+class G4FTFParticipants : public G4VParticipants
+{
   public:
+
     G4FTFParticipants();
     ~G4FTFParticipants();
 
-    const G4FTFParticipants& operator=( const G4FTFParticipants& right ) = delete;
-    G4bool operator==( const G4FTFParticipants& right ) const = delete;
-    G4bool operator!=( const G4FTFParticipants& right ) const = delete;
-    G4FTFParticipants( const G4FTFParticipants& right ) = delete;
+    const G4FTFParticipants& operator=(const G4FTFParticipants& right) = delete;
+    G4bool operator==(const G4FTFParticipants& right) const = delete;
+    G4bool operator!=(const G4FTFParticipants& right) const = delete;
+    G4FTFParticipants(const G4FTFParticipants& right) = delete;
 
     // New methods to get/set the impact parameter.
     // (Note: to get the impact parameter in fermi units, do:
@@ -66,71 +68,79 @@ class G4FTFParticipants : public G4VParticipants {
     // also of radius of the projectile nucleus; if, instead, SampleBinInterval()
     // is true, then the square of the impact parameter is drawn from a flat
     // distribution in the specified interval [Bmin2, Bmax2].
-    void SetImpactParameter( const G4double b_value );
+    void SetImpactParameter(const G4double b_value);
     G4double GetImpactParameter() const;
-    void SetBminBmax( const G4double bmin_value, const G4double bmax_value );
+    void SetBminBmax(const G4double bmin_value, const G4double bmax_value);
     G4bool SampleBinInterval() const;
     G4double GetBmin2() const;  // Minimum value of the square of the impact parameter
     G4double GetBmax2() const;  // Maximum value of the square of the impact parameter
 
-    void GetList( const G4ReactionProduct& thePrimary, G4FTFParameters* theParameters );
+    void GetList(const G4ReactionProduct& thePrimary, G4FTFParameters* theParameters);
     void StartLoop();
     G4bool Next();
     void SortInteractionsIncT();
     void ShiftInteractionTime();
-    G4InteractionContent& GetInteraction();  
+    G4InteractionContent& GetInteraction();
     void Clean();
 
   private:
+
     G4double Bimpact;
-    G4bool   BinInterval;
+    G4bool BinInterval;
     G4double Bmin2;
     G4double Bmax2;
 
-    std::vector< G4InteractionContent* > theInteractions;
+    std::vector<G4InteractionContent*> theInteractions;
     G4int currentInteraction;
 };
 
-
-inline void G4FTFParticipants::SetImpactParameter( const G4double b_value ) {
+inline void G4FTFParticipants::SetImpactParameter(const G4double b_value)
+{
   Bimpact = b_value;
 }
 
-inline G4double G4FTFParticipants::GetImpactParameter() const {
+inline G4double G4FTFParticipants::GetImpactParameter() const
+{
   return Bimpact;
 }
 
-inline void G4FTFParticipants::SetBminBmax( const G4double bmin_value, const G4double bmax_value ) {
+inline void G4FTFParticipants::SetBminBmax(const G4double bmin_value, const G4double bmax_value)
+{
   BinInterval = false;
-  if ( bmin_value < 0.0 || bmax_value < 0.0 || bmax_value < bmin_value ) return;
+  if (bmin_value < 0.0 || bmax_value < 0.0 || bmax_value < bmin_value) return;
   BinInterval = true;
   Bmin2 = bmin_value * bmin_value;
   Bmax2 = bmax_value * bmax_value;
 }
 
-inline G4bool G4FTFParticipants::SampleBinInterval() const {
+inline G4bool G4FTFParticipants::SampleBinInterval() const
+{
   return BinInterval;
 }
 
-inline G4double G4FTFParticipants::GetBmin2() const {
+inline G4double G4FTFParticipants::GetBmin2() const
+{
   return Bmin2;
 }
 
-inline G4double G4FTFParticipants::GetBmax2() const {
+inline G4double G4FTFParticipants::GetBmax2() const
+{
   return Bmax2;
 }
 
-inline void G4FTFParticipants::StartLoop() {
+inline void G4FTFParticipants::StartLoop()
+{
   currentInteraction = -1;
 }
 
-inline G4bool G4FTFParticipants::Next() {
-  return ++currentInteraction < static_cast< G4int >( theInteractions.size() );
+inline G4bool G4FTFParticipants::Next()
+{
+  return ++currentInteraction < static_cast<G4int>(theInteractions.size());
 }
 
-inline G4InteractionContent& G4FTFParticipants::GetInteraction() {
-  return *theInteractions[ currentInteraction ];
+inline G4InteractionContent& G4FTFParticipants::GetInteraction()
+{
+  return *theInteractions[currentInteraction];
 }
 
 #endif
-

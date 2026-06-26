@@ -35,85 +35,79 @@
 // -------------------------------------------------------------------
 
 // Class description:
-// Composite data set 
+// Composite data set
 // Applies a Composite design pattern for data library management
 
 // -------------------------------------------------------------------
 
 #ifndef G4COMPOSITEDATASET_HH
-#define G4COMPOSITEDATASET_HH 1
+#define G4COMPOSITEDATASET_HH
 
-#include <vector>
+#include "G4IDataSet.hh"
+#include "globals.hh"
+
 #include <CLHEP/Units/SystemOfUnits.h>
 
-#include "globals.hh"
-#include "G4IDataSet.hh"
+#include <vector>
 
 class G4IInterpolator;
 
-class G4CompositeDataSet : public G4IDataSet 
+class G4CompositeDataSet : public G4IDataSet
 {
-public:
-  G4CompositeDataSet(G4IInterpolator* argAlgorithm, 
-		     G4double eUnit=CLHEP::MeV, 
-		     G4double dataUnit=CLHEP::barn, 
-		     G4int zMin=1, 
-		     G4int zMax=99); 
+  public:
 
-  virtual ~G4CompositeDataSet();
- 
-  virtual G4double FindValue(G4double x, G4int componentId=0) const;
-  
-  virtual void PrintData(void) const;
+    G4CompositeDataSet(G4IInterpolator* argAlgorithm, G4double eUnit = CLHEP::MeV,
+                       G4double dataUnit = CLHEP::barn, G4int zMin = 1, G4int zMax = 99);
 
-  virtual const G4IDataSet* GetComponent(G4int componentId) const 
-  { return components[componentId]; }
-  
-  virtual void AddComponent(G4IDataSet* dataSet) 
-  { components.push_back(dataSet); }
-  
-  virtual size_t NumberOfComponents() const 
-  { return components.size(); }
+    virtual ~G4CompositeDataSet();
 
-  virtual const G4DataVector& GetEnergies(G4int componentId) const 
-  { return GetComponent(componentId)->GetEnergies(0); }
-  
-  virtual const G4DataVector& GetData(G4int componentId) const 
-  { return GetComponent(componentId)->GetData(0); }
+    virtual G4double FindValue(G4double x, G4int componentId = 0) const;
 
-  virtual void SetEnergiesData(G4DataVector* x, G4DataVector* data, G4int componentId);
+    virtual void PrintData(void) const;
 
-  virtual G4bool LoadData(const G4String& fileName);
-  virtual G4bool SaveData(const G4String& fileName) const;
+    virtual const G4IDataSet* GetComponent(G4int componentId) const
+    {
+      return components[componentId];
+    }
 
-  virtual G4double RandomSelect(G4int componentId) const;
+    virtual void AddComponent(G4IDataSet* dataSet) { components.push_back(dataSet); }
 
-private:
+    virtual size_t NumberOfComponents() const { return components.size(); }
 
-  void CleanUpComponents(void);
-  
-  // Hide copy constructor and assignment operator 
-  G4CompositeDataSet();
-  G4CompositeDataSet(const G4CompositeDataSet& copy);
-  G4CompositeDataSet& operator=(const G4CompositeDataSet& right);
+    virtual const G4DataVector& GetEnergies(G4int componentId) const
+    {
+      return GetComponent(componentId)->GetEnergies(0);
+    }
 
-  std::vector<G4IDataSet*> components;    // Owned pointers
+    virtual const G4DataVector& GetData(G4int componentId) const
+    {
+      return GetComponent(componentId)->GetData(0);
+    }
 
-  G4IInterpolator* algorithm;           // Owned pointer 
-  
-  G4double unitEnergies;
-  G4double unitData;
+    virtual void SetEnergiesData(G4DataVector* x, G4DataVector* data, G4int componentId);
 
-  G4int minZ;
-  G4int maxZ;
+    virtual G4bool LoadData(const G4String& fileName);
+    virtual G4bool SaveData(const G4String& fileName) const;
+
+    virtual G4double RandomSelect(G4int componentId) const;
+
+  private:
+
+    void CleanUpComponents(void);
+
+    // Hide copy constructor and assignment operator
+    G4CompositeDataSet();
+    G4CompositeDataSet(const G4CompositeDataSet& copy);
+    G4CompositeDataSet& operator=(const G4CompositeDataSet& right);
+
+    std::vector<G4IDataSet*> components;  // Owned pointers
+
+    G4IInterpolator* algorithm;  // Owned pointer
+
+    G4double unitEnergies;
+    G4double unitData;
+
+    G4int minZ;
+    G4int maxZ;
 };
 #endif /* G4COMPOSITEDATASET_HH */
-
-
-
-
-
-
-
-
-

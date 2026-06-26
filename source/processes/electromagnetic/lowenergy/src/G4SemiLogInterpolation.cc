@@ -37,83 +37,78 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 // Constructor
-G4SemiLogInterpolation::G4SemiLogInterpolation()
-{ }
-
+G4SemiLogInterpolation::G4SemiLogInterpolation() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 // Destructor
-G4SemiLogInterpolation::~G4SemiLogInterpolation()
-{ }
+G4SemiLogInterpolation::~G4SemiLogInterpolation() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-G4VDataSetAlgorithm* G4SemiLogInterpolation::Clone() const 
-{ return new G4SemiLogInterpolation; }
+G4VDataSetAlgorithm* G4SemiLogInterpolation::Clone() const
+{
+  return new G4SemiLogInterpolation;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-G4double G4SemiLogInterpolation::Calculate(G4double x, G4int bin, 
-					  const G4DataVector& points, 
-					  const G4DataVector& data) const
+G4double G4SemiLogInterpolation::Calculate(G4double x, G4int bin, const G4DataVector& points,
+                                           const G4DataVector& data) const
 {
   G4int nBins = G4int(data.size() - 1);
   G4double value = 0.;
   if (x < points[0])
-    {
-      value = 0.;
-    }
+  {
+    value = 0.;
+  }
   else if (bin < nBins)
-    {
-      G4double e1 = points[bin];
-      G4double e2 = points[bin+1];
-      G4double d1 = data[bin];
-      G4double d2 = data[bin+1];
-      value = (d1*std::log10(e2/x) + d2*std::log10(x/e1)) / std::log10(e2/e1);
-    }
+  {
+    G4double e1 = points[bin];
+    G4double e2 = points[bin + 1];
+    G4double d1 = data[bin];
+    G4double d2 = data[bin + 1];
+    value = (d1 * std::log10(e2 / x) + d2 * std::log10(x / e1)) / std::log10(e2 / e1);
+  }
   else
-    {
-      value = data[nBins];
-    }
+  {
+    value = data[nBins];
+  }
   return value;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-G4double G4SemiLogInterpolation::Calculate(G4double x, G4int bin, 
-				           const G4DataVector& points,
-                                           const G4DataVector& data,
-                                           const G4DataVector& log_points, 
-				           const G4DataVector& /*log_data*/) const
+G4double G4SemiLogInterpolation::Calculate(G4double x, G4int bin, const G4DataVector& points,
+                                           const G4DataVector& data, const G4DataVector& log_points,
+                                           const G4DataVector& /*log_data*/) const
 {
-  //A combination of logarithmic interpolation on energy set and 
-  //linear Interpolation on data set
-  //G4cout << "G4SemiLogInterpolation is performed (4 arguments)" << G4endl;
+  // A combination of logarithmic interpolation on energy set and
+  // linear Interpolation on data set
+  // G4cout << "G4SemiLogInterpolation is performed (4 arguments)" << G4endl;
   G4int nBins = G4int(data.size() - 1);
   G4double value = 0.;
   G4double log_x = std::log10(x);
   if (x < points[0])
-    {
-      value = 0.;
-    }
+  {
+    value = 0.;
+  }
   else if (bin < nBins)
-    {
-      G4double e1 = points[bin];
-      G4double e2 = points[bin+1];
-      G4double d1 = data[bin];
-      G4double d2 = data[bin+1];      
-      G4double log_e1 = log_points[bin];
-      G4double log_e2 = log_points[bin+1];
-     
-      // Values log_e1 and log_e2 are the log values of the corresponding
-      // original energy actual values. Original d1 and d2 values are used.
-      // Simple linear interpolation performed on loagarithmic data 
-      // should be equivalent to semi log-log interpolation
-      if (e1 == 0.0) log_e1 = -300;
-      if (e2 == 0.0) log_e2 = -300;
-      value = d1 + (d2 - d1)*(log_x - log_e1)/(log_e2 - log_e1);
-   }
- else
-   {
-     value = data[nBins];
-   }
+  {
+    G4double e1 = points[bin];
+    G4double e2 = points[bin + 1];
+    G4double d1 = data[bin];
+    G4double d2 = data[bin + 1];
+    G4double log_e1 = log_points[bin];
+    G4double log_e2 = log_points[bin + 1];
+
+    // Values log_e1 and log_e2 are the log values of the corresponding
+    // original energy actual values. Original d1 and d2 values are used.
+    // Simple linear interpolation performed on loagarithmic data
+    // should be equivalent to semi log-log interpolation
+    if (e1 == 0.0) log_e1 = -300;
+    if (e2 == 0.0) log_e2 = -300;
+    value = d1 + (d2 - d1) * (log_x - log_e1) / (log_e2 - log_e1);
+  }
+  else
+  {
+    value = data[nBins];
+  }
   return value;
 }
-

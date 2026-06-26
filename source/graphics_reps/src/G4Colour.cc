@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison 20th October 1996
 
 #include "G4Colour.hh"
@@ -34,9 +34,12 @@
 
 #include <algorithm>
 
-namespace {
-  auto clamp = [](double rgba){return std::clamp(rgba, 0., 1.);};
-}
+namespace
+{
+auto clamp = [](double rgba) {
+  return std::clamp(rgba, 0., 1.);
+};
+}  // namespace
 
 // clang-format off
 G4Colour::G4Colour (G4double r, G4double gr, G4double b, G4double a):
@@ -53,31 +56,32 @@ void G4Colour::SetBlue  (G4double b)  {blue  = clamp(b);}
 void G4Colour::SetAlpha (G4double a)  {alpha = clamp(a);}
 // clang-format on
 
-G4Colour::operator G4ThreeVector() {
-  return G4ThreeVector(red,green,blue);
+G4Colour::operator G4ThreeVector()
+{
+  return G4ThreeVector(red, green, blue);
 }
 
-std::ostream& operator << (std::ostream& os, const G4Colour& c) {
-  os << '(' << c.red << ',' << c.green << ',' << c.blue
-            << ',' << c.alpha << ')';
+std::ostream& operator<<(std::ostream& os, const G4Colour& c)
+{
+  os << '(' << c.red << ',' << c.green << ',' << c.blue << ',' << c.alpha << ')';
   const std::map<G4String, G4Colour>& colourMap = G4Colour::GetMap();
   // Reverse iterator to pick up English spelling of grey!!  :)
   std::map<G4String, G4Colour>::const_reverse_iterator ri;
-  for (ri = colourMap.rbegin(); ri != colourMap.rend(); ++ri) {
-    if (c == ri->second) {
+  for (ri = colourMap.rbegin(); ri != colourMap.rend(); ++ri)
+  {
+    if (c == ri->second)
+    {
       os << " (" << ri->first << ')';
       break;
     }
   }
-  
+
   return os;
 }
 
-G4bool G4Colour::operator != (const G4Colour& c) const {
-  return (red   != c.red)   ||
-      (green != c.green) ||
-      (blue  != c.blue)  ||
-      (alpha != c.alpha);
+G4bool G4Colour::operator!=(const G4Colour& c) const
+{
+  return (red != c.red) || (green != c.green) || (blue != c.blue) || (alpha != c.alpha);
 }
 
 std::map<G4String, G4Colour> G4Colour::fColourMap;
@@ -86,14 +90,14 @@ G4bool G4Colour::fInitColourMap = false;
 void G4Colour::AddToMap(const G4String& key, const G4Colour& colour)
 {
   // Allow only master thread to populate the map
-  if (!G4Threading::IsMasterThread()) {
+  if (!G4Threading::IsMasterThread())
+  {
     static G4bool first = true;
-    if (first) {
+    if (first)
+    {
       first = false;
-      G4Exception
-      ("G4Colour::AddToMap(const G4String& key, const G4Colour& colour)",
-       "greps0002", JustWarning,
-       "Attempt to add to colour map from non-master thread.");
+      G4Exception("G4Colour::AddToMap(const G4String& key, const G4Colour& colour)", "greps0002",
+                  JustWarning, "Attempt to add to colour map from non-master thread.");
     }
     return;
   }
@@ -103,15 +107,15 @@ void G4Colour::AddToMap(const G4String& key, const G4Colour& colour)
 
   // Convert to lower case since colour map is case insensitive
   G4String myKey = G4StrUtil::to_lower_copy(key);
-  
-  if (fColourMap.find(myKey) == fColourMap.end()) fColourMap[myKey] = colour;
-  else {
-    G4ExceptionDescription ed; 
+
+  if (fColourMap.find(myKey) == fColourMap.end())
+    fColourMap[myKey] = colour;
+  else
+  {
+    G4ExceptionDescription ed;
     ed << "G4Colour with key " << myKey << " already exists." << G4endl;
-    G4Exception
-      ("G4Colour::AddToMap(const G4String& key, const G4Colour& colour)",
-       "greps0001", JustWarning, ed,
-       "Colour key exists");
+    G4Exception("G4Colour::AddToMap(const G4String& key, const G4Colour& colour)", "greps0001",
+                JustWarning, ed, "Colour key exists");
   }
 }
 

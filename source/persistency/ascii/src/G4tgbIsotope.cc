@@ -29,17 +29,14 @@
 // --------------------------------------------------------------------
 
 #include "G4tgbIsotope.hh"
+
 #include "G4tgrMessenger.hh"
 
 // --------------------------------------------------------------------
-G4tgbIsotope::G4tgbIsotope()
-{
-}
+G4tgbIsotope::G4tgbIsotope() {}
 
 // --------------------------------------------------------------------
-G4tgbIsotope::~G4tgbIsotope()
-{
-}
+G4tgbIsotope::~G4tgbIsotope() {}
 
 // --------------------------------------------------------------------
 G4tgbIsotope::G4tgbIsotope(G4tgrIsotope* hg)
@@ -53,15 +50,15 @@ G4Isotope* G4tgbIsotope::BuildG4Isotope()
   G4Isotope* isot = nullptr;
 
   //-------- if G4Isotope not found, construct it
-  if(theG4Isot == nullptr)
+  if (theG4Isot == nullptr)
   {
     //----- construct new G4Isotope
 
-    isot = new G4Isotope(theTgrIsot->GetName(), theTgrIsot->GetZ(),
-                         theTgrIsot->GetN(), theTgrIsot->GetA());
+    isot = new G4Isotope(theTgrIsot->GetName(), theTgrIsot->GetZ(), theTgrIsot->GetN(),
+                         theTgrIsot->GetA());
 
 #ifdef G4VERBOSE
-    if(G4tgrMessenger::GetVerboseLevel() >= 2)
+    if (G4tgrMessenger::GetVerboseLevel() >= 2)
     {
       G4cout << "  Constructing new G4Isotope " << *isot << G4endl;
     }

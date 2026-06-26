@@ -29,8 +29,8 @@
 //
 // Author: Ivana Hrivnacova, 21/10/2015  (ivana@ipno.in2p3.fr)
 
-#ifndef G4PlotMessenger_h
-#define G4PlotMessenger_h 1
+#ifndef G4PLOTMESSENGER_HH
+#define G4PLOTMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -47,6 +47,7 @@ class G4UIparameter;
 class G4PlotMessenger : public G4UImessenger
 {
   public:
+
     explicit G4PlotMessenger(G4PlotParameters* plotParameters);
     G4PlotMessenger() = delete;
     ~G4PlotMessenger() override;
@@ -55,11 +56,12 @@ class G4PlotMessenger : public G4UImessenger
     void SetNewValue(G4UIcommand* command, G4String value) final;
 
   private:
+
     // Helper functions
-    template <typename CMD>
+    template<typename CMD>
     std::unique_ptr<CMD> CreateCommand(G4String name, G4String guidance);
-    void AddIntParameter(
-      G4UIcommand& command, G4String name, G4String guidance, G4String range = "");
+    void AddIntParameter(G4UIcommand& command, G4String name, G4String guidance,
+                         G4String range = "");
 
     // Functions to create commands
     void SetStyleCmd();
@@ -67,21 +69,20 @@ class G4PlotMessenger : public G4UImessenger
     void SetDimensionsCmd();
 
     // constants
-    static constexpr std::string_view fkClass { "G4PlotMessenger" };
+    static constexpr std::string_view fkClass{"G4PlotMessenger"};
 
     // Data members
-    G4PlotParameters*  fPlotParameters { nullptr }; ///< Associated class
-    std::unique_ptr<G4UIdirectory>  fDirectory;
+    G4PlotParameters* fPlotParameters{nullptr};  ///< Associated class
+    std::unique_ptr<G4UIdirectory> fDirectory;
 
-    std::unique_ptr<G4UIcommand>  fSetLayoutCmd;
-    std::unique_ptr<G4UIcommand>  fSetDimensionsCmd;
-    std::unique_ptr<G4UIcmdWithAString>  fSetStyleCmd;
+    std::unique_ptr<G4UIcommand> fSetLayoutCmd;
+    std::unique_ptr<G4UIcommand> fSetDimensionsCmd;
+    std::unique_ptr<G4UIcmdWithAString> fSetStyleCmd;
 };
 
 //_____________________________________________________________________________
-template <typename CMD>
-std::unique_ptr<CMD> G4PlotMessenger::CreateCommand(
-  G4String name, G4String guidance)
+template<typename CMD>
+std::unique_ptr<CMD> G4PlotMessenger::CreateCommand(G4String name, G4String guidance)
 {
   G4String fullName = "/analysis/plot/" + name;
 
@@ -93,4 +94,3 @@ std::unique_ptr<CMD> G4PlotMessenger::CreateCommand(
 }
 
 #endif
-

@@ -31,12 +31,13 @@
 // 20140930  Change name from "const char*" to "const G4String"
 
 #include "G4VCascadeCollider.hh"
-#include "G4ios.hh"
 
+#include "G4ios.hh"
 
 // Constructor handles verbose announcement
 
 G4VCascadeCollider::G4VCascadeCollider(const G4String& name, G4int verbose)
-  : theName(name), verboseLevel(verbose) {
+  : theName(name), verboseLevel(verbose)
+{
   if (verboseLevel) G4cout << " >>> " << theName << " ctor " << G4endl;
 }

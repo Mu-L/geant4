@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,10 +41,10 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#ifndef G4ITBox_h
-#define G4ITBox_h
+#ifndef G4ITBOX_HH
+#define G4ITBOX_HH
 
 #include "G4IT.hh"
 
@@ -59,48 +59,49 @@
 
 class G4ITBox
 {
+  public:
 
-public:
-  G4ITBox();
-  ~G4ITBox();
+    G4ITBox();
+    ~G4ITBox();
 
-  void ResetStack();
-  void Push(G4IT*);
-  void Extract(G4IT*);
+    void ResetStack();
+    void Push(G4IT*);
+    void Extract(G4IT*);
 
-  /** The FindIT methods are used for check only.
-   * Those methods are not effective due to the
-   * linear search. It is better to use GetIT(track)
-   * in order to retrieve the IT and GetIT(track)->GetBox()
-   * in order to check which is the box pointer.
-   */
-  G4IT* FindIT(const G4Track&);
-  const G4IT* FindIT(const G4Track&) const;
-  void TransferTo(G4ITBox*);
+    /** The FindIT methods are used for check only.
+     * Those methods are not effective due to the
+     * linear search. It is better to use GetIT(track)
+     * in order to retrieve the IT and GetIT(track)->GetBox()
+     * in order to check which is the box pointer.
+     */
+    G4IT* FindIT(const G4Track&);
+    const G4IT* FindIT(const G4Track&) const;
+    void TransferTo(G4ITBox*);
 
-  inline G4bool Empty() const;
-  inline G4int GetNTrack() const;
+    inline G4bool Empty() const;
+    inline G4int GetNTrack() const;
 
-  inline G4IT* GetFirstIT();
-  inline G4IT* GetLastIT();
-  inline const G4IT* GetFirstIT() const;
-  inline const G4IT* GetLastIT() const;
+    inline G4IT* GetFirstIT();
+    inline G4IT* GetLastIT();
+    inline const G4IT* GetFirstIT() const;
+    inline const G4IT* GetLastIT() const;
 
-  inline void SetNextBox(G4ITBox* box);
-  inline G4ITBox* GetNextBox();
-  inline const G4ITBox* GetNextBox() const;
-  inline void SetPreviousBox(G4ITBox* box);
-  inline G4ITBox* GetPreviousBox();
-  inline const G4ITBox* GetPreviousBox() const;
+    inline void SetNextBox(G4ITBox* box);
+    inline G4ITBox* GetNextBox();
+    inline const G4ITBox* GetNextBox() const;
+    inline void SetPreviousBox(G4ITBox* box);
+    inline G4ITBox* GetPreviousBox();
+    inline const G4ITBox* GetPreviousBox() const;
 
-private:
-  const G4ITBox & operator=(const G4ITBox &right);
-  G4int fNbIT{0};
-  G4IT * fpFirstIT{nullptr};
-  G4IT * fpLastIT{nullptr};
+  private:
 
-  G4ITBox* fpPreviousBox{nullptr};
-  G4ITBox* fpNextBox{nullptr};
+    const G4ITBox& operator=(const G4ITBox& right);
+    G4int fNbIT{0};
+    G4IT* fpFirstIT{nullptr};
+    G4IT* fpLastIT{nullptr};
+
+    G4ITBox* fpPreviousBox{nullptr};
+    G4ITBox* fpNextBox{nullptr};
 };
 
 inline G4bool G4ITBox::Empty() const

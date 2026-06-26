@@ -35,38 +35,36 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4PrecoProtonBuilder_h
-#define G4PrecoProtonBuilder_h 
-
-#include "globals.hh"
+#ifndef G4PRECOPROTONBUILDER_HH
+#define G4PRECOPROTONBUILDER_HH
 
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
+#include "G4PreCompoundModel.hh"
 #include "G4VProtonBuilder.hh"
-
-#include "G4PreCompoundModel.hh"   
+#include "globals.hh"
 
 class G4PrecoProtonBuilder : public G4VProtonBuilder
 {
-  public: 
+  public:
+
     G4PrecoProtonBuilder();
     virtual ~G4PrecoProtonBuilder() {}
 
-  public: 
-    virtual void Build(G4HadronElasticProcess *) final override {};
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
+  public:
 
-    using G4VProtonBuilder::Build; //Prevent compiler warning
+    virtual void Build(G4HadronElasticProcess*) final override {};
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
+
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+
+    using G4VProtonBuilder::Build;  // Prevent compiler warning
 
   private:
 
-    G4PreCompoundModel * theModel;    
+    G4PreCompoundModel* theModel;
     G4double theMin;
     G4double theMax;
-
 };
 
 #endif
-

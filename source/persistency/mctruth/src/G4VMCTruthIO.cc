@@ -31,11 +31,7 @@
 #include "G4VMCTruthIO.hh"
 
 // --------------------------------------------------------------------
-G4VMCTruthIO::G4VMCTruthIO()
-{
-}
+G4VMCTruthIO::G4VMCTruthIO() {}
 
 // --------------------------------------------------------------------
-G4VMCTruthIO::~G4VMCTruthIO()
-{
-}
+G4VMCTruthIO::~G4VMCTruthIO() {}

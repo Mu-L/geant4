@@ -29,6 +29,7 @@
 #define G4PLANE3D_HH
 
 #include "globals.hh"
+
 #include <CLHEP/Geometry/Plane3D.h>
 
 using G4Plane3D = HepGeom::Plane3D<G4double>;

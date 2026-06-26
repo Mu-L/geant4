@@ -28,7 +28,7 @@
 // Author: G.Cosmo, CERN
 // --------------------------------------------------------------------
 #ifndef TRKGDEFS_HH
-#define TRKGDEFS_HH 1
+#define TRKGDEFS_HH
 
 #include "G4Types.hh"
 

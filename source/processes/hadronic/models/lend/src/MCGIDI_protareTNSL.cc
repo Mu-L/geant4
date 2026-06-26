@@ -288,6 +288,26 @@ LUPI_HOST_DEVICE void ProtareTNSL::crossSectionVector( double a_temperature, dou
 }
 
 /* *********************************************************************************************************//**
+ * Adds the energy dependent, total cross section corresponding to the temperature *a_temperature* multiplied by *a_userFact
+ *
+ * @param   a_temperature               [in]        Specifies the temperature of the material.
+ * @param   a_userFactor                [in]        User factor which all cross sections are multiplied by.
+ * @param   a_numberAllocated           [in]        The length of memory allocated for *a_crossSectionVector*.
+ * @param   a_crossSectionVector        [in/out]    The energy dependent, total cross section to add cross section data to.
+ ***********************************************************************************************************/
+
+LUPI_HOST_DEVICE void ProtareTNSL::crossSectionVector( double a_temperature, double a_userFactor, std::size_t a_numberAllocated, 
+                float *a_crossSectionVector ) const {
+
+    if( a_temperature <= m_TNSL_maximumTemperature ) {
+        m_TNSL->crossSectionVector( a_temperature, a_userFactor, a_numberAllocated, a_crossSectionVector );
+        m_protareWithoutElastic->crossSectionVector( a_temperature, a_userFactor, a_numberAllocated, a_crossSectionVector ); }
+    else {
+        m_protareWithElastic->crossSectionVector( a_temperature, a_userFactor, a_numberAllocated, a_crossSectionVector );
+    }
+}
+
+/* *********************************************************************************************************//**
  * Returns the cross section for reaction at index *a_reactionIndex*, for target at temperature *a_temperature* and projectile of energy *a_energy*.
  *
  * @param   a_URR_protareInfos  [in]    URR information.

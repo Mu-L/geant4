@@ -50,52 +50,54 @@ using G4SecondaryLoopAction = void (*)();
 
 class G4VInteractorManager
 {
- public:
-  G4VInteractorManager();
-  virtual ~G4VInteractorManager();
-  void SetArguments(int, char**);
-  char** GetArguments(int*);
-  void SetMainInteractor(G4Interactor);
-  G4Interactor GetMainInteractor();
-  void AddDispatcher(G4DispatchFunction);
-  void RemoveDispatcher(G4DispatchFunction);
-  void AddSecondaryLoopPreAction(G4SecondaryLoopAction);
-  void AddSecondaryLoopPostAction(G4SecondaryLoopAction);
-  void AddShell(G4Interactor);
-  void RemoveShell(G4Interactor);
-  void EnableSecondaryLoop();
-  void DisableSecondaryLoop();
-  void SecondaryLoopPreActions();
-  void SecondaryLoopPostActions();
-  void RequireExitSecondaryLoop(int);
-  void DispatchEvent(void*);
-  virtual void SecondaryLoop();
-  int GetExitSecondaryLoopCode();
-  void PutStringInResourceDatabase(char*);
-  virtual G4bool Inited() = 0;
-  virtual void* GetEvent() = 0;
-  virtual void FlushAndWaitExecution() = 0;
-  void SetParentInteractor(G4Interactor);
-  G4Interactor GetParentInteractor();
-  void SetCreatedInteractor(G4Interactor);
-  G4Interactor GetCreatedInteractor();
-  void SetCreationString(char*);
-  char* GetCreationString();
+  public:
 
- private:
-  int argc;
-  char** argv;
-  G4Interactor mainInteractor;
-  std::vector<G4DispatchFunction> dispatchers;
-  std::vector<G4SecondaryLoopAction> preActions;
-  std::vector<G4SecondaryLoopAction> postActions;
-  std::vector<G4Interactor> shells;
-  G4bool secondaryLoopEnabled;
-  G4bool alreadyInSecondaryLoop;
-  int exitSecondaryLoop;
-  G4Interactor parentInteractor;
-  G4Interactor createdInteractor;
-  char* creationString;
+    G4VInteractorManager();
+    virtual ~G4VInteractorManager();
+    void SetArguments(int, char**);
+    char** GetArguments(int*);
+    void SetMainInteractor(G4Interactor);
+    G4Interactor GetMainInteractor();
+    void AddDispatcher(G4DispatchFunction);
+    void RemoveDispatcher(G4DispatchFunction);
+    void AddSecondaryLoopPreAction(G4SecondaryLoopAction);
+    void AddSecondaryLoopPostAction(G4SecondaryLoopAction);
+    void AddShell(G4Interactor);
+    void RemoveShell(G4Interactor);
+    void EnableSecondaryLoop();
+    void DisableSecondaryLoop();
+    void SecondaryLoopPreActions();
+    void SecondaryLoopPostActions();
+    void RequireExitSecondaryLoop(int);
+    void DispatchEvent(void*);
+    virtual void SecondaryLoop();
+    int GetExitSecondaryLoopCode();
+    void PutStringInResourceDatabase(char*);
+    virtual G4bool Inited() = 0;
+    virtual void* GetEvent() = 0;
+    virtual void FlushAndWaitExecution() = 0;
+    void SetParentInteractor(G4Interactor);
+    G4Interactor GetParentInteractor();
+    void SetCreatedInteractor(G4Interactor);
+    G4Interactor GetCreatedInteractor();
+    void SetCreationString(char*);
+    char* GetCreationString();
+
+  private:
+
+    int argc;
+    char** argv;
+    G4Interactor mainInteractor;
+    std::vector<G4DispatchFunction> dispatchers;
+    std::vector<G4SecondaryLoopAction> preActions;
+    std::vector<G4SecondaryLoopAction> postActions;
+    std::vector<G4Interactor> shells;
+    G4bool secondaryLoopEnabled;
+    G4bool alreadyInSecondaryLoop;
+    int exitSecondaryLoop;
+    G4Interactor parentInteractor;
+    G4Interactor createdInteractor;
+    char* creationString;
 };
 
 #define OGL_EXIT_CODE 1

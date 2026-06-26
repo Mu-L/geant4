@@ -36,34 +36,33 @@
 //
 
 #include "G4VHadronPhysics.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4HadronicProcessType.hh"
-#include "G4HadronicProcessStore.hh"
-#include "G4HadronElasticProcess.hh"
-#include "G4Neutron.hh"
-#include "G4MesonConstructor.hh"
-#include "G4BaryonConstructor.hh"
-#include "G4IonConstructor.hh"
-#include "G4ShortLivedConstructor.hh"
-#include "G4ProcessVector.hh"
-#include "G4ProcessManager.hh"
-#include "G4VHadronModelBuilder.hh"
-#include "G4HadronicParameters.hh"
 
-G4VHadronPhysics::G4VHadronPhysics(const G4String& aName, G4int verb)
-  : G4VPhysicsConstructor(aName)
+#include "G4BaryonConstructor.hh"
+#include "G4HadronElasticProcess.hh"
+#include "G4HadronicParameters.hh"
+#include "G4HadronicProcessStore.hh"
+#include "G4HadronicProcessType.hh"
+#include "G4IonConstructor.hh"
+#include "G4MesonConstructor.hh"
+#include "G4Neutron.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ProcessManager.hh"
+#include "G4ProcessVector.hh"
+#include "G4ShortLivedConstructor.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4VHadronModelBuilder.hh"
+
+G4VHadronPhysics::G4VHadronPhysics(const G4String& aName, G4int verb) : G4VPhysicsConstructor(aName)
 {
   SetVerboseLevel(verb);
   G4HadronicParameters::Instance()->SetVerboseLevel(verb);
-  if (verboseLevel>1) {
-    G4cout << "### G4VHadronPhysics: <" << aName << "> is created "
-	   << G4endl;
+  if (verboseLevel > 1)
+  {
+    G4cout << "### G4VHadronPhysics: <" << aName << "> is created " << G4endl;
   }
 }
 
-G4VHadronPhysics::~G4VHadronPhysics() 
-{}
+G4VHadronPhysics::~G4VHadronPhysics() {}
 
 void G4VHadronPhysics::ConstructParticle()
 {
@@ -80,38 +79,31 @@ void G4VHadronPhysics::ConstructParticle()
   pShortLivedConstructor.ConstructParticle();
 }
 
-G4HadronicInteraction* 
-G4VHadronPhysics::BuildModel(G4VHadronModelBuilder* mBuilder,
-			     G4double emin, 
-			     G4double emax)
+G4HadronicInteraction* G4VHadronPhysics::BuildModel(G4VHadronModelBuilder* mBuilder, G4double emin,
+                                                    G4double emax)
 {
   G4HadronicInteraction* model = mBuilder->GetModel();
   model->SetMinEnergy(emin);
   model->SetMaxEnergy(emax);
-  if (verboseLevel>1) {
-    G4cout << "### G4VHadronPhysics <" 
-	   << model->GetModelName() << " Emin(GeV)= " 
-	   << emin/GeV << "  Emax(GeV)= " << emax/GeV
-	   << G4endl;
+  if (verboseLevel > 1)
+  {
+    G4cout << "### G4VHadronPhysics <" << model->GetModelName() << " Emin(GeV)= " << emin / GeV
+           << "  Emax(GeV)= " << emax / GeV << G4endl;
   }
 
   return model;
 }
 
-G4HadronicInteraction* 
-G4VHadronPhysics::NewModel(G4HadronicInteraction* model,
-			   G4double emin, 
-			   G4double emax)
+G4HadronicInteraction* G4VHadronPhysics::NewModel(G4HadronicInteraction* model, G4double emin,
+                                                  G4double emax)
 {
-  if(nullptr == model) return model;
+  if (nullptr == model) return model;
   model->SetMinEnergy(emin);
   model->SetMaxEnergy(emax);
-  if (verboseLevel>1) {
-    G4cout << "### G4VHadronPhysics <" 
-	   << model->GetModelName() << " Emin(GeV)= " 
-	   << emin/GeV << "  Emax(GeV)= " << emax/GeV
-	   << G4endl;
+  if (verboseLevel > 1)
+  {
+    G4cout << "### G4VHadronPhysics <" << model->GetModelName() << " Emin(GeV)= " << emin / GeV
+           << "  Emax(GeV)= " << emax / GeV << G4endl;
   }
   return model;
 }
-

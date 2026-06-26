@@ -31,67 +31,45 @@
 //      File name:     G4XNNTotal
 //
 //      Author:        Maria Grazia Pia (MariaGrazia.Pia@genova.infn.it)
-// 
+//
 //      Creation date: 15 April 1999
 //
-//      Modifications: 
-//      
+//      Modifications:
+//
 // -------------------------------------------------------------------
 
 #ifndef G4XNPELASTIC_HH
 #define G4XNPELASTIC_HH
 
-#include "globals.hh"
 #include "G4CrossSectionPatch.hh"
 #include "G4CrossSectionVector.hh"
+#include "globals.hh"
 
 class G4KineticTrack;
 
 class G4XnpElastic : public G4CrossSectionPatch
 {
+  public:
 
-public:
+    G4XnpElastic();
 
-  G4XnpElastic();
+    virtual ~G4XnpElastic();
 
-  virtual ~G4XnpElastic();
+    G4bool operator==(const G4XnpElastic& right) const;
+    G4bool operator!=(const G4XnpElastic& right) const;
 
-  G4bool operator==(const G4XnpElastic &right) const;
-  G4bool operator!=(const G4XnpElastic &right) const;
+    virtual const G4CrossSectionVector* GetComponents() const { return components; }
 
-  virtual const G4CrossSectionVector* GetComponents() const { return components; } 
- 
-  virtual G4String Name() const;
+    virtual G4String Name() const;
 
+  protected:
 
-protected:
+  private:
 
+    G4XnpElastic(const G4XnpElastic& right);
+    const G4XnpElastic& operator=(const G4XnpElastic& right);
 
-private:  
-
-  G4XnpElastic(const G4XnpElastic &right);
-  const G4XnpElastic& operator=(const G4XnpElastic &right);
-
-  G4CrossSectionVector* components;
-
+    G4CrossSectionVector* components;
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

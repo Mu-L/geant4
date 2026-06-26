@@ -29,12 +29,12 @@
 // --------------------------------------------------------------------
 
 #include "G4PersistencyCenter.hh"
-#include "G4PersistencyCenterMessenger.hh"
 
-#include "G4UImanager.hh"
+#include "G4PersistencyCenterMessenger.hh"
 #include "G4PersistencyManager.hh"
-#include "G4VHCIOentry.hh"
+#include "G4UImanager.hh"
 #include "G4VDCIOentry.hh"
+#include "G4VHCIOentry.hh"
 
 G4ThreadLocal G4PersistencyCenter* G4PersistencyCenter::f_thePointer = nullptr;
 
@@ -49,25 +49,25 @@ G4PersistencyCenter::G4PersistencyCenter()
   f_rdObj[0] = "Hits";
   f_rdObj[1] = "HitsBG";
 
-  for(auto itr = f_wrObj.cbegin(); itr != f_wrObj.cend(); ++itr)
+  for (auto itr = f_wrObj.cbegin(); itr != f_wrObj.cend(); ++itr)
   {
     f_writeFileName[(*itr).second] = "G4defaultOutput";
   }
 
-  for(auto itr = f_rdObj.cbegin(); itr != f_rdObj.cend(); ++itr)
+  for (auto itr = f_rdObj.cbegin(); itr != f_rdObj.cend(); ++itr)
   {
     f_readFileName[(*itr).second] = "G4defaultInput";
   }
 
-  f_writeFileMode["HepMC"]   = kRecycle;
+  f_writeFileMode["HepMC"] = kRecycle;
   f_writeFileMode["MCTruth"] = kOn;
-  f_writeFileMode["Hits"]    = kOn;
-  f_writeFileMode["Digits"]  = kOff;
+  f_writeFileMode["Hits"] = kOn;
+  f_writeFileMode["Digits"] = kOff;
 
-  f_readFileMode["Hits"]   = false;
+  f_readFileMode["Hits"] = false;
   f_readFileMode["HitsBG"] = false;
 
-  f_theMessenger   = new G4PersistencyCenterMessenger(this);
+  f_theMessenger = new G4PersistencyCenterMessenger(this);
   f_currentManager = new G4PersistencyManager(this, "Default");
 }
 
@@ -81,8 +81,7 @@ G4PersistencyCenter::~G4PersistencyCenter()
 // --------------------------------------------------------------------
 G4PersistencyCenter* G4PersistencyCenter::GetPersistencyCenter()
 {
-  if(f_thePointer == nullptr)
-    f_thePointer = new G4PersistencyCenter;
+  if (f_thePointer == nullptr) f_thePointer = new G4PersistencyCenter;
   return f_thePointer;
 }
 
@@ -91,30 +90,28 @@ void G4PersistencyCenter::SelectSystem(const G4String& systemName)
 {
   G4int st = 0;
 
-  if(f_currentManager != nullptr)
-    delete f_currentManager;
+  if (f_currentManager != nullptr) delete f_currentManager;
 
   G4PersistencyManager* pm = nullptr;
 
-  if(systemName == "ROOT")
+  if (systemName == "ROOT")
   {
-    G4cout << " G4PersistencyCenter: \"ROOT\" Persistency Package is selected."
-           << G4endl;
+    G4cout << " G4PersistencyCenter: \"ROOT\" Persistency Package is selected." << G4endl;
     // G4UImanager *man=G4UImanager::GetUIpointer();
     // std::string libs="Cint:Core:Tree:Rint:Matrix:Physics:fadsROOT";
     // st = man->ApplyCommand("/load "+libs);
-    if(st == 0)
+    if (st == 0)
     {
       pm = GetPersistencyManager("ROOT");
     }
   }
-  else if(systemName == "ODBMS")
+  else if (systemName == "ODBMS")
   {
     G4cout << " G4PersistencyCenter: \"ODBMS\" package is selected." << G4endl;
     // G4UImanager *man=G4UImanager::GetUIpointer();
     // std::string libs="fadsODBMS";
     // st = man->ApplyCommand("/load "+libs);
-    if(st == 0)
+    if (st == 0)
     {
       pm = GetPersistencyManager("ODBMS");
     }
@@ -125,11 +122,10 @@ void G4PersistencyCenter::SelectSystem(const G4String& systemName)
     pm = new G4PersistencyManager(this, "Default");
   }
 
-  if(st == 0)
+  if (st == 0)
   {
     f_currentManager = pm->Create();
-    if(f_currentManager != nullptr)
-      f_currentManager->SetVerboseLevel(m_verbose);
+    if (f_currentManager != nullptr) f_currentManager->SetVerboseLevel(m_verbose);
     f_currentSystemName = systemName;
   }
 }
@@ -137,7 +133,7 @@ void G4PersistencyCenter::SelectSystem(const G4String& systemName)
 // --------------------------------------------------------------------
 void G4PersistencyCenter::SetHepMCObjyReaderFile(const G4String& file)
 {
-  if(SetReadFile("HepMC", file))
+  if (SetReadFile("HepMC", file))
   {
     SetRetrieveMode("HepMC", true);
   }
@@ -146,7 +142,7 @@ void G4PersistencyCenter::SetHepMCObjyReaderFile(const G4String& file)
 // --------------------------------------------------------------------
 G4String G4PersistencyCenter::CurrentHepMCObjyReaderFile()
 {
-  if(CurrentRetrieveMode("HepMC"))
+  if (CurrentRetrieveMode("HepMC"))
   {
     return CurrentReadFile("HepMC");
   }
@@ -159,7 +155,7 @@ G4String G4PersistencyCenter::CurrentHepMCObjyReaderFile()
 // --------------------------------------------------------------------
 void G4PersistencyCenter::SetStoreMode(const G4String& objName, StoreMode mode)
 {
-  if((*(f_writeFileName.find(objName))).second != "")
+  if ((*(f_writeFileName.find(objName))).second != "")
   {
     f_writeFileMode[objName] = mode;
   }
@@ -172,7 +168,7 @@ void G4PersistencyCenter::SetStoreMode(const G4String& objName, StoreMode mode)
 // --------------------------------------------------------------------
 void G4PersistencyCenter::SetRetrieveMode(const G4String& objName, G4bool mode)
 {
-  if((*(f_readFileName.find(objName))).second != "")
+  if ((*(f_readFileName.find(objName))).second != "")
   {
     f_readFileMode[objName] = mode;
   }
@@ -185,7 +181,7 @@ void G4PersistencyCenter::SetRetrieveMode(const G4String& objName, G4bool mode)
 // --------------------------------------------------------------------
 StoreMode G4PersistencyCenter::CurrentStoreMode(const G4String& objName)
 {
-  if((*(f_writeFileName.find(objName))).second != "")
+  if ((*(f_writeFileName.find(objName))).second != "")
   {
     return f_writeFileMode[objName];
   }
@@ -198,7 +194,7 @@ StoreMode G4PersistencyCenter::CurrentStoreMode(const G4String& objName)
 // --------------------------------------------------------------------
 G4bool G4PersistencyCenter::CurrentRetrieveMode(const G4String& objName)
 {
-  if((*(f_readFileName.find(objName))).second != "")
+  if ((*(f_readFileName.find(objName))).second != "")
   {
     return f_readFileMode[objName];
   }
@@ -209,10 +205,9 @@ G4bool G4PersistencyCenter::CurrentRetrieveMode(const G4String& objName)
 }
 
 // --------------------------------------------------------------------
-G4bool G4PersistencyCenter::SetWriteFile(const G4String& objName,
-                                         const G4String& writeFileName)
+G4bool G4PersistencyCenter::SetWriteFile(const G4String& objName, const G4String& writeFileName)
 {
-  if((*(f_writeFileName.find(objName))).second != "")
+  if ((*(f_writeFileName.find(objName))).second != "")
   {
     f_writeFileName[objName] = writeFileName;
   }
@@ -225,11 +220,10 @@ G4bool G4PersistencyCenter::SetWriteFile(const G4String& objName,
 }
 
 // --------------------------------------------------------------------
-G4bool G4PersistencyCenter::SetReadFile(const G4String& objName,
-                                        const G4String& readFileName)
+G4bool G4PersistencyCenter::SetReadFile(const G4String& objName, const G4String& readFileName)
 {
 #ifndef WIN32
-  if(f_ut.FileExists(readFileName))
+  if (f_ut.FileExists(readFileName))
   {
     f_readFileName[objName] = readFileName;
   }
@@ -245,7 +239,7 @@ G4bool G4PersistencyCenter::SetReadFile(const G4String& objName,
 // --------------------------------------------------------------------
 G4String G4PersistencyCenter::CurrentWriteFile(const G4String& objName)
 {
-  if((*(f_writeFileName.find(objName))).second != "")
+  if ((*(f_writeFileName.find(objName))).second != "")
   {
     return f_writeFileName[objName];
   }
@@ -258,7 +252,7 @@ G4String G4PersistencyCenter::CurrentWriteFile(const G4String& objName)
 // --------------------------------------------------------------------
 G4String G4PersistencyCenter::CurrentReadFile(const G4String& objName)
 {
-  if((*(f_readFileName.find(objName))).second != "")
+  if ((*(f_readFileName.find(objName))).second != "")
   {
     return f_readFileName[objName];
   }
@@ -271,34 +265,31 @@ G4String G4PersistencyCenter::CurrentReadFile(const G4String& objName)
 // --------------------------------------------------------------------
 G4String G4PersistencyCenter::CurrentObject(const G4String& file)
 {
-  for(auto itr = f_readFileName.cbegin(); itr != f_readFileName.cend(); ++itr)
+  for (auto itr = f_readFileName.cbegin(); itr != f_readFileName.cend(); ++itr)
   {
-    if(file == (*itr).second)
-      return (*itr).first;
+    if (file == (*itr).second) return (*itr).first;
   }
-  for(auto itr = f_writeFileName.cbegin(); itr != f_writeFileName.cend(); ++itr)
+  for (auto itr = f_writeFileName.cbegin(); itr != f_writeFileName.cend(); ++itr)
   {
-    if(file == (*itr).second)
-      return (*itr).first;
+    if (file == (*itr).second) return (*itr).first;
   }
   return "?????";
 }
 
 // --------------------------------------------------------------------
-void G4PersistencyCenter::AddHCIOmanager(const G4String& detName,
-                                         const G4String& colName)
+void G4PersistencyCenter::AddHCIOmanager(const G4String& detName, const G4String& colName)
 {
   G4HCIOcatalog* ioc = G4HCIOcatalog::GetHCIOcatalog();
 
   G4VHCIOentry* ioe = ioc->GetEntry(detName);
-  if(ioe != nullptr)
+  if (ioe != nullptr)
   {
     ioe->CreateHCIOmanager(detName, colName);
   }
   else
   {
-    G4cerr << "Error! -- HCIO assignment failed for detector " << detName
-           << ", collection " << colName << G4endl;
+    G4cerr << "Error! -- HCIO assignment failed for detector " << detName << ", collection "
+           << colName << G4endl;
   }
 }
 
@@ -316,14 +307,14 @@ void G4PersistencyCenter::AddDCIOmanager(const G4String& detName)
 
   G4String colName = "";
   G4VDCIOentry* ioe = ioc->GetEntry(detName);
-  if(ioe != nullptr)
+  if (ioe != nullptr)
   {
     ioe->CreateDCIOmanager(detName, colName);
   }
   else
   {
-    G4cerr << "Error! -- DCIO assignment failed for detector " << detName
-           << ", collection " << colName << G4endl;
+    G4cerr << "Error! -- DCIO assignment failed for detector " << detName << ", collection "
+           << colName << G4endl;
   }
 }
 
@@ -344,43 +335,42 @@ void G4PersistencyCenter::PrintAll()
   StoreMode mode;
 
   G4cout << "Output object types and file names:" << G4endl;
-  for(auto itr = f_wrObj.cbegin(); itr != f_wrObj.cend(); ++itr)
+  for (auto itr = f_wrObj.cbegin(); itr != f_wrObj.cend(); ++itr)
   {
     name = (*itr).second;
     // disabled HepMC and MCTruth for now
-    if(name != "HepMC" && name != "MCTruth")
+    if (name != "HepMC" && name != "MCTruth")
     {
       G4cout << "  Object: " << PadString(name, 9);
       mode = CurrentStoreMode(name);
-      if(mode == kOn)
+      if (mode == kOn)
       {
         G4cout << " <on>    ";
       }
-      else if(mode == kOff)
+      else if (mode == kOff)
       {
         G4cout << " <off>   ";
       }
-      else if(mode == kRecycle)
+      else if (mode == kRecycle)
       {
         G4cout << "<recycle>";
       }
       file = CurrentWriteFile(name);
-      if(file == "")
-        file = "   <N/A>";
+      if (file == "") file = "   <N/A>";
       G4cout << " File: " << file << G4endl;
     }
   }
   G4cout << G4endl;
 
   G4cout << "Input object types and file names:" << G4endl;
-  for(auto itr = f_rdObj.cbegin(); itr != f_rdObj.cend(); ++itr)
+  for (auto itr = f_rdObj.cbegin(); itr != f_rdObj.cend(); ++itr)
   {
     name = (*itr).second;
     // disabled HepMC and MCTruth for now
-    if(name != "HepMC" && name != "MCTruth")
+    if (name != "HepMC" && name != "MCTruth")
     {
       G4cout << "  Object: " << PadString(name, 9);
-      if(CurrentRetrieveMode(name))
+      if (CurrentRetrieveMode(name))
       {
         G4cout << " <on>    ";
       }
@@ -389,15 +379,14 @@ void G4PersistencyCenter::PrintAll()
         G4cout << " <off>   ";
       }
       file = CurrentReadFile(name);
-      if(file == "")
-        file = "   <N/A>";
+      if (file == "") file = "   <N/A>";
       G4cout << " File: " << CurrentReadFile(name) << G4endl;
     }
   }
   G4cout << G4endl;
 
   G4HCIOcatalog* hioc = G4HCIOcatalog::GetHCIOcatalog();
-  if(hioc != nullptr)
+  if (hioc != nullptr)
   {
     G4cout << "Hit IO Managers:" << G4endl;
     hioc->PrintEntries();
@@ -410,7 +399,7 @@ void G4PersistencyCenter::PrintAll()
   }
 
   G4DCIOcatalog* dioc = G4DCIOcatalog::GetDCIOcatalog();
-  if(dioc != nullptr)
+  if (dioc != nullptr)
   {
     G4cout << "Digit IO Managers:" << G4endl;
     dioc->PrintEntries();
@@ -424,19 +413,16 @@ void G4PersistencyCenter::PrintAll()
 }
 
 // --------------------------------------------------------------------
-void G4PersistencyCenter::SetPersistencyManager(G4PersistencyManager* pm,
-                                                const G4String& name)
+void G4PersistencyCenter::SetPersistencyManager(G4PersistencyManager* pm, const G4String& name)
 {
-  f_currentManager    = pm;
+  f_currentManager = pm;
   f_currentSystemName = name;
 }
 
 // --------------------------------------------------------------------
-G4PersistencyManager*
-G4PersistencyCenter::GetPersistencyManager(const G4String& nam)
+G4PersistencyManager* G4PersistencyCenter::GetPersistencyManager(const G4String& nam)
 {
-  if(f_theCatalog.find(nam) != f_theCatalog.cend())
-    return f_theCatalog[nam];
+  if (f_theCatalog.find(nam) != f_theCatalog.cend()) return f_theCatalog[nam];
   return nullptr;
 }
 
@@ -449,8 +435,7 @@ void G4PersistencyCenter::RegisterPersistencyManager(G4PersistencyManager* pm)
 // --------------------------------------------------------------------
 void G4PersistencyCenter::DeletePersistencyManager()
 {
-  if(f_currentManager != nullptr)
-    delete f_currentManager;
+  if (f_currentManager != nullptr) delete f_currentManager;
   f_currentManager = nullptr;
 }
 
@@ -458,22 +443,20 @@ void G4PersistencyCenter::DeletePersistencyManager()
 void G4PersistencyCenter::SetVerboseLevel(G4int v)
 {
   m_verbose = v;
-  if(f_currentManager != nullptr)
-    f_currentManager->SetVerboseLevel(m_verbose);
+  if (f_currentManager != nullptr) f_currentManager->SetVerboseLevel(m_verbose);
 }
 
 // --------------------------------------------------------------------
-G4String G4PersistencyCenter::PadString(const G4String& name,
-                                        unsigned int width)
+G4String G4PersistencyCenter::PadString(const G4String& name, unsigned int width)
 {
-  if(name.length() > width)
+  if (name.length() > width)
   {
     return name.substr(0, width - 1) + "#";
   }
   else
   {
     G4String wname = name;
-    for(unsigned int i = 0; i < width - name.length(); ++i)
+    for (unsigned int i = 0; i < width - name.length(); ++i)
       wname = wname + " ";
     return wname;
   }

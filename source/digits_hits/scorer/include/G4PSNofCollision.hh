@@ -26,11 +26,11 @@
 //
 //
 
-#ifndef G4PSNofCollision_h
-#define G4PSNofCollision_h 1
+#ifndef G4PSNOFCOLLISION_HH
+#define G4PSNOFCOLLISION_HH
 
-#include "G4VPrimitiveScorer.hh"
 #include "G4THitsMap.hh"
+#include "G4VPrimitiveScorer.hh"
 
 //////////////////////////////////////////////////////////////////////////////////
 // (Description)
@@ -43,26 +43,29 @@
 
 class G4PSNofCollision : public G4VPrimitiveScorer
 {
- public:
-  G4PSNofCollision(const G4String& name, G4int depth = 0);
-  ~G4PSNofCollision() override = default;
+  public:
 
-  inline void Weighted(G4bool flg = true) { weighted = flg; }
-  // Multiply track weight
+    G4PSNofCollision(const G4String& name, G4int depth = 0);
+    ~G4PSNofCollision() override = default;
 
-  void Initialize(G4HCofThisEvent*) override;
-  void clear() override;
-  void PrintAll() override;
+    inline void Weighted(G4bool flg = true) { weighted = flg; }
+    // Multiply track weight
 
-  virtual void SetUnit(const G4String& unit);
+    void Initialize(G4HCofThisEvent*) override;
+    void clear() override;
+    void PrintAll() override;
 
- protected:
-  G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+    virtual void SetUnit(const G4String& unit);
 
- private:
-  G4int HCID{-1};
-  G4THitsMap<G4double>* EvtMap{nullptr};
-  G4bool weighted{false};
+  protected:
+
+    G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+
+  private:
+
+    G4int HCID{-1};
+    G4THitsMap<G4double>* EvtMap{nullptr};
+    G4bool weighted{false};
 };
 
 #endif

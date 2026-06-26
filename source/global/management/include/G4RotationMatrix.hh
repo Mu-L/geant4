@@ -28,13 +28,14 @@
 // Author: G.Cosmo (CERN), 1997
 // --------------------------------------------------------------------
 #ifndef G4ROTATIONMATRIX_HH
-#define G4ROTATIONMATRIX_HH 1
+#define G4ROTATIONMATRIX_HH
 
 #include "G4ThreeVector.hh"
 #include "globals.hh"
+
 #include <CLHEP/Vector/Rotation.h>
 
 using G4RotationMatrix = CLHEP::HepRotation;
-using G4Rep3x3         = CLHEP::HepRep3x3;
+using G4Rep3x3 = CLHEP::HepRep3x3;
 
 #endif

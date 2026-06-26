@@ -45,7 +45,8 @@ G4double G4ParticleHPMadlandNixSpectrum::Madland(G4double aSecEnergy, G4double t
   G4double lightU2 = std::sqrt(energy) + std::sqrt(EF);
   lightU2 *= lightU2 / tm;
   G4double lightTerm = 0;
-  if (theAvarageKineticPerNucleonForLightFragments > 1 * eV) {
+  if (theAvarageKineticPerNucleonForLightFragments > 1 * eV)
+  {
     lightTerm = Pow->powA(lightU2, 1.5) * E1(lightU2);
     lightTerm -= Pow->powA(lightU1, 1.5) * E1(lightU1);
     lightTerm += Gamma15(lightU2) - Gamma15(lightU1);
@@ -58,7 +59,8 @@ G4double G4ParticleHPMadlandNixSpectrum::Madland(G4double aSecEnergy, G4double t
   G4double heavyU2 = std::sqrt(energy) + std::sqrt(EF);
   heavyU2 *= heavyU2 / tm;
   G4double heavyTerm = 0;
-  if (theAvarageKineticPerNucleonForHeavyFragments > 1 * eV) {
+  if (theAvarageKineticPerNucleonForHeavyFragments > 1 * eV)
+  {
     heavyTerm = Pow->powA(heavyU2, 1.5) * E1(heavyU2);
     heavyTerm -= Pow->powA(heavyU1, 1.5) * E1(heavyU1);
     heavyTerm += Gamma15(heavyU2) - Gamma15(heavyU1);
@@ -80,16 +82,19 @@ G4double G4ParticleHPMadlandNixSpectrum::Sample(G4double anEnergy)
 
   G4int icounter = 0;
   G4int icounter_max = 1024;
-  do {
+  do
+  {
     icounter++;
-    if (icounter > icounter_max) {
+    if (icounter > icounter_max)
+    {
       G4cout << "Loop-counter exceeded the threshold value at " << __LINE__ << "th line of "
              << __FILE__ << "." << G4endl;
       break;
     }
     oldValue = newValue;
     newValue = FissionIntegral(tm, current);
-    if (newValue < random) {
+    if (newValue < random)
+    {
       buff = current;
       current += std::abs(current - last) / 2.;
       last = buff;
@@ -97,7 +102,8 @@ G4double G4ParticleHPMadlandNixSpectrum::Sample(G4double anEnergy)
         throw G4HadronicException(__FILE__, __LINE__,
                                   "Madland-Nix Spectrum has not converged in sampling");
     }
-    else {
+    else
+    {
       buff = current;
       current -= std::abs(current - last) / 2.;
       last = buff;
@@ -125,7 +131,8 @@ G4double G4ParticleHPMadlandNixSpectrum::GIntegral(G4double tm, G4double anEnerg
   G4double result;
   G4double alpha2 = alpha * alpha;
   G4double alphabeta = alpha * beta;
-  if (b < EF) {
+  if (b < EF)
+  {
     result = ((0.4 * alpha2 * Pow->powA(B, 2.5) - 0.5 * alphabeta * B * B) * E1(B)
               - (0.4 * alpha2 * Pow->powA(A, 2.5) - 0.5 * alphabeta * A * A) * E1(A))
              - ((0.4 * alpha2 * Pow->powA(Bp, 2.5) + 0.5 * alphabeta * Bp * Bp) * E1(Bp)
@@ -139,7 +146,8 @@ G4double G4ParticleHPMadlandNixSpectrum::GIntegral(G4double tm, G4double anEnerg
                  * (G4Exp(-B) * (1 + B) - G4Exp(-A) * (1 + A) + G4Exp(-Bp) * (1 + Bp)
                     + G4Exp(-Ap) * (1 + Ap));
   }
-  else {
+  else
+  {
     result = ((0.4 * alpha2 * Pow->powA(B, 2.5) - 0.5 * alphabeta * B * B) * E1(B)
               - (0.4 * alpha2 * Pow->powA(A, 2.5) - 0.5 * alphabeta * A * A) * E1(A));
     result -= ((0.4 * alpha2 * Pow->powA(Bp, 2.5) + 0.5 * alphabeta * Bp * Bp) * E1(Bp)

@@ -26,56 +26,47 @@
 // Implementation of inline methods of G4Torus
 // --------------------------------------------------------------------
 
-inline
-G4double G4Torus::GetRmin() const
+inline G4double G4Torus::GetRmin() const
 {
-  return fRmin ;
+  return fRmin;
 }
 
-inline
-G4double G4Torus::GetRmax() const
+inline G4double G4Torus::GetRmax() const
 {
-  return fRmax ;
+  return fRmax;
 }
 
-inline
-G4double G4Torus::GetRtor() const
+inline G4double G4Torus::GetRtor() const
 {
-  return fRtor ;
+  return fRtor;
 }
 
-inline
-G4double G4Torus::GetSPhi() const
+inline G4double G4Torus::GetSPhi() const
 {
-  return fSPhi ;
+  return fSPhi;
 }
 
-inline
-G4double G4Torus::GetDPhi() const
+inline G4double G4Torus::GetDPhi() const
 {
-  return fDPhi ;
+  return fDPhi;
 }
 
-inline
-G4double G4Torus::GetSinStartPhi () const
+inline G4double G4Torus::GetSinStartPhi() const
 {
   return std::sin(fSPhi);
 }
 
-inline
-G4double G4Torus::GetCosStartPhi () const
+inline G4double G4Torus::GetCosStartPhi() const
 {
   return std::cos(fSPhi);
 }
 
-inline
-G4double G4Torus::GetSinEndPhi () const
+inline G4double G4Torus::GetSinEndPhi() const
 {
-  return std::sin(fSPhi+fDPhi);
+  return std::sin(fSPhi + fDPhi);
 }
 
-inline
-G4double G4Torus::GetCosEndPhi () const
+inline G4double G4Torus::GetCosEndPhi() const
 {
-  return std::cos(fSPhi+fDPhi);
+  return std::cos(fSPhi + fDPhi);
 }

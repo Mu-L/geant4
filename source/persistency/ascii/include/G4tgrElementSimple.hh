@@ -31,13 +31,13 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrElementSimple_hh
-#define G4tgrElementSimple_hh 1
+#ifndef G4TGRELEMENTSIMPLE_HH
+#define G4TGRELEMENTSIMPLE_HH
+
+#include "G4tgrElement.hh"
+#include "globals.hh"
 
 #include <vector>
-
-#include "globals.hh"
-#include "G4tgrElement.hh"
 
 class G4tgrElementSimple : public G4tgrElement
 {
@@ -47,14 +47,13 @@ class G4tgrElementSimple : public G4tgrElement
     ~G4tgrElementSimple();
 
     G4tgrElementSimple(const std::vector<G4String>& wl);
-      // Construct the G4tgrElementSimple (fill its data members)
-      // interpreting the data in the list of words 'wl'
+    // Construct the G4tgrElementSimple (fill its data members)
+    // interpreting the data in the list of words 'wl'
 
     G4double GetZ() const { return theZ; }
     G4double GetA() const { return theA; }
 
-    friend std::ostream& operator<<(std::ostream& os,
-                                    const G4tgrElementSimple& obj);
+    friend std::ostream& operator<<(std::ostream& os, const G4tgrElementSimple& obj);
 
   private:
 

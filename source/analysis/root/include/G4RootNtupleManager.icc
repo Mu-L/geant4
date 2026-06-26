@@ -37,21 +37,21 @@ inline void G4RootNtupleManager::SetNtupleFile(std::shared_ptr<G4RootFile> file)
 }
 
 //_____________________________________________________________________________
-inline const
-std::vector<G4TNtupleDescription<tools::wroot::ntuple, G4RootFile>* >&
+inline const std::vector<G4TNtupleDescription<tools::wroot::ntuple, G4RootFile>*>&
 G4RootNtupleManager::GetNtupleDescriptionVector() const
 {
   return fNtupleDescriptionVector;
 }
 
 //_____________________________________________________________________________
-template <>
-template <>
+template<>
+template<>
 inline G4bool G4TNtupleManager<tools::wroot::ntuple, G4RootFile>::FillNtupleTColumn(
   G4int ntupleId, G4int columnId, const std::string& value)
 {
-  if ( fState.GetIsActivation() && ( ! GetActivation(ntupleId) ) ) {
-    //G4cout << "Skipping FillNtupleIColumn for " << ntupleId << G4endl;
+  if (fState.GetIsActivation() && (!GetActivation(ntupleId)))
+  {
+    // G4cout << "Skipping FillNtupleIColumn for " << ntupleId << G4endl;
     return false;
   }
 
@@ -59,30 +59,31 @@ inline G4bool G4TNtupleManager<tools::wroot::ntuple, G4RootFile>::FillNtupleTCol
   if (ntuple == nullptr) return false;
 
   auto index = columnId - fFirstNtupleColumnId;
-  if ( index < 0 || index >= G4int(ntuple->columns().size()) ) {
-    G4Analysis::Warn(
-      "ntupleId " + to_string(ntupleId) + " columnId " + to_string(columnId) +
-      " does not exist.",
-      fkClass, "FillNtupleTColumn");
+  if (index < 0 || index >= G4int(ntuple->columns().size()))
+  {
+    G4Analysis::Warn("ntupleId " + to_string(ntupleId) + " columnId " + to_string(columnId)
+                       + " does not exist.",
+                     fkClass, "FillNtupleTColumn");
     return false;
   }
 
-  auto icolumn =  ntuple->columns()[index];
-  auto column = dynamic_cast<tools::wroot::ntuple::column_string* >(icolumn);
-  if (column == nullptr) {
-    G4Analysis::Warn(
-      "Column type does not match: ntupleId " + to_string(ntupleId) +
-      " columnId " + to_string(columnId) + " value " + value,
-      fkClass, "FillNtupleTColumn");
+  auto icolumn = ntuple->columns()[index];
+  auto column = dynamic_cast<tools::wroot::ntuple::column_string*>(icolumn);
+  if (column == nullptr)
+  {
+    G4Analysis::Warn("Column type does not match: ntupleId " + to_string(ntupleId) + " columnId "
+                       + to_string(columnId) + " value " + value,
+                     fkClass, "FillNtupleTColumn");
     return false;
   }
 
   column->fill(value);
 
-  if ( IsVerbose(G4Analysis::kVL4) ) {
+  if (IsVerbose(G4Analysis::kVL4))
+  {
     Message(G4Analysis::kVL4, "fill", "ntuple T column",
-       " ntupleId " + to_string(ntupleId) + " columnId " + to_string(columnId) +
-       " value " + value);
+            " ntupleId " + to_string(ntupleId) + " columnId " + to_string(columnId) + " value "
+              + value);
   }
   return true;
 }

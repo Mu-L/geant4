@@ -33,8 +33,8 @@
 //   Katsuya Amako  (e-mail: Katsuya.Amako@kek.jp)
 //   Takashi Sasaki (e-mail: Takashi.Sasaki@kek.jp)
 // --------------------------------------------------------------------
-#ifndef G4TrackVector_hh
-#define G4TrackVector_hh 1
+#ifndef G4TRACKVECTOR_HH
+#define G4TRACKVECTOR_HH
 
 #include <vector>
 

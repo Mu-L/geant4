@@ -43,7 +43,7 @@
 
 #include "G4UImessenger.hh"
 #include "G4UIcmdWithAString.hh"
-#include "G4UIdirectory.hh"
+#include "G4UIcmdWithAnInteger.hh"
 #include <memory>
 
 class PhysicsList;
@@ -61,6 +61,8 @@ public:
 private:
   PhysicsList* fPhysicsList = nullptr; // non-owning; owned by RunManager via PhysicsList
   std::unique_ptr<G4UIcmdWithAString> fListCmd;
+  std::unique_ptr<G4UIcmdWithAnInteger> fVerbosePhysicsCoChem;
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

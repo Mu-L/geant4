@@ -28,24 +28,30 @@
 // Class description:
 //
 // Utility class for polling the navigators of several geometries to
-// identify the next boundary. 
+// identify the next boundary.
 
 // Author: John Apostolakis (CERN), November 2006
 // --------------------------------------------------------------------
 #ifndef G4MULTINAVIGATOR_HH
 #define G4MULTINAVIGATOR_HH
 
-#include <iostream>
-
-#include "geomdefs.hh"
-#include "G4ThreeVector.hh"
+#include "G4NavigationHistory.hh"
 #include "G4Navigator.hh"
-
+#include "G4ThreeVector.hh"
 #include "G4TouchableHandle.hh"
 
-#include "G4NavigationHistory.hh"
+#include "geomdefs.hh"
 
-enum  ELimited { kDoNot,kUnique,kSharedTransport,kSharedOther,kUndefLimited };
+#include <iostream>
+
+enum ELimited
+{
+  kDoNot,
+  kUnique,
+  kSharedTransport,
+  kSharedOther,
+  kUndefLimited
+};
 
 class G4TransportationManager;
 class G4VPhysicalVolume;
@@ -60,7 +66,7 @@ class G4MultiNavigator : public G4Navigator
 {
   public:
 
-    friend std::ostream& operator << (std::ostream& os, const G4Navigator& n);
+    friend std::ostream& operator<<(std::ostream& os, const G4Navigator& n);
 
     /**
      * Constructor and default Destructor.
@@ -77,10 +83,8 @@ class G4MultiNavigator : public G4Navigator
      *  @returns Length from current point to next boundary surface along
      *           @p pDirection.
      */
-    G4double ComputeStep( const G4ThreeVector& pGlobalPoint,
-                          const G4ThreeVector& pDirection,
-                          const G4double       pCurrentProposedStepLength,
-                                G4double&      pNewSafety ) override;
+    G4double ComputeStep(const G4ThreeVector& pGlobalPoint, const G4ThreeVector& pDirection,
+                         const G4double pCurrentProposedStepLength, G4double& pNewSafety) override;
 
     /**
      * Gets values for a single geometry.
@@ -90,23 +94,21 @@ class G4MultiNavigator : public G4Navigator
      *  @param[in,out] limitedStep The step characterisation returned.
      *  @returns The step size for the geometry associated to 'navigatorId'.
      */
-    G4double ObtainFinalStep( G4int        navigatorId, 
-                              G4double&    pNewSafety,     // for this geom 
-                              G4double&    minStepLast,
-                              ELimited&    limitedStep ); 
+    G4double ObtainFinalStep(G4int navigatorId,
+                             G4double& pNewSafety,  // for this geom
+                             G4double& minStepLast, ELimited& limitedStep);
 
     /**
      * Finds which geometries are registered for this particles, and keeps info.
      */
-    void PrepareNavigators(); 
+    void PrepareNavigators();
 
     /**
      * Prepares Navigators and locates.
      *  @param[in] position The position point in global coordinates system.
      *  @param[in] direction The normalised vector direction.
      */
-    void PrepareNewTrack( const G4ThreeVector& position, 
-                          const G4ThreeVector direction ); 
+    void PrepareNewTrack(const G4ThreeVector& position, const G4ThreeVector direction);
 
     /**
      * Resets the geometrical hierarchy for all geometries.
@@ -117,9 +119,9 @@ class G4MultiNavigator : public G4Navigator
      *  @param[in] h The touchable history to be used for initialisation.
      *  @returns The pointer to the volume in the first (mass) geometry.
      */
-    G4VPhysicalVolume* ResetHierarchyAndLocate( const G4ThreeVector& point,
-                                     const G4ThreeVector& direction,
-                                     const G4TouchableHistory& h ) override;
+    G4VPhysicalVolume* ResetHierarchyAndLocate(const G4ThreeVector& point,
+                                               const G4ThreeVector& direction,
+                                               const G4TouchableHistory& h) override;
 
     /**
      * Locates the point in all geometries.
@@ -131,18 +133,18 @@ class G4MultiNavigator : public G4Navigator
      *  @param[in] ignoreDirection Flag to specify if to use direction or not.
      *  @returns The volume in the first (mass) geometry.
      */
-    G4VPhysicalVolume* LocateGlobalPointAndSetup( const G4ThreeVector& point,
-                                      const G4ThreeVector* direction = nullptr,
-                                      const G4bool pRelativeSearch = true,
-                                      const G4bool ignoreDirection = true) override;
+    G4VPhysicalVolume* LocateGlobalPointAndSetup(const G4ThreeVector& point,
+                                                 const G4ThreeVector* direction = nullptr,
+                                                 const G4bool pRelativeSearch = true,
+                                                 const G4bool ignoreDirection = true) override;
 
     /**
      * Relocates in all geometries for point that has not changed volume,
-     * i.e. is within safety in all geometries or its distance is less that 
+     * i.e. is within safety in all geometries or its distance is less that
      * along the direction of a computed step.
      *  @param[in] position The position point in global coordinates system.
      */
-    void LocateGlobalPointWithinVolume( const G4ThreeVector& position ) override; 
+    void LocateGlobalPointWithinVolume(const G4ThreeVector& position) override;
 
     /**
      * Calculates the isotropic distance to the nearest boundary in any
@@ -155,11 +157,11 @@ class G4MultiNavigator : public G4Navigator
      *  @param[in] keepState Flag to instruct keeping the state (default false)
      *             to ensure minimum side effects from the call.
      *  @returns Length from current point to closest boundary surface.
-     *           The value returned is usually an underestimate.  
+     *           The value returned is usually an underestimate.
      */
-    G4double ComputeSafety( const G4ThreeVector& globalpoint,
-                            const G4double pProposedMaxLength = DBL_MAX,
-                            const G4bool keepState = false ) override;
+    G4double ComputeSafety(const G4ThreeVector& globalpoint,
+                           const G4double pProposedMaxLength = DBL_MAX,
+                           const G4bool keepState = false) override;
 
     /**
      * Returns a reference counted handle to a touchable history.
@@ -176,7 +178,7 @@ class G4MultiNavigator : public G4Navigator
      *  @param[in,out] obtained Flag indicating if normal is valid.
      *  @returns A Exit Surface Normal vector and validity too.
      */
-    G4ThreeVector GetLocalExitNormal( G4bool* obtained ) override;
+    G4ThreeVector GetLocalExitNormal(G4bool* obtained) override;
 
     /**
      * Obtains the Normal vector to a surface (in local coordinates)
@@ -190,8 +192,7 @@ class G4MultiNavigator : public G4Navigator
      *  @param[in,out] obtained Flag indicating if normal is valid.
      *  @returns A Exit Surface Normal vector and validity too.
      */
-    G4ThreeVector GetLocalExitNormalAndCheck( const G4ThreeVector& point,
-                                              G4bool* obtained ) override;
+    G4ThreeVector GetLocalExitNormalAndCheck(const G4ThreeVector& point, G4bool* obtained) override;
 
     /**
      * Obtains the Normal vector to a surface (in global coordinates)
@@ -202,13 +203,12 @@ class G4MultiNavigator : public G4Navigator
      *  @param[in,out] obtained Flag indicating if normal is valid.
      *  @returns A Exit Surface Normal vector and validity too.
      */
-    G4ThreeVector GetGlobalExitNormal( const G4ThreeVector& point,
-                                             G4bool* obtained ) override;
+    G4ThreeVector GetGlobalExitNormal(const G4ThreeVector& point, G4bool* obtained) override;
 
     /**
      * Returns a pointer to a navigator, given its index.
      */
-    inline G4Navigator* GetNavigator( G4int n ) const;
+    inline G4Navigator* GetNavigator(G4int n) const;
 
     /**
      * Sets the navigator for tracking and mass world if changed.
@@ -232,7 +232,7 @@ class G4MultiNavigator : public G4Navigator
     /**
      * Flags which processes limited the step.
      */
-    void WhichLimited(); 
+    void WhichLimited();
 
     /**
      * Auxiliary, debugging printing.
@@ -242,57 +242,60 @@ class G4MultiNavigator : public G4Navigator
     /**
      * Checks if mass world pointed has been changed => issues and exception.
      */
-    void CheckMassWorld(); 
+    void CheckMassWorld();
 
   private:
 
-    // STATE Information 
+    // STATE Information
 
-    G4int fNoActiveNavigators = 0; 
+    G4int fNoActiveNavigators = 0;
     static const G4int fMaxNav = 16;
-    G4VPhysicalVolume* fLastMassWorld = nullptr; 
+    G4VPhysicalVolume* fLastMassWorld = nullptr;
 
     /** Global state (retained during stepping for one track). */
     G4Navigator* fpNavigator[fMaxNav];
 
-    // State after a step computation 
+    // State after a step computation
     //
     ELimited fLimitedStep[fMaxNav];
-    G4bool   fLimitTruth[fMaxNav];
-    G4double fCurrentStepSize[fMaxNav]; 
-    G4double fNewSafety[ fMaxNav ]; // Safety for starting point
-    G4int    fNoLimitingStep = -1;  // How many geometries limited the step
-    G4int    fIdNavLimiting = -1;   // Id of Navigator limiting step
+    G4bool fLimitTruth[fMaxNav];
+    G4double fCurrentStepSize[fMaxNav];
+    G4double fNewSafety[fMaxNav];  // Safety for starting point
+    G4int fNoLimitingStep = -1;  // How many geometries limited the step
+    G4int fIdNavLimiting = -1;  // Id of Navigator limiting step
 
     // Lowest values - determine step length, and safety
     //
-    G4double fMinStep = -kInfinity;     // As reported by Navigators
+    G4double fMinStep = -kInfinity;  // As reported by Navigators
     G4double fMinSafety = -kInfinity;
-    G4double fTrueMinStep = -kInfinity; // Corrected if fMinStep>=proposed
+    G4double fTrueMinStep = -kInfinity;  // Corrected if fMinStep>=proposed
 
     // State after calling 'locate'
     //
     G4VPhysicalVolume* fLocatedVolume[fMaxNav];
-    G4ThreeVector      fLastLocatedPosition; 
+    G4ThreeVector fLastLocatedPosition;
 
     // Cache of safety information
     //
-    G4ThreeVector fSafetyLocation; // point where ComputeSafety() is called
-    G4double fMinSafety_atSafLocation = -1.0; // - corresponding value of safety
-    G4ThreeVector fPreStepLocation; // point where last ComputeStep() called
-    G4double fMinSafety_PreStepPt = -1.0; // - corresponding value of safety
+    G4ThreeVector fSafetyLocation;  // point where ComputeSafety() is called
+    G4double fMinSafety_atSafLocation = -1.0;  // - corresponding value of safety
+    G4ThreeVector fPreStepLocation;  // point where last ComputeStep() called
+    G4double fMinSafety_PreStepPt = -1.0;  // - corresponding value of safety
 
-    G4TransportationManager* pTransportManager; // Cache for frequent use
+    G4TransportationManager* pTransportManager;  // Cache for frequent use
 };
 
 // --------------------------------------------------------------------
 // Inline methods
 // --------------------------------------------------------------------
 
-inline G4Navigator* G4MultiNavigator::GetNavigator( G4int n ) const
-{ 
-  if( (n>fNoActiveNavigators) || (n<0) ) { n=0; }
-  return fpNavigator[n]; 
+inline G4Navigator* G4MultiNavigator::GetNavigator(G4int n) const
+{
+  if ((n > fNoActiveNavigators) || (n < 0))
+  {
+    n = 0;
+  }
+  return fpNavigator[n];
 }
 
 #endif

@@ -31,27 +31,27 @@
 // Definition of a global method:
 //
 //   G4VSolid* G3toG4MakeSolid(const G4String& vname,
-//                             const G4String& shape, 
+//                             const G4String& shape,
 //                             const G4double* Rpar,
-//                             const G4int npar, 
+//                             const G4int npar,
 //                                   G4bool& NegVolPars,
-//                                   G4bool& Deferred, 
+//                                   G4bool& Deferred,
 //                                   G4bool* OKAxis);
 //
 // which checks the volume parameters and creates the G4VSolid
-// subclass object corresponding to the specified shape. 
+// subclass object corresponding to the specified shape.
 // If volume parameters are incomplete (negative or none)
 // it returns 0.
 
 // ----------------------
 
 #ifndef G3TOG4MAKESOLID_HH
-#define G3TOG4MAKESOLID_HH 1
+#define G3TOG4MAKESOLID_HH
 
-G4VSolid* G3toG4MakeSolid(const G4String& vname, const G4String& shape, 
-			  const G4double* Rpar, const G4int npar, 
-			  G4bool& NegVolPars, G4bool& Deferred, 
-			  G4bool* OKAxis);
+#include "G4String.hh"
+#include "G4Types.hh"
+#include "G4VSolid.hh"
+
+G4VSolid* G3toG4MakeSolid(const G4String& vname, const G4String& shape, const G4double* Rpar,
+                          const G4int npar, G4bool& NegVolPars, G4bool& Deferred, G4bool* OKAxis);
 #endif
-
-    

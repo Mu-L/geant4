@@ -49,6 +49,7 @@
 class G4ParticlesWorkspace
 {
   public:
+
     using pool_type = G4TWorkspacePool<G4ParticlesWorkspace>;
 
     G4ParticlesWorkspace(G4bool verbose = false);
@@ -72,9 +73,11 @@ class G4ParticlesWorkspace
     static pool_type* GetPool();
 
   protected:  // Implementation methods
+
     void InitialiseParticles();
 
   private:
+
     // Helper pointer - can be per instance or shared
     G4PDefManager* fpPDefSIM = nullptr;
 

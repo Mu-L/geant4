@@ -8,11 +8,6 @@ geant4_add_module(G4hntools
     G4PlotManager.hh
     G4PlotMessenger.hh
     G4PlotParameters.hh
-    G4TH1ToolsManager.hh
-    G4TH2ToolsManager.hh
-    G4TH3ToolsManager.hh
-    G4TP1ToolsManager.hh
-    G4TP2ToolsManager.hh
     G4ToolsAnalysisManager.hh
     G4ToolsAnalysisManager.icc
     G4ToolsAnalysisReader.hh

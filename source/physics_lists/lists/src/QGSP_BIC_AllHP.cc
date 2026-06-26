@@ -33,52 +33,53 @@
 //
 //----------------------------------------------------------------------------
 //
-#include <CLHEP/Units/SystemOfUnits.h>
-#include "G4DecayPhysics.hh"
-#include "G4RadioactiveDecayPhysics.hh"
-#include "G4EmStandardPhysics_option4.hh"
-#include "G4EmStandardPhysics.hh"
-#include "G4EmExtraPhysics.hh"
-#include "G4IonPhysicsPHP.hh"
-#include "G4IonElasticPhysics.hh"
-#include "G4StoppingPhysics.hh"
-#include "G4HadronElasticPhysicsPHP.hh"
-
 #include "QGSP_BIC_AllHP.hh"
+
+#include "G4DecayPhysics.hh"
+#include "G4EmExtraPhysics.hh"
+#include "G4EmStandardPhysics.hh"
+#include "G4EmStandardPhysics_option4.hh"
+#include "G4HadronElasticPhysicsPHP.hh"
 #include "G4HadronPhysicsQGSP_BIC_AllHP.hh"
+#include "G4IonElasticPhysics.hh"
+#include "G4IonPhysicsPHP.hh"
+#include "G4RadioactiveDecayPhysics.hh"
+#include "G4StoppingPhysics.hh"
+
+#include <CLHEP/Units/SystemOfUnits.h>
 
 QGSP_BIC_AllHP::QGSP_BIC_AllHP(G4int ver)
 {
-  if(ver > 0) {
-    G4cout << "<<< Geant4 Physics List simulation engine: QGSP_BIC_AllHP"<<G4endl;
-    G4cout <<G4endl;
+  if (ver > 0)
+  {
+    G4cout << "<<< Geant4 Physics List simulation engine: QGSP_BIC_AllHP" << G4endl;
+    G4cout << G4endl;
   }
 
-  defaultCutValue = 0.7*CLHEP::mm;  
-  SetCutValue(0, "proton");  
+  defaultCutValue = 0.7 * CLHEP::mm;
+  SetCutValue(0, "proton");
   SetVerboseLevel(ver);
 
   // EM Physics
-  RegisterPhysics( new G4EmStandardPhysics_option4(ver) );
+  RegisterPhysics(new G4EmStandardPhysics_option4(ver));
 
   // Synchroton Radiation & GN Physics
-  RegisterPhysics( new G4EmExtraPhysics(ver) );
+  RegisterPhysics(new G4EmExtraPhysics(ver));
 
   // Decays
-  RegisterPhysics( new G4DecayPhysics(ver) );
-  RegisterPhysics( new G4RadioactiveDecayPhysics(ver) );
+  RegisterPhysics(new G4DecayPhysics(ver));
+  RegisterPhysics(new G4RadioactiveDecayPhysics(ver));
 
   // Hadron Elastic scattering
-  RegisterPhysics( new G4HadronElasticPhysicsPHP(ver) );
+  RegisterPhysics(new G4HadronElasticPhysicsPHP(ver));
 
   // Hadron Physics
-  RegisterPhysics( new G4HadronPhysicsQGSP_BIC_AllHP(ver));
+  RegisterPhysics(new G4HadronPhysicsQGSP_BIC_AllHP(ver));
 
   // Stopping Physics
-  RegisterPhysics( new G4StoppingPhysics(ver) );
+  RegisterPhysics(new G4StoppingPhysics(ver));
 
   // Ion Physics
-  RegisterPhysics( new G4IonElasticPhysics(ver) );
-  RegisterPhysics( new G4IonPhysicsPHP(ver));
-  
+  RegisterPhysics(new G4IonElasticPhysics(ver));
+  RegisterPhysics(new G4IonPhysicsPHP(ver));
 }

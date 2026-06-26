@@ -27,7 +27,7 @@
 //
 // Class description:
 //
-// Used internually by importance sampling. 
+// Used internually by importance sampling.
 // It is a container for "cell" importance value pairs.
 
 // Author: Michael Dressel (CERN), 2002
@@ -35,20 +35,22 @@
 #ifndef GEOMETRYCELLIMPORTANCE_HH
 #define GEOMETRYCELLIMPORTANCE_HH
 
-#include <map>
-#include "globals.hh"
 #include "G4GeometryCell.hh"
 #include "G4GeometryCellComp.hh"
+#include "globals.hh"
+
+#include <map>
 
 /**
  * @brief G4GeometryCellImportance is a map used internually by importance
- * sampling. It is a container for "cell" importance value pairs.
+ * sampling.
+ * @ingroup geometry_biasing
+ *
+ * It is a container for "cell" importance value pairs.
  */
 
-using G4GeometryCellImportance = std::map<G4GeometryCell,
-                                          G4double, G4GeometryCellComp>;
+using G4GeometryCellImportance = std::map<G4GeometryCell, G4double, G4GeometryCellComp>;
 
-std::ostream& operator<<(std::ostream& out,
-                         const G4GeometryCellImportance& gCelli);
+std::ostream& operator<<(std::ostream& out, const G4GeometryCellImportance& gCelli);
 
 #endif

@@ -27,10 +27,11 @@
 // Author: Ivana Hrivnacova, 15/09/2020  (ivana@ipno.in2p3.fr)
 
 #include "G4Hdf5NtupleFileManager.hh"
-#include "G4Hdf5NtupleManager.hh"
-#include "G4Hdf5FileManager.hh"
+
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
+#include "G4Hdf5FileManager.hh"
+#include "G4Hdf5NtupleManager.hh"
 
 using namespace G4Analysis;
 
@@ -40,7 +41,7 @@ using namespace G4Analysis;
 
 //_____________________________________________________________________________
 G4Hdf5NtupleFileManager::G4Hdf5NtupleFileManager(const G4AnalysisManagerState& state)
- : G4VNtupleFileManager(state, "hdf5")
+  : G4VNtupleFileManager(state, "hdf5")
 {}
 
 //
@@ -50,7 +51,6 @@ G4Hdf5NtupleFileManager::G4Hdf5NtupleFileManager(const G4AnalysisManagerState& s
 //_____________________________________________________________________________
 std::shared_ptr<G4VNtupleManager> G4Hdf5NtupleFileManager::CreateNtupleManager()
 {
-
   // The managers will be deleted by the base class
   fNtupleManager = std::make_shared<G4Hdf5NtupleManager>(fState);
   fNtupleManager->SetFileManager(fFileManager);
@@ -63,8 +63,7 @@ G4bool G4Hdf5NtupleFileManager::ActionAtOpenFile(const G4String& /*fileName*/)
 {
   // Create ntuples if they are booked
   // (The files will be created with creating ntuples)
-  fNtupleManager->CreateNtuplesFromBooking(
-    fBookingManager->GetNtupleBookingVector());
+  fNtupleManager->CreateNtuplesFromBooking(fBookingManager->GetNtupleBookingVector());
 
   return true;
 }
@@ -83,7 +82,8 @@ G4bool G4Hdf5NtupleFileManager::ActionAtCloseFile()
 
   // Close ntuple files
   auto ntupleVector = fNtupleManager->GetNtupleDescriptionVector();
-  for ( auto ntupleDescription : ntupleVector) {
+  for (auto ntupleDescription : ntupleVector)
+  {
     result &= fFileManager->CloseNtupleFile(ntupleDescription);
   }
 

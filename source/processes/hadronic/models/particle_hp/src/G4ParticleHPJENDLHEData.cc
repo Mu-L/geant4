@@ -44,7 +44,8 @@ G4bool G4ParticleHPJENDLHEData::IsApplicable(const G4DynamicParticle* aP, const 
   G4bool result = true;
   G4double eKin = aP->GetKineticEnergy();
   // if(eKin>20*MeV||aP->GetDefinition()!=G4Neutron::Neutron()) result = false;
-  if (eKin < 20 * MeV || 3 * GeV < eKin || aP->GetDefinition() != G4Neutron::Neutron()) {
+  if (eKin < 20 * MeV || 3 * GeV < eKin || aP->GetDefinition() != G4Neutron::Neutron())
+  {
     result = false;
   }
   // Element Check
@@ -56,12 +57,16 @@ G4bool G4ParticleHPJENDLHEData::IsApplicable(const G4DynamicParticle* aP, const 
 
 G4ParticleHPJENDLHEData::G4ParticleHPJENDLHEData()
 {
-  for (auto& itZ : mIsotope) {
+  for (auto& itZ : mIsotope)
+  {
     std::map<G4int, G4PhysicsVector*>* pointer_map = itZ.second;
-    if (pointer_map != nullptr) {
-      for (auto& itA : *pointer_map) {
+    if (pointer_map != nullptr)
+    {
+      for (auto& itA : *pointer_map)
+      {
         G4PhysicsVector* pointerPhysicsVector = itA.second;
-        if (pointerPhysicsVector != nullptr) {
+        if (pointerPhysicsVector != nullptr)
+        {
           delete pointerPhysicsVector;
           itA.second = nullptr;
         }
@@ -103,42 +108,45 @@ void G4ParticleHPJENDLHEData::BuildPhysicsTable(const G4ParticleDefinition& aP)
   auto theElementTable = G4Element::GetElementTable();
   vElement.clear();
   vElement.resize(numberOfElements);
-  for (std::size_t i = 0; i < numberOfElements; ++i) {
+  for (std::size_t i = 0; i < numberOfElements; ++i)
+  {
     G4Element* theElement = (*theElementTable)[i];
     vElement[i] = false;
 
     // isotope
     auto nIso = (G4int)(*theElementTable)[i]->GetNumberOfIsotopes();
     auto Z = (G4int)(*theElementTable)[i]->GetZ();
-    for (G4int i1 = 0; i1 < nIso; ++i1) {
+    for (G4int i1 = 0; i1 < nIso; ++i1)
+    {
       G4int A = theElement->GetIsotope(i1)->GetN();
 
-      if (isThisNewIsotope(Z, A)) {
-	std::stringstream ss;
-	ss << dirName << aFSType << Z << "_" << A << "_" << theNames.GetName(Z - 1);
-	filename = ss.str();
-	std::fstream file;
-	file.open(filename, std::fstream::in);
-	G4int dummy;
-	file >> dummy;
-	if (file.good()) {
-	  vElement[i] = true;
+      if (isThisNewIsotope(Z, A))
+      {
+        std::stringstream ss;
+        ss << dirName << aFSType << Z << "_" << A << "_" << theNames.GetName(Z - 1);
+        filename = ss.str();
+        std::fstream file;
+        file.open(filename, std::fstream::in);
+        G4int dummy;
+        file >> dummy;
+        if (file.good())
+        {
+          vElement[i] = true;
 
-	  // read the file
-	  G4PhysicsVector* aPhysVec = readAFile(&file);
-	  registAPhysicsVector(Z, A, aPhysVec);
-	}
-	file.close();
+          // read the file
+          G4PhysicsVector* aPhysVec = readAFile(&file);
+          registAPhysicsVector(Z, A, aPhysVec);
+        }
+        file.close();
       }
     }
   }
 }
 
-void G4ParticleHPJENDLHEData::DumpPhysicsTable(const G4ParticleDefinition&)
-{}
+void G4ParticleHPJENDLHEData::DumpPhysicsTable(const G4ParticleDefinition&) {}
 
-G4double G4ParticleHPJENDLHEData::GetCrossSection(const G4DynamicParticle* aP,
-                                                  const G4Element* anE, G4double)
+G4double G4ParticleHPJENDLHEData::GetCrossSection(const G4DynamicParticle* aP, const G4Element* anE,
+                                                  G4double)
 {
   // Primary energy >20MeV
   // Thus not taking into account of Doppler broadening
@@ -150,7 +158,8 @@ G4double G4ParticleHPJENDLHEData::GetCrossSection(const G4DynamicParticle* aP,
 
   auto nIso = (G4int)anE->GetNumberOfIsotopes();
   auto Z = (G4int)anE->GetZ();
-  for (G4int i1 = 0; i1 < nIso; ++i1) {
+  for (G4int i1 = 0; i1 < nIso; ++i1)
+  {
     G4int A = anE->GetIsotope(i1)->GetN();
     G4double frac = anE->GetRelativeAbundanceVector()[i1];
     // This case does NOT request "*perCent".
@@ -169,7 +178,8 @@ G4PhysicsVector* G4ParticleHPJENDLHEData::readAFile(std::fstream* file)
   std::vector<G4double> v_e;
   std::vector<G4double> v_xs;
 
-  for (G4int i = 0; i < len; ++i) {
+  for (G4int i = 0; i < len; ++i)
+  {
     G4double e;
     G4double xs;
 
@@ -182,7 +192,8 @@ G4PhysicsVector* G4ParticleHPJENDLHEData::readAFile(std::fstream* file)
 
   auto aPhysVec = new G4PhysicsFreeVector(static_cast<std::size_t>(len), v_e.front(), v_e.back());
 
-  for (G4int i = 0; i < len; ++i) {
+  for (G4int i = 0; i < len; ++i)
+  {
     aPhysVec->PutValues(static_cast<std::size_t>(i), v_e[i], v_xs[i]);
   }
 
@@ -200,10 +211,12 @@ void G4ParticleHPJENDLHEData::registAPhysicsVector(G4int Z, G4int A, G4PhysicsVe
 {
   std::pair<G4int, G4PhysicsVector*> aPair = std::pair<G4int, G4PhysicsVector*>(A, aPhysVec);
   auto itm = mIsotope.find(Z);
-  if (itm != mIsotope.cend()) {
+  if (itm != mIsotope.cend())
+  {
     itm->second->insert(aPair);
   }
-  else {
+  else
+  {
     auto aMap = new std::map<G4int, G4PhysicsVector*>;
     aMap->insert(aPair);
     mIsotope.insert(std::pair<G4int, std::map<G4int, G4PhysicsVector*>*>(Z, aMap));
@@ -216,13 +229,18 @@ G4double G4ParticleHPJENDLHEData::getXSfromThisIsotope(G4int Z, G4int A, G4doubl
 
   G4PhysicsVector* aPhysVec;
   auto isoZ = mIsotope.find(Z);
-  if (isoZ == mIsotope.end()) { return aXSection; }
+  if (isoZ == mIsotope.end())
+  {
+    return aXSection;
+  }
   auto isoA = isoZ->second->find(A);
-  if (isoA != isoZ->second->end()) {
+  if (isoA != isoZ->second->end())
+  {
     aPhysVec = isoA->second;
     aXSection = aPhysVec->Value(ek);
   }
-  else {
+  else
+  {
     // Select closest one in the same Z
     G4int delta0 = 99;  // no mean for 99
     for (auto it = isoZ->second->begin(); it != isoZ->second->end(); ++it)
@@ -236,19 +254,23 @@ G4double G4ParticleHPJENDLHEData::getXSfromThisIsotope(G4int Z, G4int A, G4doubl
     G4int A1 = A + delta0;
     auto isoA1 = isoZ->second->find(A1);
     G4bool ok = false;
-    if (isoA1 != isoZ->second->end()) {
+    if (isoA1 != isoZ->second->end())
+    {
       aPhysVec = isoA1->second;
       ok = true;
     }
-    else {
+    else
+    {
       A1 = A - delta0;
       auto isoA2 = isoZ->second->find(A1);
-      if (isoA2 != isoZ->second->end()) {
-	aPhysVec = isoA2->second;
-	ok = true;
+      if (isoA2 != isoZ->second->end())
+      {
+        aPhysVec = isoA2->second;
+        ok = true;
       }
     }
-    if (ok) {
+    if (ok)
+    {
       aXSection = aPhysVec->Value(ek);
       // X^(2/3) factor
       aXSection *= G4Pow::GetInstance()->A23(1.0 * A / A1);

@@ -28,27 +28,28 @@
 // ---------------------------------------------------------------------
 
 #include "G4DMmessenger.hh"
+
 #include "G4DigiManager.hh"
-#include "G4UIdirectory.hh"
-#include "G4UIcmdWithoutParameter.hh"
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithAnInteger.hh"
+#include "G4UIcmdWithoutParameter.hh"
+#include "G4UIdirectory.hh"
 
-G4DMmessenger::G4DMmessenger(G4DigiManager* DigiManager):fDMan(DigiManager)
+G4DMmessenger::G4DMmessenger(G4DigiManager* DigiManager) : fDMan(DigiManager)
 {
   digiDir = new G4UIdirectory("/digi/");
   digiDir->SetGuidance("DigitizerModule");
 
-  listCmd = new G4UIcmdWithoutParameter("/digi/List",this);
+  listCmd = new G4UIcmdWithoutParameter("/digi/List", this);
   listCmd->SetGuidance("List names of digitizer modules.");
 
-  digiCmd = new G4UIcmdWithAString("/digi/Digitize",this);
+  digiCmd = new G4UIcmdWithAString("/digi/Digitize", this);
   digiCmd->SetGuidance("Invoke Digitize method of a digitizer module");
-  digiCmd->SetParameterName("moduleName",false);
+  digiCmd->SetParameterName("moduleName", false);
 
-  verboseCmd = new G4UIcmdWithAnInteger("/digi/Verbose",this);
+  verboseCmd = new G4UIcmdWithAnInteger("/digi/Verbose", this);
   verboseCmd->SetGuidance("Set the Verbose level.");
-  verboseCmd->SetParameterName("level",false);
+  verboseCmd->SetParameterName("level", false);
 }
 
 G4DMmessenger::~G4DMmessenger()
@@ -59,15 +60,19 @@ G4DMmessenger::~G4DMmessenger()
   delete digiDir;
 }
 
-void G4DMmessenger::SetNewValue(G4UIcommand * command,G4String newVal)
+void G4DMmessenger::SetNewValue(G4UIcommand* command, G4String newVal)
 {
-  if( command==listCmd )
-  { fDMan->List(); }
-  if( command==digiCmd )
-  { fDMan->Digitize(newVal); }
-  if( command==verboseCmd )
-  { fDMan->SetVerboseLevel(verboseCmd->GetNewIntValue(newVal)); }
+  if (command == listCmd)
+  {
+    fDMan->List();
+  }
+  if (command == digiCmd)
+  {
+    fDMan->Digitize(newVal);
+  }
+  if (command == verboseCmd)
+  {
+    fDMan->SetVerboseLevel(verboseCmd->GetNewIntValue(newVal));
+  }
   return;
 }
-
-

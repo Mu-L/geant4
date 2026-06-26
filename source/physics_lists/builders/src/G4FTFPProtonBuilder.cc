@@ -38,49 +38,46 @@
 //----------------------------------------------------------------------------
 //
 #include "G4FTFPProtonBuilder.hh"
-#include "G4GeneratorPrecompoundInterface.hh"
-#include "G4FTFModel.hh"
-#include "G4LundStringFragmentation.hh"
+
+#include "G4BGGNucleonInelasticXS.hh"
 #include "G4ExcitedStringDecay.hh"
+#include "G4FTFModel.hh"
+#include "G4GeneratorPrecompoundInterface.hh"
+#include "G4HadronicParameters.hh"
+#include "G4LundStringFragmentation.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ProcessManager.hh"
+#include "G4Proton.hh"
 #include "G4QuasiElasticChannel.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4Proton.hh"
-#include "G4ProcessManager.hh"
-#include "G4BGGNucleonInelasticXS.hh"
-#include "G4HadronicParameters.hh"
 
-
-G4FTFPProtonBuilder::
-G4FTFPProtonBuilder(G4bool quasiElastic) 
+G4FTFPProtonBuilder::G4FTFPProtonBuilder(G4bool quasiElastic)
 {
   theMin = G4HadronicParameters::Instance()->GetMinEnergyTransitionFTF_Cascade();
-  theMax = G4HadronicParameters::Instance()->GetMaxEnergy(); 
+  theMax = G4HadronicParameters::Instance()->GetMaxEnergy();
   theModel = new G4TheoFSGenerator("FTFP");
 
   G4FTFModel* theStringModel = new G4FTFModel();
   theStringModel->SetFragmentationModel(new G4ExcitedStringDecay());
 
-  G4GeneratorPrecompoundInterface* theCascade = 
-    new G4GeneratorPrecompoundInterface();
+  G4GeneratorPrecompoundInterface* theCascade = new G4GeneratorPrecompoundInterface();
 
   theModel->SetHighEnergyGenerator(theStringModel);
-  if (quasiElastic) {
-     theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
-  } 
+  if (quasiElastic)
+  {
+    theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
+  }
 
   theModel->SetTransport(theCascade);
   theModel->SetMinEnergy(theMin);
   theModel->SetMaxEnergy(theMax);
 }
 
-void G4FTFPProtonBuilder::
-Build(G4HadronInelasticProcess * aP)
+void G4FTFPProtonBuilder::Build(G4HadronInelasticProcess* aP)
 {
   theModel->SetMinEnergy(theMin);
   theModel->SetMaxEnergy(theMax);
   aP->RegisterMe(theModel);
-    
+
   aP->AddDataSet(new G4BGGNucleonInelasticXS(G4Proton::Proton()));
 }
-

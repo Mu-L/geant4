@@ -30,36 +30,40 @@
 // 20100517  M. Kelsey -- MakeG4EvaporationInuclCollider a data member.
 // 20100520  M. Kelsey -- Clean up interface
 
-#ifndef G4INUCLEVAPORATION_h
-#define G4INUCLEVAPORATION_h 1
+#ifndef G4INUCLEVAPORATION_HH
+#define G4INUCLEVAPORATION_HH
 
-#include "globals.hh"
-#include "G4VEvaporation.hh"
 #include "G4Fragment.hh"
+#include "G4VEvaporation.hh"
+#include "globals.hh"
 
 class G4EvaporationInuclCollider;
 
+class G4InuclEvaporation : public G4VEvaporation
+{
+  public:
 
-class G4InuclEvaporation : public G4VEvaporation {
-public:
-  G4InuclEvaporation();
-  ~G4InuclEvaporation();
+    G4InuclEvaporation();
+    ~G4InuclEvaporation();
 
-private:
-  G4InuclEvaporation(const G4InuclEvaporation &right);
+  private:
 
-  const G4InuclEvaporation & operator=(const G4InuclEvaporation &right);
-  G4bool operator==(const G4InuclEvaporation &right) const;
-  G4bool operator!=(const G4InuclEvaporation &right) const;
+    G4InuclEvaporation(const G4InuclEvaporation& right);
 
-public:
-  G4FragmentVector * BreakItUp(const G4Fragment &theNucleus);
-      
-  void setVerboseLevel( const G4int verbose );
+    const G4InuclEvaporation& operator=(const G4InuclEvaporation& right);
+    G4bool operator==(const G4InuclEvaporation& right) const;
+    G4bool operator!=(const G4InuclEvaporation& right) const;
 
-private:
-  G4int verboseLevel;
-  G4EvaporationInuclCollider* evaporator;
+  public:
+
+    G4FragmentVector* BreakItUp(const G4Fragment& theNucleus);
+
+    void setVerboseLevel(const G4int verbose);
+
+  private:
+
+    G4int verboseLevel;
+    G4EvaporationInuclCollider* evaporator;
 };
 
 #endif

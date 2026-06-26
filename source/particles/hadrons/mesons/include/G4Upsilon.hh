@@ -31,19 +31,21 @@
 // **********************************************************************
 //
 
-#ifndef G4Upsilon_h
-#define G4Upsilon_h 1
+#ifndef G4UPSILON_HH
+#define G4UPSILON_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4Upsilon : public G4ParticleDefinition
 {
   public:
+
     static G4Upsilon* Definition();
     static G4Upsilon* UpsilonDefinition();
     static G4Upsilon* Upsilon();
 
   private:
+
     G4Upsilon() {}
     ~G4Upsilon() override = default;
 

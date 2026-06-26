@@ -37,8 +37,8 @@
 // 19.09.21 V. Grichine, first version
 //
 
-#ifndef G4GaussXTRadiator_h
-#define G4GaussXTRadiator_h 1
+#ifndef G4GAUSSXTRADIATOR_HH
+#define G4GAUSSXTRADIATOR_HH
 
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"
@@ -46,20 +46,20 @@
 
 class G4GaussXTRadiator : public G4VXTRenergyLoss
 {
- public:
-  explicit G4GaussXTRadiator(
-    G4LogicalVolume* anEnvelope, G4double, G4double, G4Material*, G4Material*, G4double, G4double,
-    G4int, const G4String& processName = "GaussXTRadiator");
-  ~G4GaussXTRadiator();
+  public:
 
-  // reimplementation of base class function in analytical way
-  G4double SpectralXTRdEdx(G4double energy) override;
+    explicit G4GaussXTRadiator(G4LogicalVolume* anEnvelope, G4double, G4double, G4Material*,
+                               G4Material*, G4double, G4double, G4int,
+                               const G4String& processName = "GaussXTRadiator");
+    ~G4GaussXTRadiator();
 
-  G4double GetStackFactor(G4double energy, G4double gamma,
-                          G4double varAngle) override;
+    // reimplementation of base class function in analytical way
+    G4double SpectralXTRdEdx(G4double energy) override;
 
-  void ProcessDescription(std::ostream&) const override;
-  void DumpInfo() const override { ProcessDescription(G4cout); };
+    G4double GetStackFactor(G4double energy, G4double gamma, G4double varAngle) override;
+
+    void ProcessDescription(std::ostream&) const override;
+    void DumpInfo() const override { ProcessDescription(G4cout); };
 };
 
 #endif

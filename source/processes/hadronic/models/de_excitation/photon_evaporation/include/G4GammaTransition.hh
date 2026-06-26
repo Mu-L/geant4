@@ -25,73 +25,70 @@
 //
 //
 // -------------------------------------------------------------------
-//      GEANT 4 class file 
+//      GEANT 4 class file
 //
 //      CERN, Geneva, Switzerland
 //
 //      File name:     G4GammaTransition
 //
 //      Author:        Vladimir Ivanchenko
-// 
+//
 //      Creation date: 27 February 2015
 //
-//      Modifications: 
+//      Modifications:
 // 05.11.2016 J. Detviller added sampling of corelation between
 //            spin of a nucleus and gamma direction
 //
-//      
+//
 // -------------------------------------------------------------------
 
 #ifndef G4GAMMATRANSITION_HH
-#define G4GAMMATRANSITION_HH 1
+#define G4GAMMATRANSITION_HH
 
-#include "globals.hh"
 #include "G4Fragment.hh"
 #include "G4PolarizationTransition.hh"
+#include "globals.hh"
 
-class G4GammaTransition 
+class G4GammaTransition
 {
-public:
+  public:
 
-  explicit G4GammaTransition();
+    explicit G4GammaTransition();
 
-  virtual ~G4GammaTransition();
-  
-  virtual G4Fragment* SampleTransition(G4Fragment* nucleus,
-				       G4double newExcEnergy,
-                                       G4double mpRatio,
-                                       G4int  JP1,
-                                       G4int  JP2,
-                                       G4int  MP,
-                                       G4int  shell,
-                                       G4bool isDiscrete,
-                                       G4bool isGamma);
+    virtual ~G4GammaTransition();
 
-  virtual void SampleDirection(G4Fragment* nuc, G4double ratio, 
-			       G4int twoJ1, G4int twoJ2, G4int mp);
+    virtual G4Fragment* SampleTransition(G4Fragment* nucleus, G4double newExcEnergy,
+                                         G4double mpRatio, G4int JP1, G4int JP2, G4int MP,
+                                         G4int shell, G4bool isDiscrete, G4bool isGamma);
 
-  inline void SetPolarizationFlag(G4bool val) { polarFlag = val; };
+    virtual void SampleDirection(G4Fragment* nuc, G4double ratio, G4int twoJ1, G4int twoJ2,
+                                 G4int mp);
 
-  inline void SetTwoJMAX(G4int val) { fTwoJMAX = val; };
+    inline void SetPolarizationFlag(G4bool val) { polarFlag = val; };
 
-  inline void SetVerbose(G4int val) { fVerbose = val; fPolTrans.SetVerbose(val); };
+    inline void SetTwoJMAX(G4int val) { fTwoJMAX = val; };
 
-private:  
+    inline void SetVerbose(G4int val)
+    {
+      fVerbose = val;
+      fPolTrans.SetVerbose(val);
+    };
 
-  G4GammaTransition(const G4GammaTransition &right) = delete;
-  const G4GammaTransition& operator=(const G4GammaTransition &right) = delete;
-  G4bool operator==(const G4GammaTransition &right) const = delete;
-  G4bool operator!=(const G4GammaTransition &right) const = delete;
- 
-  G4bool polarFlag;
+  private:
 
-protected:
+    G4GammaTransition(const G4GammaTransition& right) = delete;
+    const G4GammaTransition& operator=(const G4GammaTransition& right) = delete;
+    G4bool operator==(const G4GammaTransition& right) const = delete;
+    G4bool operator!=(const G4GammaTransition& right) const = delete;
 
-  G4ThreeVector fDirection;
-  G4PolarizationTransition fPolTrans;
-  G4int fTwoJMAX;
-  G4int fVerbose;
+    G4bool polarFlag;
+
+  protected:
+
+    G4ThreeVector fDirection;
+    G4PolarizationTransition fPolTrans;
+    G4int fTwoJMAX;
+    G4int fVerbose;
 };
-
 
 #endif

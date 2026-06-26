@@ -30,44 +30,46 @@
 
 // Author: Makoto Asai (JLab) - 23/Aug/23
 // --------------------------------------------------------------------
-#ifndef G4SubEventTrackStack_hh
-#define G4SubEventTrackStack_hh 1
+#ifndef G4SUBEVENTTRACKSTACK_HH
+#define G4SUBEVENTTRACKSTACK_HH
 
-#include "G4Types.hh"
 #include "G4SubEvent.hh"
+#include "G4Types.hh"
 
 class G4Event;
 class G4StackedTrack;
 
-class G4SubEventTrackStack 
+class G4SubEventTrackStack
 {
   public:
 
     G4SubEventTrackStack() = default;
-    explicit G4SubEventTrackStack(G4int ty, std::size_t maxEnt)
-      : fSubEventType(ty), fMaxEnt(maxEnt) {;}
-   ~G4SubEventTrackStack();
-  
+    explicit G4SubEventTrackStack(G4int ty, std::size_t maxEnt) : fSubEventType(ty), fMaxEnt(maxEnt)
+    {
+      ;
+    }
+    ~G4SubEventTrackStack();
+
     G4SubEventTrackStack& operator=(const G4SubEventTrackStack&) = delete;
     G4bool operator==(const G4SubEventTrackStack&) const = delete;
     G4bool operator!=(const G4SubEventTrackStack&) const = delete;
-  
+
     void PushToStack(const G4StackedTrack& aStackedTrack);
     void ReleaseSubEvent();
-    //G4StackedTrack PopFromStack();
-  
+    // G4StackedTrack PopFromStack();
+
     void PrepareNewEvent(G4Event* ev);
     void clearAndDestroy();
 
     inline G4int GetSubEventType() const { return fSubEventType; }
     inline G4int GetNTrack() const
-    { 
-      if(fCurrentSE==nullptr) return 0;
+    {
+      if (fCurrentSE == nullptr) return 0;
       return (G4int)fCurrentSE->size();
     }
     inline std::size_t GetMaxNTrack() const { return fMaxEnt; }
     inline void SetVerboseLevel(G4int val) { verboseLevel = val; }
-  
+
   private:
 
     G4int fSubEventType = -1;

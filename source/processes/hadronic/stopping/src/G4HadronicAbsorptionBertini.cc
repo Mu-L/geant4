@@ -34,23 +34,23 @@
 // 20121017  M. Kelsey -- Use Bertini's IsApplicable to check particle allowed
 
 #include "G4HadronicAbsorptionBertini.hh"
+
 #include "G4CascadeInterface.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTypes.hh"
-#include <iostream>
 
+#include <iostream>
 
 // Constructor
 
-G4HadronicAbsorptionBertini::
-G4HadronicAbsorptionBertini(G4ParticleDefinition* pdef)
-  : G4HadronStoppingProcess("hBertiniCaptureAtRest"), pdefApplicable(pdef) {
+G4HadronicAbsorptionBertini::G4HadronicAbsorptionBertini(G4ParticleDefinition* pdef)
+  : G4HadronStoppingProcess("hBertiniCaptureAtRest"), pdefApplicable(pdef)
+{
   theCascade = new G4CascadeInterface;
-  theCascade->SetMinEnergy(0.);			// Ensure it gets used at rest
+  theCascade->SetMinEnergy(0.);  // Ensure it gets used at rest
   theCascade->usePreCompoundDeexcitation();
-  RegisterMe(theCascade);			// Transfers ownership
+  RegisterMe(theCascade);  // Transfers ownership
 }
-
 
 // Applies to constructor-specified particle, or to all known cases
 
@@ -60,18 +60,15 @@ G4bool G4HadronicAbsorptionBertini::IsApplicable(const G4ParticleDefinition& par
   if (pdefApplicable) return (&particle == pdefApplicable);
 
   // Any negative particles known to Bertini, excluding nuclei
-  return (G4HadronStoppingProcess::IsApplicable(particle) &&
-	  particle.GetAtomicMass() <= 1 &&
-	  theCascade->IsApplicable(&particle));
+  return (G4HadronStoppingProcess::IsApplicable(particle) && particle.GetAtomicMass() <= 1
+          && theCascade->IsApplicable(&particle));
 }
-
 
 // Documentation of purpose
 
-void 
-G4HadronicAbsorptionBertini::ProcessDescription(std::ostream& os) const {
+void G4HadronicAbsorptionBertini::ProcessDescription(std::ostream& os) const
+{
   os << "Stopping and absorption of charged hadrons (pi-, K-, Sigma-)\n"
      << "using Bertini-like intranuclear cascade.\n"
-     << "Native PreCompound model is used for nuclear de-excitation"
-     << std::endl;
+     << "Native PreCompound model is used for nuclear de-excitation" << std::endl;
 }

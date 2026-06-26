@@ -29,11 +29,11 @@
 // Class description:
 //
 // A wrapper class to store pointers to G4VCrossSectionSource in vectors.
-// 
+//
 // Author: Maria Grazia Pia, INFN Genova - April 1999
 // -------------------------------------------------------------------
 #ifndef G4CROSSSECTIONSOURCEPTR_HH
-#define G4CROSSSECTIONSOURCEPTR_HH 1
+#define G4CROSSSECTIONSOURCEPTR_HH
 
 #include "globals.hh"
 
@@ -41,39 +41,38 @@ class G4VCrossSectionSource;
 
 class G4CrossSectionSourcePtr
 {
- public:
+  public:
 
-  // Constructor 
-  G4CrossSectionSourcePtr(G4VCrossSectionSource* x = nullptr);
+    // Constructor
+    G4CrossSectionSourcePtr(G4VCrossSectionSource* x = nullptr);
 
-  // Destructor
-  ~G4CrossSectionSourcePtr() = default;
+    // Destructor
+    ~G4CrossSectionSourcePtr() = default;
 
-  // Copy constructor
-  G4CrossSectionSourcePtr(const G4CrossSectionSourcePtr& right);
+    // Copy constructor
+    G4CrossSectionSourcePtr(const G4CrossSectionSourcePtr& right);
 
-  // Move constructor
-  G4CrossSectionSourcePtr(G4CrossSectionSourcePtr&& right);
+    // Move constructor
+    G4CrossSectionSourcePtr(G4CrossSectionSourcePtr&& right);
 
-  // Operators
+    // Operators
 
-  const G4VCrossSectionSource* operator() () const;
-  G4VCrossSectionSource* operator() ();
+    const G4VCrossSectionSource* operator()() const;
+    G4VCrossSectionSource* operator()();
 
-  // Assignment operator
-  G4CrossSectionSourcePtr& operator= (const G4CrossSectionSourcePtr& right);
+    // Assignment operator
+    G4CrossSectionSourcePtr& operator=(const G4CrossSectionSourcePtr& right);
 
-  // Move assignment operator 
-  G4CrossSectionSourcePtr& operator=(G4CrossSectionSourcePtr&& right) noexcept;
+    // Move assignment operator
+    G4CrossSectionSourcePtr& operator=(G4CrossSectionSourcePtr&& right) noexcept;
 
-  G4bool operator== (const G4CrossSectionSourcePtr& right) const;
+    G4bool operator==(const G4CrossSectionSourcePtr& right) const;
 
-  inline G4bool operator< (const G4CrossSectionSourcePtr& ) { return false; }  
+    inline G4bool operator<(const G4CrossSectionSourcePtr&) { return false; }
 
- private:  
+  private:
 
-  G4VCrossSectionSource* x_;
-
+    G4VCrossSectionSource* x_;
 };
 
 #endif

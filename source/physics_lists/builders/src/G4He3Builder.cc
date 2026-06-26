@@ -35,34 +35,37 @@
 //
 //----------------------------------------------------------------------------
 //
- #include "G4He3Builder.hh"
- #include "G4ParticleDefinition.hh"
- #include "G4ParticleTable.hh"
- #include "G4ProcessManager.hh"
+#include "G4He3Builder.hh"
 
- 
- void G4He3Builder::Build()
- {
-   std::vector<G4VHe3Builder *>::iterator i;
-   for(i=theModelCollections.begin(); i!=theModelCollections.end(); i++)
-   {
-     (*i)->Build(theHe3Inelastic);
-   }
-   G4ProcessManager * theProcMan = G4He3::He3()->GetProcessManager();
-   theProcMan->AddDiscreteProcess(theHe3Inelastic);
- }
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "G4ProcessManager.hh"
 
- G4He3Builder::G4He3Builder()
- {
-   theHe3Inelastic=new G4HadronInelasticProcess( "he3Inelastic", G4He3::Definition() );
- }
+void G4He3Builder::Build()
+{
+  std::vector<G4VHe3Builder*>::iterator i;
+  for (i = theModelCollections.begin(); i != theModelCollections.end(); i++)
+  {
+    (*i)->Build(theHe3Inelastic);
+  }
+  G4ProcessManager* theProcMan = G4He3::He3()->GetProcessManager();
+  theProcMan->AddDiscreteProcess(theHe3Inelastic);
+}
 
- void G4He3Builder::RegisterMe(G4PhysicsBuilderInterface* aB) {
-   auto bld = dynamic_cast<G4VHe3Builder*>(aB);
-   if ( bld != nullptr ) {
-       theModelCollections.push_back(bld);
-   } else {
-       G4PhysicsBuilderInterface::RegisterMe(aB);
-   }
- }
+G4He3Builder::G4He3Builder()
+{
+  theHe3Inelastic = new G4HadronInelasticProcess("he3Inelastic", G4He3::Definition());
+}
 
+void G4He3Builder::RegisterMe(G4PhysicsBuilderInterface* aB)
+{
+  auto bld = dynamic_cast<G4VHe3Builder*>(aB);
+  if (bld != nullptr)
+  {
+    theModelCollections.push_back(bld);
+  }
+  else
+  {
+    G4PhysicsBuilderInterface::RegisterMe(aB);
+  }
+}

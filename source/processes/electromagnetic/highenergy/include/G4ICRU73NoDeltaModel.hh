@@ -45,37 +45,30 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4ICRU73NoDeltaModel_h
-#define G4ICRU73NoDeltaModel_h 1
+#ifndef G4ICRU73NODELTAMODEL_HH
+#define G4ICRU73NODELTAMODEL_HH
 
 #include "G4ICRU73QOModel.hh"
 
 class G4ICRU73NoDeltaModel : public G4ICRU73QOModel
 {
+  public:
 
-public:
+    explicit G4ICRU73NoDeltaModel(const G4ParticleDefinition* p = nullptr,
+                                  const G4String& nam = "ICRU73QONoD");
 
-  explicit G4ICRU73NoDeltaModel(const G4ParticleDefinition* p = nullptr,
-		       const G4String& nam = "ICRU73QONoD");
+    ~G4ICRU73NoDeltaModel() override;
 
-  ~G4ICRU73NoDeltaModel() override;
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                  G4double kineticEnergy, G4double cutEnergy) override;
 
-  G4double ComputeDEDXPerVolume(const G4Material*,
-				const G4ParticleDefinition*,
-				G4double kineticEnergy,
-				G4double cutEnergy) override;
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy,
+                                   G4double maxEnergy) override;
 
-  G4double CrossSectionPerVolume(const G4Material*,
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
-
-  // hide assignment operator
-  G4ICRU73NoDeltaModel & 
-    operator=(const  G4ICRU73NoDeltaModel &right) = delete;
-  G4ICRU73NoDeltaModel(const  G4ICRU73NoDeltaModel&) = delete;
-
+    // hide assignment operator
+    G4ICRU73NoDeltaModel& operator=(const G4ICRU73NoDeltaModel& right) = delete;
+    G4ICRU73NoDeltaModel(const G4ICRU73NoDeltaModel&) = delete;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

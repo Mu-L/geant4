@@ -6,7 +6,7 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-06-03 Gabriele Cosmo, Dmitri Konstantinov (proc-biasimp-V11-03-00)
+## 2026-06-03 Gabriele Cosmo, Dmitri Konstantinov (proc-biasimp-V11-04-00)
 - Fixed setting of parallel world navigator in G4ImportanceProcess to avoid
   reported cases of stale pointers when geometry gets rebuilt/reinitialised.
 - In G4WeightWindowConfigurator constructor, fixed the inverted ternary in

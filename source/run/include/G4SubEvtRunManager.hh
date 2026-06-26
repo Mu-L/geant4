@@ -36,8 +36,8 @@
 //
 // Original author: M. Asai (JLAB) - 2024
 // --------------------------------------------------------------------
-#ifndef G4SubEvtRunManager_hh
-#define G4SubEvtRunManager_hh 1
+#ifndef G4SUBEVTRUNMANAGER_HH
+#define G4SUBEVTRUNMANAGER_HH
 
 #include "G4TaskRunManager.hh"
 
@@ -51,6 +51,7 @@ class G4SubEvtRunManager : public G4TaskRunManager
     friend class G4RunManagerFactory;
 
   public:
+
     static G4SubEvtRunManager* GetMasterRunManager()
     {
       auto* _rm = G4MTRunManager::GetMasterRunManager();
@@ -59,7 +60,8 @@ class G4SubEvtRunManager : public G4TaskRunManager
 
     G4SubEvtRunManager(G4bool useTBB = G4GetEnv<G4bool>("G4USE_TBB", false));
     G4SubEvtRunManager(G4VUserTaskQueue* taskQueue,
-                     G4bool useTBB = G4GetEnv<G4bool>("G4USE_TBB", false), G4int evtGrainsize = 0);
+                       G4bool useTBB = G4GetEnv<G4bool>("G4USE_TBB", false),
+                       G4int evtGrainsize = 0);
     ~G4SubEvtRunManager() override;
 
     // Inherited methods to re-implement for MT case
@@ -76,13 +78,14 @@ class G4SubEvtRunManager : public G4TaskRunManager
 
     // The following two methods are not used in sub-event parallel mode.
     G4bool SetUpAnEvent(G4Event*, G4long&, G4long&, G4long&, G4bool = true) override
-    { return false; }
-    G4int SetUpNEvents(G4Event*, G4SeedsQueue*, G4bool = true) override
-    { return -1; }
+    {
+      return false;
+    }
+    G4int SetUpNEvents(G4Event*, G4SeedsQueue*, G4bool = true) override { return -1; }
 
     void RegisterSubEventType(G4int ty, G4int maxEnt) override;
 
-    void RegisterSubEvtWorker(G4WorkerSubEvtRunManager*,G4int);
+    void RegisterSubEvtWorker(G4WorkerSubEvtRunManager*, G4int);
 
     // The following method should be invoked by G4WorkerSubEvtRunManager for each
     // sub-event. This method returns a sub-event. This sub-event object must not
@@ -94,28 +97,26 @@ class G4SubEvtRunManager : public G4TaskRunManager
     // should be set to false. This is *NOT* allowed for the first event.
     // G4Event object should be instantiated by G4WorkerSubEvtRunManager based on the
     // input provided in G4SubEvent.
-    const G4SubEvent* GetSubEvent(G4int ty, G4bool& notReady,
-              G4long& s1, G4long& s2, G4long& s3, G4bool reseedRequired = true) override;
+    const G4SubEvent* GetSubEvent(G4int ty, G4bool& notReady, G4long& s1, G4long& s2, G4long& s3,
+                                  G4bool reseedRequired = true) override;
 
     // Notify the master thread that processing of sub-event "se" is over.
     // Outcome of processed sub-event must be kept in "evt".
     // "se" is deleted by the master thread, while "evt" must be deleted by the worker thread
     // after invoking this method.
-    void SubEventFinished(const G4SubEvent* se,const G4Event* evt) override;
+    void SubEventFinished(const G4SubEvent* se, const G4Event* evt) override;
 
     // Merge local scores to the master
     void MergeScores(const G4ScoringManager* localScoringManager) override;
 
     // Nothing to do for merging run
-    void MergeRun(const G4Run*) override
-    {}
+    void MergeRun(const G4Run*) override {}
 
     // Returns number of currently active threads.
     // This number may be different from the number of threads currently
     // in running state, e.g. the number returned by:
     // G4Threading::GetNumberOfActiveWorkerThreads() method.
-    std::size_t GetNumberActiveThreads() const override
-    { return threads.size(); }
+    std::size_t GetNumberActiveThreads() const override { return threads.size(); }
 
     // Worker threads barrier: this method should be called by each
     // worker when ready to start thread event-loop.
@@ -162,6 +163,7 @@ class G4SubEvtRunManager : public G4TaskRunManager
     void AbortEvent() override;
 
   protected:
+
     void ComputeNumberOfTasks() override
     {
       // This method is not used for sub-event parallel mode
@@ -179,7 +181,7 @@ class G4SubEvtRunManager : public G4TaskRunManager
     // Adds one seed to the list of seeds
     void RefillSeeds() override;
 
-    //void PrepareCommandsStack() override;
+    // void PrepareCommandsStack() override;
 
     // Creates worker threads and signal to start
     void CreateAndStartWorkers() override;
@@ -190,25 +192,27 @@ class G4SubEvtRunManager : public G4TaskRunManager
 
     void SetUpSeedsForSubEvent(G4long& s1, G4long& s2, G4long& s3);
 
-    void MergeTrajectories(const G4SubEvent* se,const G4Event* evt) override;
-    void UpdateScoringForSubEvent(const G4SubEvent* se,const G4Event* evt) override;
+    void MergeTrajectories(const G4SubEvent* se, const G4Event* evt) override;
+    void UpdateScoringForSubEvent(const G4SubEvent* se, const G4Event* evt) override;
 
     void CleanUpUnnecessaryEvents(G4int keepNEvents) override;
     void StackPreviousEvent(G4Event* anEvent) override;
 
   protected:
+
     std::atomic<G4bool> runInProgress = false;
 
   private:
+
     G4bool trajectoriesToBeMerged = false;
-    std::map<G4int,G4int> fSubEvtTypeMap;
-    std::map<G4WorkerSubEvtRunManager*,G4int> fWorkerMap;
+    std::map<G4int, G4int> fSubEvtTypeMap;
+    std::map<G4WorkerSubEvtRunManager*, G4int> fWorkerMap;
 
     G4bool CheckSubEvtTypes();
 
   public:
-    void TrajectoriesToBeMerged(G4bool val=true) override
-    { trajectoriesToBeMerged = val; }
+
+    void TrajectoriesToBeMerged(G4bool val = true) override { trajectoriesToBeMerged = val; }
 };
 
 #endif  // G4SubEvtRunManager_hh

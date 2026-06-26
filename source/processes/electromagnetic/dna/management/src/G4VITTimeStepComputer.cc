@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr) 
+// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr)
 //
 // History:
 // -----------
@@ -35,39 +35,38 @@
 #include "G4VITTimeStepComputer.hh"
 
 G4ThreadLocal G4double G4VITTimeStepComputer::fCurrentGlobalTime = -1;
-G4ThreadLocal G4double G4VITTimeStepComputer::fUserMinTimeStep   = -1;
+G4ThreadLocal G4double G4VITTimeStepComputer::fUserMinTimeStep = -1;
 
 G4VITTimeStepComputer::G4VITTimeStepComputer()
 {
-    fVerbose = 0;
-//    fReactants = 0;
-    fReactants.reset();
-    fSampledMinTimeStep = 0 ;
-    fpReactionTable      = nullptr;
+  fVerbose = 0;
+  //    fReactants = 0;
+  fReactants.reset();
+  fSampledMinTimeStep = 0;
+  fpReactionTable = nullptr;
 }
 
-G4VITTimeStepComputer::~G4VITTimeStepComputer()
-= default;
+G4VITTimeStepComputer::~G4VITTimeStepComputer() = default;
 
 G4VITTimeStepComputer& G4VITTimeStepComputer::operator=(const G4VITTimeStepComputer& rhs)
 {
-    if (this == &rhs) return *this; // handle self assignment
-    //assignment operator
-    return *this;
+  if (this == &rhs) return *this;  // handle self assignment
+  // assignment operator
+  return *this;
 }
 
 G4VITTimeStepComputer::G4VITTimeStepComputer(const G4VITTimeStepComputer& right)
 {
-    fVerbose            = right.fVerbose ;
-    fpReactionTable      = right.fpReactionTable ;
-//    fReactants          = 0;
-    fReactants          .reset();
-    fSampledMinTimeStep = 0 ;
+  fVerbose = right.fVerbose;
+  fpReactionTable = right.fpReactionTable;
+  //    fReactants          = 0;
+  fReactants.reset();
+  fSampledMinTimeStep = 0;
 }
 
 void G4VITTimeStepComputer::SetTimes(const G4double& currentGlobalTime,
-                            const G4double& userMinStepTime)
+                                     const G4double& userMinStepTime)
 {
-    fCurrentGlobalTime = currentGlobalTime ;
-    fUserMinTimeStep   = userMinStepTime ;
+  fCurrentGlobalTime = currentGlobalTime;
+  fUserMinTimeStep = userMinStepTime;
 }

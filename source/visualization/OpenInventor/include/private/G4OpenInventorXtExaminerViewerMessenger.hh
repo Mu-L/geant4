@@ -26,25 +26,27 @@
 #ifndef G4OPENINVENTORXTEXAMINERVIEWERMESSENGER_HH
 #define G4OPENINVENTORXTEXAMINERVIEWERMESSENGER_HH
 
-#include "G4UImessenger.hh"
-
 #include "G4String.hh"
+#include "G4UImessenger.hh"
 
 class G4OpenInventorXtExaminerViewer;
 class G4UIdirectory;
 class G4UIcmdWithAnInteger;
 
-class G4OpenInventorXtExaminerViewerMessenger: public G4UImessenger {
-public:
-  static G4OpenInventorXtExaminerViewerMessenger* GetInstance();  // Singleton constructor.
-  ~G4OpenInventorXtExaminerViewerMessenger();
-  void SetNewValue (G4UIcommand*, G4String);
+class G4OpenInventorXtExaminerViewerMessenger : public G4UImessenger
+{
+  public:
 
-private:
-  G4OpenInventorXtExaminerViewerMessenger();  // Private constructor.
-  static G4OpenInventorXtExaminerViewerMessenger* fpInstance;
-  G4UIdirectory* fpDirectory;
-  G4UIcmdWithAnInteger* fpCommandPathLookahead;
+    static G4OpenInventorXtExaminerViewerMessenger* GetInstance();  // Singleton constructor.
+    ~G4OpenInventorXtExaminerViewerMessenger();
+    void SetNewValue(G4UIcommand*, G4String);
+
+  private:
+
+    G4OpenInventorXtExaminerViewerMessenger();  // Private constructor.
+    static G4OpenInventorXtExaminerViewerMessenger* fpInstance;
+    G4UIdirectory* fpDirectory;
+    G4UIcmdWithAnInteger* fpCommandPathLookahead;
 };
 
 #endif

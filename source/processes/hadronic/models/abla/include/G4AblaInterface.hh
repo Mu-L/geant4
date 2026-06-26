@@ -48,6 +48,7 @@ class G4HadFinalState;
 class G4AblaInterface : public G4VPreCompoundModel
 {
   public:
+
     G4AblaInterface(G4ExcitationHandler* ptr = nullptr);
     virtual ~G4AblaInterface();
 
@@ -64,6 +65,7 @@ class G4AblaInterface : public G4VPreCompoundModel
     virtual void DeExciteModelDescription(std::ostream& outFile) const;
 
   private:
+
     G4HadFinalState applyYourselfResult;
     G4VarNtp* ablaResult;
     G4Abla* theABLAModel;

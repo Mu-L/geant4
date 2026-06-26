@@ -30,20 +30,18 @@
 
 #include "G4tgbVolumeMgr.hh"
 
-#include "G4SystemOfUnits.hh"
-#include "G4tgbVolume.hh"
-#include "G4tgbMaterialMgr.hh"
-#include "G4tgbRotationMatrixMgr.hh"
-
-#include "G4tgrVolumeMgr.hh"
-#include "G4tgrFileReader.hh"
-#include "G4tgrUtils.hh"
-
-#include "G4VSolid.hh"
 #include "G4PhysicalVolumeStore.hh"
 #include "G4ReflectionFactory.hh"
-#include "G4tgrMessenger.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4VSolid.hh"
 #include "G4tgbDetectorBuilder.hh"
+#include "G4tgbMaterialMgr.hh"
+#include "G4tgbRotationMatrixMgr.hh"
+#include "G4tgbVolume.hh"
+#include "G4tgrFileReader.hh"
+#include "G4tgrMessenger.hh"
+#include "G4tgrUtils.hh"
+#include "G4tgrVolumeMgr.hh"
 
 G4ThreadLocal G4tgbVolumeMgr* G4tgbVolumeMgr::theInstance = nullptr;
 
@@ -66,7 +64,7 @@ G4tgbVolumeMgr::~G4tgbVolumeMgr()
 // --------------------------------------------------------------------
 G4tgbVolumeMgr* G4tgbVolumeMgr::GetInstance()
 {
-  if(theInstance == nullptr)
+  if (theInstance == nullptr)
   {
     theInstance = new G4tgbVolumeMgr();
   }
@@ -89,28 +87,25 @@ G4VPhysicalVolume* G4tgbVolumeMgr::ReadAndConstructDetector()
 // --------------------------------------------------------------------
 void G4tgbVolumeMgr::RegisterMe(const G4tgbVolume* vol)
 {
-  theVolumeList.insert(
-    G4mssvol::value_type(vol->GetName(), const_cast<G4tgbVolume*>(vol)));
+  theVolumeList.insert(G4mssvol::value_type(vol->GetName(), const_cast<G4tgbVolume*>(vol)));
 }
 
 // --------------------------------------------------------------------
 void G4tgbVolumeMgr::RegisterMe(const G4VSolid* solid)
 {
-  theSolids.insert(
-    G4mmssol::value_type(solid->GetName(), const_cast<G4VSolid*>(solid)));
+  theSolids.insert(G4mmssol::value_type(solid->GetName(), const_cast<G4VSolid*>(solid)));
 }
 
 // --------------------------------------------------------------------
 void G4tgbVolumeMgr::RegisterMe(const G4LogicalVolume* lv)
 {
-  theLVs.insert(
-    G4mmslv::value_type(lv->GetName(), const_cast<G4LogicalVolume*>(lv)));
+  theLVs.insert(G4mmslv::value_type(lv->GetName(), const_cast<G4LogicalVolume*>(lv)));
 
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 2)
+  if (G4tgrMessenger::GetVerboseLevel() >= 2)
   {
-    G4cout << " G4tgbVolumeMgr::RegisterMe() - Logical volume registered: "
-           << lv->GetName() << G4endl;
+    G4cout << " G4tgbVolumeMgr::RegisterMe() - Logical volume registered: " << lv->GetName()
+           << G4endl;
   }
 #endif
 }
@@ -118,18 +113,15 @@ void G4tgbVolumeMgr::RegisterMe(const G4LogicalVolume* lv)
 // --------------------------------------------------------------------
 void G4tgbVolumeMgr::RegisterMe(const G4VPhysicalVolume* pv)
 {
-  thePVs.insert(
-    G4mmspv::value_type(pv->GetName(), const_cast<G4VPhysicalVolume*>(pv)));
+  thePVs.insert(G4mmspv::value_type(pv->GetName(), const_cast<G4VPhysicalVolume*>(pv)));
 }
 
 // --------------------------------------------------------------------
 void G4tgbVolumeMgr::RegisterChildParentLVs(const G4LogicalVolume* logvol,
                                             const G4LogicalVolume* parentLV)
 {
-  theLVInvTree[const_cast<G4LogicalVolume*>(logvol)] =
-    const_cast<G4LogicalVolume*>(parentLV);
-  theLVTree[const_cast<G4LogicalVolume*>(parentLV)] =
-    const_cast<G4LogicalVolume*>(logvol);
+  theLVInvTree[const_cast<G4LogicalVolume*>(logvol)] = const_cast<G4LogicalVolume*>(parentLV);
+  theLVTree[const_cast<G4LogicalVolume*>(parentLV)] = const_cast<G4LogicalVolume*>(logvol);
 }
 
 // --------------------------------------------------------------------
@@ -137,10 +129,10 @@ void G4tgbVolumeMgr::CopyVolumes()
 {
   //--------- Loop G4tgbVolume's and create a G4tgbVolume for each DetUnit
   G4mapsvol vollist = G4tgrVolumeMgr::GetInstance()->GetVolumeMap();
-  for(auto cite = vollist.cbegin(); cite != vollist.cend(); ++cite)
+  for (auto cite = vollist.cbegin(); cite != vollist.cend(); ++cite)
   {
     G4tgrVolume* tgrvol = const_cast<G4tgrVolume*>((*cite).second);
-    G4tgbVolume* svol   = new G4tgbVolume(tgrvol);
+    G4tgbVolume* svol = new G4tgbVolume(tgrvol);
     RegisterMe(svol);
   }
 }
@@ -149,11 +141,10 @@ void G4tgbVolumeMgr::CopyVolumes()
 G4tgbVolume* G4tgbVolumeMgr::FindVolume(const G4String& volname)
 {
   G4mssvol::const_iterator cite = theVolumeList.find(volname);
-  if(cite == theVolumeList.cend())
+  if (cite == theVolumeList.cend())
   {
     G4String ErrMessage = "G4tgbVolume not found: " + volname + " !";
-    G4Exception("G4tgbVolumeMgr::FindVolume()", "InvalidSetup", FatalException,
-                ErrMessage);
+    G4Exception("G4tgbVolumeMgr::FindVolume()", "InvalidSetup", FatalException, ErrMessage);
     return nullptr;
   }
   else
@@ -166,7 +157,7 @@ G4tgbVolume* G4tgbVolumeMgr::FindVolume(const G4String& volname)
 G4VSolid* G4tgbVolumeMgr::FindG4Solid(const G4String& name)
 {
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 2)
+  if (G4tgrMessenger::GetVerboseLevel() >= 2)
   {
     G4cout << " G4tgbVolumeMgr::FindG4Solid() - " << name << G4endl;
   }
@@ -176,15 +167,14 @@ G4VSolid* G4tgbVolumeMgr::FindG4Solid(const G4String& name)
   std::pair<G4mmssol::iterator, G4mmssol::iterator> mmssdi;
   mmssdi = theSolids.equal_range(name);
 
-  if(mmssdi.first != mmssdi.second)
+  if (mmssdi.first != mmssdi.second)
   {  // check there is a solid found
     G4mmssol::const_iterator mmsscite = mmssdi.first;
 
 #ifdef G4VERBOSE
-    if(G4tgrMessenger::GetVerboseLevel() >= 2)
+    if (G4tgrMessenger::GetVerboseLevel() >= 2)
     {
-      G4cout << " G4tgbVolumeMgr::FindG4Solid() - Solid finding " << name
-             << G4endl;
+      G4cout << " G4tgbVolumeMgr::FindG4Solid() - Solid finding " << name << G4endl;
     }
 #endif
     /*
@@ -203,19 +193,17 @@ G4VSolid* G4tgbVolumeMgr::FindG4Solid(const G4String& name)
     */
     oldSolid = (*mmsscite).second;
 #ifdef G4VERBOSE
-    if(G4tgrMessenger::GetVerboseLevel() >= 1)
+    if (G4tgrMessenger::GetVerboseLevel() >= 1)
     {
-      G4cout << " G4tgbVolumeMgr::FindG4Solid() - Solid already found " << name
-             << G4endl;
+      G4cout << " G4tgbVolumeMgr::FindG4Solid() - Solid already found " << name << G4endl;
     }
 #endif
   }
 
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 2)
+  if (G4tgrMessenger::GetVerboseLevel() >= 2)
   {
-    G4cout << " G4tgbVolumeMgr::FindG4Solid() - Old solid: " << oldSolid
-           << G4endl;
+    G4cout << " G4tgbVolumeMgr::FindG4Solid() - Old solid: " << oldSolid << G4endl;
   }
 #endif
 
@@ -223,17 +211,15 @@ G4VSolid* G4tgbVolumeMgr::FindG4Solid(const G4String& name)
 }
 
 // --------------------------------------------------------------------
-G4LogicalVolume* G4tgbVolumeMgr::FindG4LogVol(const G4String& name,
-                                              const G4bool exists)
+G4LogicalVolume* G4tgbVolumeMgr::FindG4LogVol(const G4String& name, const G4bool exists)
 {
   G4mmslv::const_iterator mscite = theLVs.find(name);
-  if(mscite == theLVs.cend())
+  if (mscite == theLVs.cend())
   {
-    if(exists)
+    if (exists)
     {
       G4String ErrMessage = "Logical volume name " + name + " not found !";
-      G4Exception("G4tgbVolumeMgr::FindG4LogVol()", "InvalidSetup",
-                  FatalException, ErrMessage);
+      G4Exception("G4tgbVolumeMgr::FindG4LogVol()", "InvalidSetup", FatalException, ErrMessage);
     }
     return nullptr;
   }
@@ -244,17 +230,15 @@ G4LogicalVolume* G4tgbVolumeMgr::FindG4LogVol(const G4String& name,
 }
 
 // --------------------------------------------------------------------
-G4VPhysicalVolume* G4tgbVolumeMgr::FindG4PhysVol(const G4String& name,
-                                                 const G4bool exists)
+G4VPhysicalVolume* G4tgbVolumeMgr::FindG4PhysVol(const G4String& name, const G4bool exists)
 {
   G4mmspv::const_iterator mscite = thePVs.find(name);
-  if(mscite == thePVs.cend())
+  if (mscite == thePVs.cend())
   {
-    if(exists)
+    if (exists)
     {
       G4String ErrMessage = "Physical volume name " + name + " not found !";
-      G4Exception("G4tgbVolumeMgr::FindG4PhysVol()", "InvalidSetup",
-                  FatalException, ErrMessage);
+      G4Exception("G4tgbVolumeMgr::FindG4PhysVol()", "InvalidSetup", FatalException, ErrMessage);
     }
     return nullptr;
   }
@@ -267,14 +251,13 @@ G4VPhysicalVolume* G4tgbVolumeMgr::FindG4PhysVol(const G4String& name,
 // --------------------------------------------------------------------
 G4VPhysicalVolume* G4tgbVolumeMgr::GetTopPhysVol()
 {
-  G4LogicalVolume* lv   = GetTopLogVol();
+  G4LogicalVolume* lv = GetTopLogVol();
   G4VPhysicalVolume* pv = (*(thePVs.find(lv->GetName()))).second;
 
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 2)
+  if (G4tgrMessenger::GetVerboseLevel() >= 2)
   {
-    G4cout << " G4tgbVolumeMgr::GetTopPhysVol() - pv: " << pv->GetName()
-           << G4endl;
+    G4cout << " G4tgbVolumeMgr::GetTopPhysVol() - pv: " << pv->GetName() << G4endl;
   }
 #endif
 
@@ -287,35 +270,33 @@ G4LogicalVolume* G4tgbVolumeMgr::GetTopLogVol()
   //----------- Start from any G4LogicalVolume, because if you go upwards
   //            you will always end at the top
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 2)
+  if (G4tgrMessenger::GetVerboseLevel() >= 2)
   {
-    G4cout << " G4tgbVolumeMgr::GetTopLogVol theLVInvTresize "
-           << theLVInvTree.size() << G4endl;
+    G4cout << " G4tgbVolumeMgr::GetTopLogVol theLVInvTresize " << theLVInvTree.size() << G4endl;
   }
 #endif
-  if(theLVInvTree.size() == 0)
+  if (theLVInvTree.size() == 0)
   {
-    G4Exception("G4tgbVolumeMgr::GetTopLogVol()", "InvalidSetup",
-                FatalException, "theLVInvTree has no elements.");
+    G4Exception("G4tgbVolumeMgr::GetTopLogVol()", "InvalidSetup", FatalException,
+                "theLVInvTree has no elements.");
   }
   G4LogicalVolume* lv = (*(theLVInvTree.begin())).second;
 
   //------- if first element is the top LV, its parent is 0
-  if(lv == nullptr)
+  if (lv == nullptr)
   {
     lv = (*(theLVInvTree.begin())).first;
   }
   else
   {
-    while((*(theLVInvTree.find(lv))).second != nullptr)
+    while ((*(theLVInvTree.find(lv))).second != nullptr)
     {
       //---------- get parent of first position
       lv = (*(theLVInvTree.find(lv))).second;
 #ifdef G4VERBOSE
-      if(G4tgrMessenger::GetVerboseLevel() >= 2)
+      if (G4tgrMessenger::GetVerboseLevel() >= 2)
       {
-        G4cout << " G4tgbVolumeMgr::GetTopPhysVol: lv " << lv->GetName()
-               << G4endl;
+        G4cout << " G4tgbVolumeMgr::GetTopPhysVol: lv " << lv->GetName() << G4endl;
       }
 #endif
     }
@@ -342,23 +323,18 @@ void G4tgbVolumeMgr::DumpSummary()
 {
   //---------- Dump number of objects of each class
   G4cout << " @@@@@@@@@@@@@ Dumping Geant4 geometry objects Summary " << G4endl;
-  G4cout << " @@@ Geometry built inside world volume: "
-         << GetTopPhysVol()->GetName() << G4endl;
+  G4cout << " @@@ Geometry built inside world volume: " << GetTopPhysVol()->GetName() << G4endl;
   G4cout << " Number of G4VSolid's: " << theSolids.size() << G4endl;
   G4cout << " Number of G4LogicalVolume's: " << theLVs.size() << G4endl;
   G4cout << " Number of G4VPhysicalVolume's: " << thePVs.size() << G4endl;
 
   G4tgbMaterialMgr* mateMgr = G4tgbMaterialMgr::GetInstance();
-  G4cout << " Number of G4Isotope's: " << mateMgr->GetG4IsotopeList().size()
-         << G4endl;
-  G4cout << " Number of G4Element's: " << mateMgr->GetG4ElementList().size()
-         << G4endl;
-  G4cout << " Number of G4Material's: " << mateMgr->GetG4MaterialList().size()
-         << G4endl;
+  G4cout << " Number of G4Isotope's: " << mateMgr->GetG4IsotopeList().size() << G4endl;
+  G4cout << " Number of G4Element's: " << mateMgr->GetG4ElementList().size() << G4endl;
+  G4cout << " Number of G4Material's: " << mateMgr->GetG4MaterialList().size() << G4endl;
 
   G4tgbRotationMatrixMgr* rotmMgr = G4tgbRotationMatrixMgr::GetInstance();
-  G4cout << " Number of G4RotationMatrix's: "
-         << rotmMgr->GetG4RotMatList().size() << G4endl;
+  G4cout << " Number of G4RotationMatrix's: " << rotmMgr->GetG4RotMatList().size() << G4endl;
 
   //---------- Dump list of objects of each class
   DumpG4SolidList();
@@ -369,7 +345,7 @@ void G4tgbVolumeMgr::DumpSummary()
 // --------------------------------------------------------------------
 void G4tgbVolumeMgr::DumpG4SolidList()
 {
-  for(auto cite = theSolids.cbegin(); cite != theSolids.cend(); ++cite)
+  for (auto cite = theSolids.cbegin(); cite != theSolids.cend(); ++cite)
   {
     G4cout << "G4SOLID: " << (*cite).second->GetName() << " of type "
            << (*cite).second->GetEntityType() << G4endl;
@@ -387,10 +363,9 @@ void G4tgbVolumeMgr::DumpG4LogVolTree()
 }
 
 //---------------------------------------------------------------------
-void G4tgbVolumeMgr::DumpG4LogVolLeaf(const G4LogicalVolume* lv,
-                                      unsigned int leafDepth)
+void G4tgbVolumeMgr::DumpG4LogVolLeaf(const G4LogicalVolume* lv, unsigned int leafDepth)
 {
-  for(std::size_t ii = 0; ii < leafDepth; ++ii)
+  for (std::size_t ii = 0; ii < leafDepth; ++ii)
   {
     G4cout << "  ";
   }
@@ -421,10 +396,9 @@ void G4tgbVolumeMgr::DumpG4PhysVolTree()
 }
 
 // --------------------------------------------------------------------
-void G4tgbVolumeMgr::DumpG4PhysVolLeaf(const G4VPhysicalVolume* pv,
-                                       unsigned int leafDepth)
+void G4tgbVolumeMgr::DumpG4PhysVolLeaf(const G4VPhysicalVolume* pv, unsigned int leafDepth)
 {
-  for(std::size_t ii = 0; ii < leafDepth; ++ii)
+  for (std::size_t ii = 0; ii < leafDepth; ++ii)
   {
     G4cout << "  ";
   }

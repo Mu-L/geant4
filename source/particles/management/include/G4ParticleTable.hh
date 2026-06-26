@@ -41,8 +41,8 @@
 // - 28 Oct 1999, H.Kurashige - Migration to STL maps
 // - 15 Sep 2017, K.L.Genser - Added support for MuonicAtom
 // --------------------------------------------------------------------
-#ifndef G4ParticleTable_hh
-#define G4ParticleTable_hh 1
+#ifndef G4PARTICLETABLE_HH
+#define G4PARTICLETABLE_HH
 
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTableIterator.hh"
@@ -59,6 +59,7 @@ class G4IonTable;
 class G4ParticleTable
 {
   public:
+
     using G4PTblDictionary = G4ParticleTableIterator<G4String, G4ParticleDefinition*>::Map;
     using G4PTblDicIterator = G4ParticleTableIterator<G4String, G4ParticleDefinition*>;
     using G4PTblEncodingDictionary = G4ParticleTableIterator<G4int, G4ParticleDefinition*>::Map;
@@ -186,6 +187,7 @@ class G4ParticleTable
 #endif
 
   protected:
+
     const G4PTblDictionary* GetDictionary() const;
 
     // Returns key value of the particle (i.e. particle name)
@@ -195,6 +197,7 @@ class G4ParticleTable
     const G4PTblEncodingDictionary* GetEncodingDictionary() const;
 
   private:
+
     // Provate default constructor
     G4ParticleTable();
 

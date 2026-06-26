@@ -43,30 +43,32 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4WLSTimeGeneratorProfileExponential_h
-#define G4WLSTimeGeneratorProfileExponential_h 1
+#ifndef G4WLSTIMEGENERATORPROFILEEXPONENTIAL_HH
+#define G4WLSTIMEGENERATORPROFILEEXPONENTIAL_HH
 
 #include "G4VWLSTimeGeneratorProfile.hh"
 
 class G4WLSTimeGeneratorProfileExponential : public G4VWLSTimeGeneratorProfile
 {
- public:
-  explicit G4WLSTimeGeneratorProfileExponential(const G4String& name);
+  public:
 
-  virtual ~G4WLSTimeGeneratorProfileExponential();
+    explicit G4WLSTimeGeneratorProfileExponential(const G4String& name);
 
-  virtual G4double GenerateTime(const G4double time_constant) override;
+    virtual ~G4WLSTimeGeneratorProfileExponential();
 
-  virtual G4double GenerateTime(const G4MaterialPropertiesTable*) override;
+    virtual G4double GenerateTime(const G4double time_constant) override;
 
- protected:
- private:
-  // hide assignment operator
+    virtual G4double GenerateTime(const G4MaterialPropertiesTable*) override;
 
-  G4WLSTimeGeneratorProfileExponential& operator=
-    (const G4WLSTimeGeneratorProfileExponential& right) = delete;
-  G4WLSTimeGeneratorProfileExponential(
-    const G4WLSTimeGeneratorProfileExponential&) = delete;
+  protected:
+
+  private:
+
+    // hide assignment operator
+
+    G4WLSTimeGeneratorProfileExponential&
+    operator=(const G4WLSTimeGeneratorProfileExponential& right) = delete;
+    G4WLSTimeGeneratorProfileExponential(const G4WLSTimeGeneratorProfileExponential&) = delete;
 };
 
 #endif

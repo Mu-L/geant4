@@ -23,21 +23,22 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef  G4WarnPLStatus_hh
-#define  G4WarnPLStatus_hh
+#ifndef G4WARNPLSTATUS_HH
+#define G4WARNPLSTATUS_HH
 
 #include "globals.hh"
 
-class  G4WarnPLStatus
+class G4WarnPLStatus
 {
-public:
-  G4WarnPLStatus();
-  ~G4WarnPLStatus();
+  public:
 
-  void Replaced(const G4String aPL, const G4String Replacement) const ;
-  void OnlyFromFactory(const G4String aPL, const G4String basePL) const;
-  void Unsupported(const G4String aPL, const G4String Replacement ="") const ;
-  void Experimental(const G4String aPL) const ;
+    G4WarnPLStatus();
+    ~G4WarnPLStatus();
+
+    void Replaced(const G4String aPL, const G4String Replacement) const;
+    void OnlyFromFactory(const G4String aPL, const G4String basePL) const;
+    void Unsupported(const G4String aPL, const G4String Replacement = "") const;
+    void Experimental(const G4String aPL) const;
 };
 
 #endif

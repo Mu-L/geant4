@@ -37,8 +37,8 @@
 //
 // Author: Makoto Asai
 // ---------------------------------------------------------------------
-#ifndef G4SDmessenger_h
-#define G4SDmessenger_h 1
+#ifndef G4SDMESSENGER_HH
+#define G4SDMESSENGER_HH
 
 #include "G4UImessenger.hh"
 
@@ -50,18 +50,20 @@ class G4UIcmdWithAnInteger;
 
 class G4SDmessenger : public G4UImessenger
 {
- public:
-  G4SDmessenger(G4SDManager* SDManager);
-  ~G4SDmessenger() override;
-  void SetNewValue(G4UIcommand* command, G4String newValues) override;
+  public:
 
- private:
-  G4SDManager* fSDMan;
-  G4UIdirectory* hitsDir;
-  G4UIcmdWithoutParameter* listCmd;
-  G4UIcmdWithAString* activeCmd;
-  G4UIcmdWithAString* inactiveCmd;
-  G4UIcmdWithAnInteger* verboseCmd;
+    G4SDmessenger(G4SDManager* SDManager);
+    ~G4SDmessenger() override;
+    void SetNewValue(G4UIcommand* command, G4String newValues) override;
+
+  private:
+
+    G4SDManager* fSDMan;
+    G4UIdirectory* hitsDir;
+    G4UIcmdWithoutParameter* listCmd;
+    G4UIcmdWithAString* activeCmd;
+    G4UIcmdWithAString* inactiveCmd;
+    G4UIcmdWithAnInteger* verboseCmd;
 };
 
 #endif

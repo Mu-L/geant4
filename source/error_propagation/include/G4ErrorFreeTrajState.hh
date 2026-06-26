@@ -46,92 +46,81 @@
 // - Created:   P. Arce
 // --------------------------------------------------------------------
 
-#ifndef G4ErrorFreeTrajState_hh
-#define G4ErrorFreeTrajState_hh
+#ifndef G4ERRORFREETRAJSTATE_HH
+#define G4ERRORFREETRAJSTATE_HH
 
-#include "globals.hh"
-
-#include "G4ErrorMatrix.hh"
-
-#include "G4ErrorTrajState.hh"
 #include "G4ErrorFreeTrajParam.hh"
-
+#include "G4ErrorMatrix.hh"
+#include "G4ErrorTrajState.hh"
 #include "G4Point3D.hh"
 #include "G4Vector3D.hh"
+#include "globals.hh"
 
 class G4ErrorSurfaceTrajState;
 
 class G4ErrorFreeTrajState : public G4ErrorTrajState
 {
- public:  // with description
-  G4ErrorFreeTrajState()
-    : theFirstStep(true)
-  {}
-  G4ErrorFreeTrajState(const G4String& partName, const G4Point3D& pos,
-                       const G4Vector3D& mom,
-                       const G4ErrorTrajErr& errmat = G4ErrorTrajErr(5, 0));
-  // Constructor by providing particle, position and momentum
+  public:  // with description
 
-  G4ErrorFreeTrajState(const G4ErrorSurfaceTrajState& tpOS);
-  // Constructor by providing G4ErrorSurfaceTrajState
+    G4ErrorFreeTrajState() : theFirstStep(true) {}
+    G4ErrorFreeTrajState(const G4String& partName, const G4Point3D& pos, const G4Vector3D& mom,
+                         const G4ErrorTrajErr& errmat = G4ErrorTrajErr(5, 0));
+    // Constructor by providing particle, position and momentum
 
-  ~G4ErrorFreeTrajState() {}
+    G4ErrorFreeTrajState(const G4ErrorSurfaceTrajState& tpOS);
+    // Constructor by providing G4ErrorSurfaceTrajState
 
-  virtual G4int Update(const G4Track* aTrack);
-  // update parameters from G4Track
+    ~G4ErrorFreeTrajState() {}
 
-  virtual G4int PropagateError(const G4Track* aTrack);
-  // propagate the error along the step
+    virtual G4int Update(const G4Track* aTrack);
+    // update parameters from G4Track
 
-  virtual void Dump(std::ostream& out = G4cout) const;
-  // dump TrajState parameters
+    virtual G4int PropagateError(const G4Track* aTrack);
+    // propagate the error along the step
 
-  friend std::ostream& operator<<(std::ostream&,
-                                  const G4ErrorFreeTrajState& ts);
+    virtual void Dump(std::ostream& out = G4cout) const;
+    // dump TrajState parameters
 
-  // Set and Get methods
+    friend std::ostream& operator<<(std::ostream&, const G4ErrorFreeTrajState& ts);
 
-  virtual void SetPosition(const G4Point3D pos)
-  {
-    SetParameters(pos, fMomentum);
-  }
+    // Set and Get methods
 
-  virtual void SetMomentum(const G4Vector3D& mom)
-  {
-    SetParameters(fPosition, mom);
-  }
+    virtual void SetPosition(const G4Point3D pos) { SetParameters(pos, fMomentum); }
 
-  void SetParameters(const G4Point3D& pos, const G4Vector3D& mom)
-  {
-    fPosition = pos;
-    fMomentum = mom;
-    fTrajParam.SetParameters(pos, mom);
-  }
+    virtual void SetMomentum(const G4Vector3D& mom) { SetParameters(fPosition, mom); }
 
-  G4ErrorFreeTrajParam GetParameters() const { return fTrajParam; }
+    void SetParameters(const G4Point3D& pos, const G4Vector3D& mom)
+    {
+      fPosition = pos;
+      fMomentum = mom;
+      fTrajParam.SetParameters(pos, mom);
+    }
 
-  G4ErrorMatrix GetTransfMat() const { return theTransfMat; }
+    G4ErrorFreeTrajParam GetParameters() const { return fTrajParam; }
 
- private:
-  void Init();
-  // define TrajState type and build charge
+    G4ErrorMatrix GetTransfMat() const { return theTransfMat; }
 
-  G4int PropagateErrorMSC(const G4Track* aTrack);
-  // add the error associated to multiple scattering
+  private:
 
-  void CalculateEffectiveZandA(const G4Material* mate, double& effZ,
-                               double& effA);
-  // calculate effective Z and A (needed by PropagateErrorMSC)
+    void Init();
+    // define TrajState type and build charge
 
-  G4int PropagateErrorIoni(const G4Track* aTrack);
-  // add the error associated to ionization energy loss
+    G4int PropagateErrorMSC(const G4Track* aTrack);
+    // add the error associated to multiple scattering
 
- private:
-  G4ErrorFreeTrajParam fTrajParam;
+    void CalculateEffectiveZandA(const G4Material* mate, double& effZ, double& effA);
+    // calculate effective Z and A (needed by PropagateErrorMSC)
 
-  G4ErrorMatrix theTransfMat;
+    G4int PropagateErrorIoni(const G4Track* aTrack);
+    // add the error associated to ionization energy loss
 
-  G4bool theFirstStep;  // to count if transf mat is updated or initialized
+  private:
+
+    G4ErrorFreeTrajParam fTrajParam;
+
+    G4ErrorMatrix theTransfMat;
+
+    G4bool theFirstStep;  // to count if transf mat is updated or initialized
 };
 
 #endif

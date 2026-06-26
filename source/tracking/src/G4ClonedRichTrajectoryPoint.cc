@@ -29,11 +29,11 @@
 // --------------------------------------------------------------------
 
 #include "G4ClonedRichTrajectoryPoint.hh"
-#include "G4RichTrajectoryPoint.hh"
 
 #include "G4AttDef.hh"
 #include "G4AttDefStore.hh"
 #include "G4AttValue.hh"
+#include "G4RichTrajectoryPoint.hh"
 #include "G4Step.hh"
 #include "G4Track.hh"
 #include "G4UIcommand.hh"
@@ -74,7 +74,8 @@ G4ClonedRichTrajectoryPoint::G4ClonedRichTrajectoryPoint(const G4Step* aStep)
   {
     fRemainingEnergy = aStep->GetTrack()->GetKineticEnergy();
   }
-  else {
+  else
+  {
     fRemainingEnergy = preStepPoint->GetKineticEnergy() - fTotEDep;
   }
   fpProcess = postStepPoint->GetProcessDefinedStep();
@@ -102,21 +103,27 @@ G4ClonedRichTrajectoryPoint::G4ClonedRichTrajectoryPoint(const G4RichTrajectoryP
   fpPostStepPointVolume = right.fpPostStepPointVolume;
   fPreStepPointWeight = right.fPreStepPointWeight;
   fPostStepPointWeight = right.fPostStepPointWeight;
-  if(right.fpAuxiliaryPointVector!=nullptr && right.fpAuxiliaryPointVector->size()>0)
+  if (right.fpAuxiliaryPointVector != nullptr && right.fpAuxiliaryPointVector->size() > 0)
   {
     fpAuxiliaryPointVector = new std::vector<G4ThreeVector>;
-    for(auto& i : *(right.fpAuxiliaryPointVector))
-    { fpAuxiliaryPointVector->push_back(i); }
+    for (auto& i : *(right.fpAuxiliaryPointVector))
+    {
+      fpAuxiliaryPointVector->push_back(i);
+    }
   }
 }
 
-G4ClonedRichTrajectoryPoint::~G4ClonedRichTrajectoryPoint() { delete fpAuxiliaryPointVector; }
+G4ClonedRichTrajectoryPoint::~G4ClonedRichTrajectoryPoint()
+{
+  delete fpAuxiliaryPointVector;
+}
 
 const std::map<G4String, G4AttDef>* G4ClonedRichTrajectoryPoint::GetAttDefs() const
 {
   G4bool isNew;
   std::map<G4String, G4AttDef>* store = G4AttDefStore::GetInstance("G4RichTrajectoryPoint", isNew);
-  if (isNew) {
+  if (isNew)
+  {
     G4String ID;
 
     ID = "Pos";
@@ -155,7 +162,8 @@ const std::map<G4String, G4AttDef>* G4ClonedRichTrajectoryPoint::GetAttDefs() co
 static G4String Status(G4StepStatus stps)
 {
   G4String status;
-  switch (stps) {
+  switch (stps)
+  {
     case fWorldBoundary:
       status = "fWorldBoundary";
       break;
@@ -191,7 +199,8 @@ static G4String Path(const G4TouchableHandle& th)
 {
   std::ostringstream oss;
   G4int depth = th->GetHistoryDepth();
-  for (G4int i = depth; i >= 0; --i) {
+  for (G4int i = depth; i >= 0; --i)
+  {
     oss << th->GetVolume(i)->GetName() << ':' << th->GetCopyNumber(i);
     if (i != 0) oss << '/';
   }
@@ -209,8 +218,10 @@ std::vector<G4AttValue>* G4ClonedRichTrajectoryPoint::CreateAttValues() const
   G4cout << G4AttCheck(values, GetAttDefs());
 #endif
 
-  if (fpAuxiliaryPointVector != nullptr) {
-    for (const auto& iAux : *fpAuxiliaryPointVector) {
+  if (fpAuxiliaryPointVector != nullptr)
+  {
+    for (const auto& iAux : *fpAuxiliaryPointVector)
+    {
       values->push_back(G4AttValue("Aux", G4BestUnit(iAux, "Length"), ""));
     }
   }
@@ -218,12 +229,14 @@ std::vector<G4AttValue>* G4ClonedRichTrajectoryPoint::CreateAttValues() const
   values->push_back(G4AttValue("TED", G4BestUnit(fTotEDep, "Energy"), ""));
   values->push_back(G4AttValue("RE", G4BestUnit(fRemainingEnergy, "Energy"), ""));
 
-  if (fpProcess != nullptr) {
+  if (fpProcess != nullptr)
+  {
     values->push_back(G4AttValue("PDS", fpProcess->GetProcessName(), ""));
     values->push_back(
       G4AttValue("PTDS", G4VProcess::GetProcessTypeName(fpProcess->GetProcessType()), ""));
   }
-  else {
+  else
+  {
     values->push_back(G4AttValue("PDS", "None", ""));
     values->push_back(G4AttValue("PTDS", "None", ""));
   }
@@ -236,17 +249,21 @@ std::vector<G4AttValue>* G4ClonedRichTrajectoryPoint::CreateAttValues() const
 
   values->push_back(G4AttValue("PostT", G4BestUnit(fPostStepPointGlobalTime, "Time"), ""));
 
-  if (fpPreStepPointVolume && (fpPreStepPointVolume->GetVolume() != nullptr)) {
+  if (fpPreStepPointVolume && (fpPreStepPointVolume->GetVolume() != nullptr))
+  {
     values->push_back(G4AttValue("PreVPath", Path(fpPreStepPointVolume), ""));
   }
-  else {
+  else
+  {
     values->push_back(G4AttValue("PreVPath", "None", ""));
   }
 
-  if (fpPostStepPointVolume && (fpPostStepPointVolume->GetVolume() != nullptr)) {
+  if (fpPostStepPointVolume && (fpPostStepPointVolume->GetVolume() != nullptr))
+  {
     values->push_back(G4AttValue("PostVPath", Path(fpPostStepPointVolume), ""));
   }
-  else {
+  else
+  {
     values->push_back(G4AttValue("PostVPath", "None", ""));
   }
 

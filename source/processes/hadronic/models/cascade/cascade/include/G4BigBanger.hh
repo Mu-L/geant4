@@ -41,43 +41,36 @@
 
 #include "G4CascadeDeexciteBase.hh"
 #include "G4InuclElementaryParticle.hh"
+
 #include <vector>
 
+class G4BigBanger : public G4CascadeDeexciteBase
+{
+  public:
 
-class G4BigBanger : public G4CascadeDeexciteBase {
-public:
-  G4BigBanger();
-  virtual ~G4BigBanger() {};
+    G4BigBanger();
+    virtual ~G4BigBanger() {};
 
-  virtual void deExcite(const G4Fragment& target, G4CollisionOutput& output);
+    virtual void deExcite(const G4Fragment& target, G4CollisionOutput& output);
 
-private: 
-  void generateBangInSCM(G4double etot, G4int a, G4int z);
-  void generateMomentumModules(G4double etot, G4int a, G4int z); 
-  G4double xProbability(G4double x, G4int a) const; 
-  G4double maxProbability(G4int a) const;
-  G4double generateX(G4int ia, G4double promax) const; 
+  private:
 
-  // Buffers for big-bang results
-  std::vector<G4InuclElementaryParticle> particles;
-  std::vector<G4double> momModules;
-  std::vector<G4LorentzVector> scm_momentums;
+    void generateBangInSCM(G4double etot, G4int a, G4int z);
+    void generateMomentumModules(G4double etot, G4int a, G4int z);
+    G4double xProbability(G4double x, G4int a) const;
+    G4double maxProbability(G4int a) const;
+    G4double generateX(G4int ia, G4double promax) const;
 
-private:
-  // Copying of modules is forbidden
-  G4BigBanger(const G4BigBanger&);
-  G4BigBanger& operator=(const G4BigBanger&);
-};        
+    // Buffers for big-bang results
+    std::vector<G4InuclElementaryParticle> particles;
+    std::vector<G4double> momModules;
+    std::vector<G4LorentzVector> scm_momentums;
+
+  private:
+
+    // Copying of modules is forbidden
+    G4BigBanger(const G4BigBanger&);
+    G4BigBanger& operator=(const G4BigBanger&);
+};
 
 #endif /* G4BIG_BANGER_HH */
-
-
-
-
-
-
-
-
-
-
-

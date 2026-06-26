@@ -33,10 +33,10 @@
 // Author: Zoltan Torzsok, November 2007
 // --------------------------------------------------------------------
 #ifndef G4GDMLREADMATERIALS_HH
-#define G4GDMLREADMATERIALS_HH 1
+#define G4GDMLREADMATERIALS_HH
 
-#include "G4Types.hh"
 #include "G4GDMLReadDefine.hh"
+#include "G4Types.hh"
 
 class G4Element;
 class G4Isotope;

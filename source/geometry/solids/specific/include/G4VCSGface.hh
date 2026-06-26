@@ -49,7 +49,7 @@
 //              -------+--------------+-----
 //               F   |  G           | H
 //                   |              |
-//       
+//
 //        A, C, F, and H: closest distance is the distance to
 //        the adjacent corner.
 //
@@ -101,7 +101,7 @@
 //
 //   G4VSolid::SurfaceNormal
 //
-//   Loop over all faces, call face->Normal, and return the normal to the face 
+//   Loop over all faces, call face->Normal, and return the normal to the face
 //   that is closest to the point.
 //
 //   G4VSolid::DistanceToIn(p)
@@ -130,10 +130,11 @@
 #ifndef G4VCSGFACE_HH
 #define G4VCSGFACE_HH
 
-#include "G4Types.hh"
 #include "G4ThreeVector.hh"
-#include "geomdefs.hh"
+#include "G4Types.hh"
 #include "G4VSolid.hh"
+
+#include "geomdefs.hh"
 
 class G4VoxelLimits;
 class G4AffineTransform;
@@ -141,9 +142,12 @@ class G4SolidExtentList;
 
 /**
  * @brief G4VCSGface is virtual base class, representing one side (or face)
- * of a CSG-like solid. It should be possible to build a CSG entirely
- * out of connecting CSG faces. Each face has an inside and outside surface,
- * the former represents the inside of the volume, the latter, the outside.
+ * of a CSG-like solid.
+ * @ingroup geometry_solids_specific
+ *
+ * It should be possible to build a CSG entirely out of connecting CSG faces.
+ * Each face has an inside and outside surface, the former represents the
+ * inside of the volume, the latter, the outside.
  */
 
 class G4VCSGface
@@ -155,7 +159,7 @@ class G4VCSGface
      */
     G4VCSGface() = default;
     virtual ~G4VCSGface() = default;
-  
+
     /**
      * Determines the distance along a line to the face.
      *  @param[in] p Position.
@@ -170,10 +174,9 @@ class G4VCSGface
      *  @param[out] allBehind Flag, true, if entire surface is behind normal.
      *  @returns true if there is an intersection, false otherwise.
      */
-    virtual G4bool Intersect( const G4ThreeVector& p, const G4ThreeVector& v,  
-                              G4bool outgoing, G4double surfTolerance,
-                              G4double& distance, G4double& distFromSurface,
-                              G4ThreeVector& normal, G4bool& allBehind ) = 0;
+    virtual G4bool Intersect(const G4ThreeVector& p, const G4ThreeVector& v, G4bool outgoing,
+                             G4double surfTolerance, G4double& distance, G4double& distFromSurface,
+                             G4ThreeVector& normal, G4bool& allBehind) = 0;
 
     /**
      * Determines the distance of a point from either the inside or outside
@@ -184,8 +187,8 @@ class G4VCSGface
      *  @returns The distance to the closest surface satisfying requirements
      *           or kInfinity if no such surface exists.
      */
-    virtual G4double Distance( const G4ThreeVector& p, G4bool outgoing ) = 0;
-  
+    virtual G4double Distance(const G4ThreeVector& p, G4bool outgoing) = 0;
+
     /**
      * Determines whether a point is inside, outside, or on the surface of
      * the face.
@@ -197,25 +200,23 @@ class G4VCSGface
      *           kOutside if the point is closest to the outside surface;
      *           kSurface if the point is withing tolerance of the surface.
      */
-    virtual EInside Inside( const G4ThreeVector& p, G4double tolerance, 
-                            G4double* bestDistance ) = 0;
-    
+    virtual EInside Inside(const G4ThreeVector& p, G4double tolerance, G4double* bestDistance) = 0;
+
     /**
      * Returns the normal of surface closest to the point.
      *  @param[in] p Position.
      *  @param[out] bestDistance Distance to the closest surface (in or out).
      *  @returns The normal of the surface nearest the point.
      */
-    virtual G4ThreeVector Normal( const G4ThreeVector& p,
-                                  G4double* bestDistance ) = 0;
+    virtual G4ThreeVector Normal(const G4ThreeVector& p, G4double* bestDistance) = 0;
 
     /**
      * Returns the face extent along the axis.
      *  @param[in] axis Unit vector defining the direction.
      *  @returns The largest point along the given axis of the face's extent.
      */
-    virtual G4double Extent( const G4ThreeVector axis ) = 0;
-  
+    virtual G4double Extent(const G4ThreeVector axis) = 0;
+
     /**
      * Calculates the extent of the face for the voxel navigator.
      *  @param[in] axis The axis in which to check the shapes 3D extent against.
@@ -224,10 +225,9 @@ class G4VCSGface
      *             the shape before testing.
      *  @param[out] extentList The list of (voxel) extents along the axis.
      */
-    virtual void CalculateExtent( const EAxis axis, 
-                                  const G4VoxelLimits& voxelLimit,
-                                  const G4AffineTransform& tranform,
-                                  G4SolidExtentList& extentList       ) = 0;
+    virtual void CalculateExtent(const EAxis axis, const G4VoxelLimits& voxelLimit,
+                                 const G4AffineTransform& tranform,
+                                 G4SolidExtentList& extentList) = 0;
 
     /**
      * Method invoked by the copy constructor or the assignment operator.

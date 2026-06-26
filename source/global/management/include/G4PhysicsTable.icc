@@ -31,7 +31,7 @@
 inline void G4PhysicsTable::clearAndDestroy()
 {
   G4PhysicsVector* a = nullptr;
-  while(!empty())
+  while (!empty())
   {
     a = G4PhysCollection::back();
     G4PhysCollection::pop_back();
@@ -65,24 +65,23 @@ inline void G4PhysicsTable::insert(G4PhysicsVector* pvec)
 
 inline void G4PhysicsTable::insertAt(std::size_t idx, G4PhysicsVector* pvec)
 {
-  if(idx > entries())
+  if (idx > entries())
   {
     G4ExceptionDescription ed;
-    ed << "Sprcified index (" << idx
-       << ") is larger than the size of the vector (" << entries() << ").";
-    G4Exception("G4PhysicsTable::insertAt()", "Global_PhysTbl0001",
-                FatalException, ed);
+    ed << "Sprcified index (" << idx << ") is larger than the size of the vector (" << entries()
+       << ").";
+    G4Exception("G4PhysicsTable::insertAt()", "Global_PhysTbl0001", FatalException, ed);
   }
 
   auto itr = cbegin();
-  for(std::size_t i = 0; i < idx; ++i)
+  for (std::size_t i = 0; i < idx; ++i)
   {
     ++itr;
   }
   G4PhysCollection::insert(itr, pvec);
 
   auto itrF = vecFlag.cbegin();
-  for(std::size_t j = 0; j < idx; ++j)
+  for (std::size_t j = 0; j < idx; ++j)
   {
     ++itrF;
   }
@@ -109,4 +108,7 @@ inline G4bool G4PhysicsTable::GetFlag(std::size_t i) const
   return vecFlag[i];
 }
 
-inline void G4PhysicsTable::ClearFlag(std::size_t i) { vecFlag[i] = false; }
+inline void G4PhysicsTable::ClearFlag(std::size_t i)
+{
+  vecFlag[i] = false;
+}

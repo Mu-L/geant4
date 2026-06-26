@@ -29,110 +29,98 @@
 
 // Created by Z. Francis
 
-#ifndef G4DNASancheExcitationModel_h
-#define G4DNASancheExcitationModel_h 1
+#ifndef G4DNASANCHEEXCITATIONMODEL_HH
+#define G4DNASANCHEEXCITATIONMODEL_HH
 
-#include <deque>
-#include <CLHEP/Units/SystemOfUnits.h>
-
-#include "G4VEmModel.hh"
-#include "G4ParticleChangeForGamma.hh"
 #include "G4Electron.hh"
 #include "G4NistManager.hh"
+#include "G4ParticleChangeForGamma.hh"
+#include "G4VEmModel.hh"
+
+#include <CLHEP/Units/SystemOfUnits.h>
+
+#include <deque>
 
 class G4DNASancheExcitationModel : public G4VEmModel
 {
-public:
-  G4DNASancheExcitationModel(const G4ParticleDefinition* p = nullptr,
-                             const G4String& nam = "DNASancheExcitationModel");
+  public:
 
-  ~G4DNASancheExcitationModel() override;
+    G4DNASancheExcitationModel(const G4ParticleDefinition* p = nullptr,
+                               const G4String& nam = "DNASancheExcitationModel");
 
-  G4DNASancheExcitationModel & operator=(const G4DNASancheExcitationModel &right) = delete;
-  G4DNASancheExcitationModel(const G4DNASancheExcitationModel&) = delete;
+    ~G4DNASancheExcitationModel() override;
 
-  void Initialise(const G4ParticleDefinition*,
-                          const G4DataVector&) override;
+    G4DNASancheExcitationModel& operator=(const G4DNASancheExcitationModel& right) = delete;
+    G4DNASancheExcitationModel(const G4DNASancheExcitationModel&) = delete;
 
-  G4double CrossSectionPerVolume(const G4Material* material,
-                                         const G4ParticleDefinition* p,
-                                         G4double ekin,
-                                         G4double emin,
-                                         G4double emax) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-                                 const G4MaterialCutsCouple*,
-                                 const G4DynamicParticle*,
-                                 G4double tmin,
-                                 G4double maxEnergy) override;
+    G4double CrossSectionPerVolume(const G4Material* material, const G4ParticleDefinition* p,
+                                   G4double ekin, G4double emin, G4double emax) override;
 
-  // Cross section
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  G4double PartialCrossSection(G4double energy, G4int level);
-  G4double TotalCrossSection(G4double t);
+    // Cross section
 
-  inline void ExtendLowEnergyLimit(G4double /*threshold*/);
+    G4double PartialCrossSection(G4double energy, G4int level);
+    G4double TotalCrossSection(G4double t);
 
-  inline void SetVerboseLevel(G4int verbose)
-  {
-    verboseLevel = verbose;
-  }
+    inline void ExtendLowEnergyLimit(G4double /*threshold*/);
 
-  inline void SelectStationary(G4bool input); 
+    inline void SetVerboseLevel(G4int verbose) { verboseLevel = verbose; }
 
-protected:
+    inline void SelectStationary(G4bool input);
 
-  G4ParticleChangeForGamma* fParticleChangeForGamma;
+  protected:
 
-private:
+    G4ParticleChangeForGamma* fParticleChangeForGamma;
 
-  G4bool statCode;
+  private:
 
-  // Water density table
-  const std::vector<G4double>* fpWaterDensity;
+    G4bool statCode;
 
-  G4bool isInitialised{false};
-  G4int verboseLevel;
+    // Water density table
+    const std::vector<G4double>* fpWaterDensity;
 
-  // Cross section
+    G4bool isInitialised{false};
+    G4int verboseLevel;
 
-  G4int RandomSelect(G4double energy);
-  G4int nLevels;
-  G4double VibrationEnergy(G4int level);
-  G4double Sum(G4double k);
-  G4double LinInterpolate(G4double e1,
-                          G4double e2,
-                          G4double e,
-                          G4double xs1,
-                          G4double xs2);
+    // Cross section
 
-  //
-//  typedef std::map<double, std::map<double, double> > TriDimensionMap;
-//  TriDimensionMap map1;
-  std::vector<G4double> tdummyVec;
-  std::vector<std::vector<G4double>> fEnergyLevelXS;
-  std::vector<G4double> fEnergyTotalXS;
+    G4int RandomSelect(G4double energy);
+    G4int nLevels;
+    G4double VibrationEnergy(G4int level);
+    G4double Sum(G4double k);
+    G4double LinInterpolate(G4double e1, G4double e2, G4double e, G4double xs1, G4double xs2);
 
+    //
+    //  typedef std::map<double, std::map<double, double> > TriDimensionMap;
+    //  TriDimensionMap map1;
+    std::vector<G4double> tdummyVec;
+    std::vector<std::vector<G4double>> fEnergyLevelXS;
+    std::vector<G4double> fEnergyTotalXS;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 inline void G4DNASancheExcitationModel::ExtendLowEnergyLimit(G4double threshold)
 {
-  if(threshold < 2 * CLHEP::eV)
-    G4Exception("*** WARNING : the G4DNASancheExcitationModel class is not "
-                "validated below 2 eV !",
-                "", JustWarning, "");
-  
+  if (threshold < 2 * CLHEP::eV)
+    G4Exception(
+      "*** WARNING : the G4DNASancheExcitationModel class is not "
+      "validated below 2 eV !",
+      "", JustWarning, "");
+
   SetLowEnergyLimit(threshold);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline void G4DNASancheExcitationModel::SelectStationary (G4bool input)
-{ 
-    statCode = input; 
-}		 
+inline void G4DNASancheExcitationModel::SelectStationary(G4bool input)
+{
+  statCode = input;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

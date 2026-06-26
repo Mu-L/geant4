@@ -22,24 +22,25 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // History:
 // -----------
 //  10 Nov 2021   S. Guatelli & S. Bakr - 1st implementation
-// 
+//
 // Class description
 // ----------------
 //  Computation of K, L & M shell ECPSSR ionisation cross sections for protons and alphas
 //  Based on the work of
 //  - S. Bakr et al. (2021) NIM B, 507:11-19.
-//  - S. Bakr et al (2018), NIMB B, 436: 285-291. 
+//  - S. Bakr et al (2018), NIMB B, 436: 285-291.
 // ---------------------------------------------------------------------------------------
 
-#ifndef G4ANSTOecpssrLixsModel_HH
-#define G4ANSTOecpssrLixsModel_HH 1
+#ifndef G4ANSTOECPSSRLIXSMODEL_HH
+#define G4ANSTOECPSSRLIXSMODEL_HH
 
 #include "G4VecpssrLiModel.hh"
 #include "globals.hh"
+
 #include <map>
 
 class G4VDataSetAlgorithm;
@@ -48,32 +49,32 @@ class G4VEMDataSet;
 class G4ANSTOecpssrLixsModel : public G4VecpssrLiModel
 
 {
-public:
+  public:
 
-  G4ANSTOecpssrLixsModel();
+    G4ANSTOecpssrLixsModel();
 
-  virtual ~G4ANSTOecpssrLixsModel();
-			     
-  G4double CalculateL1CrossSection (G4int zTarget, G4double massIncident, G4double energyIncident);
-  G4double CalculateL2CrossSection (G4int zTarget, G4double massIncident, G4double energyIncident);
-  G4double CalculateL3CrossSection (G4int zTarget, G4double massIncident, G4double energyIncident);				     
-private:
+    virtual ~G4ANSTOecpssrLixsModel();
 
-  G4ANSTOecpssrLixsModel(const G4ANSTOecpssrLixsModel&);
-  G4ANSTOecpssrLixsModel & operator = (const G4ANSTOecpssrLixsModel &right);
+    G4double CalculateL1CrossSection(G4int zTarget, G4double massIncident, G4double energyIncident);
+    G4double CalculateL2CrossSection(G4int zTarget, G4double massIncident, G4double energyIncident);
+    G4double CalculateL3CrossSection(G4int zTarget, G4double massIncident, G4double energyIncident);
 
-  G4VDataSetAlgorithm* interpolation;
+  private:
 
-  std::map< G4int , G4VEMDataSet* > protonL1DataSetMap;
-  std::map< G4int , G4VEMDataSet* > protonL2DataSetMap;
-  std::map< G4int , G4VEMDataSet* > protonL3DataSetMap;
-  std::map< G4int , G4VEMDataSet* > alphaL1DataSetMap;
-  std::map< G4int , G4VEMDataSet* > alphaL2DataSetMap;
-  std::map< G4int , G4VEMDataSet* > alphaL3DataSetMap;
-  std::map< G4int , G4VEMDataSet* > carbonL1DataSetMap;
-  std::map< G4int , G4VEMDataSet* > carbonL2DataSetMap;
-  std::map< G4int , G4VEMDataSet* > carbonL3DataSetMap;
+    G4ANSTOecpssrLixsModel(const G4ANSTOecpssrLixsModel&);
+    G4ANSTOecpssrLixsModel& operator=(const G4ANSTOecpssrLixsModel& right);
 
+    G4VDataSetAlgorithm* interpolation;
+
+    std::map<G4int, G4VEMDataSet*> protonL1DataSetMap;
+    std::map<G4int, G4VEMDataSet*> protonL2DataSetMap;
+    std::map<G4int, G4VEMDataSet*> protonL3DataSetMap;
+    std::map<G4int, G4VEMDataSet*> alphaL1DataSetMap;
+    std::map<G4int, G4VEMDataSet*> alphaL2DataSetMap;
+    std::map<G4int, G4VEMDataSet*> alphaL3DataSetMap;
+    std::map<G4int, G4VEMDataSet*> carbonL1DataSetMap;
+    std::map<G4int, G4VEMDataSet*> carbonL2DataSetMap;
+    std::map<G4int, G4VEMDataSet*> carbonL3DataSetMap;
 };
 
 #endif

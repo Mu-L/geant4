@@ -31,31 +31,28 @@
 // Author: 2002 H.P. Wellisch
 //
 // Modified:
-// 02.04.2009 V.Ivanchenko remove add cross section, string builderis reponsible 
+// 02.04.2009 V.Ivanchenko remove add cross section, string builderis reponsible
 //
 //----------------------------------------------------------------------------
 //
 #include "G4BinaryDeuteronBuilder.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4HadronicParameters.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4HadronicParameters.hh"
+#include "G4SystemOfUnits.hh"
 
-
-G4BinaryDeuteronBuilder::
-G4BinaryDeuteronBuilder() 
+G4BinaryDeuteronBuilder::G4BinaryDeuteronBuilder()
 {
   theModel = new G4BinaryCascade();
   theMin = 0.0;
   theMax = G4HadronicParameters::Instance()->GetMaxEnergyTransitionFTF_Cascade();
 }
 
-void G4BinaryDeuteronBuilder::
-Build(G4HadronInelasticProcess * aP)
+void G4BinaryDeuteronBuilder::Build(G4HadronInelasticProcess* aP)
 {
   theModel->SetMinEnergy(theMin);
   theModel->SetMaxEnergy(theMax);
   aP->RegisterMe(theModel);
 }
-

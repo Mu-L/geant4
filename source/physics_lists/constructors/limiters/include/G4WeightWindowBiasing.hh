@@ -28,47 +28,47 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4WeightWindowBiasing_h
-#define G4WeightWindowBiasing_h 1
+#ifndef G4WEIGHTWINDOWBIASING_HH
+#define G4WEIGHTWINDOWBIASING_HH
 
-#include "G4VPhysicsConstructor.hh"
-#include "globals.hh"
 #include "G4GeometrySampler.hh"
+#include "G4VPhysicsConstructor.hh"
 #include "G4WeightWindowAlgorithm.hh"
+#include "globals.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class G4WeightWindowBiasing : public G4VPhysicsConstructor
 {
-public:
+  public:
 
-  G4WeightWindowBiasing(const G4String& name = "NoParallelWP");
-  G4WeightWindowBiasing(G4GeometrySampler* mgs, G4VWeightWindowAlgorithm* wwAlg, G4PlaceOfAction placeOfAction, const G4String& name = "NoParallelWP");
-  virtual ~G4WeightWindowBiasing();
+    G4WeightWindowBiasing(const G4String& name = "NoParallelWP");
+    G4WeightWindowBiasing(G4GeometrySampler* mgs, G4VWeightWindowAlgorithm* wwAlg,
+                          G4PlaceOfAction placeOfAction, const G4String& name = "NoParallelWP");
+    virtual ~G4WeightWindowBiasing();
 
-public:
+  public:
 
-  // This method is dummy for physics
-  virtual void ConstructParticle();
+    // This method is dummy for physics
+    virtual void ConstructParticle();
 
-  // This method will be invoked in the Construct() method.
-  // each physics process will be instantiated and
-  // registered to the process manager of each particle type
-  virtual void ConstructProcess();
+    // This method will be invoked in the Construct() method.
+    // each physics process will be instantiated and
+    // registered to the process manager of each particle type
+    virtual void ConstructProcess();
 
-private:
+  private:
 
-   // hide assignment operator
-  G4WeightWindowBiasing & operator=(const G4WeightWindowBiasing &right);
-  G4WeightWindowBiasing(const G4WeightWindowBiasing&);
+    // hide assignment operator
+    G4WeightWindowBiasing& operator=(const G4WeightWindowBiasing& right);
+    G4WeightWindowBiasing(const G4WeightWindowBiasing&);
 
-  G4GeometrySampler* fGeomSampler;
-  G4VWeightWindowAlgorithm* fWWalg;
-  G4PlaceOfAction fPlaceOfAction;
+    G4GeometrySampler* fGeomSampler;
+    G4VWeightWindowAlgorithm* fWWalg;
+    G4PlaceOfAction fPlaceOfAction;
 
-  G4bool paraFlag;
-  G4String paraName;
-
+    G4bool paraFlag;
+    G4String paraName;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -33,8 +33,8 @@
 
 // Author: T.Koi, SLAC - 10 October 2013
 // --------------------------------------------------------------------
-#ifndef G4NuclideTable_hh
-#define G4NuclideTable_hh 1
+#ifndef G4NUCLIDETABLE_HH
+#define G4NUCLIDETABLE_HH
 
 #include "G4DecayTable.hh"
 #include "G4IonTable.hh"
@@ -52,6 +52,7 @@ class G4NuclideTableMessenger;
 class G4NuclideTable : public G4VIsotopeTable
 {
   public:
+
     using G4IsotopeList = std::vector<G4IsotopeProperty*>;
 
     ~G4NuclideTable() override;
@@ -103,12 +104,14 @@ class G4NuclideTable : public G4VIsotopeTable
     static G4double Tolerance();
 
   private:
+
     G4NuclideTable();
 
     G4double StripFloatLevelBase(G4double E, G4int& flbIndex);
     G4Ions::G4FloatLevelBase StripFloatLevelBase(const G4String&);
 
   private:
+
     G4double mean_life_threshold = 0.0;
     G4double minimum_mean_life_threshold = DBL_MAX;
 

@@ -31,8 +31,8 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrElement_hh
-#define G4tgrElement_hh 1
+#ifndef G4TGRELEMENT_HH
+#define G4TGRELEMENT_HH
 
 #include "globals.hh"
 

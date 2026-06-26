@@ -38,6 +38,7 @@
 
 /**
  * @brief G4PolyhedraHistorical is a data structure for use in G4Polyhedra.
+ * @ingroup geometry_solids_specific
  */
 
 class G4PolyhedraHistorical
@@ -45,10 +46,10 @@ class G4PolyhedraHistorical
   public:
 
     G4PolyhedraHistorical() = default;
-    G4PolyhedraHistorical( G4int z_planes );
+    G4PolyhedraHistorical(G4int z_planes);
     ~G4PolyhedraHistorical();
-    G4PolyhedraHistorical( const G4PolyhedraHistorical &source );
-    G4PolyhedraHistorical& operator=( const G4PolyhedraHistorical& right );
+    G4PolyhedraHistorical(const G4PolyhedraHistorical& source);
+    G4PolyhedraHistorical& operator=(const G4PolyhedraHistorical& right);
 
     G4double Start_angle = 0.0;
     G4double Opening_angle = 0.0;

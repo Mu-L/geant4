@@ -25,32 +25,32 @@
 //
 
 #include "G4MoleculeTableMessenger.hh"
+
+#include "G4MolecularConfiguration.hh"
+#include "G4MoleculeDefinition.hh"
+#include "G4MoleculeTable.hh"
+#include "G4ParticleTable.hh"
 #include "G4UIcmdWithAString.hh"
+
 #include <G4SystemOfUnits.hh>
 #include <G4UIcmdWithoutParameter.hh>
-#include "G4MoleculeTable.hh"
-#include "G4MoleculeDefinition.hh"
-#include "G4MolecularConfiguration.hh"
-#include "G4ParticleTable.hh"
 //------------------------------------------------------------------------------
 
 G4MoleculeTableMessenger::G4MoleculeTableMessenger()
-  : 
-   fpPrintTable(new G4UIcmdWithoutParameter("/chem/PrintSpeciesTable", this))
-  , fpSpecies(new G4UIcmdWithAString("/chem/species", this))
+  : fpPrintTable(new G4UIcmdWithoutParameter("/chem/PrintSpeciesTable", this)),
+    fpSpecies(new G4UIcmdWithAString("/chem/species", this))
 {}
 
 G4MoleculeTableMessenger::~G4MoleculeTableMessenger() = default;
 
 //------------------------------------------------------------------------------
-void G4MoleculeTableMessenger::SetNewValue(G4UIcommand* command,
-                                           G4String newValue)
+void G4MoleculeTableMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
-  if(command == fpPrintTable.get())
+  if (command == fpPrintTable.get())
   {
     G4MolecularConfiguration::PrintAll();
   }
-  if(command == fpSpecies.get())
+  if (command == fpSpecies.get())
   {
     std::istringstream iss(newValue);
 
@@ -60,12 +60,12 @@ void G4MoleculeTableMessenger::SetNewValue(G4UIcommand* command,
     G4String marker;
     iss >> marker;  // must be [
 
-    if(marker != "[")
+    if (marker != "[")
     {
       G4ExceptionDescription description;
       description << " marker : " << marker << G4endl;
-      G4Exception("G4MoleculeTableMessenger::SetNewValue",
-                  "FAIL_SPECIES_DEFINITION04", FatalException, description);
+      G4Exception("G4MoleculeTableMessenger::SetNewValue", "FAIL_SPECIES_DEFINITION04",
+                  FatalException, description);
     }
 
     G4String speciesDefName;
@@ -74,33 +74,32 @@ void G4MoleculeTableMessenger::SetNewValue(G4UIcommand* command,
     iss >> marker;  // peut etre |
 
     G4int charge = 0;
-    if(marker == "|")
+    if (marker == "|")
     {
       iss >> charge;
     }
     iss >> marker;  // peut etre |
     G4double diffusion_coefficient = 0;
-    if(marker == "|")
+    if (marker == "|")
     {
       iss >> diffusion_coefficient;
     }
     iss >> marker;  // peut etre |
     G4double VanDerVaalsRadius = 0;
-    if(marker == "|")
+    if (marker == "|")
     {
       iss >> VanDerVaalsRadius;  // in nm
     }
 
-    auto pConf =
-      G4MolecularConfiguration::GetMolecularConfiguration(speciesName);
-    if(pConf != nullptr)
+    auto pConf = G4MolecularConfiguration::GetMolecularConfiguration(speciesName);
+    if (pConf != nullptr)
     {
       pConf->UnFinalize();
-      if(VanDerVaalsRadius != 0)
+      if (VanDerVaalsRadius != 0)
       {
         pConf->SetVanDerVaalsRadius(VanDerVaalsRadius * nm);
       }
-      if(diffusion_coefficient != 0)
+      if (diffusion_coefficient != 0)
       {
         pConf->SetDiffusionCoefficient(diffusion_coefficient * (m2 / s));
       }
@@ -109,37 +108,36 @@ void G4MoleculeTableMessenger::SetNewValue(G4UIcommand* command,
     {
       auto particleDef = dynamic_cast<G4MoleculeDefinition*>(
         G4ParticleTable::GetParticleTable()->FindParticle(speciesDefName));
-      if(particleDef != nullptr)
+      if (particleDef != nullptr)
       {
         auto molConf =
-          G4MolecularConfiguration::GetOrCreateMolecularConfiguration(
-            particleDef, charge);
-        if(molConf == nullptr)
+          G4MolecularConfiguration::GetOrCreateMolecularConfiguration(particleDef, charge);
+        if (molConf == nullptr)
         {
           G4ExceptionDescription description;
           description << "This molecule has not been defined" << G4endl;
-          G4Exception("G4MoleculeTableMessenger::SetNewValue",
-                      "FAIL_SPECIES_DEFINITION02", FatalException, description);
+          G4Exception("G4MoleculeTableMessenger::SetNewValue", "FAIL_SPECIES_DEFINITION02",
+                      FatalException, description);
         }
         molConf->UnFinalize();
-        if(VanDerVaalsRadius != 0)
+        if (VanDerVaalsRadius != 0)
         {
           molConf->SetVanDerVaalsRadius(VanDerVaalsRadius * nm);
         }
-        if(diffusion_coefficient != 0)
+        if (diffusion_coefficient != 0)
         {
           molConf->SetDiffusionCoefficient(diffusion_coefficient * (m2 / s));
         }
 
         const auto& usedName = molConf->GetUserID();
-        if(!usedName.empty())
+        if (!usedName.empty())
         {
           molConf->PrintState();
           G4ExceptionDescription description;
-          description << "This molecule has been defined by the name : "
-                      << usedName << " . Please, use this name." << G4endl;
-          G4Exception("G4MoleculeTableMessenger::SetNewValue",
-                      "FAIL_SPECIES_DEFINITION", FatalException, description);
+          description << "This molecule has been defined by the name : " << usedName
+                      << " . Please, use this name." << G4endl;
+          G4Exception("G4MoleculeTableMessenger::SetNewValue", "FAIL_SPECIES_DEFINITION",
+                      FatalException, description);
         }
         else
         {
@@ -148,15 +146,14 @@ void G4MoleculeTableMessenger::SetNewValue(G4UIcommand* command,
       }
       else
       {
-        auto speciesDef =
-          new G4MoleculeDefinition(speciesDefName, /*mass no needed*/ 0,
-                                   /*D*/ diffusion_coefficient * (m * m / s),
-                                   /*charge*/ charge, 1,
-                                   /*electronL*/ 0,
-                                   /*radius*/ VanDerVaalsRadius * nm);
+        auto speciesDef = new G4MoleculeDefinition(speciesDefName, /*mass no needed*/ 0,
+                                                   /*D*/ diffusion_coefficient * (m * m / s),
+                                                   /*charge*/ charge, 1,
+                                                   /*electronL*/ 0,
+                                                   /*radius*/ VanDerVaalsRadius * nm);
         G4bool alreadyCreated(false);
-        G4MolecularConfiguration::CreateMolecularConfiguration(
-          speciesName, speciesDef, alreadyCreated);
+        G4MolecularConfiguration::CreateMolecularConfiguration(speciesName, speciesDef,
+                                                               alreadyCreated);
       }
     }
   }

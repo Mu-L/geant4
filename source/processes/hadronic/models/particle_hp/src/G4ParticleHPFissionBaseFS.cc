@@ -68,7 +68,8 @@ void G4ParticleHPFissionBaseFS::Init(G4double A, G4double Z, G4int M, const G4St
   std::istringstream theData(std::ios::in);
   G4ParticleHPManager::GetInstance()->GetDataStream(filename, theData);
   G4int dummy;
-  if (!(theData)) {
+  if (!(theData))
+  {
     // theData.close();
     hasFSData = false;
     hasXsec = false;
@@ -79,7 +80,8 @@ void G4ParticleHPFissionBaseFS::Init(G4double A, G4double Z, G4int M, const G4St
   G4int total;
   theData >> total;
   theXsection->Init(theData, total, eV);
-  if (!(theData >> dummy)) {
+  if (!(theData >> dummy))
+  {
     hasFSData = false;
     // theData.close();
     return;
@@ -97,7 +99,8 @@ void G4ParticleHPFissionBaseFS::Init(G4double A, G4double Z, G4int M, const G4St
 G4DynamicParticleVector* G4ParticleHPFissionBaseFS::ApplyYourself(G4int nPrompt)
 {
   // if therere were no data for this isotope, break out.
-  if (!HasFSData()) {
+  if (!HasFSData())
+  {
     return nullptr;
   }
 
@@ -109,25 +112,29 @@ G4DynamicParticleVector* G4ParticleHPFissionBaseFS::ApplyYourself(G4int nPrompt)
 
   // Build neutrons
   std::vector<G4ReactionProduct> theNeutrons;
-  for (i = 0; i < nPrompt; i++) {
+  for (i = 0; i < nPrompt; i++)
+  {
     theNeutrons.emplace_back();
     theNeutrons[i].SetDefinition(G4Neutron::Neutron());
   }
 
   // sample energies
   G4int dummy;
-  for (i = 0; i < nPrompt; i++) {
+  for (i = 0; i < nPrompt; i++)
+  {
     // always in the lab system (if file-5)
     theNeutrons[i].SetKineticEnergy(theEnergyDistribution.Sample(eKinetic, dummy));
   }
 
   // sample neutron angular distribution
-  for (i = 0; i < nPrompt; i++) {
+  for (i = 0; i < nPrompt; i++)
+  {
     theAngularDistribution.SampleAndUpdate(theNeutrons[i]);
   }
 
   // already in lab. Add neutrons to dynamic particle vector
-  for (i = 0; i < nPrompt; i++) {
+  for (i = 0; i < nPrompt; i++)
+  {
     auto it = new G4DynamicParticle;
     it->SetDefinition(theNeutrons[i].GetDefinition());
     it->SetMomentum(theNeutrons[i].GetMomentum());

@@ -34,11 +34,11 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4PolarizedGammaConversion_h
-#define G4PolarizedGammaConversion_h 1
+#ifndef G4POLARIZEDGAMMACONVERSION_HH
+#define G4POLARIZEDGAMMACONVERSION_HH
 
-#include "globals.hh"
 #include "G4VEmProcess.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 class G4VEmModel;
@@ -48,27 +48,29 @@ class G4DynamicParticle;
 class G4PolarizedGammaConversion : public G4VEmProcess
 
 {
- public:
-  explicit G4PolarizedGammaConversion(const G4String& processName = "pol-conv",
-                                      G4ProcessType type = fElectromagnetic);
+  public:
 
-  virtual ~G4PolarizedGammaConversion() override;
+    explicit G4PolarizedGammaConversion(const G4String& processName = "pol-conv",
+                                        G4ProcessType type = fElectromagnetic);
 
-  // true for Gamma only.
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
+    virtual ~G4PolarizedGammaConversion() override;
 
-  virtual void ProcessDescription(std::ostream&) const override;
-  virtual void DumpInfo() const override { ProcessDescription(G4cout); };
+    // true for Gamma only.
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
 
-  G4PolarizedGammaConversion& operator=(
-    const G4PolarizedGammaConversion& right) = delete;
-  G4PolarizedGammaConversion(const G4PolarizedGammaConversion&) = delete;
+    virtual void ProcessDescription(std::ostream&) const override;
+    virtual void DumpInfo() const override { ProcessDescription(G4cout); };
 
- protected:
-  virtual void InitialiseProcess(const G4ParticleDefinition*) override;
+    G4PolarizedGammaConversion& operator=(const G4PolarizedGammaConversion& right) = delete;
+    G4PolarizedGammaConversion(const G4PolarizedGammaConversion&) = delete;
 
- private:
-  G4bool fIsInitialised;
+  protected:
+
+    virtual void InitialiseProcess(const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool fIsInitialised;
 };
 
 #endif

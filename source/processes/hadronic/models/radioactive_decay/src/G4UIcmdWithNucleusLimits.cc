@@ -25,20 +25,21 @@
 //
 //
 #include "G4UIcmdWithNucleusLimits.hh"
+
 #include <sstream>
 ////////////////////////////////////////////////////////////////////////////////
 //
-G4UIcmdWithNucleusLimits::G4UIcmdWithNucleusLimits
-(const char * theCommandPath, G4UImessenger * theMessenger)
-: G4UIcommand(theCommandPath, theMessenger)
+G4UIcmdWithNucleusLimits::G4UIcmdWithNucleusLimits(const char* theCommandPath,
+                                                   G4UImessenger* theMessenger)
+  : G4UIcommand(theCommandPath, theMessenger)
 {
-  G4UIparameter * intParamAMin = new G4UIparameter('i');
+  G4UIparameter* intParamAMin = new G4UIparameter('i');
   SetParameter(intParamAMin);
-  G4UIparameter * intParamAMax = new G4UIparameter('i');
+  G4UIparameter* intParamAMax = new G4UIparameter('i');
   SetParameter(intParamAMax);
-  G4UIparameter * intParamZMin = new G4UIparameter('i');
+  G4UIparameter* intParamZMin = new G4UIparameter('i');
   SetParameter(intParamZMin);
-  G4UIparameter * intParamZMax = new G4UIparameter('i');
+  G4UIparameter* intParamZMax = new G4UIparameter('i');
   SetParameter(intParamZMax);
 }
 
@@ -50,8 +51,7 @@ G4UIcmdWithNucleusLimits::~G4UIcmdWithNucleusLimits()
 }
 ////////////////////////////////////////////////////////////////////////////////
 //
-G4NucleusLimits G4UIcmdWithNucleusLimits::
-  GetNewNucleusLimitsValue(const G4String& paramString)
+G4NucleusLimits G4UIcmdWithNucleusLimits::GetNewNucleusLimitsValue(const G4String& paramString)
 {
   G4int aMin;
   G4int aMax;
@@ -59,38 +59,37 @@ G4NucleusLimits G4UIcmdWithNucleusLimits::
   G4int zMax;
   std::istringstream is(paramString);
   is >> aMin >> aMax >> zMin >> zMax;
-  return G4NucleusLimits(aMin,aMax,zMin,zMax);
+  return G4NucleusLimits(aMin, aMax, zMin, zMax);
 }
 ////////////////////////////////////////////////////////////////////////////////
 //
-G4String G4UIcmdWithNucleusLimits::ConvertToString
-(G4NucleusLimits defLimits)
+G4String G4UIcmdWithNucleusLimits::ConvertToString(G4NucleusLimits defLimits)
 {
   std::ostringstream os;
-  os << defLimits.GetAMin() << " " << defLimits.GetAMax()
-     << defLimits.GetZMin() << " " << defLimits.GetZMax() ;
+  os << defLimits.GetAMin() << " " << defLimits.GetAMax() << defLimits.GetZMin() << " "
+     << defLimits.GetZMax();
   G4String vl = os.str();
   return vl;
-}                         
+}
 ////////////////////////////////////////////////////////////////////////////////
 //
-void G4UIcmdWithNucleusLimits::SetParameterName
-(const char * theNameAMin,const char * theNameAMax,const char * theNameZMin,
-const char * theNameZMax,G4bool omittable,G4bool currentAsDefault)
+void G4UIcmdWithNucleusLimits::SetParameterName(const char* theNameAMin, const char* theNameAMax,
+                                                const char* theNameZMin, const char* theNameZMax,
+                                                G4bool omittable, G4bool currentAsDefault)
 {
-  G4UIparameter * theParamAMin = GetParameter(0);
+  G4UIparameter* theParamAMin = GetParameter(0);
   theParamAMin->SetParameterName(theNameAMin);
   theParamAMin->SetOmittable(omittable);
   theParamAMin->SetCurrentAsDefault(currentAsDefault);
-  G4UIparameter * theParamAMax = GetParameter(1);
+  G4UIparameter* theParamAMax = GetParameter(1);
   theParamAMax->SetParameterName(theNameAMax);
   theParamAMax->SetOmittable(omittable);
   theParamAMax->SetCurrentAsDefault(currentAsDefault);
-  G4UIparameter * theParamZMin = GetParameter(2);
+  G4UIparameter* theParamZMin = GetParameter(2);
   theParamZMin->SetParameterName(theNameZMin);
   theParamZMin->SetOmittable(omittable);
   theParamZMin->SetCurrentAsDefault(currentAsDefault);
-  G4UIparameter * theParamZMax = GetParameter(3);
+  G4UIparameter* theParamZMax = GetParameter(3);
   theParamZMax->SetParameterName(theNameZMax);
   theParamZMax->SetOmittable(omittable);
   theParamZMax->SetCurrentAsDefault(currentAsDefault);
@@ -99,12 +98,12 @@ const char * theNameZMax,G4bool omittable,G4bool currentAsDefault)
 //
 void G4UIcmdWithNucleusLimits::SetDefaultValue(G4NucleusLimits defLimits)
 {
-  G4UIparameter * theParamAMin = GetParameter(0);
+  G4UIparameter* theParamAMin = GetParameter(0);
   theParamAMin->SetDefaultValue(defLimits.GetAMin());
-  G4UIparameter * theParamAMax = GetParameter(1);
+  G4UIparameter* theParamAMax = GetParameter(1);
   theParamAMax->SetDefaultValue(defLimits.GetAMax());
-  G4UIparameter * theParamZMin = GetParameter(2);
+  G4UIparameter* theParamZMin = GetParameter(2);
   theParamZMin->SetDefaultValue(defLimits.GetZMin());
-  G4UIparameter * theParamZMax = GetParameter(3);
+  G4UIparameter* theParamZMax = GetParameter(3);
   theParamZMax->SetDefaultValue(defLimits.GetZMax());
 }

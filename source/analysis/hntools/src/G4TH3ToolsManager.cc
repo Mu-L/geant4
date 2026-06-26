@@ -36,12 +36,10 @@ using namespace G4Analysis;
 
 // Specialization for H3 type
 
-
 //_____________________________________________________________________________
-template <>
+template<>
 tools::histo::h3d* G4THnToolsManager<kDim3, tools::histo::h3d>::CreateToolsHT(
-  const G4String& title,
-  const std::array<G4HnDimension, kDim3>& bins,
+  const G4String& title, const std::array<G4HnDimension, kDim3>& bins,
   const std::array<G4HnDimensionInformation, kDim3>& hnInfo)
 {
   // Apply hn information to bins
@@ -52,24 +50,22 @@ tools::histo::h3d* G4THnToolsManager<kDim3, tools::histo::h3d>::CreateToolsHT(
   auto newZBins(bins[kZ]);
   Update(newZBins, hnInfo[kZ]);
 
-  if ((hnInfo[kX].fBinScheme == G4BinScheme::kLinear) &&
-      (hnInfo[kY].fBinScheme == G4BinScheme::kLinear) &&
-      (hnInfo[kZ].fBinScheme == G4BinScheme::kLinear)) {
-    return new tools::histo::h3d(title,
-                 newXBins.fNBins, newXBins.fMinValue, newXBins.fMaxValue,
-                 newYBins.fNBins, newYBins.fMinValue, newYBins.fMaxValue,
-                 newZBins.fNBins, newZBins.fMinValue, newZBins.fMaxValue);
+  if ((hnInfo[kX].fBinScheme == G4BinScheme::kLinear)
+      && (hnInfo[kY].fBinScheme == G4BinScheme::kLinear)
+      && (hnInfo[kZ].fBinScheme == G4BinScheme::kLinear))
+  {
+    return new tools::histo::h3d(title, newXBins.fNBins, newXBins.fMinValue, newXBins.fMaxValue,
+                                 newYBins.fNBins, newYBins.fMinValue, newYBins.fMaxValue,
+                                 newZBins.fNBins, newZBins.fMinValue, newZBins.fMaxValue);
   }
 
-  return new tools::histo::h3d(title,
-               newXBins.fEdges, newYBins.fEdges, newZBins.fEdges);
+  return new tools::histo::h3d(title, newXBins.fEdges, newYBins.fEdges, newZBins.fEdges);
 }
 
 //_____________________________________________________________________________
-template <>
+template<>
 void G4THnToolsManager<kDim3, tools::histo::h3d>::ConfigureToolsHT(
-  tools::histo::h3d* ht,
-  const std::array<G4HnDimension, kDim3>& bins,
+  tools::histo::h3d* ht, const std::array<G4HnDimension, kDim3>& bins,
   const std::array<G4HnDimensionInformation, kDim3>& hnInfo)
 {
   // Apply hn information to bins
@@ -80,13 +76,13 @@ void G4THnToolsManager<kDim3, tools::histo::h3d>::ConfigureToolsHT(
   auto newZBins(bins[kZ]);
   Update(newZBins, hnInfo[kZ]);
 
-  if ((hnInfo[kX].fBinScheme == G4BinScheme::kLinear) &&
-      (hnInfo[kY].fBinScheme == G4BinScheme::kLinear) &&
-      (hnInfo[kZ].fBinScheme == G4BinScheme::kLinear)) {
-    ht->configure(
-          newXBins.fNBins, newXBins.fMinValue, newXBins.fMaxValue,
-          newYBins.fNBins, newYBins.fMinValue, newYBins.fMaxValue,
-          newZBins.fNBins, newZBins.fMinValue, newZBins.fMaxValue);
+  if ((hnInfo[kX].fBinScheme == G4BinScheme::kLinear)
+      && (hnInfo[kY].fBinScheme == G4BinScheme::kLinear)
+      && (hnInfo[kZ].fBinScheme == G4BinScheme::kLinear))
+  {
+    ht->configure(newXBins.fNBins, newXBins.fMinValue, newXBins.fMaxValue, newYBins.fNBins,
+                  newYBins.fMinValue, newYBins.fMaxValue, newZBins.fNBins, newZBins.fMinValue,
+                  newZBins.fMaxValue);
     return;
   }
 
@@ -94,10 +90,11 @@ void G4THnToolsManager<kDim3, tools::histo::h3d>::ConfigureToolsHT(
 }
 
 //_____________________________________________________________________________
-template <>
-G4bool G4THnToolsManager<kDim3, tools::histo::h3d>::FillHT(
-  tools::histo::h3d* ht, const G4HnInformation& hnInformation, 
-  std::array<G4double, kDim3>& value, G4double weight)
+template<>
+G4bool G4THnToolsManager<kDim3, tools::histo::h3d>::FillHT(tools::histo::h3d* ht,
+                                                           const G4HnInformation& hnInformation,
+                                                           std::array<G4double, kDim3>& value,
+                                                           G4double weight)
 {
   const auto& xInfo = hnInformation.GetHnDimensionInformation(kX);
   const auto& yInfo = hnInformation.GetHnDimensionInformation(kY);
@@ -115,22 +112,22 @@ G4bool G4THnToolsManager<kDim3, tools::histo::h3d>::FillHT(
 }
 
 //_____________________________________________________________________________
-template <>
-G4bool G4THnToolsManager<kDim3, tools::histo::h3d>::WriteOnAscii(
-  std::ofstream& output)
+template<>
+G4bool G4THnToolsManager<kDim3, tools::histo::h3d>::WriteOnAscii(std::ofstream& output)
 {
-// Write selected objects on ASCII file
-// According to the implementation by Michel Maire, originally in
-// extended examples.
+  // Write selected objects on ASCII file
+  // According to the implementation by Michel Maire, originally in
+  // extended examples.
 
   // Do nothing if no histograms are selected
-  if ( ! GetHnManager()->IsAscii() ) return true;
+  if (!GetHnManager()->IsAscii()) return true;
 
   // Write h3 histograms
   auto id = GetHnManager()->GetFirstId();
-  for (const auto& [h3, info] : *GetTHnVector()) {
-
-    if ( (h3 == nullptr) || (! info->GetAscii()) ) {
+  for (const auto& [h3, info] : *GetTHnVector())
+  {
+    if ((h3 == nullptr) || (!info->GetAscii()))
+    {
       // skip writing
       // if h3 was deleted or writing ascii is not selected
       id++;
@@ -142,13 +139,14 @@ G4bool G4THnToolsManager<kDim3, tools::histo::h3d>::WriteOnAscii(
     output << "\n  3D histogram " << id++ << ": " << h3->title()
            << "\n \n \t \t \t     X \t\t     Y \t\t     Z \t\t Bin Height" << G4endl;
 
-    for (G4int j=0; j< G4int(h3->axis_x().bins()); ++j) {
-      for (G4int k=0; k< G4int(h3->axis_y().bins()); ++k) {
-        for (G4int l=0; l< G4int(h3->axis_y().bins()); ++l) {
-          output << "  " << j << "\t" << k << "\t" << l << "\t"
-                 << h3->axis_x().bin_center(j) << "\t"
-                 << h3->axis_y().bin_center(k) << "\t"
-                 << h3->axis_y().bin_center(l) << "\t"
+    for (G4int j = 0; j < G4int(h3->axis_x().bins()); ++j)
+    {
+      for (G4int k = 0; k < G4int(h3->axis_y().bins()); ++k)
+      {
+        for (G4int l = 0; l < G4int(h3->axis_y().bins()); ++l)
+        {
+          output << "  " << j << "\t" << k << "\t" << l << "\t" << h3->axis_x().bin_center(j)
+                 << "\t" << h3->axis_y().bin_center(k) << "\t" << h3->axis_y().bin_center(l) << "\t"
                  << h3->bin_height(j, k, l) << G4endl;
         }
       }

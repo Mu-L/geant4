@@ -73,7 +73,10 @@ G4double G4XrayReflection::Reflectivity(const G4double GamEner, const G4double S
     // data available
     G4MaterialPropertyVector* RealIndex = theMatProp->GetProperty(kREALRINDEX);
     G4MaterialPropertyVector* ImagIndex = theMatProp->GetProperty(kIMAGINARYRINDEX);
-    if (nullptr == RealIndex || nullptr == ImagIndex) { return theReflectivity; }
+    if (nullptr == RealIndex || nullptr == ImagIndex)
+    {
+      return theReflectivity;
+    }
     const G4double delta = RealIndex->Value(GamEner);
     const G4double beta = ImagIndex->Value(GamEner);
     const G4double sin2 = std::pow(SinIncidentAngle, 2);
@@ -88,7 +91,8 @@ G4double G4XrayReflection::Reflectivity(const G4double GamEner, const G4double S
     const G4double Refl_pi = Refl_sigma * pi_over_sigma;
     theReflectivity = 0.5 * (Refl_sigma + Refl_pi);  // unpolarized
     G4double RoughAtten = 1;
-    if (fSurfaceRoughness > 0) {
+    if (fSurfaceRoughness > 0)
+    {
       G4double kiz = SinIncidentAngle * GamEner / CLHEP::hbarc;
       G4double kjz = SinIncidentAngle * (1 - delta) * GamEner / CLHEP::hbarc;
       RoughAtten = G4Exp(-2 * kiz * kjz * fSurfaceRoughness * fSurfaceRoughness);  // Nevot–Croce
@@ -124,13 +128,15 @@ G4double G4XrayReflection::GetMeanFreePath(const G4Track& aTrack, G4double previ
 
   G4double MeanFreePath = DBL_MAX;  // by default no reflection
   G4VPhysicalVolume* Volume = aTrack.GetVolume();
-  if (fLastVolume && Volume != fLastVolume && aTrack.GetTrackLength() > 0) {  // at a boundary
+  if (fLastVolume && Volume != fLastVolume && aTrack.GetTrackLength() > 0)
+  {  // at a boundary
     const G4Material* theLastMat = fLastVolume->GetLogicalVolume()->GetMaterial();
     const G4Material* theMat = Volume->GetLogicalVolume()->GetMaterial();
 
     G4double last_density = theLastMat->GetDensity();
     G4double density = theMat->GetDensity();
-    if (density > last_density) {  // density has increased
+    if (density > last_density)
+    {  // density has increased
       G4Navigator* theNavigator =
         G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
       G4bool valid = false;
@@ -139,7 +145,8 @@ G4double G4XrayReflection::GetMeanFreePath(const G4Track& aTrack, G4double previ
       if (valid) fSurfaceNormal = theSurfaceNormal;
       G4double SinIncidentAngle =
         aTrack.GetDynamicParticle()->GetMomentumDirection() * fSurfaceNormal;
-      if (G4UniformRand() < Reflectivity(GamEner, SinIncidentAngle, theMat)) {
+      if (G4UniformRand() < Reflectivity(GamEner, SinIncidentAngle, theMat))
+      {
         MeanFreePath = 0;
       }
       G4ThreeVector Position = aTrack.GetPosition();  // only for info
@@ -180,8 +187,7 @@ G4VParticleChange* G4XrayReflection::PostStepDoIt(const G4Track& aTrack, const G
            << std::right << std::setw(4) << __LINE__ << " fSurfaceNormal=" << fSurfaceNormal
            << " StepLength=" << aStep.GetStepLength() << " PhotDir=" << PhotDir
            << " photon_reflected=" << photon_reflected << " para_part=" << para_part
-           << " aParticleChange.GetTrackStatus()=" << aParticleChange.GetTrackStatus()
-           << G4endl;
+           << " aParticleChange.GetTrackStatus()=" << aParticleChange.GetTrackStatus() << G4endl;
 
   aParticleChange.ProposeTrackStatus(
     fStopAndKill);  // needed when working with primary gamma to get rid of
@@ -223,7 +229,8 @@ G4int G4XrayReflection::ReadHenkeXrayData(std::string ElName, std::vector<G4doub
   const G4String DataDir = G4EmParameters::Instance()->GetDirLEDATA() + "/XRayReflection_data/";
   const G4String InpFname = DataDir + ElName + ".nff";
   std::ifstream infile(InpFname);
-  if (!infile.is_open()) {
+  if (!infile.is_open())
+  {
     G4cout << "ReadHenkeXrayReflData " << InpFname << " not found" << G4endl;
     return 1;  // failure
   }
@@ -236,7 +243,8 @@ G4int G4XrayReflection::ReadHenkeXrayData(std::string ElName, std::vector<G4doub
   Ephot.resize(0);
   f1.resize(0);
   f2.resize(0);
-  for (;;) {
+  for (;;)
+  {
     infile >> E_eV_i >> f1_i >> f2_i;
     if (infile.eof()) break;
     Ephot.push_back(E_eV_i * eV);
@@ -253,7 +261,8 @@ void G4XrayReflection::SaveHenkeDataAsMaterialProperty()
   // loop through the material table and load set up MaterialPropertiesTable
   // with Henke data used to calculate the reflection
   auto materialTable = G4Material::GetMaterialTable();
-  for (auto a_material : *materialTable) {
+  for (auto a_material : *materialTable)
+  {
     auto N = a_material->GetTotNbOfAtomsPerVolume();
     if (GetVerboseLevel() > 2)
       if (GetVerboseLevel() > 2)
@@ -263,20 +272,24 @@ void G4XrayReflection::SaveHenkeDataAsMaterialProperty()
                << " NumberOfElements()=" << a_material->GetNumberOfElements() << G4endl;
     // calculate the reflectivity from input data. Implemented for dense
     // materials of a single element
-    if (a_material->GetNumberOfElements() == 1 && a_material->GetDensity() > 1) {
+    if (a_material->GetNumberOfElements() == 1 && a_material->GetDensity() > 1)
+    {
       G4double factor = N * CLHEP::classic_electr_radius / CLHEP::twopi;
       std::vector<G4double> Ephot, f1, f2;
       const G4Element* theElement = a_material->GetElement(0);
       G4int iret = ReadHenkeXrayData(theElement->GetName(), Ephot, f1, f2);
-      if (iret) {
+      if (iret)
+      {
         if (GetVerboseLevel() > 2)
           G4cout << std::left << std::setw(12) << __FILE__ << " " << __FUNCTION__ << " line "
                  << std::right << std::setw(4) << __LINE__ << " no Henke data found for "
                  << a_material->GetName() << " " << theElement->GetName() << G4endl;
       }
-      else {
+      else
+      {
         std::vector<G4double> RealIndex(Ephot.size()), ImagIndex(Ephot.size());
-        for (std::size_t i = 0; i < Ephot.size(); ++i) {
+        for (std::size_t i = 0; i < Ephot.size(); ++i)
+        {
           G4double lambda = CLHEP::twopi * CLHEP::hbarc / Ephot[i];
           G4double lambda_sqr = lambda * lambda;
           RealIndex[i] = std::fmax(0, factor * lambda_sqr * f1[i]);  // delta or 1-RealIndex
@@ -286,7 +299,8 @@ void G4XrayReflection::SaveHenkeDataAsMaterialProperty()
                    << RealIndex[i] << " beta=" << std::setw(10) << ImagIndex[i] << G4endl;
         }  // photon energy
         G4MaterialPropertiesTable* proptab = a_material->GetMaterialPropertiesTable();
-        if(proptab == nullptr) {
+        if (proptab == nullptr)
+        {
           proptab = new G4MaterialPropertiesTable();
           a_material->SetMaterialPropertiesTable(proptab);
         }
@@ -294,9 +308,8 @@ void G4XrayReflection::SaveHenkeDataAsMaterialProperty()
         proptab->AddProperty("IMAGINARYRINDEX", Ephot, ImagIndex);
         if (GetVerboseLevel() > 2)
           G4cout << std::left << std::setw(12) << __FILE__ << " " << __FUNCTION__ << " line "
-                 << std::right << std::setw(4) << __LINE__ << " " << a_material->GetName()
-                 << " " << theElement->GetName()
-                 << " reflection data saved in PropertiesTable" << G4endl;
+                 << std::right << std::setw(4) << __LINE__ << " " << a_material->GetName() << " "
+                 << theElement->GetName() << " reflection data saved in PropertiesTable" << G4endl;
       }  // data found
     }
   }

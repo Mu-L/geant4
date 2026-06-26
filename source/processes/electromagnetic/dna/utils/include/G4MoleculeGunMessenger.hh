@@ -30,8 +30,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -40,15 +40,16 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#ifndef MOLECULEGUNMESSENGER_HH_
-#define MOLECULEGUNMESSENGER_HH_
+#ifndef G4MOLECULEGUNMESSENGER_HH
+#define G4MOLECULEGUNMESSENGER_HH
 
-#include "G4UImessenger.hh"
-#include "G4ThreeVector.hh"
-#include "G4memory.hh"
 #include "G4MoleculeGun.hh"
+#include "G4ThreeVector.hh"
+#include "G4UImessenger.hh"
+#include "G4memory.hh"
+
 #include <vector>
 
 class G4UIcmdWithAString;
@@ -63,64 +64,60 @@ class G4MoleculeShoot;
 
 class G4MoleculeShootMessenger : public G4UImessenger
 {
-public:
-  G4MoleculeShootMessenger(const G4String& name,
-                           G4MoleculeGunMessenger*,
-                           G4shared_ptr<G4MoleculeShoot>);
-  ~G4MoleculeShootMessenger() override;
-  void SetNewValue(G4UIcommand * command, G4String newValue) override;
-  G4String GetCurrentValue(G4UIcommand * command) override;
+  public:
 
-  inline G4shared_ptr<G4MoleculeShoot>& GetShoot() {
-    return fpShoot;
-  }
+    G4MoleculeShootMessenger(const G4String& name, G4MoleculeGunMessenger*,
+                             G4shared_ptr<G4MoleculeShoot>);
+    ~G4MoleculeShootMessenger() override;
+    void SetNewValue(G4UIcommand* command, G4String newValue) override;
+    G4String GetCurrentValue(G4UIcommand* command) override;
 
-protected:
-  G4UIcmdWithAString* fpGunSpecies;
-  G4UIcmdWith3VectorAndUnit* fpGunPosition;
-  G4UIcmdWith3VectorAndUnit* fpGunRdnmPosition ;
-  G4UIcmdWithADoubleAndUnit* fpGunTime;
-  G4UIcmdWithAnInteger* fpGunN;
-  G4UIcmdWithAString* fpGunType;
-  G4shared_ptr<G4MoleculeShoot> fpShoot;
+    inline G4shared_ptr<G4MoleculeShoot>& GetShoot() { return fpShoot; }
+
+  protected:
+
+    G4UIcmdWithAString* fpGunSpecies;
+    G4UIcmdWith3VectorAndUnit* fpGunPosition;
+    G4UIcmdWith3VectorAndUnit* fpGunRdnmPosition;
+    G4UIcmdWithADoubleAndUnit* fpGunTime;
+    G4UIcmdWithAnInteger* fpGunN;
+    G4UIcmdWithAString* fpGunType;
+    G4shared_ptr<G4MoleculeShoot> fpShoot;
 };
 
 //------------------------------------------------------------------------------
 
 class G4MoleculeGunMessenger : public G4UImessenger
 {
+  public:
 
-public:
-  G4MoleculeGunMessenger(G4MoleculeGun*);
-  ~G4MoleculeGunMessenger() override;
+    G4MoleculeGunMessenger(G4MoleculeGun*);
+    ~G4MoleculeGunMessenger() override;
 
-  void SetNewValue(G4UIcommand * command, G4String newValue) override;
-  G4String GetCurrentValue(G4UIcommand * command) override;
+    void SetNewValue(G4UIcommand* command, G4String newValue) override;
+    G4String GetCurrentValue(G4UIcommand* command) override;
 
-  const std::vector<G4MoleculeShootMessenger*>&
-    GetShootMessengers() const
-  {
-    return fMultipleGun;
-  }
+    const std::vector<G4MoleculeShootMessenger*>& GetShootMessengers() const
+    {
+      return fMultipleGun;
+    }
 
-protected:
-  G4MoleculeGun* fpMoleculeGun;
-  G4UIcmdWithAString* fpGunNewGunType;
+  protected:
 
-  template<typename T>
-  G4MoleculeShootMessenger* CreateNewType(const G4String& name)
-  {
-    G4shared_ptr<G4MoleculeShoot> moleculeShoot(new TG4MoleculeShoot<T>());
-    auto  shoot =
-        new G4MoleculeShootMessenger(name,
-                                     this,
-                                     std::move(moleculeShoot));
-    fMultipleGun.push_back(shoot);
-    fpMoleculeGun->AddMoleculeShoot(shoot->GetShoot());
-    return shoot;
-  }
+    G4MoleculeGun* fpMoleculeGun;
+    G4UIcmdWithAString* fpGunNewGunType;
 
-  std::vector<G4MoleculeShootMessenger*> fMultipleGun;
+    template<typename T>
+    G4MoleculeShootMessenger* CreateNewType(const G4String& name)
+    {
+      G4shared_ptr<G4MoleculeShoot> moleculeShoot(new TG4MoleculeShoot<T>());
+      auto shoot = new G4MoleculeShootMessenger(name, this, std::move(moleculeShoot));
+      fMultipleGun.push_back(shoot);
+      fpMoleculeGun->AddMoleculeShoot(shoot->GetShoot());
+      return shoot;
+    }
+
+    std::vector<G4MoleculeShootMessenger*> fMultipleGun;
 };
 
 #endif /* MOLECULEGUNMESSENGER_HH_ */

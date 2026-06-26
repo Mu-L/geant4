@@ -32,8 +32,8 @@
 
 // Author: H.Kurashige, 9 June 2003 - First implementation
 // --------------------------------------------------------------------
-#ifndef G4ParticlePropertyTable_hh
-#define G4ParticlePropertyTable_hh 1
+#ifndef G4PARTICLEPROPERTYTABLE_HH
+#define G4PARTICLEPROPERTYTABLE_HH
 
 #include "G4ParticleDefinition.hh"
 #include "G4ParticlePropertyData.hh"
@@ -46,6 +46,7 @@
 class G4ParticlePropertyTable
 {
   public:
+
     G4ParticlePropertyTable(const G4ParticlePropertyTable&) = delete;
     G4ParticlePropertyTable& operator=(const G4ParticlePropertyTable&) = delete;
 
@@ -78,6 +79,7 @@ class G4ParticlePropertyTable
     G4int GetVerboseLevel() const;
 
   protected:
+
     // Hidden default constructor; this class is a singleton
     G4ParticlePropertyTable();
 
@@ -86,6 +88,7 @@ class G4ParticlePropertyTable
     std::vector<G4ParticlePropertyData*> arrayDataObject;
 
   private:
+
     G4int verboseLevel = 1;
     static G4ThreadLocal G4ParticlePropertyTable* fgParticlePropertyTable;
 };

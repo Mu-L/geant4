@@ -25,56 +25,46 @@
 //
 //
 //
-//Separator class. Inherits from G4OpenGLXmVWidgetComponent
+// Separator class. Inherits from G4OpenGLXmVWidgetComponent
+
+#include "G4OpenGLXmSeparator.hh"
 
 #include "G4OpenGLXmVWidgetComponent.hh"
 #include "G4OpenGLXmVWidgetContainer.hh"
-#include "G4OpenGLXmSeparator.hh"
+#include "globals.hh"
+
 #include <X11/Intrinsic.h>
 #include <Xm/Separator.h>
 
-#include "globals.hh"
-
-G4OpenGLXmSeparator::G4OpenGLXmSeparator (unsigned char l) 
-: line(0)
-, parent(0)
+G4OpenGLXmSeparator::G4OpenGLXmSeparator(unsigned char l) : line(0), parent(0)
 {
   line_type = l;
 }
 
-G4OpenGLXmSeparator::~G4OpenGLXmSeparator ()
-{}
+G4OpenGLXmSeparator::~G4OpenGLXmSeparator() {}
 
-void G4OpenGLXmSeparator::AddYourselfTo (G4OpenGLXmVWidgetContainer* container)
+void G4OpenGLXmSeparator::AddYourselfTo(G4OpenGLXmVWidgetContainer* container)
 {
+  pView = container->GetView();
+  ProcesspView();
 
-  pView = container->GetView ();
-  ProcesspView ();
+  parent = container->GetPointerToWidget();
 
-  parent = container->GetPointerToWidget ();
+  line = XtVaCreateManagedWidget("sep", xmSeparatorWidgetClass, *parent, XmNseparatorType,
+                                 line_type, XmNmargin, 1, XmNorientation, XmHORIZONTAL,
 
-  line = XtVaCreateManagedWidget ("sep",
-				  xmSeparatorWidgetClass,
-				  *parent,
-				  XmNseparatorType, line_type,
-				  XmNmargin, 1,
-				  XmNorientation, XmHORIZONTAL,
-				  
-				  XtNvisual, visual, 
-				  XtNdepth, depth, 
-				  XtNcolormap, cmap, 
-				  XtNborderColor, borcol,
-				  XtNbackground, bgnd,
-				  
-				  NULL);
+                                 XtNvisual, visual, XtNdepth, depth, XtNcolormap, cmap,
+                                 XtNborderColor, borcol, XtNbackground, bgnd,
+
+                                 NULL);
 }
 
-Widget* G4OpenGLXmSeparator::GetPointerToParent ()
+Widget* G4OpenGLXmSeparator::GetPointerToParent()
 {
   return parent;
 }
 
-Widget* G4OpenGLXmSeparator::GetPointerToWidget () 
+Widget* G4OpenGLXmSeparator::GetPointerToWidget()
 {
   return &line;
 }

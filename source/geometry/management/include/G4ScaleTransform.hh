@@ -39,7 +39,7 @@
 //
 // Member data:
 //
-//    G4ThreeVector fScale;  // scale transformation 
+//    G4ThreeVector fScale;  // scale transformation
 //    G4ThreeVector fIScale; // inverse scale (avoid divisions)
 //    G4double flFactor;     // factor for conversion to local frame
 //    G4double fgFactor;     // factor for conversion to global frame
@@ -50,12 +50,14 @@
 #ifndef G4SCALETRANSFORM_HH
 #define G4SCALETRANSFORM_HH
 
-#include "G4Types.hh"
 #include "G4ThreeVector.hh"
 #include "G4Transform3D.hh"
+#include "G4Types.hh"
 
 /**
  * @brief G4ScaleTransform is a class for geometric scaling transformations.
+ * @ingroup geometry_management
+ *
  * It supports efficient arbitrary transformation of points, vectors and
  * normals and the computation of compound and inverse transformations.
  */
@@ -68,7 +70,7 @@ class G4ScaleTransform
      * Default Constructor.
      */
     inline G4ScaleTransform();
-    
+
     /**
      * Constructor with scale parameters on each axis.
      *  @param[in] sx Scaling in X.
@@ -88,7 +90,7 @@ class G4ScaleTransform
      *  @param[in] scale Scaling transformation.
      */
     inline G4ScaleTransform(const G4Scale3D& scale);
-        
+
     /**
      * Copy constructor and assignment operator.
      */
@@ -108,7 +110,7 @@ class G4ScaleTransform
      */
     inline const G4ThreeVector& GetScale() const;
     inline const G4ThreeVector& GetInvScale() const;
- 
+
     /**
      * Modifiers for the scale transformation.
      */
@@ -119,37 +121,32 @@ class G4ScaleTransform
     /**
      * Methods to transform a point from global to local frame.
      */
-    inline void Transform(const G4ThreeVector& global,
-                                G4ThreeVector& local) const;  
+    inline void Transform(const G4ThreeVector& global, G4ThreeVector& local) const;
     inline G4ThreeVector Transform(const G4ThreeVector& global) const;
 
     /**
      * Methods to transform a point from local to global frame.
      */
-    inline void InverseTransform(const G4ThreeVector& local, 
-                                       G4ThreeVector& global) const;
+    inline void InverseTransform(const G4ThreeVector& local, G4ThreeVector& global) const;
     inline G4ThreeVector InverseTransform(const G4ThreeVector& local) const;
 
     /**
      * Methods to transform a normal from global to local frame.
      */
-    inline void TransformNormal(const G4ThreeVector& global,
-                                      G4ThreeVector& local) const;  
+    inline void TransformNormal(const G4ThreeVector& global, G4ThreeVector& local) const;
     inline G4ThreeVector TransformNormal(const G4ThreeVector& global) const;
 
     /**
      * Methods to transform a normal from local to global frame.
      */
-    inline void InverseTransformNormal(const G4ThreeVector& local, 
-                                             G4ThreeVector& global) const;
+    inline void InverseTransformNormal(const G4ThreeVector& local, G4ThreeVector& global) const;
     inline G4ThreeVector InverseTransformNormal(const G4ThreeVector& local) const;
 
     /**
      * Transforms a distance 'dist' along a given direction 'dir'
      * from global to local frame.
      */
-    inline G4double TransformDistance(G4double dist,
-                                      const G4ThreeVector& dir) const;
+    inline G4double TransformDistance(G4double dist, const G4ThreeVector& dir) const;
 
     /**
      * Transforms a 'safety' distance from global to local frame (conservative).
@@ -160,8 +157,7 @@ class G4ScaleTransform
      * Transforms a distance 'dist' along a given direction 'dir'
      * from local to global frame.
      */
-    inline G4double InverseTransformDistance(G4double dist,
-                                             const G4ThreeVector& dir) const;
+    inline G4double InverseTransformDistance(G4double dist, const G4ThreeVector& dir) const;
 
     /**
      * Transforms a 'safety' distance from local to global frame (conservative).
@@ -170,8 +166,8 @@ class G4ScaleTransform
 
   private:
 
-    G4ThreeVector fScale;  // scale transformation 
-    G4ThreeVector fIScale; // inverse scale (avoid divisions)
+    G4ThreeVector fScale;  // scale transformation
+    G4ThreeVector fIScale;  // inverse scale (avoid divisions)
 
     /** Conversion factors to local/global frames. */
     G4double flFactor = 1.0, fgFactor = 1.0;

@@ -32,12 +32,8 @@
 //
 // ----------------------------------------------------------------------
 
-
 #include "G4VSamplerConfigurator.hh"
 
+G4VSamplerConfigurator::G4VSamplerConfigurator() {}
 
-G4VSamplerConfigurator::G4VSamplerConfigurator()
-{}
-
-G4VSamplerConfigurator::~G4VSamplerConfigurator()
-{}
+G4VSamplerConfigurator::~G4VSamplerConfigurator() {}

@@ -48,8 +48,8 @@ class G4ParticleHPFissionFS : public G4ParticleHPFinalState
     G4ParticleHPFissionFS();
     ~G4ParticleHPFissionFS() override = default;
 
-    void Init(G4double A, G4double Z, G4int M, const G4String& dirName,
-              const G4String& aFSType, G4ParticleDefinition*) override;
+    void Init(G4double A, G4double Z, G4int M, const G4String& dirName, const G4String& aFSType,
+              G4ParticleDefinition*) override;
     G4HadFinalState* ApplyYourself(const G4HadProjectile& theTrack) override;
     G4ParticleHPFinalState* New() override
     {

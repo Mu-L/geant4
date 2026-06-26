@@ -30,18 +30,18 @@
 // This class is identical to G4TrajectoryPoint class, but uses the
 // singleton G4Allocator so that the master thread can safely
 // delete the object instantiated by worker threads in sub-event
-// parallel mode. 
+// parallel mode.
 //
 // Makoto Asai (JLab) - Oct.2024
 // --------------------------------------------------------------------
 //
-#ifndef G4ClonedTrajectoryPoint_hh
-#define G4ClonedTrajectoryPoint_hh 1
+#ifndef G4CLONEDTRAJECTORYPOINT_HH
+#define G4CLONEDTRAJECTORYPOINT_HH
 
 #include "G4Allocator.hh"  // Include from 'particle+matter'
+#include "G4Threading.hh"
 #include "G4ThreeVector.hh"  // Include from 'geometry'
 #include "G4VTrajectoryPoint.hh"
-#include "G4Threading.hh"
 #include "globals.hh"  // Include from 'global'
 
 #include "trkgdefs.hh"
@@ -50,36 +50,39 @@ class G4TrajectoryPoint;
 
 class G4ClonedTrajectoryPoint : public G4VTrajectoryPoint
 {
- public:
-  // Constructors/Destructor
+  public:
 
-  G4ClonedTrajectoryPoint() = default;
-  G4ClonedTrajectoryPoint(const G4TrajectoryPoint& right);
-  ~G4ClonedTrajectoryPoint() override;
+    // Constructors/Destructor
 
-  // Operators
+    G4ClonedTrajectoryPoint() = default;
+    G4ClonedTrajectoryPoint(const G4TrajectoryPoint& right);
+    ~G4ClonedTrajectoryPoint() override;
 
-  inline void* operator new(size_t);
-  inline void operator delete(void* aTrajectoryPoint);
-  inline G4bool operator==(const G4ClonedTrajectoryPoint& right) const;
+    // Operators
 
-  // Get/Set functions
+    inline void* operator new(size_t);
+    inline void operator delete(void* aTrajectoryPoint);
+    inline G4bool operator==(const G4ClonedTrajectoryPoint& right) const;
 
-  inline const G4ThreeVector GetPosition() const override { return fPosition; }
+    // Get/Set functions
 
-  // Get method for HEPRep style attributes
-  const std::map<G4String, G4AttDef>* GetAttDefs() const override;
-  std::vector<G4AttValue>* CreateAttValues() const override;
+    inline const G4ThreeVector GetPosition() const override { return fPosition; }
 
- private:
-  G4ThreeVector fPosition{0., 0., 0.};
+    // Get method for HEPRep style attributes
+    const std::map<G4String, G4AttDef>* GetAttDefs() const override;
+    std::vector<G4AttValue>* CreateAttValues() const override;
+
+  private:
+
+    G4ThreeVector fPosition{0., 0., 0.};
 };
 
 extern G4TRACKING_DLL G4Allocator<G4ClonedTrajectoryPoint>*& aClonedTrajectoryPointAllocator();
 
 inline void* G4ClonedTrajectoryPoint::operator new(size_t)
 {
-  if (aClonedTrajectoryPointAllocator() == nullptr) {
+  if (aClonedTrajectoryPointAllocator() == nullptr)
+  {
     aClonedTrajectoryPointAllocator() = new G4Allocator<G4ClonedTrajectoryPoint>;
   }
   return (void*)aClonedTrajectoryPointAllocator()->MallocSingle();

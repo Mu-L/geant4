@@ -32,7 +32,7 @@
 //
 // File name:     G4LowEWentzelVIModel
 //
-// Author:        V.Ivanchenko 
+// Author:        V.Ivanchenko
 //
 // Creation date: 11.02.2014 from G4WentzelVIModel
 //
@@ -45,8 +45,8 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4LowEWentzelVIModel_h
-#define G4LowEWentzelVIModel_h 1
+#ifndef G4LOWEWENTZELVIMODEL_HH
+#define G4LOWEWENTZELVIMODEL_HH
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -56,18 +56,18 @@
 
 class G4LowEWentzelVIModel : public G4WentzelVIModel
 {
-public:
-  explicit G4LowEWentzelVIModel();
-  ~G4LowEWentzelVIModel() override = default;
+  public:
 
-  G4double ComputeTruePathLengthLimit(const G4Track& track,
-				      G4double& currentMinimalStep) override;
+    explicit G4LowEWentzelVIModel();
+    ~G4LowEWentzelVIModel() override = default;
 
-  G4LowEWentzelVIModel & operator=(const  G4LowEWentzelVIModel &right) = delete;
-  G4LowEWentzelVIModel(const  G4LowEWentzelVIModel&) = delete;
+    G4double ComputeTruePathLengthLimit(const G4Track& track,
+                                        G4double& currentMinimalStep) override;
+
+    G4LowEWentzelVIModel& operator=(const G4LowEWentzelVIModel& right) = delete;
+    G4LowEWentzelVIModel(const G4LowEWentzelVIModel&) = delete;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

@@ -42,14 +42,9 @@
 //
 G4_DECLARE_PHYSCONSTR_FACTORY(G4IonBinaryCascadePhysics);
 
-G4IonBinaryCascadePhysics::G4IonBinaryCascadePhysics(G4int ver)
-  :  G4IonPhysics(ver)
+G4IonBinaryCascadePhysics::G4IonBinaryCascadePhysics(G4int ver) : G4IonPhysics(ver) {}
+
+G4IonBinaryCascadePhysics::G4IonBinaryCascadePhysics(const G4String&, G4int ver) : G4IonPhysics(ver)
 {}
 
-G4IonBinaryCascadePhysics::G4IonBinaryCascadePhysics(const G4String&, G4int ver)
-  :  G4IonPhysics(ver)
-{}
-
-G4IonBinaryCascadePhysics::~G4IonBinaryCascadePhysics()
-{}
-
+G4IonBinaryCascadePhysics::~G4IonBinaryCascadePhysics() {}

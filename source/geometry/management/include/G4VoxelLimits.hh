@@ -42,22 +42,22 @@
 #ifndef G4VOXELLIMITS_HH
 #define G4VOXELLIMITS_HH
 
-#include "G4Types.hh"
-#include "geomdefs.hh"
-
 #include "G4ThreeVector.hh"
+#include "G4Types.hh"
 
+#include "geomdefs.hh"
 #include <assert.h>
 
 /**
  * @brief G4VoxelLimits represents limitation/restrictions of space, where
  * restrictions are only made perpendicular to the Cartesian axes.
+ * @ingroup geometry_management
  */
 
 class G4VoxelLimits
 {
   public:
-  
+
     /**
      * Default Constructor & Destructor.
      * Constructor initialises to be unlimited. Volume unrestricted.
@@ -145,7 +145,7 @@ class G4VoxelLimits
  * "{(xmin,xmax) (ymin,ymax) (zmin,zmax)}"
  * Replaces (xmin,xmax) by (-,-)  when not limited.
  */
-std::ostream& operator << (std::ostream& os, const G4VoxelLimits& pLim);
+std::ostream& operator<<(std::ostream& os, const G4VoxelLimits& pLim);
 
 #include "G4VoxelLimits.icc"
 

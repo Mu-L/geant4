@@ -46,46 +46,44 @@
 
 // -------------------------------------------------------------------
 
-#ifndef  G4VEMDATASET_HH
-#define  G4VEMDATASET_HH 1
+#ifndef G4VEMDATASET_HH
+#define G4VEMDATASET_HH
 
-#include "globals.hh"
 #include "G4DataVector.hh"
+#include "globals.hh"
 
-class G4VEMDataSet 
-{ 
-public:
-  explicit G4VEMDataSet();
-  virtual ~G4VEMDataSet();
-  
-  virtual G4double FindValue(G4double x, G4int componentId = 0) const = 0;
- 
-  virtual void PrintData(void) const = 0;
-  
-  virtual const G4VEMDataSet* GetComponent(G4int componentId) const = 0;
-  virtual void AddComponent(G4VEMDataSet* dataSet) = 0;
-  virtual size_t NumberOfComponents(void) const = 0;
- 
-  virtual const G4DataVector& GetEnergies(G4int componentId) const = 0;
-  virtual const G4DataVector& GetData(G4int componentId) const = 0;
-  virtual const G4DataVector& GetLogEnergies(G4int componentId) const = 0;
-  virtual const G4DataVector& GetLogData(G4int componentId) const = 0;
+class G4VEMDataSet
+{
+  public:
 
-  virtual void SetEnergiesData(G4DataVector* x, G4DataVector* data, G4int component=0) = 0;
-  virtual void SetLogEnergiesData(G4DataVector* x,
-                                  G4DataVector* data,
-                                  G4DataVector* Log_x, 
-                                  G4DataVector* Log_data,
-                                  G4int component=0) = 0;
- 
-  virtual G4bool LoadData(const G4String& fileName) = 0;
-  virtual G4bool LoadNonLogData(const G4String& fileName) = 0;
+    explicit G4VEMDataSet();
+    virtual ~G4VEMDataSet();
 
-  virtual G4bool SaveData(const G4String& fileName) const = 0;
+    virtual G4double FindValue(G4double x, G4int componentId = 0) const = 0;
 
-  virtual G4double RandomSelect(G4int componentId = 0) const = 0;
-   
-  G4VEMDataSet(const G4VEMDataSet& copy) = delete;
-  G4VEMDataSet& operator=(const G4VEMDataSet& right) = delete;
+    virtual void PrintData(void) const = 0;
+
+    virtual const G4VEMDataSet* GetComponent(G4int componentId) const = 0;
+    virtual void AddComponent(G4VEMDataSet* dataSet) = 0;
+    virtual size_t NumberOfComponents(void) const = 0;
+
+    virtual const G4DataVector& GetEnergies(G4int componentId) const = 0;
+    virtual const G4DataVector& GetData(G4int componentId) const = 0;
+    virtual const G4DataVector& GetLogEnergies(G4int componentId) const = 0;
+    virtual const G4DataVector& GetLogData(G4int componentId) const = 0;
+
+    virtual void SetEnergiesData(G4DataVector* x, G4DataVector* data, G4int component = 0) = 0;
+    virtual void SetLogEnergiesData(G4DataVector* x, G4DataVector* data, G4DataVector* Log_x,
+                                    G4DataVector* Log_data, G4int component = 0) = 0;
+
+    virtual G4bool LoadData(const G4String& fileName) = 0;
+    virtual G4bool LoadNonLogData(const G4String& fileName) = 0;
+
+    virtual G4bool SaveData(const G4String& fileName) const = 0;
+
+    virtual G4double RandomSelect(G4int componentId = 0) const = 0;
+
+    G4VEMDataSet(const G4VEMDataSet& copy) = delete;
+    G4VEMDataSet& operator=(const G4VEMDataSet& right) = delete;
 };
 #endif /* G4VEMDATASET_HH */

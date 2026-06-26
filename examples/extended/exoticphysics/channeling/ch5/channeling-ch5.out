@@ -1,4 +1,4 @@
-Random seed: 1781369799
+Random seed: 1782351745
 Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Forcing G4RunManager type...
 
         ############################################
@@ -12,7 +12,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -157,6 +157,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 0
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -851,11 +852,11 @@ Number of events to be processed: 10
  Run terminated.
 Run Summary
   Number of events processed : 10
-  User=97.100000s Real=108.098049s Sys=0.070000s
+  User=128.580000s Real=139.753103s Sys=0.040000s
 
 --------------------End of Global Run-----------------------
  The run had 10 events
- Edep in the Radiator Crystal (made of G4_W): 149.23976 +/- 29.674712 MeV
+ Edep in the Radiator Crystal (made of G4_W): 98.098902 +/- 23.985736 MeV
 ------------------------------------------------------------
 
 
@@ -863,8 +864,8 @@ Run Summary
 ------------------------------------------------------------
 
 ================== Deleting memory pools ===================
-Number of memory pools allocated: 12 of which, static: 0
-Dynamic pools deleted: 12 / Total memory freed: 0.13 MB
+Number of memory pools allocated: 14 of which, static: 0
+Dynamic pools deleted: 14 / Total memory freed: 0.12 MB
 ============================================================
 Execution terminated
-User=102.950000s Real=125.953986s Sys=11.460000s
+User=133.800000s Real=156.407109s Sys=11.070000s

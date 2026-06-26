@@ -28,57 +28,56 @@
 // by V. Lara
 //
 // Modified:
-// 03.09.2008 by J. M. Quesada for external choice of inverse 
-// cross section option 
+// 03.09.2008 by J. M. Quesada for external choice of inverse
+// cross section option
 // 06.09.2008 JMQ Also external choice has been added for:
-//                - superimposed Coulomb barrier (if useSICB=true) 
+//                - superimposed Coulomb barrier (if useSICB=true)
 // 27.08.2010 V.Ivanchenko simplify and make more efficient by adding extra
-//            vector of probabilities, moved constructor and destructor to source, 
+//            vector of probabilities, moved constructor and destructor to source,
 //            simplify run time computations making inlined
-// 
+//
 
-#ifndef G4PreCompoundFragmentVector_h
-#define G4PreCompoundFragmentVector_h 1
+#ifndef G4PRECOMPOUNDFRAGMENTVECTOR_HH
+#define G4PRECOMPOUNDFRAGMENTVECTOR_HH
 
-#include "G4VPreCompoundFragment.hh"
 #include "G4DataVector.hh"
+#include "G4VPreCompoundFragment.hh"
 #include "Randomize.hh"
 #include "globals.hh"
+
 #include <vector>
 
-typedef std::vector<G4VPreCompoundFragment*>  pcfvector;
+typedef std::vector<G4VPreCompoundFragment*> pcfvector;
 
-class G4PreCompoundFragmentVector 
+class G4PreCompoundFragmentVector
 {
-public:
+  public:
 
-  explicit G4PreCompoundFragmentVector(pcfvector * avector);
+    explicit G4PreCompoundFragmentVector(pcfvector* avector);
 
-  ~G4PreCompoundFragmentVector() = default;
+    ~G4PreCompoundFragmentVector() = default;
 
-  void SetVector(pcfvector * avector);
+    void SetVector(pcfvector* avector);
 
-  void SetOPTxs(G4int);
+    void SetOPTxs(G4int);
 
-  void UseSICB(G4bool);
+    void UseSICB(G4bool);
 
-  G4double CalculateProbabilities(const G4Fragment & aFragment);
-	
-  G4VPreCompoundFragment * ChooseFragment();
-		  
-private:
+    G4double CalculateProbabilities(const G4Fragment& aFragment);
 
-  G4PreCompoundFragmentVector(const G4PreCompoundFragmentVector &right) = delete;
-  const G4PreCompoundFragmentVector& 
-  operator=(const G4PreCompoundFragmentVector &right) = delete;
-  G4bool operator==(const G4PreCompoundFragmentVector &right) const = delete;
-  G4bool operator!=(const G4PreCompoundFragmentVector &right) const = delete;
-  
-  pcfvector * theChannels;
-  G4DataVector probabilities;
+    G4VPreCompoundFragment* ChooseFragment();
 
-  G4int nChannels;
+  private:
+
+    G4PreCompoundFragmentVector(const G4PreCompoundFragmentVector& right) = delete;
+    const G4PreCompoundFragmentVector& operator=(const G4PreCompoundFragmentVector& right) = delete;
+    G4bool operator==(const G4PreCompoundFragmentVector& right) const = delete;
+    G4bool operator!=(const G4PreCompoundFragmentVector& right) const = delete;
+
+    pcfvector* theChannels;
+    G4DataVector probabilities;
+
+    G4int nChannels;
 };
 
 #endif
-

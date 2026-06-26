@@ -42,99 +42,87 @@
 // -------------------------------------------------------------------
 
 #ifndef G4EMDATASET_HH
-#define G4EMDATASET_HH 1
+#define G4EMDATASET_HH
+
+#include "G4VEMDataSet.hh"
+#include "globals.hh"
 
 #include <CLHEP/Units/SystemOfUnits.h>
-#include "globals.hh"
-#include "G4VEMDataSet.hh"
 
 class G4VDataSetAlgorithm;
 
 class G4EMDataSet : public G4VEMDataSet
 {
-public:
-  explicit G4EMDataSet(G4int argZ, 
-		       G4VDataSetAlgorithm* algo, 
-		       G4double xUnit=CLHEP::MeV, 
-		       G4double yUnit=CLHEP::barn,
-		       G4bool random=false);
+  public:
 
-  explicit G4EMDataSet(G4int argZ, 
-		       G4DataVector* xData, 
-		       G4DataVector* data, 
-		       G4VDataSetAlgorithm* algo, 
-		       G4double xUnit=CLHEP::MeV, 
-		       G4double yUnit=CLHEP::barn,
-		       G4bool random=false);
+    explicit G4EMDataSet(G4int argZ, G4VDataSetAlgorithm* algo, G4double xUnit = CLHEP::MeV,
+                         G4double yUnit = CLHEP::barn, G4bool random = false);
 
-  explicit G4EMDataSet(G4int argZ, 
-		       G4DataVector* xData, 
-		       G4DataVector* data,
-		       G4DataVector* xLogData, 
-		       G4DataVector* Logdata, 
-		       G4VDataSetAlgorithm* algo, 
-		       G4double xUnit=CLHEP::MeV, 
-		       G4double yUnit=CLHEP::barn,
-		       G4bool random=false);
+    explicit G4EMDataSet(G4int argZ, G4DataVector* xData, G4DataVector* data,
+                         G4VDataSetAlgorithm* algo, G4double xUnit = CLHEP::MeV,
+                         G4double yUnit = CLHEP::barn, G4bool random = false);
 
-  virtual ~G4EMDataSet();
- 
-  virtual G4double FindValue(G4double x, G4int componentId=0) const;
-  
-  virtual void PrintData(void) const;
+    explicit G4EMDataSet(G4int argZ, G4DataVector* xData, G4DataVector* data,
+                         G4DataVector* xLogData, G4DataVector* Logdata, G4VDataSetAlgorithm* algo,
+                         G4double xUnit = CLHEP::MeV, G4double yUnit = CLHEP::barn,
+                         G4bool random = false);
 
-  virtual const G4VEMDataSet* GetComponent(G4int /* componentId */) const { return 0; }
+    virtual ~G4EMDataSet();
 
-  virtual void AddComponent(G4VEMDataSet* /* dataSet */) {}
+    virtual G4double FindValue(G4double x, G4int componentId = 0) const;
 
-  virtual std::size_t NumberOfComponents(void) const { return 0; }
+    virtual void PrintData(void) const;
 
-  virtual const G4DataVector& GetEnergies(G4int /* componentId */) const { return *energies; }
-  virtual const G4DataVector& GetData(G4int /* componentId */) const { return *data; }
-  virtual const G4DataVector& GetLogEnergies(G4int /* componentId */) const { return *log_energies; }
-  virtual const G4DataVector& GetLogData(G4int /* componentId */) const { return *log_data; }
+    virtual const G4VEMDataSet* GetComponent(G4int /* componentId */) const { return 0; }
 
-  virtual void SetEnergiesData(G4DataVector* xData, G4DataVector* data, G4int componentId);
-  virtual void SetLogEnergiesData(G4DataVector* xData,
-                                  G4DataVector* data,
-                                  G4DataVector* xLogData, 
-                                  G4DataVector* Logdata,
-                                  G4int componentId);
+    virtual void AddComponent(G4VEMDataSet* /* dataSet */) {}
 
+    virtual std::size_t NumberOfComponents(void) const { return 0; }
 
-  virtual G4bool LoadData(const G4String& fileName);
-  virtual G4bool LoadNonLogData(const G4String& fileName);
+    virtual const G4DataVector& GetEnergies(G4int /* componentId */) const { return *energies; }
+    virtual const G4DataVector& GetData(G4int /* componentId */) const { return *data; }
+    virtual const G4DataVector& GetLogEnergies(G4int /* componentId */) const
+    {
+      return *log_energies;
+    }
+    virtual const G4DataVector& GetLogData(G4int /* componentId */) const { return *log_data; }
 
-  virtual G4bool SaveData(const G4String& fileName) const;
+    virtual void SetEnergiesData(G4DataVector* xData, G4DataVector* data, G4int componentId);
+    virtual void SetLogEnergiesData(G4DataVector* xData, G4DataVector* data, G4DataVector* xLogData,
+                                    G4DataVector* Logdata, G4int componentId);
 
-  virtual G4double RandomSelect(G4int componentId = 0) const;
-    
+    virtual G4bool LoadData(const G4String& fileName);
+    virtual G4bool LoadNonLogData(const G4String& fileName);
 
-private:
+    virtual G4bool SaveData(const G4String& fileName) const;
 
-  std::size_t FindLowerBound(G4double energy) const;
-  std::size_t FindLowerBound(G4double x, G4DataVector* values) const;
+    virtual G4double RandomSelect(G4int componentId = 0) const;
 
-  G4double IntegrationFunction(G4double x);
-  virtual void BuildPdf();
-  G4String FullFileName(const G4String& fileName) const;
+  private:
 
-  // Hide copy constructor and assignment operator 
-  explicit G4EMDataSet();
-  G4EMDataSet(const G4EMDataSet& copy) = delete;
-  G4EMDataSet& operator=(const G4EMDataSet& right) = delete;
+    std::size_t FindLowerBound(G4double energy) const;
+    std::size_t FindLowerBound(G4double x, G4DataVector* values) const;
 
-  G4DataVector* energies;            // Owned pointer
-  G4DataVector* data;                // Owned pointer
-  G4DataVector* log_energies;        // Owned pointer
-  G4DataVector* log_data;            // Owned pointer
-  G4VDataSetAlgorithm* algorithm;    // Owned pointer 
-  G4DataVector* pdf;
+    G4double IntegrationFunction(G4double x);
+    virtual void BuildPdf();
+    G4String FullFileName(const G4String& fileName) const;
 
-  G4double unitEnergies;
-  G4double unitData;
+    // Hide copy constructor and assignment operator
+    explicit G4EMDataSet();
+    G4EMDataSet(const G4EMDataSet& copy) = delete;
+    G4EMDataSet& operator=(const G4EMDataSet& right) = delete;
 
-  G4int z;
-  G4bool randomSet;
+    G4DataVector* energies;  // Owned pointer
+    G4DataVector* data;  // Owned pointer
+    G4DataVector* log_energies;  // Owned pointer
+    G4DataVector* log_data;  // Owned pointer
+    G4VDataSetAlgorithm* algorithm;  // Owned pointer
+    G4DataVector* pdf;
+
+    G4double unitEnergies;
+    G4double unitData;
+
+    G4int z;
+    G4bool randomSet;
 };
 #endif /* G4EMDATASET_HH */

@@ -26,11 +26,11 @@
 //
 //
 
-#ifndef G4PSTrackLength_h
-#define G4PSTrackLength_h 1
+#ifndef G4PSTRACKLENGTH_HH
+#define G4PSTRACKLENGTH_HH
 
-#include "G4VPrimitiveScorer.hh"
 #include "G4THitsMap.hh"
+#include "G4VPrimitiveScorer.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // (Description)
@@ -47,35 +47,38 @@
 
 class G4PSTrackLength : public G4VPrimitiveScorer
 {
- public:
-  G4PSTrackLength(const G4String& name, G4int depth = 0);
-  G4PSTrackLength(const G4String& name, const G4String& unit, G4int depth = 0);
-  ~G4PSTrackLength() override = default;
+  public:
 
-  inline void Weighted(G4bool flg = true) { weighted = flg; }
-  // Multiply track weight
+    G4PSTrackLength(const G4String& name, G4int depth = 0);
+    G4PSTrackLength(const G4String& name, const G4String& unit, G4int depth = 0);
+    ~G4PSTrackLength() override = default;
 
-  void MultiplyKineticEnergy(G4bool flg = true);
-  // Multiply Kinetic Energy
+    inline void Weighted(G4bool flg = true) { weighted = flg; }
+    // Multiply track weight
 
-  void DivideByVelocity(G4bool flg = true);
-  // Divide by velocity
+    void MultiplyKineticEnergy(G4bool flg = true);
+    // Multiply Kinetic Energy
 
-  void Initialize(G4HCofThisEvent*) override;
-  void clear() override;
-  void PrintAll() override;
+    void DivideByVelocity(G4bool flg = true);
+    // Divide by velocity
 
-  virtual void SetUnit(const G4String& unit);
+    void Initialize(G4HCofThisEvent*) override;
+    void clear() override;
+    void PrintAll() override;
 
- protected:
-  G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
-  virtual void DefineUnitAndCategory();
+    virtual void SetUnit(const G4String& unit);
 
- private:
-  G4int HCID;
-  G4THitsMap<G4double>* EvtMap;
-  G4bool weighted;
-  G4bool multiplyKinE;
-  G4bool divideByVelocity;
+  protected:
+
+    G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+    virtual void DefineUnitAndCategory();
+
+  private:
+
+    G4int HCID;
+    G4THitsMap<G4double>* EvtMap;
+    G4bool weighted;
+    G4bool multiplyKinE;
+    G4bool divideByVelocity;
 };
 #endif

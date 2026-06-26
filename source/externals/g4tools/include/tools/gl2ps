@@ -22,7 +22,7 @@
 //     ....
 //     tools_gl2psDeleteContext(gl2ps_context);
 //     ....
-// - it does not call directly OpenGL functions 
+// - it does not call directly OpenGL functions
 //     glIsEnabled,glBegin,glEnd,glGetFloatv,glVertex3f,glGetBooleanv,
 //     glGetIntegerv,glRenderMode,glFeedbackBuffer,glPassThrough
 //   but pointer to functions with the same signature. This permits to
@@ -51,9 +51,10 @@
 //     };
 //     tools_gl2ps_set_gl_funcs(gl2ps_context,&_funcs);
 //     ...
-//      
+//
 //    Guy Barrand. 15/March/2022
 //
+// clang-format off
 
 /*
  * GL2PS, an OpenGL to PostScript Printing Library
@@ -5371,8 +5372,8 @@ inline void tools_gl2psSVGGetCoordsAndColors(tools_GL2PScontext* gl2ps, int n, t
   }
 }
 
-#include <sstream>  //G.Barrand
 #include <iomanip>  //G.Barrand
+#include <sstream>  //G.Barrand
 
 inline void tools_gl2psSVGGetColorString(tools_GL2PSrgba rgba, char str[32])
 {

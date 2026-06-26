@@ -32,16 +32,17 @@
 using std::to_string;
 
 //_____________________________________________________________________________
-template <typename NT>
+template<typename NT>
 G4TRNtupleManager<NT>::G4TRNtupleManager(const G4AnalysisManagerState& state)
- : G4BaseRNtupleManager(state)
+  : G4BaseRNtupleManager(state)
 {}
 
 //_____________________________________________________________________________
-template <typename NT>
+template<typename NT>
 G4TRNtupleManager<NT>::~G4TRNtupleManager()
 {
-  for ( auto ntupleDescription : fNtupleDescriptionVector ) {
+  for (auto ntupleDescription : fNtupleDescriptionVector)
+  {
     delete ntupleDescription;
   }
 }
@@ -51,16 +52,17 @@ G4TRNtupleManager<NT>::~G4TRNtupleManager()
 //
 
 //_____________________________________________________________________________
-template <typename NT>
+template<typename NT>
 G4TRNtupleDescription<NT>*
-G4TRNtupleManager<NT>::GetNtupleDescriptionInFunction(
-  G4int id, std::string_view functionName, G4bool warn) const
+G4TRNtupleManager<NT>::GetNtupleDescriptionInFunction(G4int id, std::string_view functionName,
+                                                      G4bool warn) const
 {
   G4int index = id - fFirstId;
-  if ( index < 0 || index >= G4int(fNtupleDescriptionVector.size()) ) {
-    if ( warn) {
-      G4Analysis::Warn("ntuple " + to_string(id) + " does not exist.",
-        fkClass, functionName);
+  if (index < 0 || index >= G4int(fNtupleDescriptionVector.size()))
+  {
+    if (warn)
+    {
+      G4Analysis::Warn("ntuple " + to_string(id) + " does not exist.", fkClass, functionName);
     }
     return nullptr;
   }
@@ -69,46 +71,42 @@ G4TRNtupleManager<NT>::GetNtupleDescriptionInFunction(
 }
 
 //_____________________________________________________________________________
-template <typename NT>
-template <typename T>
-G4bool
-G4TRNtupleManager<NT>::SetNtupleTColumn(
-  G4int ntupleId, const G4String& columnName, T& value)
+template<typename NT>
+template<typename T>
+G4bool G4TRNtupleManager<NT>::SetNtupleTColumn(G4int ntupleId, const G4String& columnName, T& value)
 {
   Message(G4Analysis::kVL4, "set", "ntuple T column",
-    " ntupleId " + to_string(ntupleId) + " " + columnName);
+          " ntupleId " + to_string(ntupleId) + " " + columnName);
 
   auto ntupleDescription = GetNtupleDescriptionInFunction(ntupleId, "SetNtupleTColumn");
-  if ( ! ntupleDescription )  return false;
+  if (!ntupleDescription) return false;
 
   auto ntupleBinding = ntupleDescription->fNtupleBinding;
   ntupleBinding->add_column(columnName, value);
 
   Message(G4Analysis::kVL2, "set", "ntuple T column",
-    " ntupleId " + to_string(ntupleId) + " " + columnName);
+          " ntupleId " + to_string(ntupleId) + " " + columnName);
 
   return true;
 }
 
 //_____________________________________________________________________________
-template <typename NT>
-template <typename T>
-G4bool
-G4TRNtupleManager<NT>::SetNtupleTColumn(
-  G4int ntupleId, const G4String& columnName, std::vector<T>& vector)
+template<typename NT>
+template<typename T>
+G4bool G4TRNtupleManager<NT>::SetNtupleTColumn(G4int ntupleId, const G4String& columnName,
+                                               std::vector<T>& vector)
 {
   Message(G4Analysis::kVL4, "set", "ntuple T column",
-    " ntupleId " + to_string(ntupleId) + " " + columnName);
+          " ntupleId " + to_string(ntupleId) + " " + columnName);
 
   auto ntupleDescription = GetNtupleDescriptionInFunction(ntupleId, "SetNtupleTColumn");
-  if ( ! ntupleDescription )  return false;
+  if (!ntupleDescription) return false;
 
   auto ntupleBinding = ntupleDescription->fNtupleBinding;
   ntupleBinding->add_column(columnName, vector);
 
   Message(G4Analysis::kVL2, "set", "ntuple T column",
-    " ntupleId " + to_string(ntupleId) + " " + columnName);
-
+          " ntupleId " + to_string(ntupleId) + " " + columnName);
 
   return true;
 }
@@ -118,50 +116,47 @@ G4TRNtupleManager<NT>::SetNtupleTColumn(
 //
 
 //_____________________________________________________________________________
-template <typename NT>
+template<typename NT>
 G4bool G4TRNtupleManager<NT>::IsEmpty() const
 {
-  return ! fNtupleDescriptionVector.size();
+  return !fNtupleDescriptionVector.size();
 }
 
 //_____________________________________________________________________________
-template <typename NT>
+template<typename NT>
 G4bool G4TRNtupleManager<NT>::Reset()
 {
-// Reset ntuples
+  // Reset ntuples
 
-  for ( auto ntupleDescription : fNtupleDescriptionVector ) {
+  for (auto ntupleDescription : fNtupleDescriptionVector)
+  {
     delete ntupleDescription->fNtuple;
-    ntupleDescription->fNtuple=nullptr;
+    ntupleDescription->fNtuple = nullptr;
   }
   return true;
 }
 
 //_____________________________________________________________________________
-template <typename NT>
-NT*
-G4TRNtupleManager<NT>::GetNtuple() const
+template<typename NT>
+NT* G4TRNtupleManager<NT>::GetNtuple() const
 {
   return GetNtuple(fFirstId);
 }
 
 //_____________________________________________________________________________
-template <typename NT>
-NT*
-G4TRNtupleManager<NT>::GetNtuple(
-  G4int ntupleId) const
+template<typename NT>
+NT* G4TRNtupleManager<NT>::GetNtuple(G4int ntupleId) const
 {
   auto rntupleDescription = GetNtupleDescriptionInFunction(ntupleId, "GetNtuple");
 
-  if ( ! rntupleDescription ) return nullptr;
+  if (!rntupleDescription) return nullptr;
 
   return rntupleDescription->fNtuple;
 }
 
 //_____________________________________________________________________________
-template <typename NT>
-G4int G4TRNtupleManager<NT>::SetNtuple(
-  G4TRNtupleDescription<NT>* rntupleDescription)
+template<typename NT>
+G4int G4TRNtupleManager<NT>::SetNtuple(G4TRNtupleDescription<NT>* rntupleDescription)
 {
   auto id = G4int(fNtupleDescriptionVector.size() + fFirstId);
 
@@ -171,103 +166,88 @@ G4int G4TRNtupleManager<NT>::SetNtuple(
 }
 
 //_____________________________________________________________________________
-template <typename NT>
-G4bool
-G4TRNtupleManager<NT>::SetNtupleIColumn(
-  G4int ntupleId, const G4String& columnName, G4int& value)
+template<typename NT>
+G4bool G4TRNtupleManager<NT>::SetNtupleIColumn(G4int ntupleId, const G4String& columnName,
+                                               G4int& value)
 {
   return SetNtupleTColumn<int>(ntupleId, columnName, value);
 }
 
 //_____________________________________________________________________________
-template <typename NT>
-G4bool
-G4TRNtupleManager<NT>::SetNtupleFColumn(
-  G4int ntupleId, const G4String& columnName, G4float& value)
+template<typename NT>
+G4bool G4TRNtupleManager<NT>::SetNtupleFColumn(G4int ntupleId, const G4String& columnName,
+                                               G4float& value)
 {
   return SetNtupleTColumn<float>(ntupleId, columnName, value);
 }
 
 //_____________________________________________________________________________
-template <typename NT>
-G4bool
-G4TRNtupleManager<NT>::SetNtupleDColumn(
-  G4int ntupleId, const G4String& columnName, G4double& value)
+template<typename NT>
+G4bool G4TRNtupleManager<NT>::SetNtupleDColumn(G4int ntupleId, const G4String& columnName,
+                                               G4double& value)
 {
   return SetNtupleTColumn<double>(ntupleId, columnName, value);
 }
 
 //_____________________________________________________________________________
-template <typename NT>
-G4bool
-G4TRNtupleManager<NT>::SetNtupleIColumn(
-  G4int ntupleId, const G4String& columnName, std::vector<G4int>& vector)
+template<typename NT>
+G4bool G4TRNtupleManager<NT>::SetNtupleIColumn(G4int ntupleId, const G4String& columnName,
+                                               std::vector<G4int>& vector)
 {
   return SetNtupleTColumn<int>(ntupleId, columnName, vector);
 }
 
 //_____________________________________________________________________________
-template <typename NT>
-G4bool
-G4TRNtupleManager<NT>::SetNtupleFColumn(
-  G4int ntupleId, const G4String& columnName, std::vector<G4float>& vector)
+template<typename NT>
+G4bool G4TRNtupleManager<NT>::SetNtupleFColumn(G4int ntupleId, const G4String& columnName,
+                                               std::vector<G4float>& vector)
 {
   return SetNtupleTColumn<float>(ntupleId, columnName, vector);
 }
 
 //_____________________________________________________________________________
-template <typename NT>
-G4bool
-G4TRNtupleManager<NT>::SetNtupleDColumn(
-  G4int ntupleId, const G4String& columnName, std::vector<G4double>& vector)
+template<typename NT>
+G4bool G4TRNtupleManager<NT>::SetNtupleDColumn(G4int ntupleId, const G4String& columnName,
+                                               std::vector<G4double>& vector)
 {
   return SetNtupleTColumn<double>(ntupleId, columnName, vector);
 }
 
 //_____________________________________________________________________________
-template <typename NT>
-G4bool
-G4TRNtupleManager<NT>::SetNtupleSColumn(
-  G4int ntupleId, const G4String& columnName, G4String& value)
+template<typename NT>
+G4bool G4TRNtupleManager<NT>::SetNtupleSColumn(G4int ntupleId, const G4String& columnName,
+                                               G4String& value)
 {
   return SetNtupleTColumn<std::string>(ntupleId, columnName, value);
 }
 
 //_____________________________________________________________________________
-template <typename NT>
-G4bool
-G4TRNtupleManager<NT>::SetNtupleSColumn(
-  G4int ntupleId, const G4String& columnName, std::vector<std::string>& vector)
+template<typename NT>
+G4bool G4TRNtupleManager<NT>::SetNtupleSColumn(G4int ntupleId, const G4String& columnName,
+                                               std::vector<std::string>& vector)
 {
   return SetNtupleTColumn<std::string>(ntupleId, columnName, vector);
 }
 
 //_____________________________________________________________________________
-template <typename NT>
+template<typename NT>
 G4bool G4TRNtupleManager<NT>::GetNtupleRow(G4int ntupleId)
 {
-  Message(G4Analysis::kVL4, "get", "ntuple row",
-    "ntupleId " + to_string(ntupleId));
+  Message(G4Analysis::kVL4, "get", "ntuple row", "ntupleId " + to_string(ntupleId));
 
-  auto ntupleDescription
-    = GetNtupleDescriptionInFunction(ntupleId, "GetNtupleRow");
-  if ( ! ntupleDescription )  return false;
+  auto ntupleDescription = GetNtupleDescriptionInFunction(ntupleId, "GetNtupleRow");
+  if (!ntupleDescription) return false;
 
   auto next = GetTNtupleRow(ntupleDescription);
 
-  Message(G4Analysis::kVL2, "get", "ntuple row",
-    "ntupleId " + to_string(ntupleId));
+  Message(G4Analysis::kVL2, "get", "ntuple row", "ntupleId " + to_string(ntupleId));
 
   return next;
 }
 
-
 //_____________________________________________________________________________
-template <typename NT>
-G4int
-G4TRNtupleManager<NT>::GetNofNtuples() const
+template<typename NT>
+G4int G4TRNtupleManager<NT>::GetNofNtuples() const
 {
   return G4int(fNtupleDescriptionVector.size());
 }
-
-

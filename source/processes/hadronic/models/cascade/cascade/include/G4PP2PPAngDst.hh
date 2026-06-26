@@ -29,20 +29,21 @@
 // Description: class containing numerically integrated angular distributions
 //              in the CM for pp and nn elastic reactions.  Below 2.75 GeV
 //              distributions are taken from SAID phase shift calculations
-//              with Coulomb interactions turned off.  Above 2.75 GeV, pp 
+//              with Coulomb interactions turned off.  Above 2.75 GeV, pp
 //              elastic scattering data are used.
 //
 
-#ifndef G4PP2PPAngDst_h
-#define G4PP2PPAngDst_h 1
+#ifndef G4PP2PPANGDST_HH
+#define G4PP2PPANGDST_HH
 
 #include "G4NumIntTwoBodyAngDst.hh"
 
+class G4PP2PPAngDst : public G4NumIntTwoBodyAngDst<11, 19>
+{
+  public:
 
-class G4PP2PPAngDst : public G4NumIntTwoBodyAngDst<11,19> {
-public:
-  G4PP2PPAngDst(G4int verbose = 0);
-  virtual ~G4PP2PPAngDst() {;}
+    G4PP2PPAngDst(G4int verbose = 0);
+    virtual ~G4PP2PPAngDst() { ; }
 };
 
 #endif

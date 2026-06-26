@@ -6,7 +6,14 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-05-26 Gabriele Cosmo (analysis-V11-03-08)
+## 2026-06-19 Ben Morgan (analysis-V11-04-06)
+- Apply clang-format to all C++ files.
+  - Add headers needed to address ordering changes created by formatting.
+
+## 2025-06-08 Ben Morgan (analysis-V11-04-05)
+- Add headers required for used declarations.
+
+## 2026-05-26 Gabriele Cosmo (analysis-V11-04-04)
 - Fixed MT data race in G4PlotManager, by making the shared FreeType object
   immutable after one-time initialization.
   The race was in: static toolx::sg::text_freetype ttf; this was initialized
@@ -17,14 +24,23 @@ It must **not** be used as a substitute for writing good git commit messages!
   tools::viewplot. C++ guarantees thread-safe initialization of that
   function-local static, and after that all threads only read it.
 
-## 2026-05-23 Ben Morgan
+## 2026-05-23 Ben Morgan (analysis-V11-04-03)
 - Fixed bounds-check errors in G4RootPNtupleManager.
   - Ensure ntuple description and pointer vectors are kept in sync.
 
-## 2026-05-19 I. Hrivnacova
+## 2026-05-19 I. Hrivnacova (analysis-V11-04-02)
 - Fixed compilation warnings "missing braces around initializer",
   observed with gcc v11.5
   - addressing the problem report #2705.
+
+## 2026-01-09 Ben Morgan (analysis-V11-04-01)
+- Update header guards to style/format required by Geant4 coding guidelines.
+
+## 2026-01-06 I. Hrivnacova (analysis-V11-04-00)
+- Removed redundant G4TH*ToolsManager.hh, G4TP*ToolsManager.hh
+  with template specialization declarations;
+  (The P-files contained errorneous header guards which hided
+  an obsolete declaration in P2-file.)
 
 ## 2025-11-17 I. Hrivnacova (analysis-V11-03-07)
 - Fixing a problem observed in the rdecay02 example reported in User Forum,

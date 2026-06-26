@@ -31,7 +31,7 @@
 #include <cmath>
 
 G4CrystalUnitCell::G4CrystalUnitCell(G4double sizeA, G4double sizeB, G4double sizeC, G4double alpha,
-  G4double beta, G4double gamma, G4int spacegroup)
+                                     G4double beta, G4double gamma, G4int spacegroup)
   : theSize(G4ThreeVector(sizeA, sizeB, sizeC)),
     theAngle(G4ThreeVector(alpha, beta, gamma)),
     theSpaceGroup(spacegroup)
@@ -65,7 +65,8 @@ G4CrystalUnitCell::G4CrystalUnitCell(G4double sizeA, G4double sizeB, G4double si
 
   G4double x3, y3, z3;
 
-  switch (GetLatticeSystem(theSpaceGroup)) {
+  switch (GetLatticeSystem(theSpaceGroup))
+  {
     case Amorphous:
       break;
     case Cubic:  // Cubic, C44 set
@@ -98,7 +99,8 @@ G4CrystalUnitCell::G4CrystalUnitCell(G4double sizeA, G4double sizeB, G4double si
       break;
   }
 
-  for (auto i : {0, 1, 2}) {
+  for (auto i : {0, 1, 2})
+  {
     theBasis[i] = theUnitBasis[i] * theSize[i];
     theRecBasis[i] = theRecUnitBasis[i] * theRecSize[i];
   }
@@ -108,30 +110,37 @@ G4CrystalUnitCell::G4CrystalUnitCell(G4double sizeA, G4double sizeB, G4double si
 
 theLatticeSystemType G4CrystalUnitCell::GetLatticeSystem(G4int aGroup)
 {
-  if (aGroup >= 1 && aGroup <= 2) {
+  if (aGroup >= 1 && aGroup <= 2)
+  {
     return Triclinic;
   }
-  if (aGroup >= 3 && aGroup <= 15) {
+  if (aGroup >= 3 && aGroup <= 15)
+  {
     return Monoclinic;
   }
-  if (aGroup >= 16 && aGroup <= 74) {
+  if (aGroup >= 16 && aGroup <= 74)
+  {
     return Orthorhombic;
   }
-  if (aGroup >= 75 && aGroup <= 142) {
+  if (aGroup >= 75 && aGroup <= 142)
+  {
     return Tetragonal;
   }
-  if (aGroup == 146 || aGroup == 148 || aGroup == 155 || aGroup == 160 || aGroup == 161 ||
-      aGroup == 166 || aGroup == 167)
+  if (aGroup == 146 || aGroup == 148 || aGroup == 155 || aGroup == 160 || aGroup == 161
+      || aGroup == 166 || aGroup == 167)
   {
     return Rhombohedral;
   }
-  if (aGroup >= 143 && aGroup <= 167) {
+  if (aGroup >= 143 && aGroup <= 167)
+  {
     return Hexagonal;
   }
-  if (aGroup >= 168 && aGroup <= 194) {
+  if (aGroup >= 168 && aGroup <= 194)
+  {
     return Hexagonal;
   }
-  if (aGroup >= 195 && aGroup <= 230) {
+  if (aGroup >= 195 && aGroup <= 230)
+  {
     return Cubic;
   }
 
@@ -192,7 +201,8 @@ G4bool G4CrystalUnitCell::FillAtomicUnitPos(G4ThreeVector& pos, std::vector<G4Th
 G4bool G4CrystalUnitCell::FillAtomicPos(G4ThreeVector& posin, std::vector<G4ThreeVector>& vecout)
 {
   FillAtomicUnitPos(posin, vecout);
-  for (auto& vec : vecout) {
+  for (auto& vec : vecout)
+  {
     vec.setX(vec.x() * theSize[0]);
     vec.setY(vec.y() * theSize[1]);
     vec.setZ(vec.z() * theSize[2]);
@@ -204,7 +214,8 @@ G4bool G4CrystalUnitCell::FillAtomicPos(G4ThreeVector& posin, std::vector<G4Thre
 
 G4bool G4CrystalUnitCell::FillElReduced(G4double Cij[6][6])
 {
-  switch (GetLatticeSystem()) {
+  switch (GetLatticeSystem())
+  {
     case Amorphous:
       return FillAmorphous(Cij);
       break;
@@ -250,15 +261,20 @@ G4bool G4CrystalUnitCell::FillCubic(G4double Cij[6][6]) const
 {
   G4double C11 = Cij[0][0], C12 = Cij[0][1], C44 = Cij[3][3];
 
-  for (size_t i = 0; i < 6; i++) {
-    for (size_t j = i; j < 6; j++) {
-      if (i < 3 && j < 3) {
+  for (size_t i = 0; i < 6; i++)
+  {
+    for (size_t j = i; j < 6; j++)
+    {
+      if (i < 3 && j < 3)
+      {
         Cij[i][j] = (i == j) ? C11 : C12;
       }
-      else if (i == j && i >= 3) {
+      else if (i == j && i >= 3)
+      {
         Cij[i][i] = C44;
       }
-      else {
+      else
+      {
         Cij[i][j] = 0.;
       }
     }
@@ -295,8 +311,10 @@ G4bool G4CrystalUnitCell::FillOrthorhombic(G4double Cij[6][6]) const
   ReflectElReduced(Cij);
 
   G4bool good = true;
-  for (size_t i = 0; i < 6; i++) {
-    for (size_t j = i + 1; j < 3; j++) {
+  for (size_t i = 0; i < 6; i++)
+  {
+    for (size_t j = i + 1; j < 3; j++)
+    {
       good &= (Cij[i][j] != 0);
     }
   }
@@ -330,8 +348,8 @@ G4bool G4CrystalUnitCell::FillMonoclinic(G4double Cij[6][6]) const
   // The monoclinic matrix has 13 independent elements with no degeneracies
   // Sanity condition is same as orthorhombic, plus C45, C(1,2,3)6
 
-  return (FillOrthorhombic(Cij) && Cij[0][5] != 0. && Cij[1][5] != 0. && Cij[2][5] != 0. &&
-          Cij[3][4] != 0.);
+  return (FillOrthorhombic(Cij) && Cij[0][5] != 0. && Cij[1][5] != 0. && Cij[2][5] != 0.
+          && Cij[3][4] != 0.);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -343,8 +361,10 @@ G4bool G4CrystalUnitCell::FillTriclinic(G4double Cij[6][6]) const
   ReflectElReduced(Cij);
 
   G4bool good = true;
-  for (size_t i = 0; i < 6; i++) {
-    for (size_t j = i; j < 6; j++) {
+  for (size_t i = 0; i < 6; i++)
+  {
+    for (size_t j = i; j < 6; j++)
+    {
       good &= (Cij[i][j] != 0);
     }
   }
@@ -365,8 +385,10 @@ G4bool G4CrystalUnitCell::FillHexagonal(G4double Cij[6][6]) const
 
 G4bool G4CrystalUnitCell::ReflectElReduced(G4double Cij[6][6]) const
 {
-  for (size_t i = 1; i < 6; i++) {
-    for (size_t j = i + 1; j < 6; j++) {
+  for (size_t i = 1; i < 6; i++)
+  {
+    for (size_t j = i + 1; j < 6; j++)
+    {
       Cij[j][i] = Cij[i][j];
     }
   }
@@ -379,7 +401,8 @@ G4double G4CrystalUnitCell::ComputeCellVolume()
 {
   G4double a = theSize[0], b = theSize[1], c = theSize[2];
 
-  switch (GetLatticeSystem()) {
+  switch (GetLatticeSystem())
+  {
     case Amorphous:
       return 0.;
       break;
@@ -399,8 +422,8 @@ G4double G4CrystalUnitCell::ComputeCellVolume()
       return a * b * c * sinb;
       break;
     case Triclinic:
-      return a * b * c *
-             std::sqrt(1. - cosa * cosa - cosb * cosb - cosg * cosg + 2. * cosa * cosb * cosg);
+      return a * b * c
+             * std::sqrt(1. - cosa * cosa - cosb * cosb - cosg * cosg + 2. * cosa * cosb * cosg);
       break;
     case Hexagonal:
       return std::sqrt(3.0) / 2. * a * a * c;
@@ -440,7 +463,8 @@ G4double G4CrystalUnitCell::GetIntSp2(G4int h, G4int k, G4int l)
   G4double cos2a, sin2a, sin2b;
   G4double R, T;
 
-  switch (GetLatticeSystem()) {
+  switch (GetLatticeSystem())
+  {
     case Amorphous:
       return 0.;
       break;
@@ -502,7 +526,8 @@ G4double G4CrystalUnitCell::GetRecIntSp2(G4int h, G4int k, G4int l)
   G4double a2 = a * a, b2 = b * b, c2 = c * c;
   G4double h2 = h * h, k2 = k * k, l2 = l * l;
 
-  switch (GetLatticeSystem()) {
+  switch (GetLatticeSystem())
+  {
     case Amorphous:
       return 0.;
       break;
@@ -522,8 +547,8 @@ G4double G4CrystalUnitCell::GetRecIntSp2(G4int h, G4int k, G4int l)
       return h2 * a2 + k2 * b2 + l2 * c2 + 2. * h * l * a * c * cosbr;
       break;
     case Triclinic:
-      return h2 * a2 + k2 * b2 + l2 * c2 + 2. * k * l * b * c * cosar + 2. * l * h * c * a * cosbr +
-             2. * h * k * a * b * cosgr;
+      return h2 * a2 + k2 * b2 + l2 * c2 + 2. * k * l * b * c * cosar + 2. * l * h * c * a * cosbr
+             + 2. * h * k * a * b * cosgr;
       break;
     case Hexagonal:
       return (h2 + k2 + h * k) * a2 + l2 * c2;
@@ -557,13 +582,14 @@ G4double G4CrystalUnitCell::GetIntCosAng(G4int h1, G4int k1, G4int l1, G4int h2,
   G4double a = theRecSize[0], b = theRecSize[1], c = theRecSize[2];
   G4double a2 = a * a, b2 = b * b, c2 = c * c;
   G4double dsp1dsp2;
-  switch (GetLatticeSystem()) {
+  switch (GetLatticeSystem())
+  {
     case Amorphous:
       return 0.;
       break;
     case Cubic:
-      return (h1 * h2 + k1 * k2 + l1 * l2) /
-             (std::sqrt(h1 * h1 + k1 * k1 + l1 * l1) * std::sqrt(h2 * h2 + k2 * k2 + l2 * l2));
+      return (h1 * h2 + k1 * k2 + l1 * l2)
+             / (std::sqrt(h1 * h1 + k1 * k1 + l1 * l1) * std::sqrt(h2 * h2 + k2 * k2 + l2 * l2));
       break;
     case Tetragonal:
       dsp1dsp2 = std::sqrt(GetIntSp2(h1, k1, l1) * GetIntSp2(h2, k2, l2));
@@ -575,21 +601,21 @@ G4double G4CrystalUnitCell::GetIntCosAng(G4int h1, G4int k1, G4int l1, G4int h2,
       break;
     case Rhombohedral:
       dsp1dsp2 = std::sqrt(GetIntSp2(h1, k1, l1) * GetIntSp2(h2, k2, l2));
-      return dsp1dsp2 *
-             (h1 * h2 * a2 + k1 * k2 * b2 + l1 * l2 * c2 + (k1 * l2 + k2 * l1) * b * c * cosar +
-               (h1 * l2 + h2 * l1) * a * c * cosbr + (h1 * k2 + h2 * k1) * a * b * cosgr);
+      return dsp1dsp2
+             * (h1 * h2 * a2 + k1 * k2 * b2 + l1 * l2 * c2 + (k1 * l2 + k2 * l1) * b * c * cosar
+                + (h1 * l2 + h2 * l1) * a * c * cosbr + (h1 * k2 + h2 * k1) * a * b * cosgr);
       break;
     case Monoclinic:
       dsp1dsp2 = std::sqrt(GetIntSp2(h1, k1, l1) * GetIntSp2(h2, k2, l2));
-      return dsp1dsp2 *
-             (h1 * h2 * a2 + k1 * k2 * b2 + l1 * l2 * c2 + (k1 * l2 + k2 * l1) * b * c * cosar +
-               (h1 * l2 + h2 * l1) * a * c * cosbr + (h1 * k2 + h2 * k1) * a * b * cosgr);
+      return dsp1dsp2
+             * (h1 * h2 * a2 + k1 * k2 * b2 + l1 * l2 * c2 + (k1 * l2 + k2 * l1) * b * c * cosar
+                + (h1 * l2 + h2 * l1) * a * c * cosbr + (h1 * k2 + h2 * k1) * a * b * cosgr);
       break;
     case Triclinic:
       dsp1dsp2 = std::sqrt(GetIntSp2(h1, k1, l1) * GetIntSp2(h2, k2, l2));
-      return dsp1dsp2 *
-             (h1 * h2 * a2 + k1 * k2 * b2 + l1 * l2 * c2 + (k1 * l2 + k2 * l1) * b * c * cosar +
-               (h1 * l2 + h2 * l1) * a * c * cosbr + (h1 * k2 + h2 * k1) * a * b * cosgr);
+      return dsp1dsp2
+             * (h1 * h2 * a2 + k1 * k2 * b2 + l1 * l2 * c2 + (k1 * l2 + k2 * l1) * b * c * cosar
+                + (h1 * l2 + h2 * l1) * a * c * cosbr + (h1 * k2 + h2 * k1) * a * b * cosgr);
       break;
     case Hexagonal:
       dsp1dsp2 = std::sqrt(GetIntSp2(h1, k1, l1) * GetIntSp2(h2, k2, l2));

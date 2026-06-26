@@ -34,7 +34,7 @@
 //		combined "add()" function to put two of these together.
 // 20100716  M. Kelsey -- Add interface to handle G4CascadParticles
 // 20100924  M. Kelsey -- Use "OutgoingNuclei" name consistently, replacing
-//		old "TargetFragment".  Add new (reusable) G4Fragment buffer 
+//		old "TargetFragment".  Add new (reusable) G4Fragment buffer
 //		and access functions for initial post-cascade processing.
 //		Move implementation of add() to .cc file.
 // 20100925  M. Kelsey -- Add function to process G4ReactionProduct list
@@ -55,8 +55,9 @@
 #include "G4LorentzRotation.hh"
 #include "G4ReactionProductVector.hh"
 #include "G4ios.hh"
-#include <iosfwd>
+
 #include <algorithm>
+#include <iosfwd>
 #include <vector>
 
 class G4CascadParticle;
@@ -64,132 +65,125 @@ class G4LorentzConvertor;
 
 class G4CollisionOutput
 {
- public:
+  public:
 
-  G4CollisionOutput();
-  G4CollisionOutput& operator=(const G4CollisionOutput& right);
+    G4CollisionOutput();
+    G4CollisionOutput& operator=(const G4CollisionOutput& right);
 
-  void setVerboseLevel(G4int verbose) { verboseLevel = verbose; };
+    void setVerboseLevel(G4int verbose) { verboseLevel = verbose; };
 
-  // ===== Accumulate contents of lists =====
+    // ===== Accumulate contents of lists =====
 
-  void reset();		// Empties lists for new event
+    void reset();  // Empties lists for new event
 
-  void add(const G4CollisionOutput& right);	// Merge complete objects
+    void add(const G4CollisionOutput& right);  // Merge complete objects
 
-  void addOutgoingParticle(const G4InuclElementaryParticle& particle) {
-    outgoingParticles.push_back(particle);
-  }
+    void addOutgoingParticle(const G4InuclElementaryParticle& particle)
+    {
+      outgoingParticles.push_back(particle);
+    }
 
-  void addOutgoingParticles(const std::vector<G4InuclElementaryParticle>& particles);
+    void addOutgoingParticles(const std::vector<G4InuclElementaryParticle>& particles);
 
-  void addOutgoingNucleus(const G4InuclNuclei& nuclei) {
-    outgoingNuclei.push_back(nuclei);
-  };
+    void addOutgoingNucleus(const G4InuclNuclei& nuclei) { outgoingNuclei.push_back(nuclei); };
 
-  void addOutgoingNuclei(const std::vector<G4InuclNuclei>& nuclea);
+    void addOutgoingNuclei(const std::vector<G4InuclNuclei>& nuclea);
 
-  // These are primarily for G4IntraNucleiCascader internal checks
-  void addOutgoingParticle(const G4CascadParticle& cparticle);
-  void addOutgoingParticles(const std::vector<G4CascadParticle>& cparticles);
+    // These are primarily for G4IntraNucleiCascader internal checks
+    void addOutgoingParticle(const G4CascadParticle& cparticle);
+    void addOutgoingParticles(const std::vector<G4CascadParticle>& cparticles);
 
-  void addOutgoingParticles(const G4ReactionProductVector* rproducts);
+    void addOutgoingParticles(const G4ReactionProductVector* rproducts);
 
-  // Special buffer for initial, possible unstable fragments from cascade
-  void addRecoilFragment(const G4Fragment* aFragment) {
-    if (aFragment) addRecoilFragment(*aFragment);
-  }
+    // Special buffer for initial, possible unstable fragments from cascade
+    void addRecoilFragment(const G4Fragment* aFragment)
+    {
+      if (aFragment) addRecoilFragment(*aFragment);
+    }
 
-  void addRecoilFragment(const G4Fragment& aFragment) {
-    recoilFragments.push_back(aFragment);
-  }
-  
-  // ===== Remove contents of lists, by index, reference or value  =====
+    void addRecoilFragment(const G4Fragment& aFragment) { recoilFragments.push_back(aFragment); }
 
-  void removeOutgoingParticle(G4int index);
-  void removeOutgoingParticle(const G4InuclElementaryParticle& particle);
-  void removeOutgoingParticle(const G4InuclElementaryParticle* particle) {
-    if (particle) removeOutgoingParticle(*particle);
-  }
+    // ===== Remove contents of lists, by index, reference or value  =====
 
-  void removeOutgoingNucleus(G4int index);
-  void removeOutgoingNucleus(const G4InuclNuclei& nuclei);
-  void removeOutgoingNucleus(const G4InuclNuclei* nuclei) {
-    if (nuclei) removeOutgoingNucleus(*nuclei);
-  }
+    void removeOutgoingParticle(G4int index);
+    void removeOutgoingParticle(const G4InuclElementaryParticle& particle);
+    void removeOutgoingParticle(const G4InuclElementaryParticle* particle)
+    {
+      if (particle) removeOutgoingParticle(*particle);
+    }
 
-  void removeRecoilFragment(G4int index=-1);	// No argument removes all
+    void removeOutgoingNucleus(G4int index);
+    void removeOutgoingNucleus(const G4InuclNuclei& nuclei);
+    void removeOutgoingNucleus(const G4InuclNuclei* nuclei)
+    {
+      if (nuclei) removeOutgoingNucleus(*nuclei);
+    }
 
-  // ===== Access contents of lists =====
+    void removeRecoilFragment(G4int index = -1);  // No argument removes all
 
-  G4int numberOfOutgoingParticles() const { return (G4int)outgoingParticles.size(); }
-    
-  const std::vector<G4InuclElementaryParticle>& getOutgoingParticles() const {
-    return outgoingParticles;
-  };
+    // ===== Access contents of lists =====
 
-  std::vector<G4InuclElementaryParticle>& getOutgoingParticles() {
-    return outgoingParticles;
-  };
+    G4int numberOfOutgoingParticles() const { return (G4int)outgoingParticles.size(); }
 
-  G4int numberOfOutgoingNuclei() const { return (G4int)outgoingNuclei.size(); };
- 
-  const std::vector<G4InuclNuclei>& getOutgoingNuclei() const {
-    return outgoingNuclei;
-  };
+    const std::vector<G4InuclElementaryParticle>& getOutgoingParticles() const
+    {
+      return outgoingParticles;
+    };
 
-  std::vector<G4InuclNuclei>& getOutgoingNuclei() { return outgoingNuclei; };
+    std::vector<G4InuclElementaryParticle>& getOutgoingParticles() { return outgoingParticles; };
 
-  G4int numberOfFragments() const { return (G4int)recoilFragments.size(); }
+    G4int numberOfOutgoingNuclei() const { return (G4int)outgoingNuclei.size(); };
 
-  const G4Fragment& getRecoilFragment(G4int index=0) const;
+    const std::vector<G4InuclNuclei>& getOutgoingNuclei() const { return outgoingNuclei; };
 
-  const std::vector<G4Fragment>& getRecoilFragments() const {
-    return recoilFragments;
-  };
+    std::vector<G4InuclNuclei>& getOutgoingNuclei() { return outgoingNuclei; };
 
-  std::vector<G4Fragment>& getRecoilFragments() { return recoilFragments; };
+    G4int numberOfFragments() const { return (G4int)recoilFragments.size(); }
 
-  // ===== Get event totals for conservation checking, recoil, etc. ======
+    const G4Fragment& getRecoilFragment(G4int index = 0) const;
 
-  G4LorentzVector getTotalOutputMomentum() const;
-  G4int getTotalCharge() const;			// NOTE:  No fractional charges!
-  G4int getTotalBaryonNumber() const;
-  G4int getTotalStrangeness() const;
+    const std::vector<G4Fragment>& getRecoilFragments() const { return recoilFragments; };
 
-  void printCollisionOutput(std::ostream& os=G4cout) const;
+    std::vector<G4Fragment>& getRecoilFragments() { return recoilFragments; };
 
-  // ===== Manipulate final-state particles for kinematics =====
+    // ===== Get event totals for conservation checking, recoil, etc. ======
 
-  void boostToLabFrame(const G4LorentzConvertor& convertor);
-  G4LorentzVector boostToLabFrame(G4LorentzVector mom,	// Note pass by value!
-				  const G4LorentzConvertor& convertor) const;
+    G4LorentzVector getTotalOutputMomentum() const;
+    G4int getTotalCharge() const;  // NOTE:  No fractional charges!
+    G4int getTotalBaryonNumber() const;
+    G4int getTotalStrangeness() const;
 
-  void rotateEvent(const G4LorentzRotation& rotate);
-  void trivialise(G4InuclParticle* bullet, G4InuclParticle* target);
-  void setOnShell(G4InuclParticle* bullet, G4InuclParticle* target);
-  void setRemainingExitationEnergy();
+    void printCollisionOutput(std::ostream& os = G4cout) const;
 
-  G4double getRemainingExitationEnergy() const { return eex_rest; };
-  G4bool acceptable() const { return on_shell; };
+    // ===== Manipulate final-state particles for kinematics =====
 
- private: 
+    void boostToLabFrame(const G4LorentzConvertor& convertor);
+    G4LorentzVector boostToLabFrame(G4LorentzVector mom,  // Note pass by value!
+                                    const G4LorentzConvertor& convertor) const;
 
-  G4int verboseLevel;
+    void rotateEvent(const G4LorentzRotation& rotate);
+    void trivialise(G4InuclParticle* bullet, G4InuclParticle* target);
+    void setOnShell(G4InuclParticle* bullet, G4InuclParticle* target);
+    void setRemainingExitationEnergy();
 
-  std::vector<G4InuclElementaryParticle> outgoingParticles;
-  std::vector<G4InuclNuclei> outgoingNuclei;
-  std::vector<G4Fragment> recoilFragments;
-  static const G4Fragment emptyFragment;	// To return if list empty
+    G4double getRemainingExitationEnergy() const { return eex_rest; };
+    G4bool acceptable() const { return on_shell; };
 
-  std::pair<std::pair<G4int,G4int>, G4int> selectPairToTune(G4double de) const; 
-  G4bool tuneSelectedPair(G4LorentzVector& mom1, G4LorentzVector& mom2,
-			  G4int mom_index) const;
+  private:
 
-  G4double eex_rest;		// Used by setOnShell() for kinematics
-  G4LorentzVector mom_non_cons;
-  G4bool on_shell;
-};        
+    G4int verboseLevel;
 
-#endif // G4COLLISION_OUTPUT_HH 
+    std::vector<G4InuclElementaryParticle> outgoingParticles;
+    std::vector<G4InuclNuclei> outgoingNuclei;
+    std::vector<G4Fragment> recoilFragments;
+    static const G4Fragment emptyFragment;  // To return if list empty
 
+    std::pair<std::pair<G4int, G4int>, G4int> selectPairToTune(G4double de) const;
+    G4bool tuneSelectedPair(G4LorentzVector& mom1, G4LorentzVector& mom2, G4int mom_index) const;
+
+    G4double eex_rest;  // Used by setOnShell() for kinematics
+    G4LorentzVector mom_non_cons;
+    G4bool on_shell;
+};
+
+#endif  // G4COLLISION_OUTPUT_HH

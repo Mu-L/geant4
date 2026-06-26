@@ -59,8 +59,9 @@ G4DNAIndependentReactionTimeStepper::G4DNAIndependentReactionTimeStepper()
 
 void G4DNAIndependentReactionTimeStepper::Prepare()
 {
-  //fVerbose = G4Scheduler::Instance()->GetVerbose();
-  if (G4Scheduler::Instance()->IsInteractionStep()) {
+  // fVerbose = G4Scheduler::Instance()->GetVerbose();
+  if (G4Scheduler::Instance()->IsInteractionStep())
+  {
     fReactionSet->CleanAllReaction();
     fIsInitialized = false;
     fSampledPositions.clear();
@@ -83,7 +84,8 @@ G4double G4DNAIndependentReactionTimeStepper::CalculateStep(const G4Track& track
   fCheckedTracks.insert(trackA.GetTrackID());
 
 #ifdef G4VERBOSE
-  if (fVerbose > 1) {
+  if (fVerbose > 1)
+  {
     G4cout << "________________________________________________________________"
               "_______"
            << G4endl;
@@ -97,8 +99,10 @@ G4double G4DNAIndependentReactionTimeStepper::CalculateStep(const G4Track& track
 
   const auto pReactantList = fMolecularReactionTable->CanReactWith(pMolConfA);
 
-  if (pReactantList == nullptr) {
-    if (fVerbose > 1) {
+  if (pReactantList == nullptr)
+  {
+    if (fVerbose > 1)
+    {
       G4ExceptionDescription msg;
       msg << "G4DNAIndependentReactionTimeStepper::CalculateStep will return infinity "
              "for the reaction because the molecule "
@@ -112,8 +116,10 @@ G4double G4DNAIndependentReactionTimeStepper::CalculateStep(const G4Track& track
 
   auto nbReactives = (G4int)pReactantList->size();
 
-  if (nbReactives == 0) {
-    if (fVerbose > 1) {
+  if (nbReactives == 0)
+  {
+    if (fVerbose > 1)
+    {
       G4ExceptionDescription msg;
       msg << "G4DNAIndependentReactionTimeStepper::CalculateStep will "
              "return infinity "
@@ -128,7 +134,8 @@ G4double G4DNAIndependentReactionTimeStepper::CalculateStep(const G4Track& track
     return DBL_MAX;
   }
   fReactionModel->Initialise(pMolConfA, trackA);
-  for (G4int i = 0; i < nbReactives; ++i) {
+  for (G4int i = 0; i < nbReactives; ++i)
+  {
     auto pMoleculeB = (*pReactantList)[i];
     G4int key = pMoleculeB->GetMoleculeID();
     fRCutOff = G4IRTUtils::GetRCutOff();
@@ -139,16 +146,20 @@ G4double G4DNAIndependentReactionTimeStepper::CalculateStep(const G4Track& track
     resultIndices.clear();
     G4ChemicalMoleculeFinder::Instance()->FindNearestInRange(trackA, key, fRCutOff, resultIndices);
 
-    if (resultIndices.empty()) {
+    if (resultIndices.empty())
+    {
       continue;
     }
-    for (auto& it : resultIndices) {
+    for (auto& it : resultIndices)
+    {
       G4Track* pTrackB = *(std::get<0>(it));
 
-      if (pTrackB == &trackA) {
+      if (pTrackB == &trackA)
+      {
         continue;
       }
-      if (pTrackB == nullptr) {
+      if (pTrackB == nullptr)
+      {
         G4ExceptionDescription exceptionDescription;
         exceptionDescription << "No trackB no valid";
         G4Exception(
@@ -156,7 +167,8 @@ G4double G4DNAIndependentReactionTimeStepper::CalculateStep(const G4Track& track
           "::CalculateStep()",
           "G4DNAIndependentReactionTimeStepper007", FatalException, exceptionDescription);
       }
-      if (fCheckedTracks.find(pTrackB->GetTrackID()) != fCheckedTracks.end()) {
+      if (fCheckedTracks.find(pTrackB->GetTrackID()) != fCheckedTracks.end())
+      {
         continue;
       }
 
@@ -164,17 +176,22 @@ G4double G4DNAIndependentReactionTimeStepper::CalculateStep(const G4Track& track
       auto pMolB = GetMolecule(pTrackB);
       auto pMolConfB = pMolB->GetMolecularConfiguration();
       G4double distance = (trackA.GetPosition() - pTrackB->GetPosition()).mag();
-      if (distance * distance < Reff * Reff) {
+      if (distance * distance < Reff * Reff)
+      {
         auto reactionData = fMolecularReactionTable->GetReactionData(pMolConfA, pMolConfB);
-        if (G4Scheduler::Instance()->GetGlobalTime() == G4Scheduler::Instance()->GetStartTime()) {
-          if (reactionData->GetProbability() > G4UniformRand()) {
+        if (G4Scheduler::Instance()->GetGlobalTime() == G4Scheduler::Instance()->GetStartTime())
+        {
+          if (reactionData->GetProbability() > G4UniformRand())
+          {
             fSampledMinTimeStep = 0.;
           }
         }
       }
-      else {
+      else
+      {
         G4double tempMinET = GetTimeToEncounter(trackA, *pTrackB);
-        if (tempMinET < 0 || tempMinET > G4Scheduler::Instance()->GetEndTime()) {
+        if (tempMinET < 0 || tempMinET > G4Scheduler::Instance()->GetEndTime())
+        {
           continue;
         }
         fSampledMinTimeStep = tempMinET;
@@ -183,9 +200,9 @@ G4double G4DNAIndependentReactionTimeStepper::CalculateStep(const G4Track& track
         // the same minTimeStep(The MinTimeStep is used to optimize the chemistry).
         // TODO: full test
 
-        //if (tempMinET < fUserMinTimeStep) {
-        //  fSampledMinTimeStep = fUserMinTimeStep;
-        //}
+        // if (tempMinET < fUserMinTimeStep) {
+        //   fSampledMinTimeStep = fUserMinTimeStep;
+        // }
       }
       CheckAndRecordResults(fSampledMinTimeStep, utils);
     }
@@ -196,11 +213,13 @@ G4double G4DNAIndependentReactionTimeStepper::CalculateStep(const G4Track& track
 void G4DNAIndependentReactionTimeStepper::CheckAndRecordResults(G4double reactionTime,
                                                                 const Utils& utils)
 {
-  if (utils.fpTrackB->GetTrackStatus() != fAlive) {
+  if (utils.fpTrackB->GetTrackStatus() != fAlive)
+  {
     return;
   }
 
-  if (&utils.fpTrackB == &utils.fpTrackA) {
+  if (&utils.fpTrackB == &utils.fpTrackA)
+  {
     G4ExceptionDescription msg;
     msg << "A track is reacting with itself"
            " (which is impossible) ie fpTrackA == trackB"
@@ -234,7 +253,8 @@ void G4DNAIndependentReactionTimeStepper::CheckAndRecordResults(G4double reactio
     G4Exception("G4DNAIndependentReactionTimeStepper::RetrieveResults",
                 "G4DNAIndependentReactionTimeStepper004", FatalErrorInArgument, msg);
   }
-  if (reactionTime < 0) {
+  if (reactionTime < 0)
+  {
     // DEBUG
     G4ExceptionDescription msg;
     msg << "The interacting tracks are not in good time" << G4endl;
@@ -263,12 +283,14 @@ void G4DNAIndependentReactionTimeStepper::CheckAndRecordResults(G4double reactio
 std::unique_ptr<G4ITReactionChange> G4DNAIndependentReactionTimeStepper::FindReaction(
   G4ITReactionSet* pReactionSet, G4double& currentStepTime, const G4double globalTime)
 {
-  if (pReactionSet == nullptr) {
+  if (pReactionSet == nullptr)
+  {
     return nullptr;
   }
 
   G4ITReactionPerTime& reactionPerTime = pReactionSet->GetReactionsPerTime();
-  if (reactionPerTime.empty()) {
+  if (reactionPerTime.empty())
+  {
     return nullptr;
   }
   for (auto reaction_i = reactionPerTime.begin(); reaction_i != reactionPerTime.end();
@@ -276,16 +298,19 @@ std::unique_ptr<G4ITReactionChange> G4DNAIndependentReactionTimeStepper::FindRea
   {
     G4Track* pTrackA = (*reaction_i)->GetReactants().first;
     currentStepTime = DBL_MAX;
-    if (pTrackA->GetTrackStatus() == fStopAndKill) {
+    if (pTrackA->GetTrackStatus() == fStopAndKill)
+    {
       continue;
     }
     G4Track* pTrackB = (*reaction_i)->GetReactant(pTrackA);
     currentStepTime = DBL_MAX;
-    if (pTrackB->GetTrackStatus() == fStopAndKill) {
+    if (pTrackB->GetTrackStatus() == fStopAndKill)
+    {
       continue;
     }
 
-    if (pTrackB == pTrackA) {
+    if (pTrackB == pTrackA)
+    {
       G4ExceptionDescription msg;
       msg << "The IT reaction process sent back a reaction "
              "between trackA and trackB. ";
@@ -294,14 +319,15 @@ std::unique_ptr<G4ITReactionChange> G4DNAIndependentReactionTimeStepper::FindRea
                   "G4DNAIndependentReactionTimeStepper02", FatalErrorInArgument, msg);
     }
     G4double reactionTime = (*reaction_i)->GetTime();
-    currentStepTime =  reactionTime - globalTime;
-    if(fVerbose > 1)
-    G4cout << " reaction Time : " << reactionTime << "  currentStepTime : " << currentStepTime
-           << " globalTime : " << globalTime << "  " << pTrackA->GetTrackID() << " + "
-           << pTrackB->GetTrackID() << G4endl;
+    currentStepTime = reactionTime - globalTime;
+    if (fVerbose > 1)
+      G4cout << " reaction Time : " << reactionTime << "  currentStepTime : " << currentStepTime
+             << " globalTime : " << globalTime << "  " << pTrackA->GetTrackID() << " + "
+             << pTrackB->GetTrackID() << G4endl;
 
     pReactionSet->SelectThisReaction(*reaction_i);
-    if (fpReactionProcess != nullptr) {
+    if (fpReactionProcess != nullptr)
+    {
       if ((fSampledPositions.find(pTrackA->GetTrackID()) == fSampledPositions.end()
            && (fSampledPositions.find(pTrackB->GetTrackID()) == fSampledPositions.end())))
       {
@@ -314,13 +340,16 @@ std::unique_ptr<G4ITReactionChange> G4DNAIndependentReactionTimeStepper::FindRea
       pTrackA->SetPosition(fSampledPositions[pTrackA->GetTrackID()]);
       pTrackB->SetPosition(fSampledPositions[pTrackB->GetTrackID()]);
       auto pReactionChange = fpReactionProcess->MakeReaction(*pTrackA, *pTrackB);
-      if (pReactionChange == nullptr) {
+      if (pReactionChange == nullptr)
+      {
         return nullptr;
       }
       G4int nbSecondaries = pReactionChange->GetNumberOfSecondaries();
-      if (nbSecondaries > 0) {
+      if (nbSecondaries > 0)
+      {
         const std::vector<G4Track*>* productsVector = pReactionChange->GetfSecondary();
-        for (const auto& it : *productsVector) {
+        for (const auto& it : *productsVector)
+        {
           fSecondaries.push_back(it);
         }
       }
@@ -362,20 +391,24 @@ G4double G4DNAIndependentReactionTimeStepper::CalculateMinTimeStep(G4double curr
 {
   G4double fTSTimeStep = DBL_MAX;
   // fUserMinTimeStep = definedMinTimeStep;
-  if (!fIsInitialized) {
+  if (!fIsInitialized)
+  {
     InitializeReactions(currentGlobalTime);
   }
 
   G4int nbPreviousSecondaries = (G4int)fSecondaries.size();
-  if (nbPreviousSecondaries > 0) {
+  if (nbPreviousSecondaries > 0)
+  {
     InitializeForNewTrack();
-    for (const auto& it : fSecondaries) {
+    for (const auto& it : fSecondaries)
+    {
       CalculateStep(*it, fUserMinTimeStep);
     }
     fSecondaries.clear();
   }
   fTSTimeStep = GetNextReactionTime() - currentGlobalTime;
-  if (fTSTimeStep < 0) {
+  if (fTSTimeStep < 0)
+  {
     G4ExceptionDescription msg;
     msg << "fTSTimeStep < 0" << ": fTSTimeStep : " << fTSTimeStep
         << " GetNextReactionTime() : " << GetNextReactionTime()
@@ -389,8 +422,10 @@ G4double G4DNAIndependentReactionTimeStepper::CalculateMinTimeStep(G4double curr
 void G4DNAIndependentReactionTimeStepper::InitializeReactions(G4double /*currentGlobalTime*/)
 {
   fCheckedTracks.clear();
-  for (auto pTrack : *fpTrackContainer->GetMainList()) {
-    if (pTrack == nullptr) {
+  for (auto pTrack : *fpTrackContainer->GetMainList())
+  {
+    if (pTrack == nullptr)
+    {
       G4ExceptionDescription msg;
       msg << "No track found.";
       G4Exception("G4DNAIndependentReactionTimeStepper::InitializeReactions",
@@ -399,7 +434,8 @@ void G4DNAIndependentReactionTimeStepper::InitializeReactions(G4double /*current
     }
 
     G4TrackStatus trackStatus = pTrack->GetTrackStatus();
-    if (trackStatus == fStopAndKill || trackStatus == fStopButAlive) {
+    if (trackStatus == fStopAndKill || trackStatus == fStopButAlive)
+    {
       continue;
     }
     CalculateStep(*pTrack, fUserMinTimeStep);
@@ -415,7 +451,8 @@ G4double G4DNAIndependentReactionTimeStepper::GetNextReactionTime()
 {
   G4double output = DBL_MAX;
   auto nextReaction = GetNextReaction();
-  if (nextReaction != nullptr) {
+  if (nextReaction != nullptr)
+  {
     output = GetNextReaction()->GetTime();
   }
   return output;
@@ -426,7 +463,8 @@ const G4ITReaction* G4DNAIndependentReactionTimeStepper::GetNextReaction()
   G4ITReaction* output = nullptr;
   G4ITReactionPerTime& reactionPerTime = fReactionSet->GetReactionsPerTime();
   auto reaction_i = reactionPerTime.begin();
-  if (reaction_i != reactionPerTime.end()) {
+  if (reaction_i != reactionPerTime.end())
+  {
     output = (reaction_i->get());
   }
   return output;

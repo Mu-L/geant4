@@ -36,12 +36,10 @@ using namespace G4Analysis;
 
 // Specialization for P1 type
 
-
 //_____________________________________________________________________________
-template <>
+template<>
 tools::histo::p1d* G4THnToolsManager<kDim2, tools::histo::p1d>::CreateToolsHT(
-  const G4String& title,
-  const std::array<G4HnDimension, kDim2>& bins,
+  const G4String& title, const std::array<G4HnDimension, kDim2>& bins,
   const std::array<G4HnDimensionInformation, kDim2>& hnInfo)
 {
   // Apply hn information to bins
@@ -50,29 +48,28 @@ tools::histo::p1d* G4THnToolsManager<kDim2, tools::histo::p1d>::CreateToolsHT(
   auto newYBins(bins[kY]);
   UpdateValues(newYBins, hnInfo[kY]);
 
-  if (hnInfo[kX].fBinScheme == G4BinScheme::kLinear) {
-    if ( newYBins.fMinValue == 0. && newYBins.fMaxValue == 0.) {
-      return new tools::histo::p1d(
-        title, newXBins.fNBins, newXBins.fMinValue, newXBins.fMaxValue);
+  if (hnInfo[kX].fBinScheme == G4BinScheme::kLinear)
+  {
+    if (newYBins.fMinValue == 0. && newYBins.fMaxValue == 0.)
+    {
+      return new tools::histo::p1d(title, newXBins.fNBins, newXBins.fMinValue, newXBins.fMaxValue);
     }
-    return new tools::histo::p1d(
-      title, newXBins.fNBins, newXBins.fMinValue, newXBins.fMaxValue,
-      newYBins.fMinValue, newYBins.fMaxValue);
+    return new tools::histo::p1d(title, newXBins.fNBins, newXBins.fMinValue, newXBins.fMaxValue,
+                                 newYBins.fMinValue, newYBins.fMaxValue);
   }
 
-  if ( newYBins.fMinValue == 0. && newYBins.fMaxValue == 0.) {
+  if (newYBins.fMinValue == 0. && newYBins.fMaxValue == 0.)
+  {
     return new tools::histo::p1d(title, newXBins.fEdges);
   }
 
-  return new tools::histo::p1d(title, newXBins.fEdges,
-    newYBins.fMinValue, newYBins.fMaxValue);
+  return new tools::histo::p1d(title, newXBins.fEdges, newYBins.fMinValue, newYBins.fMaxValue);
 }
 
 //_____________________________________________________________________________
-template <>
+template<>
 void G4THnToolsManager<kDim2, tools::histo::p1d>::ConfigureToolsHT(
-  tools::histo::p1d* ht,
-  const std::array<G4HnDimension, kDim2>& bins,
+  tools::histo::p1d* ht, const std::array<G4HnDimension, kDim2>& bins,
   const std::array<G4HnDimensionInformation, kDim2>& hnInfo)
 {
   // Apply hn information to bins
@@ -81,31 +78,33 @@ void G4THnToolsManager<kDim2, tools::histo::p1d>::ConfigureToolsHT(
   auto newYBins(bins[kY]);
   UpdateValues(newYBins, hnInfo[kY]);
 
-  if (hnInfo[kX].fBinScheme == G4BinScheme::kLinear) {
-    if ( newYBins.fMinValue == 0. && newYBins.fMaxValue == 0.) {
-      ht->configure(
-            newXBins.fNBins, newXBins.fMinValue, newXBins.fMaxValue);
+  if (hnInfo[kX].fBinScheme == G4BinScheme::kLinear)
+  {
+    if (newYBins.fMinValue == 0. && newYBins.fMaxValue == 0.)
+    {
+      ht->configure(newXBins.fNBins, newXBins.fMinValue, newXBins.fMaxValue);
       return;
     }
-    ht->configure(
-          newXBins.fNBins, newXBins.fMinValue, newXBins.fMaxValue,
-          newYBins.fMinValue, newYBins.fMaxValue);
+    ht->configure(newXBins.fNBins, newXBins.fMinValue, newXBins.fMaxValue, newYBins.fMinValue,
+                  newYBins.fMaxValue);
     return;
   }
 
-  if ( newYBins.fMinValue == 0. && newYBins.fMaxValue == 0.) {
+  if (newYBins.fMinValue == 0. && newYBins.fMaxValue == 0.)
+  {
     ht->configure(newXBins.fEdges);
-  return;
+    return;
   }
   ht->configure(newXBins.fEdges, newYBins.fMinValue, newYBins.fMaxValue);
   return;
 }
 
 //_____________________________________________________________________________
-template <>
-G4bool G4THnToolsManager<kDim2, tools::histo::p1d>::FillHT(
-  tools::histo::p1d* ht, const G4HnInformation& hnInformation, 
-  std::array<G4double, kDim2>& value, G4double weight)
+template<>
+G4bool G4THnToolsManager<kDim2, tools::histo::p1d>::FillHT(tools::histo::p1d* ht,
+                                                           const G4HnInformation& hnInformation,
+                                                           std::array<G4double, kDim2>& value,
+                                                           G4double weight)
 {
   const auto& xInfo = hnInformation.GetHnDimensionInformation(kX);
   const auto& yInfo = hnInformation.GetHnDimensionInformation(kY);
@@ -121,20 +120,20 @@ G4bool G4THnToolsManager<kDim2, tools::histo::p1d>::FillHT(
 }
 
 //_____________________________________________________________________________
-template <>
-G4bool G4THnToolsManager<kDim2, tools::histo::p1d>::WriteOnAscii(
-  std::ofstream& output)
+template<>
+G4bool G4THnToolsManager<kDim2, tools::histo::p1d>::WriteOnAscii(std::ofstream& output)
 {
-// Write selected objects on ASCII file
+  // Write selected objects on ASCII file
 
   // Do nothing if no histograms are selected
-  if ( ! GetHnManager()->IsAscii() ) return true;
+  if (!GetHnManager()->IsAscii()) return true;
 
   // Write p1 histograms
   auto id = GetHnManager()->GetFirstId();
-  for (const auto& [p1, info] : *GetTHnVector()) {
-
-    if ( (p1 == nullptr) || (! info->GetAscii()) ) {
+  for (const auto& [p1, info] : *GetTHnVector())
+  {
+    if ((p1 == nullptr) || (!info->GetAscii()))
+    {
       // skip writing
       // if p1 was deleted or writing ascii is not selected
       id++;
@@ -143,16 +142,15 @@ G4bool G4THnToolsManager<kDim2, tools::histo::p1d>::WriteOnAscii(
 
     Message(kVL3, "write on ascii", "p1d", info->GetName());
 
-    output << "\n  1D profile " << id++ << ": " << p1->title()
-           << "\n \n \t \t     X \t\t MeanY" << G4endl;
+    output << "\n  1D profile " << id++ << ": " << p1->title() << "\n \n \t \t     X \t\t MeanY"
+           << G4endl;
 
-    for (G4int j=0; j< G4int(p1->axis().bins()); ++j) {
-       auto sw = p1->bin_Sw(j);
-       auto svw = p1->bin_Svw(j);
-       auto mean = ( sw != 0. ) ?  (svw / sw) : 0.;
-       output << "  " << j << "\t"
-              << p1->axis().bin_center(j) << "\t"
-              << mean << G4endl;
+    for (G4int j = 0; j < G4int(p1->axis().bins()); ++j)
+    {
+      auto sw = p1->bin_Sw(j);
+      auto svw = p1->bin_Svw(j);
+      auto mean = (sw != 0.) ? (svw / sw) : 0.;
+      output << "  " << j << "\t" << p1->axis().bin_center(j) << "\t" << mean << G4endl;
     }
   }
 

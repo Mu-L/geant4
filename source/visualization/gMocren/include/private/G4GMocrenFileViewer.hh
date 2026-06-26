@@ -30,8 +30,8 @@
 //
 // GMocrenFile viewer - opens window, hard copy, etc.
 //
-#ifndef G4GMocrenFile_VIEWER_HH
-#define G4GMocrenFile_VIEWER_HH
+#ifndef G4GMOCRENFILE_VIEWER_HH
+#define G4GMOCRENFILE_VIEWER_HH
 
 #include "G4VViewer.hh"
 #include "globals.hh"
@@ -39,30 +39,31 @@
 class G4GMocrenFileSceneHandler;
 class G4GMocrenMessenger;
 
-class G4GMocrenFileViewer: public G4VViewer {
-public:
-  //----- constructor and destructor
-  G4GMocrenFileViewer  (G4GMocrenFileSceneHandler& scene, 
-			G4GMocrenMessenger & messenger,
-			const G4String& name = "");
-  virtual ~G4GMocrenFileViewer ();
+class G4GMocrenFileViewer : public G4VViewer
+{
+  public:
 
-  //----- overriding base class methods
-  void SetView(); // Do nothing. SendViewParameters will do its job. 
-  void ClearView();
-  void DrawView();
-  void ShowView();
+    //----- constructor and destructor
+    G4GMocrenFileViewer(G4GMocrenFileSceneHandler& scene, G4GMocrenMessenger& messenger,
+                        const G4String& name = "");
+    virtual ~G4GMocrenFileViewer();
 
-  //---- methods inherent to this class
-  const char* GetG4GddViewer() { return kG4GddViewer;}
-  const char* GetG4GddViewerInvocation() { return kG4GddViewerInvocation;}
+    //----- overriding base class methods
+    void SetView();  // Do nothing. SendViewParameters will do its job.
+    void ClearView();
+    void DrawView();
+    void ShowView();
 
-private:
-  G4GMocrenFileSceneHandler& kSceneHandler; // Reference to Graphics Scene for this view.
+    //---- methods inherent to this class
+    const char* GetG4GddViewer() { return kG4GddViewer; }
+    const char* GetG4GddViewerInvocation() { return kG4GddViewerInvocation; }
 
-  char  kG4GddViewer[32] ;
-  char  kG4GddViewerInvocation[64] ;
+  private:
 
+    G4GMocrenFileSceneHandler& kSceneHandler;  // Reference to Graphics Scene for this view.
+
+    char kG4GddViewer[32];
+    char kG4GddViewerInvocation[64];
 };
 
 #endif

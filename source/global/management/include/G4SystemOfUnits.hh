@@ -30,8 +30,8 @@
 
 // Author: G.Cosmo, CERN
 // --------------------------------------------------------------------
-#ifndef G4SystemOfUnits_hh
-#define G4SystemOfUnits_hh 1
+#ifndef G4SYSTEMOFUNITS_HH
+#define G4SYSTEMOFUNITS_HH
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
@@ -158,6 +158,6 @@ using CLHEP::us;
 using CLHEP::volt;
 using CLHEP::watt;
 using CLHEP::weber;
-using CLHEP::year;  
+using CLHEP::year;
 
 #endif

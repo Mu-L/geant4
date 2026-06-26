@@ -31,7 +31,7 @@
 // Author:        Vladimir Ivanchenko
 //
 // Creation date: 20 July 2009
-// 
+//
 // Modified:
 //
 //------------------------------------------------------------------------------
@@ -47,60 +47,55 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4NuclearStopping_h
-#define G4NuclearStopping_h 1
+#ifndef G4NUCLEARSTOPPING_HH
+#define G4NUCLEARSTOPPING_HH
 
-#include "G4VEmProcess.hh"
-#include "globals.hh"
-#include "G4Track.hh"
-#include "G4Step.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4GPILSelection.hh"
 #include "G4ParticleChangeForLoss.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4Step.hh"
+#include "G4Track.hh"
+#include "G4VEmProcess.hh"
+#include "globals.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class G4NuclearStopping : public G4VEmProcess
 {
+  public:  // with description
 
-public:    // with description
+    explicit G4NuclearStopping(const G4String& processName = "nuclearStopping");
 
-  explicit G4NuclearStopping(const G4String& processName="nuclearStopping");
+    ~G4NuclearStopping() override;
 
-  ~G4NuclearStopping() override;
+    // returns true for charged particles, false otherwise
+    G4bool IsApplicable(const G4ParticleDefinition& p) final;
 
-  // returns true for charged particles, false otherwise
-  G4bool IsApplicable (const G4ParticleDefinition& p) final;
+    // implementation of pure virtual method
+    G4double AlongStepGetPhysicalInteractionLength(const G4Track& track, G4double previousStepSize,
+                                                   G4double currentMinimumStep,
+                                                   G4double& proposedSafety,
+                                                   G4GPILSelection* selection) final;
 
-  // implementation of pure virtual method
-  G4double AlongStepGetPhysicalInteractionLength(
-                               const G4Track& track,
-			       G4double  previousStepSize,
-			       G4double  currentMinimumStep,
-			       G4double& proposedSafety,
-			       G4GPILSelection* selection) final;
+    // implementation of energy loss along step
+    G4VParticleChange* AlongStepDoIt(const G4Track& track, const G4Step& step) final;
 
-  // implementation of energy loss along step
-  G4VParticleChange* AlongStepDoIt(const G4Track& track,
-				   const G4Step&  step) final;
+    // print documentation in html format
+    void ProcessDescription(std::ostream&) const override;
 
-  // print documentation in html format
-  void ProcessDescription(std::ostream&) const override;
+  protected:
 
-protected:
+    // This function initialise process
+    void InitialiseProcess(const G4ParticleDefinition*) final;
 
-  // This function initialise process
-  void InitialiseProcess(const G4ParticleDefinition*) final;
+    // copy constructor and hide assignment operator
+    G4NuclearStopping(G4NuclearStopping&) = delete;
+    G4NuclearStopping& operator=(const G4NuclearStopping& right) = delete;
 
-  // copy constructor and hide assignment operator
-  G4NuclearStopping(G4NuclearStopping &) = delete;
-  G4NuclearStopping & operator=(const G4NuclearStopping &right) = delete;
+  private:
 
-private:       
-
-  G4ParticleChangeForLoss nParticleChange;
-  G4bool isInitialized;
-
+    G4ParticleChangeForLoss nParticleChange;
+    G4bool isInitialized;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

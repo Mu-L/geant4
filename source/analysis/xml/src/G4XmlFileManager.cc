@@ -27,9 +27,10 @@
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
 #include "G4XmlFileManager.hh"
-#include "G4XmlHnFileManager.hh"
+
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
+#include "G4XmlHnFileManager.hh"
 
 #include "tools/waxml/begend"
 
@@ -38,7 +39,7 @@ using namespace tools;
 
 //_____________________________________________________________________________
 G4XmlFileManager::G4XmlFileManager(const G4AnalysisManagerState& state)
- : G4VTFileManager<std::ofstream>(state)
+  : G4VTFileManager<std::ofstream>(state)
 {
   // Create helpers defined in the base class
   fH1FileManager = std::make_shared<G4XmlHnFileManager<histo::h1d>>(this);
@@ -57,15 +58,17 @@ G4String G4XmlFileManager::GetNtupleFileName(XmlNtupleDescription* ntupleDescrip
 {
   // get ntuple file name
   auto ntupleFileName = ntupleDescription->GetFileName();
-  if (ntupleFileName.size() != 0u) {
+  if (ntupleFileName.size() != 0u)
+  {
     // update filename per object per thread
     ntupleFileName =
-      GetTnFileName(ntupleFileName, GetFileType()/*, ntupleDescription->GetCycle()*/);
+      GetTnFileName(ntupleFileName, GetFileType() /*, ntupleDescription->GetCycle()*/);
   }
-  else {
+  else
+  {
     // compose ntuple file name from the default file name
     ntupleFileName = GetNtupleFileName(
-      ntupleDescription->GetNtupleBooking().name()/*, ntupleDescription->GetCycle()*/);
+      ntupleDescription->GetNtupleBooking().name() /*, ntupleDescription->GetCycle()*/);
   }
 
   return ntupleFileName;
@@ -79,7 +82,8 @@ G4String G4XmlFileManager::GetNtupleFileName(XmlNtupleDescription* ntupleDescrip
 std::shared_ptr<std::ofstream> G4XmlFileManager::CreateFileImpl(const G4String& fileName)
 {
   std::shared_ptr<std::ofstream> file = std::make_shared<std::ofstream>(fileName);
-  if ( file->fail() ) {
+  if (file->fail())
+  {
     Warn(G4String("Cannot create file ") + fileName, fkClass, "CreateFileImpl");
     return nullptr;
   }
@@ -98,7 +102,7 @@ G4bool G4XmlFileManager::WriteFileImpl(std::shared_ptr<std::ofstream> /*file*/)
 //_____________________________________________________________________________
 G4bool G4XmlFileManager::CloseFileImpl(std::shared_ptr<std::ofstream> file)
 {
-  if ( ! file ) return false;
+  if (!file) return false;
 
   // close file
   waxml::end(*file);
@@ -115,19 +119,22 @@ G4bool G4XmlFileManager::CloseFileImpl(std::shared_ptr<std::ofstream> file)
 G4bool G4XmlFileManager::OpenFile(const G4String& fileName)
 {
   // Keep and locks file name
-  fFileName =  fileName;
+  fFileName = fileName;
   auto name = GetFullFileName(fFileName);
 
-  if ( fFile ) {
+  if (fFile)
+  {
     Warn(G4String("File ") + fileName + " already exists.", fkClass, "OpenFile");
     fFile.reset();
   }
 
   // Create histograms file (on master)
-  if ( fState.GetIsMaster() ) {
+  if (fState.GetIsMaster())
+  {
     // Create file (and save in in the file map (on master only)
     fFile = CreateTFile(name);
-    if ( ! fFile) {
+    if (!fFile)
+    {
       Warn(G4String("Failed to create file") + fileName, fkClass, "OpenFile");
       return false;
     }
@@ -139,15 +146,15 @@ G4bool G4XmlFileManager::OpenFile(const G4String& fileName)
 }
 
 //_____________________________________________________________________________
-G4bool G4XmlFileManager::CreateNtupleFile(
-  XmlNtupleDescription* ntupleDescription)
+G4bool G4XmlFileManager::CreateNtupleFile(XmlNtupleDescription* ntupleDescription)
 {
   // Get ntuple file name per object (if defined)
   auto ntupleFileName = GetNtupleFileName(ntupleDescription);
 
   // Create ntuple file name if it does not yet exist
   auto ntupleFile = GetTFile(ntupleFileName, false);
-  if ( ntupleFile == nullptr) {
+  if (ntupleFile == nullptr)
+  {
     ntupleFile = CreateTFile(ntupleFileName);
   }
 
@@ -157,12 +164,11 @@ G4bool G4XmlFileManager::CreateNtupleFile(
 }
 
 //_____________________________________________________________________________
-G4bool G4XmlFileManager::CloseNtupleFile(
-  XmlNtupleDescription* ntupleDescription)
+G4bool G4XmlFileManager::CloseNtupleFile(XmlNtupleDescription* ntupleDescription)
 {
   // Notify not empty file
   auto ntupleFileName = GetNtupleFileName(ntupleDescription);
-  auto result = SetIsEmpty(ntupleFileName, ! ntupleDescription->GetHasFill());
+  auto result = SetIsEmpty(ntupleFileName, !ntupleDescription->GetHasFill());
 
   // Ntuple files are registered in file manager map.
   // they will be closed with CloseFiles() calls

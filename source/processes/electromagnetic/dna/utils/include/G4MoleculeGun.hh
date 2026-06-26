@@ -30,8 +30,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -40,18 +40,18 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#ifndef MOLECULEGUN_HH_
-#define MOLECULEGUN_HH_
+#ifndef G4MOLECULEGUN_HH
+#define G4MOLECULEGUN_HH
 
 #include "G4ITGun.hh"
-#include "globals.hh"
 #include "G4ThreeVector.hh"
 #include "G4memory.hh"
+#include "globals.hh"
 
-#include <vector>
 #include <map>
+#include <vector>
 
 class G4Track;
 class G4MoleculeGunMessenger;
@@ -71,22 +71,22 @@ using G4ContinuousMedium = G4int;
 
 class G4MoleculeShoot : public G4enable_shared_from_this<G4MoleculeShoot>
 {
-public:
+  public:
 
-  G4MoleculeShoot();
-  virtual ~G4MoleculeShoot();
-  virtual void Shoot(G4MoleculeGun*) = 0;
+    G4MoleculeShoot();
+    virtual ~G4MoleculeShoot();
+    virtual void Shoot(G4MoleculeGun*) = 0;
 
-  template<typename TYPE> G4shared_ptr<G4MoleculeShoot> ChangeType();
+    template<typename TYPE>
+    G4shared_ptr<G4MoleculeShoot> ChangeType();
 
-  G4String fMoleculeName;
-  G4ThreeVector fPosition;
-  G4double fTime;
-  G4int fNumber;
-  G4ThreeVector* fBoxSize;
+    G4String fMoleculeName;
+    G4ThreeVector fPosition;
+    G4double fTime;
+    G4int fNumber;
+    G4ThreeVector* fBoxSize;
 
-  static void RandomPosInBox(const G4ThreeVector& boxSize,
-                             G4ThreeVector& output);
+    static void RandomPosInBox(const G4ThreeVector& boxSize, G4ThreeVector& output);
 };
 
 //------------------------------------------------------------------------------
@@ -100,14 +100,16 @@ public:
 template<typename TYPE>
 class TG4MoleculeShoot : public G4MoleculeShoot
 {
-public:
-  TG4MoleculeShoot() : G4MoleculeShoot(){}
-  ~TG4MoleculeShoot() override= default;
-  void Shoot(G4MoleculeGun*) override{}
+  public:
 
-protected:
-  void ShootAtRandomPosition(G4MoleculeGun*){}
-  void ShootAtFixedPosition(G4MoleculeGun*){}
+    TG4MoleculeShoot() : G4MoleculeShoot() {}
+    ~TG4MoleculeShoot() override = default;
+    void Shoot(G4MoleculeGun*) override {}
+
+  protected:
+
+    void ShootAtRandomPosition(G4MoleculeGun*) {}
+    void ShootAtFixedPosition(G4MoleculeGun*) {}
 };
 
 template<>
@@ -131,91 +133,81 @@ G4shared_ptr<G4MoleculeShoot> G4MoleculeShoot::ChangeType()
   return output;
 }
 
-
 //------------------------------------------------------------------------------
 
 class G4MoleculeGun : public G4ITGun
 {
-public:
-  G4MoleculeGun();
-  ~G4MoleculeGun() override;
+  public:
 
-  void DefineTracks() override;
+    G4MoleculeGun();
+    ~G4MoleculeGun() override;
 
-  /*
-   * Create a single molecule
-   * @param moleculeName name of the molecule such as recorded in molecule table
-   * @param position position where the molecule should pop up
-   * @param time time at which the molecule should pop up
-   */
-  void AddMolecule(const G4String& moleculeName,
-                   const G4ThreeVector& position,
-                   G4double time = 0);
+    void DefineTracks() override;
 
-  /*
-   * Create N molecules at a single point
-   * @param n number of molecules to create
-   * @param moleculeName name of the molecules such as recorded in molecule table
-   * @param position position where the molecules should pop up
-   * @param time time at which the molecules should pop up
-   */
-  void AddNMolecules(std::size_t n,
-                     const G4String& moleculeName,
-                     const G4ThreeVector& position,
+    /*
+     * Create a single molecule
+     * @param moleculeName name of the molecule such as recorded in molecule table
+     * @param position position where the molecule should pop up
+     * @param time time at which the molecule should pop up
+     */
+    void AddMolecule(const G4String& moleculeName, const G4ThreeVector& position,
                      G4double time = 0);
 
-  /*
-   * Create N molecules in a box
-   * @param n number of molecules to create
-   * @param moleculeName name of the molecules such as recorded in molecule table
-   * @param boxCenter center of the box
-   * @param boxExtension size of the box
-   * @param time time at which the molecules should pop up
-   */
-  void AddMoleculesRandomPositionInBox(std::size_t n,
-                                       const G4String& moleculeName,
-                                       const G4ThreeVector& boxCenter,
-                                       const G4ThreeVector& boxExtension,
+    /*
+     * Create N molecules at a single point
+     * @param n number of molecules to create
+     * @param moleculeName name of the molecules such as recorded in molecule table
+     * @param position position where the molecules should pop up
+     * @param time time at which the molecules should pop up
+     */
+    void AddNMolecules(std::size_t n, const G4String& moleculeName, const G4ThreeVector& position,
+                       G4double time = 0);
+
+    /*
+     * Create N molecules in a box
+     * @param n number of molecules to create
+     * @param moleculeName name of the molecules such as recorded in molecule table
+     * @param boxCenter center of the box
+     * @param boxExtension size of the box
+     * @param time time at which the molecules should pop up
+     */
+    void AddMoleculesRandomPositionInBox(std::size_t n, const G4String& moleculeName,
+                                         const G4ThreeVector& boxCenter,
+                                         const G4ThreeVector& boxExtension, G4double time = 0);
+
+    /*
+     * Create N molecules as component of the continuous medium in a box
+     * @param n number of molecules to create
+     * @param moleculeName name of the molecules such as recorded in molecule table
+     * @param boxCenter center of the box
+     * @param boxExtension size of the box
+     * @param time time at which the molecules should pop up
+     */
+    //  void AddMoleculeInCMRepresentation(std::size_t n,
+    //                                     const G4String& moleculeName,
+    //                                     const G4ThreeVector& boxCenter,
+    //                                     const G4ThreeVector& boxExtension,
+    //                                     G4double time = 0);
+
+    void AddMoleculeInCMRepresentation(std::size_t n, const G4String& moleculeName,
                                        G4double time = 0);
 
-  /*
-   * Create N molecules as component of the continuous medium in a box
-   * @param n number of molecules to create
-   * @param moleculeName name of the molecules such as recorded in molecule table
-   * @param boxCenter center of the box
-   * @param boxExtension size of the box
-   * @param time time at which the molecules should pop up
-   */
-//  void AddMoleculeInCMRepresentation(std::size_t n,
-//                                     const G4String& moleculeName,
-//                                     const G4ThreeVector& boxCenter,
-//                                     const G4ThreeVector& boxExtension,
-//                                     G4double time = 0);
+    const std::vector<G4shared_ptr<G4MoleculeShoot>>& GetMoleculeShoot() { return fShoots; }
 
-  void AddMoleculeInCMRepresentation(std::size_t n,
-                                     const G4String& moleculeName,
-                                     G4double time = 0);
+    using NameNumber = std::map<G4String, G4int>;
+    void GetNameAndNumber(NameNumber&);
 
-  const std::vector<G4shared_ptr<G4MoleculeShoot> >&
-      GetMoleculeShoot() {
-    return fShoots;
-  }
+    void AddMoleculeShoot(G4shared_ptr<G4MoleculeShoot>);
 
-  using NameNumber = std::map<G4String, G4int>;
-  void GetNameAndNumber(NameNumber&);
+  protected:
 
+    void BuildAndPushTrack(const G4String& name, const G4ThreeVector& position, G4double time = 0);
+    G4MoleculeGunMessenger* fpMessenger;
 
-  void AddMoleculeShoot(G4shared_ptr<G4MoleculeShoot>);
-
-protected:
-  void BuildAndPushTrack(const G4String& name,
-                         const G4ThreeVector& position,
-                         G4double time = 0);
-  G4MoleculeGunMessenger* fpMessenger;
-
-  std::vector<G4shared_ptr<G4MoleculeShoot> > fShoots;
-  friend class G4MoleculeShoot;
-  template<class T> friend class TG4MoleculeShoot;
+    std::vector<G4shared_ptr<G4MoleculeShoot>> fShoots;
+    friend class G4MoleculeShoot;
+    template<class T>
+    friend class TG4MoleculeShoot;
 };
 
 #endif /* MOLECULEGUN_HH_ */

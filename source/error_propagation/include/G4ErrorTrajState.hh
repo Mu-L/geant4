@@ -34,14 +34,14 @@
 // - Created:   P. Arce
 // --------------------------------------------------------------------
 
-#ifndef G4ErrorTrajState_hh
-#define G4ErrorTrajState_hh
+#ifndef G4ERRORTRAJSTATE_HH
+#define G4ERRORTRAJSTATE_HH
 
-#include "globals.hh"
-#include "G4Track.hh"
-#include "G4Point3D.hh"
-#include "G4Vector3D.hh"
 #include "G4ErrorTrajErr.hh"
+#include "G4Point3D.hh"
+#include "G4Track.hh"
+#include "G4Vector3D.hh"
+#include "globals.hh"
 
 enum G4eTSType
 {
@@ -51,86 +51,82 @@ enum G4eTSType
 
 class G4ErrorTrajState
 {
- public:  // with description
-  G4ErrorTrajState()
-    : fCharge(0.)
-    , theG4Track(0)
-    , iverbose(0)
-  {}
+  public:  // with description
 
-  G4ErrorTrajState(const G4String& partType, const G4Point3D& pos,
-                   const G4Vector3D& mom,
-                   const G4ErrorTrajErr& errmat = G4ErrorTrajErr(5, 0));
-  // Constructor by providing particle, position and momentum
+    G4ErrorTrajState() : fCharge(0.), theG4Track(0), iverbose(0) {}
 
-  G4ErrorTrajState(const G4ErrorTrajState&);
-  G4ErrorTrajState(G4ErrorTrajState&&);
-  // The copy and move constructors
+    G4ErrorTrajState(const G4String& partType, const G4Point3D& pos, const G4Vector3D& mom,
+                     const G4ErrorTrajErr& errmat = G4ErrorTrajErr(5, 0));
+    // Constructor by providing particle, position and momentum
 
-  virtual ~G4ErrorTrajState() {}
+    G4ErrorTrajState(const G4ErrorTrajState&);
+    G4ErrorTrajState(G4ErrorTrajState&&);
+    // The copy and move constructors
 
-  G4ErrorTrajState& operator=(const G4ErrorTrajState&);
-  G4ErrorTrajState& operator=(G4ErrorTrajState&&);
-  // The copy and move assignment operators
+    virtual ~G4ErrorTrajState() {}
 
-  void SetData(const G4String& partType, const G4Point3D& pos,
-               const G4Vector3D& mom);
-  // Set particle, position and momentum
+    G4ErrorTrajState& operator=(const G4ErrorTrajState&);
+    G4ErrorTrajState& operator=(G4ErrorTrajState&&);
+    // The copy and move assignment operators
 
-  void BuildCharge();
-  // Build charge based on particle type
+    void SetData(const G4String& partType, const G4Point3D& pos, const G4Vector3D& mom);
+    // Set particle, position and momentum
 
-  friend std::ostream& operator<<(std::ostream&, const G4ErrorTrajState& ts);
+    void BuildCharge();
+    // Build charge based on particle type
 
-  virtual G4int PropagateError(const G4Track*);
-  // Propagate the error along the step
+    friend std::ostream& operator<<(std::ostream&, const G4ErrorTrajState& ts);
 
-  virtual G4int Update(const G4Track*) { return -1; }
-  // Update parameters from G4Track
+    virtual G4int PropagateError(const G4Track*);
+    // Propagate the error along the step
 
-  void UpdatePosMom(const G4Point3D& pos, const G4Vector3D& mom);
-  // Update position and momentum
+    virtual G4int Update(const G4Track*) { return -1; }
+    // Update parameters from G4Track
 
-  void DumpPosMomError(std::ostream& out = G4cout) const;
-  // Dump position, momentum and error
+    void UpdatePosMom(const G4Point3D& pos, const G4Vector3D& mom);
+    // Update position and momentum
 
-  virtual void Dump(std::ostream& out = G4cout) const = 0;
-  // Abstract method to dump all TrajState parameters
+    void DumpPosMomError(std::ostream& out = G4cout) const;
+    // Dump position, momentum and error
 
-  // Set and Get methods
+    virtual void Dump(std::ostream& out = G4cout) const = 0;
+    // Abstract method to dump all TrajState parameters
 
-  const G4String& GetParticleType() const { return fParticleType; }
-  void SetParticleType(const G4String& partType) { fParticleType = partType; }
+    // Set and Get methods
 
-  G4Point3D GetPosition() const { return fPosition; }
-  virtual void SetPosition(const G4Point3D pos) { fPosition = pos; }
+    const G4String& GetParticleType() const { return fParticleType; }
+    void SetParticleType(const G4String& partType) { fParticleType = partType; }
 
-  G4Vector3D GetMomentum() const { return fMomentum; }
-  virtual void SetMomentum(const G4Vector3D& mom) { fMomentum = mom; }
+    G4Point3D GetPosition() const { return fPosition; }
+    virtual void SetPosition(const G4Point3D pos) { fPosition = pos; }
 
-  G4ErrorTrajErr GetError() const { return fError; }
-  virtual void SetError(G4ErrorTrajErr em) { fError = em; }
+    G4Vector3D GetMomentum() const { return fMomentum; }
+    virtual void SetMomentum(const G4Vector3D& mom) { fMomentum = mom; }
 
-  G4Track* GetG4Track() const { return theG4Track; }
-  void SetG4Track(G4Track* trk) { theG4Track = trk; }
+    G4ErrorTrajErr GetError() const { return fError; }
+    virtual void SetError(G4ErrorTrajErr em) { fError = em; }
 
-  G4double GetCharge() const { return fCharge; }
-  void SetCharge(G4double ch) { fCharge = ch; }
+    G4Track* GetG4Track() const { return theG4Track; }
+    void SetG4Track(G4Track* trk) { theG4Track = trk; }
 
-  virtual G4eTSType GetTSType() const { return theTSType; }
+    G4double GetCharge() const { return fCharge; }
+    void SetCharge(G4double ch) { fCharge = ch; }
 
- protected:
-  G4String fParticleType;
-  G4Point3D fPosition;
-  G4Vector3D fMomentum;
-  G4double fCharge = 0.;
-  G4ErrorTrajErr fError;
+    virtual G4eTSType GetTSType() const { return theTSType; }
 
-  G4eTSType theTSType;
+  protected:
 
-  G4Track* theG4Track = nullptr;
+    G4String fParticleType;
+    G4Point3D fPosition;
+    G4Vector3D fMomentum;
+    G4double fCharge = 0.;
+    G4ErrorTrajErr fError;
 
-  G4int iverbose = 0;
+    G4eTSType theTSType;
+
+    G4Track* theG4Track = nullptr;
+
+    G4int iverbose = 0;
 };
 
 #endif

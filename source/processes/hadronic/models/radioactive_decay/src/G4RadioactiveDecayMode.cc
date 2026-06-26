@@ -26,48 +26,85 @@
 
 #include "G4RadioactiveDecayMode.hh"
 
-std::istream &operator >> (std::istream& strm, G4RadioactiveDecayMode& q)
+std::istream& operator>>(std::istream& strm, G4RadioactiveDecayMode& q)
 {
   G4String a;
   strm >> a;
   if (a == "IT")
-    {q = IT;}
+  {
+    q = IT;
+  }
   else if (a == "BetaMinus")
-    {q = BetaMinus;}
+  {
+    q = BetaMinus;
+  }
   else if (a == "BetaPlus")
-    {q = BetaPlus;}
+  {
+    q = BetaPlus;
+  }
   else if (a == "KshellEC")
-    {q = KshellEC;}
+  {
+    q = KshellEC;
+  }
   else if (a == "LshellEC")
-    {q = LshellEC;}
+  {
+    q = LshellEC;
+  }
   else if (a == "MshellEC")
-    {q = MshellEC;}
+  {
+    q = MshellEC;
+  }
   else if (a == "NshellEC")
-      {q = NshellEC;}
+  {
+    q = NshellEC;
+  }
   else if (a == "Alpha")
-    {q = Alpha;}
+  {
+    q = Alpha;
+  }
   else if (a == "Proton")
-    {q = Proton;}
+  {
+    q = Proton;
+  }
   else if (a == "Neutron")
-    {q = Neutron;}
+  {
+    q = Neutron;
+  }
   else if (a == "SpFission")
-    {q = SpFission;}
+  {
+    q = SpFission;
+  }
   else if (a == "BDProton")
-    {q = BDProton;}
+  {
+    q = BDProton;
+  }
   else if (a == "BDNeutron")
-    {q = BDNeutron;}
+  {
+    q = BDNeutron;
+  }
   else if (a == "Beta2Minus")
-    {q = Beta2Minus;}
+  {
+    q = Beta2Minus;
+  }
   else if (a == "Beta2Plus")
-    {q = Beta2Plus;}
+  {
+    q = Beta2Plus;
+  }
   else if (a == "Proton2")
-    {q = Proton2;}
+  {
+    q = Proton2;
+  }
   else if (a == "Neutron2")
-    {q = Neutron2;}
+  {
+    q = Neutron2;
+  }
   else if (a == "Triton")
-    {q = Triton;}
+  {
+    q = Triton;
+  }
   else
-    {q = RDM_ERROR;}
+  {
+    q = RDM_ERROR;
+  }
   return strm;
 }
-

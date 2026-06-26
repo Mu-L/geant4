@@ -25,22 +25,19 @@
 //
 //
 //
-//Radio button class. Inherits from G4OpenGLXmVWidgetComponent
+// Radio button class. Inherits from G4OpenGLXmVWidgetComponent
+
+#include "G4OpenGLXmRadioButton.hh"
 
 #include "G4OpenGLXmVWidgetComponent.hh"
 #include "G4OpenGLXmVWidgetContainer.hh"
-#include "G4OpenGLXmRadioButton.hh"
+#include "globals.hh"
+
 #include <X11/Intrinsic.h>
 #include <Xm/ToggleB.h>
 
-#include "globals.hh"
-
-G4OpenGLXmRadioButton::G4OpenGLXmRadioButton (const char* n,
-					      XtCallbackRec* c,
-					      G4bool d,
-					      G4int num) 
-: button(0)
-, parent(0)
+G4OpenGLXmRadioButton::G4OpenGLXmRadioButton(const char* n, XtCallbackRec* c, G4bool d, G4int num)
+  : button(0), parent(0)
 {
   name = n;
   callback = c;
@@ -48,60 +45,48 @@ G4OpenGLXmRadioButton::G4OpenGLXmRadioButton (const char* n,
   number = num;
 }
 
-G4OpenGLXmRadioButton::~G4OpenGLXmRadioButton ()
-{}
+G4OpenGLXmRadioButton::~G4OpenGLXmRadioButton() {}
 
-void G4OpenGLXmRadioButton::SetName (const char* n) 
+void G4OpenGLXmRadioButton::SetName(const char* n)
 {
   name = n;
-  XmString button_string = XmStringCreateLocalized ((char*)name);
-  XtVaSetValues (button,
-		 XmNlabelString, button_string,
-		 NULL);
-  XmStringFree (button_string);
+  XmString button_string = XmStringCreateLocalized((char*)name);
+  XtVaSetValues(button, XmNlabelString, button_string, NULL);
+  XmStringFree(button_string);
 }
 
-const char* G4OpenGLXmRadioButton::GetName () 
+const char* G4OpenGLXmRadioButton::GetName()
 {
   return name;
 }
 
-void G4OpenGLXmRadioButton::AddYourselfTo (G4OpenGLXmVWidgetContainer* container)
+void G4OpenGLXmRadioButton::AddYourselfTo(G4OpenGLXmVWidgetContainer* container)
 {
+  pView = container->GetView();
+  ProcesspView();
+  parent = container->GetPointerToWidget();
+  XmString button_string = XmStringCreateLocalized((char*)name);
+  button = XtVaCreateManagedWidget(name, xmToggleButtonWidgetClass, *parent,
 
-  pView = container->GetView ();
-  ProcesspView ();
-  parent = container->GetPointerToWidget ();
-  XmString button_string = XmStringCreateLocalized ((char*)name);
-  button = XtVaCreateManagedWidget (name,
-				    xmToggleButtonWidgetClass,
-				    *parent,
-				    
-				    XmNlabelString, button_string,
-				    XmNset, default_button,
-				    XmNuserData, number,
-				    
-				    XtNvisual, visual,
-				    XtNdepth, depth,
-				    XtNcolormap, cmap,
-				    XtNborderColor, borcol,
-				    XtNbackground, bgnd,
-				    
-				    NULL);
-  
-  XtAddCallbacks (button,
-		  XmNarmCallback,
-		  callback);
+                                   XmNlabelString, button_string, XmNset, default_button,
+                                   XmNuserData, number,
 
-  XmStringFree (button_string);
+                                   XtNvisual, visual, XtNdepth, depth, XtNcolormap, cmap,
+                                   XtNborderColor, borcol, XtNbackground, bgnd,
+
+                                   NULL);
+
+  XtAddCallbacks(button, XmNarmCallback, callback);
+
+  XmStringFree(button_string);
 }
 
-Widget* G4OpenGLXmRadioButton::GetPointerToParent ()
+Widget* G4OpenGLXmRadioButton::GetPointerToParent()
 {
   return parent;
 }
 
-Widget* G4OpenGLXmRadioButton::GetPointerToWidget () 
+Widget* G4OpenGLXmRadioButton::GetPointerToWidget()
 {
   return &button;
 }

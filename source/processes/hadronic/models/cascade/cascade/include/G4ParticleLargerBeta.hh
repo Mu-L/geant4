@@ -29,44 +29,45 @@
 // 20110415  M. Kelsey -- Add additional operator() for G4CascadParticle
 // 20130522  M. Kelsey -- Long-standing error: should be ">", not ">="
 
-#ifndef G4ParticleLargerBeta_h
-#define G4ParticleLargerBeta_h
+#ifndef G4PARTICLELARGERBETA_HH
+#define G4PARTICLELARGERBETA_HH
 
 #include "G4CascadParticle.hh"
 #include "G4InuclElementaryParticle.hh"
 
 #ifdef G4CASCADE_DEBUG_SORT
-#include "G4ios.hh"
+#  include "G4ios.hh"
 #endif
 
-class G4ParticleLargerBeta {
-public:
-  G4bool operator() (const G4InuclElementaryParticle& part1,
-		     const G4InuclElementaryParticle& part2) {
+class G4ParticleLargerBeta
+{
+  public:
+
+    G4bool operator()(const G4InuclElementaryParticle& part1,
+                      const G4InuclElementaryParticle& part2)
+    {
 #ifdef G4CASCADE_DEBUG_SORT
-    G4cout << "part1 @ " << &part1 << ": " << part1
-	   << "part2 @ " << &part2 << ": " << part2
-	   << G4endl;
+      G4cout << "part1 @ " << &part1 << ": " << part1 << "part2 @ " << &part2 << ": " << part2
+             << G4endl;
 #endif
-    return (part1.getMomModule()/part1.getEnergy() >
-	    part2.getMomModule()/part2.getEnergy()
-	    );
-  }
- 
-  G4bool operator() (const G4InuclElementaryParticle* part1,
-		     const G4InuclElementaryParticle* part2) {
-    return (part1 && part2 && operator()(*part1, *part2));
-  }
+      return (part1.getMomModule() / part1.getEnergy() > part2.getMomModule() / part2.getEnergy());
+    }
 
-  G4bool operator() (const G4CascadParticle& part1,
-		     const G4CascadParticle& part2) {
-    return (operator()(part1.getParticle(), part2.getParticle()));
-  }
+    G4bool operator()(const G4InuclElementaryParticle* part1,
+                      const G4InuclElementaryParticle* part2)
+    {
+      return (part1 && part2 && operator()(*part1, *part2));
+    }
 
-  G4bool operator() (const G4CascadParticle* part1,
-		     const G4CascadParticle* part2) {
-    return (part1 && part2 && operator()(*part1, *part2));
-  }
+    G4bool operator()(const G4CascadParticle& part1, const G4CascadParticle& part2)
+    {
+      return (operator()(part1.getParticle(), part2.getParticle()));
+    }
+
+    G4bool operator()(const G4CascadParticle* part1, const G4CascadParticle* part2)
+    {
+      return (part1 && part2 && operator()(*part1, *part2));
+    }
 };
 
-#endif	/* G4ParticleLargerBeta_h */
+#endif /* G4ParticleLargerBeta_h */

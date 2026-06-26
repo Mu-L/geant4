@@ -36,8 +36,8 @@
 //
 // Author: Marc Verderi, November 2013.
 // --------------------------------------------------------------------
-#ifndef G4ILawForceFreeFlight_hh
-#define G4ILawForceFreeFlight_hh 1
+#ifndef G4ILAWFORCEFREEFLIGHT_HH
+#define G4ILAWFORCEFREEFLIGHT_HH
 
 #include "G4VBiasingInteractionLaw.hh"
 
@@ -47,12 +47,12 @@ class G4ILawForceFreeFlight : public G4VBiasingInteractionLaw
 
     G4ILawForceFreeFlight(const G4String& name = "forceFreeFlightLaw");
     virtual ~G4ILawForceFreeFlight();
-  
+
     virtual G4double ComputeEffectiveCrossSectionAt(G4double length) const;
     virtual G4double ComputeNonInteractionProbabilityAt(G4double length) const;
 
     // -- sample the distribution
-    virtual  G4double SampleInteractionLength();
+    virtual G4double SampleInteractionLength();
     // -- move by true path length, this position becomes the new initial point
     virtual G4double UpdateInteractionLengthForStep(G4double truePathLength);
     virtual G4bool IsSingular() const { return true; }

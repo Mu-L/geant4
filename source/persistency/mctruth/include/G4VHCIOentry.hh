@@ -32,29 +32,29 @@
 // Author: Youhei Morita, 12.09.2001
 // --------------------------------------------------------------------
 #ifndef G4VHCIOENTRYT_HH
-#define G4VHCIOENTRYT_HH 1
+#define G4VHCIOENTRYT_HH
 
-#include "G4Types.hh"
 #include "G4PersistencyCenter.hh"
+#include "G4Types.hh"
 
 class G4VHCIOentry
 {
   public:
 
     G4VHCIOentry(const G4String& n);
-      // Constructor
+    // Constructor
 
     virtual ~G4VHCIOentry() {}
-      // Destructor
+    // Destructor
 
     void SetVerboseLevel(G4int v) { m_verbose = v; }
-      // Sets verbose level.
+    // Sets verbose level.
 
     const G4String& GetName() { return m_name; }
-      // Returns the name of the HC I/O manager entry
+    // Returns the name of the HC I/O manager entry
 
     virtual void CreateHCIOmanager(const G4String&, const G4String&) {}
-      // Virtual method for creating HC I/O manager for the detector
+    // Virtual method for creating HC I/O manager for the detector
 
   protected:
 

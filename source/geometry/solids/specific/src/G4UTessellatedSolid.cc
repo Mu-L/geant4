@@ -28,31 +28,27 @@
 // 11.01.18 G.Cosmo, CERN
 // --------------------------------------------------------------------
 
+// Geant4/VecGeom headers must be included in order
+// clang-format off
 #include "G4TessellatedSolid.hh"
 #include "G4UTessellatedSolid.hh"
+// clang-format on
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include "G4TriangularFacet.hh"
-#include "G4QuadrangularFacet.hh"
-
-#include "G4GeomTools.hh"
-#include "G4AffineTransform.hh"
-#include "G4BoundingEnvelope.hh"
+#  include "G4AffineTransform.hh"
+#  include "G4BoundingEnvelope.hh"
+#  include "G4GeomTools.hh"
+#  include "G4QuadrangularFacet.hh"
+#  include "G4TriangularFacet.hh"
 
 ////////////////////////////////////////////////////////////////////////
 //
 // Constructors
 //
-G4UTessellatedSolid::G4UTessellatedSolid()
- : Base_t("")
-{
-}
+G4UTessellatedSolid::G4UTessellatedSolid() : Base_t("") {}
 
-G4UTessellatedSolid::G4UTessellatedSolid(const G4String& name)
- : Base_t(name)
-{
-}
+G4UTessellatedSolid::G4UTessellatedSolid(const G4String& name) : Base_t(name) {}
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -61,7 +57,10 @@ G4UTessellatedSolid::G4UTessellatedSolid(const G4String& name)
 G4UTessellatedSolid::~G4UTessellatedSolid()
 {
   std::size_t size = fFacets.size();
-  for (std::size_t i = 0; i < size; ++i)  { delete fFacets[i]; }
+  for (std::size_t i = 0; i < size; ++i)
+  {
+    delete fFacets[i];
+  }
   fFacets.clear();
 }
 
@@ -69,22 +68,18 @@ G4UTessellatedSolid::~G4UTessellatedSolid()
 //
 // Copy constructor
 //
-G4UTessellatedSolid::G4UTessellatedSolid(const G4UTessellatedSolid& source)
-  : Base_t(source)
-{
-}
+G4UTessellatedSolid::G4UTessellatedSolid(const G4UTessellatedSolid& source) : Base_t(source) {}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Assignment operator
 //
-G4UTessellatedSolid&
-G4UTessellatedSolid::operator=(const G4UTessellatedSolid& source)
+G4UTessellatedSolid& G4UTessellatedSolid::operator=(const G4UTessellatedSolid& source)
 {
   if (this == &source) return *this;
-  
-  Base_t::operator=( source );
-  
+
+  Base_t::operator=(source);
+
   return *this;
 }
 
@@ -98,52 +93,40 @@ G4bool G4UTessellatedSolid::AddFacet(G4VFacet* aFacet)
   //
   if (GetSolidClosed())
   {
-    G4Exception("G4UTessellatedSolid::AddFacet()", "GeomSolids1002",
-                JustWarning, "Attempt to add facets when solid is closed.");
+    G4Exception("G4UTessellatedSolid::AddFacet()", "GeomSolids1002", JustWarning,
+                "Attempt to add facets when solid is closed.");
     return false;
   }
   if (!aFacet->IsDefined())
   {
-    G4Exception("G4UTessellatedSolid::AddFacet()", "GeomSolids1002",
-                JustWarning, "Attempt to add facet not properly defined.");    
+    G4Exception("G4UTessellatedSolid::AddFacet()", "GeomSolids1002", JustWarning,
+                "Attempt to add facet not properly defined.");
     aFacet->StreamInfo(G4cout);
     return false;
   }
   if (aFacet->GetNumberOfVertices() == 3)
   {
     auto a3Facet = dynamic_cast<G4TriangularFacet*>(aFacet);
-    return Base_t::AddTriangularFacet(U3Vector(a3Facet->GetVertex(0).x(),
-                                               a3Facet->GetVertex(0).y(),
-                                               a3Facet->GetVertex(0).z()),
-                                      U3Vector(a3Facet->GetVertex(1).x(),
-                                               a3Facet->GetVertex(1).y(),
-                                               a3Facet->GetVertex(1).z()),
-                                      U3Vector(a3Facet->GetVertex(2).x(),
-                                               a3Facet->GetVertex(2).y(),
-                                               a3Facet->GetVertex(2).z()),
-                                      true);
+    return Base_t::AddTriangularFacet(
+      U3Vector(a3Facet->GetVertex(0).x(), a3Facet->GetVertex(0).y(), a3Facet->GetVertex(0).z()),
+      U3Vector(a3Facet->GetVertex(1).x(), a3Facet->GetVertex(1).y(), a3Facet->GetVertex(1).z()),
+      U3Vector(a3Facet->GetVertex(2).x(), a3Facet->GetVertex(2).y(), a3Facet->GetVertex(2).z()),
+      true);
   }
   else if (aFacet->GetNumberOfVertices() == 4)
   {
     auto a4Facet = dynamic_cast<G4QuadrangularFacet*>(aFacet);
-    return Base_t::AddQuadrilateralFacet(U3Vector(a4Facet->GetVertex(0).x(),
-                                                  a4Facet->GetVertex(0).y(),
-                                                  a4Facet->GetVertex(0).z()),
-                                         U3Vector(a4Facet->GetVertex(1).x(),
-                                                  a4Facet->GetVertex(1).y(),
-                                                  a4Facet->GetVertex(1).z()),
-                                         U3Vector(a4Facet->GetVertex(2).x(),
-                                                  a4Facet->GetVertex(2).y(),
-                                                  a4Facet->GetVertex(2).z()),
-                                         U3Vector(a4Facet->GetVertex(3).x(),
-                                                  a4Facet->GetVertex(3).y(),
-                                                  a4Facet->GetVertex(3).z()),
-                                         true);
+    return Base_t::AddQuadrilateralFacet(
+      U3Vector(a4Facet->GetVertex(0).x(), a4Facet->GetVertex(0).y(), a4Facet->GetVertex(0).z()),
+      U3Vector(a4Facet->GetVertex(1).x(), a4Facet->GetVertex(1).y(), a4Facet->GetVertex(1).z()),
+      U3Vector(a4Facet->GetVertex(2).x(), a4Facet->GetVertex(2).y(), a4Facet->GetVertex(2).z()),
+      U3Vector(a4Facet->GetVertex(3).x(), a4Facet->GetVertex(3).y(), a4Facet->GetVertex(3).z()),
+      true);
   }
   else
   {
-    G4Exception("G4UTessellatedSolid::AddFacet()", "GeomSolids1002",
-                JustWarning, "Attempt to add facet not properly defined.");    
+    G4Exception("G4UTessellatedSolid::AddFacet()", "GeomSolids1002", JustWarning,
+                "Attempt to add facet not properly defined.");
     aFacet->StreamInfo(G4cout);
     return false;
   }
@@ -165,7 +148,7 @@ void G4UTessellatedSolid::SetSolidClosed(const G4bool t)
   {
     Base_t::Close();
     std::size_t nVertices = fTessellated.fVertices.size();
-    std::size_t nFacets   = fTessellated.fFacets.size();
+    std::size_t nFacets = fTessellated.fFacets.size();
     for (std::size_t j = 0; j < nVertices; ++j)
     {
       U3Vector vt = fTessellated.fVertices[j];
@@ -175,16 +158,13 @@ void G4UTessellatedSolid::SetSolidClosed(const G4bool t)
     {
       vecgeom::TriangleFacet<G4double>* afacet = Base_t::GetFacet(i);
       std::vector<G4ThreeVector> v;
-      for (const auto & vertex : afacet->fVertices)
+      for (const auto& vertex : afacet->fVertices)
       {
-        v.emplace_back(vertex.x(),
-                                  vertex.y(),
-                                  vertex.z());
+        v.emplace_back(vertex.x(), vertex.y(), vertex.z());
       }
-      G4VFacet* facet = new G4TriangularFacet(v[0], v[1], v[2],
-                                              G4FacetVertexType::ABSOLUTE);
+      G4VFacet* facet = new G4TriangularFacet(v[0], v[1], v[2], G4FacetVertexType::ABSOLUTE);
       facet->SetVertices(&fVertexList);
-      for (G4int k=0; k<3; ++k)
+      for (G4int k = 0; k < 3; ++k)
       {
         facet->SetVertexIndex(k, afacet->fIndices[k]);
       }
@@ -248,7 +228,7 @@ G4int G4UTessellatedSolid::AllocatedMemoryWithoutVoxels()
   std::size_t limit = fFacets.size();
   for (std::size_t i = 0; i < limit; ++i)
   {
-    G4VFacet &facet = *fFacets[i];
+    G4VFacet& facet = *fFacets[i];
     base += facet.AllocatedMemory();
   }
   return base;
@@ -263,18 +243,15 @@ void G4UTessellatedSolid::DisplayAllocatedMemory()
   //  G4int with = AllocatedMemory();
   //  G4double ratio = (G4double) with / without;
   //  G4cout << "G4TessellatedSolid - Allocated memory without voxel overhead "
-  //         << without << "; with " << with << "; ratio: " << ratio << G4endl; 
-  G4cout << "G4TessellatedSolid - Allocated memory without voxel overhead "
-         << without << G4endl; 
+  //         << without << "; with " << with << "; ratio: " << ratio << G4endl;
+  G4cout << "G4TessellatedSolid - Allocated memory without voxel overhead " << without << G4endl;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Get bounding box
 
-void G4UTessellatedSolid::BoundingLimits(G4ThreeVector& pMin,
-                                         G4ThreeVector& pMax) const
+void G4UTessellatedSolid::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
 {
   U3Vector aMin, aMax;
   Base_t::Extent(aMin, aMax);
@@ -286,39 +263,33 @@ void G4UTessellatedSolid::BoundingLimits(G4ThreeVector& pMin,
   if (pMin.x() >= pMax.x() || pMin.y() >= pMax.y() || pMin.z() >= pMax.z())
   {
     std::ostringstream message;
-    message << "Bad bounding box (min >= max) for solid: "
-            << GetName() << " !"
-            << "\npMin = " << pMin
-            << "\npMax = " << pMax;
-    G4Exception("G4UTessellatedSolid::BoundingLimits()",
-                "GeomMgt0001", JustWarning, message);
+    message << "Bad bounding box (min >= max) for solid: " << GetName() << " !"
+            << "\npMin = " << pMin << "\npMax = " << pMax;
+    G4Exception("G4UTessellatedSolid::BoundingLimits()", "GeomMgt0001", JustWarning, message);
     StreamInfo(G4cout);
   }
 }
-
 
 //////////////////////////////////////////////////////////////////////////////
 //
 // Calculate extent under transform and specified limit
 
-G4bool
-G4UTessellatedSolid::CalculateExtent(const EAxis pAxis,
-                                     const G4VoxelLimits& pVoxelLimit,
-                                     const G4AffineTransform& pTransform,
-                                           G4double& pMin, G4double& pMax) const
+G4bool G4UTessellatedSolid::CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                                            const G4AffineTransform& pTransform, G4double& pMin,
+                                            G4double& pMax) const
 {
   G4ThreeVector bmin, bmax;
 
   // Check bounding box (bbox)
   //
-  BoundingLimits(bmin,bmax);
-  G4BoundingEnvelope bbox(bmin,bmax);
+  BoundingLimits(bmin, bmax);
+  G4BoundingEnvelope bbox(bmin, bmax);
 
   // Use simple bounding-box to help in the case of complex meshes
   //
-  return bbox.CalculateExtent(pAxis,pVoxelLimit,pTransform,pMin,pMax);
+  return bbox.CalculateExtent(pAxis, pVoxelLimit, pTransform, pMin, pMax);
 
-#if 0
+#  if 0
   // Precise extent computation (disabled by default for this shape)
   //
   G4double kCarToleranceHalf = 0.5*kCarTolerance;
@@ -359,35 +330,34 @@ G4UTessellatedSolid::CalculateExtent(const EAxis pAxis,
     if (eminlim > pMin && emaxlim < pMax) break; // max possible extent
   }
   return (pMin < pMax);
-#endif
+#  endif
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 //
 // CreatePolyhedron()
 //
-G4Polyhedron* G4UTessellatedSolid::CreatePolyhedron () const
+G4Polyhedron* G4UTessellatedSolid::CreatePolyhedron() const
 {
   auto nVertices = (G4int)fVertexList.size();
   auto nFacets = (G4int)fFacets.size();
   auto polyhedron = new G4Polyhedron(nVertices, nFacets);
   for (auto i = 0; i < nVertices; ++i)
   {
-    polyhedron->SetVertex(i+1, fVertexList[i]);
+    polyhedron->SetVertex(i + 1, fVertexList[i]);
   }
 
   for (auto i = 0; i < nFacets; ++i)
   {
     G4int v[3];  // Only facets with 3 vertices are defined in VecGeom
     G4VFacet* facet = GetFacet(i);
-    for (auto j = 0; j < 3; ++j) // Retrieve indexing directly from VecGeom
+    for (auto j = 0; j < 3; ++j)  // Retrieve indexing directly from VecGeom
     {
       v[j] = facet->GetVertexIndex(j) + 1;
     }
-    polyhedron->SetFacet(i+1, v[0], v[1], v[2]);
+    polyhedron->SetFacet(i + 1, v[0], v[1], v[2]);
   }
-  polyhedron->SetReferences();  
+  polyhedron->SetReferences();
 
   return polyhedron;
 }

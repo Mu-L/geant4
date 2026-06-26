@@ -25,8 +25,8 @@
 //
 //
 
-#ifndef G4VInteractiveSession_H
-#define G4VInteractiveSession_H 1
+#ifndef G4VINTERACTIVESESSION_HH
+#define G4VINTERACTIVESESSION_HH
 
 #include "G4VInteractorManager.hh"
 
@@ -44,45 +44,48 @@ class G4SceneTreeItem;
 
 class G4VInteractiveSession
 {
- public:  // with description
-  struct OutputStyle
-  {
-    G4bool fixed, bold, highlight;
-  };
+  public:  // with description
 
-  G4VInteractiveSession();
-  virtual ~G4VInteractiveSession();
-  virtual void AddMenu(const char*, const char*);
-  virtual void AddButton(const char*, const char*, const char*);
-  virtual void AddIcon(const char*, const char*, const char*, const char*);
-  virtual void DefaultIcons(bool);
-  virtual void SetOutputStyle(const char*, const char*);
-  virtual void NativeMenu(bool);
-  virtual void ClearMenu();
-  virtual void UpdateSceneTree(const G4SceneTreeItem&);
-  void AddInteractor(G4String, G4Interactor);
-  G4Interactor GetInteractor(const G4String&);
-  const std::map<G4String, OutputStyle>& GetOutputStyles() const;
-  
-  virtual void UpdateDrawingStyle(G4int style);
-  virtual void UpdateProjectionStyle(G4int style);
-  virtual void UpdateTransparencySlider(G4double depth, G4int option);
+    struct OutputStyle
+    {
+        G4bool fixed, bold, highlight;
+    };
 
- protected:
-  void SetStyleUtility(const G4String& destination, const G4String& style);
-  // clang-format off
+    G4VInteractiveSession();
+    virtual ~G4VInteractiveSession();
+    virtual void AddMenu(const char*, const char*);
+    virtual void AddButton(const char*, const char*, const char*);
+    virtual void AddIcon(const char*, const char*, const char*, const char*);
+    virtual void DefaultIcons(bool);
+    virtual void SetOutputStyle(const char*, const char*);
+    virtual void NativeMenu(bool);
+    virtual void ClearMenu();
+    virtual void UpdateSceneTree(const G4SceneTreeItem&);
+    void AddInteractor(G4String, G4Interactor);
+    G4Interactor GetInteractor(const G4String&);
+    const std::map<G4String, OutputStyle>& GetOutputStyles() const;
+
+    virtual void UpdateDrawingStyle(G4int style);
+    virtual void UpdateProjectionStyle(G4int style);
+    virtual void UpdateTransparencySlider(G4double depth, G4int option);
+
+  protected:
+
+    void SetStyleUtility(const G4String& destination, const G4String& style);
+    // clang-format off
     std::map<G4String,OutputStyle> fOutputStyles {
       {"cout",{true,false,true}},
       {"cerr",{true,true,true}},
       {"warn",{true,false,true}},
       {"error",{true,true,true}},
       {"debug",{true,false,true}}};
-  // clang-format on
+    // clang-format on
 
- private:
-  G4UImessenger* messenger;
-  using G4interactor_map = std::map<G4String, G4Interactor, std::less<G4String>>;
-  G4interactor_map interactors;
+  private:
+
+    G4UImessenger* messenger;
+    using G4interactor_map = std::map<G4String, G4Interactor, std::less<G4String>>;
+    G4interactor_map interactors;
 };
 
 #endif

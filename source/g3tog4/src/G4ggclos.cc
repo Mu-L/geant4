@@ -25,14 +25,16 @@
 //
 //
 
-#include "G3toG4.hh"
 #include "G3VolTable.hh"
+#include "G3toG4.hh"
 
-void PG4ggclos(){
+void PG4ggclos()
+{
   G4ggclos();
 }
 
-void G4ggclos(){
+void G4ggclos()
+{
   G4cout << "G4ggclos: setting top-level VolTableEntry" << G4endl;
   G3Vol.SetFirstVTE();
 }

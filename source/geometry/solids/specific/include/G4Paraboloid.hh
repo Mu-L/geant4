@@ -50,22 +50,23 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UPARABOLOID 1
+#  define G4GEOM_USE_UPARABOLOID 1
 #endif
 
 #if (defined(G4GEOM_USE_UPARABOLOID) && defined(G4GEOM_USE_SYS_USOLIDS))
-  #define G4UParaboloid G4Paraboloid
-  #include "G4UParaboloid.hh"
+#  define G4UParaboloid G4Paraboloid
+#  include "G4UParaboloid.hh"
 #else
 
-#include <CLHEP/Units/PhysicalConstants.h>
+#  include "G4Polyhedron.hh"
+#  include "G4VSolid.hh"
 
-#include "G4VSolid.hh"
-#include "G4Polyhedron.hh"
+#  include <CLHEP/Units/PhysicalConstants.h>
 
 /**
  * @brief G4Paraboloid represents a solid with parabolic profile
  * with possible cuts along the Z axis.
+ * @ingroup geometry_solids_specific
  */
 
 class G4Paraboloid : public G4VSolid
@@ -79,10 +80,7 @@ class G4Paraboloid : public G4VSolid
      *  @param[in] pR1 Radius at -Dz.
      *  @param[in] pR2 Radius at +Dz greater than pR1.
      */
-    G4Paraboloid(const G4String& pName,
-                       G4double pDz,
-                       G4double pR1,
-                       G4double pR2);
+    G4Paraboloid(const G4String& pName, G4double pDz, G4double pR1, G4double pR2);
 
     /**
      * Destructor.
@@ -120,25 +118,21 @@ class G4Paraboloid : public G4VSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pmin, G4double& pmax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pmin,
+                           G4double& pmax) const override;
 
     /**
      * Concrete implementations of the expected query interfaces for
      * solids, as defined in the base class G4VSolid.
      */
     EInside Inside(const G4ThreeVector& p) const override;
-    G4ThreeVector SurfaceNormal( const G4ThreeVector& p) const override;
-    G4double DistanceToIn(const G4ThreeVector& p,
-                          const G4ThreeVector& v) const override;
+    G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
     G4double DistanceToIn(const G4ThreeVector& p) const override;
-    G4double DistanceToOut(const G4ThreeVector& p,
-                           const G4ThreeVector& v,
-                           const G4bool calcNorm = false,
-                                 G4bool* validNorm = nullptr,
-                                 G4ThreeVector* n = nullptr) const override;
+    G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
     G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
@@ -175,7 +169,7 @@ class G4Paraboloid : public G4VSolid
      */
     void DescribeYourselfTo(G4VGraphicsScene& scene) const override;
     G4Polyhedron* CreatePolyhedron() const override;
-    G4Polyhedron* GetPolyhedron () const override;
+    G4Polyhedron* GetPolyhedron() const override;
 
     /**
      * Fake default constructor for usage restricted to direct object
@@ -203,18 +197,18 @@ class G4Paraboloid : public G4VSolid
     G4double fCubicVolume = 0.0;
 
     // Cached values
-    G4double dz = 0.0; // half height
-    G4double r1 = 0.0; // radius at -dz
-    G4double r2 = 0.0; // radius at  dz
-    G4double k1 = 0.0; // k1 = 0.5*(r2*r2 - r1*r1)/dz
-    G4double k2 = 0.0; // k2 = 0.5*(r2*r2 + r1*r1)
+    G4double dz = 0.0;  // half height
+    G4double r1 = 0.0;  // radius at -dz
+    G4double r2 = 0.0;  // radius at  dz
+    G4double k1 = 0.0;  // k1 = 0.5*(r2*r2 - r1*r1)/dz
+    G4double k2 = 0.0;  // k2 = 0.5*(r2*r2 + r1*r1)
 
     mutable G4bool fRebuildPolyhedron = false;
     mutable G4Polyhedron* fpPolyhedron = nullptr;
 };
 
-#include "G4Paraboloid.icc"
+#  include "G4Paraboloid.icc"
 
 #endif  // defined(G4GEOM_USE_UPARABOLOID) && defined(G4GEOM_USE_SYS_USOLIDS)
 
-#endif // G4PARABOLOID_HH
+#endif  // G4PARABOLOID_HH

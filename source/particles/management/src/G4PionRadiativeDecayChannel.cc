@@ -68,7 +68,8 @@ G4PionRadiativeDecayChannel::G4PionRadiativeDecayChannel(const G4String& thePare
   : G4VDecayChannel("Radiative Pion Decay", 1)
 {
   // set names for daughter particles
-  if (theParentName == "pi+") {
+  if (theParentName == "pi+")
+  {
     SetBR(theBR);
     SetParent("pi+");
     SetNumberOfDaughters(3);
@@ -76,7 +77,8 @@ G4PionRadiativeDecayChannel::G4PionRadiativeDecayChannel(const G4String& thePare
     SetDaughter(1, "gamma");
     SetDaughter(2, "nu_e");
   }
-  else if (theParentName == "pi-") {
+  else if (theParentName == "pi-")
+  {
     SetBR(theBR);
     SetParent("pi-");
     SetNumberOfDaughters(3);
@@ -84,9 +86,11 @@ G4PionRadiativeDecayChannel::G4PionRadiativeDecayChannel(const G4String& thePare
     SetDaughter(1, "gamma");
     SetDaughter(2, "anti_nu_e");
   }
-  else {
+  else
+  {
 #ifdef G4VERBOSE
-    if (GetVerboseLevel() > 0) {
+    if (GetVerboseLevel() > 0)
+    {
       G4cout << "G4RadiativePionDecayChannel::G4PionRadiativeDecayChannel()" << G4endl;
       G4cout << "Parent particle is not charged pion: ";
       G4cout << theParentName << G4endl;
@@ -98,7 +102,8 @@ G4PionRadiativeDecayChannel::G4PionRadiativeDecayChannel(const G4String& thePare
 G4PionRadiativeDecayChannel&
 G4PionRadiativeDecayChannel::operator=(const G4PionRadiativeDecayChannel& right)
 {
-  if (this != &right) {
+  if (this != &right)
+  {
     kinematics_name = right.kinematics_name;
     verboseLevel = right.verboseLevel;
     rbranch = right.rbranch;
@@ -111,11 +116,13 @@ G4PionRadiativeDecayChannel::operator=(const G4PionRadiativeDecayChannel& right)
 
     // recreate array
     numberOfDaughters = right.numberOfDaughters;
-    if (numberOfDaughters > 0) {
+    if (numberOfDaughters > 0)
+    {
       if (daughters_name != nullptr) ClearDaughtersName();
       daughters_name = new G4String*[numberOfDaughters];
       // copy daughters name
-      for (G4int index = 0; index < numberOfDaughters; ++index) {
+      for (G4int index = 0; index < numberOfDaughters; ++index)
+      {
         daughters_name[index] = new G4String(*right.daughters_name[index]);
       }
     }
@@ -141,7 +148,8 @@ G4DecayProducts* G4PionRadiativeDecayChannel::DecayIt(G4double)
   const G4int N_DAUGHTER = 3;
   G4double daughtermass[N_DAUGHTER];
   // G4double sumofdaughtermass = 0.0;
-  for (G4int index = 0; index < N_DAUGHTER; ++index) {
+  for (G4int index = 0; index < N_DAUGHTER; ++index)
+  {
     daughtermass[index] = G4MT_daughters[index]->GetPDGMass();
     // sumofdaughtermass += daughtermass[index];
   }
@@ -159,8 +167,10 @@ G4DecayProducts* G4PionRadiativeDecayChannel::DecayIt(G4double)
 
   const std::size_t MAX_LOOP = 1000;
 
-  for (std::size_t loop_counter1 = 0; loop_counter1 < MAX_LOOP; ++loop_counter1) {
-    for (std::size_t loop_counter2 = 0; loop_counter2 < MAX_LOOP; ++loop_counter2) {
+  for (std::size_t loop_counter1 = 0; loop_counter1 < MAX_LOOP; ++loop_counter1)
+  {
+    for (std::size_t loop_counter2 = 0; loop_counter2 < MAX_LOOP; ++loop_counter2)
+    {
       x = xl + G4UniformRand() * (xu - xl);
       y = yl + G4UniformRand() * (yu - yl);
       if (x + y > 1.) break;
@@ -229,7 +239,8 @@ G4DecayProducts* G4PionRadiativeDecayChannel::DecayIt(G4double)
 
   // output message
 #ifdef G4VERBOSE
-  if (GetVerboseLevel() > 1) {
+  if (GetVerboseLevel() > 1)
+  {
     G4cout << "G4PionRadiativeDecayChannel::DecayIt() -";
     G4cout << " create decay products in rest frame " << G4endl;
     products->DumpInfo();

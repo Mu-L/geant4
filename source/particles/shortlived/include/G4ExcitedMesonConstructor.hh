@@ -29,8 +29,8 @@
 //      History: first implementation, based on object model of
 //      10 oct 1998  H.Kurashige
 // ---------------------------------------------------------------
-#ifndef G4ExcitedMesonConstructor_h
-#define G4ExcitedMesonConstructor_h 1
+#ifndef G4EXCITEDMESONCONSTRUCTOR_HH
+#define G4EXCITEDMESONCONSTRUCTOR_HH
 
 #include "globals.hh"
 class G4DecayTable;
@@ -39,7 +39,9 @@ class G4ExcitedMesonConstructor
 {
     // This class is a utility class for construction
     // short lived particles
+
   public:
+
     enum
     {
       NMultiplets = 10
@@ -56,12 +58,14 @@ class G4ExcitedMesonConstructor
     };
 
   public:
+
     G4ExcitedMesonConstructor(G4int nStates = 0, G4int isoSpin = 0);
     virtual ~G4ExcitedMesonConstructor() = default;
 
     virtual void Construct(G4int indexOfState = -1);
 
   protected:
+
     void ConstructMesons(G4int indexOfState, G4int indexOfType);
 
     G4String GetName(G4int iIso3, G4int iState, G4int idxType);
@@ -70,6 +74,7 @@ class G4ExcitedMesonConstructor
     G4int GetQuarkContents(G4int iQ, G4int iIso3, G4int iType);
 
   protected:
+
     G4DecayTable* CreateDecayTable(const G4String&, G4int, G4int, G4int);
 
     G4DecayTable* AddKPiMode(G4DecayTable* table, const G4String& name, G4double br, G4int iIso3,
@@ -129,6 +134,7 @@ class G4ExcitedMesonConstructor
     G4double GetCharge(G4int iIsoSpin3, G4int idxType);
 
   protected:
+
     enum
     {
       N11P1 = 0,
@@ -207,31 +213,41 @@ class G4ExcitedMesonConstructor
 inline G4String G4ExcitedMesonConstructor::GetName(G4int iIso3, G4int iState, G4int iType)
 {
   G4String particle = name[iState][iType];
-  if (iType == TPi) {
-    if (iIso3 == +2) {
+  if (iType == TPi)
+  {
+    if (iIso3 == +2)
+    {
       particle += "+";
     }
-    else if (iIso3 == -2) {
+    else if (iIso3 == -2)
+    {
       particle += "-";
     }
-    else {
+    else
+    {
       particle += "0";
     }
   }
-  else if (iType == TK) {
-    if (iIso3 == +1) {
+  else if (iType == TK)
+  {
+    if (iIso3 == +1)
+    {
       particle += "+";
     }
-    else if (iIso3 == -1) {
+    else if (iIso3 == -1)
+    {
       particle += "0";
     }
   }
-  else if (iType == TAntiK) {
-    if (iIso3 == +1) {
+  else if (iType == TAntiK)
+  {
+    if (iIso3 == +1)
+    {
       particle += "0";
       particle = "anti_" + particle;
     }
-    else if (iIso3 == -1) {
+    else if (iIso3 == -1)
+    {
       particle += "-";
     }
   }

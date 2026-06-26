@@ -30,42 +30,37 @@
 //      17 August 2004  P. Gumplinger, T. MacPhail
 // ------------------------------------------------------------
 //
-#ifndef G4DecayWithSpin_h
-#define G4DecayWithSpin_h 1
-
-#include "G4ios.hh"
-#include "globals.hh"
-#include "G4VRestDiscreteProcess.hh"
-#include "G4ParticleChangeForDecay.hh"
+#ifndef G4DECAYWITHSPIN_HH
+#define G4DECAYWITHSPIN_HH
 
 #include "G4Decay.hh"
+#include "G4ParticleChangeForDecay.hh"
+#include "G4VRestDiscreteProcess.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 class G4DecayWithSpin : public G4Decay
 {
   public:
+
     //  Constructors
-    G4DecayWithSpin(const G4String& processName ="DecayWithSpin");
+    G4DecayWithSpin(const G4String& processName = "DecayWithSpin");
 
     //  Destructor
     virtual ~G4DecayWithSpin();
- 
+
     virtual void ProcessDescription(std::ostream& outFile) const override;
     //
 
-  protected: // With Description
-    virtual G4VParticleChange* PostStepDoIt(
-                             const G4Track& aTrack,
-                             const G4Step&  aStep
-                            ) override;
+  protected:  // With Description
 
-    virtual G4VParticleChange* AtRestDoIt(
-                             const G4Track& aTrack,
-                             const G4Step&  aStep
-                            ) override;
+    virtual G4VParticleChange* PostStepDoIt(const G4Track& aTrack, const G4Step& aStep) override;
+
+    virtual G4VParticleChange* AtRestDoIt(const G4Track& aTrack, const G4Step& aStep) override;
+
   private:
-     G4ThreeVector Spin_Precession(const G4Step& aStep,
-                                   G4ThreeVector B, G4double deltatime );
 
+    G4ThreeVector Spin_Precession(const G4Step& aStep, G4ThreeVector B, G4double deltatime);
 };
 
 #endif

@@ -36,7 +36,7 @@
 // Author: V.Grichine, 26.03.1997
 // --------------------------------------------------------------------
 #ifndef G4SIMPLEINTEGRATION_HH
-#define G4SIMPLEINTEGRATION_HH 1
+#define G4SIMPLEINTEGRATION_HH
 
 #include "G4Types.hh"
 
@@ -44,46 +44,47 @@ using function = G4double (*)(G4double);
 
 class G4SimpleIntegration
 {
- public:
-  explicit G4SimpleIntegration(function pFunction);
+  public:
 
-  G4SimpleIntegration(function pFunction, G4double pTolerance);
+    explicit G4SimpleIntegration(function pFunction);
 
-  ~G4SimpleIntegration() = default;
+    G4SimpleIntegration(function pFunction, G4double pTolerance);
 
-  G4SimpleIntegration(const G4SimpleIntegration&) = delete;
-  G4SimpleIntegration& operator=(const G4SimpleIntegration&) = delete;
-  // Private copy constructor and assignment operator.
+    ~G4SimpleIntegration() = default;
 
-  // Simple integration methods:
-  // Trapezoidal, MidPoint, Gauss and Simpson(double a,double b,int n)
-  // - integrate function pointed by fFunction from a to b by n iterations,
-  //   i.e. with Step (b-a)/n according to the correspondent method.
+    G4SimpleIntegration(const G4SimpleIntegration&) = delete;
+    G4SimpleIntegration& operator=(const G4SimpleIntegration&) = delete;
+    // Private copy constructor and assignment operator.
 
-  G4double Trapezoidal(G4double xInitial, G4double xFinal,
-                       G4int iterationNumber);
+    // Simple integration methods:
+    // Trapezoidal, MidPoint, Gauss and Simpson(double a,double b,int n)
+    // - integrate function pointed by fFunction from a to b by n iterations,
+    //   i.e. with Step (b-a)/n according to the correspondent method.
 
-  G4double MidPoint(G4double xInitial, G4double xFinal, G4int iterationNumber);
+    G4double Trapezoidal(G4double xInitial, G4double xFinal, G4int iterationNumber);
 
-  G4double Gauss(G4double xInitial, G4double xFinal, G4int iterationNumber);
+    G4double MidPoint(G4double xInitial, G4double xFinal, G4int iterationNumber);
 
-  G4double Simpson(G4double xInitial, G4double xFinal, G4int iterationNumber);
+    G4double Gauss(G4double xInitial, G4double xFinal, G4int iterationNumber);
 
-  // Adaptive Gauss integration with accuracy ~ fTolerance
+    G4double Simpson(G4double xInitial, G4double xFinal, G4int iterationNumber);
 
-  G4double AdaptGaussIntegration(G4double xInitial, G4double xFinal);
-  // Integrate function from a to be with accuracy <= fTolerance
+    // Adaptive Gauss integration with accuracy ~ fTolerance
 
- protected:
-  G4double Gauss(G4double xInitial, G4double xFinal);
+    G4double AdaptGaussIntegration(G4double xInitial, G4double xFinal);
+    // Integrate function from a to be with accuracy <= fTolerance
 
-  void AdaptGauss(G4double xInitial, G4double xFinal, G4double& sum,
-                  G4int& depth);
+  protected:
 
- private:
-  function fFunction;              // pointer to the function to be integrated
-  G4double fTolerance   = 0.0001;  // accuracy of integration
-  const G4int fMaxDepth = 100;     // constant maximum iteration depth
+    G4double Gauss(G4double xInitial, G4double xFinal);
+
+    void AdaptGauss(G4double xInitial, G4double xFinal, G4double& sum, G4int& depth);
+
+  private:
+
+    function fFunction;  // pointer to the function to be integrated
+    G4double fTolerance = 0.0001;  // accuracy of integration
+    const G4int fMaxDepth = 100;  // constant maximum iteration depth
 };
 
 #endif

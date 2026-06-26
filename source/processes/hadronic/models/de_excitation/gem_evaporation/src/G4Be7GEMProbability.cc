@@ -29,39 +29,38 @@
 //
 
 #include "G4Be7GEMProbability.hh"
+
 #include "G4SystemOfUnits.hh"
 
-G4Be7GEMProbability::G4Be7GEMProbability() :
-  G4GEMProbability(7,4,3.0/2.0) // A,Z,Spin
+G4Be7GEMProbability::G4Be7GEMProbability() : G4GEMProbability(7, 4, 3.0 / 2.0)  // A,Z,Spin
 {
-  ExcitEnergies.push_back(429.08*keV);
-  ExcitSpins.push_back(1.0/2.0);
-  ExcitLifetimes.push_back(133.0e-15*s);
+  ExcitEnergies.push_back(429.08 * keV);
+  ExcitSpins.push_back(1.0 / 2.0);
+  ExcitLifetimes.push_back(133.0e-15 * s);
 
-  ExcitEnergies.push_back(4570.0*keV);
-  ExcitSpins.push_back(7.0/2.0);
-  ExcitLifetimes.push_back(fPlanck/(175.0*keV));
+  ExcitEnergies.push_back(4570.0 * keV);
+  ExcitSpins.push_back(7.0 / 2.0);
+  ExcitLifetimes.push_back(fPlanck / (175.0 * keV));
 
-  ExcitEnergies.push_back(6.73e3*keV);
-  ExcitSpins.push_back(5.0/2.0);
-  ExcitLifetimes.push_back(fPlanck/(1.2*MeV));
+  ExcitEnergies.push_back(6.73e3 * keV);
+  ExcitSpins.push_back(5.0 / 2.0);
+  ExcitLifetimes.push_back(fPlanck / (1.2 * MeV));
 
-  ExcitEnergies.push_back(7210.0*keV);
-  ExcitSpins.push_back(5.0/2.0);
-  ExcitLifetimes.push_back(fPlanck/(0.5*MeV));
+  ExcitEnergies.push_back(7210.0 * keV);
+  ExcitSpins.push_back(5.0 / 2.0);
+  ExcitLifetimes.push_back(fPlanck / (0.5 * MeV));
 
-  ExcitEnergies.push_back(9900.0*keV);
-  ExcitSpins.push_back(3.0/2.0);
-  ExcitLifetimes.push_back(fPlanck/(1.8*MeV));
+  ExcitEnergies.push_back(9900.0 * keV);
+  ExcitSpins.push_back(3.0 / 2.0);
+  ExcitLifetimes.push_back(fPlanck / (1.8 * MeV));
 
-  ExcitEnergies.push_back(11010.0*keV);
-  ExcitSpins.push_back(3.0/2.0);
-  ExcitLifetimes.push_back(fPlanck/(320.0*keV));
+  ExcitEnergies.push_back(11010.0 * keV);
+  ExcitSpins.push_back(3.0 / 2.0);
+  ExcitLifetimes.push_back(fPlanck / (320.0 * keV));
 
-  ExcitEnergies.push_back(17000.0*keV);
-  ExcitSpins.push_back(1.0/2.0);
-  ExcitLifetimes.push_back(fPlanck/(6.5*MeV));
+  ExcitEnergies.push_back(17000.0 * keV);
+  ExcitSpins.push_back(1.0 / 2.0);
+  ExcitLifetimes.push_back(fPlanck / (6.5 * MeV));
 }
 
-G4Be7GEMProbability::~G4Be7GEMProbability() 
-{}
+G4Be7GEMProbability::~G4Be7GEMProbability() {}

@@ -27,20 +27,20 @@
 //
 // Class description:
 //
-// A G4tgrSolidScaled is a G4tgrSolid object with a solid made by 
+// A G4tgrSolidScaled is a G4tgrSolid object with a solid made by
 // scaling another solid(oSolid) by a G4Scale3D vector.
 //
 // Author: P.Heidary, AEOI - November 2021
 // --------------------------------------------------------------------
 
-#ifndef G4tgrSolidScaled_hh
-#define G4tgrSolidScaled_hh 1
+#ifndef G4TGRSOLIDSCALED_HH
+#define G4TGRSOLIDSCALED_HH
+
+#include "G4Transform3D.hh"
+#include "G4tgrSolid.hh"
+#include "globals.hh"
 
 #include <vector>
-
-#include "globals.hh"
-#include "G4tgrSolid.hh"
-#include "G4Transform3D.hh"
 
 class G4tgrSolidScaled : public G4tgrSolid
 {

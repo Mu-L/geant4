@@ -31,13 +31,13 @@
 
 // Author: Hisaya Kurashige, 10 May 1998
 // --------------------------------------------------------------------
-#ifndef G4ParticleChangeForTransport_hh
-#define G4ParticleChangeForTransport_hh 1
+#ifndef G4PARTICLECHANGEFORTRANSPORT_HH
+#define G4PARTICLECHANGEFORTRANSPORT_HH
 
-#include "globals.hh"
-#include "G4ios.hh"
-#include "G4TouchableHandle.hh"
 #include "G4ParticleChange.hh"
+#include "G4TouchableHandle.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 class G4MaterialCutsCouple;
 class G4VSensitiveDetector;
@@ -53,70 +53,66 @@ class G4ParticleChangeForTransport final : public G4ParticleChange
     G4ParticleChangeForTransport(const G4ParticleChangeForTransport& right) = delete;
     G4ParticleChangeForTransport& operator=(const G4ParticleChangeForTransport& right) = delete;
 
-  // --- the following methods are for updating G4Step ---
-  // Return the pointer to the G4Step after updating the Step information
-  // by using final state information of the track given by a physics process
+    // --- the following methods are for updating G4Step ---
+    // Return the pointer to the G4Step after updating the Step information
+    // by using final state information of the track given by a physics process
 
     G4Step* UpdateStepForAlongStep(G4Step* Step) final;
     G4Step* UpdateStepForAtRest(G4Step* Step) final;
     G4Step* UpdateStepForPostStep(G4Step* Step) final;
-      // A physics process gives the final state of the particle
-      // based on information of G4Track (or equivalently the PreStepPoint)
+    // A physics process gives the final state of the particle
+    // based on information of G4Track (or equivalently the PreStepPoint)
 
     void Initialize(const G4Track&) final;
-      // Initialize all properties by using G4Track information
+    // Initialize all properties by using G4Track information
 
-  // --- methods to keep information of the final state ---
-  // IMPORTANT NOTE: despite the name, what this class stores/returns
-  // through its methods, are the "FINAL" values of the Position, Momentum, etc.
+    // --- methods to keep information of the final state ---
+    // IMPORTANT NOTE: despite the name, what this class stores/returns
+    // through its methods, are the "FINAL" values of the Position, Momentum, etc.
 
     inline const G4TouchableHandle& GetTouchableHandle() const;
     inline void SetTouchableHandle(const G4TouchableHandle& fTouchable);
-      // Get/Set the touchable of the current particle.
-      // Note: Touchable in PostStepPoint will be updated only after
-      // PostStepDoIt
+    // Get/Set the touchable of the current particle.
+    // Note: Touchable in PostStepPoint will be updated only after
+    // PostStepDoIt
 
     inline G4Material* GetMaterialInTouchable() const;
     inline void SetMaterialInTouchable(G4Material* fMaterial);
-      // Get/Propose the material in the touchable of the current particle
+    // Get/Propose the material in the touchable of the current particle
 
     inline const G4MaterialCutsCouple* GetMaterialCutsCoupleInTouchable() const;
-    inline void SetMaterialCutsCoupleInTouchable(
-    const G4MaterialCutsCouple* fMaterialCutsCouple);
-      // Get/Set the materialCutsCouple in the touchable of the current
-      // particle
+    inline void SetMaterialCutsCoupleInTouchable(const G4MaterialCutsCouple* fMaterialCutsCouple);
+    // Get/Set the materialCutsCouple in the touchable of the current
+    // particle
 
     inline G4VSensitiveDetector* GetSensitiveDetectorInTouchable() const;
-    inline void SetSensitiveDetectorInTouchable(
-    G4VSensitiveDetector* fSensitiveDetector);
-      // Get/Set the sensitive detector in the touchable of the current particle
+    inline void SetSensitiveDetectorInTouchable(G4VSensitiveDetector* fSensitiveDetector);
+    // Get/Set the sensitive detector in the touchable of the current particle
 
     inline G4bool GetMomentumChanged() const;
     inline void SetMomentumChanged(G4bool b);
 
-    inline void
-    SetPointerToVectorOfAuxiliaryPoints(std::vector<G4ThreeVector>* vec);
-    inline std::vector<G4ThreeVector>*
-    GetPointerToVectorOfAuxiliaryPoints() const;
-      // Smooth representation of curved trajectories
+    inline void SetPointerToVectorOfAuxiliaryPoints(std::vector<G4ThreeVector>* vec);
+    inline std::vector<G4ThreeVector>* GetPointerToVectorOfAuxiliaryPoints() const;
+    // Smooth representation of curved trajectories
 
     void DumpInfo() const final;
 
   private:
 
     G4TouchableHandle theTouchableHandle;
-      // The changed touchable of a given particle
+    // The changed touchable of a given particle
 
     G4bool isMomentumChanged = false;
-      // The flag which is set if momentum is changed in current step
+    // The flag which is set if momentum is changed in current step
 
     G4Material* theMaterialChange = nullptr;
 
     const G4MaterialCutsCouple* theMaterialCutsCoupleChange = nullptr;
 
     G4VSensitiveDetector* theSensitiveDetectorChange = nullptr;
-      // The material (and MaterialCutsCouple) where given track
-      // currently locates
+    // The material (and MaterialCutsCouple) where given track
+    // currently locates
 
     std::vector<G4ThreeVector>* fpVectorOfAuxiliaryPointsPointer = nullptr;
 };

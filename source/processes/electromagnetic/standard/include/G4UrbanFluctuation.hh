@@ -40,47 +40,45 @@
 //
 // Class Description:
 //
-// Implementation of energy loss fluctuations made by L.Urban for 
+// Implementation of energy loss fluctuations made by L.Urban for
 // Geant4 10.X series for updated design of 11.X by V.Ivanchenko
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4UrbanFluctuation_h
-#define G4UrbanFluctuation_h 1
+#ifndef G4URBANFLUCTUATION_HH
+#define G4URBANFLUCTUATION_HH
 
 #include "G4UniversalFluctuation.hh"
 
 class G4UrbanFluctuation : public G4UniversalFluctuation
 {
+  public:
 
-public:
+    explicit G4UrbanFluctuation(const G4String& nam = "UrbanFluc");
 
-  explicit G4UrbanFluctuation(const G4String& nam = "UrbanFluc");
+    ~G4UrbanFluctuation() override;
 
-  ~G4UrbanFluctuation() override;
+    // hide assignment operator
+    G4UrbanFluctuation& operator=(const G4UrbanFluctuation& right) = delete;
+    G4UrbanFluctuation(const G4UrbanFluctuation&) = delete;
 
-  // hide assignment operator
-  G4UrbanFluctuation & operator =
-  (const G4UrbanFluctuation &right) = delete;
-  G4UrbanFluctuation(const G4UrbanFluctuation&) = delete;
+  protected:
 
-protected:
+    G4double SampleGlandz(CLHEP::HepRandomEngine* rndm, const G4Material*,
+                          const G4double tcut) override;
 
-  G4double SampleGlandz(CLHEP::HepRandomEngine* rndm, 
-                        const G4Material*, const G4double tcut) override;
+  private:
 
-private:
-
-  // material properties
-  const G4Material* lastMaterial = nullptr;
-  G4double f1Fluct = 0.0;
-  G4double f2Fluct = 0.0;
-  G4double e1Fluct = 0.0;
-  G4double e2Fluct = 0.0;
-  G4double e1LogFluct = 0.0;
-  G4double e2LogFluct = 0.0;
-  G4double esmall = 0.0;
+    // material properties
+    const G4Material* lastMaterial = nullptr;
+    G4double f1Fluct = 0.0;
+    G4double f2Fluct = 0.0;
+    G4double e1Fluct = 0.0;
+    G4double e2Fluct = 0.0;
+    G4double e1LogFluct = 0.0;
+    G4double e2LogFluct = 0.0;
+    G4double esmall = 0.0;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -30,35 +30,34 @@
 // Author:        Andreas Schaelicke
 //
 
-#ifndef G4PolarizedPhotoElectricXS_h
-#define G4PolarizedPhotoElectricXS_h 1
+#ifndef G4POLARIZEDPHOTOELECTRICXS_HH
+#define G4POLARIZEDPHOTOELECTRICXS_HH
 
 #include "G4StokesVector.hh"
 #include "G4VPolarizedXS.hh"
 
 class G4PolarizedPhotoElectricXS : public G4VPolarizedXS
 {
- public:
-  G4PolarizedPhotoElectricXS();
-  ~G4PolarizedPhotoElectricXS() override;
+  public:
 
-  void Initialize(G4double aGammaE, G4double aLept0E, G4double sintheta,
-                  const G4StokesVector& beamPol, const G4StokesVector&,
-                  G4int flag = 0) override;
+    G4PolarizedPhotoElectricXS();
+    ~G4PolarizedPhotoElectricXS() override;
 
-  G4double XSection(const G4StokesVector& pol2,
-                    const G4StokesVector& pol3) override;
+    void Initialize(G4double aGammaE, G4double aLept0E, G4double sintheta,
+                    const G4StokesVector& beamPol, const G4StokesVector&, G4int flag = 0) override;
 
-  // return expected mean polarisation
-  G4StokesVector GetPol2() override;
-  G4StokesVector GetPol3() override;
+    G4double XSection(const G4StokesVector& pol2, const G4StokesVector& pol3) override;
 
-  G4PolarizedPhotoElectricXS& operator=(
-    const G4PolarizedPhotoElectricXS& right) = delete;
-  G4PolarizedPhotoElectricXS(const G4PolarizedPhotoElectricXS&) = delete;
+    // return expected mean polarisation
+    G4StokesVector GetPol2() override;
+    G4StokesVector GetPol3() override;
 
- private:
-  G4StokesVector fFinalElectronPolarization;
+    G4PolarizedPhotoElectricXS& operator=(const G4PolarizedPhotoElectricXS& right) = delete;
+    G4PolarizedPhotoElectricXS(const G4PolarizedPhotoElectricXS&) = delete;
+
+  private:
+
+    G4StokesVector fFinalElectronPolarization;
 };
 
 #endif

@@ -24,7 +24,7 @@
 // ********************************************************************
 
 #ifndef G4GVTKMESSENGER_HH
-#define G4GVTKMESSENGER_HH 1
+#define G4GVTKMESSENGER_HH
 
 #include "G4UImessenger.hh"
 
@@ -39,6 +39,7 @@ class G4UIcmdWithoutParameter;
 class G4VtkMessenger : public G4UImessenger
 {
   public:
+
     static G4VtkMessenger* GetInstance();
     ~G4VtkMessenger() override;
 
@@ -46,6 +47,7 @@ class G4VtkMessenger : public G4UImessenger
     void SetNewValue(G4UIcommand* command, G4String newValue) override;
 
   private:
+
     static G4VtkMessenger* fpInstance;
     G4VtkMessenger();
 

@@ -42,49 +42,51 @@ G3MedTable::~G3MedTable()
 
 G3MedTableEntry* G3MedTable::get(G4int id) const
 {
-  for (size_t i=0; i< fMedVector->size(); i++) {
+  for (size_t i = 0; i < fMedVector->size(); i++)
+  {
     G3MedTableEntry* mte = (*fMedVector)[i];
     if (id == mte->GetID()) return mte;
   }
   return 0;
-}    
+}
 
-void G3MedTable::put(G4int id, G4Material* material, G4MagneticField* field,
-       G4UserLimits* limits, G4int isvol)
+void G3MedTable::put(G4int id, G4Material* material, G4MagneticField* field, G4UserLimits* limits,
+                     G4int isvol)
 {
-  G3MedTableEntry* mte 
-    = new G3MedTableEntry(id, material, field, limits, isvol);
+  G3MedTableEntry* mte = new G3MedTableEntry(id, material, field, limits, isvol);
   fMedVector->push_back(mte);
 }
 
 G3MedTableEntry* G3MedTable::GetMTE(G4int i) const
 {
-  if (i<0 || i>= G4int(fMedVector->size())) 
-    return 0;
-  
+  if (i < 0 || i >= G4int(fMedVector->size())) return 0;
+
   return (*fMedVector)[i];
-}    
-    
+}
+
 G4int G3MedTable::GetSize() const
 {
   return (G4int)fMedVector->size();
-}    
+}
 
 void G3MedTable::Clear()
 {
   G3MedTableEntry* a;
-  while (fMedVector->size()>0) {
+  while (fMedVector->size() > 0)
+  {
     a = fMedVector->back();
     fMedVector->pop_back();
-    for (G3MediumVector::iterator i=fMedVector->begin();
-                                  i!=fMedVector->end();){
-      if (*i==a) {
-	i = fMedVector->erase(i);
+    for (G3MediumVector::iterator i = fMedVector->begin(); i != fMedVector->end();)
+    {
+      if (*i == a)
+      {
+        i = fMedVector->erase(i);
       }
-      else {
-	++i;
+      else
+      {
+        ++i;
       }
-    } 
-    if ( a )  delete a;    
-  } 
+    }
+    if (a) delete a;
+  }
 }

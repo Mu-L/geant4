@@ -43,8 +43,8 @@
 // J. Comput. Phys. 274 (2014) 841-882
 // Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#ifndef G4Scheduler_h
-#define G4Scheduler_h
+#ifndef G4SCHEDULER_HH
+#define G4SCHEDULER_HH
 
 #include "G4ITModelHandler.hh"
 #include "G4ITReaction.hh"
@@ -86,9 +86,11 @@ struct compTrackPerID
 class G4Scheduler : public G4VScheduler, public G4VStateDependent
 {
   protected:
+
     ~G4Scheduler() override;
 
   public:
+
     G4Scheduler(const G4Scheduler&) = delete;
     G4Scheduler& operator=(const G4Scheduler&) = delete;
 
@@ -186,14 +188,11 @@ class G4Scheduler : public G4VScheduler, public G4VStateDependent
     {
       fpUserScavenger = std::move(scavengerMaterial);
     }
-    inline G4bool IsInteractionStep(){
-      return fInteractionStep;
-    }
-    inline void SetInteractionStep(G4bool InteractionStep){
-      fInteractionStep = InteractionStep;
-    }
+    inline G4bool IsInteractionStep() { return fInteractionStep; }
+    inline void SetInteractionStep(G4bool InteractionStep) { fInteractionStep = InteractionStep; }
 
   protected:
+
     void DoProcess();
     void SynchronizeTracks();
     void Stepping();
@@ -205,6 +204,7 @@ class G4Scheduler : public G4VScheduler, public G4VStateDependent
     void PrintWhyDoYouStop();
 
   private:
+
     G4Scheduler();
     void Create();
 
@@ -281,6 +281,7 @@ class G4Scheduler : public G4VScheduler, public G4VStateDependent
     G4bool fResetScavenger;
 
   public:
+
     void ResetScavenger(bool);
 };
 
@@ -307,7 +308,8 @@ inline void G4Scheduler::SetTimeSteps(std::map<G4double, G4double>* steps)
 
 inline void G4Scheduler::AddTimeStep(G4double startingTime, G4double timeStep)
 {
-  if (fpUserTimeSteps == nullptr) {
+  if (fpUserTimeSteps == nullptr)
+  {
     fpUserTimeSteps = new std::map<G4double, G4double>();
     fUsePreDefinedTimeSteps = true;
   }

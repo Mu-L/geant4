@@ -71,7 +71,7 @@ inline void G4StepPoint::SetGlobalTime(const G4double aValue)
 inline void G4StepPoint::AddGlobalTime(const G4double aValue)
 {
   fGlobalTime += aValue;  // Time since the event in which the
-}                         // track belongs is created
+}  // track belongs is created
 
 inline G4double G4StepPoint::GetProperTime() const
 {
@@ -105,10 +105,9 @@ inline void G4StepPoint::AddMomentumDirection(const G4ThreeVector& aValue)
 
 inline G4ThreeVector G4StepPoint::GetMomentum() const
 {
-  G4double tMomentum =           // Total momentum of the track
+  G4double tMomentum =  // Total momentum of the track
     std::sqrt(fKineticEnergy * fKineticEnergy + 2 * fKineticEnergy * fMass);
-  return G4ThreeVector(fMomentumDirection.x() * tMomentum,
-                       fMomentumDirection.y() * tMomentum,
+  return G4ThreeVector(fMomentumDirection.x() * tMomentum, fMomentumDirection.y() * tMomentum,
                        fMomentumDirection.z() * tMomentum);
 }
 
@@ -145,12 +144,12 @@ inline void G4StepPoint::SetVelocity(G4double v)
 inline G4double G4StepPoint::GetBeta() const
 {
   return fVelocity / CLHEP::c_light;  // Velocity of the track
-}                                     //  in unit of c (light velocity)
+}  //  in unit of c (light velocity)
 
 inline G4double G4StepPoint::GetGamma() const
 {
   return (fMass == 0.) ? DBL_MAX : (fKineticEnergy + fMass) / fMass;
-    // Gamma factor (1/sqrt[1-beta*beta]) of the track
+  // Gamma factor (1/sqrt[1-beta*beta]) of the track
 }
 
 inline G4VPhysicalVolume* G4StepPoint::GetPhysicalVolume() const
@@ -265,8 +264,7 @@ inline const G4MaterialCutsCouple* G4StepPoint::GetMaterialCutsCouple() const
   return fpMaterialCutsCouple;
 }
 
-inline void G4StepPoint::SetMaterialCutsCouple(
-  const G4MaterialCutsCouple* materialCutsCouple)
+inline void G4StepPoint::SetMaterialCutsCouple(const G4MaterialCutsCouple* materialCutsCouple)
 {
   fpMaterialCutsCouple = materialCutsCouple;
 }

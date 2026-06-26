@@ -28,17 +28,17 @@
 // Satoshi TANAKA
 // DAWNFILE factory.
 
-//#define DEBUG_FR_SYSTEM
+// #define DEBUG_FR_SYSTEM
 
 #include "G4DAWNFILE.hh"
 
 #define __G_ANSI_C__
 
-#include "G4VisFeaturesOfDAWNFILE.hh"
-#include "G4VSceneHandler.hh"
 #include "G4DAWNFILESceneHandler.hh"
 #include "G4DAWNFILEViewer.hh"
 #include "G4FRConst.hh"
+#include "G4VSceneHandler.hh"
+#include "G4VisFeaturesOfDAWNFILE.hh"
 
 //----- G4DAWNFILE, constructor
 G4DAWNFILE::G4DAWNFILE()
@@ -57,10 +57,8 @@ G4VSceneHandler* G4DAWNFILE::CreateSceneHandler(const G4String& name)
 }
 
 //-----  G4DAWNFILE::CreateViewer ()
-G4VViewer* G4DAWNFILE::CreateViewer(G4VSceneHandler& scene,
-                                    const G4String& name)
+G4VViewer* G4DAWNFILE::CreateViewer(G4VSceneHandler& scene, const G4String& name)
 {
-  G4VViewer* pView =
-    new G4DAWNFILEViewer((G4DAWNFILESceneHandler&) scene, name);
+  G4VViewer* pView = new G4DAWNFILEViewer((G4DAWNFILESceneHandler&)scene, name);
   return pView;
 }

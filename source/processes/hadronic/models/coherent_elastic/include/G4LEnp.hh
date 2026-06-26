@@ -26,45 +26,49 @@
 //
 // G4 Low energy model: n-p scattering
 // F.W. Jones, L.G. Greeniaus, H.P. Wellisch
-//  
+//
 // For further comments see G4LEnpData.hh and G4LEnp.cc
 //
 // 02.01.2014 V. Grichine add SampInvariantT for testing ds/dt
 
-#ifndef G4LEnp_h
-#define G4LEnp_h 1
- 
-#include "globals.hh"
+#ifndef G4LENP_HH
+#define G4LENP_HH
+
 #include "G4HadronElastic.hh"
+#include "globals.hh"
 
 class G4LEnp : public G4HadronElastic  // G4HadronicInteraction
 {
-private:
+  private:
 
-  enum { NENERGY=39, NANGLE=180 };
+    enum
+    {
+      NENERGY = 39,
+      NANGLE = 180
+    };
 
-public:
+  public:
 
-  explicit G4LEnp();
+    explicit G4LEnp();
 
-  ~G4LEnp() override;
- 
-  G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
-                                 G4Nucleus& targetNucleus) override;
+    ~G4LEnp() override;
 
-  // sample momentum transfer using Lab. momentum
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
+                                   G4Nucleus& targetNucleus) override;
 
-  G4double SampleInvariantT(const G4ParticleDefinition* p, 
-			    G4double plab, G4int Z, G4int A) override;
-private:
+    // sample momentum transfer using Lab. momentum
 
- // The following arrays are declared static to allow the use of initializers.
- // They are initialized in G4LEnpData.hh
+    G4double SampleInvariantT(const G4ParticleDefinition* p, G4double plab, G4int Z,
+                              G4int A) override;
 
-  static const G4float sig[NENERGY][NANGLE];
-  static const G4float pcm[NENERGY], elab[NENERGY]; 
-  static const G4float dsigmax[NENERGY], sigtot[NENERGY];
+  private:
 
+    // The following arrays are declared static to allow the use of initializers.
+    // They are initialized in G4LEnpData.hh
+
+    static const G4float sig[NENERGY][NANGLE];
+    static const G4float pcm[NENERGY], elab[NENERGY];
+    static const G4float dsigmax[NENERGY], sigtot[NENERGY];
 };
 
 #endif

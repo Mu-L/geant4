@@ -31,52 +31,49 @@
 //      File name:     G4CrossSectionComposite
 //
 //      Author:        Maria Grazia Pia (MariaGrazia.Pia@genova.infn.it)
-// 
+//
 //      Creation date: 15 April 1999
 //
-//      Modifications: 
-//      
+//      Modifications:
+//
 // -------------------------------------------------------------------
 
 #ifndef G4CROSSSECTIONCOMPOSITE_HH
 #define G4CROSSSECTIONCOMPOSITE_HH
 
-#include "globals.hh"
 #include "G4CrossSectionVector.hh"
+#include "globals.hh"
 
 class G4KineticTrack;
 
-class G4CrossSectionComposite 
+class G4CrossSectionComposite
 {
+  public:
 
-public:
+    G4CrossSectionComposite();
 
-  G4CrossSectionComposite();
+    virtual ~G4CrossSectionComposite();
 
-  virtual ~G4CrossSectionComposite();
+    G4bool operator==(const G4CrossSectionComposite& right) const;
+    G4bool operator!=(const G4CrossSectionComposite& right) const;
 
-  G4bool operator==(const G4CrossSectionComposite &right) const;
-  G4bool operator!=(const G4CrossSectionComposite &right) const;
+    virtual G4double CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2);
 
-  virtual G4double CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2);
- 
-  virtual void Add(G4CrossSectionComposite* component);
+    virtual void Add(G4CrossSectionComposite* component);
 
-  virtual void Remove(G4CrossSectionComposite* component);
+    virtual void Remove(G4CrossSectionComposite* component);
 
-protected:
+  protected:
 
-  G4CrossSectionVector* _components;
+    G4CrossSectionVector* _components;
 
+  private:
 
-private:  
+    //  G4CrossSectionComposite(const G4CrossSectionComposite &right);
 
-  //  G4CrossSectionComposite(const G4CrossSectionComposite &right);
-
-  //  const G4CrossSectionComposite& operator=(const G4CrossSectionComposite &right);
-  //  G4bool operator==(const G4CrossSectionComposite &right) const;
-  //  G4bool operator!=(const G4CrossSectionComposite &right) const;
-  
+    //  const G4CrossSectionComposite& operator=(const G4CrossSectionComposite &right);
+    //  G4bool operator==(const G4CrossSectionComposite &right) const;
+    //  G4bool operator!=(const G4CrossSectionComposite &right) const;
 };
 
 #endif

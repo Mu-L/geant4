@@ -28,23 +28,25 @@
 
 // Author: Ivana Hrivnacova, 15/09/2020  (ivana@ipno.in2p3.fr)
 
-#ifndef G4Hdf5HnFileManager_h
-#define G4Hdf5HnFileManager_h 1
+#ifndef G4HDF5HNFILEMANAGER_HH
+#define G4HDF5HNFILEMANAGER_HH
 
 #include "G4VTHnFileManager.hh"
 
-#include "toolx/hdf5/ntuple" // for hid_t
+#include "toolx/hdf5/ntuple"  // for hid_t
 
 #include <string_view>
 
 class G4Hdf5FileManager;
 
-template <typename HT>
+template<typename HT>
 class G4Hdf5HnFileManager : public G4VTHnFileManager<HT>
 {
   public:
+
     explicit G4Hdf5HnFileManager(G4Hdf5FileManager* fileManger)
-      : G4VTHnFileManager<HT>(), fFileManager(fileManger) {}
+      : G4VTHnFileManager<HT>(), fFileManager(fileManger)
+    {}
     G4Hdf5HnFileManager() = delete;
     ~G4Hdf5HnFileManager() override = default;
 
@@ -55,12 +57,13 @@ class G4Hdf5HnFileManager : public G4VTHnFileManager<HT>
     G4bool Write(HT* ht, const G4String& htName, G4String& fileName) final;
 
   private:
+
     // Methods
     G4bool WriteImpl(hid_t hdirectory, HT* ht, const G4String& htName);
     // Static data members
-    static constexpr std::string_view fkClass { "G4Hdf5HnFileManager<HT>" };
+    static constexpr std::string_view fkClass{"G4Hdf5HnFileManager<HT>"};
     // Data members
-    G4Hdf5FileManager* fFileManager { nullptr };
+    G4Hdf5FileManager* fFileManager{nullptr};
 };
 
 // inline functions

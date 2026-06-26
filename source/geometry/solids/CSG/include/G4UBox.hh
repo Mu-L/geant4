@@ -22,7 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // G4UBox
 //
 // Class description:
@@ -36,20 +36,21 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedBox.h>
+#  include "G4Polyhedron.hh"
 
-#include "G4Polyhedron.hh"
+#  include <VecGeom/volumes/UnplacedBox.h>
 
 /**
  * @brief G4UBox is a wrapper class for G4Box to make use of VecGeom Box.
+ * @ingroup geometry_solids_csg
  */
 
 class G4UBox : public G4UAdapter<vecgeom::UnplacedBox>
 {
-  using Shape_t = vecgeom::UnplacedBox;
-  using Base_t = G4UAdapter<vecgeom::UnplacedBox>;
+    using Shape_t = vecgeom::UnplacedBox;
+    using Base_t = G4UAdapter<vecgeom::UnplacedBox>;
 
   public:
 
@@ -65,14 +66,13 @@ class G4UBox : public G4UAdapter<vecgeom::UnplacedBox>
     /**
      * Default destructor.
      */
-   ~G4UBox() override = default;
+    ~G4UBox() override = default;
 
     /**
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -118,10 +118,9 @@ class G4UBox : public G4UAdapter<vecgeom::UnplacedBox>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                           G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.
@@ -132,7 +131,7 @@ class G4UBox : public G4UAdapter<vecgeom::UnplacedBox>
      * Copy constructor and assignment operator.
      */
     G4UBox(const G4UBox& rhs);
-    G4UBox& operator=(const G4UBox& rhs); 
+    G4UBox& operator=(const G4UBox& rhs);
 };
 
 // --------------------------------------------------------------------

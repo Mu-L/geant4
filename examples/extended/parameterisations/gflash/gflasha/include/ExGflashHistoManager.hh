@@ -30,7 +30,6 @@
 #define ExGflashHistoManager_h 1
 
 #include "G4AnalysisManager.hh"
-#include "globals.hh"
 
 class ExGflashDetectorConstruction;
 

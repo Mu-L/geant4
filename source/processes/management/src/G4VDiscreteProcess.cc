@@ -24,31 +24,29 @@
 // ********************************************************************
 //
 // G4VDiscreteProcess class implementation
-// 
+//
 // Authors:
 // - 2 December 1995, G.Cosmo - First implementation, based on object model
 // - 18 December 1996, H.Kurashige - New Physics scheme
 // --------------------------------------------------------------------
 
 #include "G4VDiscreteProcess.hh"
-#include "G4SystemOfUnits.hh"
 
-#include "G4Step.hh"
-#include "G4Track.hh"
 #include "G4MaterialTable.hh"
+#include "G4Step.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4Track.hh"
 #include "G4VParticleChange.hh"
 
 // --------------------------------------------------------------------
-G4VDiscreteProcess::G4VDiscreteProcess()
-  : G4VProcess("No Name Discrete Process") 
+G4VDiscreteProcess::G4VDiscreteProcess() : G4VProcess("No Name Discrete Process")
 {
-  G4Exception("G4VDiscreteProcess::G4VDiscreteProcess()", "ProcMan102",
-	      JustWarning, "Default constructor is called");
+  G4Exception("G4VDiscreteProcess::G4VDiscreteProcess()", "ProcMan102", JustWarning,
+              "Default constructor is called");
 }
 
 // --------------------------------------------------------------------
-G4VDiscreteProcess::
-G4VDiscreteProcess(const G4String& aName, G4ProcessType aType)
+G4VDiscreteProcess::G4VDiscreteProcess(const G4String& aName, G4ProcessType aType)
   : G4VProcess(aName, aType)
 {
   enableAtRestDoIt = false;
@@ -56,30 +54,24 @@ G4VDiscreteProcess(const G4String& aName, G4ProcessType aType)
 }
 
 // --------------------------------------------------------------------
-G4VDiscreteProcess::~G4VDiscreteProcess()
-{
-}
+G4VDiscreteProcess::~G4VDiscreteProcess() {}
 
 // --------------------------------------------------------------------
-G4VDiscreteProcess::G4VDiscreteProcess(G4VDiscreteProcess& right)
-  : G4VProcess(right)
-{
-}
+G4VDiscreteProcess::G4VDiscreteProcess(G4VDiscreteProcess& right) : G4VProcess(right) {}
 
 // --------------------------------------------------------------------
-G4double G4VDiscreteProcess::
-PostStepGetPhysicalInteractionLength( const G4Track& track,
-			              G4double previousStepSize,
-			              G4ForceCondition* condition )
+G4double G4VDiscreteProcess::PostStepGetPhysicalInteractionLength(const G4Track& track,
+                                                                  G4double previousStepSize,
+                                                                  G4ForceCondition* condition)
 {
-  if ( (previousStepSize < 0.0) || (theNumberOfInteractionLengthLeft<=0.0))
+  if ((previousStepSize < 0.0) || (theNumberOfInteractionLengthLeft <= 0.0))
   {
     // beginning of tracking (or just after DoIt() of this process)
     ResetNumberOfInteractionLengthLeft();
   }
-  else if ( previousStepSize > 0.0)
+  else if (previousStepSize > 0.0)
   {
-    // subtract NumberOfInteractionLengthLeft 
+    // subtract NumberOfInteractionLengthLeft
     SubtractNumberOfInteractionLengthLeft(previousStepSize);
   }
   else
@@ -104,22 +96,21 @@ PostStepGetPhysicalInteractionLength( const G4Track& track,
     value = DBL_MAX;
   }
 #ifdef G4VERBOSE
-  if (verboseLevel>1)
+  if (verboseLevel > 1)
   {
     G4cout << "G4VDiscreteProcess::PostStepGetPhysicalInteractionLength() - ";
-    G4cout << "[ " << GetProcessName() << "]" <<G4endl;
+    G4cout << "[ " << GetProcessName() << "]" << G4endl;
     track.GetDynamicParticle()->DumpInfo();
-    G4cout << " in Material  " <<  track.GetMaterial()->GetName() <<G4endl;
-    G4cout << "InteractionLength= " << value/cm <<"[cm] " <<G4endl;
+    G4cout << " in Material  " << track.GetMaterial()->GetName() << G4endl;
+    G4cout << "InteractionLength= " << value / cm << "[cm] " << G4endl;
   }
 #endif
   return value;
 }
 
 // --------------------------------------------------------------------
-G4VParticleChange* G4VDiscreteProcess::PostStepDoIt( const G4Track& ,
-						     const G4Step& )
-{ 
+G4VParticleChange* G4VDiscreteProcess::PostStepDoIt(const G4Track&, const G4Step&)
+{
   // clear NumberOfInteractionLengthLeft
   ClearNumberOfInteractionLengthLeft();
 

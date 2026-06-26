@@ -38,6 +38,7 @@ class vtkBillboardTextActor3D;
 class G4VtkTextPipeline : public G4VVtkPipeline
 {
   public:
+
     G4VtkTextPipeline(const G4Text& text, const G4VtkVisContext& vc,
                       const G4VisAttributes* pVisAttributes);
     ~G4VtkTextPipeline() override = default;
@@ -57,6 +58,7 @@ class G4VtkTextPipeline : public G4VVtkPipeline
                                 const G4VisAttributes* pVA);
 
   protected:
+
     vtkSmartPointer<vtkBillboardTextActor3D> actor;
 };
 

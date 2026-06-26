@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  10th February 1997
 // G4OpenGLXmViewer : Class derived from G4OpenGLXViewer, to provide
 //                  (Motif) widget OpenGL functionality for GEANT4.
@@ -35,22 +35,19 @@
 
 #include "G4OpenGLImmediateViewer.hh"
 #include "G4OpenGLXmViewer.hh"
-
 #include "globals.hh"
 
 class G4OpenGLImmediateSceneHandler;
 
-class G4OpenGLImmediateXmViewer:
-public G4OpenGLXmViewer, public G4OpenGLImmediateViewer{
-  
-public:
-  G4OpenGLImmediateXmViewer (G4OpenGLImmediateSceneHandler& scene,
-			   const G4String& name = "");
-  virtual ~G4OpenGLImmediateXmViewer ();
-  void Initialise ();
-  void DrawView ();
-  void FinishView ();
+class G4OpenGLImmediateXmViewer : public G4OpenGLXmViewer, public G4OpenGLImmediateViewer
+{
+  public:
 
+    G4OpenGLImmediateXmViewer(G4OpenGLImmediateSceneHandler& scene, const G4String& name = "");
+    virtual ~G4OpenGLImmediateXmViewer();
+    void Initialise();
+    void DrawView();
+    void FinishView();
 };
 
 #endif

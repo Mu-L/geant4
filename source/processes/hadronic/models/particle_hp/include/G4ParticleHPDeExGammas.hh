@@ -27,8 +27,8 @@
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 // V.Ivanchenko 23.04.2023 Rewritten
 //
-#ifndef G4ParticleHPDeExGammas_h
-#define G4ParticleHPDeExGammas_h 1
+#ifndef G4PARTICLEHPDEEXGAMMAS_HH
+#define G4PARTICLEHPDEEXGAMMAS_HH
 
 #include "G4ParticleHPNucLevel.hh"
 #include "G4ReactionProductVector.hh"
@@ -40,6 +40,7 @@
 class G4ParticleHPDeExGammas
 {
   public:
+
     explicit G4ParticleHPDeExGammas();
     ~G4ParticleHPDeExGammas();
 
@@ -58,6 +59,7 @@ class G4ParticleHPDeExGammas
     const G4ParticleHPDeExGammas& operator=(const G4ParticleHPDeExGammas&) = delete;
 
   private:
+
     G4int nLevels = 0;
     std::vector<G4ParticleHPNucLevel*> theLevels;
 };

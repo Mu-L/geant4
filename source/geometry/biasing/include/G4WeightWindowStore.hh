@@ -37,17 +37,19 @@
 #ifndef G4WEIGHTWINDOWSTORE_HH
 #define G4WEIGHTWINDOWSTORE_HH
 
-#include "G4VWeightWindowStore.hh"
 #include "G4GeometryCellWeight.hh"
+#include "G4VWeightWindowStore.hh"
+
 #include <set>
 #include <vector>
 
 /**
  * @brief G4WeightWindowStore is an concrete implementation of a weight window
  * store according to the G4VWeightWindowStore interface.
+ * @ingroup geometry_biasing
  */
 
-class G4WeightWindowStore: public G4VWeightWindowStore
+class G4WeightWindowStore : public G4VWeightWindowStore
 {
   public:
 
@@ -63,18 +65,17 @@ class G4WeightWindowStore: public G4VWeightWindowStore
     static G4WeightWindowStore* GetInstance(const G4String& ParallelWorldName);
 
     /**
-     * Derives a lower weight bound value of a "cell" addressed by a 
+     * Derives a lower weight bound value of a "cell" addressed by a
      * G4GeometryCell and the corresponding energy from the store.
      */
-    G4double GetLowerWeight(const G4GeometryCell& gCell, 
-                                  G4double partEnergy) const override;
+    G4double GetLowerWeight(const G4GeometryCell& gCell, G4double partEnergy) const override;
 
     /**
      * Returns true if 'gCell' is in the store, else false.
      *  @param[in] gCell The cell of reference.
      *  @returns true if present in the store, false otherwise.
      */
-    G4bool IsKnown(const G4GeometryCell &gCell) const override;
+    G4bool IsKnown(const G4GeometryCell& gCell) const override;
 
     /**
      * Clears the cells weights map.
@@ -104,20 +105,19 @@ class G4WeightWindowStore: public G4VWeightWindowStore
     /**
      * Adds lower weights. Only if general upper energy bounds have been set.
      */
-    void AddLowerWeights(const G4GeometryCell& gCell,
-                         const std::vector<G4double>& lowerWeights);
+    void AddLowerWeights(const G4GeometryCell& gCell, const std::vector<G4double>& lowerWeights);
 
     /**
      * Sets upper energy - lower weight pairs for a cell.
      */
     void AddUpperEboundLowerWeightPairs(const G4GeometryCell& gCell,
-                                  const G4UpperEnergyToLowerWeightMap& enWeMap);
+                                        const G4UpperEnergyToLowerWeightMap& enWeMap);
 
     /**
      * Sets the energy bounds.
      */
-    void SetGeneralUpperEnergyBounds(const std::set<G4double,
-                                           std::less<G4double> >& enBounds);
+    void SetGeneralUpperEnergyBounds(const std::set<G4double, std::less<G4double>>& enBounds);
+
   private:
 
     /**
@@ -144,9 +144,9 @@ class G4WeightWindowStore: public G4VWeightWindowStore
 
   private:
 
-    const G4VPhysicalVolume* fWorldVolume = nullptr;  
+    const G4VPhysicalVolume* fWorldVolume = nullptr;
 
-    std::set<G4double, std::less<G4double> > fGeneralUpperEnergyBounds;
+    std::set<G4double, std::less<G4double>> fGeneralUpperEnergyBounds;
     G4GeometryCellWeight fCellToUpEnBoundLoWePairsMap;
     mutable G4GeometryCellWeight::const_iterator fCurrentIterator;
 

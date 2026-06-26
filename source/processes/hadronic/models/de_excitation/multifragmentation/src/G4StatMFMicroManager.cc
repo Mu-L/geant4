@@ -29,28 +29,32 @@
 // by V. Lara
 
 #include "G4StatMFMicroManager.hh"
+
 #include "G4HadronicException.hh"
 
 // constructor
-G4StatMFMicroManager::G4StatMFMicroManager(const G4Fragment & theFragment, 
-					   G4int multiplicity,
-					   G4double FreeIntE, G4double SCompNuc) : 
-  _Normalization(0.0)
+G4StatMFMicroManager::G4StatMFMicroManager(const G4Fragment& theFragment, G4int multiplicity,
+                                           G4double FreeIntE, G4double SCompNuc)
+  : _Normalization(0.0)
 {
   // Perform class initialization
-  Initialize(theFragment,multiplicity,FreeIntE,SCompNuc);
+  Initialize(theFragment, multiplicity, FreeIntE, SCompNuc);
 }
 
 // destructor
-G4StatMFMicroManager::~G4StatMFMicroManager() 
+G4StatMFMicroManager::~G4StatMFMicroManager()
 {
-  if (!_Partition.empty()) {
-    for (auto & p : _Partition) { delete p; }
+  if (!_Partition.empty())
+  {
+    for (auto& p : _Partition)
+    {
+      delete p;
+    }
   }
 }
 
-void G4StatMFMicroManager::Initialize(const G4Fragment & theFragment, G4int im, 
-				      G4double FreeIntE, G4double SCompNuc) 
+void G4StatMFMicroManager::Initialize(const G4Fragment& theFragment, G4int im, G4double FreeIntE,
+                                      G4double SCompNuc)
 {
   G4int i;
 
@@ -58,7 +62,7 @@ void G4StatMFMicroManager::Initialize(const G4Fragment & theFragment, G4int im,
 
   G4int A = theFragment.GetA_asInt();
   G4int Z = theFragment.GetZ_asInt();
-	
+
   // Statistical weights
   _WW = 0.0;
 
@@ -69,59 +73,65 @@ void G4StatMFMicroManager::Initialize(const G4Fragment & theFragment, G4int im,
   _MeanTemperature = 0.0;
 
   // Mean channel entropy
-  _MeanEntropy = 0.0;	
-	
+  _MeanEntropy = 0.0;
+
   // Keep fragment atomic numbers
   // 	G4int * FragmentAtomicNumbers = new G4int(static_cast<G4int>(A+0.5));
   //	G4int * FragmentAtomicNumbers = new G4int(m);
   G4int FragmentAtomicNumbers[4];
-	
+
   // We distribute A nucleons between m fragments mantaining the order
   // FragmentAtomicNumbers[m-1]>FragmentAtomicNumbers[m-2]>...>FragmentAtomicNumbers[0]
-  // Our initial distribution is 
+  // Our initial distribution is
   // FragmentAtomicNumbers[m-1]=A, FragmentAtomicNumbers[m-2]=0, ..., FragmentAtomicNumbers[0]=0
-  FragmentAtomicNumbers[im-1] = A;
-  for (i = 0; i <  (im - 1); i++) FragmentAtomicNumbers[i] = 0;
+  FragmentAtomicNumbers[im - 1] = A;
+  for (i = 0; i < (im - 1); i++)
+    FragmentAtomicNumbers[i] = 0;
 
   // We try to distribute A nucleons in partitions of m fragments
-  // MakePartition return true if it is possible 
-  // and false if it is not	
+  // MakePartition return true if it is possible
+  // and false if it is not
 
   // Loop checking, 05-Aug-2015, Vladimir Ivanchenko
-  while (MakePartition(im,FragmentAtomicNumbers)) {
+  while (MakePartition(im, FragmentAtomicNumbers))
+  {
     // Allowed partitions are stored and its probability calculated
-			
-    G4StatMFMicroPartition * aPartition = new G4StatMFMicroPartition(A,Z);
+
+    G4StatMFMicroPartition* aPartition = new G4StatMFMicroPartition(A, Z);
     G4double PartitionProbability = 0.0;
-			
-    for (i = im-1; i >= 0; i--) aPartition->SetPartitionFragment(FragmentAtomicNumbers[i]);
-    PartitionProbability = aPartition->CalcPartitionProbability(U,FreeIntE,SCompNuc);
+
+    for (i = im - 1; i >= 0; i--)
+      aPartition->SetPartitionFragment(FragmentAtomicNumbers[i]);
+    PartitionProbability = aPartition->CalcPartitionProbability(U, FreeIntE, SCompNuc);
     _Partition.push_back(aPartition);
-			
+
     _WW += PartitionProbability;
-    _MeanMultiplicity += im*PartitionProbability;
+    _MeanMultiplicity += im * PartitionProbability;
     _MeanTemperature += aPartition->GetTemperature() * PartitionProbability;
-    if (PartitionProbability > 0.0) 
-      _MeanEntropy += PartitionProbability * aPartition->GetEntropy();
+    if (PartitionProbability > 0.0) _MeanEntropy += PartitionProbability * aPartition->GetEntropy();
   }
 }
 
-G4bool G4StatMFMicroManager::MakePartition(G4int k, G4int * ANumbers)
+G4bool G4StatMFMicroManager::MakePartition(G4int k, G4int* ANumbers)
 // Distributes A nucleons between k fragments
 // mantaining the order ANumbers[k-1] > ANumbers[k-2] > ... > ANumbers[0]
 // If it is possible returns true. In other case returns false
 {
   G4int l = 1;
   // Loop checking, 05-Aug-2015, Vladimir Ivanchenko
-  while (l < k) {
-    G4int tmp = ANumbers[l-1] + ANumbers[k-1];
-    ANumbers[l-1] += 1;
-    ANumbers[k-1] -= 1;
-    if (ANumbers[l-1] > ANumbers[l] || ANumbers[k-2] > ANumbers[k-1]) {
-      ANumbers[l-1] = 1;
-      ANumbers[k-1] = tmp - 1;
+  while (l < k)
+  {
+    G4int tmp = ANumbers[l - 1] + ANumbers[k - 1];
+    ANumbers[l - 1] += 1;
+    ANumbers[k - 1] -= 1;
+    if (ANumbers[l - 1] > ANumbers[l] || ANumbers[k - 2] > ANumbers[k - 1])
+    {
+      ANumbers[l - 1] = 1;
+      ANumbers[k - 1] = tmp - 1;
       l++;
-    } else return true;
+    }
+    else
+      return true;
   }
   return false;
 }
@@ -132,24 +142,23 @@ void G4StatMFMicroManager::Normalize(G4double Norm)
   _WW /= Norm;
   _MeanMultiplicity /= Norm;
   _MeanTemperature /= Norm;
-  _MeanEntropy /= Norm; 
-	
+  _MeanEntropy /= Norm;
+
   return;
 }
 
-G4StatMFChannel* 
-G4StatMFMicroManager::ChooseChannel(G4int A0, G4int Z0, G4double MeanT)
+G4StatMFChannel* G4StatMFMicroManager::ChooseChannel(G4int A0, G4int Z0, G4double MeanT)
 {
   G4double RandNumber = _Normalization * _WW * G4UniformRand();
   G4double AccumWeight = 0.0;
-	
-  for (auto & p : _Partition) {
+
+  for (auto& p : _Partition)
+  {
     AccumWeight += p->GetProbability();
-    if (RandNumber <= AccumWeight)
-      return p->ChooseZ(A0,Z0,MeanT);
+    if (RandNumber <= AccumWeight) return p->ChooseZ(A0, Z0, MeanT);
   }
 
-  throw G4HadronicException(__FILE__, __LINE__, 
-			    "G4StatMFMicroManager::ChooseChannel: Couldn't find a channel.");
+  throw G4HadronicException(__FILE__, __LINE__,
+                            "G4StatMFMicroManager::ChooseChannel: Couldn't find a channel.");
   return nullptr;
 }

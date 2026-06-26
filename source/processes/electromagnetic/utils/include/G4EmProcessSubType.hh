@@ -37,23 +37,23 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4EmProcessSubType_h
-#define G4EmProcessSubType_h 1
+#ifndef G4EMPROCESSSUBTYPE_HH
+#define G4EMPROCESSSUBTYPE_HH
 
-enum G4EmProcessSubType 
-{ 
-  fCoulombScattering = 1, 
-  fIonisation = 2, 
-  fBremsstrahlung = 3, 
+enum G4EmProcessSubType
+{
+  fCoulombScattering = 1,
+  fIonisation = 2,
+  fBremsstrahlung = 3,
   fPairProdByCharged = 4,
-  fAnnihilation = 5, 
+  fAnnihilation = 5,
   fAnnihilationToMuMu = 6,
   fAnnihilationToHadrons = 7,
   fNuclearStopping = 8,
   fElectronGeneralProcess = 9,
 
-  fMultipleScattering = 10, 
-  
+  fMultipleScattering = 10,
+
   fRayleigh = 11,
   fPhotoElectricEffect = 12,
   fComptonScattering = 13,
@@ -63,7 +63,7 @@ enum G4EmProcessSubType
   fPositronGeneralProcess = 17,
   fAnnihilationToTauTau = 18,
   fCoherentPairProduction = 19,
- 
+
   fCerenkov = 21,
   fScintillation = 22,
   fSynchrotronRadiation = 23,
@@ -74,7 +74,7 @@ enum G4EmProcessSubType
 
   fDynamicIonisation = 30,
   fDynamicMultipleScattering = 31,
-  
+
   fDarkBremsstrahlung = 40,
   fMuonPairProdByCharged = 49
 };

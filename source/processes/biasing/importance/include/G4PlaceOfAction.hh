@@ -34,14 +34,14 @@
 
 // Author: Michael Dressel (Michael.Dressel@cern.ch)
 // ----------------------------------------------------------------------
-#ifndef G4PlaceOfAction_hh
-#define G4PlaceOfAction_hh G4PlaceOfAction_hh
+#ifndef G4PLACEOFACTION_HH
+#define G4PLACEOFACTION_HH
 
 enum G4PlaceOfAction
 {
-  onBoundary = 1, 
-  onCollision = 2, 
-  onBoundaryAndCollision = 3 
+  onBoundary = 1,
+  onCollision = 2,
+  onBoundaryAndCollision = 3
 };
 
 #endif

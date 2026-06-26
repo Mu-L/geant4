@@ -25,9 +25,10 @@
 //
 
 #include <G4GIDI.hh>
+#include "G4GIDI_impl.hh"
 
-PoPI::Database G4GIDI_pops;
-static bool G4GIDI_pops_initialized = false;
+static PoPI::Database s_pops;
+static bool s_pops_initialized = false;
 
 /* *********************************************************************************************************//**
  * Returns the familiar name for the projectile for *a_ip*.
@@ -65,11 +66,11 @@ static std::string projectileStringFromID( int a_ip ) {
 
 void G4GIDI_initialize( std::string const &a_dataPath ) {
 
-    if( G4GIDI_pops_initialized ) return;
+    if( s_pops_initialized ) return;
 
-    G4GIDI_pops_initialized = true;
-    G4GIDI_pops.addFile( a_dataPath + "/" + "pops.xml", false );
-    G4GIDI_pops.addFile( a_dataPath + "/" + "metastables_alias.xml", false );
+    s_pops_initialized = true;
+    s_pops.addFile( a_dataPath + "/" + "pops.xml", false );
+    s_pops.addFile( a_dataPath + "/" + "metastables_alias.xml", false );
 }
 
 /*! \class G4GIDI
@@ -77,14 +78,25 @@ void G4GIDI_initialize( std::string const &a_dataPath ) {
  */
 
 /* *********************************************************************************************************//**
+ ***********************************************************************************************************/
+
+G4int G4GIDI::projectileIP( ) const { return( m_impl->m_projectileIP ); }
+
+/* *********************************************************************************************************//**
+ ***********************************************************************************************************/
+
+G4int G4GIDI::numberOfDataDirectories( ) const { return( static_cast<G4int>( m_impl->m_maps.size( ) ) ); }
+
+/* *********************************************************************************************************//**
  * @param a_ip              [in]    One of the following ids for the projectile (0:photon, 1:neutron, 2:proton, 3:deutron, 4:triton, 5:helion or 6:alpha).
  * @param a_dataDirectory   [in]    A path to a map file to load.
  ***********************************************************************************************************/
 
 G4GIDI::G4GIDI( int a_ip, std::string const &a_dataDirectory ) :
-        m_projectileIP( a_ip ),
-        m_projectile( projectileStringFromID( a_ip ) ) {
+        m_impl( std::make_unique<Impl>() ) {
 
+    m_impl->m_projectileIP = a_ip;
+    m_impl->m_projectile = projectileStringFromID( a_ip );
     addDataDirectory( a_dataDirectory );
 }
 
@@ -95,9 +107,10 @@ G4GIDI::G4GIDI( int a_ip, std::string const &a_dataDirectory ) :
  ***********************************************************************************************************/
 
 G4GIDI::G4GIDI( int a_ip, std::list<std::string> const &a_dataDirectories ) :
-        m_projectileIP( a_ip ),
-        m_projectile( projectileStringFromID( a_ip ) ) {
+        m_impl( std::make_unique<Impl>() ) {
 
+    m_impl->m_projectileIP = a_ip;
+    m_impl->m_projectile = projectileStringFromID( a_ip );
     for( auto mapIter = a_dataDirectories.begin( ); mapIter != a_dataDirectories.end( ); ++mapIter ) {
         addDataDirectory( *mapIter );
     }
@@ -108,8 +121,8 @@ G4GIDI::G4GIDI( int a_ip, std::list<std::string> const &a_dataDirectories ) :
 
 G4GIDI::~G4GIDI( ) {
 
-    for( auto mapIter = m_maps.begin( ); mapIter != m_maps.end( ); ++mapIter ) delete *mapIter;
-    for( auto protareIter = m_protares.begin( ); protareIter != m_protares.end( ); ++protareIter ) delete *protareIter;
+    for( auto mapIter = m_impl->m_maps.begin( ); mapIter != m_impl->m_maps.end( ); ++mapIter ) delete *mapIter;
+    for( auto protareIter = m_impl->m_protares.begin( ); protareIter != m_impl->m_protares.end( ); ++protareIter ) delete *protareIter;
 }
 
 /* *********************************************************************************************************//**
@@ -120,11 +133,11 @@ G4GIDI::~G4GIDI( ) {
 
 int G4GIDI::addDataDirectory( std::string const &a_dataDirectory ) {
 
-    for( auto mapIter = m_maps.begin( ); mapIter != m_maps.end( ); ++mapIter ) {
+    for( auto mapIter = m_impl->m_maps.begin( ); mapIter != m_impl->m_maps.end( ); ++mapIter ) {
         if( (*mapIter)->fileName( ) == a_dataDirectory ) return( 0 );
     }
 
-    m_maps.push_back( new GIDI::Map::Map( a_dataDirectory, G4GIDI_pops ) );
+    m_impl->m_maps.push_back( new GIDI::Map::Map( a_dataDirectory, s_pops ) );
 
     return( 0 );
 }
@@ -139,14 +152,14 @@ int G4GIDI::removeDataDirectory( std::string const &a_dataDirectory ) {
 
     std::size_t index = 0;
 
-    for( auto mapIter = m_maps.begin( ); mapIter!= m_maps.end( ); ++mapIter, ++index ) {
+    for( auto mapIter = m_impl->m_maps.begin( ); mapIter!= m_impl->m_maps.end( ); ++mapIter, ++index ) {
         if( a_dataDirectory == (*mapIter)->fileName( ) ) {
             delete *mapIter;
    
             ++index;         
-            for( ; index < m_maps.size( ); ++index )  m_maps[index-1] = m_maps[index];
-            m_maps[index-1] = nullptr;
-            m_maps.resize( m_maps.size( ) - 1 );
+            for( ; index < m_impl->m_maps.size( ); ++index )  m_impl->m_maps[index-1] = m_impl->m_maps[index];
+            m_impl->m_maps[index-1] = nullptr;
+            m_impl->m_maps.resize( m_impl->m_maps.size( ) - 1 );
         }
     }
 
@@ -163,9 +176,9 @@ std::string const G4GIDI::getDataDirectoryAtIndex( int a_index ) const {
 
     std::string nullString;
 
-    if( ( a_index < 0 ) || ( a_index >= static_cast<int>( m_maps.size( ) ) ) ) return( nullString );
+    if( ( a_index < 0 ) || ( a_index >= static_cast<int>( m_impl->m_maps.size( ) ) ) ) return( nullString );
 
-    return( m_maps[a_index]->fileName( ) );
+    return( m_impl->m_maps[a_index]->fileName( ) );
 }
 
 /* *********************************************************************************************************//**
@@ -178,7 +191,7 @@ std::vector<std::string> *G4GIDI::getDataDirectories( ) const {
 
     std::vector<std::string> *list = new std::vector<std::string>( );
 
-    for( auto mapIter = m_maps.begin( ); mapIter!= m_maps.end( ); ++mapIter ) {
+    for( auto mapIter = m_impl->m_maps.begin( ); mapIter!= m_impl->m_maps.end( ); ++mapIter ) {
         list->push_back( (*mapIter)->fileName( ) );
     }
 
@@ -212,8 +225,8 @@ bool G4GIDI::isThisDataAvailable( std::string const &a_lib_name, int a_Z, int a_
 
 bool G4GIDI::isThisDataAvailable( std::string const &a_lib_name, std::string const &a_targetName ) const {
 
-    for( auto mapIter = m_maps.begin( ); mapIter!= m_maps.end( ); ++mapIter ) {
-        if( (*mapIter)->isProtareAvailable( m_projectile, a_targetName, "", a_lib_name ) ) return( true );
+    for( auto mapIter = m_impl->m_maps.begin( ); mapIter!= m_impl->m_maps.end( ); ++mapIter ) {
+        if( (*mapIter)->isProtareAvailable( m_impl->m_projectile, a_targetName, "", a_lib_name ) ) return( true );
     }
 
     return( false );
@@ -246,8 +259,8 @@ std::string G4GIDI::dataFilename( std::string const &a_lib_name, int a_Z, int a_
 
 std::string G4GIDI::dataFilename( std::string const &a_lib_name, std::string const &a_targetName ) const {
 
-    for( auto mapIter = m_maps.begin( ); mapIter!= m_maps.end( ); ++mapIter ) {
-        std::string path = (*mapIter)->protareFilename( m_projectile, a_targetName, "", a_lib_name );
+    for( auto mapIter = m_impl->m_maps.begin( ); mapIter!= m_impl->m_maps.end( ); ++mapIter ) {
+        std::string path = (*mapIter)->protareFilename( m_impl->m_projectile, a_targetName, "", a_lib_name );
         if( path != "" ) return( path );
     }
 
@@ -280,9 +293,9 @@ std::vector<std::string> *G4GIDI::getNamesOfAvailableLibraries( std::string cons
 
     std::vector<std::string> *listOfLibraries = new std::vector<std::string>( );
 
-    for( auto mapIter = m_maps.cbegin( ); mapIter != m_maps.cend( ); ++mapIter ) {
+    for( auto mapIter = m_impl->m_maps.cbegin( ); mapIter != m_impl->m_maps.cend( ); ++mapIter ) {
         std::vector<GIDI::Map::ProtareBase const *> entries;
-        (*mapIter)->findProtareEntries( entries, std::regex( m_projectile ), std::regex( a_targetName ) );
+        (*mapIter)->findProtareEntries( entries, std::regex( m_impl->m_projectile ), std::regex( a_targetName ) );
         for( auto entryIter = entries.begin( ); entryIter != entries.end( ); ++entryIter ) {
             listOfLibraries->push_back( (*entryIter)->evaluation( ) );
         }
@@ -302,8 +315,8 @@ std::vector<std::string> *G4GIDI::getNamesOfAvailableTargets( ) const {
     std::vector<std::string> *list = new std::vector<std::string>( );
     std::set<std::string> targetIDs;
 
-    for( auto mapIter = m_maps.begin( ); mapIter!= m_maps.end( ); ++mapIter ) {
-        auto protareBases = (*mapIter)->directory( m_projectile );
+    for( auto mapIter = m_impl->m_maps.begin( ); mapIter!= m_impl->m_maps.end( ); ++mapIter ) {
+        auto protareBases = (*mapIter)->directory( m_impl->m_projectile );
 
         for( auto protareBaseIter = protareBases.begin( ); protareBaseIter != protareBases.end( ); ++protareBaseIter ) {
             targetIDs.insert( (*protareBaseIter)->targetID( ) );
@@ -345,20 +358,20 @@ G4GIDI_target *G4GIDI::readTarget( std::string const &a_lib_name, int a_Z, int a
 
 G4GIDI_target *G4GIDI::readTarget( std::string const &a_lib_name, std::string const &a_targetName, bool a_bind ) {
 
-    for( auto iter_protare = m_protares.cbegin( ); iter_protare != m_protares.cend( ); ++iter_protare ) {
+    for( auto iter_protare = m_impl->m_protares.cbegin( ); iter_protare != m_impl->m_protares.cend( ); ++iter_protare ) {
         if( *(*iter_protare)->getName( ) == a_targetName ) return( nullptr );
     }
 
     GIDI::Construction::Settings construction( GIDI::Construction::ParseMode::all, GIDI::Construction::PhotoMode::nuclearOnly );
     construction.setGRIN_continuumGammas( true );
 
-    for( auto mapIter = m_maps.begin( ); mapIter!= m_maps.end( ); ++mapIter ) {
-        GIDI::Protare *GIDI_protare = (*mapIter)->protare( construction, G4GIDI_pops, m_projectile, a_targetName, "", a_lib_name );
+    for( auto mapIter = m_impl->m_maps.begin( ); mapIter!= m_impl->m_maps.end( ); ++mapIter ) {
+        GIDI::Protare *GIDI_protare = (*mapIter)->protare( construction, s_pops, m_impl->m_projectile, a_targetName, "", a_lib_name );
         if( GIDI_protare != nullptr ) {
             LUPI::StatusMessageReporting smr;
             GIDI::Styles::TemperatureInfos temperatures = GIDI_protare->temperatures( );
             std::string label( temperatures[0].griddedCrossSection( ) );
-            MCGIDI::Transporting::MC MC( G4GIDI_pops, m_projectile, &GIDI_protare->styles( ), label, GIDI::Transporting::DelayedNeutrons::off, 20 ); // FIXME: 20
+            MCGIDI::Transporting::MC MC( s_pops, m_impl->m_projectile, &GIDI_protare->styles( ), label, GIDI::Transporting::DelayedNeutrons::off, 20 ); // FIXME: 20
             MC.setThrowOnError( false );
             MC.setSampleNonTransportingParticles( true );
             MCGIDI::DomainHash domainHash( 4000, 1e-8, 10 );
@@ -370,13 +383,13 @@ G4GIDI_target *G4GIDI::readTarget( std::string const &a_lib_name, std::string co
 
             GIDI::Styles::TemperatureInfos temperatures1;
             temperatures1.push_back( temperatures[0] );
-            MCGIDI::Protare *MCGIDI_protare = MCGIDI::protareFromGIDIProtare( smr, *GIDI_protare, G4GIDI_pops, MC, particles, domainHash, 
+            MCGIDI::Protare *MCGIDI_protare = MCGIDI::protareFromGIDIProtare( smr, *GIDI_protare, s_pops, MC, particles, domainHash, 
                     temperatures1, reactionsToExclude );
             //if( !smr.isOk( ) ) throw LUPI::Exception( smr.constructFullMessage( "G4GIDI::readTarget:" ) );
 
-            G4GIDI_target *protare = new G4GIDI_target( G4GIDI_pops, domainHash, *GIDI_protare, MCGIDI_protare );
+            G4GIDI_target *protare = new G4GIDI_target( std::make_unique<G4GIDI_target::Impl>( s_pops, domainHash, *GIDI_protare, MCGIDI_protare ) );
             delete GIDI_protare;
-            if( a_bind ) m_protares.push_back( protare );
+            if( a_bind ) m_impl->m_protares.push_back( protare );
             return( protare );
         }
     }
@@ -411,7 +424,7 @@ G4GIDI_target *G4GIDI::getAlreadyReadTarget( G4int a_Z, G4int a_A, G4int a_M ) {
 
 G4GIDI_target *G4GIDI::getAlreadyReadTarget( std::string const &a_targetName ) {
 
-    for( auto iter_protare = m_protares.cbegin( ); iter_protare != m_protares.cend( ); ++iter_protare ) {
+    for( auto iter_protare = m_impl->m_protares.cbegin( ); iter_protare != m_impl->m_protares.cend( ); ++iter_protare ) {
         if( *(*iter_protare)->getName( ) == a_targetName ) return( *iter_protare );
     }
 
@@ -429,9 +442,9 @@ G4GIDI_target *G4GIDI::getAlreadyReadTarget( std::string const &a_targetName ) {
 
 G4int G4GIDI::freeTarget( G4GIDI_target *a_target ) {
 
-    for( auto iter_protare = m_protares.cbegin( ); iter_protare != m_protares.cend( ); ++iter_protare ) {
+    for( auto iter_protare = m_impl->m_protares.cbegin( ); iter_protare != m_impl->m_protares.cend( ); ++iter_protare ) {
         if( *iter_protare == a_target ) {
-            m_protares.erase( iter_protare );
+            m_impl->m_protares.erase( iter_protare );
             delete a_target;
             return( 0 );
         }
@@ -464,7 +477,7 @@ G4int G4GIDI::freeTarget( G4int a_Z, G4int a_A, G4int a_M ) {
 
 G4int G4GIDI::freeTarget( std::string const &targetSymbol ) {
 
-    for( auto iter_protare = m_protares.cbegin( ); iter_protare != m_protares.cend( ); ++iter_protare ) {
+    for( auto iter_protare = m_impl->m_protares.cbegin( ); iter_protare != m_impl->m_protares.cend( ); ++iter_protare ) {
         if( *(*iter_protare)->getName( ) == targetSymbol ) return( freeTarget( *iter_protare ) );
     }
     return( 1 );
@@ -481,7 +494,7 @@ std::vector<std::string> *G4GIDI::getListOfReadTargetsNames( void ) {
 
     std::vector<std::string> *listOfTargets = new std::vector<std::string>( );
 
-    for( auto iter_protare = m_protares.cbegin( ); iter_protare != m_protares.cend( ); ++iter_protare ) {
+    for( auto iter_protare = m_impl->m_protares.cbegin( ); iter_protare != m_impl->m_protares.cend( ); ++iter_protare ) {
         listOfTargets->push_back( *(*iter_protare)->getName( ) );
     }
 

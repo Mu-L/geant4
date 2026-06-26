@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr) 
+// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr)
 //
 // History:
 // -----------
@@ -34,64 +34,60 @@
 
 #include "G4VITStepModel.hh"
 
-G4VITStepModel::G4VITStepModel(const G4String& aName)
-    : G4VITStepModel(nullptr, nullptr, aName)
-{
-}
+G4VITStepModel::G4VITStepModel(const G4String& aName) : G4VITStepModel(nullptr, nullptr, aName) {}
 
 G4VITStepModel::G4VITStepModel(std::unique_ptr<G4VITTimeStepComputer> pTimeStepper,
                                std::unique_ptr<G4VITReactionProcess> pReactionProcess,
                                const G4String& aName)
-    : fName(aName)
-    , fpTimeStepper(std::move(pTimeStepper))
-    , fpReactionProcess(std::move(pReactionProcess))
-    , fpReactionTable(nullptr)
-    , fType1(-1)
-    , fType2(-1)
-{
-}
+  : fName(aName),
+    fpTimeStepper(std::move(pTimeStepper)),
+    fpReactionProcess(std::move(pReactionProcess)),
+    fpReactionTable(nullptr),
+    fType1(-1),
+    fType2(-1)
+{}
 
 void G4VITStepModel::GetApplicable(G4ITType& type1, G4ITType& type2)
 {
-    type1 = fType1;
-    type2 = fType2;
-    PrintInfo();
+  type1 = fType1;
+  type2 = fType2;
+  PrintInfo();
 }
 
 void G4VITStepModel::Initialize()
 {
-    fpReactionProcess->SetReactionTable(fpReactionTable);
-    fpTimeStepper->SetReactionTable(fpReactionTable);
-    fpTimeStepper->Initialize();
-    fpReactionProcess->Initialize();
+  fpReactionProcess->SetReactionTable(fpReactionTable);
+  fpTimeStepper->SetReactionTable(fpReactionTable);
+  fpTimeStepper->Initialize();
+  fpReactionProcess->Initialize();
 }
 
 void G4VITStepModel::PrepareNewTimeStep()
 {
-    fpTimeStepper->Prepare();
+  fpTimeStepper->Prepare();
 }
 
 void G4VITStepModel::SetReactionTable(G4ITReactionTable* pReactionTable)
 {
-    fpReactionTable = pReactionTable;
+  fpReactionTable = pReactionTable;
 }
 
 const G4ITReactionTable* G4VITStepModel::GetReactionTable()
 {
-    return fpReactionTable ;
+  return fpReactionTable;
 }
 
 G4VITTimeStepComputer* G4VITStepModel::GetTimeStepper()
 {
-    return fpTimeStepper.get();
+  return fpTimeStepper.get();
 }
 
 G4VITReactionProcess* G4VITStepModel::GetReactionProcess()
 {
-    return fpReactionProcess.get();
+  return fpReactionProcess.get();
 }
 
 const G4String& G4VITStepModel::GetName()
 {
-    return fName;
+  return fName;
 }

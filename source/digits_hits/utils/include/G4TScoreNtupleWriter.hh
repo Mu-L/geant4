@@ -39,68 +39,68 @@
 //
 // Author: Ivana Hrivnacova, 30/10/2018
 // --------------------------------------------------------------------
-#ifndef G4TScoreNtupleWriter_h
-#define G4TScoreNtupleWriter_h 1
+#ifndef G4TSCORENTUPLEWRITER_HH
+#define G4TSCORENTUPLEWRITER_HH
 
-#include "G4VScoreNtupleWriter.hh"
 #include "G4HCofThisEvent.hh"
 #include "G4Threading.hh"
+#include "G4VScoreNtupleWriter.hh"
 #include "globals.hh"
 
 #include <memory>
 
 class G4HCofThisEvent;
 
-template <typename T>
+template<typename T>
 class G4TScoreNtupleWriterMessenger;
 class G4HCofThisEvent;
 
-template <typename T>
+template<typename T>
 class G4TScoreNtupleWriter : public G4VScoreNtupleWriter
 {
- public:
+  public:
 
-  G4TScoreNtupleWriter();
-  virtual ~G4TScoreNtupleWriter();
+    G4TScoreNtupleWriter();
+    virtual ~G4TScoreNtupleWriter();
 
-  // methods
-  virtual G4bool Book(G4HCofThisEvent* hce);
-  virtual void OpenFile();
-  virtual void Fill(G4HCofThisEvent* hce, G4int eventNumber);
-  virtual void Write();
+    // methods
+    virtual G4bool Book(G4HCofThisEvent* hce);
+    virtual void OpenFile();
+    virtual void Fill(G4HCofThisEvent* hce, G4int eventNumber);
+    virtual void Write();
 
-  // set methods
-  void SetDefaultFileType(const G4String& value);
-  void SetFileName(const G4String& fileName);
-  void SetVerboseLevel(G4int value);
-  void SetNtupleMerging(G4bool value);
+    // set methods
+    void SetDefaultFileType(const G4String& value);
+    void SetFileName(const G4String& fileName);
+    void SetVerboseLevel(G4int value);
+    void SetNtupleMerging(G4bool value);
 
-  // get methods
-  const G4String& GetFileName() const { return fFileName; }
-  G4int GetVerboseLevel() const { return fVerboseLevel; }
+    // get methods
+    const G4String& GetFileName() const { return fFileName; }
+    G4int GetVerboseLevel() const { return fVerboseLevel; }
 
- protected:
+  protected:
 
-  // methods
-  virtual G4VScoreNtupleWriter* CreateInstance() const;
+    // methods
+    virtual G4VScoreNtupleWriter* CreateInstance() const;
 
- private:
+  private:
 
-  // methods
-  void CreateAnalysisManager();
+    // methods
+    void CreateAnalysisManager();
 
-  // data members
-  G4TScoreNtupleWriterMessenger<T>* fMessenger;
-  std::vector<G4int> fHCIds;
-  T* fAnalysisManager;
-  G4String fDefaultFileType;
-  G4String fFileName;
-  G4int fVerboseLevel;
-  G4bool fMergeNtuples;
-  G4bool fHasAnalysisFile;
-  G4bool fIsBooked;
-  G4bool fIsInitialized;
-  G4int fFirstNtupleId;
+    // data members
+    G4TScoreNtupleWriterMessenger<T>* fMessenger;
+    std::vector<G4int> fHCIds;
+    T* fAnalysisManager;
+    G4String fDefaultFileType;
+    G4String fFileName;
+    G4int fVerboseLevel;
+    G4bool fMergeNtuples;
+    G4bool fHasAnalysisFile;
+    G4bool fIsBooked;
+    G4bool fIsInitialized;
+    G4int fFirstNtupleId;
 };
 
 #include "G4TScoreNtupleWriter.icc"

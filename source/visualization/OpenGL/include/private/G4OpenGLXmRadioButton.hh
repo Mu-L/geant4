@@ -25,8 +25,8 @@
 //
 //
 //
-// 
-//Radio button class. Inherits from G4OpenGLXmVWidgetComponent
+//
+// Radio button class. Inherits from G4OpenGLXmVWidgetComponent
 
 #ifndef G4OPENGLXMRADIOBUTTON_HH
 #define G4OPENGLXMRADIOBUTTON_HH
@@ -35,31 +35,30 @@
 
 class G4OpenGLXmRadioButton : public G4OpenGLXmVWidgetComponent
 {
+  public:
 
-public:
-  G4OpenGLXmRadioButton (const char*,
-			 XtCallbackRec*,
-			 G4bool,
-			 G4int);                    //constructor
-  virtual ~G4OpenGLXmRadioButton ();                //destructor
+    G4OpenGLXmRadioButton(const char*, XtCallbackRec*, G4bool,
+                          G4int);  // constructor
+    virtual ~G4OpenGLXmRadioButton();  // destructor
 
-  void SetName (const char*);
-  const char* GetName ();
+    void SetName(const char*);
+    const char* GetName();
 
-  void AddYourselfTo (G4OpenGLXmVWidgetContainer*);
+    void AddYourselfTo(G4OpenGLXmVWidgetContainer*);
 
-  Widget* GetPointerToParent ();
-  Widget* GetPointerToWidget ();
+    Widget* GetPointerToParent();
+    Widget* GetPointerToWidget();
 
-private:
-  G4OpenGLXmRadioButton (const G4OpenGLXmRadioButton&);
-  G4OpenGLXmRadioButton& operator = (const G4OpenGLXmRadioButton&);
-  const char* name;
-  XtCallbackRec* callback;
-  Widget button;
-  Widget* parent;
-  G4bool default_button;
-  G4int number;
+  private:
+
+    G4OpenGLXmRadioButton(const G4OpenGLXmRadioButton&);
+    G4OpenGLXmRadioButton& operator=(const G4OpenGLXmRadioButton&);
+    const char* name;
+    XtCallbackRec* callback;
+    Widget button;
+    Widget* parent;
+    G4bool default_button;
+    G4int number;
 };
 
 #endif

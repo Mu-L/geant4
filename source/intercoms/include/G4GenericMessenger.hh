@@ -31,8 +31,8 @@
 
 // Author: P.Mato, CERN - 27 September 2012
 // --------------------------------------------------------------------
-#ifndef G4GenericMessenger_hh
-#define G4GenericMessenger_hh 1
+#ifndef G4GENERICMESSENGER_HH
+#define G4GENERICMESSENGER_HH
 
 #include "G4AnyMethod.hh"
 #include "G4AnyType.hh"
@@ -48,6 +48,7 @@ class G4UIdirectory;
 class G4GenericMessenger : public G4UImessenger
 {
   public:
+
     // Contructor
     G4GenericMessenger(void* obj, const G4String& dir = "", const G4String& doc = "");
 
@@ -62,6 +63,7 @@ class G4GenericMessenger : public G4UImessenger
     void SetNewValue(G4UIcommand* command, G4String newValue) override;
 
   public:
+
     struct Command
     {
         enum UnitSpec
@@ -172,12 +174,14 @@ class G4GenericMessenger : public G4UImessenger
     void SetGuidance(const G4String& s);
     void Sort(G4bool val = true)
     {
-      if (dircmd != nullptr) {
+      if (dircmd != nullptr)
+      {
         dircmd->Sort(val);
       }
     }
 
   private:
+
     std::map<G4String, Property> properties;
     std::map<G4String, Method> methods;
     G4UIdirectory* dircmd = nullptr;

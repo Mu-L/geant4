@@ -23,32 +23,34 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// V. Ivanchenko 20 October 2023 
+// V. Ivanchenko 20 October 2023
 //
 // Cross-section data set for a high precision (based on evaluated data
 // libraries) description of light ion inelastic interactions below 200 MeV.
 //
 
-#ifndef G4ParticleHPInelasticXS_h
-#define G4ParticleHPInelasticXS_h 1
+#ifndef G4PARTICLEHPINELASTICXS_HH
+#define G4PARTICLEHPINELASTICXS_HH
 
 #include "G4CrossSectionHP.hh"
 #include "G4ParticleDefinition.hh"
+
 #include <fstream>
 
 class G4ParticleHPInelasticXS final : public G4CrossSectionHP
 {
   public:
+
     explicit G4ParticleHPInelasticXS(const G4ParticleDefinition*);
 
     ~G4ParticleHPInelasticXS() override = default;
 
     void CrossSectionDescription(std::ostream&) const final;
 
-    G4ParticleHPInelasticXS & operator=(const G4ParticleHPInelasticXS &right) = delete;
+    G4ParticleHPInelasticXS& operator=(const G4ParticleHPInelasticXS& right) = delete;
     G4ParticleHPInelasticXS(const G4ParticleHPInelasticXS&) = delete;
 
- private:
+  private:
 
     const G4ParticleDefinition* part;
 };

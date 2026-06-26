@@ -55,40 +55,45 @@
 //
 //
 
-#include <cmath>
 #include "G4fissionEvent.hh"
 
-G4double G4fissionEvent::G4SmpNVel(G4double eng, G4double* cosdiru, G4double* cosdirv, G4double* cosdirw) {
+#include <cmath>
 
-/*
-  Description
-    Knowing the neutron energy, determine its velocity and the 3 direction cosines
-*/
+G4double G4fissionEvent::G4SmpNVel(G4double eng, G4double* cosdiru, G4double* cosdirv,
+                                   G4double* cosdirw)
+{
+  /*
+    Description
+      Knowing the neutron energy, determine its velocity and the 3 direction cosines
+  */
 
-/*
-  Input
-    eng     - energy of neutron
-  Output
-            - velocity
-            - 3 components of the neutron velocity
-              in arguments (cosdiru, cosdirv, cosdirw)
-*/
+  /*
+    Input
+      eng     - energy of neutron
+    Output
+              - velocity
+              - 3 components of the neutron velocity
+                in arguments (cosdiru, cosdirv, cosdirw)
+  */
 
-   const G4double rme = 939.56563; /* Rest Mass Energy equivalents for neutrons (MeV) */
-   const G4double cspeed = 2.99792458e+8; /* speed of light (m/sec) */
+  const G4double rme = 939.56563; /* Rest Mass Energy equivalents for neutrons (MeV) */
+  const G4double cspeed = 2.99792458e+8; /* speed of light (m/sec) */
 
-   G4double vel;
-   G4double ratio = eng/rme;
+  G4double vel;
+  G4double ratio = eng / rme;
 
-   if (ratio > 1.e-8) {
-/*    Relativistic vel calculation */
-      vel = cspeed*std::sqrt(1.-rme*rme/((rme+eng)*(rme+eng)));
-   } else {
-/*    Non-relativistic vel calculation */
-      vel = cspeed*std::sqrt(2.*eng/rme);
-   }
+  if (ratio > 1.e-8)
+  {
+    /*    Relativistic vel calculation */
+    vel = cspeed * std::sqrt(1. - rme * rme / ((rme + eng) * (rme + eng)));
+  }
+  else
+  {
+    /*    Non-relativistic vel calculation */
+    vel = cspeed * std::sqrt(2. * eng / rme);
+  }
 
-   G4SmpIsoDir(cosdiru, cosdirv, cosdirw);
+  G4SmpIsoDir(cosdiru, cosdirv, cosdirw);
 
-   return vel;
+  return vel;
 }

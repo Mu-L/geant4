@@ -23,45 +23,46 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
- //
- // G4 Low energy model: n-n or p-p scattering
- // F.W. Jones, L.G. Greeniaus, H.P. Wellisch
- //
- // For further comments see G4LEnpData.hh and G4LEnp.cc
- //
+//
+// G4 Low energy model: n-n or p-p scattering
+// F.W. Jones, L.G. Greeniaus, H.P. Wellisch
+//
+// For further comments see G4LEnpData.hh and G4LEnp.cc
+//
 
-#ifndef G4AngularDistributionPP_h
-#define G4AngularDistributionPP_h 1
-
-#include "globals.hh"
+#ifndef G4ANGULARDISTRIBUTIONPP_HH
+#define G4ANGULARDISTRIBUTIONPP_HH
 
 #include "G4VAngularDistribution.hh"
+#include "globals.hh"
 
 class G4AngularDistributionPP : public G4VAngularDistribution
 {
- private:
+  private:
 
-//   enum { NENERGY=22, NANGLE=180 };
-   enum { NENERGY=40, NENERGYC=22, NANGLE=180 };
+    //   enum { NENERGY=22, NANGLE=180 };
+    enum
+    {
+      NENERGY = 40,
+      NENERGYC = 22,
+      NANGLE = 180
+    };
 
- public:
+  public:
 
-  G4AngularDistributionPP() { }
+    G4AngularDistributionPP() {}
 
-  virtual ~G4AngularDistributionPP() { }
+    virtual ~G4AngularDistributionPP() {}
 
-  virtual G4double CosTheta(G4double s, G4double m1, G4double m2) const;
+    virtual G4double CosTheta(G4double s, G4double m1, G4double m2) const;
 
-  virtual G4double Phi() const;
+    virtual G4double Phi() const;
 
- private:
+  private:
 
-  // Coulomb effects suppressed:
-  static const G4float sig[NENERGY][NANGLE];
-  static const G4float pcm[NENERGY], elab[NENERGY],
-  dsigmax[NENERGY], sigtot[NENERGY];
-
- };
+    // Coulomb effects suppressed:
+    static const G4float sig[NENERGY][NANGLE];
+    static const G4float pcm[NENERGY], elab[NENERGY], dsigmax[NENERGY], sigtot[NENERGY];
+};
 
 #endif
-

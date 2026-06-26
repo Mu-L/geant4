@@ -25,37 +25,41 @@
 //
 //
 //
-// 
+//
 // John Allison  26th August 1998.
 // Model which knows how to draw GEANT4 digis (digitisations).
 
 #include "G4DigiModel.hh"
 
+#include "G4Event.hh"
 #include "G4ModelingParameters.hh"
 #include "G4VGraphicsScene.hh"
-#include "G4Event.hh"
 
-G4DigiModel::~G4DigiModel () {}
+G4DigiModel::~G4DigiModel() {}
 
-G4DigiModel::G4DigiModel ():
-  fpCurrentDigi(nullptr)
+G4DigiModel::G4DigiModel() : fpCurrentDigi(nullptr)
 {
   fType = "G4DigiModel";
   fGlobalTag = "G4DigiModel for all digis.";
   fGlobalDescription = fGlobalTag;
 }
 
-void G4DigiModel::DescribeYourselfTo (G4VGraphicsScene& sceneHandler)
+void G4DigiModel::DescribeYourselfTo(G4VGraphicsScene& sceneHandler)
 {
   const G4Event* event = fpMP->GetEvent();
-  if (event) {
+  if (event)
+  {
     G4DCofThisEvent* DCE = event->GetDCofThisEvent();
-    if (DCE) {
+    if (DCE)
+    {
       G4int nDC = (G4int)DCE->GetCapacity();
-      for (G4int iDC = 0; iDC < nDC; ++iDC) {
+      for (G4int iDC = 0; iDC < nDC; ++iDC)
+      {
         G4VDigiCollection* DC = DCE->GetDC(iDC);
-        if (DC) {
-          for(std::size_t iDigi = 0; iDigi < DC->GetSize(); ++iDigi) {
+        if (DC)
+        {
+          for (std::size_t iDigi = 0; iDigi < DC->GetSize(); ++iDigi)
+          {
             fpCurrentDigi = DC->GetDigi(iDigi);
             if (fpCurrentDigi) sceneHandler.AddCompound(*fpCurrentDigi);
           }

@@ -31,7 +31,7 @@
 //
 // File name:     G4CoulombScattering
 //
-// Author:        Vladimir Ivanchenko 
+// Author:        Vladimir Ivanchenko
 //
 // Creation date: 22.08.2004
 //
@@ -47,18 +47,17 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include "G4CoulombScattering.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4eCoulombScatteringModel.hh"
+
+#include "G4EmParameters.hh"
 #include "G4IonCoulombScatteringModel.hh"
 #include "G4Proton.hh"
-#include "G4EmParameters.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4eCoulombScatteringModel.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4CoulombScattering::G4CoulombScattering(const G4String& nam, G4bool comb)
-  : G4VEmProcess(nam),
-    q2Max(CLHEP::TeV*CLHEP::TeV),
-    isCombined(comb)
+  : G4VEmProcess(nam), q2Max(CLHEP::TeV * CLHEP::TeV), isCombined(comb)
 {
   SetBuildTableFlag(true);
   SetStartFromNullFlag(false);
@@ -70,16 +69,12 @@ G4CoulombScattering::G4CoulombScattering(const G4String& nam, G4bool comb)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4CoulombScattering::G4CoulombScattering(const G4String& nam)
-  : G4CoulombScattering(nam, true)
-{}
- 
+G4CoulombScattering::G4CoulombScattering(const G4String& nam) : G4CoulombScattering(nam, true) {}
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4CoulombScattering::G4CoulombScattering(G4bool comb)
-  : G4CoulombScattering("CoulombScat", comb)
-{}
- 
+G4CoulombScattering::G4CoulombScattering(G4bool comb) : G4CoulombScattering("CoulombScat", comb) {}
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4CoulombScattering::~G4CoulombScattering() = default;
@@ -96,59 +91,81 @@ G4bool G4CoulombScattering::IsApplicable(const G4ParticleDefinition& p)
 void G4CoulombScattering::InitialiseProcess(const G4ParticleDefinition* p)
 {
   // second initialisation not allowed for the time being
-  // this means that polar angle limit change will not be appled 
+  // this means that polar angle limit change will not be appled
   // after first initialisation
-  if(isInitialised) { return; }
+  if (isInitialised)
+  {
+    return;
+  }
 
   G4EmParameters* param = G4EmParameters::Instance();
-  G4double a = param->FactorForAngleLimit()*CLHEP::hbarc/CLHEP::fermi;
-  q2Max = 0.5*a*a;
+  G4double a = param->FactorForAngleLimit() * CLHEP::hbarc / CLHEP::fermi;
+  q2Max = 0.5 * a * a;
   G4double theta = param->MscThetaLimit();
 
   // restricted or non-restricted cross section table
-  if(isCombined) {
-    if(theta == CLHEP::pi) {
+  if (isCombined)
+  {
+    if (theta == CLHEP::pi)
+    {
       // for restriced single scattering change cross section shape
       SetCrossSectionType(fEmIncreasing);
       SetStartFromNullFlag(true);
     }
-  } else {
+  }
+  else
+  {
     SetSplineFlag(true);
     SetCrossSectionType(fEmDecreasing);
   }
   isInitialised = true;
   G4double mass = p->GetPDGMass();
   G4String name = p->GetParticleName();
-  
+
   G4bool ion = false;
-  if (mass > CLHEP::GeV || p->GetParticleType() == "nucleus") {
+  if (mass > CLHEP::GeV || p->GetParticleType() == "nucleus")
+  {
     SetBuildTableFlag(false);
     ion = true;
-    if(name != "GenericIon") { SetVerboseLevel(0); }
-  } else {
-    if(name != "e-" && name != "e+" &&
-       name != "mu+" && name != "mu-" && name != "pi+" && 
-       name != "kaon+" && name != "proton" ) { SetVerboseLevel(0); }
+    if (name != "GenericIon")
+    {
+      SetVerboseLevel(0);
+    }
+  }
+  else
+  {
+    if (name != "e-" && name != "e+" && name != "mu+" && name != "mu-" && name != "pi+"
+        && name != "kaon+" && name != "proton")
+    {
+      SetVerboseLevel(0);
+    }
   }
   /*
   G4cout << "### G4CoulombScattering::InitialiseProcess: "
-  	 << p->GetParticleName()
-	 << " Emin(MeV)= " << MinKinEnergy()/MeV
-	 << " Emax(TeV)= " << MaxKinEnergy()/TeV
-	 << " nbins= " << LambdaBinning()
-	 << " theta= " << theta
-	 << " mass(MeV)= " << mass
-	 << " isCombined=" << isCombined
-	 << " ion=" << ion
-	 << G4endl;
+     << p->GetParticleName()
+   << " Emin(MeV)= " << MinKinEnergy()/MeV
+   << " Emax(TeV)= " << MaxKinEnergy()/TeV
+   << " nbins= " << LambdaBinning()
+   << " theta= " << theta
+   << " mass(MeV)= " << mass
+   << " isCombined=" << isCombined
+   << " ion=" << ion
+   << G4endl;
   */
-  if(nullptr == EmModel(0)) { 
-    if(ion) { SetEmModel(new G4IonCoulombScatteringModel()); }
-    else { SetEmModel(new G4eCoulombScatteringModel(isCombined)); } 
+  if (nullptr == EmModel(0))
+  {
+    if (ion)
+    {
+      SetEmModel(new G4IonCoulombScatteringModel());
+    }
+    else
+    {
+      SetEmModel(new G4eCoulombScatteringModel(isCombined));
+    }
   }
   G4VEmModel* model = EmModel(0);
-  G4double emin = std::max(param->MinKinEnergy(),model->LowEnergyLimit());
-  G4double emax = std::min(param->MaxKinEnergy(),model->HighEnergyLimit());
+  G4double emin = std::max(param->MinKinEnergy(), model->LowEnergyLimit());
+  G4double emax = std::min(param->MaxKinEnergy(), model->HighEnergyLimit());
   model->SetPolarAngleLimit(theta);
   model->SetLowEnergyLimit(emin);
   model->SetHighEnergyLimit(emax);
@@ -158,7 +175,7 @@ void G4CoulombScattering::InitialiseProcess(const G4ParticleDefinition* p)
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4double G4CoulombScattering::MinPrimaryEnergy(const G4ParticleDefinition* part,
-					       const G4Material* mat)
+                                               const G4Material* mat)
 {
   // Pure Coulomb scattering
   G4double emin = 0.0;
@@ -166,10 +183,11 @@ G4double G4CoulombScattering::MinPrimaryEnergy(const G4ParticleDefinition* part,
   // Coulomb scattering combined with multiple or hadronic scattering
   G4double theta = G4EmParameters::Instance()->MscThetaLimit();
 
-  if(0.0 < theta) {
-    G4double p2 = q2Max*mat->GetIonisation()->GetInvA23()/(1.0 - std::cos(theta));
+  if (0.0 < theta)
+  {
+    G4double p2 = q2Max * mat->GetIonisation()->GetInvA23() / (1.0 - std::cos(theta));
     G4double mass = part->GetPDGMass();
-    emin = p2/(std::sqrt(p2 + mass*mass) + mass);
+    emin = p2 / (std::sqrt(p2 + mass * mass) + mass);
   }
 
   return emin;
@@ -179,14 +197,21 @@ G4double G4CoulombScattering::MinPrimaryEnergy(const G4ParticleDefinition* part,
 
 void G4CoulombScattering::StreamProcessInfo(std::ostream& outFile) const
 {
-  G4double tetmin = G4EmParameters::Instance()->MscThetaLimit()/CLHEP::degree;
+  G4double tetmin = G4EmParameters::Instance()->MscThetaLimit() / CLHEP::degree;
   outFile << "      ";
-  if(tetmin > 179.) { outFile << "ThetaMin(p)"; }
-  else              { outFile << tetmin; }
+  if (tetmin > 179.)
+  {
+    outFile << "ThetaMin(p)";
+  }
+  else
+  {
+    outFile << tetmin;
+  }
   outFile << " < Theta(degree) < 180";
 
-  if(q2Max < DBL_MAX) {
-    outFile << ", pLimit(GeV^1)= " << std::sqrt(q2Max)/GeV;
+  if (q2Max < DBL_MAX)
+  {
+    outFile << ", pLimit(GeV^1)= " << std::sqrt(q2Max) / GeV;
   }
   outFile << G4endl;
 }
@@ -195,12 +220,11 @@ void G4CoulombScattering::StreamProcessInfo(std::ostream& outFile) const
 
 void G4CoulombScattering::ProcessDescription(std::ostream& out) const
 {
-  out <<
-  "  Coulomb scattering. Simulation of elastic scattering\n" << 
-  "    events individually. May be used in combination with multiple\n" << 
-  "    scattering, where Coulomb scattering is used for hard (large angle)\n" <<
-  "    collisions and multiple scattering for soft collisions.";
+  out << "  Coulomb scattering. Simulation of elastic scattering\n"
+      << "    events individually. May be used in combination with multiple\n"
+      << "    scattering, where Coulomb scattering is used for hard (large angle)\n"
+      << "    collisions and multiple scattering for soft collisions.";
   G4VEmProcess::ProcessDescription(out);
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.... 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

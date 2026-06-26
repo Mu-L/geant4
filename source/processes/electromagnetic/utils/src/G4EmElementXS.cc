@@ -30,37 +30,38 @@
 //
 // File name:     G4EmElementXS
 //
-// Author:        V. Ivanchenko 
-// 
+// Author:        V. Ivanchenko
+//
 // Creation date: 22 August 2024
 //
 // -------------------------------------------------------------------
 //
 
 #include "G4EmElementXS.hh"
+
+#include "G4AutoLock.hh"
 #include "G4ElementData.hh"
 #include "G4ElementDataRegistry.hh"
 #include "G4EmParameters.hh"
-#include "G4PhysicsVector.hh"
 #include "G4PhysicsFreeVector.hh"
-#include "G4AutoLock.hh"
+#include "G4PhysicsVector.hh"
 #include "G4SystemOfUnits.hh"
 
 namespace
 {
-  G4Mutex elementXSMutex = G4MUTEX_INITIALIZER;
+G4Mutex elementXSMutex = G4MUTEX_INITIALIZER;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4EmElementXS::G4EmElementXS(G4int zmin, G4int zmax, const G4String& name,
-			     const G4String& subname)
+G4EmElementXS::G4EmElementXS(G4int zmin, G4int zmax, const G4String& name, const G4String& subname)
   : Zmin(zmin - 1), Zmax(zmax), fSubName(subname)
 {
   fParameters = G4EmParameters::Instance();
   auto reg = G4ElementDataRegistry::Instance();
   fData = reg->GetElementDataByName(name);
-  if (nullptr == fData) {
+  if (nullptr == fData)
+  {
     fData = new G4ElementData(Zmax - Zmin);
     fData->SetName(name);
     reg->RegisterMe(fData);
@@ -73,23 +74,28 @@ G4PhysicsVector* G4EmElementXS::Retrieve(G4int ZZ) const
 {
   G4int Z = std::min(ZZ, Zmax);
   auto v = fData->GetElementData(Z);
-  if (nullptr == v) {
+  if (nullptr == v)
+  {
     G4AutoLock l(&elementXSMutex);
     v = fData->GetElementData(Z);
-    if (nullptr == v) {
+    if (nullptr == v)
+    {
       v = new G4PhysicsFreeVector(false);
       std::ostringstream ost;
       ost << fParameters->GetDirLEDATA() << fSubName << Z << ".dat";
       std::ifstream fin(ost.str().c_str());
-      if (!fin.is_open()) {
-	G4ExceptionDescription ed;
-	ed << "G4EmElementXS: data file <" << ost.str().c_str() << "> for Z=" << Z
-	   << " is not opened!" << G4endl;
-	G4Exception("G4EmElementXS::Retrieve()", "em0003", FatalException, ed,
-		    "G4LEDATA version should be checked");
-      } else {
-	v->Retrieve(fin, true);
-	v->ScaleVector(CLHEP::MeV, CLHEP::barn);
+      if (!fin.is_open())
+      {
+        G4ExceptionDescription ed;
+        ed << "G4EmElementXS: data file <" << ost.str().c_str() << "> for Z=" << Z
+           << " is not opened!" << G4endl;
+        G4Exception("G4EmElementXS::Retrieve()", "em0003", FatalException, ed,
+                    "G4LEDATA version should be checked");
+      }
+      else
+      {
+        v->Retrieve(fin, true);
+        v->ScaleVector(CLHEP::MeV, CLHEP::barn);
       }
       fData->InitialiseForElement(Z, v);
       l.unlock();
@@ -107,4 +113,3 @@ G4double G4EmElementXS::GetXS(G4int Z, G4double ekin) const
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-

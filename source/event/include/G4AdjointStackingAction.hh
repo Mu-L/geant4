@@ -34,17 +34,17 @@
 // extension of G4RunManager. If the primary particles are not killed before
 // being tracked in the sensitive geometry, the User Stacking action can be
 // used during the forward phase if specified by the method
-// G4AdjointSimManager::UseUserStackingAction(G4bool). 
+// G4AdjointSimManager::UseUserStackingAction(G4bool).
 
 // Author: L. Desorgher, SpaceIT GmbH - April 2008
 // Contract: ESA contract 21435/08/NL/AT
 // Customer: ESA/ESTEC
 // --------------------------------------------------------------------
-#ifndef G4AdjointStackingAction_hh
-#define G4AdjointStackingAction_hh 1
+#ifndef G4ADJOINTSTACKINGACTION_HH
+#define G4ADJOINTSTACKINGACTION_HH
 
-#include "globals.hh"
 #include "G4UserStackingAction.hh"
+#include "globals.hh"
 
 class G4Track;
 class G4ParticleDefinition;
@@ -61,13 +61,15 @@ class G4AdjointStackingAction : public G4UserStackingAction
     void NewStage() override;
     void PrepareNewEvent() override;
     inline void SetUserFwdStackingAction(G4UserStackingAction* anAction)
-      { theFwdStackingAction = anAction; }
+    {
+      theFwdStackingAction = anAction;
+    }
     inline void SetUserAdjointStackingAction(G4UserStackingAction* anAction)
-      { theUserAdjointStackingAction = anAction; }
-    inline void SetKillTracks(G4bool aBool)
-      { kill_tracks =aBool; }
-    inline void SetAdjointMode(G4bool aBool)
-      { adjoint_mode=aBool; }
+    {
+      theUserAdjointStackingAction = anAction;
+    }
+    inline void SetKillTracks(G4bool aBool) { kill_tracks = aBool; }
+    inline void SetAdjointMode(G4bool aBool) { adjoint_mode = aBool; }
 
   private:
 
@@ -81,4 +83,3 @@ class G4AdjointStackingAction : public G4UserStackingAction
 };
 
 #endif
-

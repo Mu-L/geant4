@@ -5,39 +5,17 @@
 #define tools_rcmp
 
 // used in safe cast.
+#include <algorithm>
+#include <string_view>
 
-#include <string>
-#include <cstring>
+namespace tools
+{
 
-namespace tools {
-
-inline bool rcmp(const char* a_1,const char* a_2) {
-  size_t l1 = ::strlen(a_1);
-  size_t l2 = ::strlen(a_2);
-  if(l1!=l2) return false;
-  if(!l1) return true;
-  const char* p1 = a_1+l1-1;
-  const char* p2 = a_2+l2-1;
-  //ab
-  //012
-  for(size_t index=0;index<l1;index++,p1--,p2--) {
-    if(*p1!=*p2) return false;
-  }
-  return true;
+inline bool rcmp(std::string_view a_1, std::string_view a_2)
+{
+  return (a_1.size() == a_2.size()) && std::equal(a_1.rbegin(), a_1.rend(), a_2.rbegin());
 }
 
-inline bool rcmp(const std::string& a_1,const char* a_2) {
-  return rcmp(a_1.c_str(), a_2);
-}
-
-inline bool rcmp(const char* a_1,const std::string& a_2) {
-  return rcmp(a_1, a_2.c_str());
-}
-
-inline bool rcmp(const std::string& a_1,const std::string& a_2) {
-  return rcmp(a_1.c_str(), a_2.c_str());
-}
-
-}
+}  // namespace tools
 
 #endif

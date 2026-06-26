@@ -28,18 +28,25 @@
 // Author: V.Grichine, 24.04.97
 // --------------------------------------------------------------------
 
-#include "globals.hh"
-#include <complex>
-
 #include "G4AnalyticalPolSolver.hh"
 
+#include "globals.hh"
+
+#include <complex>
+
 //////////////////////////////////////////////////////////////////////////////
 
-G4AnalyticalPolSolver::G4AnalyticalPolSolver() { ; }
+G4AnalyticalPolSolver::G4AnalyticalPolSolver()
+{
+  ;
+}
 
 //////////////////////////////////////////////////////////////////////////////
 
-G4AnalyticalPolSolver::~G4AnalyticalPolSolver() { ; }
+G4AnalyticalPolSolver::~G4AnalyticalPolSolver()
+{
+  ;
+}
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -52,13 +59,13 @@ G4int G4AnalyticalPolSolver::QuadRoots(G4double p[5], G4double r[3][5])
 {
   G4double b, c, d2, d;
 
-  b  = -p[1] / p[0] / 2.;
-  c  = p[2] / p[0];
+  b = -p[1] / p[0] / 2.;
+  c = p[2] / p[0];
   d2 = b * b - c;
 
-  if(d2 >= 0.)
+  if (d2 >= 0.)
   {
-    d       = std::sqrt(d2);
+    d = std::sqrt(d2);
     r[1][1] = b - d;
     r[1][2] = b + d;
     r[2][1] = 0.;
@@ -66,7 +73,7 @@ G4int G4AnalyticalPolSolver::QuadRoots(G4double p[5], G4double r[3][5])
   }
   else
   {
-    d       = std::sqrt(-d2);
+    d = std::sqrt(-d2);
     r[2][1] = d;
     r[2][2] = -d;
     r[1][1] = b;
@@ -88,9 +95,9 @@ G4int G4AnalyticalPolSolver::CubicRoots(G4double p[5], G4double r[3][5])
   G4double x, t, b, c, d;
   G4int k;
 
-  if(p[0] != 1.)
+  if (p[0] != 1.)
   {
-    for(k = 1; k < 4; k++)
+    for (k = 1; k < 4; k++)
     {
       p[k] = p[k] / p[0];
     }
@@ -103,13 +110,13 @@ G4int G4AnalyticalPolSolver::CubicRoots(G4double p[5], G4double r[3][5])
   c = t * t * t;
   d = b * b - c;
 
-  if(d >= 0.)
+  if (d >= 0.)
   {
     d = std::pow((std::sqrt(d) + std::fabs(b)), 1.0 / 3.0);
 
-    if(d != 0.)
+    if (d != 0.)
     {
-      if(b > 0.)
+      if (b > 0.)
       {
         b = -d;
       }
@@ -119,13 +126,13 @@ G4int G4AnalyticalPolSolver::CubicRoots(G4double p[5], G4double r[3][5])
       }
       c = t / b;
     }
-    d       = std::sqrt(0.75) * (b - c);
+    d = std::sqrt(0.75) * (b - c);
     r[2][2] = d;
-    b       = b + c;
-    c       = -0.5 * b - x;
+    b = b + c;
+    c = -0.5 * b - x;
     r[1][2] = c;
 
-    if((b > 0. && x <= 0.) || (b < 0. && x > 0.))
+    if ((b > 0. && x <= 0.) || (b < 0. && x > 0.))
     {
       r[1][1] = c;
       r[2][1] = -d;
@@ -142,7 +149,7 @@ G4int G4AnalyticalPolSolver::CubicRoots(G4double p[5], G4double r[3][5])
   }  // end of 2 equal or complex roots
   else
   {
-    if(b == 0.)
+    if (b == 0.)
     {
       d = std::atan(1.0) / 1.5;
     }
@@ -151,7 +158,7 @@ G4int G4AnalyticalPolSolver::CubicRoots(G4double p[5], G4double r[3][5])
       d = std::atan(std::sqrt(-d) / std::fabs(b)) / 3.0;
     }
 
-    if(b < 0.)
+    if (b < 0.)
     {
       b = std::sqrt(t) * 2.0;
     }
@@ -166,27 +173,27 @@ G4int G4AnalyticalPolSolver::CubicRoots(G4double p[5], G4double r[3][5])
     c = c - x;
     t = t - x;
 
-    if(std::fabs(c) > std::fabs(t))
+    if (std::fabs(c) > std::fabs(t))
     {
       r[1][3] = c;
     }
     else
     {
       r[1][3] = t;
-      t       = c;
+      t = c;
     }
-    if(std::fabs(d) > std::fabs(t))
+    if (std::fabs(d) > std::fabs(t))
     {
       r[1][2] = d;
     }
     else
     {
       r[1][2] = t;
-      t       = d;
+      t = d;
     }
     r[1][1] = t;
 
-    for(k = 1; k < 4; k++)
+    for (k = 1; k < 4; k++)
     {
       r[2][k] = 0.;
     }
@@ -205,9 +212,9 @@ G4int G4AnalyticalPolSolver::BiquadRoots(G4double p[5], G4double r[3][5])
   G4double a, b, c, d, e;
   G4int i, k, j;
 
-  if(p[0] != 1.0)
+  if (p[0] != 1.0)
   {
-    for(k = 1; k < 5; k++)
+    for (k = 1; k < 5; k++)
     {
       p[k] = p[k] / p[0];
     }
@@ -226,22 +233,22 @@ G4int G4AnalyticalPolSolver::BiquadRoots(G4double p[5], G4double r[3][5])
   p[2] = (p[1] * p[1] - c) * 0.25;
   p[3] = b * b / (-64.0);
 
-  if(p[3] < 0.)
+  if (p[3] < 0.)
   {
     CubicRoots(p, r);
 
-    for(k = 1; k < 4; k++)
+    for (k = 1; k < 4; k++)
     {
-      if(r[2][k] == 0. && r[1][k] > 0)
+      if (r[2][k] == 0. && r[1][k] > 0)
       {
         d = r[1][k] * 4;
         a = a + d;
 
-        if(a >= 0. && b >= 0.)
+        if (a >= 0. && b >= 0.)
         {
           p[1] = std::sqrt(d);
         }
-        else if(a <= 0. && b <= 0.)
+        else if (a <= 0. && b <= 0.)
         {
           p[1] = std::sqrt(d);
         }
@@ -255,9 +262,9 @@ G4int G4AnalyticalPolSolver::BiquadRoots(G4double p[5], G4double r[3][5])
         p[2] = c / b;
         QuadRoots(p, r);
 
-        for(i = 1; i < 3; i++)
+        for (i = 1; i < 3; i++)
         {
-          for(j = 1; j < 3; j++)
+          for (j = 1; j < 3; j++)
           {
             r[j][i + 2] = r[j][i];
           }
@@ -266,7 +273,7 @@ G4int G4AnalyticalPolSolver::BiquadRoots(G4double p[5], G4double r[3][5])
         p[2] = b;
         QuadRoots(p, r);
 
-        for(i = 1; i < 5; i++)
+        for (i = 1; i < 5; i++)
         {
           r[1][i] = r[1][i] - e;
         }
@@ -275,20 +282,20 @@ G4int G4AnalyticalPolSolver::BiquadRoots(G4double p[5], G4double r[3][5])
       }
     }
   }
-  if(p[2] < 0.)
+  if (p[2] < 0.)
   {
-    b    = std::sqrt(c);
-    d    = b + b - a;
+    b = std::sqrt(c);
+    d = b + b - a;
     p[1] = 0.;
 
-    if(d > 0.)
+    if (d > 0.)
     {
       p[1] = std::sqrt(d);
     }
   }
   else
   {
-    if(p[1] > 0.)
+    if (p[1] > 0.)
     {
       b = std::sqrt(p[2]) * 2.0 + p[1];
     }
@@ -297,13 +304,13 @@ G4int G4AnalyticalPolSolver::BiquadRoots(G4double p[5], G4double r[3][5])
       b = -std::sqrt(p[2]) * 2.0 + p[1];
     }
 
-    if(b != 0.)
+    if (b != 0.)
     {
       p[1] = 0;
     }
     else
     {
-      for(k = 1; k < 5; k++)
+      for (k = 1; k < 5; k++)
       {
         r[1][k] = -e;
         r[2][k] = 0;
@@ -315,9 +322,9 @@ G4int G4AnalyticalPolSolver::BiquadRoots(G4double p[5], G4double r[3][5])
   p[2] = c / b;
   QuadRoots(p, r);
 
-  for(k = 1; k < 3; k++)
+  for (k = 1; k < 3; k++)
   {
-    for(j = 1; j < 3; j++)
+    for (j = 1; j < 3; j++)
     {
       r[j][k + 2] = r[j][k];
     }
@@ -326,7 +333,7 @@ G4int G4AnalyticalPolSolver::BiquadRoots(G4double p[5], G4double r[3][5])
   p[2] = b;
   QuadRoots(p, r);
 
-  for(k = 1; k < 5; k++)
+  for (k = 1; k < 5; k++)
   {
     r[1][k] = r[1][k] - e;
   }
@@ -345,14 +352,14 @@ G4int G4AnalyticalPolSolver::QuarticRoots(G4double p[5], G4double r[3][5])
   G4double reRoot[4];
   G4int k;
 
-  for(k = 0; k < 4; k++)
+  for (k = 0; k < 4; k++)
   {
     reRoot[k] = DBL_MAX;
   }
 
-  if(p[0] != 1.0)
+  if (p[0] != 1.0)
   {
-    for(k = 1; k < 5; k++)
+    for (k = 1; k < 5; k++)
     {
       p[k] = p[k] / p[0];
     }
@@ -371,9 +378,9 @@ G4int G4AnalyticalPolSolver::QuarticRoots(G4double p[5], G4double r[3][5])
 
   CubicRoots(p, r);
 
-  for(k = 1; k < 4; k++)
+  for (k = 1; k < 4; k++)
   {
-    if(r[2][k] == 0.)  // find a real root
+    if (r[2][k] == 0.)  // find a real root
     {
       reRoot[k] = r[1][k];
     }
@@ -383,29 +390,29 @@ G4int G4AnalyticalPolSolver::QuarticRoots(G4double p[5], G4double r[3][5])
     }
   }
   y1 = DBL_MAX;  // kInfinity;
-  for(k = 1; k < 4; k++)
+  for (k = 1; k < 4; k++)
   {
-    if(reRoot[k] < y1)
+    if (reRoot[k] < y1)
     {
       y1 = reRoot[k];
     }
   }
 
   R2 = 0.25 * a3 * a3 - a2 + y1;
-  b  = 0.25 * (4 * a3 * a2 - 8 * a1 - a3 * a3 * a3);
-  c  = 0.75 * a3 * a3 - 2 * a2;
-  a  = c - R2;
-  d  = 4 * y1 * y1 - 16 * a0;
+  b = 0.25 * (4 * a3 * a2 - 8 * a1 - a3 * a3 * a3);
+  c = 0.75 * a3 * a3 - 2 * a2;
+  a = c - R2;
+  d = 4 * y1 * y1 - 16 * a0;
 
-  if(R2 > 0.)
+  if (R2 > 0.)
   {
-    R  = std::sqrt(R2);
+    R = std::sqrt(R2);
     D2 = a + b / R;
     E2 = a - b / R;
 
-    if(D2 >= 0.)
+    if (D2 >= 0.)
     {
-      D       = std::sqrt(D2);
+      D = std::sqrt(D2);
       r[1][1] = -0.25 * a3 + 0.5 * R + 0.5 * D;
       r[1][2] = -0.25 * a3 + 0.5 * R - 0.5 * D;
       r[2][1] = 0.;
@@ -413,15 +420,15 @@ G4int G4AnalyticalPolSolver::QuarticRoots(G4double p[5], G4double r[3][5])
     }
     else
     {
-      D       = std::sqrt(-D2);
+      D = std::sqrt(-D2);
       r[1][1] = -0.25 * a3 + 0.5 * R;
       r[1][2] = -0.25 * a3 + 0.5 * R;
       r[2][1] = 0.5 * D;
       r[2][2] = -0.5 * D;
     }
-    if(E2 >= 0.)
+    if (E2 >= 0.)
     {
-      E       = std::sqrt(E2);
+      E = std::sqrt(E2);
       r[1][3] = -0.25 * a3 - 0.5 * R + 0.5 * E;
       r[1][4] = -0.25 * a3 - 0.5 * R - 0.5 * E;
       r[2][3] = 0.;
@@ -429,14 +436,14 @@ G4int G4AnalyticalPolSolver::QuarticRoots(G4double p[5], G4double r[3][5])
     }
     else
     {
-      E       = std::sqrt(-E2);
+      E = std::sqrt(-E2);
       r[1][3] = -0.25 * a3 - 0.5 * R;
       r[1][4] = -0.25 * a3 - 0.5 * R;
       r[2][3] = 0.5 * E;
       r[2][4] = -0.5 * E;
     }
   }
-  else if(R2 < 0.)
+  else if (R2 < 0.)
   {
     R = std::sqrt(-R2);
     G4complex CD2(a, -b / R);
@@ -456,14 +463,14 @@ G4int G4AnalyticalPolSolver::QuarticRoots(G4double p[5], G4double r[3][5])
   }
   else  // R2=0 case
   {
-    if(d >= 0.)
+    if (d >= 0.)
     {
       D2 = c + std::sqrt(d);
       E2 = c - std::sqrt(d);
 
-      if(D2 >= 0.)
+      if (D2 >= 0.)
       {
-        D       = std::sqrt(D2);
+        D = std::sqrt(D2);
         r[1][1] = -0.25 * a3 + 0.5 * R + 0.5 * D;
         r[1][2] = -0.25 * a3 + 0.5 * R - 0.5 * D;
         r[2][1] = 0.;
@@ -471,15 +478,15 @@ G4int G4AnalyticalPolSolver::QuarticRoots(G4double p[5], G4double r[3][5])
       }
       else
       {
-        D       = std::sqrt(-D2);
+        D = std::sqrt(-D2);
         r[1][1] = -0.25 * a3 + 0.5 * R;
         r[1][2] = -0.25 * a3 + 0.5 * R;
         r[2][1] = 0.5 * D;
         r[2][2] = -0.5 * D;
       }
-      if(E2 >= 0.)
+      if (E2 >= 0.)
       {
-        E       = std::sqrt(E2);
+        E = std::sqrt(E2);
         r[1][3] = -0.25 * a3 - 0.5 * R + 0.5 * E;
         r[1][4] = -0.25 * a3 - 0.5 * R - 0.5 * E;
         r[2][3] = 0.;
@@ -487,7 +494,7 @@ G4int G4AnalyticalPolSolver::QuarticRoots(G4double p[5], G4double r[3][5])
       }
       else
       {
-        E       = std::sqrt(-E2);
+        E = std::sqrt(-E2);
         r[1][3] = -0.25 * a3 - 0.5 * R;
         r[1][4] = -0.25 * a3 - 0.5 * R;
         r[2][3] = 0.5 * E;

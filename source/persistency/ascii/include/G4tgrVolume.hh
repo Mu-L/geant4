@@ -38,13 +38,13 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrVolume_hh
-#define G4tgrVolume_hh 1
-
-#include <vector>
-#include <map>
+#ifndef G4TGRVOLUME_HH
+#define G4TGRVOLUME_HH
 
 #include "globals.hh"
+
+#include <map>
+#include <vector>
 
 class G4tgrSolid;
 class G4tgrPlace;
@@ -61,22 +61,22 @@ class G4tgrVolume
     virtual ~G4tgrVolume();
 
     virtual G4tgrPlace* AddPlace(const std::vector<G4String>& wl);
-      // Add a position with the data read from a ':place' tag
+    // Add a position with the data read from a ':place' tag
 
     G4tgrPlaceDivRep* AddPlaceReplica(const std::vector<G4String>& wl);
-      // Add a replicated position
+    // Add a replicated position
 
     G4tgrPlaceParameterisation* AddPlaceParam(const std::vector<G4String>& wl);
-      // Add a parameterised position
+    // Add a parameterised position
 
     void AddVisibility(const std::vector<G4String>& wl);
-      // Add visibility flag
+    // Add visibility flag
 
     void AddRGBColour(const std::vector<G4String>& wl);
-      // Add colour
+    // Add colour
 
     void AddCheckOverlaps(const std::vector<G4String>& wl);
-      // Add check overlaps flag
+    // Add check overlaps flag
 
     // Accessors
 
@@ -86,7 +86,7 @@ class G4tgrVolume
     G4tgrSolid* GetSolid() const { return theSolid; }
     const G4String& GetMaterialName() const { return theMaterialName; }
 
-    const std::vector<G4tgrPlace*> GetPlacements() const {return thePlacements;}
+    const std::vector<G4tgrPlace*> GetPlacements() const { return thePlacements; }
     G4bool GetVisibility() const { return theVisibility; }
     G4double* GetColour() const { return theRGBColour; }
     G4double* GetRGBColour() const { return theRGBColour; }
@@ -100,15 +100,15 @@ class G4tgrVolume
   protected:
 
     G4String theName = "";
-      // Name of the volume
+    // Name of the volume
     G4String theType = "";
-      // Type of the volume
+    // Type of the volume
     G4String theMaterialName = "";
-      // Material of which the corresponding PV will be made of
+    // Material of which the corresponding PV will be made of
     G4tgrSolid* theSolid = nullptr;
-      // Solid
+    // Solid
     std::vector<G4tgrPlace*> thePlacements;
-      // Vector of placements
+    // Vector of placements
 
     G4bool theVisibility = false;
     G4double* theRGBColour = nullptr;

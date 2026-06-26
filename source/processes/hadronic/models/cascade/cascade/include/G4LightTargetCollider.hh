@@ -25,7 +25,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
-//  File:   G4LightTargetCollider.hh                                          // 
+//  File:   G4LightTargetCollider.hh                                          //
 //  Date:   30 September 2019                                                 //
 //  Author: Dennis Wright (SLAC)                                              //
 //                                                                            //
@@ -49,41 +49,42 @@ class G4KineticTrackVector;
 typedef std::pair<G4InuclElementaryParticle, G4InuclElementaryParticle> NucleonPair;
 typedef std::vector<G4InuclElementaryParticle> ScatteringProducts;
 
-class G4LightTargetCollider : public G4CascadeColliderBase {
-public:
-  G4LightTargetCollider();
-  virtual ~G4LightTargetCollider();
+class G4LightTargetCollider : public G4CascadeColliderBase
+{
+  public:
 
-  void collide(G4InuclParticle* bullet, G4InuclParticle* target,
-	       G4CollisionOutput& globalOutput);
+    G4LightTargetCollider();
+    virtual ~G4LightTargetCollider();
 
-  void setVerboseLevel(G4int verbose=0);
+    void collide(G4InuclParticle* bullet, G4InuclParticle* target, G4CollisionOutput& globalOutput);
 
-private: 
-  G4ElementaryParticleCollider* theElementaryParticleCollider;
+    void setVerboseLevel(G4int verbose = 0);
 
-  G4CollisionOutput output;		// Secondaries from main cascade
+  private:
 
-private:
-  // Copying of modules is forbidden
-  G4LightTargetCollider(const G4LightTargetCollider&);
-  G4LightTargetCollider& operator=(const G4LightTargetCollider&);
+    G4ElementaryParticleCollider* theElementaryParticleCollider;
 
-  G4double GammaDCrossSection(G4double /*kineticEnergy*/);
+    G4CollisionOutput output;  // Secondaries from main cascade
 
-  G4CascadeFinalStateGenerator fsGen;
+  private:
 
-  NucleonPair AbsorptionOnDeuteron(G4InuclParticle* bullet);
+    // Copying of modules is forbidden
+    G4LightTargetCollider(const G4LightTargetCollider&);
+    G4LightTargetCollider& operator=(const G4LightTargetCollider&);
 
-  ScatteringProducts SingleNucleonScattering(const G4InuclElementaryParticle& projectile,
-                                             const G4InuclElementaryParticle& targetNucleon);
+    G4double GammaDCrossSection(G4double /*kineticEnergy*/);
 
-  G4double mP;   // proton mass
-  G4double mN;   // neutron mass
-  G4double mD;   // deuteron mass
-  G4double pFermiD;  // deuteron Fermi momentum (GeV/c)  
-};        
+    G4CascadeFinalStateGenerator fsGen;
+
+    NucleonPair AbsorptionOnDeuteron(G4InuclParticle* bullet);
+
+    ScatteringProducts SingleNucleonScattering(const G4InuclElementaryParticle& projectile,
+                                               const G4InuclElementaryParticle& targetNucleon);
+
+    G4double mP;  // proton mass
+    G4double mN;  // neutron mass
+    G4double mD;  // deuteron mass
+    G4double pFermiD;  // deuteron Fermi momentum (GeV/c)
+};
 
 #endif /* G4LIGHT_TARGET_COLLIDER_HH */
-
-

@@ -29,14 +29,15 @@
 // Revisions: G.Cosmo, 06.03.2001 - Migrated to STL vectors
 // --------------------------------------------------------------------
 
-#include <iomanip>
-#include <sstream>
+#include "G4UnitsTable.hh"
 
 #include "G4SystemOfUnits.hh"
 #include "G4Threading.hh"
-#include "G4UnitsTable.hh"
 
-G4ThreadLocal G4UnitsTable* G4UnitDefinition::pUnitsTable  = nullptr;
+#include <iomanip>
+#include <sstream>
+
+G4ThreadLocal G4UnitsTable* G4UnitDefinition::pUnitsTable = nullptr;
 G4ThreadLocal G4bool G4UnitDefinition::unitsTableDestroyed = false;
 
 #ifdef G4MULTITHREADED
@@ -46,7 +47,7 @@ G4UnitsTable* G4UnitDefinition::pUnitsTableShadow = nullptr;
 
 G4UnitsTable::~G4UnitsTable()
 {
-  for(const auto itr : *this)
+  for (const auto itr : *this)
   {
     delete itr;
   }
@@ -59,20 +60,18 @@ G4UnitsTable::~G4UnitsTable()
 
 G4UnitDefinition::G4UnitDefinition(const G4String& name, const G4String& symbol,
                                    const G4String& category, G4double value)
-  : Name(name)
-  , SymbolName(symbol)
-  , Value(value)
+  : Name(name), SymbolName(symbol), Value(value)
 {
-  if(pUnitsTable == nullptr)
+  if (pUnitsTable == nullptr)
   {
-    if(unitsTableDestroyed)
+    if (unitsTableDestroyed)
     {
-      G4Exception("G4UnitDefinition::G4UnitDefinition", "UnitsTable0000",
-                  FatalException, "G4UnitsTable had already deleted.");
+      G4Exception("G4UnitDefinition::G4UnitDefinition", "UnitsTable0000", FatalException,
+                  "G4UnitsTable had already deleted.");
     }
     pUnitsTable = new G4UnitsTable;
 #ifdef G4MULTITHREADED
-    if(G4Threading::IsMasterThread())
+    if (G4Threading::IsMasterThread())
     {
       pUnitsTableShadow = pUnitsTable;
     }
@@ -82,12 +81,12 @@ G4UnitDefinition::G4UnitDefinition(const G4String& name, const G4String& symbol,
   // Does the Category objet already exist ?
   //
   std::size_t nbCat = pUnitsTable->size();
-  std::size_t i     = 0;
-  while((i < nbCat) && ((*pUnitsTable)[i]->GetName() != category))
+  std::size_t i = 0;
+  while ((i < nbCat) && ((*pUnitsTable)[i]->GetName() != category))
   {
     ++i;
   }
-  if(i == nbCat)
+  if (i == nbCat)
   {
     pUnitsTable->push_back(new G4UnitsCategory(category));
   }
@@ -99,8 +98,8 @@ G4UnitDefinition::G4UnitDefinition(const G4String& name, const G4String& symbol,
 
   // Update string max length for name and symbol
   //
-  (*pUnitsTable)[i]->UpdateNameMxLen((G4int) name.length());
-  (*pUnitsTable)[i]->UpdateSymbMxLen((G4int) symbol.length());
+  (*pUnitsTable)[i]->UpdateNameMxLen((G4int)name.length());
+  (*pUnitsTable)[i]->UpdateSymbMxLen((G4int)symbol.length());
 }
 
 // --------------------------------------------------------------------
@@ -114,11 +113,11 @@ G4UnitDefinition::G4UnitDefinition(const G4UnitDefinition& right)
 
 G4UnitDefinition& G4UnitDefinition::operator=(const G4UnitDefinition& right)
 {
-  if(this != &right)
+  if (this != &right)
   {
-    Name          = right.Name;
-    SymbolName    = right.SymbolName;
-    Value         = right.Value;
+    Name = right.Name;
+    SymbolName = right.SymbolName;
+    Value = right.Value;
     CategoryIndex = right.CategoryIndex;
   }
   return *this;
@@ -128,30 +127,30 @@ G4UnitDefinition& G4UnitDefinition::operator=(const G4UnitDefinition& right)
 
 G4bool G4UnitDefinition::operator==(const G4UnitDefinition& right) const
 {
-  return (this == (G4UnitDefinition*) &right);
+  return (this == (G4UnitDefinition*)&right);
 }
 
 // --------------------------------------------------------------------
 
 G4bool G4UnitDefinition::operator!=(const G4UnitDefinition& right) const
 {
-  return (this != (G4UnitDefinition*) &right);
+  return (this != (G4UnitDefinition*)&right);
 }
 
 // --------------------------------------------------------------------
 
 G4UnitsTable& G4UnitDefinition::GetUnitsTable()
 {
-  if(pUnitsTable == nullptr)
+  if (pUnitsTable == nullptr)
   {
     pUnitsTable = new G4UnitsTable;
   }
-  if(pUnitsTable->empty())
+  if (pUnitsTable->empty())
   {
     BuildUnitsTable();
   }
 #ifdef G4MULTITHREADED
-  if(G4Threading::IsMasterThread() && pUnitsTableShadow == nullptr)
+  if (G4Threading::IsMasterThread() && pUnitsTableShadow == nullptr)
   {
     pUnitsTableShadow = pUnitsTable;
   }
@@ -164,14 +163,14 @@ G4UnitsTable& G4UnitDefinition::GetUnitsTable()
 G4bool G4UnitDefinition::IsUnitDefined(const G4String& str)
 {
   G4String name, symbol;
-  for(std::size_t i = 0; i < (GetUnitsTable()).size(); ++i)
+  for (std::size_t i = 0; i < (GetUnitsTable()).size(); ++i)
   {
     G4UnitsContainer& units = (*pUnitsTable)[i]->GetUnitsList();
-    for(auto& unit : units)
+    for (auto& unit : units)
     {
-      name   = unit->GetName();
+      name = unit->GetName();
       symbol = unit->GetSymbol();
-      if(str == name || str == symbol)
+      if (str == name || str == symbol)
       {
         return true;
       }
@@ -185,14 +184,14 @@ G4bool G4UnitDefinition::IsUnitDefined(const G4String& str)
 G4double G4UnitDefinition::GetValueOf(const G4String& str)
 {
   G4String name, symbol;
-  for(std::size_t i = 0; i < (GetUnitsTable()).size(); ++i)
+  for (std::size_t i = 0; i < (GetUnitsTable()).size(); ++i)
   {
     G4UnitsContainer& units = (*pUnitsTable)[i]->GetUnitsList();
-    for(auto& unit : units)
+    for (auto& unit : units)
     {
-      name   = unit->GetName();
+      name = unit->GetName();
       symbol = unit->GetSymbol();
-      if(str == name || str == symbol)
+      if (str == name || str == symbol)
       {
         return unit->GetValue();
       }
@@ -200,8 +199,7 @@ G4double G4UnitDefinition::GetValueOf(const G4String& str)
   }
   std::ostringstream message;
   message << "The unit '" << str << "' does not exist in the Units Table!";
-  G4Exception("G4UnitDefinition::GetValueOf()", "InvalidUnit", FatalException,
-              message);
+  G4Exception("G4UnitDefinition::GetValueOf()", "InvalidUnit", FatalException, message);
   return 0.;
 }
 
@@ -210,14 +208,14 @@ G4double G4UnitDefinition::GetValueOf(const G4String& str)
 G4String G4UnitDefinition::GetCategory(const G4String& str)
 {
   G4String name, symbol;
-  for(std::size_t i = 0; i < (GetUnitsTable()).size(); ++i)
+  for (std::size_t i = 0; i < (GetUnitsTable()).size(); ++i)
   {
     G4UnitsContainer& units = (*pUnitsTable)[i]->GetUnitsList();
-    for(auto& unit : units)
+    for (auto& unit : units)
     {
-      name   = unit->GetName();
+      name = unit->GetName();
       symbol = unit->GetSymbol();
-      if(str == name || str == symbol)
+      if (str == name || str == symbol)
       {
         return (*pUnitsTable)[i]->GetName();
       }
@@ -225,8 +223,7 @@ G4String G4UnitDefinition::GetCategory(const G4String& str)
   }
   std::ostringstream message;
   message << "The unit '" << str << "' does not exist in the Units Table!";
-  G4Exception("G4UnitDefinition::GetCategory()", "InvalidUnit", FatalException,
-              message);
+  G4Exception("G4UnitDefinition::GetCategory()", "InvalidUnit", FatalException, message);
   name = "None";
   return name;
 }
@@ -237,8 +234,8 @@ void G4UnitDefinition::PrintDefinition()
 {
   G4int nameL = (*pUnitsTable)[CategoryIndex]->GetNameMxLen();
   G4int symbL = (*pUnitsTable)[CategoryIndex]->GetSymbMxLen();
-  G4cout << std::setw(nameL) << Name << " (" << std::setw(symbL) << SymbolName
-         << ") = " << Value << G4endl;
+  G4cout << std::setw(nameL) << Name << " (" << std::setw(symbL) << SymbolName << ") = " << Value
+         << G4endl;
 }
 
 // --------------------------------------------------------------------
@@ -285,8 +282,7 @@ void G4UnitDefinition::BuildUnitsTable()
 
   // Solid angle
   new G4UnitDefinition("steradian", "sr", "Solid angle", steradian);
-  new G4UnitDefinition("millisteradian", "msr", "Solid angle",
-                       steradian * 0.001);
+  new G4UnitDefinition("millisteradian", "msr", "Solid angle", steradian * 0.001);
 
   // Time
   new G4UnitDefinition("second", "s", "Time", second);
@@ -295,24 +291,24 @@ void G4UnitDefinition::BuildUnitsTable()
   new G4UnitDefinition("nanosecond", "ns", "Time", nanosecond);
   new G4UnitDefinition("picosecond", "ps", "Time", picosecond);
   new G4UnitDefinition("minute", "min", "Time", minute);
-  new G4UnitDefinition("hour",   "h",   "Time", hour);
-  new G4UnitDefinition("day",    "d",   "Time", day);
-  new G4UnitDefinition("year",   "y",   "Time", year);
+  new G4UnitDefinition("hour", "h", "Time", hour);
+  new G4UnitDefinition("day", "d", "Time", day);
+  new G4UnitDefinition("year", "y", "Time", year);
 
   // Frequency
   new G4UnitDefinition("hertz", "Hz", "Frequency", hertz);
   new G4UnitDefinition("kilohertz", "kHz", "Frequency", kilohertz);
   new G4UnitDefinition("megahertz", "MHz", "Frequency", megahertz);
-  
+
   // Velocity
-  new G4UnitDefinition("cm/ns", "cm/ns", "Velocity", cm/ns);
-  new G4UnitDefinition("mm/ns", "mm/ns", "Velocity", mm/ns);
-  new G4UnitDefinition("cm/us", "cm/us", "Velocity", cm/us);
-  new G4UnitDefinition("km/s" , "km/s" , "Velocity", km/s);
-  new G4UnitDefinition("cm/ms", "cm/ms", "Velocity", cm/ms);
-  new G4UnitDefinition( "m/s" ,  "m/s" , "Velocity",  m/s);
-  new G4UnitDefinition("cm/s" , "cm/s" , "Velocity", cm/s);
-  new G4UnitDefinition("mm/s" , "mm/s" , "Velocity", mm/s);      
+  new G4UnitDefinition("cm/ns", "cm/ns", "Velocity", cm / ns);
+  new G4UnitDefinition("mm/ns", "mm/ns", "Velocity", mm / ns);
+  new G4UnitDefinition("cm/us", "cm/us", "Velocity", cm / us);
+  new G4UnitDefinition("km/s", "km/s", "Velocity", km / s);
+  new G4UnitDefinition("cm/ms", "cm/ms", "Velocity", cm / ms);
+  new G4UnitDefinition("m/s", "m/s", "Velocity", m / s);
+  new G4UnitDefinition("cm/s", "cm/s", "Velocity", cm / s);
+  new G4UnitDefinition("mm/s", "mm/s", "Velocity", mm / s);
 
   // Electric charge
   new G4UnitDefinition("eplus", "e+", "Electric charge", eplus);
@@ -327,14 +323,14 @@ void G4UnitDefinition::BuildUnitsTable()
   new G4UnitDefinition("petaelectronvolt", "PeV", "Energy", petaelectronvolt);
   new G4UnitDefinition("millielectronVolt", "meV", "Energy", millielectronvolt);
   new G4UnitDefinition("joule", "J", "Energy", joule);
-  
-  //Momentum
-  new G4UnitDefinition( "eV/c",  "eV/c", "Momentum", eV);
+
+  // Momentum
+  new G4UnitDefinition("eV/c", "eV/c", "Momentum", eV);
   new G4UnitDefinition("keV/c", "keV/c", "Momentum", keV);
   new G4UnitDefinition("MeV/c", "MeV/c", "Momentum", MeV);
   new G4UnitDefinition("GeV/c", "GeV/c", "Momentum", GeV);
   new G4UnitDefinition("TeV/c", "TeV/c", "Momentum", TeV);
-  
+
   // Energy/Length
   new G4UnitDefinition("GeV/cm", "GeV/cm", "Energy/Length", GeV / cm);
   new G4UnitDefinition("MeV/cm", "MeV/cm", "Energy/Length", MeV / cm);
@@ -360,14 +356,10 @@ void G4UnitDefinition::BuildUnitsTable()
   new G4UnitDefinition("cm2/g", "cm2/g", "Surface/Mass", cm2 / g);
 
   // Energy.Surface/Mass
-  new G4UnitDefinition("eV*cm2/g", " eV*cm2/g", "Energy*Surface/Mass",
-                       eV * cm2 / g);
-  new G4UnitDefinition("keV*cm2/g", "keV*cm2/g", "Energy*Surface/Mass",
-                       keV * cm2 / g);
-  new G4UnitDefinition("MeV*cm2/g", "MeV*cm2/g", "Energy*Surface/Mass",
-                       MeV * cm2 / g);
-  new G4UnitDefinition("GeV*cm2/g", "GeV*cm2/g", "Energy*Surface/Mass",
-                       GeV * cm2 / g);
+  new G4UnitDefinition("eV*cm2/g", " eV*cm2/g", "Energy*Surface/Mass", eV * cm2 / g);
+  new G4UnitDefinition("keV*cm2/g", "keV*cm2/g", "Energy*Surface/Mass", keV * cm2 / g);
+  new G4UnitDefinition("MeV*cm2/g", "MeV*cm2/g", "Energy*Surface/Mass", MeV * cm2 / g);
+  new G4UnitDefinition("GeV*cm2/g", "GeV*cm2/g", "Energy*Surface/Mass", GeV * cm2 / g);
 
   // Power
   new G4UnitDefinition("watt", "W", "Power", watt);
@@ -424,11 +416,11 @@ void G4UnitDefinition::BuildUnitsTable()
 void G4UnitDefinition::PrintUnitsTable()
 {
   G4cout << "\n          ----- The Table of Units ----- \n";
-  if(pUnitsTable == nullptr)
+  if (pUnitsTable == nullptr)
   {
     pUnitsTable = new G4UnitsTable;
   }
-  for(std::size_t i = 0; i < pUnitsTable->size(); ++i)
+  for (std::size_t i = 0; i < pUnitsTable->size(); ++i)
   {
     (*pUnitsTable)[i]->PrintCategory();
   }
@@ -441,14 +433,14 @@ void G4UnitDefinition::ClearUnitsTable()
 #ifdef G4MULTITHREADED
   delete pUnitsTable;
   pUnitsTable = nullptr;
-  if(G4Threading::IsMasterThread())
+  if (G4Threading::IsMasterThread())
   {
     pUnitsTableShadow = nullptr;
   }
 #else
-  for(std::size_t i = 0; i < pUnitsTable->size(); ++i)
+  for (std::size_t i = 0; i < pUnitsTable->size(); ++i)
   {
-    delete(*pUnitsTable)[i];
+    delete (*pUnitsTable)[i];
   }
   pUnitsTable->clear();
 #endif
@@ -457,15 +449,13 @@ void G4UnitDefinition::ClearUnitsTable()
 
 // --------------------------------------------------------------------
 
-G4UnitsCategory::G4UnitsCategory(const G4String& name)
-  : Name(name)
-{}
+G4UnitsCategory::G4UnitsCategory(const G4String& name) : Name(name) {}
 
 // --------------------------------------------------------------------
 
 G4UnitsCategory::~G4UnitsCategory()
 {
-  for(auto& i : UnitsList)
+  for (auto& i : UnitsList)
   {
     delete i;
   }
@@ -483,9 +473,9 @@ G4UnitsCategory::G4UnitsCategory(const G4UnitsCategory& right)
 
 G4UnitsCategory& G4UnitsCategory::operator=(const G4UnitsCategory& right)
 {
-  if(this != &right)
+  if (this != &right)
   {
-    Name      = right.Name;
+    Name = right.Name;
     UnitsList = right.UnitsList;
     NameMxLen = right.NameMxLen;
     SymbMxLen = right.SymbMxLen;
@@ -497,14 +487,14 @@ G4UnitsCategory& G4UnitsCategory::operator=(const G4UnitsCategory& right)
 
 G4bool G4UnitsCategory::operator==(const G4UnitsCategory& right) const
 {
-  return (this == (G4UnitsCategory*) &right);
+  return (this == (G4UnitsCategory*)&right);
 }
 
 // --------------------------------------------------------------------
 
 G4bool G4UnitsCategory::operator!=(const G4UnitsCategory& right) const
 {
-  return (this != (G4UnitsCategory*) &right);
+  return (this != (G4UnitsCategory*)&right);
 }
 
 // --------------------------------------------------------------------
@@ -512,7 +502,7 @@ G4bool G4UnitsCategory::operator!=(const G4UnitsCategory& right) const
 void G4UnitsCategory::PrintCategory()
 {
   G4cout << "\n  category: " << Name << G4endl;
-  for(auto& i : UnitsList)
+  for (auto& i : UnitsList)
   {
     i->PrintDefinition();
   }
@@ -520,57 +510,53 @@ void G4UnitsCategory::PrintCategory()
 
 // --------------------------------------------------------------------
 
-G4BestUnit::G4BestUnit(G4double value, const G4String& category)
-  : nbOfVals(1)
+G4BestUnit::G4BestUnit(G4double value, const G4String& category) : nbOfVals(1)
 {
   // find the category
   G4UnitsTable& theUnitsTable = G4UnitDefinition::GetUnitsTable();
-  std::size_t nbCat           = theUnitsTable.size();
-  std::size_t i               = 0;
-  while((i < nbCat) && (theUnitsTable[i]->GetName() != category))
+  std::size_t nbCat = theUnitsTable.size();
+  std::size_t i = 0;
+  while ((i < nbCat) && (theUnitsTable[i]->GetName() != category))
   {
     ++i;
   }
-  if(i == nbCat)
+  if (i == nbCat)
   {
-    G4cout << " G4BestUnit: the category " << category << " does not exist !!"
-           << G4endl;
+    G4cout << " G4BestUnit: the category " << category << " does not exist !!" << G4endl;
     G4Exception("G4BestUnit::G4BestUnit()", "InvalidCall", FatalException,
                 "Missing unit category !");
   }
 
-  Value[0]        = value;
-  Value[1]        = 0.;
-  Value[2]        = 0.;
-  Category        = category;
+  Value[0] = value;
+  Value[1] = 0.;
+  Value[2] = 0.;
+  Category = category;
   IndexOfCategory = i;
 }
 
 // --------------------------------------------------------------------
 
-G4BestUnit::G4BestUnit(const G4ThreeVector& value, const G4String& category)
-  : nbOfVals(3)
+G4BestUnit::G4BestUnit(const G4ThreeVector& value, const G4String& category) : nbOfVals(3)
 {
   // find the category
   G4UnitsTable& theUnitsTable = G4UnitDefinition::GetUnitsTable();
-  std::size_t nbCat           = theUnitsTable.size();
-  std::size_t i               = 0;
-  while((i < nbCat) && (theUnitsTable[i]->GetName() != category))
+  std::size_t nbCat = theUnitsTable.size();
+  std::size_t i = 0;
+  while ((i < nbCat) && (theUnitsTable[i]->GetName() != category))
   {
     ++i;
   }
-  if(i == nbCat)
+  if (i == nbCat)
   {
-    G4cerr << " G4BestUnit: the category " << category << " does not exist."
-           << G4endl;
+    G4cerr << " G4BestUnit: the category " << category << " does not exist." << G4endl;
     G4Exception("G4BestUnit::G4BestUnit()", "InvalidCall", FatalException,
                 "Missing unit category !");
   }
 
-  Value[0]        = value.x();
-  Value[1]        = value.y();
-  Value[2]        = value.z();
-  Category        = category;
+  Value[0] = value.x();
+  Value[1] = value.y();
+  Value[2] = value.z();
+  Category = category;
   IndexOfCategory = i;
 }
 
@@ -589,7 +575,7 @@ std::ostream& operator<<(std::ostream& flux, const G4BestUnit& a)
 {
   G4UnitsTable& theUnitsTable = G4UnitDefinition::GetUnitsTable();
   G4UnitsContainer& List = theUnitsTable[a.IndexOfCategory]->GetUnitsList();
-  G4int len              = theUnitsTable[a.IndexOfCategory]->GetSymbMxLen();
+  G4int len = theUnitsTable[a.IndexOfCategory]->GetSymbMxLen();
 
   G4long ksup(-1), kinf(-1);
   G4double umax(0.), umin(DBL_MAX);
@@ -597,36 +583,37 @@ std::ostream& operator<<(std::ostream& flux, const G4BestUnit& a)
 
   // for a ThreeVector, choose the best unit for the biggest value
   G4double value =
-    std::max(std::max(std::fabs(a.Value[0]), std::fabs(a.Value[1])),
-             std::fabs(a.Value[2]));
+    std::max(std::max(std::fabs(a.Value[0]), std::fabs(a.Value[1])), std::fabs(a.Value[2]));
 
-  //special treatement for Energy.
-  if ((a.Category == "Energy") && (value == 0.)) {
-    for (G4int j = 0; j < a.nbOfVals; ++j) {
-       flux << a.Value[j] << " ";
+  // special treatement for Energy.
+  if ((a.Category == "Energy") && (value == 0.))
+  {
+    for (G4int j = 0; j < a.nbOfVals; ++j)
+    {
+      flux << a.Value[j] << " ";
     }
     std::ios::fmtflags oldform = flux.flags();
     flux.setf(std::ios::left, std::ios::adjustfield);
     flux << std::setw(len) << "eV";
     flux.flags(oldform);
     return flux;
-  }	     
-	     
-  //here, value != 0.
-  for(std::size_t k = 0; k < List.size(); ++k)
+  }
+
+  // here, value != 0.
+  for (std::size_t k = 0; k < List.size(); ++k)
   {
     G4double unit = List[k]->GetValue();
-    if(!(value != DBL_MAX))
+    if (!(value != DBL_MAX))
     {
-      if(unit > umax)
+      if (unit > umax)
       {
         umax = unit;
         ksup = k;
       }
     }
-    else if(value <= DBL_MIN)
+    else if (value <= DBL_MIN)
     {
-      if(unit < umin)
+      if (unit < umin)
       {
         umin = unit;
         kinf = k;
@@ -635,12 +622,12 @@ std::ostream& operator<<(std::ostream& flux, const G4BestUnit& a)
     else
     {
       G4double ratio = value / unit;
-      if((ratio >= 1.) && (ratio < rsup))
+      if ((ratio >= 1.) && (ratio < rsup))
       {
         rsup = ratio;
         ksup = k;
       }
-      if((ratio < 1.) && (ratio > rinf))
+      if ((ratio < 1.) && (ratio > rinf))
       {
         rinf = ratio;
         kinf = k;
@@ -649,16 +636,16 @@ std::ostream& operator<<(std::ostream& flux, const G4BestUnit& a)
   }
 
   G4long index = ksup;
-  if(index == -1)
+  if (index == -1)
   {
     index = kinf;
   }
-  if(index == -1)
+  if (index == -1)
   {
     index = 0;
   }
 
-  for(G4int j = 0; j < a.nbOfVals; ++j)
+  for (G4int j = 0; j < a.nbOfVals; ++j)
   {
     flux << a.Value[j] / (List[index]->GetValue()) << " ";
   }
@@ -679,21 +666,20 @@ std::ostream& operator<<(std::ostream& flux, const G4BestUnit& a)
 void G4UnitsTable::Synchronize()
 {
   G4UnitsTable* orig = &(G4UnitDefinition::GetUnitsTableShadow());
-  if(this == orig)
+  if (this == orig)
   {
     return;
   }
 
-  for(const auto category : *orig)
+  for (const auto category : *orig)
   {
-    G4String catName          = category->GetName();
-    G4UnitsContainer* units   = &(category->GetUnitsList());
-    for(const auto unit : *units)
+    G4String catName = category->GetName();
+    G4UnitsContainer* units = &(category->GetUnitsList());
+    for (const auto unit : *units)
     {
-      if(!Contains(unit, catName))
+      if (!Contains(unit, catName))
       {
-        new G4UnitDefinition(unit->GetName(), unit->GetSymbol(), catName,
-                             unit->GetValue());
+        new G4UnitDefinition(unit->GetName(), unit->GetSymbol(), catName, unit->GetValue());
       }
     }
   }
@@ -701,21 +687,19 @@ void G4UnitsTable::Synchronize()
 
 // --------------------------------------------------------------------
 
-G4bool G4UnitsTable::Contains(const G4UnitDefinition* unit,
-                              const G4String& categoryName)
+G4bool G4UnitsTable::Contains(const G4UnitDefinition* unit, const G4String& categoryName)
 {
-  for(const auto category : *this)
+  for (const auto category : *this)
   {
     G4String catName = category->GetName();
-    if(catName != categoryName)
+    if (catName != categoryName)
     {
       continue;
     }
     G4UnitsContainer* units = &(category->GetUnitsList());
-    for(const auto ucItr : *units)
+    for (const auto ucItr : *units)
     {
-      if(ucItr->GetName() == unit->GetName() &&
-         ucItr->GetSymbol() == unit->GetSymbol())
+      if (ucItr->GetName() == unit->GetName() && ucItr->GetSymbol() == unit->GetSymbol())
       {
         return true;
       }

@@ -26,38 +26,40 @@
 //
 // -------------------------------------------------------------------
 //
-//      GEANT4 header file 
+//      GEANT4 header file
 //
 //      File name:     G4NucLevel
 //
 //      Author:        V.Ivanchenko
-// 
+//
 //      Creation date: 4 January 2012
 //
 //      Modifications:
-//  13.02.2015 Design change for gamma de-excitation 
-//      
+//  13.02.2015 Design change for gamma de-excitation
+//
 // -------------------------------------------------------------------
 
 #include "G4NucLevel.hh"
+
 #include "G4HadronicException.hh"
+
 #include <iomanip>
 
-G4NucLevel::G4NucLevel(std::size_t ntrans, G4double tgamma,
-		       const std::vector<G4int>&   vTrans,
-		       const std::vector<G4float>& wLevelGamma,
-		       const std::vector<G4float>& wGamma,
-      	               const std::vector<G4float>& vRatio,
-		       const std::vector<const std::vector<G4float>*>& wShell)
+G4NucLevel::G4NucLevel(std::size_t ntrans, G4double tgamma, const std::vector<G4int>& vTrans,
+                       const std::vector<G4float>& wLevelGamma, const std::vector<G4float>& wGamma,
+                       const std::vector<G4float>& vRatio,
+                       const std::vector<const std::vector<G4float>*>& wShell)
   : length(ntrans), fTimeGamma(tgamma)
 {
-  if(0 < length) { 
+  if (0 < length)
+  {
     fTrans.reserve(length);
     fGammaCumProbability.reserve(length);
     fGammaProbability.reserve(length);
     fMpRatio.reserve(length);
     fShellProbability.reserve(length);
-    for(std::size_t i=0; i<length; ++i) {
+    for (std::size_t i = 0; i < length; ++i)
+    {
       fTrans.push_back(vTrans[i]);
       fGammaCumProbability.push_back(wLevelGamma[i]);
       fGammaProbability.push_back(wGamma[i]);
@@ -69,7 +71,8 @@ G4NucLevel::G4NucLevel(std::size_t ntrans, G4double tgamma,
 
 G4NucLevel::~G4NucLevel()
 {
-  for(std::size_t i=0; i<length; ++i) {
+  for (std::size_t i = 0; i < length; ++i)
+  {
     delete fShellProbability[i];
   }
 }
@@ -77,18 +80,20 @@ G4NucLevel::~G4NucLevel()
 void G4NucLevel::StreamInfo(std::ostream& out) const
 {
   G4long prec = out.precision(4);
-  for(std::size_t i=0; i<length; ++i) {
-    out << std::setw(12) << FinalExcitationIndex(i) 
-	<< std::setw(4) << TransitionType(i)
-	<< std::setw(7) << fMpRatio[i] 
-	<< std::setw(7) << fGammaCumProbability[i]
-	<< std::setw(7) << fGammaProbability[i]
-	<< "\n";
+  for (std::size_t i = 0; i < length; ++i)
+  {
+    out << std::setw(12) << FinalExcitationIndex(i) << std::setw(4) << TransitionType(i)
+        << std::setw(7) << fMpRatio[i] << std::setw(7) << fGammaCumProbability[i] << std::setw(7)
+        << fGammaProbability[i] << "\n";
     const std::vector<G4float>* vec = fShellProbability[i];
-    if(vec) {
+    if (vec)
+    {
       std::size_t len = vec->size();
       out << "              ";
-      for(std::size_t j=0; j<len; ++j) { out << std::setw(7) << (*vec)[j]; }
+      for (std::size_t j = 0; j < len; ++j)
+      {
+        out << std::setw(7) << (*vec)[j];
+      }
       out << "\n";
     }
   }

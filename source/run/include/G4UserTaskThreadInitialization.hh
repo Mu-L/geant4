@@ -30,15 +30,15 @@
 //      This class is used for multi-threaded Geant4.
 //      It encapsulates the mechanism of starting/stopping threads.
 
-#ifndef G4UserTaskThreadInitialization_hh
-#define G4UserTaskThreadInitialization_hh
+#ifndef G4USERTASKTHREADINITIALIZATION_HH
+#define G4USERTASKTHREADINITIALIZATION_HH
 
-//class G4VUserPrimaryGeneratorAction;
-//class G4UserRunAction;
-//class G4UserEventAction;
-//class G4UserStackingAction;
-//class G4UserTrackingAction;
-//class G4UserSteppingAction;
+// class G4VUserPrimaryGeneratorAction;
+// class G4UserRunAction;
+// class G4UserEventAction;
+// class G4UserStackingAction;
+// class G4UserTrackingAction;
+// class G4UserSteppingAction;
 
 class G4WorkerThread;
 class G4WorkerTaskRunManager;
@@ -50,6 +50,7 @@ class G4WorkerTaskRunManager;
 class G4UserTaskThreadInitialization : public G4UserWorkerThreadInitialization
 {
   public:  // with description
+
     G4UserTaskThreadInitialization() = default;
     ~G4UserTaskThreadInitialization() override = default;
 

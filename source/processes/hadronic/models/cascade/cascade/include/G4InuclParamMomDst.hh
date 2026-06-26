@@ -31,29 +31,32 @@
 //
 // NOTE:  Coefficient arrays have fixed dimensions, validated by compiler
 
-#ifndef G4InuclParamMomDst_h
-#define G4InuclParamMomDst_h 1
+#ifndef G4INUCLPARAMMOMDST_HH
+#define G4INUCLPARAMMOMDST_HH
 
-#include "globals.hh"
 #include "G4VMultiBodyMomDst.hh"
+#include "globals.hh"
 
+class G4InuclParamMomDst : public G4VMultiBodyMomDst
+{
+  public:
 
-class G4InuclParamMomDst : public G4VMultiBodyMomDst {
-public:
-  // NOTE:  Array arguments must be STATIC, GLOBAL declarations
-  G4InuclParamMomDst(const G4String& name, 
-		     const G4double (&pqprC)[2][4][4],
-		     const G4double (&psC)[2][3],
-		     G4int verbose=0)
-    : G4VMultiBodyMomDst(name, verbose), coeffPR(pqprC), coeffPS(psC) {;}
+    // NOTE:  Array arguments must be STATIC, GLOBAL declarations
+    G4InuclParamMomDst(const G4String& name, const G4double (&pqprC)[2][4][4],
+                       const G4double (&psC)[2][3], G4int verbose = 0)
+      : G4VMultiBodyMomDst(name, verbose), coeffPR(pqprC), coeffPS(psC)
+    {
+      ;
+    }
 
-  virtual ~G4InuclParamMomDst() {;}
-  
-  virtual G4double GetMomentum(G4int ptype, const G4double& ekin) const;
+    virtual ~G4InuclParamMomDst() { ; }
 
-protected:
-  const G4double (&coeffPR)[2][4][4];	// (coeffs Ekin^0..3) * S^0..3
-  const G4double (&coeffPS)[2][3];	// PS = sum coeffs * Ekin^0..2 
-};        
+    virtual G4double GetMomentum(G4int ptype, const G4double& ekin) const;
 
-#endif	/* G4InuclParamMomDst_h */
+  protected:
+
+    const G4double (&coeffPR)[2][4][4];  // (coeffs Ekin^0..3) * S^0..3
+    const G4double (&coeffPS)[2][3];  // PS = sum coeffs * Ekin^0..2
+};
+
+#endif /* G4InuclParamMomDst_h */

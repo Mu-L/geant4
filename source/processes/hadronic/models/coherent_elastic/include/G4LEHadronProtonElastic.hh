@@ -26,35 +26,34 @@
 //
 // G4 Low energy model: hadron-p elastic scattering
 // V. Grichine based on em dipole boost approach
-// The model is approximately applied for Tkin < 20 MeV 
-// 
+// The model is approximately applied for Tkin < 20 MeV
+//
 // 15.01.2014 V. Grichine first version
-// 
+//
 
-#ifndef G4LEHadronProtonElastic_h
-#define G4LEHadronProtonElastic_h 1
- 
-#include "globals.hh"
+#ifndef G4LEHADRONPROTONELASTIC_HH
+#define G4LEHADRONPROTONELASTIC_HH
+
 #include "G4HadronElastic.hh"
+#include "globals.hh"
 
-class G4LEHadronProtonElastic : public G4HadronElastic  
+class G4LEHadronProtonElastic : public G4HadronElastic
 {
- public:
+  public:
 
-   G4LEHadronProtonElastic();
+    G4LEHadronProtonElastic();
 
-   ~G4LEHadronProtonElastic() override;
- 
-   G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
-                                  G4Nucleus& targetNucleus) override;
+    ~G4LEHadronProtonElastic() override;
 
-  // sample momentum transfer using Lab. momentum
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
+                                   G4Nucleus& targetNucleus) override;
 
-  G4double SampleInvariantT(const G4ParticleDefinition* p, 
-			    G4double plab, G4int Z, G4int A) override;
+    // sample momentum transfer using Lab. momentum
 
-  G4double RandCosThetaDipPen();
+    G4double SampleInvariantT(const G4ParticleDefinition* p, G4double plab, G4int Z,
+                              G4int A) override;
 
+    G4double RandCosThetaDipPen();
 };
 
 #endif

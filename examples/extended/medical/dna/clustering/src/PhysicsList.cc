@@ -36,7 +36,7 @@
 
 #include "PhysicsList.hh"
 
-#include "G4EmDNAPhysics.hh"
+#include "G4EmDNAPhysics_option2.hh"
 #include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -47,7 +47,7 @@ PhysicsList::PhysicsList() : G4VModularPhysicsList()
   SetVerboseLevel(1);
 
   // EM physics
-  RegisterPhysics(new G4EmDNAPhysics());
+  RegisterPhysics(new G4EmDNAPhysics_option2());
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

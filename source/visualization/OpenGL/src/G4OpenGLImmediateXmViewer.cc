@@ -25,90 +25,89 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  10th February 1997
 // Class G4OpenGLImmediateXmViewer : a class derived from G4OpenGLXmViewer
 //                                     and G4OpenGLImmediateViewer.
 
 #include "G4OpenGLImmediateXmViewer.hh"
+
 #include "G4OpenGLImmediateSceneHandler.hh"
-
-#include "G4ios.hh"
 #include "G4Threading.hh"
+#include "G4ios.hh"
 
-G4OpenGLImmediateXmViewer::
-G4OpenGLImmediateXmViewer(G4OpenGLImmediateSceneHandler& sceneHandler,
-                          const G4String& name)
- : G4VViewer (sceneHandler, sceneHandler.IncrementViewCount (), name),
-   G4OpenGLViewer (sceneHandler),
-   G4OpenGLXmViewer (sceneHandler),
-   G4OpenGLImmediateViewer (sceneHandler)
+G4OpenGLImmediateXmViewer::G4OpenGLImmediateXmViewer(G4OpenGLImmediateSceneHandler& sceneHandler,
+                                                     const G4String& name)
+  : G4VViewer(sceneHandler, sceneHandler.IncrementViewCount(), name),
+    G4OpenGLViewer(sceneHandler),
+    G4OpenGLXmViewer(sceneHandler),
+    G4OpenGLImmediateViewer(sceneHandler)
 {
   if (fViewId < 0) return;  // In case error in base class instantiation.
 
-// ensure a suitable window was found
-  if (!vi_immediate) {
+  // ensure a suitable window was found
+  if (!vi_immediate)
+  {
     G4cerr << "G4OpenGLImmediateXmViewer::G4OpenGLImmediateXmViewer -"
-      " G4OpenGLXmViewer couldn't get a visual." << G4endl;  
+              " G4OpenGLXmViewer couldn't get a visual."
+           << G4endl;
     fViewId = -1;  // This flags an error.
     return;
   }
 }
 
-G4OpenGLImmediateXmViewer::~G4OpenGLImmediateXmViewer () {}
+G4OpenGLImmediateXmViewer::~G4OpenGLImmediateXmViewer() {}
 
-void G4OpenGLImmediateXmViewer::Initialise () {
+void G4OpenGLImmediateXmViewer::Initialise()
+{
+  CreateGLXContext(vi_immediate);
+  CreateMainWindow();
+  CreateFontLists();
 
-  CreateGLXContext (vi_immediate);
-  CreateMainWindow ();
-  CreateFontLists ();
-
-  InitializeGLView ();
+  InitializeGLView();
 
   // If a double buffer context has been forced upon us, ignore the
   // back buffer for this OpenGLImmediate view.
-  glDrawBuffer (GL_FRONT);
+  glDrawBuffer(GL_FRONT);
 }
 
-void G4OpenGLImmediateXmViewer::DrawView () {
-
+void G4OpenGLImmediateXmViewer::DrawView()
+{
   G4ViewParameters::DrawingStyle style = GetViewParameters().GetDrawingStyle();
 
 #ifdef G4DEBUG_VIS_OGL
   printf("G4OpenGLImmediateXmViewer::DrawView : \n");
 #endif
 
-  if(style!=G4ViewParameters::hlr &&
-     haloing_enabled) {
-
-    HaloingFirstPass ();
-    NeedKernelVisit ();
+  if (style != G4ViewParameters::hlr && haloing_enabled)
+  {
+    HaloingFirstPass();
+    NeedKernelVisit();
 #ifdef G4DEBUG_VIS_OGL
-  printf("G4OpenGLImmediateXmViewer::DrawView : change param\n");
+    printf("G4OpenGLImmediateXmViewer::DrawView : change param\n");
 #endif
-    ProcessView ();
-    glFlush ();
+    ProcessView();
+    glFlush();
 
-    HaloingSecondPass ();
-
+    HaloingSecondPass();
   }
 
 #ifdef G4DEBUG_VIS_OGL
   printf("G4OpenGLImmediateXmViewer::DrawView : need Kernel/Process/Finish\n");
 #endif
-  NeedKernelVisit ();  // Always need to visit G4 kernel.
-  ProcessView ();
-  FinishView ();
-
+  NeedKernelVisit();  // Always need to visit G4 kernel.
+  ProcessView();
+  FinishView();
 }
 
-void G4OpenGLImmediateXmViewer::FinishView () {
+void G4OpenGLImmediateXmViewer::FinishView()
+{
 #ifdef G4DEBUG_VIS_OGL
   printf("G4OpenGLImmediateXmViewer::FinishView : \n");
 #endif
-//  glXWaitGL (); //Wait for effects of all previous OpenGL commands to
-                //be propagated before progressing.
-// JA: Commented out July 2021 - slows rendering down in some cases and I
-// don't see any adverse effects.
-  glFlush ();
+  //  glXWaitGL (); //Wait for effects of all previous OpenGL commands to
+  // be propagated before progressing.
+  // JA: Commented out July 2021 - slows rendering down in some cases and I
+  // don't see any adverse effects.
+  glFlush();
 }

@@ -31,11 +31,11 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgbMaterialMixture_hh
-#define G4tgbMaterialMixture_hh 1
+#ifndef G4TGBMATERIALMIXTURE_HH
+#define G4TGBMATERIALMIXTURE_HH
 
-#include "globals.hh"
 #include "G4tgbMaterial.hh"
+#include "globals.hh"
 
 class G4tgbMaterialMixture : public G4tgbMaterial
 {

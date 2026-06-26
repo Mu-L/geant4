@@ -26,16 +26,15 @@
 //
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara
-// 
+//
 // Modified:
 // 21.03.2013 V.Ivanchenko redesigned and cleaned up
 
 #include "G4ShellCorrection.hh"
 
-G4ShellCorrection::G4ShellCorrection()
-{}
+G4ShellCorrection::G4ShellCorrection() {}
 
-const G4CameronTruranHilfShellCorrections* 
+const G4CameronTruranHilfShellCorrections*
 G4ShellCorrection::GetCameronTruranHilfShellCorrections() const
 {
   return &theCameronTruranHilfShellCorrections;
@@ -46,13 +45,14 @@ G4ShellCorrection::GetCameronShellPlusPairingCorrections() const
 {
   return &theCameronShellPlusPairingCorrections;
 }
- 
-G4double G4ShellCorrection::GetShellCorrection(G4int A, G4int Z) const 
+
+G4double G4ShellCorrection::GetShellCorrection(G4int A, G4int Z) const
 {
   G4double shellCorr = 0.0;
   G4int N = A - Z;
-  if(!theCookShellCorrections.GetShellCorrection(N,Z,shellCorr)) {
-    theCameronGilbertShellCorrections.GetShellCorrection(N,Z,shellCorr);
-  }    
+  if (!theCookShellCorrections.GetShellCorrection(N, Z, shellCorr))
+  {
+    theCameronGilbertShellCorrections.GetShellCorrection(N, Z, shellCorr);
+  }
   return shellCorr;
 }

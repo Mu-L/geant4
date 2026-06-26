@@ -29,12 +29,12 @@
 // --------------------------------------------------------------------
 
 #include "G4VelocityTable.hh"
+
+#include "G4ApplicationState.hh"
+#include "G4Exp.hh"
+#include "G4Log.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4StateManager.hh"
-#include "G4ApplicationState.hh"
-#include "G4Log.hh"
-#include "G4Exp.hh"
-
 #include "G4ios.hh"
 
 G4ThreadLocal G4VelocityTable* G4VelocityTable::theInstance = nullptr;
@@ -59,7 +59,7 @@ void G4VelocityTable::PrepareVelocityTable()
 
   dataVector.clear();
   binVector.clear();
-  dBin    = G4Log(maxT / minT) / NbinT;
+  dBin = G4Log(maxT / minT) / NbinT;
   baseBin = G4Log(minT) / dBin;
 
   numberOfNodes = NbinT + 1;
@@ -69,7 +69,7 @@ void G4VelocityTable::PrepareVelocityTable()
   binVector.push_back(minT);
   dataVector.push_back(0.0);
 
-  for(std::size_t i = 1; i < numberOfNodes - 1; ++i)
+  for (std::size_t i = 1; i < numberOfNodes - 1; ++i)
   {
     binVector.push_back(G4Exp((baseBin + i) * dBin));
     dataVector.push_back(0.0);
@@ -80,9 +80,9 @@ void G4VelocityTable::PrepareVelocityTable()
   edgeMin = binVector[0];
   edgeMax = binVector[numberOfNodes - 1];
 
-  for(G4int i = 0; i <= NbinT; ++i)
+  for (G4int i = 0; i <= NbinT; ++i)
   {
-    G4double T    = binVector[i];
+    G4double T = binVector[i];
     dataVector[i] = c_light * std::sqrt(T * (T + 2.)) / (T + 1.0);
   }
 
@@ -114,35 +114,34 @@ G4double G4VelocityTable::Value(G4double theEnergy)
   // value 'theEnergy' lies between the last energy and low edge of of the
   // bin of last call, then the last bin location is used
 
-  if(theEnergy == lastEnergy)
-  {
-  }
-  else if(theEnergy < lastEnergy && theEnergy >= binVector[lastBin])
+  if (theEnergy == lastEnergy)
+  {}
+  else if (theEnergy < lastEnergy && theEnergy >= binVector[lastBin])
   {
     lastEnergy = theEnergy;
-    lastValue  = Interpolation();
+    lastValue = Interpolation();
   }
-  else if(theEnergy <= edgeMin)
+  else if (theEnergy <= edgeMin)
   {
-    lastBin    = 0;
+    lastBin = 0;
     lastEnergy = edgeMin;
-    lastValue  = dataVector[0];
+    lastValue = dataVector[0];
   }
-  else if(theEnergy >= edgeMax)
+  else if (theEnergy >= edgeMax)
   {
-    lastBin    = numberOfNodes - 1;
+    lastBin = numberOfNodes - 1;
     lastEnergy = edgeMax;
-    lastValue  = dataVector[lastBin];
+    lastValue = dataVector[lastBin];
   }
   else
   {
     lastBin = (std::size_t)(G4Log(theEnergy) / dBin - baseBin);
-    if(lastBin == numberOfNodes)
+    if (lastBin == numberOfNodes)
     {
       --lastBin;
     }  // VI: fix possible precision lost
     lastEnergy = theEnergy;
-    lastValue  = Interpolation();
+    lastValue = Interpolation();
   }
   return lastValue;
 }
@@ -150,7 +149,7 @@ G4double G4VelocityTable::Value(G4double theEnergy)
 // --------------------------------------------------------------------
 G4VelocityTable* G4VelocityTable::GetVelocityTable()
 {
-  if(theInstance == nullptr)
+  if (theInstance == nullptr)
   {
     static G4ThreadLocalSingleton<G4VelocityTable> inst;
     theInstance = inst.Instance();
@@ -159,29 +158,26 @@ G4VelocityTable* G4VelocityTable::GetVelocityTable()
 }
 
 // --------------------------------------------------------------------
-void G4VelocityTable::
-SetVelocityTableProperties(G4double t_max, G4double t_min, G4int nbin)
+void G4VelocityTable::SetVelocityTableProperties(G4double t_max, G4double t_min, G4int nbin)
 {
-  if(theInstance == nullptr)
+  if (theInstance == nullptr)
   {
     GetVelocityTable();
   }
 
-  G4StateManager* stateManager    = G4StateManager::GetStateManager();
+  G4StateManager* stateManager = G4StateManager::GetStateManager();
   G4ApplicationState currentState = stateManager->GetCurrentState();
 
   // check if state is outside event loop
-  if(!(currentState == G4State_Idle || currentState == G4State_PreInit))
+  if (!(currentState == G4State_Idle || currentState == G4State_PreInit))
   {
-    G4Exception("G4VelocityTable::SetVelocityTableProperties()", "Track101",
-                JustWarning,
+    G4Exception("G4VelocityTable::SetVelocityTableProperties()", "Track101", JustWarning,
                 "Can modify only in PreInit or Idle state : Method ignored.");
     return;
   }
 
-  if(nbin > 100)
-    theInstance->NbinT = nbin;
-  if((t_min < t_max) && (t_min > 0.))
+  if (nbin > 100) theInstance->NbinT = nbin;
+  if ((t_min < t_max) && (t_min > 0.))
   {
     theInstance->minT = t_min;
     theInstance->maxT = t_max;

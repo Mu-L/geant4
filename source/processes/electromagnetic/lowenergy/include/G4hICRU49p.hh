@@ -32,50 +32,50 @@
 // File name:     G4hICRU49p
 //
 // Author:        V.Ivanchenko (Vladimir.Ivanchenko@cern.ch)
-// 
+//
 // Creation date: 20 July 2000
 //
-// Modifications: 
+// Modifications:
 // 20/07/2000  V.Ivanchenko First implementation
 //
-// Class Description: 
+// Class Description:
 //
 // Electronic stopping power parametrised according to
 // ICRU Report N49, 1993, for protons.
 //
-// Class Description: End 
+// Class Description: End
 //
 // -------------------------------------------------------------------
 //
 
-#ifndef G4hICRU49p_h
-#define G4hICRU49p_h 1
+#ifndef G4HICRU49P_HH
+#define G4HICRU49P_HH
 
-#include "globals.hh"
 #include "G4VhElectronicStoppingPower.hh"
+#include "globals.hh"
 
 class G4Material;
 
 class G4hICRU49p : public G4VhElectronicStoppingPower
 {
-public:
+  public:
 
-  explicit G4hICRU49p();
+    explicit G4hICRU49p();
 
-  ~G4hICRU49p();
+    ~G4hICRU49p();
 
-  G4bool HasMaterial(const G4Material* material) override;
+    G4bool HasMaterial(const G4Material* material) override;
 
-  G4double StoppingPower(const G4Material* material,
-                               G4double kineticEnergy) override;
+    G4double StoppingPower(const G4Material* material, G4double kineticEnergy) override;
 
-  G4double ElectronicStoppingPower(G4double z,
-                                   G4double kineticEnergy) const override;
-private:
-  void SetMoleculaNumber(G4int number) {iMolecula = number;};
+    G4double ElectronicStoppingPower(G4double z, G4double kineticEnergy) const override;
 
-  const G4double protonMassAMU;
-  G4int iMolecula;               // index in the molecula's table
+  private:
+
+    void SetMoleculaNumber(G4int number) { iMolecula = number; };
+
+    const G4double protonMassAMU;
+    G4int iMolecula;  // index in the molecula's table
 };
- 
+
 #endif

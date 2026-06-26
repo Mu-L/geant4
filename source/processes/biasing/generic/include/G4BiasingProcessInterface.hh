@@ -45,13 +45,13 @@
 //
 // Author: Marc Verderi, September 2013.
 // --------------------------------------------------------------------
-#ifndef G4BiasingProcessInterface_h
-#define G4BiasingProcessInterface_h 1
+#ifndef G4BIASINGPROCESSINTERFACE_HH
+#define G4BIASINGPROCESSINTERFACE_HH
 
-#include "globals.hh"
-#include "G4VProcess.hh"
-#include "G4Cache.hh"
 #include "G4BiasingProcessSharedData.hh"
+#include "G4Cache.hh"
+#include "G4VProcess.hh"
+#include "globals.hh"
 
 class G4VBiasingInteractionLaw;
 class G4InteractionLawPhysical;
@@ -67,20 +67,18 @@ class G4BiasingProcessInterface : public G4VProcess
     // --------------------------------------------------------------------------------
     // -- constructor for dealing with biasing options not affecting physics processes:
     // --------------------------------------------------------------------------------
-    G4BiasingProcessInterface( const G4String& name = "biasWrapper(0)" );
+    G4BiasingProcessInterface(const G4String& name = "biasWrapper(0)");
     // ---------------------------------------------------------------
     // -- constructor to transform the behaviour of a physics process:
     // ---------------------------------------------------------------
     // -- wrappedProcess pointer MUST NOT be null.
-    G4BiasingProcessInterface(G4VProcess* wrappedProcess,
-                              G4bool wrappedIsAtRest,
-                              G4bool wrappedIsAlongStep,
-                              G4bool wrappedIsPostStep,
+    G4BiasingProcessInterface(G4VProcess* wrappedProcess, G4bool wrappedIsAtRest,
+                              G4bool wrappedIsAlongStep, G4bool wrappedIsPostStep,
                               G4String useThisName = "");
     ~G4BiasingProcessInterface();
     // -- pointer of wrapped physics process:
     G4VProcess* GetWrappedProcess() const { return fWrappedProcess; }
-  
+
     // ---------------------
     // -- Biasing interface:
     // ---------------------
@@ -88,39 +86,61 @@ class G4BiasingProcessInterface : public G4VProcess
     // ------------------
     // -- Current step and previous step biasing operator, if any:
     G4VBiasingOperator* GetCurrentBiasingOperator() const
-      { return fSharedData->fCurrentBiasingOperator; }
+    {
+      return fSharedData->fCurrentBiasingOperator;
+    }
     G4VBiasingOperator* GetPreviousBiasingOperator() const
-      { return fSharedData->fPreviousBiasingOperator; }
+    {
+      return fSharedData->fPreviousBiasingOperator;
+    }
     // -- current and previous operation:
     G4VBiasingOperation* GetCurrentNonPhysicsBiasingOperation() const
-      { return fNonPhysicsBiasingOperation; }
+    {
+      return fNonPhysicsBiasingOperation;
+    }
     G4VBiasingOperation* GetPreviousNonPhysicsBiasingOperation() const
-      { return fPreviousNonPhysicsBiasingOperation; }
+    {
+      return fPreviousNonPhysicsBiasingOperation;
+    }
     G4VBiasingOperation* GetCurrentOccurenceBiasingOperation() const
-      { return fOccurenceBiasingOperation; }
+    {
+      return fOccurenceBiasingOperation;
+    }
     G4VBiasingOperation* GetPreviousOccurenceBiasingOperation() const
-      { return  fPreviousOccurenceBiasingOperation; }
+    {
+      return fPreviousOccurenceBiasingOperation;
+    }
     G4VBiasingOperation* GetCurrentFinalStateBiasingOperation() const
-      { return fFinalStateBiasingOperation; }
+    {
+      return fFinalStateBiasingOperation;
+    }
     G4VBiasingOperation* GetPreviousFinalStateBiasingOperation() const
-      { return fPreviousFinalStateBiasingOperation; }
-  
+    {
+      return fPreviousFinalStateBiasingOperation;
+    }
+
     // -- Lists of processes cooperating under a same particle type/G4ProcessManager.
     // -- The vector ordering is:
     // --   - random, before first "run/beamOn"
     // --   - that of the PostStepGetPhysicalInteractionLength() once "/run/beamOn" has been issued
-    const std::vector< const G4BiasingProcessInterface* >& GetBiasingProcessInterfaces() const
-      { return fSharedData->fPublicBiasingProcessInterfaces; }
-    const std::vector< const G4BiasingProcessInterface* >& GetPhysicsBiasingProcessInterfaces() const
-      { return fSharedData->fPublicPhysicsBiasingProcessInterfaces; }
-    const std::vector< const G4BiasingProcessInterface* >& GetNonPhysicsBiasingProcessInterfaces() const
-      { return fSharedData->fPublicNonPhysicsBiasingProcessInterfaces; }
+    const std::vector<const G4BiasingProcessInterface*>& GetBiasingProcessInterfaces() const
+    {
+      return fSharedData->fPublicBiasingProcessInterfaces;
+    }
+    const std::vector<const G4BiasingProcessInterface*>& GetPhysicsBiasingProcessInterfaces() const
+    {
+      return fSharedData->fPublicPhysicsBiasingProcessInterfaces;
+    }
+    const std::vector<const G4BiasingProcessInterface*>&
+    GetNonPhysicsBiasingProcessInterfaces() const
+    {
+      return fSharedData->fPublicNonPhysicsBiasingProcessInterfaces;
+    }
 
     // -- Get shared data for this process:
-    const G4BiasingProcessSharedData* GetSharedData() const
-      { return fSharedData; }
+    const G4BiasingProcessSharedData* GetSharedData() const { return fSharedData; }
     // -- Get shared data associated to a G4ProcessManager:
-    static const G4BiasingProcessSharedData* GetSharedData( const G4ProcessManager* );
+    static const G4BiasingProcessSharedData* GetSharedData(const G4ProcessManager*);
 
     // ------------------
     // -- Helper methods:
@@ -138,10 +158,10 @@ class G4BiasingProcessInterface : public G4VProcess
     G4bool GetIsFirstPostStepDoItInterface(G4bool physOnly = true) const;
     G4bool GetIsLastPostStepDoItInterface(G4bool physOnly = true) const;
     // ---- Determine if the process is first/last in the PostStep GPIL and DoIt lists.
-    G4bool    IsFirstPostStepGPILInterface(G4bool physOnly = true) const;
-    G4bool     IsLastPostStepGPILInterface(G4bool physOnly = true) const;
-    G4bool    IsFirstPostStepDoItInterface(G4bool physOnly = true) const;
-    G4bool     IsLastPostStepDoItInterface(G4bool physOnly = true) const;
+    G4bool IsFirstPostStepGPILInterface(G4bool physOnly = true) const;
+    G4bool IsLastPostStepGPILInterface(G4bool physOnly = true) const;
+    G4bool IsFirstPostStepDoItInterface(G4bool physOnly = true) const;
+    G4bool IsLastPostStepDoItInterface(G4bool physOnly = true) const;
     // -- Information about wrapped process:
     G4bool GetWrappedProcessIsAtRest() const { return fWrappedProcessIsAtRest; }
     G4bool GetWrappedProcessIsAlong() const { return fWrappedProcessIsAlong; }
@@ -163,39 +183,35 @@ class G4BiasingProcessInterface : public G4VProcess
     // -- Start/End tracking:
     void StartTracking(G4Track* track);
     void EndTracking();
-  
+
     // -- PostStep methods:
-    virtual G4double PostStepGetPhysicalInteractionLength(const G4Track&                track,
-                                           G4double previousStepSize,
-                                           G4ForceCondition* condition);
-    virtual G4VParticleChange* PostStepDoIt(const G4Track& track,
-                                            const G4Step& step);
+    virtual G4double PostStepGetPhysicalInteractionLength(const G4Track& track,
+                                                          G4double previousStepSize,
+                                                          G4ForceCondition* condition);
+    virtual G4VParticleChange* PostStepDoIt(const G4Track& track, const G4Step& step);
     // -- AlongStep methods:
-    virtual G4double AlongStepGetPhysicalInteractionLength(const G4Track&                track,
-                                           G4double previousStepSize,
-                                           G4double currentMinimumStep, 
-                                           G4double& proposedSafety, 
-                                           G4GPILSelection* selection);
-    virtual G4VParticleChange* AlongStepDoIt(const G4Track& track,
-                                             const G4Step& step);
+    virtual G4double AlongStepGetPhysicalInteractionLength(const G4Track& track,
+                                                           G4double previousStepSize,
+                                                           G4double currentMinimumStep,
+                                                           G4double& proposedSafety,
+                                                           G4GPILSelection* selection);
+    virtual G4VParticleChange* AlongStepDoIt(const G4Track& track, const G4Step& step);
     // -- AtRest methods
-    virtual G4double AtRestGetPhysicalInteractionLength(const G4Track&,
-                                                        G4ForceCondition*);
+    virtual G4double AtRestGetPhysicalInteractionLength(const G4Track&, G4ForceCondition*);
     virtual G4VParticleChange* AtRestDoIt(const G4Track&, const G4Step&);
-  
+
     virtual G4bool IsApplicable(const G4ParticleDefinition& pd);
     virtual void BuildPhysicsTable(const G4ParticleDefinition& pd);
     virtual void PreparePhysicsTable(const G4ParticleDefinition& pd);
-    virtual G4bool StorePhysicsTable(const G4ParticleDefinition* pd,
-                                     const G4String& s, G4bool f);
-    virtual G4bool RetrievePhysicsTable(const G4ParticleDefinition* pd,
-				        const G4String& s, G4bool f);
+    virtual G4bool StorePhysicsTable(const G4ParticleDefinition* pd, const G4String& s, G4bool f);
+    virtual G4bool RetrievePhysicsTable(const G4ParticleDefinition* pd, const G4String& s,
+                                        G4bool f);
     // --
-    virtual void SetProcessManager(const G4ProcessManager*); 
-    virtual const G4ProcessManager* GetProcessManager(); 
+    virtual void SetProcessManager(const G4ProcessManager*);
+    virtual const G4ProcessManager* GetProcessManager();
     // --
     virtual void ResetNumberOfInteractionLengthLeft();
-  
+
     virtual void SetMasterProcess(G4VProcess* masterP);
     virtual void BuildWorkerPhysicsTable(const G4ParticleDefinition& pd);
     virtual void PrepareWorkerPhysicsTable(const G4ParticleDefinition& pd);
@@ -211,15 +227,15 @@ class G4BiasingProcessInterface : public G4VProcess
     {
       // -- be careful : all arguments are *assumed* to be 0 or 1. No check
       // -- for that is provided. Should be of pure internal usage.
-      return 4*firstLast + 2*GPILDoIt + physAll;
+      return 4 * firstLast + 2 * GPILDoIt + physAll;
     }
 
     // -- method used to anticipate stepping manager calls to PostStepGPIL
     // -- of wrapped processes : this method calls wrapped process PostStepGPIL
     // -- and caches results for PostStepGPIL and condition.
-    void InvokeWrappedProcessPostStepGPIL( const G4Track& track,
-                                           G4double previousStepSize,
-                                           G4ForceCondition* condition );
+    void InvokeWrappedProcessPostStepGPIL(const G4Track& track, G4double previousStepSize,
+                                          G4ForceCondition* condition);
+
   private:
 
     G4Track* fCurrentTrack = nullptr;
@@ -244,7 +260,7 @@ class G4BiasingProcessInterface : public G4VProcess
 
     G4double fWrappedProcessPostStepGPIL = -1.0;
     G4double fBiasingPostStepGPIL = -1.0;
-    G4double fWrappedProcessInteractionLength = -1.0; // -- inverse of analog cross-section
+    G4double fWrappedProcessInteractionLength = -1.0;  // -- inverse of analog cross-section
     G4ForceCondition fWrappedProcessForceCondition = NotForced;
     G4ForceCondition fBiasingForceCondition = NotForced;
     G4double fWrappedProcessAlongStepGPIL = -1.0;

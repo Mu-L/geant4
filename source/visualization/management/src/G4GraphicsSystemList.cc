@@ -27,9 +27,11 @@
 
 #include "G4GraphicsSystemList.hh"
 
-void G4GraphicsSystemList::remove(G4VGraphicsSystem* graphicsSystem) {
+void G4GraphicsSystemList::remove(G4VGraphicsSystem* graphicsSystem)
+{
   G4GraphicsSystemListIterator iGS;
-  for (iGS = begin(); iGS != end(); ++iGS) {
+  for (iGS = begin(); iGS != end(); ++iGS)
+  {
     if (*iGS == graphicsSystem) break;
   }
   if (iGS != end()) erase(iGS);

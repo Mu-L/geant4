@@ -38,13 +38,17 @@ G4ThreadLocal G4SDManager* G4SDManager::fSDManager = nullptr;
 
 G4SDManager* G4SDManager::GetSDMpointer()
 {
-  if (fSDManager == nullptr) {
+  if (fSDManager == nullptr)
+  {
     fSDManager = new G4SDManager;
   }
   return fSDManager;
 }
 
-G4SDManager* G4SDManager::GetSDMpointerIfExist() { return fSDManager; }
+G4SDManager* G4SDManager::GetSDMpointerIfExist()
+{
+  return fSDManager;
+}
 
 G4SDManager::G4SDManager()
 {
@@ -74,12 +78,14 @@ void G4SDManager::AddNewDetector(G4VSensitiveDetector* aSD)
   if (pathName.back() != '/') pathName += "/";
   treeTop->AddNewDetector(aSD, pathName);
   if (numberOfCollections < 1) return;
-  for (G4int i = 0; i < numberOfCollections; i++) {
+  for (G4int i = 0; i < numberOfCollections; i++)
+  {
     G4String SDname = aSD->GetName();
     G4String DCname = aSD->GetCollectionName(i);
     AddNewCollection(SDname, DCname);
   }
-  if (verboseLevel > 0) {
+  if (verboseLevel > 0)
+  {
     G4cout << "New sensitive detector <" << aSD->GetName() << "> is registered at " << pathName
            << G4endl;
   }
@@ -88,13 +94,16 @@ void G4SDManager::AddNewDetector(G4VSensitiveDetector* aSD)
 void G4SDManager::AddNewCollection(const G4String& SDname, const G4String& DCname)
 {
   G4int i = HCtable->Registor(SDname, DCname);
-  if (verboseLevel > 0) {
-    if (i < 0) {
+  if (verboseLevel > 0)
+  {
+    if (i < 0)
+    {
       if (verboseLevel > 1)
         G4cout << "G4SDManager::AddNewCollection : the collection <" << SDname << "/" << DCname
                << "> has already been reginstered." << G4endl;
     }
-    else {
+    else
+    {
       G4cout << "G4SDManager::AddNewCollection : the collection <" << SDname << "/" << DCname
              << "> is registered at " << i << G4endl;
     }
@@ -108,7 +117,10 @@ G4HCofThisEvent* G4SDManager::PrepareNewEvent()
   return HCE;
 }
 
-void G4SDManager::TerminateCurrentEvent(G4HCofThisEvent* HCE) { treeTop->Terminate(HCE); }
+void G4SDManager::TerminateCurrentEvent(G4HCofThisEvent* HCE)
+{
+  treeTop->Terminate(HCE);
+}
 
 void G4SDManager::Activate(const G4String& dName, G4bool activeFlag)
 {
@@ -127,10 +139,12 @@ G4VSensitiveDetector* G4SDManager::FindSensitiveDetector(const G4String& dName, 
 G4int G4SDManager::GetCollectionID(const G4String& colName)
 {
   G4int id = HCtable->GetCollectionID(colName);
-  if (id == -1) {
+  if (id == -1)
+  {
     G4cout << "<" << colName << "> is not found." << G4endl;
   }
-  else if (id == -2) {
+  else if (id == -2)
+  {
     G4cout << "<" << colName << "> is ambiguous." << G4endl;
   }
   return id;
@@ -141,25 +155,32 @@ G4int G4SDManager::GetCollectionID(G4VHitsCollection* aHC)
   return GetCollectionID(aHC->GetSDname(), aHC->GetName());
 }
 
-G4int G4SDManager::GetCollectionID(const G4String& detSubName, const G4String& colSubName ) {
+G4int G4SDManager::GetCollectionID(const G4String& detSubName, const G4String& colSubName)
+{
   G4int id = HCtable->GetCollectionID(detSubName, colSubName);
-  if (id > 0 ) return id;
-  if (id == -1) {
-    G4cout << "<" << detSubName << "/" << colSubName <<  "> is not found." << G4endl;
+  if (id > 0) return id;
+  if (id == -1)
+  {
+    G4cout << "<" << detSubName << "/" << colSubName << "> is not found." << G4endl;
   }
-  else if (id == -2) {
+  else if (id == -2)
+  {
     G4cout << "<" << detSubName << "/" << colSubName << "> is ambiguous." << G4endl;
   }
   return id;
 }
 
-
-void G4SDManager::RegisterSDFilter(G4VSDFilter* filter) { FilterList.push_back(filter); }
+void G4SDManager::RegisterSDFilter(G4VSDFilter* filter)
+{
+  FilterList.push_back(filter);
+}
 
 void G4SDManager::DeRegisterSDFilter(G4VSDFilter* filter)
 {
-  for (auto f = FilterList.begin(); f != FilterList.end(); f++) {
-    if (*f == filter) {
+  for (auto f = FilterList.begin(); f != FilterList.end(); f++)
+  {
+    if (*f == filter)
+    {
       FilterList.erase(f);
       break;
     }
@@ -169,7 +190,8 @@ void G4SDManager::DeRegisterSDFilter(G4VSDFilter* filter)
 void G4SDManager::DestroyFilters()
 {
   auto f = FilterList.begin();
-  while (f != FilterList.end()) {
+  while (f != FilterList.end())
+  {
     if (verboseLevel > 0) G4cout << "### deleting " << (*f)->GetName() << " " << (*f) << G4endl;
     delete *f;
     f = FilterList.begin();

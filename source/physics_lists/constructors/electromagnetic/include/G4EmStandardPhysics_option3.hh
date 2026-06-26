@@ -35,13 +35,13 @@
 //
 //----------------------------------------------------------------------------
 //
-// This class provides construction of EM standard physics using set of 
+// This class provides construction of EM standard physics using set of
 // the most adavced options allowing precise simulation at low
 // and intermediate energies
 //
 
-#ifndef G4EmStandardPhysics_option3_h
-#define G4EmStandardPhysics_option3_h 1
+#ifndef G4EMSTANDARDPHYSICS_OPTION3_HH
+#define G4EMSTANDARDPHYSICS_OPTION3_HH
 
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
@@ -50,22 +50,16 @@
 
 class G4EmStandardPhysics_option3 : public G4VPhysicsConstructor
 {
-public:
+  public:
 
-  explicit G4EmStandardPhysics_option3(G4int ver=1, const G4String& name="");
+    explicit G4EmStandardPhysics_option3(G4int ver = 1, const G4String& name = "");
 
-  ~G4EmStandardPhysics_option3() override;
+    ~G4EmStandardPhysics_option3() override;
 
-  void ConstructParticle() override;
-  void ConstructProcess() override;
+    void ConstructParticle() override;
+    void ConstructProcess() override;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-
-
-
-
-

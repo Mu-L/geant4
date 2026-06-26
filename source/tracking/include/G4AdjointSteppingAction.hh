@@ -49,8 +49,8 @@
 // - 20/11/2009 L.Desorgher, corrected stop of adjoint particles tracking
 //                           when reentering the adjoint source.
 //---------------------------------------------------------------------
-#ifndef G4AdjointSteppingAction_hh
-#define G4AdjointSteppingAction_hh 1
+#ifndef G4ADJOINTSTEPPINGACTION_HH
+#define G4ADJOINTSTEPPINGACTION_HH
 
 #include "G4ThreeVector.hh"
 #include "G4UserSteppingAction.hh"
@@ -61,56 +61,58 @@ class G4ParticleDefinition;
 
 class G4AdjointSteppingAction : public G4UserSteppingAction
 {
- public:
-  G4AdjointSteppingAction();
-  ~G4AdjointSteppingAction() override = default;
+  public:
 
-  void UserSteppingAction(const G4Step*) override;
+    G4AdjointSteppingAction();
+    ~G4AdjointSteppingAction() override = default;
 
-  inline void SetExtSourceEMax(G4double Emax) { ext_sourceEMax = Emax; }
-  inline void SetStartEvent(G4bool aBool) { start_event = aBool; }
-  inline G4bool GetDidAdjParticleReachTheExtSource() { return did_adj_part_reach_ext_source; }
-  inline G4ThreeVector GetLastMomentum() { return last_momentum; }
-  inline G4ThreeVector GetLastPosition() { return last_pos; }
-  inline G4double GetLastEkin() { return last_ekin; }
-  inline G4double GetLastWeight() { return last_weight; }
-  inline void SetPrimWeight(G4double weight) { prim_weight = weight; }
-  inline G4ParticleDefinition* GetLastPartDef() { return last_part_def; }
-  inline void SetUserAdjointSteppingAction(G4UserSteppingAction* anAction)
-  {
-    theUserAdjointSteppingAction = anAction;
-  }
-  inline void SetUserForwardSteppingAction(G4UserSteppingAction* anAction)
-  {
-    theUserFwdSteppingAction = anAction;
-  }
-  inline void SetAdjointTrackingMode(G4bool aBool) { is_adjoint_tracking_mode = aBool; }
-  inline void ResetDidOneAdjPartReachExtSourceDuringEvent()
-  {
-    did_one_adj_part_reach_ext_source_during_event = false;
-  }
-  inline void SetAdjointGeantinoTrackingMode(G4bool aBool)
-  {
-    is_adjoint_geantino_tracking_mode = aBool;
-  }
+    void UserSteppingAction(const G4Step*) override;
 
- private:
-  G4double ext_sourceEMax = 0.0;
-  G4AdjointCrossSurfChecker* theG4AdjointCrossSurfChecker = nullptr;
+    inline void SetExtSourceEMax(G4double Emax) { ext_sourceEMax = Emax; }
+    inline void SetStartEvent(G4bool aBool) { start_event = aBool; }
+    inline G4bool GetDidAdjParticleReachTheExtSource() { return did_adj_part_reach_ext_source; }
+    inline G4ThreeVector GetLastMomentum() { return last_momentum; }
+    inline G4ThreeVector GetLastPosition() { return last_pos; }
+    inline G4double GetLastEkin() { return last_ekin; }
+    inline G4double GetLastWeight() { return last_weight; }
+    inline void SetPrimWeight(G4double weight) { prim_weight = weight; }
+    inline G4ParticleDefinition* GetLastPartDef() { return last_part_def; }
+    inline void SetUserAdjointSteppingAction(G4UserSteppingAction* anAction)
+    {
+      theUserAdjointSteppingAction = anAction;
+    }
+    inline void SetUserForwardSteppingAction(G4UserSteppingAction* anAction)
+    {
+      theUserFwdSteppingAction = anAction;
+    }
+    inline void SetAdjointTrackingMode(G4bool aBool) { is_adjoint_tracking_mode = aBool; }
+    inline void ResetDidOneAdjPartReachExtSourceDuringEvent()
+    {
+      did_one_adj_part_reach_ext_source_during_event = false;
+    }
+    inline void SetAdjointGeantinoTrackingMode(G4bool aBool)
+    {
+      is_adjoint_geantino_tracking_mode = aBool;
+    }
 
-  G4ThreeVector last_momentum, last_pos;
-  G4double last_ekin = 0.0;
-  G4double last_weight = 0.0;
-  G4double prim_weight = 1.0;
-  G4ParticleDefinition* last_part_def = nullptr;
-  G4UserSteppingAction* theUserAdjointSteppingAction = nullptr;
-  G4UserSteppingAction* theUserFwdSteppingAction = nullptr;
+  private:
 
-  G4bool start_event = false;
-  G4bool did_adj_part_reach_ext_source = false;
-  G4bool did_one_adj_part_reach_ext_source_during_event = false;
-  G4bool is_adjoint_tracking_mode = false;
-  G4bool is_adjoint_geantino_tracking_mode = false;
+    G4double ext_sourceEMax = 0.0;
+    G4AdjointCrossSurfChecker* theG4AdjointCrossSurfChecker = nullptr;
+
+    G4ThreeVector last_momentum, last_pos;
+    G4double last_ekin = 0.0;
+    G4double last_weight = 0.0;
+    G4double prim_weight = 1.0;
+    G4ParticleDefinition* last_part_def = nullptr;
+    G4UserSteppingAction* theUserAdjointSteppingAction = nullptr;
+    G4UserSteppingAction* theUserFwdSteppingAction = nullptr;
+
+    G4bool start_event = false;
+    G4bool did_adj_part_reach_ext_source = false;
+    G4bool did_one_adj_part_reach_ext_source_during_event = false;
+    G4bool is_adjoint_tracking_mode = false;
+    G4bool is_adjoint_geantino_tracking_mode = false;
 };
 
 #endif

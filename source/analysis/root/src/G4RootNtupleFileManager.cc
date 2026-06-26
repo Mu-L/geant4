@@ -27,30 +27,28 @@
 // Author: Ivana Hrivnacova, 15/09/2020 (ivana@ipno.in2p3.fr)
 
 #include "G4RootNtupleFileManager.hh"
-#include "G4RootFileManager.hh"
-#include "G4RootNtupleManager.hh"
-#include "G4RootMainNtupleManager.hh"
-#include "G4RootPNtupleManager.hh"
-#include "G4VAnalysisManager.hh"
+
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
-
-#include "G4Threading.hh"
 #include "G4AutoLock.hh"
+#include "G4RootFileManager.hh"
+#include "G4RootMainNtupleManager.hh"
+#include "G4RootNtupleManager.hh"
+#include "G4RootPNtupleManager.hh"
+#include "G4Threading.hh"
+#include "G4VAnalysisManager.hh"
 
 using namespace G4Analysis;
 using std::make_shared;
 using std::to_string;
 
-
-
 G4RootNtupleFileManager* G4RootNtupleFileManager::fgMasterInstance = nullptr;
 
 //_____________________________________________________________________________
 G4RootNtupleFileManager::G4RootNtupleFileManager(const G4AnalysisManagerState& state)
- : G4VNtupleFileManager(state, "root")
+  : G4VNtupleFileManager(state, "root")
 {
-  if ( G4Threading::IsMasterThread() ) fgMasterInstance = this;
+  if (G4Threading::IsMasterThread()) fgMasterInstance = this;
 
   // Do not merge ntuples by default
   // Merging may require user code migration as analysis manager
@@ -62,7 +60,7 @@ G4RootNtupleFileManager::G4RootNtupleFileManager(const G4AnalysisManagerState& s
 //_____________________________________________________________________________
 G4RootNtupleFileManager::~G4RootNtupleFileManager()
 {
-  if ( fState.GetIsMaster() ) fgMasterInstance = nullptr;
+  if (fState.GetIsMaster()) fgMasterInstance = nullptr;
 }
 
 //
@@ -70,8 +68,7 @@ G4RootNtupleFileManager::~G4RootNtupleFileManager()
 //
 
 //_____________________________________________________________________________
-void G4RootNtupleFileManager::SetNtupleMergingMode(G4bool mergeNtuples,
-                                                 G4int nofNtupleFiles)
+void G4RootNtupleFileManager::SetNtupleMergingMode(G4bool mergeNtuples, G4int nofNtupleFiles)
 
 {
   Message(kVL4, "set", "ntuple merging mode");
@@ -79,46 +76,57 @@ void G4RootNtupleFileManager::SetNtupleMergingMode(G4bool mergeNtuples,
   auto canMerge = true;
 
   // Illegal situations
-  if ( mergeNtuples && ( ! G4Threading::IsMultithreadedApplication() ) ) {
-    Warn("Merging ntuples is not applicable in sequential application.\n"
-         "Setting was ignored.",
-         fkClass, "SetNtupleMergingMode");
+  if (mergeNtuples && (!G4Threading::IsMultithreadedApplication()))
+  {
+    Warn(
+      "Merging ntuples is not applicable in sequential application.\n"
+      "Setting was ignored.",
+      fkClass, "SetNtupleMergingMode");
     canMerge = false;
   }
 
   // Illegal situations
-  if (mergeNtuples && G4Threading::IsMultithreadedApplication() && (fgMasterInstance == nullptr)) {
-    Warn("Merging ntuples requires G4AnalysisManager instance on master.\n"
-         "Setting was ignored.",
-         fkClass, "SetNtupleMergingMode");
+  if (mergeNtuples && G4Threading::IsMultithreadedApplication() && (fgMasterInstance == nullptr))
+  {
+    Warn(
+      "Merging ntuples requires G4AnalysisManager instance on master.\n"
+      "Setting was ignored.",
+      fkClass, "SetNtupleMergingMode");
     canMerge = false;
   }
 
   G4String mergingMode;
-  if ( ( ! mergeNtuples ) || ( ! canMerge ) ) {
+  if ((!mergeNtuples) || (!canMerge))
+  {
     fNtupleMergeMode = G4NtupleMergeMode::kNone;
     mergingMode = "G4NtupleMergeMode::kNone";
   }
-  else {
+  else
+  {
     // Set the number of reduced ntuple files
     fNofNtupleFiles = nofNtupleFiles;
 
     // Check the number of reduced ntuple files
-    if ( fNofNtupleFiles < 0  ) {
-      Warn("Number of reduced files must be [0, nofThreads].\n"
-           "Cannot set  " + to_string(nofNtupleFiles) +" files.\n" +
-           "Setting was ignored.",
-           fkClass, "SetNtupleMergingMode");
+    if (fNofNtupleFiles < 0)
+    {
+      Warn(
+        "Number of reduced files must be [0, nofThreads].\n"
+        "Cannot set  "
+          + to_string(nofNtupleFiles) + " files.\n" + "Setting was ignored.",
+        fkClass, "SetNtupleMergingMode");
       fNofNtupleFiles = 0;
     }
 
     // Forced merging mode
-    G4bool isMaster = ! G4Threading::IsWorkerThread();
+    G4bool isMaster = !G4Threading::IsWorkerThread();
     // G4bool isMaster = fState.GetIsMaster();
-    if ( isMaster ) {
+    if (isMaster)
+    {
       fNtupleMergeMode = G4NtupleMergeMode::kMain;
       mergingMode = "G4NtupleMergeMode::kMain";
-    } else {
+    }
+    else
+    {
       fNtupleMergeMode = G4NtupleMergeMode::kSlave;
       mergingMode = "G4NtupleMergeMode::kSlave";
     }
@@ -143,12 +151,14 @@ G4int G4RootNtupleFileManager::GetNtupleFileNumber()
 G4bool G4RootNtupleFileManager::CloseNtupleFiles()
 {
   // Take into account main ntuple files if present
-  auto mainNumber = ( fNofNtupleFiles > 0 ) ? 0 : -1;
+  auto mainNumber = (fNofNtupleFiles > 0) ? 0 : -1;
 
   auto result = true;
   auto ntupleVector = fNtupleManager->GetNtupleDescriptionVector();
-  for ( auto ntupleDescription : ntupleVector) {
-    for (G4int i = mainNumber; i < fNofNtupleFiles; ++i ) {
+  for (auto ntupleDescription : ntupleVector)
+  {
+    for (G4int i = mainNumber; i < fNofNtupleFiles; ++i)
+    {
       result &= fFileManager->CloseNtupleFile(ntupleDescription, i);
     }
   }
@@ -160,14 +170,15 @@ G4bool G4RootNtupleFileManager::CloseNtupleFiles()
 //
 
 //_____________________________________________________________________________
-void G4RootNtupleFileManager::SetNtupleMerging(G4bool mergeNtuples,
-                                               G4int  nofNtupleFiles)
+void G4RootNtupleFileManager::SetNtupleMerging(G4bool mergeNtuples, G4int nofNtupleFiles)
 
 {
-  if ( fIsInitialized ) {
-    Warn("Cannot change merging mode.\n"
-         "The function must be called before OpenFile().",
-         fkClass, "SetNtupleMerging");
+  if (fIsInitialized)
+  {
+    Warn(
+      "Cannot change merging mode.\n"
+      "The function must be called before OpenFile().",
+      fkClass, "SetNtupleMerging");
     return;
   }
 
@@ -178,33 +189,37 @@ void G4RootNtupleFileManager::SetNtupleMerging(G4bool mergeNtuples,
 //_____________________________________________________________________________
 void G4RootNtupleFileManager::SetNtupleRowWise(G4bool rowWise, G4bool rowMode)
 {
-
   // Print info even when setting makes no effect
   // (as we do not get printed the default setting in the output)
   G4String rowWiseMode;
-  if ( rowWise ) {
+  if (rowWise)
+  {
     rowWiseMode = "row-wise with extra branch";
   }
-  else if ( rowMode ) {
+  else if (rowMode)
+  {
     rowWiseMode = "row-wise";
   }
-  else {
+  else
+  {
     rowWiseMode = "column-wise";
   }
 
   Message(kVL1, "set", "ntuple merging row mode", rowWiseMode);
 
   // Do nothing if the mode is not changed
-  if ( fNtupleRowWise == rowWise && fNtupleRowMode == rowMode ) return;
+  if (fNtupleRowWise == rowWise && fNtupleRowMode == rowMode) return;
 
   fNtupleRowWise = rowWise;
   fNtupleRowMode = rowMode;
 
-  if ( fNtupleManager ) {
+  if (fNtupleManager)
+  {
     fNtupleManager->SetNtupleRowWise(rowWise, rowMode);
   }
 
-  if ( fSlaveNtupleManager ) {
+  if (fSlaveNtupleManager)
+  {
     fSlaveNtupleManager->SetNtupleRowWise(rowWise, rowMode);
   }
 }
@@ -224,34 +239,33 @@ void G4RootNtupleFileManager::SetBasketEntries(unsigned int basketEntries)
 //_____________________________________________________________________________
 std::shared_ptr<G4VNtupleManager> G4RootNtupleFileManager::CreateNtupleManager()
 {
-// Create and return ntuple manager.
-// If ntuple merging is activated, managers of different types are created
-// on master/worker.
+  // Create and return ntuple manager.
+  // If ntuple merging is activated, managers of different types are created
+  // on master/worker.
 
   Message(kVL4, "create", "ntuple manager");
 
   // Check that file manager and anaysis manager are set !
 
   std::shared_ptr<G4VNtupleManager> activeNtupleManager = nullptr;
-  switch ( fNtupleMergeMode )
+  switch (fNtupleMergeMode)
   {
     case G4NtupleMergeMode::kNone:
-      fNtupleManager
-        = make_shared<G4RootNtupleManager>(
-            fState, fBookingManager, 0, 0, fNtupleRowWise, fNtupleRowMode);
+      fNtupleManager = make_shared<G4RootNtupleManager>(fState, fBookingManager, 0, 0,
+                                                        fNtupleRowWise, fNtupleRowMode);
       fNtupleManager->SetFileManager(fFileManager);
       activeNtupleManager = fNtupleManager;
       break;
 
     case G4NtupleMergeMode::kMain: {
       G4int nofMainManagers = fNofNtupleFiles;
-      if (nofMainManagers == 0) {
+      if (nofMainManagers == 0)
+      {
         // create one manager if merging required into the histos & profiles files
         nofMainManagers = 1;
       }
-      fNtupleManager
-        = make_shared<G4RootNtupleManager>(
-            fState, fBookingManager, nofMainManagers, fNofNtupleFiles, fNtupleRowWise, fNtupleRowMode);
+      fNtupleManager = make_shared<G4RootNtupleManager>(
+        fState, fBookingManager, nofMainManagers, fNofNtupleFiles, fNtupleRowWise, fNtupleRowMode);
       fNtupleManager->SetFileManager(fFileManager);
       activeNtupleManager = fNtupleManager;
       break;
@@ -259,18 +273,17 @@ std::shared_ptr<G4VNtupleManager> G4RootNtupleFileManager::CreateNtupleManager()
 
     case G4NtupleMergeMode::kSlave:
       fNtupleManager = fgMasterInstance->fNtupleManager;
-        // The master class is used only in Get* functions
-      auto mainNtupleManager
-        = fNtupleManager->GetMainNtupleManager(GetNtupleFileNumber());
-      fSlaveNtupleManager
-        = make_shared<G4RootPNtupleManager>(
-            fState, fBookingManager, mainNtupleManager, fNtupleRowWise, fNtupleRowMode);
+      // The master class is used only in Get* functions
+      auto mainNtupleManager = fNtupleManager->GetMainNtupleManager(GetNtupleFileNumber());
+      fSlaveNtupleManager = make_shared<G4RootPNtupleManager>(
+        fState, fBookingManager, mainNtupleManager, fNtupleRowWise, fNtupleRowMode);
       activeNtupleManager = fSlaveNtupleManager;
       break;
   }
 
   G4String mergeMode;
-  switch ( fNtupleMergeMode ) {
+  switch (fNtupleMergeMode)
+  {
     case G4NtupleMergeMode::kNone:
       mergeMode = "";
       break;
@@ -293,18 +306,17 @@ G4bool G4RootNtupleFileManager::ActionAtOpenFile([[maybe_unused]] const G4String
 {
   // Check if fNtupleBookingManager is set
 
-  if ( fNtupleMergeMode == G4NtupleMergeMode::kNone ||
-       fNtupleMergeMode == G4NtupleMergeMode::kMain )  {
-
+  if (fNtupleMergeMode == G4NtupleMergeMode::kNone || fNtupleMergeMode == G4NtupleMergeMode::kMain)
+  {
     G4String objectType = "analysis file";
-    if ( fNtupleMergeMode == G4NtupleMergeMode::kMain ) {
+    if (fNtupleMergeMode == G4NtupleMergeMode::kMain)
+    {
       objectType = "main analysis file";
     }
     Message(kVL4, "open", objectType, fileName);
 
     // Creating files is triggered from CreateNtuple
-    fNtupleManager->CreateNtuplesFromBooking(
-      fBookingManager->GetNtupleBookingVector());
+    fNtupleManager->CreateNtuplesFromBooking(fBookingManager->GetNtupleBookingVector());
 
     Message(kVL1, "open", objectType, fileName);
   }
@@ -321,23 +333,26 @@ G4bool G4RootNtupleFileManager::ActionAtOpenFile([[maybe_unused]] const G4String
 //_____________________________________________________________________________
 G4bool G4RootNtupleFileManager::ActionAtWrite()
 {
-  if ( fNtupleMergeMode == G4NtupleMergeMode::kNone ) {
+  if (fNtupleMergeMode == G4NtupleMergeMode::kNone)
+  {
     return true;
   }
 
   auto result = true;
 
   G4String ntupleType;
-  if ( fNtupleMergeMode == G4NtupleMergeMode::kMain ) ntupleType = "main ntuples";
-  if ( fNtupleMergeMode == G4NtupleMergeMode::kSlave ) ntupleType = "slave ntuples";
+  if (fNtupleMergeMode == G4NtupleMergeMode::kMain) ntupleType = "main ntuples";
+  if (fNtupleMergeMode == G4NtupleMergeMode::kSlave) ntupleType = "slave ntuples";
 
   Message(kVL4, "merge", ntupleType);
 
-  if ( fNtupleMergeMode == G4NtupleMergeMode::kMain )  {
+  if (fNtupleMergeMode == G4NtupleMergeMode::kMain)
+  {
     result &= fNtupleManager->Merge();
   }
 
-  if ( fNtupleMergeMode == G4NtupleMergeMode::kSlave ) {
+  if (fNtupleMergeMode == G4NtupleMergeMode::kSlave)
+  {
     result &= fSlaveNtupleManager->Merge();
   }
 
@@ -349,7 +364,8 @@ G4bool G4RootNtupleFileManager::ActionAtWrite()
 //_____________________________________________________________________________
 G4bool G4RootNtupleFileManager::ActionAtCloseFile()
 {
-  if ( fNtupleMergeMode == G4NtupleMergeMode::kSlave)  {
+  if (fNtupleMergeMode == G4NtupleMergeMode::kSlave)
+  {
     fSlaveNtupleManager->SetNewCycle(false);
     return true;
   }
@@ -360,16 +376,17 @@ G4bool G4RootNtupleFileManager::ActionAtCloseFile()
 //_____________________________________________________________________________
 G4bool G4RootNtupleFileManager::Reset()
 {
-// Reset ntuples
+  // Reset ntuples
 
   auto result = true;
 
-  if ( fNtupleMergeMode == G4NtupleMergeMode::kNone ||
-       fNtupleMergeMode == G4NtupleMergeMode::kMain )  {
+  if (fNtupleMergeMode == G4NtupleMergeMode::kNone || fNtupleMergeMode == G4NtupleMergeMode::kMain)
+  {
     result &= fNtupleManager->Reset();
   }
 
-  if ( fNtupleMergeMode == G4NtupleMergeMode::kSlave ) {
+  if (fNtupleMergeMode == G4NtupleMergeMode::kSlave)
+  {
     fSlaveNtupleManager->Reset();
   }
 

@@ -25,26 +25,22 @@
 //
 //
 //
-//Virtual base class for all Motif widgets.
+// Virtual base class for all Motif widgets.
 
-#include "G4OpenGLXmViewer.hh"
 #include "G4OpenGLXmVWidgetObject.hh"
 
-G4OpenGLXmVWidgetObject::G4OpenGLXmVWidgetObject ()
-: pView(0)
-, visual(0)
-, top(0)
-{}
+#include "G4OpenGLXmViewer.hh"
 
-G4OpenGLXmVWidgetObject::~G4OpenGLXmVWidgetObject ()
-{}
+G4OpenGLXmVWidgetObject::G4OpenGLXmVWidgetObject() : pView(0), visual(0), top(0) {}
 
-G4OpenGLXmViewer* G4OpenGLXmVWidgetObject::GetView ()
+G4OpenGLXmVWidgetObject::~G4OpenGLXmVWidgetObject() {}
+
+G4OpenGLXmViewer* G4OpenGLXmVWidgetObject::GetView()
 {
   return pView;
 }
 
-void G4OpenGLXmVWidgetObject::ProcesspView () 
+void G4OpenGLXmVWidgetObject::ProcesspView()
 {
   cmap = pView->cmap;
   depth = pView->vi->depth;

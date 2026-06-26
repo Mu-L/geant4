@@ -32,13 +32,13 @@
 // File name:     G4hIonEffChargeSquare
 //
 // Author:        V.Ivanchenko (Vladimir.Ivanchenko@cern.ch)
-// 
+//
 // Creation date: 20 July 2000
 //
-// Modifications: 
+// Modifications:
 // 20/07/2000  V.Ivanchenko First implementation
 //
-// Class Description: 
+// Class Description:
 //
 // Ion effective charge model
 // J.F.Ziegler and J.M.Manoyan, The stopping of ions in compaunds,
@@ -48,11 +48,11 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4hIonEffChargeSquare_h
-#define G4hIonEffChargeSquare_h 1
+#ifndef G4HIONEFFCHARGESQUARE_HH
+#define G4HIONEFFCHARGESQUARE_HH
 
-#include "globals.hh"
 #include "G4VLowEnergyModel.hh"
+#include "globals.hh"
 
 class G4Material;
 class G4ParticleDefinition;
@@ -60,45 +60,39 @@ class G4DynamicParticle;
 
 class G4hIonEffChargeSquare : public G4VLowEnergyModel
 {
-public:
+  public:
 
-  explicit G4hIonEffChargeSquare(const G4String& name) ;
+    explicit G4hIonEffChargeSquare(const G4String& name);
 
-  ~G4hIonEffChargeSquare() ;
+    ~G4hIonEffChargeSquare();
 
-  G4double TheValue(const G4DynamicParticle* particle,
-	       	          const G4Material* material) override;
+    G4double TheValue(const G4DynamicParticle* particle, const G4Material* material) override;
 
-  G4double TheValue(const G4ParticleDefinition* aParticle,
-       		          const G4Material* material,
-                                G4double kineticEnergy) override;
+    G4double TheValue(const G4ParticleDefinition* aParticle, const G4Material* material,
+                      G4double kineticEnergy) override;
 
-  G4double HighEnergyLimit(const G4ParticleDefinition* aParticle,
-                           const G4Material* material) const override;
+    G4double HighEnergyLimit(const G4ParticleDefinition* aParticle,
+                             const G4Material* material) const override;
 
-  G4double LowEnergyLimit(const G4ParticleDefinition* aParticle,
-                          const G4Material* material) const override;
- 
-  G4double HighEnergyLimit(const G4ParticleDefinition* aParticle) const override;
+    G4double LowEnergyLimit(const G4ParticleDefinition* aParticle,
+                            const G4Material* material) const override;
 
-  G4double LowEnergyLimit(const G4ParticleDefinition* aParticle) const override;
- 
-  G4bool IsInCharge(const G4DynamicParticle* particle,
-		    const G4Material* material) const override;
+    G4double HighEnergyLimit(const G4ParticleDefinition* aParticle) const override;
 
-  G4bool IsInCharge(const G4ParticleDefinition* aParticle,
-		    const G4Material* material) const override;
+    G4double LowEnergyLimit(const G4ParticleDefinition* aParticle) const override;
 
-private:
+    G4bool IsInCharge(const G4DynamicParticle* particle, const G4Material* material) const override;
 
-  G4double IonEffChargeSquare(const G4Material* material, 
-                                    G4double kineticEnergy,
-                                    G4double particleMass,
-                                    G4double ionCharge) const;
-  // This method returns ion effective charge square parametrised 
+    G4bool IsInCharge(const G4ParticleDefinition* aParticle,
+                      const G4Material* material) const override;
 
-  const G4double theHeMassAMU;
+  private:
 
+    G4double IonEffChargeSquare(const G4Material* material, G4double kineticEnergy,
+                                G4double particleMass, G4double ionCharge) const;
+    // This method returns ion effective charge square parametrised
+
+    const G4double theHeMassAMU;
 };
 
 #endif

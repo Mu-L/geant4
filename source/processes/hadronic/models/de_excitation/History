@@ -6,7 +6,11 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-05-22 Gabriele Cosmo (hadr-deex-V11-03-26)
+## 2026-06-10 Gabriele Cosmo (hadr-deex-V11-04-08)
+- Fixed compilation warning on Intel/icx compiler for variable set but not used
+  in G4_NO_VERBOSE mode in G4LevelReader.
+
+## 2026-05-22 Gabriele Cosmo (hadr-deex-V11-04-07)
 - Fixed MT data race in G4NuclearLevelData, by removing the separate
   std::vector<G4bool> loaded flag and making the manager pointer itself
   the loaded state, protected by the existing 'nuclearLevelDataMutex'.
@@ -18,16 +22,33 @@ It must **not** be used as a substitute for writing good git commit messages!
   vector<bool> specialization entirely and gives a clear lock happens-before
   relation.
 
-## 2026-05-16 Vladimir Ivanchenko
+## 2026-05-16 Vladimir Ivanchenko (hadr-deex-V11-04-06)
 - G4StatMFMacroCanonical - fixed problem proposed in github PR #100
 - G4FermiBreakUpVI - minor cleanup
 
-## 2026-05-10 Seth R Johnson
+## 2026-05-10 Seth R Johnson (hadr-deex-V11-04-05)
 - Fix crash when G4LEVELGAMMADATA environment variable is not set
 
-## 2026-04-29 D. Konstantinov
+## 2026-04-29 D. Konstantinov (hadr-deex-V11-04-04)
 - G4FermiBreakUpVI - protect initialisation of the shared static Fermi
     fragments pool with G4AutoLock.
+
+## 2026-02-27 Vladimir Ivanchenko (hadr-deex-V11-04-03)
+- G4UnstableFragmentBreakUp - fixed issue #279 - remove parasitic printout,
+  which is seen in the case of deuteron target. 
+
+## 2026-02-26 Vladimir Ivanchenko (hadr-deex-V11-04-02)
+- G4UnstableFragmentBreakUp - removed debug cout.
+
+## 2026-02-25 Vladimir Ivanchenko (hadr-deex-V11-04-01)
+- G4UnstableFragmentBreakUp - limit energy non-conservation to 0.5 MeV.
+
+## 2026-01-26 Vladimir Ivanchenko (hadr-deex-V11-04-00)
+- G4UnstableFragmentBreakUp - reorganized class for sampling of decay of
+    unstable fragments, which do no have decay channels due to Coulomb
+    barrier. Updated model may be used for decay of fragments with high
+    excitation. 
+- G4Evaporation - updated usage of G4UnstableFragmentBreakUp.
 
 ## 2025-11-09 Vladimir Ivanchenko (hadr-deex-V11-03-25)
 - G4LevelReader, G4GammaTransition, G4photonEvaporation - fixed Bugzilla
@@ -2988,6 +3009,4 @@ and includes helium (previously excluded)
 
 - fermi_breakup (tag hadr-deex-fermi-V07-01-00 by Aatos Heikkinen)
    <sstream> migration for G4FermiSplitter.cc
-
-
 

@@ -27,14 +27,12 @@
 // Author: Ivana Hrivnacova, 10/09/2014  (ivana@ipno.in2p3.fr)
 
 #include "G4BaseFileManager.hh"
-#include "G4AnalysisUtilities.hh"
 
+#include "G4AnalysisUtilities.hh"
 #include "G4Threading.hh"
 
 //_____________________________________________________________________________
-G4BaseFileManager::G4BaseFileManager(const G4AnalysisManagerState& state)
-  : fState(state)
-{}
+G4BaseFileManager::G4BaseFileManager(const G4AnalysisManagerState& state) : fState(state) {}
 
 //
 // public methods
@@ -46,8 +44,9 @@ void G4BaseFileManager::AddFileName(const G4String& fileName)
   // G4cout << "registering " << fileName << " in manager of " << GetFileType() << G4endl;
 
   // Do nothing in file name is already present
-  for ( const auto& name : fFileNames ) {
-    if ( name == fileName ) return;
+  for (const auto& name : fFileNames)
+  {
+    if (name == fileName) return;
   }
 
   fFileNames.push_back(fileName);
@@ -60,17 +59,17 @@ G4String G4BaseFileManager::GetFileType() const
 }
 
 //_____________________________________________________________________________
-G4String G4BaseFileManager::GetFullFileName(const G4String& baseFileName,
-                                            G4bool isPerThread) const
+G4String G4BaseFileManager::GetFullFileName(const G4String& baseFileName, G4bool isPerThread) const
 {
   G4String fileName(baseFileName);
-  if ( fileName == "" ) fileName = fFileName;
+  if (fileName == "") fileName = fFileName;
 
   // Take out file extension
   auto name = G4Analysis::GetBaseName(fileName);
 
   // Add thread Id to a file name if MT processing
-  if ( isPerThread && ! fState.GetIsMaster() ) {
+  if (isPerThread && !fState.GetIsMaster())
+  {
     std::ostringstream os;
     os << G4Threading::G4GetThreadId();
     name.append("_t");
@@ -79,7 +78,8 @@ G4String G4BaseFileManager::GetFullFileName(const G4String& baseFileName,
 
   // Add (back if it was present or is defined) file extension
   auto extension = G4Analysis::GetExtension(fileName, GetFileType());
-  if (extension.size() != 0u) {
+  if (extension.size() != 0u)
+  {
     name.append(".");
     name.append(extension);
   }
@@ -88,15 +88,13 @@ G4String G4BaseFileManager::GetFullFileName(const G4String& baseFileName,
 }
 
 //_____________________________________________________________________________
-G4String G4BaseFileManager::GetHnFileName(const G4String& hnType,
-                                          const G4String& hnName) const
+G4String G4BaseFileManager::GetHnFileName(const G4String& hnType, const G4String& hnName) const
 {
   return G4Analysis::GetHnFileName(fFileName, GetFileType(), hnType, hnName);
 }
 
 //_____________________________________________________________________________
-G4String  G4BaseFileManager::GetHnFileName(const G4String& fileName,
-                                           G4int cycle) const
+G4String G4BaseFileManager::GetHnFileName(const G4String& fileName, G4int cycle) const
 {
   // Do nothing if cycle is supported by the output type
   if (HasCycles()) return fileName;
@@ -105,8 +103,7 @@ G4String  G4BaseFileManager::GetHnFileName(const G4String& fileName,
 }
 
 //_____________________________________________________________________________
-G4String G4BaseFileManager::GetNtupleFileName(const G4String& ntupleName,
-                                              G4int cycle) const
+G4String G4BaseFileManager::GetNtupleFileName(const G4String& ntupleName, G4int cycle) const
 {
   // Do not pass cycle if supported by the output type
   auto cycleToPass = (HasCycles()) ? 0 : cycle;
@@ -115,8 +112,7 @@ G4String G4BaseFileManager::GetNtupleFileName(const G4String& ntupleName,
 }
 
 //_____________________________________________________________________________
-G4String G4BaseFileManager::GetNtupleFileName(G4int ntupleFileNumber,
-                                              G4int cycle) const
+G4String G4BaseFileManager::GetNtupleFileName(G4int ntupleFileNumber, G4int cycle) const
 {
   // Do not pass cycle if supported by the output type
   auto cycleToPass = (HasCycles()) ? 0 : cycle;
@@ -129,5 +125,3 @@ G4String G4BaseFileManager::GetPlotFileName() const
 {
   return G4Analysis::GetPlotFileName(fFileName);
 }
-
-

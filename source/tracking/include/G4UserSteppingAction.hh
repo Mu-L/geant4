@@ -35,27 +35,29 @@
 //     Katsuya Amako  (e-mail: Katsuya.Amako@kek.jp)
 //     Takashi Sasaki (e-mail: Takashi.Sasaki@kek.jp)
 // --------------------------------------------------------------------
-#ifndef G4UserSteppingAction_hh
-#define G4UserSteppingAction_hh 1
+#ifndef G4USERSTEPPINGACTION_HH
+#define G4USERSTEPPINGACTION_HH
 
 class G4Step;
 class G4SteppingManager;
 
 class G4UserSteppingAction
 {
- public:
-  // Constructor and destructor
+  public:
 
-  G4UserSteppingAction();
-  virtual ~G4UserSteppingAction() = default;
+    // Constructor and destructor
 
-  // Member functions
+    G4UserSteppingAction();
+    virtual ~G4UserSteppingAction() = default;
 
-  virtual void SetSteppingManagerPointer(G4SteppingManager* pValue);
-  virtual void UserSteppingAction(const G4Step*) {}
+    // Member functions
 
- protected:
-  G4SteppingManager* fpSteppingManager = nullptr;
+    virtual void SetSteppingManagerPointer(G4SteppingManager* pValue);
+    virtual void UserSteppingAction(const G4Step*) {}
+
+  protected:
+
+    G4SteppingManager* fpSteppingManager = nullptr;
 };
 
 #endif

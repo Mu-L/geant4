@@ -35,6 +35,7 @@
 //
 
 #include "G4ParticleHPContEnergyAngular.hh"
+
 #include "G4HadronicException.hh"
 #include "G4Neutron.hh"
 
@@ -57,7 +58,8 @@ void G4ParticleHPContEnergyAngular::Init(std::istream& aDataFile)
   const std::size_t esize = nEnergy > 0 ? nEnergy : 1;
   theAngular = new G4ParticleHPContAngularPar[esize];
   theManager.Init(aDataFile);
-  for (G4int i = 0; i < nEnergy; ++i) {
+  for (G4int i = 0; i < nEnergy; ++i)
+  {
     theAngular[i].Init(aDataFile, theProjectile);
     theAngular[i].SetInterpolation(theInterpolation);
 #ifndef PHP_AS_HP
@@ -72,7 +74,8 @@ G4ReactionProduct* G4ParticleHPContEnergyAngular::Sample(G4double anEnergy, G4do
   G4ReactionProduct* result;
   G4int i(0);
   G4int it(0);
-  for (i = 0; i < nEnergy; ++i) {
+  for (i = 0; i < nEnergy; ++i)
+  {
     it = i;
 #ifdef PHP_AS_HP
     if (theAngular[i].GetEnergy() > anEnergy) break;
@@ -82,17 +85,19 @@ G4ReactionProduct* G4ParticleHPContEnergyAngular::Sample(G4double anEnergy, G4do
   }
   G4double targetMass = GetTarget()->GetMass();
   /*
-  G4cout << "G4ParticleHPContEnergyAngular::Sample E="<<anEnergy<<" code="<< massCode<< " it=" << it 
-	 << " M=" << targetMass << G4endl;
+  G4cout << "G4ParticleHPContEnergyAngular::Sample E="<<anEnergy<<" code="<< massCode<< " it=" << it
+   << " M=" << targetMass << G4endl;
   */
-  if (it == 0) {
+  if (it == 0)
+  {
     theAngular[0].SetTarget(GetTarget());
     theAngular[0].SetTargetCode(theTargetCode);
     theAngular[0].SetPrimary(GetProjectileRP());
     result = theAngular[0].Sample(anEnergy, massCode, targetMass, theAngularRep, theInterpolation);
     currentMeanEnergy.Put(theAngular[0].MeanEnergyOfThisInteraction());
   }
-  else {
+  else
+  {
     // interpolation through alternating sampling. This needs improvement @@@
     // This is the cause of the He3 problem !!!!!!!!
     // See to it, if you can improve this.
@@ -111,7 +116,8 @@ G4ReactionProduct* G4ParticleHPContEnergyAngular::Sample(G4double anEnergy, G4do
     currentMeanEnergy.Put(theAngular[it].MeanEnergyOfThisInteraction());
 
 #else
-    if (fCacheAngular.Get() == nullptr) {
+    if (fCacheAngular.Get() == nullptr)
+    {
       auto angpar = new G4ParticleHPContAngularPar(theProjectile);
       fCacheAngular.Put(angpar);
     }
@@ -127,15 +133,16 @@ G4ReactionProduct* G4ParticleHPContEnergyAngular::Sample(G4double anEnergy, G4do
     currentMeanEnergy.Put(fCacheAngular.Get()->MeanEnergyOfThisInteraction());
 #endif
   }  // end (it != 0) branch
-  //G4cout << "+!+ Emin=" << currentMeanEnergy.Get() << G4endl;
+  // G4cout << "+!+ Emin=" << currentMeanEnergy.Get() << G4endl;
   return result;
 }
 
 G4double G4ParticleHPContEnergyAngular::MeanEnergyOfThisInteraction()
 {
-  //G4cout << "+++ Emin=" << currentMeanEnergy.Get() << G4endl;
+  // G4cout << "+++ Emin=" << currentMeanEnergy.Get() << G4endl;
   G4double result(0);
-  if (currentMeanEnergy.Get() < -1.0) {
+  if (currentMeanEnergy.Get() < -1.0)
+  {
     throw G4HadronicException(__FILE__, __LINE__,
                               "G4ParticleHPContEnergyAngular: Logical error in Product class");
   }
@@ -147,7 +154,8 @@ G4double G4ParticleHPContEnergyAngular::MeanEnergyOfThisInteraction()
 
 void G4ParticleHPContEnergyAngular::ClearHistories()
 {
-  if (theAngular != nullptr) {
+  if (theAngular != nullptr)
+  {
     for (G4int i = 0; i < nEnergy; ++i)
       theAngular[i].ClearHistories();
   }

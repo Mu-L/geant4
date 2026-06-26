@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  17th August 2013
 // Michael Kelsey  31st January 2019 -- Move functionality to G4VFieldModel
 //
@@ -34,19 +34,19 @@
 // Model that knows how to draw the magnetic field.
 
 #include "G4MagneticFieldModel.hh"
+
 #include "G4Field.hh"
 #include "G4Point3D.hh"
 
-
 // Return magnetic field vector for display
 
-void G4MagneticFieldModel::
-GetFieldAtLocation(const G4Field* field, const G4Point3D& position,
-		   G4double time, G4Point3D& result) const {
-  if (!field) return;			// No action if no field
+void G4MagneticFieldModel::GetFieldAtLocation(const G4Field* field, const G4Point3D& position,
+                                              G4double time, G4Point3D& result) const
+{
+  if (!field) return;  // No action if no field
 
-  G4double xyzt[4] = { position.x(), position.y(), position.z(), time };
-  G4double BEvals[6] = {0.};		// Field returns {Bx,By,Bz,Ex,Ey,Ez}
+  G4double xyzt[4] = {position.x(), position.y(), position.z(), time};
+  G4double BEvals[6] = {0.};  // Field returns {Bx,By,Bz,Ex,Ey,Ez}
   field->GetFieldValue(xyzt, BEvals);
 
   result.set(BEvals[0], BEvals[1], BEvals[2]);

@@ -27,6 +27,7 @@
 //
 // G4PSMinKinEAtGeneration
 #include "G4PSMinKinEAtGeneration.hh"
+
 #include "G4UnitsTable.hh"
 #include "G4VScoreHistFiller.hh"
 
@@ -42,15 +43,12 @@
 //
 
 G4PSMinKinEAtGeneration::G4PSMinKinEAtGeneration(const G4String& name, G4int depth)
-  : G4PSMinKinEAtGeneration(name, "MeV", depth) 
+  : G4PSMinKinEAtGeneration(name, "MeV", depth)
 {}
 
-G4PSMinKinEAtGeneration::G4PSMinKinEAtGeneration(const G4String& name,
-                                                 const G4String& unit,
+G4PSMinKinEAtGeneration::G4PSMinKinEAtGeneration(const G4String& name, const G4String& unit,
                                                  G4int depth)
-  : G4VPrimitivePlotter(name, depth)
-  , HCID(-1)
-  , EvtMap(nullptr)
+  : G4VPrimitivePlotter(name, depth), HCID(-1), EvtMap(nullptr)
 {
   SetUnit(unit);
 }
@@ -62,11 +60,9 @@ G4bool G4PSMinKinEAtGeneration::ProcessHits(G4Step* aStep, G4TouchableHistory*)
   //  Confirm this is a newly produced secondary.
   //
   //- check for newly produced particle. e.g. Step number is 1.
-  if(aStep->GetTrack()->GetCurrentStepNumber() != 1)
-    return false;
+  if (aStep->GetTrack()->GetCurrentStepNumber() != 1) return false;
   //- check for this is not a primary particle. e.g. ParentID != 0 .
-  if(aStep->GetTrack()->GetParentID() == 0)
-    return false;
+  if (aStep->GetTrack()->GetParentID() == 0) return false;
 
   //===============================================
   //- This is a newly produced secondary particle.
@@ -78,22 +74,20 @@ G4bool G4PSMinKinEAtGeneration::ProcessHits(G4Step* aStep, G4TouchableHistory*)
   //
 
   // -Kinetic energy of this particle at the starting point.
-  G4int index      = GetIndex(aStep);
+  G4int index = GetIndex(aStep);
   G4double kinetic = aStep->GetPreStepPoint()->GetKineticEnergy();
 
-  if(!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
+  if (!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
   {
     auto filler = G4VScoreHistFiller::Instance();
-    if(filler == nullptr)
+    if (filler == nullptr)
     {
-      G4Exception(
-        "G4PSMinKinEAtGeneration::ProcessHits", "SCORER0123", JustWarning,
-        "G4TScoreHistFiller is not instantiated!! Histogram is not filled.");
+      G4Exception("G4PSMinKinEAtGeneration::ProcessHits", "SCORER0123", JustWarning,
+                  "G4TScoreHistFiller is not instantiated!! Histogram is not filled.");
     }
     else
     {
-      filler->FillH1(hitIDMap[index], kinetic,
-                     aStep->GetPreStepPoint()->GetWeight());
+      filler->FillH1(hitIDMap[index], kinetic, aStep->GetPreStepPoint()->GetWeight());
     }
   }
 
@@ -103,8 +97,7 @@ G4bool G4PSMinKinEAtGeneration::ProcessHits(G4Step* aStep, G4TouchableHistory*)
   // -
   // If mapValue exits (e.g not NULL ), compare it with
   // current track's kinetic energy.
-  if((mapValue != nullptr) && (kinetic > *mapValue))
-    return false;
+  if ((mapValue != nullptr) && (kinetic > *mapValue)) return false;
 
   // -
   // Current Track is a newly produced secondary and has lower
@@ -117,23 +110,25 @@ G4bool G4PSMinKinEAtGeneration::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 void G4PSMinKinEAtGeneration::Initialize(G4HCofThisEvent* HCE)
 {
   EvtMap = new G4THitsMap<G4double>(detector->GetName(), GetName());
-  if(HCID < 0)
+  if (HCID < 0)
   {
     HCID = GetCollectionID(0);
   }
-  HCE->AddHitsCollection(HCID, (G4VHitsCollection*) EvtMap);
+  HCE->AddHitsCollection(HCID, (G4VHitsCollection*)EvtMap);
 }
 
-void G4PSMinKinEAtGeneration::clear() { EvtMap->clear(); }
+void G4PSMinKinEAtGeneration::clear()
+{
+  EvtMap->clear();
+}
 
 void G4PSMinKinEAtGeneration::PrintAll()
 {
   G4cout << " PrimitiveScorer " << GetName() << G4endl;
   G4cout << " Number of entries " << EvtMap->entries() << G4endl;
-  for(const auto& [copy, energy] : *(EvtMap->GetMap()))
+  for (const auto& [copy, energy] : *(EvtMap->GetMap()))
   {
-    G4cout << "  copy no.: " << copy
-           << "  energy: " << *(energy) / GetUnitValue() << " ["
+    G4cout << "  copy no.: " << copy << "  energy: " << *(energy) / GetUnitValue() << " ["
            << GetUnit() << "]" << G4endl;
   }
 }

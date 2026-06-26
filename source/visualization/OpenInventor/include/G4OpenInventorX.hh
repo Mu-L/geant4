@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  27th March 1996
 // OpenInventor graphics system factory.
 
@@ -36,10 +36,12 @@
 
 #include "G4OpenInventorXt.hh"
 
-class G4OpenInventorX: public G4OpenInventorXt {
-public:
-  G4OpenInventorX () {}
-  virtual ~G4OpenInventorX () {}
+class G4OpenInventorX : public G4OpenInventorXt
+{
+  public:
+
+    G4OpenInventorX() {}
+    virtual ~G4OpenInventorX() {}
 };
 
 #endif

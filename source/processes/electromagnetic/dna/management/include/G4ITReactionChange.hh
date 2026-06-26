@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,13 +41,14 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#ifndef G4ITReactionChange_H
-#define G4ITReactionChange_H
+#ifndef G4ITREACTIONCHANGE_HH
+#define G4ITREACTIONCHANGE_HH
 
-#include "globals.hh"
 #include "G4ParticleChange.hh"
+#include "globals.hh"
+
 #include <vector>
 
 /**
@@ -57,61 +58,63 @@
 
 class G4ITReactionChange
 {
-public:
-  /** Default constructor */
-  G4ITReactionChange();
-  /** Default destructor */
-  virtual ~G4ITReactionChange();
+  public:
 
-  //_____________________________________________________
-  // To be used by reaction processes
-  void Initialize(const G4Track&,
-                  const G4Track&,
-                  G4VParticleChange* particleChangeA = nullptr,
-                  G4VParticleChange* particleChangeB = nullptr);
-  void AddSecondary(G4Track* aSecondary);
-  inline void KillParents(G4bool);
+    /** Default constructor */
+    G4ITReactionChange();
+    /** Default destructor */
+    virtual ~G4ITReactionChange();
 
-  // If both parents are not killed therefore
-  // we can used the particle change
-  // you will have to give the pointers
-  // of your particleChange while initializing
-  // but it might tell you that energy is not
-  // conserved for instance
-  G4VParticleChange* GetParticleChange(const G4Track*);
+    //_____________________________________________________
+    // To be used by reaction processes
+    void Initialize(const G4Track&, const G4Track&, G4VParticleChange* particleChangeA = nullptr,
+                    G4VParticleChange* particleChangeB = nullptr);
+    void AddSecondary(G4Track* aSecondary);
+    inline void KillParents(G4bool);
 
-  //_____________________________________________________
-  // Not to be used in reaction processes
-  void UpdateStepInfo(G4Step*, G4Step*);
-  G4Track* GetSecondary(G4int) const;
-  std::vector<G4Track*>* GetfSecondary();
+    // If both parents are not killed therefore
+    // we can used the particle change
+    // you will have to give the pointers
+    // of your particleChange while initializing
+    // but it might tell you that energy is not
+    // conserved for instance
+    G4VParticleChange* GetParticleChange(const G4Track*);
 
-  G4int GetNumberOfSecondaries() const;
-  G4bool WereParentsKilled() const;
+    //_____________________________________________________
+    // Not to be used in reaction processes
+    void UpdateStepInfo(G4Step*, G4Step*);
+    G4Track* GetSecondary(G4int) const;
+    std::vector<G4Track*>* GetfSecondary();
 
-  const G4Track* GetTrackA();
-  const G4Track* GetTrackB();
+    G4int GetNumberOfSecondaries() const;
+    G4bool WereParentsKilled() const;
 
-protected:
-  /** Copy constructor
-   *  \param other Object to copy from
-   */
-  G4ITReactionChange(const G4ITReactionChange& other);
-  /** Assignment operator
-   *  \param other Object to assign from
-   *  \return A reference to this
-   */
-  G4ITReactionChange& operator=(const G4ITReactionChange& other);
-  // equal/unequal operator
-  G4bool operator==(const G4ITReactionChange &right) const;
-  G4bool operator!=(const G4ITReactionChange &right) const;
-  // "equal" means that the objects have the same pointer.
-protected:
-  std::map<const G4Track*, G4VParticleChange*> fParticleChange;
-  std::vector<G4Track*>* fSecondaries{nullptr};
-  G4int fNumberOfSecondaries{0};
-  G4bool fKillParents{false};
-  G4bool fParticleChangeIsSet{false};
+    const G4Track* GetTrackA();
+    const G4Track* GetTrackB();
+
+  protected:
+
+    /** Copy constructor
+     *  \param other Object to copy from
+     */
+    G4ITReactionChange(const G4ITReactionChange& other);
+    /** Assignment operator
+     *  \param other Object to assign from
+     *  \return A reference to this
+     */
+    G4ITReactionChange& operator=(const G4ITReactionChange& other);
+    // equal/unequal operator
+    G4bool operator==(const G4ITReactionChange& right) const;
+    G4bool operator!=(const G4ITReactionChange& right) const;
+    // "equal" means that the objects have the same pointer.
+
+  protected:
+
+    std::map<const G4Track*, G4VParticleChange*> fParticleChange;
+    std::vector<G4Track*>* fSecondaries{nullptr};
+    G4int fNumberOfSecondaries{0};
+    G4bool fKillParents{false};
+    G4bool fParticleChangeIsSet{false};
 };
 
 inline G4Track* G4ITReactionChange::GetSecondary(G4int anIndex) const
@@ -140,4 +143,4 @@ inline std::vector<G4Track*>* G4ITReactionChange::GetfSecondary()
   return fSecondaries;
 }
 
-#endif // G4ITReactionChange_H
+#endif  // G4ITReactionChange_H

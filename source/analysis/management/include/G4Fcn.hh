@@ -26,19 +26,23 @@
 
 // Author: Ivana Hrivnacova, 04/07/2012  (ivana@ipno.in2p3.fr)
 
-#ifndef G4Fcn_h
-#define G4Fcn_h 1
+#ifndef G4FCN_HH
+#define G4FCN_HH
 
 #include "globals.hh"
 
 // Generic function which can be applied to histogram/ntuple values
-using G4Fcn = G4double (*) (G4double);
+using G4Fcn = G4double (*)(G4double);
 
 // Identity function
-inline G4double G4FcnIdentity(G4double value) { return value; }
+inline G4double G4FcnIdentity(G4double value)
+{
+  return value;
+}
 
 // Utility function
-namespace G4Analysis {
+namespace G4Analysis
+{
 G4Fcn GetFunction(const G4String& fcnName);
 }
 

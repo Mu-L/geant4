@@ -32,7 +32,7 @@
 // Author: Youhei Morita, 10.08.2001
 // --------------------------------------------------------------------
 #ifndef G4VPEVENTIO_HH
-#define G4VPEVENTIO_HH 1
+#define G4VPEVENTIO_HH
 
 #include "G4Event.hh"
 #include "G4Pevent.hh"
@@ -42,25 +42,25 @@ class G4VPEventIO
   public:
 
     G4VPEventIO();
-      // Constructor
+    // Constructor
 
     virtual ~G4VPEventIO() {}
-      // Destructor
+    // Destructor
 
     inline void SetVerboseLevel(G4int v) { m_verbose = v; }
-      // Sets verbose level
+    // Sets verbose level
 
     inline G4int CurrentEventID() { return m_currentEvtID; }
-      // Returns the current event id
+    // Returns the current event id
 
     virtual G4bool Store(const G4Event* anEvent) = 0;
-      // Store a Geant4 event
+    // Store a Geant4 event
 
     virtual G4bool Retrieve(G4Pevent*& anEvent) = 0;
-      // Retrieve a Geant4 event
+    // Retrieve a Geant4 event
 
     virtual G4bool Retrieve(G4Event*& anEvent) = 0;
-      // Retrieve a Geant4 event
+    // Retrieve a Geant4 event
 
   protected:
 

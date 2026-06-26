@@ -40,41 +40,28 @@
 // -------------------------------------------------------------------
 
 #ifndef G4LININTERPOLATOR_HH
-#define G4LININTERPOLATOR_HH 1
+#define G4LININTERPOLATOR_HH
 
-#include "globals.hh"
-#include "G4IInterpolator.hh"
 #include "G4DataVector.hh"
+#include "G4IInterpolator.hh"
+#include "globals.hh"
 
-class G4LinInterpolator : public G4IInterpolator {
- 
-public:
+class G4LinInterpolator : public G4IInterpolator
+{
+  public:
 
-  G4LinInterpolator();
+    G4LinInterpolator();
 
-  ~G4LinInterpolator();
- 
-  G4double Calculate(G4double point, G4int bin, 
-		     const G4DataVector& energies, 
-		     const G4DataVector& data) const;
+    ~G4LinInterpolator();
 
-  G4IInterpolator* Clone() const;
+    G4double Calculate(G4double point, G4int bin, const G4DataVector& energies,
+                       const G4DataVector& data) const;
 
-private:
-  
-  // Hide copy constructor and assignment operator
+    G4IInterpolator* Clone() const;
 
+  private:
+
+    // Hide copy constructor and assignment operator
 };
- 
+
 #endif
- 
-
-
-
-
-
-
-
-
-
-

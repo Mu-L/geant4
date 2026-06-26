@@ -25,49 +25,46 @@
 //
 #include "G4KineticTrackVector.hh"
 
-G4KineticTrackVector::G4KineticTrackVector()
-{
-}
-
+G4KineticTrackVector::G4KineticTrackVector() {}
 
 //****************************************************************************************************************
 // These methods were implemented by Maxim Komogorov
 // Maxim.Komogorov@cern.ch
 
 void G4KineticTrackVector::BoostBeam(G4ThreeVector& BeamMom)
-    {
-    for(unsigned int c1 = 0; c1 < size(); c1++)
-        {
-        G4KineticTrack& KT =**(begin()+c1);
-        G4LorentzVector Mom = KT.Get4Momentum();        
-        G4ThreeVector Velocity = (1/std::sqrt(BeamMom.mag2() + sqr(KT.GetDefinition()->GetPDGMass())))*BeamMom;
-        Mom.boost(Velocity);
-        KT.Set4Momentum(Mom);
-        }
-    }
+{
+  for (unsigned int c1 = 0; c1 < size(); c1++)
+  {
+    G4KineticTrack& KT = **(begin() + c1);
+    G4LorentzVector Mom = KT.Get4Momentum();
+    G4ThreeVector Velocity =
+      (1 / std::sqrt(BeamMom.mag2() + sqr(KT.GetDefinition()->GetPDGMass()))) * BeamMom;
+    Mom.boost(Velocity);
+    KT.Set4Momentum(Mom);
+  }
+}
 //--------------------------------------------------------------------------------------------------------------
 
 void G4KineticTrackVector::Boost(G4ThreeVector& Velocity)
-    { 
-    for(unsigned int c1 = 0; c1 < size(); c1++)
-        {
-        G4KineticTrack& KT =**(begin()+c1);
-        G4LorentzVector Mom = KT.Get4Momentum();        
-        Mom.boost(Velocity);
-        KT.Set4Momentum(Mom);
-        }
-    }
+{
+  for (unsigned int c1 = 0; c1 < size(); c1++)
+  {
+    G4KineticTrack& KT = **(begin() + c1);
+    G4LorentzVector Mom = KT.Get4Momentum();
+    Mom.boost(Velocity);
+    KT.Set4Momentum(Mom);
+  }
+}
 
 //--------------------------------------------------------------------------------------------------------------
 
 void G4KineticTrackVector::Shift(G4ThreeVector& Pos)
-    {
-    for(unsigned int c1 = 0; c1 < size(); c1++)
-        {
-        G4KineticTrack& KT =**(begin()+c1);
-        KT.SetPosition(KT.GetPosition() + Pos);
-        }
-    }
- 
+{
+  for (unsigned int c1 = 0; c1 < size(); c1++)
+  {
+    G4KineticTrack& KT = **(begin() + c1);
+    KT.SetPosition(KT.GetPosition() + Pos);
+  }
+}
 
 //****************************************************************************************************************

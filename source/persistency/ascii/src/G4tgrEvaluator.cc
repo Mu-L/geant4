@@ -39,14 +39,12 @@ G4tgrEvaluator::G4tgrEvaluator()
 }
 
 // --------------------------------------------------------------------
-G4tgrEvaluator::~G4tgrEvaluator()
-{
-}
+G4tgrEvaluator::~G4tgrEvaluator() {}
 
 // --------------------------------------------------------------------
 void G4tgrEvaluator::print_error(G4int estatus) const
 {
-  switch(estatus)
+  switch (estatus)
   {
     case ERROR_SYNTAX_ERROR:
       G4cerr << "G4tgrEvaluator: syntax error!" << G4endl;
@@ -57,24 +55,69 @@ void G4tgrEvaluator::print_error(G4int estatus) const
   }
 }
 
-G4double fltsin(G4double arg) { return std::sin(arg); }
-G4double fltcos(G4double arg) { return std::cos(arg); }
-G4double flttan(G4double arg) { return std::tan(arg); }
-G4double fltasin(G4double arg) { return std::asin(arg); }
-G4double fltacos(G4double arg) { return std::acos(arg); }
-G4double fltatan(G4double arg) { return std::atan(arg); }
-G4double fltatan2(G4double arg1, G4double arg2) { return std::atan2(arg1, arg2); }
-G4double fltsinh(G4double arg) { return std::sinh(arg); }
-G4double fltcosh(G4double arg) { return std::cosh(arg); }
-G4double flttanh(G4double arg) { return std::tanh(arg); }
+G4double fltsin(G4double arg)
+{
+  return std::sin(arg);
+}
+G4double fltcos(G4double arg)
+{
+  return std::cos(arg);
+}
+G4double flttan(G4double arg)
+{
+  return std::tan(arg);
+}
+G4double fltasin(G4double arg)
+{
+  return std::asin(arg);
+}
+G4double fltacos(G4double arg)
+{
+  return std::acos(arg);
+}
+G4double fltatan(G4double arg)
+{
+  return std::atan(arg);
+}
+G4double fltatan2(G4double arg1, G4double arg2)
+{
+  return std::atan2(arg1, arg2);
+}
+G4double fltsinh(G4double arg)
+{
+  return std::sinh(arg);
+}
+G4double fltcosh(G4double arg)
+{
+  return std::cosh(arg);
+}
+G4double flttanh(G4double arg)
+{
+  return std::tanh(arg);
+}
 // G4double fltasinh( G4double arg ){  return std::asinh(arg); }
 // G4double fltacosh( G4double arg ){  return std::acosh(arg); }
 // G4double fltatanh( G4double arg ){  return std::atanh(arg); }
-G4double fltsqrt(G4double arg) { return std::sqrt(arg); }
-G4double fltexp(G4double arg) { return std::exp(arg); }
-G4double fltlog(G4double arg) { return std::log(arg); }
-G4double fltlog10(G4double arg) { return std::log10(arg); }
-G4double fltpow(G4double arg1, G4double arg2) { return std::pow(arg1, arg2); }
+G4double fltsqrt(G4double arg)
+{
+  return std::sqrt(arg);
+}
+G4double fltexp(G4double arg)
+{
+  return std::exp(arg);
+}
+G4double fltlog(G4double arg)
+{
+  return std::log(arg);
+}
+G4double fltlog10(G4double arg)
+{
+  return std::log10(arg);
+}
+G4double fltpow(G4double arg1, G4double arg2)
+{
+  return std::pow(arg1, arg2);
+}
 
 // --------------------------------------------------------------------
 void G4tgrEvaluator::AddCommonFunctions()

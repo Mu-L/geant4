@@ -28,47 +28,43 @@
 // this :
 #include "G4OpenInventor.hh"
 
-#include "HEPVis/nodes/SoBox.h"
-#include "HEPVis/nodes/SoTubs.h"
-#include "HEPVis/nodes/SoCons.h"
-#include "HEPVis/nodes/SoTrd.h"
-#include "HEPVis/nodes/SoTrap.h"
-#include "HEPVis/nodes/SoMarkerSet.h"
-#include "HEPVis/nodes/SoImageWriter.h"
-#include "HEPVis/nodekits/SoDetectorTreeKit.h"
-#include "HEPVis/actions/SoGL2PSAction.h"
-#include "HEPVis/actions/SoCounterAction.h"
-#include "HEPVis/actions/SoAlternateRepAction.h"
+#include "G4OpenInventorSceneHandler.hh"
+#include "G4UIbatch.hh"
+#include "G4UImanager.hh"
 
 #include "Geant4_SoPolyhedron.h"
+#include "HEPVis/actions/SoAlternateRepAction.h"
+#include "HEPVis/actions/SoCounterAction.h"
+#include "HEPVis/actions/SoGL2PSAction.h"
+#include "HEPVis/nodekits/SoDetectorTreeKit.h"
+#include "HEPVis/nodes/SoBox.h"
+#include "HEPVis/nodes/SoCons.h"
+#include "HEPVis/nodes/SoImageWriter.h"
+#include "HEPVis/nodes/SoMarkerSet.h"
+#include "HEPVis/nodes/SoTrap.h"
+#include "HEPVis/nodes/SoTrd.h"
+#include "HEPVis/nodes/SoTubs.h"
 
-#include "G4OpenInventorSceneHandler.hh"
+G4OpenInventor::G4OpenInventor(const G4String name, const G4String nickname,
+                               G4VGraphicsSystem::Functionality f)
+  : G4VGraphicsSystem(name, nickname, f), interactorManager(0)
+{}
 
-#include "G4UImanager.hh"
-#include "G4UIbatch.hh"
+G4OpenInventor::~G4OpenInventor() {}
 
-G4OpenInventor::G4OpenInventor (
- const G4String name
-,const G4String nickname
-,G4VGraphicsSystem::Functionality f
-)
-:G4VGraphicsSystem(name,nickname,f)
-,interactorManager(0)
+void G4OpenInventor::SetInteractorManager(G4VInteractorManager* im)
 {
-}
-
-G4OpenInventor::~G4OpenInventor () {}
-
-void G4OpenInventor::SetInteractorManager (G4VInteractorManager* im) {
   interactorManager = im;
 }
-G4VInteractorManager* G4OpenInventor::GetInteractorManager () {
+G4VInteractorManager* G4OpenInventor::GetInteractorManager()
+{
   return interactorManager;
 }
-G4VSceneHandler* G4OpenInventor::CreateSceneHandler (const G4String& name) {
+G4VSceneHandler* G4OpenInventor::CreateSceneHandler(const G4String& name)
+{
   Initialize();
-  G4VSceneHandler* p = new G4OpenInventorSceneHandler (*this, name);
-  return    p;
+  G4VSceneHandler* p = new G4OpenInventorSceneHandler(*this, name);
+  return p;
 }
 
 void G4OpenInventor::InitNodes()
@@ -88,11 +84,12 @@ void G4OpenInventor::InitNodes()
   SoAlternateRepAction::initClass();
 }
 
-G4bool G4OpenInventor::IsUISessionCompatible () const
+G4bool G4OpenInventor::IsUISessionCompatible() const
 {
   // OI windows are not appropriate in a batch session.
   G4UIsession* baseSession = G4UImanager::GetUIpointer()->GetBaseSession();
   if (baseSession == nullptr  // Pure batch session
-      || dynamic_cast<G4UIbatch*>(baseSession) != nullptr) return false;
+      || dynamic_cast<G4UIbatch*>(baseSession) != nullptr)
+    return false;
   return true;
 }

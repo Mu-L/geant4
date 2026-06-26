@@ -32,19 +32,21 @@
 //      Created                 Hisaya Kurashige, 11 Aug. 2011
 // **********************************************************************
 
-#ifndef G4AntiOmegabMinus_h
-#define G4AntiOmegabMinus_h 1
+#ifndef G4ANTIOMEGABMINUS_HH
+#define G4ANTIOMEGABMINUS_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4AntiOmegabMinus : public G4ParticleDefinition
 {
   public:
+
     static G4AntiOmegabMinus* Definition();
     static G4AntiOmegabMinus* AntiOmegabMinusDefinition();
     static G4AntiOmegabMinus* AntiOmegabMinus();
 
   private:
+
     G4AntiOmegabMinus() {}
     ~G4AntiOmegabMinus() override = default;
 

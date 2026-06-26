@@ -29,12 +29,12 @@
 // ----------------------------------------------------------------------
 
 #include "G4GeometryCellImportance.hh"
+
 #include "G4GeometryCellStepStream.hh"
 
-std::ostream& operator<<(std::ostream& out,
-                         const G4GeometryCellImportance& gCelli)
+std::ostream& operator<<(std::ostream& out, const G4GeometryCellImportance& gCelli)
 {
-  for (const auto & it : gCelli)
+  for (const auto& it : gCelli)
   {
     out << it.first << ", importance = ";
     out << it.second << "\n";

@@ -48,91 +48,91 @@
 // - 13/02/2017, Maxime Chauvin
 //     Added surface and volume shape "EllipticCylinder"
 // --------------------------------------------------------------------
-#ifndef G4SPSPosDistribution_hh
-#define G4SPSPosDistribution_hh 1
+#ifndef G4SPSPOSDISTRIBUTION_HH
+#define G4SPSPOSDISTRIBUTION_HH
 
+#include "G4Cache.hh"
 #include "G4Navigator.hh"
 #include "G4SPSRandomGenerator.hh"
 #include "G4Threading.hh"
-#include "G4Cache.hh"
 
 class G4SPSPosDistribution
 {
   public:
 
     G4SPSPosDistribution();
-      // Constructor: initializes data and instantiates the Navigator class
+    // Constructor: initializes data and instantiates the Navigator class
 
-   ~G4SPSPosDistribution();
-      // Destructor
+    ~G4SPSPosDistribution();
+    // Destructor
 
     // Methods to create source position dist
 
     void SetPosDisType(const G4String&);
-      // Allows user to choose Point, Plane, Surface or Volume source
-      // position distributions
+    // Allows user to choose Point, Plane, Surface or Volume source
+    // position distributions
 
     void SetPosDisShape(const G4String&);
-      // Allows the user to choose the particular shape they wish for the
-      // position distribution. Choices are: Square, Circle, Ellipse,
-      // Rectangle, Sphere, Ellipsoid, Cylinder, Parallelepiped
+    // Allows the user to choose the particular shape they wish for the
+    // position distribution. Choices are: Square, Circle, Ellipse,
+    // Rectangle, Sphere, Ellipsoid, Cylinder, Parallelepiped
 
     void SetCentreCoords(const G4ThreeVector&);
-      // Sets the coordinates of the centre of the position distribution
+    // Sets the coordinates of the centre of the position distribution
 
-    void SetPosRot1(const G4ThreeVector&); 
-      // Used to specify the coordinate system for the position distribution
-      // along with SetPosRot2. Sets the vector x' and need not be a unit vector
+    void SetPosRot1(const G4ThreeVector&);
+    // Used to specify the coordinate system for the position distribution
+    // along with SetPosRot2. Sets the vector x' and need not be a unit vector
 
-    void SetPosRot2(const G4ThreeVector&); 
-      // Used in connection with SetPosRot1. This sets a vector in the plane
-      // x'y'. By a series of cross products x', y', z' are generated. Again
-      // need not be a unit vector
+    void SetPosRot2(const G4ThreeVector&);
+    // Used in connection with SetPosRot1. This sets a vector in the plane
+    // x'y'. By a series of cross products x', y', z' are generated. Again
+    // need not be a unit vector
 
     void SetHalfX(G4double);
-      // Sets the half length in x
+    // Sets the half length in x
 
     void SetHalfY(G4double);
-      // Sets the half length in y
+    // Sets the half length in y
 
     void SetHalfZ(G4double);
-      // Sets the half length in z
+    // Sets the half length in z
 
     void SetRadius(G4double);
-      // Sets the radius where appropriate for source distribution shapes
+    // Sets the radius where appropriate for source distribution shapes
 
     void SetRadius0(G4double);
-      // Sets the inner radius where appropriate for source distribution shapes
+    // Sets the inner radius where appropriate for source distribution shapes
 
     void SetBeamSigmaInR(G4double);
-      // Sets the sigma for 1D beam
+    // Sets the sigma for 1D beam
 
     void SetBeamSigmaInX(G4double);
-      // Sets the first sigma for 2D beam
+    // Sets the first sigma for 2D beam
 
     void SetBeamSigmaInY(G4double);
-      // Sets the second sigma for 2D beam
+    // Sets the second sigma for 2D beam
 
     void SetParAlpha(G4double);
-      // Sets the angle Alpha in the Parallelepiped shapes
+    // Sets the angle Alpha in the Parallelepiped shapes
 
     void SetParTheta(G4double);
-      // Sets the angle Theta in the Parallelepiped shapes
+    // Sets the angle Theta in the Parallelepiped shapes
 
     void SetParPhi(G4double);
-      // Sets the angle Phi in the Parallelepiped shapes
+    // Sets the angle Phi in the Parallelepiped shapes
 
     void ConfineSourceToVolume(const G4String&);
-      // Used to confine the start positions to a particular volume
+    // Used to confine the start positions to a particular volume
 
-    void SetBiasRndm (G4SPSRandomGenerator* a);
-      // Sets the biased random number generator
+    void SetBiasRndm(G4SPSRandomGenerator* a);
+    // Sets the biased random number generator
 
     void SetVerbosity(G4int a);
-      // Sets the verbosity level
+    // Sets the verbosity level
 
     G4ThreeVector GenerateOne();
-      // Generate one random position
+    // Generate one random position
 
     const G4String& GetPosDisType() const;
     const G4String& GetPosDisShape() const;
@@ -144,7 +144,7 @@ class G4SPSPosDistribution
     inline G4double GetRadius0() const { return Radius0; }
     inline G4double GetParAlpha() const { return ParAlpha; }
     inline G4double GetParTheta() const { return ParTheta; }
-    inline G4double GetParPhi()   const { return ParPhi; }
+    inline G4double GetParPhi() const { return ParPhi; }
     inline const G4ThreeVector& GetRotx() const { return Rotx; }
     inline const G4ThreeVector& GetRoty() const { return Roty; }
     inline const G4ThreeVector& GetRotz() const { return Rotz; }
@@ -181,39 +181,39 @@ class G4SPSPosDistribution
     //
     struct thread_data_t  // Caching of some data
     {
-      G4ThreeVector CSideRefVec1;
-      G4ThreeVector CSideRefVec2;
-      G4ThreeVector CSideRefVec3;
-      G4ThreeVector CParticlePos;
-      thread_data_t();
+        G4ThreeVector CSideRefVec1;
+        G4ThreeVector CSideRefVec2;
+        G4ThreeVector CSideRefVec3;
+        G4ThreeVector CParticlePos;
+        thread_data_t();
     };
 
     G4String SourcePosType;
-      // Point, Plane, Surface, Volume
+    // Point, Plane, Surface, Volume
     G4String Shape;
-      // Circle, Square, Rectangle, etc...
+    // Circle, Square, Rectangle, etc...
     G4ThreeVector CentreCoords;
-      // Coordinates of centre of input shape
+    // Coordinates of centre of input shape
     G4ThreeVector Rotx, Roty, Rotz;
-      // Unit vectors defining rotation matrix
+    // Unit vectors defining rotation matrix
     G4double halfx, halfy, halfz;
-      // Half lengths
+    // Half lengths
     G4double Radius;
-      // Radius for circles or spheres
+    // Radius for circles or spheres
     G4double Radius0;
-      // The inner radius of an annulus
+    // The inner radius of an annulus
     G4double SR, SX, SY;
-      // Standard deviation in radial, x, y for beam type source
-    G4double ParAlpha,  ParTheta, ParPhi;
-      // Angle for Right Parallellepipeds
+    // Standard deviation in radial, x, y for beam type source
+    G4double ParAlpha, ParTheta, ParPhi;
+    // Angle for Right Parallellepipeds
     G4bool Confine = false;
-      // If true confines source distribution to VolName
+    // If true confines source distribution to VolName
     G4String VolName;
-      // Volume name
+    // Volume name
     G4int verbosityLevel;
-      // Verbosity
+    // Verbosity
     G4SPSRandomGenerator* PosRndm = nullptr;
-     // Biased random generator
+    // Biased random generator
 
     G4Cache<thread_data_t> ThreadData;
     G4Mutex a_mutex;

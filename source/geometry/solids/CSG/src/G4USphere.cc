@@ -28,15 +28,18 @@
 // 13.09.13 G.Cosmo, CERN
 // --------------------------------------------------------------------
 
+// Geant4/VecGeom headers must be included in order
+// clang-format off
 #include "G4Sphere.hh"
 #include "G4USphere.hh"
+// clang-format on
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include "G4GeomTools.hh"
-#include "G4AffineTransform.hh"
-#include "G4VPVParameterisation.hh"
-#include "G4BoundingEnvelope.hh"
+#  include "G4AffineTransform.hh"
+#  include "G4BoundingEnvelope.hh"
+#  include "G4GeomTools.hh"
+#  include "G4VPVParameterisation.hh"
 
 using namespace CLHEP;
 
@@ -45,38 +48,35 @@ using namespace CLHEP;
 // constructor - check parameters, convert angles so 0<sphi+dpshi<=2_PI
 //             - note if pDPhi>2PI then reset to 2PI
 
-G4USphere::G4USphere( const G4String& pName,
-                            G4double pRmin, G4double pRmax,
-                            G4double pSPhi, G4double pDPhi,
-                            G4double pSTheta, G4double pDTheta )
+G4USphere::G4USphere(const G4String& pName, G4double pRmin, G4double pRmax, G4double pSPhi,
+                     G4double pDPhi, G4double pSTheta, G4double pDTheta)
   : Base_t(pName, pRmin, pRmax, pSPhi, pDPhi, pSTheta, pDTheta)
-{
-}
+{}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Copy constructor
 
-G4USphere::G4USphere(const G4USphere& rhs)
-  : Base_t(rhs)
-{
-}
+G4USphere::G4USphere(const G4USphere& rhs) : Base_t(rhs) {}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Assignment operator
 
-G4USphere& G4USphere::operator = (const G4USphere& rhs) 
+G4USphere& G4USphere::operator=(const G4USphere& rhs)
 {
-   // Check assignment to self
-   //
-   if (this == &rhs)  { return *this; }
+  // Check assignment to self
+  //
+  if (this == &rhs)
+  {
+    return *this;
+  }
 
-   // Copy base class data
-   //
-   Base_t::operator=(rhs);
+  // Copy base class data
+  //
+  Base_t::operator=(rhs);
 
-   return *this;
+  return *this;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -176,11 +176,10 @@ void G4USphere::SetDeltaThetaAngle(G4double newDTheta)
 // Dispatch to parameterisation for replication mechanism dimension
 // computation & modification.
 
-void G4USphere::ComputeDimensions(      G4VPVParameterisation* p,
-                                  const G4int n,
+void G4USphere::ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                                   const G4VPhysicalVolume* pRep)
 {
-  p->ComputeDimensions(*(G4Sphere*)this,n,pRep);
+  p->ComputeDimensions(*(G4Sphere*)this, n, pRep);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -207,33 +206,31 @@ void G4USphere::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
   //
   if (GetDeltaThetaAngle() >= pi && GetDeltaPhiAngle() >= twopi)
   {
-    pMin.set(-rmax,-rmax,-rmax);
-    pMax.set( rmax, rmax, rmax);
+    pMin.set(-rmax, -rmax, -rmax);
+    pMax.set(rmax, rmax, rmax);
   }
   else
   {
     G4double sinStart = GetSinStartTheta();
     G4double cosStart = GetCosStartTheta();
-    G4double sinEnd   = GetSinEndTheta();
-    G4double cosEnd   = GetCosEndTheta();
+    G4double sinEnd = GetSinEndTheta();
+    G4double cosEnd = GetCosEndTheta();
 
     G4double stheta = GetStartThetaAngle();
     G4double etheta = stheta + GetDeltaThetaAngle();
-    G4double rhomin = rmin*std::min(sinStart,sinEnd);
+    G4double rhomin = rmin * std::min(sinStart, sinEnd);
     G4double rhomax = rmax;
-    if (stheta > halfpi) rhomax = rmax*sinStart;
-    if (etheta < halfpi) rhomax = rmax*sinEnd;
+    if (stheta > halfpi) rhomax = rmax * sinStart;
+    if (etheta < halfpi) rhomax = rmax * sinEnd;
 
-    G4TwoVector xymin,xymax;
-    G4GeomTools::DiskExtent(rhomin,rhomax,
-                            GetSinStartPhi(),GetCosStartPhi(),
-                            GetSinEndPhi(),GetCosEndPhi(),
-                            xymin,xymax);
+    G4TwoVector xymin, xymax;
+    G4GeomTools::DiskExtent(rhomin, rhomax, GetSinStartPhi(), GetCosStartPhi(), GetSinEndPhi(),
+                            GetCosEndPhi(), xymin, xymax);
 
-    G4double zmin = std::min(rmin*cosEnd,rmax*cosEnd);
-    G4double zmax = std::max(rmin*cosStart,rmax*cosStart);
-    pMin.set(xymin.x(),xymin.y(),zmin);
-    pMax.set(xymax.x(),xymax.y(),zmax);
+    G4double zmin = std::min(rmin * cosEnd, rmax * cosEnd);
+    G4double zmax = std::max(rmin * cosStart, rmax * cosStart);
+    pMin.set(xymin.x(), xymin.y(), zmin);
+    pMax.set(xymax.x(), xymax.y(), zmax);
   }
 
   // Check correctness of the bounding box
@@ -241,12 +238,9 @@ void G4USphere::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
   if (pMin.x() >= pMax.x() || pMin.y() >= pMax.y() || pMin.z() >= pMax.z())
   {
     std::ostringstream message;
-    message << "Bad bounding box (min >= max) for solid: "
-            << GetName() << " !"
-            << "\npMin = " << pMin
-            << "\npMax = " << pMax;
-    G4Exception("G4USphere::BoundingLimits()", "GeomMgt0001",
-                JustWarning, message);
+    message << "Bad bounding box (min >= max) for solid: " << GetName() << " !"
+            << "\npMin = " << pMin << "\npMax = " << pMax;
+    G4Exception("G4USphere::BoundingLimits()", "GeomMgt0001", JustWarning, message);
     StreamInfo(G4cout);
   }
 
@@ -255,21 +249,19 @@ void G4USphere::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
   if (checkBBox)
   {
     U3Vector vmin, vmax;
-    Extent(vmin,vmax);
-    if (std::abs(pMin.x()-vmin.x()) > kCarTolerance ||
-        std::abs(pMin.y()-vmin.y()) > kCarTolerance ||
-        std::abs(pMin.z()-vmin.z()) > kCarTolerance ||
-        std::abs(pMax.x()-vmax.x()) > kCarTolerance ||
-        std::abs(pMax.y()-vmax.y()) > kCarTolerance ||
-        std::abs(pMax.z()-vmax.z()) > kCarTolerance)
+    Extent(vmin, vmax);
+    if (std::abs(pMin.x() - vmin.x()) > kCarTolerance
+        || std::abs(pMin.y() - vmin.y()) > kCarTolerance
+        || std::abs(pMin.z() - vmin.z()) > kCarTolerance
+        || std::abs(pMax.x() - vmax.x()) > kCarTolerance
+        || std::abs(pMax.y() - vmax.y()) > kCarTolerance
+        || std::abs(pMax.z() - vmax.z()) > kCarTolerance)
     {
       std::ostringstream message;
-      message << "Inconsistency in bounding boxes for solid: "
-              << GetName() << " !"
+      message << "Inconsistency in bounding boxes for solid: " << GetName() << " !"
               << "\nBBox min: wrapper = " << pMin << " solid = " << vmin
               << "\nBBox max: wrapper = " << pMax << " solid = " << vmax;
-      G4Exception("G4USphere::BoundingLimits()", "GeomMgt0001",
-                  JustWarning, message);
+      G4Exception("G4USphere::BoundingLimits()", "GeomMgt0001", JustWarning, message);
       checkBBox = false;
     }
   }
@@ -279,19 +271,18 @@ void G4USphere::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
 //
 // Calculate extent under transform and specified limit
 
-G4bool G4USphere::CalculateExtent(const EAxis pAxis,
-                                  const G4VoxelLimits& pVoxelLimit,
-                                  const G4AffineTransform& pTransform,
-                                        G4double& pMin, G4double& pMax) const
+G4bool G4USphere::CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                                  const G4AffineTransform& pTransform, G4double& pMin,
+                                  G4double& pMax) const
 {
   G4ThreeVector bmin, bmax;
 
   // Get bounding box
-  BoundingLimits(bmin,bmax);
+  BoundingLimits(bmin, bmax);
 
   // Find extent
-  G4BoundingEnvelope bbox(bmin,bmax);
-  return bbox.CalculateExtent(pAxis,pVoxelLimit,pTransform,pMin,pMax);
+  G4BoundingEnvelope bbox(bmin, bmax);
+  return bbox.CalculateExtent(pAxis, pVoxelLimit, pTransform, pMin, pMax);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -300,12 +291,8 @@ G4bool G4USphere::CalculateExtent(const EAxis pAxis,
 
 G4Polyhedron* G4USphere::CreatePolyhedron() const
 {
-  return new G4PolyhedronSphere(GetInnerRadius(),
-                                GetOuterRadius(),
-                                GetStartPhiAngle(),
-                                GetDeltaPhiAngle(),
-                                GetStartThetaAngle(),
-                                GetDeltaThetaAngle());
+  return new G4PolyhedronSphere(GetInnerRadius(), GetOuterRadius(), GetStartPhiAngle(),
+                                GetDeltaPhiAngle(), GetStartThetaAngle(), GetDeltaThetaAngle());
 }
 
 #endif  // G4GEOM_USE_USOLIDS

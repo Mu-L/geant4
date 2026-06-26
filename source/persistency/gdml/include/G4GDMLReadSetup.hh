@@ -32,13 +32,12 @@
 // Author: Zoltan Torzsok, November 2007
 // -------------------------------------------------------------------------
 #ifndef G4GDMLREADSETUP_HH
-#define G4GDMLREADSETUP_HH 1
-
-#include <map>
-
-#include "G4String.hh"
+#define G4GDMLREADSETUP_HH
 
 #include "G4GDMLReadSolids.hh"
+#include "G4String.hh"
+
+#include <map>
 
 class G4GDMLReadSetup : public G4GDMLReadSolids
 {

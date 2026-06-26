@@ -37,28 +37,29 @@
 // 05.07.2010 V.Ivanchenko added name, min and max energy limit and
 //            corresponding access methods
 // 12.08.2011 G.Folger, V.Ivanchenko, T.Koi, D.Wright redesign the class
-// 
+//
 //
 // Class Description
-// This is a base class for hadronic cross section data sets.  Users may 
+// This is a base class for hadronic cross section data sets.  Users may
 // derive specialized cross section classes and register them with the
 // appropriate process, or use provided data sets.
 //
 // Each cross section should have unique name
 // Minimal and maximal energy for the cross section will be used in run
 // time before IsApplicable method is called
-// 
-// Both the name and the energy interval will be used for documentation 
+//
+// Both the name and the energy interval will be used for documentation
 //
 // Class Description - End
 
-#ifndef G4VCrossSectionDataSet_h
-#define G4VCrossSectionDataSet_h 1
+#ifndef G4VCROSSSECTIONDATASET_HH
+#define G4VCROSSSECTIONDATASET_HH
 
-#include "globals.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4DynamicParticle.hh"
 #include "G4Element.hh"
+#include "G4ParticleDefinition.hh"
+#include "globals.hh"
+
 #include <iostream>
 
 class G4DynamicParticle;
@@ -68,135 +69,119 @@ class G4CrossSectionDataSetRegistry;
 
 class G4VCrossSectionDataSet
 {
-public: //with description
+  public:  // with description
 
-  G4VCrossSectionDataSet(const G4String& nam = "");
+    G4VCrossSectionDataSet(const G4String& nam = "");
 
-  virtual ~G4VCrossSectionDataSet();
+    virtual ~G4VCrossSectionDataSet();
 
-  //============== Is Applicable methods ===============================
-  // The following three methods have default implementations returning
-  // "false".  Derived classes should implement only needed methods.
- 
-  // Element-wise cross section
-  virtual
-  G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z, 
-			     const G4Material* mat = nullptr);
+    //============== Is Applicable methods ===============================
+    // The following three methods have default implementations returning
+    // "false".  Derived classes should implement only needed methods.
 
-  // Derived classes should implement this method if they provide isotope-wise 
-  // cross sections.  Default arguments G4Element and G4Material are needed to 
-  // access low-energy neutron cross sections, but are not required for others.
-  virtual
-  G4bool IsIsoApplicable(const G4DynamicParticle*, G4int Z, G4int A,    
-			 const G4Element* elm = nullptr,
-			 const G4Material* mat = nullptr);
+    // Element-wise cross section
+    virtual G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z,
+                                       const G4Material* mat = nullptr);
 
-  //============== GetCrossSection methods ===============================
+    // Derived classes should implement this method if they provide isotope-wise
+    // cross sections.  Default arguments G4Element and G4Material are needed to
+    // access low-energy neutron cross sections, but are not required for others.
+    virtual G4bool IsIsoApplicable(const G4DynamicParticle*, G4int Z, G4int A,
+                                   const G4Element* elm = nullptr, const G4Material* mat = nullptr);
 
-  // This is a generic method to access cross section per element
-  // This method should not be overwritten in a derived class
-  inline G4double GetCrossSection(const G4DynamicParticle*, const G4Element*,
-                                  const G4Material* mat = nullptr);
+    //============== GetCrossSection methods ===============================
 
-  // This is a generic method to compute cross section per element
-  // If the DataSet is not applicable the method returns zero
-  // This method should not be overwritten in a derived class
-  G4double ComputeCrossSection(const G4DynamicParticle*, 
-                               const G4Element*,
-                               const G4Material* mat = nullptr);
+    // This is a generic method to access cross section per element
+    // This method should not be overwritten in a derived class
+    inline G4double GetCrossSection(const G4DynamicParticle*, const G4Element*,
+                                    const G4Material* mat = nullptr);
 
-  // Implement element cross section, IsApplicable does not checked.
-  // In the default implementation a sum of isotope cross sections is computed
-  virtual
-  G4double ComputeCrossSectionPerElement(G4double kinEnergy, G4double loge,
-                                         const G4ParticleDefinition*, 
-                                         const G4Element*,
-                                         const G4Material* mat = nullptr);
+    // This is a generic method to compute cross section per element
+    // If the DataSet is not applicable the method returns zero
+    // This method should not be overwritten in a derived class
+    G4double ComputeCrossSection(const G4DynamicParticle*, const G4Element*,
+                                 const G4Material* mat = nullptr);
 
-  // Implement these methods for element-wise cross section 
-  virtual
-  G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z,
-				  const G4Material* mat = nullptr);
+    // Implement element cross section, IsApplicable does not checked.
+    // In the default implementation a sum of isotope cross sections is computed
+    virtual G4double ComputeCrossSectionPerElement(G4double kinEnergy, G4double loge,
+                                                   const G4ParticleDefinition*, const G4Element*,
+                                                   const G4Material* mat = nullptr);
 
-  // Derived classes should implement these methods if they provide isotope-wise
-  // cross sections. Extra arguments G4Isotope, G4Element, and G4Material are 
-  // needed to access low-energy neutron cross sections, but not in other cases. 
-  virtual
-  G4double GetIsoCrossSection(const G4DynamicParticle*, G4int Z, G4int A,  
-			      const G4Isotope* iso = nullptr,
-			      const G4Element* elm = nullptr,
-			      const G4Material* mat = nullptr);
+    // Implement these methods for element-wise cross section
+    virtual G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z,
+                                            const G4Material* mat = nullptr);
 
-  virtual
-  G4double ComputeIsoCrossSection(G4double kinEnergy, G4double loge,
-                                  const G4ParticleDefinition*, G4int Z, G4int A,  
-			          const G4Isotope* iso = nullptr,
-			          const G4Element* elm = nullptr,
-			          const G4Material* mat = nullptr);
+    // Derived classes should implement these methods if they provide isotope-wise
+    // cross sections. Extra arguments G4Isotope, G4Element, and G4Material are
+    // needed to access low-energy neutron cross sections, but not in other cases.
+    virtual G4double GetIsoCrossSection(const G4DynamicParticle*, G4int Z, G4int A,
+                                        const G4Isotope* iso = nullptr,
+                                        const G4Element* elm = nullptr,
+                                        const G4Material* mat = nullptr);
 
-  //=====================================================================
+    virtual G4double ComputeIsoCrossSection(G4double kinEnergy, G4double loge,
+                                            const G4ParticleDefinition*, G4int Z, G4int A,
+                                            const G4Isotope* iso = nullptr,
+                                            const G4Element* elm = nullptr,
+                                            const G4Material* mat = nullptr);
 
-  // Implement this method if needed
-  // This method is called for element-wise cross section
-  // Default implementation assumes equal cross sections for all isotopes 
-  virtual const G4Isotope* SelectIsotope(const G4Element*, G4double kinEnergy, 
-                                         G4double logE);
+    //=====================================================================
 
-  // Implement this method if needed
-  virtual
-  void BuildPhysicsTable(const G4ParticleDefinition&);
+    // Implement this method if needed
+    // This method is called for element-wise cross section
+    // Default implementation assumes equal cross sections for all isotopes
+    virtual const G4Isotope* SelectIsotope(const G4Element*, G4double kinEnergy, G4double logE);
 
-  // Implement this method if needed
-  // Default implementation will provide a dump of the cross section 
-  // in logarithmic scale in the interval of applicability 
-  virtual
-  void DumpPhysicsTable(const G4ParticleDefinition&);
+    // Implement this method if needed
+    virtual void BuildPhysicsTable(const G4ParticleDefinition&);
 
-  virtual void CrossSectionDescription(std::ostream&) const;
+    // Implement this method if needed
+    // Default implementation will provide a dump of the cross section
+    // in logarithmic scale in the interval of applicability
+    virtual void DumpPhysicsTable(const G4ParticleDefinition&);
 
-  virtual void SetVerboseLevel(G4int value);
+    virtual void CrossSectionDescription(std::ostream&) const;
 
-  inline G4double GetMinKinEnergy() const;
+    virtual void SetVerboseLevel(G4int value);
 
-  inline void SetMinKinEnergy(G4double value);
+    inline G4double GetMinKinEnergy() const;
 
-  inline G4double GetMaxKinEnergy() const;
+    inline void SetMinKinEnergy(G4double value);
 
-  inline void SetMaxKinEnergy(G4double value);
+    inline G4double GetMaxKinEnergy() const;
 
-  inline bool ForAllAtomsAndEnergies() const;
+    inline void SetMaxKinEnergy(G4double value);
 
-  inline void SetForAllAtomsAndEnergies(G4bool val);
+    inline bool ForAllAtomsAndEnergies() const;
 
-  inline const G4String& GetName() const;
+    inline void SetForAllAtomsAndEnergies(G4bool val);
 
-  inline void SetName(const G4String& nam);
+    inline const G4String& GetName() const;
 
-  G4VCrossSectionDataSet & operator=
-  (const G4VCrossSectionDataSet &right) = delete;
-  G4VCrossSectionDataSet(const G4VCrossSectionDataSet&) = delete;
+    inline void SetName(const G4String& nam);
 
-protected:
+    G4VCrossSectionDataSet& operator=(const G4VCrossSectionDataSet& right) = delete;
+    G4VCrossSectionDataSet(const G4VCrossSectionDataSet&) = delete;
 
-  G4int verboseLevel{0};
+  protected:
 
-  G4String name;
+    G4int verboseLevel{0};
 
-private:
+    G4String name;
 
-  G4CrossSectionDataSetRegistry* registry;
+  private:
 
-  G4double minKinEnergy{0.0};
-  G4double maxKinEnergy;
+    G4CrossSectionDataSetRegistry* registry;
 
-  G4bool isForAllAtomsAndEnergies{false};
+    G4double minKinEnergy{0.0};
+    G4double maxKinEnergy;
 
+    G4bool isForAllAtomsAndEnergies{false};
 };
 
-inline G4double 
-G4VCrossSectionDataSet::GetCrossSection(const G4DynamicParticle* dp, 
-                                        const G4Element* elm,
-                                        const G4Material* mat)
+inline G4double G4VCrossSectionDataSet::GetCrossSection(const G4DynamicParticle* dp,
+                                                        const G4Element* elm, const G4Material* mat)
 {
   return ComputeCrossSection(dp, elm, mat);
 }

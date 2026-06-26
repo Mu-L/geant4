@@ -36,8 +36,8 @@
 // V. Ivanchenko, July-2023 Basic revision of particle HP classes
 //
 
-#ifndef G4ParticleHPChannel_h
-#define G4ParticleHPChannel_h 1
+#ifndef G4PARTICLEHPCHANNEL_HH
+#define G4PARTICLEHPCHANNEL_HH
 
 #include "G4Element.hh"
 #include "G4HadProjectile.hh"
@@ -55,111 +55,102 @@ class G4ParticleDefinition;
 
 class G4ParticleHPChannel
 {
- public:
+  public:
 
-  G4ParticleHPChannel(G4ParticleDefinition* projectile = nullptr);
+    G4ParticleHPChannel(G4ParticleDefinition* projectile = nullptr);
 
-  ~G4ParticleHPChannel();
+    ~G4ParticleHPChannel();
 
-  G4double GetXsec(G4double energy) const;
+    G4double GetXsec(G4double energy) const;
 
-  G4double GetWeightedXsec(G4double energy, G4int isoNumber) const;
+    G4double GetWeightedXsec(G4double energy, G4int isoNumber) const;
 
-  G4double GetFSCrossSection(G4double energy, G4int isoNumber) const;
+    G4double GetFSCrossSection(G4double energy, G4int isoNumber) const;
 
-  G4bool IsActive(G4int isoNumber) const
-  {
-    return active[isoNumber];
-  }
+    G4bool IsActive(G4int isoNumber) const { return active[isoNumber]; }
 
-  G4bool HasFSData(G4int isoNumber) const
-  { 
-    return theFinalStates[isoNumber]->HasFSData();
-  }
+    G4bool HasFSData(G4int isoNumber) const { return theFinalStates[isoNumber]->HasFSData(); }
 
-  G4bool HasAnyData(G4int isoNumber) const
-  {
-    return theFinalStates[isoNumber]->HasAnyData();
-  }
+    G4bool HasAnyData(G4int isoNumber) const { return theFinalStates[isoNumber]->HasAnyData(); }
 
-  G4bool Register(G4ParticleHPFinalState* theFS);
+    G4bool Register(G4ParticleHPFinalState* theFS);
 
-  void Init(G4Element* theElement, const G4String& dirName);
+    void Init(G4Element* theElement, const G4String& dirName);
 
-  void Init(G4Element* theElement, const G4String& dirName,
-	    const G4String& fsType);
+    void Init(G4Element* theElement, const G4String& dirName, const G4String& fsType);
 
-  void UpdateData(G4int A, G4int Z, G4int index, G4double abundance,
-		  G4ParticleDefinition* projectile)
-  {
-    UpdateData(A, Z, 0, index, abundance, projectile);
-  }
-
-  void UpdateData(G4int A, G4int Z, G4int M, G4int index, G4double abundance,
-		  G4ParticleDefinition* projectile);
-
-  void Harmonise(G4ParticleHPVector*& theStore, G4ParticleHPVector* theNew);
-
-  G4HadFinalState* ApplyYourself(const G4HadProjectile& theTrack,
-				 G4int isoNumber = -1,
-				 G4bool isElastic = false);
-
-  G4int GetNiso() const { return niso; }
-
-  G4double GetN(G4int i) const { return theFinalStates[i]->GetN(); }
-  G4double GetZ(G4int i) const { return theFinalStates[i]->GetZ(); }
-  G4double GetM(G4int i) const { return theFinalStates[i]->GetM(); }
-
-  G4bool HasDataInAnyFinalState() const
-  {
-    G4bool result = false;
-    for (G4int i = 0; i < niso; ++i) {
-      if (theFinalStates[i]->HasAnyData()) {
-	result = true;
-	break;
-      }
+    void UpdateData(G4int A, G4int Z, G4int index, G4double abundance,
+                    G4ParticleDefinition* projectile)
+    {
+      UpdateData(A, Z, 0, index, abundance, projectile);
     }
-    return result;
-  }
 
-  void DumpInfo() const;
+    void UpdateData(G4int A, G4int Z, G4int M, G4int index, G4double abundance,
+                    G4ParticleDefinition* projectile);
 
-  const G4String& GetFSType() { return theFSType; }
+    void Harmonise(G4ParticleHPVector*& theStore, G4ParticleHPVector* theNew);
 
-  G4ParticleHPFinalState** GetFinalStates() const { return theFinalStates; }
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& theTrack, G4int isoNumber = -1,
+                                   G4bool isElastic = false);
 
-  // method added by M.Zmeskal 02/2024 - to be used in G4ParticleHPFissionURR
-  G4WendtFissionFragmentGenerator* GetWendtFissionGenerator() const;
+    G4int GetNiso() const { return niso; }
 
-  G4ParticleHPChannel(G4ParticleHPChannel &) = delete;
-  G4ParticleHPChannel & operator=(const G4ParticleHPChannel &right) = delete;
+    G4double GetN(G4int i) const { return theFinalStates[i]->GetN(); }
+    G4double GetZ(G4int i) const { return theFinalStates[i]->GetZ(); }
+    G4double GetM(G4int i) const { return theFinalStates[i]->GetM(); }
 
- protected:
+    G4bool HasDataInAnyFinalState() const
+    {
+      G4bool result = false;
+      for (G4int i = 0; i < niso; ++i)
+      {
+        if (theFinalStates[i]->HasAnyData())
+        {
+          result = true;
+          break;
+        }
+      }
+      return result;
+    }
 
-  G4ParticleHPManager* fManager;
+    void DumpInfo() const;
 
- private:
+    const G4String& GetFSType() { return theFSType; }
 
-  G4ParticleDefinition* theProjectile;
+    G4ParticleHPFinalState** GetFinalStates() const { return theFinalStates; }
 
-  G4ParticleHPVector* theChannelData;
-  G4Element* theElement{nullptr};
+    // method added by M.Zmeskal 02/2024 - to be used in G4ParticleHPFissionURR
+    G4WendtFissionFragmentGenerator* GetWendtFissionGenerator() const;
 
-  // total (element) cross-section for this channel
-  G4ParticleHPVector* theBuffer{nullptr};
+    G4ParticleHPChannel(G4ParticleHPChannel&) = delete;
+    G4ParticleHPChannel& operator=(const G4ParticleHPChannel& right) = delete;
 
-  G4ParticleHPIsoData* theIsotopeWiseData{nullptr};
-  // these are the isotope-wise cross-sections for each final state.
-  G4ParticleHPFinalState** theFinalStates{nullptr};
-  // also these are isotope-wise pionters, parallel to the above.
+  protected:
 
-  G4WendtFissionFragmentGenerator* wendtFissionGenerator{nullptr};
-  G4bool* active{nullptr};
-  G4int niso{-1};
-  G4int registerCount{-1};
+    G4ParticleHPManager* fManager;
 
-  G4String theDir{""};
-  G4String theFSType{""};
+  private:
+
+    G4ParticleDefinition* theProjectile;
+
+    G4ParticleHPVector* theChannelData;
+    G4Element* theElement{nullptr};
+
+    // total (element) cross-section for this channel
+    G4ParticleHPVector* theBuffer{nullptr};
+
+    G4ParticleHPIsoData* theIsotopeWiseData{nullptr};
+    // these are the isotope-wise cross-sections for each final state.
+    G4ParticleHPFinalState** theFinalStates{nullptr};
+    // also these are isotope-wise pionters, parallel to the above.
+
+    G4WendtFissionFragmentGenerator* wendtFissionGenerator{nullptr};
+    G4bool* active{nullptr};
+    G4int niso{-1};
+    G4int registerCount{-1};
+
+    G4String theDir{""};
+    G4String theFSType{""};
 };
 
 #endif

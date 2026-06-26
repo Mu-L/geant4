@@ -70,13 +70,16 @@ G4HadFinalState* G4WendtFissionFragmentGenerator::ApplyYourself(const G4HadProje
   std::map<const G4int, G4FissionFragmentGenerator*>::iterator fissionGenerator;
 
   // Look for the first available isomer since no M is provided for ApplyYourself()
-  for (unsigned int M = 0; M < 10; ++M) {
+  for (unsigned int M = 0; M < 10; ++M)
+  {
     isotope = G4FissionFragmentGenerator::G4MakeIsotopeCode(Z, A, M);
     fissionGenerator = fissionIsotopes.find(isotope);
 
-    if (fissionGenerator != fissionIsotopes.end()) {
+    if (fissionGenerator != fissionIsotopes.end())
+    {
       // Only generate particles if the generator was constructed
-      if (fissionGenerator->second != nullptr) {
+      if (fissionGenerator->second != nullptr)
+      {
         finalParticles = fissionGenerator->second->G4GenerateFission(projectile);
       }
 
@@ -84,10 +87,12 @@ G4HadFinalState* G4WendtFissionFragmentGenerator::ApplyYourself(const G4HadProje
     }
   }
 
-  if (finalParticles != nullptr) {
+  if (finalParticles != nullptr)
+  {
     finalState = new G4HadFinalState();
 
-    for (auto& finalParticle : *finalParticles) {
+    for (auto& finalParticle : *finalParticles)
+    {
       finalState->AddSecondary(finalParticle, secID);
     }
   }
@@ -113,7 +118,8 @@ void G4WendtFissionFragmentGenerator::InitializeANucleus(const G4int A, const G4
   newIsotope =
     fissionIsotopes.insert(std::make_pair(isotope, (G4FissionFragmentGenerator*)nullptr));
 
-  if (newIsotope.second || newIsotope.first->second == NULL) {
+  if (newIsotope.second || newIsotope.first->second == NULL)
+  {
     // Get the data file
     G4bool flag;
     G4ParticleHPDataUsed dataFile = fileNames.GetName(A, Z, M, dataDirectory, "FF", flag);
@@ -124,7 +130,8 @@ void G4WendtFissionFragmentGenerator::InitializeANucleus(const G4int A, const G4
     // FILE: " << dataFileName << G4endl;
     std::istringstream dataStream(std::ios::in);
     G4ParticleHPManager::GetInstance()->GetDataStream(dataFileName, dataStream);
-    if (!dataStream) {
+    if (!dataStream)
+    {
       // G4FFG_FUNCTIONLEAVE__
       //  G4cerr << "*** Stream error" << G4endl;
       return;
@@ -144,7 +151,8 @@ void G4WendtFissionFragmentGenerator::InitializeANucleus(const G4int A, const G4
     auto const fissionGenerator = new G4FissionFragmentGenerator();
     newIsotope.first->second = fissionGenerator;
 
-    switch (M) {
+    switch (M)
+    {
       case 1:
         metaState = G4FFGEnumerations::META_1;
         break;
@@ -173,7 +181,8 @@ void G4WendtFissionFragmentGenerator::InitializeANucleus(const G4int A, const G4
     //      i.e. remove the ability to dynamically change the fission parameters
     //      that cause reload because a G4FissionFragmentGenerator class for
     //      each isotope should be loaded in the initialization phase
-    if (!fissionGenerator->InitializeFissionProductYieldClass(dataStream)) {
+    if (!fissionGenerator->InitializeFissionProductYieldClass(dataStream))
+    {
       // Delete if the initialization fails
       delete fissionGenerator;
 

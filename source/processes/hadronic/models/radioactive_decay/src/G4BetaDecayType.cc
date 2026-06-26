@@ -26,27 +26,43 @@
 
 #include "G4BetaDecayType.hh"
 
-std::istream& operator >> (std::istream& strm, G4BetaDecayType& q)
+std::istream& operator>>(std::istream& strm, G4BetaDecayType& q)
 {
   G4String a;
   strm >> a;
 
   if (a == "allowed")
-    {q = allowed;}
+  {
+    q = allowed;
+  }
   else if (a == "firstForbidden")
-    {q = firstForbidden;}
+  {
+    q = firstForbidden;
+  }
   else if (a == "uniqueFirstForbidden")
-    {q = uniqueFirstForbidden;}
+  {
+    q = uniqueFirstForbidden;
+  }
   else if (a == "secondForbidden")
-    {q = secondForbidden;}
+  {
+    q = secondForbidden;
+  }
   else if (a == "uniqueSecondForbidden")
-    {q = uniqueSecondForbidden;}
+  {
+    q = uniqueSecondForbidden;
+  }
   else if (a == "thirdForbidden")
-    {q = thirdForbidden;}
+  {
+    q = thirdForbidden;
+  }
   else if (a == "uniqueThirdForbidden")
-    {q = uniqueThirdForbidden;}
+  {
+    q = uniqueThirdForbidden;
+  }
   else
-    {q = notImplemented;}
+  {
+    q = notImplemented;
+  }
 
   return strm;
 }

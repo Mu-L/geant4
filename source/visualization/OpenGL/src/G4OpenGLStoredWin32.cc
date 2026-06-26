@@ -25,50 +25,52 @@
 //
 //
 //
-// 
+//
 // OpenGLStoredWin32 graphics system factory.
 
-
-#include "G4VisFeaturesOfOpenGL.hh"
-#include "G4VSceneHandler.hh"
-#include "G4OpenGLSceneHandler.hh"
-#include "G4OpenGLViewer.hh"
 #include "G4OpenGLStoredWin32.hh"
-#include "G4OpenGLStoredWin32Viewer.hh"
-#include "G4OpenGLStoredSceneHandler.hh"
-#include "G4OpenGLViewerMessenger.hh"
 
-G4OpenGLStoredWin32::G4OpenGLStoredWin32 ():
-  G4VGraphicsSystem ("OpenGLStoredWin32",
-		     "OGLSWin32",
-		     G4VisFeaturesOfOpenGLSWin32 (),
-		     G4VGraphicsSystem::threeD)
+#include "G4OpenGLSceneHandler.hh"
+#include "G4OpenGLStoredSceneHandler.hh"
+#include "G4OpenGLStoredWin32Viewer.hh"
+#include "G4OpenGLViewer.hh"
+#include "G4OpenGLViewerMessenger.hh"
+#include "G4VSceneHandler.hh"
+#include "G4VisFeaturesOfOpenGL.hh"
+
+G4OpenGLStoredWin32::G4OpenGLStoredWin32()
+  : G4VGraphicsSystem("OpenGLStoredWin32", "OGLSWin32", G4VisFeaturesOfOpenGLSWin32(),
+                      G4VGraphicsSystem::threeD)
 {
   G4OpenGLViewerMessenger::GetInstance();
 }
 
-G4VSceneHandler* G4OpenGLStoredWin32::CreateSceneHandler
-(const G4String& name) {
-  G4VSceneHandler* pScene = new G4OpenGLStoredSceneHandler (*this, name);
-  return    pScene;
+G4VSceneHandler* G4OpenGLStoredWin32::CreateSceneHandler(const G4String& name)
+{
+  G4VSceneHandler* pScene = new G4OpenGLStoredSceneHandler(*this, name);
+  return pScene;
 }
 
-G4VViewer* G4OpenGLStoredWin32::CreateViewer
-(G4VSceneHandler& scene, const G4String& name) {
-  G4VViewer* pView =
-    new G4OpenGLStoredWin32Viewer ((G4OpenGLStoredSceneHandler&) scene, name);
-  if (pView) {
-    if (pView -> GetViewId () < 0) {
+G4VViewer* G4OpenGLStoredWin32::CreateViewer(G4VSceneHandler& scene, const G4String& name)
+{
+  G4VViewer* pView = new G4OpenGLStoredWin32Viewer((G4OpenGLStoredSceneHandler&)scene, name);
+  if (pView)
+  {
+    if (pView->GetViewId() < 0)
+    {
       delete pView;
       pView = 0;
       G4cerr << "G4OpenGLStoredWin32::CreateViewer: error flagged by"
-	" negative view id in G4OpenGLStoredWin32Viewer creation."
-	"\n Destroying view and returning null pointer." << G4endl;
+                " negative view id in G4OpenGLStoredWin32Viewer creation."
+                "\n Destroying view and returning null pointer."
+             << G4endl;
     }
   }
-  else {
+  else
+  {
     G4cerr << "G4OpenGLStoredWin32::CreateViewer: null pointer on"
-      " new G4OpenGLStoredWin32Viewer." << G4endl;
+              " new G4OpenGLStoredWin32Viewer."
+           << G4endl;
   }
   return pView;
 }

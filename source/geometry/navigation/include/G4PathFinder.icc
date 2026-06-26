@@ -28,11 +28,14 @@
 // Author: John Apostolakis (CERN), 7 October 2005
 // --------------------------------------------------------------------
 
-inline G4VPhysicalVolume* G4PathFinder::GetLocatedVolume( G4int navId ) const
+inline G4VPhysicalVolume* G4PathFinder::GetLocatedVolume(G4int navId) const
 {
-  G4VPhysicalVolume* vol = nullptr;  
-  if( (navId < fMaxNav) && (navId >= 0) ) { vol= fLocatedVolume[navId]; }
-  return vol; 
+  G4VPhysicalVolume* vol = nullptr;
+  if ((navId < fMaxNav) && (navId >= 0))
+  {
+    vol = fLocatedVolume[navId];
+  }
+  return vol;
 }
 
 inline G4int G4PathFinder::SetVerboseLevel(G4int newLevel)
@@ -43,9 +46,9 @@ inline G4int G4PathFinder::SetVerboseLevel(G4int newLevel)
 }
 
 inline G4double G4PathFinder::GetMinimumStep() const
-{ 
-  return fMinStep; 
-} 
+{
+  return fMinStep;
+}
 
 inline unsigned int G4PathFinder::GetNumberGeometriesLimitingStep() const
 {
@@ -64,23 +67,24 @@ inline void G4PathFinder::MovePoint()
 }
 
 inline G4Navigator* G4PathFinder::GetNavigator(G4int n) const
-{ 
-  if( (n>fNoActiveNavigators) || (n<0) ) { n=0; }
+{
+  if ((n > fNoActiveNavigators) || (n < 0))
+  {
+    n = 0;
+  }
   return fpNavigator[n];
 }
 
-inline G4double
-G4PathFinder::ObtainSafety( G4int navId, G4ThreeVector& globalCenterPoint )
+inline G4double G4PathFinder::ObtainSafety(G4int navId, G4ThreeVector& globalCenterPoint)
 {
-  globalCenterPoint = fSafetyLocation; 
-  return fNewSafetyComputed[ navId ];
+  globalCenterPoint = fSafetyLocation;
+  return fNewSafetyComputed[navId];
 }
 
-inline G4double
-G4PathFinder::LastPreSafety( G4int navId, G4ThreeVector& globalCenterPoint, 
-                             G4double& minSafety )
+inline G4double G4PathFinder::LastPreSafety(G4int navId, G4ThreeVector& globalCenterPoint,
+                                            G4double& minSafety)
 {
   globalCenterPoint = fPreSafetyLocation;
-  minSafety =         fPreSafetyMinValue;
-  return  fPreSafetyValues[ navId ];
+  minSafety = fPreSafetyMinValue;
+  return fPreSafetyValues[navId];
 }

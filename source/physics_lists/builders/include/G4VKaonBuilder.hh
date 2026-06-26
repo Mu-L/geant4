@@ -36,22 +36,22 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4VKaonBuilder_h
-#define G4VKaonBuilder_h
+#ifndef G4VKAONBUILDER_HH
+#define G4VKAONBUILDER_HH
 
-#include "G4PhysicsBuilderInterface.hh"
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
+#include "G4PhysicsBuilderInterface.hh"
 
 class G4VKaonBuilder : public G4PhysicsBuilderInterface
 {
-public:
-  G4VKaonBuilder() = default;
-  virtual ~G4VKaonBuilder() {} 
-  virtual void Build(G4HadronElasticProcess * aP) = 0;
-  virtual void Build(G4HadronInelasticProcess * aP) = 0;
-  using G4PhysicsBuilderInterface::Build; //Prevent compiler warning
+  public:
+
+    G4VKaonBuilder() = default;
+    virtual ~G4VKaonBuilder() {}
+    virtual void Build(G4HadronElasticProcess* aP) = 0;
+    virtual void Build(G4HadronInelasticProcess* aP) = 0;
+    using G4PhysicsBuilderInterface::Build;  // Prevent compiler warning
 };
 
 #endif
-

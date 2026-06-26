@@ -27,15 +27,13 @@
 #include "G4Hdf5RNtupleManager.hh"
 
 //_____________________________________________________________________________
-inline
-toolx::hdf5::ntuple* G4Hdf5AnalysisReader::GetNtuple() const
+inline toolx::hdf5::ntuple* G4Hdf5AnalysisReader::GetNtuple() const
 {
   return fNtupleManager->GetNtuple();
 }
 
 //_____________________________________________________________________________
-inline
-toolx::hdf5::ntuple* G4Hdf5AnalysisReader::GetNtuple(G4int ntupleId) const
+inline toolx::hdf5::ntuple* G4Hdf5AnalysisReader::GetNtuple(G4int ntupleId) const
 {
   return fNtupleManager->GetNtuple(ntupleId);
 }

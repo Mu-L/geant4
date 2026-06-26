@@ -40,10 +40,10 @@
 //---------------------------------------------------------------
 
 #ifndef GFlashShowerModelMessenger_h
-#define GFlashShowerModelMessenger_h 1
+#define GFlashShowerModelMessenger_h
 
-#include "globals.hh"
 #include "G4UImessenger.hh"
+#include "globals.hh"
 
 class GFlashShowerModel;
 class G4UIdirectory;
@@ -55,6 +55,7 @@ class G4UIcmdWithADouble;
 class GFlashShowerModelMessenger : public G4UImessenger
 {
   public:
+
     GFlashShowerModelMessenger(GFlashShowerModel* myModel);
     ~GFlashShowerModelMessenger();
 
@@ -62,6 +63,7 @@ class GFlashShowerModelMessenger : public G4UImessenger
     G4String GetCurrentValue(G4UIcommand* command);
 
   private:
+
     GFlashShowerModel* myModel;
     G4UIdirectory* myParaDir;
     G4UIcmdWithAnInteger* FlagCmd;

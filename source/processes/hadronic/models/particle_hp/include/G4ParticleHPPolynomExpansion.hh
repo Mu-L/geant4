@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPPolynomExpansion_h
-#define G4ParticleHPPolynomExpansion_h 1
+#ifndef G4PARTICLEHPPOLYNOMEXPANSION_HH
+#define G4PARTICLEHPPOLYNOMEXPANSION_HH
 
 #include "G4ios.hh"
 #include "globals.hh"
@@ -52,7 +52,8 @@ class G4ParticleHPPolynomExpansion
       theData >> nPoly;
       theCoeff = new G4double[nPoly];
       G4int i;
-      for (i = 0; i < nPoly; i++) {
+      for (i = 0; i < nPoly; i++)
+      {
         theData >> theCoeff[i];
       }
     }
@@ -63,7 +64,8 @@ class G4ParticleHPPolynomExpansion
       G4double result = 0;
       G4double base = anEnergy / CLHEP::eV;
       G4double running = 1;
-      for (i = 0; i < nPoly; i++) {
+      for (i = 0; i < nPoly; i++)
+      {
         result += theCoeff[i] * running;
         running *= base;
       }

@@ -34,8 +34,8 @@
 // 22 Oct 2012   A & V Ivanchenko Migration data structure to G4PhysicsVector
 // 1 June 2017   M Bandieramonte
 
-#ifndef G4LivermorePhotoElectricModel_h
-#define G4LivermorePhotoElectricModel_h 1
+#ifndef G4LIVERMOREPHOTOELECTRICMODEL_HH
+#define G4LIVERMOREPHOTOELECTRICMODEL_HH
 
 #include "G4ElementData.hh"
 #include "G4VEmModel.hh"
@@ -48,64 +48,64 @@ class G4PhysicsFreeVector;
 
 class G4LivermorePhotoElectricModel : public G4VEmModel
 {
-public:
-  explicit G4LivermorePhotoElectricModel(const G4String& nam = "LivermorePhElectric");
+  public:
 
-  ~G4LivermorePhotoElectricModel() override;
+    explicit G4LivermorePhotoElectricModel(const G4String& nam = "LivermorePhElectric");
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    ~G4LivermorePhotoElectricModel() override;
 
-  G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
-				 G4double energy, G4double cutEnergy = 0.0,
-				 G4double maxEnergy = DBL_MAX) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double energy,
-				      G4double Z, G4double A = 0, G4double cut = 0,
-                                      G4double emax = DBL_MAX) override;
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*, G4double energy,
+                                   G4double cutEnergy = 0.0, G4double maxEnergy = DBL_MAX) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*, const G4DynamicParticle*,
-			 G4double tmin, G4double maxEnergy) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double energy, G4double Z,
+                                        G4double A = 0, G4double cut = 0,
+                                        G4double emax = DBL_MAX) override;
 
-  [[maybe_unused]] inline void SetLimitNumberOfShells(G4int n) { nShellLimit = n; };
-  G4double GetBindingEnergy(G4int Z, G4int shell);
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  G4LivermorePhotoElectricModel& operator=
-  (const G4LivermorePhotoElectricModel& right) = delete;
-  G4LivermorePhotoElectricModel(const G4LivermorePhotoElectricModel&) = delete;
+    [[maybe_unused]] inline void SetLimitNumberOfShells(G4int n) { nShellLimit = n; };
+    G4double GetBindingEnergy(G4int Z, G4int shell);
 
-protected:
-  G4ParticleChangeForGamma* fParticleChange = nullptr;
+    G4LivermorePhotoElectricModel& operator=(const G4LivermorePhotoElectricModel& right) = delete;
+    G4LivermorePhotoElectricModel(const G4LivermorePhotoElectricModel&) = delete;
 
-private:
-  void ReadData(const G4int Z);
+  protected:
 
-  void FindDirectoryPath();
+    G4ParticleChangeForGamma* fParticleChange = nullptr;
 
-  void InitialiseOnFly(G4int Z);
+  private:
 
-  const G4ParticleDefinition* theGamma;
-  const G4ParticleDefinition* theElectron;
-  G4VAtomDeexcitation* fAtomDeexcitation{nullptr};
+    void ReadData(const G4int Z);
 
-  static constexpr G4int ZMAXPE{101}; // 101 because Z range is 1-100
-  static G4ElementData* fCrossSection;
-  static G4ElementData* fCrossSectionLE;
-  static std::vector<G4double>* fParamHigh[ZMAXPE];
-  static std::vector<G4double>* fParamLow[ZMAXPE];
-  static G4int fNShells[ZMAXPE];
-  static G4int fNShellsUsed[ZMAXPE];
-  static G4Material* fWater;
-  static G4double fWaterEnergyLimit;
-  static G4String fDataDirectory;
+    void FindDirectoryPath();
 
-  std::vector<G4double> fSandiaCof;
+    void InitialiseOnFly(G4int Z);
 
-  G4double fCurrSection{0.0};
-  G4int verboseLevel;
-  G4int nShellLimit{100};
-  G4bool fDeexcitationActive{false};
-  G4bool isInitializer{false};
+    const G4ParticleDefinition* theGamma;
+    const G4ParticleDefinition* theElectron;
+    G4VAtomDeexcitation* fAtomDeexcitation{nullptr};
+
+    static constexpr G4int ZMAXPE{101};  // 101 because Z range is 1-100
+    static G4ElementData* fCrossSection;
+    static G4ElementData* fCrossSectionLE;
+    static std::vector<G4double>* fParamHigh[ZMAXPE];
+    static std::vector<G4double>* fParamLow[ZMAXPE];
+    static G4int fNShells[ZMAXPE];
+    static G4int fNShellsUsed[ZMAXPE];
+    static G4Material* fWater;
+    static G4double fWaterEnergyLimit;
+    static G4String fDataDirectory;
+
+    std::vector<G4double> fSandiaCof;
+
+    G4double fCurrSection{0.0};
+    G4int verboseLevel;
+    G4int nShellLimit{100};
+    G4bool fDeexcitationActive{false};
+    G4bool isInitializer{false};
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

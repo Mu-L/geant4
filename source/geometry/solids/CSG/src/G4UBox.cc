@@ -28,14 +28,17 @@
 // 13.09.13 G.Cosmo, CERN
 // --------------------------------------------------------------------
 
+// Geant4/VecGeom headers must be included in order
+// clang-format off
 #include "G4Box.hh"
 #include "G4UBox.hh"
+// clang-format on
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include "G4AffineTransform.hh"
-#include "G4VPVParameterisation.hh"
-#include "G4BoundingEnvelope.hh"
+#  include "G4AffineTransform.hh"
+#  include "G4BoundingEnvelope.hh"
+#  include "G4VPVParameterisation.hh"
 
 using namespace CLHEP;
 
@@ -43,39 +46,34 @@ using namespace CLHEP;
 //
 // Constructor - check & set half widths
 
-
-G4UBox::G4UBox(const G4String& pName,
-                     G4double pX,
-                     G4double pY,
-                     G4double pZ)
+G4UBox::G4UBox(const G4String& pName, G4double pX, G4double pY, G4double pZ)
   : Base_t(pName, pX, pY, pZ)
-{
-}
+{}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Copy constructor
 
-G4UBox::G4UBox(const G4UBox& rhs)
-  : Base_t(rhs)
-{
-}
+G4UBox::G4UBox(const G4UBox& rhs) : Base_t(rhs) {}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Assignment operator
 
-G4UBox& G4UBox::operator = (const G4UBox& rhs) 
+G4UBox& G4UBox::operator=(const G4UBox& rhs)
 {
-   // Check assignment to self
-   //
-   if (this == &rhs)  { return *this; }
+  // Check assignment to self
+  //
+  if (this == &rhs)
+  {
+    return *this;
+  }
 
-   // Copy base class data
-   //
-   Base_t::operator=(rhs);
+  // Copy base class data
+  //
+  Base_t::operator=(rhs);
 
-   return *this;
+  return *this;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -116,11 +114,10 @@ void G4UBox::SetZHalfLength(G4double dz)
 // Dispatch to parameterisation for replication mechanism dimension
 // computation & modification.
 
-void G4UBox::ComputeDimensions(G4VPVParameterisation* p,
-                               const G4int n,
+void G4UBox::ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                                const G4VPhysicalVolume* pRep)
 {
-  p->ComputeDimensions(*(G4Box*)this,n,pRep);
+  p->ComputeDimensions(*(G4Box*)this, n, pRep);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -141,20 +138,17 @@ void G4UBox::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
   G4double dx = GetXHalfLength();
   G4double dy = GetYHalfLength();
   G4double dz = GetZHalfLength();
-  pMin.set(-dx,-dy,-dz);
-  pMax.set( dx, dy, dz);
+  pMin.set(-dx, -dy, -dz);
+  pMax.set(dx, dy, dz);
 
   // Check correctness of the bounding box
   //
   if (pMin.x() >= pMax.x() || pMin.y() >= pMax.y() || pMin.z() >= pMax.z())
   {
     std::ostringstream message;
-    message << "Bad bounding box (min >= max) for solid: "
-            << GetName() << " !"
-            << "\npMin = " << pMin
-            << "\npMax = " << pMax;
-    G4Exception("G4UBox::BoundingLimits()", "GeomMgt0001",
-                JustWarning, message);
+    message << "Bad bounding box (min >= max) for solid: " << GetName() << " !"
+            << "\npMin = " << pMin << "\npMax = " << pMax;
+    G4Exception("G4UBox::BoundingLimits()", "GeomMgt0001", JustWarning, message);
     StreamInfo(G4cout);
   }
 }
@@ -163,22 +157,19 @@ void G4UBox::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
 //
 // Calculate extent under transform and specified limit
 
-G4bool
-G4UBox::CalculateExtent(const EAxis pAxis,
-                        const G4VoxelLimits& pVoxelLimit,
-                        const G4AffineTransform& pTransform,
-                              G4double& pMin, G4double& pMax) const
+G4bool G4UBox::CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                               const G4AffineTransform& pTransform, G4double& pMin,
+                               G4double& pMax) const
 {
   G4ThreeVector bmin, bmax;
 
   // Get bounding box limits
-  BoundingLimits(bmin,bmax);
+  BoundingLimits(bmin, bmax);
 
   // Find extent
-  G4BoundingEnvelope bbox(bmin,bmax);
-  return bbox.CalculateExtent(pAxis,pVoxelLimit,pTransform,pMin,pMax);
+  G4BoundingEnvelope bbox(bmin, bmax);
+  return bbox.CalculateExtent(pAxis, pVoxelLimit, pTransform, pMin, pMax);
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -186,9 +177,7 @@ G4UBox::CalculateExtent(const EAxis pAxis,
 
 G4Polyhedron* G4UBox::CreatePolyhedron() const
 {
-  return new G4PolyhedronBox(GetXHalfLength(),
-                             GetYHalfLength(),
-                             GetZHalfLength());
+  return new G4PolyhedronBox(GetXHalfLength(), GetYHalfLength(), GetZHalfLength());
 }
 
 #endif  // G4GEOM_USE_USOLIDS

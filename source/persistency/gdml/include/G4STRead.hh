@@ -34,12 +34,12 @@
 // Author: Zoltan Torzsok, November 2007
 // --------------------------------------------------------------------
 #ifndef G4STREAD_HH
-#define G4STREAD_HH 1
-
-#include <vector>
-#include <map>
+#define G4STREAD_HH
 
 #include "G4ThreeVector.hh"
+
+#include <map>
+#include <vector>
 
 class G4Material;
 class G4Box;
@@ -50,8 +50,7 @@ class G4STRead
 {
   public:
 
-    G4LogicalVolume* Read(const G4String&, G4Material* mediumMaterial,
-                          G4Material* solidMaterial);
+    G4LogicalVolume* Read(const G4String&, G4Material* mediumMaterial, G4Material* solidMaterial);
 
   private:
 

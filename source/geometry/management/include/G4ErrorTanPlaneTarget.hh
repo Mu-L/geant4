@@ -34,14 +34,15 @@
 #ifndef G4ERRORTANPLANETARGET_HH
 #define G4ERRORTANPLANETARGET_HH
 
-#include "globals.hh"
-#include "G4ThreeVector.hh"
 #include "G4ErrorTarget.hh"
 #include "G4Plane3D.hh"
+#include "G4ThreeVector.hh"
+#include "globals.hh"
 
 /**
  * @brief G4ErrorTanPlaneTarget is a base class for G4ErrorTarget classes
  * for which a tangent plane is defined.
+ * @ingroup geometry_management
  */
 
 class G4ErrorTanPlaneTarget : public G4ErrorTarget
@@ -59,12 +60,12 @@ class G4ErrorTanPlaneTarget : public G4ErrorTarget
      *  @param[in] point The point of reference.
      *  @returns The tangent plane.
      */
-    virtual G4Plane3D GetTangentPlane( const G4ThreeVector& point ) const = 0;
+    virtual G4Plane3D GetTangentPlane(const G4ThreeVector& point) const = 0;
 
     /**
      * Dumps to standard output the surface parameters.
      */
-    void Dump( const G4String& msg ) const override = 0;
+    void Dump(const G4String& msg) const override = 0;
 };
 
 #endif

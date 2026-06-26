@@ -41,6 +41,7 @@
 /**
  * @brief G4ImportanceAlgorithm is a concrete implementation of a
  * G4VImportanceAlgorithm.
+ * @ingroup geometry_biasing
  */
 
 class G4ImportanceAlgorithm : public G4VImportanceAlgorithm
@@ -62,9 +63,7 @@ class G4ImportanceAlgorithm : public G4VImportanceAlgorithm
      *  @returns A struct containing the number of copies (including the
      *           mother track) to be produced and the weight of each track.
      */
-    G4Nsplit_Weight Calculate(G4double ipre, 
-                              G4double ipost, 
-                              G4double init_w) const override;
+    G4Nsplit_Weight Calculate(G4double ipre, G4double ipost, G4double init_w) const override;
 
   private:
 

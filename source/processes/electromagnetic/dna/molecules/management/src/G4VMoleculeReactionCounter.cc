@@ -31,9 +31,9 @@
 
 G4VMoleculeReactionCounter::G4VMoleculeReactionCounter() : G4VMoleculeCounterInternalBase() {}
 
-G4VMoleculeReactionCounter::G4VMoleculeReactionCounter(const G4String& name, MoleculeReactionCounterType type)
+G4VMoleculeReactionCounter::G4VMoleculeReactionCounter(const G4String& name,
+                                                       MoleculeReactionCounterType type)
   : G4VMoleculeCounterInternalBase(name), fType(type)
 {}
-
 
 //------------------------------------------------------------------------------

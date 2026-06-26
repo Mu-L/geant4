@@ -30,23 +30,26 @@
 //
 
 #include "G4DNAMultipleIonisationManager.hh"
-#include "G4FindDataDir.hh"
+
+#include "G4DNAChemistryManager.hh"
+#include "G4EmParameters.hh"
+#include "G4H2O.hh"
+#include "G4Molecule.hh"
 #include "G4Scheduler.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4Molecule.hh"
 #include "G4VITTrackHolder.hh"
-#include "G4H2O.hh"
-#include "G4DNAChemistryManager.hh"
-
 //------------------------------------------------------------------------------
 void G4DNAMultipleIonisationManager::CreateMultipleIonisedWaterMolecule(
-  MultipleIonisedModification mod, G4int* shell_level,
-  const G4Track* incoming_track)
+  MultipleIonisedModification mod, G4int* shell_level, const G4Track* incoming_track)
 {
-  if (!G4DNAChemistryManager::IsActivated()) { return; }
+  if (!G4DNAChemistryManager::IsActivated())
+  {
+    return;
+  }
 
   G4int num_shells{0};
-  switch (mod) {
+  switch (mod)
+  {
     case eDoubleIonisedMolecule:
       num_shells = 2;
       break;
@@ -56,12 +59,13 @@ void G4DNAMultipleIonisationManager::CreateMultipleIonisedWaterMolecule(
     case eQuadrupleIonisedMolecule:
       num_shells = 4;
       break;
-    default: // never happen
+    default:  // never happen
       return;
   }
 
   auto* H2O = new G4Molecule(G4H2O::Definition());
-  for (G4int i = 0; i < num_shells; i++) {
+  for (G4int i = 0; i < num_shells; i++)
+  {
     H2O->IonizeMolecule(4 - shell_level[i]);
   }
 
@@ -75,11 +79,12 @@ void G4DNAMultipleIonisationManager::CreateMultipleIonisedWaterMolecule(
 }
 
 //------------------------------------------------------------------------------
-G4bool G4DNAMultipleIonisationManager::CheckShellEnergy(
-    MultipleIonisedModification mod, G4double* shell_energy)
+G4bool G4DNAMultipleIonisationManager::CheckShellEnergy(const MultipleIonisedModification mod,
+                                                        const G4double* shell_energy)
 {
   G4int num_shells{0};
-  switch (mod) {
+  switch (mod)
+  {
     case eDoubleIonisedMolecule:
       num_shells = 2;
       break;
@@ -89,13 +94,15 @@ G4bool G4DNAMultipleIonisationManager::CheckShellEnergy(
     case eQuadrupleIonisedMolecule:
       num_shells = 4;
       break;
-    default: // never happen
+    default:  // never happen
       break;
   }
 
   G4bool stop_process{false};
-  for (G4int i = 0; i < num_shells; i++) {
-    if (shell_energy[i] < 0.0) {
+  for (G4int i = 0; i < num_shells; i++)
+  {
+    if (shell_energy[i] < 0.0)
+    {
       stop_process = true;
       break;
     }
@@ -105,71 +112,107 @@ G4bool G4DNAMultipleIonisationManager::CheckShellEnergy(
 }
 
 //------------------------------------------------------------------------------
-void G4DNAMultipleIonisationManager::LoadAlphaParam(
-  const G4String& filepath, G4double Z, G4double A)
+void G4DNAMultipleIonisationManager::LoadAlphaParam(const G4String& filepath, G4double Z,
+                                                    G4double A)
 {
-  const char* path = G4FindDataDir("G4LEDATA");
-  if (path == nullptr) {
-    G4Exception("G4DNAMultipleIonisationManager::LoadAlphaParam","em0006",
-                FatalException,"G4LEDATA environment variable not set.");
+  // Resolve data directory
+  const G4String& dataDir = G4EmParameters::Instance()->GetDirLEDATA();
+
+  const G4String fullpath = dataDir + "/" + filepath;
+
+  std::ifstream fin(fullpath);
+  if (!fin.is_open())
+  {
+    G4Exception("G4DNAMultipleIonisationManager::LoadAlphaParam", "em0007", FatalException,
+                ("Cannot open file: " + fullpath).c_str());
+    return;
   }
 
-  std::stringstream fullpath;
-  fullpath << path << "/" << filepath;
+  // Parse energy/alpha pairs
+  const G4double scaleFactor = Z * A * MeV;
+  G4double e = 0., a = 0.;
+  G4String line;
 
-  std::fstream fin(fullpath.str());
+  while (std::getline(fin, line))
+  {
+    if (line.empty() || line[0] == '#') continue;  // skip blank/comment lines
 
-  G4double e, a;
-  std::string line = "";
-  while (getline(fin, line)) {
-    std::stringstream ss;
-    ss << line;
-    ss >> e >> a;
-    Eion_.push_back(e * Z * A * MeV);
+    std::istringstream iss(line);
+    if (!(iss >> e >> a))
+    {
+      G4Exception("G4DNAMultipleIonisationManager::LoadAlphaParam", "em0008", JustWarning,
+                  ("Skipping malformed line: " + line).c_str());
+      continue;
+    }
+
+    Eion_.push_back(e * scaleFactor);
     alpha_.push_back(a);
   }
 
-  num_node_ = (G4int)Eion_.size();
-  fin.close();
+  num_node_ = static_cast<G4int>(Eion_.size());
 }
 
 //------------------------------------------------------------------------------
-G4double G4DNAMultipleIonisationManager::GetAlphaParam(G4double energy)
+G4double G4DNAMultipleIonisationManager::GetAlphaParam(const G4double energy) const
 {
   auto find_lower_bound = [this](G4double e) {
+    if (Eion_.empty())
+    {
+      G4Exception("G4DNAMultipleIonisationManager::GetAlphaParam", "em0007", FatalException,
+                  "Eion_.empty()");
+    }
     auto low = 0;
     auto upp = num_node_ - 1;
-    if (e < Eion_[0]) { return low; }
-    while (low <= upp) {
+    if (e < Eion_[0])
+    {
+      return low;
+    }
+    while (low <= upp)
+    {
       const auto mid = static_cast<int>((low + upp) * 0.5);
-      if (e < Eion_[mid]) { upp = mid - 1; }
-      else { low = mid + 1; }
-      if (upp < 0) { upp = 0; }
+      if (e < Eion_[mid])
+      {
+        upp = mid - 1;
+      }
+      else
+      {
+        low = mid + 1;
+      }
+      if (upp < 0)
+      {
+        upp = 0;
+      }
     }
     return upp;
   };
 
   auto interp_log_log = [this](G4int bin1, G4double e) {
-    if (e < Eion_[0]) { return alpha_[0]; }
+    if (e < Eion_[0])
+    {
+      return alpha_[0];
+    }
     const auto num_bin = num_node_ - 1;
     const auto bin2 = bin1 + 1;
     G4double value{0.0};
-    if (bin2 <= num_bin) {
-      auto log10_e  = std::log10(e);
+    if (bin2 <= num_bin)
+    {
+      auto log10_e = std::log10(e);
       auto log10_e1 = Eion_[bin1];
       auto log10_e2 = Eion_[bin2];
       auto log10_a1 = alpha_[bin1];
       auto log10_a2 = alpha_[bin2];
-      if (log10_a1 != 0.0 && log10_a2 != 0.0) {
+      if (log10_a1 != 0.0 && log10_a2 != 0.0)
+      {
         log10_e1 = std::log10(log10_e1);
         log10_e2 = std::log10(log10_e2);
         log10_a1 = std::log10(log10_a1);
         log10_a2 = std::log10(log10_a2);
-        value = log10_a1 + (log10_a2 - log10_a1)
-                  * (log10_e - log10_e1) / (log10_e2 - log10_e1);
+        value = log10_a1 + (log10_a2 - log10_a1) * (log10_e - log10_e1) / (log10_e2 - log10_e1);
         value = std::pow(10.0, value);
       }
-    } else {
+    }
+    else
+    {
       value = alpha_[num_bin];
     }
     return value;

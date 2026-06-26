@@ -33,13 +33,13 @@
 
 #include "G4VGraphicsSystem.hh"
 
-class G4OpenGLQt: public G4VGraphicsSystem {
-public:
-  G4OpenGLQt (const G4String& name,
-              const G4String& nickname,
-              const G4String& description,
-              Functionality f);
-  G4bool IsUISessionCompatible () const;
+class G4OpenGLQt : public G4VGraphicsSystem
+{
+  public:
+
+    G4OpenGLQt(const G4String& name, const G4String& nickname, const G4String& description,
+               Functionality f);
+    G4bool IsUISessionCompatible() const;
 };
 
 #endif

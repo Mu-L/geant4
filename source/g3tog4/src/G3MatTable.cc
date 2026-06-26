@@ -42,12 +42,13 @@ G3MatTable::~G3MatTable()
 
 G4Material* G3MatTable::get(G4int id) const
 {
-  for (size_t i=0; i< fMatVector->size(); i++) {
+  for (size_t i = 0; i < fMatVector->size(); i++)
+  {
     G3MatTableEntry* mte = (*fMatVector)[i];
     if (id == mte->GetID()) return mte->GetMaterial();
   }
   return 0;
-}    
+}
 
 void G3MatTable::put(G4int id, G4Material* material)
 {
@@ -58,18 +59,21 @@ void G3MatTable::put(G4int id, G4Material* material)
 void G3MatTable::Clear()
 {
   G3MatTableEntry* a;
-  while (fMatVector->size()>0) {
+  while (fMatVector->size() > 0)
+  {
     a = fMatVector->back();
     fMatVector->pop_back();
-    for (G3MaterialVector::iterator i=fMatVector->begin();
-                                    i!=fMatVector->end();){
-      if (*i==a) {
-	i = fMatVector->erase(i);
+    for (G3MaterialVector::iterator i = fMatVector->begin(); i != fMatVector->end();)
+    {
+      if (*i == a)
+      {
+        i = fMatVector->erase(i);
       }
-      else {
-	++i;
+      else
+      {
+        ++i;
       }
-    } 
-    if ( a )  delete a;    
-  } 
+    }
+    if (a) delete a;
+  }
 }

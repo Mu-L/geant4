@@ -26,13 +26,15 @@
 // --------------------------------------------------------------
 //	GEANT 4 class implementatBoson file
 //
-#ifndef G4BosonConstructor_h
-#define G4BosonConstructor_h 1
+#ifndef G4BOSONCONSTRUCTOR_HH
+#define G4BOSONCONSTRUCTOR_HH
 
 class G4BosonConstructor
 {
     // This class is a utility class for constructBoson
+
   public:
+
     static void ConstructParticle();
 };
 

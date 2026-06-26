@@ -26,40 +26,39 @@
 //
 // Author: Hoang TRAN : 21/2/2019
 
-#ifndef G4DiffusionControlledReactionModel_hh
-#define G4DiffusionControlledReactionModel_hh 1
+#ifndef G4DIFFUSIONCONTROLLEDREACTIONMODEL_HH
+#define G4DIFFUSIONCONTROLLEDREACTIONMODEL_HH
 
 #include "G4VDNAReactionModel.hh"
+
 #include <vector>
 class G4DNAMolecularReactionData;
 class G4DiffusionControlledReactionModel : public G4VDNAReactionModel
 {
- public:
-  G4DiffusionControlledReactionModel();
-  ~G4DiffusionControlledReactionModel() override;
+  public:
 
-  G4DiffusionControlledReactionModel(
-    const G4DiffusionControlledReactionModel&) = delete;
-  G4DiffusionControlledReactionModel& operator =(
-    const G4DiffusionControlledReactionModel&) = delete;
+    G4DiffusionControlledReactionModel();
+    ~G4DiffusionControlledReactionModel() override;
 
-  void Initialise(const G4MolecularConfiguration*, const G4Track&) override;
-  void InitialiseToPrint(const G4MolecularConfiguration*) override;
-  G4double GetReactionRadius(const G4MolecularConfiguration*,
-                             const G4MolecularConfiguration*) override;
-  G4double GetReactionRadius(const G4int&) override;
+    G4DiffusionControlledReactionModel(const G4DiffusionControlledReactionModel&) = delete;
+    G4DiffusionControlledReactionModel&
+    operator=(const G4DiffusionControlledReactionModel&) = delete;
 
-  G4bool FindReaction(const G4Track&, const G4Track&,
-                      G4double /*reactionRadius*/,
-                      G4double& /*separationDistance*/,
-                      G4bool /*alongStepInteraction*/) override
-  {
-    return true;
-  }
-  G4double GetTimeToEncounter(const G4Track& trackA, const G4Track& trackB);
+    void Initialise(const G4MolecularConfiguration*, const G4Track&) override;
+    void InitialiseToPrint(const G4MolecularConfiguration*) override;
+    G4double GetReactionRadius(const G4MolecularConfiguration*,
+                               const G4MolecularConfiguration*) override;
+    G4double GetReactionRadius(const G4int&) override;
 
- private:
-  const std::vector<const G4DNAMolecularReactionData*>* fpReactionData =
-    nullptr;
+    G4bool FindReaction(const G4Track&, const G4Track&, G4double /*reactionRadius*/,
+                        G4double& /*separationDistance*/, G4bool /*alongStepInteraction*/) override
+    {
+      return true;
+    }
+    G4double GetTimeToEncounter(const G4Track& trackA, const G4Track& trackB);
+
+  private:
+
+    const std::vector<const G4DNAMolecularReactionData*>* fpReactionData = nullptr;
 };
 #endif

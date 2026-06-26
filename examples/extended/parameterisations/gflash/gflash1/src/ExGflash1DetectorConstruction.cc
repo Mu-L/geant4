@@ -70,10 +70,7 @@ ExGflash1DetectorConstruction::ExGflash1DetectorConstruction()
 
 ExGflash1DetectorConstruction::~ExGflash1DetectorConstruction()
 {
-  delete fFastShowerModel;
-  delete fParameterisation;
-  delete fParticleBounds;
-  delete fHitMaker;
+  //  delete fFastShowerModel;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -128,8 +125,8 @@ G4VPhysicalVolume* ExGflash1DetectorConstruction::Construct()
   G4double crystalWidth = 3 * cm;
   G4double crystalLength = 24 * cm;
 
-  calo_xside = (crystalWidth * nbOfCrystals) + 1 * cm;
-  calo_yside = (crystalWidth * nbOfCrystals) + 1 * cm;
+  calo_xside = (crystalWidth * nbOfCrystals);
+  calo_yside = (crystalWidth * nbOfCrystals);
   calo_zside = crystalLength;
 
   auto calo_box = new G4Box("CMS calorimeter",  // its name
@@ -156,15 +153,17 @@ G4VPhysicalVolume* ExGflash1DetectorConstruction::Construct()
                                     pbWO4,  // its material
                                     "CrystalLog");  // its name
 
-  for (G4int i = 0; i < nbOfCrystals; i++) {
-    for (G4int j = 0; j < nbOfCrystals; j++) {
+  for (G4int i = 0; i < nbOfCrystals; i++)
+  {
+    for (G4int j = 0; j < nbOfCrystals; j++)
+    {
       G4int n = i * 10 + j;
       G4ThreeVector crystalPos((i * crystalWidth) - 135, (j * crystalWidth) - 135, 0);
       fCrystalPhys[n] = new G4PVPlacement(nullptr,  // no rotation
                                           crystalPos,  // translation
                                           fCrystalLog,
                                           "crystal",  // its name
-                                          caloLog, false, i);
+                                          caloLog, false, n);
     }
   }
   G4cout << "There are " << nbOfCrystals << " crystals per row in the calorimeter, so in total "
@@ -180,7 +179,6 @@ G4VPhysicalVolume* ExGflash1DetectorConstruction::Construct()
 
   // define the fParameterisation region
   fRegion = new G4Region("crystals");
-  caloLog->SetRegion(fRegion);
   fRegion->AddRootLogicalVolume(caloLog);
 
   return experimentalHallPhys;
@@ -192,7 +190,7 @@ void ExGflash1DetectorConstruction::ConstructSDandField()
 {
   // -- sensitive detectors:
   G4SDManager* SDman = G4SDManager::GetSDMpointer();
-  auto CaloSD = new ExGflash1SensitiveDetector("Calorimeter", this);
+  auto CaloSD = new ExGflash1SensitiveDetector("Calorimeter");
   SDman->AddNewDetector(CaloSD);
   fCrystalLog->SetSensitiveDetector(CaloSD);
 
@@ -204,15 +202,15 @@ void ExGflash1DetectorConstruction::ConstructSDandField()
   // * Initializing shower modell
   // ***********************************************
   G4cout << "Creating shower parameterization models" << G4endl;
-  fFastShowerModel = new GFlashShowerModel("fFastShowerModel", fRegion);
-  fParameterisation = new GFlashHomoShowerParameterisation(pbWO4);
-  fFastShowerModel->SetParameterisation(*fParameterisation);
+  auto fFastShowerModel = new GFlashShowerModel("fFastShowerModel", fRegion);
+  auto fParameterisation = new GFlashHomoShowerParameterisation(pbWO4);
+  fFastShowerModel->SetParameterisation(fParameterisation);
   // Energy Cuts to kill particles:
-  fParticleBounds = new GFlashParticleBounds();
-  fFastShowerModel->SetParticleBounds(*fParticleBounds);
+  auto fParticleBounds = new GFlashParticleBounds();
+  fFastShowerModel->SetParticleBounds(fParticleBounds);
   // Makes the EnergieSpots
-  fHitMaker = new GFlashHitMaker();
-  fFastShowerModel->SetHitMaker(*fHitMaker);
+  auto fHitMaker = new GFlashHitMaker();
+  fFastShowerModel->SetHitMaker(fHitMaker);
   G4cout << "end shower parameterization." << G4endl;
   // **********************************************
 }

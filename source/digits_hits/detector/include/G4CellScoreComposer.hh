@@ -35,8 +35,8 @@
 //
 // Author: Michael Dressel, CERN
 // --------------------------------------------------------------------
-#ifndef G4CellScoreComposer_hh
-#define G4CellScoreComposer_hh 1
+#ifndef G4CELLSCORECOMPOSER_HH
+#define G4CELLSCORECOMPOSER_HH
 
 #include "G4CellScoreValues.hh"
 
@@ -44,27 +44,29 @@ class G4Step;
 
 class G4CellScoreComposer
 {
- public:
-  // get values for estimators based on track length
-  void EstimatorCalculation(const G4Step& step);
+  public:
 
-  // Called when a track enters the cell
-  void TrackEnters();
+    // get values for estimators based on track length
+    void EstimatorCalculation(const G4Step& step);
 
-  // Called if the cell population is increased
-  void NewTrackPopedUp();
+    // Called when a track enters the cell
+    void TrackEnters();
 
-  // Called for every collision in the cell, taking weight of the colliding particle
-  void SetCollisionWeight(G4double weight);
+    // Called if the cell population is increased
+    void NewTrackPopedUp();
 
-  // Set the importance of the cell
-  void SetImportnace(G4double importance);
+    // Called for every collision in the cell, taking weight of the colliding particle
+    void SetCollisionWeight(G4double weight);
 
-  // Return scores stored in G4CellScoreValues
-  const G4CellScoreValues& GetStandardCellScoreValues() const;
+    // Set the importance of the cell
+    void SetImportnace(G4double importance);
 
- private:
-  mutable G4CellScoreValues fSCScoreValues;
+    // Return scores stored in G4CellScoreValues
+    const G4CellScoreValues& GetStandardCellScoreValues() const;
+
+  private:
+
+    mutable G4CellScoreValues fSCScoreValues;
 };
 
 std::ostream& operator<<(std::ostream& out, const G4CellScoreComposer& ps);

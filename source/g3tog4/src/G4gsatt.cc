@@ -26,25 +26,26 @@
 //
 
 #include "globals.hh"
-#include "G3toG4.hh"
+
 #include "G3VolTable.hh"
+#include "G3toG4.hh"
 
-void PG4gsatt(G4String *tokens)
+void PG4gsatt(G4String* tokens)
 {
-    // fill the parameter containers
-    G3fillParams(tokens,PTgsatt);
+  // fill the parameter containers
+  G3fillParams(tokens, PTgsatt);
 
-    // interpret the parameters
-    G4String name = Spar[0];
-    G4String attr = Spar[1];
-    G4int ival = Ipar[0];
+  // interpret the parameters
+  G4String name = Spar[0];
+  G4String attr = Spar[1];
+  G4int ival = Ipar[0];
 
-    G4gsatt(name, attr, ival);
+  G4gsatt(name, attr, ival);
 }
 
 void G4gsatt(G4String, G4String, G4int)
 {
-    // get logical volume pointer
-    // G4LogicalVolume *lvol = G3Vol.GetVTE(name)->GetLV();
-    G4cerr << "G4gsatt not implemented" << G4endl;
+  // get logical volume pointer
+  // G4LogicalVolume *lvol = G3Vol.GetVTE(name)->GetLV();
+  G4cerr << "G4gsatt not implemented" << G4endl;
 }

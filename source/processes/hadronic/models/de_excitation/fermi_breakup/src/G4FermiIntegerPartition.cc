@@ -85,7 +85,8 @@ G4integerPartition::Iterator::Iterator(std::uint32_t number, std::uint32_t terms
   : partition_(termsCount, 0)
 {
   // No possible partitions
-  if (number < base * termsCount || termsCount == 0 || number == 0) {
+  if (number < base * termsCount || termsCount == 0 || number == 0)
+  {
     return;
   }
 
@@ -99,7 +100,8 @@ void G4integerPartition::Iterator::NextPartition()
   for (auto partitionLast = std::next(partition_.begin()); partitionLast != partition_.end();
        ++partitionLast)
   {
-    if (partition_.front() >= *partitionLast + 2) {
+    if (partition_.front() >= *partitionLast + 2)
+    {
       --partition_.front();
       ++(*partitionLast);
 

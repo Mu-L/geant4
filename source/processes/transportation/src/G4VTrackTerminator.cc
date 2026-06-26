@@ -33,6 +33,7 @@
 // ----------------------------------------------------------------------
 
 #include "G4VTrackTerminator.hh"
+
 #include "G4GeometryTolerance.hh"
 
 G4VTrackTerminator::G4VTrackTerminator()
@@ -40,5 +41,4 @@ G4VTrackTerminator::G4VTrackTerminator()
   kCarTolerance = G4GeometryTolerance::GetInstance()->GetSurfaceTolerance();
 }
 
-G4VTrackTerminator::~G4VTrackTerminator()
-{}
+G4VTrackTerminator::~G4VTrackTerminator() {}

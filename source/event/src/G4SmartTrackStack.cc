@@ -29,14 +29,15 @@
 // --------------------------------------------------------------------
 
 #include "G4SmartTrackStack.hh"
-#include "G4VTrajectory.hh"
+
 #include "G4Track.hh"
+#include "G4VTrajectory.hh"
 
 void G4SmartTrackStack::dumpStatistics()
 {
   // Print to stderr so that we can split stats output from normal
   // output of Geant4 which is typically being printed to stdout
-  for (G4int i=0; i<nTurn; ++i)
+  for (G4int i = 0; i < nTurn; ++i)
   {
     G4cerr << stacks[i]->GetNTrack() << " ";
     G4cerr << stacks[i]->getTotalEnergy() << " ";
@@ -44,9 +45,9 @@ void G4SmartTrackStack::dumpStatistics()
   G4cerr << G4endl;
 }
 
-G4SmartTrackStack::G4SmartTrackStack() 
+G4SmartTrackStack::G4SmartTrackStack()
 {
-  for(G4int i=0; i<nTurn; ++i)
+  for (G4int i = 0; i < nTurn; ++i)
   {
     stacks[i] = new G4TrackStack(5000);
     energies[i] = 0.;
@@ -85,8 +86,8 @@ G4StackedTrack G4SmartTrackStack::PopFromStack()
         --nTracks;
         break;
       }
-      
-      fTurn = (fTurn+1) % nTurn;
+
+      fTurn = (fTurn + 1) % nTurn;
     }
   }
 
@@ -95,12 +96,14 @@ G4StackedTrack G4SmartTrackStack::PopFromStack()
 
 enum
 {
-  electronCode = 11, positronCode = -11, gammaCode = 22, neutronCode = 2112
+  electronCode = 11,
+  positronCode = -11,
+  gammaCode = 22,
+  neutronCode = 2112
 };
 
-void G4SmartTrackStack::PushToStack( const G4StackedTrack& aStackedTrack )
+void G4SmartTrackStack::PushToStack(const G4StackedTrack& aStackedTrack)
 {
-
   G4int iDest = 0;
   if (aStackedTrack.GetTrack()->GetParentID() != 0)
   {
@@ -117,22 +120,21 @@ void G4SmartTrackStack::PushToStack( const G4StackedTrack& aStackedTrack )
   else
   {
     // We have a primary track, which should go first.
-    fTurn = 0; // reseting the turn
+    fTurn = 0;  // reseting the turn
   }
   stacks[iDest]->PushToStack(aStackedTrack);
   energies[iDest] += aStackedTrack.GetTrack()->GetDynamicParticle()->GetTotalEnergy();
   ++nTracks;
-  
+
   G4long dy1 = stacks[iDest]->GetNTrack() - stacks[iDest]->GetSafetyValue1();
   G4long dy2 = stacks[fTurn]->GetNTrack() - stacks[fTurn]->GetSafetyValue2();
-  
-  if (dy1 > 0 || dy1 > dy2 ||
-      (iDest == 2 &&
-       stacks[iDest]->GetNTrack() < 50 && energies[iDest] < energies[fTurn]))
+
+  if (dy1 > 0 || dy1 > dy2
+      || (iDest == 2 && stacks[iDest]->GetNTrack() < 50 && energies[iDest] < energies[fTurn]))
   {
     fTurn = iDest;
   }
-  
+
   if (nTracks > maxNTracks) maxNTracks = nTracks;
 }
 

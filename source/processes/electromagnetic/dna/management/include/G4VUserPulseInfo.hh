@@ -33,6 +33,7 @@
 class G4VUserPulseInfo : public G4VUserTrackInformation
 {
   public:
+
     G4VUserPulseInfo();
     ~G4VUserPulseInfo() override = default;
     virtual G4double GetDelayedTime() const { return 0.; };

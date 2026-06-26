@@ -30,8 +30,8 @@
 #include "G4VisCommandsMultithreading.hh"
 
 #include "G4Threading.hh"
-#include "G4UIcmdWithAnInteger.hh"
 #include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithAnInteger.hh"
 #include "G4VisManager.hh"
 
 // For future use with additional G4ios logging streams
@@ -47,11 +47,12 @@ G4VisCommandMultithreadingActionOnEventQueueFull::G4VisCommandMultithreadingActi
   fpCommand->SetGuidance("wait: event processing waits for vis manager to catch up.");
   fpCommand->SetGuidance("discard: events are discarded for drawing.");
   fpCommand->SetCandidates("wait discard");
-  fpCommand->SetParameterName ("wait", omitable = true);
-  fpCommand->SetDefaultValue ("wait");
+  fpCommand->SetParameterName("wait", omitable = true);
+  fpCommand->SetDefaultValue("wait");
 }
 
-G4VisCommandMultithreadingActionOnEventQueueFull::~G4VisCommandMultithreadingActionOnEventQueueFull()
+G4VisCommandMultithreadingActionOnEventQueueFull::
+  ~G4VisCommandMultithreadingActionOnEventQueueFull()
 {
   delete fpCommand;
 }
@@ -66,25 +67,34 @@ void G4VisCommandMultithreadingActionOnEventQueueFull::SetNewValue(G4UIcommand*,
   G4VisManager::Verbosity verbosity = fpVisManager->GetVerbosity();
 
   // Only relevant in a MT application
-  if(!G4Threading::IsMultithreadedApplication()) {
-    if (verbosity >= G4VisManager::warnings) {
-      G4warn << "command /vis/multithreading/actionOnEventQueueFull ignored in sequential mode" << G4endl;
+  if (!G4Threading::IsMultithreadedApplication())
+  {
+    if (verbosity >= G4VisManager::warnings)
+    {
+      G4warn << "command /vis/multithreading/actionOnEventQueueFull ignored in sequential mode"
+             << G4endl;
     }
     return;
   }
 
-  if (newValue == "wait") {
+  if (newValue == "wait")
+  {
     fpVisManager->SetWaitOnEventQueueFull(true);
-  } else {
+  }
+  else
+  {
     fpVisManager->SetWaitOnEventQueueFull(false);
   }
 
-  if (verbosity >= G4VisManager::confirmations) {
-    G4cout <<
-    "When event queue for drawing is full,";
-    if (fpVisManager->GetWaitOnEventQueueFull()) {
+  if (verbosity >= G4VisManager::confirmations)
+  {
+    G4cout << "When event queue for drawing is full,";
+    if (fpVisManager->GetWaitOnEventQueueFull())
+    {
       G4cout << " event processing will wait";
-    } else {
+    }
+    else
+    {
       G4cout << " events will be discarded for drawing";
     }
     G4cout << G4endl;
@@ -97,18 +107,16 @@ G4VisCommandMultithreadingMaxEventQueueSize::G4VisCommandMultithreadingMaxEventQ
 {
   G4bool omitable;
   fpCommand = new G4UIcmdWithAnInteger("/vis/multithreading/maxEventQueueSize", this);
-  fpCommand->SetGuidance
-  ("Defines maximum event queue size. N <=0 means \"unlimited\".");
-  fpCommand->SetGuidance
-  ("If adding an event to the visualisation event queue would cause the"
-   " queue size to exceed this value:");
-  fpCommand->SetGuidance
-  (" if actionOnEventQueueFull==wait the worker threads are paused for a short"
-   " time to give the visualisation manager a chance to catch up.");
-  fpCommand->SetGuidance
-  (" if actionOnEventQueueFull==discard the event is discarded for drawing.");
-  fpCommand->SetParameterName ("maxSize", omitable = true);
-  fpCommand->SetDefaultValue (100);
+  fpCommand->SetGuidance("Defines maximum event queue size. N <=0 means \"unlimited\".");
+  fpCommand->SetGuidance(
+    "If adding an event to the visualisation event queue would cause the"
+    " queue size to exceed this value:");
+  fpCommand->SetGuidance(
+    " if actionOnEventQueueFull==wait the worker threads are paused for a short"
+    " time to give the visualisation manager a chance to catch up.");
+  fpCommand->SetGuidance(" if actionOnEventQueueFull==discard the event is discarded for drawing.");
+  fpCommand->SetParameterName("maxSize", omitable = true);
+  fpCommand->SetDefaultValue(100);
 }
 
 G4VisCommandMultithreadingMaxEventQueueSize::~G4VisCommandMultithreadingMaxEventQueueSize()
@@ -126,9 +134,12 @@ void G4VisCommandMultithreadingMaxEventQueueSize::SetNewValue(G4UIcommand*, G4St
   G4VisManager::Verbosity verbosity = fpVisManager->GetVerbosity();
 
   // Only relevant in a MT application
-  if(!G4Threading::IsMultithreadedApplication()) {
-    if (verbosity >= G4VisManager::warnings) {
-      G4warn << "command /vis/multithreading/maxEventQueueSize ignored in sequential mode" << G4endl;
+  if (!G4Threading::IsMultithreadedApplication())
+  {
+    if (verbosity >= G4VisManager::warnings)
+    {
+      G4warn << "command /vis/multithreading/maxEventQueueSize ignored in sequential mode"
+             << G4endl;
     }
     return;
   }
@@ -136,10 +147,9 @@ void G4VisCommandMultithreadingMaxEventQueueSize::SetNewValue(G4UIcommand*, G4St
   G4int maxEventQueueSize = fpCommand->GetNewIntValue(newValue);
   fpVisManager->SetMaxEventQueueSize(maxEventQueueSize);
 
-  if (verbosity >= G4VisManager::confirmations) {
-    G4cout <<
-    "Maximum event queue size has been set to "
-	   << fpVisManager->GetMaxEventQueueSize()
-	   << G4endl;
+  if (verbosity >= G4VisManager::confirmations)
+  {
+    G4cout << "Maximum event queue size has been set to " << fpVisManager->GetMaxEventQueueSize()
+           << G4endl;
   }
 }

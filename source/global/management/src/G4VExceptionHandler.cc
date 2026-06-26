@@ -29,6 +29,7 @@
 // --------------------------------------------------------------------
 
 #include "G4VExceptionHandler.hh"
+
 #include "G4StateManager.hh"
 
 G4VExceptionHandler::G4VExceptionHandler()
@@ -42,10 +43,9 @@ G4VExceptionHandler::G4VExceptionHandler(const G4VExceptionHandler& right)
   *this = right;
 }
 
-G4VExceptionHandler& G4VExceptionHandler::operator=(
-  const G4VExceptionHandler& right)
+G4VExceptionHandler& G4VExceptionHandler::operator=(const G4VExceptionHandler& right)
 {
-  if(&right == this)
+  if (&right == this)
   {
     return *this;
   }

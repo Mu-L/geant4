@@ -38,44 +38,38 @@
 #ifndef G4CHARGEEXCHANGEPHYSICS_HH
 #define G4CHARGEEXCHANGEPHYSICS_HH
 
-#include "globals.hh"
 #include "G4VPhysicsConstructor.hh"
+#include "globals.hh"
 
 class G4ChargeExchangeMessenger;
 
 class G4ChargeExchangePhysics : public G4VPhysicsConstructor
 {
-public: 
-  explicit G4ChargeExchangePhysics(G4int ver = 1);
-  ~G4ChargeExchangePhysics() override;
+  public:
 
-  void ConstructParticle() override;
- 
-  void ConstructProcess() override;
+    explicit G4ChargeExchangePhysics(G4int ver = 1);
+    ~G4ChargeExchangePhysics() override;
 
-  void SetLowEnergyLimit(G4double val) { fLowEnergyLimit = val; }
+    void ConstructParticle() override;
 
-  void SetPionCrossSectionFactor(G4double val) { fXSFactorPi = val; }
+    void ConstructProcess() override;
 
-  void SetKaonCrossSectionFactor(G4double val) { fXSFactorK = val; }
-  
-  G4ChargeExchangePhysics& operator=
-  (const G4ChargeExchangePhysics& right) = delete;
-  G4ChargeExchangePhysics(const G4ChargeExchangePhysics&) = delete;
+    void SetLowEnergyLimit(G4double val) { fLowEnergyLimit = val; }
 
-private:
+    void SetPionCrossSectionFactor(G4double val) { fXSFactorPi = val; }
 
-  G4ChargeExchangeMessenger* theMessenger;
-  
-  G4double fLowEnergyLimit;
-  G4double fXSFactorPi{1.0};
-  G4double fXSFactorK{1.0};
+    void SetKaonCrossSectionFactor(G4double val) { fXSFactorK = val; }
+
+    G4ChargeExchangePhysics& operator=(const G4ChargeExchangePhysics& right) = delete;
+    G4ChargeExchangePhysics(const G4ChargeExchangePhysics&) = delete;
+
+  private:
+
+    G4ChargeExchangeMessenger* theMessenger;
+
+    G4double fLowEnergyLimit;
+    G4double fXSFactorPi{1.0};
+    G4double fXSFactorK{1.0};
 };
 
 #endif
-
-
-
-
-
-

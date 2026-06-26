@@ -42,13 +42,16 @@
 #ifndef G4ISTORE_HH
 #define G4ISTORE_HH
 
-#include "G4VIStore.hh"
 #include "G4GeometryCellImportance.hh"
 #include "G4TransportationManager.hh"
+#include "G4VIStore.hh"
 
 /**
  * @brief G4IStore is a concrete implementation of an "importance store", as
- * derived from G4VIStore. It is a singleton, using G4GeometryCellImportance
+ * derived from G4VIStore.
+ * @ingroup geometry_biasing
+ *
+ * It is a singleton, using G4GeometryCellImportance
  * as the container to store the "cells" together with the importance values.
  * Giving a cell, the importance 0 is allowed as a flagging that no biasing
  * should happen between this cell and its neighbors.
@@ -114,24 +117,21 @@ class G4IStore : public G4VIStore
     /**
      * Methods to add a "cell" together with an importance value to the store.
      */
-    void AddImportanceGeometryCell(G4double importance,
-                             const G4GeometryCell &gCell);
-    void AddImportanceGeometryCell(G4double importance,
-                             const G4VPhysicalVolume &,
-                             G4int aRepNum = 0);
+    void AddImportanceGeometryCell(G4double importance, const G4GeometryCell& gCell);
+    void AddImportanceGeometryCell(G4double importance, const G4VPhysicalVolume&,
+                                   G4int aRepNum = 0);
 
     /**
      * Methods to change an importance value of a "cell".
      */
     void ChangeImportance(G4double importance, const G4GeometryCell& gCell);
-    void ChangeImportance(G4double importance, const G4VPhysicalVolume&,
-                          G4int aRepNum = 0);
+    void ChangeImportance(G4double importance, const G4VPhysicalVolume&, G4int aRepNum = 0);
 
     /**
      * Returns the importance weight, given the volume and replica number.
      */
     G4double GetImportance(const G4VPhysicalVolume& vol, G4int rpNum = 0) const;
-  
+
   private:
 
     /**
@@ -157,7 +157,7 @@ class G4IStore : public G4VIStore
     void Error(const G4String& m) const;
 
   private:
- 
+
     const G4VPhysicalVolume* fWorldVolume = nullptr;
     G4GeometryCellImportance fGeometryCelli;
 

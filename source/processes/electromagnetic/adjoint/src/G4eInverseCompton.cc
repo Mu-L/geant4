@@ -37,9 +37,8 @@
 #include "G4VEmAdjointModel.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
-G4eInverseCompton::G4eInverseCompton(
-  G4bool whichScatCase, const G4String& process_name,
-  G4AdjointComptonModel* aComptonAdjointModel)
+G4eInverseCompton::G4eInverseCompton(G4bool whichScatCase, const G4String& process_name,
+                                     G4AdjointComptonModel* aComptonAdjointModel)
   : G4VAdjointReverseReaction(process_name, whichScatCase)
 {
   fAdjointModel = aComptonAdjointModel;

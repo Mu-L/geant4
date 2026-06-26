@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  26th July 1999.
 //
 // Class Description:
@@ -40,53 +40,43 @@
 #define G4LOGICALVOLUMEMODEL_HH
 
 #include "G4PhysicalVolumeModel.hh"
-
-#include "globals.hh"
 #include "G4Transform3D.hh"
+#include "globals.hh"
 
 class G4LogicalVolume;
 class G4ModelingParameters;
 
-class G4LogicalVolumeModel: public G4PhysicalVolumeModel {
+class G4LogicalVolumeModel : public G4PhysicalVolumeModel
+{
+  public:  // With description
 
-public: // With description
+    G4LogicalVolumeModel(G4LogicalVolume*, G4int soughtDepth = 1, G4bool booleans = true,
+                         G4bool voxels = true, G4bool readout = true, G4bool checkOverlaps = true,
+                         const G4Transform3D& modelTransformation = G4Transform3D(),
+                         const G4ModelingParameters* = 0);
 
-  G4LogicalVolumeModel
-  (G4LogicalVolume*,
-   G4int soughtDepth = 1,
-   G4bool booleans = true,
-   G4bool voxels = true,
-   G4bool readout = true,
-   G4bool checkOverlaps = true,
-   const G4Transform3D& modelTransformation = G4Transform3D(),
-   const G4ModelingParameters* = 0);
+    virtual ~G4LogicalVolumeModel();
 
-  virtual ~G4LogicalVolumeModel ();
+    void DescribeYourselfTo(G4VGraphicsScene&);
 
-  void DescribeYourselfTo (G4VGraphicsScene&);
+    G4bool Validate(G4bool) { return true; }
 
-  G4bool Validate (G4bool) {return true;}
+  protected:
 
-protected:
+    // This called from G4PhysicalVolumeModel::DescribeAndDescend by the
+    // virtual function mechanism.
+    void DescribeSolid(const G4Transform3D& theAT, G4VSolid* pSol,
+                       const G4VisAttributes* pVisAttribs, G4VGraphicsScene& sceneHandler);
 
-  // This called from G4PhysicalVolumeModel::DescribeAndDescend by the
-  // virtual function mechanism.
-  void DescribeSolid
-  (const G4Transform3D& theAT,
-   G4VSolid* pSol,
-   const G4VisAttributes* pVisAttribs,
-   G4VGraphicsScene& sceneHandler);
+    /////////////////////////////////////////////////////////
+    // Data members...
 
-  /////////////////////////////////////////////////////////
-  // Data members...
-
-  G4LogicalVolume* fpLV;
-  G4bool fBooleans;  // Flag for drawing boolean components.
-  G4bool fVoxels;    // Flag for drawing voxels.
-  G4bool fReadout;   // Flag for drawing readout geometry.
-  G4bool fCheckOverlaps;   // Flag for checking overlaps.
-  G4bool fOverlapsPrinted; // To avoid multiple printing.
-
+    G4LogicalVolume* fpLV;
+    G4bool fBooleans;  // Flag for drawing boolean components.
+    G4bool fVoxels;  // Flag for drawing voxels.
+    G4bool fReadout;  // Flag for drawing readout geometry.
+    G4bool fCheckOverlaps;  // Flag for checking overlaps.
+    G4bool fOverlapsPrinted;  // To avoid multiple printing.
 };
 
 #endif

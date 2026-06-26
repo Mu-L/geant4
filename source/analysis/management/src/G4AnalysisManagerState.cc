@@ -37,9 +37,7 @@ using namespace G4Analysis;
 
 //_____________________________________________________________________________
 G4AnalysisManagerState::G4AnalysisManagerState(G4String type, G4bool isMaster)
-  : fType(std::move(type)),
-    fIsMaster(isMaster),
-    fThreadId(G4Threading::G4GetThreadId())
+  : fType(std::move(type)), fIsMaster(isMaster), fThreadId(G4Threading::G4GetThreadId())
 {}
 
 //
@@ -49,9 +47,10 @@ G4AnalysisManagerState::G4AnalysisManagerState(G4String type, G4bool isMaster)
 //_____________________________________________________________________________
 void G4AnalysisManagerState::SetVerboseLevel(G4int verboseLevel)
 {
-  if ( verboseLevel == fVerboseLevel ) return;
+  if (verboseLevel == fVerboseLevel) return;
 
-  if ( verboseLevel < 0 ) {
+  if (verboseLevel < 0)
+  {
     Warn("Cannot set value < 0", fkClass, "SetVerboseLevel");
     return;
   }
@@ -64,12 +63,11 @@ void G4AnalysisManagerState::SetVerboseLevel(G4int verboseLevel)
 //
 
 //_____________________________________________________________________________
-void G4AnalysisManagerState::Message(
-  [[maybe_unused]] G4int level,
-  [[maybe_unused]] const G4String& action,
-  [[maybe_unused]] const G4String& objectType,
-  [[maybe_unused]] const G4String& objectName,
-  [[maybe_unused]] G4bool success ) const
+void G4AnalysisManagerState::Message([[maybe_unused]] G4int level,
+                                     [[maybe_unused]] const G4String& action,
+                                     [[maybe_unused]] const G4String& objectType,
+                                     [[maybe_unused]] const G4String& objectName,
+                                     [[maybe_unused]] G4bool success) const
 {
 #ifdef G4VERBOSE
   // Skip message if of higher level than that is set

@@ -80,7 +80,8 @@ G4DynamicParticle::G4DynamicParticle(const G4ParticleDefinition* aParticleDefini
     theDynamicalSpin(aParticleDefinition->GetPDGSpin()),
     theDynamicalMagneticMoment(aParticleDefinition->GetPDGMagneticMoment())
 {
-  if (std::abs(theDynamicalMass - dynamicalMass) > EnergyMomentumRelationAllowance) {
+  if (std::abs(theDynamicalMass - dynamicalMass) > EnergyMomentumRelationAllowance)
+  {
     if (dynamicalMass > EnergyMomentumRelationAllowance)
       theDynamicalMass = dynamicalMass;
     else
@@ -123,25 +124,31 @@ G4DynamicParticle::G4DynamicParticle(const G4ParticleDefinition* aParticleDefini
 {
   // total energy and 3-dim momentum are given
   G4double pModule2 = aParticleMomentum.mag2();
-  if (pModule2 > 0.0) {
+  if (pModule2 > 0.0)
+  {
     G4double mass2 = totalEnergy * totalEnergy - pModule2;
     G4double PDGmass2 = (aParticleDefinition->GetPDGMass()) * (aParticleDefinition->GetPDGMass());
     SetMomentumDirection(aParticleMomentum.unit());
-    if (mass2 < EnergyMRA2) {
+    if (mass2 < EnergyMRA2)
+    {
       theDynamicalMass = 0.;
       SetKineticEnergy(totalEnergy);
     }
-    else {
-      if (std::abs(PDGmass2 - mass2) > EnergyMRA2) {
+    else
+    {
+      if (std::abs(PDGmass2 - mass2) > EnergyMRA2)
+      {
         theDynamicalMass = std::sqrt(mass2);
         SetKineticEnergy(totalEnergy - theDynamicalMass);
       }
-      else {
+      else
+      {
         SetKineticEnergy(totalEnergy - theDynamicalMass);
       }
     }
   }
-  else {
+  else
+  {
     SetMomentumDirection(1.0, 0.0, 0.0);
     SetKineticEnergy(0.0);
   }
@@ -165,7 +172,8 @@ G4DynamicParticle::G4DynamicParticle(const G4DynamicParticle& right)
     verboseLevel(right.verboseLevel),
     thePDGcode(right.thePDGcode)
 {
-  if (right.theElectronOccupancy != nullptr) {
+  if (right.theElectronOccupancy != nullptr)
+  {
     theElectronOccupancy = new G4ElectronOccupancy(*right.theElectronOccupancy);
   }
 }
@@ -207,7 +215,8 @@ G4DynamicParticle::~G4DynamicParticle()
 
 G4DynamicParticle& G4DynamicParticle::operator=(const G4DynamicParticle& right)
 {
-  if (this != &right) {
+  if (this != &right)
+  {
     theMomentumDirection = right.theMomentumDirection;
     theParticleDefinition = right.theParticleDefinition;
     thePolarization = right.thePolarization;
@@ -220,10 +229,12 @@ G4DynamicParticle& G4DynamicParticle::operator=(const G4DynamicParticle& right)
     theDynamicalMagneticMoment = right.theDynamicalMagneticMoment;
 
     delete theElectronOccupancy;
-    if (right.theElectronOccupancy != nullptr) {
+    if (right.theElectronOccupancy != nullptr)
+    {
       theElectronOccupancy = new G4ElectronOccupancy(*right.theElectronOccupancy);
     }
-    else {
+    else
+    {
       theElectronOccupancy = nullptr;
     }
 
@@ -243,7 +254,8 @@ G4DynamicParticle& G4DynamicParticle::operator=(const G4DynamicParticle& right)
 
 G4DynamicParticle& G4DynamicParticle::operator=(G4DynamicParticle&& from)
 {
-  if (this != &from) {
+  if (this != &from)
+  {
     theMomentumDirection = from.theMomentumDirection;
     thePolarization = from.thePolarization;
     theKineticEnergy = from.theKineticEnergy;
@@ -279,9 +291,11 @@ G4DynamicParticle& G4DynamicParticle::operator=(G4DynamicParticle&& from)
 void G4DynamicParticle::SetDefinition(const G4ParticleDefinition* aParticleDefinition)
 {
   // remove preassigned decay
-  if (thePreAssignedDecayProducts != nullptr) {
+  if (thePreAssignedDecayProducts != nullptr)
+  {
 #ifdef G4VERBOSE
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       G4cout << " G4DynamicParticle::SetDefinition()::"
              << "!!! Pre-assigned decay products is attached !!!! " << G4endl;
       G4cout << "!!! New Definition is " << aParticleDefinition->GetParticleName() << " !!! "
@@ -302,7 +316,8 @@ void G4DynamicParticle::SetDefinition(const G4ParticleDefinition* aParticleDefin
   theDynamicalMagneticMoment = theParticleDefinition->GetPDGMagneticMoment();
 
   // Set electron orbits
-  if (theElectronOccupancy != nullptr) {
+  if (theElectronOccupancy != nullptr)
+  {
     delete theElectronOccupancy;
     theElectronOccupancy = nullptr;
   }
@@ -320,11 +335,13 @@ G4bool G4DynamicParticle::operator!=(const G4DynamicParticle& right) const
 
 void G4DynamicParticle::AllocateElectronOccupancy()
 {
-  if (G4IonTable::IsIon(theParticleDefinition)) {
+  if (G4IonTable::IsIon(theParticleDefinition))
+  {
     // Only ions can have ElectronOccupancy
     theElectronOccupancy = new G4ElectronOccupancy();
   }
-  else {
+  else
+  {
     theElectronOccupancy = nullptr;
   }
 }
@@ -332,12 +349,14 @@ void G4DynamicParticle::AllocateElectronOccupancy()
 void G4DynamicParticle::SetMomentum(const G4ThreeVector& momentum)
 {
   G4double pModule2 = momentum.mag2();
-  if (pModule2 > 0.0) {
+  if (pModule2 > 0.0)
+  {
     const G4double mass = theDynamicalMass;
     SetMomentumDirection(momentum.unit());
     SetKineticEnergy(pModule2 / (std::sqrt(pModule2 + mass * mass) + mass));
   }
-  else {
+  else
+  {
     SetMomentumDirection(1.0, 0.0, 0.0);
     SetKineticEnergy(0.0);
   }
@@ -346,21 +365,25 @@ void G4DynamicParticle::SetMomentum(const G4ThreeVector& momentum)
 void G4DynamicParticle::Set4Momentum(const G4LorentzVector& momentum)
 {
   G4double pModule2 = momentum.vect().mag2();
-  if (pModule2 > 0.0) {
+  if (pModule2 > 0.0)
+  {
     SetMomentumDirection(momentum.vect().unit());
     const G4double totalenergy = momentum.t();
     const G4double mass2 = totalenergy * totalenergy - pModule2;
     const G4double PDGmass2 =
       (theParticleDefinition->GetPDGMass()) * (theParticleDefinition->GetPDGMass());
-    if (mass2 < EnergyMRA2) {
+    if (mass2 < EnergyMRA2)
+    {
       theDynamicalMass = 0.;
     }
-    else if (std::abs(PDGmass2 - mass2) > EnergyMRA2) {
+    else if (std::abs(PDGmass2 - mass2) > EnergyMRA2)
+    {
       theDynamicalMass = std::sqrt(mass2);
     }
     SetKineticEnergy(totalenergy - theDynamicalMass);
   }
-  else {
+  else
+  {
     SetMomentumDirection(1.0, 0.0, 0.0);
     SetKineticEnergy(0.0);
   }
@@ -369,10 +392,12 @@ void G4DynamicParticle::Set4Momentum(const G4LorentzVector& momentum)
 #ifdef G4VERBOSE
 void G4DynamicParticle::DumpInfo(G4int mode) const
 {
-  if (theParticleDefinition == nullptr) {
+  if (theParticleDefinition == nullptr)
+  {
     G4cout << " G4DynamicParticle::DumpInfo() - Particle type not defined !!! " << G4endl;
   }
-  else {
+  else
+  {
     G4cout << " Particle type - " << theParticleDefinition->GetParticleName() << G4endl
            << "   mass:        " << GetMass() / CLHEP::GeV << "[GeV]" << G4endl
            << "   charge:      " << GetCharge() / CLHEP::eplus << "[e]" << G4endl
@@ -387,8 +412,10 @@ void G4DynamicParticle::DumpInfo(G4int mode) const
            << " MagneticMoment  [MeV/T]: " << GetMagneticMoment() / CLHEP::MeV * CLHEP::tesla
            << G4endl << "   ProperTime     = " << GetProperTime() / CLHEP::ns << "[ns]" << G4endl;
 
-    if (mode > 0) {
-      if (theElectronOccupancy != nullptr) {
+    if (mode > 0)
+    {
+      if (theElectronOccupancy != nullptr)
+      {
         theElectronOccupancy->DumpInfo();
       }
     }

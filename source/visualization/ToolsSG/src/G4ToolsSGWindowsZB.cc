@@ -25,31 +25,32 @@
 //
 // Guy Barrand 18th April 2023
 
-
 #include "G4ToolsSGWindowsZB.hh"
 
 #include "G4ToolsSGViewer.hh"
 
 #include <toolx/Windows/zb_viewer>
 
-G4ToolsSGWindowsZB::G4ToolsSGWindowsZB():
-parent
-("TOOLSSG_WINDOWS_ZB",
- "TSG_WINDOWS_ZB",
- "TOOLSSG_WINDOWS_ZB is a graphics driver based on the g4tools tools/sg scene graph logic where\n\
+G4ToolsSGWindowsZB::G4ToolsSGWindowsZB()
+  : parent(
+      "TOOLSSG_WINDOWS_ZB", "TSG_WINDOWS_ZB",
+      "TOOLSSG_WINDOWS_ZB is a graphics driver based on the g4tools tools/sg scene graph logic where\n\
  the rendering is done with the g4tools zbuffer and the windowing is done with Microsoft Windows.",
- parent::threeDInteractive)
-,fSGSession(nullptr)
+      parent::threeDInteractive),
+    fSGSession(nullptr)
 {}
 
-G4ToolsSGWindowsZB::~G4ToolsSGWindowsZB() {
+G4ToolsSGWindowsZB::~G4ToolsSGWindowsZB()
+{
   delete fSGSession;
 }
 
-void G4ToolsSGWindowsZB::Initialise() {
-  if(fSGSession) return; //done.
+void G4ToolsSGWindowsZB::Initialise()
+{
+  if (fSGSession) return;  // done.
   fSGSession = new toolx::Windows::session(G4cout);
-  if(!fSGSession->is_valid()) {
+  if (!fSGSession->is_valid())
+  {
     G4cerr << "G4ToolsSGWindowsZB::Initialise : session::is_valid() failed." << G4endl;
     delete fSGSession;
     fSGSession = nullptr;
@@ -57,31 +58,34 @@ void G4ToolsSGWindowsZB::Initialise() {
   }
 }
 
-G4VSceneHandler* G4ToolsSGWindowsZB::CreateSceneHandler(const G4String& a_name) {
+G4VSceneHandler* G4ToolsSGWindowsZB::CreateSceneHandler(const G4String& a_name)
+{
   G4VSceneHandler* pScene = new G4ToolsSGSceneHandler(*this, a_name);
   return pScene;
 }
 
-G4VViewer* G4ToolsSGWindowsZB::CreateViewer(G4VSceneHandler& a_scene,const G4String& a_name) {
-  if(!fSGSession) Initialise();
-  if(!fSGSession) return nullptr;
-  G4VViewer* pView =
-    new G4ToolsSGViewer<toolx::Windows::session,toolx::Windows::zb_viewer>(*fSGSession,(G4ToolsSGSceneHandler&)a_scene,a_name);
-  if (pView) {
-    if (pView->GetViewId() < 0) {
-      G4cerr <<
-      "G4ToolsSGWindowsZB::CreateViewer: ERROR flagged by negative"
-      " view id in G4ToolsSGViewer creation."
-      "\n Destroying view and returning null pointer."
-      << G4endl;
+G4VViewer* G4ToolsSGWindowsZB::CreateViewer(G4VSceneHandler& a_scene, const G4String& a_name)
+{
+  if (!fSGSession) Initialise();
+  if (!fSGSession) return nullptr;
+  G4VViewer* pView = new G4ToolsSGViewer<toolx::Windows::session, toolx::Windows::zb_viewer>(
+    *fSGSession, (G4ToolsSGSceneHandler&)a_scene, a_name);
+  if (pView)
+  {
+    if (pView->GetViewId() < 0)
+    {
+      G4cerr << "G4ToolsSGWindowsZB::CreateViewer: ERROR flagged by negative"
+                " view id in G4ToolsSGViewer creation."
+                "\n Destroying view and returning null pointer."
+             << G4endl;
       delete pView;
       pView = nullptr;
     }
   }
-  if (!pView) {
-    G4cerr <<
-    "G4ToolsSGWindowsZB::CreateViewer: ERROR: null pointer on new G4ToolsSGViewer."
-    << G4endl;
+  if (!pView)
+  {
+    G4cerr << "G4ToolsSGWindowsZB::CreateViewer: ERROR: null pointer on new G4ToolsSGViewer."
+           << G4endl;
   }
   return pView;
 }

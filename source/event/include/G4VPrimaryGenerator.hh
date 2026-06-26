@@ -34,8 +34,8 @@
 
 // Author: Makoto Asai (SLAC)
 // --------------------------------------------------------------------
-#ifndef G4VPrimaryGenerator_hh
-#define G4VPrimaryGenerator_hh 1
+#ifndef G4VPRIMARYGENERATOR_HH
+#define G4VPRIMARYGENERATOR_HH
 
 #include "G4ThreeVector.hh"
 
@@ -47,33 +47,30 @@ class G4VPrimaryGenerator
 
     G4VPrimaryGenerator() = default;
     virtual ~G4VPrimaryGenerator() = default;
-      // Constructor and destructor
+    // Constructor and destructor
 
     static G4bool CheckVertexInsideWorld(const G4ThreeVector& pos);
-      // Static service method for checking a point is included
-      // in the (current) world
+    // Static service method for checking a point is included
+    // in the (current) world
 
     virtual void GeneratePrimaryVertex(G4Event* evt) = 0;
-      // Pure virtual method which a concrete class derived from this
-      // base class must implement
+    // Pure virtual method which a concrete class derived from this
+    // base class must implement
 
     inline G4ThreeVector GetParticlePosition() { return particle_position; }
     inline G4double GetParticleTime() { return particle_time; }
 
     void SetParticlePosition(G4ThreeVector aPosition);
-      // Sets the initial position of the primary vertex.
-      // The position must obviously be located inside the world volume.
-      // A location on the surface of the world volume is also discouraged,
-      // to avoid setting the momentum direction pointing out of the world
-      // and therefore causing undefined behaviour and crash
+    // Sets the initial position of the primary vertex.
+    // The position must obviously be located inside the world volume.
+    // A location on the surface of the world volume is also discouraged,
+    // to avoid setting the momentum direction pointing out of the world
+    // and therefore causing undefined behaviour and crash
 
-    inline void SetParticleTime(G4double aTime)
-      { particle_time = aTime; }
+    inline void SetParticleTime(G4double aTime) { particle_time = aTime; }
 
-    inline void CheckInside(G4bool val=true)
-      { ifCheckInside = val; }
-    inline G4bool IfCheckInside()
-      { return ifCheckInside; }
+    inline void CheckInside(G4bool val = true) { ifCheckInside = val; }
+    inline G4bool IfCheckInside() { return ifCheckInside; }
 
   protected:
 

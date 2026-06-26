@@ -31,13 +31,13 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrParameterMgr_hh
-#define G4tgrParameterMgr_hh 1
+#ifndef G4TGRPARAMETERMGR_HH
+#define G4TGRPARAMETERMGR_HH
+
+#include "globals.hh"
 
 #include <map>
 #include <vector>
-
-#include "globals.hh"
 
 using G4mapss = std::map<G4String, G4String>;
 
@@ -46,22 +46,20 @@ class G4tgrParameterMgr
   public:
 
     static G4tgrParameterMgr* GetInstance();
-      // Get the only instance
+    // Get the only instance
 
-    void AddParameterNumber(const std::vector<G4String>& wl,
-                            G4bool mustBeNew = false);
-    void AddParameterString(const std::vector<G4String>& wl,
-                            G4bool mustBeNew = false);
-      // Add to theParameterList
+    void AddParameterNumber(const std::vector<G4String>& wl, G4bool mustBeNew = false);
+    void AddParameterString(const std::vector<G4String>& wl, G4bool mustBeNew = false);
+    // Add to theParameterList
 
     void CheckIfNewParameter(const std::vector<G4String>& wl, G4bool mustBeNew);
-      // Check if it is new and that there are 3 words
+    // Check if it is new and that there are 3 words
 
     G4String FindParameter(const G4String& name, G4bool exists = true);
-      // Find a Parameter with name 'name'.
+    // Find a Parameter with name 'name'.
 
     void DumpList();
-      // Dump list of parameters
+    // Dump list of parameters
 
   private:
 
@@ -71,8 +69,8 @@ class G4tgrParameterMgr
   private:
 
     G4mapss theParameterList;
-      // Map of Parameter's: G4String is the Parameter name,
-      // double is its value
+    // Map of Parameter's: G4String is the Parameter name,
+    // double is its value
 
     static G4ThreadLocal G4tgrParameterMgr* theInstance;
 };

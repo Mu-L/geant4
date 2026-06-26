@@ -29,14 +29,15 @@
 // Revision:
 // - June 2017, K.L. Genser - added baseion, lifetimes and access functions
 // --------------------------------------------------------------------
-#ifndef G4MuonicAtom_hh
-#define G4MuonicAtom_hh 1
+#ifndef G4MUONICATOM_HH
+#define G4MUONICATOM_HH
 
 #include "G4Ions.hh"
 
 class G4MuonicAtom : public G4Ions
 {
   public:
+
     // clang-format off
     G4MuonicAtom(
                const G4String&     aName,        G4double            mass,
@@ -67,9 +68,11 @@ class G4MuonicAtom : public G4Ions
     void SetNCLifeTime(G4double lt);
 
   protected:
+
     G4MuonicAtom() {}
 
   private:
+
     G4Ions const* baseIon = nullptr;
     G4double fDIOLifeTime = 0.0;
     G4double fNCLifeTime = 0.0;

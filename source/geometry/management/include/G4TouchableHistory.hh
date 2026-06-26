@@ -22,7 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // G4TouchableHistory
 //
 // Class description:
@@ -36,7 +36,7 @@
 // Utilisation:
 // -----------
 // A touchable is a geometrical volume which has a unique placement in a
-// detector description. It must respond to the two following "requests": 
+// detector description. It must respond to the two following "requests":
 //
 //   1) GetTranslation() and GetRotation() that return the components of the
 //      volume's transformation.
@@ -54,7 +54,7 @@
 // parent volumes available. We add a "pointer" to a level and a member
 // function to move the level in this stack. Then calling the above member
 // functions for another level, the information for that level can be
-// retrieved.  
+// retrieved.
 //
 // The top of the history tree is, by convention, the world volume.
 //
@@ -63,15 +63,15 @@
 //   6) GetReplicaNumber()/GetCopyNumber(), GetVolume(), GetTranslation() and
 //      GetRotation() each can be called with a depth argument.
 //      They return the value of the respective level of the touchable.
-// 
+//
 //   7) MoveUpHistory(num) moves the current pointer inside the touchable
-//      to point "num" levels up the history tree. Thus, e.g., calling 
-//      it with num=1 will cause the internal pointer to move to the mother 
+//      to point "num" levels up the history tree. Thus, e.g., calling
+//      it with num=1 will cause the internal pointer to move to the mother
 //      of the current volume.
 //      NOTE: this method MODIFIES the touchable.
-//   
+//
 // An update method, with different arguments is available, so that the
-// information in a touchable can be updated: 
+// information in a touchable can be updated:
 //
 //   8) UpdateYourself() takes a physical volume pointer and can additionally
 //      take a NavigationHistory.
@@ -81,11 +81,11 @@
 #ifndef G4TOUCHABLEHISTORY_HH
 #define G4TOUCHABLEHISTORY_HH
 
-#include "G4NavigationHistory.hh"
 #include "G4Allocator.hh"
 #include "G4LogicalVolume.hh"
-#include "G4ThreeVector.hh"
+#include "G4NavigationHistory.hh"
 #include "G4RotationMatrix.hh"
+#include "G4ThreeVector.hh"
 
 #include "geomwdefs.hh"
 
@@ -107,7 +107,7 @@ class G4TouchableHistory
      * Default Constructor. It produces a touchable-history of 'zero-depth',
      * i.e. an "unphysical" and not very usable one; for initialisation only.
      */
-    G4TouchableHistory(); 
+    G4TouchableHistory();
 
     /**
      * Default Destructor.
@@ -119,29 +119,28 @@ class G4TouchableHistory
     /**
      * Copy constructor.
      */
-    G4TouchableHistory( const G4NavigationHistory& history );
+    G4TouchableHistory(const G4NavigationHistory& history);
 
     /**
      * Accessors.
      */
-    inline G4VPhysicalVolume* GetVolume( G4int depth = 0 ) const;
-    inline G4VSolid* GetSolid( G4int depth = 0 ) const;
-    const G4ThreeVector& GetTranslation( G4int depth = 0 ) const;
-    const G4RotationMatrix* GetRotation( G4int depth = 0 ) const;
+    inline G4VPhysicalVolume* GetVolume(G4int depth = 0) const;
+    inline G4VSolid* GetSolid(G4int depth = 0) const;
+    const G4ThreeVector& GetTranslation(G4int depth = 0) const;
+    const G4RotationMatrix* GetRotation(G4int depth = 0) const;
 
     /**
      * Accessors for touchables with history.
      */
-    inline G4int GetReplicaNumber( G4int depth = 0 ) const;
-    inline G4int GetCopyNumber( G4int depth = 0 ) const;
-    inline G4int GetHistoryDepth()  const;
-    G4int MoveUpHistory( G4int num_levels = 1 );
+    inline G4int GetReplicaNumber(G4int depth = 0) const;
+    inline G4int GetCopyNumber(G4int depth = 0) const;
+    inline G4int GetHistoryDepth() const;
+    G4int MoveUpHistory(G4int num_levels = 1);
 
     /**
      * Update method for touchables with history.
      */
-    void UpdateYourself( G4VPhysicalVolume* pPhysVol,
-                         const G4NavigationHistory* history = nullptr ); 
+    void UpdateYourself(G4VPhysicalVolume* pPhysVol, const G4NavigationHistory* history = nullptr);
 
     /**
      * Returns a pointer to the navigation history; used in
@@ -160,7 +159,7 @@ class G4TouchableHistory
     /**
      * Calculates and returns the history index, given a depth 'stackDepth'.
      */
-    inline G4int CalculateHistoryIndex( G4int stackDepth ) const;
+    inline G4int CalculateHistoryIndex(G4int stackDepth) const;
 
   private:
 

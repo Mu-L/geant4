@@ -30,6 +30,7 @@
 #define G4VTKINTERACTORSTYLE_HH
 
 #include "G4ios.hh"
+
 #include <vtkInteractionStyleModule.h>  // For export macro
 #include <vtkInteractorStyleMultiTouchCamera.h>
 #include <vtkObjectFactory.h>
@@ -38,10 +39,11 @@
 class G4VtkInteractorStyle : public vtkInteractorStyleMultiTouchCamera
 {
   public:
+
     static G4VtkInteractorStyle* New();
     vtkTypeMacro(G4VtkInteractorStyle, vtkInteractorStyleMultiTouchCamera)
 
-    void OnMouseMove() override
+      void OnMouseMove() override
     {
       vtkInteractorStyleMultiTouchCamera::OnMouseMove();
     }
@@ -51,7 +53,6 @@ class G4VtkInteractorStyle : public vtkInteractorStyleMultiTouchCamera
       // Forward events
       vtkInteractorStyleMultiTouchCamera::OnLeftButtonDown();
     }
-
 
     void OnLeftButtonUp() override
     {

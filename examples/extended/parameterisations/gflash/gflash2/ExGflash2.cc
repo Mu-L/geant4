@@ -31,7 +31,6 @@
 // G4 includes
 #include "G4RunManagerFactory.hh"
 #include "G4Timer.hh"
-#include "G4Types.hh"
 #include "G4UImanager.hh"
 #include "G4ios.hh"
 
@@ -66,7 +65,6 @@ int main(int argc, char** argv)
   G4cout << "+-------------------------------------------------------+" << G4endl;
 
   auto* runManager = G4RunManagerFactory::CreateRunManager();
-  runManager->SetNumberOfThreads(1);
 
   // UserInitialization classes (mandatory)
   G4cout << "# GFlash Example: Detector Construction" << G4endl;
@@ -102,9 +100,7 @@ int main(int argc, char** argv)
   visManager->Initialize();
 
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
-  UImanager->ApplyCommand("/run/verbose 0");
   runManager->Initialize();
-  UImanager->ApplyCommand("/Step/Verbose 0");
 
   if (ui)  // Define UI terminal for interactive mode
   {

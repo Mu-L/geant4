@@ -29,26 +29,17 @@
 //
 
 ///////////////////////
-//G4RTTrackingAction.cc
+// G4RTTrackingAction.cc
 ///////////////////////
 
-
 #include "G4RTTrackingAction.hh"
+
 #include "G4RayTrajectory.hh"
 #include "G4TrackingManager.hh"
 #include "G4ios.hh"
 
-
-void G4RTTrackingAction :: PreUserTrackingAction(const G4Track*)
+void G4RTTrackingAction ::PreUserTrackingAction(const G4Track*)
 {
-  G4RayTrajectory* aTrajectory=new G4RayTrajectory;
+  G4RayTrajectory* aTrajectory = new G4RayTrajectory;
   fpTrackingManager->SetTrajectory(aTrajectory);
-
 }
-
-
-
-
-
-
-

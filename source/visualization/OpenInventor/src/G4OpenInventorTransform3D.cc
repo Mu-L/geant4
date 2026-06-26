@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // jck 17 Dec 1996
 // G4OpenInventorTransform3D provides OpenGL style transformation matrix
 // from G4Transform3D.
@@ -36,32 +36,31 @@
 
 #include <Inventor/SbLinear.h>
 
-G4OpenInventorTransform3D::G4OpenInventorTransform3D (const G4Transform3D &t) 
-: G4Transform3D (t) {
-#define elem(i,j) ((float)t(i,j))
-  m[0]  = elem(0,0); //xx
-  m[1]  = elem(1,0); //yx
-  m[2]  = elem(2,0); //zx
-  m[3]  = 0;
-  m[4]  = elem(0,1); //xy
-  m[5]  = elem(1,1); //yy
-  m[6]  = elem(2,1); //zy
-  m[7]  = 0;
-  m[8]  = elem(0,2); //xz
-  m[9]  = elem(1,2); //yz
-  m[10] = elem(2,2); //zz
+G4OpenInventorTransform3D::G4OpenInventorTransform3D(const G4Transform3D& t) : G4Transform3D(t)
+{
+#define elem(i, j) ((float)t(i, j))
+  m[0] = elem(0, 0);  // xx
+  m[1] = elem(1, 0);  // yx
+  m[2] = elem(2, 0);  // zx
+  m[3] = 0;
+  m[4] = elem(0, 1);  // xy
+  m[5] = elem(1, 1);  // yy
+  m[6] = elem(2, 1);  // zy
+  m[7] = 0;
+  m[8] = elem(0, 2);  // xz
+  m[9] = elem(1, 2);  // yz
+  m[10] = elem(2, 2);  // zz
   m[11] = 0;
-  m[12] = elem(0,3); //dx
-  m[13] = elem(1,3); //dy
-  m[14] = elem(2,3); //dz
+  m[12] = elem(0, 3);  // dx
+  m[13] = elem(1, 3);  // dy
+  m[14] = elem(2, 3);  // dz
   m[15] = 1;
 #undef elem
 }
 
-SbMatrix* G4OpenInventorTransform3D::GetSbMatrix () const {
-  SbMatrix* tm = new SbMatrix(m[0],m[1],m[2],m[3],
-                              m[4],m[5],m[6],m[7],
-                              m[8],m[9],m[10],m[11],
-                              m[12],m[13],m[14],m[15]);
+SbMatrix* G4OpenInventorTransform3D::GetSbMatrix() const
+{
+  SbMatrix* tm = new SbMatrix(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9], m[10],
+                              m[11], m[12], m[13], m[14], m[15]);
   return tm;
 }

@@ -27,40 +27,38 @@
 // by V. Lara
 //
 // Modified:
-// J. M. Quesada (July 08) cleanup 
-// 20.08.2010 V.Ivanchenko added int Z and A and cleanup; added 
+// J. M. Quesada (July 08) cleanup
+// 20.08.2010 V.Ivanchenko added int Z and A and cleanup; added
 //                        G4ParticleDefinition to constructor,
 //                        moved constructor and destructor to source
 
-#ifndef G4PreCompoundDeuteron_h
-#define G4PreCompoundDeuteron_h 1
+#ifndef G4PRECOMPOUNDDEUTERON_HH
+#define G4PRECOMPOUNDDEUTERON_HH
 
 #include "G4PreCompoundIon.hh"
 
 class G4PreCompoundDeuteron : public G4PreCompoundIon
 {
-public:
+  public:
 
-  G4PreCompoundDeuteron();
+    G4PreCompoundDeuteron();
 
-  ~G4PreCompoundDeuteron() override = default;
+    ~G4PreCompoundDeuteron() override = default;
 
-  G4PreCompoundDeuteron(const G4PreCompoundDeuteron &right) = delete;
-  const G4PreCompoundDeuteron& 
-  operator= (const G4PreCompoundDeuteron &right) = delete;
-  G4bool operator==(const G4PreCompoundDeuteron &right) const = delete;
-  G4bool operator!=(const G4PreCompoundDeuteron &right) const = delete;
+    G4PreCompoundDeuteron(const G4PreCompoundDeuteron& right) = delete;
+    const G4PreCompoundDeuteron& operator=(const G4PreCompoundDeuteron& right) = delete;
+    G4bool operator==(const G4PreCompoundDeuteron& right) const = delete;
+    G4bool operator!=(const G4PreCompoundDeuteron& right) const = delete;
 
-protected:
+  protected:
 
-  G4double GetRj(G4int NumberParticles, G4int NumberCharged) const override;
+    G4double GetRj(G4int NumberParticles, G4int NumberCharged) const override;
 
-  G4double FactorialFactor(G4int N, G4int P) const override;
+    G4double FactorialFactor(G4int N, G4int P) const override;
 
-  G4double CoalescenceFactor(G4int A) const override;
+    G4double CoalescenceFactor(G4int A) const override;
 
-  G4double GetAlpha() const override;
+    G4double GetAlpha() const override;
 };
 
 #endif
-

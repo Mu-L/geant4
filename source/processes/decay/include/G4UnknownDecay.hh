@@ -30,102 +30,92 @@
 //      GEANT 4 class header file
 //
 //
-#ifndef G4UnknownDecay_h
-#define G4UnknownDecay_h 1
+#ifndef G4UNKNOWNDECAY_HH
+#define G4UNKNOWNDECAY_HH
+
+#include "G4ParticleChangeForDecay.hh"
+#include "G4VDiscreteProcess.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 #include <CLHEP/Units/PhysicalConstants.h>
 
-#include "G4ios.hh"
-#include "globals.hh"
-#include "G4VDiscreteProcess.hh"
-#include "G4ParticleChangeForDecay.hh"
-
-class G4UnknownDecay : public G4VDiscreteProcess 
+class G4UnknownDecay : public G4VDiscreteProcess
 {
- // Class Description
-  //  This class is a decay process for "unknown" particle.
+    // Class Description
+    //  This class is a decay process for "unknown" particle.
 
   public:
-    //  Constructors 
-    G4UnknownDecay(const G4String& processName ="UnknownDecay");
+
+    //  Constructors
+    G4UnknownDecay(const G4String& processName = "UnknownDecay");
 
     //  Destructor
     virtual ~G4UnknownDecay();
 
   private:
+
     //  copy constructor
-      G4UnknownDecay(const G4UnknownDecay &right);
+    G4UnknownDecay(const G4UnknownDecay& right);
 
     //  Assignment Operation (generated)
-      G4UnknownDecay & operator=(const G4UnknownDecay &right);
+    G4UnknownDecay& operator=(const G4UnknownDecay& right);
 
-  public: //With Description
-  
-     virtual G4VParticleChange *PostStepDoIt(
-			     const G4Track& aTrack,
-                             const G4Step& aStep
-                            ) override;
+  public:  // With Description
 
-     virtual void BuildPhysicsTable(const G4ParticleDefinition&) override; 
-     // In G4UnknownDecay, thePhysicsTable stores values of
-    //    beta * std::sqrt( 1 - beta*beta) 
+    virtual G4VParticleChange* PostStepDoIt(const G4Track& aTrack, const G4Step& aStep) override;
+
+    virtual void BuildPhysicsTable(const G4ParticleDefinition&) override;
+    // In G4UnknownDecay, thePhysicsTable stores values of
+    //    beta * std::sqrt( 1 - beta*beta)
     //  as a function of normalized kinetic enregy (=Ekin/mass),
     //  becasuse this table is universal for all particle types,
 
-
     virtual G4bool IsApplicable(const G4ParticleDefinition&) override;
     // returns "true" if the decay process can be applied to
-    // the particle type. 
- 
+    // the particle type.
+
     virtual void ProcessDescription(std::ostream& outFile) const override;
     //
 
-  protected: // With Description
-    virtual G4VParticleChange* DecayIt(
-			     const G4Track& aTrack,
-			     const G4Step&  aStep
-			    ) ;
+  protected:  // With Description
+
+    virtual G4VParticleChange* DecayIt(const G4Track& aTrack, const G4Step& aStep);
     // The DecayIt() method returns by pointer a particle-change object,
     // which has information of daughter particles.
 
   public:
 
-    virtual G4double PostStepGetPhysicalInteractionLength(
-                             const G4Track& track,
-                             G4double   previousStepSize,
-                             G4ForceCondition* condition
-                            ) override;
+    virtual G4double PostStepGetPhysicalInteractionLength(const G4Track& track,
+                                                          G4double previousStepSize,
+                                                          G4ForceCondition* condition) override;
 
+  protected:  // With Description
 
-  protected: // With Description
-    // GetMeanFreePath returns ctau*beta*gamma for decay in flight 
-    virtual G4double GetMeanFreePath(const G4Track& aTrack,
-                              G4double   previousStepSize,
-                              G4ForceCondition* condition
-                             ) override;
+    // GetMeanFreePath returns ctau*beta*gamma for decay in flight
+    virtual G4double GetMeanFreePath(const G4Track& aTrack, G4double previousStepSize,
+                                     G4ForceCondition* condition) override;
 
   private:
-     G4int verboseLevel;
-     // controle flag for output message
-     //  0: Silent
-     //  1: Warning message
-     //  2: More
+
+    G4int verboseLevel;
+    // controle flag for output message
+    //  0: Silent
+    //  1: Warning message
+    //  2: More
 
   private:
+
     // HighestValue.
     const G4double HighestValue;
- 
+
     // ParticleChange for decay process
     G4ParticleChangeForDecay fParticleChangeForDecay;
-    
 };
 
-inline 
- G4double G4UnknownDecay::PostStepGetPhysicalInteractionLength(
-                             const G4Track& track,
-                             G4double   /*previousStepSize*/,
-                             G4ForceCondition* condition
-                            )
+inline G4double G4UnknownDecay::PostStepGetPhysicalInteractionLength(const G4Track& track,
+                                                                     G4double /*previousStepSize*/,
+                                                                     G4ForceCondition* condition)
 {
   // pre-assigned UnknownDecay time
   G4double pTime = track.GetDynamicParticle()->GetPreAssignedDecayProperTime();
@@ -134,34 +124,19 @@ inline
 
   // condition is set to "Not Forced"
   *condition = NotForced;
-  
+
   // reminder proper time
   G4double remainder = pTime - track.GetProperTime();
   if (remainder <= 0.0) remainder = DBL_MIN;
-  
-  // use pre-assigned Decay time to determine PIL
-  //return GetMeanFreePath(track, previousStepSize, condition);
-  return remainder*CLHEP::c_light;
 
+  // use pre-assigned Decay time to determine PIL
+  // return GetMeanFreePath(track, previousStepSize, condition);
+  return remainder * CLHEP::c_light;
 }
 
-inline  
-  G4VParticleChange* G4UnknownDecay::PostStepDoIt(
-			     const G4Track& aTrack,
-			     const G4Step&  aStep
-			    )
+inline G4VParticleChange* G4UnknownDecay::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 {
   return DecayIt(aTrack, aStep);
 }
 
 #endif
-
-
-
-
-
-
-
-
-
-

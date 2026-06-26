@@ -26,37 +26,37 @@
 // Based on the work described in
 // Rad Res 163, 98-111 (2005)
 // D. Emfietzoglou, H. Nikjoo
-// 
+//
 // Authors of the class (2014):
 // I. Kyriakou (kyriak@cc.uoi.gr)
 // D. Emfietzoglou (demfietz@cc.uoi.gr)
 // S. Incerti (incerti@cenbg.in2p3.fr)
 //
 
-#ifndef G4DNAEmfietzoglouWaterIonisationStructure_h
-#define G4DNAEmfietzoglouWaterIonisationStructure_h 1
- 
+#ifndef G4DNAEMFIETZOGLOUWATERIONISATIONSTRUCTURE_HH
+#define G4DNAEMFIETZOGLOUWATERIONISATIONSTRUCTURE_HH
+
 #include "globals.hh"
+
 #include <vector>
 
 class G4DNAEmfietzoglouWaterIonisationStructure
 {
-public:
-  
-  G4DNAEmfietzoglouWaterIonisationStructure();
-  
-  virtual ~G4DNAEmfietzoglouWaterIonisationStructure();
-  
-  G4double IonisationEnergy(G4int level);
+  public:
 
-  G4int NumberOfLevels() { return nLevels; }
-  
-private:
-   
-  G4int nLevels{5};
+    G4DNAEmfietzoglouWaterIonisationStructure();
 
-  std::vector<G4double> energyConstant;
-  
+    virtual ~G4DNAEmfietzoglouWaterIonisationStructure();
+
+    G4double IonisationEnergy(G4int level);
+
+    G4int NumberOfLevels() { return nLevels; }
+
+  private:
+
+    G4int nLevels{5};
+
+    std::vector<G4double> energyConstant;
 };
 
 #endif

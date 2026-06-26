@@ -24,35 +24,34 @@
 // ********************************************************************
 //
 //
-#ifndef G4GNASHTransitions_hh
-#define G4GNASHTransitions_hh 1
+#ifndef G4GNASHTRANSITIONS_HH
+#define G4GNASHTRANSITIONS_HH
 
-#include "G4VPreCompoundTransitions.hh"
 #include "G4Fragment.hh"
+#include "G4VPreCompoundTransitions.hh"
 
 class G4DeexPrecoParameters;
 
 class G4GNASHTransitions : public G4VPreCompoundTransitions
 {
-public:
+  public:
 
-  explicit G4GNASHTransitions();
+    explicit G4GNASHTransitions();
 
-  virtual ~G4GNASHTransitions();
+    virtual ~G4GNASHTransitions();
 
-  virtual G4double CalculateProbability(const G4Fragment & aFragment);
-  
-  virtual void PerformTransition(G4Fragment & aFragment);
+    virtual G4double CalculateProbability(const G4Fragment& aFragment);
 
-private:
+    virtual void PerformTransition(G4Fragment& aFragment);
 
-  G4GNASHTransitions(const G4GNASHTransitions &) = delete;
-  const G4GNASHTransitions& operator=(const G4GNASHTransitions &right) = delete;
-  G4bool operator==(const G4GNASHTransitions &right) const = delete;
-  G4bool operator!=(const G4GNASHTransitions &right) const = delete;
+  private:
 
-  G4DeexPrecoParameters* theParameters;
+    G4GNASHTransitions(const G4GNASHTransitions&) = delete;
+    const G4GNASHTransitions& operator=(const G4GNASHTransitions& right) = delete;
+    G4bool operator==(const G4GNASHTransitions& right) const = delete;
+    G4bool operator!=(const G4GNASHTransitions& right) const = delete;
 
+    G4DeexPrecoParameters* theParameters;
 };
 
 #endif

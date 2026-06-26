@@ -35,117 +35,120 @@
 #define G4VISLISTMANAGER_HH
 
 #include "G4String.hh"
+
 #include <map>
 #include <ostream>
 
-template <typename T>
-class G4VisListManager {
+template<typename T>
+class G4VisListManager
+{
+  public:  // With description
 
-public: // With description
-  
-  G4VisListManager();
+    G4VisListManager();
 
-  virtual ~G4VisListManager();
+    virtual ~G4VisListManager();
 
-  // Register ptr. Manager assumes ownership and
-  // ptr becomes current
-  void Register(T* ptr);
+    // Register ptr. Manager assumes ownership and
+    // ptr becomes current
+    void Register(T* ptr);
 
-  void SetCurrent(const G4String& name);
+    void SetCurrent(const G4String& name);
 
-  // Accessors
-  const T* Current() const {return fpCurrent;}
-  const std::map<G4String, T*>& Map() const;
+    // Accessors
+    const T* Current() const { return fpCurrent; }
+    const std::map<G4String, T*>& Map() const;
 
-  // Print configuration
-  void Print(std::ostream& ostr, const G4String& name="") const;
+    // Print configuration
+    void Print(std::ostream& ostr, const G4String& name = "") const;
 
-private:
+  private:
 
-  // Data members
-  std::map<G4String, T*> fMap;
-  T* fpCurrent;
-
+    // Data members
+    std::map<G4String, T*> fMap;
+    T* fpCurrent;
 };
 
-template <typename T>
-G4VisListManager<T>::G4VisListManager()
-  :fpCurrent(0) 
+template<typename T>
+G4VisListManager<T>::G4VisListManager() : fpCurrent(0)
 {}
 
-template <typename T>
-G4VisListManager<T>::~G4VisListManager() 
+template<typename T>
+G4VisListManager<T>::~G4VisListManager()
 {
   typename std::map<G4String, T*>::iterator iter = fMap.begin();
 
-  while (iter != fMap.end()) {
-    delete iter->second;    
+  while (iter != fMap.end())
+  {
+    delete iter->second;
     iter++;
   }
 }
 
-template <typename T>
-void
-G4VisListManager<T>::Register(T* ptr) 
+template<typename T>
+void G4VisListManager<T>::Register(T* ptr)
 {
-  assert (0 != ptr);
+  assert(0 != ptr);
 
   // Add to map.  Replace if name the same.
   fMap[ptr->Name()] = ptr;
-  fpCurrent = ptr;    
+  fpCurrent = ptr;
 }
 
-template <typename T>
-void
-G4VisListManager<T>::SetCurrent(const G4String& name)
+template<typename T>
+void G4VisListManager<T>::SetCurrent(const G4String& name)
 {
   typename std::map<G4String, T*>::const_iterator iter = fMap.find(name);
 
-  if (iter != fMap.end()) fpCurrent = fMap[name];
-  else {
+  if (iter != fMap.end())
+    fpCurrent = fMap[name];
+  else
+  {
     G4ExceptionDescription ed;
     ed << "Key \"" << name << "\" has not been registered";
-    G4Exception
-      ("G4VisListManager<T>::SetCurrent(T* ptr) ",
-       "visman0102", JustWarning, ed, "Non-existent name");
+    G4Exception("G4VisListManager<T>::SetCurrent(T* ptr) ", "visman0102", JustWarning, ed,
+                "Non-existent name");
   }
 }
 
-template <typename T>
-void
-G4VisListManager<T>::Print(std::ostream& ostr, const G4String& name) const
+template<typename T>
+void G4VisListManager<T>::Print(std::ostream& ostr, const G4String& name) const
 {
-  if (0 == fMap.size()) {
-    G4cout<<"  None"<<std::endl;
+  if (0 == fMap.size())
+  {
+    G4cout << "  None" << std::endl;
     return;
   }
-    
-  ostr<<"  Current: "<<fpCurrent->Name()<<std::endl;
 
-  if (!name.empty()) {
+  ostr << "  Current: " << fpCurrent->Name() << std::endl;
+
+  if (!name.empty())
+  {
     // Print out specified object
     typename std::map<G4String, T*>::const_iterator iter = fMap.find(name);
 
-    if (iter != fMap.end()) {
+    if (iter != fMap.end())
+    {
       iter->second->Print(ostr);
     }
-    else {
-      ostr<<name<<" not found "<<std::endl;
+    else
+    {
+      ostr << name << " not found " << std::endl;
     }
   }
-  else {
+  else
+  {
     typename std::map<G4String, T*>::const_iterator iter = fMap.begin();
-    while (iter != fMap.end()) {
+    while (iter != fMap.end())
+    {
       iter->second->Print(ostr);
-      ostr<<std::endl;
+      ostr << std::endl;
       iter++;
     }
   }
 }
 
-template <typename T>
-const std::map<G4String, T*>&
-G4VisListManager<T>::Map() const
+template<typename T>
+const std::map<G4String, T*>& G4VisListManager<T>::Map() const
 {
   return fMap;
 }

@@ -40,8 +40,8 @@
 // Based on the study by S. Zein et. al. Nucl. Inst. Meth. B 488 (2021) 70-82
 // 1/2/2023 : Hoang added modification for DNA cross sections
 
-#ifndef G4DNACPA100IonisationModel_h
-#define G4DNACPA100IonisationModel_h 1
+#ifndef G4DNACPA100IONISATIONMODEL_HH
+#define G4DNACPA100IONISATIONMODEL_HH
 
 #include "G4DNACPA100IonisationStructure.hh"
 #include "G4DNACrossSectionDataSet.hh"
@@ -70,6 +70,7 @@ class G4DNACPA100IonisationModel : public G4VDNAModel
       const std::tuple<std::size_t /*Mat*/, G4double /*Energy*/, G4int /*shell*/>&;
 
   public:
+
     explicit G4DNACPA100IonisationModel(const G4ParticleDefinition* p = nullptr,
                                         const G4String& nam = "DNACPA100IonisationModel");
 
@@ -101,9 +102,11 @@ class G4DNACPA100IonisationModel : public G4VDNAModel
                         const G4String& file, const G4double& scaleFactor) override;
 
   protected:
+
     G4ParticleChangeForGamma* fParticleChangeForGamma = nullptr;
 
   private:
+
     G4bool statCode = false;
     G4bool fasterCode = true;
     G4bool useDcs = false;

@@ -28,8 +28,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPFissionERelease_h
-#define G4ParticleHPFissionERelease_h 1
+#ifndef G4PARTICLEHPFISSIONERELEASE_HH
+#define G4PARTICLEHPFISSIONERELEASE_HH
 
 #include "G4ios.hh"
 #include "globals.hh"
@@ -41,6 +41,7 @@
 class G4ParticleHPFissionERelease
 {
   public:
+
     G4ParticleHPFissionERelease()
 
       = default;
@@ -108,6 +109,7 @@ class G4ParticleHPFissionERelease
     }
 
   private:
+
     G4double totalEnergy{0.0};
     G4double fragmentKinetic{0.0};
     G4double promptNeutronKinetic{0.0};

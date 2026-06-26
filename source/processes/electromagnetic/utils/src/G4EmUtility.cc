@@ -30,35 +30,47 @@
 //
 
 #include "G4EmUtility.hh"
-#include "G4RegionStore.hh"
-#include "G4ProductionCutsTable.hh"
-#include "G4VEmProcess.hh"
+
+#include "G4EmDataRegistry.hh"
 #include "G4EmParameters.hh"
-#include "G4PhysicsVector.hh"
-#include "Randomize.hh"
-#include "G4Log.hh"
 #include "G4Exp.hh"
+#include "G4Log.hh"
+#include "G4PhysicsTableHelper.hh"
+#include "G4PhysicsVector.hh"
+#include "G4ProcessManager.hh"
+#include "G4ProcessVector.hh"
+#include "G4ProductionCutsTable.hh"
+#include "G4RegionStore.hh"
+#include "G4VEmProcess.hh"
+#include "Randomize.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+namespace
+{
 static const G4double g4log10 = G4Log(10.);
+// static const G4int pdg[8] = {11, -11, -13, 13, 211, -211, 2212, -2212};
+}  // namespace
 
-const G4Region* 
-G4EmUtility::FindRegion(const G4String& regionName, const G4int verbose)
+const G4Region* G4EmUtility::FindRegion(const G4String& regionName, const G4int verbose)
 {
   const G4Region* reg = nullptr;
   G4RegionStore* regStore = G4RegionStore::GetInstance();
   G4String r = regionName;
-  if(r == "") { r = "DefaultRegionForTheWorld"; }
-  reg = regStore->GetRegion(r, true); 
-  if(nullptr == reg && verbose > 0) {
-    G4cout << "### G4EmUtility WARNING: fails to find a region <"
-           << r << G4endl;
-  } else if(verbose > 1) {
-    G4cout << "### G4EmUtility finds out G4Region <" << r << ">" 
-           << G4endl;
-  } 
-  return reg;  
+  if (r == "")
+  {
+    r = "DefaultRegionForTheWorld";
+  }
+  reg = regStore->GetRegion(r, true);
+  if (nullptr == reg && verbose > 0)
+  {
+    G4cout << "### G4EmUtility::FindRegion WARNING: fails to find a region <" << r << G4endl;
+  }
+  else if (verbose > 1)
+  {
+    G4cout << "### G4EmUtility finds out G4Region <" << r << ">" << G4endl;
+  }
+  return reg;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
@@ -67,13 +79,18 @@ const G4Element* G4EmUtility::SampleRandomElement(const G4Material* mat)
 {
   const G4Element* elm = mat->GetElement(0);
   std::size_t nElements = mat->GetNumberOfElements();
-  if(1 < nElements) {
-    G4double x = mat->GetTotNbOfElectPerVolume()*G4UniformRand();
+  if (1 < nElements)
+  {
+    G4double x = mat->GetTotNbOfElectPerVolume() * G4UniformRand();
     const G4double* y = mat->GetVecNbOfAtomsPerVolume();
-    for(std::size_t i=0; i<nElements; ++i) {
+    for (std::size_t i = 0; i < nElements; ++i)
+    {
       elm = mat->GetElement((G4int)i);
-      x -= y[i]*elm->GetZ();
-      if(x <= 0.0) { break; }
+      x -= y[i] * elm->GetZ();
+      if (x <= 0.0)
+      {
+        break;
+      }
     }
   }
   return elm;
@@ -85,14 +102,17 @@ const G4Isotope* G4EmUtility::SampleRandomIsotope(const G4Element* elm)
 {
   const std::size_t ni = elm->GetNumberOfIsotopes();
   const G4Isotope* iso = elm->GetIsotope(0);
-  if(ni > 1) {
+  if (ni > 1)
+  {
     const G4double* ab = elm->GetRelativeAbundanceVector();
     G4double x = G4UniformRand();
-    for(std::size_t idx=0; idx<ni; ++idx) {
+    for (std::size_t idx = 0; idx < ni; ++idx)
+    {
       x -= ab[idx];
-      if (x <= 0.0) { 
-	iso = elm->GetIsotope((G4int)idx);
-	break; 
+      if (x <= 0.0)
+      {
+        iso = elm->GetIsotope((G4int)idx);
+        break;
       }
     }
   }
@@ -104,7 +124,10 @@ const G4Isotope* G4EmUtility::SampleRandomIsotope(const G4Element* elm)
 std::vector<G4double>* G4EmUtility::FindCrossSectionMax(G4PhysicsTable* p)
 {
   std::vector<G4double>* ptr = nullptr;
-  if(nullptr == p) { return ptr; }
+  if (nullptr == p)
+  {
+    return ptr;
+  }
 
   const std::size_t n = p->length();
   ptr = new std::vector<G4double>;
@@ -114,29 +137,36 @@ std::vector<G4double>* G4EmUtility::FindCrossSectionMax(G4PhysicsTable* p)
   G4double e, ss, ee, xs;
 
   // first loop on existing vectors
-  for (std::size_t i=0; i<n; ++i) {
+  for (std::size_t i = 0; i < n; ++i)
+  {
     const G4PhysicsVector* pv = (*p)[i];
     xs = ee = 0.0;
-    if(nullptr != pv) {
+    if (nullptr != pv)
+    {
       G4int nb = (G4int)pv->GetVectorLength();
-      for (G4int j=0; j<nb; ++j) {
-	e = pv->Energy(j);
-	ss = (*pv)(j);
-	if(ss >= xs) {
-	  xs = ss;
-	  ee = e;
-	  continue;
-	} else {
-	  isPeak = true;
-	  (*ptr)[i] = ee;
-	  break;
-	}
+      for (G4int j = 0; j < nb; ++j)
+      {
+        e = pv->Energy(j);
+        ss = (*pv)(j);
+        if (ss >= xs)
+        {
+          xs = ss;
+          ee = e;
+          continue;
+        }
+        else
+        {
+          isPeak = true;
+          (*ptr)[i] = ee;
+          break;
+        }
       }
     }
   }
 
   // there is no peak for any material
-  if(!isPeak) {
+  if (!isPeak)
+  {
     delete ptr;
     ptr = nullptr;
   }
@@ -145,24 +175,25 @@ std::vector<G4double>* G4EmUtility::FindCrossSectionMax(G4PhysicsTable* p)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-std::vector<G4double>* 
-G4EmUtility::FindCrossSectionMax(G4VDiscreteProcess* p,
-                                 const G4ParticleDefinition* part)
+std::vector<G4double>* G4EmUtility::FindCrossSectionMax(G4VDiscreteProcess* p,
+                                                        const G4ParticleDefinition* part)
 {
   std::vector<G4double>* ptr = nullptr;
-  if (nullptr == p || nullptr == part) { return ptr; }
+  if (nullptr == p || nullptr == part)
+  {
+    return ptr;
+  }
 
   G4EmParameters* theParameters = G4EmParameters::Instance();
   const G4double tmin = theParameters->MinKinEnergy();
   const G4double tmax = theParameters->MaxKinEnergy();
-  const G4double ee = G4Log(tmax/tmin);
-  const G4double scale = theParameters->NumberOfBinsPerDecade()/g4log10;
-  G4int nbin = static_cast<G4int>(ee*scale);
+  const G4double ee = G4Log(tmax / tmin);
+  const G4double scale = theParameters->NumberOfBinsPerDecade() / g4log10;
+  G4int nbin = static_cast<G4int>(ee * scale);
   nbin = std::max(nbin, 4);
-  G4double x = G4Exp(ee/(G4double)nbin);
+  G4double x = G4Exp(ee / (G4double)nbin);
 
-  const G4ProductionCutsTable* theCoupleTable=
-        G4ProductionCutsTable::GetProductionCutsTable();
+  const G4ProductionCutsTable* theCoupleTable = G4ProductionCutsTable::GetProductionCutsTable();
   std::size_t n = theCoupleTable->GetTableSize();
   ptr = new std::vector<G4double>;
   ptr->resize(n, DBL_MAX);
@@ -171,25 +202,31 @@ G4EmUtility::FindCrossSectionMax(G4VDiscreteProcess* p,
 
   // first loop on existing vectors
   const G4int nn = static_cast<G4int>(n);
-  for (G4int i=0; i<nn; ++i) {
+  for (G4int i = 0; i < nn; ++i)
+  {
     G4double sm = 0.0;
     G4double em = 0.0;
     G4double e = tmin;
-    for (G4int j=0; j<=nbin; ++j) {
+    for (G4int j = 0; j <= nbin; ++j)
+    {
       G4double sig = p->GetCrossSection(e, theCoupleTable->GetMaterialCutsCouple(i));
-      if (sig >= sm) {
-	em = e;
-	sm = sig;
-	e = (j+1 < nbin) ? e*x : tmax;
-      } else {
-	isPeak = true;
-	(*ptr)[i] = em;
-	break;
+      if (sig >= sm)
+      {
+        em = e;
+        sm = sig;
+        e = (j + 1 < nbin) ? e * x : tmax;
+      }
+      else
+      {
+        isPeak = true;
+        (*ptr)[i] = em;
+        break;
       }
     }
   }
   // there is no peak for any couple
-  if (!isPeak) {
+  if (!isPeak)
+  {
     delete ptr;
     ptr = nullptr;
   }
@@ -198,11 +235,13 @@ G4EmUtility::FindCrossSectionMax(G4VDiscreteProcess* p,
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-std::vector<G4TwoPeaksXS*>* 
-G4EmUtility::FillPeaksStructure(G4PhysicsTable* p, G4LossTableBuilder* bld)
+std::vector<G4TwoPeaksXS*>* G4EmUtility::FillPeaksStructure(G4PhysicsTable* p)
 {
   std::vector<G4TwoPeaksXS*>* ptr = nullptr;
-  if(nullptr == p) { return ptr; }
+  if (nullptr == p)
+  {
+    return ptr;
+  }
 
   const G4int n = (G4int)p->length();
   ptr = new std::vector<G4TwoPeaksXS*>;
@@ -213,71 +252,95 @@ G4EmUtility::FillPeaksStructure(G4PhysicsTable* p, G4LossTableBuilder* bld)
   G4bool isDeep = false;
 
   // first loop on existing vectors
-  for (G4int i=0; i<n; ++i) {
+  for (G4int i = 0; i < n; ++i)
+  {
     const G4PhysicsVector* pv = (*p)[i];
     ee = xs = 0.0;
     e1peak = e1deep = e2peak = e2deep = e3peak = DBL_MAX;
-    if(nullptr != pv) {
+    if (nullptr != pv)
+    {
       G4int nb = (G4int)pv->GetVectorLength();
-      for (G4int j=0; j<nb; ++j) {
-	e = pv->Energy(j);
-	ss = (*pv)(j);
-	// find out 1st peak
-	if(e1peak == DBL_MAX) {
-	  if(ss >= xs) {
-	    xs = ss;
-	    ee = e;
-	    continue;
-	  } else {
-	    e1peak = ee;
-	  }
-	}
-	// find out the deep
-	if(e1deep == DBL_MAX) {
-	  if(ss <= xs) {
-	    xs = ss;
-	    ee = e;
-	    continue;
-	  } else {
-	    e1deep = ee;
-	    isDeep = true;
-	  }
-	}
-	// find out 2nd peak
-	if(e2peak == DBL_MAX) {
-	  if(ss >= xs) {
-	    xs = ss;
-	    ee = e;
-	    continue;
-	  } else {
-	    e2peak = ee;
-	  }
-	}
-	if(e2deep == DBL_MAX) {
-	  if(ss <= xs) {
-	    xs = ss;
-	    ee = e;
-	    continue;
-	  } else {
-	    e2deep = ee;
-	    break;
-	  }
-	}
-	// find out 3d peak
-	if(e3peak == DBL_MAX) {
-	  if(ss >= xs) {
-	    xs = ss;
-	    ee = e;
-	    continue;
-	  } else {
-	    e3peak = ee;
-	  }
-	}
+      for (G4int j = 0; j < nb; ++j)
+      {
+        e = pv->Energy(j);
+        ss = (*pv)(j);
+        // find out 1st peak
+        if (e1peak == DBL_MAX)
+        {
+          if (ss >= xs)
+          {
+            xs = ss;
+            ee = e;
+            continue;
+          }
+          else
+          {
+            e1peak = ee;
+          }
+        }
+        // find out the deep
+        if (e1deep == DBL_MAX)
+        {
+          if (ss <= xs)
+          {
+            xs = ss;
+            ee = e;
+            continue;
+          }
+          else
+          {
+            e1deep = ee;
+            isDeep = true;
+          }
+        }
+        // find out 2nd peak
+        if (e2peak == DBL_MAX)
+        {
+          if (ss >= xs)
+          {
+            xs = ss;
+            ee = e;
+            continue;
+          }
+          else
+          {
+            e2peak = ee;
+          }
+        }
+        if (e2deep == DBL_MAX)
+        {
+          if (ss <= xs)
+          {
+            xs = ss;
+            ee = e;
+            continue;
+          }
+          else
+          {
+            e2deep = ee;
+            break;
+          }
+        }
+        // find out 3d peak
+        if (e3peak == DBL_MAX)
+        {
+          if (ss >= xs)
+          {
+            xs = ss;
+            ee = e;
+            continue;
+          }
+          else
+          {
+            e3peak = ee;
+          }
+        }
       }
     }
     G4TwoPeaksXS* x = (*ptr)[i];
-    if(nullptr == x) { 
-      x = new G4TwoPeaksXS(); 
+    if (nullptr == x)
+    {
+      x = new G4TwoPeaksXS();
       (*ptr)[i] = x;
     }
     x->e1peak = e1peak;
@@ -287,27 +350,41 @@ G4EmUtility::FillPeaksStructure(G4PhysicsTable* p, G4LossTableBuilder* bld)
     x->e3peak = e3peak;
   }
   // case of no 1st peak in all vectors
-  if(!isDeep) {
-    for (G4int k=0; k<n; ++k) { delete (*ptr)[k]; }
+  if (!isDeep)
+  {
+    for (G4int k = 0; k < n; ++k)
+    {
+      delete (*ptr)[k];
+    }
     delete ptr;
     ptr = nullptr;
     return ptr;
   }
   // check base particles
-  if(!bld->GetBaseMaterialFlag()) { return ptr; }
+  auto registry = G4EmDataRegistry::Instance();
+  if (!registry->GetBaseMaterialFlag())
+  {
+    return ptr;
+  }
 
-  auto theDensityIdx = bld->GetCoupleIndexes();
+  auto theDensityIdx = registry->GetCoupleIndexes();
   // second loop using base materials
-  for (G4int i=0; i<n; ++i) {
+  for (G4int i = 0; i < n; ++i)
+  {
     const G4PhysicsVector* pv = (*p)[i];
-    if (nullptr == pv) {
+    if (nullptr == pv)
+    {
       G4int j = (*theDensityIdx)[i];
-      if(j == i) { continue; }
+      if (j == i)
+      {
+        continue;
+      }
       G4TwoPeaksXS* x = (*ptr)[i];
       G4TwoPeaksXS* y = (*ptr)[j];
-      if(nullptr == x) { 
-	x = new G4TwoPeaksXS(); 
-	(*ptr)[i] = x;
+      if (nullptr == x)
+      {
+        x = new G4TwoPeaksXS();
+        (*ptr)[i] = x;
       }
       x->e1peak = y->e1peak;
       x->e1deep = y->e1deep;
@@ -321,10 +398,8 @@ G4EmUtility::FillPeaksStructure(G4PhysicsTable* p, G4LossTableBuilder* bld)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-void G4EmUtility::InitialiseElementSelectors(G4VEmModel* mod,
-					     const G4ParticleDefinition* part,
-					     const G4DataVector& cuts,
-                                             const G4double elow,
+void G4EmUtility::InitialiseElementSelectors(G4VEmModel* mod, const G4ParticleDefinition* part,
+                                             const G4DataVector& cuts, const G4double elow,
                                              const G4double ehigh)
 {
   // using spline for element selectors should be investigated in details
@@ -334,30 +409,35 @@ void G4EmUtility::InitialiseElementSelectors(G4VEmModel* mod,
 
   G4int nbinsPerDec = G4EmParameters::Instance()->NumberOfBinsPerDecade();
 
-  G4ProductionCutsTable* theCoupleTable=
-    G4ProductionCutsTable::GetProductionCutsTable();
+  G4ProductionCutsTable* theCoupleTable = G4ProductionCutsTable::GetProductionCutsTable();
   std::size_t numOfCouples = theCoupleTable->GetTableSize();
 
   // prepare vector
   auto elmSelectors = mod->GetElementSelectors();
-  if(nullptr == elmSelectors) {
+  if (nullptr == elmSelectors)
+  {
     elmSelectors = new std::vector<G4EmElementSelector*>;
   }
   std::size_t nSelectors = elmSelectors->size();
-  if(numOfCouples > nSelectors) { 
-    for(std::size_t i=nSelectors; i<numOfCouples; ++i) { 
-      elmSelectors->push_back(nullptr); 
+  if (numOfCouples > nSelectors)
+  {
+    for (std::size_t i = nSelectors; i < numOfCouples; ++i)
+    {
+      elmSelectors->push_back(nullptr);
     }
     nSelectors = numOfCouples;
   }
 
   // initialise vector
-  for(std::size_t i=0; i<numOfCouples; ++i) {
-
+  for (std::size_t i = 0; i < numOfCouples; ++i)
+  {
     // no need in element selectors for infinite cuts
-    if(cuts[i] == DBL_MAX) { continue; }
-   
-    auto couple = theCoupleTable->GetMaterialCutsCouple((G4int)i); 
+    if (cuts[i] == DBL_MAX)
+    {
+      continue;
+    }
+
+    auto couple = theCoupleTable->GetMaterialCutsCouple((G4int)i);
     auto mat = couple->GetMaterial();
     mod->SetCurrentCouple(couple);
 
@@ -365,49 +445,205 @@ void G4EmUtility::InitialiseElementSelectors(G4VEmModel* mod,
     delete (*elmSelectors)[i];
 
     G4double emin = std::max(elow, mod->MinPrimaryEnergy(mat, part, cuts[i]));
-    G4double emax = std::max(ehigh, 10*emin);
-    static const G4double invlog106 = 1.0/(6*G4Log(10.));
-    G4int nbins = G4lrint(nbinsPerDec*G4Log(emax/emin)*invlog106);
+    G4double emax = std::max(ehigh, 10 * emin);
+    static const G4double invlog106 = 1.0 / (6 * G4Log(10.));
+    G4int nbins = G4lrint(nbinsPerDec * G4Log(emax / emin) * invlog106);
     nbins = std::max(nbins, 3);
 
-    (*elmSelectors)[i] = new G4EmElementSelector(mod,mat,nbins,
-						 emin,emax,spline);
+    (*elmSelectors)[i] = new G4EmElementSelector(mod, mat, nbins, emin, emax, spline);
     ((*elmSelectors)[i])->Initialise(part, cuts[i]);
-    /*      
-      G4cout << "G4VEmModel::InitialiseElmSelectors i= " << i 
-             << "  "  << part->GetParticleName() 
-             << " for " << mod->GetName() << "  cut= " << cuts[i] 
-             << "  " << (*elmSelectors)[i] << G4endl;      
-      ((*elmSelectors)[i])->Dump(part);
-    */
   }
   mod->SetElementSelectors(elmSelectors);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
-void G4EmUtility::FillFluctFlags(std::vector<std::pair<G4String, G4bool> >& reg,
-		    	         std::vector<G4bool>* flags)
+void G4EmUtility::FillFluctFlags(std::vector<std::pair<G4String, G4bool>>& reg,
+                                 std::vector<G4bool>* flags)
 {
   G4RegionStore* regStore = G4RegionStore::GetInstance();
-  G4ProductionCutsTable* theCoupleTable=
-    G4ProductionCutsTable::GetProductionCutsTable();
+  G4ProductionCutsTable* theCoupleTable = G4ProductionCutsTable::GetProductionCutsTable();
   std::size_t numOfCouples = theCoupleTable->GetTableSize();
-  for (std::size_t i = 0; i < numOfCouples; ++i) {
+  for (std::size_t i = 0; i < numOfCouples; ++i)
+  {
     auto couple = theCoupleTable->GetMaterialCutsCouple((G4int)i);
     auto mat = const_cast<G4Material*>(couple->GetMaterial());
-    for (auto const& r : reg) {
+    for (auto const& r : reg)
+    {
       const G4String& rname = r.first;
       G4Region* region = regStore->GetRegion(rname, false);
-      if (nullptr != region) {
-	auto couple1 = region->FindCouple(mat);
-	if (couple1 == couple) {
-	  (*flags)[couple->GetIndex()] = r.second;
-	  break;
-	}
+      if (nullptr != region)
+      {
+        auto couple1 = region->FindCouple(mat);
+        if (couple1 == couple)
+        {
+          (*flags)[couple->GetIndex()] = r.second;
+          break;
+        }
       }
     }
   }
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
+
+G4int G4EmUtility::BuildTables(const G4ParticleDefinition* part,
+                               const std::vector<const G4ParticleDefinition*>& vpart,
+                               const std::vector<G4VEnergyLossProcess*>& vproc, const G4int verbose,
+                               const G4bool buildCSDA)
+{
+  if (2 < verbose)
+  {
+    G4cout << "  G4EmUtility::BuildTables for " << part->GetParticleName() << G4endl;
+  }
+
+  std::vector<G4PhysicsTable*> t_list;
+  t_list.reserve(5);
+  std::vector<G4VEnergyLossProcess*> loss_list;
+  loss_list.reserve(5);
+  std::size_t n_loss = vproc.size();
+  G4VEnergyLossProcess* em = nullptr;
+  G4VEnergyLossProcess* p = nullptr;
+  G4int iem = -1;
+  G4PhysicsTable* dedx = nullptr;
+
+  G4ProcessVector* pvec = part->GetProcessManager()->GetProcessList();
+  G4int nvec = (G4int)pvec->size();
+
+  for (std::size_t i = 0; i < n_loss; ++i)
+  {
+    p = vproc[i];
+    G4bool yes = (part == vpart[i]);
+
+    // possible case of process sharing between particle/anti-particle
+    if (!yes)
+    {
+      auto ptr = static_cast<G4VProcess*>(p);
+      for (G4int j = 0; j < nvec; ++j)
+      {
+        if (ptr == (*pvec)[j])
+        {
+          yes = true;
+          break;
+        }
+      }
+    }
+    // the process does not used for the particle
+    if (!yes)
+    {
+      continue;
+    }
+
+    // ionisation process for this particle
+    if (p->IsIonisationProcess() || nullptr == em)
+    {
+      em = p;
+      iem = (G4int)i;
+    }
+
+    // tables may be shared between particle/anti-particle
+    if (!p->TablesAreBuilt())
+    {
+      // build new table
+      dedx = p->BuildDEDXTable(fRestricted);
+      p->SetDEDXTable(dedx, fRestricted);
+      p->SetTablesAreBuilt(true);
+    }
+    else
+    {
+      // use existing table
+      dedx = p->DEDXTable();
+    }
+    t_list.push_back(dedx);
+    loss_list.push_back(p);
+  }
+
+  G4int n_dedx = (G4int)t_list.size();
+  if (0 == n_dedx || nullptr == em)
+  {
+    G4cout << "G4EmUtility::BuildTables WARNING: no DEDX processes for " << part->GetParticleName()
+           << G4endl;
+    return iem;
+  }
+
+  if (2 < verbose)
+  {
+    G4cout << "     Start to build the sum of " << n_dedx << " processes"
+           << " iem= " << iem << " em= " << em->GetProcessName() << " buildCSDARange= " << buildCSDA
+           << G4endl;
+  }
+
+  dedx = em->DEDXTable();
+  em->SetDEDXTable(dedx, fIsIonisation);
+  auto tableBuilder = G4EmDataRegistry::Instance()->GetLossTableBuilder();
+  tableBuilder->SetSplineFlag(em->Spline());
+
+  if (1 < n_dedx)
+  {
+    dedx = nullptr;
+    dedx = G4PhysicsTableHelper::PreparePhysicsTable(dedx);
+    tableBuilder->BuildDEDXTable(dedx, t_list);
+    em->SetDEDXTable(dedx, fRestricted);
+  }
+
+  G4PhysicsTable* range = em->RangeTableForLoss();
+  if (nullptr == range)
+  {
+    range = G4PhysicsTableHelper::PreparePhysicsTable(range);
+  }
+
+  G4PhysicsTable* invrange = em->InverseRangeTable();
+  if (nullptr == invrange)
+  {
+    invrange = G4PhysicsTableHelper::PreparePhysicsTable(invrange);
+  }
+
+  tableBuilder->BuildRangeTable(dedx, range);
+  tableBuilder->BuildInverseRangeTable(range, invrange);
+
+  em->SetRangeTableForLoss(range);
+  em->SetInverseRangeTable(invrange);
+
+  // build lambda table for all processes from the list
+  for (auto& ptr : loss_list)
+  {
+    ptr->SetLambdaTable(ptr->BuildLambdaTable(fRestricted));
+  }
+
+  // CSDA dedx and range tables
+  if (buildCSDA)
+  {
+    std::vector<G4PhysicsTable*> listCSDA;
+    listCSDA.reserve(n_dedx);
+    for (auto& ptr : loss_list)
+    {
+      dedx = ptr->BuildDEDXTable(fTotal);
+      ptr->SetDEDXTable(dedx, fTotal);
+      listCSDA.push_back(dedx);
+    }
+    G4PhysicsTable* dedxCSDA = em->DEDXunRestrictedTable();
+    if (1 < n_dedx)
+    {
+      dedxCSDA = nullptr;
+      dedxCSDA = G4PhysicsTableHelper::PreparePhysicsTable(dedxCSDA);
+      tableBuilder->BuildDEDXTable(dedxCSDA, listCSDA);
+      em->SetDEDXTable(dedxCSDA, fTotal);
+    }
+    G4PhysicsTable* rCSDA = em->CSDARangeTable();
+    if (nullptr == rCSDA)
+    {
+      rCSDA = G4PhysicsTableHelper::PreparePhysicsTable(rCSDA);
+    }
+    tableBuilder->BuildRangeTable(dedxCSDA, rCSDA);
+    em->SetCSDARangeTable(rCSDA);
+  }
+
+  if (1 < verbose)
+  {
+    G4cout << "G4EmUtility::BuildTables: Tables are built for " << part->GetParticleName()
+           << "; ionisation process: " << em->GetProcessName() << " idx=" << iem << G4endl;
+  }
+  return iem;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....

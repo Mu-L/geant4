@@ -30,16 +30,17 @@
 //              in the CM for elastic scattering of pi-p, pi+n, k-p,
 //		k0bn, k+n, or k0p
 
-#ifndef G4HadNElastic2AngDst_h
-#define G4HadNElastic2AngDst_h 1
+#ifndef G4HADNELASTIC2ANGDST_HH
+#define G4HADNELASTIC2ANGDST_HH
 
 #include "G4ParamExpTwoBodyAngDst.hh"
 
+class G4HadNElastic2AngDst : public G4ParamExpTwoBodyAngDst<10>
+{
+  public:
 
-class G4HadNElastic2AngDst : public G4ParamExpTwoBodyAngDst<10> {
-public:
-  G4HadNElastic2AngDst(G4int verbose = 0);
-  virtual ~G4HadNElastic2AngDst() {;}
+    G4HadNElastic2AngDst(G4int verbose = 0);
+    virtual ~G4HadNElastic2AngDst() { ; }
 };
 
 #endif

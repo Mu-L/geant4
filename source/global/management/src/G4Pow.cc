@@ -32,6 +32,7 @@
 // --------------------------------------------------------------------
 
 #include "G4Pow.hh"
+
 #include "G4Threading.hh"
 
 G4Pow* G4Pow::fpInstance = nullptr;
@@ -40,7 +41,7 @@ G4Pow* G4Pow::fpInstance = nullptr;
 
 G4Pow* G4Pow::GetInstance()
 {
-  if(fpInstance == nullptr)
+  if (fpInstance == nullptr)
   {
     static G4Pow geant4pow;
     fpInstance = &geant4pow;
@@ -53,19 +54,19 @@ G4Pow* G4Pow::GetInstance()
 G4Pow::G4Pow()
 {
 #ifdef G4MULTITHREADED
-  if(G4Threading::IsWorkerThread())
+  if (G4Threading::IsWorkerThread())
   {
     G4Exception("G4Pow::G4Pow()", "InvalidSetup", FatalException,
                 "Attempt to instantiate G4Pow in worker thread!");
   }
 #endif
-  const G4int maxZ     = 512;
+  const G4int maxZ = 512;
   const G4int maxZfact = 170;
-  const G4int numLowA  = 17;
+  const G4int numLowA = 17;
 
-  maxA    = -0.6 + maxZ;
+  maxA = -0.6 + maxZ;
   maxLowA = 4.0;
-  maxA2   = 1.25 + max2 * 0.2;
+  maxA2 = 1.25 + max2 * 0.2;
   maxAexp = -0.76 + maxZfact * 0.5;
 
   ener.resize(max2 + 1, 1.0);
@@ -78,24 +79,24 @@ G4Pow::G4Pow()
   fact.resize(maxZfact, 0.0);
   logfact.resize(maxZ, 0.0);
 
-  G4double f    = 1.0;
+  G4double f = 1.0;
   G4double logf = 0.0;
-  fact[0]       = 1.0;
-  fexp[0]       = 1.0;
+  fact[0] = 1.0;
+  fexp[0] = 1.0;
 
-  for(G4int i = 1; i <= max2; ++i)
+  for (G4int i = 1; i <= max2; ++i)
   {
-    ener[i]  = powN(500., i);
+    ener[i] = powN(500., i);
     logen[i] = G4Log(ener[i]);
-    lz2[i]   = G4Log(1.0 + i * 0.2);
+    lz2[i] = G4Log(1.0 + i * 0.2);
   }
 
-  for(G4int i = 1; i < maxZ; ++i)
+  for (G4int i = 1; i < maxZ; ++i)
   {
-    auto  x = G4double(i);
-    pz13[i]    = std::pow(x, onethird);
-    lz[i]      = G4Log(x);
-    if(i < maxZfact)
+    auto x = G4double(i);
+    pz13[i] = std::pow(x, onethird);
+    lz[i] = G4Log(x);
+    if (i < maxZfact)
     {
       f *= x;
       fact[i] = f;
@@ -105,7 +106,7 @@ G4Pow::G4Pow()
     logfact[i] = logf;
   }
 
-  for(G4int i = 4; i < numLowA; ++i)
+  for (G4int i = 4; i < numLowA; ++i)
   {
     lowa13[i] = std::pow(0.25 * i, onethird);
   }
@@ -116,11 +117,11 @@ G4Pow::G4Pow()
 G4double G4Pow::A13(G4double A) const
 {
   G4double res = 0.;
-  if(A > 0.)
+  if (A > 0.)
   {
     const bool invert = (A < 1.);
-    const G4double a  = invert ? 1. / A : A;
-    res               = (a < maxLowA) ? A13Low(a, invert) : A13High(a, invert);
+    const G4double a = invert ? 1. / A : A;
+    res = (a < maxLowA) ? A13Low(a, invert) : A13High(a, invert);
   }
   return res;
 }
@@ -130,11 +131,11 @@ G4double G4Pow::A13(G4double A) const
 G4double G4Pow::A13High(const G4double a, const bool invert) const
 {
   G4double res;
-  if(a < maxA)
+  if (a < maxA)
   {
-    const auto  i    = static_cast<G4int>(a + 0.5);
+    const auto i = static_cast<G4int>(a + 0.5);
     const G4double x = (a / i - 1.) * onethird;
-    res              = pz13[i] * (1. + x - x * x * (1. - 1.666667 * x));
+    res = pz13[i] * (1. + x - x * x * (1. - 1.666667 * x));
   }
   else
   {
@@ -149,11 +150,11 @@ G4double G4Pow::A13High(const G4double a, const bool invert) const
 G4double G4Pow::A13Low(const G4double a, const G4bool invert) const
 {
   G4double res;
-  const auto  i    = static_cast<G4int>(4. * (a + 0.125));
+  const auto i = static_cast<G4int>(4. * (a + 0.125));
   const G4double y = 0.25 * i;
   const G4double x = (a / y - 1.) * onethird;
-  res              = lowa13[i] * (1. + x - x * x * (1. - 1.666667 * x));
-  res              = invert ? 1. / res : res;
+  res = lowa13[i] * (1. + x - x * x * (1. - 1.666667 * x));
+  res = invert ? 1. / res : res;
   return res;
 }
 
@@ -161,27 +162,27 @@ G4double G4Pow::A13Low(const G4double a, const G4bool invert) const
 
 G4double G4Pow::powN(G4double x, G4int n) const
 {
-  if(0.0 == x)
+  if (0.0 == x)
   {
     return 0.0;
   }
-  if(std::abs(n) > 8)
+  if (std::abs(n) > 8)
   {
     return std::pow(x, G4double(n));
   }
   G4double res = 1.0;
-  if(n >= 0)
+  if (n >= 0)
   {
-    for(G4int i = 0; i < n; ++i)
+    for (G4int i = 0; i < n; ++i)
     {
       res *= x;
     }
   }
-  else if(n < 0)
+  else if (n < 0)
   {
     G4double y = 1.0 / x;
-    G4int nn   = -n;
-    for(G4int i = 0; i < nn; ++i)
+    G4int nn = -n;
+    for (G4int i = 0; i < nn; ++i)
     {
       res *= y;
     }

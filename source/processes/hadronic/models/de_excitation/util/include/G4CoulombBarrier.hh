@@ -27,26 +27,26 @@
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara (Dec 1999)
 //
-// 15-11-2010 V.Ivanchenko cleanup 
+// 15-11-2010 V.Ivanchenko cleanup
 
-#ifndef G4CoulombBarrier_h
-#define G4CoulombBarrier_h 1
+#ifndef G4COULOMBBARRIER_HH
+#define G4COULOMBBARRIER_HH
 
 #include "G4VCoulombBarrier.hh"
 
 class G4CoulombBarrier : public G4VCoulombBarrier
 {
-public:
+  public:
 
-  explicit G4CoulombBarrier(G4int anA, G4int aZ);
-  ~G4CoulombBarrier() override = default;
+    explicit G4CoulombBarrier(G4int anA, G4int aZ);
+    ~G4CoulombBarrier() override = default;
 
-  G4double GetCoulombBarrier(G4int ARes, G4int ZRes, G4double U) const override;
+    G4double GetCoulombBarrier(G4int ARes, G4int ZRes, G4double U) const override;
 
-  G4double BarrierPenetrationFactor(G4int aZ) const override;
+    G4double BarrierPenetrationFactor(G4int aZ) const override;
 
-  G4CoulombBarrier(const G4CoulombBarrier & right) = delete;
-  const G4CoulombBarrier & operator=(const G4CoulombBarrier & right) = delete;
+    G4CoulombBarrier(const G4CoulombBarrier& right) = delete;
+    const G4CoulombBarrier& operator=(const G4CoulombBarrier& right) = delete;
 };
 
 #endif

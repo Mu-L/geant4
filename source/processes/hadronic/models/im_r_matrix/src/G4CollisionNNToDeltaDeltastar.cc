@@ -25,7 +25,6 @@
 //
 //
 
-#include "globals.hh"
 #include "G4CollisionNNToDeltaDeltastar.hh"
 
 #include "G4CollisionNNToDeltaDelta1600.hh"
@@ -37,21 +36,16 @@
 #include "G4CollisionNNToDeltaDelta1920.hh"
 #include "G4CollisionNNToDeltaDelta1930.hh"
 #include "G4CollisionNNToDeltaDelta1950.hh"
+#include "globals.hh"
 
-typedef
-GROUP9(G4CollisionNNToDeltaDelta1600, 
-      G4CollisionNNToDeltaDelta1620,
-      G4CollisionNNToDeltaDelta1700,
-      G4CollisionNNToDeltaDelta1900,
-      G4CollisionNNToDeltaDelta1905,
-      G4CollisionNNToDeltaDelta1910,
-      G4CollisionNNToDeltaDelta1920,
-      G4CollisionNNToDeltaDelta1930,
-      G4CollisionNNToDeltaDelta1950) theChannels;
-      
+typedef GROUP9(G4CollisionNNToDeltaDelta1600, G4CollisionNNToDeltaDelta1620,
+               G4CollisionNNToDeltaDelta1700, G4CollisionNNToDeltaDelta1900,
+               G4CollisionNNToDeltaDelta1905, G4CollisionNNToDeltaDelta1910,
+               G4CollisionNNToDeltaDelta1920, G4CollisionNNToDeltaDelta1930,
+               G4CollisionNNToDeltaDelta1950) theChannels;
+
 G4CollisionNNToDeltaDeltastar::G4CollisionNNToDeltaDeltastar()
-{ 
+{
   Register aR;
-  G4ForEach<theChannels>::Apply(&aR, this); 
+  G4ForEach<theChannels>::Apply(&aR, this);
 }
-

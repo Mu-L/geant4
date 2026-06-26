@@ -23,112 +23,120 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#include "globals.hh"
 #include "G4GammaParticipants.hh"
+
+#include "G4HadronicException.hh"
 #include "G4LorentzVector.hh"
 #include "G4V3DNucleus.hh"
-#include "G4HadronicException.hh"
+#include "globals.hh"
+
 #include <utility>
 
-// Class G4GammaParticipants 
+// Class G4GammaParticipants
 
-//#define debugGammaParticipants
+// #define debugGammaParticipants
 
-G4VSplitableHadron* G4GammaParticipants::SelectInteractions(const G4ReactionProduct  &thePrimary) 
+G4VSplitableHadron* G4GammaParticipants::SelectInteractions(const G4ReactionProduct& thePrimary)
 {
-	// Check reaction threshold  - goes to CheckThreshold
+  // Check reaction threshold  - goes to CheckThreshold
 
-	theProjectileSplitable = new G4QGSMSplitableHadron(thePrimary, TRUE);
-        theProjectileSplitable->SetStatus(1);
+  theProjectileSplitable = new G4QGSMSplitableHadron(thePrimary, TRUE);
+  theProjectileSplitable->SetStatus(1);
 
-	G4LorentzVector aPrimaryMomentum(thePrimary.GetMomentum(), thePrimary.GetTotalEnergy());
-	G4LorentzVector aTargetNMomentum(0.,0.,0.,938.);
-	if((!(aPrimaryMomentum.e()>-1)) && (!(aPrimaryMomentum.e()<1)) )
-	{
-		throw G4HadronicException(__FILE__, __LINE__,
-				"G4GammaParticipants::SelectInteractions: primary nan energy.");
-	}
-	G4double S = (aPrimaryMomentum + aTargetNMomentum).mag2();
-	G4double ThresholdMass = thePrimary.GetMass() + 938.;
-	ModelMode = SOFT;
+  G4LorentzVector aPrimaryMomentum(thePrimary.GetMomentum(), thePrimary.GetTotalEnergy());
+  G4LorentzVector aTargetNMomentum(0., 0., 0., 938.);
+  if ((!(aPrimaryMomentum.e() > -1)) && (!(aPrimaryMomentum.e() < 1)))
+  {
+    throw G4HadronicException(__FILE__, __LINE__,
+                              "G4GammaParticipants::SelectInteractions: primary nan energy.");
+  }
+  G4double S = (aPrimaryMomentum + aTargetNMomentum).mag2();
+  G4double ThresholdMass = thePrimary.GetMass() + 938.;
+  ModelMode = SOFT;
 
-	#ifdef debugGammaParticipants
-		G4cout <<G4endl<< "Gamma Participants - SelectInteractions " << G4endl;
-                G4cout << "Energy and Nucleus Mass N "<<thePrimary.GetTotalEnergy()<<" "<<theNucleus->GetMassNumber()<<G4endl;
-		G4cout << "SqrtS ThresholdMass ModelMode " <<std::sqrt(S)<<" "<<ThresholdMass<<" "<<ModelMode<< G4endl;
-                G4cout << "ThresholdParameter QGSMThreshold "<<ThresholdParameter<<" "<<QGSMThreshold<<G4endl;
-	#endif
+#ifdef debugGammaParticipants
+  G4cout << G4endl << "Gamma Participants - SelectInteractions " << G4endl;
+  G4cout << "Energy and Nucleus Mass N " << thePrimary.GetTotalEnergy() << " "
+         << theNucleus->GetMassNumber() << G4endl;
+  G4cout << "SqrtS ThresholdMass ModelMode " << std::sqrt(S) << " " << ThresholdMass << " "
+         << ModelMode << G4endl;
+  G4cout << "ThresholdParameter QGSMThreshold " << ThresholdParameter << " " << QGSMThreshold
+         << G4endl;
+#endif
 
+  if (sqr(ThresholdMass + ThresholdParameter) > S)
+  {
+    ModelMode = DIFFRACTIVE;
+  }
 
-	if (sqr(ThresholdMass + ThresholdParameter) > S)
-	{
-		ModelMode = DIFFRACTIVE;
-	}
+  if (sqr(ThresholdMass + QGSMThreshold) > S)
+  {
+    ModelMode = DIFFRACTIVE;
+  }
 
-	if (sqr(ThresholdMass + QGSMThreshold) > S)
-	{
-		ModelMode = DIFFRACTIVE;
-	}
+#ifdef debugGammaParticipants
+  G4cout << "Interaction type (ModelMode) 0 - SOFT, 1 - DIFFRACTIVE:    " << ModelMode << G4endl;
+#endif
 
-	#ifdef debugGammaParticipants
-		G4cout << "Interaction type (ModelMode) 0 - SOFT, 1 - DIFFRACTIVE:    "<<ModelMode<< G4endl;
-	#endif
+  std::for_each(theInteractions.begin(), theInteractions.end(), DeleteInteractionContent());
+  theInteractions.clear();
 
-	std::for_each(theInteractions.begin(), theInteractions.end(), DeleteInteractionContent());
-	theInteractions.clear();
+  //	#ifdef debug_G4GammaParticipants
+  //		G4double eK = thePrimary.GetKineticEnergy()/GeV;
+  //		G4int nucleonCount = theNucleus->GetMassNumber();
+  //	#endif
 
-//	#ifdef debug_G4GammaParticipants
-//		G4double eK = thePrimary.GetKineticEnergy()/GeV;
-//		G4int nucleonCount = theNucleus->GetMassNumber();
-//	#endif
+  G4int theCurrent = G4int(theNucleus->GetMassNumber() * G4UniformRand());
+  G4int NucleonNo = 0;
 
-	G4int theCurrent = G4int(theNucleus->GetMassNumber()*G4UniformRand());
-        G4int NucleonNo=0;
+  theNucleus->StartLoop();
+  G4Nucleon* pNucleon = 0;
 
-        theNucleus->StartLoop();
-        G4Nucleon * pNucleon =0;
+  while ((pNucleon = theNucleus->GetNextNucleon()))
+  {
+    if (NucleonNo == theCurrent) break;
+    NucleonNo++;
+  }
 
-        while( (pNucleon = theNucleus->GetNextNucleon()) ) {if(NucleonNo == theCurrent) break; NucleonNo++;} 
+  if (pNucleon)
+  {
+    G4QGSMSplitableHadron* aTarget = new G4QGSMSplitableHadron(*pNucleon);
+    pNucleon->Hit(aTarget);
 
-        if ( pNucleon ) {
+    if ((0.06 > G4UniformRand() && (ModelMode == SOFT))
+        || (ModelMode == DIFFRACTIVE))  //  (false) //
+    {  // Diffractive interaction
+      G4InteractionContent* aInteraction = new G4InteractionContent(theProjectileSplitable);
+      theProjectileSplitable->SetStatus(1 * theProjectileSplitable->GetStatus());
 
-	  G4QGSMSplitableHadron* aTarget = new G4QGSMSplitableHadron(*pNucleon);
-          pNucleon->Hit(aTarget);
+      aInteraction->SetTarget(aTarget);
+      aInteraction->SetTargetNucleon(pNucleon);
+      aTarget->SetCollisionCount(0);
+      aTarget->SetStatus(1);  // Mark that is Diffr. interaction
 
-	  if( (0.06 > G4UniformRand() &&(ModelMode==SOFT)) || (ModelMode==DIFFRACTIVE ) ) //  (false) //
-	  {     // Diffractive interaction
-      		G4InteractionContent * aInteraction = new G4InteractionContent(theProjectileSplitable);
-      		theProjectileSplitable->SetStatus(1*theProjectileSplitable->GetStatus());
+      aInteraction->SetNumberOfDiffractiveCollisions(1);
+      aInteraction->SetNumberOfSoftCollisions(0);
+      aInteraction->SetStatus(1);
 
-      		aInteraction->SetTarget(aTarget);
-      		aInteraction->SetTargetNucleon(pNucleon);
-      		aTarget->SetCollisionCount(0);
-      		aTarget->SetStatus(1);                             // Mark that is Diffr. interaction
+      theInteractions.push_back(aInteraction);
+    }
+    else
+    {
+      // nondiffractive soft interaction occurs
+      aTarget->IncrementCollisionCount(1);
+      aTarget->SetStatus(0);
+      theTargets.push_back(aTarget);
 
-      		aInteraction->SetNumberOfDiffractiveCollisions(1);
-      		aInteraction->SetNumberOfSoftCollisions(0);
-      		aInteraction->SetStatus(1);
+      theProjectileSplitable->IncrementCollisionCount(1);
+      theProjectileSplitable->SetStatus(0 * theProjectileSplitable->GetStatus());
 
-      		theInteractions.push_back(aInteraction);
-	  }
-	  else
-	  {
-		// nondiffractive soft interaction occurs
-		aTarget->IncrementCollisionCount(1);
-	        aTarget->SetStatus(0);
-        	theTargets.push_back(aTarget);
-
-		theProjectileSplitable->IncrementCollisionCount(1);
-        	theProjectileSplitable->SetStatus(0*theProjectileSplitable->GetStatus());
-
-		G4InteractionContent * aInteraction = 
-                                           new G4InteractionContent(theProjectileSplitable);
-		aInteraction->SetTarget(aTarget);
-        	aInteraction->SetTargetNucleon(pNucleon);
-		aInteraction->SetNumberOfSoftCollisions(1);
-        	aInteraction->SetStatus(0);                        // Mark that is non-Diffr. interaction
-		theInteractions.push_back(aInteraction);
-	  }
-        }
-	return theProjectileSplitable;
+      G4InteractionContent* aInteraction = new G4InteractionContent(theProjectileSplitable);
+      aInteraction->SetTarget(aTarget);
+      aInteraction->SetTargetNucleon(pNucleon);
+      aInteraction->SetNumberOfSoftCollisions(1);
+      aInteraction->SetStatus(0);  // Mark that is non-Diffr. interaction
+      theInteractions.push_back(aInteraction);
+    }
+  }
+  return theProjectileSplitable;
 }

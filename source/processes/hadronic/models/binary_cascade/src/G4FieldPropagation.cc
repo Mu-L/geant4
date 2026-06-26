@@ -24,6 +24,7 @@
 // ********************************************************************
 //
 #include "G4FieldPropagation.hh"
+
 #include "G4HadronicException.hh"
 
 G4FieldPropagation::~G4FieldPropagation() {}

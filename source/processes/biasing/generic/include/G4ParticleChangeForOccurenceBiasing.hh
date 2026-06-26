@@ -36,8 +36,8 @@
 // Author: Marc Verderi, November 2013.
 //
 // --------------------------------------------------------------------
-#ifndef G4ParticleChangeForOccurenceBiasing_hh
-#define G4ParticleChangeForOccurenceBiasing_hh 1
+#ifndef G4PARTICLECHANGEFOROCCURENCEBIASING_HH
+#define G4PARTICLECHANGEFOROCCURENCEBIASING_HH
 
 #include "G4VParticleChange.hh"
 
@@ -48,29 +48,27 @@ class G4ParticleChangeForOccurenceBiasing : public G4VParticleChange
     G4ParticleChangeForOccurenceBiasing(const G4String& name);
     ~G4ParticleChangeForOccurenceBiasing() = default;
 
-    void SetOccurenceWeightForNonInteraction(G4double w)
-      { fOccurenceWeightForNonInteraction = w; }
+    void SetOccurenceWeightForNonInteraction(G4double w) { fOccurenceWeightForNonInteraction = w; }
     G4double GetOccurenceWeightForNonInteraction() const
-      { return fOccurenceWeightForNonInteraction; }
-    void SetOccurenceWeightForInteraction(G4double w)
-      { fOccurenceWeightForInteraction = w; }
-    G4double GetOccurenceWeightForInteraction() const
-      { return fOccurenceWeightForInteraction; }
+    {
+      return fOccurenceWeightForNonInteraction;
+    }
+    void SetOccurenceWeightForInteraction(G4double w) { fOccurenceWeightForInteraction = w; }
+    G4double GetOccurenceWeightForInteraction() const { return fOccurenceWeightForInteraction; }
 
     // -- set a wrapped particle change AND USE IT TO UPDATE this occurrence
     //    particle change state:
     void SetWrappedParticleChange(G4VParticleChange* wpc);
-    G4VParticleChange* GetWrappedParticleChange() const
-      { return fWrappedParticleChange; }
+    G4VParticleChange* GetWrappedParticleChange() const { return fWrappedParticleChange; }
 
     // -- collect the secondaries from the wrapped particle change,
     //    apply weight correction, and clear wrapped particle change:
     void StealSecondaries();
-  
+
     // -- from base class G4VParticleChange:
-    virtual G4Step* UpdateStepForAtRest (G4Step* step);
+    virtual G4Step* UpdateStepForAtRest(G4Step* step);
     virtual G4Step* UpdateStepForAlongStep(G4Step* step);
-    virtual G4Step* UpdateStepForPostStep (G4Step* step);
+    virtual G4Step* UpdateStepForPostStep(G4Step* step);
 
     const G4String& GetName() const { return fName; }
 
@@ -79,7 +77,7 @@ class G4ParticleChangeForOccurenceBiasing : public G4VParticleChange
     G4String fName;
     G4VParticleChange* fWrappedParticleChange = nullptr;
     G4double fOccurenceWeightForNonInteraction = -1.0;
-    G4double fOccurenceWeightForInteraction = -1.0;  
+    G4double fOccurenceWeightForInteraction = -1.0;
 };
 
 #endif

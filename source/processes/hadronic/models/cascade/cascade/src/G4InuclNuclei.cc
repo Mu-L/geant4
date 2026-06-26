@@ -55,6 +55,7 @@
 // 20150608  M. Kelsey -- Label all while loops as terminating.
 
 #include "G4InuclNuclei.hh"
+
 #include "G4AutoLock.hh"
 #include "G4Fragment.hh"
 #include "G4HadronicException.hh"
@@ -70,23 +71,24 @@
 #include "G4V3DNucleus.hh"
 
 #include <assert.h>
-#include <sstream>
+
 #include <map>
+#include <sstream>
 
 using namespace G4InuclSpecialFunctions;
 
-
 // Convert contents from (via constructor) and to G4Fragment
 
-G4InuclNuclei::G4InuclNuclei(const G4Fragment& aFragment,
-			     G4InuclParticle::Model model)
-  : G4InuclParticle() {
+G4InuclNuclei::G4InuclNuclei(const G4Fragment& aFragment, G4InuclParticle::Model model)
+  : G4InuclParticle()
+{
   copy(aFragment, model);
 }
 
-void G4InuclNuclei::copy(const G4Fragment& aFragment, Model model) {
-  fill(aFragment.GetMomentum()/GeV, aFragment.GetA_asInt(),
-       aFragment.GetZ_asInt(), aFragment.GetExcitationEnergy(), model);
+void G4InuclNuclei::copy(const G4Fragment& aFragment, Model model)
+{
+  fill(aFragment.GetMomentum() / GeV, aFragment.GetA_asInt(), aFragment.GetZ_asInt(),
+       aFragment.GetExcitationEnergy(), model);
 
   // Exciton configuration must be set by hand
   theExitonConfiguration.protonQuasiParticles = aFragment.GetNumberOfCharged();
@@ -100,64 +102,66 @@ void G4InuclNuclei::copy(const G4Fragment& aFragment, Model model) {
     aFragment.GetNumberOfHoles() - theExitonConfiguration.protonHoles;
 }
 
-
 // FIXME:  Should we have a local buffer and return by const-reference instead?
-G4Fragment G4InuclNuclei::makeG4Fragment() const {
-  G4Fragment frag(getA(), getZ(), getMomentum()*GeV);	// From Bertini units
+G4Fragment G4InuclNuclei::makeG4Fragment() const
+{
+  G4Fragment frag(getA(), getZ(), getMomentum() * GeV);  // From Bertini units
 
   // Note:  exciton configuration has to be set piece by piece
-  frag.SetNumberOfHoles(theExitonConfiguration.protonHoles
-			+ theExitonConfiguration.neutronHoles,
-			theExitonConfiguration.protonHoles);
+  frag.SetNumberOfHoles(theExitonConfiguration.protonHoles + theExitonConfiguration.neutronHoles,
+                        theExitonConfiguration.protonHoles);
 
-  frag.SetNumberOfExcitedParticle(theExitonConfiguration.protonQuasiParticles 
-		  + theExitonConfiguration.neutronQuasiParticles,
-		  theExitonConfiguration.protonQuasiParticles);
+  frag.SetNumberOfExcitedParticle(theExitonConfiguration.protonQuasiParticles
+                                    + theExitonConfiguration.neutronQuasiParticles,
+                                  theExitonConfiguration.protonQuasiParticles);
 
   return frag;
 }
 
-G4InuclNuclei::operator G4Fragment() const {
+G4InuclNuclei::operator G4Fragment() const
+{
   return makeG4Fragment();
 }
 
-
 // Convert contents from (via constructor) G4V3DNucleus
 
-G4InuclNuclei::G4InuclNuclei(G4V3DNucleus* a3DNucleus,
-			     G4InuclParticle::Model model)
-  : G4InuclParticle() {
+G4InuclNuclei::G4InuclNuclei(G4V3DNucleus* a3DNucleus, G4InuclParticle::Model model)
+  : G4InuclParticle()
+{
   copy(a3DNucleus, model);
 }
 
-void G4InuclNuclei::copy(G4V3DNucleus* a3DNucleus, Model model) {
-  if (!a3DNucleus) return;		// Null pointer means no action
+void G4InuclNuclei::copy(G4V3DNucleus* a3DNucleus, Model model)
+{
+  if (!a3DNucleus) return;  // Null pointer means no action
 
   fill(0., a3DNucleus->GetMassNumber(), a3DNucleus->GetCharge(), 0., model);
 
   // Convert every hit nucleon into an exciton hole
-  if (a3DNucleus->StartLoop()) {
+  if (a3DNucleus->StartLoop())
+  {
     G4Nucleon* nucl = 0;
 
     /* Loop checking 08.06.2015 MHK */
-    while ((nucl = a3DNucleus->GetNextNucleon())) {
-      if (nucl->AreYouHit()) {	// Found previously interacted nucleon
-	if (nucl->GetParticleType() == G4Proton::Definition())
-	  theExitonConfiguration.protonHoles++;
+    while ((nucl = a3DNucleus->GetNextNucleon()))
+    {
+      if (nucl->AreYouHit())
+      {  // Found previously interacted nucleon
+        if (nucl->GetParticleType() == G4Proton::Definition()) theExitonConfiguration.protonHoles++;
 
-	if (nucl->GetParticleType() == G4Neutron::Definition())
-	  theExitonConfiguration.neutronHoles++;
+        if (nucl->GetParticleType() == G4Neutron::Definition())
+          theExitonConfiguration.neutronHoles++;
       }
     }
   }
 }
 
-
 // Overwrite data structure (avoids creating/copying temporaries)
 
-void G4InuclNuclei::fill(const G4LorentzVector& mom, G4int a, G4int z,
-			 G4double exc, G4InuclParticle::Model model) {
-  setDefinition(makeDefinition(a,z));
+void G4InuclNuclei::fill(const G4LorentzVector& mom, G4int a, G4int z, G4double exc,
+                         G4InuclParticle::Model model)
+{
+  setDefinition(makeDefinition(a, z));
   setMomentum(mom);
   setExitationEnergy(exc);
   clearExitonConfiguration();
@@ -165,73 +169,75 @@ void G4InuclNuclei::fill(const G4LorentzVector& mom, G4int a, G4int z,
 }
 
 void G4InuclNuclei::fill(G4double ekin, G4int a, G4int z, G4double exc,
-			 G4InuclParticle::Model model) {
-  setDefinition(makeDefinition(a,z));
+                         G4InuclParticle::Model model)
+{
+  setDefinition(makeDefinition(a, z));
   setKineticEnergy(ekin);
   setExitationEnergy(exc);
   clearExitonConfiguration();
   setModel(model);
 }
 
-void G4InuclNuclei::clear() {
+void G4InuclNuclei::clear()
+{
   setDefinition(0);
   clearExitonConfiguration();
   setModel(G4InuclParticle::DefaultModel);
 }
 
-
 // Change excitation energy while keeping momentum vector constant
 
-void G4InuclNuclei::setExitationEnergy(G4double e) {
-  G4double ekin = getKineticEnergy();		// Current kinetic energy
+void G4InuclNuclei::setExitationEnergy(G4double e)
+{
+  G4double ekin = getKineticEnergy();  // Current kinetic energy
 
-  G4double emass = getNucleiMass() + e*MeV/GeV;	// From Bertini to G4 units
+  G4double emass = getNucleiMass() + e * MeV / GeV;  // From Bertini to G4 units
 
   // Safety check -- if zero energy, don't do computation
-  G4double ekin_new = (ekin == 0.) ? 0.
-    : std::sqrt(emass*emass + ekin*(2.*getMass()+ekin)) - emass;
+  G4double ekin_new =
+    (ekin == 0.) ? 0. : std::sqrt(emass * emass + ekin * (2. * getMass() + ekin)) - emass;
 
-  setMass(emass);	       // Momentum is computed from mass and Ekin
+  setMass(emass);  // Momentum is computed from mass and Ekin
   setKineticEnergy(ekin_new);
 }
-
 
 // Convert nuclear configuration to standard GEANT4 pointer
 
 // WARNING:  Opposite conventions!  G4InuclNuclei uses (A,Z) everywhere, while
 //	  G4ParticleTable::GetIon() uses (Z,A)!
 
-G4ParticleDefinition* G4InuclNuclei::makeDefinition(G4int a, G4int z) {
+G4ParticleDefinition* G4InuclNuclei::makeDefinition(G4int a, G4int z)
+{
   // SPECIAL CASE:  (0,0) means create dummy without definition
   if (0 == a && 0 == z) return 0;
 
   G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
-  G4ParticleDefinition *pd = pTable->GetIonTable()->GetIon(z, a, 0);
+  G4ParticleDefinition* pd = pTable->GetIonTable()->GetIon(z, a, 0);
 
   // SPECIAL CASE:  Non-physical nuclear fragment, for final-state return
-  if (!pd) pd = makeNuclearFragment(a,z);
+  if (!pd) pd = makeNuclearFragment(a, z);
 
-  return pd;		// This could return a null pointer if above fails
+  return pd;  // This could return a null pointer if above fails
 }
-
 
 // Shared buffer of nuclear fragments created below, to avoid memory leaks
 
-namespace {
-  static std::map<G4int,G4ParticleDefinition*> fragmentList;
-  G4Mutex fragListMutex = G4MUTEX_INITIALIZER;
-}
+namespace
+{
+static std::map<G4int, G4ParticleDefinition*> fragmentList;
+G4Mutex fragListMutex = G4MUTEX_INITIALIZER;
+}  // namespace
 
 // Creates a non-physical pseudo-nucleus, for return as final-state fragment
 // from G4IntraNuclearCascader
 
-G4ParticleDefinition* 
-G4InuclNuclei::makeNuclearFragment(G4int a, G4int z) {
-  if (a<=0 || z<0 || a<z) {
+G4ParticleDefinition* G4InuclNuclei::makeNuclearFragment(G4int a, G4int z)
+{
+  if (a <= 0 || z < 0 || a < z)
+  {
     G4cerr << " >>> G4InuclNuclei::makeNuclearFragment() called with"
-	   << " impossible arguments A=" << a << " Z=" << z << G4endl;
-    throw G4HadronicException(__FILE__, __LINE__,
-			      "G4InuclNuclei impossible A/Z arguments");
+           << " impossible arguments A=" << a << " Z=" << z << G4endl;
+    throw G4HadronicException(__FILE__, __LINE__, "G4InuclNuclei impossible A/Z arguments");
   }
 
   G4int code = G4IonTable::GetNucleusEncoding(z, a);
@@ -248,11 +254,11 @@ G4InuclNuclei::makeNuclearFragment(G4int a, G4int z) {
   std::stringstream zstr, astr;
   zstr << z;
   astr << a;
-  
+
   G4String name = "Z" + zstr.str() + "A" + astr.str();
-  
-  G4double mass = getNucleiMass(a,z) *GeV/MeV;	// From Bertini to GEANT4 units
-  
+
+  G4double mass = getNucleiMass(a, z) * GeV / MeV;  // From Bertini to GEANT4 units
+
   //    Arguments for constructor are as follows
   //               name             mass          width         charge
   //             2*spin           parity  C-conjugation
@@ -260,29 +266,28 @@ G4InuclNuclei::makeNuclearFragment(G4int a, G4int z) {
   //               type    lepton number  baryon number   PDG encoding
   //             stable         lifetime    decay table
   //             shortlived      subType    anti_encoding Excitation-energy
-  
-  G4Ions* fragPD = new G4Ions(name,       mass, 0., z*eplus,
-  			      0,          +1,   0,
-			      0,          0,    0,
-			      "nucleus",  0,    a, code,
-			      true,	  0.,   0,
-			      true, "generic",  0,  0.);
+
+  G4Ions* fragPD = new G4Ions(name, mass, 0., z * eplus, 0, +1, 0, 0, 0, 0, "nucleus", 0, a, code,
+                              true, 0., 0, true, "generic", 0, 0.);
   fragPD->SetAntiPDGEncoding(0);
 
-  fragListLock.lock();		    // Protect before saving new fragment
-  return (fragmentList[code] = fragPD);     // Store in table for next lookup
+  fragListLock.lock();  // Protect before saving new fragment
+  return (fragmentList[code] = fragPD);  // Store in table for next lookup
 }
 
-G4double G4InuclNuclei::getNucleiMass(G4int a, G4int z, G4double exc) {
+G4double G4InuclNuclei::getNucleiMass(G4int a, G4int z, G4double exc)
+{
   // Simple minded mass calculation use constants in CLHEP (all in MeV)
-  G4double mass = G4NucleiProperties::GetNuclearMass(a,z) + exc;
+  G4double mass = G4NucleiProperties::GetNuclearMass(a, z) + exc;
 
-  return mass*MeV/GeV;		// Convert from GEANT4 to Bertini units
+  return mass * MeV / GeV;  // Convert from GEANT4 to Bertini units
 }
 
 // Assignment operator for use with std::sort()
-G4InuclNuclei& G4InuclNuclei::operator=(const G4InuclNuclei& right) {
-  if (this != &right) {
+G4InuclNuclei& G4InuclNuclei::operator=(const G4InuclNuclei& right)
+{
+  if (this != &right)
+  {
     theExitonConfiguration = right.theExitonConfiguration;
     G4InuclParticle::operator=(right);
   }
@@ -291,12 +296,11 @@ G4InuclNuclei& G4InuclNuclei::operator=(const G4InuclNuclei& right) {
 
 // Dump particle properties for diagnostics
 
-void G4InuclNuclei::print(std::ostream& os) const {
+void G4InuclNuclei::print(std::ostream& os) const
+{
   G4InuclParticle::print(os);
-  os << G4endl << " Nucleus: " << getDefinition()->GetParticleName() 
-     << " A " << getA() << " Z " << getZ() << " mass " << getMass()
-     << " Eex (MeV) " << getExitationEnergy();
+  os << G4endl << " Nucleus: " << getDefinition()->GetParticleName() << " A " << getA() << " Z "
+     << getZ() << " mass " << getMass() << " Eex (MeV) " << getExitationEnergy();
 
-  if (!theExitonConfiguration.empty())
-    os << G4endl << "         " << theExitonConfiguration;
+  if (!theExitonConfiguration.empty()) os << G4endl << "         " << theExitonConfiguration;
 }

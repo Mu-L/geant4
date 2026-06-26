@@ -36,41 +36,36 @@
 //
 
 #include "G4EmStandardPhysics_option1.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4EmParameters.hh"
-#include "G4EmBuilder.hh"
 
-#include "G4ComptonScattering.hh"
-#include "G4GammaConversion.hh"
-#include "G4PhotoElectricEffect.hh"
-#include "G4LivermorePhotoElectricModel.hh"
-
-#include "G4hMultipleScattering.hh"
-#include "G4eCoulombScatteringModel.hh"
-#include "G4CoulombScattering.hh"
-#include "G4WentzelVIModel.hh"
-#include "G4UrbanMscModel.hh"
-
-#include "G4eIonisation.hh"
-#include "G4eBremsstrahlung.hh"
-#include "G4eplusAnnihilation.hh"
-#include "G4UAtomicDeexcitation.hh"
-
-#include "G4hIonisation.hh"
-#include "G4ionIonisation.hh"
-
-#include "G4ParticleTable.hh"
-#include "G4Gamma.hh"
-#include "G4Electron.hh"
-#include "G4Positron.hh"
-#include "G4GenericIon.hh"
-
-#include "G4PhysicsListHelper.hh"
 #include "G4BuilderType.hh"
+#include "G4ComptonScattering.hh"
+#include "G4CoulombScattering.hh"
+#include "G4Electron.hh"
+#include "G4EmBuilder.hh"
 #include "G4EmModelActivator.hh"
+#include "G4EmParameters.hh"
+#include "G4Gamma.hh"
+#include "G4GammaConversion.hh"
 #include "G4GammaGeneralProcess.hh"
+#include "G4GenericIon.hh"
+#include "G4LivermorePhotoElectricModel.hh"
 #include "G4LossTableManager.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "G4PhotoElectricEffect.hh"
+#include "G4PhysicsListHelper.hh"
+#include "G4Positron.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4UAtomicDeexcitation.hh"
+#include "G4UrbanMscModel.hh"
+#include "G4WentzelVIModel.hh"
+#include "G4eBremsstrahlung.hh"
+#include "G4eCoulombScatteringModel.hh"
+#include "G4eIonisation.hh"
+#include "G4eplusAnnihilation.hh"
+#include "G4hIonisation.hh"
+#include "G4hMultipleScattering.hh"
+#include "G4ionIonisation.hh"
 
 // factory
 #include "G4PhysicsConstructorFactory.hh"
@@ -79,8 +74,7 @@ G4_DECLARE_PHYSCONSTR_FACTORY(G4EmStandardPhysics_option1);
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4EmStandardPhysics_option1::G4EmStandardPhysics_option1(G4int ver, 
-							 const G4String&)
+G4EmStandardPhysics_option1::G4EmStandardPhysics_option1(G4int ver, const G4String&)
   : G4VPhysicsConstructor("G4EmStandard_opt1")
 {
   SetVerboseLevel(ver);
@@ -91,7 +85,7 @@ G4EmStandardPhysics_option1::G4EmStandardPhysics_option1(G4int ver,
   param->SetGeneralProcessActive(true);
   // Enable the combined G4TransportationWithMsc, but not the internal stepping.
   param->SetTransportationWithMsc(G4TransportationWithMscType::fEnabled);
-  param->SetStepFunction(0.8, 1*CLHEP::mm);
+  param->SetStepFunction(0.8, 1 * CLHEP::mm);
   param->SetMscRangeFactor(0.2);
   param->SetMscStepLimitType(fMinimal);
   SetPhysicsType(bElectromagnetic);
@@ -99,8 +93,7 @@ G4EmStandardPhysics_option1::G4EmStandardPhysics_option1(G4int ver,
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4EmStandardPhysics_option1::~G4EmStandardPhysics_option1()
-{}
+G4EmStandardPhysics_option1::~G4EmStandardPhysics_option1() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -114,7 +107,8 @@ void G4EmStandardPhysics_option1::ConstructParticle()
 
 void G4EmStandardPhysics_option1::ConstructProcess()
 {
-  if(verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "### " << GetPhysicsName() << " Construct Processes " << G4endl;
   }
   G4EmBuilder::PrepareEMPhysics();
@@ -134,15 +128,17 @@ void G4EmStandardPhysics_option1::ConstructProcess()
   G4PhotoElectricEffect* pee = new G4PhotoElectricEffect();
   pee->SetEmModel(new G4LivermorePhotoElectricModel());
 
-  if(G4EmParameters::Instance()->GeneralProcessActive()) {
+  if (G4EmParameters::Instance()->GeneralProcessActive())
+  {
     G4GammaGeneralProcess* sp = new G4GammaGeneralProcess();
     sp->AddEmProcess(pee);
     sp->AddEmProcess(new G4ComptonScattering());
     sp->AddEmProcess(new G4GammaConversion());
     G4LossTableManager::Instance()->SetGammaGeneralProcess(sp);
     ph->RegisterProcess(sp, particle);
-
-  } else {
+  }
+  else
+  {
     ph->RegisterProcess(pee, particle);
     ph->RegisterProcess(new G4ComptonScattering(), particle);
     ph->RegisterProcess(new G4GammaConversion(), particle);
@@ -159,9 +155,9 @@ void G4EmStandardPhysics_option1::ConstructProcess()
   msc2->SetLowEnergyLimit(highEnergyLimit);
   G4EmBuilder::ConstructElectronMscProcess(msc1, msc2, particle);
 
-  G4eCoulombScatteringModel* ssm = new G4eCoulombScatteringModel(); 
+  G4eCoulombScatteringModel* ssm = new G4eCoulombScatteringModel();
   G4CoulombScattering* ss = new G4CoulombScattering();
-  ss->SetEmModel(ssm); 
+  ss->SetEmModel(ssm);
   ss->SetMinKinEnergy(highEnergyLimit);
   ssm->SetLowEnergyLimit(highEnergyLimit);
   ssm->SetActivationLowEnergyLimit(highEnergyLimit);
@@ -180,9 +176,9 @@ void G4EmStandardPhysics_option1::ConstructProcess()
   msc2->SetLowEnergyLimit(highEnergyLimit);
   G4EmBuilder::ConstructElectronMscProcess(msc1, msc2, particle);
 
-  ssm = new G4eCoulombScatteringModel(); 
+  ssm = new G4eCoulombScatteringModel();
   ss = new G4CoulombScattering();
-  ss->SetEmModel(ssm); 
+  ss->SetEmModel(ssm);
   ss->SetMinKinEnergy(highEnergyLimit);
   ssm->SetLowEnergyLimit(highEnergyLimit);
   ssm->SetActivationLowEnergyLimit(highEnergyLimit);

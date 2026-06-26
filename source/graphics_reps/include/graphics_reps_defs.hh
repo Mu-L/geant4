@@ -32,16 +32,16 @@
 #include "G4Types.hh"
 
 #ifdef WIN32
-  //
-  // Unique identifier for graphics_reps module
-  //
-  #if defined G4GREPS_ALLOC_EXPORT
-    #define G4GREPS_DLL G4DLLEXPORT
-  #else
-    #define G4GREPS_DLL G4DLLIMPORT
-  #endif
+//
+// Unique identifier for graphics_reps module
+//
+#  if defined G4GREPS_ALLOC_EXPORT
+#    define G4GREPS_DLL G4DLLEXPORT
+#  else
+#    define G4GREPS_DLL G4DLLIMPORT
+#  endif
 #else
-  #define G4GREPS_DLL
+#  define G4GREPS_DLL
 #endif
 
 #endif /* G4GRAPHICSREPSDEFS_HH */

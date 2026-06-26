@@ -33,36 +33,40 @@
 //
 //  - Created   M. Asai, Sept. 2020
 
-#ifndef G4PSVolumeFlux_h
-#define G4PSVolumeFlux_h 1
+#ifndef G4PSVOLUMEFLUX_HH
+#define G4PSVOLUMEFLUX_HH
 
-#include "G4VPrimitivePlotter.hh"
-#include "G4THitsMap.hh"
 #include "G4PSDirectionFlag.hh"
+#include "G4THitsMap.hh"
+#include "G4VPrimitivePlotter.hh"
 
 class G4PSVolumeFlux : public G4VPrimitivePlotter
 {
- public:
-  G4PSVolumeFlux(const G4String& name, G4int direction = 1, G4int depth = 0);
-  ~G4PSVolumeFlux() override = default;
+  public:
 
- public:
-  void Initialize(G4HCofThisEvent*) override;
-  void clear() override;
-  void PrintAll() override;
+    G4PSVolumeFlux(const G4String& name, G4int direction = 1, G4int depth = 0);
+    ~G4PSVolumeFlux() override = default;
 
-  void SetDivAre(G4bool val) { divare = val; }
-  void SetDivCos(G4bool val) { divcos = val; }
- 
- protected:
-  G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+  public:
 
- private:
-  G4int HCID{-1};
-  G4int fDirection;
-  G4THitsMap<G4double>* EvtMap{nullptr};
-  G4bool divare = false;  // divide by the surface area
-  G4bool divcos = false;  // divide by cos(theta)
+    void Initialize(G4HCofThisEvent*) override;
+    void clear() override;
+    void PrintAll() override;
+
+    void SetDivAre(G4bool val) { divare = val; }
+    void SetDivCos(G4bool val) { divcos = val; }
+
+  protected:
+
+    G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+
+  private:
+
+    G4int HCID{-1};
+    G4int fDirection;
+    G4THitsMap<G4double>* EvtMap{nullptr};
+    G4bool divare = false;  // divide by the surface area
+    G4bool divcos = false;  // divide by cos(theta)
 };
 
 #endif

@@ -47,13 +47,11 @@ G4PSTermination::G4PSTermination(const G4String& name, G4int depth)
 
 G4bool G4PSTermination::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
-  if(aStep->GetTrack()->GetTrackStatus() != fStopAndKill)
-    return false;
+  if (aStep->GetTrack()->GetTrackStatus() != fStopAndKill) return false;
 
-  G4int index  = GetIndex(aStep);
+  G4int index = GetIndex(aStep);
   G4double val = 1.0;
-  if(weighted)
-    val *= aStep->GetPreStepPoint()->GetWeight();
+  if (weighted) val *= aStep->GetPreStepPoint()->GetWeight();
   EvtMap->add(index, val);
   return true;
 }
@@ -61,38 +59,40 @@ G4bool G4PSTermination::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 void G4PSTermination::Initialize(G4HCofThisEvent* HCE)
 {
   EvtMap = new G4THitsMap<G4double>(detector->GetName(), GetName());
-  if(HCID < 0)
+  if (HCID < 0)
   {
     HCID = GetCollectionID(0);
   }
-  HCE->AddHitsCollection(HCID, (G4VHitsCollection*) EvtMap);
+  HCE->AddHitsCollection(HCID, (G4VHitsCollection*)EvtMap);
 }
 
-void G4PSTermination::clear() { EvtMap->clear(); }
+void G4PSTermination::clear()
+{
+  EvtMap->clear();
+}
 
 void G4PSTermination::PrintAll()
 {
   G4cout << " MultiFunctionalDet  " << detector->GetName() << G4endl;
   G4cout << " PrimitiveScorer " << GetName() << G4endl;
   G4cout << " Number of entries " << EvtMap->entries() << G4endl;
-  for(const auto& [copy, terminations] : *(EvtMap->GetMap()))
+  for (const auto& [copy, terminations] : *(EvtMap->GetMap()))
   {
-    G4cout << "  copy no.: " << copy
-           << "  terminations: " << *(terminations) << G4endl;
+    G4cout << "  copy no.: " << copy << "  terminations: " << *(terminations) << G4endl;
   }
 }
 
 void G4PSTermination::SetUnit(const G4String& unit)
 {
-  if(unit.empty())
+  if (unit.empty())
   {
-    unitName  = unit;
+    unitName = unit;
     unitValue = 1.0;
   }
   else
   {
-    G4String msg = "Invalid unit [" + unit + "] (Current  unit is [" +
-                   GetUnit() + "] ) for " + GetName();
+    G4String msg =
+      "Invalid unit [" + unit + "] (Current  unit is [" + GetUnit() + "] ) for " + GetName();
     G4Exception("G4PSTermination::SetUnit", "DetPS0017", JustWarning, msg);
   }
 }

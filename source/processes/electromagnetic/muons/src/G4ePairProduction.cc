@@ -43,20 +43,20 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include "G4ePairProduction.hh"
-#include "G4SystemOfUnits.hh"
+
 #include "G4Electron.hh"
-#include "G4Positron.hh"
-#include "G4VEmModel.hh"
-#include "G4VEmFluctuationModel.hh"
-#include "G4MuPairProductionModel.hh"
 #include "G4ElementData.hh"
 #include "G4EmParameters.hh"
+#include "G4MuPairProductionModel.hh"
+#include "G4Positron.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4VEmFluctuationModel.hh"
+#include "G4VEmModel.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4ePairProduction::G4ePairProduction(const G4String& name)
-  : G4VEnergyLossProcess(name),
-    lowestKinEnergy(100.*CLHEP::MeV)
+  : G4VEnergyLossProcess(name), lowestKinEnergy(100. * CLHEP::MeV)
 {
   SetProcessSubType(fPairProdByCharged);
   SetSecondaryParticle(G4Positron::Positron());
@@ -73,28 +73,27 @@ G4bool G4ePairProduction::IsApplicable(const G4ParticleDefinition& p)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double G4ePairProduction::MinPrimaryEnergy(const G4ParticleDefinition*,
-					     const G4Material*,
-					     G4double)
+G4double G4ePairProduction::MinPrimaryEnergy(const G4ParticleDefinition*, const G4Material*,
+                                             G4double)
 {
   return lowestKinEnergy;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4ePairProduction::InitialiseEnergyLossProcess(
-                         const G4ParticleDefinition* part,
-			 const G4ParticleDefinition*)
+void G4ePairProduction::InitialiseEnergyLossProcess(const G4ParticleDefinition* part,
+                                                    const G4ParticleDefinition*)
 {
-  if (!isInitialised) {
+  if (!isInitialised)
+  {
     isInitialised = true;
 
     theParticle = part;
 
-    G4MuPairProductionModel* mod = new G4MuPairProductionModel(part, "ePairProd"); 
+    G4MuPairProductionModel* mod = new G4MuPairProductionModel(part, "ePairProd");
     SetEmModel(mod);
 
-    lowestKinEnergy = std::max(lowestKinEnergy, part->GetPDGMass()*8.0);
+    lowestKinEnergy = std::max(lowestKinEnergy, part->GetPDGMass() * 8.0);
     mod->SetLowestKineticEnergy(lowestKinEnergy);
 
     G4VEmFluctuationModel* fm = nullptr;
@@ -110,16 +109,17 @@ void G4ePairProduction::InitialiseEnergyLossProcess(
 void G4ePairProduction::StreamProcessInfo(std::ostream& out) const
 {
   G4ElementData* ed = EmModel(0)->GetElementData();
-  if(ed) {
-    for(G4int Z=1; Z<93; ++Z) {
+  if (ed)
+  {
+    for (G4int Z = 1; Z < 93; ++Z)
+    {
       G4Physics2DVector* pv = ed->GetElement2DData(Z);
-      if(pv) {
-        out << "      Sampling table " << pv->GetLengthY()
-	    << "x" << pv->GetLengthX() << "; from "
-	    << G4Exp(pv->GetY(0))/GeV << " GeV to " 
-	    << G4Exp(pv->GetY(pv->GetLengthY()-1))/TeV 
-	    << " TeV " << G4endl;
-	break;
+      if (pv)
+      {
+        out << "      Sampling table " << pv->GetLengthY() << "x" << pv->GetLengthX() << "; from "
+            << G4Exp(pv->GetY(0)) / GeV << " GeV to " << G4Exp(pv->GetY(pv->GetLengthY() - 1)) / TeV
+            << " TeV " << G4endl;
+        break;
       }
     }
   }

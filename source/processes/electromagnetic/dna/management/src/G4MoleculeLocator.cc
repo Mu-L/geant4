@@ -41,11 +41,13 @@ G4MoleculeLocator::G4MoleculeLocator()
 
 G4MoleculeLocator* G4MoleculeLocator::Instance()
 {
-  if (fpInstance == nullptr) {
+  if (fpInstance == nullptr)
+  {
     static G4ThreadLocalSingleton<G4MoleculeLocator> instance;
     fpInstance = instance.Instance();
   }
-  if (!fpInstance->fIsInitialized) {
+  if (!fpInstance->fIsInitialized)
+  {
     fpInstance->Initialize();
   }
   return fpInstance;
@@ -63,15 +65,18 @@ G4TouchableHandle G4MoleculeLocator::LocateMoleculeTrack(const G4Track* pTrack)
 {
   G4IT* pITrack = GetIT(pTrack);
 
-  if (pITrack == nullptr) {
-    G4Exception("G4MoleculeLocator::LocateMoleculeSetStateAndTouchable", "NOT_AN_IT", FatalErrorInArgument,
+  if (pITrack == nullptr)
+  {
+    G4Exception("G4MoleculeLocator::LocateMoleculeSetStateAndTouchable", "NOT_AN_IT",
+                FatalErrorInArgument,
                 "The track passed to this method appears to not hold an IT (molecule) object!");
   }
 
   std::unique_ptr<G4ITNavigatorState_Lock> tmpStateHolder;
   if (pITrack->GetTrackingInfo()->GetNavigatorState() != nullptr)
     fNavigator->SetNavigatorState(pITrack->GetTrackingInfo()->GetNavigatorState());
-  else {
+  else
+  {
     fNavigator->NewNavigatorState();
     tmpStateHolder = std::unique_ptr<G4ITNavigatorState_Lock>(fNavigator->GetNavigatorState());
     // will be deleted once method goes out of scope
@@ -89,8 +94,10 @@ void G4MoleculeLocator::LocateMoleculeSetStateAndTouchable(G4Track* pTrack)
 {
   G4IT* pITrack = GetIT(pTrack);
 
-  if (pITrack == nullptr) {
-    G4Exception("G4MoleculeLocator::LocateMoleculeSetStateAndTouchable", "NOT_AN_IT", FatalErrorInArgument,
+  if (pITrack == nullptr)
+  {
+    G4Exception("G4MoleculeLocator::LocateMoleculeSetStateAndTouchable", "NOT_AN_IT",
+                FatalErrorInArgument,
                 "The track passed to this method appears to not hold an IT (molecule) object!");
   }
 

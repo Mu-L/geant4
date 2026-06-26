@@ -31,17 +31,17 @@
 // 25-Jul-06 V.Ivanchenko add 19 MeV low energy, below which S-wave is sampled
 //
 
-#ifndef G4ChargeExchange_h
-#define G4ChargeExchange_h 1
+#ifndef G4CHARGEEXCHANGE_HH
+#define G4CHARGEEXCHANGE_HH
 
 // Class Description
 // Final state production model for hadron nuclear coherent charge exchange;
 // Class Description - End
 
-#include "globals.hh"
-#include "G4HadronicInteraction.hh"
 #include "G4HadProjectile.hh"
+#include "G4HadronicInteraction.hh"
 #include "G4Nucleus.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 class G4ChargeExchangeXS;
@@ -50,33 +50,32 @@ class G4NistManager;
 
 class G4ChargeExchange : public G4HadronicInteraction
 {
-public:
+  public:
 
-  explicit G4ChargeExchange(G4ChargeExchangeXS*);
-  ~G4ChargeExchange() override;
+    explicit G4ChargeExchange(G4ChargeExchangeXS*);
+    ~G4ChargeExchange() override;
 
-  G4ChargeExchange( const G4ChargeExchange &right ) = delete;
-  const G4ChargeExchange & operator=( const G4ChargeExchange &right ) = delete;
-  G4bool operator==( const G4ChargeExchange &right ) const = delete;
-  G4bool operator!=( const G4ChargeExchange &right ) const = delete;
+    G4ChargeExchange(const G4ChargeExchange& right) = delete;
+    const G4ChargeExchange& operator=(const G4ChargeExchange& right) = delete;
+    G4bool operator==(const G4ChargeExchange& right) const = delete;
+    G4bool operator!=(const G4ChargeExchange& right) const = delete;
 
-  G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
-                                 G4Nucleus& targetNucleus) override;
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
+                                   G4Nucleus& targetNucleus) override;
 
-  G4double SampleT(const G4ParticleDefinition* theSec, const G4int A,
-		   const G4double tmax) const;
+    G4double SampleT(const G4ParticleDefinition* theSec, const G4int A, const G4double tmax) const;
 
-private:
+  private:
 
-  G4bool SampleMass(G4double& mass, const G4double width, const G4double elim);
-  
-  G4ChargeExchangeXS* fXSection;
-  G4ExcitationHandler* fHandler;
-  G4NistManager* nist;
+    G4bool SampleMass(G4double& mass, const G4double width, const G4double elim);
 
-  G4int secID;  // Creator model ID for the secondaries created by this model
-  G4double lowEnergyLimit; // lowest limit to avoid numerical problems
-  G4double fXSWeightFactor;
+    G4ChargeExchangeXS* fXSection;
+    G4ExcitationHandler* fHandler;
+    G4NistManager* nist;
+
+    G4int secID;  // Creator model ID for the secondaries created by this model
+    G4double lowEnergyLimit;  // lowest limit to avoid numerical problems
+    G4double fXSWeightFactor;
 };
 
 #endif

@@ -25,28 +25,26 @@
 //
 //
 //
-// 
+//
 // John Allison  3rd April 2001
 // Model which knows how to draw text.
 
 #include "G4TextModel.hh"
 
 #include "G4ModelingParameters.hh"
+#include "G4UnitsTable.hh"
 #include "G4VGraphicsScene.hh"
 
-#include "G4UnitsTable.hh"
 #include <sstream>
 
-G4TextModel::~G4TextModel () {}
+G4TextModel::~G4TextModel() {}
 
-G4TextModel::G4TextModel (const G4Text& g4Text, const G4Transform3D& transform)
-: fG4Text(g4Text)
+G4TextModel::G4TextModel(const G4Text& g4Text, const G4Transform3D& transform) : fG4Text(g4Text)
 {
   fType = "G4TextModel";
   std::ostringstream oss;
-  oss << "G4TextModel: '" << fG4Text.GetText()
-      << "' at " << G4BestUnit(g4Text.GetPosition(),"Length")
-      << "with size " << g4Text.GetScreenSize()
+  oss << "G4TextModel: '" << fG4Text.GetText() << "' at "
+      << G4BestUnit(g4Text.GetPosition(), "Length") << "with size " << g4Text.GetScreenSize()
       << " with offsets " << g4Text.GetXOffset() << ',' << g4Text.GetYOffset();
   fGlobalTag = oss.str();
   fGlobalDescription = fGlobalTag;
@@ -54,8 +52,9 @@ G4TextModel::G4TextModel (const G4Text& g4Text, const G4Transform3D& transform)
   fG4Text.SetPosition(fG4Text.GetPosition().transform(transform));
 }
 
-void G4TextModel::DescribeYourselfTo (G4VGraphicsScene& sceneHandler) {
-  sceneHandler.BeginPrimitives ();
-  sceneHandler.AddPrimitive (fG4Text);
-  sceneHandler.EndPrimitives ();
+void G4TextModel::DescribeYourselfTo(G4VGraphicsScene& sceneHandler)
+{
+  sceneHandler.BeginPrimitives();
+  sceneHandler.AddPrimitive(fG4Text);
+  sceneHandler.EndPrimitives();
 }

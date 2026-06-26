@@ -25,40 +25,43 @@
 //
 //
 
-#ifndef G4CollisionNNToDeltaDelta_h
-#define G4CollisionNNToDeltaDelta_h
+#ifndef G4COLLISIONNNTODELTADELTA_HH
+#define G4COLLISIONNNTODELTADELTA_HH
 
-#include "globals.hh"
 #include "G4GeneralNNCollision.hh"
-#include "G4VCrossSectionSource.hh"
-#include "G4VAngularDistribution.hh"
 #include "G4KineticTrackVector.hh"
-#include <vector>
+#include "G4VAngularDistribution.hh"
+#include "G4VCrossSectionSource.hh"
 #include "G4XDeltaDeltaTable.hh"
+#include "globals.hh"
+
+#include <vector>
 
 class G4KineticTrack;
 
 class G4CollisionNNToDeltaDelta : public G4GeneralNNCollision
 {
-public:
+  public:
 
-  G4CollisionNNToDeltaDelta();
-  virtual ~G4CollisionNNToDeltaDelta() {};
-  virtual G4String GetName() const { return "NN -> Delta Delta Collision"; }
+    G4CollisionNNToDeltaDelta();
+    virtual ~G4CollisionNNToDeltaDelta() {};
+    virtual G4String GetName() const { return "NN -> Delta Delta Collision"; }
 
-private:
-  G4CollisionNNToDeltaDelta(const G4CollisionNNToDeltaDelta &);
-  G4CollisionNNToDeltaDelta & operator= (const G4CollisionNNToDeltaDelta &);
+  private:
 
-protected:
-  
-  std::vector<G4String> result;
-  virtual const std::vector<G4String>& GetListOfColliders(G4int ) const
-  {
-    throw G4HadronicException(__FILE__, __LINE__, "Tried to call G4CollisionNNToDeltaDelta::GetListOfColliders. Please find out why!");
-    return result;
-  } 
-  
+    G4CollisionNNToDeltaDelta(const G4CollisionNNToDeltaDelta&);
+    G4CollisionNNToDeltaDelta& operator=(const G4CollisionNNToDeltaDelta&);
+
+  protected:
+
+    std::vector<G4String> result;
+    virtual const std::vector<G4String>& GetListOfColliders(G4int) const
+    {
+      throw G4HadronicException(
+        __FILE__, __LINE__,
+        "Tried to call G4CollisionNNToDeltaDelta::GetListOfColliders. Please find out why!");
+      return result;
+    }
 };
 
 #endif

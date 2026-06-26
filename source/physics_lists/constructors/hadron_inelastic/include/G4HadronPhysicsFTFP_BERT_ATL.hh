@@ -39,25 +39,24 @@
 // 22.09.2020: V.Ivanchenko change design using G4HadProcess utility
 //---------------------------------------------------------------------------
 //
-#ifndef G4HadronPhysicsFTFP_BERT_ATL_h
-#define G4HadronPhysicsFTFP_BERT_ATL_h 1
+#ifndef G4HADRONPHYSICSFTFP_BERT_ATL_HH
+#define G4HADRONPHYSICSFTFP_BERT_ATL_HH
 
 #include "G4HadronPhysicsFTFP_BERT.hh"
 
 class G4HadronPhysicsFTFP_BERT_ATL : public G4HadronPhysicsFTFP_BERT
 {
-  public: 
-    G4HadronPhysicsFTFP_BERT_ATL(G4int verbose =1);
-    G4HadronPhysicsFTFP_BERT_ATL(const G4String& name, G4bool quasiElastic=false);
+  public:
+
+    G4HadronPhysicsFTFP_BERT_ATL(G4int verbose = 1);
+    G4HadronPhysicsFTFP_BERT_ATL(const G4String& name, G4bool quasiElastic = false);
     virtual ~G4HadronPhysicsFTFP_BERT_ATL();
 
     void ConstructProcess() override;
 
     // copy constructor and hide assignment operator
-    G4HadronPhysicsFTFP_BERT_ATL(G4HadronPhysicsFTFP_BERT_ATL &) = delete;
-    G4HadronPhysicsFTFP_BERT_ATL & operator =
-    (const G4HadronPhysicsFTFP_BERT_ATL &right) = delete;
+    G4HadronPhysicsFTFP_BERT_ATL(G4HadronPhysicsFTFP_BERT_ATL&) = delete;
+    G4HadronPhysicsFTFP_BERT_ATL& operator=(const G4HadronPhysicsFTFP_BERT_ATL& right) = delete;
 };
 
 #endif
-

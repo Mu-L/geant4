@@ -35,33 +35,34 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4HadronPhysicsFTF_BIC_h
-#define G4HadronPhysicsFTF_BIC_h 1
+#ifndef G4HADRONPHYSICSFTF_BIC_HH
+#define G4HADRONPHYSICSFTF_BIC_HH
 
 #include "G4HadronPhysicsFTFP_BERT.hh"
 
 class G4HadronPhysicsFTF_BIC : public G4HadronPhysicsFTFP_BERT
 {
-  public: 
-    G4HadronPhysicsFTF_BIC(G4int verbose =1);
-    G4HadronPhysicsFTF_BIC(const G4String& name, G4bool quasiElastic=false);
+  public:
+
+    G4HadronPhysicsFTF_BIC(G4int verbose = 1);
+    G4HadronPhysicsFTF_BIC(const G4String& name, G4bool quasiElastic = false);
     virtual ~G4HadronPhysicsFTF_BIC();
 
     // copy constructor and hide assignment operator
-    G4HadronPhysicsFTF_BIC(G4HadronPhysicsFTF_BIC &) = delete;
-    G4HadronPhysicsFTF_BIC & operator =
-    (const G4HadronPhysicsFTF_BIC &right) = delete;
+    G4HadronPhysicsFTF_BIC(G4HadronPhysicsFTF_BIC&) = delete;
+    G4HadronPhysicsFTF_BIC& operator=(const G4HadronPhysicsFTF_BIC& right) = delete;
 
   protected:
+
     void Neutron() override;
     void Proton() override;
     void Pion() override;
     void Kaon() override;
 
   private:
+
     G4double maxBIC_pion;
     G4double minBERT_pion;
 };
 
 #endif
-

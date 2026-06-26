@@ -49,17 +49,20 @@
 G4Isotope::G4Isotope(const G4String& Name, G4int Z, G4int N, G4double A, G4int il)
   : fName(Name), fZ(Z), fN(N), fA(A), fm(il)
 {
-  if (Z < 1) {
+  if (Z < 1)
+  {
     G4ExceptionDescription ed;
     ed << "Wrong Isotope " << Name << " Z= " << Z << G4endl;
     G4Exception("G4Isotope::G4Isotope()", "mat001", FatalException, ed);
   }
-  if (N < Z) {
+  if (N < Z)
+  {
     G4ExceptionDescription ed;
     ed << "Wrong Isotope " << Name << " Z= " << Z << " > N= " << N << G4endl;
     G4Exception("G4Isotope::G4Isotope()", "mat002", FatalException, ed);
   }
-  if (A <= 0.0) {
+  if (A <= 0.0)
+  {
     fA =
       (G4NistManager::Instance()->GetAtomicMass(Z, N)) * CLHEP::g / (CLHEP::mole * CLHEP::amu_c2);
   }
@@ -69,15 +72,24 @@ G4Isotope::G4Isotope(const G4String& Name, G4int Z, G4int N, G4double A, G4int i
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4Isotope::~G4Isotope() { GetIsotopeTableRef()[fIndexInTable] = nullptr; }
+G4Isotope::~G4Isotope()
+{
+  GetIsotopeTableRef()[fIndexInTable] = nullptr;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4bool G4Isotope::operator==(const G4Isotope& right) const { return (this == (G4Isotope*)&right); }
+G4bool G4Isotope::operator==(const G4Isotope& right) const
+{
+  return (this == (G4Isotope*)&right);
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4bool G4Isotope::operator!=(const G4Isotope& right) const { return (this != (G4Isotope*)&right); }
+G4bool G4Isotope::operator!=(const G4Isotope& right) const
+{
+  return (this != (G4Isotope*)&right);
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -95,7 +107,7 @@ std::ostream& operator<<(std::ostream& flux, const G4Isotope* isotope)
     << "   A = " << std::setw(6) << std::setprecision(2) 
     << (isotope->fA)/(g/mole) << " g/mole";
   // clang-format on
-  
+
   flux.precision(prec);
   flux.setf(mode, std::ios::floatfield);
   return flux;
@@ -116,50 +128,61 @@ std::ostream& operator<<(std::ostream& flux, const G4IsotopeTable& IsotopeTable)
   // Dump info for all known isotopes
   flux << "\n***** Table : Nb of isotopes = " << IsotopeTable.size() << " *****\n" << G4endl;
 
-  for (auto const & i : IsotopeTable) {
+  for (auto const& i : IsotopeTable)
+  {
     flux << i << G4endl;
   }
 
   return flux;
 }
-      
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-const G4IsotopeTable* G4Isotope::GetIsotopeTable() { return &GetIsotopeTableRef(); }
+const G4IsotopeTable* G4Isotope::GetIsotopeTable()
+{
+  return &GetIsotopeTableRef();
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4IsotopeTable& G4Isotope::GetIsotopeTableRef()
 {
-  struct Holder {
-    G4IsotopeTable instance;
-    ~Holder() {
-      for(auto item : instance)
-        delete item;
-    }
+  struct Holder
+  {
+      G4IsotopeTable instance;
+      ~Holder()
+      {
+        for (auto item : instance)
+          delete item;
+      }
   };
   static Holder _holder;
   return _holder.instance;
 }
-  
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-std::size_t G4Isotope::GetNumberOfIsotopes() { return GetIsotopeTableRef().size(); }
+std::size_t G4Isotope::GetNumberOfIsotopes()
+{
+  return GetIsotopeTableRef().size();
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4Isotope* G4Isotope::GetIsotope(const G4String& isotopeName, G4bool warning)
 {
   // search the isotope by its name
-  for (auto const & J : GetIsotopeTableRef()) {
-    if (J->GetName() == isotopeName) {
+  for (auto const& J : GetIsotopeTableRef())
+  {
+    if (J->GetName() == isotopeName)
+    {
       return J;
     }
   }
 
   // the isotope does not exist in the table
-  if (warning) {
+  if (warning)
+  {
     G4cout << "\n---> warning from G4Isotope::GetIsotope(). The isotope: " << isotopeName
            << " does not exist in the table. Return NULL pointer." << G4endl;
   }

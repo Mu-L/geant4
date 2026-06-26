@@ -33,8 +33,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4EMDissociationCrossSection_h
-#define G4EMDissociationCrossSection_h 1
+#ifndef G4EMDISSOCIATIONCROSSSECTION_HH
+#define G4EMDISSOCIATIONCROSSSECTION_HH
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //
 // MODULE:		G4EMDissociationCrossSection.hh
@@ -57,18 +57,18 @@
 // 15 March 2004, P R Truscott, QinetiQ Ltd, UK
 // Beta release
 //
-// 17 August 2011, V.Ivanchenko, provide migration to new design of cross 
+// 17 August 2011, V.Ivanchenko, provide migration to new design of cross
 //                 sections considering this cross section as element-wise
 //
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ///////////////////////////////////////////////////////////////////////////////
 //
-#include "G4VCrossSectionDataSet.hh"
 #include "G4DynamicParticle.hh"
+#include "G4EMDissociationSpectrum.hh"
 #include "G4Element.hh"
 #include "G4ParticleDefinition.hh"
-#include "G4EMDissociationSpectrum.hh"
 #include "G4PhysicsFreeVector.hh"
+#include "G4VCrossSectionDataSet.hh"
 #include "globals.hh"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -79,27 +79,28 @@ class G4Material;
 class G4EMDissociationCrossSection : public G4VCrossSectionDataSet
 {
   public:
-    G4EMDissociationCrossSection ();
-    ~G4EMDissociationCrossSection () override;
 
-    G4bool IsElementApplicable (const G4DynamicParticle*, G4int Z, const G4Material*) override;
- 
-    G4double GetElementCrossSection (const G4DynamicParticle*, G4int Z, const G4Material*) override;
-      
-    G4PhysicsFreeVector * GetCrossSectionForProjectile
-      (G4double, G4double, G4double, G4double, G4double, G4double);
-    G4PhysicsFreeVector * GetCrossSectionForTarget
-      (G4double, G4double, G4double, G4double, G4double, G4double);
-    G4double GetWilsonProbabilityForProtonDissociation
-      (G4double, G4double);
+    G4EMDissociationCrossSection();
+    ~G4EMDissociationCrossSection() override;
+
+    G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z, const G4Material*) override;
+
+    G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z, const G4Material*) override;
+
+    G4PhysicsFreeVector* GetCrossSectionForProjectile(G4double, G4double, G4double, G4double,
+                                                      G4double, G4double);
+    G4PhysicsFreeVector* GetCrossSectionForTarget(G4double, G4double, G4double, G4double, G4double,
+                                                  G4double);
+    G4double GetWilsonProbabilityForProtonDissociation(G4double, G4double);
 
   private:
-    G4EMDissociationSpectrum *thePhotonSpectrum;
-    G4double                 r0;
-    G4double                 J;
-    G4double                 Qprime;
-    G4double                 epsilon;
-    G4double                 xd;
+
+    G4EMDissociationSpectrum* thePhotonSpectrum;
+    G4double r0;
+    G4double J;
+    G4double Qprime;
+    G4double epsilon;
+    G4double xd;
 };
 
 #endif

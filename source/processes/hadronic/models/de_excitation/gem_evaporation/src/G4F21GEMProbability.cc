@@ -29,30 +29,26 @@
 //
 
 #include "G4F21GEMProbability.hh"
+
 #include "G4SystemOfUnits.hh"
 
-G4F21GEMProbability::G4F21GEMProbability() :
-  G4GEMProbability(21,9,5.0/2.0) // A,Z,Spin
+G4F21GEMProbability::G4F21GEMProbability() : G4GEMProbability(21, 9, 5.0 / 2.0)  // A,Z,Spin
 {
+  ExcitEnergies.push_back(279.93 * keV);
+  ExcitSpins.push_back(1.0 / 2.0);
+  ExcitLifetimes.push_back(6.1 * nanosecond);
 
-  ExcitEnergies.push_back(279.93*keV);
-  ExcitSpins.push_back(1.0/2.0);
-  ExcitLifetimes.push_back(6.1*nanosecond);
+  ExcitEnergies.push_back(1100.9 * keV);
+  ExcitSpins.push_back(3.0 / 2.0);
+  ExcitLifetimes.push_back(305.0e-3 * picosecond);
 
-  ExcitEnergies.push_back(1100.9*keV);
-  ExcitSpins.push_back(3.0/2.0);
-  ExcitLifetimes.push_back(305.0e-3*picosecond);
+  ExcitEnergies.push_back(3459.64 * keV);
+  ExcitSpins.push_back(5.0 / 2.0);
+  ExcitLifetimes.push_back(0.7 * picosecond);
 
-  ExcitEnergies.push_back(3459.64*keV);
-  ExcitSpins.push_back(5.0/2.0);
-  ExcitLifetimes.push_back(0.7*picosecond);
-
-  ExcitEnergies.push_back(3508.0*keV);
-  ExcitSpins.push_back(5.0/2.0);
-  ExcitLifetimes.push_back(0.7*picosecond);
-
+  ExcitEnergies.push_back(3508.0 * keV);
+  ExcitSpins.push_back(5.0 / 2.0);
+  ExcitLifetimes.push_back(0.7 * picosecond);
 }
 
-G4F21GEMProbability::~G4F21GEMProbability() 
-{}
-
+G4F21GEMProbability::~G4F21GEMProbability() {}

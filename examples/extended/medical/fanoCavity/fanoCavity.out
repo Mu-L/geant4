@@ -11,7 +11,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -178,6 +178,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           1
 Use cut as a final range enabled                   0
 Enable angular generator interface                 0
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 10 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -300,7 +301,7 @@ Index : 1     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 4000
-  User=6.470000s Real=6.488276s Sys=0.000000s
+  User=6.120000s Real=6.130549s Sys=0.000000s
 
  ======================== run summary ======================
 
@@ -310,7 +311,7 @@ Run Summary
 
  ============================================================
 
- Process calls frequency --->  compt= 281959  Transportation= 79127  msc= 2043905  eIoni= 1872824
+ Process calls frequency --->  compt= 281959  Transportation= 79127  msc= 2043908  eIoni= 1872820
 
  Gamma crossSections in wall material :  compt= 63.464 cm2/g   --> total= 63.464 cm2/g
 
@@ -330,7 +331,7 @@ Run Summary
 
  (Dose/EnergyFluence)/Mass_energy_transfer = 0.95514 +- 0.02609
 
- StepSize of ch. tracks in wall   = 119.8298 um  +- 89.6445 um 	 (nbSteps/track = 13.9916)
+ StepSize of ch. tracks in wall   = 119.8295 um  +- 89.6443 um 	 (nbSteps/track = 13.9916)
  StepSize of ch. tracks in cavity = 1.2336 mm  +- 1.6468 mm 	 (nbSteps/track = 2.2339)
 ================== Deleting memory pools ===================
 Number of memory pools allocated: 9 of which, static: 0

@@ -32,21 +32,22 @@
 
 // Author: Hisaya Kurashige, 16 February 2000
 // --------------------------------------------------------------------
-#ifndef G4StepPoint_hh
-#define G4StepPoint_hh 1
+#ifndef G4STEPPOINT_HH
+#define G4STEPPOINT_HH
 
-#include <cmath>  // Include from 'system'
+#include "G4Allocator.hh"  // Include from 'global'
+#include "G4LogicalVolume.hh"
+#include "G4Material.hh"
+#include "G4StepStatus.hh"  // Include from 'track'
+#include "G4SteppingControl.hh"
+#include "G4ThreeVector.hh"  // Include from 'geometry'
+#include "G4TouchableHandle.hh"  // Include from 'geometry'
+#include "G4VPhysicalVolume.hh"  // Include from 'geometry'
+#include "globals.hh"  // Include from 'global'
+
 #include <CLHEP/Units/PhysicalConstants.h>
 
-#include "globals.hh"            // Include from 'global'
-#include "G4Allocator.hh"        // Include from 'global'
-#include "G4ThreeVector.hh"      // Include from 'geometry'
-#include "G4VPhysicalVolume.hh"  // Include from 'geometry'
-#include "G4SteppingControl.hh"
-#include "G4StepStatus.hh"       // Include from 'track'
-#include "G4TouchableHandle.hh"  // Include from 'geometry'
-#include "G4Material.hh"
-#include "G4LogicalVolume.hh"
+#include <cmath>  // Include from 'system'
 
 class G4VProcess;
 class G4MaterialCutsCouple;
@@ -57,58 +58,58 @@ class G4StepPoint
   public:
 
     G4StepPoint() = default;
-    ~G4StepPoint()= default;
-      // Constructor/Destructor
+    ~G4StepPoint() = default;
+    // Constructor/Destructor
 
     G4StepPoint(const G4StepPoint&) = default;
     G4StepPoint& operator=(const G4StepPoint&);
-      // Copy Constructor and assignment operator
+    // Copy Constructor and assignment operator
 
     inline const G4ThreeVector& GetPosition() const;
     inline void SetPosition(const G4ThreeVector& aValue);
     inline void AddPosition(const G4ThreeVector& aValue);
-      // Position
+    // Position
 
     inline G4double GetLocalTime() const;
     inline void SetLocalTime(const G4double aValue);
     inline void AddLocalTime(const G4double aValue);
-      // Time since the track is created
+    // Time since the track is created
 
     inline G4double GetGlobalTime() const;
     inline void SetGlobalTime(const G4double aValue);
     inline void AddGlobalTime(const G4double aValue);
-      // Time since the event in which the track belongs is created
+    // Time since the event in which the track belongs is created
 
     inline G4double GetProperTime() const;
     inline void SetProperTime(const G4double aValue);
     inline void AddProperTime(const G4double aValue);
-      // Proper time of the particle
+    // Proper time of the particle
 
     inline const G4ThreeVector& GetMomentumDirection() const;
     inline void SetMomentumDirection(const G4ThreeVector& aValue);
     inline void AddMomentumDirection(const G4ThreeVector& aValue);
-      // Direction of momentum  (should be an unit vector)
+    // Direction of momentum  (should be an unit vector)
 
     inline G4ThreeVector GetMomentum() const;
-      // Total momentum of the track
+    // Total momentum of the track
 
     inline G4double GetTotalEnergy() const;
-      // Total energy of the track
+    // Total energy of the track
 
     inline G4double GetKineticEnergy() const;
     inline void SetKineticEnergy(const G4double aValue);
     inline void AddKineticEnergy(const G4double aValue);
-      // Kinetic Energy of the track
+    // Kinetic Energy of the track
 
     inline G4double GetVelocity() const;
     inline void SetVelocity(G4double v);
-      // Velocity
+    // Velocity
 
     inline G4double GetBeta() const;
-      // Velocity of the track in unit of c(light velocity)
+    // Velocity of the track in unit of c(light velocity)
 
     inline G4double GetGamma() const;
-      // Gamma factor (1/sqrt[1-beta*beta]) of the track
+    // Gamma factor (1/sqrt[1-beta*beta]) of the track
 
     inline G4VPhysicalVolume* GetPhysicalVolume() const;
 
@@ -136,8 +137,8 @@ class G4StepPoint
     inline void SetStepStatus(const G4StepStatus aValue);
 
     inline const G4VProcess* GetProcessDefinedStep() const;
-      // If the pointer is 0, this means the Step is defined
-      // by the user defined limit in the current volume
+    // If the pointer is 0, this means the Step is defined
+    // by the user defined limit in the current volume
     inline void SetProcessDefinedStep(const G4VProcess* aValue);
 
     inline G4double GetMass() const;
@@ -156,36 +157,36 @@ class G4StepPoint
 
     G4ThreeVector fPosition;
     G4double fGlobalTime = 0.0;
-      // Time since event is created
+    // Time since event is created
     G4double fLocalTime = 0.0;
-      // Time since track is created
+    // Time since track is created
     G4double fProperTime = 0.0;
-      // Time since track is created (in rest frame of particle)
+    // Time since track is created (in rest frame of particle)
     G4ThreeVector fMomentumDirection;
     G4double fKineticEnergy = 0.0;
     G4double fVelocity = 0.0;
-      // Momentum,energy and velocity
+    // Momentum,energy and velocity
     G4TouchableHandle fpTouchable;
-      // Touchable Handle
+    // Touchable Handle
     G4Material* fpMaterial = nullptr;
-      // Material of the volmue
+    // Material of the volmue
     const G4MaterialCutsCouple* fpMaterialCutsCouple = nullptr;
-      // MaterialCutsCouple of the volmue
+    // MaterialCutsCouple of the volmue
     G4VSensitiveDetector* fpSensitiveDetector = nullptr;
     G4double fSafety = 0.0;
     G4ThreeVector fPolarization;
     G4StepStatus fStepStatus = fUndefined;
-      // DoIt type which defined the current Step.
+    // DoIt type which defined the current Step.
     const G4VProcess* fpProcessDefinedStep = nullptr;
-      // Process which defined the current Step.
+    // Process which defined the current Step.
     G4double fMass = 0.0;
-      // Dynamical mass of the particle
+    // Dynamical mass of the particle
     G4double fCharge = 0.0;
-      // Dynamical Charge of the particle
+    // Dynamical Charge of the particle
     G4double fMagneticMoment = 0.0;
-      // Dynamical MagneticMoment of the particle
+    // Dynamical MagneticMoment of the particle
     G4double fWeight = 0.0;
-      // Track Weight
+    // Track Weight
 };
 
 #include "G4StepPoint.icc"

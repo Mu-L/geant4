@@ -32,28 +32,28 @@
 
 // Author: Makoto Asai, 1997
 // --------------------------------------------------------------------
-#ifndef G4HEPEvtParticle_hh
-#define G4HEPEvtParticle_hh 1
+#ifndef G4HEPEVTPARTICLE_HH
+#define G4HEPEVTPARTICLE_HH
 
-#include "globals.hh"
-#include "evtdefs.hh"
 #include "G4Allocator.hh"
 #include "G4PrimaryParticle.hh"
+#include "globals.hh"
 
-class G4HEPEvtParticle 
+#include "evtdefs.hh"
+
+class G4HEPEvtParticle
 {
   public:
 
     G4HEPEvtParticle() = default;
-    G4HEPEvtParticle(G4PrimaryParticle* pp,
-                     G4int isthep, G4int jdahep1, G4int jdahep2);
-   ~G4HEPEvtParticle() = default;
+    G4HEPEvtParticle(G4PrimaryParticle* pp, G4int isthep, G4int jdahep1, G4int jdahep2);
+    ~G4HEPEvtParticle() = default;
 
-    G4HEPEvtParticle & operator=(const G4HEPEvtParticle& right);
-    G4bool operator==(const G4HEPEvtParticle &right) const;
-    G4bool operator!=(const G4HEPEvtParticle &right) const;
+    G4HEPEvtParticle& operator=(const G4HEPEvtParticle& right);
+    G4bool operator==(const G4HEPEvtParticle& right) const;
+    G4bool operator!=(const G4HEPEvtParticle& right) const;
 
-    inline void *operator new(std::size_t);
+    inline void* operator new(std::size_t);
     inline void operator delete(void* aStackedTrack);
 
     inline G4PrimaryParticle* GetTheParticle() { return theParticle; }
@@ -64,28 +64,28 @@ class G4HEPEvtParticle
 
   private:
 
-    G4PrimaryParticle* theParticle = nullptr; // not owned
-    G4int ISTHEP = 1; // Status code of the entry
-                      // Set to be 0 after generating links of
-                      // G4PrimaryParticle object
+    G4PrimaryParticle* theParticle = nullptr;  // not owned
+    G4int ISTHEP = 1;  // Status code of the entry
+                       // Set to be 0 after generating links of
+                       // G4PrimaryParticle object
     G4int JDAHEP1 = 1;
     G4int JDAHEP2 = 1;
 };
 
 extern G4EVENT_DLL G4Allocator<G4HEPEvtParticle>*& aHEPEvtParticleAllocator();
 
-inline void * G4HEPEvtParticle::operator new(std::size_t)
+inline void* G4HEPEvtParticle::operator new(std::size_t)
 {
   if (aHEPEvtParticleAllocator() == nullptr)
   {
     aHEPEvtParticleAllocator() = new G4Allocator<G4HEPEvtParticle>;
   }
-  return (void *) aHEPEvtParticleAllocator()->MallocSingle();
+  return (void*)aHEPEvtParticleAllocator()->MallocSingle();
 }
 
-inline void G4HEPEvtParticle::operator delete(void * aHEPEvtParticle)
+inline void G4HEPEvtParticle::operator delete(void* aHEPEvtParticle)
 {
-  aHEPEvtParticleAllocator()->FreeSingle((G4HEPEvtParticle *) aHEPEvtParticle);
+  aHEPEvtParticleAllocator()->FreeSingle((G4HEPEvtParticle*)aHEPEvtParticle);
 }
 
 #endif

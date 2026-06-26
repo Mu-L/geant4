@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4Neutron_h
-#define G4Neutron_h 1
+#ifndef G4NEUTRON_HH
+#define G4NEUTRON_HH
 
 #include "G4Ions.hh"
 
 class G4Neutron : public G4Ions
 {
   public:
+
     static G4Neutron* Definition();
     static G4Neutron* NeutronDefinition();
     static G4Neutron* Neutron();
 
   private:
+
     G4Neutron() {}
     ~G4Neutron() override = default;
 

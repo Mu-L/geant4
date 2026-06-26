@@ -29,26 +29,26 @@
 //  Author: D.H. Wright (SLAC)                                                //
 //  Date:   14 November 2014                                                  //
 //  Description: performs beta+ decay of radioactive nuclei, and returns      //
-//               daughter particles in rest frame of parent nucleus           // 
+//               daughter particles in rest frame of parent nucleus           //
 //  Modifications:                                                            //
 //    23.08.2023 V.Ivanchenko make it thread safe using static utility        //
 //               G4BetaSpectrumSampler                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4BetaPlusDecay_h
-#define G4BetaPlusDecay_h 1
+#ifndef G4BETAPLUSDECAY_HH
+#define G4BETAPLUSDECAY_HH
 
-#include "G4NuclearDecay.hh"
 #include "G4BetaDecayType.hh"
+#include "G4NuclearDecay.hh"
 
 class G4BetaPlusDecay : public G4NuclearDecay
 {
   public:
-    G4BetaPlusDecay(const G4ParticleDefinition* theParentNucleus,
-                    const G4double& theBR, const G4double& endpointE,
-                    const G4double& ex, const G4Ions::G4FloatLevelBase& flb,
-                    const G4BetaDecayType& type);
+
+    G4BetaPlusDecay(const G4ParticleDefinition* theParentNucleus, const G4double& theBR,
+                    const G4double& endpointE, const G4double& ex,
+                    const G4Ions::G4FloatLevelBase& flb, const G4BetaDecayType& type);
 
     ~G4BetaPlusDecay() override = default;
 
@@ -61,8 +61,8 @@ class G4BetaPlusDecay : public G4NuclearDecay
     void SetUpBetaSpectrumSampler(const G4int& parentZ, const G4int& parentA,
                                   const G4BetaDecayType& type);
 
-    const G4double maxEnergy; // in eMass units
-    const G4double estep;     // in eMass units
+    const G4double maxEnergy;  // in eMass units
+    const G4double estep;  // in eMass units
     G4double parentMass;
     G4double resMass;
 
@@ -76,4 +76,3 @@ class G4BetaPlusDecay : public G4NuclearDecay
 };
 
 #endif
-

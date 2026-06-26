@@ -25,5 +25,5 @@
 //
 
 #include "G4ToolsSGQtZBViewer.hh"
-#include "moc_G4ToolsSGQtZBViewer.cpp"
 
+#include "moc_G4ToolsSGQtZBViewer.cpp"

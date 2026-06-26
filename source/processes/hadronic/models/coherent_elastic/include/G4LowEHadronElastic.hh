@@ -26,37 +26,36 @@
 // Geant4 Header : G4LowEHadronElastic
 //
 // Author : V.Ivanchenko 10 May 2019
-//  
+//
 //
 // Class Description:
 //
-// Elastic scattering in resonance energy region 
+// Elastic scattering in resonance energy region
 //
 
-#ifndef G4LowEHadronElastic_h
-#define G4LowEHadronElastic_h 1
- 
-#include "globals.hh"
+#ifndef G4LOWEHADRONELASTIC_HH
+#define G4LOWEHADRONELASTIC_HH
+
 #include "G4HadronElastic.hh"
+#include "globals.hh"
 
 class G4LowEHadronElastic : public G4HadronElastic
 {
-public:
+  public:
 
-  explicit G4LowEHadronElastic();
+    explicit G4LowEHadronElastic();
 
-  ~G4LowEHadronElastic() override;
- 
-  G4double SampleInvariantT(const G4ParticleDefinition* p, 
-			    G4double plab, G4int Z, G4int A) override;
+    ~G4LowEHadronElastic() override;
 
-private:
+    G4double SampleInvariantT(const G4ParticleDefinition* p, G4double plab, G4int Z,
+                              G4int A) override;
 
-  G4bool IsResonanseScattering(const G4ParticleDefinition* p, 
-			       G4double plab, G4int Z, G4int A);
+  private:
 
-  G4double plabLowLimit;
-  G4double plabHighLimit;
+    G4bool IsResonanseScattering(const G4ParticleDefinition* p, G4double plab, G4int Z, G4int A);
+
+    G4double plabLowLimit;
+    G4double plabHighLimit;
 };
 
 #endif

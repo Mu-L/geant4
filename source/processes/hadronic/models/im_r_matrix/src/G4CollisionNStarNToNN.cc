@@ -25,27 +25,28 @@
 //
 //
 
-#include "globals.hh"
 #include "G4CollisionNStarNToNN.hh"
-#include "G4KineticTrack.hh"
-#include "G4VCrossSectionSource.hh"
-#include "G4Proton.hh"
-#include "G4Neutron.hh"
-#include "G4XAqmElastic.hh"
+
 #include "G4AngularDistribution.hh"
-#include "G4ThreeVector.hh"
-#include "G4LorentzVector.hh"
-#include "G4LorentzRotation.hh"
-#include "G4KineticTrackVector.hh"
-#include "G4ParticleTable.hh"
-#include "G4CollisionVector.hh"
 #include "G4CollisionNStarNToNN.hh"
+#include "G4CollisionVector.hh"
 #include "G4ConcreteNStarNToNN.hh"
+#include "G4KineticTrack.hh"
+#include "G4KineticTrackVector.hh"
+#include "G4LorentzRotation.hh"
+#include "G4LorentzVector.hh"
+#include "G4Neutron.hh"
+#include "G4ParticleTable.hh"
+#include "G4Proton.hh"
+#include "G4ThreeVector.hh"
+#include "G4VCrossSectionSource.hh"
+#include "G4XAqmElastic.hh"
+#include "globals.hh"
 
 typedef G4ConcreteNStarNToNN channelType;
 
 G4CollisionNStarNToNN::G4CollisionNStarNToNN()
-{ 
+{
   MakeNNStarToNN<channelType, N1400pPC, N1400nPC>::Make(this);
   MakeNNStarToNN<channelType, N1520pPC, N1520nPC>::Make(this);
   MakeNNStarToNN<channelType, N1535pPC, N1535nPC>::Make(this);
@@ -62,4 +63,3 @@ G4CollisionNStarNToNN::G4CollisionNStarNToNN()
   MakeNNStarToNN<channelType, N2220pPC, N2220nPC>::Make(this);
   MakeNNStarToNN<channelType, N2250pPC, N2250nPC>::Make(this);
 }
-

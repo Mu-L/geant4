@@ -42,8 +42,8 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4EmModelActivator_h
-#define G4EmModelActivator_h 1
+#ifndef G4EMMODELACTIVATOR_HH
+#define G4EMMODELACTIVATOR_HH
 
 #include "globals.hh"
 
@@ -56,38 +56,36 @@ class G4EmConfigurator;
 class G4VMscModel;
 class G4VEmProcess;
 
-class G4EmModelActivator 
+class G4EmModelActivator
 {
-public:
+  public:
 
-  explicit G4EmModelActivator(const G4String& emphys="");
+    explicit G4EmModelActivator(const G4String& emphys = "");
 
-  G4EmModelActivator & operator=(const G4EmModelActivator &right) = delete;
-  G4EmModelActivator(const G4EmModelActivator&) = delete;
+    G4EmModelActivator& operator=(const G4EmModelActivator& right) = delete;
+    G4EmModelActivator(const G4EmModelActivator&) = delete;
 
-private:
+  private:
 
-  void ActivatePAI();
+    void ActivatePAI();
 
-  void ActivateMicroElec();
+    void ActivateMicroElec();
 
-  void ActivateEmOptions();
+    void ActivateEmOptions();
 
-  G4VEmProcess* FindOrAddProcess(const G4ParticleDefinition*, const G4String&);
+    G4VEmProcess* FindOrAddProcess(const G4ParticleDefinition*, const G4String&);
 
-  void AddStandardScattering(const G4ParticleDefinition*, G4EmConfigurator*,
-                             G4VMscModel*, const G4String&, 
-                             G4double, G4double, const G4String&);
+    void AddStandardScattering(const G4ParticleDefinition*, G4EmConfigurator*, G4VMscModel*,
+                               const G4String&, G4double, G4double, const G4String&);
 
-  G4bool HasMsc(G4ProcessManager*) const;
+    G4bool HasMsc(G4ProcessManager*) const;
 
-  void SetMscParameters(const G4ParticleDefinition*, G4VMscModel*, const G4String& phys);
+    void SetMscParameters(const G4ParticleDefinition*, G4VMscModel*, const G4String& phys);
 
-  G4EmParameters* theParameters;
-  G4String baseName;
+    G4EmParameters* theParameters;
+    G4String baseName;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

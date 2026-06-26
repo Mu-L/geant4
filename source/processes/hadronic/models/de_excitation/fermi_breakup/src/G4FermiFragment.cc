@@ -29,11 +29,11 @@
 //
 
 #include "G4FermiFragment.hh"
+
 #include "G4NucleiProperties.hh"
 
 G4FermiFragment::G4FermiFragment(G4int a, G4int z, G4int sp, G4double e, G4double t)
   : excitEnergy(e), lifeTime(t), A(a), Z(z), spin(sp)
 {
-  fragmentMass = G4NucleiProperties::GetNuclearMass(A, Z); 
+  fragmentMass = G4NucleiProperties::GetNuclearMass(A, Z);
 }
-

@@ -31,37 +31,35 @@
 #ifndef G4VATTVALUEFILTER_HH
 #define G4VATTVALUEFILTER_HH
 
-#include "globals.hh"
 #include "G4String.hh"
 #include "G4VFilter.hh"
+#include "globals.hh"
 
 class G4AttValue;
 
-class G4VAttValueFilter : public G4VFilter<G4AttValue> {
+class G4VAttValueFilter : public G4VFilter<G4AttValue>
+{
+  public:
 
-public:
+    // Constructor
+    G4VAttValueFilter(const G4String& name = "G4AttValueFilter") : G4VFilter<G4AttValue>(name) {}
 
-  // Constructor
-  G4VAttValueFilter(const G4String& name = "G4AttValueFilter")
-    :G4VFilter<G4AttValue>(name){}
+    // Destructor
+    virtual ~G4VAttValueFilter() {}
 
-  // Destructor
-  virtual ~G4VAttValueFilter() {}
-  
-  // Filter methods
-  virtual G4bool Accept(const G4AttValue&) const = 0;
-  virtual G4bool GetValidElement(const G4AttValue&, G4String&) const = 0;
+    // Filter methods
+    virtual G4bool Accept(const G4AttValue&) const = 0;
+    virtual G4bool GetValidElement(const G4AttValue&, G4String&) const = 0;
 
-  // Print configuration
-  virtual void PrintAll(std::ostream& ostr) const = 0;
-  
-  // Reset 
-  virtual void Reset() = 0;
+    // Print configuration
+    virtual void PrintAll(std::ostream& ostr) const = 0;
 
-  // Load filter data
-  virtual void LoadIntervalElement(const G4String&) = 0;
-  virtual void LoadSingleValueElement(const G4String&) = 0;
+    // Reset
+    virtual void Reset() = 0;
 
+    // Load filter data
+    virtual void LoadIntervalElement(const G4String&) = 0;
+    virtual void LoadSingleValueElement(const G4String&) = 0;
 };
 
 #endif

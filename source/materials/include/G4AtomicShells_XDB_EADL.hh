@@ -37,32 +37,34 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4ATOMICSHELLS_XDB_EADL_H
-#define G4ATOMICSHELLS_XDB_EADL_H
+#ifndef G4ATOMICSHELLS_XDB_EADL_HH
+#define G4ATOMICSHELLS_XDB_EADL_HH
 
 #include "globals.hh"
 
 class G4AtomicShells_XDB_EADL
 {
- public:  // with description
-  G4AtomicShells_XDB_EADL(const G4AtomicShells_XDB_EADL&) = delete;
-  const G4AtomicShells_XDB_EADL& operator=(const G4AtomicShells_XDB_EADL&) = delete;
+  public:  // with description
 
-  static G4int GetNumberOfShells(G4int Z);
-  static G4int GetNumberOfElectrons(G4int Z, G4int SubshellNb);
-  static G4int GetNumberOfFreeElectrons(G4int Z, G4double th);
-  static G4double GetBindingEnergy(G4int Z, G4int SubshellNb);
-  static G4double GetTotalBindingEnergy(G4int Z);
+    G4AtomicShells_XDB_EADL(const G4AtomicShells_XDB_EADL&) = delete;
+    const G4AtomicShells_XDB_EADL& operator=(const G4AtomicShells_XDB_EADL&) = delete;
 
- private:
+    static G4int GetNumberOfShells(G4int Z);
+    static G4int GetNumberOfElectrons(G4int Z, G4int SubshellNb);
+    static G4int GetNumberOfFreeElectrons(G4int Z, G4double th);
+    static G4double GetBindingEnergy(G4int Z, G4int SubshellNb);
+    static G4double GetTotalBindingEnergy(G4int Z);
+
+  private:
+
 #ifdef G4VERBOSE
-  static G4int PrintErrorZ(G4int Z, const G4String&);
-  static G4int PrintErrorShell(G4int Z, G4int SubshellNb, const G4String&);
+    static G4int PrintErrorZ(G4int Z, const G4String&);
+    static G4int PrintErrorShell(G4int Z, G4int SubshellNb, const G4String&);
 #endif
-  static const G4int fNumberOfShells[121];
-  static const G4int fIndexOfShells[121];
-  static const G4int fNumberOfElectrons[2171];
-  static const G4double fBindingEnergies[2171];
+    static const G4int fNumberOfShells[121];
+    static const G4int fIndexOfShells[121];
+    static const G4int fNumberOfElectrons[2171];
+    static const G4double fBindingEnergies[2171];
 };
 
 #endif  // end of G4AtomicShells_XDB_EADL.hh

@@ -36,13 +36,9 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-G4PSStepChecker3D::G4PSStepChecker3D(const G4String& name, G4int ni, G4int nj,
-                                     G4int nk, G4int depi, G4int depj,
-                                     G4int depk)
-  : G4PSStepChecker(name)
-  , fDepthi(depi)
-  , fDepthj(depj)
-  , fDepthk(depk)
+G4PSStepChecker3D::G4PSStepChecker3D(const G4String& name, G4int ni, G4int nj, G4int nk, G4int depi,
+                                     G4int depj, G4int depk)
+  : G4PSStepChecker(name), fDepthi(depi), fDepthj(depj), fDepthk(depk)
 {
   SetNijk(ni, nj, nk);
 }
@@ -50,17 +46,15 @@ G4PSStepChecker3D::G4PSStepChecker3D(const G4String& name, G4int ni, G4int nj,
 G4int G4PSStepChecker3D::GetIndex(G4Step* aStep)
 {
   const G4VTouchable* touchable = aStep->GetPreStepPoint()->GetTouchable();
-  G4int i                       = touchable->GetReplicaNumber(fDepthi);
-  G4int j                       = touchable->GetReplicaNumber(fDepthj);
-  G4int k                       = touchable->GetReplicaNumber(fDepthk);
+  G4int i = touchable->GetReplicaNumber(fDepthi);
+  G4int j = touchable->GetReplicaNumber(fDepthj);
+  G4int k = touchable->GetReplicaNumber(fDepthk);
 
   G4int N = i * fNj * fNk + j * fNk + k;
 
-  G4cout << " depi= " << fDepthi << " depj= " << fDepthj << " depk= " << fDepthk
-         << G4endl;
+  G4cout << " depi= " << fDepthi << " depj= " << fDepthj << " depk= " << fDepthk << G4endl;
   G4cout << "    i= " << i << "   j= " << j << "    k= " << k << G4endl;
-  G4cout << "    N= " << N << "  Nx= " << fNi << " Nj= " << fNj
-         << " Nk= " << fNk << G4endl;
+  G4cout << "    N= " << N << "  Nx= " << fNi << " Nj= " << fNj << " Nk= " << fNk << G4endl;
 
   return i * fNj * fNk + j * fNk + k;
 }

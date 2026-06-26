@@ -26,13 +26,13 @@
 //
 //
 
-#ifndef G4SDParticleFilter_h
-#define G4SDParticleFilter_h 1
+#ifndef G4SDPARTICLEFILTER_HH
+#define G4SDPARTICLEFILTER_HH
 
 class G4Step;
 class G4ParticleDefinition;
-#include "globals.hh"
 #include "G4VSDFilter.hh"
+#include "globals.hh"
 
 #include <vector>
 
@@ -51,30 +51,30 @@ class G4ParticleDefinition;
 
 class G4SDParticleFilter : public G4VSDFilter
 {
- public:
-  G4SDParticleFilter(const G4String& name);
-  G4SDParticleFilter(const G4String& name, const G4String& particleName);
-  G4SDParticleFilter(const G4String& name,
-                     const std::vector<G4String>& particleNames);
-  G4SDParticleFilter(const G4String& name,
-                     const std::vector<G4ParticleDefinition*>& particleDef);
-  // Constructors. Filter name and particle's name.
-  //
+  public:
 
-  ~G4SDParticleFilter() override = default;
+    G4SDParticleFilter(const G4String& name);
+    G4SDParticleFilter(const G4String& name, const G4String& particleName);
+    G4SDParticleFilter(const G4String& name, const std::vector<G4String>& particleNames);
+    G4SDParticleFilter(const G4String& name, const std::vector<G4ParticleDefinition*>& particleDef);
+    // Constructors. Filter name and particle's name.
+    //
 
-  G4bool Accept(const G4Step*) const override;
+    ~G4SDParticleFilter() override = default;
 
-  void add(const G4String& particleName);
-  // set method for acceptable particle name.
-  //
-  void addIon(G4int Z, G4int A);
-  void show();
+    G4bool Accept(const G4Step*) const override;
 
- private:
-  std::vector<G4ParticleDefinition*> thePdef;
-  std::vector<G4int> theIonZ;
-  std::vector<G4int> theIonA;
+    void add(const G4String& particleName);
+    // set method for acceptable particle name.
+    //
+    void addIon(G4int Z, G4int A);
+    void show();
+
+  private:
+
+    std::vector<G4ParticleDefinition*> thePdef;
+    std::vector<G4int> theIonZ;
+    std::vector<G4int> theIonA;
 };
 
 #endif

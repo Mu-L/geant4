@@ -35,8 +35,8 @@
 //
 // Author: Makoto Asai
 // --------------------------------------------------------------------
-#ifndef G4VHit_h
-#define G4VHit_h 1
+#ifndef G4VHIT_HH
+#define G4VHIT_HH
 
 #include "globals.hh"
 
@@ -48,27 +48,27 @@ class G4AttValue;
 
 class G4VHit
 {
- public:
+  public:
 
-  G4VHit() = default;
-  virtual ~G4VHit() = default;
+    G4VHit() = default;
+    virtual ~G4VHit() = default;
 
-  G4bool operator==(const G4VHit&) const { return false; }
+    G4bool operator==(const G4VHit&) const { return false; }
 
-  virtual void Draw() {}
-  virtual void Print() {}
+    virtual void Draw() {}
+    virtual void Print() {}
 
-  // Returns pointer to map of attribute definitions for this hit
-  // Caller is responsible for checking validity of returned pointer.
-  // See `G4Trajectory` for a concrete implementation.
-  virtual const std::map<G4String, G4AttDef>* GetAttDefs() const { return nullptr; }
+    // Returns pointer to map of attribute definitions for this hit
+    // Caller is responsible for checking validity of returned pointer.
+    // See `G4Trajectory` for a concrete implementation.
+    virtual const std::map<G4String, G4AttDef>* GetAttDefs() const { return nullptr; }
 
-  // Returns pointer to list of attributes for this hit
-  // Each attribute must correspond to a definition returned by `GetAffDefs`.
-  // Caller is responsible for checking validity of returned pointer.
-  // See `G4Trajectory` for a concrete implementation, and
-  // `G4VTrajectory::ShowTrajectory` for an example of its use.
-  virtual std::vector<G4AttValue>* CreateAttValues() const { return nullptr; }
+    // Returns pointer to list of attributes for this hit
+    // Each attribute must correspond to a definition returned by `GetAffDefs`.
+    // Caller is responsible for checking validity of returned pointer.
+    // See `G4Trajectory` for a concrete implementation, and
+    // `G4VTrajectory::ShowTrajectory` for an example of its use.
+    virtual std::vector<G4AttValue>* CreateAttValues() const { return nullptr; }
 };
 
 #endif

@@ -38,6 +38,7 @@
 class G4Vtk : public G4VGraphicsSystem
 {
   public:
+
     G4Vtk();
     ~G4Vtk() override = default;
     G4VSceneHandler* CreateSceneHandler(const G4String& name = "") override;

@@ -36,20 +36,20 @@
 // 01-SEP-2008 V.Ivanchenko: use methods from the base class
 // 14-Sep-12 M.Kelsey -- Pass subType code to base ctor
 //
- 
+
 #include "G4HadronInelasticProcess.hh"
+
 #include "G4GenericIon.hh"
 #include "G4ParticleDefinition.hh"
-  
+
 G4HadronInelasticProcess::G4HadronInelasticProcess(const G4String& processName,
-                                                   const G4ParticleDefinition* particleDef):
-  G4HadronicProcess(processName,fHadronInelastic), fParticleDef(particleDef)
+                                                   const G4ParticleDefinition* particleDef)
+  : G4HadronicProcess(processName, fHadronInelastic), fParticleDef(particleDef)
 {}
 
-G4HadronInelasticProcess::~G4HadronInelasticProcess() 
-{}
+G4HadronInelasticProcess::~G4HadronInelasticProcess() {}
 
 G4bool G4HadronInelasticProcess::IsApplicable(const G4ParticleDefinition&)
 {
-  return  true;
+  return true;
 }

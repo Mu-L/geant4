@@ -27,26 +27,28 @@
 // Author: Ivana Hrivnacova, 20/07/2017 (ivana@ipno.in2p3.fr)
 
 #include "G4Hdf5FileManager.hh"
-#include "G4Hdf5HnFileManager.hh"
+
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
 #include "G4AutoLock.hh"
+#include "G4Hdf5HnFileManager.hh"
 
 #include "toolx/hdf5/h2file"
 
 using namespace G4Analysis;
 using namespace tools;
 
-//using namespace G4Analysis;
+// using namespace G4Analysis;
 
-namespace {
-  //Mutex to lock master manager when closing a file
-  G4Mutex closeFileMutex = G4MUTEX_INITIALIZER;
-}
+namespace
+{
+// Mutex to lock master manager when closing a file
+G4Mutex closeFileMutex = G4MUTEX_INITIALIZER;
+}  // namespace
 
 //_____________________________________________________________________________
 G4Hdf5FileManager::G4Hdf5FileManager(const G4AnalysisManagerState& state)
- : G4VTFileManager<G4Hdf5File>(state)
+  : G4VTFileManager<G4Hdf5File>(state)
 {
   // Create helpers defined in the base class
   fH1FileManager = std::make_shared<G4Hdf5HnFileManager<histo::h1d>>(this);
@@ -61,20 +63,21 @@ G4Hdf5FileManager::G4Hdf5FileManager(const G4AnalysisManagerState& state)
 //
 
 //_____________________________________________________________________________
-hid_t G4Hdf5FileManager::CreateDirectory(hid_t& file,
-  const G4String& directoryName, const G4String& objectType)
+hid_t G4Hdf5FileManager::CreateDirectory(hid_t& file, const G4String& directoryName,
+                                         const G4String& objectType)
 {
-// Method for both histograms and ntuples directories.
+  // Method for both histograms and ntuples directories.
 
   // return if no file provided
   if (file < 0) return kInvalidId;
 
   // use default directory name if not provided
   auto newDirectoryName = directoryName;
-  if ( newDirectoryName == "" ) {
-      newDirectoryName = fgkDefaultDirectoryName;
-      newDirectoryName += "_";
-      newDirectoryName += objectType;
+  if (newDirectoryName == "")
+  {
+    newDirectoryName = fgkDefaultDirectoryName;
+    newDirectoryName += "_";
+    newDirectoryName += objectType;
   }
 
   Message(kVL4, "create", "directory for " + objectType, newDirectoryName);
@@ -83,20 +86,21 @@ hid_t G4Hdf5FileManager::CreateDirectory(hid_t& file,
 
   // create directory
   auto directory = toolx_H5Gcreate(file, newDirectoryName, 0);
-       // 0 seems to be an optional parameter. The web doc does not say what should
-       // be the default value but 0 is what is found in examples, and in the code, if we pass 0, clearly some
-       // default value is taken.
-  if ( directory < 0 ) {
-    Warn("Cannot create directory " + directoryName,
-      fkClass, "CreateDirectory");
+  // 0 seems to be an optional parameter. The web doc does not say what should
+  // be the default value but 0 is what is found in examples, and in the code, if we pass 0, clearly
+  // some default value is taken.
+  if (directory < 0)
+  {
+    Warn("Cannot create directory " + directoryName, fkClass, "CreateDirectory");
     success = false;
   }
-  else {
+  else
+  {
     // write atb (header?)
     auto result = toolx::hdf5::write_atb(directory, "type", "directory");
-    if ( !result) {
-      Warn("Write_atb class failed for " + directoryName,
-        fkClass, "CreateDirectory");
+    if (!result)
+    {
+      Warn("Write_atb class failed for " + directoryName, fkClass, "CreateDirectory");
       success = false;
     }
   }
@@ -111,11 +115,13 @@ G4String G4Hdf5FileManager::GetNtupleFileName(Hdf5NtupleDescription* ntupleDescr
 {
   // get ntuple file name
   auto ntupleFileName = ntupleDescription->GetFileName();
-  if (ntupleFileName.size() != 0u) {
+  if (ntupleFileName.size() != 0u)
+  {
     // update filename per object per thread
     ntupleFileName = GetTnFileName(ntupleFileName, GetFileType());
   }
-  else {
+  else
+  {
     // get default file name
     ntupleFileName = GetFullFileName();
   }
@@ -134,30 +140,31 @@ std::shared_ptr<G4Hdf5File> G4Hdf5FileManager::CreateFileImpl(const G4String& fi
 
   // Do nothing if there is no file
   // (the error should be handled by caller)
-  if ( file < 0 ) {
+  if (file < 0)
+  {
     Warn("::H5Fcreate failed " + fileName, fkClass, "CreateFileImpl");
     return std::make_shared<G4Hdf5File>(-1, -1, -1);
   }
 
   // create a header with general infos
-  if(!toolx::hdf5::write_header(file)) {
-    Warn("toolx::hdf5::write_header() failed for " + fileName,
-      fkClass, "CreateFileImpl");
+  if (!toolx::hdf5::write_header(file))
+  {
+    Warn("toolx::hdf5::write_header() failed for " + fileName, fkClass, "CreateFileImpl");
     return std::make_shared<G4Hdf5File>(-1, -1, -1);
   }
 
   // create histo directory
-  auto hdirectory
-    = CreateDirectory(file, fHistoDirectoryName, "histograms");
-  if ( hdirectory < 0 ) {
+  auto hdirectory = CreateDirectory(file, fHistoDirectoryName, "histograms");
+  if (hdirectory < 0)
+  {
     // Warning is issued in CreateDirectory
     return std::make_shared<G4Hdf5File>(-1, -1, -1);
   }
 
   // create ntuple directory
-  auto ndirectory
-    = CreateDirectory(file, fNtupleDirectoryName, "ntuples");
-  if ( ndirectory < 0 ) {
+  auto ndirectory = CreateDirectory(file, fNtupleDirectoryName, "ntuples");
+  if (ndirectory < 0)
+  {
     // Warnin is issued in CreateDirectory
     return std::make_shared<G4Hdf5File>(-1, -1, -1);
   }
@@ -175,7 +182,7 @@ G4bool G4Hdf5FileManager::WriteFileImpl(std::shared_ptr<G4Hdf5File> /*file*/)
 //_____________________________________________________________________________
 G4bool G4Hdf5FileManager::CloseFileImpl(std::shared_ptr<G4Hdf5File> file)
 {
-  if ( ! file ) return false;
+  if (!file) return false;
 
   G4AutoLock lock(&closeFileMutex);
 
@@ -199,14 +206,16 @@ G4bool G4Hdf5FileManager::OpenFile(const G4String& fileName)
   fFileName = fileName;
   auto name = GetFullFileName();
 
-  if ( fFile ) {
+  if (fFile)
+  {
     Warn("File " + fileName + " already exists.", fkClass, "OpenFile");
     fFile.reset();
   }
 
   // create new file
   fFile = CreateTFile(name);
-  if ( ! fFile ) {
+  if (!fFile)
+  {
     Warn("Failed to create file " + fileName, fkClass, "OpenFile");
     return false;
   }
@@ -218,14 +227,14 @@ G4bool G4Hdf5FileManager::OpenFile(const G4String& fileName)
 }
 
 //_____________________________________________________________________________
-G4bool G4Hdf5FileManager::CreateNtupleFile(
-  Hdf5NtupleDescription* ntupleDescription)
+G4bool G4Hdf5FileManager::CreateNtupleFile(Hdf5NtupleDescription* ntupleDescription)
 {
   // get ntuple file name per object
   auto ntupleFileName = GetNtupleFileName(ntupleDescription);
 
   auto file = GetTFile(ntupleFileName, false);
-  if (! file) {
+  if (!file)
+  {
     file = CreateTFile(ntupleFileName);
   }
   ntupleDescription->SetFile(file);
@@ -234,12 +243,11 @@ G4bool G4Hdf5FileManager::CreateNtupleFile(
 }
 
 //_____________________________________________________________________________
-G4bool G4Hdf5FileManager::CloseNtupleFile(
-  Hdf5NtupleDescription* ntupleDescription)
+G4bool G4Hdf5FileManager::CloseNtupleFile(Hdf5NtupleDescription* ntupleDescription)
 {
   // Notify not empty file
   auto ntupleFileName = GetNtupleFileName(ntupleDescription);
-  auto result = SetIsEmpty(ntupleFileName, ! ntupleDescription->GetHasFill());
+  auto result = SetIsEmpty(ntupleFileName, !ntupleDescription->GetHasFill());
 
   // Ntuple files are registered in file manager map.
   // they will be closed with CloseFiles() calls
@@ -251,7 +259,7 @@ G4bool G4Hdf5FileManager::CloseNtupleFile(
 //_____________________________________________________________________________
 hid_t G4Hdf5FileManager::GetHistoDirectory() const
 {
-  if ( ! fFile ) return kInvalidId;
+  if (!fFile) return kInvalidId;
 
   return std::get<1>(*fFile);
 }
@@ -259,7 +267,7 @@ hid_t G4Hdf5FileManager::GetHistoDirectory() const
 //_____________________________________________________________________________
 hid_t G4Hdf5FileManager::GetNtupleDirectory() const
 {
-  if ( ! fFile ) return kInvalidId;
+  if (!fFile) return kInvalidId;
 
   return std::get<2>(*fFile);
 }

@@ -114,8 +114,8 @@ G4VPhysicalVolume* ExGflash2DetectorConstruction::Construct()
   G4double crystalWidth = 3 * cm;
   G4double crystalLength = 24 * cm;
 
-  calo_xside = (crystalWidth * nbOfCrystals) + 1 * cm;
-  calo_yside = (crystalWidth * nbOfCrystals) + 1 * cm;
+  calo_xside = (crystalWidth * nbOfCrystals);
+  calo_yside = (crystalWidth * nbOfCrystals);
   calo_zside = crystalLength;
 
   auto calo_box = new G4Box("CMS calorimeter",  // its name
@@ -150,7 +150,7 @@ G4VPhysicalVolume* ExGflash2DetectorConstruction::Construct()
                                           crystalPos,  // translation
                                           fCrystalLog,
                                           "crystal",  // its name
-                                          caloLog, false, i);
+                                          caloLog, false, n);
     }
   }
   G4cout << "There are " << nbOfCrystals << " crystals per row in the calorimeter, so in total "
@@ -175,7 +175,7 @@ void ExGflash2DetectorConstruction::ConstructSDandField()
 {
   // -- sensitive detectors:
   G4SDManager* SDman = G4SDManager::GetSDMpointer();
-  auto CaloSD = new ExGflash2SensitiveDetector("Calorimeter", this);
+  auto CaloSD = new ExGflash2SensitiveDetector("Calorimeter");
   SDman->AddNewDetector(CaloSD);
   fCrystalLog->SetSensitiveDetector(CaloSD);
 

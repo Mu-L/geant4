@@ -33,19 +33,21 @@
 // **********************************************************************
 //
 
-#ifndef G4AntiLambdab_h
-#define G4AntiLambdab_h 1
+#ifndef G4ANTILAMBDAB_HH
+#define G4ANTILAMBDAB_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4AntiLambdab : public G4ParticleDefinition
 {
   public:
+
     static G4AntiLambdab* Definition();
     static G4AntiLambdab* AntiLambdabDefinition();
     static G4AntiLambdab* AntiLambdab();
 
   private:
+
     G4AntiLambdab() {}
     ~G4AntiLambdab() override = default;
 

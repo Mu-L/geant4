@@ -30,22 +30,20 @@
 
 #include "G4MagIntegratorStepper.hh"
 
-// Constructor for stepper abstract base class. 
-// 
+// Constructor for stepper abstract base class.
 //
-G4MagIntegratorStepper::
-G4MagIntegratorStepper( G4EquationOfMotion* Equation,
-                        G4int               num_integration_vars,
-                        G4int               num_state_vars,
-                        G4bool              isFSAL )
+//
+G4MagIntegratorStepper::G4MagIntegratorStepper(G4EquationOfMotion* Equation,
+                                               G4int num_integration_vars, G4int num_state_vars,
+                                               G4bool isFSAL)
   : fEquation_Rhs(Equation),
     fNoIntegrationVariables(num_integration_vars),
-    fNoStateVariables(std::max(num_state_vars,8)),
+    fNoStateVariables(std::max(num_state_vars, 8)),
     fIsFSAL(isFSAL)
 {
-  if( Equation == nullptr )
+  if (Equation == nullptr)
   {
-     G4Exception( "G4MagIntegratorStepper::G4MagIntegratorStepper", "GeomField0003",
-                  FatalErrorInArgument, "Must have non-null equation." );
+    G4Exception("G4MagIntegratorStepper::G4MagIntegratorStepper", "GeomField0003",
+                FatalErrorInArgument, "Must have non-null equation.");
   }
 }

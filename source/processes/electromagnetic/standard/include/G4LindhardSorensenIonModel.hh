@@ -37,20 +37,20 @@
 //
 // Class Description:
 //
-// Implementation of ion ionisation energy loss and delta-electron 
+// Implementation of ion ionisation energy loss and delta-electron
 // production by heavy charged particles according to
 // J. Lindhard & A.H. Sorensen, Phys. Rev. A 53 (1996) 2443-2455
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4LindhardSorensenIonModel_h
-#define G4LindhardSorensenIonModel_h 1
+#ifndef G4LINDHARDSORENSENIONMODEL_HH
+#define G4LINDHARDSORENSENIONMODEL_HH
+
+#include "G4NistManager.hh"
+#include "G4VEmModel.hh"
 
 #include <vector>
-
-#include "G4VEmModel.hh"
-#include "G4NistManager.hh"
 
 class G4EmCorrections;
 class G4ParticleChangeForLoss;
@@ -61,119 +61,97 @@ class G4IonICRU73Data;
 
 class G4LindhardSorensenIonModel : public G4VEmModel
 {
-public:
+  public:
 
-  explicit G4LindhardSorensenIonModel(const G4ParticleDefinition* p = nullptr,
-				      const G4String& nam = "LindhardSorensen");
+    explicit G4LindhardSorensenIonModel(const G4ParticleDefinition* p = nullptr,
+                                        const G4String& nam = "LindhardSorensen");
 
-  ~G4LindhardSorensenIonModel() override;
+    ~G4LindhardSorensenIonModel() override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  G4double MinEnergyCut(const G4ParticleDefinition*,
-                        const G4MaterialCutsCouple* couple) override;
+    G4double MinEnergyCut(const G4ParticleDefinition*, const G4MaterialCutsCouple* couple) override;
 
-  G4double ComputeCrossSectionPerElectron(
-		                 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy);
-				 
-  G4double ComputeCrossSectionPerAtom(
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double Z, G4double A,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
-				 				 
-  G4double CrossSectionPerVolume(const G4Material*,
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
-	      			 
-  G4double ComputeDEDXPerVolume(const G4Material*,
-                                const G4ParticleDefinition*,
-                                G4double kineticEnergy,
-                                G4double cutEnergy) override;
+    G4double ComputeCrossSectionPerElectron(const G4ParticleDefinition*, G4double kineticEnergy,
+                                            G4double cutEnergy, G4double maxEnergy);
 
-  G4double GetChargeSquareRatio(const G4ParticleDefinition* p,
-                                const G4Material* mat,
-                                G4double kineticEnergy) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kineticEnergy,
+                                        G4double Z, G4double A, G4double cutEnergy,
+                                        G4double maxEnergy) override;
 
-  G4double GetParticleCharge(const G4ParticleDefinition* p,
-			     const G4Material* mat,
-                             G4double kineticEnergy) override;
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy,
+                                   G4double maxEnergy) override;
 
-  void CorrectionsAlongStep(const G4Material*,
-			    const G4ParticleDefinition*,
-			    const G4double kinEnergy,
-			    const G4double cutEnergy,
-			    const G4double& length,
-                            G4double& eloss) override;
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                  G4double kineticEnergy, G4double cutEnergy) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-                         const G4MaterialCutsCouple*,
-		         const G4DynamicParticle*,
-			 G4double tmin,
-	                 G4double maxEnergy) override;
+    G4double GetChargeSquareRatio(const G4ParticleDefinition* p, const G4Material* mat,
+                                  G4double kineticEnergy) override;
 
-  // hide assignment operator
-  G4LindhardSorensenIonModel & operator=
-  (const  G4LindhardSorensenIonModel &right) = delete;
-  G4LindhardSorensenIonModel(const  G4LindhardSorensenIonModel&) = delete;
+    G4double GetParticleCharge(const G4ParticleDefinition* p, const G4Material* mat,
+                               G4double kineticEnergy) override;
 
-protected:
+    void CorrectionsAlongStep(const G4Material*, const G4ParticleDefinition*,
+                              const G4double kinEnergy, const G4double cutEnergy,
+                              const G4double& length, G4double& eloss) override;
 
-  G4double MaxSecondaryEnergy(const G4ParticleDefinition*,
-                              G4double kinEnergy) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-private:
+    // hide assignment operator
+    G4LindhardSorensenIonModel& operator=(const G4LindhardSorensenIonModel& right) = delete;
+    G4LindhardSorensenIonModel(const G4LindhardSorensenIonModel&) = delete;
 
-  void SetupParameters();
+  protected:
 
-  void InitialiseLS();
+    G4double MaxSecondaryEnergy(const G4ParticleDefinition*, G4double kinEnergy) override;
 
-  G4double ComputeDEDXPerVolumeLS(const G4Material*,
-                                  const G4ParticleDefinition*,
-				  G4double kinEnergy, G4double cutEnergy);
+  private:
 
-  inline void SetParticle(const G4ParticleDefinition* p);
+    void SetupParameters();
 
-  //  static const G4int MAXZION = 93;
+    void InitialiseLS();
 
-  static G4IonICRU73Data* fIonData;
-  static G4LindhardSorensenData* lsdata;
+    G4double ComputeDEDXPerVolumeLS(const G4Material*, const G4ParticleDefinition*,
+                                    G4double kinEnergy, G4double cutEnergy);
 
-  const G4ParticleDefinition* particle = nullptr;
-  G4ParticleDefinition* theElectron;
-  G4EmCorrections* corr;
-  G4ParticleChangeForLoss* fParticleChange = nullptr;
-  G4NistManager* nist;
-  G4BraggModel* fBraggModel;
-  G4BetheBlochModel* fBBModel;
+    inline void SetParticle(const G4ParticleDefinition* p);
 
-  G4int Zin = 1;
-  G4double mass = 0.0;
-  G4double tlimit = DBL_MAX;
-  G4double spin = 0.0;
-  G4double magMoment2 = 0.0;
-  G4double chargeSquareRatio = 1.0;
-  G4double charge = 1.0;
-  G4double eRatio = 0.0;
-  G4double pRatio = 1.0;
-  G4double formfact = 0.0;
-  G4double twoln10;
-  G4double fElimit;
-  G4bool isFirst = false;
+    //  static const G4int MAXZION = 93;
+
+    static G4IonICRU73Data* fIonData;
+    static G4LindhardSorensenData* lsdata;
+
+    const G4ParticleDefinition* particle = nullptr;
+    G4ParticleDefinition* theElectron;
+    G4EmCorrections* corr;
+    G4ParticleChangeForLoss* fParticleChange = nullptr;
+    G4NistManager* nist;
+    G4BraggModel* fBraggModel;
+    G4BetheBlochModel* fBBModel;
+
+    G4int Zin = 1;
+    G4double mass = 0.0;
+    G4double tlimit = DBL_MAX;
+    G4double spin = 0.0;
+    G4double magMoment2 = 0.0;
+    G4double chargeSquareRatio = 1.0;
+    G4double charge = 1.0;
+    G4double eRatio = 0.0;
+    G4double pRatio = 1.0;
+    G4double formfact = 0.0;
+    G4double twoln10;
+    G4double fElimit;
+    G4bool isFirst = false;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline void 
-G4LindhardSorensenIonModel::SetParticle(const G4ParticleDefinition* p)
+inline void G4LindhardSorensenIonModel::SetParticle(const G4ParticleDefinition* p)
 {
-  if(particle != p) {
+  if (particle != p)
+  {
     particle = p;
     SetupParameters();
   }

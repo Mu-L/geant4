@@ -33,8 +33,8 @@
 
 // Author: Makoto Asai (SLAC), 1998
 // --------------------------------------------------------------------
-#ifndef G4UIcommandTree_hh
-#define G4UIcommandTree_hh 1
+#ifndef G4UICOMMANDTREE_HH
+#define G4UICOMMANDTREE_HH
 
 #include "G4UIcommand.hh"
 #include "globals.hh"
@@ -44,6 +44,7 @@
 class G4UIcommandTree
 {
   public:
+
     G4UIcommandTree() = default;
     G4UIcommandTree(const char* thePathName);
 
@@ -80,10 +81,12 @@ class G4UIcommandTree
     }
 
   private:
+
     G4String CreateFileName(const char* pName);
     G4String ModStr(const char* strS);
 
   private:
+
     std::vector<G4UIcommand*> command;
     std::vector<G4UIcommandTree*> tree;
     G4UIcommand* guidance = nullptr;

@@ -70,10 +70,12 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::DecayIt(G4double parentMass)
   else
     current_parent_mass.Put(G4MT_parent_mass);
 
-  switch (numberOfDaughters) {
+  switch (numberOfDaughters)
+  {
     case 0:
 #ifdef G4VERBOSE
-      if (GetVerboseLevel() > 0) {
+      if (GetVerboseLevel() > 0)
+      {
         G4cout << "G4PhaseSpaceDecayChannel::DecayIt() -";
         G4cout << " daughters not defined " << G4endl;
       }
@@ -93,7 +95,8 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::DecayIt(G4double parentMass)
       break;
   }
 #ifdef G4VERBOSE
-  if ((products == nullptr) && (GetVerboseLevel() > 0)) {
+  if ((products == nullptr) && (GetVerboseLevel() > 0))
+  {
     G4cout << "G4PhaseSpaceDecayChannel::DecayIt() - ";
     G4cout << *parent_name << " cannot decay " << G4endl;
     DumpInfo();
@@ -123,7 +126,8 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::OneBodyDecayIt()
   products->PushProducts(daughterparticle);
 
 #ifdef G4VERBOSE
-  if (GetVerboseLevel() > 1) {
+  if (GetVerboseLevel() > 1)
+  {
     G4cout << "G4PhaseSpaceDecayChannel::OneBodyDecayIt() -";
     G4cout << " create decay products in rest frame " << G4endl;
     products->DumpInfo();
@@ -154,18 +158,22 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::TwoBodyDecayIt()
   auto products = new G4DecayProducts(*parentparticle);
   delete parentparticle;
 
-  if (!useGivenDaughterMass) {
+  if (!useGivenDaughterMass)
+  {
     G4bool withWidth = (daughterwidth[0] > 1.0e-3 * daughtermass[0])
                        || (daughterwidth[1] > 1.0e-3 * daughtermass[1]);
-    if (withWidth) {
+    if (withWidth)
+    {
       G4double sumofdaughterwidthsq =
         daughterwidth[0] * daughterwidth[0] + daughterwidth[1] * daughterwidth[1];
       // check parent mass and daughter mass
       G4double maxDev =
         (parentmass - daughtermass[0] - daughtermass[1]) / std::sqrt(sumofdaughterwidthsq);
-      if (maxDev <= -1.0 * rangeMass) {
+      if (maxDev <= -1.0 * rangeMass)
+      {
 #ifdef G4VERBOSE
-        if (GetVerboseLevel() > 0) {
+        if (GetVerboseLevel() > 0)
+        {
           G4cout << "G4PhaseSpaceDecayChannel::TwoBodyDecayIt()" << G4endl
                  << "Sum of daughter mass is larger than parent mass!" << G4endl;
           G4cout << "Parent :" << G4MT_parent->GetParticleName() << "  "
@@ -194,14 +202,17 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::TwoBodyDecayIt()
       daughtermass[1] = dm2;
     }
   }
-  else {
+  else
+  {
     // use given daughter mass;
     daughtermass[0] = givenDaughterMasses[0];
     daughtermass[1] = givenDaughterMasses[1];
   }
-  if (parentmass < daughtermass[0] + daughtermass[1]) {
+  if (parentmass < daughtermass[0] + daughtermass[1])
+  {
 #ifdef G4VERBOSE
-    if (GetVerboseLevel() > 0) {
+    if (GetVerboseLevel() > 0)
+    {
       G4cout << "G4PhaseSpaceDecayChannel::TwoBodyDecayIt()" << G4endl
              << "Sum of daughter mass is larger than parent mass!" << G4endl;
       G4cout << "Parent :" << G4MT_parent->GetParticleName() << "  "
@@ -210,7 +221,8 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::TwoBodyDecayIt()
              << daughtermass[0] / GeV << G4endl;
       G4cout << "Daughter 2:" << G4MT_daughters[1]->GetParticleName() << "  "
              << daughtermass[1] / GeV << G4endl;
-      if (useGivenDaughterMass) {
+      if (useGivenDaughterMass)
+      {
         G4cout << "Daughter Mass is given." << G4endl;
       }
     }
@@ -242,7 +254,8 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::TwoBodyDecayIt()
   products->PushProducts(daughterparticle);
 
 #ifdef G4VERBOSE
-  if (GetVerboseLevel() > 1) {
+  if (GetVerboseLevel() > 1)
+  {
     G4cout << "G4PhaseSpaceDecayChannel::TwoBodyDecayIt() -";
     G4cout << " Create decay products in rest frame " << G4endl;
     products->DumpInfo();
@@ -265,7 +278,8 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ThreeBodyDecayIt()
   G4double sumofdaughtermass = 0.0;
   G4double sumofdaughterwidthsq = 0.0;
   G4bool withWidth = false;
-  for (G4int index = 0; index < 3; ++index) {
+  for (G4int index = 0; index < 3; ++index)
+  {
     daughtermass[index] = G4MT_daughters_mass[index];
     sumofdaughtermass += daughtermass[index];
     daughterwidth[index] = G4MT_daughters_width[index];
@@ -281,12 +295,16 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ThreeBodyDecayIt()
   auto products = new G4DecayProducts(*parentparticle);
   delete parentparticle;
 
-  if (!useGivenDaughterMass) {
-    if (withWidth) {
+  if (!useGivenDaughterMass)
+  {
+    if (withWidth)
+    {
       G4double maxDev = (parentmass - sumofdaughtermass) / std::sqrt(sumofdaughterwidthsq);
-      if (maxDev <= -1.0 * rangeMass) {
+      if (maxDev <= -1.0 * rangeMass)
+      {
 #ifdef G4VERBOSE
-        if (GetVerboseLevel() > 0) {
+        if (GetVerboseLevel() > 0)
+        {
           G4cout << "G4PhaseSpaceDecayChannel::ThreeBodyDecayIt()" << G4endl
                  << "Sum of daughter mass is larger than parent mass!" << G4endl;
           G4cout << "Parent :" << G4MT_parent->GetParticleName() << "  "
@@ -322,7 +340,8 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ThreeBodyDecayIt()
       sumofdaughtermass = dm1 + dm2 + dm3;
     }
   }
-  else {
+  else
+  {
     // use given daughter mass;
     daughtermass[0] = givenDaughterMasses[0];
     daughtermass[1] = givenDaughterMasses[1];
@@ -330,9 +349,11 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ThreeBodyDecayIt()
     sumofdaughtermass = daughtermass[0] + daughtermass[1] + daughtermass[2];
   }
 
-  if (sumofdaughtermass > parentmass) {
+  if (sumofdaughtermass > parentmass)
+  {
 #ifdef G4VERBOSE
-    if (GetVerboseLevel() > 0) {
+    if (GetVerboseLevel() > 0)
+    {
       G4cout << "G4PhaseSpaceDecayChannel::ThreeBodyDecayIt()" << G4endl
              << "Sum of daughter mass is larger than parent mass!" << G4endl;
       G4cout << "Parent :" << G4MT_parent->GetParticleName() << "  "
@@ -344,7 +365,8 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ThreeBodyDecayIt()
       G4cout << "Daughter 3:" << G4MT_daughters[2]->GetParticleName() << "  "
              << daughtermass[2] / GeV << G4endl;
     }
-    if (useGivenDaughterMass) {
+    if (useGivenDaughterMass)
+    {
       G4cout << "Daughter Mass is given." << G4endl;
     }
 #endif
@@ -362,10 +384,12 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ThreeBodyDecayIt()
   G4double energy;
   const std::size_t MAX_LOOP = 10000;
 
-  for (std::size_t loop_counter = 0; loop_counter < MAX_LOOP; ++loop_counter) {
+  for (std::size_t loop_counter = 0; loop_counter < MAX_LOOP; ++loop_counter)
+  {
     rd1 = G4UniformRand();
     rd2 = G4UniformRand();
-    if (rd2 > rd1) {
+    if (rd2 > rd1)
+    {
       rd = rd1;
       rd1 = rd2;
       rd2 = rd;
@@ -392,7 +416,8 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ThreeBodyDecayIt()
 
   // output message
 #ifdef G4VERBOSE
-  if (GetVerboseLevel() > 1) {
+  if (GetVerboseLevel() > 1)
+  {
     G4cout << "     daughter 0:" << daughtermomentum[0] / GeV << "[GeV/c]" << G4endl;
     G4cout << "     daughter 1:" << daughtermomentum[1] / GeV << "[GeV/c]" << G4endl;
     G4cout << "     daughter 2:" << daughtermomentum[2] / GeV << "[GeV/c]" << G4endl;
@@ -444,7 +469,8 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ThreeBodyDecayIt()
   products->PushProducts(daughterparticle);
 
 #ifdef G4VERBOSE
-  if (GetVerboseLevel() > 1) {
+  if (GetVerboseLevel() > 1)
+  {
     G4cout << "G4PhaseSpaceDecayChannel::ThreeBodyDecayIt -";
     G4cout << " create decay products in rest frame " << G4endl;
     products->DumpInfo();
@@ -482,18 +508,23 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ManyBodyDecayIt()
   auto daughtermass = new G4double[numberOfDaughters];
 
   G4double sumofdaughtermass = 0.0;
-  for (index = 0; index < numberOfDaughters; ++index) {
-    if (!useGivenDaughterMass) {
+  for (index = 0; index < numberOfDaughters; ++index)
+  {
+    if (!useGivenDaughterMass)
+    {
       daughtermass[index] = G4MT_daughters_mass[index];
     }
-    else {
+    else
+    {
       daughtermass[index] = givenDaughterMasses[index];
     }
     sumofdaughtermass += daughtermass[index];
   }
-  if (sumofdaughtermass > parentmass) {
+  if (sumofdaughtermass > parentmass)
+  {
 #ifdef G4VERBOSE
-    if (GetVerboseLevel() > 0) {
+    if (GetVerboseLevel() > 0)
+    {
       G4cout << "G4PhaseSpaceDecayChannel::ManyBodyDecayIt()" << G4endl
              << "Sum of daughter mass is larger than parent mass!" << G4endl;
       G4cout << "Parent :" << G4MT_parent->GetParticleName() << "  "
@@ -527,18 +558,23 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ManyBodyDecayIt()
   G4int numberOfTry = 0;
   const std::size_t MAX_LOOP = 10000;
 
-  for (std::size_t loop_counter = 0; loop_counter < MAX_LOOP; ++loop_counter) {
+  for (std::size_t loop_counter = 0; loop_counter < MAX_LOOP; ++loop_counter)
+  {
     // Generate rundom number in descending order
     G4double temp;
     auto rd = new G4double[numberOfDaughters];
     rd[0] = 1.0;
-    for (index = 1; index < numberOfDaughters - 1; ++index) {
+    for (index = 1; index < numberOfDaughters - 1; ++index)
+    {
       rd[index] = G4UniformRand();
     }
     rd[numberOfDaughters - 1] = 0.0;
-    for (index = 1; index < numberOfDaughters - 1; ++index) {
-      for (index2 = index + 1; index2 < numberOfDaughters; ++index2) {
-        if (rd[index] < rd[index2]) {
+    for (index = 1; index < numberOfDaughters - 1; ++index)
+    {
+      for (index2 = index + 1; index2 < numberOfDaughters; ++index2)
+      {
+        if (rd[index] < rd[index2])
+        {
           temp = rd[index];
           rd[index] = rd[index2];
           rd[index2] = temp;
@@ -549,10 +585,12 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ManyBodyDecayIt()
     // calculate virtual mass
     tmas = parentmass - sumofdaughtermass;
     temp = sumofdaughtermass;
-    for (index = 0; index < numberOfDaughters; ++index) {
+    for (index = 0; index < numberOfDaughters; ++index)
+    {
       sm[index] = rd[index] * tmas + temp;
       temp -= daughtermass[index];
-      if (GetVerboseLevel() > 1) {
+      if (GetVerboseLevel() > 1)
+      {
         G4cout << index << "  rundom number:" << rd[index];
         G4cout << "   virtual mass:" << sm[index] / GeV << "[GeV/c/c]" << G4endl;
       }
@@ -562,7 +600,8 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ManyBodyDecayIt()
     // Calculate daughter momentum
     weight = 1.0;
     G4bool smOK = true;
-    for (index = 0; index < numberOfDaughters - 1 && smOK; ++index) {
+    for (index = 0; index < numberOfDaughters - 1 && smOK; ++index)
+    {
       smOK = (sm[index] - daughtermass[index] - sm[index + 1] >= 0.);
     }
     if (!smOK) continue;
@@ -570,18 +609,22 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ManyBodyDecayIt()
     index = numberOfDaughters - 1;
     daughtermomentum[index] = Pmx(sm[index - 1], daughtermass[index - 1], sm[index]);
 #ifdef G4VERBOSE
-    if (GetVerboseLevel() > 1) {
+    if (GetVerboseLevel() > 1)
+    {
       G4cout << "     daughter " << index << ":" << *daughters_name[index];
       G4cout << " momentum:" << daughtermomentum[index] / GeV << "[GeV/c]" << G4endl;
     }
 #endif
-    for (index = numberOfDaughters - 2; index >= 0; --index) {
+    for (index = numberOfDaughters - 2; index >= 0; --index)
+    {
       // calculate
       daughtermomentum[index] = Pmx(sm[index], daughtermass[index], sm[index + 1]);
-      if (daughtermomentum[index] < 0.0) {
+      if (daughtermomentum[index] < 0.0)
+      {
         // !!! illegal momentum !!!
 #ifdef G4VERBOSE
-        if (GetVerboseLevel() > 0) {
+        if (GetVerboseLevel() > 0)
+        {
           G4cout << "G4PhaseSpaceDecayChannel::ManyBodyDecayIt()" << G4endl;
           G4cout << "     Cannot calculate daughter momentum " << G4endl;
           G4cout << "     parent:" << *parent_name;
@@ -589,7 +632,8 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ManyBodyDecayIt()
           G4cout << "     daughter " << index << ":" << *daughters_name[index];
           G4cout << " mass:" << daughtermass[index] / GeV << "[GeV/c/c]";
           G4cout << " mass:" << daughtermomentum[index] / GeV << "[GeV/c]" << G4endl;
-          if (useGivenDaughterMass) {
+          if (useGivenDaughterMass)
+          {
             G4cout << "Daughter Mass is given." << G4endl;
           }
         }
@@ -607,7 +651,8 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ManyBodyDecayIt()
       // calculate weight of this events
       weight *= daughtermomentum[index] / sm[index];
 #ifdef G4VERBOSE
-      if (GetVerboseLevel() > 1) {
+      if (GetVerboseLevel() > 1)
+      {
         G4cout << "     daughter " << index << ":" << *daughters_name[index];
         G4cout << " momentum:" << daughtermomentum[index] / GeV << "[GeV/c]" << G4endl;
       }
@@ -615,20 +660,24 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ManyBodyDecayIt()
     }
 
 #ifdef G4VERBOSE
-    if (GetVerboseLevel() > 1) {
+    if (GetVerboseLevel() > 1)
+    {
       G4cout << "    weight: " << weight << G4endl;
     }
 #endif
 
     // exit if number of Try exceeds 100
-    if (++numberOfTry > 100) {
+    if (++numberOfTry > 100)
+    {
 #ifdef G4VERBOSE
-      if (GetVerboseLevel() > 0) {
+      if (GetVerboseLevel() > 0)
+      {
         G4cout << "G4PhaseSpaceDecayChannel::ManyBodyDecayIt()" << G4endl;
         G4cout << "Cannot determine Decay Kinematics " << G4endl;
         G4cout << "parent : " << *parent_name << G4endl;
         G4cout << "daughters : ";
-        for (index = 0; index < numberOfDaughters; ++index) {
+        for (index = 0; index < numberOfDaughters; ++index)
+        {
           G4cout << *daughters_name[index] << " , ";
         }
         G4cout << G4endl;
@@ -647,7 +696,8 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ManyBodyDecayIt()
   }
 
 #ifdef G4VERBOSE
-  if (GetVerboseLevel() > 1) {
+  if (GetVerboseLevel() > 1)
+  {
     G4cout << "Start calculation of daughters momentum vector " << G4endl;
   }
 #endif
@@ -668,7 +718,8 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ManyBodyDecayIt()
   daughterparticle[index + 1] =
     new G4DynamicParticle(G4MT_daughters[index + 1], direction * (-1.0 * daughtermomentum[index]));
 
-  for (index = numberOfDaughters - 3; index >= 0; --index) {
+  for (index = numberOfDaughters - 3; index >= 0; --index)
+  {
     // calculate momentum direction
     costheta = 2. * G4UniformRand() - 1.0;
     sintheta = std::sqrt((1.0 - costheta) * (1.0 + costheta));
@@ -681,7 +732,8 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ManyBodyDecayIt()
     beta = daughtermomentum[index];
     beta /=
       std::sqrt(daughtermomentum[index] * daughtermomentum[index] + sm[index + 1] * sm[index + 1]);
-    for (index2 = index + 1; index2 < numberOfDaughters; ++index2) {
+    for (index2 = index + 1; index2 < numberOfDaughters; ++index2)
+    {
       G4LorentzVector p4;
       // make G4LorentzVector for secondaries
       p4 = daughterparticle[index2]->Get4Momentum();
@@ -698,12 +750,14 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ManyBodyDecayIt()
   }
 
   // add daughters to G4Decayproducts
-  for (index = 0; index < numberOfDaughters; ++index) {
+  for (index = 0; index < numberOfDaughters; ++index)
+  {
     products->PushProducts(daughterparticle[index]);
   }
 
 #ifdef G4VERBOSE
-  if (GetVerboseLevel() > 1) {
+  if (GetVerboseLevel() > 1)
+  {
     G4cout << "G4PhaseSpaceDecayChannel::ManyBodyDecayIt() -";
     G4cout << " create decay products in rest frame " << G4endl;
     products->DumpInfo();
@@ -720,7 +774,8 @@ G4DecayProducts* G4PhaseSpaceDecayChannel::ManyBodyDecayIt()
 
 G4bool G4PhaseSpaceDecayChannel::SetDaughterMasses(G4double masses[])
 {
-  for (G4int idx = 0; idx < numberOfDaughters; ++idx) {
+  for (G4int idx = 0; idx < numberOfDaughters; ++idx)
+  {
     givenDaughterMasses[idx] = masses[idx];
   }
   useGivenDaughterMass = true;
@@ -741,7 +796,8 @@ G4bool G4PhaseSpaceDecayChannel::IsOKWithParentMass(G4double parentMass)
   CheckAndFillDaughters();
 
   G4double sumOfDaughterMassMin = 0.0;
-  for (G4int index = 0; index < numberOfDaughters; ++index) {
+  for (G4int index = 0; index < numberOfDaughters; ++index)
+  {
     sumOfDaughterMassMin += givenDaughterMasses[index];
   }
   return (parentMass >= sumOfDaughterMassMin);

@@ -34,17 +34,20 @@
 class G4AttDef;
 class G4TypeKey;
 class G4VAttValueFilter;
-template <typename A, typename B, typename C> class G4CreatorFactoryT;
+template<typename A, typename B, typename C>
+class G4CreatorFactoryT;
 
-namespace G4AttFilterUtils {
-    
-  typedef G4CreatorFactoryT<G4VAttValueFilter, G4TypeKey, G4VAttValueFilter*(*)()> G4AttValueFilterFactory;
+namespace G4AttFilterUtils
+{
 
-  // G4AttValue filter factory  
-  G4AttValueFilterFactory* GetAttValueFilterFactory();
-  
-  // Create new G4AttValue filter 
-  G4VAttValueFilter* GetNewFilter(const G4AttDef& def);
-}
+typedef G4CreatorFactoryT<G4VAttValueFilter, G4TypeKey, G4VAttValueFilter* (*)()>
+  G4AttValueFilterFactory;
+
+// G4AttValue filter factory
+G4AttValueFilterFactory* GetAttValueFilterFactory();
+
+// Create new G4AttValue filter
+G4VAttValueFilter* GetNewFilter(const G4AttDef& def);
+}  // namespace G4AttFilterUtils
 
 #endif

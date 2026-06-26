@@ -25,13 +25,12 @@
 //
 //
 //
-// 
+//
 // John Allison 20th October 1996
 
 // Class Description:
 // typedef G4Colour G4Color;
 // Class Description - End:
-
 
 #ifndef G4COLOR_HH
 #define G4COLOR_HH

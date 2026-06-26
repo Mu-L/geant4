@@ -35,37 +35,45 @@
 
 #include "G4InteractionContent.hh"
 
-#include "G4PhysicalConstants.hh" 
+#include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 
-G4InteractionContent::G4InteractionContent(G4VSplitableHadron *aPrimaryParticipant)
-: theNumberOfHard(0), theNumberOfSoft(0), theNumberOfDiffractive(0),
-  theInteractionTime(0.), curStatus(0)
+G4InteractionContent::G4InteractionContent(G4VSplitableHadron* aPrimaryParticipant)
+  : theNumberOfHard(0),
+    theNumberOfSoft(0),
+    theNumberOfDiffractive(0),
+    theInteractionTime(0.),
+    curStatus(0)
 {
-  theProjectile=aPrimaryParticipant;
-  theTarget=0;
-  theProjectileNucleon=0;
-  theTargetNucleon=0;
+  theProjectile = aPrimaryParticipant;
+  theTarget = 0;
+  theProjectileNucleon = 0;
+  theTargetNucleon = 0;
 }
 
-G4InteractionContent::~G4InteractionContent()
-{}
+G4InteractionContent::~G4InteractionContent() {}
 
-
-G4bool G4InteractionContent::operator<(const G4InteractionContent &right) const
+G4bool G4InteractionContent::operator<(const G4InteractionContent& right) const
 {
   return this->GetInteractionTime() < right.GetInteractionTime();
 }
 
-void  G4InteractionContent::SetInteractionTime(G4double aValue)
-{theInteractionTime = aValue;}
+void G4InteractionContent::SetInteractionTime(G4double aValue)
+{
+  theInteractionTime = aValue;
+}
 
 G4double G4InteractionContent::GetInteractionTime() const
-{return theInteractionTime;}
+{
+  return theInteractionTime;
+}
 
 void G4InteractionContent::SetStatus(G4int aValue)
-{curStatus = aValue;}
+{
+  curStatus = aValue;
+}
 
 G4int G4InteractionContent::GetStatus() const
-{return curStatus;}
-
+{
+  return curStatus;
+}

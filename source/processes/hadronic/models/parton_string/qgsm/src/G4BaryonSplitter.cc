@@ -24,27 +24,35 @@
 // ********************************************************************
 //
 // Split baryon (antibaryon) into quark and diquark (antidiquark and antiquark)
-// based on prototype, needs clean up of interfaces HPW Feb 1999  
+// based on prototype, needs clean up of interfaces HPW Feb 1999
 // Numbers verified and errors corrected, HPW Dec 1999
 
 #include "G4BaryonSplitter.hh"
+
 #include "G4ParticleTable.hh"
 
-G4BaryonSplitter::
-G4BaryonSplitter()
+G4BaryonSplitter::G4BaryonSplitter()
 {
   theBaryons.insert(new G4SPBaryon(G4Proton::Proton()));
   theBaryons.insert(new G4SPBaryon(G4Neutron::Neutron()));
   theBaryons.insert(new G4SPBaryon(G4AntiProton::AntiProton()));
   theBaryons.insert(new G4SPBaryon(G4AntiNeutron::AntiNeutron()));
-  theBaryons.insert(new G4SPBaryon(G4ParticleTable::GetParticleTable()->FindParticle(2224))); // Delta++
-  theBaryons.insert(new G4SPBaryon(G4ParticleTable::GetParticleTable()->FindParticle(2214))); // Delta+
-  theBaryons.insert(new G4SPBaryon(G4ParticleTable::GetParticleTable()->FindParticle(2114))); // Delta0
-  theBaryons.insert(new G4SPBaryon(G4ParticleTable::GetParticleTable()->FindParticle(1114))); // Delta-
-  theBaryons.insert(new G4SPBaryon(G4ParticleTable::GetParticleTable()->FindParticle(-2224))); // anti Delta++
-  theBaryons.insert(new G4SPBaryon(G4ParticleTable::GetParticleTable()->FindParticle(-2214))); // anti Delta+
-  theBaryons.insert(new G4SPBaryon(G4ParticleTable::GetParticleTable()->FindParticle(-2114))); // anti Delta0
-  theBaryons.insert(new G4SPBaryon(G4ParticleTable::GetParticleTable()->FindParticle(-1114))); // anti Delta-
+  theBaryons.insert(
+    new G4SPBaryon(G4ParticleTable::GetParticleTable()->FindParticle(2224)));  // Delta++
+  theBaryons.insert(
+    new G4SPBaryon(G4ParticleTable::GetParticleTable()->FindParticle(2214)));  // Delta+
+  theBaryons.insert(
+    new G4SPBaryon(G4ParticleTable::GetParticleTable()->FindParticle(2114)));  // Delta0
+  theBaryons.insert(
+    new G4SPBaryon(G4ParticleTable::GetParticleTable()->FindParticle(1114)));  // Delta-
+  theBaryons.insert(
+    new G4SPBaryon(G4ParticleTable::GetParticleTable()->FindParticle(-2224)));  // anti Delta++
+  theBaryons.insert(
+    new G4SPBaryon(G4ParticleTable::GetParticleTable()->FindParticle(-2214)));  // anti Delta+
+  theBaryons.insert(
+    new G4SPBaryon(G4ParticleTable::GetParticleTable()->FindParticle(-2114)));  // anti Delta0
+  theBaryons.insert(
+    new G4SPBaryon(G4ParticleTable::GetParticleTable()->FindParticle(-1114)));  // anti Delta-
   theBaryons.insert(new G4SPBaryon(G4Lambda::Lambda()));
   theBaryons.insert(new G4SPBaryon(G4AntiLambda::AntiLambda()));
   theBaryons.insert(new G4SPBaryon(G4SigmaPlus::SigmaPlus()));
@@ -89,38 +97,37 @@ G4BaryonSplitter()
   theBaryons.insert(new G4SPBaryon(G4AntiOmegabMinus::Definition()));
 }
 
-G4bool G4BaryonSplitter::
-SplitBarion(G4int PDGCode, G4int& q_or_qqbar, G4int& qbar_or_qq)
+G4bool G4BaryonSplitter::SplitBarion(G4int PDGCode, G4int& q_or_qqbar, G4int& qbar_or_qq)
 {
-  const G4SPBaryon * aBaryon = theBaryons.GetBaryon(G4ParticleTable::GetParticleTable()->FindParticle(PDGCode));
+  const G4SPBaryon* aBaryon =
+    theBaryons.GetBaryon(G4ParticleTable::GetParticleTable()->FindParticle(PDGCode));
 
-  if(aBaryon == nullptr)
+  if (aBaryon == nullptr)
   {
     return false;
-  } else {
+  }
+  else
+  {
     aBaryon->SampleQuarkAndDiquark(q_or_qqbar, qbar_or_qq);
     return true;
   }
 }
 
-
 // Get the splittable baryon for a PDG code.
-const G4SPBaryon & G4BaryonSplitter::
-GetSPBaryon(G4int PDGCode)
+const G4SPBaryon& G4BaryonSplitter::GetSPBaryon(G4int PDGCode)
 {
   return *theBaryons.GetBaryon(G4ParticleTable::GetParticleTable()->FindParticle(PDGCode));
 }
 
-
-// Find rest diquark in given barion after quark - antiquark annihilation  
+// Find rest diquark in given barion after quark - antiquark annihilation
 G4bool G4BaryonSplitter::FindDiquark(G4int PDGCode, G4int Quark, G4int& Diquark)
 {
-  const G4SPBaryon * aBaryon = theBaryons.GetBaryon(G4ParticleTable::GetParticleTable()->FindParticle(PDGCode));
-  if(aBaryon)
+  const G4SPBaryon* aBaryon =
+    theBaryons.GetBaryon(G4ParticleTable::GetParticleTable()->FindParticle(PDGCode));
+  if (aBaryon)
   {
     aBaryon->FindDiquark(Quark, Diquark);
     return true;
   }
   return false;
 }
-

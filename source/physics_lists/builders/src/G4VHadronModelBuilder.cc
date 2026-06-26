@@ -37,16 +37,12 @@
 
 #include "G4VHadronModelBuilder.hh"
 
-G4VHadronModelBuilder::G4VHadronModelBuilder(const G4String& aName) 
-  : model(0),name(aName)
-{}
+G4VHadronModelBuilder::G4VHadronModelBuilder(const G4String& aName) : model(0), name(aName) {}
 
-G4VHadronModelBuilder::~G4VHadronModelBuilder() 
-{}                                     
+G4VHadronModelBuilder::~G4VHadronModelBuilder() {}
 
 G4HadronicInteraction* G4VHadronModelBuilder::GetModel()
 {
-  if(!model) model = BuildModel();
+  if (!model) model = BuildModel();
   return model;
 }
-

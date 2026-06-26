@@ -36,22 +36,23 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedGenericPolycone.h>
+#  include "G4PolyconeSide.hh"
+#  include "G4TwoVector.hh"
 
-#include "G4TwoVector.hh"
-#include "G4PolyconeSide.hh"
+#  include <VecGeom/volumes/UnplacedGenericPolycone.h>
 
 /**
  * @brief G4UGenericPolycone is a wrapper class for G4GenericPolycone
  * to make use of VecGeom GenericPolycone.
+ * @ingroup geometry_solids_specific
  */
 
 class G4UGenericPolycone : public G4UAdapter<vecgeom::UnplacedGenericPolycone>
 {
-  using Shape_t = vecgeom::UnplacedGenericPolycone;
-  using Base_t  = G4UAdapter<vecgeom::UnplacedGenericPolycone>;
+    using Shape_t = vecgeom::UnplacedGenericPolycone;
+    using Base_t = G4UAdapter<vecgeom::UnplacedGenericPolycone>;
 
   public:
 
@@ -64,12 +65,12 @@ class G4UGenericPolycone : public G4UAdapter<vecgeom::UnplacedGenericPolycone>
      *  @param[in] r Vector of r coordinate of corners.
      *  @param[in] z Vector of Z coordinate of corners.
      */
-    G4UGenericPolycone(const G4String& name, 
-                       G4double phiStart,    // initial phi starting angle
-                       G4double phiTotal,    // total phi angle
-                       G4int    numRZ,       // number corners in r,z space
-                 const G4double r[],         // r coordinate of these corners
-                 const G4double z[]       ); // z coordinate of these corners
+    G4UGenericPolycone(const G4String& name,
+                       G4double phiStart,  // initial phi starting angle
+                       G4double phiTotal,  // total phi angle
+                       G4int numRZ,  // number corners in r,z space
+                       const G4double r[],  // r coordinate of these corners
+                       const G4double z[]);  // z coordinate of these corners
 
     /**
      * Default destructor.
@@ -79,16 +80,16 @@ class G4UGenericPolycone : public G4UAdapter<vecgeom::UnplacedGenericPolycone>
     /**
      * Accessors.
      */
-    G4double GetStartPhi()    const;
-    G4double GetEndPhi()      const;
+    G4double GetStartPhi() const;
+    G4double GetEndPhi() const;
     G4double GetSinStartPhi() const;
     G4double GetCosStartPhi() const;
-    G4double GetSinEndPhi()   const;
-    G4double GetCosEndPhi()   const;
-    G4bool IsOpen()           const;
-    G4int  GetNumRZCorner()   const;
+    G4double GetSinEndPhi() const;
+    G4double GetCosEndPhi() const;
+    G4bool IsOpen() const;
+    G4int GetNumRZCorner() const;
     G4PolyconeSideRZ GetCorner(G4int index) const;
-  
+
     /**
      * Returns the type ID, "G4GenericPolycone" of the solid.
      */
@@ -117,10 +118,9 @@ class G4UGenericPolycone : public G4UAdapter<vecgeom::UnplacedGenericPolycone>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                           G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.
@@ -130,7 +130,7 @@ class G4UGenericPolycone : public G4UAdapter<vecgeom::UnplacedGenericPolycone>
     /**
      * Copy constructor and assignment operator.
      */
-    G4UGenericPolycone( const G4UGenericPolycone& source );
+    G4UGenericPolycone(const G4UGenericPolycone& source);
     G4UGenericPolycone& operator=(const G4UGenericPolycone& source);
 
   private:
@@ -148,7 +148,7 @@ inline G4GeometryType G4UGenericPolycone::GetEntityType() const
 {
   return "G4GenericPolycone";
 }
-  
+
 #endif  // G4GEOM_USE_USOLIDS
 
 #endif

@@ -33,43 +33,43 @@
 //
 // Class Description - End
 
-#ifndef G4NuclearPolarizationStore_h
-#define G4NuclearPolarizationStore_h 1
+#ifndef G4NUCLEARPOLARIZATIONSTORE_HH
+#define G4NUCLEARPOLARIZATIONSTORE_HH
 
-#include "globals.hh"
 #include "G4NuclearPolarization.hh"
 #include "G4ThreadLocalSingleton.hh"
+#include "globals.hh"
 
 const G4int maxNumStates = 10;
 
 class G4NuclearPolarizationStore
 {
-friend class G4ThreadLocalSingleton<G4NuclearPolarizationStore>;
+    friend class G4ThreadLocalSingleton<G4NuclearPolarizationStore>;
 
-public:
+  public:
 
-  static G4NuclearPolarizationStore* GetInstance();
-  // access 
-  
-  ~G4NuclearPolarizationStore();
+    static G4NuclearPolarizationStore* GetInstance();
+    // access
 
-  void Register(G4NuclearPolarization* ptr);
-  // register new G4NuclearPolarization object
+    ~G4NuclearPolarizationStore();
 
-  G4NuclearPolarization* FindOrBuild(G4int Z, G4int A, G4double Eexc);
-  // find G4NuclearPolarization object or build new
+    void Register(G4NuclearPolarization* ptr);
+    // register new G4NuclearPolarization object
 
-  void RemoveMe(G4NuclearPolarization* ptr);
-  // deregister and delete G4NuclearPolarization object
+    G4NuclearPolarization* FindOrBuild(G4int Z, G4int A, G4double Eexc);
+    // find G4NuclearPolarization object or build new
 
-private:
+    void RemoveMe(G4NuclearPolarization* ptr);
+    // deregister and delete G4NuclearPolarization object
 
-  G4NuclearPolarizationStore();
+  private:
 
-  static G4ThreadLocal G4NuclearPolarizationStore* instance;
+    G4NuclearPolarizationStore();
 
-  G4NuclearPolarization* nuclist[maxNumStates];
-  G4int oldIdx;
+    static G4ThreadLocal G4NuclearPolarizationStore* instance;
+
+    G4NuclearPolarization* nuclist[maxNumStates];
+    G4int oldIdx;
 };
 
 #endif

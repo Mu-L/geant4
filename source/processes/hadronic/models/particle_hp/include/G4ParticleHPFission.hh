@@ -31,8 +31,8 @@
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
 
-#ifndef G4ParticleHPFission_h
-#define G4ParticleHPFission_h 1
+#ifndef G4PARTICLEHPFISSION_HH
+#define G4PARTICLEHPFISSION_HH
 
 // Class Description
 // Final state production model for a high precision (based on evaluated data
@@ -52,6 +52,7 @@
 class G4ParticleHPFission : public G4HadronicInteraction
 {
   public:
+
     G4ParticleHPFission();
 
     ~G4ParticleHPFission() override;
@@ -62,12 +63,14 @@ class G4ParticleHPFission : public G4HadronicInteraction
     const std::pair<G4double, G4double> GetFatalEnergyCheckLevels() const override;
 
   public:
+
     G4int GetVerboseLevel() const;
     void SetVerboseLevel(G4int);
     void BuildPhysicsTable(const G4ParticleDefinition&) override;
     void ModelDescription(std::ostream& outFile) const override;
 
   private:
+
     // G4ParticleHPChannel * theFission;
     std::vector<G4ParticleHPChannel*>* theFission{nullptr};
     G4String dirName;

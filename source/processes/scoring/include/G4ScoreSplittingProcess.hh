@@ -34,8 +34,8 @@
 //
 // Design and first implementation: J.Apostolakis, M.Asai - 2010
 //---------------------------------------------------------------------
-#ifndef G4ScoreSplittingProcess_h
-#define G4ScoreSplittingProcess_h 1
+#ifndef G4SCORESPLITTINGPROCESS_HH
+#define G4SCORESPLITTINGPROCESS_HH
 
 #include "G4FieldTrack.hh"
 #include "G4TouchableHandle.hh"

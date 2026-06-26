@@ -29,20 +29,18 @@
 //
 
 #include "G4C10GEMProbability.hh"
+
 #include "G4SystemOfUnits.hh"
 
-G4C10GEMProbability::G4C10GEMProbability() :
-  G4GEMProbability(10,6,0.0) // A,Z,Spin
+G4C10GEMProbability::G4C10GEMProbability() : G4GEMProbability(10, 6, 0.0)  // A,Z,Spin
 {
-
-  ExcitEnergies.push_back(3353.7*keV);
+  ExcitEnergies.push_back(3353.7 * keV);
   ExcitSpins.push_back(2.0);
-  ExcitLifetimes.push_back(107.0e-15*s);
+  ExcitLifetimes.push_back(107.0e-15 * s);
 
-  ExcitEnergies.push_back(6580.0*keV);
+  ExcitEnergies.push_back(6580.0 * keV);
   ExcitSpins.push_back(2.0);
-  ExcitLifetimes.push_back(fPlanck/(200.0*keV));
+  ExcitLifetimes.push_back(fPlanck / (200.0 * keV));
 }
 
-G4C10GEMProbability::~G4C10GEMProbability()
-{}
+G4C10GEMProbability::~G4C10GEMProbability() {}

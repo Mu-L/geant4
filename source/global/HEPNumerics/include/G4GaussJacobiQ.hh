@@ -36,23 +36,23 @@
 // Author: V.Grichine, 13.05.1997
 // --------------------------------------------------------------------
 #ifndef G4GAUSSJACOBIQ_HH
-#define G4GAUSSJACOBIQ_HH 1
+#define G4GAUSSJACOBIQ_HH
 
 #include "G4VGaussianQuadrature.hh"
 
 class G4GaussJacobiQ : public G4VGaussianQuadrature
 {
- public:
-  G4GaussJacobiQ(function pFunction, G4double alpha, G4double beta,
-                 G4int nJacobi);
-  // Constructor for Gauss-Jacobi integration method.
+  public:
 
-  G4GaussJacobiQ(const G4GaussJacobiQ&) = delete;
-  G4GaussJacobiQ& operator=(const G4GaussJacobiQ&) = delete;
+    G4GaussJacobiQ(function pFunction, G4double alpha, G4double beta, G4int nJacobi);
+    // Constructor for Gauss-Jacobi integration method.
 
-  G4double Integral() const;
-  // Gauss-Jacobi method for integration of
-  // ((1-x)^alpha)*((1+x)^beta)*pFunction(x) from minus unit to plus unit.
+    G4GaussJacobiQ(const G4GaussJacobiQ&) = delete;
+    G4GaussJacobiQ& operator=(const G4GaussJacobiQ&) = delete;
+
+    G4double Integral() const;
+    // Gauss-Jacobi method for integration of
+    // ((1-x)^alpha)*((1+x)^beta)*pFunction(x) from minus unit to plus unit.
 };
 
 #endif

@@ -35,35 +35,37 @@
 //
 //----------------------------------------------------------------------------
 //
- #include "G4TritonBuilder.hh"
- #include "G4ParticleDefinition.hh"
- #include "G4ParticleTable.hh"
- #include "G4ProcessManager.hh"
+#include "G4TritonBuilder.hh"
 
- 
- void G4TritonBuilder::Build()
- {
-   std::vector<G4VTritonBuilder *>::iterator i;
-   for(i=theModelCollections.begin(); i!=theModelCollections.end(); i++)
-   {
-     (*i)->Build(theTritonInelastic);
-   }
-   G4ProcessManager * theProcMan = G4Triton::Triton()->GetProcessManager();
-   theProcMan->AddDiscreteProcess(theTritonInelastic);
- }
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "G4ProcessManager.hh"
 
- G4TritonBuilder::
- G4TritonBuilder()
- {
-   theTritonInelastic=new G4HadronInelasticProcess( "tInelastic", G4Triton::Definition() );
- }
-
-void G4TritonBuilder::RegisterMe(G4PhysicsBuilderInterface* aB) {
-  auto bld = dynamic_cast<G4VTritonBuilder*>(aB);
-  if ( bld != nullptr ) {
-      theModelCollections.push_back(bld);
-  } else {
-      G4PhysicsBuilderInterface::RegisterMe(aB);
+void G4TritonBuilder::Build()
+{
+  std::vector<G4VTritonBuilder*>::iterator i;
+  for (i = theModelCollections.begin(); i != theModelCollections.end(); i++)
+  {
+    (*i)->Build(theTritonInelastic);
   }
+  G4ProcessManager* theProcMan = G4Triton::Triton()->GetProcessManager();
+  theProcMan->AddDiscreteProcess(theTritonInelastic);
 }
 
+G4TritonBuilder::G4TritonBuilder()
+{
+  theTritonInelastic = new G4HadronInelasticProcess("tInelastic", G4Triton::Definition());
+}
+
+void G4TritonBuilder::RegisterMe(G4PhysicsBuilderInterface* aB)
+{
+  auto bld = dynamic_cast<G4VTritonBuilder*>(aB);
+  if (bld != nullptr)
+  {
+    theModelCollections.push_back(bld);
+  }
+  else
+  {
+    G4PhysicsBuilderInterface::RegisterMe(aB);
+  }
+}

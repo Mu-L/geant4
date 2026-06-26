@@ -34,55 +34,55 @@
 #include "G4MagIntegratorStepper.hh"
 #include "G4qss_misc.hh"
 
-#include <map>
 #include <cmath>
+#include <map>
 
-constexpr G4int MAX_QSS_ORDER=3;
+constexpr G4int MAX_QSS_ORDER = 3;
 constexpr G4int NUMBER_OF_VARIABLES_QSS = 6;
 
 typedef G4double QSStateVector[6];
 
 /**
  * @brief Structs used by G4QSStepper.
+ * @ingroup geometry_magneticfield
  */
 
 struct Substep
 {
-  QSStateVector state_x[MAX_QSS_ORDER+1];
-  QSStateVector state_q[MAX_QSS_ORDER];
-  QSStateVector state_tx;
-  QSStateVector state_tq;
-  QSStateVector sync_t;
-  G4double t{0.0};
-  // simple id method so that substeps can have different orders in same step
-  G4int extrapolation_method =0;  // To be overwritten in run (expect: 1,2 or 3)
-  G4double b_field[3] = {0.0, 0.0, 0.0 };
+    QSStateVector state_x[MAX_QSS_ORDER + 1];
+    QSStateVector state_q[MAX_QSS_ORDER];
+    QSStateVector state_tx;
+    QSStateVector state_tq;
+    QSStateVector sync_t;
+    G4double t{0.0};
+    // simple id method so that substeps can have different orders in same step
+    G4int extrapolation_method = 0;  // To be overwritten in run (expect: 1,2 or 3)
+    G4double b_field[3] = {0.0, 0.0, 0.0};
 
-  inline Substep();
+    inline Substep();
 };
 
 // --------------------------------------------------------------------------------
 
 struct Substeps
 {
-  G4int _arrlength = 30;
-  Substep* _substeps = nullptr;
-  G4int current_substep_index = -1;
+    G4int _arrlength = 30;
+    Substep* _substeps = nullptr;
+    G4int current_substep_index = -1;
 
-  Substeps();
-  ~Substeps();
+    Substeps();
+    ~Substeps();
 
-  /** Mimics the functionality of GNU method reallocarray. */
-  void* safe_reallocarray(void* ptr, size_t numMembers, size_t size);
-   
-  inline void resize();
+    /** Mimics the functionality of GNU method reallocarray. */
+    void* safe_reallocarray(void* ptr, size_t numMembers, size_t size);
 
-  inline Substep* create_substep();
+    inline void resize();
 
-  inline void save_substep(Substep* substep);
+    inline Substep* create_substep();
 
-  inline void reset();
+    inline void save_substep(Substep* substep);
 
+    inline void reset();
 };
 
 #include "G4QSSubstepStruct.icc"

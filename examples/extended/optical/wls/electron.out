@@ -11,7 +11,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -143,28 +143,28 @@ G4NistElementBuilder: Build Element <O>  Z= 8  Aeff= 15.9994  with natural isoto
 G4NistElementBuilder: Build Element <Ar>  Z= 18  Aeff= 39.9477  with natural isotope composition
 G4NistMaterialBuilder::FindOrBuildMaterial PMMA
 G4NistMaterialBuilder::FindOrBuildMaterial WARNING: material <PMMA> is not found.
-New material PMMA is prepared  nMaterials= 310 nComponents= 780 nCurrent= 3
-G4NistMaterialBuilder: BuildMaterial #309
+New material PMMA is prepared  nMaterials= 311 nComponents= 781 nCurrent= 3
+G4NistMaterialBuilder: BuildMaterial #310
 New material nComponents= 3
 G4NistMaterialBuilder::FindOrBuildMaterial Pethylene
 G4NistMaterialBuilder::FindOrBuildMaterial WARNING: material <Pethylene> is not found.
-New material Pethylene is prepared  nMaterials= 311 nComponents= 783 nCurrent= 2
-G4NistMaterialBuilder: BuildMaterial #310
+New material Pethylene is prepared  nMaterials= 312 nComponents= 784 nCurrent= 2
+G4NistMaterialBuilder: BuildMaterial #311
 New material nComponents= 2
 G4NistMaterialBuilder::FindOrBuildMaterial FPethylene
 G4NistMaterialBuilder::FindOrBuildMaterial WARNING: material <FPethylene> is not found.
-New material FPethylene is prepared  nMaterials= 312 nComponents= 785 nCurrent= 2
-G4NistMaterialBuilder: BuildMaterial #311
+New material FPethylene is prepared  nMaterials= 313 nComponents= 786 nCurrent= 2
+G4NistMaterialBuilder: BuildMaterial #312
 New material nComponents= 2
 G4NistMaterialBuilder::FindOrBuildMaterial Polystyrene
 G4NistMaterialBuilder::FindOrBuildMaterial WARNING: material <Polystyrene> is not found.
-New material Polystyrene is prepared  nMaterials= 313 nComponents= 787 nCurrent= 2
-G4NistMaterialBuilder: BuildMaterial #312
+New material Polystyrene is prepared  nMaterials= 314 nComponents= 788 nCurrent= 2
+G4NistMaterialBuilder: BuildMaterial #313
 New material nComponents= 2
 G4NistMaterialBuilder::FindOrBuildMaterial Silicone
 G4NistMaterialBuilder::FindOrBuildMaterial WARNING: material <Silicone> is not found.
-New material Silicone is prepared  nMaterials= 314 nComponents= 789 nCurrent= 2
-G4NistMaterialBuilder: BuildMaterial #313
+New material Silicone is prepared  nMaterials= 315 nComponents= 790 nCurrent= 2
+G4NistMaterialBuilder: BuildMaterial #314
 New material nComponents= 2
 G4NistMaterialBuilder::FindOrBuildMaterial G4_Al
 G4NistMaterialBuilder: BuildMaterial #13
@@ -172,8 +172,8 @@ New material nComponents= 1
 G4NistElementBuilder: Build Element <Al>  Z= 13  Aeff= 26.9815  with natural isotope composition
 G4NistMaterialBuilder::FindOrBuildMaterial TiO2
 G4NistMaterialBuilder::FindOrBuildMaterial WARNING: material <TiO2> is not found.
-New material TiO2 is prepared  nMaterials= 315 nComponents= 791 nCurrent= 2
-G4NistMaterialBuilder: BuildMaterial #314
+New material TiO2 is prepared  nMaterials= 316 nComponents= 792 nCurrent= 2
+G4NistMaterialBuilder: BuildMaterial #315
 New material nComponents= 2
 G4NistElementBuilder: Build Element <Ti>  Z= 22  Aeff= 47.8667  with natural isotope composition
 
@@ -247,6 +247,7 @@ Use built-in Birks saturation                      1
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 1
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            1 MeV
 Linear loss limit                                  0.01
@@ -1111,7 +1112,7 @@ Arrival time: 5.84403 ns Arrival position: (-157.53 um , 550.755 um ) Exit posit
  Run terminated.
 Run Summary
   Number of events processed : 10
-  User=3.120000s Real=3.146083s Sys=0.000000s
+  User=2.800000s Real=2.854887s Sys=0.000000s
 
  ----> print histograms statistics for the entire run 
 

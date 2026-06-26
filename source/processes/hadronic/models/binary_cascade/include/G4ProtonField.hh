@@ -25,65 +25,65 @@
 //
 //
 // -------------------------------------------------------------------
-//      GEANT 4 class header file 
+//      GEANT 4 class header file
 //
 //      CERN, Geneva, Switzerland
 //
 //      File name:     G4ProtonField.hh
 //
 //      Author:        Alessandro Brunengo (Alessandro.Brunengo@ge.infn.it)
-// 
+//
 //      Creation date: 5 June 2000
 // -------------------------------------------------------------------
 
-#ifndef G4ProtonField_h
-#define  G4ProtonField_h 1
+#ifndef G4PROTONFIELD_HH
+#define G4PROTONFIELD_HH
 
-#include "G4VNuclearField.hh"
-#include "G4V3DNucleus.hh"
 #include "G4FermiMomentum.hh"
+#include "G4V3DNucleus.hh"
 #include "G4VNuclearDensity.hh"
+#include "G4VNuclearField.hh"
+
 #include <vector>
 
-class G4ProtonField: public G4VNuclearField
+class G4ProtonField : public G4VNuclearField
 {
-public:
+  public:
 
-  G4ProtonField(G4V3DNucleus * nucleus);
-  virtual ~G4ProtonField();
+    G4ProtonField(G4V3DNucleus* nucleus);
+    virtual ~G4ProtonField();
 
-private:
-  G4ProtonField(const  G4ProtonField &right);
-  const G4ProtonField & operator=(const G4ProtonField & right);
-  G4bool operator==(const G4ProtonField & right) const;
-  G4bool operator!=(const G4ProtonField & right) const;
+  private:
 
-public:
+    G4ProtonField(const G4ProtonField& right);
+    const G4ProtonField& operator=(const G4ProtonField& right);
+    G4bool operator==(const G4ProtonField& right) const;
+    G4bool operator!=(const G4ProtonField& right) const;
 
-  virtual G4double GetField(const G4ThreeVector & aPosition);
-  virtual G4double GetBarrier();
+  public:
 
-private:
+    virtual G4double GetField(const G4ThreeVector& aPosition);
+    virtual G4double GetBarrier();
 
-  G4double GetDensity(const G4ThreeVector & aPosition)
-  {
-    return theDensity->GetDensity(aPosition);
-  }
-  G4double GetFermiMomentum(const G4double aDensity)
-  {
-    return theFermi.GetFermiMomentum(aDensity);
-  }
-  
-  G4int theA;
-  G4int theZ;
-  G4double theBarrier;
-  G4double theRadius;
-  G4FermiMomentum theFermi;
-  const G4VNuclearDensity * theDensity;
+  private:
 
-  std::vector<G4double> theFermiMomBuffer;
+    G4double GetDensity(const G4ThreeVector& aPosition)
+    {
+      return theDensity->GetDensity(aPosition);
+    }
+    G4double GetFermiMomentum(const G4double aDensity)
+    {
+      return theFermi.GetFermiMomentum(aDensity);
+    }
+
+    G4int theA;
+    G4int theZ;
+    G4double theBarrier;
+    G4double theRadius;
+    G4FermiMomentum theFermi;
+    const G4VNuclearDensity* theDensity;
+
+    std::vector<G4double> theFermiMomBuffer;
 };
 
 #endif
-
-

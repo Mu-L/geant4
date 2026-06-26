@@ -25,40 +25,43 @@
 //
 //
 
-#include "globals.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4ConcreteNNToDeltaDeltastar.hh"
+
 #include "G4DeltaDeltastarBuilder.hh"
+#include "G4ParticleDefinition.hh"
+#include "globals.hh"
+
 #include <typeinfo>
 
-G4ThreadLocal G4XDeltaDeltastarTable *G4ConcreteNNToDeltaDeltastar::theSigmaTable_G4MT_TLS_ = 0;
+G4ThreadLocal G4XDeltaDeltastarTable* G4ConcreteNNToDeltaDeltastar::theSigmaTable_G4MT_TLS_ = 0;
 
 G4ConcreteNNToDeltaDeltastar::G4ConcreteNNToDeltaDeltastar(const G4ParticleDefinition* aPrimary,
-					   const G4ParticleDefinition* bPrimary,
-					   const G4ParticleDefinition* aSecondary,
-					   const G4ParticleDefinition* bSecondary)  :
-	 G4ConcreteNNTwoBodyResonance(NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+                                                           const G4ParticleDefinition* bPrimary,
+                                                           const G4ParticleDefinition* aSecondary,
+                                                           const G4ParticleDefinition* bSecondary)
+  : G4ConcreteNNTwoBodyResonance(NULL, NULL, NULL, NULL, NULL, NULL, NULL)
 {
   if (!theSigmaTable_G4MT_TLS_) theSigmaTable_G4MT_TLS_ = new G4XDeltaDeltastarTable;
-  G4XDeltaDeltastarTable &theSigmaTable = *theSigmaTable_G4MT_TLS_;
-  establish_G4MT_TLS_G4ConcreteNNTwoBodyResonance(aPrimary,bPrimary,aSecondary,bSecondary,
-		                                          G4DeltaDeltastarBuilder(bSecondary->GetParticleName(),theSigmaTable));
-  G4double chargeBalance = aPrimary->GetPDGCharge()+bPrimary->GetPDGCharge();
+  G4XDeltaDeltastarTable& theSigmaTable = *theSigmaTable_G4MT_TLS_;
+  establish_G4MT_TLS_G4ConcreteNNTwoBodyResonance(
+    aPrimary, bPrimary, aSecondary, bSecondary,
+    G4DeltaDeltastarBuilder(bSecondary->GetParticleName(), theSigmaTable));
+  G4double chargeBalance = aPrimary->GetPDGCharge() + bPrimary->GetPDGCharge();
   chargeBalance -= aSecondary->GetPDGCharge();
   chargeBalance -= bSecondary->GetPDGCharge();
-  if(std::abs(chargeBalance) >.1)
+  if (std::abs(chargeBalance) > .1)
   {
-    G4cout << "Charge conservation problem in G4ConcreteNNToDeltaDeltastar"<<G4endl;
-    G4cout << "Initial charges in "<<typeid(*this).name()<<G4endl;
-    G4cout << aPrimary->GetPDGCharge()<<" "<<aPrimary->GetParticleName()
-           << bPrimary->GetPDGCharge()<<" "<<bPrimary->GetParticleName()
-	   << aSecondary->GetPDGCharge()<<" "<<aSecondary->GetParticleName()
-	   << bSecondary->GetPDGCharge()<<" "<<bSecondary->GetParticleName()<<G4endl;
+    G4cout << "Charge conservation problem in G4ConcreteNNToDeltaDeltastar" << G4endl;
+    G4cout << "Initial charges in " << typeid(*this).name() << G4endl;
+    G4cout << aPrimary->GetPDGCharge() << " " << aPrimary->GetParticleName()
+           << bPrimary->GetPDGCharge() << " " << bPrimary->GetParticleName()
+           << aSecondary->GetPDGCharge() << " " << aSecondary->GetParticleName()
+           << bSecondary->GetPDGCharge() << " " << bSecondary->GetParticleName() << G4endl;
   }
 }
 
 G4ConcreteNNToDeltaDeltastar::~G4ConcreteNNToDeltaDeltastar()
 {
   if (theSigmaTable_G4MT_TLS_) delete theSigmaTable_G4MT_TLS_;
-  theSigmaTable_G4MT_TLS_=0;
+  theSigmaTable_G4MT_TLS_ = 0;
 }

@@ -6,6 +6,18 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-06-08 Ben Morgan (gflash-V11-04-01)
+- Use standard Geant4 header guard without value for definition.
+
+## 2026-03-12 Igor Semeniouk (gflash-V11-04-00)
+ - GVFlashShowerParameterisation - Add GetEffZoA function
+ - GFlashHomoShowerParameterisation, GFlashSamplingShowerParameterisation -
+  made SetMaterial privete, Ec colculation correction
+
+ - GFlashShowerModel - Add methods:  SetParameterisation, SetHitMaker,
+   SetParticleBounds via pointers, GetPBound
+ -  GFlashShowerModelMessenger - Use GetPBound function
+
 ## 2024-10-21 Igor Semeniouk (gflash-V11-02-01)
 - GFlashSamplingShowerParameterisation - add GetEffDensity function
 - correction of Es and sampling resolution function

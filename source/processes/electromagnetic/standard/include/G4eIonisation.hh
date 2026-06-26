@@ -65,49 +65,47 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4eIonisation_h
-#define G4eIonisation_h 1
+#ifndef G4EIONISATION_HH
+#define G4EIONISATION_HH
 
-#include "G4VEnergyLossProcess.hh"
 #include "G4Electron.hh"
 #include "G4Positron.hh"
 #include "G4VEmModel.hh"
+#include "G4VEnergyLossProcess.hh"
 
 class G4Material;
 class G4ParticleDefinition;
 
 class G4eIonisation : public G4VEnergyLossProcess
 {
+  public:
 
-public:
+    explicit G4eIonisation(const G4String& name = "eIoni");
 
-  explicit G4eIonisation(const G4String& name = "eIoni");
+    ~G4eIonisation() override;
 
-  ~G4eIonisation() override;
+    G4bool IsApplicable(const G4ParticleDefinition& p) final;
 
-  G4bool IsApplicable(const G4ParticleDefinition& p) final;
+    // print documentation in html format
+    void ProcessDescription(std::ostream&) const override;
 
-  // print documentation in html format
-  void ProcessDescription(std::ostream&) const override;
+    // hide assignment operator
+    G4eIonisation& operator=(const G4eIonisation& right) = delete;
+    G4eIonisation(const G4eIonisation&) = delete;
 
-  // hide assignment operator
-  G4eIonisation & operator=(const G4eIonisation &right) = delete;
-  G4eIonisation(const G4eIonisation&) = delete;
+  protected:
 
-protected:
+    void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
+                                     const G4ParticleDefinition*) override;
 
-  void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
-  			           const G4ParticleDefinition*) override;
+    G4double MinPrimaryEnergy(const G4ParticleDefinition*, const G4Material*, G4double cut) final;
 
-  G4double MinPrimaryEnergy(const G4ParticleDefinition*,
-			    const G4Material*, G4double cut) final;
+  private:
 
-private:
+    const G4ParticleDefinition* theElectron;
 
-  const G4ParticleDefinition* theElectron;
-
-  G4bool isElectron;
-  G4bool isInitialised;
+    G4bool isElectron;
+    G4bool isInitialised;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

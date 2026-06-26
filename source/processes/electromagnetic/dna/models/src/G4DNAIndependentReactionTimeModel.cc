@@ -24,22 +24,23 @@
 // ********************************************************************
 //
 
-#include "globals.hh"
-#include "G4DNAMakeReaction.hh"
-#include <G4DNAMolecularReactionTable.hh>
-#include <memory>
 #include "G4DNAIndependentReactionTimeModel.hh"
+
+#include "G4ChemicalMoleculeFinder.hh"
 #include "G4DNAIndependentReactionTimeStepper.hh"
+#include "G4DNAMakeReaction.hh"
 #include "G4DiffusionControlledReactionModel.hh"
 #include "G4Molecule.hh"
 #include "G4VDNAReactionModel.hh"
-#include "G4ChemicalMoleculeFinder.hh"
+#include "globals.hh"
 
-G4DNAIndependentReactionTimeModel::G4DNAIndependentReactionTimeModel(
-  const G4String& name)
-  : G4DNAIndependentReactionTimeModel(
-      name, std::make_unique<G4DNAIndependentReactionTimeStepper>(),
-      std::make_unique<G4DNAMakeReaction>())
+#include <G4DNAMolecularReactionTable.hh>
+
+#include <memory>
+
+G4DNAIndependentReactionTimeModel::G4DNAIndependentReactionTimeModel(const G4String& name)
+  : G4DNAIndependentReactionTimeModel(name, std::make_unique<G4DNAIndependentReactionTimeStepper>(),
+                                      std::make_unique<G4DNAMakeReaction>())
 {}
 
 G4DNAIndependentReactionTimeModel::G4DNAIndependentReactionTimeModel(
@@ -51,34 +52,30 @@ G4DNAIndependentReactionTimeModel::G4DNAIndependentReactionTimeModel(
   fType2 = G4Molecule::ITType();
 }
 
-G4DNAIndependentReactionTimeModel::~G4DNAIndependentReactionTimeModel() =
-  default;
+G4DNAIndependentReactionTimeModel::~G4DNAIndependentReactionTimeModel() = default;
 
 void G4DNAIndependentReactionTimeModel::Initialize()
 {
-  if(fpReactionTable == nullptr)
+  if (fpReactionTable == nullptr)
   {
     SetReactionTable(G4DNAMolecularReactionTable::GetReactionTable());
   }
 
-  if(!fpReactionModel)
+  if (!fpReactionModel)
   {
     fpReactionModel = std::make_unique<G4DiffusionControlledReactionModel>();
   }
 
-  fpReactionModel->SetReactionTable(
-    (const G4DNAMolecularReactionTable*) fpReactionTable);
+  fpReactionModel->SetReactionTable((const G4DNAMolecularReactionTable*)fpReactionTable);
 
-  ((G4DNAMakeReaction*) fpReactionProcess.get())
+  ((G4DNAMakeReaction*)fpReactionProcess.get())->SetReactionModel(fpReactionModel.get());
+
+  ((G4DNAMakeReaction*)fpReactionProcess.get())->SetTimeStepComputer(fpTimeStepper.get());
+
+  ((G4DNAIndependentReactionTimeStepper*)fpTimeStepper.get())
     ->SetReactionModel(fpReactionModel.get());
 
-  ((G4DNAMakeReaction*) fpReactionProcess.get())
-    ->SetTimeStepComputer(fpTimeStepper.get());
-
-  ((G4DNAIndependentReactionTimeStepper*) fpTimeStepper.get())
-    ->SetReactionModel(fpReactionModel.get());
-
-  ((G4DNAIndependentReactionTimeStepper*) fpTimeStepper.get())
+  ((G4DNAIndependentReactionTimeStepper*)fpTimeStepper.get())
     ->SetReactionProcess((fpReactionProcess).get());
 
   G4ChemicalMoleculeFinder::Instance()->Clear();
@@ -88,9 +85,9 @@ void G4DNAIndependentReactionTimeModel::Initialize()
 void G4DNAIndependentReactionTimeModel::PrintInfo()
 {
 #ifdef G4VERBOSE
-  if(G4Threading::IsMultithreadedApplication())
+  if (G4Threading::IsMultithreadedApplication())
   {
-    if(G4Threading::G4GetThreadId() == 0)
+    if (G4Threading::G4GetThreadId() == 0)
     {
       G4VITStepModel::PrintInfo();
       G4cout << G4endl;
@@ -116,8 +113,7 @@ void G4DNAIndependentReactionTimeModel::PrintInfo()
 #endif
 }
 
-void G4DNAIndependentReactionTimeModel::SetReactionModel(
-  G4VDNAReactionModel* pReactionModel)
+void G4DNAIndependentReactionTimeModel::SetReactionModel(G4VDNAReactionModel* pReactionModel)
 {
   fpReactionModel.reset(pReactionModel);
 }

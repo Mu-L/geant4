@@ -6,22 +6,32 @@
 
 #include "../typedefs"
 
-namespace tools {
-namespace wroot {
-  class idir;
-}}
+namespace tools
+{
+namespace wroot
+{
+class idir;
+}
+}  // namespace tools
 
-namespace tools {
-namespace wroot {
+namespace tools
+{
+namespace wroot
+{
 
-class itree {
-public:
-  virtual ~itree(){}
-public:
-  virtual idir& dir() = 0;
-  virtual const idir& dir() const = 0;
+class itree
+{
+  public:
+
+    virtual ~itree() {}
+
+  public:
+
+    virtual idir& dir() = 0;
+    virtual const idir& dir() const = 0;
 };
 
-}}
+}  // namespace wroot
+}  // namespace tools
 
 #endif

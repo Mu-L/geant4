@@ -32,68 +32,64 @@
 // File name:  G4PhotoElectricAngularGeneratorPolarized
 //
 // Author:        A.C. Farinha, L. Peralta, P. Rodrigues and A. Trindade
-// 
+//
 // Creation date: 10 January 2006
 //
-// Class Description: 
+// Class Description:
 //
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4PhotoElectricAngularGeneratorPolarized_h
-#define G4PhotoElectricAngularGeneratorPolarized_h 1
+#ifndef G4PHOTOELECTRICANGULARGENERATORPOLARIZED_HH
+#define G4PHOTOELECTRICANGULARGENERATORPOLARIZED_HH
 
+#include "G4RotationMatrix.hh"
 #include "G4VEmAngularDistribution.hh"
 #include "G4ios.hh"
 #include "globals.hh"
-#include "G4RotationMatrix.hh"
 
 class G4PhotoElectricAngularGeneratorPolarized : public G4VEmAngularDistribution
 {
-public:
-  explicit G4PhotoElectricAngularGeneratorPolarized();
-  ~G4PhotoElectricAngularGeneratorPolarized();
+  public:
 
-  G4ThreeVector& SampleDirection(const G4DynamicParticle* dp,
-				 G4double eKinEnergy,
-				 G4int shellId,
-				 const G4Material* mat = nullptr) override;
+    explicit G4PhotoElectricAngularGeneratorPolarized();
+    ~G4PhotoElectricAngularGeneratorPolarized();
 
-  void PrintGeneratorInformation() const override;
+    G4ThreeVector& SampleDirection(const G4DynamicParticle* dp, G4double eKinEnergy, G4int shellId,
+                                   const G4Material* mat = nullptr) override;
 
-  // hide assignment operator 
-  G4PhotoElectricAngularGeneratorPolarized & operator=(const  G4PhotoElectricAngularGeneratorPolarized &right) = delete;
-  G4PhotoElectricAngularGeneratorPolarized(const  G4PhotoElectricAngularGeneratorPolarized&) = delete;
+    void PrintGeneratorInformation() const override;
 
-protected:
-  G4ThreeVector PerpendicularVector(const G4ThreeVector& a) const;
+    // hide assignment operator
+    G4PhotoElectricAngularGeneratorPolarized&
+    operator=(const G4PhotoElectricAngularGeneratorPolarized& right) = delete;
+    G4PhotoElectricAngularGeneratorPolarized(const G4PhotoElectricAngularGeneratorPolarized&) =
+      delete;
 
-private:
-  void PhotoElectronGetMajorantSurfaceAandCParameters(G4int shellId, 
-						      G4double beta, 
-						      G4double *majorantSurfaceParameterA, 
-						      G4double *majorantSurfaceParameterC) const;
-  void PhotoElectronGeneratePhiAndTheta(G4int shellId, 
-					G4double beta, 
-					G4double aBeta, 
-					G4double cBeta, 
-					G4double *pphi, 
-					G4double *ptheta) const;
-  G4ThreeVector PhotoElectronComputeFinalDirection(const G4RotationMatrix& rotation, 
-						   G4double theta, 
-						   G4double phi) const;
-  G4RotationMatrix PhotoElectronRotationMatrix(const G4ThreeVector& direction, 
-					       const G4ThreeVector& polarization);
+  protected:
 
-  G4double CrossSectionMajorantFunction(G4double theta, G4double cBeta) const;
-  G4double DSigmaKshellGavrila1959(G4double beta, G4double theta, G4double phi) const;
-  G4double DSigmaL1shellGavrila(G4double beta, G4double theta, G4double phi) const;
+    G4ThreeVector PerpendicularVector(const G4ThreeVector& a) const;
 
-  G4double betaArray[3];
-  G4double aMajorantSurfaceParameterTable[980][2];
-  G4double cMajorantSurfaceParameterTable[980][2];
+  private:
+
+    void PhotoElectronGetMajorantSurfaceAandCParameters(G4int shellId, G4double beta,
+                                                        G4double* majorantSurfaceParameterA,
+                                                        G4double* majorantSurfaceParameterC) const;
+    void PhotoElectronGeneratePhiAndTheta(G4int shellId, G4double beta, G4double aBeta,
+                                          G4double cBeta, G4double* pphi, G4double* ptheta) const;
+    G4ThreeVector PhotoElectronComputeFinalDirection(const G4RotationMatrix& rotation,
+                                                     G4double theta, G4double phi) const;
+    G4RotationMatrix PhotoElectronRotationMatrix(const G4ThreeVector& direction,
+                                                 const G4ThreeVector& polarization);
+
+    G4double CrossSectionMajorantFunction(G4double theta, G4double cBeta) const;
+    G4double DSigmaKshellGavrila1959(G4double beta, G4double theta, G4double phi) const;
+    G4double DSigmaL1shellGavrila(G4double beta, G4double theta, G4double phi) const;
+
+    G4double betaArray[3];
+    G4double aMajorantSurfaceParameterTable[980][2];
+    G4double cMajorantSurfaceParameterTable[980][2];
 };
 
 #endif
-

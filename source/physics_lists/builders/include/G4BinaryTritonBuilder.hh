@@ -36,37 +36,35 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4BinaryTritonBuilder_h
-#define G4BinaryTritonBuilder_h 
+#ifndef G4BINARYTRITONBUILDER_HH
+#define G4BINARYTRITONBUILDER_HH
 
-#include "globals.hh"
-
+#include "G4BinaryCascade.hh"
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
 #include "G4VTritonBuilder.hh"
-
-#include "G4BinaryCascade.hh"   
+#include "globals.hh"
 
 class G4BinaryTritonBuilder : public G4VTritonBuilder
 {
-  public: 
+  public:
+
     G4BinaryTritonBuilder();
     virtual ~G4BinaryTritonBuilder() {}
 
-    virtual void Build(G4HadronElasticProcess *) final override {}
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
-    virtual void SetMaxEnergy(G4double aM) final override {theMax = aM;}
+    virtual void Build(G4HadronElasticProcess*) final override {}
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
-    using G4VTritonBuilder::Build; //Prvent compiler warning
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+    virtual void SetMaxEnergy(G4double aM) final override { theMax = aM; }
+
+    using G4VTritonBuilder::Build;  // Prvent compiler warning
 
   private:
 
-    G4BinaryCascade * theModel;    
+    G4BinaryCascade* theModel;
     G4double theMin;
     G4double theMax;
 };
 
 #endif
-

@@ -32,127 +32,126 @@
 
 namespace G4coutFormatters
 {
-  // Internal functions and utilites used to setup default formatters
-  namespace
+// Internal functions and utilites used to setup default formatters
+namespace
+{
+// Split a single string in an array of strings
+//
+String_V split(const G4String& input, char separator = '\n')
+{
+  String_V output;
+  G4String::size_type prev_pos = 0, pos = 0;
+  while ((pos = input.find(separator, pos)) != G4String::npos)
   {
-    // Split a single string in an array of strings
-    //
-    String_V split(const G4String& input, char separator = '\n')
-    {
-      String_V output;
-      G4String::size_type prev_pos = 0, pos = 0;
-      while((pos = input.find(separator, pos)) != G4String::npos)
-      {
-        // TBR: shouldn't be worse than push_back+move
-        output.emplace_back(input.substr(prev_pos, pos - prev_pos));
-        prev_pos = ++pos;
-      }
-      return output;
-    }
+    // TBR: shouldn't be worse than push_back+move
+    output.emplace_back(input.substr(prev_pos, pos - prev_pos));
+    prev_pos = ++pos;
+  }
+  return output;
+}
 
-    // Return a syslog style message with input message, type identifies
-    // the type of the message
-    //
-    G4bool transform(G4String& input, const G4String& type)
-    {
-      std::time_t result = std::time(nullptr);
-      std::ostringstream newm;
+// Return a syslog style message with input message, type identifies
+// the type of the message
+//
+G4bool transform(G4String& input, const G4String& type)
+{
+  std::time_t result = std::time(nullptr);
+  std::ostringstream newm;
 #if __GNUC__ >= 5
-      newm << std::put_time(std::localtime(&result), "%d/%b/%Y:%H:%M:%S %z");
+  newm << std::put_time(std::localtime(&result), "%d/%b/%Y:%H:%M:%S %z");
 #else
-      std::tm* time_ = std::localtime(&result);
-      newm << time_->tm_mday << "/" << time_->tm_mon << "/" << time_->tm_year;
-      newm << ":" << time_->tm_hour << ":" << time_->tm_min << ":"
-           << time_->tm_sec;
+  std::tm* time_ = std::localtime(&result);
+  newm << time_->tm_mday << "/" << time_->tm_mon << "/" << time_->tm_year;
+  newm << ":" << time_->tm_hour << ":" << time_->tm_min << ":" << time_->tm_sec;
 #endif
-      newm << " " << type << " [";
-      G4String delimiter = "";
-      for(const auto& el : split(input))
-      {
-        if(!el.empty())
-        {
-          newm << delimiter << el;
-          delimiter = "\\n";
-        }
-      }
-      newm << " ]" << G4endl;
-      input = newm.str();
-      return true;
-    }
-
-    // Style used in master thread
-    //
-    G4String masterStyle = "";
-
-    // Modify output to look like syslog messages:
-    // DATE TIME **LOG|ERROR** [ "multi","line","message"]
-    //
-    SetupStyle_f SysLogStyle = [](G4coutDestination* dest) -> G4int {
-      if(dest != nullptr)
-      {
-        dest->AddCoutTransformer(
-          std::bind(&transform, std::placeholders::_1, "INFO"));
-        dest->AddCerrTransformer(
-          std::bind(&transform, std::placeholders::_1, "ERROR"));
-      }
-      return 0;
-    };
-
-    // Bring back destination to original state
-    //
-    SetupStyle_f DefaultStyle = [](G4coutDestination* dest) -> G4int {
-      if(dest != nullptr)
-      {
-        dest->ResetTransformers();
-      }
-      return 0;
-    };
-
-    std::unordered_map<std::string, SetupStyle_f> transformers = {
-      { ID::SYSLOG, SysLogStyle },
-      { ID::DEFAULT, DefaultStyle }
-    };
-  }  // namespace
-
-  void SetMasterStyle(const G4String& news) { masterStyle = news; }
-
-  G4String GetMasterStyle() { return masterStyle; }
-
-  void SetupStyleGlobally(const G4String& news)
+  newm << " " << type << " [";
+  G4String delimiter = "";
+  for (const auto& el : split(input))
   {
-    static G4coutDestination ss;
-    G4iosSetDestination(&ss);
-    G4coutFormatters::HandleStyle(&ss, news);
-    G4coutFormatters::SetMasterStyle(news);
-  }
-
-  String_V Names()
-  {
-    String_V result;
-    for(const auto& el : transformers)
+    if (!el.empty())
     {
-      result.push_back(el.first);
+      newm << delimiter << el;
+      delimiter = "\\n";
     }
-    return result;
   }
+  newm << " ]" << G4endl;
+  input = newm.str();
+  return true;
+}
 
-  G4int HandleStyle(G4coutDestination* dest, const G4String& style)
-  {
-    const auto& handler = transformers.find(style);
-    return (handler != transformers.cend()) ? (handler->second)(dest) : -1;
-  }
+// Style used in master thread
+//
+G4String masterStyle = "";
 
-  void RegisterNewStyle(const G4String& name, SetupStyle_f& fmt)
+// Modify output to look like syslog messages:
+// DATE TIME **LOG|ERROR** [ "multi","line","message"]
+//
+SetupStyle_f SysLogStyle = [](G4coutDestination* dest) -> G4int {
+  if (dest != nullptr)
   {
-    if(transformers.find(name) != transformers.cend())
-    {
-      G4ExceptionDescription msg;
-      msg << "Format Style with name " << name
-          << " already exists. Replacing existing.";
-      G4Exception("G4coutFormatters::RegisterNewStyle()", "FORMATTER001",
-                  JustWarning, msg);
-    }
-    // transformers.insert(std::make_pair(name,fmt));
-    transformers[name] = fmt;
+    dest->AddCoutTransformer(std::bind(&transform, std::placeholders::_1, "INFO"));
+    dest->AddCerrTransformer(std::bind(&transform, std::placeholders::_1, "ERROR"));
   }
+  return 0;
+};
+
+// Bring back destination to original state
+//
+SetupStyle_f DefaultStyle = [](G4coutDestination* dest) -> G4int {
+  if (dest != nullptr)
+  {
+    dest->ResetTransformers();
+  }
+  return 0;
+};
+
+std::unordered_map<std::string, SetupStyle_f> transformers = {{ID::SYSLOG, SysLogStyle},
+                                                              {ID::DEFAULT, DefaultStyle}};
+}  // namespace
+
+void SetMasterStyle(const G4String& news)
+{
+  masterStyle = news;
+}
+
+G4String GetMasterStyle()
+{
+  return masterStyle;
+}
+
+void SetupStyleGlobally(const G4String& news)
+{
+  static G4coutDestination ss;
+  G4iosSetDestination(&ss);
+  G4coutFormatters::HandleStyle(&ss, news);
+  G4coutFormatters::SetMasterStyle(news);
+}
+
+String_V Names()
+{
+  String_V result;
+  for (const auto& el : transformers)
+  {
+    result.push_back(el.first);
+  }
+  return result;
+}
+
+G4int HandleStyle(G4coutDestination* dest, const G4String& style)
+{
+  const auto& handler = transformers.find(style);
+  return (handler != transformers.cend()) ? (handler->second)(dest) : -1;
+}
+
+void RegisterNewStyle(const G4String& name, SetupStyle_f& fmt)
+{
+  if (transformers.find(name) != transformers.cend())
+  {
+    G4ExceptionDescription msg;
+    msg << "Format Style with name " << name << " already exists. Replacing existing.";
+    G4Exception("G4coutFormatters::RegisterNewStyle()", "FORMATTER001", JustWarning, msg);
+  }
+  // transformers.insert(std::make_pair(name,fmt));
+  transformers[name] = fmt;
+}
 }  // namespace G4coutFormatters

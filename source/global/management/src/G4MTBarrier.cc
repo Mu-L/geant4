@@ -29,12 +29,11 @@
 // --------------------------------------------------------------------
 
 #include "G4MTBarrier.hh"
+
 #include "G4AutoLock.hh"
 
 // --------------------------------------------------------------------
-G4MTBarrier::G4MTBarrier(unsigned int numThreads)
-  : m_numActiveThreads(numThreads)
-{}
+G4MTBarrier::G4MTBarrier(unsigned int numThreads) : m_numActiveThreads(numThreads) {}
 
 // --------------------------------------------------------------------
 void G4MTBarrier::ThisWorkerReady()
@@ -52,13 +51,13 @@ void G4MTBarrier::ThisWorkerReady()
 // --------------------------------------------------------------------
 void G4MTBarrier::Wait()
 {
-  while(true)
+  while (true)
   {
     // Step-2: Acquires lock on shared resource (the counter)
     G4AutoLock lock(&m_mutex);
     // If the counter equals active threads, all threads are ready, exit the
     // loop
-    if(m_counter == m_numActiveThreads)
+    if (m_counter == m_numActiveThreads)
     {
       break;
     }

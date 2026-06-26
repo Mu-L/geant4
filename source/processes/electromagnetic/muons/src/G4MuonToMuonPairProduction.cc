@@ -44,12 +44,13 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include "G4MuonToMuonPairProduction.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4MuonPlus.hh"
-#include "G4VEmModel.hh"
-#include "G4MuonToMuonPairProductionModel.hh"
+
 #include "G4ElementData.hh"
 #include "G4EmParameters.hh"
+#include "G4MuonPlus.hh"
+#include "G4MuonToMuonPairProductionModel.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4VEmModel.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -62,19 +63,22 @@ G4MuonToMuonPairProduction::G4MuonToMuonPairProduction(const G4String& name)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4MuonToMuonPairProduction::InitialiseEnergyLossProcess(
-                         const G4ParticleDefinition* part,
-			 const G4ParticleDefinition*)
+void G4MuonToMuonPairProduction::InitialiseEnergyLossProcess(const G4ParticleDefinition* part,
+                                                             const G4ParticleDefinition*)
 {
-  if (isInitialised) { return; }
+  if (isInitialised)
+  {
+    return;
+  }
   isInitialised = true;
 
   theParticle = part;
-  lowestKinEnergy = std::max(lowestKinEnergy, part->GetPDGMass()*8.0);
+  lowestKinEnergy = std::max(lowestKinEnergy, part->GetPDGMass() * 8.0);
 
   G4VEmModel* mod = EmModel(0);
-  if(nullptr == mod) {
-    mod = new G4MuonToMuonPairProductionModel(part); 
+  if (nullptr == mod)
+  {
+    mod = new G4MuonToMuonPairProductionModel(part);
     SetEmModel(mod);
   }
 

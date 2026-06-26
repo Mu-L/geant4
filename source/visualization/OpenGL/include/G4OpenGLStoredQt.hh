@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // OpenGLStoredQt graphics system factory.
 
 #ifndef G4OPENGLSTOREDQT_HH
@@ -33,11 +33,13 @@
 
 #include "G4OpenGLQt.hh"
 
-class G4OpenGLStoredQt: public G4OpenGLQt {
-public:
-  G4OpenGLStoredQt ();
-  G4VSceneHandler* CreateSceneHandler (const G4String& name = "");
-  G4VViewer*  CreateViewer  (G4VSceneHandler&, const G4String& name = "");
+class G4OpenGLStoredQt : public G4OpenGLQt
+{
+  public:
+
+    G4OpenGLStoredQt();
+    G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
+    G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "");
 };
 
 #endif

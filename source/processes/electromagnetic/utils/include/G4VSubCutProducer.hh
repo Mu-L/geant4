@@ -30,55 +30,54 @@
 //
 // File name:     G4VSubCutProducer
 //
-// Author:        V. Ivanchenko using design of existing 
+// Author:        V. Ivanchenko using design of existing
 //                interface G4VBremAngularDistribution
-// 
+//
 // Creation date: 13 October 2010
 //
-// Modifications: 
+// Modifications:
 //
-// Class Description: 
+// Class Description:
 //
 // Abstract base class for polar angle sampling
 //
-// Class Description: End 
+// Class Description: End
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4VSubCutProducer_h
-#define G4VSubCutProducer_h 1
+#ifndef G4VSUBCUTPRODUCER_HH
+#define G4VSUBCUTPRODUCER_HH
 
-#include "globals.hh"
 #include "G4Step.hh"
 #include "G4Track.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4VSubCutProducer
 {
-public:
+  public:
 
-  explicit G4VSubCutProducer(const G4String& name) : fName(name) {};
+    explicit G4VSubCutProducer(const G4String& name) : fName(name) {};
 
-  virtual ~G4VSubCutProducer() = default;
+    virtual ~G4VSubCutProducer() = default;
 
-  // Sample direction in global coordinate system,
-  // this means for zero scattering angle this direction is the same
-  // as the direction of primary 
-  virtual void SampleSecondaries(const G4Step& step,
-				 std::vector<G4Track*>& tracks,
-                                 G4double& eloss,
-				 G4double cut) const = 0;
+    // Sample direction in global coordinate system,
+    // this means for zero scattering angle this direction is the same
+    // as the direction of primary
+    virtual void SampleSecondaries(const G4Step& step, std::vector<G4Track*>& tracks,
+                                   G4double& eloss, G4double cut) const = 0;
 
-  inline const G4String& GetName() const;
+    inline const G4String& GetName() const;
 
-  // hide assignment operator 
-  G4VSubCutProducer & operator=(const  G4VSubCutProducer &right) = delete;
-  G4VSubCutProducer(const  G4VSubCutProducer&) = delete;
+    // hide assignment operator
+    G4VSubCutProducer& operator=(const G4VSubCutProducer& right) = delete;
+    G4VSubCutProducer(const G4VSubCutProducer&) = delete;
 
-private:
+  private:
 
-  G4String fName;
+    G4String fName;
 };
 
 inline const G4String& G4VSubCutProducer::GetName() const
@@ -87,4 +86,3 @@ inline const G4String& G4VSubCutProducer::GetName() const
 }
 
 #endif
-

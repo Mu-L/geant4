@@ -34,55 +34,54 @@
 #include "G4Types.hh"
 
 #include <algorithm>
-#include <vector>
 #include <cmath>
+#include <vector>
 
-class G4NuclWatcher {
-public:
-  G4NuclWatcher(G4int z, 
-		const std::vector<G4double>& expa, 
-		const std::vector<G4double>& expcs, 
-		const std::vector<G4double>& experr, 
-		G4bool check, 
-		G4bool nucl);
+class G4NuclWatcher
+{
+  public:
 
-  ~G4NuclWatcher() {}
+    G4NuclWatcher(G4int z, const std::vector<G4double>& expa, const std::vector<G4double>& expcs,
+                  const std::vector<G4double>& experr, G4bool check, G4bool nucl);
 
-  void watch(G4int a, G4int z);
-  void setInuclCs(G4double csec, G4int nev);
+    ~G4NuclWatcher() {}
 
-  G4double getChsq() const { return izotop_chsq; }
-  G4bool to_check() const { return checkable; }
-  G4bool look_forNuclei() const { return nucleable; }
-  G4double getLhood() const { return aver_lhood; }
-  G4double getNmatched() const { return aver_matched; }
+    void watch(G4int a, G4int z);
+    void setInuclCs(G4double csec, G4int nev);
 
-  std::pair<G4double, G4double> getExpCs() const;
-  std::pair<G4double, G4double> getInuclCs() const;
+    G4double getChsq() const { return izotop_chsq; }
+    G4bool to_check() const { return checkable; }
+    G4bool look_forNuclei() const { return nucleable; }
+    G4double getLhood() const { return aver_lhood; }
+    G4double getNmatched() const { return aver_matched; }
 
-  std::pair<G4double, G4double> getAverageRatio() const { 
-    return std::pair<G4double, G4double>(average_ratio, aver_rat_err); 
-  }
+    std::pair<G4double, G4double> getExpCs() const;
+    std::pair<G4double, G4double> getInuclCs() const;
 
-  void print();
+    std::pair<G4double, G4double> getAverageRatio() const
+    {
+      return std::pair<G4double, G4double>(average_ratio, aver_rat_err);
+    }
 
-private: 
-  G4int nuclz;
-  G4double izotop_chsq;
-  G4double average_ratio;
-  G4double aver_rat_err;
-  G4double aver_lhood;
-  G4double aver_matched;
-  std::vector<G4double> exper_as;
-  std::vector<G4double> exper_cs;
-  std::vector<G4double> exper_err;
-  std::vector<G4double> simulated_as;
-  std::vector<G4double> simulated_cs;
-  std::vector<G4double> simulated_errors;
-  std::vector<G4double> simulated_prob;
-  G4bool checkable;
-  G4bool nucleable;
+    void print();
+
+  private:
+
+    G4int nuclz;
+    G4double izotop_chsq;
+    G4double average_ratio;
+    G4double aver_rat_err;
+    G4double aver_lhood;
+    G4double aver_matched;
+    std::vector<G4double> exper_as;
+    std::vector<G4double> exper_cs;
+    std::vector<G4double> exper_err;
+    std::vector<G4double> simulated_as;
+    std::vector<G4double> simulated_cs;
+    std::vector<G4double> simulated_errors;
+    std::vector<G4double> simulated_prob;
+    G4bool checkable;
+    G4bool nucleable;
 };
 
-#endif // G4NUCL_WATCHER_HH 
-
+#endif  // G4NUCL_WATCHER_HH

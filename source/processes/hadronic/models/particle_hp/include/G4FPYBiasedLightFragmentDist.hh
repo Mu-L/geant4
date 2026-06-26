@@ -57,6 +57,7 @@
 class G4FPYBiasedLightFragmentDist : public G4FissionProductYieldDist
 {
   public:
+
     // Constructor definition
     /** Default constructor
      *  - Usage:
@@ -87,10 +88,12 @@ class G4FPYBiasedLightFragmentDist : public G4FissionProductYieldDist
                                  std::istringstream& dataStream);
 
   protected:
+
     /** Initialize is a common function called by all constructors. */
     void Initialize();
 
   protected:
+
     // Variables
     /** Defines the half-weight of the fission isotope */
     G4int HalfWeight_;
@@ -101,7 +104,9 @@ class G4FPYBiasedLightFragmentDist : public G4FissionProductYieldDist
     G4Ions* GetFissionProduct() override;
 
     // Destructor function(s)
+
   public:
+
     /** Default deconstructor. It is a virtual function since
      *  G4FPYBiasedLightFragmentDist inherits from G4FissionProductYieldDist
      */

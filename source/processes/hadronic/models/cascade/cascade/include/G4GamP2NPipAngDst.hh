@@ -31,17 +31,17 @@
 //
 // 20130219	M. Kelsey: Inherit from templated base, remove ctor arguments
 
-
-#ifndef G4GamP2NPipAngDst_h
-#define G4GamP2NPipAngDst_h 1
+#ifndef G4GAMP2NPIPANGDST_HH
+#define G4GAMP2NPIPANGDST_HH
 
 #include "G4NumIntTwoBodyAngDst.hh"
 
+class G4GamP2NPipAngDst : public G4NumIntTwoBodyAngDst<15, 19>
+{
+  public:
 
-class G4GamP2NPipAngDst : public G4NumIntTwoBodyAngDst<15,19> {
-public:
-  G4GamP2NPipAngDst(G4int verbose=0);
-  virtual ~G4GamP2NPipAngDst() {}
+    G4GamP2NPipAngDst(G4int verbose = 0);
+    virtual ~G4GamP2NPipAngDst() {}
 };
 
 #endif

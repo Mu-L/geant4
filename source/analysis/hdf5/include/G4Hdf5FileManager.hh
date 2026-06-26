@@ -28,18 +28,18 @@
 
 // Author: Ivana Hrivnacova, 20/07/2017 (ivana@ipno.in2p3.fr)
 
-#ifndef G4Hdf5FileManager_h
-#define G4Hdf5FileManager_h 1
+#ifndef G4HDF5FILEMANAGER_HH
+#define G4HDF5FILEMANAGER_HH
 
-#include "G4VTFileManager.hh"
 #include "G4AnalysisUtilities.hh"
+#include "G4VTFileManager.hh"
 #include "globals.hh"
 
-#include "toolx/hdf5/ntuple" // for hid_t
+#include "toolx/hdf5/ntuple"  // for hid_t
 
 #include <memory>
-#include <tuple>
 #include <string_view>
+#include <tuple>
 
 using G4Hdf5File = std::tuple<hid_t, hid_t, hid_t>;
 using Hdf5NtupleDescription = G4TNtupleDescription<toolx::hdf5::ntuple, G4Hdf5File>;
@@ -47,6 +47,7 @@ using Hdf5NtupleDescription = G4TNtupleDescription<toolx::hdf5::ntuple, G4Hdf5Fi
 class G4Hdf5FileManager : public G4VTFileManager<G4Hdf5File>
 {
   public:
+
     explicit G4Hdf5FileManager(const G4AnalysisManagerState& state);
     G4Hdf5FileManager() = delete;
     ~G4Hdf5FileManager() override = default;
@@ -65,7 +66,7 @@ class G4Hdf5FileManager : public G4VTFileManager<G4Hdf5File>
     G4bool CloseNtupleFile(Hdf5NtupleDescription* ntupleDescription);
 
     // Set methods
-    void  SetBasketSize(unsigned int basketSize);
+    void SetBasketSize(unsigned int basketSize);
 
     // Get methods
     hid_t GetHistoDirectory() const;
@@ -73,32 +74,37 @@ class G4Hdf5FileManager : public G4VTFileManager<G4Hdf5File>
     unsigned int GetBasketSize() const;
 
   protected:
+
     // // Methods derived from base class
     std::shared_ptr<G4Hdf5File> CreateFileImpl(const G4String& fileName) final;
     G4bool WriteFileImpl(std::shared_ptr<G4Hdf5File> file) final;
     G4bool CloseFileImpl(std::shared_ptr<G4Hdf5File> file) final;
 
   private:
-    hid_t CreateDirectory(hid_t& file, const G4String& directoryName,
-             const G4String& objectType);
+
+    hid_t CreateDirectory(hid_t& file, const G4String& directoryName, const G4String& objectType);
     G4String GetNtupleFileName(Hdf5NtupleDescription* ntupleDescription);
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4Hdf5FileManager" };
-    inline static const G4String fgkDefaultDirectoryName { "default" };
+    static constexpr std::string_view fkClass{"G4Hdf5FileManager"};
+    inline static const G4String fgkDefaultDirectoryName{"default"};
 
     // data members
-    unsigned int fBasketSize { G4Analysis::kDefaultBasketSize };
+    unsigned int fBasketSize{G4Analysis::kDefaultBasketSize};
 };
 
 // inline functions
 
 //_____________________________________________________________________________
 inline void G4Hdf5FileManager::SetBasketSize(unsigned int basketSize)
-{ fBasketSize = basketSize; }
+{
+  fBasketSize = basketSize;
+}
 
 //_____________________________________________________________________________
 inline unsigned int G4Hdf5FileManager::GetBasketSize() const
-{ return fBasketSize; }
+{
+  return fBasketSize;
+}
 
 #endif

@@ -54,16 +54,17 @@
 
 // Author: Hisaya Kurashige, 23 March 1998
 // --------------------------------------------------------------------
-#ifndef G4VParticleChange_hh
-#define G4VParticleChange_hh 1
+#ifndef G4VPARTICLECHANGE_HH
+#define G4VPARTICLECHANGE_HH
+
+#include "G4Step.hh"
+#include "G4SteppingControl.hh"
+#include "G4Track.hh"
+#include "G4TrackStatus.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 #include <vector>
-#include "globals.hh"
-#include "G4ios.hh"
-#include "G4TrackStatus.hh"
-#include "G4SteppingControl.hh"
-#include "G4Step.hh"
-#include "G4Track.hh"
 
 class G4VParticleChange
 {
@@ -76,135 +77,135 @@ class G4VParticleChange
     G4VParticleChange(const G4VParticleChange& right) = delete;
     G4VParticleChange& operator=(const G4VParticleChange& right) = delete;
 
-  // --- the following methods are for updating G4Step ---
+    // --- the following methods are for updating G4Step ---
 
     virtual G4Step* UpdateStepForAtRest(G4Step* Step);
     virtual G4Step* UpdateStepForAlongStep(G4Step* Step);
     virtual G4Step* UpdateStepForPostStep(G4Step* Step);
-      // Return the pointer to the G4Step after updating the Step information
-      // by using final state information of the track given by a physics
-      // process
+    // Return the pointer to the G4Step after updating the Step information
+    // by using final state information of the track given by a physics
+    // process
 
     virtual void Initialize(const G4Track&);
-      // This methods will be called by each process at the beginning
-      // of DoIt() if necessary
+    // This methods will be called by each process at the beginning
+    // of DoIt() if necessary
 
-  // --- the following methods are for TruePathLength ---
+    // --- the following methods are for TruePathLength ---
 
     inline G4double GetTrueStepLength() const;
     inline void ProposeTrueStepLength(G4double truePathLength);
-      // Get/Propose theTrueStepLength
+    // Get/Propose theTrueStepLength
 
-  // --- the following methods are for LocalEnergyDeposit ---
+    // --- the following methods are for LocalEnergyDeposit ---
 
     inline G4double GetLocalEnergyDeposit() const;
     inline void ProposeLocalEnergyDeposit(G4double anEnergyPart);
-      // Get/Propose the locally deposited energy
+    // Get/Propose the locally deposited energy
 
-  // --- the following methods are for nonIonizingEnergyDeposit  ---
+    // --- the following methods are for nonIonizingEnergyDeposit  ---
 
     inline G4double GetNonIonizingEnergyDeposit() const;
     inline void ProposeNonIonizingEnergyDeposit(G4double anEnergyPart);
-      // Get/Propose the non-ionizing deposited energy
+    // Get/Propose the non-ionizing deposited energy
 
-  // --- the following methods are for TrackStatus ---
+    // --- the following methods are for TrackStatus ---
 
     inline G4TrackStatus GetTrackStatus() const;
     inline void ProposeTrackStatus(G4TrackStatus status);
-      // Get/Propose the final TrackStatus of the current particle
+    // Get/Propose the final TrackStatus of the current particle
 
     inline const G4Track* GetCurrentTrack() const;
-      // Get primary track pointer
+    // Get primary track pointer
 
-  // --- the following methods are for management of SteppingControl ---
+    // --- the following methods are for management of SteppingControl ---
 
     inline G4SteppingControl GetSteppingControl() const;
     inline void ProposeSteppingControl(G4SteppingControl StepControlFlag);
-      // Set/Propose a flag to control stepping manager behaviour
+    // Set/Propose a flag to control stepping manager behaviour
 
-  // --- the following methods are for management of initial/last step
+    // --- the following methods are for management of initial/last step
 
     inline G4bool GetFirstStepInVolume() const;
     inline G4bool GetLastStepInVolume() const;
     inline void ProposeFirstStepInVolume(G4bool flag);
     inline void ProposeLastStepInVolume(G4bool flag);
 
-  // --- the following methods are for management of secondaries ---
+    // --- the following methods are for management of secondaries ---
 
     inline void Clear();
-      // Clear the contents of this objects
-      // This method should be called after the Tracking(Stepping)
-      // manager removes all secondaries in theListOfSecondaries
+    // Clear the contents of this objects
+    // This method should be called after the Tracking(Stepping)
+    // manager removes all secondaries in theListOfSecondaries
 
     inline void SetNumberOfSecondaries(G4int totSecondaries);
-      // SetNumberOfSecondaries must be called just before AddSecondary()
-      // in order to secure memory space for theListOfSecondaries
-      // This method resets theNumberOfSecondaries to zero
-      // (that will be incremented at every AddSecondary() call)
+    // SetNumberOfSecondaries must be called just before AddSecondary()
+    // in order to secure memory space for theListOfSecondaries
+    // This method resets theNumberOfSecondaries to zero
+    // (that will be incremented at every AddSecondary() call)
 
     inline G4int GetNumberOfSecondaries() const;
-      // Returns the number of secondaries current stored in G4TrackFastVector
+    // Returns the number of secondaries current stored in G4TrackFastVector
 
     inline G4Track* GetSecondary(G4int anIndex) const;
-      // Returns the pointer to the generated secondary particle,
-      // which is specified by an Index, no check on boundary is performed
+    // Returns the pointer to the generated secondary particle,
+    // which is specified by an Index, no check on boundary is performed
 
     void AddSecondary(G4Track* aSecondary);
-      // Adds a secondary particle to theListOfSecondaries
+    // Adds a secondary particle to theListOfSecondaries
 
-  // --- the following methods are for management of weights ---
+    // --- the following methods are for management of weights ---
 
     inline G4double GetWeight() const;
     inline G4double GetParentWeight() const;
-      // Get weight of the parent (i.e. current) track
+    // Get weight of the parent (i.e. current) track
 
     inline void ProposeWeight(G4double finalWeight);
     inline void ProposeParentWeight(G4double finalWeight);
-      // Propose new weight of the parent (i.e. current) track
-      // As for AlongStepDoIt, the parent weight will be set
-      // in accumulated manner, i.e. - If two processes propose
-      // weight of W1 and W2 respectively for the track with initial
-      // weight of W0 the final weight is set to: (W1/W0) * (W2/W0) * W0
+    // Propose new weight of the parent (i.e. current) track
+    // As for AlongStepDoIt, the parent weight will be set
+    // in accumulated manner, i.e. - If two processes propose
+    // weight of W1 and W2 respectively for the track with initial
+    // weight of W0 the final weight is set to: (W1/W0) * (W2/W0) * W0
 
     inline void SetSecondaryWeightByProcess(G4bool);
     inline G4bool IsSecondaryWeightSetByProcess() const;
-      // In default (fSecondaryWeightByProcess flag is false),
-      // the weight of secondary tracks will be set to the parent weight
-      // If fSecondaryWeightByProcess flag is true, the weight of secondary
-      // tracks will not be changed by the ParticleChange (i.e. the process
-      // determine the secondary weight)
-      // NOTE:
-      // Make sure that only one process in AlongStepDoIt() proposes the
-      // parent weight; if several processes in AlongStepDoIt() propose
-      // the parent weight and add secondaties with fSecondaryWeightByProcess
-      // is set to false, secondary weights may be wrong
+    // In default (fSecondaryWeightByProcess flag is false),
+    // the weight of secondary tracks will be set to the parent weight
+    // If fSecondaryWeightByProcess flag is true, the weight of secondary
+    // tracks will not be changed by the ParticleChange (i.e. the process
+    // determine the secondary weight)
+    // NOTE:
+    // Make sure that only one process in AlongStepDoIt() proposes the
+    // parent weight; if several processes in AlongStepDoIt() propose
+    // the parent weight and add secondaties with fSecondaryWeightByProcess
+    // is set to false, secondary weights may be wrong
 
     void SetParentWeightByProcess(G4bool);
     G4bool IsParentWeightSetByProcess() const;
-      // Obsolete
+    // Obsolete
 
-  // --- Dump and debug methods ---
+    // --- Dump and debug methods ---
 
     virtual void DumpInfo() const;
-      // Print out information
+    // Print out information
 
     inline void SetVerboseLevel(G4int vLevel);
     inline G4int GetVerboseLevel() const;
 
     virtual G4bool CheckIt(const G4Track&);
-      // CheckIt method for general control in debug regime
+    // CheckIt method for general control in debug regime
 
     inline void ClearDebugFlag();
     inline void SetDebugFlag();
     inline G4bool GetDebugFlag() const;
-      // CheckIt method is activated if debug flag is set
-      // and 'G4VERBOSE' is defined
+    // CheckIt method is activated if debug flag is set
+    // and 'G4VERBOSE' is defined
 
   protected:
 
     G4Step* UpdateStepInfo(G4Step* Step);
-      // Update the G4Step specific attributes
-      // (i.e. SteppingControl, LocalEnergyDeposit, and TrueStepLength)
+    // Update the G4Step specific attributes
+    // (i.e. SteppingControl, LocalEnergyDeposit, and TrueStepLength)
 
     inline void InitializeLocalEnergyDeposit();
     inline void InitializeSteppingControl();
@@ -213,11 +214,11 @@ class G4VParticleChange
     inline void InitializeSecondaries();
     inline void InitializeFromStep(const G4Step*);
 
-    inline G4double ComputeBeta(G4double kinEnergy); 
+    inline G4double ComputeBeta(G4double kinEnergy);
 
     G4bool CheckSecondary(G4Track&);
-      // CheckSecondary method is provided to control secondary track 
-      // in debug regime
+    // CheckSecondary method is provided to control secondary track
+    // in debug regime
 
     G4double GetAccuracyForWarning() const;
     G4double GetAccuracyForException() const;
@@ -227,63 +228,63 @@ class G4VParticleChange
     static const G4double accuracyForWarning;
     static const G4double accuracyForException;
     static const G4int maxError;
-      // accuracy levels
+    // accuracy levels
 
     const G4Track* theCurrentTrack = nullptr;
 
     G4TrackStatus theStatusChange = fAlive;
-      // The changed (final) track status of a given particle
+    // The changed (final) track status of a given particle
 
     G4SteppingControl theSteppingControlFlag = NormalCondition;
-      // A flag to control stepping manager behavior
+    // A flag to control stepping manager behavior
 
     G4double theLocalEnergyDeposit = 0.0;
-      // It represents the part of the energy lost for discrete
-      // or semi-continuous processes which is due to secondaries
-      // not generated because they would have been below their cut
-      // threshold.
-      // The sum of the locally deposited energy + the delta-energy
-      // coming from the continuous processes gives the
-      // total energy loss localized in the current Step
+    // It represents the part of the energy lost for discrete
+    // or semi-continuous processes which is due to secondaries
+    // not generated because they would have been below their cut
+    // threshold.
+    // The sum of the locally deposited energy + the delta-energy
+    // coming from the continuous processes gives the
+    // total energy loss localized in the current Step
 
     G4double theNonIonizingEnergyDeposit = 0.0;
-      // Non-ionizing energu deposit is defined as a part of local
-      // energy deposit, which does not cause ionization of atoms
+    // Non-ionizing energu deposit is defined as a part of local
+    // energy deposit, which does not cause ionization of atoms
 
     G4double theTrueStepLength = 0.0;
-      // The value of "True" Step Length
+    // The value of "True" Step Length
 
     G4double theParentWeight = 1.0;
-      // Weight ofparent track
+    // Weight ofparent track
 
     G4double theParentGlobalTime = 0.0;
-      // Global time of the parent.
-      // This is used only for checking
+    // Global time of the parent.
+    // This is used only for checking
 
     G4int theNumberOfSecondaries = 0;
-      // The total number of secondaries produced by each process.
+    // The total number of secondaries produced by each process.
 
     G4int theSizeOftheListOfSecondaries = 0;
-      // TheSizeOftheListOfSecondaries;
+    // TheSizeOftheListOfSecondaries;
 
     G4int verboseLevel = 1;
-      // The Verbose level
+    // The Verbose level
 
     G4int nError = 0;
 
     G4bool theFirstStepInVolume = false;
     G4bool theLastStepInVolume = false;
-      // Flag for initial/last step
+    // Flag for initial/last step
 
     G4bool isParentWeightProposed = false;
-      // Flag for Weight of parent track
+    // Flag for Weight of parent track
     G4bool fSetSecondaryWeightByProcess = false;
-      // Flag for setting weight of secondaries
+    // Flag for setting weight of secondaries
 
     G4bool debugFlag = false;
 
     std::vector<G4Track*> theListOfSecondaries;
-      // The vector of secondaries
+    // The vector of secondaries
 };
 
 #include "G4VParticleChange.icc"

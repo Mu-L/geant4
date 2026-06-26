@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4NeutronHPFissionData_h
-#define G4NeutronHPFissionData_h
+#ifndef G4NEUTRONHPFISSIONDATA_HH
+#define G4NEUTRONHPFISSIONDATA_HH
 
 #include "G4ParticleHPFissionData.hh"
 using G4NeutronHPFissionData = G4ParticleHPFissionData;

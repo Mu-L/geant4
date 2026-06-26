@@ -27,22 +27,23 @@
 //
 // Class description:
 //
-// Driver class which controls the integration error of a Runge-Kutta stepper 
+// Driver class which controls the integration error of a Runge-Kutta stepper
 
 // Author: Dmitry Sorokin (CERN, Google Summer of Code 2017), 20.10.2017
 // --------------------------------------------------------------------
 #ifndef G4FSALINTEGRATIONDRIVER_HH
 #define G4FSALINTEGRATIONDRIVER_HH
 
-#include "G4RKIntegrationDriver.hh"
 #include "G4ChordFinderDelegate.hh"
+#include "G4RKIntegrationDriver.hh"
 
 /**
  * @brief G4FSALIntegrationDriver is a templated driver class which controls
  * the integration error of a Runge-Kutta stepper.
+ * @ingroup geometry_magneticfield
  */
 
-template <class T>
+template<class T>
 class G4FSALIntegrationDriver : public G4RKIntegrationDriver<T>,
                                 public G4ChordFinderDelegate<G4FSALIntegrationDriver<T>>
 {
@@ -56,9 +57,7 @@ class G4FSALIntegrationDriver : public G4RKIntegrationDriver<T>,
      *             if not matching stepper's number of variables, issue exception.
      *  @param[in] statisticsVerbosity Verbosity level.
      */
-    inline G4FSALIntegrationDriver(G4double hminimum,
-                                   T* stepper,
-                                   G4int numberOfComponents = 6,
+    inline G4FSALIntegrationDriver(G4double hminimum, T* stepper, G4int numberOfComponents = 6,
                                    G4int statisticsVerbosity = 1);
 
     /**
@@ -80,9 +79,7 @@ class G4FSALIntegrationDriver : public G4RKIntegrationDriver<T>,
      *  @param[in] chordDistance Maximum sagitta distance.
      *  @returns The length of step taken.
      */
-    inline G4double AdvanceChordLimited(G4FieldTrack& track,
-                                        G4double hstep,
-                                        G4double eps,
+    inline G4double AdvanceChordLimited(G4FieldTrack& track, G4double hstep, G4double eps,
                                         G4double chordDistance) override;
 
     /**
@@ -99,7 +96,7 @@ class G4FSALIntegrationDriver : public G4RKIntegrationDriver<T>,
      * The driver does implement re-integration. Returns true.
      */
     inline G4bool DoesReIntegrate() const override;
-   
+
     /**
      * Advances integration accurately by relative accuracy better than 'eps'.
      * On output the track is replaced by the value at the end of interval.
@@ -109,9 +106,8 @@ class G4FSALIntegrationDriver : public G4RKIntegrationDriver<T>,
      *  @param[in] hinitial Initial minimum integration step.
      *  @returns true if integration succeeds.
      */
-    inline G4bool AccurateAdvance(G4FieldTrack& track,
-                                  G4double hstep,
-                                  G4double eps, // Requested y_err/hstep
+    inline G4bool AccurateAdvance(G4FieldTrack& track, G4double hstep,
+                                  G4double eps,  // Requested y_err/hstep
                                   G4double hinitial = 0.0) override;
 
     /**
@@ -124,11 +120,8 @@ class G4FSALIntegrationDriver : public G4RKIntegrationDriver<T>,
      *  @param[out] dyerr Estimated error.
      *  @returns true if integration succeeds.
      */
-    inline G4bool QuickAdvance(G4FieldTrack& fieldTrack,
-                               const G4double dydx[],
-                               G4double hstep,
-                               G4double& dchord_step,
-                               G4double& dyerr) override;
+    inline G4bool QuickAdvance(G4FieldTrack& fieldTrack, const G4double dydx[], G4double hstep,
+                               G4double& dchord_step, G4double& dyerr) override;
 
     /**
      * Takes one Step that is as large as possible while satisfying the
@@ -142,12 +135,8 @@ class G4FSALIntegrationDriver : public G4RKIntegrationDriver<T>,
      *  @param[out] hnext Proposed next step.
      */
     inline void OneGoodStep(G4double y[],  // InOut
-                            G4double dydx[],
-                            G4double& curveLength,
-                            G4double htry,
-                            G4double eps,
-                            G4double& hdid,
-                            G4double& hnext);
+                            G4double dydx[], G4double& curveLength, G4double htry, G4double eps,
+                            G4double& hdid, G4double& hnext);
 
     /**
      * Setter and getter for verbosity.
@@ -158,8 +147,8 @@ class G4FSALIntegrationDriver : public G4RKIntegrationDriver<T>,
     /**
      * Writes out to stream the parameters/state of the driver.
      */
-    inline void StreamInfo( std::ostream& os ) const override;
-   
+    inline void StreamInfo(std::ostream& os) const override;
+
     /**
      * Getter and Setter for minimum allowed step.
      */
@@ -184,8 +173,7 @@ class G4FSALIntegrationDriver : public G4RKIntegrationDriver<T>,
     /**
      * Checks accuracy of step distance on the end point.
      */
-    inline void CheckStep(const G4ThreeVector& posIn, 
-                          const G4ThreeVector& posOut, G4double hdid);
+    inline void CheckStep(const G4ThreeVector& posIn, const G4ThreeVector& posOut, G4double hdid);
 
   private:
 

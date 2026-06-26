@@ -31,30 +31,30 @@
 #define G4FISSION_STORE_HH
 
 #include "G4FissionConfiguration.hh"
+
 #include <vector>
 
-class G4FissionStore {
-public:
-  G4FissionStore();
+class G4FissionStore
+{
+  public:
 
-  void setVerboseLevel(G4int verbose=1) { verboseLevel = verbose; }
+    G4FissionStore();
 
-  void addConfig(G4double a, G4double z, G4double ez, G4double ek, G4double ev);
+    void setVerboseLevel(G4int verbose = 1) { verboseLevel = verbose; }
 
-  void clear() { configurations.clear(); }
+    void addConfig(G4double a, G4double z, G4double ez, G4double ek, G4double ev);
 
-  size_t size() const { return configurations.size(); }
+    void clear() { configurations.clear(); }
 
-  G4FissionConfiguration generateConfiguration(G4double amax, 
-					       G4double rand) const;
+    size_t size() const { return configurations.size(); }
 
-private:
-  G4int verboseLevel;
-  std::vector<G4FissionConfiguration> configurations;
-  mutable std::vector<G4double> configProbs;
+    G4FissionConfiguration generateConfiguration(G4double amax, G4double rand) const;
+
+  private:
+
+    G4int verboseLevel;
+    std::vector<G4FissionConfiguration> configurations;
+    mutable std::vector<G4double> configProbs;
 };
 
-#endif // G4FISSION_STORE_HH 
-
-
-
+#endif  // G4FISSION_STORE_HH

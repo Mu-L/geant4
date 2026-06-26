@@ -31,6 +31,4 @@
 #include "G4VPEventIO.hh"
 
 // --------------------------------------------------------------------
-G4VPEventIO::G4VPEventIO()
-{
-}
+G4VPEventIO::G4VPEventIO() {}

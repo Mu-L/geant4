@@ -39,43 +39,29 @@
 // -------------------------------------------------------------------
 
 #ifndef G4IINTERPOLATOR_HH
-#define G4IINTERPOLATOR_HH 1
+#define G4IINTERPOLATOR_HH
 
-#include "globals.hh"
 #include "G4DataVector.hh"
+#include "globals.hh"
 
-class G4IInterpolator {
- 
-public:
+class G4IInterpolator
+{
+  public:
 
-  G4IInterpolator() { }
+    G4IInterpolator() {}
 
-  virtual ~G4IInterpolator() { }
- 
+    virtual ~G4IInterpolator() {}
 
-  virtual G4double Calculate(G4double point, G4int bin, 
-			     const G4DataVector& energies, 
-			     const G4DataVector& data) const = 0;
+    virtual G4double Calculate(G4double point, G4int bin, const G4DataVector& energies,
+                               const G4DataVector& data) const = 0;
 
-  virtual G4IInterpolator* Clone() const = 0;
+    virtual G4IInterpolator* Clone() const = 0;
 
-private:
-  
-  // Hide copy constructor and assignment operator
-  G4IInterpolator(const G4IInterpolator&);
-  G4IInterpolator& operator=(const G4IInterpolator& right);
+  private:
 
+    // Hide copy constructor and assignment operator
+    G4IInterpolator(const G4IInterpolator&);
+    G4IInterpolator& operator=(const G4IInterpolator& right);
 };
- 
+
 #endif
- 
-
-
-
-
-
-
-
-
-
-

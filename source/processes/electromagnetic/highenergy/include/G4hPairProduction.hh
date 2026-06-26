@@ -47,33 +47,32 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4hPairProduction_h
-#define G4hPairProduction_h 1
+#ifndef G4HPAIRPRODUCTION_HH
+#define G4HPAIRPRODUCTION_HH
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "globals.hh"
 #include "G4MuPairProduction.hh"
+#include "globals.hh"
 
 class G4hPairProduction : public G4MuPairProduction
 {
-public:
+  public:
 
-  explicit G4hPairProduction(const G4String& processName = "hPairProd");
+    explicit G4hPairProduction(const G4String& processName = "hPairProd");
 
-  ~G4hPairProduction() = default;
+    ~G4hPairProduction() = default;
 
-  // print description in html
-  void ProcessDescription(std::ostream&) const override;
+    // print description in html
+    void ProcessDescription(std::ostream&) const override;
 
-  G4hPairProduction & operator=(const G4hPairProduction &right) = delete;
-  G4hPairProduction(const G4hPairProduction&) = delete;
+    G4hPairProduction& operator=(const G4hPairProduction& right) = delete;
+    G4hPairProduction(const G4hPairProduction&) = delete;
 
-protected:
+  protected:
 
-  virtual void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
-					   const G4ParticleDefinition*) override;
-
+    virtual void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
+                                             const G4ParticleDefinition*) override;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

@@ -37,7 +37,7 @@
 //
 // Modifications:
 // 08-11-04 Migration to new interface of Store/Retrieve tables (V.Ivanchenko)
-// 15-03-05 Update interface according to changings 
+// 15-03-05 Update interface according to changings
 //           in G4VEmProcess (V.Ivanchenko)
 // 08-04-05 Major optimisation of internal interfaces (V.Ivanchenko)
 // 04-05-05 Make class to be default (V.Ivanchenko)
@@ -57,8 +57,8 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4eplusAnnihilation_h
-#define G4eplusAnnihilation_h 1
+#ifndef G4EPLUSANNIHILATION_HH
+#define G4EPLUSANNIHILATION_HH
 
 #include "G4VEmProcess.hh"
 
@@ -67,45 +67,40 @@ class G4VPositronAtRestModel;
 
 class G4eplusAnnihilation : public G4VEmProcess
 {
+  public:
 
-public:
+    explicit G4eplusAnnihilation(const G4String& name = "annihil");
 
-  explicit G4eplusAnnihilation(const G4String& name = "annihil");
+    ~G4eplusAnnihilation() override;
 
-  ~G4eplusAnnihilation() override;
+    G4bool IsApplicable(const G4ParticleDefinition& p) final;
 
-  G4bool IsApplicable(const G4ParticleDefinition& p) final;
+    G4VParticleChange* AtRestDoIt(const G4Track& track, const G4Step& stepData) override;
 
-  G4VParticleChange* AtRestDoIt(
-                             const G4Track& track,
-                             const G4Step& stepData) override;
+    G4double AtRestGetPhysicalInteractionLength(const G4Track& track,
+                                                G4ForceCondition* condition) override;
 
-  G4double AtRestGetPhysicalInteractionLength(
-                             const G4Track& track,
-                             G4ForceCondition* condition
-                            ) override;
+    // print documentation in html format
+    void ProcessDescription(std::ostream&) const override;
 
-  // print documentation in html format
-  void ProcessDescription(std::ostream&) const override;
+    G4eplusAnnihilation& operator=(const G4eplusAnnihilation& right) = delete;
+    G4eplusAnnihilation(const G4eplusAnnihilation&) = delete;
 
-  G4eplusAnnihilation & operator=(const G4eplusAnnihilation &right) = delete;
-  G4eplusAnnihilation(const G4eplusAnnihilation&) = delete;
+  protected:
 
-protected:
+    void InitialiseProcess(const G4ParticleDefinition*) override;
 
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+    // Print out of the class parameters
+    void StreamProcessInfo(std::ostream& outFile) const override;
 
-  // Print out of the class parameters
-  void StreamProcessInfo(std::ostream& outFile) const override;
+  private:
 
-private:
-
-  G4VPositronAtRestModel* f2GammaAtRestModel{nullptr};
-  G4VPositronAtRestModel* f3GammaAtRestModel{nullptr};
-  G4int fEntanglementModelID;
-  G4bool isInitialised{false};
-  G4bool fEntangled{false};
-  G4bool fApplyCuts{false};
+    G4VPositronAtRestModel* f2GammaAtRestModel{nullptr};
+    G4VPositronAtRestModel* f3GammaAtRestModel{nullptr};
+    G4int fEntanglementModelID;
+    G4bool isInitialised{false};
+    G4bool fEntangled{false};
+    G4bool fApplyCuts{false};
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

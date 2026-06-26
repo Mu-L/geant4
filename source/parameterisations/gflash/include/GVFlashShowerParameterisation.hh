@@ -38,9 +38,10 @@
 // Author: Joanna Weng - 11.2005
 //---------------------------------------------------------------
 #ifndef GVFlashShowerParameterisation_h
-#define GVFlashShowerParameterisation_h 1
+#define GVFlashShowerParameterisation_h
 
 #include "globals.hh"
+
 #include "GVFlashHomoShowerTuning.hh"
 
 class MyGamma;
@@ -49,6 +50,7 @@ class G4Material;
 class GVFlashShowerParameterisation
 {
   public:  // with description
+
     GVFlashShowerParameterisation();
     virtual ~GVFlashShowerParameterisation();
 
@@ -79,17 +81,22 @@ class GVFlashShowerParameterisation
     G4double GeneratePhi();
     G4double GetEffZ(const G4Material* material);
     G4double GetEffA(const G4Material* material);
+    G4double GetEffZoA(const G4Material* mat);
+    // Returns Z/A or effective Z/A=sum(pi*Zi/Ai) (if compound/mixture)
+    // of given material
     G4double gam(G4double x, G4double a) const;  // @@@@ gamma function
     void PrintMaterial(const G4Material* mat);
 
   protected:
+
     GVFlashHomoShowerTuning* thePar;
     // Parameterisation parameters
-    G4double density, A, Z, X0, Ec, Rm;
+    G4double density, ZoA, A, Z, X0, Ec, Rm;
     // Medium related quantities
     G4double NSpot;
 
   private:
+
     MyGamma* fGamma;
 };
 

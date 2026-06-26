@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPWattSpectrum_h
-#define G4ParticleHPWattSpectrum_h 1
+#ifndef G4PARTICLEHPWATTSPECTRUM_HH
+#define G4PARTICLEHPWATTSPECTRUM_HH
 
 #include "G4Exp.hh"
 #include "G4ParticleHPVector.hh"
@@ -45,6 +45,7 @@
 class G4ParticleHPWattSpectrum : public G4VParticleHPEDis
 {
   public:
+
     G4ParticleHPWattSpectrum() { expm1 = G4Exp(-1.); }
     ~G4ParticleHPWattSpectrum() override = default;
 
@@ -63,6 +64,7 @@ class G4ParticleHPWattSpectrum : public G4VParticleHPEDis
     G4double Sample(G4double anEnergy) override;
 
   private:
+
     inline G4double Watt(G4double anEnergy, G4double a, G4double b)
     {
       G4double energy = anEnergy / CLHEP::eV;
@@ -71,6 +73,7 @@ class G4ParticleHPWattSpectrum : public G4VParticleHPEDis
     }
 
   private:
+
     G4double expm1;
 
     G4ParticleHPVector theFractionalProb;

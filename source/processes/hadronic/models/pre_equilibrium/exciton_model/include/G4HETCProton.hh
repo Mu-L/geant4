@@ -27,34 +27,33 @@
 // by V. Lara
 //
 // Modified:
-// 23.08.2010 V.Ivanchenko general cleanup, move constructor and destructor 
+// 23.08.2010 V.Ivanchenko general cleanup, move constructor and destructor
 //            the source, use G4Pow
 
-#ifndef G4HETCProton_h
-#define G4HETCProton_h 1
+#ifndef G4HETCPROTON_HH
+#define G4HETCPROTON_HH
 
 #include "G4HETCChargedFragment.hh"
 #include "G4ReactionProduct.hh"
 
 class G4HETCProton : public G4HETCChargedFragment
 {
-public:
+  public:
 
-  G4HETCProton();
+    G4HETCProton();
 
-  ~G4HETCProton() override = default;
+    ~G4HETCProton() override = default;
 
-  G4HETCProton(const G4HETCProton &right) = delete;
-  const G4HETCProton & operator=(const G4HETCProton &right) = delete;
-  G4bool operator==(const G4HETCProton &right) const = delete;
-  G4bool operator!=(const G4HETCProton &right) const = delete;
+    G4HETCProton(const G4HETCProton& right) = delete;
+    const G4HETCProton& operator=(const G4HETCProton& right) = delete;
+    G4bool operator==(const G4HETCProton& right) const = delete;
+    G4bool operator!=(const G4HETCProton& right) const = delete;
 
-protected:
+  protected:
 
-  G4double GetAlpha() const override;
-  G4double GetSpinFactor() const override;
-  G4double K(const G4Fragment& aFragment) const override;
+    G4double GetAlpha() const override;
+    G4double GetSpinFactor() const override;
+    G4double K(const G4Fragment& aFragment) const override;
 };
 
 #endif
- 

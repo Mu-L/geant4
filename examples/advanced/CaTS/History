@@ -6,6 +6,26 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-05-05 Ilker Parmaksiz (CaTS-V11-04-00)
+- Updated CMakeLists.txt to support proper compilation and linkage with the
+  latest Opticks.
+- Added MySensorIdentifier.hh and OpticksHitHandler.hh to provide sensor'ID
+  assignment and Opticks hit collection.
+- Implemented a new SteppingAction to transfer optical photon information
+  (Cerenkov and scintillation) to Opticks and to register boundary interactions
+  as hits.
+- Modified IArTPCSD, PhotonSD, and RadiatorSD to incorporate Opticks generated
+  hits into their sensitive detector workflows.
+- Added simpleLArTPC_Opticks.gdml for testing geometry and validating Opticks
+  integration.
+- Added a new example macro, electron.mac, which generates a single electron
+  for testing and validation.
+- Removed find_dependency(PLog) from CMakeLists.txt.
+- Performed code cleanup: removed unused and commented out code; replaced int
+  with G4int and std::cout with G4cout in multiple files.
+- Corrected indentation issues across the codebase.
+- Use swap in OpticksHitHandler::GetHits to prevent data races. 
+
 ## 2025-08-25 S.Y. Jun (CaTS-V11-03-00)
 - RootIO, EventAction: Move hit collections from EventAction to RootIO and
   improve code readability

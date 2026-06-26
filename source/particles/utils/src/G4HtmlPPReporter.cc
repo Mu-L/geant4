@@ -42,7 +42,8 @@ void G4HtmlPPReporter::Print(const G4String& option)
 
   GenerateIndex();
 
-  for (const auto& i : pList) {
+  for (const auto& i : pList)
+  {
     G4ParticleDefinition* particle =
       G4ParticleTable::GetParticleTable()->FindParticle(i->GetParticleName());
     GeneratePropertyTable(particle);
@@ -55,8 +56,10 @@ void G4HtmlPPReporter::SparseOption(const G4String& option)
 
   // 1st option : base directory
   baseDir = savedToken();
-  if (!baseDir.empty()) {
-    if (baseDir.back() != '/') {
+  if (!baseDir.empty())
+  {
+    if (baseDir.back() != '/')
+    {
       baseDir += "/";
     }
   }
@@ -101,7 +104,8 @@ void G4HtmlPPReporter::GenerateIndex()
   outFile << eTR << G4endl;
   ;
 
-  for (const auto& i : pList) {
+  for (const auto& i : pList)
+  {
     if (i->GetPDGEncoding() < 0) continue;
 
     outFile << sTR << G4endl;
@@ -130,7 +134,8 @@ void G4HtmlPPReporter::GenerateIndex()
     outFile << sTD << i->GetPDGLifeTime() / ns << eTD << G4endl;
 
     // column 6 AntiParticle
-    if ((i->GetAntiPDGEncoding() != 0) && (i->GetAntiPDGEncoding() != i->GetPDGEncoding())) {
+    if ((i->GetAntiPDGEncoding() != 0) && (i->GetAntiPDGEncoding() != i->GetPDGEncoding()))
+    {
       G4ParticleDefinition* anti_particle =
         G4ParticleTable::GetParticleTable()->FindParticle(i->GetAntiPDGEncoding());
 
@@ -189,59 +194,77 @@ void G4HtmlPPReporter::GeneratePropertyTable(const G4ParticleDefinition* particl
   outFile << " [GeV/c" << sSUP << "2" << eSUP << "]" << eTD << eTR << G4endl;
   // IJPC
   outFile << sTR << sTD << sB << "I J" << sSUP << "PC" << eSUP << eB << eTD;
-  if (particle->GetPDGiIsospin() < 0) {
+  if (particle->GetPDGiIsospin() < 0)
+  {
     outFile << sTD << "    ";
   }
-  else if (particle->GetPDGiIsospin() == 1) {
+  else if (particle->GetPDGiIsospin() == 1)
+  {
     outFile << sTD << "1/2 ";
   }
-  else if (particle->GetPDGiIsospin() == 3) {
+  else if (particle->GetPDGiIsospin() == 3)
+  {
     outFile << sTD << "3/2 ";
   }
-  else {
+  else
+  {
     outFile << sTD << particle->GetPDGiIsospin() / 2 << " ";
   }
-  if (particle->GetPDGiSpin() == 1) {
+  if (particle->GetPDGiSpin() == 1)
+  {
     outFile << "1/2";
   }
-  else if (particle->GetPDGiSpin() == 3) {
+  else if (particle->GetPDGiSpin() == 3)
+  {
     outFile << "3/2";
   }
-  else if (particle->GetPDGiSpin() == 5) {
+  else if (particle->GetPDGiSpin() == 5)
+  {
     outFile << "5/2";
   }
-  else if (particle->GetPDGiSpin() == 7) {
+  else if (particle->GetPDGiSpin() == 7)
+  {
     outFile << "7/2";
   }
-  else if (particle->GetPDGiSpin() == 9) {
+  else if (particle->GetPDGiSpin() == 9)
+  {
     outFile << "9/2";
   }
-  else if (particle->GetPDGiSpin() == 11) {
+  else if (particle->GetPDGiSpin() == 11)
+  {
     outFile << "11/2";
   }
-  else if (particle->GetPDGiSpin() == 13) {
+  else if (particle->GetPDGiSpin() == 13)
+  {
     outFile << "13/2";
   }
-  else {
+  else
+  {
     outFile << particle->GetPDGiSpin() / 2;
   }
   outFile << sSUP << sSYMBOL;
-  if (particle->GetPDGiParity() == +1) {
+  if (particle->GetPDGiParity() == +1)
+  {
     outFile << "+";
   }
-  else if (particle->GetPDGiParity() == -1) {
+  else if (particle->GetPDGiParity() == -1)
+  {
     outFile << "-";
   }
-  else {
+  else
+  {
     outFile << " ";
   }
-  if (particle->GetPDGiConjugation() == +1) {
+  if (particle->GetPDGiConjugation() == +1)
+  {
     outFile << "+";
   }
-  else if (particle->GetPDGiConjugation() == -1) {
+  else if (particle->GetPDGiConjugation() == -1)
+  {
     outFile << "-";
   }
-  else {
+  else
+  {
     outFile << " ";
   }
   outFile << eSYMBOL << eSUP;
@@ -252,28 +275,35 @@ void G4HtmlPPReporter::GeneratePropertyTable(const G4ParticleDefinition* particl
   outFile << eTD << eTR << G4endl;
   // Magnetic Moment
   outFile << sTR << sTD << sB << "Magnetic Moment" << eB << eTD;
-  if (particle->GetPDGMagneticMoment() != 0.0) {
+  if (particle->GetPDGMagneticMoment() != 0.0)
+  {
     outFile << sTD << particle->GetPDGMagneticMoment() / MeV * tesla;
     outFile << "[MeV/T]" << eTD << eTR << G4endl;
   }
-  else {
+  else
+  {
     outFile << sTD << " not defined ";
     outFile << eTD << eTR << G4endl;
   }
   // life time
   outFile << sTR << sTD << sB << "Life Time" << eB << eTD;
-  if (particle->GetPDGLifeTime() > 0.0) {
+  if (particle->GetPDGLifeTime() > 0.0)
+  {
     outFile << sTD << particle->GetPDGLifeTime() / second;
     outFile << "[sec]" << eTD << G4endl;
   }
-  else {
-    if (particle->GetPDGStable()) {
+  else
+  {
+    if (particle->GetPDGStable())
+    {
       outFile << sTD << "stable" << eTD;
     }
-    else if (particle->IsShortLived()) {
+    else if (particle->IsShortLived())
+    {
       outFile << sTD << "short-lived" << eTD;
     }
-    else {
+    else
+    {
       outFile << sTD << "not Defined" << eTD;
     }
   }
@@ -296,7 +326,8 @@ void G4HtmlPPReporter::GeneratePropertyTable(const G4ParticleDefinition* particl
   outFile << eTR;
 
   static const char* quarkName[6] = {"d", "u", "s", "c", "b", "t"};
-  for (G4int flv = 0; flv < 6; flv++) {
+  for (G4int flv = 0; flv < 6; flv++)
+  {
     outFile << sTR;
     outFile << sTD << sB << quarkName[flv] << eB << eTD;
     outFile << sTD << sB << particle->GetQuarkContent(flv + 1) << eB << eTD;
@@ -308,7 +339,8 @@ void G4HtmlPPReporter::GeneratePropertyTable(const G4ParticleDefinition* particl
 
   // Decay Table
   G4DecayTable* dcyTable = particle->GetDecayTable();
-  if (dcyTable != nullptr) {
+  if (dcyTable != nullptr)
+  {
     outFile << "<H2>"
             << " Decay Table "
             << "</H2>" << G4endl;
@@ -320,7 +352,8 @@ void G4HtmlPPReporter::GeneratePropertyTable(const G4ParticleDefinition* particl
     outFile << sTD << sB << "kinematics" << eB << eTD;
     outFile << eTR;
 
-    for (G4int i = 0; i < dcyTable->entries(); i++) {
+    for (G4int i = 0; i < dcyTable->entries(); i++)
+    {
       G4VDecayChannel* channel = dcyTable->GetDecayChannel(i);
       outFile << sTR << G4endl;
       ;
@@ -329,7 +362,8 @@ void G4HtmlPPReporter::GeneratePropertyTable(const G4ParticleDefinition* particl
       // column 2 : Kinematics
       outFile << sTD << channel->GetKinematicsName() << eTD;
       // column 3..  : daughters
-      for (G4int j = 0; j < channel->GetNumberOfDaughters(); j++) {
+      for (G4int j = 0; j < channel->GetNumberOfDaughters(); j++)
+      {
         outFile << sTD << channel->GetDaughter(j)->GetParticleName() << eTD;
       }
       outFile << eTR << G4endl;

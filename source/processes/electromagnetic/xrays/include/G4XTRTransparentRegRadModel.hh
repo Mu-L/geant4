@@ -37,8 +37,8 @@
 // 05.04.05 V. Grichine, first version
 //
 
-#ifndef G4XTRTransparentRegRadModel_h
-#define G4XTRTransparentRegRadModel_h 1
+#ifndef G4XTRTRANSPARENTREGRADMODEL_HH
+#define G4XTRTRANSPARENTREGRADMODEL_HH
 
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"
@@ -46,20 +46,20 @@
 
 class G4XTRTransparentRegRadModel : public G4VXTRenergyLoss
 {
- public:
-  explicit G4XTRTransparentRegRadModel(
-    G4LogicalVolume* anEnvelope, G4Material*, G4Material*, G4double, G4double,
-    G4int, const G4String& processName = "XTRTransparentRegRadModel");
-  ~G4XTRTransparentRegRadModel();
+  public:
 
-  void ProcessDescription(std::ostream&) const override;
-  void DumpInfo() const override { ProcessDescription(G4cout); };
+    explicit G4XTRTransparentRegRadModel(G4LogicalVolume* anEnvelope, G4Material*, G4Material*,
+                                         G4double, G4double, G4int,
+                                         const G4String& processName = "XTRTransparentRegRadModel");
+    ~G4XTRTransparentRegRadModel();
 
-  // reimplementation of base class function in analytical way
-  G4double SpectralXTRdEdx(G4double energy) override;
+    void ProcessDescription(std::ostream&) const override;
+    void DumpInfo() const override { ProcessDescription(G4cout); };
 
-  G4double GetStackFactor(G4double energy, G4double gamma,
-                          G4double varAngle) override;
+    // reimplementation of base class function in analytical way
+    G4double SpectralXTRdEdx(G4double energy) override;
+
+    G4double GetStackFactor(G4double energy, G4double gamma, G4double varAngle) override;
 };
 
 #endif

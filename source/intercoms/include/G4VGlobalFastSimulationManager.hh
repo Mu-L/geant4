@@ -47,7 +47,7 @@
 // Authors: P. Mora de Freitas & M. Verderi, 14 April 1999
 // --------------------------------------------------------------------
 #ifndef G4VGLOBALFASTSIMULATIONMANAGER_HH
-#define G4VGLOBALFASTSIMULATIONMANAGER_HH 1
+#define G4VGLOBALFASTSIMULATIONMANAGER_HH
 
 #include "G4Types.hh"
 
@@ -59,6 +59,7 @@ class G4ParticleDefinition;
 class G4VGlobalFastSimulationManager
 {
   public:
+
     // Returns pointer to the actual Global Fast Simulation manager if
     // at least a parameterisation envelope exists
     static G4VGlobalFastSimulationManager* GetConcreteInstance();
@@ -69,6 +70,7 @@ class G4VGlobalFastSimulationManager
     virtual G4VFlavoredParallelWorld* GetFlavoredWorldForThis(G4ParticleDefinition*) = 0;
 
   protected:
+
     // Sets the pointer to the actual Global Fast Simulation manager
     static void SetConcreteInstance(G4VGlobalFastSimulationManager*);
 

@@ -32,8 +32,8 @@
 //
 // Author: Marc Verderi, November 2013.
 // --------------------------------------------------------------------
-#ifndef G4InteractionLawPhysical_hh
-#define G4InteractionLawPhysical_hh 1
+#ifndef G4INTERACTIONLAWPHYSICAL_HH
+#define G4INTERACTIONLAWPHYSICAL_HH
 
 #include "G4VBiasingInteractionLaw.hh"
 
@@ -46,11 +46,11 @@ class G4InteractionLawPhysical : public G4VBiasingInteractionLaw
 
     void SetPhysicalCrossSection(G4double crossSection);
     G4double GetPhysicalCrossSection() const { return fCrossSection; }
-  
+
     virtual G4double ComputeEffectiveCrossSectionAt(G4double length) const;
     virtual G4double ComputeNonInteractionProbabilityAt(G4double length) const;
     // -- sample the distribution
-    virtual  G4double SampleInteractionLength();
+    virtual G4double SampleInteractionLength();
     // -- move by true path length, this position becomes the new initial point
     virtual G4double UpdateInteractionLengthForStep(G4double truePathLength);
 

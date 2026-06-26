@@ -31,19 +31,22 @@
 // Utilities to build DNA physics
 //
 
-#ifndef G4EmDNABuilder_h
-#define G4EmDNABuilder_h 1
+#ifndef G4EMDNABUILDER_HH
+#define G4EMDNABUILDER_HH
 
 #include "globals.hh"
 // DNA processes
-#include "G4DNAElectronSolvation.hh"
-#include "G4DNAElastic.hh"
-#include "G4DNAIonisation.hh"
-#include "G4DNAExcitation.hh"
-#include "G4DNAVibExcitation.hh"
 #include "G4DNAAttachment.hh"
 #include "G4DNAChargeDecrease.hh"
 #include "G4DNAChargeIncrease.hh"
+#include "G4DNADoubleIonisation.hh"
+#include "G4DNAElastic.hh"
+#include "G4DNAElectronSolvation.hh"
+#include "G4DNAExcitation.hh"
+#include "G4DNAIonisation.hh"
+#include "G4DNAQuadrupleIonisation.hh"
+#include "G4DNATripleIonisation.hh"
+#include "G4DNAVibExcitation.hh"
 #include "G4LowECapture.hh"
 
 enum G4EmDNAMscModelType
@@ -58,79 +61,66 @@ class G4Region;
 
 class G4EmDNABuilder
 {
-public:
+  public:
 
-  static void ConstructDNAParticles();
+    static void ConstructDNAParticles();
 
-  static void ConstructStandardEmPhysics(const G4double emin_electron,
-                                         const G4double emin_proton,
-                                         const G4double emin_alpha,
-                                         const G4double emin_ion,
-                                         const G4EmDNAMscModelType mscType,
-                                         const G4bool fast);
+    static void ConstructStandardEmPhysics(const G4double emin_electron, const G4double emin_proton,
+                                           const G4double emin_ion,
+                                           const G4EmDNAMscModelType mscType, const G4bool fast);
 
-  static void ConstructDNAElectronPhysics(const G4double emaxDNA,
-                                          const G4int opt,
-                                          const G4bool fast,
-                                          const G4bool stationary,
+    static void ConstructDNAElectronPhysics(const G4double emaxDNA, const G4int opt,
+                                            const G4bool fast, const G4bool stationary,
+                                            const G4Region* reg = nullptr);
+
+    static void ConstructDNAProtonPhysics(const G4double emaxDNA, const G4int opt,
+                                          const G4bool fast, const G4bool stationary,
                                           const G4Region* reg = nullptr);
 
-  static void ConstructDNAProtonPhysics(const G4double e1DNA,
-                                        const G4double emaxDNA,
-                                        const G4int opt,
-                                        const G4bool fast,
-                                        const G4bool stationary,
-                                        const G4Region* reg = nullptr);
+    static void ConstructDNAIonPhysics(const G4double emax, const G4int opt,
+                                       const G4Region* reg = nullptr);
 
-  static void ConstructDNAIonPhysics(const G4double emax,
-                                     const G4int opt,
-                                     const G4Region* reg = nullptr);
+    static void ConstructDNALightIonPhysics(G4ParticleDefinition* part, const G4int charge,
+                                            const G4int opt, const G4double emax, const G4bool fast,
+                                            const G4bool stationary, const G4Region* reg = nullptr);
 
-  static void ConstructDNALightIonPhysics(G4ParticleDefinition* part,
-                                          const G4int charge,
-                                          const G4int opt,
-                                          const G4double emax,
-                                          const G4bool fast,
-                                          const G4bool stationary,
-                                          const G4Region* reg = nullptr);
+    static G4DNAElectronSolvation* FindOrBuildElectronSolvation();
 
-  static G4DNAElectronSolvation* FindOrBuildElectronSolvation();
+    static G4DNAElastic* FindOrBuildElastic(G4ParticleDefinition* part, const G4String& name);
 
-  static G4DNAElastic* 
-  FindOrBuildElastic(G4ParticleDefinition* part, const G4String& name);
+    static G4DNAExcitation* FindOrBuildExcitation(G4ParticleDefinition* part, const G4String& name);
 
-  static G4DNAExcitation*
-  FindOrBuildExcitation(G4ParticleDefinition* part, const G4String& name);
+    static G4DNAVibExcitation* FindOrBuildVibExcitation(G4ParticleDefinition* part,
+                                                        const G4String& name);
 
-  static G4DNAVibExcitation*
-  FindOrBuildVibExcitation(G4ParticleDefinition* part, const G4String& name);
+    static G4DNAIonisation* FindOrBuildIonisation(G4ParticleDefinition* part, const G4String& name);
 
-  static G4DNAIonisation*
-  FindOrBuildIonisation(G4ParticleDefinition* part, const G4String& name);
+    static G4DNAAttachment* FindOrBuildAttachment(G4ParticleDefinition* part, const G4String& name);
 
-  static G4DNAAttachment*
-  FindOrBuildAttachment(G4ParticleDefinition* part, const G4String& name);
+    static G4DNAChargeDecrease* FindOrBuildChargeDecrease(G4ParticleDefinition* part,
+                                                          const G4String& name);
 
-  static G4DNAChargeDecrease*
-  FindOrBuildChargeDecrease(G4ParticleDefinition* part, const G4String& name);
+    static G4DNAChargeIncrease* FindOrBuildChargeIncrease(G4ParticleDefinition* part,
+                                                          const G4String& name);
 
-  static G4DNAChargeIncrease*
-  FindOrBuildChargeIncrease(G4ParticleDefinition* part, const G4String& name);
+    static G4LowECapture* FindOrBuildCapture(const G4double elim, G4ParticleDefinition* part);
 
-  static G4LowECapture*
-  FindOrBuildCapture(const G4double elim, G4ParticleDefinition* part);
+    static void FindOrBuildNuclearStopping(G4ParticleDefinition* part, const G4double elim);
 
-  static void FindOrBuildNuclearStopping(G4ParticleDefinition* part,
-					 const G4double elim);
+    static void FindOrBuildDoubleIonisation(G4ParticleDefinition* part, const G4String& name,
+                                            const G4Region* reg);
 
-private:
+    static void FindOrBuildTripleIonisation(G4ParticleDefinition* part, const G4String& name,
+                                            const G4Region* reg);
 
-  static void StandardHadronPhysics(G4ParticleDefinition*,
-			            const G4double lowELimitForMSC,
-			            const G4double lowELimitForIoni,
-			            const G4double maxEnergy,
-				    const G4EmDNAMscModelType mscType,
-                                    const G4bool isIon);
+    static void FindOrBuildQuadrupleIonisation(G4ParticleDefinition* part, const G4String& name,
+                                               const G4Region* reg);
+
+  private:
+
+    static void StandardHadronPhysics(G4ParticleDefinition*, const G4double lowELimitForMSC,
+                                      const G4double lowELimitForIoni, const G4double maxEnergy,
+                                      const G4EmDNAMscModelType mscType, const G4bool isIon);
 };
 
 #endif

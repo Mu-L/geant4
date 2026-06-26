@@ -32,44 +32,35 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4AlphaPHPBuilder_h
-#define G4AlphaPHPBuilder_h 1
-
-#include "globals.hh"
+#ifndef G4ALPHAPHPBUILDER_HH
+#define G4ALPHAPHPBUILDER_HH
 
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
-#include "G4VAlphaBuilder.hh"
-
 #include "G4ParticleHPInelastic.hh"
+#include "G4VAlphaBuilder.hh"
+#include "globals.hh"
 
 class G4AlphaPHPBuilder : public G4VAlphaBuilder
 {
-public: 
-  G4AlphaPHPBuilder();
-  virtual ~G4AlphaPHPBuilder() {}
-  
-  virtual void Build(G4HadronInelasticProcess * aP) final override ;
-  virtual void Build(G4HadronElasticProcess * aP) final override;
-  
-  virtual void SetMinEnergy(G4double aM) final override
-  {
-    theMin=aM;
-  }
-  virtual void SetMaxEnergy(G4double aM) final override
-  {
-    theMax=aM;
-  }
-  
-  using G4VAlphaBuilder::Build; //Prevent compiler warning
+  public:
 
-private:
-  G4double theMin;
-  G4double theMax;
-  G4ParticleHPInelastic*  theParticlePHPModel;
-  
+    G4AlphaPHPBuilder();
+    virtual ~G4AlphaPHPBuilder() {}
+
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
+    virtual void Build(G4HadronElasticProcess* aP) final override;
+
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+    virtual void SetMaxEnergy(G4double aM) final override { theMax = aM; }
+
+    using G4VAlphaBuilder::Build;  // Prevent compiler warning
+
+  private:
+
+    G4double theMin;
+    G4double theMax;
+    G4ParticleHPInelastic* theParticlePHPModel;
 };
 
-
 #endif
-

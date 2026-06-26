@@ -30,15 +30,15 @@
  *  Created on: Jul 23, 2019
  *      Author: W. G. Shin
  *              J. Ramos-Mendez and B. Faddegon
-*/
+ */
 
-#ifndef G4O2_h
-#define G4O2_h 1
+#ifndef G4O2_HH
+#define G4O2_HH
 
-#include "globals.hh"
-#include "G4ios.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4MoleculeDefinition.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 // ######################################################################
 // ###                         OXYGEN                                 ###
@@ -46,12 +46,14 @@
 
 class G4O2 : public G4MoleculeDefinition
 {
-private:
+  private:
+
     static /*G4ThreadLocal*/ G4O2* theInstance;
     G4O2() {}
     ~G4O2() override = default;
 
-public:
+  public:
+
     static G4O2* Definition();
 };
 

@@ -25,14 +25,14 @@
 //
 //
 #include "G4MoleculeHandleManager.hh"
+
 #include "G4Molecule.hh"
 
 using namespace std;
 
 G4ThreadLocal G4MoleculeHandleManager* G4MoleculeHandleManager::fInstance(nullptr);
 
-G4MoleculeHandleManager::G4MoleculeHandleManager()
-= default;
+G4MoleculeHandleManager::G4MoleculeHandleManager() = default;
 
 G4bool G4MoleculeHandleManager::CompMoleculePointer::operator()(const G4Molecule* mol1,
                                                                 const G4Molecule* mol2) const

@@ -23,11 +23,11 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// G4PropagatorInField 
+// G4PropagatorInField
 //
 // Class description:
-// 
-// This class performs the navigation/propagation of a particle/track 
+//
+// This class performs the navigation/propagation of a particle/track
 // in a magnetic field. The field is in general non-uniform.
 // For the calculation of the path, it relies on the class G4ChordFinder.
 // It utilises an ODE solver (with the Runge-Kutta method) to evolve the
@@ -36,18 +36,17 @@
 
 // Author: John Apostolakis (CERN), 25 October 1996
 // ---------------------------------------------------------------------------
-#ifndef G4PropagatorInField_hh 
-#define G4PropagatorInField_hh 1
+#ifndef G4PROPAGATORINFIELD_HH
+#define G4PROPAGATORINFIELD_HH
 
+#include "G4FieldManager.hh"
+#include "G4FieldTrack.hh"
 #include "G4Types.hh"
+#include "G4VIntersectionLocator.hh"
 
 #include <vector>
 
-#include "G4FieldTrack.hh"
-#include "G4FieldManager.hh"
-#include "G4VIntersectionLocator.hh"
-
-class G4ChordFinder; 
+class G4ChordFinder;
 
 class G4Navigator;
 class G4VPhysicalVolume;
@@ -55,7 +54,10 @@ class G4VCurvedTrajectoryFilter;
 
 /**
  * @brief G4PropagatorInField performs the navigation/propagation of a
- * particle/track in a magnetic field. The field is in general non-uniform.
+ * particle/track in a magnetic field.
+ * @ingroup geometry_navigation
+ *
+ * The field is in general non-uniform.
  * For the calculation of the path, it relies on the class G4ChordFinder.
  * It utilises an ODE solver (with the Runge-Kutta method) to evolve the
  * particle, and drives it until the particle has traveled a set distance
@@ -69,10 +71,9 @@ class G4PropagatorInField
     /**
      * Constructor and Destructor.
      */
-    G4PropagatorInField( G4Navigator* theNavigator, 
-                         G4FieldManager* detectorFieldMgr,
-                         G4VIntersectionLocator* vLocator = nullptr );
-   ~G4PropagatorInField();
+    G4PropagatorInField(G4Navigator* theNavigator, G4FieldManager* detectorFieldMgr,
+                        G4VIntersectionLocator* vLocator = nullptr);
+    ~G4PropagatorInField();
 
     /**
      * Computes the next geometric Step.
@@ -83,18 +84,16 @@ class G4PropagatorInField
      *  @param[in] canRelaxDeltaChord To enable relaxing delta-chord parameter.
      *  @returns Step length.
      */
-    G4double ComputeStep( G4FieldTrack& pFieldTrack,
-                          G4double pCurrentProposedStepLength,
-                          G4double& pNewSafety, 
-                          G4VPhysicalVolume* pPhysVol = nullptr,
-                          G4bool canRelaxDeltaChord = false);
+    G4double ComputeStep(G4FieldTrack& pFieldTrack, G4double pCurrentProposedStepLength,
+                         G4double& pNewSafety, G4VPhysicalVolume* pPhysVol = nullptr,
+                         G4bool canRelaxDeltaChord = false);
 
     /**
      * Returning the state after the Step.
      */
-    inline G4ThreeVector EndPosition() const;       
+    inline G4ThreeVector EndPosition() const;
     inline G4ThreeVector EndMomentumDir() const;
-    inline G4bool        IsParticleLooping() const;
+    inline G4bool IsParticleLooping() const;
 
     /**
      * Returning the relative accuracy for the current Step.
@@ -108,7 +107,7 @@ class G4PropagatorInField
     inline void SetEpsilonStep(G4double newEps);
 
     /**
-     * Sets (and returns) the correct field manager (global or local), 
+     * Sets (and returns) the correct field manager (global or local),
      * if it exists.
      *  @note Should be called before ComputeStep is called;
      *        Currently, ComputeStep() will call it, if it has not been called.
@@ -116,7 +115,7 @@ class G4PropagatorInField
      *  @returns The pointer to the field manager.
      */
     G4FieldManager* FindAndSetFieldManager(G4VPhysicalVolume* pCurrentPhysVol);
- 
+
     /**
      * Returning the pointer to the chord finder.
      */
@@ -125,7 +124,7 @@ class G4PropagatorInField
     /**
      * Verbosity control.
      */
-    G4int SetVerboseLevel( G4int verbose );
+    G4int SetVerboseLevel(G4int verbose);
     inline G4int GetVerboseLevel() const;
     inline G4int Verbose() const;
 
@@ -137,26 +136,23 @@ class G4PropagatorInField
     /**
      * Accessor/modifier for tracing key parts of ComputeStep().
      */
-    inline void SetVerboseTrace( G4bool enable );
+    inline void SetVerboseTrace(G4bool enable);
     inline G4bool GetVerboseTrace();
-   
+
     /**
      * Accessor/modifier for controlling the maximum for the number of
      * substeps that a particle can take. Above this number it is signaled
      * as 'looping'.
      */
     inline G4int GetMaxLoopCount() const;
-    inline void  SetMaxLoopCount( G4int new_max );
+    inline void SetMaxLoopCount(G4int new_max);
 
     /**
      * Print method, useful mostly for debugging.
      */
-    void printStatus( const G4FieldTrack&      startFT,
-                      const G4FieldTrack&      currentFT, 
-                            G4double           requestStep, 
-                            G4double           safety,
-                            G4int              step, 
-                            G4VPhysicalVolume* startVolume);
+    void printStatus(const G4FieldTrack& startFT, const G4FieldTrack& currentFT,
+                     G4double requestStep, G4double safety, G4int step,
+                     G4VPhysicalVolume* startVolume);
 
     /**
      * Accessor for retrieving the field track.
@@ -167,36 +163,36 @@ class G4PropagatorInField
      * Methods to control values for the global field manager.
      *  @deprecated The four methods below are now obsolescent but *for now*
      *     will work. They are being replaced by same-name methods in
-     *     G4FieldManager, allowing the specialisation in different volumes. 
+     *     G4FieldManager, allowing the specialisation in different volumes.
      */
-    inline G4double GetMinimumEpsilonStep() const; // Min for relative accuracy
-    inline void     SetMinimumEpsilonStep( G4double newEpsMin ); // of any step
+    inline G4double GetMinimumEpsilonStep() const;  // Min for relative accuracy
+    inline void SetMinimumEpsilonStep(G4double newEpsMin);  // of any step
     inline G4double GetMaximumEpsilonStep() const;
-    inline void     SetMaximumEpsilonStep( G4double newEpsMax );
+    inline void SetMaximumEpsilonStep(G4double newEpsMax);
 
     /**
      * Methods to obtain / change the size of the largest step the method
      * will undertake. The Reset method uses the world volume's.
      */
-    void     SetLargestAcceptableStep( G4double newBigDist );
+    void SetLargestAcceptableStep(G4double newBigDist);
     G4double GetLargestAcceptableStep();
-    void     ResetLargestAcceptableStep();
+    void ResetLargestAcceptableStep();
 
     /**
      * Methods to control extra Multiplier parameter for limiting long steps.
      */
     G4double GetMaxStepSizeMultiplier();
-    void     SetMaxStepSizeMultiplier(G4double vm);
+    void SetMaxStepSizeMultiplier(G4double vm);
 
     /**
      * Methods to Control minimum 'directional' distance in case of
      * too-large step.
      */
     G4double GetMinBigDistance();
-    void     SetMinBigDistance(G4double val);
+    void SetMinBigDistance(G4double val);
 
     /**
-     * Sets the filter that examines & stores 'intermediate' 
+     * Sets the filter that examines & stores 'intermediate'
      * curved trajectory points.
      *  @note Currently only position is stored.
      */
@@ -206,7 +202,7 @@ class G4PropagatorInField
      * Accesses the points which have passed by the filter.
      *   @note Responsibility for deleting the points lies with the client.
      *         This method MUST BE called exactly ONCE per step.
-     */ 
+     */
     std::vector<G4ThreeVector>* GimmeTrajectoryVectorAndForgetIt() const;
 
     /**
@@ -218,13 +214,13 @@ class G4PropagatorInField
     /**
      * Setter for global field manager. Updates the state.
      */
-    inline void SetDetectorFieldManager( G4FieldManager* newGlobalFieldManager );
-  
+    inline void SetDetectorFieldManager(G4FieldManager* newGlobalFieldManager);
+
     /**
      * Toggles & views parameter for using safety to discard unneccesary calls
      * to the navigator (thus 'optimising' performance).
      */
-    inline void   SetUseSafetyForOptimization( G4bool );
+    inline void SetUseSafetyForOptimization(G4bool);
     inline G4bool GetUseSafetyForOptimization();
 
     /**
@@ -232,11 +228,9 @@ class G4PropagatorInField
      * whether an intersection occurred.
      *   @note Safety is changed!
      */
-    inline G4bool IntersectChord( const G4ThreeVector& StartPointA,
-                                  const G4ThreeVector& EndPointB,
-                                        G4double&      NewSafety,
-                                        G4double&      LinearStepLength,
-                                        G4ThreeVector& IntersectionPoint);
+    inline G4bool IntersectChord(const G4ThreeVector& StartPointA, const G4ThreeVector& EndPointB,
+                                 G4double& NewSafety, G4double& LinearStepLength,
+                                 G4ThreeVector& IntersectionPoint);
 
     /**
      * Returns if it is the first step in the volume.
@@ -258,7 +252,7 @@ class G4PropagatorInField
      * point with the next boundary.
      */
     inline G4VIntersectionLocator* GetIntersectionLocator();
-    inline void SetIntersectionLocator(G4VIntersectionLocator* pLocator );
+    inline void SetIntersectionLocator(G4VIntersectionLocator* pLocator);
 
     /**
      * Controls the parameter which enables the temporary 'relaxation' which
@@ -272,7 +266,7 @@ class G4PropagatorInField
      *         each call to ComputeStep().
      */
     inline G4int GetIterationsToIncreaseChordDistance() const;
-    inline void  SetIterationsToIncreaseChordDistance(G4int numIters);
+    inline void SetIterationsToIncreaseChordDistance(G4int numIters);
 
     /**
      * Accessors.
@@ -290,40 +284,35 @@ class G4PropagatorInField
     /**
      * Accessor and modifier for navigator.
      */
-    inline void SetNavigatorForPropagating(G4Navigator* SimpleOrMultiNavigator); 
+    inline void SetNavigatorForPropagating(G4Navigator* SimpleOrMultiNavigator);
     inline G4Navigator* GetNavigatorForPropagating();
 
     /**
      * Accessors and modifiers for no-zero steps threshold.
      */
-    inline void SetThresholdNoZeroStep( G4int noAct,
-                                        G4int noHarsh,
-                                        G4int noAbandon );
-    inline G4int GetThresholdNoZeroSteps( G4int i ); 
-    inline G4double GetZeroStepThreshold(); 
-    inline void     SetZeroStepThreshold( G4double newLength ); 
-   
+    inline void SetThresholdNoZeroStep(G4int noAct, G4int noHarsh, G4int noAbandon);
+    inline G4int GetThresholdNoZeroSteps(G4int i);
+    inline G4double GetZeroStepThreshold();
+    inline void SetZeroStepThreshold(G4double newLength);
+
     /**
      * Updates the Locator with parameters from this class and from current
      * field manager.
      */
-    void RefreshIntersectionLocator(); 
+    void RefreshIntersectionLocator();
 
   protected:
 
     /**
      * Logging methods.
      */
-    void PrintStepLengthDiagnostic( G4double      currentProposedStepLength,
-                                    G4double      decreaseFactor,
-                                    G4double      stepTrial,
-                              const G4FieldTrack& aFieldTrack);
-    void ReportLoopingParticle( G4int count,  G4double StepTaken,
-                                G4double stepRequest, const char* methodName,
-                                const G4ThreeVector&      momentumVec,
-                                G4VPhysicalVolume* physVol);
-    void ReportStuckParticle(G4int noZeroSteps, G4double proposedStep,
-                             G4double lastTriedStep, G4VPhysicalVolume* physVol);
+    void PrintStepLengthDiagnostic(G4double currentProposedStepLength, G4double decreaseFactor,
+                                   G4double stepTrial, const G4FieldTrack& aFieldTrack);
+    void ReportLoopingParticle(G4int count, G4double StepTaken, G4double stepRequest,
+                               const char* methodName, const G4ThreeVector& momentumVec,
+                               G4VPhysicalVolume* physVol);
+    void ReportStuckParticle(G4int noZeroSteps, G4double proposedStep, G4double lastTriedStep,
+                             G4VPhysicalVolume* physVol);
 
   private:
 
@@ -336,88 +325,88 @@ class G4PropagatorInField
 
     //  ** PARAMETERS -----------
     G4int fMax_loop_count = 1000;
-      // Limit for the number of sub-steps taken in one call to ComputeStep
+    // Limit for the number of sub-steps taken in one call to ComputeStep
     G4int fIncreaseChordDistanceThreshold = 100;
     G4bool fUseSafetyForOptimisation = true;
-      // (false) is less sensitive to incorrect safety
+    // (false) is less sensitive to incorrect safety
 
     //  Thresholds for identifying "abnormal" cases - which cause looping
     //
-    G4int fActionThreshold_NoZeroSteps = 2;        // Threshold # - above it act
-    G4int fSevereActionThreshold_NoZeroSteps = 10; // Threshold # to act harshly
-    G4int fAbandonThreshold_NoZeroSteps = 50;      // Threshold # to abandon
-    G4double fZeroStepThreshold = 0.0; 
-      // Threshold *length* for counting of tiny or 'zero' steps 
+    G4int fActionThreshold_NoZeroSteps = 2;  // Threshold # - above it act
+    G4int fSevereActionThreshold_NoZeroSteps = 10;  // Threshold # to act harshly
+    G4int fAbandonThreshold_NoZeroSteps = 50;  // Threshold # to abandon
+    G4double fZeroStepThreshold = 0.0;
+    // Threshold *length* for counting of tiny or 'zero' steps
 
     // Parameters related to handling of very large steps which
     // occur typically in large volumes with vacuum or very thin gas
     //
     G4double fLargestAcceptableStep;
-      // Maximum size of a step - for optimization (and to avoid problems)
+    // Maximum size of a step - for optimization (and to avoid problems)
     G4double fMaxStepSizeMultiplier = 3;
-      // Multiplier for directional exit distance used as extra long-step limit 
-    G4double fMinBigDistance= 100. ; // * CLHEP::mm
-      // Minimum distance added to directional exit distance
+    // Multiplier for directional exit distance used as extra long-step limit
+    G4double fMinBigDistance = 100.;  // * CLHEP::mm
+                                      // Minimum distance added to directional exit distance
     //  ** End of PARAMETERS -----
 
     G4double kCarTolerance;
-        // Geometrical tolerance defining surface thickness
+    // Geometrical tolerance defining surface thickness
 
-    G4bool fAllocatedLocator;                    //  Book-keeping
+    G4bool fAllocatedLocator;  //  Book-keeping
 
     //  --------------------------------------------------------
-    //  ** Dependent Objects - to which work is delegated 
+    //  ** Dependent Objects - to which work is delegated
 
-    G4FieldManager* fDetectorFieldMgr; 
-      // The  Field Manager of the whole Detector.  (default)
+    G4FieldManager* fDetectorFieldMgr;
+    // The  Field Manager of the whole Detector.  (default)
 
     G4VIntersectionLocator* fIntersectionLocator;
-      // Refines candidate intersection
+    // Refines candidate intersection
 
     G4VCurvedTrajectoryFilter* fpTrajectoryFilter = nullptr;
-      // The filter encapsulates the algorithm which selects which
-      // intermediate points should be stored in a trajectory. 
-      // When it is NULL, no intermediate points will be stored.
-      // Else PIF::ComputeStep must submit (all) intermediate
-      // points it calculates, to this filter.  (jacek 04/11/2002)
+    // The filter encapsulates the algorithm which selects which
+    // intermediate points should be stored in a trajectory.
+    // When it is NULL, no intermediate points will be stored.
+    // Else PIF::ComputeStep must submit (all) intermediate
+    // points it calculates, to this filter.  (jacek 04/11/2002)
 
     G4Navigator* fNavigator;
-      // Set externally - only by tracking / run manager
+    // Set externally - only by tracking / run manager
     //
     //  ** End of Dependent Objects ----------------------------
 
-    //  End of INVARIANTS 
+    //  End of INVARIANTS
     //  ==================================================================
 
     //  STATE information
     //  -----------------
     G4FieldManager* fCurrentFieldMgr;
-      // The  Field Manager of the current volume (may be the global)
+    // The  Field Manager of the current volume (may be the global)
     G4bool fSetFieldMgr = false;  // Has it been set for the current step?
 
     // Parameters of current step
     //
-    G4double fEpsilonStep;            // Relative accuracy of current Step
-    G4FieldTrack End_PointAndTangent; // End point storage
+    G4double fEpsilonStep;  // Relative accuracy of current Step
+    G4FieldTrack End_PointAndTangent;  // End point storage
     G4bool fParticleIsLooping = false;
-    G4int fNoZeroStep = 0;            // Count of zero Steps
+    G4int fNoZeroStep = 0;  // Count of zero Steps
 
     // State used for Optimisation
     //
-    G4double fFull_CurveLen_of_LastAttempt = -1; 
-    G4double fLast_ProposedStepLength = -1; 
-      // Previous step information -- for use in adjust step size
+    G4double fFull_CurveLen_of_LastAttempt = -1;
+    G4double fLast_ProposedStepLength = -1;
+    // Previous step information -- for use in adjust step size
     G4ThreeVector fPreviousSftOrigin;
-    G4double fPreviousSafety = 0.0; 
-      // Last safety origin & value: for optimisation
+    G4double fPreviousSafety = 0.0;
+    // Last safety origin & value: for optimisation
 
     G4int fVerboseLevel = 0;
     G4bool fVerbTracePiF = false;
     G4bool fCheck = false;
-      // For debugging purposes
+    // For debugging purposes
 
-    G4bool fFirstStepInVolume = true; 
-    G4bool fLastStepInVolume = true; 
+    G4bool fFirstStepInVolume = true;
+    G4bool fLastStepInVolume = true;
     G4bool fNewTrack = true;
 };
 
@@ -425,4 +414,4 @@ class G4PropagatorInField
 //
 #include "G4PropagatorInField.icc"
 
-#endif 
+#endif

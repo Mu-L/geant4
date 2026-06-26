@@ -66,8 +66,8 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4ionIonisation_h
-#define G4ionIonisation_h 1
+#ifndef G4IONIONISATION_HH
+#define G4IONIONISATION_HH
 
 #include "G4VEnergyLossProcess.hh"
 
@@ -75,43 +75,40 @@ class G4Material;
 
 class G4ionIonisation : public G4VEnergyLossProcess
 {
-public:
+  public:
 
-  explicit G4ionIonisation(const G4String& name = "ionIoni");
+    explicit G4ionIonisation(const G4String& name = "ionIoni");
 
-  ~G4ionIonisation() override = default;
+    ~G4ionIonisation() override = default;
 
-  G4bool IsApplicable(const G4ParticleDefinition& p) final;
+    G4bool IsApplicable(const G4ParticleDefinition& p) final;
 
-  void AddStoppingData(G4int Z, G4int A, const G4String& materialName,
-		       G4PhysicsVector* dVector);
+    void AddStoppingData(G4int Z, G4int A, const G4String& materialName, G4PhysicsVector* dVector);
 
-  void ActivateStoppingData(G4bool);
+    void ActivateStoppingData(G4bool);
 
-  // print documentation in html format
-  void ProcessDescription(std::ostream&) const override;
+    // print documentation in html format
+    void ProcessDescription(std::ostream&) const override;
 
-  // hide assignment operator
-  G4ionIonisation & operator=(const G4ionIonisation &right) = delete;
-  G4ionIonisation(const G4ionIonisation&) = delete;
+    // hide assignment operator
+    G4ionIonisation& operator=(const G4ionIonisation& right) = delete;
+    G4ionIonisation(const G4ionIonisation&) = delete;
 
-protected:
+  protected:
 
-  void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
-				   const G4ParticleDefinition*) override;
+    void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
+                                     const G4ParticleDefinition*) override;
 
-  G4double MinPrimaryEnergy(const G4ParticleDefinition* p,
-			    const G4Material*, G4double cut) final;
+    G4double MinPrimaryEnergy(const G4ParticleDefinition* p, const G4Material*, G4double cut) final;
 
-  inline G4double BetheBlochEnergyThreshold();
+    inline G4double BetheBlochEnergyThreshold();
 
-private:
+  private:
 
+    const G4ParticleDefinition* theParticle = nullptr;
+    G4double eth;
 
-  const G4ParticleDefinition* theParticle = nullptr;
-  G4double eth;
-
-  G4bool isInitialised = false;
+    G4bool isInitialised = false;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

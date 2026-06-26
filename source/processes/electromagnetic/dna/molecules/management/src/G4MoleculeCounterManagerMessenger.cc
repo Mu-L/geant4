@@ -65,23 +65,28 @@ void G4MoleculeCounterManagerMessenger::InitializeCommands()
 
 void G4MoleculeCounterManagerMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
-  if (command == fpActiveCmd.get()) {
+  if (command == fpActiveCmd.get())
+  {
     auto value = fpActiveCmd->ConvertToBool(newValue);
     fpManager->SetIsActive(value);
   }
-  else if (command == fpResetBeforeEventCmd.get()) {
+  else if (command == fpResetBeforeEventCmd.get())
+  {
     auto value = fpResetBeforeEventCmd->ConvertToBool(newValue);
     fpManager->SetResetCountersBeforeEvent(value);
   }
-  else if (command == fpResetBeforeRunCmd.get()) {
+  else if (command == fpResetBeforeRunCmd.get())
+  {
     auto value = fpResetBeforeRunCmd->ConvertToBool(newValue);
     fpManager->SetResetCountersBeforeRun(value);
   }
-  else if (command == fpAccumulateIntoMasterCmd.get()) {
+  else if (command == fpAccumulateIntoMasterCmd.get())
+  {
     auto value = fpAccumulateIntoMasterCmd->ConvertToBool(newValue);
     fpManager->SetAccumulateCounterIntoMaster(value);
   }
-  else if (command == fpVerboseCmd.get()) {
+  else if (command == fpVerboseCmd.get())
+  {
     auto value = fpVerboseCmd->ConvertToInt(newValue);
     fpManager->SetVerbosity(value);
   }

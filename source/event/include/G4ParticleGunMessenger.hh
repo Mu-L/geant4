@@ -32,11 +32,11 @@
 
 // Author: Makoto Asai, 1997
 // --------------------------------------------------------------------
-#ifndef G4ParticleGunMessenger_hh
-#define G4ParticleGunMessenger_hh 1
+#ifndef G4PARTICLEGUNMESSENGER_HH
+#define G4PARTICLEGUNMESSENGER_HH
 
-#include "globals.hh"
 #include "G4UImessenger.hh"
+#include "globals.hh"
 
 class G4ParticleGun;
 class G4ParticleTable;
@@ -56,7 +56,7 @@ class G4ParticleGunMessenger : public G4UImessenger
 
     explicit G4ParticleGunMessenger(G4ParticleGun* fPtclGun);
     ~G4ParticleGunMessenger() override;
-    
+
     void SetNewValue(G4UIcommand* command, G4String newValues) override;
     G4String GetCurrentValue(G4UIcommand* command) override;
 
@@ -67,35 +67,35 @@ class G4ParticleGunMessenger : public G4UImessenger
 
   private:
 
-    G4ParticleGun* fParticleGun = nullptr; // Not owned, cannot be null post construction
+    G4ParticleGun* fParticleGun = nullptr;  // Not owned, cannot be null post construction
     G4ParticleTable* particleTable = nullptr;
 
     // Commands
     //
-    G4UIdirectory*              gunDirectory;
-    G4UIcmdWithoutParameter*    listCmd;
-    G4UIcmdWithAString*         particleCmd;
-    G4UIcmdWith3Vector*         directionCmd;
-    G4UIcmdWithADoubleAndUnit*  energyCmd;
-    G4UIcmdWithADoubleAndUnit*  momAmpCmd;
-    G4UIcmdWith3VectorAndUnit*  momCmd;
-    G4UIcmdWith3VectorAndUnit*  positionCmd;
-    G4UIcmdWithADoubleAndUnit*  timeCmd;
-    G4UIcmdWith3Vector*         polCmd;
-    G4UIcmdWithAnInteger*       numberCmd;
-    G4UIcommand*                ionCmd;
-    G4UIcommand*                ionLvlCmd;
-    G4UIcmdWithABool*           volChkCmd;
+    G4UIdirectory* gunDirectory;
+    G4UIcmdWithoutParameter* listCmd;
+    G4UIcmdWithAString* particleCmd;
+    G4UIcmdWith3Vector* directionCmd;
+    G4UIcmdWithADoubleAndUnit* energyCmd;
+    G4UIcmdWithADoubleAndUnit* momAmpCmd;
+    G4UIcmdWith3VectorAndUnit* momCmd;
+    G4UIcmdWith3VectorAndUnit* positionCmd;
+    G4UIcmdWithADoubleAndUnit* timeCmd;
+    G4UIcmdWith3Vector* polCmd;
+    G4UIcmdWithAnInteger* numberCmd;
+    G4UIcommand* ionCmd;
+    G4UIcommand* ionLvlCmd;
+    G4UIcmdWithABool* volChkCmd;
 
     // For ion shooting
     //
-    G4bool   fShootIon = false; 
-    G4int    fAtomicNumber = 0;
-    G4int    fAtomicMass = 0;
-    G4int    fIonCharge = 0;
+    G4bool fShootIon = false;
+    G4int fAtomicNumber = 0;
+    G4int fAtomicMass = 0;
+    G4int fIonCharge = 0;
     G4double fIonExciteEnergy = 0.0;
-    char     fIonFloatingLevelBase = '\0';
-    G4int    fIonEnergyLevel = 0;
+    char fIonFloatingLevelBase = '\0';
+    G4int fIonEnergyLevel = 0;
 };
 
 #endif

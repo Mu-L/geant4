@@ -38,11 +38,12 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include "G4EmStandUtil.hh"
+
+#include "G4EmParameters.hh"
+#include "G4IonFluctuations.hh"
+#include "G4LossFluctuationDummy.hh"
 #include "G4UniversalFluctuation.hh"
 #include "G4UrbanFluctuation.hh"
-#include "G4LossFluctuationDummy.hh"
-#include "G4IonFluctuations.hh"
-#include "G4EmParameters.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -50,13 +51,20 @@ G4VEmFluctuationModel* G4EmStandUtil::ModelOfFluctuations(G4bool isIon)
 {
   G4VEmFluctuationModel* f = nullptr;
   auto ftype = G4EmParameters::Instance()->FluctuationType();
-  if (ftype == fDummyFluctuation) {
+  if (ftype == fDummyFluctuation)
+  {
     f = new G4LossFluctuationDummy();
-  } else if (isIon) {
+  }
+  else if (isIon)
+  {
     f = new G4IonFluctuations();
-  } else if (ftype == fUrbanFluctuation) {
+  }
+  else if (ftype == fUrbanFluctuation)
+  {
     f = new G4UrbanFluctuation();
-  } else {
+  }
+  else
+  {
     f = new G4UniversalFluctuation();
   }
   return f;

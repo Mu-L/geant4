@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4NeutronHPThermalBoost_h
-#define G4NeutronHPThermalBoost_h
+#ifndef G4NEUTRONHPTHERMALBOOST_HH
+#define G4NEUTRONHPTHERMALBOOST_HH
 
 #include "G4ParticleHPThermalBoost.hh"
 using G4NeutronHPThermalBoost = G4ParticleHPThermalBoost;

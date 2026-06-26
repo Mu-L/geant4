@@ -27,36 +27,34 @@
 // by V. Lara
 //
 // Modified:
-// J. M. Quesada (July 08) cleanup 
-// 20.08.2010 V.Ivanchenko added int Z and A and cleanup; added 
+// J. M. Quesada (July 08) cleanup
+// 20.08.2010 V.Ivanchenko added int Z and A and cleanup; added
 //                        G4ParticleDefinition to constructor,
 //                        moved constructor and destructor to source
 
-#ifndef G4PreCompoundProton_h
-#define G4PreCompoundProton_h 1
+#ifndef G4PRECOMPOUNDPROTON_HH
+#define G4PRECOMPOUNDPROTON_HH
 
 #include "G4PreCompoundNucleon.hh"
 
 class G4PreCompoundProton : public G4PreCompoundNucleon
 {
-public:
+  public:
 
-  G4PreCompoundProton();
+    G4PreCompoundProton();
 
-  ~G4PreCompoundProton() override = default;
+    ~G4PreCompoundProton() override = default;
 
-  G4PreCompoundProton(const G4PreCompoundProton &right) = delete;
-  const G4PreCompoundProton& 
-  operator= (const G4PreCompoundProton &right) = delete;
-  G4bool operator==(const G4PreCompoundProton &right) const = delete;
-  G4bool operator!=(const G4PreCompoundProton &right) const = delete;
+    G4PreCompoundProton(const G4PreCompoundProton& right) = delete;
+    const G4PreCompoundProton& operator=(const G4PreCompoundProton& right) = delete;
+    G4bool operator==(const G4PreCompoundProton& right) const = delete;
+    G4bool operator!=(const G4PreCompoundProton& right) const = delete;
 
-protected:
+  protected:
 
-  G4double GetRj(G4int NumberParticles, G4int NumberCharged) const override;
+    G4double GetRj(G4int NumberParticles, G4int NumberCharged) const override;
 
-  G4double GetAlpha() const override;
+    G4double GetAlpha() const override;
 };
 
 #endif
- 

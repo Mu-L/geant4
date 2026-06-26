@@ -47,7 +47,10 @@ G4SteppingVerboseWithUnits::G4SteppingVerboseWithUnits(G4int prec) : fprec(prec)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4SteppingVerboseWithUnits::~G4SteppingVerboseWithUnits() { delete fmessenger; }
+G4SteppingVerboseWithUnits::~G4SteppingVerboseWithUnits()
+{
+  delete fmessenger;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -69,7 +72,8 @@ void G4SteppingVerboseWithUnits::TrackingStarted()
 
   // Step zero
   //
-  if (verboseLevel > 0) {
+  if (verboseLevel > 0)
+  {
     G4cout << std::setw(5) << "Step#"
            << " " << std::setw(fprec + 3) << "X"
            << "    " << std::setw(fprec + 3) << "Y"
@@ -100,9 +104,11 @@ void G4SteppingVerboseWithUnits::StepInfo()
   CopyState();
   G4long oldprec = G4cout.precision(fprec);
 
-  if (verboseLevel >= 1) {
+  if (verboseLevel >= 1)
+  {
     if (verboseLevel >= 4) VerboseTrack();
-    if (verboseLevel >= 3) {
+    if (verboseLevel >= 3)
+    {
       G4cout << G4endl;
       G4cout << std::setw(5) << "#Step#"
              << " " << std::setw(fprec + 3) << "X"
@@ -132,12 +138,15 @@ void G4SteppingVerboseWithUnits::StepInfo()
     G4cout << "   " << std::setw(9) << procName;
     G4cout << G4endl;
 
-    if (verboseLevel == 2) {
+    if (verboseLevel == 2)
+    {
       const std::vector<const G4Track*>* secondary = fStep->GetSecondaryInCurrentStep();
-      if (! secondary->empty()) {
+      if (!secondary->empty())
+      {
         G4cout << "\n    :----- List of secondaries ----------------" << G4endl;
         G4cout.precision(4);
-        for (auto lp : *secondary) {
+        for (auto lp : *secondary)
+        {
           G4cout << "   " << std::setw(13) << lp->GetDefinition()->GetParticleName()
                  << ":  energy =" << std::setw(6) << G4BestUnit(lp->GetKineticEnergy(), "Energy")
                  << "  time =" << std::setw(6) << G4BestUnit(lp->GetGlobalTime(), "Time");
@@ -158,18 +167,22 @@ void G4SteppingVerboseWithUnits::AtRestDoItInvoked()
   G4VProcess* ptProcManager;
   CopyState();
 
-  if (verboseLevel >= 3) {
+  if (verboseLevel >= 3)
+  {
     G4int npt = 0;
     G4cout << " **List of AtRestDoIt invoked:" << G4endl;
-    for (std::size_t np = 0; np < MAXofAtRestLoops; ++np) {
+    for (std::size_t np = 0; np < MAXofAtRestLoops; ++np)
+    {
       std::size_t npGPIL = MAXofAtRestLoops - np - 1;
-      if ((*fSelectedAtRestDoItVector)[npGPIL] == G4ForceCondition::Forced) {
+      if ((*fSelectedAtRestDoItVector)[npGPIL] == G4ForceCondition::Forced)
+      {
         ++npt;
         ptProcManager = (*fAtRestDoItVector)[(G4int)np];
         G4cout << "   # " << npt << " : " << ptProcManager->GetProcessName() << " (Forced)"
                << G4endl;
       }
-      else if ((*fSelectedAtRestDoItVector)[npGPIL] == G4ForceCondition::NotForced) {
+      else if ((*fSelectedAtRestDoItVector)[npGPIL] == G4ForceCondition::NotForced)
+      {
         ++npt;
         ptProcManager = (*fAtRestDoItVector)[(G4int)np];
         G4cout << "   # " << npt << " : " << ptProcManager->GetProcessName() << G4endl;
@@ -178,7 +191,8 @@ void G4SteppingVerboseWithUnits::AtRestDoItInvoked()
 
     G4cout << "   Generated secondaries = " << fN2ndariesAtRestDoIt << G4endl;
 
-    if (fN2ndariesAtRestDoIt > 0) {
+    if (fN2ndariesAtRestDoIt > 0)
+    {
       G4cout << "   -- List of secondaries generated : "
              << "(x,y,z,kE,t,PID) --" << G4endl;
       for (std::size_t lp1 = (*fSecondary).size() - fN2ndariesAtRestDoIt;
@@ -195,7 +209,8 @@ void G4SteppingVerboseWithUnits::AtRestDoItInvoked()
     }
   }
 
-  if (verboseLevel >= 4) {
+  if (verboseLevel >= 4)
+  {
     ShowStep();
     G4cout << G4endl;
   }
@@ -209,15 +224,18 @@ void G4SteppingVerboseWithUnits::AlongStepDoItAllDone()
 
   CopyState();
 
-  if (verboseLevel >= 3) {
+  if (verboseLevel >= 3)
+  {
     G4cout << G4endl;
     G4cout << " >>AlongStepDoIt (after all invocations):" << G4endl;
     G4cout << "    ++List of invoked processes " << G4endl;
 
-    for (std::size_t ci = 0; ci < MAXofAlongStepLoops; ++ci) {
+    for (std::size_t ci = 0; ci < MAXofAlongStepLoops; ++ci)
+    {
       ptProcManager = (*fAlongStepDoItVector)((G4int)ci);
       G4cout << "      " << ci + 1 << ") ";
-      if (ptProcManager != nullptr) {
+      if (ptProcManager != nullptr)
+      {
         G4cout << ptProcManager->GetProcessName() << G4endl;
       }
     }
@@ -228,8 +246,10 @@ void G4SteppingVerboseWithUnits::AlongStepDoItAllDone()
            << "(x,y,z,kE,t,PID):"
            << "  No. of secondaries = " << (*fSecondary).size() << G4endl;
 
-    if (! (*fSecondary).empty()) {
-      for (auto& lp1 : *fSecondary) {
+    if (!(*fSecondary).empty())
+    {
+      for (auto& lp1 : *fSecondary)
+      {
         G4cout << "      " << std::setw(9) << G4BestUnit(lp1->GetPosition().x(), "Length") << " "
                << std::setw(9) << G4BestUnit(lp1->GetPosition().y(), "Length") << " "
                << std::setw(9) << G4BestUnit(lp1->GetPosition().z(), "Length") << " "
@@ -249,26 +269,31 @@ void G4SteppingVerboseWithUnits::PostStepDoItAllDone()
 
   CopyState();
 
-  if ((static_cast<int>(fStepStatus == fPostStepDoItProc) | static_cast<int>(fCondition == Forced) |
-        static_cast<int>(fCondition == Conditionally) |
-        static_cast<int>(fCondition == ExclusivelyForced) |
-        static_cast<int>(fCondition == StronglyForced)) != 0)
+  if ((static_cast<int>(fStepStatus == fPostStepDoItProc) | static_cast<int>(fCondition == Forced)
+       | static_cast<int>(fCondition == Conditionally)
+       | static_cast<int>(fCondition == ExclusivelyForced)
+       | static_cast<int>(fCondition == StronglyForced))
+      != 0)
   {
-    if (verboseLevel >= 3) {
+    if (verboseLevel >= 3)
+    {
       G4int npt = 0;
       G4cout << G4endl;
       G4cout << " **PostStepDoIt (after all invocations):" << G4endl;
       G4cout << "    ++List of invoked processes " << G4endl;
 
-      for (std::size_t np = 0; np < MAXofPostStepLoops; ++np) {
+      for (std::size_t np = 0; np < MAXofPostStepLoops; ++np)
+      {
         std::size_t npGPIL = MAXofPostStepLoops - np - 1;
-        if ((*fSelectedPostStepDoItVector)[npGPIL] == G4ForceCondition::Forced) {
+        if ((*fSelectedPostStepDoItVector)[npGPIL] == G4ForceCondition::Forced)
+        {
           ++npt;
           ptProcManager = (*fPostStepDoItVector)[(G4int)np];
           G4cout << "      " << npt << ") " << ptProcManager->GetProcessName() << " (Forced)"
                  << G4endl;
         }
-        else if ((*fSelectedPostStepDoItVector)[npGPIL] == G4ForceCondition::NotForced) {
+        else if ((*fSelectedPostStepDoItVector)[npGPIL] == G4ForceCondition::NotForced)
+        {
           ++npt;
           ptProcManager = (*fPostStepDoItVector)[(G4int)np];
           G4cout << "      " << npt << ") " << ptProcManager->GetProcessName() << G4endl;
@@ -282,8 +307,10 @@ void G4SteppingVerboseWithUnits::PostStepDoItAllDone()
              << "  No. of secondaries = " << (*fSecondary).size() << G4endl;
       G4cout << "      [Note]Secondaries from AlongStepDoIt included." << G4endl;
 
-      if (! (*fSecondary).empty()) {
-        for (auto& lp1 : *fSecondary) {
+      if (!(*fSecondary).empty())
+      {
+        for (auto& lp1 : *fSecondary)
+        {
           G4cout << "      " << std::setw(9) << G4BestUnit(lp1->GetPosition().x(), "Length") << " "
                  << std::setw(9) << G4BestUnit(lp1->GetPosition().y(), "Length") << " "
                  << std::setw(9) << G4BestUnit(lp1->GetPosition().z(), "Length") << " "
@@ -302,7 +329,8 @@ void G4SteppingVerboseWithUnits::DPSLStarted()
 {
   CopyState();
 
-  if (verboseLevel > 5) {
+  if (verboseLevel > 5)
+  {
     G4cout << G4endl << " >>DefinePhysicalStepLength (List of proposed StepLengths): " << G4endl;
   }
 }
@@ -313,7 +341,8 @@ void G4SteppingVerboseWithUnits::DPSLUserLimit()
 {
   CopyState();
 
-  if (verboseLevel > 5) {
+  if (verboseLevel > 5)
+  {
     G4cout << G4endl << G4endl;
     G4cout << "=== Defined Physical Step Length (DPSL)" << G4endl;
     G4cout << "    ++ProposedStep(UserLimit) = " << std::setw(9)
@@ -328,23 +357,29 @@ void G4SteppingVerboseWithUnits::DPSLPostStep()
 {
   CopyState();
 
-  if (verboseLevel > 5) {
+  if (verboseLevel > 5)
+  {
     G4cout << "    ++ProposedStep(PostStep ) = " << std::setw(9)
            << G4BestUnit(physIntLength, "Length")
            << " : ProcName = " << fCurrentProcess->GetProcessName() << " (";
-    if (fCondition == ExclusivelyForced) {
+    if (fCondition == ExclusivelyForced)
+    {
       G4cout << "ExclusivelyForced)" << G4endl;
     }
-    else if (fCondition == StronglyForced) {
+    else if (fCondition == StronglyForced)
+    {
       G4cout << "StronglyForced)" << G4endl;
     }
-    else if (fCondition == Conditionally) {
+    else if (fCondition == Conditionally)
+    {
       G4cout << "Conditionally)" << G4endl;
     }
-    else if (fCondition == Forced) {
+    else if (fCondition == Forced)
+    {
       G4cout << "Forced)" << G4endl;
     }
-    else {
+    else
+    {
       G4cout << "No ForceCondition)" << G4endl;
     }
   }
@@ -356,17 +391,21 @@ void G4SteppingVerboseWithUnits::DPSLAlongStep()
 {
   CopyState();
 
-  if (verboseLevel > 5) {
+  if (verboseLevel > 5)
+  {
     G4cout << "    ++ProposedStep(AlongStep) = " << std::setw(9)
            << G4BestUnit(physIntLength, "Length")
            << " : ProcName = " << fCurrentProcess->GetProcessName() << " (";
-    if (fGPILSelection == CandidateForSelection) {
+    if (fGPILSelection == CandidateForSelection)
+    {
       G4cout << "CandidateForSelection)" << G4endl;
     }
-    else if (fGPILSelection == NotCandidateForSelection) {
+    else if (fGPILSelection == NotCandidateForSelection)
+    {
       G4cout << "NotCandidateForSelection)" << G4endl;
     }
-    else {
+    else
+    {
       G4cout << "?!?)" << G4endl;
     }
   }
@@ -378,7 +417,8 @@ void G4SteppingVerboseWithUnits::AlongStepDoItOneByOne()
 {
   CopyState();
 
-  if (verboseLevel >= 4) {
+  if (verboseLevel >= 4)
+  {
     G4cout << G4endl;
     G4cout << " >>AlongStepDoIt (process by process): "
            << "   Process Name = " << fCurrentProcess->GetProcessName() << G4endl;
@@ -395,7 +435,8 @@ void G4SteppingVerboseWithUnits::AlongStepDoItOneByOne()
            << "(x,y,z,kE,t,PID):"
            << "  No. of secondaries = " << fN2ndariesAlongStepDoIt << G4endl;
 
-    if (fN2ndariesAlongStepDoIt > 0) {
+    if (fN2ndariesAlongStepDoIt > 0)
+    {
       for (std::size_t lp1 = (*fSecondary).size() - fN2ndariesAlongStepDoIt;
            lp1 < (*fSecondary).size(); ++lp1)
       {
@@ -417,7 +458,8 @@ void G4SteppingVerboseWithUnits::PostStepDoItOneByOne()
 {
   CopyState();
 
-  if (verboseLevel >= 4) {
+  if (verboseLevel >= 4)
+  {
     G4cout << G4endl;
     G4cout << " >>PostStepDoIt (process by process): "
            << "   Process Name = " << fCurrentProcess->GetProcessName() << G4endl;
@@ -431,7 +473,8 @@ void G4SteppingVerboseWithUnits::PostStepDoItOneByOne()
            << "(x,y,z,kE,t,PID):"
            << "  No. of secondaries = " << fN2ndariesPostStepDoIt << G4endl;
 
-    if (fN2ndariesPostStepDoIt > 0) {
+    if (fN2ndariesPostStepDoIt > 0)
+    {
       for (std::size_t lp1 = (*fSecondary).size() - fN2ndariesPostStepDoIt;
            lp1 < (*fSecondary).size(); ++lp1)
       {
@@ -637,51 +680,65 @@ void G4SteppingVerboseWithUnits::ShowStep() const
          << fStep->GetPostStepPoint()->GetWeight() << G4endl;
   G4cout << "         Step Status         : ";
   G4StepStatus tStepStatus = fStep->GetPreStepPoint()->GetStepStatus();
-  if (tStepStatus == fGeomBoundary) {
+  if (tStepStatus == fGeomBoundary)
+  {
     G4cout << std::setw(20) << "Geom Limit";
   }
-  else if (tStepStatus == fAlongStepDoItProc) {
+  else if (tStepStatus == fAlongStepDoItProc)
+  {
     G4cout << std::setw(20) << "AlongStep Proc.";
   }
-  else if (tStepStatus == fPostStepDoItProc) {
+  else if (tStepStatus == fPostStepDoItProc)
+  {
     G4cout << std::setw(20) << "PostStep Proc";
   }
-  else if (tStepStatus == fAtRestDoItProc) {
+  else if (tStepStatus == fAtRestDoItProc)
+  {
     G4cout << std::setw(20) << "AtRest Proc";
   }
-  else if (tStepStatus == fUndefined) {
+  else if (tStepStatus == fUndefined)
+  {
     G4cout << std::setw(20) << "Undefined";
   }
 
   tStepStatus = fStep->GetPostStepPoint()->GetStepStatus();
-  if (tStepStatus == fGeomBoundary) {
+  if (tStepStatus == fGeomBoundary)
+  {
     G4cout << std::setw(20) << "Geom Limit";
   }
-  else if (tStepStatus == fAlongStepDoItProc) {
+  else if (tStepStatus == fAlongStepDoItProc)
+  {
     G4cout << std::setw(20) << "AlongStep Proc.";
   }
-  else if (tStepStatus == fPostStepDoItProc) {
+  else if (tStepStatus == fPostStepDoItProc)
+  {
     G4cout << std::setw(20) << "PostStep Proc";
   }
-  else if (tStepStatus == fAtRestDoItProc) {
+  else if (tStepStatus == fAtRestDoItProc)
+  {
     G4cout << std::setw(20) << "AtRest Proc";
   }
-  else if (tStepStatus == fUndefined) {
+  else if (tStepStatus == fUndefined)
+  {
     G4cout << std::setw(20) << "Undefined";
   }
 
   G4cout << G4endl;
   G4cout << "         Process defined Step: ";
-  if (fStep->GetPreStepPoint()->GetProcessDefinedStep() == nullptr) {
+  if (fStep->GetPreStepPoint()->GetProcessDefinedStep() == nullptr)
+  {
     G4cout << std::setw(20) << "Undefined";
   }
-  else {
+  else
+  {
     G4cout << std::setw(20) << fStep->GetPreStepPoint()->GetProcessDefinedStep()->GetProcessName();
   }
-  if (fStep->GetPostStepPoint()->GetProcessDefinedStep() == nullptr) {
+  if (fStep->GetPostStepPoint()->GetProcessDefinedStep() == nullptr)
+  {
     G4cout << std::setw(20) << "Undefined";
   }
-  else {
+  else
+  {
     G4cout << std::setw(20) << fStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
   }
   G4cout.precision(oldprc);

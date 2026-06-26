@@ -10,7 +10,7 @@
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -18,7 +18,7 @@
                              WWW : http://geant4.org/
 **************************************************************
 
- creating G4RunManagerKernel 0x1cfcb90
+ creating G4RunManagerKernel 0x1a53b20
  G4ChordFinder: stepperDriverId: 2
 
 The materials defined are : 
@@ -94,15 +94,15 @@ G4Transportation:  Current values for thresholds related to  the killing of loop
     Important Energy = 250  ( above this tracks are given multiple chances ) 
     Extra Trials     = 10 'important' tracks, i.e. those above 'important' energy 
  G4Transportation constructor> set fShortStepOptimisation to false
-0x1fb65f0G4ErrorPhysicsList:: particle process manager e+ = 0x1fbaf80
-0x1fb6450G4ErrorPhysicsList:: particle process manager e- = 0x1fbba60
-0x1fb62b0G4ErrorPhysicsList:: particle process manager gamma = 0x1fbbc70
-0x1fb79b0G4ErrorPhysicsList:: particle process manager geantino = 0x1fba2f0
-0x1fb67d0G4ErrorPhysicsList:: particle process manager mu+ = 0x1fbefe0
-0x1fb6b20G4ErrorPhysicsList:: particle process manager mu- = 0x1fbf1f0
-0x1fb6f00G4ErrorPhysicsList:: particle process manager pi+ = 0x1fbf440
-0x1fb7360G4ErrorPhysicsList:: particle process manager pi- = 0x1fbf690
-0x1fb7780G4ErrorPhysicsList:: particle process manager proton = 0x1fbf8e0
+0x1d0e170G4ErrorPhysicsList:: particle process manager e+ = 0x1d12b00
+0x1d0dfd0G4ErrorPhysicsList:: particle process manager e- = 0x1d135e0
+0x1d0de30G4ErrorPhysicsList:: particle process manager gamma = 0x1d137f0
+0x1d0f530G4ErrorPhysicsList:: particle process manager geantino = 0x1d16c20
+0x1d0e350G4ErrorPhysicsList:: particle process manager mu+ = 0x1d16e70
+0x1d0e6a0G4ErrorPhysicsList:: particle process manager mu- = 0x1d11e70
+0x1d0ea80G4ErrorPhysicsList:: particle process manager pi+ = 0x1d16fe0
+0x1d0eee0G4ErrorPhysicsList:: particle process manager pi- = 0x1d17210
+0x1d0f300G4ErrorPhysicsList:: particle process manager proton = 0x1d17460
 physicsList->CheckParticleList() start.
 physicsList->setCut() start.
  G4ChordFinder: stepperDriverId: 2
@@ -151,6 +151,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 0
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -267,13 +268,14 @@ G4VoxelisationHelper::ReportVoxelStats -- Voxel Statistics
 /geant4e/limits/stepLength 100 mm
 Step#    X(mm)    Y(mm)    Z(mm) KinE(MeV)  dE(MeV) StepLeng TrackLeng  NextVolume ProcName
     0        0        0        0  1.99e+04        0        0         0        BEAM initStep
-### G4EnergyLossForExtrapolator::Initialisation tables= 0
-G4TablesForExtrapolator::ComputeElectronDEDX for e-
-G4TablesForExtrapolator::ComputeElectronDEDX for e+
+### G4EnergyLossForExtrapolator::Initialisation tables= 0x1d18d30  initializer:1  ThreadID=-2
+### G4TablesForExtrapolator::Initialisation for 4 couples.
+G4TablesForExtrapolator::ComputeElectronDEDX for e- Ncouples=4
+G4TablesForExtrapolator::ComputeElectronDEDX for e+ Ncouples=4
 G4TablesForExtrapolator::ComputeMuonDEDX for mu+
 G4TablesForExtrapolator::ComputeProtonDEDX for proton
 G4TablesForExtrapolator::ComputeTransportXS for e-
-### G4EnergyLossForExtrapolator::BuildTables for 4 materials Nbins= 80 Emin(MeV)= 1  Emax(MeV)= 1e+08
+### G4EnergyLossForExtrapolator::BuildTables for 0 materials Nbins= 80 Emin(MeV)= 1  Emax(MeV)= 1e+08
     1       50   0.0187        0  1.99e+04   0.0167       50        50        CDET Transportation
     2      150    0.169        0  1.99e+04   0.0333      100       150        CDET G4ErrorStepLengthLimit
     3      250    0.468        0  1.99e+04   0.0333      100       250        CDET G4ErrorStepLengthLimit

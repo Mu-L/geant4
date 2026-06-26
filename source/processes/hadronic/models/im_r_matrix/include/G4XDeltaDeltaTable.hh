@@ -27,49 +27,43 @@
 //
 // -------------------------------------------------------------------
 
-#ifndef G4XDeltaDeltaTable_h
-#define G4XDeltaDeltaTable_h
+#ifndef G4XDELTADELTATABLE_HH
+#define G4XDELTADELTATABLE_HH
 
-#include "globals.hh"
-#include "G4PhysicsVector.hh"
 #include "G4PhysicsFreeVector.hh"
+#include "G4PhysicsVector.hh"
 #include "G4VXResonanceTable.hh"
-
+#include "globals.hh"
 
 class G4XDeltaDeltaTable : public G4VXResonanceTable
 {
+  public:
 
-public:
+    G4XDeltaDeltaTable();
 
-  G4XDeltaDeltaTable(); 
+    ~G4XDeltaDeltaTable();
 
-  ~G4XDeltaDeltaTable();
+    virtual G4PhysicsVector* CrossSectionTable() const;
 
-  virtual G4PhysicsVector* CrossSectionTable() const;
+    G4bool operator==(const G4XDeltaDeltaTable& right) const;
+    G4bool operator!=(const G4XDeltaDeltaTable& right) const;
 
-  G4bool operator==(const G4XDeltaDeltaTable &right) const;
-  G4bool operator!=(const G4XDeltaDeltaTable &right) const;
+  protected:
 
+  private:
 
-protected:
+    G4XDeltaDeltaTable(const G4XDeltaDeltaTable& right);
+    G4XDeltaDeltaTable& operator=(const G4XDeltaDeltaTable& right);
 
+    static const G4int sizeDeltaDelta;
 
-private:  
+    // The energies corresponding to the following cross sections
+    static const G4double energyTable[121];
 
-  G4XDeltaDeltaTable(const G4XDeltaDeltaTable &right);
-  G4XDeltaDeltaTable& operator=(const G4XDeltaDeltaTable &right);
+    // Cross sections for p p -> N N*
+    static const G4double sigmaDD1232[121];
 
-  static const G4int sizeDeltaDelta;
-
-  // The energies corresponding to the following cross sections
-  static const G4double energyTable[121];
-
-  // Cross sections for p p -> N N*
-  static const G4double sigmaDD1232[121];
-
-  G4int size;
-
+    G4int size;
 };
 
 #endif
-

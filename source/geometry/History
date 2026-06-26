@@ -6,6 +6,15 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-06-19 Ben Morgan (geometry-V11-04-02)
+- Apply clang-format to all C++ files.
+
+## 2026-04-28 Ben Morgan (geometry-V11-04-01)
+- Update Doxygen documentation with grouping commands to organise classes/functions
+  documentation by category/subcategory.
+
+## 2026-01-09 Ben Morgan (geometry-V11-04-00)
+- Update header guards to style/format required by Geant4 coding guidelines.
 
 ## 2022-12-12 Ben Morgan (geometry-V11-01-00)
 - Remove obsolete GNUmakefile scripts

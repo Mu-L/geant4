@@ -31,32 +31,31 @@
 //  Reference: J.Meesungnoen et. al, DOI: 10.1021/jp058037z
 //
 
-#ifndef G4DNA_TRIPLE_IONISATION_MODEL_HH_
-#define G4DNA_TRIPLE_IONISATION_MODEL_HH_
+#ifndef G4DNA_TRIPLE_IONISATION_MODEL_HH
+#define G4DNA_TRIPLE_IONISATION_MODEL_HH
 
 #include "G4DNADoubleIonisationModel.hh"
 #include "G4VEmModel.hh"
 
-class G4DNATripleIonisationModel : public G4DNADoubleIonisationModel {
-public:
-  // constructor
-  G4DNATripleIonisationModel(
-    const G4ParticleDefinition* p = nullptr,
-    const G4String& model_name = "G4DNATripleIonisationModel");
+class G4DNATripleIonisationModel : public G4DNADoubleIonisationModel
+{
+  public:
 
-  // destructor
-  ~G4DNATripleIonisationModel() override = default;
+    // constructor
+    G4DNATripleIonisationModel(const G4ParticleDefinition* p = nullptr,
+                               const G4String& model_name = "G4DNATripleIonisationModel");
 
-  void Initialise(const G4ParticleDefinition* particle,
-                  const G4DataVector&) override;
+    // destructor
+    ~G4DNATripleIonisationModel() override = default;
 
-  G4double CrossSectionPerVolume(
-    const G4Material* material, const G4ParticleDefinition* pdef,
-    G4double ekin, G4double, G4double) override;
+    void Initialise(const G4ParticleDefinition* particle, const G4DataVector&) override;
 
-  void SampleSecondaries(
-    std::vector<G4DynamicParticle*>* vsec, const G4MaterialCutsCouple* couple,
-    const G4DynamicParticle* particle, G4double, G4double) override;
+    G4double CrossSectionPerVolume(const G4Material* material, const G4ParticleDefinition* pdef,
+                                   G4double ekin, G4double, G4double) override;
+
+    void SampleSecondaries(std::vector<G4DynamicParticle*>* vsec,
+                           const G4MaterialCutsCouple* couple, const G4DynamicParticle* particle,
+                           G4double, G4double) override;
 };
 
-#endif // G4DNA_TRIPLE_IONISATION_MODEL_HH_
+#endif  // G4DNA_TRIPLE_IONISATION_MODEL_HH_

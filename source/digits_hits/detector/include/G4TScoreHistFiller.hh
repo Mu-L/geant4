@@ -33,51 +33,54 @@
 //
 // Author: Makoto Asai, September 2020
 // --------------------------------------------------------------------
-#ifndef G4TScoreHistFiller_h
-#define G4TScoreHistFiller_h 1
+#ifndef G4TSCOREHISTFILLER_HH
+#define G4TSCOREHISTFILLER_HH
 
 #include "G4VScoreHistFiller.hh"
 #include "globals.hh"
 
 #include <memory>
 
-template <typename T>
+template<typename T>
 class G4TScoreHistFiller : public G4VScoreHistFiller
 {
- public:
-  G4TScoreHistFiller() = default;
-  virtual ~G4TScoreHistFiller() = default;
+  public:
 
-  // methods
-  virtual void FillH1(G4int id, G4double value, G4double weight = 1.0);
-  virtual void FillH2(G4int id, G4double xvalue, G4double yvalue, G4double weight = 1.0);
-  virtual void FillH3(
-    G4int id, G4double xvalue, G4double yvalue, G4double zvalue, G4double weight = 1.0);
-  virtual void FillP1(G4int id, G4double xvalue, G4double yvalue, G4double weight = 1.0);
-  virtual void FillP2(
-    G4int id, G4double xvalue, G4double yvalue, G4double zvalue, G4double weight = 1.0);
+    G4TScoreHistFiller() = default;
+    virtual ~G4TScoreHistFiller() = default;
 
-  virtual G4bool CheckH1(G4int id);
-  virtual G4bool CheckH2(G4int id);
-  virtual G4bool CheckH3(G4int id);
-  virtual G4bool CheckP1(G4int id);
-  virtual G4bool CheckP2(G4int id);
+    // methods
+    virtual void FillH1(G4int id, G4double value, G4double weight = 1.0);
+    virtual void FillH2(G4int id, G4double xvalue, G4double yvalue, G4double weight = 1.0);
+    virtual void FillH3(G4int id, G4double xvalue, G4double yvalue, G4double zvalue,
+                        G4double weight = 1.0);
+    virtual void FillP1(G4int id, G4double xvalue, G4double yvalue, G4double weight = 1.0);
+    virtual void FillP2(G4int id, G4double xvalue, G4double yvalue, G4double zvalue,
+                        G4double weight = 1.0);
 
-  void SetVerboseLevel(G4int value);
-  G4int GetVerboseLevel() const { return fVerboseLevel; }
+    virtual G4bool CheckH1(G4int id);
+    virtual G4bool CheckH2(G4int id);
+    virtual G4bool CheckH3(G4int id);
+    virtual G4bool CheckP1(G4int id);
+    virtual G4bool CheckP2(G4int id);
 
- protected:
-  // methods
-  virtual G4VScoreHistFiller* CreateInstance() const;
+    void SetVerboseLevel(G4int value);
+    G4int GetVerboseLevel() const { return fVerboseLevel; }
 
- private:
-  // methods
-  void CreateAnalysisManager();
+  protected:
 
-  // data members
-  T* fAnalysisManager = nullptr;
-  G4int fVerboseLevel = 0;
-  G4bool fIsInitialized = false;
+    // methods
+    virtual G4VScoreHistFiller* CreateInstance() const;
+
+  private:
+
+    // methods
+    void CreateAnalysisManager();
+
+    // data members
+    T* fAnalysisManager = nullptr;
+    G4int fVerboseLevel = 0;
+    G4bool fIsInitialized = false;
 };
 
 #include "G4TScoreHistFiller.icc"

@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  4th April 1998.
 // Null model - simply a holder for modeling parameter.
 // DO NOT INVOKE DescribeYourself.
@@ -35,22 +35,21 @@
 
 #include "G4VModel.hh"
 
-class G4NullModel: public G4VModel {
+class G4NullModel : public G4VModel
+{
+  public:
 
-public:
+    G4NullModel(const G4ModelingParameters* = 0);
 
-  G4NullModel (const G4ModelingParameters* = 0);
+    virtual ~G4NullModel();
 
-  virtual ~G4NullModel ();
+    void DescribeYourselfTo(G4VGraphicsScene&);
+    // An exception is thrown if this is called!!!!!!!!!!!!!!!!!!!!
 
-  void DescribeYourselfTo (G4VGraphicsScene&);
-  // An exception is thrown if this is called!!!!!!!!!!!!!!!!!!!!
-
-  /////////////////////////////////////////////////
-  // Access to other information: use GetModelingParameters()
-  // (inherited from G4VModel) and the access functions of
-  // G4ModelingParameters.
-
+    /////////////////////////////////////////////////
+    // Access to other information: use GetModelingParameters()
+    // (inherited from G4VModel) and the access functions of
+    // G4ModelingParameters.
 };
 
 #endif

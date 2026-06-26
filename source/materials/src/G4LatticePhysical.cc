@@ -44,63 +44,70 @@ namespace
 G4ThreeVector xhat(1, 0, 0), yhat(0, 1, 0), zhat(0, 0, 1), nullVec(0, 0, 0);
 }
 
-
 G4LatticePhysical::G4LatticePhysical(const G4LatticeLogical* Lat, const G4RotationMatrix* Rot)
   : fLattice(Lat)
 {
   SetPhysicalOrientation(Rot);
 }
 
-
 void G4LatticePhysical::SetPhysicalOrientation(const G4RotationMatrix* Rot)
 {
-  if (Rot == nullptr) {  // No orientation specified
+  if (Rot == nullptr)
+  {  // No orientation specified
     fLocalToGlobal = fGlobalToLocal = G4RotationMatrix::IDENTITY;
   }
-  else {
+  else
+  {
     fLocalToGlobal = fGlobalToLocal = *Rot;  // Frame rotation
     fGlobalToLocal.invert();
   }
 
-  if (verboseLevel > 0) {
+  if (verboseLevel > 0)
+  {
     G4cout << "G4LatticePhysical::SetPhysicalOrientation ";
-    if (Rot != nullptr) { G4cout << *Rot; }
-    else { G4cout << " 0 "; }
+    if (Rot != nullptr)
+    {
+      G4cout << *Rot;
+    }
+    else
+    {
+      G4cout << " 0 ";
+    }
     G4cout << "\nfLocalToGlobal: " << fLocalToGlobal << "\nfGlobalToLocal: " << fGlobalToLocal
            << G4endl;
   }
 }
-
 
 void G4LatticePhysical::SetLatticeOrientation(G4double t_rot, G4double p_rot)
 {
   fTheta = t_rot;
   fPhi = p_rot;
 
-  if (verboseLevel != 0) {
+  if (verboseLevel != 0)
+  {
     G4cout << "G4LatticePhysical::SetLatticeOrientation " << fTheta << " " << fPhi << G4endl;
   }
 }
-
 
 void G4LatticePhysical::SetMillerOrientation(G4int l, G4int k, G4int n)
 {
   fTheta = halfpi - std::atan2(n + 0.000001, l + 0.000001);
   fPhi = halfpi - std::atan2(l + 0.000001, k + 0.000001);
 
-  if (verboseLevel != 0) {
+  if (verboseLevel != 0)
+  {
     G4cout << "G4LatticePhysical::SetMillerOrientation(" << l << k << n << ") : " << fTheta << " "
            << fPhi << G4endl;
   }
 }
-
 
 ///////////////////////////////
 // Loads the group velocity in m/s
 /////////////////////////////
 G4double G4LatticePhysical::MapKtoV(G4int polarizationState, G4ThreeVector k) const
 {
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "G4LatticePhysical::MapKtoV " << k << G4endl;
   }
 
@@ -113,7 +120,8 @@ G4double G4LatticePhysical::MapKtoV(G4int polarizationState, G4ThreeVector k) co
 ///////////////////////////////
 G4ThreeVector G4LatticePhysical::MapKtoVDir(G4int polarizationState, G4ThreeVector k) const
 {
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "G4LatticePhysical::MapKtoVDir " << k << G4endl;
   }
 
@@ -124,18 +132,19 @@ G4ThreeVector G4LatticePhysical::MapKtoVDir(G4int polarizationState, G4ThreeVect
   return VG.rotate(zhat, -fPhi).rotate(yhat, -fTheta);
 }
 
-
 // Apply orientation transforms to specified vector
 
 G4ThreeVector G4LatticePhysical::RotateToGlobal(const G4ThreeVector& dir) const
 {
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "G4LatticePhysical::RotateToGlobal " << dir << "\nusing fLocalToGlobal "
            << fLocalToGlobal << G4endl;
   }
 
   G4ThreeVector result = fLocalToGlobal * dir;
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << " result " << result << G4endl;
   }
 
@@ -144,13 +153,15 @@ G4ThreeVector G4LatticePhysical::RotateToGlobal(const G4ThreeVector& dir) const
 
 G4ThreeVector G4LatticePhysical::RotateToLocal(const G4ThreeVector& dir) const
 {
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "G4LatticePhysical::RotateToLocal " << dir << "\nusing fGlobalToLocal "
            << fGlobalToLocal << G4endl;
   }
 
   G4ThreeVector result = fGlobalToLocal * dir;
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << " result " << result << G4endl;
   }
 

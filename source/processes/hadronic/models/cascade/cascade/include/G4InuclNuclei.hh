@@ -53,118 +53,126 @@
 #ifndef G4INUCL_NUCLEI_HH
 #define G4INUCL_NUCLEI_HH
 
-#include <CLHEP/Units/SystemOfUnits.h>
-
+#include "G4ExitonConfiguration.hh"
 #include "G4InuclParticle.hh"
 #include "G4LorentzVector.hh"
-#include "G4ExitonConfiguration.hh"
+
+#include <CLHEP/Units/SystemOfUnits.h>
 
 class G4Fragment;
 class G4ParticleDefinition;
 class G4V3DNucleus;
 
+class G4InuclNuclei : public G4InuclParticle
+{
+  public:
 
-class G4InuclNuclei : public G4InuclParticle {
-public:
-  G4InuclNuclei() : G4InuclParticle() {}
+    G4InuclNuclei() : G4InuclParticle() {}
 
-  G4InuclNuclei(const G4DynamicParticle& dynPart, Model model=DefaultModel)
-    : G4InuclParticle(dynPart, model) {}
+    G4InuclNuclei(const G4DynamicParticle& dynPart, Model model = DefaultModel)
+      : G4InuclParticle(dynPart, model)
+    {}
 
-  G4InuclNuclei(G4int a, G4int z, G4double exc=0., Model model=DefaultModel)
-    : G4InuclParticle(makeDefinition(a,z), model) {
-    setExitationEnergy(exc);
-  }
+    G4InuclNuclei(G4int a, G4int z, G4double exc = 0., Model model = DefaultModel)
+      : G4InuclParticle(makeDefinition(a, z), model)
+    {
+      setExitationEnergy(exc);
+    }
 
-  G4InuclNuclei(const G4LorentzVector& mom, G4int a, G4int z,
-		G4double exc=0., Model model=DefaultModel)
-    : G4InuclParticle(makeDefinition(a,z), mom, model) {
-    setExitationEnergy(exc);
-  }
+    G4InuclNuclei(const G4LorentzVector& mom, G4int a, G4int z, G4double exc = 0.,
+                  Model model = DefaultModel)
+      : G4InuclParticle(makeDefinition(a, z), mom, model)
+    {
+      setExitationEnergy(exc);
+    }
 
-  G4InuclNuclei(G4double ekin, G4int a, G4int z, G4double exc,
-		Model model=DefaultModel)
-    : G4InuclParticle(makeDefinition(a,z), ekin, model) {
-    setExitationEnergy(exc);
-  }
+    G4InuclNuclei(G4double ekin, G4int a, G4int z, G4double exc, Model model = DefaultModel)
+      : G4InuclParticle(makeDefinition(a, z), ekin, model)
+    {
+      setExitationEnergy(exc);
+    }
 
-  G4InuclNuclei(const G4Fragment& aFragment, Model model=DefaultModel);
+    G4InuclNuclei(const G4Fragment& aFragment, Model model = DefaultModel);
 
-  G4InuclNuclei(G4V3DNucleus* a3DNucleus, Model model=DefaultModel);
+    G4InuclNuclei(G4V3DNucleus* a3DNucleus, Model model = DefaultModel);
 
-  virtual ~G4InuclNuclei() {}
+    virtual ~G4InuclNuclei() {}
 
-  // Copy and assignment constructors for use with std::vector<>
-  G4InuclNuclei(const G4InuclNuclei& right)
-    : G4InuclParticle(right),
-      theExitonConfiguration(right.theExitonConfiguration) {}
+    // Copy and assignment constructors for use with std::vector<>
+    G4InuclNuclei(const G4InuclNuclei& right)
+      : G4InuclParticle(right), theExitonConfiguration(right.theExitonConfiguration)
+    {}
 
-  G4InuclNuclei& operator=(const G4InuclNuclei& right);
+    G4InuclNuclei& operator=(const G4InuclNuclei& right);
 
-  // Equality (comparison) operator -- NOT SORTING
-  G4bool operator==(const G4InuclNuclei& right) {
-    return ( G4InuclParticle::operator==(right) && 
-	     theExitonConfiguration == right.theExitonConfiguration );
-  }
+    // Equality (comparison) operator -- NOT SORTING
+    G4bool operator==(const G4InuclNuclei& right)
+    {
+      return (G4InuclParticle::operator==(right)
+              && theExitonConfiguration == right.theExitonConfiguration);
+    }
 
-  // Overwrite data structure (avoids creating/copying temporaries)
-  void fill(G4int a, G4int z, G4double exc=0., Model model=DefaultModel) {
-    fill(0., a, z, exc, model);
-  }
+    // Overwrite data structure (avoids creating/copying temporaries)
+    void fill(G4int a, G4int z, G4double exc = 0., Model model = DefaultModel)
+    {
+      fill(0., a, z, exc, model);
+    }
 
-  void fill(const G4LorentzVector& mom, G4int a, G4int z,
-	    G4double exc=0., Model model=DefaultModel);
+    void fill(const G4LorentzVector& mom, G4int a, G4int z, G4double exc = 0.,
+              Model model = DefaultModel);
 
-  void fill(G4double ekin, G4int a, G4int z, G4double exc,
-	    Model model=DefaultModel);
+    void fill(G4double ekin, G4int a, G4int z, G4double exc, Model model = DefaultModel);
 
-  void copy(const G4Fragment& aFragment, Model model=DefaultModel);
+    void copy(const G4Fragment& aFragment, Model model = DefaultModel);
 
-  void copy(G4V3DNucleus* a3DNucleus, Model model=DefaultModel);
+    void copy(G4V3DNucleus* a3DNucleus, Model model = DefaultModel);
 
-  void clear();			// Discard all information (including A,Z)
+    void clear();  // Discard all information (including A,Z)
 
-  // Excitation energy is stored as dynamical mass of particle
-  void setExitationEnergy(G4double e);
+    // Excitation energy is stored as dynamical mass of particle
+    void setExitationEnergy(G4double e);
 
-  void setExitonConfiguration(const G4ExitonConfiguration& config) { 
-    theExitonConfiguration = config;
-  }
+    void setExitonConfiguration(const G4ExitonConfiguration& config)
+    {
+      theExitonConfiguration = config;
+    }
 
-  void clearExitonConfiguration() { theExitonConfiguration.clear(); }
+    void clearExitonConfiguration() { theExitonConfiguration.clear(); }
 
-  G4int getA() const { return getDefinition()->GetAtomicMass(); }
-  G4int getZ() const { return getDefinition()->GetAtomicNumber(); }
+    G4int getA() const { return getDefinition()->GetAtomicMass(); }
+    G4int getZ() const { return getDefinition()->GetAtomicNumber(); }
 
-  G4double getNucleiMass() const {
-    return getDefinition()->GetPDGMass()*CLHEP::MeV/CLHEP::GeV;	// From G4 to Bertini
-  }
+    G4double getNucleiMass() const
+    {
+      return getDefinition()->GetPDGMass() * CLHEP::MeV / CLHEP::GeV;  // From G4 to Bertini
+    }
 
-  G4double getExitationEnergy() const {
-    return (getMass()-getNucleiMass())*CLHEP::GeV/CLHEP::MeV; // Always in MeV
-  }
+    G4double getExitationEnergy() const
+    {
+      return (getMass() - getNucleiMass()) * CLHEP::GeV / CLHEP::MeV;  // Always in MeV
+    }
 
-  G4double getExitationEnergyInGeV() const { return getExitationEnergy()/CLHEP::GeV; }
+    G4double getExitationEnergyInGeV() const { return getExitationEnergy() / CLHEP::GeV; }
 
-  const G4ExitonConfiguration& getExitonConfiguration() const {
-    return theExitonConfiguration;
-  }
+    const G4ExitonConfiguration& getExitonConfiguration() const { return theExitonConfiguration; }
 
-  static G4double getNucleiMass(G4int a, G4int z, G4double exc=0.);
+    static G4double getNucleiMass(G4int a, G4int z, G4double exc = 0.);
 
-  virtual void print(std::ostream& os) const;
+    virtual void print(std::ostream& os) const;
 
-  // Convert contents to G4Fragment for use outside package
-  G4Fragment makeG4Fragment() const;
-  operator G4Fragment() const;
+    // Convert contents to G4Fragment for use outside package
+    G4Fragment makeG4Fragment() const;
+    operator G4Fragment() const;
 
-protected:
-  // Convert nuclear configuration to standard GEANT4 pointer
-  static G4ParticleDefinition* makeDefinition(G4int a, G4int z);
-  static G4ParticleDefinition* makeNuclearFragment(G4int a, G4int z);
+  protected:
 
-private: 
-  G4ExitonConfiguration theExitonConfiguration;
-};        
+    // Convert nuclear configuration to standard GEANT4 pointer
+    static G4ParticleDefinition* makeDefinition(G4int a, G4int z);
+    static G4ParticleDefinition* makeNuclearFragment(G4int a, G4int z);
 
-#endif // G4INUCL_NUCLEI_HH 
+  private:
+
+    G4ExitonConfiguration theExitonConfiguration;
+};
+
+#endif  // G4INUCL_NUCLEI_HH

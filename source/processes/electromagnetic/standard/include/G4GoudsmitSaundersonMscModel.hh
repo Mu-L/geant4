@@ -104,10 +104,11 @@
 //            (Z and material) dependent.
 // 02.02.2018 M. Novak: implemented CrossSectionPerVolume interface method (used only for testing)
 // 26.10.2025 M. Novak: the model has only its accurate stepping and boundary crossing algorithms
-//            left as the only option that ensures the expected precision, especially when activating
-//            its Mott correction option (that also activates the screeing and scattering power
-//            corrections). The model has been used for describing e-/e+ MSC (below 100 MeV kinetic)
-//            energy in the option4, Penelope and Livermore EM physics constructors since Geant4 10.6.
+//            left as the only option that ensures the expected precision, especially when
+//            activating its Mott correction option (that also activates the screeing and scattering
+//            power corrections). The model has been used for describing e-/e+ MSC (below 100 MeV
+//            kinetic) energy in the option4, Penelope and Livermore EM physics constructors since
+//            Geant4 10.6.
 //
 //
 // Class description:
@@ -124,16 +125,15 @@
 //
 // -----------------------------------------------------------------------------
 
-#ifndef G4GoudsmitSaundersonMscModel_h
-#define G4GoudsmitSaundersonMscModel_h 1
+#ifndef G4GOUDSMITSAUNDERSONMSCMODEL_HH
+#define G4GOUDSMITSAUNDERSONMSCMODEL_HH
 
-#include <CLHEP/Units/SystemOfUnits.h>
-
-#include "G4VMscModel.hh"
-#include "G4PhysicsTable.hh"
 #include "G4MaterialCutsCouple.hh"
+#include "G4PhysicsTable.hh"
+#include "G4VMscModel.hh"
 #include "globals.hh"
 
+#include <CLHEP/Units/SystemOfUnits.h>
 
 class G4DataVector;
 class G4ParticleChangeForMSC;
@@ -143,106 +143,110 @@ class G4GSPWACorrections;
 
 class G4GoudsmitSaundersonMscModel : public G4VMscModel
 {
-public:
+  public:
 
-  G4GoudsmitSaundersonMscModel(const G4String& nam = "GoudsmitSaunderson");
+    G4GoudsmitSaundersonMscModel(const G4String& nam = "GoudsmitSaunderson");
 
-  ~G4GoudsmitSaundersonMscModel() override;
+    ~G4GoudsmitSaundersonMscModel() override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void InitialiseLocal(const G4ParticleDefinition* p, G4VEmModel* masterModel) override;
+    void InitialiseLocal(const G4ParticleDefinition* p, G4VEmModel* masterModel) override;
 
-  G4ThreeVector& SampleScattering(const G4ThreeVector&, G4double safety) override;
+    G4ThreeVector& SampleScattering(const G4ThreeVector&, G4double safety) override;
 
-  G4double ComputeTruePathLengthLimit(const G4Track& track, G4double& currentMinimalStep) override;
+    G4double ComputeTruePathLengthLimit(const G4Track& track,
+                                        G4double& currentMinimalStep) override;
 
-  G4double ComputeGeomPathLength(G4double truePathLength) override;
+    G4double ComputeGeomPathLength(G4double truePathLength) override;
 
-  G4double ComputeTrueStepLength(G4double geomStepLength) override;
+    G4double ComputeTrueStepLength(G4double geomStepLength) override;
 
-  // method to compute first transport cross section per Volume (i.e. macroscropic first transport cross section; this
-  // method is used only for testing and not during a normal simulation)
-  G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*, G4double kineticEnergy, G4double cutEnergy = 0.0, G4double maxEnergy = DBL_MAX) override;
+    // method to compute first transport cross section per Volume (i.e. macroscropic first transport
+    // cross section; this method is used only for testing and not during a normal simulation)
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy = 0.0,
+                                   G4double maxEnergy = DBL_MAX) override;
 
-  void     StartTracking(G4Track*) override;
+    void StartTracking(G4Track*) override;
 
-  void     SampleMSC();
+    void SampleMSC();
 
-  G4double GetTransportMeanFreePath(const G4ParticleDefinition*, G4double);
+    G4double GetTransportMeanFreePath(const G4ParticleDefinition*, G4double);
 
-  void SetOptionPWACorrection(G4bool opt)    { fIsUsePWACorrection = opt; }
+    void SetOptionPWACorrection(G4bool opt) { fIsUsePWACorrection = opt; }
 
-  G4bool GetOptionPWACorrection() const      { return fIsUsePWACorrection; }
+    G4bool GetOptionPWACorrection() const { return fIsUsePWACorrection; }
 
-  void   SetOptionMottCorrection(G4bool opt) { fIsUseMottCorrection = opt; }
+    void SetOptionMottCorrection(G4bool opt) { fIsUseMottCorrection = opt; }
 
-  G4bool GetOptionMottCorrection() const     { return fIsUseMottCorrection; }
+    G4bool GetOptionMottCorrection() const { return fIsUseMottCorrection; }
 
-  void   SetOptionOptimisation(G4bool opt) { fIsUseOptimisation = opt; }
+    void SetOptionOptimisation(G4bool opt) { fIsUseOptimisation = opt; }
 
-  G4bool GetOptionOptimisation() const     { return fIsUseOptimisation; }
+    G4bool GetOptionOptimisation() const { return fIsUseOptimisation; }
 
-  G4GoudsmitSaundersonTable* GetGSTable()          { return fGSTable; }
+    G4GoudsmitSaundersonTable* GetGSTable() { return fGSTable; }
 
-  G4GSPWACorrections*        GetPWACorrection()    { return fPWACorrection; }
+    G4GSPWACorrections* GetPWACorrection() { return fPWACorrection; }
 
-  //  hide assignment operator
-  G4GoudsmitSaundersonMscModel & operator=(const  G4GoudsmitSaundersonMscModel &right) = delete;
-  G4GoudsmitSaundersonMscModel(const  G4GoudsmitSaundersonMscModel&) = delete;
+    //  hide assignment operator
+    G4GoudsmitSaundersonMscModel& operator=(const G4GoudsmitSaundersonMscModel& right) = delete;
+    G4GoudsmitSaundersonMscModel(const G4GoudsmitSaundersonMscModel&) = delete;
 
-private:
-  inline void     SetParticle(const G4ParticleDefinition* p);
+  private:
 
-  inline G4double GetLambda(G4double);
+    inline void SetParticle(const G4ParticleDefinition* p);
 
-  G4double GetTransportMeanFreePathOnly(const G4ParticleDefinition*,G4double);
+    inline G4double GetLambda(G4double);
 
-private:
+    G4double GetTransportMeanFreePathOnly(const G4ParticleDefinition*, G4double);
 
-  G4double currentKinEnergy;
-  G4double currentRange;
-  G4double presafety;
-  G4int    currentMaterialIndex;
-  //
-  const G4ParticleDefinition* particle;
-  G4ParticleChangeForMSC*     fParticleChange;
-  const G4MaterialCutsCouple* currentCouple;
+  private:
 
-  G4GoudsmitSaundersonTable*  fGSTable;
-  G4GSPWACorrections*         fPWACorrection;
+    G4double currentKinEnergy;
+    G4double currentRange;
+    G4double presafety;
+    G4int currentMaterialIndex;
+    //
+    const G4ParticleDefinition* particle;
+    G4ParticleChangeForMSC* fParticleChange;
+    const G4MaterialCutsCouple* currentCouple;
 
-  G4bool   fIsUsePWACorrection;
-  G4bool   fIsUseMottCorrection;
-  G4bool   fIsUseOptimisation;
-  //
-  G4double fLambda0; // elastic mean free path
-  G4double fLambda1; // first transport mean free path
-  G4double fScrA;    // screening parameter
-  G4double fG1;      // first transport coef.
-  // in case of Mott-correction
-  G4double fMCtoScrA;
-  G4double fMCtoQ1;
-  G4double fMCtoG2PerG1;
-  //
-  G4double fTheTrueStepLenght;
-  G4double fTheZPathLenght;
-  //
-  G4ThreeVector fTheDisplacementVector;
-  G4ThreeVector fTheNewDirection;
-  //
-  G4bool fIsEndedUpOnBoundary;
-  G4bool fIsMultipleScattering;
-  G4bool fIsSingleScattering;
-  G4bool fIsNoScatteringInMSC;
-  G4bool fIsSimplified;
+    G4GoudsmitSaundersonTable* fGSTable;
+    G4GSPWACorrections* fPWACorrection;
+
+    G4bool fIsUsePWACorrection;
+    G4bool fIsUseMottCorrection;
+    G4bool fIsUseOptimisation;
+    //
+    G4double fLambda0;  // elastic mean free path
+    G4double fLambda1;  // first transport mean free path
+    G4double fScrA;  // screening parameter
+    G4double fG1;  // first transport coef.
+    // in case of Mott-correction
+    G4double fMCtoScrA;
+    G4double fMCtoQ1;
+    G4double fMCtoG2PerG1;
+    //
+    G4double fTheTrueStepLenght;
+    G4double fTheZPathLenght;
+    //
+    G4ThreeVector fTheDisplacementVector;
+    G4ThreeVector fTheNewDirection;
+    //
+    G4bool fIsEndedUpOnBoundary;
+    G4bool fIsMultipleScattering;
+    G4bool fIsSingleScattering;
+    G4bool fIsNoScatteringInMSC;
+    G4bool fIsSimplified;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-inline
-void G4GoudsmitSaundersonMscModel::SetParticle(const G4ParticleDefinition* p)
+inline void G4GoudsmitSaundersonMscModel::SetParticle(const G4ParticleDefinition* p)
 {
-  if (p != particle) {
+  if (p != particle)
+  {
     particle = p;
   }
 }

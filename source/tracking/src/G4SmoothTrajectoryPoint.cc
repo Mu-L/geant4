@@ -50,26 +50,34 @@ G4Allocator<G4SmoothTrajectoryPoint>*& aSmoothTrajectoryPointAllocator()
   return _instance;
 }
 
-G4SmoothTrajectoryPoint::G4SmoothTrajectoryPoint(G4ThreeVector pos) { fPosition = pos; }
+G4SmoothTrajectoryPoint::G4SmoothTrajectoryPoint(G4ThreeVector pos)
+{
+  fPosition = pos;
+}
 
-G4SmoothTrajectoryPoint::G4SmoothTrajectoryPoint(
-  G4ThreeVector pos, std::vector<G4ThreeVector>* auxiliaryPoints)
+G4SmoothTrajectoryPoint::G4SmoothTrajectoryPoint(G4ThreeVector pos,
+                                                 std::vector<G4ThreeVector>* auxiliaryPoints)
   : fPosition(pos), fAuxiliaryPointVector(auxiliaryPoints)
 {}
 
 G4SmoothTrajectoryPoint::G4SmoothTrajectoryPoint(const G4SmoothTrajectoryPoint& right)
   : G4VTrajectoryPoint(),
-    fPosition(right.fPosition), fAuxiliaryPointVector(right.fAuxiliaryPointVector)
+    fPosition(right.fPosition),
+    fAuxiliaryPointVector(right.fAuxiliaryPointVector)
 {}
 
-G4SmoothTrajectoryPoint::~G4SmoothTrajectoryPoint() { delete fAuxiliaryPointVector; }
+G4SmoothTrajectoryPoint::~G4SmoothTrajectoryPoint()
+{
+  delete fAuxiliaryPointVector;
+}
 
 const std::map<G4String, G4AttDef>* G4SmoothTrajectoryPoint::GetAttDefs() const
 {
   G4bool isNew;
   std::map<G4String, G4AttDef>* store =
     G4AttDefStore::GetInstance("G4SmoothTrajectoryPoint", isNew);
-  if (isNew) {
+  if (isNew)
+  {
     G4String Pos("Pos");
     (*store)[Pos] = G4AttDef(Pos, "Step Position", "Physics", "G4BestUnit", "G4ThreeVector");
     G4String Aux("Aux");
@@ -83,8 +91,10 @@ std::vector<G4AttValue>* G4SmoothTrajectoryPoint::CreateAttValues() const
 {
   auto values = new std::vector<G4AttValue>;
 
-  if (fAuxiliaryPointVector != nullptr) {
-    for (const auto& iAux : *fAuxiliaryPointVector) {
+  if (fAuxiliaryPointVector != nullptr)
+  {
+    for (const auto& iAux : *fAuxiliaryPointVector)
+    {
       values->push_back(G4AttValue("Aux", G4BestUnit(iAux, "Length"), ""));
     }
   }

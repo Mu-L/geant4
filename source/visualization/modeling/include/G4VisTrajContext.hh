@@ -32,118 +32,116 @@
 #include "G4Colour.hh"
 #include "G4Polymarker.hh"
 
-class G4VisTrajContext {
+class G4VisTrajContext
+{
+  public:
 
-public:
+    // Default configuration
+    G4VisTrajContext(const G4String& name = "Unspecified");
 
-  // Default configuration
-  G4VisTrajContext(const G4String& name = "Unspecified");
+    // Destructor
+    virtual ~G4VisTrajContext();
 
-  // Destructor
-  virtual ~G4VisTrajContext();
+    G4String Name() const;
 
-  G4String Name() const;
-  
-  void SetVisible(const G4bool& visible); 
+    void SetVisible(const G4bool& visible);
 
-  // Print configuration
-  void Print(std::ostream& ostr) const;
+    // Print configuration
+    void Print(std::ostream& ostr) const;
 
-  // Line
-  void SetLineColour(const G4Colour& colour);
-  G4Colour GetLineColour() const;
+    // Line
+    void SetLineColour(const G4Colour& colour);
+    G4Colour GetLineColour() const;
 
-  void SetLineWidth(const G4double& width);
-  G4double GetLineWidth() const;
+    void SetLineWidth(const G4double& width);
+    G4double GetLineWidth() const;
 
-  void SetDrawLine(const G4bool& draw); 
-  G4bool GetDrawLine() const;
+    void SetDrawLine(const G4bool& draw);
+    G4bool GetDrawLine() const;
 
-  void SetLineVisible(const G4bool& visible);
-  G4bool GetLineVisible() const;
+    void SetLineVisible(const G4bool& visible);
+    G4bool GetLineVisible() const;
 
-  // Auxiliary points
-  void SetDrawAuxPts(const G4bool& draw);
-  G4bool GetDrawAuxPts() const;
+    // Auxiliary points
+    void SetDrawAuxPts(const G4bool& draw);
+    G4bool GetDrawAuxPts() const;
 
-  void SetAuxPtsType(const G4Polymarker::MarkerType& marker);
-  G4Polymarker::MarkerType GetAuxPtsType() const;
+    void SetAuxPtsType(const G4Polymarker::MarkerType& marker);
+    G4Polymarker::MarkerType GetAuxPtsType() const;
 
-  void SetAuxPtsSize(const G4double& size);
-  G4double GetAuxPtsSize() const;
+    void SetAuxPtsSize(const G4double& size);
+    G4double GetAuxPtsSize() const;
 
-  void SetAuxPtsSizeType(const G4VMarker::SizeType& sizeType);
-  G4VMarker::SizeType GetAuxPtsSizeType() const;
+    void SetAuxPtsSizeType(const G4VMarker::SizeType& sizeType);
+    G4VMarker::SizeType GetAuxPtsSizeType() const;
 
-  void SetAuxPtsFillStyle(const G4VMarker::FillStyle& style);
-  G4VMarker::FillStyle GetAuxPtsFillStyle() const;
+    void SetAuxPtsFillStyle(const G4VMarker::FillStyle& style);
+    G4VMarker::FillStyle GetAuxPtsFillStyle() const;
 
-  void SetAuxPtsColour(const G4Colour& colour);
-  G4Colour GetAuxPtsColour() const;
+    void SetAuxPtsColour(const G4Colour& colour);
+    G4Colour GetAuxPtsColour() const;
 
-  void SetAuxPtsVisible(const G4bool& visible);
-  G4bool GetAuxPtsVisible() const;
+    void SetAuxPtsVisible(const G4bool& visible);
+    G4bool GetAuxPtsVisible() const;
 
-  // Step points
-  void SetDrawStepPts(const G4bool& draw);
-  G4bool GetDrawStepPts() const;
+    // Step points
+    void SetDrawStepPts(const G4bool& draw);
+    G4bool GetDrawStepPts() const;
 
-  void SetStepPtsType(const G4Polymarker::MarkerType& marker);
-  G4Polymarker::MarkerType GetStepPtsType() const;
+    void SetStepPtsType(const G4Polymarker::MarkerType& marker);
+    G4Polymarker::MarkerType GetStepPtsType() const;
 
-  void SetStepPtsSize(const G4double& size);
-  G4double GetStepPtsSize() const;
+    void SetStepPtsSize(const G4double& size);
+    G4double GetStepPtsSize() const;
 
-  void SetStepPtsSizeType(const G4VMarker::SizeType& sizeType);
-  G4VMarker::SizeType GetStepPtsSizeType() const;
+    void SetStepPtsSizeType(const G4VMarker::SizeType& sizeType);
+    G4VMarker::SizeType GetStepPtsSizeType() const;
 
-  void SetStepPtsFillStyle(const G4VMarker::FillStyle& style);
-  G4VMarker::FillStyle GetStepPtsFillStyle() const;
+    void SetStepPtsFillStyle(const G4VMarker::FillStyle& style);
+    G4VMarker::FillStyle GetStepPtsFillStyle() const;
 
-  void SetStepPtsColour(const G4Colour& colour);
-  G4Colour GetStepPtsColour() const;
+    void SetStepPtsColour(const G4Colour& colour);
+    G4Colour GetStepPtsColour() const;
 
-  void SetStepPtsVisible(const G4bool& visible);
-  G4bool GetStepPtsVisible() const;
+    void SetStepPtsVisible(const G4bool& visible);
+    G4bool GetStepPtsVisible() const;
 
-  void SetTimeSliceInterval(const G4double& interval);
-  G4double GetTimeSliceInterval() const;
+    void SetTimeSliceInterval(const G4double& interval);
+    G4double GetTimeSliceInterval() const;
 
-private:
-  
-  // Data members
-  G4String fName;
+  private:
 
-  // Line data
-  G4double fLineWidth;
-  G4Colour fLineColour;
-  G4bool fLineVisible;
-  G4bool fDrawLine;
+    // Data members
+    G4String fName;
 
-  // Auxiliary point data
-  G4bool fDrawAuxPts;
-  G4Polymarker::MarkerType fAuxPtsType;
-  G4double fAuxPtsSize;
-  G4VMarker::SizeType fAuxPtsSizeType;
-  G4VMarker::FillStyle fAuxPtsFillStyle;
-  G4Colour fAuxPtsColour;
-  G4bool fAuxPtsVisible;
+    // Line data
+    G4double fLineWidth;
+    G4Colour fLineColour;
+    G4bool fLineVisible;
+    G4bool fDrawLine;
 
-  // Step point data
-  G4bool fDrawStepPts;
-  G4Polymarker::MarkerType fStepPtsType;
-  G4double fStepPtsSize;
-  G4VMarker::SizeType fStepPtsSizeType;
-  G4VMarker::FillStyle fStepPtsFillStyle;
-  G4Colour fStepPtsColour;
-  G4bool fStepPtsVisible;
+    // Auxiliary point data
+    G4bool fDrawAuxPts;
+    G4Polymarker::MarkerType fAuxPtsType;
+    G4double fAuxPtsSize;
+    G4VMarker::SizeType fAuxPtsSizeType;
+    G4VMarker::FillStyle fAuxPtsFillStyle;
+    G4Colour fAuxPtsColour;
+    G4bool fAuxPtsVisible;
 
-  // Time slicing
-  G4double fTimeSliceInterval;
+    // Step point data
+    G4bool fDrawStepPts;
+    G4Polymarker::MarkerType fStepPtsType;
+    G4double fStepPtsSize;
+    G4VMarker::SizeType fStepPtsSizeType;
+    G4VMarker::FillStyle fStepPtsFillStyle;
+    G4Colour fStepPtsColour;
+    G4bool fStepPtsVisible;
 
+    // Time slicing
+    G4double fTimeSliceInterval;
 };
 
 #include "G4VisTrajContext.icc"
 
 #endif
-

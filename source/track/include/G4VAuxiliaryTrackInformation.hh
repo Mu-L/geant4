@@ -46,8 +46,8 @@
 
 // Author: Makoto Asai, 3 June 2005
 // --------------------------------------------------------------------
-#ifndef G4VAuxiliaryTrackInformation_hh
-#define G4VAuxiliaryTrackInformation_hh 1
+#ifndef G4VAUXILIARYTRACKINFORMATION_HH
+#define G4VAUXILIARYTRACKINFORMATION_HH
 
 #include "globals.hh"
 
@@ -59,6 +59,11 @@ class G4VAuxiliaryTrackInformation
     virtual ~G4VAuxiliaryTrackInformation();
 
     virtual void Print() const;
+
+    // Instantiate cloned object
+    // This method must be implemented in the concrete class
+    // if AuxiliaryTrackInformation is used in sub-event parallel mode
+    virtual G4VAuxiliaryTrackInformation* Clone() const;
 };
 
 #endif

@@ -27,25 +27,26 @@
 //
 // Class description:
 //
-// This class is a helper for physics processes which require 
+// This class is a helper for physics processes which require
 // knowledge of the safety, and the step size for the 'mass' geometry.
 
 // Author: John Apostolakis (CERN), 5 July 2006
 // --------------------------------------------------------------------
 #ifndef G4SAFETYHELPER_HH
-#define G4SAFETYHELPER_HH 1
+#define G4SAFETYHELPER_HH
+
+#include "G4Navigator.hh"
+#include "G4ThreeVector.hh"
+#include "G4Types.hh"
 
 #include <vector>
-
-#include "G4Types.hh"
-#include "G4ThreeVector.hh"
-#include "G4Navigator.hh"
 
 class G4PathFinder;
 
 /**
- * @brief G4SafetyHelper is a helper class for physics processes which require 
+ * @brief G4SafetyHelper is a helper class for physics processes which require
  * knowledge of the safety, and the step size for the 'mass' geometry.
+ * @ingroup geometry_navigation
  */
 
 class G4SafetyHelper
@@ -55,8 +56,8 @@ class G4SafetyHelper
     /**
      * Constructor and default Destructor.
      */
-    G4SafetyHelper(); 
-   ~G4SafetyHelper() = default;
+    G4SafetyHelper();
+    ~G4SafetyHelper() = default;
 
     /**
      * Computes the distance in the mass geometry.
@@ -66,10 +67,8 @@ class G4SafetyHelper
      *  @param[in,out] newSafety New safety.
      *  @returns The linear step for mass geometry.
      */
-    G4double CheckNextStep( const G4ThreeVector& position, 
-                            const G4ThreeVector& direction,
-                            const G4double currentMaxStep,
-                                  G4double& newSafety );
+    G4double CheckNextStep(const G4ThreeVector& position, const G4ThreeVector& direction,
+                           const G4double currentMaxStep, G4double& newSafety);
 
     /**
      * Computes the safety distance for all geometries.
@@ -79,22 +78,20 @@ class G4SafetyHelper
      *             cost. If not provided, the real isotropic safety is computed.
      *  @returns The safety distance for all geometries.
      */
-    G4double ComputeSafety( const G4ThreeVector& pGlobalPoint,
-                            G4double maxRadius = DBL_MAX );
+    G4double ComputeSafety(const G4ThreeVector& pGlobalPoint, G4double maxRadius = DBL_MAX);
 
     /**
      * Locates the point for all geometries.
      *  @param[in] pGlobalPoint Point in global coordinates.
      *  @param[in] direction Direction.
      */
-    void Locate(const G4ThreeVector& pGlobalPoint,
-                const G4ThreeVector& direction);
+    void Locate(const G4ThreeVector& pGlobalPoint, const G4ThreeVector& direction);
 
     /**
      * Relocates the point in the volume of interest.
      *  @param[in] pGlobalPoint Point in global coordinates.
      */
-    void ReLocateWithinVolume(const G4ThreeVector& pGlobalPoint );
+    void ReLocateWithinVolume(const G4ThreeVector& pGlobalPoint);
 
     /**
      * Enables navigation in parallel geometries.
@@ -113,7 +110,7 @@ class G4SafetyHelper
      *  @param[in] lev The new verbosity level to enable.
      *  @returns The old verbosity level.
      */
-    inline G4int SetVerboseLevel( G4int lev );
+    inline G4int SetVerboseLevel(G4int lev);
 
     /**
      * Retrieves the world volume of the mass geometry.
@@ -140,13 +137,13 @@ class G4SafetyHelper
 
     /** Flag whether to use PathFinder or single (mass) navigator directly.
         By default, one geometry only. */
-    G4bool fUseParallelGeometries = false; 
+    G4bool fUseParallelGeometries = false;
 
     /** Flag of first call. */
     G4bool fFirstCall = true;
 
     /** Whether to print warning in case of move outside safety. */
-    G4int fVerbose = 0; 
+    G4int fVerbose = 0;
 
     // State used during tracking -- for optimisation -------------------------
 

@@ -35,80 +35,78 @@
 //
 // Creation date: 12.08.2004
 //
-// Modifications: 14 July 2014 N. Chikuma revised interfaces  
+// Modifications: 14 July 2014 N. Chikuma revised interfaces
 //
 
 //
 // Class Description: base class to compute partial cross sections
-//                    of e+e- annihilation into hadrons and 
+//                    of e+e- annihilation into hadrons and
 //                    sample of final state in the centre mass frame
 
 // -------------------------------------------------------------------
 //
-#ifndef G4Vee2hadrons_h
-#define G4Vee2hadrons_h 1
+#ifndef G4VEE2HADRONS_HH
+#define G4VEE2HADRONS_HH
 
-#include <vector>
-#include <CLHEP/Units/SystemOfUnits.h>
-
-#include "globals.hh"
+#include "G4PhysicsLinearVector.hh"
 #include "G4ThreeVector.hh"
 #include "G4eeCrossSections.hh"
-#include "G4PhysicsLinearVector.hh"
+#include "globals.hh"
+
+#include <CLHEP/Units/SystemOfUnits.h>
+
+#include <vector>
 
 class G4DynamicParticle;
 class G4PhysicsVector;
 
-class G4Vee2hadrons 
+class G4Vee2hadrons
 {
+  public:
 
-public:
+    explicit G4Vee2hadrons(G4eeCrossSections* cr, G4double vlowEnergy, G4double vhighEnergy,
+                           G4double vdelta)
+      : cross(cr)
+    {
+      lowEnergy = vlowEnergy;
+      highEnergy = vhighEnergy;
+      delta = vdelta;
+    };
 
-  explicit G4Vee2hadrons(G4eeCrossSections* cr,
-		G4double vlowEnergy,
-		G4double vhighEnergy,
-		G4double vdelta) : cross(cr)
-  {
-    lowEnergy  = vlowEnergy;
-    highEnergy = vhighEnergy;
-    delta      = vdelta;
-  };
+    virtual ~G4Vee2hadrons() {};
 
-  virtual ~G4Vee2hadrons() {};
+    virtual G4double PeakEnergy() const = 0;
 
-  virtual G4double PeakEnergy() const = 0;
+    virtual G4double ComputeCrossSection(G4double) const = 0;
 
-  virtual G4double ComputeCrossSection(G4double) const = 0;
+    G4PhysicsVector* PhysicsVector() const
+    {
+      G4int nbins = std::max(3, G4int((highEnergy - lowEnergy) / delta));
+      G4PhysicsVector* pp = new G4PhysicsLinearVector(lowEnergy, highEnergy, nbins);
+      return pp;
+    };
 
-  G4PhysicsVector* PhysicsVector() const
-  {
-    G4int nbins = std::max(3, G4int((highEnergy - lowEnergy)/delta) );
-    G4PhysicsVector* pp = new G4PhysicsLinearVector(lowEnergy,highEnergy,nbins);
-    return pp;
-  };
+    virtual void SampleSecondaries(std::vector<G4DynamicParticle*>*, G4double,
+                                   const G4ThreeVector&) = 0;
 
-  virtual void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-				 G4double, const G4ThreeVector&) = 0;
+    G4double LowEnergy() const { return lowEnergy; };
 
-  G4double LowEnergy() const {return lowEnergy;};
+    G4double HighEnergy() const { return highEnergy; };
 
-  G4double HighEnergy() const {return highEnergy;};
-  
-  // hide assignment operator
-  G4Vee2hadrons & operator=(const  G4Vee2hadrons &right) = delete;
-  G4Vee2hadrons(const  G4Vee2hadrons&) = delete;
+    // hide assignment operator
+    G4Vee2hadrons& operator=(const G4Vee2hadrons& right) = delete;
+    G4Vee2hadrons(const G4Vee2hadrons&) = delete;
 
-private:
+  private:
 
-  // parameters of the table
-  G4double lowEnergy;
-  G4double highEnergy;
-  G4double delta;       
+    // parameters of the table
+    G4double lowEnergy;
+    G4double highEnergy;
+    G4double delta;
 
-protected:
+  protected:
 
-   G4eeCrossSections* cross;  // class to compute cross section
-
+    G4eeCrossSections* cross;  // class to compute cross section
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

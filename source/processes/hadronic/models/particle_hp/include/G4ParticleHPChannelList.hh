@@ -31,8 +31,8 @@
 // V. Ivanchenko, July-2023 Basic revision of particle HP classes
 //
 
-#ifndef G4ParticleHPChannelList_h
-#define G4ParticleHPChannelList_h 1
+#ifndef G4PARTICLEHPCHANNELLIST_HH
+#define G4PARTICLEHPCHANNELLIST_HH
 
 #include "G4ParticleHPChannel.hh"
 #include "globals.hh"
@@ -46,39 +46,42 @@ class G4ParticleDefinition;
 class G4ParticleHPChannelList
 {
   public:
+
     G4ParticleHPChannelList(G4int n = 0, G4ParticleDefinition* p = nullptr);
 
     void Init(G4int n);
 
     ~G4ParticleHPChannelList();
 
-    G4HadFinalState* ApplyYourself(const G4Element* theElement,
-                                   const G4HadProjectile& aTrack);
+    G4HadFinalState* ApplyYourself(const G4Element* theElement, const G4HadProjectile& aTrack);
 
     // method added by M.Zmeskal 02/2024 - to be used in G4ParticleHPInelasticURR
-    G4HadFinalState * ApplyYourself(G4int, G4int, G4int, const G4HadProjectile & aTrack);
+    G4HadFinalState* ApplyYourself(G4int, G4int, G4int, const G4HadProjectile& aTrack);
 
-    void Init(G4Element* anElement, const G4String& dirName,
-              G4ParticleDefinition* projectile);
+    void Init(G4Element* anElement, const G4String& dirName, G4ParticleDefinition* projectile);
 
     void Register(G4ParticleHPFinalState* theFS, const G4String& aName);
 
     G4double GetXsec(G4double anEnergy)
     {
       G4double result = 0.0;
-      for (G4int i = 0; i < nChannels; ++i) {
+      for (G4int i = 0; i < nChannels; ++i)
+      {
         result += std::max(0., theChannels[i]->GetXsec(anEnergy));
       }
       return result;
     }
 
     // method added by M.Zmeskal 02/2024 - to be used in G4ParticleHPIsoProbabilityTable
-    inline G4double GetWeightedXsec( G4double anEnergy, G4int isotopeJ ) {
+    inline G4double GetWeightedXsec(G4double anEnergy, G4int isotopeJ)
+    {
       G4double result = 0.0;
       G4int i;
-      for ( i = 0; i < nChannels; i++ ) {
-        if ( theChannels[i]->HasAnyData( isotopeJ ) ) {
-          result += std::max( 0.0, theChannels[i]->GetWeightedXsec( anEnergy, isotopeJ ) );
+      for (i = 0; i < nChannels; i++)
+      {
+        if (theChannels[i]->HasAnyData(isotopeJ))
+        {
+          result += std::max(0.0, theChannels[i]->GetWeightedXsec(anEnergy, isotopeJ));
         }
       }
       return result;
@@ -89,23 +92,24 @@ class G4ParticleHPChannelList
     G4bool HasDataInAnyFinalState()
     {
       G4bool result = false;
-      for (G4int i = 0; i < nChannels; ++i) {
+      for (G4int i = 0; i < nChannels; ++i)
+      {
         if (theChannels[i]->HasDataInAnyFinalState())
-	{
+        {
           result = true;
-	  break;
-	}
+          break;
+        }
       }
       return result;
     }
 
     void DumpInfo();
 
-    G4ParticleHPChannelList(G4ParticleHPChannelList &) = delete;
-    G4ParticleHPChannelList & operator=
-    (const G4ParticleHPChannelList &right) = delete;
+    G4ParticleHPChannelList(G4ParticleHPChannelList&) = delete;
+    G4ParticleHPChannelList& operator=(const G4ParticleHPChannelList& right) = delete;
 
   private:
+
     G4ParticleHPChannel** theChannels;
     G4ParticleDefinition* theProjectile;
     G4Element* theElement{nullptr};

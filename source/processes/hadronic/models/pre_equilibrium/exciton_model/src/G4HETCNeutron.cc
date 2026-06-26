@@ -27,27 +27,26 @@
 // by V. Lara
 //
 // Modified:
-// 23.08.2010 V.Ivanchenko general cleanup, move constructor and destructor 
+// 23.08.2010 V.Ivanchenko general cleanup, move constructor and destructor
 //            the source, use G4Pow
 
 #include "G4HETCNeutron.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
+
 #include "G4Neutron.hh"
 #include "G4NuclearLevelData.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
 
-G4HETCNeutron::G4HETCNeutron() 
-  : G4HETCFragment(G4Neutron::Neutron())
-{}
+G4HETCNeutron::G4HETCNeutron() : G4HETCFragment(G4Neutron::Neutron()) {}
 
 G4double G4HETCNeutron::GetAlpha() const
 {
-  return 0.76+2.2/theResA13;
+  return 0.76 + 2.2 / theResA13;
 }
-  
+
 G4double G4HETCNeutron::GetBeta() const
 {
-  return (2.12/(theResA13*theResA13)-0.05)/GetAlpha(); // in MeV
+  return (2.12 / (theResA13 * theResA13) - 0.05) / GetAlpha();  // in MeV
 }
 
 G4double G4HETCNeutron::GetSpinFactor() const
@@ -55,20 +54,20 @@ G4double G4HETCNeutron::GetSpinFactor() const
   // (2s+1)
   return 2.0;
 }
-  
+
 G4double G4HETCNeutron::K(const G4Fragment& aFragment) const
 {
   // Number of protons in emitted fragment
   G4int Pa = theZ;
-  // Number of neutrons in emitted fragment 
+  // Number of neutrons in emitted fragment
   G4int Na = theA - Pa;
 
-  G4double r = G4double(theResZ)/G4double(theResA);
-  
+  G4double r = G4double(theResZ) / G4double(theResA);
+
   G4int P = aFragment.GetNumberOfParticles();
   G4int H = aFragment.GetNumberOfHoles();
-  
-  G4double result = (P > 0) ? (H + Na/(1.0 - r))/P : 0.0;
+
+  G4double result = (P > 0) ? (H + Na / (1.0 - r)) / P : 0.0;
   return result;
 }
 
@@ -78,14 +77,13 @@ G4double G4HETCNeutron::SampleKineticEnergy(const G4Fragment& frag)
   G4int Pb = frag.GetNumberOfParticles();
   G4int Nb = Pb + H;
   G4double U = frag.GetExcitationEnergy();
-  G4double g0 = 
-    (6.0/CLHEP::pi2)*fNucData->GetLevelDensity(theFragZ,theFragA,U);
-  
-  G4double Ab = std::max(0.0, (G4double)(Pb*Pb+H*H+Pb-3*H)/(4.0*g0));
+  G4double g0 = (6.0 / CLHEP::pi2) * fNucData->GetLevelDensity(theFragZ, theFragA, U);
+
+  G4double Ab = std::max(0.0, (G4double)(Pb * Pb + H * H + Pb - 3 * H) / (4.0 * g0));
   G4double Emax = theMaxKinEnergy - Ab;
-  
-  G4double cut = GetBeta() / (GetBeta()+Emax/G4double(Nb+1));
-  G4double x = (G4UniformRand() <= cut) ? BetaRand(Nb,1) : BetaRand(Nb,2);
+
+  G4double cut = GetBeta() / (GetBeta() + Emax / G4double(Nb + 1));
+  G4double x = (G4UniformRand() <= cut) ? BetaRand(Nb, 1) : BetaRand(Nb, 2);
 
   return Emax * (1.0 - x);
 }

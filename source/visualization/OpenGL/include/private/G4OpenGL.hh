@@ -26,56 +26,55 @@
 //
 // G.Barrand.
 
+#ifndef G4OpenGL_h
+#define G4OpenGL_h
 
- #ifndef G4OpenGL_h
- #define G4OpenGL_h 
-
- #ifdef WIN32
- #include <windows.h>
- #undef min
- #undef max
- #endif
-
-
- #if defined (G4VIS_BUILD_OPENGLX_DRIVER) || defined (G4VIS_USE_OPENGLX)
-   #if defined (G4VIS_BUILD_OPENGLQT_DRIVER) || defined (G4VIS_USE_OPENGLQT)
-     #ifdef __MACH__
-       #include <OpenGL/gl.h>
-     #else
-       #include <GL/gl.h>
-     #endif
-   #else
-     #include <GL/gl.h>
-   #endif
- #endif
-
- #if defined (G4VIS_BUILD_OPENGLXM_DRIVER) || defined (G4VIS_USE_OPENGLXM)
-   #if defined (G4VIS_BUILD_OPENGLQT_DRIVER) || defined (G4VIS_USE_OPENGLQT)
-     #ifdef __MACH__
-       #include <OpenGL/gl.h>
-     #else
-       #include <GL/gl.h>
-     #endif
-   #else
-     #include <GL/gl.h>
-   #endif
+#ifdef WIN32
+#  include <windows.h>
+#  undef min
+#  undef max
+#  undef pascal
 #endif
 
- #if defined (G4VIS_BUILD_OPENGLWIN32_DRIVER) || defined (G4VIS_USE_OPENGLWIN32)
- #    include <GL/gl.h>
- #endif
-//# Do NOT include glx Here ! It has to be done, after all <Qxx...> includes
-//#  include <GL/glx.h>
+#if defined(G4VIS_BUILD_OPENGLX_DRIVER) || defined(G4VIS_USE_OPENGLX)
+#  if defined(G4VIS_BUILD_OPENGLQT_DRIVER) || defined(G4VIS_USE_OPENGLQT)
+#    ifdef __MACH__
+#      include <OpenGL/gl.h>
+#    else
+#      include <GL/gl.h>
+#    endif
+#  else
+#    include <GL/gl.h>
+#  endif
+#endif
 
- #if defined (G4VIS_BUILD_OPENGLQT_DRIVER) || defined (G4VIS_USE_OPENGLQT)
-   #if defined (G4VIS_BUILD_OPENGLX_DRIVER) || defined (G4VIS_USE_OPENGLX)
-   #else
-    #ifdef __MACH__
-      #include <OpenGL/gl.h>
-    #else
-      #include <GL/gl.h>
-    #endif
-  #endif
+#if defined(G4VIS_BUILD_OPENGLXM_DRIVER) || defined(G4VIS_USE_OPENGLXM)
+#  if defined(G4VIS_BUILD_OPENGLQT_DRIVER) || defined(G4VIS_USE_OPENGLQT)
+#    ifdef __MACH__
+#      include <OpenGL/gl.h>
+#    else
+#      include <GL/gl.h>
+#    endif
+#  else
+#    include <GL/gl.h>
+#  endif
+#endif
+
+#if defined(G4VIS_BUILD_OPENGLWIN32_DRIVER) || defined(G4VIS_USE_OPENGLWIN32)
+#  include <GL/gl.h>
+#endif
+// # Do NOT include glx Here ! It has to be done, after all <Qxx...> includes
+// #  include <GL/glx.h>
+
+#if defined(G4VIS_BUILD_OPENGLQT_DRIVER) || defined(G4VIS_USE_OPENGLQT)
+#  if defined(G4VIS_BUILD_OPENGLX_DRIVER) || defined(G4VIS_USE_OPENGLX)
+#  else
+#    ifdef __MACH__
+#      include <OpenGL/gl.h>
+#    else
+#      include <GL/gl.h>
+#    endif
+#  endif
 #endif
 
 #define G4OPENGL_FLT_BIG 1.e20

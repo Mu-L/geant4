@@ -25,8 +25,8 @@
 //
 //
 //
-// 
-//Base class for all Motif component widgets
+//
+// Base class for all Motif component widgets
 
 #ifndef G4OPENGLXMVWIDGETCOMPONENT_HH
 #define G4OPENGLXMVWIDGETCOMPONENT_HH
@@ -37,18 +37,17 @@ class G4OpenGLXmVWidgetContainer;
 
 class G4OpenGLXmVWidgetComponent : public G4OpenGLXmVWidgetObject
 {
+  public:
 
-public:
-  G4OpenGLXmVWidgetComponent();           //constructor
-  virtual ~G4OpenGLXmVWidgetComponent();  //destructor
+    G4OpenGLXmVWidgetComponent();  // constructor
+    virtual ~G4OpenGLXmVWidgetComponent();  // destructor
 
-  virtual void AddYourselfTo (G4OpenGLXmVWidgetContainer*) = 0;
+    virtual void AddYourselfTo(G4OpenGLXmVWidgetContainer*) = 0;
 
-  virtual Widget* GetPointerToParent () = 0;
-  virtual Widget* GetPointerToWidget () = 0;
+    virtual Widget* GetPointerToParent() = 0;
+    virtual Widget* GetPointerToWidget() = 0;
 
-private:
-  
+  private:
 };
 
 #endif

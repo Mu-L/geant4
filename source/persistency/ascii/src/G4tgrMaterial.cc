@@ -29,36 +29,31 @@
 // --------------------------------------------------------------------
 
 #include "G4tgrMaterial.hh"
+
 #include "G4PhysicalConstants.hh"
 
 // --------------------------------------------------------------------
-G4tgrMaterial::G4tgrMaterial()
-  : theTemperature(NTP_Temperature)
-  , thePressure(STP_Pressure)
-{
-}
+G4tgrMaterial::G4tgrMaterial() : theTemperature(NTP_Temperature), thePressure(STP_Pressure) {}
 
 // --------------------------------------------------------------------
-G4tgrMaterial::~G4tgrMaterial()
-{
-}
+G4tgrMaterial::~G4tgrMaterial() {}
 
 // --------------------------------------------------------------------
 void G4tgrMaterial::SetState(const G4String& val)
 {
-  if(val == "Undefined")
+  if (val == "Undefined")
   {
     theState = kStateUndefined;
   }
-  else if(val == "Solid")
+  else if (val == "Solid")
   {
     theState = kStateSolid;
   }
-  else if(val == "Liquid")
+  else if (val == "Liquid")
   {
     theState = kStateLiquid;
   }
-  else if(val == "Gas")
+  else if (val == "Gas")
   {
     theState = kStateGas;
   }

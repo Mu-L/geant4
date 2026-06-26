@@ -32,7 +32,7 @@
 //
 // History
 //   October 18th, 2021 : first implementation
-//
+//          March 28th, 2026: Modified by Ilker Parmaksiz for latest Opticks
 // ********************************************************************
 //
 /// \file RadiatorSD.cc
@@ -42,27 +42,28 @@
 #include "G4Step.hh"
 #include "G4Track.hh"
 #ifdef WITH_G4OPTICKS
-#  include "G4ThreeVector.hh"
-#  include "G4ios.hh"
-#  include "G4UnitsTable.hh"
-#  include "G4SystemOfUnits.hh"
-#  include "G4VProcess.hh"
-#  include "G4VRestDiscreteProcess.hh"
-#  include "G4SDManager.hh"
-#  include "G4HCofThisEvent.hh"
-#  include "G4Opticks.hh"
-#  include "TrackInfo.hh"
-#  include "OpticksGenstep.h"
-#  include "OpticksFlags.hh"
-#  include "G4OpticksHit.hh"
-#  include "G4EventManager.hh"
-#  include "G4Event.hh"
-#  include "G4RunManager.hh"
-#  include "G4Version.hh"
-#  include "PhotonSD.hh"
-#  include "G4Cerenkov.hh"
-#  include "G4Scintillation.hh"
-#  include <string>
+#include "G4ThreeVector.hh"
+#include "G4ios.hh"
+#include "G4UnitsTable.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4VProcess.hh"
+#include "G4VRestDiscreteProcess.hh"
+#include "G4SDManager.hh"
+#include "G4HCofThisEvent.hh"
+#include "G4CXOpticks.hh"
+#include "TrackInfo.hh"
+#include "OpticksGenstep.h"
+#include "Opticks/OpticksHitHandler.hh"
+#include "G4EventManager.hh"
+#include "G4Event.hh"
+#include "G4RunManager.hh"
+#include "G4Version.hh"
+#include "PhotonSD.hh"
+#include "G4Cerenkov.hh"
+#include "G4Scintillation.hh"
+#include "U4.hh"
+#include "G4CXOpticks.hh"
+#include <string>
 #endif
 // project headers
 #include "RadiatorSD.hh"
@@ -215,29 +216,26 @@ G4bool RadiatorSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
     //
     if(Sphotons > 0)
     {
-      G4double ScintillationRiseTime = 0.0;
-      G4Opticks::Get()->collectGenstep_G4Scintillation_1042(
-        aTrack, aStep, Sphotons, scntId, ScintillationTime,
-        ScintillationRiseTime);
+      U4::CollectGenstep_DsG4Scintillation_r4695(
+        aTrack, aStep, Sphotons, scntId, ScintillationTime);
     }
     //
     // harvest the Cerenkov photon gensteps:
     //
     if(Cphotons > 0)
     {
-      G4Opticks::Get()->collectGenstep_G4Cerenkov_1042(
+      U4::CollectGenstep_G4Cerenkov_modified(
         aTrack, aStep, Cphotons, BetaInverse, Pmin, Pmax, maxCos, maxSin2,
         MeanNumberOfPhotons1, MeanNumberOfPhotons2);
     }
-    G4Opticks* g4ok      = G4Opticks::Get();
+    G4CXOpticks* g4cx      = G4CXOpticks::Get();
     G4RunManager* rm     = G4RunManager::GetRunManager();
     const G4Event* event = rm->GetCurrentEvent();
     G4int eventid        = event->GetEventID();
-    G4OpticksHit hit;
-    unsigned num_photons = g4ok->getNumPhotons();
+    unsigned num_photons = SEvt::GetNumPhotonCollected(0);
     if(num_photons > ConfigurationManager::getInstance()->getMaxPhotons())
     {
-      g4ok->propagateOpticalPhotons(eventid);
+      g4cx->simulate(eventid,false);
       G4HCtable* hctable = G4SDManager::GetSDMpointer()->GetHCtable();
       for(G4int i = 0; i < hctable->entries(); ++i)
       {
@@ -251,7 +249,7 @@ G4bool RadiatorSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
           aSD->AddOpticksHits();
         }
       }
-      g4ok->reset();
+      g4cx->reset(eventid);
     }
   }
 #endif

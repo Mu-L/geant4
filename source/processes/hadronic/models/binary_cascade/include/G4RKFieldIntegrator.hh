@@ -23,66 +23,86 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4RKFieldIntegrator_h
-#define G4RKFieldIntegrator_h 1
+#ifndef G4RKFIELDINTEGRATOR_HH
+#define G4RKFIELDINTEGRATOR_HH
 
 #include "G4FieldPropagation.hh"
 
-class G4RKFieldIntegrator : public G4FieldPropagation  
+class G4RKFieldIntegrator : public G4FieldPropagation
 {
-public:
-   G4RKFieldIntegrator() {}
-   G4RKFieldIntegrator(const G4RKFieldIntegrator &):G4FieldPropagation() {}
+  public:
 
-   ~G4RKFieldIntegrator() {}
+    G4RKFieldIntegrator() {}
+    G4RKFieldIntegrator(const G4RKFieldIntegrator&) : G4FieldPropagation() {}
 
-   //Operators
-   const G4RKFieldIntegrator & operator=(const G4RKFieldIntegrator &) {return *this;}
-   
-   G4bool operator==(const G4RKFieldIntegrator &) const {return 1;}
-   G4bool operator!=(const G4RKFieldIntegrator &) const {return 1;}
+    ~G4RKFieldIntegrator() {}
 
-   // only theActive are propagated, nothing else
-   // only theSpectators define the field, nothing else
-   void Transport(G4KineticTrackVector &theActive, const G4KineticTrackVector &theSpectators, G4double theTimeStep);
-   G4double GetExcitationEnergy(G4int nHitNucleons, const G4KineticTrackVector &theParticles);
+    // Operators
+    const G4RKFieldIntegrator& operator=(const G4RKFieldIntegrator&) { return *this; }
 
-   // methods for calculating potentials for different types of particles
-   void Init(G4int z, G4int a) {theZ = z;  theA = a;} // prepare potentials' functions
-   
-   // aPosition is relative to the nucleus center
-   G4double GetNeutronPotential(G4double radius);
-   G4double GetNeutronPotential(G4ThreeVector &aPosition) {return GetNeutronPotential(aPosition.mag());}
-   
-   G4double GetProtonPotential(G4double radius);
-   G4double GetProtonPotential(G4ThreeVector &aPosition)  {return GetProtonPotential(aPosition.mag());}
-   
-   G4double GetAntiprotonPotential(G4double radius);
-   G4double GetAntiprotonPotential(G4ThreeVector &aPosition) {return GetAntiprotonPotential(aPosition.mag());};
+    G4bool operator==(const G4RKFieldIntegrator&) const { return 1; }
+    G4bool operator!=(const G4RKFieldIntegrator&) const { return 1; }
 
-   G4double GetKaonPotential(G4double radius);
-   G4double GetKaonPotential(G4ThreeVector &aPosition) {return GetKaonPotential(aPosition.mag());}
-   
-   G4double GetPionPotential(G4double radius);
-   G4double GetPionPotential(G4ThreeVector &aPosition) {return GetPionPotential(aPosition.mag());}
-      
-private:
-   void Integrate(const G4KineticTrackVector & theActive, G4double theTimeStep);
-   G4double CalculateTotalEnergy(const G4KineticTrackVector& Barions);
-   G4double Erf(G4double X);
+    // only theActive are propagated, nothing else
+    // only theSpectators define the field, nothing else
+    void Transport(G4KineticTrackVector& theActive, const G4KineticTrackVector& theSpectators,
+                   G4double theTimeStep);
+    G4double GetExcitationEnergy(G4int nHitNucleons, const G4KineticTrackVector& theParticles);
 
-  // parameters to calculate potentials
-  G4int theA;
-  G4int theZ;
-  
-  // Vc(A, Z) = 1.44 * Z /(r0*(1 + std::pow(A, 1/3))) 
-  //          = colomb * Z / (1 + std::pow(A, 1/3))
-  static const G4double coulomb;       // coulomb barier constant
-  static const G4double a_kaon;        // kaon's potential constant
-  static const G4double a_pion;        // pion's potential constant
-  static const G4double a_antiproton;  // antiproton's potential constant
+    // methods for calculating potentials for different types of particles
+    void Init(G4int z, G4int a)
+    {
+      theZ = z;
+      theA = a;
+    }  // prepare potentials' functions
+
+    // aPosition is relative to the nucleus center
+    G4double GetNeutronPotential(G4double radius);
+    G4double GetNeutronPotential(G4ThreeVector& aPosition)
+    {
+      return GetNeutronPotential(aPosition.mag());
+    }
+
+    G4double GetProtonPotential(G4double radius);
+    G4double GetProtonPotential(G4ThreeVector& aPosition)
+    {
+      return GetProtonPotential(aPosition.mag());
+    }
+
+    G4double GetAntiprotonPotential(G4double radius);
+    G4double GetAntiprotonPotential(G4ThreeVector& aPosition)
+    {
+      return GetAntiprotonPotential(aPosition.mag());
+    };
+
+    G4double GetKaonPotential(G4double radius);
+    G4double GetKaonPotential(G4ThreeVector& aPosition)
+    {
+      return GetKaonPotential(aPosition.mag());
+    }
+
+    G4double GetPionPotential(G4double radius);
+    G4double GetPionPotential(G4ThreeVector& aPosition)
+    {
+      return GetPionPotential(aPosition.mag());
+    }
+
+  private:
+
+    void Integrate(const G4KineticTrackVector& theActive, G4double theTimeStep);
+    G4double CalculateTotalEnergy(const G4KineticTrackVector& Barions);
+    G4double Erf(G4double X);
+
+    // parameters to calculate potentials
+    G4int theA;
+    G4int theZ;
+
+    // Vc(A, Z) = 1.44 * Z /(r0*(1 + std::pow(A, 1/3)))
+    //          = colomb * Z / (1 + std::pow(A, 1/3))
+    static const G4double coulomb;  // coulomb barier constant
+    static const G4double a_kaon;  // kaon's potential constant
+    static const G4double a_pion;  // pion's potential constant
+    static const G4double a_antiproton;  // antiproton's potential constant
 };
 
-#endif // G4RKFieldIntegrator_h
-
-
+#endif  // G4RKFieldIntegrator_h

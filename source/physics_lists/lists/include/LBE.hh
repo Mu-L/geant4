@@ -43,78 +43,78 @@
 // PhysicsList header
 // --------------------------------------------------------------
 
-#ifndef LBE_h
-#define LBE_h 1
+#ifndef LBE_HH
+#define LBE_HH
 
-#include "globals.hh"
-#include "G4VUserPhysicsList.hh"
 #include "G4VModularPhysicsList.hh"
+#include "G4VUserPhysicsList.hh"
+#include "globals.hh"
 
-class G4StoppingPhysics;	// This builder encapsulate stopping processes
+class G4StoppingPhysics;  // This builder encapsulate stopping processes
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-
-class LBE: public G4VModularPhysicsList
+class LBE : public G4VModularPhysicsList
 {
-public:
-  LBE(G4int ver = 1);
-  virtual ~LBE();
+  public:
 
-  //delete copy constructor and assignment operator
-  LBE(const LBE &)=delete;
-  LBE& operator=(const LBE &right)=delete;
+    LBE(G4int ver = 1);
+    virtual ~LBE();
 
-public:
-  virtual void SetCuts();
+    // delete copy constructor and assignment operator
+    LBE(const LBE&) = delete;
+    LBE& operator=(const LBE& right) = delete;
 
+  public:
 
-protected:
-  // Construct particle and physics
-  virtual void ConstructParticle();
-  virtual void ConstructProcess();
-    
-  // these methods Construct physics processes and register them
-  virtual void ConstructGeneral();
-  virtual void ConstructEM();
-  virtual void ConstructHad();
-  virtual void ConstructOp();
+    virtual void SetCuts();
 
+  protected:
 
-  /*
-  // these methods Construct all particles in each category
-  virtual void ConstructAllBosons();
-  virtual void ConstructAllLeptons();
-  virtual void ConstructAllMesons();
-  virtual void ConstructAllBaryons();
-  virtual void ConstructAllIons();
-  virtual void ConstructAllShortLiveds();
-  */
+    // Construct particle and physics
+    virtual void ConstructParticle();
+    virtual void ConstructProcess();
 
-  virtual void AddTransportation();
+    // these methods Construct physics processes and register them
+    virtual void ConstructGeneral();
+    virtual void ConstructEM();
+    virtual void ConstructHad();
+    virtual void ConstructOp();
 
-private:
-  G4int VerboseLevel;
-  G4int OpVerbLevel;
+    /*
+    // these methods Construct all particles in each category
+    virtual void ConstructAllBosons();
+    virtual void ConstructAllLeptons();
+    virtual void ConstructAllMesons();
+    virtual void ConstructAllBaryons();
+    virtual void ConstructAllIons();
+    virtual void ConstructAllShortLiveds();
+    */
 
-  G4double cutForGamma;
-  G4double cutForElectron;
-  G4double cutForPositron;
-// uncomment if the code if corresponding code in LBE.cc is un-commented
-//  G4double cutForProton;
-//  G4double cutForAlpha;
-//  G4double cutForGenericIon;
+    virtual void AddTransportation();
 
-  G4StoppingPhysics* stoppingPhysics;
+  private:
 
-  // these methods Construct particles 
-  void ConstructMyBosons();
-  void ConstructMyLeptons();
-  void ConstructMyMesons();
-  void ConstructMyBaryons();
-  void ConstructMyIons();
-  void ConstructMyShortLiveds();
+    G4int VerboseLevel;
+    G4int OpVerbLevel;
 
+    G4double cutForGamma;
+    G4double cutForElectron;
+    G4double cutForPositron;
+    // uncomment if the code if corresponding code in LBE.cc is un-commented
+    //  G4double cutForProton;
+    //  G4double cutForAlpha;
+    //  G4double cutForGenericIon;
+
+    G4StoppingPhysics* stoppingPhysics;
+
+    // these methods Construct particles
+    void ConstructMyBosons();
+    void ConstructMyLeptons();
+    void ConstructMyMesons();
+    void ConstructMyBaryons();
+    void ConstructMyIons();
+    void ConstructMyShortLiveds();
 };
 
 #endif

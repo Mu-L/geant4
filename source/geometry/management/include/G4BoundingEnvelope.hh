@@ -42,22 +42,25 @@
 #ifndef G4BOUNDINGENVELOPE_HH
 #define G4BOUNDINGENVELOPE_HH
 
-#include <vector>
+#include "G4Plane3D.hh"
+#include "G4Point3D.hh"
+#include "G4ThreeVector.hh"
+#include "G4Transform3D.hh"
+#include "G4VoxelLimits.hh"
+
 #include "geomdefs.hh"
 
-#include "G4ThreeVector.hh"
-#include "G4VoxelLimits.hh"
-#include "G4Transform3D.hh"
-#include "G4Point3D.hh"
-#include "G4Plane3D.hh"
+#include <vector>
 
 using G4ThreeVectorList = std::vector<G4ThreeVector>;
 using G4Polygon3D = std::vector<G4Point3D>;
-using G4Segment3D = std::pair<G4Point3D,G4Point3D>;
+using G4Segment3D = std::pair<G4Point3D, G4Point3D>;
 
 /**
  * @brief G4BoundingEnvelope is a helper class to facilitate calculation of
  * the extent of a solid within the limits defined by a G4VoxelLimits object.
+ * @ingroup geometry_management
+ *
  * Calculation of the extent takes into account scaling and reflection, if any.
  */
 
@@ -70,8 +73,7 @@ class G4BoundingEnvelope
      *  @param[in] pMin Lower boundary point.
      *  @param[in] pMax Higher boundary point.
      */
-    G4BoundingEnvelope(const G4ThreeVector& pMin,
-                       const G4ThreeVector& pMax);
+    G4BoundingEnvelope(const G4ThreeVector& pMin, const G4ThreeVector& pMax);
 
     /**
      * Constructor from a sequence of convex polygons, the polygons should have
@@ -87,8 +89,7 @@ class G4BoundingEnvelope
      *  @param[in] pMax Higher boundary point.
      *  @param[in] polygons The list of polygons.
      */
-    G4BoundingEnvelope(const G4ThreeVector& pMin,
-                       const G4ThreeVector& pMax,
+    G4BoundingEnvelope(const G4ThreeVector& pMin, const G4ThreeVector& pMax,
                        const std::vector<const G4ThreeVectorList*>& polygons);
 
     /**
@@ -109,10 +110,9 @@ class G4BoundingEnvelope
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the envelope is intersected by the extent region.
      */
-    G4bool BoundingBoxVsVoxelLimits(const EAxis pAxis,
-                                    const G4VoxelLimits& pVoxelLimits,
-                                    const G4Transform3D& pTransform3D,
-                                    G4double& pMin, G4double& pMax) const;
+    G4bool BoundingBoxVsVoxelLimits(const EAxis pAxis, const G4VoxelLimits& pVoxelLimits,
+                                    const G4Transform3D& pTransform3D, G4double& pMin,
+                                    G4double& pMax) const;
 
     /**
      * Calculates the minimum and maximum extent of the bounding envelope,
@@ -124,10 +124,8 @@ class G4BoundingEnvelope
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the envelope is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimits,
-                           const G4Transform3D& pTransform3D,
-                           G4double& pMin, G4double& pMax) const;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimits,
+                           const G4Transform3D& pTransform3D, G4double& pMin, G4double& pMax) const;
 
   private:
 
@@ -149,46 +147,39 @@ class G4BoundingEnvelope
     /**
      * Creates a list of transformed polygons.
      */
-    void TransformVertices(const G4Transform3D& pTransform3D,
-                                 std::vector<G4Point3D>& pVertices,
-                                 std::vector<std::pair<G4int,G4int>>& pBases) const;
+    void TransformVertices(const G4Transform3D& pTransform3D, std::vector<G4Point3D>& pVertices,
+                           std::vector<std::pair<G4int, G4int>>& pBases) const;
 
     /**
      * Finds the bounding box of a prism.
      */
-    void GetPrismAABB(const G4Polygon3D& pBaseA,
-                      const G4Polygon3D& pBaseB,
-                            G4Segment3D& pAABB) const;
+    void GetPrismAABB(const G4Polygon3D& pBaseA, const G4Polygon3D& pBaseB,
+                      G4Segment3D& pAABB) const;
 
     /**
      * Creates a list of edges of a prism.
      */
-    void CreateListOfEdges(const G4Polygon3D& baseA,
-                           const G4Polygon3D& baseB,
-                                 std::vector<G4Segment3D>& pEdges) const;
+    void CreateListOfEdges(const G4Polygon3D& baseA, const G4Polygon3D& baseB,
+                           std::vector<G4Segment3D>& pEdges) const;
 
     /**
      * Creates a list of planes bounding a prism.
      */
-    void CreateListOfPlanes(const G4Polygon3D& baseA,
-                            const G4Polygon3D& baseB,
-                                  std::vector<G4Plane3D>& pPlanes) const;
+    void CreateListOfPlanes(const G4Polygon3D& baseA, const G4Polygon3D& baseB,
+                            std::vector<G4Plane3D>& pPlanes) const;
 
     /**
      * Clips a set of edges by G4VoxelLimits.
      */
-    G4bool ClipEdgesByVoxel(const std::vector<G4Segment3D>& pEdges,
-                            const G4VoxelLimits& pLimits,
-                                  G4Segment3D& pExtent) const;
+    G4bool ClipEdgesByVoxel(const std::vector<G4Segment3D>& pEdges, const G4VoxelLimits& pLimits,
+                            G4Segment3D& pExtent) const;
 
     /**
      * Clips G4VoxelLimits by set of planes bounding a prism.
      */
-    void ClipVoxelByPlanes(G4int pBits,
-                           const G4VoxelLimits& pLimits,
-                           const std::vector<G4Plane3D>& pPlanes,
-                           const G4Segment3D& pAABB,
-                                 G4Segment3D& pExtent) const;
+    void ClipVoxelByPlanes(G4int pBits, const G4VoxelLimits& pLimits,
+                           const std::vector<G4Plane3D>& pPlanes, const G4Segment3D& pAABB,
+                           G4Segment3D& pExtent) const;
 
   private:
 

@@ -28,15 +28,16 @@
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara (Oct 1998)
 
-#ifndef G4CompetitiveFission_h
-#define G4CompetitiveFission_h 1
+#ifndef G4COMPETITIVEFISSION_HH
+#define G4COMPETITIVEFISSION_HH
 
-#include "G4VEvaporationChannel.hh"
+#include "G4Exp.hh"
+#include "G4FissionParameters.hh"
 #include "G4Fragment.hh"
 #include "G4VEmissionProbability.hh"
-#include "G4FissionParameters.hh"
+#include "G4VEvaporationChannel.hh"
+
 #include <CLHEP/Units/SystemOfUnits.h>
-#include "G4Exp.hh"
 
 class G4VFissionBarrier;
 class G4VEmissionProbability;
@@ -45,128 +46,123 @@ class G4PairingCorrection;
 
 class G4CompetitiveFission : public G4VEvaporationChannel
 {
-public:
-  
-  G4CompetitiveFission();
-  ~G4CompetitiveFission() override;
+  public:
 
-  void Initialise() override;
-  
-  G4Fragment* EmittedFragment(G4Fragment* theNucleus) override;
+    G4CompetitiveFission();
+    ~G4CompetitiveFission() override;
 
-  G4double GetEmissionProbability(G4Fragment* theNucleus) override;
+    void Initialise() override;
 
-  void SetFissionBarrier(G4VFissionBarrier * aBarrier);
+    G4Fragment* EmittedFragment(G4Fragment* theNucleus) override;
 
-  void SetEmissionStrategy(G4VEmissionProbability * aFissionProb);
+    G4double GetEmissionProbability(G4Fragment* theNucleus) override;
 
-  void SetLevelDensityParameter(G4VLevelDensityParameter * aLevelDensity);
+    void SetFissionBarrier(G4VFissionBarrier* aBarrier);
 
-  inline G4double GetFissionBarrier(void) const;
+    void SetEmissionStrategy(G4VEmissionProbability* aFissionProb);
 
-  inline G4double GetLevelDensityParameter(void) const;
+    void SetLevelDensityParameter(G4VLevelDensityParameter* aLevelDensity);
 
-  inline G4double GetMaximalKineticEnergy(void) const;
+    inline G4double GetFissionBarrier(void) const;
 
-  G4CompetitiveFission(const G4CompetitiveFission &right) = delete;
-  const G4CompetitiveFission & operator=(const G4CompetitiveFission &right) = delete;
-  G4bool operator==(const G4CompetitiveFission &right) const = delete;
-  G4bool operator!=(const G4CompetitiveFission &right) const = delete;
+    inline G4double GetLevelDensityParameter(void) const;
 
-private:
+    inline G4double GetMaximalKineticEnergy(void) const;
 
-  // Sample AtomicNumber of Fission products
-  G4int FissionAtomicNumber(G4int A);
+    G4CompetitiveFission(const G4CompetitiveFission& right) = delete;
+    const G4CompetitiveFission& operator=(const G4CompetitiveFission& right) = delete;
+    G4bool operator==(const G4CompetitiveFission& right) const = delete;
+    G4bool operator!=(const G4CompetitiveFission& right) const = delete;
 
-  G4double MassDistribution(G4double x, G4int A);
+  private:
 
-  // Sample Charge of fission products
-  G4int FissionCharge(G4int A, G4int Z, G4double Af);
+    // Sample AtomicNumber of Fission products
+    G4int FissionAtomicNumber(G4int A);
 
-  // Sample Kinetic energy of fission products
-  G4double FissionKineticEnergy(G4int A, G4int Z,
-				G4int Af1, G4int Zf1,
-				G4int Af2, G4int Zf2,
-				G4double U, G4double Tmax);
-    
-  inline G4double Ratio(G4double A, G4double A11, 
-                        G4double B1, G4double A00) const;
+    G4double MassDistribution(G4double x, G4int A);
 
-  inline G4double SymmetricRatio(G4int A, G4double A11) const;
+    // Sample Charge of fission products
+    G4int FissionCharge(G4int A, G4int Z, G4double Af);
 
-  inline G4double AsymmetricRatio(G4int A, G4double A11) const;
+    // Sample Kinetic energy of fission products
+    G4double FissionKineticEnergy(G4int A, G4int Z, G4int Af1, G4int Zf1, G4int Af2, G4int Zf2,
+                                  G4double U, G4double Tmax);
 
-  inline G4double LocalExp(G4double x) const;
+    inline G4double Ratio(G4double A, G4double A11, G4double B1, G4double A00) const;
 
-  // Maximal Kinetic Energy that can be carried by fragment
-  G4double maxKineticEnergy{0.0};
-  G4double fissionBarrier{0.0};
-  G4double fissionProbability{0.0};
-  G4double fFactor{1.0};
+    inline G4double SymmetricRatio(G4int A, G4double A11) const;
 
-  // For Fission barrier
-  G4VFissionBarrier* theFissionBarrierPtr;
+    inline G4double AsymmetricRatio(G4int A, G4double A11) const;
 
-  // For Fission probability emission
-  G4VEmissionProbability* theFissionProbabilityPtr;
+    inline G4double LocalExp(G4double x) const;
 
-  // For Level Density calculation
-  G4VLevelDensityParameter* theLevelDensityPtr;
-  G4PairingCorrection* pairingCorrection;
+    // Maximal Kinetic Energy that can be carried by fragment
+    G4double maxKineticEnergy{0.0};
+    G4double fissionBarrier{0.0};
+    G4double fissionProbability{0.0};
+    G4double fFactor{1.0};
 
-  G4bool myOwnFissionProbability{true};
-  G4bool myOwnFissionBarrier{true};
-  G4bool myOwnLevelDensity{true};
+    // For Fission barrier
+    G4VFissionBarrier* theFissionBarrierPtr;
 
-  G4FissionParameters theParam;
-  
-  G4int theSecID;  // Creator model ID for the secondaries created by this model
-  G4bool isInitialised{false};
+    // For Fission probability emission
+    G4VEmissionProbability* theFissionProbabilityPtr;
+
+    // For Level Density calculation
+    G4VLevelDensityParameter* theLevelDensityPtr;
+    G4PairingCorrection* pairingCorrection;
+
+    G4bool myOwnFissionProbability{true};
+    G4bool myOwnFissionBarrier{true};
+    G4bool myOwnLevelDensity{true};
+
+    G4FissionParameters theParam;
+
+    G4int theSecID;  // Creator model ID for the secondaries created by this model
+    G4bool isInitialised{false};
 };
 
-inline G4double G4CompetitiveFission::GetFissionBarrier(void) const 
-{ 
-  return fissionBarrier; 
+inline G4double G4CompetitiveFission::GetFissionBarrier(void) const
+{
+  return fissionBarrier;
 }
 
-inline G4double G4CompetitiveFission::GetMaximalKineticEnergy(void) const 
-{ 
-  return maxKineticEnergy; 
+inline G4double G4CompetitiveFission::GetMaximalKineticEnergy(void) const
+{
+  return maxKineticEnergy;
 }
 
-inline
-G4double G4CompetitiveFission::Ratio(G4double A, G4double A11,
-				     G4double B1, G4double A00) const
+inline G4double G4CompetitiveFission::Ratio(G4double A, G4double A11, G4double B1,
+                                            G4double A00) const
 {
   G4double res;
-  if (A11 >= A*0.5 && A11 <= (A00+10.0)) {
-    G4double x = (A11-A00)/A;
-    res = 1.0 - B1*x*x;
-  } else {
-    G4double x = 10.0/A;
-    res = 1.0 - B1*x*x - 2.0*x*B1*(A11-A00-10.0)/A;
+  if (A11 >= A * 0.5 && A11 <= (A00 + 10.0))
+  {
+    G4double x = (A11 - A00) / A;
+    res = 1.0 - B1 * x * x;
+  }
+  else
+  {
+    G4double x = 10.0 / A;
+    res = 1.0 - B1 * x * x - 2.0 * x * B1 * (A11 - A00 - 10.0) / A;
   }
   return res;
 }
 
-inline
-G4double G4CompetitiveFission::AsymmetricRatio(G4int A, G4double A11) const
+inline G4double G4CompetitiveFission::AsymmetricRatio(G4int A, G4double A11) const
 {
-  return Ratio(G4double(A),A11,23.5,134.0);
+  return Ratio(G4double(A), A11, 23.5, 134.0);
 }
 
-inline
-G4double G4CompetitiveFission::SymmetricRatio(G4int A, G4double A11) const
+inline G4double G4CompetitiveFission::SymmetricRatio(G4int A, G4double A11) const
 {
   G4double A0 = G4double(A);
-  return Ratio(A0,A11,5.32,A0*0.5);
+  return Ratio(A0, A11, 5.32, A0 * 0.5);
 }
 
 inline G4double G4CompetitiveFission::LocalExp(G4double x) const
 {
-  return (std::abs(x) < 8.) ? G4Exp(-0.5*x*x) : 0.0;
+  return (std::abs(x) < 8.) ? G4Exp(-0.5 * x * x) : 0.0;
 }
 
 #endif
-
-

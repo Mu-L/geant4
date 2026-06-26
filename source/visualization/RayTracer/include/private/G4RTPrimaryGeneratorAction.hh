@@ -26,35 +26,39 @@
 //
 //
 
-#ifndef G4RTPrimaryGeneratorAction_h
-#define G4RTPrimaryGeneratorAction_h 1
+#ifndef G4RTPRIMARYGENERATORACTION_HH
+#define G4RTPRIMARYGENERATORACTION_HH
 
 #include "G4VUserPrimaryGeneratorAction.hh"
 class G4Event;
 class G4ParticleDefinition;
 class G4VPhysicalVolume;
-#include "globals.hh"
-#include "geomdefs.hh"
 #include "G4ThreeVector.hh"
+#include "globals.hh"
+
+#include "geomdefs.hh"
 
 class G4RTPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
   public:
+
     G4RTPrimaryGeneratorAction();
     virtual ~G4RTPrimaryGeneratorAction();
 
   public:
+
     virtual void GeneratePrimaries(G4Event* anEvent);
     void SetUp();
 
   private:
-    G4ParticleDefinition* particle_definition;
-    G4double              particle_energy;
-    G4double              particle_time;
-    G4ThreeVector         particle_polarization;
 
-    G4VPhysicalVolume*    pWorld;
-    EInside               whereisit;
+    G4ParticleDefinition* particle_definition;
+    G4double particle_energy;
+    G4double particle_time;
+    G4ThreeVector particle_polarization;
+
+    G4VPhysicalVolume* pWorld;
+    EInside whereisit;
 
     G4int nColumn;
     G4int nRow;
@@ -72,5 +76,3 @@ class G4RTPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 };
 
 #endif
-
-

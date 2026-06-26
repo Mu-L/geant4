@@ -59,15 +59,18 @@ G4int G4UIcmdWith3VectorAndUnit::DoIt(const G4String& parameterList)
   std::vector<G4String> token_vector;
   G4Tokenizer tkn(parameterList);
   G4String str;
-  while (!(str = tkn()).empty()) {
+  while (!(str = tkn()).empty())
+  {
     token_vector.push_back(str);
   }
 
   // convert a value in default unit
   G4String converted_parameter;
   G4String default_unit = GetParameter(3)->GetDefaultValue();
-  if (!default_unit.empty() && token_vector.size() >= 4) {
-    if (CategoryOf(token_vector[3]) != CategoryOf(default_unit)) {
+  if (!default_unit.empty() && token_vector.size() >= 4)
+  {
+    if (CategoryOf(token_vector[3]) != CategoryOf(default_unit))
+    {
       return fParameterOutOfCandidates + 3;
     }
     G4double value_given = ValueOf(token_vector[3]);
@@ -84,12 +87,14 @@ G4int G4UIcmdWith3VectorAndUnit::DoIt(const G4String& parameterList)
     converted_parameter += ConvertToString(z);
     converted_parameter += " ";
     converted_parameter += default_unit;
-    for (std::size_t i = 4; i < token_vector.size(); ++i) {
+    for (std::size_t i = 4; i < token_vector.size(); ++i)
+    {
       converted_parameter += " ";
       converted_parameter += token_vector[i];
     }
   }
-  else {
+  else
+  {
     converted_parameter = parameterList;
   }
 
@@ -147,10 +152,12 @@ G4String G4UIcmdWith3VectorAndUnit::ConvertToStringWithDefaultUnit(const G4Three
 {
   G4UIparameter* unitParam = GetParameter(3);
   G4String st;
-  if (unitParam->IsOmittable()) {
+  if (unitParam->IsOmittable())
+  {
     st = ConvertToString(vec, unitParam->GetDefaultValue());
   }
-  else {
+  else
+  {
     st = ConvertToStringWithBestUnit(vec);
   }
   return st;

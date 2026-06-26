@@ -41,7 +41,10 @@
 
 /**
  * @brief G4LineCurrentMagField is a class describing a line current magnetic
- * field. The line current is directed along the Z axis and crosses the XY
+ * field.
+ * @ingroup geometry_magneticfield
+ *
+ * The line current is directed along the Z axis and crosses the XY
  * plane in the origin point.
  */
 
@@ -73,7 +76,7 @@ class G4LineCurrentMagField : public G4MagneticField
     G4Field* Clone() const override;
 
   private:
-  
+
     G4double fFieldConstant = 0.0;
 };
 

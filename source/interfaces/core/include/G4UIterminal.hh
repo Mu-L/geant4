@@ -59,8 +59,8 @@
 //
 //   For more detail, see source codes.
 // ====================================================================
-#ifndef G4UIterminal_h
-#define G4UIterminal_h 1
+#ifndef G4UITERMINAL_HH
+#define G4UITERMINAL_HH
 
 #include "G4UImanager.hh"
 #include "G4VBasicShell.hh"
@@ -70,34 +70,37 @@
 
 class G4UIterminal : public G4VBasicShell
 {
- public:
-  G4UIterminal(G4VUIshell* aShell = nullptr, G4bool qsig = true);
-  ~G4UIterminal() override;
+  public:
 
-  void SetPrompt(const G4String& prompt);
+    G4UIterminal(G4VUIshell* aShell = nullptr, G4bool qsig = true);
+    ~G4UIterminal() override;
 
-  // These methods are implementation of corresponding virtual methods
-  // of G4UIsession class.
-  G4UIsession* SessionStart() override;
-  void PauseSessionStart(const G4String& msg) override;
-  G4int ReceiveG4debug(const G4String& debugString) override;
-  G4int ReceiveG4cout(const G4String& coutString) override;
-  G4int ReceiveG4cerr(const G4String& cerrString) override;
+    void SetPrompt(const G4String& prompt);
 
- private:
-  void ExecuteCommand(const G4String& aCommand) override;
-  G4bool GetHelpChoice(G4int& aInt) override;
-  void ExitHelp() const override;
-  G4String GetCommand(const char* msg = nullptr);
+    // These methods are implementation of corresponding virtual methods
+    // of G4UIsession class.
+    G4UIsession* SessionStart() override;
+    void PauseSessionStart(const G4String& msg) override;
+    G4int ReceiveG4debug(const G4String& debugString) override;
+    G4int ReceiveG4cout(const G4String& coutString) override;
+    G4int ReceiveG4cerr(const G4String& cerrString) override;
 
- private:
-  G4UImanager* UI;
-  // shell
-  G4VUIshell* shell;
+  private:
 
-  // program states
-  G4bool iExit;
-  G4bool iCont;
+    void ExecuteCommand(const G4String& aCommand) override;
+    G4bool GetHelpChoice(G4int& aInt) override;
+    void ExitHelp() const override;
+    G4String GetCommand(const char* msg = nullptr);
+
+  private:
+
+    G4UImanager* UI;
+    // shell
+    G4VUIshell* shell;
+
+    // program states
+    G4bool iExit;
+    G4bool iCont;
 };
 
 #endif

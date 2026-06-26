@@ -32,8 +32,8 @@
 //
 // Author: Ivana Hrivnacova, 11/09/2018
 // --------------------------------------------------------------------
-#ifndef G4VScoreNtupleWriter_h
-#define G4VScoreNtupleWriter_h 1
+#ifndef G4VSCORENTUPLEWRITER_HH
+#define G4VSCORENTUPLEWRITER_HH
 
 #include "G4Threading.hh"
 #include "globals.hh"
@@ -42,27 +42,27 @@ class G4HCofThisEvent;
 
 class G4VScoreNtupleWriter
 {
- public:
+  public:
 
-  virtual ~G4VScoreNtupleWriter();
+    virtual ~G4VScoreNtupleWriter();
 
-  // static methods
-  static G4VScoreNtupleWriter* Instance();
+    // static methods
+    static G4VScoreNtupleWriter* Instance();
 
-  // methods
-  virtual G4bool Book(G4HCofThisEvent* hce)                  = 0;
-  virtual void OpenFile()                                    = 0;
-  virtual void Fill(G4HCofThisEvent* hce, G4int eventNumber) = 0;
-  virtual void Write()                                       = 0;
+    // methods
+    virtual G4bool Book(G4HCofThisEvent* hce) = 0;
+    virtual void OpenFile() = 0;
+    virtual void Fill(G4HCofThisEvent* hce, G4int eventNumber) = 0;
+    virtual void Write() = 0;
 
- protected:
+  protected:
 
-  G4VScoreNtupleWriter();
-  virtual G4VScoreNtupleWriter* CreateInstance() const = 0;
+    G4VScoreNtupleWriter();
+    virtual G4VScoreNtupleWriter* CreateInstance() const = 0;
 
-  // static data members
-  static G4VScoreNtupleWriter* fgMasterInstance;
-  static G4ThreadLocal G4VScoreNtupleWriter* fgInstance;
+    // static data members
+    static G4VScoreNtupleWriter* fgMasterInstance;
+    static G4ThreadLocal G4VScoreNtupleWriter* fgInstance;
 };
 
 #endif

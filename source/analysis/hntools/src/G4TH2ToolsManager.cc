@@ -36,12 +36,10 @@ using namespace G4Analysis;
 
 // Specialization for H2 type
 
-
 //_____________________________________________________________________________
-template <>
+template<>
 tools::histo::h2d* G4THnToolsManager<kDim2, tools::histo::h2d>::CreateToolsHT(
-  const G4String& title,
-  const std::array<G4HnDimension, kDim2>& bins,
+  const G4String& title, const std::array<G4HnDimension, kDim2>& bins,
   const std::array<G4HnDimensionInformation, kDim2>& hnInfo)
 {
   // Apply hn information to bins
@@ -50,10 +48,10 @@ tools::histo::h2d* G4THnToolsManager<kDim2, tools::histo::h2d>::CreateToolsHT(
   auto newYBins(bins[kY]);
   Update(newYBins, hnInfo[kY]);
 
-  if ((hnInfo[kX].fBinScheme == G4BinScheme::kLinear) &&
-      (hnInfo[kY].fBinScheme == G4BinScheme::kLinear)) {
-    return new tools::histo::h2d(title,
-                                 newXBins.fNBins, newXBins.fMinValue, newXBins.fMaxValue,
+  if ((hnInfo[kX].fBinScheme == G4BinScheme::kLinear)
+      && (hnInfo[kY].fBinScheme == G4BinScheme::kLinear))
+  {
+    return new tools::histo::h2d(title, newXBins.fNBins, newXBins.fMinValue, newXBins.fMaxValue,
                                  newYBins.fNBins, newYBins.fMinValue, newYBins.fMaxValue);
   }
 
@@ -61,10 +59,9 @@ tools::histo::h2d* G4THnToolsManager<kDim2, tools::histo::h2d>::CreateToolsHT(
 }
 
 //_____________________________________________________________________________
-template <>
+template<>
 void G4THnToolsManager<kDim2, tools::histo::h2d>::ConfigureToolsHT(
-  tools::histo::h2d* ht,
-  const std::array<G4HnDimension, kDim2>& bins,
+  tools::histo::h2d* ht, const std::array<G4HnDimension, kDim2>& bins,
   const std::array<G4HnDimensionInformation, kDim2>& hnInfo)
 {
   // Apply hn information to bins
@@ -73,11 +70,11 @@ void G4THnToolsManager<kDim2, tools::histo::h2d>::ConfigureToolsHT(
   auto newYBins(bins[kY]);
   Update(newYBins, hnInfo[kY]);
 
-  if ((hnInfo[kX].fBinScheme == G4BinScheme::kLinear) &&
-      (hnInfo[kY].fBinScheme == G4BinScheme::kLinear)) {
-    ht->configure(
-          newXBins.fNBins, newXBins.fMinValue, newXBins.fMaxValue,
-          newYBins.fNBins, newYBins.fMinValue, newYBins.fMaxValue);
+  if ((hnInfo[kX].fBinScheme == G4BinScheme::kLinear)
+      && (hnInfo[kY].fBinScheme == G4BinScheme::kLinear))
+  {
+    ht->configure(newXBins.fNBins, newXBins.fMinValue, newXBins.fMaxValue, newYBins.fNBins,
+                  newYBins.fMinValue, newYBins.fMaxValue);
     return;
   }
 
@@ -85,10 +82,11 @@ void G4THnToolsManager<kDim2, tools::histo::h2d>::ConfigureToolsHT(
 }
 
 //_____________________________________________________________________________
-template <>
-G4bool G4THnToolsManager<kDim2, tools::histo::h2d>::FillHT(
-  tools::histo::h2d* ht, const G4HnInformation& hnInformation, 
-  std::array<G4double, kDim2>& value, G4double weight)
+template<>
+G4bool G4THnToolsManager<kDim2, tools::histo::h2d>::FillHT(tools::histo::h2d* ht,
+                                                           const G4HnInformation& hnInformation,
+                                                           std::array<G4double, kDim2>& value,
+                                                           G4double weight)
 {
   const auto& xInfo = hnInformation.GetHnDimensionInformation(kX);
   const auto& yInfo = hnInformation.GetHnDimensionInformation(kY);
@@ -104,22 +102,22 @@ G4bool G4THnToolsManager<kDim2, tools::histo::h2d>::FillHT(
 }
 
 //_____________________________________________________________________________
-template <>
-G4bool G4THnToolsManager<kDim2, tools::histo::h2d>::WriteOnAscii(
-  std::ofstream& output)
+template<>
+G4bool G4THnToolsManager<kDim2, tools::histo::h2d>::WriteOnAscii(std::ofstream& output)
 {
-// Write selected objects on ASCII file
-// According to the implementation by Michel Maire, originally in
-// extended examples.
+  // Write selected objects on ASCII file
+  // According to the implementation by Michel Maire, originally in
+  // extended examples.
 
   // Do nothing if no histograms are selected
-  if ( ! GetHnManager()->IsAscii() ) return true;
+  if (!GetHnManager()->IsAscii()) return true;
 
   // Write h2 histograms
   auto id = GetHnManager()->GetFirstId();
-  for (const auto& [h2, info] : *GetTHnVector()) {
-
-    if ( (h2 == nullptr) || (! info->GetAscii()) ) {
+  for (const auto& [h2, info] : *GetTHnVector())
+  {
+    if ((h2 == nullptr) || (!info->GetAscii()))
+    {
       // skip writing
       // if h2 was deleted or writing ascii is not selected
       id++;
@@ -131,12 +129,12 @@ G4bool G4THnToolsManager<kDim2, tools::histo::h2d>::WriteOnAscii(
     output << "\n  2D histogram " << id++ << ": " << h2->title()
            << "\n \n \t \t     X \t\t     Y \t\t Bin Height" << G4endl;
 
-    for (G4int j=0; j< G4int(h2->axis_x().bins()); ++j) {
-      for (G4int k=0; k< G4int(h2->axis_y().bins()); ++k) {
-        output << "  " << j << "\t" << k << "\t"
-               << h2->axis_x().bin_center(j) << "\t"
-               << h2->axis_y().bin_center(k) << "\t"
-               << h2->bin_height(j, k) << G4endl;
+    for (G4int j = 0; j < G4int(h2->axis_x().bins()); ++j)
+    {
+      for (G4int k = 0; k < G4int(h2->axis_y().bins()); ++k)
+      {
+        output << "  " << j << "\t" << k << "\t" << h2->axis_x().bin_center(j) << "\t"
+               << h2->axis_y().bin_center(k) << "\t" << h2->bin_height(j, k) << G4endl;
       }
     }
   }

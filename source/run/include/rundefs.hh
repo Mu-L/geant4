@@ -28,7 +28,7 @@
 // Author: G.Cosmo (CERN), 5 April 2013
 // --------------------------------------------------------------------
 #ifndef G4RUNDEFS_HH
-#define G4RUNDEFS_HH 1
+#define G4RUNDEFS_HH
 
 #include "G4Types.hh"
 

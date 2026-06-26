@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4IsotopeMagneticMomentTable_h
-#define G4IsotopeMagneticMomentTable_h 1
+#ifndef G4ISOTOPEMAGNETICMOMENTTABLE_HH
+#define G4ISOTOPEMAGNETICMOMENTTABLE_HH
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //
 // MODULE:              G4IsotopeMagneticMomentTable.hh
@@ -53,11 +53,14 @@ class G4IsotopeMagneticMomentTable : public G4VIsotopeTable
     //   which has magnetic moment and spin.
     //   Data File name is given by G4IONMAGNETICMOMENT
     //
+
   public:
+
     using G4IsotopeList = std::vector<G4IsotopeProperty*>;
     using G4IsotopeNameList = std::vector<G4String>;
 
   public:
+
     // constructor
     G4IsotopeMagneticMomentTable();
 
@@ -86,15 +89,18 @@ class G4IsotopeMagneticMomentTable : public G4VIsotopeTable
     G4IsotopeProperty* GetIsotopeByIsoLvl(G4int Z, G4int A, G4int lvl = 0) override;
 
   protected:
+
     // hide copy construictor and assignment operator as protected
     G4IsotopeMagneticMomentTable(const G4IsotopeMagneticMomentTable& right);
     G4IsotopeMagneticMomentTable& operator=(const G4IsotopeMagneticMomentTable& right);
 
   private:
+
     // get Verbose Level defined in G4ParticleTable
     G4int GetVerboseLevel() const;
 
   private:
+
     G4IsotopeList fIsotopeList;
 
     static const G4double levelTolerance;

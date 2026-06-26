@@ -26,24 +26,20 @@
 
 #include "G4PreCompoundEmissionFactory.hh"
 
+#include "G4PreCompoundAlpha.hh"
+#include "G4PreCompoundDeuteron.hh"
+#include "G4PreCompoundHe3.hh"
 #include "G4PreCompoundNeutron.hh"
 #include "G4PreCompoundProton.hh"
-#include "G4PreCompoundDeuteron.hh"
 #include "G4PreCompoundTriton.hh"
-#include "G4PreCompoundHe3.hh"
-#include "G4PreCompoundAlpha.hh"
 
-G4PreCompoundEmissionFactory::G4PreCompoundEmissionFactory()
-{}
+G4PreCompoundEmissionFactory::G4PreCompoundEmissionFactory() {}
 
-G4PreCompoundEmissionFactory::~G4PreCompoundEmissionFactory()
-{}
+G4PreCompoundEmissionFactory::~G4PreCompoundEmissionFactory() {}
 
-std::vector<G4VPreCompoundFragment*> *  G4PreCompoundEmissionFactory::
-CreateFragmentVector()
+std::vector<G4VPreCompoundFragment*>* G4PreCompoundEmissionFactory::CreateFragmentVector()
 {
-  std::vector<G4VPreCompoundFragment*> * theFragVector = 
-    new std::vector<G4VPreCompoundFragment*>();
+  std::vector<G4VPreCompoundFragment*>* theFragVector = new std::vector<G4VPreCompoundFragment*>();
   theFragVector->reserve(6);
 
   // neutron

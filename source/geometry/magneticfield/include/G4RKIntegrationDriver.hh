@@ -27,8 +27,8 @@
 //
 // Class description:
 //
-// Driver class which controls the integration error of a 
-// Runge-Kutta stepper 
+// Driver class which controls the integration error of a
+// Runge-Kutta stepper
 
 // Author: Dmitry Sorokin (CERN, Google Summer of Code 2017), 20.10.2017
 // --------------------------------------------------------------------
@@ -40,9 +40,10 @@
 /**
  * @brief G4RKIntegrationDriver is a templated driver class which controls the
  * integration error of a Runge-Kutta stepper.
+ * @ingroup geometry_magneticfield
  */
 
-template <class T>
+template<class T>
 class G4RKIntegrationDriver : public G4VIntegrationDriver
 {
   public:
@@ -62,18 +63,16 @@ class G4RKIntegrationDriver : public G4VIntegrationDriver
     /**
      * Accessors for derivatives.
      */
-    void GetDerivatives(const G4FieldTrack& track,
-                              G4double dydx[]) const override;
-    void GetDerivatives(const G4FieldTrack& track,
-                              G4double dydx[],
-                              G4double field[]) const override;
+    void GetDerivatives(const G4FieldTrack& track, G4double dydx[]) const override;
+    void GetDerivatives(const G4FieldTrack& track, G4double dydx[],
+                        G4double field[]) const override;
 
     /**
      * Taking the last step's normalised error, it calculates a step size for
      * the next step; it limits the next step's size within a factor of the
      * current one.
      */
-    G4double ComputeNewStepSize(G4double errMaxNorm, // normalised error
+    G4double ComputeNewStepSize(G4double errMaxNorm,  // normalised error
                                 G4double hstepCurrent) final;
 
     /**
@@ -91,8 +90,8 @@ class G4RKIntegrationDriver : public G4VIntegrationDriver
     /**
      * Writes out to stream the parameters/state of the driver.
      */
-    void  StreamInfo( std::ostream& os ) const override;
-   
+    void StreamInfo(std::ostream& os) const override;
+
     /**
      * Accessors.
      */
@@ -104,18 +103,18 @@ class G4RKIntegrationDriver : public G4VIntegrationDriver
 
     void ReSetParameters(G4double safety = 0.9);
     void SetSafety(G4double valS);
-      //  i) sets the exponents (pgrow & pshrnk),
-      //     using the current Stepper's order,
-      // ii) sets the safety
+    //  i) sets the exponents (pgrow & pshrnk),
+    //     using the current Stepper's order,
+    // ii) sets the safety
 
-     G4int GetMaxNoSteps() const;
-     void SetMaxNoSteps(G4int val);
-       // Modify and Get the Maximum number of Steps that can be
-       // taken for the integration of a single segment -
-       // (ie a single call to AccurateAdvance).
+    G4int GetMaxNoSteps() const;
+    void SetMaxNoSteps(G4int val);
+    // Modify and Get the Maximum number of Steps that can be
+    // taken for the integration of a single segment -
+    // (ie a single call to AccurateAdvance).
 
-     G4double GetSmallestFraction() const;
-     void SetSmallestFraction(G4double val);
+    G4double GetSmallestFraction() const;
+    void SetSmallestFraction(G4double val);
 
   protected:
 
@@ -144,8 +143,8 @@ class G4RKIntegrationDriver : public G4VIntegrationDriver
 
     /** Parameters used to grow and shrink trial stepsize. */
     G4double safety;
-    G4double pshrnk;   //  exponent for shrinking
-    G4double pgrow;    //  exponent for growth
+    G4double pshrnk;  //  exponent for shrinking
+    G4double pgrow;  //  exponent for growth
 
     /** Maximum error values for shrinking / growing (optimisation). */
     G4double errorConstraintShrink;

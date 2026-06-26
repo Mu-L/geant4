@@ -31,43 +31,43 @@
 // John Allison February 2016, based on
 // G4TrajectoryDrawByVolume.hh  Jane Tinslay March 2006
 
-#ifndef G4TRAJECTORYDRAWBYENCOUNTEREDVOLUME
-#define G4TRAJECTORYDRAWBYENCOUNTEREDVOLUME
+#ifndef G4TRAJECTORYDRAWBYENCOUNTEREDVOLUME_HH
+#define G4TRAJECTORYDRAWBYENCOUNTEREDVOLUME_HH
 
-#include "G4VTrajectoryModel.hh"
 #include "G4Colour.hh"
 #include "G4ModelColourMap.hh"
 #include "G4String.hh"
+#include "G4VTrajectoryModel.hh"
+
 #include <map>
 
-class G4TrajectoryDrawByEncounteredVolume : public G4VTrajectoryModel {
+class G4TrajectoryDrawByEncounteredVolume : public G4VTrajectoryModel
+{
+  public:  // With description
 
-public: // With description
- 
-  G4TrajectoryDrawByEncounteredVolume(const G4String& name = "Unspecified", G4VisTrajContext* context=0);
-  
-  virtual ~G4TrajectoryDrawByEncounteredVolume();
+    G4TrajectoryDrawByEncounteredVolume(const G4String& name = "Unspecified",
+                                        G4VisTrajContext* context = 0);
 
-  // Draw method
-  virtual void Draw(const G4VTrajectory& trajectory, 
-		    const G4bool& visible = true) const;
-  
-  virtual void Print(std::ostream& ostr) const;
-  // Print configuration
+    virtual ~G4TrajectoryDrawByEncounteredVolume();
 
-  void SetDefault(const G4String&);
-  void SetDefault(const G4Colour&);
+    // Draw method
+    virtual void Draw(const G4VTrajectory& trajectory, const G4bool& visible = true) const;
 
-  void Set(const G4String& pvname, const G4String& colour);
-  void Set(const G4String& pvname, const G4Colour& colour);
-  // Configuration functions
+    virtual void Print(std::ostream& ostr) const;
+    // Print configuration
 
-private:
+    void SetDefault(const G4String&);
+    void SetDefault(const G4Colour&);
 
-  // Data members
-  G4ModelColourMap<G4String> fMap;
-  G4Colour fDefault;
+    void Set(const G4String& pvname, const G4String& colour);
+    void Set(const G4String& pvname, const G4Colour& colour);
+    // Configuration functions
 
+  private:
+
+    // Data members
+    G4ModelColourMap<G4String> fMap;
+    G4Colour fDefault;
 };
 
 #endif

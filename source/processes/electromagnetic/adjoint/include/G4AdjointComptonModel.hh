@@ -31,56 +31,53 @@
 //  Model for the adjoint compton scattering.
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4AdjointComptonModel_h
-#define G4AdjointComptonModel_h 1
+#ifndef G4ADJOINTCOMPTONMODEL_HH
+#define G4ADJOINTCOMPTONMODEL_HH
 
-#include "globals.hh"
 #include "G4VEmAdjointModel.hh"
+#include "globals.hh"
 
 class G4VEmProcess;
 
 class G4AdjointComptonModel : public G4VEmAdjointModel
 {
- public:
-  G4AdjointComptonModel();
-  ~G4AdjointComptonModel() override;
+  public:
 
-  void SampleSecondaries(const G4Track& aTrack, G4bool isScatProjToProj,
-                         G4ParticleChange* fParticleChange) override;
+    G4AdjointComptonModel();
+    ~G4AdjointComptonModel() override;
 
-  void RapidSampleSecondaries(const G4Track& aTrack, G4bool isScatProjToProj,
-                              G4ParticleChange* fParticleChange);
+    void SampleSecondaries(const G4Track& aTrack, G4bool isScatProjToProj,
+                           G4ParticleChange* fParticleChange) override;
 
-  G4double DiffCrossSectionPerAtomPrimToScatPrim(
-    G4double kinEnergyProj,      // kin energy of primary before interaction
-    G4double kinEnergyScatProj,  // kin energy of primary after interaction
-    G4double Z, G4double A = 0.) override;
+    void RapidSampleSecondaries(const G4Track& aTrack, G4bool isScatProjToProj,
+                                G4ParticleChange* fParticleChange);
 
-  G4double DiffCrossSectionPerAtomPrimToSecond(
-    G4double kinEnergyProj,  // kin energy of primary before interaction
-    G4double kinEnergyProd,  // kin energy of secondary particle
-    G4double Z, G4double A = 0.) override;
+    G4double DiffCrossSectionPerAtomPrimToScatPrim(
+      G4double kinEnergyProj,  // kin energy of primary before interaction
+      G4double kinEnergyScatProj,  // kin energy of primary after interaction
+      G4double Z, G4double A = 0.) override;
 
-  G4double GetSecondAdjEnergyMaxForScatProjToProj(
-    G4double primAdjEnergy) override;
-  G4double GetSecondAdjEnergyMinForProdToProj(G4double primAdjEnergy) override;
+    G4double DiffCrossSectionPerAtomPrimToSecond(
+      G4double kinEnergyProj,  // kin energy of primary before interaction
+      G4double kinEnergyProd,  // kin energy of secondary particle
+      G4double Z, G4double A = 0.) override;
 
-  G4double AdjointCrossSection(const G4MaterialCutsCouple* aCouple,
-                               G4double primEnergy,
-                               G4bool isScatProjToProj) override;
+    G4double GetSecondAdjEnergyMaxForScatProjToProj(G4double primAdjEnergy) override;
+    G4double GetSecondAdjEnergyMinForProdToProj(G4double primAdjEnergy) override;
 
-  inline void SetDirectProcess(G4VEmProcess* aProcess)
-  {
-    fDirectProcess = aProcess;
-  };
+    G4double AdjointCrossSection(const G4MaterialCutsCouple* aCouple, G4double primEnergy,
+                                 G4bool isScatProjToProj) override;
 
-  G4AdjointComptonModel(G4AdjointComptonModel&) = delete;
-  G4AdjointComptonModel& operator=(const G4AdjointComptonModel& right) = delete;
+    inline void SetDirectProcess(G4VEmProcess* aProcess) { fDirectProcess = aProcess; };
 
- private:
-  G4VEmProcess* fDirectProcess = nullptr;
+    G4AdjointComptonModel(G4AdjointComptonModel&) = delete;
+    G4AdjointComptonModel& operator=(const G4AdjointComptonModel& right) = delete;
 
-  G4double fDirectCS = 0.;
+  private:
+
+    G4VEmProcess* fDirectProcess = nullptr;
+
+    G4double fDirectCS = 0.;
 };
 
 #endif

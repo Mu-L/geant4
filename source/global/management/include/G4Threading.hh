@@ -32,8 +32,8 @@
 // Author: Andrea Dotti, 15 February 2013 - First Implementation
 // Revision: Jonathan R. Madsen, 21 February 2018
 // --------------------------------------------------------------------
-#ifndef G4Threading_hh
-#define G4Threading_hh 1
+#ifndef G4THREADING_HH
+#define G4THREADING_HH
 
 #include "G4Types.hh"
 #include "globals.hh"
@@ -47,15 +47,14 @@
 
 // Macro to put current thread to sleep
 //
-#define G4THREADSLEEP(tick)                                                    \
-  std::this_thread::sleep_for(std::chrono::seconds(tick))
+#define G4THREADSLEEP(tick) std::this_thread::sleep_for(std::chrono::seconds(tick))
 
 // Will be used in the future when migrating threading to task-based style
-template <typename _Tp>
+template<typename _Tp>
 using G4Future = std::future<_Tp>;
-template <typename _Tp>
+template<typename _Tp>
 using G4SharedFuture = std::shared_future<_Tp>;
-template <typename _Tp>
+template<typename _Tp>
 using G4Promise = std::promise<_Tp>;
 
 //          NOTE ON GEANT4 SERIAL BUILDS AND MUTEX/UNIQUE_LOCK
@@ -78,41 +77,39 @@ using G4Promise = std::promise<_Tp>;
 // --> An example of this behavior can be found in G4AutoLock.hh
 
 // Global mutex types
-using G4Mutex          = std::mutex;
+using G4Mutex = std::mutex;
 using G4RecursiveMutex = std::recursive_mutex;
 
 // Mutex macros
-#define G4MUTEX_INITIALIZER                                                    \
+#define G4MUTEX_INITIALIZER \
   {}
-#define G4MUTEXINIT(mutex)                                                     \
-  ;                                                                            \
+#define G4MUTEXINIT(mutex) \
+  ;                        \
   ;
-#define G4MUTEXDESTROY(mutex)                                                  \
-  ;                                                                            \
+#define G4MUTEXDESTROY(mutex) \
+  ;                           \
   ;
 
 // Static functions: get_id(), sleep_for(...), sleep_until(...), yield(),
 namespace G4ThisThread
 {
-  using namespace std::this_thread;
+using namespace std::this_thread;
 }
 
 // Will be used in the future when migrating threading to task-based style
 // and are currently used in unit tests
-template <typename _Tp>
+template<typename _Tp>
 using G4Promise = std::promise<_Tp>;
-template <typename _Tp>
+template<typename _Tp>
 using G4Future = std::future<_Tp>;
-template <typename _Tp>
+template<typename _Tp>
 using G4SharedFuture = std::shared_future<_Tp>;
 
 // Some useful types
 using G4ThreadFunReturnType = void*;
-using G4ThreadFunArgType    = void*;
-using thread_lock =
-  G4int (*)(G4Mutex*);  // typedef G4int (*thread_lock)(G4Mutex*);
-using thread_unlock =
-  G4int (*)(G4Mutex*);  // typedef G4int (*thread_unlock)(G4Mutex*);
+using G4ThreadFunArgType = void*;
+using thread_lock = G4int (*)(G4Mutex*);  // typedef G4int (*thread_lock)(G4Mutex*);
+using thread_unlock = G4int (*)(G4Mutex*);  // typedef G4int (*thread_unlock)(G4Mutex*);
 
 // Helper function for getting a unique static mutex for a specific
 // class or type
@@ -120,7 +117,7 @@ using thread_unlock =
 //   a template class "G4Cache<T>" that required a static
 //   mutex for specific to type T:
 //      G4AutoLock l(G4TypeMutex<G4Cache<T>>());
-template <typename _Tp>
+template<typename _Tp>
 G4Mutex& G4TypeMutex()
 {
   static G4Mutex _mutex;
@@ -134,7 +131,7 @@ G4Mutex& G4TypeMutex()
 //                recursive_mutex for specific to type T:
 //                        G4RecursiveAutoLock
 //                        l(G4TypeRecursiveMutex<G4Cache<T>>());
-template <typename _Tp>
+template<typename _Tp>
 G4RecursiveMutex& G4TypeRecursiveMutex()
 {
   static G4RecursiveMutex _mutex;
@@ -147,17 +144,17 @@ G4RecursiveMutex& G4TypeRecursiveMutex()
 //==========================================
 
 // global thread types
-using G4Thread       = std::thread;
+using G4Thread = std::thread;
 using G4NativeThread = std::thread::native_handle_type;
 
 // mutex macros
-#  define G4MUTEXLOCK(mutex)                                                   \
-    {                                                                          \
-      (mutex)->lock();                                                         \
+#  define G4MUTEXLOCK(mutex) \
+    {                        \
+      (mutex)->lock();       \
     }
-#  define G4MUTEXUNLOCK(mutex)                                                 \
-    {                                                                          \
-      (mutex)->unlock();                                                       \
+#  define G4MUTEXUNLOCK(mutex) \
+    {                          \
+      (mutex)->unlock();       \
     }
 
 // Macro to join thread
@@ -168,7 +165,7 @@ using G4Pid_t = std::thread::id;
 
 // Instead of previous macro taking one argument, define function taking
 // unlimited arguments
-template <typename _Worker, typename _Func, typename... _Args>
+template<typename _Worker, typename _Func, typename... _Args>
 void G4THREADCREATE(_Worker*& worker, _Func func, _Args... args)
 {
   *worker = G4Thread(func, std::forward<_Args>(args)...);
@@ -179,7 +176,7 @@ void G4THREADCREATE(_Worker*& worker, _Func func, _Args... args)
 // See G4MTRunManager for example on how to use these
 //
 using G4Condition = std::condition_variable;
-#  define G4CONDITION_INITIALIZER                                              \
+#  define G4CONDITION_INITIALIZER \
     {}
 #  define G4CONDITIONWAIT(cond, lock) (cond)->wait(*lock);
 #  define G4CONDITIONWAITLAMBDA(cond, lock, lambda) (cond)->wait(*lock, lambda);
@@ -198,57 +195,61 @@ using G4Condition = std::condition_variable;
 // implement a dummy thread class that acts like a thread
 class G4DummyThread
 {
- public:
-  using native_handle_type = G4int;
-  using id                 = std::thread::id;
+  public:
 
- public:
-  // does nothing
-  G4DummyThread() {}
-  // a std::thread-like constructor that execute upon construction
-  template <typename _Func, typename... _Args>
-  G4DummyThread(_Func func, _Args&&... _args)
-  {
-    func(std::forward<_Args>(_args)...);
-  }
+    using native_handle_type = G4int;
+    using id = std::thread::id;
 
- public:
-  native_handle_type native_handle() const { return native_handle_type(); }
-  G4bool joinable() const { return true; }
-  id get_id() const noexcept { return std::this_thread::get_id(); }
-  void swap(G4DummyThread&) {}
-  void join() {}
-  void detach() {}
+  public:
 
- public:
-  static unsigned int hardware_concurrency() noexcept
-  {
-    return std::thread::hardware_concurrency();
-  }
+    // does nothing
+    G4DummyThread() {}
+    // a std::thread-like constructor that execute upon construction
+    template<typename _Func, typename... _Args>
+    G4DummyThread(_Func func, _Args&&... _args)
+    {
+      func(std::forward<_Args>(_args)...);
+    }
+
+  public:
+
+    native_handle_type native_handle() const { return native_handle_type(); }
+    G4bool joinable() const { return true; }
+    id get_id() const noexcept { return std::this_thread::get_id(); }
+    void swap(G4DummyThread&) {}
+    void join() {}
+    void detach() {}
+
+  public:
+
+    static unsigned int hardware_concurrency() noexcept
+    {
+      return std::thread::hardware_concurrency();
+    }
 };
 
 // global thread types
-using G4Thread       = G4DummyThread;
+using G4Thread = G4DummyThread;
 using G4NativeThread = G4DummyThread::native_handle_type;
 
 // mutex macros
-#  define G4MUTEXLOCK(mutex)                                                   \
-    ;                                                                          \
+#  define G4MUTEXLOCK(mutex) \
+    ;                        \
     ;
-#  define G4MUTEXUNLOCK(mutex)                                                 \
-    ;                                                                          \
+#  define G4MUTEXUNLOCK(mutex) \
+    ;                          \
     ;
 
 // Macro to join thread
-#  define G4THREADJOIN(worker)                                                 \
-    ;                                                                          \
+#  define G4THREADJOIN(worker) \
+    ;                          \
     ;
 
 using G4Pid_t = G4int;
 
 // Instead of previous macro taking one argument, define function taking
 // unlimited arguments
-template <typename _Worker, typename _Func, typename... _Args>
+template<typename _Worker, typename _Func, typename... _Args>
 void G4THREADCREATE(_Worker*& worker, _Func func, _Args... args)
 {
   *worker = G4Thread(func, std::forward<_Args>(args)...);
@@ -257,8 +258,7 @@ void G4THREADCREATE(_Worker*& worker, _Func func, _Args... args)
 using G4Condition = G4int;
 #  define G4CONDITION_INITIALIZER 1
 #  define G4CONDITIONWAIT(cond, mutex) G4ConsumeParameters(cond, mutex);
-#  define G4CONDITIONWAITLAMBDA(cond, mutex, lambda)                           \
-    G4ConsumeParameters(cond, mutex, lambda);
+#  define G4CONDITIONWAITLAMBDA(cond, mutex, lambda) G4ConsumeParameters(cond, mutex, lambda);
 #  define G4CONDITIONNOTIFY(cond) G4ConsumeParameters(cond);
 #  define G4CONDITIONBROADCAST(cond) G4ConsumeParameters(cond);
 
@@ -273,26 +273,26 @@ using G4ThreadId = G4Thread::id;
 
 namespace G4Threading
 {
-  enum
-  {
-    SEQUENTIAL_ID    = -2,
-    MASTER_ID        = -1,
-    WORKER_ID        = 0,
-    GENERICTHREAD_ID = -1000
-  };
+enum
+{
+  SEQUENTIAL_ID = -2,
+  MASTER_ID = -1,
+  WORKER_ID = 0,
+  GENERICTHREAD_ID = -1000
+};
 
-  G4Pid_t G4GetPidId();
-  G4int G4GetNumberOfCores();
-  G4int G4GetThreadId();
-  G4bool IsWorkerThread();
-  G4bool IsMasterThread();
-  void G4SetThreadId(G4int aNewValue);
-  G4bool G4SetPinAffinity(G4int idx, G4NativeThread& at);
-  void SetMultithreadedApplication(G4bool value);
-  G4bool IsMultithreadedApplication();
-  G4int WorkerThreadLeavesPool();
-  G4int WorkerThreadJoinsPool();
-  G4int GetNumberOfRunningWorkerThreads();
+G4Pid_t G4GetPidId();
+G4int G4GetNumberOfCores();
+G4int G4GetThreadId();
+G4bool IsWorkerThread();
+G4bool IsMasterThread();
+void G4SetThreadId(G4int aNewValue);
+G4bool G4SetPinAffinity(G4int idx, G4NativeThread& at);
+void SetMultithreadedApplication(G4bool value);
+G4bool IsMultithreadedApplication();
+G4int WorkerThreadLeavesPool();
+G4int WorkerThreadJoinsPool();
+G4int GetNumberOfRunningWorkerThreads();
 }  // namespace G4Threading
 
 #endif  // G4Threading_hh

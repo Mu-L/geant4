@@ -28,24 +28,21 @@
 //
 // Author: Ivana Hrivnacova, IJCLab IN2P3/CNRS, 19/07/2024
 
-#ifndef G4AccUnorderedMap_h
-#define G4AccUnorderedMap_h 1
+#ifndef G4ACCUNORDEREDMAP_HH
+#define G4ACCUNORDEREDMAP_HH
 
-#include "G4VAccumulable.hh"
 #include "G4MergeMode.hh"
-
+#include "G4VAccumulable.hh"
 #include "globals.hh"
 
 #include <unordered_map>
 
-template <class Key,
-          class T,
-          class Hash = std::hash<Key>,
-          class KeyEqual = std::equal_to<Key>,
-          class Allocator = std::allocator<std::pair<const Key, T>>>
+template<class Key, class T, class Hash = std::hash<Key>, class KeyEqual = std::equal_to<Key>,
+         class Allocator = std::allocator<std::pair<const Key, T>>>
 class G4AccUnorderedMap : public G4VAccumulable
 {
   public:
+
     // ctors to be supported
     // (https://en.cppreference.com/w/cpp/container/unordered_map/unordered_map)
     //
@@ -118,80 +115,61 @@ class G4AccUnorderedMap : public G4VAccumulable
     // Constructs the container with the contents of rg.
     // - skipped
 
-
     // Default constructor (1)
     // Constructs an empty container with all defaults.
-    G4AccUnorderedMap(const G4String& name = "",
-                      G4MergeMode mergeMode = G4MergeMode::kAddition);
+    G4AccUnorderedMap(const G4String& name = "", G4MergeMode mergeMode = G4MergeMode::kAddition);
 
     // Constructor (2)
     // Constructs an empty container with the given bucket_count
-    G4AccUnorderedMap(std::size_t bucket_count,
-                      G4MergeMode mergeMode = G4MergeMode::kAddition,
+    G4AccUnorderedMap(std::size_t bucket_count, G4MergeMode mergeMode = G4MergeMode::kAddition,
                       const Allocator& alloc = Allocator());
 
     // Constructor (2) with name
     // Constructs an empty container with the given bucket_count and name
-    G4AccUnorderedMap(const G4String& name,
-                      std::size_t bucket_count,
+    G4AccUnorderedMap(const G4String& name, std::size_t bucket_count,
                       G4MergeMode mergeMode = G4MergeMode::kAddition,
                       const Allocator& alloc = Allocator());
 
     // Constructor (3)
     // Constructs an empty container with the given bucket_count and allocator
-    G4AccUnorderedMap(std::size_t bucket_count,
-                      const Allocator& alloc,
+    G4AccUnorderedMap(std::size_t bucket_count, const Allocator& alloc,
                       G4MergeMode mergeMode = G4MergeMode::kAddition);
 
     // Constructor (3) with name
     // Constructs an empty container with the given bucket_count, allocator and name
-    G4AccUnorderedMap(const G4String& name,
-                      std::size_t bucket_count,
-                      const Allocator& alloc,
+    G4AccUnorderedMap(const G4String& name, std::size_t bucket_count, const Allocator& alloc,
                       G4MergeMode mergeMode = G4MergeMode::kAddition);
     // Constructor (4)
     // Constructs an empty container with the given bucket_count, allocator and hash
-    G4AccUnorderedMap(std::size_t bucket_count,
-                      const Hash& hash,
-                      const Allocator& alloc,
+    G4AccUnorderedMap(std::size_t bucket_count, const Hash& hash, const Allocator& alloc,
                       G4MergeMode mergeMode = G4MergeMode::kAddition);
 
     // Constructor (4) with name
     // Constructs an empty container with the given bucket_count, allocator, hash and name
-    G4AccUnorderedMap(const G4String& name,
-                      std::size_t bucket_count,
-                      const Hash& hash,
-                      const Allocator& alloc,
-                      G4MergeMode mergeMode = G4MergeMode::kAddition);
+    G4AccUnorderedMap(const G4String& name, std::size_t bucket_count, const Hash& hash,
+                      const Allocator& alloc, G4MergeMode mergeMode = G4MergeMode::kAddition);
     // Constructor (5)
     // Constructs an empty container with the given allocator alloc.
-    G4AccUnorderedMap(const Allocator& alloc,
-                      G4MergeMode mergeMode = G4MergeMode::kAddition);
+    G4AccUnorderedMap(const Allocator& alloc, G4MergeMode mergeMode = G4MergeMode::kAddition);
 
     // Constructor (5) with name
     // Constructs an empty container with the given allocator alloc and name
-    G4AccUnorderedMap(const G4String& name,
-                      const Allocator& alloc,
+    G4AccUnorderedMap(const G4String& name, const Allocator& alloc,
                       G4MergeMode mergeMode = G4MergeMode::kAddition);
 
     // Constructor (13)
     // Constructs the container with the contents of the initializer list init.
-    G4AccUnorderedMap(std::initializer_list<std::pair<const Key,T>> init,
-                      G4MergeMode mergeMode = G4MergeMode::kAddition,
-                      std::size_t bucket_count = 0,
-                      const Hash& hash = Hash(),
-                      const KeyEqual& equal = KeyEqual(),
-                      const Allocator& alloc = Allocator() );
+    G4AccUnorderedMap(std::initializer_list<std::pair<const Key, T>> init,
+                      G4MergeMode mergeMode = G4MergeMode::kAddition, std::size_t bucket_count = 0,
+                      const Hash& hash = Hash(), const KeyEqual& equal = KeyEqual(),
+                      const Allocator& alloc = Allocator());
 
     // Constructor (13) with name
     // Constructs the container with the contents of the initializer list init.
-    G4AccUnorderedMap(const G4String& name,
-                      std::initializer_list<std::pair<const Key,T>> init,
-                      G4MergeMode mergeMode = G4MergeMode::kAddition,
-                      std::size_t bucket_count = 0,
-                      const Hash& hash = Hash(),
-                      const KeyEqual& equal = KeyEqual(),
-                      const Allocator& alloc = Allocator() );
+    G4AccUnorderedMap(const G4String& name, std::initializer_list<std::pair<const Key, T>> init,
+                      G4MergeMode mergeMode = G4MergeMode::kAddition, std::size_t bucket_count = 0,
+                      const Hash& hash = Hash(), const KeyEqual& equal = KeyEqual(),
+                      const Allocator& alloc = Allocator());
 
     // Copy constructor
     G4AccUnorderedMap(const G4AccUnorderedMap& rhs) = default;
@@ -209,27 +187,72 @@ class G4AccUnorderedMap : public G4VAccumulable
     inline T& operator[](Key&& key) { return fUMap[std::move(key)]; }
     // at
     inline T& at(const Key& key) { return fUMap[key]; }
-    inline const T& at(const Key& key ) const { return fUMap[key]; }
+    inline const T& at(const Key& key) const { return fUMap[key]; }
     // size
-    inline typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::size_type size() const { return fUMap.size(); }
+    inline typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::size_type size() const
+    {
+      return fUMap.size();
+    }
     // begin, cbegin
-    inline typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::iterator begin() { return fUMap.begin(); }
-    inline typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::const_iterator begin() const { return fUMap.begin(); }
-    inline typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::const_iterator cbegin() const { return fUMap.cbegin(); }
+    inline typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::iterator begin()
+    {
+      return fUMap.begin();
+    }
+    inline typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::const_iterator
+    begin() const
+    {
+      return fUMap.begin();
+    }
+    inline typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::const_iterator
+    cbegin() const
+    {
+      return fUMap.cbegin();
+    }
     // end, cend
-    inline typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::iterator end() { return fUMap.end(); }
-    inline typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::const_iterator end() const { return fUMap.end(); }
-    inline typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::const_iterator cend() const { return fUMap.cend(); }
+    inline typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::iterator end()
+    {
+      return fUMap.end();
+    }
+    inline typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::const_iterator
+    end() const
+    {
+      return fUMap.end();
+    }
+    inline typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::const_iterator
+    cend() const
+    {
+      return fUMap.cend();
+    }
     // clear
     inline void clear() { fUMap.clear(); }
     // insert
-    inline std::pair<typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::iterator, bool> insert(const T& value) { return fUMap.insert(value); }
-    template< class P >
-    inline std::pair<typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::iterator, bool> insert( P&& value ) { return fUMap.insert(std::move(value)); }
-    inline std::pair<typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::iterator, bool> insert( T&& value ) { return fUMap.insert(std::move(value)); }   
+    inline std::pair<typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::iterator, bool>
+    insert(const T& value)
+    {
+      return fUMap.insert(value);
+    }
+    template<class P>
+    inline std::pair<typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::iterator, bool>
+    insert(P&& value)
+    {
+      return fUMap.insert(std::move(value));
+    }
+    inline std::pair<typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::iterator, bool>
+    insert(T&& value)
+    {
+      return fUMap.insert(std::move(value));
+    }
     // find
-    inline typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::iterator find( const Key& key ) { return fUMap.find(key); }
-    inline typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::const_iterator find( const Key& key ) const { return fUMap.find(key); }
+    inline typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::iterator
+    find(const Key& key)
+    {
+      return fUMap.find(key);
+    }
+    inline typename std::unordered_map<Key, T, Hash, KeyEqual, Allocator>::const_iterator
+    find(const Key& key) const
+    {
+      return fUMap.find(key);
+    }
 
     // Methods
     void Merge(const G4VAccumulable& other) final;
@@ -241,14 +264,18 @@ class G4AccUnorderedMap : public G4VAccumulable
     // Get methods
     G4AccType GetType() const final { return G4AccType::kUnorderedMap; }
     std::unordered_map<Key, T, Hash, KeyEqual, Allocator>& GetUnorderedMap() { return fUMap; }
-    const std::unordered_map<Key, T, Hash, KeyEqual, Allocator>& GetUnorderedMap() const { return fUMap; }
+    const std::unordered_map<Key, T, Hash, KeyEqual, Allocator>& GetUnorderedMap() const
+    {
+      return fUMap;
+    }
 
   private:
+
     // Data members
     std::unordered_map<Key, T, Hash, KeyEqual, Allocator> fUMap;
     T fInitValue = 0;
     G4MergeFunction<T> fMergeFunction;
- };
+};
 
 // inline functions
 

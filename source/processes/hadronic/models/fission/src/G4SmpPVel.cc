@@ -55,28 +55,30 @@
 //
 //
 
-#include <cmath>
 #include "G4fissionEvent.hh"
 
-G4double G4fissionEvent::G4SmpPVel(G4double /*eng*/, G4double* cosdiru, G4double* cosdirv, G4double* cosdirw) {
+#include <cmath>
 
-/*
-  Description
-    Knowing the photon energy, determine its velocity and the 3 direction cosines
-*/
+G4double G4fissionEvent::G4SmpPVel(G4double /*eng*/, G4double* cosdiru, G4double* cosdirv,
+                                   G4double* cosdirw)
+{
+  /*
+    Description
+      Knowing the photon energy, determine its velocity and the 3 direction cosines
+  */
 
-/*
-  Input
-    eng     - energy of photon
-  Output
-            - velocity
-            - 3 components of the photon velocity
-              as arugments (cosdiru, cosdirv, cosdirw)
-*/
+  /*
+    Input
+      eng     - energy of photon
+    Output
+              - velocity
+              - 3 components of the photon velocity
+                as arugments (cosdiru, cosdirv, cosdirw)
+  */
 
-   const G4double cspeed = 2.99792458e+8; /* speed of light (m/sec) */
+  const G4double cspeed = 2.99792458e+8; /* speed of light (m/sec) */
 
-   G4SmpIsoDir(cosdiru, cosdirv, cosdirw);
+  G4SmpIsoDir(cosdiru, cosdirv, cosdirw);
 
-   return cspeed;
+  return cspeed;
 }

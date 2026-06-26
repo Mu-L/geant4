@@ -6,14 +6,20 @@ be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-06-04 Makoto Asai (event-V11-03-05) 
-- G4Event::GetNumberOfRemainingSubEvents() : use Mutex only for the G4Event used
-  in the master thread in sub-event parallel mode. Addressing to Bug Report #2734.
+## 2026-06-19 Ben Morgan (event-V11-04-03)
+- Apply clang-format to all C++ files.
 
-## 2026-05-07 Makoto Asai (event-V11-03-04)
+## 2026-06-04 Makoto Asai (event-V11-04-02) 
+- G4Event::GetNumberOfRemainingSubEvents() : use Mutex only for the G4Event used 
+  in the master thread in sub-event parallel mode. Addressing to Bug Report #2734.
+ 
+## 2026-05-07 Makoto Asai (event-V11-04-01)
 - G4StackManager::PushOneTrack() : remove the check for generic ion having
   proper process manager. This is to avoid rare race condition issue of 
   G4ParticleDefinition::GetParticleDefinitionID() method.
+
+## 2026-01-09 Ben Morgan (event-V11-04-00)
+- Update header guards to style/format required by Geant4 coding guidelines.
 
 ## 2025-11-06 Laurent Desorgher (event-V11-03-03) 
 - G4AdjointPrimaryGenerator: Make it G4ThreadLocal and add GetInstance() method

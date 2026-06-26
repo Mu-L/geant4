@@ -34,8 +34,8 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4PhysListFactory_h
-#define G4PhysListFactory_h 1
+#ifndef G4PHYSLISTFACTORY_HH
+#define G4PHYSLISTFACTORY_HH
 
 #include "G4VModularPhysicsList.hh"
 #include "globals.hh"
@@ -44,41 +44,38 @@ class G4UImessenger;
 
 class G4PhysListFactory
 {
-public:
+  public:
 
-  G4PhysListFactory(G4int ver = 1);
+    G4PhysListFactory(G4int ver = 1);
 
-  ~G4PhysListFactory();
+    ~G4PhysListFactory();
 
-  G4VModularPhysicsList* GetReferencePhysList(const G4String&);
-  // instantiate PhysList by name
+    G4VModularPhysicsList* GetReferencePhysList(const G4String&);
+    // instantiate PhysList by name
 
-  G4VModularPhysicsList* ReferencePhysList();
-  // instantiate PhysList by environment variable "PHYSLIST"
+    G4VModularPhysicsList* ReferencePhysList();
+    // instantiate PhysList by environment variable "PHYSLIST"
 
-  G4bool IsReferencePhysList(const G4String&) const;
-  // check if the name is in the list of PhysLists names
+    G4bool IsReferencePhysList(const G4String&) const;
+    // check if the name is in the list of PhysLists names
 
-  const std::vector<G4String>& AvailablePhysLists() const;
-  // list of avalable base Phys Lists
+    const std::vector<G4String>& AvailablePhysLists() const;
+    // list of avalable base Phys Lists
 
-  const std::vector<G4String>& AvailablePhysListsEM() const;
-  // list of avalable EM options
+    const std::vector<G4String>& AvailablePhysListsEM() const;
+    // list of avalable EM options
 
-  inline void SetVerbose(G4int val) { verbose = val; }
+    inline void SetVerbose(G4int val) { verbose = val; }
 
-private:
+  private:
 
-  G4String defName;  
-  std::vector<G4String> listnames_hadr;
-  std::vector<G4String> listnames_em;
-  std::size_t nlists_hadr;
-  std::size_t nlists_em;
-  G4int verbose;
-  G4UImessenger* theMessenger;
+    G4String defName;
+    std::vector<G4String> listnames_hadr;
+    std::vector<G4String> listnames_em;
+    std::size_t nlists_hadr;
+    std::size_t nlists_em;
+    G4int verbose;
+    G4UImessenger* theMessenger;
 };
 
 #endif
-
-
-

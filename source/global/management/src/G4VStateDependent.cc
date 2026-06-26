@@ -29,6 +29,7 @@
 // --------------------------------------------------------------------
 
 #include "G4VStateDependent.hh"
+
 #include "G4StateManager.hh"
 
 G4VStateDependent::G4VStateDependent(G4bool bottom)
@@ -50,7 +51,7 @@ G4VStateDependent::G4VStateDependent(const G4VStateDependent& right)
 
 G4VStateDependent& G4VStateDependent::operator=(const G4VStateDependent& right)
 {
-  if(&right == this)
+  if (&right == this)
   {
     return *this;
   }

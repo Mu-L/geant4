@@ -36,27 +36,24 @@
 //
 
 #include "G4QGSBuilder.hh"
-#include "G4ExcitedStringDecay.hh"
-#include "G4QuasiElasticChannel.hh"
-#include "G4TheoFSGenerator.hh"
-#include "G4GeneratorPrecompoundInterface.hh"
-#include "G4QGSMFragmentation.hh"
-#include "G4ExcitedStringDecay.hh"
+
 #include "G4BinaryCascade.hh"
-#include "G4PreCompoundModel.hh"
 #include "G4ExcitationHandler.hh"
+#include "G4ExcitedStringDecay.hh"
+#include "G4GeneratorPrecompoundInterface.hh"
 #include "G4HadronicParameters.hh"
+#include "G4PreCompoundModel.hh"
+#include "G4QGSMFragmentation.hh"
 #include "G4QGSModel.hh"
 #include "G4QGSParticipants.hh"
+#include "G4QuasiElasticChannel.hh"
+#include "G4TheoFSGenerator.hh"
 
-G4QGSBuilder::G4QGSBuilder(const G4String& aName, G4PreCompoundModel*,
-			   G4bool quasiel) 
-  : G4VHadronModelBuilder(aName), 
-    quasielFlag(quasiel)
+G4QGSBuilder::G4QGSBuilder(const G4String& aName, G4PreCompoundModel*, G4bool quasiel)
+  : G4VHadronModelBuilder(aName), quasielFlag(quasiel)
 {}
 
-G4QGSBuilder::~G4QGSBuilder() 
-{}                                     
+G4QGSBuilder::~G4QGSBuilder() {}
 
 G4HadronicInteraction* G4QGSBuilder::BuildModel()
 {
@@ -66,24 +63,24 @@ G4HadronicInteraction* G4QGSBuilder::BuildModel()
   theModel->SetMinEnergy(theMin);
   theModel->SetMaxEnergy(theMax);
 
-  G4QGSModel< G4QGSParticipants >* theStringModel = 
-    new G4QGSModel< G4QGSParticipants >;
-  G4ExcitedStringDecay* theStringDecay = 
-    new G4ExcitedStringDecay(new G4QGSMFragmentation());
+  G4QGSModel<G4QGSParticipants>* theStringModel = new G4QGSModel<G4QGSParticipants>;
+  G4ExcitedStringDecay* theStringDecay = new G4ExcitedStringDecay(new G4QGSMFragmentation());
   theStringModel->SetFragmentationModel(theStringDecay);
 
   theModel->SetHighEnergyGenerator(theStringModel);
   if (quasielFlag)
-    {
-      theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
-    } 
+  {
+    theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
+  }
 
-  if(GetName() == "QGSB") {
+  if (GetName() == "QGSB")
+  {
     theModel->SetTransport(new G4BinaryCascade());
-  } else {
+  }
+  else
+  {
     theModel->SetTransport(new G4GeneratorPrecompoundInterface());
   }
 
   return theModel;
 }
-

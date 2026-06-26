@@ -33,31 +33,31 @@
 // Author: Josh Xie (CERN, Google Summer of Code 2014), June 2014
 // Supervisors:  Sandro Wenzel, John Apostolakis (CERN)
 // --------------------------------------------------------------------
-#ifndef G4TSimpleRunge_HH
-#define G4TSimpleRunge_HH
+#ifndef G4TSIMPLERUNGE_HH
+#define G4TSIMPLERUNGE_HH
 
-#include <cassert>
 #include "G4TMagErrorStepper.hh"
 #include "G4ThreeVector.hh"
 
+#include <cassert>
+
 /**
  * @brief G4TSimpleRunge is a templated version of G4SimpleRunge.
+ * @ingroup geometry_magneticfield
  */
 
-template <class T_Equation, int N>
-class G4TSimpleRunge
-  : public G4TMagErrorStepper<G4TSimpleRunge<T_Equation, N>, T_Equation, N>
+template<class T_Equation, int N>
+class G4TSimpleRunge : public G4TMagErrorStepper<G4TSimpleRunge<T_Equation, N>, T_Equation, N>
 {
   public:
 
     static constexpr double IntegratorCorrection = 1. / ((1 << 2) - 1);
 
     G4TSimpleRunge(T_Equation* EqRhs, G4int numberOfVariables = 6)
-      : G4TMagErrorStepper<G4TSimpleRunge<T_Equation, N>, T_Equation, N>(
-          EqRhs, numberOfVariables)
-      , fNumberOfVariables(numberOfVariables)
-      , fEquation_Rhs(EqRhs)
-      
+      : G4TMagErrorStepper<G4TSimpleRunge<T_Equation, N>, T_Equation, N>(EqRhs, numberOfVariables),
+        fNumberOfVariables(numberOfVariables),
+        fEquation_Rhs(EqRhs)
+
     {
       // default GetNumberOfStateVariables() == 12
       assert(this->GetNumberOfStateVariables() <= 12);
@@ -65,27 +65,25 @@ class G4TSimpleRunge
 
     ~G4TSimpleRunge() = default;
 
-    inline void RightHandSide(G4double y[],
-                              G4double dydx[])
+    inline void RightHandSide(G4double y[], G4double dydx[])
     {
       fEquation_Rhs->T_Equation::RightHandSide(y, dydx);
     }
 
-    inline void DumbStepper(const G4double yIn[],
-                            const G4double dydx[],
-                            G4double h, G4double yOut[]) // override final
+    inline void DumbStepper(const G4double yIn[], const G4double dydx[], G4double h,
+                            G4double yOut[])  // override final
     {
       // Initialise time to t0, needed when it is not updated by the integration.
       yTemp[7] = yOut[7] = yIn[7];  //  Better to set it to NaN;  // TODO
 
-      for(G4int i = 0; i < N; ++i)
+      for (G4int i = 0; i < N; ++i)
       {
         yTemp[i] = yIn[i] + 0.5 * h * dydx[i];
       }
 
       this->RightHandSide(yTemp, dydxTemp);
 
-      for(G4int i = 0; i < N; ++i)
+      for (G4int i = 0; i < N; ++i)
       {
         yOut[i] = yIn[i] + h * (dydxTemp[i]);
       }

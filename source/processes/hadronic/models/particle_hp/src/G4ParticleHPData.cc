@@ -33,34 +33,41 @@
 
 #include "G4PhysicsFreeVector.hh"
 
-G4ParticleHPData::G4ParticleHPData(G4ParticleDefinition* projectile)
-  : theProjectile(projectile)
+G4ParticleHPData::G4ParticleHPData(G4ParticleDefinition* projectile) : theProjectile(projectile)
 {
   // const char* theDataDirVariable;
-  if (projectile == G4Neutron::Neutron()) {
+  if (projectile == G4Neutron::Neutron())
+  {
     theDataDirVariable = "G4NEUTRONHPDATA";
   }
-  else if (projectile == G4Proton::Proton()) {
+  else if (projectile == G4Proton::Proton())
+  {
     theDataDirVariable = "G4PROTONHPDATA";
   }
-  else if (projectile == G4Deuteron::Deuteron()) {
+  else if (projectile == G4Deuteron::Deuteron())
+  {
     theDataDirVariable = "G4DEUTERONHPDATA";
   }
-  else if (projectile == G4Triton::Triton()) {
+  else if (projectile == G4Triton::Triton())
+  {
     theDataDirVariable = "G4TRITONHPDATA";
   }
-  else if (projectile == G4He3::He3()) {
+  else if (projectile == G4He3::He3())
+  {
     theDataDirVariable = "G4HE3HPDATA";
   }
-  else if (projectile == G4Alpha::Alpha()) {
+  else if (projectile == G4Alpha::Alpha())
+  {
     theDataDirVariable = "G4ALPHAHPDATA";
   }
 
   numEle = (G4int)G4Element::GetNumberOfElements();
-  for (G4int i = 0; i < numEle; ++i) {
+  for (G4int i = 0; i < numEle; ++i)
+  {
     theData.push_back(new G4ParticleHPElementData);
   }
-  for (G4int i = 0; i < numEle; ++i) {
+  for (G4int i = 0; i < numEle; ++i)
+  {
     (*theData[i]).Init((*(G4Element::GetElementTable()))[i], projectile, theDataDirVariable);
   }
 }
@@ -89,7 +96,8 @@ G4PhysicsVector* G4ParticleHPData::DoPhysicsVector(G4ParticleHPVector* theVector
   G4double emax = theVector->GetX(len - 1);
 
   auto theResult = new G4PhysicsFreeVector(len, emin, emax);
-  for (G4int i = 0; i < len; ++i) {
+  for (G4int i = 0; i < len; ++i)
+  {
     theResult->PutValues(i, theVector->GetX(i), theVector->GetY(i));
   }
   return theResult;
@@ -97,7 +105,8 @@ G4PhysicsVector* G4ParticleHPData::DoPhysicsVector(G4ParticleHPVector* theVector
 
 void G4ParticleHPData::addPhysicsVector()
 {
-  for (G4int i = numEle; i < (G4int)G4Element::GetNumberOfElements(); ++i) {
+  for (G4int i = numEle; i < (G4int)G4Element::GetNumberOfElements(); ++i)
+  {
     theData.push_back(new G4ParticleHPElementData);
     (*theData[i]).Init((*(G4Element::GetElementTable()))[i], theProjectile, theDataDirVariable);
   }

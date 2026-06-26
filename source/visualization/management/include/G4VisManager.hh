@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 
 // Class Description:
 //
@@ -81,26 +81,24 @@
 
 // Temporary definition until Xeon Phi can handle full C++11.
 #ifndef __MIC__
-#define G4VIS_USE_STD11
+#  define G4VIS_USE_STD11
 #endif
 
-#include "G4VVisManager.hh"
-
-#include "globals.hh"
 #include "G4GraphicsSystemList.hh"
 #include "G4ModelingParameters.hh"
 #include "G4NullModel.hh"
 #include "G4SceneHandlerList.hh"
 #include "G4SceneList.hh"
+#include "G4Threading.hh"
 #include "G4TrajectoriesModel.hh"
 #include "G4Transform3D.hh"
 #include "G4UImessenger.hh"
+#include "G4VVisManager.hh"
+#include "globals.hh"
 
 #include <iostream>
-#include <vector>
 #include <map>
-
-#include "G4Threading.hh"
+#include <vector>
 
 class G4Scene;
 class G4UIcommand;
@@ -108,283 +106,275 @@ class G4UImessenger;
 class G4VisStateDependent;
 class G4VTrajectoryModel;
 class G4VUserVisAction;
-template <typename> class G4VFilter;
-template <typename> class G4VisFilterManager;
-template <typename> class G4VisModelManager;
-template <typename> class G4VModelFactory;
+template<typename>
+class G4VFilter;
+template<typename>
+class G4VisFilterManager;
+template<typename>
+class G4VisModelManager;
+template<typename>
+class G4VModelFactory;
 class G4Event;
 
 // Useful typedef's
 typedef G4VModelFactory<G4VTrajectoryModel> G4TrajDrawModelFactory;
-typedef G4VModelFactory<G4VFilter<G4VTrajectory> > G4TrajFilterFactory;
-typedef G4VModelFactory<G4VFilter<G4VHit> > G4HitFilterFactory;
-typedef G4VModelFactory<G4VFilter<G4VDigi> > G4DigiFilterFactory;
+typedef G4VModelFactory<G4VFilter<G4VTrajectory>> G4TrajFilterFactory;
+typedef G4VModelFactory<G4VFilter<G4VHit>> G4HitFilterFactory;
+typedef G4VModelFactory<G4VFilter<G4VDigi>> G4DigiFilterFactory;
+
+class G4VisManager : public G4VVisManager
+{
+    // Management friends...
+    friend class G4VSceneHandler;
+    friend class G4VViewer;
+    friend class G4VisStateDependent;
+    friend class G4VisCommandList;
+
+    // operator << friends...
+    friend std::ostream& operator<<(std::ostream&, const G4VGraphicsSystem&);
+    friend std::ostream& operator<<(std::ostream&, const G4VSceneHandler&);
 
-class G4VisManager: public G4VVisManager {
-
-  // Management friends...
-  friend class G4VSceneHandler;
-  friend class G4VViewer;
-  friend class G4VisStateDependent;
-  friend class G4VisCommandList;
+  public:  // With description
 
-  // operator << friends...
-  friend std::ostream& operator << (std::ostream&, const G4VGraphicsSystem&);
-  friend std::ostream& operator << (std::ostream&, const G4VSceneHandler&);
+    // This enumeration defines levels of verbosity for messages printed by the
+    // visualisation manager and messengers.
+    // Higher levels include all messages from lower levels.
+    enum Verbosity
+    {
+      quiet,
+      startup,
+      errors,
+      warnings,
+      confirmations,
+      parameters,
+      all
+    };
 
-public: // With description
+  protected:  // With description
 
-  enum Verbosity {
-    quiet,         // Nothing is printed.
-    startup,       // Startup and endup messages are printed...
-    errors,        // ...and errors...
-    warnings,      // ...and warnings...
-    confirmations, // ...and confirming messages...
-    parameters,    // ...and parameters of scenes and views...
-    all            // ...and everything available.
-  };
-  // Simple graded message scheme.
+    G4VisManager(const G4String& verbosityString = "warnings");
+    // The constructor is protected so that an object of the derived
+    // class may be constructed.
 
-protected: // With description
+  public:  // With description
 
-  G4VisManager (const G4String& verbosityString = "warnings");
-  // The constructor is protected so that an object of the derived
-  // class may be constructed.
+    virtual ~G4VisManager();
 
-public: // With description
+  private:
 
-  virtual ~G4VisManager ();
+    // Private copy constructor and assigment operator - copying and
+    // assignment not allowed.  Keeps CodeWizard happy.
+    G4VisManager(const G4VisManager&);
+    G4VisManager& operator=(const G4VisManager&);
 
-private:
+  public:
 
-  // Private copy constructor and assigment operator - copying and
-  // assignment not allowed.  Keeps CodeWizard happy.
-  G4VisManager (const G4VisManager&);
-  G4VisManager& operator = (const G4VisManager&);
+    static G4VisManager* GetInstance();
+    // Returns pointer to itself.  Throws a G4Exception if called before
+    // instantiation.  Intended only for use within the vis category; the
+    // normal user should instead use G4VVisManager::GetConcreteInstance()
+    // to get a "higher level" pointer for general use - but always test
+    // for non-zero.
 
-public:
-  static G4VisManager* GetInstance ();
-  // Returns pointer to itself.  Throws a G4Exception if called before
-  // instantiation.  Intended only for use within the vis category; the
-  // normal user should instead use G4VVisManager::GetConcreteInstance()
-  // to get a "higher level" pointer for general use - but always test
-  // for non-zero.
+  public:  // With description
 
-public: // With description
+    void Initialise();
+    void Initialize();  // Alias Initialise ()
 
-  void Initialise ();
-  void Initialize ();  // Alias Initialise ()
+    // Optional registration of user vis actions.  Added to scene with
+    // /vis/scene/add/userAction.
+    void RegisterRunDurationUserVisAction(const G4String& name, G4VUserVisAction*,
+                                          const G4VisExtent& = G4VisExtent());
+    void RegisterEndOfEventUserVisAction(const G4String& name, G4VUserVisAction*,
+                                         const G4VisExtent& = G4VisExtent());
+    void RegisterEndOfRunUserVisAction(const G4String& name, G4VUserVisAction*,
+                                       const G4VisExtent& = G4VisExtent());
 
-  // Optional registration of user vis actions.  Added to scene with
-  // /vis/scene/add/userAction.
-  void RegisterRunDurationUserVisAction
-  (const G4String& name, G4VUserVisAction*,
-   const G4VisExtent& = G4VisExtent());
-  void RegisterEndOfEventUserVisAction
-  (const G4String& name, G4VUserVisAction*,
-   const G4VisExtent& = G4VisExtent());
-  void RegisterEndOfRunUserVisAction
-  (const G4String& name, G4VUserVisAction*,
-   const G4VisExtent& = G4VisExtent());
+    G4bool RegisterGraphicsSystem(G4VGraphicsSystem*);
+    // Register an individual graphics system.  Normally this is done in
+    // a sub-class implementation of the protected virtual function,
+    // RegisterGraphicsSystems.  See, e.g., G4VisExecutive.icc.
 
-  G4bool RegisterGraphicsSystem (G4VGraphicsSystem*);
-  // Register an individual graphics system.  Normally this is done in
-  // a sub-class implementation of the protected virtual function,
-  // RegisterGraphicsSystems.  See, e.g., G4VisExecutive.icc.
+    void RegisterModelFactory(G4TrajDrawModelFactory* factory);
+    // Register trajectory draw model factory. Assumes ownership of factory.
 
-  void RegisterModelFactory(G4TrajDrawModelFactory* factory);
-  // Register trajectory draw model factory. Assumes ownership of factory.
+    void RegisterModel(G4VTrajectoryModel* model);
+    // Register trajectory model. Assumes ownership of model.
 
-  void RegisterModel(G4VTrajectoryModel* model);
-  // Register trajectory model. Assumes ownership of model.
+    void RegisterModelFactory(G4TrajFilterFactory* factory);
+    // Register trajectory filter model factory. Assumes ownership of factory.
 
-  void RegisterModelFactory(G4TrajFilterFactory* factory);
-  // Register trajectory filter model factory. Assumes ownership of factory.
+    void RegisterModel(G4VFilter<G4VTrajectory>* filter);
+    // Register trajectory filter model. Assumes ownership of model.
 
-  void RegisterModel(G4VFilter<G4VTrajectory>* filter);
-  // Register trajectory filter model. Assumes ownership of model.
+    void RegisterModelFactory(G4HitFilterFactory* factory);
+    // Register trajectory hit model factory. Assumes ownership of factory.
 
-  void RegisterModelFactory(G4HitFilterFactory* factory);
-  // Register trajectory hit model factory. Assumes ownership of factory.
+    void RegisterModel(G4VFilter<G4VHit>* filter);
+    // Register trajectory hit model. Assumes ownership of model.
 
-  void RegisterModel(G4VFilter<G4VHit>* filter);
-  // Register trajectory hit model. Assumes ownership of model.
+    void RegisterModelFactory(G4DigiFilterFactory* factory);
+    // Register trajectory digi model factory. Assumes ownership of factory.
 
-  void RegisterModelFactory(G4DigiFilterFactory* factory);
-  // Register trajectory digi model factory. Assumes ownership of factory.
+    void RegisterModel(G4VFilter<G4VDigi>* filter);
+    // Register trajectory digi model. Assumes ownership of model.
 
-  void RegisterModel(G4VFilter<G4VDigi>* filter);
-  // Register trajectory digi model. Assumes ownership of model.
+    void SelectTrajectoryModel(const G4String& model);
+    // Set default trajectory model. Useful for use in compiled code
 
-  void SelectTrajectoryModel(const G4String& model);
-  // Set default trajectory model. Useful for use in compiled code
+    void RegisterMessenger(G4UImessenger* messenger);
+    // Register messenger. Assumes ownership of messenger.
 
-  void RegisterMessenger(G4UImessenger* messenger);
-  // Register messenger. Assumes ownership of messenger.
+    /////////////////////////////////////////////////////////////////
+    // Now functions that implement the pure virtual functions of
+    // G4VVisManager for drawing various visualization primitives, useful
+    // for representing hits, digis, etc.
 
-  /////////////////////////////////////////////////////////////////
-  // Now functions that implement the pure virtual functions of
-  // G4VVisManager for drawing various visualization primitives, useful
-  // for representing hits, digis, etc.
+    void Draw(const G4Circle&, const G4Transform3D& objectTransformation = G4Transform3D());
 
-  void Draw (const G4Circle&,
-    const G4Transform3D& objectTransformation = G4Transform3D());
+    void Draw(const G4Polyhedron&, const G4Transform3D& objectTransformation = G4Transform3D());
 
-  void Draw (const G4Polyhedron&,
-    const G4Transform3D& objectTransformation = G4Transform3D());
+    void Draw(const G4Polyline&, const G4Transform3D& objectTransformation = G4Transform3D());
 
-  void Draw (const G4Polyline&,
-    const G4Transform3D& objectTransformation = G4Transform3D());
+    void Draw(const G4Polymarker&, const G4Transform3D& objectTransformation = G4Transform3D());
 
-  void Draw (const G4Polymarker&,
-    const G4Transform3D& objectTransformation = G4Transform3D());
+    void Draw(const G4Square&, const G4Transform3D& objectTransformation = G4Transform3D());
 
-  void Draw (const G4Square&,
-    const G4Transform3D& objectTransformation = G4Transform3D());
+    void Draw(const G4Text&, const G4Transform3D& objectTransformation = G4Transform3D());
 
-  void Draw (const G4Text&,
-    const G4Transform3D& objectTransformation = G4Transform3D());
+    void Draw2D(const G4Circle&, const G4Transform3D& objectTransformation = G4Transform3D());
 
-  void Draw2D (const G4Circle&,
-    const G4Transform3D& objectTransformation = G4Transform3D());
+    void Draw2D(const G4Polyhedron&, const G4Transform3D& objectTransformation = G4Transform3D());
 
-  void Draw2D (const G4Polyhedron&,
-    const G4Transform3D& objectTransformation = G4Transform3D());
+    void Draw2D(const G4Polyline&, const G4Transform3D& objectTransformation = G4Transform3D());
 
-  void Draw2D (const G4Polyline&,
-    const G4Transform3D& objectTransformation = G4Transform3D());
+    void Draw2D(const G4Polymarker&, const G4Transform3D& objectTransformation = G4Transform3D());
 
-  void Draw2D (const G4Polymarker&,
-    const G4Transform3D& objectTransformation = G4Transform3D());
+    void Draw2D(const G4Square&, const G4Transform3D& objectTransformation = G4Transform3D());
 
-  void Draw2D (const G4Square&,
-    const G4Transform3D& objectTransformation = G4Transform3D());
+    void Draw2D(const G4Text&, const G4Transform3D& objectTransformation = G4Transform3D());
 
-  void Draw2D (const G4Text&,
-    const G4Transform3D& objectTransformation = G4Transform3D());
+    ////////////////////////////////////////////////////////////////////
+    // Now functions that implement the pure virtual functions of
+    // G4VVisManager for drawing a GEANT4 object.  Note that the
+    // visualization attributes needed in some cases override any
+    // visualization attributes that are associated with the object
+    // itself - thus you can, for example, change the colour of a
+    // physical volume.
 
-  ////////////////////////////////////////////////////////////////////
-  // Now functions that implement the pure virtual functions of
-  // G4VVisManager for drawing a GEANT4 object.  Note that the
-  // visualization attributes needed in some cases override any
-  // visualization attributes that are associated with the object
-  // itself - thus you can, for example, change the colour of a
-  // physical volume.
+    void Draw(const G4VTrajectory&);
 
-  void Draw (const G4VTrajectory&);
+    void Draw(const G4VHit&);
 
-  void Draw (const G4VHit&);
+    void Draw(const G4VDigi&);
 
-  void Draw (const G4VDigi&);
+    void Draw(const G4LogicalVolume&, const G4VisAttributes&,
+              const G4Transform3D& objectTransformation = G4Transform3D());
 
-  void Draw (const G4LogicalVolume&, const G4VisAttributes&,
-    const G4Transform3D& objectTransformation = G4Transform3D());
+    void Draw(const G4VPhysicalVolume&, const G4VisAttributes&,
+              const G4Transform3D& objectTransformation = G4Transform3D());
 
-  void Draw (const G4VPhysicalVolume&, const G4VisAttributes&,
-    const G4Transform3D& objectTransformation = G4Transform3D());
+    void Draw(const G4VSolid&, const G4VisAttributes&,
+              const G4Transform3D& objectTransformation = G4Transform3D());
 
-  void Draw (const G4VSolid&, const G4VisAttributes&,
-    const G4Transform3D& objectTransformation = G4Transform3D());
+    void DrawGeometry(G4VPhysicalVolume*, const G4Transform3D& t = G4Transform3D());
+    // Draws a geometry tree starting at the specified physical volume.
 
-  void DrawGeometry
-  (G4VPhysicalVolume*, const G4Transform3D& t = G4Transform3D());
-  // Draws a geometry tree starting at the specified physical volume.
+    //////////////////////////////////////////////////////////////////////
+    // Optional methods that you may use to bracket a series of Draw
+    // messages that have identical objectTransformation to improve
+    // drawing speed.  Use Begin/EndDraw for a series of Draw messages,
+    // Begin/EndDraw2D for a series of Draw2D messages.  Do not mix Draw
+    // and Draw2D messages.
 
-  //////////////////////////////////////////////////////////////////////
-  // Optional methods that you may use to bracket a series of Draw
-  // messages that have identical objectTransformation to improve
-  // drawing speed.  Use Begin/EndDraw for a series of Draw messages,
-  // Begin/EndDraw2D for a series of Draw2D messages.  Do not mix Draw
-  // and Draw2D messages.
+    void BeginDraw(const G4Transform3D& objectTransformation = G4Transform3D());
 
-  void BeginDraw
-  (const G4Transform3D& objectTransformation = G4Transform3D());
+    void EndDraw();
 
-  void EndDraw ();
+    void BeginDraw2D(const G4Transform3D& objectTransformation = G4Transform3D());
 
-  void BeginDraw2D
-  (const G4Transform3D& objectTransformation = G4Transform3D());
+    void EndDraw2D();
 
-  void EndDraw2D ();
+    ////////////////////////////////////////////////////////////////////////
+    // Now other pure virtual functions of G4VVisManager...
 
-  ////////////////////////////////////////////////////////////////////////
-  // Now other pure virtual functions of G4VVisManager...
+    void GeometryHasChanged();
+    // Used by run manager to notify change.
 
-  void GeometryHasChanged ();
-  // Used by run manager to notify change.
+    void IgnoreStateChanges(G4bool);
+    // This method shoud be invoked by a class that has its own event loop,
+    // such as the RayTracer, material scanner, etc. If the argument is true,
+    // the following state changes among Idle, GeomClosed and EventProc are
+    // caused by such a class, and thus not by the ordinary event simulation.
+    // The same method with false should be invoked once such an event loop
+    // is over.
 
-  void IgnoreStateChanges(G4bool);
-  // This method shoud be invoked by a class that has its own event loop,
-  // such as the RayTracer, material scanner, etc. If the argument is true,
-  // the following state changes among Idle, GeomClosed and EventProc are
-  // caused by such a class, and thus not by the ordinary event simulation.
-  // The same method with false should be invoked once such an event loop
-  // is over.
+    void NotifyHandlers();
+    // Notify scene handlers (G4VGraphicsScene objects) that the scene
+    // has changed so that they may rebuild their graphics database, if
+    // any, and redraw all views.
 
-  void NotifyHandlers();
-  // Notify scene handlers (G4VGraphicsScene objects) that the scene
-  // has changed so that they may rebuild their graphics database, if
-  // any, and redraw all views.
+    void DispatchToModel(const G4VTrajectory&);
+    // Draw the trajectory.
 
-  void DispatchToModel(const G4VTrajectory&);
-  // Draw the trajectory.
+    G4bool FilterTrajectory(const G4VTrajectory&);
+    G4bool FilterHit(const G4VHit&);
+    G4bool FilterDigi(const G4VDigi&);
 
-  G4bool FilterTrajectory(const G4VTrajectory&);
-  G4bool FilterHit(const G4VHit&);
-  G4bool FilterDigi(const G4VDigi&);
+    virtual void SetUpForAThread();
+    // This method is invoked by G4WorkerRunManager
 
-  virtual void SetUpForAThread();
-  // This method is invoked by G4WorkerRunManager
+    virtual void EventReadyForVis(const G4Event*);
+    // This is invoked by G4SubEvtRunManager.
+    // The event is passed to EndOfEventKernel.
 
-  virtual void EventReadyForVis(const G4Event*);
-  // This is invoked by G4SubEvtRunManager.
-  // The event is passed to EndOfEventKernel.
+    static G4ThreadFunReturnType G4VisSubThread(G4ThreadFunArgType);
+    // Vis sub-thread function.
 
-  static G4ThreadFunReturnType G4VisSubThread(G4ThreadFunArgType);
-  // Vis sub-thread function.
+    ////////////////////////////////////////////////////////////////////////
+    // Administration routines.
 
+    void CreateSceneHandler(const G4String& name = "");
+    // Creates scene handler for the current system.
 
-  ////////////////////////////////////////////////////////////////////////
-  // Administration routines.
+    void CreateViewer(const G4String& name = "", const G4String& XGeometry = "");
+    // Creates viewer for the current scene handler.
 
-  void CreateSceneHandler (const G4String& name = "");
-  // Creates scene handler for the current system.
+  private:
 
-  void CreateViewer (const G4String& name = "", const G4String& XGeometry = "");
-  // Creates viewer for the current scene handler.
+    void BeginOfRun();
 
-private:
+    void BeginOfEvent();
 
-  void BeginOfRun ();
+    void EndOfEvent();
+    void EndOfEventKernel(const G4Event* currentEvent);
+    void EndOfEventCleanup(const G4Event* currentEvent);
+    G4bool RequiredToBeKeptForVis(G4int eventID);
+    // Cluster of methods to handle end of event.
 
-  void BeginOfEvent ();
+    void EndOfRun();
 
-  void EndOfEvent ();
-  void EndOfEventKernel (const G4Event* currentEvent);
-  void EndOfEventCleanup (const G4Event* currentEvent);
-  G4bool RequiredToBeKeptForVis (G4int eventID);
-  // Cluster of methods to handle end of event.
+  public:  // With description
 
-  void EndOfRun ();
+    /////////////////////////////////////////////////////////////////////
+    // Access functions.
 
-public: // With description
+    void Enable();
+    void Disable();
+    G4bool IsEnabled() const;
+    // Global enable/disable functions.
 
-  /////////////////////////////////////////////////////////////////////
-  // Access functions.
+    const G4VTrajectoryModel* CurrentTrajDrawModel() const;
 
-  void Enable();
-  void Disable();
-  G4bool IsEnabled() const;
-  // Global enable/disable functions.
-
-  const G4VTrajectoryModel* CurrentTrajDrawModel() const;
-
-  struct UserVisAction {
-    UserVisAction(const G4String& name, G4VUserVisAction* pUserVisAction)
-      :fName(name), fpUserVisAction(pUserVisAction) {}
-    G4String fName;
-    G4VUserVisAction* fpUserVisAction;
-  };
+    struct UserVisAction
+    {
+        UserVisAction(const G4String& name, G4VUserVisAction* pUserVisAction)
+          : fName(name), fpUserVisAction(pUserVisAction)
+        {}
+        G4String fName;
+        G4VUserVisAction* fpUserVisAction;
+    };
+    // clang-format off
   const std::vector<UserVisAction>& GetRunDurationUserVisActions () const;
   const std::vector<UserVisAction>& GetEndOfEventUserVisActions  () const;
   const std::vector<UserVisAction>& GetEndOfRunUserVisActions    () const;
@@ -449,126 +439,127 @@ public: // With description
   void              SetDefaultXGeometryString   (const G4String&);
   void              SetDefaultGraphicsSystemBasis(const G4String&);
   void              SetDefaultXGeometryStringBasis(const G4String&);
+    // clang-format on
 
-  /////////////////////////////////////////////////////////////////////
-  // Utility functions.
+    /////////////////////////////////////////////////////////////////////
+    // Utility functions.
 
-  G4String ViewerShortName (const G4String& viewerName) const;
-  // Returns shortened version of viewer name, i.e., up to first space,
-  // if any.
+    G4String ViewerShortName(const G4String& viewerName) const;
+    // Returns shortened version of viewer name, i.e., up to first space,
+    // if any.
 
-  G4VViewer* GetViewer (const G4String& viewerName) const;
-  // Returns zero if not found.  Can use long or short name, but find
-  // is done on short name.
+    G4VViewer* GetViewer(const G4String& viewerName) const;
+    // Returns zero if not found.  Can use long or short name, but find
+    // is done on short name.
 
-  static Verbosity GetVerbosityValue(const G4String&);
-  // Returns verbosity given a string.  (Uses first character only.)
+    static Verbosity GetVerbosityValue(const G4String&);
+    // Returns verbosity given a string.  (Uses first character only.)
 
-  static Verbosity GetVerbosityValue(G4int);
-  // Returns verbosity given an integer.  If integer is out of range,
-  // selects verbosity at extreme of range.
+    static Verbosity GetVerbosityValue(G4int);
+    // Returns verbosity given an integer.  If integer is out of range,
+    // selects verbosity at extreme of range.
 
-  static G4String VerbosityString(Verbosity);
-  // Converts the verbosity into a string for suitable for printing.
-  
-  static std::vector<G4String> VerbosityGuidanceStrings;
-  // Guidance on the use of visualization verbosity.
+    static G4String VerbosityString(Verbosity);
+    // Converts the verbosity into a string for suitable for printing.
 
-  static void PrintAvailableVerbosity (std::ostream& os);
+    static std::vector<G4String> VerbosityGuidanceStrings;
+    // Guidance on the use of visualization verbosity.
 
-  void PrintAvailableGraphicsSystems (Verbosity, std::ostream& = G4cout) const;
+    static void PrintAvailableVerbosity(std::ostream& os);
 
-protected:
+    void PrintAvailableGraphicsSystems(Verbosity, std::ostream& = G4cout) const;
 
-  virtual void RegisterGraphicsSystems () = 0;
-  // The sub-class must implement and make successive calls to
-  // RegisterGraphicsSystem.
+  protected:
 
-  virtual void RegisterModelFactories();
-  // Sub-class must register desired models
+    virtual void RegisterGraphicsSystems() = 0;
+    // The sub-class must implement and make successive calls to
+    // RegisterGraphicsSystem.
 
-  void RegisterMessengers              ();   // Command messengers.
+    virtual void RegisterModelFactories();
+    // Sub-class must register desired models
 
-  const G4int fVerbose;
-  // No longer used. Use fVerbosity and access functions instead.
-  // fVerbose is kept for backwards compatibility for some user
-  // examples.  (It is used in the derived user vis managers to print
-  // available graphics systems.)  It is initialised to 1 in the
-  // constructor and cannot be changed.
-  static Verbosity fVerbosity;
+    void RegisterMessengers();  // Command messengers.
 
-  G4String fDefaultGraphicsSystemName;
-  G4String fDefaultXGeometryString;
-  G4String fDefaultGraphicsSystemBasis;
-  G4String fDefaultXGeometryStringBasis;
+    const G4int fVerbose;
+    // No longer used. Use fVerbosity and access functions instead.
+    // fVerbose is kept for backwards compatibility for some user
+    // examples.  (It is used in the derived user vis managers to print
+    // available graphics systems.)  It is initialised to 1 in the
+    // constructor and cannot be changed.
+    static Verbosity fVerbosity;
 
-private:
+    G4String fDefaultGraphicsSystemName;
+    G4String fDefaultXGeometryString;
+    G4String fDefaultGraphicsSystemBasis;
+    G4String fDefaultXGeometryStringBasis;
 
-  // Function templates to implement the Draw methods (to avoid source
-  // code duplication).
-  template <class T> void DrawT
-  (const T& graphics_primitive, const G4Transform3D& objectTransform);
-  template <class T> void DrawT2D
-  (const T& graphics_primitive, const G4Transform3D& objectTransform);
+  private:
 
-  void PrintAvailableModels            (Verbosity) const;
-  void InitialiseG4ColourMap           () const;
-  void PrintAvailableColours           (Verbosity) const;
-  void PrintAvailableUserVisActions    (Verbosity) const;
-  void PrintInvalidPointers            () const;
-  G4bool IsValidView ();
-  // True if view is valid.  Prints messages and sanitises various data.
-  void ClearTransientStoreIfMarked();
-  // Clears transient store of current scene handler if it is marked
-  // for clearing.  Assumes view is valid.
+    // Function templates to implement the Draw methods (to avoid source
+    // code duplication).
+    template<class T>
+    void DrawT(const T& graphics_primitive, const G4Transform3D& objectTransform);
+    template<class T>
+    void DrawT2D(const T& graphics_primitive, const G4Transform3D& objectTransform);
 
-  static G4VisManager*  fpInstance;         // Pointer to single instance. 
-  G4bool                fInitialised;
-  std::vector<UserVisAction> fRunDurationUserVisActions;
-  std::vector<UserVisAction> fEndOfEventUserVisActions;
-  std::vector<UserVisAction> fEndOfRunUserVisActions;
-  std::map<G4VUserVisAction*,G4VisExtent> fUserVisActionExtents;
-  G4VGraphicsSystem*    fpGraphicsSystem;   // Current graphics system.
-  G4Scene*              fpScene;            // Current scene.
-  G4VSceneHandler*      fpSceneHandler;     // Current scene handler.
-  G4VViewer*            fpViewer;           // Current viewer.
-  G4GraphicsSystemList  fAvailableGraphicsSystems;
-  G4SceneList           fSceneList;
-  G4SceneHandlerList    fAvailableSceneHandlers;
-  std::vector<G4UImessenger*> fMessengerList;
-  std::vector<G4UIcommand*>   fDirectoryList;
-  G4VisStateDependent*  fpStateDependent;   // Friend state dependent class.
-  G4bool                fEventRefreshing;
-  G4bool                fTransientsDrawnThisRun;
-  G4bool                fTransientsDrawnThisEvent;
-  G4int                 fNoOfEventsDrawnThisRun;
-  G4int                 fNKeepForPostProcessingRequests;
-  G4int                 fNKeepTheEventRequests;
-  G4bool                fEventKeepingSuspended;
-  G4bool                fDrawEventOnlyIfToBeKept;
-  const G4Event*        fpRequestedEvent; // If non-zero, scene handler uses.
-  G4bool                fReviewingKeptEvents;
-  G4bool                fAbortReviewKeptEvents;
-  G4bool                fReviewingPlots;
-  G4bool                fAbortReviewPlots;
-  G4ViewParameters      fDefaultViewParameters;
-  G4bool                fIsDrawGroup;
-  G4int                 fDrawGroupNestingDepth;
-  G4bool                fIgnoreStateChanges;
-  G4int                 fMaxEventQueueSize;
-  G4bool                fWaitOnEventQueueFull;
+    void PrintAvailableModels(Verbosity) const;
+    void InitialiseG4ColourMap() const;
+    void PrintAvailableColours(Verbosity) const;
+    void PrintAvailableUserVisActions(Verbosity) const;
+    void PrintInvalidPointers() const;
+    G4bool IsValidView();
+    // True if view is valid.  Prints messages and sanitises various data.
+    void ClearTransientStoreIfMarked();
+    // Clears transient store of current scene handler if it is marked
+    // for clearing.  Assumes view is valid.
 
-  // Trajectory draw model manager
-  G4VisModelManager<G4VTrajectoryModel>* fpTrajDrawModelMgr;
-  
-  // Trajectory filter model manager
-  G4VisFilterManager<G4VTrajectory>* fpTrajFilterMgr;
+    static G4VisManager* fpInstance;  // Pointer to single instance.
+    G4bool fInitialised;
+    std::vector<UserVisAction> fRunDurationUserVisActions;
+    std::vector<UserVisAction> fEndOfEventUserVisActions;
+    std::vector<UserVisAction> fEndOfRunUserVisActions;
+    std::map<G4VUserVisAction*, G4VisExtent> fUserVisActionExtents;
+    G4VGraphicsSystem* fpGraphicsSystem;  // Current graphics system.
+    G4Scene* fpScene;  // Current scene.
+    G4VSceneHandler* fpSceneHandler;  // Current scene handler.
+    G4VViewer* fpViewer;  // Current viewer.
+    G4GraphicsSystemList fAvailableGraphicsSystems;
+    G4SceneList fSceneList;
+    G4SceneHandlerList fAvailableSceneHandlers;
+    std::vector<G4UImessenger*> fMessengerList;
+    std::vector<G4UIcommand*> fDirectoryList;
+    G4VisStateDependent* fpStateDependent;  // Friend state dependent class.
+    G4bool fEventRefreshing;
+    G4bool fTransientsDrawnThisRun;
+    G4bool fTransientsDrawnThisEvent;
+    G4int fNoOfEventsDrawnThisRun;
+    G4int fNKeepForPostProcessingRequests;
+    G4int fNKeepTheEventRequests;
+    G4bool fEventKeepingSuspended;
+    G4bool fDrawEventOnlyIfToBeKept;
+    const G4Event* fpRequestedEvent;  // If non-zero, scene handler uses.
+    G4bool fReviewingKeptEvents;
+    G4bool fAbortReviewKeptEvents;
+    G4bool fReviewingPlots;
+    G4bool fAbortReviewPlots;
+    G4ViewParameters fDefaultViewParameters;
+    G4bool fIsDrawGroup;
+    G4int fDrawGroupNestingDepth;
+    G4bool fIgnoreStateChanges;
+    G4int fMaxEventQueueSize;
+    G4bool fWaitOnEventQueueFull;
 
-  // Hit filter model manager
-  G4VisFilterManager<G4VHit>* fpHitFilterMgr;
+    // Trajectory draw model manager
+    G4VisModelManager<G4VTrajectoryModel>* fpTrajDrawModelMgr;
 
-  // Digi filter model manager
-  G4VisFilterManager<G4VDigi>* fpDigiFilterMgr;
+    // Trajectory filter model manager
+    G4VisFilterManager<G4VTrajectory>* fpTrajFilterMgr;
+
+    // Hit filter model manager
+    G4VisFilterManager<G4VHit>* fpHitFilterMgr;
+
+    // Digi filter model manager
+    G4VisFilterManager<G4VDigi>* fpDigiFilterMgr;
 };
 
 #include "G4VisManager.icc"

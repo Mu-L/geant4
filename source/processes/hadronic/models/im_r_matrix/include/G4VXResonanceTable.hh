@@ -31,11 +31,11 @@
 //      File name:     G4VXResonanceTable
 //
 //      Author:        Maria Grazia Pia (MariaGrazia.Pia@genova.infn.it)
-// 
+//
 //      Creation date: 4 June 1999
 //
-//      Modifications: 
-//      
+//      Modifications:
+//
 // Hadron Kinetic Model
 // Base class for cross section tables
 //
@@ -44,26 +44,22 @@
 #ifndef G4VXRESONANCETABLE_HH
 #define G4VXRESONANCETABLE_HH
 
-#include "globals.hh"
 #include "G4PhysicsVector.hh"
+#include "globals.hh"
 
-class G4VXResonanceTable 
+class G4VXResonanceTable
 {
+  public:
 
-public:
+    G4VXResonanceTable() {}
 
-  G4VXResonanceTable() { }
+    virtual ~G4VXResonanceTable() {}
 
-  virtual ~G4VXResonanceTable() { }
+    virtual G4PhysicsVector* CrossSectionTable() const = 0;
 
-  virtual G4PhysicsVector* CrossSectionTable() const = 0;
+  protected:
 
-
-protected:
-
-private:  
-
+  private:
 };
 
 #endif
-

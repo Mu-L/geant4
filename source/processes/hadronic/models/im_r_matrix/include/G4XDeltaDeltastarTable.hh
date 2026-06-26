@@ -24,63 +24,58 @@
 // ********************************************************************
 //
 //
-//      
+//
 // Hadron Kinetic Model
 // p p -> N Delta* cross section tables
 //
 // -------------------------------------------------------------------
 
-#ifndef G4XDeltaDeltastarTable_h
-#define G4XDeltaDeltastarTable_h
+#ifndef G4XDELTADELTASTARTABLE_HH
+#define G4XDELTADELTASTARTABLE_HH
 
-#include "globals.hh"
 #include "G4PhysicsVector.hh"
 #include "G4VXResonanceTable.hh"
+#include "globals.hh"
 
 #include <map>
 
-class G4XDeltaDeltastarTable 
+class G4XDeltaDeltastarTable
 {
+  public:
 
-public:
+    G4XDeltaDeltastarTable();
 
-  G4XDeltaDeltastarTable(); 
+    virtual ~G4XDeltaDeltastarTable();
 
-  virtual ~G4XDeltaDeltastarTable();
+    virtual const G4PhysicsVector* CrossSectionTable(const G4String& particleName) const;
 
-  virtual const G4PhysicsVector* CrossSectionTable(const G4String& particleName) const;
+    G4bool operator==(const G4XDeltaDeltastarTable& right) const;
+    G4bool operator!=(const G4XDeltaDeltastarTable& right) const;
 
-  G4bool operator==(const G4XDeltaDeltastarTable &right) const;
-  G4bool operator!=(const G4XDeltaDeltastarTable &right) const;
+  protected:
 
+  private:
 
-protected:
+    G4XDeltaDeltastarTable(const G4XDeltaDeltastarTable& right);
+    G4XDeltaDeltastarTable& operator=(const G4XDeltaDeltastarTable& right);
 
+    std::map<G4String, G4double*, std::less<G4String>> xMap;
 
-private:  
+    static const G4int sizeDeltaDeltastar;
 
-  G4XDeltaDeltastarTable(const G4XDeltaDeltastarTable &right);
-  G4XDeltaDeltastarTable& operator=(const G4XDeltaDeltastarTable &right);
+    // The energies corresponding to the following cross sections
+    static const G4double energyTable[121];
 
-  std::map <G4String, G4double*, std::less<G4String> > xMap;
-
-  static const G4int sizeDeltaDeltastar;
-
-  // The energies corresponding to the following cross sections
-  static const G4double energyTable[121];
-
-  // Cross sections for p p -> N Delta*
-  static const G4double sigmaDD1600[121];
-  static const G4double sigmaDD1620[121];
-  static const G4double sigmaDD1700[121];
-  static const G4double sigmaDD1900[121];
-  static const G4double sigmaDD1905[121];
-  static const G4double sigmaDD1910[121];
-  static const G4double sigmaDD1920[121];
-  static const G4double sigmaDD1930[121]; // 40 is missing... @@@@@@@
-  static const G4double sigmaDD1950[121];
-
+    // Cross sections for p p -> N Delta*
+    static const G4double sigmaDD1600[121];
+    static const G4double sigmaDD1620[121];
+    static const G4double sigmaDD1700[121];
+    static const G4double sigmaDD1900[121];
+    static const G4double sigmaDD1905[121];
+    static const G4double sigmaDD1910[121];
+    static const G4double sigmaDD1920[121];
+    static const G4double sigmaDD1930[121];  // 40 is missing... @@@@@@@
+    static const G4double sigmaDD1950[121];
 };
 
 #endif
-

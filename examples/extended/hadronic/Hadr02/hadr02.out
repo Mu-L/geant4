@@ -10,7 +10,7 @@
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -178,6 +178,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 0
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -897,33 +898,33 @@ Index : 1     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 100
-  User=0.070000s Real=0.103406s Sys=0.000000s
+  User=0.050000s Real=0.048807s Sys=0.000000s
 RunAction: End of run action is starting
 HistoManager: End of run actions are started
 ========================================================
 Beam particle                        S32
 Beam Energy(GeV)                     200
 Number of events                     100
-Average energy deposit (GeV)         6.157   RMS(GeV) 4.122
-Average number of steps              53.48
-Average number of gamma              0.72
+Average energy deposit (GeV)         6.239   RMS(GeV) 4.239
+Average number of steps              54.42
+Average number of gamma              0.8
 Average number of e-                 0
 Average number of e+                 0
-Average number of neutrons           10.01
-Average number of protons            10.6
+Average number of neutrons           10
+Average number of protons            10.06
 Average number of antiprotons        0
-Average number of pi+ & pi-          8.44
-Average number of pi0                4.28
-Average number of kaons              0.1
+Average number of pi+ & pi-          7.53
+Average number of pi0                3.25
+Average number of kaons              0.08
 Average number of muons              0
-Average number of deuterons+tritons  1.02
-Average number of He3+alpha          1.91
-Average number of ions               0.98
+Average number of deuterons+tritons  1.29
+Average number of He3+alpha          1.47
+Average number of ions               1.17
 ========================================================
 
 Graphics systems deleted.
 Visualization Manager deleting...
 ================== Deleting memory pools ===================
 Number of memory pools allocated: 12 of which, static: 0
-Dynamic pools deleted: 12 / Total memory freed: 0.094 MB
+Dynamic pools deleted: 12 / Total memory freed: 0.093 MB
 ============================================================

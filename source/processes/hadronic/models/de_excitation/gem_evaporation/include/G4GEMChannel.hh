@@ -28,17 +28,17 @@
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara (Oct 1998)
 //
-#ifndef G4GEMChannel_h
-#define G4GEMChannel_h 1
+#ifndef G4GEMCHANNEL_HH
+#define G4GEMCHANNEL_HH
 
-#include "G4VEvaporationChannel.hh"
-#include "G4GEMProbability.hh"
-#include "G4VLevelDensityParameter.hh"
 #include "G4EvaporationLevelDensityParameter.hh"
-#include "G4NucleiProperties.hh"
+#include "G4GEMProbability.hh"
 #include "G4NuclearLevelData.hh"
-#include "Randomize.hh"
+#include "G4NucleiProperties.hh"
 #include "G4ParticleTable.hh"
+#include "G4VEvaporationChannel.hh"
+#include "G4VLevelDensityParameter.hh"
+#include "Randomize.hh"
 
 class G4Pow;
 class G4PairingCorrection;
@@ -46,78 +46,80 @@ class G4VCoulombBarrier;
 
 class G4GEMChannel : public G4VEvaporationChannel
 {
-public:
+  public:
 
-  explicit G4GEMChannel(G4int theA, G4int theZ, const G4String & aName,
-			G4GEMProbability * aEmissionStrategy);
+    explicit G4GEMChannel(G4int theA, G4int theZ, const G4String& aName,
+                          G4GEMProbability* aEmissionStrategy);
 
-  // destructor
-  virtual ~G4GEMChannel();
-    
-  virtual G4double GetEmissionProbability(G4Fragment* theNucleus);
+    // destructor
+    virtual ~G4GEMChannel();
 
-  virtual G4Fragment* EmittedFragment(G4Fragment* theNucleus);
+    virtual G4double GetEmissionProbability(G4Fragment* theNucleus);
 
-  virtual void Dump() const;
+    virtual G4Fragment* EmittedFragment(G4Fragment* theNucleus);
 
-  inline void SetLevelDensityParameter(G4VLevelDensityParameter * aLevelDensity)
-  {
-    if (MyOwnLevelDensity) { delete theLevelDensityPtr; }
-    theLevelDensityPtr = aLevelDensity;
-    MyOwnLevelDensity = false;
-  }
+    virtual void Dump() const;
 
-private: 
+    inline void SetLevelDensityParameter(G4VLevelDensityParameter* aLevelDensity)
+    {
+      if (MyOwnLevelDensity)
+      {
+        delete theLevelDensityPtr;
+      }
+      theLevelDensityPtr = aLevelDensity;
+      MyOwnLevelDensity = false;
+    }
 
-  // Samples fragment kinetic energy.
-  G4double SampleKineticEnergy(const G4Fragment & fragment);
+  private:
 
-  G4GEMChannel(const G4GEMChannel & right) = delete;  
-  const G4GEMChannel & operator=(const G4GEMChannel & right) = delete;
-  G4bool operator==(const G4GEMChannel & right) const = delete;
-  G4bool operator!=(const G4GEMChannel & right) const = delete;
-  
-  // Data Members ************
-  // This data member define the channel. 
-  // They are initialised at object creation (constructor) time.
-    
-  // Atomic Number
-  G4int A;
-    
-  // Charge
-  G4int Z;
+    // Samples fragment kinetic energy.
+    G4double SampleKineticEnergy(const G4Fragment& fragment);
 
-  // Residual Atomic Number
-  G4int ResidualA;
+    G4GEMChannel(const G4GEMChannel& right) = delete;
+    const G4GEMChannel& operator=(const G4GEMChannel& right) = delete;
+    G4bool operator==(const G4GEMChannel& right) const = delete;
+    G4bool operator!=(const G4GEMChannel& right) const = delete;
 
-  // Residual Charge
-  G4int ResidualZ;
+    // Data Members ************
+    // This data member define the channel.
+    // They are initialised at object creation (constructor) time.
 
-  G4double EvaporatedMass;
-  G4double ResidualMass;
-  G4double CoulombBarrier;
-  G4double EmissionProbability;
+    // Atomic Number
+    G4int A;
 
-  // Maximal Kinetic Energy that can be carried by fragment
-  G4double MaximalKineticEnergy;
+    // Charge
+    G4int Z;
 
-  G4Pow* fG4pow;
-    
-  // For evaporation probability calcualtion
-  G4GEMProbability * theEvaporationProbabilityPtr;
-    
-  // For Level Density calculation
-  G4bool MyOwnLevelDensity;
-  G4VLevelDensityParameter * theLevelDensityPtr;
-    
-  // For Coulomb Barrier calculation
-  G4VCoulombBarrier * theCoulombBarrierPtr;
+    // Residual Atomic Number
+    G4int ResidualA;
 
-  G4NuclearLevelData* fNucData;
+    // Residual Charge
+    G4int ResidualZ;
 
-  // For creator model ID of the secondaries created by this model
-  G4int secID;
+    G4double EvaporatedMass;
+    G4double ResidualMass;
+    G4double CoulombBarrier;
+    G4double EmissionProbability;
+
+    // Maximal Kinetic Energy that can be carried by fragment
+    G4double MaximalKineticEnergy;
+
+    G4Pow* fG4pow;
+
+    // For evaporation probability calcualtion
+    G4GEMProbability* theEvaporationProbabilityPtr;
+
+    // For Level Density calculation
+    G4bool MyOwnLevelDensity;
+    G4VLevelDensityParameter* theLevelDensityPtr;
+
+    // For Coulomb Barrier calculation
+    G4VCoulombBarrier* theCoulombBarrierPtr;
+
+    G4NuclearLevelData* fNucData;
+
+    // For creator model ID of the secondaries created by this model
+    G4int secID;
 };
-
 
 #endif

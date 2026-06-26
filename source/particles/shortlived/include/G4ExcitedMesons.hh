@@ -30,8 +30,8 @@
 //      Hisaya Kurashige, 27 June 1998
 // ----------------------------------------------------------------
 
-#ifndef G4ExcitedMesons_h
-#define G4ExcitedMesons_h 1
+#ifndef G4EXCITEDMESONS_HH
+#define G4EXCITEDMESONS_HH
 
 #include "G4VShortLivedParticle.hh"
 #include "globals.hh"
@@ -39,6 +39,7 @@
 class G4ExcitedMesons : public G4VShortLivedParticle
 {
   public:
+
     // clang-format off
    G4ExcitedMesons(
        const G4String&     aName,        G4double            mass,

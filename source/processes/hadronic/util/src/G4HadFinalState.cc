@@ -29,44 +29,43 @@
 //		functions to avoid creating temporaries.
 
 #include "G4HadFinalState.hh"
+
 #include "G4HadronicException.hh"
 
-
 G4HadFinalState::G4HadFinalState()
-  : theDirection(0,0,1), theEnergy(-1), theStat(isAlive), 
-    theW(1.), theEDep(0.) {}
+  : theDirection(0, 0, 1), theEnergy(-1), theStat(isAlive), theW(1.), theEDep(0.)
+{}
 
-void G4HadFinalState::SetEnergyChange(G4double anEnergy) 
+void G4HadFinalState::SetEnergyChange(G4double anEnergy)
 {
-  theEnergy=anEnergy;
-  if(theEnergy<0) 
-    {
-      G4cout << "Final state energy was: E = "<<theEnergy<<G4endl;
-      throw G4HadronicException(__FILE__, __LINE__, 
-      "G4HadFinalState: fatal - negative energy");
-    }
+  theEnergy = anEnergy;
+  if (theEnergy < 0.0)
+  {
+    G4cout << "Final state energy was: E = " << theEnergy << G4endl;
+    throw G4HadronicException(__FILE__, __LINE__, "G4HadFinalState: fatal - negative energy");
+  }
 }
 
-void G4HadFinalState::SetMomentumChange(G4double x, G4double y, G4double z) 
+void G4HadFinalState::SetMomentumChange(G4double x, G4double y, G4double z)
 {
-  theDirection.set(x,y,z);
-  if(std::abs(x*x + y*y + z*z - 1.0)>0.001) {
-    G4cout <<"We have negative theDirection.mag() = "<<theDirection.mag()
-	   <<G4endl;
-    throw G4HadronicException(__FILE__, __LINE__, 
-	  "G4HadFinalState: fatal - negative direction.mag().");
+  theDirection.set(x, y, z);
+  if (std::abs(x * x + y * y + z * z - 1.0) > 0.001)
+  {
+    G4cout << "We have negative theDirection.mag() = " << theDirection.mag() << G4endl;
+    throw G4HadronicException(__FILE__, __LINE__,
+                              "G4HadFinalState: fatal - negative direction.mag().");
   }
 }
 
 // Concatenate lists efficiently
 void G4HadFinalState::AddSecondaries(const std::vector<G4HadSecondary>& addSecs)
 {
-  theSecs.insert(theSecs.end(),addSecs.begin(),addSecs.end());
+  theSecs.insert(theSecs.end(), addSecs.begin(), addSecs.end());
 }
 
 void G4HadFinalState::Clear()
 {
-  theDirection.set(0,0,1);
+  theDirection.set(0, 0, 1);
   theEnergy = -1;
   theStat = isAlive;
   theW = 1.;
@@ -74,22 +73,22 @@ void G4HadFinalState::Clear()
   ClearSecondaries();
 }
 
-//void G4HadFinalState::SecondariesAreStale() { /*DEPRECATED*/ }
-
-G4HadSecondary * G4HadFinalState::GetSecondary(size_t i) 
+G4HadSecondary* G4HadFinalState::GetSecondary(std::size_t i)
 {
-  if(i>theSecs.size()) {
-    throw G4HadronicException(__FILE__, __LINE__, 
-	  "Trying direct access to secondary beyond end of list");
+  if (i > theSecs.size())
+  {
+    throw G4HadronicException(__FILE__, __LINE__,
+                              "Trying direct access to secondary beyond end of list");
   }
   return &theSecs[i];
 }
 
-const G4HadSecondary* G4HadFinalState::GetSecondary(size_t i) const
+const G4HadSecondary* G4HadFinalState::GetSecondary(std::size_t i) const
 {
-  if(i>theSecs.size()) {
-    throw G4HadronicException(__FILE__, __LINE__, 
-	  "Trying direct access to secondary beyond end of list");
+  if (i > theSecs.size())
+  {
+    throw G4HadronicException(__FILE__, __LINE__,
+                              "Trying direct access to secondary beyond end of list");
   }
   return &theSecs[i];
 }

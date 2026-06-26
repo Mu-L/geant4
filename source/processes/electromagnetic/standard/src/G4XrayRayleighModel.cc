@@ -33,44 +33,42 @@
 // 25.05.2011   first implementation
 
 #include "G4XrayRayleighModel.hh"
+
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 
 //////////////////////////////////////////////////////////////////////////////////
 
-const G4double G4XrayRayleighModel::fCofA = 2.*pi2*Bohr_radius*Bohr_radius;
+const G4double G4XrayRayleighModel::fCofA = 2. * pi2 * Bohr_radius * Bohr_radius;
 
-const G4double G4XrayRayleighModel::fCofR = 8.*pi*classic_electr_radius*classic_electr_radius/3.;
+const G4double G4XrayRayleighModel::fCofR =
+  8. * pi * classic_electr_radius * classic_electr_radius / 3.;
 
 //////////////////////////////////////////////////////////////////////////////////
 
-G4XrayRayleighModel::G4XrayRayleighModel(const G4ParticleDefinition*,
-						   const G4String& nam)
-  :G4VEmModel(nam),isInitialised(false)
+G4XrayRayleighModel::G4XrayRayleighModel(const G4ParticleDefinition*, const G4String& nam)
+  : G4VEmModel(nam), isInitialised(false)
 {
   fParticleChange = nullptr;
-  lowEnergyLimit  = 250*eV; 
-  highEnergyLimit = 10.*MeV;
-  fFormFactor     = 0.0;
-  
+  lowEnergyLimit = 250 * eV;
+  highEnergyLimit = 10. * MeV;
+  fFormFactor = 0.0;
+
   //  SetLowEnergyLimit(lowEnergyLimit);
   SetHighEnergyLimit(highEnergyLimit);
   //
-  verboseLevel= 0;
+  verboseLevel = 0;
   // Verbosity scale:
-  // 0 = nothing 
-  // 1 = warning for energy non-conservation 
+  // 0 = nothing
+  // 1 = warning for energy non-conservation
   // 2 = details of energy budget
   // 3 = calculation of cross sections, file openings, sampling of atoms
   // 4 = entering in methods
 
-  if(verboseLevel > 0) 
+  if (verboseLevel > 0)
   {
-    G4cout << "Xray Rayleigh is constructed " << G4endl
-	   << "Energy range: "
-	   << lowEnergyLimit / eV << " eV - "
-	   << highEnergyLimit / MeV << " MeV"
-	   << G4endl;
+    G4cout << "Xray Rayleigh is constructed " << G4endl << "Energy range: " << lowEnergyLimit / eV
+           << " eV - " << highEnergyLimit / MeV << " MeV" << G4endl;
   }
 }
 
@@ -80,80 +78,71 @@ G4XrayRayleighModel::~G4XrayRayleighModel() = default;
 
 //////////////////////////////////////////////////////////////////////////////////
 
-void G4XrayRayleighModel::Initialise(const G4ParticleDefinition* particle,
-					  const G4DataVector& cuts)
+void G4XrayRayleighModel::Initialise(const G4ParticleDefinition* particle, const G4DataVector& cuts)
 {
-  if (verboseLevel > 3) 
+  if (verboseLevel > 3)
   {
     G4cout << "Calling G4XrayRayleighModel::Initialise()" << G4endl;
   }
 
-  InitialiseElementSelectors(particle,cuts);
+  InitialiseElementSelectors(particle, cuts);
 
-
-  if(isInitialised) return; 
+  if (isInitialised) return;
   fParticleChange = GetParticleChangeForGamma();
   isInitialised = true;
-
 }
 
 //////////////////////////////////////////////////////////////////////////////////
 
-G4double G4XrayRayleighModel::ComputeCrossSectionPerAtom(
-                                       const G4ParticleDefinition*,
-                                             G4double gammaEnergy,
-                                             G4double Z, G4double,
-                                             G4double, G4double)
+G4double G4XrayRayleighModel::ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
+                                                         G4double gammaEnergy, G4double Z, G4double,
+                                                         G4double, G4double)
 {
-  if (verboseLevel > 3) 
+  if (verboseLevel > 3)
   {
     G4cout << "Calling CrossSectionPerAtom() of G4XrayRayleighModel" << G4endl;
   }
-  if (gammaEnergy < lowEnergyLimit || gammaEnergy > highEnergyLimit) 
+  if (gammaEnergy < lowEnergyLimit || gammaEnergy > highEnergyLimit)
   {
     return 0.0;
   }
-  G4double k   = gammaEnergy/hbarc;
-           k  *= Bohr_radius;
-  G4double p0  =  0.680654;  
-  G4double p1  = -0.0224188;
-  G4double lnZ = std::log(Z);    
+  G4double k = gammaEnergy / hbarc;
+  k *= Bohr_radius;
+  G4double p0 = 0.680654;
+  G4double p1 = -0.0224188;
+  G4double lnZ = std::log(Z);
 
-  G4double lna = p0 + p1*lnZ; 
+  G4double lna = p0 + p1 * lnZ;
 
-  G4double  alpha = std::exp(lna);
+  G4double alpha = std::exp(lna);
 
-  G4double fo   = std::pow(k, alpha); 
+  G4double fo = std::pow(k, alpha);
 
   p0 = 3.68455;
   p1 = -0.464806;
-  lna = p0 + p1*lnZ; 
+  lna = p0 + p1 * lnZ;
 
-  fo *= 0.01*std::exp(lna);
+  fo *= 0.01 * std::exp(lna);
 
   fFormFactor = fo;
 
-  G4double b    = 1. + 2.*fo;
-  G4double b2   = b*b;
-  G4double b3   = b*b2;
+  G4double b = 1. + 2. * fo;
+  G4double b2 = b * b;
+  G4double b3 = b * b2;
 
-  G4double xsc  = fCofR*Z*Z/b3;
-           xsc *= fo*fo + (1. + fo)*(1. + fo);  
+  G4double xsc = fCofR * Z * Z / b3;
+  xsc *= fo * fo + (1. + fo) * (1. + fo);
 
-
-  return   xsc;   
-
+  return xsc;
 }
 
 //////////////////////////////////////////////////////////////////////////////////
 
-void G4XrayRayleighModel::SampleSecondaries(std::vector<G4DynamicParticle*>* /*fvect*/,  
+void G4XrayRayleighModel::SampleSecondaries(std::vector<G4DynamicParticle*>* /*fvect*/,
                                             const G4MaterialCutsCouple* couple,
-                                            const G4DynamicParticle* aDPGamma,
-                                            G4double,
-                                            G4double)
+                                            const G4DynamicParticle* aDPGamma, G4double, G4double)
 {
-  if ( verboseLevel > 3)
+  if (verboseLevel > 3)
   {
     G4cout << "Calling SampleSecondaries() of G4XrayRayleighModel" << G4endl;
   }
@@ -161,66 +150,63 @@ void G4XrayRayleighModel::SampleSecondaries(std::vector<G4DynamicParticle*>* /*f
 
   G4ParticleMomentum photonDirection0 = aDPGamma->GetMomentumDirection();
 
-
   // Sample the angle of the scattered photon
   // according to 1 + cosTheta*cosTheta distribution
 
   G4double cosDipole, cosTheta, sinTheta;
-  G4double c, delta, cofA, signc = 1., a, power = 1./3.;
+  G4double c, delta, cofA, signc = 1., a, power = 1. / 3.;
 
-  c = 4. - 8.*G4UniformRand();
+  c = 4. - 8. * G4UniformRand();
   a = c;
- 
-  if( c < 0. )
+
+  if (c < 0.)
   {
     signc = -1.;
-    a     = -c;
+    a = -c;
   }
-  delta  = std::sqrt(a*a+4.);
+  delta = std::sqrt(a * a + 4.);
   delta += a;
-  delta *= 0.5; 
-  cofA = -signc*std::pow(delta, power);
-  cosDipole = cofA - 1./cofA;
+  delta *= 0.5;
+  cofA = -signc * std::pow(delta, power);
+  cosDipole = cofA - 1. / cofA;
 
   // select atom
-  const G4Element* elm = SelectTargetAtom(couple, aDPGamma->GetParticleDefinition(),
-                                          photonEnergy0,aDPGamma->GetLogKineticEnergy());
+  const G4Element* elm = SelectTargetAtom(couple, aDPGamma->GetParticleDefinition(), photonEnergy0,
+                                          aDPGamma->GetLogKineticEnergy());
   G4double Z = elm->GetZ();
 
-  G4double k   = photonEnergy0/hbarc;
-           k  *= Bohr_radius;
-  G4double p0  =  0.680654;  
-  G4double p1  = -0.0224188;
-  G4double lnZ = std::log(Z);    
+  G4double k = photonEnergy0 / hbarc;
+  k *= Bohr_radius;
+  G4double p0 = 0.680654;
+  G4double p1 = -0.0224188;
+  G4double lnZ = std::log(Z);
 
-  G4double lna = p0 + p1*lnZ; 
+  G4double lna = p0 + p1 * lnZ;
 
-  G4double  alpha = std::exp(lna);
+  G4double alpha = std::exp(lna);
 
-  G4double fo   = std::pow(k, alpha); 
+  G4double fo = std::pow(k, alpha);
 
   p0 = 3.68455;
   p1 = -0.464806;
-  lna = p0 + p1*lnZ; 
+  lna = p0 + p1 * lnZ;
 
-  fo *= 0.01*pi*std::exp(lna);
+  fo *= 0.01 * pi * std::exp(lna);
 
-  
-  G4double beta = fo/(1 + fo);
+  G4double beta = fo / (1 + fo);
 
-  cosTheta = (cosDipole + beta)/(1. + cosDipole*beta);
+  cosTheta = (cosDipole + beta) / (1. + cosDipole * beta);
 
+  if (cosTheta > 1.) cosTheta = 1.;
+  if (cosTheta < -1.) cosTheta = -1.;
 
-  if( cosTheta >  1.) cosTheta =  1.;
-  if( cosTheta < -1.) cosTheta = -1.;
-
-  sinTheta = std::sqrt( (1. - cosTheta)*(1. + cosTheta) );
+  sinTheta = std::sqrt((1. - cosTheta) * (1. + cosTheta));
 
   // Scattered photon angles. ( Z - axis along the parent photon)
 
-  G4double phi = twopi * G4UniformRand() ;
-  G4double dirX = sinTheta*std::cos(phi);
-  G4double dirY = sinTheta*std::sin(phi);
+  G4double phi = twopi * G4UniformRand();
+  G4double dirX = sinTheta * std::cos(phi);
+  G4double dirY = sinTheta * std::sin(phi);
   G4double dirZ = cosTheta;
 
   // Update G4VParticleChange for the scattered photon
@@ -229,7 +215,5 @@ void G4XrayRayleighModel::SampleSecondaries(std::vector<G4DynamicParticle*>* /*f
   photonDirection1.rotateUz(photonDirection0);
   fParticleChange->ProposeMomentumDirection(photonDirection1);
 
-  fParticleChange->SetProposedKineticEnergy(photonEnergy0); 
+  fParticleChange->SetProposedKineticEnergy(photonEnergy0);
 }
-
-

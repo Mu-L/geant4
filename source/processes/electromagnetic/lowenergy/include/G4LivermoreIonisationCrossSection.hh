@@ -29,11 +29,11 @@
 //
 // History:
 // --------
-// 31 May 2011 V.Ivanchenko  The class is created  
+// 31 May 2011 V.Ivanchenko  The class is created
 // 04 Jul 2011 L Pandola     Comment unused private member
 // 09 Mar 2012 L Pandola     Changed signature of methods
-// 
-// 
+//
+//
 // -------------------------------------------------------------------
 //
 // Class description:
@@ -41,56 +41,51 @@
 // -------------------------------------------------------------------
 
 #ifndef G4LIVERMOREIONISATIONCROSSSECTION_HH
-#define G4LIVERMOREIONISATIONCROSSSECTION_HH 1
+#define G4LIVERMOREIONISATIONCROSSSECTION_HH
 
+#include "G4AtomicShellEnumerator.hh"
 #include "G4VhShellCrossSection.hh"
 #include "globals.hh"
-#include "G4AtomicShellEnumerator.hh"
+
 #include <vector>
 
 class G4AtomicTransitionManager;
 class G4VCrossSectionHandler;
 
-class G4LivermoreIonisationCrossSection : public G4VhShellCrossSection 
+class G4LivermoreIonisationCrossSection : public G4VhShellCrossSection
 {
+  public:
 
-public:
-  
-  explicit G4LivermoreIonisationCrossSection(const G4String& nam = "LivermorePIXE");
-  virtual ~G4LivermoreIonisationCrossSection();
+    explicit G4LivermoreIonisationCrossSection(const G4String& nam = "LivermorePIXE");
+    virtual ~G4LivermoreIonisationCrossSection();
 
-  void Initialise();
+    void Initialise();
 
-  G4double CrossSection(G4int Z, G4AtomicShellEnumerator shell,
-			G4double incidentEnergy,
-			G4double mass = 0.0,
-			const G4Material* mat = 0) override;
+    G4double CrossSection(G4int Z, G4AtomicShellEnumerator shell, G4double incidentEnergy,
+                          G4double mass = 0.0, const G4Material* mat = 0) override;
 
-  std::vector<G4double> GetCrossSection(G4int Z,
-					G4double incidentEnergy,
-					G4double mass = 0.0,
-					G4double deltaEnergy = 0.0,
-					const G4Material* mat = 0) override;
+    std::vector<G4double> GetCrossSection(G4int Z, G4double incidentEnergy, G4double mass = 0.0,
+                                          G4double deltaEnergy = 0.0,
+                                          const G4Material* mat = 0) override;
 
-  std::vector<G4double> Probabilities(G4int Z,
-				      G4double incidentEnergy,
-				      G4double mass = 0.0,
-				      G4double deltaEnergy = 0,
-				      const G4Material* mat = 0) override;
-    
-  G4LivermoreIonisationCrossSection & operator=(const G4LivermoreIonisationCrossSection &right) = delete;
-  G4LivermoreIonisationCrossSection(const G4LivermoreIonisationCrossSection&) = delete;
+    std::vector<G4double> Probabilities(G4int Z, G4double incidentEnergy, G4double mass = 0.0,
+                                        G4double deltaEnergy = 0,
+                                        const G4Material* mat = 0) override;
 
-private:
-  G4VCrossSectionHandler* crossSectionHandler;
-  const G4AtomicTransitionManager* transitionManager;
+    G4LivermoreIonisationCrossSection&
+    operator=(const G4LivermoreIonisationCrossSection& right) = delete;
+    G4LivermoreIonisationCrossSection(const G4LivermoreIonisationCrossSection&) = delete;
 
-  //Intrinsic energy limits of the model: cannot be extended by the parent process
-  G4double fLowEnergyLimit;
-  G4double fHighEnergyLimit;
- 
-  G4int verboseLevel;
+  private:
+
+    G4VCrossSectionHandler* crossSectionHandler;
+    const G4AtomicTransitionManager* transitionManager;
+
+    // Intrinsic energy limits of the model: cannot be extended by the parent process
+    G4double fLowEnergyLimit;
+    G4double fHighEnergyLimit;
+
+    G4int verboseLevel;
 };
 
 #endif
-

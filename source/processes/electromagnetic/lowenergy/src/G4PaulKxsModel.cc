@@ -39,89 +39,84 @@
 
 // -------------------------------------------------------------------
 
-#include <fstream>
-#include <iomanip>
-
 #include "G4PaulKxsModel.hh"
 
-#include "globals.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4ios.hh"
+#include "G4Alpha.hh"
 #include "G4EMDataSet.hh"
 #include "G4LogLogInterpolation.hh"
 #include "G4Proton.hh"
-#include "G4Alpha.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4ios.hh"
+#include "globals.hh"
+
+#include <fstream>
+#include <iomanip>
 
 // -------------------------------------------------------------------
 
 G4PaulKxsModel::G4PaulKxsModel()
-{   
+{
   interpolation = new G4LogLogInterpolation();
 
-  for (G4int i=4; i<93; i++) {
-      protonDataSetMap[i] = new G4EMDataSet(i,interpolation);
-      protonDataSetMap[i]->LoadData("pixe/kpcsPaul/kcs-");
-    }
-    for (G4int i=6; i<93; i++) {
-      alphaDataSetMap[i] = new G4EMDataSet(i,interpolation);
-      alphaDataSetMap[i]->LoadData("pixe/kacsPaul/kacs-");
-    }
+  for (G4int i = 4; i < 93; i++)
+  {
+    protonDataSetMap[i] = new G4EMDataSet(i, interpolation);
+    protonDataSetMap[i]->LoadData("pixe/kpcsPaul/kcs-");
+  }
+  for (G4int i = 6; i < 93; i++)
+  {
+    alphaDataSetMap[i] = new G4EMDataSet(i, interpolation);
+    alphaDataSetMap[i]->LoadData("pixe/kacsPaul/kacs-");
+  }
 }
 
 G4PaulKxsModel::~G4PaulKxsModel()
-{ 
+{
   protonDataSetMap.clear();
   alphaDataSetMap.clear();
   delete interpolation;
 }
 
 // -------------------------------------------------------------------
-G4double G4PaulKxsModel::CalculateKCrossSection(G4int zTarget,
-						G4double massIncident, G4double energyIncident)
+G4double G4PaulKxsModel::CalculateKCrossSection(G4int zTarget, G4double massIncident,
+                                                G4double energyIncident)
 {
-  
   G4Proton* aProtone = G4Proton::Proton();
   G4Alpha* aAlpha = G4Alpha::Alpha();
   G4double sigma = 0;
 
   if (massIncident == aProtone->GetPDGMass() && zTarget < 93 && zTarget > 3)
+  {
+    if (energyIncident > protonDataSetMap[zTarget]->GetEnergies(0).back()
+        || energyIncident < protonDataSetMap[zTarget]->GetEnergies(0).front())
     {
-      if (energyIncident > protonDataSetMap[zTarget]->GetEnergies(0).back() ||
-	  energyIncident < protonDataSetMap[zTarget]->GetEnergies(0).front() )
-	{sigma = 0;}
-      else {     
-	sigma = protonDataSetMap[zTarget]->FindValue(energyIncident/MeV); 
+      sigma = 0;
+    }
+    else
+    {
+      sigma = protonDataSetMap[zTarget]->FindValue(energyIncident / MeV);
+    }
+  }
+  else
+  {
+    if (massIncident == aAlpha->GetPDGMass() && zTarget < 93 && zTarget > 5)
+    {
+      if (energyIncident > alphaDataSetMap[zTarget]->GetEnergies(0).back()
+          || energyIncident < alphaDataSetMap[zTarget]->GetEnergies(0).front())
+      {
+        sigma = 0;
+      }
+      else
+      {
+        sigma = alphaDataSetMap[zTarget]->FindValue(energyIncident / MeV);
       }
     }
-  else
+    else
     {
-      if (massIncident == aAlpha->GetPDGMass() && zTarget < 93 && zTarget > 5)
-	{
-	  if (energyIncident > alphaDataSetMap[zTarget]->GetEnergies(0).back() ||
-	      energyIncident < alphaDataSetMap[zTarget]->GetEnergies(0).front() )
-	    {sigma = 0;}
-	  else {
-	    sigma = alphaDataSetMap[zTarget]->FindValue(energyIncident/MeV); 
-	  }
-	}
-      else
-	{ 
-	  sigma = 0.;
-	}
+      sigma = 0.;
     }
-  
+  }
+
   // sigma is in internal units (mm^2)
   return sigma;
 }
-
-
-
-
-
-
-
-
-
-
-
-

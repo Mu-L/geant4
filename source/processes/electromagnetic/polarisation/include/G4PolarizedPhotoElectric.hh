@@ -28,34 +28,37 @@
 //
 // -----------------------------------------------------------------------------
 
-#ifndef G4PolarizedPhotoElectric
-#  define G4PolarizedPhotoElectric_h 1
+#ifndef G4POLARIZEDPHOTOELECTRIC_HH
+#define G4POLARIZEDPHOTOELECTRIC_HH
 
-#  include "globals.hh"
-#  include "G4VEmProcess.hh"
+#include "G4VEmProcess.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 
 class G4PolarizedPhotoElectric : public G4VEmProcess
 
 {
- public:
-  explicit G4PolarizedPhotoElectric(const G4String& processName = "pol-phot",
-                                    G4ProcessType type = fElectromagnetic);
+  public:
 
-  virtual ~G4PolarizedPhotoElectric() override;
+    explicit G4PolarizedPhotoElectric(const G4String& processName = "pol-phot",
+                                      G4ProcessType type = fElectromagnetic);
 
-  // true for Gamma only.
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
+    virtual ~G4PolarizedPhotoElectric() override;
 
-  virtual void ProcessDescription(std::ostream&) const override;
-  virtual void DumpInfo() const override { ProcessDescription(G4cout); };
+    // true for Gamma only.
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
 
- protected:
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+    virtual void ProcessDescription(std::ostream&) const override;
+    virtual void DumpInfo() const override { ProcessDescription(G4cout); };
 
- private:
-  G4bool fIsInitialised;
+  protected:
+
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool fIsInitialised;
 };
 
 #endif

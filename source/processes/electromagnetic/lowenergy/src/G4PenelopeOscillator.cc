@@ -28,18 +28,26 @@
 //
 // History:
 // --------
-// 18 Dec 2008   L Pandola    First implementation 
+// 18 Dec 2008   L Pandola    First implementation
 
 #include "G4PenelopeOscillator.hh"
+
 #include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4PenelopeOscillator::G4PenelopeOscillator() :
- fHartreeFactor(0.), fIonisationEnergy(0.*eV), fResonanceEnergy(0.*eV),
- fOscillatorStrength(0.), fParentZ(0.), fCutoffRecoilResonantEnergy(0*eV),
- fParentShellID(-1), fShellFlag(-1)
-{;}
+G4PenelopeOscillator::G4PenelopeOscillator()
+  : fHartreeFactor(0.),
+    fIonisationEnergy(0. * eV),
+    fResonanceEnergy(0. * eV),
+    fOscillatorStrength(0.),
+    fParentZ(0.),
+    fCutoffRecoilResonantEnergy(0 * eV),
+    fParentShellID(-1),
+    fShellFlag(-1)
+{
+  ;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -59,8 +67,7 @@ G4PenelopeOscillator::G4PenelopeOscillator(const G4PenelopeOscillator& right)
 
 G4PenelopeOscillator& G4PenelopeOscillator::operator=(const G4PenelopeOscillator& right)
 {
-  if (this == &right)  
-    return *this; 
+  if (this == &right) return *this;
 
   fHartreeFactor = right.fHartreeFactor;
   fIonisationEnergy = right.fIonisationEnergy;
@@ -68,7 +75,7 @@ G4PenelopeOscillator& G4PenelopeOscillator::operator=(const G4PenelopeOscillator
   fOscillatorStrength = right.fOscillatorStrength;
   fShellFlag = right.fShellFlag;
   fParentZ = right.fParentZ;
-  fParentShellID = right.fParentShellID; 
+  fParentShellID = right.fParentShellID;
   fCutoffRecoilResonantEnergy = right.fCutoffRecoilResonantEnergy;
   return *this;
 }
@@ -77,8 +84,8 @@ G4PenelopeOscillator& G4PenelopeOscillator::operator=(const G4PenelopeOscillator
 
 G4bool G4PenelopeOscillator::operator==(const G4PenelopeOscillator& right) const
 {
-  //Oscillator are ordered according to the ionisation energy. They are considered to be
-  //equal if the ionisation energy is the same
+  // Oscillator are ordered according to the ionisation energy. They are considered to be
+  // equal if the ionisation energy is the same
   return (fIonisationEnergy == right.fIonisationEnergy) ? true : false;
 }
 
@@ -86,17 +93,14 @@ G4bool G4PenelopeOscillator::operator==(const G4PenelopeOscillator& right) const
 
 G4bool G4PenelopeOscillator::operator>(const G4PenelopeOscillator& right) const
 {
-  //Oscillator are ordered according to the ionisation energy. 
+  // Oscillator are ordered according to the ionisation energy.
   return (fIonisationEnergy > right.fIonisationEnergy) ? true : false;
 }
-
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4bool G4PenelopeOscillator::operator<(const G4PenelopeOscillator& right) const
 {
-  //Oscillator are ordered according to the ionisation energy. 
+  // Oscillator are ordered according to the ionisation energy.
   return (fIonisationEnergy < right.fIonisationEnergy) ? true : false;
 }
-
-

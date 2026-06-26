@@ -29,11 +29,12 @@
 #define G4QUICKRAND_HH
 
 #include "G4Types.hh"
+
 #include <cstdint>
 
 inline G4double G4QuickRand(uint32_t seed = 0)
 {
-  static const G4double f = 1. / 4294967296.; // 2^-32
+  static const G4double f = 1. / 4294967296.;  // 2^-32
 
   // Algorithm "xor" from p.4 of G.Marsaglia, "Xorshift RNGs"
   static G4ThreadLocal uint32_t y = 2463534242;

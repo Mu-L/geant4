@@ -35,60 +35,56 @@
 // -------------------------------------------------------------------
 
 #include "G4EqMagElectricField.hh"
-#include "globals.hh"
+
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
+#include "globals.hh"
 
-G4EqMagElectricField::G4EqMagElectricField(G4ElectroMagneticField* emField )
-  : G4EquationOfMotion( emField )
+G4EqMagElectricField::G4EqMagElectricField(G4ElectroMagneticField* emField)
+  : G4EquationOfMotion(emField)
+{}
+
+void G4EqMagElectricField::SetChargeMomentumMass(G4ChargeState particleCharge, G4double,
+                                                 G4double particleMass)
 {
+  G4double pcharge = particleCharge.GetCharge();
+  fElectroMagCof = eplus * pcharge * c_light;
+  fMassCof = particleMass * particleMass;
 }
 
-void  
-G4EqMagElectricField::SetChargeMomentumMass(G4ChargeState particleCharge,
-                                            G4double,
-                                            G4double particleMass)
+void G4EqMagElectricField::EvaluateRhsGivenB(const G4double y[], const G4double Field[],
+                                             G4double dydx[]) const
 {
-   G4double pcharge = particleCharge.GetCharge();
-   fElectroMagCof =  eplus*pcharge*c_light ;
-   fMassCof = particleMass*particleMass ; 
-}
+  // Components of y:
+  //    0-2 dr/ds,
+  //    3-5 dp/ds - momentum derivatives
 
-void
-G4EqMagElectricField::EvaluateRhsGivenB(const G4double y[],
-                                        const G4double Field[],
-                                              G4double dydx[] ) const
-{
-   // Components of y:
-   //    0-2 dr/ds, 
-   //    3-5 dp/ds - momentum derivatives 
+  G4double pSquared = y[3] * y[3] + y[4] * y[4] + y[5] * y[5];
 
-   G4double pSquared = y[3]*y[3] + y[4]*y[4] + y[5]*y[5] ;
+  G4double Energy = std::sqrt(pSquared + fMassCof);
+  G4double cof2 = Energy / c_light;
 
-   G4double Energy   = std::sqrt( pSquared + fMassCof );
-   G4double cof2     = Energy/c_light ;
+  G4double pModuleInverse = 1.0 / std::sqrt(pSquared);
 
-   G4double pModuleInverse  = 1.0/std::sqrt(pSquared) ;
+  G4double inverse_velocity = Energy * pModuleInverse / c_light;
 
-   G4double inverse_velocity = Energy * pModuleInverse / c_light;
+  G4double cof1 = fElectroMagCof * pModuleInverse;
 
-   G4double cof1     = fElectroMagCof*pModuleInverse ;
+  dydx[0] = y[3] * pModuleInverse;
+  dydx[1] = y[4] * pModuleInverse;
+  dydx[2] = y[5] * pModuleInverse;
 
-   dydx[0] = y[3]*pModuleInverse ;                         
-   dydx[1] = y[4]*pModuleInverse ;                         
-   dydx[2] = y[5]*pModuleInverse ;                        
+  dydx[3] = cof1 * (cof2 * Field[3] + (y[4] * Field[2] - y[5] * Field[1]));
 
-   dydx[3] = cof1*(cof2*Field[3] + (y[4]*Field[2] - y[5]*Field[1])) ;
-   
-   dydx[4] = cof1*(cof2*Field[4] + (y[5]*Field[0] - y[3]*Field[2])) ; 
- 
-   dydx[5] = cof1*(cof2*Field[5] + (y[3]*Field[1] - y[4]*Field[0])) ;  
+  dydx[4] = cof1 * (cof2 * Field[4] + (y[5] * Field[0] - y[3] * Field[2]));
 
-   dydx[6] = 0.;//not used
+  dydx[5] = cof1 * (cof2 * Field[5] + (y[3] * Field[1] - y[4] * Field[0]));
 
-   // Lab Time of flight
-   //
-   dydx[7] = inverse_velocity;
+  dydx[6] = 0.;  // not used
 
-   return;
+  // Lab Time of flight
+  //
+  dydx[7] = inverse_velocity;
+
+  return;
 }

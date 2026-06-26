@@ -128,28 +128,34 @@ G4LocalThreadCoutMessenger::~G4LocalThreadCoutMessenger()
 void G4LocalThreadCoutMessenger::SetNewValue(G4UIcommand* command, G4String newVal)
 {
   G4UImanager* UI = G4UImanager::GetUIpointer();
-  if (command == coutFileNameCmd) {
+  if (command == coutFileNameCmd)
+  {
     G4Tokenizer next(newVal);
     G4String fn = next();
     G4bool af = StoB(next());
     UI->SetCoutFileName(fn, af);
   }
-  else if (command == cerrFileNameCmd) {
+  else if (command == cerrFileNameCmd)
+  {
     G4Tokenizer next(newVal);
     G4String fn = next();
     G4bool af = StoB(next());
     UI->SetCerrFileName(fn, af);
   }
-  else if (command == bufferCoutCmd) {
+  else if (command == bufferCoutCmd)
+  {
     UI->SetThreadUseBuffer(StoB(newVal));
   }
-  else if (command == prefixCmd) {
+  else if (command == prefixCmd)
+  {
     UI->SetThreadPrefixString(newVal);
   }
-  else if (command == ignoreCmd) {
+  else if (command == ignoreCmd)
+  {
     UI->SetThreadIgnore(StoI(newVal));
   }
-  else if (command == ignoreInitCmd) {
+  else if (command == ignoreInitCmd)
+  {
     UI->SetThreadIgnoreInit(StoB(newVal));
   }
 }

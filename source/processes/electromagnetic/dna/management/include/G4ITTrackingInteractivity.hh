@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,7 +41,7 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
 #ifndef G4ITTRACKINGINTERACTIVITY_HH
 #define G4ITTRACKINGINTERACTIVITY_HH
@@ -56,71 +56,42 @@ class G4VITSteppingVerbose;
 
 class G4ITTrackingInteractivity
 {
-protected:
-  int fVerboseLevel;
+  protected:
 
-public:
-  G4ITTrackingInteractivity(G4VITSteppingVerbose* verbose = nullptr);
+    int fVerboseLevel;
 
-  virtual ~G4ITTrackingInteractivity()
-  {
-    ;
-  }
+  public:
 
-  virtual void Initialize()
-  {
-    ;
-  }
+    G4ITTrackingInteractivity(G4VITSteppingVerbose* verbose = nullptr);
 
-  virtual void StartTracking(G4Track* /*track*/)
-  {
+    virtual ~G4ITTrackingInteractivity() { ; }
 
-  }
+    virtual void Initialize() { ; }
 
-  virtual void AppendStep(G4Track* /*track*/,
-                          G4Step* /*step*/)
-  {
-    ;
-  }
+    virtual void StartTracking(G4Track* /*track*/) {}
 
-  virtual void EndTracking(G4Track* /*track*/)
-  {
+    virtual void AppendStep(G4Track* /*track*/, G4Step* /*step*/) { ; }
 
-  }
+    virtual void EndTracking(G4Track* /*track*/) {}
 
-  virtual void Finalize()
-  {
-    ;
-  }
+    virtual void Finalize() { ; }
 
-  virtual void TrackBanner(G4Track* /*track*/,
-                           const G4String& message = "");
+    virtual void TrackBanner(G4Track* /*track*/, const G4String& message = "");
 
-  inline void SetVerbose(int flag)
-  {
-    fVerboseLevel = flag;
-  }
+    inline void SetVerbose(int flag) { fVerboseLevel = flag; }
 
-  inline G4int GetVerboseLevel() const
-  {
-    return fVerboseLevel;
-  }
+    inline G4int GetVerboseLevel() const { return fVerboseLevel; }
 
-  void SetSteppingVerboseLevel(G4int level);
-  G4int GetSteppingVerboseLevel() const;
+    void SetSteppingVerboseLevel(G4int level);
+    G4int GetSteppingVerboseLevel() const;
 
-  inline G4VITSteppingVerbose* GetSteppingVerbose()
-  {
-    return fpVerbose;
-  }
+    inline G4VITSteppingVerbose* GetSteppingVerbose() { return fpVerbose; }
 
-  inline void SetSteppingVerbose(G4VITSteppingVerbose* verbose)
-  {
-    fpVerbose = verbose;
-  }
+    inline void SetSteppingVerbose(G4VITSteppingVerbose* verbose) { fpVerbose = verbose; }
 
-private:
-  G4VITSteppingVerbose* fpVerbose;
+  private:
+
+    G4VITSteppingVerbose* fpVerbose;
 };
 
-#endif // G4ITTRACKINGINTERACTIVITY_HH
+#endif  // G4ITTRACKINGINTERACTIVITY_HH

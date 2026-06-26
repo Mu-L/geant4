@@ -29,6 +29,7 @@
 //
 
 #include "G4VFermiFragmentAN.hh"
+
 #include "G4FermiNucleiProperties.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
@@ -37,8 +38,8 @@
 #include <iomanip>
 
 G4VFermiFragmentAN::G4VFermiFragmentAN(G4FermiAtomicMass atomicMass,
-				       G4FermiChargeNumber chargeNumber,
-                                       G4int polarization, G4double excitationEnergy)
+                                       G4FermiChargeNumber chargeNumber, G4int polarization,
+                                       G4double excitationEnergy)
   : atomicMass_(atomicMass),
     chargeNumber_(chargeNumber),
     polarization_(polarization),

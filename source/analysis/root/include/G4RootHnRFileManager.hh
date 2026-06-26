@@ -28,8 +28,8 @@
 
 // Author: Ivana Hrivnacova, 26/08/2021  (ivana@ipno.in2p3.fr)
 
-#ifndef G4RootHnRFileManager_h
-#define G4RootHnRFileManager_h 1
+#ifndef G4ROOTHNRFILEMANAGER_HH
+#define G4ROOTHNRFILEMANAGER_HH
 
 #include "G4VTHnRFileManager.hh"
 
@@ -38,38 +38,41 @@
 
 class G4RootRFileManager;
 
-namespace tools {
-namespace rroot {
+namespace tools
+{
+namespace rroot
+{
 class buffer;
 class TDirectory;
-}
-}
+}  // namespace rroot
+}  // namespace tools
 
-template <typename HT>
+template<typename HT>
 class G4RootHnRFileManager : public G4VTHnRFileManager<HT>
 {
   public:
+
     explicit G4RootHnRFileManager(G4RootRFileManager* rfileManger)
-      : G4VTHnRFileManager<HT>(), fRFileManager(rfileManger) {}
+      : G4VTHnRFileManager<HT>(), fRFileManager(rfileManger)
+    {}
     G4RootHnRFileManager() = delete;
     ~G4RootHnRFileManager() override = default;
 
     // Methods for reading objects
     HT* Read(const G4String& htName, const G4String& fileName, const G4String& dirName,
-      G4bool isUserFileName) final;
+             G4bool isUserFileName) final;
 
   private:
+
     // Methods
-    tools::rroot::buffer* GetBuffer(
-                             const G4String& fileName,
-                             const G4String& dirName,
-                             const G4String& name);
+    tools::rroot::buffer* GetBuffer(const G4String& fileName, const G4String& dirName,
+                                    const G4String& name);
     HT* ReadT(tools::rroot::buffer* buffer);
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4RootHnRFileManager<HT>" };
+    static constexpr std::string_view fkClass{"G4RootHnRFileManager<HT>"};
     // Data members
-    G4RootRFileManager* fRFileManager { nullptr };
+    G4RootRFileManager* fRFileManager{nullptr};
 };
 
 // inline functions

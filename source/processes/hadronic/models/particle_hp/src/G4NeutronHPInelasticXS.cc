@@ -23,20 +23,22 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// V. Ivanchenko 23 September 2023 
+// V. Ivanchenko 23 September 2023
 //
 
 #include "G4NeutronHPInelasticXS.hh"
+
 #include "G4Neutron.hh"
 #include "G4ParticleHPManager.hh"
 #include "G4SystemOfUnits.hh"
 
 G4NeutronHPInelasticXS::G4NeutronHPInelasticXS()
   : G4CrossSectionHP(G4Neutron::Neutron(), "neutronInelasticHP",
-		     G4ParticleHPManager::GetInstance()->GetNeutronHPPath() + "/Inelastic/CrossSection/",
-                     20*CLHEP::MeV, 0, 100)
+                     G4ParticleHPManager::GetInstance()->GetNeutronHPPath()
+                       + "/Inelastic/CrossSection/",
+                     20 * CLHEP::MeV, 0, 100)
 {
-  SetMaxKinEnergy(20*CLHEP::MeV);
+  SetMaxKinEnergy(20 * CLHEP::MeV);
 }
 
 void G4NeutronHPInelasticXS::CrossSectionDescription(std::ostream& outF) const

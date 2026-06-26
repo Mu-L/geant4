@@ -41,73 +41,72 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4EmExtraPhysics_h
-#define G4EmExtraPhysics_h 1
-
-#include "G4VPhysicsConstructor.hh"
-#include "globals.hh"
+#ifndef G4EMEXTRAPHYSICS_HH
+#define G4EMEXTRAPHYSICS_HH
 
 #include "G4EmMessenger.hh"
+#include "G4VPhysicsConstructor.hh"
+#include "globals.hh"
 
 class G4CascadeInterface;
 class G4HadronInelasticProcess;
 
 class G4EmExtraPhysics : public G4VPhysicsConstructor
 {
-public:
+  public:
 
-  G4EmExtraPhysics(G4int ver = 1);
+    G4EmExtraPhysics(G4int ver = 1);
 
-  // obsolete
-  G4EmExtraPhysics(const G4String& name);
+    // obsolete
+    G4EmExtraPhysics(const G4String& name);
 
-  ~G4EmExtraPhysics() override;
+    ~G4EmExtraPhysics() override;
 
-  void ConstructParticle() override;
-  void ConstructProcess() override;
+    void ConstructParticle() override;
+    void ConstructProcess() override;
 
-  void Synch(G4bool val);
-  void SynchAll(G4bool val);
-  void GammaNuclear(G4bool val);
-  void LENDGammaNuclear(G4bool val);
-  void ElectroNuclear(G4bool val);
-  void MuonNuclear(G4bool val);
-  void GammaToMuMu(G4bool val);
-  void MuonToMuMu(G4bool val);
-  void PositronToMuMu(G4bool val);
-  void PositronToHadrons(G4bool val);
-  void GammaToMuMuFactor(G4double val);
-  void PositronToMuMuFactor(G4double val);
-  void PositronToHadronsFactor(G4double val);
-  void GammaNuclearLEModelLimit(G4double val);
-  void SetUseGammaNuclearXS(G4bool val);
+    void Synch(G4bool val);
+    void SynchAll(G4bool val);
+    void GammaNuclear(G4bool val);
+    void LENDGammaNuclear(G4bool val);
+    void ElectroNuclear(G4bool val);
+    void MuonNuclear(G4bool val);
+    void GammaToMuMu(G4bool val);
+    void MuonToMuMu(G4bool val);
+    void PositronToMuMu(G4bool val);
+    void PositronToHadrons(G4bool val);
+    void GammaToMuMuFactor(G4double val);
+    void PositronToMuMuFactor(G4double val);
+    void PositronToHadronsFactor(G4double val);
+    void GammaNuclearLEModelLimit(G4double val);
+    void SetUseGammaNuclearXS(G4bool val);
 
-  G4EmExtraPhysics& operator=(const G4EmExtraPhysics& right) = delete;
-  G4EmExtraPhysics(const G4EmExtraPhysics&) = delete;
- 
-private:
+    G4EmExtraPhysics& operator=(const G4EmExtraPhysics& right) = delete;
+    G4EmExtraPhysics(const G4EmExtraPhysics&) = delete;
 
-  void ConstructGammaElectroNuclear();
+  private:
 
-  G4bool gnActivated{true};
-  G4bool eActivated{true};
-  G4bool gLENDActivated{false};
-  G4bool munActivated{true};
-  G4bool synActivated{false};
-  G4bool synActivatedForAll{false};
-  G4bool gmumuActivated{false};
-  G4bool mmumuActivated{false};
-  G4bool pmumuActivated{false};
-  G4bool phadActivated{false};
-  G4bool fUseGammaNuclearXS{true};
+    void ConstructGammaElectroNuclear();
 
-  G4double gmumuFactor{1.0};
-  G4double pmumuFactor{1.0};
-  G4double phadFactor{1.0};
-  G4double fGNLowEnergyLimit;
+    G4bool gnActivated{true};
+    G4bool eActivated{true};
+    G4bool gLENDActivated{false};
+    G4bool munActivated{true};
+    G4bool synActivated{false};
+    G4bool synActivatedForAll{false};
+    G4bool gmumuActivated{false};
+    G4bool mmumuActivated{false};
+    G4bool pmumuActivated{false};
+    G4bool phadActivated{false};
+    G4bool fUseGammaNuclearXS{true};
 
-  G4EmMessenger* theMessenger;
-  G4int verbose;
+    G4double gmumuFactor{1.0};
+    G4double pmumuFactor{1.0};
+    G4double phadFactor{1.0};
+    G4double fGNLowEnergyLimit;
+
+    G4EmMessenger* theMessenger;
+    G4int verbose;
 };
 
 #endif

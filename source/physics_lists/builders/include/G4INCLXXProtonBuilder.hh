@@ -23,17 +23,15 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4INCLXXProtonBuilder_h
-#define G4INCLXXProtonBuilder_h 
-
-#include "globals.hh"
+#ifndef G4INCLXXPROTONBUILDER_HH
+#define G4INCLXXPROTONBUILDER_HH
 
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
-#include "G4VProtonBuilder.hh"
-
-#include "G4INCLXXInterface.hh"   
+#include "G4INCLXXInterface.hh"
 #include "G4VPreCompoundModel.hh"
+#include "G4VProtonBuilder.hh"
+#include "globals.hh"
 
 /**
  * Builder for proton processes using the INCL++ intra-nuclear
@@ -51,43 +49,43 @@
  */
 class G4INCLXXProtonBuilder : public G4VProtonBuilder
 {
-  public: 
+  public:
+
     G4INCLXXProtonBuilder();
     virtual ~G4INCLXXProtonBuilder() {}
 
-  /**
-   * Build elastic process.
-   *
-   * No elastic process is built.
-   */
-    virtual void Build(G4HadronElasticProcess *) final override {};
+    /**
+     * Build elastic process.
+     *
+     * No elastic process is built.
+     */
+    virtual void Build(G4HadronElasticProcess*) final override {};
 
-  /**
-   * Build inelastic process.
-   */
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-  /**
-   * Set the minimum energy limit for the model.
-   */
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
+    /**
+     * Build inelastic process.
+     */
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
-  /**
-   * Set the maximum energy limit for the model.
-   */
-    virtual void SetMaxEnergy(G4double aM) final override {theMax = aM;}
+    /**
+     * Set the minimum energy limit for the model.
+     */
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
 
-    using G4VProtonBuilder::Build; //Prevent compiler warning
+    /**
+     * Set the maximum energy limit for the model.
+     */
+    virtual void SetMaxEnergy(G4double aM) final override { theMax = aM; }
+
+    using G4VProtonBuilder::Build;  // Prevent compiler warning
 
   private:
-    G4INCLXXInterface * theModel;    
-    G4VPreCompoundModel * thePreCompoundModel;    
+
+    G4INCLXXInterface* theModel;
+    G4VPreCompoundModel* thePreCompoundModel;
     G4double thePreCompoundMin;
     G4double thePreCompoundMax;
     G4double theMin;
     G4double theMax;
-
 };
 
 #endif
-

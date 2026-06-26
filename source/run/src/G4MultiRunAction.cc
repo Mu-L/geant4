@@ -38,9 +38,11 @@
 G4Run* G4MultiRunAction::GenerateRun()
 {
   G4Run* aRun = nullptr;
-  for (auto& ru : *this) {
+  for (auto& ru : *this)
+  {
     auto anotherRun = ru->GenerateRun();
-    if (aRun != nullptr && anotherRun != nullptr) {
+    if (aRun != nullptr && anotherRun != nullptr)
+    {
       G4Exception("G4MultiRunAction::GenerateRun()", "Run0036", FatalException,
                   "More than one registered UserRunAction return an instance"
                   " of G4Run, not allowed.");

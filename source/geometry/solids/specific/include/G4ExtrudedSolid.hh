@@ -55,22 +55,24 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UEXTRUDEDSOLID 1
+#  define G4GEOM_USE_UEXTRUDEDSOLID 1
 #endif
 
 #if defined(G4GEOM_USE_UEXTRUDEDSOLID)
-  #define G4UExtrudedSolid G4ExtrudedSolid
-  #include "G4UExtrudedSolid.hh"
+#  define G4UExtrudedSolid G4ExtrudedSolid
+#  include "G4UExtrudedSolid.hh"
 #else
 
-#include <vector>
+#  include "G4TessellatedSolid.hh"
+#  include "G4TwoVector.hh"
 
-#include "G4TwoVector.hh"
-#include "G4TessellatedSolid.hh"
+#  include <vector>
 
 /**
  * @brief G4ExtrudedSolid is a is a solid which represents the extrusion
  * of an arbitrary polygon with fixed outline in the defined Z sections.
+ * @ingroup geometry_solids_specific
+ *
  * The z-sides of the solid are the scaled versions of the same polygon.
  * The solid is implemented as a specification of a G4TessellatedSolid.
  */
@@ -84,13 +86,14 @@ class G4ExtrudedSolid : public G4TessellatedSolid
      */
     struct ZSection
     {
-      ZSection() : fZ(0.), fOffset(0.,0.), fScale(1.) {}
-      ZSection(G4double z, const G4TwoVector& offset, G4double scale)
-        : fZ(z), fOffset(offset), fScale(scale) {}
+        ZSection() : fZ(0.), fOffset(0., 0.), fScale(1.) {}
+        ZSection(G4double z, const G4TwoVector& offset, G4double scale)
+          : fZ(z), fOffset(offset), fScale(scale)
+        {}
 
-      G4double    fZ;
-      G4TwoVector fOffset;
-      G4double    fScale;
+        G4double fZ;
+        G4TwoVector fOffset;
+        G4double fScale;
     };
 
     /**
@@ -101,9 +104,8 @@ class G4ExtrudedSolid : public G4TessellatedSolid
      *  @param[in] zsections The 3D polyline with scale factors, i.e. the
      *             Z-sections defined by Z position in increasing order.
      */
-    G4ExtrudedSolid( const G4String&                 pName,
-                     const std::vector<G4TwoVector>& polygon,
-                     const std::vector<ZSection>&    zsections);
+    G4ExtrudedSolid(const G4String& pName, const std::vector<G4TwoVector>& polygon,
+                    const std::vector<ZSection>& zsections);
 
     /**
      * Special constructor for an extruded polygon with 2 Z-sections.
@@ -117,13 +119,9 @@ class G4ExtrudedSolid : public G4TessellatedSolid
      *  @param[in] off2 (X, Y) position of the second polygon in +halfZ.
      *  @param[in] scale2 Scale factor at +halfZ.
      */
-    G4ExtrudedSolid( const G4String&                 pName,
-                     const std::vector<G4TwoVector>& polygon,
-                           G4double                  halfZ,
-                     const G4TwoVector& off1 = G4TwoVector(0.,0.),
-                           G4double scale1 = 1.,
-                     const G4TwoVector& off2 = G4TwoVector(0.,0.),
-                           G4double scale2 = 1. );
+    G4ExtrudedSolid(const G4String& pName, const std::vector<G4TwoVector>& polygon, G4double halfZ,
+                    const G4TwoVector& off1 = G4TwoVector(0., 0.), G4double scale1 = 1.,
+                    const G4TwoVector& off2 = G4TwoVector(0., 0.), G4double scale2 = 1.);
 
     /**
      * Default Destructor.
@@ -133,27 +131,24 @@ class G4ExtrudedSolid : public G4TessellatedSolid
     /**
      * Accessors.
      */
-    inline G4int       GetNofVertices() const;
+    inline G4int GetNofVertices() const;
     inline G4TwoVector GetVertex(G4int index) const;
     inline std::vector<G4TwoVector> GetPolygon() const;
-    inline G4int       GetNofZSections() const;
-    inline ZSection    GetZSection(G4int index) const;
+    inline G4int GetNofZSections() const;
+    inline ZSection GetZSection(G4int index) const;
     inline std::vector<ZSection> GetZSections() const;
 
     /**
      * Concrete implementations of the expected query interfaces for
      * solids, as defined in the base class G4VSolid.
      */
-    EInside  Inside(const G4ThreeVector& p) const override;
+    EInside Inside(const G4ThreeVector& p) const override;
     G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
-    G4double DistanceToIn(const G4ThreeVector& p,
-                          const G4ThreeVector& v) const override;
-    G4double DistanceToIn(const G4ThreeVector& p ) const override;
-    G4double DistanceToOut(const G4ThreeVector& p,
-                           const G4ThreeVector& v,
-                           const G4bool calcNorm = false,
-                                 G4bool* validNorm = nullptr,
-                                 G4ThreeVector* n = nullptr) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
+    G4double DistanceToIn(const G4ThreeVector& p) const override;
+    G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
     G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
@@ -173,20 +168,19 @@ class G4ExtrudedSolid : public G4TessellatedSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Returns the type ID, "G4ExtrudedSolid" of the solid.
      */
-    G4GeometryType GetEntityType () const override;
+    G4GeometryType GetEntityType() const override;
 
     /**
      * Returns true as the solid has only planar faces.
      */
-    G4bool IsFaceted () const override;
+    G4bool IsFaceted() const override;
 
     /**
      * Makes a clone of the object for use in multi-treading.
@@ -258,37 +252,28 @@ class G4ExtrudedSolid : public G4TessellatedSolid
     /**
      * Returns true if 'p' is on the line through 'l1', 'l2'.
      */
-    G4bool IsSameLine(const G4TwoVector& p,
-                      const G4TwoVector& l1,
-                      const G4TwoVector& l2) const;
+    G4bool IsSameLine(const G4TwoVector& p, const G4TwoVector& l1, const G4TwoVector& l2) const;
     /**
      * Returns true if 'p' is on the line through 'l1', 'l2'
      * and lies between 'l1' and 'l2'.
      */
-    G4bool IsSameLineSegment(const G4TwoVector& p,
-                             const G4TwoVector& l1,
+    G4bool IsSameLineSegment(const G4TwoVector& p, const G4TwoVector& l1,
                              const G4TwoVector& l2) const;
     /**
      * Returns true if 'p1' and 'p2' are on the same side of the line
      * through 'l1', 'l2'.
      */
-    G4bool IsSameSide(const G4TwoVector& p1,
-                      const G4TwoVector& p2,
-                      const G4TwoVector& l1,
+    G4bool IsSameSide(const G4TwoVector& p1, const G4TwoVector& p2, const G4TwoVector& l1,
                       const G4TwoVector& l2) const;
     /**
      * Returns true if 'p' is inside of triangle abc or on its edges.
      */
-    G4bool IsPointInside(const G4TwoVector& a,
-                         const G4TwoVector& b,
-                         const G4TwoVector& c,
+    G4bool IsPointInside(const G4TwoVector& a, const G4TwoVector& b, const G4TwoVector& c,
                          const G4TwoVector& p) const;
     /**
      * Returns the angle of the vertex in 'p0'.
      */
-    G4double GetAngle(const G4TwoVector& p0,
-                      const G4TwoVector& pa,
-                      const G4TwoVector& pb) const;
+    G4double GetAngle(const G4TwoVector& p0, const G4TwoVector& pa, const G4TwoVector& pb) const;
 
     /**
      * Returns a pointer to a triangular facet from the polygon points
@@ -317,28 +302,34 @@ class G4ExtrudedSolid : public G4TessellatedSolid
 
   private:
 
-    std::size_t    fNv;
-    std::size_t    fNz;
+    std::size_t fNv;
+    std::size_t fNz;
     std::vector<G4TwoVector> fPolygon;
-    std::vector<ZSection>    fZSections;
-    std::vector< std::vector<G4int> > fTriangles;
-    G4bool         fIsConvex = false;
+    std::vector<ZSection> fZSections;
+    std::vector<std::vector<G4int>> fTriangles;
+    G4bool fIsConvex = false;
     G4GeometryType fGeometryType;
 
     G4int fSolidType = 0;
-    struct plane { G4double a,b,c,d; }; // a*x + b*y + c*z + d = 0
+    struct plane
+    {
+        G4double a, b, c, d;
+    };  // a*x + b*y + c*z + d = 0
     std::vector<plane> fPlanes;
-    struct line { G4double k,m; };      // x = k*y + m;
+    struct line
+    {
+        G4double k, m;
+    };  // x = k*y + m;
     std::vector<line> fLines;
-    std::vector<G4double> fLengths;     // edge lengths
+    std::vector<G4double> fLengths;  // edge lengths
 
-    std::vector<G4double>      fKScales;
-    std::vector<G4double>      fScale0s;
-    std::vector<G4TwoVector>   fKOffsets;
-    std::vector<G4TwoVector>   fOffset0s;
+    std::vector<G4double> fKScales;
+    std::vector<G4double> fScale0s;
+    std::vector<G4TwoVector> fKOffsets;
+    std::vector<G4TwoVector> fOffset0s;
 };
 
-#include "G4ExtrudedSolid.icc"
+#  include "G4ExtrudedSolid.icc"
 
 #endif
 

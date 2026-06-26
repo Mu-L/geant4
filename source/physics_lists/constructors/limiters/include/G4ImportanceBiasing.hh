@@ -28,44 +28,43 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4ImportanceBiasing_h
-#define G4ImportanceBiasing_h 1
+#ifndef G4IMPORTANCEBIASING_HH
+#define G4IMPORTANCEBIASING_HH
 
+#include "G4GeometrySampler.hh"
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
-#include "G4GeometrySampler.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class G4ImportanceBiasing : public G4VPhysicsConstructor
 {
-public:
+  public:
 
-  G4ImportanceBiasing(const G4String& name = "NoParallelWP");
-  G4ImportanceBiasing(G4GeometrySampler* mgs, const G4String& name = "NoParallelWP");
-  virtual ~G4ImportanceBiasing();
+    G4ImportanceBiasing(const G4String& name = "NoParallelWP");
+    G4ImportanceBiasing(G4GeometrySampler* mgs, const G4String& name = "NoParallelWP");
+    virtual ~G4ImportanceBiasing();
 
-public:
+  public:
 
-  // This method is dummy for physics
-  virtual void ConstructParticle();
+    // This method is dummy for physics
+    virtual void ConstructParticle();
 
-  // This method will be invoked in the Construct() method.
-  // each physics process will be instantiated and
-  // registered to the process manager of each particle type
-  virtual void ConstructProcess();
+    // This method will be invoked in the Construct() method.
+    // each physics process will be instantiated and
+    // registered to the process manager of each particle type
+    virtual void ConstructProcess();
 
-private:
+  private:
 
-   // hide assignment operator
-  G4ImportanceBiasing & operator=(const G4ImportanceBiasing &right);
-  G4ImportanceBiasing(const G4ImportanceBiasing&);
+    // hide assignment operator
+    G4ImportanceBiasing& operator=(const G4ImportanceBiasing& right);
+    G4ImportanceBiasing(const G4ImportanceBiasing&);
 
-  G4GeometrySampler* fGeomSampler;
+    G4GeometrySampler* fGeomSampler;
 
-  G4bool paraFlag;
-  G4String paraName;
-
+    G4bool paraFlag;
+    G4String paraName;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

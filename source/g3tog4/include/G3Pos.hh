@@ -35,40 +35,39 @@
 // modified by I.Hrivnacova, 13.10.99
 
 #ifndef G3POS_HH
-#define G3POS_HH 1
+#define G3POS_HH
 
 #include "G4ThreeVector.hh"
 
 class G3Pos
 {
+  public:  // with description
 
-public:  // with description
+    G3Pos() { ; }
 
-  G3Pos(){;}
+    G3Pos(G4String M, G4int C, G4ThreeVector* T, G4int R, G4String O);
 
-  G3Pos(G4String M, G4int C, G4ThreeVector* T, G4int R, G4String O);
+    G4bool operator==(const G3Pos& g3p) const;
 
-  G4bool operator == (const G3Pos& g3p) const;
+    virtual ~G3Pos();
 
-  virtual ~G3Pos();
+    G4String& GetMotherName();
 
-  G4String& GetMotherName();
+    G4int GetIrot();
 
-  G4int GetIrot();
+    G4ThreeVector* GetPos();
 
-  G4ThreeVector* GetPos();
+    G4int GetCopy();
 
-  G4int GetCopy();
+    G4String& GetOnly();
 
-  G4String& GetOnly();
+  private:
 
-private:
-
-  G4String _MotherName;   
-  G4int _Copy;
-  G4ThreeVector* _Position;
-  G4int _Irot;
-  G4String _Only;
+    G4String _MotherName;
+    G4int _Copy;
+    G4ThreeVector* _Position;
+    G4int _Irot;
+    G4String _Only;
 };
 
 #endif

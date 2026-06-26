@@ -44,21 +44,22 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include "G4hPairProduction.hh"
+
 #include "G4hPairProductionModel.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4hPairProduction::G4hPairProduction(const G4String& name)
-  : G4MuPairProduction(name)
-{}
+G4hPairProduction::G4hPairProduction(const G4String& name) : G4MuPairProduction(name) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4hPairProduction::InitialiseEnergyLossProcess(
-                         const G4ParticleDefinition* part,
-			 const G4ParticleDefinition* bpart)
+void G4hPairProduction::InitialiseEnergyLossProcess(const G4ParticleDefinition* part,
+                                                    const G4ParticleDefinition* bpart)
 {
-  if (nullptr == EmModel(0)) { SetEmModel(new G4hPairProductionModel(part)); }
+  if (nullptr == EmModel(0))
+  {
+    SetEmModel(new G4hPairProductionModel(part));
+  }
   G4MuPairProduction::InitialiseEnergyLossProcess(part, bpart);
 }
 

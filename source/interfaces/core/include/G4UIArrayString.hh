@@ -26,8 +26,8 @@
 //
 //
 
-#ifndef G4UIArrayString_h
-#define G4UIArrayString_h
+#ifndef G4UIARRAYSTRING_HH
+#define G4UIARRAYSTRING_HH
 
 #include "globals.hh"
 
@@ -39,27 +39,29 @@
 
 class G4UIArrayString
 {
- public:
-  G4UIArrayString(const G4String& stream);
-  ~G4UIArrayString();
+  public:
 
-  void Show(G4int ncol);
+    G4UIArrayString(const G4String& stream);
+    ~G4UIArrayString();
 
- private:
-  G4String* GetElement(G4int icol, G4int irow) const;
+    void Show(G4int ncol);
 
-  // #rows in a column
-  G4int GetNRow(G4int icol) const;
+  private:
 
-  // max field width of a column
-  G4int GetNField(G4int icol) const;
+    G4String* GetElement(G4int icol, G4int irow) const;
 
-  // calculate total column width
-  G4int CalculateColumnWidth() const;
+    // #rows in a column
+    G4int GetNRow(G4int icol) const;
 
-  G4String* stringArray;
-  std::size_t nElement;
-  std::size_t nColumn;
+    // max field width of a column
+    G4int GetNField(G4int icol) const;
+
+    // calculate total column width
+    G4int CalculateColumnWidth() const;
+
+    G4String* stringArray;
+    std::size_t nElement;
+    std::size_t nColumn;
 };
 
 #endif

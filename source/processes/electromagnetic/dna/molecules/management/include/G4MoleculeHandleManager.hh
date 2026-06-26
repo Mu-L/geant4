@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,15 +41,17 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
 #ifndef G4MOLECULEHANDLEMANAGER_HH
 #define G4MOLECULEHANDLEMANAGER_HH
 
-#include "globals.hh"
 #include "G4ReferenceCountedHandle.hh"
-#include <map>
+#include "globals.hh"
+
 #include <G4memory.hh>
+
+#include <map>
 
 class G4Molecule;
 
@@ -57,24 +59,27 @@ using G4MoleculeHandle = std::shared_ptr<const G4Molecule>;
 
 class G4MoleculeHandleManager
 {
-public:
-  static G4MoleculeHandleManager* Instance();
-  ~G4MoleculeHandleManager();
-  G4MoleculeHandle GetMoleculeHandle(const G4Molecule*);
+  public:
 
-  static void DeleteInstance();
+    static G4MoleculeHandleManager* Instance();
+    ~G4MoleculeHandleManager();
+    G4MoleculeHandle GetMoleculeHandle(const G4Molecule*);
 
-private:
-  G4MoleculeHandleManager();
-  static G4ThreadLocal G4MoleculeHandleManager* fInstance;
+    static void DeleteInstance();
 
-  struct CompMoleculePointer
-  {
-    G4bool operator()(const G4Molecule* mol1, const G4Molecule* mol2) const;
-  };
+  private:
 
-  using MoleculeHandleMap = std::map<const G4Molecule *, G4MoleculeHandle, G4MoleculeHandleManager::CompMoleculePointer>;
-  MoleculeHandleMap fMoleculeHandle;
+    G4MoleculeHandleManager();
+    static G4ThreadLocal G4MoleculeHandleManager* fInstance;
+
+    struct CompMoleculePointer
+    {
+        G4bool operator()(const G4Molecule* mol1, const G4Molecule* mol2) const;
+    };
+
+    using MoleculeHandleMap =
+      std::map<const G4Molecule*, G4MoleculeHandle, G4MoleculeHandleManager::CompMoleculePointer>;
+    MoleculeHandleMap fMoleculeHandle;
 };
 
-#endif // G4MOLECULEHANDLEMANAGER_HH
+#endif  // G4MOLECULEHANDLEMANAGER_HH

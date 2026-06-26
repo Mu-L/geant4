@@ -28,32 +28,34 @@
 #ifndef G4OPENGLXMVIEWERMESSENGER_HH
 #define G4OPENGLXMVIEWERMESSENGER_HH
 
-#include "G4UImessenger.hh"
-
 #include "G4String.hh"
+#include "G4UImessenger.hh"
 
 class G4OpenGLXmViewer;
 class G4UIdirectory;
 class G4UIcmdWithADoubleAndUnit;
 class G4UIcmdWithADouble;
 
-class G4OpenGLXmViewerMessenger: public G4UImessenger {
-public:
-  static G4OpenGLXmViewerMessenger* GetInstance();  // Singleton constructor.
-  ~G4OpenGLXmViewerMessenger();
-  void SetNewValue (G4UIcommand*, G4String);
+class G4OpenGLXmViewerMessenger : public G4UImessenger
+{
+  public:
 
-private:
-  G4OpenGLXmViewerMessenger();  // Private constructor.
-  static G4OpenGLXmViewerMessenger* fpInstance;
-  G4UIdirectory* fpDirectory;
-  G4UIdirectory* fpDirectorySet;
-  G4UIcmdWithADoubleAndUnit* fpCommandSetDollyHigh;
-  G4UIcmdWithADoubleAndUnit* fpCommandSetDollyLow;
-  G4UIcmdWithADoubleAndUnit* fpCommandSetPanHigh;
-  G4UIcmdWithADoubleAndUnit* fpCommandSetRotationHigh;
-  G4UIcmdWithADouble* fpCommandSetZoomHigh;
-  G4UIcmdWithADouble* fpCommandSetZoomLow;
+    static G4OpenGLXmViewerMessenger* GetInstance();  // Singleton constructor.
+    ~G4OpenGLXmViewerMessenger();
+    void SetNewValue(G4UIcommand*, G4String);
+
+  private:
+
+    G4OpenGLXmViewerMessenger();  // Private constructor.
+    static G4OpenGLXmViewerMessenger* fpInstance;
+    G4UIdirectory* fpDirectory;
+    G4UIdirectory* fpDirectorySet;
+    G4UIcmdWithADoubleAndUnit* fpCommandSetDollyHigh;
+    G4UIcmdWithADoubleAndUnit* fpCommandSetDollyLow;
+    G4UIcmdWithADoubleAndUnit* fpCommandSetPanHigh;
+    G4UIcmdWithADoubleAndUnit* fpCommandSetRotationHigh;
+    G4UIcmdWithADouble* fpCommandSetZoomHigh;
+    G4UIcmdWithADouble* fpCommandSetZoomLow;
 };
 
 #endif

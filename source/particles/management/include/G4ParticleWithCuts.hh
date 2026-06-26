@@ -29,8 +29,8 @@
 
 // Author: H.Kurashige, 9 March 2001
 // --------------------------------------------------------------------
-#ifndef G4ParticleWithCuts_h
-#define G4ParticleWithCuts_h 1
+#ifndef G4PARTICLEWITHCUTS_HH
+#define G4PARTICLEWITHCUTS_HH
 
 #include "G4ParticleDefinition.hh"
 

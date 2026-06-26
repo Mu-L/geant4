@@ -36,14 +36,10 @@
 #include "G4tgrMessenger.hh"
 
 // --------------------------------------------------------------------
-G4tgbMaterialMixtureByNoAtoms::G4tgbMaterialMixtureByNoAtoms()
-{
-}
+G4tgbMaterialMixtureByNoAtoms::G4tgbMaterialMixtureByNoAtoms() {}
 
 // --------------------------------------------------------------------
-G4tgbMaterialMixtureByNoAtoms::~G4tgbMaterialMixtureByNoAtoms()
-{
-}
+G4tgbMaterialMixtureByNoAtoms::~G4tgbMaterialMixtureByNoAtoms() {}
 
 // --------------------------------------------------------------------
 G4tgbMaterialMixtureByNoAtoms::G4tgbMaterialMixtureByNoAtoms(G4tgrMaterial* hg)
@@ -56,20 +52,17 @@ G4Material* G4tgbMaterialMixtureByNoAtoms::BuildG4Material()
 {
   //----- construct new G4Material with components materials (a mixture)
 
-  G4Material* mate =
-    new G4Material(theTgrMate->GetName(), theTgrMate->GetDensity(),
-                   theTgrMate->GetNumberOfComponents(), theTgrMate->GetState(),
-                   theTgrMate->GetTemperature(), theTgrMate->GetPressure());
+  G4Material* mate = new G4Material(theTgrMate->GetName(), theTgrMate->GetDensity(),
+                                    theTgrMate->GetNumberOfComponents(), theTgrMate->GetState(),
+                                    theTgrMate->GetTemperature(), theTgrMate->GetPressure());
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 2)
+  if (G4tgrMessenger::GetVerboseLevel() >= 2)
   {
     G4cout << " G4tgbMaterialMixtureByNoAtoms::BuildG4Material() -"
            << " Constructing new G4Material:"
-           << " " << theTgrMate->GetName() << " "
-           << theTgrMate->GetDensity() / g * cm3 << " "
-           << theTgrMate->GetNumberOfComponents() << " "
-           << theTgrMate->GetState() << " " << theTgrMate->GetTemperature()
-           << " " << theTgrMate->GetPressure() << G4endl;
+           << " " << theTgrMate->GetName() << " " << theTgrMate->GetDensity() / g * cm3 << " "
+           << theTgrMate->GetNumberOfComponents() << " " << theTgrMate->GetState() << " "
+           << theTgrMate->GetTemperature() << " " << theTgrMate->GetPressure() << G4endl;
   }
 #endif
 
@@ -77,40 +70,38 @@ G4Material* G4tgbMaterialMixtureByNoAtoms::BuildG4Material()
 
   G4Element* compElem;
   G4tgbMaterialMgr* mf = G4tgbMaterialMgr::GetInstance();
-  for(G4int ii = 0; ii < theTgrMate->GetNumberOfComponents(); ++ii)
+  for (G4int ii = 0; ii < theTgrMate->GetNumberOfComponents(); ++ii)
   {
     // look if this component is an element
     compElem = mf->FindOrBuildG4Element(GetComponent(ii), false);
-    if(compElem != nullptr)
+    if (compElem != nullptr)
     {
 #ifdef G4VERBOSE
-      if(G4tgrMessenger::GetVerboseLevel() >= 2)
+      if (G4tgrMessenger::GetVerboseLevel() >= 2)
       {
         G4cout << " G4tgbMaterialMixtureByNoAtoms::BuildG4Material() -"
                << " Adding component element ..." << G4endl;
       }
 #endif
       // add it by number of atoms
-      G4cout << compElem->GetName() << " BY NATOMS ele " << ii << " "
-             << G4int(GetFraction(ii)) << G4endl;
+      G4cout << compElem->GetName() << " BY NATOMS ele " << ii << " " << G4int(GetFraction(ii))
+             << G4endl;
       mate->AddElement(compElem, G4int(GetFraction(ii)));
       // if it is not an element look if it is a material
     }
     else
     {
-      G4String ErrMessage = "Component " + GetComponent(ii) + " of material " +
-                            theTgrMate->GetName() + "\n" +
-                            "is not an element !";
-      G4Exception("G4tgbMaterialMixtureByWeight::buildG4Material()",
-                  "InvalidSetup", FatalException, ErrMessage);
+      G4String ErrMessage = "Component " + GetComponent(ii) + " of material "
+                            + theTgrMate->GetName() + "\n" + "is not an element !";
+      G4Exception("G4tgbMaterialMixtureByWeight::buildG4Material()", "InvalidSetup", FatalException,
+                  ErrMessage);
     }
   }
 
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 1)
+  if (G4tgrMessenger::GetVerboseLevel() >= 1)
   {
-    G4cout << " Constructing new G4Material by number of atoms: " << *mate
-           << G4endl;
+    G4cout << " Constructing new G4Material by number of atoms: " << *mate << G4endl;
   }
 #endif
 
@@ -118,6 +109,4 @@ G4Material* G4tgbMaterialMixtureByNoAtoms::BuildG4Material()
 }
 
 // --------------------------------------------------------------------
-void G4tgbMaterialMixtureByNoAtoms::TransformToFractionsByWeight()
-{
-}
+void G4tgbMaterialMixtureByNoAtoms::TransformToFractionsByWeight() {}

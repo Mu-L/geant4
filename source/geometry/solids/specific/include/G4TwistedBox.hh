@@ -47,7 +47,10 @@
 
 /**
  * @brief G4TwistedBox is a twisted cuboid of given half lengths and twist
- * angle. The box is centred on the origin with sides parallel to the
+ * angle.
+ * @ingroup geometry_solids_specific
+ *
+ * The box is centred on the origin with sides parallel to the
  * Cartesian axes.
  */
 
@@ -63,11 +66,8 @@ class G4TwistedBox : public G4VTwistedFaceted
      *  @param[in] pDy Half-length along Y axis.
      *  @param[in] pDz Half-length along Z axis.
      */
-    G4TwistedBox(const G4String& pName,
-                       G4double  pPhiTwist,
-                       G4double  pDx,
-                       G4double  pDy,
-                       G4double  pDz );
+    G4TwistedBox(const G4String& pName, G4double pPhiTwist, G4double pDx, G4double pDy,
+                 G4double pDz);
 
     /**
      * Default destructor.
@@ -77,10 +77,10 @@ class G4TwistedBox : public G4VTwistedFaceted
     /**
      * Accessors.
      */
-    inline G4double GetXHalfLength() const { return GetDx1() ; }
-    inline G4double GetYHalfLength() const { return GetDy1() ; }
-    inline G4double GetZHalfLength() const { return GetDz()  ; }
-    inline G4double GetPhiTwist()    const { return GetTwistAngle() ; }
+    inline G4double GetXHalfLength() const { return GetDx1(); }
+    inline G4double GetYHalfLength() const { return GetDy1(); }
+    inline G4double GetZHalfLength() const { return GetDz(); }
+    inline G4double GetPhiTwist() const { return GetTwistAngle(); }
 
     /**
      * Returns the type ID, "G4TwistedBox" of the solid.

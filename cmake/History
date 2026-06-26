@@ -6,7 +6,19 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-02-17 Ben Morgan (cmake-V11-03-18)
+## 2026-05-11 Ben Morgan (cmake-V11-04-03)
+- Bump G4EMLOW dataset to version 9.0 (see #289, !5670).
+
+## 2026-04-26 Ben Morgan (cmake-V11-04-02)
+- Preliminary addition of doc/ directory for Doxygen-ation of toolkit code.
+  - Based on existance of directory in case this is not distributed with code
+    initially (e.g. until sufficient coverage is available).
+
+## 2026-02-18 Ben Morgan (cmake-V11-04-01)
+- Bump G4EMLOW dataset to version 8.9
+  - Addressing bug in DNA dataset energy ordering (see #274).
+
+## 2026-02-17 Ben Morgan (cmake-V11-04-00)
 - Use CMake 3.16-3.19 compatible construction of interface libraries.
   - Fixes [Bugzilla 2700](https://bugzilla-geant4.kek.jp/show_bug.cgi?id=2700)
 - Fix logic error in construction of link interface to such interface

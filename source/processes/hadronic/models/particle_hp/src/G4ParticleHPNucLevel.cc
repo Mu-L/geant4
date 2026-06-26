@@ -46,20 +46,24 @@ void G4ParticleHPNucLevel::AddGamma(G4double e, G4double w, G4int idx)
 
 void G4ParticleHPNucLevel::Normalize()
 {
-  if (gammas.empty()) {
+  if (gammas.empty())
+  {
     return;
   }
   G4double sum = 0.0;
-  for (auto& gam : gammas) {
+  for (auto& gam : gammas)
+  {
     sum += gam.cumProbability;
   }
-  if (sum <= 0.0) {
+  if (sum <= 0.0)
+  {
     return;
   }
 
   G4double norm = 1.0 / sum;
   sum = 0;
-  for (auto& gam : gammas) {
+  for (auto& gam : gammas)
+  {
     sum += norm * gam.cumProbability;
     gam.cumProbability = sum;
   }
@@ -68,19 +72,23 @@ void G4ParticleHPNucLevel::Normalize()
 
 G4ReactionProduct* G4ParticleHPNucLevel::GetDecayGamma(G4int& idx) const
 {
-  if (gammas.empty()) {
+  if (gammas.empty())
+  {
     return nullptr;
   }
   G4double q = G4UniformRand();
   G4double e = 0.0;
-  for (auto& gam : gammas) {
-    if (q <= gam.cumProbability) {
+  for (auto& gam : gammas)
+  {
+    if (q <= gam.cumProbability)
+    {
       e = gam.gammaEnergy;
       idx = gam.next;
       break;
     }
   }
-  if (e <= 0.0) {
+  if (e <= 0.0)
+  {
     return nullptr;
   }
   G4ThreeVector p = G4RandomDirection();

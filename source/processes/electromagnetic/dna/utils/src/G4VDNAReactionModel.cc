@@ -27,17 +27,17 @@
 #include "G4VDNAReactionModel.hh"
 
 G4VDNAReactionModel::G4VDNAReactionModel()
-     
-= default;
+
+  = default;
 
 G4VDNAReactionModel::~G4VDNAReactionModel() = default;
 
 void G4VDNAReactionModel::SetReactionTable(const G4DNAMolecularReactionTable* pReactionTable)
 {
-    fpReactionTable = pReactionTable;
+  fpReactionTable = pReactionTable;
 }
 
 const G4DNAMolecularReactionTable* G4VDNAReactionModel::GetReactionTable()
 {
-    return fpReactionTable;
+  return fpReactionTable;
 }

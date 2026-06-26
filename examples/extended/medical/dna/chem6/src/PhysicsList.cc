@@ -48,14 +48,9 @@
 #include "G4EmDNAChemistry_option1.hh"
 #include "G4EmDNAChemistry_option2.hh"
 #include "G4EmDNAChemistry_option3.hh"
-#include "G4EmDNAPhysics.hh"
-#include "G4EmDNAPhysics_option1.hh"
 #include "G4EmDNAPhysics_option2.hh"
-#include "G4EmDNAPhysics_option3.hh"
 #include "G4EmDNAPhysics_option4.hh"
-#include "G4EmDNAPhysics_option5.hh"
 #include "G4EmDNAPhysics_option6.hh"
-#include "G4EmDNAPhysics_option7.hh"
 #include "G4EmDNAPhysics_option8.hh"
 #include "G4EmParameters.hh"
 #include "G4SystemOfUnits.hh"
@@ -102,6 +97,7 @@ void PhysicsList::ConstructProcess() {
     fEmDNAPhysicsList->ConstructProcess();
   }
   if (fEmDNAChemistryList != nullptr) {
+    fEmDNAChemistryList->SetVerboseLevel(GetVerboseLevel());
     fEmDNAChemistryList->ConstructProcess();
   }
 }
@@ -115,13 +111,9 @@ void PhysicsList::RegisterConstructor(const G4String &name) {
 
   static const std::map<std::string, PhysFactory> physFactories = {
     {"G4EmDNAPhysics", [](G4int v) { return std::make_unique<G4EmDNAPhysics>(v); }},
-    {"G4EmDNAPhysics_option1", [](G4int v) { return std::make_unique<G4EmDNAPhysics_option1>(v); }},
     {"G4EmDNAPhysics_option2", [](G4int v) { return std::make_unique<G4EmDNAPhysics_option2>(v); }},
-    {"G4EmDNAPhysics_option3", [](G4int v) { return std::make_unique<G4EmDNAPhysics_option3>(v); }},
     {"G4EmDNAPhysics_option4", [](G4int v) { return std::make_unique<G4EmDNAPhysics_option4>(v); }},
-    {"G4EmDNAPhysics_option5", [](G4int v) { return std::make_unique<G4EmDNAPhysics_option5>(v); }},
     {"G4EmDNAPhysics_option6", [](G4int v) { return std::make_unique<G4EmDNAPhysics_option6>(v); }},
-    {"G4EmDNAPhysics_option7", [](G4int v) { return std::make_unique<G4EmDNAPhysics_option7>(v); }},
     {"G4EmDNAPhysics_option8", [](G4int v) { return std::make_unique<G4EmDNAPhysics_option8>(v); }}
   };
 

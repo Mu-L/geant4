@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  5th April 2001
 // A graphics system to dump geometry hierarchy.
 
@@ -34,13 +34,13 @@
 
 #include "G4VGraphicsSystem.hh"
 
-class G4VTree: public G4VGraphicsSystem {
-public:
-  G4VTree (const G4String& name,
-	   const G4String& nickname,
-	   const G4String& description,
-	   Functionality f);
-  virtual ~G4VTree ();
+class G4VTree : public G4VGraphicsSystem
+{
+  public:
+
+    G4VTree(const G4String& name, const G4String& nickname, const G4String& description,
+            Functionality f);
+    virtual ~G4VTree();
 };
 
 #endif

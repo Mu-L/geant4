@@ -30,8 +30,8 @@
  *      Author: mkaramit
  */
 
-#include <G4VITSteppingVerbose.hh>
 #include <G4UIcmdWithAnInteger.hh>
+#include <G4VITSteppingVerbose.hh>
 
 //______________________________________________________________________________
 
@@ -91,7 +91,6 @@ G4VITSteppingVerbose::G4VITSteppingVerbose()
   physIntLength = 0;
   fCondition = InActivated;
   fGPILSelection = NotCandidateForSelection;
-
 }
 
 //______________________________________________________________________________
@@ -105,8 +104,8 @@ G4VITSteppingVerbose::~G4VITSteppingVerbose()
 
 void G4VITSteppingVerbose::CopyState()
 {
-
-  if(fpState != nullptr) *fpState = *(fpStepProcessor->GetProcessorState());
+  if (fpState != nullptr)
+    *fpState = *(fpStepProcessor->GetProcessorState());
   else
   {
     fpState = new G4ITStepProcessorState(*fpStepProcessor->GetProcessorState());
@@ -125,7 +124,7 @@ void G4VITSteppingVerbose::CopyState()
   fPostStepPoint = fStep->GetPostStepPoint();
 
   fCurrentVolume = fpStepProcessor->GetCurrentVolume();
-//  fSensitive = fpStepProcessor->GetfSensitive();
+  //  fSensitive = fpStepProcessor->GetfSensitive();
   fCurrentProcess = fpStepProcessor->GetCurrentProcess();
 
   fAtRestDoItVector = fpProcessGeneralInfo->fpAtRestDoItVector;
@@ -133,8 +132,7 @@ void G4VITSteppingVerbose::CopyState()
   fPostStepDoItVector = fpProcessGeneralInfo->fpPostStepDoItVector;
 
   fAtRestGetPhysIntVector = fpProcessGeneralInfo->fpAtRestGetPhysIntVector;
-  fAlongStepGetPhysIntVector =
-      fpProcessGeneralInfo->fpAlongStepGetPhysIntVector;
+  fAlongStepGetPhysIntVector = fpProcessGeneralInfo->fpAlongStepGetPhysIntVector;
   fPostStepGetPhysIntVector = fpProcessGeneralInfo->fpPostStepGetPhysIntVector;
 
   MAXofAtRestLoops = fpProcessGeneralInfo->MAXofAtRestLoops;
@@ -148,7 +146,7 @@ void G4VITSteppingVerbose::CopyState()
   fN2ndariesAlongStepDoIt = fpStepProcessor->GetN2ndariesAlongStepDoIt();
   fN2ndariesPostStepDoIt = fpStepProcessor->GetN2ndariesPostStepDoIt();
 
-//  fNavigator = fpStepProcessor->GetfNavigator();
+  //  fNavigator = fpStepProcessor->GetfNavigator();
 
   fSelectedAtRestDoItVector = &(fpState->fSelectedAtRestDoItVector);
   fSelectedPostStepDoItVector = &(fpState->fSelectedPostStepDoItVector);
@@ -157,7 +155,7 @@ void G4VITSteppingVerbose::CopyState()
 
   fTouchableHandle = fpState->fTouchableHandle;
 
-//  StepControlFlag = fpStepProcessor->GetStepControlFlag();
+  //  StepControlFlag = fpStepProcessor->GetStepControlFlag();
 
   physIntLength = fpStepProcessor->GetPhysIntLength();
   fCondition = fpStepProcessor->GetCondition();
@@ -168,7 +166,7 @@ void G4VITSteppingVerbose::CopyState()
 
 void G4VITSteppingVerbose::SetNewValue(G4UIcommand* command, G4String newValue)
 {
-  if(command == fpVerboseUI)
+  if (command == fpVerboseUI)
   {
     fVerboseLevel = fpVerboseUI->GetNewIntValue(newValue);
   }
@@ -185,29 +183,28 @@ G4String G4VITSteppingVerbose::GetCurrentValue(G4UIcommand* command)
 
 void G4VITSteppingVerbose::TrackingStarted(G4Track*
 #ifdef G4VERBOSE
-                                           track
+                                             track
 #endif
 )
 {
 #ifdef G4VERBOSE
-  if(fVerboseLevel > 0)
+  if (fVerboseLevel > 0)
   {
     TrackBanner(track, "G4ITTrackingManager::StartTracking : ");
   }
 #endif
-
 }
 
 //______________________________________________________________________________
 
 void G4VITSteppingVerbose::TrackingEnded(G4Track*
 #ifdef G4VERBOSE
-                                         track
+                                           track
 #endif
 )
 {
 #ifdef G4VERBOSE
-  if(fVerboseLevel > 0)
+  if (fVerboseLevel > 0)
   {
     TrackBanner(track, "G4ITTrackingManager::EndTracking : ");
   }
@@ -220,21 +217,16 @@ void G4VITSteppingVerbose::TrackBanner(G4Track* track, const G4String& message)
 {
   G4cout << G4endl;
   G4cout << "*******************************************************"
-         << "**************************************************"
-         << G4endl;
-  if(!message.empty())
+         << "**************************************************" << G4endl;
+  if (!message.empty())
   {
     G4cout << message;
   }
   G4cout << " * G4Track Information: "
-         << "   Particle : " << track->GetDefinition()->GetParticleName()
-         << ","
-         << "   Track ID : " << track->GetTrackID()
-         << ","
-         << "   Parent ID : " << track->GetParentID()
-         << G4endl;
+         << "   Particle : " << track->GetDefinition()->GetParticleName() << ","
+         << "   Track ID : " << track->GetTrackID() << ","
+         << "   Parent ID : " << track->GetParentID() << G4endl;
   G4cout << "*******************************************************"
-         << "**************************************************"
-         << G4endl;
+         << "**************************************************" << G4endl;
   G4cout << G4endl;
 }

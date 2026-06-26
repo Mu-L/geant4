@@ -31,13 +31,13 @@
 //
 // Author: Michael Dressel, CERN
 // --------------------------------------------------------------------
-#ifndef G4WeightWindowConfigurator_hh
-#define G4WeightWindowConfigurator_hh 1
+#ifndef G4WEIGHTWINDOWCONFIGURATOR_HH
+#define G4WEIGHTWINDOWCONFIGURATOR_HH
 
-#include "G4Types.hh"
-#include "G4ProcessPlacer.hh"
-#include "G4VSamplerConfigurator.hh"
 #include "G4PlaceOfAction.hh"
+#include "G4ProcessPlacer.hh"
+#include "G4Types.hh"
+#include "G4VSamplerConfigurator.hh"
 
 class G4VWeightWindowStore;
 class G4VWeightWindowAlgorithm;
@@ -46,34 +46,30 @@ class G4VPhysicalVolume;
 
 class G4WeightWindowConfigurator : public G4VSamplerConfigurator
 {
+  public:
 
- public:
+    G4WeightWindowConfigurator(const G4VPhysicalVolume* worldvolume, const G4String& particlename,
+                               G4VWeightWindowStore& wwstore, const G4VWeightWindowAlgorithm* wwAlg,
+                               G4PlaceOfAction placeOfAction, G4bool paraflag);
 
-  G4WeightWindowConfigurator(const G4VPhysicalVolume* worldvolume,
-			     const G4String& particlename,
-                                   G4VWeightWindowStore& wwstore,
-                             const G4VWeightWindowAlgorithm* wwAlg,
-                                   G4PlaceOfAction placeOfAction,
-                                   G4bool paraflag);
+    virtual ~G4WeightWindowConfigurator();
 
-  virtual ~G4WeightWindowConfigurator();
+    G4WeightWindowConfigurator(const G4WeightWindowConfigurator&) = delete;
+    G4WeightWindowConfigurator& operator=(const G4WeightWindowConfigurator&) = delete;
 
-  G4WeightWindowConfigurator(const G4WeightWindowConfigurator &) = delete;
-  G4WeightWindowConfigurator& operator=(const G4WeightWindowConfigurator &) = delete;
+    virtual void Configure(G4VSamplerConfigurator* preConf);
+    virtual const G4VTrackTerminator* GetTrackTerminator() const;
 
-  virtual void Configure(G4VSamplerConfigurator* preConf);
-  virtual const G4VTrackTerminator* GetTrackTerminator() const;
+  private:
 
- private:
-
-  const G4VPhysicalVolume* fWorld = nullptr;
-  G4ProcessPlacer fPlacer;
-  G4VWeightWindowStore& fWeightWindowStore;
-  G4bool fDeleteWWalg = false;
-  const G4VWeightWindowAlgorithm* fWWalgorithm = nullptr;
-  G4WeightWindowProcess* fWeightWindowProcess = nullptr;
-  G4PlaceOfAction fPlaceOfAction;
-  G4bool paraflag = false;
+    const G4VPhysicalVolume* fWorld = nullptr;
+    G4ProcessPlacer fPlacer;
+    G4VWeightWindowStore& fWeightWindowStore;
+    G4bool fDeleteWWalg = false;
+    const G4VWeightWindowAlgorithm* fWWalgorithm = nullptr;
+    G4WeightWindowProcess* fWeightWindowProcess = nullptr;
+    G4PlaceOfAction fPlaceOfAction;
+    G4bool paraflag = false;
 };
 
 #endif

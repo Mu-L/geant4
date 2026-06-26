@@ -31,40 +31,37 @@
 
 #include "G3toG4RotationMatrix.hh"
 
-G3RotTableEntry::G3RotTableEntry(G4int id, G4RotationMatrix* matrix)
-  : fID(id),
-    fMatrix(matrix)
-{}
+G3RotTableEntry::G3RotTableEntry(G4int id, G4RotationMatrix* matrix) : fID(id), fMatrix(matrix) {}
 
 G3RotTableEntry::G3RotTableEntry(const G3RotTableEntry& right)
-  : fID(right.GetID()),
-    fMatrix(right.GetMatrix())
-{}    
-
-G3RotTableEntry::~G3RotTableEntry()
+  : fID(right.GetID()), fMatrix(right.GetMatrix())
 {}
 
+G3RotTableEntry::~G3RotTableEntry() {}
+
 G3RotTableEntry& G3RotTableEntry::operator=(const G3RotTableEntry& right)
-{ 
-  if (&right == this)  { return *this; }
+{
+  if (&right == this)
+  {
+    return *this;
+  }
   fID = right.GetID();
-  fMatrix = right.GetMatrix();     
+  fMatrix = right.GetMatrix();
   return *this;
 }
 
 G4bool G3RotTableEntry::operator==(const G3RotTableEntry& right) const
-{ 
-  if (fID == right.GetID()) 
+{
+  if (fID == right.GetID())
     return true;
   else
     return false;
 }
 
 G4bool G3RotTableEntry::operator!=(const G3RotTableEntry& right) const
-{ 
-  if (*this == right) 
+{
+  if (*this == right)
     return false;
   else
     return true;
 }
-

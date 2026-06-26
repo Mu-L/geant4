@@ -24,33 +24,32 @@
 // ********************************************************************
 
 #ifndef G4DNAWATEREXCITATIONSTRUCTURE_HH
-#define G4DNAWATEREXCITATIONSTRUCTURE_HH 1
- 
+#define G4DNAWATEREXCITATIONSTRUCTURE_HH
+
 #include "globals.hh"
+
 #include <vector>
 
- 
 class G4DNAWaterExcitationStructure
 {
-public:
-  
-  G4DNAWaterExcitationStructure();
-  
-  virtual ~G4DNAWaterExcitationStructure();
-  
-  G4double ExcitationEnergy(G4int level);
+  public:
 
-  G4int NumberOfLevels() { return nLevels; }
-  
-  // Copy constructor and assignment operator to be added here
-    
-private:
-   
- // Number of excitation levels of the water molecule
- G4int nLevels{5};
+    G4DNAWaterExcitationStructure();
 
-  std::vector<G4double> energyConstant;
-  
+    virtual ~G4DNAWaterExcitationStructure();
+
+    G4double ExcitationEnergy(G4int level);
+
+    G4int NumberOfLevels() { return nLevels; }
+
+    // Copy constructor and assignment operator to be added here
+
+  private:
+
+    // Number of excitation levels of the water molecule
+    G4int nLevels{5};
+
+    std::vector<G4double> energyConstant;
 };
 
 #endif

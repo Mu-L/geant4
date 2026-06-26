@@ -36,24 +36,22 @@ G4Allocator<G4HEPEvtParticle>*& aHEPEvtParticleAllocator()
   return _instance;
 }
 
-G4HEPEvtParticle::
-G4HEPEvtParticle(G4PrimaryParticle* pp,
-                 G4int isthep, G4int jdahep1, G4int jdahep2)
-  : theParticle(pp),ISTHEP(isthep),JDAHEP1(jdahep1),JDAHEP2(jdahep2)
-{
-}
+G4HEPEvtParticle::G4HEPEvtParticle(G4PrimaryParticle* pp, G4int isthep, G4int jdahep1,
+                                   G4int jdahep2)
+  : theParticle(pp), ISTHEP(isthep), JDAHEP1(jdahep1), JDAHEP2(jdahep2)
+{}
 
-G4HEPEvtParticle& G4HEPEvtParticle::operator=(const G4HEPEvtParticle &)
-{ 
+G4HEPEvtParticle& G4HEPEvtParticle::operator=(const G4HEPEvtParticle&)
+{
   return *this;
 }
 
-G4bool G4HEPEvtParticle::operator==(const G4HEPEvtParticle &right) const
+G4bool G4HEPEvtParticle::operator==(const G4HEPEvtParticle& right) const
 {
-  return (this==&right);
+  return (this == &right);
 }
 
-G4bool G4HEPEvtParticle::operator!=(const G4HEPEvtParticle &right) const
+G4bool G4HEPEvtParticle::operator!=(const G4HEPEvtParticle& right) const
 {
-  return (this!=&right);
+  return (this != &right);
 }

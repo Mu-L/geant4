@@ -28,18 +28,22 @@
 //
 // Author: Ivana Hrivnacova, 13/07/2022  (ivana@ipno.in2p3.fr)
 
-#ifndef G4RootRFile_h
-#define G4RootRFile_h 1
+#ifndef G4ROOTRFILE_HH
+#define G4ROOTRFILE_HH
 
-namespace tools {
-namespace rroot {
+#include <memory>
+#include <tuple>
+
+namespace tools
+{
+namespace rroot
+{
 class directory;
 class file;
-}
-}
+}  // namespace rroot
+}  // namespace tools
 
-using G4RootRFile = std::tuple<tools::rroot::file*,
-                               tools::rroot::directory*,
-                               tools::rroot::directory*>;
+using G4RootRFile =
+  std::tuple<tools::rroot::file*, tools::rroot::directory*, tools::rroot::directory*>;
 
 #endif

@@ -42,12 +42,13 @@ G3RotTable::~G3RotTable()
 
 G4RotationMatrix* G3RotTable::Get(G4int id) const
 {
-  for (size_t i=0; i<fRotVector->size(); i++) {
+  for (size_t i = 0; i < fRotVector->size(); i++)
+  {
     G3RotTableEntry* rte = (*fRotVector)[i];
     if (id == rte->GetID()) return rte->GetMatrix();
   }
   return 0;
-}    
+}
 
 void G3RotTable::Put(G4int id, G4RotationMatrix* matrix)
 {
@@ -58,18 +59,21 @@ void G3RotTable::Put(G4int id, G4RotationMatrix* matrix)
 void G3RotTable::Clear()
 {
   G3RotTableEntry* a;
-  while (fRotVector->size()>0) {
+  while (fRotVector->size() > 0)
+  {
     a = fRotVector->back();
     fRotVector->pop_back();
-    for (G3RotMatrixVector::iterator i=fRotVector->begin();
-                                     i!=fRotVector->end();){
-      if (*i==a) {
-	i = fRotVector->erase(i);
+    for (G3RotMatrixVector::iterator i = fRotVector->begin(); i != fRotVector->end();)
+    {
+      if (*i == a)
+      {
+        i = fRotVector->erase(i);
       }
-      else {
-	++i;
+      else
+      {
+        ++i;
       }
-    } 
-    if ( a )  delete a;    
-  } 
+    }
+    if (a) delete a;
+  }
 }

@@ -34,8 +34,8 @@
 //   Katsuya Amako  (e-mail: Katsuya.Amako@kek.jp)
 //   Takashi Sasaki (e-mail: Takashi.Sasaki@kek.jp)
 // --------------------------------------------------------------------
-#ifndef G4ForceCondition_hh
-#define G4ForceCondition_hh 1
+#ifndef G4FORCECONDITION_HH
+#define G4FORCECONDITION_HH
 
 enum G4ForceCondition
 {

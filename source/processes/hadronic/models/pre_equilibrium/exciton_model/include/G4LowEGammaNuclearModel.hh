@@ -28,44 +28,42 @@
 // Author  V.Ivanchenko
 //
 // Class Description
-// Sampling of gamma nuclear interaction at low energy 
+// Sampling of gamma nuclear interaction at low energy
 // Class Description - End
 //
 
-#ifndef G4LowEGammaNuclearModel_h
-#define G4LowEGammaNuclearModel_h 1
- 
-#include "globals.hh"
-#include "G4HadronicInteraction.hh"
+#ifndef G4LOWEGAMMANUCLEARMODEL_HH
+#define G4LOWEGAMMANUCLEARMODEL_HH
+
 #include "G4HadProjectile.hh"
-#include "G4Nucleus.hh"
+#include "G4HadronicInteraction.hh"
 #include "G4LorentzVector.hh"
+#include "G4Nucleus.hh"
+#include "globals.hh"
 
 class G4PreCompoundModel;
 
 class G4LowEGammaNuclearModel : public G4HadronicInteraction
 {
-public:
+  public:
 
-  explicit G4LowEGammaNuclearModel();
+    explicit G4LowEGammaNuclearModel();
 
-  ~G4LowEGammaNuclearModel() override;
- 
-  G4HadFinalState* ApplyYourself(const G4HadProjectile & aTrack, 
-				 G4Nucleus & targetNucleus) final;
+    ~G4LowEGammaNuclearModel() override;
 
-  void InitialiseModel() final;
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& targetNucleus) final;
 
-private:
+    void InitialiseModel() final;
 
-  G4LowEGammaNuclearModel & operator=
-  (const G4LowEGammaNuclearModel &right);
-  G4LowEGammaNuclearModel(const G4LowEGammaNuclearModel&);
+  private:
 
-  G4PreCompoundModel* fPreco;
-  G4LorentzVector lab4mom;
+    G4LowEGammaNuclearModel& operator=(const G4LowEGammaNuclearModel& right);
+    G4LowEGammaNuclearModel(const G4LowEGammaNuclearModel&);
 
-  G4int secID;  // Creator model ID for the secondaries created by this model
+    G4PreCompoundModel* fPreco;
+    G4LorentzVector lab4mom;
+
+    G4int secID;  // Creator model ID for the secondaries created by this model
 };
 
 #endif

@@ -35,8 +35,8 @@
 //  G4MTRunManager. There exists one instance of this class for each
 //  worker in a MT application.
 
-#ifndef G4WorkerTaskRunManager_h
-#define G4WorkerTaskRunManager_h 1
+#ifndef G4WORKERTASKRUNMANAGER_HH
+#define G4WORKERTASKRUNMANAGER_HH
 
 #include "G4RNGHelper.hh"
 #include "G4RunManager.hh"
@@ -48,9 +48,11 @@ class G4WorkerTaskRunManagerKernel;
 class G4WorkerTaskRunManager : public G4WorkerRunManager
 {
   public:
+
     using G4StrVector = std::vector<G4String>;
 
   public:
+
     static G4WorkerTaskRunManager* GetWorkerRunManager();
     static G4WorkerTaskRunManagerKernel* GetWorkerRunManagerKernel();
     G4WorkerTaskRunManager() = default;
@@ -71,12 +73,15 @@ class G4WorkerTaskRunManager : public G4WorkerRunManager
     G4StrVector GetCommandStack() const { return processedCommandStack; }
 
   protected:
+
     void StoreRNGStatus(const G4String& filenamePrefix) override;
 
   protected:
+
     void SetupDefaultRNGEngine() override;
 
   protected:
+
     G4StrVector processedCommandStack;
 };
 

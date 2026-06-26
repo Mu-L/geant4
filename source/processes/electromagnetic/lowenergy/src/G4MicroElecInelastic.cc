@@ -38,56 +38,53 @@
 //	    very low energy electromagnetic models for protons and
 //	    heavy ions in Si, NIM B, vol. 287, pp. 124 - 129, 2012.
 //
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo...... 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "G4MicroElecInelastic.hh"
-#include "G4DummyModel.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4Electron.hh"
-#include "G4Proton.hh"
-#include "G4GenericIon.hh"
+
 #include "G4Alpha.hh"
+#include "G4DummyModel.hh"
+#include "G4Electron.hh"
+#include "G4GenericIon.hh"
 #include "G4LowEnergyEmProcessSubType.hh"
+#include "G4Proton.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 using namespace std;
 
-G4MicroElecInelastic::G4MicroElecInelastic(const G4String& processName,
-                                           G4ProcessType type)
-  : G4VEmProcess (processName, type), isInitialised(false)
+G4MicroElecInelastic::G4MicroElecInelastic(const G4String& processName, G4ProcessType type)
+  : G4VEmProcess(processName, type), isInitialised(false)
 {
   SetProcessSubType(fLowEnergyIonisation);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
- 
-G4MicroElecInelastic::~G4MicroElecInelastic()
-{}
+
+G4MicroElecInelastic::~G4MicroElecInelastic() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4bool G4MicroElecInelastic::IsApplicable(const G4ParticleDefinition& p)
 {
-  return (&p == G4Electron::Electron() ||
-          &p == G4Proton::Proton()  ||
-          &p == G4Alpha::Alpha()  ||
-          &p == G4GenericIon::GenericIonDefinition());
+  return (&p == G4Electron::Electron() || &p == G4Proton::Proton() || &p == G4Alpha::Alpha()
+          || &p == G4GenericIon::GenericIonDefinition());
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void G4MicroElecInelastic::InitialiseProcess(const G4ParticleDefinition* p)
 {
-  if(!isInitialised) 
+  if (!isInitialised)
   {
     isInitialised = true;
     SetBuildTableFlag(false);
     G4String name = p->GetParticleName();
 
-    if(!EmModel()) SetEmModel(new G4DummyModel());
-    AddEmModel(2, EmModel());   
-  } 
+    if (!EmModel()) SetEmModel(new G4DummyModel());
+    AddEmModel(2, EmModel());
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

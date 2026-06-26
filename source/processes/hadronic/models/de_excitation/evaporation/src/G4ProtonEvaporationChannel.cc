@@ -31,9 +31,6 @@
 
 #include "G4ProtonEvaporationChannel.hh"
 
-G4ProtonEvaporationChannel::G4ProtonEvaporationChannel() 
-  : G4EvaporationChannel(1,1,&pr) 
-{}
+G4ProtonEvaporationChannel::G4ProtonEvaporationChannel() : G4EvaporationChannel(1, 1, &pr) {}
 
-G4ProtonEvaporationChannel::~G4ProtonEvaporationChannel() 
-{}
+G4ProtonEvaporationChannel::~G4ProtonEvaporationChannel() {}

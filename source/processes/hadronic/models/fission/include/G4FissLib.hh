@@ -104,12 +104,12 @@
 // !                                                                  !
 // ********************************************************************
 //
- // Hadronic Process: High Precision low E neutron tracking
- // original by J.M. Verbeke, LLNL, 5-Jan-07
- // Builds and has the Cross-section data for one material.
-  
-#ifndef G4FissLib_h
-#define G4FissLib_h 1
+// Hadronic Process: High Precision low E neutron tracking
+// original by J.M. Verbeke, LLNL, 5-Jan-07
+// Builds and has the Cross-section data for one material.
+
+#ifndef G4FISSLIB_HH
+#define G4FISSLIB_HH
 
 // Class Description
 // Final state production model for a high precision (based on evaluated data
@@ -118,31 +118,33 @@
 // not provide the nuclear fragments.
 //
 // To be used in your physics list in case you need this physics.
-// In this case you want to register an object of this class with 
+// In this case you want to register an object of this class with
 // the corresponding process.
 // Class Description - End
 
-#include "globals.hh"
-#include "G4ParticleHPChannel.hh"
-#include "G4HadronicInteraction.hh"
-#include "G4ParticleHPThermalBoost.hh"
 #include "G4FissionLibrary.hh"
+#include "G4HadronicInteraction.hh"
+#include "G4ParticleHPChannel.hh"
+#include "G4ParticleHPThermalBoost.hh"
+#include "globals.hh"
 // #include "G4FissLib.hh"
 
 class G4FissLib : public G4HadronicInteraction
 {
-  public: 
+  public:
+
     G4FissLib();
     ~G4FissLib();
-  
-    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
-                                   G4Nucleus& aTargetNucleus);
+
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& aTargetNucleus);
     const std::pair<G4double, G4double> GetFatalEnergyCheckLevels() const;
 
   private:
+
     G4FissionLibrary theLibrary;
-  
+
   private:
+
     G4double* xSec;
     G4ParticleHPChannel* theFission;
     G4String dirName;

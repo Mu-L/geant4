@@ -131,15 +131,18 @@ void G4UImessenger::CreateDirectory(const G4String& path, const G4String& dsc,
   G4UImanager* ui = G4UImanager::GetUIpointer();
 
   G4String fullpath = path;
-  if (fullpath.back() != '/') {
+  if (fullpath.back() != '/')
+  {
     fullpath.append("/");
   }
 
   G4UIcommandTree* tree = ui->GetTree()->FindCommandTree(fullpath.c_str());
-  if (tree != nullptr) {
+  if (tree != nullptr)
+  {
     baseDirName = tree->GetPathName();
   }
-  else {
+  else
+  {
     baseDir = new G4UIdirectory(fullpath.c_str(), commandsToBeBroadcasted);
     baseDirName = std::move(fullpath);
     baseDir->SetGuidance(dsc.c_str());

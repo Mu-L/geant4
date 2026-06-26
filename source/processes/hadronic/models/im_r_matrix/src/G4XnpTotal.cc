@@ -31,27 +31,28 @@
 //
 //      File name:     G4XnpTotal
 //
-//      Author:        
-// 
+//      Author:
+//
 //      Creation date: 15 April 1999
 //
-//      Modifications: 
-//      
+//      Modifications:
+//
 // -------------------------------------------------------------------
 
-#include "globals.hh"
 #include "G4XnpTotal.hh"
-#include "G4XnpTotalLowE.hh"
-#include "G4XPDGTotal.hh"
-#include "G4VCrossSectionSource.hh"
-#include "G4KineticTrack.hh"
-#include "G4ParticleDefinition.hh"
+
 #include "G4CrossSectionVector.hh"
-#include "G4Proton.hh"
+#include "G4KineticTrack.hh"
 #include "G4Neutron.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4Proton.hh"
+#include "G4VCrossSectionSource.hh"
+#include "G4XPDGTotal.hh"
+#include "G4XnpTotalLowE.hh"
+#include "globals.hh"
 
 G4XnpTotal::G4XnpTotal()
-{ 
+{
   components = new G4CrossSectionVector;
 
   G4VCrossSectionSource* xnpTotalLowE = new G4XnpTotalLowE;
@@ -61,37 +62,33 @@ G4XnpTotal::G4XnpTotal()
   components->push_back(xnpTotalHighE);
 }
 
-
 G4XnpTotal::~G4XnpTotal()
-{ 
-  if (components != nullptr) 
+{
+  if (components != nullptr)
+  {
+    std::size_t nComponents = GetComponents()->size();
+    for (std::size_t i = 0; i < nComponents; ++i)
     {
-      std::size_t nComponents = GetComponents()->size();
-      for (std::size_t i=0; i<nComponents; ++i)
-	{
-          G4CrossSectionSourcePtr componentPtr = (*components)[i];
-	  G4VCrossSectionSource* component = componentPtr();
-	  delete component;
-	  component = nullptr;
-	  componentPtr = nullptr;
-	}
+      G4CrossSectionSourcePtr componentPtr = (*components)[i];
+      G4VCrossSectionSource* component = componentPtr();
+      delete component;
+      component = nullptr;
+      componentPtr = nullptr;
     }
+  }
   delete components;
   components = nullptr;
 }
 
-
-G4bool G4XnpTotal::operator==(const G4XnpTotal &right) const
+G4bool G4XnpTotal::operator==(const G4XnpTotal& right) const
 {
-  return (this == (G4XnpTotal*) &right);
+  return (this == (G4XnpTotal*)&right);
 }
 
-
-G4bool G4XnpTotal::operator!=(const G4XnpTotal &right) const
+G4bool G4XnpTotal::operator!=(const G4XnpTotal& right) const
 {
-  return (this != (G4XnpTotal*) &right);
+  return (this != (G4XnpTotal*)&right);
 }
-
 
 G4String G4XnpTotal::Name() const
 {

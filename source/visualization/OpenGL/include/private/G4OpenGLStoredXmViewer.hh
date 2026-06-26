@@ -25,29 +25,28 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  10th February 1997
-// Class G4OpenGLStoredXmViewer : a class derived from G4OpenGLXmViewer 
+// Class G4OpenGLStoredXmViewer : a class derived from G4OpenGLXmViewer
 //                                and G4OpenGLStoredViewer.
 
-#ifndef G4OpenGLSTOREDXMVIEWER_HH
-#define G4OpenGLSTOREDXMVIEWER_HH
+#ifndef G4OPENGLSTOREDXMVIEWER_HH
+#define G4OPENGLSTOREDXMVIEWER_HH
 
 #include "G4OpenGLStoredViewer.hh"
 #include "G4OpenGLXmViewer.hh"
 
 class G4OpenGLStoredSceneHandler;
 
-class G4OpenGLStoredXmViewer:
-public G4OpenGLXmViewer, public G4OpenGLStoredViewer{
-  
-public:
-  G4OpenGLStoredXmViewer (G4OpenGLStoredSceneHandler& scene, const G4String& name = "");
-  virtual ~G4OpenGLStoredXmViewer ();
-  void Initialise ();
-  void DrawView ();
-  void FinishView ();
+class G4OpenGLStoredXmViewer : public G4OpenGLXmViewer, public G4OpenGLStoredViewer
+{
+  public:
 
+    G4OpenGLStoredXmViewer(G4OpenGLStoredSceneHandler& scene, const G4String& name = "");
+    virtual ~G4OpenGLStoredXmViewer();
+    void Initialise();
+    void DrawView();
+    void FinishView();
 };
 
 #endif

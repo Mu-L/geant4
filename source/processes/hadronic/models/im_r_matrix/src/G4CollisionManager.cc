@@ -24,19 +24,19 @@
 // ********************************************************************
 //
 
-#include <typeinfo>
-
 #include "G4CollisionManager.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4HadronicException.hh"
-#include "G4CollisionInitialState.hh"
+
 #include "G4BCAction.hh"
+#include "G4CollisionInitialState.hh"
+#include "G4HadronicException.hh"
+#include "G4SystemOfUnits.hh"
+
+#include <typeinfo>
 
 G4CollisionManager::G4CollisionManager()
 {
   theCollisionList = new G4ListOfCollisions;
 }
-
 
 G4CollisionManager::~G4CollisionManager()
 {
@@ -44,155 +44,139 @@ G4CollisionManager::~G4CollisionManager()
   delete theCollisionList;
 }
 
-
-void G4CollisionManager::AddCollision(G4double time, G4KineticTrack * proj,
-				      G4KineticTrack * target)
+void G4CollisionManager::AddCollision(G4double time, G4KineticTrack* proj, G4KineticTrack* target)
 
 {
-      if ( time < DBL_MAX )
-      {
-         G4CollisionInitialState *
-	     collision = new G4CollisionInitialState(time, proj, target);
-         theCollisionList->push_back(collision);
-      } else {
-         G4cerr << "G4Scatterer invalid TimeTo Interaction : " << time;
-         G4cerr <<"    projectile "<<proj->Get4Momentum()<<" "
-                                   <<proj->GetDefinition()->GetParticleName()<<G4endl;
-         if (target) G4cerr <<"    target     "
-				<<target->Get4Momentum()<<" "
-                                <<target->GetDefinition()->GetParticleName()<<G4endl;
-         G4cerr <<"G4Scatterer error message end"<< G4endl;
-	 throw G4HadronicException(__FILE__, __LINE__, "G4Scatterer::AddCollision()");
-      }
+  if (time < DBL_MAX)
+  {
+    G4CollisionInitialState* collision = new G4CollisionInitialState(time, proj, target);
+    theCollisionList->push_back(collision);
+  }
+  else
+  {
+    G4cerr << "G4Scatterer invalid TimeTo Interaction : " << time;
+    G4cerr << "    projectile " << proj->Get4Momentum() << " "
+           << proj->GetDefinition()->GetParticleName() << G4endl;
+    if (target)
+      G4cerr << "    target     " << target->Get4Momentum() << " "
+             << target->GetDefinition()->GetParticleName() << G4endl;
+    G4cerr << "G4Scatterer error message end" << G4endl;
+    throw G4HadronicException(__FILE__, __LINE__, "G4Scatterer::AddCollision()");
+  }
 }
 
-
-void G4CollisionManager::RemoveCollision(G4CollisionInitialState * collision)
+void G4CollisionManager::RemoveCollision(G4CollisionInitialState* collision)
 {
-  theCollisionList->erase(std::find(theCollisionList->begin(),
-				      theCollisionList->end(),
-				      collision));
+  theCollisionList->erase(std::find(theCollisionList->begin(), theCollisionList->end(), collision));
   delete collision;
-  collision = NULL; // prevent future use of the pointer
+  collision = NULL;  // prevent future use of the pointer
 }
 
-
-void G4CollisionManager::RemoveTracksCollisions(G4KineticTrackVector * toBeCaned)
+void G4CollisionManager::RemoveTracksCollisions(G4KineticTrackVector* toBeCaned)
 {
-  if(toBeCaned == NULL)
-    return;
-  if(toBeCaned->empty())
-    return;
+  if (toBeCaned == NULL) return;
+  if (toBeCaned->empty()) return;
 
-  G4CollisionInitialState * collision;
-  std::vector<G4CollisionInitialState *>::iterator collIter, collIter2;
-  std::vector<G4KineticTrack *>::iterator trackIter;
+  G4CollisionInitialState* collision;
+  std::vector<G4CollisionInitialState*>::iterator collIter, collIter2;
+  std::vector<G4KineticTrack*>::iterator trackIter;
   G4ListOfCollisions toRemove;
 
-  for(collIter = theCollisionList->begin();
-      collIter != theCollisionList->end(); collIter++)
+  for (collIter = theCollisionList->begin(); collIter != theCollisionList->end(); collIter++)
   {
     collision = *collIter;
-    G4KineticTrackVector & targets = collision->GetTargetCollection();
+    G4KineticTrackVector& targets = collision->GetTargetCollection();
     G4bool getNextCollision = false;
-    for(trackIter = toBeCaned->begin(); trackIter != toBeCaned->end(); ++trackIter)
+    for (trackIter = toBeCaned->begin(); trackIter != toBeCaned->end(); ++trackIter)
     {
-      if((collision->GetTarget() == *trackIter) ||
-	 (collision->GetPrimary() == *trackIter))
+      if ((collision->GetTarget() == *trackIter) || (collision->GetPrimary() == *trackIter))
       {  // cannot remove the collision from the list inside the loop. Save and do it later
-	toRemove.push_back(collision);
-	break;  // exit from the "trackIter" loop
+        toRemove.push_back(collision);
+        break;  // exit from the "trackIter" loop
       }
-      for(size_t tcount=0; tcount<targets.size(); tcount++)
+      for (size_t tcount = 0; tcount < targets.size(); tcount++)
       {
-        if(targets[tcount] == *trackIter)
+        if (targets[tcount] == *trackIter)
         {
-	  toRemove.push_back(collision);
-	  getNextCollision = true;
-	  break;
-	}
+          toRemove.push_back(collision);
+          getNextCollision = true;
+          break;
+        }
       }
-      if(getNextCollision) break;
+      if (getNextCollision) break;
     }
   }
 
   // now remove the collisions
-  for(collIter = toRemove.begin(); collIter != toRemove.end(); ++collIter)
+  for (collIter = toRemove.begin(); collIter != toRemove.end(); ++collIter)
   {
     collision = *collIter;
-    collIter2 = std::find(theCollisionList->begin(),
-			    theCollisionList->end(), collision);
+    collIter2 = std::find(theCollisionList->begin(), theCollisionList->end(), collision);
     theCollisionList->erase(collIter2);  // remove from list...
-    delete collision;                    // ...and delete the collision
+    delete collision;  // ...and delete the collision
   }
 }
 
-
 void G4CollisionManager::ClearAndDestroy()
 {
-  std::vector<G4CollisionInitialState *>::iterator i;
-  for(i = theCollisionList->begin(); i != theCollisionList->end(); ++i)
+  std::vector<G4CollisionInitialState*>::iterator i;
+  for (i = theCollisionList->begin(); i != theCollisionList->end(); ++i)
     delete *i;
   theCollisionList->clear();
 }
 
-
-G4CollisionInitialState * G4CollisionManager::GetNextCollision()
+G4CollisionInitialState* G4CollisionManager::GetNextCollision()
 {
-  G4CollisionInitialState * theNext=0;
+  G4CollisionInitialState* theNext = 0;
   G4double nextTime = DBL_MAX;
-  std::vector<G4CollisionInitialState *>::iterator i;
-  for(i = theCollisionList->begin(); i != theCollisionList->end(); ++i)
+  std::vector<G4CollisionInitialState*>::iterator i;
+  for (i = theCollisionList->begin(); i != theCollisionList->end(); ++i)
   {
-    if(nextTime > (*i)->GetCollisionTime())
+    if (nextTime > (*i)->GetCollisionTime())
     {
       nextTime = (*i)->GetCollisionTime();
       theNext = *i;
     }
   }
-  #ifdef debug_G4CollisionManager
-  if(theNext == 0 && theCollisionList->size()!=0)
+#ifdef debug_G4CollisionManager
+  if (theNext == 0 && theCollisionList->size() != 0)
   {
     G4double debugTime = DBL_MAX;
-    G4cerr <<"G4CollisionManager::GetNextCollision - Fatal"<<G4endl;
-    G4cerr <<" number of collisions left "<<theCollisionList->size()<<G4endl;
-    for(i = theCollisionList->begin(); i != theCollisionList->end(); ++i)
+    G4cerr << "G4CollisionManager::GetNextCollision - Fatal" << G4endl;
+    G4cerr << " number of collisions left " << theCollisionList->size() << G4endl;
+    for (i = theCollisionList->begin(); i != theCollisionList->end(); ++i)
     {
-      G4cerr <<" Time to collision "<<(*i)->GetCollisionTime()<<" "<<G4endl;
-      G4cerr <<"    projectile "<<(*i)->GetPrimary()->Get4Momentum()<<" "
-                                <<(*i)->GetPrimary()->GetDefinition()->GetParticleName()<<G4endl;
-      if ((*i)->GetTarget()) G4cerr <<"    target     "<<(*i)->GetTarget()->Get4Momentum()<<" "
-                                <<(*i)->GetTarget()->GetDefinition()->GetParticleName()<<G4endl;
+      G4cerr << " Time to collision " << (*i)->GetCollisionTime() << " " << G4endl;
+      G4cerr << "    projectile " << (*i)->GetPrimary()->Get4Momentum() << " "
+             << (*i)->GetPrimary()->GetDefinition()->GetParticleName() << G4endl;
+      if ((*i)->GetTarget())
+        G4cerr << "    target     " << (*i)->GetTarget()->Get4Momentum() << " "
+               << (*i)->GetTarget()->GetDefinition()->GetParticleName() << G4endl;
     }
-    G4cerr <<"G4CollisionManager::GetNextCollision - End of message"<<G4endl;
+    G4cerr << "G4CollisionManager::GetNextCollision - End of message" << G4endl;
   }
-  #endif
+#endif
 
   return theNext;
 }
 
-
 void G4CollisionManager::Print()
 {
-  std::vector<G4CollisionInitialState *>::iterator i;
- 
-  G4cout << "CollisionManager: " << theCollisionList->size()
-	 << " entries at " << theCollisionList << G4endl;
-  G4CollisionInitialState * collision;
-  for(i = theCollisionList->begin(); i != theCollisionList->end(); ++i)
+  std::vector<G4CollisionInitialState*>::iterator i;
+
+  G4cout << "CollisionManager: " << theCollisionList->size() << " entries at " << theCollisionList
+         << G4endl;
+  G4CollisionInitialState* collision;
+  for (i = theCollisionList->begin(); i != theCollisionList->end(); ++i)
   {
     collision = *i;
-    G4int tgtPdg=collision->GetTarget() ?
-	   collision->GetTarget()->GetDefinition()->GetPDGEncoding() : 0;
-	 const G4BCAction &action= *collision->GetGenerator();
-    G4cout << "  collision " << collision << " time: "
-	   << collision->GetCollisionTime()/second << " proj: "
-	   << collision->GetPrimary() << "/pdg="
-	   << collision->GetPrimary()->GetDefinition()->GetPDGEncoding()
-	   << " trgt: "
-	   << collision->GetTarget() << "/pdg="
-	   << tgtPdg
-	   << " Collision type: "<< typeid(action).name()
-	   << G4endl;
+    G4int tgtPdg =
+      collision->GetTarget() ? collision->GetTarget()->GetDefinition()->GetPDGEncoding() : 0;
+    const G4BCAction& action = *collision->GetGenerator();
+    G4cout << "  collision " << collision << " time: " << collision->GetCollisionTime() / second
+           << " proj: " << collision->GetPrimary()
+           << "/pdg=" << collision->GetPrimary()->GetDefinition()->GetPDGEncoding()
+           << " trgt: " << collision->GetTarget() << "/pdg=" << tgtPdg
+           << " Collision type: " << typeid(action).name() << G4endl;
   }
 }

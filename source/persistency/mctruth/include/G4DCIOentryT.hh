@@ -32,7 +32,7 @@
 // Author: Youhei Morita, 12.09.2001
 // --------------------------------------------------------------------
 #ifndef G4DCIOENTRYT_HH
-#define G4DCIOENTRYT_HH 1
+#define G4DCIOENTRYT_HH
 
 #include "G4Types.hh"
 #include "G4VPDigitsCollectionIO.hh"
@@ -40,53 +40,55 @@
 // Class inherited:
 #include "G4VDCIOentry.hh"
 
-template <class T>
+template<class T>
 class G4DCIOentryT : public G4VDCIOentry
 {
   public:
 
     G4DCIOentryT<T>(const G4String& n) : G4VDCIOentry(n)
     {
-      if(m_verbose > 2)
+      if (m_verbose > 2)
       {
         G4cout << "G4DCIOentryT: Registering DigitsCollection IO manager"
                << " for \"" << n << "\"" << G4endl;
       }
     }
-      // Constructor
+    // Constructor
 
     ~G4DCIOentryT() {}
-      // Destructor
+    // Destructor
 
     void CreateDCIOmanager(const G4String& detName, const G4String& colName)
     {
-      if(f_manager == nullptr)
+      if (f_manager == nullptr)
       {
         f_manager = new T(detName, colName);
-        if(m_verbose > 2)
+        if (m_verbose > 2)
         {
           G4cout << "G4DCIOentryT: Constructing DigitsCollection IO manager"
                  << " for \"" << detName << "\" " << f_manager << G4endl;
         }
         G4DCIOcatalog::GetDCIOcatalog()->RegisterDCIOmanager(f_manager);
-        if(m_verbose > 2)
+        if (m_verbose > 2)
         {
           G4DCIOcatalog::GetDCIOcatalog()->PrintDCIOmanager();
         }
       }
     }
-      // Create a new digits collection I/O manager
+    // Create a new digits collection I/O manager
 
     void DeleteDCIOmanager()
     {
-      if(f_manager != nullptr)  { delete f_manager; }
+      if (f_manager != nullptr)
+      {
+        delete f_manager;
+      }
     }
-      // Delete a digits collection I/O manager
+    // Delete a digits collection I/O manager
 
   private:
 
     G4VPDigitsCollectionIO* f_manager = nullptr;
-
 };
 
 #endif

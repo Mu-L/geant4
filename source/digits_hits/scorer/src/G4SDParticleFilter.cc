@@ -27,9 +27,10 @@
 //
 // G4VSensitiveDetector
 #include "G4SDParticleFilter.hh"
-#include "G4Step.hh"
-#include "G4ParticleTable.hh"
+
 #include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "G4Step.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // class description:
@@ -42,74 +43,64 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-G4SDParticleFilter::G4SDParticleFilter(const G4String& name)
-  : G4VSDFilter(name)
-{}
+G4SDParticleFilter::G4SDParticleFilter(const G4String& name) : G4VSDFilter(name) {}
 
-G4SDParticleFilter::G4SDParticleFilter(const G4String& name,
-                                       const G4String& particleName)
+G4SDParticleFilter::G4SDParticleFilter(const G4String& name, const G4String& particleName)
   : G4VSDFilter(name)
 {
-  G4ParticleDefinition* pd =
-    G4ParticleTable::GetParticleTable()->FindParticle(particleName);
-  if(pd == nullptr)
+  G4ParticleDefinition* pd = G4ParticleTable::GetParticleTable()->FindParticle(particleName);
+  if (pd == nullptr)
   {
     G4String msg = "Particle <";
     msg += particleName;
     msg += "> not found.";
-    G4Exception("G4SDParticleFilter::G4SDParticleFilter", "DetPS0101",
-                FatalException, msg);
+    G4Exception("G4SDParticleFilter::G4SDParticleFilter", "DetPS0101", FatalException, msg);
   }
   thePdef.push_back(pd);
 }
 
-G4SDParticleFilter::G4SDParticleFilter(
-  const G4String& name, const std::vector<G4String>& particleNames)
+G4SDParticleFilter::G4SDParticleFilter(const G4String& name,
+                                       const std::vector<G4String>& particleNames)
   : G4VSDFilter(name)
 {
-  for(const auto & particleName : particleNames)
+  for (const auto& particleName : particleNames)
   {
-    G4ParticleDefinition* pd =
-      G4ParticleTable::GetParticleTable()->FindParticle(particleName);
-    if(pd == nullptr)
+    G4ParticleDefinition* pd = G4ParticleTable::GetParticleTable()->FindParticle(particleName);
+    if (pd == nullptr)
     {
       G4String msg = "Particle <";
       msg += particleName;
       msg += "> not found.";
-      G4Exception("G4SDParticleFilter::G4SDParticleFilter", "DetPS0102",
-                  FatalException, msg);
+      G4Exception("G4SDParticleFilter::G4SDParticleFilter", "DetPS0102", FatalException, msg);
     }
     thePdef.push_back(pd);
   }
 }
 
-G4SDParticleFilter::G4SDParticleFilter(
-  const G4String& name, const std::vector<G4ParticleDefinition*>& particleDef)
-  : G4VSDFilter(name)
-  , thePdef(particleDef)
+G4SDParticleFilter::G4SDParticleFilter(const G4String& name,
+                                       const std::vector<G4ParticleDefinition*>& particleDef)
+  : G4VSDFilter(name), thePdef(particleDef)
 {
-  for(auto i : particleDef)
+  for (auto i : particleDef)
   {
-    if(i == nullptr)
-      G4Exception("G4SDParticleFilter::G4SDParticleFilter", "DetPS0103",
-                  FatalException,
+    if (i == nullptr)
+      G4Exception("G4SDParticleFilter::G4SDParticleFilter", "DetPS0103", FatalException,
                   "NULL pointer is found in the given particleDef vector.");
   }
 }
 
 G4bool G4SDParticleFilter::Accept(const G4Step* aStep) const
 {
-  for(auto i : thePdef)
+  for (auto i : thePdef)
   {
-    if(i == aStep->GetTrack()->GetDefinition())
-      return true;
+    if (i == aStep->GetTrack()->GetDefinition()) return true;
   }
 
   // Ions by Z,A
-  for(size_t i = 0; i < theIonZ.size(); i++)
+  for (size_t i = 0; i < theIonZ.size(); i++)
   {
-    if(theIonZ[i] == aStep->GetTrack()->GetDefinition()->GetAtomicNumber() &&
-       theIonA[i] == aStep->GetTrack()->GetDefinition()->GetAtomicMass())
+    if (theIonZ[i] == aStep->GetTrack()->GetDefinition()->GetAtomicNumber()
+        && theIonA[i] == aStep->GetTrack()->GetDefinition()->GetAtomicMass())
     {
       return true;
     }
@@ -120,31 +111,28 @@ G4bool G4SDParticleFilter::Accept(const G4Step* aStep) const
 
 void G4SDParticleFilter::add(const G4String& particleName)
 {
-  G4ParticleDefinition* pd =
-    G4ParticleTable::GetParticleTable()->FindParticle(particleName);
-  if(pd == nullptr)
+  G4ParticleDefinition* pd = G4ParticleTable::GetParticleTable()->FindParticle(particleName);
+  if (pd == nullptr)
   {
     G4String msg = "Particle <";
     msg += particleName;
     msg += "> not found.";
     G4Exception("G4SDParticleFilter::add()", "DetPS0104", FatalException, msg);
   }
-  for(auto & i : thePdef)
+  for (auto& i : thePdef)
   {
-    if(i == pd)
-      return;
+    if (i == pd) return;
   }
   thePdef.push_back(pd);
 }
 
 void G4SDParticleFilter::addIon(G4int Z, G4int A)
 {
-  for(size_t i = 0; i < theIonZ.size(); i++)
+  for (size_t i = 0; i < theIonZ.size(); i++)
   {
-    if(theIonZ[i] == Z && theIonA[i] == A)
+    if (theIonZ[i] == Z && theIonA[i] == A)
     {
-      G4cout << "G4SDParticleFilter:: Ion has been already registered."
-             << G4endl;
+      G4cout << "G4SDParticleFilter:: Ion has been already registered." << G4endl;
       return;
     }
   }
@@ -155,14 +143,13 @@ void G4SDParticleFilter::addIon(G4int Z, G4int A)
 void G4SDParticleFilter::show()
 {
   G4cout << "----G4SDParticleFileter particle list------" << G4endl;
-  for(auto & i : thePdef)
+  for (auto& i : thePdef)
   {
     G4cout << i->GetParticleName() << G4endl;
   }
-  for(size_t i = 0; i < theIonZ.size(); i++)
+  for (size_t i = 0; i < theIonZ.size(); i++)
   {
-    G4cout << " Ion PrtclDef (" << theIonZ[i] << "," << theIonA[i] << ")"
-           << G4endl;
+    G4cout << " Ion PrtclDef (" << theIonZ[i] << "," << theIonA[i] << ")" << G4endl;
   }
   G4cout << "-------------------------------------------" << G4endl;
 }

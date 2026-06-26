@@ -47,14 +47,12 @@ G4TrajectoryContainer::~G4TrajectoryContainer()
   delete vect;
 }
 
-G4bool
-G4TrajectoryContainer::operator==(const G4TrajectoryContainer& right) const
-{ 
-  return (this==&right);
+G4bool G4TrajectoryContainer::operator==(const G4TrajectoryContainer& right) const
+{
+  return (this == &right);
 }
 
-G4bool
-G4TrajectoryContainer::operator!=(const G4TrajectoryContainer& right) const
+G4bool G4TrajectoryContainer::operator!=(const G4TrajectoryContainer& right) const
 {
-  return (this!=&right);
+  return (this != &right);
 }

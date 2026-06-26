@@ -54,131 +54,131 @@
 //    Added cutoff power-law distribution option. Implementation is similar
 //    to that of the BlackBody one.
 // --------------------------------------------------------------------
-#ifndef G4SPSEneDistribution_hh
-#define G4SPSEneDistribution_hh 1
+#ifndef G4SPSENEDISTRIBUTION_HH
+#define G4SPSENEDISTRIBUTION_HH
 
-#include "G4PhysicsFreeVector.hh"
-#include "G4ParticleMomentum.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4DataInterpolation.hh"
-#include "G4Threading.hh"
 #include "G4Cache.hh"
-#include <vector>
-
+#include "G4DataInterpolation.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleMomentum.hh"
+#include "G4PhysicsFreeVector.hh"
 #include "G4SPSRandomGenerator.hh"
+#include "G4Threading.hh"
+
+#include <vector>
 
 class G4SPSEneDistribution
 {
   public:
 
     G4SPSEneDistribution();
-      // Constructor: initializes variables
-   ~G4SPSEneDistribution();
-      // Destructor
+    // Constructor: initializes variables
+    ~G4SPSEneDistribution();
+    // Destructor
 
     void SetEnergyDisType(const G4String&);
-      // Allows the user to choose the energy distribution type.
-      // The arguments are: Mono (mono-energetic), Lin (linear),
-      // Pow (power-law), Exp (exponential), Gauss (gaussian),
-      // Brem (bremsstrahlung), BBody (black-body),
-      // Cdg (cosmic diffuse gamma-ray), User (user-defined),
-      // Arb (arbitrary point-wise), Epn (energy per nucleon)
+    // Allows the user to choose the energy distribution type.
+    // The arguments are: Mono (mono-energetic), Lin (linear),
+    // Pow (power-law), Exp (exponential), Gauss (gaussian),
+    // Brem (bremsstrahlung), BBody (black-body),
+    // Cdg (cosmic diffuse gamma-ray), User (user-defined),
+    // Arb (arbitrary point-wise), Epn (energy per nucleon)
 
     const G4String& GetEnergyDisType();
 
     void SetEmin(G4double);
-      // Sets the minimum energy
+    // Sets the minimum energy
 
     G4double GetEmin() const;
     G4double GetArbEmin();
 
     void SetEmax(G4double);
-      // Sets the maximum energy
+    // Sets the maximum energy
 
     G4double GetEmax() const;
     G4double GetArbEmax();
 
     void SetMonoEnergy(G4double);
-      // Sets energy for mono-energetic distribution
+    // Sets energy for mono-energetic distribution
 
     void SetAlpha(G4double);
-      // Sets alpha for a power-law distribution
+    // Sets alpha for a power-law distribution
 
     void SetBiasAlpha(G4double);
 
     void SetTemp(G4double);
-      // Sets Temperature for a Brem or BBody distributions
+    // Sets Temperature for a Brem or BBody distributions
 
     void SetBeamSigmaInE(G4double);
 
     void SetEzero(G4double);
-      // Sets Ezero for an exponential distribution
+    // Sets Ezero for an exponential distribution
 
     void SetGradient(G4double);
-      // Sets gradient for a linear distribution
+    // Sets gradient for a linear distribution
 
     void SetInterCept(G4double);
-      // Sets intercept for a linear distribution
+    // Sets intercept for a linear distribution
 
     void UserEnergyHisto(const G4ThreeVector&);
-      // Allows user to defined a histogram for the energy distribution
+    // Allows user to defined a histogram for the energy distribution
 
     void ArbEnergyHisto(const G4ThreeVector&);
-      // Allows the user to define an Arbitrary set of points for the
-      // energy distribution
+    // Allows the user to define an Arbitrary set of points for the
+    // energy distribution
 
     void ArbEnergyHistoFile(const G4String&);
 
     void EpnEnergyHisto(const G4ThreeVector&);
-      // Allows the user to define an Energy per nucleon histogram
+    // Allows the user to define an Energy per nucleon histogram
 
     void InputEnergySpectra(G4bool);
-      // Allows the user to choose between momentum and energy histograms
-      // for user-defined histograms and arbitrary point-wise spectra.
-      // The default is true (energy)
+    // Allows the user to choose between momentum and energy histograms
+    // for user-defined histograms and arbitrary point-wise spectra.
+    // The default is true (energy)
 
     void InputDifferentialSpectra(G4bool);
-      // Allows the user to choose between integral and differential 
-      // distributions when using the arbitrary point-wise option
+    // Allows the user to choose between integral and differential
+    // distributions when using the arbitrary point-wise option
 
     void ArbInterpolate(const G4String&);
-      // Allows the user to specify the type of function to
-      // interpolate the Arbitrary points spectrum with
+    // Allows the user to specify the type of function to
+    // interpolate the Arbitrary points spectrum with
 
     const G4String& GetIntType();
-    
+
     void Calculate();
-      // Controls the calculation of Integral PDF for the Cdg and BBody
-      // distributions
+    // Controls the calculation of Integral PDF for the Cdg and BBody
+    // distributions
 
     void SetBiasRndm(G4SPSRandomGenerator* a);
-      // Sets the biased random number generator
+    // Sets the biased random number generator
 
     void ReSetHist(const G4String&);
-      // Resets the histogram for user defined distribution
+    // Resets the histogram for user defined distribution
 
     void SetVerbosity(G4int a);
-      // Sets the verbosity level
+    // Sets the verbosity level
 
     G4double GetWeight() const;
 
     G4double GetMonoEnergy();
-      // Mono-energetic energy
+    // Mono-energetic energy
 
     G4double GetSE();
-      // Standard deviation for Gaussian distribution in energy
+    // Standard deviation for Gaussian distribution in energy
 
     G4double Getalpha() const;
-      // Alpha (pow)
+    // Alpha (pow)
 
     G4double GetEzero() const;
-      // E0 (exp)
+    // E0 (exp)
 
     G4double GetTemp();
-      // Temp (bbody,brem)
+    // Temp (bbody,brem)
 
     G4double Getgrad() const;
-      // Gradient and intercept for linear spectra
+    // Gradient and intercept for linear spectra
 
     G4double Getcept() const;
 
@@ -187,9 +187,9 @@ class G4SPSEneDistribution
     G4PhysicsFreeVector GetArbEnergyHisto();
 
     G4double GenerateOne(G4ParticleDefinition*);
-       // Generate one random energy for the specified particle
+    // Generate one random energy for the specified particle
 
-    G4double GetProbability (G4double);
+    G4double GetProbability(G4double);
 
     G4double GetArbEneWeight(G4double);
 
@@ -217,43 +217,43 @@ class G4SPSEneDistribution
     void GenerateCdgEnergies();
     void GenUserHistEnergies();
     void GenEpnHistEnergies();
-    void GenArbPointEnergies(); // NOTE: REQUIRES UPDATE OF DATA MEMBERS
+    void GenArbPointEnergies();  // NOTE: REQUIRES UPDATE OF DATA MEMBERS
     void GenerateExpEnergies(G4bool);
     void GenerateLinearEnergies(G4bool);
     void GeneratePowEnergies(G4bool);
     void GenerateCPowEnergies();
 
     void ConvertEPNToEnergy();
-      // Converts energy per nucleon to energy
-    
+    // Converts energy per nucleon to energy
+
     void BBInitHists();
     void CPInitHists();
 
   private:  // Non invariant data members become G4Cache
 
-    G4String EnergyDisType; // energy dis type Variable  - Mono,Lin,Exp,etc
-    G4double weight; // particle weight //// NOT INVARIANT
-    G4double MonoEnergy; //Mono-energteic energy
-    G4double SE; // Standard deviation for Gaussian distribution in energy
+    G4String EnergyDisType;  // energy dis type Variable  - Mono,Lin,Exp,etc
+    G4double weight;  // particle weight //// NOT INVARIANT
+    G4double MonoEnergy;  // Mono-energteic energy
+    G4double SE;  // Standard deviation for Gaussian distribution in energy
 
-    G4double Emin, Emax; // emin and emax //// NOT INVARIANT
-    G4double alpha, Ezero;// alpha (pow), E0 (exp) //// NOT INVARIANT
-    G4double Temp; // Temp (bbody,brem)
-    G4double biasalpha; // biased power index
-    G4double grad, cept; // gradient and intercept for linear spectra //// NOT INVARIANT
-    G4double prob_norm; // normalisation factor use in calculate the probability
-    G4bool Biased = false; // biased to power-law
-    G4bool EnergySpec = true; // energy spectra, false - momentum spectra
-    G4bool DiffSpec = true; // differential spec, false integral spec
+    G4double Emin, Emax;  // emin and emax //// NOT INVARIANT
+    G4double alpha, Ezero;  // alpha (pow), E0 (exp) //// NOT INVARIANT
+    G4double Temp;  // Temp (bbody,brem)
+    G4double biasalpha;  // biased power index
+    G4double grad, cept;  // gradient and intercept for linear spectra //// NOT INVARIANT
+    G4double prob_norm;  // normalisation factor use in calculate the probability
+    G4bool Biased = false;  // biased to power-law
+    G4bool EnergySpec = true;  // energy spectra, false - momentum spectra
+    G4bool DiffSpec = true;  // differential spec, false integral spec
 
-    G4PhysicsFreeVector UDefEnergyH; // energy hist data
+    G4PhysicsFreeVector UDefEnergyH;  // energy hist data
     G4PhysicsFreeVector IPDFEnergyH;
     G4bool IPDFEnergyExist = false, IPDFArbExist = false, Epnflag = false;
-    G4PhysicsFreeVector ArbEnergyH; // Arb x,y histogram
-    G4PhysicsFreeVector IPDFArbEnergyH; // IPDF for Arb
+    G4PhysicsFreeVector ArbEnergyH;  // Arb x,y histogram
+    G4PhysicsFreeVector IPDFArbEnergyH;  // IPDF for Arb
     G4PhysicsFreeVector EpnEnergyH;
-    G4double CDGhist[3]; // cumulative histo for cdg
-    
+    G4double CDGhist[3];  // cumulative histo for cdg
+
     std::vector<G4double>* BBHist = nullptr;
     std::vector<G4double>* Bbody_x = nullptr;
     G4bool BBhistInit = false;
@@ -266,7 +266,7 @@ class G4SPSEneDistribution
     G4bool CPhistInit = false;
     G4bool CPhistCalcd = false;
 
-    G4String IntType; // Interpolation type
+    G4String IntType;  // Interpolation type
     G4double* Arb_grad = nullptr;
     G4double* Arb_cept = nullptr;
     G4bool Arb_grad_cept_flag = false;
@@ -279,7 +279,7 @@ class G4SPSEneDistribution
     G4bool applyEvergyWeight = false;
 
     G4double ArbEmin, ArbEmax;
-      // Emin and Emax for the whole arb distribution used primarily for debug.
+    // Emin and Emax for the whole arb distribution used primarily for debug.
 
     G4double particle_energy;
 
@@ -287,14 +287,14 @@ class G4SPSEneDistribution
 
     G4int verbosityLevel;
 
-    G4PhysicsFreeVector ZeroPhysVector; // for re-set only
+    G4PhysicsFreeVector ZeroPhysVector;  // for re-set only
 
     std::vector<G4DataInterpolation*> SplineInt;
-      // Holds Spline stuff required for sampling
+    // Holds Spline stuff required for sampling
     G4DataInterpolation* Splinetemp = nullptr;
-      // Holds a temp Spline used for calculating area
+    // Holds a temp Spline used for calculating area
 
-    G4Mutex mutex; // protect access to shared resources
+    G4Mutex mutex;  // protect access to shared resources
 
     // Thread local data (non-invariant during event loop).
     // These are copied from master one at the beginning of
@@ -302,15 +302,15 @@ class G4SPSEneDistribution
     //
     struct threadLocal_t
     {
-      G4double Emin;
-      G4double Emax;
-      G4double alpha;
-      G4double Ezero;
-      G4double grad;
-      G4double cept;
-      G4ParticleDefinition* particle_definition;
-      G4double weight;
-      G4double particle_energy;
+        G4double Emin;
+        G4double Emax;
+        G4double alpha;
+        G4double Ezero;
+        G4double grad;
+        G4double cept;
+        G4ParticleDefinition* particle_definition;
+        G4double weight;
+        G4double particle_energy;
     };
     G4Cache<threadLocal_t> threadLocalData;
 };

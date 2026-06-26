@@ -30,8 +30,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -40,14 +40,14 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#ifndef G4MOLECULETABLE_HH_
-#define G4MOLECULETABLE_HH_
+#ifndef G4MOLECULETABLE_HH
+#define G4MOLECULETABLE_HH
 
-#include "globals.hh"
-#include "G4MoleculeIterator.hh"
 #include "G4ElectronOccupancy.hh"
+#include "G4MoleculeIterator.hh"
+#include "globals.hh"
 
 #include <memory>
 
@@ -60,82 +60,76 @@ using G4ConfigurationIterator = G4MoleculeIterator<G4MolecularConfiguration>;
 
 class G4MoleculeTable
 {
-public:
-  static G4MoleculeTable* Instance();
-  static G4MoleculeTable* GetMoleculeTable();
-  virtual ~G4MoleculeTable();
+  public:
 
-  //____________________________________________________________________________
-  // The methods below enable to create G4MoleculeDefinition &
-  // G4MolecularConfiguration with a user identifier so that they can be retrieved
-  // from this molecule table
-  //
+    static G4MoleculeTable* Instance();
+    static G4MoleculeTable* GetMoleculeTable();
+    virtual ~G4MoleculeTable();
 
-  //____________________________________________________________________________
+    //____________________________________________________________________________
+    // The methods below enable to create G4MoleculeDefinition &
+    // G4MolecularConfiguration with a user identifier so that they can be retrieved
+    // from this molecule table
+    //
 
-  G4MoleculeDefinition* CreateMoleculeDefinition(const G4String& userIdentifier,
-                                                 double diffusion_coefficient);
+    //____________________________________________________________________________
 
-  //____________________________________________________________________________
+    G4MoleculeDefinition* CreateMoleculeDefinition(const G4String& userIdentifier,
+                                                   double diffusion_coefficient);
 
-  G4MolecularConfiguration*
-  CreateConfiguration(const G4String& userIdentifier,
-                      const G4MoleculeDefinition* molDef,
-                      const G4String& configurationLabel,
-                      const G4ElectronOccupancy& eOcc);
+    //____________________________________________________________________________
 
-  G4MolecularConfiguration*
-  CreateConfiguration(const G4String& userIdentifier,
-                      G4MoleculeDefinition*,
-                      int charge,
-                      double diffusion_coefficient = -1);
+    G4MolecularConfiguration* CreateConfiguration(const G4String& userIdentifier,
+                                                  const G4MoleculeDefinition* molDef,
+                                                  const G4String& configurationLabel,
+                                                  const G4ElectronOccupancy& eOcc);
 
-  G4MolecularConfiguration*
-  CreateConfiguration(const G4String& userIdentifier,
-                      G4MoleculeDefinition*);
+    G4MolecularConfiguration* CreateConfiguration(const G4String& userIdentifier,
+                                                  G4MoleculeDefinition*, int charge,
+                                                  double diffusion_coefficient = -1);
 
-  G4MolecularConfiguration*
-  CreateConfiguration(const G4String& userIdentifier,
-                      G4MoleculeDefinition*,
-                      const G4String& configurationLabel,
-                      int charge = 0);
+    G4MolecularConfiguration* CreateConfiguration(const G4String& userIdentifier,
+                                                  G4MoleculeDefinition*);
 
-  //____________________________________________________________________________
+    G4MolecularConfiguration* CreateConfiguration(const G4String& userIdentifier,
+                                                  G4MoleculeDefinition*,
+                                                  const G4String& configurationLabel,
+                                                  int charge = 0);
 
-  G4MoleculeDefinition* GetMoleculeDefinition(const G4String&,
-                                              bool mustExist = true);
+    //____________________________________________________________________________
 
-  G4MolecularConfiguration* GetConfiguration(const G4String&,
-                                             bool mustExist = true);
-  G4MolecularConfiguration* GetConfiguration(G4int id);
+    G4MoleculeDefinition* GetMoleculeDefinition(const G4String&, bool mustExist = true);
 
-  //____________________________________________________________________________
+    G4MolecularConfiguration* GetConfiguration(const G4String&, bool mustExist = true);
+    G4MolecularConfiguration* GetConfiguration(G4int id);
 
-  void Insert(G4MoleculeDefinition*);
-  void Finalize(G4MoleculeDefinition*){}
-  void Finalize();
-  //____________________________________________________________________________
+    //____________________________________________________________________________
 
-  G4MoleculeDefinitionIterator GetDefintionIterator()
-  {
-    return G4MoleculeDefinitionIterator(this->fMoleculeDefTable);
-  }
+    void Insert(G4MoleculeDefinition*);
+    void Finalize(G4MoleculeDefinition*) {}
+    void Finalize();
+    //____________________________________________________________________________
 
-  G4ConfigurationIterator GetConfigurationIterator();
+    G4MoleculeDefinitionIterator GetDefintionIterator()
+    {
+      return G4MoleculeDefinitionIterator(this->fMoleculeDefTable);
+    }
 
-  void PrepareMolecularConfiguration();
+    G4ConfigurationIterator GetConfigurationIterator();
 
-  int GetNumberOfDefinedSpecies();
+    void PrepareMolecularConfiguration();
 
-protected:
-  G4MoleculeTable();
+    int GetNumberOfDefinedSpecies();
 
-  static G4MoleculeTable* fpgMoleculeTable;
-  using MoleculeDefTable = std::map<G4String, G4MoleculeDefinition *>;
+  protected:
 
-  MoleculeDefTable fMoleculeDefTable;
-  std::unique_ptr<G4MoleculeTableMessenger> fMoleculeDefTableMessenger;
+    G4MoleculeTable();
 
+    static G4MoleculeTable* fpgMoleculeTable;
+    using MoleculeDefTable = std::map<G4String, G4MoleculeDefinition*>;
+
+    MoleculeDefTable fMoleculeDefTable;
+    std::unique_ptr<G4MoleculeTableMessenger> fMoleculeDefTableMessenger;
 };
 
 #endif /* G4MOLECULETABLE_HH_ */

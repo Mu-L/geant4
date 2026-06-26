@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 // Defines an interface to Bertini (BERT) cascade
-// based on INUCL  intra-nuclear transport.models 
+// based on INUCL  intra-nuclear transport.models
 // with bullet hadron energy ~< 10 GeV
 //
 // 20100405  M. Kelsey -- Fix constness of op== and op!=
@@ -37,8 +37,8 @@
 // 20110224  M. Kelsey -- Add createTarget() for use with Propagate(); split
 //		conservation law messages to separate function.  Move verbose
 //		setting to .cc file, and apply to all member objects.
-// 20110301  M. Kelsey -- Add copyPreviousCascade() for use with Propagate()  
-//		along with new buffers and related particle-conversion  
+// 20110301  M. Kelsey -- Add copyPreviousCascade() for use with Propagate()
+//		along with new buffers and related particle-conversion
 //		functions.  Encapulate buffer deletion in clear()
 // 20110303  M. Kelsey -- Change "bulletList" name to "inputFragments"
 // 20110304  M. Kelsey -- Drop conversion of Propagate() arguments; pass
@@ -58,10 +58,9 @@
 // 20140116  M. Kelsey -- Move statics to const data members to avoid weird
 //		interactions with MT.
 
-#ifndef G4CASCADEINTERFACE_H
-#define G4CASCADEINTERFACE_H 1
+#ifndef G4CASCADEINTERFACE_HH
+#define G4CASCADEINTERFACE_HH
 
-#include "G4VIntraNuclearTransportModel.hh"
 #include "G4FragmentVector.hh"
 #include "G4InuclElementaryParticle.hh"
 #include "G4InuclNuclei.hh"
@@ -71,6 +70,8 @@
 #include "G4ParticleChange.hh"
 #include "G4ReactionProduct.hh"
 #include "G4ReactionProductVector.hh"
+#include "G4VIntraNuclearTransportModel.hh"
+
 #include <vector>
 
 class G4CascadParticle;
@@ -84,109 +85,105 @@ class G4InuclParticle;
 class G4ParticleDefinition;
 class G4V3DNucleus;
 
+class G4CascadeInterface : public G4VIntraNuclearTransportModel
+{
+  public:
 
-class G4CascadeInterface : public G4VIntraNuclearTransportModel {
+    G4CascadeInterface(const G4String& name = "BertiniCascade");
 
-public:
-  G4CascadeInterface(const G4String& name = "BertiniCascade");
+    virtual ~G4CascadeInterface();
 
-  virtual ~G4CascadeInterface();
+    G4ReactionProductVector* Propagate(G4KineticTrackVector* theSecondaries,
+                                       G4V3DNucleus* theNucleus);
 
-  G4ReactionProductVector* Propagate(G4KineticTrackVector* theSecondaries,
-				     G4V3DNucleus* theNucleus);
-  
-  G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
-				 G4Nucleus& theNucleus);
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& theNucleus);
 
-  void SetVerboseLevel(G4int verbose);		// Overrides base class
+    void SetVerboseLevel(G4int verbose);  // Overrides base class
 
-  G4bool IsApplicable(const G4HadProjectile& aTrack,
-		      G4Nucleus& theNucleus);
+    G4bool IsApplicable(const G4HadProjectile& aTrack, G4Nucleus& theNucleus);
 
-  G4bool IsApplicable(const G4ParticleDefinition* aPD) const;
+    G4bool IsApplicable(const G4ParticleDefinition* aPD) const;
 
-  // Used with multithreaded applications to preload shared objects
-  static void Initialize();
+    // Used with multithreaded applications to preload shared objects
+    static void Initialize();
 
-  // Select betweeen different post-cascade de-excitation models
-  void useCascadeDeexcitation();
-  void usePreCompoundDeexcitation();
-  void useAblaDeexcitation();
+    // Select betweeen different post-cascade de-excitation models
+    void useCascadeDeexcitation();
+    void usePreCompoundDeexcitation();
+    void useAblaDeexcitation();
 
-  virtual void ModelDescription(std::ostream& outFile) const;
-  virtual void DumpConfiguration(std::ostream& outFile) const;
+    virtual void ModelDescription(std::ostream& outFile) const;
+    virtual void DumpConfiguration(std::ostream& outFile) const;
 
-protected:
-  void clear();			// Delete previously created particles
+  protected:
 
-  // Convert input projectile and target to Bertini internal types
-  G4bool createBullet(const G4HadProjectile& aTrack);
-  G4bool createTarget(G4Nucleus& theNucleus);
-  G4bool createTarget(G4V3DNucleus* theNucleus);
-  G4bool createTarget(G4int A, G4int Z);
+    void clear();  // Delete previously created particles
 
-  // Evaluate whether any outgoing particles penetrated Coulomb barrier
-  G4bool coulombBarrierViolation() const;
+    // Convert input projectile and target to Bertini internal types
+    G4bool createBullet(const G4HadProjectile& aTrack);
+    G4bool createTarget(G4Nucleus& theNucleus);
+    G4bool createTarget(G4V3DNucleus* theNucleus);
+    G4bool createTarget(G4int A, G4int Z);
 
-  // Conditions for rejecting cascade attempt
-  G4bool retryInelasticProton() const;
-  G4bool retryInelasticNucleus() const;
+    // Evaluate whether any outgoing particles penetrated Coulomb barrier
+    G4bool coulombBarrierViolation() const;
 
-  // Transfer Bertini internal final state to hadronics interface
-  void copyOutputToHadronicResult();
-  G4ReactionProductVector* copyOutputToReactionProducts();
+    // Conditions for rejecting cascade attempt
+    G4bool retryInelasticProton() const;
+    G4bool retryInelasticNucleus() const;
 
-  // Replicate input particles onto output
-  G4HadFinalState* NoInteraction(const G4HadProjectile& aTrack,
-				 G4Nucleus& theNucleus);
+    // Transfer Bertini internal final state to hadronics interface
+    void copyOutputToHadronicResult();
+    G4ReactionProductVector* copyOutputToReactionProducts();
 
-  // Report violations of conservation laws in original frame
-  void checkFinalResult();
+    // Replicate input particles onto output
+    G4HadFinalState* NoInteraction(const G4HadProjectile& aTrack, G4Nucleus& theNucleus);
 
-  // Terminate job because of energy/momentum/etc. violations
-  void throwNonConservationFailure();
+    // Report violations of conservation laws in original frame
+    void checkFinalResult();
 
-  // Convert between Bertini and external particle types
-  G4DynamicParticle* makeDynamicParticle(const G4InuclElementaryParticle& iep) const;
-  G4DynamicParticle* makeDynamicParticle(const G4InuclNuclei& inuc) const;
+    // Terminate job because of energy/momentum/etc. violations
+    void throwNonConservationFailure();
 
+    // Convert between Bertini and external particle types
+    G4DynamicParticle* makeDynamicParticle(const G4InuclElementaryParticle& iep) const;
+    G4DynamicParticle* makeDynamicParticle(const G4InuclNuclei& inuc) const;
 
-private:
-  G4bool operator==(const G4CascadeInterface& right) const {
-    return (this == &right);
-  }
+  private:
 
-  G4bool operator!=(const G4CascadeInterface& right) const {
-    return (this != &right);
-  }
+    G4bool operator==(const G4CascadeInterface& right) const { return (this == &right); }
 
-  const G4String randomFile;		// Filename to capture random seeds
-  const G4int maximumTries;		// Number of iterations for inelastic
+    G4bool operator!=(const G4CascadeInterface& right) const { return (this != &right); }
 
-  G4int numberOfTries;
+    const G4String randomFile;  // Filename to capture random seeds
+    const G4int maximumTries;  // Number of iterations for inelastic
 
-  G4InuclCollider* collider;
-  G4CascadeCheckBalance* balance;
+    G4int numberOfTries;
 
-  G4LightTargetCollider* ltcollider;
+    G4InuclCollider* collider;
+    G4CascadeCheckBalance* balance;
 
-  G4InuclParticle* bullet;		// Pointers to last filled versions
-  G4InuclParticle* target;
+    G4LightTargetCollider* ltcollider;
 
-  G4CollisionOutput* output;
+    G4InuclParticle* bullet;  // Pointers to last filled versions
+    G4InuclParticle* target;
 
-  G4InuclElementaryParticle hadronBullet;	// Buffers for bullet, target
-  G4InuclNuclei             nucleusBullet;
+    G4CollisionOutput* output;
 
-  G4InuclElementaryParticle hadronTarget;
-  G4InuclNuclei             nucleusTarget;
+    G4InuclElementaryParticle hadronBullet;  // Buffers for bullet, target
+    G4InuclNuclei nucleusBullet;
 
-  G4int secID;  // Creator model ID for the secondaries
-  
-private:
-  // Copying of modules is forbidden
-  G4CascadeInterface(const G4CascadeInterface&);
-  G4CascadeInterface& operator=(const G4CascadeInterface&);
+    G4InuclElementaryParticle hadronTarget;
+    G4InuclNuclei nucleusTarget;
+
+    G4int secID;  // Creator model ID for the secondaries
+    std::map<G4InuclParticle::Model, G4int> BertiniCreatorModelMap;  // Bertini model -> G4 model
+
+  private:
+
+    // Copying of modules is forbidden
+    G4CascadeInterface(const G4CascadeInterface&);
+    G4CascadeInterface& operator=(const G4CascadeInterface&);
 };
 
-#endif // G4CASCADEINTERFACE_H
+#endif  // G4CASCADEINTERFACE_H

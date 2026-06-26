@@ -23,34 +23,42 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4SPBaryonTable_h
-#define G4SPBaryonTable_h
+#ifndef G4SPBARYONTABLE_HH
+#define G4SPBARYONTABLE_HH
+
+#include "G4SPBaryon.hh"
 
 #include <vector>
-#include "G4SPBaryon.hh"
 
 class G4SPBaryonTable
 {
   public:
-    struct DeleteSPBaryon{void operator()(G4SPBaryon* aS){delete aS;} };
 
-    ~G4SPBaryonTable() {std::for_each(theBaryons.begin(), theBaryons.end(), G4SPBaryonTable::DeleteSPBaryon());}
-    void insert(G4SPBaryon * aBaryon) { theBaryons.push_back(aBaryon);}
-    std::size_t length() {return theBaryons.size();}
+    struct DeleteSPBaryon
+    {
+        void operator()(G4SPBaryon* aS) { delete aS; }
+    };
 
-    const G4SPBaryon * GetBaryon(G4ParticleDefinition * aDefinition);
+    ~G4SPBaryonTable()
+    {
+      std::for_each(theBaryons.begin(), theBaryons.end(), G4SPBaryonTable::DeleteSPBaryon());
+    }
+    void insert(G4SPBaryon* aBaryon) { theBaryons.push_back(aBaryon); }
+    std::size_t length() { return theBaryons.size(); }
+
+    const G4SPBaryon* GetBaryon(G4ParticleDefinition* aDefinition);
 
   private:
-    std::vector<G4SPBaryon *> theBaryons;
+
+    std::vector<G4SPBaryon*> theBaryons;
 };
 
-inline const G4SPBaryon * G4SPBaryonTable::
-GetBaryon(G4ParticleDefinition * aDefinition)
+inline const G4SPBaryon* G4SPBaryonTable::GetBaryon(G4ParticleDefinition* aDefinition)
 {
-  G4SPBaryon * result = 0;
-  for(unsigned int i=0; i<theBaryons.size(); i++)
+  G4SPBaryon* result = 0;
+  for (unsigned int i = 0; i < theBaryons.size(); i++)
   {
-    if(theBaryons[i]->GetDefinition()==aDefinition)
+    if (theBaryons[i]->GetDefinition() == aDefinition)
     {
       result = theBaryons[i];
       break;
@@ -60,4 +68,3 @@ GetBaryon(G4ParticleDefinition * aDefinition)
 }
 
 #endif
-

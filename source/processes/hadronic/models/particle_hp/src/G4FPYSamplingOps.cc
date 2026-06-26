@@ -92,7 +92,8 @@ G4double G4FPYSamplingOps::G4SampleGaussian(G4double Mean, G4double StdDev)
 
   // Determine if the parameters have changed
   G4bool ParametersChanged = (Mean_ != Mean || StdDev_ != StdDev);
-  if (static_cast<int>(ParametersChanged) == TRUE) {
+  if (static_cast<int>(ParametersChanged) == TRUE)
+  {
     // Set the new values if the parameters have changed
     NextGaussianIsStoredInMemory_ = FALSE;
 
@@ -111,7 +112,8 @@ G4double G4FPYSamplingOps::G4SampleGaussian(G4double Mean, G4double StdDev,
 {
   G4FFG_SAMPLING_FUNCTIONENTER__
 
-  if (Range == G4FFGEnumerations::ALL) {
+  if (Range == G4FFGEnumerations::ALL)
+  {
     // Call the overloaded function
     G4double Sample = G4SampleGaussian(Mean, StdDev);
 
@@ -121,8 +123,10 @@ G4double G4FPYSamplingOps::G4SampleGaussian(G4double Mean, G4double StdDev,
 
   // Determine if the parameters have changed
   G4bool ParametersChanged = (Mean_ != Mean || StdDev_ != StdDev);
-  if (static_cast<int>(ParametersChanged) == TRUE) {
-    if (Mean <= 0) {
+  if (static_cast<int>(ParametersChanged) == TRUE)
+  {
+    if (Mean <= 0)
+    {
       std::ostringstream Temp;
       Temp << "Mean value of " << Mean << " out of range";
       G4Exception("G4FPYGaussianOps::G4SampleIntegerGaussian()", Temp.str().c_str(), JustWarning,
@@ -142,7 +146,8 @@ G4double G4FPYSamplingOps::G4SampleGaussian(G4double Mean, G4double StdDev,
 
   // Sample the Gaussian distribution
   G4double Rand;
-  do {
+  do
+  {
     Rand = SampleGaussian();
   } while (Rand < 0);  // Loop checking, 11.05.2015, T. Koi
 
@@ -156,7 +161,8 @@ G4int G4FPYSamplingOps::G4SampleIntegerGaussian(G4double Mean, G4double StdDev)
 
   // Determine if the parameters have changed
   G4bool ParametersChanged = (Mean_ != Mean || StdDev_ != StdDev);
-  if (static_cast<int>(ParametersChanged) == TRUE) {
+  if (static_cast<int>(ParametersChanged) == TRUE)
+  {
     // Set the new values if the parameters have changed
     NextGaussianIsStoredInMemory_ = FALSE;
 
@@ -176,7 +182,8 @@ G4int G4FPYSamplingOps::G4SampleIntegerGaussian(G4double Mean, G4double StdDev,
 {
   G4FFG_SAMPLING_FUNCTIONENTER__
 
-  if (Range == G4FFGEnumerations::ALL) {
+  if (Range == G4FFGEnumerations::ALL)
+  {
     // Call the overloaded function
     G4int Sample = G4SampleIntegerGaussian(Mean, StdDev);
 
@@ -185,7 +192,8 @@ G4int G4FPYSamplingOps::G4SampleIntegerGaussian(G4double Mean, G4double StdDev,
   }
   // ParameterShift() locks up if the mean is less than 1.
   std::ostringstream Temp;
-  if (Mean < 1) {
+  if (Mean < 1)
+  {
     //    Temp << "Mean value of " << Mean << " out of range";
     //    G4Exception("G4FPYGaussianOps::G4SampleIntegerGaussian()",
     //                Temp.str().c_str(),
@@ -195,7 +203,8 @@ G4int G4FPYSamplingOps::G4SampleIntegerGaussian(G4double Mean, G4double StdDev,
     //    return 0;
   }
 
-  if (Mean / StdDev < 2) {
+  if (Mean / StdDev < 2)
+  {
     // Temp << "Non-ideal conditions:\tMean:" << Mean << "\tStdDev: "
     //         << StdDev;
     // G4Exception("G4FPYGaussianOps::G4SampleIntegerGaussian()",
@@ -206,7 +215,8 @@ G4int G4FPYSamplingOps::G4SampleIntegerGaussian(G4double Mean, G4double StdDev,
 
   // Determine if the parameters have changed
   G4bool ParametersChanged = (Mean_ != Mean || StdDev_ != StdDev);
-  if (static_cast<int>(ParametersChanged) == TRUE) {
+  if (static_cast<int>(ParametersChanged) == TRUE)
+  {
     // Set the new values if the parameters have changed and then perform
     // the shift
     Mean_ = Mean;
@@ -218,7 +228,8 @@ G4int G4FPYSamplingOps::G4SampleIntegerGaussian(G4double Mean, G4double StdDev,
   G4int RandInt;
   // Sample the Gaussian distribution - only non-negative values are
   // accepted
-  do {
+  do
+  {
     RandInt = (G4int)floor(SampleGaussian());
   } while (RandInt < 0);  // Loop checking, 11.05.2015, T. Koi
 
@@ -281,7 +292,8 @@ G4double G4FPYSamplingOps::G4SampleWatt(G4int WhatIsotope,
          > WattConstants_->B * WattConstants_->L * X)  // Loop checking, 11.05.2015, T. Koi
   {
     icounter++;
-    if (icounter > icounter_max) {
+    if (icounter > icounter_max)
+    {
       G4cout << "Loop-counter exceeded the threshold value at " << __LINE__ << "th line of "
              << __FILE__ << "." << G4endl;
       break;
@@ -310,7 +322,8 @@ G4bool G4FPYSamplingOps::CheckAndSetParameters()
   G4FFG_SAMPLING_FUNCTIONENTER__
 
   G4double ShiftedMean = ShiftedGaussianValues_->G4FindShiftedMean(Mean_, StdDev_);
-  if (ShiftedMean == 0) {
+  if (ShiftedMean == 0)
+  {
     G4FFG_SAMPLING_FUNCTIONLEAVE__
     return FALSE;
   }
@@ -330,10 +343,13 @@ void G4FPYSamplingOps::EvaluateWattConstants()
   // Use the default values if IsotopeIndex is not reset
   G4int IsotopeIndex = 0;
 
-  if (WattConstants_->Cause == G4FFGEnumerations::SPONTANEOUS) {
+  if (WattConstants_->Cause == G4FFGEnumerations::SPONTANEOUS)
+  {
     // Determine if the isotope requested exists in the lookup tables
-    for (G4int i = 0; SpontaneousWattIsotopesIndex[i] != -1; i++) {
-      if (SpontaneousWattIsotopesIndex[i] == WattConstants_->Product) {
+    for (G4int i = 0; SpontaneousWattIsotopesIndex[i] != -1; i++)
+    {
+      if (SpontaneousWattIsotopesIndex[i] == WattConstants_->Product)
+      {
         IsotopeIndex = i;
 
         break;
@@ -344,10 +360,13 @@ void G4FPYSamplingOps::EvaluateWattConstants()
     A = SpontaneousWattConstants[IsotopeIndex][0];
     WattConstants_->B = SpontaneousWattConstants[IsotopeIndex][1];
   }
-  else if (WattConstants_->Cause == G4FFGEnumerations::NEUTRON_INDUCED) {
+  else if (WattConstants_->Cause == G4FFGEnumerations::NEUTRON_INDUCED)
+  {
     // Determine if the isotope requested exists in the lookup tables
-    for (G4int i = 0; NeutronInducedWattIsotopesIndex[i] != -1; i++) {
-      if (NeutronInducedWattIsotopesIndex[i] == WattConstants_->Product) {
+    for (G4int i = 0; NeutronInducedWattIsotopesIndex[i] != -1; i++)
+    {
+      if (NeutronInducedWattIsotopesIndex[i] == WattConstants_->Product)
+      {
         IsotopeIndex = i;
         break;
       }
@@ -355,11 +374,13 @@ void G4FPYSamplingOps::EvaluateWattConstants()
 
     // Determine the Watt fission spectrum constants based on the energy of
     // the incident neutron
-    if (WattConstants_->Energy == G4FFGDefaultValues::ThermalNeutronEnergy) {
+    if (WattConstants_->Energy == G4FFGDefaultValues::ThermalNeutronEnergy)
+    {
       A = NeutronInducedWattConstants[IsotopeIndex][0][0];
       WattConstants_->B = NeutronInducedWattConstants[IsotopeIndex][0][1];
     }
-    else if (WattConstants_->Energy > 14.0 * CLHEP::MeV) {
+    else if (WattConstants_->Energy > 14.0 * CLHEP::MeV)
+    {
       G4Exception("G4FPYSamplingOps::G4SampleWatt()",
                   "Incident neutron energy above 14 MeV requested.", JustWarning,
                   "Using Watt fission constants for 14 Mev.");
@@ -367,16 +388,20 @@ void G4FPYSamplingOps::EvaluateWattConstants()
       A = NeutronInducedWattConstants[IsotopeIndex][2][0];
       WattConstants_->B = NeutronInducedWattConstants[IsotopeIndex][2][1];
     }
-    else {
+    else
+    {
       G4int EnergyIndex = 0;
       G4double EnergyDifference = 0;
       G4double RangeDifference, ConstantDifference;
 
-      for (G4int i = 1; IncidentEnergyBins[i] != -1; i++) {
-        if (WattConstants_->Energy <= IncidentEnergyBins[i]) {
+      for (G4int i = 1; IncidentEnergyBins[i] != -1; i++)
+      {
+        if (WattConstants_->Energy <= IncidentEnergyBins[i])
+        {
           EnergyIndex = i;
           EnergyDifference = IncidentEnergyBins[EnergyIndex] - WattConstants_->Energy;
-          if (EnergyDifference != 0) {
+          if (EnergyDifference != 0)
+          {
             std::ostringstream Temp;
             Temp << "Incident neutron energy of ";
             Temp << WattConstants_->Energy << " MeV is not ";
@@ -405,17 +430,21 @@ void G4FPYSamplingOps::EvaluateWattConstants()
                           + NeutronInducedWattConstants[IsotopeIndex][EnergyIndex - 1][1];
     }
   }
-  else {
+  else
+  {
     // Produce an error since an unsupported fission type was requested and
     // abort the current run
     G4String Temp = "Watt fission spectra data not available for ";
-    if (WattConstants_->Cause == G4FFGEnumerations::PROTON_INDUCED) {
+    if (WattConstants_->Cause == G4FFGEnumerations::PROTON_INDUCED)
+    {
       Temp += "proton induced fission.";
     }
-    else if (WattConstants_->Cause == G4FFGEnumerations::GAMMA_INDUCED) {
+    else if (WattConstants_->Cause == G4FFGEnumerations::GAMMA_INDUCED)
+    {
       Temp += "gamma induced fission.";
     }
-    else {
+    else
+    {
       Temp += "!Warning! unknown cause.";
     }
     G4Exception("G4FPYSamplingOps::G4SampleWatt()", Temp, RunMustBeAborted,
@@ -434,7 +463,8 @@ G4double G4FPYSamplingOps::SampleGaussian()
 {
   G4FFG_SAMPLING_FUNCTIONENTER__
 
-  if (static_cast<int>(NextGaussianIsStoredInMemory_) == TRUE) {
+  if (static_cast<int>(NextGaussianIsStoredInMemory_) == TRUE)
+  {
     NextGaussianIsStoredInMemory_ = FALSE;
 
     G4FFG_SAMPLING_FUNCTIONLEAVE__
@@ -446,7 +476,8 @@ G4double G4FPYSamplingOps::SampleGaussian()
   G4double MappingFactor;
 
   // Sample from the unit circle (21.4% rejection probability)
-  do {
+  do
+  {
     GaussianOne_ = 2.0 * G4SampleUniform() - 1.0;
     GaussianTwo_ = 2.0 * G4SampleUniform() - 1.0;
     Radius = GaussianOne_ * GaussianOne_ + GaussianTwo_ * GaussianTwo_;
@@ -472,18 +503,21 @@ void G4FPYSamplingOps::ShiftParameters(G4FFGEnumerations::GaussianReturnType Typ
   NextGaussianIsStoredInMemory_ = FALSE;
 
   // Check if the requested parameters have already been calculated
-  if (static_cast<int>(CheckAndSetParameters()) == TRUE) {
+  if (static_cast<int>(CheckAndSetParameters()) == TRUE)
+  {
     G4FFG_SAMPLING_FUNCTIONLEAVE__
     return;
   }
 
   // If the requested type is INT, then perform an iterative refinement of the
   // mean that is going to be sampled
-  if (Type == G4FFGEnumerations::INT) {
+  if (Type == G4FFGEnumerations::INT)
+  {
     // Return if the mean is greater than 7 standard deviations away from 0
     // since there is essentially 0 probability that a sampled number will
     // be less than 0
-    if (Mean_ > 7 * StdDev_) {
+    if (Mean_ > 7 * StdDev_)
+    {
       G4FFG_SAMPLING_FUNCTIONLEAVE__
       return;
     }
@@ -511,9 +545,11 @@ void G4FPYSamplingOps::ShiftParameters(G4FFGEnumerations::GaussianReturnType Typ
 
     G4int icounter = 0;
     G4int icounter_max = 1024;
-    do {
+    do
+    {
       icounter++;
-      if (icounter > icounter_max) {
+      if (icounter > icounter_max)
+      {
         G4cout << "Loop-counter exceeded the threshold value at " << __LINE__ << "th line of "
                << __FILE__ << "." << G4endl;
         break;
@@ -523,14 +559,16 @@ void G4FPYSamplingOps::ShiftParameters(G4FFGEnumerations::GaussianReturnType Typ
       AdjustedErfContainer = 0;
 
       // Calculate the area and weighted area
-      for (G4int i = 0; i <= UpperLimit; i++) {
+      for (G4int i = 0; i <= UpperLimit; i++)
+      {
         // Determine the lower and upper bounds
         LowErf = ((AdjMean - i) / Normalization);
         HighErf = ((AdjMean - (i + 1.0)) / Normalization);
 
         // Correct the bounds for how they lie on the x-axis with
         // respect to the mean
-        if (LowErf <= 0) {
+        if (LowErf <= 0)
+        {
           LowErf *= -1;
           HighErf *= -1;
 // Container = (erf(HighErf) - erf(LowErf))/2.0;
@@ -540,7 +578,8 @@ void G4FPYSamplingOps::ShiftParameters(G4FFGEnumerations::GaussianReturnType Typ
           Container = (erf(HighErf) - erf(LowErf)) / 2.0;
 #endif
         }
-        else if (HighErf < 0) {
+        else if (HighErf < 0)
+        {
           HighErf *= -1;
 
 // Container = (erf(HighErf) + erf(LowErf))/2.0;
@@ -550,7 +589,8 @@ void G4FPYSamplingOps::ShiftParameters(G4FFGEnumerations::GaussianReturnType Typ
           Container = (erf(HighErf) + erf(LowErf)) / 2.0;
 #endif
         }
-        else {
+        else
+        {
 // Container = (erf(LowErf) - erf(HighErf))/2.0;
 #if defined WIN32 - VC
           Container = (CLHEP::HepStat::erf(LowErf) - CLHEP::HepStat::erf(HighErf)) / 2.0;
@@ -574,20 +614,24 @@ void G4FPYSamplingOps::ShiftParameters(G4FFGEnumerations::GaussianReturnType Typ
 
       // Is it close enough to what we want?
       ToleranceCheck = (std::fabs(Mean_ - Container) < Tolerance_);
-      if (static_cast<int>(ToleranceCheck) == TRUE) {
+      if (static_cast<int>(ToleranceCheck) == TRUE)
+      {
         break;
       }
 
       // Determine the step size
-      if (static_cast<int>(HalfDelta) == TRUE) {
+      if (static_cast<int>(HalfDelta) == TRUE)
+      {
         Delta /= 2;
       }
 
       // Step in the appropriate direction
-      if (Container > Mean_) {
+      if (Container > Mean_)
+      {
         AdjMean -= Delta;
       }
-      else {
+      else
+      {
         HalfDelta = TRUE;
         AdjMean += Delta;
       }
@@ -596,7 +640,8 @@ void G4FPYSamplingOps::ShiftParameters(G4FFGEnumerations::GaussianReturnType Typ
     ShiftedGaussianValues_->G4InsertShiftedMean(AdjMean, Mean_, StdDev_);
     Mean_ = AdjMean;
   }
-  else if (Mean_ / 7 < StdDev_) {
+  else if (Mean_ / 7 < StdDev_)
+  {
     // If the requested type is double, then just re-define the standard
     // deviation appropriately - chances are approximately 2.56E-12 that
     // the value will be negative using this sampling scheme

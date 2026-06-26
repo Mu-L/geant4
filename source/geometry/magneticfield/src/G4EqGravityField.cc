@@ -33,47 +33,39 @@
 // -------------------------------------------------------------------
 
 #include "G4EqGravityField.hh"
-#include "globals.hh"
+
 #include "G4PhysicalConstants.hh"
+#include "globals.hh"
 
-G4EqGravityField::G4EqGravityField(G4UniformGravityField* gField) 
-  : G4EquationOfMotion( gField )
-{
-}
+G4EqGravityField::G4EqGravityField(G4UniformGravityField* gField) : G4EquationOfMotion(gField) {}
 
-void
-G4EqGravityField::SetChargeMomentumMass(G4ChargeState,
-                                        G4double,
-                                        G4double particleMass )
+void G4EqGravityField::SetChargeMomentumMass(G4ChargeState, G4double, G4double particleMass)
 {
   fMass = particleMass;
 }
 
-void
-G4EqGravityField::EvaluateRhsGivenB(const G4double y[],
-                                    const G4double G[],
-                                          G4double dydx[] ) const
+void G4EqGravityField::EvaluateRhsGivenB(const G4double y[], const G4double G[],
+                                         G4double dydx[]) const
 {
-
   // Components of y:
   //    0-2 dr/ds,
   //    3-5 dp/ds - momentum derivatives
 
-  G4double momentum_mag_square = y[3]*y[3] + y[4]*y[4] + y[5]*y[5];
-  G4double inv_momentum_magnitude = 1.0 / std::sqrt( momentum_mag_square );
+  G4double momentum_mag_square = y[3] * y[3] + y[4] * y[4] + y[5] * y[5];
+  G4double inv_momentum_magnitude = 1.0 / std::sqrt(momentum_mag_square);
 
-  G4double Energy = std::sqrt(momentum_mag_square + fMass*fMass);
-  G4double cof2 = Energy/c_light;
-  G4double cof1 = inv_momentum_magnitude*fMass;
-  G4double inverse_velocity = Energy*inv_momentum_magnitude/c_light;
+  G4double Energy = std::sqrt(momentum_mag_square + fMass * fMass);
+  G4double cof2 = Energy / c_light;
+  G4double cof1 = inv_momentum_magnitude * fMass;
+  G4double inverse_velocity = Energy * inv_momentum_magnitude / c_light;
 
-  dydx[0] = y[3]*inv_momentum_magnitude;       //  (d/ds)x = Vx/V
-  dydx[1] = y[4]*inv_momentum_magnitude;       //  (d/ds)y = Vy/V
-  dydx[2] = y[5]*inv_momentum_magnitude;       //  (d/ds)z = Vz/V
+  dydx[0] = y[3] * inv_momentum_magnitude;  //  (d/ds)x = Vx/V
+  dydx[1] = y[4] * inv_momentum_magnitude;  //  (d/ds)y = Vy/V
+  dydx[2] = y[5] * inv_momentum_magnitude;  //  (d/ds)z = Vz/V
 
-  dydx[3] = G[0]*cof1*cof2/c_light;
-  dydx[4] = G[1]*cof1*cof2/c_light;            //  m*g
-  dydx[5] = G[2]*cof1*cof2/c_light;
+  dydx[3] = G[0] * cof1 * cof2 / c_light;
+  dydx[4] = G[1] * cof1 * cof2 / c_light;  //  m*g
+  dydx[5] = G[2] * cof1 * cof2 / c_light;
 
   // Lab Time of flight
   //

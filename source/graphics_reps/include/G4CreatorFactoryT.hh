@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Generic identifier-creator based factory. Based on 
+// Generic identifier-creator based factory. Based on
 // factory presented in "Modern C++ Design, Andrei Alexandrescu"
 //
 // Jane Tinslay, September 2006
@@ -33,52 +33,51 @@
 #define G4CREATORFACTORYT_HH
 
 #include "globals.hh"
+
 #include <map>
 
-template <typename T, typename Identifier, typename Creator>
-class G4CreatorFactoryT {
+template<typename T, typename Identifier, typename Creator>
+class G4CreatorFactoryT
+{
+  public:
 
-public:
+    // Constructor
+    G4CreatorFactoryT();
 
-  // Constructor
-  G4CreatorFactoryT();
+    // Destructor
+    virtual ~G4CreatorFactoryT();
 
-  // Destructor
-  virtual ~G4CreatorFactoryT();
+    // Register identifier<->creator pairs
+    G4bool Register(const Identifier& id, Creator creator);
 
-  // Register identifier<->creator pairs
-  G4bool Register(const Identifier& id, Creator creator);
+    // Create product with given identifier
+    T* Create(const Identifier& id) const;
 
-  // Create product with given identifier
-  T* Create(const Identifier& id) const; 
+  private:
 
-private:
+    typedef std::map<Identifier, Creator> Map;
 
-  typedef std::map<Identifier, Creator> Map;
-
-  // Data member
-  Map fMap;
-
+    // Data member
+    Map fMap;
 };
 
-template <typename T, typename Identifier, typename Creator>
-G4CreatorFactoryT<T, Identifier, Creator>::G4CreatorFactoryT() {}
+template<typename T, typename Identifier, typename Creator>
+G4CreatorFactoryT<T, Identifier, Creator>::G4CreatorFactoryT()
+{}
 
-template <typename T, typename Identifier, typename Creator>
-G4CreatorFactoryT<T, Identifier, Creator>::~G4CreatorFactoryT() {}
+template<typename T, typename Identifier, typename Creator>
+G4CreatorFactoryT<T, Identifier, Creator>::~G4CreatorFactoryT()
+{}
 
-template <typename T, typename Identifier, typename Creator>
-G4bool
-G4CreatorFactoryT<T, Identifier, Creator>::Register(const Identifier& id, 
-                                                    Creator creator)
+template<typename T, typename Identifier, typename Creator>
+G4bool G4CreatorFactoryT<T, Identifier, Creator>::Register(const Identifier& id, Creator creator)
 {
-  if (fMap.find(id) != fMap.end()) {
+  if (fMap.find(id) != fMap.end())
+  {
     G4ExceptionDescription ed;
-    ed << "Creator with identifier "<<id<<" already exists."<<G4endl;
-    G4Exception
-      ("G4CreatorFactoryT::Register(const Identifier& id, Creator creator)",
-       "greps0102", JustWarning, ed,
-       "Creator exists");
+    ed << "Creator with identifier " << id << " already exists." << G4endl;
+    G4Exception("G4CreatorFactoryT::Register(const Identifier& id, Creator creator)", "greps0102",
+                JustWarning, ed, "Creator exists");
     return false;
   }
 
@@ -87,21 +86,20 @@ G4CreatorFactoryT<T, Identifier, Creator>::Register(const Identifier& id,
   return fMap.insert(myPair).second;
 }
 
-template <typename T, typename Identifier, typename Creator>
-T* 
-G4CreatorFactoryT<T, Identifier, Creator>::Create(const Identifier& id) const
+template<typename T, typename Identifier, typename Creator>
+T* G4CreatorFactoryT<T, Identifier, Creator>::Create(const Identifier& id) const
 {
   typename Map::const_iterator iter = fMap.find(id);
-  
-  if (iter == fMap.end()) {
+
+  if (iter == fMap.end())
+  {
     G4ExceptionDescription ed;
-    ed << "Identifier "<<id<<" does not exist."<<G4endl;
-    G4Exception("G4CreatorFactoryT::Create(const Identifier& id)",
-                "greps0103", JustWarning, ed,
+    ed << "Identifier " << id << " does not exist." << G4endl;
+    G4Exception("G4CreatorFactoryT::Create(const Identifier& id)", "greps0103", JustWarning, ed,
                 "Non-existent identifier");
     return 0;
   }
-  
+
   return iter->second();
 }
 

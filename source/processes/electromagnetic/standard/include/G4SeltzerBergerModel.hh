@@ -38,11 +38,11 @@
 // Modifications:
 //
 // 24.07.2018 Introduced possibility to use sampling tables to sample the
-//            emitted photon energy (instead of using rejectio) from the 
-//            Seltzer-Berger scalled DCS for bremsstrahlung photon emission. 
-//            Using these sampling tables option gives faster(30-70%) final 
-//            state generation than the original rejection but takes some 
-//            extra memory (+ ~6MB in the case of the full CMS detector). 
+//            emitted photon energy (instead of using rejectio) from the
+//            Seltzer-Berger scalled DCS for bremsstrahlung photon emission.
+//            Using these sampling tables option gives faster(30-70%) final
+//            state generation than the original rejection but takes some
+//            extra memory (+ ~6MB in the case of the full CMS detector).
 //            (M Novak)
 //
 // Class Description:
@@ -55,8 +55,8 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4SeltzerBergerModel_h
-#define G4SeltzerBergerModel_h 1
+#ifndef G4SELTZERBERGERMODEL_HH
+#define G4SELTZERBERGERMODEL_HH
 
 #include "G4VEmModel.hh"
 #include "G4eBremsstrahlungRelModel.hh"
@@ -68,103 +68,89 @@ class G4ParticleChangeForLoss;
 
 class G4SeltzerBergerModel : public G4VEmModel
 {
+  public:
 
-public:
+    explicit G4SeltzerBergerModel(const G4ParticleDefinition* p = nullptr,
+                                  const G4String& nam = "eBremSB");
 
-  explicit G4SeltzerBergerModel(const G4ParticleDefinition* p = nullptr,
-                                const G4String& nam = "eBremSB");
+    ~G4SeltzerBergerModel() override;
 
-  ~G4SeltzerBergerModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel* masterModel) override;
 
-  void InitialiseLocal(const G4ParticleDefinition*,
-                       G4VEmModel* masterModel) override;
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*, G4double ekin,
+                                  G4double cutEnergy) override;
 
-  G4double ComputeDEDXPerVolume(const G4Material*,
-                                const G4ParticleDefinition*,
-                                G4double ekin,
-                                G4double cutEnergy) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double ekin, G4double zet,
+                                        G4double, G4double cutEnergy,
+                                        G4double maxEnergy = DBL_MAX) override;
 
-  G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
-                                      G4double ekin,
-                                      G4double zet,
-                                      G4double,
-                                      G4double cutEnergy,
-                                      G4double maxEnergy = DBL_MAX) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double cutEnergy,
+                           G4double maxEnergy) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-                         const G4MaterialCutsCouple*,
-                         const G4DynamicParticle*,
-			 G4double cutEnergy,
-                         G4double maxEnergy) override;
+    void SetupForMaterial(const G4ParticleDefinition*, const G4Material*, G4double) override;
 
-  void SetupForMaterial(const G4ParticleDefinition*,
-                        const G4Material*, G4double) override;
+    G4double MinPrimaryEnergy(const G4Material*, const G4ParticleDefinition*,
+                              G4double cutEnergy) override;
 
-  G4double MinPrimaryEnergy(const G4Material*,
-                            const G4ParticleDefinition*,
-                            G4double cutEnergy) override;
+    inline void SetBicubicInterpolationFlag(G4bool val) { fIsUseBicubicInterpolation = val; };
 
-  inline void SetBicubicInterpolationFlag(G4bool val) 
-  { fIsUseBicubicInterpolation = val; };
+    // hide assignment operator and cctr
+    G4SeltzerBergerModel& operator=(const G4SeltzerBergerModel& right) = delete;
+    G4SeltzerBergerModel(const G4SeltzerBergerModel&) = delete;
 
-  // hide assignment operator and cctr
-  G4SeltzerBergerModel & operator=(const G4SeltzerBergerModel &right) = delete;
-  G4SeltzerBergerModel(const G4SeltzerBergerModel&) = delete;
+  private:
 
-private:
+    void SetParticle(const G4ParticleDefinition* p);
 
-  void SetParticle(const G4ParticleDefinition* p);
+    void ReadData(G4int Z);
 
-  void ReadData(G4int Z);
+    G4double ComputeBremLoss(G4double cutEnergy);
 
-  G4double ComputeBremLoss(G4double cutEnergy);
+    G4double ComputeXSectionPerAtom(G4double cutEnergy);
 
-  G4double ComputeXSectionPerAtom(G4double cutEnergy);
+    G4double ComputeDXSectionPerAtom(G4double gammaEnergy);
 
-  G4double ComputeDXSectionPerAtom(G4double gammaEnergy);
+    G4double SampleEnergyTransfer(const G4double kineticEnergy, const G4double logKineticEnergy,
+                                  const G4double cut, const G4double emax);
 
-  G4double SampleEnergyTransfer(const G4double kineticEnergy, 
-                                const G4double logKineticEnergy, 
-                                const G4double cut,
-                                const G4double emax);
+  protected:
 
-protected:
+    G4ParticleChangeForLoss* fParticleChange{nullptr};
 
-  G4ParticleChangeForLoss* fParticleChange{nullptr};
+  private:
 
-private:
+    static constexpr G4int gMaxZet{101};
+    static constexpr G4double gExpNumLimit{-12.};
+    static G4double gYLimitData[gMaxZet];
+    static G4Physics2DVector* gSBDCSData[gMaxZet];
+    static G4SBBremTable* gSBSamplingTable;
+    static const G4double gBremFactor;
+    static const G4double gMigdalConstant;
 
-  static constexpr G4int gMaxZet{101};
-  static constexpr G4double gExpNumLimit{-12.};
-  static G4double gYLimitData[gMaxZet];
-  static G4Physics2DVector* gSBDCSData[gMaxZet];
-  static G4SBBremTable* gSBSamplingTable;
-  static const G4double gBremFactor;
-  static const G4double gMigdalConstant;
+    G4bool fIsUseBicubicInterpolation{false};
+    G4bool fIsUseSamplingTables{true};
+    G4bool fIsElectron{true};
+    G4bool fIsScatOffElectron{false};
+    G4bool isInitializer{false};
+    //
+    G4int fCurrentIZ{0};
+    G4int fNumWarnings{0};
 
-  G4bool fIsUseBicubicInterpolation{false};
-  G4bool fIsUseSamplingTables{true};
-  G4bool fIsElectron{true};
-  G4bool fIsScatOffElectron{false};
-  G4bool isInitializer{false};
-  //
-  G4int fCurrentIZ{0};
-  G4int fNumWarnings{0};
+    const G4ParticleDefinition* fPrimaryParticle{nullptr};
+    G4ParticleDefinition* fGammaParticle;
 
-  const G4ParticleDefinition* fPrimaryParticle{nullptr};
-  G4ParticleDefinition* fGammaParticle;
+    // cash
+    G4double fPrimaryKinEnergy{0.};
+    G4double fPrimaryTotalEnergy{0.};
+    G4double fDensityFactor{0.};
+    G4double fDensityCorr{0.};
+    G4double fLowestKinEnergy;
 
-  // cash
-  G4double fPrimaryKinEnergy{0.};
-  G4double fPrimaryTotalEnergy{0.};
-  G4double fDensityFactor{0.};
-  G4double fDensityCorr{0.};
-  G4double fLowestKinEnergy;
-
-  std::size_t fIndx{0};
-  std::size_t fIndy{0};
+    std::size_t fIndx{0};
+    std::size_t fIndy{0};
 };
 
 #endif

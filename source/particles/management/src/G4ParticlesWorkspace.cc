@@ -53,7 +53,8 @@ G4ParticlesWorkspace::G4ParticlesWorkspace(G4bool verbose) : fVerbose(verbose)
 
 void G4ParticlesWorkspace::UseWorkspace()
 {
-  if (fVerbose) {
+  if (fVerbose)
+  {
     G4cout << "G4ParticlesWorkspace::UseWorkspace: "
            << "Copying particles-definition Split-Class - Start " << G4endl;
   }
@@ -71,7 +72,8 @@ void G4ParticlesWorkspace::InitialiseParticles() {}
 
 void G4ParticlesWorkspace::InitialiseWorkspace()
 {
-  if (fVerbose) {
+  if (fVerbose)
+  {
     G4cout << "G4ParticlesWorkspace::InitialiseWorkspace: "
            << "Copying particles-definition Split-Class - Start " << G4endl;
   }
@@ -84,7 +86,8 @@ void G4ParticlesWorkspace::InitialiseWorkspace()
   // Additional initialization if needed - beyond copying memory
   InitialiseParticles();
 
-  if (fVerbose) {
+  if (fVerbose)
+  {
     G4cout << "G4ParticlesWorkspace::CreateAndUseWorkspace: "
            << "Copying particles-definition Split-Class - Done!" << G4endl;
   }

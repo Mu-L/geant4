@@ -34,82 +34,62 @@
 // - 2 December 1995, G.Cosmo - First implementation, based on object model
 // - 8 January 1997, H.Kurashige - New Physics scheme
 // --------------------------------------------------------------------
-#ifndef G4VRestDiscreteProcess_hh
-#define G4VRestDiscreteProcess_hh 1
-
-#include "globals.hh"
-#include "G4ios.hh"
+#ifndef G4VRESTDISCRETEPROCESS_HH
+#define G4VRESTDISCRETEPROCESS_HH
 
 #include "G4VProcess.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
-class G4VRestDiscreteProcess : public G4VProcess 
+class G4VRestDiscreteProcess : public G4VProcess
 {
-  public:     
+  public:
 
-    G4VRestDiscreteProcess(const G4String& ,
-			   G4ProcessType aType = fNotDefined);
+    G4VRestDiscreteProcess(const G4String&, G4ProcessType aType = fNotDefined);
     G4VRestDiscreteProcess(G4VRestDiscreteProcess&);
 
     virtual ~G4VRestDiscreteProcess();
 
     G4VRestDiscreteProcess& operator=(const G4VRestDiscreteProcess&) = delete;
 
-    virtual G4double PostStepGetPhysicalInteractionLength(
-                             const G4Track& track,
-			     G4double previousStepSize,
-			     G4ForceCondition* condition
-			    );
+    virtual G4double PostStepGetPhysicalInteractionLength(const G4Track& track,
+                                                          G4double previousStepSize,
+                                                          G4ForceCondition* condition);
 
-    virtual G4VParticleChange* PostStepDoIt(
-			     const G4Track& ,
-			     const G4Step& 
-			    );
+    virtual G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&);
 
-    virtual G4double AtRestGetPhysicalInteractionLength(
-                             const G4Track& ,
-			     G4ForceCondition* 
-			    );
-      
-    virtual G4VParticleChange* AtRestDoIt(
-			     const G4Track& ,
-			     const G4Step&
-			    );
+    virtual G4double AtRestGetPhysicalInteractionLength(const G4Track&, G4ForceCondition*);
 
-    virtual G4double AlongStepGetPhysicalInteractionLength(
-                             const G4Track&,
-			     G4double  ,
-			     G4double  ,
-			     G4double& ,
-                             G4GPILSelection*
-			    ) { return -1.0; }
-      // No operation in AlongStepDoIt
+    virtual G4VParticleChange* AtRestDoIt(const G4Track&, const G4Step&);
 
-    virtual G4VParticleChange* AlongStepDoIt(
-			     const G4Track& ,
-			     const G4Step& 
-			    ) { return 0; }
-      // No operation in AlongStepDoIt
- 
+    virtual G4double AlongStepGetPhysicalInteractionLength(const G4Track&, G4double, G4double,
+                                                           G4double&, G4GPILSelection*)
+    {
+      return -1.0;
+    }
+    // No operation in AlongStepDoIt
+
+    virtual G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&) { return 0; }
+    // No operation in AlongStepDoIt
+
   protected:
 
-    virtual G4double GetMeanFreePath(const G4Track& aTrack,
-                                     G4double previousStepSize,
+    virtual G4double GetMeanFreePath(const G4Track& aTrack, G4double previousStepSize,
                                      G4ForceCondition* condition) = 0;
-      // Calculates from the macroscopic cross-section a mean
-      // free path, the value is returned in units of distance
+    // Calculates from the macroscopic cross-section a mean
+    // free path, the value is returned in units of distance
 
-    virtual G4double GetMeanLifeTime(const G4Track& aTrack,
-                                     G4ForceCondition* condition) = 0;
-      // Calculates the mean life-time (i.e. for decays) of the
-      // particle at rest due to the occurrence of the given process,
-      // or converts the probability of interaction (i.e. for
-      // annihilation) into the life-time of the particle for the
-      // occurrence of the given process
+    virtual G4double GetMeanLifeTime(const G4Track& aTrack, G4ForceCondition* condition) = 0;
+    // Calculates the mean life-time (i.e. for decays) of the
+    // particle at rest due to the occurrence of the given process,
+    // or converts the probability of interaction (i.e. for
+    // annihilation) into the life-time of the particle for the
+    // occurrence of the given process
 
   private:
 
     G4VRestDiscreteProcess();
-      // Hidden default constructor
+    // Hidden default constructor
 };
 
 #endif

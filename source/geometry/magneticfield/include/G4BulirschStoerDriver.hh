@@ -35,19 +35,19 @@
 #ifndef G4BULIRSCH_STOER_DRIVER_HH
 #define G4BULIRSCH_STOER_DRIVER_HH
 
-#include "G4IntegrationDriver.hh"
 #include "G4BulirschStoer.hh"
 #include "G4ChordFinderDelegate.hh"
+#include "G4IntegrationDriver.hh"
 
 /**
  * @brief G4IntegrationDriver<G4BulirschStoer> is a concrete driver class
  * using the Bulirsch-Stoer method to integrate the equation of motion.
+ * @ingroup geometry_magneticfield
  */
 
-template <>
-class G4IntegrationDriver<G4BulirschStoer>: 
-    public G4VIntegrationDriver,
-    public G4ChordFinderDelegate<G4IntegrationDriver<G4BulirschStoer>>
+template<>
+class G4IntegrationDriver<G4BulirschStoer>
+  : public G4VIntegrationDriver, public G4ChordFinderDelegate<G4IntegrationDriver<G4BulirschStoer>>
 {
   public:
 
@@ -58,10 +58,8 @@ class G4IntegrationDriver<G4BulirschStoer>:
      *  @param[in] numberOfComponents The number of integration variables.
      *  @param[in] verbosity Flag for verbosity.
      */
-    G4IntegrationDriver( G4double hminimum,
-                         G4BulirschStoer* stepper,
-                         G4int numberOfComponents = 6,
-                         G4int statisticsVerbosity = 1);
+    G4IntegrationDriver(G4double hminimum, G4BulirschStoer* stepper, G4int numberOfComponents = 6,
+                        G4int statisticsVerbosity = 1);
 
     /**
      * Default Destructor.
@@ -82,9 +80,7 @@ class G4IntegrationDriver<G4BulirschStoer>:
      *  @param[in] chordDistance Maximum sagitta distance.
      *  @returns The length of step taken.
      */
-    G4double AdvanceChordLimited(G4FieldTrack& track,
-                                 G4double hstep,
-                                 G4double eps,
+    G4double AdvanceChordLimited(G4FieldTrack& track, G4double hstep, G4double eps,
                                  G4double chordDistance) override;
 
     /**
@@ -101,7 +97,7 @@ class G4IntegrationDriver<G4BulirschStoer>:
      * The driver does not implement re-integration. Returns false.
      */
     G4bool DoesReIntegrate() const override;
-   
+
     /**
      * Advances integration accurately by relative accuracy better than 'eps'.
      *  @param[in,out] track The current track in field.
@@ -110,10 +106,8 @@ class G4IntegrationDriver<G4BulirschStoer>:
      *  @param[in] beginStep Initial minimum integration step.
      *  @returns true if integration succeeds.
      */
-    G4bool AccurateAdvance( G4FieldTrack& track,
-                            G4double stepLen,
-                            G4double eps,
-                            G4double beginStep = 0) override;
+    G4bool AccurateAdvance(G4FieldTrack& track, G4double stepLen, G4double eps,
+                           G4double beginStep = 0) override;
 
     /**
      * Attempts one integration step, and returns estimated error 'dyerr'.
@@ -125,11 +119,8 @@ class G4IntegrationDriver<G4BulirschStoer>:
      *  @param[out] dyerr Estimated error.
      *  @returns true if integration succeeds.
      */
-    G4bool QuickAdvance( G4FieldTrack& y_val,
-                         const G4double dydx[],
-                         G4double hstep,
-                         G4double& missDist,
-                         G4double& dyerr) override;
+    G4bool QuickAdvance(G4FieldTrack& y_val, const G4double dydx[], G4double hstep,
+                        G4double& missDist, G4double& dyerr) override;
 
     /**
      * Takes one Step that is as large as possible while satisfying the
@@ -142,22 +133,15 @@ class G4IntegrationDriver<G4BulirschStoer>:
      *  @param[out] hdid Step achieved.
      *  @param[out] hnext Proposed next step.
      */
-    void OneGoodStep( G4double y[],
-                      const G4double dydx[],
-                      G4double& curveLength,
-                      G4double htry,
-                      G4double eps,
-                      G4double& hdid,
-                      G4double& hnext);
+    void OneGoodStep(G4double y[], const G4double dydx[], G4double& curveLength, G4double htry,
+                     G4double eps, G4double& hdid, G4double& hnext);
 
     /**
      * Getters for derivatives.
      */
-    void GetDerivatives( const G4FieldTrack& track,
-                               G4double dydx[]) const override;
-    void GetDerivatives( const G4FieldTrack& track,
-                               G4double dydx[],
-                               G4double field[]) const override;
+    void GetDerivatives(const G4FieldTrack& track, G4double dydx[]) const override;
+    void GetDerivatives(const G4FieldTrack& track, G4double dydx[],
+                        G4double field[]) const override;
 
     /**
      * Setter and getter for verbosity.
@@ -171,8 +155,7 @@ class G4IntegrationDriver<G4BulirschStoer>:
      *  @param[in] hstepCurrent The current step size.
      *  @returns The new step size.
      */
-    G4double ComputeNewStepSize(G4double errMaxNorm,
-                                G4double hstepCurrent) override;
+    G4double ComputeNewStepSize(G4double errMaxNorm, G4double hstepCurrent) override;
 
     /**
      * Getters and setter for the equation of motion.
@@ -190,8 +173,8 @@ class G4IntegrationDriver<G4BulirschStoer>:
     /**
      * Writes out to stream the parameters/state of the driver.
      */
-    void StreamInfo( std::ostream& os ) const override;
-   
+    void StreamInfo(std::ostream& os) const override;
+
   private:
 
     G4int GetNumberOfVarialbles() const;
@@ -202,13 +185,9 @@ class G4IntegrationDriver<G4BulirschStoer>:
     G4ModifiedMidpoint fMidpointMethod;
     G4BulirschStoer* bulirschStoer;
 
-    G4double yIn[G4FieldTrack::ncompSVEC],
-             yMid[G4FieldTrack::ncompSVEC],
-             yMid2[G4FieldTrack::ncompSVEC],
-             yOut[G4FieldTrack::ncompSVEC],
-             yOut2[G4FieldTrack::ncompSVEC],
-             yError[G4FieldTrack::ncompSVEC];
-
+    G4double yIn[G4FieldTrack::ncompSVEC], yMid[G4FieldTrack::ncompSVEC],
+      yMid2[G4FieldTrack::ncompSVEC], yOut[G4FieldTrack::ncompSVEC], yOut2[G4FieldTrack::ncompSVEC],
+      yError[G4FieldTrack::ncompSVEC];
 
     G4double dydxCurrent[G4FieldTrack::ncompSVEC];
     G4double yCurrent[G4FieldTrack::ncompSVEC];
@@ -217,8 +196,7 @@ class G4IntegrationDriver<G4BulirschStoer>:
 
     const G4int interval_sequence[2];
 
-    using ChordFinderDelegate =
-          G4ChordFinderDelegate<G4IntegrationDriver<G4BulirschStoer>>;
+    using ChordFinderDelegate = G4ChordFinderDelegate<G4IntegrationDriver<G4BulirschStoer>>;
 };
 
 #include "G4BulirschStoerDriver.icc"

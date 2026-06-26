@@ -44,41 +44,36 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4DummyModel_h
-#define G4DummyModel_h 1
+#ifndef G4DUMMYMODEL_HH
+#define G4DUMMYMODEL_HH
 
-#include "globals.hh"
 #include "G4VMscModel.hh"
+#include "globals.hh"
 
 class G4DummyModel : public G4VMscModel
 {
+  public:
 
-public:
+    explicit G4DummyModel(const G4String& nam = "DummyModel");
 
-  explicit G4DummyModel(const G4String& nam = "DummyModel");
+    ~G4DummyModel() override;
 
-  ~G4DummyModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) final;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) final;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double tmax) final;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double tmax) final;
+    G4double ComputeTruePathLengthLimit(const G4Track&, G4double&) final;
 
-  G4double ComputeTruePathLengthLimit(const G4Track&, G4double&) final;
+    G4double ComputeGeomPathLength(G4double) final;
 
-  G4double ComputeGeomPathLength(G4double) final;
+    G4double ComputeTrueStepLength(G4double) final;
 
-  G4double ComputeTrueStepLength(G4double) final;
+    G4ThreeVector& SampleScattering(const G4ThreeVector&, G4double) final;
 
-  G4ThreeVector& SampleScattering(const G4ThreeVector&, G4double) final;
-
-  //  hide assignment operator
-  G4DummyModel & operator=(const  G4DummyModel &right) = delete;
-  G4DummyModel(const  G4DummyModel&) = delete;
+    //  hide assignment operator
+    G4DummyModel& operator=(const G4DummyModel& right) = delete;
+    G4DummyModel(const G4DummyModel&) = delete;
 };
 
 #endif
-

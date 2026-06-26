@@ -32,13 +32,13 @@
 // File name:     G4VhElectronicStoppingPower
 //
 // Author:        V.Ivanchenko (Vladimir.Ivanchenko@cern.ch)
-// 
+//
 // Creation date: 20 July 2000
 //
-// Modifications: 
+// Modifications:
 // 20/07/2000  V.Ivanchenko First implementation
 //
-// Class Description: 
+// Class Description:
 //
 // Low energy hadrons/ions electronic stopping power parametrisation
 // Virtual class to provide the interface between G4hLowEnergyIonisation
@@ -48,46 +48,43 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4VhElectronicStoppingPower_h
-#define G4VhElectronicStoppingPower_h 1
+#ifndef G4VHELECTRONICSTOPPINGPOWER_HH
+#define G4VHELECTRONICSTOPPINGPOWER_HH
 
 #include "G4ios.hh"
 #include "globals.hh"
 
 class G4Material;
 
-class G4VhElectronicStoppingPower 
+class G4VhElectronicStoppingPower
 {
-public:
-  explicit G4VhElectronicStoppingPower();
-  virtual ~G4VhElectronicStoppingPower();
+  public:
 
-  virtual G4double StoppingPower(const G4Material* material,
-                                       G4double kineticEnergy) = 0 ;
+    explicit G4VhElectronicStoppingPower();
+    virtual ~G4VhElectronicStoppingPower();
 
-  virtual G4bool HasMaterial(const G4Material* material) = 0 ;
+    virtual G4double StoppingPower(const G4Material* material, G4double kineticEnergy) = 0;
 
-  virtual G4double ElectronicStoppingPower(G4double z,
-                                           G4double kineticEnergy) const = 0;
+    virtual G4bool HasMaterial(const G4Material* material) = 0;
 
-  G4VhElectronicStoppingPower(G4VhElectronicStoppingPower &) = delete;
-  G4VhElectronicStoppingPower & operator =
-  (const G4VhElectronicStoppingPower &right) = delete;
- 
-protected:
+    virtual G4double ElectronicStoppingPower(G4double z, G4double kineticEnergy) const = 0;
 
-  /// This method returns He effective charge square parametrised according to
-  /// J.F.Ziegler, J.P. Biersack, U. Littmark
-  /// The Stopping and Range of Ions in Matter,
-  /// Vol.1, Pergamon Press, 1985
-  G4double HeEffChargeSquare(const G4double z, 
-                             const G4double kineticEnergyHe) const;
+    G4VhElectronicStoppingPower(G4VhElectronicStoppingPower&) = delete;
+    G4VhElectronicStoppingPower& operator=(const G4VhElectronicStoppingPower& right) = delete;
 
-  G4double GetHeMassAMU() const {return theHeMassAMU;};
+  protected:
 
-private:
+    /// This method returns He effective charge square parametrised according to
+    /// J.F.Ziegler, J.P. Biersack, U. Littmark
+    /// The Stopping and Range of Ions in Matter,
+    /// Vol.1, Pergamon Press, 1985
+    G4double HeEffChargeSquare(const G4double z, const G4double kineticEnergyHe) const;
 
-  const G4double theHeMassAMU;
+    G4double GetHeMassAMU() const { return theHeMassAMU; };
+
+  private:
+
+    const G4double theHeMassAMU;
 };
 
 #endif

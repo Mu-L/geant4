@@ -4,15 +4,18 @@
 #ifndef tools_sg_cursor_shape
 #define tools_sg_cursor_shape
 
-namespace tools {
-namespace sg {
+namespace tools
+{
+namespace sg
+{
 
-enum cursor_shape {
+enum cursor_shape
+{
   cursor_default = 0,
   cursor_target
 };
 
-}}
+}
+}  // namespace tools
 
 #endif
-

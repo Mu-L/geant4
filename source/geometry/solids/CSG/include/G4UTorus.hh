@@ -36,20 +36,21 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedTorus2.h>
+#  include "G4Polyhedron.hh"
 
-#include "G4Polyhedron.hh"
+#  include <VecGeom/volumes/UnplacedTorus2.h>
 
 /**
  * @brief G4UTorus is a wrapper class for G4Torus to make use of VecGeom Torus.
+ * @ingroup geometry_solids_csg
  */
 
 class G4UTorus : public G4UAdapter<vecgeom::UnplacedTorus2>
 {
-  using Shape_t = vecgeom::UnplacedTorus2;
-  using Base_t  = G4UAdapter<vecgeom::UnplacedTorus2>;
+    using Shape_t = vecgeom::UnplacedTorus2;
+    using Base_t = G4UAdapter<vecgeom::UnplacedTorus2>;
 
   public:
 
@@ -63,9 +64,8 @@ class G4UTorus : public G4UAdapter<vecgeom::UnplacedTorus2>
      *             adjusted such that fSPhi+fDPhi<=2PI, fSPhi>-2PI.
      *  @param[in] dPhi Delta angle of the segment in radians.
      */
-    G4UTorus(const G4String& pName,
-                   G4double rmin, G4double rmax, G4double rtor,
-                   G4double sphi, G4double dphi);
+    G4UTorus(const G4String& pName, G4double rmin, G4double rmax, G4double rtor, G4double sphi,
+             G4double dphi);
 
     /**
      * Default destructor.
@@ -76,8 +76,7 @@ class G4UTorus : public G4UAdapter<vecgeom::UnplacedTorus2>
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -96,8 +95,8 @@ class G4UTorus : public G4UAdapter<vecgeom::UnplacedTorus2>
     G4double GetDPhi() const;
     G4double GetSinStartPhi() const;
     G4double GetCosStartPhi() const;
-    G4double GetSinEndPhi  () const;
-    G4double GetCosEndPhi  () const;
+    G4double GetSinEndPhi() const;
+    G4double GetCosEndPhi() const;
 
     /**
      * Modifiers.
@@ -111,8 +110,8 @@ class G4UTorus : public G4UAdapter<vecgeom::UnplacedTorus2>
     /**
      * Checks and sets all the parameters given in input. Used in constructor.
      */
-    void SetAllParameters(G4double arg1, G4double arg2,
-                          G4double arg3, G4double arg4, G4double arg5);
+    void SetAllParameters(G4double arg1, G4double arg2, G4double arg3, G4double arg4,
+                          G4double arg5);
 
     /**
      * Returns the type ID, "G4Torus" of the solid.
@@ -136,10 +135,9 @@ class G4UTorus : public G4UAdapter<vecgeom::UnplacedTorus2>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.

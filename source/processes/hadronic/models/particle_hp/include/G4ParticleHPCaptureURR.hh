@@ -26,13 +26,13 @@
 //
 // -------------------------------------------------------------------
 //
-//      Geant4 header file 
+//      Geant4 header file
 //
 //      File name: G4ParticleHPCaptureURR.hh
 //
 //      Authors: Marek Zmeskal (CTU, Czech Technical University in Prague, Czech Republic)
 //	         Loic Thulliez (CEA France)
-// 
+//
 //      Creation date: 4 June 2024
 //
 //      Description: Final state production model for a high precision
@@ -44,36 +44,39 @@
 //                   class with the corresponding process.
 //
 //      Modifications:
-//      
+//
 // -------------------------------------------------------------------
 //
 //
-#ifndef G4ParticleHPCaptureURR_h
-#define G4ParticleHPCaptureURR_h 1
+#ifndef G4PARTICLEHPCAPTUREURR_HH
+#define G4PARTICLEHPCAPTUREURR_HH
 
-#include "globals.hh"
 #include "G4HadronicInteraction.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4NeutronHPCapture;
 
-
-class G4ParticleHPCaptureURR : public G4HadronicInteraction {
+class G4ParticleHPCaptureURR : public G4HadronicInteraction
+{
   public:
+
     G4ParticleHPCaptureURR();
     ~G4ParticleHPCaptureURR();
 
-    G4HadFinalState* ApplyYourself( const G4HadProjectile& aTrack, G4Nucleus& aTargetNucleus );
-  
-    virtual const std::pair< G4double, G4double > GetFatalEnergyCheckLevels() const;
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& aTargetNucleus);
+
+    virtual const std::pair<G4double, G4double> GetFatalEnergyCheckLevels() const;
     G4int GetVerboseLevel() const;
-    void SetVerboseLevel( G4int );
-    void BuildPhysicsTable( const G4ParticleDefinition& );
-    virtual void ModelDescription( std::ostream& outFile ) const;
+    void SetVerboseLevel(G4int);
+    void BuildPhysicsTable(const G4ParticleDefinition&);
+    virtual void ModelDescription(std::ostream& outFile) const;
 
   private:
+
     G4NeutronHPCapture* neutronHPcapture;
-    std::vector< std::pair< G4double, G4double > >* URRlimits{ nullptr };
+    std::vector<std::pair<G4double, G4double>>* URRlimits{nullptr};
 };
 
 #endif

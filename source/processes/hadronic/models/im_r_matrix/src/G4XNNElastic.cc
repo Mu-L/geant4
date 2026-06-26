@@ -31,27 +31,27 @@
 //
 //      File name:     G4XNNElastic
 //
-//      Author:        
-// 
+//      Author:
+//
 //      Creation date: 15 April 1999
 //
-//      Modifications: 
-//      
+//      Modifications:
+//
 // -------------------------------------------------------------------
 
-#include "globals.hh"
 #include "G4XNNElastic.hh"
-#include "G4XNNElasticLowE.hh"
-#include "G4XPDGElastic.hh"
-#include "G4VCrossSectionSource.hh"
+
+#include "G4CrossSectionVector.hh"
 #include "G4KineticTrack.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4Proton.hh"
-#include "G4CrossSectionVector.hh"
-
+#include "G4VCrossSectionSource.hh"
+#include "G4XNNElasticLowE.hh"
+#include "G4XPDGElastic.hh"
+#include "globals.hh"
 
 G4XNNElastic::G4XNNElastic()
-{ 
+{
   components = new G4CrossSectionVector;
 
   G4VCrossSectionSource* xNNElasticLowE = new G4XNNElasticLowE;
@@ -61,37 +61,33 @@ G4XNNElastic::G4XNNElastic()
   components->push_back(xNNElasticHighE);
 }
 
-
 G4XNNElastic::~G4XNNElastic()
-{ 
-  if (components != nullptr) 
+{
+  if (components != nullptr)
+  {
+    std::size_t nComponents = GetComponents()->size();
+    for (std::size_t i = 0; i < nComponents; ++i)
     {
-      std::size_t nComponents = GetComponents()->size();
-      for (std::size_t i=0; i<nComponents; ++i)
-	{
-          G4CrossSectionSourcePtr componentPtr = (*components)[i];
-	  G4VCrossSectionSource* component = componentPtr();
-	  delete component;
-	  component = nullptr;
-	  componentPtr = nullptr;
-	}
+      G4CrossSectionSourcePtr componentPtr = (*components)[i];
+      G4VCrossSectionSource* component = componentPtr();
+      delete component;
+      component = nullptr;
+      componentPtr = nullptr;
     }
+  }
   delete components;
   components = nullptr;
 }
 
-
-G4bool G4XNNElastic::operator==(const G4XNNElastic &right) const
+G4bool G4XNNElastic::operator==(const G4XNNElastic& right) const
 {
-  return (this == (G4XNNElastic*) &right);
+  return (this == (G4XNNElastic*)&right);
 }
 
-
-G4bool G4XNNElastic::operator!=(const G4XNNElastic &right) const
+G4bool G4XNNElastic::operator!=(const G4XNNElastic& right) const
 {
-  return (this != (G4XNNElastic*) &right);
+  return (this != (G4XNNElastic*)&right);
 }
-
 
 G4String G4XNNElastic::Name() const
 {

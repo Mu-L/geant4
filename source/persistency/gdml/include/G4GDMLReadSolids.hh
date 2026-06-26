@@ -32,13 +32,13 @@
 // Author: Zoltan Torzsok, November 2007
 // --------------------------------------------------------------------
 #ifndef G4GDMLREADSOLIDS_HH
-#define G4GDMLREADSOLIDS_HH 1
+#define G4GDMLREADSOLIDS_HH
 
-#include "G4Types.hh"
-#include "G4GDMLReadMaterials.hh"
 #include "G4ExtrudedSolid.hh"
-#include "G4MultiUnion.hh"
+#include "G4GDMLReadMaterials.hh"
 #include "G4MaterialPropertiesTable.hh"
+#include "G4MultiUnion.hh"
+#include "G4Types.hh"
 
 class G4VSolid;
 class G4QuadrangularFacet;
@@ -48,18 +48,18 @@ class G4OpticalSurface;
 
 class G4GDMLReadSolids : public G4GDMLReadMaterials
 {
-  enum BooleanOp
-  {
-    UNION,
-    SUBTRACTION,
-    INTERSECTION
-  };
+    enum BooleanOp
+    {
+      UNION,
+      SUBTRACTION,
+      INTERSECTION
+    };
 
-  // typedef struct { G4double rmin,rmax,z; } zplaneType;
-  typedef struct
-  {
-    G4double r, z;
-  } rzPointType;
+    // typedef struct { G4double rmin,rmax,z; } zplaneType;
+    typedef struct
+    {
+        G4double r, z;
+    } rzPointType;
 
   public:
 
@@ -72,7 +72,7 @@ class G4GDMLReadSolids : public G4GDMLReadMaterials
 
     typedef struct
     {
-      G4double rmin, rmax, z;
+        G4double rmin, rmax, z;
     } zplaneType;
 
     G4GDMLReadSolids();
@@ -86,8 +86,7 @@ class G4GDMLReadSolids : public G4GDMLReadMaterials
     void EltubeRead(const xercesc::DOMElement* const);
     void XtruRead(const xercesc::DOMElement* const);
     void HypeRead(const xercesc::DOMElement* const);
-    void MultiUnionNodeRead(const xercesc::DOMElement* const,
-                            G4MultiUnion* const);
+    void MultiUnionNodeRead(const xercesc::DOMElement* const, G4MultiUnion* const);
     void MultiUnionRead(const xercesc::DOMElement* const);
     void OrbRead(const xercesc::DOMElement* const);
     void ParaRead(const xercesc::DOMElement* const);
@@ -97,10 +96,10 @@ class G4GDMLReadSolids : public G4GDMLReadMaterials
     void PolyhedraRead(const xercesc::DOMElement* const);
     void GenericPolyhedraRead(const xercesc::DOMElement* const);
     G4QuadrangularFacet* QuadrangularRead(const xercesc::DOMElement* const);
+    void DisplacedSolidRead(const xercesc::DOMElement* const);
     void ReflectedSolidRead(const xercesc::DOMElement* const);
     void ScaledSolidRead(const xercesc::DOMElement* const);
-    G4ExtrudedSolid::ZSection SectionRead(const xercesc::DOMElement* const,
-                                          G4double);
+    G4ExtrudedSolid::ZSection SectionRead(const xercesc::DOMElement* const, G4double);
     void SphereRead(const xercesc::DOMElement* const);
     void TessellatedRead(const xercesc::DOMElement* const);
     void TetRead(const xercesc::DOMElement* const);

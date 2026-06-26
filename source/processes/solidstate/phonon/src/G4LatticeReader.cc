@@ -35,129 +35,151 @@
 //		move ctor, dtor here; check stream pointer before closing.
 
 #include "G4LatticeReader.hh"
+
 #include "G4ExceptionSeverity.hh"
 #include "G4LatticeLogical.hh"
 #include "G4SystemOfUnits.hh"
-#include <fstream>
-#include <limits>
+
 #include <stdlib.h>
 
+#include <fstream>
+#include <limits>
 
 // Default path to lattice files, for use with filenames below
 
 const G4String G4LatticeReader::fDataDir =
   G4FindDataDir("G4LATTICEDATA") ? (const char*)G4FindDataDir("G4LATTICEDATA") : "./CrystalMaps";
 
-
 // Constructor and destructor
 
 G4LatticeReader::G4LatticeReader(G4int vb)
-  : verboseLevel(vb), psLatfile(0), pLattice(0), fMapPath(""),
-    fToken(""), fValue(0.), fMap(""), fsPol(""), fPol(-1), fNX(0), fNY(0) {;}
-
-G4LatticeReader::~G4LatticeReader() {
-  delete psLatfile; psLatfile = 0;
+  : verboseLevel(vb),
+    psLatfile(0),
+    pLattice(0),
+    fMapPath(""),
+    fToken(""),
+    fValue(0.),
+    fMap(""),
+    fsPol(""),
+    fPol(-1),
+    fNX(0),
+    fNY(0)
+{
+  ;
 }
 
+G4LatticeReader::~G4LatticeReader()
+{
+  delete psLatfile;
+  psLatfile = 0;
+}
 
 // Main drivers to read configuration from file or stream
 
-G4LatticeLogical* G4LatticeReader::MakeLattice(const G4String& filename) {
+G4LatticeLogical* G4LatticeReader::MakeLattice(const G4String& filename)
+{
   if (verboseLevel) G4cout << "G4LatticeReader " << filename << G4endl;
 
-  if (!OpenFile(filename)) {
+  if (!OpenFile(filename))
+  {
     G4ExceptionDescription msg;
     msg << "Unable to open " << filename;
-    G4Exception("G4LatticeReader::MakeLattice", "Lattice001",
-		FatalException, msg);
+    G4Exception("G4LatticeReader::MakeLattice", "Lattice001", FatalException, msg);
     return 0;
   }
 
-  pLattice = new G4LatticeLogical;	// Create lattice to be filled
+  pLattice = new G4LatticeLogical;  // Create lattice to be filled
 
   G4bool goodLattice = true;
-  while (!psLatfile->eof()) {
+  while (!psLatfile->eof())
+  {
     goodLattice &= ProcessToken();
   }
   CloseFile();
 
-  if (!goodLattice) {
+  if (!goodLattice)
+  {
     G4ExceptionDescription msg;
     msg << "Error reading lattice from " << filename;
-    G4Exception("G4LatticeReader::MakeLattice", "Lattice002",
-		FatalException, msg);
+    G4Exception("G4LatticeReader::MakeLattice", "Lattice002", FatalException, msg);
     delete pLattice;
     pLattice = 0;
   }
 
-  return pLattice;	// Lattice complete; return pointer with ownership
+  return pLattice;  // Lattice complete; return pointer with ownership
 }
-
 
 // Open local file or file found under data path
 
-G4bool G4LatticeReader::OpenFile(const G4String& filename) {
-  if (verboseLevel)
-    G4cout << "G4LatticeReader::OpenFile " << filename << G4endl;
+G4bool G4LatticeReader::OpenFile(const G4String& filename)
+{
+  if (verboseLevel) G4cout << "G4LatticeReader::OpenFile " << filename << G4endl;
 
   G4String filepath = filename;
   psLatfile = new std::ifstream(filepath);
-  if (!psLatfile->good()) {			// Local file not found
+  if (!psLatfile->good())
+  {  // Local file not found
     filepath = fDataDir + "/" + filename;
-    psLatfile->open(filepath);			// Try data directory
-    if (!psLatfile->good()) {
+    psLatfile->open(filepath);  // Try data directory
+    if (!psLatfile->good())
+    {
       CloseFile();
       return false;
     }
-    if (verboseLevel>1) G4cout << " Found file " << filepath << G4endl;
+    if (verboseLevel > 1) G4cout << " Found file " << filepath << G4endl;
   }
 
   // Extract path from filename to use in finding .ssv map files
   size_t lastdir = filepath.rfind('/');
-  if (lastdir == std::string::npos) fMapPath = ".";	// No path at all
-  else fMapPath = filepath.substr(0,lastdir);
+  if (lastdir == std::string::npos)
+    fMapPath = ".";  // No path at all
+  else
+    fMapPath = filepath.substr(0, lastdir);
 
   return true;
 }
 
 // Close and delete input stream
 
-void G4LatticeReader::CloseFile() {
+void G4LatticeReader::CloseFile()
+{
   if (psLatfile) psLatfile->close();
   delete psLatfile;
   psLatfile = 0;
 }
 
-
 // Read next token from file, use it to store next data into lattice
 
-G4bool G4LatticeReader::ProcessToken() {
+G4bool G4LatticeReader::ProcessToken()
+{
   fToken = "";
   *psLatfile >> fToken;
-  if (fToken.empty() || psLatfile->eof()) return true;	// End of file reached
+  if (fToken.empty() || psLatfile->eof()) return true;  // End of file reached
 
-  if (verboseLevel>1) G4cout << " ProcessToken " << fToken << G4endl;
+  if (verboseLevel > 1) G4cout << " ProcessToken " << fToken << G4endl;
 
   G4StrUtil::to_lower(fToken);
-  if (G4StrUtil::contains(fToken, '#')) return SkipComments();	// Ignore rest of line
-  if (fToken == "vdir")     return ProcessNMap();	// Direction vector map
-  if (fToken == "vg")       return ProcessMap();	// Velocity magnitudes
-  if (fToken == "dyn")      return ProcessConstants();	// Dynamical parameters
-  return ProcessValue(fToken);				// Single numeric value
+  if (G4StrUtil::contains(fToken, '#')) return SkipComments();  // Ignore rest of line
+  if (fToken == "vdir") return ProcessNMap();  // Direction vector map
+  if (fToken == "vg") return ProcessMap();  // Velocity magnitudes
+  if (fToken == "dyn") return ProcessConstants();  // Dynamical parameters
+  return ProcessValue(fToken);  // Single numeric value
 }
 
 // Eat remainder of line, assuming a '#' token was found
 
-G4bool G4LatticeReader::SkipComments() {
+G4bool G4LatticeReader::SkipComments()
+{
   psLatfile->ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-  return true;		// Never fails
+  return true;  // Never fails
 }
 
 // Read double value from file, store based on name string
 
-G4bool G4LatticeReader::ProcessValue(const G4String& name) {
+G4bool G4LatticeReader::ProcessValue(const G4String& name)
+{
   *psLatfile >> fValue;
-  if (verboseLevel>1) G4cout << " ProcessValue " << fValue << G4endl;
+  if (verboseLevel > 1) G4cout << " ProcessValue " << fValue << G4endl;
 
   G4bool good = true;
   /***** NOTE: Individual Set functions not included in Release 10.0
@@ -166,14 +188,22 @@ G4bool G4LatticeReader::ProcessValue(const G4String& name) {
   else if (name == "lambda") pLattice->SetLambda(fValue);
   else if (name == "mu")     pLattice->SetMu(fValue);
   else *****/
-       if (name == "scat")   pLattice->SetScatteringConstant(fValue*s*s*s);
-  else if (name == "b")      pLattice->SetScatteringConstant(fValue*s*s*s);
-  else if (name == "decay")  pLattice->SetAnhDecConstant(fValue*s*s*s*s);
-  else if (name == "a")      pLattice->SetAnhDecConstant(fValue*s*s*s*s);
-  else if (name == "ldos")   pLattice->SetLDOS(fValue);
-  else if (name == "stdos")  pLattice->SetSTDOS(fValue);
-  else if (name == "ftdos")  pLattice->SetFTDOS(fValue);
-  else {
+  if (name == "scat")
+    pLattice->SetScatteringConstant(fValue * s * s * s);
+  else if (name == "b")
+    pLattice->SetScatteringConstant(fValue * s * s * s);
+  else if (name == "decay")
+    pLattice->SetAnhDecConstant(fValue * s * s * s * s);
+  else if (name == "a")
+    pLattice->SetAnhDecConstant(fValue * s * s * s * s);
+  else if (name == "ldos")
+    pLattice->SetLDOS(fValue);
+  else if (name == "stdos")
+    pLattice->SetSTDOS(fValue);
+  else if (name == "ftdos")
+    pLattice->SetFTDOS(fValue);
+  else
+  {
     G4cerr << "G4LatticeReader: Unrecognized token " << name << G4endl;
     good = false;
   }
@@ -181,31 +211,33 @@ G4bool G4LatticeReader::ProcessValue(const G4String& name) {
   return good;
 }
 
-G4bool G4LatticeReader::ProcessConstants() {
-  G4double beta=0., gamma=0., lambda=0., mu=0.;
+G4bool G4LatticeReader::ProcessConstants()
+{
+  G4double beta = 0., gamma = 0., lambda = 0., mu = 0.;
   *psLatfile >> beta >> gamma >> lambda >> mu;
-  if (verboseLevel>1)
-    G4cout << " ProcessConstants " << beta << " " << gamma
-	   << " " << lambda << " " << mu << G4endl;
+  if (verboseLevel > 1)
+    G4cout << " ProcessConstants " << beta << " " << gamma << " " << lambda << " " << mu << G4endl;
 
   pLattice->SetDynamicalConstants(beta, gamma, lambda, mu);
   return psLatfile->good();
 }
 
-// Read map filename, polarization, and binning dimensions 
+// Read map filename, polarization, and binning dimensions
 
-G4bool G4LatticeReader::ReadMapInfo() {
+G4bool G4LatticeReader::ReadMapInfo()
+{
   *psLatfile >> fMap >> fsPol >> fNX >> fNY;
-  if (verboseLevel>1)
-    G4cout << " ReadMapInfo " << fMap << " " << fsPol
-	   << " " << fNX << " " << fNY << G4endl;
+  if (verboseLevel > 1)
+    G4cout << " ReadMapInfo " << fMap << " " << fsPol << " " << fNX << " " << fNY << G4endl;
 
-  if (fNX < 0 || fNX >= G4LatticeLogical::MAXRES) {
+  if (fNX < 0 || fNX >= G4LatticeLogical::MAXRES)
+  {
     G4cerr << "G4LatticeReader: Invalid map theta dimension " << fNX << G4endl;
     return false;
   }
 
-  if (fNY < 0 || fNY >= G4LatticeLogical::MAXRES) {
+  if (fNY < 0 || fNY >= G4LatticeLogical::MAXRES)
+  {
     G4cerr << "G4LatticeReader: Invalid map phi dimension " << fNY << G4endl;
     return false;
   }
@@ -215,12 +247,15 @@ G4bool G4LatticeReader::ReadMapInfo() {
 
   // Convert string code (L,ST,LT) to polarization index
   G4StrUtil::to_lower(fsPol);
-  fPol = ( (fsPol=="l")  ? 0 :		// Longitudinal
-	   (fsPol=="st") ? 1 :		// Slow-transverse
-	   (fsPol=="ft") ? 2 :		// Fast-transverse
-	   -1 );			// Invalid code
+  fPol = ((fsPol == "l") ? 0 :  // Longitudinal
+            (fsPol == "st") ? 1
+                            :  // Slow-transverse
+            (fsPol == "ft") ? 2
+                            :  // Fast-transverse
+            -1);  // Invalid code
 
-  if (fPol<0 || fPol>2) {
+  if (fPol < 0 || fPol > 2)
+  {
     G4cerr << "G4LatticeReader: Invalid polarization code " << fsPol << G4endl;
     return false;
   }
@@ -228,8 +263,10 @@ G4bool G4LatticeReader::ReadMapInfo() {
   return true;
 }
 
-G4bool G4LatticeReader::ProcessMap() {
-  if (!ReadMapInfo()) {		// Get specific parameters for map to load
+G4bool G4LatticeReader::ProcessMap()
+{
+  if (!ReadMapInfo())
+  {  // Get specific parameters for map to load
     G4cerr << "G4LatticeReader: Unable to process mapfile directive." << G4endl;
     return false;
   }
@@ -237,8 +274,10 @@ G4bool G4LatticeReader::ProcessMap() {
   return pLattice->LoadMap(fNX, fNY, fPol, fMap);
 }
 
-G4bool G4LatticeReader::ProcessNMap() {
-  if (!ReadMapInfo()) {		// Get specific parameters for map to load
+G4bool G4LatticeReader::ProcessNMap()
+{
+  if (!ReadMapInfo())
+  {  // Get specific parameters for map to load
     G4cerr << "G4LatticeReader: Unable to process mapfile directive." << G4endl;
     return false;
   }

@@ -27,18 +27,19 @@
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
 #include "G4XmlNtupleFileManager.hh"
-#include "G4XmlFileManager.hh"
-#include "G4XmlNtupleManager.hh"
+
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
 #include "G4AutoLock.hh"
+#include "G4XmlFileManager.hh"
+#include "G4XmlNtupleManager.hh"
 
 using namespace G4Analysis;
 using std::make_shared;
 
 //_____________________________________________________________________________
 G4XmlNtupleFileManager::G4XmlNtupleFileManager(const G4AnalysisManagerState& state)
- : G4VNtupleFileManager(state, "csv")
+  : G4VNtupleFileManager(state, "csv")
 {}
 
 //
@@ -59,8 +60,7 @@ G4bool G4XmlNtupleFileManager::ActionAtOpenFile(const G4String& /*fileName*/)
 {
   // Create ntuples if they are booked
   // (The files will be created with creating ntuples)
-  fNtupleManager->CreateNtuplesFromBooking(
-    fBookingManager->GetNtupleBookingVector());
+  fNtupleManager->CreateNtuplesFromBooking(fBookingManager->GetNtupleBookingVector());
 
   return true;
 }
@@ -70,8 +70,10 @@ G4bool G4XmlNtupleFileManager::ActionAtWrite()
 {
   auto ntupleVector = fNtupleManager->GetNtupleDescriptionVector();
 
-  for ( auto ntupleDescription : ntupleVector ) {
-    if (ntupleDescription->GetNtuple() != nullptr) {
+  for (auto ntupleDescription : ntupleVector)
+  {
+    if (ntupleDescription->GetNtuple() != nullptr)
+    {
       ntupleDescription->GetNtuple()->write_trailer();
     }
   }
@@ -86,7 +88,8 @@ G4bool G4XmlNtupleFileManager::ActionAtCloseFile()
 
   // Close ntuple files
   auto ntupleVector = fNtupleManager->GetNtupleDescriptionVector();
-  for ( auto ntupleDescription : ntupleVector) {
+  for (auto ntupleDescription : ntupleVector)
+  {
     result &= fFileManager->CloseNtupleFile(ntupleDescription);
   }
 
@@ -96,8 +99,7 @@ G4bool G4XmlNtupleFileManager::ActionAtCloseFile()
 //_____________________________________________________________________________
 G4bool G4XmlNtupleFileManager::Reset()
 {
-// Reset histograms and ntuple
+  // Reset histograms and ntuple
 
   return fNtupleManager->Reset();
 }
-

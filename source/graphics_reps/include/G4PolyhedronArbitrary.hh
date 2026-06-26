@@ -64,40 +64,39 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
 //
-#ifndef G4PolyhedronArbitrary_h
-#define G4PolyhedronArbitrary_h 1
+#ifndef G4POLYHEDRONARBITRARY_HH
+#  define G4POLYHEDRONARBITRARY_HH
 
-#include "G4Polyhedron.hh"
-#include "G4ThreeVector.hh"
+#  include "G4Polyhedron.hh"
+#  include "G4ThreeVector.hh"
 
 ///////////////////////////////////////////////////////////////////////////////
 //
 class G4PolyhedronArbitrary : public G4Polyhedron
 {
   public:
-    G4PolyhedronArbitrary (const G4int nVertices, const G4int nFacets);
-    ~G4PolyhedronArbitrary () override;
+
+    G4PolyhedronArbitrary(const G4int nVertices, const G4int nFacets);
+    ~G4PolyhedronArbitrary() override;
     // Private copy constructor and assignment operator added to satisfy
     // Coverity - JA 11/11/11.
     G4PolyhedronArbitrary(const G4PolyhedronArbitrary&) = delete;
-    G4PolyhedronArbitrary& operator= (const G4PolyhedronArbitrary&) = delete;    
+    G4PolyhedronArbitrary& operator=(const G4PolyhedronArbitrary&) = delete;
 
-    void AddVertex (const G4ThreeVector& v);
-    void AddFacet (const G4int iv1, const G4int iv2, const G4int iv3,
-      const G4int iv4=0);
-    
+    void AddVertex(const G4ThreeVector& v);
+    void AddFacet(const G4int iv1, const G4int iv2, const G4int iv3, const G4int iv4 = 0);
+
     // Call this after all vertices and facets have been added.
-    void SetReferences() {HepPolyhedron::SetReferences();}
+    void SetReferences() { HepPolyhedron::SetReferences(); }
 
     // Can be useful.
-    void InvertFacets() {HepPolyhedron::InvertFacets();}
+    void InvertFacets() { HepPolyhedron::InvertFacets(); }
 
   protected:
+
     G4int nVertexCount;
     G4int nFacetCount;
-
 };
 #endif
 ///////////////////////////////////////////////////////////////////////////////
 //
-

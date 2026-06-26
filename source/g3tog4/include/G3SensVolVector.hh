@@ -31,11 +31,13 @@
 // by I.Hrivnacova, 27 Sep 99
 
 #ifndef G3SENSVOLVECTOR_HH
-#define G3SENSVOLVECTOR_HH 1
+#define G3SENSVOLVECTOR_HH
+
+#include "G4LogicalVolume.hh"
+
+#include "G3toG4Defs.hh"
 
 #include <vector>
-#include "G3toG4Defs.hh"
-#include "G4LogicalVolume.hh"
 
 typedef std::vector<G4LogicalVolume*> G3SensVolVector;
 

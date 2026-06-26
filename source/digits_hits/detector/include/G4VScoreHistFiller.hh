@@ -36,42 +36,44 @@
 //
 // Author: Makoto Asai, September 2020
 // --------------------------------------------------------------------
-#ifndef G4VScoreHistFiller_h
-#define G4VScoreHistFiller_h 1
+#ifndef G4VSCOREHISTFILLER_HH
+#define G4VSCOREHISTFILLER_HH
 
 #include "G4Threading.hh"
 #include "globals.hh"
 
 class G4VScoreHistFiller
 {
- public:
-  virtual ~G4VScoreHistFiller();
+  public:
 
-  // static method
-  static G4VScoreHistFiller* Instance();
+    virtual ~G4VScoreHistFiller();
 
-  // methods
-  virtual void FillH1(G4int id, G4double value, G4double weight = 1.0) = 0;
-  virtual void FillH2(G4int id, G4double xvalue, G4double yvalue, G4double weight = 1.0) = 0;
-  virtual void FillH3(
-    G4int id, G4double xvalue, G4double yvalue, G4double zvalue, G4double weight = 1.0) = 0;
-  virtual void FillP1(G4int id, G4double xvalue, G4double yvalue, G4double weight = 1.0) = 0;
-  virtual void FillP2(
-    G4int id, G4double xvalue, G4double yvalue, G4double zvalue, G4double weight = 1.0) = 0;
+    // static method
+    static G4VScoreHistFiller* Instance();
 
-  virtual G4bool CheckH1(G4int id) = 0;
-  virtual G4bool CheckH2(G4int id) = 0;
-  virtual G4bool CheckH3(G4int id) = 0;
-  virtual G4bool CheckP1(G4int id) = 0;
-  virtual G4bool CheckP2(G4int id) = 0;
+    // methods
+    virtual void FillH1(G4int id, G4double value, G4double weight = 1.0) = 0;
+    virtual void FillH2(G4int id, G4double xvalue, G4double yvalue, G4double weight = 1.0) = 0;
+    virtual void FillH3(G4int id, G4double xvalue, G4double yvalue, G4double zvalue,
+                        G4double weight = 1.0) = 0;
+    virtual void FillP1(G4int id, G4double xvalue, G4double yvalue, G4double weight = 1.0) = 0;
+    virtual void FillP2(G4int id, G4double xvalue, G4double yvalue, G4double zvalue,
+                        G4double weight = 1.0) = 0;
 
- protected:
-  G4VScoreHistFiller();
-  virtual G4VScoreHistFiller* CreateInstance() const = 0;
+    virtual G4bool CheckH1(G4int id) = 0;
+    virtual G4bool CheckH2(G4int id) = 0;
+    virtual G4bool CheckH3(G4int id) = 0;
+    virtual G4bool CheckP1(G4int id) = 0;
+    virtual G4bool CheckP2(G4int id) = 0;
 
-  // static data members
-  static G4VScoreHistFiller* fgMasterInstance;
-  static G4ThreadLocal G4VScoreHistFiller* fgInstance;
+  protected:
+
+    G4VScoreHistFiller();
+    virtual G4VScoreHistFiller* CreateInstance() const = 0;
+
+    // static data members
+    static G4VScoreHistFiller* fgMasterInstance;
+    static G4ThreadLocal G4VScoreHistFiller* fgInstance;
 };
 
 #endif

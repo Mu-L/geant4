@@ -25,31 +25,32 @@
 //
 //
 
-#ifndef G4VFieldPropagation_h
-#define  G4VFieldPropagation_h 1
+#ifndef G4VFIELDPROPAGATION_HH
+#define G4VFIELDPROPAGATION_HH
 
 #include "G4KineticTrackVector.hh"
 #include "G4V3DNucleus.hh"
 
 class G4VFieldPropagation
 {
-public:
-  G4VFieldPropagation();
-  virtual ~G4VFieldPropagation();
+  public:
 
-private:
-  G4VFieldPropagation(const  G4VFieldPropagation &right);
-  const G4VFieldPropagation & operator=(const G4VFieldPropagation & right);
-  G4bool operator==(const G4VFieldPropagation & right) const;
-  G4bool operator!=(const G4VFieldPropagation & right) const;
+    G4VFieldPropagation();
+    virtual ~G4VFieldPropagation();
 
-public:
-  virtual void Init(G4V3DNucleus * theNucleus) = 0;
-  virtual void Transport(G4KineticTrackVector &theActive,
-			 const G4KineticTrackVector &theSpectators,
-			 G4double theTimeStep) = 0;
-  virtual G4ThreeVector GetMomentumTransfer() const =0;
+  private:
+
+    G4VFieldPropagation(const G4VFieldPropagation& right);
+    const G4VFieldPropagation& operator=(const G4VFieldPropagation& right);
+    G4bool operator==(const G4VFieldPropagation& right) const;
+    G4bool operator!=(const G4VFieldPropagation& right) const;
+
+  public:
+
+    virtual void Init(G4V3DNucleus* theNucleus) = 0;
+    virtual void Transport(G4KineticTrackVector& theActive,
+                           const G4KineticTrackVector& theSpectators, G4double theTimeStep) = 0;
+    virtual G4ThreeVector GetMomentumTransfer() const = 0;
 };
 
 #endif
-

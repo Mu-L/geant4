@@ -34,13 +34,16 @@
 // --------------------------------------------------------------------
 
 #ifndef G4CSGSOLID_HH
-#define G4CSGSOLID_HH 1
+#define G4CSGSOLID_HH
 
 #include "G4VSolid.hh"
 
 /**
  * @brief G4CSGSolid is an abstract class inherited from G4VSolid for
- * Constructed Solids. Used primarily to structure inheritance tree.
+ * Constructed Solids.
+ * @ingroup geometry_solids_csg
+ *
+ * Used primarily to structure inheritance tree.
  */
 
 class G4CSGSolid : public G4VSolid
@@ -65,7 +68,7 @@ class G4CSGSolid : public G4VSolid
     /**
      * Returns a pointer to the generated polyhedron for visualisation.
      */
-    G4Polyhedron* GetPolyhedron () const override;
+    G4Polyhedron* GetPolyhedron() const override;
 
     /**
      * Fake default constructor for usage restricted to direct object
@@ -78,7 +81,7 @@ class G4CSGSolid : public G4VSolid
      * Copy constructor and assignment operator.
      */
     G4CSGSolid(const G4CSGSolid& rhs);
-    G4CSGSolid& operator=(const G4CSGSolid& rhs); 
+    G4CSGSolid& operator=(const G4CSGSolid& rhs);
 
   protected:
 

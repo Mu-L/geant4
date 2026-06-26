@@ -33,10 +33,9 @@
 //
 // ------------------------------------------------------------
 
-#ifndef G4SynchrotronRadiationInMat_h
-#define G4SynchrotronRadiationInMat_h 1
+#ifndef G4SYNCHROTRONRADIATIONINMAT_HH
+#define G4SYNCHROTRONRADIATIONINMAT_HH
 
-#include "globals.hh"
 #include "G4Electron.hh"
 #include "G4Gamma.hh"
 #include "G4PhysicsLogVector.hh"
@@ -48,98 +47,93 @@
 #include "G4TransportationManager.hh"
 #include "G4VDiscreteProcess.hh"
 #include "G4VParticleChange.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 class G4PropagatorInField;
 
 class G4SynchrotronRadiationInMat : public G4VDiscreteProcess
 {
- public:
-  explicit G4SynchrotronRadiationInMat(
-    const G4String& processName = "SynchrotronRadiation",
-    G4ProcessType type          = fElectromagnetic);
+  public:
 
-  ~G4SynchrotronRadiationInMat();
+    explicit G4SynchrotronRadiationInMat(const G4String& processName = "SynchrotronRadiation",
+                                         G4ProcessType type = fElectromagnetic);
 
-  G4SynchrotronRadiationInMat& operator=(
-    const G4SynchrotronRadiationInMat& right) = delete;
-  G4SynchrotronRadiationInMat(const G4SynchrotronRadiationInMat&) = delete;
+    ~G4SynchrotronRadiationInMat();
 
-  G4double GetMeanFreePath(const G4Track& track, G4double previousStepSize,
-                           G4ForceCondition* condition) override;
+    G4SynchrotronRadiationInMat& operator=(const G4SynchrotronRadiationInMat& right) = delete;
+    G4SynchrotronRadiationInMat(const G4SynchrotronRadiationInMat&) = delete;
 
-  G4VParticleChange* PostStepDoIt(const G4Track& track,
-                                  const G4Step& Step) override;
+    G4double GetMeanFreePath(const G4Track& track, G4double previousStepSize,
+                             G4ForceCondition* condition) override;
 
-  G4double GetPhotonEnergy(const G4Track& trackData, const G4Step& stepData);
+    G4VParticleChange* PostStepDoIt(const G4Track& track, const G4Step& Step) override;
 
-  G4double GetRandomEnergySR(G4double, G4double);
+    G4double GetPhotonEnergy(const G4Track& trackData, const G4Step& stepData);
 
-  G4double GetProbSpectrumSRforInt(G4double);
-  G4double GetIntProbSR(G4double);
+    G4double GetRandomEnergySR(G4double, G4double);
 
-  G4double GetProbSpectrumSRforEnergy(G4double);
-  G4double GetEnergyProbSR(G4double);
+    G4double GetProbSpectrumSRforInt(G4double);
+    G4double GetIntProbSR(G4double);
 
-  G4double GetIntegrandForAngleK(G4double);
-  G4double GetAngleK(G4double);
-  G4double GetAngleNumberAtGammaKsi(G4double);
+    G4double GetProbSpectrumSRforEnergy(G4double);
+    G4double GetEnergyProbSR(G4double);
 
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
+    G4double GetIntegrandForAngleK(G4double);
+    G4double GetAngleK(G4double);
+    G4double GetAngleNumberAtGammaKsi(G4double);
 
-  static G4double GetLambdaConst();
-  static G4double GetEnergyConst();
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
 
-  void SetRootNumber(G4int rn) { fRootNumber = rn; };
-  void SetVerboseLevel(G4int v) { fVerboseLevel = v; };
-  void SetKsi(G4double ksi) { fKsi = ksi; };
-  void SetEta(G4double eta) { fEta = eta; };
-  void SetPsiGamma(G4double psg) { fPsiGamma = psg; };
-  void SetOrderAngleK(G4double ord)
-  {
-    fOrderAngleK = ord;
-  };  // should be 1/3 or 2/3
+    static G4double GetLambdaConst();
+    static G4double GetEnergyConst();
 
- private:
-  // Constant for calculation of mean free path
-  // sqrt(3.) = 1.73...
-  static constexpr G4double fLambdaConst =
-    1.73205080756887729352 * CLHEP::electron_mass_c2 /
-    (2.5 * CLHEP::fine_structure_const * CLHEP::eplus * ::CLHEP::c_light);
+    void SetRootNumber(G4int rn) { fRootNumber = rn; };
+    void SetVerboseLevel(G4int v) { fVerboseLevel = v; };
+    void SetKsi(G4double ksi) { fKsi = ksi; };
+    void SetEta(G4double eta) { fEta = eta; };
+    void SetPsiGamma(G4double psg) { fPsiGamma = psg; };
+    void SetOrderAngleK(G4double ord) { fOrderAngleK = ord; };  // should be 1/3 or 2/3
 
-  // Constant for calculation of characterictic energy
-  static constexpr G4double fEnergyConst =
-    1.5 * CLHEP::c_light * CLHEP::c_light * CLHEP::eplus * CLHEP::hbar_Planck /
-    CLHEP::electron_mass_c2;
+  private:
 
-  // Array of integral probability of synchrotron photons:
-  // the corresponding energy = 0.0001*i*i*(characteristic energy)
-  static const G4double fIntegralProbabilityOfSR[200]; 
+    // Constant for calculation of mean free path
+    // sqrt(3.) = 1.73...
+    static constexpr G4double fLambdaConst =
+      1.73205080756887729352 * CLHEP::electron_mass_c2
+      / (2.5 * CLHEP::fine_structure_const * CLHEP::eplus * ::CLHEP::c_light);
 
-  const G4ParticleDefinition* theGamma;
-  const G4ParticleDefinition* theElectron;
-  const G4ParticleDefinition* thePositron;
+    // Constant for calculation of characterictic energy
+    static constexpr G4double fEnergyConst = 1.5 * CLHEP::c_light * CLHEP::c_light * CLHEP::eplus
+                                             * CLHEP::hbar_Planck / CLHEP::electron_mass_c2;
 
-  G4PropagatorInField* fFieldPropagator;
+    // Array of integral probability of synchrotron photons:
+    // the corresponding energy = 0.0001*i*i*(characteristic energy)
+    static const G4double fIntegralProbabilityOfSR[200];
 
-  const G4double
-    LowestKineticEnergy;  // low  energy limit of the cross-section formula
+    const G4ParticleDefinition* theGamma;
+    const G4ParticleDefinition* theElectron;
+    const G4ParticleDefinition* thePositron;
 
-  G4double CutInRange;
-  G4double GammaCutInKineticEnergyNow;
-  G4double ElectronCutInKineticEnergyNow;
-  G4double PositronCutInKineticEnergyNow;
-  G4double ParticleCutInKineticEnergyNow;
-  G4double fAlpha;
-  G4double fKsi;          // omega/omega_c
-  G4double fPsiGamma;     // Psi-angle*gamma
-  G4double fEta;          //
-  G4double fOrderAngleK;  // 1/3 or 2/3
+    G4PropagatorInField* fFieldPropagator;
 
-  G4int fRootNumber;
-  G4int fVerboseLevel;
-  
-  G4int secID = -1;  // creator modelID
+    const G4double LowestKineticEnergy;  // low  energy limit of the cross-section formula
+
+    G4double CutInRange;
+    G4double GammaCutInKineticEnergyNow;
+    G4double ElectronCutInKineticEnergyNow;
+    G4double PositronCutInKineticEnergyNow;
+    G4double ParticleCutInKineticEnergyNow;
+    G4double fAlpha;
+    G4double fKsi;  // omega/omega_c
+    G4double fPsiGamma;  // Psi-angle*gamma
+    G4double fEta;  //
+    G4double fOrderAngleK;  // 1/3 or 2/3
+
+    G4int fRootNumber;
+    G4int fVerboseLevel;
+
+    G4int secID = -1;  // creator modelID
 };
 
 #endif  // end of G4SynchrotronRadiationInMat.hh

@@ -46,70 +46,66 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4DynamicParticleMSC_h
-#define G4DynamicParticleMSC_h 1
+#ifndef G4DYNAMICPARTICLEMSC_HH
+#define G4DYNAMICPARTICLEMSC_HH
 
-#include "G4VContinuousDiscreteProcess.hh"
 #include "G4ParticleChangeForMSC.hh"
+#include "G4VContinuousDiscreteProcess.hh"
 
 class G4Material;
 class G4LossTableManager;
 
 class G4DynamicParticleMSC : public G4VContinuousDiscreteProcess
 {
-public:
+  public:
 
-  G4DynamicParticleMSC();
+    G4DynamicParticleMSC();
 
-  ~G4DynamicParticleMSC() override;
+    ~G4DynamicParticleMSC() override;
 
-  // Step limit from AlongStep 
-  G4double AlongStepGetPhysicalInteractionLength(
-                                  const G4Track&,
-                                  G4double  previousStepSize,
-                                  G4double  currentMinimumStep,
-                                  G4double& currentSafety,
-                                  G4GPILSelection* selection) override;
+    // Step limit from AlongStep
+    G4double AlongStepGetPhysicalInteractionLength(const G4Track&, G4double previousStepSize,
+                                                   G4double currentMinimumStep,
+                                                   G4double& currentSafety,
+                                                   G4GPILSelection* selection) override;
 
-  // Step limit from cross section
-  G4double PostStepGetPhysicalInteractionLength(
-                                  const G4Track& track,
-                                  G4double previousStepSize,
-                                  G4ForceCondition* condition) override;
+    // Step limit from cross section
+    G4double PostStepGetPhysicalInteractionLength(const G4Track& track, G4double previousStepSize,
+                                                  G4ForceCondition* condition) override;
 
-  // AlongStep computations
-  G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&) override;
+    // AlongStep computations
+    G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&) override;
 
-  // This method is not used for tracking, it returns mean free path value
-  G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition* condition) override;
+    // This method is not used for tracking, it returns mean free path value
+    G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition* condition) override;
 
-  // This method is not used for tracking, it returns step limit
-  G4double GetContinuousStepLimit(const G4Track& track, G4double previousStepSize,
-                                  G4double currentMinimalStep, G4double& currentSafety) override;
+    // This method is not used for tracking, it returns step limit
+    G4double GetContinuousStepLimit(const G4Track& track, G4double previousStepSize,
+                                    G4double currentMinimalStep, G4double& currentSafety) override;
 
-  // print description in html
-  void ProcessDescription(std::ostream&) const override;
+    // print description in html
+    void ProcessDescription(std::ostream&) const override;
 
-  // hide assignment operator
-  G4DynamicParticleMSC & operator=(const G4DynamicParticleMSC &right) = delete;
-  G4DynamicParticleMSC(const G4DynamicParticleMSC&) = delete;
+    // hide assignment operator
+    G4DynamicParticleMSC& operator=(const G4DynamicParticleMSC& right) = delete;
+    G4DynamicParticleMSC(const G4DynamicParticleMSC&) = delete;
 
-private:
+  private:
 
-  // all parameters are dynamic
-  void PreStepInitialisation(const G4Track&);
+    // all parameters are dynamic
+    void PreStepInitialisation(const G4Track&);
 
-  G4LossTableManager* lManager;
-  const G4Material* fMaterial{nullptr};
+    G4LossTableManager* lManager;
+    const G4Material* fMaterial{nullptr};
 
-  G4double fMass{0.0};
-  G4double fCharge{0.0};
-  G4double fEkinPreStep{0.0};
-  G4double fBeta{0.0};
-  G4double fZeff{0.0};
+    G4double fMass{0.0};
+    G4double fCharge{0.0};
+    G4double fEkinPreStep{0.0};
+    G4double fBeta{0.0};
+    G4double fZeff{0.0};
 
-  G4ThreeVector fNewDir{G4ThreeVector(0.0, 0.0, 0.0)};
-  G4ParticleChangeForMSC fParticleChange;
+    G4ThreeVector fNewDir{G4ThreeVector(0.0, 0.0, 0.0)};
+    G4ParticleChangeForMSC fParticleChange;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

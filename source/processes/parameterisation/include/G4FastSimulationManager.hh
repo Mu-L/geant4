@@ -38,8 +38,8 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4FastSimulationManager_h
-#define G4FastSimulationManager_h 1
+#ifndef G4FASTSIMULATIONMANAGER_HH
+#define G4FASTSIMULATIONMANAGER_HH
 
 #include "G4FastSimulationVector.hh"
 #include "G4FastStep.hh"
@@ -73,6 +73,7 @@
 class G4FastSimulationManager
 {
   public:  // with description
+
     //------------------------
     // Constructor/Destructor
     //------------------------
@@ -147,6 +148,7 @@ class G4FastSimulationManager
     G4bool operator==(const G4FastSimulationManager&) const;
 
   private:
+
     // Private members :
     G4FastTrack fFastTrack;
     G4FastStep fFastStep;

@@ -26,16 +26,19 @@
 // --------------------------------------------------------------
 //	GEANT 4 class implementation file
 //
-#ifndef G4IonConstructor_h
-#define G4IonConstructor_h 1
+#ifndef G4IONCONSTRUCTOR_HH
+#define G4IONCONSTRUCTOR_HH
 
 class G4IonConstructor
 {
     // This class is a utility class for construction
+
   public:
+
     static void ConstructParticle();
 
   protected:
+
     static void ConstructLightIons();
     static void ConstructHyperNuclei();
 };

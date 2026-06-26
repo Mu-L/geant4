@@ -37,8 +37,8 @@
 // Authors: G.Cosmo, 4 April 1996 - Design based on object model
 //          H.Kurashige, 27 June 1998 - First implementation
 // --------------------------------------------------------------------
-#ifndef G4Ions_hh
-#define G4Ions_hh 1
+#ifndef G4IONS_HH
+#define G4IONS_HH
 
 #include "G4ParticleDefinition.hh"
 #include "G4ios.hh"
@@ -47,6 +47,7 @@
 class G4Ions : public G4ParticleDefinition
 {
   public:
+
     // clang-format off
     G4Ions(
        const G4String&     aName,        G4double            mass,
@@ -108,9 +109,11 @@ class G4Ions : public G4ParticleDefinition
     inline void SetFloatLevelBase(G4int flbIdx);
 
   protected:
+
     G4Ions() = default;
 
   private:
+
     G4double theExcitationEnergy = 0.0;
     G4int theIsomerLevel = 0;
     G4FloatLevelBase floatLevelBase = G4FloatLevelBase::no_Float;

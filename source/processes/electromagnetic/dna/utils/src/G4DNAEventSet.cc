@@ -22,34 +22,33 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#include <memory>
 #include "G4DNAEventSet.hh"
-#include "globals.hh"
-#include "G4UnitsTable.hh"
+
 #include "G4DNAMolecularReactionTable.hh"
+#include "G4UnitsTable.hh"
+#include "globals.hh"
+
+#include <memory>
 
 Event::Event(const G4double& time, const Index& index, ReactionData* pReactionData)
-  : fTimeStep(time)
-  , fIndex(index)
-  , fData(std::pair<std::unique_ptr<JumpingData>, ReactionData*>(nullptr,
-                                                                 pReactionData))
+  : fTimeStep(time),
+    fIndex(index),
+    fData(std::pair<std::unique_ptr<JumpingData>, ReactionData*>(nullptr, pReactionData))
 {}
 
-Event::Event(const G4double& time, const Index& index,
-             std::unique_ptr<JumpingData>&& jumping)
-  : fTimeStep(time)
-  , fIndex(index)
-  , fData(std::pair<std::unique_ptr<JumpingData>, ReactionData*>(
-      std::move(jumping), nullptr))
+Event::Event(const G4double& time, const Index& index, std::unique_ptr<JumpingData>&& jumping)
+  : fTimeStep(time),
+    fIndex(index),
+    fData(std::pair<std::unique_ptr<JumpingData>, ReactionData*>(std::move(jumping), nullptr))
 {}
 
 Event::~Event() = default;
 
 void Event::PrintEvent() const
 {
-  G4cout << "****PrintEvent::TimeStep : " << G4BestUnit(fTimeStep, "Time")
-         << " index : " << fIndex << " action : ";
-  if(std::get<0>(fData) == nullptr)
+  G4cout << "****PrintEvent::TimeStep : " << G4BestUnit(fTimeStep, "Time") << " index : " << fIndex
+         << " action : ";
+  if (std::get<0>(fData) == nullptr)
   {
     G4cout << std::get<1>(fData)->GetReactant1()->GetName() << " + "
            << std::get<1>(fData)->GetReactant2()->GetName() << " -> "
@@ -57,24 +56,22 @@ void Event::PrintEvent() const
   }
   else
   {
-    G4cout << std::get<0>(fData)->first->GetName() << " jumping to "
-           << std::get<0>(fData)->second << G4endl;
+    G4cout << std::get<0>(fData)->first->GetName() << " jumping to " << std::get<0>(fData)->second
+           << G4endl;
   }
 }
 
 G4bool comparatorEventSet::operator()(std::unique_ptr<Event> const& rhs,
                                       std::unique_ptr<Event> const& lhs) const
 {
-  if(rhs->GetTime() == lhs->GetTime())
+  if (rhs->GetTime() == lhs->GetTime())
   {
     return rhs->GetIndex() < lhs->GetIndex();
   }
   return rhs->GetTime() < lhs->GetTime();
 }
 
-G4DNAEventSet::G4DNAEventSet()
-  : fEventSet(comparatorEventSet())
-{}
+G4DNAEventSet::G4DNAEventSet() : fEventSet(comparatorEventSet()) {}
 
 void G4DNAEventSet::CreateEvent(const G4double& time, const Index& index,
                                 Event::ReactionData* pReactionData)
@@ -93,7 +90,7 @@ void G4DNAEventSet::CreateEvent(const G4double& time, const Index& index,
 void G4DNAEventSet::RemoveEventOfVoxel(const Index& key)
 {
   auto it = fEventMap.find(key);
-  if(it != fEventMap.end())
+  if (it != fEventMap.end())
   {
     fEventSet.erase(it->second);
     fEventMap.erase(it);
@@ -111,20 +108,23 @@ void G4DNAEventSet::AddEvent(std::unique_ptr<Event> pEvent)
   // idea is no 2 events in one key (or index)
   auto key = pEvent->GetIndex();
   RemoveEventOfVoxel(key);
-  auto it        = fEventSet.emplace(std::move(pEvent));
+  auto it = fEventSet.emplace(std::move(pEvent));
   fEventMap[key] = std::get<0>(it);
 }
 
 //_____________________________________________________________________________________
 
-G4DNAEventSet::~G4DNAEventSet() { RemoveEventSet(); }
+G4DNAEventSet::~G4DNAEventSet()
+{
+  RemoveEventSet();
+}
 
 [[maybe_unused]] void G4DNAEventSet::PrintEventSet()
 {
-  G4cout<<G4endl;
+  G4cout << G4endl;
   G4cout << "*****************************************************" << G4endl;
-  G4cout << "G4DNAEventSet::PrintEventSet() of : "<< this->size()<<" events "<< G4endl;
-  for(const auto& it : fEventSet)
+  G4cout << "G4DNAEventSet::PrintEventSet() of : " << this->size() << " events " << G4endl;
+  for (const auto& it : fEventSet)
   {
     (*it).PrintEvent();
   }

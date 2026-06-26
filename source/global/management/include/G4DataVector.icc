@@ -31,11 +31,11 @@
 inline void G4DataVector::insertAt(std::size_t pos, const G4double& a)
 {
   auto i = cbegin();
-  for(std::size_t ptn = 0; (ptn < pos) && (i != cend()); ++i, ++ptn)
+  for (std::size_t ptn = 0; (ptn < pos) && (i != cend()); ++i, ++ptn)
   {
     ;
   }
-  if(i != cend())
+  if (i != cend())
   {
     insert(i, a);
   }
@@ -48,9 +48,9 @@ inline void G4DataVector::insertAt(std::size_t pos, const G4double& a)
 inline std::size_t G4DataVector::index(const G4double& a) const
 {
   std::size_t ptn = 0;
-  for(auto i = cbegin(); i != cend(); ++i, ++ptn)
+  for (auto i = cbegin(); i != cend(); ++i, ++ptn)
   {
-    if((*i) == a)
+    if ((*i) == a)
     {
       break;
     }
@@ -67,9 +67,9 @@ inline G4bool G4DataVector::remove(const G4double& a)
 {
   G4bool found = false;
 
-  for(auto i = cbegin(); i != cend(); ++i)
+  for (auto i = cbegin(); i != cend(); ++i)
   {
-    if(!(*i != a))
+    if (!(*i != a))
     {
       erase(i);
       found = true;
@@ -83,9 +83,9 @@ inline std::size_t G4DataVector::removeAll(const G4double& a)
 {
   std::size_t ptn = 0;
 
-  for(auto i = cbegin(); i != cend(); ++i)
+  for (auto i = cbegin(); i != cend(); ++i)
   {
-    if(!(*i != a))
+    if (!(*i != a))
     {
       erase(i);
       ++ptn;

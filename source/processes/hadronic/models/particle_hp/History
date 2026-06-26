@@ -6,7 +6,7 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-05-18 Gabriele Cosmo (hadr-hpp-V11-03-07)
+## 2026-05-18 Gabriele Cosmo (hadr-hpp-V11-04-05)
 - Fixed MT data race in G4ParticleHPFissionFS, by removing the shared mutable
   'produceFissionFragments' member and making the decision local to each
   ApplyYourself() call. The race was from every worker writing the same
@@ -25,7 +25,7 @@ It must **not** be used as a substitute for writing good git commit messages!
   G4ParticleHPLabAngularEnergy, matching the pattern already used by related
   HP classes.
 
-## 2026-05-15 Gabriele Cosmo
+## 2026-05-15 Gabriele Cosmo (hadr-hpp-V11-04-04)
 - Fixed MT data race in G4ParticleHPElasticFS; moved initialization of
   SVT/DBRC scattering-kernel parameters from GetBiasedThermalNucleus(), called
   during event processing, to Init(), called during final-state setup. Worker
@@ -34,7 +34,7 @@ It must **not** be used as a substitute for writing good git commit messages!
   copied into the final-state object, so they should be setup-time state, not
   per-collision mutable state.
 
-## 2026-05-04 Gabriele Cosmo
+## 2026-05-04 Gabriele Cosmo (hadr-hpp-V11-04-03)
 - Fixed MT data race in G4ParticleHPChannel; patched UpdateData() so the elastic
   final state registers its isotope-wise cross-section once in UpdateData(),
   after the cross-section vector is created; then removed the racing write from
@@ -43,21 +43,21 @@ It must **not** be used as a substitute for writing good git commit messages!
   G4ParticleHPElasticFS object during event processing; now workers only read
   the pointer and the write happens during channel initialization.
 
-## 2026-04-07 Alberto Ribon
+## 2026-04-07 Alberto Ribon (hadr-hpp-V11-04-02)
 - G4ParticleHPLegendreTable : add protection in the inlined method Init
   to protect against the possibility of negative input parameter (which
   could cause writing on a zero-size allocated buffer).
   This problem and its solution have been reported to the Computer.Security@cern.ch
   by Sebastian Alba Vives of the Instituto Tecnologico de Costa Rica (TEC).
 
-## 2026-02-23 Dmitri Konstantinov (hadr-hpp-V11-03-06)
+## 2026-02-23 Dmitri Konstantinov (hadr-hpp-V11-04-01)
 - G4ParticleHPContAngularPar - reduced allocator fragmentation and memory
   churn in BuildByInterpolation() by removing unconditional deep copies
   of input angular distributions. Copies are now created only in case of
   self-aliasing (this == &angparX), preserving correctness while avoiding
-  excessive per-call heap allocations. Also addressing problem report #2630.
+  excessive per-call heap allocations.
 
-## 2025-12-23 Vladimir Ivanchenko (hadr-hpp-V11-03-05)
+## 2025-12-23 Vladimir Ivanchenko (hadr-hpp-V11-04-00)
 - G4ParticleHPNBodyPhaseSpace, G4ParticleHPInelasticCompFS - added
   G4HadronicException header.
 
@@ -1278,4 +1278,3 @@ for Pedro Arce and Emilio Mendoza of CIEMAT (hadr-hpp-V10-00-00)
 - create particle_hp module for treatment of low energy charged particles
 - code developed by Pedro Arce and Emilio Mendoza of CIEMAT and based on
   neutronHP
-

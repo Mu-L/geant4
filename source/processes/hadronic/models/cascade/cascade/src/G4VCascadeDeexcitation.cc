@@ -29,19 +29,21 @@
 // 20130621  Add implementation of ::collide() to throw exception
 
 #include "G4VCascadeDeexcitation.hh"
-#include "G4HadronicException.hh"
 
+#include "G4HadronicException.hh"
 
 // Standard Collider interface must not be used, only G4Fragment
 
-void G4VCascadeDeexcitation::collide(G4InuclParticle* /*bullet*/,
-				     G4InuclParticle* /*target*/,
-				     G4CollisionOutput& /*globalOutput*/) {
-  if (verboseLevel) {
+void G4VCascadeDeexcitation::collide(G4InuclParticle* /*bullet*/, G4InuclParticle* /*target*/,
+                                     G4CollisionOutput& /*globalOutput*/)
+{
+  if (verboseLevel)
+  {
     G4cout << " >>> G4VCascadeDeexcitation[" << theName << "]::collide "
-	   << " *** SHOULD NOT BE CALLED ***" << G4endl;
+           << " *** SHOULD NOT BE CALLED ***" << G4endl;
   }
 
-  throw G4HadronicException(__FILE__, __LINE__, 
+  throw G4HadronicException(
+    __FILE__, __LINE__,
     "G4VCascadeDeexcitation::collide() invalid, must use ::deExcite(G4Fagment*)");
 }

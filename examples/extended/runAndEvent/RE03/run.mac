@@ -1,4 +1,5 @@
 #########################################################
+#
 # macro file for RE03 example
 #  - for both batch and interactive modes
 #
@@ -44,11 +45,21 @@
 #
 /score/dumpQuantityToFile boxMesh_1 nOfStepGamma nOfStepGamma.txt
 #
-#
 ########################################
 #
-# drawing projection
+# drawing projections and slices
 #
-/control/ifInteractive draw.mac
+/control/ifInteractive @@
+  /score/drawProjection boxMesh_1 eDep
+  /score/drawProjection boxMesh_1 nOfStepGamma
+  /score/drawProjection boxMesh_1 nOfStepEMinus
+  /score/drawProjection boxMesh_1 nOfStepEPlus
+  /score/refreshDrawing
+  /score/colorMap/setMinMax ! 0. 400.
+  /control/loop @@ iColumn 0 29 7
+    /score/drawColumn boxMesh_1 nOfStepGamma 0 {iColumn}
+  /control/endRecord
+/control/endRecord
 #
+########################################
 #

@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr) 
+// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr)
 //
 // WARNING : This class is released as a prototype.
 // It might strongly evolve or even disapear in the next releases.
@@ -36,41 +36,38 @@
 // -------------------------------------------------------------------
 
 #include "G4DNAElectronSolvation.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4Electron.hh"
-#include "G4DNAWaterExcitationStructure.hh"
-#include "G4LowEnergyEmProcessSubType.hh"
 
-G4DNAElectronSolvation::G4DNAElectronSolvation(const G4String& processName,
-        G4ProcessType type):G4VEmProcess (processName, type)
+#include "G4DNAWaterExcitationStructure.hh"
+#include "G4Electron.hh"
+#include "G4LowEnergyEmProcessSubType.hh"
+#include "G4SystemOfUnits.hh"
+
+G4DNAElectronSolvation::G4DNAElectronSolvation(const G4String& processName, G4ProcessType type)
+  : G4VEmProcess(processName, type)
 {
-    SetProcessSubType(fLowEnergyElectronSolvation);
+  SetProcessSubType(fLowEnergyElectronSolvation);
 }
 
-G4DNAElectronSolvation::~G4DNAElectronSolvation()
-= default;
+G4DNAElectronSolvation::~G4DNAElectronSolvation() = default;
 
 G4bool G4DNAElectronSolvation::IsApplicable(const G4ParticleDefinition& p)
 {
-    return (&p == G4Electron::Electron() ) ;
+  return (&p == G4Electron::Electron());
 }
 
-void G4DNAElectronSolvation::PrintInfo()
-{}
+void G4DNAElectronSolvation::PrintInfo() {}
 
 void G4DNAElectronSolvation::InitialiseProcess(const G4ParticleDefinition*)
 {
-  if(!isInitialised)
+  if (!isInitialised)
   {
     isInitialised = true;
     SetBuildTableFlag(false);
 
-    if(EmModel() == nullptr)
+    if (EmModel() == nullptr)
     {
       SetEmModel(G4DNASolvationModelFactory::GetMacroDefinedModel());
     }
     AddEmModel(1, EmModel());
   }
 }
-
-

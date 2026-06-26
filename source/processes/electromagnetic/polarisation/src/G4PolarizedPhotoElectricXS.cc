@@ -41,47 +41,43 @@ G4PolarizedPhotoElectricXS::G4PolarizedPhotoElectricXS()
 G4PolarizedPhotoElectricXS::~G4PolarizedPhotoElectricXS() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-void G4PolarizedPhotoElectricXS::Initialize(G4double aGammaE, G4double aLept0E,
-                                            G4double sinTheta,
+void G4PolarizedPhotoElectricXS::Initialize(G4double aGammaE, G4double aLept0E, G4double sinTheta,
                                             const G4StokesVector& beamPol,
-                                            const G4StokesVector& /*p1*/,
-                                            G4int /*flag*/)
+                                            const G4StokesVector& /*p1*/, G4int /*flag*/)
 {
   // Polarization transfer to e- in PhotoelectricEffect.
-  G4double Gfactor   = aLept0E / CLHEP::electron_mass_c2 + 1.;
+  G4double Gfactor = aLept0E / CLHEP::electron_mass_c2 + 1.;
   G4double Gfactor_2 = Gfactor * Gfactor;
 
   G4double beta = std::sqrt(1. - 1. / (Gfactor_2));
 
   G4double Stokes_P3 = beamPol.z();
 
-  G4double Lept0E  = aLept0E / CLHEP::electron_mass_c2 + 1.;
+  G4double Lept0E = aLept0E / CLHEP::electron_mass_c2 + 1.;
   G4double Lept0E2 = Lept0E * Lept0E;
-  G4double GammaE  = aGammaE / CLHEP::electron_mass_c2;
+  G4double GammaE = aGammaE / CLHEP::electron_mass_c2;
 
   G4double cosTheta = std::sqrt(1. - sinTheta * sinTheta);
 
   G4double I_Lepton0 =
-    1.0 +
-    (1. / GammaE) * ((2. / (GammaE * Lept0E * (1 - beta * cosTheta))) - 1.);
+    1.0 + (1. / GammaE) * ((2. / (GammaE * Lept0E * (1 - beta * cosTheta))) - 1.);
 
-  G4double A_Lepton0 =
-    (Lept0E / (Lept0E + 1)) *
-    (2.0 / (GammaE * Lept0E) + beta * cosTheta +
-     (2.0 / ((GammaE * Lept0E2) * (1.0 - beta * cosTheta)))) /
-    I_Lepton0;
+  G4double A_Lepton0 = (Lept0E / (Lept0E + 1))
+                       * (2.0 / (GammaE * Lept0E) + beta * cosTheta
+                          + (2.0 / ((GammaE * Lept0E2) * (1.0 - beta * cosTheta))))
+                       / I_Lepton0;
 
-  G4double B_Lepton0 = (Lept0E / (Lept0E + 1.0)) * beta * sinTheta *
-                       (2.0 / (GammaE * Lept0E * (1 - beta * cosTheta)) - 1.0) /
-                       I_Lepton0;
+  G4double B_Lepton0 = (Lept0E / (Lept0E + 1.0)) * beta * sinTheta
+                       * (2.0 / (GammaE * Lept0E * (1 - beta * cosTheta)) - 1.0) / I_Lepton0;
 
   fFinalElectronPolarization.setX(Stokes_P3 * B_Lepton0);
   fFinalElectronPolarization.setY(0.);
   fFinalElectronPolarization.setZ(Stokes_P3 * A_Lepton0);
 
-  if((fFinalElectronPolarization.x() * fFinalElectronPolarization.x() +
-      fFinalElectronPolarization.y() * fFinalElectronPolarization.y() +
-      fFinalElectronPolarization.z() * fFinalElectronPolarization.z()) > 1.)
+  if ((fFinalElectronPolarization.x() * fFinalElectronPolarization.x()
+       + fFinalElectronPolarization.y() * fFinalElectronPolarization.y()
+       + fFinalElectronPolarization.z() * fFinalElectronPolarization.z())
+      > 1.)
 
   {
     G4ExceptionDescription ed;
@@ -89,8 +85,7 @@ void G4PolarizedPhotoElectricXS::Initialize(G4double aGammaE, G4double aLept0E,
           "lepton:Px2 + Py2 + Pz2 > 1\n";
     ed << "Polarization transfer forced to be total and similar as incoming "
           "Photo\n";
-    G4Exception("G4PolarizedPhotoElectricXS::Initialize", "pol023", JustWarning,
-                ed);
+    G4Exception("G4PolarizedPhotoElectricXS::Initialize", "pol023", JustWarning, ed);
     fFinalElectronPolarization = beamPol;  // to be safe
   }
 }
@@ -102,8 +97,7 @@ G4double G4PolarizedPhotoElectricXS::XSection(const G4StokesVector& /*pol2*/,
   G4ExceptionDescription ed;
   ed << "ERROR dummy routine G4PolarizedPhotoElectricXS::XSection() "
         "called\n";
-  G4Exception("G4PolarizedPhotoElectricXS::XSection", "pol024", FatalException,
-              ed);
+  G4Exception("G4PolarizedPhotoElectricXS::XSection", "pol024", FatalException, ed);
   return 0.;
 }
 

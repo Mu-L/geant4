@@ -28,20 +28,19 @@
 //
 // Author: Ivana Hrivnacova, IJCLab IN2P3/CNRS, 04/09/2015
 
-#ifndef G4VAccumulable_h
-#define G4VAccumulable_h 1
+#ifndef G4VACCUMULABLE_HH
+#define G4VACCUMULABLE_HH
 
 #include "G4AccType.hh"
 #include "G4MergeMode.hh"
-
 #include "globals.hh"
 
 class G4VAccumulable
 {
   public:
+
     G4VAccumulable(G4MergeMode mergeMode = G4MergeMode::kAddition);
-    G4VAccumulable(const G4String& name,
-                   G4MergeMode mergeMode = G4MergeMode::kAddition);
+    G4VAccumulable(const G4String& name, G4MergeMode mergeMode = G4MergeMode::kAddition);
     G4VAccumulable(const G4VAccumulable& rhs) = default;
     G4VAccumulable(G4VAccumulable&& rhs) = default;
     virtual ~G4VAccumulable() = default;
@@ -61,21 +60,21 @@ class G4VAccumulable
     void SetId(G4int id);
 
     // Get methods
-    G4String  GetName() const;
+    G4String GetName() const;
     G4MergeMode GetMergeMode() const;
     G4int GetId() const;
 
     virtual G4AccType GetType() const { return G4AccType::kUser; }
 
   protected:
+
     void PrintBase(G4PrintOptions options) const;
 
-    G4String  fName;
-    G4MergeMode  fMergeMode = G4MergeMode::kAddition;
+    G4String fName;
+    G4MergeMode fMergeMode = G4MergeMode::kAddition;
     G4int fId = G4Accumulables::kInvalidId;
- };
+};
 
 #include "G4VAccumulable.icc"
 
 #endif
-

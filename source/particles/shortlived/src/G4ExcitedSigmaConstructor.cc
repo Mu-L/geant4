@@ -54,35 +54,43 @@ G4DecayTable* G4ExcitedSigmaConstructor::CreateDecayTable(const G4String& parent
   auto decayTable = new G4DecayTable();
 
   G4double br;
-  if ((br = bRatio[iState][NK]) > 0.0) {
+  if ((br = bRatio[iState][NK]) > 0.0)
+  {
     AddNKMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][NKStar]) > 0.0) {
+  if ((br = bRatio[iState][NKStar]) > 0.0)
+  {
     AddNKStarMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][SigmaPi]) > 0.0) {
+  if ((br = bRatio[iState][SigmaPi]) > 0.0)
+  {
     AddSigmaPiMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][SigmaStarPi]) > 0.0) {
+  if ((br = bRatio[iState][SigmaStarPi]) > 0.0)
+  {
     AddSigmaStarPiMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][LambdaPi]) > 0.0) {
+  if ((br = bRatio[iState][LambdaPi]) > 0.0)
+  {
     AddLambdaPiMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][SigmaEta]) > 0.0) {
+  if ((br = bRatio[iState][SigmaEta]) > 0.0)
+  {
     AddSigmaEtaMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][LambdaStarPi]) > 0.0) {
+  if ((br = bRatio[iState][LambdaStarPi]) > 0.0)
+  {
     AddLambdaStarPiMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][DeltaK]) > 0.0) {
+  if ((br = bRatio[iState][DeltaK]) > 0.0)
+  {
     AddDeltaKMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
@@ -96,13 +104,16 @@ G4DecayTable* G4ExcitedSigmaConstructor::AddSigmaEtaMode(G4DecayTable* decayTabl
   G4VDecayChannel* mode;
   //
   G4String daughterH;
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     daughterH = "sigma+";
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughterH = "sigma0";
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     daughterH = "sigma-";
   }
   if (fAnti) daughterH = "anti_" + daughterH;
@@ -128,25 +139,31 @@ G4DecayTable* G4ExcitedSigmaConstructor::AddNKMode(G4DecayTable* decayTable,
 
   // ------------ N K- ------------
   // determine daughters
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     r = 0.;
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughterN = "proton";
     r = br / 2.;
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     daughterN = "neutron";
     r = br;
   }
-  if (!fAnti) {
+  if (!fAnti)
+  {
     daughterK = "kaon-";
   }
-  else {
+  else
+  {
     daughterK = "kaon+";
   }
   if (fAnti) daughterN = "anti_" + daughterN;
-  if (r > 0.) {
+  if (r > 0.)
+  {
     // create decay channel  [parent    BR     #daughters]
     mode = new G4PhaseSpaceDecayChannel(nameParent, r, 2, daughterN, daughterK);
     // add decay table
@@ -155,25 +172,31 @@ G4DecayTable* G4ExcitedSigmaConstructor::AddNKMode(G4DecayTable* decayTable,
 
   // ------------ N K0 ------------
   // determine daughters
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     daughterN = "proton";
     r = br;
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughterN = "neutron";
     r = br / 2.;
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     r = 0.;
   }
-  if (!fAnti) {
+  if (!fAnti)
+  {
     daughterK = "anti_kaon0";
   }
-  else {
+  else
+  {
     daughterK = "kaon0";
   }
   if (fAnti) daughterN = "anti_" + daughterN;
-  if (r > 0.) {
+  if (r > 0.)
+  {
     // create decay channel  [parent    BR     #daughters]
     mode = new G4PhaseSpaceDecayChannel(nameParent, r, 2, daughterN, daughterK);
     // add decay table
@@ -195,26 +218,32 @@ G4DecayTable* G4ExcitedSigmaConstructor::AddDeltaKMode(G4DecayTable* decayTable,
 
   // ------------ N K- ------------
   // determine daughters
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     daughterN = "delta++";
     r = 0.75 * br;
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughterN = "delta+";
     r = br / 2.;
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     daughterN = "delta0";
     r = 0.25 * br;
   }
-  if (!fAnti) {
+  if (!fAnti)
+  {
     daughterK = "kaon-";
   }
-  else {
+  else
+  {
     daughterK = "kaon+";
   }
   if (fAnti) daughterN = "anti_" + daughterN;
-  if (r > 0.) {
+  if (r > 0.)
+  {
     // create decay channel  [parent    BR     #daughters]
     mode = new G4PhaseSpaceDecayChannel(nameParent, r, 2, daughterN, daughterK);
     // add decay table
@@ -223,26 +252,32 @@ G4DecayTable* G4ExcitedSigmaConstructor::AddDeltaKMode(G4DecayTable* decayTable,
 
   // ------------ N K0 ------------
   // determine daughters
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     daughterN = "delta+";
     r = 0.25 * br;
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughterN = "delta0";
     r = br / 2.;
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     daughterN = "delta-";
     r = 0.75 * br;
   }
-  if (!fAnti) {
+  if (!fAnti)
+  {
     daughterK = "anti_kaon0";
   }
-  else {
+  else
+  {
     daughterK = "kaon0";
   }
   if (fAnti) daughterN = "anti_" + daughterN;
-  if (r > 0.) {
+  if (r > 0.)
+  {
     // create decay channel  [parent    BR     #daughters]
     mode = new G4PhaseSpaceDecayChannel(nameParent, r, 2, daughterN, daughterK);
     // add decay table
@@ -264,25 +299,31 @@ G4DecayTable* G4ExcitedSigmaConstructor::AddNKStarMode(G4DecayTable* decayTable,
 
   // ------------ N K- ------------
   // determine daughters
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     r = 0.;
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughterN = "proton";
     r = br / 2.;
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     daughterN = "neutron";
     r = br;
   }
-  if (!fAnti) {
+  if (!fAnti)
+  {
     daughterK = "k_star-";
   }
-  else {
+  else
+  {
     daughterK = "k_star+";
   }
   if (fAnti) daughterN = "anti_" + daughterN;
-  if (r > 0.) {
+  if (r > 0.)
+  {
     // create decay channel  [parent    BR     #daughters]
     mode = new G4PhaseSpaceDecayChannel(nameParent, r, 2, daughterN, daughterK);
     // add decay table
@@ -292,26 +333,32 @@ G4DecayTable* G4ExcitedSigmaConstructor::AddNKStarMode(G4DecayTable* decayTable,
   // ------------ N K0 ------------
 
   // determine daughters
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     daughterN = "proton";
     r = br;
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughterN = "neutron";
     r = br / 2.;
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     r = 0.;
   }
-  if (!fAnti) {
+  if (!fAnti)
+  {
     daughterK = "anti_k_star0";
   }
-  else {
+  else
+  {
     daughterK = "k_star0";
   }
   if (fAnti) daughterN = "anti_" + daughterN;
   // create decay channel  [parent    BR     #daughters]
-  if (r > 0.) {
+  if (r > 0.)
+  {
     mode = new G4PhaseSpaceDecayChannel(nameParent, r, 2, daughterN, daughterK);
     // add decay table
     decayTable->Insert(mode);
@@ -332,25 +379,31 @@ G4DecayTable* G4ExcitedSigmaConstructor::AddSigmaPiMode(G4DecayTable* decayTable
 
   // ------------ Sigma+ pi - ------------
   // determine daughters
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     r = 0.;
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughterSigma = "sigma+";
     r = br / 2.;
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     daughterSigma = "sigma0";
     r = br / 2.;
   }
-  if (!fAnti) {
+  if (!fAnti)
+  {
     daughterPi = "pi-";
   }
-  else {
+  else
+  {
     daughterPi = "pi+";
   }
   if (fAnti) daughterSigma = "anti_" + daughterSigma;
-  if (r > 0.) {
+  if (r > 0.)
+  {
     // create decay channel  [parent    BR     #daughters]
     mode = new G4PhaseSpaceDecayChannel(nameParent, r, 2, daughterSigma, daughterPi);
     // add decay table
@@ -358,21 +411,25 @@ G4DecayTable* G4ExcitedSigmaConstructor::AddSigmaPiMode(G4DecayTable* decayTable
   }
   // ------------ Sigma0 Pi0 ------------
   // determine daughters
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     daughterSigma = "sigma+";
     r = br / 2.;
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     r = 0.;
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     daughterSigma = "sigma-";
 
     r = br / 2.;
   }
   daughterPi = "pi0";
   if (fAnti) daughterSigma = "anti_" + daughterSigma;
-  if (r > 0.) {
+  if (r > 0.)
+  {
     // create decay channel  [parent    BR     #daughters]
     mode = new G4PhaseSpaceDecayChannel(nameParent, r, 2, daughterSigma, daughterPi);
     // add decay table
@@ -381,25 +438,31 @@ G4DecayTable* G4ExcitedSigmaConstructor::AddSigmaPiMode(G4DecayTable* decayTable
 
   // ------------ Sigma- pi + ------------
   // determine daughters
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     daughterSigma = "sigma0";
     r = br / 2.;
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughterSigma = "sigma-";
     r = br / 2.;
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     r = 0.;
   }
-  if (!fAnti) {
+  if (!fAnti)
+  {
     daughterPi = "pi+";
   }
-  else {
+  else
+  {
     daughterPi = "pi-";
   }
   if (fAnti) daughterSigma = "anti_" + daughterSigma;
-  if (r > 0.) {
+  if (r > 0.)
+  {
     // create decay channel  [parent    BR     #daughters]
     mode = new G4PhaseSpaceDecayChannel(nameParent, r, 2, daughterSigma, daughterPi);
     // add decay table
@@ -421,25 +484,31 @@ G4DecayTable* G4ExcitedSigmaConstructor::AddSigmaStarPiMode(G4DecayTable* decayT
 
   // ------------ Sigma+ pi - ------------
   // determine daughters
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     r = 0.;
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughterSigma = "sigma(1385)+";
     r = br / 2.;
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     daughterSigma = "sigma(1385)0";
     r = br / 2.;
   }
-  if (!fAnti) {
+  if (!fAnti)
+  {
     daughterPi = "pi-";
   }
-  else {
+  else
+  {
     daughterPi = "pi+";
   }
   if (fAnti) daughterSigma = "anti_" + daughterSigma;
-  if (r > 0.) {
+  if (r > 0.)
+  {
     // create decay channel  [parent    BR     #daughters]
     mode = new G4PhaseSpaceDecayChannel(nameParent, r, 2, daughterSigma, daughterPi);
     // add decay table
@@ -447,20 +516,24 @@ G4DecayTable* G4ExcitedSigmaConstructor::AddSigmaStarPiMode(G4DecayTable* decayT
   }
   // ------------ Sigma0 Pi0 ------------
   // determine daughters
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     daughterSigma = "sigma(1385)+";
     r = br / 2.;
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     r = 0.;
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     daughterSigma = "sigma(1385)-";
     r = br / 2.;
   }
   daughterPi = "pi0";
   if (fAnti) daughterSigma = "anti_" + daughterSigma;
-  if (r > 0.) {
+  if (r > 0.)
+  {
     // create decay channel  [parent    BR     #daughters]
     mode = new G4PhaseSpaceDecayChannel(nameParent, r, 2, daughterSigma, daughterPi);
 
@@ -470,25 +543,31 @@ G4DecayTable* G4ExcitedSigmaConstructor::AddSigmaStarPiMode(G4DecayTable* decayT
 
   // ------------ Sigma- pi + ------------
   // determine daughters
-  if (iIso3 == +2) {
+  if (iIso3 == +2)
+  {
     daughterSigma = "sigma(1385)0";
     r = br / 2.;
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughterSigma = "sigma(1385)-";
     r = br / 2.;
   }
-  else if (iIso3 == -2) {
+  else if (iIso3 == -2)
+  {
     r = 0.;
   }
-  if (!fAnti) {
+  if (!fAnti)
+  {
     daughterPi = "pi+";
   }
-  else {
+  else
+  {
     daughterPi = "pi-";
   }
   if (fAnti) daughterSigma = "anti_" + daughterSigma;
-  if (r > 0.) {
+  if (r > 0.)
+  {
     // create decay channel  [parent    BR     #daughters]
 
     mode = new G4PhaseSpaceDecayChannel(nameParent, r, 2, daughterSigma, daughterPi);
@@ -509,22 +588,29 @@ G4DecayTable* G4ExcitedSigmaConstructor::AddLambdaPiMode(G4DecayTable* decayTabl
   G4String daughterPi;
 
   // determine daughters
-  if (iIso3 == +2) {
-    if (!fAnti) {
+  if (iIso3 == +2)
+  {
+    if (!fAnti)
+    {
       daughterPi = "pi+";
     }
-    else {
+    else
+    {
       daughterPi = "pi-";
     }
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughterPi = "pi0";
   }
-  else if (iIso3 == -2) {
-    if (!fAnti) {
+  else if (iIso3 == -2)
+  {
+    if (!fAnti)
+    {
       daughterPi = "pi-";
     }
-    else {
+    else
+    {
       daughterPi = "pi+";
     }
   }
@@ -547,22 +633,29 @@ G4DecayTable* G4ExcitedSigmaConstructor::AddLambdaStarPiMode(G4DecayTable* decay
   G4String daughterPi;
 
   // determine daughters
-  if (iIso3 == +2) {
-    if (!fAnti) {
+  if (iIso3 == +2)
+  {
+    if (!fAnti)
+    {
       daughterPi = "pi+";
     }
-    else {
+    else
+    {
       daughterPi = "pi-";
     }
   }
-  else if (iIso3 == 0) {
+  else if (iIso3 == 0)
+  {
     daughterPi = "pi0";
   }
-  else if (iIso3 == -2) {
-    if (!fAnti) {
+  else if (iIso3 == -2)
+  {
+    if (!fAnti)
+    {
       daughterPi = "pi-";
     }
-    else {
+    else
+    {
       daughterPi = "pi+";
     }
   }
@@ -579,7 +672,8 @@ G4DecayTable* G4ExcitedSigmaConstructor::AddLambdaStarPiMode(G4DecayTable* decay
 G4double G4ExcitedSigmaConstructor::GetMass(G4int iState, G4int iso3)
 {
   G4double fmass = mass[iState];
-  if (iState == 0) {
+  if (iState == 0)
+  {
     if (iso3 == +2)
       fmass -= 0.9 * MeV;  // sigma+ (1.3828 GeV from PDG 2025)
     else if (iso3 == -2)
@@ -591,7 +685,8 @@ G4double G4ExcitedSigmaConstructor::GetMass(G4int iState, G4int iso3)
 G4double G4ExcitedSigmaConstructor::GetWidth(G4int iState, G4int iso3)
 {
   G4double fw = width[iState];
-  if (iState == 0) {
+  if (iState == 0)
+  {
     if (iso3 == +2)
       fw = 36.2 * MeV;  // sigma+ (modified based on PDG 2025)
     else if (iso3 == -2)

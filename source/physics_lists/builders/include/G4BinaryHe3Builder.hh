@@ -36,37 +36,35 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4BinaryHe3Builder_h
-#define G4BinaryHe3Builder_h 
+#ifndef G4BINARYHE3BUILDER_HH
+#define G4BINARYHE3BUILDER_HH
 
-#include "globals.hh"
-
+#include "G4BinaryCascade.hh"
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
 #include "G4VHe3Builder.hh"
-
-#include "G4BinaryCascade.hh"   
+#include "globals.hh"
 
 class G4BinaryHe3Builder : public G4VHe3Builder
 {
-  public: 
+  public:
+
     G4BinaryHe3Builder();
     virtual ~G4BinaryHe3Builder() {}
 
-    virtual void Build(G4HadronElasticProcess *) final override {}
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
-    virtual void SetMaxEnergy(G4double aM) final override {theMax = aM;}
+    virtual void Build(G4HadronElasticProcess*) final override {}
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
-    using G4VHe3Builder::Build; //Prevent compiler warning
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+    virtual void SetMaxEnergy(G4double aM) final override { theMax = aM; }
+
+    using G4VHe3Builder::Build;  // Prevent compiler warning
 
   private:
 
-    G4BinaryCascade * theModel;    
+    G4BinaryCascade* theModel;
     G4double theMin;
     G4double theMax;
 };
 
 #endif
-

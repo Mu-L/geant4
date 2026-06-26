@@ -35,37 +35,35 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4BinaryPionBuilder_h
-#define G4BinaryPionBuilder_h 1
+#ifndef G4BINARYPIONBUILDER_HH
+#define G4BINARYPIONBUILDER_HH
 
-#include "globals.hh"
-
+#include "G4BinaryCascade.hh"
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
 #include "G4VPionBuilder.hh"
-
-#include "G4BinaryCascade.hh"   
-
+#include "globals.hh"
 
 class G4BinaryPionBuilder : public G4VPionBuilder
 {
-  public: 
+  public:
+
     G4BinaryPionBuilder();
     virtual ~G4BinaryPionBuilder() {}
 
-    virtual void Build(G4HadronElasticProcess *) final override {}
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-    void SetMinEnergy(G4double aM) final override {theMin = aM;}
-    void SetMaxEnergy(G4double aM) final override {theMax = aM;}
+    virtual void Build(G4HadronElasticProcess*) final override {}
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
-    using G4VPionBuilder::Build; //Prevent compiler warning
+    void SetMinEnergy(G4double aM) final override { theMin = aM; }
+    void SetMaxEnergy(G4double aM) final override { theMax = aM; }
+
+    using G4VPionBuilder::Build;  // Prevent compiler warning
+
   private:
-    G4BinaryCascade * theModel;    
+
+    G4BinaryCascade* theModel;
     G4double theMin;
     G4double theMax;
-
 };
 
 #endif
-

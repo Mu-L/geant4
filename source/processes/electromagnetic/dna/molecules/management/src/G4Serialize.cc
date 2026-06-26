@@ -30,7 +30,6 @@
  *      Author: mkaramit
  */
 
-
 #include "G4Serialize.hh"
 
 template<>
@@ -45,19 +44,20 @@ void WRITE<G4String>(std::ostream& out, const G4String& name)
 
 class UReadBinaryString
 {
-public:
-    static G4String read(std::istream &is, size_t size)
-    {
-      G4String  returnStr;
-        if(size > 0)
-        {
-            auto  buff = new char[size];
-            is.read(buff, size);
-            returnStr.assign(buff, size);
-            delete [] buff;
-        }
+  public:
 
-        return returnStr;
+    static G4String read(std::istream& is, size_t size)
+    {
+      G4String returnStr;
+      if (size > 0)
+      {
+        auto buff = new char[size];
+        is.read(buff, size);
+        returnStr.assign(buff, size);
+        delete[] buff;
+      }
+
+      return returnStr;
     }
 };
 

@@ -36,41 +36,39 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4PrecoNeutronBuilder_h
-#define G4PrecoNeutronBuilder_h 1
+#ifndef G4PRECONEUTRONBUILDER_HH
+#define G4PRECONEUTRONBUILDER_HH
 
-#include "globals.hh"
-
+#include "G4ExcitationHandler.hh"
 #include "G4HadronElasticProcess.hh"
-#include "G4NeutronFissionProcess.hh"
-#include "G4NeutronCaptureProcess.hh"
 #include "G4HadronInelasticProcess.hh"
+#include "G4NeutronCaptureProcess.hh"
+#include "G4NeutronFissionProcess.hh"
+#include "G4PreCompoundModel.hh"
 #include "G4VNeutronBuilder.hh"
-
-#include "G4PreCompoundModel.hh" 
-#include "G4ExcitationHandler.hh"  
+#include "globals.hh"
 
 class G4PrecoNeutronBuilder : public G4VNeutronBuilder
 {
-  public: 
+  public:
+
     G4PrecoNeutronBuilder();
     virtual ~G4PrecoNeutronBuilder() {}
 
-    virtual void Build(G4HadronElasticProcess *) final override {}
-    virtual void Build(G4NeutronFissionProcess *) final override {}
-    virtual void Build(G4NeutronCaptureProcess *) final override {}
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
+    virtual void Build(G4HadronElasticProcess*) final override {}
+    virtual void Build(G4NeutronFissionProcess*) final override {}
+    virtual void Build(G4NeutronCaptureProcess*) final override {}
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
-    using G4VNeutronBuilder::Build; //Prevent Compiler warning
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+
+    using G4VNeutronBuilder::Build;  // Prevent Compiler warning
 
   private:
-    G4PreCompoundModel * theModel;   
+
+    G4PreCompoundModel* theModel;
     G4double theMin;
     G4double theMax;
-
 };
 
 #endif
-

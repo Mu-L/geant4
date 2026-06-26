@@ -27,7 +27,7 @@
 //
 // Class description:
 //
-// A utility class responsible for (efficiently) maintaining a list 
+// A utility class responsible for (efficiently) maintaining a list
 // of blocked volume numbers, with rapid 'reset' operations.
 //
 // Notes:
@@ -40,19 +40,21 @@
 // Author: Paul Kent (CERN), 24.07.1996 - Separated from G4Navigator
 // --------------------------------------------------------------------
 #ifndef G4BLOCKINGLIST_HH
-#define G4BLOCKINGLIST_HH 1
+#define G4BLOCKINGLIST_HH
 
 #include "G4Types.hh"
+
 #include <vector>
 
-const G4int kBlockingListMaxDefault = 500; // Block up to 511 daughters
-                                           // initially
+const G4int kBlockingListMaxDefault = 500;  // Block up to 511 daughters
+                                            // initially
 const G4int kBlockingListStride = 128;
-const G4int kBlockTagNoMax = 2147483647;   // 2^31-1 maximum tag no may reach
+const G4int kBlockTagNoMax = 2147483647;  // 2^31-1 maximum tag no may reach
 
 /**
  * @brief G4BlockingList is an utility class responsible for (efficiently)
  * maintaining a list of blocked volume numbers, with rapid 'reset' operations.
+ * @ingroup geometry_management
  */
 
 class G4BlockingList
@@ -65,8 +67,7 @@ class G4BlockingList
      *  @param[in] maxDefault Maximum list size.
      *  @param[in] stride Stride resize count.
      */
-    G4BlockingList(G4int maxDefault = kBlockingListMaxDefault,
-                   G4int stride = kBlockingListStride);
+    G4BlockingList(G4int maxDefault = kBlockingListMaxDefault, G4int stride = kBlockingListStride);
 
     /**
      * Default Destructor.
@@ -114,7 +115,7 @@ class G4BlockingList
 
     /** Blocked volumes: elements with indices corresponding to blocked
         volume set to fBlockTagNo. */
-    std::vector<G4int> fBlockingList; 
+    std::vector<G4int> fBlockingList;
 };
 
 #include "G4BlockingList.icc"

@@ -30,7 +30,7 @@
 // Abstract class, the user can subclass for storing information
 // associated with a G4Region class object.
 //
-// It is user's responsibility to construct a concrete class object 
+// It is user's responsibility to construct a concrete class object
 // and set the pointer to proper G4Region object.
 // The concrete class object is deleted by Geant4 kernel when
 // associated G4Region object is deleted.
@@ -43,12 +43,13 @@
 /**
  * @brief G4VUserRegionInformation is an abstract class, the user can subclass
  * for storing information associated with a G4Region class object.
+ * @ingroup geometry_management
  */
 
 class G4VUserRegionInformation
 {
   public:
-  
+
     /**
      * Default Constructor and Destructor.
      */
@@ -62,4 +63,3 @@ class G4VUserRegionInformation
 };
 
 #endif
-

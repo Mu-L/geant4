@@ -23,33 +23,30 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 
-#ifndef G4IRTUtils_hh
-#define G4IRTUtils_hh
+#ifndef G4IRTUTILS_HH
+#define G4IRTUTILS_HH
 
 #include "globals.hh"
+
 #include <memory>
 
 class G4ErrorFunction;
-class G4IRTUtils {
+class G4IRTUtils
+{
+  public:
 
-public:
-	G4IRTUtils() = default;
-   ~G4IRTUtils() = default;
-    static G4double EffectiveDistance(const G4double& rc,
-                                      const G4double& r0);
+    G4IRTUtils() = default;
+    ~G4IRTUtils() = default;
+    static G4double EffectiveDistance(const G4double& rc, const G4double& r0);
 
-    static G4double GetKact(const G4double& obs, 
-                            const G4double& dif)
+    static G4double GetKact(const G4double& obs, const G4double& dif)
     {
-        return (obs == 0 || dif == 0) ? 0 : dif * obs/(dif - obs);
+      return (obs == 0 || dif == 0) ? 0 : dif * obs / (dif - obs);
     }
-    
+
     static G4double GetRCutOff();
     static G4double GetRCutOff(G4double tCutOff);
     static G4double GetDNADistanceCutOff();
 };
 
-
-
 #endif
-

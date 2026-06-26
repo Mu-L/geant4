@@ -37,56 +37,50 @@
 //
 
 #include "G4HadronPhysicsQGS_BIC.hh"
-#include "G4PionBuilder.hh"
-#include "G4BinaryPionBuilder.hh"
-#include "G4BertiniPionBuilder.hh"
-#include "G4FTFBinaryPionBuilder.hh"
-#include "G4QGSBinaryPionBuilder.hh"
 
-#include "G4KaonBuilder.hh"
 #include "G4BertiniKaonBuilder.hh"
-#include "G4FTFBinaryKaonBuilder.hh"
-#include "G4QGSBinaryKaonBuilder.hh"
-
-#include "G4BertiniProtonBuilder.hh"
-#include "G4FTFBinaryProtonBuilder.hh"
-#include "G4QGSBinaryProtonBuilder.hh"
-#include "G4BinaryProtonBuilder.hh"
-
 #include "G4BertiniNeutronBuilder.hh"
-#include "G4FTFBinaryNeutronBuilder.hh"
-#include "G4QGSBinaryNeutronBuilder.hh"
+#include "G4BertiniPionBuilder.hh"
+#include "G4BertiniProtonBuilder.hh"
 #include "G4BinaryNeutronBuilder.hh"
-#include "G4ParticleInelasticXS.hh"
-
-#include "G4SystemOfUnits.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4ParticleTable.hh"
-
-#include "G4NeutronRadCapture.hh"
-#include "G4NeutronInelasticXS.hh"
-#include "G4NeutronCaptureXS.hh"
-
-#include "G4PhysListUtil.hh"
+#include "G4BinaryPionBuilder.hh"
+#include "G4BinaryProtonBuilder.hh"
+#include "G4FTFBinaryKaonBuilder.hh"
+#include "G4FTFBinaryNeutronBuilder.hh"
+#include "G4FTFBinaryPionBuilder.hh"
+#include "G4FTFBinaryProtonBuilder.hh"
 #include "G4HadParticles.hh"
 #include "G4HadronicParameters.hh"
-#include "G4ProcessManager.hh"
-
+#include "G4KaonBuilder.hh"
+#include "G4NeutronCaptureXS.hh"
+#include "G4NeutronInelasticXS.hh"
+#include "G4NeutronRadCapture.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleInelasticXS.hh"
+#include "G4ParticleTable.hh"
+#include "G4PhysListUtil.hh"
 #include "G4PhysicsConstructorFactory.hh"
+#include "G4PionBuilder.hh"
+#include "G4ProcessManager.hh"
+#include "G4QGSBinaryKaonBuilder.hh"
+#include "G4QGSBinaryNeutronBuilder.hh"
+#include "G4QGSBinaryPionBuilder.hh"
+#include "G4QGSBinaryProtonBuilder.hh"
+#include "G4SystemOfUnits.hh"
 //
 G4_DECLARE_PHYSCONSTR_FACTORY(G4HadronPhysicsQGS_BIC);
 
 G4HadronPhysicsQGS_BIC::G4HadronPhysicsQGS_BIC(G4int verb)
-    : G4HadronPhysicsQGS_BIC("hInelastic QGS_BIC",true) 
+  : G4HadronPhysicsQGS_BIC("hInelastic QGS_BIC", true)
 {
   G4HadronicParameters::Instance()->SetVerboseLevel(verb);
 }
 
 G4HadronPhysicsQGS_BIC::G4HadronPhysicsQGS_BIC(const G4String& name, G4bool qe)
-  : G4HadronPhysicsQGSP_BERT(name, qe) 
+  : G4HadronPhysicsQGSP_BERT(name, qe)
 {
-  maxBIC_proton = maxBIC_neutron  = 1.5*CLHEP::GeV;
-  minBERT_proton = minBERT_neutron  = 1.0*CLHEP::GeV;
+  maxBIC_proton = maxBIC_neutron = 1.5 * CLHEP::GeV;
+  minBERT_proton = minBERT_neutron = 1.0 * CLHEP::GeV;
 }
 
 void G4HadronPhysicsQGS_BIC::Neutron()
@@ -95,37 +89,39 @@ void G4HadronPhysicsQGS_BIC::Neutron()
   G4bool useFactorXS = param->ApplyFactorXS();
 
   const G4ParticleDefinition* neutron = G4Neutron::Neutron();
-  auto inel = new G4HadronInelasticProcess( "neutronInelastic", neutron );
-  neutron->GetProcessManager()->AddDiscreteProcess( inel );
+  auto inel = new G4HadronInelasticProcess("neutronInelastic", neutron);
+  neutron->GetProcessManager()->AddDiscreteProcess(inel);
 
-  G4QGSBinaryNeutronBuilder qgs( QuasiElasticQGS );
-  qgs.SetMinEnergy( minQGSP_neutron );
-  qgs.Build( inel );
+  G4QGSBinaryNeutronBuilder qgs(QuasiElasticQGS);
+  qgs.SetMinEnergy(minQGSP_neutron);
+  qgs.Build(inel);
 
-  G4FTFBinaryNeutronBuilder ftf( QuasiElasticFTF );
-  ftf.SetMinEnergy( minFTFP_neutron );
-  ftf.SetMaxEnergy( maxFTFP_neutron );
-  ftf.Build( inel );
-  
+  G4FTFBinaryNeutronBuilder ftf(QuasiElasticFTF);
+  ftf.SetMinEnergy(minFTFP_neutron);
+  ftf.SetMaxEnergy(maxFTFP_neutron);
+  ftf.Build(inel);
+
   G4BertiniNeutronBuilder bert;
-  bert.SetMinEnergy( minBERT_neutron );
-  bert.SetMaxEnergy( maxBERT_neutron );
-  bert.Build( inel );
+  bert.SetMinEnergy(minBERT_neutron);
+  bert.SetMaxEnergy(maxBERT_neutron);
+  bert.Build(inel);
 
-  if ( maxBIC_neutron > 0.0 ) {
+  if (maxBIC_neutron > 0.0)
+  {
     G4BinaryNeutronBuilder bic;
-    bic.SetMaxEnergy( maxBIC_neutron );
-    bic.Build( inel );
+    bic.SetMaxEnergy(maxBIC_neutron);
+    bic.Build(inel);
   }
 
-  inel->AddDataSet( new G4NeutronInelasticXS() ); 
-  if ( useFactorXS ) {
-    inel->MultiplyCrossSectionBy( param->XSFactorNucleonInelastic() );
+  inel->AddDataSet(new G4NeutronInelasticXS());
+  if (useFactorXS)
+  {
+    inel->MultiplyCrossSectionBy(param->XSFactorNucleonInelastic());
   }
-  auto capture = new G4NeutronCaptureProcess( "nCaptureXS" );
+  auto capture = new G4NeutronCaptureProcess("nCaptureXS");
   neutron->GetProcessManager()->AddDiscreteProcess(capture);
-  capture->AddDataSet( new G4NeutronCaptureXS() );
-  capture->RegisterMe( new G4NeutronRadCapture() );
+  capture->AddDataSet(new G4NeutronCaptureXS());
+  capture->RegisterMe(new G4NeutronRadCapture());
 }
 
 void G4HadronPhysicsQGS_BIC::Proton()
@@ -134,33 +130,35 @@ void G4HadronPhysicsQGS_BIC::Proton()
   G4bool useFactorXS = param->ApplyFactorXS();
 
   const G4ParticleDefinition* proton = G4Proton::Proton();
-  auto inel = new G4HadronInelasticProcess( "protonInelastic", proton );
-  proton->GetProcessManager()->AddDiscreteProcess( inel );
+  auto inel = new G4HadronInelasticProcess("protonInelastic", proton);
+  proton->GetProcessManager()->AddDiscreteProcess(inel);
 
   G4QGSBinaryProtonBuilder qgs(QuasiElasticQGS);
   qgs.SetMinEnergy(minQGSP_proton);
-  qgs.Build( inel );
+  qgs.Build(inel);
 
   G4FTFBinaryProtonBuilder ftf(QuasiElasticFTF);
-  ftf.SetMinEnergy( minFTFP_proton );
-  ftf.SetMaxEnergy( maxFTFP_proton );
-  ftf.Build( inel );
+  ftf.SetMinEnergy(minFTFP_proton);
+  ftf.SetMaxEnergy(maxFTFP_proton);
+  ftf.Build(inel);
 
   G4BertiniProtonBuilder bert;
-  bert.SetMinEnergy( minBERT_proton );
-  bert.SetMaxEnergy( maxBERT_proton );
-  bert.Build( inel );
+  bert.SetMinEnergy(minBERT_proton);
+  bert.SetMaxEnergy(maxBERT_proton);
+  bert.Build(inel);
 
-  if ( maxBIC_proton > 0.0 ) {
+  if (maxBIC_proton > 0.0)
+  {
     G4BinaryProtonBuilder bic;
-    bic.SetMaxEnergy( maxBIC_proton);
-    bic.Build( inel );
+    bic.SetMaxEnergy(maxBIC_proton);
+    bic.Build(inel);
   }
 
-  auto xsinel = new G4ParticleInelasticXS( proton );
-  inel->AddDataSet( xsinel );
+  auto xsinel = new G4ParticleInelasticXS(proton);
+  inel->AddDataSet(xsinel);
 
-  if ( useFactorXS ) {
-    inel->MultiplyCrossSectionBy( param->XSFactorNucleonInelastic() );
+  if (useFactorXS)
+  {
+    inel->MultiplyCrossSectionBy(param->XSFactorNucleonInelastic());
   }
 }

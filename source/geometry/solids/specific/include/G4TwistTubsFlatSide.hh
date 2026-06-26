@@ -60,16 +60,12 @@ class G4TwistTubsFlatSide : public G4VTwistSurface
      *  @param[in] axis0max Maximum in Rho.
      *  @param[in] axis1max Maximum in Phi.
      */
-    G4TwistTubsFlatSide(const G4String& name,
-                        const G4RotationMatrix& rot,
-                        const G4ThreeVector& tlate,
-                        const G4ThreeVector& n,
-                        const EAxis axis0 = kRho, // RHO axis !
-                        const EAxis axis1 = kPhi, // PHI axis !
-                              G4double axis0min = -kInfinity,
-                              G4double axis1min = -kInfinity,
-                              G4double axis0max = kInfinity,
-                              G4double axis1max = kInfinity);
+    G4TwistTubsFlatSide(const G4String& name, const G4RotationMatrix& rot,
+                        const G4ThreeVector& tlate, const G4ThreeVector& n,
+                        const EAxis axis0 = kRho,  // RHO axis !
+                        const EAxis axis1 = kPhi,  // PHI axis !
+                        G4double axis0min = -kInfinity, G4double axis1min = -kInfinity,
+                        G4double axis0max = kInfinity, G4double axis1max = kInfinity);
 
     /**
      * Alternative Construct for a cylinder flat boundary surface.
@@ -81,13 +77,9 @@ class G4TwistTubsFlatSide : public G4VTwistSurface
      *  @param[in] EndZ Z length.
      *  @param[in] handedness Orientation: +z = +ve, -z = -ve.
      */
-    G4TwistTubsFlatSide(const G4String& name,
-                              G4double EndInnerRadius[2],
-                              G4double EndOuterRadius[2],
-                              G4double DPhi,
-                              G4double EndPhi[2],
-                              G4double EndZ[2], 
-                              G4int handedness);
+    G4TwistTubsFlatSide(const G4String& name, G4double EndInnerRadius[2],
+                        G4double EndOuterRadius[2], G4double DPhi, G4double EndPhi[2],
+                        G4double EndZ[2], G4int handedness);
 
     /**
      * Default destructor.
@@ -101,8 +93,7 @@ class G4TwistTubsFlatSide : public G4VTwistSurface
      *  @param[in] isGlobal If true, it returns the normal in global coordinates.
      *  @returns The current normal vector.
      */
-    G4ThreeVector GetNormal(const G4ThreeVector& /* p */ ,
-                                  G4bool isGlobal = false) override;
+    G4ThreeVector GetNormal(const G4ThreeVector& /* p */, G4bool isGlobal = false) override;
 
     /**
      * Returns the distance to surface, given point 'gp' and direction 'gv'.
@@ -115,12 +106,8 @@ class G4TwistTubsFlatSide : public G4VTwistSurface
      *  @param[in] validate Adopted validation criteria.
      *  @returns The number of solutions.
      */
-    G4int DistanceToSurface(const G4ThreeVector& gp,
-                            const G4ThreeVector& gv,
-                                  G4ThreeVector  gxx[],
-                                  G4double       distance[],
-                                  G4int          areacode[],
-                                  G4bool         isvalid[],
+    G4int DistanceToSurface(const G4ThreeVector& gp, const G4ThreeVector& gv, G4ThreeVector gxx[],
+                            G4double distance[], G4int areacode[], G4bool isvalid[],
                             EValidate validate = kValidateWithTol) override;
 
     /**
@@ -131,10 +118,8 @@ class G4TwistTubsFlatSide : public G4VTwistSurface
      *  @param[out] areacode The location vector based on number of solutions.
      *  @returns The number of solutions.
      */
-    G4int DistanceToSurface(const G4ThreeVector& gp,
-                                  G4ThreeVector  gxx[],
-                                  G4double       distance[],
-                                  G4int          areacode[]) override;
+    G4int DistanceToSurface(const G4ThreeVector& gp, G4ThreeVector gxx[], G4double distance[],
+                            G4int areacode[]) override;
 
     /**
      * Fake default constructor for usage restricted to direct object
@@ -148,23 +133,20 @@ class G4TwistTubsFlatSide : public G4VTwistSurface
     /**
      * Returns point on surface given 'phi' and 'u'.
      */
-    inline G4ThreeVector SurfacePoint(G4double, G4double,
-                                      G4bool isGlobal = false) override;  
+    inline G4ThreeVector SurfacePoint(G4double, G4double, G4bool isGlobal = false) override;
 
     /**
      * Internal accessors.
      */
     inline G4double GetBoundaryMin(G4double phi) override;
     inline G4double GetBoundaryMax(G4double phi) override;
-    inline G4double GetSurfaceArea() override { return fSurfaceArea ; }
-    void GetFacets( G4int m, G4int n, G4double xyz[][3],
-                    G4int faces[][4], G4int iside ) override;
+    inline G4double GetSurfaceArea() override { return fSurfaceArea; }
+    void GetFacets(G4int m, G4int n, G4double xyz[][3], G4int faces[][4], G4int iside) override;
 
     /**
      * Returns the area code for point 'xx' using or not surface tolerance.
      */
-    G4int GetAreaCode(const G4ThreeVector& xx, 
-                            G4bool withTol = true) override ;
+    G4int GetAreaCode(const G4ThreeVector& xx, G4bool withTol = true) override;
 
     /**
      * Setters.
@@ -182,27 +164,27 @@ class G4TwistTubsFlatSide : public G4VTwistSurface
 // inline functions
 //========================================================
 
-inline G4ThreeVector G4TwistTubsFlatSide::
-SurfacePoint(G4double phi , G4double rho , G4bool isGlobal )
+inline G4ThreeVector G4TwistTubsFlatSide::SurfacePoint(G4double phi, G4double rho, G4bool isGlobal)
 {
-  G4ThreeVector SurfPoint (rho*std::cos(phi) , rho*std::sin(phi) , 0);
+  G4ThreeVector SurfPoint(rho * std::cos(phi), rho * std::sin(phi), 0);
 
-  if (isGlobal) { return (fRot * SurfPoint + fTrans); }
+  if (isGlobal)
+  {
+    return (fRot * SurfPoint + fTrans);
+  }
   return SurfPoint;
 }
 
-inline
-G4double G4TwistTubsFlatSide::GetBoundaryMin(G4double)
+inline G4double G4TwistTubsFlatSide::GetBoundaryMin(G4double)
 {
   G4ThreeVector dphimin = GetCorner(sC0Max1Min);
-  return  std::atan2( dphimin.y(), dphimin.x() );  
+  return std::atan2(dphimin.y(), dphimin.x());
 }
 
-inline
-G4double G4TwistTubsFlatSide::GetBoundaryMax(G4double)
+inline G4double G4TwistTubsFlatSide::GetBoundaryMax(G4double)
 {
-  G4ThreeVector dphimax = GetCorner(sC0Max1Max);   
-  return  std::atan2( dphimax.y(), dphimax.x() );  
+  G4ThreeVector dphimax = GetCorner(sC0Max1Max);
+  return std::atan2(dphimax.y(), dphimax.x());
 }
 
 #endif

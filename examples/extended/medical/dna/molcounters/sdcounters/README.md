@@ -53,22 +53,22 @@ the `(Begin|End)Of(Event|Run)Action` methods and call the corresponding
 method on the `G4DNAChemistryManager::Instance()`. See the example's
 `EventAction.hh` and `RunAction.(hh|cc)` on how to do this.
 
-    __`BuildMoleculeCounters()`:__
-    * __[important]__ Reset counters before each event but not keep counter values between events. \
-    This is required since our scorers will read out the molecule counters using
-    their `EndOfEvent()` method and save the recorded molecules.
-    * Register a `G4MoleculeCounter` instance called "BasicCounter":
-        * set its time precision to 10 ps
-    * Register a `G4MoleculeCounter` instance called "BasicCounter_VariablePrecision":
-        * set its time precision to vary with global time:
-        ```
-            <= 10 ps: 5 ps
-            <= 100 ps: 50 ps
-            <= 1 ns: 0.5 ns
-            <= 1 µs: 50 ns
-        ```
-    * Register a `G4MoleculeReactionCounter` instance called "Reactions":
-        * set its time precision to 10 ps
+__`BuildMoleculeCounters()`:__
+* __[important]__ Reset counters before each event but not keep counter values between events. \
+This is required since our scorers will read out the molecule counters using
+their `EndOfEvent()` method and save the recorded molecules.
+* Register a `G4MoleculeCounter` instance called "BasicCounter":
+    * set its time precision to 10 ps
+* Register a `G4MoleculeCounter` instance called "BasicCounter_VariablePrecision":
+    * set its time precision to vary with global time:
+    ```
+        <= 10 ps: 5 ps
+        <= 100 ps: 50 ps
+        <= 1 ns: 0.5 ns
+        <= 1 µs: 50 ns
+    ```
+* Register a `G4MoleculeReactionCounter` instance called "Reactions":
+    * set its time precision to 10 ps
 
 ## Multifunctional Detector & Primitive Scorers:
 
@@ -80,10 +80,12 @@ The results are saved as ROOT trees to a single file.
 ## Execute the code by running:
 
 ```
-./sdcounters [simple_sbs.in,simple_irt_syn_react.in]
+./sdcounters [-ui,-gui] [simple_sbs.in,simple_irt_syn_react.in]
 ```
 
 The `simple_sbs.in` macro __only__ includes molecule transport (diffusion)!
+
+**Visualization:** To enable visualization, ensure you include this in the macros and notify the code by using the `-ui/-gui` flags.
 
 ## Output
 

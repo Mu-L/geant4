@@ -42,8 +42,7 @@
 #include "G4VMultipleScattering.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-G4eAdjointMultipleScattering::G4eAdjointMultipleScattering(
-  const G4String& processName)
+G4eAdjointMultipleScattering::G4eAdjointMultipleScattering(const G4String& processName)
   : G4VMultipleScattering(processName)
 {}
 
@@ -61,14 +60,13 @@ G4bool G4eAdjointMultipleScattering::IsApplicable(const G4ParticleDefinition& p)
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-void G4eAdjointMultipleScattering::InitialiseProcess(
-  const G4ParticleDefinition*)
+void G4eAdjointMultipleScattering::InitialiseProcess(const G4ParticleDefinition*)
 {
-  if(fIsInitialized)
+  if (fIsInitialized)
   {
     return;
   }
-  if(EmModel(0) == nullptr)
+  if (EmModel(0) == nullptr)
   {
     SetEmModel(new G4UrbanAdjointMscModel());
   }
@@ -79,10 +77,9 @@ void G4eAdjointMultipleScattering::InitialiseProcess(
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 void G4eAdjointMultipleScattering::StreamProcessInfo(std::ostream& out) const
 {
-  out << "      RangeFactor= " << RangeFactor()
-      << ", stepLimType: " << StepLimitType()
+  out << "      RangeFactor= " << RangeFactor() << ", stepLimType: " << StepLimitType()
       << ", latDisp: " << LateralDisplasmentFlag();
-  if(StepLimitType() == fUseDistanceToBoundary)
+  if (StepLimitType() == fUseDistanceToBoundary)
   {
     out << ", skin= " << Skin() << ", geomFactor= " << GeomFactor();
   }
@@ -92,8 +89,8 @@ void G4eAdjointMultipleScattering::StreamProcessInfo(std::ostream& out) const
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 void G4eAdjointMultipleScattering::StartTracking(G4Track*)
 {
-  G4DynamicParticle* aDynPart = new G4DynamicParticle(
-    G4Electron::Electron(), G4ThreeVector(0., 0., 1.), 1.);
+  G4DynamicParticle* aDynPart =
+    new G4DynamicParticle(G4Electron::Electron(), G4ThreeVector(0., 0., 1.), 1.);
   G4Track* tempTrack = new G4Track(aDynPart, 0., G4ThreeVector(0., 0., 0.));
   G4VMultipleScattering::StartTracking(tempTrack);
   delete tempTrack;

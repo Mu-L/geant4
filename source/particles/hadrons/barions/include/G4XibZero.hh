@@ -33,19 +33,21 @@
 // **********************************************************************
 //
 
-#ifndef G4XibZero_h
-#define G4XibZero_h 1
+#ifndef G4XIBZERO_HH
+#define G4XIBZERO_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4XibZero : public G4ParticleDefinition
 {
   public:
+
     static G4XibZero* Definition();
     static G4XibZero* XibZeroDefinition();
     static G4XibZero* XibZero();
 
   private:
+
     G4XibZero() {}
     ~G4XibZero() override = default;
 

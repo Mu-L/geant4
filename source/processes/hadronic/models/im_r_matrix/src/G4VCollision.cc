@@ -25,34 +25,28 @@
 //
 //
 
-#include "globals.hh"
-#include "G4ios.hh"
 #include "G4VCollision.hh"
-#include "G4VCrossSectionSource.hh"
+
 #include "G4KineticTrack.hh"
+#include "G4VCrossSectionSource.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
-G4VCollision::G4VCollision()
-{ }
+G4VCollision::G4VCollision() {}
 
-G4VCollision::~G4VCollision()
+G4VCollision::~G4VCollision() {}
+
+G4bool G4VCollision::operator==(const G4VCollision& right) const
 {
+  return (this == (G4VCollision*)&right);
 }
 
-
-G4bool G4VCollision::operator==(const G4VCollision &right) const
+G4bool G4VCollision::operator!=(const G4VCollision& right) const
 {
-  return (this == (G4VCollision *) &right);
+  return (this != (G4VCollision*)&right);
 }
 
-
-G4bool G4VCollision::operator!=(const G4VCollision &right) const
-{
-  return (this != (G4VCollision *) &right);
-}
-
-
-G4double G4VCollision::CrossSection(const G4KineticTrack& aTrk1, 
-                                    const G4KineticTrack& aTrk2) const
+G4double G4VCollision::CrossSection(const G4KineticTrack& aTrk1, const G4KineticTrack& aTrk2) const
 {
   G4double sigma = 0.;
 
@@ -61,11 +55,10 @@ G4double G4VCollision::CrossSection(const G4KineticTrack& aTrk1,
   if (xSource != nullptr)
   {
     // There is a cross section for this Collision
-    sigma = xSource->CrossSection(aTrk1,aTrk2);
+    sigma = xSource->CrossSection(aTrk1, aTrk2);
   }
   return sigma;
 }
-
 
 void G4VCollision::Print() const
 {
@@ -82,7 +75,7 @@ void G4VCollision::Print() const
   {
     nComponents = (G4int)components->size();
   }
-  G4cout << "---- " << name << "---- has " << nComponents << " components" <<G4endl;
+  G4cout << "---- " << name << "---- has " << nComponents << " components" << G4endl;
   G4int i = 0;
   if (components)
   {
@@ -95,13 +88,11 @@ void G4VCollision::Print() const
   }
 }
 
-
-void G4VCollision::Print(const G4KineticTrack& trk1, 
-                         const G4KineticTrack& trk2) const
+void G4VCollision::Print(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const
 {
   G4String name = GetName();
 
-  if (IsInCharge(trk1,trk2))
+  if (IsInCharge(trk1, trk2))
   {
     G4cout << "---- " << name << "is in charge ---- " << G4endl;
   }
@@ -114,7 +105,7 @@ void G4VCollision::Print(const G4KineticTrack& trk1,
 
   const G4VCrossSectionSource* xSource = GetCrossSectionSource();
   if (xSource) xSource->Print();
-  G4cout << "Cross section = " << CrossSection(trk1,trk2) << G4endl;
+  G4cout << "Cross section = " << CrossSection(trk1, trk2) << G4endl;
 
   G4int nComponents = 0;
   const G4CollisionVector* components = GetComponents();
@@ -122,7 +113,7 @@ void G4VCollision::Print(const G4KineticTrack& trk1,
   {
     nComponents = (G4int)components->size();
   }
-  G4cout << "---- " << name << "has " << nComponents << " components" <<G4endl;
+  G4cout << "---- " << name << "has " << nComponents << " components" << G4endl;
 
   G4int i = 0;
   if (components)
@@ -136,10 +127,6 @@ void G4VCollision::Print(const G4KineticTrack& trk1,
   }
 }
 
-G4VCollision::G4VCollision(void*, void*, void *, void *, void *, void *, void *)
-{
-}
+G4VCollision::G4VCollision(void*, void*, void*, void*, void*, void*, void*) {}
 
-void G4VCollision::establish_G4MT_TLS_G4VCollision()
-{
-}
+void G4VCollision::establish_G4MT_TLS_G4VCollision() {}

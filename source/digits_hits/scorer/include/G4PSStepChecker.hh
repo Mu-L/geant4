@@ -26,11 +26,11 @@
 //
 //
 
-#ifndef G4PSStepChecker_h
-#define G4PSStepChecker_h 1
+#ifndef G4PSSTEPCHECKER_HH
+#define G4PSSTEPCHECKER_HH
 
-#include "G4VPrimitiveScorer.hh"
 #include "G4THitsMap.hh"
+#include "G4VPrimitiveScorer.hh"
 
 //////////////////////////////////////////////////////////////////////////////////
 // (Description)
@@ -42,12 +42,14 @@
 
 class G4PSStepChecker : public G4VPrimitiveScorer
 {
- public:
-  G4PSStepChecker(const G4String& name, G4int depth = 0);
-  ~G4PSStepChecker() override = default;
+  public:
 
- protected:
-  G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+    G4PSStepChecker(const G4String& name, G4int depth = 0);
+    ~G4PSStepChecker() override = default;
+
+  protected:
+
+    G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
 };
 
 #endif

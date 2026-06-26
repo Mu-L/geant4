@@ -30,16 +30,17 @@
 //              in the CM for pion - nucleon inelastic two-body scattering
 //
 
-#ifndef G4PiNInelasticAngDst_h
-#define G4PiNInelasticAngDst_h 1
+#ifndef G4PININELASTICANGDST_HH
+#define G4PININELASTICANGDST_HH
 
 #include "G4ParamExpTwoBodyAngDst.hh"
 
+class G4PiNInelasticAngDst : public G4ParamExpTwoBodyAngDst<10>
+{
+  public:
 
-class G4PiNInelasticAngDst : public G4ParamExpTwoBodyAngDst<10> {
-public:
-  G4PiNInelasticAngDst(G4int verbose = 0);
-  virtual ~G4PiNInelasticAngDst() {;}
+    G4PiNInelasticAngDst(G4int verbose = 0);
+    virtual ~G4PiNInelasticAngDst() { ; }
 };
 
 #endif

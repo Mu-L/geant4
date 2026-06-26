@@ -27,8 +27,9 @@
 //
 // G4PSEnergyDeposit
 #include "G4PSEnergyDeposit.hh"
-#include "G4VScoreHistFiller.hh"
+
 #include "G4UnitsTable.hh"
+#include "G4VScoreHistFiller.hh"
 ////////////////////////////////////////////////////////////////////////////////
 // Description:
 //   This is a primitive scorer class for scoring energy deposit.
@@ -44,11 +45,8 @@ G4PSEnergyDeposit::G4PSEnergyDeposit(const G4String& name, G4int depth)
   : G4PSEnergyDeposit(name, "MeV", depth)
 {}
 
-G4PSEnergyDeposit::G4PSEnergyDeposit(const G4String& name, const G4String& unit,
-                                     G4int depth)
-  : G4VPrimitivePlotter(name, depth)
-  , HCID(-1)
-  , EvtMap(nullptr)
+G4PSEnergyDeposit::G4PSEnergyDeposit(const G4String& name, const G4String& unit, G4int depth)
+  : G4VPrimitivePlotter(name, depth), HCID(-1), EvtMap(nullptr)
 {
   SetUnit(unit);
 }
@@ -56,21 +54,19 @@ G4PSEnergyDeposit::G4PSEnergyDeposit(const G4String& name, const G4String& unit,
 G4bool G4PSEnergyDeposit::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
   G4double edep = aStep->GetTotalEnergyDeposit();
-  if(edep == 0.)
-    return false;
+  if (edep == 0.) return false;
   G4double wei = aStep->GetPreStepPoint()->GetWeight();  // (Particle Weight)
-  G4int index  = GetIndex(aStep);
+  G4int index = GetIndex(aStep);
   G4double edepwei = edep * wei;
   EvtMap->add(index, edepwei);
 
-  if(!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
+  if (!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
   {
     auto filler = G4VScoreHistFiller::Instance();
-    if(filler == nullptr)
+    if (filler == nullptr)
     {
-      G4Exception(
-        "G4PSEnergyDeposit::ProcessHits", "SCORER0123", JustWarning,
-        "G4TScoreHistFiller is not instantiated!! Histogram is not filled.");
+      G4Exception("G4PSEnergyDeposit::ProcessHits", "SCORER0123", JustWarning,
+                  "G4TScoreHistFiller is not instantiated!! Histogram is not filled.");
     }
     else
     {
@@ -83,26 +79,27 @@ G4bool G4PSEnergyDeposit::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 
 void G4PSEnergyDeposit::Initialize(G4HCofThisEvent* HCE)
 {
-  EvtMap = new G4THitsMap<G4double>(GetMultiFunctionalDetector()->GetName(),
-                                    GetName());
-  if(HCID < 0)
+  EvtMap = new G4THitsMap<G4double>(GetMultiFunctionalDetector()->GetName(), GetName());
+  if (HCID < 0)
   {
     HCID = GetCollectionID(0);
   }
-  HCE->AddHitsCollection(HCID, (G4VHitsCollection*) EvtMap);
+  HCE->AddHitsCollection(HCID, (G4VHitsCollection*)EvtMap);
 }
 
-void G4PSEnergyDeposit::clear() { EvtMap->clear(); }
+void G4PSEnergyDeposit::clear()
+{
+  EvtMap->clear();
+}
 
 void G4PSEnergyDeposit::PrintAll()
 {
   G4cout << " MultiFunctionalDet  " << detector->GetName() << G4endl;
   G4cout << " PrimitiveScorer " << GetName() << G4endl;
   G4cout << " Number of entries " << EvtMap->entries() << G4endl;
-  for(const auto& [copy, edep] : *(EvtMap->GetMap()))
+  for (const auto& [copy, edep] : *(EvtMap->GetMap()))
   {
-    G4cout << "  copy no.: " << copy
-           << "  energy deposit: " << *(edep) / GetUnitValue() << " ["
+    G4cout << "  copy no.: " << copy << "  energy deposit: " << *(edep) / GetUnitValue() << " ["
            << GetUnit() << "]" << G4endl;
   }
 }

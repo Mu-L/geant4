@@ -38,8 +38,8 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4VFastSimulationModel_h
-#define G4VFastSimulationModel_h
+#ifndef G4VFASTSIMULATIONMODEL_HH
+#define G4VFASTSIMULATIONMODEL_HH
 
 #include "G4FastStep.hh"
 #include "G4FastTrack.hh"
@@ -59,6 +59,7 @@
 class G4VFastSimulationModel
 {
   public:
+
     // aName identifies the parameterisation model.
     G4VFastSimulationModel(const G4String& aName);
 
@@ -130,6 +131,7 @@ class G4VFastSimulationModel
     G4bool operator==(const G4VFastSimulationModel&) const;
 
   private:
+
     //-------------
     // Model Name:
     //-------------

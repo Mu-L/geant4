@@ -29,8 +29,9 @@
 #ifndef g4csv_defs_h
 #define g4csv_defs_h
 
-#include "tools/wcsv_ntuple"
 #include "g4hntools_defs.hh"
+
+#include "tools/wcsv_ntuple"
 
 // Csv output specific types
 using G4CsvNtuple = tools::wcsv::ntuple;

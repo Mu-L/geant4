@@ -25,434 +25,424 @@
 //
 //  MR - 04/04/2012
 //  Based on G4DNACrossSectionDataSet
-// 
+//
 
 #include "G4MicroElecCrossSectionDataSet_new.hh"
-#include "G4VDataSetAlgorithm.hh"
+
 #include "G4EMDataSet.hh"
-#include <vector>
+#include "G4VDataSetAlgorithm.hh"
+
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-
-G4MicroElecCrossSectionDataSet_new::G4MicroElecCrossSectionDataSet_new(G4VDataSetAlgorithm* argAlgorithm, 
-						   G4double argUnitEnergies, 
-						   G4double argUnitData)
-  :
-   algorithm(argAlgorithm), unitEnergies(argUnitEnergies), unitData(argUnitData)
-{;}
+G4MicroElecCrossSectionDataSet_new::G4MicroElecCrossSectionDataSet_new(
+  G4VDataSetAlgorithm* argAlgorithm, G4double argUnitEnergies, G4double argUnitData)
+  : algorithm(argAlgorithm), unitEnergies(argUnitEnergies), unitData(argUnitData)
+{
+  ;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4MicroElecCrossSectionDataSet_new::~G4MicroElecCrossSectionDataSet_new()
 {
   CleanUpComponents();
- 
-  if (algorithm)
-    delete algorithm;
+
+  if (algorithm) delete algorithm;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4bool G4MicroElecCrossSectionDataSet_new::LoadData(const G4String & argFileName)
+G4bool G4MicroElecCrossSectionDataSet_new::LoadData(const G4String& argFileName)
 {
   CleanUpComponents();
   G4cout << "loaddata : " << argFileName << G4endl;
   G4String fullFileName(FullFileName(argFileName));
-  std::ifstream in(fullFileName, std::ifstream::binary|std::ifstream::in);
-  
+  std::ifstream in(fullFileName, std::ifstream::binary | std::ifstream::in);
+
   if (!in.is_open())
-    {
-      G4String message("Data file \"");
-      message+=fullFileName;
-      message+="\" not found";
-      G4Exception("G4MicroElecCrossSectionDataSet_new::LoadData","em0003",
-		  FatalException,message);
-      return false;
-    }
-  
-  std::vector<G4DataVector *> columns;
-  std::vector<G4DataVector *> log_columns;
-  
-  std::stringstream *stream(new std::stringstream);
+  {
+    G4String message("Data file \"");
+    message += fullFileName;
+    message += "\" not found";
+    G4Exception("G4MicroElecCrossSectionDataSet_new::LoadData", "em0003", FatalException, message);
+    return false;
+  }
+
+  std::vector<G4DataVector*> columns;
+  std::vector<G4DataVector*> log_columns;
+
+  std::stringstream* stream(new std::stringstream);
   char c;
   G4bool comment(false);
   G4bool space(true);
   G4bool first(true);
-  
+
   try
+  {
+    while (!in.eof())
     {
-      while (!in.eof())
-	{
-	  in.get(c);
-	  
-	  switch (c)
-	    {
-	    case '\r':
-	    case '\n':
-	      if (!first)
-		{
-		  unsigned long i(0);
-		  G4double value;
-		  
-		  while (!stream->eof())
-		    {
-		      (*stream) >> value;
-		      
-		      while (i>=columns.size())
-                        {
-			  columns.push_back(new G4DataVector);
-			  log_columns.push_back(new G4DataVector);
-                        }
-		      
-		      columns[i]->push_back(value);
-		      
-		      // N. A. Karakatsanis
-		      // A condition is applied to check if negative or zero values are present in the dataset.
-		      // If yes, then a near-zero value is applied to allow the computation of the logarithmic value
-		      // If a value is zero, this simplification is acceptable
-		      // If a value is negative, then it is not acceptable and the data of the particular column of
-		      // logarithmic values should not be used by interpolation methods.
-		      //
-		      // Therefore, G4LogLogInterpolation and G4LinLogLogInterpolation should not be used if negative values are present.
-		      // Instead, G4LinInterpolation is safe in every case
-		      // SemiLogInterpolation is safe only if the energy columns are non-negative
-		      // G4LinLogInterpolation is safe only if the cross section data columns are non-negative
-		      
-                      if (value <=0.) value = 1e-300;
-                      log_columns[i]->push_back(std::log10(value));
-		      
-		      i++;
-		    }
-		  
-		  delete stream;
-		  stream=new std::stringstream;
-		}
-	      
-	      first=true;
-	      comment=false;
-	      space=true;
-	      break;
-	      
-	    case '#':
-	      comment=true;
-	      break;
-	      
-	    case '\t':
-	      c=' ';
-              break; 
-	    //case ' ':
-            //  if (space)
-	    //	break;
-	    default:
-              if ((c==' ') && space)
-                 break;
-              
-	      if (comment)
-		break;
-	      
-	      if (c==' ')
-		space=true;
-	      else
-		{
-		  if (space && (!first))
-		    (*stream) << ' ';
-		  
-		  first=false;
-		  (*stream) << c;
-		  space=false;
-		}
-	    }
-	}
+      in.get(c);
+
+      switch (c)
+      {
+        case '\r':
+        case '\n':
+          if (!first)
+          {
+            unsigned long i(0);
+            G4double value;
+
+            while (!stream->eof())
+            {
+              (*stream) >> value;
+
+              while (i >= columns.size())
+              {
+                columns.push_back(new G4DataVector);
+                log_columns.push_back(new G4DataVector);
+              }
+
+              columns[i]->push_back(value);
+
+              // N. A. Karakatsanis
+              // A condition is applied to check if negative or zero values are present in the
+              // dataset. If yes, then a near-zero value is applied to allow the computation of the
+              // logarithmic value If a value is zero, this simplification is acceptable If a value
+              // is negative, then it is not acceptable and the data of the particular column of
+              // logarithmic values should not be used by interpolation methods.
+              //
+              // Therefore, G4LogLogInterpolation and G4LinLogLogInterpolation should not be used if
+              // negative values are present. Instead, G4LinInterpolation is safe in every case
+              // SemiLogInterpolation is safe only if the energy columns are non-negative
+              // G4LinLogInterpolation is safe only if the cross section data columns are
+              // non-negative
+
+              if (value <= 0.) value = 1e-300;
+              log_columns[i]->push_back(std::log10(value));
+
+              i++;
+            }
+
+            delete stream;
+            stream = new std::stringstream;
+          }
+
+          first = true;
+          comment = false;
+          space = true;
+          break;
+
+        case '#':
+          comment = true;
+          break;
+
+        case '\t':
+          c = ' ';
+          break;
+        // case ' ':
+        //   if (space)
+        //	break;
+        default:
+          if ((c == ' ') && space) break;
+
+          if (comment) break;
+
+          if (c == ' ')
+            space = true;
+          else
+          {
+            if (space && (!first)) (*stream) << ' ';
+
+            first = false;
+            (*stream) << c;
+            space = false;
+          }
+      }
     }
-  catch(const std::ios::failure &e)
-    {
-      // some implementations of STL could throw a "failture" exception
-      // when read wants read characters after end of file
-    }
+  }
+  catch (const std::ios::failure& e)
+  {
+    // some implementations of STL could throw a "failture" exception
+    // when read wants read characters after end of file
+  }
   delete stream;
-  
+
   std::size_t maxI(columns.size());
-  
-  if (maxI<2)
+
+  if (maxI < 2)
+  {
+    G4String message("Data file \"");
+    message += fullFileName;
+    message += "\" should have at least two columns";
+    G4Exception("G4MicroElecCrossSectionDataSet_new::LoadData", "em0005", FatalException, message);
+    return false;
+  }
+
+  std::size_t i(1);
+  while (i < maxI)
+  {
+    std::size_t maxJ(columns[i]->size());
+
+    if (maxJ != columns[0]->size())
     {
       G4String message("Data file \"");
-      message+=fullFileName;
-      message+="\" should have at least two columns";
-      G4Exception("G4MicroElecCrossSectionDataSet_new::LoadData","em0005",
-		  FatalException,message);
+      message += fullFileName;
+      message += "\" has lines with a different number of columns";
+      G4Exception("G4MicroElecCrossSectionDataSet_new::LoadData", "em0005", FatalException,
+                  message);
       return false;
     }
-  
-  std::size_t i(1);
-  while (i<maxI)
+
+    std::size_t j(0);
+
+    G4DataVector* argEnergies = new G4DataVector;
+    G4DataVector* argData = new G4DataVector;
+    G4DataVector* argLogEnergies = new G4DataVector;
+    G4DataVector* argLogData = new G4DataVector;
+
+    while (j < maxJ)
     {
-      std::size_t maxJ(columns[i]->size());
-      
-      if (maxJ!=columns[0]->size())
-	{
-	  G4String message("Data file \"");
-	  message+=fullFileName;
-	  message+="\" has lines with a different number of columns";
-	  G4Exception("G4MicroElecCrossSectionDataSet_new::LoadData","em0005",
-                      FatalException,message);
-	  return false;
-	}
-      
-      std::size_t j(0);
-      
-      G4DataVector *argEnergies=new G4DataVector;
-      G4DataVector *argData=new G4DataVector;
-      G4DataVector *argLogEnergies=new G4DataVector;
-      G4DataVector *argLogData=new G4DataVector;
-      
-      while(j<maxJ)
-	{
-	  argEnergies->push_back(columns[0]->operator[] (j)*GetUnitEnergies());
-	  argData->push_back(columns[i]->operator[] (j)*GetUnitData());
-	  argLogEnergies->push_back(log_columns[0]->operator[] (j) + std::log10(GetUnitEnergies()));
-	  argLogData->push_back(log_columns[i]->operator[] (j) + std::log10(GetUnitData()));
-	  j++;
-	}
-      
-      AddComponent(new G4EMDataSet(G4int(i-1), argEnergies, argData, argLogEnergies, argLogData, GetAlgorithm()->Clone(), GetUnitEnergies(), GetUnitData()));
-      
-      ++i;
+      argEnergies->push_back(columns[0]->operator[](j) * GetUnitEnergies());
+      argData->push_back(columns[i]->operator[](j) * GetUnitData());
+      argLogEnergies->push_back(log_columns[0]->operator[](j) + std::log10(GetUnitEnergies()));
+      argLogData->push_back(log_columns[i]->operator[](j) + std::log10(GetUnitData()));
+      j++;
     }
-  
-  i=maxI;
-  while (i>0)
-    {
-      i--;
-      delete columns[i];
-      delete log_columns[i];
-    }
+
+    AddComponent(new G4EMDataSet(G4int(i - 1), argEnergies, argData, argLogEnergies, argLogData,
+                                 GetAlgorithm()->Clone(), GetUnitEnergies(), GetUnitData()));
+
+    ++i;
+  }
+
+  i = maxI;
+  while (i > 0)
+  {
+    i--;
+    delete columns[i];
+    delete log_columns[i];
+  }
 
   return true;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4bool G4MicroElecCrossSectionDataSet_new::LoadNonLogData(const G4String & argFileName)
+G4bool G4MicroElecCrossSectionDataSet_new::LoadNonLogData(const G4String& argFileName)
 {
   CleanUpComponents();
 
   G4String fullFileName(FullFileName(argFileName));
-  std::ifstream in(fullFileName, std::ifstream::binary|std::ifstream::in);
+  std::ifstream in(fullFileName, std::ifstream::binary | std::ifstream::in);
 
   if (!in.is_open())
-    {
-      G4String message("Data file \"");
-      message+=fullFileName;
-      message+="\" not found";
-      G4Exception("G4MicroElecCrossSectionDataSet_new::LoadData","em0003",
-                      FatalException,message);
-      return false;
-    }
+  {
+    G4String message("Data file \"");
+    message += fullFileName;
+    message += "\" not found";
+    G4Exception("G4MicroElecCrossSectionDataSet_new::LoadData", "em0003", FatalException, message);
+    return false;
+  }
 
-  std::vector<G4DataVector *> columns;
+  std::vector<G4DataVector*> columns;
 
-  std::stringstream *stream(new std::stringstream);
+  std::stringstream* stream(new std::stringstream);
   char c;
   G4bool comment(false);
   G4bool space(true);
   G4bool first(true);
 
   try
+  {
+    while (!in.eof())
     {
-      while (!in.eof())
-	{
-	  in.get(c);
-   
-	  switch (c)
-	    {
-	    case '\r':
-	    case '\n':
-	      if (!first)
-		{
-		  unsigned long i(0);
-		  G4double value;
-      
-		  while (!stream->eof())
-		    {
-		      (*stream) >> value;
-       
-		      while (i>=columns.size())
-                        {
-			 columns.push_back(new G4DataVector);
-                        }
-      
-		      columns[i]->push_back(value);
-       
-		      i++;
-		    }
-      
-		  delete stream;
-		  stream=new std::stringstream;
-		}
-     
-	      first=true;
-	      comment=false;
-	      space=true;
-	      break;
-     
-	    case '#':
-	      comment=true;
-	      break;
-     
-	    default:
-              if( c=='\t')
-                 c=' ';
-              if( c==' ' && space)
-                 break;
+      in.get(c);
 
-	      if (comment)
-		break;
-     
-	      if (c==' ')
-		space=true;
-	      else
-		{
-		  if (space && (!first))
-		    (*stream) << ' ';
-      
-		  first=false;
-		  (*stream) << c;
-		  space=false;
-		}
-	    }
-	}
+      switch (c)
+      {
+        case '\r':
+        case '\n':
+          if (!first)
+          {
+            unsigned long i(0);
+            G4double value;
+
+            while (!stream->eof())
+            {
+              (*stream) >> value;
+
+              while (i >= columns.size())
+              {
+                columns.push_back(new G4DataVector);
+              }
+
+              columns[i]->push_back(value);
+
+              i++;
+            }
+
+            delete stream;
+            stream = new std::stringstream;
+          }
+
+          first = true;
+          comment = false;
+          space = true;
+          break;
+
+        case '#':
+          comment = true;
+          break;
+
+        default:
+          if (c == '\t') c = ' ';
+          if (c == ' ' && space) break;
+
+          if (comment) break;
+
+          if (c == ' ')
+            space = true;
+          else
+          {
+            if (space && (!first)) (*stream) << ' ';
+
+            first = false;
+            (*stream) << c;
+            space = false;
+          }
+      }
     }
-  catch(const std::ios::failure &e)
-    {
-      // some implementations of STL could throw a "failture" exception
-      // when read wants read characters after end of file
-    }
- 
+  }
+  catch (const std::ios::failure& e)
+  {
+    // some implementations of STL could throw a "failture" exception
+    // when read wants read characters after end of file
+  }
+
   delete stream;
- 
+
   std::size_t maxI(columns.size());
- 
-  if (maxI<2)
+
+  if (maxI < 2)
+  {
+    G4String message("Data file \"");
+    message += fullFileName;
+    message += "\" should have at least two columns";
+    G4Exception("G4MicroElecCrossSectionDataSet_new::LoadData", "em0005", FatalException, message);
+    return false;
+  }
+
+  std::size_t i(1);
+  while (i < maxI)
+  {
+    std::size_t maxJ(columns[i]->size());
+
+    if (maxJ != columns[0]->size())
     {
       G4String message("Data file \"");
-      message+=fullFileName;
-      message+="\" should have at least two columns";
-      G4Exception("G4MicroElecCrossSectionDataSet_new::LoadData","em0005",
-                      FatalException,message);
+      message += fullFileName;
+      message += "\" has lines with a different number of columns.";
+      G4Exception("G4MicroElecCrossSectionDataSet_new::LoadData", "em0005", FatalException,
+                  message);
       return false;
     }
- 
-  std::size_t i(1);
-  while (i<maxI)
+
+    std::size_t j(0);
+
+    G4DataVector* argEnergies = new G4DataVector;
+    G4DataVector* argData = new G4DataVector;
+
+    while (j < maxJ)
     {
-      std::size_t maxJ(columns[i]->size());
-
-	    
-      if (maxJ!=columns[0]->size())
-	{
-	  G4String message("Data file \"");
-	  message+=fullFileName;
-	  message+="\" has lines with a different number of columns.";
-          G4Exception("G4MicroElecCrossSectionDataSet_new::LoadData","em0005",
-                      FatalException,message);
-	  return false;
-	}
-
-      std::size_t j(0);
-
-      G4DataVector *argEnergies=new G4DataVector;
-      G4DataVector *argData=new G4DataVector;
-
-      while(j<maxJ)
-	{
-	  argEnergies->push_back(columns[0]->operator[] (j)*GetUnitEnergies());
-	  argData->push_back(columns[i]->operator[] (j)*GetUnitData());
-	  ++j;
-	}
-
-      AddComponent(new G4EMDataSet(G4int(i-1), argEnergies, argData, GetAlgorithm()->Clone(), GetUnitEnergies(), GetUnitData()));
-  
-      ++i;
+      argEnergies->push_back(columns[0]->operator[](j) * GetUnitEnergies());
+      argData->push_back(columns[i]->operator[](j) * GetUnitData());
+      ++j;
     }
 
-  i=maxI;
-  while (i>0)
-    {
-      --i;
-      delete columns[i];
-    }
+    AddComponent(new G4EMDataSet(G4int(i - 1), argEnergies, argData, GetAlgorithm()->Clone(),
+                                 GetUnitEnergies(), GetUnitData()));
+
+    ++i;
+  }
+
+  i = maxI;
+  while (i > 0)
+  {
+    --i;
+    delete columns[i];
+  }
 
   return true;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4bool G4MicroElecCrossSectionDataSet_new::SaveData(const G4String & argFileName) const
+G4bool G4MicroElecCrossSectionDataSet_new::SaveData(const G4String& argFileName) const
 {
   const std::size_t n(NumberOfComponents());
- 
-  if (n==0)
-    {
-      G4Exception("G4MicroElecCrossSectionDataSet_new::SaveData","em0005",
-                      FatalException,"Expected at least one component");
 
-      return false;
-    }
- 
+  if (n == 0)
+  {
+    G4Exception("G4MicroElecCrossSectionDataSet_new::SaveData", "em0005", FatalException,
+                "Expected at least one component");
+
+    return false;
+  }
+
   G4String fullFileName(FullFileName(argFileName));
   std::ofstream out(fullFileName);
 
   if (!out.is_open())
-    {
-      G4String message("Cannot open \"");
-      message+=fullFileName;
-      message+="\"";
-      G4Exception("G4MicroElecCrossSectionDataSet_new::SaveData","em0005",
-                      FatalException,message);
-      return false;
-    }
- 
+  {
+    G4String message("Cannot open \"");
+    message += fullFileName;
+    message += "\"";
+    G4Exception("G4MicroElecCrossSectionDataSet_new::SaveData", "em0005", FatalException, message);
+    return false;
+  }
+
   G4DataVector::const_iterator iEnergies(GetComponent(0)->GetEnergies(0).begin());
   G4DataVector::const_iterator iEnergiesEnd(GetComponent(0)->GetEnergies(0).end());
-  G4DataVector::const_iterator * iData(new G4DataVector::const_iterator[n]);
- 
+  G4DataVector::const_iterator* iData(new G4DataVector::const_iterator[n]);
+
   std::size_t k(n);
- 
-  while (k>0)
+
+  while (k > 0)
+  {
+    --k;
+    iData[k] = GetComponent((G4int)k)->GetData(0).begin();
+  }
+
+  while (iEnergies != iEnergiesEnd)
+  {
+    out.precision(10);
+    out.width(15);
+    out.setf(std::ofstream::left);
+    out << ((*iEnergies) / GetUnitEnergies());
+
+    k = 0;
+
+    while (k < n)
     {
-      --k;
-      iData[k]=GetComponent((G4int)k)->GetData(0).begin();
-    }
- 
-  while (iEnergies!=iEnergiesEnd)
-    {
+      out << ' ';
       out.precision(10);
       out.width(15);
       out.setf(std::ofstream::left);
-      out << ((*iEnergies)/GetUnitEnergies());
-  
-      k=0;
-  
-      while (k<n)
-	{
-	  out << ' ';
-	  out.precision(10);
-	  out.width(15);
-	  out.setf(std::ofstream::left);
-	  out << ((*(iData[k]))/GetUnitData());
+      out << ((*(iData[k])) / GetUnitData());
 
-	  iData[k]++;
-	  ++k;
-	}
-  
-      out << std::endl;
-  
-      ++iEnergies;
+      iData[k]++;
+      ++k;
     }
- 
+
+    out << std::endl;
+
+    ++iEnergies;
+  }
+
   delete[] iData;
 
   return true;
@@ -464,13 +454,14 @@ G4String G4MicroElecCrossSectionDataSet_new::FullFileName(const G4String& argFil
 {
   const char* path = G4FindDataDir("G4LEDATA");
   if (!path)
-    {
-      G4Exception("G4MicroElecCrossSectionDataSet_new::Initialise","em0006",FatalException,"G4LEDATA environment variable not set.");
-      return "";    
-    }
-  
-  //Reading DCS file
-  
+  {
+    G4Exception("G4MicroElecCrossSectionDataSet_new::Initialise", "em0006", FatalException,
+                "G4LEDATA environment variable not set.");
+    return "";
+  }
+
+  // Reading DCS file
+
   std::ostringstream fullFileName;
   fullFileName << path << "/microelec/" << argFileName << ".dat";
   return G4String(fullFileName.str().c_str());
@@ -478,19 +469,20 @@ G4String G4MicroElecCrossSectionDataSet_new::FullFileName(const G4String& argFil
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double G4MicroElecCrossSectionDataSet_new::FindValue(G4double argEnergy, G4int /* argComponentId */) const
+G4double G4MicroElecCrossSectionDataSet_new::FindValue(G4double argEnergy,
+                                                       G4int /* argComponentId */) const
 {
   // Returns the sum over the shells corresponding to e
   G4double value = 0.;
 
-  std::vector<G4VEMDataSet *>::const_iterator i(components.begin());
-  std::vector<G4VEMDataSet *>::const_iterator end(components.end());
+  std::vector<G4VEMDataSet*>::const_iterator i(components.begin());
+  std::vector<G4VEMDataSet*>::const_iterator end(components.end());
 
-  while (i!=end)
-    {
-      value+=(*i)->FindValue(argEnergy);
-      i++;
-    }
+  while (i != end)
+  {
+    value += (*i)->FindValue(argEnergy);
+    i++;
+  }
 
   return value;
 }
@@ -510,61 +502,59 @@ void G4MicroElecCrossSectionDataSet_new::PrintData(void) const
 
   G4cout << "The data set has " << n << " components" << G4endl;
   G4cout << G4endl;
- 
+
   G4int i(0);
- 
-  while (i<(G4int)n)
-    {
-      G4cout << "--- Component " << i << " ---" << G4endl;
-      GetComponent(i)->PrintData();
-      ++i;
-    }
+
+  while (i < (G4int)n)
+  {
+    G4cout << "--- Component " << i << " ---" << G4endl;
+    GetComponent(i)->PrintData();
+    ++i;
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4MicroElecCrossSectionDataSet_new::SetEnergiesData(G4DataVector* argEnergies, 
-					 G4DataVector* argData, 
-					 G4int argComponentId)
+void G4MicroElecCrossSectionDataSet_new::SetEnergiesData(G4DataVector* argEnergies,
+                                                         G4DataVector* argData,
+                                                         G4int argComponentId)
 {
-  G4VEMDataSet * component(components[argComponentId]);
- 
+  G4VEMDataSet* component(components[argComponentId]);
+
   if (component)
-    {
-      component->SetEnergiesData(argEnergies, argData, 0);
-      return;
-    }
+  {
+    component->SetEnergiesData(argEnergies, argData, 0);
+    return;
+  }
 
   std::ostringstream message;
   message << "Component " << argComponentId << " not found";
- 
-  G4Exception("G4MicroElecCrossSectionDataSet_new::SetEnergiesData","em0005",
-                 FatalException,message.str().c_str());
-  
+
+  G4Exception("G4MicroElecCrossSectionDataSet_new::SetEnergiesData", "em0005", FatalException,
+              message.str().c_str());
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4MicroElecCrossSectionDataSet_new::SetLogEnergiesData(G4DataVector* argEnergies, 
-					 G4DataVector* argData,
-                                         G4DataVector* argLogEnergies,
-                                         G4DataVector* argLogData, 
-					 G4int argComponentId)
+void G4MicroElecCrossSectionDataSet_new::SetLogEnergiesData(G4DataVector* argEnergies,
+                                                            G4DataVector* argData,
+                                                            G4DataVector* argLogEnergies,
+                                                            G4DataVector* argLogData,
+                                                            G4int argComponentId)
 {
-  G4VEMDataSet * component(components[argComponentId]);
- 
+  G4VEMDataSet* component(components[argComponentId]);
+
   if (component)
-    {
-      component->SetLogEnergiesData(argEnergies, argData, argLogEnergies, argLogData, 0);
-      return;
-    }
+  {
+    component->SetLogEnergiesData(argEnergies, argData, argLogEnergies, argLogData, 0);
+    return;
+  }
 
   std::ostringstream message;
   message << "Component " << argComponentId << " not found";
- 
-  G4Exception("G4MicroElecCrossSectionDataSet_new::SetLogEnergiesData","em0005",
-                 FatalException,message.str().c_str());
 
+  G4Exception("G4MicroElecCrossSectionDataSet_new::SetLogEnergiesData", "em0005", FatalException,
+              message.str().c_str());
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -572,11 +562,10 @@ void G4MicroElecCrossSectionDataSet_new::SetLogEnergiesData(G4DataVector* argEne
 void G4MicroElecCrossSectionDataSet_new::CleanUpComponents()
 {
   while (!components.empty())
-    {
-      if (components.back()) delete components.back();
-      components.pop_back();
-    }
+  {
+    if (components.back()) delete components.back();
+    components.pop_back();
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-

@@ -422,7 +422,25 @@ LUPI_HOST_DEVICE double ProtareComposite::crossSection( URR_protareInfos const &
  * @param   a_crossSectionVector        [in/out]    The energy dependent, total cross section to add cross section data to.
  ***********************************************************************************************************/
 
-LUPI_HOST_DEVICE void ProtareComposite::crossSectionVector( double a_temperature, double a_userFactor, std::size_t a_numberAllocated, double *a_crossSectionVector ) const {
+LUPI_HOST_DEVICE void ProtareComposite::crossSectionVector( double a_temperature, double a_userFactor, 
+                std::size_t a_numberAllocated, double *a_crossSectionVector ) const {
+
+    std::size_t length = static_cast<std::size_t>( m_protares.size( ) );
+
+    for( std::size_t i1 = 0; i1 < length; ++i1 ) m_protares[i1]->crossSectionVector( a_temperature, a_userFactor, a_numberAllocated, a_crossSectionVector );
+}
+
+/* *********************************************************************************************************//**
+ * Adds the energy dependent, total cross section corresponding to the temperature *a_temperature* multiplied by *a_userFactor* to *a_crossSectionVector*.
+ *
+ * @param   a_temperature               [in]        Specifies the temperature of the material.
+ * @param   a_userFactor                [in]        User factor which all cross sections are multiplied by.
+ * @param   a_numberAllocated           [in]        The length of memory allocated for *a_crossSectionVector*.
+ * @param   a_crossSectionVector        [in/out]    The energy dependent, total cross section to add cross section data to.
+ ***********************************************************************************************************/
+
+LUPI_HOST_DEVICE void ProtareComposite::crossSectionVector( double a_temperature, double a_userFactor, 
+                std::size_t a_numberAllocated, float *a_crossSectionVector ) const {
 
     std::size_t length = static_cast<std::size_t>( m_protares.size( ) );
 

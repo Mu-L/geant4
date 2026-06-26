@@ -33,11 +33,10 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef FTFP_INCLXX_h
-#define FTFP_INCLXX_h 1
+#ifndef FTFP_INCLXX_HH
+#define FTFP_INCLXX_HH
 
 #include "INCLXXPhysicsListHelper.hh"
-typedef TINCLXXPhysicsListHelper<G4VModularPhysicsList,false,true> FTFP_INCLXX;
+typedef TINCLXXPhysicsListHelper<G4VModularPhysicsList, false, true> FTFP_INCLXX;
 
-#endif // FTFP_INCLXX_h
-
+#endif  // FTFP_INCLXX_h

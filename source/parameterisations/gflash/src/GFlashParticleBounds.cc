@@ -35,9 +35,9 @@
 
 #include "GFlashParticleBounds.hh"
 
-#include "G4SystemOfUnits.hh"
 #include "G4Electron.hh"
 #include "G4Positron.hh"
+#include "G4SystemOfUnits.hh"
 
 GFlashParticleBounds::GFlashParticleBounds()
 {
@@ -47,9 +47,7 @@ GFlashParticleBounds::GFlashParticleBounds()
   EEneToKill = 0.1 * GeV;  // Energie at which electrons are killed
 }
 
-GFlashParticleBounds::~GFlashParticleBounds()
-{
-}
+GFlashParticleBounds::~GFlashParticleBounds() {}
 
 void GFlashParticleBounds::SetMinEneToParametrise(G4ParticleDefinition& particleType,
                                                   G4double enemin)

@@ -24,8 +24,8 @@
 // ********************************************************************
 //
 
-#ifndef G4VPreCompoundModel_h
-#define G4VPreCompoundModel_h 1
+#ifndef G4VPRECOMPOUNDMODEL_HH
+#define G4VPRECOMPOUNDMODEL_HH
 
 // -----------------------------------------------------------------------------
 //      GEANT 4 class header file
@@ -37,15 +37,15 @@
 // -----------------------------------------------------------------------------
 
 // Class Description
-// Base class for pre-equilibrium decay models in geant4. By merit of 
-// inheriting from this class a pre-equilibrium decay model can be used 
-// in conjunction with any cascade, string parton model or other high 
+// Base class for pre-equilibrium decay models in geant4. By merit of
+// inheriting from this class a pre-equilibrium decay model can be used
+// in conjunction with any cascade, string parton model or other high
 // energy generator in the generation of final states for inelastic scattering.
 // Class Description - End
 
 #include "G4HadronicInteraction.hh"
-#include "G4ReactionProductVector.hh"
 #include "G4ReactionProduct.hh"
+#include "G4ReactionProductVector.hh"
 
 class G4HadProjectile;
 class G4HadFinalState;
@@ -55,29 +55,29 @@ class G4ExcitationHandler;
 
 class G4VPreCompoundModel : public G4HadronicInteraction
 {
-public:
+  public:
 
-  explicit G4VPreCompoundModel(G4ExcitationHandler* ptr = nullptr, 
-			       const G4String& modelName = "PrecompoundModel");
+    explicit G4VPreCompoundModel(G4ExcitationHandler* ptr = nullptr,
+                                 const G4String& modelName = "PrecompoundModel");
 
-  virtual ~G4VPreCompoundModel();
-  
-  virtual G4ReactionProductVector* DeExcite(G4Fragment& aFragment) = 0;
+    virtual ~G4VPreCompoundModel();
 
-  virtual void DeExciteModelDescription(std::ostream& outFile) const = 0;
+    virtual G4ReactionProductVector* DeExcite(G4Fragment& aFragment) = 0;
 
-  inline void SetExcitationHandler(G4ExcitationHandler* ptr);
-    
-  inline G4ExcitationHandler* GetExcitationHandler() const;
-  
-  G4VPreCompoundModel(const G4VPreCompoundModel &) = delete;
-  const G4VPreCompoundModel& operator=(const G4VPreCompoundModel &right) = delete;
-  G4bool operator==(const G4VPreCompoundModel &right) const = delete;
-  G4bool operator!=(const G4VPreCompoundModel &right) const = delete;
+    virtual void DeExciteModelDescription(std::ostream& outFile) const = 0;
 
-private:
+    inline void SetExcitationHandler(G4ExcitationHandler* ptr);
 
-  G4ExcitationHandler* theExcitationHandler;
+    inline G4ExcitationHandler* GetExcitationHandler() const;
+
+    G4VPreCompoundModel(const G4VPreCompoundModel&) = delete;
+    const G4VPreCompoundModel& operator=(const G4VPreCompoundModel& right) = delete;
+    G4bool operator==(const G4VPreCompoundModel& right) const = delete;
+    G4bool operator!=(const G4VPreCompoundModel& right) const = delete;
+
+  private:
+
+    G4ExcitationHandler* theExcitationHandler;
 };
 
 inline void G4VPreCompoundModel::SetExcitationHandler(G4ExcitationHandler* ptr)

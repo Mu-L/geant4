@@ -26,11 +26,11 @@
 //
 //
 
-#ifndef G4PSDoseDeposit_h
-#define G4PSDoseDeposit_h 1
+#ifndef G4PSDOSEDEPOSIT_HH
+#define G4PSDOSEDEPOSIT_HH
 
-#include "G4VPrimitivePlotter.hh"
 #include "G4THitsMap.hh"
+#include "G4VPrimitivePlotter.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // (Description)
@@ -45,23 +45,26 @@
 
 class G4PSDoseDeposit : public G4VPrimitivePlotter
 {
- public:
-  G4PSDoseDeposit(const G4String& name, G4int depth = 0);
-  G4PSDoseDeposit(const G4String& name, const G4String& unit, G4int depth = 0);
-  ~G4PSDoseDeposit() override = default;
+  public:
 
-  void Initialize(G4HCofThisEvent*) override;
-  void clear() override;
-  void PrintAll() override;
+    G4PSDoseDeposit(const G4String& name, G4int depth = 0);
+    G4PSDoseDeposit(const G4String& name, const G4String& unit, G4int depth = 0);
+    ~G4PSDoseDeposit() override = default;
 
-  virtual void SetUnit(const G4String& unit);
+    void Initialize(G4HCofThisEvent*) override;
+    void clear() override;
+    void PrintAll() override;
 
- protected:
-  G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
-  virtual G4double ComputeVolume(G4Step*, G4int idx);
- 
- private:
-  G4int HCID;
-  G4THitsMap<G4double>* EvtMap;
+    virtual void SetUnit(const G4String& unit);
+
+  protected:
+
+    G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+    virtual G4double ComputeVolume(G4Step*, G4int idx);
+
+  private:
+
+    G4int HCID;
+    G4THitsMap<G4double>* EvtMap;
 };
 #endif

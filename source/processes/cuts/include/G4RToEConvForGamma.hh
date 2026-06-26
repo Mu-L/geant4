@@ -31,24 +31,23 @@
 
 // Author: H.Kurashige, 05 October 2002 - First implementation
 // --------------------------------------------------------------------
-#ifndef G4RToEConvForGamma_hh
-#define G4RToEConvForGamma_hh 1
+#ifndef G4RTOECONVFORGAMMA_HH
+#define G4RTOECONVFORGAMMA_HH
 
-#include "globals.hh"
 #include "G4VRangeToEnergyConverter.hh"
+#include "globals.hh"
 
 class G4RToEConvForGamma : public G4VRangeToEnergyConverter
 {
-public:
+  public:
 
-  explicit G4RToEConvForGamma();
+    explicit G4RToEConvForGamma();
 
-  virtual ~G4RToEConvForGamma();
+    virtual ~G4RToEConvForGamma();
 
-protected:
+  protected:
 
-  G4double ComputeValue(const G4int Z, const G4double kinEnergy) final;
-
+    G4double ComputeValue(const G4int Z, const G4double kinEnergy) final;
 };
 
 #endif

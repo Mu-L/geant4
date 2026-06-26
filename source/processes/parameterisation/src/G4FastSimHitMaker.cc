@@ -64,16 +64,19 @@ void G4FastSimHitMaker::make(const G4FastHit& aHit, const G4FastTrack& aTrack)
   // do not make empty deposit
   if (aHit.GetEnergy() <= 0) return;
   // Locate the spot
-  if (!fNaviSetup) {
+  if (!fNaviSetup)
+  {
     // Choose the world volume that contains the sensitive detector based on its
     // name (empty name for mass geometry)
     G4VPhysicalVolume* worldWithSD = nullptr;
-    if (fWorldWithSdName.empty()) {
+    if (fWorldWithSdName.empty())
+    {
       worldWithSD = G4TransportationManager::GetTransportationManager()
                       ->GetNavigatorForTracking()
                       ->GetWorldVolume();
     }
-    else {
+    else
+    {
       worldWithSD =
         G4TransportationManager::GetTransportationManager()->GetParallelWorld(fWorldWithSdName);
     }
@@ -83,7 +86,8 @@ void G4FastSimHitMaker::make(const G4FastHit& aHit, const G4FastTrack& aTrack)
                                                      fTouchableHandle(), false);
     fNaviSetup = true;
   }
-  else {
+  else
+  {
     // for further deposits use hit (local) position and local->global
     // transformation
     fpNavigator->LocateGlobalPointAndUpdateTouchable(
@@ -92,10 +96,12 @@ void G4FastSimHitMaker::make(const G4FastHit& aHit, const G4FastTrack& aTrack)
   }
   G4VPhysicalVolume* currentVolume = fTouchableHandle()->GetVolume();
 
-  if (currentVolume != nullptr) {
+  if (currentVolume != nullptr)
+  {
     G4VSensitiveDetector* sensitive = currentVolume->GetLogicalVolume()->GetSensitiveDetector();
     auto fastSimSensitive = dynamic_cast<G4VFastSimSensitiveDetector*>(sensitive);
-    if (fastSimSensitive != nullptr) {
+    if (fastSimSensitive != nullptr)
+    {
       fastSimSensitive->Hit(&aHit, &aTrack, &fTouchableHandle);
     }
     else if ((sensitive != nullptr)

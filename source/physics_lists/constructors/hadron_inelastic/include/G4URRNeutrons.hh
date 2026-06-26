@@ -28,7 +28,7 @@
 //
 // ClassName:    G4URRNeutrons
 //
-// Author:       Alberto Ribon - October 2024  
+// Author:       Alberto Ribon - October 2024
 //
 // Description:  Physics list constructor that can be applied on top of any
 //               _HP or _HPT based physics list.
@@ -45,16 +45,17 @@
 //
 // Addition of neutron thermal scattering on top of any PhysicsList
 
-#ifndef G4URRNeutrons_h
-#define G4URRNeutrons_h
+#ifndef G4URRNEUTRONS_HH
+#define G4URRNEUTRONS_HH
 
 #include "G4VHadronPhysics.hh"
 #include "globals.hh"
 
-
-class G4URRNeutrons : public G4VHadronPhysics {
+class G4URRNeutrons : public G4VHadronPhysics
+{
   public:
-    explicit G4URRNeutrons( G4int ver = 1 );
+
+    explicit G4URRNeutrons(G4int ver = 1);
     virtual ~G4URRNeutrons();
     void ConstructProcess() override;
 };

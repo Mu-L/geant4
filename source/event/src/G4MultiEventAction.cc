@@ -29,25 +29,20 @@
 // --------------------------------------------------------------------
 
 #include "G4MultiEventAction.hh"
+
 #include <algorithm>
 
 void G4MultiEventAction::SetEventManager(G4EventManager* mgr)
 {
-  std::for_each( begin() , end() ,
-      [mgr](G4UserEventActionUPtr& e) { e->SetEventManager(mgr); }
-  );
+  std::for_each(begin(), end(), [mgr](G4UserEventActionUPtr& e) { e->SetEventManager(mgr); });
 }
 
 void G4MultiEventAction::BeginOfEventAction(const G4Event* evt)
 {
-  std::for_each( begin() , end() ,
-      [evt](G4UserEventActionUPtr& e) { e->BeginOfEventAction(evt); }
-  );
+  std::for_each(begin(), end(), [evt](G4UserEventActionUPtr& e) { e->BeginOfEventAction(evt); });
 }
 
 void G4MultiEventAction::EndOfEventAction(const G4Event* evt)
 {
-  std::for_each( begin() , end() ,
-      [evt](G4UserEventActionUPtr& e) { e->EndOfEventAction(evt); }
-  );
+  std::for_each(begin(), end(), [evt](G4UserEventActionUPtr& e) { e->EndOfEventAction(evt); });
 }

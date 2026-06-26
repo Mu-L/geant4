@@ -70,6 +70,7 @@ class G4MagIntegratorStepper;
 /**
  * @brief G4FieldBuilder is a singleton manager class for building magnetic
  * or other fields, using the configuration in G4FieldParameters.
+ * @ingroup geometry_magneticfield
  */
 
 class G4FieldBuilder
@@ -148,7 +149,7 @@ class G4FieldBuilder
      *  @param[in] warn If flag is true, issues a warning if the previous
      *             field is deleted.
      */
-    void SetGlobalField(G4Field* field, G4bool warn=false);
+    void SetGlobalField(G4Field* field, G4bool warn = false);
 
     /**
      * Registers the local field in the map. It updates the field objects,
@@ -162,23 +163,21 @@ class G4FieldBuilder
      *  @param[in] warn If flag is true, issues a warning if the previous
      *             field is deleted.
      */
-    void SetLocalField(G4Field* field, G4LogicalVolume* lv, G4bool warn=false);
+    void SetLocalField(G4Field* field, G4LogicalVolume* lv, G4bool warn = false);
 
     /**
      * Sets the user equation of motion.
      *  @param[in] equation Pointer to the equation of motion algorithm.
      *  @param[in] volumeName Optional volume name.
      */
-    void SetUserEquationOfMotion(G4EquationOfMotion* equation,
-                                 const G4String& volumeName = "");
+    void SetUserEquationOfMotion(G4EquationOfMotion* equation, const G4String& volumeName = "");
 
     /**
      * Sets the user stepper.
      *  @param[in] stepper Pointer to the stepper algorithm.
      *  @param[in] volumeName Optional volume name.
      */
-    void SetUserStepper(G4MagIntegratorStepper* stepper,
-                        const G4String& volumeName = "");
+    void SetUserStepper(G4MagIntegratorStepper* stepper, const G4String& volumeName = "");
 
     /**
      * Sets the verbosity level.
@@ -214,8 +213,7 @@ class G4FieldBuilder
     /**
      * Creates magnetic, electromagnetic or gravity field setup.
      */
-    void CreateFieldSetup(G4Field* field, G4FieldParameters* fieldParameters,
-                          G4LogicalVolume* lv);
+    void CreateFieldSetup(G4Field* field, G4FieldParameters* fieldParameters, G4LogicalVolume* lv);
 
     /**
      * Constructs global magnetic field setup.
@@ -241,7 +239,7 @@ class G4FieldBuilder
   private:  // Data members
 
     /** Information if an instance exists. */
-    inline static G4ThreadLocal G4bool fgIsInstance { false };
+    inline static G4ThreadLocal G4bool fgIsInstance{false};
 
     /** Messenger for this class. */
     G4FieldBuilderMessenger* fMessenger = nullptr;

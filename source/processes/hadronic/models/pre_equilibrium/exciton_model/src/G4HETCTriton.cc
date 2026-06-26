@@ -27,33 +27,35 @@
 // by V. Lara
 //
 // Modified:
-// 23.08.2010 V.Ivanchenko general cleanup, move constructor and destructor 
+// 23.08.2010 V.Ivanchenko general cleanup, move constructor and destructor
 //            the source, use G4Pow
 
 #include "G4HETCTriton.hh"
-#include "G4Triton.hh"
-#include "G4CoulombBarrier.hh"
 
-G4HETCTriton::G4HETCTriton() 
-  : G4HETCChargedFragment(G4Triton::Triton(), new G4CoulombBarrier(3, 1))
+#include "G4CoulombBarrier.hh"
+#include "G4Triton.hh"
+
+G4HETCTriton::G4HETCTriton() : G4HETCChargedFragment(G4Triton::Triton(), new G4CoulombBarrier(3, 1))
 {}
 
 G4double G4HETCTriton::GetAlpha() const
 {
   G4double C;
-  if (theFragZ <= 70) 
-    {
-      C = 0.10;
-    } 
-  else 
-    {
-      C = ((((0.15417e-06*theFragZ) - 0.29875e-04)*theFragZ 
-	    + 0.21071e-02)*theFragZ - 0.66612e-01)*theFragZ + 0.98375; 
-    }
-  
-  return 1.0 + C/3.0;
+  if (theFragZ <= 70)
+  {
+    C = 0.10;
+  }
+  else
+  {
+    C =
+      ((((0.15417e-06 * theFragZ) - 0.29875e-04) * theFragZ + 0.21071e-02) * theFragZ - 0.66612e-01)
+        * theFragZ
+      + 0.98375;
+  }
+
+  return 1.0 + C / 3.0;
 }
-  
+
 G4double G4HETCTriton::GetSpinFactor() const
 {
   // 2s+1
@@ -64,24 +66,23 @@ G4double G4HETCTriton::K(const G4Fragment& aFragment) const
 {
   // Number of protons in emitted fragment
   G4int Pa = theZ;
-  // Number of neutrons in emitted fragment 
+  // Number of neutrons in emitted fragment
   G4int Na = theA - Pa;
 
-  G4double r = G4double(theResZ)/G4double(theResA);
+  G4double r = G4double(theResZ) / G4double(theResA);
 
   G4int P = aFragment.GetNumberOfParticles();
   G4int H = aFragment.GetNumberOfHoles();
 
   G4double result = 0.0;
   if (P > 2)
-    {
-      result = 3.0/(P*(P-1.0)*(P-2.0)) * 
-	(H*(H-1.0)*(H-2.0)*r*(r-1.0)*(r-1.0) +
-	 H*(H-1.0)*(2.0*Na*r*(1.0-r)+Pa*(1.0-r)*(1.0-r)) +
-	 H*(Na*(Na-1.0)*r+2.0*Na*Pa*(1.0-r)) +
-	 Pa*Na*(Na-1.0));
+  {
+    result = 3.0 / (P * (P - 1.0) * (P - 2.0))
+             * (H * (H - 1.0) * (H - 2.0) * r * (r - 1.0) * (r - 1.0)
+                + H * (H - 1.0) * (2.0 * Na * r * (1.0 - r) + Pa * (1.0 - r) * (1.0 - r))
+                + H * (Na * (Na - 1.0) * r + 2.0 * Na * Pa * (1.0 - r)) + Pa * Na * (Na - 1.0));
 
-      result /= 3.0*r*(1.0 - r)*(1.0 - r);
-    }
-  return std::max(0.0,result);
+    result /= 3.0 * r * (1.0 - r) * (1.0 - r);
+  }
+  return std::max(0.0, result);
 }

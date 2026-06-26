@@ -25,23 +25,23 @@
 //
 //
 // Hadronic Process: Nuclear Preequilibrium
-// by V. Lara 
+// by V. Lara
 //
-// Modif (03 September 2008) by J. M. Quesada for external choice of inverse 
+// Modif (03 September 2008) by J. M. Quesada for external choice of inverse
 // cross section option
 // JMQ (06 September 2008) Also external choice has been added for:
-//                      - superimposed Coulomb barrier (if useSICB=true) 
+//                      - superimposed Coulomb barrier (if useSICB=true)
 // 20.08.2010 V.Ivanchenko added G4Pow and G4PreCompoundParameters pointers
-//                         use int Z and A and cleanup; 
+//                         use int Z and A and cleanup;
 //                         inline methods moved from icc file to hh
 
-#ifndef G4PreCompoundEmission_h
-#define G4PreCompoundEmission_h 1
+#ifndef G4PRECOMPOUNDEMISSION_HH
+#define G4PRECOMPOUNDEMISSION_HH
 
-#include "G4VPreCompoundFragment.hh"
-#include "G4ReactionProduct.hh"
 #include "G4Fragment.hh"
 #include "G4PreCompoundFragmentVector.hh"
+#include "G4ReactionProduct.hh"
+#include "G4VPreCompoundFragment.hh"
 
 class G4VPreCompoundEmissionFactory;
 class G4Pow;
@@ -49,58 +49,54 @@ class G4NuclearLevelData;
 
 class G4PreCompoundEmission
 {
-public:
+  public:
 
-  G4PreCompoundEmission();
+    G4PreCompoundEmission();
 
-  ~G4PreCompoundEmission();
+    ~G4PreCompoundEmission();
 
-  void SetDefaultModel();
+    void SetDefaultModel();
 
-  void SetHETCModel();
+    void SetHETCModel();
 
-  G4ReactionProduct* PerformEmission(G4Fragment& aFragment);
+    G4ReactionProduct* PerformEmission(G4Fragment& aFragment);
 
-  inline G4double GetTotalProbability(const G4Fragment& aFragment);
+    inline G4double GetTotalProbability(const G4Fragment& aFragment);
 
-  inline void SetOPTxs(G4int);
+    inline void SetOPTxs(G4int);
 
-  inline void UseSICB(G4bool);
+    inline void UseSICB(G4bool);
 
-  G4PreCompoundEmission(const G4PreCompoundEmission &right) = delete;
-  const G4PreCompoundEmission& operator=
-  (const G4PreCompoundEmission &right) = delete;
-  G4bool operator==(const G4PreCompoundEmission &right) const = delete;
-  G4bool operator!=(const G4PreCompoundEmission &right) const = delete;
+    G4PreCompoundEmission(const G4PreCompoundEmission& right) = delete;
+    const G4PreCompoundEmission& operator=(const G4PreCompoundEmission& right) = delete;
+    G4bool operator==(const G4PreCompoundEmission& right) const = delete;
+    G4bool operator!=(const G4PreCompoundEmission& right) const = delete;
 
-private:
+  private:
 
-  void AngularDistribution(G4VPreCompoundFragment * theFragment,
-			   const G4Fragment& aFragment,
-			   G4double kineticEnergy);
-		
-  G4double rho(G4int p, G4int h, G4double gg, 
-               G4double E, G4double Ef) const;
+    void AngularDistribution(G4VPreCompoundFragment* theFragment, const G4Fragment& aFragment,
+                             G4double kineticEnergy);
 
-  G4Pow* g4calc;
-  G4NuclearLevelData* fNuclData;
+    G4double rho(G4int p, G4int h, G4double gg, G4double E, G4double Ef) const;
 
-  G4double fFermiEnergy;
+    G4Pow* g4calc;
+    G4NuclearLevelData* fNuclData;
 
-  // A vector with the allowed emission fragments 
-  G4PreCompoundFragmentVector* theFragmentsVector;
-  G4VPreCompoundEmissionFactory* theFragmentsFactory;
+    G4double fFermiEnergy;
 
-  // Momentum of emitted fragment
-  G4ThreeVector theFinalMomentum;
-  G4bool fUseAngularGenerator;
+    // A vector with the allowed emission fragments
+    G4PreCompoundFragmentVector* theFragmentsVector;
+    G4VPreCompoundEmissionFactory* theFragmentsFactory;
 
-  G4int fModelID;
-  G4int fVerbose{1};
+    // Momentum of emitted fragment
+    G4ThreeVector theFinalMomentum;
+    G4bool fUseAngularGenerator;
+
+    G4int fModelID;
+    G4int fVerbose{1};
 };
 
-inline G4double 
-G4PreCompoundEmission::GetTotalProbability(const G4Fragment& aFragment) 
+inline G4double G4PreCompoundEmission::GetTotalProbability(const G4Fragment& aFragment)
 {
   return theFragmentsVector->CalculateProbabilities(aFragment);
 }

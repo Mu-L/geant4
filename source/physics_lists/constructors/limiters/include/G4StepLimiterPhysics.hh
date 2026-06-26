@@ -28,8 +28,8 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4StepLimiterPhysics_h
-#define G4StepLimiterPhysics_h 1
+#ifndef G4STEPLIMITERPHYSICS_HH
+#define G4STEPLIMITERPHYSICS_HH
 
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
@@ -41,33 +41,33 @@ class G4UserSpecialCuts;
 
 class G4StepLimiterPhysics : public G4VPhysicsConstructor
 {
-public:
+  public:
 
-  G4StepLimiterPhysics(const G4String& name = "stepLimiter");
-  virtual ~G4StepLimiterPhysics();
+    G4StepLimiterPhysics(const G4String& name = "stepLimiter");
+    virtual ~G4StepLimiterPhysics();
 
-public:
+  public:
 
-  // This method is dummy for physics
-  virtual void ConstructParticle();
+    // This method is dummy for physics
+    virtual void ConstructParticle();
 
-  // This method will be invoked in the Construct() method.
-  // each physics process will be instantiated and
-  // registered to the process manager of each particle type
-  virtual void ConstructProcess();
+    // This method will be invoked in the Construct() method.
+    // each physics process will be instantiated and
+    // registered to the process manager of each particle type
+    virtual void ConstructProcess();
 
-  // Option to apply the step limit to all particles
-  // (by default the step limit is applied to charged particles only)
-  void   SetApplyToAll(G4bool option) { fApplyToAll= option; }
-  G4bool GetApplyToAll() const { return fApplyToAll; }
+    // Option to apply the step limit to all particles
+    // (by default the step limit is applied to charged particles only)
+    void SetApplyToAll(G4bool option) { fApplyToAll = option; }
+    G4bool GetApplyToAll() const { return fApplyToAll; }
 
-private:
+  private:
 
-   // hide assignment operator
-  G4StepLimiterPhysics & operator=(const G4StepLimiterPhysics &right);
-  G4StepLimiterPhysics(const G4StepLimiterPhysics&);
+    // hide assignment operator
+    G4StepLimiterPhysics& operator=(const G4StepLimiterPhysics& right);
+    G4StepLimiterPhysics(const G4StepLimiterPhysics&);
 
-  G4bool  fApplyToAll;
+    G4bool fApplyToAll;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

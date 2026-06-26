@@ -24,8 +24,8 @@
 // ********************************************************************
 //
 
-#ifndef G4LindhardSorensenData_h
-#define G4LindhardSorensenData_h 1
+#ifndef G4LINDHARDSORENSENDATA_HH
+#define G4LINDHARDSORENSENDATA_HH
 
 //---------------------------------------------------------------------------
 //
@@ -49,32 +49,31 @@
 class G4PhysicsVector;
 class G4Pow;
 
-class G4LindhardSorensenData 
-{ 
-public: 
+class G4LindhardSorensenData
+{
+  public:
 
-  explicit G4LindhardSorensenData();
+    explicit G4LindhardSorensenData();
 
-  ~G4LindhardSorensenData();
+    ~G4LindhardSorensenData();
 
-  G4double GetDeltaL(G4int Z, G4double gamma) const;
+    G4double GetDeltaL(G4int Z, G4double gamma) const;
 
-  // hide assignment operator
-  G4LindhardSorensenData & operator=
-  (const  G4LindhardSorensenData &right) = delete;
-  G4LindhardSorensenData(const  G4LindhardSorensenData&) = delete;
+    // hide assignment operator
+    G4LindhardSorensenData& operator=(const G4LindhardSorensenData& right) = delete;
+    G4LindhardSorensenData(const G4LindhardSorensenData&) = delete;
 
-private:
+  private:
 
-  void InitialiseData();
+    void InitialiseData();
 
-  G4double ComputeDeltaL(G4int Z, G4double x) const;
+    G4double ComputeDeltaL(G4int Z, G4double x) const;
 
-  G4double xmin;
-  G4double xmax;
+    G4double xmin;
+    G4double xmax;
 
-  G4PhysicsVector* data[9];
-  G4Pow* g4calc;
+    G4PhysicsVector* data[9];
+    G4Pow* g4calc;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

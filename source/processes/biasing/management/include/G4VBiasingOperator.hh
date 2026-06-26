@@ -51,21 +51,23 @@
 //
 //   1) non-physics-based biasing:
 //   -----------------------------
-//   Meant for pure killing/splitting/etc. biasing operations, not 
+//   Meant for pure killing/splitting/etc. biasing operations, not
 //   associated to a physics process:
 //
 //   virtual G4VBiasingOperation* ProposeNonPhysicsBiasingOperation( const G4Track* track,
-//                                                                   const G4BiasingProcessInterface* callingProcess ) = 0;
+//                                                                   const
+//                                                                   G4BiasingProcessInterface*
+//                                                                   callingProcess ) = 0;
 //
 //   Arguments are the current track, and the G4BiasingProcessInterface
 //   pointer making the call to the operator. In this case, this process
-//   does not wrap a physics process and 
+//   does not wrap a physics process and
 //                callingProcess->GetWrappedProcess() == 0.
 //
 //   The G4VBiasingOperation pointer returned is the operation to be
 //   applied. Zero can be returned. This operation will limit the
 //   step and propose a final state.
-//   
+//
 //   This method is the first operator method called, it is called at the
 //   by the PostStepGetPhysicalInterationLength(...) method of the
 //   G4BiasingProcessInterface.
@@ -78,8 +80,10 @@
 //
 //   a) The biasing of the occurrence interaction law is proposed by:
 //
-//   virtual G4VBiasingOperation*  ProposeOccurenceBiasingOperation( const G4Track* track, 
-//                                                                   const G4BiasingProcessInterface* callingProcess ) = 0;
+//   virtual G4VBiasingOperation*  ProposeOccurenceBiasingOperation( const G4Track* track,
+//                                                                   const
+//                                                                   G4BiasingProcessInterface*
+//                                                                   callingProcess ) = 0;
 //   The current G4Track pointer and the G4BiasingProcessInterface
 //   pointer of the process calling the operator are passed. The
 //   G4BiasingProcessInterface process wraps an actual physics process
@@ -98,7 +102,9 @@
 //   b) The biasing of the physics process final state is proposed by:
 //
 //   virtual G4VBiasingOperation* ProposeFinalStateBiasingOperation( const G4Track* track,
-//                                                                   const G4BiasingProcessInterface* callingProcess ) = 0;
+//                                                                   const
+//                                                                   G4BiasingProcessInterface*
+//                                                                   callingProcess ) = 0;
 //
 //   The operator can propose a biasing operation that will handle the
 //   physic process final state biasing. As in previous case a) the
@@ -132,7 +138,7 @@
 //        biasingCase ==  BAC_FinalState;
 // The operation applied and final state passed to the tracking (particleChangeProduced) are
 // passed as information to the operator.
-// 
+//
 // virtual void OperationApplied( const G4BiasingProcessInterface* callingProcess,
 //                                G4BiasingAppliedCase biasingCase,
 //				  G4VBiasingOperation* occurenceOperationApplied,
@@ -152,13 +158,13 @@
 //
 // Author: M.Verderi (LLR), November 2013
 // --------------------------------------------------------------------
-#ifndef G4VBiasingOperator_hh
-#define G4VBiasingOperator_hh 1
+#ifndef G4VBIASINGOPERATOR_HH
+#define G4VBIASINGOPERATOR_HH
 
-#include "globals.hh"
 #include "G4BiasingAppliedCase.hh"
 #include "G4Cache.hh"
 #include "G4VStateDependent.hh"
+#include "globals.hh"
 
 #include <map>
 #include <vector>
@@ -172,11 +178,11 @@ class G4BiasingOperatorStateNotifier;
 
 class G4VBiasingOperator
 {
-  // -- State machine used to inform operators
-  // -- about run starting.
-  // -- Defined at the end of this file.
-  friend class G4BiasingOperatorStateNotifier;
-  
+    // -- State machine used to inform operators
+    // -- about run starting.
+    // -- Defined at the end of this file.
+    friend class G4BiasingOperatorStateNotifier;
+
   public:
 
     // ---------------
@@ -184,7 +190,7 @@ class G4VBiasingOperator
     // ---------------
     G4VBiasingOperator(const G4String& name);
     virtual ~G4VBiasingOperator() = default;
-  
+
     // ---- Configure() is called in sequential mode or for master thread in MT mode.
     // ---- It is in particular aimed at registering ID's to physics model at run initialization.
     virtual void Configure() {}
@@ -194,7 +200,7 @@ class G4VBiasingOperator
     // ---- inform the operator of the start of the run:
     virtual void StartRun() {}
     // ---- inform the operator of the start (end) of the tracking of a new track:
-    virtual void StartTracking( const G4Track* /* track */ ) {}
+    virtual void StartTracking(const G4Track* /* track */) {}
     virtual void EndTracking() {}
 
     // --------------------
@@ -202,90 +208,125 @@ class G4VBiasingOperator
     // --------------------
     // -- needed by user:
     const G4String& GetName() const { return fName; }
-    void AttachTo( const G4LogicalVolume* ); // -- attach to single volume 
+    void AttachTo(const G4LogicalVolume*);  // -- attach to single volume
 
     G4BiasingAppliedCase GetPreviousBiasingAppliedCase() const
-      { return fPreviousBiasingAppliedCase; }
+    {
+      return fPreviousBiasingAppliedCase;
+    }
     // -- all operators (might got to a manager):
-    static const std::vector < G4VBiasingOperator* >& GetBiasingOperators();
-      // -- get operator associated to a logical volume:
-    static G4VBiasingOperator* GetBiasingOperator( const G4LogicalVolume* );
-      // -- might go to a manager ; or moved to volume
+    static const std::vector<G4VBiasingOperator*>& GetBiasingOperators();
+    // -- get operator associated to a logical volume:
+    static G4VBiasingOperator* GetBiasingOperator(const G4LogicalVolume*);
+    // -- might go to a manager ; or moved to volume
 
-    // -- used by biasing process interface, or used by another operator (not expected to be invoked differently than with these two cases):
-    G4VBiasingOperation* GetProposedOccurenceBiasingOperation( const G4Track* track,
-                         const G4BiasingProcessInterface* callingProcess );
-    G4VBiasingOperation* GetProposedFinalStateBiasingOperation( const G4Track* track,
-                         const G4BiasingProcessInterface* callingProcess );
-    G4VBiasingOperation* GetProposedNonPhysicsBiasingOperation( const G4Track* track,
-                         const G4BiasingProcessInterface* callingProcess );
-    void ExitingBiasing( const G4Track* track,
-                         const G4BiasingProcessInterface* callingProcess );
+    // -- used by biasing process interface, or used by another operator (not expected to be invoked
+    // differently than with these two cases):
+    G4VBiasingOperation*
+    GetProposedOccurenceBiasingOperation(const G4Track* track,
+                                         const G4BiasingProcessInterface* callingProcess);
+    G4VBiasingOperation*
+    GetProposedFinalStateBiasingOperation(const G4Track* track,
+                                          const G4BiasingProcessInterface* callingProcess);
+    G4VBiasingOperation*
+    GetProposedNonPhysicsBiasingOperation(const G4Track* track,
+                                          const G4BiasingProcessInterface* callingProcess);
+    void ExitingBiasing(const G4Track* track, const G4BiasingProcessInterface* callingProcess);
 
-    void ReportOperationApplied( const G4BiasingProcessInterface* callingProcess,
-                         G4BiasingAppliedCase biasingCase,
-                         G4VBiasingOperation* operationApplied,
-                         const G4VParticleChange* particleChangeProduced );
-    void ReportOperationApplied( const G4BiasingProcessInterface* callingProcess,
-                         G4BiasingAppliedCase biasingCase,
-                         G4VBiasingOperation* occurenceOperationApplied,
-                         G4double weightForOccurenceInteraction,
-                         G4VBiasingOperation* finalStateOperationApplied,
-                         const G4VParticleChange* particleChangeProduced );
-  
+    void ReportOperationApplied(const G4BiasingProcessInterface* callingProcess,
+                                G4BiasingAppliedCase biasingCase,
+                                G4VBiasingOperation* operationApplied,
+                                const G4VParticleChange* particleChangeProduced);
+    void ReportOperationApplied(const G4BiasingProcessInterface* callingProcess,
+                                G4BiasingAppliedCase biasingCase,
+                                G4VBiasingOperation* occurenceOperationApplied,
+                                G4double weightForOccurenceInteraction,
+                                G4VBiasingOperation* finalStateOperationApplied,
+                                const G4VParticleChange* particleChangeProduced);
+
     const G4VBiasingOperation* GetPreviousNonPhysicsAppliedOperation()
-      { return  fPreviousAppliedNonPhysicsBiasingOperation; }
+    {
+      return fPreviousAppliedNonPhysicsBiasingOperation;
+    }
 
   protected:
 
     // -- mandatory methods to let the operator tell about biasing operations to be applied:
     // -------------------------------------------------------------------------------------
-    // -- These three methods have the same arguments passed : the current G4Track pointer, and the pointer of the
-    // -- G4BiasingProcessInterface instance calling this biasing operator. This same biasing operator will be called by each
+    // -- These three methods have the same arguments passed : the current G4Track pointer, and the
+    // pointer of the
+    // -- G4BiasingProcessInterface instance calling this biasing operator. This same biasing
+    // operator will be called by each
     // -- of the G4BiasingProcessInterface instances, meaning for example that:
-    // --     - if one G4BiasingProcessInterface with no wrapped physics process exits, ProposeNonPhysicsBiasingOperation(...)
+    // --     - if one G4BiasingProcessInterface with no wrapped physics process exits,
+    // ProposeNonPhysicsBiasingOperation(...)
     // --       will be called one time at the beginning of the step,
-    // --     - if three G4BiasingProcessInterface instances exist, each of these one wrapping a physics process (eg
-    // --       conversion, Compton, photo-electric), ProposeOccurenceBiasingOperation(...) will be called three times,
-    // --       by each of these instances, at the beginning of the step and ProposeFinalStateBiasingOperation(...) will
+    // --     - if three G4BiasingProcessInterface instances exist, each of these one wrapping a
+    // physics process (eg
+    // --       conversion, Compton, photo-electric), ProposeOccurenceBiasingOperation(...) will be
+    // called three times,
+    // --       by each of these instances, at the beginning of the step and
+    // ProposeFinalStateBiasingOperation(...) will
     // --       also be called by each of these instances, at the PostStepDoIt level.
     // -- If a null pointer is returned, the analog -unbiased- behavior is adopted.
     // -- non-physics-based biasing:
     // -----------------------------
     // -- [ First operator method called, at the PostStepGetPhysicalInterationLength(...) level. ]
-    virtual G4VBiasingOperation* ProposeNonPhysicsBiasingOperation( const G4Track* track, const G4BiasingProcessInterface* callingProcess ) = 0;
+    virtual G4VBiasingOperation*
+    ProposeNonPhysicsBiasingOperation(const G4Track* track,
+                                      const G4BiasingProcessInterface* callingProcess) = 0;
 
     // -- physics-based biasing:
     // -------------------------
-    // -- Method to propose an occurrence biasing operation : ie a change of the interaction length distribution. The proposed
+    // -- Method to propose an occurrence biasing operation : ie a change of the interaction length
+    // distribution. The proposed
     // -- biasing operation will then be asked for its interaction law.
-    // -- Note that *** all sanity checks regarding the operation and its interaction law will have to have been performed
-    // -- before returning the biasing operation pointer *** as no corrective/aborting actions will be possible beyond this point.
-    // -- The informations provided by the G4BiasingProcessInterface calling process (previous occurrence operation, previous step length,
-    // -- etc.) might be useful for doing this. They will be useful also to decide with continuing with a same operation proposed
-    // -- in the previous step, updating the interaction law taking into account the new G4Track state and the previous step size.
+    // -- Note that *** all sanity checks regarding the operation and its interaction law will have
+    // to have been performed
+    // -- before returning the biasing operation pointer *** as no corrective/aborting actions will
+    // be possible beyond this point.
+    // -- The informations provided by the G4BiasingProcessInterface calling process (previous
+    // occurrence operation, previous step length,
+    // -- etc.) might be useful for doing this. They will be useful also to decide with continuing
+    // with a same operation proposed
+    // -- in the previous step, updating the interaction law taking into account the new G4Track
+    // state and the previous step size.
     // -- [ Second operator method called, at the PostStepGetPhysicalInterationLength(...) level. ]
-    virtual G4VBiasingOperation* ProposeOccurenceBiasingOperation( const G4Track* track, const G4BiasingProcessInterface* callingProcess ) = 0;
+    virtual G4VBiasingOperation*
+    ProposeOccurenceBiasingOperation(const G4Track* track,
+                                     const G4BiasingProcessInterface* callingProcess) = 0;
 
     // -- [ Third operator method called, at the PostStepDoIt(...) level. ]
-    virtual G4VBiasingOperation* ProposeFinalStateBiasingOperation( const G4Track* track, const G4BiasingProcessInterface* callingProcess ) = 0;
+    virtual G4VBiasingOperation*
+    ProposeFinalStateBiasingOperation(const G4Track* track,
+                                      const G4BiasingProcessInterface* callingProcess) = 0;
 
     // -- optional methods for further information passed to the operator:
     // -------------------------------------------------------------------
-    // ---- report to operator about the operation applied, the biasingCase value provides the case of biasing applied:
-    virtual void OperationApplied( const G4BiasingProcessInterface* callingProcess, G4BiasingAppliedCase biasingCase,
-				   G4VBiasingOperation* operationApplied, const G4VParticleChange* particleChangeProduced );
-    // ---- same as above, report about the operation applied, for the case an occurrence biasing was applied, together or not with a final state biasing.
-    // ---- The variable biasingCase tells if the final state is a biased one or not. **But in all cases**, this call happens only
-    // ---- for an occurrence biasing : ie the occurrence weight is applied on top of the particleChangeProduced, which is the particle
+    // ---- report to operator about the operation applied, the biasingCase value provides the case
+    // of biasing applied:
+    virtual void OperationApplied(const G4BiasingProcessInterface* callingProcess,
+                                  G4BiasingAppliedCase biasingCase,
+                                  G4VBiasingOperation* operationApplied,
+                                  const G4VParticleChange* particleChangeProduced);
+    // ---- same as above, report about the operation applied, for the case an occurrence biasing
+    // was applied, together or not with a final state biasing.
+    // ---- The variable biasingCase tells if the final state is a biased one or not. **But in all
+    // cases**, this call happens only
+    // ---- for an occurrence biasing : ie the occurrence weight is applied on top of the
+    // particleChangeProduced, which is the particle
     // ---- *before* the weight application for occurence biasing.
-    virtual void OperationApplied( const G4BiasingProcessInterface* callingProcess, G4BiasingAppliedCase biasingCase,
-				   G4VBiasingOperation* occurenceOperationApplied, G4double weightForOccurenceInteraction,
-				   G4VBiasingOperation* finalStateOperationApplied, const G4VParticleChange* particleChangeProduced );
+    virtual void OperationApplied(const G4BiasingProcessInterface* callingProcess,
+                                  G4BiasingAppliedCase biasingCase,
+                                  G4VBiasingOperation* occurenceOperationApplied,
+                                  G4double weightForOccurenceInteraction,
+                                  G4VBiasingOperation* finalStateOperationApplied,
+                                  const G4VParticleChange* particleChangeProduced);
 
-    // ---- method to inform operator that its biasing control is over (exit volume, or end of tracking):
+    // ---- method to inform operator that its biasing control is over (exit volume, or end of
+    // tracking):
     // ---- [Called at the beginning of next step, or at the end of tracking.]
-    virtual void ExitBiasing( const G4Track* track, const G4BiasingProcessInterface* callingProcess );
+    virtual void ExitBiasing(const G4Track* track, const G4BiasingProcessInterface* callingProcess);
 
     // ----------------------------------
     // -- Delegation to another operator:
@@ -305,27 +346,27 @@ class G4VBiasingOperator
     // -- the delegation. For a scheme long delegation, the delegater operator will unset
     // -- itself has delegation. Likely to happen in the ReportOperationApplied as well,
     // -- but not sure it is mandatory though.
-  
+
   private:
 
     const G4String fName;
     // -- thread local:
-    static G4MapCache< const G4LogicalVolume*, G4VBiasingOperator* > fLogicalToSetupMap;
+    static G4MapCache<const G4LogicalVolume*, G4VBiasingOperator*> fLogicalToSetupMap;
     // -- thread local:
-    static G4VectorCache<G4VBiasingOperator* > fOperators;
+    static G4VectorCache<G4VBiasingOperator*> fOperators;
 
     // -- thread local:
-    static G4Cache< G4BiasingOperatorStateNotifier* > fStateNotifier;
+    static G4Cache<G4BiasingOperatorStateNotifier*> fStateNotifier;
 
     // -- For this operator:
-    std::vector< const G4LogicalVolume* > fRootVolumes;
-    std::map< const G4LogicalVolume*, G4int > fDepthInTree;
-  
+    std::vector<const G4LogicalVolume*> fRootVolumes;
+    std::map<const G4LogicalVolume*, G4int> fDepthInTree;
+
     // -- current operation:
     G4VBiasingOperation* fOccurenceBiasingOperation = nullptr;
     G4VBiasingOperation* fFinalStateBiasingOperation = nullptr;
     G4VBiasingOperation* fNonPhysicsBiasingOperation = nullptr;
-  
+
     // -- previous operations:
     const G4VBiasingOperation* fPreviousProposedOccurenceBiasingOperation = nullptr;
     const G4VBiasingOperation* fPreviousProposedFinalStateBiasingOperation = nullptr;

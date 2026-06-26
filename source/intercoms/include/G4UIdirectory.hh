@@ -33,14 +33,15 @@
 
 // Author: Makoto Asai, 1998
 // --------------------------------------------------------------------
-#ifndef G4UIdirectory_hh
-#define G4UIdirectory_hh 1
+#ifndef G4UIDIRECTORY_HH
+#define G4UIDIRECTORY_HH
 
 #include "G4UIcommand.hh"
 
 class G4UIdirectory : public G4UIcommand
 {
   public:
+
     // Constructors. The argument is a full path directory which
     // starts and ends with "/".
     G4UIdirectory(char* theCommandPath, G4bool commandsToBeBroadcasted = true);

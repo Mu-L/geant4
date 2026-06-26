@@ -28,7 +28,7 @@
 // Class description:
 //
 // Integrates the equations of the motion of a particle in a magnetic field
-// using 4th Runge-Kutta-Nystrom method with errors estimation 
+// using 4th Runge-Kutta-Nystrom method with errors estimation
 // (ATL-SOFT-PUB-2009-01)
 // Current form can be used only for 'pure' magnetic field.
 // Notes: 1) field must be time-independent.
@@ -40,9 +40,9 @@
 #ifndef G4NYSTROMRK4_HH
 #define G4NYSTROMRK4_HH
 
+#include "G4CachedMagneticField.hh"
 #include "G4MagIntegratorStepper.hh"
 #include "G4Mag_EqRhs.hh"
-#include "G4CachedMagneticField.hh"
 #include "G4ThreeVector.hh"
 
 #include <memory>
@@ -51,11 +51,12 @@
  * @brief G4NystromRK4 integrates the equations of the motion of a particle
  * in a magnetic field using 4th Runge-Kutta-Nystrom method with errors
  * estimation. The current form can be used only for 'pure' magnetic field.
+ * @ingroup geometry_magneticfield
  */
 
 class G4NystromRK4 : public G4MagIntegratorStepper
 {
-  public: 
+  public:
 
     /**
      * Constructor for G4NystromRK4. Can be used only for Magnetic Fields
@@ -63,14 +64,13 @@ class G4NystromRK4 : public G4MagIntegratorStepper
      *  @param[in] EquationMotion Pointer to the provided equation of motion.
      *  @param[in] distanceConstField Distance value for constant field.
      */
-    G4NystromRK4(G4Mag_EqRhs* EquationMotion, 
-                 G4double distanceConstField = 0.0); 
+    G4NystromRK4(G4Mag_EqRhs* EquationMotion, G4double distanceConstField = 0.0);
 
     /**
      * Default Destructor.
      */
-   ~G4NystromRK4() override = default;
-   
+    ~G4NystromRK4() override = default;
+
     /**
      * The stepper for the Runge Kutta integration.
      * The stepsize is fixed, with the step size given by 'hstep'.
@@ -83,18 +83,15 @@ class G4NystromRK4 : public G4MagIntegratorStepper
      *  @param[out] yOut Integration output.
      *  @param[out] yError The estimated error.
      */
-    void Stepper(const G4double y[],
-                 const G4double dydx[],
-                       G4double hstep,
-                       G4double yOut[],
-                       G4double yError[]) override;
+    void Stepper(const G4double y[], const G4double dydx[], G4double hstep, G4double yOut[],
+                 G4double yError[]) override;
 
     /**
      * Setter and getter for the distance value for constant field.
      */
-    void SetDistanceForConstantField(G4double length); 
-    G4double GetDistanceForConstantField() const; 
-   
+    void SetDistanceForConstantField(G4double length);
+    G4double GetDistanceForConstantField() const;
+
     /**
      * Returns the order, 4, of integration.
      */
@@ -103,13 +100,13 @@ class G4NystromRK4 : public G4MagIntegratorStepper
     /**
      * Returns the distance from chord line.
      */
-    G4double DistChord() const override; 
+    G4double DistChord() const override;
 
     /**
      * Returns the stepper type-ID, "kNystromRK4".
      */
     inline G4StepperType StepperType() const override;
-  
+
   private:
 
     /**

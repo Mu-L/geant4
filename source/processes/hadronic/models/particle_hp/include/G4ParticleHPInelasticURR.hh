@@ -26,13 +26,13 @@
 //
 // -------------------------------------------------------------------
 //
-//      Geant4 header file 
+//      Geant4 header file
 //
 //      File name: G4ParticleHPInelasticURR.hh
 //
 //      Authors: Marek Zmeskal (CTU, Czech Technical University in Prague, Czech Republic)
 //	         Loic Thulliez (CEA France)
-// 
+//
 //      Creation date: 4 June 2024
 //
 //      Description: Final state production model for a high precision
@@ -44,37 +44,40 @@
 //                   class with the corresponding process.
 //
 //      Modifications:
-//      
+//
 // -------------------------------------------------------------------
 //
 //
-#ifndef G4ParticleHPInelasticURR_h
-#define G4ParticleHPInelasticURR_h 1
+#ifndef G4PARTICLEHPINELASTICURR_HH
+#define G4PARTICLEHPINELASTICURR_HH
 
-#include "globals.hh"
 #include "G4HadronicInteraction.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4ParticleHPInelastic;
 
-
-class G4ParticleHPInelasticURR : public G4HadronicInteraction {
+class G4ParticleHPInelasticURR : public G4HadronicInteraction
+{
   public:
+
     G4ParticleHPInelasticURR();
     ~G4ParticleHPInelasticURR();
-  
-    G4HadFinalState* ApplyYourself( const G4HadProjectile& aTrack, G4Nucleus& aTargetNucleus );
 
-    virtual const std::pair< G4double, G4double > GetFatalEnergyCheckLevels() const;
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& aTargetNucleus);
+
+    virtual const std::pair<G4double, G4double> GetFatalEnergyCheckLevels() const;
     G4int GetVerboseLevel() const;
-    void SetVerboseLevel( G4int );
-    void BuildPhysicsTable( const G4ParticleDefinition& );
-    virtual void ModelDescription( std::ostream& outFile ) const;
+    void SetVerboseLevel(G4int);
+    void BuildPhysicsTable(const G4ParticleDefinition&);
+    virtual void ModelDescription(std::ostream& outFile) const;
 
   private:
+
     G4ParticleHPInelastic* particleHPinelastic;
-    std::vector< std::pair< G4double, G4double > >* URRlimits{ nullptr };
-    G4bool doNOTusePTforInelastic{ true };
+    std::vector<std::pair<G4double, G4double>>* URRlimits{nullptr};
+    G4bool doNOTusePTforInelastic{true};
 };
 
 #endif

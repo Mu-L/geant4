@@ -29,28 +29,36 @@
 //
 
 ///////////////////////
-//G4RTRunAction.cc
+// G4RTRunAction.cc
 ///////////////////////
 
 #include "G4RTRunAction.hh"
+
 #include "G4RTRun.hh"
 #include "G4SDManager.hh"
 
-G4RTRunAction::G4RTRunAction(){;}
-G4RTRunAction::~G4RTRunAction(){;}
+G4RTRunAction::G4RTRunAction()
+{
+  ;
+}
+G4RTRunAction::~G4RTRunAction()
+{
+  ;
+}
 
 G4Run* G4RTRunAction::GenerateRun()
-{ return new G4RTRun; }
+{
+  return new G4RTRun;
+}
 
 void G4RTRunAction::BeginOfRunAction(const G4Run*)
 {
   G4SDManager* theSDMan = G4SDManager::GetSDMpointerIfExist();
-  if(theSDMan) theSDMan->Activate("/",false); 
+  if (theSDMan) theSDMan->Activate("/", false);
 }
 
 void G4RTRunAction::EndOfRunAction(const G4Run*)
 {
   G4SDManager* theSDMan = G4SDManager::GetSDMpointerIfExist();
-  if(theSDMan) theSDMan->Activate("/",true); 
+  if (theSDMan) theSDMan->Activate("/", true);
 }
-

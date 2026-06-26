@@ -45,6 +45,7 @@ class G4Field;
  * @brief G4RepleteEofM is the right-hand side of equation of motion in a
  * combined field, including: magnetic, electric, gravity, and gradient
  * B field, as well as spin tracking.
+ * @ingroup geometry_magneticfield
  */
 
 class G4RepleteEofM : public G4EquationOfMotion
@@ -70,9 +71,8 @@ class G4RepleteEofM : public G4EquationOfMotion
      *  @param[in] MomentumXc Particle momentum.
      *  @param[in] mass Particle mass.
      */
-    void SetChargeMomentumMass(G4ChargeState particleCharge, // in e+ units
-                               G4double MomentumXc,
-                               G4double mass) override;
+    void SetChargeMomentumMass(G4ChargeState particleCharge,  // in e+ units
+                               G4double MomentumXc, G4double mass) override;
 
     /**
      * Calculates the value of the derivative, given the value of the field.
@@ -80,9 +80,8 @@ class G4RepleteEofM : public G4EquationOfMotion
      *  @param[in] Field Field value.
      *  @param[out] dydx Derivatives array.
      */
-    void EvaluateRhsGivenB(const G4double y[],
-                           const G4double Field[],
-                                 G4double dydx[] ) const override;
+    void EvaluateRhsGivenB(const G4double y[], const G4double Field[],
+                           G4double dydx[]) const override;
 
     /**
      * Setter and getter for the magnetic anomaly.
@@ -95,22 +94,21 @@ class G4RepleteEofM : public G4EquationOfMotion
      */
     inline void SetBField() { fBfield = true; }
     inline void SetEField() { fEfield = true; }
-    inline void SetgradB()  { fgradB  = true; }
-    inline void SetSpin()   { fSpin   = true; }
+    inline void SetgradB() { fgradB = true; }
+    inline void SetSpin() { fSpin = true; }
 
   private:
 
     G4int fNvar = 0;
 
-    G4bool fBfield=false, fEfield=false,
-           fGfield=false, fgradB=false, fSpin=false;
+    G4bool fBfield = false, fEfield = false, fGfield = false, fgradB = false, fSpin = false;
 
-    G4double charge=0.0, mass=0.0, magMoment=0.0, spin=0.0;
+    G4double charge = 0.0, mass = 0.0, magMoment = 0.0, spin = 0.0;
 
-    G4double ElectroMagCof=0.0;
+    G4double ElectroMagCof = 0.0;
 
-    G4double omegac=0.0, anomaly=0.0;
-    G4double beta=0.0, gamma=0.0;
+    G4double omegac = 0.0, anomaly = 0.0;
+    G4double beta = 0.0, gamma = 0.0;
 };
 
 #endif

@@ -6,6 +6,10 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-05-24 Ben Morgan (clhep-V11-04-00)
+- Add .clang-format file to explicitly exclude CLHEP code from formatting.
+  - We want to retain upstream style to make changes/updates clear.
+
 ## 2025-02-04 Gabriele Cosmo (clhep-V11-03-00)
 - Properly export static symbols in RandFlat for DLL build support on Windows.
 

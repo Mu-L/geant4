@@ -34,20 +34,22 @@
 
 class G4TheRayTracer;
 
-class G4RayTracerViewer: public G4VViewer {
-public:
-  G4RayTracerViewer(G4VSceneHandler&,
-		    const G4String& name,
-		    G4TheRayTracer* = 0);
-  virtual ~G4RayTracerViewer();
-  void Initialise();
-  void SetView();
-  void ClearView();
-  void DrawView();
-  G4TheRayTracer* GetTracer() {return theTracer;}
-protected:
-  G4int fFileCount;
-  G4TheRayTracer* theTracer;
+class G4RayTracerViewer : public G4VViewer
+{
+  public:
+
+    G4RayTracerViewer(G4VSceneHandler&, const G4String& name, G4TheRayTracer* = 0);
+    virtual ~G4RayTracerViewer();
+    void Initialise();
+    void SetView();
+    void ClearView();
+    void DrawView();
+    G4TheRayTracer* GetTracer() { return theTracer; }
+
+  protected:
+
+    G4int fFileCount;
+    G4TheRayTracer* theTracer;
 };
 
 #endif

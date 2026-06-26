@@ -35,8 +35,8 @@
 
 // Author: M.Asai, SLAC
 // --------------------------------------------------------------------
-#ifndef G4EvManMessenger_hh
-#define G4EvManMessenger_hh 1
+#ifndef G4EVMANMESSENGER_HH
+#define G4EVMANMESSENGER_HH
 
 #include "G4UImessenger.hh"
 
@@ -64,4 +64,3 @@ class G4EvManMessenger : public G4UImessenger
 };
 
 #endif
-

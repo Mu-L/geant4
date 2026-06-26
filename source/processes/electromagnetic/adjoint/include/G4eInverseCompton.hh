@@ -31,26 +31,27 @@
 //  Adjoint/reverse Compton
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4eInverseCompton_h
-#define G4eInverseCompton_h 1
+#ifndef G4EINVERSECOMPTON_HH
+#define G4EINVERSECOMPTON_HH
 
-#include "globals.hh"
 #include "G4VAdjointReverseReaction.hh"
+#include "globals.hh"
 
 class G4AdjointComptonModel;
 
 class G4eInverseCompton : public G4VAdjointReverseReaction
 {
- public:
-  explicit G4eInverseCompton(G4bool whichScatCase, const G4String& process_name,
-                             G4AdjointComptonModel* aEmAdjointModel);
-  ~G4eInverseCompton() override = default;
+  public:
 
-  void ProcessDescription(std::ostream&) const override;
-  void DumpInfo() const override { ProcessDescription(G4cout); }
+    explicit G4eInverseCompton(G4bool whichScatCase, const G4String& process_name,
+                               G4AdjointComptonModel* aEmAdjointModel);
+    ~G4eInverseCompton() override = default;
 
-  G4eInverseCompton(G4eInverseCompton&) = delete;
-  G4eInverseCompton& operator=(const G4eInverseCompton& right) = delete;
+    void ProcessDescription(std::ostream&) const override;
+    void DumpInfo() const override { ProcessDescription(G4cout); }
+
+    G4eInverseCompton(G4eInverseCompton&) = delete;
+    G4eInverseCompton& operator=(const G4eInverseCompton& right) = delete;
 };
 
 #endif

@@ -42,6 +42,7 @@
 #include "G4SDManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "Randomize.hh"
+//#include <cmath>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -152,7 +153,7 @@ void TrackerSD::EndOfEvent(G4HCofThisEvent*)
   // Random placement of sphere: method 1
   /*
   G4ThreeVector randDir = G4RandomDirection();
-  G4double randRadius = G4UniformRand()*radius;
+  G4double randRadius = std::pow(G4UniformRand(), 1./3.) * radius;
   G4ThreeVector randCenterPos = randRadius*randDir + hitPos;
   */
 

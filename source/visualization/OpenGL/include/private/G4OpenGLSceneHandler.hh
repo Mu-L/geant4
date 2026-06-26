@@ -33,112 +33,106 @@
 #ifndef G4OPENGLSCENEHANDLER_HH
 #define G4OPENGLSCENEHANDLER_HH
 
-#include "globals.hh"
-
-#include "G4VSceneHandler.hh"
 #include "G4OpenGL.hh"
+#include "G4VSceneHandler.hh"
+#include "globals.hh"
 
 #include <map>
 
 class G4AttHolder;
 
 // Base class for various OpenGLSceneHandler classes.
-class G4OpenGLSceneHandler: public G4VSceneHandler {
-  
-  friend class G4OpenGLViewer;
-  
-public:
-  virtual void BeginPrimitives (const G4Transform3D& objectTransformation);
-  virtual void EndPrimitives ();
-  virtual void BeginPrimitives2D (const G4Transform3D& objectTransformation);
-  virtual void EndPrimitives2D ();
-  using G4VSceneHandler::AddPrimitive;
-  void AddPrimitive (const G4Polyline&);
-  void AddPrimitive (const G4Polymarker&);
-  void AddPrimitive (const G4Text&);
-  void AddPrimitive (const G4Circle&);
-  void AddPrimitive (const G4Square&);
-  void AddPrimitivesCircle (const std::vector <G4VMarker>&);
-  void AddPrimitivesSquare (const std::vector <G4VMarker>&);
-  void AddPrimitive (const G4Polyhedron&);
-  
-  void PreAddSolid (const G4Transform3D& objectTransformation,
-                    const G4VisAttributes&);
-  void AddSolid (const G4Box&);
-  void AddSolid (const G4Cons&);
-  void AddSolid (const G4Tubs&);
-  void AddSolid (const G4Trd&);
-  void AddSolid (const G4Trap&);
-  void AddSolid (const G4Sphere&);
-  void AddSolid (const G4Para&);
-  void AddSolid (const G4Torus&);
-  void AddSolid (const G4Polycone&);
-  void AddSolid (const G4Polyhedra&);
-  void AddSolid (const G4Orb&);
-  void AddSolid (const G4Ellipsoid&);
-  void AddSolid (const G4TessellatedSolid&);
-  void AddSolid (const G4VSolid&);
-  void AddCompound (const G4VTrajectory&);
-  void AddCompound (const G4VHit&);
-  void AddCompound (const G4VDigi&);
-  void AddCompound (const G4THitsMap<G4double>&);
-  void AddCompound (const G4THitsMap<G4StatDouble>&);
-  void AddCompound (const G4Mesh&);
+class G4OpenGLSceneHandler : public G4VSceneHandler
+{
+    friend class G4OpenGLViewer;
 
-  // enum for /vis/ogl/flushAt.
-  enum FlushAction {
-    endOfEvent,
-    endOfRun,
-    eachPrimitive,
-    NthPrimitive,
-    NthEvent,
-    never
-  };
-  static G4int GetEntitiesFlushInterval()
-  {return fEntitiesFlushInterval;}
-  static FlushAction GetFlushAction()
-  {return fFlushAction;}
-  static void SetEntitiesFlushInterval(G4int interval)
-  {fEntitiesFlushInterval = interval;}
-  static void SetFlushAction(FlushAction action)
-  {fFlushAction = action;}
+  public:
 
-protected:
-  
-  G4OpenGLSceneHandler (G4VGraphicsSystem& system,
-                        G4int id,
-                        const G4String& name = "");
-  virtual ~G4OpenGLSceneHandler ();
-  
-  void ProcessScene();
-  G4DisplacedSolid* CreateSectionSolid ();
-  G4DisplacedSolid* CreateCutawaySolid ();
-  
-  void ClearAndDestroyAtts();  // Destroys att holders and clears pick map.
-  
-  GLuint fPickName;
-  std::map<GLuint, G4AttHolder*> fPickMap;  // For picking.
-  
-  // Shared code to wait until we make a single glFlush
-  void ScaledFlush () ;
-  // Static so that they apply to all OGL scene handlers...
-  static FlushAction fFlushAction;
-  // Number of entities between flushes
-  static G4int fEntitiesFlushInterval;
+    virtual void BeginPrimitives(const G4Transform3D& objectTransformation);
+    virtual void EndPrimitives();
+    virtual void BeginPrimitives2D(const G4Transform3D& objectTransformation);
+    virtual void EndPrimitives2D();
+    using G4VSceneHandler::AddPrimitive;
+    void AddPrimitive(const G4Polyline&);
+    void AddPrimitive(const G4Polymarker&);
+    void AddPrimitive(const G4Text&);
+    void AddPrimitive(const G4Circle&);
+    void AddPrimitive(const G4Square&);
+    void AddPrimitivesCircle(const std::vector<G4VMarker>&);
+    void AddPrimitivesSquare(const std::vector<G4VMarker>&);
+    void AddPrimitive(const G4Polyhedron&);
 
-  // True if caller of primitives is capable of processing three passes.
-  G4bool fThreePassCapable;
-  
-  G4bool fSecondPassForTransparencyRequested;
-  G4bool fSecondPassForTransparency;
-  
-  G4bool fThirdPassForNonHiddenMarkersRequested;
-  G4bool fThirdPassForNonHiddenMarkers;
-  
-  static const GLubyte fStippleMaskHashed [128];
-  bool fEdgeFlag;
+    void PreAddSolid(const G4Transform3D& objectTransformation, const G4VisAttributes&);
+    void AddSolid(const G4Box&);
+    void AddSolid(const G4Cons&);
+    void AddSolid(const G4Tubs&);
+    void AddSolid(const G4Trd&);
+    void AddSolid(const G4Trap&);
+    void AddSolid(const G4Sphere&);
+    void AddSolid(const G4Para&);
+    void AddSolid(const G4Torus&);
+    void AddSolid(const G4Polycone&);
+    void AddSolid(const G4Polyhedra&);
+    void AddSolid(const G4Orb&);
+    void AddSolid(const G4Ellipsoid&);
+    void AddSolid(const G4TessellatedSolid&);
+    void AddSolid(const G4VSolid&);
+    void AddCompound(const G4VTrajectory&);
+    void AddCompound(const G4VHit&);
+    void AddCompound(const G4VDigi&);
+    void AddCompound(const G4THitsMap<G4double>&);
+    void AddCompound(const G4THitsMap<G4StatDouble>&);
+    void AddCompound(const G4Mesh&);
+
+    // enum for /vis/ogl/flushAt.
+    enum FlushAction
+    {
+      endOfEvent,
+      endOfRun,
+      eachPrimitive,
+      NthPrimitive,
+      NthEvent,
+      never
+    };
+    static G4int GetEntitiesFlushInterval() { return fEntitiesFlushInterval; }
+    static FlushAction GetFlushAction() { return fFlushAction; }
+    static void SetEntitiesFlushInterval(G4int interval) { fEntitiesFlushInterval = interval; }
+    static void SetFlushAction(FlushAction action) { fFlushAction = action; }
+
+  protected:
+
+    G4OpenGLSceneHandler(G4VGraphicsSystem& system, G4int id, const G4String& name = "");
+    virtual ~G4OpenGLSceneHandler();
+
+    void ProcessScene();
+    G4DisplacedSolid* CreateSectionSolid();
+    G4DisplacedSolid* CreateCutawaySolid();
+
+    void ClearAndDestroyAtts();  // Destroys att holders and clears pick map.
+
+    GLuint fPickName;
+    std::map<GLuint, G4AttHolder*> fPickMap;  // For picking.
+
+    // Shared code to wait until we make a single glFlush
+    void ScaledFlush();
+    // Static so that they apply to all OGL scene handlers...
+    static FlushAction fFlushAction;
+    // Number of entities between flushes
+    static G4int fEntitiesFlushInterval;
+
+    // True if caller of primitives is capable of processing three passes.
+    G4bool fThreePassCapable;
+
+    G4bool fSecondPassForTransparencyRequested;
+    G4bool fSecondPassForTransparency;
+
+    G4bool fThirdPassForNonHiddenMarkersRequested;
+    G4bool fThirdPassForNonHiddenMarkers;
+
+    static const GLubyte fStippleMaskHashed[128];
+    bool fEdgeFlag;
 };
 
 #include "G4OpenGLSceneHandler.icc"
 
-#endif // G4OPENGLSCENEHANDLER_HH
+#endif  // G4OPENGLSCENEHANDLER_HH

@@ -38,19 +38,21 @@
 // from this class, and G4VSensitiveDetector.
 
 //---------------------------------------------------------------
-#ifndef G4VGFlashSensitiveDetector_h
-#define G4VGFlashSensitiveDetector_h 1
+#ifndef G4VGFLASHSENSITIVEDETECTOR_HH
+#define G4VGFLASHSENSITIVEDETECTOR_HH
 
-#include "G4Step.hh"
-#include "G4VReadOutGeometry.hh"
-#include "G4TouchableHistory.hh"
-#include "GFlashEnergySpot.hh"
 #include "G4GFlashSpot.hh"
+#include "G4Step.hh"
+#include "G4TouchableHistory.hh"
+#include "G4VReadOutGeometry.hh"
 #include "G4VSensitiveDetector.hh"
+
+#include "GFlashEnergySpot.hh"
 
 class G4VGFlashSensitiveDetector
 {
   public:  // with description
+
     G4VGFlashSensitiveDetector() {}
     G4VGFlashSensitiveDetector(const G4VGFlashSensitiveDetector&) {}
     // Constructors. The user's concrete class must use one of these
@@ -59,12 +61,14 @@ class G4VGFlashSensitiveDetector
     // corresponding GG4VSensitiveDetector.
 
   public:  // without description
+
     virtual ~G4VGFlashSensitiveDetector() {}
 
     G4bool operator==(const G4VGFlashSensitiveDetector& right) const { return this == &right; }
     G4bool operator!=(const G4VGFlashSensitiveDetector& right) const { return this != &right; }
 
   public:  // without description
+
     inline G4bool Hit(G4GFlashSpot* aSpot)
     {
       // This is the public method invoked by GFlashHitMaker for generating
@@ -73,17 +77,20 @@ class G4VGFlashSensitiveDetector
 
       G4bool result = true;
       G4VSensitiveDetector* This = dynamic_cast<G4VSensitiveDetector*>(this);
-      if (!This) {
+      if (!This)
+      {
         G4Exception("G4VGFlashSensitiveDetector::Hit()", "InvalidSetup", FatalException,
                     "Needs also to inherit from G4VSensitiveDetector!");
         return false;
       }
-      if (This->isActive()) {
+      if (This->isActive())
+      {
         G4VReadOutGeometry* ROgeometry = 0;
         G4TouchableHistory* ROhis = 0;
 
         if (This) ROgeometry = This->GetROgeometry();
-        if (ROgeometry) {
+        if (ROgeometry)
+        {
           // fake pre-step point for touchable from read-out geometry.
           G4Step fakeStep;
           G4StepPoint* tmpPoint = fakeStep.GetPreStepPoint();
@@ -95,13 +102,15 @@ class G4VGFlashSensitiveDetector
         }
         if (result) result = ProcessHits(aSpot, ROhis);
       }
-      else {
+      else
+      {
         result = false;
       }
       return result;
     }
 
   protected:  // with description
+
     virtual G4bool ProcessHits(G4GFlashSpot* aSpot, G4TouchableHistory* ROhist) = 0;
     // The user MUST implement this method for generating hit(s) from the
     // GFlashSpots. Be aware that this method is a protected method and it
@@ -111,4 +120,3 @@ class G4VGFlashSensitiveDetector
 };
 
 #endif
-

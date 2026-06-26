@@ -30,15 +30,17 @@
 //              in the CM for hadron/nucleon 3-body final states
 //
 
-#ifndef G4HadNucl3BodyMomDst_h
-#define G4HadNucl3BodyMomDst_h 1
+#ifndef G4HADNUCL3BODYMOMDST_HH
+#define G4HADNUCL3BODYMOMDST_HH
 
 #include "G4InuclParamMomDst.hh"
 
-class G4HadNucl3BodyMomDst : public G4InuclParamMomDst {
-public:
-  G4HadNucl3BodyMomDst(G4int verbose = 0);
-  virtual ~G4HadNucl3BodyMomDst() {;}
+class G4HadNucl3BodyMomDst : public G4InuclParamMomDst
+{
+  public:
+
+    G4HadNucl3BodyMomDst(G4int verbose = 0);
+    virtual ~G4HadNucl3BodyMomDst() { ; }
 };
 
 #endif

@@ -30,14 +30,15 @@
 // --------------------------------------------------------------------
 
 #include "G4ExtendedPhysicsVector.hh"
-#include "G4PhysicsFreeVector.hh"
-#include "G4Log.hh"
+
 #include "G4Exp.hh"
+#include "G4Log.hh"
+#include "G4PhysicsFreeVector.hh"
+
 #include <iomanip>
 
 // --------------------------------------------------------------
-G4ExtendedPhysicsVector::G4ExtendedPhysicsVector(G4PhysicsVector* ptr, G4int nxsec)
-  : totalData(ptr)
+G4ExtendedPhysicsVector::G4ExtendedPhysicsVector(G4PhysicsVector* ptr, G4int nxsec) : totalData(ptr)
 {
   if (nullptr == ptr)
   {
@@ -50,7 +51,7 @@ G4ExtendedPhysicsVector::G4ExtendedPhysicsVector(G4PhysicsVector* ptr, G4int nxs
   if (nxsec > 1)
   {
     nPartialXS = nxsec - 1;
-    dataPartialXS = new std::vector<std::vector<G4float>* >;
+    dataPartialXS = new std::vector<std::vector<G4float>*>;
     dataPartialXS->resize((std::size_t)nPartialXS, nullptr);
   }
 }
@@ -60,7 +61,10 @@ G4ExtendedPhysicsVector::~G4ExtendedPhysicsVector()
 {
   if (nPartialXS > 0)
   {
-    for (auto const & p : *dataPartialXS) { delete p; }
+    for (auto const& p : *dataPartialXS)
+    {
+      delete p;
+    }
     delete dataPartialXS;
   }
   delete totalData;
@@ -78,10 +82,10 @@ void G4ExtendedPhysicsVector::SetDataLength(G4int dlength)
   }
   else
   {
-   if (0 < verboseLevel)
+    if (0 < verboseLevel)
     {
-      G4cout << "### G4ExtendedPhysicsVector::SetDataLength numberOfNodes="
-             << numberOfNodes << " data structure left empty." << G4endl;
+      G4cout << "### G4ExtendedPhysicsVector::SetDataLength numberOfNodes=" << numberOfNodes
+             << " data structure left empty." << G4endl;
     }
     return;
   }
@@ -90,7 +94,7 @@ void G4ExtendedPhysicsVector::SetDataLength(G4int dlength)
   {
     for (G4int i = 0; i < nPartialXS; ++i)
     {
-      (*dataPartialXS)[i] = new std::vector<G4float>(numberOfNodes, 0.f); 
+      (*dataPartialXS)[i] = new std::vector<G4float>(numberOfNodes, 0.f);
     }
   }
 }
@@ -108,7 +112,7 @@ G4double G4ExtendedPhysicsVector::LogLogValue(const G4double e, std::size_t& idx
     G4double y2 = (*totalData)[idx + 1];
     if (e1 > 0.0 && e2 > e1 && y1 > 0.0 && y2 > 0.0)
     {
-      y1 *= G4Exp(G4Log(e/e1) * G4Log(y2/y1) / G4Log(e2/e1));
+      y1 *= G4Exp(G4Log(e / e1) * G4Log(y2 / y1) / G4Log(e2 / e1));
     }
   }
   return y1;
@@ -122,8 +126,7 @@ void G4ExtendedPhysicsVector::PutPartialXSData(const std::size_t idx, const G4do
     if (0 < verboseLevel)
     {
       G4cout << "### G4ExtendedPhysicsVector::PutPartialXSData(..) idx=" << idx
-             << " is out of range " << numberOfNodes 
-             << G4endl;
+             << " is out of range " << numberOfNodes << G4endl;
     }
     return;
   }
@@ -139,7 +142,7 @@ void G4ExtendedPhysicsVector::PutPartialXSData(const std::size_t idx, const G4do
   sum += (G4float)y[nPartialXS];
   if (sum > 0.f)
   {
-    sum = 1.f/sum;
+    sum = 1.f / sum;
     for (G4int i = 0; i < nPartialXS; ++i)
     {
       (*((*dataPartialXS)[i]))[idx] *= sum;
@@ -148,11 +151,13 @@ void G4ExtendedPhysicsVector::PutPartialXSData(const std::size_t idx, const G4do
 }
 
 // --------------------------------------------------------------------
-G4int G4ExtendedPhysicsVector::SampleReactionChannel(const G4double e,
-                                                     const G4double rand,
+G4int G4ExtendedPhysicsVector::SampleReactionChannel(const G4double e, const G4double rand,
                                                      std::size_t& idx) const
 {
-  if (nPartialXS <= 1) { return 0; }
+  if (nPartialXS <= 1)
+  {
+    return 0;
+  }
   G4bool interpolation = totalData->CheckIndex(e, idx);
 
   G4double e1 = totalData->Energy(idx);
@@ -160,9 +165,12 @@ G4int G4ExtendedPhysicsVector::SampleReactionChannel(const G4double e,
   if (interpolation)
   {
     e2 = totalData->Energy(idx + 1) - e1;
-    if (e2 <= 0.0) { interpolation = false; }
+    if (e2 <= 0.0)
+    {
+      interpolation = false;
+    }
   }
-  for (G4int i=0; i < nPartialXS; ++i)
+  for (G4int i = 0; i < nPartialXS; ++i)
   {
     G4double xs = (G4double)(*((*dataPartialXS)[i]))[idx];
     if (interpolation)
@@ -170,27 +178,37 @@ G4int G4ExtendedPhysicsVector::SampleReactionChannel(const G4double e,
       G4double xs2 = (G4double)((*((*dataPartialXS)[i]))[idx + 1]) - xs;
       xs += (e - e1) * xs2 / e2;
     }
-    if (xs >= rand) { return i; }  
+    if (xs >= rand)
+    {
+      return i;
+    }
   }
   return nPartialXS;
 }
 
 // --------------------------------------------------------------------
-G4int
-G4ExtendedPhysicsVector::SampleReactionChannelLogLog(const G4double e,
-                                                     const G4double rand,
-                                                     std::size_t& idx) const
+G4int G4ExtendedPhysicsVector::SampleReactionChannelLogLog(const G4double e, const G4double rand,
+                                                           std::size_t& idx) const
 {
-  if (nPartialXS <= 1) { return 0; }
+  if (nPartialXS <= 1)
+  {
+    return 0;
+  }
   G4bool interpolation = totalData->CheckIndex(e, idx);
 
   G4double e1 = totalData->Energy(idx);
-  if (e1 <= 0.0) { interpolation = false; }
+  if (e1 <= 0.0)
+  {
+    interpolation = false;
+  }
   G4double e2 = e1;
   if (interpolation)
   {
     e2 = totalData->Energy(idx + 1);
-    if (e2 <= e1) { interpolation = false; }
+    if (e2 <= e1)
+    {
+      interpolation = false;
+    }
     e2 = G4Log(e2 / e1);
   }
   for (G4int i = 0; i < nPartialXS; ++i)
@@ -204,7 +222,10 @@ G4ExtendedPhysicsVector::SampleReactionChannelLogLog(const G4double e,
         xs *= G4Exp(G4Log(e / e1) * G4Log(xs2 / xs) / e2);
       }
     }
-    if (xs >= rand) { return i; }
+    if (xs >= rand)
+    {
+      return i;
+    }
   }
   return nPartialXS;
 }

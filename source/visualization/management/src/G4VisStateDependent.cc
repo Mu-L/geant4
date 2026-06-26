@@ -27,26 +27,30 @@
 
 #include "G4VisStateDependent.hh"
 
-#include "G4VisManager.hh"
 #include "G4StateManager.hh"
+#include "G4VisManager.hh"
 
-G4VisStateDependent::G4VisStateDependent (G4VisManager* pVisManager):
-  fpVisManager (pVisManager) {}
+G4VisStateDependent::G4VisStateDependent(G4VisManager* pVisManager) : fpVisManager(pVisManager) {}
 
-G4bool G4VisStateDependent::Notify (G4ApplicationState requestedState) {
+G4bool G4VisStateDependent::Notify(G4ApplicationState requestedState)
+{
   G4StateManager* stateManager = G4StateManager::GetStateManager();
   G4ApplicationState previousState = stateManager->GetPreviousState();
-  if (previousState == G4State_Idle  &&  requestedState == G4State_GeomClosed) {
-    fpVisManager -> BeginOfRun ();
+  if (previousState == G4State_Idle && requestedState == G4State_GeomClosed)
+  {
+    fpVisManager->BeginOfRun();
   }
-  else if (previousState == G4State_GeomClosed &&  requestedState == G4State_EventProc) {
-    fpVisManager -> BeginOfEvent ();
+  else if (previousState == G4State_GeomClosed && requestedState == G4State_EventProc)
+  {
+    fpVisManager->BeginOfEvent();
   }
-  else if (previousState == G4State_EventProc &&  requestedState == G4State_GeomClosed) {
-    fpVisManager -> EndOfEvent ();
+  else if (previousState == G4State_EventProc && requestedState == G4State_GeomClosed)
+  {
+    fpVisManager->EndOfEvent();
   }
-  else if (previousState == G4State_GeomClosed &&  requestedState == G4State_Idle) {
-    fpVisManager -> EndOfRun ();
+  else if (previousState == G4State_GeomClosed && requestedState == G4State_Idle)
+  {
+    fpVisManager->EndOfRun();
   }
   return true;
 }

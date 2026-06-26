@@ -24,19 +24,19 @@
 // ********************************************************************
 //
 
-#include "G4GenericFileManager.hh"
 #include "G4AutoLock.hh"
+#include "G4GenericFileManager.hh"
 
 //_____________________________________________________________________________
-inline std::shared_ptr<G4VFileManager> G4GenericAnalysisManager::GetFileManager(
-  const G4String& fileName)
+inline std::shared_ptr<G4VFileManager>
+G4GenericAnalysisManager::GetFileManager(const G4String& fileName)
 {
   return fFileManager->GetFileManager(fileName);
 }
 
 //_____________________________________________________________________________
-inline void G4GenericAnalysisManager::SetNtupleMerging(
-  G4bool mergeNtuples, G4int nofReducedNtupleFiles)
+inline void G4GenericAnalysisManager::SetNtupleMerging(G4bool mergeNtuples,
+                                                       G4int nofReducedNtupleFiles)
 {
   fIsNtupleMergingSet = true;
   fMergeNtuples = mergeNtuples;
@@ -44,23 +44,20 @@ inline void G4GenericAnalysisManager::SetNtupleMerging(
 }
 
 //_____________________________________________________________________________
-inline void G4GenericAnalysisManager::SetNtupleRowWise(
-  G4bool rowWise, G4bool rowMode)
+inline void G4GenericAnalysisManager::SetNtupleRowWise(G4bool rowWise, G4bool rowMode)
 {
   fNtupleRowWise = rowWise;
   fNtupleRowMode = rowMode;
 }
 
 //_____________________________________________________________________________
-inline void G4GenericAnalysisManager::SetBasketSize(
-  unsigned int basketSize)
+inline void G4GenericAnalysisManager::SetBasketSize(unsigned int basketSize)
 {
   fBasketSize = basketSize;
 }
 
 //_____________________________________________________________________________
-inline void G4GenericAnalysisManager::SetBasketEntries(
-  unsigned int basketEntries)
+inline void G4GenericAnalysisManager::SetBasketEntries(unsigned int basketEntries)
 {
   fBasketEntries = basketEntries;
 }

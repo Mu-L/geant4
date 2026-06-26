@@ -6,12 +6,20 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-06-04 Makoto Asai (run-V11-03-09)
+## 2026-06-19 Ben Morgan (run-V11-04-16)
+- Apply clang-format to all C++ files.
+
+## 2026-06-09 Gabriele Cosmo (run-V11-04-15)
+- Use "const G4String&" as arguments in G4ExceptionHandler.
+- Fixed compilation warning on macOS/XCode for implicit type conversion.
+
+## 2026-06-04 Makoto Asai (run-V11-04-14)
 - G4SubEvtRunManager.cc
  - G4Event::GetNumberOfRemainingSubEvents() uses Mutex only for the G4Event used
   in the master thread in sub-event parallel mode. Addressing to Bug Report #2734.
+ - Co-working with event-V11-04-02.
 
-## 2026-05-22 Gabriele Cosmo (run-V11-03-08)
+## 2026-05-22 Gabriele Cosmo (run-V11-04-13)
 - Fixed data race in G4MTRunManager detected by Valgrind/DRD when running
   with G4RUN_MANAGER_TYPE set to "MT", by moving UI command-stack preparation
   behind the same action-request barrier that wakes the workers.
@@ -26,35 +34,66 @@ It must **not** be used as a substitute for writing good git commit messages!
   the barrier. Removed the earlier unsynchronized PrepareCommandsStack()
   calls before CreateAndStartWorkers() and before PROCESSUI.
 
-## 2026-05-15 Alberto Ribon
+## 2026-05-15 Alberto Ribon (run-V11-04-12)
 -  G4VUserPhysicsList : in the method Construct(), removed the condition
    to be the master-thread for calling G4PhysicsModelCatalog::Initialize().
    This is possible with the revised thread-safe version of G4PhysicsModelCatalog,
    and it is consistent with the possibility of parallel initialisation.
 
-## 2026-05-13 Gabriele Cosmo
+## 2026-05-13 Gabriele Cosmo (run-V11-04-11)
 - In G4UserTaskThreadInitialization, correct initialisation of Ranlux random
   engines in SetupRNGEngine(), to take in consideration the luxury level.
   Further addressing problem report #2184.
 
-## 2026-05-11 Makoto Asai
+## 2026-05-11 Makoto Asai (run-V11-04-10)
 - G4WorkerTaskRunManager
    Add a check not to start a new event if the current run of the master run
    manager is aborted.
    Further addressing to the bug report #2729.
 
-## 2026-05-07 Makoto Asai
+## 2026-05-07 Makoto Asai (run-V11-04-09)
 - G4RunManagerKernel::PropagateGenericIonID()
    Add a new Mutex lock to protect race condition problem .
 - G4TaskRunManager, G4WorkerTaskRunManager
    Add protection not to start a new task if the current run is aborted.
    Addressing to the bug report #2729.
 
-## 2026-03-10 Gabriele Cosmo
+## 2026-05-05 Soon Yung Jun (run-V11-04-08)
+- Add public interface for event seed initialization:
+ - G4MTRunManager
+   Add interface for initializing event seeds, enabling flexible integration
+   with external schedulers without requiring additional code changes
+
+## 2026-04-19 Makoto Asai (run-V11-04-07)
+- Adding options of writing messages to a file
+ - G4ExceptionHandler, G4ExceptionHandlerMessenger
+    Write specified or all warning messages to a file rather than on display
+ - G4MaterialScanner, G4MatScanMessenger
+    Write scan results to a file rather than on display
+    Add a UI command to alter the particle type and its momentum for
+    estimating the hadronic interaction length
+
+## 2026-04-10 Makoto Asai (run-V11-04-06)
+- Further polishing of the material scanner
+ - G4MaterialScanner, G4MatScanMessenger, G4MSSteppingAction
+    Calculating hadronic interaction length from hadron inelastic cross-sections
+    instead of relying on the empirical formula of G4Material.
+ - Co-working with hadr-man-V11-04-00
+
+## 2026-03-25 Makoto Asai (run-V11-04-05)
+- Further fixing of the material scanner
+ - G4MSSteppingAction
+    Remove average A and Z that make poor sense, and add integrated mass length
+    (a.k.a. column density) instead
+ - G4MaterialScanner, G4MatScanMessenger
+    Unify the length unit to cm
+    Add an option to ignore low-density materials
+
+## 2026-03-10 Gabriele Cosmo (run-V11-04-04)
 - Set verbosity in call to G4GeometryManager::CloseGeometry(..) only if
   level greater than 1 in G4MTRunManager and G4RunManager.
 
-## 2026-03-06 Makoto Asai (run-V11-03-07)
+## 2026-03-06 Makoto Asai (run-V11-04-03)
 - Fixing the material scanner
  - G4MaterialScanner.cc
     Delete G4Event object at the end of each event.
@@ -68,13 +107,16 @@ It must **not** be used as a substitute for writing good git commit messages!
     Prevent material scanner UI commands from broadcasting to worker threads.
     Material scanner is centrally managed by the master thread.
 
-## 2026-01-22 Igor Semeniouk
+## 2026-01-22 Igor Semeniouk (run-V11-04-02)
 - Introducing UI command to force geometry optimization
  - G4RunManager, G4MTRunManager, G4WorkerRunManager : add GeometryOptimisation method 
  - G4RunMessenger : the /run/undertakeOptimisation command added
 
-## 2026-01-16 Alvaro Tolosa-Delgado
+## 2026-01-16 Alvaro Tolosa-Delgado (run-V11-04-01)
 - Re-enable automatic instantiation of G4MaterialScanner in G4RunManager.
+
+## 2026-01-09 Ben Morgan (run-V11-04-00)
+- Update header guards to style/format required by Geant4 coding guidelines.
 
 ## 2025-11-06 Laurent Desorgher (run-V11-03-06)
 - G4AdjointPrimaryGeneratorAction : 

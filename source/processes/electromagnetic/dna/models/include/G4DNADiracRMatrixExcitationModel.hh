@@ -29,96 +29,86 @@
 //
 // This class perform electric excitation for electron transportation,
 // based on Dirac B-Spline R-Matrix Model and scaled experimental data.
-// See following reference paper 
-// Phys.Rev.A77,062711(2008) and Phys.Rev.A78,042713(2008)	
+// See following reference paper
+// Phys.Rev.A77,062711(2008) and Phys.Rev.A78,042713(2008)
 
-#ifndef G4DNADiracRMatrixExcitationModel_h
-#define G4DNADiracRMatrixExcitationModel_h 1
-
-#include "G4VEmModel.hh"
-#include "G4ParticleChangeForGamma.hh"
-#include "G4ProductionCutsTable.hh"
-#include "G4VAtomDeexcitation.hh"
-
-#include "G4LogLogInterpolation.hh"
-#include "G4Electron.hh"
-#include "G4Proton.hh"
-#include "G4NistManager.hh"
+#ifndef G4DNADIRACRMATRIXEXCITATIONMODEL_HH
+#define G4DNADIRACRMATRIXEXCITATIONMODEL_HH
 
 #include "G4DNACrossSectionDataSet.hh"
+#include "G4Electron.hh"
+#include "G4LogLogInterpolation.hh"
+#include "G4NistManager.hh"
+#include "G4ParticleChangeForGamma.hh"
+#include "G4ProductionCutsTable.hh"
+#include "G4Proton.hh"
+#include "G4VAtomDeexcitation.hh"
+#include "G4VEmModel.hh"
 
-class G4DNADiracRMatrixExcitationModel: public G4VEmModel
+class G4DNADiracRMatrixExcitationModel : public G4VEmModel
 {
+  public:
 
-public:
+    G4DNADiracRMatrixExcitationModel(const G4ParticleDefinition* p = nullptr,
+                                     const G4String& nam = "DNADiracRMatrixExcitationModel");
 
-  G4DNADiracRMatrixExcitationModel(const G4ParticleDefinition* p = nullptr,
-                        const G4String& nam = "DNADiracRMatrixExcitationModel");
+    ~G4DNADiracRMatrixExcitationModel() override;
 
-  ~G4DNADiracRMatrixExcitationModel() override;
+    G4DNADiracRMatrixExcitationModel&
+    operator=(const G4DNADiracRMatrixExcitationModel& right) = delete;
+    G4DNADiracRMatrixExcitationModel(const G4DNADiracRMatrixExcitationModel&) = delete;
 
-  G4DNADiracRMatrixExcitationModel & operator
-                           =(const  G4DNADiracRMatrixExcitationModel &right) = delete;
-  G4DNADiracRMatrixExcitationModel(const  G4DNADiracRMatrixExcitationModel&) = delete;
+    void Initialise(const G4ParticleDefinition*,
+                    const G4DataVector& = *(new G4DataVector())) override;
 
+    G4double CrossSectionPerVolume(const G4Material* material, const G4ParticleDefinition* p,
+                                   G4double ekin, G4double emin, G4double emax) override;
 
-  void Initialise(const G4ParticleDefinition*,
-                          const G4DataVector& = *(new G4DataVector())) override;
+    virtual G4double GetExtendedTotalCrossSection(const G4Material* material,
+                                                  const G4ParticleDefinition*,
+                                                  G4double kineticEnergy);
 
-  G4double CrossSectionPerVolume(const G4Material* material,
-                                         const G4ParticleDefinition* p,
-                                         G4double ekin,
-                                         G4double emin,
-                                         G4double emax) override;
+    virtual G4double GetExtendedPartialCrossSection(const G4Material* material, G4int level,
+                                                    const G4ParticleDefinition*,
+                                                    G4double kineticEnergy);
 
-  virtual G4double GetExtendedTotalCrossSection  (const G4Material* material,
-                                          const G4ParticleDefinition*,
-                                          G4double kineticEnergy);
-  
-  virtual G4double GetExtendedPartialCrossSection(const G4Material* material,
-                                          G4int level,
-                                          const G4ParticleDefinition*,
-                                          G4double kineticEnergy);
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-                                 const G4MaterialCutsCouple*,
-                                 const G4DynamicParticle*,
-                                 G4double tmin,
-                                 G4double maxEnergy) override;
+    inline void SelectStationary(G4bool input);
 
-  inline  void SelectStationary(G4bool input);
+  protected:
 
-protected:
+    G4ParticleChangeForGamma* fParticleChangeForGamma;
 
-  G4ParticleChangeForGamma* fParticleChangeForGamma;
+  private:
 
-private:
+    const G4double paramFuncTCS_5dto6s1[3] = {-3e-50, 9.46358e-16,
+                                              1.4237};  // y = [0]+[1]/pow(x-[2],2)
+    const G4double paramFuncTCS_5dto6s2[3] = {-3e-50, 4.24498e-15,
+                                              -0.674543};  // y = [0]+[1]/pow(x-[2],2)
+    const G4double paramFuncTCS_6sto6p1[3] = {1.50018e-26, 2.459e-15,
+                                              -40.8088};  // y = [0]+[1]*log(x-[2])/(x-[2])
+    const G4double paramFuncTCS_6sto6p2[3] = {1.26684e-25, 3.97221e-15,
+                                              -55.6954};  // y = [0]+[1]*log(x-[2])/(x-[2])
+    const G4double ExcitationEnergyAu[4] = {2.66, 1.14, 4.63, 5.11};
+    // [eV] 5dto6s1,6sto6p1,6sto6p2
 
-  const G4double paramFuncTCS_5dto6s1[3]={-3e-50      , 9.46358e-16,  1.4237  }; // y = [0]+[1]/pow(x-[2],2)
-  const G4double paramFuncTCS_5dto6s2[3]={-3e-50      , 4.24498e-15, -0.674543}; // y = [0]+[1]/pow(x-[2],2)
-  const G4double paramFuncTCS_6sto6p1[3]={ 1.50018e-26, 2.459e-15  ,-40.8088  }; // y = [0]+[1]*log(x-[2])/(x-[2])
-  const G4double paramFuncTCS_6sto6p2[3]={ 1.26684e-25, 3.97221e-15,-55.6954  }; // y = [0]+[1]*log(x-[2])/(x-[2])
-  const G4double ExcitationEnergyAu[4]={ 2.66 , 1.14 , 4.63 ,  5.11}; 
-  // [eV] 5dto6s1,6sto6p1,6sto6p2
+    G4double fLowEnergyLimit = 0.;
+    G4double fExperimentalEnergyLimit = 0.;
+    G4double fHighEnergyLimit = 0.;
 
-  G4double fLowEnergyLimit=0.;
-  G4double fExperimentalEnergyLimit=0.;
-  G4double fHighEnergyLimit=0.;
+    G4bool isInitialised = false;
+    G4bool statCode = false;
+    G4int verboseLevel = 0;
 
-  G4bool   isInitialised=false;
-  G4bool   statCode=false;
-  G4int    verboseLevel=0;
+    G4String fTableFile = "";
+    G4DNACrossSectionDataSet* fTableData = nullptr;
+    const std::vector<G4double>* fpMaterialDensity = nullptr;
+    const G4ParticleDefinition* fParticleDefinition = nullptr;
 
-  G4String                     fTableFile="";
-  G4DNACrossSectionDataSet*    fTableData=nullptr;
-  const std::vector<G4double>* fpMaterialDensity=nullptr;
-  const  G4ParticleDefinition* fParticleDefinition=nullptr;
-
-  G4int RandomSelect(const G4Material* material,
-                     const G4ParticleDefinition*,
-                     G4double kineticEnergy);
-  
-   
+    G4int RandomSelect(const G4Material* material, const G4ParticleDefinition*,
+                       G4double kineticEnergy);
 };
 
 inline void G4DNADiracRMatrixExcitationModel::SelectStationary(G4bool input)

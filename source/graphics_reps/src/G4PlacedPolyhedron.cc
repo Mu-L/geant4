@@ -27,8 +27,9 @@
 
 #include "G4PlacedPolyhedron.hh"
 
-G4PlacedPolyhedron::G4PlacedPolyhedron () = default;
+G4PlacedPolyhedron::G4PlacedPolyhedron() = default;
 
-G4PlacedPolyhedron::G4PlacedPolyhedron
-(const G4Polyhedron& polyhedron, const G4Transform3D& transform):
-  fPolyhedron (polyhedron), fTransform (transform) {}
+G4PlacedPolyhedron::G4PlacedPolyhedron(const G4Polyhedron& polyhedron,
+                                       const G4Transform3D& transform)
+  : fPolyhedron(polyhedron), fTransform(transform)
+{}

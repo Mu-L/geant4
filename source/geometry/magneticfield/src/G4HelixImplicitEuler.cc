@@ -37,41 +37,36 @@
 // -------------------------------------------------------------------------
 
 #include "G4HelixImplicitEuler.hh"
+
 #include "G4ThreeVector.hh"
 
-G4HelixImplicitEuler::G4HelixImplicitEuler(G4Mag_EqRhs *EqRhs)
-  : G4MagHelicalStepper(EqRhs)
-{
-}
+G4HelixImplicitEuler::G4HelixImplicitEuler(G4Mag_EqRhs* EqRhs) : G4MagHelicalStepper(EqRhs) {}
 
-void
-G4HelixImplicitEuler::DumbStepper( const G4double yIn[],
-                                   G4ThreeVector  Bfld,
-                                   G4double       h,
-                                   G4double       yOut[])
+void G4HelixImplicitEuler::DumbStepper(const G4double yIn[], G4ThreeVector Bfld, G4double h,
+                                       G4double yOut[])
 {
-  const G4int nvar = 6 ;
+  const G4int nvar = 6;
   G4double yTemp[6], yTemp2[6];
   G4ThreeVector Bfld_endpoint;
 
   // Step forward like in the explicit euler case
   //
-  AdvanceHelix( yIn, Bfld, h, yTemp);
+  AdvanceHelix(yIn, Bfld, h, yTemp);
 
   // now obtain the new field value at the new point
   //
-  MagFieldEvaluate(yTemp, Bfld_endpoint);      
+  MagFieldEvaluate(yTemp, Bfld_endpoint);
 
   // and also advance along a helix for this field value
   //
-  AdvanceHelix( yIn, Bfld_endpoint, h, yTemp2);
+  AdvanceHelix(yIn, Bfld_endpoint, h, yTemp2);
 
   // we take the average
   //
-  for( G4int i = 0; i < nvar; ++i )
+  for (G4int i = 0; i < nvar; ++i)
   {
-    yOut[i] = 0.5 * ( yTemp[i] + yTemp2[i] );
+    yOut[i] = 0.5 * (yTemp[i] + yTemp2[i]);
   }
 
-  // NormaliseTangentVector( yOut );           
-}  
+  // NormaliseTangentVector( yOut );
+}

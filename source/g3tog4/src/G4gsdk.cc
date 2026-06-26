@@ -26,35 +26,36 @@
 //
 
 #include "G4Decay.hh"
-#include "G3toG4.hh"
+
 #include "G3PartTable.hh"
+#include "G3toG4.hh"
 
-void PG4gsdk(G4String *tokens)
+void PG4gsdk(G4String* tokens)
 {
-    // fill the parameter containers
-    G3fillParams(tokens,PTgsdk);
+  // fill the parameter containers
+  G3fillParams(tokens, PTgsdk);
 
-    // interpret the parameters
-    G4int ipart = Ipar[0];
-    G4int *mode = &Ipar[3];
-    G4double *bratio = Rpar;
+  // interpret the parameters
+  G4int ipart = Ipar[0];
+  G4int* mode = &Ipar[3];
+  G4double* bratio = Rpar;
 
-    G4gsdk(ipart,bratio,mode);
+  G4gsdk(ipart, bratio, mode);
 }
 
 void G4gsdk(G4int, G4double*, G4int*)
 {
-/*
-    // create decay object for the particle
-    G4Decay *decay = new G4Decay();
-    // add decay modes
-    for (G4int i=0; i<6; i++) {
-        if (mode[i] != 0) {
-// $$$            decay->AddMode(mode[i],bratio[i]);
-        }
-    }
-    // associate decay object with particle ipart
-    G4ParticleDefinition *part = G3Part.Get(ipart);
-// $$$    part->SetDecay(decay);
-*/
+  /*
+      // create decay object for the particle
+      G4Decay *decay = new G4Decay();
+      // add decay modes
+      for (G4int i=0; i<6; i++) {
+          if (mode[i] != 0) {
+  // $$$            decay->AddMode(mode[i],bratio[i]);
+          }
+      }
+      // associate decay object with particle ipart
+      G4ParticleDefinition *part = G3Part.Get(ipart);
+  // $$$    part->SetDecay(decay);
+  */
 }

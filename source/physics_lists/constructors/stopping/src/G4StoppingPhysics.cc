@@ -32,10 +32,10 @@
 //
 // Date:       27 July 2012
 //
-// Modified:  
+// Modified:
 // 20120921  M. Kelsey -- Move MuonMinusCapture.hh here; replace G4MMCAtRest
 //		with new G4MuonMinusCapture.
-// 16-Oct-2012 A. Ribon: renamed G4BertiniAndFritiofStoppingPhysics as 
+// 16-Oct-2012 A. Ribon: renamed G4BertiniAndFritiofStoppingPhysics as
 //                       G4StoppingPhysics.
 // 17-Oct-2012 A. Ribon: added nuclear capture at rest of anti-nuclei with
 //                       Fritof/Precompound.
@@ -46,41 +46,38 @@
 //----------------------------------------------------------------------------
 
 #include "G4StoppingPhysics.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4BaryonConstructor.hh"
+#include "G4BuilderType.hh"
 #include "G4HadronicAbsorptionBertini.hh"
 #include "G4HadronicAbsorptionFritiof.hh"
-#include "G4MuonMinusCapture.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4ProcessManager.hh"
 #include "G4LeptonConstructor.hh"
 #include "G4MesonConstructor.hh"
-#include "G4BaryonConstructor.hh"
 #include "G4MuonMinus.hh"
+#include "G4MuonMinusCapture.hh"
+#include "G4ParticleDefinition.hh"
 #include "G4PionMinus.hh"
-#include "G4BuilderType.hh"
+#include "G4ProcessManager.hh"
+#include "G4SystemOfUnits.hh"
 
 // factory
 #include "G4PhysicsConstructorFactory.hh"
 //
 G4_DECLARE_PHYSCONSTR_FACTORY(G4StoppingPhysics);
 
-G4StoppingPhysics::G4StoppingPhysics( G4int ver ) :  
-  G4StoppingPhysics("stopping", ver)
-{}
+G4StoppingPhysics::G4StoppingPhysics(G4int ver) : G4StoppingPhysics("stopping", ver) {}
 
-G4StoppingPhysics::G4StoppingPhysics(const G4String& name, G4int ver, 
-                                     G4bool useMuCapture) :
-  G4VPhysicsConstructor( name ),
-  verbose( ver ), 
-  useMuonMinusCapture( useMuCapture ) 
+G4StoppingPhysics::G4StoppingPhysics(const G4String& name, G4int ver, G4bool useMuCapture)
+  : G4VPhysicsConstructor(name), verbose(ver), useMuonMinusCapture(useMuCapture)
 {
   SetPhysicsType(bStopping);
-  if ( verbose > 1 ) G4cout << "### G4StoppingPhysics" << G4endl;
+  if (verbose > 1) G4cout << "### G4StoppingPhysics" << G4endl;
 }
 
 G4StoppingPhysics::~G4StoppingPhysics() {}
 
-void G4StoppingPhysics::ConstructParticle() {
+void G4StoppingPhysics::ConstructParticle()
+{
   // G4cout << "G4StoppingPhysics::ConstructParticle" << G4endl;
   G4LeptonConstructor pLeptonConstructor;
   pLeptonConstructor.ConstructParticle();
@@ -92,86 +89,92 @@ void G4StoppingPhysics::ConstructParticle() {
   pBaryonConstructor.ConstructParticle();
 }
 
-void G4StoppingPhysics::ConstructProcess() {
-  if ( verbose > 1 ) G4cout << "### G4StoppingPhysics::ConstructProcess " 
-		   	    << G4endl;
+void G4StoppingPhysics::ConstructProcess()
+{
+  if (verbose > 1) G4cout << "### G4StoppingPhysics::ConstructProcess " << G4endl;
 
   G4MuonMinusCapture* muProcess = nullptr;
   G4HadronicAbsorptionBertini* hBertiniProcess = nullptr;
   G4HadronicAbsorptionFritiof* hFritiofProcess = nullptr;
 
-  if ( useMuonMinusCapture ) {
+  if (useMuonMinusCapture)
+  {
     muProcess = new G4MuonMinusCapture();
-  }   
+  }
 
   hBertiniProcess = new G4HadronicAbsorptionBertini();
   hFritiofProcess = new G4HadronicAbsorptionFritiof();
 
-  G4double mThreshold = 130.0*MeV;
+  G4double mThreshold = 130.0 * MeV;
 
   // Add Stopping Process
   G4ParticleDefinition* particle = 0;
   G4ProcessManager* pmanager = 0;
 
-  auto myParticleIterator=GetParticleIterator();
+  auto myParticleIterator = GetParticleIterator();
   myParticleIterator->reset();
 
-  while ( (*myParticleIterator)() ) {
-
+  while ((*myParticleIterator)())
+  {
     particle = myParticleIterator->value();
     pmanager = particle->GetProcessManager();
 
-    if (useMuonMinusCapture && particle == G4MuonMinus::MuonMinus()) {
-      pmanager->AddRestProcess( muProcess );
-      if ( verbose > 1 ) {
-	G4cout << "### G4StoppingPhysics added G4MuonMinusCapture for " 
-	       << particle->GetParticleName() << G4endl;
+    if (useMuonMinusCapture && particle == G4MuonMinus::MuonMinus())
+    {
+      pmanager->AddRestProcess(muProcess);
+      if (verbose > 1)
+      {
+        G4cout << "### G4StoppingPhysics added G4MuonMinusCapture for "
+               << particle->GetParticleName() << G4endl;
       }
     }
 
-    if ( particle->GetPDGCharge() <= 0.0      && 
-         particle->GetPDGMass() > mThreshold  &&
-         ! particle->IsShortLived() ) {
-
-      // Use Fritiof/Precompound for: anti-proton, anti-neutron, anti-lambda, 
+    if (particle->GetPDGCharge() <= 0.0 && particle->GetPDGMass() > mThreshold
+        && !particle->IsShortLived())
+    {
+      // Use Fritiof/Precompound for: anti-proton, anti-neutron, anti-lambda,
       //                              anti-sigma0, anti-sigma+, anti-xi0 and anti-nuclei.
-      if ( particle == G4AntiProton::Definition()     ||
-           particle == G4AntiNeutron::Definition()    ||
-           particle == G4AntiLambda::Definition()     ||
-           particle == G4AntiSigmaZero::Definition()  ||
-           particle == G4AntiSigmaPlus::Definition()  ||
-           particle == G4AntiXiZero::Definition()     ||
-           particle->GetBaryonNumber() < -1 ) {  // Anti-nuclei
-        if ( hFritiofProcess->IsApplicable( *particle ) ) {
-          pmanager->AddRestProcess( hFritiofProcess );
-          if ( verbose > 1 ) {
-	    G4cout << "### G4HadronicAbsorptionFritiof added for "
-                   << particle->GetParticleName() << G4endl;
+      if (particle == G4AntiProton::Definition() || particle == G4AntiNeutron::Definition()
+          || particle == G4AntiLambda::Definition() || particle == G4AntiSigmaZero::Definition()
+          || particle == G4AntiSigmaPlus::Definition() || particle == G4AntiXiZero::Definition()
+          || particle->GetBaryonNumber() < -1)
+      {  // Anti-nuclei
+        if (hFritiofProcess->IsApplicable(*particle))
+        {
+          pmanager->AddRestProcess(hFritiofProcess);
+          if (verbose > 1)
+          {
+            G4cout << "### G4HadronicAbsorptionFritiof added for " << particle->GetParticleName()
+                   << G4endl;
           }
         }
 
-      // Use Bertini/Precompound for pi-, K-, Sigma-, Xi-, and Omega-
-      } else if ( particle == G4PionMinus::Definition()   ||
-                  particle == G4KaonMinus::Definition()   ||
-                  particle == G4SigmaMinus::Definition()  ||
-                  particle == G4XiMinus::Definition()     ||
-                  particle == G4OmegaMinus::Definition() ) {
-        if ( hBertiniProcess->IsApplicable( *particle ) ) {
-          pmanager->AddRestProcess( hBertiniProcess );
-          if ( verbose > 1 ) {
-	    G4cout << "### G4HadronicAbsorptionBertini added for "
-                   << particle->GetParticleName() << G4endl;
+        // Use Bertini/Precompound for pi-, K-, Sigma-, Xi-, and Omega-
+      }
+      else if (particle == G4PionMinus::Definition() || particle == G4KaonMinus::Definition()
+               || particle == G4SigmaMinus::Definition() || particle == G4XiMinus::Definition()
+               || particle == G4OmegaMinus::Definition())
+      {
+        if (hBertiniProcess->IsApplicable(*particle))
+        {
+          pmanager->AddRestProcess(hBertiniProcess);
+          if (verbose > 1)
+          {
+            G4cout << "### G4HadronicAbsorptionBertini added for " << particle->GetParticleName()
+                   << G4endl;
           }
         }
-
-      } else {
-        if ( verbose > 1 ) {
+      }
+      else
+      {
+        if (verbose > 1)
+        {
           G4cout << "WARNING in G4StoppingPhysics::ConstructProcess: \
-                     not able to deal with nuclear stopping of " 
+                     not able to deal with nuclear stopping of "
                  << particle->GetParticleName() << G4endl;
         }
       }
     }
 
-  } // end of while loop
+  }  // end of while loop
 }

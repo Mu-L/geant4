@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPField_h
-#define G4ParticleHPField_h 1
+#ifndef G4PARTICLEHPFIELD_HH
+#define G4PARTICLEHPFIELD_HH
 
 #include "G4ParticleHPFieldPoint.hh"
 #include "G4PhysicsVector.hh"
@@ -35,6 +35,7 @@
 class G4ParticleHPField
 {
   public:
+
     G4ParticleHPField();
 
     ~G4ParticleHPField();
@@ -76,6 +77,7 @@ class G4ParticleHPField
     void Dump();
 
   private:
+
     void Check(G4int i);
 
     G4ParticleHPFieldPoint* theData;

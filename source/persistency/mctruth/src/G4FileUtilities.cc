@@ -30,32 +30,28 @@
 
 #ifndef WIN32
 
-#include "G4FileUtilities.hh"
+#  include "G4FileUtilities.hh"
 
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <errno.h>
-#include <stdlib.h>
-
-// --------------------------------------------------------------------
-G4FileUtilities::G4FileUtilities()
-{
-}
+#  include <errno.h>
+#  include <fcntl.h>
+#  include <stdlib.h>
+#  include <sys/types.h>
+#  include <unistd.h>
 
 // --------------------------------------------------------------------
-G4FileUtilities::~G4FileUtilities()
-{
-}
+G4FileUtilities::G4FileUtilities() {}
+
+// --------------------------------------------------------------------
+G4FileUtilities::~G4FileUtilities() {}
 
 // --------------------------------------------------------------------
 G4bool G4FileUtilities::FileExists(const G4String& file)
 {
-  char* c = (char*) file.c_str();
+  char* c = (char*)file.c_str();
 
   G4int fd = ::open(c, O_RDONLY);
   // G4int error = errno;
-  if(fd != -1)
+  if (fd != -1)
   {
     ::close(fd);
     return true;
@@ -79,16 +75,14 @@ G4int G4FileUtilities::Shell(const G4String& str)
 }
 
 // --------------------------------------------------------------------
-G4int G4FileUtilities::CopyFile(const G4String& srcFile,
-                                const G4String& dstFile)
+G4int G4FileUtilities::CopyFile(const G4String& srcFile, const G4String& dstFile)
 {
   G4String cmd = "cp " + srcFile + " " + dstFile;
   return Shell(cmd);
 }
 
 // --------------------------------------------------------------------
-G4int G4FileUtilities::DeleteFile(const G4String& file,
-                                  const G4String& option)
+G4int G4FileUtilities::DeleteFile(const G4String& file, const G4String& option)
 {
   G4String cmd = "rm " + option + " " + file;
   return Shell(cmd);

@@ -32,47 +32,50 @@
 //      File name:     G4CollisionNN
 //
 //      Author:        Maria Grazia Pia
-// 
+//
 //      Creation date: 15 April 1999
 //
-//      Modifications: 
-//      
+//      Modifications:
+//
 // -------------------------------------------------------------------
 
 #ifndef G4COLLISIONMESONBARYON_HH
 #define G4COLLISIONMESONBARYON_HH
 
-#include "globals.hh"
 #include "G4CollisionComposite.hh"
 #include "G4CollisionVector.hh"
 #include "G4VCrossSectionSource.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4KineticTrack;
 
 class G4CollisionMesonBaryon : public G4CollisionComposite
 {
+  public:
 
-public:
+    G4CollisionMesonBaryon();
 
-  G4CollisionMesonBaryon();
+    virtual ~G4CollisionMesonBaryon() {};
 
-  virtual ~G4CollisionMesonBaryon() {};
+    virtual G4String GetName() const { return "Meson Baryon CollisionComposite"; }
 
-  virtual G4String GetName() const { return "Meson Baryon CollisionComposite"; }
+  private:
 
-private:
-  G4CollisionMesonBaryon(const G4CollisionMesonBaryon &);
-  G4CollisionMesonBaryon & operator= (const G4CollisionMesonBaryon &);
+    G4CollisionMesonBaryon(const G4CollisionMesonBaryon&);
+    G4CollisionMesonBaryon& operator=(const G4CollisionMesonBaryon&);
 
-protected:
+  protected:
 
-  std::vector<G4String> result;
-  virtual const std::vector<G4String>& GetListOfColliders(G4int ) const
-  {
-    throw G4HadronicException(__FILE__, __LINE__, "Tried to call G4CollisionNNToDeltaDelta::GetListOfColliders. Please find out why!");
-    return result;
-  } 
+    std::vector<G4String> result;
+    virtual const std::vector<G4String>& GetListOfColliders(G4int) const
+    {
+      throw G4HadronicException(
+        __FILE__, __LINE__,
+        "Tried to call G4CollisionNNToDeltaDelta::GetListOfColliders. Please find out why!");
+      return result;
+    }
 };
 
 #endif

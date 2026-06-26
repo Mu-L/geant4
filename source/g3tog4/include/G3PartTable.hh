@@ -34,27 +34,28 @@
 // ----------------------
 
 #ifndef G3PARTTABLE_HH
-#define G3PARTTABLE_HH 1
-#include <map>
-#include "G3toG4Defs.hh"
+#define G3PARTTABLE_HH
 #include "G4ParticleDefinition.hh"
+
+#include "G3toG4Defs.hh"
+
+#include <map>
 
 class G3PartTable
 {
+  public:  // with description
 
-public:  // with description
+    G3PartTable();
+    virtual ~G3PartTable();
+    G4ParticleDefinition* Get(G4int partid);
+    void Put(G4int partid, G4ParticleDefinition* partpt);
+    void PrintAll();
 
-  G3PartTable();
-  virtual ~G3PartTable();
-  G4ParticleDefinition* Get(G4int partid);
-  void Put(G4int partid, G4ParticleDefinition* partpt);
-  void PrintAll();
+  private:
 
-private:
-
-  std::map<G4String, G4ParticleDefinition*, std::less<G4String> > PTD;
-  void HashID(G4int partid, G4String* _HID);
-  void HashID(G4int partid, G4String& _HID);
+    std::map<G4String, G4ParticleDefinition*, std::less<G4String>> PTD;
+    void HashID(G4int partid, G4String* _HID);
+    void HashID(G4int partid, G4String& _HID);
 };
 
 extern G3G4DLL_API G3PartTable G3Part;

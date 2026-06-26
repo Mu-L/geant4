@@ -28,51 +28,50 @@
 // Geant4 header : G4NeutronRadCapture
 // Created:  31 August 2009
 // Author  V.Ivanchenko
-//  
+//
 // Modified:
 //
 // Class Description
-// Sampling of neutron radiative capture 
+// Sampling of neutron radiative capture
 // Class Description - End
 //
 
-#ifndef G4NeutronRadCapture_h
-#define G4NeutronRadCapture_h 1
- 
-#include "globals.hh"
-#include "G4HadronicInteraction.hh"
+#ifndef G4NEUTRONRADCAPTURE_HH
+#define G4NEUTRONRADCAPTURE_HH
+
 #include "G4HadProjectile.hh"
-#include "G4Nucleus.hh"
+#include "G4HadronicInteraction.hh"
 #include "G4LorentzVector.hh"
+#include "G4Nucleus.hh"
+#include "globals.hh"
 
 class G4VEvaporationChannel;
 class G4IonTable;
 
 class G4NeutronRadCapture : public G4HadronicInteraction
 {
-public:
+  public:
 
-  G4NeutronRadCapture();
+    G4NeutronRadCapture();
 
-  ~G4NeutronRadCapture() override;
- 
-  G4HadFinalState* ApplyYourself(const G4HadProjectile & aTrack, 
-				 G4Nucleus & targetNucleus) override;
+    ~G4NeutronRadCapture() override;
 
-  void InitialiseModel() override;
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
+                                   G4Nucleus& targetNucleus) override;
 
-  G4NeutronRadCapture & operator=(const G4NeutronRadCapture &right) = delete;
-  G4NeutronRadCapture(const G4NeutronRadCapture&) = delete;
+    void InitialiseModel() override;
 
-private:
+    G4NeutronRadCapture& operator=(const G4NeutronRadCapture& right) = delete;
+    G4NeutronRadCapture(const G4NeutronRadCapture&) = delete;
 
-  G4int secID;  // creator model ID for secondaries produced by this model
-  G4double lowestEnergyLimit;
-  G4double minExcitation;
-  G4VEvaporationChannel* photonEvaporation;
-  G4IonTable* theTableOfIons;
-  G4LorentzVector lab4mom;
+  private:
 
+    G4int secID;  // creator model ID for secondaries produced by this model
+    G4double lowestEnergyLimit;
+    G4double minExcitation;
+    G4VEvaporationChannel* photonEvaporation;
+    G4IonTable* theTableOfIons;
+    G4LorentzVector lab4mom;
 };
 
 #endif

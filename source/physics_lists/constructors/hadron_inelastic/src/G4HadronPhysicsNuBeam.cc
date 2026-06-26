@@ -27,7 +27,7 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:  HadronPhysicsNuBeam 
+// ClassName:  HadronPhysicsNuBeam
 //
 // Author: Julia Yarba, FNAL/CD (2013)
 //   created from (molded after) HadronPhysicsFTFP_BERT
@@ -36,43 +36,43 @@
 //
 //----------------------------------------------------------------------------
 //
-#include <iomanip>   
-
 #include "G4HadronPhysicsNuBeam.hh"
-#include "G4QGSPLundStrFragmProtonBuilder.hh"
-#include "G4ProtonBuilder.hh"
-#include "G4FTFPProtonBuilder.hh"
-#include "G4BertiniProtonBuilder.hh"
-#include "globals.hh"
-#include "G4ios.hh"
-#include "G4SystemOfUnits.hh"
 
-#include "G4PhysListUtil.hh"
+#include "G4BertiniProtonBuilder.hh"
+#include "G4FTFPProtonBuilder.hh"
 #include "G4HadronicParameters.hh"
+#include "G4PhysListUtil.hh"
+#include "G4ProtonBuilder.hh"
+#include "G4QGSPLundStrFragmProtonBuilder.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4ios.hh"
+#include "globals.hh"
+
+#include <iomanip>
 
 // factory
 #include "G4PhysicsConstructorFactory.hh"
 //
 G4_DECLARE_PHYSCONSTR_FACTORY(G4HadronPhysicsNuBeam);
 
-G4HadronPhysicsNuBeam::G4HadronPhysicsNuBeam(G4int verb) :
-    G4HadronPhysicsNuBeam("hInelasticNuBeam",false)
+G4HadronPhysicsNuBeam::G4HadronPhysicsNuBeam(G4int verb)
+  : G4HadronPhysicsNuBeam("hInelasticNuBeam", false)
 {
   G4HadronicParameters::Instance()->SetVerboseLevel(verb);
 }
 
 G4HadronPhysicsNuBeam::G4HadronPhysicsNuBeam(const G4String& name, G4bool quasiElastic)
-    :  G4HadronPhysicsFTFP_BERT(name,quasiElastic)
+  : G4HadronPhysicsFTFP_BERT(name, quasiElastic)
 {
   // specific transition energies should be defined here
 
-  //minFTFP_neutron = 4.0*GeV;
-  //maxBERT_neutron = 5.0*GeV;
-  minFTFP_proton = 3.0*GeV;
-  maxFTFP_proton = 101.0*GeV;
-  //maxBERT_proton = 3.5*GeV;
-  //minFTFP_pion = minFTFP_kaon = 3.0*GeV;
-  //maxBERT_pion = maxBERT_kaon = 3.5*GeV;
+  // minFTFP_neutron = 4.0*GeV;
+  // maxBERT_neutron = 5.0*GeV;
+  minFTFP_proton = 3.0 * GeV;
+  maxFTFP_proton = 101.0 * GeV;
+  // maxBERT_proton = 3.5*GeV;
+  // minFTFP_pion = minFTFP_kaon = 3.0*GeV;
+  // maxBERT_pion = maxBERT_kaon = 3.5*GeV;
 }
 
 void G4HadronPhysicsNuBeam::Proton()
@@ -90,7 +90,7 @@ void G4HadronPhysicsNuBeam::Proton()
   // also explicitly set quasi-elastic key ON for QGS
   // (it should be OFF for FTF, controlled by QuasiElastic)
   //
-  auto qgsppro = new G4QGSPLundStrFragmProtonBuilder( true );
+  auto qgsppro = new G4QGSPLundStrFragmProtonBuilder(true);
   AddBuilder(qgsppro);
   pro->RegisterMe(qgsppro);
   //
@@ -112,16 +112,17 @@ void G4HadronPhysicsNuBeam::Proton()
 
   const G4ParticleDefinition* proton = G4Proton::Proton();
   G4HadronicProcess* inel = G4PhysListUtil::FindInelasticProcess(proton);
-  if(nullptr != inel) { 
-    if( useFactorXS ) inel->MultiplyCrossSectionBy( param->XSFactorNucleonInelastic() );
+  if (nullptr != inel)
+  {
+    if (useFactorXS) inel->MultiplyCrossSectionBy(param->XSFactorNucleonInelastic());
   }
 }
 
 void G4HadronPhysicsNuBeam::ConstructProcess()
 {
-  if(G4Threading::IsMasterThread() &&
-     G4HadronicParameters::Instance()->GetVerboseLevel() > 0) {
-      DumpBanner();
+  if (G4Threading::IsMasterThread() && G4HadronicParameters::Instance()->GetVerboseLevel() > 0)
+  {
+    DumpBanner();
   }
   CreateModels();
 }

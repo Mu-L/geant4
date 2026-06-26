@@ -39,8 +39,8 @@
 // - 15 March 2019,   M.Novak - log-kinetic energy value is computed only
 //                    on demand if its stored value is not up-to-date.
 // --------------------------------------------------------------------
-#ifndef G4DynamicParticle_hh
-#define G4DynamicParticle_hh 1
+#ifndef G4DYNAMICPARTICLE_HH
+#define G4DYNAMICPARTICLE_HH
 
 #include "G4Allocator.hh"
 #include "G4ElectronOccupancy.hh"
@@ -62,6 +62,7 @@ class G4DecayProducts;
 class G4DynamicParticle
 {
   public:
+
     //- constructors
     G4DynamicParticle();
 
@@ -224,10 +225,12 @@ class G4DynamicParticle
     inline G4int GetPDGcode() const;
 
   protected:
+
     void AllocateElectronOccupancy();
     G4double GetElectronMass() const;
 
   private:
+
     inline void ComputeBeta() const;
 
     // The normalized momentum vector

@@ -38,12 +38,13 @@
 #define G4SEXTUPOLEMAGFIELD_HH
 
 #include "G4MagneticField.hh"
-#include "G4ThreeVector.hh"
 #include "G4RotationMatrix.hh"
+#include "G4ThreeVector.hh"
 
 /**
  * @brief G4SextupoleMagField is a class for defining a sextupole
  * magnetic field.
+ * @ingroup geometry_magneticfield
  */
 
 class G4SextupoleMagField : public G4MagneticField
@@ -62,8 +63,7 @@ class G4SextupoleMagField : public G4MagneticField
      *  @param[in] pOrigin Origin position.
      *  @param[in] pMatrix Rotation matrix.
      */
-    G4SextupoleMagField(G4double pGradient,
-                        const G4ThreeVector& pOrigin,
+    G4SextupoleMagField(G4double pGradient, const G4ThreeVector& pOrigin,
                         G4RotationMatrix* pMatrix);
 
     /**
@@ -85,9 +85,9 @@ class G4SextupoleMagField : public G4MagneticField
 
   private:
 
-    G4double          fGradient = 0.0;
-    G4ThreeVector     fOrigin   = G4ThreeVector(0.0, 0.0, 0.0);
-    G4RotationMatrix* fpMatrix  = nullptr;
+    G4double fGradient = 0.0;
+    G4ThreeVector fOrigin = G4ThreeVector(0.0, 0.0, 0.0);
+    G4RotationMatrix* fpMatrix = nullptr;
 };
 
 #endif

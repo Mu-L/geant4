@@ -25,45 +25,46 @@
 //
 //
 //
-// 
-//Text field class. Inherits from G4OpenGLXmVWidgetComponent
+//
+// Text field class. Inherits from G4OpenGLXmVWidgetComponent
 
 #ifndef G4OPENGLXMTEXTFIELD_HH
 #define G4OPENGLXMTEXTFIELD_HH
 
 #include "G4OpenGLXmVWidgetComponent.hh"
-//#include "G4OpenGLXmConvenienceRoutines.hh"
+// #include "G4OpenGLXmConvenienceRoutines.hh"
 
 class G4OpenGLXmTextField : public G4OpenGLXmVWidgetComponent
 {
+  public:
 
-public:
-  G4OpenGLXmTextField (const char*,G4double*);   //constructor
-  G4OpenGLXmTextField (const char*,const char*); //constructor
-  virtual ~G4OpenGLXmTextField ();               //destructor
+    G4OpenGLXmTextField(const char*, G4double*);  // constructor
+    G4OpenGLXmTextField(const char*, const char*);  // constructor
+    virtual ~G4OpenGLXmTextField();  // destructor
 
-  void SetName (const char*);
-  const char* GetName ();
+    void SetName(const char*);
+    const char* GetName();
 
-  void SetValue (G4double);
-  void SetValue (const char*);
-  const char* GetValue ();
+    void SetValue(G4double);
+    void SetValue(const char*);
+    const char* GetValue();
 
-  void AddYourselfTo (G4OpenGLXmVWidgetContainer*);
+    void AddYourselfTo(G4OpenGLXmVWidgetContainer*);
 
-  Widget* GetPointerToParent ();
-  Widget* GetPointerToWidget ();
+    Widget* GetPointerToParent();
+    Widget* GetPointerToWidget();
 
-private:
-  G4OpenGLXmTextField (const G4OpenGLXmTextField&);
-  G4OpenGLXmTextField& operator = (const G4OpenGLXmTextField&);
-  const char* name;
-  void* value;
-  G4bool text;
-  char* initial;
-  Widget text_label;
-  Widget text_field;
-  Widget* parent;
+  private:
+
+    G4OpenGLXmTextField(const G4OpenGLXmTextField&);
+    G4OpenGLXmTextField& operator=(const G4OpenGLXmTextField&);
+    const char* name;
+    void* value;
+    G4bool text;
+    char* initial;
+    Widget text_label;
+    Widget text_field;
+    Widget* parent;
 };
 
 #endif

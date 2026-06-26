@@ -55,11 +55,14 @@ G4Allocator<G4TrajectoryPoint>*& masterTrajectoryPointAllocator()
   return master_instance;
 }
 
-G4TrajectoryPoint::G4TrajectoryPoint(G4ThreeVector pos) { fPosition = pos; }
+G4TrajectoryPoint::G4TrajectoryPoint(G4ThreeVector pos)
+{
+  fPosition = pos;
+}
 
 G4TrajectoryPoint::G4TrajectoryPoint(const G4TrajectoryPoint& right)
-: G4VTrajectoryPoint(),
-  fPosition(right.fPosition) {}
+  : G4VTrajectoryPoint(), fPosition(right.fPosition)
+{}
 
 G4TrajectoryPoint::~G4TrajectoryPoint() = default;
 
@@ -67,7 +70,8 @@ const std::map<G4String, G4AttDef>* G4TrajectoryPoint::GetAttDefs() const
 {
   G4bool isNew;
   std::map<G4String, G4AttDef>* store = G4AttDefStore::GetInstance("G4TrajectoryPoint", isNew);
-  if (isNew) {
+  if (isNew)
+  {
     G4String Pos("Pos");
     (*store)[Pos] = G4AttDef(Pos, "Position", "Physics", "G4BestUnit", "G4ThreeVector");
   }

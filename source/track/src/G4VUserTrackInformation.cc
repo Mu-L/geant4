@@ -43,22 +43,19 @@ G4VUserTrackInformation::~G4VUserTrackInformation()
 }
 
 // --------------------------------------------------------------------
-G4VUserTrackInformation::
-G4VUserTrackInformation(const G4VUserTrackInformation& right)
+G4VUserTrackInformation::G4VUserTrackInformation(const G4VUserTrackInformation& right)
 {
-  if(right.pType != nullptr)
-    pType = new G4String(*(right.pType));
+  if (right.pType != nullptr) pType = new G4String(*(right.pType));
 }
 
 // --------------------------------------------------------------------
-G4VUserTrackInformation&
-G4VUserTrackInformation::operator=(const G4VUserTrackInformation& right)
+G4VUserTrackInformation& G4VUserTrackInformation::operator=(const G4VUserTrackInformation& right)
 {
-  if(this != &right)
+  if (this != &right)
   {
     delete pType;
 
-    if(right.pType != nullptr)
+    if (right.pType != nullptr)
       pType = new G4String(*(right.pType));
     else
       pType = nullptr;
@@ -70,7 +67,6 @@ G4VUserTrackInformation::operator=(const G4VUserTrackInformation& right)
 const G4String& G4VUserTrackInformation::GetType() const
 {
   static const G4String NOTYPE = "NONE";
-  if(pType != nullptr)
-    return *pType;
+  if (pType != nullptr) return *pType;
   return NOTYPE;
 }

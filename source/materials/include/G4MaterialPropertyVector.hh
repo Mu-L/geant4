@@ -41,8 +41,8 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-#ifndef G4MaterialPropertyVector_h
-#define G4MaterialPropertyVector_h 1
+#ifndef G4MATERIALPROPERTYVECTOR_HH
+#define G4MATERIALPROPERTYVECTOR_HH
 
 #include "G4PhysicsFreeVector.hh"
 using G4MaterialPropertyVector = G4PhysicsFreeVector;

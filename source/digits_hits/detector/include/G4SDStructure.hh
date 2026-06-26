@@ -32,8 +32,8 @@
 //
 // Author: Makoto Asai
 // --------------------------------------------------------------------
-#ifndef G4SDStructure_h
-#define G4SDStructure_h 1
+#ifndef G4SDSTRUCTURE_HH
+#define G4SDSTRUCTURE_HH
 
 // Globals
 #include "G4VSensitiveDetector.hh"
@@ -45,42 +45,47 @@ class G4HCofThisEvent;
 
 class G4SDStructure
 {
- public:
-  G4SDStructure(const G4String& aPath);
-  ~G4SDStructure();
+  public:
 
-  G4bool operator==(const G4SDStructure& right) const;
+    G4SDStructure(const G4String& aPath);
+    ~G4SDStructure();
 
-  void AddNewDetector(G4VSensitiveDetector* aSD, const G4String& treeStructure);
-  void Activate(const G4String& aName, G4bool sensitiveFlag);
-  void Initialize(G4HCofThisEvent* HCE);
-  void Terminate(G4HCofThisEvent* HCE);
-  G4VSensitiveDetector* FindSensitiveDetector(const G4String& aName, G4bool warning = true);
-  G4VSensitiveDetector* GetSD(const G4String& aName);
-  void ListTree();
+    G4bool operator==(const G4SDStructure& right) const;
 
-  inline void SetVerboseLevel(G4int vl)
-  {
-    verboseLevel = vl;
-    for (auto& i : structure) {
-      i->SetVerboseLevel(vl);
-    }
-    for (auto& j : detector) {
-      j->SetVerboseLevel(vl);
-    }
-  };
+    void AddNewDetector(G4VSensitiveDetector* aSD, const G4String& treeStructure);
+    void Activate(const G4String& aName, G4bool sensitiveFlag);
+    void Initialize(G4HCofThisEvent* HCE);
+    void Terminate(G4HCofThisEvent* HCE);
+    G4VSensitiveDetector* FindSensitiveDetector(const G4String& aName, G4bool warning = true);
+    G4VSensitiveDetector* GetSD(const G4String& aName);
+    void ListTree();
 
- private:
-  G4SDStructure* FindSubDirectory(const G4String& subD);
-  G4String ExtractDirName(const G4String& aPath);
-  void RemoveSD(G4VSensitiveDetector*);
+    inline void SetVerboseLevel(G4int vl)
+    {
+      verboseLevel = vl;
+      for (auto& i : structure)
+      {
+        i->SetVerboseLevel(vl);
+      }
+      for (auto& j : detector)
+      {
+        j->SetVerboseLevel(vl);
+      }
+    };
 
- private:
-  std::vector<G4SDStructure*> structure;
-  std::vector<G4VSensitiveDetector*> detector;
-  G4String pathName;
-  G4String dirName;
-  G4int verboseLevel{0};
+  private:
+
+    G4SDStructure* FindSubDirectory(const G4String& subD);
+    G4String ExtractDirName(const G4String& aPath);
+    void RemoveSD(G4VSensitiveDetector*);
+
+  private:
+
+    std::vector<G4SDStructure*> structure;
+    std::vector<G4VSensitiveDetector*> detector;
+    G4String pathName;
+    G4String dirName;
+    G4int verboseLevel{0};
 };
 
 #endif

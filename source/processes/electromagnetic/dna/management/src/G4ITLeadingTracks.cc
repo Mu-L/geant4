@@ -30,16 +30,14 @@
  *      Author: mkaramit
  */
 
-#include <G4ITLeadingTracks.hh>
 #include "G4TrackingInformation.hh"
+
 #include <G4IT.hh>
+#include <G4ITLeadingTracks.hh>
 
-G4ITLeadingTracks::G4ITLeadingTracks()
-= default;
+G4ITLeadingTracks::G4ITLeadingTracks() = default;
 
-G4ITLeadingTracks::~G4ITLeadingTracks()
-= default;
-
+G4ITLeadingTracks::~G4ITLeadingTracks() = default;
 
 void G4ITLeadingTracks::Reset()
 {
@@ -74,7 +72,7 @@ void G4ITLeadingTracks::Push(G4Track* track)
 
 void G4ITLeadingTracks::PrepareLeadingTracks()
 {
-  for(auto track : fLeadingTracks)
+  for (auto track : fLeadingTracks)
   {
     G4IT* ITrack = GetIT(track);
     ITrack->GetTrackingInfo()->SetLeadingStep(true);

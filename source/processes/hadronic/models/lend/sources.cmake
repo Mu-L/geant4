@@ -3,6 +3,7 @@
 # Define the Geant4 Module.
 geant4_add_module(G4had_lend
   PUBLIC_HEADERS
+    G4GIDI.hh
     G4LENDCapture.hh
     G4LENDCaptureCrossSection.hh
     G4LENDCombinedCrossSection.hh
@@ -20,17 +21,8 @@ geant4_add_module(G4had_lend
     G4LENDManager.hh
     G4LENDModel.hh
     G4LENDUsedTarget.hh
-    G4GIDI.hh
-    g4gidi_version.hh
-    nf_Legendre.h
-    nf_integration.h
-    nf_buffer.h
-    nf_utilities.h
-    ptwX.h
-    ptwXY.h
-    statusMessageReporting.h
-    pugiconfig.hpp
-    pugixml.hpp
+  PRIVATE_HEADERS
+    G4GIDI_impl.hh
     GIDI.hpp
     GIDI_data.hpp
     GUPI.hpp
@@ -48,7 +40,21 @@ geant4_add_module(G4had_lend
     MCGIDI_vector.hpp
     PoPI.hpp
     RISI.hpp
+    g4gidi_version.hh
+    miniProtareSingleKeyed_xml.hpp
+    nf_Legendre.h
+    nf_buffer.h
+    nf_integration.h
+    nf_utilities.h
+    ptwX.h
+    ptwXY.h
+    pugiconfig.hpp
+    pugixml.hpp
+    statusMessageReporting.h
   SOURCES
+    G4GIDI.cc
+    G4GIDI_misc.cc
+    G4GIDI_target.cc
     G4LENDCapture.cc
     G4LENDCaptureCrossSection.cc
     G4LENDCombinedCrossSection.cc
@@ -65,28 +71,6 @@ geant4_add_module(G4had_lend
     G4LENDManager.cc
     G4LENDModel.cc
     G4LENDUsedTarget.cc
-    nf_Legendre.c
-    nf_Legendre_GaussianQuadrature.c
-    nf_GnG_adaptiveQuadrature.c
-    nf_stringToDoubles.c
-    nf_stringToInt32s.c
-    nf_utilities.c
-    ptwX_core.c
-    ptwX_misc.c
-    ptwXY_binaryOperators.c
-    ptwXY_convenient.c
-    ptwXY_core.c
-    ptwXY_functions.c
-    ptwXY_integration.c
-    ptwXY_interpolation.c
-    ptwXY_methods.c
-    ptwXY_misc.c
-    ptwXY_unitaryOperators.c
-    statusMessageReporting.c
-    pugixml.cc
-    G4GIDI.cc
-    G4GIDI_misc.cc
-    G4GIDI_target.cc
     GIDI_1dData.cc
     GIDI_GNDS_fileType.cc
     GIDI_GRIN_continuumGammas.cc
@@ -127,6 +111,7 @@ geant4_add_module(G4had_lend
     GIDI_isotropic2d.cc
     GIDI_map.cc
     GIDI_matrix.cc
+    GIDI_miniProtareSingle.cc
     GIDI_misc.cc
     GIDI_misc1d.cc
     GIDI_outputChannel.cc
@@ -138,7 +123,6 @@ geant4_add_module(G4had_lend
     GIDI_product.cc
     GIDI_protare.cc
     GIDI_protareComposite.cc
-    GIDI_styles.cc
     GIDI_protareTNSL.cc
     GIDI_reaction.cc
     GIDI_recoil2d.cc
@@ -150,6 +134,7 @@ geant4_add_module(G4had_lend
     GIDI_settings_flux.cc
     GIDI_settings_group.cc
     GIDI_settings_particle.cc
+    GIDI_styles.cc
     GIDI_suite.cc
     GIDI_sums.cc
     GIDI_table.cc
@@ -218,7 +203,26 @@ geant4_add_module(G4had_lend
     PoPI_physicalQuantity.cc
     PoPI_pq_suite.cc
     PoPI_unorthodox.cc
-    RISI_read.cc)
+    RISI_read.cc
+    nf_GnG_adaptiveQuadrature.c
+    nf_Legendre.c
+    nf_Legendre_GaussianQuadrature.c
+    nf_stringToDoubles.c
+    nf_stringToInt32s.c
+    nf_utilities.c
+    ptwXY_binaryOperators.c
+    ptwXY_convenient.c
+    ptwXY_core.c
+    ptwXY_functions.c
+    ptwXY_integration.c
+    ptwXY_interpolation.c
+    ptwXY_methods.c
+    ptwXY_misc.c
+    ptwXY_unitaryOperators.c
+    ptwX_core.c
+    ptwX_misc.c
+    statusMessageReporting.c
+    pugixml.cc)
 
 geant4_module_link_libraries(G4had_lend
   PUBLIC

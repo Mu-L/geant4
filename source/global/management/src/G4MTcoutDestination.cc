@@ -41,12 +41,11 @@
 
 namespace
 {
-  G4String empty = "";
+G4String empty = "";
 }
 
 // --------------------------------------------------------------------
-G4MTcoutDestination::G4MTcoutDestination(const G4int& threadId)
-  : id(threadId)
+G4MTcoutDestination::G4MTcoutDestination(const G4int& threadId) : id(threadId)
 {
   // TODO: Move this out of here and in the caller
   G4iosSetDestination(this);
@@ -56,16 +55,15 @@ G4MTcoutDestination::G4MTcoutDestination(const G4int& threadId)
 }
 
 // --------------------------------------------------------------------
-void G4MTcoutDestination::SetDefaultOutput(G4bool addmasterDestination,
-                                           G4bool formatAlsoMaster)
+void G4MTcoutDestination::SetDefaultOutput(G4bool addmasterDestination, G4bool formatAlsoMaster)
 {
-  masterDestinationFlag    = addmasterDestination;
+  masterDestinationFlag = addmasterDestination;
   masterDestinationFmtFlag = formatAlsoMaster;
   // Formatter: add prefix to each thread
   const auto f = [this](G4String& msg) -> G4bool {
     std::ostringstream str;
     str << prefix;
-    if(id != G4Threading::GENERICTHREAD_ID)
+    if (id != G4Threading::GENERICTHREAD_ID)
     {
       str << id;
     }
@@ -75,13 +73,12 @@ void G4MTcoutDestination::SetDefaultOutput(G4bool addmasterDestination,
   };
   // Block cout if not in correct state
   const auto filter_out = [this](G4String&) -> G4bool {
-    return !(
-      this->ignoreCout ||
-      (this->ignoreInit && this->stateMgr->GetCurrentState() == G4State_Init));
+    return !(this->ignoreCout
+             || (this->ignoreInit && this->stateMgr->GetCurrentState() == G4State_Init));
   };
 
   // Default behavior, add a destination that uses cout and uses a mutex
-  auto output    = G4coutDestinationUPtr(new G4LockcoutDestination);
+  auto output = G4coutDestinationUPtr(new G4LockcoutDestination);
   ref_defaultOut = output.get();
   output->AddDebugTransformer(filter_out);
   output->AddDebugTransformer(f);
@@ -89,7 +86,7 @@ void G4MTcoutDestination::SetDefaultOutput(G4bool addmasterDestination,
   output->AddCoutTransformer(f);
   output->AddCerrTransformer(f);
   push_back(std::move(output));
-  if(addmasterDestination)
+  if (addmasterDestination)
   {
     AddMasterOutput(formatAlsoMaster);
   }
@@ -100,21 +97,20 @@ void G4MTcoutDestination::AddMasterOutput(G4bool formatAlsoMaster)
 {
   // Add a destination, that forwards the message to the master thread
   auto forwarder = G4coutDestinationUPtr(new G4MasterForwardcoutDestination);
-  ref_masterOut  = forwarder.get();
+  ref_masterOut = forwarder.get();
   const auto filter_out = [this](G4String&) -> G4bool {
-    return !(
-      this->ignoreCout ||
-      (this->ignoreInit && this->stateMgr->GetCurrentState() == G4State_Idle));
+    return !(this->ignoreCout
+             || (this->ignoreInit && this->stateMgr->GetCurrentState() == G4State_Idle));
   };
   forwarder->AddDebugTransformer(filter_out);
   forwarder->AddCoutTransformer(filter_out);
-  if(formatAlsoMaster)
+  if (formatAlsoMaster)
   {
     // Formatter: add prefix to each thread
     const auto f = [this](G4String& msg) -> G4bool {
       std::ostringstream str;
       str << prefix;
-      if(id != G4Threading::GENERICTHREAD_ID)
+      if (id != G4Threading::GENERICTHREAD_ID)
       {
         str << id;
       }
@@ -132,7 +128,7 @@ void G4MTcoutDestination::AddMasterOutput(G4bool formatAlsoMaster)
 // --------------------------------------------------------------------
 G4MTcoutDestination::~G4MTcoutDestination()
 {
-  if(useBuffer)
+  if (useBuffer)
   {
     DumpBuffer();
   }
@@ -153,8 +149,7 @@ void G4MTcoutDestination::HandleFileCout(const G4String& fileN, G4bool ifAppend,
   // stream and should discard everything in G4cerr.
   // First we create the destination with the appropriate open mode
 
-  std::ios_base::openmode mode =
-    (ifAppend ? std::ios_base::app : std::ios_base::trunc);
+  std::ios_base::openmode mode = (ifAppend ? std::ios_base::app : std::ios_base::trunc);
   auto output = G4coutDestinationUPtr(new G4FilecoutDestination(fileN, mode));
 
   // This reacts only to G4cout, so let's make a filter that ignores all other streams
@@ -162,10 +157,10 @@ void G4MTcoutDestination::HandleFileCout(const G4String& fileN, G4bool ifAppend,
   output->AddCerrTransformer([](G4String&) { return false; });
   push_back(std::move(output));
   // Silence G4cout from default formatter
-  if(suppressDefault)
+  if (suppressDefault)
   {
     ref_defaultOut->AddCoutTransformer([](G4String&) { return false; });
-    if(ref_masterOut != nullptr)
+    if (ref_masterOut != nullptr)
     {
       ref_masterOut->AddCoutTransformer([](G4String&) { return false; });
     }
@@ -178,16 +173,15 @@ void G4MTcoutDestination::HandleFileCerr(const G4String& fileN, G4bool ifAppend,
 {
   // See HandleFileCout for explanation, switching cout with cerr
 
-  std::ios_base::openmode mode =
-    (ifAppend ? std::ios_base::app : std::ios_base::trunc);
+  std::ios_base::openmode mode = (ifAppend ? std::ios_base::app : std::ios_base::trunc);
   auto output = G4coutDestinationUPtr(new G4FilecoutDestination(fileN, mode));
   output->AddDebugTransformer([](G4String&) { return false; });
   output->AddCoutTransformer([](G4String&) { return false; });
   push_back(std::move(output));
-  if(suppressDefault)
+  if (suppressDefault)
   {
     ref_defaultOut->AddCerrTransformer([](G4String&) { return false; });
-    if(ref_masterOut != nullptr)
+    if (ref_masterOut != nullptr)
     {
       ref_masterOut->AddCerrTransformer([](G4String&) { return false; });
     }
@@ -195,12 +189,11 @@ void G4MTcoutDestination::HandleFileCerr(const G4String& fileN, G4bool ifAppend,
 }
 
 // --------------------------------------------------------------------
-void G4MTcoutDestination::SetCoutFileName(const G4String& fileN,
-                                          G4bool ifAppend)
+void G4MTcoutDestination::SetCoutFileName(const G4String& fileN, G4bool ifAppend)
 {
   // First let's go back to the default
   Reset();
-  if(fileN != "**Screen**")
+  if (fileN != "**Screen**")
   {
     HandleFileCout(fileN, ifAppend, true);
   }
@@ -211,18 +204,18 @@ void G4MTcoutDestination::EnableBuffering(G4bool flag)
 {
   // I was using buffered output and now I want to turn it off, dump current
   // buffer content and reset output
-  if(useBuffer && !flag)
+  if (useBuffer && !flag)
   {
     DumpBuffer();
     Reset();
   }
-  else if(useBuffer && flag)
+  else if (useBuffer && flag)
   { /* do nothing: already using */
   }
-  else if(!useBuffer && !flag)
+  else if (!useBuffer && !flag)
   { /* do nothing: not using */
   }
-  else if(!useBuffer && flag)
+  else if (!useBuffer && flag)
   {
     // Remove everything, in this case also removing the forward to the master
     // thread, we want everything to be dumpled to a file
@@ -238,8 +231,7 @@ void G4MTcoutDestination::EnableBuffering(G4bool flag)
 }
 
 // --------------------------------------------------------------------
-void G4MTcoutDestination::AddCoutFileName(const G4String& fileN,
-                                          G4bool ifAppend)
+void G4MTcoutDestination::AddCoutFileName(const G4String& fileN, G4bool ifAppend)
 {
   // This is like the equivalent SetCoutFileName, but in this case we do not
   // remove or silence what is already exisiting
@@ -247,20 +239,18 @@ void G4MTcoutDestination::AddCoutFileName(const G4String& fileN,
 }
 
 // --------------------------------------------------------------------
-void G4MTcoutDestination::SetCerrFileName(const G4String& fileN,
-                                          G4bool ifAppend)
+void G4MTcoutDestination::SetCerrFileName(const G4String& fileN, G4bool ifAppend)
 {
   // See SetCoutFileName for explanation
   Reset();
-  if(fileN != "**Screen**")
+  if (fileN != "**Screen**")
   {
     HandleFileCerr(fileN, ifAppend, true);
   }
 }
 
 // --------------------------------------------------------------------
-void G4MTcoutDestination::AddCerrFileName(const G4String& fileN,
-                                          G4bool ifAppend)
+void G4MTcoutDestination::AddCerrFileName(const G4String& fileN, G4bool ifAppend)
 {
   HandleFileCerr(fileN, ifAppend, false);
 }
@@ -268,7 +258,7 @@ void G4MTcoutDestination::AddCerrFileName(const G4String& fileN,
 // --------------------------------------------------------------------
 void G4MTcoutDestination::SetIgnoreCout(G4int tid)
 {
-  if(tid < 0)
+  if (tid < 0)
   {
     ignoreCout = false;
   }
@@ -280,7 +270,7 @@ void G4MTcoutDestination::SetIgnoreCout(G4int tid)
 
 namespace
 {
-  G4Mutex coutm = G4MUTEX_INITIALIZER;
+G4Mutex coutm = G4MUTEX_INITIALIZER;
 }
 
 // --------------------------------------------------------------------
@@ -298,10 +288,10 @@ void G4MTcoutDestination::DumpBuffer()
   G4coutDestination::ReceiveG4cout(msg.str());
   std::for_each(begin(), end(), [this, &sep](G4coutDestinationUPtr& el) {
     auto cout = dynamic_cast<G4BuffercoutDestination*>(el.get());
-    if(cout != nullptr)
+    if (cout != nullptr)
     {
       cout->FlushG4debug();
-      if(sep)
+      if (sep)
       {
         G4coutDestination::ReceiveG4cout("==========\n");
       }
@@ -320,10 +310,10 @@ void G4MTcoutDestination::DumpBuffer()
   G4coutDestination::ReceiveG4cout(msg.str());
   std::for_each(begin(), end(), [this, &sep](G4coutDestinationUPtr& el) {
     auto cout = dynamic_cast<G4BuffercoutDestination*>(el.get());
-    if(cout != nullptr)
+    if (cout != nullptr)
     {
       cout->FlushG4cout();
-      if(sep)
+      if (sep)
       {
         G4coutDestination::ReceiveG4cout("==========\n");
       }
@@ -338,15 +328,14 @@ void G4MTcoutDestination::DumpBuffer()
   msg.str("");
   msg.clear();
   msg << "=======================\n";
-  msg << "cerr buffer(s) for worker with ID:" << id << " (goes to std error)"
-      << std::endl;
+  msg << "cerr buffer(s) for worker with ID:" << id << " (goes to std error)" << std::endl;
   G4coutDestination::ReceiveG4cout(msg.str());
   std::for_each(begin(), end(), [this, &sep](G4coutDestinationUPtr& el) {
     auto cout = dynamic_cast<G4BuffercoutDestination*>(el.get());
-    if(cout != nullptr)
+    if (cout != nullptr)
     {
       cout->FlushG4cerr();
-      if(sep)
+      if (sep)
       {
         G4coutDestination::ReceiveG4cout("==========\n");
       }

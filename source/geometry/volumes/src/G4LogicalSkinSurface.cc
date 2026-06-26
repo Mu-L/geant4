@@ -29,19 +29,18 @@
 // --------------------------------------------------------------------
 
 #include "G4LogicalSkinSurface.hh"
-#include "G4LogicalVolume.hh"
-#include "G4GeometryManager.hh"
 
-G4LogicalSkinSurfaceTable *G4LogicalSkinSurface::theSkinSurfaceTable = nullptr;
+#include "G4GeometryManager.hh"
+#include "G4LogicalVolume.hh"
+
+G4LogicalSkinSurfaceTable* G4LogicalSkinSurface::theSkinSurfaceTable = nullptr;
 
 // --------------------------------------------------------------------
 // Constructor
 //
-G4LogicalSkinSurface::G4LogicalSkinSurface(const G4String&  name,
-                                           G4LogicalVolume* logicalVolume,
+G4LogicalSkinSurface::G4LogicalSkinSurface(const G4String& name, G4LogicalVolume* logicalVolume,
                                            G4SurfaceProperty* surfaceProperty)
-  : G4LogicalSurface(name, surfaceProperty),
-    LogVolume(logicalVolume)
+  : G4LogicalSurface(name, surfaceProperty), LogVolume(logicalVolume)
 {
   if (theSkinSurfaceTable == nullptr)
   {
@@ -53,17 +52,15 @@ G4LogicalSkinSurface::G4LogicalSkinSurface(const G4String&  name,
 }
 
 // --------------------------------------------------------------------
-G4bool
-G4LogicalSkinSurface::operator==(const G4LogicalSkinSurface& right) const
+G4bool G4LogicalSkinSurface::operator==(const G4LogicalSkinSurface& right) const
 {
-  return (this == (G4LogicalSkinSurface *) &right);
+  return (this == (G4LogicalSkinSurface*)&right);
 }
 
 // --------------------------------------------------------------------
-G4bool
-G4LogicalSkinSurface::operator!=(const G4LogicalSkinSurface& right) const
+G4bool G4LogicalSkinSurface::operator!=(const G4LogicalSkinSurface& right) const
 {
-  return (this != (G4LogicalSkinSurface *) &right);
+  return (this != (G4LogicalSkinSurface*)&right);
 }
 
 // --------------------------------------------------------------------
@@ -87,13 +84,15 @@ size_t G4LogicalSkinSurface::GetNumberOfSkinSurfaces()
 }
 
 // --------------------------------------------------------------------
-G4LogicalSkinSurface*
-G4LogicalSkinSurface::GetSurface(const G4LogicalVolume* vol)
+G4LogicalSkinSurface* G4LogicalSkinSurface::GetSurface(const G4LogicalVolume* vol)
 {
   if (theSkinSurfaceTable != nullptr)
   {
     auto pos = theSkinSurfaceTable->find(vol);
-    if(pos != theSkinSurfaceTable->cend()) { return pos->second; }
+    if (pos != theSkinSurfaceTable->cend())
+    {
+      return pos->second;
+    }
   }
   return nullptr;
 }
@@ -101,20 +100,18 @@ G4LogicalSkinSurface::GetSurface(const G4LogicalVolume* vol)
 // --------------------------------------------------------------------
 // Dump info for known surfaces
 //
-void G4LogicalSkinSurface::DumpInfo() 
+void G4LogicalSkinSurface::DumpInfo()
 {
-  G4cout << "***** Skin Surface Table : Nb of Surfaces = "
-         << GetNumberOfSkinSurfaces() << " *****" << G4endl;
+  G4cout << "***** Skin Surface Table : Nb of Surfaces = " << GetNumberOfSkinSurfaces() << " *****"
+         << G4endl;
 
   if (theSkinSurfaceTable != nullptr)
   {
-    for(const auto & pos : *theSkinSurfaceTable)
+    for (const auto& pos : *theSkinSurfaceTable)
     {
       G4LogicalSkinSurface* pSurf = pos.second;
-      G4cout << pSurf->GetName() << " : " << G4endl
-             << " Skin of logical volume "
-             << pSurf->GetLogicalVolume()->GetName()
-             << G4endl;
+      G4cout << pSurf->GetName() << " : " << G4endl << " Skin of logical volume "
+             << pSurf->GetLogicalVolume()->GetName() << G4endl;
     }
   }
   G4cout << G4endl;
@@ -123,7 +120,10 @@ void G4LogicalSkinSurface::DumpInfo()
 // --------------------------------------------------------------------
 void G4LogicalSkinSurface::CleanSurfaceTable()
 {
-  if (theSkinSurfaceTable == nullptr) { return; }
+  if (theSkinSurfaceTable == nullptr)
+  {
+    return;
+  }
 
   // Do nothing if geometry is closed
   if (G4GeometryManager::GetInstance()->IsGeometryClosed())

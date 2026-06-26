@@ -28,70 +28,70 @@
 // Supervision: John Apostolakis (CERN)
 // --------------------------------------------------------------------
 
-namespace field_utils {
+namespace field_utils
+{
 
 namespace internal
 {
-  template<class T>
-  std::size_t getFirstIndex(const T& value)
-  {
-    return static_cast<std::size_t>(value);
-  }
+template<class T>
+std::size_t getFirstIndex(const T& value)
+{
+  return static_cast<std::size_t>(value);
 }
+}  // namespace internal
 
-template <typename ArrayType>
+template<typename ArrayType>
 inline G4double getValue(const ArrayType& array, Value1D value)
 {
   const auto begin = internal::getFirstIndex(value);
   return array[begin];
 }
 
-template <typename ArrayType>
+template<typename ArrayType>
 G4double getValue2(const ArrayType& array, Value1D value)
 {
   return sqr(getValue(array, value));
 }
 
-template <typename ArrayType>
+template<typename ArrayType>
 G4double getValue(const ArrayType& array, Value3D value)
 {
   return std::sqrt(getValue2(array, value));
 }
 
-template <typename ArrayType>
+template<typename ArrayType>
 G4double getValue2(const ArrayType& array, const Value3D value)
 {
   const auto begin = internal::getFirstIndex(value);
-  return sqr(array[begin]) + sqr(array[begin+1]) + sqr(array[begin+2]);
+  return sqr(array[begin]) + sqr(array[begin + 1]) + sqr(array[begin + 2]);
 }
 
-template <typename ArrayType>
+template<typename ArrayType>
 G4ThreeVector makeVector(const ArrayType& array, Value3D value)
 {
-    const auto begin = internal::getFirstIndex(value);
-    return G4ThreeVector(array[begin], array[begin + 1], array[begin + 2]);
+  const auto begin = internal::getFirstIndex(value);
+  return G4ThreeVector(array[begin], array[begin + 1], array[begin + 2]);
 }
 
-template <typename SourceArray, typename TargetArray>
+template<typename SourceArray, typename TargetArray>
 void setValue(const SourceArray& src, Value1D value, TargetArray& trg)
 {
   const auto begin = internal::getFirstIndex(value);
   trg[begin] = src[begin];
 }
 
-template <typename SourceArray, typename TargetArray, typename ...TargetArrays>
-void setValue(const SourceArray& src, Value1D value,
-              TargetArray& trg, TargetArrays&... trgs)
+template<typename SourceArray, typename TargetArray, typename... TargetArrays>
+void setValue(const SourceArray& src, Value1D value, TargetArray& trg, TargetArrays&... trgs)
 {
   const auto begin = internal::getFirstIndex(value);
   trg[begin] = src[begin];
   setValue(src, value, trgs...);
 }
 
-template <typename T>
+template<typename T>
 T clamp(T value, T lo, T hi)
 {
   return std::min(std::max(lo, value), hi);
 }
 
-} // field_utils
+}  // namespace field_utils

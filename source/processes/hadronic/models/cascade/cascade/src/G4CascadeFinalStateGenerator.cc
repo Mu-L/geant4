@@ -32,28 +32,31 @@
 //
 
 #include "G4CascadeFinalStateGenerator.hh"
+
 #include "G4CascadeFinalStateAlgorithm.hh"
 #include "G4InuclElementaryParticle.hh"
-
 
 // Constructor and destructor
 
 G4CascadeFinalStateGenerator::G4CascadeFinalStateGenerator()
-  : G4HadDecayGenerator(new G4CascadeFinalStateAlgorithm) {;}
+  : G4HadDecayGenerator(new G4CascadeFinalStateAlgorithm)
+{
+  ;
+}
 
-G4CascadeFinalStateGenerator::~G4CascadeFinalStateGenerator() {;}
-
+G4CascadeFinalStateGenerator::~G4CascadeFinalStateGenerator()
+{
+  ;
+}
 
 // Configure base class with correct algorithm for interaction
-void 
-G4CascadeFinalStateGenerator::Configure(G4InuclElementaryParticle* bullet,
-					G4InuclElementaryParticle* target,
-				const std::vector<G4int>& particle_kinds) {
-  if (verboseLevel>1)
-    G4cout << " >>> G4CascadeFinalStateGenerator::Configure" << G4endl;
+void G4CascadeFinalStateGenerator::Configure(G4InuclElementaryParticle* bullet,
+                                             G4InuclElementaryParticle* target,
+                                             const std::vector<G4int>& particle_kinds)
+{
+  if (verboseLevel > 1) G4cout << " >>> G4CascadeFinalStateGenerator::Configure" << G4endl;
 
   // Casting is safe, based on constructor implementation
-  G4CascadeFinalStateAlgorithm* cascAlg = 
-    dynamic_cast<G4CascadeFinalStateAlgorithm*>(theAlgorithm);
+  G4CascadeFinalStateAlgorithm* cascAlg = dynamic_cast<G4CascadeFinalStateAlgorithm*>(theAlgorithm);
   cascAlg->Configure(bullet, target, particle_kinds);
 }

@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  5th September 2018
 // Originally G4PhysicalVolumeSearchScene, 10th August 1998, which only
 // found the first occurrence of a volume.
@@ -38,83 +38,83 @@
 #ifndef G4PHYSICALVOLUMESSEARCHSCENE_HH
 #define G4PHYSICALVOLUMESSEARCHSCENE_HH
 
-#include "G4PseudoScene.hh"
-
-#include "G4VPhysicalVolume.hh"
 #include "G4PhysicalVolumeModel.hh"
+#include "G4PseudoScene.hh"
+#include "G4VPhysicalVolume.hh"
 
-class G4PhysicalVolumesSearchScene: public G4PseudoScene
+class G4PhysicalVolumesSearchScene : public G4PseudoScene
 {
-public:
-
-  G4PhysicalVolumesSearchScene
-  (G4PhysicalVolumeModel* pSearchVolumeModel,    // usually a world
-   const G4String&        requiredPhysicalVolumeName,
-   G4int                  requiredCopyNo = -1); // -1 means any copy no
-
-  virtual ~G4PhysicalVolumesSearchScene () {}
-
-  struct Findings
-  {
-    Findings
-    (G4VPhysicalVolume* pSearchPV,
-     G4VPhysicalVolume* pFoundPV,
-     G4int foundPVCopyNo = 0,
-     G4int foundDepth = 0,
-     const std::vector<G4PhysicalVolumeModel::G4PhysicalVolumeNodeID>&
-       foundBasePVPath = std::vector<G4PhysicalVolumeModel::G4PhysicalVolumeNodeID>(),
-     const std::vector<G4PhysicalVolumeModel::G4PhysicalVolumeNodeID>&
-       foundFullPVPath = std::vector<G4PhysicalVolumeModel::G4PhysicalVolumeNodeID>(),
-     const G4Transform3D& foundObjectTransformation = G4Transform3D())
-    : fpSearchPV(pSearchPV)
-    , fpFoundPV(pFoundPV)
-    , fFoundPVCopyNo(foundPVCopyNo)
-    , fFoundDepth(foundDepth)
-    , fFoundBasePVPath(foundBasePVPath)
-    , fFoundFullPVPath(foundFullPVPath)
-    , fFoundObjectTransformation(foundObjectTransformation) {}
-    Findings(const G4PhysicalVolumeModel::TouchableProperties& tp)
-    : fpSearchPV(nullptr)
-    , fpFoundPV(tp.fpTouchablePV)
-    , fFoundPVCopyNo(tp.fCopyNo)
-    , fFoundDepth(0)
-    , fFoundBasePVPath(tp.fTouchableBaseFullPVPath)
-    , fFoundFullPVPath(tp.fTouchableFullPVPath)
-    , fFoundObjectTransformation(tp.fTouchableGlobalTransform) {}
-    G4VPhysicalVolume*   fpSearchPV;   // Searched physical volume.
-    G4VPhysicalVolume*   fpFoundPV;    // Found physical volume.
-    G4int                fFoundPVCopyNo;  // Found Copy number.
-    G4int                fFoundDepth;  // Found depth.
-    std::vector<G4PhysicalVolumeModel::G4PhysicalVolumeNodeID>
-    fFoundBasePVPath;    // Base path (e.g., empty for world volume)
-    std::vector<G4PhysicalVolumeModel::G4PhysicalVolumeNodeID>
-    fFoundFullPVPath;    // Full path of found volume
-    G4Transform3D        fFoundObjectTransformation;  // Found transformation.
-  };
-
-  const std::vector<Findings>& GetFindings() const
-  {return fFindings;}
-
-private:
-
-  class Matcher {
   public:
-    Matcher(const G4String& requiredMatch);
-    G4bool Match(const G4String&);
-    // Match the string with the required match. The latter can be of the form
-    // "/regexp/", where regexp is a regular expression (see C++ regex),
-    // or a plain string, in which case there must be an exact match.
-  private:
-    G4bool   fRegexFlag;  // True if fRequiredMatch is of the form "/.../".
-    G4String fRequiredMatch;
-  };
 
-  void ProcessVolume(const G4VSolid&);
-  
-  const G4PhysicalVolumeModel* fpSearchVolumesModel;
-  Matcher                      fMatcher;
-  G4int                        fRequiredCopyNo;
-  std::vector<Findings>        fFindings;
+    G4PhysicalVolumesSearchScene(G4PhysicalVolumeModel* pSearchVolumeModel,  // usually a world
+                                 const G4String& requiredPhysicalVolumeName,
+                                 G4int requiredCopyNo = -1);  // -1 means any copy no
+
+    virtual ~G4PhysicalVolumesSearchScene() {}
+
+    struct Findings
+    {
+        Findings(G4VPhysicalVolume* pSearchPV, G4VPhysicalVolume* pFoundPV, G4int foundPVCopyNo = 0,
+                 G4int foundDepth = 0,
+                 const std::vector<G4PhysicalVolumeModel::G4PhysicalVolumeNodeID>& foundBasePVPath =
+                   std::vector<G4PhysicalVolumeModel::G4PhysicalVolumeNodeID>(),
+                 const std::vector<G4PhysicalVolumeModel::G4PhysicalVolumeNodeID>& foundFullPVPath =
+                   std::vector<G4PhysicalVolumeModel::G4PhysicalVolumeNodeID>(),
+                 const G4Transform3D& foundObjectTransformation = G4Transform3D())
+          : fpSearchPV(pSearchPV),
+            fpFoundPV(pFoundPV),
+            fFoundPVCopyNo(foundPVCopyNo),
+            fFoundDepth(foundDepth),
+            fFoundBasePVPath(foundBasePVPath),
+            fFoundFullPVPath(foundFullPVPath),
+            fFoundObjectTransformation(foundObjectTransformation)
+        {}
+        Findings(const G4PhysicalVolumeModel::TouchableProperties& tp)
+          : fpSearchPV(nullptr),
+            fpFoundPV(tp.fpTouchablePV),
+            fFoundPVCopyNo(tp.fCopyNo),
+            fFoundDepth(0),
+            fFoundBasePVPath(tp.fTouchableBaseFullPVPath),
+            fFoundFullPVPath(tp.fTouchableFullPVPath),
+            fFoundObjectTransformation(tp.fTouchableGlobalTransform)
+        {}
+        G4VPhysicalVolume* fpSearchPV;  // Searched physical volume.
+        G4VPhysicalVolume* fpFoundPV;  // Found physical volume.
+        G4int fFoundPVCopyNo;  // Found Copy number.
+        G4int fFoundDepth;  // Found depth.
+        std::vector<G4PhysicalVolumeModel::G4PhysicalVolumeNodeID>
+          fFoundBasePVPath;  // Base path (e.g., empty for world volume)
+        std::vector<G4PhysicalVolumeModel::G4PhysicalVolumeNodeID>
+          fFoundFullPVPath;  // Full path of found volume
+        G4Transform3D fFoundObjectTransformation;  // Found transformation.
+    };
+
+    const std::vector<Findings>& GetFindings() const { return fFindings; }
+
+  private:
+
+    class Matcher
+    {
+      public:
+
+        Matcher(const G4String& requiredMatch);
+        G4bool Match(const G4String&);
+        // Match the string with the required match. The latter can be of the form
+        // "/regexp/", where regexp is a regular expression (see C++ regex),
+        // or a plain string, in which case there must be an exact match.
+
+      private:
+
+        G4bool fRegexFlag;  // True if fRequiredMatch is of the form "/.../".
+        G4String fRequiredMatch;
+    };
+
+    void ProcessVolume(const G4VSolid&);
+
+    const G4PhysicalVolumeModel* fpSearchVolumesModel;
+    Matcher fMatcher;
+    G4int fRequiredCopyNo;
+    std::vector<Findings> fFindings;
 };
 
 #endif

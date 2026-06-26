@@ -117,10 +117,12 @@ void G4FastTrack::FRecordsAffineTransformation(const G4Navigator* theNavigator)
   auto depth = (G4int)history->GetHistory()->GetDepth();
   G4int idepth;
   G4bool Done = false;
-  for (idepth = 0; idepth <= depth; ++idepth) {
+  for (idepth = 0; idepth <= depth; ++idepth)
+  {
     G4VPhysicalVolume* currPV = history->GetHistory()->GetVolume(idepth);
     G4LogicalVolume* currLV = currPV->GetLogicalVolume();
-    if ((currLV->GetRegion() == fEnvelope) && (currLV->IsRootRegion())) {
+    if ((currLV->GetRegion() == fEnvelope) && (currLV->IsRootRegion()))
+    {
       fEnvelopePhysicalVolume = currPV;
       fEnvelopeLogicalVolume = currLV;
       fEnvelopeSolid = currLV->GetSolid();
@@ -131,12 +133,14 @@ void G4FastTrack::FRecordsAffineTransformation(const G4Navigator* theNavigator)
   //---------------------------------------------
   //-- Verification: should be removed in future:
   //---------------------------------------------
-  if (!Done) {
+  if (!Done)
+  {
     G4ExceptionDescription ed;
     ed << "Can't find transformation for `" << fEnvelopePhysicalVolume->GetName() << "'" << G4endl;
     G4Exception("G4FastTrack::FRecordsAffineTransformation()", "FastSim011", JustWarning, ed);
   }
-  else {
+  else
+  {
     //-------------------------------------------------------
     // Records the transformation and inverse transformation:
     //-------------------------------------------------------

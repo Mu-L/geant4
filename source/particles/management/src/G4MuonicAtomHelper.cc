@@ -216,18 +216,22 @@ G4double G4MuonicAtomHelper::GetMuonCaptureRate(G4int Z, G4int A)
   G4double lambda = -1.;
 
   std::size_t nCapRates = sizeof(capRates) / sizeof(capRates[0]);
-  for (std::size_t j = 0; j < nCapRates; ++j) {
-    if (capRates[j].Z == Z && capRates[j].A == A) {
+  for (std::size_t j = 0; j < nCapRates; ++j)
+  {
+    if (capRates[j].Z == Z && capRates[j].A == A)
+    {
       lambda = capRates[j].cRate / microsecond;
       break;
     }
     // make sure the data is sorted for the next statement to work correctly
-    if (capRates[j].Z > Z) {
+    if (capRates[j].Z > Z)
+    {
       break;
     }
   }
 
-  if (lambda < 0.) {
+  if (lambda < 0.)
+  {
     // ==  Mu capture lifetime (Goulard and Primakoff PRC10(1974)2034.
 
     constexpr G4double b0a = -0.03;
@@ -273,10 +277,12 @@ G4double G4MuonicAtomHelper::GetMuonZeff(G4int Z)
        34.84,34.94,35.05,35.16,35.25,35.36,35.46,35.57,35.67,35.78 };
   // clang-format on
 
-  if (Z < 0) {
+  if (Z < 0)
+  {
     Z = 0;
   }
-  if (Z > G4int(maxZ)) {
+  if (Z > G4int(maxZ))
+  {
     Z = maxZ;
   }
 
@@ -321,11 +327,13 @@ G4double G4MuonicAtomHelper::GetMuonDecayRate(G4int Z)
 
   // we'll use the above code once we have more data
   // since we only have one value we just assign it
-  if (Z == 1) {
+  if (Z == 1)
+  {
     lambda = decRates[0].dRate / microsecond;
   }
 
-  if (lambda < 0.) {
+  if (lambda < 0.)
+  {
     constexpr G4double freeMuonDecayRate = 0.45517005 / microsecond;
     lambda = 1.0;
     G4double x = GetMuonZeff(Z) * fine_structure_const;
@@ -372,9 +380,11 @@ G4double G4MuonicAtomHelper::GetLinApprox(G4int N, const G4double* const X, cons
     Yuser = Y[0];
   else if (Xuser >= X[N - 1])
     Yuser = Y[N - 1];
-  else {
+  else
+  {
     G4int i;
-    for (i = 1; i < N; ++i) {
+    for (i = 1; i < N; ++i)
+    {
       if (Xuser <= X[i]) break;
     }
 

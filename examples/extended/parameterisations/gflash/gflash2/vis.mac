@@ -42,7 +42,7 @@
 # (if too many tracks cause core dump => /tracking/storeTrajectory 0)
 #
 # Draw hits at end of event:
-#/vis/scene/add/hits
+/vis/scene/add/hits
 #
 # To draw only gammas:
 #/vis/filtering/trajectories/create/particleFilter
@@ -66,9 +66,5 @@
 #
 # For file-based drivers, use this to create an empty detector view:
 #/vis/viewer/flush
-#
-/tracking/verbose 0
-/GFlash/flag 1
-#/run/beamOn 2
 
 

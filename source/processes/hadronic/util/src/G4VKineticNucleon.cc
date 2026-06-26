@@ -27,35 +27,21 @@
 //
 #include "G4VKineticNucleon.hh"
 
-G4VKineticNucleon::G4VKineticNucleon()
-{
-}
+G4VKineticNucleon::G4VKineticNucleon() {}
 
-G4VKineticNucleon::G4VKineticNucleon(const G4VKineticNucleon &)
-{
-}
+G4VKineticNucleon::G4VKineticNucleon(const G4VKineticNucleon&) {}
 
+G4VKineticNucleon::~G4VKineticNucleon() {}
 
-G4VKineticNucleon::~G4VKineticNucleon()
-{
-}
-
-
-//const G4VKineticNucleon & G4VKineticNucleon::operator=(const G4VKineticNucleon &right)
+// const G4VKineticNucleon & G4VKineticNucleon::operator=(const G4VKineticNucleon &right)
 //{}
 
-
-G4bool G4VKineticNucleon::operator==(const G4VKineticNucleon &right) const
+G4bool G4VKineticNucleon::operator==(const G4VKineticNucleon& right) const
 {
-	return this == &right;
+  return this == &right;
 }
 
-G4bool G4VKineticNucleon::operator!=(const G4VKineticNucleon &right) const
+G4bool G4VKineticNucleon::operator!=(const G4VKineticNucleon& right) const
 {
-	return this != &right;
-
+  return this != &right;
 }
-
-
-
-

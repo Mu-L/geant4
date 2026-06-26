@@ -21,6 +21,7 @@
 /testem/phys/addPhysics dna_opt2
 #/testem/phys/addPhysics dna_opt4
 #/testem/phys/addPhysics dna_opt6
+#/testem/phys/addPhysics dna_opt8
 #
 /run/initialize
 #

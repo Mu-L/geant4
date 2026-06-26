@@ -32,8 +32,8 @@
 #include "G4VisAttributes.hh"
 #include "G4VtkVisContext.hh"
 
-#include <vtkSmartPointer.h>
 #include <vtkRenderer.h>
+#include <vtkSmartPointer.h>
 
 namespace std
 {
@@ -57,7 +57,8 @@ struct hash<G4String>
 
       std::size_t h = 0;
 
-      for (char const& c : strng) {
+      for (char const& c : strng)
+      {
         std::hash_combine(h, c);
       }
 
@@ -103,10 +104,12 @@ struct hash<G4Polyhedron>
 
       std::size_t h = 0;
 
-      do {
+      do
+      {
         notLastFace = ph.GetNextFacet(nEdges, vertex, edgeFlag, normals);
 
-        for (int i = 0; i < nEdges; i++) {
+        for (int i = 0; i < nEdges; i++)
+        {
           std::size_t hx = std::hash<double>()(vertex[i].x());
           std::size_t hy = std::hash<double>()(vertex[i].y());
           std::size_t hz = std::hash<double>()(vertex[i].z());
@@ -124,6 +127,7 @@ struct hash<G4Polyhedron>
 class G4VVtkPipeline
 {
   public:
+
     G4VVtkPipeline() : name("none"), type("G4VVtkPipeline"), disableParent(false), renderer(nullptr)
     {}
     G4VVtkPipeline(G4String nameIn, G4String typeIn, const G4VtkVisContext& vcIn,
@@ -172,7 +176,8 @@ class G4VVtkPipeline
     void AddChildPipeline(G4VVtkPipeline* child)
     {
       childPipelines.push_back(child);
-      if (child->GetDisableParent()) {
+      if (child->GetDisableParent())
+      {
         Disable();
       }
     }
@@ -182,6 +187,7 @@ class G4VVtkPipeline
     void ClearChildPipeline() { childPipelines.clear(); }
 
   protected:
+
     G4String name;
     G4String type;
     G4bool disableParent;

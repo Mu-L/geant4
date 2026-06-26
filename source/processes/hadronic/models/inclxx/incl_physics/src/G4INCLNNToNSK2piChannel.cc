@@ -170,7 +170,8 @@ namespace G4INCL {
 			}
 
 			
-		}if(iso == -2){
+		}
+		else if(iso == -2){
 			if(rdm*20. < 1.){
 				particle1->setType(Neutron);
 				particle2->setType(SigmaPlus);

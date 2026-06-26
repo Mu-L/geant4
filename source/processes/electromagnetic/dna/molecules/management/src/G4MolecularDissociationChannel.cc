@@ -32,6 +32,7 @@
 // **********************************************************************
 
 #include "G4MolecularDissociationChannel.hh"
+
 #include "G4VMolecularDissociationDisplacer.hh"
 
 using namespace std;
@@ -39,65 +40,59 @@ using namespace std;
 //______________________________________________________________________________
 
 G4MolecularDissociationChannel::G4MolecularDissociationChannel(const G4String& aName)
-    : G4MolecularDissociationChannel()
+  : G4MolecularDissociationChannel()
 {
-    fName = aName;
+  fName = aName;
 }
 
 //______________________________________________________________________________
 
 G4MolecularDissociationChannel::G4MolecularDissociationChannel()
-    : fDisplacementType(G4VMolecularDissociationDisplacer::NoDisplacement)
-    , fReleasedEnergy(0.)
-    , fProbability(0.)
-    , fDecayTime(0.)
-    , fRMSMotherMoleculeDisplacement(0.)
-{
-}
+  : fDisplacementType(G4VMolecularDissociationDisplacer::NoDisplacement),
+    fReleasedEnergy(0.),
+    fProbability(0.),
+    fDecayTime(0.),
+    fRMSMotherMoleculeDisplacement(0.)
+{}
 
 //______________________________________________________________________________
 
-void G4MolecularDissociationChannel::AddProduct(Product* pProduct,
-                                                G4double displacement)
+void G4MolecularDissociationChannel::AddProduct(Product* pProduct, G4double displacement)
 {
-    fProductsVector.push_back(pProduct);
-    fRMSProductsDisplacementVector.push_back(displacement);
+  fProductsVector.push_back(pProduct);
+  fRMSProductsDisplacementVector.push_back(displacement);
 }
 
 //______________________________________________________________________________
 
 G4int G4MolecularDissociationChannel::GetNbProducts() const
 {
-    return (G4int)fProductsVector.size();
+  return (G4int)fProductsVector.size();
 }
 
 //______________________________________________________________________________
 
 G4MolecularDissociationChannel::Product* G4MolecularDissociationChannel::GetProduct(int index) const
 {
-    return fProductsVector[index];
+  return fProductsVector[index];
 }
 
 //______________________________________________________________________________
 
-G4double
-G4MolecularDissociationChannel::GetRMSRadialDisplacementOfProduct(Product* pProduct)
+G4double G4MolecularDissociationChannel::GetRMSRadialDisplacementOfProduct(Product* pProduct)
 {
-    if (fProductsVector.empty())
-    {
-        return -1.;
-    }
+  if (fProductsVector.empty())
+  {
+    return -1.;
+  }
 
-    auto it = std::find_if(fProductsVector.begin(), fProductsVector.end(),
-                           [pProduct](Product* _pProduct) {
-                               return _pProduct == pProduct;
-                           });
+  auto it = std::find_if(fProductsVector.begin(), fProductsVector.end(),
+                         [pProduct](Product* _pProduct) { return _pProduct == pProduct; });
 
-    if (it == fProductsVector.end())
-    {
-        return -1.;
-    }
-    auto index = std::distance(fProductsVector.begin(), it);
-    return fRMSProductsDisplacementVector[index];
+  if (it == fProductsVector.end())
+  {
+    return -1.;
+  }
+  auto index = std::distance(fProductsVector.begin(), it);
+  return fRMSProductsDisplacementVector[index];
 }
-

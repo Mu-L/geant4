@@ -95,11 +95,13 @@ G4FissionProductYieldDist::G4FissionProductYieldDist(G4int WhichIsotope,
 {
   G4FFG_FUNCTIONENTER__
 
-  try {
+  try
+  {
     // Initialize the class
     Initialize(dataStream);
   }
-  catch (std::exception& e) {
+  catch (std::exception& e)
+  {
     G4FFG_FUNCTIONLEAVE__
     throw e;
   }
@@ -121,11 +123,13 @@ G4FissionProductYieldDist::G4FissionProductYieldDist(G4int WhichIsotope,
 {
   G4FFG_FUNCTIONENTER__
 
-  try {
+  try
+  {
     // Initialize the class
     Initialize(dataStream);
   }
-  catch (std::exception& e) {
+  catch (std::exception& e)
+  {
     G4FFG_FUNCTIONLEAVE__
     throw e;
   }
@@ -156,7 +160,8 @@ void G4FissionProductYieldDist::Initialize(std::istringstream& dataStream)
   // TODO Make G4FPSamplingOps a singleton so that only one instance is used across all classes
   RandomEngine_ = new G4FPYSamplingOps;
 
-  try {
+  try
+  {
     // Read in and sort the probability data
     ENDFData_ = new G4ENDFTapeRead(dataStream, YieldType_, Cause_, Verbosity_);
     //        ENDFData_ = new G4ENDFTapeRead(MakeDirectoryName(),
@@ -171,7 +176,8 @@ void G4FissionProductYieldDist::Initialize(std::istringstream& dataStream)
     MakeTrees();
     ReadProbabilities();
   }
-  catch (std::exception& e) {
+  catch (std::exception& e)
+  {
     delete ElementNames_;
     delete RandomEngine_;
 
@@ -211,7 +217,8 @@ G4DynamicParticleVector* G4FissionProductYieldDist::G4GetFission()
   RemainingZ_ = ParentZ;
 
   // Don't forget the extra nucleons depending on the fission cause
-  switch (Cause_) {
+  switch (Cause_)
+  {
     case G4FFGEnumerations::NEUTRON_INDUCED:
       ++RemainingA_;
       break;
@@ -238,7 +245,8 @@ G4DynamicParticleVector* G4FissionProductYieldDist::G4GetFission()
   FirstDaughter = new G4ReactionProduct(GetFissionProduct());
   RemainingA_ -= FirstDaughter->GetDefinition()->GetAtomicMass();
   RemainingZ_ -= FirstDaughter->GetDefinition()->GetAtomicNumber();
-  if ((Verbosity_ & G4FFGEnumerations::DAUGHTER_INFO) != 0) {
+  if ((Verbosity_ & G4FFGEnumerations::DAUGHTER_INFO) != 0)
+  {
     G4FFG_SPACING__
     G4FFG_LOCATION__
 
@@ -260,7 +268,8 @@ G4DynamicParticleVector* G4FissionProductYieldDist::G4GetFission()
   G4int NewIsotope = RemainingZ_ * 1000 + RemainingA_;
   SecondDaughter =
     new G4ReactionProduct(GetParticleDefinition(NewIsotope, G4FFGEnumerations::GROUND_STATE));
-  if ((Verbosity_ & G4FFGEnumerations::DAUGHTER_INFO) != 0) {
+  if ((Verbosity_ & G4FFGEnumerations::DAUGHTER_INFO) != 0)
+  {
     G4FFG_SPACING__
     G4FFG_LOCATION__
 
@@ -308,9 +317,11 @@ G4DynamicParticleVector* G4FissionProductYieldDist::G4GetFission()
   G4double FragmentsKE = 0.;
   G4int icounter = 0;
   G4int icounter_max = 1024;
-  do {
+  do
+  {
     icounter++;
-    if (icounter > icounter_max) {
+    if (icounter > icounter_max)
+    {
       G4cout << "Loop-counter exceeded the threshold value at " << __LINE__ << "th line of "
              << __FILE__ << "." << G4endl;
       break;
@@ -319,7 +330,8 @@ G4DynamicParticleVector* G4FissionProductYieldDist::G4GetFission()
   } while (FragmentsKE > RemainingEnergy_);  // Loop checking, 11.05.2015, T. Koi
 
   // Make sure that we don't produce any sub-gamma photons
-  if ((RemainingEnergy_ - FragmentsKE) / (100 * keV) < 1.0) {
+  if ((RemainingEnergy_ - FragmentsKE) / (100 * keV) < 1.0)
+  {
     FragmentsKE = RemainingEnergy_;
   }
 
@@ -339,7 +351,8 @@ G4DynamicParticleVector* G4FissionProductYieldDist::G4GetFission()
   G4ThreeVector Direction;
   G4ParticleMomentum ResultantVector(0, 0, 0);
 
-  if (!Alphas->empty()) {
+  if (!Alphas->empty())
+  {
     // Sample the angles of the alpha particles and neutrons, then calculate
     // the total moment contribution to the system
     // The average angle of the alpha particles with respect to the
@@ -362,12 +375,14 @@ G4DynamicParticleVector* G4FissionProductYieldDist::G4GetFission()
       FirstDaughter->GetDefinition()->GetPDGMass() / SecondDaughter->GetDefinition()->GetPDGMass();
 
     // Invert the mass ratio if the first daughter product is the lighter fragment
-    if (MassRatio < 1) {
+    if (MassRatio < 1)
+    {
       MassRatio = 1 / MassRatio;
     }
 
     // The empirical equation is valid for mass ratios up to 2.75
-    if (MassRatio > 2.75) {
+    if (MassRatio > 2.75)
+    {
       MassRatio = 2.75;
     }
     const G4double MeanAlphaAngle = 0.3644 * MassRatio * MassRatio * MassRatio
@@ -379,13 +394,16 @@ G4DynamicParticleVector* G4FissionProductYieldDist::G4GetFission()
     const G4double MeanAlphaAngleStdDev = 0.0523598776;
     G4double PlusMinus;
 
-    for (auto& Alpha : *Alphas) {
+    for (auto& Alpha : *Alphas)
+    {
       PlusMinus = std::acos(RandomEngine_->G4SampleGaussian(0, MeanAlphaAngleStdDev)) - (pi / 2);
       Theta = MeanAlphaAngle + PlusMinus;
-      if (Theta < 0) {
+      if (Theta < 0)
+      {
         Theta = 0.0 - Theta;
       }
-      else if (Theta > pi) {
+      else if (Theta > pi)
+      {
         Theta = (2 * pi - Theta);
       }
       Phi = RandomEngine_->G4SampleUniform(-pi, pi);
@@ -398,8 +416,10 @@ G4DynamicParticleVector* G4FissionProductYieldDist::G4GetFission()
   }
 
   // Sample the directions of the neutrons.
-  if (!Neutrons->empty()) {
-    for (auto& Neutron : *Neutrons) {
+  if (!Neutrons->empty())
+  {
+    for (auto& Neutron : *Neutrons)
+    {
       Theta = std::acos(RandomEngine_->G4SampleUniform(-1, 1));
       Phi = RandomEngine_->G4SampleUniform(-pi, pi);
 
@@ -412,8 +432,10 @@ G4DynamicParticleVector* G4FissionProductYieldDist::G4GetFission()
   }
 
   // Sample the directions of the gamma rays
-  if (!Gammas->empty()) {
-    for (auto& Gamma : *Gammas) {
+  if (!Gammas->empty())
+  {
+    for (auto& Gamma : *Gammas)
+    {
       Theta = std::acos(RandomEngine_->G4SampleUniform(-1, 1));
       Phi = RandomEngine_->G4SampleUniform(-pi, pi);
 
@@ -439,7 +461,8 @@ G4DynamicParticleVector* G4FissionProductYieldDist::G4GetFission()
     LightFragment = FirstDaughter;
     HeavyFragment = SecondDaughter;
   }
-  else {
+  else
+  {
     LightFragment = SecondDaughter;
     HeavyFragment = FirstDaughter;
   }
@@ -510,7 +533,8 @@ G4DynamicParticleVector* G4FissionProductYieldDist::G4GetFission()
   HeavyFragmentDirection.setR(1.0);
   HeavyFragment->SetMomentum(HeavyFragmentDirection * HeavyFragmentMomentum);
 
-  if ((Verbosity_ & (G4FFGEnumerations::DAUGHTER_INFO | G4FFGEnumerations::MOMENTUM_INFO)) != 0) {
+  if ((Verbosity_ & (G4FFGEnumerations::DAUGHTER_INFO | G4FFGEnumerations::MOMENTUM_INFO)) != 0)
+  {
     G4FFG_SPACING__
     G4FFG_LOCATION__
 
@@ -527,15 +551,18 @@ G4DynamicParticleVector* G4FissionProductYieldDist::G4GetFission()
   FissionProducts->push_back(MakeG4DynamicParticle(LightFragment));
   FissionProducts->push_back(MakeG4DynamicParticle(HeavyFragment));
   // Load the neutrons
-  for (auto& Neutron : *Neutrons) {
+  for (auto& Neutron : *Neutrons)
+  {
     FissionProducts->push_back(MakeG4DynamicParticle(Neutron));
   }
   // Load the gammas
-  for (auto& Gamma : *Gammas) {
+  for (auto& Gamma : *Gammas)
+  {
     FissionProducts->push_back(MakeG4DynamicParticle(Gamma));
   }
   // Load the alphas
-  for (auto& Alpha : *Alphas) {
+  for (auto& Alpha : *Alphas)
+  {
     FissionProducts->push_back(MakeG4DynamicParticle(Alpha));
   }
 
@@ -550,7 +577,8 @@ G4DynamicParticleVector* G4FissionProductYieldDist::G4GetFission()
 
   // We will also check the net momenta
   ResultantVector.set(0.0, 0.0, 0.0);
-  for (auto& FissionProduct : *FissionProducts) {
+  for (auto& FissionProduct : *FissionProducts)
+  {
     Direction = FissionProduct->GetMomentumDirection();
     Direction.rotateUz(RotationAxis);
     FissionProduct->SetMomentumDirection(Direction);
@@ -560,7 +588,8 @@ G4DynamicParticleVector* G4FissionProductYieldDist::G4GetFission()
   // Warn if the sum momenta of the system is not within a reasonable
   // tolerance
   G4double PossibleImbalance = ResultantVector.mag();
-  if (PossibleImbalance > 0.01) {
+  if (PossibleImbalance > 0.01)
+  {
     std::ostringstream Temp;
     Temp << "Momenta imbalance of ";
     Temp << PossibleImbalance / (MeV / CLHEP::c_light);
@@ -603,10 +632,12 @@ void G4FissionProductYieldDist::G4SetEnergy(G4double WhatIncidentEnergy)
 {
   G4FFG_FUNCTIONENTER__
 
-  if (Cause_ != G4FFGEnumerations::SPONTANEOUS) {
+  if (Cause_ != G4FFGEnumerations::SPONTANEOUS)
+  {
     IncidentEnergy_ = WhatIncidentEnergy;
   }
-  else {
+  else
+  {
     IncidentEnergy_ = 0 * GeV;
   }
 
@@ -639,10 +670,12 @@ void G4FissionProductYieldDist::CheckAlphaSanity()
   G4FFG_FUNCTIONENTER__
 
   // This provides comfortable breathing room at 16 MeV per alpha
-  if (AlphaProduction_ > 10) {
+  if (AlphaProduction_ > 10)
+  {
     AlphaProduction_ = 10;
   }
-  else if (AlphaProduction_ < -7) {
+  else if (AlphaProduction_ < -7)
+  {
     AlphaProduction_ = -7;
   }
 
@@ -658,24 +691,29 @@ G4Ions* G4FissionProductYieldDist::FindParticle(G4double RandomParticle)
   G4bool lowerExists = false;
   G4bool higherExists = false;
   G4int energyGroup;
-  for (energyGroup = 0; energyGroup < YieldEnergyGroups_; energyGroup++) {
-    if (IncidentEnergy_ == YieldEnergies_[energyGroup]) {
+  for (energyGroup = 0; energyGroup < YieldEnergyGroups_; energyGroup++)
+  {
+    if (IncidentEnergy_ == YieldEnergies_[energyGroup])
+    {
       isExact = true;
       break;
     }
 
-    if (energyGroup == 0 && IncidentEnergy_ < YieldEnergies_[energyGroup]) {
+    if (energyGroup == 0 && IncidentEnergy_ < YieldEnergies_[energyGroup])
+    {
       // Break if the energy is less than the lowest energy
       higherExists = true;
       break;
     }
-    if (energyGroup == YieldEnergyGroups_ - 1) {
+    if (energyGroup == YieldEnergyGroups_ - 1)
+    {
       // The energy is greater than any values in the yield data.
       lowerExists = true;
       break;
     }
     // Break if the energy is less than the lowest energy
-    if (IncidentEnergy_ > YieldEnergies_[energyGroup]) {
+    if (IncidentEnergy_ > YieldEnergies_[energyGroup])
+    {
       energyGroup--;
       lowerExists = true;
       higherExists = true;
@@ -685,12 +723,15 @@ G4Ions* G4FissionProductYieldDist::FindParticle(G4double RandomParticle)
 
   // Determine which particle it is
   G4Ions* FoundParticle = nullptr;
-  if (isExact || YieldEnergyGroups_ == 1) {
+  if (isExact || YieldEnergyGroups_ == 1)
+  {
     // Determine which tree contains the random value
     G4int tree;
-    for (tree = 0; tree < TreeCount_; tree++) {
+    for (tree = 0; tree < TreeCount_; tree++)
+    {
       // Break if a tree is identified as containing the random particle
-      if (RandomParticle <= Trees_[tree].ProbabilityRangeEnd[energyGroup]) {
+      if (RandomParticle <= Trees_[tree].ProbabilityRangeEnd[energyGroup])
+      {
         break;
       }
     }
@@ -704,21 +745,25 @@ G4Ions* G4FissionProductYieldDist::FindParticle(G4double RandomParticle)
            || (RangeIsGreater = (RandomParticle > Branch->ProbabilityRangeTop[energyGroup])))
     // Loop checking, 11.05.2015, T. Koi
     {
-      if (RangeIsSmaller) {
+      if (RangeIsSmaller)
+      {
         Branch = Branch->Left;
       }
-      else {
+      else
+      {
         Branch = Branch->Right;
       }
     }
 
     FoundParticle = Branch->Particle;
   }
-  else if (lowerExists && higherExists) {
+  else if (lowerExists && higherExists)
+  {
     // We need to do some interpolation
     FoundParticle = FindParticleInterpolation(RandomParticle, energyGroup);
   }
-  else {
+  else
+  {
     // We need to do some extrapolation
     FoundParticle = FindParticleExtrapolation(RandomParticle, lowerExists);
   }
@@ -738,16 +783,19 @@ G4Ions* G4FissionProductYieldDist::FindParticleExtrapolation(G4double RandomPart
   G4int NextNearestEnergy;
 
   // Check to see if we are extrapolating above or below the data set
-  if (LowerEnergyGroupExists) {
+  if (LowerEnergyGroupExists)
+  {
     NearestEnergy = YieldEnergyGroups_ - 1;
     NextNearestEnergy = NearestEnergy - 1;
   }
-  else {
+  else
+  {
     NearestEnergy = 0;
     NextNearestEnergy = 1;
   }
 
-  for (G4int Tree = 0; Tree < TreeCount_ && FoundParticle == nullptr; Tree++) {
+  for (G4int Tree = 0; Tree < TreeCount_ && FoundParticle == nullptr; Tree++)
+  {
     FoundParticle = FindParticleBranchSearch(Trees_[Tree].Trunk, RandomParticle, NearestEnergy,
                                              NextNearestEnergy);
   }
@@ -764,7 +812,8 @@ G4Ions* G4FissionProductYieldDist::FindParticleInterpolation(G4double RandomPart
   G4Ions* FoundParticle = nullptr;
   G4int HigherEnergyGroup = LowerEnergyGroup + 1;
 
-  for (G4int Tree = 0; Tree < TreeCount_ && FoundParticle == nullptr; Tree++) {
+  for (G4int Tree = 0; Tree < TreeCount_ && FoundParticle == nullptr; Tree++)
+  {
     FoundParticle = FindParticleBranchSearch(Trees_[Tree].Trunk, RandomParticle, LowerEnergyGroup,
                                              HigherEnergyGroup);
   }
@@ -782,7 +831,8 @@ G4Ions* G4FissionProductYieldDist::FindParticleBranchSearch(ProbabilityBranch* B
   G4Ions* Particle;
 
   // Verify that the branch exists
-  if (Branch == nullptr) {
+  if (Branch == nullptr)
+  {
     Particle = nullptr;
   }
   else if (EnergyGroup1 >= Branch->IncidentEnergiesCount
@@ -792,7 +842,8 @@ G4Ions* G4FissionProductYieldDist::FindParticleBranchSearch(ProbabilityBranch* B
     // Set NULL if any invalid conditions exist
     Particle = nullptr;
   }
-  else {
+  else
+  {
     // Everything check out - proceed
     G4Ions* FoundParticle = nullptr;
     G4double Intercept;
@@ -810,11 +861,13 @@ G4Ions* G4FissionProductYieldDist::FindParticleBranchSearch(ProbabilityBranch* B
     RangeAtIncidentEnergy = Slope * IncidentEnergy_ + Intercept;
 
     // Go right if the particle is below the probability bounds
-    if (RandomParticle < RangeAtIncidentEnergy) {
+    if (RandomParticle < RangeAtIncidentEnergy)
+    {
       FoundParticle =
         FindParticleBranchSearch(Branch->Left, RandomParticle, EnergyGroup1, EnergyGroup2);
     }
-    else {
+    else
+    {
       // Calculate the upper probability bounds
       Slope =
         (Branch->ProbabilityRangeTop[EnergyGroup1] - Branch->ProbabilityRangeTop[EnergyGroup2])
@@ -824,11 +877,13 @@ G4Ions* G4FissionProductYieldDist::FindParticleBranchSearch(ProbabilityBranch* B
       RangeAtIncidentEnergy = Slope * IncidentEnergy_ + Intercept;
 
       // Go left if the particle is above the probability bounds
-      if (RandomParticle > RangeAtIncidentEnergy) {
+      if (RandomParticle > RangeAtIncidentEnergy)
+      {
         FoundParticle =
           FindParticleBranchSearch(Branch->Right, RandomParticle, EnergyGroup1, EnergyGroup2);
       }
-      else {
+      else
+      {
         // If the particle is bounded then we found it!
         FoundParticle = Branch->Particle;
       }
@@ -847,21 +902,25 @@ void G4FissionProductYieldDist::GenerateAlphas(std::vector<G4ReactionProduct*>* 
 
   // Throw the dice to determine if ternary fission occurs
   G4bool MakeAlphas = RandomEngine_->G4SampleUniform() <= TernaryProbability_;
-  if (MakeAlphas) {
+  if (MakeAlphas)
+  {
     G4int NumberOfAlphasToProduce;
 
     // Determine how many alpha particles to produce for the ternary fission
-    if (AlphaProduction_ < 0) {
+    if (AlphaProduction_ < 0)
+    {
       NumberOfAlphasToProduce = RandomEngine_->G4SampleIntegerGaussian(AlphaProduction_ * -1, 1,
                                                                        G4FFGEnumerations::POSITIVE);
     }
-    else {
+    else
+    {
       NumberOfAlphasToProduce = (G4int)AlphaProduction_;
     }
 
     // TK modifed 131108
     // Alphas->resize(NumberOfAlphasToProduce);
-    for (int i = 0; i < NumberOfAlphasToProduce; i++) {
+    for (int i = 0; i < NumberOfAlphasToProduce; i++)
+    {
       // Set the G4Ions as an alpha particle
       Alphas->push_back(new G4ReactionProduct(AlphaDefinition_));
 
@@ -884,7 +943,8 @@ void G4FissionProductYieldDist::GenerateNeutrons(std::vector<G4ReactionProduct*>
 
   // TK modifed 131108
   // Neutrons->resize(NeutronProduction);
-  for (int i = 0; i < NeutronProduction; i++) {
+  for (int i = 0; i < NeutronProduction; i++)
+  {
     // Define the fragment as a neutron
     Neutrons->push_back(new G4ReactionProduct(NeutronDefinition_));
 
@@ -994,7 +1054,8 @@ G4String G4FissionProductYieldDist::MakeFileName(G4int Isotope,
   std::ostringstream FileName;
 
   // Determine if a leading 0 is needed (ZZZAAA or 0ZZAAA)
-  if (Isotope < 100000) {
+  if (Isotope < 100000)
+  {
     FileName << "0";
   }
 
@@ -1032,11 +1093,13 @@ G4String G4FissionProductYieldDist::MakeIsotopeName(G4int Isotope,
   IsotopeName << Z << "_" << A;
 
   // If it is metastable then append "m" to the name
-  if (MetaState != G4FFGEnumerations::GROUND_STATE) {
+  if (MetaState != G4FFGEnumerations::GROUND_STATE)
+  {
     IsotopeName << "m";
 
     // If it is a second isomeric state then append "2" to the name
-    if (MetaState == G4FFGEnumerations::META_2) {
+    if (MetaState == G4FFGEnumerations::META_2)
+    {
       IsotopeName << "2";
     }
   }
@@ -1069,7 +1132,8 @@ void G4FissionProductYieldDist::MakeTrees()
   Trees_ = new ProbabilityTree[TreeCount_];
 
   // Initialize the range of each node
-  for (G4int i = 0; i < TreeCount_; i++) {
+  for (G4int i = 0; i < TreeCount_; i++)
+  {
     Trees_[i].ProbabilityRangeEnd = new G4double[YieldEnergyGroups_];
     Trees_[i].Trunk = nullptr;
     Trees_[i].BranchCount = 0;
@@ -1090,7 +1154,8 @@ void G4FissionProductYieldDist::ReadProbabilities()
   G4ArrayOps::Set(YieldEnergyGroups_, DataTotal_, 0.0);
 
   // Loop through all the products
-  for (G4int i = 0; i < ProductCount; i++) {
+  for (G4int i = 0; i < ProductCount; i++)
+  {
     // Acquire the data and sort it
     SortProbability(ENDFData_->G4GetYield(i));
   }
@@ -1102,7 +1167,8 @@ void G4FissionProductYieldDist::ReadProbabilities()
   G4ArrayOps::Set(YieldEnergyGroups_, DataTotal_, 0.0);
 
   // Go through all the trees one at a time
-  for (G4int i = 0; i < TreeCount_; i++) {
+  for (G4int i = 0; i < TreeCount_; i++)
+  {
     Renormalize(Trees_[i].Trunk);
     // Set the max range of the tree to DataTotal
     G4ArrayOps::Copy(YieldEnergyGroups_, Trees_[i].ProbabilityRangeEnd, DataTotal_);
@@ -1117,7 +1183,8 @@ void G4FissionProductYieldDist::Renormalize(ProbabilityBranch* Branch)
 
   // Check to see if Branch exists. Branch will be a null pointer if it
   // doesn't exist
-  if (Branch != nullptr) {
+  if (Branch != nullptr)
+  {
     // Call the lower branch to set the probability segment first, since it
     // supposed to have a lower probability segment that this node
     Renormalize(Branch->Left);
@@ -1145,13 +1212,15 @@ void G4FissionProductYieldDist::SampleAlphaEnergies(std::vector<G4ReactionProduc
   G4double MeanAlphaEnergy = 16.0;
   G4double TotalAlphaEnergy;
 
-  do {
+  do
+  {
     G4double AlphaEnergy;
     TotalAlphaEnergy = 0;
 
     // Walk through the alpha particles one at a time and sample each's
     // energy
-    for (auto& Alpha : *Alphas) {
+    for (auto& Alpha : *Alphas)
+    {
       AlphaEnergy =
         RandomEngine_->G4SampleGaussian(MeanAlphaEnergy, 2.35, G4FFGEnumerations::POSITIVE) * MeV;
       // Assign the energy to the alpha particle
@@ -1176,7 +1245,8 @@ void G4FissionProductYieldDist::SampleGammaEnergies(std::vector<G4ReactionProduc
   G4FFG_FUNCTIONENTER__
 
   // Make sure that there is energy to assign to the gamma rays
-  if (RemainingEnergy_ != 0) {
+  if (RemainingEnergy_ != 0)
+  {
     G4double SampleEnergy;
 
     // Sample from RemainingEnergy until it is all gone. Also,
@@ -1190,7 +1260,8 @@ void G4FissionProductYieldDist::SampleGammaEnergies(std::vector<G4ReactionProduc
            >= G4FFGDefaultValues::MeanGammaEnergy)  // Loop checking, 11.05.2015, T. Koi
     {
       icounter++;
-      if (icounter > icounter_max) {
+      if (icounter > icounter_max)
+      {
         G4cout << "Loop-counter exceeded the threshold value at " << __LINE__ << "th line of "
                << __FILE__ << "." << G4endl;
         break;
@@ -1198,11 +1269,13 @@ void G4FissionProductYieldDist::SampleGammaEnergies(std::vector<G4ReactionProduc
       SampleEnergy = RandomEngine_->G4SampleGaussian(G4FFGDefaultValues::MeanGammaEnergy, 1.0 * MeV,
                                                      G4FFGEnumerations::POSITIVE);
       // Make sure that we didn't sample more energy than was available
-      if (SampleEnergy <= RemainingEnergy_) {
+      if (SampleEnergy <= RemainingEnergy_)
+      {
         // If this energy assignment would leave less energy than the
         // 'intrinsic' minimal energy of a gamma ray then just assign
         // all of the remaining energy
-        if (RemainingEnergy_ - SampleEnergy < 100 * keV) {
+        if (RemainingEnergy_ - SampleEnergy < 100 * keV)
+        {
           SampleEnergy = RemainingEnergy_;
         }
 
@@ -1221,7 +1294,8 @@ void G4FissionProductYieldDist::SampleGammaEnergies(std::vector<G4ReactionProduc
     // If there is anything left over, the energy must be above 100 keV but
     // less than G4FFGDefaultValues::MeanGammaEnergy. Arbitrarily assign
     // RemainingEnergy to a new particle
-    if (RemainingEnergy_ > 0) {
+    if (RemainingEnergy_ > 0)
+    {
       SampleEnergy = RemainingEnergy_;
       Gammas->push_back(new G4ReactionProduct());
 
@@ -1250,9 +1324,11 @@ void G4FissionProductYieldDist::SampleNeutronEnergies(std::vector<G4ReactionProd
   // Make sure that we don't sample more energy than is available
   G4int icounter = 0;
   G4int icounter_max = 1024;
-  do {
+  do
+  {
     icounter++;
-    if (icounter > icounter_max) {
+    if (icounter > icounter_max)
+    {
       G4cout << "Loop-counter exceeded the threshold value at " << __LINE__ << "th line of "
              << __FILE__ << "." << G4endl;
       break;
@@ -1262,7 +1338,8 @@ void G4FissionProductYieldDist::SampleNeutronEnergies(std::vector<G4ReactionProd
     // Walk through the neutrons one at a time and sample the energies.
     // The gamma rays have not yet been sampled, so the last neutron will
     // have a NULL value for NextFragment
-    for (auto& Neutron : *Neutrons) {
+    for (auto& Neutron : *Neutrons)
+    {
       // Assign the energy to the neutron
       NeutronEnergy = RandomEngine_->G4SampleWatt(Isotope_, Cause_, IncidentEnergy_);
       Neutron->SetKineticEnergy(NeutronEnergy);
@@ -1286,11 +1363,13 @@ void G4FissionProductYieldDist::SetNubar()
   G4int* NubarWidth;
   G4double XFactor, BFactor;
 
-  if (Cause_ == G4FFGEnumerations::SPONTANEOUS) {
+  if (Cause_ == G4FFGEnumerations::SPONTANEOUS)
+  {
     WhichNubar = const_cast<G4int*>(&SpontaneousNubar_[0][0]);
     NubarWidth = const_cast<G4int*>(&SpontaneousNubarWidth_[0][0]);
   }
-  else {
+  else
+  {
     WhichNubar = const_cast<G4int*>(&NeutronInducedNubar_[0][0]);
     NubarWidth = const_cast<G4int*>(&NeutronInducedNubarWidth_[0][0]);
   }
@@ -1300,7 +1379,8 @@ void G4FissionProductYieldDist::SetNubar()
   Nubar_ = *(WhichNubar + 1) * IncidentEnergy_ * XFactor + *(WhichNubar + 2) * BFactor;
   while (*WhichNubar != -1)  // Loop checking, 11.05.2015, T. Koi
   {
-    if (*WhichNubar == Isotope_) {
+    if (*WhichNubar == Isotope_)
+    {
       Nubar_ = *(WhichNubar + 1) * IncidentEnergy_ * XFactor + *(WhichNubar + 2) * BFactor;
 
       break;
@@ -1312,7 +1392,8 @@ void G4FissionProductYieldDist::SetNubar()
   NubarWidth_ = *(NubarWidth + 1) * XFactor;
   while (*WhichNubar != -1)  // Loop checking, 11.05.2015, T. Koi
   {
-    if (*WhichNubar == Isotope_) {
+    if (*WhichNubar == Isotope_)
+    {
       NubarWidth_ = *(NubarWidth + 1) * XFactor;
 
       break;
@@ -1343,28 +1424,34 @@ void G4FissionProductYieldDist::SortProbability(G4ENDFYieldDataContainer* YieldD
 
   // Check to see if the this is the smallest/largest particle. First, check
   // to see if this is the first particle in the system
-  if (SmallestZ_ == nullptr) {
+  if (SmallestZ_ == nullptr)
+  {
     SmallestZ_ = SmallestA_ = LargestZ_ = LargestA_ = NewBranch->Particle;
   }
-  else {
+  else
+  {
     G4bool IsSmallerZ = NewBranch->Particle->GetAtomicNumber() < SmallestZ_->GetAtomicNumber();
     G4bool IsSmallerA = NewBranch->Particle->GetAtomicMass() < SmallestA_->GetAtomicMass();
     G4bool IsLargerZ = NewBranch->Particle->GetAtomicNumber() > LargestZ_->GetAtomicNumber();
     G4bool IsLargerA = NewBranch->Particle->GetAtomicMass() > LargestA_->GetAtomicMass();
 
-    if (IsSmallerZ) {
+    if (IsSmallerZ)
+    {
       SmallestZ_ = NewBranch->Particle;
     }
 
-    if (IsLargerZ) {
+    if (IsLargerZ)
+    {
       LargestA_ = NewBranch->Particle;
     }
 
-    if (IsSmallerA) {
+    if (IsSmallerA)
+    {
       SmallestA_ = NewBranch->Particle;
     }
 
-    if (IsLargerA) {
+    if (IsLargerA)
+    {
       LargestA_ = NewBranch->Particle;
     }
   }
@@ -1382,11 +1469,13 @@ void G4FissionProductYieldDist::SortProbability(G4ENDFYieldDataContainer* YieldD
   // Run through the tree until the end branch is reached
   while (BranchPosition > 1)  // Loop checking, 11.05.2015, T. Koi
   {
-    if ((BranchPosition & 1) != 0) {
+    if ((BranchPosition & 1) != 0)
+    {
       // If the 1's bit is on then move to the next 'right' branch
       WhichBranch = &((*WhichBranch)->Right);
     }
-    else {
+    else
+    {
       // If the 1's bit is off then move to the next 'down' branch
       WhichBranch = &((*WhichBranch)->Left);
     }
@@ -1431,7 +1520,8 @@ void G4FissionProductYieldDist::BurnTree(ProbabilityBranch* Branch)
 
   // Check to see it Branch exists. Branch will be a null pointer if it
   // doesn't exist
-  if (Branch != nullptr) {
+  if (Branch != nullptr)
+  {
     // Burn down before you burn up
     BurnTree(Branch->Left);
     delete Branch->Left;

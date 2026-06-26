@@ -24,58 +24,58 @@
 // ********************************************************************
 //
 //
-#ifndef G4DNAMesh_hh
-#define G4DNAMesh_hh 1
+#ifndef G4DNAMESH_HH
+#define G4DNAMESH_HH
 
-#include "globals.hh"
 #include "G4DNABoundingBox.hh"
-#include <vector>
-#include <array>
-#include <cmath>
-#include <unordered_map>
-#include <memory>
-#include <sstream>
 #include "G4MolecularConfiguration.hh"
 #include "G4VDNAMesh.hh"
+#include "globals.hh"
+
+#include <array>
+#include <cmath>
+#include <memory>
+#include <sstream>
+#include <unordered_map>
+#include <vector>
 
 class G4DNAMesh : public G4VDNAMesh
 {
- public:
-  using Box         = G4DNABoundingBox;
-  using MolType     = const G4MolecularConfiguration*;
-  using Data        = std::map<MolType, size_t>;
-  using Voxel       = std::tuple<Index, Box, Data>;
-  using IndexMap    = std::unordered_map<Index, G4int, G4VDNAMesh::hashFunc>;
-  using VoxelVector = std::vector<Voxel>;
-  G4DNAMesh(const G4DNABoundingBox&, G4int);
-  ~G4DNAMesh() override;
-  Index GetIndex(const G4ThreeVector& position) const;
-  Voxel& GetVoxel(const Index& index);  // GetorCreateVoxel
-  size_t size() { return fVoxelVector.size(); };
-  Index ConvertIndex(const Index& index, const G4int&) const;
-  Index GetRandomIndex(const Index&, const G4double& resolution) const;
-  std::vector<Index> FindNeighboringVoxels(const Index& index) const;
-  void Reset();
-  Data& GetVoxelMapList(const Index& index);
-  auto end() { return fVoxelVector.end(); }
-  auto begin() { return fVoxelVector.begin(); }
-  VoxelVector::const_iterator const_end() const { return fVoxelVector.end(); }
-  VoxelVector::const_iterator const_begin() const
-  {
-    return fVoxelVector.begin();
-  }
-  void PrintMesh();
-  void PrintVoxel(const Index& index);
-  const G4DNABoundingBox& GetBoundingBox() const;
-  G4DNABoundingBox GetBoundingBox(const Index& index);
-  G4int GetNumberOfType(MolType type) const;
-  void InitializeVoxel(const Index& key, Data&& mapList);
-  G4double GetResolution() const;
+  public:
 
- private:
-  IndexMap fIndexMap;
-  VoxelVector fVoxelVector;
-  const G4DNABoundingBox* fpBoundingMesh;
-  G4double fResolution;
+    using Box = G4DNABoundingBox;
+    using MolType = const G4MolecularConfiguration*;
+    using Data = std::map<MolType, size_t>;
+    using Voxel = std::tuple<Index, Box, Data>;
+    using IndexMap = std::unordered_map<Index, G4int, G4VDNAMesh::hashFunc>;
+    using VoxelVector = std::vector<Voxel>;
+    G4DNAMesh(const G4DNABoundingBox&, G4int);
+    ~G4DNAMesh() override;
+    Index GetIndex(const G4ThreeVector& position) const;
+    Voxel& GetVoxel(const Index& index);  // GetorCreateVoxel
+    size_t size() { return fVoxelVector.size(); };
+    Index ConvertIndex(const Index& index, const G4int&) const;
+    Index GetRandomIndex(const Index&, const G4double& resolution) const;
+    std::vector<Index> FindNeighboringVoxels(const Index& index) const;
+    void Reset();
+    Data& GetVoxelMapList(const Index& index);
+    auto end() { return fVoxelVector.end(); }
+    auto begin() { return fVoxelVector.begin(); }
+    VoxelVector::const_iterator const_end() const { return fVoxelVector.end(); }
+    VoxelVector::const_iterator const_begin() const { return fVoxelVector.begin(); }
+    void PrintMesh();
+    void PrintVoxel(const Index& index);
+    const G4DNABoundingBox& GetBoundingBox() const;
+    G4DNABoundingBox GetBoundingBox(const Index& index);
+    G4int GetNumberOfType(MolType type) const;
+    void InitializeVoxel(const Index& key, Data&& mapList);
+    G4double GetResolution() const;
+
+  private:
+
+    IndexMap fIndexMap;
+    VoxelVector fVoxelVector;
+    const G4DNABoundingBox* fpBoundingMesh;
+    G4double fResolution;
 };
 #endif

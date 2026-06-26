@@ -32,28 +32,25 @@
 // Author: Zoltan Torzsok, November 2007
 // --------------------------------------------------------------------
 #ifndef G4GDMLPARAMETERISATION_HH
-#define G4GDMLPARAMETERISATION_HH 1
+#define G4GDMLPARAMETERISATION_HH
 
-#include "G4VPVParameterisation.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4ThreeVector.hh"
 #include "G4Box.hh"
-#include "G4Trd.hh"
-#include "G4Trap.hh"
 #include "G4Cons.hh"
-#include "G4Sphere.hh"
-#include "G4Orb.hh"
 #include "G4Ellipsoid.hh"
-#include "G4Polycone.hh"
-#include "G4Polyhedra.hh"
-#include "G4Torus.hh"
-#include "G4Para.hh"
 #include "G4Hype.hh"
-#include "G4Tubs.hh"
+#include "G4Orb.hh"
+#include "G4Para.hh"
 #include "G4Polycone.hh"
 #include "G4Polyhedra.hh"
 #include "G4RotationMatrix.hh"
+#include "G4Sphere.hh"
 #include "G4ThreeVector.hh"
+#include "G4Torus.hh"
+#include "G4Trap.hh"
+#include "G4Trd.hh"
+#include "G4Tubs.hh"
+#include "G4VPVParameterisation.hh"
+#include "G4VPhysicalVolume.hh"
 
 #include <vector>
 
@@ -63,14 +60,11 @@ class G4GDMLParameterisation : public G4VPVParameterisation
 
     struct PARAMETER
     {
-      G4RotationMatrix* pRot = nullptr;
-      G4ThreeVector position;
-      G4double dimension[16];
+        G4RotationMatrix* pRot = nullptr;
+        G4ThreeVector position;
+        G4double dimension[16];
 
-      PARAMETER()
-      {
-        memset(dimension, 0, sizeof(dimension));
-      }
+        PARAMETER() { memset(dimension, 0, sizeof(dimension)); }
     };
 
     G4int GetSize() const;
@@ -79,32 +73,19 @@ class G4GDMLParameterisation : public G4VPVParameterisation
   private:
 
     void ComputeTransformation(const G4int, G4VPhysicalVolume*) const;
-    void ComputeDimensions(G4Box&, const G4int,
-                           const G4VPhysicalVolume*) const;
-    void ComputeDimensions(G4Trd&, const G4int,
-                           const G4VPhysicalVolume*) const;
-    void ComputeDimensions(G4Trap&, const G4int,
-                           const G4VPhysicalVolume*) const;
-    void ComputeDimensions(G4Cons&, const G4int,
-                           const G4VPhysicalVolume*) const;
-    void ComputeDimensions(G4Sphere&, const G4int,
-                           const G4VPhysicalVolume*) const;
-    void ComputeDimensions(G4Orb&, const G4int,
-                           const G4VPhysicalVolume*) const;
-    void ComputeDimensions(G4Ellipsoid&, const G4int,
-                           const G4VPhysicalVolume*) const;
-    void ComputeDimensions(G4Torus&, const G4int,
-                           const G4VPhysicalVolume*) const;
-    void ComputeDimensions(G4Para&, const G4int,
-                           const G4VPhysicalVolume*) const;
-    void ComputeDimensions(G4Hype&, const G4int,
-                           const G4VPhysicalVolume*) const;
-    void ComputeDimensions(G4Tubs&, const G4int,
-                           const G4VPhysicalVolume*) const;
-    void ComputeDimensions(G4Polycone&, const G4int,
-                           const G4VPhysicalVolume*) const;
-    void ComputeDimensions(G4Polyhedra&, const G4int,
-                           const G4VPhysicalVolume*) const;
+    void ComputeDimensions(G4Box&, const G4int, const G4VPhysicalVolume*) const;
+    void ComputeDimensions(G4Trd&, const G4int, const G4VPhysicalVolume*) const;
+    void ComputeDimensions(G4Trap&, const G4int, const G4VPhysicalVolume*) const;
+    void ComputeDimensions(G4Cons&, const G4int, const G4VPhysicalVolume*) const;
+    void ComputeDimensions(G4Sphere&, const G4int, const G4VPhysicalVolume*) const;
+    void ComputeDimensions(G4Orb&, const G4int, const G4VPhysicalVolume*) const;
+    void ComputeDimensions(G4Ellipsoid&, const G4int, const G4VPhysicalVolume*) const;
+    void ComputeDimensions(G4Torus&, const G4int, const G4VPhysicalVolume*) const;
+    void ComputeDimensions(G4Para&, const G4int, const G4VPhysicalVolume*) const;
+    void ComputeDimensions(G4Hype&, const G4int, const G4VPhysicalVolume*) const;
+    void ComputeDimensions(G4Tubs&, const G4int, const G4VPhysicalVolume*) const;
+    void ComputeDimensions(G4Polycone&, const G4int, const G4VPhysicalVolume*) const;
+    void ComputeDimensions(G4Polyhedra&, const G4int, const G4VPhysicalVolume*) const;
 
   private:
 

@@ -32,39 +32,40 @@
 //  devired from G4BertiniPiKBuilder
 //
 // Modified:
-// 02.04.2009 V.Ivanchenko remove add cross section, string builderis reponsible 
+// 02.04.2009 V.Ivanchenko remove add cross section, string builderis reponsible
 // 12.04.2017 A.Dotti move to new design with base class
 //
 //----------------------------------------------------------------------------
 //
 #include "G4BertiniPionBuilder.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4BGGPionInelasticXS.hh"
+#include "G4HadronicParameters.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4BGGPionInelasticXS.hh"
-#include "G4HadronicParameters.hh"
+#include "G4SystemOfUnits.hh"
 
+G4BertiniPionBuilder::G4BertiniPionBuilder()
+{
+  theMin = 0.0;
+  theMax = G4HadronicParameters::Instance()->GetMaxEnergyTransitionFTF_Cascade();
+  theModel = new G4CascadeInterface;
+  theModel->SetMinEnergy(theMin);
+  theModel->SetMaxEnergy(theMax);
+}
 
-G4BertiniPionBuilder::
-G4BertiniPionBuilder() 
- {
-   theMin = 0.0;
-   theMax = G4HadronicParameters::Instance()->GetMaxEnergyTransitionFTF_Cascade();
-   theModel = new G4CascadeInterface;
-   theModel->SetMinEnergy(theMin);
-   theModel->SetMaxEnergy(theMax); 
- }
-
-void G4BertiniPionBuilder::
-Build(G4HadronInelasticProcess * aP)
- {
-   theModel->SetMinEnergy(theMin);
-   theModel->SetMaxEnergy(theMax);
-   if ( aP->GetParticleDefinition() == G4PionPlus::Definition() ) { 
-     aP->AddDataSet( new G4BGGPionInelasticXS( G4PionPlus::Definition() ) );
-   } else if ( aP->GetParticleDefinition() == G4PionMinus::Definition() ) { 
-     aP->AddDataSet( new G4BGGPionInelasticXS( G4PionMinus::Definition() ) );
-   }
-   aP->RegisterMe(theModel);
- }
+void G4BertiniPionBuilder::Build(G4HadronInelasticProcess* aP)
+{
+  theModel->SetMinEnergy(theMin);
+  theModel->SetMaxEnergy(theMax);
+  if (aP->GetParticleDefinition() == G4PionPlus::Definition())
+  {
+    aP->AddDataSet(new G4BGGPionInelasticXS(G4PionPlus::Definition()));
+  }
+  else if (aP->GetParticleDefinition() == G4PionMinus::Definition())
+  {
+    aP->AddDataSet(new G4BGGPionInelasticXS(G4PionMinus::Definition()));
+  }
+  aP->RegisterMe(theModel);
+}

@@ -31,26 +31,22 @@
 #include "G4tgrRotationMatrix.hh"
 
 #include "G4SystemOfUnits.hh"
+#include "G4tgrMessenger.hh"
 #include "G4tgrRotationMatrixFactory.hh"
 #include "G4tgrUtils.hh"
-#include "G4tgrMessenger.hh"
 
 // --------------------------------------------------------------------
-G4tgrRotationMatrix::G4tgrRotationMatrix()
-{
-}
+G4tgrRotationMatrix::G4tgrRotationMatrix() {}
 
 // --------------------------------------------------------------------
-G4tgrRotationMatrix::~G4tgrRotationMatrix()
-{
-}
+G4tgrRotationMatrix::~G4tgrRotationMatrix() {}
 
 // --------------------------------------------------------------------
 G4tgrRotationMatrix::G4tgrRotationMatrix(const std::vector<G4String>& wl)
 {
   theName = G4tgrUtils::GetString(wl[1]);
 
-  switch(wl.size())
+  switch (wl.size())
   {
     case 5:
       theInputType = rm3;
@@ -62,16 +58,16 @@ G4tgrRotationMatrix::G4tgrRotationMatrix(const std::vector<G4String>& wl)
       theInputType = rm9;
       break;
     default:
-      G4Exception("G4tgrRotationMatrix::G4tgrRotationMatrix()", "InvalidMatrix",
-                  FatalException, "Input line must have 5, 8 or 11 words.");
+      G4Exception("G4tgrRotationMatrix::G4tgrRotationMatrix()", "InvalidMatrix", FatalException,
+                  "Input line must have 5, 8 or 11 words.");
       break;
   }
 
   //-------- Fill matrix values
   std::size_t siz = wl.size() - 2;
-  for(std::size_t ii = 0; ii < siz; ++ii)
+  for (std::size_t ii = 0; ii < siz; ++ii)
   {
-    if(siz == 9)
+    if (siz == 9)
     {
       theValues.push_back(G4tgrUtils::GetDouble(wl[ii + 2]));
     }
@@ -81,11 +77,10 @@ G4tgrRotationMatrix::G4tgrRotationMatrix(const std::vector<G4String>& wl)
     }
   }
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 2)
+  if (G4tgrMessenger::GetVerboseLevel() >= 2)
   {
-    G4cout << " G4tgrRotationMatrix::G4tgrRotationMatrix() - Created: "
-           << theName << G4endl;
-    for(std::size_t ii = 0; ii < siz; ++ii)
+    G4cout << " G4tgrRotationMatrix::G4tgrRotationMatrix() - Created: " << theName << G4endl;
+    for (std::size_t ii = 0; ii < siz; ++ii)
     {
       G4cout << " " << theValues[ii];
     }
@@ -97,10 +92,10 @@ G4tgrRotationMatrix::G4tgrRotationMatrix(const std::vector<G4String>& wl)
 // --------------------------------------------------------------------
 std::ostream& operator<<(std::ostream& os, const G4tgrRotationMatrix& obj)
 {
-  os << "G4tgrRotationMatrix= " << obj.theName
-     << " InputTyep = " << obj.theInputType << " VALUES= ";
+  os << "G4tgrRotationMatrix= " << obj.theName << " InputTyep = " << obj.theInputType
+     << " VALUES= ";
 
-  for(std::size_t ii = 0; ii < obj.theValues.size(); ++ii)
+  for (std::size_t ii = 0; ii < obj.theValues.size(); ++ii)
   {
     os << obj.theValues[ii] << " ";
   }

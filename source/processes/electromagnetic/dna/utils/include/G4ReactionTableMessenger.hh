@@ -30,8 +30,8 @@
  *      Author: mkaramit
  */
 
-#ifndef SOURCE_PROCESSES_ELECTROMAGNETIC_DNA_UTILS_INCLUDE_G4REACTIONTABLEMESSENGER_HH_
-#define SOURCE_PROCESSES_ELECTROMAGNETIC_DNA_UTILS_INCLUDE_G4REACTIONTABLEMESSENGER_HH_
+#ifndef G4REACTIONTABLEMESSENGER_HH
+#define G4REACTIONTABLEMESSENGER_HH
 
 #include <G4UImessenger.hh>
 
@@ -44,19 +44,21 @@ class G4UIcmdWithABool;
 
 class G4ReactionTableMessenger : public G4UImessenger
 {
-public:
-  G4ReactionTableMessenger(G4DNAMolecularReactionTable*);
-  ~G4ReactionTableMessenger() override;
-  void SetNewValue(G4UIcommand * command,G4String newValue) override;
+  public:
 
-protected:
-  G4DNAMolecularReactionTable* fpTable;
-  std::unique_ptr<G4UIcmdWithoutParameter> fpActivateReactionUI;
-  G4UIcmdWithAString* fpAddReaction;
-  G4UIcmdWithAString* fpNewDiffContReaction;
-//  G4UIcmdWithAString* fpNewPartDiffContReactionByRadius;
-//  G4UIcmdWithAString* fpNewPartDiffContReactionByReactionRate;
-  G4UIcmdWithoutParameter* fpPrintTable;
+    G4ReactionTableMessenger(G4DNAMolecularReactionTable*);
+    ~G4ReactionTableMessenger() override;
+    void SetNewValue(G4UIcommand* command, G4String newValue) override;
+
+  protected:
+
+    G4DNAMolecularReactionTable* fpTable;
+    std::unique_ptr<G4UIcmdWithoutParameter> fpActivateReactionUI;
+    G4UIcmdWithAString* fpAddReaction;
+    G4UIcmdWithAString* fpNewDiffContReaction;
+    //  G4UIcmdWithAString* fpNewPartDiffContReactionByRadius;
+    //  G4UIcmdWithAString* fpNewPartDiffContReactionByReactionRate;
+    G4UIcmdWithoutParameter* fpPrintTable;
 };
 
 #endif /* SOURCE_PROCESSES_ELECTROMAGNETIC_DNA_UTILS_INCLUDE_G4REACTIONTABLEMESSENGER_HH_ */

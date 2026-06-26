@@ -6,6 +6,7 @@
 // by the tools/wrap program from the file :
 //    viewplot_fonts_google.style
 //
+// clang-format off
 
 inline const char** viewplot_fonts_google_style(unsigned int& a_linen){
   static const char _0[] = "<styles>";

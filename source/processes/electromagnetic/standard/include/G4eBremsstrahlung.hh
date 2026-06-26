@@ -67,49 +67,46 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4eBremsstrahlung_h
-#define G4eBremsstrahlung_h 1
+#ifndef G4EBREMSSTRAHLUNG_HH
+#define G4EBREMSSTRAHLUNG_HH
 
-#include "G4VEnergyLossProcess.hh"
 #include "G4DynamicParticle.hh"
 #include "G4Electron.hh"
 #include "G4Positron.hh"
+#include "G4VEnergyLossProcess.hh"
 
 class G4Material;
 
 class G4eBremsstrahlung : public G4VEnergyLossProcess
 {
+  public:
 
-public:
+    explicit G4eBremsstrahlung(const G4String& name = "eBrem");
 
-  explicit G4eBremsstrahlung(const G4String& name = "eBrem");
+    ~G4eBremsstrahlung() override;
 
-  ~G4eBremsstrahlung() override;
+    G4bool IsApplicable(const G4ParticleDefinition& p) final;
 
-  G4bool IsApplicable(const G4ParticleDefinition& p) final;
-  
-  // print documentation in html format
-  void ProcessDescription(std::ostream&) const override;
+    // print documentation in html format
+    void ProcessDescription(std::ostream&) const override;
 
-  // hide assignment operator
-  G4eBremsstrahlung & operator=(const G4eBremsstrahlung &right) = delete;
-  G4eBremsstrahlung(const G4eBremsstrahlung&) = delete;
+    // hide assignment operator
+    G4eBremsstrahlung& operator=(const G4eBremsstrahlung& right) = delete;
+    G4eBremsstrahlung(const G4eBremsstrahlung&) = delete;
 
-protected:
+  protected:
 
-  // Print out of the class parameters
-  void StreamProcessInfo(std::ostream& outFile) const override;
+    // Print out of the class parameters
+    void StreamProcessInfo(std::ostream& outFile) const override;
 
-  void 
-  InitialiseEnergyLossProcess(const G4ParticleDefinition*,
-			      const G4ParticleDefinition*) override;
+    void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
+                                     const G4ParticleDefinition*) override;
 
-private:
+  private:
 
-  G4bool isInitialised = false;
+    G4bool isInitialised = false;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #endif
-

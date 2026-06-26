@@ -31,51 +31,51 @@
 //                      The XS is calculated based on the corrected CHIPS XS.
 //
 
-#ifndef G4ElNucleusSFcs_h
-#define G4ElNucleusSFcs_h 1
+#ifndef G4ELNUCLEUSSFCS_HH
+#define G4ELNUCLEUSSFCS_HH
 
-#include "G4VCrossSectionDataSet.hh"
 #include "G4DynamicParticle.hh"
-#include "G4Element.hh"
-#include "G4ParticleTable.hh"
-#include "G4NucleiProperties.hh"
-#include "G4NistManager.hh"
-#include <vector>
-#include "Randomize.hh"
 #include "G4Electron.hh"
+#include "G4Element.hh"
+#include "G4NistManager.hh"
+#include "G4NucleiProperties.hh"
+#include "G4ParticleTable.hh"
 #include "G4Positron.hh"
+#include "G4VCrossSectionDataSet.hh"
+#include "Randomize.hh"
+
 #include <map>
+#include <vector>
 
 class G4ElectroNuclearCrossSection;
 
 class G4ElNucleusSFcs : public G4VCrossSectionDataSet
 {
-public:
+  public:
 
-  G4ElNucleusSFcs();
-  virtual ~G4ElNucleusSFcs();
-    
-  static const char* Default_Name() {return "ElectronNucleusSFcs";}
+    G4ElNucleusSFcs();
+    virtual ~G4ElNucleusSFcs();
 
-  virtual void CrossSectionDescription(std::ostream&) const;
+    static const char* Default_Name() { return "ElectronNucleusSFcs"; }
 
-  virtual G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z,
-                                     const G4Material*);
-  
-  virtual G4double GetIsoCrossSection(const G4DynamicParticle*, G4int Z, G4int A,  
-                              const G4Isotope* iso = nullptr,
-                              const G4Element* elm = nullptr,
-			      const G4Material* mat = nullptr );
-  G4double ThresholdEnergy();
+    virtual void CrossSectionDescription(std::ostream&) const;
 
-  G4double GetRatio(G4int Z, G4int A);
+    virtual G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z, const G4Material*);
 
-private:
+    virtual G4double GetIsoCrossSection(const G4DynamicParticle*, G4int Z, G4int A,
+                                        const G4Isotope* iso = nullptr,
+                                        const G4Element* elm = nullptr,
+                                        const G4Material* mat = nullptr);
+    G4double ThresholdEnergy();
 
-  static const G4double fZZ[19];
-  static const G4double fRR[19];
+    G4double GetRatio(G4int Z, G4int A);
 
-  G4ElectroNuclearCrossSection* fCHIPScs;
+  private:
+
+    static const G4double fZZ[19];
+    static const G4double fRR[19];
+
+    G4ElectroNuclearCrossSection* fCHIPScs;
 };
 
 #endif

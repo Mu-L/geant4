@@ -41,23 +41,22 @@ https://doi.org/10.11484/jaea-data-code-2018-007
 */
 //         on base of G4LivermoreRayleighModel
 
-
 #include "G4JAEAElasticScattering.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4JAEAElasticScatteringModel.hh"
-#include "G4Gamma.hh"
+
 #include "G4EmProcessSubType.hh"
+#include "G4Gamma.hh"
+#include "G4JAEAElasticScatteringModel.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4JAEAElasticScattering::G4JAEAElasticScattering(const G4String& processName,
-  G4ProcessType type):G4VEmProcess (processName, type),
-    isInitialised(false)
+G4JAEAElasticScattering::G4JAEAElasticScattering(const G4String& processName, G4ProcessType type)
+  : G4VEmProcess(processName, type), isInitialised(false)
 {
   SetStartFromNullFlag(false);
   SetBuildTableFlag(true);
   SetProcessSubType(fRayleigh);
-  SetMinKinEnergyPrim(100*keV);
+  SetMinKinEnergyPrim(100 * keV);
   SetSplineFlag(false);
 }
 
@@ -67,21 +66,25 @@ G4JAEAElasticScattering::~G4JAEAElasticScattering() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-//Check particle for the process
+// Check particle for the process
 G4bool G4JAEAElasticScattering::IsApplicable(const G4ParticleDefinition& p)
 {
   return (&p == G4Gamma::Gamma());
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-//initialize the process
+// initialize the process
 void G4JAEAElasticScattering::InitialiseProcess(const G4ParticleDefinition*)
 {
-  if(!isInitialised) {
+  if (!isInitialised)
+  {
     isInitialised = true;
-    if(!EmModel()) { SetEmModel(new G4JAEAElasticScatteringModel); }
+    if (!EmModel())
+    {
+      SetEmModel(new G4JAEAElasticScatteringModel);
+    }
     AddEmModel(1, EmModel());
-  }  
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

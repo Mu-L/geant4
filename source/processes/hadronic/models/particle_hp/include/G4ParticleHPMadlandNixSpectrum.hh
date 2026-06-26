@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPMadlandNixSpectrum_h
-#define G4ParticleHPMadlandNixSpectrum_h 1
+#ifndef G4PARTICLEHPMADLANDNIXSPECTRUM_HH
+#define G4PARTICLEHPMADLANDNIXSPECTRUM_HH
 
 #include "G4Exp.hh"
 #include "G4Log.hh"
@@ -51,6 +51,7 @@
 class G4ParticleHPMadlandNixSpectrum : public G4VParticleHPEDis
 {
   public:
+
     G4ParticleHPMadlandNixSpectrum()
     {
       expm1 = G4Exp(-1.);
@@ -77,6 +78,7 @@ class G4ParticleHPMadlandNixSpectrum : public G4VParticleHPEDis
     G4double Sample(G4double anEnergy) override;
 
   private:
+
     G4double Madland(G4double aSecEnergy, G4double tm);
 
     inline G4double FissionIntegral(G4double tm, G4double anEnergy)
@@ -129,7 +131,8 @@ class G4ParticleHPMadlandNixSpectrum : public G4VParticleHPEDis
       // G4double last;
       G4int count = 1;
       result -= term;
-      for (;;) {
+      for (;;)
+      {
         count++;
         // 110527TKDB  Unnessary codes, Detected by gcc4.6 compiler
         // last = result;
@@ -143,9 +146,11 @@ class G4ParticleHPMadlandNixSpectrum : public G4VParticleHPEDis
     }
 
   private:
+
     G4double expm1;
 
   private:
+
     G4ParticleHPVector theFractionalProb;
 
     G4double theAvarageKineticPerNucleonForLightFragments;

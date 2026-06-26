@@ -23,23 +23,22 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// Author:  J. Apostolakis Nov 2022 
+// Author:  J. Apostolakis Nov 2022
 
 #include "G4TransportationParameters.hh"
 
 #include "G4ApplicationState.hh"
-#include "G4StateManager.hh"
-#include "G4Threading.hh"
 #include "G4AutoLock.hh"
-
+#include "G4StateManager.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4Threading.hh"
 
 G4TransportationParameters* G4TransportationParameters::theInstance = nullptr;
 
-#ifdef G4MULTITHREADED   
+#ifdef G4MULTITHREADED
 namespace
 {
-   G4Mutex transportParamsMutex = G4MUTEX_INITIALIZER;
+G4Mutex transportParamsMutex = G4MUTEX_INITIALIZER;
 }
 #endif
 
@@ -54,9 +53,11 @@ G4TransportationParameters::G4TransportationParameters()
 
 G4TransportationParameters* G4TransportationParameters::Instance()
 {
-  if(theInstance == nullptr) {      
+  if (theInstance == nullptr)
+  {
     G4MUTEXLOCK(&transportParamsMutex);
-    if(theInstance == nullptr) {        
+    if (theInstance == nullptr)
+    {
       static G4TransportationParameters manager;
       theInstance = &manager;
     }
@@ -72,89 +73,98 @@ G4bool G4TransportationParameters::IsLocked() const
   auto stateManager = G4StateManager::GetStateManager();
 
   auto state = stateManager->GetCurrentState();
-  bool goodState = state == G4State_PreInit
-                   || state == G4State_Init
-                   || state == G4State_Idle ;
-  return ( !G4Threading::IsMasterThread() || !goodState );
+  bool goodState = state == G4State_PreInit || state == G4State_Init || state == G4State_Idle;
+  return (!G4Threading::IsMasterThread() || !goodState);
 }
 
 //------------------------------------------------------------------------------
 
-G4bool  G4TransportationParameters::SetNumberOfTrials( G4int val )
+G4bool G4TransportationParameters::SetNumberOfTrials(G4int val)
 {
-   if(IsLocked()) { ReportLockError(__func__); return false; }
-   fNumberOfTrials = val;
-   return true;
+  if (IsLocked())
+  {
+    ReportLockError(__func__);
+    return false;
+  }
+  fNumberOfTrials = val;
+  return true;
 }
 
 //------------------------------------------------------------------------------
 
-G4bool  G4TransportationParameters::SetWarningEnergy( double val )
+G4bool G4TransportationParameters::SetWarningEnergy(double val)
 {
-   if(IsLocked()) { ReportLockError(__func__); return false; }
-   fWarningEnergy = val;
+  if (IsLocked())
+  {
+    ReportLockError(__func__);
+    return false;
+  }
+  fWarningEnergy = val;
 
-   // Consistency check -- and trial fix
-   if( fWarningEnergy > fImportantEnergy   ) {
-      G4cerr << "G4TransportationParameters::GetWarningEnergy enforcing warning-E <= important-E "
-             << "  resetting important energy from " << fImportantEnergy
-             << " to " << val << G4endl;
-      // "Enforcing Important Energy >= Warning Energy"
-      fImportantEnergy = fWarningEnergy;
-   }
-   return true;      
+  // Consistency check -- and trial fix
+  if (fWarningEnergy > fImportantEnergy)
+  {
+    G4cerr << "G4TransportationParameters::GetWarningEnergy enforcing warning-E <= important-E "
+           << "  resetting important energy from " << fImportantEnergy << " to " << val << G4endl;
+    // "Enforcing Important Energy >= Warning Energy"
+    fImportantEnergy = fWarningEnergy;
+  }
+  return true;
 }
 
 //------------------------------------------------------------------------------
 
-G4bool  G4TransportationParameters::SetImportantEnergy( double val )
+G4bool G4TransportationParameters::SetImportantEnergy(double val)
 {
-   if(IsLocked()) { ReportLockError(__func__); return false; }
-   fImportantEnergy = val;
+  if (IsLocked())
+  {
+    ReportLockError(__func__);
+    return false;
+  }
+  fImportantEnergy = val;
 
-   // Consistency check -- and trial fix   
-   if( fImportantEnergy < fWarningEnergy ) {
-      G4String mthd= G4String("G4TransportationParameters")+G4String(__func__);
-      G4ExceptionDescription ed;
-      ed<<"enforcing hierarchy (warning-E <= important-E): resetting important"
-        <<" energy from " << fImportantEnergy << " to " << val << G4endl;
-      G4Exception( mthd, "Enforcing Warning Energy <= Important Energy",
-                   JustWarning, ed );
+  // Consistency check -- and trial fix
+  if (fImportantEnergy < fWarningEnergy)
+  {
+    G4String mthd = G4String("G4TransportationParameters") + G4String(__func__);
+    G4ExceptionDescription ed;
+    ed << "enforcing hierarchy (warning-E <= important-E): resetting important"
+       << " energy from " << fImportantEnergy << " to " << val << G4endl;
+    G4Exception(mthd, "Enforcing Warning Energy <= Important Energy", JustWarning, ed);
 
-      fWarningEnergy = fImportantEnergy;
-   }
-   return true;
+    fWarningEnergy = fImportantEnergy;
+  }
+  return true;
 }
 
 //------------------------------------------------------------------------------
 
-G4bool G4TransportationParameters::SetWarningAndImportantEnergies( G4double warnE,
-                                                                   G4double importE )
+G4bool G4TransportationParameters::SetWarningAndImportantEnergies(G4double warnE, G4double importE)
 {
-   if(IsLocked()) {
-      ReportLockError(__func__);
-      return false;
-   }
+  if (IsLocked())
+  {
+    ReportLockError(__func__);
+    return false;
+  }
 
-   if( warnE <= importE )
-   {
-     fWarningEnergy = warnE;
-     fImportantEnergy = importE;
-   }
-   else
-   {
-     fWarningEnergy = importE;
-     fImportantEnergy = warnE;
+  if (warnE <= importE)
+  {
+    fWarningEnergy = warnE;
+    fImportantEnergy = importE;
+  }
+  else
+  {
+    fWarningEnergy = importE;
+    fImportantEnergy = warnE;
 
-     G4String mthd= G4String("G4TransportationParameters")+G4String(__func__);
-     G4ExceptionDescription ed;
-     ed << "To enforce hierarchy (warning-E <= important-E): "
-        << " using smaller value= " <<  importE << " as Warning Energy "
-        << " and larger value= " <<  warnE << " as Important Energy." << G4endl;
-      G4Exception( mthd, "Enforcing Warning Energy <= Important Energy",
-                   JustWarning, ed );
-   }
-   return true;
+    G4String mthd = G4String("G4TransportationParameters") + G4String(__func__);
+    G4ExceptionDescription ed;
+    ed << "To enforce hierarchy (warning-E <= important-E): "
+       << " using smaller value= " << importE << " as Warning Energy "
+       << " and larger value= " << warnE << " as Important Energy." << G4endl;
+    G4Exception(mthd, "Enforcing Warning Energy <= Important Energy", JustWarning, ed);
+  }
+  return true;
 }
 
 //------------------------------------------------------------------------------
@@ -162,22 +172,23 @@ G4bool G4TransportationParameters::SetWarningAndImportantEnergies( G4double warn
 void G4TransportationParameters::ReportLockError(G4String methodName, G4bool verbose) const
 {
   // Report Incompatible States: GeomClosed , EventProc, (also Quit, Abort)
-  G4String namesMethodClass= G4String("G4TransportationParameters") + methodName;
+  G4String namesMethodClass = G4String("G4TransportationParameters") + methodName;
 
   auto stateManager = G4StateManager::GetStateManager();
-  auto state    = stateManager->GetCurrentState();
+  auto state = stateManager->GetCurrentState();
 
   G4ExceptionDescription ed;
   ed << "Cannot change values of G4TransportationParameters when G4State is "
      << stateManager->GetStateString(state) << G4endl;
   ed << "Only the following Geant4 state are compatible: Pre_Init, Init and Idle." << G4endl;
-  if( verbose ) {
-     ed << G4endl << "Values remain as follows:" << G4endl;
-     StreamInfo( ed );
+  if (verbose)
+  {
+    ed << G4endl << "Values remain as follows:" << G4endl;
+    StreamInfo(ed);
   }
-  G4Exception( namesMethodClass,
-               "Locked, due to incompatible G4state: it not possible to change its parameters.",
-               JustWarning, ed );
+  G4Exception(namesMethodClass,
+              "Locked, due to incompatible G4state: it not possible to change its parameters.",
+              JustWarning, ed);
 }
 
 //------------------------------------------------------------------------------
@@ -187,7 +198,7 @@ void G4TransportationParameters::StreamInfo(std::ostream& os) const
   auto prec = os.precision(5);
 
   os << "Transport Parameters:  " << G4endl;
-  os << "   Warning   energy = " << GetWarningEnergy()   / CLHEP::MeV << " MeV " << G4endl;
+  os << "   Warning   energy = " << GetWarningEnergy() / CLHEP::MeV << " MeV " << G4endl;
   os << "   Important energy = " << GetImportantEnergy() / CLHEP::MeV << " MeV " << G4endl;
   os << "   Number of trials = " << GetNumberOfTrials() << G4endl;
   os.precision(prec);
@@ -206,17 +217,20 @@ void G4TransportationParameters::Dump() const
 
 G4bool G4TransportationParameters::SetHighLooperThresholds()
 {
-  if(IsLocked()) { return false; }
-  
+  if (IsLocked())
+  {
+    return false;
+  }
+
   // Restores the old high values -- potentially appropriate for energy-frontier
   //   HEP experiments.
-  // Caution:  All tracks with E < 100 MeV that are found to loop are 
-  SetWarningEnergy(    100.0 * CLHEP::MeV ); // Warn above this energy
-  SetImportantEnergy(  250.0 * CLHEP::MeV ); // Extra trial above this En
+  // Caution:  All tracks with E < 100 MeV that are found to loop are
+  SetWarningEnergy(100.0 * CLHEP::MeV);  // Warn above this energy
+  SetImportantEnergy(250.0 * CLHEP::MeV);  // Extra trial above this En
 
   G4int maxTrials = 10;
-  SetNumberOfTrials( maxTrials );
-  
+  SetNumberOfTrials(maxTrials);
+
   return true;
 }
 
@@ -224,46 +238,57 @@ G4bool G4TransportationParameters::SetHighLooperThresholds()
 
 G4bool G4TransportationParameters::SetIntermediateLooperThresholds()
 {
-  if(IsLocked()) { return false; } // Currently must not change during loop - may relax
+  if (IsLocked())
+  {
+    return false;
+  }  // Currently must not change during loop - may relax
 
   // Medium values -- reasonable default for an unknown application
-  fWarningEnergy=     1.0 * CLHEP::MeV; // Warn above this energy
-  fImportantEnergy=  10.0 * CLHEP::MeV; // Extra trial above this En
-  fNumberOfTrials= 10;
+  fWarningEnergy = 1.0 * CLHEP::MeV;  // Warn above this energy
+  fImportantEnergy = 10.0 * CLHEP::MeV;  // Extra trial above this En
+  fNumberOfTrials = 10;
   return true;
 }
 
 //------------------------------------------------------------------------------
 
-G4bool G4TransportationParameters::SetLowLooperThresholds() // Values for low-E applications
+G4bool G4TransportationParameters::SetLowLooperThresholds()  // Values for low-E applications
 {
-  if(IsLocked()) { return false; }
-  
+  if (IsLocked())
+  {
+    return false;
+  }
+
   // These values were the default in Geant4 10.5 - beta
-  SetWarningEnergy(     1.0 * CLHEP::keV ); // Warn above this En
-  SetImportantEnergy(   1.0 * CLHEP::MeV ); // Extra trials above it
+  SetWarningEnergy(1.0 * CLHEP::keV);  // Warn above this En
+  SetImportantEnergy(1.0 * CLHEP::MeV);  // Extra trials above it
 
   G4int maxTrials = 30;
-  SetNumberOfTrials( maxTrials );
+  SetNumberOfTrials(maxTrials);
 
-  return true;  
+  return true;
 }
 
 //------------------------------------------------------------------------------
 
 G4bool G4TransportationParameters::EnableUseOfMagneticMoment(G4bool useMoment)
 {
-  if(IsLocked()) { return false; }
-  fUseMagneticMoment= useMoment;
+  if (IsLocked())
+  {
+    return false;
+  }
+  fUseMagneticMoment = useMoment;
   return true;
 }
 
 //------------------------------------------------------------------------------
 
-
 G4bool G4TransportationParameters::SetSilenceAllLooperWarnings(G4bool val)
 {
-  if(IsLocked()) { return false; }
-  fSilenceLooperWarnings= val;
+  if (IsLocked())
+  {
+    return false;
+  }
+  fSilenceLooperWarnings = val;
   return true;
-}   
+}

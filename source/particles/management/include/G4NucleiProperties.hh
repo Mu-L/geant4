@@ -35,8 +35,8 @@
 // - 17.11.1998, H.Kurashige - Migrated into particles category
 // - 31.03.2009, T.Koi - Migrated to AME03
 // --------------------------------------------------------------------
-#ifndef G4NucleiProperties_hh
-#define G4NucleiProperties_hh 1
+#ifndef G4NUCLEIPROPERTIES_HH
+#define G4NUCLEIPROPERTIES_HH
 
 #include "G4ios.hh"
 #include "globals.hh"
@@ -44,6 +44,7 @@
 class G4NucleiProperties
 {
   public:
+
     G4NucleiProperties() = default;
     ~G4NucleiProperties() = default;
 
@@ -65,6 +66,7 @@ class G4NucleiProperties
     static G4double GetMassExcess(const G4double A, const G4double Z);
 
   private:
+
     // Hidden methods to enforce using GetNuclearMass
 
     // Give mass of Atom A,Z
@@ -79,6 +81,7 @@ class G4NucleiProperties
     static G4double MassExcess(G4double A, G4double Z);
 
   private:
+
     enum
     {
       MaxZ = 120

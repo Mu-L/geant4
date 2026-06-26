@@ -25,24 +25,23 @@
 //
 
 #include "G4DNAExcitation.hh"
-#include "G4LEPTSExcitationModel.hh"
-#include "G4DNAMillerGreenExcitationModel.hh"
+
 #include "G4DNABornExcitationModel.hh"
 #include "G4DNAGenericIonsManager.hh"
+#include "G4DNAMillerGreenExcitationModel.hh"
 #include "G4Electron.hh"
-#include "G4Proton.hh"
-
-#include "G4SystemOfUnits.hh"
-#include "G4Positron.hh"
+#include "G4LEPTSExcitationModel.hh"
 #include "G4LowEnergyEmProcessSubType.hh"
+#include "G4Positron.hh"
+#include "G4Proton.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 using namespace std;
 
-G4DNAExcitation::G4DNAExcitation(const G4String& processName,
-                                 G4ProcessType type) :
-    G4VEmProcess(processName, type) 
+G4DNAExcitation::G4DNAExcitation(const G4String& processName, G4ProcessType type)
+  : G4VEmProcess(processName, type)
 {
   SetProcessSubType(fLowEnergyExcitation);
 }
@@ -51,15 +50,12 @@ G4DNAExcitation::G4DNAExcitation(const G4String& processName,
 
 G4bool G4DNAExcitation::IsApplicable(const G4ParticleDefinition& p)
 {
-
-  G4DNAGenericIonsManager *instance;
+  G4DNAGenericIonsManager* instance;
   instance = G4DNAGenericIonsManager::Instance();
 
   return (&p == G4Electron::Electron() || &p == G4Positron::Positron()
-          || &p == G4Proton::ProtonDefinition()
-          || &p == instance->GetIon("hydrogen")
-          || &p == instance->GetIon("alpha++")
-          || &p == instance->GetIon("alpha+")
+          || &p == G4Proton::ProtonDefinition() || &p == instance->GetIon("hydrogen")
+          || &p == instance->GetIon("alpha++") || &p == instance->GetIon("alpha+")
           || &p == instance->GetIon("helium"));
 }
 
@@ -69,73 +65,70 @@ void G4DNAExcitation::InitialiseProcess(const G4ParticleDefinition* p)
 {
   // default models are defined in the case of unit tests,
   // when G4EmDNABuilder is not used
-  if(!isInitialised)
+  if (!isInitialised)
   {
     isInitialised = true;
     SetBuildTableFlag(false);
 
     G4String name = p->GetParticleName();
 
-    if(name == "e-")
+    if (name == "e-")
     {
       // Born model
-      if(nullptr == EmModel(0))
+      if (nullptr == EmModel(0))
       {
-        auto  born = new G4DNABornExcitationModel();
+        auto born = new G4DNABornExcitationModel();
         SetEmModel(born);
         born->SetLowEnergyLimit(9 * eV);
         born->SetHighEnergyLimit(1 * MeV);
       }
       AddEmModel(1, EmModel(0));
     }
-    else if(name == "e+")
+    else if (name == "e+")
     {
-      if(nullptr == EmModel(0))
+      if (nullptr == EmModel(0))
       {
-        auto  lepts = new G4LEPTSExcitationModel();
+        auto lepts = new G4LEPTSExcitationModel();
         SetEmModel(lepts);
         lepts->SetLowEnergyLimit(1 * eV);
         lepts->SetHighEnergyLimit(1 * MeV);
       }
       AddEmModel(1, EmModel(0));
     }
-    else if(name == "proton")
+    else if (name == "proton")
     {
-      if(nullptr == EmModel(0))
+      if (nullptr == EmModel(0))
       {
-        auto  miller =
-            new G4DNAMillerGreenExcitationModel();
+        auto miller = new G4DNAMillerGreenExcitationModel();
         SetEmModel(miller);
         miller->SetLowEnergyLimit(10 * eV);
         miller->SetHighEnergyLimit(500 * keV);
 
-        auto  born = new G4DNABornExcitationModel();
+        auto born = new G4DNABornExcitationModel();
         SetEmModel(born);
         born->SetLowEnergyLimit(500 * keV);
         born->SetHighEnergyLimit(100 * MeV);
       }
 
       AddEmModel(1, EmModel(0));
-      if(nullptr != EmModel(1)) AddEmModel(2, EmModel(1));
+      if (nullptr != EmModel(1)) AddEmModel(2, EmModel(1));
     }
-    else if(name == "hydrogen")
+    else if (name == "hydrogen")
     {
-      if(nullptr == EmModel(0))
+      if (nullptr == EmModel(0))
       {
-        auto  miller =
-            new G4DNAMillerGreenExcitationModel;
+        auto miller = new G4DNAMillerGreenExcitationModel;
         SetEmModel(miller);
         miller->SetLowEnergyLimit(10 * eV);
         miller->SetHighEnergyLimit(500 * keV);
       }
       AddEmModel(1, EmModel(0));
     }
-    else if(name == "alpha" || name == "alpha+" || name == "helium")
+    else if (name == "alpha" || name == "alpha+" || name == "helium")
     {
-      if(nullptr == EmModel(0))
+      if (nullptr == EmModel(0))
       {
-        auto  miller =
-            new G4DNAMillerGreenExcitationModel;
+        auto miller = new G4DNAMillerGreenExcitationModel;
         SetEmModel(miller);
         miller->SetLowEnergyLimit(1 * keV);
         miller->SetHighEnergyLimit(400 * MeV);

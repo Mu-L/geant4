@@ -36,8 +36,8 @@
 
 // Author: A.Dotti, 2013
 // --------------------------------------------------------------------
-#ifndef G4UIbridge_hh
-#define G4UIbridge_hh 1
+#ifndef G4UIBRIDGE_HH
+#define G4UIBRIDGE_HH
 
 #include "globals.hh"
 
@@ -46,6 +46,7 @@ class G4UImanager;
 class G4UIbridge
 {
   public:
+
     G4UIbridge(G4UImanager* localUI, const G4String& dir);
     ~G4UIbridge() = default;
 
@@ -56,6 +57,7 @@ class G4UIbridge
     inline G4int DirLength() const { return (G4int)dirName.length(); }
 
   private:
+
     G4UImanager* localUImanager = nullptr;
     G4String dirName;
 };

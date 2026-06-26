@@ -31,40 +31,37 @@
 
 #include "G4Material.hh"
 
-G3MatTableEntry::G3MatTableEntry(G4int id, G4Material* material)
-  : fID(id),
-    fMaterial(material)
-{}
+G3MatTableEntry::G3MatTableEntry(G4int id, G4Material* material) : fID(id), fMaterial(material) {}
 
 G3MatTableEntry::G3MatTableEntry(const G3MatTableEntry& right)
-  : fID(right.GetID()),
-    fMaterial(right.GetMaterial())
-{}    
-
-G3MatTableEntry::~G3MatTableEntry()
+  : fID(right.GetID()), fMaterial(right.GetMaterial())
 {}
+
+G3MatTableEntry::~G3MatTableEntry() {}
 
 G3MatTableEntry& G3MatTableEntry::operator=(const G3MatTableEntry& right)
 {
-  if (&right == this)  { return *this; }
+  if (&right == this)
+  {
+    return *this;
+  }
   fID = right.GetID();
-  fMaterial = right.GetMaterial();     
+  fMaterial = right.GetMaterial();
   return *this;
 }
 
 G4bool G3MatTableEntry::operator==(const G3MatTableEntry& right) const
-{ 
-  if (fID == right.GetID()) 
+{
+  if (fID == right.GetID())
     return true;
   else
     return false;
 }
 
 G4bool G3MatTableEntry::operator!=(const G3MatTableEntry& right) const
-{ 
-  if (*this == right) 
+{
+  if (*this == right)
     return false;
   else
     return true;
 }
-

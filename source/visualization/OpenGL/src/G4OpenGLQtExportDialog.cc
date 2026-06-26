@@ -29,33 +29,28 @@
 
 #include "G4OpenGLQtExportDialog.hh"
 
-#include <qvariant.h>
-#include <qpushbutton.h>
-#include <qcheckbox.h>
-#include <qlabel.h>
-#include <qcombobox.h>
-#include <qslider.h>
-#include <qlayout.h>
-#include <qgroupbox.h>
-#include <qradiobutton.h>
-#include <qimage.h>
-#include <qlineedit.h>
 #include <qbuttongroup.h>
+#include <qcheckbox.h>
+#include <qcombobox.h>
+#include <qgroupbox.h>
+#include <qimage.h>
+#include <qlabel.h>
+#include <qlayout.h>
+#include <qlineedit.h>
+#include <qpushbutton.h>
+#include <qradiobutton.h>
+#include <qslider.h>
+#include <qvariant.h>
 
 #ifndef G4GMAKE
-#include "moc_G4OpenGLQtExportDialog.cpp"
+#  include "moc_G4OpenGLQtExportDialog.cpp"
 #endif
 
-G4OpenGLQtExportDialog::G4OpenGLQtExportDialog(
- QWidget* parentw
-,QString format
- ,int aHeight
- ,int aWidth
-)
-  : QDialog( parentw ),
-    isChangingSize(false)
+G4OpenGLQtExportDialog::G4OpenGLQtExportDialog(QWidget* parentw, QString format, int aHeight,
+                                               int aWidth)
+  : QDialog(parentw), isChangingSize(false)
 {
-  setWindowTitle( tr( " Export options" ));
+  setWindowTitle(tr(" Export options"));
   originalWidth = aWidth;
   originalHeight = aHeight;
 
@@ -69,24 +64,21 @@ G4OpenGLQtExportDialog::G4OpenGLQtExportDialog(
 
   // global layout
   QVBoxLayout* globalVLayout = new QVBoxLayout(this);
-  globalVLayout->setContentsMargins(10,10,10,10);
+  globalVLayout->setContentsMargins(10, 10, 10, 10);
   globalVLayout->setSpacing(10);
-
-
-
 
   // size box
 
-  QWidget * sizeWidget = new QWidget(this); // widget containing group button
-  QVBoxLayout * sizeWidgetLayout = new QVBoxLayout(sizeWidget);
-  sizeWidgetLayout->setContentsMargins(10,10,10,10);
+  QWidget* sizeWidget = new QWidget(this);  // widget containing group button
+  QVBoxLayout* sizeWidgetLayout = new QVBoxLayout(sizeWidget);
+  sizeWidgetLayout->setContentsMargins(10, 10, 10, 10);
 
   // original and modify radiobuttons
 
   sizeGroupBox = new QGroupBox(tr("Size"));
-  QVBoxLayout *sizeGroupBoxLayout = new QVBoxLayout(sizeGroupBox);
-  QButtonGroup * sizeButtonGroupBox = new QButtonGroup();
-  sizeGroupBoxLayout->setContentsMargins(15,15,15,15);
+  QVBoxLayout* sizeGroupBoxLayout = new QVBoxLayout(sizeGroupBox);
+  QButtonGroup* sizeButtonGroupBox = new QButtonGroup();
+  sizeGroupBoxLayout->setContentsMargins(15, 15, 15, 15);
 
   original = new QRadioButton("Original");
   modify = new QRadioButton("Modify");
@@ -101,47 +93,44 @@ G4OpenGLQtExportDialog::G4OpenGLQtExportDialog(
   sizeGroupBox->setLayout(sizeGroupBoxLayout);
   sizeWidgetLayout->addWidget(sizeGroupBox);
 
-  connect( sizeButtonGroupBox, SIGNAL( buttonClicked(QAbstractButton*) ), this, SLOT( changeSizeBox()) );
-  original->setChecked( true );
-
+  connect(sizeButtonGroupBox, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(changeSizeBox()));
+  original->setChecked(true);
 
   // height
   heightWidget = new QWidget(sizeWidget);
 
-  QHBoxLayout *heightLineLayout = new QHBoxLayout(heightWidget);
+  QHBoxLayout* heightLineLayout = new QHBoxLayout(heightWidget);
 
   QString tmp;
 
-  heightLineLayout->addWidget(new QLabel("Height",heightWidget));
-  height = new QLineEdit(tmp.setNum(originalHeight),heightWidget);
+  heightLineLayout->addWidget(new QLabel("Height", heightWidget));
+  height = new QLineEdit(tmp.setNum(originalHeight), heightWidget);
   height->setMaxLength(5);
   heightLineLayout->addWidget(height);
 
   heightWidget->setLayout(heightLineLayout);
 
   sizeWidgetLayout->addWidget(heightWidget);
-  connect( height, SIGNAL( textChanged ( const QString& ) ), this, SLOT( textHeightChanged(const QString &) ) );
-
+  connect(height, SIGNAL(textChanged(const QString&)), this,
+          SLOT(textHeightChanged(const QString&)));
 
   // width
   widthWidget = new QWidget(sizeWidget);
 
-  QHBoxLayout *widthLineLayout = new QHBoxLayout(widthWidget);
+  QHBoxLayout* widthLineLayout = new QHBoxLayout(widthWidget);
 
-  widthLineLayout->addWidget(new QLabel("Width ",widthWidget));
-  width = new QLineEdit(tmp.setNum(originalWidth),widthWidget);
+  widthLineLayout->addWidget(new QLabel("Width ", widthWidget));
+  width = new QLineEdit(tmp.setNum(originalWidth), widthWidget);
   width->setMaxLength(5);
   widthLineLayout->addWidget(width);
   widthWidget->setLayout(widthLineLayout);
   sizeWidgetLayout->addWidget(widthWidget);
-  connect( width, SIGNAL( textChanged ( const QString& ) ), this, SLOT( textWidthChanged(const QString &) ) );
-
-
+  connect(width, SIGNAL(textChanged(const QString&)), this, SLOT(textWidthChanged(const QString&)));
 
   // ratio check box
 
-  ratioCheckBox = new QCheckBox( "Keep ratio",sizeWidget);
-  ratioCheckBox->setChecked( true );
+  ratioCheckBox = new QCheckBox("Keep ratio", sizeWidget);
+  ratioCheckBox->setChecked(true);
 
   sizeWidgetLayout->addWidget(ratioCheckBox);
 
@@ -152,87 +141,80 @@ G4OpenGLQtExportDialog::G4OpenGLQtExportDialog(
   sizeWidget->setLayout(sizeWidgetLayout);
   globalVLayout->addWidget(sizeWidget);
 
- if (format == "eps") {
+  if (format == "eps")
+  {
+    QGroupBox* EPSWidgetGroupBox =
+      new QGroupBox(tr("EPS options"), this);  // widget containing group button
 
-   QGroupBox *EPSWidgetGroupBox = new QGroupBox(tr("EPS options"),this); // widget containing group button
+    QVBoxLayout* EPSGroupBoxLayout = new QVBoxLayout(EPSWidgetGroupBox);
+    EPSGroupBoxLayout->setContentsMargins(15, 15, 15, 15);
 
+    //     colorButton = new QRadioButton("Color",EPSWidgetGroupBox);
+    //     BWButton = new QRadioButton("Grayscale",EPSWidgetGroupBox);
 
-    QVBoxLayout * EPSGroupBoxLayout = new QVBoxLayout(EPSWidgetGroupBox);
-     EPSGroupBoxLayout->setContentsMargins(15,15,15,15);
+    //     QButtonGroup * EPSColorButtonGroupBox = new QButtonGroup();
+    //     EPSColorButtonGroupBox->addButton(colorButton);
+    //     EPSColorButtonGroupBox->addButton(BWButton);
+    //     EPSColorButtonGroupBox->setExclusive(true);
 
-//     colorButton = new QRadioButton("Color",EPSWidgetGroupBox);
-//     BWButton = new QRadioButton("Grayscale",EPSWidgetGroupBox);
+    //     EPSGroupBoxLayout->addWidget(colorButton);
+    //     EPSGroupBoxLayout->addWidget(BWButton);
 
-//     QButtonGroup * EPSColorButtonGroupBox = new QButtonGroup();
-//     EPSColorButtonGroupBox->addButton(colorButton);
-//     EPSColorButtonGroupBox->addButton(BWButton);
-//     EPSColorButtonGroupBox->setExclusive(true);
-
-//     EPSGroupBoxLayout->addWidget(colorButton);
-//     EPSGroupBoxLayout->addWidget(BWButton);
-
-    vectorEPSCheckBox = new QCheckBox( "Vector EPS File",EPSWidgetGroupBox);
+    vectorEPSCheckBox = new QCheckBox("Vector EPS File", EPSWidgetGroupBox);
     EPSGroupBoxLayout->addWidget(vectorEPSCheckBox);
 
     EPSWidgetGroupBox->setLayout(EPSGroupBoxLayout);
     //    colorButton->setChecked( true );
-    vectorEPSCheckBox->setChecked( true );
+    vectorEPSCheckBox->setChecked(true);
 
     globalVLayout->addWidget(EPSWidgetGroupBox);
-    connect( vectorEPSCheckBox, SIGNAL( clicked() ), this, SLOT( changeVectorEPS()) );
-
+    connect(vectorEPSCheckBox, SIGNAL(clicked()), this, SLOT(changeVectorEPS()));
   }
 
-  if ((format == "jpg") ||
-      (format == "jpeg")) {
+  if ((format == "jpg") || (format == "jpeg"))
+  {
+    QGroupBox* imageGroupBox = new QGroupBox(tr("Image quality"), this);
+    QHBoxLayout* hSliderLayout = new QHBoxLayout(imageGroupBox);
+    hSliderLayout->setContentsMargins(15, 15, 15, 15);
 
-    QGroupBox *imageGroupBox = new QGroupBox(tr("Image quality"),this);
-    QHBoxLayout *hSliderLayout = new QHBoxLayout(imageGroupBox);
-    hSliderLayout->setContentsMargins(15,15,15,15);
-
-    qualitySlider= new QSlider(Qt::Horizontal,imageGroupBox);
+    qualitySlider = new QSlider(Qt::Horizontal, imageGroupBox);
     qualitySlider->setMinimum(0);
     qualitySlider->setMaximum(100);
     qualitySlider->setTickPosition(QSlider::TicksBelow);
     qualitySlider->setValue(60);
-    hSliderLayout->addWidget(new QLabel("Low ",imageGroupBox));
+    hSliderLayout->addWidget(new QLabel("Low ", imageGroupBox));
     hSliderLayout->addWidget(qualitySlider);
-    hSliderLayout->addWidget(new QLabel(" Maximum",imageGroupBox));
+    hSliderLayout->addWidget(new QLabel(" Maximum", imageGroupBox));
 
     imageGroupBox->setLayout(hSliderLayout);
 
     globalVLayout->addWidget(imageGroupBox);
   }
 
-
   // button ok/cancel box
 
-  QWidget *buttonBox = new QWidget(this);
+  QWidget* buttonBox = new QWidget(this);
 
-  QHBoxLayout *buttonBoxLayout = new QHBoxLayout(buttonBox);
+  QHBoxLayout* buttonBoxLayout = new QHBoxLayout(buttonBox);
 
-  buttonOk = new QPushButton( tr( "&OK" ),buttonBox );
-  buttonOk->setAutoDefault( true );
-  buttonOk->setDefault( true );
+  buttonOk = new QPushButton(tr("&OK"), buttonBox);
+  buttonOk->setAutoDefault(true);
+  buttonOk->setDefault(true);
   buttonBoxLayout->addWidget(buttonOk);
 
-  buttonCancel = new QPushButton( tr( "&Cancel" ),buttonBox );
-  buttonCancel->setAutoDefault( true );
+  buttonCancel = new QPushButton(tr("&Cancel"), buttonBox);
+  buttonCancel->setAutoDefault(true);
   buttonBoxLayout->addWidget(buttonCancel);
 
   buttonBox->setLayout(buttonBoxLayout);
   globalVLayout->addWidget(buttonBox);
 
-
-
   setLayout(globalVLayout);
 
   // signals and slots connections
-  connect( buttonOk, SIGNAL( clicked() ), this, SLOT( accept() ) );
-  connect( buttonCancel, SIGNAL( clicked() ), this, SLOT( reject() ) );
+  connect(buttonOk, SIGNAL(clicked()), this, SLOT(accept()));
+  connect(buttonCancel, SIGNAL(clicked()), this, SLOT(reject()));
 }
-
-
 
 int G4OpenGLQtExportDialog::getSliderValue()
 {
@@ -258,16 +240,18 @@ bool G4OpenGLQtExportDialog::getVectorEPS()
   return vectorEPSCheckBox->isChecked();
 }
 
-
 void G4OpenGLQtExportDialog::changeVectorEPS()
 {
   if (!vectorEPSCheckBox) return;
-  if (vectorEPSCheckBox->isChecked()) {
+  if (vectorEPSCheckBox->isChecked())
+  {
     sizeGroupBox->show();
     original->show();
     modify->show();
     changeSizeBox();
-  } else {
+  }
+  else
+  {
     sizeGroupBox->hide();
     original->hide();
     modify->hide();
@@ -277,7 +261,6 @@ void G4OpenGLQtExportDialog::changeVectorEPS()
   }
 }
 
-
 void G4OpenGLQtExportDialog::changeSizeBox()
 {
   if (!original) return;
@@ -285,50 +268,49 @@ void G4OpenGLQtExportDialog::changeSizeBox()
   if (!widthWidget) return;
   if (!ratioCheckBox) return;
 
-  if ( original->isChecked()) {
+  if (original->isChecked())
+  {
     ratioCheckBox->hide();
     heightWidget->hide();
     widthWidget->hide();
-  } else {
+  }
+  else
+  {
     heightWidget->show();
     widthWidget->show();
     ratioCheckBox->show();
   }
 }
 
-
-void G4OpenGLQtExportDialog::textWidthChanged(
- const QString & s
- )
+void G4OpenGLQtExportDialog::textWidthChanged(const QString& s)
 {
   if (!ratioCheckBox) return;
   if (!width) return;
-  if (isChangingSize == true) return; // exclusive slot
+  if (isChangingSize == true) return;  // exclusive slot
 
-  if (ratioCheckBox->isChecked()){
+  if (ratioCheckBox->isChecked())
+  {
     isChangingSize = true;
     QString tmp;
-  height->setText(tmp.setNum((int)(s.toInt()*(double)((double)originalHeight/(double)originalWidth))));
-  isChangingSize = false;
+    height->setText(
+      tmp.setNum((int)(s.toInt() * (double)((double)originalHeight / (double)originalWidth))));
+    isChangingSize = false;
   }
 }
 
-void G4OpenGLQtExportDialog::  textHeightChanged(
- const QString & s
-)
+void G4OpenGLQtExportDialog::textHeightChanged(const QString& s)
 {
   if (!ratioCheckBox) return;
   if (!width) return;
-  if (isChangingSize == true) return; // exclusive slot
+  if (isChangingSize == true) return;  // exclusive slot
 
-  if (ratioCheckBox->isChecked()){
-  isChangingSize = true;
+  if (ratioCheckBox->isChecked())
+  {
+    isChangingSize = true;
     QString tmp;
-    width->setText(tmp.setNum(s.toInt()*originalWidth/originalHeight));
-  isChangingSize = false;
+    width->setText(tmp.setNum(s.toInt() * originalWidth / originalHeight));
+    isChangingSize = false;
   }
 }
 
-G4OpenGLQtExportDialog::~G4OpenGLQtExportDialog()
-{
-}
+G4OpenGLQtExportDialog::~G4OpenGLQtExportDialog() {}

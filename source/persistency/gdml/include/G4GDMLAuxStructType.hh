@@ -28,17 +28,18 @@
 // Author: Witold Pokorski, March 2015
 // --------------------------------------------------------------------
 #ifndef G4GDMLAUXSTRUCTTYPE_HH
-#define G4GDMLAUXSTRUCTTYPE_HH 1
+#define G4GDMLAUXSTRUCTTYPE_HH
+
+#include "G4String.hh"
 
 #include <vector>
-#include "G4String.hh"
 
 struct G4GDMLAuxStructType
 {
-  G4String type;
-  G4String value;
-  G4String unit;
-  std::vector<G4GDMLAuxStructType>* auxList;
+    G4String type;
+    G4String value;
+    G4String unit;
+    std::vector<G4GDMLAuxStructType>* auxList;
 };
 
 using G4GDMLAuxListType = std::vector<G4GDMLAuxStructType>;

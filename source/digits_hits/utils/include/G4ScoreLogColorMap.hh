@@ -27,24 +27,24 @@
 //
 // Author: Makoto Asai
 // --------------------------------------------------------------------
-#ifndef G4ScoreLogColorMap_h
-#define G4ScoreLogColorMap_h 1
+#ifndef G4SCORELOGCOLORMAP_HH
+#define G4SCORELOGCOLORMAP_HH
 
-#include "globals.hh"
 #include "G4VScoreColorMap.hh"
+#include "globals.hh"
 
 class G4ScoreLogColorMap : public G4VScoreColorMap
 {
- public:
+  public:
 
-  using G4VScoreColorMap::G4VScoreColorMap;
-  ~G4ScoreLogColorMap() override = default;
+    using G4VScoreColorMap::G4VScoreColorMap;
+    ~G4ScoreLogColorMap() override = default;
 
-  void GetMapColor(G4double val, G4double color[4]) override;
+    void GetMapColor(G4double val, G4double color[4]) override;
 
-  // draw a color chart
-  void DrawColorChartBar(G4int nPoint) override;
-  void DrawColorChartText(G4int nPoint) override;
+    // draw a color chart
+    void DrawColorChartBar(G4int nPoint) override;
+    void DrawColorChartText(G4int nPoint) override;
 };
 
 #endif

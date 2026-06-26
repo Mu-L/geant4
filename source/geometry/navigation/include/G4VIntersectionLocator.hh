@@ -23,11 +23,11 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// G4VIntersectionLocator 
+// G4VIntersectionLocator
 //
 // Class description:
 //
-// Base class for the calculation of the intersection point with a boundary 
+// Base class for the calculation of the intersection point with a boundary
 // when PropagationInField is used.
 // Gives possibility to choose the method of intersection; concrete locators
 // implemented are: G4SimpleLocator, G4MultiLevelLocator, G4BrentLocator.
@@ -36,35 +36,36 @@
 // Authors: John Apostolakis, Tatiana Nikitina (CERN), 27 October 2008
 // --------------------------------------------------------------------
 #ifndef G4VINTERSECTIONLOCATOR_HH
-#define G4VINTERSECTIONLOCATOR_HH 1
+#define G4VINTERSECTIONLOCATOR_HH
 
-#include "G4Types.hh" 
-#include "G4ThreeVector.hh"
-#include "G4FieldTrack.hh"
-
-#include "G4Navigator.hh"
 #include "G4ChordFinder.hh"
+#include "G4FieldTrack.hh"
+#include "G4Navigator.hh"
+#include "G4ThreeVector.hh"
+#include "G4Types.hh"
 
 /**
  * @brief G4VIntersectionLocator is a base class for the calculation of the
  * intersection point with a boundary when PropagationInField is used.
+ * @ingroup geometry_navigation
+ *
  * It gives the possibility to choose the method of intersection.
  */
 
 class G4VIntersectionLocator
 {
   public:
- 
+
     /**
      * Constructor and virtual Destructor.
      */
-    G4VIntersectionLocator(G4Navigator *theNavigator);
+    G4VIntersectionLocator(G4Navigator* theNavigator);
     virtual ~G4VIntersectionLocator();
-     
+
     /**
      * If such an intersection exists, this method calculates the intersection
      * point of the true path of the particle with the surface of the current
-     * volume (or of one of its daughters). 
+     * volume (or of one of its daughters).
      * Should use lateral displacement as measure of convergence.
      *  @note Changes the safety!
      *  @param[in] curveStartPointTangent Start point tangent track.
@@ -74,16 +75,15 @@ class G4VIntersectionLocator
      *  @param[out] recalculatedEndPoint Flagging if end point was recomputed.
      *  @param[in,out] fPreviousSafety Previous safety distance.
      *  @param[in,out] fPreviousSftOrigin Previous safety point origin.
-     *  @returns Whether intersection exists or not. 
+     *  @returns Whether intersection exists or not.
      */
-    virtual G4bool EstimateIntersectionPoint( 
-                     const G4FieldTrack&  curveStartPointTangent,  // A
-                     const G4FieldTrack&  curveEndPointTangent,    // B
-                     const G4ThreeVector& trialPoint,              // E
-                           G4FieldTrack&  intersectPointTangent,   // Output
-                           G4bool&        recalculatedEndPoint,    // Out
-                           G4double&      fPreviousSafety,         // In/Out
-                           G4ThreeVector& fPreviousSftOrigin) = 0; // In/Out   
+    virtual G4bool EstimateIntersectionPoint(const G4FieldTrack& curveStartPointTangent,  // A
+                                             const G4FieldTrack& curveEndPointTangent,  // B
+                                             const G4ThreeVector& trialPoint,  // E
+                                             G4FieldTrack& intersectPointTangent,  // Output
+                                             G4bool& recalculatedEndPoint,  // Out
+                                             G4double& fPreviousSafety,  // In/Out
+                                             G4ThreeVector& fPreviousSftOrigin) = 0;  // In/Out
 
     /**
      * Intersects the chord from StartPointA to EndPointB and returns
@@ -98,50 +98,48 @@ class G4VIntersectionLocator
      *  @param[out] IntersectionPoint Intersection point.
      *  @param[in,out] calledNavigator Pointer to flag indicating if the
      *                 navigator has been called or not.
-     *  @returns Whether intersection exists or not. 
+     *  @returns Whether intersection exists or not.
      */
-    inline G4bool IntersectChord( const G4ThreeVector&  StartPointA,
-                                  const G4ThreeVector&  EndPointB,
-                                  G4double&      NewSafety,
-                                  G4double&      PreviousSafety,    // In/Out
-                                  G4ThreeVector& PreviousSftOrigin, // In/Out
-                                  G4double&      LinearStepLength,
-                                  G4ThreeVector& IntersectionPoint,
-                                  G4bool*        calledNavigator = nullptr );
+    inline G4bool IntersectChord(const G4ThreeVector& StartPointA, const G4ThreeVector& EndPointB,
+                                 G4double& NewSafety,
+                                 G4double& PreviousSafety,  // In/Out
+                                 G4ThreeVector& PreviousSftOrigin,  // In/Out
+                                 G4double& LinearStepLength, G4ThreeVector& IntersectionPoint,
+                                 G4bool* calledNavigator = nullptr);
 
     /**
      * Setters for parameters which must be set at each step, in case they are
      * changed.
-     *  @note This simple approach ensures that all scenarios are considered. 
-     *        Future refinement may identify which are invariant during a 
+     *  @note This simple approach ensures that all scenarios are considered.
+     *        Future refinement may identify which are invariant during a
      *        track, run or event.
      */
-    inline void SetEpsilonStepFor( G4double EpsilonStep );
-    inline void SetDeltaIntersectionFor( G4double deltaIntersection );
-    inline void SetNavigatorFor( G4Navigator* fNavigator );
-    inline void SetChordFinderFor(G4ChordFinder* fCFinder );
+    inline void SetEpsilonStepFor(G4double EpsilonStep);
+    inline void SetDeltaIntersectionFor(G4double deltaIntersection);
+    inline void SetNavigatorFor(G4Navigator* fNavigator);
+    inline void SetChordFinderFor(G4ChordFinder* fCFinder);
 
     /**
      * Verbosity control.
      * Controlling verbosity enables checking of the locating of intersections.
      */
-    inline void  SetVerboseFor(G4int fVerbose);
+    inline void SetVerboseFor(G4int fVerbose);
     inline G4int GetVerboseFor();
 
     /**
      * Additional inline Get/Set methods for parameters, dependent objects.
      */
-    inline G4double       GetDeltaIntersectionFor();
-    inline G4double       GetEpsilonStepFor();
-    inline G4Navigator*   GetNavigatorFor();
+    inline G4double GetDeltaIntersectionFor();
+    inline G4double GetEpsilonStepFor();
+    inline G4Navigator* GetNavigatorFor();
     inline G4ChordFinder* GetChordFinderFor();
-    inline void SetSafetyParametersFor(G4bool UseSafety );
+    inline void SetSafetyParametersFor(G4bool UseSafety);
 
     /**
      * Adjustment flag accessor/modifier.
      */
-    inline void AdjustIntersections(G4bool UseCorrection); 
-    inline G4bool AreIntersectionsAdjusted(){ return fUseNormalCorrection; }  
+    inline void AdjustIntersections(G4bool UseCorrection);
+    inline G4bool AreIntersectionsAdjusted() { return fUseNormalCorrection; }
 
     /**
      * Adjustment flag accessor/modifier.
@@ -153,30 +151,23 @@ class G4VIntersectionLocator
     /**
      * Dumps status of propagator to any ostream.
      */
-    static void printStatus( const G4FieldTrack& startFT,
-                             const G4FieldTrack& currentFT, 
-                                   G4double      requestStep, 
-                                   G4double      safety,
-                                   G4int         stepNum,
-                                   std::ostream& oss,
-                                   G4int         verboseLevel );
+    static void printStatus(const G4FieldTrack& startFT, const G4FieldTrack& currentFT,
+                            G4double requestStep, G4double safety, G4int stepNum, std::ostream& oss,
+                            G4int verboseLevel);
 
     /**
      * Dumps status of propagator to cout, useful mostly for debugging.
      */
-    void printStatus( const G4FieldTrack& startFT,
-                      const G4FieldTrack& currentFT, 
-                            G4double      requestStep, 
-                            G4double      safety,
-                            G4int         stepNum);
+    void printStatus(const G4FieldTrack& startFT, const G4FieldTrack& currentFT,
+                     G4double requestStep, G4double safety, G4int stepNum);
 
     /**
      * Sets/gets check mode.
      * When enabled, uses additional verifications and stricter condictions
      * for ensuring correctness. Effective only when G4VERBOSE is enabled.
      */
-    inline void SetCheckMode( G4bool value ) { fCheckMode = value; }
-    inline G4bool GetCheckMode()             { return fCheckMode; }
+    inline void SetCheckMode(G4bool value) { fCheckMode = value; }
+    inline G4bool GetCheckMode() { return fCheckMode; }
 
   protected:
 
@@ -190,10 +181,10 @@ class G4VIntersectionLocator
      *  @param[in] curveDist Not used.
      *  @returns New estimate for state.
      */
-    G4FieldTrack ReEstimateEndpoint( const G4FieldTrack& CurrentStateA,  
-                                     const G4FieldTrack& EstimtdEndStateB,
-                                           G4double linearDistSq, // not used
-                                           G4double curveDist );  // not used 
+    G4FieldTrack ReEstimateEndpoint(const G4FieldTrack& CurrentStateA,
+                                    const G4FieldTrack& EstimtdEndStateB,
+                                    G4double linearDistSq,  // not used
+                                    G4double curveDist);  // not used
 
     /**
      * Checks whether EndB is too far from StartA to be reached and if,
@@ -206,10 +197,9 @@ class G4VIntersectionLocator
      *  @param[in] errorCode Error code (0=OK, 1=coincident points, 2=error).
      *  @returns true if end point has been revised.
      */
-    G4bool CheckAndReEstimateEndpoint( const G4FieldTrack& CurrentStartA,  
-                                       const G4FieldTrack& EstimatedEndB,
-                                             G4FieldTrack& RevisedEndPoint,
-                                             G4int&        errorCode);
+    G4bool CheckAndReEstimateEndpoint(const G4FieldTrack& CurrentStartA,
+                                      const G4FieldTrack& EstimatedEndB,
+                                      G4FieldTrack& RevisedEndPoint, G4int& errorCode);
 
     /**
      * Returns the surface normal. Position *must* be the intersection point
@@ -224,8 +214,7 @@ class G4VIntersectionLocator
      *  @param[in,out] validNormal Flagging if normal is a valid vector.
      *  @returns The surface normal vector in local coordinates.
      */
-    G4ThreeVector GetSurfaceNormal(const G4ThreeVector& CurrentInt_Point,
-                                         G4bool& validNormal);
+    G4ThreeVector GetSurfaceNormal(const G4ThreeVector& CurrentInt_Point, G4bool& validNormal);
 
     /**
      * Returns the surface normal of the Intersecting Solid in global
@@ -235,8 +224,7 @@ class G4VIntersectionLocator
      *  @param[in,out] validNormal Flagging if normal is a valid vector.
      *  @returns The surface normal vector in global coordinates.
      */
-    G4ThreeVector GetGlobalSurfaceNormal(const G4ThreeVector& CurrentE_Point,
-                                               G4bool& validNormal);
+    G4ThreeVector GetGlobalSurfaceNormal(const G4ThreeVector& CurrentE_Point, G4bool& validNormal);
     /**
      * Optional method for adjustment of located intersection point using
      * the surface-normal.
@@ -249,18 +237,15 @@ class G4VIntersectionLocator
      *  @param[in,out] NewSafety New safety distance.
      *  @param[in,out] fPrevSafety Previous safety distance.
      *  @param[in,out] fPrevSftOrigin Previous safety point origin.
-     *  @returns Whether intersection exists or not. 
+     *  @returns Whether intersection exists or not.
      */
     G4bool AdjustmentOfFoundIntersection(const G4ThreeVector& A,
-                                         const G4ThreeVector& CurrentE_Point, 
+                                         const G4ThreeVector& CurrentE_Point,
                                          const G4ThreeVector& CurrentF_Point,
-                                         const G4ThreeVector& MomentumDir,
-                                         const G4bool         IntersectAF, 
-                                               G4ThreeVector& IntersectionPoint,
-                                               G4double&      NewSafety,
-                                               G4double&      fPrevSafety,
-                                               G4ThreeVector& fPrevSftOrigin );
-  
+                                         const G4ThreeVector& MomentumDir, const G4bool IntersectAF,
+                                         G4ThreeVector& IntersectionPoint, G4double& NewSafety,
+                                         G4double& fPrevSafety, G4ThreeVector& fPrevSftOrigin);
+
     /**
      * Prints a three-line report on the current "sub-step",
      * i.e. trial intersection.
@@ -271,12 +256,9 @@ class G4VIntersectionLocator
      *  @param[in] NormalAtEntry Normal vector at entry.
      *  @param[in] validNormal Validity flag for normal vector at E.
      */
-    void ReportTrialStep( G4int step_no, 
-                          const G4ThreeVector& ChordAB_v,
-                          const G4ThreeVector& ChordEF_v,
-                          const G4ThreeVector& NewMomentumDir,
-                          const G4ThreeVector& NormalAtEntry,
-                          G4bool validNormal   );
+    void ReportTrialStep(G4int step_no, const G4ThreeVector& ChordAB_v,
+                         const G4ThreeVector& ChordEF_v, const G4ThreeVector& NewMomentumDir,
+                         const G4ThreeVector& NormalAtEntry, G4bool validNormal);
 
     /**
      * Locates a point using the navigator and updates the state of Navigator.
@@ -288,7 +270,7 @@ class G4VIntersectionLocator
      *  @param[in] pos The point to locate.
      *  @returns If a point is inside the volume or not.
      */
-    G4bool LocateGlobalPointWithinVolumeAndCheck( const G4ThreeVector& pos );
+    G4bool LocateGlobalPointWithinVolumeAndCheck(const G4ThreeVector& pos);
 
     /**
      * Locates a point using the navigator and updates the state of Navigator,
@@ -298,9 +280,9 @@ class G4VIntersectionLocator
      *  @param[in] CodeLocationInfo String for code location info.
      *  @param[in] CheckMode Not used.
      */
-    void LocateGlobalPointWithinVolumeCheckAndReport( const G4ThreeVector& pos,
-                                            const G4String& CodeLocationInfo,
-                                                  G4int     CheckMode );
+    void LocateGlobalPointWithinVolumeCheckAndReport(const G4ThreeVector& pos,
+                                                     const G4String& CodeLocationInfo,
+                                                     G4int CheckMode);
 
     // Auxiliary methods -- to report issues
 
@@ -308,76 +290,67 @@ class G4VIntersectionLocator
      * Builds error message (in ossMsg) to report that point 'B' has
      * gone past 'A'.
      */
-    void ReportReversedPoints( std::ostringstream& ossMsg,
-                               const G4FieldTrack& StartPointVel, 
-                               const G4FieldTrack& EndPointVel,
-                                     G4double NewSafety, G4double epsStep,
-                               const G4FieldTrack& CurrentA_PointVelocity,
-                               const G4FieldTrack& CurrentB_PointVelocity,
-                               const G4FieldTrack& SubStart_PointVelocity,
-                               const G4ThreeVector& CurrentE_Point,
-                               const G4FieldTrack& ApproxIntersecPointV,
-                               G4int sbstp_no, G4int sbstp_no_p, G4int depth );
+    void ReportReversedPoints(std::ostringstream& ossMsg, const G4FieldTrack& StartPointVel,
+                              const G4FieldTrack& EndPointVel, G4double NewSafety, G4double epsStep,
+                              const G4FieldTrack& CurrentA_PointVelocity,
+                              const G4FieldTrack& CurrentB_PointVelocity,
+                              const G4FieldTrack& SubStart_PointVelocity,
+                              const G4ThreeVector& CurrentE_Point,
+                              const G4FieldTrack& ApproxIntersecPointV, G4int sbstp_no,
+                              G4int sbstp_no_p, G4int depth);
 
     /**
      * Reports the current status / progress in finding the first intersection.
      */
-    void ReportProgress( std::ostream& oss,
-                         const G4FieldTrack& StartPointVel, 
-                         const G4FieldTrack& EndPointVel,
-                               G4int         substep_no, 
-                         const G4FieldTrack& A_PtVel,    // G4double safetyA
-                         const G4FieldTrack& B_PtVel,  
-                               G4double      safetyLast,
-                               G4int         depth= -1 );
+    void ReportProgress(std::ostream& oss, const G4FieldTrack& StartPointVel,
+                        const G4FieldTrack& EndPointVel, G4int substep_no,
+                        const G4FieldTrack& A_PtVel,  // G4double safetyA
+                        const G4FieldTrack& B_PtVel, G4double safetyLast, G4int depth = -1);
 
     /**
      * Report case: trial point is 'close' to start, within tolerance.
      */
-     void ReportImmediateHit( const char*          MethodName, 
-                              const G4ThreeVector& StartPosition, 
-                              const G4ThreeVector& TrialPoint, 
-                                    G4double       tolerance,
-                                 unsigned long int numCalls );
-    
+    void ReportImmediateHit(const char* MethodName, const G4ThreeVector& StartPosition,
+                            const G4ThreeVector& TrialPoint, G4double tolerance,
+                            unsigned long int numCalls);
+
   private:
 
     /**
      * Returns the SurfaceNormal of the Intersecting Solid in local coordinates.
      */
-    G4ThreeVector GetLocalSurfaceNormal(const G4ThreeVector& CurrentE_Point,
-                                              G4bool& validNormal);
+    G4ThreeVector GetLocalSurfaceNormal(const G4ThreeVector& CurrentE_Point, G4bool& validNormal);
 
     /**
      * Position *must* be the intersection point from last call
      * to G4Navigator's ComputeStep  (via IntersectChord).
      */
-    G4ThreeVector GetLastSurfaceNormal( const G4ThreeVector& intersectPoint,
-                                              G4bool& validNormal) const;
+    G4ThreeVector GetLastSurfaceNormal(const G4ThreeVector& intersectPoint,
+                                       G4bool& validNormal) const;
 
   protected:
 
-    G4double kCarTolerance;                  // Constant
+    G4double kCarTolerance;  // Constant
 
-    G4int    fVerboseLevel = 0;              // For debugging
-    G4bool   fUseNormalCorrection = false;   // Configuration parameter
-    G4bool   fCheckMode = false;
-    G4bool   fiUseSafety = false;    // Whether to use safety for 'fast steps'
-   
+    G4int fVerboseLevel = 0;  // For debugging
+    G4bool fUseNormalCorrection = false;  // Configuration parameter
+    G4bool fCheckMode = false;
+    G4bool fiUseSafety = false;  // Whether to use safety for 'fast steps'
+
     G4Navigator* fiNavigator;
 
     /**
      * Parameters set at each physical step by G4PropagatorInField.
      */
     G4ChordFinder* fiChordFinder = nullptr;  // Overridden at each step
-    G4double fiEpsilonStep = -1.0;           // Overridden at each step
-    G4double fiDeltaIntersection = -1.0;     // Overridden at each step
+    G4double fiEpsilonStep = -1.0;  // Overridden at each step
+    G4double fiDeltaIntersection = -1.0;  // Overridden at each step
 
     /** Helper for location. */
-    G4Navigator *fHelpingNavigator;
+    G4Navigator* fHelpingNavigator;
 
     /** Touchable history hook. */
-    G4TouchableHistory *fpTouchable = nullptr;
+    G4TouchableHistory* fpTouchable = nullptr;
 };
 
 #include "G4VIntersectionLocator.icc"

@@ -41,7 +41,8 @@ G4DNAPTBIonisationModel::G4DNAPTBIonisationModel(const G4String& applyToMaterial
                                                  const G4bool isAuger)
   : G4VDNAModel(nam, applyToMaterial)
 {
-  if (isAuger) {
+  if (isAuger)
+  {
     // create the PTB Auger model
     fpDNAPTBAugerModel = std::make_unique<G4DNAPTBAugerModel>("e-_G4DNAPTBAugerModel");
   }
@@ -64,10 +65,12 @@ G4DNAPTBIonisationModel::G4DNAPTBIonisationModel(const G4String& applyToMaterial
 void G4DNAPTBIonisationModel::Initialise(const G4ParticleDefinition* particle,
                                          const G4DataVector& /*cuts*/)
 {
-  if (isInitialised) {
+  if (isInitialised)
+  {
     return;
   }
-  if (verboseLevel > 3) {
+  if (verboseLevel > 3)
+  {
     G4cout << "Calling G4DNAPTBIonisationModel::Initialise()" << G4endl;
   }
 
@@ -81,11 +84,13 @@ void G4DNAPTBIonisationModel::Initialise(const G4ParticleDefinition* particle,
   // Cross section data
   //*******************************************************
   std::size_t index;
-  if (particle == electronDef) {
+  if (particle == electronDef)
+  {
     // Raw materials
     //
     // MPietrzak
-    if (fpN2 != nullptr) {
+    if (fpN2 != nullptr)
+    {
       index = fpN2->GetIndex();
       AddCrossSectionData(index, particle, "dna/sigma_ionisation_e-_PTB_N2",
                           "dna/sigmadiff_cumulated_ionisation_e-_PTB_N2", scaleFactor);
@@ -95,7 +100,8 @@ void G4DNAPTBIonisationModel::Initialise(const G4ParticleDefinition* particle,
 
     // MPietrzak
 
-    if (fpTHF != nullptr) {
+    if (fpTHF != nullptr)
+    {
       index = fpTHF->GetIndex();
       AddCrossSectionData(index, particle, "dna/sigma_ionisation_e-_PTB_THF",
                           "dna/sigmadiff_cumulated_ionisation_e-_PTB_THF", scaleFactor);
@@ -103,7 +109,8 @@ void G4DNAPTBIonisationModel::Initialise(const G4ParticleDefinition* particle,
       SetHighELimit(index, particle, 1. * keV);
     }
 
-    if (fpPY != nullptr) {
+    if (fpPY != nullptr)
+    {
       index = fpPY->GetIndex();
       AddCrossSectionData(index, particle, "dna/sigma_ionisation_e-_PTB_PY",
                           "dna/sigmadiff_cumulated_ionisation_e-_PTB_PY", scaleFactor);
@@ -111,14 +118,16 @@ void G4DNAPTBIonisationModel::Initialise(const G4ParticleDefinition* particle,
       SetHighELimit(index, particle, 1. * keV);
     }
 
-    if (fpPU != nullptr) {
+    if (fpPU != nullptr)
+    {
       index = fpPU->GetIndex();
       AddCrossSectionData(index, particle, "dna/sigma_ionisation_e-_PTB_PU",
                           "dna/sigmadiff_cumulated_ionisation_e-_PTB_PU", scaleFactor);
       SetLowELimit(index, particle, 12. * eV);
       SetHighELimit(index, particle, 1. * keV);
     }
-    if (fpTMP != nullptr) {
+    if (fpTMP != nullptr)
+    {
       index = fpTMP->GetIndex();
       AddCrossSectionData(index, particle, "dna/sigma_ionisation_e-_PTB_TMP",
                           "dna/sigmadiff_cumulated_ionisation_e-_PTB_TMP", scaleFactor);
@@ -126,7 +135,8 @@ void G4DNAPTBIonisationModel::Initialise(const G4ParticleDefinition* particle,
       SetHighELimit(index, particle, 1. * keV);
     }
 
-    if (fpG4_WATER != nullptr) {
+    if (fpG4_WATER != nullptr)
+    {
       index = fpG4_WATER->GetIndex();
       AddCrossSectionData(index, particle, "dna/sigma_ionisation_e_born",
                           "dna/sigmadiff_ionisation_e_born", scaleFactorBorn);
@@ -135,7 +145,8 @@ void G4DNAPTBIonisationModel::Initialise(const G4ParticleDefinition* particle,
     }
     // DNA materials
     //
-    if (fpBackbone_THF != nullptr) {
+    if (fpBackbone_THF != nullptr)
+    {
       index = fpBackbone_THF->GetIndex();
       AddCrossSectionData(index, particle, "dna/sigma_ionisation_e-_PTB_THF",
                           "dna/sigmadiff_cumulated_ionisation_e-_PTB_THF", scaleFactor * 33. / 30);
@@ -143,7 +154,8 @@ void G4DNAPTBIonisationModel::Initialise(const G4ParticleDefinition* particle,
       SetHighELimit(index, particle, 1. * keV);
     }
 
-    if (fpCytosine_PY != nullptr) {
+    if (fpCytosine_PY != nullptr)
+    {
       index = fpCytosine_PY->GetIndex();
       AddCrossSectionData(index, particle, "dna/sigma_ionisation_e-_PTB_PY",
                           "dna/sigmadiff_cumulated_ionisation_e-_PTB_PY", scaleFactor * 42. / 30);
@@ -151,7 +163,8 @@ void G4DNAPTBIonisationModel::Initialise(const G4ParticleDefinition* particle,
       SetHighELimit(index, particle, 1. * keV);
     }
 
-    if (fpThymine_PY != nullptr) {
+    if (fpThymine_PY != nullptr)
+    {
       index = fpThymine_PY->GetIndex();
       AddCrossSectionData(index, particle, "dna/sigma_ionisation_e-_PTB_PY",
                           "dna/sigmadiff_cumulated_ionisation_e-_PTB_PY", scaleFactor * 48. / 30);
@@ -159,7 +172,8 @@ void G4DNAPTBIonisationModel::Initialise(const G4ParticleDefinition* particle,
       SetHighELimit(index, particle, 1. * keV);
     }
 
-    if (fpAdenine_PU != nullptr) {
+    if (fpAdenine_PU != nullptr)
+    {
       index = fpAdenine_PU->GetIndex();
       AddCrossSectionData(index, particle, "dna/sigma_ionisation_e-_PTB_PU",
                           "dna/sigmadiff_cumulated_ionisation_e-_PTB_PU", scaleFactor * 50. / 44);
@@ -167,7 +181,8 @@ void G4DNAPTBIonisationModel::Initialise(const G4ParticleDefinition* particle,
       SetHighELimit(index, particle, 1. * keV);
     }
 
-    if (fpGuanine_PU != nullptr) {
+    if (fpGuanine_PU != nullptr)
+    {
       index = fpGuanine_PU->GetIndex();
       AddCrossSectionData(index, particle, "dna/sigma_ionisation_e-_PTB_PU",
                           "dna/sigmadiff_cumulated_ionisation_e-_PTB_PU", scaleFactor * 56. / 44);
@@ -175,7 +190,8 @@ void G4DNAPTBIonisationModel::Initialise(const G4ParticleDefinition* particle,
       SetHighELimit(index, particle, 1. * keV);
     }
 
-    if (fpBackbone_TMP != nullptr) {
+    if (fpBackbone_TMP != nullptr)
+    {
       index = fpBackbone_TMP->GetIndex();
       AddCrossSectionData(index, particle, "dna/sigma_ionisation_e-_PTB_TMP",
                           "dna/sigmadiff_cumulated_ionisation_e-_PTB_TMP", scaleFactor * 33. / 50);
@@ -184,12 +200,14 @@ void G4DNAPTBIonisationModel::Initialise(const G4ParticleDefinition* particle,
     }
   }
 
-  else if (particle == protonDef) {
+  else if (particle == protonDef)
+  {
     G4String particleName = particle->GetParticleName();
 
     // Raw materials
     //
-    if (fpTHF != nullptr) {
+    if (fpTHF != nullptr)
+    {
       index = fpTHF->GetIndex();
       AddCrossSectionData(index, particle, "dna/sigma_ionisation_p_HKS_THF",
                           "dna/sigmadiff_cumulated_ionisation_p_PTB_THF", scaleFactor);
@@ -197,7 +215,8 @@ void G4DNAPTBIonisationModel::Initialise(const G4ParticleDefinition* particle,
       SetHighELimit(index, particle, 10. * MeV);
     }
 
-    if (fpPY != nullptr) {
+    if (fpPY != nullptr)
+    {
       index = fpPY->GetIndex();
       AddCrossSectionData(index, particle, "dna/sigma_ionisation_p_HKS_PY",
                           "dna/sigmadiff_cumulated_ionisation_p_PTB_PY", scaleFactor);
@@ -214,7 +233,8 @@ void G4DNAPTBIonisationModel::Initialise(const G4ParticleDefinition* particle,
             SetHighELimit("PU", particleName2, 10.*keV);
 */
 
-    if (fpTMP != nullptr) {
+    if (fpTMP != nullptr)
+    {
       index = fpTMP->GetIndex();
       AddCrossSectionData(index, particle, "dna/sigma_ionisation_p_HKS_TMP",
                           "dna/sigmadiff_cumulated_ionisation_p_PTB_TMP", scaleFactor);
@@ -225,25 +245,30 @@ void G4DNAPTBIonisationModel::Initialise(const G4ParticleDefinition* particle,
   // *******************************************************
   // deal with composite materials
   // *******************************************************
-  if (!G4DNAMaterialManager::Instance()->IsLocked()) {
+  if (!G4DNAMaterialManager::Instance()->IsLocked())
+  {
     LoadCrossSectionData(particle);
     G4DNAMaterialManager::Instance()->SetMasterDataModel(DNAModelType::fDNAIonisation, this);
     fpModelData = this;
   }
-  else {
+  else
+  {
     auto dataModel = dynamic_cast<G4DNAPTBIonisationModel*>(
       G4DNAMaterialManager::Instance()->GetModel(DNAModelType::fDNAIonisation));
-    if (dataModel == nullptr) {
+    if (dataModel == nullptr)
+    {
       G4cout << "G4DNAPTBIonisationModel::Initialise:: not good modelData" << G4endl;
       G4Exception("G4DNAPTBIonisationModel::Initialise", "PTB0004", FatalException,
                   "not good modelData");
     }
-    else {
+    else
+    {
       fpModelData = dataModel;
     }
   }
   // initialise DNAPTBAugerModel
-  if (fpDNAPTBAugerModel) {
+  if (fpDNAPTBAugerModel)
+  {
     fpDNAPTBAugerModel->Initialise();
   }
   fParticleChangeForGamma = GetParticleChangeForGamma();
@@ -269,17 +294,20 @@ G4double G4DNAPTBIonisationModel::CrossSectionPerVolume(const G4Material* materi
   G4double highLim = fpModelData->GetHighELimit(matID, p);
 
   // Check that we are in the correct energy range
-  if (ekin >= lowLim && ekin < highLim) {
+  if (ekin >= lowLim && ekin < highLim)
+  {
     // Get the map with all the model data tables
     auto tableData = fpModelData->GetData();
-    if ((*tableData)[matID][p] == nullptr) {
+    if ((*tableData)[matID][p] == nullptr)
+    {
       G4Exception("G4DNAPTBIonisationModel::CrossSectionPerVolume", "em00236", FatalException,
                   "No model is registered");
     }
     // Retrieve the cross section value for the current material, particle and energy values
     sigma = (*tableData)[matID][p]->FindValue(ekin);
 
-    if (verboseLevel > 2) {
+    if (verboseLevel > 2)
+    {
       G4cout << "__________________________________" << G4endl;
       G4cout << "°°° G4DNAPTBIonisationModel - XS INFO START" << G4endl;
       G4cout << "°°° Kinetic energy(eV)=" << ekin / eV << " particle : " << particleName << G4endl;
@@ -290,8 +318,7 @@ G4double G4DNAPTBIonisationModel::CrossSectionPerVolume(const G4Material* materi
   }
 
   // Return the cross section value
-  auto MolDensity =
-    (*G4DNAMolecularMaterial::Instance()->GetNumMolPerVolTableFor(material))[matID];
+  auto MolDensity = (*G4DNAMolecularMaterial::Instance()->GetNumMolPerVolTableFor(material))[matID];
   return sigma * MolDensity;
 }
 
@@ -314,7 +341,8 @@ void G4DNAPTBIonisationModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
   G4double highLim = fpModelData->GetHighELimit(materialID, p);
 
   // Check if we are in the correct energy range
-  if (k >= lowLim && k < highLim) {
+  if (k >= lowLim && k < highLim)
+  {
     G4ParticleMomentum primaryDirection = aDynamicParticle->GetMomentumDirection();
     G4double particleMass = aDynamicParticle->GetDefinition()->GetPDGMass();
     G4double totalEnergy = k + particleMass;
@@ -330,17 +358,20 @@ void G4DNAPTBIonisationModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
     // Initialize the secondary kinetic energy to a negative value.
     G4double secondaryKinetic(-1000 * eV);
 
-    if (fpG4_WATER == nullptr || materialID != fpG4_WATER->GetIndex()) {
+    if (fpG4_WATER == nullptr || materialID != fpG4_WATER->GetIndex())
+    {
       // Get the energy of the secondary particle
       secondaryKinetic = fpModelData->RandomizeEjectedElectronEnergyFromCumulated(
         aDynamicParticle->GetDefinition(), k / eV, ionizationShell, materialID);
     }
-    else {
+    else
+    {
       secondaryKinetic = fpModelData->RandomizeEjectedElectronEnergy(
         aDynamicParticle->GetDefinition(), k, ionizationShell, materialID);
     }
 
-    if (secondaryKinetic <= 0) {
+    if (secondaryKinetic <= 0)
+    {
       G4cout << "Fatal error *************************************** " << secondaryKinetic / eV
              << G4endl;
       G4cout << "secondaryKinetic: " << secondaryKinetic / eV << G4endl;
@@ -368,7 +399,8 @@ void G4DNAPTBIonisationModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
     // introduced within this model the following should be added:
     //
     // Check if the particle is an electron
-    if (aDynamicParticle->GetDefinition() == G4Electron::ElectronDefinition()) {
+    if (aDynamicParticle->GetDefinition() == G4Electron::ElectronDefinition())
+    {
       // If yes do the following code until next commented "else" statement
 
       G4double deltaTotalMomentum =
@@ -397,14 +429,16 @@ void G4DNAPTBIonisationModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
       fParticleChangeForGamma->ProposeMomentumDirection(direction.unit());
     }
     // If the particle is not an electron
-    else {
+    else
+    {
       fParticleChangeForGamma->ProposeMomentumDirection(primaryDirection);
     }
 
     // note that secondaryKinetic is the energy of the delta ray, not of all secondaries.
     G4double scatteredEnergy = k - bindingEnergy - secondaryKinetic;
 
-    if (scatteredEnergy <= 0) {
+    if (scatteredEnergy <= 0)
+    {
       G4cout << "Fatal error ****************************" << G4endl;
       G4cout << "k: " << k / eV << G4endl;
       G4cout << "secondaryKinetic: " << secondaryKinetic / eV << G4endl;
@@ -427,9 +461,11 @@ void G4DNAPTBIonisationModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
     fvect->push_back(dp);
 
     // Check if the auger model is activated (ie instanciated)
-    if (fpDNAPTBAugerModel) {
+    if (fpDNAPTBAugerModel)
+    {
       // run the PTB Auger model
-      if (materialName != "G4_WATER") {
+      if (materialName != "G4_WATER")
+      {
         fpDNAPTBAugerModel->ComputeAugerEffect(fvect, materialName, bindingEnergy);
       }
     }
@@ -447,7 +483,8 @@ void G4DNAPTBIonisationModel::ReadDiffCSFile(const std::size_t& materialID,
   // get the path of the G4LEDATA data folder
   const char* path = G4FindDataDir("G4LEDATA");
   // if it is not found then quit and print error message
-  if (path == nullptr) {
+  if (path == nullptr)
+  {
     G4Exception("G4DNAPTBIonisationModel::ReadAllDiffCSFiles", "em0006", FatalException,
                 "G4LEDATA environment variable was not set.");
     return;
@@ -461,7 +498,8 @@ void G4DNAPTBIonisationModel::ReadDiffCSFile(const std::size_t& materialID,
   std::ifstream diffCrossSection(fullFileName.str().c_str());
   // error if file is not there
   std::stringstream endPath;
-  if (!diffCrossSection) {
+  if (!diffCrossSection)
+  {
     endPath << "Missing data file: " << file;
     G4Exception("G4DNAPTBIonisationModel::Initialise", "em0003", FatalException,
                 endPath.str().c_str());
@@ -475,19 +513,22 @@ void G4DNAPTBIonisationModel::ReadDiffCSFile(const std::size_t& materialID,
   // read the file until we reach the end of file point
   // fill fTMapWithVec, diffCrossSectionData, fEnergyTransferData, fProbaShellMap and
   // fEMapWithVector
-  while (std::getline(diffCrossSection, line)) {
+  while (std::getline(diffCrossSection, line))
+  {
     // check if the line is comment or empty
     //
     std::istringstream testIss(line);
     G4String test;
     testIss >> test;
     // check first caracter to determine if following information is data or comments
-    if (test == "#") {
+    if (test == "#")
+    {
       // skip the line by beginning a new while loop.
       continue;
     }
     // check if line is empty
-    if (line.empty()) {
+    if (line.empty())
+    {
       // skip the line by beginning a new while loop.
       continue;
     }
@@ -509,12 +550,14 @@ void G4DNAPTBIonisationModel::ReadDiffCSFile(const std::size_t& materialID,
     if (T != fTMapWithVec[materialID][p].back()) fTMapWithVec[materialID][p].push_back(T);
 
     // iterate on each shell of the corresponding material
-    for (int shell = 0, eshell = ptbStructure.NumberOfLevels(materialID); shell < eshell; ++shell) {
+    for (int shell = 0, eshell = ptbStructure.NumberOfLevels(materialID); shell < eshell; ++shell)
+    {
       // map[material][particle][shell][T][E]=diffCrossSectionValue
       // Fill the map with the informations of the input file
       iss >> diffCrossSectionData[materialID][p][shell][T][E];
 
-      if (fpG4_WATER != nullptr && fpG4_WATER->GetIndex() != materialID) {
+      if (fpG4_WATER != nullptr && fpG4_WATER->GetIndex() != materialID)
+      {
         // map[material][particle][shell][T][CS]=E
         // Fill the map
         fEnergySecondaryData[materialID][p][shell][T]
@@ -525,7 +568,8 @@ void G4DNAPTBIonisationModel::ReadDiffCSFile(const std::size_t& materialID,
         fProbaShellMap[materialID][p][shell][T].push_back(
           diffCrossSectionData[materialID][p][shell][T][E]);
       }
-      else {
+      else
+      {
         diffCrossSectionData[materialID][p][shell][T][E] *= scaleFactor;
         fEMapWithVector[materialID][p][T].push_back(E);
       }
@@ -536,9 +580,11 @@ void G4DNAPTBIonisationModel::ReadDiffCSFile(const std::size_t& materialID,
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4double G4DNAPTBIonisationModel::RandomizeEjectedElectronEnergy(
-  const G4ParticleDefinition* particleDefinition, G4double k, G4int shell, const std::size_t& materialID)
+  const G4ParticleDefinition* particleDefinition, G4double k, G4int shell,
+  const std::size_t& materialID)
 {
-  if (particleDefinition == G4Electron::ElectronDefinition()) {
+  if (particleDefinition == G4Electron::ElectronDefinition())
+  {
     // G4double Tcut=25.0E-6;
     G4double maximumEnergyTransfer;
     ((k + ptbStructure.IonisationEnergy(shell, materialID)) / 2. > k)
@@ -569,7 +615,8 @@ G4double G4DNAPTBIonisationModel::RandomizeEjectedElectronEnergy(
     G4double value(minEnergy);
     G4double stpEnergy(std::pow(maxEnergy / value, 1. / static_cast<G4double>(nEnergySteps - 1)));
     G4int step(nEnergySteps);
-    while (step > 0) {
+    while (step > 0)
+    {
       step--;
       G4double differentialCrossSection =
         DifferentialCrossSection(particleDefinition, k / eV, value / eV, shell, materialID);
@@ -581,7 +628,8 @@ G4double G4DNAPTBIonisationModel::RandomizeEjectedElectronEnergy(
 
     G4double secondaryElectronKineticEnergy = 0.;
 
-    do {
+    do
+    {
       secondaryElectronKineticEnergy =
         G4UniformRand()
         * (maximumEnergyTransfer - ptbStructure.IonisationEnergy(shell, materialID));
@@ -595,7 +643,8 @@ G4double G4DNAPTBIonisationModel::RandomizeEjectedElectronEnergy(
     return secondaryElectronKineticEnergy;
   }
 
-  if (particleDefinition == G4Proton::ProtonDefinition()) {
+  if (particleDefinition == G4Proton::ProtonDefinition())
+  {
     G4double maximumKineticEnergyTransfer = 4. * (electron_mass_c2 / proton_mass_c2) * k;
 
     G4double crossSectionMaximum = 0.;
@@ -609,7 +658,8 @@ G4double G4DNAPTBIonisationModel::RandomizeEjectedElectronEnergy(
     }
 
     G4double secondaryElectronKineticEnergy = 0.;
-    do {
+    do
+    {
       secondaryElectronKineticEnergy = G4UniformRand() * maximumKineticEnergyTransfer;
     } while (
       G4UniformRand() * crossSectionMaximum >= DifferentialCrossSection(
@@ -629,22 +679,26 @@ void G4DNAPTBIonisationModel::RandomizeEjectedElectronDirection(const G4Particle
                                                                 G4double k, G4double secKinetic,
                                                                 G4double& cosTheta, G4double& phi)
 {
-  if (p == G4Electron::ElectronDefinition()) {
+  if (p == G4Electron::ElectronDefinition())
+  {
     phi = twopi * G4UniformRand();
     if (secKinetic < 50. * eV)
       cosTheta = (2. * G4UniformRand()) - 1.;
-    else if (secKinetic <= 200. * eV) {
+    else if (secKinetic <= 200. * eV)
+    {
       if (G4UniformRand() <= 0.1)
         cosTheta = (2. * G4UniformRand()) - 1.;
       else
         cosTheta = G4UniformRand() * (std::sqrt(2.) / 2);
     }
-    else {
+    else
+    {
       G4double sin2O = (1. - secKinetic / k) / (1. + secKinetic / (2. * electron_mass_c2));
       cosTheta = std::sqrt(1. - sin2O);
     }
   }
-  else if (p == G4Proton::ProtonDefinition()) {
+  else if (p == G4Proton::ProtonDefinition())
+  {
     G4double maxSecKinetic = 4. * (electron_mass_c2 / proton_mass_c2) * k;
     phi = twopi * G4UniformRand();
 
@@ -668,7 +722,8 @@ double G4DNAPTBIonisationModel::DifferentialCrossSection(const G4ParticleDefinit
   G4double shellEnergy(ptbStructure.IonisationEnergy(ionizationLevelIndex, materialID));
   G4double kSE(energyTransfer - shellEnergy);
 
-  if (energyTransfer >= shellEnergy) {
+  if (energyTransfer >= shellEnergy)
+  {
     G4double valueT1 = 0;
     G4double valueT2 = 0;
     G4double valueE21 = 0;
@@ -681,7 +736,8 @@ double G4DNAPTBIonisationModel::DifferentialCrossSection(const G4ParticleDefinit
     G4double xs21 = 0;
     G4double xs22 = 0;
 
-    if (p == G4Electron::ElectronDefinition()) {
+    if (p == G4Electron::ElectronDefinition())
+    {
       // k should be in eV and energy transfer eV also
       auto t2 =
         std::upper_bound(fTMapWithVec[materialID][p].begin(), fTMapWithVec[materialID][p].end(), k);
@@ -713,7 +769,8 @@ double G4DNAPTBIonisationModel::DifferentialCrossSection(const G4ParticleDefinit
       }
     }
 
-    if (p == G4Proton::ProtonDefinition()) {
+    if (p == G4Proton::ProtonDefinition())
+    {
       // k should be in eV and energy transfer eV also
       auto t2 =
         std::upper_bound(fTMapWithVec[materialID][p].begin(), fTMapWithVec[materialID][p].end(), k);
@@ -742,7 +799,8 @@ double G4DNAPTBIonisationModel::DifferentialCrossSection(const G4ParticleDefinit
 
     G4double xsProduct = xs11 * xs12 * xs21 * xs22;
 
-    if (xsProduct != 0.) {
+    if (xsProduct != 0.)
+    {
       sigma = QuadInterpolator(valueE11, valueE12, valueE21, valueE22, xs11, xs12, xs21, xs22,
                                valueT1, valueT2, k, kSE);
     }
@@ -754,7 +812,8 @@ double G4DNAPTBIonisationModel::DifferentialCrossSection(const G4ParticleDefinit
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4double G4DNAPTBIonisationModel::RandomizeEjectedElectronEnergyFromCumulated(
-  const G4ParticleDefinition* p, G4double k, G4int ionizationLevelIndex, const std::size_t& materialID)
+  const G4ParticleDefinition* p, G4double k, G4int ionizationLevelIndex,
+  const std::size_t& materialID)
 {
   // k should be in eV
 
@@ -821,7 +880,8 @@ G4double G4DNAPTBIonisationModel::RandomizeEjectedElectronEnergyFromCumulated(
   // Ex : table done for 12*eV -> 1000*eV and k=2000*eV
   // then k2 = 0 and k1 = max of the table.
   // To detect this, we check that k1 is not superior to k2.
-  if (*k1 > *k2) {
+  if (*k1 > *k2)
+  {
     // Error
     G4cerr << "**************** Fatal error ******************" << G4endl;
     G4cerr << "G4DNAPTBIonisationModel::RandomizeEjectedElectronEnergyFromCumulated" << G4endl;
@@ -873,7 +933,8 @@ G4double G4DNAPTBIonisationModel::RandomizeEjectedElectronEnergyFromCumulated(
   // interpolate T value between Tupper Tlower. That's why the final E value should be interpolate
   // between 0 and the E value (upper T).
   //
-  if (cumulCS12 == fProbaShellMap[materialID][p][ionizationLevelIndex][(*k1)].end()) {
+  if (cumulCS12 == fProbaShellMap[materialID][p][ionizationLevelIndex][(*k1)].end())
+  {
     // Here we are in the special case and we force Elower1 and Elower2 to be equal at 0 for the
     // interpolation.
     secElecE11 = 0;
@@ -884,7 +945,8 @@ G4double G4DNAPTBIonisationModel::RandomizeEjectedElectronEnergyFromCumulated(
     valueCumulCS11 = 0;
     valueCumulCS12 = 0;
   }
-  else {
+  else
+  {
     // No special case, interpolation will happen as usual.
     secElecE11 = fEnergySecondaryData[materialID][p][ionizationLevelIndex][valueK1][valueCumulCS11];
     secElecE12 = fEnergySecondaryData[materialID][p][ionizationLevelIndex][valueK1][valueCumulCS12];
@@ -901,7 +963,8 @@ G4double G4DNAPTBIonisationModel::RandomizeEjectedElectronEnergyFromCumulated(
   // **********************************************
 
   G4double bindingEnergy(ptbStructure.IonisationEnergy(ionizationLevelIndex, materialID) / eV);
-  if (k - ejectedElectronEnergy - bindingEnergy <= 0 || ejectedElectronEnergy <= 0) {
+  if (k - ejectedElectronEnergy - bindingEnergy <= 0 || ejectedElectronEnergy <= 0)
+  {
     G4cout << "k " << k << G4endl;
     G4cout << "material ID : " << materialID << G4endl;
     G4cout << "secondaryKin " << ejectedElectronEnergy << G4endl;
@@ -937,7 +1000,8 @@ G4double G4DNAPTBIonisationModel::LogLogInterpolate(G4double e1, G4double e2, G4
 
   // Switch to log-lin interpolation for faster code
 
-  if ((e2 - e1) != 0 && xs1 != 0 && xs2 != 0) {
+  if ((e2 - e1) != 0 && xs1 != 0 && xs2 != 0)
+  {
     G4double d1 = std::log10(xs1);
     G4double d2 = std::log10(xs2);
     value = std::pow(10., (d1 + (d2 - d1) * (e - e1) / (e2 - e1)));
@@ -946,7 +1010,8 @@ G4double G4DNAPTBIonisationModel::LogLogInterpolate(G4double e1, G4double e2, G4
   // Switch to lin-lin interpolation for faster code
   // in case one of xs1 or xs2 (=cum proba) value is zero
 
-  if ((e2 - e1) != 0 && (xs1 == 0 || xs2 == 0)) {
+  if ((e2 - e1) != 0 && (xs1 == 0 || xs2 == 0))
+  {
     G4double d1 = xs1;
     G4double d2 = xs2;
     value = (d1 + (d2 - d1) * (e - e1) / (e2 - e1));

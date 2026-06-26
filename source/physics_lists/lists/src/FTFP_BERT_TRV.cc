@@ -33,7 +33,7 @@
 //   created from FTFP_BERT - simple variant changing inelastic thresholds
 //
 // Modified:
-// 16.08.2010 H.Kurashige: Remove inclusion of G4ParticleWithCuts 
+// 16.08.2010 H.Kurashige: Remove inclusion of G4ParticleWithCuts
 // 18.10.2011 A.Ribon: Replace CHIPS with FTF/Preco for nuclear capture
 //                     at rest of anti-protons.
 // 27.07.2012 A.Ribon:  Use the new class G4BertiniAndFritiofStoppingPhysics
@@ -43,64 +43,59 @@
 //
 //----------------------------------------------------------------------------
 //
-#include <iomanip>   
-
-#include "globals.hh"
-#include "G4ios.hh"
-
-#include "G4DecayPhysics.hh"
-#include "G4EmStandardPhysics.hh"
-#include "G4EmStandardPhysicsGS.hh"
-#include "G4EmExtraPhysics.hh"
-#include "G4IonPhysics.hh"
-#include "G4StoppingPhysics.hh"
-#include "G4HadronHElasticPhysics.hh"
-#include "G4NeutronTrackingCut.hh"
-
-#include "G4HadronPhysicsFTFP_BERT_TRV.hh"
 #include "FTFP_BERT_TRV.hh"
 
-#include "G4WarnPLStatus.hh"
-
+#include "G4DecayPhysics.hh"
+#include "G4EmExtraPhysics.hh"
 #include "G4EmParameters.hh"
+#include "G4EmStandardPhysics.hh"
+#include "G4EmStandardPhysicsGS.hh"
+#include "G4HadronHElasticPhysics.hh"
+#include "G4HadronPhysicsFTFP_BERT_TRV.hh"
+#include "G4IonPhysics.hh"
+#include "G4NeutronTrackingCut.hh"
+#include "G4StoppingPhysics.hh"
+#include "G4WarnPLStatus.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
+#include <iomanip>
 
 FTFP_BERT_TRV::FTFP_BERT_TRV(G4int ver)
 {
-  if(ver > 0) {
-    G4cout << "<<< Geant4 Physics List simulation engine: FTFP_BERT_TRV "<<G4endl;
-    G4cout <<G4endl;
+  if (ver > 0)
+  {
+    G4cout << "<<< Geant4 Physics List simulation engine: FTFP_BERT_TRV " << G4endl;
+    G4cout << G4endl;
     G4WarnPLStatus exp;
     exp.Experimental("FTFP_BERT_TRV");
   }
-  defaultCutValue = 0.7*CLHEP::mm;  
+  defaultCutValue = 0.7 * CLHEP::mm;
   SetVerboseLevel(ver);
 
   // EM Physics
-  G4EmStandardPhysicsGS* gsPhysics = new G4EmStandardPhysicsGS( ver );
-  G4EmParameters::Instance()->SetMscStepLimitType( fUseSafety );
-  RegisterPhysics( gsPhysics );
+  G4EmStandardPhysicsGS* gsPhysics = new G4EmStandardPhysicsGS(ver);
+  G4EmParameters::Instance()->SetMscStepLimitType(fUseSafety);
+  RegisterPhysics(gsPhysics);
 
   // Synchroton Radiation & GN Physics
-  RegisterPhysics( new G4EmExtraPhysics(ver) );
+  RegisterPhysics(new G4EmExtraPhysics(ver));
 
-  // Decays 
-  RegisterPhysics( new G4DecayPhysics(ver) );
+  // Decays
+  RegisterPhysics(new G4DecayPhysics(ver));
 
-   // Hadron Elastic scattering
-  RegisterPhysics( new G4HadronHElasticPhysics(ver, true) );
+  // Hadron Elastic scattering
+  RegisterPhysics(new G4HadronHElasticPhysics(ver, true));
 
-   // Hadron Physics
-  RegisterPhysics(  new G4HadronPhysicsFTFP_BERT_TRV(ver));
+  // Hadron Physics
+  RegisterPhysics(new G4HadronPhysicsFTFP_BERT_TRV(ver));
 
   // Stopping Physics
-  RegisterPhysics( new G4StoppingPhysics(ver) );
+  RegisterPhysics(new G4StoppingPhysics(ver));
 
   // Ion Physics
-  RegisterPhysics( new G4IonPhysics(ver));
-  
+  RegisterPhysics(new G4IonPhysics(ver));
+
   // Neutron tracking cut
-  RegisterPhysics( new G4NeutronTrackingCut(ver));
-
+  RegisterPhysics(new G4NeutronTrackingCut(ver));
 }
-

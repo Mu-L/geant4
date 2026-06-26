@@ -27,6 +27,7 @@
 //
 // G4PSNofStep
 #include "G4PSNofStep.hh"
+
 #include "G4UnitsTable.hh"
 #include "G4VScoreHistFiller.hh"
 
@@ -40,31 +41,28 @@
 //              in mm vs. number of steps (not weighted)        (Makoto Asai)
 //
 
-G4PSNofStep::G4PSNofStep(const G4String& name, G4int depth)
-  : G4VPrimitivePlotter(name, depth)
+G4PSNofStep::G4PSNofStep(const G4String& name, G4int depth) : G4VPrimitivePlotter(name, depth)
 {
   SetUnit("");
 }
 
 G4bool G4PSNofStep::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
-  if(boundaryFlag)
+  if (boundaryFlag)
   {
-    if(aStep->GetStepLength() == 0.)
-      return false;
+    if (aStep->GetStepLength() == 0.) return false;
   }
-  G4int index  = GetIndex(aStep);
+  G4int index = GetIndex(aStep);
   G4double val = 1.0;
   EvtMap->add(index, val);
 
-  if(!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
+  if (!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
   {
     auto filler = G4VScoreHistFiller::Instance();
-    if(filler == nullptr)
+    if (filler == nullptr)
     {
-      G4Exception(
-        "G4PSNofStep::ProcessHits", "SCORER0123", JustWarning,
-        "G4TScoreHistFiller is not instantiated!! Histogram is not filled.");
+      G4Exception("G4PSNofStep::ProcessHits", "SCORER0123", JustWarning,
+                  "G4TScoreHistFiller is not instantiated!! Histogram is not filled.");
     }
     else
     {
@@ -78,38 +76,40 @@ G4bool G4PSNofStep::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 void G4PSNofStep::Initialize(G4HCofThisEvent* HCE)
 {
   EvtMap = new G4THitsMap<G4double>(detector->GetName(), GetName());
-  if(HCID < 0)
+  if (HCID < 0)
   {
     HCID = GetCollectionID(0);
   }
-  HCE->AddHitsCollection(HCID, (G4VHitsCollection*) EvtMap);
+  HCE->AddHitsCollection(HCID, (G4VHitsCollection*)EvtMap);
 }
 
-void G4PSNofStep::clear() { EvtMap->clear(); }
+void G4PSNofStep::clear()
+{
+  EvtMap->clear();
+}
 
 void G4PSNofStep::PrintAll()
 {
   G4cout << " MultiFunctionalDet  " << detector->GetName() << G4endl;
   G4cout << " PrimitiveScorer " << GetName() << G4endl;
   G4cout << " Number of entries " << EvtMap->entries() << G4endl;
-  for(const auto& [copy, nsteps] : *(EvtMap->GetMap()))
+  for (const auto& [copy, nsteps] : *(EvtMap->GetMap()))
   {
-    G4cout << "  copy no.: " << copy
-           << "  num of step: " << *(nsteps) << " [steps] " << G4endl;
+    G4cout << "  copy no.: " << copy << "  num of step: " << *(nsteps) << " [steps] " << G4endl;
   }
 }
 
 void G4PSNofStep::SetUnit(const G4String& unit)
 {
-  if(unit.empty())
+  if (unit.empty())
   {
-    unitName  = unit;
+    unitName = unit;
     unitValue = 1.0;
   }
   else
   {
-    G4String msg = "Invalid unit [" + unit + "] (Current  unit is [" +
-                   GetUnit() + "] ) for " + GetName();
+    G4String msg =
+      "Invalid unit [" + unit + "] (Current  unit is [" + GetUnit() + "] ) for " + GetName();
     G4Exception("G4PSNofStep::SetUnit", "DetPS0011", JustWarning, msg);
   }
 }

@@ -10,7 +10,7 @@
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -120,6 +120,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 0
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -276,7 +277,7 @@ Step#       X          Y          Z         KineE         dEStep    StepLeng   T
  Run terminated.
 Run Summary
   Number of events processed : 5
-  User=0.000000s Real=0.000675s Sys=0.000000s
+  User=0.000000s Real=0.000475s Sys=0.000000s
 ### RunAction::EndOfRunAction
 
  Number of process calls --->	GammaToMuPair : 5
@@ -395,7 +396,7 @@ Step#       X          Y          Z         KineE         dEStep    StepLeng   T
  Run terminated.
 Run Summary
   Number of events processed : 5
-  User=0.000000s Real=0.000385s Sys=0.000000s
+  User=0.000000s Real=0.000312s Sys=0.000000s
 ### RunAction::EndOfRunAction
 
  Number of process calls --->	AnnihiToMuPair : 2	ee2hadr : 3
@@ -419,8 +420,8 @@ Run Summary
 #
 G4 kernel has come to Quit state.
 Deleting G4Run (id:1) 
-UserDetectorConstruction deleted 0xc71de0
-UserPhysicsList deleted 0xcab2c0
+UserDetectorConstruction deleted 0x2266cd0
+UserPhysicsList deleted 0x22a0050
 UserActionInitialization deleted 0
 UserWorkerInitialization deleted 0
 UserWorkerThreadInitialization deleted 0

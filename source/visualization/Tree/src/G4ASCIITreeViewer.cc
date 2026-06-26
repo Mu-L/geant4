@@ -27,9 +27,9 @@
 
 #include "G4ASCIITreeViewer.hh"
 
-G4ASCIITreeViewer::G4ASCIITreeViewer
-(G4VSceneHandler& sceneHandler, const G4String& name):
-  G4VTreeViewer(sceneHandler, name) {
+G4ASCIITreeViewer::G4ASCIITreeViewer(G4VSceneHandler& sceneHandler, const G4String& name)
+  : G4VTreeViewer(sceneHandler, name)
+{
   // Make changes to view parameters for ASCIITree...
   fVP.SetCulling(false);
   fDefaultVP.SetCulling(false);

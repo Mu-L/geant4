@@ -42,55 +42,52 @@
 //
 // This class manages the ionisation process for a magnetic monopole
 // it inherites from G4VContinuousDiscreteProcess via G4VEnergyLossProcess.
-// Magnetic charge of the monopole should be defined in the constructor of 
-// the process, unless it is assumed that it is classic Dirac monopole with 
+// Magnetic charge of the monopole should be defined in the constructor of
+// the process, unless it is assumed that it is classic Dirac monopole with
 // the charge 67.5*eplus. The name of the particle should be "monopole".
 //
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4mplIonisation_h
-#define G4mplIonisation_h 1
+#ifndef G4MPLIONISATION_HH
+#define G4MPLIONISATION_HH
 
+#include "G4VEmModel.hh"
 #include "G4VEnergyLossProcess.hh"
 #include "globals.hh"
-#include "G4VEmModel.hh"
 
 class G4Material;
 class G4VEmFluctuationModel;
 
 class G4mplIonisation : public G4VEnergyLossProcess
 {
+  public:
 
-public:
+    explicit G4mplIonisation(G4double mCharge = 0.0, const G4String& name = "mplIoni");
 
-  explicit G4mplIonisation(G4double mCharge = 0.0, 
-                           const G4String& name = "mplIoni");
+    ~G4mplIonisation() override;
 
-  ~G4mplIonisation() override;
+    G4bool IsApplicable(const G4ParticleDefinition& p) override;
 
-  G4bool IsApplicable(const G4ParticleDefinition& p) override;
+    G4double MinPrimaryEnergy(const G4ParticleDefinition* p, const G4Material*, G4double cut) final;
 
-  G4double MinPrimaryEnergy(const G4ParticleDefinition* p,
-                            const G4Material*, G4double cut) final;
+    // print description in html
+    void ProcessDescription(std::ostream&) const override;
 
-  // print description in html
-  void ProcessDescription(std::ostream&) const override;
+    // hide assignment operator
+    G4mplIonisation& operator=(const G4mplIonisation& right) = delete;
+    G4mplIonisation(const G4mplIonisation&) = delete;
 
-  // hide assignment operator
-  G4mplIonisation & operator=(const G4mplIonisation &right) = delete;
-  G4mplIonisation(const G4mplIonisation&) = delete;
+  protected:
 
-protected:
+    virtual void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
+                                             const G4ParticleDefinition*) override;
 
-  virtual void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
-                                           const G4ParticleDefinition*) override;
+  private:
 
-private:
-
-  G4double magneticCharge;
-  G4bool isInitialised = false;
+    G4double magneticCharge;
+    G4bool isInitialised = false;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

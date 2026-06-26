@@ -29,23 +29,25 @@
 #define G4FISSION_CONFIGURATION_HH
 
 #include "globals.hh"
+
 #include <iosfwd>
 
-class G4FissionConfiguration {
-public:
-  G4FissionConfiguration() {}
-  G4FissionConfiguration(G4double a, G4double z, G4double ez, 
-			 G4double ek, G4double ep) 
-    : afirst(a), zfirst(z), ezet(ez), ekin(ek), epot(ep) {}
+class G4FissionConfiguration
+{
+  public:
 
-  G4double afirst;
-  G4double zfirst;
-  G4double ezet;
-  G4double ekin;
-  G4double epot;
-};        
+    G4FissionConfiguration() {}
+    G4FissionConfiguration(G4double a, G4double z, G4double ez, G4double ek, G4double ep)
+      : afirst(a), zfirst(z), ezet(ez), ekin(ek), epot(ep)
+    {}
+
+    G4double afirst;
+    G4double zfirst;
+    G4double ezet;
+    G4double ekin;
+    G4double epot;
+};
 
 std::ostream& operator<<(std::ostream& os, const G4FissionConfiguration& fis);
 
-#endif // G4FISSION_CONFIGURATION_HH 
-
+#endif  // G4FISSION_CONFIGURATION_HH

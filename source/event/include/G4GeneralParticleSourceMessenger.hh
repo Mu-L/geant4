@@ -29,7 +29,7 @@
 //
 // The function of the G4GeneralParticleSourceMessenger is to allow the user to
 // enter commands either in interactive command line mode or through macros to
-// control the G4GeneralParticleSource. 
+// control the G4GeneralParticleSource.
 
 // Author: Fan Lei, QinetiQ ltd.
 // Customer: ESA/ESTEC
@@ -49,8 +49,8 @@
 //   executed by master thread. For this reason the messenger itself should
 //   be created once, form here the singleton pattern
 // --------------------------------------------------------------------
-#ifndef G4GeneralParticleSourceMessenger_hh
-#define G4GeneralParticleSourceMessenger_hh 1
+#ifndef G4GENERALPARTICLESOURCEMESSENGER_HH
+#define G4GENERALPARTICLESOURCEMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -71,32 +71,32 @@ class G4UIcmdWithoutParameter;
 class G4SingleParticleSource;
 class G4GeneralParticleSource;
 
-class G4GeneralParticleSourceMessenger: public G4UImessenger
+class G4GeneralParticleSourceMessenger : public G4UImessenger
 {
   public:
 
-    void SetParticleGun(G4SingleParticleSource *fpg) { fParticleGun = fpg; } ;
-      // Select the particle gun to be defined/modified
-   
+    void SetParticleGun(G4SingleParticleSource* fpg) { fParticleGun = fpg; };
+    // Select the particle gun to be defined/modified
+
     void SetNewValue(G4UIcommand* command, G4String newValues) override;
-      // Identifies the command which has been invoked by the user, extracts the
-      // parameters associated with that command (held in newValues), and uses
-      // these values with the appropriate member function of
-      // G4GeneralParticleSource
+    // Identifies the command which has been invoked by the user, extracts the
+    // parameters associated with that command (held in newValues), and uses
+    // these values with the appropriate member function of
+    // G4GeneralParticleSource
 
     G4String GetCurrentValue(G4UIcommand* command) override;
-      // Allows the user to retrieve the current values of parameters.
-      // NOT yet implemented!
+    // Allows the user to retrieve the current values of parameters.
+    // NOT yet implemented!
 
     static G4GeneralParticleSourceMessenger* GetInstance(G4GeneralParticleSource*);
     static void Destroy();
 
- private:
+  private:
 
     explicit G4GeneralParticleSourceMessenger(G4GeneralParticleSource*);
-      // Constructor: sets up commands
+    // Constructor: sets up commands
     ~G4GeneralParticleSourceMessenger() override;
-      // Destructor: deletes commands
+    // Destructor: deletes commands
 
     void IonCommand(const G4String& newValues);
     void IonLvlCommand(const G4String& newValues);
@@ -107,90 +107,90 @@ class G4GeneralParticleSourceMessenger: public G4UImessenger
     G4SingleParticleSource* fParticleGun = nullptr;
     G4ParticleTable* particleTable = nullptr;
     G4String histtype;
-    
+
     G4UIdirectory* gpsDirectory;
 
     // Multiple source control commands
     //
-    G4UIdirectory              *sourceDirectory;
-    G4UIcmdWithADouble         *addsourceCmd;
-    G4UIcmdWithoutParameter    *listsourceCmd;
-    G4UIcmdWithoutParameter    *clearsourceCmd;
-    G4UIcmdWithoutParameter    *getsourceCmd;
-    G4UIcmdWithAnInteger       *setsourceCmd;  
-    G4UIcmdWithADouble         *setintensityCmd;
-    G4UIcmdWithAnInteger       *deletesourceCmd;
-    G4UIcmdWithABool           *multiplevertexCmd;
-    G4UIcmdWithABool           *flatsamplingCmd;
+    G4UIdirectory* sourceDirectory;
+    G4UIcmdWithADouble* addsourceCmd;
+    G4UIcmdWithoutParameter* listsourceCmd;
+    G4UIcmdWithoutParameter* clearsourceCmd;
+    G4UIcmdWithoutParameter* getsourceCmd;
+    G4UIcmdWithAnInteger* setsourceCmd;
+    G4UIcmdWithADouble* setintensityCmd;
+    G4UIcmdWithAnInteger* deletesourceCmd;
+    G4UIcmdWithABool* multiplevertexCmd;
+    G4UIcmdWithABool* flatsamplingCmd;
 
     // Positional commands
     //
-    G4UIdirectory              *positionDirectory;
-    G4UIcmdWithAString         *typeCmd1;
-    G4UIcmdWithAString         *shapeCmd1;
-    G4UIcmdWith3VectorAndUnit  *centreCmd1;
-    G4UIcmdWith3Vector         *posrot1Cmd1;
-    G4UIcmdWith3Vector         *posrot2Cmd1;
-    G4UIcmdWithADoubleAndUnit  *halfxCmd1;
-    G4UIcmdWithADoubleAndUnit  *halfyCmd1;
-    G4UIcmdWithADoubleAndUnit  *halfzCmd1;
-    G4UIcmdWithADoubleAndUnit  *radiusCmd1;
-    G4UIcmdWithADoubleAndUnit  *radius0Cmd1;
-    G4UIcmdWithADoubleAndUnit  *possigmarCmd1;
-    G4UIcmdWithADoubleAndUnit  *possigmaxCmd1;
-    G4UIcmdWithADoubleAndUnit  *possigmayCmd1;
-    G4UIcmdWithADoubleAndUnit  *paralpCmd1;
-    G4UIcmdWithADoubleAndUnit  *partheCmd1;
-    G4UIcmdWithADoubleAndUnit  *parphiCmd1;  
-    G4UIcmdWithAString         *confineCmd1;
-    
+    G4UIdirectory* positionDirectory;
+    G4UIcmdWithAString* typeCmd1;
+    G4UIcmdWithAString* shapeCmd1;
+    G4UIcmdWith3VectorAndUnit* centreCmd1;
+    G4UIcmdWith3Vector* posrot1Cmd1;
+    G4UIcmdWith3Vector* posrot2Cmd1;
+    G4UIcmdWithADoubleAndUnit* halfxCmd1;
+    G4UIcmdWithADoubleAndUnit* halfyCmd1;
+    G4UIcmdWithADoubleAndUnit* halfzCmd1;
+    G4UIcmdWithADoubleAndUnit* radiusCmd1;
+    G4UIcmdWithADoubleAndUnit* radius0Cmd1;
+    G4UIcmdWithADoubleAndUnit* possigmarCmd1;
+    G4UIcmdWithADoubleAndUnit* possigmaxCmd1;
+    G4UIcmdWithADoubleAndUnit* possigmayCmd1;
+    G4UIcmdWithADoubleAndUnit* paralpCmd1;
+    G4UIcmdWithADoubleAndUnit* partheCmd1;
+    G4UIcmdWithADoubleAndUnit* parphiCmd1;
+    G4UIcmdWithAString* confineCmd1;
+
     // Angular commands
     //
     G4UIdirectory* angularDirectory;
-    G4UIcmdWithAString         *angtypeCmd1;
-    G4UIcmdWith3Vector         *angrot1Cmd1;
-    G4UIcmdWith3Vector         *angrot2Cmd1;
-    G4UIcmdWithADoubleAndUnit  *minthetaCmd1;
-    G4UIcmdWithADoubleAndUnit  *maxthetaCmd1;
-    G4UIcmdWithADoubleAndUnit  *minphiCmd1;
-    G4UIcmdWithADoubleAndUnit  *maxphiCmd1;
-    G4UIcmdWithADoubleAndUnit  *angsigmarCmd1;
-    G4UIcmdWithADoubleAndUnit  *angsigmaxCmd1;
-    G4UIcmdWithADoubleAndUnit  *angsigmayCmd1;
-    G4UIcmdWith3VectorAndUnit  *angfocusCmd;
-    G4UIcmdWithABool           *useuserangaxisCmd1;
-    G4UIcmdWithABool           *surfnormCmd1;
+    G4UIcmdWithAString* angtypeCmd1;
+    G4UIcmdWith3Vector* angrot1Cmd1;
+    G4UIcmdWith3Vector* angrot2Cmd1;
+    G4UIcmdWithADoubleAndUnit* minthetaCmd1;
+    G4UIcmdWithADoubleAndUnit* maxthetaCmd1;
+    G4UIcmdWithADoubleAndUnit* minphiCmd1;
+    G4UIcmdWithADoubleAndUnit* maxphiCmd1;
+    G4UIcmdWithADoubleAndUnit* angsigmarCmd1;
+    G4UIcmdWithADoubleAndUnit* angsigmaxCmd1;
+    G4UIcmdWithADoubleAndUnit* angsigmayCmd1;
+    G4UIcmdWith3VectorAndUnit* angfocusCmd;
+    G4UIcmdWithABool* useuserangaxisCmd1;
+    G4UIcmdWithABool* surfnormCmd1;
 
     // Energy commands
     //
     G4UIdirectory* energyDirectory;
-    G4UIcmdWithAString         *energytypeCmd1;
-    G4UIcmdWithADoubleAndUnit  *eminCmd1;
-    G4UIcmdWithADoubleAndUnit  *emaxCmd1;
-    G4UIcmdWithADoubleAndUnit  *monoenergyCmd1;
-    G4UIcmdWithADoubleAndUnit  *engsigmaCmd1;
-    G4UIcmdWithADouble         *alphaCmd1;
-    G4UIcmdWithADouble         *tempCmd1;
-    G4UIcmdWithADouble         *ezeroCmd1;
-    G4UIcmdWithADouble         *gradientCmd1;
-    G4UIcmdWithADouble         *interceptCmd1;
-    G4UIcmdWithADouble         *arbeintCmd1;
-    G4UIcmdWithoutParameter    *calculateCmd1;
-    G4UIcmdWithABool           *energyspecCmd1;
-    G4UIcmdWithABool           *diffspecCmd1;
-    G4UIcmdWithABool           *applyEnergyWeightCmd1;
+    G4UIcmdWithAString* energytypeCmd1;
+    G4UIcmdWithADoubleAndUnit* eminCmd1;
+    G4UIcmdWithADoubleAndUnit* emaxCmd1;
+    G4UIcmdWithADoubleAndUnit* monoenergyCmd1;
+    G4UIcmdWithADoubleAndUnit* engsigmaCmd1;
+    G4UIcmdWithADouble* alphaCmd1;
+    G4UIcmdWithADouble* tempCmd1;
+    G4UIcmdWithADouble* ezeroCmd1;
+    G4UIcmdWithADouble* gradientCmd1;
+    G4UIcmdWithADouble* interceptCmd1;
+    G4UIcmdWithADouble* arbeintCmd1;
+    G4UIcmdWithoutParameter* calculateCmd1;
+    G4UIcmdWithABool* energyspecCmd1;
+    G4UIcmdWithABool* diffspecCmd1;
+    G4UIcmdWithABool* applyEnergyWeightCmd1;
 
     // Histogram commands
     //
-    G4UIdirectory              *histDirectory;
-    G4UIcmdWith3Vector         *histpointCmd1;
-    G4UIcmdWithAString         *histfileCmd1;
-    G4UIcmdWithAString         *histnameCmd1;
-    G4UIcmdWithAString         *arbintCmd1;
-    G4UIcmdWithAString         *resethistCmd1;
+    G4UIdirectory* histDirectory;
+    G4UIcmdWith3Vector* histpointCmd1;
+    G4UIcmdWithAString* histfileCmd1;
+    G4UIcmdWithAString* histnameCmd1;
+    G4UIcmdWithAString* arbintCmd1;
+    G4UIcmdWithAString* resethistCmd1;
 
     G4UIcmdWithAnInteger* verbosityCmd;
-    G4UIcmdWithABool*     volChkCmd;
+    G4UIcmdWithABool* volChkCmd;
 
     // Commands from G4ParticleGun
     //
@@ -207,39 +207,38 @@ class G4GeneralParticleSourceMessenger: public G4UImessenger
 
     // For ion shooting
     //
-    G4bool   fShootIon = false; 
+    G4bool fShootIon = false;
 
-    G4int    fAtomicNumber = 0;
-    G4int    fAtomicMass = 0;
-    G4int    fIonCharge = 0;
+    G4int fAtomicNumber = 0;
+    G4int fAtomicMass = 0;
+    G4int fIonCharge = 0;
     G4double fIonExciteEnergy = 0.0;
 
-    G4int    fAtomicNumberL = 0;
-    G4int    fAtomicMassL = 0;
-    G4int    fIonChargeL = 0;
-    G4int    fIonEnergyLevel = 0;
+    G4int fAtomicNumberL = 0;
+    G4int fAtomicMassL = 0;
+    G4int fIonChargeL = 0;
+    G4int fIonEnergyLevel = 0;
 
-/** Andrea Dotti Feb 2015
- * GPS messenger design requires some explanation for what distributions
- * parameters are concerned : Each thread has its own GPS
- * since primary generation is a user action.
- * However to save memory the underlying structures that provide the
- * GPS functionalities ( the G4SPS*Distribution classes and the
- * G4SPSRandomGenerator class)
- * are shared among threads. This implies that modifying parameters of sources
- * requires some attention:
- * 1- Only one thread should change source parameters.
- * 2- Changing of parameters can happen only between runs, when is guaranteed
- *    that no thread is accessing them
- * 2- UI commands require that even if messenger is instantiated in a thread
- *    the commands are executed in the master (this is possible since V10.1)
- * The simplest solution is to use UI commands to change GPS parameters and
- * avoid C++ APIs. If this is inevitable a simple solution is to instantiate
- * an instance of G4GeneralParticleSource explicitly in the master thread
- * (for example in G4VUserActionInitialization::BuildForMaster() and set the
- * defaults parameter there).
- */
-
+    /** Andrea Dotti Feb 2015
+     * GPS messenger design requires some explanation for what distributions
+     * parameters are concerned : Each thread has its own GPS
+     * since primary generation is a user action.
+     * However to save memory the underlying structures that provide the
+     * GPS functionalities ( the G4SPS*Distribution classes and the
+     * G4SPSRandomGenerator class)
+     * are shared among threads. This implies that modifying parameters of sources
+     * requires some attention:
+     * 1- Only one thread should change source parameters.
+     * 2- Changing of parameters can happen only between runs, when is guaranteed
+     *    that no thread is accessing them
+     * 2- UI commands require that even if messenger is instantiated in a thread
+     *    the commands are executed in the master (this is possible since V10.1)
+     * The simplest solution is to use UI commands to change GPS parameters and
+     * avoid C++ APIs. If this is inevitable a simple solution is to instantiate
+     * an instance of G4GeneralParticleSource explicitly in the master thread
+     * (for example in G4VUserActionInitialization::BuildForMaster() and set the
+     * defaults parameter there).
+     */
 };
 
 #endif

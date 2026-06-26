@@ -121,39 +121,39 @@
 
 class G4MTBarrier
 {
- public:
-  G4MTBarrier()
-    : G4MTBarrier(1)
-  {}
-  virtual ~G4MTBarrier() {}
-  G4MTBarrier(const G4MTBarrier&) = delete;
-  G4MTBarrier& operator=(const G4MTBarrier&) = delete;
+  public:
 
-  // on explicitly defaulted move at
-  // https://msdn.microsoft.com/en-us/library/dn457344.aspx
-  // G4MTBarrier(G4MTBarrier&&) = default;
-  // G4MTBarrier& operator=(G4MTBarrier&&)  = default;
+    G4MTBarrier() : G4MTBarrier(1) {}
+    virtual ~G4MTBarrier() {}
+    G4MTBarrier(const G4MTBarrier&) = delete;
+    G4MTBarrier& operator=(const G4MTBarrier&) = delete;
 
-  G4MTBarrier(unsigned int numThreads);
-  void ThisWorkerReady();
-  virtual void WaitForReadyWorkers();
-  inline void SetActiveThreads(unsigned int val) { m_numActiveThreads = val; }
-  void ResetCounter();
-  unsigned int GetCounter();
-  void Wait();
-  void ReleaseBarrier();
-  inline void Wait(unsigned int numt)
-  {
-    SetActiveThreads(numt);
-    Wait();
-  }
+    // on explicitly defaulted move at
+    // https://msdn.microsoft.com/en-us/library/dn457344.aspx
+    // G4MTBarrier(G4MTBarrier&&) = default;
+    // G4MTBarrier& operator=(G4MTBarrier&&)  = default;
 
- private:
-  unsigned int m_numActiveThreads = 0;
-  unsigned int m_counter          = 0;
-  G4Mutex m_mutex;
-  G4Condition m_counterChanged;
-  G4Condition m_continue;
+    G4MTBarrier(unsigned int numThreads);
+    void ThisWorkerReady();
+    virtual void WaitForReadyWorkers();
+    inline void SetActiveThreads(unsigned int val) { m_numActiveThreads = val; }
+    void ResetCounter();
+    unsigned int GetCounter();
+    void Wait();
+    void ReleaseBarrier();
+    inline void Wait(unsigned int numt)
+    {
+      SetActiveThreads(numt);
+      Wait();
+    }
+
+  private:
+
+    unsigned int m_numActiveThreads = 0;
+    unsigned int m_counter = 0;
+    G4Mutex m_mutex;
+    G4Condition m_counterChanged;
+    G4Condition m_continue;
 };
 
 #endif

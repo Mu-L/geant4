@@ -27,6 +27,7 @@
 //
 // G4PSDoseDepositForCylinder3D
 #include "G4PSDoseDepositForCylinder3D.hh"
+
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 
@@ -40,28 +41,25 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-G4PSDoseDepositForCylinder3D::G4PSDoseDepositForCylinder3D(const G4String& name,
-                                                           G4int ni, G4int nj,
-                                                           G4int nk, G4int di,
-                                                           G4int dj, G4int dk)
+G4PSDoseDepositForCylinder3D::G4PSDoseDepositForCylinder3D(const G4String& name, G4int ni, G4int nj,
+                                                           G4int nk, G4int di, G4int dj, G4int dk)
   : G4PSDoseDeposit3D(name, ni, nj, nk, di, dj, dk)
 {
   nSegment[0] = nSegment[1] = nSegment[2] = 0;
 }
 
 G4PSDoseDepositForCylinder3D::G4PSDoseDepositForCylinder3D(const G4String& name,
-                                                           const G4String& unit,
-                                                           G4int ni, G4int nj,
-                                                           G4int nk, G4int di,
-                                                           G4int dj, G4int dk)
+                                                           const G4String& unit, G4int ni, G4int nj,
+                                                           G4int nk, G4int di, G4int dj, G4int dk)
   : G4PSDoseDeposit3D(name, unit, ni, nj, nk, di, dj, dk)
 {
   nSegment[0] = nSegment[1] = nSegment[2] = 0;
 }
 
-void G4PSDoseDepositForCylinder3D::SetCylinderSize(G4ThreeVector cylSize, G4double StartAng, G4double AngSpan)
+void G4PSDoseDepositForCylinder3D::SetCylinderSize(G4ThreeVector cylSize, G4double StartAng,
+                                                   G4double AngSpan)
 {
-  cylinderSize = cylSize;   // rMin, rMax, halfZ
+  cylinderSize = cylSize;  // rMin, rMax, halfZ
   fAngle[0] = StartAng;
   fAngle[1] = AngSpan;
 }
@@ -79,14 +77,13 @@ G4double G4PSDoseDepositForCylinder3D::ComputeVolume(G4Step*, G4int idx)
   G4double dRArea = (r1 * r1 - r0 * r0) * pi;
 
   // cylinderSize is given in Half Size
-  G4double fullz    = cylinderSize[2] / nSegment[0] * 2.;
-  G4double phiRatio = (fAngle[1] / (CLHEP::twopi*rad)) / nSegment[1];
-  G4double v        = dRArea * fullz * phiRatio;
+  G4double fullz = cylinderSize[2] / nSegment[0] * 2.;
+  G4double phiRatio = (fAngle[1] / (CLHEP::twopi * rad)) / nSegment[1];
+  G4double v = dRArea * fullz * phiRatio;
 
-  if(verboseLevel > 9)
+  if (verboseLevel > 9)
   {
-    G4cout << " r0= " << r0 / cm << "  r1= " << r1 / cm
-           << " fullz=" << fullz / cm << G4endl;
+    G4cout << " r0= " << r0 / cm << "  r1= " << r1 / cm << " fullz=" << fullz / cm << G4endl;
     G4cout << " idx= " << idx << "  v(cm3)= " << v / cm3 << G4endl;
   }
 

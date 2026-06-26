@@ -87,7 +87,7 @@
 // 21-04-12, fMassOfMolecule (mma)
 
 #ifndef G4MATERIAL_HH
-#define G4MATERIAL_HH 1
+#define G4MATERIAL_HH
 
 #include "G4Element.hh"
 #include "G4ElementVector.hh"
@@ -115,221 +115,226 @@ static const G4double NTP_Temperature = 293.15 * CLHEP::kelvin;
 
 class G4Material
 {
- public:  // with description
-  // Constructor to create a material from single element
-  G4Material(const G4String& name,  // its name
-    G4double z,  // atomic number
-    G4double a,  // mass of mole
-    G4double density,  // density
-    G4State state = kStateUndefined,  // solid,gas
-    G4double temp = NTP_Temperature,  // temperature
-    G4double pressure = CLHEP::STP_Pressure);  // pressure
+  public:  // with description
 
-  // Constructor to create a material from a combination of elements
-  // and/or materials subsequently added via AddElement and/or AddMaterial
-  G4Material(const G4String& name,  // its name
-    G4double density,  // density
-    G4int nComponents,  // nbOfComponents
-    G4State state = kStateUndefined,  // solid,gas
-    G4double temp = NTP_Temperature,  // temperature
-    G4double pressure = CLHEP::STP_Pressure);  // pressure
+    // Constructor to create a material from single element
+    G4Material(const G4String& name,  // its name
+               G4double z,  // atomic number
+               G4double a,  // mass of mole
+               G4double density,  // density
+               G4State state = kStateUndefined,  // solid,gas
+               G4double temp = NTP_Temperature,  // temperature
+               G4double pressure = CLHEP::STP_Pressure);  // pressure
 
-  // Constructor to create a material from the base material
-  G4Material(const G4String& name,  // its name
-    G4double density,  // density
-    const G4Material* baseMaterial,  // base material
-    G4State state = kStateUndefined,  // solid,gas
-    G4double temp = NTP_Temperature,  // temperature
-    G4double pressure = CLHEP::STP_Pressure);  // pressure
+    // Constructor to create a material from a combination of elements
+    // and/or materials subsequently added via AddElement and/or AddMaterial
+    G4Material(const G4String& name,  // its name
+               G4double density,  // density
+               G4int nComponents,  // nbOfComponents
+               G4State state = kStateUndefined,  // solid,gas
+               G4double temp = NTP_Temperature,  // temperature
+               G4double pressure = CLHEP::STP_Pressure);  // pressure
 
-  virtual ~G4Material();
+    // Constructor to create a material from the base material
+    G4Material(const G4String& name,  // its name
+               G4double density,  // density
+               const G4Material* baseMaterial,  // base material
+               G4State state = kStateUndefined,  // solid,gas
+               G4double temp = NTP_Temperature,  // temperature
+               G4double pressure = CLHEP::STP_Pressure);  // pressure
 
-  // These methods allow customisation of corrections to ionisation
-  // computations. Free electron density above zero means that the material
-  // is a conductor. Computation of density effect correction of fly
-  // may be more accurate but require extra computations.
-  void SetChemicalFormula(const G4String& chF);
-  void SetFreeElectronDensity(G4double val);
-  void ComputeDensityEffectOnFly(G4bool val);
+    virtual ~G4Material();
 
-  G4Material(const G4Material&) = delete;
-  const G4Material& operator=(const G4Material&) = delete;
+    // These methods allow customisation of corrections to ionisation
+    // computations. Free electron density above zero means that the material
+    // is a conductor. Computation of density effect correction of fly
+    // may be more accurate but require extra computations.
+    void SetChemicalFormula(const G4String& chF);
+    void SetFreeElectronDensity(G4double val);
+    void ComputeDensityEffectOnFly(G4bool val);
 
-  // Add an element, giving number of atoms
-  void AddElementByNumberOfAtoms(const G4Element* elm, G4int nAtoms);
-  inline void AddElement(G4Element* elm, G4int nAtoms) { AddElementByNumberOfAtoms(elm, nAtoms); }
+    G4Material(const G4Material&) = delete;
+    const G4Material& operator=(const G4Material&) = delete;
 
-  // Add an element or material, giving fraction of mass
-  void AddElementByMassFraction(const G4Element* elm, G4double fraction);
-  inline void AddElement(G4Element* elm, G4double frac) { AddElementByMassFraction(elm, frac); }
+    // Add an element, giving number of atoms
+    void AddElementByNumberOfAtoms(const G4Element* elm, G4int nAtoms);
+    inline void AddElement(G4Element* elm, G4int nAtoms) { AddElementByNumberOfAtoms(elm, nAtoms); }
 
-  void AddMaterial(G4Material* material, G4double fraction);
+    // Add an element or material, giving fraction of mass
+    void AddElementByMassFraction(const G4Element* elm, G4double fraction);
+    inline void AddElement(G4Element* elm, G4double frac) { AddElementByMassFraction(elm, frac); }
 
-  //
-  // retrieval methods
-  //
-  inline const G4String& GetName() const { return fName; }
-  inline const G4String& GetChemicalFormula() const { return fChemicalFormula; }
-  inline G4double GetFreeElectronDensity() const { return fFreeElecDensity; }
-  inline G4double GetDensity() const { return fDensity; }
-  inline G4State GetState() const { return fState; }
-  inline G4double GetTemperature() const { return fTemp; }
-  inline G4double GetPressure() const { return fPressure; }
+    void AddMaterial(G4Material* material, G4double fraction);
 
-  // number of elements constituing this material:
-  inline std::size_t GetNumberOfElements() const { return fNumberOfElements; }
+    //
+    // retrieval methods
+    //
+    inline const G4String& GetName() const { return fName; }
+    inline const G4String& GetChemicalFormula() const { return fChemicalFormula; }
+    inline G4double GetFreeElectronDensity() const { return fFreeElecDensity; }
+    inline G4double GetDensity() const { return fDensity; }
+    inline G4State GetState() const { return fState; }
+    inline G4double GetTemperature() const { return fTemp; }
+    inline G4double GetPressure() const { return fPressure; }
 
-  // vector of pointers to elements constituing this material:
-  inline const G4ElementVector* GetElementVector() const { return theElementVector; }
+    // number of elements constituing this material:
+    inline std::size_t GetNumberOfElements() const { return fNumberOfElements; }
 
-  // vector of fractional mass of each element:
-  inline const G4double* GetFractionVector() const { return fMassFractionVector; }
+    // vector of pointers to elements constituing this material:
+    inline const G4ElementVector* GetElementVector() const { return theElementVector; }
 
-  // vector of atom count of each element:
-  inline const G4int* GetAtomsVector() const { return fAtomsVector; }
+    // vector of fractional mass of each element:
+    inline const G4double* GetFractionVector() const { return fMassFractionVector; }
 
-  // return a pointer to an element, given its index in the material:
-  inline const G4Element* GetElement(G4int iel) const { return (*theElementVector)[iel]; }
+    // vector of atom count of each element:
+    inline const G4int* GetAtomsVector() const { return fAtomsVector; }
 
-  // vector of nb of atoms per volume of each element in this material:
-  inline const G4double* GetVecNbOfAtomsPerVolume() const { return fVecNbOfAtomsPerVolume; }
-  // total number of atoms per volume:
-  inline G4double GetTotNbOfAtomsPerVolume() const { return fTotNbOfAtomsPerVolume; }
-  // total number of electrons per volume:
-  inline G4double GetTotNbOfElectPerVolume() const { return fTotNbOfElectPerVolume; }
+    // return a pointer to an element, given its index in the material:
+    inline const G4Element* GetElement(G4int iel) const { return (*theElementVector)[iel]; }
 
-  // obsolete names (5-10-98) see the 2 functions above
-  inline const G4double* GetAtomicNumDensityVector() const { return fVecNbOfAtomsPerVolume; }
-  inline G4double GetElectronDensity() const { return fTotNbOfElectPerVolume; }
+    // vector of nb of atoms per volume of each element in this material:
+    inline const G4double* GetVecNbOfAtomsPerVolume() const { return fVecNbOfAtomsPerVolume; }
+    // total number of atoms per volume:
+    inline G4double GetTotNbOfAtomsPerVolume() const { return fTotNbOfAtomsPerVolume; }
+    // total number of electrons per volume:
+    inline G4double GetTotNbOfElectPerVolume() const { return fTotNbOfElectPerVolume; }
 
-  // Radiation length:
-  inline G4double GetRadlen() const { return fRadlen; }
+    // obsolete names (5-10-98) see the 2 functions above
+    inline const G4double* GetAtomicNumDensityVector() const { return fVecNbOfAtomsPerVolume; }
+    inline G4double GetElectronDensity() const { return fTotNbOfElectPerVolume; }
 
-  // Nuclear interaction length
-  inline G4double GetNuclearInterLength() const { return fNuclInterLen; }
+    // Radiation length:
+    inline G4double GetRadlen() const { return fRadlen; }
 
-  // ionisation parameters:
-  inline G4IonisParamMat* GetIonisation() const { return fIonisation; }
+    // Nuclear interaction length
+    inline G4double GetNuclearInterLength() const { return fNuclInterLen; }
 
-  // Sandia table:
-  inline G4SandiaTable* GetSandiaTable() const { return fSandiaTable; }
+    // ionisation parameters:
+    inline G4IonisParamMat* GetIonisation() const { return fIonisation; }
 
-  // Base material:
-  inline const G4Material* GetBaseMaterial() const { return fBaseMaterial; }
+    // Sandia table:
+    inline G4SandiaTable* GetSandiaTable() const { return fSandiaTable; }
 
-  // material components:
-  inline const std::map<G4Material*, G4double>& GetMatComponents() const { return fMatComponents; }
+    // Base material:
+    inline const G4Material* GetBaseMaterial() const { return fBaseMaterial; }
 
-  // for chemical compound
-  inline G4double GetMassOfMolecule() const { return fMassOfMolecule; }
+    // material components:
+    inline const std::map<G4Material*, G4double>& GetMatComponents() const
+    {
+      return fMatComponents;
+    }
 
-  // meaningful only for single material:
-  G4double GetZ() const;
-  G4double GetA() const;
+    // for chemical compound
+    inline G4double GetMassOfMolecule() const { return fMassOfMolecule; }
 
-  // the MaterialPropertiesTable (if any) attached to this material:
-  void SetMaterialPropertiesTable(G4MaterialPropertiesTable* anMPT);
+    // meaningful only for single material:
+    G4double GetZ() const;
+    G4double GetA() const;
 
-  inline G4MaterialPropertiesTable* GetMaterialPropertiesTable() const
-  {
-    return fMaterialPropertiesTable;
-  }
+    // the MaterialPropertiesTable (if any) attached to this material:
+    void SetMaterialPropertiesTable(G4MaterialPropertiesTable* anMPT);
 
-  // the index of this material in the Table:
-  inline std::size_t GetIndex() const { return fIndexInTable; }
+    inline G4MaterialPropertiesTable* GetMaterialPropertiesTable() const
+    {
+      return fMaterialPropertiesTable;
+    }
 
-  // the static Table of Materials:
-  static G4MaterialTable* GetMaterialTable();
+    // the index of this material in the Table:
+    inline std::size_t GetIndex() const { return fIndexInTable; }
 
-  static std::size_t GetNumberOfMaterials();
+    // the static Table of Materials:
+    static G4MaterialTable* GetMaterialTable();
 
-  // return  pointer to a material, given its name:
-  static G4Material* GetMaterial(const G4String& name, G4bool warning = true);
+    static std::size_t GetNumberOfMaterials();
 
-  // return  pointer to a simple material, given its propeties:
-  static G4Material* GetMaterial(G4double z, G4double a, G4double dens);
+    // return  pointer to a material, given its name:
+    static G4Material* GetMaterial(const G4String& name, G4bool warning = true);
 
-  // return  pointer to a composit material, given its propeties:
-  static G4Material* GetMaterial(std::size_t nComp, G4double dens);
+    // return  pointer to a simple material, given its propeties:
+    static G4Material* GetMaterial(G4double z, G4double a, G4double dens);
 
-  // printing methods
-  friend std::ostream& operator<<(std::ostream&, const G4Material*);
-  friend std::ostream& operator<<(std::ostream&, const G4Material&);
-  friend std::ostream& operator<<(std::ostream&, const G4MaterialTable&);
+    // return  pointer to a composit material, given its propeties:
+    static G4Material* GetMaterial(std::size_t nComp, G4double dens);
 
-  inline void SetName(const G4String& name) { fName = name; }
+    // printing methods
+    friend std::ostream& operator<<(std::ostream&, const G4Material*);
+    friend std::ostream& operator<<(std::ostream&, const G4Material&);
+    friend std::ostream& operator<<(std::ostream&, const G4MaterialTable&);
 
-  virtual G4bool IsExtended() const;
+    inline void SetName(const G4String& name) { fName = name; }
 
-  // operators
-  G4bool operator==(const G4Material&) const = delete;
-  G4bool operator!=(const G4Material&) const = delete;
+    virtual G4bool IsExtended() const;
 
- private:
-  void InitializePointers();
+    // operators
+    G4bool operator==(const G4Material&) const = delete;
+    G4bool operator!=(const G4Material&) const = delete;
 
-  // Header routine for all derived quantities
-  void ComputeDerivedQuantities();
+  private:
 
-  // Compute Radiation length
-  void ComputeRadiationLength();
+    void InitializePointers();
 
-  // Compute Nuclear interaction length
-  void ComputeNuclearInterLength();
+    // Header routine for all derived quantities
+    void ComputeDerivedQuantities();
 
-  // Copy pointers of base material
-  void CopyPointersOfBaseMaterial();
+    // Compute Radiation length
+    void ComputeRadiationLength();
 
-  void FillVectors();
+    // Compute Nuclear interaction length
+    void ComputeNuclearInterLength();
 
-  G4bool IsLocked();
+    // Copy pointers of base material
+    void CopyPointersOfBaseMaterial();
 
-  const G4Material* fBaseMaterial;  // Pointer to the base material
-  G4MaterialPropertiesTable* fMaterialPropertiesTable;
+    void FillVectors();
 
-  //
-  // General atomic properties defined in constructor or
-  // computed from the basic data members
-  //
+    G4bool IsLocked();
 
-  G4ElementVector* theElementVector;  // vector of constituent G4Elements
-  G4int* fAtomsVector;  // composition by atom count
-  G4double* fMassFractionVector;  // composition by fractional mass
-  G4double* fVecNbOfAtomsPerVolume;  // number of atoms per volume
+    const G4Material* fBaseMaterial;  // Pointer to the base material
+    G4MaterialPropertiesTable* fMaterialPropertiesTable;
 
-  G4IonisParamMat* fIonisation;  // ionisation parameters
-  G4SandiaTable* fSandiaTable;  // Sandia table
+    //
+    // General atomic properties defined in constructor or
+    // computed from the basic data members
+    //
 
-  G4double fDensity;  // Material density
-  G4double fFreeElecDensity;  // Free electron density
-  G4double fTemp;  // Temperature (defaults: STP)
-  G4double fPressure;  // Pressure    (defaults: STP)
+    G4ElementVector* theElementVector;  // vector of constituent G4Elements
+    G4int* fAtomsVector;  // composition by atom count
+    G4double* fMassFractionVector;  // composition by fractional mass
+    G4double* fVecNbOfAtomsPerVolume;  // number of atoms per volume
 
-  G4double fTotNbOfAtomsPerVolume;  // Total nb of atoms per volume
-  G4double fTotNbOfElectPerVolume;  // Total nb of electrons per volume
-  G4double fRadlen;  // Radiation length
-  G4double fNuclInterLen;  // Nuclear interaction length
-  G4double fMassOfMolecule;  // Correct for materials built by atoms count
+    G4IonisParamMat* fIonisation;  // ionisation parameters
+    G4SandiaTable* fSandiaTable;  // Sandia table
 
-  G4State fState;  // Material state
-  std::size_t fIndexInTable;  // Index in the material table
-  G4int fNumberOfElements;  // Number of G4Elements in the material
+    G4double fDensity;  // Material density
+    G4double fFreeElecDensity;  // Free electron density
+    G4double fTemp;  // Temperature (defaults: STP)
+    G4double fPressure;  // Pressure    (defaults: STP)
 
-  // Class members used only at initialisation
-  G4int fNbComponents;  // Number of components
-  G4int fIdxComponent;  // Index of a new component
-  G4bool fMassFraction;  // Flag of the method to add components
+    G4double fTotNbOfAtomsPerVolume;  // Total nb of atoms per volume
+    G4double fTotNbOfElectPerVolume;  // Total nb of electrons per volume
+    G4double fRadlen;  // Radiation length
+    G4double fNuclInterLen;  // Nuclear interaction length
+    G4double fMassOfMolecule;  // Correct for materials built by atoms count
 
-  // For composites built
-  std::vector<G4int>* fAtoms = nullptr;
-  std::vector<G4double>* fElmFrac = nullptr;
-  std::vector<const G4Element*>* fElm = nullptr;
+    G4State fState;  // Material state
+    std::size_t fIndexInTable;  // Index in the material table
+    G4int fNumberOfElements;  // Number of G4Elements in the material
 
-  // For composites built via AddMaterial()
-  std::map<G4Material*, G4double> fMatComponents;
+    // Class members used only at initialisation
+    G4int fNbComponents;  // Number of components
+    G4int fIdxComponent;  // Index of a new component
+    G4bool fMassFraction;  // Flag of the method to add components
 
-  G4String fName;  // Material name
-  G4String fChemicalFormula;  // Material chemical formula
+    // For composites built
+    std::vector<G4int>* fAtoms = nullptr;
+    std::vector<G4double>* fElmFrac = nullptr;
+    std::vector<const G4Element*>* fElm = nullptr;
+
+    // For composites built via AddMaterial()
+    std::map<G4Material*, G4double> fMatComponents;
+
+    G4String fName;  // Material name
+    G4String fChemicalFormula;  // Material chemical formula
 };
 
 #endif

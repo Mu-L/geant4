@@ -26,56 +26,47 @@
 // Implementation of inline methods of G4GenericPolycone
 // --------------------------------------------------------------------
 
-inline
-G4double G4GenericPolycone::GetStartPhi() const
+inline G4double G4GenericPolycone::GetStartPhi() const
 {
   return startPhi;
 }
 
-inline
-G4double G4GenericPolycone::GetEndPhi() const
+inline G4double G4GenericPolycone::GetEndPhi() const
 {
   return endPhi;
 }
 
-inline
-G4double G4GenericPolycone::GetSinStartPhi() const
+inline G4double G4GenericPolycone::GetSinStartPhi() const
 {
   return IsOpen() ? std::sin(startPhi) : 0;
 }
 
-inline
-G4double G4GenericPolycone::GetCosStartPhi() const
+inline G4double G4GenericPolycone::GetCosStartPhi() const
 {
   return IsOpen() ? std::cos(startPhi) : 1;
 }
 
-inline
-G4double G4GenericPolycone::GetSinEndPhi() const
+inline G4double G4GenericPolycone::GetSinEndPhi() const
 {
   return IsOpen() ? std::sin(endPhi) : 0;
 }
 
-inline
-G4double G4GenericPolycone::GetCosEndPhi() const
+inline G4double G4GenericPolycone::GetCosEndPhi() const
 {
   return IsOpen() ? std::cos(endPhi) : 1;
 }
 
-inline
-G4bool G4GenericPolycone::IsOpen() const
+inline G4bool G4GenericPolycone::IsOpen() const
 {
   return phiIsOpen;
 }
 
-inline
-G4int G4GenericPolycone::GetNumRZCorner() const
+inline G4int G4GenericPolycone::GetNumRZCorner() const
 {
   return numCorner;
 }
 
-inline
-G4PolyconeSideRZ G4GenericPolycone::GetCorner(G4int index) const
+inline G4PolyconeSideRZ G4GenericPolycone::GetCorner(G4int index) const
 {
   return corners[index];
 }

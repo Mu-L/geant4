@@ -27,30 +27,29 @@
 //
 // Author: Pedro Arce (CIEMAT), 2014
 // --------------------------------------------------------------------
-#ifndef G4LEPTSDistribution_hh
-#define G4LEPTSDistribution_hh 1
+#ifndef G4LEPTSDISTRIBUTION_HH
+#define G4LEPTSDISTRIBUTION_HH
 
-#include "globals.hh"
 #include "Randomize.hh"
+#include "globals.hh"
 
 class G4LEPTSDistribution
 {
+  public:
 
- public:
+    G4LEPTSDistribution() = default;
+    void ReadFile(const G4String& fileName);
+    G4bool ReadFile(FILE* fp, G4int nData);
+    G4double Sample(G4double, G4double);
 
-  G4LEPTSDistribution() = default;
-  void ReadFile( const G4String& fileName );
-  G4bool ReadFile( FILE* fp, G4int nData );
-  G4double Sample( G4double, G4double );
+    G4bool IsFileFound() const { return bFileFound; }
 
-  G4bool IsFileFound() const { return bFileFound; }
+  private:
 
- private:
-
-  G4int NoBins;
+    G4int NoBins;
 #define NMAX 20000
-  G4double E[NMAX], f[NMAX], F[NMAX], eF[NMAX];
-  G4bool bFileFound;
+    G4double E[NMAX], f[NMAX], F[NMAX], eF[NMAX];
+    G4bool bFileFound;
 };
 
 #endif

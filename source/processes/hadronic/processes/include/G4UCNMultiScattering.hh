@@ -42,15 +42,14 @@
 ////////////////////////////////////////////////////////////////////////
 
 #ifndef G4UCNMULTISCATTERING_HH
-#define G4UCNMULTISCATTERING_HH 1
+#define G4UCNMULTISCATTERING_HH
 
 /////////////
 // Includes
 /////////////
 
-#include "G4VDiscreteProcess.hh"
-
 #include "G4Neutron.hh"
+#include "G4VDiscreteProcess.hh"
 
 // Class Description:
 // Discrete Process -- Multiple Scattering of Ultra Cold Neutrons.
@@ -64,57 +63,51 @@
 
 class G4UCNMultiScattering : public G4VDiscreteProcess
 {
+  public:
 
-public:
+    ////////////////////////////////
+    // Constructors and Destructor
+    ////////////////////////////////
 
-        ////////////////////////////////
-        // Constructors and Destructor
-        ////////////////////////////////
+    G4UCNMultiScattering(const G4String& processName = "UCNMultiScattering",
+                         G4ProcessType type = fUCN);
+    virtual ~G4UCNMultiScattering();
 
-        G4UCNMultiScattering(const G4String& processName = "UCNMultiScattering",
-                                      G4ProcessType type = fUCN);
-	virtual ~G4UCNMultiScattering();
+  private:
 
-private:
+    G4UCNMultiScattering(const G4UCNMultiScattering& right);
 
-        G4UCNMultiScattering(const G4UCNMultiScattering &right);
+    //////////////
+    // Operators
+    //////////////
 
-        //////////////
-        // Operators
-        //////////////
+    G4UCNMultiScattering& operator=(const G4UCNMultiScattering& right);
 
-        G4UCNMultiScattering& operator=(const G4UCNMultiScattering &right);
+  public:
 
-public:
+    ////////////
+    // Methods
+    ////////////
 
-        ////////////
-        // Methods
-        ////////////
+    G4bool IsApplicable(const G4ParticleDefinition& aParticleType);
+    // Returns true -> 'is applicable' only for an UCN.
 
-        G4bool IsApplicable(const G4ParticleDefinition& aParticleType);
-        // Returns true -> 'is applicable' only for an UCN.
+    G4double GetMeanFreePath(const G4Track& aTrack, G4double, G4ForceCondition* condition);
 
-	G4double GetMeanFreePath(const G4Track& aTrack,
-                                 G4double ,
-                                 G4ForceCondition* condition);
+    G4VParticleChange* PostStepDoIt(const G4Track& aTrack, const G4Step& aStep);
 
-	G4VParticleChange* PostStepDoIt(const G4Track& aTrack,
-                                        const G4Step&  aStep);
+    G4ThreeVector Scatter();
 
-        G4ThreeVector Scatter();
-
-private:
-
+  private:
 };
 
 ////////////////////
 // Inline methods
 ////////////////////
 
-inline G4bool
-G4UCNMultiScattering::IsApplicable(const G4ParticleDefinition& aParticleType)
+inline G4bool G4UCNMultiScattering::IsApplicable(const G4ParticleDefinition& aParticleType)
 {
-   return ( &aParticleType == G4Neutron::NeutronDefinition() );
+  return (&aParticleType == G4Neutron::NeutronDefinition());
 }
 
 #endif /* G4UCNMULTISCATTERING_HH */

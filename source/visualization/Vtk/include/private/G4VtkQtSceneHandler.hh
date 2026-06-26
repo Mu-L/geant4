@@ -36,6 +36,7 @@
 class G4VtkQtSceneHandler : public G4VtkSceneHandler
 {
   public:
+
     G4VtkQtSceneHandler(G4VGraphicsSystem& system, const G4String& name);
     ~G4VtkQtSceneHandler() override = default;
 
@@ -49,9 +50,11 @@ class G4VtkQtSceneHandler : public G4VtkSceneHandler
     void AddPrimitive(const G4Polyhedron&) override;
 
   protected:
+
     static G4int fSceneIdCount;  // Counter for Vtk scene handlers.
 
   private:
+
     friend class G4VtkQtViewer;
 };
 

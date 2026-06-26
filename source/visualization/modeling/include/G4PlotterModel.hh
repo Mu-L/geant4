@@ -29,23 +29,26 @@
 #ifndef G4PLOTTERMODEL_HH
 #define G4PLOTTERMODEL_HH
 
+#include "G4Plotter.hh"
 #include "G4VModel.hh"
 
-#include "G4Plotter.hh"
+class G4PlotterModel : public G4VModel
+{
+  public:
 
-class G4PlotterModel: public G4VModel {
-public:
-  G4PlotterModel(G4Plotter& plotter,const G4String& global_description = "",const G4Transform3D& transform = G4Transform3D());
-  virtual ~G4PlotterModel () = default;
-  void DescribeYourselfTo (G4VGraphicsScene&) override;
-  G4Plotter& plotter() {return fPlotter;}
+    G4PlotterModel(G4Plotter& plotter, const G4String& global_description = "",
+                   const G4Transform3D& transform = G4Transform3D());
+    virtual ~G4PlotterModel() = default;
+    void DescribeYourselfTo(G4VGraphicsScene&) override;
+    G4Plotter& plotter() { return fPlotter; }
 
-private:
-  G4PlotterModel (const G4PlotterModel&);
-  G4PlotterModel& operator = (const G4PlotterModel&);
+  private:
 
-  G4Plotter& fPlotter;
-  G4Transform3D fTransform;
+    G4PlotterModel(const G4PlotterModel&);
+    G4PlotterModel& operator=(const G4PlotterModel&);
+
+    G4Plotter& fPlotter;
+    G4Transform3D fTransform;
 };
 
 #endif

@@ -25,38 +25,37 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  10th February 1997
 // OpenGL immediate scene - draws immediately to buffer
 //                           (saving space on server).
 
 #include "G4OpenGLImmediateSceneHandler.hh"
 
-#include "G4OpenGLViewer.hh"
+#include "G4AttHolder.hh"
+#include "G4Circle.hh"
 #include "G4OpenGLTransform3D.hh"
+#include "G4OpenGLViewer.hh"
+#include "G4Polyhedron.hh"
 #include "G4Polyline.hh"
 #include "G4Polymarker.hh"
-#include "G4Text.hh"
-#include "G4Circle.hh"
 #include "G4Square.hh"
-#include "G4Polyhedron.hh"
-#include "G4AttHolder.hh"
+#include "G4Text.hh"
 
 #include <typeinfo>
 
-G4OpenGLImmediateSceneHandler::G4OpenGLImmediateSceneHandler
-(G4VGraphicsSystem& system,const G4String& name):
-  G4OpenGLSceneHandler (system, fSceneIdCount++, name)
+G4OpenGLImmediateSceneHandler::G4OpenGLImmediateSceneHandler(G4VGraphicsSystem& system,
+                                                             const G4String& name)
+  : G4OpenGLSceneHandler(system, fSceneIdCount++, name)
 {}
 
-G4OpenGLImmediateSceneHandler::~G4OpenGLImmediateSceneHandler ()
-{}
+G4OpenGLImmediateSceneHandler::~G4OpenGLImmediateSceneHandler() {}
 
 #include <iomanip>
 
 G4bool G4OpenGLImmediateSceneHandler::AddPrimitivePreamble(const G4VMarker& visible)
 {
-    return AddPrimitivePreambleInternal(visible, true, false);
+  return AddPrimitivePreambleInternal(visible, true, false);
 }
 G4bool G4OpenGLImmediateSceneHandler::AddPrimitivePreamble(const G4Polyline& visible)
 {
@@ -67,17 +66,19 @@ G4bool G4OpenGLImmediateSceneHandler::AddPrimitivePreamble(const G4Polyhedron& v
   return AddPrimitivePreambleInternal(visible, false, false);
 }
 
-G4bool G4OpenGLImmediateSceneHandler::AddPrimitivePreambleInternal(const G4Visible& visible, bool isMarker, bool isPolyline)
+G4bool G4OpenGLImmediateSceneHandler::AddPrimitivePreambleInternal(const G4Visible& visible,
+                                                                   bool isMarker, bool isPolyline)
 {
   // Get applicable vis attributes for all primitives.
   fpVisAttribs = fpViewer->GetApplicableVisAttributes(visible.GetVisAttributes());
-  const G4Colour& c = GetColour ();
-  G4double opacity = c.GetAlpha ();
-  
+  const G4Colour& c = GetColour();
+  G4double opacity = c.GetAlpha();
+
   G4bool transparency_enabled = true;
   G4bool isMarkerNotHidden = true;
   G4OpenGLViewer* pViewer = dynamic_cast<G4OpenGLViewer*>(fpViewer);
-  if (pViewer) {
+  if (pViewer)
+  {
     transparency_enabled = pViewer->transparency_enabled;
     isMarkerNotHidden = pViewer->fVP.IsMarkerNotHidden();
   }
@@ -85,123 +86,146 @@ G4bool G4OpenGLImmediateSceneHandler::AddPrimitivePreambleInternal(const G4Visib
   G4bool isMarkerOrPolyline = isMarker || isPolyline;
   G4bool treatAsTransparent = transparency_enabled && opacity < 1.;
   G4bool treatAsNotHidden = isMarkerNotHidden && (isMarker || isPolyline);
-  
-  if (fProcessing2D) glDisable (GL_DEPTH_TEST);
-  else {
+
+  if (fProcessing2D)
+    glDisable(GL_DEPTH_TEST);
+  else
+  {
     if (isMarkerOrPolyline && isMarkerNotHidden)
-      glDisable (GL_DEPTH_TEST);
-    else {glEnable (GL_DEPTH_TEST); glDepthFunc (GL_LEQUAL);}
+      glDisable(GL_DEPTH_TEST);
+    else
+    {
+      glEnable(GL_DEPTH_TEST);
+      glDepthFunc(GL_LEQUAL);
+    }
   }
 
-  if (fThreePassCapable) {
-    
+  if (fThreePassCapable)
+  {
     // Ensure transparent objects are drawn opaque ones and before
     // non-hidden markers.  The problem of blending/transparency/alpha
     // is quite a tricky one - see History of opengl-V07-01-01/2/3.
-    if (!(fSecondPassForTransparency || fThirdPassForNonHiddenMarkers)) {
+    if (!(fSecondPassForTransparency || fThirdPassForNonHiddenMarkers))
+    {
       // First pass...
-      if (treatAsTransparent) {  // Request pass for transparent objects...
+      if (treatAsTransparent)
+      {  // Request pass for transparent objects...
         fSecondPassForTransparencyRequested = true;
       }
-      if (treatAsNotHidden) {    // Request pass for non-hidden markers...
+      if (treatAsNotHidden)
+      {  // Request pass for non-hidden markers...
         fThirdPassForNonHiddenMarkersRequested = true;
       }
       // On first pass, transparent objects and non-hidden markers are not drawn...
-      if (treatAsTransparent || treatAsNotHidden) {
+      if (treatAsTransparent || treatAsNotHidden)
+      {
         return false;
       }
     }
-    
+
     // On second pass, only transparent objects are drawn...
-    if (fSecondPassForTransparency) {
-      if (!treatAsTransparent) {
+    if (fSecondPassForTransparency)
+    {
+      if (!treatAsTransparent)
+      {
         return false;
       }
     }
-    
+
     // On third pass, only non-hidden markers are drawn...
-    if (fThirdPassForNonHiddenMarkers) {
-      if (!treatAsNotHidden) {
+    if (fThirdPassForNonHiddenMarkers)
+    {
+      if (!treatAsNotHidden)
+      {
         return false;
       }
     }
   }  // fThreePassCapable
-  
+
   // Loads G4Atts for picking...
-  if (fpViewer->GetViewParameters().IsPicking()) {
+  if (fpViewer->GetViewParameters().IsPicking())
+  {
     glLoadName(++fPickName);
     G4AttHolder* holder = new G4AttHolder;
     LoadAtts(visible, holder);
     fPickMap[fPickName] = holder;
   }
 
-  if (transparency_enabled) {
-    glColor4d(c.GetRed(),c.GetGreen(),c.GetBlue(),c.GetAlpha());
-  } else {
-    glColor3d(c.GetRed(),c.GetGreen(),c.GetBlue());    
+  if (transparency_enabled)
+  {
+    glColor4d(c.GetRed(), c.GetGreen(), c.GetBlue(), c.GetAlpha());
+  }
+  else
+  {
+    glColor3d(c.GetRed(), c.GetGreen(), c.GetBlue());
   }
 
   return true;
 }
 
-void G4OpenGLImmediateSceneHandler::AddPrimitive (const G4Polyline& polyline)
+void G4OpenGLImmediateSceneHandler::AddPrimitive(const G4Polyline& polyline)
 {
   G4bool furtherprocessing = AddPrimitivePreamble(polyline);
-  if (furtherprocessing) {
+  if (furtherprocessing)
+  {
     G4OpenGLSceneHandler::AddPrimitive(polyline);
   }
 }
 
-void G4OpenGLImmediateSceneHandler::AddPrimitive (const G4Polymarker& polymarker)
+void G4OpenGLImmediateSceneHandler::AddPrimitive(const G4Polymarker& polymarker)
 {
   G4bool furtherprocessing = AddPrimitivePreamble(polymarker);
-  if (furtherprocessing) {
+  if (furtherprocessing)
+  {
     G4OpenGLSceneHandler::AddPrimitive(polymarker);
   }
 }
 
-void G4OpenGLImmediateSceneHandler::AddPrimitive (const G4Text& text)
+void G4OpenGLImmediateSceneHandler::AddPrimitive(const G4Text& text)
 {
   // Note: colour is still handled in
   // G4OpenGLSceneHandler::AddPrimitive(const G4Text&).
   G4bool furtherprocessing = AddPrimitivePreamble(text);
-  if (furtherprocessing) {
+  if (furtherprocessing)
+  {
     G4OpenGLSceneHandler::AddPrimitive(text);
   }
 }
 
-void G4OpenGLImmediateSceneHandler::AddPrimitive (const G4Circle& circle)
+void G4OpenGLImmediateSceneHandler::AddPrimitive(const G4Circle& circle)
 {
   G4bool furtherprocessing = AddPrimitivePreamble(circle);
-  if (furtherprocessing) {
+  if (furtherprocessing)
+  {
     G4OpenGLSceneHandler::AddPrimitive(circle);
   }
 }
 
-void G4OpenGLImmediateSceneHandler::AddPrimitive (const G4Square& square)
+void G4OpenGLImmediateSceneHandler::AddPrimitive(const G4Square& square)
 {
   G4bool furtherprocessing = AddPrimitivePreamble(square);
-  if (furtherprocessing) {
+  if (furtherprocessing)
+  {
     G4OpenGLSceneHandler::AddPrimitive(square);
   }
 }
 
-void G4OpenGLImmediateSceneHandler::AddPrimitive (const G4Polyhedron& polyhedron)
+void G4OpenGLImmediateSceneHandler::AddPrimitive(const G4Polyhedron& polyhedron)
 {
   // Note: colour is still handled in
   // G4OpenGLSceneHandler::AddPrimitive(const G4Polyhedron&).
   G4bool furtherprocessing = AddPrimitivePreamble(polyhedron);
-  if (furtherprocessing) {
+  if (furtherprocessing)
+  {
     G4OpenGLSceneHandler::AddPrimitive(polyhedron);
   }
 }
 
-void G4OpenGLImmediateSceneHandler::BeginPrimitives
-(const G4Transform3D& objectTransformation)
+void G4OpenGLImmediateSceneHandler::BeginPrimitives(const G4Transform3D& objectTransformation)
 {
-  G4OpenGLSceneHandler::BeginPrimitives (objectTransformation);
+  G4OpenGLSceneHandler::BeginPrimitives(objectTransformation);
 
-  G4OpenGLTransform3D oglt (objectTransformation);
+  G4OpenGLTransform3D oglt(objectTransformation);
 
   glPushMatrix();
 
@@ -215,71 +239,74 @@ void G4OpenGLImmediateSceneHandler::BeginPrimitives
   G4cout << G4endl;
   *****************************************/
 
-  glMultMatrixd (oglt.GetGLMatrix ());
+  glMultMatrixd(oglt.GetGLMatrix());
 }
 
-void G4OpenGLImmediateSceneHandler::EndPrimitives ()
+void G4OpenGLImmediateSceneHandler::EndPrimitives()
 {
   glPopMatrix();
 
   // See all primitives immediately...  At least soon...
   ScaledFlush();
 
-  G4OpenGLSceneHandler::EndPrimitives ();
+  G4OpenGLSceneHandler::EndPrimitives();
 }
 
-void G4OpenGLImmediateSceneHandler::BeginPrimitives2D
-(const G4Transform3D& objectTransformation)
+void G4OpenGLImmediateSceneHandler::BeginPrimitives2D(const G4Transform3D& objectTransformation)
 {
   G4OpenGLSceneHandler::BeginPrimitives2D(objectTransformation);
 
   // Push current 3D world matrices and load identity to define screen
   // coordinates...
-  glMatrixMode (GL_PROJECTION);
+  glMatrixMode(GL_PROJECTION);
   glPushMatrix();
   glLoadIdentity();
   G4OpenGLViewer* pViewer = dynamic_cast<G4OpenGLViewer*>(fpViewer);
-  if (pViewer) {
-    pViewer->g4GlOrtho (-1., 1., -1., 1., -G4OPENGL_FLT_BIG, G4OPENGL_FLT_BIG);
+  if (pViewer)
+  {
+    pViewer->g4GlOrtho(-1., 1., -1., 1., -G4OPENGL_FLT_BIG, G4OPENGL_FLT_BIG);
   }
-  glMatrixMode (GL_MODELVIEW);
+  glMatrixMode(GL_MODELVIEW);
   glPushMatrix();
   glLoadIdentity();
-  G4OpenGLTransform3D oglt (objectTransformation);
-  glMultMatrixd (oglt.GetGLMatrix ());
+  G4OpenGLTransform3D oglt(objectTransformation);
+  glMultMatrixd(oglt.GetGLMatrix());
   glDisable(GL_DEPTH_TEST);  // But see parent scene handler!!  In
-  glDisable (GL_LIGHTING);   // some cases, we need to re-iterate this.
+  glDisable(GL_LIGHTING);  // some cases, we need to re-iterate this.
 }
 
 void G4OpenGLImmediateSceneHandler::EndPrimitives2D()
 {
   // Pop current 3D world matrices back again...
-  glMatrixMode (GL_PROJECTION);
+  glMatrixMode(GL_PROJECTION);
   glPopMatrix();
-  glMatrixMode (GL_MODELVIEW);
+  glMatrixMode(GL_MODELVIEW);
   glPopMatrix();
 
   // See all primitives immediately...  At least soon...
   ScaledFlush();
 
-  G4OpenGLSceneHandler::EndPrimitives2D ();
+  G4OpenGLSceneHandler::EndPrimitives2D();
 }
 
-void G4OpenGLImmediateSceneHandler::BeginModeling () {
+void G4OpenGLImmediateSceneHandler::BeginModeling()
+{
   G4VSceneHandler::BeginModeling();
 }
 
-void G4OpenGLImmediateSceneHandler::EndModeling () {
-  G4VSceneHandler::EndModeling ();
+void G4OpenGLImmediateSceneHandler::EndModeling()
+{
+  G4VSceneHandler::EndModeling();
 }
 
-void G4OpenGLImmediateSceneHandler::ClearTransientStore ()
+void G4OpenGLImmediateSceneHandler::ClearTransientStore()
 {
   // Nothing to do except redraw the scene ready for the next event.
-  if (fpViewer) {
-    fpViewer -> SetView ();
-    fpViewer -> ClearView ();
-    fpViewer -> DrawView ();
+  if (fpViewer)
+  {
+    fpViewer->SetView();
+    fpViewer->ClearView();
+    fpViewer->DrawView();
   }
 }
 

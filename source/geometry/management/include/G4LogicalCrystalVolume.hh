@@ -37,15 +37,19 @@
 #ifndef G4LOGICALCRYSTALVOLUME_HH
 #define G4LOGICALCRYSTALVOLUME_HH
 
-#include <vector>
 #include "G4LogicalVolume.hh"
+
+#include <vector>
 
 class G4CrystalExtension;
 class G4ExtendedMaterial;
 
 /**
  * @brief G4LogicalCrystalVolume is a specialised logical volume for the
- * description of crystals. The object can be created only with an extended
+ * description of crystals.
+ * @ingroup geometry_management
+ *
+ * The object can be created only with an extended
  * material with a crystal extension. The class handles the orientation
  * of the crystal axes wrt the solid to which the crystal is attached.
  */
@@ -68,23 +72,17 @@ class G4LogicalCrystalVolume : public G4LogicalVolume
      *  @param[in] l Miller orientation parameter l.
      *  @param[in] rot Miller rotation parameter.
      */
-    G4LogicalCrystalVolume(G4VSolid* pSolid,
-                           G4ExtendedMaterial* pMaterial,
-                           const G4String& name,
+    G4LogicalCrystalVolume(G4VSolid* pSolid, G4ExtendedMaterial* pMaterial, const G4String& name,
                            G4FieldManager* pFieldMgr = nullptr,
                            G4VSensitiveDetector* pSDetector = nullptr,
-                           G4UserLimits* pULimits = nullptr,
-                           G4bool optimise = true,
-                           G4int h = 0,
-                           G4int k = 0,
-                           G4int l = 0,
-                           G4double rot = 0.0);
+                           G4UserLimits* pULimits = nullptr, G4bool optimise = true, G4int h = 0,
+                           G4int k = 0, G4int l = 0, G4double rot = 0.0);
 
     /**
      * Destructor.
      */
     ~G4LogicalCrystalVolume() override;
-    
+
     /**
      * Returns true as it is not a base-class object.
      */
@@ -95,7 +93,7 @@ class G4LogicalCrystalVolume : public G4LogicalVolume
      * Miller orientation aligns lattice normal (hkl) with geometry +Z.
      */
     void SetMillerOrientation(G4int h, G4int k, G4int l, G4double rot = 0.0);
-    
+
     /**
      * Methods to rotate input vector between lattice and solid orientations.
      *  @returns The new vector value for convenience.
@@ -112,7 +110,7 @@ class G4LogicalCrystalVolume : public G4LogicalVolume
      * Calls through to get crystal basis vectors.
      */
     const G4ThreeVector& GetBasis(G4int i) const;
-    
+
     /**
      * Setter for verbosity level.
      */
@@ -132,7 +130,7 @@ class G4LogicalCrystalVolume : public G4LogicalVolume
     /** Cached Miller indices for dump. */
     G4int hMiller = 1, kMiller = 1, lMiller = 0;
     G4double fRot = 0.0;
-    
+
     /** Verbosity level. */
     G4int verboseLevel = 0;
 

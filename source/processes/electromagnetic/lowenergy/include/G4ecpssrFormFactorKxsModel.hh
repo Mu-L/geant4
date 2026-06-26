@@ -22,23 +22,24 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // History:
 // -----------
 //  01 Oct 2011   A.M., S.I. - 1st implementation
-// 
+//
 // Class description
 // ----------------
 //  Computation of K, L & M shell ECPSSR ionisation cross sections for protons and alphas
-//  Based on the work of A. Taborda et al. 
+//  Based on the work of A. Taborda et al.
 //  X-Ray Spectrom. 2011, 40, 127-134
 // ---------------------------------------------------------------------------------------
 
-#ifndef G4ecpssrFormFactorKxsModel_HH
-#define G4ecpssrFormFactorKxsModel_HH 1
+#ifndef G4ECPSSRFORMFACTORKXSMODEL_HH
+#define G4ECPSSRFORMFACTORKXSMODEL_HH
 
 #include "G4VecpssrKModel.hh"
 #include "globals.hh"
+
 #include <map>
 
 class G4VDataSetAlgorithm;
@@ -47,20 +48,23 @@ class G4VEMDataSet;
 class G4ecpssrFormFactorKxsModel : public G4VecpssrKModel
 
 {
-public:
-  explicit G4ecpssrFormFactorKxsModel();
+  public:
 
-  virtual ~G4ecpssrFormFactorKxsModel();
-			     
-  G4double CalculateCrossSection (G4int zTarget, G4double massIncident, G4double energyIncident) override;
-  G4ecpssrFormFactorKxsModel(const G4ecpssrFormFactorKxsModel&) = delete;
-  G4ecpssrFormFactorKxsModel & operator = (const G4ecpssrFormFactorKxsModel &right) = delete;
+    explicit G4ecpssrFormFactorKxsModel();
 
-private:
-  G4VDataSetAlgorithm* interpolation;
+    virtual ~G4ecpssrFormFactorKxsModel();
 
-  std::map< G4int , G4VEMDataSet* > protonDataSetMap;
-  std::map< G4int , G4VEMDataSet* > alphaDataSetMap;
+    G4double CalculateCrossSection(G4int zTarget, G4double massIncident,
+                                   G4double energyIncident) override;
+    G4ecpssrFormFactorKxsModel(const G4ecpssrFormFactorKxsModel&) = delete;
+    G4ecpssrFormFactorKxsModel& operator=(const G4ecpssrFormFactorKxsModel& right) = delete;
+
+  private:
+
+    G4VDataSetAlgorithm* interpolation;
+
+    std::map<G4int, G4VEMDataSet*> protonDataSetMap;
+    std::map<G4int, G4VEMDataSet*> alphaDataSetMap;
 };
 
 #endif

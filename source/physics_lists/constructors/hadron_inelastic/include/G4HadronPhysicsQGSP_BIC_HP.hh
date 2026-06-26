@@ -44,25 +44,26 @@
 //
 //----------------------------------------------------------------------------
 
-#ifndef G4HadronPhysicsQGSP_BIC_HP_h
-#define G4HadronPhysicsQGSP_BIC_HP_h 1
+#ifndef G4HADRONPHYSICSQGSP_BIC_HP_HH
+#define G4HADRONPHYSICSQGSP_BIC_HP_HH
 
 #include "G4HadronPhysicsQGSP_BIC.hh"
 
-class G4HadronPhysicsQGSP_BIC_HP : public G4HadronPhysicsQGSP_BIC {
-  public: 
-    G4HadronPhysicsQGSP_BIC_HP( G4int verbose = 1 );
-    G4HadronPhysicsQGSP_BIC_HP( const G4String& name, G4bool quasiElastic = true );
+class G4HadronPhysicsQGSP_BIC_HP : public G4HadronPhysicsQGSP_BIC
+{
+  public:
+
+    G4HadronPhysicsQGSP_BIC_HP(G4int verbose = 1);
+    G4HadronPhysicsQGSP_BIC_HP(const G4String& name, G4bool quasiElastic = true);
     ~G4HadronPhysicsQGSP_BIC_HP() override = default;
 
     // copy constructor and hide assignment operator
-    G4HadronPhysicsQGSP_BIC_HP(G4HadronPhysicsQGSP_BIC_HP &) = delete;
-    G4HadronPhysicsQGSP_BIC_HP & operator =
-    (const G4HadronPhysicsQGSP_BIC_HP &right) = delete;
+    G4HadronPhysicsQGSP_BIC_HP(G4HadronPhysicsQGSP_BIC_HP&) = delete;
+    G4HadronPhysicsQGSP_BIC_HP& operator=(const G4HadronPhysicsQGSP_BIC_HP& right) = delete;
 
   protected:
-    void Neutron() override;
 
+    void Neutron() override;
 };
 
 #endif

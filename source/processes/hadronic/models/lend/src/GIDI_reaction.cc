@@ -60,6 +60,7 @@ Reaction::Reaction( int a_ENDF_MT, std::string const &a_fissionGenre ) :
 Reaction::Reaction( Construction::Settings const &a_construction, HAPI::Node const &a_node, SetupInfo &a_setupInfo, PoPI::Database const &a_pops, 
                 PoPI::Database const &a_internalPoPs, Protare const &a_protare, Styles::Suite const *a_styles ) :
         Form( a_node, a_setupInfo, FormType::reaction ),
+        m_reactionIndex( 0 ),
         m_active( true ),
         m_ENDF_MT( a_node.attribute_as_int( GIDI_ENDF_MT_Chars ) ),
         m_ENDL_C( 0 ),
@@ -166,6 +167,46 @@ Reaction::Reaction( Construction::Settings const &a_construction, HAPI::Node con
 Reaction::~Reaction( ) {
 
     if( m_outputChannel != nullptr ) delete m_outputChannel;
+}
+
+/* *********************************************************************************************************//**
+ * Returns the domain minimum for this reaction as determined by the lowest cross section point.
+ *
+ * @return          A double representing the minimum of the domain.
+ ***********************************************************************************************************/
+
+double Reaction::domainMin( ) const {
+
+    for( std::size_t index = 0; index < m_crossSection.size( ); ++index ) {
+        Functions::FunctionForm const *function = m_crossSection.get<Functions::FunctionForm const>( index );
+        try {
+            return( function->domainMin( ) ); }
+        catch (...) {
+            continue;
+        }
+    }
+
+    throw Exception( "GIDI::Reaction::domainMin could not be determined." );
+}
+
+/* *********************************************************************************************************//**
+ * Returns the domain maximum for this reaction as determined by the lowest cross section point.
+ *
+ * @return          A double representing the maximum of the domain.
+ ***********************************************************************************************************/
+
+double Reaction::domainMax( ) const {
+
+    for( std::size_t index = 0; index < m_crossSection.size( ); ++index ) {
+        Functions::FunctionForm const *function = m_crossSection.get<Functions::FunctionForm const>( index );
+        try {
+            return( function->domainMax( ) ); }
+        catch (...) {
+            continue;
+        }
+    }
+
+    throw Exception( "GIDI::Reaction::domainMax could not be determined." );
 }
 
 /* *********************************************************************************************************//**

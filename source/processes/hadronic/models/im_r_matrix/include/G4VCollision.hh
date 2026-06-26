@@ -25,90 +25,68 @@
 //
 //
 
-#ifndef G4VCollision_h
-#define G4VCollision_h
+#ifndef G4VCOLLISION_HH
+#define G4VCOLLISION_HH
 
-#include "globals.hh"
 #include "G4CollisionVector.hh"
-#include "G4VCrossSectionSource.hh"
-#include "G4VAngularDistribution.hh"
 #include "G4KineticTrackVector.hh"
+#include "G4VAngularDistribution.hh"
+#include "G4VCrossSectionSource.hh"
+#include "globals.hh"
 
 class G4KineticTrack;
 
-class G4VCollision 
+class G4VCollision
 {
-public:
+  public:
 
-  G4VCollision();
-  void establish_G4MT_TLS_G4VCollision();
-  G4VCollision(void *s1, void *s2, void *s3, void *s4, void *s5, void *s6, void *s7);
+    G4VCollision();
+    void establish_G4MT_TLS_G4VCollision();
+    G4VCollision(void* s1, void* s2, void* s3, void* s4, void* s5, void* s6, void* s7);
 
-  virtual ~G4VCollision();
+    virtual ~G4VCollision();
 
-  G4bool operator==(const G4VCollision &right) const;
-  G4bool operator!=(const G4VCollision &right) const;
+    G4bool operator==(const G4VCollision& right) const;
+    G4bool operator!=(const G4VCollision& right) const;
 
-  virtual G4double CrossSection(const G4KineticTrack& trk1, 
-				const G4KineticTrack& trk2) const;
+    virtual G4double CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
 
-  virtual G4KineticTrackVector* FinalState(const G4KineticTrack& trk1, 
-					   const G4KineticTrack& trk2) const = 0;
+    virtual G4KineticTrackVector* FinalState(const G4KineticTrack& trk1,
+                                             const G4KineticTrack& trk2) const = 0;
 
-  virtual G4bool IsInCharge(const G4KineticTrack& trk1, 
-			    const G4KineticTrack& trk2) const = 0;
+    virtual G4bool IsInCharge(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const = 0;
 
-  virtual G4String GetName() const = 0;
+    virtual G4String GetName() const = 0;
 
-  virtual void Print() const;
-  virtual void Print(const G4KineticTrack& trk1, 
-		     const G4KineticTrack& trk2) const;
-protected:
+    virtual void Print() const;
+    virtual void Print(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
 
-  G4int GetNumberOfPartons(const G4ParticleDefinition * aP) const
-  {
-    G4int result = 0;
-    for(G4int i=0; i<6; i++) 
+  protected:
+
+    G4int GetNumberOfPartons(const G4ParticleDefinition* aP) const
     {
-      result += aP->GetQuarkContent(i+1);
-      result += aP->GetAntiQuarkContent(i+1);
+      G4int result = 0;
+      for (G4int i = 0; i < 6; i++)
+      {
+        result += aP->GetQuarkContent(i + 1);
+        result += aP->GetAntiQuarkContent(i + 1);
+      }
+      return result;
     }
-    return result;
-  }
-  
-  virtual const G4CollisionVector* GetComponents() const { return 0;}
 
-  virtual const G4VCrossSectionSource* GetCrossSectionSource() const = 0;
+    virtual const G4CollisionVector* GetComponents() const { return 0; }
 
-  virtual const G4VAngularDistribution* GetAngularDistribution() const = 0;
+    virtual const G4VCrossSectionSource* GetCrossSectionSource() const = 0;
 
-  virtual const std::vector<G4String>& GetListOfColliders(G4int whichOne) const = 0;
+    virtual const G4VAngularDistribution* GetAngularDistribution() const = 0;
 
+    virtual const std::vector<G4String>& GetListOfColliders(G4int whichOne) const = 0;
 
-private:  
+  private:
 
-  G4VCollision(const G4VCollision &right);
+    G4VCollision(const G4VCollision& right);
 
-  const G4VCollision& operator=(const G4VCollision &right);
-
+    const G4VCollision& operator=(const G4VCollision& right);
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

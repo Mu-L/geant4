@@ -4,6 +4,9 @@ See `CONTRIBUTING.rst` for details of **required** info/format for each entry,
 which **must** added in reverse chronological order (newest at the top). It must **not**
 be used as a substitute for writing good git commit messages!
 
+## 2026-05-24 Ben Morgan (expat-V11-04-00)
+- Add .clang-format file to explicitly exclude expat code from formatting.
+  - We want to retain upstream style to make changes/updates clear.
 
 ## 2022-10-07 Ben Morgan (expat-V11-00-01)
 - Update source/build with Expat 2.4.9 sources from upstream

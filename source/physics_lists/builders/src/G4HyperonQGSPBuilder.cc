@@ -31,47 +31,47 @@
 //---------------------------------------------------------------------------
 
 #include "G4HyperonQGSPBuilder.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4ComponentGGHadronNucleusXsc.hh"
+#include "G4CrossSectionInelastic.hh"
+#include "G4ExcitedStringDecay.hh"
+#include "G4GeneratorPrecompoundInterface.hh"
+#include "G4HadronInelasticProcess.hh"
+#include "G4HadronicParameters.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4HadronInelasticProcess.hh"
-#include "G4CrossSectionInelastic.hh"
-#include "G4ComponentGGHadronNucleusXsc.hh"
-#include "G4HadronicParameters.hh"
-#include "G4TheoFSGenerator.hh"
-#include "G4GeneratorPrecompoundInterface.hh"
+#include "G4QGSMFragmentation.hh"
 #include "G4QGSModel.hh"
 #include "G4QGSParticipants.hh"
-#include "G4QGSMFragmentation.hh"
-#include "G4ExcitedStringDecay.hh"
 #include "G4QuasiElasticChannel.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4TheoFSGenerator.hh"
 
-
-G4HyperonQGSPBuilder::G4HyperonQGSPBuilder( G4bool quasiElastic ) {
-  theHyperonQGSP = new G4TheoFSGenerator( "QGSP" );
-  G4QGSModel< G4QGSParticipants >* theStringModel = new G4QGSModel< G4QGSParticipants >;
-  G4ExcitedStringDecay* theStringDecay = new G4ExcitedStringDecay( new G4QGSMFragmentation );
-  theStringModel->SetFragmentationModel( theStringDecay );
+G4HyperonQGSPBuilder::G4HyperonQGSPBuilder(G4bool quasiElastic)
+{
+  theHyperonQGSP = new G4TheoFSGenerator("QGSP");
+  G4QGSModel<G4QGSParticipants>* theStringModel = new G4QGSModel<G4QGSParticipants>;
+  G4ExcitedStringDecay* theStringDecay = new G4ExcitedStringDecay(new G4QGSMFragmentation);
+  theStringModel->SetFragmentationModel(theStringDecay);
   G4GeneratorPrecompoundInterface* theCascade = new G4GeneratorPrecompoundInterface;
-  theHyperonQGSP->SetTransport( theCascade );
-  theHyperonQGSP->SetHighEnergyGenerator( theStringModel );
-  if ( quasiElastic ) theHyperonQGSP->SetQuasiElasticChannel( new G4QuasiElasticChannel );
+  theHyperonQGSP->SetTransport(theCascade);
+  theHyperonQGSP->SetHighEnergyGenerator(theStringModel);
+  if (quasiElastic) theHyperonQGSP->SetQuasiElasticChannel(new G4QuasiElasticChannel);
   // It is recommended to use QGSP above >~ 12 GeV .
   theMin = G4HadronicParameters::Instance()->GetMinEnergyTransitionQGS_FTF();
   theMax = G4HadronicParameters::Instance()->GetMaxEnergy();
-  theHyperonQGSP->SetMinEnergy( theMin );
-  theHyperonQGSP->SetMaxEnergy( theMax );  
-  theInelasticCrossSection = new G4CrossSectionInelastic( new G4ComponentGGHadronNucleusXsc );
+  theHyperonQGSP->SetMinEnergy(theMin);
+  theHyperonQGSP->SetMaxEnergy(theMax);
+  theInelasticCrossSection = new G4CrossSectionInelastic(new G4ComponentGGHadronNucleusXsc);
 }
-
 
 G4HyperonQGSPBuilder::~G4HyperonQGSPBuilder() {}
 
-
-void G4HyperonQGSPBuilder::Build( G4HadronInelasticProcess* aP ) {
-  theHyperonQGSP->SetMinEnergy( theMin );
-  theHyperonQGSP->SetMaxEnergy( theMax );
-  aP->RegisterMe( theHyperonQGSP );
-  aP->AddDataSet( theInelasticCrossSection );
+void G4HyperonQGSPBuilder::Build(G4HadronInelasticProcess* aP)
+{
+  theHyperonQGSP->SetMinEnergy(theMin);
+  theHyperonQGSP->SetMaxEnergy(theMax);
+  aP->RegisterMe(theHyperonQGSP);
+  aP->AddDataSet(theInelasticCrossSection);
 }

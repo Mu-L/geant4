@@ -44,43 +44,37 @@
 //
 
 #include "G4CrossSectionElastic.hh"
-#include "G4VComponentCrossSection.hh"
-#include "G4ParticleDefinition.hh"
+
 #include "G4DynamicParticle.hh"
 #include "G4Element.hh"
-#include "G4NistManager.hh"
 #include "G4HadronicParameters.hh"
+#include "G4NistManager.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4VComponentCrossSection.hh"
 
-G4CrossSectionElastic::G4CrossSectionElastic(G4VComponentCrossSection* c,
-					     G4int zmin, G4int zmax, 
-					     G4double Emin, G4double Emax)
-  : G4VCrossSectionDataSet(c->GetName()), component(c),
-    Zmin(zmin),Zmax(zmax)
+G4CrossSectionElastic::G4CrossSectionElastic(G4VComponentCrossSection* c, G4int zmin, G4int zmax,
+                                             G4double Emin, G4double Emax)
+  : G4VCrossSectionDataSet(c->GetName()), component(c), Zmin(zmin), Zmax(zmax)
 {
   nist = G4NistManager::Instance();
   SetMinKinEnergy(Emin);
   SetMaxKinEnergy(Emax);
 }
 
-G4CrossSectionElastic::~G4CrossSectionElastic()
-{}
-   
-G4bool G4CrossSectionElastic::IsElementApplicable(const G4DynamicParticle* p, 
-						  G4int Z, const G4Material*)
+G4CrossSectionElastic::~G4CrossSectionElastic() {}
+
+G4bool G4CrossSectionElastic::IsElementApplicable(const G4DynamicParticle* p, G4int Z,
+                                                  const G4Material*)
 {
   G4double e = p->GetKineticEnergy();
-  return 
-    (Z >= Zmin && Z <= Zmax && e >= GetMinKinEnergy() && e <= GetMaxKinEnergy()); 
+  return (Z >= Zmin && Z <= Zmax && e >= GetMinKinEnergy() && e <= GetMaxKinEnergy());
 }
 
-G4double 
-G4CrossSectionElastic::GetElementCrossSection(const G4DynamicParticle* p, 
-					      G4int Z, 
-					      const G4Material*)
+G4double G4CrossSectionElastic::GetElementCrossSection(const G4DynamicParticle* p, G4int Z,
+                                                       const G4Material*)
 {
-  return component->GetElasticElementCrossSection(p->GetDefinition(), 
-						  p->GetKineticEnergy(), 
-						  Z, nist->GetAtomicMassAmu(Z));
+  return component->GetElasticElementCrossSection(p->GetDefinition(), p->GetKineticEnergy(), Z,
+                                                  nist->GetAtomicMassAmu(Z));
 }
 
 void G4CrossSectionElastic::BuildPhysicsTable(const G4ParticleDefinition& p)
@@ -91,8 +85,8 @@ void G4CrossSectionElastic::BuildPhysicsTable(const G4ParticleDefinition& p)
   // often shared between the different types of ions (d, t, He3, alpha, and
   // genericIon) therefore we scale by Zmax - which is safely larger than the
   // number of nucleons of the heaviest nuclides.
-  G4int fact = (std::abs(p.GetBaryonNumber()) > 1 || 
-		p.GetParticleName() == "GenericIon") ? Zmax : 1;
+  G4int fact =
+    (std::abs(p.GetBaryonNumber()) > 1 || p.GetParticleName() == "GenericIon") ? Zmax : 1;
   SetMaxKinEnergy(G4HadronicParameters::Instance()->GetMaxEnergy() * fact);
 }
 
@@ -105,5 +99,3 @@ void G4CrossSectionElastic::CrossSectionDescription(std::ostream& outFile) const
 {
   component->Description(outFile);
 }
-
-

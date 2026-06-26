@@ -40,49 +40,46 @@
 // Class Description:
 //
 // Implementation of energy loss using and delta-electron production
-// by heavy positive partially stripted ion using G4BraggModel. Effective 
-// charge of ion is not used, dynamic charge should be sampled by a 
+// by heavy positive partially stripted ion using G4BraggModel. Effective
+// charge of ion is not used, dynamic charge should be sampled by a
 // dedicated charge exchange process
 //
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4BraggIonGasModel_h
-#define G4BraggIonGasModel_h 1
+#ifndef G4BRAGGIONGASMODEL_HH
+#define G4BRAGGIONGASMODEL_HH
 
 #include "G4BraggModel.hh"
 
 class G4BraggIonGasModel : public G4BraggModel
 {
+  public:
 
-public:
+    explicit G4BraggIonGasModel(const G4ParticleDefinition* p = nullptr,
+                                const G4String& nam = "BraggIonGas");
 
-  explicit G4BraggIonGasModel(const G4ParticleDefinition* p = nullptr,
-			      const G4String& nam = "BraggIonGas");
+    ~G4BraggIonGasModel() override = default;
 
-  ~G4BraggIonGasModel() override = default;
+    // define current dynamic
+    G4double ChargeSquareRatio(const G4Track&) final;
 
-  // define current dynamic
-  G4double ChargeSquareRatio(const G4Track&) final;
+    // access current dynamic charge
+    G4double GetChargeSquareRatio(const G4ParticleDefinition* p, const G4Material* mat,
+                                  G4double kineticEnergy) final;
 
-  // access current dynamic charge
-  G4double GetChargeSquareRatio(const G4ParticleDefinition* p,
-                                const G4Material* mat,
-				G4double kineticEnergy) final;
+    // Access dynamic charge
+    G4double GetParticleCharge(const G4ParticleDefinition*, const G4Material* mat,
+                               G4double kineticEnergy) final;
 
-  // Access dynamic charge 
-  G4double GetParticleCharge(const G4ParticleDefinition*,
-			     const G4Material* mat,
-			     G4double kineticEnergy) final;
+    // hide assignment operator
+    G4BraggIonGasModel& operator=(const G4BraggIonGasModel& right) = delete;
+    G4BraggIonGasModel(const G4BraggIonGasModel&) = delete;
 
-  // hide assignment operator
-  G4BraggIonGasModel & operator=(const  G4BraggIonGasModel &right) = delete;
-  G4BraggIonGasModel(const  G4BraggIonGasModel&) = delete;
+  private:
 
-private:
-
-  G4double currentCharge;
+    G4double currentCharge;
 };
 
 #endif

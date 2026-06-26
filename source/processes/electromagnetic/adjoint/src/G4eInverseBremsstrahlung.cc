@@ -28,9 +28,9 @@
 #include "G4VEmAdjointModel.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
-G4eInverseBremsstrahlung::G4eInverseBremsstrahlung(
-  G4bool whichScatCase, const G4String& process_name,
-  G4VEmAdjointModel* aBremAdjointModel)
+G4eInverseBremsstrahlung::G4eInverseBremsstrahlung(G4bool whichScatCase,
+                                                   const G4String& process_name,
+                                                   G4VEmAdjointModel* aBremAdjointModel)
   : G4VAdjointReverseReaction(process_name, whichScatCase)
 {
   fAdjointModel = aBremAdjointModel;

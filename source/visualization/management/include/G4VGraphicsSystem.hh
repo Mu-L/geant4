@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  27th March 1996
 //
 // Class description
@@ -42,55 +42,58 @@
 class G4VSceneHandler;
 class G4VViewer;
 
-class G4VGraphicsSystem {
+class G4VGraphicsSystem
+{
+  public:  // With description
 
-public: // With description
+    enum Functionality
+    {
+      noFunctionality,
+      nonEuclidian  // e.g., tree representation of geometry hierarchy.
+      ,
+      twoD  // Simple 2D, e.g., X (no stored structures).
+      ,
+      twoDStore  // 2D with stored structures.
+      ,
+      threeD  // Passive 3D (with stored structures).
+      ,
+      threeDInteractive  // 3D with "pick" functionality.
+      ,
+      virtualReality  // Virtual Reality functionality.
+      ,
+      fileWriter  // File writer
+    };
 
-  enum Functionality {
-    noFunctionality
-    ,nonEuclidian       // e.g., tree representation of geometry hierarchy.
-    ,twoD               // Simple 2D, e.g., X (no stored structures).
-    ,twoDStore          // 2D with stored structures.
-    ,threeD             // Passive 3D (with stored structures).
-    ,threeDInteractive  // 3D with "pick" functionality.
-    ,virtualReality     // Virtual Reality functionality.
-    ,fileWriter         // File writer
-  };
+    G4VGraphicsSystem(const G4String& name, Functionality f);
 
-  G4VGraphicsSystem (const G4String& name,
-		     Functionality f);
+    G4VGraphicsSystem(const G4String& name, const G4String& nickname, Functionality f);
 
-  G4VGraphicsSystem (const G4String& name,
-		     const G4String& nickname,
-		     Functionality f);
+    G4VGraphicsSystem(const G4String& name, const G4String& nickname, const G4String& description,
+                      Functionality f);
 
-  G4VGraphicsSystem (const G4String& name,
-		     const G4String& nickname,
-		     const G4String& description,
-		     Functionality f);
+    virtual ~G4VGraphicsSystem();
 
-  virtual ~G4VGraphicsSystem ();
+    virtual G4VSceneHandler* CreateSceneHandler(const G4String& name) = 0;
 
-  virtual G4VSceneHandler* CreateSceneHandler (const G4String& name) = 0;
+    virtual G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name) = 0;
 
-  virtual G4VViewer* CreateViewer (G4VSceneHandler&, const G4String& name) = 0;
+    // Access functions.
+    const G4String& GetName() const { return fName; }
+    const G4String& GetNickname() const { return fNicknames[0]; }
+    const std::vector<G4String>& GetNicknames() const { return fNicknames; }
+    const G4String& GetDescription() const { return fDescription; }
+    Functionality GetFunctionality() const { return fFunctionality; }
+    virtual G4bool IsUISessionCompatible() const;
+    void AddNickname(const G4String& nickname) { fNicknames.push_back(nickname); }
 
-  // Access functions.
-  const G4String& GetName                   () const {return fName;}
-  const G4String& GetNickname               () const {return fNicknames[0];}
-  const std::vector<G4String>& GetNicknames () const {return fNicknames;}
-  const G4String& GetDescription            () const {return fDescription;}
-  Functionality   GetFunctionality          () const {return fFunctionality;}
-  virtual G4bool  IsUISessionCompatible     () const;
-  void AddNickname (const G4String& nickname) {fNicknames.push_back(nickname);}
+  protected:
 
-protected:
-  G4String fName;
-  std::vector<G4String> fNicknames;
-  G4String fDescription;
-  Functionality  fFunctionality;
+    G4String fName;
+    std::vector<G4String> fNicknames;
+    G4String fDescription;
+    Functionality fFunctionality;
 };
 
-std::ostream& operator << (std::ostream& os, const G4VGraphicsSystem& gs);
+std::ostream& operator<<(std::ostream& os, const G4VGraphicsSystem& gs);
 
 #endif

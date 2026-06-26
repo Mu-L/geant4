@@ -34,34 +34,34 @@
 
 #include "G4SmartFilter.hh"
 #include "G4VTrajectory.hh"
+
 #include <vector>
 
-class G4TrajectoryEncounteredVolumeFilter : public G4SmartFilter<G4VTrajectory> {
+class G4TrajectoryEncounteredVolumeFilter : public G4SmartFilter<G4VTrajectory>
+{
+  public:  // With description
 
-public: // With description
- 
-  // Construct with filter name
-  G4TrajectoryEncounteredVolumeFilter(const G4String& name = "Unspecified");
-  
-  virtual ~G4TrajectoryEncounteredVolumeFilter();
+    // Construct with filter name
+    G4TrajectoryEncounteredVolumeFilter(const G4String& name = "Unspecified");
 
-  // Evaluate this trajectory
-  virtual bool Evaluate(const G4VTrajectory&) const;
+    virtual ~G4TrajectoryEncounteredVolumeFilter();
 
-  // Print configuration
-  virtual void Print(std::ostream& ostr) const;
+    // Evaluate this trajectory
+    virtual bool Evaluate(const G4VTrajectory&) const;
 
-  // Clear filter
-  virtual void Clear();
+    // Print configuration
+    virtual void Print(std::ostream& ostr) const;
 
-  // Configuration function
-  void Add(const G4String& volume);
+    // Clear filter
+    virtual void Clear();
 
-private:
+    // Configuration function
+    void Add(const G4String& volume);
 
-  // Data member
-  std::vector<G4String> fVolumes;
+  private:
 
+    // Data member
+    std::vector<G4String> fVolumes;
 };
 
 #endif

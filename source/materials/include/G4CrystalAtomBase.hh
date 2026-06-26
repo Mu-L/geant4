@@ -35,8 +35,8 @@
 //
 // 21-04-16, created by E.Bagli
 
-#ifndef G4CrystalAtomBase_HH
-#define G4CrystalAtomBase_HH 1
+#ifndef G4CRYSTALATOMBASE_HH
+#define G4CRYSTALATOMBASE_HH
 
 #include <G4ThreeVector.hh>
 
@@ -45,27 +45,29 @@
 
 class G4CrystalAtomBase
 {
- public:  // with description
-  //
-  // Constructor to create a lattice
-  //
-  G4CrystalAtomBase() = default;
-  G4CrystalAtomBase(const G4ThreeVector& apos) { AddPos(apos); };
-  ~G4CrystalAtomBase() = default;
+  public:  // with description
 
-  inline std::vector<G4ThreeVector> GetPos() { return thePos; }
+    //
+    // Constructor to create a lattice
+    //
+    G4CrystalAtomBase() = default;
+    G4CrystalAtomBase(const G4ThreeVector& apos) { AddPos(apos); };
+    ~G4CrystalAtomBase() = default;
 
-  inline G4ThreeVector GetPos(G4int idx) { return thePos[idx]; }
-  inline void AddPos(const G4ThreeVector& a3vec) { thePos.push_back(a3vec); }
-  inline void SetPos(std::vector<G4ThreeVector> a3vecvec) { thePos = std::move(a3vecvec); }
-  inline void DelPos(G4int idx) { thePos.erase(thePos.begin() + idx); }
+    inline std::vector<G4ThreeVector> GetPos() { return thePos; }
 
- private:
-  // Atom positions in the lattice are stored in fractional coordinates
-  // i.e. the position in the unit cell described as a fractional
-  // position along each cell edge.
-  // Atoms may be removed or added
-  std::vector<G4ThreeVector> thePos;
+    inline G4ThreeVector GetPos(G4int idx) { return thePos[idx]; }
+    inline void AddPos(const G4ThreeVector& a3vec) { thePos.push_back(a3vec); }
+    inline void SetPos(std::vector<G4ThreeVector> a3vecvec) { thePos = std::move(a3vecvec); }
+    inline void DelPos(G4int idx) { thePos.erase(thePos.begin() + idx); }
+
+  private:
+
+    // Atom positions in the lattice are stored in fractional coordinates
+    // i.e. the position in the unit cell described as a fractional
+    // position along each cell edge.
+    // Atoms may be removed or added
+    std::vector<G4ThreeVector> thePos;
 };
 
 #endif

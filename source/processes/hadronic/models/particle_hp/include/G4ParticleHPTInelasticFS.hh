@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPTInelasticFS_h
-#define G4ParticleHPTInelasticFS_h 1
+#ifndef G4PARTICLEHPTINELASTICFS_HH
+#define G4PARTICLEHPTINELASTICFS_HH
 
 #include "G4HadFinalState.hh"
 #include "G4HadProjectile.hh"
@@ -45,8 +45,8 @@ class G4ParticleHPTInelasticFS : public G4ParticleHPInelasticCompFS
     G4ParticleHPTInelasticFS();
     ~G4ParticleHPTInelasticFS() override = default;
 
-    void Init(G4double A, G4double Z, G4int M, const G4String& dirName,
-              const G4String& aFSType, G4ParticleDefinition*) override;
+    void Init(G4double A, G4double Z, G4int M, const G4String& dirName, const G4String& aFSType,
+              G4ParticleDefinition*) override;
     G4HadFinalState* ApplyYourself(const G4HadProjectile& theTrack) override;
     G4ParticleHPFinalState* New() override
     {

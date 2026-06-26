@@ -45,12 +45,15 @@
 #define G4VCURVEDTRAJECTORYFILTER_HH
 
 #include "G4ThreeVector.hh"
+
 #include <vector>
 
 /**
  * @brief G4VCurvedTrajectoryFilter defines a filter for deciding which
- * intermediate points on a curved trajectory merit being stored. It defines
- * the compromise between accuracy of representation of the curved trajectory
+ * intermediate points on a curved trajectory merit being stored.
+ * @ingroup geometry_management
+ *
+ * It defines the compromise between accuracy of representation of the curved trajectory
  * and memory use. Derived classes should implement the filtering algorithm.
  */
 
@@ -66,7 +69,7 @@ class G4VCurvedTrajectoryFilter
 
     // Probably do not want these objects to be copied,
     // so make the copy constructor deleted in derived classes.
-  
+
     /**
      * Each segment stores the auxiliary points of a single step.
      */
@@ -77,13 +80,13 @@ class G4VCurvedTrajectoryFilter
      * rejecting. Derived classes should implement the filtering algorithm
      * in this method.
      */
-    virtual void TakeIntermediatePoint( G4ThreeVector newPoint ) = 0; 
+    virtual void TakeIntermediatePoint(G4ThreeVector newPoint) = 0;
 
     /**
      * Returns the vector of points, transferring the ownership.
      */
     std::vector<G4ThreeVector>* GimmeThePointsAndForgetThem();
-  
+
   protected:
 
     std::vector<G4ThreeVector>* fpFilteredPoints = nullptr;

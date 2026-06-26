@@ -27,40 +27,45 @@
 /// \brief Definition of the G4PhononDownconversion class
 //
 //
-#ifndef G4PhononDownconversion_h
-#define G4PhononDownconversion_h 1
+#ifndef G4PHONONDOWNCONVERSION_HH
+#define G4PHONONDOWNCONVERSION_HH
 
 #include "G4VPhononProcess.hh"
 
-class G4PhononDownconversion : public G4VPhononProcess {
-public:
-  G4PhononDownconversion(const G4String& processName ="phononDownconversion");
-  virtual ~G4PhononDownconversion();
+class G4PhononDownconversion : public G4VPhononProcess
+{
+  public:
 
-  virtual G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step& );
-  
-  virtual G4bool IsApplicable(const G4ParticleDefinition&);
-  
-protected:
-  virtual G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*);
-  
-private:
-  // relative probability that anharmonic decay occurs L->L'+T'
-  G4double GetLTDecayProb(G4double, G4double) const;
-  G4double GetTTDecayProb(G4double, G4double) const;
-  G4double MakeLDeviation(G4double, G4double) const;
-  G4double MakeTTDeviation(G4double, G4double) const;
-  G4double MakeTDeviation(G4double, G4double) const;
+    G4PhononDownconversion(const G4String& processName = "phononDownconversion");
+    virtual ~G4PhononDownconversion();
 
-  void MakeTTSecondaries(const G4Track&);
-  void MakeLTSecondaries(const G4Track&);
+    virtual G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&);
 
-private:
-  G4double fBeta, fGamma, fLambda, fMu;	// Local buffers for calculations
+    virtual G4bool IsApplicable(const G4ParticleDefinition&);
 
-  // hide assignment operator as private 
-  G4PhononDownconversion(G4PhononDownconversion&);
-  G4PhononDownconversion& operator=(const G4PhononDownconversion& right);
+  protected:
+
+    virtual G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*);
+
+  private:
+
+    // relative probability that anharmonic decay occurs L->L'+T'
+    G4double GetLTDecayProb(G4double, G4double) const;
+    G4double GetTTDecayProb(G4double, G4double) const;
+    G4double MakeLDeviation(G4double, G4double) const;
+    G4double MakeTTDeviation(G4double, G4double) const;
+    G4double MakeTDeviation(G4double, G4double) const;
+
+    void MakeTTSecondaries(const G4Track&);
+    void MakeLTSecondaries(const G4Track&);
+
+  private:
+
+    G4double fBeta, fGamma, fLambda, fMu;  // Local buffers for calculations
+
+    // hide assignment operator as private
+    G4PhononDownconversion(G4PhononDownconversion&);
+    G4PhononDownconversion& operator=(const G4PhononDownconversion& right);
 };
 
 #endif

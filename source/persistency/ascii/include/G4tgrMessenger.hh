@@ -32,8 +32,8 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrMessenger_hh
-#define G4tgrMessenger_hh 1
+#ifndef G4TGRMESSENGER_HH
+#define G4TGRMESSENGER_HH
 
 #include "G4UImessenger.hh"
 

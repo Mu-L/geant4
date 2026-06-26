@@ -32,14 +32,14 @@
 // Author: Youhei Morita, 18.07.2001
 // --------------------------------------------------------------------
 #ifndef G4PERSISTENCYCENTERMESSENGER_HH
-#define G4PERSISTENCYCENTERMESSENGER_HH 1
+#define G4PERSISTENCYCENTERMESSENGER_HH
 
+#include "G4PersistencyCenter.hh"
+#include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithAnInteger.hh"
+#include "G4UIcmdWithoutParameter.hh"
 #include "G4UIcommand.hh"
 #include "G4UIdirectory.hh"
-#include "G4UIcmdWithAnInteger.hh"
-#include "G4UIcmdWithAString.hh"
-#include "G4UIcmdWithoutParameter.hh"
-#include "G4PersistencyCenter.hh"
 #include "G4UImessenger.hh"
 
 class G4PersistencyCenterMessenger : public G4UImessenger
@@ -47,28 +47,27 @@ class G4PersistencyCenterMessenger : public G4UImessenger
   public:
 
     G4PersistencyCenterMessenger(G4PersistencyCenter* p);
-      // Constructor
+    // Constructor
 
     ~G4PersistencyCenterMessenger();
-      // Destructor
+    // Destructor
 
     void SetNewValue(G4UIcommand* command, G4String newValues);
-      // User interface for setting a new value
+    // User interface for setting a new value
 
     G4String GetCurrentValue(G4UIcommand* command);
-      // User interface for getting a value
+    // User interface for getting a value
 
   private:
 
     G4String PopWord(const G4String& text, G4int n, const G4String& delim);
-      // Parse text and returns the n-th words separated by delim
+    // Parse text and returns the n-th words separated by delim
 
   private:
 
     G4PersistencyCenter* pc = nullptr;
-    G4UIdirectory *directory  = nullptr,
-                  *subdir1 = nullptr, *subdir2 = nullptr,
-                  *subdir3 = nullptr, *subdir4 = nullptr, *subdir5 = nullptr;
+    G4UIdirectory *directory = nullptr, *subdir1 = nullptr, *subdir2 = nullptr, *subdir3 = nullptr,
+                  *subdir4 = nullptr, *subdir5 = nullptr;
     G4UIcmdWithAnInteger* verboseCmd = nullptr;
     G4UIcmdWithAString* select = nullptr;
     G4UIcmdWithAString* regHitIO = nullptr;

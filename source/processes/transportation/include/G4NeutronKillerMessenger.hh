@@ -37,11 +37,11 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4NeutronKillerMessenger_h
-#define G4NeutronKillerMessenger_h 1
+#ifndef G4NEUTRONKILLERMESSENGER_HH
+#define G4NEUTRONKILLERMESSENGER_HH
 
-#include "globals.hh"
 #include "G4UImessenger.hh"
+#include "globals.hh"
 
 class G4NeutronKiller;
 class G4UIdirectory;
@@ -49,26 +49,26 @@ class G4UIcmdWithADoubleAndUnit;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-class G4NeutronKillerMessenger: public G4UImessenger
+class G4NeutronKillerMessenger : public G4UImessenger
 {
-public:
+  public:
 
-  G4NeutronKillerMessenger(G4NeutronKiller*);
-  virtual ~G4NeutronKillerMessenger();
-    
-  void SetNewValue(G4UIcommand*, G4String);
-    
-private:
+    G4NeutronKillerMessenger(G4NeutronKiller*);
+    virtual ~G4NeutronKillerMessenger();
 
-  // hide assignment operator as private
-  G4NeutronKillerMessenger(const G4NeutronKillerMessenger&);
-  G4NeutronKillerMessenger& operator = (const G4NeutronKillerMessenger &right);
+    void SetNewValue(G4UIcommand*, G4String);
 
-  G4NeutronKiller*   killer;
-    
-  G4UIdirectory* dir;
-  G4UIcmdWithADoubleAndUnit* eCmd;
-  G4UIcmdWithADoubleAndUnit* tCmd;
+  private:
+
+    // hide assignment operator as private
+    G4NeutronKillerMessenger(const G4NeutronKillerMessenger&);
+    G4NeutronKillerMessenger& operator=(const G4NeutronKillerMessenger& right);
+
+    G4NeutronKiller* killer;
+
+    G4UIdirectory* dir;
+    G4UIcmdWithADoubleAndUnit* eCmd;
+    G4UIcmdWithADoubleAndUnit* tCmd;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

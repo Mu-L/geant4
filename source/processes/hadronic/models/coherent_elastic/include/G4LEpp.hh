@@ -26,47 +26,50 @@
 //
 // G4 Low energy model: n-n or p-p scattering
 // F.W. Jones, L.G. Greeniaus, H.P. Wellisch
-//  
+//
 // For further comments see G4LEppData.hh and G4LEpp.cc
 //
-// 30.01.14 V. Grichine add SampleInvariantT and inherit 
+// 30.01.14 V. Grichine add SampleInvariantT and inherit
 //             from G4HadronElastic
 
-#ifndef G4LEpp_h
-#define G4LEpp_h 1
- 
-#include "globals.hh"
+#ifndef G4LEPP_HH
+#define G4LEPP_HH
+
 #include "G4HadronElastic.hh"
+#include "globals.hh"
 
 class G4LEpp : public G4HadronElastic
 {
-private:
+  private:
 
-  enum { NENERGY=40, NANGLE=180 };
+    enum
+    {
+      NENERGY = 40,
+      NANGLE = 180
+    };
 
-public:
+  public:
 
-  explicit G4LEpp();
+    explicit G4LEpp();
 
-  ~G4LEpp() override;
- 
-  G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
-  				 G4Nucleus& targetNucleus) override;
+    ~G4LEpp() override;
 
-  G4double SampleInvariantT(const G4ParticleDefinition* p, 
-			    G4double plab, G4int Z, G4int A) override;
-  
-private:
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
+                                   G4Nucleus& targetNucleus) override;
 
-  // The following arrays are declared static to allow the use of initializers.
-  // They are initialized in G4LEppData.hh
+    G4double SampleInvariantT(const G4ParticleDefinition* p, G4double plab, G4int Z,
+                              G4int A) override;
 
-  // Coulomb effects suppressed:
-  static const G4float Sig[NENERGY][NANGLE];
-  static const G4float elab[NENERGY]; 
-  static const G4float dSigmax[NENERGY];
-  static const G4float Sigtot[NENERGY];
+  private:
 
+    // The following arrays are declared static to allow the use of initializers.
+    // They are initialized in G4LEppData.hh
+
+    // Coulomb effects suppressed:
+    static const G4float Sig[NENERGY][NANGLE];
+    static const G4float elab[NENERGY];
+    static const G4float dSigmax[NENERGY];
+    static const G4float Sigtot[NENERGY];
 };
 
 #endif

@@ -25,8 +25,8 @@
 //
 //
 //
-#ifndef G4LorentzRotation_hh
-#define G4LorentzRotation_hh
+#ifndef G4LORENTZROTATION_HH
+#define G4LORENTZROTATION_HH
 
 #include <CLHEP/Vector/LorentzRotation.h>
 

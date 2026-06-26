@@ -37,8 +37,11 @@
 // Author: Jonathan Madsen (May 28th 2020)
 // ---------------------------------------------------------------
 
-#pragma once
+#ifndef G4THREADPOOL_HH
+#define G4THREADPOOL_HH
 
 #include "PTL/ThreadPool.hh"
 
 using G4ThreadPool = PTL::ThreadPool;
+
+#endif

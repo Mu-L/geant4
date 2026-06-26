@@ -25,53 +25,55 @@
 //
 //
 //
-// 
+//
 // G4OpenGLWin32Viewer : Class to provide WindowsNT specific
 //                       functionality for OpenGL in GEANT4
 
 #ifndef G4OPENGLWIN32VIEWER_HH
 #define G4OPENGLWIN32VIEWER_HH
 
-#include "globals.hh"
-
 #include "G4OpenGLViewer.hh"
+#include "globals.hh"
 
 class G4OpenGLSceneHandler;
 
-class G4OpenGLWin32Viewer: virtual public G4OpenGLViewer {
+class G4OpenGLWin32Viewer : virtual public G4OpenGLViewer
+{
+  public:
 
-public:
-  G4OpenGLWin32Viewer (G4OpenGLSceneHandler& scene);
-  virtual ~G4OpenGLWin32Viewer ();
-  void SetView ();
-  void ShowView ();
-  void SwitchToMasterThread();
+    G4OpenGLWin32Viewer(G4OpenGLSceneHandler& scene);
+    virtual ~G4OpenGLWin32Viewer();
+    void SetView();
+    void ShowView();
+    void SwitchToMasterThread();
 
-protected:
-  void GetWin32Connection ();
-  void CreateGLWin32Context ();
-  virtual void CreateMainWindow ();
-  HDC fHDC;
+  protected:
 
-  G4bool fMouseHovered;
-  G4bool fMousePressed;
-  G4int fMousePressedX, fMousePressedY;
+    void GetWin32Connection();
+    void CreateGLWin32Context();
+    virtual void CreateMainWindow();
+    HDC fHDC;
 
-private:
-  static LRESULT CALLBACK WindowProc(HWND,UINT,WPARAM,LPARAM);
-  static G4bool SetWindowPixelFormat(HDC);
+    G4bool fMouseHovered;
+    G4bool fMousePressed;
+    G4int fMousePressedX, fMousePressedY;
 
-  void TrackMouse(G4int, G4int);
-  void ReleaseMouse();
-  void SetShift(G4int, G4int);
-  void SetRotation(G4int, G4int);
-  void SetZoom(G4int);
-  G4bool GetWindowSize(unsigned int& a_w, unsigned int& a_h);
-  G4bool GetRenderAreaSize(unsigned int& a_w, unsigned int& a_h);
+  private:
 
-  HWND fWindow;
-  HGLRC fHGLRC;
-  G4bool fInCreateWindow;
+    static LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
+    static G4bool SetWindowPixelFormat(HDC);
+
+    void TrackMouse(G4int, G4int);
+    void ReleaseMouse();
+    void SetShift(G4int, G4int);
+    void SetRotation(G4int, G4int);
+    void SetZoom(G4int);
+    G4bool GetWindowSize(unsigned int& a_w, unsigned int& a_h);
+    G4bool GetRenderAreaSize(unsigned int& a_w, unsigned int& a_h);
+
+    HWND fWindow;
+    HGLRC fHGLRC;
+    G4bool fInCreateWindow;
 };
 
 #endif

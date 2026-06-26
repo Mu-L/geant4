@@ -25,53 +25,56 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  10th February 1997
 // OpenGL graphics system factory.
 
-#include "G4VisFeaturesOfOpenGL.hh"
-#include "G4VSceneHandler.hh"
+#include "G4OpenGLImmediateXm.hh"
+
+#include "G4OpenGLImmediateSceneHandler.hh"
+#include "G4OpenGLImmediateXmViewer.hh"
 #include "G4OpenGLSceneHandler.hh"
 #include "G4OpenGLViewer.hh"
-#include "G4OpenGLImmediateXm.hh"
-#include "G4OpenGLImmediateXmViewer.hh"
 #include "G4OpenGLViewerMessenger.hh"
 #include "G4OpenGLXmViewerMessenger.hh"
-#include "G4OpenGLImmediateSceneHandler.hh"
+#include "G4VSceneHandler.hh"
+#include "G4VisFeaturesOfOpenGL.hh"
 
-G4OpenGLImmediateXm::G4OpenGLImmediateXm ():
-  G4OpenGLXm ("OpenGLImmediateXm",
-              "OGLIXm",
-              G4VisFeaturesOfOpenGLIXm (),
-              G4VGraphicsSystem::threeD)
+G4OpenGLImmediateXm::G4OpenGLImmediateXm()
+  : G4OpenGLXm("OpenGLImmediateXm", "OGLIXm", G4VisFeaturesOfOpenGLIXm(), G4VGraphicsSystem::threeD)
 {
   G4OpenGLViewerMessenger::GetInstance();
   G4OpenGLXmViewerMessenger::GetInstance();
 }
 
-G4OpenGLImmediateXm::~G4OpenGLImmediateXm () {}
+G4OpenGLImmediateXm::~G4OpenGLImmediateXm() {}
 
-G4VSceneHandler* G4OpenGLImmediateXm::CreateSceneHandler (const G4String& name) {
-  G4VSceneHandler* pScene = new G4OpenGLImmediateSceneHandler (*this, name);
-  return    pScene;
+G4VSceneHandler* G4OpenGLImmediateXm::CreateSceneHandler(const G4String& name)
+{
+  G4VSceneHandler* pScene = new G4OpenGLImmediateSceneHandler(*this, name);
+  return pScene;
 }
 
-G4VViewer* G4OpenGLImmediateXm::CreateViewer (G4VSceneHandler& scene,
-					  const G4String& name) {
-  G4VViewer* pView =
-    new G4OpenGLImmediateXmViewer ((G4OpenGLImmediateSceneHandler&) scene, name);
-  if (pView) {
-    if (pView -> GetViewId () < 0) {
+G4VViewer* G4OpenGLImmediateXm::CreateViewer(G4VSceneHandler& scene, const G4String& name)
+{
+  G4VViewer* pView = new G4OpenGLImmediateXmViewer((G4OpenGLImmediateSceneHandler&)scene, name);
+  if (pView)
+  {
+    if (pView->GetViewId() < 0)
+    {
       G4cerr << "G4OpenGLImmediateXm::CreateViewer: error flagged by"
-	" negative view id in G4OpenGLImmediateXmViewer creation."
-	"\n Destroying view and returning null pointer." << G4endl;
+                " negative view id in G4OpenGLImmediateXmViewer creation."
+                "\n Destroying view and returning null pointer."
+             << G4endl;
       delete pView;
       pView = 0;
     }
   }
-  else {
+  else
+  {
     G4cerr << "G4OpenGLImmediateXm::CreateViewer: null pointer on"
-      " new G4OpenGLImmediateXmViewer." << G4endl;
+              " new G4OpenGLImmediateXmViewer."
+           << G4endl;
   }
   return pView;
 }

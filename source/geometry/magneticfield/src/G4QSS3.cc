@@ -30,29 +30,22 @@
 
 #include "G4QSS3.hh"
 
-G4QSS3::G4QSS3(QSS_simulator sim)
-  : simulator(sim)
-{
-}
+G4QSS3::G4QSS3(QSS_simulator sim) : simulator(sim) {}
 
 void G4QSS3::recompute_next_times(G4int* inf, G4double t)
 {
   G4int i;
-  G4double *x = simulator->x;
-  G4double *q = simulator->q;
-  G4double *lqu = simulator->lqu;
-  G4double *time = simulator->nextStateTime;
+  G4double* x = simulator->x;
+  G4double* q = simulator->q;
+  G4double* lqu = simulator->lqu;
+  G4double* time = simulator->nextStateTime;
   G4double coeff[4];
 
-  for(i = 0; i < 3; ++i)
+  for (i = 0; i < 3; ++i)
   {
-    const G4int var = inf[i],
-                cf0 = 4*var,
-                cf1 = cf0 + 1,
-                cf2 = cf1 + 1,
-                cf3 = cf2 + 1;
+    const G4int var = inf[i], cf0 = 4 * var, cf1 = cf0 + 1, cf2 = cf1 + 1, cf3 = cf2 + 1;
 
-    if(std::fabs(q[cf0] - x[cf0]) >= lqu[var])
+    if (std::fabs(q[cf0] - x[cf0]) >= lqu[var])
     {
       time[var] = t;
     }

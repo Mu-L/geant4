@@ -11,7 +11,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -112,6 +112,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 1
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            1 MeV
 Linear loss limit                                  0.01
@@ -518,30 +519,30 @@ N=17 V[N]={906770732717044781, 629165745432651234, 1235682547346241386, 68420008
  Run terminated.
 Run Summary
   Number of events processed : 100000
-  User=0.510000s Real=0.518994s Sys=0.000000s
+  User=0.440000s Real=0.552978s Sys=0.000000s
 
  ======================== run summary ======================
 
  The run was 100000 pi+ of 5 GeV through 20 um  of Silicon (density: 2.33 g/cm3 )
 
- Total energy deposit in absorber per event = 6.353 keV +- 16.34 eV 
+ Total energy deposit in absorber per event = 6.354 keV +- 16.33 eV 
 
- -----> Mean dE/dx = 3.177 MeV/cm	(1.363 MeV*cm2/g)
+ -----> Mean dE/dx = 3.177 MeV/cm	(1.364 MeV*cm2/g)
 
  From formulas :
    restricted dEdx = 2.96 MeV/cm	(1.27 MeV*cm2/g)
    full dEdx       = 4.726 MeV/cm	(2.028 MeV*cm2/g)
 
- Leakage :  primary = 5 GeV +- 725.3 eV    secondaries = 2.672 keV +- 724.6 eV 
+ Leakage :  primary = 5 GeV +- 725.3 eV    secondaries = 2.673 keV +- 724.6 eV 
  Energy balance :  edep + eleak = 5 GeV
 
- Total track length (charged) in absorber per event = 20.26 um  +- 7.771 nm 
+ Total track length (charged) in absorber per event = 20.26 um  +- 7.778 nm 
  Total track length (neutral) in absorber per event = 7.453e+04 fm  +- 7.453e+04 fm 
 
- Number of steps (charged) in absorber per event = 1.179 +- 0.005528
+ Number of steps (charged) in absorber per event = 1.179 +- 0.005533
  Number of steps (neutral) in absorber per event = 1e-05 +- 1e-05
 
- Number of secondaries per event : Gammas = 1e-05   electrons = 0.017   positrons = 0
+ Number of secondaries per event : Gammas = 1e-05   electrons = 0.01702   positrons = 0
 
  Number of events with the primary particle transmitted = 100 %
  Number of events with at least  1 particle transmitted (same charge as primary) = 100 %
@@ -552,7 +553,7 @@ Run Summary
  MultipleScattering:
   rms proj angle of transmit primary particle = 0.02504 mrad (central part only)
   computed theta0 (Highland formula)          = 0.02627 mrad
-  central part defined as +- 0.07881 mrad   Tail ratio = 1.951 %
+  central part defined as +- 0.07881 mrad   Tail ratio = 1.953 %
 
  Gamma process counts:
    Photoeffect 0
@@ -563,7 +564,7 @@ Run Summary
 ------- MixMaxRng engine status -------
  Current state vector is:
 mixmax state, file version 1.0
-N=17 V[N]={1378456096184970916, 645125664873386088, 289313246081823319, 692181631145386720, 1554795592127445348, 429523111405020466, 1767267687826005316, 887948550155982521, 745800083929026403, 309730682002155907, 2175523263042675480, 1439287206468397773, 1375105445691351298, 782374144723864041, 1715829858399311388, 655882193793759711, 1581270085403564578} counter= 8sumtot= 2284513478758269616
+N=17 V[N]={886589202658846319, 62615003870212312, 1420803680119587982, 160733668625648282, 310654957685314585, 333778400379280460, 1226917225736365329, 1813319405138970591, 1906401454822702462, 1829615018296488736, 2108821954964461345, 1476136457715262765, 1749961341067139248, 1841426766026999176, 1998533703169304903, 1738091728807740400, 1525741823465822095} counter= 4sumtot= 1637554709626901431
 ---------------------------------------
 #
 /testem/det/setAbsMat Gold
@@ -608,7 +609,7 @@ Index : 2     used in the geometry : Yes
 ------- MixMaxRng engine status -------
  Current state vector is:
 mixmax state, file version 1.0
-N=17 V[N]={1378456096184970916, 645125664873386088, 289313246081823319, 692181631145386720, 1554795592127445348, 429523111405020466, 1767267687826005316, 887948550155982521, 745800083929026403, 309730682002155907, 2175523263042675480, 1439287206468397773, 1375105445691351298, 782374144723864041, 1715829858399311388, 655882193793759711, 1581270085403564578} counter= 8sumtot= 2284513478758269616
+N=17 V[N]={886589202658846319, 62615003870212312, 1420803680119587982, 160733668625648282, 310654957685314585, 333778400379280460, 1226917225736365329, 1813319405138970591, 1906401454822702462, 1829615018296488736, 2108821954964461345, 1476136457715262765, 1749961341067139248, 1841426766026999176, 1998533703169304903, 1738091728807740400, 1525741823465822095} counter= 4sumtot= 1637554709626901431
 ---------------------------------------
 --> Event 0 starts.
 --> Event 10000 starts.
@@ -618,44 +619,44 @@ N=17 V[N]={1378456096184970916, 645125664873386088, 289313246081823319, 69218163
  Run terminated.
 Run Summary
   Number of events processed : 50000
-  User=0.320000s Real=0.321834s Sys=0.000000s
+  User=0.320000s Real=0.326997s Sys=0.000000s
 
  ======================== run summary ======================
 
  The run was 50000 e- of 15.7 MeV through 9.66 um  of Gold (density: 19.3 g/cm3 )
 
- Total energy deposit in absorber per event = 18.38 keV +- 64.44 eV 
+ Total energy deposit in absorber per event = 18.39 keV +- 64.27 eV 
 
- -----> Mean dE/dx = 19.03 MeV/cm	(0.9848 MeV*cm2/g)
+ -----> Mean dE/dx = 19.05 MeV/cm	(0.9858 MeV*cm2/g)
 
  From formulas :
    restricted dEdx = 17.91 MeV/cm	(0.927 MeV*cm2/g)
    full dEdx       = 61.41 MeV/cm	(3.179 MeV*cm2/g)
 
- Leakage :  primary = 15.64 MeV +- 2.11 keV   secondaries = 37.48 keV +- 2.102 keV
+ Leakage :  primary = 15.64 MeV +- 2.068 keV   secondaries = 36.79 keV +- 2.054 keV
  Energy balance :  edep + eleak = 15.7 MeV
 
- Total track length (charged) in absorber per event = 9.911 um  +- 11.24 nm 
- Total track length (neutral) in absorber per event = 141.4 nm  +- 13.24 nm 
+ Total track length (charged) in absorber per event = 9.915 um  +- 11.29 nm 
+ Total track length (neutral) in absorber per event = 140.4 nm  +- 13.23 nm 
 
- Number of steps (charged) in absorber per event = 2.602 +- 0.009024
- Number of steps (neutral) in absorber per event = 0.02698 +- 0.0007528
+ Number of steps (charged) in absorber per event = 2.607 +- 0.009114
+ Number of steps (neutral) in absorber per event = 0.02684 +- 0.0007515
 
- Number of secondaries per event : Gammas = 0.0269   electrons = 0.02112   positrons = 0
+ Number of secondaries per event : Gammas = 0.02676   electrons = 0.02138   positrons = 0
 
  Number of events with the primary particle transmitted = 99.98 %
  Number of events with at least  1 particle transmitted (same charge as primary) = 99.98 %
 
  Number of events with the primary particle reflected = 0.02 %
- Number of events with at least  1 particle reflected (same charge as primary) = 0.31 %
+ Number of events with at least  1 particle reflected (same charge as primary) = 0.322 %
 
  MultipleScattering:
-  rms proj angle of transmit primary particle = 34.71 mrad (central part only)
+  rms proj angle of transmit primary particle = 34.73 mrad (central part only)
   computed theta0 (Highland formula)          = 35.1 mrad
-  central part defined as +- 105.3 mrad   Tail ratio = 2.948 %
+  central part defined as +- 105.3 mrad   Tail ratio = 2.914 %
 
  Gamma process counts:
-   Photoeffect 198
+   Photoeffect 197
    Compton     0
    Conversion  0
    Rayleigh    4
@@ -663,7 +664,7 @@ Run Summary
 ------- MixMaxRng engine status -------
  Current state vector is:
 mixmax state, file version 1.0
-N=17 V[N]={187465526861526162, 1919470187343084000, 1200600146555496649, 2254698630955541145, 1010695742965213971, 386425232931658995, 1773838893809632618, 1545813557997812675, 1661416122218187049, 1838452107617613130, 852398828744869876, 2030305144316100, 2300250181027420193, 126900021668951897, 823556986218677264, 1235812847093715199, 1130805818374825746} counter= 11sumtot= 1803887063818991061
+N=17 V[N]={367816950800835088, 373325060154984196, 1507226702758585023, 35267312586335488, 61843947603466070, 1006486419550769248, 1129901815199416007, 584965419802414362, 155708661903574101, 676499230565032858, 1044336465536180803, 216723645740040279, 1615871482412887260, 1033064127011791986, 1602057914090354718, 1811752226977693422, 2300237718795515126} counter= 11sumtot= 1688027046207712329
 ---------------------------------------
 #
 /run/setCut 10 um
@@ -713,7 +714,7 @@ Index : 3     used in the geometry : Yes
 ------- MixMaxRng engine status -------
  Current state vector is:
 mixmax state, file version 1.0
-N=17 V[N]={187465526861526162, 1919470187343084000, 1200600146555496649, 2254698630955541145, 1010695742965213971, 386425232931658995, 1773838893809632618, 1545813557997812675, 1661416122218187049, 1838452107617613130, 852398828744869876, 2030305144316100, 2300250181027420193, 126900021668951897, 823556986218677264, 1235812847093715199, 1130805818374825746} counter= 11sumtot= 1803887063818991061
+N=17 V[N]={367816950800835088, 373325060154984196, 1507226702758585023, 35267312586335488, 61843947603466070, 1006486419550769248, 1129901815199416007, 584965419802414362, 155708661903574101, 676499230565032858, 1044336465536180803, 216723645740040279, 1615871482412887260, 1033064127011791986, 1602057914090354718, 1811752226977693422, 2300237718795515126} counter= 11sumtot= 1688027046207712329
 ---------------------------------------
 --> Event 0 starts.
 --> Event 10000 starts.
@@ -723,13 +724,13 @@ N=17 V[N]={187465526861526162, 1919470187343084000, 1200600146555496649, 2254698
  Run terminated.
 Run Summary
   Number of events processed : 50000
-  User=1.000000s Real=1.013984s Sys=0.000000s
+  User=0.970000s Real=0.999177s Sys=0.000000s
 
  ======================== run summary ======================
 
  The run was 50000 mu+ of 96.2 MeV through 4.74 mm  of G4_POLYETHYLENE (density: 940 mg/cm3)
 
- Total energy deposit in absorber per event = 1.048 MeV +- 993.7 eV 
+ Total energy deposit in absorber per event = 1.048 MeV +- 993.8 eV 
 
  -----> Mean dE/dx = 2.21 MeV/cm	(2.351 MeV*cm2/g)
 
@@ -737,16 +738,16 @@ Run Summary
    restricted dEdx = 1.749 MeV/cm	(1.861 MeV*cm2/g)
    full dEdx       = 2.265 MeV/cm	(2.409 MeV*cm2/g)
 
- Leakage :  primary = 95.13 MeV +- 1.332 keV   secondaries = 26.01 keV +- 701.3 eV 
+ Leakage :  primary = 95.13 MeV +- 1.332 keV   secondaries = 26.04 keV +- 701.6 eV 
  Energy balance :  edep + eleak = 96.2 MeV
 
  Total track length (charged) in absorber per event = 5.17 mm  +- 3.775 um 
  Total track length (neutral) in absorber per event = 22.35 um  +- 2.273 um 
 
- Number of steps (charged) in absorber per event = 12.17 +- 0.03721
+ Number of steps (charged) in absorber per event = 12.17 +- 0.03722
  Number of steps (neutral) in absorber per event = 0.00988 +- 0.0004846
 
- Number of secondaries per event : Gammas = 0.00914   electrons = 4.181   positrons = 0
+ Number of secondaries per event : Gammas = 0.00914   electrons = 4.18   positrons = 0
 
  Number of events with the primary particle transmitted = 100 %
  Number of events with at least  1 particle transmitted (same charge as primary) = 100 %
@@ -755,9 +756,9 @@ Run Summary
  Number of events with at least  1 particle reflected (same charge as primary) = 0 %
 
  MultipleScattering:
-  rms proj angle of transmit primary particle = 7.373 mrad (central part only)
+  rms proj angle of transmit primary particle = 7.372 mrad (central part only)
   computed theta0 (Highland formula)          = 7.636 mrad
-  central part defined as +- 22.91 mrad   Tail ratio = 1.214 %
+  central part defined as +- 22.91 mrad   Tail ratio = 1.218 %
 
  Gamma process counts:
    Photoeffect 305
@@ -768,7 +769,7 @@ Run Summary
 ------- MixMaxRng engine status -------
  Current state vector is:
 mixmax state, file version 1.0
-N=17 V[N]={2083361880407413973, 558014575596605443, 155743980189950201, 2182957000861726697, 1838655335096136537, 1946843552728816280, 1681406852924851701, 474130547566224162, 1018240738768540513, 1872432096900372193, 472993835442224762, 10222201860268061, 1779133025925577121, 2263978871037324573, 1473228915816656057, 35068858945786700, 1174357358231345229} counter= 2sumtot= 268182545376574644
+N=17 V[N]={1685398004832614251, 1612674287300551319, 1548362229955202086, 809397434692165386, 1170311246217315506, 1564713211078605012, 448127584653227439, 606630857405134858, 237013838991685674, 1824893309076547395, 2179332368354870418, 1008543394564683351, 1711162459250213732, 638645298689682732, 615564707800230506, 2206073458263592711, 1408830628866293453} counter= 5sumtot= 523087237069370270
 ---------------------------------------
 #
 /run/setCut 1 mm
@@ -824,7 +825,7 @@ Index : 4     used in the geometry : Yes
 ------- MixMaxRng engine status -------
  Current state vector is:
 mixmax state, file version 1.0
-N=17 V[N]={2083361880407413973, 558014575596605443, 155743980189950201, 2182957000861726697, 1838655335096136537, 1946843552728816280, 1681406852924851701, 474130547566224162, 1018240738768540513, 1872432096900372193, 472993835442224762, 10222201860268061, 1779133025925577121, 2263978871037324573, 1473228915816656057, 35068858945786700, 1174357358231345229} counter= 2sumtot= 268182545376574644
+N=17 V[N]={1685398004832614251, 1612674287300551319, 1548362229955202086, 809397434692165386, 1170311246217315506, 1564713211078605012, 448127584653227439, 606630857405134858, 237013838991685674, 1824893309076547395, 2179332368354870418, 1008543394564683351, 1711162459250213732, 638645298689682732, 615564707800230506, 2206073458263592711, 1408830628866293453} counter= 5sumtot= 523087237069370270
 ---------------------------------------
 --> Event 0 starts.
 --> Event 10000 starts.
@@ -834,15 +835,15 @@ N=17 V[N]={2083361880407413973, 558014575596605443, 155743980189950201, 21829570
  Run terminated.
 Run Summary
   Number of events processed : 50000
-  User=0.240000s Real=0.243813s Sys=0.000000s
+  User=0.230000s Real=0.236520s Sys=0.000000s
 
  ======================== run summary ======================
 
  The run was 50000 proton of 175 GeV through 8 mm  of Aluminium (density: 2.7 g/cm3 )
 
- Total energy deposit in absorber per event = 5.362 MeV +- 381.9 keV
+ Total energy deposit in absorber per event = 5.36 MeV +- 381.9 keV
 
- -----> Mean dE/dx = 6.699 MeV/cm	(2.481 MeV*cm2/g)
+ -----> Mean dE/dx = 6.697 MeV/cm	(2.48 MeV*cm2/g)
 
  From formulas :
    restricted dEdx = 4.024 MeV/cm	(1.49 MeV*cm2/g)
@@ -854,10 +855,10 @@ Run Summary
  Total track length (charged) in absorber per event = 8.004 mm  +- 0 fm 
  Total track length (neutral) in absorber per event = 0 fm  +- 0 fm 
 
- Number of steps (charged) in absorber per event = 1.268 +- 0.002316
+ Number of steps (charged) in absorber per event = 1.268 +- 0.002315
  Number of steps (neutral) in absorber per event = 0 +- 0
 
- Number of secondaries per event : Gammas = 0   electrons = 0.268   positrons = 0.00088
+ Number of secondaries per event : Gammas = 0   electrons = 0.2679   positrons = 0.0009
 
  Number of events with the primary particle transmitted = 100 %
  Number of events with at least  1 particle transmitted (same charge as primary) = 100 %
@@ -868,7 +869,7 @@ Run Summary
  MultipleScattering:
   rms proj angle of transmit primary particle = 0.02062 mrad (central part only)
   computed theta0 (Highland formula)          = 0.02111 mrad
-  central part defined as +- 0.06333 mrad   Tail ratio = 1.327 %
+  central part defined as +- 0.06333 mrad   Tail ratio = 1.326 %
 
  Gamma process counts:
    Photoeffect 0
@@ -879,7 +880,7 @@ Run Summary
 ------- MixMaxRng engine status -------
  Current state vector is:
 mixmax state, file version 1.0
-N=17 V[N]={864120598200464168, 189420282748189000, 2125101903705486721, 1863466081725669111, 1383960382039097673, 550892631529147885, 2244069534527202395, 933979936320874605, 791647544461653037, 286412522794523854, 1616800613386878212, 478416970401061220, 1548587089976077386, 917812281992815632, 2284924600166281660, 94168853074452663, 1674934093723585259} counter= 15sumtot= 1401971847063908873
+N=17 V[N]={2100667368802703687, 1470343380493707136, 61161333147268140, 934893976963626681, 2125043056574639718, 1308837644292739958, 1913017956734956878, 45644756770901656, 606820931306633549, 1756146907524934647, 216769033899851605, 885331573643983440, 2204109186648997905, 331009688570203210, 1918110166724555762, 1484204409897387371, 1536495597998315976} counter= 9sumtot= 146019887072161760
 ---------------------------------------
 #
 /testem/det/setAbsMat Iron
@@ -936,7 +937,7 @@ Index : 5     used in the geometry : Yes
 ------- MixMaxRng engine status -------
  Current state vector is:
 mixmax state, file version 1.0
-N=17 V[N]={864120598200464168, 189420282748189000, 2125101903705486721, 1863466081725669111, 1383960382039097673, 550892631529147885, 2244069534527202395, 933979936320874605, 791647544461653037, 286412522794523854, 1616800613386878212, 478416970401061220, 1548587089976077386, 917812281992815632, 2284924600166281660, 94168853074452663, 1674934093723585259} counter= 15sumtot= 1401971847063908873
+N=17 V[N]={2100667368802703687, 1470343380493707136, 61161333147268140, 934893976963626681, 2125043056574639718, 1308837644292739958, 1913017956734956878, 45644756770901656, 606820931306633549, 1756146907524934647, 216769033899851605, 885331573643983440, 2204109186648997905, 331009688570203210, 1918110166724555762, 1484204409897387371, 1536495597998315976} counter= 9sumtot= 146019887072161760
 ---------------------------------------
 --> Event 0 starts.
 --> Event 10000 starts.
@@ -946,7 +947,7 @@ N=17 V[N]={864120598200464168, 189420282748189000, 2125101903705486721, 18634660
  Run terminated.
 Run Summary
   Number of events processed : 50000
-  User=4.290000s Real=4.352058s Sys=0.000000s
+  User=4.170000s Real=4.265906s Sys=0.000000s
 
  ======================== run summary ======================
 
@@ -969,7 +970,7 @@ Run Summary
  Number of steps (charged) in absorber per event = 47.58 +- 0.03044
  Number of steps (neutral) in absorber per event = 0 +- 0
 
- Number of secondaries per event : Gammas = 0.05044   electrons = 46.52   positrons = 1.254
+ Number of secondaries per event : Gammas = 0.05044   electrons = 46.53   positrons = 1.254
 
  Number of events with the primary particle transmitted = 100 %
  Number of events with at least  1 particle transmitted (same charge as primary) = 100 %
@@ -991,7 +992,7 @@ Run Summary
 ------- MixMaxRng engine status -------
  Current state vector is:
 mixmax state, file version 1.0
-N=17 V[N]={1046585659322464193, 1700724626221482459, 1710146587566228662, 2274062821915192324, 1093598942862882934, 859975426035031537, 1845450543346184012, 1347610440888355163, 1747669745252223770, 1589127766525861706, 1326010817860615296, 367647672722605028, 58019342554185087, 2022010207749596709, 2304966030133393681, 135872583825542285, 522422170598193944} counter= 6sumtot= 1199314302456793231
+N=17 V[N]={1387106789572808779, 1207688421699769565, 1287739199628718119, 153978792041637269, 930955307994986262, 1808016463188689849, 2181055841416900788, 2015022714195132386, 1705048031772837047, 25230835777695867, 1834630334569768002, 606219335441995841, 2122621871630059680, 1543250882561257515, 1370756180250293286, 2148891671866922446, 421044689788145395} counter= 6sumtot= 1996670280474372537
 ---------------------------------------
 #
 ================== Deleting memory pools ===================

@@ -27,40 +27,39 @@
 // --------------------------------------------------------------------
 #include "G4BiasingHelper.hh"
 
-#include "G4ProcessManager.hh"
 #include "G4BiasingProcessInterface.hh"
 #include "G4ParallelGeometriesLimiterProcess.hh"
+#include "G4ProcessManager.hh"
 
 G4bool G4BiasingHelper::ActivatePhysicsBiasing(G4ProcessManager* pmanager,
-					       const G4String& physicsProcessToBias,
-					       const G4String& wrappedName)
+                                               const G4String& physicsProcessToBias,
+                                               const G4String& wrappedName)
 {
   G4VProcess* physicsProcess(0);
-  
+
   G4ProcessVector* vprocess = pmanager->GetProcessList();
-  for (auto ip = 0 ; ip < (G4int)vprocess->size() ; ++ip)
+  for (auto ip = 0; ip < (G4int)vprocess->size(); ++ip)
   {
-    if ( (*vprocess)[ip]->GetProcessName() == physicsProcessToBias )
+    if ((*vprocess)[ip]->GetProcessName() == physicsProcessToBias)
     {
       physicsProcess = (*vprocess)[ip];
       break;
     }
   }
-  
+
   // -- process not found, return "false" to tell about failure
-  if ( physicsProcess == nullptr ) return false;
-  
+  if (physicsProcess == nullptr) return false;
+
   // -- process is not a physics one, return "false" to tell about failure
   G4int processType = physicsProcess->GetProcessType();
-  if ( ( processType != 2 ) &&  // EM
-       ( processType != 3 ) &&  // Optical
-       ( processType != 4 ) &&  // Hadronic
-       ( processType != 6 ) )   // Decay
+  if ((processType != 2) &&  // EM
+      (processType != 3) &&  // Optical
+      (processType != 4) &&  // Hadronic
+      (processType != 6))  // Decay
     return false;
 
   // -- prevent wrapper of wrapper...
-  if ( dynamic_cast< G4BiasingProcessInterface* >( physicsProcess ) )
-    return false;
+  if (dynamic_cast<G4BiasingProcessInterface*>(physicsProcess)) return false;
 
   // -- remember process indeces:
   G4int atRestIndex = pmanager->GetProcessOrdering(physicsProcess, idxAtRest);
@@ -69,76 +68,71 @@ G4bool G4BiasingHelper::ActivatePhysicsBiasing(G4ProcessManager* pmanager,
 
   // -- now remove the physic process, that will be replaced by a wrapped version:
   G4VProcess* removed = pmanager->RemoveProcess(physicsProcess);
-  if ( removed != physicsProcess )
+  if (removed != physicsProcess)
   {
     G4ExceptionDescription ed;
     ed << "Internal inconsistency in processes handling. Please report !" << G4endl;
-    G4Exception("G4BiasingHelper::ActivatePhysicsBiasing(...)",
-                "BIAS.GEN.01", FatalException, ed);
+    G4Exception("G4BiasingHelper::ActivatePhysicsBiasing(...)", "BIAS.GEN.01", FatalException, ed);
   }
-  
-  G4BiasingProcessInterface* biasingWrapper =
-    new G4BiasingProcessInterface( physicsProcess,
-                                   atRestIndex != ordInActive,
-                                   alongStepIndex != ordInActive,
-                                   postStepIndex  != ordInActive,
-                                   wrappedName );
 
-  if ( alongStepIndex == -1 ) alongStepIndex = ordDefault;
-  
-  pmanager->AddProcess( biasingWrapper, atRestIndex, alongStepIndex, postStepIndex);
+  G4BiasingProcessInterface* biasingWrapper = new G4BiasingProcessInterface(
+    physicsProcess, atRestIndex != ordInActive, alongStepIndex != ordInActive,
+    postStepIndex != ordInActive, wrappedName);
+
+  if (alongStepIndex == -1) alongStepIndex = ordDefault;
+
+  pmanager->AddProcess(biasingWrapper, atRestIndex, alongStepIndex, postStepIndex);
 
   return true;
 }
 
 void G4BiasingHelper::ActivateNonPhysicsBiasing(G4ProcessManager* pmanager,
-                                     const G4String& nonPhysicsProcessName )
+                                                const G4String& nonPhysicsProcessName)
 {
   G4BiasingProcessInterface* biasingNonPhys(nullptr);
-  if ( nonPhysicsProcessName == "" )
+  if (nonPhysicsProcessName == "")
     biasingNonPhys = new G4BiasingProcessInterface();
   else
-    biasingNonPhys = new G4BiasingProcessInterface(nonPhysicsProcessName );
+    biasingNonPhys = new G4BiasingProcessInterface(nonPhysicsProcessName);
 
-  pmanager->AddProcess( biasingNonPhys, ordInActive, ordInActive, ordDefault);
+  pmanager->AddProcess(biasingNonPhys, ordInActive, ordInActive, ordDefault);
 }
 
-G4ParallelGeometriesLimiterProcess*
-G4BiasingHelper::AddLimiterProcess(G4ProcessManager* pmanager,
-                                   const G4String& processName)
+G4ParallelGeometriesLimiterProcess* G4BiasingHelper::AddLimiterProcess(G4ProcessManager* pmanager,
+                                                                       const G4String& processName)
 {
   G4ParallelGeometriesLimiterProcess* toReturn = nullptr;
-  
+
   G4ProcessVector* processList = pmanager->GetProcessList();
   G4bool noInstance = true;
-  for (auto i = 0 ; i < (G4int)processList->size() ; ++i)
+  for (auto i = 0; i < (G4int)processList->size(); ++i)
   {
     G4VProcess* process = (*processList)[i];
-    if ( dynamic_cast< G4ParallelGeometriesLimiterProcess* >( process ) )
+    if (dynamic_cast<G4ParallelGeometriesLimiterProcess*>(process))
     {
       noInstance = false;
-	  
+
       G4ExceptionDescription ed;
       ed << "Trying to re-add a G4ParallelGeometriesLimiterProcess process \n"
-         << "to the process manager for '"
-         << pmanager->GetParticleType()->GetParticleName()
+         << "to the process manager for '" << pmanager->GetParticleType()->GetParticleName()
          << " (PDG : " << pmanager->GetParticleType()->GetPDGEncoding() << " )"
          << " while one is already present." << G4endl;
-      G4Exception("G4BiasingHelper::AddBiasingProcessLimiter()",
-                  "BIAS.GEN.28", JustWarning, ed, "Call ignored.");
+      G4Exception("G4BiasingHelper::AddBiasingProcessLimiter()", "BIAS.GEN.28", JustWarning, ed,
+                  "Call ignored.");
       break;
     }
   }
-  
-  if ( noInstance )
+
+  if (noInstance)
   {
-    G4ParallelGeometriesLimiterProcess* biasingLimiter = new G4ParallelGeometriesLimiterProcess(processName);
-    pmanager->AddProcess                ( biasingLimiter );
-    pmanager->SetProcessOrderingToSecond( biasingLimiter, idxAlongStep );
-    pmanager->SetProcessOrderingToLast  ( biasingLimiter, idxPostStep  );
-      
+    G4ParallelGeometriesLimiterProcess* biasingLimiter =
+      new G4ParallelGeometriesLimiterProcess(processName);
+    pmanager->AddProcess(biasingLimiter);
+    pmanager->SetProcessOrderingToSecond(biasingLimiter, idxAlongStep);
+    pmanager->SetProcessOrderingToLast(biasingLimiter, idxPostStep);
+
     toReturn = biasingLimiter;
   }
-  
+
   return toReturn;
 }

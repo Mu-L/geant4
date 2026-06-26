@@ -41,14 +41,9 @@
 
 #include "G4DecayPhysics.hh"
 #include "G4EmDNABuilder.hh"
-#include "G4EmDNAPhysics.hh"
-#include "G4EmDNAPhysics_option1.hh"
 #include "G4EmDNAPhysics_option2.hh"
-#include "G4EmDNAPhysics_option3.hh"
 #include "G4EmDNAPhysics_option4.hh"
-#include "G4EmDNAPhysics_option5.hh"
 #include "G4EmDNAPhysics_option6.hh"
-#include "G4EmDNAPhysics_option7.hh"
 #include "G4EmDNAPhysics_option8.hh"
 #include "G4EmLivermorePhysics.hh"
 #include "G4EmParameters.hh"
@@ -150,37 +145,17 @@ void PhysicsList::AddPhysics(const G4String& name)
     delete fEmPhysicsList;
     fEmPhysicsList = new G4EmPenelopePhysics();
   }
-  else if (name == "DNA_Opt0") {
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics();
-  }
-  else if (name == "DNA_Opt1") {
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics_option1();
-  }
   else if (name == "DNA_Opt2") {
     delete fEmPhysicsList;
     fEmPhysicsList = new G4EmDNAPhysics_option2();
-  }
-  else if (name == "DNA_Opt3") {
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics_option3();
   }
   else if (name == "DNA_Opt4") {
     delete fEmPhysicsList;
     fEmPhysicsList = new G4EmDNAPhysics_option4();
   }
-  else if (name == "DNA_Opt5") {
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics_option5();
-  }
   else if (name == "DNA_Opt6") {
     delete fEmPhysicsList;
     fEmPhysicsList = new G4EmDNAPhysics_option6();
-  }
-  else if (name == "DNA_Opt7") {
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics_option7();
   }
   else if (name == "DNA_Opt8") {
     delete fEmPhysicsList;

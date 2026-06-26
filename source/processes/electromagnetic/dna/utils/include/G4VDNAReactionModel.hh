@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,9 +41,10 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#pragma once
+#ifndef G4VDNAREACTIONMODEL_HH
+#define G4VDNAREACTIONMODEL_HH
 
 #include "globals.hh"
 
@@ -53,31 +54,34 @@ class G4Molecule;
 class G4Track;
 
 /**
-  * G4VDNAReactionModel is an interface used by the G4DNAMolecularReaction process.
-  * It defines how the reaction radius should be calculated and whether two molecules
-  * can indeed react.
-  */
+ * G4VDNAReactionModel is an interface used by the G4DNAMolecularReaction process.
+ * It defines how the reaction radius should be calculated and whether two molecules
+ * can indeed react.
+ */
 class G4VDNAReactionModel
 {
-public :
+  public:
+
     G4VDNAReactionModel();
     G4VDNAReactionModel(const G4VDNAReactionModel&) = delete;
     G4VDNAReactionModel& operator=(const G4VDNAReactionModel&) = delete;
     virtual ~G4VDNAReactionModel();
 
     virtual void Initialise(const G4MolecularConfiguration*, const G4Track&) {}
-    virtual void InitialiseToPrint(const G4MolecularConfiguration*) = 0 ;
+    virtual void InitialiseToPrint(const G4MolecularConfiguration*) = 0;
     virtual G4double GetReactionRadius(const G4MolecularConfiguration*,
                                        const G4MolecularConfiguration*) = 0;
     virtual G4double GetReactionRadius(const G4int&) = 0;
-    virtual G4bool FindReaction(const G4Track&, const G4Track&,
-                                G4double /*reactionRadius*/,
+    virtual G4bool FindReaction(const G4Track&, const G4Track&, G4double /*reactionRadius*/,
                                 G4double& /*separationDistance*/,
                                 G4bool /*hasReachedUserTimeLimit*/) = 0;
 
     void SetReactionTable(const G4DNAMolecularReactionTable*);
     const G4DNAMolecularReactionTable* GetReactionTable();
 
-protected :
-    const G4DNAMolecularReactionTable* fpReactionTable{nullptr} ;
+  protected:
+
+    const G4DNAMolecularReactionTable* fpReactionTable{nullptr};
 };
+
+#endif

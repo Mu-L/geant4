@@ -23,18 +23,25 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef CompileTimeConstraints_hh
-#define CompileTimeConstraints_hh
+#ifndef COMPILETIMECONSTRAINTS_HH
+#define COMPILETIMECONSTRAINTS_HH
 
 namespace CompileTimeConstraints
 {
-  template <class Base> char InheritsFrom(Base *);
-  template <class Derived> Derived* DerivedPointer();
-  template < class A, class B > struct IsA 
-  { 
+template<class Base>
+char InheritsFrom(Base*);
+template<class Derived>
+Derived* DerivedPointer();
+template<class A, class B>
+struct IsA
+{
   public:
-    enum { ok=(sizeof(InheritsFrom<B>(DerivedPointer<A>())) ) };
-  };
-}
+
+    enum
+    {
+      ok = (sizeof(InheritsFrom<B>(DerivedPointer<A>())))
+    };
+};
+}  // namespace CompileTimeConstraints
 
 #endif

@@ -72,37 +72,39 @@
  *  }
  */
 
-#ifndef G4CTCounter_h
-#define G4CTCounter_h
+#ifndef G4CTCOUNTER_HH
+#define G4CTCOUNTER_HH
 
 template<int N>
-struct G4Number: public G4Number<N-1>{
-  static constexpr int value=N;
+struct G4Number : public G4Number<N - 1>
+{
+    static constexpr int value = N;
 };
 
 template<>
-struct G4Number<0>{
-  static constexpr int value=0;
+struct G4Number<0>
+{
+    static constexpr int value = 0;
 };
 
 //------------------------------------------------------------------------------
 
-#define G4CT_COUNT_INIT(init_value)     \
-  static constexpr G4Number<init_value> \
-   Counter(G4Number<init_value>) {      \
-     return G4Number<init_value>();     \
-   }
+#define G4CT_COUNT_INIT(init_value)                                   \
+  static constexpr G4Number<init_value> Counter(G4Number<init_value>) \
+  {                                                                   \
+    return G4Number<init_value>();                                    \
+  }
 
 // Allow overridable maximum enum depth by setting G4CT_MAX_COUNT
 #ifndef G4CT_MAX_COUNT
-#ifndef __NVCOMPILER
+#  ifndef __NVCOMPILER
 // Maximum in Geant4 V11.0.0 is hardcoded to 255
-#define G4CT_MAX_COUNT 255
-#else
+#    define G4CT_MAX_COUNT 255
+#  else
 // NVC++ compiler default template instantiation recursion limit is 64.
 // This can be changed by setting, e.g., "-Wc,--pending_instantiations=256"
-#define G4CT_MAX_COUNT 63
-#endif
+#    define G4CT_MAX_COUNT 63
+#  endif
 #endif
 
 #define G4CT_COUNT(flagName)                                                                  \
@@ -119,26 +121,23 @@ struct G4Number<0>{
 // to avoid potential crashes
 
 #define G4CT_COUNT_INIT_DEF(init_value) \
-  static constexpr G4Number<init_value> \
-   Counter(G4Number<init_value>);
+  static constexpr G4Number<init_value> Counter(G4Number<init_value>);
 
-#define G4CT_COUNT_INIT_IMPL(enumName, init_value) \
-  constexpr G4Number<init_value> \
-   enumName::Counter(G4Number<init_value>){ \
-     return G4Number<init_value>{}; \
-   }
+#define G4CT_COUNT_INIT_IMPL(enumName, init_value)                       \
+  constexpr G4Number<init_value> enumName::Counter(G4Number<init_value>) \
+  {                                                                      \
+    return G4Number<init_value>{};                                       \
+  }
 
-#define G4CT_COUNT_DEF(flagName) \
-  static constexpr const int flagName = \
-   decltype(Counter(G4Number<G4CT_MAX_COUNT>{}))::value; \
-  static constexpr G4Number<flagName + 1> \
-   Counter(G4Number<flagName + 1>);
+#define G4CT_COUNT_DEF(flagName)                                                              \
+  static constexpr const int flagName = decltype(Counter(G4Number<G4CT_MAX_COUNT>{}))::value; \
+  static constexpr G4Number<flagName + 1> Counter(G4Number<flagName + 1>);
 
-#define G4CT_COUNT_IMPL(enumName, flagName) \
-  constexpr G4Number<enumName::flagName + 1> \
-   enumName::Counter(G4Number<enumName::flagName + 1>){ \
-     return G4Number<enumName::flagName +1 >{}; \
-   }
+#define G4CT_COUNT_IMPL(enumName, flagName)                                                      \
+  constexpr G4Number<enumName::flagName + 1> enumName::Counter(G4Number<enumName::flagName + 1>) \
+  {                                                                                              \
+    return G4Number<enumName::flagName + 1>{};                                                   \
+  }
 
 //------------------------------------------------------------------------------
 

@@ -35,30 +35,21 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4HadronElasticPhysicsXS_h
-#define G4HadronElasticPhysicsXS_h 1
+#ifndef G4HADRONELASTICPHYSICSXS_HH
+#define G4HADRONELASTICPHYSICSXS_HH
 
 #include "G4HadronElasticPhysics.hh"
 
 class G4HadronElasticPhysicsXS : public G4HadronElasticPhysics
 {
-public: 
+  public:
 
-  explicit G4HadronElasticPhysicsXS(G4int ver = 1); 
+    explicit G4HadronElasticPhysicsXS(G4int ver = 1);
 
-  ~G4HadronElasticPhysicsXS() override = default;
+    ~G4HadronElasticPhysicsXS() override = default;
 
-  G4HadronElasticPhysicsXS(G4HadronElasticPhysicsXS &) = delete;
-  G4HadronElasticPhysicsXS & operator=(const G4HadronElasticPhysicsXS &right) = delete;
+    G4HadronElasticPhysicsXS(G4HadronElasticPhysicsXS&) = delete;
+    G4HadronElasticPhysicsXS& operator=(const G4HadronElasticPhysicsXS& right) = delete;
 };
 
-
 #endif
-
-
-
-
-
-
-
-

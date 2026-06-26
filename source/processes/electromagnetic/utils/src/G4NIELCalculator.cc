@@ -43,47 +43,48 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include "G4NIELCalculator.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4PhysicalConstants.hh"
+
 #include "G4LossTableManager.hh"
 #include "G4Material.hh"
 #include "G4MaterialTable.hh"
+#include "G4PhysicalConstants.hh"
 #include "G4Step.hh"
 #include "G4StepPoint.hh"
-#include "G4VProcess.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4Track.hh"
+#include "G4VProcess.hh"
 #include "Randomize.hh"
+
 #include <vector>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4NIELCalculator::G4NIELCalculator(G4VEmModel* mod, G4int verb)
-  : fModel(mod), fVerbose(verb)
+G4NIELCalculator::G4NIELCalculator(G4VEmModel* mod, G4int verb) : fModel(mod), fVerbose(verb)
 {
   G4LossTableManager::Instance()->SetNIELCalculator(this);
-  if(fVerbose > 0) {
-    G4cout << "G4NIELCalculator: is created with the model <" 
-           << fModel->GetName() << ">" << G4endl;
+  if (fVerbose > 0)
+  {
+    G4cout << "G4NIELCalculator: is created with the model <" << fModel->GetName() << ">" << G4endl;
   }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4NIELCalculator::AddEmModel(G4VEmModel* mod) 
+void G4NIELCalculator::AddEmModel(G4VEmModel* mod)
 {
-  if(mod && mod != fModel) { 
-    fModel = mod; 
-    if(fVerbose > 0) {
-      G4cout << "G4NIELCalculator: new model <" << fModel->GetName()
-             << "> is added" << G4endl;
+  if (mod && mod != fModel)
+  {
+    fModel = mod;
+    if (fVerbose > 0)
+    {
+      G4cout << "G4NIELCalculator: new model <" << fModel->GetName() << "> is added" << G4endl;
     }
   }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4NIELCalculator::Initialise() 
-{}
+void G4NIELCalculator::Initialise() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -91,19 +92,19 @@ G4double G4NIELCalculator::ComputeNIEL(const G4Step* step)
 {
   G4double niel = 0.0;
   G4double T2 = step->GetPostStepPoint()->GetKineticEnergy();
-  if(fModel && T2 > 0.) {
+  if (fModel && T2 > 0.)
+  {
     const G4Track* track = step->GetTrack();
     const G4ParticleDefinition* part = track->GetParticleDefinition();
-    G4double length = step->GetStepLength(); 
+    G4double length = step->GetStepLength();
 
-    if(length > 0.0 && part->GetPDGMass() > 100*CLHEP::MeV) {
-
+    if (length > 0.0 && part->GetPDGMass() > 100 * CLHEP::MeV)
+    {
       // primary
-      G4double T1= step->GetPreStepPoint()->GetKineticEnergy();
-      G4double T = 0.5*(T1 + T2);
-      const G4MaterialCutsCouple* couple = 
-	step->GetPreStepPoint()->GetMaterialCutsCouple(); 
-      niel = length*fModel->ComputeDEDXPerVolume(couple->GetMaterial(),part,T);
+      G4double T1 = step->GetPreStepPoint()->GetKineticEnergy();
+      G4double T = 0.5 * (T1 + T2);
+      const G4MaterialCutsCouple* couple = step->GetPreStepPoint()->GetMaterialCutsCouple();
+      niel = length * fModel->ComputeDEDXPerVolume(couple->GetMaterial(), part, T);
       niel = std::min(niel, T1);
     }
   }
@@ -115,12 +116,15 @@ G4double G4NIELCalculator::ComputeNIEL(const G4Step* step)
 G4double G4NIELCalculator::RecoilEnergy(const G4Step* step)
 {
   G4double erec = 0.0;
-  const std::vector<const G4Track*>* sec = step->GetSecondaryInCurrentStep(); 
+  const std::vector<const G4Track*>* sec = step->GetSecondaryInCurrentStep();
 
-  if(sec) {
-    for(auto track : *sec) {
+  if (sec)
+  {
+    for (auto track : *sec)
+    {
       const G4ParticleDefinition* part = track->GetParticleDefinition();
-      if(part->IsGeneralIon()) {
+      if (part->IsGeneralIon())
+      {
         erec += track->GetKineticEnergy();
       }
     }

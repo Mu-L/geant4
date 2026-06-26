@@ -27,12 +27,12 @@
 //
 // Class description:
 //
-// This is an interface used by importance sampling to get the 
-// number of copies and weight a mother particle should be split 
-// into when crossing a boundary of "importance cells". 
+// This is an interface used by importance sampling to get the
+// number of copies and weight a mother particle should be split
+// into when crossing a boundary of "importance cells".
 // The interface defines the input to be the ratio of the pre over
 // the post importance and the weight of the mother track.
-// It returns a struct containing the number of copies (including 
+// It returns a struct containing the number of copies (including
 // the mother track) to be produced and the weight of each track.
 // A user defined algorithm deriving from this interface may be used
 // by the importance sampling.
@@ -46,8 +46,10 @@
 
 /**
  * @brief G4VImportanceAlgorithm is an interface used by importance sampling
- * to get the number of copies and weight a mother particle should be split 
- * into when crossing a boundary of "importance cells". 
+ * to get the number of copies and weight a mother particle should be split
+ * into when crossing a boundary of "importance cells".
+ * @ingroup geometry_biasing
+ *
  * The interface defines the input to be the ratio of the pre over the post
  * importance and the weight of the mother track.
  * It returns a struct containing the number of copies (including the mother
@@ -75,9 +77,7 @@ class G4VImportanceAlgorithm
      *  @returns A struct containing the number of copies (including the
      *           mother track) to be produced and the weight of each track.
      */
-    virtual G4Nsplit_Weight Calculate(G4double ipre,
-                                      G4double ipost,
-                                      G4double init_w) const = 0;
+    virtual G4Nsplit_Weight Calculate(G4double ipre, G4double ipost, G4double init_w) const = 0;
 };
 
 #endif

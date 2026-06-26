@@ -27,8 +27,8 @@
 //
 //
 
-#ifndef G4RTSimpleScanner_H
-#define G4RTSimpleScanner_H 1
+#ifndef G4RTSIMPLESCANNER_HH
+#define G4RTSIMPLESCANNER_HH
 
 // class description:
 //
@@ -37,25 +37,26 @@
 
 #include "G4VRTScanner.hh"
 
-class G4RTSimpleScanner: public G4VRTScanner {
+class G4RTSimpleScanner : public G4VRTScanner
+{
+  public:  // with description
 
-public: // with description
+    G4RTSimpleScanner();
+    virtual ~G4RTSimpleScanner();
 
-  G4RTSimpleScanner();
-  virtual ~G4RTSimpleScanner();
+    // Compiler defaults for copy constructor and assignmemt.
 
-  // Compiler defaults for copy constructor and assignmemt.
+    virtual void Initialize(G4int nRow, G4int nColumn);
+    // Intialises scanner for window with nRow rows and nColumn columns.
 
-  virtual void Initialize(G4int nRow, G4int nColumn);
-  // Intialises scanner for window with nRow rows and nColumn columns.
+    virtual G4bool Coords(G4int& iRow, G4int& iColumn);
+    // Supplies coordinate (iRow,iColumn) and returns false when the
+    // sequence has finished, i.e., on the call *after* suplying the
+    // last valid coordinate.
 
-  virtual G4bool Coords(G4int& iRow, G4int& iColumn);
-  // Supplies coordinate (iRow,iColumn) and returns false when the
-  // sequence has finished, i.e., on the call *after* suplying the
-  // last valid coordinate.
+  protected:
 
-protected:
-  G4int theNRow, theNColumn, theIRow, theIColumn;
+    G4int theNRow, theNColumn, theIRow, theIColumn;
 };
 
 #endif

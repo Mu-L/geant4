@@ -25,56 +25,49 @@
 //
 //
 // -------------------------------------------------------------------
-//      GEANT 4 class file 
+//      GEANT 4 class file
 //
 //      CERN, Geneva, Switzerland
 //
 //      File name:     G4VGammaTransition
 //
 //      Author:        Maria Grazia Pia (pia@genova.infn.it)
-// 
+//
 //      Creation date: 23 October 1998
 //
-//      Modifications: 
+//      Modifications:
 //
 // 15.04.1999, Alessandro Brunengo (Alessandro.Brunengo@ge.infn.it)
 //             Added creation time evaluation for products of evaporation
 // 30.10.2010  V.Ivanchenko moved constructor and destructor to the source
-//      
+//
 // -------------------------------------------------------------------
 
 #ifndef G4VGAMMATRANSITION_HH
-#define G4VGAMMATRANSITION_HH 1
+#define G4VGAMMATRANSITION_HH
 
-#include "globals.hh"
 #include "G4Fragment.hh"
+#include "globals.hh"
 
-class G4VGammaTransition 
+class G4VGammaTransition
 {
-public:
+  public:
 
-  explicit G4VGammaTransition() {};
+    explicit G4VGammaTransition() {};
 
-  virtual ~G4VGammaTransition() {};
-  
-  virtual void SelectGamma() = 0;
-  virtual G4double GetGammaEnergy() = 0;
-  virtual G4double GetGammaCreationTime() = 0;
-  virtual void SetEnergyFrom(G4double energy) = 0;
+    virtual ~G4VGammaTransition() {};
 
-private:  
+    virtual void SelectGamma() = 0;
+    virtual G4double GetGammaEnergy() = 0;
+    virtual G4double GetGammaCreationTime() = 0;
+    virtual void SetEnergyFrom(G4double energy) = 0;
 
-  G4VGammaTransition(const G4VGammaTransition &right) = delete;
-  const G4VGammaTransition& operator=(const G4VGammaTransition &right) = delete;
-  G4bool operator==(const G4VGammaTransition &right) const = delete;
-  G4bool operator!=(const G4VGammaTransition &right) const = delete;
- 
+  private:
+
+    G4VGammaTransition(const G4VGammaTransition& right) = delete;
+    const G4VGammaTransition& operator=(const G4VGammaTransition& right) = delete;
+    G4bool operator==(const G4VGammaTransition& right) const = delete;
+    G4bool operator!=(const G4VGammaTransition& right) const = delete;
 };
 
-
 #endif
-
-
-
-
-

@@ -36,25 +36,29 @@ class G4UIcmdWithAString;
 class G4UIcmdWithoutParameter;
 class G4UIcmdWithABool;
 
-class G4VisCommandsTouchable: public G4VVisCommand {
-public:
-  G4VisCommandsTouchable ();
-  virtual ~G4VisCommandsTouchable ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandsTouchable (const G4VisCommandsTouchable&);
-  G4VisCommandsTouchable& operator = (const G4VisCommandsTouchable&);
-  G4UIcmdWithoutParameter* fpCommandCentreOn;
-  G4UIcmdWithoutParameter* fpCommandCentreAndZoomInOn;
-  G4UIcmdWithABool*        fpCommandDraw;
-  G4UIcmdWithoutParameter* fpCommandDump;
-  G4UIcmdWithABool*        fpCommandExtentForField;
-  G4UIcommand*             fpCommandFindPath;
-  G4UIcmdWithoutParameter* fpCommandLocalAxes;
-  G4UIcmdWithABool*        fpCommandShowExtent;
-  G4UIcmdWithoutParameter* fpCommandTwinkle;
-  G4UIcmdWithABool*        fpCommandVolumeForField;
+class G4VisCommandsTouchable : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandsTouchable();
+    virtual ~G4VisCommandsTouchable();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandsTouchable(const G4VisCommandsTouchable&);
+    G4VisCommandsTouchable& operator=(const G4VisCommandsTouchable&);
+    G4UIcmdWithoutParameter* fpCommandCentreOn;
+    G4UIcmdWithoutParameter* fpCommandCentreAndZoomInOn;
+    G4UIcmdWithABool* fpCommandDraw;
+    G4UIcmdWithoutParameter* fpCommandDump;
+    G4UIcmdWithABool* fpCommandExtentForField;
+    G4UIcommand* fpCommandFindPath;
+    G4UIcmdWithoutParameter* fpCommandLocalAxes;
+    G4UIcmdWithABool* fpCommandShowExtent;
+    G4UIcmdWithoutParameter* fpCommandTwinkle;
+    G4UIcmdWithABool* fpCommandVolumeForField;
 };
 
 #endif

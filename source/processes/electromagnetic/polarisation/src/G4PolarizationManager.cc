@@ -43,14 +43,13 @@ G4ThreadLocal G4PolarizationManager* G4PolarizationManager::fInstance = nullptr;
 
 G4PolarizationManager* G4PolarizationManager::GetInstance()
 {
-  if(fInstance == nullptr)
-    fInstance = new G4PolarizationManager();
+  if (fInstance == nullptr) fInstance = new G4PolarizationManager();
   return fInstance;
 }
 
 void G4PolarizationManager::Dispose()
 {
-  if(fInstance != nullptr)
+  if (fInstance != nullptr)
   {
     delete fInstance;
     fInstance = nullptr;
@@ -58,9 +57,7 @@ void G4PolarizationManager::Dispose()
 }
 
 G4PolarizationManager::G4PolarizationManager()
-  : fMessenger(nullptr)
-  , fVerboseLevel(0)
-  , fActivated(true)
+  : fMessenger(nullptr), fVerboseLevel(0), fActivated(true)
 {
   fMessenger = new G4PolarizationMessenger(this);
 }
@@ -69,36 +66,32 @@ G4PolarizationManager::~G4PolarizationManager() {}
 
 void G4PolarizationManager::ListVolumes()
 {
-  if(fVolumePolarizations.empty())
-    return;
+  if (fVolumePolarizations.empty()) return;
   G4cout << " Polarization for " << fVolumePolarizations.size()
          << " registered volume(s) : " << G4endl;
-  if(!fActivated)
-    G4cout << " but polarization deactivated " << G4endl;
-  for(auto& vp : fVolumePolarizations)
+  if (!fActivated) G4cout << " but polarization deactivated " << G4endl;
+  for (auto& vp : fVolumePolarizations)
   {
     G4cout << vp.first->GetName() << " : " << vp.second << G4endl;
   }
 }
 
-void G4PolarizationManager::SetVolumePolarization(G4LogicalVolume* lVol,
-                                                  const G4ThreeVector& pol)
+void G4PolarizationManager::SetVolumePolarization(G4LogicalVolume* lVol, const G4ThreeVector& pol)
 {
   fVolumePolarizations[lVol] = pol;
-  if(fVerboseLevel >= 1)
-    G4cout << " SetVolumePolarization " << lVol->GetName() << " " << pol
-           << G4endl;
+  if (fVerboseLevel >= 1)
+    G4cout << " SetVolumePolarization " << lVol->GetName() << " " << pol << G4endl;
 }
 
 void G4PolarizationManager::SetVolumePolarization(const G4String& lVolName,
                                                   const G4ThreeVector& pol)
 {
-  for(auto& vp : fVolumePolarizations)
+  for (auto& vp : fVolumePolarizations)
   {
-    if(vp.first->GetName() == lVolName)
+    if (vp.first->GetName() == lVolName)
     {
       vp.second = pol;
-      if(fVerboseLevel >= 1)
+      if (fVerboseLevel >= 1)
         G4cout << " SetVolumePolarization " << lVolName << " " << pol << G4endl;
       return;
     }
@@ -106,6 +99,5 @@ void G4PolarizationManager::SetVolumePolarization(const G4String& lVolName,
   G4ExceptionDescription ed;
   ed << " Logical volume '" << lVolName << "'not registered yet.\n"
      << " Please register before using '/polarization/volume/set'\n";
-  G4Exception("G4PolarizationManager::SetVolumePolarization", "pol040",
-              FatalException, ed);
+  G4Exception("G4PolarizationManager::SetVolumePolarization", "pol040", FatalException, ed);
 }

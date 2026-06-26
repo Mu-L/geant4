@@ -92,8 +92,10 @@ G4MTRunManagerKernel::G4MTRunManagerKernel() : G4RunManagerKernel(masterRMK)
 G4MTRunManagerKernel::~G4MTRunManagerKernel()
 {
   G4AutoLock l(&workerRMMutex);
-  if (workerRMvector != nullptr) {
-    if (!workerRMvector->empty()) {
+  if (workerRMvector != nullptr)
+  {
+    if (!workerRMvector->empty())
+    {
       G4ExceptionDescription msg;
       msg << "G4MTRunManagerKernel is to be deleted while " << workerRMvector->size()
           << " G4WorkerRunManager are still alive.";
@@ -164,12 +166,15 @@ void G4MTRunManagerKernel::StartThread(G4WorkerThread* context)
   //============================
   // Step-2: Initialise worker thread
   //============================
-  if (masterRM->GetUserWorkerInitialization() != nullptr) {
+  if (masterRM->GetUserWorkerInitialization() != nullptr)
+  {
     masterRM->GetUserWorkerInitialization()->WorkerInitialize();
   }
-  if (masterRM->GetUserActionInitialization() != nullptr) {
+  if (masterRM->GetUserActionInitialization() != nullptr)
+  {
     G4VSteppingVerbose* sv = masterRM->GetUserActionInitialization()->InitializeSteppingVerbose();
-    if (sv != nullptr) {
+    if (sv != nullptr)
+    {
       G4VSteppingVerbose::SetInstance(sv);
     }
   }
@@ -193,10 +198,12 @@ void G4MTRunManagerKernel::StartThread(G4WorkerThread* context)
   //================================
   // Step-4: Initialise worker run manager
   //================================
-  if (masterRM->GetUserActionInitialization() != nullptr) {
+  if (masterRM->GetUserActionInitialization() != nullptr)
+  {
     masterRM->GetNonConstUserActionInitialization()->Build();
   }
-  if (masterRM->GetUserWorkerInitialization() != nullptr) {
+  if (masterRM->GetUserWorkerInitialization() != nullptr)
+  {
     masterRM->GetUserWorkerInitialization()->WorkerStart();
   }
   wrm->Initialize();
@@ -212,13 +219,16 @@ void G4MTRunManagerKernel::StartThread(G4WorkerThread* context)
   //===============================
   // Step-6: Terminate worker thread
   //===============================
-  if (masterRM->GetUserWorkerInitialization() != nullptr) {
+  if (masterRM->GetUserWorkerInitialization() != nullptr)
+  {
     masterRM->GetUserWorkerInitialization()->WorkerStop();
   }
 
   wrmm.lock();
-  for (auto itrWrm = workerRMvector->cbegin(); itrWrm != workerRMvector->cend(); ++itrWrm) {
-    if ((*itrWrm) == wrm) {
+  for (auto itrWrm = workerRMvector->cbegin(); itrWrm != workerRMvector->cend(); ++itrWrm)
+  {
+    if ((*itrWrm) == wrm)
+    {
       workerRMvector->erase(itrWrm);
       break;
     }
@@ -240,11 +250,14 @@ void G4MTRunManagerKernel::SetUpDecayChannels()
 {
   auto pItr = G4ParticleTable::GetParticleTable()->GetIterator();
   pItr->reset();
-  while ((*pItr)()) {
+  while ((*pItr)())
+  {
     G4DecayTable* dt = pItr->value()->GetDecayTable();
-    if (dt != nullptr) {
+    if (dt != nullptr)
+    {
       G4int nCh = dt->entries();
-      for (G4int i = 0; i < nCh; ++i) {
+      for (G4int i = 0; i < nCh; ++i)
+      {
         dt->GetDecayChannel(i)->GetDaughter(0);
       }
     }
@@ -256,7 +269,8 @@ void G4MTRunManagerKernel::BroadcastAbortRun(G4bool softAbort)
 {
   G4AutoLock wrmm(&workerRMMutex);
 
-  for (const auto& itr : *workerRMvector) {
+  for (const auto& itr : *workerRMvector)
+  {
     itr->AbortRun(softAbort);
   }
 }

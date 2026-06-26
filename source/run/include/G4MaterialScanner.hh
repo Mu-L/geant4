@@ -48,10 +48,12 @@ class G4MSSteppingAction;
 class G4MatScanMessenger;
 class G4RayShooter;
 class G4Region;
+class G4ParticleDefinition;
 
 class G4MaterialScanner
 {
   public:
+
     G4MaterialScanner();
     ~G4MaterialScanner();
 
@@ -78,8 +80,12 @@ class G4MaterialScanner
     G4bool SetRegionName(const G4String& val);
     inline const G4String& GetRegionName() const { return regionName; }
     inline void SetVerbosity(G4int v) { verbosity = v; };
+    G4bool SetThinMaterial(G4bool flg, G4String& mat);
+    void SetDetDefaultParticle(const G4ParticleDefinition* ptcl, G4double eKin);
+    void SetOutFile(G4String& fNm);
 
   private:
+
     void DoScan();
     // Event loop
 
@@ -88,6 +94,7 @@ class G4MaterialScanner
     // Store and restore user action classes if defined.
 
   private:
+
     G4RayShooter* theRayShooter = nullptr;
     G4MatScanMessenger* theMessenger = nullptr;
 
@@ -117,11 +124,17 @@ class G4MaterialScanner
     G4String regionName = "notDefined";
     G4Region* theRegion = nullptr;
 
+    G4bool ignoreThinMaterial = false;
+    G4double thinDencity = 0.;
+
     /// Configure degree of verbosity of Material Scan
     /// verbosity 0: default
     /// verbosity 1: call PrintIntegratedMaterialVerbose
     /// verbosity 2: call PrintEachMaterialVerbose
     G4int verbosity = 0;
+
+    std::ostream* ost = nullptr;
+    G4String fTarget = "**Screen**";
 };
 
 #endif

@@ -29,14 +29,16 @@
 // H. Tran 16.12.2022
 //
 
-#ifndef G4ChemDissociationChannels_option1_h
-#define G4ChemDissociationChannels_option1_h 1
+#ifndef G4CHEMDISSOCIATIONCHANNELS_OPTION1_HH
+#define G4CHEMDISSOCIATIONCHANNELS_OPTION1_HH
 
-class G4ChemDissociationChannels_option1{
- public:
-  ~G4ChemDissociationChannels_option1() = default;
-  static void ConstructDissociationChannels();
-  static void ConstructMolecule();
+class G4ChemDissociationChannels_option1
+{
+  public:
+
+    ~G4ChemDissociationChannels_option1() = default;
+    static void ConstructDissociationChannels();
+    static void ConstructMolecule();
 };
 
 #endif

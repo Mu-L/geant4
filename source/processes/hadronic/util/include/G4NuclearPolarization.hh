@@ -29,18 +29,18 @@
 //      File name:     G4NuclearPolarization
 //
 //      Author:        Jason Detwiler (jasondet@gmail.com)
-// 
-//      Creation date: Aug 2015 
 //
-//      Description:   
-//      Stores the statistical tensor describing the nuclear polarization 
+//      Creation date: Aug 2015
+//
+//      Description:
+//      Stores the statistical tensor describing the nuclear polarization
 //      (see Alder and Winther, "Electromagnetic Excitation" (1975),
-//      Appendix F). 
+//      Appendix F).
 //
 //      V.Ivanchenko left only polarization tensor and access methods
 //                   in this class, also add operators
-//                   this allows future implemention of polarized 
-//                   hadronic models with polarized initial and 
+//                   this allows future implemention of polarized
+//                   hadronic models with polarized initial and
 //                   final states
 //
 // -------------------------------------------------------------------
@@ -49,87 +49,72 @@
 #define G4NUCLEARPOLARIZATION_HH
 
 #include "globals.hh"
+
 #include <vector>
 
 class G4NuclearPolarization
 {
-public:
+  public:
 
-  explicit G4NuclearPolarization(G4int Z, G4int A, G4double exc);
+    explicit G4NuclearPolarization(G4int Z, G4int A, G4double exc);
 
-  ~G4NuclearPolarization();
+    ~G4NuclearPolarization();
 
-  inline void Unpolarize() 
-  { 
-    Clean(); 
-    fPolarization.resize(1); 
-    fPolarization[0].push_back(1.0); 
-  }
-  
-  inline void SetPolarization(std::vector< std::vector<G4complex> >& p) 
-  { 
-    Clean(); 
-    for(auto & pol : p) {
-      fPolarization.push_back(pol);
+    inline void Unpolarize()
+    {
+      Clean();
+      fPolarization.resize(1);
+      fPolarization[0].push_back(1.0);
     }
-  }
 
-  inline std::vector< std::vector<G4complex> >& GetPolarization() 
-  { 
-    return fPolarization; 
-  }
-
-  inline G4int GetZ() const
-  {
-    return fZ;
-  }
-
-  inline G4int GetA() const
-  {
-    return fA;
-  }
-
-  inline G4double GetExcitationEnergy() const
-  {
-    return fExcEnergy;
-  }
-
-  inline void SetExcitationEnergy(G4double val)
-  {
-    fExcEnergy = val;
-  }
-
-  // ============= OPERATORS ==================
-
-  inline G4NuclearPolarization & operator=(const G4NuclearPolarization &right)
-  {
-    if (this != &right) { 
-      fZ = right.fZ;
-      fA = right.fA;
-      fExcEnergy = right.fExcEnergy;
-      fPolarization = right.fPolarization; 
+    inline void SetPolarization(std::vector<std::vector<G4complex>>& p)
+    {
+      Clean();
+      for (auto& pol : p)
+      {
+        fPolarization.push_back(pol);
+      }
     }
-    return *this;
-  }
-    
-  inline G4NuclearPolarization(const G4NuclearPolarization &right )
-  { 
-    *this = right; 
-  }
 
-  G4bool operator==(const G4NuclearPolarization &right) const;
-  G4bool operator!=(const G4NuclearPolarization &right) const;
+    inline std::vector<std::vector<G4complex>>& GetPolarization() { return fPolarization; }
 
-  friend std::ostream& operator<<(std::ostream&, const G4NuclearPolarization&);
+    inline G4int GetZ() const { return fZ; }
 
-private:
+    inline G4int GetA() const { return fA; }
 
-  void Clean(); 
+    inline G4double GetExcitationEnergy() const { return fExcEnergy; }
 
-  G4int fZ;
-  G4int fA;
-  G4double fExcEnergy;
-  std::vector< std::vector<G4complex> > fPolarization;
+    inline void SetExcitationEnergy(G4double val) { fExcEnergy = val; }
+
+    // ============= OPERATORS ==================
+
+    inline G4NuclearPolarization& operator=(const G4NuclearPolarization& right)
+    {
+      if (this != &right)
+      {
+        fZ = right.fZ;
+        fA = right.fA;
+        fExcEnergy = right.fExcEnergy;
+        fPolarization = right.fPolarization;
+      }
+      return *this;
+    }
+
+    inline G4NuclearPolarization(const G4NuclearPolarization& right) { *this = right; }
+
+    G4bool operator==(const G4NuclearPolarization& right) const;
+    G4bool operator!=(const G4NuclearPolarization& right) const;
+
+    friend std::ostream& operator<<(std::ostream&, const G4NuclearPolarization&);
+
+  private:
+
+    void Clean();
+
+    G4int fZ;
+    G4int fA;
+    G4double fExcEnergy;
+    std::vector<std::vector<G4complex>> fPolarization;
 };
 
 #endif

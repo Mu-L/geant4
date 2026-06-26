@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  10th February 1997
 // OpenGL graphics system factory.
 
@@ -34,12 +34,14 @@
 
 #include "G4VGraphicsSystem.hh"
 
-class G4OpenGLStoredX: public G4VGraphicsSystem {
-public:
-  G4OpenGLStoredX ();
-  virtual ~G4OpenGLStoredX ();
-  G4VSceneHandler* CreateSceneHandler (const G4String& name = "");
-  G4VViewer*  CreateViewer  (G4VSceneHandler&, const G4String& name = "");
+class G4OpenGLStoredX : public G4VGraphicsSystem
+{
+  public:
+
+    G4OpenGLStoredX();
+    virtual ~G4OpenGLStoredX();
+    G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
+    G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "");
 };
 
 #endif

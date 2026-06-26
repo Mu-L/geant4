@@ -23,75 +23,83 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4HadronicDeveloperParameters_h
-#define G4HadronicDeveloperParameters_h
+#ifndef G4HADRONICDEVELOPERPARAMETERS_HH
+#define G4HADRONICDEVELOPERPARAMETERS_HH
 
 #include "globals.hh"
 
-#include<map>
-#include<string>
-#include<cfloat>
-
+#include <cfloat>
+#include <map>
+#include <string>
 
 class G4HadronicDeveloperParameters
 {
-   public:
-      static G4HadronicDeveloperParameters& GetInstance();
+  public:
 
-   //protected:
-   private:
-      G4HadronicDeveloperParameters();
-      G4HadronicDeveloperParameters( const G4HadronicDeveloperParameters& );
-      G4HadronicDeveloperParameters &operator=( const G4HadronicDeveloperParameters& );
+    static G4HadronicDeveloperParameters& GetInstance();
 
-   public:
-      G4bool Set( const G4String& name , const G4bool );
-      G4bool Set( const G4String& name , const G4int );
-      G4bool Set( const G4String& name , const G4double );
-      G4bool GetDefault( const G4String& name , G4bool& value );
-      G4bool GetDefault( const G4String& name , G4int& value );
-      G4bool GetDefault( const G4String& name , G4double& value );
-      G4bool Get( const G4String& name , G4bool& value );
-      G4bool Get( const G4String& name , G4int& value );
-      G4bool Get( const G4String& name , G4double& value );
-      G4bool DeveloperGet( const G4String& name , G4bool& value );
-      G4bool DeveloperGet( const G4String& name , G4int& value );
-      G4bool DeveloperGet( const G4String& name , G4double& value );
-      void Dump( const G4String& name );
+    // protected:
 
-   //protected:
-   public:
-      G4bool SetDefault( const G4String& name , const G4bool value );
-      G4bool SetDefault( const G4String& name , const G4int value , G4int lower_limit = -INT_MAX , G4int upper_limit = INT_MAX );
-      G4bool SetDefault( const G4String& name , const G4double value , G4double lower_limit = -DBL_MAX , G4double upper_limit = DBL_MAX );
+  private:
 
-   private:
-      G4bool get( const G4String& name , G4bool& value , G4bool check_change = false );
-      G4bool get( const G4String& name , G4int& value , G4bool check_change = false );
-      G4bool get( const G4String& name , G4double& value , G4bool check_change= false );
+    G4HadronicDeveloperParameters();
+    G4HadronicDeveloperParameters(const G4HadronicDeveloperParameters&);
+    G4HadronicDeveloperParameters& operator=(const G4HadronicDeveloperParameters&);
 
-      std::map<G4String,G4bool> b_values;
-      std::map<G4String,const G4bool> b_defaults;
+  public:
 
-      std::map<G4String,G4int> i_values;
-      std::map<G4String,const G4int> i_defaults;
-      std::map<G4String,std::pair<const G4int,const G4int>> i_limits;
+    G4bool Set(const G4String& name, const G4bool);
+    G4bool Set(const G4String& name, const G4int);
+    G4bool Set(const G4String& name, const G4double);
+    G4bool GetDefault(const G4String& name, G4bool& value);
+    G4bool GetDefault(const G4String& name, G4int& value);
+    G4bool GetDefault(const G4String& name, G4double& value);
+    G4bool Get(const G4String& name, G4bool& value);
+    G4bool Get(const G4String& name, G4int& value);
+    G4bool Get(const G4String& name, G4double& value);
+    G4bool DeveloperGet(const G4String& name, G4bool& value);
+    G4bool DeveloperGet(const G4String& name, G4int& value);
+    G4bool DeveloperGet(const G4String& name, G4double& value);
+    void Dump(const G4String& name);
 
-      std::map<G4String,G4double> values;
-      std::map<G4String,const G4double> defaults;
-      std::map<G4String,std::pair<const G4double,const G4double>> limits;
+    // protected:
 
-      G4bool check_value_within_limits( std::pair<const G4double,const G4double>& , G4double );
-      G4bool check_value_within_limits( std::pair<const G4int,const G4int>& , G4int );
+  public:
 
-      void issue_no_param( const G4String& name );
-      void issue_has_changed( const G4String& name );
-      void issue_non_eligible_value( const G4String& name );
-      void issue_is_already_defined( const G4String& name );
-      void issue_is_modified( const G4String& name );
+    G4bool SetDefault(const G4String& name, const G4bool value);
+    G4bool SetDefault(const G4String& name, const G4int value, G4int lower_limit = -INT_MAX,
+                      G4int upper_limit = INT_MAX);
+    G4bool SetDefault(const G4String& name, const G4double value, G4double lower_limit = -DBL_MAX,
+                      G4double upper_limit = DBL_MAX);
 
-      G4int nWarn{0};
-      G4int nWarnMax{5};
+  private:
+
+    G4bool get(const G4String& name, G4bool& value, G4bool check_change = false);
+    G4bool get(const G4String& name, G4int& value, G4bool check_change = false);
+    G4bool get(const G4String& name, G4double& value, G4bool check_change = false);
+
+    std::map<G4String, G4bool> b_values;
+    std::map<G4String, const G4bool> b_defaults;
+
+    std::map<G4String, G4int> i_values;
+    std::map<G4String, const G4int> i_defaults;
+    std::map<G4String, std::pair<const G4int, const G4int>> i_limits;
+
+    std::map<G4String, G4double> values;
+    std::map<G4String, const G4double> defaults;
+    std::map<G4String, std::pair<const G4double, const G4double>> limits;
+
+    G4bool check_value_within_limits(std::pair<const G4double, const G4double>&, G4double);
+    G4bool check_value_within_limits(std::pair<const G4int, const G4int>&, G4int);
+
+    void issue_no_param(const G4String& name);
+    void issue_has_changed(const G4String& name);
+    void issue_non_eligible_value(const G4String& name);
+    void issue_is_already_defined(const G4String& name);
+    void issue_is_modified(const G4String& name);
+
+    G4int nWarn{0};
+    G4int nWarnMax{5};
 };
 
 #endif

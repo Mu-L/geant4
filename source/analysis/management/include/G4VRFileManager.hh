@@ -28,8 +28,8 @@
 //
 // Author: Ivana Hrivnacova, 06/08/2021  (ivana@ijclab.in2p3.fr)
 
-#ifndef G4VRFileManager_h
-#define G4VRFileManager_h 1
+#ifndef G4VRFILEMANAGER_HH
+#define G4VRFILEMANAGER_HH
 
 #include "G4BaseFileManager.hh"
 #include "G4VTHnRFileManager.hh"
@@ -37,21 +37,23 @@
 #include <memory>
 #include <string_view>
 
-namespace tools {
-namespace histo {
+namespace tools
+{
+namespace histo
+{
 class h1d;
 class h2d;
 class h3d;
 class p1d;
 class p2d;
-}
-}
+}  // namespace histo
+}  // namespace tools
 
 class G4VRFileManager : public G4BaseFileManager
 {
   public:
-    explicit G4VRFileManager(const G4AnalysisManagerState& state)
-      : G4BaseFileManager(state) {}
+
+    explicit G4VRFileManager(const G4AnalysisManagerState& state) : G4BaseFileManager(state) {}
     G4VRFileManager() = delete;
     ~G4VRFileManager() override = default;
 
@@ -59,52 +61,58 @@ class G4VRFileManager : public G4BaseFileManager
     virtual void CloseFiles() = 0;
 
     // Access to helpers
-    template <typename HT>
+    template<typename HT>
     std::shared_ptr<G4VTHnRFileManager<HT>> GetHnRFileManager() const;
 
   protected:
+
     // Static data members
-    static constexpr std::string_view fkClass { "G4VRFileManager" };
+    static constexpr std::string_view fkClass{"G4VRFileManager"};
 
     // Data members
     // FileManagers per object type
-    std::shared_ptr<G4VTHnRFileManager<tools::histo::h1d>> fH1RFileManager { nullptr };
-    std::shared_ptr<G4VTHnRFileManager<tools::histo::h2d>> fH2RFileManager { nullptr };
-    std::shared_ptr<G4VTHnRFileManager<tools::histo::h3d>> fH3RFileManager { nullptr };
-    std::shared_ptr<G4VTHnRFileManager<tools::histo::p1d>> fP1RFileManager { nullptr };
-    std::shared_ptr<G4VTHnRFileManager<tools::histo::p2d>> fP2RFileManager { nullptr };
+    std::shared_ptr<G4VTHnRFileManager<tools::histo::h1d>> fH1RFileManager{nullptr};
+    std::shared_ptr<G4VTHnRFileManager<tools::histo::h2d>> fH2RFileManager{nullptr};
+    std::shared_ptr<G4VTHnRFileManager<tools::histo::h3d>> fH3RFileManager{nullptr};
+    std::shared_ptr<G4VTHnRFileManager<tools::histo::p1d>> fP1RFileManager{nullptr};
+    std::shared_ptr<G4VTHnRFileManager<tools::histo::p2d>> fP2RFileManager{nullptr};
 };
 
 // inline functions
 
-template <>
-inline
-std::shared_ptr<G4VTHnRFileManager<tools::histo::h1d>>
+template<>
+inline std::shared_ptr<G4VTHnRFileManager<tools::histo::h1d>>
 G4VRFileManager::GetHnRFileManager<tools::histo::h1d>() const
-{ return fH1RFileManager; }
+{
+  return fH1RFileManager;
+}
 
-template <>
-inline
-std::shared_ptr<G4VTHnRFileManager<tools::histo::h2d>>
+template<>
+inline std::shared_ptr<G4VTHnRFileManager<tools::histo::h2d>>
 G4VRFileManager::GetHnRFileManager<tools::histo::h2d>() const
-{ return fH2RFileManager; }
+{
+  return fH2RFileManager;
+}
 
-template <>
-inline
-std::shared_ptr<G4VTHnRFileManager<tools::histo::h3d>>
+template<>
+inline std::shared_ptr<G4VTHnRFileManager<tools::histo::h3d>>
 G4VRFileManager::GetHnRFileManager<tools::histo::h3d>() const
-{ return fH3RFileManager; }
+{
+  return fH3RFileManager;
+}
 
-template <>
-inline
-std::shared_ptr<G4VTHnRFileManager<tools::histo::p1d>>
+template<>
+inline std::shared_ptr<G4VTHnRFileManager<tools::histo::p1d>>
 G4VRFileManager::GetHnRFileManager<tools::histo::p1d>() const
-{ return fP1RFileManager; }
+{
+  return fP1RFileManager;
+}
 
-template <>
-inline
-std::shared_ptr<G4VTHnRFileManager<tools::histo::p2d>>
+template<>
+inline std::shared_ptr<G4VTHnRFileManager<tools::histo::p2d>>
 G4VRFileManager::GetHnRFileManager<tools::histo::p2d>() const
-{ return fP2RFileManager; }
+{
+  return fP2RFileManager;
+}
 
 #endif

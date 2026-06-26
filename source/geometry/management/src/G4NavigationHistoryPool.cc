@@ -30,15 +30,15 @@
 // Author: Gabriele Cosmo (CERN), 07.05.2014 - Initial version
 // --------------------------------------------------------------------
 
-#include "globals.hh"
 #include "G4NavigationHistoryPool.hh"
+
+#include "globals.hh"
 
 // ***************************************************************************
 // Static class variables
 // ***************************************************************************
 //
-G4ThreadLocal G4NavigationHistoryPool*
-G4NavigationHistoryPool::fgInstance = nullptr;
+G4ThreadLocal G4NavigationHistoryPool* G4NavigationHistoryPool::fgInstance = nullptr;
 
 // ***************************************************************************
 // Private constructor: Construct underlying containers
@@ -54,9 +54,10 @@ G4NavigationHistoryPool::G4NavigationHistoryPool()
 // Destructor
 // ***************************************************************************
 //
-G4NavigationHistoryPool::~G4NavigationHistoryPool() 
+G4NavigationHistoryPool::~G4NavigationHistoryPool()
 {
-  Clean(); fgInstance = nullptr;
+  Clean();
+  fgInstance = nullptr;
 }
 
 // ***************************************************************************
@@ -65,7 +66,7 @@ G4NavigationHistoryPool::~G4NavigationHistoryPool()
 //
 void G4NavigationHistoryPool::Clean()
 {
-  for(auto & i : fPool)
+  for (auto& i : fPool)
   {
     delete i;
   }
@@ -80,8 +81,7 @@ void G4NavigationHistoryPool::Clean()
 void G4NavigationHistoryPool::Print() const
 {
 #ifdef G4VERBOSE
-  G4cout << "Total navigation history collections cleaned: "
-         << fPool.size() << G4endl;
+  G4cout << "Total navigation history collections cleaned: " << fPool.size() << G4endl;
 #endif
 }
 
@@ -91,11 +91,11 @@ void G4NavigationHistoryPool::Print() const
 //
 void G4NavigationHistoryPool::Reset()
 {
-  for(auto & i : fPool)
+  for (auto& i : fPool)
   {
     i = nullptr;
   }
-  for(auto & j : fFree)
+  for (auto& j : fFree)
   {
     j = nullptr;
   }

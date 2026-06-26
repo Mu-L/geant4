@@ -28,8 +28,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPFissionData_h
-#define G4ParticleHPFissionData_h 1
+#ifndef G4PARTICLEHPFISSIONDATA_HH
+#define G4PARTICLEHPFISSIONDATA_HH
 
 // Class Description
 // Cross-section data set for a high precision (based on evaluated data
@@ -48,6 +48,7 @@
 class G4ParticleHPFissionData : public G4VCrossSectionDataSet
 {
   public:
+
     G4ParticleHPFissionData();
 
     ~G4ParticleHPFissionData() override;
@@ -62,6 +63,7 @@ class G4ParticleHPFissionData : public G4VCrossSectionDataSet
     // G4bool IsApplicable(const G4DynamicParticle*, const G4Element*);
 
   public:
+
     // G4bool IsZAApplicable( const G4DynamicParticle* , G4double /*ZZ*/, G4double /*AA*/)
     //{ return false;}
 
@@ -72,11 +74,13 @@ class G4ParticleHPFissionData : public G4VCrossSectionDataSet
     void DumpPhysicsTable(const G4ParticleDefinition&) override;
 
   public:
+
     G4int GetVerboseLevel() const;
     void SetVerboseLevel(G4int) override;
     void CrossSectionDescription(std::ostream&) const override;
 
   private:
+
     G4PhysicsTable* theCrossSections;
 
     G4bool instanceOfWorker;

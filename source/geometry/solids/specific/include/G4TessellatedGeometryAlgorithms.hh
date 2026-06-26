@@ -31,10 +31,10 @@
 // The G4TessellatedGeometryAlgorithms class is used to contain standard
 // routines to determine whether (and if so where) simple geometric shapes
 // intersect.
-//   
+//
 // The constructor doesn't need to do anything, and neither does the
 // destructor.
-//   
+//
 // IntersectLineAndTriangle2D
 //   Determines whether there is an intersection between a line defined
 //   by r = p + s.v and a triangle defined by verticies P0, P0+E0 and P0+E1.
@@ -69,6 +69,7 @@
 /**
  * @brief G4TessellatedGeometryAlgorithms contains standard methods to
  * determine whether (and if so where) simple geometric shapes intersect.
+ * @ingroup geometry_solids_specific
  */
 
 class G4TessellatedGeometryAlgorithms
@@ -86,12 +87,9 @@ class G4TessellatedGeometryAlgorithms
      *  @param[out] location The returned location of the intersection.
      *  @returns false if no intersection occours.
      */
-    static G4bool IntersectLineAndTriangle2D (const G4TwoVector& p,
-                                              const G4TwoVector& v,
-                                              const G4TwoVector& p0, 
-                                              const G4TwoVector& e0,
-                                              const G4TwoVector& e1,
-                                                    G4TwoVector location[2]);
+    static G4bool IntersectLineAndTriangle2D(const G4TwoVector& p, const G4TwoVector& v,
+                                             const G4TwoVector& p0, const G4TwoVector& e0,
+                                             const G4TwoVector& e1, G4TwoVector location[2]);
 
     /**
      * Determines whether there is an intersection between a line defined
@@ -103,11 +101,9 @@ class G4TessellatedGeometryAlgorithms
      *  @param[out] location The returned location of the intersection.
      *  @returns false if no intersection occours.
      */
-    static G4int IntersectLineAndLineSegment2D (const G4TwoVector& p0,
-                                                const G4TwoVector& d0,
-                                                const G4TwoVector& p1,
-                                                const G4TwoVector& d1,
-                                                      G4TwoVector location[2]);
+    static G4int IntersectLineAndLineSegment2D(const G4TwoVector& p0, const G4TwoVector& d0,
+                                               const G4TwoVector& p1, const G4TwoVector& d1,
+                                               G4TwoVector location[2]);
 
     /**
      * Ficticious "cross-product" function for two 2D vectors.

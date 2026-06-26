@@ -37,22 +37,22 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4VPiKBuilder_h
-#define G4VPiKBuilder_h
+#ifndef G4VPIKBUILDER_HH
+#define G4VPIKBUILDER_HH
 
-#include "G4PhysicsBuilderInterface.hh"
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
+#include "G4PhysicsBuilderInterface.hh"
 
 class G4VPiKBuilder : public G4PhysicsBuilderInterface
 {
-public:
-  G4VPiKBuilder() = default;
-  virtual ~G4VPiKBuilder() {}
-  virtual void Build(G4HadronElasticProcess * aP) = 0;
-  virtual void Build(G4HadronInelasticProcess * aP) = 0;
-  using G4PhysicsBuilderInterface::Build; //Prevent compiler warning;
+  public:
+
+    G4VPiKBuilder() = default;
+    virtual ~G4VPiKBuilder() {}
+    virtual void Build(G4HadronElasticProcess* aP) = 0;
+    virtual void Build(G4HadronInelasticProcess* aP) = 0;
+    using G4PhysicsBuilderInterface::Build;  // Prevent compiler warning;
 };
 
 #endif
-

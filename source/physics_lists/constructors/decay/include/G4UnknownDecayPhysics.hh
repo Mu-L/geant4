@@ -33,38 +33,32 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4UnknownDecayPhysics_h
-#define G4UnknownDecayPhysics_h 1
+#ifndef G4UNKNOWNDECAYPHYSICS_HH
+#define G4UNKNOWNDECAYPHYSICS_HH
 
-#include "globals.hh"
 #include "G4VPhysicsConstructor.hh"
+#include "globals.hh"
 
 class G4UnknownDecayPhysics : public G4VPhysicsConstructor
 {
-public: 
-  G4UnknownDecayPhysics(G4int ver = 1);
-  G4UnknownDecayPhysics(const G4String& name, G4int ver = 1);
-  ~G4UnknownDecayPhysics() override;
+  public:
 
-    // This method will be invoked in the Construct() method. 
+    G4UnknownDecayPhysics(G4int ver = 1);
+    G4UnknownDecayPhysics(const G4String& name, G4int ver = 1);
+    ~G4UnknownDecayPhysics() override;
+
+    // This method will be invoked in the Construct() method.
     // each particle type will be instantiated
-  void ConstructParticle() override;
- 
+    void ConstructParticle() override;
+
     // This method will be invoked in the Construct() method.
     // each physics process will be instantiated and
-    // registered to the process manager of each particle type 
-  void ConstructProcess() override;
+    // registered to the process manager of each particle type
+    void ConstructProcess() override;
 
-private:
-  G4int    verbose;
+  private:
+
+    G4int verbose;
 };
 
 #endif
-
-
-
-
-
-
-
-

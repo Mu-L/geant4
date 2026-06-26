@@ -26,6 +26,7 @@
 
 #include <g4gidi_version.hh>
 #include <G4GIDI.hh>
+#include "G4GIDI_impl.hh"
 
 /* *********************************************************************************************************//**
  * Returns the version string for the version of G4GIDI.

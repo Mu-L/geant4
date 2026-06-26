@@ -29,29 +29,29 @@
 // by V. Lara (Sept. 2001)
 //
 
-#ifndef G4N17GEMChannel_h
-#define G4N17GEMChannel_h 1
+#ifndef G4N17GEMCHANNEL_HH
+#define G4N17GEMCHANNEL_HH
 
 #include "G4GEMChannel.hh"
 #include "G4N17GEMProbability.hh"
 
 class G4N17GEMChannel : public G4GEMChannel
 {
-public:
-  // only available constructor
-  explicit G4N17GEMChannel() 
-    : G4GEMChannel(17,7,"N17",&theEvaporationProbability) {}
-  
-  // destructor
-  ~G4N17GEMChannel() {};
-  
-private:
-  const G4N17GEMChannel & operator=(const G4N17GEMChannel & right) = delete;  
-  G4N17GEMChannel(const G4N17GEMChannel & right) = delete;
-  G4bool operator==(const G4N17GEMChannel & right) const = delete;
-  G4bool operator!=(const G4N17GEMChannel & right) const = delete;
-    
-  G4N17GEMProbability theEvaporationProbability;
-  
+  public:
+
+    // only available constructor
+    explicit G4N17GEMChannel() : G4GEMChannel(17, 7, "N17", &theEvaporationProbability) {}
+
+    // destructor
+    ~G4N17GEMChannel() {};
+
+  private:
+
+    const G4N17GEMChannel& operator=(const G4N17GEMChannel& right) = delete;
+    G4N17GEMChannel(const G4N17GEMChannel& right) = delete;
+    G4bool operator==(const G4N17GEMChannel& right) const = delete;
+    G4bool operator!=(const G4N17GEMChannel& right) const = delete;
+
+    G4N17GEMProbability theEvaporationProbability;
 };
 #endif

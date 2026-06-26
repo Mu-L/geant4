@@ -31,27 +31,28 @@
 //
 // Author: Michael Dressel, CERN
 // --------------------------------------------------------------------
-#ifndef G4CellScoreValues_hh
-#define G4CellScoreValues_hh 1
+#ifndef G4CELLSCOREVALUES_HH
+#define G4CELLSCOREVALUES_HH
 
 #include "globals.hh"
 
 class G4CellScoreValues
 {
- public:
-  G4double fSumSL = 0;
-  G4double fSumSLW = 0;
-  G4double fSumSLW_v = 0;
-  G4double fSumSLWE = 0;
-  G4double fSumSLWE_v = 0;
-  G4int fSumTracksEntering = 0;
-  G4int fSumPopulation = 0;
-  G4int fSumCollisions = 0;
-  G4double fSumCollisionsWeight = 0;
-  G4double fNumberWeightedEnergy = 0;
-  G4double fFluxWeightedEnergy = 0;
-  G4double fAverageTrackWeight = 0;
-  G4double fImportance = 0;
+  public:
+
+    G4double fSumSL = 0;
+    G4double fSumSLW = 0;
+    G4double fSumSLW_v = 0;
+    G4double fSumSLWE = 0;
+    G4double fSumSLWE_v = 0;
+    G4int fSumTracksEntering = 0;
+    G4int fSumPopulation = 0;
+    G4int fSumCollisions = 0;
+    G4double fSumCollisionsWeight = 0;
+    G4double fNumberWeightedEnergy = 0;
+    G4double fFluxWeightedEnergy = 0;
+    G4double fAverageTrackWeight = 0;
+    G4double fImportance = 0;
 };
 
 #endif

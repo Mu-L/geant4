@@ -45,16 +45,18 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4eeToHadronsMultiModel_h
-#define G4eeToHadronsMultiModel_h 1
+#ifndef G4EETOHADRONSMULTIMODEL_HH
+#define G4EETOHADRONSMULTIMODEL_HH
 
-#include "G4VEmModel.hh"
-#include "G4eeToHadronsModel.hh"
 #include "G4ParticleChangeForGamma.hh"
 #include "G4TrackStatus.hh"
+#include "G4VEmModel.hh"
+#include "G4eeToHadronsModel.hh"
 #include "Randomize.hh"
-#include <CLHEP/Units/SystemOfUnits.h>
+
 #include <CLHEP/Units/PhysicalConstants.h>
+#include <CLHEP/Units/SystemOfUnits.h>
+
 #include <vector>
 
 class G4eeCrossSections;
@@ -62,85 +64,74 @@ class G4Vee2hadrons;
 
 class G4eeToHadronsMultiModel : public G4VEmModel
 {
+  public:
 
-public:
+    explicit G4eeToHadronsMultiModel(G4int ver = 0, const G4String& nam = "eeToHadrons");
 
-  explicit G4eeToHadronsMultiModel(G4int ver=0, 
-                                   const G4String& nam = "eeToHadrons");
+    ~G4eeToHadronsMultiModel() override;
 
-  ~G4eeToHadronsMultiModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy,
+                                   G4double maxEnergy) override;
 
-  G4double CrossSectionPerVolume(const G4Material*,
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kineticEnergy,
+                                        G4double Z, G4double A, G4double cutEnergy = 0.0,
+                                        G4double maxEnergy = DBL_MAX) override;
 
-  G4double ComputeCrossSectionPerAtom(
-                                 const G4ParticleDefinition*,
-                                 G4double kineticEnergy,
-                                 G4double Z, G4double A,
-                                 G4double cutEnergy = 0.0,
-                                 G4double maxEnergy = DBL_MAX) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin = 0.0,
+                           G4double maxEnergy = DBL_MAX) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin = 0.0,
-			 G4double maxEnergy = DBL_MAX) override;
+    void ModelDescription(std::ostream& outFile) const override;
 
-  void ModelDescription(std::ostream& outFile) const override;
-  
-  // Set the factor to artificially increase the crossSection (default 1)
-  void SetCrossSecFactor(G4double fac);
+    // Set the factor to artificially increase the crossSection (default 1)
+    void SetCrossSecFactor(G4double fac);
 
-  G4double ComputeCrossSectionPerElectron(const G4ParticleDefinition*,
-                                          G4double kineticEnergy,
-                                          G4double cutEnergy = 0.0,
-                                          G4double maxEnergy = DBL_MAX);
+    G4double ComputeCrossSectionPerElectron(const G4ParticleDefinition*, G4double kineticEnergy,
+                                            G4double cutEnergy = 0.0, G4double maxEnergy = DBL_MAX);
 
-  // hide assignment operator
-  G4eeToHadronsMultiModel & operator=(const  G4eeToHadronsMultiModel &right) = delete;
-  G4eeToHadronsMultiModel(const  G4eeToHadronsMultiModel&) = delete;
+    // hide assignment operator
+    G4eeToHadronsMultiModel& operator=(const G4eeToHadronsMultiModel& right) = delete;
+    G4eeToHadronsMultiModel(const G4eeToHadronsMultiModel&) = delete;
 
-private:
+  private:
 
-  void AddEEModel(G4Vee2hadrons*, const G4DataVector&);
+    void AddEEModel(G4Vee2hadrons*, const G4DataVector&);
 
-  //change incident e+ kinetic energy into CM total energy(sum of e+ and e-)  
-  inline G4double LabToCM(G4double);
+    // change incident e+ kinetic energy into CM total energy(sum of e+ and e-)
+    inline G4double LabToCM(G4double);
 
-  G4eeCrossSections*               cross = nullptr;
-  G4ParticleChangeForGamma*        fParticleChange = nullptr;
+    G4eeCrossSections* cross = nullptr;
+    G4ParticleChangeForGamma* fParticleChange = nullptr;
 
-  std::vector<G4eeToHadronsModel*> models;
+    std::vector<G4eeToHadronsModel*> models;
 
-  std::vector<G4double>            ekinMin;
-  std::vector<G4double>            ekinPeak;
-  std::vector<G4double>            ekinMax;
-  std::vector<G4double>            cumSum;
+    std::vector<G4double> ekinMin;
+    std::vector<G4double> ekinPeak;
+    std::vector<G4double> ekinMax;
+    std::vector<G4double> cumSum;
 
-  G4double 			   delta;  
-  G4double                         thKineticEnergy = DBL_MAX;
-  G4double                         maxKineticEnergy;
-  G4double                         csFactor = 1.0;
+    G4double delta;
+    G4double thKineticEnergy = DBL_MAX;
+    G4double maxKineticEnergy;
+    G4double csFactor = 1.0;
 
-  G4int                            nModels = 0;
-  G4int                            verbose;
-  G4bool                           isInitialised = false;
+    G4int nModels = 0;
+    G4int verbose;
+    G4bool isInitialised = false;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-//change incident e+ kinetic energy into CM total energy(sum of e+ and e-)  
+// change incident e+ kinetic energy into CM total energy(sum of e+ and e-)
 inline G4double G4eeToHadronsMultiModel::LabToCM(G4double kinE_lab)
 {
   G4double totE_CM = 0.0;
   G4double mass = CLHEP::electron_mass_c2;
   G4double totE_lab = kinE_lab + mass;
-  totE_CM = std::sqrt(2*mass*(mass+totE_lab));
+  totE_CM = std::sqrt(2 * mass * (mass + totE_lab));
 
   return totE_CM;
 }

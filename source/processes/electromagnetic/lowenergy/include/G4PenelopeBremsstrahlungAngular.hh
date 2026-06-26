@@ -23,7 +23,7 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// 
+//
 // -------------------------------------------------------------------
 //
 // Author: L.Pandola
@@ -42,62 +42,59 @@
 // version 2008
 // --------------------------------------------------------------
 
-
 #ifndef G4PENELOPEBREMSSTRAHLUNGANGULAR_HH
-#define G4PENELOPEBREMSSTRAHLUNGANGULAR_HH 1
-#include "globals.hh"
-#include <map>
+#define G4PENELOPEBREMSSTRAHLUNGANGULAR_HH
 #include "G4VEmAngularDistribution.hh"
+#include "globals.hh"
+
+#include <map>
 
 class G4PhysicsTable;
 class G4Material;
 
 class G4PenelopeBremsstrahlungAngular : public G4VEmAngularDistribution
-{ 
-public:
-  explicit G4PenelopeBremsstrahlungAngular(); 
-  ~G4PenelopeBremsstrahlungAngular();
+{
+  public:
 
-  //! Samples the direction of the outgoing photon (in global coordinates). 
-  G4ThreeVector& SampleDirection(const G4DynamicParticle* dp,
-				 G4double out_energy,
-				 G4int Z,
-				 const G4Material* mat = nullptr) override;
-  
-  //! Set/Get Verbosity level
-  void SetVerbosityLevel(G4int vl){fVerbosityLevel = vl;};
-  G4int GetVerbosityLevel(){return fVerbosityLevel;};
+    explicit G4PenelopeBremsstrahlungAngular();
+    ~G4PenelopeBremsstrahlungAngular();
 
-  //! Reserved for Master Model
-  //! The Initialize() method forces the cleaning of tables
-  void Initialize();
-  //! Reserved for Master Model
-  void PrepareTables(const G4Material* material,
-		     G4bool isMaster);
+    //! Samples the direction of the outgoing photon (in global coordinates).
+    G4ThreeVector& SampleDirection(const G4DynamicParticle* dp, G4double out_energy, G4int Z,
+                                   const G4Material* mat = nullptr) override;
 
-private: 
-  void ClearTables();
-  G4double CalculateEffectiveZ(const G4Material* material);
-  void ReadDataFile();
- 
-  std::map<const G4Material*,G4double> *fEffectiveZSq;
+    //! Set/Get Verbosity level
+    void SetVerbosityLevel(G4int vl) { fVerbosityLevel = vl; };
+    G4int GetVerbosityLevel() { return fVerbosityLevel; };
 
-  //Tables containing the Lorentz sampling coefficients 
-  //The key is the effective Z of the material
-  std::map<G4double,G4PhysicsTable*> *fLorentzTables1;
-  std::map<G4double,G4PhysicsTable*> *fLorentzTables2;
- 
-  static const G4int fNumberofZPoints=6;
-  static const G4int fNumberofEPoints=6;
-  static const G4int fNumberofKPoints=4;
+    //! Reserved for Master Model
+    //! The Initialize() method forces the cleaning of tables
+    void Initialize();
+    //! Reserved for Master Model
+    void PrepareTables(const G4Material* material, G4bool isMaster);
 
-  G4double fQQ1[fNumberofZPoints][fNumberofEPoints][fNumberofKPoints];
-  G4double fQQ2[fNumberofZPoints][fNumberofEPoints][fNumberofKPoints];
+  private:
 
-  G4int fVerbosityLevel;
-  G4bool fDataRead;
+    void ClearTables();
+    G4double CalculateEffectiveZ(const G4Material* material);
+    void ReadDataFile();
+
+    std::map<const G4Material*, G4double>* fEffectiveZSq;
+
+    // Tables containing the Lorentz sampling coefficients
+    // The key is the effective Z of the material
+    std::map<G4double, G4PhysicsTable*>* fLorentzTables1;
+    std::map<G4double, G4PhysicsTable*>* fLorentzTables2;
+
+    static const G4int fNumberofZPoints = 6;
+    static const G4int fNumberofEPoints = 6;
+    static const G4int fNumberofKPoints = 4;
+
+    G4double fQQ1[fNumberofZPoints][fNumberofEPoints][fNumberofKPoints];
+    G4double fQQ2[fNumberofZPoints][fNumberofEPoints][fNumberofKPoints];
+
+    G4int fVerbosityLevel;
+    G4bool fDataRead;
 };
 
-
-  
 #endif

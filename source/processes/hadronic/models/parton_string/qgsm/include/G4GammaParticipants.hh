@@ -23,25 +23,26 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4GammaParticipants_h
-#define G4GammaParticipants_h 1
+#ifndef G4GAMMAPARTICIPANTS_HH
+#define G4GAMMAPARTICIPANTS_HH
 
 // An implementation of a parton string model, re-using
 // the most parts of quark gluon string model. The calculation
-// of collision probabilities was implemented as a transparent 
+// of collision probabilities was implemented as a transparent
 // nucleus approximation. This implies that exactely ont nucleon
 // in the nucleus participates in the reaction.
 
-#include "G4QGSParticipants.hh" 
+#include "G4QGSParticipants.hh"
 
 class G4GammaParticipants : public G4QGSParticipants
 {
   public:
-    virtual ~G4GammaParticipants(){}
+
+    virtual ~G4GammaParticipants() {}
 
   private:
-    virtual G4VSplitableHadron* SelectInteractions(const G4ReactionProduct  &thePrimary);
+
+    virtual G4VSplitableHadron* SelectInteractions(const G4ReactionProduct& thePrimary);
 };
 
 #endif
-

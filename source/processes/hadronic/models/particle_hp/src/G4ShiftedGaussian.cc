@@ -68,9 +68,12 @@ G4double G4ShiftedGaussian::G4FindShiftedMean(G4double RequestedMean, G4double R
 
   std::size_t VectorSize = ShiftedMean_.size();
 
-  for (std::size_t i = 0; i < VectorSize; ++i) {
-    if (ShiftedMean_[i].first.first == RequestedMean) {
-      if (ShiftedMean_[i].first.second == RequestedStdDev) {
+  for (std::size_t i = 0; i < VectorSize; ++i)
+  {
+    if (ShiftedMean_[i].first.first == RequestedMean)
+    {
+      if (ShiftedMean_[i].first.second == RequestedStdDev)
+      {
         G4FFG_SAMPLING_FUNCTIONLEAVE__
         return ShiftedMean_[i].second;
       }

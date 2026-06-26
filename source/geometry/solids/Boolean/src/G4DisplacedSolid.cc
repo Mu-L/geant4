@@ -23,7 +23,7 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// Implementation of G4DisplacedSolid class for Boolean 
+// Implementation of G4DisplacedSolid class for Boolean
 // operations between other solids
 //
 // 28.10.98 V.Grichine: created
@@ -32,35 +32,31 @@
 
 #include "G4DisplacedSolid.hh"
 
-#include "G4VoxelLimits.hh"
-
-#include "G4VPVParameterisation.hh"
-
-#include "G4VGraphicsScene.hh"
 #include "G4Polyhedron.hh"
+#include "G4VGraphicsScene.hh"
+#include "G4VPVParameterisation.hh"
+#include "G4VoxelLimits.hh"
 
 ////////////////////////////////////////////////////////////////
 //
-// Constructor for transformation like rotation of frame then translation 
+// Constructor for transformation like rotation of frame then translation
 // in new frame. It is similar to 1st constractor in G4PVPlacement
 
-G4DisplacedSolid::G4DisplacedSolid( const G4String& pName,
-                                          G4VSolid* pSolid ,
-                                          G4RotationMatrix* rotMatrix,
-                                    const G4ThreeVector& transVector    )
+G4DisplacedSolid::G4DisplacedSolid(const G4String& pName, G4VSolid* pSolid,
+                                   G4RotationMatrix* rotMatrix, const G4ThreeVector& transVector)
   : G4VSolid(pName)
 {
   if (pSolid->GetEntityType() == "G4DisplacedSolid")
   {
     fPtrSolid = ((G4DisplacedSolid*)pSolid)->GetConstituentMovedSolid();
     G4AffineTransform t1 = ((G4DisplacedSolid*)pSolid)->GetDirectTransform();
-    G4AffineTransform t2 = G4AffineTransform(rotMatrix,transVector);
-    fDirectTransform = new G4AffineTransform(t1*t2);
+    G4AffineTransform t2 = G4AffineTransform(rotMatrix, transVector);
+    fDirectTransform = new G4AffineTransform(t1 * t2);
   }
   else
-  { 
+  {
     fPtrSolid = pSolid;
-    fDirectTransform = new G4AffineTransform(rotMatrix,transVector);
+    fDirectTransform = new G4AffineTransform(rotMatrix, transVector);
   }
   fPtrTransform = new G4AffineTransform(fDirectTransform->Inverse());
 }
@@ -69,24 +65,23 @@ G4DisplacedSolid::G4DisplacedSolid( const G4String& pName,
 //
 // Constructor
 
-G4DisplacedSolid::G4DisplacedSolid( const G4String& pName,
-                                          G4VSolid* pSolid ,
-                                    const G4Transform3D& transform  )
+G4DisplacedSolid::G4DisplacedSolid(const G4String& pName, G4VSolid* pSolid,
+                                   const G4Transform3D& transform)
   : G4VSolid(pName)
 {
   if (pSolid->GetEntityType() == "G4DisplacedSolid")
   {
     fPtrSolid = ((G4DisplacedSolid*)pSolid)->GetConstituentMovedSolid();
     G4AffineTransform t1 = ((G4DisplacedSolid*)pSolid)->GetDirectTransform();
-    G4AffineTransform t2 = G4AffineTransform(transform.getRotation().inverse(),
-                                             transform.getTranslation());
-    fDirectTransform = new G4AffineTransform(t1*t2);
+    G4AffineTransform t2 =
+      G4AffineTransform(transform.getRotation().inverse(), transform.getTranslation());
+    fDirectTransform = new G4AffineTransform(t1 * t2);
   }
   else
-  { 
+  {
     fPtrSolid = pSolid;
-    fDirectTransform = new G4AffineTransform(transform.getRotation().inverse(),
-                                             transform.getTranslation()) ;
+    fDirectTransform =
+      new G4AffineTransform(transform.getRotation().inverse(), transform.getTranslation());
   }
   fPtrTransform = new G4AffineTransform(fDirectTransform->Inverse());
 }
@@ -96,20 +91,19 @@ G4DisplacedSolid::G4DisplacedSolid( const G4String& pName,
 // Constructor for use with creation of Transient object
 // from Persistent object
 
-G4DisplacedSolid::G4DisplacedSolid( const G4String& pName,
-                                          G4VSolid* pSolid ,
-                                    const G4AffineTransform directTransform )
+G4DisplacedSolid::G4DisplacedSolid(const G4String& pName, G4VSolid* pSolid,
+                                   const G4AffineTransform directTransform)
   : G4VSolid(pName)
 {
   if (pSolid->GetEntityType() == "G4DisplacedSolid")
   {
     fPtrSolid = ((G4DisplacedSolid*)pSolid)->GetConstituentMovedSolid();
     G4AffineTransform t1 = ((G4DisplacedSolid*)pSolid)->GetDirectTransform();
-    auto  t2 = G4AffineTransform(directTransform);
-    fDirectTransform = new G4AffineTransform(t1*t2);
+    auto t2 = G4AffineTransform(directTransform);
+    fDirectTransform = new G4AffineTransform(t1 * t2);
   }
   else
-  { 
+  {
     fPtrSolid = pSolid;
     fDirectTransform = new G4AffineTransform(directTransform);
   }
@@ -121,19 +115,17 @@ G4DisplacedSolid::G4DisplacedSolid( const G4String& pName,
 // Fake default constructor - sets only member data and allocates memory
 //                            for usage restricted to object persistency.
 
-G4DisplacedSolid::G4DisplacedSolid( __void__& a )
-  : G4VSolid(a)
-{
-}
+G4DisplacedSolid::G4DisplacedSolid(__void__& a) : G4VSolid(a) {}
 
 ///////////////////////////////////////////////////////////////////
 //
 // Destructor
 
-G4DisplacedSolid::~G4DisplacedSolid() 
+G4DisplacedSolid::~G4DisplacedSolid()
 {
   CleanTransformations();
-  delete fpPolyhedron; fpPolyhedron = nullptr;
+  delete fpPolyhedron;
+  fpPolyhedron = nullptr;
 }
 
 ///////////////////////////////////////////////////////////////
@@ -141,7 +133,7 @@ G4DisplacedSolid::~G4DisplacedSolid()
 // Copy constructor
 
 G4DisplacedSolid::G4DisplacedSolid(const G4DisplacedSolid& rhs)
-  : G4VSolid (rhs), fPtrSolid(rhs.fPtrSolid)
+  : G4VSolid(rhs), fPtrSolid(rhs.fPtrSolid)
 {
   fPtrTransform = new G4AffineTransform(*(rhs.fPtrTransform));
   fDirectTransform = new G4AffineTransform(*(rhs.fDirectTransform));
@@ -151,11 +143,14 @@ G4DisplacedSolid::G4DisplacedSolid(const G4DisplacedSolid& rhs)
 //
 // Assignment operator
 
-G4DisplacedSolid& G4DisplacedSolid::operator = (const G4DisplacedSolid& rhs) 
+G4DisplacedSolid& G4DisplacedSolid::operator=(const G4DisplacedSolid& rhs)
 {
   // Check assignment to self
   //
-  if (this == &rhs)  { return *this; }
+  if (this == &rhs)
+  {
+    return *this;
+  }
 
   // Copy base class data
   //
@@ -164,48 +159,52 @@ G4DisplacedSolid& G4DisplacedSolid::operator = (const G4DisplacedSolid& rhs)
   // Copy data
   //
   fPtrSolid = rhs.fPtrSolid;
-  delete fPtrTransform; delete fDirectTransform;
+  delete fPtrTransform;
+  delete fDirectTransform;
   fPtrTransform = new G4AffineTransform(*(rhs.fPtrTransform));
   fDirectTransform = new G4AffineTransform(*(rhs.fDirectTransform));
   fRebuildPolyhedron = false;
-  delete fpPolyhedron; fpPolyhedron = nullptr;
+  delete fpPolyhedron;
+  fpPolyhedron = nullptr;
 
   return *this;
-}  
+}
 
 /////////////////////////////////////////////////////////////////////////////
 
 void G4DisplacedSolid::CleanTransformations()
 {
-  if(fPtrTransform != nullptr)
+  if (fPtrTransform != nullptr)
   {
-    delete fPtrTransform; fPtrTransform = nullptr;
-    delete fDirectTransform; fDirectTransform = nullptr;
+    delete fPtrTransform;
+    fPtrTransform = nullptr;
+    delete fDirectTransform;
+    fDirectTransform = nullptr;
   }
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-const G4DisplacedSolid* G4DisplacedSolid::GetDisplacedSolidPtr() const   
+const G4DisplacedSolid* G4DisplacedSolid::GetDisplacedSolidPtr() const
 {
   return this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-G4DisplacedSolid* G4DisplacedSolid::GetDisplacedSolidPtr() 
+G4DisplacedSolid* G4DisplacedSolid::GetDisplacedSolidPtr()
 {
   return this;
 }
 
 G4VSolid* G4DisplacedSolid::GetConstituentMovedSolid() const
-{ 
-  return fPtrSolid; 
-} 
+{
+  return fPtrSolid;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 
-G4AffineTransform  G4DisplacedSolid::GetTransform() const
+G4AffineTransform G4DisplacedSolid::GetTransform() const
 {
   G4AffineTransform aTransform = *fPtrTransform;
   return aTransform;
@@ -213,23 +212,23 @@ G4AffineTransform  G4DisplacedSolid::GetTransform() const
 
 /////////////////////////////////////////////////////////////////////////////
 
-void G4DisplacedSolid::SetTransform(G4AffineTransform& transform) 
+void G4DisplacedSolid::SetTransform(G4AffineTransform& transform)
 {
-  fPtrTransform = &transform ;
+  fPtrTransform = &transform;
   fRebuildPolyhedron = true;
 }
 
 //////////////////////////////////////////////////////////////////////////////
 
-G4AffineTransform  G4DisplacedSolid::GetDirectTransform() const
+G4AffineTransform G4DisplacedSolid::GetDirectTransform() const
 {
-  G4AffineTransform aTransform= *fDirectTransform;
+  G4AffineTransform aTransform = *fDirectTransform;
   return aTransform;
 }
 
-void G4DisplacedSolid::SetDirectTransform(G4AffineTransform& transform) 
+void G4DisplacedSolid::SetDirectTransform(G4AffineTransform& transform)
 {
-  fDirectTransform = &transform ;
+  fDirectTransform = &transform;
   fRebuildPolyhedron = true;
 }
 
@@ -249,7 +248,7 @@ void G4DisplacedSolid::SetFrameRotation(const G4RotationMatrix& matrix)
 
 /////////////////////////////////////////////////////////////////////////////
 
-G4ThreeVector  G4DisplacedSolid::GetFrameTranslation() const
+G4ThreeVector G4DisplacedSolid::GetFrameTranslation() const
 {
   return fPtrTransform->NetTranslation();
 }
@@ -280,7 +279,7 @@ void G4DisplacedSolid::SetObjectRotation(const G4RotationMatrix& matrix)
 
 ///////////////////////////////////////////////////////////////////////
 
-G4ThreeVector  G4DisplacedSolid::GetObjectTranslation() const
+G4ThreeVector G4DisplacedSolid::GetObjectTranslation() const
 {
   return fDirectTransform->NetTranslation();
 }
@@ -297,14 +296,13 @@ void G4DisplacedSolid::SetObjectTranslation(const G4ThreeVector& vector)
 //
 // Get bounding box
 
-void G4DisplacedSolid::BoundingLimits(G4ThreeVector& pMin,
-                                      G4ThreeVector& pMax) const
+void G4DisplacedSolid::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
 {
   if (!fDirectTransform->IsRotated())
   {
     // Special case of pure translation
     //
-    fPtrSolid->BoundingLimits(pMin,pMax);
+    fPtrSolid->BoundingLimits(pMin, pMax);
     G4ThreeVector offset = fDirectTransform->NetTranslation();
     pMin += offset;
     pMax += offset;
@@ -314,25 +312,22 @@ void G4DisplacedSolid::BoundingLimits(G4ThreeVector& pMin,
     // General case, use CalculateExtent() to find bounding box
     //
     G4VoxelLimits unLimit;
-    G4double xmin,xmax,ymin,ymax,zmin,zmax;
-    fPtrSolid->CalculateExtent(kXAxis,unLimit,*fDirectTransform,xmin,xmax);
-    fPtrSolid->CalculateExtent(kYAxis,unLimit,*fDirectTransform,ymin,ymax);
-    fPtrSolid->CalculateExtent(kZAxis,unLimit,*fDirectTransform,zmin,zmax);
-    pMin.set(xmin,ymin,zmin);
-    pMax.set(xmax,ymax,zmax);
+    G4double xmin, xmax, ymin, ymax, zmin, zmax;
+    fPtrSolid->CalculateExtent(kXAxis, unLimit, *fDirectTransform, xmin, xmax);
+    fPtrSolid->CalculateExtent(kYAxis, unLimit, *fDirectTransform, ymin, ymax);
+    fPtrSolid->CalculateExtent(kZAxis, unLimit, *fDirectTransform, zmin, zmax);
+    pMin.set(xmin, ymin, zmin);
+    pMax.set(xmax, ymax, zmax);
   }
-  
+
   // Check correctness of the bounding box
   //
   if (pMin.x() >= pMax.x() || pMin.y() >= pMax.y() || pMin.z() >= pMax.z())
   {
     std::ostringstream message;
-    message << "Bad bounding box (min >= max) for solid: "
-            << GetName() << " !"
-            << "\npMin = " << pMin
-            << "\npMax = " << pMax;
-    G4Exception("G4DisplacedSolid::BoundingLimits()", "GeomMgt0001",
-               JustWarning, message);
+    message << "Bad bounding box (min >= max) for solid: " << GetName() << " !"
+            << "\npMin = " << pMin << "\npMax = " << pMax;
+    G4Exception("G4DisplacedSolid::BoundingLimits()", "GeomMgt0001", JustWarning, message);
     DumpInfo();
   }
 }
@@ -340,52 +335,46 @@ void G4DisplacedSolid::BoundingLimits(G4ThreeVector& pMin,
 //////////////////////////////////////////////////////////////////////////
 //
 // Calculate extent under transform and specified limit
-     
-G4bool 
-G4DisplacedSolid::CalculateExtent( const EAxis pAxis,
-                                   const G4VoxelLimits& pVoxelLimit,
-                                   const G4AffineTransform& pTransform,
-                                         G4double& pMin, 
-                                         G4double& pMax           ) const 
+
+G4bool G4DisplacedSolid::CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                                         const G4AffineTransform& pTransform, G4double& pMin,
+                                         G4double& pMax) const
 {
-  G4AffineTransform sumTransform ;
-  sumTransform.Product(*fDirectTransform,pTransform) ;
-  return fPtrSolid->CalculateExtent(pAxis,pVoxelLimit,sumTransform,pMin,pMax) ;
+  G4AffineTransform sumTransform;
+  sumTransform.Product(*fDirectTransform, pTransform);
+  return fPtrSolid->CalculateExtent(pAxis, pVoxelLimit, sumTransform, pMin, pMax);
 }
- 
+
 /////////////////////////////////////////////////////
 //
 // Inside
 
 EInside G4DisplacedSolid::Inside(const G4ThreeVector& p) const
 {
-  G4ThreeVector newPoint = fPtrTransform->TransformPoint(p) ;
-  return fPtrSolid->Inside(newPoint) ; 
+  G4ThreeVector newPoint = fPtrTransform->TransformPoint(p);
+  return fPtrSolid->Inside(newPoint);
 }
 
 //////////////////////////////////////////////////////////////
 //
 // SurfaceNormal
 
-G4ThreeVector 
-G4DisplacedSolid::SurfaceNormal( const G4ThreeVector& p ) const 
+G4ThreeVector G4DisplacedSolid::SurfaceNormal(const G4ThreeVector& p) const
 {
-  G4ThreeVector newPoint = fPtrTransform->TransformPoint(p) ;
-  G4ThreeVector normal = fPtrSolid->SurfaceNormal(newPoint) ; 
-  return fDirectTransform->TransformAxis(normal) ;
+  G4ThreeVector newPoint = fPtrTransform->TransformPoint(p);
+  G4ThreeVector normal = fPtrSolid->SurfaceNormal(newPoint);
+  return fDirectTransform->TransformAxis(normal);
 }
 
 /////////////////////////////////////////////////////////////
 //
 // The same algorithm as in DistanceToIn(p)
 
-G4double 
-G4DisplacedSolid::DistanceToIn( const G4ThreeVector& p,
-                                const G4ThreeVector& v  ) const 
-{    
-  G4ThreeVector newPoint = fPtrTransform->TransformPoint(p) ;
-  G4ThreeVector newDirection = fPtrTransform->TransformAxis(v) ;
-  return fPtrSolid->DistanceToIn(newPoint,newDirection) ;   
+G4double G4DisplacedSolid::DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const
+{
+  G4ThreeVector newPoint = fPtrTransform->TransformPoint(p);
+  G4ThreeVector newDirection = fPtrTransform->TransformAxis(v);
+  return fPtrSolid->DistanceToIn(newPoint, newDirection);
 }
 
 ////////////////////////////////////////////////////////
@@ -393,45 +382,39 @@ G4DisplacedSolid::DistanceToIn( const G4ThreeVector& p,
 // Approximate nearest distance from the point p to the intersection of
 // two solids
 
-G4double 
-G4DisplacedSolid::DistanceToIn( const G4ThreeVector& p ) const 
+G4double G4DisplacedSolid::DistanceToIn(const G4ThreeVector& p) const
 {
-  G4ThreeVector newPoint = fPtrTransform->TransformPoint(p) ;
-  return fPtrSolid->DistanceToIn(newPoint) ;   
+  G4ThreeVector newPoint = fPtrTransform->TransformPoint(p);
+  return fPtrSolid->DistanceToIn(newPoint);
 }
 
 //////////////////////////////////////////////////////////
 //
 // The same algorithm as DistanceToOut(p)
 
-G4double 
-G4DisplacedSolid::DistanceToOut( const G4ThreeVector& p,
-                                 const G4ThreeVector& v,
-                                 const G4bool calcNorm,
-                                       G4bool *validNorm,
-                                       G4ThreeVector *n   ) const 
+G4double G4DisplacedSolid::DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                                         const G4bool calcNorm, G4bool* validNorm,
+                                         G4ThreeVector* n) const
 {
-  G4ThreeVector solNorm ; 
-  G4ThreeVector newPoint = fPtrTransform->TransformPoint(p) ;
-  G4ThreeVector newDirection = fPtrTransform->TransformAxis(v) ;
-  G4double dist = fPtrSolid->DistanceToOut(newPoint,newDirection,
-                                           calcNorm,validNorm,&solNorm) ;
-  if(calcNorm)
-  { 
-    *n = fDirectTransform->TransformAxis(solNorm) ;
+  G4ThreeVector solNorm;
+  G4ThreeVector newPoint = fPtrTransform->TransformPoint(p);
+  G4ThreeVector newDirection = fPtrTransform->TransformAxis(v);
+  G4double dist = fPtrSolid->DistanceToOut(newPoint, newDirection, calcNorm, validNorm, &solNorm);
+  if (calcNorm)
+  {
+    *n = fDirectTransform->TransformAxis(solNorm);
   }
-  return dist ;  
+  return dist;
 }
 
 //////////////////////////////////////////////////////////////
 //
 // Inverted algorithm of DistanceToIn(p)
 
-G4double 
-G4DisplacedSolid::DistanceToOut( const G4ThreeVector& p ) const 
+G4double G4DisplacedSolid::DistanceToOut(const G4ThreeVector& p) const
 {
-  G4ThreeVector newPoint = fPtrTransform->TransformPoint(p) ;
-  return fPtrSolid->DistanceToOut(newPoint) ;   
+  G4ThreeVector newPoint = fPtrTransform->TransformPoint(p);
+  return fPtrSolid->DistanceToOut(newPoint);
 }
 
 //////////////////////////////////////////////////////////////
@@ -479,14 +462,14 @@ G4int G4DisplacedSolid::GetNumOfConstituents() const
 
 G4bool G4DisplacedSolid::IsFaceted() const
 {
-  return fPtrSolid->IsFaceted();  
+  return fPtrSolid->IsFaceted();
 }
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Return object type name
 
-G4GeometryType G4DisplacedSolid::GetEntityType() const 
+G4GeometryType G4DisplacedSolid::GetEntityType() const
 {
   return {"G4DisplacedSolid"};
 }
@@ -528,32 +511,28 @@ std::ostream& G4DisplacedSolid::StreamInfo(std::ostream& os) const
 
 //////////////////////////////////////////////////////////////////////////
 //
-// DescribeYourselfTo               
+// DescribeYourselfTo
 
-void 
-G4DisplacedSolid::DescribeYourselfTo ( G4VGraphicsScene& scene ) const 
+void G4DisplacedSolid::DescribeYourselfTo(G4VGraphicsScene& scene) const
 {
-  scene.AddSolid (*this);
+  scene.AddSolid(*this);
 }
 
 //////////////////////////////////////////////////////////////////////////
 //
 // CreatePolyhedron
 
-G4Polyhedron* 
-G4DisplacedSolid::CreatePolyhedron () const 
+G4Polyhedron* G4DisplacedSolid::CreatePolyhedron() const
 {
   G4Polyhedron* polyhedron = fPtrSolid->CreatePolyhedron();
   if (polyhedron != nullptr)
   {
-    polyhedron
-    ->Transform(G4Transform3D(GetObjectRotation(),GetObjectTranslation()));
+    polyhedron->Transform(G4Transform3D(GetObjectRotation(), GetObjectTranslation()));
   }
   else
   {
     DumpInfo();
-    G4Exception("G4DisplacedSolid::CreatePolyhedron()",
-                "GeomSolids2002", JustWarning,
+    G4Exception("G4DisplacedSolid::CreatePolyhedron()", "GeomSolids2002", JustWarning,
                 "No G4Polyhedron for displaced solid");
   }
   return polyhedron;
@@ -563,15 +542,14 @@ G4DisplacedSolid::CreatePolyhedron () const
 //
 // GetPolyhedron
 
-G4Polyhedron* G4DisplacedSolid::GetPolyhedron () const
+G4Polyhedron* G4DisplacedSolid::GetPolyhedron() const
 {
-  if (fpPolyhedron == nullptr ||
-      fRebuildPolyhedron ||
-      fpPolyhedron->GetNumberOfRotationStepsAtTimeOfCreation() !=
-      fpPolyhedron->GetNumberOfRotationSteps())
-    {
-      fpPolyhedron = CreatePolyhedron();
-      fRebuildPolyhedron = false;
-    }
+  if (fpPolyhedron == nullptr || fRebuildPolyhedron
+      || fpPolyhedron->GetNumberOfRotationStepsAtTimeOfCreation()
+           != fpPolyhedron->GetNumberOfRotationSteps())
+  {
+    fpPolyhedron = CreatePolyhedron();
+    fRebuildPolyhedron = false;
+  }
   return fpPolyhedron;
 }

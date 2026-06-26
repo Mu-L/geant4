@@ -31,21 +31,23 @@
 //
 // This design means that objects of only *one* order of QSS driver
 // can be created (QSS2 or QSS3 must be used globally).
-// 
+//
 // Author: John Apostolakis (CERN), 19.08.2025
 // --------------------------------------------------------------------
-#ifndef G4QSSParameters_HH
-#define G4QSSParameters_HH
+#ifndef G4QSSPARAMETERS_HH
+#define G4QSSPARAMETERS_HH
 
 #include "G4Types.hh"
 
 /**
  * @brief G4QSSParameters hold parameters for the QSS Integrator driver.
+ * @ingroup geometry_magneticfield
+ *
  * It is used to create all QSStepper objects, directly or via the
  * Integration Driver. Checks for consistency of the proposed values.
  */
 
-class G4QSSParameters 
+class G4QSSParameters
 {
   public:
 
@@ -59,18 +61,18 @@ class G4QSSParameters
     /**
      * Accessors.
      */
-    inline G4int    GetQssOrder() { return fQssOrder; }
+    inline G4int GetQssOrder() { return fQssOrder; }
     inline G4double Get_dQRel() { return fdQRel; }
     inline G4double Get_dQMin() { return fdQMin; }
-    inline G4int    GetMaxSubsteps() { return fMaxSubsteps; }
+    inline G4int GetMaxSubsteps() { return fMaxSubsteps; }
 
     /**
      * Modifiers.
      */
-    G4bool SetQssOrder( G4int value,  G4bool onlyWarn= false );
-    G4bool Set_dQRel( G4double dQRel );
-    G4bool Set_dQMin( G4double dQMin );
-    G4bool SetMaxSubsteps( G4int maxSubsteps );
+    G4bool SetQssOrder(G4int value, G4bool onlyWarn = false);
+    G4bool Set_dQRel(G4double dQRel);
+    G4bool Set_dQMin(G4double dQMin);
+    G4bool SetMaxSubsteps(G4int maxSubsteps);
 
   private:
 
@@ -81,10 +83,10 @@ class G4QSSParameters
 
   private:
 
-    G4int    fQssOrder = 2;
-    G4double fdQMin    = 0.00001;
-    G4double fdQRel    = 0.001;
-    G4int    fMaxSubsteps = 5000;
+    G4int fQssOrder = 2;
+    G4double fdQMin = 0.00001;
+    G4double fdQRel = 0.001;
+    G4int fMaxSubsteps = 5000;
 };
 
 #endif

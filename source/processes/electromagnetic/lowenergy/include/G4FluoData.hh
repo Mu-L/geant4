@@ -33,71 +33,70 @@
 
 // Class description:
 // Low Energy Electromagnetic Physics
-// Fluorescence data set: shell identifiers, transition probabilities, 
+// Fluorescence data set: shell identifiers, transition probabilities,
 // transition energies
 
 // -------------------------------------------------------------------
 
 #ifndef G4FLUODATA_HH
-#define G4FLUODATA_HH 1
+#define G4FLUODATA_HH
 
 #include "globals.hh"
-#include <vector>
+
 #include <map>
+#include <vector>
 
 class G4FluoTransition;
 class G4DataVector;
 
 class G4FluoData
 {
-public:
+  public:
 
-  explicit G4FluoData(const G4String& dir);
+    explicit G4FluoData(const G4String& dir);
 
-  ~G4FluoData();
+    ~G4FluoData();
 
-  /// The method returns the number of shells in wich a 
-  /// vacancy can be filled by a radiative transition
-  std::size_t NumberOfVacancies() const;
+    /// The method returns the number of shells in wich a
+    /// vacancy can be filled by a radiative transition
+    std::size_t NumberOfVacancies() const;
 
-  /// Given the index of the vacancy returns its identity
-  G4int VacancyId(G4int vacancyIndex) const;
-  
-  /// Given the index of a vacancy returns the number of
-  /// shells starting from wich an electrons can fill the vacancy
-  std::size_t NumberOfTransitions(G4int vacancyIndex) const;
+    /// Given the index of the vacancy returns its identity
+    G4int VacancyId(G4int vacancyIndex) const;
 
-  /// Given the indexes of the starting and final shells for the 
-  /// transition, returns the identity of the starting one
-  G4int StartShellId(G4int initIndex, G4int vacancyIndex) const;
+    /// Given the index of a vacancy returns the number of
+    /// shells starting from wich an electrons can fill the vacancy
+    std::size_t NumberOfTransitions(G4int vacancyIndex) const;
 
-  /// Given the indexes of the starting and final shells for the 
-  /// transition, returns the transition energy
-  G4double StartShellEnergy(G4int initIndex, G4int vacancyIndex) const;
+    /// Given the indexes of the starting and final shells for the
+    /// transition, returns the identity of the starting one
+    G4int StartShellId(G4int initIndex, G4int vacancyIndex) const;
 
-  /// Given the indexes of the starting and final shells for the 
-  /// transition, returns the probability of this transition
-  G4double StartShellProb(G4int initIndex, G4int vacancyIndex) const;
+    /// Given the indexes of the starting and final shells for the
+    /// transition, returns the transition energy
+    G4double StartShellEnergy(G4int initIndex, G4int vacancyIndex) const;
 
-  void LoadData(G4int Z);
+    /// Given the indexes of the starting and final shells for the
+    /// transition, returns the probability of this transition
+    G4double StartShellProb(G4int initIndex, G4int vacancyIndex) const;
 
-  void PrintData();
+    void LoadData(G4int Z);
 
-  G4FluoData& operator=(const G4FluoData& right) = delete;
-  G4FluoData(const G4FluoData&) = delete;
+    void PrintData();
 
-private:
-  std::map<G4int,G4DataVector*,std::less<G4int> > idMap;
-  std::map<G4int,G4DataVector*,std::less<G4int> > energyMap;
-  std::map<G4int,G4DataVector*,std::less<G4int> > probabilityMap;
-  std::vector<G4int> nInitShells; 
-  std::map<G4int,std::vector<G4FluoTransition*>,std::less<G4int> > fluoTransitionTable;  
-  G4String fluoDirectory;  
+    G4FluoData& operator=(const G4FluoData& right) = delete;
+    G4FluoData(const G4FluoData&) = delete;
 
-  G4int numberOfVacancies = 0;
+  private:
 
+    std::map<G4int, G4DataVector*, std::less<G4int>> idMap;
+    std::map<G4int, G4DataVector*, std::less<G4int>> energyMap;
+    std::map<G4int, G4DataVector*, std::less<G4int>> probabilityMap;
+    std::vector<G4int> nInitShells;
+    std::map<G4int, std::vector<G4FluoTransition*>, std::less<G4int>> fluoTransitionTable;
+    G4String fluoDirectory;
+
+    G4int numberOfVacancies = 0;
 };
 
 #endif
-
-

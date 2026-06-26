@@ -36,83 +36,72 @@
 #define G4FIELD_UTILS_HH
 
 #include "G4FieldTrack.hh"
-#include "G4Types.hh"
 #include "G4ThreeVector.hh"
+#include "G4Types.hh"
 
 /**
  * @brief field_utils is a helper namespace, including simple methods to extract
  * vectors from arrays in conventions of the magnetic field integration.
+ * @ingroup geometry_magneticfield
  */
 
 namespace field_utils
 {
-  using State = G4double[G4FieldTrack::ncompSVEC];
+using State = G4double[G4FieldTrack::ncompSVEC];
 
-  template <unsigned int N>
-  using ShortState = G4double[N];
-   
-  enum class Value3D
-  {
-    Position = 0,
-    Momentum = 3,
-    Spin = 9
-  };
+template<unsigned int N>
+using ShortState = G4double[N];
 
-  enum class Value1D
-  {
-    KineticEnergy = 6,
-    LabTime = 7,
-    ProperTime = 8
-  };
+enum class Value3D
+{
+  Position = 0,
+  Momentum = 3,
+  Spin = 9
+};
 
-  template <typename ArrayType>
-  G4double getValue(const ArrayType& array, Value1D value);
+enum class Value1D
+{
+  KineticEnergy = 6,
+  LabTime = 7,
+  ProperTime = 8
+};
 
-  template <typename ArrayType>
-  G4double getValue2(const ArrayType& array, Value1D value);
+template<typename ArrayType>
+G4double getValue(const ArrayType& array, Value1D value);
 
-  template <typename ArrayType>
-  G4double getValue(const ArrayType& array, Value3D value);
+template<typename ArrayType>
+G4double getValue2(const ArrayType& array, Value1D value);
 
-  template <typename ArrayType>
-  G4double getValue2(const ArrayType& array, Value3D value);
+template<typename ArrayType>
+G4double getValue(const ArrayType& array, Value3D value);
 
-  template <typename ArrayType>
-  G4ThreeVector makeVector(const ArrayType& array, Value3D value);
+template<typename ArrayType>
+G4double getValue2(const ArrayType& array, Value3D value);
 
-  G4double absoluteError(
-    const G4double y[],
-    const G4double yerr[],
-    G4double hstep);
+template<typename ArrayType>
+G4ThreeVector makeVector(const ArrayType& array, Value3D value);
 
-  G4double relativeError2(
-    const G4double y[],
-    const G4double yerr[],
-    G4double hstep,
-    G4double errorTolerance);
+G4double absoluteError(const G4double y[], const G4double yerr[], G4double hstep);
 
-  G4double relativeError(
-    const G4double y[],
-    const G4double yerr[],
-    G4double hstep,
-    G4double errorTolerance);
+G4double relativeError2(const G4double y[], const G4double yerr[], G4double hstep,
+                        G4double errorTolerance);
 
-  template <typename SourceArray, typename TargetArray>
-  void setValue(const SourceArray& src, Value1D value, TargetArray& trg);
+G4double relativeError(const G4double y[], const G4double yerr[], G4double hstep,
+                       G4double errorTolerance);
 
-  template <typename SourceArray, typename TargetArray, typename ...TargetArrays>
-  void setValue(const SourceArray& src, Value1D value,
-                TargetArray& trg, TargetArrays&... trgs);
+template<typename SourceArray, typename TargetArray>
+void setValue(const SourceArray& src, Value1D value, TargetArray& trg);
 
-  void copy(G4double dst[], const G4double src[],
-            std::size_t size = G4FieldTrack::ncompSVEC);
+template<typename SourceArray, typename TargetArray, typename... TargetArrays>
+void setValue(const SourceArray& src, Value1D value, TargetArray& trg, TargetArrays&... trgs);
 
-  G4double inverseCurvatureRadius(G4double particleCharge,
-                                  G4double momentum, G4double BField);
+void copy(G4double dst[], const G4double src[], std::size_t size = G4FieldTrack::ncompSVEC);
 
-  template <typename T>
-  T clamp(T value, T lo, T hi);
-}
+G4double inverseCurvatureRadius(G4double particleCharge, G4double momentum, G4double BField);
+
+template<typename T>
+T clamp(T value, T lo, T hi);
+}  // namespace field_utils
 
 #include "G4FieldUtils.icc"
 

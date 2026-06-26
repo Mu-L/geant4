@@ -29,49 +29,46 @@
 // --------------------------------------------------------------------
 
 #include "G4RToEConvForProton.hh"
-#include "G4ParticleTable.hh"
 
+#include "G4ParticleTable.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 
 // --------------------------------------------------------------------
-G4RToEConvForProton::G4RToEConvForProton() 
-  : G4VRangeToEnergyConverter()
-{    
+G4RToEConvForProton::G4RToEConvForProton() : G4VRangeToEnergyConverter()
+{
   theParticle = G4ParticleTable::GetParticleTable()->FindParticle("proton");
   if (theParticle == nullptr)
   {
 #ifdef G4VERBOSE
-    if (GetVerboseLevel()>0)
+    if (GetVerboseLevel() > 0)
     {
       G4cout << "G4RToEConvForProton::G4RToEConvForProton() - ";
       G4cout << "Proton is not defined !!" << G4endl;
     }
 #endif
   }
-  else 
+  else
   {
     fPDG = theParticle->GetPDGEncoding();
   }
 }
 
 // --------------------------------------------------------------------
-G4RToEConvForProton::~G4RToEConvForProton()
-{}
+G4RToEConvForProton::~G4RToEConvForProton() {}
 
 // --------------------------------------------------------------------
-G4double G4RToEConvForProton::Convert(const G4double rangeCut, 
-                                      const G4Material* )
+G4double G4RToEConvForProton::Convert(const G4double rangeCut, const G4Material*)
 {
 #ifdef G4VERBOSE
-  if (GetVerboseLevel()>3)
+  if (GetVerboseLevel() > 3)
   {
     G4cout << "G4RToEConvForProton::Convert() - ";
-    G4cout << " with Range Cut " << rangeCut/mm << "[mm]" << G4endl;
+    G4cout << " with Range Cut " << rangeCut / mm << "[mm]" << G4endl;
   }
 #endif
   // Simple formula - range = Ekin/(100*keV)*(1*mm);
-  return (rangeCut/(1.0*CLHEP::mm)) * (100.0*CLHEP::keV); 
+  return (rangeCut / (1.0 * CLHEP::mm)) * (100.0 * CLHEP::keV);
 }
 
 // --------------------------------------------------------------------

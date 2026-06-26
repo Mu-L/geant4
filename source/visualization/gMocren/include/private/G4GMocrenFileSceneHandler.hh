@@ -26,22 +26,20 @@
 //
 //
 //
-// Created:  Mar. 31, 2009  Akinori Kimura  
+// Created:  Mar. 31, 2009  Akinori Kimura
 //
 // Scene handler to export geometry and trajectories to a gMocren file.
 //
-#ifndef G4GMocrenFile_SCENE_HANDLER_HH
-#define G4GMocrenFile_SCENE_HANDLER_HH
+#ifndef G4GMOCRENFILE_SCENE_HANDLER_HH
+#define G4GMOCRENFILE_SCENE_HANDLER_HH
 
-#include "globals.hh"
-
+#include "G4THitsMap.hh"
 #include "G4VSceneHandler.hh"
+#include "globals.hh"
 
 #include <fstream>
 
-#include "G4THitsMap.hh"
-
-class G4VisAttributes ;
+class G4VisAttributes;
 class G4GMocrenFile;
 class G4GMocrenMessenger;
 class G4GMocrenIO;
@@ -50,156 +48,159 @@ class G4Polyhedron;
 class G4Colour;
 
 //-----
-class G4GMocrenFileSceneHandler: public G4VSceneHandler {
+class G4GMocrenFileSceneHandler : public G4VSceneHandler
+{
+    friend class G4GMocrenFileViewer;
 
-  friend class G4GMocrenFileViewer;
-
-public:
-
-	//----- constructor and destructor
-  G4GMocrenFileSceneHandler (G4GMocrenFile& system,
-			     G4GMocrenMessenger & messenger,
-			     const G4String& name = "");
-  virtual ~G4GMocrenFileSceneHandler ();
-
-	//----- overriding base class methods
-  using G4VSceneHandler::AddPrimitive;
-  void AddPrimitive (const G4Polyline& line);
-  void AddPrimitive (const G4Polyhedron& p);
-  void AddPrimitive (const G4Text&);
-  void AddPrimitive (const G4Circle&);
-  void AddPrimitive (const G4Square&);
-
-  virtual void BeginModeling () { G4VSceneHandler::BeginModeling ();} 
-  virtual void EndModeling   () { G4VSceneHandler::EndModeling   ();}
-
-  virtual void BeginPrimitives (const G4Transform3D& objectTransformation);
-  virtual void EndPrimitives ();
-
-  using G4VSceneHandler::AddSolid;
-  void AddSolid ( const G4Box&    box    );
-  void AddSolid ( const G4Cons&   cons   );
-  void AddSolid ( const G4Tubs&   tubs   );
-  void AddSolid ( const G4Trd&    trd    );
-  void AddSolid ( const G4Trap&   trap   );
-  void AddSolid ( const G4Sphere& sphere );
-  void AddSolid ( const G4Para&   para   );
-  void AddSolid ( const G4Torus&  torus  );
-  void AddSolid ( const G4VSolid& solid  );
-
-  using G4VSceneHandler::AddCompound;
-  void AddCompound ( const G4VTrajectory& traj);
-  void AddCompound ( const G4VHit& hit);
-  void AddCompound ( const G4VDigi& hit);
-  void AddCompound ( const G4THitsMap<G4double> & hits);
-  void AddCompound ( const G4THitsMap<G4StatDouble> & hits);
-
-
-  void ClearTransientStore();  // Used for triggering detector re-drawing.
-
-  //----- public methods inherent to this class
-  void         GFBeginModeling () ;
-  void         GFEndModeling   () ;
-  G4bool       GFIsInModeling  () { return kFlagInModeling ; }
-
-  G4bool IsSavingGdd   ( void ) { return kFlagSaving_g4_gdd ;	}
-  void	BeginSavingGdd( void ); 
-  void	EndSavingGdd  ( void ) ;
-  void	SetGddFileName() ;
-
-  G4GMocrenFile&  GetSystem   () { return kSystem   ; }
-  const char*  GetGddFileName () { return kGddFileName ; }
-
-
-private:
-
-  //----- initialize all parameters
-  void InitializeParameters();
-
-  //----- Utilities etc.
-  G4bool IsVisible();
-
-  //
-  void AddDetector(const G4VSolid & solid);
-  void ExtractDetector();
-
-  void GetNestedVolumeIndex(G4int, G4int[3]);
-
-private:
-  G4GMocrenFile&	kSystem;     // Graphics system for this scene.
-  G4GMocrenMessenger & kMessenger;
-  G4GMocrenIO * kgMocrenIO;
-
-  std::map<G4int, float> kModality;
-  G4int kModalitySize[3];
-  //std::map<G4ThreeVector, float> kModalityDensities; // key: position, val: density
-  G4bool kbSetModalityVoxelSize;
-  G4bool kbModelingTrajectory;
-
-  static G4int	kSceneIdCount;
-  //std::vector<float *> fTrajectories;
-  //std::vector<unsigned char *> fTrajectoryColors;
-  G4Transform3D kVolumeTrans3D;
-
-  class Detector {
   public:
-    G4String name;
-    G4Polyhedron * polyhedron;
-    G4Transform3D transform3D;
-    unsigned char color[3];
-    Detector();
-    ~Detector();
-    void clear();
-  };
-  std::vector<Detector> kDetectors;
-  G4ThreeVector kVolumeSize;
-  G4ThreeVector kVoxelDimension;
-  std::vector<G4String> kNestedVolumeNames;
-  G4int kNestedVolumeDimension[3];
-  G4int kNestedVolumeDirAxis[3];
 
-  class Index3D {
-  public:
-    G4int x, y, z;
+    //----- constructor and destructor
+    G4GMocrenFileSceneHandler(G4GMocrenFile& system, G4GMocrenMessenger& messenger,
+                              const G4String& name = "");
+    virtual ~G4GMocrenFileSceneHandler();
 
-    Index3D();
-    Index3D(const Index3D & _index3D);
-    Index3D(G4int _x, G4int _y, G4int _z);
-    ~Index3D(){;}
-    G4bool operator < (const Index3D & _right) const;
-    G4bool operator == (const Index3D & _right) const;
+    //----- overriding base class methods
+    using G4VSceneHandler::AddPrimitive;
+    void AddPrimitive(const G4Polyline& line);
+    void AddPrimitive(const G4Polyhedron& p);
+    void AddPrimitive(const G4Text&);
+    void AddPrimitive(const G4Circle&);
+    void AddPrimitive(const G4Square&);
+
+    virtual void BeginModeling() { G4VSceneHandler::BeginModeling(); }
+    virtual void EndModeling() { G4VSceneHandler::EndModeling(); }
+
+    virtual void BeginPrimitives(const G4Transform3D& objectTransformation);
+    virtual void EndPrimitives();
+
+    using G4VSceneHandler::AddSolid;
+    void AddSolid(const G4Box& box);
+    void AddSolid(const G4Cons& cons);
+    void AddSolid(const G4Tubs& tubs);
+    void AddSolid(const G4Trd& trd);
+    void AddSolid(const G4Trap& trap);
+    void AddSolid(const G4Sphere& sphere);
+    void AddSolid(const G4Para& para);
+    void AddSolid(const G4Torus& torus);
+    void AddSolid(const G4VSolid& solid);
+
+    using G4VSceneHandler::AddCompound;
+    void AddCompound(const G4VTrajectory& traj);
+    void AddCompound(const G4VHit& hit);
+    void AddCompound(const G4VDigi& hit);
+    void AddCompound(const G4THitsMap<G4double>& hits);
+    void AddCompound(const G4THitsMap<G4StatDouble>& hits);
+
+    void ClearTransientStore();  // Used for triggering detector re-drawing.
+
+    //----- public methods inherent to this class
+    void GFBeginModeling();
+    void GFEndModeling();
+    G4bool GFIsInModeling() { return kFlagInModeling; }
+
+    G4bool IsSavingGdd(void) { return kFlagSaving_g4_gdd; }
+    void BeginSavingGdd(void);
+    void EndSavingGdd(void);
+    void SetGddFileName();
+
+    G4GMocrenFile& GetSystem() { return kSystem; }
+    const char* GetGddFileName() { return kGddFileName; }
+
   private:
-    // Private assigment operator -
-    // assignment not allowed.  Keeps Coverity happy.
-    // Index3D& operator = (const Index3D&);
-  };
 
-  std::map<Index3D, float> kNestedModality;
-  //std::map<Index3D, G4double> * fTempNestedHits;
-  std::map<G4String, std::map<Index3D, G4double> > kNestedHitsList;
-  //std::map<G4String, G4String> kNestedHitsUnit;
+    //----- initialize all parameters
+    void InitializeParameters();
 
-  std::ofstream	kGddDest;  // defined here
-  G4bool kFlagInModeling;	
-		// true:  GF_BEGIN_MODELING has sent to gMocrenFile, and
-		//        GF_END_MODELING   has not sent yet.
-		// false:  otherwise
-		// 
-		// kFlagInModeling is set to "true"
-		// in GFBeginModeling(), and to "false" 
-		// in GFEndModeling().
+    //----- Utilities etc.
+    G4bool IsVisible();
 
-  G4bool kFlagSaving_g4_gdd ;	
+    //
+    void AddDetector(const G4VSolid& solid);
+    void ExtractDetector();
 
-  G4int kFlagParameterization; // 0: G4VNestedParameterisation based geometry
-                               // 1: G4PhantomParameterisation
-                               // 2: interactive scorer
-  G4bool kFlagProcessedInteractiveScorer;
+    void GetNestedVolumeIndex(G4int, G4int[3]);
 
-  char kGddDestDir[256]; 
-  char kGddFileName[256];
-  G4int	kMaxFileNum;
+  private:
 
+    G4GMocrenFile& kSystem;  // Graphics system for this scene.
+    G4GMocrenMessenger& kMessenger;
+    G4GMocrenIO* kgMocrenIO;
+
+    std::map<G4int, float> kModality;
+    G4int kModalitySize[3];
+    // std::map<G4ThreeVector, float> kModalityDensities; // key: position, val: density
+    G4bool kbSetModalityVoxelSize;
+    G4bool kbModelingTrajectory;
+
+    static G4int kSceneIdCount;
+    // std::vector<float *> fTrajectories;
+    // std::vector<unsigned char *> fTrajectoryColors;
+    G4Transform3D kVolumeTrans3D;
+
+    class Detector
+    {
+      public:
+
+        G4String name;
+        G4Polyhedron* polyhedron;
+        G4Transform3D transform3D;
+        unsigned char color[3];
+        Detector();
+        ~Detector();
+        void clear();
+    };
+    std::vector<Detector> kDetectors;
+    G4ThreeVector kVolumeSize;
+    G4ThreeVector kVoxelDimension;
+    std::vector<G4String> kNestedVolumeNames;
+    G4int kNestedVolumeDimension[3];
+    G4int kNestedVolumeDirAxis[3];
+
+    class Index3D
+    {
+      public:
+
+        G4int x, y, z;
+
+        Index3D();
+        Index3D(const Index3D& _index3D);
+        Index3D(G4int _x, G4int _y, G4int _z);
+        ~Index3D() { ; }
+        G4bool operator<(const Index3D& _right) const;
+        G4bool operator==(const Index3D& _right) const;
+
+      private:
+
+        // Private assigment operator -
+        // assignment not allowed.  Keeps Coverity happy.
+        // Index3D& operator = (const Index3D&);
+    };
+
+    std::map<Index3D, float> kNestedModality;
+    // std::map<Index3D, G4double> * fTempNestedHits;
+    std::map<G4String, std::map<Index3D, G4double>> kNestedHitsList;
+    // std::map<G4String, G4String> kNestedHitsUnit;
+
+    std::ofstream kGddDest;  // defined here
+    G4bool kFlagInModeling;
+    // true:  GF_BEGIN_MODELING has sent to gMocrenFile, and
+    //        GF_END_MODELING   has not sent yet.
+    // false:  otherwise
+    //
+    // kFlagInModeling is set to "true"
+    // in GFBeginModeling(), and to "false"
+    // in GFEndModeling().
+
+    G4bool kFlagSaving_g4_gdd;
+
+    G4int kFlagParameterization;  // 0: G4VNestedParameterisation based geometry
+                                  // 1: G4PhantomParameterisation
+                                  // 2: interactive scorer
+    G4bool kFlagProcessedInteractiveScorer;
+
+    char kGddDestDir[256];
+    char kGddFileName[256];
+    G4int kMaxFileNum;
 };
 
 #endif

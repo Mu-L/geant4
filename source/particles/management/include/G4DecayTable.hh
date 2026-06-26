@@ -32,8 +32,8 @@
 
 // Author: H.Kurashige, 7 July 1996
 // --------------------------------------------------------------------
-#ifndef G4DecayTable_hh
-#define G4DecayTable_hh 1
+#ifndef G4DECAYTABLE_HH
+#define G4DECAYTABLE_HH
 
 #include "G4ParticleDefinition.hh"
 #include "G4VDecayChannel.hh"
@@ -45,6 +45,7 @@
 class G4DecayTable
 {
   public:
+
     using G4VDecayChannelVector = std::vector<G4VDecayChannel*>;
 
     G4DecayTable();
@@ -74,6 +75,7 @@ class G4DecayTable
     void DumpInfo() const;
 
   private:
+
     G4ParticleDefinition* parent = nullptr;
     G4VDecayChannelVector* channels = nullptr;
 };
@@ -105,7 +107,8 @@ inline G4VDecayChannel* G4DecayTable::operator[](G4int index)
 inline G4VDecayChannel* G4DecayTable::GetDecayChannel(G4int index) const
 {
   G4VDecayChannel* selectedChannel = nullptr;
-  if ((index >= 0) && (index < G4int(channels->size()))) {
+  if ((index >= 0) && (index < G4int(channels->size())))
+  {
     selectedChannel = (*channels)[index];
   }
   return selectedChannel;

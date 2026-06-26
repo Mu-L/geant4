@@ -30,15 +30,17 @@
  *      Author: kara
  */
 
-#include "globals.hh"
-#include <cstdio>
-#include <cmath>
 #include "G4KDTree.hh"
+
 #include "G4KDMap.hh"
 #include "G4KDNode.hh"
 #include "G4KDTreeResult.hh"
-#include <list>
+#include "globals.hh"
+
+#include <cmath>
+#include <cstdio>
 #include <iostream>
+#include <list>
 
 using namespace std;
 
@@ -50,24 +52,24 @@ G4Allocator<G4KDTree>*& G4KDTree::fgAllocator()
 
 //______________________________________________________________________
 // KDTree methods
-G4KDTree::G4KDTree(size_t k)
-  : fDim(k)
-  ,fKDMap(new G4KDMap(k))
-{}
+G4KDTree::G4KDTree(size_t k) : fDim(k), fKDMap(new G4KDMap(k)) {}
 
 G4KDTree::~G4KDTree()
 {
-  if(fRoot != nullptr){
+  if (fRoot != nullptr)
+  {
     __Clear_Rec(fRoot);
     fRoot = nullptr;
   }
 
-  if(fRect != nullptr){
+  if (fRect != nullptr)
+  {
     delete fRect;
     fRect = nullptr;
   }
 
-  if(fKDMap != nullptr){
+  if (fKDMap != nullptr)
+  {
     delete fKDMap;
     fKDMap = nullptr;
   }
@@ -75,20 +77,22 @@ G4KDTree::~G4KDTree()
 
 void* G4KDTree::operator new(size_t)
 {
-  if(fgAllocator() == nullptr){
+  if (fgAllocator() == nullptr)
+  {
     fgAllocator() = new G4Allocator<G4KDTree>;
   }
-  return (void*) fgAllocator()->MallocSingle();
+  return (void*)fgAllocator()->MallocSingle();
 }
 
 void G4KDTree::operator delete(void* aNode)
 {
-  fgAllocator()->FreeSingle((G4KDTree*) aNode);
+  fgAllocator()->FreeSingle((G4KDTree*)aNode);
 }
 
 void G4KDTree::Print(std::ostream& out) const
 {
-  if(fRoot != nullptr){
+  if (fRoot != nullptr)
+  {
     fRoot->Print(out);
   }
 }
@@ -96,10 +100,10 @@ void G4KDTree::Print(std::ostream& out) const
 void G4KDTree::Clear()
 {
   __Clear_Rec(fRoot);
-  fRoot    = nullptr;
+  fRoot = nullptr;
   fNbNodes = 0;
 
-  if(fRect != nullptr)
+  if (fRect != nullptr)
   {
     delete fRect;
     fRect = nullptr;
@@ -108,16 +112,16 @@ void G4KDTree::Clear()
 
 void G4KDTree::__Clear_Rec(G4KDNode_Base* node)
 {
-  if(node == nullptr)
+  if (node == nullptr)
   {
     return;
   }
 
-  if(node->GetLeft() != nullptr)
+  if (node->GetLeft() != nullptr)
   {
     __Clear_Rec(node->GetLeft());
   }
-  if(node->GetRight() != nullptr)
+  if (node->GetRight() != nullptr)
   {
     __Clear_Rec(node->GetRight());
   }
@@ -125,7 +129,10 @@ void G4KDTree::__Clear_Rec(G4KDNode_Base* node)
   delete node;
 }
 
-void G4KDTree::__InsertMap(G4KDNode_Base* node) { fKDMap->Insert(node); }
+void G4KDTree::__InsertMap(G4KDNode_Base* node)
+{
+  fKDMap->Insert(node);
+}
 
 void G4KDTree::Build()
 {
@@ -137,7 +144,7 @@ void G4KDTree::Build()
 
   G4KDNode_Base* root = fKDMap->PopOutMiddle(0);
 
-  if(root == nullptr)
+  if (root == nullptr)
   {
     return;
   }
@@ -151,12 +158,12 @@ void G4KDTree::Build()
 
   G4KDNode_Base* parent = fRoot;
 
-  for(size_t n = 0; n < Nnodes; n += fDim)
+  for (size_t n = 0; n < Nnodes; n += fDim)
   {
-    for(size_t dim = 0; dim < fDim; dim++)
+    for (size_t dim = 0; dim < fDim; dim++)
     {
       G4KDNode_Base* node = fKDMap->PopOutMiddle(dim);
-      if(node != nullptr)
+      if (node != nullptr)
       {
         parent->Insert(node);
         fNbActiveNodes++;
@@ -169,7 +176,7 @@ void G4KDTree::Build()
 
 G4KDTreeResultHandle G4KDTree::Nearest(G4KDNode_Base* node)
 {
-  if(fRect == nullptr)
+  if (fRect == nullptr)
   {
     return nullptr;
   }
@@ -189,11 +196,11 @@ G4KDTreeResultHandle G4KDTree::Nearest(G4KDNode_Base* node)
   delete newrect;
 
   /* Store the result */
-  if(!result.empty())
+  if (!result.empty())
   {
     G4KDTreeResultHandle rset(new G4KDTreeResult(this));
     G4int j = 0;
-    while(j < nbresult)
+    while (j < nbresult)
     {
       rset->Insert(dist_sq, result[j]);
       j++;
@@ -202,14 +209,13 @@ G4KDTreeResultHandle G4KDTree::Nearest(G4KDNode_Base* node)
 
     return rset;
   }
-  
+
   return nullptr;
 }
 
-G4KDTreeResultHandle G4KDTree::NearestInRange(G4KDNode_Base* node,
-                                              const G4double& range)
+G4KDTreeResultHandle G4KDTree::NearestInRange(G4KDNode_Base* node, const G4double& range)
 {
-  if(node == nullptr)
+  if (node == nullptr)
   {
     return nullptr;
   }
@@ -219,8 +225,7 @@ G4KDTreeResultHandle G4KDTree::NearestInRange(G4KDNode_Base* node,
 
   const G4double range_sq = sqr(range);
 
-  if((ret = __NearestInRange(fRoot, *node, range_sq, range, *rset, 0, node)) ==
-     -1)
+  if ((ret = __NearestInRange(fRoot, *node, range_sq, range, *rset, 0, node)) == -1)
   {
     delete rset;
     return nullptr;

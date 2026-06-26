@@ -28,8 +28,8 @@
 //
 // Author: Ivana Hrivnacova, 15/09/2020 (ivana@ipno.in2p3.fr)
 
-#ifndef G4CsvNtupleFileManager_h
-#define G4CsvNtupleFileManager_h 1
+#ifndef G4CSVNTUPLEFILEMANAGER_HH
+#define G4CSVNTUPLEFILEMANAGER_HH
 
 #include "G4VNtupleFileManager.hh"
 #include "globals.hh"
@@ -44,9 +44,10 @@ class G4NtupleBookingManager;
 
 class G4CsvNtupleFileManager : public G4VNtupleFileManager
 {
-  friend class G4CsvAnalysisManager;
+    friend class G4CsvAnalysisManager;
 
   public:
+
     explicit G4CsvNtupleFileManager(const G4AnalysisManagerState& state);
     G4CsvNtupleFileManager() = delete;
     ~G4CsvNtupleFileManager() override = default;
@@ -64,24 +65,25 @@ class G4CsvNtupleFileManager : public G4VNtupleFileManager
     std::shared_ptr<G4CsvNtupleManager> GetNtupleManager() const;
 
   private:
+
     // Static data members
-    static constexpr std::string_view fkClass { "G4CsvNtupleFileManager" };
+    static constexpr std::string_view fkClass{"G4CsvNtupleFileManager"};
 
     // Data members
-    std::shared_ptr<G4CsvFileManager> fFileManager { nullptr };
-    std::shared_ptr<G4CsvNtupleManager> fNtupleManager { nullptr };
+    std::shared_ptr<G4CsvFileManager> fFileManager{nullptr};
+    std::shared_ptr<G4CsvNtupleManager> fNtupleManager{nullptr};
 };
 
 // inline functions
 
-inline void G4CsvNtupleFileManager::SetFileManager(
-  std::shared_ptr<G4CsvFileManager> fileManager)
+inline void G4CsvNtupleFileManager::SetFileManager(std::shared_ptr<G4CsvFileManager> fileManager)
 {
   fFileManager = std::move(fileManager);
 }
 
 inline std::shared_ptr<G4CsvNtupleManager> G4CsvNtupleFileManager::GetNtupleManager() const
-{ return fNtupleManager; }
+{
+  return fNtupleManager;
+}
 
 #endif
-

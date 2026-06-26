@@ -30,52 +30,57 @@
 // Author:  Michael Kelsey <kelsey@slac.stanford.edu>
 
 #include "G4DecayKineticTracks.hh"
-#include "G4KineticTrackVector.hh"
-#include "G4KineticTrack.hh"
 
+#include "G4KineticTrack.hh"
+#include "G4KineticTrackVector.hh"
 
 // Decay all input tracks, put daughters onto end of list
 
-G4DecayKineticTracks::G4DecayKineticTracks(G4KineticTrackVector *tracks) {
-
+G4DecayKineticTracks::G4DecayKineticTracks(G4KineticTrackVector* tracks)
+{
   if (tracks) Decay(tracks);
 }
 
-void G4DecayKineticTracks::Decay(G4KineticTrackVector *tracks) const {
-
+void G4DecayKineticTracks::Decay(G4KineticTrackVector* tracks) const
+{
   if (!tracks) return;
 
   G4KineticTrackVector* daughters = 0;
-  for (size_t i=0; i<tracks->size(); ++i) {
+  for (size_t i = 0; i < tracks->size(); ++i)
+  {
     G4KineticTrack* track = (*tracks)[i];
     if (!track) continue;
 
     // Select decay of current track, put daughters at end of vector
     daughters = track->GetDefinition()->IsShortLived() ? track->Decay() : 0;
-  
-    if (daughters) {
+
+    if (daughters)
+    {
       // Use the integer round mass in keV to get an unique ID for the parent resonance
-      G4int uniqueID = static_cast< G4int >( round( track->Get4Momentum().mag() / CLHEP::keV ) );
- 
+      G4int uniqueID = static_cast<G4int>(round(track->Get4Momentum().mag() / CLHEP::keV));
+
       // Assign to the daughters the creator model ID of their parent
-      for (size_t k=0; k<daughters->size(); ++k) {
-	G4KineticTrack* aDaughter = (*daughters)[k];
-	if (aDaughter) {
+      for (size_t k = 0; k < daughters->size(); ++k)
+      {
+        G4KineticTrack* aDaughter = (*daughters)[k];
+        if (aDaughter)
+        {
           aDaughter->SetCreatorModelID(track->GetCreatorModelID());
           aDaughter->SetParentResonanceDef(track->GetDefinition());
-          aDaughter->SetParentResonanceID(uniqueID);          
+          aDaughter->SetParentResonanceID(uniqueID);
         }
       }
-      
+
       tracks->insert(tracks->end(), daughters->begin(), daughters->end());
-      delete track;		// Remove parent track
+      delete track;  // Remove parent track
       delete daughters;
-      (*tracks)[i] = nullptr;	// Flag parent's slot for removal
+      (*tracks)[i] = nullptr;  // Flag parent's slot for removal
     }
   }
 
   // Find and remove null pointers created by decays above
-  for (G4int j=(G4int)tracks->size()-1; j>=0; --j) {
-    if (nullptr == (*tracks)[j]) tracks->erase(tracks->begin()+j);
+  for (G4int j = (G4int)tracks->size() - 1; j >= 0; --j)
+  {
+    if (nullptr == (*tracks)[j]) tracks->erase(tracks->begin() + j);
   }
 }

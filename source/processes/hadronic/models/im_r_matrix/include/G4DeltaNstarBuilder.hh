@@ -23,26 +23,25 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4DeltaNstarBuilder_h
-#define G4DeltaNstarBuilder_h
+#ifndef G4DELTANSTARBUILDER_HH
+#define G4DELTANSTARBUILDER_HH
 
 #include "G4VXResonanceTable.hh"
 #include "G4XDeltaNstarTable.hh"
 
 class G4DeltaNstarBuilder : public G4VXResonanceTable
 {
-  public: 
-  G4DeltaNstarBuilder(const G4String & aName, G4XDeltaNstarTable & aT)
-      : theT(aT), theS(aName)
-  {}
-  virtual G4PhysicsVector* CrossSectionTable() const
-  {
-    return const_cast<G4PhysicsVector*>(theT.CrossSectionTable(theS));
-  }
-  
+  public:
+
+    G4DeltaNstarBuilder(const G4String& aName, G4XDeltaNstarTable& aT) : theT(aT), theS(aName) {}
+    virtual G4PhysicsVector* CrossSectionTable() const
+    {
+      return const_cast<G4PhysicsVector*>(theT.CrossSectionTable(theS));
+    }
+
   private:
-  
-  G4XDeltaNstarTable & theT;
-  G4String theS;
+
+    G4XDeltaNstarTable& theT;
+    G4String theS;
 };
 #endif

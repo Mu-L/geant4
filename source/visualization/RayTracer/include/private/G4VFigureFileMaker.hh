@@ -33,23 +33,23 @@
 // converting from RGB 8 bits unsigned integers to a kind of picture format.
 //
 
-#ifndef G4VFigureFileMaker_H
-#define G4VFigureFileMaker_H 1
+#ifndef G4VFIGUREFILEMAKER_HH
+#define G4VFIGUREFILEMAKER_HH
 
 #include "globals.hh"
 
 class G4VFigureFileMaker
 {
   public:
-    G4VFigureFileMaker() {;}
-    virtual ~G4VFigureFileMaker() {;}
+
+    G4VFigureFileMaker() { ; }
+    virtual ~G4VFigureFileMaker() { ; }
 
   public:
-    virtual void CreateFigureFile(const G4String& fileName,
-              int nColumn,int nRow,
-              unsigned char* colorR, unsigned char* colorG, 
-              unsigned char* colorB) = 0;
+
+    virtual void CreateFigureFile(const G4String& fileName, int nColumn, int nRow,
+                                  unsigned char* colorR, unsigned char* colorG,
+                                  unsigned char* colorB) = 0;
 };
 
 #endif
-

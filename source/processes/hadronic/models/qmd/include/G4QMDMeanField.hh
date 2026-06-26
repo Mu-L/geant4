@@ -27,90 +27,90 @@
 //
 // Author: Tatsumi Koi (SLAC), 29 March 2007
 // --------------------------------------------------------------------
-#ifndef G4QMDMeanField_hh
-#define G4QMDMeanField_hh
+#ifndef G4QMDMEANFIELD_HH
+#define G4QMDMEANFIELD_HH
 
-#include "G4QMDSystem.hh"
 #include "G4QMDNucleus.hh"
+#include "G4QMDSystem.hh"
 
-class G4QMDMeanField 
+class G4QMDMeanField
 {
-   public:
+  public:
 
-      G4QMDMeanField();
-      ~G4QMDMeanField() = default;
+    G4QMDMeanField();
+    ~G4QMDMeanField() = default;
 
-      void SetSystem ( G4QMDSystem* aSystem );
-      void SetNucleus ( G4QMDNucleus* aSystem );
-      inline G4QMDSystem* GetSystem () { return system; }
+    void SetSystem(G4QMDSystem* aSystem);
+    void SetNucleus(G4QMDNucleus* aSystem);
+    inline G4QMDSystem* GetSystem() { return system; }
 
-      void Cal2BodyQuantities(); 
-      void Cal2BodyQuantities( G4int ); 
+    void Cal2BodyQuantities();
+    void Cal2BodyQuantities(G4int);
 
-      void CalGraduate(); 
+    void CalGraduate();
 
-      G4bool IsPauliBlocked( G4int ); 
+    G4bool IsPauliBlocked(G4int);
 
-      G4double GetTotalPotential();
-      G4double GetPotential( G4int );
+    G4double GetTotalPotential();
+    G4double GetPotential(G4int);
 
-      void DoPropagation( G4double );
+    void DoPropagation(G4double);
 
-      std::vector< G4QMDNucleus* > DoClusterJudgment();
+    std::vector<G4QMDNucleus*> DoClusterJudgment();
 
-      inline G4double GetRR2( G4int i , G4int j ) { return rr2[i][j]; }
+    inline G4double GetRR2(G4int i, G4int j) { return rr2[i][j]; }
 
-      inline G4double GetRHA( G4int i , G4int j ) { return rha[i][j]; }
-      inline G4double GetRHE( G4int i , G4int j ) { return rhe[i][j]; }
-      inline G4ThreeVector GetFFr( G4int i ) { return ffr[i]; }
-      inline G4ThreeVector GetFFp( G4int i ) { return ffp[i]; }
+    inline G4double GetRHA(G4int i, G4int j) { return rha[i][j]; }
+    inline G4double GetRHE(G4int i, G4int j) { return rhe[i][j]; }
+    inline G4ThreeVector GetFFr(G4int i) { return ffr[i]; }
+    inline G4ThreeVector GetFFp(G4int i) { return ffp[i]; }
 
-      std::vector< G4double > GetLocalDensity();  
-      std::vector< G4double > GetDepthOfPotential();  
+    std::vector<G4double> GetLocalDensity();
+    std::vector<G4double> GetDepthOfPotential();
 
-      void Update();
+    void Update();
 
-   private:
+  private:
 
-      G4double calPauliBlockingFactor( G4int ); 
+    G4double calPauliBlockingFactor(G4int);
 
-   private:
+  private:
 
-      G4QMDSystem* system; 
+    G4QMDSystem* system;
 
-      G4double rclds { 4.0 };    // distance for cluster judgement 
+    G4double rclds{4.0};  // distance for cluster judgement
 
-      G4double hbc , rho0;
-      G4double epsx { -20.0 };   // gauss term
-      G4double epscl { 0.0001 }; // coulomb term
+    G4double hbc, rho0;
+    G4double epsx{-20.0};  // gauss term
+    G4double epscl{0.0001};  // coulomb term
 
-      G4double cpc;
+    G4double cpc;
 
-      //G4int icoul, irelcr;
-      G4int irelcr { 1 };
-      G4double gamm, c0, c3, cs, cl, wl; 
-      //G4double c0w, c3w, clw, c0sw;
-      G4double c0w, clw, c0sw;
+    // G4int icoul, irelcr;
+    G4int irelcr{1};
+    G4double gamm, c0, c3, cs, cl, wl;
+    // G4double c0w, c3w, clw, c0sw;
+    G4double c0w, clw, c0sw;
 
-      G4double c0g,c3g,csg,pag; 
+    G4double c0g, c3g, csg, pag;
 
-      G4double cpw,cph;
-       
-      // 2 Body Quantities 
-      std::vector < std::vector < G4double > > rr2;    
-      std::vector < std::vector < G4double > > pp2;    
-      std::vector < std::vector < G4double > > rbij;    
+    G4double cpw, cph;
 
-      // Gauss 
-      std::vector < std::vector < G4double > > rha;    
+    // 2 Body Quantities
+    std::vector<std::vector<G4double>> rr2;
+    std::vector<std::vector<G4double>> pp2;
+    std::vector<std::vector<G4double>> rbij;
 
-      // Coulomb
-      std::vector < std::vector < G4double > > rhe;    
-      std::vector < std::vector < G4double > > rhc;    
-                                         
-      std::vector < G4ThreeVector > ffr;    
-      std::vector < G4ThreeVector > ffp;    
-      std::vector < G4double > rh3d;
+    // Gauss
+    std::vector<std::vector<G4double>> rha;
+
+    // Coulomb
+    std::vector<std::vector<G4double>> rhe;
+    std::vector<std::vector<G4double>> rhc;
+
+    std::vector<G4ThreeVector> ffr;
+    std::vector<G4ThreeVector> ffp;
+    std::vector<G4double> rh3d;
 };
 
 #endif

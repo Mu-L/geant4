@@ -31,14 +31,10 @@
 #include "G4tgrPlace.hh"
 
 // --------------------------------------------------------------------
-G4tgrPlace::G4tgrPlace()
-{
-}
+G4tgrPlace::G4tgrPlace() {}
 
 // --------------------------------------------------------------------
-G4tgrPlace::~G4tgrPlace()
-{
-}
+G4tgrPlace::~G4tgrPlace() {}
 
 // --------------------------------------------------------------------
 G4ThreeVector G4tgrPlace::GetPlacement() const

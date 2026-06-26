@@ -36,26 +36,26 @@
 // by I.Hrivnacova, 27 Sep 99
 
 #ifndef G3MATTABLE_HH
-#define G3MATTABLE_HH 1
+#define G3MATTABLE_HH
+
+#include "globals.hh"
 
 #include "G3MatTableEntry.hh"
 #include "G3toG4Defs.hh"
-
-#include "globals.hh"
 
 #include <vector>
 
 class G4Material;
 
-typedef std::vector<G3MatTableEntry*>  G3MaterialVector;
+typedef std::vector<G3MatTableEntry*> G3MaterialVector;
 
 class G3MatTable
 {
-  public: // with description
+  public:  // with description
 
     G3MatTable();
     virtual ~G3MatTable();
-    
+
     // methods
     G4Material* get(G4int id) const;
     void put(G4int id, G4Material* material);
@@ -63,7 +63,7 @@ class G3MatTable
 
   private:
 
-    G3MaterialVector*  fMatVector;
+    G3MaterialVector* fMatVector;
 };
 
 extern G3G4DLL_API G3MatTable G3Mat;

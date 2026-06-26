@@ -32,177 +32,169 @@
 // G.Folger, spring 2010:  add integer A/Z interface
 // A. Ribon, autumn 2021:  extended to hypernuclei
 
-#ifndef G4Nucleus_h
-#define G4Nucleus_h 1
+#ifndef G4NUCLEUS_HH
+#define G4NUCLEUS_HH
 // Class Description
-// This class knows how to describe a nucleus; 
+// This class knows how to describe a nucleus;
 // to be used in your physics implementation (not physics list) in case you need this physics.
 // Class Description - End
 
- 
-#include "globals.hh"
-#include "G4ThreeVector.hh"
+#include "G4DynamicParticle.hh"
 #include "G4ParticleTypes.hh"
 #include "G4ReactionProduct.hh"
-#include "G4DynamicParticle.hh"
 #include "G4ReactionProductVector.hh"
+#include "G4ThreeVector.hh"
 #include "Randomize.hh"
- 
-class G4Nucleus 
+#include "globals.hh"
+
+class G4Nucleus
 {
   public:
-    
+
     G4Nucleus();
     G4Nucleus(const G4double A, const G4double Z, const G4int numberOfLambdas = 0);
     G4Nucleus(const G4int A, const G4int Z, const G4int numberOfLambdas = 0);
     G4Nucleus(const G4Material* aMaterial);
-    
-    ~G4Nucleus();
-    
-    G4Nucleus(const G4Nucleus&) = default;    
-    G4Nucleus(G4Nucleus&&) = default;    
-    G4Nucleus& operator = (const G4Nucleus&) = default;
-    G4Nucleus& operator = (G4Nucleus&&) = default;
-   
-    inline G4bool operator==( const G4Nucleus &right ) const
-    { return ( this == (G4Nucleus *) &right ); }
-    
-    inline G4bool operator!=( const G4Nucleus &right ) const
-    { return ( this != (G4Nucleus *) &right ); }
-    
-    void ChooseParameters( const G4Material *aMaterial );
 
-    void SetParameters( const G4double A, const G4double Z, const G4int numberOfLambdas = 0 );
-    void SetParameters( const G4int A, const G4int Z, const G4int numberOfLambdas = 0 );
-   
-    inline G4int GetA_asInt() const
-    { return theA; }   
-    
-    inline G4int GetN_asInt() const
-    { return theA-theZ-theL; }   
-    
-    inline G4int GetZ_asInt() const
-    { return theZ; }   
+    ~G4Nucleus();
+
+    G4Nucleus(const G4Nucleus&) = default;
+    G4Nucleus(G4Nucleus&&) = default;
+    G4Nucleus& operator=(const G4Nucleus&) = default;
+    G4Nucleus& operator=(G4Nucleus&&) = default;
+
+    inline G4bool operator==(const G4Nucleus& right) const { return (this == (G4Nucleus*)&right); }
+
+    inline G4bool operator!=(const G4Nucleus& right) const { return (this != (G4Nucleus*)&right); }
+
+    void ChooseParameters(const G4Material* aMaterial);
+
+    void SetParameters(const G4double A, const G4double Z, const G4int numberOfLambdas = 0);
+    void SetParameters(const G4int A, const G4int Z, const G4int numberOfLambdas = 0);
+
+    inline G4int GetA_asInt() const { return theA; }
+
+    inline G4int GetN_asInt() const { return theA - theZ - theL; }
+
+    inline G4int GetZ_asInt() const { return theZ; }
 
     inline G4int GetL() const  // Number of Lambdas (in the case of a hypernucleus)
-    { return theL; }
+    {
+      return theL;
+    }
 
-    inline const G4Isotope* GetIsotope()
-    { return fIsotope; }
+    inline const G4Isotope* GetIsotope() { return fIsotope; }
 
     inline void SetIsotope(const G4Isotope* iso)
-    { 
+    {
       fIsotope = iso;
-      if(iso) { 
-	theZ = iso->GetZ();
+      if (iso)
+      {
+        theZ = iso->GetZ();
         theA = iso->GetN();
-	theL = 0;
+        theL = 0;
         aEff = theA;
         zEff = theZ;
       }
     }
 
-    G4DynamicParticle *ReturnTargetParticle() const;
-    
-    G4double AtomicMass( const G4double A, const G4double Z, const G4int numberOfLambdas = 0 ) const;
-    G4double AtomicMass( const G4int A, const G4int Z, const G4int numberOfLambdas = 0 ) const;
+    G4DynamicParticle* ReturnTargetParticle() const;
 
-    G4double GetThermalPz( const G4double mass, const G4double temp ) const;
-    
-    G4ReactionProduct GetThermalNucleus(G4double aMass, G4double temp=-1) const;
-    
-    G4ReactionProduct GetBiasedThermalNucleus(G4double aMass, G4ThreeVector aVelocity, G4double temp=-1) const;
+    G4double AtomicMass(const G4double A, const G4double Z, const G4int numberOfLambdas = 0) const;
+    G4double AtomicMass(const G4int A, const G4int Z, const G4int numberOfLambdas = 0) const;
 
-    void DoKinematicsOfThermalNucleus(const G4double mu, const G4double vT_norm, const G4ThreeVector& aVelocity,
+    G4double GetThermalPz(const G4double mass, const G4double temp) const;
+
+    G4ReactionProduct GetThermalNucleus(G4double aMass, G4double temp = -1) const;
+
+    G4ReactionProduct GetBiasedThermalNucleus(G4double aMass, G4ThreeVector aVelocity,
+                                              G4double temp = -1) const;
+
+    void DoKinematicsOfThermalNucleus(const G4double mu, const G4double vT_norm,
+                                      const G4ThreeVector& aVelocity,
                                       G4ReactionProduct& result) const;
-  
-    G4double Cinema( G4double kineticEnergy );
-    
-    G4double EvaporationEffects( G4double kineticEnergy );
+
+    G4double Cinema(G4double kineticEnergy);
+
+    G4double EvaporationEffects(G4double kineticEnergy);
 
     G4double AnnihilationEvaporationEffects(G4double kineticEnergy, G4double ekOrg);
-    
-    inline G4double GetPNBlackTrackEnergy() const
-    { return pnBlackTrackEnergy; }
-    
-    inline G4double GetDTABlackTrackEnergy() const
-    { return dtaBlackTrackEnergy; }
-    
+
+    inline G4double GetPNBlackTrackEnergy() const { return pnBlackTrackEnergy; }
+
+    inline G4double GetDTABlackTrackEnergy() const { return dtaBlackTrackEnergy; }
+
     inline G4double GetAnnihilationPNBlackTrackEnergy() const
-    { return pnBlackTrackEnergyfromAnnihilation; }
-    
+    {
+      return pnBlackTrackEnergyfromAnnihilation;
+    }
+
     inline G4double GetAnnihilationDTABlackTrackEnergy() const
-    { return dtaBlackTrackEnergyfromAnnihilation; }
-    
-// ******************  methods introduced by ChV ***********************    
-   // return fermi momentum
-     G4ThreeVector GetFermiMomentum();
+    {
+      return dtaBlackTrackEnergyfromAnnihilation;
+    }
 
-/*
-  // return particle to be absorbed. 
-     G4DynamicParticle* ReturnAbsorbingParticle(G4double weight);
-*/
+    // ******************  methods introduced by ChV ***********************
+    // return fermi momentum
+    G4ThreeVector GetFermiMomentum();
 
-  //  final nucleus fragmentation. Return List of particles
-  // which should be used for further tracking.
-     G4ReactionProductVector* Fragmentate();
-     
+    /*
+      // return particle to be absorbed.
+         G4DynamicParticle* ReturnAbsorbingParticle(G4double weight);
+    */
 
-  // excitation Energy...
-     void AddExcitationEnergy(G4double anEnergy);
-  
-  
-  // momentum of absorbed Particles ..
-     void AddMomentum(const G4ThreeVector aMomentum);
-     
-  // return excitation Energy
-     G4double GetEnergyDeposit() {return excitationEnergy; }
-     
+    //  final nucleus fragmentation. Return List of particles
+    // which should be used for further tracking.
+    G4ReactionProductVector* Fragmentate();
 
+    // excitation Energy...
+    void AddExcitationEnergy(G4double anEnergy);
 
-// ****************************** end ChV ******************************
+    // momentum of absorbed Particles ..
+    void AddMomentum(const G4ThreeVector aMomentum);
 
+    // return excitation Energy
+    G4double GetEnergyDeposit() { return excitationEnergy; }
 
- private:
-    
-    G4int    theA;
-    G4int    theZ;
-    G4int    theL;  // Number of Lambdas (in the case of hypernucleus)
+    // ****************************** end ChV ******************************
+
+  private:
+
+    G4int theA;
+    G4int theZ;
+    G4int theL;  // Number of Lambdas (in the case of hypernucleus)
     G4double aEff;  // effective atomic weight
     G4double zEff;  // effective atomic number
 
     const G4Isotope* fIsotope;
-    
+
     G4double pnBlackTrackEnergy;  // the kinetic energy available for
                                   // proton/neutron black track particles
-    G4double dtaBlackTrackEnergy; // the kinetic energy available for
-                                  // deuteron/triton/alpha particles
+    G4double dtaBlackTrackEnergy;  // the kinetic energy available for
+                                   // deuteron/triton/alpha particles
     G4double pnBlackTrackEnergyfromAnnihilation;
-                     // kinetic energy available for proton/neutron black 
-                     // track particles based on baryon annihilation 
+    // kinetic energy available for proton/neutron black
+    // track particles based on baryon annihilation
     G4double dtaBlackTrackEnergyfromAnnihilation;
-                     // kinetic energy available for deuteron/triton/alpha 
-                     // black track particles based on baryon annihilation 
+    // kinetic energy available for deuteron/triton/alpha
+    // black track particles based on baryon annihilation
 
+    // ************************** member variables by ChV *******************
+    // Excitation Energy leading to evaporation or deexcitation.
+    G4double excitationEnergy;
 
-// ************************** member variables by ChV *******************
-  // Excitation Energy leading to evaporation or deexcitation.
-     G4double  excitationEnergy;
-     
-  // Momentum, accumulated by absorbing Particles
-     G4ThreeVector momentum;
-     
-  // Fermi Gas model: at present, we assume constant nucleon density for all 
-  // nuclei. The radius of a nucleon is taken to be 1 fm.
-  // see for example S.Fl"ugge, Encyclopedia of Physics, Vol XXXIX, 
-  // Structure of Atomic Nuclei (Berlin-Gottingen-Heidelberg, 1957) page 426.
+    // Momentum, accumulated by absorbing Particles
+    G4ThreeVector momentum;
 
-  // maximum momentum possible from fermi gas model:
-     G4double fermiMomentum; 
-     G4double theTemp; // temperature
-// ****************************** end ChV ******************************
+    // Fermi Gas model: at present, we assume constant nucleon density for all
+    // nuclei. The radius of a nucleon is taken to be 1 fm.
+    // see for example S.Fl"ugge, Encyclopedia of Physics, Vol XXXIX,
+    // Structure of Atomic Nuclei (Berlin-Gottingen-Heidelberg, 1957) page 426.
 
- };
- 
+    // maximum momentum possible from fermi gas model:
+    G4double fermiMomentum;
+    G4double theTemp;  // temperature
+    // ****************************** end ChV ******************************
+};
+
 #endif
- 

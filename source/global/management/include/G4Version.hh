@@ -43,23 +43,23 @@
 ///     |--> patch number (single digit)
 ///
 #ifndef G4VERSION_NUMBER
-  #define G4VERSION_NUMBER 1142
+#  define G4VERSION_NUMBER 1150
 #endif
 
 /// @def G4VERSION_REFERENCE_TAG
 /// @brief Number indicating current development cycle
-/// 
-/// Can take values between -1 and 11. A value of -1 indicates a release, whose version 
+///
+/// Can take values between -1 and 11. A value of -1 indicates a release, whose version
 /// can be read from @ref `G4VERSION_NUMBER`. Values 0-11 indicate an in development version,
-/// the value being incremented on each reference tag and thus corresponding to the month number 
+/// the value being incremented on each reference tag and thus corresponding to the month number
 /// (taking December as 0, the start of new development of the next major/minor release).
 ///
 #ifndef G4VERSION_REFERENCE_TAG
-  #define G4VERSION_REFERENCE_TAG 00
+#  define G4VERSION_REFERENCE_TAG 06
 #endif
 
 #ifndef G4VERSION_TAG
-  #define G4VERSION_TAG "$Name: geant4-11-04-patch-02 $"
+#  define G4VERSION_TAG "$Name: geant4-11-05-beta-01 $"
 #endif
 
 // as variables
@@ -68,10 +68,10 @@
 #include "G4Types.hh"
 
 #ifdef G4MULTITHREADED
-static const G4String G4Version = "$Name: geant4-11-04-patch-02 [MT]$";
+static const G4String G4Version = "$Name: geant4-11-05-beta-01 [MT]$";
 #else
-static const G4String G4Version = "$Name: geant4-11-04-patch-02 $";
+static const G4String G4Version = "$Name: geant4-11-05-beta-01 $";
 #endif
-static const G4String G4Date = "(12-June-2026)";
+static const G4String G4Date = "(26-June-2026)";
 
 #endif

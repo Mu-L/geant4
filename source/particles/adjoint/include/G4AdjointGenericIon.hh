@@ -37,19 +37,21 @@
 //		is based on an idea of M. Asai.
 //
 
-#ifndef G4AdjointGenericIon_h
-#define G4AdjointGenericIon_h 1
+#ifndef G4ADJOINTGENERICION_HH
+#define G4ADJOINTGENERICION_HH
 
 #include "G4AdjointIons.hh"
 
 class G4AdjointGenericIon : public G4AdjointIons
 {
   public:
+
     static G4AdjointGenericIon* Definition();
     static G4AdjointGenericIon* GenericIonDefinition();
     static G4AdjointGenericIon* GenericIon();
 
   private:
+
     G4AdjointGenericIon() {}
     ~G4AdjointGenericIon() override = default;
 

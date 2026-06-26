@@ -23,169 +23,199 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-//
 // -------------------------------------------------------------------
-//      GEANT 4 class file 
+//      GEANT 4 class file
 //
 //      CERN, Geneva, Switzerland
 //
 //      File name:     G4UnstableFragmentBreakUp
 //
 //      Author:        V.Ivanchenko
-// 
+//
 //      Creation date: 11 May 2010
 //
-//Modifications: 
-//      
 // -------------------------------------------------------------------
 //
 
 #include "G4UnstableFragmentBreakUp.hh"
-#include "Randomize.hh"
-#include "G4RandomDirection.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4LorentzVector.hh"
+
 #include "G4Fragment.hh"
 #include "G4FragmentVector.hh"
-#include "G4NucleiProperties.hh"
-#include "G4NuclearLevelData.hh"
 #include "G4LevelManager.hh"
-#include "Randomize.hh"
+#include "G4LorentzVector.hh"
+#include "G4NuclearLevelData.hh"
+#include "G4NucleiProperties.hh"
+#include "G4PhysicalConstants.hh"
 #include "G4PhysicsModelCatalog.hh"
+#include "G4RandomDirection.hh"
+#include "Randomize.hh"
 
 const G4int G4UnstableFragmentBreakUp::Zfr[] = {0, 1, 1, 1, 2, 2};
 const G4int G4UnstableFragmentBreakUp::Afr[] = {1, 1, 2, 3, 3, 4};
+G4double G4UnstableFragmentBreakUp::masses[] = {0., 0., 0., 0., 0., 0.};
 
-G4UnstableFragmentBreakUp::G4UnstableFragmentBreakUp() : fVerbose(1), fSecID(-1)
-{ 
+namespace
+{
+constexpr G4double dmlimit = 5 * CLHEP::keV;
+}
+
+G4UnstableFragmentBreakUp::G4UnstableFragmentBreakUp()
+{
   fLevelData = G4NuclearLevelData::GetInstance();
-  for(G4int i=0; i<6; ++i) {
-    masses[i] = G4NucleiProperties::GetNuclearMass(Afr[i], Zfr[i]);
+  if (0.0 == masses[0])
+  {
+    for (G4int i = 0; i < 6; ++i)
+    {
+      masses[i] = G4NucleiProperties::GetNuclearMass(Afr[i], Zfr[i]);
+    }
+  }
+  for (G4int i = 0; i < 6; ++i)
+  {
+    prob[i] = mrec[i] = 0.0;
   }
   fSecID = G4PhysicsModelCatalog::GetModelID("model_G4UnstableFragmentBreakUp");
 }
 
-G4UnstableFragmentBreakUp::~G4UnstableFragmentBreakUp()
-{}
-
-G4bool G4UnstableFragmentBreakUp::BreakUpChain(G4FragmentVector* results, 
-					       G4Fragment* nucleus)
+G4bool G4UnstableFragmentBreakUp::BreakUpChain(G4FragmentVector* results, G4Fragment* nucleus)
 {
-  //G4cout << "G4UnstableFragmentBreakUp::EmittedFragment" << G4endl;
+  // G4cout << "G4UnstableFragmentBreakUp::EmittedFragment" << G4endl;
   G4Fragment* frag = nullptr;
-  
+
   G4int Z = nucleus->GetZ_asInt();
   G4int A = nucleus->GetA_asInt();
 
   G4LorentzVector lv = nucleus->GetMomentum();
   G4double time = nucleus->GetCreationTime();
 
-  G4double mass1(0.0), mass2(0.0);
- 
   // look for the decay channel with normal masses
   // without Coulomb barrier and paring corrections
-  // 1 - recoil, 2 - emitted light ion 
-  if(fVerbose > 1) {
-    G4cout << "#Unstable decay " << " Z= " << Z << " A= " << A 
-	   << " Eex(MeV)= " << nucleus->GetExcitationEnergy() << G4endl;
+  if (fVerbose > 1)
+  {
+    G4cout << "#Unstable decay " << " Z= " << Z << " A= " << A
+           << " Eex(MeV)= " << nucleus->GetExcitationEnergy() << G4endl;
   }
-  const G4double tolerance = 10*CLHEP::eV;
-  const G4double dmlimit   = 0.005*CLHEP::MeV;
   G4double mass = lv.mag();
-  G4double exca = -1000.0;
-  G4bool isChannel = false;
+  G4double sum = 0.0;
+  G4double dmass = 0.0;
+
+  // only small energy non-concervation is allowed
+  G4double maxprob = -0.5 * CLHEP::MeV;
   G4int idx = -1;
-  for(G4int i=0; i<6; ++i) {
+  for (G4int i = 0; i < 6; ++i)
+  {
     G4int Zres = Z - Zfr[i];
     G4int Ares = A - Afr[i];
-    if(Zres >= 0 && Ares >= Zres && Ares >= Afr[i]) {
-      if(Ares <= 4) {
-	for(G4int j=0; j<6; ++j) {
-	  if(Zres == Zfr[j] && Ares == Afr[j]) {
-	    G4double delm = mass - masses[i] - masses[j];
-	    /*
-	    G4cout << "i=" << i << " j=" << j << " Zres=" << Zres
-		   << " Ares=" << Ares << " delm=" << delm << G4endl;
-	    */
-	    if(delm > exca) {
-	      mass2 = masses[i]; // emitted
-	      mass1 = masses[j]; // recoil
-              exca  = delm; 
-	      idx = i;
-              if(delm > 0.0) { 
-		isChannel = true;
-		break;
-	      }
-	    }
-	  }
-	}
+    G4double m1 = 0.0;
+    G4double p = 0.0;
+    if (Zres >= 0 && Ares >= Zres && Ares >= Afr[i])
+    {
+      m1 = G4NucleiProperties::GetNuclearMass(Ares, Zres);
+      // decay probability is proportional to free energy
+      p = mass - masses[i] - m1;
+      if (p > maxprob)
+      {
+        maxprob = p;
+        idx = i;
       }
-      if(isChannel) { break; }
-      // no simple channel
-      G4double mres = G4NucleiProperties::GetNuclearMass(Ares, Zres);
-      G4double e = mass - mres - masses[i];
-      // select excited state
-      //const G4LevelManager* lman = fLevelData->GetLevelManager(Zres, Ares);
-      /*
-      G4cout << "i=" << i << " Zres=" << Zres
-	     << " Ares=" << Ares << " delm=" << e << G4endl;
-      */
-      if(e >= exca) {
-	mass2 = masses[i];
-	mass1 = (Ares > 4 && e > 0.0) ? mres + e*G4UniformRand() : mres;
-        exca  = e;
-	idx = i;
-	if(e > 0.0) {
-	  isChannel = true;
-	  break;
-	}
-      } 
+      p = std::max(p, 0.0);
+    }
+    sum += p;
+    prob[i] = sum;
+    mrec[i] = m1;
+  }
+  // there is no decay channel
+  if (-1 == idx)
+  {
+    return false;
+  }
+
+  // decay channel may be considered
+  dmass = maxprob;
+  if (sum > 0.0)
+  {
+    sum *= G4UniformRand();
+    for (G4int i = 0; i < 6; ++i)
+    {
+      if (sum <= prob[i] && mrec[i] > 0.0)
+      {
+        idx = i;
+        dmass = mass - masses[i] - mrec[i];
+        break;
+      }
     }
   }
-
-  G4double massmin = mass1 + mass2;
-  if(fVerbose > 1) {
-    G4cout << "isChannel:" << isChannel << " idx=" << idx << " Zfr=" << Zfr[idx]
-	   << " Arf=" << Afr[idx] << " delm=" << mass - massmin << G4endl;
-  }
-  if(!isChannel || mass < massmin) { 
-    if(mass + dmlimit < massmin) { return false; }
-    if(fVerbose > 1) {
-      G4cout << "#Unstable decay correction: Z= " << Z << " A= " << A 
-             << " idx= " << idx
-             << " deltaM(MeV)= " << mass - massmin
-             << G4endl;
-    }      
-    mass = massmin;
-    G4double e = std::max(lv.e(), mass + tolerance);
-    G4double mom = std::sqrt((e - mass)*(e + mass));
-    G4ThreeVector dir = lv.vect().unit();
-    lv.set(dir*mom, e);
+  G4int Zres = Z - Zfr[idx];
+  G4int Ares = A - Afr[idx];
+  if (Zres < 0 || Ares < Zres)
+  {
+    return false;
   }
 
-  // compute energy of light fragment
-  G4double e2 = 0.5*((mass - mass1)*(mass + mass1) + mass2*mass2)/mass;
-  e2 = std::max(e2, mass2);
-  G4double mom = std::sqrt((e2 - mass2)*(e2 + mass2));
+  if (dmass > 0.0)
+  {
+    // check if final particles are "stable" light mesons
+    for (G4int i = 0; i < 6; ++i)
+    {
+      if (Zres == Zfr[i] && Ares == Afr[i])
+      {
+        dmass = 0.0;
+        break;
+      }
+    }
+    // randomize excitation energy
+    if (dmass > 0.0)
+    {
+      G4double x;
+      do
+      {
+        x = G4RandGauss::shoot(0.0, 0.25);
+      } while (std::abs(x) > 1.0);
+      dmass *= 0.5 * (1.0 + x);
+    }
+  }
+  else
+  {
+    dmass = 0.0;
+  }
+  // 1 - light ion
+  G4double mass1 = masses[idx];
+  G4double mass2 = mrec[idx] + dmass;
+  /*
+  G4cout << "idx=" << idx << " Z=" << Z << " A=" << A << " Zres=" << Zres
+         << " Ares=" << Ares << " dmass=" << dmass
+   << " delm=" << mass - mass1 - mass2 << G4endl;
+  G4cout << "    mass=" << mass << " mass1=" << mass1 << " mass2=" << mass2
+         << G4endl;
+  */
+  // correct primary 4-vector if the reaction is impossible kinematically
+  G4double m0 = mass1 + mass2;
+  if (mass < m0)
+  {
+    G4double e0 = lv.e() - mass + m0 + 2 * dmlimit;
+    mass = m0 + dmlimit;
+    G4ThreeVector v0 = lv.vect().unit();
+    G4double p0 = std::sqrt((e0 - mass) * (e0 + mass));
+    lv.set(p0 * v0, e0);
+  }
 
-  // sample decay
-  G4ThreeVector bst  = lv.boostVector();
-  G4ThreeVector v = G4RandomDirection();
-  G4LorentzVector mom2 = G4LorentzVector(v*mom, e2);
-  mom2.boost(bst);  
-  frag = new G4Fragment(Afr[idx], Zfr[idx], mom2);
+  // compute 4-momentum of light fragment
+  G4double e1 = 0.5 * ((mass - mass2) * (mass + mass2) + mass1 * mass1) / mass;
+  e1 = std::max(e1, mass1);
+  G4double mom1 = std::sqrt((e1 - mass1) * (e1 + mass1));
+  G4ThreeVector bst = lv.boostVector();
+  G4ThreeVector v1 = G4RandomDirection();
+  G4LorentzVector lv1 = G4LorentzVector(v1 * mom1, e1);
+  lv1.boost(bst);
+  frag = new G4Fragment(Afr[idx], Zfr[idx], lv1);
   frag->SetCreationTime(time);
   frag->SetCreatorModelID(fSecID);
   results->push_back(frag);
 
   // residual
-  lv -= mom2;
-  Z  -= Zfr[idx];
-  A  -= Afr[idx];
-    
-  nucleus->SetZandA_asInt(Z, A);
-  nucleus->SetMomentum(lv);
+  lv -= lv1;
+  nucleus->SetZAandMomentum(lv, Zres, Ares);
   nucleus->SetCreatorModelID(fSecID);
+
   return true;
 }
 

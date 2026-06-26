@@ -40,7 +40,7 @@ target_link_libraries(RE03 ${Geant4_LIBRARIES} )
 # relies on these scripts being in the current working directory.
 #
 set(RE03_SCRIPTS
-    drawCylinderSlice.mac drawSlice.mac draw.mac run.mac run2.mac run3.mac run4.mac vis.mac
+    run.mac run2.mac run3.mac run4.mac run5.mac vis.mac
   )
 
 foreach(_script ${RE03_SCRIPTS})

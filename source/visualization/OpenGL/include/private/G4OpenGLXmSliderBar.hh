@@ -25,8 +25,8 @@
 //
 //
 //
-// 
-//Slider bar class. Inherits from G4OpenGLXmVWidgetComponent
+//
+// Slider bar class. Inherits from G4OpenGLXmVWidgetComponent
 
 #ifndef G4OPENGLXMSLIDERBAR_HH
 #define G4OPENGLXMSLIDERBAR_HH
@@ -35,58 +35,57 @@
 
 class G4OpenGLXmSliderBar : public G4OpenGLXmVWidgetComponent
 {
+  public:
 
-public:
-  G4OpenGLXmSliderBar (const char* = NULL,     // name of slider bar
-		       XtCallbackRec* = NULL,  // callbacks for slider bar
-		       G4bool = False,         // show current value if True
-		       short = 0,              // decimal places for show value
-		       G4double = 0.,          // initial value
-		       G4double = 0.,          // max value
-		       G4double = 0.,          // min value
-		       unsigned char = XmHORIZONTAL,
-		       unsigned char = XmMAX_ON_RIGHT); 
-                                               //constructor
-  virtual ~G4OpenGLXmSliderBar ();             //destructor
+    G4OpenGLXmSliderBar(const char* = NULL,  // name of slider bar
+                        XtCallbackRec* = NULL,  // callbacks for slider bar
+                        G4bool = False,  // show current value if True
+                        short = 0,  // decimal places for show value
+                        G4double = 0.,  // initial value
+                        G4double = 0.,  // max value
+                        G4double = 0.,  // min value
+                        unsigned char = XmHORIZONTAL, unsigned char = XmMAX_ON_RIGHT);
+    // constructor
+    virtual ~G4OpenGLXmSliderBar();  // destructor
 
-  void SetName (const char*);
-  void SetShow (G4bool);
-  void SetDecimalPlaces (short);
-  void SetInitialValue (G4double);
-  void SetMaxValue (G4double);
-  void SetMinValue (G4double);
-  void SetOrientation (unsigned char);
-  void SetDirection (unsigned char);
+    void SetName(const char*);
+    void SetShow(G4bool);
+    void SetDecimalPlaces(short);
+    void SetInitialValue(G4double);
+    void SetMaxValue(G4double);
+    void SetMinValue(G4double);
+    void SetOrientation(unsigned char);
+    void SetDirection(unsigned char);
 
- 
-  const char* GetName ();
-  G4bool GetShow ();
-  short GetDecimalPlaces ();
-  G4double GetInitialValue ();
-  G4double GetMaxValue ();
-  G4double GetMinValue ();
-  unsigned char GetOrientation ();
-  unsigned char GetDirection ();
+    const char* GetName();
+    G4bool GetShow();
+    short GetDecimalPlaces();
+    G4double GetInitialValue();
+    G4double GetMaxValue();
+    G4double GetMinValue();
+    unsigned char GetOrientation();
+    unsigned char GetDirection();
 
-  void AddYourselfTo (G4OpenGLXmVWidgetContainer*);
+    void AddYourselfTo(G4OpenGLXmVWidgetContainer*);
 
-  Widget* GetPointerToParent ();
-  Widget* GetPointerToWidget ();
+    Widget* GetPointerToParent();
+    Widget* GetPointerToWidget();
 
-private:
-  G4OpenGLXmSliderBar (const G4OpenGLXmSliderBar&);
-  G4OpenGLXmSliderBar& operator = (const G4OpenGLXmSliderBar&);
-  const char* name;
-  XtCallbackRec* callback;
-  Widget sliderbar;
-  Widget* parent;
-  G4bool show;
-  short decimal_places;
-  G4int initial_value;
-  G4int max_value;
-  G4int min_value;
-  unsigned char orientation;
-  unsigned char direction;
+  private:
+
+    G4OpenGLXmSliderBar(const G4OpenGLXmSliderBar&);
+    G4OpenGLXmSliderBar& operator=(const G4OpenGLXmSliderBar&);
+    const char* name;
+    XtCallbackRec* callback;
+    Widget sliderbar;
+    Widget* parent;
+    G4bool show;
+    short decimal_places;
+    G4int initial_value;
+    G4int max_value;
+    G4int min_value;
+    unsigned char orientation;
+    unsigned char direction;
 };
 
 #endif

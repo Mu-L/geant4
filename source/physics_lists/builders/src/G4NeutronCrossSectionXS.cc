@@ -39,55 +39,58 @@
 
 #include "G4NeutronCrossSectionXS.hh"
 
-#include "G4NeutronInelasticXS.hh"
-#include "G4NeutronCaptureXS.hh"
-
-#include "G4ParticleDefinition.hh"
+#include "G4CrossSectionDataSetRegistry.hh"
 #include "G4HadronicProcess.hh"
+#include "G4HadronicProcessType.hh"
+#include "G4Neutron.hh"
+#include "G4NeutronCaptureXS.hh"
+#include "G4NeutronInelasticXS.hh"
+#include "G4ParticleDefinition.hh"
 #include "G4ProcessManager.hh"
 #include "G4ProcessVector.hh"
-#include "G4HadronicProcessType.hh"
-
-#include "G4Neutron.hh"
-#include "G4CrossSectionDataSetRegistry.hh"
 // factory
 #include "G4PhysicsConstructorFactory.hh"
 //
 G4_DECLARE_PHYSCONSTR_FACTORY(G4NeutronCrossSectionXS);
 
-
-G4NeutronCrossSectionXS::G4NeutronCrossSectionXS(G4int ver) :
-  G4VPhysicsConstructor("NeutronXS"), verbose(ver) 
+G4NeutronCrossSectionXS::G4NeutronCrossSectionXS(G4int ver)
+  : G4VPhysicsConstructor("NeutronXS"), verbose(ver)
 {}
 
-G4NeutronCrossSectionXS::~G4NeutronCrossSectionXS() 
-{}
+G4NeutronCrossSectionXS::~G4NeutronCrossSectionXS() {}
 
-void G4NeutronCrossSectionXS::ConstructParticle() 
+void G4NeutronCrossSectionXS::ConstructParticle()
 {
   G4Neutron::Neutron();
 }
 
-void G4NeutronCrossSectionXS::ConstructProcess() 
+void G4NeutronCrossSectionXS::ConstructProcess()
 {
-
-  G4NeutronInelasticXS* xinel = (G4NeutronInelasticXS*)G4CrossSectionDataSetRegistry::Instance()->GetCrossSectionDataSet(G4NeutronInelasticXS::Default_Name());
-    G4NeutronCaptureXS* xcap = (G4NeutronCaptureXS*)G4CrossSectionDataSetRegistry::Instance()->GetCrossSectionDataSet(G4NeutronCaptureXS::Default_Name());
+  G4NeutronInelasticXS* xinel =
+    (G4NeutronInelasticXS*)G4CrossSectionDataSetRegistry::Instance()->GetCrossSectionDataSet(
+      G4NeutronInelasticXS::Default_Name());
+  G4NeutronCaptureXS* xcap =
+    (G4NeutronCaptureXS*)G4CrossSectionDataSetRegistry::Instance()->GetCrossSectionDataSet(
+      G4NeutronCaptureXS::Default_Name());
 
   const G4ParticleDefinition* neutron = G4Neutron::Neutron();
-  if(verbose > 1) {
-    G4cout << "### G4NeutronCrossSectionXS: use alternative neutron X-sections"
-	   << G4endl;
+  if (verbose > 1)
+  {
+    G4cout << "### G4NeutronCrossSectionXS: use alternative neutron X-sections" << G4endl;
   }
 
   G4ProcessVector* pv = neutron->GetProcessManager()->GetProcessList();
   G4int n = (G4int)pv->size();
   G4HadronicProcess* had = 0;
-  for(G4int i=0; i<n; i++) {
-    if(fHadronInelastic == ((*pv)[i])->GetProcessSubType()) {
+  for (G4int i = 0; i < n; i++)
+  {
+    if (fHadronInelastic == ((*pv)[i])->GetProcessSubType())
+    {
       had = static_cast<G4HadronicProcess*>((*pv)[i]);
       had->AddDataSet(xinel);
-    } else if(fCapture == ((*pv)[i])->GetProcessSubType()) {
+    }
+    else if (fCapture == ((*pv)[i])->GetProcessSubType())
+    {
       had = static_cast<G4HadronicProcess*>((*pv)[i]);
       had->AddDataSet(xcap);
     }

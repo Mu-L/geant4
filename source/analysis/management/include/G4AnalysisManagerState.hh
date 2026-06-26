@@ -28,8 +28,8 @@
 //
 // Author: Ivana Hrivnacova, 09/07/2013  (ivana@ipno.in2p3.fr)
 
-#ifndef G4AnalysisManagerState_h
-#define G4AnalysisManagerState_h 1
+#ifndef G4ANALYSISMANAGERSTATE_HH
+#define G4ANALYSISMANAGERSTATE_HH
 
 #include "G4AnalysisVerbose.hh"
 #include "G4Threading.hh"
@@ -39,12 +39,13 @@
 
 class G4AnalysisManagerState
 {
-  // Only G4VAnalysisManager can change the state
-  friend class G4VAnalysisManager;
-  friend class G4VAnalysisReader;
-  friend class G4ParameterManager;
+    // Only G4VAnalysisManager can change the state
+    friend class G4VAnalysisManager;
+    friend class G4VAnalysisReader;
+    friend class G4ParameterManager;
 
   public:
+
     G4AnalysisManagerState(G4String type, G4bool isMaster);
     // disabled constructors, operators
     G4AnalysisManagerState() = delete;
@@ -52,8 +53,7 @@ class G4AnalysisManagerState
     G4AnalysisManagerState& operator=(const G4AnalysisManagerState&) = delete;
 
     // Methods
-    void Message([[maybe_unused]] G4int level,
-                 [[maybe_unused]] const G4String& action,
+    void Message([[maybe_unused]] G4int level, [[maybe_unused]] const G4String& action,
                  [[maybe_unused]] const G4String& objectType,
                  [[maybe_unused]] const G4String& objectName = "",
                  [[maybe_unused]] G4bool success = true) const;
@@ -63,65 +63,88 @@ class G4AnalysisManagerState
     // get methods
     G4String GetType() const;
     G4String GetFileType() const;
-    G4bool   GetIsMaster() const;
-    G4int    GetThreadId() const;
-    G4bool   GetIsActivation() const;
-    G4int    GetVerboseLevel() const;
-    G4bool   IsVerbose(G4int verboseLevel) const;
-    G4int    GetCycle() const;
+    G4bool GetIsMaster() const;
+    G4int GetThreadId() const;
+    G4bool GetIsActivation() const;
+    G4int GetVerboseLevel() const;
+    G4bool IsVerbose(G4int verboseLevel) const;
+    G4int GetCycle() const;
 
   private:
+
     // set methods
     // (hidden from all clients except for G4VAnalysisManager friend)
     void SetIsActivation(G4bool isActivation);
     void SetVerboseLevel(G4int verboseLevel);
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4AnalysisManagerState" };
+    static constexpr std::string_view fkClass{"G4AnalysisManagerState"};
 
     // Data members
     G4String fType;
-    G4bool   fIsMaster;
-    G4int    fThreadId { G4Threading::SEQUENTIAL_ID };
-    G4bool   fIsActivation { false };
-    G4int    fVerboseLevel { 0 };
-    G4int    fCycle { 0 };
+    G4bool fIsMaster;
+    G4int fThreadId{G4Threading::SEQUENTIAL_ID};
+    G4bool fIsActivation{false};
+    G4int fVerboseLevel{0};
+    G4int fCycle{0};
     G4AnalysisVerbose fVerbose;
 };
 
 // inline functions
 
 inline void G4AnalysisManagerState::SetIsActivation(G4bool isActivation)
-{ fIsActivation = isActivation; }
+{
+  fIsActivation = isActivation;
+}
 
 inline void G4AnalysisManagerState::IncrementCycle()
-{ ++fCycle; }
+{
+  ++fCycle;
+}
 
 inline void G4AnalysisManagerState::ResetCycle()
-{ fCycle = 0; }
+{
+  fCycle = 0;
+}
 
 inline G4String G4AnalysisManagerState::GetType() const
-{ return fType; }
+{
+  return fType;
+}
 
 inline G4String G4AnalysisManagerState::GetFileType() const
-{ return G4StrUtil::to_lower_copy(fType); }
+{
+  return G4StrUtil::to_lower_copy(fType);
+}
 
-inline G4bool  G4AnalysisManagerState::GetIsMaster() const
-{ return fIsMaster; }
+inline G4bool G4AnalysisManagerState::GetIsMaster() const
+{
+  return fIsMaster;
+}
 
-inline G4int  G4AnalysisManagerState::GetThreadId() const
-{ return fThreadId; }
+inline G4int G4AnalysisManagerState::GetThreadId() const
+{
+  return fThreadId;
+}
 
-inline G4bool  G4AnalysisManagerState::GetIsActivation() const
-{ return fIsActivation; }
+inline G4bool G4AnalysisManagerState::GetIsActivation() const
+{
+  return fIsActivation;
+}
 
-inline G4int   G4AnalysisManagerState::GetVerboseLevel() const
-{ return fVerboseLevel; }
+inline G4int G4AnalysisManagerState::GetVerboseLevel() const
+{
+  return fVerboseLevel;
+}
 
-inline G4bool  G4AnalysisManagerState::IsVerbose(G4int verboseLevel) const
-{ return fVerboseLevel == verboseLevel; }
+inline G4bool G4AnalysisManagerState::IsVerbose(G4int verboseLevel) const
+{
+  return fVerboseLevel == verboseLevel;
+}
 
 inline G4int G4AnalysisManagerState::GetCycle() const
-{ return fCycle; }
+{
+  return fCycle;
+}
 
 #endif

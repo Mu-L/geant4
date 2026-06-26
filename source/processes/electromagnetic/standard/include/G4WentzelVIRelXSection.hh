@@ -32,9 +32,9 @@
 //
 // File name:     G4WentzelVIRelXSection
 //
-// Authors:       V.Ivanchenko  
+// Authors:       V.Ivanchenko
 //
-// Creation date: 08.06.2012 from G4WentzelOKandVIxSection 
+// Creation date: 08.06.2012 from G4WentzelOKandVIxSection
 //
 // Modifications:
 //
@@ -50,8 +50,8 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4WentzelVIRelXSection_h
-#define G4WentzelVIRelXSection_h 1
+#ifndef G4WENTZELVIRELXSECTION_HH
+#define G4WENTZELVIRELXSECTION_HH
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -62,24 +62,20 @@
 
 class G4WentzelVIRelXSection : public G4WentzelOKandVIxSection
 {
+  public:
 
-public:
+    explicit G4WentzelVIRelXSection();
 
-  explicit G4WentzelVIRelXSection();
+    ~G4WentzelVIRelXSection() override;
 
-  ~G4WentzelVIRelXSection() override;
+    // return cos(ThetaMax) for msc and cos(thetaMin) for single scattering
+    // cut = DBL_MAX means no scattering off electrons
+    G4double SetupKinematic(G4double kinEnergy, const G4Material* mat) override;
 
-  // return cos(ThetaMax) for msc and cos(thetaMin) for single scattering
-  // cut = DBL_MAX means no scattering off electrons 
-  G4double SetupKinematic(G4double kinEnergy, const G4Material* mat) override;
-
-  G4WentzelVIRelXSection & operator=
-  (const G4WentzelVIRelXSection &right) = delete;
-  G4WentzelVIRelXSection(const  G4WentzelVIRelXSection&) = delete;
-
+    G4WentzelVIRelXSection& operator=(const G4WentzelVIRelXSection& right) = delete;
+    G4WentzelVIRelXSection(const G4WentzelVIRelXSection&) = delete;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

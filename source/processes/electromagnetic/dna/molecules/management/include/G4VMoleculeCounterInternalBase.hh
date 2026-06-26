@@ -25,8 +25,8 @@
 //
 // Author: Christian Velten (2025)
 
-#ifndef G4VMoleculeCounterInternalBaseBASE_HH
-#define G4VMoleculeCounterInternalBaseBASE_HH 1
+#ifndef G4VMOLECULECOUNTERINTERNALBASEBASE_HH
+#define G4VMOLECULECOUNTERINTERNALBASEBASE_HH
 
 #include "G4Exception.hh"
 #include "G4MoleculeCounterTimeComparer.hh"
@@ -66,6 +66,7 @@ class G4VMoleculeCounterInternalBase
     // only allow these classes to derive
 
   public:
+
     struct G4VMoleculeCounterIndexInterface
     {
         virtual ~G4VMoleculeCounterIndexInterface() = default;
@@ -73,15 +74,18 @@ class G4VMoleculeCounterInternalBase
     };
 
   private:
+
     G4VMoleculeCounterInternalBase();
     G4VMoleculeCounterInternalBase(const G4String&);
     G4VMoleculeCounterInternalBase(G4VMoleculeCounterInternalBase const&) = delete;
     void operator=(G4VMoleculeCounterInternalBase const& x) = delete;
 
   public:
+
     virtual ~G4VMoleculeCounterInternalBase() = default;
 
   public:
+
     virtual void Initialize() = 0;
     virtual void InitializeUser() = 0;
     virtual void ResetCounter() = 0;
@@ -92,10 +96,15 @@ class G4VMoleculeCounterInternalBase
 
     virtual void AbsorbCounter(const G4VMoleculeCounterInternalBase*) = 0;
 
+    virtual G4int GetCountAtIndexAndTime(const G4VMoleculeCounterIndexInterface*,
+                                         G4double) const = 0;
+
   private:
+
     static G4ThreadLocal G4int _createdCounters;
 
   protected:
+
     G4bool fIsInitialized{false};
 
     G4int fId;
@@ -113,6 +122,7 @@ class G4VMoleculeCounterInternalBase
     G4MoleculeCounterTimeComparer fTimeComparer{};
 
   public:
+
     G4int GetId() const;
     void SetManagedId(G4int);
     G4int GetManagedId() const;
@@ -132,15 +142,16 @@ class G4VMoleculeCounterInternalBase
     G4bool IsTimeAboveUpperBound(G4double) const;
     G4bool IsActiveAtGlobalTime(G4double) const;
 
-    G4bool GetCheckTimeConsistencyWithScheduler() const; // w.r.t. scheduler time
+    G4bool GetCheckTimeConsistencyWithScheduler() const;  // w.r.t. scheduler time
     void SetCheckTimeConsistencyWithScheduler(G4bool = true);
-    G4bool GetCheckRecordedTimeConsistency() const; // w.r.t last recorded time
+    G4bool GetCheckRecordedTimeConsistency() const;  // w.r.t last recorded time
     void SetCheckRecordedTimeConsistency(G4bool = true);
 
     const G4MoleculeCounterTimeComparer& GetTimeComparer() const;
     void SetTimeComparer(const G4MoleculeCounterTimeComparer&);
 
   public:
+
     static void SetFixedTimePrecision(G4double);
 };
 
@@ -153,13 +164,15 @@ inline G4int G4VMoleculeCounterInternalBase::GetId() const
 
 inline void G4VMoleculeCounterInternalBase::SetManagedId(G4int id)
 {
-  if (fManagedId > -1) {
+  if (fManagedId > -1)
+  {
     G4ExceptionDescription description;
     description << "Someone is trying to change the managed id of this counter but it was already "
                    "changed from -1!\n";
     description << "  Id: " << fManagedId << "\n";
     description << "Name: " << fName << "\n";
-    G4Exception("G4VMoleculeCounterInternalBase::SetManagedId", "MOLCTR000", FatalException, description);
+    G4Exception("G4VMoleculeCounterInternalBase::SetManagedId", "MOLCTR000", FatalException,
+                description);
   }
   fManagedId = id;
 }
@@ -249,10 +262,13 @@ inline const G4MoleculeCounterTimeComparer& G4VMoleculeCounterInternalBase::GetT
   return fTimeComparer;
 }
 
-inline void G4VMoleculeCounterInternalBase::SetTimeComparer(const G4MoleculeCounterTimeComparer& comparer)
+inline void
+G4VMoleculeCounterInternalBase::SetTimeComparer(const G4MoleculeCounterTimeComparer& comparer)
 {
-  if (fIsInitialized) {
-    G4Exception("G4VMoleculeCounterInternalBase::SetTimeComparer()", "AlreadyInitialized", JustWarning,
+  if (fIsInitialized)
+  {
+    G4Exception("G4VMoleculeCounterInternalBase::SetTimeComparer()", "AlreadyInitialized",
+                JustWarning,
                 "Molecule counter was already initialized, assigning the time comparer now may "
                 "have no effect!");
   }

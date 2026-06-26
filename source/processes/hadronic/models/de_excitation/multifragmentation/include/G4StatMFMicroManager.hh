@@ -28,70 +28,60 @@
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara
 
-
-#ifndef G4StatMFMicroManager_h
-#define G4StatMFMicroManager_h 1
-
-#include "G4StatMFMicroPartition.hh"
-#include "G4StatMFParameters.hh"
-#include "G4StatMFChannel.hh"
+#ifndef G4STATMFMICROMANAGER_HH
+#define G4STATMFMICROMANAGER_HH
 
 #include "G4Fragment.hh"
+#include "G4StatMFChannel.hh"
+#include "G4StatMFMicroPartition.hh"
+#include "G4StatMFParameters.hh"
 #include "Randomize.hh"
 
+class G4StatMFMicroManager
+{
+  public:
 
-class G4StatMFMicroManager {
+    // G4StatMFMicroManager class must be initialized with a G4Fragment, multiplicity,
+    // free internal energy and the entropy of the compund nucleus.
+    G4StatMFMicroManager(const G4Fragment& theFragment, G4int multiplicity, G4double FreeIntE,
+                         G4double SCompNuc);
 
-public:
+    ~G4StatMFMicroManager();
 
-  // G4StatMFMicroManager class must be initialized with a G4Fragment, multiplicity,
-  // free internal energy and the entropy of the compund nucleus.
-  G4StatMFMicroManager(const G4Fragment& theFragment, G4int multiplicity,
-		       G4double FreeIntE, G4double SCompNuc);
+    // copy constructor
+    G4StatMFMicroManager(const G4StatMFMicroManager& right) = delete;
+    G4StatMFMicroManager& operator=(const G4StatMFMicroManager& right) = delete;
+    G4bool operator==(const G4StatMFMicroManager& right) const = delete;
+    G4bool operator!=(const G4StatMFMicroManager& right) const = delete;
 
-  ~G4StatMFMicroManager();
+    // Choice of fragment atomic numbers and charges.
+    G4StatMFChannel* ChooseChannel(G4int A0, G4int Z0, G4double MeanT);
 
-  // copy constructor
-  G4StatMFMicroManager(const G4StatMFMicroManager& right) = delete;
-  G4StatMFMicroManager & operator=(const G4StatMFMicroManager& right) = delete;
-  G4bool operator==(const G4StatMFMicroManager & right) const = delete;
-  G4bool operator!=(const G4StatMFMicroManager & right) const = delete;
+    G4double GetProbability(void) const { return _WW; }
 
-  // Choice of fragment atomic numbers and charges.
-  G4StatMFChannel* ChooseChannel(G4int A0, G4int Z0, G4double MeanT);
-	
-  G4double GetProbability(void) const {return _WW;}
+    void Normalize(G4double Norm);
 
-  void Normalize(G4double Norm);
-	
-  G4double GetMeanMultiplicity(void) const {return _MeanMultiplicity; }
+    G4double GetMeanMultiplicity(void) const { return _MeanMultiplicity; }
 
-  G4double GetMeanTemperature(void) const {return _MeanTemperature; }
+    G4double GetMeanTemperature(void) const { return _MeanTemperature; }
 
-  G4double GetMeanEntropy(void) const {return _MeanEntropy; }
+    G4double GetMeanEntropy(void) const { return _MeanEntropy; }
 
-private:
+  private:
 
-  // Initailization method
-  void Initialize(const G4Fragment & theFragment, G4int m,
-		  G4double FreeIntE, G4double SCompNuc);
+    // Initailization method
+    void Initialize(const G4Fragment& theFragment, G4int m, G4double FreeIntE, G4double SCompNuc);
 
-  G4bool MakePartition(G4int k, G4int* ANumbers); 
-								
-  // Partitions vector
-  std::vector<G4StatMFMicroPartition*> _Partition;
+    G4bool MakePartition(G4int k, G4int* ANumbers);
 
-  G4double _WW;
-  G4double _Normalization;
-  G4double _MeanMultiplicity;
-  G4double _MeanTemperature;
-  G4double _MeanEntropy;
+    // Partitions vector
+    std::vector<G4StatMFMicroPartition*> _Partition;
+
+    G4double _WW;
+    G4double _Normalization;
+    G4double _MeanMultiplicity;
+    G4double _MeanTemperature;
+    G4double _MeanEntropy;
 };
 
 #endif
-
-
-
-
-
-

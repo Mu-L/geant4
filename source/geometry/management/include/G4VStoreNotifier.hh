@@ -44,6 +44,7 @@
  * the implementation of user notifiers to be activated at the registration
  * or deregistration of objects in the volume, solid and region stores.
  * See G4VNotifier for the details.
+ * @ingroup geometry_management
  */
 
 using G4VStoreNotifier = G4VNotifier;

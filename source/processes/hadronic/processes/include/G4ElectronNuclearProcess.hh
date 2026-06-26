@@ -27,7 +27,7 @@
 //
 // Class Description:
 //
-// Process for electron nuclear inelastic scattering; 
+// Process for electron nuclear inelastic scattering;
 // to be used in your physics list in case you need this physics.
 //
 
@@ -35,20 +35,19 @@
 // J.P. Wellisch, CERN, Apr. 14 2000
 // Last modified: 03-Apr-1997
 
-#ifndef G4ElectronNuclearProcess_h
-#define G4ElectronNuclearProcess_h 1
- 
+#ifndef G4ELECTRONNUCLEARPROCESS_HH
+#define G4ELECTRONNUCLEARPROCESS_HH
+
 #include "G4HadronInelasticProcess.hh"
- 
+
 class G4ElectronNuclearProcess : public G4HadronInelasticProcess
 {
-public:
-    
-  G4ElectronNuclearProcess(const G4String& processName = "electronNuclear" );
-  virtual ~G4ElectronNuclearProcess();
+  public:
 
-  virtual void ProcessDescription(std::ostream& outFile) const;
+    G4ElectronNuclearProcess(const G4String& processName = "electronNuclear");
+    virtual ~G4ElectronNuclearProcess();
+
+    virtual void ProcessDescription(std::ostream& outFile) const;
 };
 
 #endif
-

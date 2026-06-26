@@ -33,14 +33,13 @@
 // Author: Zoltan Torzsok, November 2007
 // --------------------------------------------------------------------
 #ifndef G4GDMLREADDEFINE_HH
-#define G4GDMLREADDEFINE_HH 1
-
-#include <map>
-
-#include "G4ThreeVector.hh"
-#include "G4RotationMatrix.hh"
+#define G4GDMLREADDEFINE_HH
 
 #include "G4GDMLRead.hh"
+#include "G4RotationMatrix.hh"
+#include "G4ThreeVector.hh"
+
+#include <map>
 
 class G4GDMLMatrix
 {
@@ -78,8 +77,7 @@ class G4GDMLReadDefine : public G4GDMLRead
 
     virtual void DefineRead(const xercesc::DOMElement* const);
 
-    inline void SetReverseSearch(G4bool flag)
-    { reverseSearch = flag; }
+    inline void SetReverseSearch(G4bool flag) { reverseSearch = flag; }
 
   protected:
 
@@ -100,6 +98,7 @@ class G4GDMLReadDefine : public G4GDMLRead
     void ExpressionRead(const xercesc::DOMElement* const);
 
   protected:
+
     G4bool reverseSearch = false;
     std::map<G4String, G4double> quantityMap;
     std::map<G4String, G4ThreeVector> positionMap;

@@ -123,9 +123,11 @@ G4ParticleDefinition::G4ParticleDefinition(
   if (anti_encoding != 0) theAntiPDGEncoding = anti_encoding;
 
   // check quark contents
-  if (this->FillQuarkContents() != thePDGEncoding) {
+  if (this->FillQuarkContents() != thePDGEncoding)
+  {
 #ifdef G4VERBOSE
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       // Using G4cout expecting that it is available
       // in construction of static objects
       G4cout << "Particle " << aName << " has a strange PDGEncoding " << G4endl;
@@ -142,7 +144,8 @@ G4ParticleDefinition::G4ParticleDefinition(
       && (currentState != G4State_PreInit))
   {
 #ifdef G4VERBOSE
-    if (GetVerboseLevel() > 0) {
+    if (GetVerboseLevel() > 0)
+    {
       G4cout << "G4ParticleDefinition (other than ions and shortlived)"
              << " should be created in Pre_Init state - " << aName << G4endl;
     }
@@ -151,12 +154,14 @@ G4ParticleDefinition::G4ParticleDefinition(
                 "G4ParticleDefinition should be created in PreInit state");
   }
 
-  if (theParticleTable->GetIonTable()->IsIon(this)) {
+  if (theParticleTable->GetIonTable()->IsIon(this))
+  {
     SetAtomicNumber(G4int(GetPDGCharge() / eplus));
     SetAtomicMass(GetBaryonNumber());
   }
 
-  if (theParticleTable->GetIonTable()->IsAntiIon(this)) {
+  if (theParticleTable->GetIonTable()->IsAntiIon(this))
+  {
     SetAtomicNumber(std::abs(G4int(GetPDGCharge() / eplus)));
     SetAtomicMass(std::abs(GetBaryonNumber()));
   }
@@ -173,10 +178,12 @@ G4ParticleDefinition::G4ParticleDefinition()
 
 G4ParticleDefinition::~G4ParticleDefinition()
 {
-  if (G4ParticleTable::GetParticleTable()->GetReadiness()) {
+  if (G4ParticleTable::GetParticleTable()->GetReadiness())
+  {
     G4StateManager* pStateManager = G4StateManager::GetStateManager();
     G4ApplicationState currentState = pStateManager->GetCurrentState();
-    if (currentState != G4State_PreInit) {
+    if (currentState != G4State_PreInit)
+    {
       G4String msg = "Request of deletion for ";
       msg += GetParticleName();
       msg += " has No effects because readyToUse is true.";
@@ -185,7 +192,8 @@ G4ParticleDefinition::~G4ParticleDefinition()
     }
 
 #ifdef G4VERBOSE
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       G4cout << GetParticleName() << " will be deleted..." << G4endl;
     }
 #endif
@@ -235,7 +243,8 @@ G4int G4ParticleDefinition::FillQuarkContents()
   // this->thePDGEncoding
 
   G4int flavor;
-  for (flavor = 0; flavor < NumberOfQuarkFlavor; ++flavor) {
+  for (flavor = 0; flavor < NumberOfQuarkFlavor; ++flavor)
+  {
     theQuarkContent[flavor] = 0;
     theAntiQuarkContent[flavor] = 0;
   }
@@ -245,19 +254,24 @@ G4int G4ParticleDefinition::FillQuarkContents()
 
   G4int temp = checker.CheckPDGCode(thePDGEncoding, theParticleType);
 
-  if (temp != 0) {
-    for (flavor = 0; flavor < NumberOfQuarkFlavor; ++flavor) {
+  if (temp != 0)
+  {
+    for (flavor = 0; flavor < NumberOfQuarkFlavor; ++flavor)
+    {
       theQuarkContent[flavor] = checker.GetQuarkContent(flavor);
       theAntiQuarkContent[flavor] = checker.GetAntiQuarkContent(flavor);
     }
-    if ((theParticleType == "meson") || (theParticleType == "baryon")) {
+    if ((theParticleType == "meson") || (theParticleType == "baryon"))
+    {
       // check charge
-      if (!checker.CheckCharge(thePDGCharge)) {
+      if (!checker.CheckCharge(thePDGCharge))
+      {
         temp = 0;
         G4Exception("G4ParticleDefintion::G4ParticleDefintion", "PART103", JustWarning,
                     "Inconsistent charge against PDG code ");
 #ifdef G4VERBOSE
-        if (verboseLevel > 0) {
+        if (verboseLevel > 0)
+        {
           G4cout << "G4ParticleDefinition::FillQuarkContents  : "
                  << " illegal charge (" << thePDGCharge / eplus << " PDG code=" << thePDGEncoding
                  << G4endl;
@@ -265,12 +279,14 @@ G4int G4ParticleDefinition::FillQuarkContents()
 #endif
       }
       // check spin
-      if (checker.GetSpin() != thePDGiSpin) {
+      if (checker.GetSpin() != thePDGiSpin)
+      {
         temp = 0;
         G4Exception("G4ParticleDefintion::G4ParticleDefintion", "PART104", JustWarning,
                     "Inconsistent spin against PDG code ");
 #ifdef G4VERBOSE
-        if (verboseLevel > 0) {
+        if (verboseLevel > 0)
+        {
           G4cout << "G4ParticleDefinition::FillQuarkContents  : "
                  << " illegal SPIN (" << thePDGiSpin << "/2"
                  << " PDG code=" << thePDGEncoding << G4endl;
@@ -299,7 +315,8 @@ void G4ParticleDefinition::DumpTable() const
   G4cout << " Isospin : (I,Iz): (" << thePDGiIsospin << "/2";
   G4cout << " , " << thePDGiIsospin3 << "/2 ) " << G4endl;
   G4cout << " GParity : " << thePDGiGParity << G4endl;
-  if (thePDGMagneticMoment != 0.0) {
+  if (thePDGMagneticMoment != 0.0)
+  {
     G4cout << " MagneticMoment [MeV/T] : " << thePDGMagneticMoment / MeV * tesla << G4endl;
   }
   G4cout << " Quark contents     (d,u,s,c,b,t) : " << theQuarkContent[0];
@@ -325,32 +342,42 @@ void G4ParticleDefinition::DumpTable() const
     G4cout << " Atomic Number : " << GetAtomicNumber();
     G4cout << "  Atomic Mass : " << GetAtomicMass() << G4endl;
   }
-  if (fShortLivedFlag) {
+  if (fShortLivedFlag)
+  {
     G4cout << " ShortLived : ON" << G4endl;
   }
 
-  if (IsGeneralIon()) {
+  if (IsGeneralIon())
+  {
     G4double lftm = GetIonLifeTime();
-    if (lftm < -1000.) {
+    if (lftm < -1000.)
+    {
       G4cout << " Stable : No data found -- unknown" << G4endl;
     }
-    else if (lftm < 0.) {
+    else if (lftm < 0.)
+    {
       G4cout << " Stable : stable" << G4endl;
     }
-    else {
+    else
+    {
       G4cout << " Stable : unstable -- lifetime = " << G4BestUnit(lftm, "Time")
              << "\n  Decay table should be consulted to G4RadioactiveDecayProcess." << G4endl;
     }
   }
-  else {
-    if (thePDGStable) {
+  else
+  {
+    if (thePDGStable)
+    {
       G4cout << " Stable : stable" << G4endl;
     }
-    else {
-      if (theDecayTable != nullptr) {
+    else
+    {
+      if (theDecayTable != nullptr)
+      {
         theDecayTable->DumpInfo();
       }
-      else {
+      else
+      {
         G4cout << "Decay Table is not defined !!" << G4endl;
       }
     }
@@ -364,7 +391,8 @@ void G4ParticleDefinition::SetApplyCutsFlag(G4bool flg)
   {
     fApplyCutsFlag = flg;
   }
-  else {
+  else
+  {
     G4cout << "G4ParticleDefinition::SetApplyCutsFlag() for " << theParticleName << G4endl;
     G4cout << "becomes obsolete. Production threshold is applied only for "
            << "gamma, e- ,e+ and proton." << G4endl;
@@ -377,7 +405,8 @@ G4double G4ParticleDefinition::CalculateAnomaly() const
               "CalculateAnomaly() method will be removed in future releases");
 
   // gives the anomaly of magnetic moment for spin 1/2 particles
-  if (thePDGiSpin == 1) {
+  if (thePDGiSpin == 1)
+  {
     G4double muB = 0.5 * CLHEP::eplus * CLHEP::hbar_Planck / (thePDGMass / CLHEP::c_squared);
     return 0.5 * std::fabs(thePDGMagneticMoment / muB - 2. * thePDGCharge / CLHEP::eplus);
   }
@@ -387,17 +416,22 @@ G4double G4ParticleDefinition::CalculateAnomaly() const
 
 void G4ParticleDefinition::SetParticleDefinitionID(G4int id)
 {
-  if (id < 0) {
+  if (id < 0)
+  {
     g4particleDefinitionInstanceID = subInstanceManager.CreateSubInstance();
     G4MT_pmanager = nullptr;
   }
-  else {
-    if (isGeneralIon || isMuonicAtom) {
-      if (g4particleDefinitionInstanceID != id) {
+  else
+  {
+    if (isGeneralIon || isMuonicAtom)
+    {
+      if (g4particleDefinitionInstanceID != id)
+      {
         g4particleDefinitionInstanceID = id;
       }
     }
-    else {
+    else
+    {
       G4ExceptionDescription ed;
       ed << "ParticleDefinitionID should not be set for the particles <" << theParticleName << ">.";
       G4Exception("G4ParticleDefintion::SetParticleDefinitionID", "PART10114", FatalException, ed);
@@ -407,8 +441,10 @@ void G4ParticleDefinition::SetParticleDefinitionID(G4int id)
 
 void G4ParticleDefinition::SetProcessManager(G4ProcessManager* aProcessManager)
 {
-  if (g4particleDefinitionInstanceID < 0 && !isGeneralIon) {
-    if (G4Threading::G4GetThreadId() >= 0) {
+  if (g4particleDefinitionInstanceID < 0 && !isGeneralIon)
+  {
+    if (G4Threading::G4GetThreadId() >= 0)
+    {
       G4ExceptionDescription ed;
       ed << "ProcessManager is being set to " << theParticleName
          << " without proper initialization of TLS pointer vector.\n"
@@ -422,8 +458,10 @@ void G4ParticleDefinition::SetProcessManager(G4ProcessManager* aProcessManager)
 
 void G4ParticleDefinition::SetTrackingManager(G4VTrackingManager* aTrackingManager)
 {
-  if (g4particleDefinitionInstanceID < 0 && !isGeneralIon) {
-    if (G4Threading::G4GetThreadId() >= 0) {
+  if (g4particleDefinitionInstanceID < 0 && !isGeneralIon)
+  {
+    if (G4Threading::G4GetThreadId() >= 0)
+    {
       G4ExceptionDescription ed;
       ed << "TrackingManager is being set to " << theParticleName
          << " without proper initialization of TLS pointer vector.\n"

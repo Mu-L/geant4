@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  May 2021
 //
 // G4Mesh captures and validates a parameterisation, which we
@@ -58,65 +58,68 @@
 
 #include "G4Mesh.hh"
 
-#include "G4VPhysicalVolume.hh"
+#include "G4Box.hh"
 #include "G4LogicalVolume.hh"
 #include "G4PVParameterised.hh"
-#include "G4VNestedParameterisation.hh"
-#include "G4Box.hh"
-#include "G4Tubs.hh"
 #include "G4Sphere.hh"
 #include "G4Tet.hh"
+#include "G4Tubs.hh"
+#include "G4VNestedParameterisation.hh"
+#include "G4VPhysicalVolume.hh"
 
-std::map<G4int,G4String> G4Mesh::fEnumMap = {
-  {invalid,"invalid"},
-  {rectangle,"rectangle"},
-  {nested3DRectangular,"nested3Drectangular"},
-  {cylinder,"cylinder"},
-  {sphere,"sphere"},
-  {tetrahedron,"tetrahedron"}
-};
+std::map<G4int, G4String> G4Mesh::fEnumMap = {
+  {invalid, "invalid"},   {rectangle, "rectangle"}, {nested3DRectangular, "nested3Drectangular"},
+  {cylinder, "cylinder"}, {sphere, "sphere"},       {tetrahedron, "tetrahedron"}};
 
-G4Mesh::G4Mesh (G4VPhysicalVolume* containerVolume,const G4Transform3D& transform)
-: fpContainerVolume(containerVolume)
-, fpParameterisedVolume(nullptr)
-, fMeshType(invalid)
-, fMeshDepth(0)
-, fTransform(transform)
+G4Mesh::G4Mesh(G4VPhysicalVolume* containerVolume, const G4Transform3D& transform)
+  : fpContainerVolume(containerVolume),
+    fpParameterisedVolume(nullptr),
+    fMeshType(invalid),
+    fMeshDepth(0),
+    fTransform(transform)
 {
   if (fpContainerVolume == nullptr) return;
-    
+
   G4VPhysicalVolume* pv0 = fpContainerVolume;
   G4VPhysicalVolume* pv1 = nullptr;
   G4VPhysicalVolume* pv2 = nullptr;
   G4VPhysicalVolume* pv3 = nullptr;
-  G4LogicalVolume*   lv0 = pv0->GetLogicalVolume();
-  G4LogicalVolume*   lv1 = nullptr;
-  G4LogicalVolume*   lv2 = nullptr;
+  G4LogicalVolume* lv0 = pv0->GetLogicalVolume();
+  G4LogicalVolume* lv1 = nullptr;
+  G4LogicalVolume* lv2 = nullptr;
 
   // Check if this is a container for a parameterisation.
   // A simple parameterisation may only be one level.
   // Nested parameterisations may be 2- or 3-level.
   G4bool isContainer = false;
-  if (lv0->GetNoDaughters()) {
+  if (lv0->GetNoDaughters())
+  {
     fMeshDepth++;
     pv1 = lv0->GetDaughter(0);
     lv1 = pv1->GetLogicalVolume();
-    if (dynamic_cast<G4PVParameterised*>(pv1)) {
+    if (dynamic_cast<G4PVParameterised*>(pv1))
+    {
       isContainer = true;
       fpParameterisedVolume = pv1;
-    } else if (lv1->GetNoDaughters()) {
+    }
+    else if (lv1->GetNoDaughters())
+    {
       fMeshDepth++;
       pv2 = lv1->GetDaughter(0);
       lv2 = pv2->GetLogicalVolume();
-      if (dynamic_cast<G4PVParameterised*>(pv2) &&
-          dynamic_cast<G4VNestedParameterisation*>(pv2->GetParameterisation())) {
+      if (dynamic_cast<G4PVParameterised*>(pv2)
+          && dynamic_cast<G4VNestedParameterisation*>(pv2->GetParameterisation()))
+      {
         isContainer = true;
         fpParameterisedVolume = pv2;
-      } else if (lv2->GetNoDaughters()) {
+      }
+      else if (lv2->GetNoDaughters())
+      {
         fMeshDepth++;
         pv3 = lv2->GetDaughter(0);
-        if (dynamic_cast<G4PVParameterised*>(pv3) &&
-            dynamic_cast<G4VNestedParameterisation*>(pv3->GetParameterisation())) {
+        if (dynamic_cast<G4PVParameterised*>(pv3)
+            && dynamic_cast<G4VNestedParameterisation*>(pv3->GetParameterisation()))
+        {
           isContainer = true;
           fpParameterisedVolume = pv3;
         }
@@ -124,59 +127,72 @@ G4Mesh::G4Mesh (G4VPhysicalVolume* containerVolume,const G4Transform3D& transfor
     }
   }
 
-  if (isContainer) {
-
+  if (isContainer)
+  {
     // Get type
-    G4VSolid* pEndSol = fpParameterisedVolume->GetLogicalVolume()->GetSolid ();
-    if (dynamic_cast<G4Box*>(pEndSol)) {
+    G4VSolid* pEndSol = fpParameterisedVolume->GetLogicalVolume()->GetSolid();
+    if (dynamic_cast<G4Box*>(pEndSol))
+    {
       fMeshType = rectangle;
       auto pBox = static_cast<G4Box*>(pEndSol);
       f3DRPs.fHalfX = pBox->GetXHalfLength();
       f3DRPs.fHalfY = pBox->GetYHalfLength();
       f3DRPs.fHalfZ = pBox->GetZHalfLength();
-    } else if (dynamic_cast<G4Tet*>(pEndSol)) {
+    }
+    else if (dynamic_cast<G4Tet*>(pEndSol))
+    {
       fMeshType = tetrahedron;
-    } else if (dynamic_cast<G4Tubs*>(pEndSol)) {
+    }
+    else if (dynamic_cast<G4Tubs*>(pEndSol))
+    {
       fMeshType = cylinder;
-    } else if (dynamic_cast<G4Sphere*>(pEndSol)) {
+    }
+    else if (dynamic_cast<G4Sphere*>(pEndSol))
+    {
       fMeshType = sphere;
     }
-    
+
     // Special case for rectangular nested paramaterisation - extra information
-    if (fMeshDepth == 3 && fMeshType == rectangle) {
+    if (fMeshDepth == 3 && fMeshType == rectangle)
+    {
       auto nestedParam3 = dynamic_cast<G4VNestedParameterisation*>(pv3);
-      if (nestedParam3) {
+      if (nestedParam3)
+      {
         fMeshType = nested3DRectangular;
-        pv1->GetReplicationData
-        (f3DRPs.fAxis1,f3DRPs.fNreplica1,f3DRPs.fWidth1,f3DRPs.fOffset1,f3DRPs.fConsuming1);
-        pv2->GetReplicationData
-        (f3DRPs.fAxis2,f3DRPs.fNreplica2,f3DRPs.fWidth2,f3DRPs.fOffset2,f3DRPs.fConsuming2);
-        pv3->GetReplicationData
-        (f3DRPs.fAxis3,f3DRPs.fNreplica3,f3DRPs.fWidth3,f3DRPs.fOffset3,f3DRPs.fConsuming3);
+        pv1->GetReplicationData(f3DRPs.fAxis1, f3DRPs.fNreplica1, f3DRPs.fWidth1, f3DRPs.fOffset1,
+                                f3DRPs.fConsuming1);
+        pv2->GetReplicationData(f3DRPs.fAxis2, f3DRPs.fNreplica2, f3DRPs.fWidth2, f3DRPs.fOffset2,
+                                f3DRPs.fConsuming2);
+        pv3->GetReplicationData(f3DRPs.fAxis3, f3DRPs.fNreplica3, f3DRPs.fWidth3, f3DRPs.fOffset3,
+                                f3DRPs.fConsuming3);
       }
     }
   }
 }
 
-G4Mesh::~G4Mesh () {}
+G4Mesh::~G4Mesh() {}
 
-std::ostream& operator << (std::ostream& os, const G4Mesh& mesh) {
+std::ostream& operator<<(std::ostream& os, const G4Mesh& mesh)
+{
   os << "G4Mesh: ";
   os << "\nContainer: " << mesh.GetContainerVolume()->GetName();
   const auto& map = mesh.GetEnumMap();
   const auto& typeEntry = map.find(mesh.GetMeshType());
   G4String type;
-  if (typeEntry != map.end()) {
+  if (typeEntry != map.end())
+  {
     type = typeEntry->second;
-  } else {
+  }
+  else
+  {
     type = "unrecognised";
   }
   os << "\nType: " << type;
   os << "\nDepth: " << mesh.GetMeshDepth();
   os << "\nTranslation: " << mesh.GetTransform().getTranslation();
   os << "\nRotation: " << mesh.GetTransform().getRotation();
-  if (mesh.GetMeshType() == G4Mesh::rectangle &&
-      mesh.GetMeshDepth() == 3) {
+  if (mesh.GetMeshType() == G4Mesh::rectangle && mesh.GetMeshDepth() == 3)
+  {
     // Print ThreeDRectangleParameters
   }
   return os;

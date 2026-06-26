@@ -30,12 +30,10 @@
 #define ExGflashHit_h 1
 
 #include "G4Allocator.hh"
-#include "G4RotationMatrix.hh"
 #include "G4THitsCollection.hh"
+#include "G4Threading.hh"
 #include "G4ThreeVector.hh"
 #include "G4VHit.hh"
-
-class G4LogicalVolume;
 
 class ExGflashHit : public G4VHit
 {
@@ -48,11 +46,6 @@ class ExGflashHit : public G4VHit
 
     inline void* operator new(size_t);
     inline void operator delete(void* aHit);
-    void* operator new(size_t, void* p) { return p; }
-
-#ifndef G4NOT_ISO_DELETES
-    void operator delete(void*, void*) {}
-#endif
 
     void Draw() override;
     void Print() override;

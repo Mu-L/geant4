@@ -28,11 +28,11 @@
 //
 // GEANT4 Class header file
 //
-// File name:    G4IonCoulombScatteringModel 
+// File name:    G4IonCoulombScatteringModel
 //
 // Author:	Cristina Consolandi
 //
-// Creation date: 05.10.2010 from G4eCoulombScatteringModel 
+// Creation date: 05.10.2010 from G4eCoulombScatteringModel
 //				& G4CoulombScatteringModel
 //
 //
@@ -40,9 +40,9 @@
 //	Single Scattering Model for
 //      for protons, alpha and heavy Ions
 //
-// Reference:		
-//	M.J. Boschini et al. "Nuclear and Non-Ionizing Energy-Loss 
-//	for Coulomb ScatteredParticles from Low Energy up to Relativistic 
+// Reference:
+//	M.J. Boschini et al. "Nuclear and Non-Ionizing Energy-Loss
+//	for Coulomb ScatteredParticles from Low Energy up to Relativistic
 //	Regime in Space	Radiation Environment"
 //	Accepted for publication in the Proceedings of  the  ICATPP Conference
 //	on Cosmic Rays for Particle and Astroparticle Physics, Villa  Olmo, 7-8
@@ -54,13 +54,13 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4IonCoulombScatteringModel_h
-#define G4IonCoulombScatteringModel_h 1
+#ifndef G4IONCOULOMBSCATTERINGMODEL_HH
+#define G4IONCOULOMBSCATTERINGMODEL_HH
 
+#include "G4IonCoulombCrossSection.hh"
+#include "G4NistManager.hh"
 #include "G4VEmModel.hh"
 #include "globals.hh"
-#include "G4NistManager.hh"
-#include "G4IonCoulombCrossSection.hh"
 
 #include <vector>
 
@@ -70,77 +70,64 @@ class G4IonTable;
 
 class G4IonCoulombScatteringModel : public G4VEmModel
 {
-public:
+  public:
 
-  explicit G4IonCoulombScatteringModel(const G4String& nam = 
-				       "IonCoulombScattering");
- 
-  ~G4IonCoulombScatteringModel() override;
+    explicit G4IonCoulombScatteringModel(const G4String& nam = "IonCoulombScattering");
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) final;
- 
-  G4double ComputeCrossSectionPerAtom(
-                                const G4ParticleDefinition*,
-				G4double kinEnergy, 
-				G4double Z, 
-				G4double A, 
-				G4double cut,
-				G4double emax) final;
+    ~G4IonCoulombScatteringModel() override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) final;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) final;
 
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A, G4double cut, G4double emax) final;
 
-  	
-  inline void  SetRecoilThreshold(G4double eth);
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) final;
 
-  inline void  SetHeavyIonCorr(G4int b);
+    inline void SetRecoilThreshold(G4double eth);
 
-  inline G4int GetHeavyIonCorr();
+    inline void SetHeavyIonCorr(G4int b);
 
-  // hide assignment operator
-  G4IonCoulombScatteringModel & operator=
-  (const G4IonCoulombScatteringModel &right) = delete;
-  G4IonCoulombScatteringModel(const  G4IonCoulombScatteringModel&) = delete;
-	 
-private:
+    inline G4int GetHeavyIonCorr();
 
-  inline void DefineMaterial(const G4MaterialCutsCouple*);
-  
-  inline void SetupParticle(const G4ParticleDefinition*);
+    // hide assignment operator
+    G4IonCoulombScatteringModel& operator=(const G4IonCoulombScatteringModel& right) = delete;
+    G4IonCoulombScatteringModel(const G4IonCoulombScatteringModel&) = delete;
 
-  G4IonTable*               theIonTable;
-  G4ParticleChangeForGamma* fParticleChange; 
-  G4NistManager*            fNistManager;
-  G4IonCoulombCrossSection* ioncross;	  
+  private:
 
-  const std::vector<G4double>* pCuts;
-  const G4MaterialCutsCouple* currentCouple; 
-  const G4Material*           currentMaterial;
-  const G4Element*            currentElement;
-  G4int                       currentMaterialIndex;
-  
-  G4int 		      heavycorr;
+    inline void DefineMaterial(const G4MaterialCutsCouple*);
 
-  G4double                  cosThetaMin;
-  G4double                  recoilThreshold;
-				
-  // projectile
-  const G4ParticleDefinition* particle;		
-  const G4ParticleDefinition* theProton;	
-  G4double                  mass;		
+    inline void SetupParticle(const G4ParticleDefinition*);
 
+    G4IonTable* theIonTable;
+    G4ParticleChangeForGamma* fParticleChange;
+    G4NistManager* fNistManager;
+    G4IonCoulombCrossSection* ioncross;
+
+    const std::vector<G4double>* pCuts;
+    const G4MaterialCutsCouple* currentCouple;
+    const G4Material* currentMaterial;
+    const G4Element* currentElement;
+    G4int currentMaterialIndex;
+
+    G4int heavycorr;
+
+    G4double cosThetaMin;
+    G4double recoilThreshold;
+
+    // projectile
+    const G4ParticleDefinition* particle;
+    const G4ParticleDefinition* theProton;
+    G4double mass;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline void 
-G4IonCoulombScatteringModel::DefineMaterial(const G4MaterialCutsCouple* cup)
-{ 
-  if(cup != currentCouple) {
+inline void G4IonCoulombScatteringModel::DefineMaterial(const G4MaterialCutsCouple* cup)
+{
+  if (cup != currentCouple)
+  {
     currentCouple = cup;
     currentMaterial = cup->GetMaterial();
     currentMaterialIndex = currentCouple->GetIndex();
@@ -149,10 +136,10 @@ G4IonCoulombScatteringModel::DefineMaterial(const G4MaterialCutsCouple* cup)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
-void G4IonCoulombScatteringModel::SetupParticle(const G4ParticleDefinition* p)
+inline void G4IonCoulombScatteringModel::SetupParticle(const G4ParticleDefinition* p)
 {
-  if(p != particle) {
+  if (p != particle)
+  {
     particle = p;
     mass = particle->GetPDGMass();
     ioncross->SetupParticle(p);
@@ -168,16 +155,16 @@ inline void G4IonCoulombScatteringModel::SetRecoilThreshold(G4double eth)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline void G4IonCoulombScatteringModel::SetHeavyIonCorr(G4int b) 
+inline void G4IonCoulombScatteringModel::SetHeavyIonCorr(G4int b)
 {
-  heavycorr = b; 
+  heavycorr = b;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline G4int G4IonCoulombScatteringModel::GetHeavyIonCorr() 
+inline G4int G4IonCoulombScatteringModel::GetHeavyIonCorr()
 {
-  return heavycorr; 
+  return heavycorr;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

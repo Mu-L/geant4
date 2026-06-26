@@ -30,60 +30,61 @@
 //
 //      History: first implementation, Maxim Komogorov, 10-Jul-1998
 // -----------------------------------------------------------------------------
-#ifndef G4QGSMFragmentation_h
-#define G4QGSMFragmentation_h 1
+#ifndef G4QGSMFRAGMENTATION_HH
+#define G4QGSMFRAGMENTATION_HH
 
 #include "G4VLongitudinalStringDecay.hh"
 
 //******************************************************************************
-class G4QGSMFragmentation:public G4VLongitudinalStringDecay
+class G4QGSMFragmentation : public G4VLongitudinalStringDecay
 {
   public:
+
     G4QGSMFragmentation();
     ~G4QGSMFragmentation();
     virtual G4KineticTrackVector* FragmentString(const G4ExcitedString& theString);
 
   private:
+
     // not implemented to protect/forbid use
-    G4QGSMFragmentation(const G4QGSMFragmentation &right);
-    const G4QGSMFragmentation & operator=(const G4QGSMFragmentation &right);
-    G4bool operator==(const G4QGSMFragmentation &right) const;
-    G4bool operator!=(const G4QGSMFragmentation &right) const;
+    G4QGSMFragmentation(const G4QGSMFragmentation& right);
+    const G4QGSMFragmentation& operator=(const G4QGSMFragmentation& right);
+    G4bool operator==(const G4QGSMFragmentation& right) const;
+    G4bool operator!=(const G4QGSMFragmentation& right) const;
 
   private:
-    virtual G4bool StopFragmenting(const G4FragmentingString  * string);
-    virtual G4bool IsItFragmentable(const G4FragmentingString * string);
 
-    virtual G4bool SplitLast(G4FragmentingString * string, 
-	 	             G4KineticTrackVector * LeftVector, 
-                             G4KineticTrackVector * RightVector);
+    virtual G4bool StopFragmenting(const G4FragmentingString* string);
+    virtual G4bool IsItFragmentable(const G4FragmentingString* string);
+
+    virtual G4bool SplitLast(G4FragmentingString* string, G4KineticTrackVector* LeftVector,
+                             G4KineticTrackVector* RightVector);
 
     virtual void Sample4Momentum(G4LorentzVector* Mom, G4double Mass, G4LorentzVector* AntiMom,
-                                 G4double AntiMass, G4double InitialMass); 
+                                 G4double AntiMass, G4double InitialMass);
 
-    virtual G4KineticTrack * Splitup(G4FragmentingString *string, 
-                                     G4FragmentingString *&newString);
+    virtual G4KineticTrack* Splitup(G4FragmentingString* string, G4FragmentingString*& newString);
 
     // The hadron can be producet at QuarkSplitup or DiQuarkSplitup
     // virtual G4ParticleDefinition * QuarkSplitup(G4ParticleDefinition* decay,
     //	  	   		                   G4ParticleDefinition *&created);
 
-    virtual G4ParticleDefinition * DiQuarkSplitup(G4ParticleDefinition* decay,
-                                                  G4ParticleDefinition *&created);
+    virtual G4ParticleDefinition* DiQuarkSplitup(G4ParticleDefinition* decay,
+                                                 G4ParticleDefinition*& created);
 
-    virtual G4LorentzVector * SplitEandP(G4ParticleDefinition * pHadron, 
-                                         G4FragmentingString * string, 
-                                         G4FragmentingString * newString);
+    virtual G4LorentzVector* SplitEandP(G4ParticleDefinition* pHadron, G4FragmentingString* string,
+                                        G4FragmentingString* newString);
 
-    virtual G4double GetLightConeZ(G4double zmin, G4double zmax, G4int PartonEncoding, 
+    virtual G4double GetLightConeZ(G4double zmin, G4double zmax, G4int PartonEncoding,
                                    G4ParticleDefinition* pHadron, G4double Px, G4double Py);
 
   private:
+
     // model parameters
     G4double arho;
     G4double aphi;
-    G4double aJPs;        // alpha_J/Psi
-    G4double aUps;        // alpha_Y
+    G4double aJPs;  // alpha_J/Psi
+    G4double aUps;  // alpha_Y
     G4double an;
     G4double ala;
 
@@ -105,15 +106,15 @@ class G4QGSMFragmentation:public G4VLongitudinalStringDecay
     G4double FFqq2qq[15][5][2];
 
   private:
+
     void SetFFq2q();
     void SetFFq2qq();
     void SetFFqq2qq();
     void SetFFqq2q();
 
     G4int IndexDiQ[5][5];
-  };
+};
 
-// Class G4QGSMFragmentation 
+// Class G4QGSMFragmentation
 
 #endif
-

@@ -25,14 +25,14 @@
 //
 //
 
-#ifndef G4XAnnihilationChannel_h
-#define G4XAnnihilationChannel_h
+#ifndef G4XANNIHILATIONCHANNEL_HH
+#define G4XANNIHILATIONCHANNEL_HH
 
-#include "globals.hh"
-#include "G4VCrossSectionSource.hh"
-#include "G4CrossSectionVector.hh"
 #include "G4Clebsch.hh"
+#include "G4CrossSectionVector.hh"
 #include "G4ResonanceNames.hh"
+#include "G4VCrossSectionSource.hh"
+#include "globals.hh"
 
 #include <map>
 
@@ -45,78 +45,55 @@ class G4PartialWidthTable;
 
 class G4XAnnihilationChannel : public G4VCrossSectionSource
 {
-public:
+  public:
 
-  G4XAnnihilationChannel();
+    G4XAnnihilationChannel();
 
-  G4XAnnihilationChannel(const G4ParticleDefinition* resDefinition,
-			 const G4ResonanceWidth& resWidths,
-			 const G4ResonancePartialWidth& resPartWidths,
-			 const G4String& partWidthLabel);
+    G4XAnnihilationChannel(const G4ParticleDefinition* resDefinition,
+                           const G4ResonanceWidth& resWidths,
+                           const G4ResonancePartialWidth& resPartWidths,
+                           const G4String& partWidthLabel);
 
-  virtual ~G4XAnnihilationChannel();
+    virtual ~G4XAnnihilationChannel();
 
-  G4bool operator==(const G4XAnnihilationChannel &right) const;
-  G4bool operator!=(const G4XAnnihilationChannel &right) const;
+    G4bool operator==(const G4XAnnihilationChannel& right) const;
+    G4bool operator!=(const G4XAnnihilationChannel& right) const;
 
-  virtual G4double CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
- 
-  virtual const G4CrossSectionVector* GetComponents() const { return 0; }
+    virtual G4double CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
 
-  virtual G4bool IsValid(G4double e) const;
+    virtual const G4CrossSectionVector* GetComponents() const { return 0; }
 
-  virtual G4String Name() const;
+    virtual G4bool IsValid(G4double e) const;
 
+    virtual G4String Name() const;
 
-protected:
+  protected:
 
-private:  
+  private:
 
-  G4XAnnihilationChannel(const G4XAnnihilationChannel &right);
-  const G4XAnnihilationChannel& operator=(const G4XAnnihilationChannel &right);
-  
-  G4double Branch(const G4KineticTrack& trk1, 
-                  const G4KineticTrack& trk2) const;
+    G4XAnnihilationChannel(const G4XAnnihilationChannel& right);
+    const G4XAnnihilationChannel& operator=(const G4XAnnihilationChannel& right);
 
-  G4double VariableWidth(const G4KineticTrack& trk1, 
-                         const G4KineticTrack& trk2) const;
- 
-  G4double VariablePartialWidth(const G4KineticTrack& trk1, 
-                                const G4KineticTrack& trk2) const;
+    G4double Branch(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
 
-  G4double NormalizedClebsch(const G4KineticTrack& trk1, 
-                             const G4KineticTrack& trk2) const;
+    G4double VariableWidth(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
 
-  G4double lowLimit;
-  G4double highLimit;
+    G4double VariablePartialWidth(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
 
-  G4Clebsch clebsch;
-  G4ResonanceNames theNames;
-  
-  // Owned pointers
-  G4PhysicsVector* widthTable;
-  G4PhysicsVector* partWidthTable;
+    G4double NormalizedClebsch(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
 
-  // Unowned pointer
-  const G4ParticleDefinition* resonance;
+    G4double lowLimit;
+    G4double highLimit;
+
+    G4Clebsch clebsch;
+    G4ResonanceNames theNames;
+
+    // Owned pointers
+    G4PhysicsVector* widthTable;
+    G4PhysicsVector* partWidthTable;
+
+    // Unowned pointer
+    const G4ParticleDefinition* resonance;
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

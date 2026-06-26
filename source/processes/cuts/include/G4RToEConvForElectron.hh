@@ -31,27 +31,26 @@
 
 // Author: H.Kurashige, 05 October 2002 - First implementation
 // --------------------------------------------------------------------
-#ifndef G4RToEConvForElectron_hh
-#define G4RToEConvForElectron_hh 1
+#ifndef G4RTOECONVFORELECTRON_HH
+#define G4RTOECONVFORELECTRON_HH
+
+#include "G4VRangeToEnergyConverter.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 #include <vector>
 
-#include "globals.hh"
-#include "G4ios.hh"
-#include "G4VRangeToEnergyConverter.hh"
-
 class G4RToEConvForElectron : public G4VRangeToEnergyConverter
 {
-public: 
+  public:
 
-  explicit G4RToEConvForElectron();
+    explicit G4RToEConvForElectron();
 
-  virtual ~G4RToEConvForElectron();
+    virtual ~G4RToEConvForElectron();
 
-protected:
+  protected:
 
-  G4double ComputeValue(const G4int Z, const G4double kinEnergy) final;
-
+    G4double ComputeValue(const G4int Z, const G4double kinEnergy) final;
 };
 
 #endif

@@ -35,19 +35,19 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4FTFPAntiBarionBuilder_h
-#define G4FTFPAntiBarionBuilder_h 1
+#ifndef G4FTFPANTIBARIONBUILDER_HH
+#define G4FTFPANTIBARIONBUILDER_HH
 
 #include "globals.hh"
 
 class G4FTFPAntiBarionBuilder
 {
-  public: 
+  public:
+
     G4FTFPAntiBarionBuilder();
     ~G4FTFPAntiBarionBuilder();
 
     void Build();
- };
+};
 
 #endif
-

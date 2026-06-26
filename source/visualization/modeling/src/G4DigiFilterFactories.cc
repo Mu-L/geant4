@@ -30,13 +30,14 @@
 //
 // Jane Tinslay March 2006
 //
-#include "G4ModelCommandsT.hh"
 #include "G4DigiFilterFactories.hh"
+
 #include "G4AttributeFilterT.hh"
+#include "G4ModelCommandsT.hh"
 
 // Attribute filter
 G4DigiAttributeFilterFactory::G4DigiAttributeFilterFactory()
-  :G4VModelFactory< G4VFilter<G4VDigi> >("attributeFilter") 
+  : G4VModelFactory<G4VFilter<G4VDigi>>("attributeFilter")
 {}
 
 G4DigiAttributeFilterFactory::~G4DigiAttributeFilterFactory() {}
@@ -47,18 +48,19 @@ G4DigiAttributeFilterFactory::Create(const G4String& placement, const G4String& 
   typedef G4AttributeFilterT<G4VDigi> G4DigiAttributeFilter;
   // Create model
   G4DigiAttributeFilter* model = new G4DigiAttributeFilter(name);
-  
+
   // Create associated messengers
   Messengers messengers;
-  
-  messengers.push_back(new G4ModelCmdSetString<G4DigiAttributeFilter>(model, placement, "setAttribute"));
+
+  messengers.push_back(
+    new G4ModelCmdSetString<G4DigiAttributeFilter>(model, placement, "setAttribute"));
   messengers.push_back(new G4ModelCmdInvert<G4DigiAttributeFilter>(model, placement));
   messengers.push_back(new G4ModelCmdActive<G4DigiAttributeFilter>(model, placement));
   messengers.push_back(new G4ModelCmdVerbose<G4DigiAttributeFilter>(model, placement));
   messengers.push_back(new G4ModelCmdReset<G4DigiAttributeFilter>(model, placement));
-  messengers.push_back(new G4ModelCmdAddInterval<G4DigiAttributeFilter>(model, placement, "addInterval"));
+  messengers.push_back(
+    new G4ModelCmdAddInterval<G4DigiAttributeFilter>(model, placement, "addInterval"));
   messengers.push_back(new G4ModelCmdAddValue<G4DigiAttributeFilter>(model, placement, "addValue"));
-  
+
   return ModelAndMessengers(model, messengers);
 }
-

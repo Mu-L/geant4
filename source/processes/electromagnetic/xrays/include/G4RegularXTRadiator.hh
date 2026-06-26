@@ -37,27 +37,27 @@
 // 16.01.02 V. Grichine, first version
 //
 
-#ifndef G4RegularXTRadiator_h
-#define G4RegularXTRadiator_h 1
+#ifndef G4REGULARXTRADIATOR_HH
+#define G4REGULARXTRADIATOR_HH
 
 #include "G4Material.hh"
 #include "G4VXTRenergyLoss.hh"
 
 class G4RegularXTRadiator : public G4VXTRenergyLoss
 {
- public:
-  explicit G4RegularXTRadiator(
-    G4LogicalVolume* anEnvelope, G4Material*, G4Material*, G4double, G4double,
-    G4int, const G4String& processName = "XTRegularRadiator");
-  ~G4RegularXTRadiator();
+  public:
 
-  G4double SpectralXTRdEdx(G4double energy) override;
+    explicit G4RegularXTRadiator(G4LogicalVolume* anEnvelope, G4Material*, G4Material*, G4double,
+                                 G4double, G4int,
+                                 const G4String& processName = "XTRegularRadiator");
+    ~G4RegularXTRadiator();
 
-  G4double GetStackFactor(G4double energy, G4double gamma,
-                          G4double varAngle) override;
+    G4double SpectralXTRdEdx(G4double energy) override;
 
-  void ProcessDescription(std::ostream&) const override;
-  void DumpInfo() const override { ProcessDescription(G4cout); };
+    G4double GetStackFactor(G4double energy, G4double gamma, G4double varAngle) override;
+
+    void ProcessDescription(std::ostream&) const override;
+    void DumpInfo() const override { ProcessDescription(G4cout); };
 };
 
 #endif

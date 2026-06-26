@@ -31,8 +31,8 @@
 
 // Author: H.Kurashige, 27 July 1996
 // --------------------------------------------------------------------
-#ifndef G4VDecayChannel_hh
-#define G4VDecayChannel_hh 1
+#ifndef G4VDECAYCHANNEL_HH
+#define G4VDECAYCHANNEL_HH
 
 #include "G4AutoLock.hh"
 #include "G4Threading.hh"
@@ -49,6 +49,7 @@ class G4ParticleTable;
 class G4VDecayChannel
 {
   public:
+
     // Constructors
     G4VDecayChannel(const G4String& aName, G4int Verbose = 1);
     G4VDecayChannel(const G4String& aName, const G4String& theParentName, G4double theBR,
@@ -124,6 +125,7 @@ class G4VDecayChannel
     inline const G4ThreeVector& GetPolarization() const;
 
   protected:
+
     // Default constructor
     G4VDecayChannel();
 
@@ -140,6 +142,7 @@ class G4VDecayChannel
     G4double DynamicalMass(G4double massPDG, G4double width, G4double maxDev = 1.0) const;
 
   protected:
+
     // Kinematics name
     G4String kinematics_name = "";
     // Branching ratio  [0.0 - 1.0]
@@ -178,6 +181,7 @@ class G4VDecayChannel
     G4int verboseLevel = 1;
 
   private:
+
     // Fill daughters array
     void FillDaughters();
 
@@ -202,7 +206,8 @@ inline G4ParticleDefinition* G4VDecayChannel::GetDaughter(G4int anIndex)
   CheckAndFillDaughters();
 
   // get the pointer to a daughter particle
-  if ((anIndex >= 0) && (anIndex < numberOfDaughters)) {
+  if ((anIndex >= 0) && (anIndex < numberOfDaughters))
+  {
     return G4MT_daughters[anIndex];
   }
 
@@ -213,11 +218,13 @@ inline G4ParticleDefinition* G4VDecayChannel::GetDaughter(G4int anIndex)
 
 inline const G4String& G4VDecayChannel::GetDaughterName(G4int anIndex) const
 {
-  if ((anIndex >= 0) && (anIndex < numberOfDaughters)) {
+  if ((anIndex >= 0) && (anIndex < numberOfDaughters))
+  {
     return *daughters_name[anIndex];
   }
 
-  if (verboseLevel > 0) {
+  if (verboseLevel > 0)
+  {
     G4cout << "G4VDecayChannel::GetDaughterName ";
     G4cout << "index out of range " << anIndex << G4endl;
   }
@@ -226,11 +233,13 @@ inline const G4String& G4VDecayChannel::GetDaughterName(G4int anIndex) const
 
 inline G4double G4VDecayChannel::GetDaughterMass(G4int anIndex) const
 {
-  if ((anIndex >= 0) && (anIndex < numberOfDaughters)) {
+  if ((anIndex >= 0) && (anIndex < numberOfDaughters))
+  {
     return G4MT_daughters_mass[anIndex];
   }
 
-  if (verboseLevel > 0) {
+  if (verboseLevel > 0)
+  {
     G4cout << "G4VDecayChannel::GetDaughterMass ";
     G4cout << "index out of range " << anIndex << G4endl;
   }
@@ -310,7 +319,8 @@ inline const G4ThreeVector& G4VDecayChannel::GetPolarization() const
 inline void G4VDecayChannel::CheckAndFillDaughters()
 {
   G4AutoLock l(&daughtersMutex);
-  if (G4MT_daughters == nullptr) {
+  if (G4MT_daughters == nullptr)
+  {
     l.unlock();
     FillDaughters();
   }
@@ -319,7 +329,8 @@ inline void G4VDecayChannel::CheckAndFillDaughters()
 inline void G4VDecayChannel::CheckAndFillParent()
 {
   G4AutoLock l(&parentMutex);
-  if (G4MT_parent == nullptr) {
+  if (G4MT_parent == nullptr)
+  {
     l.unlock();
     FillParent();
   }

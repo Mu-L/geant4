@@ -46,6 +46,7 @@
 class G4ENDFYieldDataContainer
 {
   public:
+
     // Constructor
     /** Default constructor */
     G4ENDFYieldDataContainer(G4int YieldSlots);
@@ -73,6 +74,7 @@ class G4ENDFYieldDataContainer
     void SetYieldSlots(G4int NumberOfSlots);
 
   protected:
+
     // Data members
     /** The number of energy groups, or yield slots, that are stored */
     G4int YieldSlots_;
@@ -86,7 +88,9 @@ class G4ENDFYieldDataContainer
     G4double* YieldError_;
 
     // Destructor function(s)
+
   public:
+
     /** Default deconstructor */
     ~G4ENDFYieldDataContainer();
 };

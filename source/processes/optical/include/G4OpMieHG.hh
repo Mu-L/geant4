@@ -37,41 +37,39 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-#ifndef G4OpMieHG_h
-#define G4OpMieHG_h 1
+#ifndef G4OPMIEHG_HH
+#define G4OPMIEHG_HH
 
-#include "G4VDiscreteProcess.hh"
 #include "G4OpticalPhoton.hh"
+#include "G4VDiscreteProcess.hh"
 
 class G4OpMieHG : public G4VDiscreteProcess
 {
- public:
-  explicit G4OpMieHG(const G4String& processName = "OpMieHG",
-                     G4ProcessType type          = fOptical);
-  virtual ~G4OpMieHG();
+  public:
 
-  virtual G4bool IsApplicable(
-    const G4ParticleDefinition& aParticleType) override;
-  // Returns true -> 'is applicable' only for an optical photon.
+    explicit G4OpMieHG(const G4String& processName = "OpMieHG", G4ProcessType type = fOptical);
+    virtual ~G4OpMieHG();
 
-  virtual G4double GetMeanFreePath(const G4Track& aTrack, G4double,
-                                   G4ForceCondition*) override;
-  // Return the mean free path of Mie scattering
+    virtual G4bool IsApplicable(const G4ParticleDefinition& aParticleType) override;
+    // Returns true -> 'is applicable' only for an optical photon.
 
-  virtual G4VParticleChange* PostStepDoIt(const G4Track& aTrack,
-                                          const G4Step& aStep) override;
-  // This is the method implementing Mie scattering.
+    virtual G4double GetMeanFreePath(const G4Track& aTrack, G4double, G4ForceCondition*) override;
+    // Return the mean free path of Mie scattering
 
-  virtual void PreparePhysicsTable(const G4ParticleDefinition&) override;
-  virtual void Initialise();
+    virtual G4VParticleChange* PostStepDoIt(const G4Track& aTrack, const G4Step& aStep) override;
+    // This is the method implementing Mie scattering.
 
-  void SetVerboseLevel(G4int);
+    virtual void PreparePhysicsTable(const G4ParticleDefinition&) override;
+    virtual void Initialise();
 
- private:
-  G4OpMieHG(const G4OpMieHG& right) = delete;
-  G4OpMieHG& operator=(const G4OpMieHG& right) = delete;
+    void SetVerboseLevel(G4int);
 
-  size_t idx_mie = 0;
+  private:
+
+    G4OpMieHG(const G4OpMieHG& right) = delete;
+    G4OpMieHG& operator=(const G4OpMieHG& right) = delete;
+
+    size_t idx_mie = 0;
 };
 
 inline G4bool G4OpMieHG::IsApplicable(const G4ParticleDefinition& aParticleType)

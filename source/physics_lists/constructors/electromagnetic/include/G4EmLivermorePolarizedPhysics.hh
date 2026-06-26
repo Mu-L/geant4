@@ -24,8 +24,8 @@
 // ********************************************************************
 //
 
-#ifndef G4EmLivermorePolarizedPhysics_h
-#define G4EmLivermorePolarizedPhysics_h 1
+#ifndef G4EMLIVERMOREPOLARIZEDPHYSICS_HH
+#define G4EMLIVERMOREPOLARIZEDPHYSICS_HH
 
 #include "G4EmLivermorePhysics.hh"
 
@@ -33,19 +33,13 @@
 
 class G4EmLivermorePolarizedPhysics : public G4EmLivermorePhysics
 {
-public:
+  public:
 
-  explicit G4EmLivermorePolarizedPhysics(G4int ver=1, const G4String& name="");
+    explicit G4EmLivermorePolarizedPhysics(G4int ver = 1, const G4String& name = "");
 
-  ~G4EmLivermorePolarizedPhysics() override;
+    ~G4EmLivermorePolarizedPhysics() override;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-
-
-
-
-

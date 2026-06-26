@@ -22,15 +22,15 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // Class G4ReflectionFactory Implementation
 //
 // Decomposition of a general transformation
 // that can include reflection in a "reflection-free" transformation:
-// 
+//
 // x(inM') = TG*x(inM)         TG - general transformation
 //         = T*(R*x(inM))      T  - "reflection-free" transformation
-//         = T* x(inReflM)   
+//         = T* x(inReflM)
 //
 // Daughters transformation:
 // When a volume V containing daughter D with transformation TD
@@ -38,10 +38,10 @@
 // the TGV is decomposed,
 // new reflected volume ReflV containing a new daughter ReflD
 // with reflected transformation ReflTD is created:
-// 
+//
 // x(inV) = TD * x(inD);
-// x(inM) = TGV * x(inV) 
-//        = TV * R * x(inV) 
+// x(inM) = TGV * x(inV)
+//        = TV * R * x(inV)
 //        = TV * R * TD * x(inD)
 //        = TV * R*TD*R-1 * R*x(inD)
 //        = TV * ReflTD * x(inReflD)
@@ -50,40 +50,42 @@
 // --------------------------------------------------------------------
 
 #include "G4ReflectionFactory.hh"
-#include "G4ReflectedSolid.hh"
-#include "G4Region.hh" 
-#include "G4LogicalVolume.hh"  
-#include "G4PVPlacement.hh"  
-#include "G4PVReplica.hh"  
-#include "G4VPVDivisionFactory.hh"
+
 #include "G4GeometryTolerance.hh"
+#include "G4LogicalVolume.hh"
+#include "G4PVPlacement.hh"
+#include "G4PVReplica.hh"
+#include "G4ReflectedSolid.hh"
+#include "G4Region.hh"
+#include "G4VPVDivisionFactory.hh"
 
 G4ThreadLocal G4ReflectionFactory* G4ReflectionFactory::fInstance = nullptr;
-const G4String  G4ReflectionFactory::fDefaultNameExtension = "_refl";
+const G4String G4ReflectionFactory::fDefaultNameExtension = "_refl";
 const G4Scale3D G4ReflectionFactory::fScale = G4ScaleZ3D(-1.0);
 
 //_____________________________________________________________________________
 
-G4ReflectionFactory* G4ReflectionFactory::Instance() 
+G4ReflectionFactory* G4ReflectionFactory::Instance()
 {
   // Static singleton access method.
   // ---
 
-  if (fInstance == nullptr) { fInstance = new G4ReflectionFactory(); }
+  if (fInstance == nullptr)
+  {
+    fInstance = new G4ReflectionFactory();
+  }
 
   return fInstance;
-}  
+}
 
 //_____________________________________________________________________________
 
-G4ReflectionFactory::G4ReflectionFactory()
-  : fNameExtension(fDefaultNameExtension)    
+G4ReflectionFactory::G4ReflectionFactory() : fNameExtension(fDefaultNameExtension)
 {
   // Protected singleton constructor.
   // ---
 
-  fScalePrecision = 10.
-                  * G4GeometryTolerance::GetInstance()->GetSurfaceTolerance();
+  fScalePrecision = 10. * G4GeometryTolerance::GetInstance()->GetSurfaceTolerance();
   fInstance = this;
 }
 
@@ -100,14 +102,10 @@ G4ReflectionFactory::~G4ReflectionFactory()
 
 //_____________________________________________________________________________
 
-G4PhysicalVolumesPair
-G4ReflectionFactory::Place( const G4Transform3D& transform3D,
-                            const G4String&      name,
-                                  G4LogicalVolume* LV,
-                                  G4LogicalVolume* motherLV,
-                                  G4bool  isMany, 
-                                  G4int   copyNo,
-                                  G4bool  surfCheck)
+G4PhysicalVolumesPair G4ReflectionFactory::Place(const G4Transform3D& transform3D,
+                                                 const G4String& name, G4LogicalVolume* LV,
+                                                 G4LogicalVolume* motherLV, G4bool isMany,
+                                                 G4int copyNo, G4bool surfCheck)
 {
   // Evaluates the passed transformation; if it contains reflection
   // it performs its decomposition, creates new reflected solid and
@@ -119,88 +117,85 @@ G4ReflectionFactory::Place( const G4Transform3D& transform3D,
   // - or nullptr if mother LV was not reflected.
   // ---
 
-  if (fVerboseLevel>0)
+  if (fVerboseLevel > 0)
   {
-    G4cout << "Place " << name << " lv " << LV << " "
-           << LV->GetName() << G4endl;
-  }  
+    G4cout << "Place " << name << " lv " << LV << " " << LV->GetName() << G4endl;
+  }
 
   // decompose transformation
-  G4Scale3D     scale;
-  G4Rotate3D    rotation;
+  G4Scale3D scale;
+  G4Rotate3D rotation;
   G4Translate3D translation;
 
   transform3D.getDecomposition(scale, rotation, translation);
   G4Transform3D pureTransform3D = translation * rotation;
-  
-  //PrintTransform(transform3D);
-  //PrintTransform(pureTransform3D);
+
+  // PrintTransform(transform3D);
+  // PrintTransform(pureTransform3D);
 
   // check that scale correspond to fScale
   //
   CheckScale(scale);
-  
+
   //
-  // reflection IS NOT present in transform3D 
+  // reflection IS NOT present in transform3D
   //
 
   if (!IsReflection(scale))
   {
-    if (fVerboseLevel>0) { G4cout << "Scale positive" << G4endl; }
+    if (fVerboseLevel > 0)
+    {
+      G4cout << "Scale positive" << G4endl;
+    }
 
-    G4VPhysicalVolume* pv1
-      =  new G4PVPlacement(pureTransform3D, LV, name,
-                           motherLV, isMany, copyNo, surfCheck);
- 
+    G4VPhysicalVolume* pv1 =
+      new G4PVPlacement(pureTransform3D, LV, name, motherLV, isMany, copyNo, surfCheck);
+
     G4VPhysicalVolume* pv2 = nullptr;
     if (G4LogicalVolume* reflMotherLV = GetReflectedLV(motherLV))
     {
       // if mother was reflected
       // reflect this LV and place it in reflected mother
-      
-      pv2 = new G4PVPlacement(fScale * (pureTransform3D * fScale.inverse()),
-                              ReflectLV(LV, surfCheck), name, reflMotherLV,
-                              isMany, copyNo, surfCheck);
+
+      pv2 =
+        new G4PVPlacement(fScale * (pureTransform3D * fScale.inverse()), ReflectLV(LV, surfCheck),
+                          name, reflMotherLV, isMany, copyNo, surfCheck);
     }
-    
-    return {pv1, pv2};            
-  }         
-           
+
+    return {pv1, pv2};
+  }
+
   //
   //  reflection IS present in transform3D
   //
 
-  if (fVerboseLevel>0) { G4cout << "scale negative" << G4endl; }
+  if (fVerboseLevel > 0)
+  {
+    G4cout << "scale negative" << G4endl;
+  }
 
-  G4VPhysicalVolume* pv1
-    = new G4PVPlacement(pureTransform3D, ReflectLV(LV, surfCheck), name,
-                        motherLV, isMany, copyNo, surfCheck);
+  G4VPhysicalVolume* pv1 = new G4PVPlacement(pureTransform3D, ReflectLV(LV, surfCheck), name,
+                                             motherLV, isMany, copyNo, surfCheck);
 
   G4VPhysicalVolume* pv2 = nullptr;
   if (G4LogicalVolume* reflMotherLV = GetReflectedLV(motherLV))
   {
-
     // if mother was reflected
     // place the refLV consituent in reflected mother
 
-    pv2 =  new G4PVPlacement(fScale * (pureTransform3D * fScale.inverse()),
-                             LV, name, reflMotherLV, isMany, copyNo, surfCheck);
+    pv2 = new G4PVPlacement(fScale * (pureTransform3D * fScale.inverse()), LV, name, reflMotherLV,
+                            isMany, copyNo, surfCheck);
   }
 
   return {pv1, pv2};
-}           
-
+}
 
 //_____________________________________________________________________________
 
-G4PhysicalVolumesPair
-G4ReflectionFactory::Replicate(const G4String& name, 
-                                     G4LogicalVolume* LV,
-                                     G4LogicalVolume* motherLV,
-                                     EAxis axis, 
-                                     G4int nofReplicas, 
-                                     G4double width,
-                                     G4double offset)
+G4PhysicalVolumesPair G4ReflectionFactory::Replicate(const G4String& name, G4LogicalVolume* LV,
+                                                     G4LogicalVolume* motherLV, EAxis axis,
+                                                     G4int nofReplicas, G4double width,
+                                                     G4double offset)
 {
   // Creates replica in given mother.
   // The result is a pair of physical volumes;
@@ -208,38 +203,31 @@ G4ReflectionFactory::Replicate(const G4String& name,
   // - or nullptr if mother LV was not reflected.
   // ---
 
-  if (fVerboseLevel>0)
+  if (fVerboseLevel > 0)
   {
-    G4cout << "Replicate " << name << " lv " << LV << " " 
-           << LV->GetName() << G4endl;
-  }  
+    G4cout << "Replicate " << name << " lv " << LV << " " << LV->GetName() << G4endl;
+  }
 
-  G4VPhysicalVolume* pv1
-    = new G4PVReplica(name, LV, motherLV, axis, nofReplicas, width, offset);
- 
+  G4VPhysicalVolume* pv1 = new G4PVReplica(name, LV, motherLV, axis, nofReplicas, width, offset);
+
   G4VPhysicalVolume* pv2 = nullptr;
   if (G4LogicalVolume* reflMotherLV = GetReflectedLV(motherLV))
   {
     // if mother was reflected
     // reflect the LV and replicate it in reflected mother
-    
-    pv2 = new G4PVReplica(name, ReflectLV(LV), reflMotherLV, 
-                          axis, nofReplicas, width, offset); 
+
+    pv2 = new G4PVReplica(name, ReflectLV(LV), reflMotherLV, axis, nofReplicas, width, offset);
   }
-    
-  return {pv1, pv2};            
-}         
-        
+
+  return {pv1, pv2};
+}
+
 //_____________________________________________________________________________
 
-G4PhysicalVolumesPair
-G4ReflectionFactory::Divide(const G4String& name, 
-                                  G4LogicalVolume* LV,
-                                  G4LogicalVolume* motherLV,
-                                  EAxis axis, 
-                                  G4int nofDivisions, 
-                                  G4double width,
-                                  G4double offset)
+G4PhysicalVolumesPair G4ReflectionFactory::Divide(const G4String& name, G4LogicalVolume* LV,
+                                                  G4LogicalVolume* motherLV, EAxis axis,
+                                                  G4int nofDivisions, G4double width,
+                                                  G4double offset)
 {
   // Creates division in the given mother.
   // The result is a pair of physical volumes;
@@ -247,40 +235,34 @@ G4ReflectionFactory::Divide(const G4String& name,
   // or nullptr if mother LV was not reflected.
   // ---
 
-  if (fVerboseLevel>0)
+  if (fVerboseLevel > 0)
   {
-    G4cout << "Divide " << name << " lv " << LV << " " 
-           << LV->GetName() << G4endl;
-  }  
+    G4cout << "Divide " << name << " lv " << LV << " " << LV->GetName() << G4endl;
+  }
 
   G4VPVDivisionFactory* divisionFactory = GetPVDivisionFactory();
 
-  G4VPhysicalVolume* pv1 = divisionFactory
-      ->CreatePVDivision(name, LV, motherLV, axis, nofDivisions, width, offset);
- 
+  G4VPhysicalVolume* pv1 =
+    divisionFactory->CreatePVDivision(name, LV, motherLV, axis, nofDivisions, width, offset);
+
   G4VPhysicalVolume* pv2 = nullptr;
   if (G4LogicalVolume* reflMotherLV = GetReflectedLV(motherLV))
   {
     // if mother was reflected
     // reflect the LV and replicate it in reflected mother
-    
-    pv2 = divisionFactory->CreatePVDivision(name, ReflectLV(LV), reflMotherLV, 
-                                            axis, nofDivisions, width, offset); 
+
+    pv2 = divisionFactory->CreatePVDivision(name, ReflectLV(LV), reflMotherLV, axis, nofDivisions,
+                                            width, offset);
   }
-    
-  return {pv1, pv2};            
-}         
-        
-             
+
+  return {pv1, pv2};
+}
+
 //_____________________________________________________________________________
 
-G4PhysicalVolumesPair
-G4ReflectionFactory::Divide(const G4String& name, 
-                                  G4LogicalVolume* LV,
-                                  G4LogicalVolume* motherLV,
-                                  EAxis axis, 
-                                  G4int nofDivisions, 
-                                  G4double offset)
+G4PhysicalVolumesPair G4ReflectionFactory::Divide(const G4String& name, G4LogicalVolume* LV,
+                                                  G4LogicalVolume* motherLV, EAxis axis,
+                                                  G4int nofDivisions, G4double offset)
 {
   // Creates division in the given mother.
   // The result is a pair of physical volumes;
@@ -288,40 +270,34 @@ G4ReflectionFactory::Divide(const G4String& name,
   // or nullptr if mother LV was not reflected.
   // ---
 
-  if (fVerboseLevel>0)
+  if (fVerboseLevel > 0)
   {
-    G4cout << "Divide " << name << " lv " << LV << " " 
-           << LV->GetName() << G4endl;
-  }  
+    G4cout << "Divide " << name << " lv " << LV << " " << LV->GetName() << G4endl;
+  }
 
   G4VPVDivisionFactory* divisionFactory = GetPVDivisionFactory();
 
-  G4VPhysicalVolume* pv1 = divisionFactory
-      ->CreatePVDivision(name, LV, motherLV, axis, nofDivisions, offset);
- 
+  G4VPhysicalVolume* pv1 =
+    divisionFactory->CreatePVDivision(name, LV, motherLV, axis, nofDivisions, offset);
+
   G4VPhysicalVolume* pv2 = nullptr;
   if (G4LogicalVolume* reflMotherLV = GetReflectedLV(motherLV))
   {
     // if mother was reflected
     // reflect the LV and replicate it in reflected mother
-    
-    pv2 = divisionFactory->CreatePVDivision(name, ReflectLV(LV), reflMotherLV, 
-                                            axis, nofDivisions, offset); 
+
+    pv2 = divisionFactory->CreatePVDivision(name, ReflectLV(LV), reflMotherLV, axis, nofDivisions,
+                                            offset);
   }
-    
-  return {pv1, pv2};            
-}         
-        
-             
+
+  return {pv1, pv2};
+}
+
 //_____________________________________________________________________________
 
-G4PhysicalVolumesPair
-G4ReflectionFactory::Divide(const G4String& name, 
-                                  G4LogicalVolume* LV,
-                                  G4LogicalVolume* motherLV,
-                                  EAxis axis, 
-                                  G4double width,
-                                  G4double offset)
+G4PhysicalVolumesPair G4ReflectionFactory::Divide(const G4String& name, G4LogicalVolume* LV,
+                                                  G4LogicalVolume* motherLV, EAxis axis,
+                                                  G4double width, G4double offset)
 {
   // Creates division in the given mother.
   // The result is a pair of physical volumes;
@@ -329,39 +305,35 @@ G4ReflectionFactory::Divide(const G4String& name,
   // or nullptr if mother LV was not reflected.
   // ---
 
-  if (fVerboseLevel>0)
+  if (fVerboseLevel > 0)
   {
-    G4cout << "Divide " << name << " lv " << LV << " " 
-           << LV->GetName() << G4endl;
-  }  
+    G4cout << "Divide " << name << " lv " << LV << " " << LV->GetName() << G4endl;
+  }
 
   G4VPVDivisionFactory* divisionFactory = GetPVDivisionFactory();
 
-  G4VPhysicalVolume* pv1 = divisionFactory
-    -> CreatePVDivision(name, LV, motherLV, axis, width, offset);
- 
+  G4VPhysicalVolume* pv1 =
+    divisionFactory->CreatePVDivision(name, LV, motherLV, axis, width, offset);
+
   G4VPhysicalVolume* pv2 = nullptr;
   if (G4LogicalVolume* reflMotherLV = GetReflectedLV(motherLV))
   {
     // if mother was reflected
     // reflect the LV and replicate it in reflected mother
-    
-    pv2 = divisionFactory->CreatePVDivision(name, ReflectLV(LV), reflMotherLV, 
-                                            axis, width, offset); 
+
+    pv2 = divisionFactory->CreatePVDivision(name, ReflectLV(LV), reflMotherLV, axis, width, offset);
   }
-    
-  return {pv1, pv2};            
-}         
-        
-             
+
+  return {pv1, pv2};
+}
+
 //
 // private methods
 //
 
 //_____________________________________________________________________________
 
-G4LogicalVolume* G4ReflectionFactory::ReflectLV(G4LogicalVolume* LV,
-                                                G4bool surfCheck) 
+G4LogicalVolume* G4ReflectionFactory::ReflectLV(G4LogicalVolume* LV, G4bool surfCheck)
 {
   // Gets/creates the reflected solid and logical volume
   // and copies + transforms LV daughters.
@@ -371,12 +343,11 @@ G4LogicalVolume* G4ReflectionFactory::ReflectLV(G4LogicalVolume* LV,
 
   if (refLV == nullptr)
   {
-
     // create new (reflected) objects
     //
     refLV = CreateReflectedLV(LV);
-        
-    // process daughters  
+
+    // process daughters
     //
     ReflectDaughters(LV, refLV, surfCheck);
 
@@ -384,7 +355,7 @@ G4LogicalVolume* G4ReflectionFactory::ReflectLV(G4LogicalVolume* LV,
     //
     if (LV->IsRootRegion())
     {
-       LV->GetRegion()->AddRootLogicalVolume(refLV);
+      LV->GetRegion()->AddRootLogicalVolume(refLV);
     }
   }
 
@@ -393,7 +364,7 @@ G4LogicalVolume* G4ReflectionFactory::ReflectLV(G4LogicalVolume* LV,
 
 //_____________________________________________________________________________
 
-G4LogicalVolume* G4ReflectionFactory::CreateReflectedLV(G4LogicalVolume* LV) 
+G4LogicalVolume* G4ReflectionFactory::CreateReflectedLV(G4LogicalVolume* LV)
 {
   // Creates the reflected solid and logical volume
   // and add the logical volumes pair in the maps.
@@ -404,87 +375,79 @@ G4LogicalVolume* G4ReflectionFactory::CreateReflectedLV(G4LogicalVolume* LV)
   if (fReflectedLVMap.find(LV) != fReflectedLVMap.cend())
   {
     std::ostringstream message;
-    message << "Invalid reflection for volume: "
-           << LV->GetName() << G4endl
-           << "Cannot be applied to a volume already reflected !";
-    G4Exception("G4ReflectionFactory::CreateReflectedLV()",
-                "GeomVol0002", FatalException, message);
-  }        
-              
-  G4VSolid* refSolid 
-    = new G4ReflectedSolid(LV->GetSolid()->GetName() + fNameExtension,
-                           LV->GetSolid(), fScale);
-      
-  auto refLV
-    = new G4LogicalVolume(refSolid, 
-                          LV->GetMaterial(),                 
-                          LV->GetName() + fNameExtension,
-                          LV->GetFieldManager(),
-                          LV->GetSensitiveDetector(),
-                          LV->GetUserLimits());
+    message << "Invalid reflection for volume: " << LV->GetName() << G4endl
+            << "Cannot be applied to a volume already reflected !";
+    G4Exception("G4ReflectionFactory::CreateReflectedLV()", "GeomVol0002", FatalException, message);
+  }
 
-  if (LV->GetVisAttributes() != nullptr) {
+  G4VSolid* refSolid =
+    new G4ReflectedSolid(LV->GetSolid()->GetName() + fNameExtension, LV->GetSolid(), fScale);
+
+  auto refLV =
+    new G4LogicalVolume(refSolid, LV->GetMaterial(), LV->GetName() + fNameExtension,
+                        LV->GetFieldManager(), LV->GetSensitiveDetector(), LV->GetUserLimits());
+
+  if (LV->GetVisAttributes() != nullptr)
+  {
     refLV->SetVisAttributes(*LV->GetVisAttributes());  // vis-attributes
   }
-  refLV->SetBiasWeight(LV->GetBiasWeight());        // biasing weight
+  refLV->SetBiasWeight(LV->GetBiasWeight());  // biasing weight
   if (LV->IsRegion())
   {
-    refLV->SetRegion(LV->GetRegion());              // set a region in case
+    refLV->SetRegion(LV->GetRegion());  // set a region in case
   }
 
   fConstituentLVMap[LV] = refLV;
   fReflectedLVMap[refLV] = LV;
 
-  return refLV;        
+  return refLV;
 }
 
 //_____________________________________________________________________________
 
-void G4ReflectionFactory::ReflectDaughters(G4LogicalVolume* LV, 
-                                           G4LogicalVolume* refLV,
+void G4ReflectionFactory::ReflectDaughters(G4LogicalVolume* LV, G4LogicalVolume* refLV,
                                            G4bool surfCheck)
 {
   // Reflects daughters recursively.
   // ---
 
-  if (fVerboseLevel>0)
+  if (fVerboseLevel > 0)
   {
-    G4cout << "G4ReflectionFactory::ReflectDaughters(): " 
-           << LV->GetNoDaughters() << " of " << LV->GetName() << G4endl;
-  }     
+    G4cout << "G4ReflectionFactory::ReflectDaughters(): " << LV->GetNoDaughters() << " of "
+           << LV->GetName() << G4endl;
+  }
 
-  for (std::size_t i=0; i<LV->GetNoDaughters(); ++i)
+  for (std::size_t i = 0; i < LV->GetNoDaughters(); ++i)
   {
     G4VPhysicalVolume* dPV = LV->GetDaughter((G4int)i);
-    
+
     if (!dPV->IsReplicated())
     {
-      ReflectPVPlacement(dPV, refLV, surfCheck); 
-    }  
+      ReflectPVPlacement(dPV, refLV, surfCheck);
+    }
     else if (dPV->GetParameterisation() == nullptr)
     {
-      ReflectPVReplica(dPV, refLV); 
-    }  
-    else if ((G4VPVDivisionFactory::Instance() != nullptr) &&
-             G4VPVDivisionFactory::Instance()->IsPVDivision(dPV))
+      ReflectPVReplica(dPV, refLV);
+    }
+    else if ((G4VPVDivisionFactory::Instance() != nullptr)
+             && G4VPVDivisionFactory::Instance()->IsPVDivision(dPV))
     {
-      ReflectPVDivision(dPV, refLV); 
-    }  
+      ReflectPVDivision(dPV, refLV);
+    }
     else
     {
-      ReflectPVParameterised(dPV, refLV, surfCheck); 
+      ReflectPVParameterised(dPV, refLV, surfCheck);
     }
   }
 }
 
 //_____________________________________________________________________________
 
-void G4ReflectionFactory::ReflectPVPlacement(G4VPhysicalVolume* dPV, 
-                                             G4LogicalVolume* refLV,
+void G4ReflectionFactory::ReflectPVPlacement(G4VPhysicalVolume* dPV, G4LogicalVolume* refLV,
                                              G4bool surfCheck)
 {
   // Copies and transforms daughter of PVPlacement type of
-  // a constituent volume into a reflected volume. 
+  // a constituent volume into a reflected volume.
   // ---
 
   G4LogicalVolume* dLV = dPV->GetLogicalVolume();
@@ -495,53 +458,59 @@ void G4ReflectionFactory::ReflectPVPlacement(G4VPhysicalVolume* dPV,
   dt = fScale * (dt * fScale.inverse());
 
   G4LogicalVolume* refDLV;
-  
-  if (fVerboseLevel>0) { G4cout << "Daughter: " << dPV << "  " << dLV->GetName(); }
-  
+
+  if (fVerboseLevel > 0)
+  {
+    G4cout << "Daughter: " << dPV << "  " << dLV->GetName();
+  }
+
   if (!IsReflected(dLV))
   {
-
-    if (fVerboseLevel>0) { G4cout << " will be reflected." << G4endl; }
+    if (fVerboseLevel > 0)
+    {
+      G4cout << " will be reflected." << G4endl;
+    }
 
     // get reflected volume if already created
-    refDLV = GetReflectedLV(dLV); 
+    refDLV = GetReflectedLV(dLV);
 
     if (refDLV == nullptr)
     {
       // create new daughter solid and logical volume
       //
-      refDLV = CreateReflectedLV(dLV); 
-  
+      refDLV = CreateReflectedLV(dLV);
+
       // recursive call
       //
-      ReflectDaughters(dLV, refDLV, surfCheck);   
-    }  
+      ReflectDaughters(dLV, refDLV, surfCheck);
+    }
 
     // create new daughter physical volume
     // with updated transformation
 
-    new G4PVPlacement(dt, refDLV, dPV->GetName(), refLV, 
-                      dPV->IsMany(), dPV->GetCopyNo(), surfCheck); 
-
-  } 
+    new G4PVPlacement(dt, refDLV, dPV->GetName(), refLV, dPV->IsMany(), dPV->GetCopyNo(),
+                      surfCheck);
+  }
   else
   {
-    if (fVerboseLevel>0) { G4cout << " will be reconstitued." << G4endl; }
+    if (fVerboseLevel > 0)
+    {
+      G4cout << " will be reconstitued." << G4endl;
+    }
 
-    refDLV = GetConstituentLV(dLV); 
+    refDLV = GetConstituentLV(dLV);
 
-    new G4PVPlacement(dt, refDLV, dPV->GetName(), refLV, 
-                      dPV->IsMany(), dPV->GetCopyNo(), surfCheck); 
-  }       
-}    
+    new G4PVPlacement(dt, refDLV, dPV->GetName(), refLV, dPV->IsMany(), dPV->GetCopyNo(),
+                      surfCheck);
+  }
+}
 
 //_____________________________________________________________________________
 
-void G4ReflectionFactory::ReflectPVReplica(G4VPhysicalVolume* dPV, 
-                                           G4LogicalVolume* refLV)
+void G4ReflectionFactory::ReflectPVReplica(G4VPhysicalVolume* dPV, G4LogicalVolume* refLV)
 {
   // Copies and transforms daughter of PVReplica type of
-  // a constituent volume into a reflected volume. 
+  // a constituent volume into a reflected volume.
   // ---
 
   G4LogicalVolume* dLV = dPV->GetLogicalVolume();
@@ -557,51 +526,57 @@ void G4ReflectionFactory::ReflectPVReplica(G4VPhysicalVolume* dPV,
   dPV->GetReplicationData(axis, nofReplicas, width, offset, consuming);
 
   G4LogicalVolume* refDLV;
-  
-  if (fVerboseLevel>0) { G4cout << "Daughter: " << dPV << "  " << dLV->GetName(); }
-  
+
+  if (fVerboseLevel > 0)
+  {
+    G4cout << "Daughter: " << dPV << "  " << dLV->GetName();
+  }
+
   if (!IsReflected(dLV))
   {
-    if (fVerboseLevel>0) { G4cout << " will be reflected." << G4endl; }
+    if (fVerboseLevel > 0)
+    {
+      G4cout << " will be reflected." << G4endl;
+    }
 
     // get reflected volume if already created
     //
-    refDLV = GetReflectedLV(dLV); 
+    refDLV = GetReflectedLV(dLV);
 
     if (refDLV == nullptr)
     {
       // create new daughter solid and logical volume
       //
-      refDLV = CreateReflectedLV(dLV); 
-  
+      refDLV = CreateReflectedLV(dLV);
+
       // recursive call
       //
-      ReflectDaughters(dLV, refDLV); 
-    }     
-        
+      ReflectDaughters(dLV, refDLV);
+    }
+
     // create new daughter replica
     //
-    new G4PVReplica(dPV->GetName(), refDLV, refLV, 
-                    axis, nofReplicas, width, offset);
+    new G4PVReplica(dPV->GetName(), refDLV, refLV, axis, nofReplicas, width, offset);
   }
   else
   {
-    if (fVerboseLevel>0) { G4cout << " will be reconstitued." << G4endl; }
+    if (fVerboseLevel > 0)
+    {
+      G4cout << " will be reconstitued." << G4endl;
+    }
 
-    refDLV = GetConstituentLV(dLV); 
+    refDLV = GetConstituentLV(dLV);
 
-    new G4PVReplica(dPV->GetName(), refDLV, refLV, 
-                    axis, nofReplicas, width, offset); 
-  }       
+    new G4PVReplica(dPV->GetName(), refDLV, refLV, axis, nofReplicas, width, offset);
+  }
 }
 
 //_____________________________________________________________________________
 
-void G4ReflectionFactory::ReflectPVDivision(G4VPhysicalVolume* dPV, 
-                                            G4LogicalVolume* refLV)
+void G4ReflectionFactory::ReflectPVDivision(G4VPhysicalVolume* dPV, G4LogicalVolume* refLV)
 {
   // Copies and transforms daughter of PVDivision type of
-  // a constituent volume into a reflected volume. 
+  // a constituent volume into a reflected volume.
   // ---
 
   G4VPVDivisionFactory* divisionFactory = GetPVDivisionFactory();
@@ -613,90 +588,102 @@ void G4ReflectionFactory::ReflectPVDivision(G4VPhysicalVolume* dPV,
   G4VPVParameterisation* param = dPV->GetParameterisation();
 
   G4LogicalVolume* refDLV;
-  
-  if (fVerboseLevel>0) { G4cout << "Daughter: " << dPV << "  " << dLV->GetName(); }
-  
+
+  if (fVerboseLevel > 0)
+  {
+    G4cout << "Daughter: " << dPV << "  " << dLV->GetName();
+  }
+
   if (!IsReflected(dLV))
   {
-    if (fVerboseLevel>0) { G4cout << " will be reflected." << G4endl; }
+    if (fVerboseLevel > 0)
+    {
+      G4cout << " will be reflected." << G4endl;
+    }
 
     // get reflected volume if already created
     //
-    refDLV = GetReflectedLV(dLV); 
+    refDLV = GetReflectedLV(dLV);
 
     if (refDLV == nullptr)
     {
       // create new daughter solid and logical volume
       //
-      refDLV = CreateReflectedLV(dLV); 
-  
+      refDLV = CreateReflectedLV(dLV);
+
       // recursive call
       //
-      ReflectDaughters(dLV, refDLV); 
-    }     
-        
+      ReflectDaughters(dLV, refDLV);
+    }
+
     // create new daughter replica
     //
     divisionFactory->CreatePVDivision(dPV->GetName(), refDLV, refLV, param);
   }
   else
   {
-    if (fVerboseLevel>0) { G4cout << " will be reconstitued." << G4endl; }
+    if (fVerboseLevel > 0)
+    {
+      G4cout << " will be reconstitued." << G4endl;
+    }
 
-    refDLV = GetConstituentLV(dLV); 
+    refDLV = GetConstituentLV(dLV);
 
-    divisionFactory->CreatePVDivision(dPV->GetName(), refDLV, refLV, param); 
-  }       
+    divisionFactory->CreatePVDivision(dPV->GetName(), refDLV, refLV, param);
+  }
 }
 
 //_____________________________________________________________________________
 
-void G4ReflectionFactory::ReflectPVParameterised(G4VPhysicalVolume* dPV, 
-                                                 G4LogicalVolume*, G4bool)
+void G4ReflectionFactory::ReflectPVParameterised(G4VPhysicalVolume* dPV, G4LogicalVolume*, G4bool)
 {
   // Not implemented.
   // Should copy and transform daughter of G4PVParameterised type of
-  // a constituent volume into a reflected volume. 
+  // a constituent volume into a reflected volume.
   // ---
 
   std::ostringstream message;
   message << "Not yet implemented. Volume: " << dPV->GetName() << G4endl
           << "Reflection of parameterised volumes is not yet implemented.";
-  G4Exception("G4ReflectionFactory::ReflectPVParameterised()",
-              "GeomVol0001", FatalException, message);
+  G4Exception("G4ReflectionFactory::ReflectPVParameterised()", "GeomVol0001", FatalException,
+              message);
 }
 
 //_____________________________________________________________________________
 
-G4LogicalVolume*
-G4ReflectionFactory::GetConstituentLV(G4LogicalVolume* reflLV) const
-{              
+G4LogicalVolume* G4ReflectionFactory::GetConstituentLV(G4LogicalVolume* reflLV) const
+{
   // Returns the consituent volume of the given reflected volume,
   // nullptr if the given reflected volume was not found.
   // ---
 
   auto it = fReflectedLVMap.find(reflLV);
 
-  if (it == fReflectedLVMap.cend()) { return nullptr; }
+  if (it == fReflectedLVMap.cend())
+  {
+    return nullptr;
+  }
 
   return (*it).second;
-}        
+}
 
 //_____________________________________________________________________________
 
-G4LogicalVolume*
-G4ReflectionFactory::GetReflectedLV(G4LogicalVolume* lv) const
-{              
+G4LogicalVolume* G4ReflectionFactory::GetReflectedLV(G4LogicalVolume* lv) const
+{
   // Returns the reflected volume of the given consituent volume,
   // nullptr if the given volume was not reflected.
   // ---
 
   auto it = fConstituentLVMap.find(lv);
 
-  if (it == fConstituentLVMap.cend()) { return nullptr; }
+  if (it == fConstituentLVMap.cend())
+  {
+    return nullptr;
+  }
 
   return (*it).second;
-}        
+}
 
 //_____________________________________________________________________________
 
@@ -707,7 +694,7 @@ G4bool G4ReflectionFactory::IsConstituent(G4LogicalVolume* lv) const
   // ---
 
   return (fConstituentLVMap.find(lv) != fConstituentLVMap.cend());
-}  
+}
 
 //_____________________________________________________________________________
 
@@ -718,7 +705,7 @@ G4bool G4ReflectionFactory::IsReflected(G4LogicalVolume* lv) const
   // ---
 
   return (fReflectedLVMap.find(lv) != fReflectedLVMap.cend());
-}  
+}
 
 //_____________________________________________________________________________
 
@@ -727,13 +714,12 @@ G4bool G4ReflectionFactory::IsReflection(const G4Scale3D& scale) const
   // Returns true if the scale is negative, false otherwise.
   // ---
 
-  return scale(0,0)*scale(1,1)*scale(2,2) < 0.;  
+  return scale(0, 0) * scale(1, 1) * scale(2, 2) < 0.;
 }
 
 //_____________________________________________________________________________
 
-const G4ReflectedVolumesMap&
-G4ReflectionFactory::GetReflectedVolumesMap() const
+const G4ReflectedVolumesMap& G4ReflectionFactory::GetReflectedVolumesMap() const
 {
   return fReflectedLVMap;
 }
@@ -753,12 +739,12 @@ void G4ReflectionFactory::PrintConstituentLVMap() const
   // temporary - for debugging purpose
   // ---
 
-  for (const auto & it : fConstituentLVMap)
+  for (const auto& it : fConstituentLVMap)
   {
     G4cout << "lv: " << it.first << "  lv_refl: " << it.second << G4endl;
   }
   G4cout << G4endl;
-}  
+}
 
 //_____________________________________________________________________________
 
@@ -768,55 +754,51 @@ void G4ReflectionFactory::CheckScale(const G4Scale3D& scale) const
   // if not give exception.
   // ---
 
-  if (!IsReflection(scale)) { return;
-}
-  
-  G4double diff = 0.;
-  for (auto i=0; i<4; ++i)
+  if (!IsReflection(scale))
   {
-    for (auto j=0; j<4; ++j)
-    { 
-      diff += std::abs(scale(i,j) - fScale(i,j));  
+    return;
+  }
+
+  G4double diff = 0.;
+  for (auto i = 0; i < 4; ++i)
+  {
+    for (auto j = 0; j < 4; ++j)
+    {
+      diff += std::abs(scale(i, j) - fScale(i, j));
     }
   }
 
   if (diff > fScalePrecision)
   {
     std::ostringstream message;
-    message << "Unexpected scale in input !" << G4endl
-            << "        Difference: " << diff;
-    G4Exception("G4ReflectionFactory::CheckScale()",
-                "GeomVol0002", FatalException, message);
+    message << "Unexpected scale in input !" << G4endl << "        Difference: " << diff;
+    G4Exception("G4ReflectionFactory::CheckScale()", "GeomVol0002", FatalException, message);
   }
-}    
+}
 
 //_____________________________________________________________________________
 
 G4VPVDivisionFactory* G4ReflectionFactory::GetPVDivisionFactory() const
 {
   // Returns the G4PVDivisionFactory instance if it exists,
-  // otherwise gives exception 
+  // otherwise gives exception
   // ---
 
   G4VPVDivisionFactory* divisionFactory = G4VPVDivisionFactory::Instance();
   if (divisionFactory == nullptr)
   {
     std::ostringstream message;
-    message << "A concrete G4PVDivisionFactory instantiated is required !"
-            << G4endl
-            << "        It has been requested to reflect divided volumes."
-            << G4endl
-            << "        In this case, it is required to instantiate a concrete"
-            << G4endl
-            << "        factory G4PVDivisionFactory in your program -before-"
-            << G4endl
+    message << "A concrete G4PVDivisionFactory instantiated is required !" << G4endl
+            << "        It has been requested to reflect divided volumes." << G4endl
+            << "        In this case, it is required to instantiate a concrete" << G4endl
+            << "        factory G4PVDivisionFactory in your program -before-" << G4endl
             << "        executing the reflection !";
-     G4Exception("G4ReflectionFactory::GetPVDivisionFactory()",
-                 "GeomVol0002", FatalException, message);
+    G4Exception("G4ReflectionFactory::GetPVDivisionFactory()", "GeomVol0002", FatalException,
+                message);
   }
-  
+
   return divisionFactory;
-}  
+}
 
 //_____________________________________________________________________________
 
@@ -838,7 +820,7 @@ void G4ReflectionFactory::SetVerboseLevel(G4int verboseLevel)
 {
   fVerboseLevel = verboseLevel;
 }
-          
+
 //_____________________________________________________________________________
 
 G4int G4ReflectionFactory::GetVerboseLevel() const
@@ -852,7 +834,7 @@ void G4ReflectionFactory::SetVolumesNameExtension(const G4String& nameExtension)
 {
   fNameExtension = nameExtension;
 }
-          
+
 //_____________________________________________________________________________
 
 const G4String& G4ReflectionFactory::GetVolumesNameExtension() const

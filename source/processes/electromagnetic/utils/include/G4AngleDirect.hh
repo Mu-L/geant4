@@ -30,23 +30,23 @@
 //
 // File name:     G4AngleDirect
 //
-// Author:        V. Ivanchenko 
-// 
+// Author:        V. Ivanchenko
+//
 // Creation date: 03 October 2013
 //
-// Modifications: 
+// Modifications:
 //
-// Class Description: 
+// Class Description:
 //
 // Secondary particle has the same direction as a primary
 //
-// Class Description: End 
+// Class Description: End
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4AngleDirect_h
-#define G4AngleDirect_h 1
+#ifndef G4ANGLEDIRECT_HH
+#define G4ANGLEDIRECT_HH
 
 #include "G4VEmAngularDistribution.hh"
 
@@ -54,24 +54,21 @@ class G4Material;
 
 class G4AngleDirect : public G4VEmAngularDistribution
 {
-public:
+  public:
 
-  G4AngleDirect();
+    G4AngleDirect();
 
-  ~G4AngleDirect() override;
+    ~G4AngleDirect() override;
 
-  // Sample direction in global coordinate system,
-  // this means for zero scattering angle this direction is the same
-  // as the direction of primary 
-  G4ThreeVector& SampleDirection(const G4DynamicParticle* dp,
-                                 G4double, G4int, 
-                                 const G4Material*) override;
+    // Sample direction in global coordinate system,
+    // this means for zero scattering angle this direction is the same
+    // as the direction of primary
+    G4ThreeVector& SampleDirection(const G4DynamicParticle* dp, G4double, G4int,
+                                   const G4Material*) override;
 
-  // hide assignment operator 
-  G4AngleDirect & operator=(const  G4AngleDirect &right) = delete;
-  G4AngleDirect(const  G4AngleDirect&) = delete;
-
+    // hide assignment operator
+    G4AngleDirect& operator=(const G4AngleDirect& right) = delete;
+    G4AngleDirect(const G4AngleDirect&) = delete;
 };
 
 #endif
-

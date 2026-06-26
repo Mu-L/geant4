@@ -31,104 +31,104 @@
 #include "G4LEPTSDistribution.hh"
 
 #include <stdio.h>
-#include <iostream> 
+
+#include <iostream>
 
 void G4LEPTSDistribution::ReadFile(const G4String& fileName)
 {
   G4int eB, out, out2;
-  G4float  float_data1,float_data2;
+  G4float float_data1, float_data2;
   G4double sum, esum;
-  FILE * fp;
+  FILE* fp;
 
-  for (eB=0; eB<10000; ++eB)
+  for (eB = 0; eB < 10000; ++eB)
   {
-    E[eB]=0.0;
-    f[eB]=0.0;
-    F[eB]=0.0;
-    eF[eB]=0.0;
+    E[eB] = 0.0;
+    f[eB] = 0.0;
+    F[eB] = 0.0;
+    eF[eB] = 0.0;
   }
 
-  if ((fp=fopen(fileName.c_str(), "r"))==nullptr)
+  if ((fp = fopen(fileName.c_str(), "r")) == nullptr)
   {
     NoBins = 0;
     bFileFound = false;
     return;
   }
-  
+
   bFileFound = true;
 
-  out=1;
-  eB=1;
-  while (out==1)
+  out = 1;
+  eB = 1;
+  while (out == 1)
   {
-    out  = fscanf(fp,"%f \n",&float_data1);
-    out2 = fscanf(fp,"%f \n",&float_data2);
-    if (out==1 && out2==1)
+    out = fscanf(fp, "%f \n", &float_data1);
+    out2 = fscanf(fp, "%f \n", &float_data2);
+    if (out == 1 && out2 == 1)
     {
-      E[eB]=(G4double)float_data1;
-      f[eB]=(G4double)float_data2;
+      E[eB] = (G4double)float_data1;
+      f[eB] = (G4double)float_data2;
       ++eB;
     }
   }
 
   fclose(fp);
 
-  NoBins=eB-1;  //=1272+1 or 9607+1;
+  NoBins = eB - 1;  //=1272+1 or 9607+1;
 
-  if( NoBins >= NMAX )
+  if (NoBins >= NMAX)
   {
     std::ostringstream message;
     message << "ERROR !!!!  Eloss NoBins = " << NoBins;
-    G4Exception("G4LEPTSDistribution::ReadFile()", "ReadError",
-                FatalException, message);	
+    G4Exception("G4LEPTSDistribution::ReadFile()", "ReadError", FatalException, message);
   }
 
-  sum=0.0;
-  esum=0.0;
-  for (eB=0; eB<=NoBins; ++eB)
+  sum = 0.0;
+  esum = 0.0;
+  for (eB = 0; eB <= NoBins; ++eB)
   {
-    if( f[eB] > 0)
+    if (f[eB] > 0)
     {
-      sum+=f[eB];
-      esum+=E[eB]*f[eB];
+      sum += f[eB];
+      esum += E[eB] * f[eB];
     }
-    F[eB]=sum;
-    eF[eB]=esum;
+    F[eB] = sum;
+    eF[eB] = esum;
   }
 
-  for (eB=0; eB<=NoBins; ++eB)
+  for (eB = 0; eB <= NoBins; ++eB)
   {
-    eF[eB] = eF[eB]/F[eB];
-    F[eB] = F[eB]/F[NoBins];
+    eF[eB] = eF[eB] / F[eB];
+    F[eB] = F[eB] / F[NoBins];
   }
 }
 
-G4bool G4LEPTSDistribution::ReadFile( FILE* fp, G4int nData ) 
+G4bool G4LEPTSDistribution::ReadFile(FILE* fp, G4int nData)
 {
-
   G4int eB, out, out2;
-  G4float  float_data1,float_data2;
+  G4float float_data1, float_data2;
   G4double sum, esum;
 
-  for (eB=0; eB<10000; ++eB)
+  for (eB = 0; eB < 10000; ++eB)
   {
-    E[eB]=0.0;
-    f[eB]=0.0;
-    F[eB]=0.0;
-    eF[eB]=0.0;
+    E[eB] = 0.0;
+    f[eB] = 0.0;
+    F[eB] = 0.0;
+    eF[eB] = 0.0;
   }
 
   bFileFound = true;
-  out=1;
-  eB=1;
+  out = 1;
+  eB = 1;
 
-  for( G4int id = 0; id < nData; ++id )
-  {	  
-    out  = fscanf(fp,"%f \n",&float_data1);
-    out2 = fscanf(fp,"%f \n",&float_data2);
-    if (out==1 && out2==1){
-      E[eB]=(G4double)float_data1;
-      f[eB]=(G4double)float_data2;
+  for (G4int id = 0; id < nData; ++id)
+  {
+    out = fscanf(fp, "%f \n", &float_data1);
+    out2 = fscanf(fp, "%f \n", &float_data2);
+    if (out == 1 && out2 == 1)
+    {
+      E[eB] = (G4double)float_data1;
+      f[eB] = (G4double)float_data2;
       ++eB;
     }
     else
@@ -136,79 +136,89 @@ G4bool G4LEPTSDistribution::ReadFile( FILE* fp, G4int nData )
       return true;
     }
   }
-    
-  NoBins=eB-1;  //=1272+1 or 9607+1;
 
-  if( NoBins >= NMAX )
+  NoBins = eB - 1;  //=1272+1 or 9607+1;
+
+  if (NoBins >= NMAX)
   {
     std::ostringstream message;
     message << "ERROR !!!!  Eloss NoBins = " << NoBins;
-    G4Exception("G4LEPTSDistribution::ReadFile()", "ReadError",
-                FatalException, message);	
+    G4Exception("G4LEPTSDistribution::ReadFile()", "ReadError", FatalException, message);
   }
 
-  sum=0.0;
-  esum=0.0;
-  for (eB=0; eB<=NoBins; ++eB)
+  sum = 0.0;
+  esum = 0.0;
+  for (eB = 0; eB <= NoBins; ++eB)
   {
-    if( f[eB] > 0)
+    if (f[eB] > 0)
     {
-      sum+=f[eB];
-      esum+=E[eB]*f[eB];
+      sum += f[eB];
+      esum += E[eB] * f[eB];
     }
-    F[eB]=sum;
-    eF[eB]=esum;
+    F[eB] = sum;
+    eF[eB] = esum;
   }
-  
-  for (eB=0; eB<=NoBins; ++eB)
+
+  for (eB = 0; eB <= NoBins; ++eB)
   {
-    eF[eB] = eF[eB]/F[eB];
-    F[eB] = F[eB]/F[NoBins];
+    eF[eB] = eF[eB] / F[eB];
+    F[eB] = F[eB] / F[NoBins];
   }
 
   return false;
 }
 
-G4double G4LEPTSDistribution::Sample( G4double eMin, G4double eMax )
+G4double G4LEPTSDistribution::Sample(G4double eMin, G4double eMax)
 {
   // Sample Energy from Cumulative distr. G4interval [eMin, eMax]
 
-  if( eMin > eMax) return 0.0;
+  if (eMin > eMax) return 0.0;
 
-  G4int i,j,k=0, iMin, iMax;
+  G4int i, j, k = 0, iMin, iMax;
 
-  i=0; j=NoBins;
-  while ((j-i)>1)
+  i = 0;
+  j = NoBins;
+  while ((j - i) > 1)
   {
-    k=(i+j)/2;
-    if( E[k] < eMax ) i=k;
-    else              j=k;
+    k = (i + j) / 2;
+    if (E[k] < eMax)
+      i = k;
+    else
+      j = k;
   }
   iMax = i;
 
-  i=0; j=NoBins;
-  while ((j-i)>1)
+  i = 0;
+  j = NoBins;
+  while ((j - i) > 1)
   {
-    k=(i+j)/2;
-    if( E[k] < eMin ) i=k;
-    else              j=k;
+    k = (i + j) / 2;
+    if (E[k] < eMin)
+      i = k;
+    else
+      j = k;
   }
   iMin = i;
 
   G4double rnd = F[iMin] + (F[iMax] - F[iMin]) * G4UniformRand();
 
-  i=0; j=NoBins;
-  while ((j-i)>1)
+  i = 0;
+  j = NoBins;
+  while ((j - i) > 1)
   {
-    k=(i+j)/2;
-    if( F[k]<rnd) i=k;
-    else          j=k;
+    k = (i + j) / 2;
+    if (F[k] < rnd)
+      i = k;
+    else
+      j = k;
   }
 
   G4double Sampled = E[k];
 
-  if(      Sampled < eMin) Sampled = eMin;
-  else if( Sampled > eMax) Sampled = eMax;
+  if (Sampled < eMin)
+    Sampled = eMin;
+  else if (Sampled > eMax)
+    Sampled = eMax;
 
   return Sampled;
 }

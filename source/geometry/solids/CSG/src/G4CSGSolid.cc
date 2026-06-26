@@ -28,17 +28,17 @@
 // 27.03.98 J.Apostolakis - First version.
 // --------------------------------------------------------------------
 
-#include <cmath>
-
 #include "G4CSGSolid.hh"
-#include "G4QuickRand.hh"
-#include "G4Polyhedron.hh"
 
 #include "G4AutoLock.hh"
+#include "G4Polyhedron.hh"
+#include "G4QuickRand.hh"
+
+#include <cmath>
 
 namespace
 {
-  G4Mutex polyhedronMutex = G4MUTEX_INITIALIZER;
+G4Mutex polyhedronMutex = G4MUTEX_INITIALIZER;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -46,20 +46,14 @@ namespace
 // Constructor
 //  - Base class constructor
 
-G4CSGSolid::G4CSGSolid(const G4String& name) :
-  G4VSolid(name)
-{
-}
+G4CSGSolid::G4CSGSolid(const G4String& name) : G4VSolid(name) {}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Fake default constructor - sets only member data and allocates memory
 //                            for usage restricted to object persistency.
 
-G4CSGSolid::G4CSGSolid( __void__& a )
-  : G4VSolid(a)
-{
-}
+G4CSGSolid::G4CSGSolid(__void__& a) : G4VSolid(a) {}
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -68,7 +62,8 @@ G4CSGSolid::G4CSGSolid( __void__& a )
 
 G4CSGSolid::~G4CSGSolid()
 {
-  delete fpPolyhedron; fpPolyhedron = nullptr;
+  delete fpPolyhedron;
+  fpPolyhedron = nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -77,40 +72,41 @@ G4CSGSolid::~G4CSGSolid()
 //
 
 G4CSGSolid::G4CSGSolid(const G4CSGSolid& rhs)
-  : G4VSolid(rhs), fCubicVolume(rhs.fCubicVolume),
-    fSurfaceArea(rhs.fSurfaceArea)
-{
-}
+  : G4VSolid(rhs), fCubicVolume(rhs.fCubicVolume), fSurfaceArea(rhs.fSurfaceArea)
+{}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Assignment operator
 
-G4CSGSolid& G4CSGSolid::operator = (const G4CSGSolid& rhs)
+G4CSGSolid& G4CSGSolid::operator=(const G4CSGSolid& rhs)
 {
-   // Check assignment to self
-   //
-   if (this == &rhs)  { return *this; }
+  // Check assignment to self
+  //
+  if (this == &rhs)
+  {
+    return *this;
+  }
 
-   // Copy base class data
-   //
-   G4VSolid::operator=(rhs);
+  // Copy base class data
+  //
+  G4VSolid::operator=(rhs);
 
-   // Copy data
-   //
-   fCubicVolume = rhs.fCubicVolume;
-   fSurfaceArea = rhs.fSurfaceArea;
-   fRebuildPolyhedron = false;
-   delete fpPolyhedron; fpPolyhedron = nullptr;
+  // Copy data
+  //
+  fCubicVolume = rhs.fCubicVolume;
+  fSurfaceArea = rhs.fSurfaceArea;
+  fRebuildPolyhedron = false;
+  delete fpPolyhedron;
+  fpPolyhedron = nullptr;
 
-   return *this;
+  return *this;
 }
 
 G4double G4CSGSolid::GetRadiusInRing(G4double rmin, G4double rmax) const
 {
   G4double k = G4QuickRand();
-  return (rmin <= 0) ? rmax*std::sqrt(k)
-                     : std::sqrt(k*rmax*rmax + (1. - k)*rmin*rmin);
+  return (rmin <= 0) ? rmax * std::sqrt(k) : std::sqrt(k * rmax * rmax + (1. - k) * rmin * rmin);
 }
 
 std::ostream& G4CSGSolid::StreamInfo(std::ostream& os) const
@@ -126,18 +122,17 @@ std::ostream& G4CSGSolid::StreamInfo(std::ostream& os) const
   return os;
 }
 
-G4Polyhedron* G4CSGSolid::GetPolyhedron () const
+G4Polyhedron* G4CSGSolid::GetPolyhedron() const
 {
-  if (fpPolyhedron == nullptr ||
-      fRebuildPolyhedron ||
-      fpPolyhedron->GetNumberOfRotationStepsAtTimeOfCreation() !=
-      fpPolyhedron->GetNumberOfRotationSteps())
-    {
-      G4AutoLock l(&polyhedronMutex);
-      delete fpPolyhedron;
-      fpPolyhedron = CreatePolyhedron();
-      fRebuildPolyhedron = false;
-      l.unlock();
-    }
+  if (fpPolyhedron == nullptr || fRebuildPolyhedron
+      || fpPolyhedron->GetNumberOfRotationStepsAtTimeOfCreation()
+           != fpPolyhedron->GetNumberOfRotationSteps())
+  {
+    G4AutoLock l(&polyhedronMutex);
+    delete fpPolyhedron;
+    fpPolyhedron = CreatePolyhedron();
+    fRebuildPolyhedron = false;
+    l.unlock();
+  }
   return fpPolyhedron;
 }

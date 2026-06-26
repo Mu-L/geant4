@@ -29,79 +29,86 @@
 // by V. Lara
 
 #include "G4StatMFMacroBiNucleon.hh"
-#include "G4StatMFParameters.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4Log.hh"
+
 #include "G4Exp.hh"
+#include "G4Log.hh"
+#include "G4PhysicalConstants.hh"
 #include "G4Pow.hh"
+#include "G4StatMFParameters.hh"
+#include "G4SystemOfUnits.hh"
 
 // Operators
 
 static const G4double degeneracy = 3.0;
 
-G4StatMFMacroBiNucleon & G4StatMFMacroBiNucleon::
-operator=(const G4StatMFMacroBiNucleon & )
+G4StatMFMacroBiNucleon& G4StatMFMacroBiNucleon::operator=(const G4StatMFMacroBiNucleon&)
 {
-    throw G4HadronicException(__FILE__, __LINE__, "G4StatMFMacroBiNucleon::operator= meant to not be accessible");
-    return *this;
+  throw G4HadronicException(__FILE__, __LINE__,
+                            "G4StatMFMacroBiNucleon::operator= meant to not be accessible");
+  return *this;
 }
 
-G4bool G4StatMFMacroBiNucleon::operator==(const G4StatMFMacroBiNucleon & ) const
+G4bool G4StatMFMacroBiNucleon::operator==(const G4StatMFMacroBiNucleon&) const
 {
-    throw G4HadronicException(__FILE__, __LINE__, "G4StatMFMacroBiNucleon::operator== meant to not be accessible");
-    return false;
-}
- 
-
-G4bool G4StatMFMacroBiNucleon::operator!=(const G4StatMFMacroBiNucleon & ) const
-{
-    throw G4HadronicException(__FILE__, __LINE__, "G4StatMFMacroBiNucleon::operator!= meant to not be accessible");
-    return true;
+  throw G4HadronicException(__FILE__, __LINE__,
+                            "G4StatMFMacroBiNucleon::operator== meant to not be accessible");
+  return false;
 }
 
-G4double G4StatMFMacroBiNucleon::CalcMeanMultiplicity(const G4double FreeVol, 
-						      const G4double mu, 
-						      const G4double nu, 
-						      const G4double T)
+G4bool G4StatMFMacroBiNucleon::operator!=(const G4StatMFMacroBiNucleon&) const
 {
-  G4double ThermalWaveLenght = 16.15*fermi/std::sqrt(T);
-  G4double lambda3 = ThermalWaveLenght*ThermalWaveLenght*ThermalWaveLenght;
-    
-  const G4double BindingE = G4NucleiProperties::GetBindingEnergy(theA,1); 
-  //old value was 2.796*MeV
-  G4double exponent = (BindingE + theA*(mu+nu*theZARatio) - 
-		       G4StatMFParameters::GetCoulomb()*theZARatio*theZARatio*theA
-		       *G4Pow::GetInstance()->Z23(theA))/T;
+  throw G4HadronicException(__FILE__, __LINE__,
+                            "G4StatMFMacroBiNucleon::operator!= meant to not be accessible");
+  return true;
+}
+
+G4double G4StatMFMacroBiNucleon::CalcMeanMultiplicity(const G4double FreeVol, const G4double mu,
+                                                      const G4double nu, const G4double T)
+{
+  G4double ThermalWaveLenght = 16.15 * fermi / std::sqrt(T);
+  G4double lambda3 = ThermalWaveLenght * ThermalWaveLenght * ThermalWaveLenght;
+
+  const G4double BindingE = G4NucleiProperties::GetBindingEnergy(theA, 1);
+  // old value was 2.796*MeV
+  G4double exponent = (BindingE + theA * (mu + nu * theZARatio)
+                       - G4StatMFParameters::GetCoulomb() * theZARatio * theZARatio * theA
+                           * G4Pow::GetInstance()->Z23(theA))
+                      / T;
 
   // To avoid numerical problems
-  if (exponent < -300.0) exponent = -300.0;
-  else if (exponent > 300.0) exponent = 300.0;
+  if (exponent < -300.0)
+    exponent = -300.0;
+  else if (exponent > 300.0)
+    exponent = 300.0;
 
-  _MeanMultiplicity = (degeneracy*FreeVol*theA*std::sqrt((G4double)theA)/lambda3)*
-    G4Exp(exponent);
-			 
+  _MeanMultiplicity =
+    (degeneracy * FreeVol * theA * std::sqrt((G4double)theA) / lambda3) * G4Exp(exponent);
+
   return _MeanMultiplicity;
 }
 
 G4double G4StatMFMacroBiNucleon::CalcEnergy(const G4double T)
 {
-  _Energy  = -G4NucleiProperties::GetBindingEnergy(theA,1) + 
-    G4StatMFParameters::GetCoulomb() * theZARatio * theZARatio 
-    * theA*G4Pow::GetInstance()->Z23(theA) + 1.5*T;
-							
-  return _Energy;				
+  _Energy = -G4NucleiProperties::GetBindingEnergy(theA, 1)
+            + G4StatMFParameters::GetCoulomb() * theZARatio * theZARatio * theA
+                * G4Pow::GetInstance()->Z23(theA)
+            + 1.5 * T;
+
+  return _Energy;
 }
 
 G4double G4StatMFMacroBiNucleon::CalcEntropy(const G4double T, const G4double FreeVol)
 {
   G4double Entropy = 0.0;
-  if (_MeanMultiplicity > 0.0) {
-    G4double ThermalWaveLenght = 16.15*fermi/std::sqrt(T);
-    G4double lambda3 = ThermalWaveLenght*ThermalWaveLenght*ThermalWaveLenght;
+  if (_MeanMultiplicity > 0.0)
+  {
+    G4double ThermalWaveLenght = 16.15 * fermi / std::sqrt(T);
+    G4double lambda3 = ThermalWaveLenght * ThermalWaveLenght * ThermalWaveLenght;
     // Is this formula correct?
-    Entropy = _MeanMultiplicity*(2.5+G4Log(3.0*theA*std::sqrt((G4double)theA)*FreeVol
-					     /(lambda3*_MeanMultiplicity)));
+    Entropy =
+      _MeanMultiplicity
+      * (2.5
+         + G4Log(3.0 * theA * std::sqrt((G4double)theA) * FreeVol / (lambda3 * _MeanMultiplicity)));
   }
   return Entropy;
 }

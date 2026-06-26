@@ -42,43 +42,29 @@
 // -------------------------------------------------------------------
 
 #ifndef G4VDATASETALGORITHM_HH
-#define G4VDATASETALGORITHM_HH 1
+#define G4VDATASETALGORITHM_HH
 
-#include "globals.hh"
 #include "G4DataVector.hh"
+#include "globals.hh"
 
-class G4VDataSetAlgorithm {
- 
-public:
-  explicit G4VDataSetAlgorithm() { }
-  virtual ~G4VDataSetAlgorithm() { }
- 
-  virtual G4double Calculate(G4double point, G4int bin, 
-			     const G4DataVector& energies, 
-			     const G4DataVector& data) const = 0;
+class G4VDataSetAlgorithm
+{
+  public:
 
-  virtual G4double Calculate(G4double point, G4int bin,
-                     	     const G4DataVector& energies,
-                             const G4DataVector& data, 
-		             const G4DataVector& log_energies, 
-		             const G4DataVector& log_data) const = 0;
+    explicit G4VDataSetAlgorithm() {}
+    virtual ~G4VDataSetAlgorithm() {}
 
-  virtual G4VDataSetAlgorithm* Clone() const = 0;
+    virtual G4double Calculate(G4double point, G4int bin, const G4DataVector& energies,
+                               const G4DataVector& data) const = 0;
 
-  G4VDataSetAlgorithm(const G4VDataSetAlgorithm&) = delete;
-  G4VDataSetAlgorithm& operator=(const G4VDataSetAlgorithm& right) = delete;
+    virtual G4double Calculate(G4double point, G4int bin, const G4DataVector& energies,
+                               const G4DataVector& data, const G4DataVector& log_energies,
+                               const G4DataVector& log_data) const = 0;
 
+    virtual G4VDataSetAlgorithm* Clone() const = 0;
+
+    G4VDataSetAlgorithm(const G4VDataSetAlgorithm&) = delete;
+    G4VDataSetAlgorithm& operator=(const G4VDataSetAlgorithm& right) = delete;
 };
- 
+
 #endif
- 
-
-
-
-
-
-
-
-
-
-

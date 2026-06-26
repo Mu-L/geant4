@@ -41,7 +41,8 @@ void G4TextPPReporter::Print(const G4String& option)
 {
   SparseOption(option);
 
-  for (const auto& i : pList) {
+  for (const auto& i : pList)
+  {
     G4ParticleDefinition* particle =
       G4ParticleTable::GetParticleTable()->FindParticle(i->GetParticleName());
 
@@ -55,8 +56,10 @@ void G4TextPPReporter::SparseOption(const G4String& option)
 
   // 1st option : base directory
   baseDir = savedToken();
-  if (!baseDir.empty()) {
-    if (baseDir.back() != '/') {
+  if (!baseDir.empty())
+  {
+    if (baseDir.back() != '/')
+    {
       baseDir += "/";
     }
   }
@@ -91,8 +94,10 @@ void G4TextPPReporter::GeneratePropertyTable(const G4ParticleDefinition* particl
 
   // Decay Table
   G4DecayTable* dcyTable = particle->GetDecayTable();
-  if (dcyTable != nullptr) {
-    for (G4int i = 0; i < dcyTable->entries(); i++) {
+  if (dcyTable != nullptr)
+  {
+    for (G4int i = 0; i < dcyTable->entries(); i++)
+    {
       G4VDecayChannel* channel = dcyTable->GetDecayChannel(i);
       // column 1  : BR
       outFile << channel->GetBR() << " ";
@@ -101,7 +106,8 @@ void G4TextPPReporter::GeneratePropertyTable(const G4ParticleDefinition* particl
       // column 3 : Kinematics
       outFile << channel->GetKinematicsName() << " ";
       // daughters
-      for (G4int j = 0; j < channel->GetNumberOfDaughters(); j++) {
+      for (G4int j = 0; j < channel->GetNumberOfDaughters(); j++)
+      {
         outFile << channel->GetDaughter(j)->GetParticleName() << " ";
       }
       outFile << G4endl;

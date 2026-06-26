@@ -32,21 +32,21 @@
 // File name:     G4eIonisationCrossSectionHandler
 //
 // Author:        V.Ivanchenko (Vladimir.Ivanchenko@cern.ch)
-// 
+//
 // Creation date: 17 September 2001
 //
-// Modified: 
+// Modified:
 // 10 Oct 2001  M.G. Pia        Revision to improve code quality and consistency with design
 // 28 Jan 2009  L.Pandola    Added public method to make a easier migration of
 //                           G4LowEnergyIonisation to G4LivermoreIonisationModel
 // -------------------------------------------------------------------
-// Class description: 
-// Provides cross sections with cut for LowEnergyIonisation 
+// Class description:
+// Provides cross sections with cut for LowEnergyIonisation
 // -------------------------------------------------------------------
 //
 
 #ifndef G4EIONISATIONCROSSSECTIONHANDLER_HH
-#define G4EIONISATIONCROSSSECTIONHANDLER_HH 1
+#define G4EIONISATIONCROSSSECTIONHANDLER_HH
 
 #include "G4VCrossSectionHandler.hh"
 #include "globals.hh"
@@ -58,32 +58,30 @@ class G4VDataSetAlgorithm;
 
 class G4eIonisationCrossSectionHandler : public G4VCrossSectionHandler
 {
-public:
-  explicit G4eIonisationCrossSectionHandler(const G4VEnergySpectrum* spec,
-                                         G4VDataSetAlgorithm* alg,
-                                         G4double emin, 
-                                         G4double emax, 
-                                         G4int nbin);
+  public:
 
-  ~G4eIonisationCrossSectionHandler();
+    explicit G4eIonisationCrossSectionHandler(const G4VEnergySpectrum* spec,
+                                              G4VDataSetAlgorithm* alg, G4double emin,
+                                              G4double emax, G4int nbin);
 
-  G4double GetCrossSectionAboveThresholdForElement(G4double energy,
-						   G4double cutEnergy,
-						   G4int Z);
-  G4eIonisationCrossSectionHandler& operator=(const G4eIonisationCrossSectionHandler& right) = delete;
-  G4eIonisationCrossSectionHandler(const G4eIonisationCrossSectionHandler&) = delete;
+    ~G4eIonisationCrossSectionHandler();
 
-protected:
+    G4double GetCrossSectionAboveThresholdForElement(G4double energy, G4double cutEnergy, G4int Z);
+    G4eIonisationCrossSectionHandler&
+    operator=(const G4eIonisationCrossSectionHandler& right) = delete;
+    G4eIonisationCrossSectionHandler(const G4eIonisationCrossSectionHandler&) = delete;
 
-  std::vector<G4VEMDataSet*>* BuildCrossSectionsForMaterials(
-                                const G4DataVector& energyVector, 
-				const G4DataVector* energyCuts) override;
+  protected:
 
-private:
-  const G4VEnergySpectrum* theParam;
-  G4VDataSetAlgorithm* interp;
-  G4int verbose;
+    std::vector<G4VEMDataSet*>*
+    BuildCrossSectionsForMaterials(const G4DataVector& energyVector,
+                                   const G4DataVector* energyCuts) override;
+
+  private:
+
+    const G4VEnergySpectrum* theParam;
+    G4VDataSetAlgorithm* interp;
+    G4int verbose;
 };
- 
-#endif
 
+#endif

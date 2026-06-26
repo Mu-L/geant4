@@ -49,6 +49,7 @@
 #include <TROOT.h>
 #include <TTree.h>
 #include <cstring>
+#include <cmath>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -210,7 +211,7 @@ void ProcessSingleFile(TFile* file)
     auto end2 = it_SOA->second.end();
 
     info.fName = it2->second.fName;
-    const size_t size2 = it_SOA->second.size();
+    const std::size_t size2 = it_SOA->second.size();
     info.fG.resize(size2);
     info.fGerr.resize(size2);
     info.fTime.resize(size2);
@@ -220,7 +221,7 @@ void ProcessSingleFile(TFile* file)
 
       double _SumG2 = infoAOS.fG2;
       double _MeanG = infoAOS.fG / infoAOS.fNEvent;
-      double _Gerr = sqrt((_SumG2 / infoAOS.fNEvent - pow(_MeanG, 2)) / (infoAOS.fNEvent - 1));
+      double _Gerr = std::sqrt((_SumG2 / infoAOS.fNEvent - std::pow(_MeanG, 2)) / (infoAOS.fNEvent - 1));
 
       info.fG[i2] = _MeanG;
       info.fGerr[i2] = _Gerr;

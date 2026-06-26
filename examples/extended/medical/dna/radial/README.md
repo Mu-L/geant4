@@ -82,7 +82,7 @@ Geant4-DNA Physics constructors can be selected using the command:
 /radial/addPhysics DNA_OptX
 ```
 
-where X is 0 to 8 (2, 4 or 6 are recommended).
+where X is 2, 4, 6 or 8.
 
 Comments regarding ions:
 

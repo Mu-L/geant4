@@ -30,54 +30,52 @@
 #ifndef G4RAYTRACERSCENEHANDLER_HH
 #define G4RAYTRACERSCENEHANDLER_HH
 
+#include "G4ModelingParameters.hh"
 #include "G4VSceneHandler.hh"
 
-#include "G4ModelingParameters.hh"
 #include <map>
 
-class G4RayTracerSceneHandler: public G4VSceneHandler
+class G4RayTracerSceneHandler : public G4VSceneHandler
 {
-public:
+  public:
 
-  G4RayTracerSceneHandler(G4VGraphicsSystem& system,
-			  const G4String& name = "");
-  virtual ~G4RayTracerSceneHandler();
+    G4RayTracerSceneHandler(G4VGraphicsSystem& system, const G4String& name = "");
+    virtual ~G4RayTracerSceneHandler();
 
-  void BuildVisAttsMap (const G4VSolid& solid);
-  // BuildVisAttsMap is the appropriate name for what it does in this class
-  // but it is actually an override of G4VSceneHandler::RequestPrimitives.
-  void RequestPrimitives (const G4VSolid& solid)
-  {BuildVisAttsMap(solid);}
+    void BuildVisAttsMap(const G4VSolid& solid);
+    // BuildVisAttsMap is the appropriate name for what it does in this class
+    // but it is actually an override of G4VSceneHandler::RequestPrimitives.
+    void RequestPrimitives(const G4VSolid& solid) { BuildVisAttsMap(solid); }
 
-  // Required pure virtual functions, not used in Ray Tracer.
-  using G4VSceneHandler::AddPrimitive;
-  void AddPrimitive(const G4Polyline&){}
-  void AddPrimitive(const G4Text&){}
-  void AddPrimitive(const G4Circle&){}
-  void AddPrimitive(const G4Square&){}
-  void AddPrimitive(const G4Polyhedron&){}
-  void AddPrimitive(const G4Polymarker&){}
+    // Required pure virtual functions, not used in Ray Tracer.
+    using G4VSceneHandler::AddPrimitive;
+    void AddPrimitive(const G4Polyline&) {}
+    void AddPrimitive(const G4Text&) {}
+    void AddPrimitive(const G4Circle&) {}
+    void AddPrimitive(const G4Square&) {}
+    void AddPrimitive(const G4Polyhedron&) {}
+    void AddPrimitive(const G4Polymarker&) {}
 
-  void ClearStore ();
+    void ClearStore();
 
-  struct PathLessThan
-  {G4bool operator()
-    (const G4ModelingParameters::PVPointerCopyNoPath&,
-     const G4ModelingParameters::PVPointerCopyNoPath&) const;
-  };
+    struct PathLessThan
+    {
+        G4bool operator()(const G4ModelingParameters::PVPointerCopyNoPath&,
+                          const G4ModelingParameters::PVPointerCopyNoPath&) const;
+    };
 
-  const std::map
-  <G4ModelingParameters::PVPointerCopyNoPath,G4VisAttributes,PathLessThan>&
-  GetSceneVisAttsMap() const
-  {return fSceneVisAttsMap;}
+    const std::map<G4ModelingParameters::PVPointerCopyNoPath, G4VisAttributes, PathLessThan>&
+    GetSceneVisAttsMap() const
+    {
+      return fSceneVisAttsMap;
+    }
 
-private:
-  
-  static G4int fSceneIdCount;  // Counter for RayTracer scene handlers.
+  private:
 
-  std::map
-  <G4ModelingParameters::PVPointerCopyNoPath,G4VisAttributes,PathLessThan>
-  fSceneVisAttsMap;
+    static G4int fSceneIdCount;  // Counter for RayTracer scene handlers.
+
+    std::map<G4ModelingParameters::PVPointerCopyNoPath, G4VisAttributes, PathLessThan>
+      fSceneVisAttsMap;
 };
 
 #endif

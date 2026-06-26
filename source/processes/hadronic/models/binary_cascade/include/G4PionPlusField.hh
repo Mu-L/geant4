@@ -25,46 +25,48 @@
 //
 //
 // -------------------------------------------------------------------
-//      GEANT 4 class header file 
+//      GEANT 4 class header file
 //
 //      CERN, Geneva, Switzerland
 //
 //      File name:     G4PionPlusField.hh
 //
 //      Author:        Alessandro Brunengo (Alessandro.Brunengo@ge.infn.it)
-// 
+//
 //      Creation date: 5 June 2000
 // -------------------------------------------------------------------
 
-#ifndef G4PionPlusField_hh
-#define G4PionPlusField_hh
+#ifndef G4PIONPLUSFIELD_HH
+#define G4PIONPLUSFIELD_HH
+
+#include "G4V3DNucleus.hh"
+#include "G4VNuclearField.hh"
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
-#include "G4VNuclearField.hh"
-#include "G4V3DNucleus.hh"
-
-class G4PionPlusField: public G4VNuclearField
+class G4PionPlusField : public G4VNuclearField
 {
-public:
-  G4PionPlusField(G4V3DNucleus * nucleus, G4double coeff = 0.042*CLHEP::fermi);
-  virtual ~G4PionPlusField();
+  public:
 
-private:
-  G4PionPlusField(const  G4PionPlusField &right);
-  const G4PionPlusField & operator=(const G4PionPlusField & right);
-  G4bool operator==(const G4PionPlusField & right) const;
-  G4bool operator!=(const G4PionPlusField & right) const;
+    G4PionPlusField(G4V3DNucleus* nucleus, G4double coeff = 0.042 * CLHEP::fermi);
+    virtual ~G4PionPlusField();
 
-public:
-  virtual G4double GetField(const G4ThreeVector & aPosition);
-  virtual G4double GetBarrier();
-  virtual G4double GetCoeff() { return theCoeff; }
+  private:
 
-private:
-  G4double theCoeff;
+    G4PionPlusField(const G4PionPlusField& right);
+    const G4PionPlusField& operator=(const G4PionPlusField& right);
+    G4bool operator==(const G4PionPlusField& right) const;
+    G4bool operator!=(const G4PionPlusField& right) const;
+
+  public:
+
+    virtual G4double GetField(const G4ThreeVector& aPosition);
+    virtual G4double GetBarrier();
+    virtual G4double GetCoeff() { return theCoeff; }
+
+  private:
+
+    G4double theCoeff;
 };
 
 #endif
-
-

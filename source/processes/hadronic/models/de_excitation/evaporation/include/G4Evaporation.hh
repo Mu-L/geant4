@@ -28,9 +28,9 @@
 // by V. Lara
 //
 //
-// 14/02/2007 Alex Howard - added protection for negative probabilities in the sum 
-// 27/07/2009 V.Ivanchenko - added Combined decay channels (default + GEM) 
-// 11/05/2010 V.Ivanchenko - rewrited technical part do not "new" and "delete" 
+// 14/02/2007 Alex Howard - added protection for negative probabilities in the sum
+// 27/07/2009 V.Ivanchenko - added Combined decay channels (default + GEM)
+// 11/05/2010 V.Ivanchenko - rewrited technical part do not "new" and "delete"
 //                           of small objects
 // 22/04/2011 V.Ivanchenko - added maxZ and maxA for FermiBreakUp model
 // 23/01/2012 V.Ivanchenko added pointer of G4VPhotonEvaporation to the constructor
@@ -40,15 +40,15 @@
 //                       derived from G4VEvaporation.
 //
 
-#ifndef G4Evaporation_h
-#define G4Evaporation_h 1
+#ifndef G4EVAPORATION_HH
+#define G4EVAPORATION_HH
 
-#include "globals.hh"
-
+#include "G4DeexPrecoParameters.hh"
+#include "G4Fragment.hh"
 #include "G4VEvaporation.hh"
 #include "G4VEvaporationChannel.hh"
-#include "G4Fragment.hh"
-#include "G4DeexPrecoParameters.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4VEvaporationFactory;
@@ -60,45 +60,45 @@ class G4NuclearLevelData;
 
 class G4Evaporation : public G4VEvaporation
 {
-public:
+  public:
 
-  explicit G4Evaporation(G4VEvaporationChannel* photoEvaporation = nullptr);
-	 
-  ~G4Evaporation() override;
+    explicit G4Evaporation(G4VEvaporationChannel* photoEvaporation = nullptr);
 
-  void InitialiseChannels() override;
+    ~G4Evaporation() override;
 
-  // new interface - vector of products is added to the provided vector
-  // primary fragment is deleted or is modified and added to the list
-  // of products 
-  void BreakFragment(G4FragmentVector*, G4Fragment* theNucleus) override;
+    void InitialiseChannels() override;
 
-  void SetDefaultChannel();
-  void SetGEMChannel();
-  void SetGEMVIChannel();
-  void SetCombinedChannel();
+    // new interface - vector of products is added to the provided vector
+    // primary fragment is deleted or is modified and added to the list
+    // of products
+    void BreakFragment(G4FragmentVector*, G4Fragment* theNucleus) override;
 
-  G4Evaporation(const G4Evaporation &right) = delete;
-  const G4Evaporation & operator=(const G4Evaporation &right) = delete;
-  G4bool operator==(const G4Evaporation &right) const = delete;
-  G4bool operator!=(const G4Evaporation &right) const = delete;
+    void SetDefaultChannel();
+    void SetGEMChannel();
+    void SetGEMVIChannel();
+    void SetCombinedChannel();
 
-private:
+    G4Evaporation(const G4Evaporation& right) = delete;
+    const G4Evaporation& operator=(const G4Evaporation& right) = delete;
+    G4bool operator==(const G4Evaporation& right) const = delete;
+    G4bool operator!=(const G4Evaporation& right) const = delete;
 
-  void InitialiseChannelFactory();
+  private:
 
-  G4int fVerbose;
-  std::size_t nChannels{0};
-  G4double minExcitation;
-  G4NistManager* nist;
-  G4IonTable* theTableOfIons;
-  G4NuclearLevelData* fLevelData;
-  G4UnstableFragmentBreakUp* unstableBreakUp;
-  G4bool isInitialised{false};
+    void InitialiseChannelFactory();
 
-  G4DeexChannelType channelType{fDummy};
+    G4int fVerbose;
+    std::size_t nChannels{0};
+    G4double minExcitation;
+    G4NistManager* nist;
+    G4IonTable* theTableOfIons;
+    G4NuclearLevelData* fLevelData;
+    G4UnstableFragmentBreakUp* unstableBreakUp;
+    G4bool isInitialised{false};
 
-  std::vector<G4double> probabilities;
+    G4DeexChannelType channelType{fDummy};
+
+    std::vector<G4double> probabilities;
 };
 
 #endif

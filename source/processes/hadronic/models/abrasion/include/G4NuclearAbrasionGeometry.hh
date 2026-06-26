@@ -33,8 +33,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4NuclearAbrasionGeometry_h
-#define G4NuclearAbrasionGeometry_h 1
+#ifndef G4NUCLEARABRASIONGEOMETRY_HH
+#define G4NUCLEARABRASIONGEOMETRY_HH
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //
 // MODULE:		G4NuclearAbrasionGeometry.hh
@@ -67,16 +67,18 @@
 class G4NuclearAbrasionGeometry
 {
   public:
-    G4NuclearAbrasionGeometry (G4double AP, G4double AT, G4double r);
-    ~G4NuclearAbrasionGeometry ();
-    void SetPeripheralThreshold (G4double);
-    G4double GetPeripheralThreshold ();
-    G4double F ();
-    G4double P ();
-    G4double GetExcitationEnergyOfProjectile ();
-    G4double GetExcitationEnergyOfTarget ();
+
+    G4NuclearAbrasionGeometry(G4double AP, G4double AT, G4double r);
+    ~G4NuclearAbrasionGeometry();
+    void SetPeripheralThreshold(G4double);
+    G4double GetPeripheralThreshold();
+    G4double F();
+    G4double P();
+    G4double GetExcitationEnergyOfProjectile();
+    G4double GetExcitationEnergyOfTarget();
 
   private:
+
     G4double AP;
     G4double AT;
     G4double rP;
@@ -91,7 +93,7 @@ class G4NuclearAbrasionGeometry
     G4double T;
     G4double R;
     G4double U;
-    
+
     G4double rth;
     G4double B;
 };

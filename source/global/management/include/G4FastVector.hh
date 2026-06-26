@@ -33,52 +33,52 @@
 // Author: G.Cosmo, 2 December 1995
 //         First implementation, based on object model
 // --------------------------------------------------------------------
-#ifndef G4FastVector_hh
-#define G4FastVector_hh 1
+#ifndef G4FASTVECTOR_HH
+#define G4FASTVECTOR_HH
 
 #include "globals.hh"
 
-template <class Type, G4int N>
+template<class Type, G4int N>
 class G4FastVector
 {
- public:
-  G4FastVector() { ptr = &theArray[0]; }
+  public:
 
-  ~G4FastVector()
-  {
-    if(ptr != &theArray[0])
-      delete[] ptr;
-  }
+    G4FastVector() { ptr = &theArray[0]; }
 
-  inline Type* operator[](G4int anIndex) const
-  //  Access operator to the array.
-  {
-    return ptr[anIndex];
-  }
+    ~G4FastVector()
+    {
+      if (ptr != &theArray[0]) delete[] ptr;
+    }
 
-  inline void Initialize(G4int items)
-  //  Normally the pointer ptr points to the stack-array
-  //  theArray; only when the number of items is greater
-  //  than N, memory is allocated dynamically.
-  {
-    if(ptr != &theArray[0])
-      delete[] ptr;
-    if(items > N)
-      ptr = new Type*[items];
-    else
-      ptr = &theArray[0];
-  }
+    inline Type* operator[](G4int anIndex) const
+    //  Access operator to the array.
+    {
+      return ptr[anIndex];
+    }
 
-  inline void SetElement(G4int anIndex, Type* anElement)
-  //  To insert an element at the given position inside
-  //  the vector.
-  {
-    ptr[anIndex] = anElement;
-  }
+    inline void Initialize(G4int items)
+    //  Normally the pointer ptr points to the stack-array
+    //  theArray; only when the number of items is greater
+    //  than N, memory is allocated dynamically.
+    {
+      if (ptr != &theArray[0]) delete[] ptr;
+      if (items > N)
+        ptr = new Type*[items];
+      else
+        ptr = &theArray[0];
+    }
 
- private:
-  Type* theArray[N];
-  Type** ptr;
+    inline void SetElement(G4int anIndex, Type* anElement)
+    //  To insert an element at the given position inside
+    //  the vector.
+    {
+      ptr[anIndex] = anElement;
+    }
+
+  private:
+
+    Type* theArray[N];
+    Type** ptr;
 };
 
 #endif

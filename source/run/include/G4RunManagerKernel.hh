@@ -47,8 +47,8 @@
 
 // Author: M.Asai, 1 August 2003
 // --------------------------------------------------------------------
-#ifndef G4RunManagerKernel_hh
-#define G4RunManagerKernel_hh 1
+#ifndef G4RUNMANAGERKERNEL_HH
+#define G4RUNMANAGERKERNEL_HH
 
 #include "G4EventManager.hh"
 #include "globals.hh"
@@ -64,6 +64,7 @@ class G4PrimaryTransformer;
 class G4RunManagerKernel
 {
   public:
+
     // Static method returning the singleton pointer of
     // G4RunManagerKernel or its derived class.
     static G4RunManagerKernel* GetRunManagerKernel();
@@ -145,14 +146,17 @@ class G4RunManagerKernel
 
     inline void SetGeometryToBeOptimized(G4bool vl)
     {
-      if (geometryToBeOptimized != vl) {
+      if (geometryToBeOptimized != vl)
+      {
         geometryToBeOptimized = vl;
         geometryNeedsToBeClosed = true;
       }
     }
-  
-    inline void ResetNavigatorAtInitialization(G4bool val=true)
-    { resetNavigatorAtInitialization = val; }
+
+    inline void ResetNavigatorAtInitialization(G4bool val = true)
+    {
+      resetNavigatorAtInitialization = val;
+    }
 
     inline G4int GetNumberOfParallelWorld() const { return numberOfParallelWorld; }
     inline void SetNumberOfParallelWorld(G4int i) { numberOfParallelWorld = i; }
@@ -171,6 +175,7 @@ class G4RunManagerKernel
     };
 
   protected:
+
     // Constructor to be used by derived classes.
     G4RunManagerKernel(RMKType rmkType);
 
@@ -189,17 +194,20 @@ class G4RunManagerKernel
     void PropagateGenericIonID();
 
   private:
+
     void CheckRegularGeometry();
     G4bool ConfirmCoupledTransportation();
     void SetScoreSplitter();
 
   protected:
+
     RMKType runManagerKernelType;
     G4Region* defaultRegion = nullptr;
     G4Region* defaultRegionForParallelWorld = nullptr;
     G4bool geometryNeedsToBeClosed = true;
 
   private:
+
     G4VUserPhysicsList* physicsList = nullptr;
     G4VPhysicalVolume* currentWorld = nullptr;
     G4bool geometryInitialized = false;

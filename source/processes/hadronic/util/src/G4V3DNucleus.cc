@@ -26,38 +26,28 @@
 //
 //
 #include "G4V3DNucleus.hh"
+
 #include "G4HadronicException.hh"
 
-G4V3DNucleus::G4V3DNucleus()
-{
-}
+G4V3DNucleus::G4V3DNucleus() {}
 
-G4V3DNucleus::G4V3DNucleus(const G4V3DNucleus &)
-{
-}
+G4V3DNucleus::G4V3DNucleus(const G4V3DNucleus&) {}
 
+G4V3DNucleus::~G4V3DNucleus() {}
 
-G4V3DNucleus::~G4V3DNucleus()
-{
-}
-
-
-const G4V3DNucleus & G4V3DNucleus::operator=(const G4V3DNucleus &)
+const G4V3DNucleus& G4V3DNucleus::operator=(const G4V3DNucleus&)
 {
   const G4String& text = "G4V3DNucleus::operator= meant to not be accessible";
-  throw G4HadronicException(__FILE__, __LINE__, text); 
+  throw G4HadronicException(__FILE__, __LINE__, text);
   return *this;
 }
 
-
-G4bool G4V3DNucleus::operator==(const G4V3DNucleus &) const
+G4bool G4V3DNucleus::operator==(const G4V3DNucleus&) const
 {
   return false;
 }
 
-G4bool G4V3DNucleus::operator!=(const G4V3DNucleus &) const
+G4bool G4V3DNucleus::operator!=(const G4V3DNucleus&) const
 {
   return true;
 }
-
-

@@ -35,25 +35,23 @@
 // energy region [9, 12] GeV (instead of [3, 6] GeV as in FTFP_BERT).
 //----------------------------------------------------------------------------
 //
-#ifndef FTFP_BERT_ATL_h
-#define FTFP_BERT_ATL_h 1
+#ifndef FTFP_BERT_ATL_HH
+#define FTFP_BERT_ATL_HH
+
+#include "G4VModularPhysicsList.hh"
+#include "globals.hh"
 
 #include <CLHEP/Units/SystemOfUnits.h>
 
-#include "globals.hh"
-#include "G4VModularPhysicsList.hh"
-
-
-class FTFP_BERT_ATL: public G4VModularPhysicsList
+class FTFP_BERT_ATL : public G4VModularPhysicsList
 {
-public:
-  FTFP_BERT_ATL(G4int ver = 1);
-  virtual ~FTFP_BERT_ATL()=default;
+  public:
 
-  FTFP_BERT_ATL(const FTFP_BERT_ATL &) = delete;
-  FTFP_BERT_ATL & operator=(const FTFP_BERT_ATL &)=delete;
-  
+    FTFP_BERT_ATL(G4int ver = 1);
+    virtual ~FTFP_BERT_ATL() = default;
+
+    FTFP_BERT_ATL(const FTFP_BERT_ATL&) = delete;
+    FTFP_BERT_ATL& operator=(const FTFP_BERT_ATL&) = delete;
 };
 
 #endif
-

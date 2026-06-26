@@ -26,37 +26,33 @@
 // Geant4 class : G4LowEHadronElastic
 //
 // Author : V.Ivanchenko 10 May 2019
-//  
+//
 //
 
 #include "G4LowEHadronElastic.hh"
+
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
-#include "Randomize.hh"
 #include "G4ios.hh"
+#include "Randomize.hh"
 
-G4LowEHadronElastic::G4LowEHadronElastic():G4HadronElastic("hLowEElastic")
+G4LowEHadronElastic::G4LowEHadronElastic() : G4HadronElastic("hLowEElastic")
 {
-  plabLowLimit  = 400*CLHEP::MeV;
-  plabHighLimit = 2000*CLHEP::MeV;
+  plabLowLimit = 400 * CLHEP::MeV;
+  plabHighLimit = 2000 * CLHEP::MeV;
 }
 
-G4LowEHadronElastic::~G4LowEHadronElastic()
-{}
+G4LowEHadronElastic::~G4LowEHadronElastic() {}
 
-G4double 
-G4LowEHadronElastic::SampleInvariantT(const G4ParticleDefinition* p, 
-				      G4double plab, G4int Z, G4int A)
+G4double G4LowEHadronElastic::SampleInvariantT(const G4ParticleDefinition* p, G4double plab,
+                                               G4int Z, G4int A)
 {
-  return (IsResonanseScattering(p, plab, Z, A)) 
-    ? G4UniformRand()*pLocalTmax 
-    : G4HadronElastic::SampleInvariantT(p, plab, Z, A);
+  return (IsResonanseScattering(p, plab, Z, A)) ? G4UniformRand() * pLocalTmax
+                                                : G4HadronElastic::SampleInvariantT(p, plab, Z, A);
 }
 
-G4bool
-G4LowEHadronElastic::IsResonanseScattering(const G4ParticleDefinition*, 
-				           G4double plab, 
-                                           G4int, G4int)
+G4bool G4LowEHadronElastic::IsResonanseScattering(const G4ParticleDefinition*, G4double plab, G4int,
+                                                  G4int)
 {
   return (plab < plabHighLimit);
 }

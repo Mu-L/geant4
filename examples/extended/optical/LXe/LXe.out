@@ -11,7 +11,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -169,6 +169,7 @@ Use built-in Birks saturation                      1
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 1
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            1 MeV
 Linear loss limit                                  0.01
@@ -933,7 +934,7 @@ Index : 3     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 200
-  User=4.700000s Real=4.819694s Sys=0.020000s
+  User=4.260000s Real=4.444707s Sys=0.020000s
 
  ======================== run summary ======================
 The run was 200 events.
@@ -945,6 +946,15 @@ Number of absorbed photons per event :	 3050 +- 25.93
 Number of photons absorbed at boundary per event:	 0 +- 0
 Total energy deposition in scintillator per event:	 519.8 +- 4.274 keV.
 
+There are histograms that can be viewed with visualization:
+  8 h1 histograms(s)
+  List them with "/analysis/list".
+  View them immediately with "/vis/plot" or "/vis/reviewPlots".
+  But...there are no entries. To make your histograms available for
+  plotting in this UI session, use CloseFile(false) in your
+  EndOfRunAction and Reset() in your BeginOfRunAction.
+There are 0 kept events.
+You may need to issue "/vis/enable".
 /vis/enable
 WARNING: G4VisManager::IsValidView(): Attempt to draw when no graphics system
   has been instantiated.  Use "/vis/open" or "/vis/sceneHandler/create".
@@ -1050,7 +1060,7 @@ Unaccounted for photons in this event : 0
  Run terminated.
 Run Summary
   Number of events processed : 5
-  User=0.110000s Real=0.109929s Sys=0.000000s
+  User=0.110000s Real=0.110744s Sys=0.000000s
 
  ======================== run summary ======================
 The run was 5 events.
@@ -1062,6 +1072,15 @@ Number of absorbed photons per event :	 3113 +- 37.53
 Number of photons absorbed at boundary per event:	 0 +- 0
 Total energy deposition in scintillator per event:	 533 +- 0.2657 keV.
 
+There are histograms that can be viewed with visualization:
+  8 h1 histograms(s)
+  List them with "/analysis/list".
+  View them immediately with "/vis/plot" or "/vis/reviewPlots".
+  But...there are no entries. To make your histograms available for
+  plotting in this UI session, use CloseFile(false) in your
+  EndOfRunAction and Reset() in your BeginOfRunAction.
+There are 0 kept events.
+You may need to issue "/vis/enable".
 /tracking/verbose 1
 /LXe/forceDrawPhotons true
 /LXe/detector/MainScintYield 100
@@ -1869,7 +1888,7 @@ Unaccounted for photons in this event : 0
 "./currentEvent.rndm" is copied to "./run2evt0.rndm Run terminated.
 Run Summary
   Number of events processed : 1
-  User=0.010000s Real=0.003497s Sys=0.000000s
+  User=0.000000s Real=0.002370s Sys=0.000000s
 
  ======================== run summary ======================
 The run was 1 events.
@@ -1881,6 +1900,15 @@ Number of absorbed photons per event :	 33 +- 0
 Number of photons absorbed at boundary per event:	 0 +- 0
 Total energy deposition in scintillator per event:	 511.2 +- 0 keV.
 
+There are histograms that can be viewed with visualization:
+  8 h1 histograms(s)
+  List them with "/analysis/list".
+  View them immediately with "/vis/plot" or "/vis/reviewPlots".
+  But...there are no entries. To make your histograms available for
+  plotting in this UI session, use CloseFile(false) in your
+  EndOfRunAction and Reset() in your BeginOfRunAction.
+There are 0 kept events.
+You may need to issue "/vis/enable".
 Graphics systems deleted.
 Visualization Manager deleting...
 ================== Deleting memory pools ===================

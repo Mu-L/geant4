@@ -29,30 +29,33 @@
 
 #include "G4RTQtScanner.hh"
 
-//#include "G4TheRayTracer.hh"
-//#include "G4RayTracerQtViewer.hh"
-#include "G4ViewParameters.hh"
-#include "G4UImanager.hh"
+// #include "G4TheRayTracer.hh"
+// #include "G4RayTracerQtViewer.hh"
 #include "G4UIQt.hh"
+#include "G4UImanager.hh"
+#include "G4ViewParameters.hh"
 
-#include <QLabel>
-#include <QImage>
-#include <QPainter>
 #include <QColor>
+#include <QImage>
+#include <QLabel>
+#include <QPainter>
 
 #define G4warn G4cout
 
 G4RTQtScanner::G4RTQtScanner()
-: G4VRTScanner()
-, theNRow(0), theNColumn(0)
-, theIRow(0), theIColumn(0)
-, fpImageLabel(nullptr)
-, fpImage(nullptr)
+  : G4VRTScanner(),
+    theNRow(0),
+    theNColumn(0),
+    theIRow(0),
+    theIColumn(0),
+    fpImageLabel(nullptr),
+    fpImage(nullptr)
 {}
 
 G4RTQtScanner::~G4RTQtScanner() {}
 
-void G4RTQtScanner::Initialize(G4int nRow, G4int nColumn) {
+void G4RTQtScanner::Initialize(G4int nRow, G4int nColumn)
+{
   theNRow = nRow;
   theNColumn = nColumn;
   theIRow = 0;
@@ -63,13 +66,15 @@ G4bool G4RTQtScanner::Coords(G4int& iRow, G4int& iColumn)
 {
   // Increment column and, if necessary, increment row...
   ++theIColumn;
-  if (theIColumn >= theNColumn) {
+  if (theIColumn >= theNColumn)
+  {
     theIColumn = 0;
     ++theIRow;
   }
 
   // Return if finished...
-  if (theIRow >= theNRow) {
+  if (theIRow >= theNRow)
+  {
     // ...and paint the image
     fpImageLabel->setPixmap(QPixmap::fromImage(*fpImage));
     QPainter windowPainter(fpImageLabel);
@@ -87,12 +92,12 @@ G4bool G4RTQtScanner::GetQtWindow(const G4String& name, G4ViewParameters& vp)
 {
   auto UI = G4UImanager::GetUIpointer();
   auto uiQt = dynamic_cast<G4UIQt*>(UI->GetG4UIWindow());
-  if (!uiQt) {
-    G4warn << "G4RTQtScanner::GetQtWindow: RayTracerQt requires G4UIQt"
-    << G4endl;
+  if (!uiQt)
+  {
+    G4warn << "G4RTQtScanner::GetQtWindow: RayTracerQt requires G4UIQt" << G4endl;
     return false;
   }
-  uiQt->AddTabWidget(this,QString(name));
+  uiQt->AddTabWidget(this, QString(name));
   setBackgroundRole(QPalette::Dark);
 
   theWindowSizeX = vp.GetWindowSizeHintX();  // As used by the ray tracer
@@ -102,13 +107,12 @@ G4bool G4RTQtScanner::GetQtWindow(const G4String& name, G4ViewParameters& vp)
   fpImageLabel->setPixmap(QPixmap::fromImage(*fpImage));
   setWidget(fpImageLabel);
   setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  ensureVisible(theWindowSizeX/2, theWindowSizeY/2);
+  ensureVisible(theWindowSizeX / 2, theWindowSizeY / 2);
 
   return true;
 }
 
-void G4RTQtScanner::Draw
-(unsigned char red, unsigned char green, unsigned char blue)
+void G4RTQtScanner::Draw(unsigned char red, unsigned char green, unsigned char blue)
 // Add a coloured point to the image at current position.
 {
   QPainter painter(fpImage);

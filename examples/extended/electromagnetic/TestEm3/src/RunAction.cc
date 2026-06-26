@@ -37,6 +37,7 @@
 #include "G4RunManager.hh"
 #include "G4Timer.hh"
 #include "Randomize.hh"
+#include "G4Threading.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -45,6 +46,10 @@ RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim)
 {
   fRunMessenger = new RunActionMessenger(this);
   fHistoManager = new HistoManager();
+  if (G4Threading::IsMasterThread()) { 
+    fTimer = new G4Timer();
+    fTimer->Start();
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -66,9 +71,16 @@ G4Run* RunAction::GenerateRun()
 
 void RunAction::BeginOfRunAction(const G4Run*)
 {
+  if (nullptr != fTimer) {
+    fTimer->Stop();
+    G4cout << "### The 1st run initialisation: " << *fTimer << G4endl;
+    delete fTimer;
+    fTimer = nullptr;
+  }
   // keep run condition
-  if (fPrimary) {
-    G4ParticleDefinition* particle = fPrimary->GetParticleGun()->GetParticleDefinition();
+  if (nullptr != fPrimary) {
+    G4ParticleDefinition* particle =
+      fPrimary->GetParticleGun()->GetParticleDefinition();
     G4double energy = fPrimary->GetParticleGun()->GetParticleEnergy();
     fRun->SetPrimary(particle, energy);
   }
@@ -77,14 +89,6 @@ void RunAction::BeginOfRunAction(const G4Run*)
   //
   G4AnalysisManager* analysis = G4AnalysisManager::Instance();
   if (analysis->IsActive()) analysis->OpenFile();
-
-  // save Rndm status and open the timer
-
-  if (isMaster) {
-    //    G4Random::showEngineStatus();
-    fTimer = new G4Timer();
-    fTimer->Start();
-  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -93,13 +97,6 @@ void RunAction::EndOfRunAction(const G4Run*)
 {
   // compute and print statistic
   if (isMaster) {
-    fTimer->Stop();
-    if (!((G4RunManager::GetRunManager()->GetRunManagerType() == G4RunManager::sequentialRM))) {
-      G4cout << "\n"
-             << "Total number of events:  " << fRun->GetNumberOfEvent() << G4endl;
-      G4cout << "Master thread time:  " << *fTimer << G4endl;
-    }
-    delete fTimer;
     fRun->EndOfRun();
   }
   // save histograms
@@ -108,23 +105,20 @@ void RunAction::EndOfRunAction(const G4Run*)
     analysis->Write();
     analysis->CloseFile();
   }
-
-  // show Rndm status
-  //  if (isMaster)  G4Random::showEngineStatus();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void RunAction::SetEdepAndRMS(G4int i, G4double edep, G4double rms, G4double lim)
 {
-  if (fRun) fRun->SetEdepAndRMS(i, edep, rms, lim);
+  if (nullptr != fRun) fRun->SetEdepAndRMS(i, edep, rms, lim);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void RunAction::SetApplyLimit(G4bool val)
 {
-  if (fRun) fRun->SetApplyLimit(val);
+  if (nullptr != fRun) fRun->SetApplyLimit(val);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

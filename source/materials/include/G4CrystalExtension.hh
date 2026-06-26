@@ -37,8 +37,8 @@
 //
 // 21-04-16, created by E.Bagli
 
-#ifndef G4CrystalExtension_HH
-#define G4CrystalExtension_HH 1
+#ifndef G4CRYSTALEXTENSION_HH
+#define G4CRYSTALEXTENSION_HH
 
 #include "G4AtomicBond.hh"
 #include "G4CrystalAtomBase.hh"
@@ -50,90 +50,95 @@
 
 class G4CrystalExtension : public G4VMaterialExtension
 {
- public:
-  // Elasticity and reduced elasticity tensors
-  using Elasticity = G4double[3][3][3][3];
-  using ReducedElasticity = G4double[6][6];
+  public:
 
- public:  // with description
-  // Constructor to create a material
-  G4CrystalExtension(G4Material*, const G4String& name = "crystal");
+    // Elasticity and reduced elasticity tensors
+    using Elasticity = G4double[3][3][3][3];
+    using ReducedElasticity = G4double[6][6];
 
-  ~G4CrystalExtension() override = default;
+  public:  // with description
 
-  void Print() const override { ; };
+    // Constructor to create a material
+    G4CrystalExtension(G4Material*, const G4String& name = "crystal");
 
-  G4Material* GetMaterial() { return fMaterial; };
-  void SetMaterial(G4Material* aMat) { fMaterial = aMat; };
+    ~G4CrystalExtension() override = default;
 
-  inline void SetUnitCell(G4CrystalUnitCell* aUC) { theUnitCell = aUC; }
-  inline G4CrystalUnitCell* GetUnitCell() const { return theUnitCell; }
+    void Print() const override { ; };
 
-  const Elasticity& GetElasticity() const { return fElasticity; }
-  const ReducedElasticity& GetElReduced() const { return fElReduced; }
+    G4Material* GetMaterial() { return fMaterial; };
+    void SetMaterial(G4Material* aMat) { fMaterial = aMat; };
 
-  G4double GetCijkl(G4int i, G4int j, G4int k, G4int l) const { return fElasticity[i][j][k][l]; }
+    inline void SetUnitCell(G4CrystalUnitCell* aUC) { theUnitCell = aUC; }
+    inline G4CrystalUnitCell* GetUnitCell() const { return theUnitCell; }
 
-  // Reduced elasticity tensor: C11-C66 interface for clarity
-  void SetElReduced(const ReducedElasticity& mat);
+    const Elasticity& GetElasticity() const { return fElasticity; }
+    const ReducedElasticity& GetElReduced() const { return fElReduced; }
 
-  void SetCpq(G4int p, G4int q, G4double value);
-  G4double GetCpq(G4int p, G4int q) const { return fElReduced[p - 1][q - 1]; }
+    G4double GetCijkl(G4int i, G4int j, G4int k, G4int l) const { return fElasticity[i][j][k][l]; }
 
-  G4CrystalAtomBase* GetAtomBase(const G4Element* anElement);
-  void AddAtomBase(const G4Element* anElement, G4CrystalAtomBase* aBase)
-  {
-    theCrystalAtomBaseMap.insert(std::pair<const G4Element*, G4CrystalAtomBase*>(anElement, aBase));
-  }
+    // Reduced elasticity tensor: C11-C66 interface for clarity
+    void SetElReduced(const ReducedElasticity& mat);
 
-  G4CrystalAtomBase* GetAtomBase(G4int anElIdx)
-  {
-    return GetAtomBase(fMaterial->GetElement(anElIdx));
-  }
+    void SetCpq(G4int p, G4int q, G4double value);
+    G4double GetCpq(G4int p, G4int q) const { return fElReduced[p - 1][q - 1]; }
 
-  void AddAtomBase(G4int anElIdx, G4CrystalAtomBase* aLattice)
-  {
-    AddAtomBase(fMaterial->GetElement(anElIdx), aLattice);
-  }
+    G4CrystalAtomBase* GetAtomBase(const G4Element* anElement);
+    void AddAtomBase(const G4Element* anElement, G4CrystalAtomBase* aBase)
+    {
+      theCrystalAtomBaseMap.insert(
+        std::pair<const G4Element*, G4CrystalAtomBase*>(anElement, aBase));
+    }
 
-  // Get the position of all the atoms in the unit cell
-  // for a single element or all the elements
-  G4bool GetAtomPos(const G4Element* anEl, std::vector<G4ThreeVector>& vecout);
-  G4bool GetAtomPos(std::vector<G4ThreeVector>& vecout);
+    G4CrystalAtomBase* GetAtomBase(G4int anElIdx)
+    {
+      return GetAtomBase(fMaterial->GetElement(anElIdx));
+    }
 
-  G4bool GetAtomPos(G4int anElIdx, std::vector<G4ThreeVector>& vecout)
-  {
-    GetAtomPos(fMaterial->GetElement(anElIdx), vecout);
-    return true;
-  }
+    void AddAtomBase(G4int anElIdx, G4CrystalAtomBase* aLattice)
+    {
+      AddAtomBase(fMaterial->GetElement(anElIdx), aLattice);
+    }
 
-  // Structure factor calculations
-  // Eq. 46, Chapter 2 , Introduction to solid state physics, C. Kittel
-  G4complex ComputeStructureFactor(G4double kScatteringVector, G4int h, G4int k, G4int l);
-  G4complex ComputeStructureFactorGeometrical(G4int h, G4int k, G4int l);
+    // Get the position of all the atoms in the unit cell
+    // for a single element or all the elements
+    G4bool GetAtomPos(const G4Element* anEl, std::vector<G4ThreeVector>& vecout);
+    G4bool GetAtomPos(std::vector<G4ThreeVector>& vecout);
 
-  void AddAtomicBond(G4AtomicBond* aBond) { theAtomicBondVector.push_back(aBond); };
-  G4AtomicBond* GetAtomicBond(G4int idx) { return theAtomicBondVector[idx]; };
-  std::vector<G4AtomicBond*> GetAtomicBondVector() { return theAtomicBondVector; };
+    G4bool GetAtomPos(G4int anElIdx, std::vector<G4ThreeVector>& vecout)
+    {
+      GetAtomPos(fMaterial->GetElement(anElIdx), vecout);
+      return true;
+    }
 
- protected:
-  Elasticity fElasticity;  // Full 4D elasticity tensor
-  ReducedElasticity fElReduced;  // Reduced 2D elasticity tensor
+    // Structure factor calculations
+    // Eq. 46, Chapter 2 , Introduction to solid state physics, C. Kittel
+    G4complex ComputeStructureFactor(G4double kScatteringVector, G4int h, G4int k, G4int l);
+    G4complex ComputeStructureFactorGeometrical(G4int h, G4int k, G4int l);
 
- private:
-  G4Material* fMaterial;
+    void AddAtomicBond(G4AtomicBond* aBond) { theAtomicBondVector.push_back(aBond); };
+    G4AtomicBond* GetAtomicBond(G4int idx) { return theAtomicBondVector[idx]; };
+    std::vector<G4AtomicBond*> GetAtomicBondVector() { return theAtomicBondVector; };
 
-  // Crystal cell description, i.e. space group
-  // and cell parameters
-  G4CrystalUnitCell* theUnitCell{nullptr};
+  protected:
 
-  // Map of atom positions for each element
-  // The coordinate system is the unit cell
-  std::map<const G4Element*, G4CrystalAtomBase*> theCrystalAtomBaseMap;
+    Elasticity fElasticity;  // Full 4D elasticity tensor
+    ReducedElasticity fElReduced;  // Reduced 2D elasticity tensor
 
-  // Bond between atoms. Each bond is mapped with two Elements
-  // and the number of the atoms in the corresponding G4CrystalBaseAtomPos
-  std::vector<G4AtomicBond*> theAtomicBondVector;
+  private:
+
+    G4Material* fMaterial;
+
+    // Crystal cell description, i.e. space group
+    // and cell parameters
+    G4CrystalUnitCell* theUnitCell{nullptr};
+
+    // Map of atom positions for each element
+    // The coordinate system is the unit cell
+    std::map<const G4Element*, G4CrystalAtomBase*> theCrystalAtomBaseMap;
+
+    // Bond between atoms. Each bond is mapped with two Elements
+    // and the number of the atoms in the corresponding G4CrystalBaseAtomPos
+    std::vector<G4AtomicBond*> theAtomicBondVector;
 };
 
 #endif

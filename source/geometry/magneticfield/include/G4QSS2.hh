@@ -35,18 +35,20 @@
 #include "G4Types.hh"
 #include "G4qss_misc.hh"
 
+#include <cassert>
 #include <cmath>
-#include <cassert>
 
-#define  REPORT_CRITICAL_PROBLEM  1
+#define REPORT_CRITICAL_PROBLEM 1
 
-#ifdef   REPORT_CRITICAL_PROBLEM
-#include <cassert>
-#include "G4Log.hh"
+#ifdef REPORT_CRITICAL_PROBLEM
+#  include "G4Log.hh"
+
+#  include <cassert>
 #endif
 
 /**
  * @brief G4QSS2 defines the QSS2 simulator engine used in QSS field stepper.
+ * @ingroup geometry_magneticfield
  */
 
 class G4QSS2
@@ -182,45 +184,64 @@ class G4QSS2
 
           if (unlikely(cf2 == 0 || (1000 * std::fabs(cf2)) < std::fabs(cf1)))
           {
-            if (cf1 == 0) {
+            if (cf1 == 0)
+            {
               mpr = Qss_misc::INF;
-            } else
+            }
+            else
             {
               mpr = -cf0 / cf1;
               mpr2 = -cf0Alt / cf1;
-              if (mpr < 0 || (mpr2 > 0 && mpr2 < mpr)) { mpr = mpr2; }
+              if (mpr < 0 || (mpr2 > 0 && mpr2 < mpr))
+              {
+                mpr = mpr2;
+              }
             }
 
-            if (mpr < 0) { mpr = Qss_misc::INF; }
+            if (mpr < 0)
+            {
+              mpr = Qss_misc::INF;
+            }
           }
           else
           {
-            static G4ThreadLocal unsigned long long okCalls=0LL, badCalls= 0LL;
+            static G4ThreadLocal unsigned long long okCalls = 0LL, badCalls = 0LL;
             constexpr G4double dangerZone = 1.0e+30;
-            static G4ThreadLocal G4double bigCf1_pr = dangerZone,
-                                          bigCf2_pr = dangerZone;
+            static G4ThreadLocal G4double bigCf1_pr = dangerZone, bigCf2_pr = dangerZone;
             static G4ThreadLocal G4double bigCf1 = 0.0, bigCf2 = 0.0;
-            if( std::abs(cf1) > dangerZone || std::fabs(cf2) > dangerZone )
+            if (std::abs(cf1) > dangerZone || std::fabs(cf2) > dangerZone)
             {
               badCalls++;
-              if( badCalls == 1 
-                 || ( badCalls < 1000 && badCalls % 20 == 0 )
-                 || (   1000 < badCalls && badCalls <   10000 && badCalls %  100 == 0 )
-                 || (  10000 < badCalls && badCalls <  100000 && badCalls % 1000 == 0 )
-                 || ( 100000 < badCalls &&                       badCalls % 10000 == 0 )
-                 || ( std::fabs(cf1) > 1.5 * bigCf1_pr || std::fabs(cf2) > 1.5 * bigCf2_pr )
-                )
+              if (badCalls == 1 || (badCalls < 1000 && badCalls % 20 == 0)
+                  || (1000 < badCalls && badCalls < 10000 && badCalls % 100 == 0)
+                  || (10000 < badCalls && badCalls < 100000 && badCalls % 1000 == 0)
+                  || (100000 < badCalls && badCalls % 10000 == 0)
+                  || (std::fabs(cf1) > 1.5 * bigCf1_pr || std::fabs(cf2) > 1.5 * bigCf2_pr))
               {
                 std::cout << " cf1 = " << std::setw(15) << cf1 << " cf2= " << std::setw(15) << cf2
                           << "  badCall # " << badCalls << " of " << badCalls + okCalls
-                          << "  fraction = " << double(badCalls) / double(badCalls+okCalls);
+                          << "  fraction = " << double(badCalls) / double(badCalls + okCalls);
 
-                if( std::fabs(cf1) > 1.5 * bigCf1_pr ) { bigCf1_pr = std::fabs(cf1); std::cout << " Bigger cf1 "; }
-                if( std::fabs(cf2) > 1.5 * bigCf2_pr ) { bigCf2_pr = std::fabs(cf2); std::cout << " Bigger cf2 "; }
+                if (std::fabs(cf1) > 1.5 * bigCf1_pr)
+                {
+                  bigCf1_pr = std::fabs(cf1);
+                  std::cout << " Bigger cf1 ";
+                }
+                if (std::fabs(cf2) > 1.5 * bigCf2_pr)
+                {
+                  bigCf2_pr = std::fabs(cf2);
+                  std::cout << " Bigger cf2 ";
+                }
                 std::cout << std::endl;
               }
-              if( std::fabs(cf1) > 1.5 * bigCf1 ) { bigCf1 = std::fabs(cf1); }
-              if( std::fabs(cf2) > 1.5 * bigCf2 ) { bigCf2 = std::fabs(cf2); }
+              if (std::fabs(cf1) > 1.5 * bigCf1)
+              {
+                bigCf1 = std::fabs(cf1);
+              }
+              if (std::fabs(cf2) > 1.5 * bigCf2)
+              {
+                bigCf2 = std::fabs(cf2);
+              }
             }
             else
             {
@@ -228,28 +249,28 @@ class G4QSS2
             }
 
 #ifdef REPORT_CRITICAL_PROBLEM
-            constexpr unsigned int exp_limit= 140;
-            constexpr G4double limit= 1.0e+140; // std::pow(10,exp_limit));
-            assert( std::fabs( std::pow(10, exp_limit) - limit ) < 1.0e-14*limit );
-            G4bool bad_cf2fac= G4Log(std::fabs(cf2))
-                             + G4Log(std::max( std::fabs(cf0), std::fabs(cf0Alt))) > 2*limit;
-            if( std::fabs(cf1) > limit
-               || G4Log(std::fabs(cf2))
-                + G4Log(std::max( std::fabs(cf0), std::fabs(cf0Alt))) > 2*exp_limit )
+            constexpr unsigned int exp_limit = 140;
+            constexpr G4double limit = 1.0e+140;  // std::pow(10,exp_limit));
+            assert(std::fabs(std::pow(10, exp_limit) - limit) < 1.0e-14 * limit);
+            G4bool bad_cf2fac =
+              G4Log(std::fabs(cf2)) + G4Log(std::max(std::fabs(cf0), std::fabs(cf0Alt)))
+              > 2 * limit;
+            if (std::fabs(cf1) > limit
+                || G4Log(std::fabs(cf2)) + G4Log(std::max(std::fabs(cf0), std::fabs(cf0Alt)))
+                     > 2 * exp_limit)
             {
               G4ExceptionDescription ermsg;
               ermsg << "QSS2: Coefficients exceed tolerable values -- beyond " << limit << G4endl;
-              if( std::fabs(cf1) > limit )
+              if (std::fabs(cf1) > limit)
               {
                 ermsg << " |cf1| = " << cf1 << " is > " << limit << " (limit)";
               }
-              if( bad_cf2fac)
+              if (bad_cf2fac)
               {
-                ermsg << " bad cf2-factor:  cf2 = " << cf2
-                      << " product is > " << 2*limit << " (limit)";
+                ermsg << " bad cf2-factor:  cf2 = " << cf2 << " product is > " << 2 * limit
+                      << " (limit)";
               }
-              G4Exception("QSS2::recompute_next_times",
-                          "Field/Qss2-", FatalException, ermsg ); 
+              G4Exception("QSS2::recompute_next_times", "Field/Qss2-", FatalException, ermsg);
             }
 #endif
             G4double cf1_2 = cf1 * cf1;
@@ -267,26 +288,38 @@ class G4QSS2
               G4double sd, r1;
               sd = std::sqrt(disc1);
               r1 = (-cf1 + sd) / cf2_d2;
-              if (r1 > 0) {
+              if (r1 > 0)
+              {
                 mpr = r1;
-              } else {
+              }
+              else
+              {
                 mpr = Qss_misc::INF;
               }
               r1 = (-cf1 - sd) / cf2_d2;
-              if ((r1 > 0) && (r1 < mpr)) { mpr = r1; }
+              if ((r1 > 0) && (r1 < mpr))
+              {
+                mpr = r1;
+              }
             }
             else if (disc1 < 0)
             {
               G4double sd, r1;
               sd = std::sqrt(disc2);
               r1 = (-cf1 + sd) / cf2_d2;
-              if (r1 > 0) {
+              if (r1 > 0)
+              {
                 mpr = r1;
-              } else {
+              }
+              else
+              {
                 mpr = Qss_misc::INF;
               }
               r1 = (-cf1 - sd) / cf2_d2;
-              if ((r1 > 0) && (r1 < mpr)) { mpr = r1; }
+              if ((r1 > 0) && (r1 < mpr))
+              {
+                mpr = r1;
+              }
             }
             else
             {
@@ -295,13 +328,28 @@ class G4QSS2
               sd2 = std::sqrt(disc2);
               r1 = (-cf1 + sd1) / cf2_d2;
               r2 = (-cf1 + sd2) / cf2_d2;
-              if (r1 > 0) { mpr = r1; }
-              else { mpr = Qss_misc::INF; }
+              if (r1 > 0)
+              {
+                mpr = r1;
+              }
+              else
+              {
+                mpr = Qss_misc::INF;
+              }
               r1 = (-cf1 - sd1) / cf2_d2;
-              if ((r1 > 0) && (r1 < mpr)) { mpr = r1; }
-              if (r2 > 0 && r2 < mpr) { mpr = r2; }
+              if ((r1 > 0) && (r1 < mpr))
+              {
+                mpr = r1;
+              }
+              if (r2 > 0 && r2 < mpr)
+              {
+                mpr = r2;
+              }
               r2 = (-cf1 - sd2) / cf2_d2;
-              if ((r2 > 0) && (r2 < mpr)) { mpr = r2; }
+              if ((r2 > 0) && (r2 < mpr))
+              {
+                mpr = r2;
+              }
             }
           }
           time[var] += mpr;
@@ -327,7 +375,10 @@ class G4QSS2
         else
         {
           mpr = lqu[var] / x[icf1];
-          if (mpr < 0) { mpr *= -1; }
+          if (mpr < 0)
+          {
+            mpr *= -1;
+          }
           time[var] = t + mpr;
         }
       }
@@ -340,9 +391,12 @@ class G4QSS2
       G4double* const lqu = simulator->lqu;
       G4double* const time = simulator->nextStateTime;
 
-      if (x[cf2] != 0.0) {
+      if (x[cf2] != 0.0)
+      {
         time[var] = t + std::sqrt(lqu[var] / std::fabs(x[cf2]));
-      } else {
+      }
+      else
+      {
         time[var] = Qss_misc::INF;
       }
     }

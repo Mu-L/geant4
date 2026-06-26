@@ -30,34 +30,33 @@
  *      Author: kara
  */
 
-#include <G4Scheduler.hh>
-#include <G4VScheduler.hh>
 #include "G4ITTrackHolder.hh"
+
+#include "G4AutoLock.hh"
 #include "G4IT.hh"
+#include "G4Threading.hh"
 #include "G4Track.hh"
 #include "G4UnitsTable.hh"
-#include "G4AutoLock.hh"
-#include "G4Threading.hh"
+
+#include <G4Scheduler.hh>
+#include <G4VScheduler.hh>
 
 using namespace std;
 
-PriorityList::PriorityList() :
-     fpMainList(nullptr), fpWaitingList(nullptr)
-{
-}
+PriorityList::PriorityList() : fpMainList(nullptr), fpWaitingList(nullptr) {}
 
-PriorityList::PriorityList(G4TrackManyList& allMainList):
-     fpMainList(nullptr), fpWaitingList(nullptr)
+PriorityList::PriorityList(G4TrackManyList& allMainList)
+  : fpMainList(nullptr), fpWaitingList(nullptr)
 {
   NewMainList(allMainList);
 }
 
-PriorityList::PriorityList(const PriorityList& right) :
-    
+PriorityList::PriorityList(const PriorityList& right)
+  :
+
     fpMainList(right.fpMainList),
     fpWaitingList(right.fpWaitingList)
-{
-}
+{}
 
 PriorityList::~PriorityList()
 {
@@ -77,18 +76,17 @@ void PriorityList::NotifyDeletingList(G4TrackList* __list)
 {
   if (__list == fpMainList)
   {
-//    StopWatching(fpMainList);
+    //    StopWatching(fpMainList);
     fpMainList = nullptr;
   }
   else if (__list == fpWaitingList)
   {
-//    StopWatching(fpWaitingList);
+    //    StopWatching(fpWaitingList);
     fpWaitingList = nullptr;
   }
 }
 
-void PriorityList::NewMainList(G4TrackList* __list,
-                               G4TrackManyList& allMainList)
+void PriorityList::NewMainList(G4TrackList* __list, G4TrackManyList& allMainList)
 {
   fpMainList = __list;
   allMainList.Add(__list);
@@ -97,13 +95,12 @@ void PriorityList::NewMainList(G4TrackList* __list,
 
 G4TrackList* PriorityList::NewMainList(G4TrackManyList& allMainList)
 {
-  auto  trackList = new G4TrackList();
+  auto trackList = new G4TrackList();
   NewMainList(trackList, allMainList);
   return fpMainList;
 }
 
-void PriorityList::PushToMainList(G4Track* __track,
-                                  G4TrackManyList& allMainList)
+void PriorityList::PushToMainList(G4Track* __track, G4TrackManyList& allMainList)
 {
   if (fpMainList == nullptr)
   {
@@ -112,8 +109,7 @@ void PriorityList::PushToMainList(G4Track* __track,
   fpMainList->push_back(__track);
 }
 
-void PriorityList::TransferToMainList(G4TrackList*& __list,
-                                      G4TrackManyList& allMainList)
+void PriorityList::TransferToMainList(G4TrackList*& __list, G4TrackManyList& allMainList)
 {
   if (fpMainList != nullptr)
   {
@@ -127,8 +123,7 @@ void PriorityList::TransferToMainList(G4TrackList*& __list,
   }
 }
 
-void PriorityList::PushToListOfSecondaries(G4Track* __track,
-                                           G4TrackManyList& listOfAllSecondaries)
+void PriorityList::PushToListOfSecondaries(G4Track* __track, G4TrackManyList& listOfAllSecondaries)
 {
   //      if (priorityList->fSecondaries.empty())
   if (fSecondaries.GetListNode() != nullptr)
@@ -198,13 +193,10 @@ G4ITTrackHolder* G4ITTrackHolder::Instance()
   if (fgInstance == nullptr)
   {
     fgInstance = new G4ITTrackHolder();
-    if(G4Threading::IsMasterThread() ||
-       !G4Threading::IsMultithreadedApplication() 
-    ) 
+    if (G4Threading::IsMasterThread() || !G4Threading::IsMultithreadedApplication())
     {
       fgMasterInstance = fgInstance;
     }
-    
   }
   return fgInstance;
 }
@@ -227,15 +219,14 @@ G4ITTrackHolder::G4ITTrackHolder()
   fVerbose = 0;
 
   fPostActivityGlobalTime = -1;
-//  fPreActivityGlobalTime = -1;
+  //  fPreActivityGlobalTime = -1;
 }
 
 G4ITTrackHolder::~G4ITTrackHolder()
 {
   auto end = fLists.end();
 
-  for (auto it = fLists.begin(); it != end;
-      it++)
+  for (auto it = fLists.begin(); it != end; it++)
   {
     delete it->second;
     it->second = 0;
@@ -249,8 +240,7 @@ G4ITTrackHolder::~G4ITTrackHolder()
     for (; fDelayedList_i != fDelayedList_end; fDelayedList_i++)
     {
       auto it = fDelayedList_i->second.begin();
-      auto __end =
-          fDelayedList_i->second.end();
+      auto __end = fDelayedList_i->second.end();
 
       for (; it != __end; it++)
       {
@@ -287,18 +277,16 @@ G4ITTrackHolder::~G4ITTrackHolder()
  */
 bool G4ITTrackHolder::MergeNextTimeToMainList(double& time)
 {
-//  G4cout << "G4ITTrackHolder::MergeNextTimeToMainList" << G4endl;
+  //  G4cout << "G4ITTrackHolder::MergeNextTimeToMainList" << G4endl;
   if (fDelayedList.empty())
   {
     return false;
   }
 
-//  G4cout << "fDelayedList.size = " << fDelayedList.size() <<G4endl;
+  //  G4cout << "fDelayedList.size = " << fDelayedList.size() <<G4endl;
 
-  auto it =
-      fDelayedList.begin()->second.begin();
-  auto end =
-      fDelayedList.begin()->second.end();
+  auto it = fDelayedList.begin()->second.begin();
+  auto end = fDelayedList.begin()->second.end();
   if (it == end) return false;
 
   bool output = false;
@@ -306,8 +294,7 @@ bool G4ITTrackHolder::MergeNextTimeToMainList(double& time)
   {
     PriorityList* right_listUnion(nullptr);
 
-    auto it_listUnion = fLists.find(
-        it->first);
+    auto it_listUnion = fLists.find(it->first);
     if (it_listUnion == fLists.end())
     {
       right_listUnion = (fLists[it->first] = new PriorityList());
@@ -375,7 +362,7 @@ void G4ITTrackHolder::MergeSecondariesWithMainList()
 
 void G4ITTrackHolder::AddTrackID(G4Track* track)
 {
-  //if(fNbTracks == 0) fNbTracks = -1;
+  // if(fNbTracks == 0) fNbTracks = -1;
   track->SetTrackID(fNbTracks);
   fNbTracks--;
 }
@@ -384,18 +371,18 @@ void G4ITTrackHolder::AddTrackID(G4Track* track)
 
 void G4ITTrackHolder::Push(G4Track* track)
 {
-//  if (G4VScheduler::Instance()->IsRunning())
-//  {
-//    G4ExceptionDescription exceptionDescription;
-//    exceptionDescription
-//        << "G4ITTrackHolder::PushTrack : You are trying to push tracks while the "
-//        "ITStepManager is running";
-//    G4Exception("G4ITTrackHolder::PushTrack", "ITStepManager012",
-//                FatalErrorInArgument, exceptionDescription);
-//  }
+  //  if (G4VScheduler::Instance()->IsRunning())
+  //  {
+  //    G4ExceptionDescription exceptionDescription;
+  //    exceptionDescription
+  //        << "G4ITTrackHolder::PushTrack : You are trying to push tracks while the "
+  //        "ITStepManager is running";
+  //    G4Exception("G4ITTrackHolder::PushTrack", "ITStepManager012",
+  //                FatalErrorInArgument, exceptionDescription);
+  //  }
   _PushTrack(track);
 
-//  G4MIConstituent::NotifyEntityAdded(track);
+  //  G4MIConstituent::NotifyEntityAdded(track);
 }
 //_________________________________________________________________________
 void G4ITTrackHolder::PushTo(G4Track* track, PriorityList::Type type)
@@ -417,25 +404,21 @@ void G4ITTrackHolder::PushTo(G4Track* track, PriorityList::Type type)
 
   switch (type)
   {
-    case PriorityList::MainList:
-    {
+    case PriorityList::MainList: {
       priorityList->PushToMainList(track, fAllMainList);
       break;
     }
-    case PriorityList::SecondariesList:
-    {
+    case PriorityList::SecondariesList: {
       priorityList->PushToListOfSecondaries(track, fAllSecondariesList);
       break;
     }
-    case PriorityList::WaitingList:
-    {
+    case PriorityList::WaitingList: {
       priorityList->PushToWaitingList(track);
       return;
       break;
     }
 
-    default:
-    {
+    default: {
       return;
       break;
     }
@@ -448,12 +431,11 @@ void G4ITTrackHolder::_PushTrack(G4Track* track)
   if (track == nullptr)
   {
     G4ExceptionDescription exceptionDescription;
-    exceptionDescription
-        << "You are trying to push a non-existing track (track pointer is null)"
-        << G4endl;
+    exceptionDescription << "You are trying to push a non-existing track (track pointer is null)"
+                         << G4endl;
 
-    G4Exception("G4ITTrackHolder::_PushTrack", "ITStepManager014",
-                FatalErrorInArgument, exceptionDescription);
+    G4Exception("G4ITTrackHolder::_PushTrack", "ITStepManager014", FatalErrorInArgument,
+                exceptionDescription);
   }
 
   G4double globalTime = track->GetGlobalTime();
@@ -470,13 +452,11 @@ void G4ITTrackHolder::_PushTrack(G4Track* track)
   if (fVerbose != 0)
   {
     G4cout << G4endl;
-    G4cout << "\t"<< ">> Pushing a track -->  ";
-    G4cout << GetIT(track)->GetName() << " (" << track->GetTrackID() <<")"
-    << " -- ";
-    G4cout << "Global current time: " << G4BestUnit(currentGlobalTime,"Time")
-    << "\t";
-    G4cout << "Track's time: " << G4BestUnit(track->GetGlobalTime(),"Time")
-    << G4endl;
+    G4cout << "\t" << ">> Pushing a track -->  ";
+    G4cout << GetIT(track)->GetName() << " (" << track->GetTrackID() << ")"
+           << " -- ";
+    G4cout << "Global current time: " << G4BestUnit(currentGlobalTime, "Time") << "\t";
+    G4cout << "Track's time: " << G4BestUnit(track->GetGlobalTime(), "Time") << G4endl;
   }
 #endif
 
@@ -485,20 +465,16 @@ void G4ITTrackHolder::_PushTrack(G4Track* track)
     if (globalTime < currentGlobalTime)
     {
       G4ExceptionDescription exceptionDescription;
-      exceptionDescription
-          << "You are trying to push a track with a global time"
-          << " inferior to the current simulation time." << G4endl<< "The time is going back : " << G4endl
-      << "The time in the step manager : "
-      << G4BestUnit(currentGlobalTime,"Time")
-      << G4endl
-      << "The time of the track : "
-      << G4BestUnit(globalTime,"Time")
-      << G4endl
-      << "(ITStepManager is not yet running)"
-      << G4endl;
+      exceptionDescription << "You are trying to push a track with a global time"
+                           << " inferior to the current simulation time." << G4endl
+                           << "The time is going back : " << G4endl
+                           << "The time in the step manager : "
+                           << G4BestUnit(currentGlobalTime, "Time") << G4endl
+                           << "The time of the track : " << G4BestUnit(globalTime, "Time") << G4endl
+                           << "(ITStepManager is not yet running)" << G4endl;
 
-      G4Exception("G4ITTrackHolder::_PushTrack", "ITStepManager014",
-                  FatalErrorInArgument, exceptionDescription);
+      G4Exception("G4ITTrackHolder::_PushTrack", "ITStepManager014", FatalErrorInArgument,
+                  exceptionDescription);
     }
 
     // Push the track to the rigth track list :
@@ -513,42 +489,38 @@ void G4ITTrackHolder::_PushTrack(G4Track* track)
     {
       if (globalTime == currentGlobalTime)
       {
-        #ifdef G4VERBOSE
-          if (fVerbose != 0)
-          {
-            G4cout << G4endl;
-            G4cout << "\t"<< ">> Pushing to *main* list -->  ";
-            G4cout << GetIT(track)->GetName() << " (" << track->GetTrackID() <<")"
-            << " -- ";
-            G4cout << "Global current time: " << G4BestUnit(currentGlobalTime,"Time")
-            << "\t";
-            G4cout << "Track's time: " << G4BestUnit(track->GetGlobalTime(),"Time")
-            << G4endl;
-          }
-        #endif
+#ifdef G4VERBOSE
+        if (fVerbose != 0)
+        {
+          G4cout << G4endl;
+          G4cout << "\t" << ">> Pushing to *main* list -->  ";
+          G4cout << GetIT(track)->GetName() << " (" << track->GetTrackID() << ")"
+                 << " -- ";
+          G4cout << "Global current time: " << G4BestUnit(currentGlobalTime, "Time") << "\t";
+          G4cout << "Track's time: " << G4BestUnit(track->GetGlobalTime(), "Time") << G4endl;
+        }
+#endif
         PushTo(track, PriorityList::MainList);
       }
       else
       {
-        // if(currentGlobalTime > 1*CLHEP::picosecond) abort();
-        #ifdef G4VERBOSE
-          if (fVerbose != 0)
-          {
-            G4cout << G4endl;
-            G4cout << "\t"<< ">> Pushing to *delayed* list -->  ";
-            G4cout << GetIT(track)->GetName() << " (" << track->GetTrackID() <<")"
-            << " -- ";
-            G4cout << "Global current time: " << G4BestUnit(currentGlobalTime,"Time")
-            << "\t";
-            G4cout << "Track's time: " << G4BestUnit(track->GetGlobalTime(),"Time")
-            << G4endl;
-          }
-        #endif
+// if(currentGlobalTime > 1*CLHEP::picosecond) abort();
+#ifdef G4VERBOSE
+        if (fVerbose != 0)
+        {
+          G4cout << G4endl;
+          G4cout << "\t" << ">> Pushing to *delayed* list -->  ";
+          G4cout << GetIT(track)->GetName() << " (" << track->GetTrackID() << ")"
+                 << " -- ";
+          G4cout << "Global current time: " << G4BestUnit(currentGlobalTime, "Time") << "\t";
+          G4cout << "Track's time: " << G4BestUnit(track->GetGlobalTime(), "Time") << G4endl;
+        }
+#endif
         PushDelayed(track);
       }
     }
   }
-  else // Is running
+  else  // Is running
   {
     double timeDifference = globalTime - currentGlobalTime;
     double timeTolerance = G4Scheduler::Instance()->GetTimeTolerance();
@@ -556,20 +528,16 @@ void G4ITTrackHolder::_PushTrack(G4Track* track)
     if (timeDifference < -1 * timeTolerance)
     {
       G4ExceptionDescription exceptionDescription;
-      exceptionDescription
-          << "You are trying to push a track with a global time"
-          << " inferior to the current simulation time." << G4endl<< "The time is going back : "
-      << G4endl
-      << "The time in the step manager : "
-      << G4BestUnit(timeDifference,"Time")
-      << G4endl
-      << "The time of the track : " << G4BestUnit(globalTime,"Time")
-      << G4endl
-      << "(ITStepManager is running)"
-      << G4endl;
+      exceptionDescription << "You are trying to push a track with a global time"
+                           << " inferior to the current simulation time." << G4endl
+                           << "The time is going back : " << G4endl
+                           << "The time in the step manager : "
+                           << G4BestUnit(timeDifference, "Time") << G4endl
+                           << "The time of the track : " << G4BestUnit(globalTime, "Time") << G4endl
+                           << "(ITStepManager is running)" << G4endl;
 
-      G4Exception("G4ITTrackHolder::_PushTrack", "ITStepManager015",
-                  FatalErrorInArgument, exceptionDescription);
+      G4Exception("G4ITTrackHolder::_PushTrack", "ITStepManager015", FatalErrorInArgument,
+                  exceptionDescription);
     }
 
     // Push the track to the rigth track list :
@@ -578,38 +546,33 @@ void G4ITTrackHolder::_PushTrack(G4Track* track)
     // otherwise, it will be pushed to the delayed track list.
     if (fabs(timeDifference) < timeTolerance)
     {
-//      G4cout << "Is pushing " << GetIT(track)->GetName() << G4endl;
+      //      G4cout << "Is pushing " << GetIT(track)->GetName() << G4endl;
 
-      #ifdef G4VERBOSE
-        if (fVerbose != 0)
-        {
-          G4cout << G4endl;
-          G4cout << "\t"<< ">> Pushing to *secondary* list -->  ";
-          G4cout << GetIT(track)->GetName() << " (" << track->GetTrackID() <<")"
-          << " -- ";
-          G4cout << "Global current time: " << G4BestUnit(currentGlobalTime,"Time")
-          << "\t";
-          G4cout << "Track's time: " << G4BestUnit(track->GetGlobalTime(),"Time")
-          << G4endl;
-        }
-      #endif
+#ifdef G4VERBOSE
+      if (fVerbose != 0)
+      {
+        G4cout << G4endl;
+        G4cout << "\t" << ">> Pushing to *secondary* list -->  ";
+        G4cout << GetIT(track)->GetName() << " (" << track->GetTrackID() << ")"
+               << " -- ";
+        G4cout << "Global current time: " << G4BestUnit(currentGlobalTime, "Time") << "\t";
+        G4cout << "Track's time: " << G4BestUnit(track->GetGlobalTime(), "Time") << G4endl;
+      }
+#endif
       PushTo(track, PriorityList::SecondariesList);
     }
-    else // globalTime < fGlobalTime already taken into account above
+    else  // globalTime < fGlobalTime already taken into account above
     {
       G4ExceptionDescription exceptionDescription;
-      exceptionDescription
-          << "While running you cannot push a track"
-          << " with a bigger global time than the current global time" << G4endl<< "The time in the step manager : "
-      << G4BestUnit(currentGlobalTime,"Time")
-      << G4endl
-      << "The time of the track : " << G4BestUnit(globalTime,"Time")
-      << G4endl
-      << "(ITStepManager is running)"
-      << G4endl;
+      exceptionDescription << "While running you cannot push a track"
+                           << " with a bigger global time than the current global time" << G4endl
+                           << "The time in the step manager : "
+                           << G4BestUnit(currentGlobalTime, "Time") << G4endl
+                           << "The time of the track : " << G4BestUnit(globalTime, "Time") << G4endl
+                           << "(ITStepManager is running)" << G4endl;
 
-      G4Exception("G4ITTrackHolder::_PushTrack", "ITStepManager016",
-                  FatalErrorInArgument, exceptionDescription);
+      G4Exception("G4ITTrackHolder::_PushTrack", "ITStepManager016", FatalErrorInArgument,
+                  exceptionDescription);
       // PushDelayed(track, globalTime);
     }
   }
@@ -631,18 +594,15 @@ void G4ITTrackHolder::PushDelayed(G4Track* track)
 
   G4double globalTime = track->GetGlobalTime();
 
-  auto it_delayed =
-  fDelayedList.find(globalTime);
+  auto it_delayed = fDelayedList.find(globalTime);
 
   if (it_delayed == fDelayedList.end())
   {
-    (fDelayedList[globalTime][moleculeID] = new G4TrackList())->push_back(
-        track);
+    (fDelayedList[globalTime][moleculeID] = new G4TrackList())->push_back(track);
   }
   else
   {
-    auto it_trackList =
-    it_delayed->second.find(moleculeID);
+    auto it_trackList = it_delayed->second.find(moleculeID);
 
     if (it_trackList == it_delayed->second.end())
     {
@@ -698,36 +658,33 @@ void G4ITTrackHolder::KillTracks()
 #ifdef G4VERBOSE
   if (fVerbose > 1)
   {
-    G4cout << "*** G4ITTrackHolder::KillTracks , step #"
-           << G4VScheduler::Instance()->GetNbSteps()
+    G4cout << "*** G4ITTrackHolder::KillTracks , step #" << G4VScheduler::Instance()->GetNbSteps()
            << " ***" << G4endl;
-    G4cout << "Nb of tracks to kill "<< fToBeKilledList.size() << G4endl;
-    G4cout << setw(25) << left << "#Name"
-           << setw(25) << "track ID"<< G4endl;
+    G4cout << "Nb of tracks to kill " << fToBeKilledList.size() << G4endl;
+    G4cout << setw(25) << left << "#Name" << setw(25) << "track ID" << G4endl;
 
     G4TrackList::iterator it = fToBeKilledList.begin();
-    for(; it != fToBeKilledList.end();)
+    for (; it != fToBeKilledList.end();)
     {
       G4Track* toBeErased = *it;
 
-      G4cout << setw(25) << GetIT(toBeErased)->GetName()
-      << setw(25) << toBeErased->GetTrackID()
-      << G4endl;
+      G4cout << setw(25) << GetIT(toBeErased)->GetName() << setw(25) << toBeErased->GetTrackID()
+             << G4endl;
 
       it = fToBeKilledList.erase(toBeErased);
     }
   }
   else
 #endif
-  fToBeKilledList.erase(fToBeKilledList.begin(), fToBeKilledList.end());
+    fToBeKilledList.erase(fToBeKilledList.begin(), fToBeKilledList.end());
 }
 
 void G4ITTrackHolder::Clear()
 {
   fAllMainList.ClearLists();
   fAllSecondariesList.ClearLists();
-//  fAllMainList.RemoveLists();
-//  fAllSecondariesList.RemoveLists();
+  //  fAllMainList.RemoveLists();
+  //  fAllSecondariesList.RemoveLists();
 
   auto it = fLists.begin();
 
@@ -753,8 +710,8 @@ void G4ITTrackHolder::Clear()
 
   fDelayedList.clear();
 
-//  fAllMainList.ClearLists();
-//  fAllSecondariesList.ClearLists();
+  //  fAllMainList.ClearLists();
+  //  fAllSecondariesList.ClearLists();
   fAllMainList.RemoveLists();
   fAllSecondariesList.RemoveLists();
   KillTracks();
@@ -779,9 +736,7 @@ G4TrackList* G4ITTrackHolder::GetMainList(G4int i)
   return nullptr;
 }
 
-bool G4ITTrackHolder::AddWatcher(Key id,
-                                 G4TrackList::Watcher* watcher,
-                                 PriorityList::Type type)
+bool G4ITTrackHolder::AddWatcher(Key id, G4TrackList::Watcher* watcher, PriorityList::Type type)
 {
   auto it = fLists.find(id);
   if (it == fLists.end()) return false;
@@ -847,7 +802,7 @@ void G4ITTrackHolder::MoveMainToWaitingList()
     if (PriorityList* lists = it->second)
     {
       lists->SetWaitingList(lists->GetMainList());
-      //TODO
+      // TODO
     }
   }
   fAllMainList.RemoveLists();
@@ -876,8 +831,7 @@ bool G4ITTrackHolder::DelayListsNOTEmpty()
   return false;
 }
 
-bool G4ITTrackHolder::CheckMapIsNOTEmpty(MapOfPriorityLists& mapOfLists,
-                                         PriorityList::Type type)
+bool G4ITTrackHolder::CheckMapIsNOTEmpty(MapOfPriorityLists& mapOfLists, PriorityList::Type type)
 {
   auto it = mapOfLists.begin();
   auto end = mapOfLists.end();

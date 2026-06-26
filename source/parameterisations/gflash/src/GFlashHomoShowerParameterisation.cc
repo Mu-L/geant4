@@ -33,16 +33,18 @@
 // Authors: E.Barberio & Joanna Weng - 9.11.2004
 // ------------------------------------------------------------
 
-#include <cmath>
-
 #include "GFlashHomoShowerParameterisation.hh"
-#include "GVFlashShowerParameterisation.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
-#include "Randomize.hh"
-#include "G4ios.hh"
+
 #include "G4Material.hh"
 #include "G4MaterialTable.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4ios.hh"
+#include "Randomize.hh"
+
+#include "GVFlashShowerParameterisation.hh"
+
+#include <cmath>
 
 GFlashHomoShowerParameterisation::GFlashHomoShowerParameterisation(G4Material* aMat,
                                                                    GVFlashHomoShowerTuning* aPar)
@@ -60,10 +62,12 @@ GFlashHomoShowerParameterisation::GFlashHomoShowerParameterisation(G4Material* a
     Betah(0.)
 
 {
-  if (!aPar) {
+  if (!aPar)
+  {
     thePar = new GVFlashHomoShowerTuning;
   }
-  else {
+  else
+  {
     thePar = aPar;
   }
 
@@ -149,17 +153,16 @@ GFlashHomoShowerParameterisation::GFlashHomoShowerParameterisation(G4Material* a
 void GFlashHomoShowerParameterisation::SetMaterial(G4Material* mat)
 {
   material = mat;
+  ZoA = GetEffZoA(material);
   Z = GetEffZ(material);
   A = GetEffA(material);
+  // G4cout << "Set Material ZoA " << ZoA << " Z/A " << Z/A << G4endl;
   density = material->GetDensity() / (g / cm3);
-  X0 = material->GetRadlen();
+  X0 = material->GetRadlen();  // in mm !
   // O. I. Dovzhenkko and A. A. Pommanskii
-  Ec = 2.66 * std::pow((X0 * Z / A), 1.1);
-  // // Rossi appriximation
-  // Ec = 610.0 * MeV / (Z + 1.24);
+  Ec = 2.66 * std::pow((X0 / cm * density * ZoA), 1.1) * MeV;
   const G4double Es = 21.2 * MeV;
   Rm = X0 * Es / Ec;
-  // PrintMaterial();
 }
 
 GFlashHomoShowerParameterisation::~GFlashHomoShowerParameterisation()
@@ -169,7 +172,8 @@ GFlashHomoShowerParameterisation::~GFlashHomoShowerParameterisation()
 
 void GFlashHomoShowerParameterisation::GenerateLongitudinalProfile(G4double Energy)
 {
-  if (material == 0) {
+  if (material == 0)
+  {
     G4Exception("GFlashHomoShowerParameterisation::GenerateLongitudinalProfile()", "InvalidSetup",
                 FatalException, "No material initialized!");
   }
@@ -219,14 +223,13 @@ void GFlashHomoShowerParameterisation::GenerateNSpotProfile(const G4double y)
   NSpot = ParSpotN1 * std::log(Z) * std::pow((y * Ec) / GeV, ParSpotN2);  // ok
 }
 
-G4double GFlashHomoShowerParameterisation::
-IntegrateEneLongitudinal(G4double LongitudinalStep)
+G4double GFlashHomoShowerParameterisation::IntegrateEneLongitudinal(G4double LongitudinalStep)
 {
   G4double LongitudinalStepInX0 = LongitudinalStep / X0;
-  G4float x1= Betah*LongitudinalStepInX0;
-  G4float x2= Alphah;
-  float x3 =  gam(x1,x2);
-  G4double DEne=x3;
+  G4float x1 = Betah * LongitudinalStepInX0;
+  G4float x2 = Alphah;
+  float x3 = gam(x1, x2);
+  G4double DEne = x3;
   return DEne;
 }
 
@@ -243,7 +246,8 @@ G4double GFlashHomoShowerParameterisation::IntegrateNspLongitudinal(G4double Lon
 G4double GFlashHomoShowerParameterisation::GenerateRadius(G4int ispot, G4double Energy,
                                                           G4double LongitudinalPosition)
 {
-  if (ispot < 1) {
+  if (ispot < 1)
+  {
     // Determine lateral parameters in the middle of the step.
     // They depend on energy & position along step.
     //
@@ -259,7 +263,8 @@ G4double GFlashHomoShowerParameterisation::GenerateRadius(G4int ispot, G4double 
   {
     Radius = Rm * RadiusCore * std::sqrt(Random2 / (1. - Random2));
   }
-  else {
+  else
+  {
     Radius = Rm * RadiusTail * std::sqrt(Random2 / (1. - Random2));
   }
   Radius = std::min(Radius, DBL_MAX);
@@ -294,10 +299,9 @@ void GFlashHomoShowerParameterisation::ComputeRadialParameters(G4double Energy, 
   RadiusTail = k1 * (std::exp(k3 * (Tau - k2)) + std::exp(k4 * (Tau - k2)));  // ok
 }
 
-G4double GFlashHomoShowerParameterisation::
-GenerateExponential(const G4double /* Energy */ )
+G4double GFlashHomoShowerParameterisation::GenerateExponential(const G4double /* Energy */)
 {
-  G4double ParExp1 =  9./7.*X0;
-  G4double random  = -ParExp1*G4RandExponential::shoot() ;
+  G4double ParExp1 = 9. / 7. * X0;
+  G4double random = -ParExp1 * G4RandExponential::shoot();
   return random;
 }

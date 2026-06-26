@@ -23,11 +23,11 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4LENDorBERTModel_h
-#define G4LENDorBERTModel_h 1
+#ifndef G4LENDORBERTMODEL_HH
+#define G4LENDORBERTMODEL_HH
 
 // Class Description
-// LEND is Geant4 interface for GIDI (General Interaction Data Interface) 
+// LEND is Geant4 interface for GIDI (General Interaction Data Interface)
 // which gives a discription of nuclear and atomic reactions, such as
 //    Binary collision cross sections
 //    Particle number multiplicity distributions of reaction products
@@ -45,18 +45,20 @@ class G4CascadeInterface;
 
 class G4LENDorBERTModel : public G4LENDModel
 {
-   public: 
-      G4LENDorBERTModel( G4ParticleDefinition* pd );
-      ~G4LENDorBERTModel(){;};
+  public:
 
-      void BuildPhysicsTable(const G4ParticleDefinition&);
+    G4LENDorBERTModel(G4ParticleDefinition* pd);
+    ~G4LENDorBERTModel() { ; };
 
-      G4HadFinalState* ApplyYourself( const G4HadProjectile& aTrack, G4Nucleus& aTargetNucleus );
-     
-   private: 
-      G4LENDCombinedModel* lend;
-      G4CascadeInterface* bert;
-      G4int secID;  // Creator model ID for the secondaries created by this model
+    void BuildPhysicsTable(const G4ParticleDefinition&);
+
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& aTargetNucleus);
+
+  private:
+
+    G4LENDCombinedModel* lend;
+    G4CascadeInterface* bert;
+    G4int secID;  // Creator model ID for the secondaries created by this model
 };
 
 #endif

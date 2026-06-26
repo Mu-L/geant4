@@ -42,9 +42,9 @@ class G4VtkStructuredGridPipeline
       actor->SetMapper(mapper);
     }
 
-    void Modified(){};
-    void Clear(){};
-    void Print(){};
+    void Modified() {};
+    void Clear() {};
+    void Print() {};
 
     G4int nx, ny, nz;
     vtkSmartPointer<vtkPoints> points;

@@ -6,7 +6,25 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2025-12-16 Gabriele Cosmo (hadr-casc-V11-03-02)
+## 2026-06-16 Alvaro Tolosa-Delgado (hadr-casc-V11-04-02)
+- Fixed Bertini secondary creator model IDs in G4CascadeInterface, tagging 
+    particles from precompound and evaporation stages with their corresponding 
+    submodel instead of always using model_BertiniCascade.
+
+## 2026-04-23 Julia Yarba (hadr-casc-V11-04-01)
+- G4CascadeFinalStateAlgorithm::GenerateCosTheta
+    For 4-or-higher body generation of cos(theta)b revert to the original 
+    algorithm sin(theta)*exp(-sin(theta)) (i.e. pt*sin(-pt)) but sample
+    cos(theta) from (-1.,1.) and calculate sin(theta). This replaced sampling 
+    sin(theta) from (0.,1.) and reflecting calculated cos(theta) if rndm>0.5
+    which in turn was causing a symmetric double bump in the Feynman-x distribution.
+    The update removes the aforementioned issue in the xF spectra. Based on initial 
+    validation, the update also repairs unphysical bumps in the centain spectra
+    of secondary pions coming from h+A interactions and does not induce any 
+    additional unphysical effects in the simulated spectra of secondary pions,
+    protons, and neutrons resulting from h+A interactions.
+   
+## 2025-12-16 Gabriele Cosmo (hadr-casc-V11-04-00)
 - Directly use std::cbrt(double) in G4InuclSpecialFunctions, as now standard
   and available in <cmath>, replacing old ad-hoc implementation.
   Minor code formatting.

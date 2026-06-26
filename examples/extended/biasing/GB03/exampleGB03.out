@@ -11,7 +11,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -149,6 +149,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 0
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -909,7 +910,7 @@ GB03BOptrGeometryBasedBiasing : starting run with splitting factor = 2, and prob
  Run terminated.
 Run Summary
   Number of events processed : 10
-  User=0.040000s Real=0.039185s Sys=0.010000s
+  User=0.030000s Real=0.034154s Sys=0.000000s
 for the entire run 10
 
                   C12       1  0.000976562 Emin     0.132706 Emax     0.132706 (MeV) 
@@ -1062,7 +1063,7 @@ GB03BOptrGeometryBasedBiasing : starting run with splitting factor = 2, and prob
  Run terminated.
 Run Summary
   Number of events processed : 10
-  User=0.060000s Real=0.059139s Sys=0.000000s
+  User=0.040000s Real=0.039157s Sys=0.000000s
 for the entire run 10
 
                   B10       1   0.00195312 Emin      1.69626 Emax      1.69626 (MeV) 
@@ -1077,9 +1078,9 @@ Graphics systems deleted.
 Visualization Manager deleting...
 G4 kernel has come to Quit state.
 Deleting G4Run (id:1) 
-UserDetectorConstruction deleted 0x209b9a0
-UserPhysicsList deleted 0x20d97d0
-UserActionInitialization deleted 0x22715f0
+UserDetectorConstruction deleted 0x7d8890
+UserPhysicsList deleted 0x816530
+UserActionInitialization deleted 0x9afe90
 UserWorkerInitialization deleted 0
 UserWorkerThreadInitialization deleted 0
 UserRunAction deleted.

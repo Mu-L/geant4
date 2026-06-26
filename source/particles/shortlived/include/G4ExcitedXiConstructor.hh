@@ -29,8 +29,8 @@
 //      History: first implementation, based on object model of
 //      10 oct 1998  H.Kurashige
 // ---------------------------------------------------------------
-#ifndef G4ExcitedXiConstructor_h
-#define G4ExcitedXiConstructor_h 1
+#ifndef G4EXCITEDXICONSTRUCTOR_HH
+#define G4EXCITEDXICONSTRUCTOR_HH
 
 #include "G4ExcitedBaryonConstructor.hh"
 #include "globals.hh"
@@ -39,7 +39,9 @@ class G4ExcitedXiConstructor : public G4ExcitedBaryonConstructor
 {
     // This class is a utility class for construction
     // short lived particles
+
   public:
+
     enum
     {
       NStates = 5
@@ -51,10 +53,12 @@ class G4ExcitedXiConstructor : public G4ExcitedBaryonConstructor
     };
 
   public:
+
     G4ExcitedXiConstructor();
     ~G4ExcitedXiConstructor() override = default;
 
   protected:
+
     G4bool Exist(G4int) override { return true; }
 
     G4int GetQuarkContents(G4int, G4int) override;
@@ -70,6 +74,7 @@ class G4ExcitedXiConstructor : public G4ExcitedBaryonConstructor
                                    G4bool fAnti = false) override;
 
   private:
+
     G4DecayTable* AddXiPiMode(G4DecayTable* table, const G4String& name, G4double br, G4int iIso3,
                               G4bool fAnti);
     G4DecayTable* AddXiGammaMode(G4DecayTable* table, const G4String& name, G4double br,
@@ -80,6 +85,7 @@ class G4ExcitedXiConstructor : public G4ExcitedBaryonConstructor
                                 G4bool fAnti);
 
   private:
+
     enum
     {
       XiIsoSpin = 1
@@ -121,20 +127,25 @@ inline G4int G4ExcitedXiConstructor::GetEncodingOffset(G4int iState)
 inline G4int G4ExcitedXiConstructor::GetQuarkContents(G4int iQ, G4int iIso3)
 {
   G4int quark = 0;
-  if (iQ == 0) {
+  if (iQ == 0)
+  {
     // s-quark
     quark = 3;
   }
-  else if (iQ == 1) {
+  else if (iQ == 1)
+  {
     // s-quark
     quark = 3;
   }
-  else if (iQ == 2) {
-    if (iIso3 == +1) {
+  else if (iQ == 2)
+  {
+    if (iIso3 == +1)
+    {
       // u-quark
       quark = 2;
     }
-    else {
+    else
+    {
       // d-quark
       quark = 1;
     }
@@ -150,10 +161,12 @@ inline G4String G4ExcitedXiConstructor::GetMultipletName(G4int iState)
 inline G4String G4ExcitedXiConstructor::GetName(G4int iIso3, G4int iState)
 {
   G4String particle = name[iState];
-  if (iIso3 == +1) {
+  if (iIso3 == +1)
+  {
     particle += "0";
   }
-  else if (iIso3 == -1) {
+  else if (iIso3 == -1)
+  {
     particle += "-";
   }
   return particle;

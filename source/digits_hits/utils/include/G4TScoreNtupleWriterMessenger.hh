@@ -34,12 +34,12 @@
 //
 // Author: Ivana Hrivnacova, 30/10/2018
 // --------------------------------------------------------------------
-#ifndef G4TScoreNtupleWriterMessenger_h
-#define G4TScoreNtupleWriterMessenger_h 1
+#ifndef G4TSCORENTUPLEWRITERMESSENGER_HH
+#define G4TSCORENTUPLEWRITERMESSENGER_HH
 
 #include "G4UImessenger.hh"
 
-template <typename T>
+template<typename T>
 class G4TScoreNtupleWriter;
 
 class G4UIdirectory;
@@ -47,19 +47,21 @@ class G4UIcmdWithoutParameter;
 class G4UIcmdWithAString;
 class G4UIcmdWithAnInteger;
 
-template <typename T>
+template<typename T>
 class G4TScoreNtupleWriterMessenger : public G4UImessenger
 {
- public:
-  G4TScoreNtupleWriterMessenger(G4TScoreNtupleWriter<T>* scoreNtupleWriter);
-  ~G4TScoreNtupleWriterMessenger();
-  void SetNewValue(G4UIcommand* command, G4String newValues);
+  public:
 
- private:
-  G4TScoreNtupleWriter<T>* fScoreNtupleWriter;
-  G4UIdirectory* fDirectory;
-  G4UIcmdWithAString* fWriterFileNameCmd;
-  G4UIcmdWithAnInteger* fWriterVerboseCmd;
+    G4TScoreNtupleWriterMessenger(G4TScoreNtupleWriter<T>* scoreNtupleWriter);
+    ~G4TScoreNtupleWriterMessenger();
+    void SetNewValue(G4UIcommand* command, G4String newValues);
+
+  private:
+
+    G4TScoreNtupleWriter<T>* fScoreNtupleWriter;
+    G4UIdirectory* fDirectory;
+    G4UIcmdWithAString* fWriterFileNameCmd;
+    G4UIcmdWithAnInteger* fWriterVerboseCmd;
 };
 
 #include "G4TScoreNtupleWriterMessenger.icc"

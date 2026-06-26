@@ -30,15 +30,15 @@
  *      Author: matkara
  */
 
-#ifndef SOURCE_PROCESSES_ELECTROMAGNETIC_DNA_MODELS_INCLUDE_G4DNABORNEXCITATIONMODEL_HH_
-#define SOURCE_PROCESSES_ELECTROMAGNETIC_DNA_MODELS_INCLUDE_G4DNABORNEXCITATIONMODEL_HH_
+#ifndef G4DNABORNEXCITATIONMODEL_HH
+#define G4DNABORNEXCITATIONMODEL_HH
 
 #include "G4DNABornExcitationModel1.hh"
 #include "G4DNABornExcitationModel2.hh"
 
 #ifndef G4DNABornExcitationModel
 using G4DNABornExcitationModel = G4DNABornExcitationModel1;
-//typedef G4DNABornExcitationModel2 G4DNABornExcitationModel;
+// typedef G4DNABornExcitationModel2 G4DNABornExcitationModel;
 #endif
 
 #endif /* SOURCE_PROCESSES_ELECTROMAGNETIC_DNA_MODELS_INCLUDE_G4DNABORNEXCITATIONMODEL_HH_ */

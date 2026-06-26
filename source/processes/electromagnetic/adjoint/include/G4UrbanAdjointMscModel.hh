@@ -32,8 +32,8 @@
 //   H.W.Lewis Phys Rev 78 (1950) 526 and L.Urban model
 // -------------------------------------------------------------------
 
-#ifndef G4UrbanAdjointMscModel_h
-#define G4UrbanAdjointMscModel_h 1
+#ifndef G4URBANADJOINTMSCMODEL_HH
+#define G4URBANADJOINTMSCMODEL_HH
 
 #include "G4Electron.hh"
 #include "G4Exp.hh"
@@ -51,113 +51,111 @@ class G4SafetyHelper;
 
 class G4UrbanAdjointMscModel : public G4VMscModel
 {
- public:
-  explicit G4UrbanAdjointMscModel(const G4String& nam = "UrbanMsc");
+  public:
 
-  ~G4UrbanAdjointMscModel() override;
+    explicit G4UrbanAdjointMscModel(const G4String& nam = "UrbanMsc");
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    ~G4UrbanAdjointMscModel() override;
 
-  void StartTracking(G4Track*) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition* particle,
-                                      G4double KineticEnergy,
-                                      G4double AtomicNumber,
-                                      G4double AtomicWeight = 0.,
-                                      G4double cut          = 0.,
-                                      G4double emax         = DBL_MAX) override;
+    void StartTracking(G4Track*) override;
 
-  G4ThreeVector& SampleScattering(const G4ThreeVector&,
-                                  G4double safety) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition* particle,
+                                        G4double KineticEnergy, G4double AtomicNumber,
+                                        G4double AtomicWeight = 0., G4double cut = 0.,
+                                        G4double emax = DBL_MAX) override;
 
-  G4double ComputeTruePathLengthLimit(const G4Track& track,
-                                      G4double& currentMinimalStep) override;
+    G4ThreeVector& SampleScattering(const G4ThreeVector&, G4double safety) override;
 
-  G4double ComputeGeomPathLength(G4double truePathLength) override;
+    G4double ComputeTruePathLengthLimit(const G4Track& track,
+                                        G4double& currentMinimalStep) override;
 
-  G4double ComputeTrueStepLength(G4double geomStepLength) override;
+    G4double ComputeGeomPathLength(G4double truePathLength) override;
 
-  G4double ComputeTheta0(G4double truePathLength, G4double KineticEnergy);
+    G4double ComputeTrueStepLength(G4double geomStepLength) override;
 
-  inline void SetNewDisplacementFlag(G4bool);
+    G4double ComputeTheta0(G4double truePathLength, G4double KineticEnergy);
 
-  G4UrbanAdjointMscModel& operator=(const G4UrbanAdjointMscModel& right) =
-    delete;
-  G4UrbanAdjointMscModel(const G4UrbanAdjointMscModel&) = delete;
+    inline void SetNewDisplacementFlag(G4bool);
 
- private:
-  G4double SampleCosineTheta(G4double trueStepLength, G4double KineticEnergy);
+    G4UrbanAdjointMscModel& operator=(const G4UrbanAdjointMscModel& right) = delete;
+    G4UrbanAdjointMscModel(const G4UrbanAdjointMscModel&) = delete;
 
-  void SampleDisplacement(G4double sinTheta, G4double phi);
+  private:
 
-  void SampleDisplacementNew(G4double sinTheta, G4double phi);
+    G4double SampleCosineTheta(G4double trueStepLength, G4double KineticEnergy);
 
-  inline void SetParticle(const G4ParticleDefinition*);
+    void SampleDisplacement(G4double sinTheta, G4double phi);
 
-  inline void UpdateCache();
+    void SampleDisplacementNew(G4double sinTheta, G4double phi);
 
-  inline G4double Randomizetlimit();
+    inline void SetParticle(const G4ParticleDefinition*);
 
-  inline G4double SimpleScattering(G4double xmeanth, G4double x2meanth);
+    inline void UpdateCache();
 
-  CLHEP::HepRandomEngine* rndmEngineMod;
+    inline G4double Randomizetlimit();
 
-  const G4ParticleDefinition* particle;
-  const G4ParticleDefinition* positron;
-  G4ParticleChangeForMSC* fParticleChange;
+    inline G4double SimpleScattering(G4double xmeanth, G4double x2meanth);
 
-  const G4MaterialCutsCouple* couple;
-  G4LossTableManager* theManager;
+    CLHEP::HepRandomEngine* rndmEngineMod;
 
-  G4double mass;
-  G4double charge, ChargeSquare;
-  G4double masslimite, lambdalimit, fr;
+    const G4ParticleDefinition* particle;
+    const G4ParticleDefinition* positron;
+    G4ParticleChangeForMSC* fParticleChange;
 
-  G4double taubig;
-  G4double tausmall;
-  G4double taulim;
-  G4double currentTau;
-  G4double tlimit;
-  G4double tlimitmin;
-  G4double tlimitminfix, tlimitminfix2;
-  G4double tgeom;
+    const G4MaterialCutsCouple* couple;
+    G4LossTableManager* theManager;
 
-  G4double geombig;
-  G4double geommin;
-  G4double geomlimit;
-  G4double skindepth;
-  G4double smallstep;
+    G4double mass;
+    G4double charge, ChargeSquare;
+    G4double masslimite, lambdalimit, fr;
 
-  G4double presafety;
+    G4double taubig;
+    G4double tausmall;
+    G4double taulim;
+    G4double currentTau;
+    G4double tlimit;
+    G4double tlimitmin;
+    G4double tlimitminfix, tlimitminfix2;
+    G4double tgeom;
 
-  G4double lambda0;
-  G4double lambdaeff;
-  G4double tPathLength;
-  G4double zPathLength;
-  G4double par1, par2, par3;
+    G4double geombig;
+    G4double geommin;
+    G4double geomlimit;
+    G4double skindepth;
+    G4double smallstep;
 
-  G4double stepmin;
+    G4double presafety;
 
-  G4double currentKinEnergy;
-  G4double currentRange;
-  G4double rangeinit;
-  G4double currentRadLength;
+    G4double lambda0;
+    G4double lambdaeff;
+    G4double tPathLength;
+    G4double zPathLength;
+    G4double par1, par2, par3;
 
-  G4double Zold;
-  G4double Zeff, Z2, Z23, lnZ;
-  G4double coeffth1, coeffth2;
-  G4double coeffc1, coeffc2, coeffc3, coeffc4;
+    G4double stepmin;
 
-  G4double rangecut;
-  G4double drr, finalr;
+    G4double currentKinEnergy;
+    G4double currentRange;
+    G4double rangeinit;
+    G4double currentRadLength;
 
-  G4int currentMaterialIndex;
+    G4double Zold;
+    G4double Zeff, Z2, Z23, lnZ;
+    G4double coeffth1, coeffth2;
+    G4double coeffc1, coeffc2, coeffc3, coeffc4;
 
-  G4bool firstStep;
-  G4bool insideskin;
+    G4double rangecut;
+    G4double drr, finalr;
 
-  G4bool latDisplasmentbackup;
-  G4bool displacementFlag;
+    G4int currentMaterialIndex;
+
+    G4bool firstStep;
+    G4bool insideskin;
+
+    G4bool latDisplasmentbackup;
+    G4bool displacementFlag;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -170,14 +168,13 @@ inline void G4UrbanAdjointMscModel::SetParticle(const G4ParticleDefinition* p)
 {
   const G4ParticleDefinition* p1 = p;
 
-  if(p->GetParticleName() == "adj_e-")
-    p1 = G4Electron::Electron();
+  if (p->GetParticleName() == "adj_e-") p1 = G4Electron::Electron();
 
-  if(p1 != particle)
+  if (p1 != particle)
   {
-    particle     = p1;
-    mass         = p1->GetPDGMass();
-    charge       = p1->GetPDGCharge() / CLHEP::eplus;
+    particle = p1;
+    mass = p1->GetPDGMass();
+    charge = p1->GetPDGCharge() / CLHEP::eplus;
     ChargeSquare = charge * charge;
   }
 }
@@ -186,14 +183,14 @@ inline void G4UrbanAdjointMscModel::SetParticle(const G4ParticleDefinition* p)
 inline G4double G4UrbanAdjointMscModel::Randomizetlimit()
 {
   G4double temptlimit = tlimit;
-  if(tlimit > tlimitmin)
+  if (tlimit > tlimitmin)
   {
     G4double delta = tlimit - tlimitmin;
     do
     {
       temptlimit = G4RandGauss::shoot(rndmEngineMod, tlimit, 0.1 * delta);
       // Loop checking, 10-Apr-2016, Laszlo Urban
-    } while((temptlimit < tlimit - delta) || (temptlimit > tlimit + delta));
+    } while ((temptlimit < tlimit - delta) || (temptlimit > tlimit + delta));
   }
   else
   {
@@ -208,37 +205,35 @@ inline void G4UrbanAdjointMscModel::UpdateCache()
 {
   lnZ = G4Log(Zeff);
   // correction in theta0 formula
-  G4double w    = G4Exp(lnZ / 6.);
+  G4double w = G4Exp(lnZ / 6.);
   G4double facz = 0.990395 + w * (-0.168386 + w * 0.093286);
-  coeffth1      = facz * (1. - 8.7780e-2 / Zeff);
-  coeffth2      = facz * (4.0780e-2 + 1.7315e-4 * Zeff);
+  coeffth1 = facz * (1. - 8.7780e-2 / Zeff);
+  coeffth2 = facz * (4.0780e-2 + 1.7315e-4 * Zeff);
 
   // tail parameters
   G4double Z13 = w * w;
-  coeffc1      = 2.3785 - Z13 * (4.1981e-1 - Z13 * 6.3100e-2);
-  coeffc2      = 4.7526e-1 + Z13 * (1.7694 - Z13 * 3.3885e-1);
-  coeffc3      = 2.3683e-1 - Z13 * (1.8111 - Z13 * 3.2774e-1);
-  coeffc4      = 1.7888e-2 + Z13 * (1.9659e-2 - Z13 * 2.6664e-3);
+  coeffc1 = 2.3785 - Z13 * (4.1981e-1 - Z13 * 6.3100e-2);
+  coeffc2 = 4.7526e-1 + Z13 * (1.7694 - Z13 * 3.3885e-1);
+  coeffc3 = 2.3683e-1 - Z13 * (1.8111 - Z13 * 3.2774e-1);
+  coeffc4 = 1.7888e-2 + Z13 * (1.9659e-2 - Z13 * 2.6664e-3);
 
-  Z2  = Zeff * Zeff;
+  Z2 = Zeff * Zeff;
   Z23 = Z13 * Z13;
 
   Zold = Zeff;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-inline G4double G4UrbanAdjointMscModel::SimpleScattering(G4double xmeanth,
-                                                         G4double x2meanth)
+inline G4double G4UrbanAdjointMscModel::SimpleScattering(G4double xmeanth, G4double x2meanth)
 {
   // 'large angle scattering'
   // 2 model functions with correct xmean and x2mean
-  G4double a =
-    (2. * xmeanth + 9. * x2meanth - 3.) / (2. * xmeanth - 3. * x2meanth + 1.);
+  G4double a = (2. * xmeanth + 9. * x2meanth - 3.) / (2. * xmeanth - 3. * x2meanth + 1.);
   G4double prob = (a + 2.) * xmeanth / a;
 
   // sampling
   G4double cth = 1.;
-  if(rndmEngineMod->flat() < prob)
+  if (rndmEngineMod->flat() < prob)
   {
     cth = -1. + 2. * G4Exp(G4Log(rndmEngineMod->flat()) / (a + 1.));
   }

@@ -25,23 +25,26 @@
 //
 //
 //
-// 
+//
 // John Allison  July 1995
 
 #include "G4Polyline.hh"
 
-G4Polyline::G4Polyline () = default;
+G4Polyline::G4Polyline() = default;
 
-G4Polyline::~G4Polyline () = default;
+G4Polyline::~G4Polyline() = default;
 
-G4Polyline& G4Polyline::transform (const G4Transform3D& transformation) {
-  for (auto & i : *this) i.transform(transformation);
+G4Polyline& G4Polyline::transform(const G4Transform3D& transformation)
+{
+  for (auto& i : *this)
+    i.transform(transformation);
   return *this;
 }
 
-std::ostream& operator << (std::ostream& os, const G4Polyline& line) {
+std::ostream& operator<<(std::ostream& os, const G4Polyline& line)
+{
   os << "G4Polyline: ";
-  os << '\n' << (const G4Visible&) line;
-  os << '\n' << (const G4Point3DList&) line;
+  os << '\n' << (const G4Visible&)line;
+  os << '\n' << (const G4Point3DList&)line;
   return os;
 }

@@ -611,10 +611,10 @@ void Map::initialize( HAPI::Node const &a_node, std::string const &a_fileName, P
     std::string basePath = GIDI_basePath( m_realFileName );
 
     std::string format = a_node.attribute_as_string( GIDI_formatChars );
-    if( ( format == GNDS_formatVersion_2_0_LLNL_4Chars ) || ( format == GIDI_mapFormatVersion_0_2Chars ) ) format = GNDS_formatVersion_2_0Chars;
-    if( format != GNDS_formatVersion_2_0Chars ) {
-        if( format != GIDI_mapFormatVersion_0_1Chars ) throw Exception( "Unsupported map format" );
-    }
+    if( format == GIDI_mapFormatVersion_0_1Chars ) format = GNDS_formatVersion_2_0Chars;
+    if( format == GIDI_mapFormatVersion_0_2Chars ) format = GNDS_formatVersion_2_0Chars;
+    m_formatVersion.setFormat( format );
+    if( !m_formatVersion.supported( ) ) throw Exception( "unsupported GNDS format version" );
 
     m_library = a_node.attribute_as_string( GIDI_libraryChars );
     for( HAPI::Node child = a_node.first_child( ); !child.empty( ); child.to_next_sibling( ) ) {

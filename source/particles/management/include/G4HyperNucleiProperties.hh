@@ -34,8 +34,8 @@
 // Author: Mikhail Kosov
 // Revision: H.Kurashige, Migrated to particles category - September 2007
 // --------------------------------------------------------------------
-#ifndef G4HyperNucleiProperties_hh
-#define G4HyperNucleiProperties_hh 1
+#ifndef G4HYPERNUCLEIPROPERTIES_HH
+#define G4HYPERNUCLEIPROPERTIES_HH
 
 #include "G4ParticleTable.hh"
 #include "G4ios.hh"
@@ -44,6 +44,7 @@
 class G4HyperNucleiProperties
 {
   public:
+
     G4HyperNucleiProperties() = default;
     ~G4HyperNucleiProperties() = default;
 

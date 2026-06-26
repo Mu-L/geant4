@@ -35,45 +35,42 @@
 //
 // Modifications:
 //
- 
+
 //
 // Class Description
 // This is a class for hadronic cross section ratio
 // diffractive/elastic
 // Class Description - End
 
-#ifndef G4DiffElasticRatio_h
-#define G4DiffElasticRatio_h 1
+#ifndef G4DIFFELASTICRATIO_HH
+#define G4DIFFELASTICRATIO_HH
 
-#include "globals.hh"
 #include "G4VCrossSectionRatio.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 class G4ComponentGGHadronNucleusXsc;
 
-class G4DiffElasticRatio: public G4VCrossSectionRatio
+class G4DiffElasticRatio : public G4VCrossSectionRatio
 {
-public: 
+  public:
 
-  G4DiffElasticRatio(const G4String& nam = "", G4int verb = 0);
+    G4DiffElasticRatio(const G4String& nam = "", G4int verb = 0);
 
-  virtual ~G4DiffElasticRatio();
+    virtual ~G4DiffElasticRatio();
 
-  
-  G4double ComputeRatio(const G4ParticleDefinition*,
-			G4double kinEnergy, 
-			G4int Z, G4int A);
+    G4double ComputeRatio(const G4ParticleDefinition*, G4double kinEnergy, G4int Z, G4int A);
 
-  void SetEnergyThreshold(G4double e){fDDthreshold=e;};
-  G4double GetEnergyThreshold(){return fDDthreshold;};
+    void SetEnergyThreshold(G4double e) { fDDthreshold = e; };
+    G4double GetEnergyThreshold() { return fDDthreshold; };
 
-private:
+  private:
 
-  G4DiffElasticRatio & operator=(const G4DiffElasticRatio &right);
-  G4DiffElasticRatio(const G4DiffElasticRatio&);
+    G4DiffElasticRatio& operator=(const G4DiffElasticRatio& right);
+    G4DiffElasticRatio(const G4DiffElasticRatio&);
 
-  G4ComponentGGHadronNucleusXsc* fGGXsc;
-  G4double fDDthreshold;
+    G4ComponentGGHadronNucleusXsc* fGGXsc;
+    G4double fDDthreshold;
 };
 
 #endif

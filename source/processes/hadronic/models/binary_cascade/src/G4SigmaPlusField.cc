@@ -25,64 +25,58 @@
 //
 //
 // -------------------------------------------------------------------
-//      GEANT 4 class implementation file 
+//      GEANT 4 class implementation file
 //
 //      CERN, Geneva, Switzerland
 //
 //      File name:     G4SigmaPlusField.cc
 //
 //      Author:        Alessandro Brunengo (Alessandro.Brunengo@ge.infn.it)
-// 
+//
 //      Creation date: 5 June 2000
 // -------------------------------------------------------------------
 
 #include "G4SigmaPlusField.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4NucleiProperties.hh"
-#include "G4VNuclearDensity.hh"
-#include "G4FermiMomentum.hh"
-#include "G4SigmaPlus.hh"
-#include "G4HadTmpUtil.hh"
-#include "G4Pow.hh"
 
-G4SigmaPlusField::G4SigmaPlusField(G4V3DNucleus * nucleus, G4double coeff)
-  : G4VNuclearField(nucleus)
+#include "G4FermiMomentum.hh"
+#include "G4HadTmpUtil.hh"
+#include "G4NucleiProperties.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4Pow.hh"
+#include "G4SigmaPlus.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4VNuclearDensity.hh"
+
+G4SigmaPlusField::G4SigmaPlusField(G4V3DNucleus* nucleus, G4double coeff) : G4VNuclearField(nucleus)
 {
   theCoeff = coeff;
 }
 
+G4SigmaPlusField::~G4SigmaPlusField() {}
 
-G4SigmaPlusField::~G4SigmaPlusField()
-{ }
-
-G4double G4SigmaPlusField::GetField(const G4ThreeVector & aPosition)
+G4double G4SigmaPlusField::GetField(const G4ThreeVector& aPosition)
 {
-// Field is 0 out of the nucleus!
-  if(aPosition.mag() >= radius) return 0.0;
+  // Field is 0 out of the nucleus!
+  if (aPosition.mag() >= radius) return 0.0;
 
   G4double sigmaPlusMass = G4SigmaPlus::SigmaPlus()->GetPDGMass();
 
   G4int A = theNucleus->GetMassNumber();
   G4int Z = theNucleus->GetCharge();
   G4double bindingEnergy = G4NucleiProperties::GetBindingEnergy(A, Z);
-  G4double nucleusMass = Z*proton_mass_c2+(A-Z)*neutron_mass_c2+bindingEnergy;
-  G4double reducedMass = sigmaPlusMass*nucleusMass/(sigmaPlusMass+nucleusMass);
+  G4double nucleusMass = Z * proton_mass_c2 + (A - Z) * neutron_mass_c2 + bindingEnergy;
+  G4double reducedMass = sigmaPlusMass * nucleusMass / (sigmaPlusMass + nucleusMass);
 
-  const G4VNuclearDensity * nuclearDensity=theNucleus->GetNuclearDensity();
+  const G4VNuclearDensity* nuclearDensity = theNucleus->GetNuclearDensity();
   G4double density = nuclearDensity->GetDensity(aPosition);
 
-  return -2.*pi*hbarc*hbarc/reducedMass*(2.0)*theCoeff*density+GetBarrier();
+  return -2. * pi * hbarc * hbarc / reducedMass * (2.0) * theCoeff * density + GetBarrier();
 }
 
 G4double G4SigmaPlusField::GetBarrier()
 {
   G4double A = theNucleus->GetMassNumber();
   G4double Z = theNucleus->GetCharge();
-  G4double coulombBarrier = (1.44/1.14) * MeV * Z / (1.0 + G4Pow::GetInstance()->A13(A));
+  G4double coulombBarrier = (1.44 / 1.14) * MeV * Z / (1.0 + G4Pow::GetInstance()->A13(A));
   return coulombBarrier;
 }
-
-
-
-

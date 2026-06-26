@@ -28,8 +28,8 @@
 
 // Author: Ivana Hrivnacova, 10/09/2014  (ivana@ipno.in2p3.fr)
 
-#ifndef G4XmlRFileManager_h
-#define G4XmlRFileManager_h 1
+#ifndef G4XMLRFILEMANAGER_HH
+#define G4XMLRFILEMANAGER_HH
 
 #include "G4VRFileManager.hh"
 #include "globals.hh"
@@ -43,6 +43,7 @@ class G4AnalysisManagerState;
 class G4XmlRFileManager : public G4VRFileManager
 {
   public:
+
     explicit G4XmlRFileManager(const G4AnalysisManagerState& state);
     G4XmlRFileManager() = delete;
     ~G4XmlRFileManager() override;
@@ -59,17 +60,17 @@ class G4XmlRFileManager : public G4VRFileManager
     toolx::raxml* GetRFile(const G4String& fileName) const;
 
     // Helper method
-    template <typename HT>
-    tools::raxml_out* GetHandler(const G4String& fileName,
-                         const G4String& objectName,
-                         std::string_view inFunction);
+    template<typename HT>
+    tools::raxml_out* GetHandler(const G4String& fileName, const G4String& objectName,
+                                 std::string_view inFunction);
 
-   private:
+  private:
+
     // Static data members
-    static constexpr std::string_view fkClass { "G4XmRFileManager" };
+    static constexpr std::string_view fkClass{"G4XmRFileManager"};
 
     // Data members
-    tools::xml::default_factory*  fReadFactory { nullptr };
+    tools::xml::default_factory* fReadFactory{nullptr};
     std::map<G4String, toolx::raxml*> fRFiles;
 };
 

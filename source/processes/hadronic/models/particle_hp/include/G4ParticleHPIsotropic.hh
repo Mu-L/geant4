@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPIsotropic_h
-#define G4ParticleHPIsotropic_h 1
+#ifndef G4PARTICLEHPISOTROPIC_HH
+#define G4PARTICLEHPISOTROPIC_HH
 
 #include "G4ReactionProduct.hh"
 #include "G4VParticleHPEnergyAngular.hh"
@@ -39,11 +39,13 @@
 class G4ParticleHPIsotropic : public G4VParticleHPEnergyAngular
 {
   public:
+
     G4ParticleHPIsotropic() = default;
 
     ~G4ParticleHPIsotropic() override = default;
 
   public:
+
     void Init(std::istream& aDataFile) override;
     G4ReactionProduct* Sample(G4double anEnergy, G4double massCode, G4double mass) override;
     G4double MeanEnergyOfThisInteraction() override { return -1.; }

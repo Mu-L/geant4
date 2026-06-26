@@ -32,33 +32,37 @@
 // File name:     G4VLowEnergyModel
 //
 // Author:        Maria Grazia Pia (MariaGrazia.Pia@ge.infn.it)
-// 
+//
 // Creation date: 7 May 2000
 //
-// Modifications: 
+// Modifications:
 // 22/05/2000  MGP          Version compliant with design
 // 20/07/2000  V.Ivanchenko First implementation
 //
-// Class Description: 
+// Class Description:
 //
 // Abstract base class for hadron electronic energy loss model
 //
-// Class Description: End 
+// Class Description: End
 //
 // -------------------------------------------------------------------
 //
-//    
+//
 
 #include "G4VLowEnergyModel.hh"
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....  
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4VLowEnergyModel::G4VLowEnergyModel(const G4String& ) // argument is name
-{;}
+G4VLowEnergyModel::G4VLowEnergyModel(const G4String&)  // argument is name
+{
+  ;
+}
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.... 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4VLowEnergyModel::~G4VLowEnergyModel() 
-{;}
+G4VLowEnergyModel::~G4VLowEnergyModel()
+{
+  ;
+}
 
-//    
+//

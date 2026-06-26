@@ -84,8 +84,8 @@ void ExGflash3ParallelWorld::Construct()
   G4double crystalWidth = 3 * cm;
   G4double crystalLength = 24 * cm;
 
-  calo_xside = (crystalWidth * nbOfCrystals) + 1 * cm;
-  calo_yside = (crystalWidth * nbOfCrystals) + 1 * cm;
+  calo_xside = (crystalWidth * nbOfCrystals);
+  calo_yside = (crystalWidth * nbOfCrystals);
   calo_zside = crystalLength;
 
   auto calo_box = new G4Box("CMS calorimeter",  // its name
@@ -112,15 +112,17 @@ void ExGflash3ParallelWorld::Construct()
                                     dummy,  // its material
                                     "CrystalLog");  // its name
 
-  for (G4int i = 0; i < nbOfCrystals; i++) {
-    for (G4int j = 0; j < nbOfCrystals; j++) {
+  for (G4int i = 0; i < nbOfCrystals; i++)
+  {
+    for (G4int j = 0; j < nbOfCrystals; j++)
+    {
       G4int n = i * 10 + j;
       G4ThreeVector crystalPos((i * crystalWidth) - 135, (j * crystalWidth) - 135, 0);
       fCrystalPhys[n] = new G4PVPlacement(nullptr,  // no rotation
                                           crystalPos,  // translation
                                           fCrystalLog,
                                           "crystal",  // its name
-                                          caloLog, false, i);
+                                          caloLog, false, n);
     }
   }
   G4cout << "There are " << nbOfCrystals << " crystals per row in the calorimeter, so in total "
@@ -140,7 +142,7 @@ void ExGflash3ParallelWorld::ConstructSD()
 {
   // -- sensitive detectors:
   G4SDManager* SDman = G4SDManager::GetSDMpointer();
-  auto CaloSD = new ExGflash3SensitiveDetector("Calorimeter", this);
+  auto CaloSD = new ExGflash3SensitiveDetector("Calorimeter");
   SDman->AddNewDetector(CaloSD);
   fCrystalLog->SetSensitiveDetector(CaloSD);
 }

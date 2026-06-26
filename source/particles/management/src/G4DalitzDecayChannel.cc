@@ -57,7 +57,8 @@ G4DalitzDecayChannel::G4DalitzDecayChannel(const G4String& theParentName, G4doub
 
 G4DalitzDecayChannel& G4DalitzDecayChannel::operator=(const G4DalitzDecayChannel& right)
 {
-  if (this != &right) {
+  if (this != &right)
+  {
     kinematics_name = right.kinematics_name;
     verboseLevel = right.verboseLevel;
     rbranch = right.rbranch;
@@ -70,11 +71,13 @@ G4DalitzDecayChannel& G4DalitzDecayChannel::operator=(const G4DalitzDecayChannel
 
     // recreate array
     numberOfDaughters = right.numberOfDaughters;
-    if (numberOfDaughters > 0) {
+    if (numberOfDaughters > 0)
+    {
       if (daughters_name != nullptr) ClearDaughtersName();
       daughters_name = new G4String*[numberOfDaughters];
       // copy daughters name
-      for (G4int index = 0; index < numberOfDaughters; ++index) {
+      for (G4int index = 0; index < numberOfDaughters; ++index)
+      {
         daughters_name[index] = new G4String(*right.daughters_name[index]);
       }
     }
@@ -106,18 +109,21 @@ G4DecayProducts* G4DalitzDecayChannel::DecayIt(G4double)
   G4double wmax = 1.5;
   G4double x, w, ww, w1, w2, w3, t;
   const std::size_t MAX_LOOP = 10000;
-  for (std::size_t loop_counter = 0; loop_counter < MAX_LOOP; ++loop_counter) {
+  for (std::size_t loop_counter = 0; loop_counter < MAX_LOOP; ++loop_counter)
+  {
     x = G4UniformRand() * (xmax - xmin) + xmin;
     w = G4UniformRand() * wmax;
     t = std::exp(x);
     w1 = (1.0 - 4.0 * leptonmass * leptonmass / t);
-    if (w1 > 0.0) {
+    if (w1 > 0.0)
+    {
       w2 = (1.0 + 2.0 * leptonmass * leptonmass / t);
       w3 = (1.0 - t / parentmass / parentmass);
       w3 = w3 * w3 * w3;
       ww = w3 * w2 * std::sqrt(w1);
     }
-    else {
+    else
+    {
       ww = 0.0;
     }
     if (w <= ww) break;
@@ -166,7 +172,8 @@ G4DecayProducts* G4DalitzDecayChannel::DecayIt(G4double)
   products->PushProducts(antileptonparticle);
 
 #ifdef G4VERBOSE
-  if (GetVerboseLevel() > 1) {
+  if (GetVerboseLevel() > 1)
+  {
     G4cout << "G4DalitzDecayChannel::DecayIt ";
     G4cout << "  create decay products in rest frame " << G4endl;
     products->DumpInfo();

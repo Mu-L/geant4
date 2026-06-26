@@ -6,17 +6,47 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-06-03 Gabriele Cosmo (geomnav-V11-03-03)
+## 2026-06-12 Gabriele Cosmo (geomnav-V11-04-05)
+- Parallelised overlap checks for placed volumes in G4GeomTestVolume using
+  the available tasking thread pool, or a temporary local pool in MT builds.
+  Temporary results are cached by G4GeomTestVolume and reported in geometry
+  traversal order. Parameterised and other specialised physical volumes
+  retain their existing serial overlap checks.
+- Added task-local geometry and solids workspaces, deterministic random seeds
+  and surface sampling warm-up, including constituents of G4MultiUnion, for
+  safe concurrent overlap calculations.
+- Made UI commands for checking overlaps master-only commands to avoid
+  repeating the full overlap check on every worker in MT/tasking applications.
+
+## 2026-06-11 Gabriele Cosmo (geomnav-V11-04-04)
+- Fixed compilation warnings on Intel/icx compiler for variables set but not
+  used in G4VoxelSafety and G4_NO_VERBOSE mode.
+- Applied clang-format to new visitor/walker classes and fixed comments.
+
+## 2026-06-03 John Apostolakis (geomnav-V11-04-03)
+- Added new classes G4TouchableWalker and interface G4VTouchableVisitor,
+  This allows perusal of the full tree of 'touchables' - i.e. all the trunk
+  and leaf volumes of the geometry (descending every copy of replicas,
+  parameterised volumes.)
+  A concrete example visitor class G4TouchableCollector identifies any
+  touchables that are instances of a particular logical or physical volume.
+- Also new classes G4VolumeTreeWalker and G4VVolumeTreeVisitor which
+  visits each physical and logical volume. In this case a replicated volume
+  (replica, parameterised volume) is visited only once.
+  A concrete example visitor class G4VolumeTreeReporter prints the
+  volume tree, one line per logical and physical volume.
+
+## 2026-06-03 Gabriele Cosmo (geomnav-V11-04-02)
 - Added rounding protection in ComputeSafety() of G4ParameterisedNavigation
   in the computation of the current voxel node for the 1D optimisation case.
   Addressing problem report #2735.
 
-## 2026-04-28 Gabriele Cosmo
+## 2026-04-28 Gabriele Cosmo (geomnav-V11-04-01)
 - Refresh navigator for tracking and mass world in G4MultiNavigator from
   G4PathFinder whenever geometry is modified/rebuilt to avoid stale pointers.
   Addresses problem report #2714.
 
-## 2026-03-21 Gabriele Cosmo
+## 2026-03-21 Gabriele Cosmo (geomnav-V11-04-00)
 - Fixed inverted comments in G4Navigator.icc.
 
 ## 2025-08-19 Gabriele Cosmo (geomnav-V11-03-02)
@@ -93,9 +123,9 @@ It must **not** be used as a substitute for writing good git commit messages!
 - G4PropagatorInField: Added parameters for big steps.
    New parameter 'MaxStepSizeMultiplier' - enables changing
      (eg needed to reduce costly unnecessary integration in QSS)
-   New parameter 'MinBigDistance' used as minimum distance in 
+   New parameter 'MinBigDistance' used as minimum distance in
      case of long steps.  Could be adapted to size of world.
-   Default values also changed: 
+   Default values also changed:
            'LargestAcceptableDistance' = 100 * meter ( from 1000* meter )
            'MaxStepSizeMultiplier'     = 0.1         ( from 100 ).
 
@@ -144,19 +174,19 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 September 25, 2021 - P.Arce  (geomnav-V10-07-05)
 ----------------------------
-- Reduce warning messages in GetReplicaNo: only when difference is > kCarTolerance 
+- Reduce warning messages in GetReplicaNo: only when difference is > kCarTolerance
 - NoVoxel -> NoVoxels for coherence with rest of code
 
 May  4, 2021 - J.Apostolakis  (geomnav-V10-07-04)
 ----------------------------
-- G4Navigator: 
+- G4Navigator:
    * Added missing implementation of SetVoxelNavigation method (i.e. VecGeom Nav.)
    * deleted experimental method RecheckDistanceToCurrentBoundary (obsolete)
        ( Also removed in G4SafetyHelper and G4PathFinder. )
    * cleaned up ComputeSafety
-- G4VoxelNavigation: 
+- G4VoxelNavigation:
    * simplify code of 'check' mode tests -- avoid 2nd code path.
-       Prioritise reducing cost of 'non-checking' mode (avoid one if) 
+       Prioritise reducing cost of 'non-checking' mode (avoid one if)
        at marginal extra cost in check mode (extra call to DistanceToOut)
    * added comments about method arguments.
 - G4NavigationLogger: soften check of step vs distance (using tolerance)

@@ -32,8 +32,8 @@
 // Modified:
 //---------------------------------------------------------------------------
 
-#ifndef G4HyperonQGSPBuilder_h
-#define G4HyperonQGSPBuilder_h 1
+#ifndef G4HYPERONQGSPBUILDER_HH
+#define G4HYPERONQGSPBUILDER_HH
 
 #include "G4VHyperonBuilder.hh"
 #include "globals.hh"
@@ -41,21 +41,23 @@
 class G4TheoFSGenerator;
 class G4VCrossSectionDataSet;
 
+class G4HyperonQGSPBuilder : public G4VHyperonBuilder
+{
+  public:
 
-class G4HyperonQGSPBuilder : public G4VHyperonBuilder {
-  public: 
-  G4HyperonQGSPBuilder( G4bool quasiElastic = false );
+    G4HyperonQGSPBuilder(G4bool quasiElastic = false);
     virtual ~G4HyperonQGSPBuilder();
 
-    virtual void Build( G4HadronElasticProcess* ) final override {}
-    virtual void Build( G4HadronInelasticProcess* aP ) final override;
+    virtual void Build(G4HadronElasticProcess*) final override {}
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
-    virtual void SetMinEnergy( G4double val ) final override { theMin = val; }
-    virtual void SetMaxEnergy( G4double val ) final override { theMax = val; }
+    virtual void SetMinEnergy(G4double val) final override { theMin = val; }
+    virtual void SetMaxEnergy(G4double val) final override { theMax = val; }
 
     using G4VHyperonBuilder::Build;  // Prevent compiler warning
 
-  private: 
+  private:
+
     G4TheoFSGenerator* theHyperonQGSP;
     G4VCrossSectionDataSet* theInelasticCrossSection;
     G4double theMin;

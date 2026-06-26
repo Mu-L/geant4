@@ -44,18 +44,19 @@
 /**
  * @brief G4HarmonicPolMagField describes a magnetic field parametrised
  * by harmonic polynom up to 3rd order.
+ * @ingroup geometry_magneticfield
  */
 
 class G4HarmonicPolMagField : public G4MagneticField
 {
   public:
-                       
+
     /**
      * Default Constructor and Destructor.
      */
     G4HarmonicPolMagField() = default;
     ~G4HarmonicPolMagField() override = default;
-     
+
     /**
      * Returns the field value on the given position 'yTrack'.
      *  @param[in] yTrack Time position array.

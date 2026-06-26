@@ -36,19 +36,21 @@
 // particle’s representation as a collective distribution of optical photons-
 // a synthetic construct used to manage secondary particle generation in the
 // Geant4 tracking and optical processes.
-#ifndef G4QuasiOpticalPhoton_h
-#define G4QuasiOpticalPhoton_h 1
+#ifndef G4QUASIOPTICALPHOTON_HH
+#define G4QUASIOPTICALPHOTON_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4QuasiOpticalPhoton : public G4ParticleDefinition
 {
   public:
+
     static G4QuasiOpticalPhoton* Definition();
     static G4QuasiOpticalPhoton* QuasiOpticalPhotonDefinition();
     static G4QuasiOpticalPhoton* QuasiOpticalPhoton();
 
   private:
+
     G4QuasiOpticalPhoton() {}
     ~G4QuasiOpticalPhoton() override = default;
 

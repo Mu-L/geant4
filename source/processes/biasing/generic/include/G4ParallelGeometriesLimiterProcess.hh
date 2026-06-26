@@ -32,16 +32,16 @@
 //
 // Author: Marc Verderi, September 2016.
 // --------------------------------------------------------------------
-#ifndef G4ParallelGeometriesLimiterProcess_hh
-#define G4ParallelGeometriesLimiterProcess_hh 1
+#ifndef G4PARALLELGEOMETRIESLIMITERPROCESS_HH
+#define G4PARALLELGEOMETRIESLIMITERPROCESS_HH
 
-#include "globals.hh"
-#include "G4VProcess.hh"
-#include "G4Step.hh"
-#include "G4Navigator.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4ParticleChangeForNothing.hh"
 #include "G4FieldTrack.hh"
+#include "G4Navigator.hh"
+#include "G4ParticleChangeForNothing.hh"
+#include "G4Step.hh"
+#include "G4VPhysicalVolume.hh"
+#include "G4VProcess.hh"
+#include "globals.hh"
 
 class G4PathFinder;
 class G4TransportationManager;
@@ -56,7 +56,7 @@ class G4ParallelGeometriesLimiterProcess : public G4VProcess
     G4ParallelGeometriesLimiterProcess(const G4String& processName = "biasLimiter");
 
     virtual ~G4ParallelGeometriesLimiterProcess() = default;
-  
+
     // ----------------------------------------------------
     // -- Registration / deregistration of parallel worlds.
     // -- Access to the list of registered parallel worlds.
@@ -64,26 +64,30 @@ class G4ParallelGeometriesLimiterProcess : public G4VProcess
     void AddParallelWorld(const G4String& parallelWorldName);
     void RemoveParallelWorld(const G4String& parallelWorldName);
     // -- The list of registered parallel worlds:
-    const std::vector< G4VPhysicalVolume* >& GetParallelWorlds() const
-      { return fParallelWorlds; }
+    const std::vector<G4VPhysicalVolume*>& GetParallelWorlds() const { return fParallelWorlds; }
 
     // -- Get the parallel world volume index in the list of world volumes handled
     // -- by the process. This index can then be used to access current volume and step
     // -- limitation status below.
     // -- If the world passed is unknown to the process, -1 is returned.
-    G4int GetParallelWorldIndex( const G4VPhysicalVolume* parallelWorld ) const;
-    G4int GetParallelWorldIndex( const G4String& parallelWorldName ) const;
+    G4int GetParallelWorldIndex(const G4VPhysicalVolume* parallelWorld) const;
+    G4int GetParallelWorldIndex(const G4String& parallelWorldName) const;
 
     // ---------------------
     // -- Active navigators:
     // ---------------------
     // -- The list of navigators handled by the process:
-    const std::vector< G4Navigator* >& GetActiveNavigators() const
-      { return fParallelWorldNavigators; }
-    // -- The navigator used for the passed parallel world index (obtained with GetParallelWorldIndex(...) above)
+    const std::vector<G4Navigator*>& GetActiveNavigators() const
+    {
+      return fParallelWorldNavigators;
+    }
+    // -- The navigator used for the passed parallel world index (obtained with
+    // GetParallelWorldIndex(...) above)
     // -- Note that no boundary checks are done on the index passed.
-    const G4Navigator* GetNavigator( G4int worldIndex ) const
-      { return fParallelWorldNavigators[std::size_t(worldIndex)]; }
+    const G4Navigator* GetNavigator(G4int worldIndex) const
+    {
+      return fParallelWorldNavigators[std::size_t(worldIndex)];
+    }
 
     // ---------------------------------------------------
     // -- Previous and current steps geometry information:
@@ -94,27 +98,39 @@ class G4ParallelGeometriesLimiterProcess : public G4VProcess
     // --    - in the AlongStepGPIL for the step limitations
     // --
     // -- The list of previous step and current step volumes:
-    const std::vector< const G4VPhysicalVolume* >& GetCurrentVolumes() const
-      { return  fCurrentVolumes; }
-    const std::vector< const G4VPhysicalVolume* >& GetPreviousVolumes() const
-      { return fPreviousVolumes; }
-    // -- The current and previous volume for the passed parallel world index (obtained with GetParallelWorldIndex(...) above)
+    const std::vector<const G4VPhysicalVolume*>& GetCurrentVolumes() const
+    {
+      return fCurrentVolumes;
+    }
+    const std::vector<const G4VPhysicalVolume*>& GetPreviousVolumes() const
+    {
+      return fPreviousVolumes;
+    }
+    // -- The current and previous volume for the passed parallel world index (obtained with
+    // GetParallelWorldIndex(...) above)
     // -- Note that no boundary checks are done on the index passed.
-    const G4VPhysicalVolume* GetCurrentVolume( G4int worldIndex ) const
-      { return  fCurrentVolumes[std::size_t(worldIndex)]; }
-    const G4VPhysicalVolume* GetPreviousVolume( G4int worldIndex ) const
-      { return fPreviousVolumes[std::size_t(worldIndex)]; }
+    const G4VPhysicalVolume* GetCurrentVolume(G4int worldIndex) const
+    {
+      return fCurrentVolumes[std::size_t(worldIndex)];
+    }
+    const G4VPhysicalVolume* GetPreviousVolume(G4int worldIndex) const
+    {
+      return fPreviousVolumes[std::size_t(worldIndex)];
+    }
     // -- Flags telling about step limitation in previous and current step:
-    const std::vector< G4bool >& GetIsLimiting() const
-      { return  fParallelWorldIsLimiting; }
-    const std::vector< G4bool >& GetWasLimiting() const
-      { return fParallelWorldWasLimiting; }
-    // -- The current and previous step limitation status for the passed parallel world index (obtained with GetParallelWorldIndex(...) above)
+    const std::vector<G4bool>& GetIsLimiting() const { return fParallelWorldIsLimiting; }
+    const std::vector<G4bool>& GetWasLimiting() const { return fParallelWorldWasLimiting; }
+    // -- The current and previous step limitation status for the passed parallel world index
+    // (obtained with GetParallelWorldIndex(...) above)
     // -- Note that no boundary checks are done on the index passed.
-    G4bool GetIsLimiting( G4int worldIndex ) const
-      { return  fParallelWorldIsLimiting[std::size_t(worldIndex)]; }
-    G4bool GetWasLimiting( G4int worldIndex ) const
-      { return fParallelWorldWasLimiting[std::size_t(worldIndex)]; }
+    G4bool GetIsLimiting(G4int worldIndex) const
+    {
+      return fParallelWorldIsLimiting[std::size_t(worldIndex)];
+    }
+    G4bool GetWasLimiting(G4int worldIndex) const
+    {
+      return fParallelWorldWasLimiting[std::size_t(worldIndex)];
+    }
 
     // --------------------------------------------------------------
     //                      From process interface
@@ -129,37 +145,39 @@ class G4ParallelGeometriesLimiterProcess : public G4VProcess
     // -- PostStepGPIL is used to collect up to date volumes in the parallel geometries:
     G4double PostStepGetPhysicalInteractionLength(const G4Track&, G4double, G4ForceCondition*);
     // -- PostStepDoIt is not used (never called):
-    G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step& ) { return nullptr; }
+    G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&) { return nullptr; }
 
     // ---------------------------------------------------------------------------
     // -- Along step used for limiting the step on parallel geometries boundaries:
     // ---------------------------------------------------------------------------
-    G4double AlongStepGetPhysicalInteractionLength(const G4Track& track,
-                        G4double previousStepSize, G4double currentMinimumStep, 
-                        G4double& proposedSafety, G4GPILSelection* selection);
+    G4double AlongStepGetPhysicalInteractionLength(const G4Track& track, G4double previousStepSize,
+                                                   G4double currentMinimumStep,
+                                                   G4double& proposedSafety,
+                                                   G4GPILSelection* selection);
     G4VParticleChange* AlongStepDoIt(const G4Track& track, const G4Step& step);
-  
+
     // ---------------------------
     // -- AtRest methods not used:
     // ---------------------------
     G4double AtRestGetPhysicalInteractionLength(const G4Track&, G4ForceCondition*)
-      { return DBL_MAX; }
-    G4VParticleChange* AtRestDoIt(const G4Track&, const G4Step&)
-      { return nullptr; }
+    {
+      return DBL_MAX;
+    }
+    G4VParticleChange* AtRestDoIt(const G4Track&, const G4Step&) { return nullptr; }
 
     // --
     virtual void SetProcessManager(const G4ProcessManager*);
 
   private:
 
-    std::vector< G4VPhysicalVolume* > fParallelWorlds;
-    std::vector< G4Navigator* > fParallelWorldNavigators;
-    std::vector< G4int > fParallelWorldNavigatorIndeces;
-    std::vector< G4double > fParallelWorldSafeties;
-    std::vector< G4bool > fParallelWorldIsLimiting;
-    std::vector< G4bool > fParallelWorldWasLimiting;
-    std::vector< const G4VPhysicalVolume* > fCurrentVolumes;
-    std::vector< const G4VPhysicalVolume* > fPreviousVolumes;
+    std::vector<G4VPhysicalVolume*> fParallelWorlds;
+    std::vector<G4Navigator*> fParallelWorldNavigators;
+    std::vector<G4int> fParallelWorldNavigatorIndeces;
+    std::vector<G4double> fParallelWorldSafeties;
+    std::vector<G4bool> fParallelWorldIsLimiting;
+    std::vector<G4bool> fParallelWorldWasLimiting;
+    std::vector<const G4VPhysicalVolume*> fCurrentVolumes;
+    std::vector<const G4VPhysicalVolume*> fPreviousVolumes;
     G4double fParallelWorldSafety = 0.0;
     G4bool fIsTrackingTime = false;
     G4FieldTrack fFieldTrack = '0';

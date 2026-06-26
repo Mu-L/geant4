@@ -31,43 +31,100 @@
 // end of the job, this class is responsible for destruction.
 //
 
-#ifndef G4EmDataRegistry_h
-#define G4EmDataRegistry_h 1
+#ifndef G4EMDATAREGISTRY_HH
+#define G4EMDATAREGISTRY_HH
+
+#include "G4EmDataHandler.hh"
+#include "G4PhysicsTable.hh"
+#include "globals.hh"
 
 #include <vector>
-#include "G4EmDataHandler.hh"
+
+class G4EmParameters;
+class G4LossTableBuilder;
+class G4LossTableManager;
+class G4ParticleDefinition;
 
 class G4EmDataRegistry
 {
- public:
+  public:
 
-  static G4EmDataRegistry* Instance();
+    static G4EmDataRegistry* Instance();
 
-  ~G4EmDataRegistry();
+    ~G4EmDataRegistry();
 
-  // create or access data handler
-  // nTable - number of tables in a new handler
-  G4EmDataHandler* GetHandlerByName(const G4String&, std::size_t nTable);
+    // create or access data handler
+    // nTable - number of tables in a new handler
+    G4EmDataHandler* GetHandlerByName(const G4String&, std::size_t nTable);
 
-  // register a new handler
-  void Register(G4EmDataHandler*);
+    // register a new handler
+    void Register(G4LossTableManager*, G4int threadID);
 
-  // register a new handler
-  void DeRegister(G4EmDataHandler*);
-  
-  // hide assignment operator 
-  G4EmDataRegistry& operator=(const G4EmDataRegistry &right) = delete;
-  G4EmDataRegistry(const G4EmDataRegistry&) = delete;
+    // register a new handler
+    void Register(G4EmDataHandler*);
 
- private:
+    // register a new handler
+    void DeRegister(G4EmDataHandler*);
 
-  G4EmDataRegistry();
+    // initialise base materials
+    void InitialiseBaseMaterials(const G4PhysicsTable* table = nullptr);
 
-  G4EmDataHandler* EmDataHandler(const G4String&);
+    // access methods
+    const std::vector<G4int>* GetCoupleIndexes() const;
 
-  static G4EmDataRegistry* instance;
+    const std::vector<G4double>* GetDensityFactors() const;
 
-  std::vector<G4EmDataHandler*> fDataHandlers;
+    const std::vector<G4bool>* GetFluctuationFlags() const;
+
+    const std::vector<G4bool>* GetFlags() const;
+
+    G4bool GetFlag(std::size_t idx) const;
+
+    G4bool GetBaseMaterialFlag() const;
+
+    G4LossTableBuilder* GetLossTableBuilder() const;
+
+    // method called once per run before initialisation
+    void CheckBaseMaterials();
+
+    // build tables in parallel
+    void BuildTablesInParallel(const G4int verbose);
+
+    const std::vector<const G4ParticleDefinition*>& ListForParallelBuild() const;
+
+    G4bool TablesAreBuilt(const G4ParticleDefinition*, const G4int id);
+
+    void ResetFlag(const G4ParticleDefinition*);
+
+    // hide assignment operator
+    G4EmDataRegistry& operator=(const G4EmDataRegistry&) = delete;
+    G4EmDataRegistry(const G4EmDataRegistry&) = delete;
+
+  private:
+
+    G4EmDataRegistry();
+
+    G4EmDataHandler* EmDataHandler(const G4String&);
+
+    static G4EmDataRegistry* instance;
+    G4EmParameters* theParameters;
+    G4LossTableBuilder* theTableBuilder;
+
+    G4bool isInitialized{false};
+    G4bool baseMatFlag{false};
+    G4bool parallelIni{false};
+    G4int fNumberOfManagers{0};
+    G4int verbose{0};
+
+    std::vector<G4EmDataHandler*> fDataHandlers;
+    std::vector<G4LossTableManager*> fManagers;
+    std::vector<const G4ParticleDefinition*> fParticle;
+    std::vector<G4int> isBuilt;
+    std::vector<G4int> fID;
+    std::vector<G4double>* theDensityFactor;
+    std::vector<G4int>* theDensityIdx;
+    std::vector<G4bool>* theFlag;
+    std::vector<G4bool>* theFluct;
 };
 
 #endif

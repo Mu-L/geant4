@@ -31,26 +31,27 @@
 //  Adjoint/reverse bremsstrahlung
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4eInverseBremsstrahlung_h
-#define G4eInverseBremsstrahlung_h 1
+#ifndef G4EINVERSEBREMSSTRAHLUNG_HH
+#define G4EINVERSEBREMSSTRAHLUNG_HH
 
-#include "globals.hh"
 #include "G4VAdjointReverseReaction.hh"
+#include "globals.hh"
 
 class G4VEmAdjointModel;
 
 class G4eInverseBremsstrahlung : public G4VAdjointReverseReaction
 {
- public:
-  explicit G4eInverseBremsstrahlung(G4bool whichScatCase, const G4String& process_name,
-                                    G4VEmAdjointModel* aEmAdjointModel);
-  ~G4eInverseBremsstrahlung() override = default;
+  public:
 
-  void ProcessDescription(std::ostream&) const override;
-  void DumpInfo() const override { ProcessDescription(G4cout); }
+    explicit G4eInverseBremsstrahlung(G4bool whichScatCase, const G4String& process_name,
+                                      G4VEmAdjointModel* aEmAdjointModel);
+    ~G4eInverseBremsstrahlung() override = default;
 
-  G4eInverseBremsstrahlung(G4eInverseBremsstrahlung&) = delete;
-  G4eInverseBremsstrahlung& operator=(const G4eInverseBremsstrahlung& right) = delete;
+    void ProcessDescription(std::ostream&) const override;
+    void DumpInfo() const override { ProcessDescription(G4cout); }
+
+    G4eInverseBremsstrahlung(G4eInverseBremsstrahlung&) = delete;
+    G4eInverseBremsstrahlung& operator=(const G4eInverseBremsstrahlung& right) = delete;
 };
 
 #endif

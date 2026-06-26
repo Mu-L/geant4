@@ -28,32 +28,30 @@
 //
 // modified by I.Hrivnacova, 6 Oct 99
 
-#include "G3toG4.hh"
 #include "G3DetTable.hh"
+#include "G3toG4.hh"
 
-void G4gsdeta(G4String chset, G4String chdet, G4String,
-              G4int nwhi, G4int nwdi);
+void G4gsdeta(G4String chset, G4String chdet, G4String, G4int nwhi, G4int nwdi);
 
-void PG4gsdeta(G4String *tokens)
+void PG4gsdeta(G4String* tokens)
 {
-    // fill the parameter containers
-    G3fillParams(tokens,PTgsdeta);
+  // fill the parameter containers
+  G3fillParams(tokens, PTgsdeta);
 
-    // interpret the parameters
-    G4String chset = Spar[0];
-    G4String chdet = Spar[1];
-    G4String chali = Spar[2];
-    G4int nwhi = Ipar[0];
-    G4int nwdi = Ipar[1];
+  // interpret the parameters
+  G4String chset = Spar[0];
+  G4String chdet = Spar[1];
+  G4String chali = Spar[2];
+  G4int nwhi = Ipar[0];
+  G4int nwdi = Ipar[1];
 
-    G4gsdeta(chset,chdet,chali,nwhi,nwdi);
+  G4gsdeta(chset, chdet, chali, nwhi, nwdi);
 }
 
-void G4gsdeta(G4String chset, G4String chdet, G4String,
-              G4int nwhi, G4int nwdi)
+void G4gsdeta(G4String chset, G4String chdet, G4String, G4int nwhi, G4int nwdi)
 {
-    G4int idtyp = G3Det.GetID(chset, chdet);
-    // just associate another sensitive detector structure with
-    // the volume chdet
-    G4gsdetv(chset, chdet, idtyp, nwhi, nwdi);
+  G4int idtyp = G3Det.GetID(chset, chdet);
+  // just associate another sensitive detector structure with
+  // the volume chdet
+  G4gsdetv(chset, chdet, idtyp, nwhi, nwdi);
 }

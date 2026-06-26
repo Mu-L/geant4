@@ -33,22 +33,22 @@
 //
 // Creation date: 10 May 2004
 //
-// Modifications: 
+// Modifications:
 // 10 May 2003     P. Rodrigues    First implementation acording with new design
 //
-// Class Description: 
+// Class Description:
 //
-// Concrete class for PhotoElectric Electron Angular Distribution Generation 
+// Concrete class for PhotoElectric Electron Angular Distribution Generation
 // This model is a re-implementation of the Photolectric angular distribution
-// developed my M. Maire for the Standard EM Physics G4PhotoElectricEffect 
+// developed my M. Maire for the Standard EM Physics G4PhotoElectricEffect
 //
 // This class is obsolete and will be removed soon
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4PhotoElectricAngularGeneratorSauterGavrila_h
-#define G4PhotoElectricAngularGeneratorSauterGavrila_h 1
+#ifndef G4PHOTOELECTRICANGULARGENERATORSAUTERGAVRILA_HH
+#define G4PHOTOELECTRICANGULARGENERATORSAUTERGAVRILA_HH
 
 #include "G4VEmAngularDistribution.hh"
 #include "G4ios.hh"
@@ -56,21 +56,21 @@
 
 class G4PhotoElectricAngularGeneratorSauterGavrila : public G4VEmAngularDistribution
 {
-public:
-  explicit G4PhotoElectricAngularGeneratorSauterGavrila();
-  ~G4PhotoElectricAngularGeneratorSauterGavrila();
+  public:
 
-  G4ThreeVector& SampleDirection(const G4DynamicParticle* dp,
-				 G4double e = 0.0,
-				 G4int shellId = 0,
-				 const G4Material* mat = nullptr) override;
+    explicit G4PhotoElectricAngularGeneratorSauterGavrila();
+    ~G4PhotoElectricAngularGeneratorSauterGavrila();
 
-  void PrintGeneratorInformation() const override;
+    G4ThreeVector& SampleDirection(const G4DynamicParticle* dp, G4double e = 0.0, G4int shellId = 0,
+                                   const G4Material* mat = nullptr) override;
 
-  // hide assignment operator 
-  G4PhotoElectricAngularGeneratorSauterGavrila & operator=(const  G4PhotoElectricAngularGeneratorSauterGavrila &right) = delete;
-  G4PhotoElectricAngularGeneratorSauterGavrila(const  G4PhotoElectricAngularGeneratorSauterGavrila&) = delete;
+    void PrintGeneratorInformation() const override;
+
+    // hide assignment operator
+    G4PhotoElectricAngularGeneratorSauterGavrila&
+    operator=(const G4PhotoElectricAngularGeneratorSauterGavrila& right) = delete;
+    G4PhotoElectricAngularGeneratorSauterGavrila(
+      const G4PhotoElectricAngularGeneratorSauterGavrila&) = delete;
 };
 
 #endif
-

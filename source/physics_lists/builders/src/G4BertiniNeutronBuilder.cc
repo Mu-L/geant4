@@ -31,32 +31,29 @@
 // Author: 2002 H.P. Wellisch
 //
 // Modified:
-// 02.04.2009 V.Ivanchenko remove add cross section, string builderis reponsible 
+// 02.04.2009 V.Ivanchenko remove add cross section, string builderis reponsible
 // 12.04.2017 A.Dotti move to new design with base class
 //
 //----------------------------------------------------------------------------
 //
 #include "G4BertiniNeutronBuilder.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4HadronicParameters.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4HadronicParameters.hh"
+#include "G4SystemOfUnits.hh"
 
-
-G4BertiniNeutronBuilder::
-G4BertiniNeutronBuilder() 
+G4BertiniNeutronBuilder::G4BertiniNeutronBuilder()
 {
   theMin = 0.0;
   theMax = G4HadronicParameters::Instance()->GetMaxEnergyTransitionFTF_Cascade();
   theModel = new G4CascadeInterface;
 }
 
-void G4BertiniNeutronBuilder::
-Build(G4HadronInelasticProcess * aP)
+void G4BertiniNeutronBuilder::Build(G4HadronInelasticProcess* aP)
 {
   theModel->SetMinEnergy(theMin);
   theModel->SetMaxEnergy(theMax);
   aP->RegisterMe(theModel);
 }
-

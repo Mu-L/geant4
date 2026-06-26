@@ -53,105 +53,106 @@
 // -------------------------------------------------------------------
 
 //
-#ifndef G4IonCoulombCrossSection_h
-#define G4IonCoulombCrossSection_h 1
+#ifndef G4IONCOULOMBCROSSSECTION_HH
+#define G4IONCOULOMBCROSSSECTION_HH
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include <CLHEP/Units/SystemOfUnits.h>
-
-#include "globals.hh"
 #include "G4NistManager.hh"
 #include "G4ParticleDefinition.hh"
+#include "globals.hh"
+
+#include <CLHEP/Units/SystemOfUnits.h>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class G4IonCoulombCrossSection
 {
-public:
+  public:
 
-  explicit G4IonCoulombCrossSection();
+    explicit G4IonCoulombCrossSection();
 
-  ~G4IonCoulombCrossSection() = default;
+    ~G4IonCoulombCrossSection() = default;
 
-  void Initialise(const G4ParticleDefinition*, G4double cosThetaLim);
+    void Initialise(const G4ParticleDefinition*, G4double cosThetaLim);
 
-  G4double NuclearCrossSection();
+    G4double NuclearCrossSection();
 
-  G4double SampleCosineTheta();
+    G4double SampleCosineTheta();
 
-  void SetupKinematic(G4double kinEnergy, G4double tmass);
+    void SetupKinematic(G4double kinEnergy, G4double tmass);
 
-  void SetupTarget(G4double Z, G4double kinEnergy, G4int heavycorr);
+    void SetupTarget(G4double Z, G4double kinEnergy, G4int heavycorr);
 
-  inline void SetupParticle(const G4ParticleDefinition*);
+    inline void SetupParticle(const G4ParticleDefinition*);
 
-  inline G4double GetMomentum2();
+    inline G4double GetMomentum2();
 
-  G4IonCoulombCrossSection & operator=
-  (const  G4IonCoulombCrossSection &right) = delete;
-  G4IonCoulombCrossSection(const  G4IonCoulombCrossSection&) = delete;
+    G4IonCoulombCrossSection& operator=(const G4IonCoulombCrossSection& right) = delete;
+    G4IonCoulombCrossSection(const G4IonCoulombCrossSection&) = delete;
 
-private:
+  private:
 
-  void   SetScreenRSquare(G4int iz);
+    void SetScreenRSquare(G4int iz);
 
-  const G4ParticleDefinition* theProton;  
+    const G4ParticleDefinition* theProton;
 
-  G4NistManager*  fNistManager;		
-  G4Pow*          fG4pow;
+    G4NistManager* fNistManager;
+    G4Pow* fG4pow;
 
-  G4double                coeff;	  
+    G4double coeff;
 
-  //cost - min - max 
-  G4double                cosThetaMin;// def 1.0
-  G4double                cosThetaMax;// def -1.0
-  //SetupTarget
-  G4double                cosTetMinNuc;// -->cosThetaMin
-  G4double                cosTetMaxNuc;// -->cosThetaMax
+    // cost - min - max
+    G4double cosThetaMin;  // def 1.0
+    G4double cosThetaMax;  // def -1.0
+    // SetupTarget
+    G4double cosTetMinNuc;  // -->cosThetaMin
+    G4double cosTetMaxNuc;  // -->cosThetaMax
 
-  //cross section
-  G4double                nucXSection;    	
+    // cross section
+    G4double nucXSection;
 
-  //energy 
-  G4double                etag;	    
+    // energy
+    G4double etag;
 
-  // projectile........................
-  const G4ParticleDefinition* particle;
+    // projectile........................
+    const G4ParticleDefinition* particle;
 
-  G4double                chargeSquare;  
-  G4double                spin;	   
-  G4double                mass;	   
+    G4double chargeSquare;
+    G4double spin;
+    G4double mass;
 
-  //lab of incedent particle 
-  G4double                tkinLab;
-  G4double                momLab2;
-  G4double                invbetaLab2;
+    // lab of incedent particle
+    G4double tkinLab;
+    G4double momLab2;
+    G4double invbetaLab2;
 
-  //relative system with nucleus
-  G4double                tkin;	   
-  G4double                mom2;	   
-  G4double                invbeta2;	   
+    // relative system with nucleus
+    G4double tkin;
+    G4double mom2;
+    G4double invbeta2;
 
-  // target nucleus
-  G4double                targetZ;    
-  G4double                targetMass; 
-  G4double                screenZ; 
-  G4double                alpha2;
-  G4double 	   	  ScreenRSquare;  
+    // target nucleus
+    G4double targetZ;
+    G4double targetMass;
+    G4double screenZ;
+    G4double alpha2;
+    G4double ScreenRSquare;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline 
-void G4IonCoulombCrossSection::SetupParticle(const G4ParticleDefinition* p)
+inline void G4IonCoulombCrossSection::SetupParticle(const G4ParticleDefinition* p)
 {
   particle = p;
   mass = particle->GetPDGMass();
   spin = particle->GetPDGSpin();
-  if(0.0 != spin) { spin = 0.5; }
-  G4double q = particle->GetPDGCharge()/CLHEP::eplus;
-  chargeSquare = q*q;
+  if (0.0 != spin)
+  {
+    spin = 0.5;
+  }
+  G4double q = particle->GetPDGCharge() / CLHEP::eplus;
+  chargeSquare = q * q;
   tkin = 0.0;
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -163,5 +164,3 @@ inline G4double G4IonCoulombCrossSection::GetMomentum2()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #endif
-
-

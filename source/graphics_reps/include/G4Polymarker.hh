@@ -25,33 +25,39 @@
 //
 //
 //
-// 
+//
 // John Allison  November 1996
 
 // Class Description:
 // A set of markers.
 // Class Description - End:
 
-
 #ifndef G4POLYMARKER_HH
 #define G4POLYMARKER_HH
 
-#include "G4VMarker.hh"
 #include "G4Point3DList.hh"
+#include "G4VMarker.hh"
 
-class G4Polymarker: public G4VMarker, public G4Point3DList {
+class G4Polymarker : public G4VMarker, public G4Point3DList
+{
+  public:  // With description
 
-public: // With description
+    friend std::ostream& operator<<(std::ostream& os, const G4Polymarker& marker);
+    enum MarkerType
+    {
+      dots,
+      circles,
+      squares
+    };
+    G4Polymarker();
+    G4Polymarker(const G4VMarker&);
+    ~G4Polymarker() override;
+    MarkerType GetMarkerType() const;
+    void SetMarkerType(MarkerType);
 
-  friend std::ostream& operator << (std::ostream& os, const G4Polymarker& marker);
-  enum MarkerType {dots, circles, squares};
-  G4Polymarker ();
-  G4Polymarker (const G4VMarker&);
-  ~G4Polymarker () override;
-  MarkerType GetMarkerType () const;
-  void SetMarkerType (MarkerType);
-private:
-  MarkerType fMarkerType;
+  private:
+
+    MarkerType fMarkerType;
 };
 
 #include "G4Polymarker.icc"

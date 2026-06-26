@@ -60,50 +60,50 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
 #include "G4WilsonRadius.hh"
-#include "G4SystemOfUnits.hh"
+
 #include "G4Pow.hh"
+#include "G4SystemOfUnits.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-G4WilsonRadius::G4WilsonRadius ()
+G4WilsonRadius::G4WilsonRadius()
 {
-  G4double r0 = 0.84*fermi;
-  r0sq        = r0 * r0;
-  factor      = std::sqrt(5.0/3.0) * fermi;
-  third       = 1.0 / 3.0;
+  G4double r0 = 0.84 * fermi;
+  r0sq = r0 * r0;
+  factor = std::sqrt(5.0 / 3.0) * fermi;
+  third = 1.0 / 3.0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 //
-G4WilsonRadius::~G4WilsonRadius ()
-{;}
+G4WilsonRadius::~G4WilsonRadius()
+{
+  ;
+}
 ////////////////////////////////////////////////////////////////////////////////
 //
-G4double G4WilsonRadius::GetWilsonRMSRadius (G4double A)
+G4double G4WilsonRadius::GetWilsonRMSRadius(G4double A)
 {
   G4double radius;
   if (A > 26.0)
-    radius = factor * (0.84*G4Pow::GetInstance()->A13(A) + 0.55);
+    radius = factor * (0.84 * G4Pow::GetInstance()->A13(A) + 0.55);
   else
   {
-	// this was changed from just G4double to static const G4double
-	// to make sure that time wasn't being wasted on every call reloading a stack variable
-	// by MHM 20050119
-    static const G4double r[27] = {0.0, 0.85,  2.095, 1.976, 1.671, 1.986,
-                           2.57,  2.41,  2.23,  2.519, 2.45,
-                           2.42,  2.471, 2.440, 2.58,  2.611,
-                           2.730, 2.662, 2.727, 2.9,   3.040,
-                           2.867, 2.969, 2.94,  3.075, 3.11,
-                           3.06};
-    radius = factor * r[(G4int) (A+0.4)];
+    // this was changed from just G4double to static const G4double
+    // to make sure that time wasn't being wasted on every call reloading a stack variable
+    // by MHM 20050119
+    static const G4double r[27] = {0.0,   0.85, 2.095, 1.976, 1.671, 1.986, 2.57,  2.41,  2.23,
+                                   2.519, 2.45, 2.42,  2.471, 2.440, 2.58,  2.611, 2.730, 2.662,
+                                   2.727, 2.9,  3.040, 2.867, 2.969, 2.94,  3.075, 3.11,  3.06};
+    radius = factor * r[(G4int)(A + 0.4)];
   }
   return radius;
 }
 ////////////////////////////////////////////////////////////////////////////////
 //
-G4double G4WilsonRadius::GetWilsonRadius (G4double A)
+G4double G4WilsonRadius::GetWilsonRadius(G4double A)
 {
-  G4double r  = GetWilsonRMSRadius(A);
-  return  1.29*std::sqrt(r*r-r0sq);
+  G4double r = GetWilsonRMSRadius(A);
+  return 1.29 * std::sqrt(r * r - r0sq);
 }
 ////////////////////////////////////////////////////////////////////////////////
 //

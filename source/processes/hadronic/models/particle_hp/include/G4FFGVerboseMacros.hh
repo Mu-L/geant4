@@ -47,9 +47,10 @@ extern G4long G4FFG_DEPTH;
   G4cout << G4FFG_FUNCTION_SIGNATURE__ << " at " << debugOutput << ":" << __LINE__;
 
 /** G4FFG_SPACING__ indents the debug messages according to the debugging depth */
-#define G4FFG_SPACING__                                 \
-  for (G4int depth = 0; depth < G4FFG_DEPTH; depth++) { \
-    G4cout << "  ";                                     \
+#define G4FFG_SPACING__                               \
+  for (G4int depth = 0; depth < G4FFG_DEPTH; depth++) \
+  {                                                   \
+    G4cout << "  ";                                   \
   }
 
 #endif /* G4FFGVERBOSEMACROS_HH */

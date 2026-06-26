@@ -35,19 +35,25 @@
 
 class G4VInteractorManager;
 
-class G4OpenInventor: public G4VGraphicsSystem {
-public:
-  G4OpenInventor(const G4String,const G4String,G4VGraphicsSystem::Functionality);
-  virtual ~G4OpenInventor();
-  void SetInteractorManager(G4VInteractorManager*);
-  G4VInteractorManager* GetInteractorManager();
-  G4VSceneHandler* CreateSceneHandler (const G4String& name);
-  void InitNodes();
-  G4bool IsUISessionCompatible () const;
-private:
-  virtual void Initialize() = 0;
-private:
-  G4VInteractorManager* interactorManager;
+class G4OpenInventor : public G4VGraphicsSystem
+{
+  public:
+
+    G4OpenInventor(const G4String, const G4String, G4VGraphicsSystem::Functionality);
+    virtual ~G4OpenInventor();
+    void SetInteractorManager(G4VInteractorManager*);
+    G4VInteractorManager* GetInteractorManager();
+    G4VSceneHandler* CreateSceneHandler(const G4String& name);
+    void InitNodes();
+    G4bool IsUISessionCompatible() const;
+
+  private:
+
+    virtual void Initialize() = 0;
+
+  private:
+
+    G4VInteractorManager* interactorManager;
 };
 
 #endif

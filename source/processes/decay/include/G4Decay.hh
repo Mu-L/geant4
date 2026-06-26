@@ -42,171 +42,143 @@
 //   PreAssignedDecayTime         18 Jan. 2001 H.Kurashige
 //   Add External Decayer         23 Feb. 2001  H.Kurashige
 //   Remove PhysicsTable          12 Feb. 2002 H.Kurashige
-//   Fixed bug in PostStepGPIL 
+//   Fixed bug in PostStepGPIL
 //    in case of stopping during AlongStepDoIt 12 Mar. 2004 H.Kurashige
 //   Add GetRemainderLifeTime  10 Aug/2004 H.Kurashige
 //   Add DaughterPolarization     23 July 2008 H.Kurashige
 
+#ifndef G4DECAY_HH
+#define G4DECAY_HH
 
-#ifndef G4Decay_h
-#define G4Decay_h 1
-
+#include "G4DecayProcessType.hh"
+#include "G4ParticleChangeForDecay.hh"
+#include "G4VRestDiscreteProcess.hh"
 #include "G4ios.hh"
 #include "globals.hh"
-#include "G4VRestDiscreteProcess.hh"
-#include "G4ParticleChangeForDecay.hh"
-#include "G4DecayProcessType.hh"
 
 class G4VExtDecayer;
 
-class G4Decay : public G4VRestDiscreteProcess 
+class G4Decay : public G4VRestDiscreteProcess
 {
- // Class Description
-  //  This class is a decay process
+    // Class Description
+    //  This class is a decay process
 
   public:
-    //  Constructors 
-    G4Decay(const G4String& processName ="Decay");
+
+    //  Constructors
+    G4Decay(const G4String& processName = "Decay");
 
     //  Destructor
     virtual ~G4Decay();
 
   private:
+
     //  copy constructor
-      G4Decay(const G4Decay &right);
+    G4Decay(const G4Decay& right);
 
     //  Assignment Operation (generated)
-      G4Decay & operator=(const G4Decay &right);
+    G4Decay& operator=(const G4Decay& right);
 
-  public: //With Description
-     // G4Decay Process has both 
-     // PostStepDoIt (for decay in flight) 
-     //   and 
-     // AtRestDoIt (for decay at rest)
-  
-     virtual G4VParticleChange *PostStepDoIt(
-			     const G4Track& aTrack,
-                             const G4Step& aStep
-                            ) override;
+  public:  // With Description
 
-     virtual G4VParticleChange* AtRestDoIt(
-			     const G4Track& aTrack,
-			     const G4Step&  aStep
-			    ) override;
+    // G4Decay Process has both
+    // PostStepDoIt (for decay in flight)
+    //   and
+    // AtRestDoIt (for decay at rest)
 
-     virtual void BuildPhysicsTable(const G4ParticleDefinition&) override; 
-     // In G4Decay, thePhysicsTable stores values of
-    //    beta * std::sqrt( 1 - beta*beta) 
+    virtual G4VParticleChange* PostStepDoIt(const G4Track& aTrack, const G4Step& aStep) override;
+
+    virtual G4VParticleChange* AtRestDoIt(const G4Track& aTrack, const G4Step& aStep) override;
+
+    virtual void BuildPhysicsTable(const G4ParticleDefinition&) override;
+    // In G4Decay, thePhysicsTable stores values of
+    //    beta * std::sqrt( 1 - beta*beta)
     //  as a function of normalized kinetic enregy (=Ekin/mass),
     //  becasuse this table is universal for all particle types,
 
-
     virtual G4bool IsApplicable(const G4ParticleDefinition&) override;
     // returns "true" if the decay process can be applied to
-    // the particle type. 
- 
-  protected: // With Description
-    virtual G4VParticleChange* DecayIt(
-			     const G4Track& aTrack,
-			     const G4Step&  aStep
-			    );
+    // the particle type.
+
+  protected:  // With Description
+
+    virtual G4VParticleChange* DecayIt(const G4Track& aTrack, const G4Step& aStep);
     // The DecayIt() method returns by pointer a particle-change object,
     // which has information of daughter particles.
 
     // Set daughter polarization
-    //  NO OPERATION in the base class of G4Decay 
-    virtual void DaughterPolarization(const G4Track& aTrack,
-			      G4DecayProducts* products);
+    //  NO OPERATION in the base class of G4Decay
+    virtual void DaughterPolarization(const G4Track& aTrack, G4DecayProducts* products);
 
- public:
-    virtual G4double AtRestGetPhysicalInteractionLength(
-                             const G4Track& track,
-                             G4ForceCondition* condition
-                            ) override;
+  public:
 
-    virtual G4double PostStepGetPhysicalInteractionLength(
-                             const G4Track& track,
-                             G4double   previousStepSize,
-                             G4ForceCondition* condition
-                            ) override;
+    virtual G4double AtRestGetPhysicalInteractionLength(const G4Track& track,
+                                                        G4ForceCondition* condition) override;
 
-  protected: // With Description
-    // GetMeanFreePath returns ctau*beta*gamma for decay in flight 
+    virtual G4double PostStepGetPhysicalInteractionLength(const G4Track& track,
+                                                          G4double previousStepSize,
+                                                          G4ForceCondition* condition) override;
+
+  protected:  // With Description
+
+    // GetMeanFreePath returns ctau*beta*gamma for decay in flight
     // GetMeanLifeTime returns ctau for decay at rest
-    virtual G4double GetMeanFreePath(const G4Track& aTrack,
-                              G4double   previousStepSize,
-                              G4ForceCondition* condition
-                             ) override;
+    virtual G4double GetMeanFreePath(const G4Track& aTrack, G4double previousStepSize,
+                                     G4ForceCondition* condition) override;
 
-    virtual G4double GetMeanLifeTime(const G4Track& aTrack,
-                              G4ForceCondition* condition
-                            ) override;
+    virtual G4double GetMeanLifeTime(const G4Track& aTrack, G4ForceCondition* condition) override;
 
-   public: //With Description
-     virtual void StartTracking(G4Track*) override;
-     virtual void EndTracking() override;
-      // inform Start/End of tracking for each track to the physics process 
+  public:  // With Description
 
-   public: //With Description
-     void SetExtDecayer(G4VExtDecayer*);
-     const G4VExtDecayer* GetExtDecayer() const;
-     // Set/Get External Decayer
-   
-    G4double GetRemainderLifeTime() const;  
-    //Get Remainder of life time at rest decay 
+    virtual void StartTracking(G4Track*) override;
+    virtual void EndTracking() override;
+    // inform Start/End of tracking for each track to the physics process
+
+  public:  // With Description
+
+    void SetExtDecayer(G4VExtDecayer*);
+    const G4VExtDecayer* GetExtDecayer() const;
+    // Set/Get External Decayer
+
+    G4double GetRemainderLifeTime() const;
+    // Get Remainder of life time at rest decay
 
     virtual void ProcessDescription(std::ostream& outFile) const override;
     //
 
   protected:
-     G4int verboseLevel;
-     // controle flag for output message
-     //  0: Silent
-     //  1: Warning message
-     //  2: More
+
+    G4int verboseLevel;
+    // controle flag for output message
+    //  0: Silent
+    //  1: Warning message
+    //  2: More
 
   protected:
- 
+
     // Remainder of life time at rest
-    G4double                 fRemainderLifeTime;
-  
+    G4double fRemainderLifeTime;
+
     // ParticleChange for decay process
     G4ParticleChangeForDecay fParticleChangeForDecay;
-    
+
     // External Decayer
-    G4VExtDecayer*    pExtDecayer;
+    G4VExtDecayer* pExtDecayer;
 };
 
-inline  
-  G4VParticleChange* G4Decay::AtRestDoIt(
-			     const G4Track& aTrack,
-			     const G4Step&  aStep
-			    )
+inline G4VParticleChange* G4Decay::AtRestDoIt(const G4Track& aTrack, const G4Step& aStep)
 {
   return DecayIt(aTrack, aStep);
 }
 
-
-inline
- const G4VExtDecayer* G4Decay::GetExtDecayer() const
+inline const G4VExtDecayer* G4Decay::GetExtDecayer() const
 {
   return pExtDecayer;
 }
 
-inline
- G4double G4Decay::GetRemainderLifeTime() const 
+inline G4double G4Decay::GetRemainderLifeTime() const
 {
   return fRemainderLifeTime;
 }
 
 #endif
-
-
-
-
-
-
-
-
-
-

@@ -30,15 +30,15 @@
  *      Author: matkara
  */
 
-#include <G4ITReaction.hh>
 #include "globals.hh"
 
-//G4ThreadLocal std::set<G4ITReaction*>* G4ITReaction::gAll(0);
+#include <G4ITReaction.hh>
+
+// G4ThreadLocal std::set<G4ITReaction*>* G4ITReaction::gAll(0);
 
 G4ThreadLocal G4ITReactionSet* G4ITReactionSet::fpInstance(nullptr);
 
-G4bool compReactionPerTime::operator()(G4ITReactionPtr rhs,
-                                     G4ITReactionPtr lhs) const
+G4bool compReactionPerTime::operator()(G4ITReactionPtr rhs, G4ITReactionPtr lhs) const
 {
   G4double time1 = rhs->GetTime();
   G4double time2 = lhs->GetTime();
@@ -49,12 +49,10 @@ G4bool compReactionPerTime::operator()(G4ITReactionPtr rhs,
   return rhs->GetTime() < lhs->GetTime();
 }
 
-
 template<class T>
-inline void hash_combine(std::size_t& seed,
-                         const T& v)
+inline void hash_combine(std::size_t& seed, const T& v)
 {
-//  std::hash<T> hasher;
+  //  std::hash<T> hasher;
   seed ^= /*std::hash<T>(v)*/ v + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 }
 
@@ -66,43 +64,44 @@ std::size_t G4ITReaction::GetHash() const
   return hash;
 }
 
-G4ITReaction::G4ITReaction(G4double time, G4Track* trackA, G4Track* trackB) :
-  
-  fTime(time),
-  fReactants(trackA,trackB)
+G4ITReaction::G4ITReaction(G4double time, G4Track* trackA, G4Track* trackB)
+  :
+
+    fTime(time),
+    fReactants(trackA, trackB)
 {
-  //if(gAll == 0) gAll = new std::set<G4ITReaction*>();
-  //gAll->insert(this);
+  // if(gAll == 0) gAll = new std::set<G4ITReaction*>();
+  // gAll->insert(this);
   fReactionPerTimeIt = nullptr;
 }
 
 G4ITReaction::~G4ITReaction()
 {
-  //gAll->erase(this);
+  // gAll->erase(this);
   delete fReactionPerTimeIt;
 }
 
 void G4ITReaction::RemoveMe()
 {
   G4ITReactionPtr backMeUp = this->shared_from_this();
-  for(auto & it : fReactionPerTrack)
+  for (auto& it : fReactionPerTrack)
   {
     it.first->RemoveThisReaction(it.second);
   }
   fReactionPerTrack.clear();
 
-  if(fReactionPerTimeIt != nullptr)
+  if (fReactionPerTimeIt != nullptr)
   {
-   G4ITReactionSet::Instance()->GetReactionsPerTime().erase(*fReactionPerTimeIt);
-   delete fReactionPerTimeIt;
-   fReactionPerTimeIt = nullptr;
+    G4ITReactionSet::Instance()->GetReactionsPerTime().erase(*fReactionPerTimeIt);
+    delete fReactionPerTimeIt;
+    fReactionPerTimeIt = nullptr;
   }
 }
 
 G4bool G4ITReactionPerTrack::RemoveThisReaction(G4ITReactionList::iterator it)
 {
   fReactions.erase(it);
-  if(fReactions.empty())
+  if (fReactions.empty())
   {
     G4ITReactionSet::Instance()->RemoveReactionPerTrack(this->shared_from_this());
     return true;

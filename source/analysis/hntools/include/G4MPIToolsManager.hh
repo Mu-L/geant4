@@ -28,54 +28,56 @@
 
 // Author: Ivana Hrivnacova, 25/06/2015  (ivana@ipno.in2p3.fr)
 
-#ifndef G4MPIToolsManager_h
-#define G4MPIToolsManager_h 1
+#ifndef G4MPITOOLSMANAGER_HH
+#define G4MPITOOLSMANAGER_HH
 
 #include "G4AnalysisManagerState.hh"
 #include "G4HnInformation.hh"
 #include "G4ios.hh"
 
-#include "tools/impi_world"
 #include "tools/histo/hmpi"
+#include "tools/impi_world"
 
-#include <vector>
 #include <string_view>
+#include <vector>
 
 class G4MPIToolsManager
 {
   public:
-    G4MPIToolsManager(const G4AnalysisManagerState& state,
-                      tools::histo::hmpi* hmpi)
-    : fState(state), fHmpi(hmpi) {}
+
+    G4MPIToolsManager(const G4AnalysisManagerState& state, tools::histo::hmpi* hmpi)
+      : fState(state), fHmpi(hmpi)
+    {}
     G4MPIToolsManager() = delete;
     virtual ~G4MPIToolsManager() = default;
 
   public:
+
     // Methods
-    template <typename HT>
+    template<typename HT>
     G4bool Merge(const std::vector<std::pair<HT*, G4HnInformation*>>& hnVector
 
-);
+    );
+
   private:
+
     // Methods
-    template <typename HT>
-    G4bool Send(G4int nofActiveT,
-                const std::vector<std::pair<HT*, G4HnInformation*>>& hnVector
+    template<typename HT>
+    G4bool Send(G4int nofActiveT, const std::vector<std::pair<HT*, G4HnInformation*>>& hnVector
 
-);
+    );
 
-    template <typename HT>
-    G4bool Receive(G4int nofActiveT,
-                const std::vector<std::pair<HT*, G4HnInformation*>>& hnVector
+    template<typename HT>
+    G4bool Receive(G4int nofActiveT, const std::vector<std::pair<HT*, G4HnInformation*>>& hnVector
 
-);
+    );
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4MPIToolsManager" };
+    static constexpr std::string_view fkClass{"G4MPIToolsManager"};
 
     // Data members
     const G4AnalysisManagerState& fState;
-    tools::histo::hmpi*  fHmpi;
+    tools::histo::hmpi* fHmpi;
 };
 
 // inline functions

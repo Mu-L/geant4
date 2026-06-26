@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison    17th August 2013
 // Michael Kelsey  31st January 2019 -- Move functionality to G4VFieldModel
 //
@@ -38,36 +38,35 @@
 
 #include "G4VFieldModel.hh"
 
+class G4MagneticFieldModel : public G4VFieldModel
+{
+  public:  // With description
 
-class G4MagneticFieldModel: public G4VFieldModel {
-public: 		// With description
+    // Constructor just passes through to base
+    G4MagneticFieldModel(G4int nDataPointsPerHalfExtent = 3,
+                         Representation representation = Representation::fullArrow,
+                         G4int arrow3DLineSegmentsPerCircle = 6,
+                         const G4VisExtent& extentForField = G4VisExtent(),
+                         const std::vector<G4PhysicalVolumesSearchScene::Findings>& pvFindings =
+                           std::vector<G4PhysicalVolumesSearchScene::Findings>())
+      : G4VFieldModel("Magnetic", "B", extentForField, pvFindings, nDataPointsPerHalfExtent,
+                      representation, arrow3DLineSegmentsPerCircle)
+    {}
 
-  // Constructor just passes through to base
-  G4MagneticFieldModel
-  (G4int nDataPointsPerHalfExtent = 3,
-   Representation representation = Representation::fullArrow,
-   G4int arrow3DLineSegmentsPerCircle = 6,
-   const G4VisExtent& extentForField = G4VisExtent(),
-   const std::vector<G4PhysicalVolumesSearchScene::Findings>& pvFindings
-   = std::vector<G4PhysicalVolumesSearchScene::Findings>())
-  : G4VFieldModel
-  ("Magnetic","B", extentForField, pvFindings,
-  nDataPointsPerHalfExtent, representation, arrow3DLineSegmentsPerCircle)
-  {}
+    virtual ~G4MagneticFieldModel() { ; }
 
-  virtual ~G4MagneticFieldModel() {;}
+  protected:
 
-protected:
-  virtual void GetFieldAtLocation(const G4Field* field,
-				  const G4Point3D& position, G4double time,
-				  G4Point3D& result) const;
-  // The appropriate output from GetFieldValue should be filled into result.
-  // If (field==0), the function should do nothing; returning without error.
+    virtual void GetFieldAtLocation(const G4Field* field, const G4Point3D& position, G4double time,
+                                    G4Point3D& result) const;
+    // The appropriate output from GetFieldValue should be filled into result.
+    // If (field==0), the function should do nothing; returning without error.
 
-private:
-  // Private copy contructor and assignment to forbid use...
-  G4MagneticFieldModel(const G4MagneticFieldModel&);
-  G4MagneticFieldModel& operator=(const G4MagneticFieldModel&);
+  private:
+
+    // Private copy contructor and assignment to forbid use...
+    G4MagneticFieldModel(const G4MagneticFieldModel&);
+    G4MagneticFieldModel& operator=(const G4MagneticFieldModel&);
 };
 
 #endif

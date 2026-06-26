@@ -25,10 +25,12 @@
 //
 /// file: G4DNAPolyNucleotideReactionProcess.hh
 /// brief: This file handls reaction process with DNA geometry.
-#ifndef G4DNAPolyNucleotideReactionProcess_hh
-#define G4DNAPolyNucleotideReactionProcess_hh
-#include <CLHEP/Units/SystemOfUnits.h>
+#ifndef G4DNAPOLYNUCLEOTIDEREACTIONPROCESS_HH
+#define G4DNAPOLYNUCLEOTIDEREACTIONPROCESS_HH
 #include "G4VITDiscreteProcess.hh"
+
+#include <CLHEP/Units/SystemOfUnits.h>
+
 #include <variant>
 class G4DNAMolecularReactionTable;
 class G4DNAComponentNode;
@@ -36,68 +38,65 @@ class G4VDNAHitModel;
 
 class G4DNAPolyNucleotideReactionProcess : public G4VITDiscreteProcess
 {
- public:
-  explicit G4DNAPolyNucleotideReactionProcess(
-    const G4String& aName = "DNAStaticMoleculeReactionProcess",
-    G4int verbosityLevel  = 0);
-  ~G4DNAPolyNucleotideReactionProcess() override;
-  
-  G4DNAPolyNucleotideReactionProcess(const G4DNAPolyNucleotideReactionProcess&) = delete;
-  G4DNAPolyNucleotideReactionProcess& operator =(
-    const G4DNAPolyNucleotideReactionProcess&) = delete;
- 
-  inline void SetDNADamageReactionModel(G4VDNAHitModel* pModel);
+  public:
 
-  G4bool IsApplicable(const G4ParticleDefinition&) override { return true; }
+    explicit G4DNAPolyNucleotideReactionProcess(
+      const G4String& aName = "DNAStaticMoleculeReactionProcess", G4int verbosityLevel = 0);
+    ~G4DNAPolyNucleotideReactionProcess() override;
 
-  G4double CalculateTimeStep(const G4Track& trackA,
-                             const G4double& userTimeStep = 0);
+    G4DNAPolyNucleotideReactionProcess(const G4DNAPolyNucleotideReactionProcess&) = delete;
+    G4DNAPolyNucleotideReactionProcess&
+    operator=(const G4DNAPolyNucleotideReactionProcess&) = delete;
 
-  void StartTracking(G4Track* aTrack) override;
+    inline void SetDNADamageReactionModel(G4VDNAHitModel* pModel);
 
-  G4double PostStepGetPhysicalInteractionLength(
-    const G4Track&,  // track
-    G4double,        // previousStepSize
-    G4ForceCondition* pForceCond) override;
-  G4VParticleChange* PostStepDoIt(const G4Track& track, const G4Step&) override;
+    G4bool IsApplicable(const G4ParticleDefinition&) override { return true; }
 
-  G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*) override
-  {
-    return DBL_MAX;
-  }
+    G4double CalculateTimeStep(const G4Track& trackA, const G4double& userTimeStep = 0);
 
-  inline void SetVerbose(G4int verbose);
+    void StartTracking(G4Track* aTrack) override;
 
- protected:
-  G4VParticleChange fParticleChange;
+    G4double PostStepGetPhysicalInteractionLength(const G4Track&,  // track
+                                                  G4double,  // previousStepSize
+                                                  G4ForceCondition* pForceCond) override;
+    G4VParticleChange* PostStepDoIt(const G4Track& track, const G4Step&) override;
 
- private:
-  struct G4PolyNucleotideReactionState
-    : public G4ProcessStateBase<G4PolyNucleotideReactionState>
-  {
-    G4PolyNucleotideReactionState();
-    ~G4PolyNucleotideReactionState() override = default;
-    G4String GetType() override { return "PolyNucleotideReactionState"; }
+    G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*) override
+    {
+      return DBL_MAX;
+    }
 
-    using DNANode =
-      std::variant<const G4DNAComponentNode*, /*for dnadamage chain*/
-                   const G4VPhysicalVolume* /*for molecularDNA chain*/>;
-    DNANode fNodeReactant;
-    G4double fSampledMinTimeStep;
-    G4double fPreviousTimeAtPreStepPoint;
-  };
-  G4bool fHasAlreadyReachedNullTime{false};
-  G4int fVerbose;
-  G4double fRCutOff;
-  G4VDNAHitModel* fpDamageModel{nullptr};
+    inline void SetVerbose(G4int verbose);
+
+  protected:
+
+    G4VParticleChange fParticleChange;
+
+  private:
+
+    struct G4PolyNucleotideReactionState : public G4ProcessStateBase<G4PolyNucleotideReactionState>
+    {
+        G4PolyNucleotideReactionState();
+        ~G4PolyNucleotideReactionState() override = default;
+        G4String GetType() override { return "PolyNucleotideReactionState"; }
+
+        using DNANode = std::variant<const G4DNAComponentNode*, /*for dnadamage chain*/
+                                     const G4VPhysicalVolume* /*for molecularDNA chain*/>;
+        DNANode fNodeReactant;
+        G4double fSampledMinTimeStep;
+        G4double fPreviousTimeAtPreStepPoint;
+    };
+    G4bool fHasAlreadyReachedNullTime{false};
+    G4int fVerbose;
+    G4double fRCutOff;
+    G4VDNAHitModel* fpDamageModel{nullptr};
 };
 inline void G4DNAPolyNucleotideReactionProcess::SetVerbose(G4int verbose)
 {
   fVerbose = verbose;
 }
 
-inline void G4DNAPolyNucleotideReactionProcess::SetDNADamageReactionModel(
-  G4VDNAHitModel* pModel)
+inline void G4DNAPolyNucleotideReactionProcess::SetDNADamageReactionModel(G4VDNAHitModel* pModel)
 {
   fpDamageModel = pModel;
 }

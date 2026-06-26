@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPReactionWhiteBoard_h
-#define G4ParticleHPReactionWhiteBoard_h 1
+#ifndef G4PARTICLEHPREACTIONWHITEBOARD_HH
+#define G4PARTICLEHPREACTIONWHITEBOARD_HH
 
 // Class Description
 // Keep Information of Current Interaction

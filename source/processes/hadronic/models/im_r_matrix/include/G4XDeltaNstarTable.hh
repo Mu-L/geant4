@@ -24,62 +24,58 @@
 // ********************************************************************
 //
 
-#ifndef G4XDeltaNstarTable_h
-#define G4XDeltaNstarTable_h
+#ifndef G4XDELTANSTARTABLE_HH
+#define G4XDELTANSTARTABLE_HH
 
-#include "globals.hh"
 #include "G4PhysicsVector.hh"
 #include "G4VXResonanceTable.hh"
+#include "globals.hh"
 
 #include <map>
 
-class G4XDeltaNstarTable 
+class G4XDeltaNstarTable
 {
+  public:
 
-public:
+    G4XDeltaNstarTable();
 
-  G4XDeltaNstarTable(); 
+    virtual ~G4XDeltaNstarTable();
 
-  virtual ~G4XDeltaNstarTable();
+    virtual const G4PhysicsVector* CrossSectionTable(const G4String& particleName) const;
 
-  virtual const G4PhysicsVector* CrossSectionTable(const G4String& particleName) const;
+    G4bool operator==(const G4XDeltaNstarTable& right) const;
+    G4bool operator!=(const G4XDeltaNstarTable& right) const;
 
-  G4bool operator==(const G4XDeltaNstarTable &right) const;
-  G4bool operator!=(const G4XDeltaNstarTable &right) const;
+  protected:
 
+  private:
 
-protected:
+    G4XDeltaNstarTable(const G4XDeltaNstarTable& right);
+    G4XDeltaNstarTable& operator=(const G4XDeltaNstarTable& right);
 
-private:  
+    std::map<G4String, G4double*, std::less<G4String>> xMap;
 
-  G4XDeltaNstarTable(const G4XDeltaNstarTable &right);
-  G4XDeltaNstarTable& operator=(const G4XDeltaNstarTable &right);
+    static const G4int sizeDeltaNstar;
 
-  std::map <G4String, G4double*, std::less<G4String> > xMap;
-  
-  static const G4int sizeDeltaNstar;
+    // The energies corresponding to the following cross sections
+    static const G4double energyTable[121];
 
-  // The energies corresponding to the following cross sections
-  static const G4double energyTable[121];
-
-  // Cross sections for p p -> N N*
-  static const G4double sigmaDN1440[121];
-  static const G4double sigmaDN1520[121];
-  static const G4double sigmaDN1535[121];
-  static const G4double sigmaDN1650[121];
-  static const G4double sigmaDN1675[121];
-  static const G4double sigmaDN1680[121];
-  static const G4double sigmaDN1700[121];
-  static const G4double sigmaDN1710[121];
-  static const G4double sigmaDN1720[121];
-  static const G4double sigmaDN1900[121];
-  static const G4double sigmaDN1990[121];
-  static const G4double sigmaDN2090[121];
-  static const G4double sigmaDN2190[121];
-  static const G4double sigmaDN2220[121];
-  static const G4double sigmaDN2250[121];
-
+    // Cross sections for p p -> N N*
+    static const G4double sigmaDN1440[121];
+    static const G4double sigmaDN1520[121];
+    static const G4double sigmaDN1535[121];
+    static const G4double sigmaDN1650[121];
+    static const G4double sigmaDN1675[121];
+    static const G4double sigmaDN1680[121];
+    static const G4double sigmaDN1700[121];
+    static const G4double sigmaDN1710[121];
+    static const G4double sigmaDN1720[121];
+    static const G4double sigmaDN1900[121];
+    static const G4double sigmaDN1990[121];
+    static const G4double sigmaDN2090[121];
+    static const G4double sigmaDN2190[121];
+    static const G4double sigmaDN2220[121];
+    static const G4double sigmaDN2250[121];
 };
 
 #endif
-

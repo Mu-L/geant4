@@ -32,8 +32,8 @@
 
 // Authors: X.Dong, A.Dotti, 2013
 // --------------------------------------------------------------------
-#ifndef G4WorkerThread_hh
-#define G4WorkerThread_hh 1
+#ifndef G4WORKERTHREAD_HH
+#define G4WORKERTHREAD_HH
 
 #include "G4String.hh"
 #include "G4Threading.hh"
@@ -42,6 +42,7 @@
 class G4WorkerThread
 {
   public:
+
     void SetThreadId(G4int threadId);
     G4int GetThreadId() const;
 
@@ -58,6 +59,7 @@ class G4WorkerThread
     void SetPinAffinity(G4int aff) const;
 
   private:
+
     G4int threadId = 0;
     G4int numThreads = 0;
 };

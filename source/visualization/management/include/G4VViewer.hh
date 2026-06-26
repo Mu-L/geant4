@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  27th March 1996
 //
 // Class description
@@ -35,16 +35,14 @@
 #ifndef G4VVIEWER_HH
 #define G4VVIEWER_HH
 
-#include "globals.hh"
-
-#include "G4SceneTreeItem.hh"
-
-#include "G4ViewParameters.hh"
 #include "G4PhysicalVolumeModel.hh"
 #include "G4PseudoScene.hh"
+#include "G4SceneTreeItem.hh"
+#include "G4ViewParameters.hh"
+#include "globals.hh"
 
-#include <vector>
 #include <list>
+#include <vector>
 
 class G4VSceneHandler;
 

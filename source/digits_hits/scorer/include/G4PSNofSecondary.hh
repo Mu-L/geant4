@@ -26,12 +26,12 @@
 //
 //
 
-#ifndef G4PSNofSecondary_h
-#define G4PSNofSecondary_h 1
+#ifndef G4PSNOFSECONDARY_HH
+#define G4PSNOFSECONDARY_HH
 
-#include "G4VPrimitivePlotter.hh"
-#include "G4THitsMap.hh"
 #include "G4ParticleTable.hh"
+#include "G4THitsMap.hh"
+#include "G4VPrimitivePlotter.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // (Description)
@@ -52,30 +52,33 @@
 
 class G4PSNofSecondary : public G4VPrimitivePlotter
 {
- public:
-  G4PSNofSecondary(const G4String& name, G4int depth = 0);
-  ~G4PSNofSecondary() override = default;
+  public:
 
-  // Scoring option
-  void SetParticle(const G4String& particleName);
+    G4PSNofSecondary(const G4String& name, G4int depth = 0);
+    ~G4PSNofSecondary() override = default;
 
-  inline void Weighted(G4bool flg = true) { weighted = flg; }
-  // Multiply track weight
+    // Scoring option
+    void SetParticle(const G4String& particleName);
 
-  void Initialize(G4HCofThisEvent*) override;
-  void clear() override;
-  void PrintAll() override;
+    inline void Weighted(G4bool flg = true) { weighted = flg; }
+    // Multiply track weight
 
-  virtual void SetUnit(const G4String& unit);
+    void Initialize(G4HCofThisEvent*) override;
+    void clear() override;
+    void PrintAll() override;
 
- protected:
-  G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+    virtual void SetUnit(const G4String& unit);
 
- private:
-  G4int HCID{-1};
-  G4THitsMap<G4double>* EvtMap{nullptr};
-  G4ParticleDefinition* particleDef{nullptr};
-  G4bool weighted{true};
+  protected:
+
+    G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+
+  private:
+
+    G4int HCID{-1};
+    G4THitsMap<G4double>* EvtMap{nullptr};
+    G4ParticleDefinition* particleDef{nullptr};
+    G4bool weighted{true};
 };
 
 #endif

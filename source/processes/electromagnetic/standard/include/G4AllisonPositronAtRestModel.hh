@@ -28,46 +28,43 @@
 // File name:  G4AllisonPositronAtRestModel
 //
 // Author:     Vladimir Ivanchenko
-// 
+//
 // Creation date: 14 May 2024
 //
-// Class Description: 
+// Class Description:
 //
 // Allison AtRest positron 2-gamma annihilation model
 // Electron of media is assumed to have the Maxwell–Boltzmann
 // distribution defined by the temperature of the media.
 // Energy of mean ionisation should not be zero - some amount of free
 // electrons should be in the media.
-// Polarisation of gamma according to M.H.L.Pryce and J.C.Ward, 
+// Polarisation of gamma according to M.H.L.Pryce and J.C.Ward,
 // Nature 4065 (1947) 435.
 // Snyder et al, Physical Review 73 (1948) p.440.
 //
 // -------------------------------------------------------------------
 //
 
-#ifndef G4AllisonPositronAtRestModel_h
-#define G4AllisonPositronAtRestModel_h 1
+#ifndef G4ALLISONPOSITRONATRESTMODEL_HH
+#define G4ALLISONPOSITRONATRESTMODEL_HH
 
 #include "G4VPositronAtRestModel.hh"
 
 class G4AllisonPositronAtRestModel : public G4VPositronAtRestModel
 {
+  public:
 
-public:
+    G4AllisonPositronAtRestModel();
 
-  G4AllisonPositronAtRestModel();
+    ~G4AllisonPositronAtRestModel() override = default;
 
-  ~G4AllisonPositronAtRestModel() override = default;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>& secParticles, G4double&,
+                           const G4Material*) const override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>& secParticles,
-			 G4double&, const G4Material*) const override;
-  
-  void PrintGeneratorInformation() const override;
+    void PrintGeneratorInformation() const override;
 
-  G4AllisonPositronAtRestModel& operator=
-  (const  G4AllisonPositronAtRestModel& right) = delete;
-  G4AllisonPositronAtRestModel(const G4AllisonPositronAtRestModel&) = delete;
-
+    G4AllisonPositronAtRestModel& operator=(const G4AllisonPositronAtRestModel& right) = delete;
+    G4AllisonPositronAtRestModel(const G4AllisonPositronAtRestModel&) = delete;
 };
 
 #endif

@@ -30,27 +30,27 @@
 // Revision: Andrea Dotti, SLAC
 // --------------------------------------------------------------------
 
-#include <cmath>
-
 #include "G4SingleParticleSource.hh"
 
-#include "G4SystemOfUnits.hh"
-#include "G4PrimaryParticle.hh"
+#include "G4AutoLock.hh"
 #include "G4Event.hh"
-#include "Randomize.hh"
-#include "G4ParticleTable.hh"
 #include "G4Geantino.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4IonTable.hh"
 #include "G4Ions.hh"
-#include "G4TrackingManager.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "G4PrimaryParticle.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4Track.hh"
-#include "G4AutoLock.hh"
+#include "G4TrackingManager.hh"
+#include "Randomize.hh"
+
+#include <cmath>
 
 G4SingleParticleSource::part_prop_t::part_prop_t()
 {
-  momentum_direction = G4ParticleMomentum(1,0,0);
-  energy = 1.*MeV;
+  momentum_direction = G4ParticleMomentum(1, 0, 0);
+  energy = 1. * MeV;
   position = G4ThreeVector();
 }
 
@@ -76,7 +76,7 @@ G4SingleParticleSource::G4SingleParticleSource()
   eneGenerator->SetBiasRndm(biasRndm);
 
   verbosityLevel = 0;
-    
+
   G4MUTEXINIT(mutex);
 }
 
@@ -99,8 +99,7 @@ void G4SingleParticleSource::SetVerbosity(G4int vL)
   eneGenerator->SetVerbosity(vL);
 }
 
-void G4SingleParticleSource::
-SetParticleDefinition(G4ParticleDefinition* aParticleDefinition)
+void G4SingleParticleSource::SetParticleDefinition(G4ParticleDefinition* aParticleDefinition)
 {
   definition = aParticleDefinition;
   charge = aParticleDefinition->GetPDGCharge();
@@ -116,8 +115,7 @@ void G4SingleParticleSource::GeneratePrimaryVertex(G4Event* evt)
 
   if (verbosityLevel > 1)
   {
-    G4cout << " NumberOfParticlesToBeGenerated: "
-           << NumberOfParticlesToBeGenerated << G4endl;
+    G4cout << " NumberOfParticlesToBeGenerated: " << NumberOfParticlesToBeGenerated << G4endl;
   }
 
   part_prop_t& pp = ParticleProperties.Get();
@@ -126,9 +124,9 @@ void G4SingleParticleSource::GeneratePrimaryVertex(G4Event* evt)
   pp.position = posGenerator->GenerateOne();
 
   // Create a new vertex
-  auto* vertex = new G4PrimaryVertex(pp.position,time);
+  auto* vertex = new G4PrimaryVertex(pp.position, time);
 
-  for (G4int i=0; i<NumberOfParticlesToBeGenerated; ++i)
+  for (G4int i = 0; i < NumberOfParticlesToBeGenerated; ++i)
   {
     // Angular stuff
     pp.momentum_direction = angGenerator->GenerateOne();
@@ -145,13 +143,11 @@ void G4SingleParticleSource::GeneratePrimaryVertex(G4Event* evt)
     //
     G4double mass = definition->GetPDGMass();
     auto* particle = new G4PrimaryParticle(definition);
-    particle->SetKineticEnergy(pp.energy );
-    particle->SetMass( mass );
-    particle->SetMomentumDirection( pp.momentum_direction );
-    particle->SetCharge( charge );
-    particle->SetPolarization(polarization.x(),
-                              polarization.y(),
-                              polarization.z());
+    particle->SetKineticEnergy(pp.energy);
+    particle->SetMass(mass);
+    particle->SetMomentumDirection(pp.momentum_direction);
+    particle->SetCharge(charge);
+    particle->SetPolarization(polarization.x(), polarization.y(), polarization.z());
     if (verbosityLevel > 1)
     {
       G4cout << "Particle name: " << definition->GetParticleName() << G4endl;
@@ -162,9 +158,9 @@ void G4SingleParticleSource::GeneratePrimaryVertex(G4Event* evt)
 
     // Set bweight equal to the multiple of all non-zero weights
     //
-    G4double weight = eneGenerator->GetWeight()*biasRndm->GetBiasWeight();
+    G4double weight = eneGenerator->GetWeight() * biasRndm->GetBiasWeight();
 
-    if(eneGenerator->IfApplyEnergyWeight())
+    if (eneGenerator->IfApplyEnergyWeight())
     {
       weight *= eneGenerator->GetArbEneWeight(pp.energy);
     }

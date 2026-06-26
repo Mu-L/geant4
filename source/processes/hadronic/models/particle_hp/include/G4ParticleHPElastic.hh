@@ -30,8 +30,8 @@
 // Builds and has the Cross-section data for one material.
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPElastic_h
-#define G4ParticleHPElastic_h 1
+#ifndef G4PARTICLEHPELASTIC_HH
+#define G4PARTICLEHPELASTIC_HH
 
 // Class Description
 // Final state production model for a high precision (based on evaluated data
@@ -48,6 +48,7 @@
 class G4ParticleHPElastic : public G4HadronicInteraction
 {
   public:
+
     G4ParticleHPElastic();
 
     ~G4ParticleHPElastic() override;
@@ -65,12 +66,14 @@ class G4ParticleHPElastic : public G4HadronicInteraction
     void DoNotSuspend() { overrideSuspension = true; }
 
   public:
+
     G4int GetVerboseLevel() const;
     void SetVerboseLevel(G4int);
     void BuildPhysicsTable(const G4ParticleDefinition&) override;
     void ModelDescription(std::ostream& outFile) const override;
 
   private:
+
     std::vector<G4ParticleHPChannel*>* theElastic{nullptr};
 
     G4String dirName;

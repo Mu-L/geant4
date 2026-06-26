@@ -28,7 +28,7 @@
 // Geant4 header : G4NeutronRadCaptureHP
 // Created:  02 October 2023
 // Author  V.Ivanchenko
-//  
+//
 // Modified:
 //
 // Class Description
@@ -38,14 +38,14 @@
 // Class Description - End
 //
 
-#ifndef G4NeutronRadCaptureHP_h
-#define G4NeutronRadCaptureHP_h 1
- 
-#include "globals.hh"
-#include "G4HadronicInteraction.hh"
+#ifndef G4NEUTRONRADCAPTUREHP_HH
+#define G4NEUTRONRADCAPTUREHP_HH
+
 #include "G4HadProjectile.hh"
-#include "G4Nucleus.hh"
+#include "G4HadronicInteraction.hh"
 #include "G4LorentzVector.hh"
+#include "G4Nucleus.hh"
+#include "globals.hh"
 
 class G4VEvaporationChannel;
 class G4IonTable;
@@ -53,36 +53,34 @@ class G4ParticleHPManager;
 
 class G4NeutronRadCaptureHP : public G4HadronicInteraction
 {
-public:
+  public:
 
-  G4NeutronRadCaptureHP();
+    G4NeutronRadCaptureHP();
 
-  ~G4NeutronRadCaptureHP() override;
+    ~G4NeutronRadCaptureHP() override;
 
-  G4HadFinalState* ApplyYourself(const G4HadProjectile & aTrack, 
-                                 G4Nucleus & targetNucleus) override;
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
+                                   G4Nucleus& targetNucleus) override;
 
-  void BuildPhysicsTable(const G4ParticleDefinition&) override;
+    void BuildPhysicsTable(const G4ParticleDefinition&) override;
 
-  G4NeutronRadCaptureHP & operator=
-  (const G4NeutronRadCaptureHP &right) = delete;
-  G4NeutronRadCaptureHP(const G4NeutronRadCaptureHP&) = delete;
+    G4NeutronRadCaptureHP& operator=(const G4NeutronRadCaptureHP& right) = delete;
+    G4NeutronRadCaptureHP(const G4NeutronRadCaptureHP&) = delete;
 
-private:
+  private:
 
-  G4int icID{-1}; // creator model ID for e- produced by internal conversion
-  G4int secID{-1};  // creator model ID for the other secondaries produced by this model
-  const G4ParticleDefinition* electron;
-  G4ParticleHPManager* fManagerHP;
-  G4VEvaporationChannel* photonEvaporation{nullptr};
-  G4IonTable* theTableOfIons;
-  G4double lowestEnergyLimit;
-  G4double minExcitation;
-  G4double emax;
-  G4double emaxT;
-  G4LorentzVector lab4mom;
-  G4bool fLocalPE{false};
-
+    G4int icID{-1};  // creator model ID for e- produced by internal conversion
+    G4int secID{-1};  // creator model ID for the other secondaries produced by this model
+    const G4ParticleDefinition* electron;
+    G4ParticleHPManager* fManagerHP;
+    G4VEvaporationChannel* photonEvaporation{nullptr};
+    G4IonTable* theTableOfIons;
+    G4double lowestEnergyLimit;
+    G4double minExcitation;
+    G4double emax;
+    G4double emaxT;
+    G4LorentzVector lab4mom;
+    G4bool fLocalPE{false};
 };
 
 #endif

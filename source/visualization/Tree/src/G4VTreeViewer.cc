@@ -29,9 +29,9 @@
 
 #include "G4VSceneHandler.hh"
 
-G4VTreeViewer::G4VTreeViewer
-(G4VSceneHandler& sceneHandler, const G4String& name):
-  G4VViewer(sceneHandler, sceneHandler.IncrementViewCount(), name) {}
+G4VTreeViewer::G4VTreeViewer(G4VSceneHandler& sceneHandler, const G4String& name)
+  : G4VViewer(sceneHandler, sceneHandler.IncrementViewCount(), name)
+{}
 
 G4VTreeViewer::~G4VTreeViewer() {}
 
@@ -39,7 +39,8 @@ void G4VTreeViewer::SetView() {}
 
 void G4VTreeViewer::ClearView() {}
 
-void G4VTreeViewer::DrawView() {
-  NeedKernelVisit ();  // Always need to visit G4 kernel.
-  ProcessView ();
+void G4VTreeViewer::DrawView()
+{
+  NeedKernelVisit();  // Always need to visit G4 kernel.
+  ProcessView();
 }

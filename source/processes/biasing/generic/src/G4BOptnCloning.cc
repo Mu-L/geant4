@@ -28,24 +28,19 @@
 
 #include "G4BOptnCloning.hh"
 
-G4BOptnCloning::G4BOptnCloning(const G4String& name)
-  : G4VBiasingOperation( name ),
-    fParticleChange()
+G4BOptnCloning::G4BOptnCloning(const G4String& name) : G4VBiasingOperation(name), fParticleChange()
 {}
 
-G4BOptnCloning::~G4BOptnCloning()
-{}
+G4BOptnCloning::~G4BOptnCloning() {}
 
-G4VParticleChange*
-G4BOptnCloning::GenerateBiasingFinalState( const G4Track* track,
-                                           const G4Step*       )
+G4VParticleChange* G4BOptnCloning::GenerateBiasingFinalState(const G4Track* track, const G4Step*)
 {
   fParticleChange.Initialize(*track);
-  fParticleChange.ProposeParentWeight( fClone1W );
+  fParticleChange.ProposeParentWeight(fClone1W);
   fParticleChange.SetSecondaryWeightByProcess(true);
   fParticleChange.SetNumberOfSecondaries(1);
-  fCloneTrack = new G4Track( *track );
-  fCloneTrack->SetWeight( fClone2W );
-  fParticleChange.AddSecondary( fCloneTrack );
+  fCloneTrack = new G4Track(*track);
+  fCloneTrack->SetWeight(fClone2W);
+  fParticleChange.AddSecondary(fCloneTrack);
   return &fParticleChange;
 }

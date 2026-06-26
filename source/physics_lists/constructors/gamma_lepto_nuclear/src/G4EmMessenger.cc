@@ -38,6 +38,7 @@
 //
 
 #include "G4EmMessenger.hh"
+
 #include "G4EmExtraPhysics.hh"
 
 G4EmMessenger::G4EmMessenger(G4EmExtraPhysics* ab)
@@ -51,84 +52,84 @@ G4EmMessenger::G4EmMessenger(G4EmExtraPhysics* ab)
   aDir2->SetGuidance("Extra EM processes configuration.");
 
   // command for synchrotron radiation.
-  theSynch = new G4UIcmdWithABool("/physics_lists/em/SyncRadiation",this);
+  theSynch = new G4UIcmdWithABool("/physics_lists/em/SyncRadiation", this);
   theSynch->SetGuidance("Switching on/off synchrotron radiation.");
   theSynch->AvailableForStates(G4State_PreInit);
   theSynch->SetToBeBroadcasted(false);
 
   // command for synchrotron radiation.
-  theSynchAll = new G4UIcmdWithABool("/physics_lists/em/SyncRadiationAll",this);
+  theSynchAll = new G4UIcmdWithABool("/physics_lists/em/SyncRadiationAll", this);
   theSynchAll->SetGuidance("Switching on/off synchrotron radiation for all charged.");
   theSynchAll->AvailableForStates(G4State_PreInit);
   theSynchAll->SetToBeBroadcasted(false);
 
   // command for gamma nuclear physics.
-  theGN = new G4UIcmdWithABool("/physics_lists/em/GammaNuclear",this);
+  theGN = new G4UIcmdWithABool("/physics_lists/em/GammaNuclear", this);
   theGN->SetGuidance("Switching on gamma nuclear physics.");
   theGN->AvailableForStates(G4State_PreInit);
   theGN->SetToBeBroadcasted(false);
 
   // command for gamma nuclear physics.
-  theXS = new G4UIcmdWithABool("/physics_lists/em/UseGammaNuclearXS",this);
+  theXS = new G4UIcmdWithABool("/physics_lists/em/UseGammaNuclearXS", this);
   theXS->SetGuidance("Use XS gamma nuclear cross section.");
   theXS->AvailableForStates(G4State_PreInit);
   theXS->SetToBeBroadcasted(false);
 
   // command for lend gamma nuclear physics.
-  theGLENDN = new G4UIcmdWithABool("/physics_lists/em/LENDGammaNuclear",this);
+  theGLENDN = new G4UIcmdWithABool("/physics_lists/em/LENDGammaNuclear", this);
   theGLENDN->SetGuidance("Switching on LEND gamma nuclear physics.");
   theGLENDN->AvailableForStates(G4State_PreInit);
   theGLENDN->SetToBeBroadcasted(false);
 
-  theEN = new G4UIcmdWithABool("/physics_lists/em/ElectroNuclear",this);
+  theEN = new G4UIcmdWithABool("/physics_lists/em/ElectroNuclear", this);
   theEN->SetGuidance("Switching on e+- nuclear physics.");
   theEN->AvailableForStates(G4State_PreInit);
   theEN->SetToBeBroadcasted(false);
 
   // command for muon nuclear physics.
-  theMUN = new G4UIcmdWithABool("/physics_lists/em/MuonNuclear",this);
+  theMUN = new G4UIcmdWithABool("/physics_lists/em/MuonNuclear", this);
   theMUN->SetGuidance("Switching on muon nuclear physics.");
   theMUN->AvailableForStates(G4State_PreInit);
   theMUN->SetToBeBroadcasted(false);
 
-  theGMM = new G4UIcmdWithABool("/physics_lists/em/GammaToMuons",this);
+  theGMM = new G4UIcmdWithABool("/physics_lists/em/GammaToMuons", this);
   theGMM->SetGuidance("Switching on gamma conversion to muon pair.");
   theGMM->AvailableForStates(G4State_PreInit);
   theGMM->SetToBeBroadcasted(false);
 
-  theMMM = new G4UIcmdWithABool("/physics_lists/em/MuonToMuons",this);
+  theMMM = new G4UIcmdWithABool("/physics_lists/em/MuonToMuons", this);
   theMMM->SetGuidance("Switching on muon pair production by muons.");
   theMMM->AvailableForStates(G4State_PreInit);
   theMMM->SetToBeBroadcasted(false);
 
-  thePMM = new G4UIcmdWithABool("/physics_lists/em/PositronToMuons",this);
+  thePMM = new G4UIcmdWithABool("/physics_lists/em/PositronToMuons", this);
   thePMM->SetGuidance("Switching on positron conversion to muon pair.");
   thePMM->AvailableForStates(G4State_PreInit);
   thePMM->SetToBeBroadcasted(false);
 
-  thePH = new G4UIcmdWithABool("/physics_lists/em/PositronToHadrons",this);
+  thePH = new G4UIcmdWithABool("/physics_lists/em/PositronToHadrons", this);
   thePH->SetGuidance("Switching on positron conversion to hadrons.");
   thePH->AvailableForStates(G4State_PreInit);
   thePH->SetToBeBroadcasted(false);
 
-  theGMM1 = new G4UIcmdWithADouble("/physics_lists/em/GammaToMuonsFactor",this);
+  theGMM1 = new G4UIcmdWithADouble("/physics_lists/em/GammaToMuonsFactor", this);
   theGMM1->SetGuidance("Factor for gamma conversion to muon pair.");
   theGMM1->AvailableForStates(G4State_PreInit);
   theGMM1->SetToBeBroadcasted(false);
 
-  thePMM1 = new G4UIcmdWithADouble("/physics_lists/em/PositronToMuonsFactor",this);
+  thePMM1 = new G4UIcmdWithADouble("/physics_lists/em/PositronToMuonsFactor", this);
   thePMM1->SetGuidance("Factor for positron conversion to muon pair.");
   thePMM1->AvailableForStates(G4State_PreInit);
   thePMM1->SetToBeBroadcasted(false);
 
-  thePH1 = new G4UIcmdWithADouble("/physics_lists/em/PositronToHadronsFactor",this);
+  thePH1 = new G4UIcmdWithADouble("/physics_lists/em/PositronToHadronsFactor", this);
   thePH1->SetGuidance("Factor for positron conversion to hadrons.");
   thePH1->AvailableForStates(G4State_PreInit);
   thePH1->SetToBeBroadcasted(false);
 
-  theGNlowe = new G4UIcmdWithADoubleAndUnit("/physics_lists/em/GammaNuclearLEModelLimit",this);
+  theGNlowe = new G4UIcmdWithADoubleAndUnit("/physics_lists/em/GammaNuclearLEModelLimit", this);
   theGNlowe->SetGuidance("Upper energy limit for low-energy gamma-nuclear model");
-  theGNlowe->SetParameterName("emin",true);
+  theGNlowe->SetParameterName("emin", true);
   theGNlowe->SetUnitCategory("Energy");
   theGNlowe->AvailableForStates(G4State_PreInit);
   theGNlowe->SetToBeBroadcasted(false);
@@ -159,34 +160,34 @@ G4EmMessenger::~G4EmMessenger()
 
 void G4EmMessenger::SetNewValue(G4UIcommand* aComm, G4String aS)
 {
-  if (aComm==theSynch)
+  if (aComm == theSynch)
     theB->Synch(theSynch->GetNewBoolValue(aS));
-  else if (aComm==theSynchAll)
+  else if (aComm == theSynchAll)
     theB->SynchAll(theSynchAll->GetNewBoolValue(aS));
-  else if (aComm==theGN)
+  else if (aComm == theGN)
     theB->GammaNuclear(theGN->GetNewBoolValue(aS));
-  else if (aComm==theGLENDN)
+  else if (aComm == theGLENDN)
     theB->LENDGammaNuclear(theGLENDN->GetNewBoolValue(aS));
-  else if (aComm==theEN)
+  else if (aComm == theEN)
     theB->ElectroNuclear(theEN->GetNewBoolValue(aS));
-  else if (aComm==theMUN)
+  else if (aComm == theMUN)
     theB->MuonNuclear(theMUN->GetNewBoolValue(aS));
-  else if (aComm==theGMM)
+  else if (aComm == theGMM)
     theB->GammaToMuMu(theGMM->GetNewBoolValue(aS));
-  else if (aComm==theMMM)
+  else if (aComm == theMMM)
     theB->MuonToMuMu(theMMM->GetNewBoolValue(aS));
-  else if (aComm==thePMM)
+  else if (aComm == thePMM)
     theB->PositronToMuMu(thePMM->GetNewBoolValue(aS));
-  else if (aComm==thePH)
+  else if (aComm == thePH)
     theB->PositronToHadrons(thePH->GetNewBoolValue(aS));
-  else if (aComm==theXS)
+  else if (aComm == theXS)
     theB->SetUseGammaNuclearXS(theXS->GetNewBoolValue(aS));
-  else if (aComm==theGMM1)
+  else if (aComm == theGMM1)
     theB->GammaToMuMuFactor(theGMM1->GetNewDoubleValue(aS));
-  else if (aComm==thePMM1)
+  else if (aComm == thePMM1)
     theB->PositronToMuMuFactor(thePMM1->GetNewDoubleValue(aS));
-  else if (aComm==thePH1)
+  else if (aComm == thePH1)
     theB->PositronToHadronsFactor(thePH1->GetNewDoubleValue(aS));
-  else if (aComm==theGNlowe)
+  else if (aComm == theGNlowe)
     theB->GammaNuclearLEModelLimit(theGNlowe->GetNewDoubleValue(aS));
 }

@@ -29,7 +29,7 @@
 //
 // History:
 // -----------
-// 16 Sept 2001  EG  Modified according to a design iteration in the 
+// 16 Sept 2001  EG  Modified according to a design iteration in the
 //                   LowEnergy category
 //
 // -------------------------------------------------------------------
@@ -37,20 +37,18 @@
 #include "G4FluoTransition.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-G4FluoTransition::G4FluoTransition(G4int finalShell,
-				       const std::vector<G4int>& ids,
-				       const G4DataVector& energies,
-				       const G4DataVector& prob)
-  :originatingShellIds(ids),
-   transitionEnergies(energies),
-   transitionProbabilities(prob),
-   finalShellId(finalShell)
-{ }
+G4FluoTransition::G4FluoTransition(G4int finalShell, const std::vector<G4int>& ids,
+                                   const G4DataVector& energies, const G4DataVector& prob)
+  : originatingShellIds(ids),
+    transitionEnergies(energies),
+    transitionProbabilities(prob),
+    finalShellId(finalShell)
+{}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 const std::vector<G4int>& G4FluoTransition::OriginatingShellIds() const
 {
-  return  originatingShellIds;
+  return originatingShellIds;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -67,7 +65,7 @@ const G4DataVector& G4FluoTransition::TransitionProbabilities() const
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 G4int G4FluoTransition::FinalShellId() const
-{ 
+{
   return finalShellId;
 }
 
@@ -80,12 +78,11 @@ G4int G4FluoTransition::OriginatingShellId(G4int index) const
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 G4double G4FluoTransition::TransitionEnergy(G4int index) const
 {
-  return  transitionEnergies[index];
+  return transitionEnergies[index];
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 G4double G4FluoTransition::TransitionProbability(G4int index) const
 {
-  return  transitionProbabilities[index];
+  return transitionProbabilities[index];
 }
-

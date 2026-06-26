@@ -39,46 +39,45 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4HadronXSDataTable_h
-#define G4HadronXSDataTable_h 1
+#ifndef G4HADRONXSDATATABLE_HH
+#define G4HADRONXSDATATABLE_HH
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "globals.hh"
 #include "G4PhysicsTable.hh"
 #include "G4PiData.hh"
+#include "globals.hh"
+
 #include <vector>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class G4HadronXSDataTable
 {
+  public:
 
-public:
+    static G4HadronXSDataTable* Instance();
 
-  static G4HadronXSDataTable* Instance();
+    ~G4HadronXSDataTable();
 
-  ~G4HadronXSDataTable();
+    void AddPiData(std::vector<G4PiData*>* ptr);
 
-  void AddPiData(std::vector<G4PiData*>* ptr);
+    void AddTable(G4PhysicsTable* ptr);
 
-  void AddTable(G4PhysicsTable* ptr);
+    // Assignment operator and copy constructor
+    G4HadronXSDataTable& operator=(const G4HadronXSDataTable& right) = delete;
+    G4HadronXSDataTable(const G4HadronXSDataTable&) = delete;
 
-  // Assignment operator and copy constructor
-  G4HadronXSDataTable & operator=(const G4HadronXSDataTable &right) = delete;
-  G4HadronXSDataTable(const G4HadronXSDataTable&) = delete;
+  private:
 
-private:
+    G4HadronXSDataTable();
 
-  G4HadronXSDataTable();
+    static G4HadronXSDataTable* sInstance;
 
-  static G4HadronXSDataTable* sInstance;
-
-  std::vector<std::vector<G4PiData*>* > fPiData;
-  std::vector<G4PhysicsTable*> fTable;
+    std::vector<std::vector<G4PiData*>*> fPiData;
+    std::vector<G4PhysicsTable*> fTable;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
- 

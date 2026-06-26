@@ -48,95 +48,100 @@ class G4MagIntegratorStepper;
 
 /**
  * @brief G4FieldType defines the available fields in Geant4.
+ * @ingroup geometry_magneticfield
  */
 
 enum G4FieldType
 {
-  kMagnetic,           ///< magnetic field
-  kElectroMagnetic,    ///< electromagnetic field
-  kGravity,            ///< gravity field
-  kUserFieldType       ///< User defined field type
+  kMagnetic,  ///< magnetic field
+  kElectroMagnetic,  ///< electromagnetic field
+  kGravity,  ///< gravity field
+  kUserFieldType  ///< User defined field type
 };
 
 /**
  * @brief G4EquationType defines the types of equations of motion of a
  * particle in a field in Geant4.
+ * @ingroup geometry_magneticfield
  */
 
 enum G4EquationType
 {
-  kEqMagnetic,        ///< G4Mag_UsualEqRhs: the standard right-hand side for
-                      ///< equation of motion.
-  kEqMagneticWithSpin,///< G4Mag_SpinEqRhs: the equation of motion for a particle
-                      ///< with spin
-                      ///< in a pure magnetic field
-  kEqElectroMagnetic, ///< G4EqMagElectricField: Equation of motion in a combined
-                      ///< electric and magnetic field
-  kEqEMfieldWithSpin, ///< G4EqEMFieldWithSpin: Equation of motion for a
-                      ///< particle with spin
-                      ///< in a combined electric and magnetic field
+  kEqMagnetic,  ///< G4Mag_UsualEqRhs: the standard right-hand side for
+                ///< equation of motion.
+  kEqMagneticWithSpin,  ///< G4Mag_SpinEqRhs: the equation of motion for a particle
+                        ///< with spin
+                        ///< in a pure magnetic field
+  kEqElectroMagnetic,  ///< G4EqMagElectricField: Equation of motion in a combined
+                       ///< electric and magnetic field
+  kEqEMfieldWithSpin,  ///< G4EqEMFieldWithSpin: Equation of motion for a
+                       ///< particle with spin
+                       ///< in a combined electric and magnetic field
   kEqEMfieldWithEDM,  ///< G4EqEMFieldWithEDM: Equation of motion in a combined
                       ///< electric and magnetic field, with spin tracking for
                       ///< both MDM and EDM terms
-  kEqGravity,         ///< G4EqGravityField: equation of motion in a gravity field
-                      ///  (not build by G4FieldBuilder)
-  kEqMonopole,        ///< G4MonopoleEq: the right-hand side of equation of motion for monopole
-                      ///  in a combined electric and magnetic field
-                      ///  (not build by G4FieldBuilder)
-  kEqReplate,         ///< G4RepleteEofM: equation of motion in a combined field, including:
-                      ///  magnetic, electric, gravity, and gradient B field, as well as spin tracking
-                      ///  (not build by G4FieldBuilder)
-  kUserEquation       ///< User defined equation of motion
+  kEqGravity,  ///< G4EqGravityField: equation of motion in a gravity field
+               ///  (not build by G4FieldBuilder)
+  kEqMonopole,  ///< G4MonopoleEq: the right-hand side of equation of motion for monopole
+                ///  in a combined electric and magnetic field
+                ///  (not build by G4FieldBuilder)
+  kEqReplate,  ///< G4RepleteEofM: equation of motion in a combined field, including:
+               ///  magnetic, electric, gravity, and gradient B field, as well as spin tracking
+               ///  (not build by G4FieldBuilder)
+  kUserEquation  ///< User defined equation of motion
 };
 
 /**
  * @brief G4StepperType defines the available integrator of particle's
  * equation of motion in Geant4.
+ * @ingroup geometry_magneticfield
  */
 
 enum G4StepperType
 {
   // steppers with equation of motion of generic type (G4EquationOfMotion)
-  kCashKarpRKF45,     ///< G4CashKarpRKF45
-  kClassicalRK4,      ///< G4ClassicalRK4
-  kBogackiShampine23, ///< G4BogackiShampine23
-  kBogackiShampine45, ///< G4BogackiShampine45
-  kDoLoMcPriRK34,     ///< G4DoLoMcPriRK34
+  kCashKarpRKF45,  ///< G4CashKarpRKF45
+  kClassicalRK4,  ///< G4ClassicalRK4
+  kBogackiShampine23,  ///< G4BogackiShampine23
+  kBogackiShampine45,  ///< G4BogackiShampine45
+  kDoLoMcPriRK34,  ///< G4DoLoMcPriRK34
   kDormandPrince745,  ///< G4DormandPrince745
-  kDormandPrinceRK56, ///< G4DormandPrinceRK56
-  kDormandPrinceRK78, ///< G4DormandPrinceRK78
-  kExplicitEuler,     ///< G4ExplicitEuler
-  kImplicitEuler,     ///< G4ImplicitEuler
-  kSimpleHeum,        ///< G4SimpleHeum
-  kSimpleRunge,       ///< G4SimpleRunge
-  kTsitourasRK45,     ///< G4TsitourasRK45
+  kDormandPrinceRK56,  ///< G4DormandPrinceRK56
+  kDormandPrinceRK78,  ///< G4DormandPrinceRK78
+  kExplicitEuler,  ///< G4ExplicitEuler
+  kImplicitEuler,  ///< G4ImplicitEuler
+  kSimpleHeum,  ///< G4SimpleHeum
+  kSimpleRunge,  ///< G4SimpleRunge
+  kTsitourasRK45,  ///< G4TsitourasRK45
 
   // steppers with equation of motion of G4Mag_UsualEqRhs type
-  kConstRK4,           ///< G4ConstRK4
+  kConstRK4,  ///< G4ConstRK4
   kExactHelixStepper,  ///< G4ExactHelixStepper
-  kHelixExplicitEuler, ///< G4HelixExplicitEuler
-  kHelixHeum,          ///< G4HelixHeum
-  kHelixImplicitEuler, ///< G4HelixImplicitEuler
+  kHelixExplicitEuler,  ///< G4HelixExplicitEuler
+  kHelixHeum,  ///< G4HelixHeum
+  kHelixImplicitEuler,  ///< G4HelixImplicitEuler
   kHelixMixedStepper,  ///< G4HelixMixedStepper
-  kHelixSimpleRunge,   ///< G4HelixSimpleRunge
-  kNystromRK4,         ///< G4NystromRK4
-  kRKG3Stepper,        ///< G4RKG3_Stepper
-  kUserStepper,        ///< User defined stepper
+  kHelixSimpleRunge,  ///< G4HelixSimpleRunge
+  kNystromRK4,  ///< G4NystromRK4
+  kRKG3Stepper,  ///< G4RKG3_Stepper
+  kUserStepper,  ///< User defined stepper
 
   // FSAL steppers
-  kRK547FEq1,          ///< G4RK547FEq1
-  kRK547FEq2,          ///< G4RK547FEq2
-  kRK547FEq3,          ///< G4RK547FEq3
+  kRK547FEq1,  ///< G4RK547FEq1
+  kRK547FEq2,  ///< G4RK547FEq2
+  kRK547FEq3,  ///< G4RK547FEq3
 
   // Templated steppers (not build by G4FieldBuilder)
-  kTCashKarpRKF45,     ///< G4TCashKarpRKF45
-  kTDormandPrince45,   ///< G4TDormandPrince45
-  kTMagErrorStepper,   ///< G4TMagErrorStepper
-  kQSStepper           ///< G4QSStepper
+  kTCashKarpRKF45,  ///< G4TCashKarpRKF45
+  kTDormandPrince45,  ///< G4TDormandPrince45
+  kTMagErrorStepper,  ///< G4TMagErrorStepper
+  kQSStepper  ///< G4QSStepper
 };
 
 /**
  * @brief G4FieldDefaults defines the magnetic field parameters defaults.
+ * @ingroup geometry_magneticfield
+ *
  * The namespace defines the default values of the field paraments as constexpr
  * so that they can be used also as the default values in the magnetic field
  * classes constructors and other member functions.
@@ -144,24 +149,27 @@ enum G4StepperType
 
 namespace G4FieldDefaults
 {
-  /// Default minimum step in G4ChordFinder
-  constexpr G4double kMinimumStep  = 0.01 * CLHEP::mm;
-  /// Default delta chord in G4ChordFinder
-  constexpr G4double kDeltaChord = 0.25 * CLHEP::mm;
-  /// Default delta one step in global field manager
-  constexpr G4double kDeltaOneStep = 0.01 * CLHEP::mm;
-  /// Delta intersection in global field manager
-  constexpr G4double kDeltaIntersection = 0.001 * CLHEP::mm;
-  /// Default minimum epsilon step in global field manager
-  constexpr G4double kMinimumEpsilonStep = 5.0e-5;  // Expected: 5.0e-5 to 1.0e-10 ...
-  /// Default maximum epsilon step in global field manager
-  constexpr G4double kMaximumEpsilonStep = 0.001;   // Expected: 1.0e-3 to 1.0e-8 ...
-}
+/// Default minimum step in G4ChordFinder
+constexpr G4double kMinimumStep = 0.01 * CLHEP::mm;
+/// Default delta chord in G4ChordFinder
+constexpr G4double kDeltaChord = 0.25 * CLHEP::mm;
+/// Default delta one step in global field manager
+constexpr G4double kDeltaOneStep = 0.01 * CLHEP::mm;
+/// Delta intersection in global field manager
+constexpr G4double kDeltaIntersection = 0.001 * CLHEP::mm;
+/// Default minimum epsilon step in global field manager
+constexpr G4double kMinimumEpsilonStep = 5.0e-5;  // Expected: 5.0e-5 to 1.0e-10 ...
+/// Default maximum epsilon step in global field manager
+constexpr G4double kMaximumEpsilonStep = 0.001;  // Expected: 1.0e-3 to 1.0e-8 ...
+}  // namespace G4FieldDefaults
 
 /**
  * @brief G4FieldParameters defines the type of equation of motion of a
  * particle in a field and the integration method, as well as other accuracy
- * parameters. The default values correspond to the defaults set in Geant4.
+ * parameters.
+ * @ingroup geometry_magneticfield
+ *
+ * The default values correspond to the defaults set in Geant4.
  */
 
 class G4FieldParameters

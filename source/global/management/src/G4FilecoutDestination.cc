@@ -37,7 +37,7 @@
 G4FilecoutDestination::~G4FilecoutDestination()
 {
   Close();
-  if(m_output)
+  if (m_output)
   {
     m_output.reset();
   }
@@ -46,14 +46,14 @@ G4FilecoutDestination::~G4FilecoutDestination()
 // --------------------------------------------------------------------
 void G4FilecoutDestination::Open(std::ios_base::openmode mode)
 {
-  if(m_name.empty())
+  if (m_name.empty())
   {
 #ifndef __MIC
     // Cannot use G4Exception, because G4cout/G4cerr is not setup
     throw std::ios_base::failure("No output file name specified");
 #endif
   }
-  if(m_output != nullptr && m_output->is_open())
+  if (m_output != nullptr && m_output->is_open())
   {
     Close();
   }
@@ -63,7 +63,7 @@ void G4FilecoutDestination::Open(std::ios_base::openmode mode)
 // --------------------------------------------------------------------
 void G4FilecoutDestination::Close()
 {
-  if(m_output && m_output->is_open())
+  if (m_output && m_output->is_open())
   {
     m_output->close();
   }
@@ -72,7 +72,7 @@ void G4FilecoutDestination::Close()
 // --------------------------------------------------------------------
 G4int G4FilecoutDestination::ReceiveG4debug(const G4String& msg)
 {
-  if(m_output == nullptr || !m_output->is_open())
+  if (m_output == nullptr || !m_output->is_open())
   {
     Open(m_mode);
   }
@@ -83,7 +83,7 @@ G4int G4FilecoutDestination::ReceiveG4debug(const G4String& msg)
 // --------------------------------------------------------------------
 G4int G4FilecoutDestination::ReceiveG4cout(const G4String& msg)
 {
-  if(m_output == nullptr || !m_output->is_open())
+  if (m_output == nullptr || !m_output->is_open())
   {
     Open(m_mode);
   }
@@ -94,7 +94,7 @@ G4int G4FilecoutDestination::ReceiveG4cout(const G4String& msg)
 // --------------------------------------------------------------------
 G4int G4FilecoutDestination::ReceiveG4cerr(const G4String& msg)
 {
-  if(m_output == nullptr || !m_output->is_open())
+  if (m_output == nullptr || !m_output->is_open())
   {
     Open(m_mode);
   }

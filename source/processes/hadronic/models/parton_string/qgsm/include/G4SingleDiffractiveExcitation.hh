@@ -25,8 +25,8 @@
 //
 //
 
-#ifndef G4SingleDiffractiveExcitation_h
-#define G4SingleDiffractiveExcitation_h 1
+#ifndef G4SINGLEDIFFRACTIVEEXCITATION_HH
+#define G4SINGLEDIFFRACTIVEEXCITATION_HH
 // ------------------------------------------------------------
 //      GEANT 4 class header file
 //
@@ -37,10 +37,10 @@
 //	excite the projectile and target
 // ------------------------------------------------------------
 
-//#include "G4SystemOfUnits.hh"
-#include "globals.hh"
-#include "G4ThreeVector.hh"
+// #include "G4SystemOfUnits.hh"
 #include "G4QGSDiffractiveExcitation.hh"
+#include "G4ThreeVector.hh"
+#include "globals.hh"
 
 class G4VSplitableHadron;
 class G4ExcitedString;
@@ -48,21 +48,23 @@ class G4ExcitedString;
 class G4SingleDiffractiveExcitation : public G4QGSDiffractiveExcitation
 {
   public:
-	G4SingleDiffractiveExcitation();
-	~G4SingleDiffractiveExcitation();
 
-	G4bool ExciteParticipants (G4VSplitableHadron *aPartner, G4VSplitableHadron * bPartner, 
-                                   G4bool ProjectileDiffraction) const;
+    G4SingleDiffractiveExcitation();
+    ~G4SingleDiffractiveExcitation();
+
+    G4bool ExciteParticipants(G4VSplitableHadron* aPartner, G4VSplitableHadron* bPartner,
+                              G4bool ProjectileDiffraction) const;
 
   private:
-	G4SingleDiffractiveExcitation(const G4SingleDiffractiveExcitation &right);
 
-	G4double ChooseX(G4double Xmin, G4double Xmax) const;
-	G4ThreeVector GaussianPt(G4double widthSquare, G4double maxPtSquare) const;
+    G4SingleDiffractiveExcitation(const G4SingleDiffractiveExcitation& right);
 
-	const G4SingleDiffractiveExcitation & operator=(const G4SingleDiffractiveExcitation &right);
-	G4bool operator==(const G4SingleDiffractiveExcitation &right) const;
-	G4bool operator!=(const G4SingleDiffractiveExcitation &right) const;
+    G4double ChooseX(G4double Xmin, G4double Xmax) const;
+    G4ThreeVector GaussianPt(G4double widthSquare, G4double maxPtSquare) const;
+
+    const G4SingleDiffractiveExcitation& operator=(const G4SingleDiffractiveExcitation& right);
+    G4bool operator==(const G4SingleDiffractiveExcitation& right) const;
+    G4bool operator!=(const G4SingleDiffractiveExcitation& right) const;
 };
 
 #endif

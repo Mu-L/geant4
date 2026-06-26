@@ -26,8 +26,8 @@
 //
 //
 
-#ifndef G4PSTrackCounter3D_h
-#define G4PSTrackCounter3D_h 1
+#ifndef G4PSTRACKCOUNTER3D_HH
+#define G4PSTRACKCOUNTER3D_HH
 
 #include "G4PSTrackCounter.hh"
 
@@ -42,16 +42,19 @@
 
 class G4PSTrackCounter3D : public G4PSTrackCounter
 {
- public:
-  G4PSTrackCounter3D(const G4String& name, G4int direction, G4int ni = 1, G4int nj = 1,
-                     G4int nk = 1, G4int di = 2, G4int dj = 1, G4int dk = 0);
-  ~G4PSTrackCounter3D() override = default;
+  public:
 
- protected:
-  G4int GetIndex(G4Step*) override;
+    G4PSTrackCounter3D(const G4String& name, G4int direction, G4int ni = 1, G4int nj = 1,
+                       G4int nk = 1, G4int di = 2, G4int dj = 1, G4int dk = 0);
+    ~G4PSTrackCounter3D() override = default;
 
- private:
-  G4int fDepthi, fDepthj, fDepthk;
+  protected:
+
+    G4int GetIndex(G4Step*) override;
+
+  private:
+
+    G4int fDepthi, fDepthj, fDepthk;
 };
 
 #endif

@@ -23,24 +23,24 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4LENDBertiniGammaElectroNuclearBuilder_h
-#define G4LENDBertiniGammaElectroNuclearBuilder_h 1
+#ifndef G4LENDBERTINIGAMMAELECTRONUCLEARBUILDER_HH
+#define G4LENDBERTINIGAMMAELECTRONUCLEARBUILDER_HH
 
 #include "G4BertiniElectroNuclearBuilder.hh"
 
-class G4LENDBertiniGammaElectroNuclearBuilder
-  : public G4BertiniElectroNuclearBuilder
+class G4LENDBertiniGammaElectroNuclearBuilder : public G4BertiniElectroNuclearBuilder
 {
-public: 
-  explicit G4LENDBertiniGammaElectroNuclearBuilder(G4bool eNucl);
-  ~G4LENDBertiniGammaElectroNuclearBuilder() override = default;
+  public:
 
-  void Build() override;
+    explicit G4LENDBertiniGammaElectroNuclearBuilder(G4bool eNucl);
+    ~G4LENDBertiniGammaElectroNuclearBuilder() override = default;
 
-  G4LENDBertiniGammaElectroNuclearBuilder& operator=
-  (const G4LENDBertiniGammaElectroNuclearBuilder& right) = delete;
-  G4LENDBertiniGammaElectroNuclearBuilder(const G4LENDBertiniGammaElectroNuclearBuilder&) = delete;
+    void Build() override;
+
+    G4LENDBertiniGammaElectroNuclearBuilder&
+    operator=(const G4LENDBertiniGammaElectroNuclearBuilder& right) = delete;
+    G4LENDBertiniGammaElectroNuclearBuilder(const G4LENDBertiniGammaElectroNuclearBuilder&) =
+      delete;
 };
 
 #endif
-

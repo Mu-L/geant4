@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  7th February 1997
 // Class G4OpenGLStoredXViewer : a class derived from G4OpenGLXViewer and
 //                               G4OpenGLStoredViewer.
@@ -38,15 +38,15 @@
 
 class G4OpenGLStoredSceneHandler;
 
-class G4OpenGLStoredXViewer:
-public G4OpenGLXViewer, public G4OpenGLStoredViewer{
-  
-public:
-  G4OpenGLStoredXViewer (G4OpenGLStoredSceneHandler& scene, const G4String& name = "");
-  virtual ~G4OpenGLStoredXViewer ();
-  void Initialise ();
-  void DrawView ();
-  void FinishView ();
+class G4OpenGLStoredXViewer : public G4OpenGLXViewer, public G4OpenGLStoredViewer
+{
+  public:
+
+    G4OpenGLStoredXViewer(G4OpenGLStoredSceneHandler& scene, const G4String& name = "");
+    virtual ~G4OpenGLStoredXViewer();
+    void Initialise();
+    void DrawView();
+    void FinishView();
 };
 
 #endif

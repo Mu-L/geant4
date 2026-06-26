@@ -32,7 +32,7 @@
 // File name:     G4hBremsstrahlungModel
 //
 // Author:        Vladimir Ivanchenko on base of G4MuBremsstrahlungModel
-// 
+//
 // Creation date: 28.02.2008
 //
 // Modifications:
@@ -44,30 +44,28 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4hBremsstrahlungModel_h
-#define G4hBremsstrahlungModel_h 1
+#ifndef G4HBREMSSTRAHLUNGMODEL_HH
+#define G4HBREMSSTRAHLUNGMODEL_HH
 
 #include "G4MuBremsstrahlungModel.hh"
 
 class G4hBremsstrahlungModel : public G4MuBremsstrahlungModel
 {
+  public:
 
-public:
+    explicit G4hBremsstrahlungModel(const G4ParticleDefinition* p = nullptr,
+                                    const G4String& nam = "hBrem");
 
-  explicit G4hBremsstrahlungModel(const G4ParticleDefinition* p = nullptr,
-				  const G4String& nam = "hBrem");
+    ~G4hBremsstrahlungModel() override;
 
-  ~G4hBremsstrahlungModel() override;
+    // hide assignment operator
+    G4hBremsstrahlungModel& operator=(const G4hBremsstrahlungModel& right) = delete;
+    G4hBremsstrahlungModel(const G4hBremsstrahlungModel&) = delete;
 
-  // hide assignment operator
-  G4hBremsstrahlungModel & 
-    operator=(const  G4hBremsstrahlungModel &right) = delete;
-  G4hBremsstrahlungModel(const  G4hBremsstrahlungModel&) = delete;
+  protected:
 
-protected:
-
-  G4double ComputeDMicroscopicCrossSection(G4double tkin, G4double Z,
-					   G4double gammaEnergy) override;
+    G4double ComputeDMicroscopicCrossSection(G4double tkin, G4double Z,
+                                             G4double gammaEnergy) override;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

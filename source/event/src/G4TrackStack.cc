@@ -29,9 +29,10 @@
 // --------------------------------------------------------------------
 
 #include "G4TrackStack.hh"
+
 #include "G4SmartTrackStack.hh"
-#include "G4VTrajectory.hh"
 #include "G4Track.hh"
+#include "G4VTrajectory.hh"
 
 G4TrackStack::~G4TrackStack()
 {
@@ -40,7 +41,7 @@ G4TrackStack::~G4TrackStack()
 
 void G4TrackStack::clearAndDestroy()
 {
-  for(auto & i : *this)
+  for (auto& i : *this)
   {
     delete i.GetTrack();
     delete i.GetTrajectory();
@@ -50,7 +51,7 @@ void G4TrackStack::clearAndDestroy()
 
 void G4TrackStack::TransferTo(G4TrackStack* aStack)
 {
-  for(auto & i : *this)
+  for (auto& i : *this)
   {
     aStack->push_back(i);
   }
@@ -68,7 +69,7 @@ void G4TrackStack::TransferTo(G4SmartTrackStack* aStack)
 G4double G4TrackStack::getTotalEnergy() const
 {
   G4double totalEnergy = 0.0;
-  for (const auto & i : *this)
+  for (const auto& i : *this)
   {
     totalEnergy += i.GetTrack()->GetDynamicParticle()->GetTotalEnergy();
   }

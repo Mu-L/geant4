@@ -24,6 +24,7 @@
 // ********************************************************************
 //
 #include "G4HadTmpUtil.hh"
+
 #include <sstream>
 
 G4String G4inttostring(int ai)

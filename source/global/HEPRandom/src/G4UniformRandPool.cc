@@ -43,14 +43,26 @@
 
 // Not aligned memory
 //
-void create_pool(G4double*& buffer, G4int ps) { buffer = new G4double[ps]; }
+void create_pool(G4double*& buffer, G4int ps)
+{
+  buffer = new G4double[ps];
+}
 
-void destroy_pool(G4double*& buffer) { delete[] buffer; }
+void destroy_pool(G4double*& buffer)
+{
+  delete[] buffer;
+}
 
 #if defined(WIN32) || defined(__MINGW32__)
 // No bother with WIN
-void create_pool_align(G4double*& buffer, G4int ps) { create_pool(buffer, ps); }
-void destroy_pool_align(G4double*& buffer) { destroy_pool(buffer); }
+void create_pool_align(G4double*& buffer, G4int ps)
+{
+  create_pool(buffer, ps);
+}
+void destroy_pool_align(G4double*& buffer)
+{
+  destroy_pool(buffer);
+}
 
 #else
 
@@ -60,23 +72,26 @@ void destroy_pool_align(G4double*& buffer) { destroy_pool(buffer); }
 void create_pool_align(G4double*& buffer, G4int ps)
 {
   // POSIX standard way
-  G4int errcode = posix_memalign((void**) &buffer, sizeof(G4double) * CHAR_BIT,
-                                 ps * sizeof(G4double));
-  if(errcode != 0)
+  G4int errcode =
+    posix_memalign((void**)&buffer, sizeof(G4double) * CHAR_BIT, ps * sizeof(G4double));
+  if (errcode != 0)
   {
-    G4Exception("G4UniformRandPool::create_pool_align()", "InvalidCondition",
-                FatalException, "Cannot allocate aligned buffer");
+    G4Exception("G4UniformRandPool::create_pool_align()", "InvalidCondition", FatalException,
+                "Cannot allocate aligned buffer");
     return;
   }
   return;
 }
 
-void destroy_pool_align(G4double*& buffer) { free(buffer); }
+void destroy_pool_align(G4double*& buffer)
+{
+  free(buffer);
+}
 #endif
 
-G4UniformRandPool::G4UniformRandPool() 
+G4UniformRandPool::G4UniformRandPool()
 {
-  if(sizeof(G4double) * CHAR_BIT == 64)
+  if (sizeof(G4double) * CHAR_BIT == 64)
   {
     create_pool_align(buffer, size);
   }
@@ -87,10 +102,9 @@ G4UniformRandPool::G4UniformRandPool()
   Fill(size);
 }
 
-G4UniformRandPool::G4UniformRandPool(G4int siz)
-  : size(siz)
+G4UniformRandPool::G4UniformRandPool(G4int siz) : size(siz)
 {
-  if(sizeof(G4double) * CHAR_BIT == 64)
+  if (sizeof(G4double) * CHAR_BIT == 64)
   {
     create_pool_align(buffer, size);
   }
@@ -103,7 +117,7 @@ G4UniformRandPool::G4UniformRandPool(G4int siz)
 
 G4UniformRandPool::~G4UniformRandPool()
 {
-  if(sizeof(G4double) * CHAR_BIT == 64)
+  if (sizeof(G4double) * CHAR_BIT == 64)
   {
     destroy_pool_align(buffer);
   }
@@ -115,11 +129,11 @@ G4UniformRandPool::~G4UniformRandPool()
 
 void G4UniformRandPool::Resize(/*PoolSize_t*/ G4int newSize)
 {
-  if(newSize != size)
+  if (newSize != size)
   {
     destroy_pool(buffer);
     create_pool(buffer, newSize);
-    size       = newSize;
+    size = newSize;
     currentIdx = 0;
   }
   currentIdx = 0;
@@ -162,12 +176,12 @@ void G4UniformRandPool::GetMany(G4double* rnds, G4int howmany)
   // and we will request at least "size" rng, so
   // let's start with a fresh buffer of numbers if needed
   //
-  if(maxcycles > 0 && currentIdx > 0)
+  if (maxcycles > 0 && currentIdx > 0)
   {
     assert(currentIdx <= size);
     Fill(currentIdx);  //<size?currentIdx:size);
   }
-  for(; cycle < maxcycles; ++cycle)
+  for (; cycle < maxcycles; ++cycle)
   {
     // We can use memcpy of std::copy, it turns out that the two are basically
     // performance-wise equivalent (expected), since in my tests memcpy is a
@@ -187,7 +201,7 @@ void G4UniformRandPool::GetMany(G4double* rnds, G4int howmany)
   // but if maxcycles==0 currentIdx can be whatever, let's make sure we have
   // enough fresh numbers
   //
-  if(currentIdx + peel >= size)
+  if (currentIdx + peel >= size)
   {
     Fill(currentIdx < size ? currentIdx : size);
   }
@@ -204,12 +218,12 @@ void G4UniformRandPool::GetMany(G4double* rnds, G4int howmany)
 
 namespace
 {
-  G4ThreadLocal G4UniformRandPool* rndpool = nullptr;
+G4ThreadLocal G4UniformRandPool* rndpool = nullptr;
 }
 
 G4double G4UniformRandPool::flat()
 {
-  if(rndpool == nullptr)
+  if (rndpool == nullptr)
   {
     rndpool = new G4UniformRandPool;
     G4AutoDelete::Register(rndpool);
@@ -219,10 +233,10 @@ G4double G4UniformRandPool::flat()
 
 void G4UniformRandPool::flatArray(G4int howmany, G4double* rnds)
 {
-  if(rndpool == nullptr)
+  if (rndpool == nullptr)
   {
     rndpool = new G4UniformRandPool;
     G4AutoDelete::Register(rndpool);
   }
-  rndpool->GetMany(rnds, (unsigned int) howmany);
+  rndpool->GetMany(rnds, (unsigned int)howmany);
 }

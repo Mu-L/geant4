@@ -46,7 +46,7 @@
 // modified by I.Hrivnacova, 13.10.99
 
 #ifndef G3TOG4BUILDTREE_HH
-#define G3TOG4BUILDTREE_HH 1
+#define G3TOG4BUILDTREE_HH
 
 #include "G3VolTableEntry.hh"
 
@@ -54,4 +54,4 @@ void G3toG4BuildTree(G3VolTableEntry* curVTE, G3VolTableEntry* motherVTE);
 void G3toG4BuildLVTree(G3VolTableEntry* curVTE, G3VolTableEntry* motherVTE);
 void G3toG4BuildPVTree(G3VolTableEntry* curVTE);
 
-#endif  
+#endif

@@ -48,12 +48,15 @@
 class G4FermiBreakUpAN : public G4VFermiBreakUp
 {
   private:
+
     class PossibleSplits
     {
       private:
+
         using NucleiSplits = std::vector<G4FermiFragmentVector>;
 
       public:
+
         PossibleSplits() = default;
         PossibleSplits& operator=(PossibleSplits&&) noexcept = default;
 
@@ -63,14 +66,15 @@ class G4FermiBreakUpAN : public G4VFermiBreakUp
                                       const G4FermiChargeNumber chargeNumber) const;
 
         void InsertSplits(const G4FermiAtomicMass atomicMass,
-                          const G4FermiChargeNumber chargeNumber,
-			  NucleiSplits&& splits);
+                          const G4FermiChargeNumber chargeNumber, NucleiSplits&& splits);
 
       private:
+
         std::vector<NucleiSplits> splits_;
     };
 
   public:
+
     explicit G4FermiBreakUpAN(G4int verbosity = 0);
     ~G4FermiBreakUpAN() override = default;
 
@@ -88,6 +92,7 @@ class G4FermiBreakUpAN : public G4VFermiBreakUp
     std::vector<G4FermiParticle> BreakItUp(const G4FermiParticle& nucleus) const;
 
   private:
+
     std::vector<G4FermiParticle> SplitToParticles(const G4FermiParticle& sourceParticle,
                                                   const G4FermiFragmentVector& split) const;
 

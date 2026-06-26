@@ -32,38 +32,38 @@
 // Author: Youhei Morita, 24.08.2001
 // --------------------------------------------------------------------
 #ifndef G4FILE_UTILITIES_HH
-#define G4FILE_UTILITIES_HH 1
+#define G4FILE_UTILITIES_HH
 
-#include "G4Types.hh"
 #include "G4String.hh"
+#include "G4Types.hh"
 
 class G4FileUtilities
 {
   public:
 
     G4FileUtilities();
-      // Constructor
+    // Constructor
 
     ~G4FileUtilities();
-      // Destructor
+    // Destructor
 
     G4bool FileExists(const G4String& file);
-      // checks if the "file" exists.  returns true if it does
+    // checks if the "file" exists.  returns true if it does
 
     G4String StrErrNo() const;
-      // returns the error message of the last system call as string
+    // returns the error message of the last system call as string
 
     G4int Shell(const G4String& str);
-      // executes the shell command.  returns zero if success
+    // executes the shell command.  returns zero if success
 
     G4int CopyFile(const G4String& srcFile, const G4String& dstFile);
-      // copies the "srcFile" to "dstFile".  returns zero if success
+    // copies the "srcFile" to "dstFile".  returns zero if success
 
     G4int DeleteFile(const G4String& file, const G4String& option);
-      // deletes the "file" with the "option".  returns zero if success
+    // deletes the "file" with the "option".  returns zero if success
 
     G4String GetEnv(const G4String& env);
-      // retuns the value of environment variable as string
+    // retuns the value of environment variable as string
 };
 
 #endif

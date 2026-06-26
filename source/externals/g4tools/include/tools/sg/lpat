@@ -4,13 +4,14 @@
 #ifndef tools_sg_lpat
 #define tools_sg_lpat
 
-namespace tools {
-namespace sg {
+namespace tools
+{
+namespace sg
+{
 
 typedef unsigned short lpat;
 
-}}
+}
+}  // namespace tools
 
 #endif
-
-

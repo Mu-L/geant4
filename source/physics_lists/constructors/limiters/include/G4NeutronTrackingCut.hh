@@ -34,39 +34,40 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4NeutronTrackingCut_h
-#define G4NeutronTrackingCut_h 1
+#ifndef G4NEUTRONTRACKINGCUT_HH
+#define G4NEUTRONTRACKINGCUT_HH
 
-#include "globals.hh"
 #include "G4VPhysicsConstructor.hh"
+#include "globals.hh"
 
 class G4NeutronKiller;
 
 class G4NeutronTrackingCut : public G4VPhysicsConstructor
 {
-public: 
-  G4NeutronTrackingCut(G4int ver=0);
-  G4NeutronTrackingCut(const G4String& name,G4int ver=0);
-  virtual ~G4NeutronTrackingCut();
+  public:
 
-    // This method will be invoked in the Construct() method. 
+    G4NeutronTrackingCut(G4int ver = 0);
+    G4NeutronTrackingCut(const G4String& name, G4int ver = 0);
+    virtual ~G4NeutronTrackingCut();
+
+    // This method will be invoked in the Construct() method.
     // each particle type will be instantiated
-  virtual void ConstructParticle();
- 
+    virtual void ConstructParticle();
+
     // This method will be invoked in the Construct() method.
     // each physics process will be instantiated and
-    // registered to the process manager of each particle type 
-  virtual void ConstructProcess();
+    // registered to the process manager of each particle type
+    virtual void ConstructProcess();
 
-  inline void SetTimeLimit(G4double);
-  inline void SetKineticEnergyLimit(G4double);
+    inline void SetTimeLimit(G4double);
+    inline void SetKineticEnergyLimit(G4double);
 
-private:
+  private:
 
-  G4double timeLimit;
-  G4double kineticEnergyLimit;
-  
-  G4int    verbose;
+    G4double timeLimit;
+    G4double kineticEnergyLimit;
+
+    G4int verbose;
 };
 
 inline void G4NeutronTrackingCut::SetTimeLimit(G4double val)
@@ -80,11 +81,3 @@ inline void G4NeutronTrackingCut::SetKineticEnergyLimit(G4double val)
 }
 
 #endif
-
-
-
-
-
-
-
-

@@ -28,8 +28,8 @@
 
 // Author: Ivana Hrivnacova, 15/09/2020  (ivana@ipno.in2p3.fr)
 
-#ifndef G4CsvHnFileManager_h
-#define G4CsvHnFileManager_h 1
+#ifndef G4CSVHNFILEMANAGER_HH
+#define G4CSVHNFILEMANAGER_HH
 
 #include "G4VTHnFileManager.hh"
 
@@ -37,13 +37,15 @@
 
 class G4CsvFileManager;
 
-template <typename HT>
+template<typename HT>
 class G4CsvHnFileManager : public G4VTHnFileManager<HT>
 
 {
   public:
+
     explicit G4CsvHnFileManager(G4CsvFileManager* fileManger)
-      : G4VTHnFileManager<HT>(), fFileManager(fileManger) {}
+      : G4VTHnFileManager<HT>(), fFileManager(fileManger)
+    {}
     G4CsvHnFileManager() = delete;
     ~G4CsvHnFileManager() override = default;
 
@@ -53,11 +55,12 @@ class G4CsvHnFileManager : public G4VTHnFileManager<HT>
     G4bool Write(HT* ht, const G4String& htName, G4String& fileName) final;
 
   private:
+
     // Methods
     G4bool Write(std::ofstream& hnfile, HT* ht);
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4CsvHnFileManager" };
+    static constexpr std::string_view fkClass{"G4CsvHnFileManager"};
 
     // Data members
     G4CsvFileManager* fFileManager;
@@ -66,4 +69,3 @@ class G4CsvHnFileManager : public G4VTHnFileManager<HT>
 #include "G4CsvHnFileManager.icc"
 
 #endif
-

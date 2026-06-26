@@ -28,8 +28,8 @@
 
 // Author: Ivana Hrivnacova, 15/09/2020  (ivana@ipno.in2p3.fr)
 
-#ifndef G4XmlHnFileManager_h
-#define G4XmlHnFileManager_h 1
+#ifndef G4XMLHNFILEMANAGER_HH
+#define G4XMLHNFILEMANAGER_HH
 
 #include "G4VTHnFileManager.hh"
 
@@ -37,12 +37,14 @@
 
 class G4XmlFileManager;
 
-template <typename HT>
+template<typename HT>
 class G4XmlHnFileManager : public G4VTHnFileManager<HT>
 {
   public:
+
     G4XmlHnFileManager(G4XmlFileManager* fileManger)
-      : G4VTHnFileManager<HT>(), fFileManager(fileManger) {}
+      : G4VTHnFileManager<HT>(), fFileManager(fileManger)
+    {}
     G4XmlHnFileManager() = delete;
     ~G4XmlHnFileManager() override = default;
 
@@ -53,10 +55,11 @@ class G4XmlHnFileManager : public G4VTHnFileManager<HT>
     G4bool Write(HT* ht, const G4String& htName, G4String& fileName) final;
 
   private:
+
     // Static data members
-    static constexpr std::string_view fkClass { "G4XmlHnFileManager" };
+    static constexpr std::string_view fkClass{"G4XmlHnFileManager"};
     // Data members
-    G4XmlFileManager* fFileManager { nullptr };
+    G4XmlFileManager* fFileManager{nullptr};
 };
 
 // inline functions

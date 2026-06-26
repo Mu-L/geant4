@@ -25,21 +25,26 @@
 
 // Frederick Jones TRIUMF 07 November 2017
 
-
 #ifndef G4OPENINVENTORQT_HH
 #define G4OPENINVENTORQT_HH
 
 #include "G4OpenInventor.hh"
 
-class G4OpenInventorQt: public G4OpenInventor {
-public:
-  G4OpenInventorQt();
-  virtual ~G4OpenInventorQt ();
-  G4VViewer* CreateViewer(G4VSceneHandler&,const G4String& name = "");
-private:
-  virtual void Initialize();
-private:
-  bool fInited;
+class G4OpenInventorQt : public G4OpenInventor
+{
+  public:
+
+    G4OpenInventorQt();
+    virtual ~G4OpenInventorQt();
+    G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "");
+
+  private:
+
+    virtual void Initialize();
+
+  private:
+
+    bool fInited;
 };
 
 #endif

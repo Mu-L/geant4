@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr) 
+// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr)
 //
 // History:
 // -----------
@@ -42,82 +42,80 @@
 
 G4ITModelHandler::G4ITModelHandler()
 {
-    fIsInitialized = false;
-    fTimeStepComputerFlag = false;
-    fReactionProcessFlag = false;
+  fIsInitialized = false;
+  fTimeStepComputerFlag = false;
+  fReactionProcessFlag = false;
 }
 
 G4ITModelHandler::~G4ITModelHandler() = default;
 
 void G4ITModelHandler::Initialize()
 {
-    fpModelManager->Initialize();
-    fIsInitialized = true;
+  fpModelManager->Initialize();
+  fIsInitialized = true;
 }
 
-void G4ITModelHandler::RegisterModel(G4VITStepModel* pModel,
-                                     G4double startingTime)
+void G4ITModelHandler::RegisterModel(G4VITStepModel* pModel, G4double startingTime)
 {
-    if(fFinalize)
-    {
-      return;
-    }
-    assert(pModel != nullptr);
+  if (fFinalize)
+  {
+    return;
+  }
+  assert(pModel != nullptr);
 
-    G4ITType type1;
-    G4ITType type2;
+  G4ITType type1;
+  G4ITType type2;
 
-    pModel->GetApplicable(type1, type2);
+  pModel->GetApplicable(type1, type2);
 
-    if (type1 != type2)
-    {
-        G4Exception("G4ITModelHandler::RegisterModel",
-                    "FeatureDisabled",
-                    FatalException,
-                    "Models for different type ids are not supported anymore. This feature will be superseded.");
-    }
+  if (type1 != type2)
+  {
+    G4Exception(
+      "G4ITModelHandler::RegisterModel", "FeatureDisabled", FatalException,
+      "Models for different type ids are not supported anymore. This feature will be superseded.");
+  }
 
-    if(!fpModelManager)
-    {
-        fpModelManager = std::make_unique<G4ITModelManager>();
-    }
+  if (!fpModelManager)
+  {
+    fpModelManager = std::make_unique<G4ITModelManager>();
+  }
 
-    fpModelManager->SetModel(pModel, startingTime);
+  fpModelManager->SetModel(pModel, startingTime);
 
-    //________________________________________________
-    // Setup ITStepManager
-    if (pModel->GetTimeStepper() != nullptr)
-    {
-        fTimeStepComputerFlag = true;
-    }
-    if (pModel->GetReactionProcess() != nullptr)
-    {
-        fReactionProcessFlag = true;
-    }
+  //________________________________________________
+  // Setup ITStepManager
+  if (pModel->GetTimeStepper() != nullptr)
+  {
+    fTimeStepComputerFlag = true;
+  }
+  if (pModel->GetReactionProcess() != nullptr)
+  {
+    fReactionProcessFlag = true;
+  }
 }
 
 std::vector<G4VITStepModel*> G4ITModelHandler::GetActiveModels(G4double globalTime) const
 {
-    if(!fpModelManager)
-    {
-        return {};
-    }
-    return fpModelManager->GetActiveModels(globalTime);
+  if (!fpModelManager)
+  {
+    return {};
+  }
+  return fpModelManager->GetActiveModels(globalTime);
 }
 
 bool G4ITModelHandler::GetTimeStepComputerFlag()
 {
-    return fTimeStepComputerFlag;
+  return fTimeStepComputerFlag;
 }
 
 bool G4ITModelHandler::GetReactionProcessFlag()
 {
-    return fReactionProcessFlag;
+  return fReactionProcessFlag;
 }
 
 void G4ITModelHandler::Reset()
 {
-    fpModelManager.reset();
+  fpModelManager.reset();
 }
 
 void G4ITModelHandler::Finalize()

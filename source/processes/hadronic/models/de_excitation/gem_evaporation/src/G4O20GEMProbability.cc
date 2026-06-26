@@ -30,9 +30,7 @@
 
 #include "G4O20GEMProbability.hh"
 
-G4O20GEMProbability::G4O20GEMProbability() :
-  G4GEMProbability(20,8,0.0) // A,Z,Spin
+G4O20GEMProbability::G4O20GEMProbability() : G4GEMProbability(20, 8, 0.0)  // A,Z,Spin
 {}
 
-G4O20GEMProbability::~G4O20GEMProbability()
-{}
+G4O20GEMProbability::~G4O20GEMProbability() {}

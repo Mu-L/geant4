@@ -25,61 +25,57 @@
 //
 //
 // -------------------------------------------------------------------
-//      GEANT 4 class implementation file 
+//      GEANT 4 class implementation file
 //
 //      CERN, Geneva, Switzerland
 //
 //      File name:     G4KaonPlusField.cc
 //
 //      Author:        Alessandro Brunengo (Alessandro.Brunengo@ge.infn.it)
-// 
+//
 //      Creation date: 5 June 2000
 // -------------------------------------------------------------------
 
 #include "G4KaonPlusField.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4NucleiProperties.hh"
-#include "G4VNuclearDensity.hh"
-#include "G4FermiMomentum.hh"
-#include "G4KaonPlus.hh"
-#include "G4HadTmpUtil.hh"
-#include "G4Pow.hh"
 
-G4KaonPlusField::G4KaonPlusField(G4V3DNucleus * nucleus, G4double coeff)
-  : G4VNuclearField(nucleus)
+#include "G4FermiMomentum.hh"
+#include "G4HadTmpUtil.hh"
+#include "G4KaonPlus.hh"
+#include "G4NucleiProperties.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4Pow.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4VNuclearDensity.hh"
+
+G4KaonPlusField::G4KaonPlusField(G4V3DNucleus* nucleus, G4double coeff) : G4VNuclearField(nucleus)
 {
   theCoeff = coeff;
 }
 
+G4KaonPlusField::~G4KaonPlusField() {}
 
-G4KaonPlusField::~G4KaonPlusField()
-{ }
-
-G4double G4KaonPlusField::GetField(const G4ThreeVector & aPosition)
+G4double G4KaonPlusField::GetField(const G4ThreeVector& aPosition)
 {
-// Field is 0 out of the nucleus!
-  if(aPosition.mag() >= radius) return 0.0;
+  // Field is 0 out of the nucleus!
+  if (aPosition.mag() >= radius) return 0.0;
 
   G4double kaonMass = G4KaonPlus::KaonPlus()->GetPDGMass();
 
   G4int A = theNucleus->GetMassNumber();
   G4int Z = theNucleus->GetCharge();
   G4double bindingEnergy = G4NucleiProperties::GetBindingEnergy(A, Z);
-  G4double nucleusMass = Z*proton_mass_c2+(A-Z)*neutron_mass_c2+bindingEnergy;
-  G4double reducedMass = kaonMass*nucleusMass/(kaonMass+nucleusMass);
+  G4double nucleusMass = Z * proton_mass_c2 + (A - Z) * neutron_mass_c2 + bindingEnergy;
+  G4double reducedMass = kaonMass * nucleusMass / (kaonMass + nucleusMass);
 
   G4double density = theNucleus->GetNuclearDensity()->GetDensity(aPosition);
 
-  return -2.*pi*hbarc*hbarc/reducedMass*(2.0)*theCoeff*density+GetBarrier();
+  return -2. * pi * hbarc * hbarc / reducedMass * (2.0) * theCoeff * density + GetBarrier();
 }
 
 G4double G4KaonPlusField::GetBarrier()
 {
   G4int A = theNucleus->GetMassNumber();
   G4int Z = theNucleus->GetCharge();
-  G4double coulombBarrier = (1.44/1.14) * MeV * Z / (1.0 + G4Pow::GetInstance()->Z13(A));
+  G4double coulombBarrier = (1.44 / 1.14) * MeV * Z / (1.0 + G4Pow::GetInstance()->Z13(A));
   return coulombBarrier;
 }
-
-

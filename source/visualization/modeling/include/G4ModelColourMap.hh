@@ -34,98 +34,101 @@
 
 #include "G4Colour.hh"
 #include "G4String.hh"
+
 #include <map>
 
-template <typename T>
-class G4ModelColourMap {
+template<typename T>
+class G4ModelColourMap
+{
+  public:  // With description
 
-public: // With description
+    G4ModelColourMap();
 
-  G4ModelColourMap();
+    virtual ~G4ModelColourMap();
 
-  virtual ~G4ModelColourMap();
+    // Configuration functions
+    void Set(const T&, const G4Colour&);
+    void Set(const T&, const G4String&);
+    G4Colour& operator[](const T& quantity);
 
-  // Configuration functions
-  void Set(const T&, const G4Colour&);
-  void Set(const T&, const G4String&);
-  G4Colour& operator[](const T& quantity);
+    // Access functions
+    const std::map<T, G4Colour>& GetBasicMap() const;
+    bool GetColour(const T&, G4Colour&) const;
+    void Print(std::ostream& ostr) const;
 
-  // Access functions
-  const std::map<T, G4Colour>& GetBasicMap() const;
-  bool GetColour(const T&, G4Colour&) const;
-  void Print(std::ostream& ostr) const;
+  private:
 
-private:
-
-  // Data member
-  std::map<T, G4Colour> fMap;
-
+    // Data member
+    std::map<T, G4Colour> fMap;
 };
 
-template <typename T>
-G4Colour& 
-G4ModelColourMap<T>::operator[](const T& quantity) {return fMap[quantity];}
+template<typename T>
+G4Colour& G4ModelColourMap<T>::operator[](const T& quantity)
+{
+  return fMap[quantity];
+}
 
-template <typename T>
-G4ModelColourMap<T>::G4ModelColourMap() {}
+template<typename T>
+G4ModelColourMap<T>::G4ModelColourMap()
+{}
 
-template <typename T>
-G4ModelColourMap<T>::~G4ModelColourMap() {}
+template<typename T>
+G4ModelColourMap<T>::~G4ModelColourMap()
+{}
 
-template <typename T>
-void
-G4ModelColourMap<T>::Set(const T& quantity, const G4String& colour) 
+template<typename T>
+void G4ModelColourMap<T>::Set(const T& quantity, const G4String& colour)
 {
   G4Colour myColour;
-  
+
   // Will not setup the map if colour key does not exist
-  if (!G4Colour::GetColour(colour, myColour)) {
+  if (!G4Colour::GetColour(colour, myColour))
+  {
     G4ExceptionDescription ed;
-    ed << "G4Colour with key "<<colour<<" does not exist ";
-    G4Exception
-      ("G4ColourMap::Set(Charge charge, const G4String& colour)",
-       "modeling0108", JustWarning, ed);
+    ed << "G4Colour with key " << colour << " does not exist ";
+    G4Exception("G4ColourMap::Set(Charge charge, const G4String& colour)", "modeling0108",
+                JustWarning, ed);
     return;
   }
-  
-  
+
   // Will not modify myColour if colour key does not exist
   Set(quantity, myColour);
 }
 
-template <typename T>
-void
-G4ModelColourMap<T>::Set(const T& quantity, const G4Colour& colour) 
+template<typename T>
+void G4ModelColourMap<T>::Set(const T& quantity, const G4Colour& colour)
 {
   fMap[quantity] = colour;
-}   
+}
 
-template <typename T>
+template<typename T>
 const std::map<T, G4Colour>& G4ModelColourMap<T>::GetBasicMap() const
-{ return fMap; }
+{
+  return fMap;
+}
 
-template <typename T>
-bool
-G4ModelColourMap<T>::GetColour(const T& quantity, G4Colour& colour) const
+template<typename T>
+bool G4ModelColourMap<T>::GetColour(const T& quantity, G4Colour& colour) const
 {
   typename std::map<T, G4Colour>::const_iterator iter = fMap.find(quantity);
 
-  if (iter != fMap.end()) {
+  if (iter != fMap.end())
+  {
     colour = iter->second;
     return true;
   }
-  
+
   return false;
 }
 
-template <typename T>
-void
-G4ModelColourMap<T>::Print(std::ostream& ostr) const
+template<typename T>
+void G4ModelColourMap<T>::Print(std::ostream& ostr) const
 {
   typename std::map<T, G4Colour>::const_iterator iter = fMap.begin();
-  
-  while (iter != fMap.end()) {
-    ostr<< iter->first <<" : "<< iter->second <<G4endl;
+
+  while (iter != fMap.end())
+  {
+    ostr << iter->first << " : " << iter->second << G4endl;
     iter++;
   }
 }

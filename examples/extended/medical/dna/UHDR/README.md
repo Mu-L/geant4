@@ -14,9 +14,9 @@
 ## INTRODUCTION
 
  This example shows how to activate the mesoscopic model in chemistry and
- combine with IRT-syn model (https://arxiv.org/abs/2409.11993).
- It allows to simulate chemical reactions longtime (beyond 1 us) of post-irradiation.
- Important : This example is provided as a prototype. Some mistakes may be present in the code.
+ combine with the IRT-syn model (https://arxiv.org/abs/2409.11993).
+ It allows simulating chemical reactions a longtime (beyond 1 us) of post-irradiation.
+ Important: This example is provided as a prototype. Some mistakes may be present in the code.
  We would be happy to hear from you — please don’t hesitate to share your feedback and 
  let us know about any difficulties you may encounter.
 
@@ -28,7 +28,7 @@ cmake ../pathToExamples/UHDR
 make
 ```
 
-To visualize (only for physical stage)
+To visualize (only for the physical stage)
 ```
 ./UHDR
 ```
@@ -46,10 +46,10 @@ In batch mode, the macro beam.in can be used as follows:
 ## GEOMETRY DEFINITION
 
 
- The world volume is a simple water box 3.2 x 3.2 x 3.2 um3 for 0.01 Gy of cut-off
+ The world volume is a simple water box 3.2 x 3.2 x 3.2 um3 for 0.01 Gy of a cut-off
  absorbed dose and 1.6 x 1.6 x 1.6 um3 for 1 Gy. This example is limited to these geometries.
- The choice of simulation volume is a compromise between a sufficient number of chemical species a
- nd an achievable computation time.
+ The choice of simulation volume is a compromise between enough chemical species 
+  and an achievable computation time.
 
  Two parameters define the geometry :
  - the material of the box for the physical stage is water.
@@ -65,14 +65,15 @@ In batch mode, the macro beam.in can be used as follows:
 
 ## PHYSICS LIST
 
- PhysicsList is Geant4 modular physics list using G4EmDNAPhysics_option2
+ PhysicsList is a Geant4 modular physics list using G4EmDNAPhysics_option2
  and EmDNAChemistry constructors (the chemistry constructor uses the
  Step-by-step method).
 
 ## Beamline Dose Cutoff
 
  A threshold dose value along a beamline in a simulation. 
- This is the total dose per beamline (across all pulses). 
+ This is the total dose per beamline (across all pulses). The dose per pulse is automatically 
+ and randomly sampled from the recorded dose distribution (see below). 
  The concept of the dose cutoff is that once the recorded dose exceeds this threshold, 
  the particle beam is automatically stopped. 
 
@@ -85,8 +86,10 @@ In batch mode, the macro beam.in can be used as follows:
  This object is controlled by DetectorContruction. It defines the chemistry volume,
  scavengers and pH of water.
 
- This fearture can be set by the following commands:
+ This feature can be set by the following commands:
  # pH and Scavenger
+pH is defined in terms of the concentration of H3O+ and OH- scavengers. 
+See detail in http://dx.doi.org/10.2139/ssrn.6438061
 ```
  /UHDR/env/pH 5.5
 ```
@@ -98,7 +101,7 @@ In batch mode, the macro beam.in can be used as follows:
 ```
 ## AN EVENT: PRIMARY GENERATOR
 
-This example utilizes the G4SingleParticleSource.
+This example uses the G4SingleParticleSource.
 Each event consists of multiple incident particles.
 A large number has been chosen to ensure that the stack remains non-empty until the desired
 energy deposition is achieved (which is then converted to a cutoff dose).
@@ -108,8 +111,8 @@ The actual dose is calculated based on the real energy deposited in the volume.
 
 ## G-value Scorer
 
-There is one G4MultiFunctionalDetector object which computes the
-energy deposition and the number of species along time in order to
+There is one G4MultiFunctionalDetector object that computes the
+energy deposition and the number of species a long time to
 extract the G-value:
 (Number of species X) / (100 eV of deposited energy).
 
@@ -132,13 +135,22 @@ their respective delayed time. This process creates a duration for the primary p
 where their primary chemical species are activated randomly through an experimental beam
 current transformation, named "pulse duration".
 
-This fearture can be set by the following commands:
+This feature can be set by the following commands:
 
 # time structure
 ```
 /UHDR/pulse/pulseOn true // active the time structure
 ```
 # push structure file
+
+The pulse structure file represents the real pulse intensity as a function of time. 
+The Δt is sampled from this file. The file should contain two columns: 
+the first column is the time in microseconds (us), 
+and the second column is the relative intensity of the pulse at that time. 
+The higher amplitude means a higher probability of primary particle activation 
+(see sampling function in PulseAction.cc).
+The following command is used to push the pulse structure file:
+
 ```
 /UHDR/pulse/pulseFile 1.4us // push structure file
 ```
@@ -148,7 +160,9 @@ This fearture can be set by the following commands:
 /UHDR/pulse/pulsePeriod 10 ms // time between two pulses (DIT)
 /UHDR/pulse/numberOfPulse 2 // number of pulses
 ```
- **Important: the multi-pulse function may produce incorrect results with long pulse structures.**
+ **Important: the multi-pulse function may produce incorrect results with long pulse structures.
+ The correct version is still under development.**
+
 ## OUTPUT
 
 G-value
@@ -200,7 +214,7 @@ The PBC helps reduce the edge effects in dose calculations for micrometer-sized 
 
 
 The PBC requires a maximum dose (xxx) to abort the event. This to avoid the high energy of
-secondary electrons deposit a large energy inside the micro volume.
+secondary electrons deposits a large energy inside the micro volume.
 
 ```
 /scorer/Dose/abortedDose xxx Gy
@@ -212,5 +226,5 @@ Use the following command to activate or deactivate PBC.
 /UHDR/Detector/PBC true
 ```
 
-Contact: H. Tran (tran@lp2ib.in2p3.fr)
+Contact: Hoang Tran (tran@lp2ib.in2p3.fr)
 CNRS, lp2i, UMR 5797, Université de Bordeaux, F-33170 Gradignan, France

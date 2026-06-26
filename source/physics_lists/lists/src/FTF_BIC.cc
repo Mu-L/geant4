@@ -33,69 +33,65 @@
 // Modified:
 // 19.06.2008 G.Folger: don't use chips quasielastic in FTF
 // 04.06.2010 G.Folger: Use new ctor for builders
-// 16.08.2010 H.Kurashige: Remove inclusion of G4ParticleWithCuts 
+// 16.08.2010 H.Kurashige: Remove inclusion of G4ParticleWithCuts
 // 16.10.2012 A.Ribon: Use new default stopping and ion physics
 // 06.08.2019 A.Ribon: Use the new G4StoppingPhysicsFritiofWithBinaryCascade
 //
 //----------------------------------------------------------------------------
 //
-#include <iomanip>   
-
-#include "globals.hh"
-#include "G4ios.hh"
+#include "FTF_BIC.hh"
 
 #include "G4DecayPhysics.hh"
-#include "G4EmStandardPhysics.hh"
 #include "G4EmExtraPhysics.hh"
-#include "G4IonPhysics.hh"
-#include "G4StoppingPhysicsFritiofWithBinaryCascade.hh"
+#include "G4EmStandardPhysics.hh"
 #include "G4HadronElasticPhysics.hh"
-#include "G4NeutronTrackingCut.hh"
-
-#include "FTF_BIC.hh"
 #include "G4HadronPhysicsFTF_BIC.hh"
-
+#include "G4IonPhysics.hh"
+#include "G4NeutronTrackingCut.hh"
+#include "G4StoppingPhysicsFritiofWithBinaryCascade.hh"
 #include "G4WarnPLStatus.hh"
+#include "G4ios.hh"
+#include "globals.hh"
+
+#include <iomanip>
 
 FTF_BIC::FTF_BIC(G4int ver)
 {
-  if(ver > 0) {
-    G4cout << "<<< Geant4 Physics List simulation engine: FTF_BIC"<<G4endl;
-    G4cout <<G4endl;
+  if (ver > 0)
+  {
+    G4cout << "<<< Geant4 Physics List simulation engine: FTF_BIC" << G4endl;
+    G4cout << G4endl;
     G4WarnPLStatus exp;
     exp.Experimental("FTF_BIC");
   }
 
-  defaultCutValue = 0.7*CLHEP::mm;  
+  defaultCutValue = 0.7 * CLHEP::mm;
   SetVerboseLevel(ver);
 
   // EM Physics
-  RegisterPhysics( new G4EmStandardPhysics(ver) );
+  RegisterPhysics(new G4EmStandardPhysics(ver));
 
   // Synchroton Radiation & GN Physics
-  RegisterPhysics( new G4EmExtraPhysics(ver) );
+  RegisterPhysics(new G4EmExtraPhysics(ver));
 
   // Decays
-  RegisterPhysics( new G4DecayPhysics(ver) );
+  RegisterPhysics(new G4DecayPhysics(ver));
 
-   // Hadron Elastic scattering
-   RegisterPhysics( new G4HadronElasticPhysics(ver) );
+  // Hadron Elastic scattering
+  RegisterPhysics(new G4HadronElasticPhysics(ver));
 
-   // Hadron Physics
-  RegisterPhysics(  new G4HadronPhysicsFTF_BIC(ver));
+  // Hadron Physics
+  RegisterPhysics(new G4HadronPhysicsFTF_BIC(ver));
 
   // Stopping Physics
-  RegisterPhysics( new G4StoppingPhysicsFritiofWithBinaryCascade(ver) );
+  RegisterPhysics(new G4StoppingPhysicsFritiofWithBinaryCascade(ver));
 
   // Ion Physics
-  RegisterPhysics( new G4IonPhysics(ver));
-  
+  RegisterPhysics(new G4IonPhysics(ver));
+
   // Neutron tracking cut
-  RegisterPhysics( new G4NeutronTrackingCut(ver));
+  RegisterPhysics(new G4NeutronTrackingCut(ver));
 
   // Neutron cross sections
-  //AR-31Oct2012 RegisterPhysics( new G4NeutronCrossSectionXS(ver) );
-
+  // AR-31Oct2012 RegisterPhysics( new G4NeutronCrossSectionXS(ver) );
 }
-
-

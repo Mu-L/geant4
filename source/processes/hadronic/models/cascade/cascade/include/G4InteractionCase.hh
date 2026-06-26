@@ -35,41 +35,40 @@
 
 class G4InuclParticle;
 
+class G4InteractionCase
+{
+  public:
 
-class G4InteractionCase {
-public:
-  G4InteractionCase() : bullet(0), target(0), inter_case(0) {}
+    G4InteractionCase() : bullet(0), target(0), inter_case(0) {}
 
-  G4InteractionCase(G4InuclParticle* part1, G4InuclParticle* part2) {
-    set(part1, part2);
-  }
+    G4InteractionCase(G4InuclParticle* part1, G4InuclParticle* part2) { set(part1, part2); }
 
-  void set(G4InuclParticle* part1, G4InuclParticle* part2);
+    void set(G4InuclParticle* part1, G4InuclParticle* part2);
 
-  void clear() {
-    bullet = target = 0;
-    inter_case = 0;
-  }
+    void clear()
+    {
+      bullet = target = 0;
+      inter_case = 0;
+    }
 
-  G4InuclParticle* getBullet() const { return bullet; }
-  G4InuclParticle* getTarget() const { return target; }
+    G4InuclParticle* getBullet() const { return bullet; }
+    G4InuclParticle* getTarget() const { return target; }
 
-  G4bool valid() const      { return inter_case != 0; }
+    G4bool valid() const { return inter_case != 0; }
 
-  G4bool twoNuclei() const  { return inter_case == -2; }
-  G4bool hadNucleus() const { return inter_case == -1; }
-  G4int  hadrons() const    { return inter_case; }	// "rtype" or "is" code
+    G4bool twoNuclei() const { return inter_case == -2; }
+    G4bool hadNucleus() const { return inter_case == -1; }
+    G4int hadrons() const { return inter_case; }  // "rtype" or "is" code
 
-  // For compatibility with G4IntraNucleiCascader code
-  G4int  code() const { return ((inter_case<0) ? -inter_case : 0); }
+    // For compatibility with G4IntraNucleiCascader code
+    G4int code() const { return ((inter_case < 0) ? -inter_case : 0); }
 
-private:
-  G4InuclParticle* bullet;
-  G4InuclParticle* target;
+  private:
 
-  G4int inter_case;
+    G4InuclParticle* bullet;
+    G4InuclParticle* target;
+
+    G4int inter_case;
 };
 
-#endif // G4INTERACTION_CASE_HH 
-
-
+#endif  // G4INTERACTION_CASE_HH

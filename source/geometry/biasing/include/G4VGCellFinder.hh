@@ -37,20 +37,22 @@
 #ifndef G4VGCELLFINDER_HH
 #define G4VGCELLFINDER_HH
 
-#include "globals.hh"
 #include "G4GeometryCell.hh"
+#include "globals.hh"
 
 class G4Step;
 
 /**
  * @brief G4VGCellFinder is an interface base class for GCellFinder.
+ * @ingroup geometry_biasing
+ *
  * The G4GeometryCell is obtained in the parallel geometry from
  * G4VParallelStepper and in the mass geometry from G4Step. This interface
  * allows one to implement the two different ways to get a G4GeometryCell
  * used by a process.
  */
 
-class  G4VGCellFinder
+class G4VGCellFinder
 {
   public:
 

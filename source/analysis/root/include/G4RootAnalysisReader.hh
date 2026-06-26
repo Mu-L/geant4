@@ -29,8 +29,8 @@
 
 // Author: Ivana Hrivnacova, 09/04/2014 (ivana@ipno.in2p3.fr)
 
-#ifndef G4RootAnalysisReader_h
-#define G4RootAnalysisReader_h 1
+#ifndef G4ROOTANALYSISREADER_HH
+#define G4ROOTANALYSISREADER_HH
 
 #include "G4ToolsAnalysisReader.hh"
 #include "globals.hh"
@@ -43,14 +43,15 @@
 class G4RootAnalysisReader;
 class G4RootRFileManager;
 class G4RootRNtupleManager;
-template <class T>
+template<class T>
 class G4ThreadLocalSingleton;
 
 class G4RootAnalysisReader : public G4ToolsAnalysisReader
 {
-  friend class G4ThreadLocalSingleton<G4RootAnalysisReader>;
+    friend class G4ThreadLocalSingleton<G4RootAnalysisReader>;
 
   public:
+
     ~G4RootAnalysisReader() override;
 
     // Static methods
@@ -62,27 +63,28 @@ class G4RootAnalysisReader : public G4ToolsAnalysisReader
     using G4VAnalysisReader::GetNtuple;
 
   protected:
+
     G4RootAnalysisReader();
 
     // // Virtual methods from base class
     G4bool CloseFilesImpl(G4bool reset) final;
 
   private:
+
     // Static data members
-    inline static G4RootAnalysisReader* fgMasterInstance { nullptr };
+    inline static G4RootAnalysisReader* fgMasterInstance{nullptr};
 
     // Methods
     G4bool Reset();
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4RootAnalysisReader" };
+    static constexpr std::string_view fkClass{"G4RootAnalysisReader"};
 
     // Data members
-    std::shared_ptr<G4RootRNtupleManager> fNtupleManager { nullptr };
-    std::shared_ptr<G4RootRFileManager>   fFileManager { nullptr };
+    std::shared_ptr<G4RootRNtupleManager> fNtupleManager{nullptr};
+    std::shared_ptr<G4RootRFileManager> fFileManager{nullptr};
 };
 
 #include "G4RootAnalysisReader.icc"
 
 #endif
-

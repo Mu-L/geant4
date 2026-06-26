@@ -36,8 +36,8 @@
 // 20110808  M. Kelsey -- Remove unnecessary #includes, use forward decls,
 //		Change 3D nucleus to (owned) pointer to base.
 
-#ifndef G4QuasiElasticChannel_h
-#define G4QuasiElasticChannel_h
+#ifndef G4QUASIELASTICCHANNEL_HH
+#define G4QUASIELASTICCHANNEL_HH
 
 #include "G4HadronicInteraction.hh"
 #include "globals.hh"
@@ -51,24 +51,24 @@ class G4V3DNucleus;
 class G4QuasiElasticChannel : public G4HadronicInteraction
 {
   public:
-	explicit G4QuasiElasticChannel();
-	~G4QuasiElasticChannel() override;
 
-	G4double GetFraction(G4Nucleus &theNucleus,
-			     const G4DynamicParticle& thePrimary);
+    explicit G4QuasiElasticChannel();
+    ~G4QuasiElasticChannel() override;
 
-	G4KineticTrackVector* Scatter(G4Nucleus &theNucleus,
-				      const G4DynamicParticle& thePrimary);
-					
-        G4QuasiElasticChannel(const G4QuasiElasticChannel &) = delete;
-	const G4QuasiElasticChannel & operator=(const G4QuasiElasticChannel &) = delete;
-	G4bool operator==(const G4QuasiElasticChannel &) const = delete;
-	G4bool operator!=(const G4QuasiElasticChannel &) const = delete;
+    G4double GetFraction(G4Nucleus& theNucleus, const G4DynamicParticle& thePrimary);
+
+    G4KineticTrackVector* Scatter(G4Nucleus& theNucleus, const G4DynamicParticle& thePrimary);
+
+    G4QuasiElasticChannel(const G4QuasiElasticChannel&) = delete;
+    const G4QuasiElasticChannel& operator=(const G4QuasiElasticChannel&) = delete;
+    G4bool operator==(const G4QuasiElasticChannel&) const = delete;
+    G4bool operator!=(const G4QuasiElasticChannel&) const = delete;
 
   private:
-   	G4QuasiElRatios* theQuasiElastic;
-	G4V3DNucleus* the3DNucleus;
-        G4int secID;  // Creator model ID for the secondaries created by this model
+
+    G4QuasiElRatios* theQuasiElastic;
+    G4V3DNucleus* the3DNucleus;
+    G4int secID;  // Creator model ID for the secondaries created by this model
 };
 
 #endif

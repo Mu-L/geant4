@@ -30,24 +30,22 @@
 // Utilities used at initialisation of material properties
 //
 
-#ifndef G4MatUtils_HH
-#define G4MatUtils_HH
+#ifndef G4MATUTILS_HH
+#define G4MATUTILS_HH
 
-#include "globals.hh"
 #include "G4ExtendedPhysicsVector.hh"
+#include "globals.hh"
 
 class G4MatUtils
 {
-public:
+  public:
 
-  // Build G4ExtendedPhysicsVector using data provided in the fixed format
-  // of length = number of strings with the same data:  
-  //    energy and N partial cross sections
-  static G4ExtendedPhysicsVector*
-  BuildExtendedVector(const G4String& dirpath, const G4String& filename,
-		      const G4int N, const G4int length,
-		      const G4double unitE = 1.0, const G4double unitS = 1.0);
-
+    // Build G4ExtendedPhysicsVector using data provided in the fixed format
+    // of length = number of strings with the same data:
+    //    energy and N partial cross sections
+    static G4ExtendedPhysicsVector*
+    BuildExtendedVector(const G4String& dirpath, const G4String& filename, const G4int N,
+                        const G4int length, const G4double unitE = 1.0, const G4double unitS = 1.0);
 };
 
 #endif

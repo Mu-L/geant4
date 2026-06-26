@@ -67,14 +67,14 @@ G4int G4coutDestination::ReceiveG4cerr(const G4String& msg)
 G4int G4coutDestination::ReceiveG4debug_(const G4String& msg)
 {
   // Avoid copy of string if not necessary
-  if(!transformersDebug.empty())
+  if (!transformersDebug.empty())
   {
-    G4String m    = msg;
+    G4String m = msg;
     G4bool result = true;
-    for(const auto& el : transformersDebug)
+    for (const auto& el : transformersDebug)
     {
       result &= el(m);
-      if(!result)
+      if (!result)
       {
         break;
       }
@@ -89,36 +89,38 @@ G4int G4coutDestination::ReceiveG4debug_(const G4String& msg)
 G4int G4coutDestination::ReceiveG4cout_(const G4String& msg)
 {
   // Avoid copy of string if not necessary
-  if(!transformersCout.empty())
+  if (!transformersCout.empty())
   {
-    G4String m    = msg;
+    G4String m = msg;
     G4bool result = true;
-    for(const auto& el : transformersCout)
+    for (const auto& el : transformersCout)
     {
       result &= el(m);
-      if(!result)
+      if (!result)
       {
         break;
       }
     }
     return (result ? ReceiveG4cout(m) : 0);
   }
-  
+
   return ReceiveG4cout(msg);
 }
 
 // --------------------------------------------------------------------
 G4int G4coutDestination::ReceiveG4cerr_(const G4String& msg)
 {
-  if(!transformersCout.empty())
+  if (!transformersCout.empty())
   {
     G4String m = msg;
     std::for_each(transformersCerr.begin(), transformersCerr.end(),
-                  [&m](const Transformer& t) { t(m); }
+                  [&m](const Transformer& t) {
+                    t(m);
+                  }
                   // Call transforming function on message
     );
     return ReceiveG4cerr(m);
   }
-  
+
   return ReceiveG4cerr(msg);
 }

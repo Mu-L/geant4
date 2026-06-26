@@ -26,32 +26,32 @@
 //
 //
 // Hadronic Process: Nuclear De-excitations
-// by V. Lara 
+// by V. Lara
 
-#ifndef G4VMultiFragmentation_h
-#define G4VMultiFragmentation_h 1
+#ifndef G4VMULTIFRAGMENTATION_HH
+#define G4VMULTIFRAGMENTATION_HH
 
-#include "globals.hh"
 #include "G4Fragment.hh"
+#include "globals.hh"
 
-class G4VMultiFragmentation 
+class G4VMultiFragmentation
 {
-public:
-  G4VMultiFragmentation();
-  virtual ~G4VMultiFragmentation();
-  
-private:
-  G4VMultiFragmentation(const G4VMultiFragmentation &right);
-  
-  const G4VMultiFragmentation & operator=(const G4VMultiFragmentation &right);
-  G4bool operator==(const G4VMultiFragmentation &right) const;
-  G4bool operator!=(const G4VMultiFragmentation &right) const;
-  
-public:
-  virtual G4FragmentVector * BreakItUp(const G4Fragment &theNucleus) = 0;
+  public:
+
+    G4VMultiFragmentation();
+    virtual ~G4VMultiFragmentation();
+
+  private:
+
+    G4VMultiFragmentation(const G4VMultiFragmentation& right);
+
+    const G4VMultiFragmentation& operator=(const G4VMultiFragmentation& right);
+    G4bool operator==(const G4VMultiFragmentation& right) const;
+    G4bool operator!=(const G4VMultiFragmentation& right) const;
+
+  public:
+
+    virtual G4FragmentVector* BreakItUp(const G4Fragment& theNucleus) = 0;
 };
 
-
 #endif
-
-

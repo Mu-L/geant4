@@ -35,13 +35,13 @@
 //
 // --------------------------------------------------------------------
 
-#ifndef G4StandardCerenkovModel_h
-#define G4StandardCerenkovModel_h 1
+#ifndef G4STANDARDCERENKOVMODEL_HH
+#define G4STANDARDCERENKOVMODEL_HH
 
-#include "G4VXRayModel.hh"
-#include "globals.hh"
 #include "G4LogicalVolume.hh"
 #include "G4MaterialPropertyVector.hh"
+#include "G4VXRayModel.hh"
+#include "globals.hh"
 
 #include <vector>
 
@@ -52,49 +52,50 @@ class G4Track;
 
 class G4StandardCerenkovModel : public G4VXRayModel
 {
-public:
-  G4StandardCerenkovModel();
+  public:
 
-  // the default copy constructor is used by G4GeneralCerenkov class
-  G4StandardCerenkovModel(const G4StandardCerenkovModel&) = default;
-  
-  ~G4StandardCerenkovModel() override;
+    G4StandardCerenkovModel();
 
-  G4StandardCerenkovModel& operator=(const G4StandardCerenkovModel& right) = delete;
-  G4StandardCerenkovModel& operator==(const G4StandardCerenkovModel& right) = delete;
-  G4StandardCerenkovModel& operator!=(const G4StandardCerenkovModel& right) = delete;
+    // the default copy constructor is used by G4GeneralCerenkov class
+    G4StandardCerenkovModel(const G4StandardCerenkovModel&) = default;
 
-  void InitialiseModel() override;
+    ~G4StandardCerenkovModel() override;
 
-  G4bool StepLimitForVolume(G4double& limit) override;
+    G4StandardCerenkovModel& operator=(const G4StandardCerenkovModel& right) = delete;
+    G4StandardCerenkovModel& operator==(const G4StandardCerenkovModel& right) = delete;
+    G4StandardCerenkovModel& operator!=(const G4StandardCerenkovModel& right) = delete;
 
-  void SampleXRays(std::vector<G4Track*>& out, const G4Step&) override;
+    void InitialiseModel() override;
 
-  void ModelDescription(std::ostream& outFile) const override;
-  
-private:
+    G4bool StepLimitForVolume(G4double& limit) override;
 
-  G4double AverageNumberOfPhotons(const G4double charge, const G4double beta,
-				  const G4double n) const
-  {
-    return fRfact*charge*charge*std::max(1.0 - 1.0/(beta*n), 0.0);
-  }
+    void SampleXRays(std::vector<G4Track*>& out, const G4Step&) override;
 
-  static std::vector<G4double>* fBetaLim;
-  static std::vector<std::vector<G4double>* >* fMeanNumberOfPhotons;
-  static std::vector<std::vector<std::vector<G4double>* >* >* fIntegral;
-  static std::vector<G4MaterialPropertyVector*>* fRindex;
+    void ModelDescription(std::ostream& outFile) const override;
 
-  const G4ParticleDefinition* fParticle{nullptr};
-  const G4ParticleDefinition* fPhoton{nullptr};
-  G4double fPreStepKinE{0.0};
-  G4double fMass{0.0};
-  G4double fCharge{0.0};
-  G4double fMeanNPhotons{0.0};
-  G4double fRfact{1.0};
-  
-  G4bool isInitializer{false};
-  G4bool isInitialized{false};
+  private:
+
+    G4double AverageNumberOfPhotons(const G4double charge, const G4double beta,
+                                    const G4double n) const
+    {
+      return fRfact * charge * charge * std::max(1.0 - 1.0 / (beta * n), 0.0);
+    }
+
+    static std::vector<G4double>* fBetaLim;
+    static std::vector<std::vector<G4double>*>* fMeanNumberOfPhotons;
+    static std::vector<std::vector<std::vector<G4double>*>*>* fIntegral;
+    static std::vector<G4MaterialPropertyVector*>* fRindex;
+
+    const G4ParticleDefinition* fParticle{nullptr};
+    const G4ParticleDefinition* fPhoton{nullptr};
+    G4double fPreStepKinE{0.0};
+    G4double fMass{0.0};
+    G4double fCharge{0.0};
+    G4double fMeanNPhotons{0.0};
+    G4double fRfact{1.0};
+
+    G4bool isInitializer{false};
+    G4bool isInitialized{false};
 };
 
 #endif

@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  3rd April 2001
 //
 // Class Description:
@@ -39,28 +39,27 @@
 #ifndef G4TEXTMODEL_HH
 #define G4TEXTMODEL_HH
 
-#include "G4VModel.hh"
 #include "G4Text.hh"
+#include "G4VModel.hh"
 
-class G4TextModel: public G4VModel {
+class G4TextModel : public G4VModel
+{
+  public:  // With description
 
-public: // With description
+    G4TextModel(const G4Text&, const G4Transform3D& = G4Transform3D());
 
-  G4TextModel (const G4Text&, const G4Transform3D& = G4Transform3D());
-   
-  virtual ~G4TextModel ();
+    virtual ~G4TextModel();
 
-  void DescribeYourselfTo (G4VGraphicsScene&) override;
-  // The main task of a model is to describe itself to the graphics scene.
+    void DescribeYourselfTo(G4VGraphicsScene&) override;
+    // The main task of a model is to describe itself to the graphics scene.
 
-private:
+  private:
 
-  // Private copy contructor and assignment to forbid use...
-  G4TextModel (const G4TextModel&);
-  G4TextModel& operator = (const G4TextModel&);
+    // Private copy contructor and assignment to forbid use...
+    G4TextModel(const G4TextModel&);
+    G4TextModel& operator=(const G4TextModel&);
 
-  G4Text fG4Text;
-
+    G4Text fG4Text;
 };
 
 #endif

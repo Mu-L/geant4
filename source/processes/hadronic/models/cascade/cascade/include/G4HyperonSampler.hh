@@ -32,6 +32,9 @@
 #include "G4CascadeSampler.hh"
 
 // Entire interface is inherited from base (struct makes default public:)
-struct G4HyperonSampler : public G4CascadeSampler<31,6> { G4HyperonSampler(); };
+struct G4HyperonSampler : public G4CascadeSampler<31, 6>
+{
+    G4HyperonSampler();
+};
 
-#endif	/* G4_HYPERON_SAMPLER_HH */
+#endif /* G4_HYPERON_SAMPLER_HH */

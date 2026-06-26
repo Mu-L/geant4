@@ -58,18 +58,22 @@ class G4ModelingParameters;
 
 class G4VUserVisAction
 {
-public: // With description
-  G4VUserVisAction(): fpSceneHandler(nullptr), fpMP(nullptr) {}
-  virtual ~G4VUserVisAction() {}
-  void operator()(G4VGraphicsScene& scene, const G4ModelingParameters* pMP) {
-    fpSceneHandler = &scene;
-    fpMP           = pMP;
-    Draw();
-  }
-protected:
-  virtual void Draw() = 0;
-  G4VGraphicsScene* fpSceneHandler;
-  const G4ModelingParameters* fpMP;
+  public:  // With description
+
+    G4VUserVisAction() : fpSceneHandler(nullptr), fpMP(nullptr) {}
+    virtual ~G4VUserVisAction() {}
+    void operator()(G4VGraphicsScene& scene, const G4ModelingParameters* pMP)
+    {
+      fpSceneHandler = &scene;
+      fpMP = pMP;
+      Draw();
+    }
+
+  protected:
+
+    virtual void Draw() = 0;
+    G4VGraphicsScene* fpSceneHandler;
+    const G4ModelingParameters* fpMP;
 };
 
 #endif

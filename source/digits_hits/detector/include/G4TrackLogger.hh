@@ -33,8 +33,8 @@
 //
 // Author: Michael Dressel, CERN
 // --------------------------------------------------------------------
-#ifndef G4TrackLogger_hh
-#define G4TrackLogger_hh 1
+#ifndef G4TRACKLOGGER_HH
+#define G4TRACKLOGGER_HH
 
 #include "globals.hh"
 
@@ -42,18 +42,20 @@
 
 class G4TrackLogger
 {
- public:
-  // inform the object about the event number
-  // if the event number changes the loggs are cleared.
-  void SetEventID(G4int id);
+  public:
 
-  // returns true if the track is new to this event.
-  G4bool FirstEnterance(G4int trid);
+    // inform the object about the event number
+    // if the event number changes the loggs are cleared.
+    void SetEventID(G4int id);
 
- private:
-  G4int fPreviousEventID = -1;
-  using TrackIDsSet = std::set<G4int>;
-  TrackIDsSet fTrackIDsSet;
+    // returns true if the track is new to this event.
+    G4bool FirstEnterance(G4int trid);
+
+  private:
+
+    G4int fPreviousEventID = -1;
+    using TrackIDsSet = std::set<G4int>;
+    TrackIDsSet fTrackIDsSet;
 };
 
 #endif

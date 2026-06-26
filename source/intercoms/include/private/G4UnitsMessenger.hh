@@ -32,8 +32,8 @@
 
 // Author: Michel Maire, 1998
 // --------------------------------------------------------------------
-#ifndef G4UnitsMessenger_hh
-#define G4UnitsMessenger_hh 1
+#ifndef G4UNITSMESSENGER_HH
+#define G4UNITSMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -44,12 +44,14 @@ class G4UIcmdWithoutParameter;
 class G4UnitsMessenger : public G4UImessenger
 {
   public:
+
     G4UnitsMessenger();
     ~G4UnitsMessenger() override;
 
     void SetNewValue(G4UIcommand*, G4String) override;
 
   private:
+
     G4UIdirectory* UnitsTableDir = nullptr;
     G4UIcmdWithoutParameter* ListCmd = nullptr;
 };

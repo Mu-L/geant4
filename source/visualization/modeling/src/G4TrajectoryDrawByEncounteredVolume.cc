@@ -28,46 +28,50 @@
 // G4TrajectoryDrawByVolume.hh  Jane Tinslay March 2006
 
 #include "G4TrajectoryDrawByEncounteredVolume.hh"
-#include "G4TrajectoryDrawerUtils.hh"
-#include "G4VTrajectory.hh"
-#include "G4VisTrajContext.hh"
-#include "G4VTrajectoryPoint.hh"
+
 #include "G4AttDef.hh"
 #include "G4AttValue.hh"
+#include "G4TrajectoryDrawerUtils.hh"
+#include "G4VTrajectory.hh"
+#include "G4VTrajectoryPoint.hh"
+#include "G4VisTrajContext.hh"
 
-G4TrajectoryDrawByEncounteredVolume::G4TrajectoryDrawByEncounteredVolume
-(const G4String& name, G4VisTrajContext* context)
-  :G4VTrajectoryModel(name, context)
-  ,fDefault(G4Colour::Grey())
+G4TrajectoryDrawByEncounteredVolume::G4TrajectoryDrawByEncounteredVolume(const G4String& name,
+                                                                         G4VisTrajContext* context)
+  : G4VTrajectoryModel(name, context), fDefault(G4Colour::Grey())
 {}
 
 G4TrajectoryDrawByEncounteredVolume::~G4TrajectoryDrawByEncounteredVolume() {}
 
-void
-G4TrajectoryDrawByEncounteredVolume::Draw(const G4VTrajectory& traj, const G4bool& /*visible*/) const
+void G4TrajectoryDrawByEncounteredVolume::Draw(const G4VTrajectory& traj,
+                                               const G4bool& /*visible*/) const
 {
   // Check the required G4Att exists
   const auto& aPointAttDefs = traj.GetPoint(0)->GetAttDefs();
-  if (aPointAttDefs->find("PostVPath") != aPointAttDefs->end()) {
-
+  if (aPointAttDefs->find("PostVPath") != aPointAttDefs->end())
+  {
     // Must be a rich trajectory
     const auto& richTrajectory = traj;
 
     G4Colour colour(fDefault);
     G4String soughtPVName("none");
 
-    for (const auto& item: fMap.GetBasicMap()) {
+    for (const auto& item : fMap.GetBasicMap())
+    {
       soughtPVName = item.first;
-      for (G4int iPoint = 0; iPoint < richTrajectory.GetPointEntries(); iPoint++) {
+      for (G4int iPoint = 0; iPoint < richTrajectory.GetPointEntries(); iPoint++)
+      {
         G4VTrajectoryPoint* point = richTrajectory.GetPoint(iPoint);
         if (!point) continue;
         const auto attValues = point->GetAttValues();
         std::vector<G4AttValue>::const_iterator iAtt;
-        for (iAtt = attValues->begin(); iAtt != attValues->end(); ++iAtt) {
-          if (iAtt->GetName() == "PostVPath" &&
-              G4StrUtil::contains(iAtt->GetValue(), soughtPVName)) break;
+        for (iAtt = attValues->begin(); iAtt != attValues->end(); ++iAtt)
+        {
+          if (iAtt->GetName() == "PostVPath" && G4StrUtil::contains(iAtt->GetValue(), soughtPVName))
+            break;
         }
-        if (iAtt != attValues->end()) {  // Required value found
+        if (iAtt != attValues->end())
+        {  // Required value found
           fMap.GetColour(soughtPVName, colour);
           break;  // First found pvname determines colour.
         }
@@ -78,72 +82,61 @@ G4TrajectoryDrawByEncounteredVolume::Draw(const G4VTrajectory& traj, const G4boo
 
     myContext.SetLineColour(colour);
 
-    if (GetVerbose()) {
-      G4cout
-      << "G4TrajectoryDrawByEncounteredVolume drawer named " << Name()
-      << ", drawing trajectory touching physical volume " << soughtPVName
-      << ", with configuration:" << G4endl;
+    if (GetVerbose())
+    {
+      G4cout << "G4TrajectoryDrawByEncounteredVolume drawer named " << Name()
+             << ", drawing trajectory touching physical volume " << soughtPVName
+             << ", with configuration:" << G4endl;
       myContext.Print(G4cout);
     }
 
     G4TrajectoryDrawerUtils::DrawLineAndPoints(richTrajectory, myContext);
-
-  } else {
-
+  }
+  else
+  {
     G4ExceptionDescription ed;
     ed << "Requires G4RichTrajectory - \"/vis/scene/add/trajectories rich\"";
-    G4Exception
-    ("G4TrajectoryDrawByEncounteredVolume::Draw(const G4VTrajectory& traj,...",
-     "modeling0125",
-     JustWarning, ed);
-
+    G4Exception("G4TrajectoryDrawByEncounteredVolume::Draw(const G4VTrajectory& traj,...",
+                "modeling0125", JustWarning, ed);
   }
 }
 
-void
-G4TrajectoryDrawByEncounteredVolume::SetDefault(const G4String& colour)
+void G4TrajectoryDrawByEncounteredVolume::SetDefault(const G4String& colour)
 {
-  G4Colour myColour;      
+  G4Colour myColour;
 
-  // Will not modify default colour if colour key does not exist  
-  if (!G4Colour::GetColour(colour, myColour)) {
+  // Will not modify default colour if colour key does not exist
+  if (!G4Colour::GetColour(colour, myColour))
+  {
     G4ExceptionDescription ed;
-    ed << "G4Colour with key "<<colour<<" does not exist ";
-    G4Exception
-      ("G4TrajectoryDrawByEncounteredParticleID::SetDefault(const G4String& colour)",
-       "modeling0123", JustWarning, ed);
+    ed << "G4Colour with key " << colour << " does not exist ";
+    G4Exception("G4TrajectoryDrawByEncounteredParticleID::SetDefault(const G4String& colour)",
+                "modeling0123", JustWarning, ed);
     return;
   }
 
   SetDefault(myColour);
 }
 
-void
-G4TrajectoryDrawByEncounteredVolume::SetDefault(const G4Colour& colour)
+void G4TrajectoryDrawByEncounteredVolume::SetDefault(const G4Colour& colour)
 {
   fDefault = colour;
 }
 
-void
-G4TrajectoryDrawByEncounteredVolume::Set(const G4String& pvname, const G4String& colour)
+void G4TrajectoryDrawByEncounteredVolume::Set(const G4String& pvname, const G4String& colour)
 {
   fMap.Set(pvname, colour);
 }
 
-void
-G4TrajectoryDrawByEncounteredVolume::Set(const G4String& pvname, const G4Colour& colour)
+void G4TrajectoryDrawByEncounteredVolume::Set(const G4String& pvname, const G4Colour& colour)
 {
   fMap[pvname] = colour;
 }
 
-void
-G4TrajectoryDrawByEncounteredVolume::Print(std::ostream& ostr) const
+void G4TrajectoryDrawByEncounteredVolume::Print(std::ostream& ostr) const
 {
-  ostr
-  << "G4TrajectoryDrawByEncounteredVolume model "<< Name()
-  << ", colour scheme: "
-  << ", Default " << fDefault
-  << std::endl;
+  ostr << "G4TrajectoryDrawByEncounteredVolume model " << Name() << ", colour scheme: "
+       << ", Default " << fDefault << std::endl;
 
   fMap.Print(ostr);
 

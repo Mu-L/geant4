@@ -37,8 +37,8 @@
 //  R.M. Sternheimer et al. Density Effect for the Ionization Loss of Charged
 //  Particles in Various Substances. Atom. Data Nucl. Data Tabl. 30 (1984) 261-271.
 
-#ifndef DensityEffectData_h
-#define DensityEffectData_h 1
+#ifndef G4DENSITYEFFECTDATA_HH
+#define G4DENSITYEFFECTDATA_HH
 
 #include "G4Material.hh"
 #include "globals.hh"
@@ -51,52 +51,54 @@ const G4int NDENSELEM = 98;
 
 class G4DensityEffectData
 {
- public:
-  G4DensityEffectData();
+  public:
 
-  ~G4DensityEffectData() = default;
+    G4DensityEffectData();
 
-  // Assignment operator and copy constructor
-  G4DensityEffectData& operator=(const G4DensityEffectData& right) = delete;
-  G4DensityEffectData(const G4DensityEffectData&) = delete;
+    ~G4DensityEffectData() = default;
 
-  // return index by Z, -1 if material is not in the table
-  G4int GetElementIndex(G4int Z, G4State st = kStateUndefined) const;
+    // Assignment operator and copy constructor
+    G4DensityEffectData& operator=(const G4DensityEffectData& right) = delete;
+    G4DensityEffectData(const G4DensityEffectData&) = delete;
 
-  // return index by material name, -1 if material is not in the table
-  G4int GetIndex(const G4String& matName) const;
+    // return index by Z, -1 if material is not in the table
+    G4int GetElementIndex(G4int Z, G4State st = kStateUndefined) const;
 
-  // printout data for material
-  void PrintData(const G4String& matName) const;
+    // return index by material name, -1 if material is not in the table
+    G4int GetIndex(const G4String& matName) const;
 
-  // printout all data
-  void DumpData() const;
+    // printout data for material
+    void PrintData(const G4String& matName) const;
 
-  // Access to the data via index
-  inline G4double GetPlasmaEnergy(G4int idx) const;
-  inline G4double GetAdjustmentFactor(G4int idx) const;
-  inline G4double GetCdensity(G4int idx) const;
-  inline G4double GetX0density(G4int idx) const;
-  inline G4double GetX1density(G4int idx) const;
-  inline G4double GetAdensity(G4int idx) const;
-  inline G4double GetMdensity(G4int idx) const;
-  inline G4double GetDelta0density(G4int idx) const;
-  inline G4double GetErrorDensity(G4int idx) const;
-  inline G4double GetMeanIonisationPotential(G4int idx) const;
+    // printout all data
+    void DumpData() const;
 
- private:
-  void Initialize();
+    // Access to the data via index
+    inline G4double GetPlasmaEnergy(G4int idx) const;
+    inline G4double GetAdjustmentFactor(G4int idx) const;
+    inline G4double GetCdensity(G4int idx) const;
+    inline G4double GetX0density(G4int idx) const;
+    inline G4double GetX1density(G4int idx) const;
+    inline G4double GetAdensity(G4int idx) const;
+    inline G4double GetMdensity(G4int idx) const;
+    inline G4double GetDelta0density(G4int idx) const;
+    inline G4double GetErrorDensity(G4int idx) const;
+    inline G4double GetMeanIonisationPotential(G4int idx) const;
 
-  void AddMaterial(G4double* val, const G4String& matName);
+  private:
 
-  G4double data[NDENSDATA][NDENSARRAY];
-  std::vector<G4String> names;
+    void Initialize();
 
-  // indexes defined only for pure materials
-  G4int indexZ[NDENSELEM];
-  G4State state[NDENSELEM];
+    void AddMaterial(G4double* val, const G4String& matName);
 
-  G4int index{0};
+    G4double data[NDENSDATA][NDENSARRAY];
+    std::vector<G4String> names;
+
+    // indexes defined only for pure materials
+    G4int indexZ[NDENSELEM];
+    G4State state[NDENSELEM];
+
+    G4int index{0};
 };
 
 inline G4double G4DensityEffectData::GetPlasmaEnergy(G4int idx) const

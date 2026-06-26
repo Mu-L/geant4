@@ -87,27 +87,30 @@
 
 struct TrapSidePlane
 {
-    G4double a,b,c,d;    // Normal unit vector (a,b,c)  and offset (d)
-        // => Ax+By+Cz+D=0
+    G4double a, b, c, d;  // Normal unit vector (a,b,c)  and offset (d)
+                          // => Ax+By+Cz+D=0
 };
 
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UTRAP 1
+#  define G4GEOM_USE_UTRAP 1
 #endif
 
 #if defined(G4GEOM_USE_UTRAP)
-  #define G4UTrap G4Trap
-  #include "G4UTrap.hh"
+#  define G4UTrap G4Trap
+#  include "G4UTrap.hh"
 #else
 
-#include "G4CSGSolid.hh"
+#  include "G4CSGSolid.hh"
 
 /**
  * @brief G4Trap is a general trapezoid: the faces perpendicular to the Z
  * planes are trapezia, and their centres are not necessarily on a line parallel
- * to the Z axis. A check for planarity is made in the calculation of the
+ * to the Z axis.
+ * @ingroup geometry_solids_csg
+ *
+ * A check for planarity is made in the calculation of the
  * equation for each plane. If the planes are not parallel, a call to
  * G4Exception is made.
  */
@@ -140,21 +143,16 @@ class G4Trap : public G4CSGSolid
      *  @param[in] pAlp2 Angle with respect to the Y axis from the centre of the
      *             side at y=-pDy2 to the centre at y=+pDy2 of the face at +pDz.
      */
-    G4Trap( const G4String& pName,
-                  G4double pDz,
-                  G4double pTheta, G4double pPhi,
-                  G4double pDy1, G4double pDx1, G4double pDx2,
-                  G4double pAlp1,
-                  G4double pDy2, G4double pDx3, G4double pDx4,
-                  G4double pAlp2 );
+    G4Trap(const G4String& pName, G4double pDz, G4double pTheta, G4double pPhi, G4double pDy1,
+           G4double pDx1, G4double pDx2, G4double pAlp1, G4double pDy2, G4double pDx3,
+           G4double pDx4, G4double pAlp2);
 
     /**
      * Prepares plane equations and parameters from corner coordinates.
      *  @param[in] pName The name of the solid.
      *  @param[in] pt Points of the 8 vertices.
      */
-    G4Trap( const G4String& pName,
-            const G4ThreeVector pt[8] ) ;
+    G4Trap(const G4String& pName, const G4ThreeVector pt[8]);
 
     /**
      * Constructor for Right Angular Wedge from STEP (assumes pLTX<=pX).
@@ -164,10 +162,7 @@ class G4Trap : public G4CSGSolid
      *  @param[in] pX Length along X at the wider side.
      *  @param[in] pLTX Length along X at the narrower side (plTX<=pX).
      */
-    G4Trap( const G4String& pName,
-                  G4double pZ,
-                  G4double pY,
-                  G4double pX, G4double pLTX );
+    G4Trap(const G4String& pName, G4double pZ, G4double pY, G4double pX, G4double pLTX);
 
     /**
      * Constructor for G4Trd.
@@ -178,10 +173,8 @@ class G4Trap : public G4CSGSolid
      *  @param[in] pDy2 Half-length along Y at the surface positioned at +dz.
      *  @param[in] pDz Half-length along Z axis.
      */
-    G4Trap( const G4String& pName,
-                  G4double pDx1,  G4double pDx2,
-                  G4double pDy1,  G4double pDy2,
-                  G4double pDz );
+    G4Trap(const G4String& pName, G4double pDx1, G4double pDx2, G4double pDy1, G4double pDy2,
+           G4double pDz);
 
     /**
      * Constructor for G4Para.
@@ -196,40 +189,39 @@ class G4Trap : public G4CSGSolid
      *  @param[in] pPhi Azimuthal angle of the line joining the centres of
      *             the faces at -dz and +dz in Z.
      */
-     G4Trap(const G4String& pName,
-                  G4double pDx, G4double pDy, G4double pDz,
-                  G4double pAlpha, G4double pTheta, G4double pPhi );
+    G4Trap(const G4String& pName, G4double pDx, G4double pDy, G4double pDz, G4double pAlpha,
+           G4double pTheta, G4double pPhi);
 
     /**
      * Constructor for "nominal" G4Trap whose parameters are to be set
      * by a G4VPVParamaterisation later on.
      *  @param[in] pName The name of the solid.
      */
-     G4Trap( const G4String& pName );
+    G4Trap(const G4String& pName);
 
     /**
      * Default destructor.
      */
-     ~G4Trap() override = default;
+    ~G4Trap() override = default;
 
     /**
      * Accessors. Returning the coordinates of a unit vector along a straight
      * line joining centers of -/+fDz planes.
      */
-    inline G4double GetZHalfLength()  const;
+    inline G4double GetZHalfLength() const;
     inline G4double GetYHalfLength1() const;
     inline G4double GetXHalfLength1() const;
     inline G4double GetXHalfLength2() const;
-    inline G4double GetTanAlpha1()    const;
+    inline G4double GetTanAlpha1() const;
     inline G4double GetYHalfLength2() const;
     inline G4double GetXHalfLength3() const;
     inline G4double GetXHalfLength4() const;
-    inline G4double GetTanAlpha2()    const;
+    inline G4double GetTanAlpha2() const;
 
     /**
      * More accessors.
      */
-    inline TrapSidePlane GetSidePlane( G4int n ) const;
+    inline TrapSidePlane GetSidePlane(G4int n) const;
     inline G4ThreeVector GetSymAxis() const;
 
     /**
@@ -238,23 +230,15 @@ class G4Trap : public G4CSGSolid
     inline G4double GetPhi() const;
     inline G4double GetTheta() const;
     inline G4double GetAlpha1() const;
-    inline G4double GetAlpha2() const;   
-   
+    inline G4double GetAlpha2() const;
+
     /**
      * Sets all parameters, as for constructor. Checks and sets half-widths
      * as well as angles. Makes a final check of co-planarity.
      */
-    void SetAllParameters ( G4double pDz,
-                            G4double pTheta,
-                            G4double pPhi,
-                            G4double pDy1,
-                            G4double pDx1,
-                            G4double pDx2,
-                            G4double pAlp1,
-                            G4double pDy2,
-                            G4double pDx3,
-                            G4double pDx4,
-                            G4double pAlp2 );
+    void SetAllParameters(G4double pDz, G4double pTheta, G4double pPhi, G4double pDy1,
+                          G4double pDx1, G4double pDx2, G4double pAlp1, G4double pDy2,
+                          G4double pDx3, G4double pDx4, G4double pAlp2);
 
     /**
      * Returning an estimation of the solid volume (capacity) and
@@ -267,9 +251,8 @@ class G4Trap : public G4CSGSolid
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions( G4VPVParameterisation* p,
-                            const G4int n,
-                            const G4VPhysicalVolume* pRep ) override;
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
+                           const G4VPhysicalVolume* pRep) override;
 
     /**
      * Computes the bounding limits of the solid.
@@ -288,25 +271,22 @@ class G4Trap : public G4CSGSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Concrete implementations of the expected query interfaces for
      * solids, as defined in the base class G4VSolid.
      */
-    EInside Inside( const G4ThreeVector& p ) const override;
-    G4ThreeVector SurfaceNormal( const G4ThreeVector& p ) const override;
-    G4double DistanceToIn(const G4ThreeVector& p,
-                          const G4ThreeVector& v) const override;
-    G4double DistanceToIn( const G4ThreeVector& p ) const override;
+    EInside Inside(const G4ThreeVector& p) const override;
+    G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
+    G4double DistanceToIn(const G4ThreeVector& p) const override;
     G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
-                           const G4bool calcNorm = false,
-                                 G4bool* validNorm = nullptr,
-                                 G4ThreeVector* n = nullptr) const override;
-    G4double DistanceToOut( const G4ThreeVector& p ) const override;
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
+    G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
      * Returns the type ID, "G4Trap" of the solid.
@@ -333,13 +313,13 @@ class G4Trap : public G4CSGSolid
     /**
      * Streams the object contents to an output stream.
      */
-    std::ostream& StreamInfo( std::ostream& os ) const override;
+    std::ostream& StreamInfo(std::ostream& os) const override;
 
     /**
      * Methods for creating graphical representations (i.e. for visualisation).
      */
-    void DescribeYourselfTo (G4VGraphicsScene& scene) const override;
-    G4Polyhedron* CreatePolyhedron () const override;
+    void DescribeYourselfTo(G4VGraphicsScene& scene) const override;
+    G4Polyhedron* CreatePolyhedron() const override;
 
     /**
      * Fake default constructor for usage restricted to direct object
@@ -361,7 +341,7 @@ class G4Trap : public G4CSGSolid
      * Computing the vertices and setting side planes, checking for planarity.
      */
     void MakePlanes();
-    void MakePlanes( const G4ThreeVector pt[8] );
+    void MakePlanes(const G4ThreeVector pt[8]);
 
     /**
      * Calculates the coefficents of the plane p1->p2->p3->p4->p1
@@ -369,11 +349,8 @@ class G4Trap : public G4CSGSolid
      * from infront of the plane (i.e. from normal direction).
      *  @return true if the points are co-planar, false otherwise.
      */
-    G4bool MakePlane( const G4ThreeVector& p1,
-                      const G4ThreeVector& p2,
-                      const G4ThreeVector& p3,
-                      const G4ThreeVector& p4,
-                            TrapSidePlane& plane ) ;
+    G4bool MakePlane(const G4ThreeVector& p1, const G4ThreeVector& p2, const G4ThreeVector& p3,
+                     const G4ThreeVector& p4, TrapSidePlane& plane);
     /**
      * Recomputes parameters using planes.
      */
@@ -395,20 +372,20 @@ class G4Trap : public G4CSGSolid
      * Algorithm for SurfaceNormal() following the original specification
      * for points not on the surface.
      */
-    G4ThreeVector ApproxSurfaceNormal( const G4ThreeVector& p ) const;
+    G4ThreeVector ApproxSurfaceNormal(const G4ThreeVector& p) const;
 
   private:
 
     G4double halfCarTolerance;
-    G4double fDz,fTthetaCphi,fTthetaSphi;
-    G4double fDy1,fDx1,fDx2,fTalpha1;
-    G4double fDy2,fDx3,fDx4,fTalpha2;
+    G4double fDz, fTthetaCphi, fTthetaSphi;
+    G4double fDy1, fDx1, fDx2, fTalpha1;
+    G4double fDy2, fDx3, fDx4, fTalpha2;
     TrapSidePlane fPlanes[4];
     G4double fAreas[6];
     G4int fTrapType;
 };
 
-#include "G4Trap.icc"
+#  include "G4Trap.icc"
 
 #endif
 

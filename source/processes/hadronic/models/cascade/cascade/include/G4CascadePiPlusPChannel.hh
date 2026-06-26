@@ -31,11 +31,12 @@
 #include "G4CascadeFunctions.hh"
 #include "G4PionNucSampler.hh"
 
-struct G4CascadePiPlusPChannelData {
-  typedef G4CascadeData<30,2,7,15,24,33,41,47,55> data_t;
-  static const data_t data;
+struct G4CascadePiPlusPChannelData
+{
+    typedef G4CascadeData<30, 2, 7, 15, 24, 33, 41, 47, 55> data_t;
+    static const data_t data;
 };
 
-typedef G4CascadeFunctions<G4CascadePiPlusPChannelData,G4PionNucSampler> G4CascadePiPlusPChannel;
+typedef G4CascadeFunctions<G4CascadePiPlusPChannelData, G4PionNucSampler> G4CascadePiPlusPChannel;
 
-#endif	/* G4_CASCADE_PIPLUSP_CHANNEL_HH */
+#endif /* G4_CASCADE_PIPLUSP_CHANNEL_HH */

@@ -45,10 +45,11 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4PEEffectFluoModel_h
-#define G4PEEffectFluoModel_h 1
+#ifndef G4PEEFFECTFLUOMODEL_HH
+#define G4PEEFFECTFLUOMODEL_HH
 
 #include "G4VEmModel.hh"
+
 #include <vector>
 
 class G4ParticleChangeForGamma;
@@ -56,48 +57,39 @@ class G4VAtomDeexcitation;
 
 class G4PEEffectFluoModel : public G4VEmModel
 {
+  public:
 
-public:
+    explicit G4PEEffectFluoModel(const G4String& nam = "PhotoElectric");
 
-  explicit G4PEEffectFluoModel(const G4String& nam = "PhotoElectric");
+    ~G4PEEffectFluoModel() override;
 
-  ~G4PEEffectFluoModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A, G4double, G4double) override;
 
-  G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
-				      G4double kinEnergy,
-				      G4double Z,
-				      G4double A,
-				      G4double, G4double) override;
-				      
-  G4double CrossSectionPerVolume(const G4Material*,
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy,
+                                   G4double maxEnergy) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  G4PEEffectFluoModel & operator=(const G4PEEffectFluoModel &right) = delete;
-  G4PEEffectFluoModel(const G4PEEffectFluoModel&) = delete;
+    G4PEEffectFluoModel& operator=(const G4PEEffectFluoModel& right) = delete;
+    G4PEEffectFluoModel(const G4PEEffectFluoModel&) = delete;
 
-private:
+  private:
 
-  G4ParticleDefinition* theGamma;
-  G4ParticleDefinition* theElectron;
-  G4ParticleChangeForGamma* fParticleChange = nullptr;
-  G4VAtomDeexcitation* fAtomDeexcitation = nullptr;
+    G4ParticleDefinition* theGamma;
+    G4ParticleDefinition* theElectron;
+    G4ParticleChangeForGamma* fParticleChange = nullptr;
+    G4VAtomDeexcitation* fAtomDeexcitation = nullptr;
 
-  G4bool fPEBelowKShell = true;
+    G4bool fPEBelowKShell = true;
 
-  G4double fminimalEnergy;
-  std::vector<G4double> fSandiaCof;
-  std::vector<G4double> fMatEnergyTh;
+    G4double fminimalEnergy;
+    std::vector<G4double> fSandiaCof;
+    std::vector<G4double> fMatEnergyTh;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

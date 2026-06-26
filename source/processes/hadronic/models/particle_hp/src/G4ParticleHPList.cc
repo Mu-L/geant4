@@ -37,13 +37,15 @@
 
 void G4ParticleHPList::Check(G4int i)
 {
-  if (i < 0) {
+  if (i < 0)
+  {
     throw G4HadronicException(__FILE__, __LINE__,
                               "G4ParticleHPList::Check(G4int) called with negative index");
   }
   if (i > nEntries)
     throw G4HadronicException(__FILE__, __LINE__, "Skipped some index numbers in G4ParticleHPList");
-  if (i == nPoints) {
+  if (i == nPoints)
+  {
     nPoints = static_cast<G4int>(1.5 * nPoints);
     auto buff = new G4double[nPoints];
     for (G4int j = 0; j < nEntries; j++)
@@ -58,7 +60,8 @@ void G4ParticleHPList::Init(std::istream& aDataFile, G4int nPar, G4double unit)
 {
   G4int i;
   G4double y;
-  for (i = 0; i < nPar; i++) {
+  for (i = 0; i < nPar; i++)
+  {
     aDataFile >> y;
     SetValue(i, y * unit);
   }
@@ -69,7 +72,8 @@ void G4ParticleHPList::Init(std::istream& aDataFile, G4double unit)
   G4int total, i;
   aDataFile >> total;
   G4double y;
-  for (i = 0; i < total; i++) {
+  for (i = 0; i < total; i++)
+  {
     aDataFile >> y;
     SetValue(i, y * unit);
   }

@@ -38,41 +38,42 @@ class G4DAWNFILESceneHandler;
 
 class G4DAWNFILEViewer : public G4VViewer
 {
-  enum FRDEV
-  {
-    FRDEV_PS         = 1,
-    FRDEV_XWIN       = 2,
-    FRDEV_PS2        = 3,
-    FRDEV_XWIN2      = 4,
-    FRDEV_OPEN_GL    = 5,
-    FRDEV_DEVICE_END = 6
-  };
+    enum FRDEV
+    {
+      FRDEV_PS = 1,
+      FRDEV_XWIN = 2,
+      FRDEV_PS2 = 3,
+      FRDEV_XWIN2 = 4,
+      FRDEV_OPEN_GL = 5,
+      FRDEV_DEVICE_END = 6
+    };
 
- public:
-  //----- constructor and destructor
-  G4DAWNFILEViewer(G4DAWNFILESceneHandler& scene, const G4String& name = "");
-  virtual ~G4DAWNFILEViewer();
+  public:
 
-  //----- overriding base class methods
-  void SetView();  // Do nothing. SendViewParameters will do its job.
-  void ClearView();
-  void DrawView();
-  void ShowView();
+    //----- constructor and destructor
+    G4DAWNFILEViewer(G4DAWNFILESceneHandler& scene, const G4String& name = "");
+    virtual ~G4DAWNFILEViewer();
 
-  //---- methods inherent to this class
-  void SendViewParameters();
-  const char* GetG4PrimViewer() { return fG4PrimViewer; }
-  const char* GetG4PrimViewerInvocation() { return fG4PrimViewerInvocation; }
-  const char* GetPSViewer() { return fPSViewer; }
-  void SendDrawingStyleToDAWNGUI(std::ostream& out);
+    //----- overriding base class methods
+    void SetView();  // Do nothing. SendViewParameters will do its job.
+    void ClearView();
+    void DrawView();
+    void ShowView();
 
- private:
-  G4DAWNFILESceneHandler&
-    fSceneHandler;  // Reference to Graphics Scene for this view.
+    //---- methods inherent to this class
+    void SendViewParameters();
+    const char* GetG4PrimViewer() { return fG4PrimViewer; }
+    const char* GetG4PrimViewerInvocation() { return fG4PrimViewerInvocation; }
+    const char* GetPSViewer() { return fPSViewer; }
+    void SendDrawingStyleToDAWNGUI(std::ostream& out);
 
-  char fG4PrimViewer[32];
-  char fG4PrimViewerInvocation[64];
-  char fPSViewer[32];
+  private:
+
+    G4DAWNFILESceneHandler& fSceneHandler;  // Reference to Graphics Scene for this view.
+
+    char fG4PrimViewer[32];
+    char fG4PrimViewerInvocation[64];
+    char fPSViewer[32];
 };
 
 #endif

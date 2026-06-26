@@ -33,14 +33,14 @@
 
 // Author: Pedro Arce (CIEMAT), May 2007
 // --------------------------------------------------------------------
-#ifndef G4RegularNavigation_HH
-#define G4RegularNavigation_HH 1
+#ifndef G4REGULARNAVIGATION_HH
+#define G4REGULARNAVIGATION_HH
+
+#include "G4ThreeVector.hh"
+#include "G4Types.hh"
+#include "G4VNavigation.hh"
 
 #include <vector>
-
-#include "G4Types.hh"
-#include "G4ThreeVector.hh"
-#include "G4VNavigation.hh"
 
 class G4NormalNavigation;
 class G4VPhysicalVolume;
@@ -49,20 +49,22 @@ class G4NavigationHistory;
 
 /**
  * @brief G4RegularNavigation is a concrete utility class for fast navigation
- * in volumes containing a regular parameterisation. If two contiguous voxels
- * have the same material, navigation does not stop at the surface.
+ * in volumes containing a regular parameterisation.
+ * @ingroup geometry_navigation
+ *
+ * If two contiguous voxels have the same material, navigation does not stop at the surface.
  */
 
 class G4RegularNavigation : public G4VNavigation
 {
   public:
-  
+
     /**
      * Constructor and Destructor.
      */
     G4RegularNavigation();
-   ~G4RegularNavigation() override;
-  
+    ~G4RegularNavigation() override;
+
     /**
      * Locates a point using its position with respect to regular
      * parameterisation container volume.
@@ -74,13 +76,10 @@ class G4RegularNavigation : public G4VNavigation
      *  @param[in,out] localPoint Point in local coordinates system.
      *  @returns Whether a containing volume has been found.
      */
-    G4bool LevelLocate(      G4NavigationHistory& history,
-                       const G4VPhysicalVolume* blockedVol,
-                       const G4int blockedNum,
-                       const G4ThreeVector& globalPoint,
-                       const G4ThreeVector* globalDirection,
-                       const G4bool pLocatedOnEdge, 
-                             G4ThreeVector& localPoint ) final;
+    G4bool LevelLocate(G4NavigationHistory& history, const G4VPhysicalVolume* blockedVol,
+                       const G4int blockedNum, const G4ThreeVector& globalPoint,
+                       const G4ThreeVector* globalDirection, const G4bool pLocatedOnEdge,
+                       G4ThreeVector& localPoint) final;
 
     /**
      * Method never called because to be called the daughter has to be a
@@ -88,18 +87,12 @@ class G4RegularNavigation : public G4VNavigation
      * mother of voxels volume. But the voxels fill completely their mother,
      * so when a track enters the mother it automatically enters a voxel.
      */
-    G4double ComputeStep( const G4ThreeVector& localPoint,
-                          const G4ThreeVector& localDirection,
-                          const G4double currentProposedStepLength,
-                                G4double& newSafety,
-                                G4NavigationHistory& history,
-                                G4bool& validExitNormal,
-                                G4ThreeVector& exitNormal,
-                                G4bool& exiting,
-                                G4bool& entering,
-                                G4VPhysicalVolume *(*pBlockedPhysical),
-                                G4int& blockedReplicaNo ) final;
-  
+    G4double ComputeStep(const G4ThreeVector& localPoint, const G4ThreeVector& localDirection,
+                         const G4double currentProposedStepLength, G4double& newSafety,
+                         G4NavigationHistory& history, G4bool& validExitNormal,
+                         G4ThreeVector& exitNormal, G4bool& exiting, G4bool& entering,
+                         G4VPhysicalVolume*(*pBlockedPhysical), G4int& blockedReplicaNo) final;
+
     /**
      * Computes the step skipping surfaces when they separate voxels with
      * equal materials. Loops to voxels until a different material is found:
@@ -122,19 +115,12 @@ class G4RegularNavigation : public G4VNavigation
      *  @returns Length from current point to next boundary surface along
      *           the direction.
      */
-    G4double ComputeStepSkippingEqualMaterials( 
-                                G4ThreeVector& localPoint,
-                          const G4ThreeVector& localDirection,
-                          const G4double currentProposedStepLength,
-                                G4double& newSafety,
-                                G4NavigationHistory& history,
-                                G4bool& validExitNormal,
-                                G4ThreeVector& exitNormal,
-                                G4bool& exiting,
-                                G4bool& entering,
-                                G4VPhysicalVolume *(*pBlockedPhysical),
-                                G4int& blockedReplicaNo,
-                                G4VPhysicalVolume* pCurrentPhysical);
+    G4double ComputeStepSkippingEqualMaterials(
+      G4ThreeVector& localPoint, const G4ThreeVector& localDirection,
+      const G4double currentProposedStepLength, G4double& newSafety, G4NavigationHistory& history,
+      G4bool& validExitNormal, G4ThreeVector& exitNormal, G4bool& exiting, G4bool& entering,
+      G4VPhysicalVolume*(*pBlockedPhysical), G4int& blockedReplicaNo,
+      G4VPhysicalVolume* pCurrentPhysical);
 
     /**
      * Method never called because to be called the daughter has to be a
@@ -142,14 +128,13 @@ class G4RegularNavigation : public G4VNavigation
      * mother of voxels volume. But the voxels fill completely their mother,
      * so when a track enters the mother it automatically enters a voxel.
      */
-    G4double ComputeSafety( const G4ThreeVector& localPoint,
-                            const G4NavigationHistory& history,
-                            const G4double pProposedMaxLength = DBL_MAX ) final;
+    G4double ComputeSafety(const G4ThreeVector& localPoint, const G4NavigationHistory& history,
+                           const G4double pProposedMaxLength = DBL_MAX) final;
 
     /**
      * Setter for normal navigation.
      */
-    void SetNormalNavigation( G4NormalNavigation* fnormnav );
+    void SetNormalNavigation(G4NormalNavigation* fnormnav);
 
   private:
 
@@ -161,7 +146,7 @@ class G4RegularNavigation : public G4VNavigation
 
     /** Cached minimum step. */
     G4double fMinStep;
- 
+
     /** Whether the last ComputeStep moved Zero. Used to check for edges. */
     G4bool fLastStepWasZero = false;
 
@@ -169,10 +154,10 @@ class G4RegularNavigation : public G4VNavigation
     G4int fNumberZeroSteps = 0;
 
     /** After this many failed/zero steps, act (push etc). */
-    G4int fActionThreshold_NoZeroSteps = 2;  
+    G4int fActionThreshold_NoZeroSteps = 2;
 
     /** After this many failed/zero steps, abandon track. */
-    G4int fAbandonThreshold_NoZeroSteps = 25; 
+    G4int fAbandonThreshold_NoZeroSteps = 25;
 
     /** Maximum number of steps a track can travel skipping voxels
         (if there are more, track is assumed to be stuck and it is killed). */

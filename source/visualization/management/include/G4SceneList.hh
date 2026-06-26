@@ -25,18 +25,21 @@
 //
 //
 //
-// 
+//
 // John Allison  9th August 1998
 
 #ifndef G4SCENELIST_HH
 #define G4SCENELIST_HH
 
 #include "G4Scene.hh"
+
 #include <vector>
 
-class G4SceneList: public std::vector <G4Scene*> {
-public:
-  void remove(G4Scene*);
+class G4SceneList : public std::vector<G4Scene*>
+{
+  public:
+
+    void remove(G4Scene*);
 };
 
 typedef std::vector<G4Scene*>::iterator G4SceneListIterator;

@@ -25,14 +25,14 @@
 //
 //
 //
-// 
+//
 // ------------------------------------------------------------
 //        GEANT 4  include file implementation
 // ------------------------------------------------------------
 //
 // Class description:
 //
-// G4CoupledTransportation is an optional process to transport  
+// G4CoupledTransportation is an optional process to transport
 // a particle, in case of coupled navigation in parallel geometries
 //  i.e. the geometrical propagation will be done
 //   encountering the geometrical volumes of the detectors and
@@ -46,92 +46,83 @@
 #ifndef G4COUPLEDTRANSPORTATION_HH
 #define G4COUPLEDTRANSPORTATION_HH
 
-#include "G4Transportation.hh"
-
-#include "G4Track.hh"
 #include "G4Step.hh"
+#include "G4Track.hh"
+#include "G4Transportation.hh"
 
 class G4PathFinder;
 
 class G4CoupledTransportation : public G4Transportation
 {
-
   public:  // with description
 
-     G4CoupledTransportation( G4int verbosityLevel= 0); 
-     ~G4CoupledTransportation(); 
+    G4CoupledTransportation(G4int verbosityLevel = 0);
+    ~G4CoupledTransportation();
 
-     G4double      AlongStepGetPhysicalInteractionLength(
-                             const G4Track& track,
-                                   G4double  previousStepSize,
-                                   G4double  currentMinimumStep, 
-                                   G4double& currentSafety,
-                                   G4GPILSelection* selection
-                            );
+    G4double AlongStepGetPhysicalInteractionLength(const G4Track& track, G4double previousStepSize,
+                                                   G4double currentMinimumStep,
+                                                   G4double& currentSafety,
+                                                   G4GPILSelection* selection);
 
-     // AlongStepDoIt is implemented by G4Transportation.
+    // AlongStepDoIt is implemented by G4Transportation.
 
-     G4VParticleChange* PostStepDoIt(
-                             const G4Track& track,
-                             const G4Step&  stepData
-                            );
-       // Responsible for the relocation
+    G4VParticleChange* PostStepDoIt(const G4Track& track, const G4Step& stepData);
+    // Responsible for the relocation
 
-     // PostStepGetPhysicalInteractionLength is implemented by
-     // G4Transportation to force PostStepDoIt, but not limiting the step.
+    // PostStepGetPhysicalInteractionLength is implemented by
+    // G4Transportation to force PostStepDoIt, but not limiting the step.
 
-     static void  SetSignifyStepsInAnyVolume( G4bool anyVol )
-       { fSignifyStepInAnyVolume = anyVol; } 
-     static G4bool GetSignifyStepsInAnyVolume()
-       { return fSignifyStepInAnyVolume; }
-     // Flag in step corresponds to first/last step in a volume 'any'
-     // geometry (if this is true) or refers to first/last step in mass
-     // geometry only (if false)
+    static void SetSignifyStepsInAnyVolume(G4bool anyVol) { fSignifyStepInAnyVolume = anyVol; }
+    static G4bool GetSignifyStepsInAnyVolume() { return fSignifyStepInAnyVolume; }
+    // Flag in step corresponds to first/last step in a volume 'any'
+    // geometry (if this is true) or refers to first/last step in mass
+    // geometry only (if false)
 
-     // The following methods give access to first/last step in particular
-     // geometry *independent* of the choice of the 'Signify' flag
-     //
-     G4bool IsFirstStepInAnyVolume() const { return fFirstStepInVolume; }
-     G4bool IsLastStepInAnyVolume() const { return fGeometryLimitedStep; }
-     G4bool IsFirstStepInMassVolume() const { return fFirstStepInMassVolume; }
-     G4bool IsLastStepInMassVolume() const { return fMassGeometryLimitedStep; } 
+    // The following methods give access to first/last step in particular
+    // geometry *independent* of the choice of the 'Signify' flag
+    //
+    G4bool IsFirstStepInAnyVolume() const { return fFirstStepInVolume; }
+    G4bool IsLastStepInAnyVolume() const { return fGeometryLimitedStep; }
+    G4bool IsFirstStepInMassVolume() const { return fFirstStepInMassVolume; }
+    G4bool IsLastStepInMassVolume() const { return fMassGeometryLimitedStep; }
 
   public:  // without description
 
-     void StartTracking(G4Track* aTrack); 
-     void EndTracking();
+    void StartTracking(G4Track* aTrack);
+    void EndTracking();
 
-     static G4bool EnableUseMagneticMoment(G4bool useMoment=true)
-      { return EnableMagneticMoment(useMoment); }
-     // Old name ... obsolete
-   
+    static G4bool EnableUseMagneticMoment(G4bool useMoment = true)
+    {
+      return EnableMagneticMoment(useMoment);
+    }
+    // Old name ... obsolete
+
   protected:
 
-     void ReportInexactEnergy(G4double startEnergy, G4double endEnergy);
-       // Issue warning
+    void ReportInexactEnergy(G4double startEnergy, G4double endEnergy);
+    // Issue warning
 
-     void ReportMove( G4ThreeVector OldVector, G4ThreeVector NewVector,
-                      const G4String& Quantity );
-   
-  private:
-
-     G4PathFinder*        fPathFinder;
-       // The PathFinder used to transport the particle
-
-     G4double             fPreviousMassSafety;
-     G4double             fPreviousFullSafety;
-
-     G4bool fMassGeometryLimitedStep;
-       // Flag to determine whether a 'mass' boundary was reached.
+    void ReportMove(G4ThreeVector OldVector, G4ThreeVector NewVector, const G4String& Quantity);
 
   private:
 
-     G4bool fFirstStepInMassVolume;
-     // G4bool fLastStepInMassVolume; => use fMassGeometryLimitedStep 
+    G4PathFinder* fPathFinder;
+    // The PathFinder used to transport the particle
 
-     static G4bool fSignifyStepInAnyVolume;
-       // True: First/Last step in any one of the geometries
-       // False: First/Last step in volume of 'mass' geometry
+    G4double fPreviousMassSafety;
+    G4double fPreviousFullSafety;
+
+    G4bool fMassGeometryLimitedStep;
+    // Flag to determine whether a 'mass' boundary was reached.
+
+  private:
+
+    G4bool fFirstStepInMassVolume;
+    // G4bool fLastStepInMassVolume; => use fMassGeometryLimitedStep
+
+    static G4bool fSignifyStepInAnyVolume;
+    // True: First/Last step in any one of the geometries
+    // False: First/Last step in volume of 'mass' geometry
 };
 
-#endif  
+#endif

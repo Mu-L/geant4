@@ -28,7 +28,7 @@
 //
 // Class Description:
 // Abstract base class for trajectory drawing models. Trajectory drawing
-// models are responsible for drawing individual trajectories according 
+// models are responsible for drawing individual trajectories according
 // to a particular style.
 // Class Description - End:
 
@@ -40,43 +40,40 @@
 
 class G4VisTrajContext;
 
-class G4VTrajectoryModel {
+class G4VTrajectoryModel
+{
+  public:
 
-public:
+    // Construct with context object
+    G4VTrajectoryModel(const G4String& name, G4VisTrajContext* fpContext = 0);
 
-  // Construct with context object
-  G4VTrajectoryModel(const G4String& name, G4VisTrajContext* fpContext=0);
+    // Destructor
+    virtual ~G4VTrajectoryModel();
 
-  // Destructor
-  virtual ~G4VTrajectoryModel();
-  
-  // Draw method
-  virtual void Draw(const G4VTrajectory& trajectory, 
-		    const G4bool& visible = true) const = 0;
-  
-  // Print configuration
-  virtual void Print(std::ostream& ostr) const = 0;
-  
-  // Accessors
-  G4String Name() const ;
-  const G4VisTrajContext& GetContext() const;
-  
-  // Set verbosity
-  void SetVerbose(const G4bool&);
-  G4bool GetVerbose() const;
+    // Draw method
+    virtual void Draw(const G4VTrajectory& trajectory, const G4bool& visible = true) const = 0;
 
-private:
+    // Print configuration
+    virtual void Print(std::ostream& ostr) const = 0;
 
-  // Private copy constructor and assigment operator - copying and
-  // assignment not allowed.  Keeps Coverity happy.
-  G4VTrajectoryModel (const G4VTrajectoryModel&);
-  G4VTrajectoryModel& operator = (const G4VTrajectoryModel&);
+    // Accessors
+    G4String Name() const;
+    const G4VisTrajContext& GetContext() const;
 
-  G4String fName;
-  G4bool fVerbose;
-  G4VisTrajContext* fpContext;
-  
+    // Set verbosity
+    void SetVerbose(const G4bool&);
+    G4bool GetVerbose() const;
+
+  private:
+
+    // Private copy constructor and assigment operator - copying and
+    // assignment not allowed.  Keeps Coverity happy.
+    G4VTrajectoryModel(const G4VTrajectoryModel&);
+    G4VTrajectoryModel& operator=(const G4VTrajectoryModel&);
+
+    G4String fName;
+    G4bool fVerbose;
+    G4VisTrajContext* fpContext;
 };
 
 #endif
-

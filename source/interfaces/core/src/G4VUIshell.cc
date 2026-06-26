@@ -38,7 +38,8 @@
 // terminal color string
 static const G4String strESC(1, '\033');
 static const G4String TermColorString[8] = {strESC + "[30m", strESC + "[31m", strESC + "[32m",
-  strESC + "[33m", strESC + "[34m", strESC + "[35m", strESC + "[36m", strESC + "[37m"};
+                                            strESC + "[33m", strESC + "[34m", strESC + "[35m",
+                                            strESC + "[36m", strESC + "[37m"};
 
 ///////////////////////////////////////////////////////////////////
 G4VUIshell::G4VUIshell(const G4String& prompt)
@@ -60,29 +61,36 @@ G4VUIshell::~G4VUIshell() = default;
 void G4VUIshell::MakePrompt(const char* msg)
 ////////////////////////////////////////////
 {
-  if (promptSetting.length() <= 1) {
+  if (promptSetting.length() <= 1)
+  {
     promptString = promptSetting;
     return;
   }
 
   promptString = "";
   G4int i;
-  for (i = 0; i < (G4int)promptSetting.length() - 1; ++i) {
-    if (promptSetting[i] == '%') {
-      switch (promptSetting[i + 1]) {
+  for (i = 0; i < (G4int)promptSetting.length() - 1; ++i)
+  {
+    if (promptSetting[i] == '%')
+    {
+      switch (promptSetting[i + 1])
+      {
         case 's':  // current application status
         {
           G4String stateStr;
-          if (msg != nullptr) {
+          if (msg != nullptr)
+          {
             stateStr = msg;
           }
-          else {
+          else
+          {
             G4StateManager* statM = G4StateManager::GetStateManager();
             stateStr = statM->GetStateString(statM->GetCurrentState());
           }
           promptString.append(stateStr);
           i++;
-        } break;
+        }
+        break;
         case '/':  // current working directory
           promptString.append(currentCommandDir);
           i++;
@@ -92,7 +100,8 @@ void G4VUIshell::MakePrompt(const char* msg)
           break;
       }
     }
-    else {
+    else
+    {
       promptString += promptSetting[i];
     }
   }
@@ -124,9 +133,11 @@ G4UIcommandTree* G4VUIshell::GetCommandTree(const G4String& input) const
   if (absPath[G4int(absPath.length() - 1)] != '/') return nullptr;  // error??
   if (absPath == "/") return cmdTree;
 
-  for (std::size_t indx = 1; indx < absPath.length() - 1;) {
+  for (std::size_t indx = 1; indx < absPath.length() - 1;)
+  {
     std::size_t jslash = absPath.find('/', indx);  // search index begin with "/"
-    if (jslash != G4String::npos) {
+    if (jslash != G4String::npos)
+    {
       if (cmdTree != nullptr) cmdTree = cmdTree->GetTree(G4String(absPath.substr(0, jslash + 1)));
     }
     indx = jslash + 1;
@@ -149,34 +160,43 @@ G4String G4VUIshell::GetAbsCommandDirPath(const G4String& apath) const
 
   // parsing...
   G4String absPath = "/";
-  for (std::size_t indx = 1; indx <= bpath.length() - 1;) {
+  for (std::size_t indx = 1; indx <= bpath.length() - 1;)
+  {
     std::size_t jslash = bpath.find('/', indx);  // search index begin with "/"
-    if (indx == jslash) {  // skip first '///'
+    if (indx == jslash)
+    {  // skip first '///'
       ++indx;
       continue;
     }
-    if (jslash != G4String::npos) {
-      if (bpath.substr(indx, jslash - indx) == "..") {  // directory up
-        if (absPath == "/") {
+    if (jslash != G4String::npos)
+    {
+      if (bpath.substr(indx, jslash - indx) == "..")
+      {  // directory up
+        if (absPath == "/")
+        {
           indx = jslash + 1;
           continue;
         }
-        if (absPath.length() >= 2) {
+        if (absPath.length() >= 2)
+        {
           absPath.erase(absPath.length() - 1);  // remove last  "/"
           auto jpre = absPath.rfind('/');
           if (jpre != G4String::npos) absPath.erase(jpre + 1);
         }
       }
-      else if (bpath.substr(indx, jslash - indx) == ".") {  // nothing to do
+      else if (bpath.substr(indx, jslash - indx) == ".")
+      {  // nothing to do
       }
-      else {  // add
+      else
+      {  // add
         if (jslash != indx || bpath[(G4int)indx] != '/')  // truncate "////"
           absPath += bpath.substr(indx, jslash - indx + 1);
         // better to be check directory existence. (it costs!)
       }
       indx = jslash + 1;
     }
-    else {  // directory ONLY (ignore non-"/" terminated string)
+    else
+    {  // directory ONLY (ignore non-"/" terminated string)
       break;
     }
   }
@@ -198,9 +218,11 @@ G4String G4VUIshell::GetCommandPathTail(const G4String& apath) const
 
   // searching last '/' from tail
   G4int indx = -1;
-  for (G4int i = lstr - 1; i >= 0; --i) {
+  for (G4int i = lstr - 1; i >= 0; --i)
+  {
     if (Qsla && apath[i] != '/') Qsla = false;  // break "/" flag!!
-    if (apath[i] == '/' && ! Qsla) {
+    if (apath[i] == '/' && !Qsla)
+    {
       indx = i;
       break;
     }
@@ -208,7 +230,8 @@ G4String G4VUIshell::GetCommandPathTail(const G4String& apath) const
 
   if (indx == -1) return apath;  // not found
 
-  if (indx == 0 && lstr == 1) {  // "/"
+  if (indx == 0 && lstr == 1)
+  {  // "/"
     G4String nullStr;
     return nullStr;
   }
@@ -233,10 +256,13 @@ void G4VUIshell::ListCommand(const G4String& dir, const G4String& candidate) con
   G4String vcmd;
 
   auto len = (G4int)input.length();
-  if (! input.empty()) {
+  if (!input.empty())
+  {
     G4int indx = -1;
-    for (G4int i = len - 1; i >= 0; --i) {  // search last '/'
-      if (input[i] == '/') {
+    for (G4int i = len - 1; i >= 0; --i)
+    {  // search last '/'
+      if (input[i] == '/')
+      {
         indx = i;
         break;
       }
@@ -248,9 +274,11 @@ void G4VUIshell::ListCommand(const G4String& dir, const G4String& candidate) con
 
   // check "vcmd" is directory?
   const G4String& inputpath = vpath + vcmd;
-  if (! vcmd.empty()) {
+  if (!vcmd.empty())
+  {
     const G4String& tmpstr = inputpath + "/";
-    if (GetCommandTree(tmpstr) != nullptr) {
+    if (GetCommandTree(tmpstr) != nullptr)
+    {
       vpath = tmpstr;
       vcmd = "";
     }
@@ -258,7 +286,8 @@ void G4VUIshell::ListCommand(const G4String& dir, const G4String& candidate) con
 
   // check "vpath" directory exists?
   G4UIcommandTree* atree = GetCommandTree(vpath);
-  if (atree == nullptr) {
+  if (atree == nullptr)
+  {
     G4cout << "<" << input << ">: No such directory" << G4endl;
     return;
   }
@@ -272,19 +301,24 @@ void G4VUIshell::ListCommand(const G4String& dir, const G4String& candidate) con
   if (Ndir == 0 && Ncmd == 0) return;  // no contents
 
   // directory ...
-  for (G4int idir = 1; idir <= Ndir; idir++) {
+  for (G4int idir = 1; idir <= Ndir; idir++)
+  {
     if (idir == 1 && lsColorFlag) stream += TermColorString[directoryColor];
     G4String fpdir = atree->GetTree(idir)->GetPathName();
     // matching test
-    if (candidate.empty()) {  // list all
-      if (vcmd.empty() || fpdir == inputpath) {
+    if (candidate.empty())
+    {  // list all
+      if (vcmd.empty() || fpdir == inputpath)
+      {
         stream += GetCommandPathTail(fpdir);
         stream += "  ";
         isMatch = true;
       }
     }
-    else {  // list only matched with candidate
-      if (fpdir.find(candidate, 0) == 0) {
+    else
+    {  // list only matched with candidate
+      if (fpdir.find(candidate, 0) == 0)
+      {
         stream += GetCommandPathTail(fpdir);
         stream += "  ";
       }
@@ -292,19 +326,24 @@ void G4VUIshell::ListCommand(const G4String& dir, const G4String& candidate) con
   }
 
   // command ...
-  for (G4int icmd = 1; icmd <= Ncmd; icmd++) {
+  for (G4int icmd = 1; icmd <= Ncmd; icmd++)
+  {
     if (icmd == 1 && lsColorFlag) stream += TermColorString[commandColor];
     G4String fpcmd = atree->GetPathName() + atree->GetCommand(icmd)->GetCommandName();
     // matching test
-    if (candidate.empty()) {  // list all
-      if (vcmd.empty() || fpcmd == inputpath) {
+    if (candidate.empty())
+    {  // list all
+      if (vcmd.empty() || fpcmd == inputpath)
+      {
         stream += GetCommandPathTail(fpcmd);
         stream += "*  ";
         isMatch = true;
       }
     }
-    else {  // list only matched with candidate
-      if (fpcmd.find(candidate, 0) == 0) {
+    else
+    {  // list only matched with candidate
+      if (fpcmd.find(candidate, 0) == 0)
+      {
         stream += GetCommandPathTail(fpcmd);
         stream += "*  ";
       }
@@ -312,7 +351,7 @@ void G4VUIshell::ListCommand(const G4String& dir, const G4String& candidate) con
   }
 
   // waring : not matched
-  if (! isMatch && candidate.empty())
+  if (!isMatch && candidate.empty())
     G4cout << "<" << input << ">: No such directory or command" << std::flush;
 
   // display

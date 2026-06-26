@@ -31,37 +31,36 @@
 //
 
 #include "G4PreCompoundInterface.hh"
+
+#include "G4DeexPrecoParameters.hh"
+#include "G4DynamicParticle.hh"
+#include "G4Exp.hh"
+#include "G4LorentzVector.hh"
+#include "G4Neutron.hh"
+#include "G4NuclearLevelData.hh"
+#include "G4NucleiProperties.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "G4ParticleTypes.hh"
 #include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
+#include "G4PhysicsModelCatalog.hh"
 #include "G4PreCompoundEmissionInt.hh"
 #include "G4PreCompoundTransitionsInt.hh"
-#include "G4DeexPrecoParameters.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4Proton.hh"
-#include "G4Neutron.hh"
-
-#include "G4NucleiProperties.hh"
-#include "G4NuclearLevelData.hh"
-#include "G4DeexPrecoParameters.hh"
+#include "G4SystemOfUnits.hh"
 #include "Randomize.hh"
-#include "G4DynamicParticle.hh"
-#include "G4ParticleTypes.hh"
-#include "G4ParticleTable.hh"
-#include "G4LorentzVector.hh"
-#include "G4Exp.hh"
-#include "G4PhysicsModelCatalog.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 
-G4PreCompoundInterface::G4PreCompoundInterface() 
-  : G4VPreCompoundModel(new G4ExcitationHandler(),"PRECO_I")
+G4PreCompoundInterface::G4PreCompoundInterface()
+  : G4VPreCompoundModel(new G4ExcitationHandler(), "PRECO_I")
 {
   fNuclData = G4NuclearLevelData::GetInstance();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-G4PreCompoundInterface::~G4PreCompoundInterface() 
+G4PreCompoundInterface::~G4PreCompoundInterface()
 {
   delete theEmission;
   delete theTransition;
@@ -70,16 +69,19 @@ G4PreCompoundInterface::~G4PreCompoundInterface()
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void G4PreCompoundInterface::BuildPhysicsTable(const G4ParticleDefinition&) 
+void G4PreCompoundInterface::BuildPhysicsTable(const G4ParticleDefinition&)
 {
   InitialiseModel();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void G4PreCompoundInterface::InitialiseModel() 
+void G4PreCompoundInterface::InitialiseModel()
 {
-  if (isInitialised) { return; }
+  if (isInitialised)
+  {
+    return;
+  }
   isInitialised = true;
 
   G4DeexPrecoParameters* param = fNuclData->GetParameters();
@@ -88,9 +90,12 @@ void G4PreCompoundInterface::InitialiseModel()
   fHighLimitExc = param->GetPrecoHighEnergy();
   fVerbose = param->GetVerbose();
 
-  if (param->PrecoDummy()) {
+  if (param->PrecoDummy())
+  {
     isActive = false;
-  } else {
+  }
+  else
+  {
     theEmission = new G4PreCompoundEmissionInt(fVerbose);
     theEmission->SetOPTxs(param->GetPrecoModelType());
     theTransition = new G4PreCompoundTransitionsInt(fVerbose);
@@ -104,116 +109,135 @@ void G4PreCompoundInterface::InitialiseModel()
 G4ReactionProductVector* G4PreCompoundInterface::DeExcite(G4Fragment& frag)
 {
   G4ReactionProductVector* res = new G4ReactionProductVector;
-  if (!isInitialised) { InitialiseModel(); }
+  if (!isInitialised)
+  {
+    InitialiseModel();
+  }
 
   // decays by de-excitation
   G4double U = frag.GetExcitationEnergy();
-  G4int Z = frag.GetZ_asInt(); 
+  G4int Z = frag.GetZ_asInt();
   G4int A = frag.GetA_asInt();
-  if (1 < fVerbose) {
-    G4cout << "### G4PreCompoundInterface::DeExcite Z=" << Z << " A=" << A
-           << " U(MeV)=" << U << G4endl;
+  if (1 < fVerbose)
+  {
+    G4cout << "### G4PreCompoundInterface::DeExcite Z=" << Z << " A=" << A << " U(MeV)=" << U
+           << G4endl;
   }
-  if (!isActive || Z < minZ || A < minA || 
-      U < fLowLimitExc*A || U > A*fHighLimitExc ||
-      0 < frag.GetNumberOfLambdas()) {
+  if (!isActive || Z < minZ || A < minA || U < fLowLimitExc * A || U > A * fHighLimitExc
+      || 0 < frag.GetNumberOfLambdas())
+  {
     PerformEquilibriumEmission(frag, res);
     return res;
   }
-  // decays by precompound model 
+  // decays by precompound model
   BreakUpFragment(frag, res);
   return res;
 }
 
-void G4PreCompoundInterface::BreakUpFragment(G4Fragment& frag,
-                                             G4ReactionProductVector* res)
+void G4PreCompoundInterface::BreakUpFragment(G4Fragment& frag, G4ReactionProductVector* res)
 {
   // check initial fragment and number of excitons is not defined
   G4double U = frag.GetExcitationEnergy();
-  G4int Z = frag.GetZ_asInt(); 
+  G4int Z = frag.GetZ_asInt();
   G4int A = frag.GetA_asInt();
-  if (Z < minZ || A < minA || U < fLowLimitExc*A) {
+  if (Z < minZ || A < minA || U < fLowLimitExc * A)
+  {
     PerformEquilibriumEmission(frag, res);
     return;
   }
 
-  const G4double ldfact = 3.0/CLHEP::pi2;
-  const G4double eperex = 20.0*CLHEP::MeV;
-  
+  const G4double ldfact = 3.0 / CLHEP::pi2;
+  const G4double eperex = 20.0 * CLHEP::MeV;
+
   // number of excitons may be defined or not defined
   G4int np = frag.GetNumberOfParticles();
   G4int nz = frag.GetNumberOfCharged();
-  if (0 == np) {
-    np = G4lrint(U/eperex);
+  if (0 == np)
+  {
+    np = G4lrint(U / eperex);
     np = std::min(np, A);
     frag.SetNumberOfParticles(np);
-    nz = G4lrint((np*Z)/(G4double)A);
+    nz = G4lrint((np * Z) / (G4double)A);
     nz = std::min(std::min(nz, np), Z);
     frag.SetNumberOfExcitedParticle(np, nz);
   }
 
   // main loop over fragments
-  for (G4int i=0; i<50; ++i) {
-    if (Z < minZ || A < minA || U < fLowLimitExc*A) {
+  for (G4int i = 0; i < 50; ++i)
+  {
+    if (Z < minZ || A < minA || U < fLowLimitExc * A)
+    {
       break;
     }
 
     // eqNum is the number of particle, not excitons
-    G4int eqNum =
-      G4lrint(std::sqrt(ldfact*U*fNuclData->GetLevelDensity(Z, A, U)));        
-    if (2 < fVerbose) {
-      G4cout << "   1st loop " << i << ". Z=" << Z << " A=" << A
-             << " U(MeV)=" << U << " Npart=" << np << " Nch=" << nz
-	     << " eqExcitationNumber=" << eqNum << G4endl;
+    G4int eqNum = G4lrint(std::sqrt(ldfact * U * fNuclData->GetLevelDensity(Z, A, U)));
+    if (2 < fVerbose)
+    {
+      G4cout << "   1st loop " << i << ". Z=" << Z << " A=" << A << " U(MeV)=" << U
+             << " Npart=" << np << " Nch=" << nz << " eqExcitationNumber=" << eqNum << G4endl;
     }
-    if (np <= eqNum) { break; }
+    if (np <= eqNum)
+    {
+      break;
+    }
 
-    // Loop for transitions, it is performed while there are 
+    // Loop for transitions, it is performed while there are
     // preequilibrium transitions and is completed by emission
     G4bool isTransition = false;
     G4bool isEquilibrium = false;
-    
-    for (G4int j=0; j<20; ++j) {
-      G4double transProbability =
-	theTransition->CalculateProbability(frag);
+
+    for (G4int j = 0; j < 20; ++j)
+    {
+      G4double transProbability = theTransition->CalculateProbability(frag);
       G4double P1 = theTransition->GetTransitionProb1();
       G4double P2 = theTransition->GetTransitionProb2();
       G4double P3 = theTransition->GetTransitionProb3();
-      if (2 < fVerbose) {
-        G4cout << "   2nd loop " << j << ". Npart=" << np << " P1=" << P1
-             << " P2=" << P2 << " P3=" << P3 << G4endl;
+      if (2 < fVerbose)
+      {
+        G4cout << "   2nd loop " << j << ". Npart=" << np << " P1=" << P1 << " P2=" << P2
+               << " P3=" << P3 << G4endl;
       }
-      if (np <= eqNum || P1 <= P2+P3) {
-	isEquilibrium = true;
-	break;
+      if (np <= eqNum || P1 <= P2 + P3)
+      {
+        isEquilibrium = true;
+        break;
       }
-      
-      G4double emissionProbability =
-	theEmission->GetTotalProbability(frag);
+
+      G4double emissionProbability = theEmission->GetTotalProbability(frag);
 
       // Sum of all probabilities
       G4double totalProb = emissionProbability + transProbability;
-            
-      // Select subprocess
-      if (totalProb*G4UniformRand() > emissionProbability) {
-	isTransition = true;
-	theTransition->PerformTransition(frag);
-	isEquilibrium = (np <= eqNum);
-      } else {
-	isTransition = false;
-	auto product = theEmission->PerformEmission(frag);
-	res->push_back(product);
 
-	// new parameters of the residual fragment
-	U = frag.GetExcitationEnergy();
-	Z = frag.GetZ_asInt(); 
-	A = frag.GetA_asInt();
+      // Select subprocess
+      if (totalProb * G4UniformRand() > emissionProbability)
+      {
+        isTransition = true;
+        theTransition->PerformTransition(frag);
+        isEquilibrium = (np <= eqNum);
+      }
+      else
+      {
+        isTransition = false;
+        auto product = theEmission->PerformEmission(frag);
+        res->push_back(product);
+
+        // new parameters of the residual fragment
+        U = frag.GetExcitationEnergy();
+        Z = frag.GetZ_asInt();
+        A = frag.GetA_asInt();
       }
       np = frag.GetNumberOfParticles();
       nz = frag.GetNumberOfCharged();
-      if (!isTransition || isEquilibrium) { break; }
+      if (!isTransition || isEquilibrium)
+      {
+        break;
+      }
     }
-    if (isEquilibrium) { break; }
+    if (isEquilibrium)
+    {
+      break;
+    }
   }
   PerformEquilibriumEmission(frag, res);
 }
@@ -224,31 +248,32 @@ void G4PreCompoundInterface::BreakUpFragment(G4Fragment& frag,
 
 void G4PreCompoundInterface::ModelDescription(std::ostream& outFile) const
 {
-  outFile 
+  outFile
     << "The GEANT4 precompound model is considered as an extension of the\n"
-    <<	"hadron kinetic model. It gives a possibility to extend the low energy range\n"
-    <<	"of the hadron kinetic model for nucleon-nucleus inelastic collision and it \n"
-    <<	"provides a ”smooth” transition from kinetic stage of reaction described by the\n"
-    <<	"hadron kinetic model to the equilibrium stage of reaction described by the\n"
-    <<	"equilibrium deexcitation models.\n"
-    <<	"The initial information for calculation of pre-compound nuclear stage\n"
-    <<	"consists of the atomic mass number A, charge Z of residual nucleus, its\n"
-    <<	"four momentum P0 , excitation energy U and number of excitons n, which equals\n"
-    <<	"the sum of the number of particles p (from them p_Z are charged) and the number of\n"
-    <<	"holes h.\n"
-    <<	"At the preequilibrium stage of reaction, we follow the exciton model approach in ref. [1],\n"
-    <<	"taking into account the competition among all possible nuclear transitions\n"
-    <<	"with ∆n = +2, −2, 0 (which are defined by their associated transition probabilities) and\n"
-    <<	"the emission of neutrons, protons, deuterons, thritium and helium nuclei (also defined by\n"
-    <<	"their associated emission  probabilities according to exciton model)\n"
-    <<	"\n"
-    <<	"[1] K.K. Gudima, S.G. Mashnik, V.D. Toneev, Nucl. Phys. A401 329 (1983)\n"
-    <<  "\n";
+    << "hadron kinetic model. It gives a possibility to extend the low energy range\n"
+    << "of the hadron kinetic model for nucleon-nucleus inelastic collision and it \n"
+    << "provides a ”smooth” transition from kinetic stage of reaction described by the\n"
+    << "hadron kinetic model to the equilibrium stage of reaction described by the\n"
+    << "equilibrium deexcitation models.\n"
+    << "The initial information for calculation of pre-compound nuclear stage\n"
+    << "consists of the atomic mass number A, charge Z of residual nucleus, its\n"
+    << "four momentum P0 , excitation energy U and number of excitons n, which equals\n"
+    << "the sum of the number of particles p (from them p_Z are charged) and the number of\n"
+    << "holes h.\n"
+    << "At the preequilibrium stage of reaction, we follow the exciton model approach in ref. "
+       "[1],\n"
+    << "taking into account the competition among all possible nuclear transitions\n"
+    << "with ∆n = +2, −2, 0 (which are defined by their associated transition probabilities) and\n"
+    << "the emission of neutrons, protons, deuterons, thritium and helium nuclei (also defined by\n"
+    << "their associated emission  probabilities according to exciton model)\n"
+    << "\n"
+    << "[1] K.K. Gudima, S.G. Mashnik, V.D. Toneev, Nucl. Phys. A401 329 (1983)\n"
+    << "\n";
 }
 
 void G4PreCompoundInterface::DeExciteModelDescription(std::ostream& outFile) const
 {
   outFile << "description of precompound model as used with DeExcite()" << "\n";
 }
-  
+
 ////////////////////////////////////////////////////////////////////////////////

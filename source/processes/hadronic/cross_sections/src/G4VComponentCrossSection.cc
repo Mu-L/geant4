@@ -37,11 +37,13 @@
 //
 
 #include "G4VComponentCrossSection.hh"
+
 #include "G4CrossSectionDataSetRegistry.hh"
+
 #include <iostream>
 
-G4VComponentCrossSection::G4VComponentCrossSection(const G4String& nam) :
-  verboseLevel(0),minKinEnergy(0.0),maxKinEnergy(DBL_MAX),name(nam) 
+G4VComponentCrossSection::G4VComponentCrossSection(const G4String& nam)
+  : verboseLevel(0), minKinEnergy(0.0), maxKinEnergy(DBL_MAX), name(nam)
 {
   registry = G4CrossSectionDataSetRegistry::Instance();
   registry->Register(this);
@@ -52,21 +54,15 @@ G4VComponentCrossSection::~G4VComponentCrossSection()
   registry->DeRegister(this);
 }
 
-G4double 
-G4VComponentCrossSection::ComputeQuasiElasticRatio(const G4ParticleDefinition*,
-                                                   G4double /*kinEnergy*/, 
-						   G4int /*Z*/, G4int /*N*/)
+G4double G4VComponentCrossSection::ComputeQuasiElasticRatio(const G4ParticleDefinition*,
+                                                            G4double /*kinEnergy*/, G4int /*Z*/,
+                                                            G4int /*N*/)
 {
   return 0.0;
 }
 
-void G4VComponentCrossSection::Description(std::ostream&) const
-{}
+void G4VComponentCrossSection::Description(std::ostream&) const {}
 
-void 
-G4VComponentCrossSection::BuildPhysicsTable(const G4ParticleDefinition&)
-{}
+void G4VComponentCrossSection::BuildPhysicsTable(const G4ParticleDefinition&) {}
 
-void 
-G4VComponentCrossSection::DumpPhysicsTable(const G4ParticleDefinition&)
-{}
+void G4VComponentCrossSection::DumpPhysicsTable(const G4ParticleDefinition&) {}

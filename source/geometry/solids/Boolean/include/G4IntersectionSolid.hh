@@ -34,13 +34,12 @@
 #ifndef G4INTERSECTIONSOLID_HH
 #define G4INTERSECTIONSOLID_HH
 
+#include "G4AffineTransform.hh"
 #include "G4BooleanSolid.hh"
-#include "G4VSolid.hh"
-
 #include "G4RotationMatrix.hh"
 #include "G4ThreeVector.hh"
 #include "G4Transform3D.hh"
-#include "G4AffineTransform.hh"
+#include "G4VSolid.hh"
 
 /**
  * @brief G4IntersectionSolid is a solid describing the Boolean intersection
@@ -59,9 +58,7 @@ class G4IntersectionSolid : public G4BooleanSolid
      *  @param[in] pSolidA Pointer to the first reference solid.
      *  @param[in] pSolidB Pointer to the second solid to form the composition.
      */
-    G4IntersectionSolid( const G4String& pName,
-                               G4VSolid* pSolidA ,
-                               G4VSolid* pSolidB   ) ;
+    G4IntersectionSolid(const G4String& pName, G4VSolid* pSolidA, G4VSolid* pSolidB);
 
     /**
      * Constructor of a Boolean intersection between two solids with rotation
@@ -73,11 +70,8 @@ class G4IntersectionSolid : public G4BooleanSolid
      *  @param[in] rotMatrix Pointer to the rotation vector.
      *  @param[in] transVector The translation vector.
      */
-    G4IntersectionSolid( const G4String& pName,
-                               G4VSolid* pSolidA ,
-                               G4VSolid* pSolidB, 
-                               G4RotationMatrix* rotMatrix,
-                         const G4ThreeVector& transVector   ) ;
+    G4IntersectionSolid(const G4String& pName, G4VSolid* pSolidA, G4VSolid* pSolidB,
+                        G4RotationMatrix* rotMatrix, const G4ThreeVector& transVector);
 
     /**
      * Constructor of a Boolean intersection between two solids with a
@@ -88,10 +82,8 @@ class G4IntersectionSolid : public G4BooleanSolid
      *  @param[in] pSolidB Pointer to the second solid to form the composition.
      *  @param[in] transform The composed 3D transformation.
      */
-    G4IntersectionSolid( const G4String& pName,
-                               G4VSolid* pSolidA ,
-                               G4VSolid* pSolidB,
-                         const G4Transform3D& transform    ) ;
+    G4IntersectionSolid(const G4String& pName, G4VSolid* pSolidA, G4VSolid* pSolidB,
+                        const G4Transform3D& transform);
 
     /**
      * Default destructor.
@@ -139,21 +131,20 @@ class G4IntersectionSolid : public G4BooleanSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent( const EAxis pAxis,
-                            const G4VoxelLimits& pVoxelLimit,
-                            const G4AffineTransform& pTransform,
-                                  G4double& pMin, G4double& pMax) const override ;
-       
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
+
     /**
      * Returns if the given point "p" is inside or not the solid.
      */
-    EInside Inside( const G4ThreeVector& p ) const override ;
+    EInside Inside(const G4ThreeVector& p) const override;
 
     /**
      * Returns the outwards pointing unit normal of the shape for the
      * surface closest to the point at offset "p".
      */
-    G4ThreeVector SurfaceNormal( const G4ThreeVector& p ) const override ;
+    G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
 
     /**
      * Returns the distance along the normalised vector "v" to the shape,
@@ -162,14 +153,13 @@ class G4IntersectionSolid : public G4BooleanSolid
      * surface/volume is discarded. Hence, it is tolerant of points on
      * the surface of the shape.
      */
-    G4double DistanceToIn( const G4ThreeVector& p,
-                           const G4ThreeVector& v  ) const override ;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
 
     /**
      * Calculates the safety distance to the nearest surface of a shape from
      * an outside point. The distance can be an underestimate.
      */
-    G4double DistanceToIn( const G4ThreeVector& p) const override ;
+    G4double DistanceToIn(const G4ThreeVector& p) const override;
 
     /**
      * Returns the distance along the normalised vector "v" to the shape,
@@ -184,27 +174,24 @@ class G4IntersectionSolid : public G4BooleanSolid
      *              or on the exiting surface (calcNorm must be true, otherwise
      *              it is unused).
      *  @param[out] n The exiting outwards normal vector (undefined Magnitude).
-     *              (calcNorm must be true, otherwise it is unused). 
+     *              (calcNorm must be true, otherwise it is unused).
      *  @returns The distance value to exit the volume.
      */
-    G4double DistanceToOut( const G4ThreeVector& p,
-                            const G4ThreeVector& v,
-                            const G4bool calcNorm = false,
-                                  G4bool* validNorm = nullptr,
-                                  G4ThreeVector* n = nullptr ) const override ;
+    G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
 
     /**
      * Calculates the safety distance to the nearest surface of a shape from
      * an inside point "p". The distance can be an underestimate.
      */
-    G4double DistanceToOut( const G4ThreeVector& p ) const override ;
+    G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
      * Methods for creating graphical representations (i.e. for visualisation).
      */
-    void DescribeYourselfTo ( G4VGraphicsScene& scene ) const override ;
-    G4Polyhedron* CreatePolyhedron () const override ;
+    void DescribeYourselfTo(G4VGraphicsScene& scene) const override;
+    G4Polyhedron* CreatePolyhedron() const override;
 };
 
 #endif
-

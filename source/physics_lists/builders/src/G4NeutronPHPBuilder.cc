@@ -24,74 +24,70 @@
 // ********************************************************************
 //
 #include "G4NeutronPHPBuilder.hh"
+
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
 #include "G4SystemOfUnits.hh"
 
-G4NeutronPHPBuilder::
-G4NeutronPHPBuilder() 
+G4NeutronPHPBuilder::G4NeutronPHPBuilder()
 {
   theHPElastic = 0;
   theHPElasticData = 0;
-  
+
   theHPFission = 0;
   theHPFissionData = 0;
-  
+
   theHPCapture = 0;
   theHPCaptureData = 0;
-  
+
   theHPInelastic = 0;
   theHPInelasticData = 0;
 
   theMin = 0;
   theIMin = theMin;
-  theMax = 20*MeV;
+  theMax = 20 * MeV;
   theIMax = theMax;
-
 }
 
-void G4NeutronPHPBuilder::
-Build(G4HadronElasticProcess * aP)
+void G4NeutronPHPBuilder::Build(G4HadronElasticProcess* aP)
 {
-  if(theHPElastic==0) theHPElastic = new G4ParticleHPElastic;
+  if (theHPElastic == 0) theHPElastic = new G4ParticleHPElastic;
   theHPElastic->SetMinEnergy(theMin);
   theHPElastic->SetMaxEnergy(theMax);
-  if(theHPElasticData == 0) theHPElasticData = new G4ParticleHPElasticData;
+  if (theHPElasticData == 0) theHPElasticData = new G4ParticleHPElasticData;
   aP->AddDataSet(theHPElasticData);
   aP->RegisterMe(theHPElastic);
 }
 
-void G4NeutronPHPBuilder::
-Build(G4NeutronFissionProcess * aP)
+void G4NeutronPHPBuilder::Build(G4NeutronFissionProcess* aP)
 {
-  if(theHPFission == 0) theHPFission = new G4ParticleHPFission;
+  if (theHPFission == 0) theHPFission = new G4ParticleHPFission;
   theHPFission->SetMinEnergy(theMin);
   theHPFission->SetMaxEnergy(theMax);
-  if(theHPFissionData==0) theHPFissionData=new G4ParticleHPFissionData;
+  if (theHPFissionData == 0) theHPFissionData = new G4ParticleHPFissionData;
   aP->AddDataSet(theHPFissionData);
   aP->RegisterMe(theHPFission);
 }
 
-void G4NeutronPHPBuilder::
-Build(G4NeutronCaptureProcess * aP)
+void G4NeutronPHPBuilder::Build(G4NeutronCaptureProcess* aP)
 {
-  if (theHPCapture==nullptr) theHPCapture = new G4NeutronRadCaptureHP;
+  if (theHPCapture == nullptr) theHPCapture = new G4NeutronRadCaptureHP;
   theHPCapture->SetMinEnergy(theMin);
   theHPCapture->SetMaxEnergy(theMax);
-  if(theHPCaptureData==0) theHPCaptureData = new G4NeutronHPCaptureData;
+  if (theHPCaptureData == 0) theHPCaptureData = new G4NeutronHPCaptureData;
   aP->AddDataSet(theHPCaptureData);
   aP->RegisterMe(theHPCapture);
 }
 
-void G4NeutronPHPBuilder::
-Build(G4HadronInelasticProcess * aP)
+void G4NeutronPHPBuilder::Build(G4HadronInelasticProcess* aP)
 {
-  if(theHPInelastic==0) theHPInelastic = new G4ParticleHPInelastic(G4Neutron::Neutron(),"NeutronHPInelastic");
+  if (theHPInelastic == 0)
+    theHPInelastic = new G4ParticleHPInelastic(G4Neutron::Neutron(), "NeutronHPInelastic");
   theHPInelastic->SetMinEnergy(theIMin);
   theHPInelastic->SetMaxEnergy(theIMax);
-  if(theHPInelasticData==0) theHPInelasticData = new G4ParticleHPInelasticData(G4Neutron::Neutron());
+  if (theHPInelasticData == 0)
+    theHPInelasticData = new G4ParticleHPInelasticData(G4Neutron::Neutron());
   aP->AddDataSet(theHPInelasticData);
   aP->RegisterMe(theHPInelastic);
 }
-

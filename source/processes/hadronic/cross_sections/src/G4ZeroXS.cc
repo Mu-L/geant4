@@ -41,39 +41,30 @@
 //
 
 #include "G4ZeroXS.hh"
+
 #include "G4CrossSectionDataSetRegistry.hh"
 
-G4ZeroXS::G4ZeroXS()
- : G4VCrossSectionDataSet("ZeroXS") 
-{
-}
+G4ZeroXS::G4ZeroXS() : G4VCrossSectionDataSet("ZeroXS") {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4ZeroXS::~G4ZeroXS()
-{
-}
+G4ZeroXS::~G4ZeroXS() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4bool 
-G4ZeroXS::IsElementApplicable(const G4DynamicParticle*, G4int,
-					   const G4Material*)
+G4bool G4ZeroXS::IsElementApplicable(const G4DynamicParticle*, G4int, const G4Material*)
 {
   return true;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double
-G4ZeroXS::GetElementCrossSection(const G4DynamicParticle* ,
-					      G4int , const G4Material*)
+G4double G4ZeroXS::GetElementCrossSection(const G4DynamicParticle*, G4int, const G4Material*)
 {
   return 0.0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 
 void G4ZeroXS::CrossSectionDescription(std::ostream& outFile) const
 {

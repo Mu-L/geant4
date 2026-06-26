@@ -49,12 +49,12 @@
 // Modeling Radiation Chemistry in the Geant4 Toolkit,
 // M. Karamitros et al., Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
+#ifndef G4VUSERITACTION_HH
+#define G4VUSERITACTION_HH
 
-#ifndef G4VUSERITACTION_H
-#define G4VUSERITACTION_H
-
-#include "globals.hh"
 #include "G4Track.hh"
+#include "globals.hh"
+
 #include <vector>
 
 /**
@@ -67,36 +67,41 @@
 
 class G4UserTimeStepAction
 {
-public:
-  G4UserTimeStepAction();
-  G4UserTimeStepAction(const G4UserTimeStepAction& );
-  virtual ~G4UserTimeStepAction();
+  public:
 
-  virtual void StartProcessing(){;}
-  virtual void NewStage(){;}
+    G4UserTimeStepAction();
+    G4UserTimeStepAction(const G4UserTimeStepAction&);
+    virtual ~G4UserTimeStepAction();
 
-  /** In this method, the user can use :
-   * G4Scheduler::Instance()->GetGlobalTime(), to know the current simulation time
-   * G4Scheduler::Instance()->GetTimeStep(), to know the selected minimum time
-   * WARNING : The call of this method happens before the call of DoIT methods
-   */
-  virtual void UserPreTimeStepAction(){;}
-  virtual void UserPostTimeStepAction(){;}
+    virtual void StartProcessing() { ; }
+    virtual void NewStage() { ; }
 
-  /**
-   * Inform about a reaction
-   */
-  virtual void UserReactionAction(const G4Track& /*trackA*/,
-      const G4Track& /*trackB*/,
-      const std::vector<G4Track*>* /*products*/){;}
-  virtual void EndProcessing(){;}
+    /** In this method, the user can use :
+     * G4Scheduler::Instance()->GetGlobalTime(), to know the current simulation time
+     * G4Scheduler::Instance()->GetTimeStep(), to know the selected minimum time
+     * WARNING : The call of this method happens before the call of DoIT methods
+     */
+    virtual void UserPreTimeStepAction() { ; }
+    virtual void UserPostTimeStepAction() { ; }
 
-protected:
-  void SetMinimumTimeSteps(std::map<double,double>*);
-  void AddTimeStep(double /*startingTime*/, double /*timeStep*/);
+    /**
+     * Inform about a reaction
+     */
+    virtual void UserReactionAction(const G4Track& /*trackA*/, const G4Track& /*trackB*/,
+                                    const std::vector<G4Track*>* /*products*/)
+    {
+      ;
+    }
+    virtual void EndProcessing() { ; }
 
-private:
-  G4UserTimeStepAction& operator=(const G4UserTimeStepAction& );
+  protected:
+
+    void SetMinimumTimeSteps(std::map<double, double>*);
+    void AddTimeStep(double /*startingTime*/, double /*timeStep*/);
+
+  private:
+
+    G4UserTimeStepAction& operator=(const G4UserTimeStepAction&);
 };
 
-#endif // G4VUSERITACTION_H
+#endif  // G4VUSERITACTION_H

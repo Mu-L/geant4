@@ -6,6 +6,9 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-04-20 Sebastien Incerti (pdb4dna-V11-04-00)
+- Reduction of the number of DNA physics constructors in the perspective of Geant4 12
+
 ## 2022-10-04 Gabriele Cosmo (pdb4dna-V11-00-01)
 - Fixed compilation warnings on Intel-icx compiler for set but unused variables
   in DetectorConstruction and PDBlib sources.

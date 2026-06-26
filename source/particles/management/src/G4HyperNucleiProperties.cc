@@ -42,18 +42,22 @@ G4double G4HyperNucleiProperties::GetNuclearMass(G4int A, G4int Z, G4int LL)
 {
   if (LL == 0) return G4NucleiProperties::GetNuclearMass(A, Z);
 
-  if (A < 2 || Z < 0 || Z > A - LL || LL > A) {
+  if (A < 2 || Z < 0 || Z > A - LL || LL > A)
+  {
 #ifdef G4VERBOSE
-    if (G4ParticleTable::GetParticleTable()->GetVerboseLevel() > 0) {
+    if (G4ParticleTable::GetParticleTable()->GetVerboseLevel() > 0)
+    {
       G4cout << "G4HyperNucleiProperties::GetNuclearMass: "
              << " Wrong values for A = " << A << " Z = " << Z << " L = " << LL << G4endl;
     }
 #endif
     return 0.0;
   }
-  if (A == 2) {
+  if (A == 2)
+  {
 #ifdef G4VERBOSE
-    if (G4ParticleTable::GetParticleTable()->GetVerboseLevel() > 0) {
+    if (G4ParticleTable::GetParticleTable()->GetVerboseLevel() > 0)
+    {
       G4cout << "G4HyperNucleiProperties::GetNuclearMass: "
              << " No boud state for A = " << A << " Z = " << Z << " L = " << LL << G4endl;
     }
@@ -88,7 +92,8 @@ G4double G4HyperNucleiProperties::GetNuclearMass(G4int A, G4int Z, G4int LL)
 G4double G4HyperNucleiProperties::GetAtomicMass(G4int A, G4int Z, G4int LL)
 {
   G4double mass = GetNuclearMass(A, Z, LL);
-  if (mass > 0.0) {
+  if (mass > 0.0)
+  {
     mass += Z * electron_mass_c2 - 1.433e-5 * MeV * G4Pow::GetInstance()->powZ(Z, 2.39);
   }
   return mass;

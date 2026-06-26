@@ -23,11 +23,14 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4PhysicsOrderedFreeVector_hh
-#define G4PhysicsOrderedFreeVector_hh 1
+#ifndef G4PHYSICSORDEREDFREEVECTOR_HH
+#define G4PHYSICSORDEREDFREEVECTOR_HH
 
 #include "G4PhysicsFreeVector.hh"
 
+/**
+@deprecated No class, just a using
+*/
 using G4PhysicsOrderedFreeVector = G4PhysicsFreeVector;
 
 #endif

@@ -28,20 +28,17 @@
 // Author: Hisaya Kurashige, 10 May 1998
 // --------------------------------------------------------------------
 
-inline void G4ParticleChangeForTransport::SetTouchableHandle(
-  const G4TouchableHandle& fTouchable)
+inline void G4ParticleChangeForTransport::SetTouchableHandle(const G4TouchableHandle& fTouchable)
 {
   theTouchableHandle = fTouchable;
 }
 
-inline const G4TouchableHandle&
-G4ParticleChangeForTransport::GetTouchableHandle() const
+inline const G4TouchableHandle& G4ParticleChangeForTransport::GetTouchableHandle() const
 {
   return theTouchableHandle;
 }
 
-inline void G4ParticleChangeForTransport::SetMaterialInTouchable(
-  G4Material* fMaterial)
+inline void G4ParticleChangeForTransport::SetMaterialInTouchable(G4Material* fMaterial)
 {
   theMaterialChange = fMaterial;
 }
@@ -69,8 +66,7 @@ inline void G4ParticleChangeForTransport::SetSensitiveDetectorInTouchable(
   theSensitiveDetectorChange = fSensitiveDetector;
 }
 
-inline G4VSensitiveDetector*
-G4ParticleChangeForTransport::GetSensitiveDetectorInTouchable() const
+inline G4VSensitiveDetector* G4ParticleChangeForTransport::GetSensitiveDetectorInTouchable() const
 {
   return theSensitiveDetectorChange;
 }
@@ -97,8 +93,8 @@ inline void G4ParticleChangeForTransport::Initialize(const G4Track& track)
 
   // set Energy/Momentum etc. equal to those of the parent particle
   const G4DynamicParticle* pParticle = track.GetDynamicParticle();
-  theVelocityChange     = track.GetVelocity();
-  isVelocityChanged     = false;
+  theVelocityChange = track.GetVelocity();
+  isVelocityChanged = false;
   thePolarizationChange = pParticle->GetPolarization();
 
   // set TimeChange equal to local time of the parent track

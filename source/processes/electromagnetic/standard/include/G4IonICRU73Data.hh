@@ -24,8 +24,8 @@
 // ********************************************************************
 //
 
-#ifndef G4IonICRU73Data_h
-#define G4IonICRU73Data_h 1
+#ifndef G4IONICRU73DATA_HH
+#define G4IONICRU73DATA_HH
 
 //---------------------------------------------------------------------------
 //
@@ -44,65 +44,61 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include <vector>
-#include <iostream>
 #include "globals.hh"
+
+#include <iostream>
+#include <vector>
 
 class G4PhysicsLogVector;
 class G4PhysicsFreeVector;
 class G4Material;
 
-class G4IonICRU73Data 
-{ 
-public: 
+class G4IonICRU73Data
+{
+  public:
 
-  explicit G4IonICRU73Data();
+    explicit G4IonICRU73Data();
 
-  ~G4IonICRU73Data();
+    ~G4IonICRU73Data();
 
-  // should be called before each run
-  void Initialise();
+    // should be called before each run
+    void Initialise();
 
-  // Z - atomic number of the projectile
-  // e - energy per nucleon, loge = log(e)
-  // if data for a given combination Z/material exist the DEDX > 0. 
-  G4double GetDEDX(const G4Material*, const G4int Z,
-                   const G4double e, const G4double loge) const;
+    // Z - atomic number of the projectile
+    // e - energy per nucleon, loge = log(e)
+    // if data for a given combination Z/material exist the DEDX > 0.
+    G4double GetDEDX(const G4Material*, const G4int Z, const G4double e, const G4double loge) const;
 
-  // hide assignment operator
-  G4IonICRU73Data & operator = (const  G4IonICRU73Data &right) = delete;
-  G4IonICRU73Data(const  G4IonICRU73Data&) = delete;
+    // hide assignment operator
+    G4IonICRU73Data& operator=(const G4IonICRU73Data& right) = delete;
+    G4IonICRU73Data(const G4IonICRU73Data&) = delete;
 
-private:
+  private:
 
-  void ReadMaterialData(const G4Material* mat, const G4double fact, 
-                        const G4bool type);
+    void ReadMaterialData(const G4Material* mat, const G4double fact, const G4bool type);
 
-  void ReadElementData(const G4Material* mat, G4bool type);
+    void ReadElementData(const G4Material* mat, G4bool type);
 
-  G4PhysicsLogVector* FindOrBuildElementData(const G4int Z, 
-                                             const G4int Z1, 
-                                             G4bool useICRU90);
+    G4PhysicsLogVector* FindOrBuildElementData(const G4int Z, const G4int Z1, G4bool useICRU90);
 
-  G4PhysicsLogVector* RetrieveVector(std::ostringstream& in,
-                                     G4bool warn);
+    G4PhysicsLogVector* RetrieveVector(std::ostringstream& in, G4bool warn);
 
-  G4double fEmin;
-  G4double fEmax;
+    G4double fEmin;
+    G4double fEmax;
 
-  std::vector<G4int> fMatIndex;
-  // projectile (3<= Z <= 80), target element (1 <= Z <= 92)
-  const G4int ZPROJMAX = 80;
-  const G4int ZTARGMAX = 92;
-  std::vector<G4PhysicsLogVector*>* fMatData[81] = {nullptr};
-  G4PhysicsLogVector* fElmData[81][93] = {{nullptr}};
-  G4PhysicsFreeVector* fVector = nullptr;
+    std::vector<G4int> fMatIndex;
+    // projectile (3<= Z <= 80), target element (1 <= Z <= 92)
+    const G4int ZPROJMAX = 80;
+    const G4int ZTARGMAX = 92;
+    std::vector<G4PhysicsLogVector*>* fMatData[81] = {nullptr};
+    G4PhysicsLogVector* fElmData[81][93] = {{nullptr}};
+    G4PhysicsFreeVector* fVector = nullptr;
 
-  G4int fNbins = 0;
-  G4int fNbinsPerDecade = 10;
-  G4int fVerbose = 0;
-  G4bool fSpline = false;
-  G4String fDataDirectory = "";
+    G4int fNbins = 0;
+    G4int fNbinsPerDecade = 10;
+    G4int fVerbose = 0;
+    G4bool fSpline = false;
+    G4String fDataDirectory = "";
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

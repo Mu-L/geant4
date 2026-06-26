@@ -30,23 +30,22 @@
 //
 // Author:      A.Ivanchenko 28.07.2018
 //
-// Modified: 
+// Modified:
 //
 //---------------------------------------------------------------------------
 
 #include "G4IonPhysicsXS.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4ProcessManager.hh"
 
-#include "G4GenericIon.hh"
-
-#include "G4HadronInelasticProcess.hh"
-#include "G4ParticleInelasticXS.hh"
-#include "G4VCrossSectionDataSet.hh"
-#include "G4HadronicInteraction.hh"
 #include "G4DeexPrecoParameters.hh"
+#include "G4GenericIon.hh"
+#include "G4HadronInelasticProcess.hh"
+#include "G4HadronicInteraction.hh"
 #include "G4NuclearLevelData.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleInelasticXS.hh"
+#include "G4ProcessManager.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4VCrossSectionDataSet.hh"
 
 using namespace std;
 
@@ -57,38 +56,34 @@ G4_DECLARE_PHYSCONSTR_FACTORY(G4IonPhysicsXS);
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4IonPhysicsXS::G4IonPhysicsXS(G4int ver)
-  : G4IonPhysicsXS("ionPhysicsXS", ver)
-{}
+G4IonPhysicsXS::G4IonPhysicsXS(G4int ver) : G4IonPhysicsXS("ionPhysicsXS", ver) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4IonPhysicsXS::G4IonPhysicsXS(const G4String& nname, G4int ver)
-  : G4IonPhysics(nname, ver)
-{}
+G4IonPhysicsXS::G4IonPhysicsXS(const G4String& nname, G4int ver) : G4IonPhysics(nname, ver) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4IonPhysicsXS::~G4IonPhysicsXS()
-{}
+G4IonPhysicsXS::~G4IonPhysicsXS() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void G4IonPhysicsXS::AddProcess(const G4String& name, 
-		 	        G4ParticleDefinition* part,
-			        G4HadronicInteraction* theIonBC,
-			        G4HadronicInteraction* theFTFP,
-			        G4VCrossSectionDataSet* xs)
+void G4IonPhysicsXS::AddProcess(const G4String& name, G4ParticleDefinition* part,
+                                G4HadronicInteraction* theIonBC, G4HadronicInteraction* theFTFP,
+                                G4VCrossSectionDataSet* xs)
 {
   G4HadronInelasticProcess* hadi = new G4HadronInelasticProcess(name, part);
   G4ProcessManager* pManager = part->GetProcessManager();
   pManager->AddDiscreteProcess(hadi);
-  
-  if(part == G4GenericIon::GenericIon()) {  
+
+  if (part == G4GenericIon::GenericIon())
+  {
     hadi->AddDataSet(xs);
-  } else {
+  }
+  else
+  {
     hadi->AddDataSet(new G4ParticleInelasticXS(part));
-  }  
+  }
   hadi->RegisterMe(theIonBC);
   hadi->RegisterMe(theFTFP);
 }

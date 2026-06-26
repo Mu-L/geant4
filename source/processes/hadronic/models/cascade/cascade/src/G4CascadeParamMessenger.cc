@@ -34,6 +34,7 @@
 // 20200110  M. Kelsey -- Reset cmdDir to 0 before .../cascade/ directory.
 
 #include "G4CascadeParamMessenger.hh"
+
 #include "G4CascadeParameters.hh"
 #include "G4HadronicParameters.hh"
 #include "G4UIcmdWithABool.hh"
@@ -46,62 +47,62 @@
 #include "G4UIdirectory.hh"
 #include "G4UImanager.hh"
 
-
 // Constructor and destructor
 
 G4CascadeParamMessenger::G4CascadeParamMessenger(G4CascadeParameters* params)
-  : G4UImessenger(), theParams(params) {
+  : G4UImessenger(), theParams(params)
+{
   G4HadronicParameters::Instance();
-  cmdDir = new G4UIdirectory( "/process/had/cascade/" );
-  cmdDir->SetGuidance( "Bertini-esque cascade parameters" );
+  cmdDir = new G4UIdirectory("/process/had/cascade/");
+  cmdDir->SetGuidance("Bertini-esque cascade parameters");
 
-  verboseCmd = CreateCommand<G4UIcmdWithAnInteger>("verbose",
-			"Enable information messages");
-  balanceCmd = CreateCommand<G4UIcmdWithABool>("checkBalance",
-			"Enable internal conservation checking");
-  reportCmd = CreateCommand<G4UIcmdWithoutParameter>("report",
-			"Dump all non-default parameter settings");
+  verboseCmd = CreateCommand<G4UIcmdWithAnInteger>("verbose", "Enable information messages");
+  balanceCmd =
+    CreateCommand<G4UIcmdWithABool>("checkBalance", "Enable internal conservation checking");
+  reportCmd =
+    CreateCommand<G4UIcmdWithoutParameter>("report", "Dump all non-default parameter settings");
   usePreCoCmd = CreateCommand<G4UIcmdWithABool>("usePreCompound",
-			"Use PreCompoundModel for nuclear de-excitation");
-  doCoalCmd = CreateCommand<G4UIcmdWithABool>("doCoalescence",
-			"Apply final-state nucleon clustering");
-  piNAbsCmd = CreateCommand<G4UIcmdWithADouble>("piNAbsorption",
-			"Probability for pion absorption on single nucleon");
-  historyCmd = CreateCommand<G4UIcmdWithABool>("showHistory",
-		        "Collect and report full structure of cascade");
-  use3BodyCmd = CreateCommand<G4UIcmdWithABool>("use3BodyMom",
-			"Use three-body momentum parametrizations");
-  usePSCmd = CreateCommand<G4UIcmdWithABool>("usePhaseSpace",
-			"Use Kopylov N-body momentum generator");
-  randomFileCmd = CreateCommand<G4UIcmdWithAString>("randomFile",
-			"Save random-engine to file at each interaction");
+                                                "Use PreCompoundModel for nuclear de-excitation");
+  doCoalCmd =
+    CreateCommand<G4UIcmdWithABool>("doCoalescence", "Apply final-state nucleon clustering");
+  piNAbsCmd = CreateCommand<G4UIcmdWithADouble>(
+    "piNAbsorption", "Probability for pion absorption on single nucleon");
+  historyCmd =
+    CreateCommand<G4UIcmdWithABool>("showHistory", "Collect and report full structure of cascade");
+  use3BodyCmd =
+    CreateCommand<G4UIcmdWithABool>("use3BodyMom", "Use three-body momentum parametrizations");
+  usePSCmd =
+    CreateCommand<G4UIcmdWithABool>("usePhaseSpace", "Use Kopylov N-body momentum generator");
+  randomFileCmd = CreateCommand<G4UIcmdWithAString>(
+    "randomFile", "Save random-engine to file at each interaction");
   nucUseBestCmd = CreateCommand<G4UIcmdWithABool>("useBestNuclearModel",
-			"Use all physical-units for nuclear structure");
+                                                  "Use all physical-units for nuclear structure");
   nucRad2parCmd = CreateCommand<G4UIcmdWithADouble>("useTwoParamNuclearRadius",
-			"Use R = C1*cbrt(A) + C2/cbrt(A)");
-  nucRadScaleCmd = CreateCommand<G4UIcmdWithADouble>("nuclearRadiusScale",
-			"Set length scale for nuclear model");
-  nucRadSmallCmd = CreateCommand<G4UIcmdWithADouble>("smallNucleusRadius",
-			"Set radius of A<4 nuclei");
-  nucRadAlphaCmd = CreateCommand<G4UIcmdWithADouble>("alphaRadiusScale",
-			"Fraction of small-radius for He-4");
-  nucRadTrailingCmd = CreateCommand<G4UIcmdWithADouble>("shadowningRadius",
-			"Effective nucleon radius for trailing effect");
-  nucFermiScaleCmd = CreateCommand<G4UIcmdWithADouble>("fermiScale",
-			"Scale factor for fermi momentum");
-  nucXsecScaleCmd = CreateCommand<G4UIcmdWithADouble>("crossSectionScale",
-			"Scale fator for total cross-sections");
-  nucGammaQDCmd = CreateCommand<G4UIcmdWithADouble>("gammaQuasiDeutScale",
-			"Scale factor for gamma-quasideutron cross-sections");
-  coalDPmax2Cmd = CreateCommand<G4UIcmdWithADouble>("cluster2DPmax",
-			"Maximum momentum for p-n clusters");
-  coalDPmax3Cmd = CreateCommand<G4UIcmdWithADouble>("cluster3DPmax",
-			"Maximum momentum for ppn/pnn clusters");
-  coalDPmax4Cmd = CreateCommand<G4UIcmdWithADouble>("cluster4DPmax",
-			"Maximum momentum for alpha clusters");
+                                                    "Use R = C1*cbrt(A) + C2/cbrt(A)");
+  nucRadScaleCmd =
+    CreateCommand<G4UIcmdWithADouble>("nuclearRadiusScale", "Set length scale for nuclear model");
+  nucRadSmallCmd =
+    CreateCommand<G4UIcmdWithADouble>("smallNucleusRadius", "Set radius of A<4 nuclei");
+  nucRadAlphaCmd =
+    CreateCommand<G4UIcmdWithADouble>("alphaRadiusScale", "Fraction of small-radius for He-4");
+  nucRadTrailingCmd = CreateCommand<G4UIcmdWithADouble>(
+    "shadowningRadius", "Effective nucleon radius for trailing effect");
+  nucFermiScaleCmd =
+    CreateCommand<G4UIcmdWithADouble>("fermiScale", "Scale factor for fermi momentum");
+  nucXsecScaleCmd =
+    CreateCommand<G4UIcmdWithADouble>("crossSectionScale", "Scale fator for total cross-sections");
+  nucGammaQDCmd = CreateCommand<G4UIcmdWithADouble>(
+    "gammaQuasiDeutScale", "Scale factor for gamma-quasideutron cross-sections");
+  coalDPmax2Cmd =
+    CreateCommand<G4UIcmdWithADouble>("cluster2DPmax", "Maximum momentum for p-n clusters");
+  coalDPmax3Cmd =
+    CreateCommand<G4UIcmdWithADouble>("cluster3DPmax", "Maximum momentum for ppn/pnn clusters");
+  coalDPmax4Cmd =
+    CreateCommand<G4UIcmdWithADouble>("cluster4DPmax", "Maximum momentum for alpha clusters");
 }
 
-G4CascadeParamMessenger::~G4CascadeParamMessenger() {
+G4CascadeParamMessenger::~G4CascadeParamMessenger()
+{
   delete verboseCmd;
   delete balanceCmd;
   delete reportCmd;
@@ -129,73 +130,55 @@ G4CascadeParamMessenger::~G4CascadeParamMessenger() {
 
 // Use command argument (literal string) to set envvar maps in container
 
-void G4CascadeParamMessenger::SetNewValue(G4UIcommand* cmd, G4String arg) {
+void G4CascadeParamMessenger::SetNewValue(G4UIcommand* cmd, G4String arg)
+{
   if (cmd == reportCmd) theParams->DumpConfig(G4cout);
 
-  if (cmd == verboseCmd) 
-    theParams->G4CASCADE_VERBOSE = strdup(arg.c_str());
+  if (cmd == verboseCmd) theParams->G4CASCADE_VERBOSE = strdup(arg.c_str());
 
-  if (cmd == balanceCmd) 
-    theParams->G4CASCADE_CHECK_ECONS = StoB(arg) ? strdup(arg.c_str()) : 0;
+  if (cmd == balanceCmd) theParams->G4CASCADE_CHECK_ECONS = StoB(arg) ? strdup(arg.c_str()) : 0;
 
-  if (cmd == usePreCoCmd) 
+  if (cmd == usePreCoCmd)
     theParams->G4CASCADE_USE_PRECOMPOUND = StoB(arg) ? strdup(arg.c_str()) : 0;
 
-  if (cmd == doCoalCmd) 
-    theParams->G4CASCADE_DO_COALESCENCE = StoB(arg) ? strdup(arg.c_str()) : 0;
+  if (cmd == doCoalCmd) theParams->G4CASCADE_DO_COALESCENCE = StoB(arg) ? strdup(arg.c_str()) : 0;
 
-  if (cmd == piNAbsCmd) 
-    theParams->G4CASCADE_PIN_ABSORPTION = strdup(arg.c_str());
+  if (cmd == piNAbsCmd) theParams->G4CASCADE_PIN_ABSORPTION = strdup(arg.c_str());
 
-  if (cmd == historyCmd) 
-    theParams->G4CASCADE_SHOW_HISTORY = StoB(arg) ? strdup(arg.c_str()) : 0;
+  if (cmd == historyCmd) theParams->G4CASCADE_SHOW_HISTORY = StoB(arg) ? strdup(arg.c_str()) : 0;
 
-  if (cmd == use3BodyCmd)
-    theParams->G4CASCADE_USE_3BODYMOM = StoB(arg) ? strdup(arg.c_str()) : 0;
+  if (cmd == use3BodyCmd) theParams->G4CASCADE_USE_3BODYMOM = StoB(arg) ? strdup(arg.c_str()) : 0;
 
-  if (cmd == usePSCmd)
-    theParams->G4CASCADE_USE_PHASESPACE = StoB(arg) ? strdup(arg.c_str()) : 0;
+  if (cmd == usePSCmd) theParams->G4CASCADE_USE_PHASESPACE = StoB(arg) ? strdup(arg.c_str()) : 0;
 
   if (cmd == randomFileCmd)
     theParams->G4CASCADE_RANDOM_FILE = arg.empty() ? 0 : strdup(arg.c_str());
 
-  if (cmd == nucUseBestCmd)
-    theParams->G4NUCMODEL_USE_BEST = StoB(arg) ? strdup(arg.c_str()) : 0;
+  if (cmd == nucUseBestCmd) theParams->G4NUCMODEL_USE_BEST = StoB(arg) ? strdup(arg.c_str()) : 0;
 
-//  if (cmd == nucRad2parCmd)
-//    theParams->G4NUCMODEL_RAD_2PAR = strdup(arg.c_str());
-  if (cmd == nucRad2parCmd)
-    theParams->G4NUCMODEL_RAD_2PAR = StoB(arg) ? strdup(arg.c_str()) : 0;
+  //  if (cmd == nucRad2parCmd)
+  //    theParams->G4NUCMODEL_RAD_2PAR = strdup(arg.c_str());
+  if (cmd == nucRad2parCmd) theParams->G4NUCMODEL_RAD_2PAR = StoB(arg) ? strdup(arg.c_str()) : 0;
 
-  if (cmd == nucRadScaleCmd)
-    theParams->G4NUCMODEL_RAD_SCALE = strdup(arg.c_str());
+  if (cmd == nucRadScaleCmd) theParams->G4NUCMODEL_RAD_SCALE = strdup(arg.c_str());
 
-  if (cmd == nucRadSmallCmd)
-    theParams->G4NUCMODEL_RAD_SMALL = strdup(arg.c_str());
+  if (cmd == nucRadSmallCmd) theParams->G4NUCMODEL_RAD_SMALL = strdup(arg.c_str());
 
-  if (cmd == nucRadAlphaCmd)
-    theParams->G4NUCMODEL_RAD_ALPHA = strdup(arg.c_str());
+  if (cmd == nucRadAlphaCmd) theParams->G4NUCMODEL_RAD_ALPHA = strdup(arg.c_str());
 
-  if (cmd == nucRadTrailingCmd)
-    theParams->G4NUCMODEL_RAD_TRAILING = strdup(arg.c_str());
+  if (cmd == nucRadTrailingCmd) theParams->G4NUCMODEL_RAD_TRAILING = strdup(arg.c_str());
 
-  if (cmd == nucFermiScaleCmd)
-    theParams->G4NUCMODEL_FERMI_SCALE = strdup(arg.c_str());
+  if (cmd == nucFermiScaleCmd) theParams->G4NUCMODEL_FERMI_SCALE = strdup(arg.c_str());
 
-  if (cmd == nucXsecScaleCmd)
-    theParams->G4NUCMODEL_XSEC_SCALE = strdup(arg.c_str());
+  if (cmd == nucXsecScaleCmd) theParams->G4NUCMODEL_XSEC_SCALE = strdup(arg.c_str());
 
-  if (cmd == nucGammaQDCmd)
-    theParams->G4NUCMODEL_GAMMAQD = strdup(arg.c_str());
+  if (cmd == nucGammaQDCmd) theParams->G4NUCMODEL_GAMMAQD = strdup(arg.c_str());
 
-  if (cmd == coalDPmax2Cmd)
-    theParams->DPMAX_2CLUSTER = strdup(arg.c_str());
+  if (cmd == coalDPmax2Cmd) theParams->DPMAX_2CLUSTER = strdup(arg.c_str());
 
-  if (cmd == coalDPmax3Cmd)
-    theParams->DPMAX_3CLUSTER = strdup(arg.c_str());
+  if (cmd == coalDPmax3Cmd) theParams->DPMAX_3CLUSTER = strdup(arg.c_str());
 
-  if (cmd == coalDPmax4Cmd)
-    theParams->DPMAX_4CLUSTER = strdup(arg.c_str());
+  if (cmd == coalDPmax4Cmd) theParams->DPMAX_4CLUSTER = strdup(arg.c_str());
 
-  theParams->Initialize();	// Update numerical values from settings
+  theParams->Initialize();  // Update numerical values from settings
 }

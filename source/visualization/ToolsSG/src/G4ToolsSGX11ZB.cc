@@ -31,24 +31,26 @@
 
 #include <toolx/X11/zb_viewer>
 
-G4ToolsSGX11ZB::G4ToolsSGX11ZB():
-parent
-("TOOLSSG_X11_ZB",
- "TSG_X11_ZB",
- "TOOLSSG_X11_ZB is a graphics driver based on the g4tools tools/sg scene graph logic where\n\
+G4ToolsSGX11ZB::G4ToolsSGX11ZB()
+  : parent(
+      "TOOLSSG_X11_ZB", "TSG_X11_ZB",
+      "TOOLSSG_X11_ZB is a graphics driver based on the g4tools tools/sg scene graph logic where\n\
  the rendering is done with the g4tools zbuffer and the windowing is done with X11.",
- parent::threeDInteractive)
-,fSGSession(nullptr)
+      parent::threeDInteractive),
+    fSGSession(nullptr)
 {}
 
-G4ToolsSGX11ZB::~G4ToolsSGX11ZB() {
+G4ToolsSGX11ZB::~G4ToolsSGX11ZB()
+{
   delete fSGSession;
 }
 
-void G4ToolsSGX11ZB::Initialise() {
-  if(fSGSession) return; //done.
+void G4ToolsSGX11ZB::Initialise()
+{
+  if (fSGSession) return;  // done.
   fSGSession = new toolx::X11::base_session(G4cout);
-  if(!fSGSession->is_valid()) {
+  if (!fSGSession->is_valid())
+  {
     G4cerr << "G4ToolsSGX11ZB::Initialise : base_session::is_valid() failed." << G4endl;
     delete fSGSession;
     fSGSession = nullptr;
@@ -56,32 +58,33 @@ void G4ToolsSGX11ZB::Initialise() {
   }
 }
 
-G4VSceneHandler* G4ToolsSGX11ZB::CreateSceneHandler(const G4String& a_name) {
-  G4VSceneHandler* pScene = new G4ToolsSGSceneHandler(*this,a_name);
+G4VSceneHandler* G4ToolsSGX11ZB::CreateSceneHandler(const G4String& a_name)
+{
+  G4VSceneHandler* pScene = new G4ToolsSGSceneHandler(*this, a_name);
   return pScene;
 }
 
-G4VViewer* G4ToolsSGX11ZB::CreateViewer(G4VSceneHandler& a_scene,const G4String& a_name) {
-  if(!fSGSession) Initialise();
-  if(!fSGSession) return nullptr;
-  G4VViewer* pView =
-    new G4ToolsSGViewer<toolx::X11::base_session,toolx::X11::zb_viewer>
-    (*fSGSession,(G4ToolsSGSceneHandler&)a_scene,a_name);
-  if (pView) {
-    if (pView->GetViewId() < 0) {
-      G4cerr <<
-      "G4ToolsSGX11ZB::CreateViewer: ERROR flagged by negative"
-      " view id in G4ToolsSGViewer creation."
-      "\n Destroying view and returning null pointer."
-      << G4endl;
+G4VViewer* G4ToolsSGX11ZB::CreateViewer(G4VSceneHandler& a_scene, const G4String& a_name)
+{
+  if (!fSGSession) Initialise();
+  if (!fSGSession) return nullptr;
+  G4VViewer* pView = new G4ToolsSGViewer<toolx::X11::base_session, toolx::X11::zb_viewer>(
+    *fSGSession, (G4ToolsSGSceneHandler&)a_scene, a_name);
+  if (pView)
+  {
+    if (pView->GetViewId() < 0)
+    {
+      G4cerr << "G4ToolsSGX11ZB::CreateViewer: ERROR flagged by negative"
+                " view id in G4ToolsSGViewer creation."
+                "\n Destroying view and returning null pointer."
+             << G4endl;
       delete pView;
       pView = nullptr;
     }
   }
-  if (!pView) {
-    G4cerr <<
-    "G4ToolsSGX11ZB::CreateViewer: ERROR: null pointer on new G4ToolsSGViewer."
-    << G4endl;
+  if (!pView)
+  {
+    G4cerr << "G4ToolsSGX11ZB::CreateViewer: ERROR: null pointer on new G4ToolsSGViewer." << G4endl;
   }
   return pView;
 }

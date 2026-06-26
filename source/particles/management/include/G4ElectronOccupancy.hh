@@ -38,8 +38,8 @@
 
 // Author: Hisaya Kurashige, 17 Aug 1999
 // --------------------------------------------------------------------
-#ifndef G4ElectronOccupancy_hh
-#define G4ElectronOccupancy_hh 1
+#ifndef G4ELECTRONOCCUPANCY_HH
+#define G4ELECTRONOCCUPANCY_HH
 
 #include "G4Allocator.hh"
 #include "G4ios.hh"
@@ -50,6 +50,7 @@
 class G4ElectronOccupancy
 {
   public:
+
     enum
     {
       MaxSizeOfOrbit = 20
@@ -81,6 +82,7 @@ class G4ElectronOccupancy
     void DumpInfo() const;
 
   private:
+
     G4int theSizeOfOrbit = 0;
     G4int theTotalOccupancy = 0;
     G4int* theOccupancies = nullptr;
@@ -94,7 +96,8 @@ extern G4PART_DLL G4Allocator<G4ElectronOccupancy>*& aElectronOccupancyAllocator
 
 inline void* G4ElectronOccupancy::operator new(size_t)
 {
-  if (aElectronOccupancyAllocator() == nullptr) {
+  if (aElectronOccupancyAllocator() == nullptr)
+  {
     aElectronOccupancyAllocator() = new G4Allocator<G4ElectronOccupancy>;
   }
   return (void*)aElectronOccupancyAllocator()->MallocSingle();
@@ -118,7 +121,8 @@ inline G4int G4ElectronOccupancy::GetTotalOccupancy() const
 inline G4int G4ElectronOccupancy::GetOccupancy(G4int orbit) const
 {
   G4int value = 0;
-  if ((orbit >= 0) && (orbit < theSizeOfOrbit)) {
+  if ((orbit >= 0) && (orbit < theSizeOfOrbit))
+  {
     value = theOccupancies[orbit];
   }
   return value;

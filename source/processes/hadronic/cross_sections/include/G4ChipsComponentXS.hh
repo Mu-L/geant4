@@ -28,127 +28,101 @@
 //  of hadron (proton, neutron, pi+, pi-, K+, K-, anti_proton, anti_neutron
 //  interactions with nuclei based on CHIPS model
 //
-//   Created by V. Uzhinsky, 31.05.2011  
+//   Created by V. Uzhinsky, 31.05.2011
 //  Copied to hadronic/cross_sections by W. Pokorski
 
+#ifndef G4CHIPSCOMPONENTXS_HH
+#define G4CHIPSCOMPONENTXS_HH
 
-#ifndef G4ChipsComponentXS_h
-#define G4ChipsComponentXS_h
-
-#include <CLHEP/Units/PhysicalConstants.h>  // pi, fermi,..
-
-#include "globals.hh"
-#include "G4Proton.hh"
 #include "G4AntiProton.hh"
-#include "G4Nucleus.hh"
-
-#include "G4ChipsProtonElasticXS.hh"
-#include "G4ChipsProtonInelasticXS.hh"
-
-#include "G4ChipsNeutronElasticXS.hh"
-#include "G4ChipsNeutronInelasticXS.hh"
-
-#include "G4ChipsAntiBaryonElasticXS.hh" 
+#include "G4ChipsAntiBaryonElasticXS.hh"
 #include "G4ChipsAntiBaryonInelasticXS.hh"
-
-#include "G4ChipsPionMinusElasticXS.hh" 
-#include "G4ChipsPionMinusInelasticXS.hh"
-
-#include "G4ChipsPionPlusElasticXS.hh" 
-#include "G4ChipsPionPlusInelasticXS.hh"
-
+#include "G4ChipsHyperonElasticXS.hh"
+#include "G4ChipsHyperonInelasticXS.hh"
 #include "G4ChipsKaonMinusElasticXS.hh"
 #include "G4ChipsKaonMinusInelasticXS.hh"
-
-#include "G4ChipsKaonPlusElasticXS.hh" 
+#include "G4ChipsKaonPlusElasticXS.hh"
 #include "G4ChipsKaonPlusInelasticXS.hh"
-
-#include "G4ChipsKaonZeroElasticXS.hh" 
+#include "G4ChipsKaonZeroElasticXS.hh"
 #include "G4ChipsKaonZeroInelasticXS.hh"
-
-#include "G4ChipsHyperonElasticXS.hh" 
-#include "G4ChipsHyperonInelasticXS.hh"
-
+#include "G4ChipsNeutronElasticXS.hh"
+#include "G4ChipsNeutronInelasticXS.hh"
+#include "G4ChipsPionMinusElasticXS.hh"
+#include "G4ChipsPionMinusInelasticXS.hh"
+#include "G4ChipsPionPlusElasticXS.hh"
+#include "G4ChipsPionPlusInelasticXS.hh"
+#include "G4ChipsProtonElasticXS.hh"
+#include "G4ChipsProtonInelasticXS.hh"
+#include "G4Nucleus.hh"
+#include "G4Proton.hh"
 #include "G4VComponentCrossSection.hh"
+#include "globals.hh"
+
+#include <CLHEP/Units/PhysicalConstants.h>  // pi, fermi,..
 
 class G4ParticleDefinition;
 
 class G4ChipsComponentXS : public G4VComponentCrossSection
 {
-public:
+  public:
 
-  G4ChipsComponentXS ();
-  virtual ~G4ChipsComponentXS ();
+    G4ChipsComponentXS();
+    virtual ~G4ChipsComponentXS();
 
-  virtual
-  G4double GetTotalElementCrossSection(const G4ParticleDefinition* aParticle,
-				       G4double kinEnergy, 
-				       G4int Z, G4double N);
+    virtual G4double GetTotalElementCrossSection(const G4ParticleDefinition* aParticle,
+                                                 G4double kinEnergy, G4int Z, G4double N);
 
-  virtual
-  G4double GetTotalIsotopeCrossSection(const G4ParticleDefinition* aParticle,
-				       G4double kinEnergy,
-				       G4int Z, G4int N);
-  virtual
-  G4double GetInelasticElementCrossSection(const G4ParticleDefinition* aParticle,
-					   G4double kinEnergy, 
-					   G4int Z, G4double N);
-  virtual
-  G4double GetInelasticIsotopeCrossSection(const G4ParticleDefinition* aParticle,
-					   G4double kinEnergy, 
-					   G4int Z, G4int N);
+    virtual G4double GetTotalIsotopeCrossSection(const G4ParticleDefinition* aParticle,
+                                                 G4double kinEnergy, G4int Z, G4int N);
+    virtual G4double GetInelasticElementCrossSection(const G4ParticleDefinition* aParticle,
+                                                     G4double kinEnergy, G4int Z, G4double N);
+    virtual G4double GetInelasticIsotopeCrossSection(const G4ParticleDefinition* aParticle,
+                                                     G4double kinEnergy, G4int Z, G4int N);
 
-  virtual
-  G4double GetElasticElementCrossSection(const G4ParticleDefinition* aParticle,
-					 G4double kinEnergy, 
-					 G4int Z, G4double N);
+    virtual G4double GetElasticElementCrossSection(const G4ParticleDefinition* aParticle,
+                                                   G4double kinEnergy, G4int Z, G4double N);
 
-  virtual
-  G4double GetElasticIsotopeCrossSection(const G4ParticleDefinition* aParticle,
-					 G4double kinEnergy, 
-					 G4int Z, G4int N);
- 
-  virtual
-  void BuildPhysicsTable(const G4ParticleDefinition&)
-  {}
+    virtual G4double GetElasticIsotopeCrossSection(const G4ParticleDefinition* aParticle,
+                                                   G4double kinEnergy, G4int Z, G4int N);
 
-  virtual
-  void DumpPhysicsTable(const G4ParticleDefinition&) 
-  {}
+    virtual void BuildPhysicsTable(const G4ParticleDefinition&) {}
+
+    virtual void DumpPhysicsTable(const G4ParticleDefinition&) {}
 
   private:
-  G4ChipsComponentXS & operator=(const G4ChipsComponentXS &right);
-  G4ChipsComponentXS(const G4ChipsComponentXS&);
 
-  const G4double fUpperLimit;
-  const G4double fLowerLimit; 
+    G4ChipsComponentXS& operator=(const G4ChipsComponentXS& right);
+    G4ChipsComponentXS(const G4ChipsComponentXS&);
 
-  G4ChipsProtonElasticXS* PxsManagerEl;
-  G4ChipsProtonInelasticXS* PxsManagerInEl;
+    const G4double fUpperLimit;
+    const G4double fLowerLimit;
 
-  G4ChipsNeutronElasticXS* NxsManagerEl;
-  G4ChipsNeutronInelasticXS* NxsManagerInEl;
+    G4ChipsProtonElasticXS* PxsManagerEl;
+    G4ChipsProtonInelasticXS* PxsManagerInEl;
 
-  G4ChipsAntiBaryonElasticXS* PBARxsManagerEl;
-  G4ChipsAntiBaryonInelasticXS* PBARxsManagerInEl;
+    G4ChipsNeutronElasticXS* NxsManagerEl;
+    G4ChipsNeutronInelasticXS* NxsManagerInEl;
 
-  G4ChipsPionPlusElasticXS* PIPxsManagerEl; 
-  G4ChipsPionPlusInelasticXS* PIPxsManagerInEl; 
+    G4ChipsAntiBaryonElasticXS* PBARxsManagerEl;
+    G4ChipsAntiBaryonInelasticXS* PBARxsManagerInEl;
 
-  G4ChipsPionMinusElasticXS* PIMxsManagerEl; 
-  G4ChipsPionMinusInelasticXS* PIMxsManagerInEl; 
+    G4ChipsPionPlusElasticXS* PIPxsManagerEl;
+    G4ChipsPionPlusInelasticXS* PIPxsManagerInEl;
 
-  G4ChipsKaonPlusElasticXS* KPxsManagerEl;
-  G4ChipsKaonPlusInelasticXS* KPxsManagerInEl;
+    G4ChipsPionMinusElasticXS* PIMxsManagerEl;
+    G4ChipsPionMinusInelasticXS* PIMxsManagerInEl;
 
-  G4ChipsKaonMinusElasticXS* KMxsManagerEl;
-  G4ChipsKaonMinusInelasticXS* KMxsManagerInEl;
+    G4ChipsKaonPlusElasticXS* KPxsManagerEl;
+    G4ChipsKaonPlusInelasticXS* KPxsManagerInEl;
 
-  G4ChipsKaonZeroElasticXS* KZxsManagerEl;
-  G4ChipsKaonZeroInelasticXS* KZxsManagerInEl;
+    G4ChipsKaonMinusElasticXS* KMxsManagerEl;
+    G4ChipsKaonMinusInelasticXS* KMxsManagerInEl;
 
-  G4ChipsHyperonElasticXS* HxsManagerEl;
-  G4ChipsHyperonInelasticXS* HxsManagerInEl;
+    G4ChipsKaonZeroElasticXS* KZxsManagerEl;
+    G4ChipsKaonZeroInelasticXS* KZxsManagerInEl;
+
+    G4ChipsHyperonElasticXS* HxsManagerEl;
+    G4ChipsHyperonInelasticXS* HxsManagerInEl;
 };
 
 #endif

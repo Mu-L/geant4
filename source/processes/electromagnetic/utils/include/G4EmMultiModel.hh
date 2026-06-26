@@ -46,60 +46,52 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4EmMultiModel_h
-#define G4EmMultiModel_h 1
+#ifndef G4EMMULTIMODEL_HH
+#define G4EMMULTIMODEL_HH
 
-#include "globals.hh"
-#include "G4VEmModel.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4MaterialCutsCouple.hh"
 #include "G4Material.hh"
+#include "G4MaterialCutsCouple.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4VEmModel.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4DynamicParticle;
 
-class G4EmMultiModel :  public G4VEmModel
+class G4EmMultiModel : public G4VEmModel
 {
-public:
+  public:
 
-  explicit G4EmMultiModel(const G4String& nam = "MultiModel");
+    explicit G4EmMultiModel(const G4String& nam = "MultiModel");
 
-  ~G4EmMultiModel() override;
+    ~G4EmMultiModel() override;
 
-  void AddModel(G4VEmModel*);
+    void AddModel(G4VEmModel*);
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) final;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) final;
 
-  G4double ComputeDEDXPerVolume(const G4Material*,
-				const G4ParticleDefinition*,
-				G4double kineticEnergy,
-				G4double cutEnergy) final;
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                  G4double kineticEnergy, G4double cutEnergy) final;
 
-  // main method to compute cross section per atom
-  G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
-				      G4double kinEnergy,
-				      G4double Z,
-				      G4double A = 0., /* amu */
-				      G4double cutEnergy = 0.0,
-				      G4double maxEnergy = DBL_MAX) final;
+    // main method to compute cross section per atom
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A = 0., /* amu */
+                                        G4double cutEnergy = 0.0,
+                                        G4double maxEnergy = DBL_MAX) final;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double tmax) final;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double tmax) final;
 
-  //  hide assignment operator
-  G4EmMultiModel & operator=(const  G4EmMultiModel &right) = delete;
-  G4EmMultiModel(const  G4EmMultiModel&) = delete;
+    //  hide assignment operator
+    G4EmMultiModel& operator=(const G4EmMultiModel& right) = delete;
+    G4EmMultiModel(const G4EmMultiModel&) = delete;
 
-private: 
+  private:
 
-  G4int                         nModels = 0;
-  std::vector<G4VEmModel*>      model;
-  std::vector<G4double>         cross_section;
-
+    G4int nModels = 0;
+    std::vector<G4VEmModel*> model;
+    std::vector<G4double> cross_section;
 };
 
 #endif
-

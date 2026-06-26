@@ -22,7 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // class G4LogicalVolume inline implementation
 //
 // Author: Paul Kent (CERN), 11.07.1995 - Initial version
@@ -32,18 +32,16 @@
 // GetName
 // ********************************************************************
 //
-inline
-const G4String& G4LogicalVolume::GetName() const
+inline const G4String& G4LogicalVolume::GetName() const
 {
   return fName;
 }
-    
+
 // ********************************************************************
 // GetInstanceID
 // ********************************************************************
 //
-inline
-G4int G4LogicalVolume::GetInstanceID() const
+inline G4int G4LogicalVolume::GetInstanceID() const
 {
   return instanceID;
 }
@@ -52,8 +50,7 @@ G4int G4LogicalVolume::GetInstanceID() const
 // GetMasterFieldManager
 // ********************************************************************
 //
-inline
-G4FieldManager* G4LogicalVolume::GetMasterFieldManager() const
+inline G4FieldManager* G4LogicalVolume::GetMasterFieldManager() const
 {
   return fFieldManager;
 }
@@ -62,8 +59,7 @@ G4FieldManager* G4LogicalVolume::GetMasterFieldManager() const
 // GetNoDaughters
 // ********************************************************************
 //
-inline
-std::size_t G4LogicalVolume::GetNoDaughters() const
+inline std::size_t G4LogicalVolume::GetNoDaughters() const
 {
   return fDaughters.size();
 }
@@ -72,8 +68,7 @@ std::size_t G4LogicalVolume::GetNoDaughters() const
 // GetDaughter
 // ********************************************************************
 //
-inline
-G4VPhysicalVolume* G4LogicalVolume::GetDaughter(const std::size_t i) const
+inline G4VPhysicalVolume* G4LogicalVolume::GetDaughter(const std::size_t i) const
 {
   return fDaughters[i];
 }
@@ -82,11 +77,13 @@ G4VPhysicalVolume* G4LogicalVolume::GetDaughter(const std::size_t i) const
 // GetFastSimulationManager
 // ********************************************************************
 //
-inline
-G4FastSimulationManager* G4LogicalVolume::GetFastSimulationManager () const 
+inline G4FastSimulationManager* G4LogicalVolume::GetFastSimulationManager() const
 {
   G4FastSimulationManager* fFSM = nullptr;
-  if(fRegion != nullptr) { fFSM = fRegion->GetFastSimulationManager(); }
+  if (fRegion != nullptr)
+  {
+    fFSM = fRegion->GetFastSimulationManager();
+  }
   return fFSM;
 }
 
@@ -94,12 +91,14 @@ G4FastSimulationManager* G4LogicalVolume::GetFastSimulationManager () const
 // IsDaughter
 // ********************************************************************
 //
-inline
-G4bool G4LogicalVolume::IsDaughter(const G4VPhysicalVolume* p) const
+inline G4bool G4LogicalVolume::IsDaughter(const G4VPhysicalVolume* p) const
 {
-  for (const auto & daughter : fDaughters)
+  for (const auto& daughter : fDaughters)
   {
-    if (*daughter==*p) { return true; }
+    if (*daughter == *p)
+    {
+      return true;
+    }
   }
   return false;
 }
@@ -108,8 +107,7 @@ G4bool G4LogicalVolume::IsDaughter(const G4VPhysicalVolume* p) const
 // CharacteriseDaughters
 // ********************************************************************
 //
-inline
-EVolume G4LogicalVolume::CharacteriseDaughters() const
+inline EVolume G4LogicalVolume::CharacteriseDaughters() const
 {
   return fDaughtersVolumeType;
 }
@@ -118,13 +116,12 @@ EVolume G4LogicalVolume::CharacteriseDaughters() const
 // DeduceDaughtersType
 // ********************************************************************
 //
-inline
-EVolume G4LogicalVolume::DeduceDaughtersType() const
+inline EVolume G4LogicalVolume::DeduceDaughtersType() const
 {
-  EVolume type= kNormal;
+  EVolume type = kNormal;
   G4VPhysicalVolume* pVol;
-    
-  if ( GetNoDaughters() >= 1 )
+
+  if (GetNoDaughters() >= 1)
   {
     pVol = GetDaughter(0);
     type = pVol->VolumeType();
@@ -136,8 +133,7 @@ EVolume G4LogicalVolume::DeduceDaughtersType() const
 // GetMasterSolid
 // ********************************************************************
 //
-inline
-G4VSolid* G4LogicalVolume::GetMasterSolid() const
+inline G4VSolid* G4LogicalVolume::GetMasterSolid() const
 {
   return fSolid;
 }
@@ -146,8 +142,7 @@ G4VSolid* G4LogicalVolume::GetMasterSolid() const
 // GetMasterSensitiveDetector
 // ********************************************************************
 //
-inline
-G4VSensitiveDetector* G4LogicalVolume::GetMasterSensitiveDetector() const
+inline G4VSensitiveDetector* G4LogicalVolume::GetMasterSensitiveDetector() const
 {
   return fSensitiveDetector;
 }
@@ -156,12 +151,16 @@ G4VSensitiveDetector* G4LogicalVolume::GetMasterSensitiveDetector() const
 // GetUserLimits
 // ********************************************************************
 //
-inline
-G4UserLimits* G4LogicalVolume::GetUserLimits() const
+inline G4UserLimits* G4LogicalVolume::GetUserLimits() const
 {
-  if(fUserLimits != nullptr) { return fUserLimits;
-}
-  if(fRegion != nullptr) { return fRegion->GetUserLimits(); }
+  if (fUserLimits != nullptr)
+  {
+    return fUserLimits;
+  }
+  if (fRegion != nullptr)
+  {
+    return fRegion->GetUserLimits();
+  }
   return nullptr;
 }
 
@@ -169,8 +168,7 @@ G4UserLimits* G4LogicalVolume::GetUserLimits() const
 // SetUserLimits
 // ********************************************************************
 //
-inline
-void G4LogicalVolume::SetUserLimits(G4UserLimits* pULimits)
+inline void G4LogicalVolume::SetUserLimits(G4UserLimits* pULimits)
 {
   fUserLimits = pULimits;
 }
@@ -179,8 +177,7 @@ void G4LogicalVolume::SetUserLimits(G4UserLimits* pULimits)
 // GetVoxelHeader
 // ********************************************************************
 //
-inline
-G4SmartVoxelHeader* G4LogicalVolume::GetVoxelHeader() const
+inline G4SmartVoxelHeader* G4LogicalVolume::GetVoxelHeader() const
 {
   return fVoxel;
 }
@@ -189,8 +186,7 @@ G4SmartVoxelHeader* G4LogicalVolume::GetVoxelHeader() const
 // SetVoxelHeader
 // ********************************************************************
 //
-inline
-void G4LogicalVolume::SetVoxelHeader(G4SmartVoxelHeader* pVoxel)
+inline void G4LogicalVolume::SetVoxelHeader(G4SmartVoxelHeader* pVoxel)
 {
   fVoxel = pVoxel;
 }
@@ -199,8 +195,7 @@ void G4LogicalVolume::SetVoxelHeader(G4SmartVoxelHeader* pVoxel)
 // GetSmartless
 // ********************************************************************
 //
-inline
-G4double G4LogicalVolume::GetSmartless() const
+inline G4double G4LogicalVolume::GetSmartless() const
 {
   return fSmartless;
 }
@@ -209,8 +204,7 @@ G4double G4LogicalVolume::GetSmartless() const
 // SetSmartless
 // ********************************************************************
 //
-inline
-void G4LogicalVolume::SetSmartless(G4double smt)
+inline void G4LogicalVolume::SetSmartless(G4double smt)
 {
   fSmartless = smt;
 }
@@ -219,8 +213,7 @@ void G4LogicalVolume::SetSmartless(G4double smt)
 // IsToOptimise
 // ********************************************************************
 //
-inline
-G4bool G4LogicalVolume::IsToOptimise() const
+inline G4bool G4LogicalVolume::IsToOptimise() const
 {
   return fOptimise;
 }
@@ -229,8 +222,7 @@ G4bool G4LogicalVolume::IsToOptimise() const
 // SetOptimisation
 // ********************************************************************
 //
-inline
-void G4LogicalVolume::SetOptimisation(G4bool optim)
+inline void G4LogicalVolume::SetOptimisation(G4bool optim)
 {
   fOptimise = optim;
 }
@@ -239,8 +231,7 @@ void G4LogicalVolume::SetOptimisation(G4bool optim)
 // IsRootRegion
 // ********************************************************************
 //
-inline
-G4bool G4LogicalVolume::IsRootRegion() const
+inline G4bool G4LogicalVolume::IsRootRegion() const
 {
   return fRootRegion;
 }
@@ -249,8 +240,7 @@ G4bool G4LogicalVolume::IsRootRegion() const
 // SetRegionRootFlag
 // ********************************************************************
 //
-inline
-void G4LogicalVolume::SetRegionRootFlag(G4bool rreg)
+inline void G4LogicalVolume::SetRegionRootFlag(G4bool rreg)
 {
   fRootRegion = rreg;
 }
@@ -259,11 +249,13 @@ void G4LogicalVolume::SetRegionRootFlag(G4bool rreg)
 // IsRegion
 // ********************************************************************
 //
-inline
-G4bool G4LogicalVolume::IsRegion() const
+inline G4bool G4LogicalVolume::IsRegion() const
 {
   G4bool reg = false;
-  if (fRegion != nullptr) { reg = true; }
+  if (fRegion != nullptr)
+  {
+    reg = true;
+  }
   return reg;
 }
 
@@ -271,8 +263,7 @@ G4bool G4LogicalVolume::IsRegion() const
 // SetRegion
 // ********************************************************************
 //
-inline
-void G4LogicalVolume::SetRegion(G4Region* reg)
+inline void G4LogicalVolume::SetRegion(G4Region* reg)
 {
   fRegion = reg;
 }
@@ -281,8 +272,7 @@ void G4LogicalVolume::SetRegion(G4Region* reg)
 // GetRegion
 // ********************************************************************
 //
-inline
-G4Region* G4LogicalVolume::GetRegion() const
+inline G4Region* G4LogicalVolume::GetRegion() const
 {
   return fRegion;
 }
@@ -291,8 +281,7 @@ G4Region* G4LogicalVolume::GetRegion() const
 // PropagateRegion
 // ********************************************************************
 //
-inline
-void G4LogicalVolume::PropagateRegion()
+inline void G4LogicalVolume::PropagateRegion()
 {
   fRegion->ScanVolumeTree(this, true);
 }
@@ -301,8 +290,7 @@ void G4LogicalVolume::PropagateRegion()
 // Lock
 // ********************************************************************
 //
-inline
-void G4LogicalVolume::Lock()
+inline void G4LogicalVolume::Lock()
 {
   fLock = true;
 }
@@ -311,18 +299,16 @@ void G4LogicalVolume::Lock()
 // Operator ==
 // ********************************************************************
 //
-inline
-G4bool G4LogicalVolume::operator == ( const G4LogicalVolume& lv) const
+inline G4bool G4LogicalVolume::operator==(const G4LogicalVolume& lv) const
 {
-  return this==&lv;
+  return this == &lv;
 }
 
 // ********************************************************************
 // SetBiasWeight
 // ********************************************************************
 //
-inline
-void G4LogicalVolume::SetBiasWeight(G4double weight)
+inline void G4LogicalVolume::SetBiasWeight(G4double weight)
 {
   fBiasWeight = weight;
 }
@@ -331,8 +317,7 @@ void G4LogicalVolume::SetBiasWeight(G4double weight)
 // GetBiasWeight
 // ********************************************************************
 //
-inline
-G4double G4LogicalVolume::GetBiasWeight() const
+inline G4double G4LogicalVolume::GetBiasWeight() const
 {
   return fBiasWeight;
 }
@@ -341,8 +326,7 @@ G4double G4LogicalVolume::GetBiasWeight() const
 // GetVisAttributes
 // ********************************************************************
 //
-inline
-const G4VisAttributes* G4LogicalVolume::GetVisAttributes () const
+inline const G4VisAttributes* G4LogicalVolume::GetVisAttributes() const
 {
   return fVisAttributes.get();
 }

@@ -43,53 +43,51 @@
 // J. Comput. Phys. 274 (2014) 841-882
 // Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
+#ifndef G4DNAWATERDISSOCIATIONDISPLACER_HH
+#define G4DNAWATERDISSOCIATIONDISPLACER_HH
 
-#ifndef G4DNAWaterDissociationDisplacer_h
-#define G4DNAWaterDissociationDisplacer_h 1
-
-#include "G4VMolecularDissociationDisplacer.hh"
-#include "G4DNARevertProbability.hh"
 #include "G4DNAModelSubType.hh"
+#include "G4DNARevertProbability.hh"
+#include "G4VMolecularDissociationDisplacer.hh"
 
 #define _WATER_DISPLACER_USE_TERRISOL_
-//#define _WATER_DISPLACER_USE_KREIPL_
+// #define _WATER_DISPLACER_USE_KREIPL_
 
-class G4DNAWaterDissociationDisplacer: public G4VMolecularDissociationDisplacer
+class G4DNAWaterDissociationDisplacer : public G4VMolecularDissociationDisplacer
 {
-public:
-  G4DNAWaterDissociationDisplacer();
-  ~G4DNAWaterDissociationDisplacer() override;
+  public:
 
-  std::vector<G4ThreeVector>
-  GetProductsDisplacement(const G4MolecularDissociationChannel*) const
-  override;
+    G4DNAWaterDissociationDisplacer();
+    ~G4DNAWaterDissociationDisplacer() override;
 
-  G4ThreeVector
-  GetMotherMoleculeDisplacement(const G4MolecularDissociationChannel*) const
-  override;
+    std::vector<G4ThreeVector>
+    GetProductsDisplacement(const G4MolecularDissociationChannel*) const override;
 
-  G4ThreeVector radialDistributionOfElectron() const;
-  G4ThreeVector radialDistributionOfProducts(G4double r_rms) const;
-  static G4double ElectronProbaDistribution(G4double r);
+    G4ThreeVector
+    GetMotherMoleculeDisplacement(const G4MolecularDissociationChannel*) const override;
 
-  G4CT_COUNT_DEF(Ionisation_DissociationDecay)
-  G4CT_COUNT_DEF(A1B1_DissociationDecay)
-  G4CT_COUNT_DEF(B1A1_DissociationDecay)
-  G4CT_COUNT_DEF(B1A1_DissociationDecay2)
-  G4CT_COUNT_DEF(AutoIonisation)
-  G4CT_COUNT_DEF(DissociativeAttachment)
-  G4CT_COUNT_DEF(DoubleIonisation_DissociationDecay1)
-  G4CT_COUNT_DEF(DoubleIonisation_DissociationDecay2)
-  G4CT_COUNT_DEF(DoubleIonisation_DissociationDecay3)
-  G4CT_COUNT_DEF(TripleIonisation_DissociationDecay)
-  G4CT_COUNT_DEF(QuadrupleIonisation_DissociationDecay)
+    G4ThreeVector radialDistributionOfElectron() const;
+    G4ThreeVector radialDistributionOfProducts(G4double r_rms) const;
+    static G4double ElectronProbaDistribution(G4double r);
 
-private:
-  G4double ke;
-  G4DNAModelSubType dnaSubType;
-//  std::function<G4double(G4double)> fProba1DFunction;
-//  std::vector<G4double> fElectronThermalization;
-//  G4DNARevertProbability fFastElectronDistrib;
+    G4CT_COUNT_DEF(Ionisation_DissociationDecay)
+    G4CT_COUNT_DEF(A1B1_DissociationDecay)
+    G4CT_COUNT_DEF(B1A1_DissociationDecay)
+    G4CT_COUNT_DEF(B1A1_DissociationDecay2)
+    G4CT_COUNT_DEF(AutoIonisation)
+    G4CT_COUNT_DEF(DissociativeAttachment)
+    G4CT_COUNT_DEF(DoubleIonisation_DissociationDecay1)
+    G4CT_COUNT_DEF(DoubleIonisation_DissociationDecay2)
+    G4CT_COUNT_DEF(DoubleIonisation_DissociationDecay3)
+    G4CT_COUNT_DEF(TripleIonisation_DissociationDecay)
+    G4CT_COUNT_DEF(QuadrupleIonisation_DissociationDecay)
+
+  private:
+
+    G4double ke;
+    G4DNAModelSubType dnaSubType;
+    //  std::function<G4double(G4double)> fProba1DFunction;
+    //  std::vector<G4double> fElectronThermalization;
+    //  G4DNARevertProbability fFastElectronDistrib;
 };
 #endif
-

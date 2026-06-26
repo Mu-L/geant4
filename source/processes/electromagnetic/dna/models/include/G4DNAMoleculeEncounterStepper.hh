@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,14 +41,15 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#pragma once
+#ifndef G4DNAMOLECULARENCOUNTERSTEPPER_HH
+#define G4DNAMOLECULARENCOUNTERSTEPPER_HH
 
-#include "G4VITTimeStepComputer.hh"
-#include "G4KDTreeResult.hh"
-#include "G4ITTrackHolder.hh"
 #include "G4ITReaction.hh"
+#include "G4ITTrackHolder.hh"
+#include "G4KDTreeResult.hh"
+#include "G4VITTimeStepComputer.hh"
 
 class G4VDNAReactionModel;
 class G4DNAMolecularReactionTable;
@@ -69,7 +70,8 @@ class G4Molecule;
 
 class G4DNAMoleculeEncounterStepper : public G4VITTimeStepComputer
 {
-public:
+  public:
+
     G4DNAMoleculeEncounterStepper();
     ~G4DNAMoleculeEncounterStepper() override;
     G4DNAMoleculeEncounterStepper(const G4DNAMoleculeEncounterStepper&) = delete;
@@ -86,7 +88,8 @@ public:
     // Final time returned when reaction is available in the reaction table = 1
     // All details = 2
 
-private:
+  private:
+
     void InitializeForNewTrack();
 
     class Utils;
@@ -105,14 +108,12 @@ private:
 
     class Utils
     {
-    public:
+      public:
+
         Utils(const G4Track& tA, const G4MolecularConfiguration* mB);
         ~Utils() = default;
 
-        G4double GetConstant() const
-        {
-            return fConstant;
-        }
+        G4double GetConstant() const { return fConstant; }
 
         const G4Track& fpTrackA;
         const G4MolecularConfiguration* fpMoleculeB;
@@ -122,3 +123,5 @@ private:
         G4double fConstant;
     };
 };
+
+#endif

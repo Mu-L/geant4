@@ -31,11 +31,11 @@
 //      File name:     G4LegendrePolynomial
 //
 //      Author:        Jason Detwiler (jasondet@gmail.com)
-// 
+//
 //      Creation date: February 2015
 //
 //      Modifications: 29 October 2024 Isaac Kunen
-//      
+//
 //      Legendre Polynomial
 //
 // -------------------------------------------------------------------
@@ -44,14 +44,16 @@
 #define G4LEGENDREPOLYNOMIAL_HH
 
 #include "globals.hh"
-#include <vector>
+
 #include <map>
+#include <vector>
 
 class G4LegendrePolynomial
 {
   public:
+
     // Access to coefficients
-    static std::size_t GetNCoefficients(std::size_t order) { return order+1; }
+    static std::size_t GetNCoefficients(std::size_t order) { return order + 1; }
     G4double GetCoefficient(std::size_t i, std::size_t order);
 
     // Evaluation functions
@@ -61,15 +63,16 @@ class G4LegendrePolynomial
 
     // cache is not used; use EvalAssocLegendrePoly(l, m, x) instead.
     G4double EvalAssocLegendrePoly(G4int l, G4int m, G4double x,
-      std::map<G4int, std::map<G4int, G4double> >* cache)
+                                   std::map<G4int, std::map<G4int, G4double>>* cache)
     {
-      (void) cache; // suppress compiler warning for unused cache
-      return EvalAssocLegendrePoly(l, m, x); 
+      (void)cache;  // suppress compiler warning for unused cache
+      return EvalAssocLegendrePoly(l, m, x);
     }
 
-  protected: // Cache coefficients for speed
+  protected:  // Cache coefficients for speed
+
     void BuildUpToOrder(std::size_t order);
-    std::vector< std::vector<G4double> > fCoefficients;
+    std::vector<std::vector<G4double>> fCoefficients;
 };
 
 #endif

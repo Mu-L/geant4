@@ -36,25 +36,23 @@
 // 02.10.2020 V.Ivanchenko: added c-,b- particles and cross section biasing
 //----------------------------------------------------------------------------
 //
-#ifndef G4HadronPhysicsQGSP_FTFP_BERT_h
-#define G4HadronPhysicsQGSP_FTFP_BERT_h 1
+#ifndef G4HADRONPHYSICSQGSP_FTFP_BERT_HH
+#define G4HADRONPHYSICSQGSP_FTFP_BERT_HH
 
-#include "globals.hh"
 #include "G4HadronPhysicsQGSP_BERT.hh"
+#include "globals.hh"
 
-class G4HadronPhysicsQGSP_FTFP_BERT : public G4HadronPhysicsQGSP_BERT 
+class G4HadronPhysicsQGSP_FTFP_BERT : public G4HadronPhysicsQGSP_BERT
 {
-  public: 
+  public:
+
     G4HadronPhysicsQGSP_FTFP_BERT(G4int verbose = 1);
     G4HadronPhysicsQGSP_FTFP_BERT(const G4String& name, G4bool quasiElastic = true);
     ~G4HadronPhysicsQGSP_FTFP_BERT() override = default;
 
     // copy constructor and hide assignment operator
-    G4HadronPhysicsQGSP_FTFP_BERT(G4HadronPhysicsQGSP_FTFP_BERT &) = delete;
-    G4HadronPhysicsQGSP_FTFP_BERT & operator =
-    (const G4HadronPhysicsQGSP_FTFP_BERT &right) = delete;
+    G4HadronPhysicsQGSP_FTFP_BERT(G4HadronPhysicsQGSP_FTFP_BERT&) = delete;
+    G4HadronPhysicsQGSP_FTFP_BERT& operator=(const G4HadronPhysicsQGSP_FTFP_BERT& right) = delete;
 };
 
 #endif
-
-

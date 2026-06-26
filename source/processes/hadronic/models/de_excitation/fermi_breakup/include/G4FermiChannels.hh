@@ -28,48 +28,54 @@
 // by V. Ivanchenko (July 2016)
 //
 
-#ifndef G4FermiChannels_h
-#define G4FermiChannels_h 1
+#ifndef G4FERMICHANNELS_HH
+#define G4FERMICHANNELS_HH
 
-#include "globals.hh"
 #include "G4FermiFragment.hh"
 #include "G4FermiPair.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4FermiChannels
 {
-public:
+  public:
 
-  explicit G4FermiChannels(const G4FermiFragment* ptr) : frag(ptr) {}
-  ~G4FermiChannels() { for (auto const & p : fvect) { delete p; } }
+    explicit G4FermiChannels(const G4FermiFragment* ptr) : frag(ptr) {}
+    ~G4FermiChannels()
+    {
+      for (auto const& p : fvect)
+      {
+        delete p;
+      }
+    }
 
-  G4int GetZ() const { return frag->GetZ(); }
-  const G4FermiFragment* GetFragment() const { return frag; }
+    G4int GetZ() const { return frag->GetZ(); }
+    const G4FermiFragment* GetFragment() const { return frag; }
 
-  std::size_t NumberPairs() const { return nch; }
-  const std::vector<G4FermiPair*>& GetChannels() const { return fvect; }
-  const G4FermiPair* GetPair(std::size_t idx) const {
-    return (idx < nch) ? fvect[idx] : nullptr;
-  }
+    std::size_t NumberPairs() const { return nch; }
+    const std::vector<G4FermiPair*>& GetChannels() const { return fvect; }
+    const G4FermiPair* GetPair(std::size_t idx) const { return (idx < nch) ? fvect[idx] : nullptr; }
 
-  void AddChannel(G4FermiPair* ptr) {
-    fvect.push_back(ptr);
-    ++nch;
-  }
+    void AddChannel(G4FermiPair* ptr)
+    {
+      fvect.push_back(ptr);
+      ++nch;
+    }
 
-  G4double GetExcitation() const { return frag->GetExcitationEnergy(); }
-  G4double GetMass() const { return frag->GetTotalEnergy(); }
+    G4double GetExcitation() const { return frag->GetExcitationEnergy(); }
+    G4double GetMass() const { return frag->GetTotalEnergy(); }
 
-  inline const G4FermiChannels& operator=(const G4FermiChannels&) = delete;
-  inline G4FermiChannels(const G4FermiChannels &) = delete;
-  inline G4bool operator==(const G4FermiChannels &) = delete;
-  inline G4bool operator!=(const G4FermiChannels &) = delete;
+    inline const G4FermiChannels& operator=(const G4FermiChannels&) = delete;
+    inline G4FermiChannels(const G4FermiChannels&) = delete;
+    inline G4bool operator==(const G4FermiChannels&) = delete;
+    inline G4bool operator!=(const G4FermiChannels&) = delete;
 
-private:
+  private:
 
-  const G4FermiFragment* frag;
-  std::size_t nch{0};
-  std::vector<G4FermiPair*> fvect;
+    const G4FermiFragment* frag;
+    std::size_t nch{0};
+    std::vector<G4FermiPair*> fvect;
 };
 
 #endif

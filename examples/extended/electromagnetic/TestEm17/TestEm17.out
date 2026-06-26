@@ -10,7 +10,7 @@
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -189,6 +189,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 0
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -635,7 +636,7 @@ N=17 V[N]={906770732717044781, 629165745432651234, 1235682547346241386, 68420008
  Run terminated.
 Run Summary
   Number of events processed : 10000
-  User=0.750000s Real=0.759418s Sys=0.000000s
+  User=0.720000s Real=0.725404s Sys=0.000000s
 
  The run consists of 10000 mu+ of 10 TeV through 1 m   of Iron (density: 7.9 g/cm3 )
 
@@ -691,7 +692,7 @@ N=17 V[N]={882454084924701664, 2270259229220857311, 818577390581940897, 14266040
  Run terminated.
 Run Summary
   Number of events processed : 10000
-  User=0.710000s Real=0.720624s Sys=0.000000s
+  User=0.650000s Real=0.653362s Sys=0.000000s
 
  The run consists of 10000 pi+ of 10 TeV through 1 m   of Iron (density: 7.9 g/cm3 )
 
@@ -746,7 +747,7 @@ N=17 V[N]={2103257823577124208, 469380737387581810, 386042433805554138, 18024306
  Run terminated.
 Run Summary
   Number of events processed : 10000
-  User=0.620000s Real=0.626872s Sys=0.000000s
+  User=0.600000s Real=0.607261s Sys=0.000000s
 
  The run consists of 10000 proton of 10 TeV through 1 m   of Iron (density: 7.9 g/cm3 )
 
@@ -755,8 +756,8 @@ Run Summary
 #
 G4 kernel has come to Quit state.
 Deleting G4Run (id:2) 
-UserDetectorConstruction deleted 0x1ed60c0
-UserPhysicsList deleted 0x1f16098
+UserDetectorConstruction deleted 0x236b420
+UserPhysicsList deleted 0x23a9e78
 UserActionInitialization deleted 0
 UserWorkerInitialization deleted 0
 UserWorkerThreadInitialization deleted 0

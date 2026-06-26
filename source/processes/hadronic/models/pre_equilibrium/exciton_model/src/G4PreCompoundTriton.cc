@@ -33,17 +33,18 @@
 //
 // Author:         V.Lara
 //
-// Modified:  
-// 21.08.2008 J. M. Quesada add choice of options  
+// Modified:
+// 21.08.2008 J. M. Quesada add choice of options
 // 20.08.2010 V.Ivanchenko added G4Pow and G4PreCompoundParameters pointers
 //                         use int Z and A and cleanup
 // 05.07.2013 J.M. Quesada FactorialFactor fixed
 //
- 
+
 #include "G4PreCompoundTriton.hh"
-#include "G4Triton.hh"
+
 #include "G4CoulombBarrier.hh"
 #include "G4DeexPrecoUtility.hh"
+#include "G4Triton.hh"
 
 G4PreCompoundTriton::G4PreCompoundTriton()
   : G4PreCompoundIon(G4Triton::Triton(), new G4CoulombBarrier(3, 1))
@@ -51,28 +52,26 @@ G4PreCompoundTriton::G4PreCompoundTriton()
 
 G4double G4PreCompoundTriton::FactorialFactor(G4int N, const G4int P) const
 {
-  return G4double((N - 3) * (P - 2) * (N - 2)) *
-         G4double((P - 1) * (N - 1) * P) / 6.;
+  return G4double((N - 3) * (P - 2) * (N - 2)) * G4double((P - 1) * (N - 1) * P) / 6.;
 }
-  
+
 G4double G4PreCompoundTriton::CoalescenceFactor(G4int A) const
 {
-  return 243.0/static_cast<G4double>(A*A);
-}    
+  return 243.0 / static_cast<G4double>(A * A);
+}
 
 G4double G4PreCompoundTriton::GetRj(G4int nParticles, G4int nCharged) const
 {
   G4double rj = 0.0;
-  if(nCharged >= 1 && (nParticles-nCharged) >= 2) {
-    G4double denominator = (G4double)(nParticles*(nParticles-1)*(nParticles-2));
-    rj = (3*nCharged*(nParticles-nCharged)*(nParticles-nCharged-1))
-      /denominator; 
+  if (nCharged >= 1 && (nParticles - nCharged) >= 2)
+  {
+    G4double denominator = (G4double)(nParticles * (nParticles - 1) * (nParticles - 2));
+    rj = (3 * nCharged * (nParticles - nCharged) * (nParticles - nCharged - 1)) / denominator;
   }
   return rj;
 }
 
 G4double G4PreCompoundTriton::GetAlpha() const
 {
-  return 1.0 + G4DeexPrecoUtility::ProtonCValue(theResZ)/3.0;
+  return 1.0 + G4DeexPrecoUtility::ProtonCValue(theResZ) / 3.0;
 }
-

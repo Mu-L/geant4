@@ -51,8 +51,8 @@
 
 // Author: M.Asai - July 2013
 // --------------------------------------------------------------------
-#ifndef G4MTRunManagerKernel_hh
-#define G4MTRunManagerKernel_hh 1
+#ifndef G4MTRUNMANAGERKERNEL_HH
+#define G4MTRUNMANAGERKERNEL_HH
 
 #include "G4MTRunManager.hh"
 #include "G4RunManagerKernel.hh"
@@ -66,6 +66,7 @@ class G4WorkerRunManager;
 class G4MTRunManagerKernel : public G4RunManagerKernel
 {
   public:
+
     G4MTRunManagerKernel();
     ~G4MTRunManagerKernel() override;
 
@@ -84,9 +85,11 @@ class G4MTRunManagerKernel : public G4RunManagerKernel
     void BroadcastAbortRun(G4bool softAbort);
 
   protected:
+
     void SetupShadowProcess() const override;
 
   private:
+
     static G4ThreadLocal G4WorkerThread* wThreadContext;
 
     static std::vector<G4WorkerRunManager*>* workerRMvector;

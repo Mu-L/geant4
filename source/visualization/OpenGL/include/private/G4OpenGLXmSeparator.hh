@@ -25,8 +25,8 @@
 //
 //
 //
-// 
-//Separator class. Inherits from G4OpenGLXmVWidgetComponent
+//
+// Separator class. Inherits from G4OpenGLXmVWidgetComponent
 
 #ifndef G4OPENGLXMSEPARATOR_HH
 #define G4OPENGLXMSEPARATOR_HH
@@ -35,22 +35,23 @@
 
 class G4OpenGLXmSeparator : public G4OpenGLXmVWidgetComponent
 {
+  public:
 
-public:
-  G4OpenGLXmSeparator (unsigned char = XmSINGLE_LINE);           //constructor
-  virtual ~G4OpenGLXmSeparator ();                               //destructor
+    G4OpenGLXmSeparator(unsigned char = XmSINGLE_LINE);  // constructor
+    virtual ~G4OpenGLXmSeparator();  // destructor
 
-  void AddYourselfTo (G4OpenGLXmVWidgetContainer*);
+    void AddYourselfTo(G4OpenGLXmVWidgetContainer*);
 
-  Widget* GetPointerToParent ();
-  Widget* GetPointerToWidget ();
+    Widget* GetPointerToParent();
+    Widget* GetPointerToWidget();
 
-private:
-  G4OpenGLXmSeparator (const G4OpenGLXmSeparator&);
-  G4OpenGLXmSeparator& operator = (const G4OpenGLXmSeparator&);
-  unsigned char line_type;
-  Widget line;
-  Widget* parent;
+  private:
+
+    G4OpenGLXmSeparator(const G4OpenGLXmSeparator&);
+    G4OpenGLXmSeparator& operator=(const G4OpenGLXmSeparator&);
+    unsigned char line_type;
+    Widget line;
+    Widget* parent;
 };
 
 #endif

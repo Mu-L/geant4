@@ -29,8 +29,8 @@
 
 // Authors: Lucio Santi, Rodrigo Castro (Univ. Buenos Aires), 2018-2021
 // --------------------------------------------------------------------
-#ifndef G4QSSDriver_HH
-#define G4QSSDriver_HH
+#ifndef G4QSSDRIVER_HH
+#define G4QSSDRIVER_HH
 
 #include "G4InterpolationDriver.hh"
 #include "G4QSSMessenger.hh"
@@ -38,9 +38,10 @@
 /**
  * @brief G4QSSDriver is a templated driver class defining the QSS
  * (Quantum State Simulation) Interpolator Driver.
+ * @ingroup geometry_magneticfield
  */
 
-template <class T>
+template<class T>
 class G4QSSDriver : public G4InterpolationDriver<T, true>
 {
   public:
@@ -70,9 +71,7 @@ class G4QSSDriver : public G4InterpolationDriver<T, true>
      *  @param[in] chordDistance Maximum sagitta distance.
      *  @returns The length of step taken.
      */
-    inline G4double AdvanceChordLimited(G4FieldTrack& track,
-                                        G4double hstep,
-                                        G4double eps,
+    inline G4double AdvanceChordLimited(G4FieldTrack& track, G4double hstep, G4double eps,
                                         G4double chordDistance) override;
 
     /**
@@ -98,11 +97,8 @@ class G4QSSDriver : public G4InterpolationDriver<T, true>
      *  @returns The step achieved.
      */
     inline G4double OneGoodStep(typename G4InterpolationDriver<T, true>::StepperIterator it,
-                                field_utils::State& y,
-                                field_utils::State& dydx,
-                                G4double& hstep,
-                                G4double epsStep,
-                                G4double curveLength,
+                                field_utils::State& y, field_utils::State& dydx, G4double& hstep,
+                                G4double epsStep, G4double curveLength,
                                 G4FieldTrack* track) override;
 
   private:

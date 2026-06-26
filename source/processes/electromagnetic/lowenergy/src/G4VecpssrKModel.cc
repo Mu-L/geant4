@@ -25,7 +25,7 @@
 //
 //
 // Author: Haifa Ben Abdelouahed
-//         
+//
 //
 // History:
 // -----------
@@ -37,17 +37,16 @@
 // Further documentation available from http://www.ge.infn.it/geant4/lowE
 // -------------------------------------------------------------------
 
-
-
 #include "G4VecpssrKModel.hh"
 
-
 G4VecpssrKModel::G4VecpssrKModel()
-{;}
+{
+  ;
+}
 
 // -------------------------------------------------------------------
 
 G4VecpssrKModel::~G4VecpssrKModel()
-{;}
-
-
+{
+  ;
+}

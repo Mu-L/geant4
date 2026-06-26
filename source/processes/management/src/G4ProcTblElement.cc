@@ -33,13 +33,10 @@
 // --------------------------------------------------------------------
 // Default constructor
 //
-G4ProcTblElement::G4ProcTblElement()
-{
-}
+G4ProcTblElement::G4ProcTblElement() {}
 
 // --------------------------------------------------------------------
-G4ProcTblElement::G4ProcTblElement(G4VProcess* aProcess)
-  : pProcess(aProcess)
+G4ProcTblElement::G4ProcTblElement(G4VProcess* aProcess) : pProcess(aProcess)
 {
   pProcMgrVector = new G4ProcMgrVector();
 }
@@ -78,8 +75,7 @@ G4ProcTblElement& G4ProcTblElement::operator=(const G4ProcTblElement& right)
       delete pProcMgrVector;
     }
     pProcMgrVector = new G4ProcMgrVector();
-    for (auto i = right.pProcMgrVector->cbegin();
-              i!= right.pProcMgrVector->cend(); ++i)
+    for (auto i = right.pProcMgrVector->cbegin(); i != right.pProcMgrVector->cend(); ++i)
     {
       pProcMgrVector->push_back(*i);
     }

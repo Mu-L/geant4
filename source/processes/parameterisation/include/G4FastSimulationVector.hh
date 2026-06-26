@@ -38,8 +38,8 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4FastSimulationVector_h
-#define G4FastSimulationVector_h 1
+#ifndef G4FASTSIMULATIONVECTOR_HH
+#define G4FASTSIMULATIONVECTOR_HH
 
 #include "G4Types.hh"
 
@@ -53,6 +53,7 @@ class G4FastSimulationVector : public std::vector<T*>
     using const_iterator = typename std_pvector::const_iterator;
 
   public:
+
     G4FastSimulationVector() = default;
 
     virtual ~G4FastSimulationVector() = default;

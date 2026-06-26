@@ -27,7 +27,7 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   G4EmStandardPhysicsGS 
+// ClassName:   G4EmStandardPhysicsGS
 //
 // Author:      V.Ivanchenko 05.06.2015 created from G4EmStandardPhysics
 //
@@ -40,8 +40,8 @@
 // It is an experimental EM physics configuration
 //
 
-#ifndef G4EmStandardPhysicsGS_h
-#define G4EmStandardPhysicsGS_h 1
+#ifndef G4EMSTANDARDPHYSICSGS_HH
+#define G4EMSTANDARDPHYSICSGS_HH
 
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
@@ -50,22 +50,16 @@
 
 class G4EmStandardPhysicsGS : public G4VPhysicsConstructor
 {
-public:
+  public:
 
-  explicit G4EmStandardPhysicsGS(G4int ver=1, const G4String& name="");
+    explicit G4EmStandardPhysicsGS(G4int ver = 1, const G4String& name = "");
 
-  ~G4EmStandardPhysicsGS() override;
+    ~G4EmStandardPhysicsGS() override;
 
-  void ConstructParticle() override;
-  void ConstructProcess() override;
+    void ConstructParticle() override;
+    void ConstructProcess() override;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-
-
-
-
-

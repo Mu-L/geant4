@@ -26,11 +26,11 @@
 //
 //
 
-#ifndef G4PSPassageTrackLength_h
-#define G4PSPassageTrackLength_h 1
+#ifndef G4PSPASSAGETRACKLENGTH_HH
+#define G4PSPASSAGETRACKLENGTH_HH
 
-#include "G4VPrimitivePlotter.hh"
 #include "G4THitsMap.hh"
+#include "G4VPrimitivePlotter.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // (Description)
@@ -47,30 +47,33 @@
 
 class G4PSPassageTrackLength : public G4VPrimitivePlotter
 {
- public:
-  G4PSPassageTrackLength(const G4String& name, G4int depth = 0);
-  G4PSPassageTrackLength(const G4String& name, const G4String& unit, G4int depth = 0);
-  ~G4PSPassageTrackLength() override = default;
+  public:
 
-  inline void Weighted(G4bool flg = true) { weighted = flg; }
-  // Multiply track weight
+    G4PSPassageTrackLength(const G4String& name, G4int depth = 0);
+    G4PSPassageTrackLength(const G4String& name, const G4String& unit, G4int depth = 0);
+    ~G4PSPassageTrackLength() override = default;
 
-  void Initialize(G4HCofThisEvent*) override;
-  void clear() override;
-  void PrintAll() override;
+    inline void Weighted(G4bool flg = true) { weighted = flg; }
+    // Multiply track weight
 
-  virtual void SetUnit(const G4String& unit);
+    void Initialize(G4HCofThisEvent*) override;
+    void clear() override;
+    void PrintAll() override;
 
- protected:
-  G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
-  G4bool IsPassed(G4Step*);
+    virtual void SetUnit(const G4String& unit);
 
- private:
-  G4int HCID;
-  G4int fCurrentTrkID;
-  G4double fTrackLength;
-  G4THitsMap<G4double>* EvtMap;
-  G4bool weighted;
+  protected:
+
+    G4bool ProcessHits(G4Step*, G4TouchableHistory*) override;
+    G4bool IsPassed(G4Step*);
+
+  private:
+
+    G4int HCID;
+    G4int fCurrentTrkID;
+    G4double fTrackLength;
+    G4THitsMap<G4double>* EvtMap;
+    G4bool weighted;
 };
 
 #endif

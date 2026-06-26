@@ -22,11 +22,11 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // G4LogicalVolume implementation
 //
 // 11.07.95 P.Kent: Initial version
-// 04.08.97 P.M.DeFreitas: Added methods for parameterised simulation 
+// 04.08.97 P.M.DeFreitas: Added methods for parameterised simulation
 // 09.11.98 M.Verderi, J.Apostolakis: Added BiasWeight member and accessors
 // 12.02.99 S.Giani: Added user defined optimisation quality
 // 18.04.01 G.Cosmo: Migrated to STL vector
@@ -38,15 +38,18 @@
 // --------------------------------------------------------------------
 
 #include "G4LogicalVolume.hh"
+
 #include "G4LogicalVolumeStore.hh"
-#include "G4VSolid.hh"
 #include "G4Material.hh"
+#include "G4UnitsTable.hh"
 #include "G4VPVParameterisation.hh"
+#include "G4VSolid.hh"
 #include "G4VisAttributes.hh"
 
-#include "G4UnitsTable.hh"
-
-G4LVData::G4LVData() {;}
+G4LVData::G4LVData()
+{
+  ;
+}
 
 // This new field helps to use the class G4LVManager
 //
@@ -55,13 +58,13 @@ G4LVManager G4LogicalVolume::subInstanceManager;
 // These macros change the references to fields that are now encapsulated
 // in the class G4LVData.
 //
-#define G4MT_solid     ((subInstanceManager.offset[instanceID]).fSolid)
+#define G4MT_solid ((subInstanceManager.offset[instanceID]).fSolid)
 #define G4MT_sdetector ((subInstanceManager.offset[instanceID]).fSensitiveDetector)
-#define G4MT_fmanager  ((subInstanceManager.offset[instanceID]).fFieldManager)
-#define G4MT_material  ((subInstanceManager.offset[instanceID]).fMaterial)
-#define G4MT_mass      ((subInstanceManager.offset[instanceID]).fMass)
-#define G4MT_ccouple   ((subInstanceManager.offset[instanceID]).fCutsCouple)
-#define G4MT_instance  (subInstanceManager.offset[instanceID])
+#define G4MT_fmanager ((subInstanceManager.offset[instanceID]).fFieldManager)
+#define G4MT_material ((subInstanceManager.offset[instanceID]).fMaterial)
+#define G4MT_mass ((subInstanceManager.offset[instanceID]).fMass)
+#define G4MT_ccouple ((subInstanceManager.offset[instanceID]).fCutsCouple)
+#define G4MT_instance (subInstanceManager.offset[instanceID])
 
 // ********************************************************************
 // Constructor - sets member data and adds to logical Store,
@@ -69,15 +72,10 @@ G4LVManager G4LogicalVolume::subInstanceManager;
 //               Initialises daughter vector to 0 length.
 // ********************************************************************
 //
-G4LogicalVolume::G4LogicalVolume( G4VSolid* pSolid,
-                                  G4Material* pMaterial,
-                            const G4String& name,
-                                  G4FieldManager* pFieldMgr,
-                                  G4VSensitiveDetector* pSDetector,
-                                  G4UserLimits* pULimits,
-                                  G4bool optimise )
- : fDaughters(0,(G4VPhysicalVolume*)nullptr), fDaughtersVolumeType(kNormal),
-   fOptimise(optimise)
+G4LogicalVolume::G4LogicalVolume(G4VSolid* pSolid, G4Material* pMaterial, const G4String& name,
+                                 G4FieldManager* pFieldMgr, G4VSensitiveDetector* pSDetector,
+                                 G4UserLimits* pULimits, G4bool optimise)
+  : fDaughters(0, (G4VPhysicalVolume*)nullptr), fDaughtersVolumeType(kNormal), fOptimise(optimise)
 {
   // Initialize 'Shadow'/master pointers - for use in copying to workers
   //
@@ -87,7 +85,7 @@ G4LogicalVolume::G4LogicalVolume( G4VSolid* pSolid,
 
   instanceID = subInstanceManager.CreateSubInstance();
   AssignFieldManager(pFieldMgr);
-  
+
   G4MT_mass = 0.;
   G4MT_ccouple = nullptr;
 
@@ -95,7 +93,7 @@ G4LogicalVolume::G4LogicalVolume( G4VSolid* pSolid,
   SetMaterial(pMaterial);
   SetName(name);
   SetSensitiveDetector(pSDetector);
-  SetUserLimits(pULimits);    
+  SetUserLimits(pULimits);
 
   // Initialize 'Shadow' data structure - for use by object persistency
   //
@@ -114,17 +112,16 @@ G4LogicalVolume::G4LogicalVolume( G4VSolid* pSolid,
 //                            for usage restricted to object persistency.
 // ********************************************************************
 //
-G4LogicalVolume::G4LogicalVolume( __void__& )
- : fDaughters(0,(G4VPhysicalVolume*)nullptr), fName("")
+G4LogicalVolume::G4LogicalVolume(__void__&) : fDaughters(0, (G4VPhysicalVolume*)nullptr), fName("")
 {
   instanceID = subInstanceManager.CreateSubInstance();
-  
-  SetSensitiveDetector(nullptr);    // G4MT_sdetector = nullptr;
+
+  SetSensitiveDetector(nullptr);  // G4MT_sdetector = nullptr;
   SetFieldManager(nullptr, false);  // G4MT_fmanager = nullptr;
 
   G4MT_mass = 0.;
   G4MT_ccouple = nullptr;
-  
+
   // Add to store
   //
   G4LogicalVolumeStore::Register(this);
@@ -138,7 +135,7 @@ G4LogicalVolume::G4LogicalVolume( __void__& )
 G4LogicalVolume::~G4LogicalVolume()
 {
   if (!fLock && fRootRegion)  // De-register root region first if not locked
-  {                           // and flagged as root logical-volume
+  {  // and flagged as root logical-volume
     fRegion->RemoveRootLogicalVolume(this, true);
   }
   delete lvdata;
@@ -165,26 +162,24 @@ void G4LogicalVolume::SetName(const G4String& pName)
 // for the fields encapsulated by the class G4LVData.
 // ********************************************************************
 //
-void G4LogicalVolume::
-InitialiseWorker( G4LogicalVolume* /*pMasterObject*/,
-                  G4VSolid* pSolid,
-                  G4VSensitiveDetector* pSDetector)
+void G4LogicalVolume::InitialiseWorker(G4LogicalVolume* /*pMasterObject*/, G4VSolid* pSolid,
+                                       G4VSensitiveDetector* pSDetector)
 {
   subInstanceManager.SlaveCopySubInstanceArray();
 
   SetSolid(pSolid);
-  SetSensitiveDetector(pSDetector); //  How this object is available now ?
+  SetSensitiveDetector(pSDetector);  //  How this object is available now ?
   AssignFieldManager(fFieldManager);
-   // Should be set - but a per-thread copy is not available yet
-   // Must not call SetFieldManager(), which propagates FieldMgr
+  // Should be set - but a per-thread copy is not available yet
+  // Must not call SetFieldManager(), which propagates FieldMgr
 
 #ifdef CLONE_FIELD_MGR
   // Create a field FieldManager by cloning
   //
-  G4FieldManager workerFldMgr = fFieldManager->GetWorkerClone(G4bool* created);
-  if( created || (GetFieldManager() != workerFldMgr) )
+  G4FieldManager workerFldMgr = fFieldManager->GetWorkerClone(G4bool * created);
+  if (created || (GetFieldManager() != workerFldMgr))
   {
-    SetFieldManager(fFieldManager, false); // which propagates FieldMgr
+    SetFieldManager(fFieldManager, false);  // which propagates FieldMgr
   }
   else
   {
@@ -212,15 +207,12 @@ void G4LogicalVolume::Clean()
 // For G4LogicalVolume instances, nothing more to do here.
 // ********************************************************************
 //
-void G4LogicalVolume::
-TerminateWorker( G4LogicalVolume* /*pMasterObject*/)
-{
-}
+void G4LogicalVolume::TerminateWorker(G4LogicalVolume* /*pMasterObject*/) {}
 
 // ********************************************************************
 // GetSubInstanceManager
 //
-// Returns the private data instance manager.    
+// Returns the private data instance manager.
 // ********************************************************************
 //
 const G4LVManager& G4LogicalVolume::GetSubInstanceManager()
@@ -241,10 +233,13 @@ G4FieldManager* G4LogicalVolume::GetFieldManager() const
 // AssignFieldManager
 // ********************************************************************
 //
-void G4LogicalVolume::AssignFieldManager( G4FieldManager *fldMgr)
+void G4LogicalVolume::AssignFieldManager(G4FieldManager* fldMgr)
 {
-  G4MT_fmanager= fldMgr;
-  if(G4Threading::IsMasterThread())  { fFieldManager = fldMgr; }
+  G4MT_fmanager = fldMgr;
+  if (G4Threading::IsMasterThread())
+  {
+    fFieldManager = fldMgr;
+  }
 }
 
 // ********************************************************************
@@ -260,18 +255,16 @@ G4bool G4LogicalVolume::IsExtended() const
 // SetFieldManager
 // ********************************************************************
 //
-void
-G4LogicalVolume::SetFieldManager(G4FieldManager* pNewFieldMgr,
-                                 G4bool          forceAllDaughters) 
+void G4LogicalVolume::SetFieldManager(G4FieldManager* pNewFieldMgr, G4bool forceAllDaughters)
 {
   AssignFieldManager(pNewFieldMgr);
 
   auto NoDaughters = GetNoDaughters();
-  while ( (NoDaughters--)>0 )
+  while ((NoDaughters--) > 0)
   {
-    G4LogicalVolume* DaughterLogVol; 
+    G4LogicalVolume* DaughterLogVol;
     DaughterLogVol = GetDaughter(NoDaughters)->GetLogicalVolume();
-    if ( forceAllDaughters || (DaughterLogVol->GetFieldManager() == nullptr) )
+    if (forceAllDaughters || (DaughterLogVol->GetFieldManager() == nullptr))
     {
       DaughterLogVol->SetFieldManager(pNewFieldMgr, forceAllDaughters);
     }
@@ -288,7 +281,7 @@ void G4LogicalVolume::AddDaughter(G4VPhysicalVolume* pNewDaughter)
 
   // The type of the navigation needed is determined by the first daughter
   //
-  if( fDaughters.empty() )
+  if (fDaughters.empty())
   {
     fDaughtersVolumeType = daughterType;
   }
@@ -298,39 +291,33 @@ void G4LogicalVolume::AddDaughter(G4VPhysicalVolume* pNewDaughter)
 
     // 1. A replica or parameterised volume can have only one daughter
     //
-    if( fDaughters[0]->IsReplicated() )
+    if (fDaughters[0]->IsReplicated())
     {
       std::ostringstream message;
-      message << "ERROR - Attempt to place a volume in a mother volume"
-        << G4endl
-        << "        already containing a replicated volume." << G4endl
-        << "        A volume can either contain several placements" << G4endl
-        << "        or a unique replica or parameterised volume !" << G4endl
-        << "           Mother logical volume: " << GetName() << G4endl
-        << "           Placing volume: " << pNewDaughter->GetName()
-        << G4endl;
-      G4Exception("G4LogicalVolume::AddDaughter()", "GeomMgt0002",
-                  FatalException, message,
+      message << "ERROR - Attempt to place a volume in a mother volume" << G4endl
+              << "        already containing a replicated volume." << G4endl
+              << "        A volume can either contain several placements" << G4endl
+              << "        or a unique replica or parameterised volume !" << G4endl
+              << "           Mother logical volume: " << GetName() << G4endl
+              << "           Placing volume: " << pNewDaughter->GetName() << G4endl;
+      G4Exception("G4LogicalVolume::AddDaughter()", "GeomMgt0002", FatalException, message,
                   "Replica or parameterised volume must be the only daughter!");
     }
     else
     {
       // 2. Ensure that Placement and External physical volumes do not mix
       //
-      if(  daughterType != fDaughtersVolumeType )
+      if (daughterType != fDaughtersVolumeType)
       {
         std::ostringstream message;
-        message << "ERROR - Attempt to place a volume in a mother volume"
-          << G4endl
-          << "        already containing a different type of volume." << G4endl
-          << "        A volume can either contain" << G4endl
-          << "        - one or more placements, OR" << G4endl
-          << "        - one or more 'external' type physical volumes." << G4endl
-          << "          Mother logical volume: " << GetName() << G4endl
-          << "          Volume being placed: " << pNewDaughter->GetName()
-          << G4endl;
-        G4Exception("G4LogicalVolume::AddDaughter()", "GeomMgt0002",
-                    FatalException, message,
+        message << "ERROR - Attempt to place a volume in a mother volume" << G4endl
+                << "        already containing a different type of volume." << G4endl
+                << "        A volume can either contain" << G4endl
+                << "        - one or more placements, OR" << G4endl
+                << "        - one or more 'external' type physical volumes." << G4endl
+                << "          Mother logical volume: " << GetName() << G4endl
+                << "          Volume being placed: " << pNewDaughter->GetName() << G4endl;
+        G4Exception("G4LogicalVolume::AddDaughter()", "GeomMgt0002", FatalException, message,
                     "Cannot mix placements and external physical volumes !");
       }
     }
@@ -349,8 +336,8 @@ void G4LogicalVolume::AddDaughter(G4VPhysicalVolume* pNewDaughter)
 
   // Avoid propagating the fieldManager pointer if null
   // and daughter's one is null as well...
-  // 
-  if( (G4MT_fmanager != nullptr ) && (pDaughterFieldManager == nullptr) )
+  //
+  if ((G4MT_fmanager != nullptr) && (pDaughterFieldManager == nullptr))
   {
     pDaughterLogical->SetFieldManager(G4MT_fmanager, false);
   }
@@ -367,9 +354,9 @@ void G4LogicalVolume::AddDaughter(G4VPhysicalVolume* pNewDaughter)
 //
 void G4LogicalVolume::RemoveDaughter(const G4VPhysicalVolume* p)
 {
-  for (auto i=fDaughters.cbegin(); i!=fDaughters.cend(); ++i )
+  for (auto i = fDaughters.cbegin(); i != fDaughters.cend(); ++i)
   {
-    if (**i==*p)
+    if (**i == *p)
     {
       fDaughters.erase(i);
       break;
@@ -402,36 +389,35 @@ void G4LogicalVolume::ClearDaughters()
 //
 void G4LogicalVolume::ResetMass()
 {
-  G4MT_mass= 0.0;
+  G4MT_mass = 0.0;
 }
 
 // ********************************************************************
 // GetSolid
 // ********************************************************************
 //
-G4VSolid* G4LogicalVolume::GetSolid(G4LVData &instLVdata) // const
+G4VSolid* G4LogicalVolume::GetSolid(G4LVData& instLVdata)  // const
 {
   return instLVdata.fSolid;
 }
 
 G4VSolid* G4LogicalVolume::GetSolid() const
 {
-  return this->GetSolid( subInstanceManager.offset[instanceID] ); 
+  return this->GetSolid(subInstanceManager.offset[instanceID]);
 }
 
 // ********************************************************************
 // SetSolid
 // ********************************************************************
 //
-void G4LogicalVolume::SetSolid(G4VSolid *pSolid)
+void G4LogicalVolume::SetSolid(G4VSolid* pSolid)
 {
-
   G4MT_solid = pSolid;
-  this->ResetMass(); 
+  this->ResetMass();
 }
 
 void G4LogicalVolume::SetSolid(G4LVData& instLVdata, G4VSolid* pSolid)
-{  
+{
   instLVdata.fSolid = pSolid;
   instLVdata.fMass = 0.0;
 }
@@ -461,8 +447,11 @@ void G4LogicalVolume::SetMaterial(G4Material* pMaterial)
 //
 void G4LogicalVolume::UpdateMaterial(G4Material* pMaterial)
 {
-  G4MT_material=pMaterial;
-  if (fRegion != nullptr) { G4MT_ccouple = fRegion->FindCouple(pMaterial); }
+  G4MT_material = pMaterial;
+  if (fRegion != nullptr)
+  {
+    G4MT_ccouple = fRegion->FindCouple(pMaterial);
+  }
   G4MT_mass = 0.0;
 }
 
@@ -482,7 +471,10 @@ G4VSensitiveDetector* G4LogicalVolume::GetSensitiveDetector() const
 void G4LogicalVolume::SetSensitiveDetector(G4VSensitiveDetector* pSDetector)
 {
   G4MT_sdetector = pSDetector;
-  if (G4Threading::IsMasterThread())  { fSensitiveDetector = pSDetector; }
+  if (G4Threading::IsMasterThread())
+  {
+    fSensitiveDetector = pSDetector;
+  }
 }
 
 // ********************************************************************
@@ -506,20 +498,22 @@ void G4LogicalVolume::SetMaterialCutsCouple(G4MaterialCutsCouple* cuts)
 // ********************************************************************
 // IsAncestor
 //
-// Finds out if the current logical volume is an ancestor of a given 
+// Finds out if the current logical volume is an ancestor of a given
 // physical volume
 // ********************************************************************
 //
-G4bool
-G4LogicalVolume::IsAncestor(const G4VPhysicalVolume* aVolume) const
+G4bool G4LogicalVolume::IsAncestor(const G4VPhysicalVolume* aVolume) const
 {
   G4bool isDaughter = IsDaughter(aVolume);
   if (!isDaughter)
   {
-    for (const auto & daughter : fDaughters)
+    for (const auto& daughter : fDaughters)
     {
       isDaughter = daughter->GetLogicalVolume()->IsAncestor(aVolume);
-      if (isDaughter) { break; }
+      if (isDaughter)
+      {
+        break;
+      }
     }
   }
   return isDaughter;
@@ -537,8 +531,8 @@ G4int G4LogicalVolume::TotalVolumeEntities() const
   G4int vols = 1;
   for (auto physDaughter : fDaughters)
   {
-    vols += physDaughter->GetMultiplicity()
-           *physDaughter->GetLogicalVolume()->TotalVolumeEntities();
+    vols +=
+      physDaughter->GetMultiplicity() * physDaughter->GetLogicalVolume()->TotalVolumeEntities();
   }
   return vols;
 }
@@ -555,20 +549,21 @@ G4int G4LogicalVolume::TotalVolumeEntities() const
 //       calls (default), unless recomputation is forced by providing
 //       'true' for the boolean argument in input. Computation should
 //       be forced if the geometry setup has changed after the previous
-//       call. By setting the 'propagate' boolean flag to 'false' the 
-//       method returns the mass of the present logical volume only 
+//       call. By setting the 'propagate' boolean flag to 'false' the
+//       method returns the mass of the present logical volume only
 //       (subtracted for the volume occupied by the daughter volumes).
 //       The extra argument 'parMaterial' is internally used to
 //       consider cases of geometrical parameterisations by material.
 // ********************************************************************
 //
-G4double G4LogicalVolume::GetMass(G4bool forced,
-                                  G4bool propagate,
-                                  G4Material* parMaterial)
+G4double G4LogicalVolume::GetMass(G4bool forced, G4bool propagate, G4Material* parMaterial)
 {
   // Return the cached non-zero value, if not forced
   //
-  if ( ((G4MT_mass) != 0.0) && (!forced) )  { return G4MT_mass; }
+  if (((G4MT_mass) != 0.0) && (!forced))
+  {
+    return G4MT_mass;
+  }
 
   // Global density and computed mass associated to the logical
   // volume without considering its daughters
@@ -577,32 +572,28 @@ G4double G4LogicalVolume::GetMass(G4bool forced,
   if (logMaterial == nullptr)
   {
     std::ostringstream message;
-    message << "No material associated to the logical volume: "
-            << fName << " !" << G4endl
+    message << "No material associated to the logical volume: " << fName << " !" << G4endl
             << "Sorry, cannot compute the mass ...";
-    G4Exception("G4LogicalVolume::GetMass()", "GeomMgt0002",
-                FatalException, message);
+    G4Exception("G4LogicalVolume::GetMass()", "GeomMgt0002", FatalException, message);
     return 0.0;
   }
-  if ( GetSolid() == nullptr )
+  if (GetSolid() == nullptr)
   {
     std::ostringstream message;
-    message << "No solid is associated to the logical volume: "
-            << fName << " !" << G4endl
+    message << "No solid is associated to the logical volume: " << fName << " !" << G4endl
             << "Sorry, cannot compute the mass ...";
-    G4Exception("G4LogicalVolume::GetMass()", "GeomMgt0002",
-                FatalException, message);
+    G4Exception("G4LogicalVolume::GetMass()", "GeomMgt0002", FatalException, message);
     return 0.0;
   }
   G4double globalDensity = logMaterial->GetDensity();
   G4double motherMass = GetSolid()->GetCubicVolume() * globalDensity;
   G4double massSum = motherMass;
-  
+
   // For each daughter in the tree, subtract the mass occupied
   // and if required by the propagate flag, add the real daughter's
   // one computed recursively
 
-  for (const auto & physDaughter : fDaughters)
+  for (const auto& physDaughter : fDaughters)
   {
     G4LogicalVolume* logDaughter = physDaughter->GetLogicalVolume();
     G4double subMass = 0.0;
@@ -613,7 +604,7 @@ G4double G4LogicalVolume::GetMass(G4bool forced,
     // considering its multiplicity (i.e. replicated or not) and
     // eventually its parameterisation (by solid and/or by material)
     //
-    for (auto i=0; i<physDaughter->GetMultiplicity(); ++i)
+    for (auto i = 0; i < physDaughter->GetMultiplicity(); ++i)
     {
       G4VPVParameterisation* physParam = physDaughter->GetParameterisation();
       if (physParam != nullptr)
@@ -656,7 +647,7 @@ G4double G4LogicalVolume::GetMass(G4bool forced,
 G4bool G4LogicalVolume::ChangeDaughtersType(EVolume aType)
 {
   G4bool works = false;
-  if( aType == kExternal )
+  if (aType == kExternal)
   {
     // It is the responsibility of External Navigator to handle types selected
     //
@@ -667,7 +658,7 @@ G4bool G4LogicalVolume::ChangeDaughtersType(EVolume aType)
   {
     EVolume expectedVType = DeduceDaughtersType();
     works = (expectedVType == aType);
-    if ( works )
+    if (works)
     {
       fDaughtersVolumeType = aType;
     }
@@ -679,9 +670,12 @@ G4bool G4LogicalVolume::ChangeDaughtersType(EVolume aType)
 // SetVisAttributes - copy version
 // ********************************************************************
 //
-void G4LogicalVolume::SetVisAttributes (const G4VisAttributes& VA)
+void G4LogicalVolume::SetVisAttributes(const G4VisAttributes& VA)
 {
-  if (G4Threading::IsWorkerThread()) { return; }
+  if (G4Threading::IsWorkerThread())
+  {
+    return;
+  }
   fVisAttributes = std::make_shared<const G4VisAttributes>(VA);
 }
 
@@ -689,8 +683,11 @@ void G4LogicalVolume::SetVisAttributes (const G4VisAttributes& VA)
 // SetVisAttributes
 // ********************************************************************
 //
-void G4LogicalVolume::SetVisAttributes (const G4VisAttributes* pVA)
+void G4LogicalVolume::SetVisAttributes(const G4VisAttributes* pVA)
 {
-  if (G4Threading::IsWorkerThread()) { return; }
-  fVisAttributes = std::shared_ptr<const G4VisAttributes>(pVA,[](const G4VisAttributes*){});
+  if (G4Threading::IsWorkerThread())
+  {
+    return;
+  }
+  fVisAttributes = std::shared_ptr<const G4VisAttributes>(pVA, [](const G4VisAttributes*) {});
 }

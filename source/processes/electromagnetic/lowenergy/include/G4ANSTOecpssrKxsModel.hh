@@ -22,7 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // History:
 // -----------
 //  10 Nov 2021   S. Guatelli & S. Bakr - 1st implementation
@@ -32,14 +32,15 @@
 //  Computation of K, L & M shell ECPSSR ionisation cross sections for protons and alphas
 //  Based on the work of
 //  - S. Bakr et al. (2021) NIM B, 507:11-19.
-//  - S. Bakr et al (2018), NIMB B, 436: 285-291. 
+//  - S. Bakr et al (2018), NIMB B, 436: 285-291.
 // ---------------------------------------------------------------------------------------
 
-#ifndef G4ANSTOecpssrKxsModel_HH
-#define G4ANSTOecpssrKxsModel_HH 1
+#ifndef G4ANSTOECPSSRKXSMODEL_HH
+#define G4ANSTOECPSSRKXSMODEL_HH
 
 #include "G4VecpssrKModel.hh"
 #include "globals.hh"
+
 #include <map>
 
 class G4VDataSetAlgorithm;
@@ -48,25 +49,24 @@ class G4VEMDataSet;
 class G4ANSTOecpssrKxsModel : public G4VecpssrKModel
 
 {
-public:
+  public:
 
-  G4ANSTOecpssrKxsModel();
+    G4ANSTOecpssrKxsModel();
 
-  virtual ~G4ANSTOecpssrKxsModel();
-			     
-  G4double CalculateCrossSection (G4int zTarget, G4double massIncident, G4double energyIncident);
-				     
-private:
+    virtual ~G4ANSTOecpssrKxsModel();
 
-  G4ANSTOecpssrKxsModel(const G4ANSTOecpssrKxsModel&);
-  G4ANSTOecpssrKxsModel & operator = (const G4ANSTOecpssrKxsModel &right);
+    G4double CalculateCrossSection(G4int zTarget, G4double massIncident, G4double energyIncident);
 
-  G4VDataSetAlgorithm* interpolation;
+  private:
 
-  std::map< G4int , G4VEMDataSet* > protonDataSetMap;
-  std::map< G4int , G4VEMDataSet* > alphaDataSetMap;
-  std::map< G4int , G4VEMDataSet* > carbonDataSetMap;
+    G4ANSTOecpssrKxsModel(const G4ANSTOecpssrKxsModel&);
+    G4ANSTOecpssrKxsModel& operator=(const G4ANSTOecpssrKxsModel& right);
 
+    G4VDataSetAlgorithm* interpolation;
+
+    std::map<G4int, G4VEMDataSet*> protonDataSetMap;
+    std::map<G4int, G4VEMDataSet*> alphaDataSetMap;
+    std::map<G4int, G4VEMDataSet*> carbonDataSetMap;
 };
 
 #endif

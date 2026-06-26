@@ -70,61 +70,63 @@ class G4VProcess;
 
 class G4RichTrajectoryPoint : public G4VTrajectoryPoint
 {
+    friend class G4ClonedRichTrajectoryPoint;
 
-  friend class G4ClonedRichTrajectoryPoint;
+  public:  // without description
 
- public:  // without description
-  // Constructors/Destructor
-  //
-  G4RichTrajectoryPoint();
-  G4RichTrajectoryPoint(const G4Track*);  // For first point.
-  G4RichTrajectoryPoint(const G4Step*);  // For subsequent points.
-  G4RichTrajectoryPoint(const G4RichTrajectoryPoint& right);
-  ~G4RichTrajectoryPoint() override;
+    // Constructors/Destructor
+    //
+    G4RichTrajectoryPoint();
+    G4RichTrajectoryPoint(const G4Track*);  // For first point.
+    G4RichTrajectoryPoint(const G4Step*);  // For subsequent points.
+    G4RichTrajectoryPoint(const G4RichTrajectoryPoint& right);
+    ~G4RichTrajectoryPoint() override;
 
-  // Operators
-  //
-  G4RichTrajectoryPoint& operator=(const G4RichTrajectoryPoint&) = delete;
-  inline G4bool operator==(const G4RichTrajectoryPoint& right) const;
-  inline void* operator new(size_t);
-  inline void operator delete(void* aRichTrajectoryPoint);
+    // Operators
+    //
+    G4RichTrajectoryPoint& operator=(const G4RichTrajectoryPoint&) = delete;
+    inline G4bool operator==(const G4RichTrajectoryPoint& right) const;
+    inline void* operator new(size_t);
+    inline void operator delete(void* aRichTrajectoryPoint);
 
-  // Get/Set functions
-  //
+    // Get/Set functions
+    //
 
-  inline const G4ThreeVector GetPosition() const override { return fPosition; }
+    inline const G4ThreeVector GetPosition() const override { return fPosition; }
 
-  inline const std::vector<G4ThreeVector>* GetAuxiliaryPoints() const override;
-  const std::map<G4String, G4AttDef>* GetAttDefs() const override;
-  std::vector<G4AttValue>* CreateAttValues() const override;
+    inline const std::vector<G4ThreeVector>* GetAuxiliaryPoints() const override;
+    const std::map<G4String, G4AttDef>* GetAttDefs() const override;
+    std::vector<G4AttValue>* CreateAttValues() const override;
 
-  G4double GetPreStepPointGlobalTime()  const {return fPreStepPointGlobalTime;}
-  G4double GetPostStepPointGlobalTime() const {return fPostStepPointGlobalTime;}
+    G4double GetPreStepPointGlobalTime() const { return fPreStepPointGlobalTime; }
+    G4double GetPostStepPointGlobalTime() const { return fPostStepPointGlobalTime; }
 
- private:
-  G4ThreeVector fPosition{0., 0., 0.};
+  private:
 
-  // Extended member data
-  //
-  std::vector<G4ThreeVector>* fpAuxiliaryPointVector = nullptr;
-  G4double fTotEDep = 0.0;
-  G4double fRemainingEnergy = 0.0;
-  const G4VProcess* fpProcess = nullptr;
-  G4StepStatus fPreStepPointStatus = fUndefined;
-  G4StepStatus fPostStepPointStatus = fUndefined;
-  G4double fPreStepPointGlobalTime = 0.0;
-  G4double fPostStepPointGlobalTime = 0.0;
-  G4TouchableHandle fpPreStepPointVolume;
-  G4TouchableHandle fpPostStepPointVolume;
-  G4double fPreStepPointWeight = 0.0;
-  G4double fPostStepPointWeight = 0.0;
+    G4ThreeVector fPosition{0., 0., 0.};
+
+    // Extended member data
+    //
+    std::vector<G4ThreeVector>* fpAuxiliaryPointVector = nullptr;
+    G4double fTotEDep = 0.0;
+    G4double fRemainingEnergy = 0.0;
+    const G4VProcess* fpProcess = nullptr;
+    G4StepStatus fPreStepPointStatus = fUndefined;
+    G4StepStatus fPostStepPointStatus = fUndefined;
+    G4double fPreStepPointGlobalTime = 0.0;
+    G4double fPostStepPointGlobalTime = 0.0;
+    G4TouchableHandle fpPreStepPointVolume;
+    G4TouchableHandle fpPostStepPointVolume;
+    G4double fPreStepPointWeight = 0.0;
+    G4double fPostStepPointWeight = 0.0;
 };
 
 extern G4TRACKING_DLL G4Allocator<G4RichTrajectoryPoint>*& aRichTrajectoryPointAllocator();
 
 inline void* G4RichTrajectoryPoint::operator new(size_t)
 {
-  if (aRichTrajectoryPointAllocator() == nullptr) {
+  if (aRichTrajectoryPointAllocator() == nullptr)
+  {
     aRichTrajectoryPointAllocator() = new G4Allocator<G4RichTrajectoryPoint>;
   }
   return (void*)aRichTrajectoryPointAllocator()->MallocSingle();

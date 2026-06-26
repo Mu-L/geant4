@@ -32,61 +32,60 @@
 // Author: Youhei Morita, 12.09.2001
 // --------------------------------------------------------------------
 #ifndef G4DCIOCATALOG_HH
-#define G4DCIOCATALOG_HH 1
+#define G4DCIOCATALOG_HH
 
-#include <map>
 #include "G4Types.hh"
 #include "G4VPDigitsCollectionIO.hh"
 
+#include <map>
+
 class G4VDCIOentry;
 
-using DCIOmap = std::map<G4String, G4VDCIOentry*,
-                         std::less<G4String>>;
-using DCIOstore = std::map<G4String, G4VPDigitsCollectionIO*,
-                           std::less<G4String>>;
+using DCIOmap = std::map<G4String, G4VDCIOentry*, std::less<G4String>>;
+using DCIOstore = std::map<G4String, G4VPDigitsCollectionIO*, std::less<G4String>>;
 
 class G4DCIOcatalog
 {
   public:
 
     G4DCIOcatalog();
-      // Constructor
+    // Constructor
 
     virtual ~G4DCIOcatalog() {}
-      // Destructor
+    // Destructor
 
     static G4DCIOcatalog* GetDCIOcatalog();
-      // Construct G4DCIOcatalog and returns the pointer
+    // Construct G4DCIOcatalog and returns the pointer
 
     void SetVerboseLevel(int v) { m_verbose = v; }
-      // Set verbose level
+    // Set verbose level
 
     void RegisterEntry(G4VDCIOentry* d);
-      // Register I/O manager entry
+    // Register I/O manager entry
 
     void RegisterDCIOmanager(G4VPDigitsCollectionIO* d);
-      // Register I/O manager
+    // Register I/O manager
 
     G4VDCIOentry* GetEntry(const G4String& name);
-      // Returns the I/O manager entry
+    // Returns the I/O manager entry
 
     G4VPDigitsCollectionIO* GetDCIOmanager(const G4String& name);
-      // Returns the registered I/O manager entry
+    // Returns the registered I/O manager entry
 
     void PrintEntries();
-      // Prints the list of I/O manager entries
+    // Prints the list of I/O manager entries
 
     G4String CurrentDCIOmanager();
-      // Returns the list of I/O managers
+    // Returns the list of I/O managers
 
     void PrintDCIOmanager();
-      // Prints the list of I/O managers
+    // Prints the list of I/O managers
 
     std::size_t NumberOfDCIOmanager() { return theStore.size(); }
-      // Returns the number of registered I/O managers
+    // Returns the number of registered I/O managers
 
     G4VPDigitsCollectionIO* GetDCIOmanager(G4int n);
-      // Returns the n-th registered I/O manager entry
+    // Returns the n-th registered I/O manager entry
 
   private:
 

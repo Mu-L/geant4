@@ -35,50 +35,66 @@
 class G4UIcommand;
 class G4UIcmdWithAString;
 
-class G4VisCommandSceneHandlerAttach: public G4VVisCommand {
-public:
-  // Uses compiler defaults for copy constructor and assignment.
-  G4VisCommandSceneHandlerAttach ();
-  ~G4VisCommandSceneHandlerAttach ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4UIcmdWithAString* fpCommand;
+class G4VisCommandSceneHandlerAttach : public G4VVisCommand
+{
+  public:
+
+    // Uses compiler defaults for copy constructor and assignment.
+    G4VisCommandSceneHandlerAttach();
+    ~G4VisCommandSceneHandlerAttach();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4UIcmdWithAString* fpCommand;
 };
 
-class G4VisCommandSceneHandlerCreate: public G4VVisCommand {
-public:
-  // Uses compiler defaults for copy constructor and assignment.
-  G4VisCommandSceneHandlerCreate ();
-  ~G4VisCommandSceneHandlerCreate ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4String NextName ();
-  G4UIcommand* fpCommand;
-  G4int fId;
+class G4VisCommandSceneHandlerCreate : public G4VVisCommand
+{
+  public:
+
+    // Uses compiler defaults for copy constructor and assignment.
+    G4VisCommandSceneHandlerCreate();
+    ~G4VisCommandSceneHandlerCreate();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4String NextName();
+    G4UIcommand* fpCommand;
+    G4int fId;
 };
 
-class G4VisCommandSceneHandlerList: public G4VVisCommand {
-public:
-  // Uses compiler defaults for copy constructor and assignment.
-  G4VisCommandSceneHandlerList ();
-  ~G4VisCommandSceneHandlerList ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4UIcommand* fpCommand;
+class G4VisCommandSceneHandlerList : public G4VVisCommand
+{
+  public:
+
+    // Uses compiler defaults for copy constructor and assignment.
+    G4VisCommandSceneHandlerList();
+    ~G4VisCommandSceneHandlerList();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4UIcommand* fpCommand;
 };
 
-class G4VisCommandSceneHandlerSelect: public G4VVisCommand {
-public:
-  // Uses compiler defaults for copy constructor and assignment.
-  G4VisCommandSceneHandlerSelect ();
-  ~G4VisCommandSceneHandlerSelect ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4UIcmdWithAString* fpCommand;
+class G4VisCommandSceneHandlerSelect : public G4VVisCommand
+{
+  public:
+
+    // Uses compiler defaults for copy constructor and assignment.
+    G4VisCommandSceneHandlerSelect();
+    ~G4VisCommandSceneHandlerSelect();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4UIcmdWithAString* fpCommand;
 };
 
 #endif

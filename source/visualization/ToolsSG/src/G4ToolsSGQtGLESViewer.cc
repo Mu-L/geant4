@@ -25,5 +25,5 @@
 //
 
 #include "G4ToolsSGQtGLESViewer.hh"
-#include "moc_G4ToolsSGQtGLESViewer.cpp"
 
+#include "moc_G4ToolsSGQtGLESViewer.cpp"

@@ -30,8 +30,9 @@
 // Author: Gabriele Cosmo (CERN), 9 October 2018
 // --------------------------------------------------------------------
 
-#include "G4AssemblyVolume.hh"
 #include "G4AssemblyStore.hh"
+
+#include "G4AssemblyVolume.hh"
 #include "G4GeometryManager.hh"
 #include "G4ios.hh"
 
@@ -57,7 +58,7 @@ G4AssemblyStore::G4AssemblyStore()
 // Destructor
 // ***************************************************************************
 //
-G4AssemblyStore::~G4AssemblyStore() 
+G4AssemblyStore::~G4AssemblyStore()
 {
   Clean();  // Delete all assemblies in the store
 }
@@ -80,13 +81,16 @@ void G4AssemblyStore::Clean()
   // Locks store for deletion of assemblies. De-registration will be
   // performed at this stage. Assemblies will not de-register themselves.
   //
-  locked = true;  
+  locked = true;
 
   G4AssemblyStore* store = GetInstance();
 
-  for(const auto & pos : *store)
+  for (const auto& pos : *store)
   {
-    if (fgNotifier != nullptr) { fgNotifier->NotifyDeRegistration(); }
+    if (fgNotifier != nullptr)
+    {
+      fgNotifier->NotifyDeRegistration();
+    }
     delete pos;
   }
 
@@ -111,7 +115,10 @@ void G4AssemblyStore::SetNotifier(G4VStoreNotifier* pNotifier)
 void G4AssemblyStore::Register(G4AssemblyVolume* pAssembly)
 {
   GetInstance()->push_back(pAssembly);
-  if (fgNotifier != nullptr)  { fgNotifier->NotifyRegistration(); }
+  if (fgNotifier != nullptr)
+  {
+    fgNotifier->NotifyRegistration();
+  }
 }
 
 // ***************************************************************************
@@ -120,12 +127,15 @@ void G4AssemblyStore::Register(G4AssemblyVolume* pAssembly)
 //
 void G4AssemblyStore::DeRegister(G4AssemblyVolume* pAssembly)
 {
-  if (!locked)    // Do not de-register if locked !
+  if (!locked)  // Do not de-register if locked !
   {
-    if (fgNotifier != nullptr)  { fgNotifier->NotifyDeRegistration(); }
-    for (auto i=GetInstance()->cbegin(); i!=GetInstance()->cend(); ++i)
+    if (fgNotifier != nullptr)
     {
-      if (*i==pAssembly)
+      fgNotifier->NotifyDeRegistration();
+    }
+    for (auto i = GetInstance()->cbegin(); i != GetInstance()->cend(); ++i)
+    {
+      if (*i == pAssembly)
       {
         GetInstance()->erase(i);
         break;
@@ -152,21 +162,21 @@ G4AssemblyStore* G4AssemblyStore::GetInstance()
 // Returns an assembly through its name specification.
 // ***************************************************************************
 //
-G4AssemblyVolume*
-G4AssemblyStore::GetAssembly(unsigned int id, G4bool verbose) const
+G4AssemblyVolume* G4AssemblyStore::GetAssembly(unsigned int id, G4bool verbose) const
 {
-  for (const auto & i : *GetInstance())
+  for (const auto& i : *GetInstance())
   {
-    if (i->GetAssemblyID() == id) { return i; }
+    if (i->GetAssemblyID() == id)
+    {
+      return i;
+    }
   }
   if (verbose)
   {
     std::ostringstream message;
-    message << "Assembly NOT found in store !" << G4endl
-            << "        Assembly " << id << " NOT found in store !" << G4endl
-            << "        Returning NULL pointer.";
-    G4Exception("G4AssemblyStore::GetAssembly()",
-                "GeomVol1001", JustWarning, message);
+    message << "Assembly NOT found in store !" << G4endl << "        Assembly " << id
+            << " NOT found in store !" << G4endl << "        Returning NULL pointer.";
+    G4Exception("G4AssemblyStore::GetAssembly()", "GeomVol1001", JustWarning, message);
   }
   return nullptr;
 }

@@ -36,20 +36,21 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedTube.h>
+#  include "G4Polyhedron.hh"
 
-#include "G4Polyhedron.hh"
+#  include <VecGeom/volumes/UnplacedTube.h>
 
 /**
  * @brief G4UTubs is a wrapper class for G4Tubs to make use of VecGeom Tube.
+ * @ingroup geometry_solids_csg
  */
 
 class G4UTubs : public G4UAdapter<vecgeom::GenericUnplacedTube>
 {
-  using Shape_t = vecgeom::GenericUnplacedTube;
-  using Base_t = G4UAdapter<vecgeom::GenericUnplacedTube>;
+    using Shape_t = vecgeom::GenericUnplacedTube;
+    using Base_t = G4UAdapter<vecgeom::GenericUnplacedTube>;
 
   public:
 
@@ -64,12 +65,8 @@ class G4UTubs : public G4UAdapter<vecgeom::GenericUnplacedTube>
      *  @param[in] pSPhi Starting phi angle in radians.
      *  @param[in] pDPhi Angle of the segment in radians.
      */
-    G4UTubs( const G4String& pName,
-                   G4double pRMin,
-                   G4double pRMax,
-                   G4double pDz,
-                   G4double pSPhi,
-                   G4double pDPhi );
+    G4UTubs(const G4String& pName, G4double pRMin, G4double pRMax, G4double pDz, G4double pSPhi,
+            G4double pDPhi);
 
     /**
      * Default destructor.
@@ -80,9 +77,8 @@ class G4UTubs : public G4UAdapter<vecgeom::GenericUnplacedTube>
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions( G4VPVParameterisation* p,
-                            const G4int n,
-                            const G4VPhysicalVolume* pRep ) override;
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
+                           const G4VPhysicalVolume* pRep) override;
 
     /**
      * Makes a clone of the object for use in multi-treading.
@@ -93,24 +89,24 @@ class G4UTubs : public G4UAdapter<vecgeom::GenericUnplacedTube>
     /**
      * Accessors.
      */
-    G4double GetInnerRadius   () const;
-    G4double GetOuterRadius   () const;
-    G4double GetZHalfLength   () const;
-    G4double GetStartPhiAngle () const;
-    G4double GetDeltaPhiAngle () const;
-    G4double GetSinStartPhi   () const;
-    G4double GetCosStartPhi   () const;
-    G4double GetSinEndPhi     () const;
-    G4double GetCosEndPhi     () const;
+    G4double GetInnerRadius() const;
+    G4double GetOuterRadius() const;
+    G4double GetZHalfLength() const;
+    G4double GetStartPhiAngle() const;
+    G4double GetDeltaPhiAngle() const;
+    G4double GetSinStartPhi() const;
+    G4double GetCosStartPhi() const;
+    G4double GetSinEndPhi() const;
+    G4double GetCosEndPhi() const;
 
     /**
      * Modifiers.
      */
-    void SetInnerRadius   (G4double newRMin);
-    void SetOuterRadius   (G4double newRMax);
-    void SetZHalfLength   (G4double newDz);
-    void SetStartPhiAngle (G4double newSPhi, G4bool trig=true);
-    void SetDeltaPhiAngle (G4double newDPhi);
+    void SetInnerRadius(G4double newRMin);
+    void SetOuterRadius(G4double newRMax);
+    void SetZHalfLength(G4double newDz);
+    void SetStartPhiAngle(G4double newSPhi, G4bool trig = true);
+    void SetDeltaPhiAngle(G4double newDPhi);
 
     /**
      * Returns the type ID, "G4Tubs" of the solid.
@@ -134,10 +130,9 @@ class G4UTubs : public G4UAdapter<vecgeom::GenericUnplacedTube>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                           G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.

@@ -6,7 +6,7 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-05-12 Gabriele Cosmo (procman-V11-03-00)
+## 2026-05-12 Gabriele Cosmo (procman-V11-04-00)
 - In G4ProcessTable, fixed compilation warning on gcc-16.1 for variable
   set but not used in DumpInfo().
 

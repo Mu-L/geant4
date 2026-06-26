@@ -28,17 +28,17 @@
 // Class description:
 //
 // This class builds and places the G4WeightCutOffProcess.
-// If the object is deleted the process is removed from the 
+// If the object is deleted the process is removed from the
 // process list.
 //
 // Author: Michael Dressel, CERN
 // ----------------------------------------------------------------------
-#ifndef G4WeightCutOffConfigurator_hh
-#define G4WeightCutOffConfigurator_hh 1
+#ifndef G4WEIGHTCUTOFFCONFIGURATOR_HH
+#define G4WEIGHTCUTOFFCONFIGURATOR_HH
 
+#include "G4ProcessPlacer.hh"
 #include "G4Types.hh"
 #include "G4VSamplerConfigurator.hh"
-#include "G4ProcessPlacer.hh"
 
 class G4WeightCutOffProcess;
 class G4VIStore;
@@ -46,32 +46,27 @@ class G4VPhysicalVolume;
 
 class G4WeightCutOffConfigurator : public G4VSamplerConfigurator
 {
+  public:
 
- public:
+    G4WeightCutOffConfigurator(const G4VPhysicalVolume* worldvolume, const G4String& particlename,
+                               G4double wsurvival, G4double wlimit, G4double isource,
+                               G4VIStore* istore, G4bool paraflag);
 
-  G4WeightCutOffConfigurator(const G4VPhysicalVolume* worldvolume,
-                             const G4String& particlename,
-                                   G4double wsurvival,
-                                   G4double wlimit,
-                                   G4double isource,
-                                   G4VIStore* istore,
-                                   G4bool paraflag);
+    virtual ~G4WeightCutOffConfigurator();
 
-  virtual ~G4WeightCutOffConfigurator();
+    G4WeightCutOffConfigurator(const G4WeightCutOffConfigurator&) = delete;
+    G4WeightCutOffConfigurator& operator=(const G4WeightCutOffConfigurator&) = delete;
 
-  G4WeightCutOffConfigurator(const G4WeightCutOffConfigurator&) = delete;
-  G4WeightCutOffConfigurator& operator=(const G4WeightCutOffConfigurator&) = delete;
+    virtual void Configure(G4VSamplerConfigurator* preConf);
+    virtual const G4VTrackTerminator* GetTrackTerminator() const;
 
-  virtual void Configure(G4VSamplerConfigurator* preConf);
-  virtual const G4VTrackTerminator* GetTrackTerminator() const;
-  
- private:
+  private:
 
-  const G4VPhysicalVolume* fWorld = nullptr;
-  G4ProcessPlacer fPlacer;
-  G4WeightCutOffProcess* fWeightCutOffProcess = nullptr;
-  G4bool fPlaced = false;
-  G4bool paraflag = false;
+    const G4VPhysicalVolume* fWorld = nullptr;
+    G4ProcessPlacer fPlacer;
+    G4WeightCutOffProcess* fWeightCutOffProcess = nullptr;
+    G4bool fPlaced = false;
+    G4bool paraflag = false;
 };
 
 #endif

@@ -36,10 +36,12 @@ namespace
 class G4UIRangeChecker
 {
   public:
+
     G4bool DoCheck(const G4UIparameter& p, const char* newValue);
     G4bool DoCheck(const G4UIcommand& cmd, const char* newValue);
 
   private:
+
     G4bool RangeCheckImpl(const char* newValue);
 
     // returns the index of the var name
@@ -71,6 +73,7 @@ class G4UIRangeChecker
     G4int Follow(G4int expect, G4int ifyes, G4int ifno);
 
   private:
+
     // Data from param/cmd
     G4String rangeExpression;
     G4String commandName;
@@ -108,7 +111,8 @@ inline G4bool G4UIRangeChecker::DoCheck(const G4UIcommand& cmd, const char* newV
   commandName = cmd.GetCommandName();
   parameter.resize(cmd.GetParameterEntries());
   newVal.resize(parameter.size());
-  for (G4int i = 0; i < (G4int)parameter.size(); ++i) {
+  for (G4int i = 0; i < (G4int)parameter.size(); ++i)
+  {
     parameter[i] = cmd.GetParameter(i);
   }
 
@@ -117,16 +121,19 @@ inline G4bool G4UIRangeChecker::DoCheck(const G4UIcommand& cmd, const char* newV
 
 inline G4bool G4UIRangeChecker::RangeCheckImpl(const char* newValue)
 {
-  if (rangeExpression.empty()) {
+  if (rangeExpression.empty())
+  {
     return true;
   }
 
   yystype result;
   bp = 0;  // reset buffer pointer for G4UIpGetc()
   std::istringstream is(newValue);
-  for (unsigned i = 0; i < parameter.size(); ++i) {
+  for (unsigned i = 0; i < parameter.size(); ++i)
+  {
     char type = (char)std::toupper(parameter[i]->GetParameterType());
-    switch (type) {
+    switch (type)
+    {
       case 'D':
         is >> newVal[i].D;
         break;
@@ -148,14 +155,17 @@ inline G4bool G4UIRangeChecker::RangeCheckImpl(const char* newValue)
   token = Yylex();
   result = Expression();
 
-  if (paramERR == 1) {
+  if (paramERR == 1)
+  {
     return false;
   }
-  if (result.type != CONSTINT) {
+  if (result.type != CONSTINT)
+  {
     G4cerr << "Illegal Expression in parameter range." << G4endl;
     return false;
   }
-  if (result.I != 0) {
+  if (result.I != 0)
+  {
     return true;
   }
   G4cerr << "parameter out of range: " << rangeExpression << G4endl;
@@ -164,8 +174,10 @@ inline G4bool G4UIRangeChecker::RangeCheckImpl(const char* newValue)
 
 inline unsigned G4UIRangeChecker::IndexOf(const char* nam)
 {
-  for (unsigned i = 0; i < parameter.size(); ++i) {
-    if (parameter[i]->GetParameterName() == nam) {
+  for (unsigned i = 0; i < parameter.size(); ++i)
+  {
+    if (parameter[i]->GetParameterName() == nam)
+    {
       return i;
     }
   }
@@ -176,8 +188,10 @@ inline unsigned G4UIRangeChecker::IndexOf(const char* nam)
 
 inline unsigned G4UIRangeChecker::IsParameter(const char* nam)
 {
-  for (auto& i : parameter) {
-    if (i->GetParameterName() == nam) {
+  for (auto& i : parameter)
+  {
+    if (i->GetParameterName() == nam)
+    {
       return 1;
     }
   }
@@ -196,22 +210,27 @@ inline yystype G4UIRangeChecker::LogicalORExpression()
 {
   yystype result;
   yystype p = LogicalANDExpression();
-  if (token != LOGICALOR) {
+  if (token != LOGICALOR)
+  {
     return p;
   }
-  if (p.type == CONSTSTRING || p.type == IDENTIFIER) {
+  if (p.type == CONSTSTRING || p.type == IDENTIFIER)
+  {
     G4cerr << "Parameter range: illegal type at '||'" << G4endl;
     paramERR = 1;
   }
   result.I = p.I;
-  while (token == LOGICALOR) {
+  while (token == LOGICALOR)
+  {
     token = Yylex();
     p = LogicalANDExpression();
-    if (p.type == CONSTSTRING || p.type == IDENTIFIER) {
+    if (p.type == CONSTSTRING || p.type == IDENTIFIER)
+    {
       G4cerr << "Parameter range: illegal type at '||'" << G4endl;
       paramERR = 1;
     }
-    switch (p.type) {
+    switch (p.type)
+    {
       case CONSTINT:
         result.I += p.I;
         result.type = CONSTINT;
@@ -237,22 +256,27 @@ inline yystype G4UIRangeChecker::LogicalANDExpression()
 {
   yystype result;
   yystype p = EqualityExpression();
-  if (token != LOGICALAND) {
+  if (token != LOGICALAND)
+  {
     return p;
   }
-  if (p.type == CONSTSTRING || p.type == IDENTIFIER) {
+  if (p.type == CONSTSTRING || p.type == IDENTIFIER)
+  {
     G4cerr << "Parameter range: illegal type at '&&'" << G4endl;
     paramERR = 1;
   }
   result.I = p.I;
-  while (token == LOGICALAND) {
+  while (token == LOGICALAND)
+  {
     token = Yylex();
     p = EqualityExpression();
-    if (p.type == CONSTSTRING || p.type == IDENTIFIER) {
+    if (p.type == CONSTSTRING || p.type == IDENTIFIER)
+    {
       G4cerr << "Parameter range: illegal type at '&&'" << G4endl;
       paramERR = 1;
     }
-    switch (p.type) {
+    switch (p.type)
+    {
       case CONSTINT:
         result.I *= p.I;
         result.type = CONSTINT;
@@ -279,7 +303,8 @@ inline yystype G4UIRangeChecker::EqualityExpression()
   yystype arg1, arg2;
   G4int operat;
   yystype result = RelationalExpression();
-  if (token == EQ || token == NE) {
+  if (token == EQ || token == NE)
+  {
     operat = token;
     token = Yylex();
     arg1 = result;
@@ -287,8 +312,10 @@ inline yystype G4UIRangeChecker::EqualityExpression()
     result.I = Eval2(arg1, operat, arg2);  // semantic action
     result.type = CONSTINT;
   }
-  else {
-    if (result.type != CONSTINT && result.type != CONSTDOUBLE) {
+  else
+  {
+    if (result.type != CONSTINT && result.type != CONSTDOUBLE)
+    {
       G4cerr << "Parameter range: error at EqualityExpression" << G4endl;
       paramERR = 1;
     }
@@ -304,14 +331,16 @@ inline yystype G4UIRangeChecker::RelationalExpression()
   yystype result;
 
   arg1 = AdditiveExpression();
-  if (token == GT || token == GE || token == LT || token == LE) {
+  if (token == GT || token == GE || token == LT || token == LE)
+  {
     operat = token;
     token = Yylex();
     arg2 = AdditiveExpression();
     result.I = Eval2(arg1, operat, arg2);  // semantic action
     result.type = CONSTINT;
   }
-  else {
+  else
+  {
     result = std::move(arg1);
   }
   return result;
@@ -321,7 +350,8 @@ inline yystype G4UIRangeChecker::RelationalExpression()
 inline yystype G4UIRangeChecker::AdditiveExpression()
 {
   yystype result = MultiplicativeExpression();
-  if (token != '+' && token != '-') {
+  if (token != '+' && token != '-')
+  {
     return result;
   }
   G4cerr << "Parameter range: operator " << (char)token << " is not supported." << G4endl;
@@ -333,7 +363,8 @@ inline yystype G4UIRangeChecker::AdditiveExpression()
 inline yystype G4UIRangeChecker::MultiplicativeExpression()
 {
   yystype result = UnaryExpression();
-  if (token != '*' && token != '/' && token != '%') {
+  if (token != '*' && token != '/' && token != '%')
+  {
     return result;
   }
   G4cerr << "Parameter range: operator " << (char)token << " is not supported." << G4endl;
@@ -346,19 +377,23 @@ inline yystype G4UIRangeChecker::UnaryExpression()
 {
   yystype result;
   yystype p;
-  switch (token) {
+  switch (token)
+  {
     case '-':
       token = Yylex();
       p = UnaryExpression();
-      if (p.type == CONSTINT) {
+      if (p.type == CONSTINT)
+      {
         result.I = -p.I;
         result.type = CONSTINT;
       }
-      if (p.type == CONSTLONG) {
+      if (p.type == CONSTLONG)
+      {
         result.L = -p.L;
         result.type = CONSTLONG;
       }
-      if (p.type == CONSTDOUBLE) {
+      if (p.type == CONSTDOUBLE)
+      {
         result.D = -p.D;
         result.type = CONSTDOUBLE;
       }
@@ -384,7 +419,8 @@ inline yystype G4UIRangeChecker::UnaryExpression()
 inline yystype G4UIRangeChecker::PrimaryExpression()
 {
   yystype result;
-  switch (token) {
+  switch (token)
+  {
     case IDENTIFIER:
       result.S = yylval.S;
       result.type = token;
@@ -408,7 +444,8 @@ inline yystype G4UIRangeChecker::PrimaryExpression()
     case '(':
       token = Yylex();
       result = Expression();
-      if (token != ')') {
+      if (token != ')')
+      {
         G4cerr << " ')' expected" << G4endl;
         paramERR = 1;
       }
@@ -424,7 +461,8 @@ inline yystype G4UIRangeChecker::PrimaryExpression()
 
 inline G4int G4UIRangeChecker::Eval2(const yystype& arg1, G4int op, const yystype& arg2)
 {
-  if ((arg1.type != IDENTIFIER) && (arg2.type != IDENTIFIER)) {
+  if ((arg1.type != IDENTIFIER) && (arg2.type != IDENTIFIER))
+  {
     G4cerr << commandName << ": meaningless comparison" << G4int(arg1.type) << " "
            << G4int(arg2.type) << G4endl;
     paramERR = 1;
@@ -433,84 +471,106 @@ inline G4int G4UIRangeChecker::Eval2(const yystype& arg1, G4int op, const yystyp
   // Might want to also disallow comparison of same identifiers?
 
   char newValtype;
-  if (arg1.type == IDENTIFIER) {
+  if (arg1.type == IDENTIFIER)
+  {
     unsigned i = IndexOf(arg1.S);
     newValtype = (char)std::toupper(parameter[i]->GetParameterType());
-    switch (newValtype) {
+    switch (newValtype)
+    {
       case 'I':
-        if (arg2.type == CONSTINT) {
+        if (arg2.type == CONSTINT)
+        {
           return G4UIparsing::CompareInt(newVal[i].I, op, arg2.I, paramERR);
           //===================================================================
           // MA - 2018.07.23
         }
-        else if (arg2.type == IDENTIFIER) {
+        else if (arg2.type == IDENTIFIER)
+        {
           unsigned iii = IndexOf(arg2.S);
           char newValtype2 = (char)std::toupper(parameter[iii]->GetParameterType());
-          if (newValtype2 == 'I') {
+          if (newValtype2 == 'I')
+          {
             return G4UIparsing::CompareInt(newVal[i].I, op, newVal[iii].I, paramERR);
           }
-          if (newValtype2 == 'L') {
+          if (newValtype2 == 'L')
+          {
             G4cerr << "Warning : Integer is compared with long int : " << rangeExpression << G4endl;
             return G4UIparsing::CompareLong(newVal[i].I, op, newVal[iii].L, paramERR);
           }
-          if (newValtype2 == 'D') {
+          if (newValtype2 == 'D')
+          {
             G4cerr << "Warning : Integer is compared with double : " << rangeExpression << G4endl;
             return G4UIparsing::CompareDouble(newVal[i].I, op, newVal[iii].D, paramERR);
           }
           //===================================================================
         }
-        else {
+        else
+        {
           G4cerr << "integer operand expected for " << rangeExpression << '.' << G4endl;
         }
         break;
       case 'L':
-        if (arg2.type == CONSTINT) {
+        if (arg2.type == CONSTINT)
+        {
           return G4UIparsing::CompareLong(newVal[i].L, op, arg2.I, paramERR);
         }
-        else if (arg2.type == CONSTLONG) {
+        else if (arg2.type == CONSTLONG)
+        {
           return G4UIparsing::CompareLong(newVal[i].L, op, arg2.L, paramERR);
         }
-        else if (arg2.type == IDENTIFIER) {
+        else if (arg2.type == IDENTIFIER)
+        {
           unsigned iii = IndexOf(arg2.S);
           char newValtype2 = (char)std::toupper(parameter[iii]->GetParameterType());
-          if (newValtype2 == 'I') {
+          if (newValtype2 == 'I')
+          {
             return G4UIparsing::CompareLong(newVal[i].L, op, newVal[iii].I, paramERR);
           }
-          if (newValtype2 == 'L') {
+          if (newValtype2 == 'L')
+          {
             return G4UIparsing::CompareLong(newVal[i].L, op, newVal[iii].L, paramERR);
           }
-          if (newValtype2 == 'D') {
+          if (newValtype2 == 'D')
+          {
             G4cerr << "Warning : Long int is compared with double : " << rangeExpression << G4endl;
             return G4UIparsing::CompareDouble(newVal[i].L, op, newVal[iii].D, paramERR);
           }
           //===================================================================
         }
-        else {
+        else
+        {
           G4cerr << "integer operand expected for " << rangeExpression << '.' << G4endl;
         }
         break;
       case 'D':
-        if (arg2.type == CONSTDOUBLE) {
+        if (arg2.type == CONSTDOUBLE)
+        {
           return G4UIparsing::CompareDouble(newVal[i].D, op, arg2.D, paramERR);
         }
-        else if (arg2.type == CONSTINT) {  // integral promotion
+        else if (arg2.type == CONSTINT)
+        {  // integral promotion
           return G4UIparsing::CompareDouble(newVal[i].D, op, arg2.I, paramERR);
           //===================================================================
           // MA - 2018.07.23
         }
-        else if (arg2.type == CONSTLONG) {
+        else if (arg2.type == CONSTLONG)
+        {
           return G4UIparsing::CompareDouble(newVal[i].D, op, arg2.L, paramERR);
         }
-        else if (arg2.type == IDENTIFIER) {
+        else if (arg2.type == IDENTIFIER)
+        {
           unsigned iii = IndexOf(arg2.S);
           char newValtype2 = (char)std::toupper(parameter[iii]->GetParameterType());
-          if (newValtype2 == 'I') {
+          if (newValtype2 == 'I')
+          {
             return G4UIparsing::CompareDouble(newVal[i].D, op, newVal[iii].I, paramERR);
           }
-          if (newValtype2 == 'L') {
+          if (newValtype2 == 'L')
+          {
             return G4UIparsing::CompareDouble(newVal[i].D, op, newVal[iii].L, paramERR);
           }
-          if (newValtype2 == 'D') {
+          if (newValtype2 == 'D')
+          {
             return G4UIparsing::CompareDouble(newVal[i].D, op, newVal[iii].D, paramERR);
           }
           //===================================================================
@@ -519,31 +579,39 @@ inline G4int G4UIRangeChecker::Eval2(const yystype& arg1, G4int op, const yystyp
       default:;
     }
   }
-  if (arg2.type == IDENTIFIER) {
+  if (arg2.type == IDENTIFIER)
+  {
     unsigned i = IndexOf(arg2.S);
     newValtype = (char)std::toupper(parameter[i]->GetParameterType());
-    switch (newValtype) {
+    switch (newValtype)
+    {
       case 'I':
-        if (arg1.type == CONSTINT) {
+        if (arg1.type == CONSTINT)
+        {
           return G4UIparsing::CompareInt(arg1.I, op, newVal[i].I, paramERR);
         }
-        else {
+        else
+        {
           G4cerr << "integer operand expected for " << rangeExpression << '.' << G4endl;
         }
         break;
       case 'L':
-        if (arg1.type == CONSTLONG) {
+        if (arg1.type == CONSTLONG)
+        {
           return G4UIparsing::CompareLong(arg1.L, op, newVal[i].L, paramERR);
         }
-        else {
+        else
+        {
           G4cerr << "long int operand expected for " << rangeExpression << '.' << G4endl;
         }
         break;
       case 'D':
-        if (arg1.type == CONSTDOUBLE) {
+        if (arg1.type == CONSTDOUBLE)
+        {
           return G4UIparsing::CompareDouble(arg1.D, op, newVal[i].D, paramERR);
         }
-        else if (arg1.type == CONSTINT) {  // integral promotion
+        else if (arg1.type == CONSTINT)
+        {  // integral promotion
           return G4UIparsing::CompareDouble(arg1.I, op, newVal[i].D, paramERR);
         }
         break;
@@ -560,26 +628,32 @@ inline tokenNum G4UIRangeChecker::Yylex()  // reads input and returns token numb
   G4int c;
   G4String buf;
 
-  while ((c = G4UIpGetc()) == ' ' || c == '\t' || c == '\n') {
+  while ((c = G4UIpGetc()) == ' ' || c == '\t' || c == '\n')
+  {
     ;
   }
-  if (c == EOF) {
+  if (c == EOF)
+  {
     return (tokenNum)EOF;  // KR488
   }
   buf = "";
-  if ((isdigit(c) != 0) || c == '.') {  // I or D
-    do {
+  if ((isdigit(c) != 0) || c == '.')
+  {  // I or D
+    do
+    {
       buf += (unsigned char)c;
       c = G4UIpGetc();
     } while (c == '.' || (isdigit(c) != 0) || c == 'e' || c == 'E' || c == '+' || c == '-');
     G4UIpUngetc(c);
     const char* t = buf;
     std::istringstream is(t);
-    if (G4UIparsing::IsInt(buf.data(), 20)) {
+    if (G4UIparsing::IsInt(buf.data(), 20))
+    {
       is >> yylval.I;
       return CONSTINT;
     }
-    if (G4UIparsing::IsDouble(buf.data())) {
+    if (G4UIparsing::IsDouble(buf.data()))
+    {
       is >> yylval.D;
       return CONSTDOUBLE;
     }
@@ -587,12 +661,15 @@ inline tokenNum G4UIRangeChecker::Yylex()  // reads input and returns token numb
     G4cerr << buf << ": numeric format error." << G4endl;
   }
   buf = "";
-  if ((isalpha(c) != 0) || c == '_') {  // IDENTIFIER
-    do {
+  if ((isalpha(c) != 0) || c == '_')
+  {  // IDENTIFIER
+    do
+    {
       buf += (unsigned char)c;
     } while ((c = G4UIpGetc()) != EOF && ((isalnum(c) != 0) || c == '_'));
     G4UIpUngetc(c);
-    if (IsParameter(buf) != 0u) {
+    if (IsParameter(buf) != 0u)
+    {
       yylval.S = std::move(buf);
       return IDENTIFIER;
     }
@@ -600,7 +677,8 @@ inline tokenNum G4UIRangeChecker::Yylex()  // reads input and returns token numb
     G4cerr << buf << " is not a parameter name." << G4endl;
     paramERR = 1;
   }
-  switch (c) {
+  switch (c)
+  {
     case '>':
       return (tokenNum)Follow('=', GE, GT);
     case '<':
@@ -622,7 +700,8 @@ inline tokenNum G4UIRangeChecker::Yylex()  // reads input and returns token numb
 inline G4int G4UIRangeChecker::Follow(G4int expect, G4int ifyes, G4int ifno)
 {
   G4int c = G4UIpGetc();
-  if (c == expect) {
+  if (c == expect)
+  {
     return ifyes;
   }
   G4UIpUngetc(c);
@@ -634,7 +713,8 @@ inline G4int G4UIRangeChecker::Follow(G4int expect, G4int ifyes, G4int ifno)
 inline G4int G4UIRangeChecker::G4UIpGetc()
 {  // emulation of getc()
   std::size_t length = rangeExpression.length();
-  if (bp < (G4int)length) {
+  if (bp < (G4int)length)
+  {
     return rangeExpression[bp++];
   }
 
@@ -644,13 +724,16 @@ inline G4int G4UIRangeChecker::G4UIpGetc()
 // --------------------------------------------------------------------
 inline G4int G4UIRangeChecker::G4UIpUngetc(G4int c)
 {  // emulation of ungetc()
-  if (c < 0) {
+  if (c < 0)
+  {
     return -1;
   }
-  if (bp > 0 && c == rangeExpression[bp - 1]) {
+  if (bp > 0 && c == rangeExpression[bp - 1])
+  {
     --bp;
   }
-  else {
+  else
+  {
     paramERR = 1;
     return -1;
   }
@@ -671,4 +754,4 @@ G4bool RangeCheck(const G4UIcommand& p, const char* value)
   G4UIRangeChecker r;
   return r.DoCheck(p, value);
 }
-}  // namespace G4UIRangeCheck
+}  // namespace G4UIparsing

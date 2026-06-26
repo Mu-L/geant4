@@ -44,101 +44,84 @@
 // This class is extracted from G4PAIPhot in order to provide sharing
 // of these data between threads.
 //
-// Internal data tables are computed for proton. 
+// Internal data tables are computed for proton.
 //
 // -------------------------------------------------------------------
 //
 
-#ifndef G4PAIPhotData_h
-#define G4PAIPhotData_h 1
+#ifndef G4PAIPHOTDATA_HH
+#define G4PAIPHOTDATA_HH
 
-#include <vector>
-#include "globals.hh"
 #include "G4PAIxSection.hh"
 #include "G4SandiaTable.hh"
+#include "globals.hh"
+
+#include <vector>
 
 class G4PhysicsLogVector;
 class G4PhysicsTable;
 class G4MaterialCutsCouple;
 class G4PAIPhotModel;
 
-class G4PAIPhotData 
+class G4PAIPhotData
 {
+  public:
 
-public:
+    explicit G4PAIPhotData(G4double tmin, G4double tmax, G4int verbose);
 
-  explicit G4PAIPhotData(G4double tmin, G4double tmax, G4int verbose);
+    ~G4PAIPhotData();
 
-  ~G4PAIPhotData();
+    void Initialise(const G4MaterialCutsCouple*, G4double cut, G4PAIPhotModel*);
 
-  void Initialise(const G4MaterialCutsCouple*, G4double cut, G4PAIPhotModel*);
+    G4double DEDXPerVolume(G4int coupleIndex, G4double scaledTkin, G4double cut) const;
 
-  G4double DEDXPerVolume(G4int coupleIndex, G4double scaledTkin,
-			 G4double cut) const;
+    G4double CrossSectionPerVolume(G4int coupleIndex, G4double scaledTkin, G4double tcut,
+                                   G4double tmax) const;
 
-  G4double CrossSectionPerVolume(G4int coupleIndex, G4double scaledTkin,
-				 G4double tcut, G4double tmax) const;
+    G4double GetPlasmonRatio(G4int coupleIndex, G4double scaledTkin) const;
 
-  G4double GetPlasmonRatio( G4int coupleIndex, G4double scaledTkin ) const;
+    G4double SampleAlongStepTransfer(G4int coupleIndex, G4double kinEnergy, G4double scaledTkin,
+                                     G4double stepFactor) const;
+    G4double SampleAlongStepPhotonTransfer(G4int coupleIndex, G4double kinEnergy,
+                                           G4double scaledTkin, G4double stepFactor) const;
+    G4double SampleAlongStepPlasmonTransfer(G4int coupleIndex, G4double kinEnergy,
+                                            G4double scaledTkin, G4double stepFactor) const;
 
-  G4double SampleAlongStepTransfer(G4int coupleIndex, G4double kinEnergy,
-				   G4double scaledTkin,
-				   G4double stepFactor) const;
-  G4double SampleAlongStepPhotonTransfer(G4int coupleIndex, G4double kinEnergy,
-				   G4double scaledTkin,
-				   G4double stepFactor) const;
-  G4double SampleAlongStepPlasmonTransfer(G4int coupleIndex, G4double kinEnergy,
-				   G4double scaledTkin,
-				   G4double stepFactor) const;
+    G4double SamplePostStepTransfer(G4int coupleIndex, G4double scaledTkin) const;
+    G4double SamplePostStepPhotonTransfer(G4int coupleIndex, G4double scaledTkin) const;
+    G4double SamplePostStepPlasmonTransfer(G4int coupleIndex, G4double scaledTkin) const;
 
-  G4double SamplePostStepTransfer(G4int coupleIndex, 
-				  G4double scaledTkin) const;
-  G4double SamplePostStepPhotonTransfer(G4int coupleIndex, 
-				  G4double scaledTkin) const;
-  G4double SamplePostStepPlasmonTransfer(G4int coupleIndex, 
-				  G4double scaledTkin) const;
+    // hide assignment operator
+    G4PAIPhotData& operator=(const G4PAIPhotData& right) = delete;
+    G4PAIPhotData(const G4PAIPhotData&) = delete;
 
-  // hide assignment operator 
-  G4PAIPhotData & operator=(const  G4PAIPhotData &right) = delete;
-  G4PAIPhotData(const  G4PAIPhotData&) = delete;
+  private:
 
-private:
+    G4double GetEnergyTransfer(G4int coupleIndex, size_t iPlace, G4double position) const;
+    G4double GetEnergyPhotonTransfer(G4int coupleIndex, size_t iPlace, G4double position) const;
+    G4double GetEnergyPlasmonTransfer(G4int coupleIndex, size_t iPlace, G4double position) const;
 
-  G4double GetEnergyTransfer(G4int coupleIndex, size_t iPlace, 
-			     G4double position) const;
-  G4double GetEnergyPhotonTransfer(G4int coupleIndex, size_t iPlace, 
-			     G4double position) const;
-  G4double GetEnergyPlasmonTransfer(G4int coupleIndex, size_t iPlace, 
-			     G4double position) const;
+    G4int fTotBin;
+    G4double fLowestKineticEnergy;
+    G4double fHighestKineticEnergy;
 
-  G4int                fTotBin;
-  G4double             fLowestKineticEnergy;
-  G4double             fHighestKineticEnergy;
+    G4PhysicsLogVector* fParticleEnergyVector;
 
-  G4PhysicsLogVector*  fParticleEnergyVector;
+    G4PAIxSection fPAIxSection;
+    G4SandiaTable fSandia;
 
-  G4PAIxSection        fPAIxSection;
-  G4SandiaTable        fSandia;
+    std::vector<G4PhysicsTable*> fPAIxscBank;
+    std::vector<G4PhysicsTable*> fPAIphotonBank;
+    std::vector<G4PhysicsTable*> fPAIplasmonBank;
 
-  std::vector<G4PhysicsTable*>      fPAIxscBank;
-  std::vector<G4PhysicsTable*>      fPAIphotonBank;
-  std::vector<G4PhysicsTable*>      fPAIplasmonBank;
+    std::vector<G4PhysicsTable*> fPAIdEdxBank;
+    std::vector<G4PhysicsLogVector*> fdEdxTable;
 
-  std::vector<G4PhysicsTable*>      fPAIdEdxBank;
-  std::vector<G4PhysicsLogVector*>  fdEdxTable;
+    std::vector<G4PhysicsLogVector*> fdNdxCutTable;
+    std::vector<G4PhysicsLogVector*> fdNdxCutPhotonTable;
+    std::vector<G4PhysicsLogVector*> fdNdxCutPlasmonTable;
 
-  std::vector<G4PhysicsLogVector*>  fdNdxCutTable;
-  std::vector<G4PhysicsLogVector*>  fdNdxCutPhotonTable;
-  std::vector<G4PhysicsLogVector*>  fdNdxCutPlasmonTable;
-
-  std::vector<G4PhysicsLogVector*>  fdEdxCutTable;
+    std::vector<G4PhysicsLogVector*> fdEdxCutTable;
 };
 
 #endif
-
-
-
-
-
-
-

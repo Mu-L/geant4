@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // Jeff Kallenbach 01 Aug 1996
 // OpenInventor viewer - opens window, hard copy, etc.
 
@@ -39,24 +39,32 @@
 
 class Geant4_SoWinExaminerViewer;
 
-class G4OpenInventorWinViewer: public G4OpenInventorViewer {
-public: //G4VViewer
-  virtual void FinishView();
-  virtual void SetView();
-protected:
-  virtual void ViewerRender();
-  virtual SoCamera* GetCamera();
-public:
-  G4OpenInventorWinViewer(G4OpenInventorSceneHandler& scene,
-		       const G4String& name = "");
-  virtual ~G4OpenInventorWinViewer();
-  void Initialise();
+class G4OpenInventorWinViewer : public G4OpenInventorViewer
+{
+  public:  // G4VViewer
 
-private:
-  static LRESULT CALLBACK WindowProc(HWND,UINT,WPARAM,LPARAM);
-private:
-  HWND fShell;
-  Geant4_SoWinExaminerViewer* fViewer;
+    virtual void FinishView();
+    virtual void SetView();
+
+  protected:
+
+    virtual void ViewerRender();
+    virtual SoCamera* GetCamera();
+
+  public:
+
+    G4OpenInventorWinViewer(G4OpenInventorSceneHandler& scene, const G4String& name = "");
+    virtual ~G4OpenInventorWinViewer();
+    void Initialise();
+
+  private:
+
+    static LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
+
+  private:
+
+    HWND fShell;
+    Geant4_SoWinExaminerViewer* fViewer;
 };
 
 #endif

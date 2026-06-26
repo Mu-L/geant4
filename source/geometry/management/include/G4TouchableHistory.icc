@@ -30,13 +30,12 @@
 
 extern G4GEOM_DLL G4Allocator<G4TouchableHistory>*& aTouchableHistoryAllocator();
 
-inline
-void G4TouchableHistory::UpdateYourself( G4VPhysicalVolume* pPhysVol,
-                                         const G4NavigationHistory* pHistory )
+inline void G4TouchableHistory::UpdateYourself(G4VPhysicalVolume* pPhysVol,
+                                               const G4NavigationHistory* pHistory)
 {
   fhistory = *pHistory;
   const G4AffineTransform& tf = fhistory.GetTopTransform();
-  if( pPhysVol == nullptr )
+  if (pPhysVol == nullptr)
   {
     // This means that the track has left the World Volume.
     // Since the Navigation History does not already reflect this,
@@ -48,89 +47,77 @@ void G4TouchableHistory::UpdateYourself( G4VPhysicalVolume* pPhysVol,
   frot = tf.InverseNetRotation();
 }
 
-inline
-G4int G4TouchableHistory::CalculateHistoryIndex( G4int stackDepth ) const
-{ 
-  return G4int(fhistory.GetDepth()-stackDepth); // was -1
+inline G4int G4TouchableHistory::CalculateHistoryIndex(G4int stackDepth) const
+{
+  return G4int(fhistory.GetDepth() - stackDepth);  // was -1
 }
 
-inline
-G4VPhysicalVolume* G4TouchableHistory::GetVolume( G4int depth ) const
-{ 
+inline G4VPhysicalVolume* G4TouchableHistory::GetVolume(G4int depth) const
+{
   return fhistory.GetVolume(CalculateHistoryIndex(depth));
 }
 
-inline
-G4VSolid* G4TouchableHistory::GetSolid( G4int depth ) const
-{ 
-  return fhistory.GetVolume(CalculateHistoryIndex(depth))
-                            ->GetLogicalVolume()->GetSolid();
+inline G4VSolid* G4TouchableHistory::GetSolid(G4int depth) const
+{
+  return fhistory.GetVolume(CalculateHistoryIndex(depth))->GetLogicalVolume()->GetSolid();
 }
 
-inline
-G4int G4TouchableHistory::GetReplicaNumber( G4int depth ) const
-{ 
+inline G4int G4TouchableHistory::GetReplicaNumber(G4int depth) const
+{
   return fhistory.GetReplicaNo(CalculateHistoryIndex(depth));
 }
 
-inline
-G4int G4TouchableHistory::GetCopyNumber(G4int depth) const
+inline G4int G4TouchableHistory::GetCopyNumber(G4int depth) const
 {
   return GetReplicaNumber(depth);
 }
 
-inline
-G4int G4TouchableHistory::GetHistoryDepth()  const
-{ 
-  return  G4int(fhistory.GetDepth());
+inline G4int G4TouchableHistory::GetHistoryDepth() const
+{
+  return G4int(fhistory.GetDepth());
 }
 
-inline
-G4int G4TouchableHistory::MoveUpHistory( G4int num_levels )
-{ 
-  auto  maxLevelsMove = G4int(fhistory.GetDepth());
-  G4int minLevelsMove = 0;              // Cannot redescend today!
-                                        // Soon it will be possible
-                                        // by adding a data member here
-                                        //     fCurrentDepth;
-  if( num_levels > maxLevelsMove )
+inline G4int G4TouchableHistory::MoveUpHistory(G4int num_levels)
+{
+  auto maxLevelsMove = G4int(fhistory.GetDepth());
+  G4int minLevelsMove = 0;  // Cannot redescend today!
+                            // Soon it will be possible
+                            // by adding a data member here
+                            //     fCurrentDepth;
+  if (num_levels > maxLevelsMove)
   {
     num_levels = maxLevelsMove;
   }
-  else if( num_levels < minLevelsMove )
+  else if (num_levels < minLevelsMove)
   {
     num_levels = minLevelsMove;
   }
-  fhistory.BackLevel( num_levels ); 
+  fhistory.BackLevel(num_levels);
 
   return num_levels;
 }
 
-inline
-const G4NavigationHistory* G4TouchableHistory::GetHistory() const
-{ 
+inline const G4NavigationHistory* G4TouchableHistory::GetHistory() const
+{
   return &fhistory;
 }
 
 // There is no provision in case this class is subclassed.
 // If it is subclassed, this will fail and may not give errors!
 //
-inline
-void* G4TouchableHistory::operator new(std::size_t)
-{ 
+inline void* G4TouchableHistory::operator new(std::size_t)
+{
   // Once the Navigator calls InitializeAllocator,
   // the if block below can be removed.
   //
   if (aTouchableHistoryAllocator() == nullptr)
   {
-     aTouchableHistoryAllocator() = new G4Allocator<G4TouchableHistory>;
+    aTouchableHistoryAllocator() = new G4Allocator<G4TouchableHistory>;
   }
-  return (void *) aTouchableHistoryAllocator()->MallocSingle();
+  return (void*)aTouchableHistoryAllocator()->MallocSingle();
 }
 
-inline
-void G4TouchableHistory::operator delete(void* aTH)
-{  
-  aTouchableHistoryAllocator()->FreeSingle((G4TouchableHistory *) aTH);
+inline void G4TouchableHistory::operator delete(void* aTH)
+{
+  aTouchableHistoryAllocator()->FreeSingle((G4TouchableHistory*)aTH);
 }
-

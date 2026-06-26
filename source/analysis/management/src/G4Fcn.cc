@@ -27,6 +27,7 @@
 // Author: Ivana Hrivnacova, 22/08/2013  (ivana@ipno.in2p3.fr)
 
 #include "G4Fcn.hh"
+
 #include "G4AnalysisUtilities.hh"
 
 namespace G4Analysis
@@ -52,4 +53,4 @@ G4Fcn GetFunction(const G4String& fcnName)
   // clang-format on
 }
 
-}
+}  // namespace G4Analysis

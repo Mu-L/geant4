@@ -30,18 +30,16 @@
 
 #include "G4GeometryCell.hh"
 
-G4GeometryCell::G4GeometryCell(const G4VPhysicalVolume& aVolume,
-                                     G4int RepNum)
- : fVPhysicalVolume(&aVolume), fRepNum(RepNum)
-{
-}
+G4GeometryCell::G4GeometryCell(const G4VPhysicalVolume& aVolume, G4int RepNum)
+  : fVPhysicalVolume(&aVolume), fRepNum(RepNum)
+{}
 
 const G4VPhysicalVolume& G4GeometryCell::GetPhysicalVolume() const
 {
   return *fVPhysicalVolume;
 }
 
-G4int G4GeometryCell::GetReplicaNumber() const 
+G4int G4GeometryCell::GetReplicaNumber() const
 {
   return fRepNum;
 }
@@ -50,13 +48,12 @@ G4GeometryCell& G4GeometryCell::operator=(const G4GeometryCell& rhs)
 {
   if (this != &rhs)
   {
-    fVPhysicalVolume = rhs.fVPhysicalVolume; // this is treated 
-                                             // as identifyer
+    fVPhysicalVolume = rhs.fVPhysicalVolume;  // this is treated
+                                              // as identifyer
     fRepNum = rhs.fRepNum;
   }
   return *this;
 }
-
 
 G4bool operator==(const G4GeometryCell& k1, const G4GeometryCell& k2)
 {
@@ -83,5 +80,5 @@ G4bool operator!=(const G4GeometryCell& k1, const G4GeometryCell& k2)
   {
     unequal = true;
   }
-  return unequal;  
+  return unequal;
 }

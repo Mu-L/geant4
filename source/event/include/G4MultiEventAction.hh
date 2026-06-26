@@ -47,22 +47,22 @@
 #define G4MULTIEVENTACTION_HH
 
 #include "G4UserEventAction.hh"
-#include <vector>
+
 #include <memory>
+#include <vector>
 
-using G4UserEventActionUPtr=std::unique_ptr<G4UserEventAction>;
-using G4UserEventActionVector=std::vector<G4UserEventActionUPtr>;
+using G4UserEventActionUPtr = std::unique_ptr<G4UserEventAction>;
+using G4UserEventActionVector = std::vector<G4UserEventActionUPtr>;
 
-class G4MultiEventAction : public G4UserEventAction
-                         , public G4UserEventActionVector
+class G4MultiEventAction : public G4UserEventAction, public G4UserEventActionVector
 {
   public:
 
     G4MultiEventAction() = default;
     ~G4MultiEventAction() override = default;
-    void SetEventManager(G4EventManager* ) override;
-    void BeginOfEventAction(const G4Event* ) override;
-    void EndOfEventAction(const G4Event* ) override;
+    void SetEventManager(G4EventManager*) override;
+    void BeginOfEventAction(const G4Event*) override;
+    void EndOfEventAction(const G4Event*) override;
 };
 
 #endif

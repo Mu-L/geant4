@@ -32,7 +32,7 @@
 // File name:     G4eBremParametrizedModel
 //                extention of standard G4eBremsstrahlungModel
 //
-// Author:        Andreas Schaelicke 
+// Author:        Andreas Schaelicke
 //
 // Creation date: 28.03.2008
 //
@@ -47,137 +47,125 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4eBremParametrizedModel_h
-#define G4eBremParametrizedModel_h 1
+#ifndef G4EBREMPARAMETRIZEDMODEL_HH
+#define G4EBREMPARAMETRIZEDMODEL_HH
 
-#include "G4VEmModel.hh"
 #include "G4NistManager.hh"
+#include "G4VEmModel.hh"
 
 class G4ParticleChangeForLoss;
 class G4PhysicsVector;
 
 class G4eBremParametrizedModel : public G4VEmModel
 {
+  public:
 
-public:
+    explicit G4eBremParametrizedModel(const G4ParticleDefinition* p = nullptr,
+                                      const G4String& nam = "eBremParam");
 
-  explicit G4eBremParametrizedModel(const G4ParticleDefinition* p = nullptr, 
-				    const G4String& nam = "eBremParam");
+    ~G4eBremParametrizedModel() override;
 
-  ~G4eBremParametrizedModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel* masterModel) override;
 
-  void InitialiseLocal(const G4ParticleDefinition*, 
-		       G4VEmModel* masterModel) override;
+    G4double MinEnergyCut(const G4ParticleDefinition*, const G4MaterialCutsCouple*) override;
 
-  G4double MinEnergyCut(const G4ParticleDefinition*, 
-			const G4MaterialCutsCouple*) override;
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                  G4double kineticEnergy, G4double cutEnergy) override;
 
-  G4double ComputeDEDXPerVolume(const G4Material*,
-				const G4ParticleDefinition*,
-				G4double kineticEnergy,
-				G4double cutEnergy) override;
-					
-  G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*,
-				      G4double tkin, 
-				      G4double Z, G4double,
-				      G4double cutEnergy,
-				      G4double maxEnergy = DBL_MAX) override;
-  
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double cutEnergy,
-			 G4double maxEnergy) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double tkin, G4double Z,
+                                        G4double, G4double cutEnergy,
+                                        G4double maxEnergy = DBL_MAX) override;
 
-  void SetupForMaterial(const G4ParticleDefinition*,
-                        const G4Material*,G4double) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double cutEnergy,
+                           G4double maxEnergy) override;
 
-  // hide assignment operator
-  G4eBremParametrizedModel & operator=(const  G4eBremParametrizedModel &right) = delete;
-  G4eBremParametrizedModel(const  G4eBremParametrizedModel&) = delete;
+    void SetupForMaterial(const G4ParticleDefinition*, const G4Material*, G4double) override;
 
-private:
+    // hide assignment operator
+    G4eBremParametrizedModel& operator=(const G4eBremParametrizedModel& right) = delete;
+    G4eBremParametrizedModel(const G4eBremParametrizedModel&) = delete;
 
-  void InitialiseConstants();
+  private:
 
-  G4double ComputeBremLoss(G4double cutEnergy);
+    void InitialiseConstants();
 
-  G4double ComputeXSectionPerAtom(G4double cutEnergy);
+    G4double ComputeBremLoss(G4double cutEnergy);
 
-  G4double ComputeDXSectionPerAtom(G4double gammaEnergy);
+    G4double ComputeXSectionPerAtom(G4double cutEnergy);
 
-  G4double ComputeParametrizedDXSectionPerAtom(G4double kineticEnergy, 
-					       G4double gammaEnergy, 
-					       G4double Z);
+    G4double ComputeDXSectionPerAtom(G4double gammaEnergy);
 
-  void SetParticle(const G4ParticleDefinition* p);
+    G4double ComputeParametrizedDXSectionPerAtom(G4double kineticEnergy, G4double gammaEnergy,
+                                                 G4double Z);
 
-  G4double ScreenFunction1(G4double ScreenVariable);
+    void SetParticle(const G4ParticleDefinition* p);
 
-  G4double ScreenFunction2(G4double ScreenVariable);
+    G4double ScreenFunction1(G4double ScreenVariable);
 
-  inline void SetCurrentElement(const G4double);
+    G4double ScreenFunction2(G4double ScreenVariable);
 
-protected:
+    inline void SetCurrentElement(const G4double);
 
-  G4NistManager*              nist;
-  const G4ParticleDefinition* particle;
-  G4ParticleDefinition*       theGamma;
-  G4ParticleChangeForLoss*    fParticleChange;
+  protected:
 
-  static const G4double xgi[8], wgi[8];
+    G4NistManager* nist;
+    const G4ParticleDefinition* particle;
+    G4ParticleDefinition* theGamma;
+    G4ParticleChangeForLoss* fParticleChange;
 
-  G4double minThreshold;
+    static const G4double xgi[8], wgi[8];
 
-  // cash
-  G4double particleMass;
-  G4double kinEnergy;
-  G4double totalEnergy;
-  G4double currentZ;
-  G4double z13, z23, lnZ;
-  G4double densityFactor;
-  G4double densityCorr;
-  G4double Fel, Finel;
-  G4double facFel, facFinel;
-  G4double fMax,fCoulomb;
+    G4double minThreshold;
 
-private:
+    // cash
+    G4double particleMass;
+    G4double kinEnergy;
+    G4double totalEnergy;
+    G4double currentZ;
+    G4double z13, z23, lnZ;
+    G4double densityFactor;
+    G4double densityCorr;
+    G4double Fel, Finel;
+    G4double facFel, facFinel;
+    G4double fMax, fCoulomb;
 
-  G4double lowKinEnergy;
-  G4double fMigdalConstant;
-  G4double bremFactor;
+  private:
 
-  G4bool isInitialised;
+    G4double lowKinEnergy;
+    G4double fMigdalConstant;
+    G4double bremFactor;
 
-protected:
+    G4bool isInitialised;
 
-  G4bool isElectron;
+  protected:
 
+    G4bool isElectron;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 inline void G4eBremParametrizedModel::SetCurrentElement(const G4double Z)
 {
-  if(Z != currentZ) {
+  if (Z != currentZ)
+  {
     currentZ = Z;
 
     G4int iz = G4lrint(Z);
     z13 = nist->GetZ13(iz);
-    z23 = z13*z13;
+    z23 = z13 * z13;
     lnZ = nist->GetLOGZ(iz);
 
-    Fel = facFel - lnZ/3. ;
-    Finel = facFinel - 2.*lnZ/3. ;
+    Fel = facFel - lnZ / 3.;
+    Finel = facFinel - 2. * lnZ / 3.;
 
     fCoulomb = GetCurrentElement()->GetfCoulomb();
-    fMax = Fel-fCoulomb + Finel/currentZ  +  (1.+1./currentZ)/12.;
+    fMax = Fel - fCoulomb + Finel / currentZ + (1. + 1. / currentZ) / 12.;
   }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
 
 #endif

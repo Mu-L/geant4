@@ -37,21 +37,19 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-G4PSPopulation::G4PSPopulation(const G4String& name, G4int depth)
-  : G4VPrimitiveScorer(name, depth)
+G4PSPopulation::G4PSPopulation(const G4String& name, G4int depth) : G4VPrimitiveScorer(name, depth)
 {
   SetUnit("");
 }
 
 G4bool G4PSPopulation::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
-  G4int index         = GetIndex(aStep);
+  G4int index = GetIndex(aStep);
   G4TrackLogger& tlog = fCellTrackLogger[index];
-  if(tlog.FirstEnterance(aStep->GetTrack()->GetTrackID()))
+  if (tlog.FirstEnterance(aStep->GetTrack()->GetTrackID()))
   {
     G4double val = 1.0;
-    if(weighted)
-      val *= aStep->GetPreStepPoint()->GetWeight();
+    if (weighted) val *= aStep->GetPreStepPoint()->GetWeight();
     EvtMap->add(index, val);
   }
 
@@ -61,14 +59,17 @@ G4bool G4PSPopulation::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 void G4PSPopulation::Initialize(G4HCofThisEvent* HCE)
 {
   EvtMap = new G4THitsMap<G4double>(detector->GetName(), GetName());
-  if(HCID < 0)
+  if (HCID < 0)
   {
     HCID = GetCollectionID(0);
   }
-  HCE->AddHitsCollection(HCID, (G4VHitsCollection*) EvtMap);
+  HCE->AddHitsCollection(HCID, (G4VHitsCollection*)EvtMap);
 }
 
-void G4PSPopulation::EndOfEvent(G4HCofThisEvent*) { fCellTrackLogger.clear(); }
+void G4PSPopulation::EndOfEvent(G4HCofThisEvent*)
+{
+  fCellTrackLogger.clear();
+}
 
 void G4PSPopulation::clear()
 {
@@ -81,25 +82,24 @@ void G4PSPopulation::PrintAll()
   G4cout << " MultiFunctionalDet  " << detector->GetName() << G4endl;
   G4cout << " PrimitiveScorer " << GetName() << G4endl;
   G4cout << " Number of entries " << EvtMap->entries() << G4endl;
-  for(const auto& [copy, population] : *(EvtMap->GetMap()))
+  for (const auto& [copy, population] : *(EvtMap->GetMap()))
   {
-    G4cout << "  copy no.: " << copy
-           << "  population: " << *(population) / GetUnitValue() << " [tracks]"
-           << G4endl;
+    G4cout << "  copy no.: " << copy << "  population: " << *(population) / GetUnitValue()
+           << " [tracks]" << G4endl;
   }
 }
 
 void G4PSPopulation::SetUnit(const G4String& unit)
 {
-  if(unit.empty())
+  if (unit.empty())
   {
-    unitName  = unit;
+    unitName = unit;
     unitValue = 1.0;
   }
   else
   {
-    G4String msg = "Invalid unit [" + unit + "] (Current  unit is [" +
-                   GetUnit() + "] ) for " + GetName();
+    G4String msg =
+      "Invalid unit [" + unit + "] (Current  unit is [" + GetUnit() + "] ) for " + GetName();
     G4Exception("G4PSPopulation::SetUnit", "DetPS0014", JustWarning, msg);
   }
 }

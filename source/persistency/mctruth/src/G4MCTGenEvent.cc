@@ -31,9 +31,7 @@
 #include "G4MCTGenEvent.hh"
 
 // --------------------------------------------------------------------
-G4MCTGenEvent::G4MCTGenEvent()
-{
-}
+G4MCTGenEvent::G4MCTGenEvent() {}
 
 // --------------------------------------------------------------------
 G4MCTGenEvent::~G4MCTGenEvent()
@@ -58,7 +56,7 @@ G4int G4MCTGenEvent::GetNofEvents() const
 const void* G4MCTGenEvent::GetGenEvent(G4int i)
 {
   G4int size = (G4int)eventList.size();
-  if(i >= 0 && i < size)
+  if (i >= 0 && i < size)
     return eventList[i];
   else
     return nullptr;

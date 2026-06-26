@@ -32,39 +32,36 @@
 
 // Author: H.Kurashige, 20 August 2004 - First implementation
 // --------------------------------------------------------------------
-#ifndef G4PhysicsTableHelper_hh 
-#define G4PhysicsTableHelper_hh 1
+#ifndef G4PHYSICSTABLEHELPER_HH
+#define G4PHYSICSTABLEHELPER_HH
 
-#include "globals.hh"
-#include "G4PhysicsVector.hh"
 #include "G4PhysicsTable.hh"
+#include "G4PhysicsVector.hh"
+#include "globals.hh"
 
 class G4PhysicsTableHelper
-{ 
+{
   public:
 
     static G4PhysicsTable* PreparePhysicsTable(G4PhysicsTable* physTable);
-      // Prepare the given physics table. Before building the table 
-      // resize the given physics table to match with the current
-      // production cut table
+    // Prepare the given physics table. Before building the table
+    // resize the given physics table to match with the current
+    // production cut table
 
-    static G4bool RetrievePhysicsTable(G4PhysicsTable* physTable,
-                                       const G4String& fileName,
+    static G4bool RetrievePhysicsTable(G4PhysicsTable* physTable, const G4String& fileName,
                                        G4bool ascii, G4bool spline);
-      // Retrieve the physics table from the given file and 
-      // fill the given physics table with retrieved physics vectors
+    // Retrieve the physics table from the given file and
+    // fill the given physics table with retrieved physics vectors
 
-    static void SetPhysicsVector(G4PhysicsTable* physTable,
-                                 std::size_t idx,
-                                 G4PhysicsVector* vec);
-      // Set a physics vector at given position 
+    static void SetPhysicsVector(G4PhysicsTable* physTable, std::size_t idx, G4PhysicsVector* vec);
+    // Set a physics vector at given position
 
-    static void  SetVerboseLevel(G4int value);
+    static void SetVerboseLevel(G4int value);
     static G4int GetVerboseLevel();
-      // Set/get control flag for output message
-      //  0: Silent
-      //  1: Warning message
-      //  2: More
+    // Set/get control flag for output message
+    //  0: Silent
+    //  1: Warning message
+    //  2: More
 
     G4PhysicsTableHelper(const G4PhysicsTableHelper&) = delete;
     G4PhysicsTableHelper& operator=(const G4PhysicsTableHelper&) = delete;
@@ -73,9 +70,9 @@ class G4PhysicsTableHelper
 
     G4PhysicsTableHelper();
     ~G4PhysicsTableHelper();
- 
+
     static G4int verboseLevel;
-      // Control flag for output message
+    // Control flag for output message
 };
 
 #endif

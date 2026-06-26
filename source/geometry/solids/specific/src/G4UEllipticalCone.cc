@@ -28,53 +28,53 @@
 // 13-08-2019 Gabriele Cosmo, CERN
 // --------------------------------------------------------------------
 
+// Geant4/VecGeom headers must be included in order
+// clang-format off
 #include "G4EllipticalCone.hh"
 #include "G4UEllipticalCone.hh"
+// clang-format on
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include "G4AffineTransform.hh"
-#include "G4VPVParameterisation.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4BoundingEnvelope.hh"
-#include "G4Polyhedron.hh"
+#  include "G4AffineTransform.hh"
+#  include "G4BoundingEnvelope.hh"
+#  include "G4PhysicalConstants.hh"
+#  include "G4Polyhedron.hh"
+#  include "G4VPVParameterisation.hh"
 
 ////////////////////////////////////////////////////////////////////////
 //
 // Constructor - check & set half widths
 
-
-G4UEllipticalCone::G4UEllipticalCone(const G4String& pName,
-                                           G4double a,
-                                           G4double b,
-                                           G4double h,
-                                           G4double cut )
+G4UEllipticalCone::G4UEllipticalCone(const G4String& pName, G4double a, G4double b, G4double h,
+                                     G4double cut)
   : Base_t(pName, a, b, h, cut)
-{ }
+{}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Copy constructor
 
-G4UEllipticalCone::G4UEllipticalCone(const G4UEllipticalCone& rhs)
-  : Base_t(rhs)
-{ }
+G4UEllipticalCone::G4UEllipticalCone(const G4UEllipticalCone& rhs) : Base_t(rhs) {}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Assignment operator
 
-G4UEllipticalCone& G4UEllipticalCone::operator = (const G4UEllipticalCone& rhs)
+G4UEllipticalCone& G4UEllipticalCone::operator=(const G4UEllipticalCone& rhs)
 {
-   // Check assignment to self
-   //
-   if (this == &rhs)  { return *this; }
+  // Check assignment to self
+  //
+  if (this == &rhs)
+  {
+    return *this;
+  }
 
-   // Copy base class data
-   //
-   Base_t::operator=(rhs);
+  // Copy base class data
+  //
+  Base_t::operator=(rhs);
 
-   return *this;
+  return *this;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -101,14 +101,14 @@ G4double G4UEllipticalCone::GetZTopCut() const
   return Base_t::GetZTopCut();
 }
 
-G4double G4UEllipticalCone::GetSemiAxisMax () const
+G4double G4UEllipticalCone::GetSemiAxisMax() const
 {
-  return std::max(GetSemiAxisX(),GetSemiAxisY());
+  return std::max(GetSemiAxisX(), GetSemiAxisY());
 }
 
-G4double G4UEllipticalCone::GetSemiAxisMin () const
+G4double G4UEllipticalCone::GetSemiAxisMin() const
 {
-  return std::min(GetSemiAxisX(),GetSemiAxisY());
+  return std::min(GetSemiAxisX(), GetSemiAxisY());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -138,27 +138,23 @@ G4VSolid* G4UEllipticalCone::Clone() const
 //
 // Get bounding box
 
-void G4UEllipticalCone::BoundingLimits(G4ThreeVector& pMin,
-                                       G4ThreeVector& pMax) const
+void G4UEllipticalCone::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
 {
-  G4double zcut   = GetZTopCut();
-  G4double height = GetZMax(); 
-  G4double xmax   = GetSemiAxisX()*(height+zcut);
-  G4double ymax   = GetSemiAxisY()*(height+zcut);
-  pMin.set(-xmax,-ymax,-zcut);
-  pMax.set( xmax, ymax, zcut);
+  G4double zcut = GetZTopCut();
+  G4double height = GetZMax();
+  G4double xmax = GetSemiAxisX() * (height + zcut);
+  G4double ymax = GetSemiAxisY() * (height + zcut);
+  pMin.set(-xmax, -ymax, -zcut);
+  pMax.set(xmax, ymax, zcut);
 
   // Check correctness of the bounding box
   //
   if (pMin.x() >= pMax.x() || pMin.y() >= pMax.y() || pMin.z() >= pMax.z())
   {
     std::ostringstream message;
-    message << "Bad bounding box (min >= max) for solid: "
-            << GetName() << " !"
-            << "\npMin = " << pMin
-            << "\npMax = " << pMax;
-    G4Exception("G4UEllipticalCone::BoundingLimits()", "GeomMgt0001",
-                JustWarning, message);
+    message << "Bad bounding box (min >= max) for solid: " << GetName() << " !"
+            << "\npMin = " << pMin << "\npMax = " << pMax;
+    G4Exception("G4UEllipticalCone::BoundingLimits()", "GeomMgt0001", JustWarning, message);
     StreamInfo(G4cout);
   }
 }
@@ -167,60 +163,58 @@ void G4UEllipticalCone::BoundingLimits(G4ThreeVector& pMin,
 //
 // Calculate extent under transform and specified limit
 
-G4bool
-G4UEllipticalCone::CalculateExtent(const EAxis pAxis,
-                                   const G4VoxelLimits& pVoxelLimit,
-                                   const G4AffineTransform& pTransform,
-                                         G4double& pMin, G4double& pMax) const
+G4bool G4UEllipticalCone::CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                                          const G4AffineTransform& pTransform, G4double& pMin,
+                                          G4double& pMax) const
 {
-  G4ThreeVector bmin,bmax;
+  G4ThreeVector bmin, bmax;
   G4bool exist;
 
   // Check bounding box (bbox)
   //
-  BoundingLimits(bmin,bmax);
-  G4BoundingEnvelope bbox(bmin,bmax);
-#ifdef G4BBOX_EXTENT
-  return bbox.CalculateExtent(pAxis,pVoxelLimit,pTransform,pMin,pMax);
-#endif
-  if (bbox.BoundingBoxVsVoxelLimits(pAxis,pVoxelLimit,pTransform,pMin,pMax))
+  BoundingLimits(bmin, bmax);
+  G4BoundingEnvelope bbox(bmin, bmax);
+#  ifdef G4BBOX_EXTENT
+  return bbox.CalculateExtent(pAxis, pVoxelLimit, pTransform, pMin, pMax);
+#  endif
+  if (bbox.BoundingBoxVsVoxelLimits(pAxis, pVoxelLimit, pTransform, pMin, pMax))
   {
     return exist = pMin < pMax;
   }
 
   // Set bounding envelope (benv) and calculate extent
   //
-  static const G4int NSTEPS = 48; // number of steps for whole circle
-  static const G4double ang = twopi/NSTEPS;
-  static const G4double sinHalf = std::sin(0.5*ang);
-  static const G4double cosHalf = std::cos(0.5*ang);
-  static const G4double sinStep = 2.*sinHalf*cosHalf;
-  static const G4double cosStep = 1. - 2.*sinHalf*sinHalf;
-  G4double zcut   = bmax.z();
-  G4double height = GetZMax(); 
-  G4double sxmin  = GetSemiAxisX()*(height-zcut)/cosHalf;
-  G4double symin  = GetSemiAxisY()*(height-zcut)/cosHalf;
-  G4double sxmax  = bmax.x()/cosHalf;
-  G4double symax  = bmax.y()/cosHalf;
+  static const G4int NSTEPS = 48;  // number of steps for whole circle
+  static const G4double ang = twopi / NSTEPS;
+  static const G4double sinHalf = std::sin(0.5 * ang);
+  static const G4double cosHalf = std::cos(0.5 * ang);
+  static const G4double sinStep = 2. * sinHalf * cosHalf;
+  static const G4double cosStep = 1. - 2. * sinHalf * sinHalf;
+  G4double zcut = bmax.z();
+  G4double height = GetZMax();
+  G4double sxmin = GetSemiAxisX() * (height - zcut) / cosHalf;
+  G4double symin = GetSemiAxisY() * (height - zcut) / cosHalf;
+  G4double sxmax = bmax.x() / cosHalf;
+  G4double symax = bmax.y() / cosHalf;
 
   G4double sinCur = sinHalf;
   G4double cosCur = cosHalf;
-  G4ThreeVectorList baseA(NSTEPS),baseB(NSTEPS);
-  for (G4int k=0; k<NSTEPS; ++k)
+  G4ThreeVectorList baseA(NSTEPS), baseB(NSTEPS);
+  for (G4int k = 0; k < NSTEPS; ++k)
   {
-    baseA[k].set(sxmax*cosCur,symax*sinCur,-zcut);
-    baseB[k].set(sxmin*cosCur,symin*sinCur, zcut);
-    
+    baseA[k].set(sxmax * cosCur, symax * sinCur, -zcut);
+    baseB[k].set(sxmin * cosCur, symin * sinCur, zcut);
+
     G4double sinTmp = sinCur;
-    sinCur = sinCur*cosStep + cosCur*sinStep;
-    cosCur = cosCur*cosStep - sinTmp*sinStep;
+    sinCur = sinCur * cosStep + cosCur * sinStep;
+    cosCur = cosCur * cosStep - sinTmp * sinStep;
   }
 
-  std::vector<const G4ThreeVectorList *> polygons(2);
+  std::vector<const G4ThreeVectorList*> polygons(2);
   polygons[0] = &baseA;
   polygons[1] = &baseB;
-  G4BoundingEnvelope benv(bmin,bmax,polygons);
-  exist = benv.CalculateExtent(pAxis,pVoxelLimit,pTransform,pMin,pMax);
+  G4BoundingEnvelope benv(bmin, bmax, polygons);
+  exist = benv.CalculateExtent(pAxis, pVoxelLimit, pTransform, pMin, pMax);
   return exist;
 }
 
@@ -230,8 +224,7 @@ G4UEllipticalCone::CalculateExtent(const EAxis pAxis,
 //
 G4Polyhedron* G4UEllipticalCone::CreatePolyhedron() const
 {
-  return new G4PolyhedronEllipticalCone(GetSemiAxisX(), GetSemiAxisY(),
-                                        GetZMax(), GetZTopCut());
+  return new G4PolyhedronEllipticalCone(GetSemiAxisX(), GetSemiAxisY(), GetZMax(), GetZTopCut());
 }
 
 #endif  // G4GEOM_USE_USOLIDS

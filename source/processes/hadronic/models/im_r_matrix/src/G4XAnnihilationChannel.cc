@@ -23,33 +23,34 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#include "globals.hh"
-#include "G4ios.hh"
-#include "G4PhysicalConstants.hh"
 #include "G4XAnnihilationChannel.hh"
-#include "G4KineticTrack.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4ResonanceWidth.hh"
-#include "G4ResonancePartialWidth.hh"
-#include "G4PhysicsVector.hh"
-#include "G4PartialWidthTable.hh"
 
-G4XAnnihilationChannel::G4XAnnihilationChannel(): resonance(0)
+#include "G4KineticTrack.hh"
+#include "G4PartialWidthTable.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4PhysicsVector.hh"
+#include "G4ResonancePartialWidth.hh"
+#include "G4ResonanceWidth.hh"
+#include "G4ios.hh"
+#include "globals.hh"
+
+G4XAnnihilationChannel::G4XAnnihilationChannel() : resonance(0)
 {
-	// As a first approximation the model is assumed to be valid over
-	  // the entire energy range
-	  lowLimit = 0.;
-	  highLimit = DBL_MAX;
-	  widthTable = 0;
-	  partWidthTable = 0;
+  // As a first approximation the model is assumed to be valid over
+  // the entire energy range
+  lowLimit = 0.;
+  highLimit = DBL_MAX;
+  widthTable = 0;
+  partWidthTable = 0;
 }
 
 G4XAnnihilationChannel::G4XAnnihilationChannel(const G4ParticleDefinition* resDefinition,
-					       const G4ResonanceWidth& resWidths,
-					       const G4ResonancePartialWidth& resPartWidths,
-					       const G4String& partWidthLabel) 
+                                               const G4ResonanceWidth& resWidths,
+                                               const G4ResonancePartialWidth& resPartWidths,
+                                               const G4String& partWidthLabel)
   : resonance(resDefinition)
-{ 
+{
   // Get the tabulated mass-dependent widths for the resonance
   G4String resName = resonance->GetParticleName();
   // cout << "HPW "<<resName<<endl;
@@ -60,12 +61,11 @@ G4XAnnihilationChannel::G4XAnnihilationChannel(const G4ParticleDefinition* resDe
   widthTable = resWidths.MassDependentWidth(shortName);
   partWidthTable = resPartWidths.MassDependentWidth(partWidthLabel);
 
-  // As a first approximation the model is assumed to be valid over 
+  // As a first approximation the model is assumed to be valid over
   // the entire energy range
   lowLimit = 0.;
   highLimit = DBL_MAX;
 }
-
 
 G4XAnnihilationChannel::~G4XAnnihilationChannel()
 {
@@ -73,23 +73,20 @@ G4XAnnihilationChannel::~G4XAnnihilationChannel()
   widthTable = 0;
   if (partWidthTable) delete partWidthTable;
   partWidthTable = 0;
- }
-
-
-G4bool G4XAnnihilationChannel::operator==(const G4XAnnihilationChannel &right) const
-{
-  return (this == (G4XAnnihilationChannel *) &right);
 }
 
-
-G4bool G4XAnnihilationChannel::operator!=(const G4XAnnihilationChannel &right) const
+G4bool G4XAnnihilationChannel::operator==(const G4XAnnihilationChannel& right) const
 {
-  return (this != (G4XAnnihilationChannel *) &right);
+  return (this == (G4XAnnihilationChannel*)&right);
 }
 
+G4bool G4XAnnihilationChannel::operator!=(const G4XAnnihilationChannel& right) const
+{
+  return (this != (G4XAnnihilationChannel*)&right);
+}
 
-G4double G4XAnnihilationChannel::CrossSection(const G4KineticTrack& trk1, 
-					      const G4KineticTrack& trk2) const
+G4double G4XAnnihilationChannel::CrossSection(const G4KineticTrack& trk1,
+                                              const G4KineticTrack& trk2) const
 {
   G4double sigma = 0.;
   G4double eCM = (trk1.Get4Momentum() + trk2.Get4Momentum()).mag();
@@ -105,33 +102,33 @@ G4double G4XAnnihilationChannel::CrossSection(const G4KineticTrack& trk1,
   G4int JRes = resonance->GetPDGiSpin();
   G4double mRes = resonance->GetPDGMass();
 
-  G4double branch = Branch(trk1,trk2);
-  G4double width = VariableWidth(trk1,trk2);
-  G4double cleb = NormalizedClebsch(trk1,trk2);
+  G4double branch = Branch(trk1, trk2);
+  G4double width = VariableWidth(trk1, trk2);
+  G4double cleb = NormalizedClebsch(trk1, trk2);
 
   G4double S = eCM * eCM;
-  if (S == 0.) throw G4HadronicException(__FILE__, __LINE__, "G4XAnnihilationChannel::CrossSection - eCM = 0");
+  if (S == 0.)
+    throw G4HadronicException(__FILE__, __LINE__, "G4XAnnihilationChannel::CrossSection - eCM = 0");
 
-  G4double pCM = std::sqrt((S-(m_1+m_2)*(m_1+m_2))*(S-(m_1-m_2)*(m_1-m_2))/(4.*S));
+  G4double pCM =
+    std::sqrt((S - (m_1 + m_2) * (m_1 + m_2)) * (S - (m_1 - m_2) * (m_1 - m_2)) / (4. * S));
 
-  sigma = ( (JRes + 1.) / ( (J1 + 1) * (J2 + 1) ) 
-	    * pi / (pCM * pCM) * branch * width * width / 
-	    ( (eCM - mRes) * (eCM - mRes) + width * width / 4.0) * cleb * hbarc_squared);
+  sigma = ((JRes + 1.) / ((J1 + 1) * (J2 + 1)) * pi / (pCM * pCM) * branch * width * width
+           / ((eCM - mRes) * (eCM - mRes) + width * width / 4.0) * cleb * hbarc_squared);
 
-//   G4cout << "SS " << branch<<" "<<sigma<<" "
-//          << J1 <<" "
-// 	 <<J2<<" "
-// 	 <<m1<<" "
-// 	 <<m2<<" "
-// 	 <<JRes<<" "
-// 	 <<mRes<<" "
-// 	 <<wRes<<" "
-// 	 <<width<<" "
-// 	 <<cleb<<" "
-// 	 <<G4endl;
+  //   G4cout << "SS " << branch<<" "<<sigma<<" "
+  //          << J1 <<" "
+  // 	 <<J2<<" "
+  // 	 <<m1<<" "
+  // 	 <<m2<<" "
+  // 	 <<JRes<<" "
+  // 	 <<mRes<<" "
+  // 	 <<wRes<<" "
+  // 	 <<width<<" "
+  // 	 <<cleb<<" "
+  // 	 <<G4endl;
   return sigma;
 }
-
 
 G4String G4XAnnihilationChannel::Name() const
 {
@@ -139,25 +136,22 @@ G4String G4XAnnihilationChannel::Name() const
   return name;
 }
 
-
-
 G4bool G4XAnnihilationChannel::IsValid(G4double e) const
 {
-  G4bool answer = InLimits(e,lowLimit,highLimit);
+  G4bool answer = InLimits(e, lowLimit, highLimit);
 
   return answer;
 }
 
-
-G4double G4XAnnihilationChannel::Branch(const G4KineticTrack& trk1, 
+G4double G4XAnnihilationChannel::Branch(const G4KineticTrack& trk1,
                                         const G4KineticTrack& trk2) const
 {
-  G4double w=VariableWidth(trk1,trk2);
-  if(w==0) return 0;
-  return VariablePartialWidth(trk1,trk2) / VariableWidth(trk1,trk2);
+  G4double w = VariableWidth(trk1, trk2);
+  if (w == 0) return 0;
+  return VariablePartialWidth(trk1, trk2) / VariableWidth(trk1, trk2);
 }
 
-G4double G4XAnnihilationChannel::VariableWidth(const G4KineticTrack& trk1, 
+G4double G4XAnnihilationChannel::VariableWidth(const G4KineticTrack& trk1,
                                                const G4KineticTrack& trk2) const
 {
   // actual production width of resonance, depending on available energy.
@@ -165,18 +159,17 @@ G4double G4XAnnihilationChannel::VariableWidth(const G4KineticTrack& trk1,
   G4double width = resonance->GetPDGWidth();
   G4bool dummy = false;
   G4double sqrtS = (trk1.Get4Momentum() + trk2.Get4Momentum()).mag();
-  if (widthTable != 0) 
-    {
-      width = widthTable->GetValue(sqrtS,dummy);
-    }
+  if (widthTable != 0)
+  {
+    width = widthTable->GetValue(sqrtS, dummy);
+  }
   return width;
 }
 
-
-G4double G4XAnnihilationChannel::VariablePartialWidth(const G4KineticTrack& trk1, 
+G4double G4XAnnihilationChannel::VariablePartialWidth(const G4KineticTrack& trk1,
                                                       const G4KineticTrack& trk2) const
 {
-  // Calculate mass dependent partial width of resonance, 
+  // Calculate mass dependent partial width of resonance,
   // based on UrQMD tabulations
 
   G4double width(0);
@@ -186,7 +179,7 @@ G4double G4XAnnihilationChannel::VariablePartialWidth(const G4KineticTrack& trk1
     G4double sqrtS = 0;
     G4bool dummy = false;
     sqrtS = (trk1.Get4Momentum() + trk2.Get4Momentum()).mag();
-    width = partWidthTable->GetValue(sqrtS,dummy);
+    width = partWidthTable->GetValue(sqrtS, dummy);
   }
   else
   {
@@ -195,8 +188,7 @@ G4double G4XAnnihilationChannel::VariablePartialWidth(const G4KineticTrack& trk1
   return width;
 }
 
-
-G4double G4XAnnihilationChannel::NormalizedClebsch(const G4KineticTrack& trk1, 
+G4double G4XAnnihilationChannel::NormalizedClebsch(const G4KineticTrack& trk1,
                                                    const G4KineticTrack& trk2) const
 {
   G4double cleb = 0.;
@@ -210,27 +202,22 @@ G4double G4XAnnihilationChannel::NormalizedClebsch(const G4KineticTrack& trk1,
   G4int iso2 = def2->GetPDGiIsospin();
 
   G4int isoRes = resonance->GetPDGiIsospin();
-  
-  if (isoRes < iso3) return 0.;
-  if ((iso1*iso2) == 0) return 1.;
 
-  cleb = clebsch.NormalizedClebschGordan(isoRes,iso3,iso1,iso2,iso31,iso32);
+  if (isoRes < iso3) return 0.;
+  if ((iso1 * iso2) == 0) return 1.;
+
+  cleb = clebsch.NormalizedClebschGordan(isoRes, iso3, iso1, iso2, iso31, iso32);
 
   // Special case: particle-antiparticle, charge-conjugated states have the same weight
   G4String type1 = def1->GetParticleType();
   G4String type2 = def2->GetParticleType();
   G4int anti = def1->GetPDGEncoding() * def2->GetPDGEncoding();
   G4int strangeness = resonance->GetQuarkContent(3) + resonance->GetAntiQuarkContent(3);
-  if ( ((type1 == "baryon" && type2 == "baryon") ||(type1 == "meson" && type2 == "meson")) &&
-       anti < 0 && strangeness == 0) 
-    {
-      if (def1->GetPDGEncoding() != -(def2->GetPDGEncoding())) cleb = 0.5 * cleb;
-    }
-       
+  if (((type1 == "baryon" && type2 == "baryon") || (type1 == "meson" && type2 == "meson"))
+      && anti < 0 && strangeness == 0)
+  {
+    if (def1->GetPDGEncoding() != -(def2->GetPDGEncoding())) cleb = 0.5 * cleb;
+  }
+
   return cleb;
 }
-
-
-
-
-

@@ -46,9 +46,10 @@
  * @brief G4InterpolationDriver is a templated driver class which uses
  * Runge-Kutta stepper with interpolation property to integrate track with
  * error control.
+ * @ingroup geometry_magneticfield
  */
 
-template <class T, G4bool StepperCachesDchord = true>
+template<class T, G4bool StepperCachesDchord = true>
 class G4InterpolationDriver : public G4RKIntegrationDriver<T>
 {
   public:
@@ -61,9 +62,7 @@ class G4InterpolationDriver : public G4RKIntegrationDriver<T>
      *             if not matching stepper's number of variables, issue exception.
      *  @param[in] statisticsVerbosity Verbosity level.
      */
-    G4InterpolationDriver(G4double hminimum,
-                          T* stepper,
-                          G4int numberOfComponents = 6,
+    G4InterpolationDriver(G4double hminimum, T* stepper, G4int numberOfComponents = 6,
                           G4int statisticsVerbosity = 0);
 
     /**
@@ -85,9 +84,7 @@ class G4InterpolationDriver : public G4RKIntegrationDriver<T>
      *  @param[in] chordDistance Maximum sagitta distance.
      *  @returns The length of step taken.
      */
-    G4double AdvanceChordLimited(G4FieldTrack& track,
-                                 G4double hstep,
-                                 G4double eps,
+    G4double AdvanceChordLimited(G4FieldTrack& track, G4double hstep, G4double eps,
                                  G4double chordDistance) override;
 
     /**
@@ -114,8 +111,7 @@ class G4InterpolationDriver : public G4RKIntegrationDriver<T>
      *  @param[in] hinitial Initial minimum integration step.
      *  @returns true if integration succeeds.
      */
-    G4bool AccurateAdvance(G4FieldTrack& track,
-                           G4double hstep,
+    G4bool AccurateAdvance(G4FieldTrack& track, G4double hstep,
                            G4double eps,  // Requested y_err/hstep
                            G4double hinitial = 0) override;
 
@@ -134,10 +130,10 @@ class G4InterpolationDriver : public G4RKIntegrationDriver<T>
 
     struct InterpStepper
     {
-      std::unique_ptr<T> stepper;
-      G4double begin;
-      G4double end;
-      G4double inverseLength;
+        std::unique_ptr<T> stepper;
+        G4double begin;
+        G4double end;
+        G4double inverseLength;
     };
 
     using StepperIterator = typename std::vector<InterpStepper>::iterator;
@@ -155,13 +151,9 @@ class G4InterpolationDriver : public G4RKIntegrationDriver<T>
      *  @param[in,out] track Pointer to the Field track. Not used.
      *  @returns The step achieved.
      */
-    virtual G4double OneGoodStep(StepperIterator it,
-                                 field_utils::State& y,
-                                 field_utils::State& dydx,
-                                 G4double& hstep,
-                                 G4double eps,
-                                 G4double curveLength,
-                                 G4FieldTrack* track = nullptr);
+    virtual G4double OneGoodStep(StepperIterator it, field_utils::State& y,
+                                 field_utils::State& dydx, G4double& hstep, G4double eps,
+                                 G4double curveLength, G4FieldTrack* track = nullptr);
 
     /**
      * Track interpolation.
@@ -173,27 +165,18 @@ class G4InterpolationDriver : public G4RKIntegrationDriver<T>
     /**
      * Wrapper method for interpolation.
      */
-    void InterpolateImpl(G4double curveLength,
-                         ConstStepperIterator it,
+    void InterpolateImpl(G4double curveLength, ConstStepperIterator it,
                          field_utils::State& y) const;
 
     /**
      * Methods for calculation of chord step and distance.
      */
-    G4double DistChord(const field_utils::State& yBegin,
-                             G4double curveLengthBegin,
-                       const field_utils::State& yEnd,
-                             G4double curveLengthEnd) const;
-    G4double FindNextChord(const field_utils::State& yBegin,
-                                 G4double curveLengthBegin,
-                                 field_utils::State& yEnd,
-                                 G4double curveLengthEnd,
-                                 G4double dChord,
-                                 G4double maxChordDistance);
-    G4double CalcChordStep(G4double stepTrialOld,
-                           G4double dChordStep,
-                           G4double fDeltaChord);
-
+    G4double DistChord(const field_utils::State& yBegin, G4double curveLengthBegin,
+                       const field_utils::State& yEnd, G4double curveLengthEnd) const;
+    G4double FindNextChord(const field_utils::State& yBegin, G4double curveLengthBegin,
+                           field_utils::State& yEnd, G4double curveLengthEnd, G4double dChord,
+                           G4double maxChordDistance);
+    G4double CalcChordStep(G4double stepTrialOld, G4double dChordStep, G4double fDeltaChord);
 
     /**
      * Internal methods for printing/checking the state.

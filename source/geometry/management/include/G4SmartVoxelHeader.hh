@@ -52,13 +52,13 @@
 #ifndef G4SMARTVOXELHEADER_HH
 #define G4SMARTVOXELHEADER_HH
 
-#include <vector>
-
+#include "G4SmartVoxelNode.hh"
+#include "G4SmartVoxelProxy.hh"
 #include "G4Types.hh"
+
 #include "geomdefs.hh"
 
-#include "G4SmartVoxelProxy.hh"
-#include "G4SmartVoxelNode.hh"
+#include <vector>
 
 // Forward declarations
 class G4LogicalVolume;
@@ -73,8 +73,11 @@ using G4VolumeExtentVector = std::vector<G4double>;
 
 /**
  * @brief G4SmartVoxelHeader represents a set of voxels, created by a single
- * axis of virtual division. It contains the individual voxels, which are
- * potentially further divided along different axes.
+ * axis of virtual division.
+ * @ingroup geometry_management
+ *
+ * It contains the individual voxels, which are potentially further divided along
+ * different axes.
  */
 
 class G4SmartVoxelHeader
@@ -101,28 +104,25 @@ class G4SmartVoxelHeader
      *  @param[in] pCandidates Candidate volumes to be considered.
      *  @param[in] pSlice Max & min equivalent slice numbers for the header.
      */
-    G4SmartVoxelHeader(G4LogicalVolume* pVolume,
-		       const G4VoxelLimits& pLimits,
-		       const G4VolumeNosVector* pCandidates,
-		       G4int pSlice = 0);
-      // 
+    G4SmartVoxelHeader(G4LogicalVolume* pVolume, const G4VoxelLimits& pLimits,
+                       const G4VolumeNosVector* pCandidates, G4int pSlice = 0);
+    //
 
     /**
      * Destructor. Deletes all referenced nodes [but *not* the referenced
      * physical volumes].
      */
     ~G4SmartVoxelHeader();
-    
+
     /**
      * Equality operator.
      */
-    G4bool operator == (const G4SmartVoxelHeader& pHead) const;
+    G4bool operator==(const G4SmartVoxelHeader& pHead) const;
 
     /**
      * Streaming operator.
      */
-    friend std::ostream&
-    operator << (std::ostream&s, const G4SmartVoxelHeader& h);
+    friend std::ostream& operator<<(std::ostream& s, const G4SmartVoxelHeader& h);
 
     /**
      * Access functions for min/max equivalent slices (nodes & headers).
@@ -151,12 +151,12 @@ class G4SmartVoxelHeader
      * Returns the minimum coordinate limit along the current axis.
      */
     G4double GetMinExtent() const;
-    
+
     /**
      * Returns the number of slices along the current axis.
      */
     std::size_t GetNoSlices() const;
-    
+
     /**
      * Returns the pointer to the proxy for the n-th slice
      * (numbering from 0, no bounds checking is performed).
@@ -193,9 +193,8 @@ class G4SmartVoxelHeader
      * for "construction". Hardwired to stop at third level of refinement,
      * using the XYZ Cartesian axes in any order.
      */
-    void BuildVoxelsWithinLimits(G4LogicalVolume* pVolume,
-                                 G4VoxelLimits pLimits,
-		                 const G4VolumeNosVector* pCandidates);
+    void BuildVoxelsWithinLimits(G4LogicalVolume* pVolume, G4VoxelLimits pLimits,
+                                 const G4VolumeNosVector* pCandidates);
 
     /**
      * Calculates and stores the minimum and maximum equivalent neighbour
@@ -220,10 +219,8 @@ class G4SmartVoxelHeader
      * the specified limits 'pLimits', considering the daughters numbered
      * 'pCandidates' of the logical volume 'pVolume'.
      */
-    G4ProxyVector* BuildNodes(G4LogicalVolume* pVolume,
-	                      G4VoxelLimits pLimits,
-	                      const G4VolumeNosVector* pCandidates,
-	                      EAxis pAxis);
+    G4ProxyVector* BuildNodes(G4LogicalVolume* pVolume, G4VoxelLimits pLimits,
+                              const G4VolumeNosVector* pCandidates, EAxis pAxis);
 
     /**
      * Calculates a "quality value" for the specified vector of voxels.

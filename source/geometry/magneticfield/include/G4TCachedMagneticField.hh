@@ -31,29 +31,30 @@
 #ifndef G4TCACHED_MAGNETIC_FIELD_HH
 #define G4TCACHED_MAGNETIC_FIELD_HH
 
-#include "G4Types.hh"
-#include "G4ThreeVector.hh"
 #include "G4MagneticField.hh"
+#include "G4ThreeVector.hh"
+#include "G4Types.hh"
 
 /**
  * @brief G4TCachedMagneticField is a templated implementation for a specialisation
  * of G4MagneticField used to cache the Magnetic Field value.
+ * @ingroup geometry_magneticfield
  */
 
-template <class T_Field>
+template<class T_Field>
 class G4TCachedMagneticField : public G4MagneticField
 {
   public:
 
     G4TCachedMagneticField(T_Field* pTField, G4double distance)
-      : G4MagneticField()
-      , fLastLocation(DBL_MAX, DBL_MAX, DBL_MAX)
-      , fLastValue(DBL_MAX, DBL_MAX, DBL_MAX)
-      , fCountCalls(0)
-      , fCountEvaluations(0)
+      : G4MagneticField(),
+        fLastLocation(DBL_MAX, DBL_MAX, DBL_MAX),
+        fLastValue(DBL_MAX, DBL_MAX, DBL_MAX),
+        fCountCalls(0),
+        fCountEvaluations(0)
     {
       fpMagneticField = pTField;
-      fDistanceConst  = distance;
+      fDistanceConst = distance;
 
       this->ClearCounts();
     }
@@ -63,25 +64,28 @@ class G4TCachedMagneticField : public G4MagneticField
     G4TCachedMagneticField(const G4TCachedMagneticField<T_Field>& rightCMF)
     {
       fpMagneticField = rightCMF.fpMagneticField;
-      fDistanceConst  = rightCMF.fDistanceConst;
-      fLastLocation   = rightCMF.fLastLocation;
-      fLastValue      = rightCMF.fLastValue;
+      fDistanceConst = rightCMF.fDistanceConst;
+      fLastLocation = rightCMF.fLastLocation;
+      fLastValue = rightCMF.fLastValue;
       this->ClearCounts();
     }
 
     G4TCachedMagneticField& operator=(const G4TCachedMagneticField& right)
     {
-      if(&right == this) { return *this; }
+      if (&right == this)
+      {
+        return *this;
+      }
 
       fpMagneticField = right.fpMagneticField;
 
-      fDistanceConst= right.fDistanceConst;
+      fDistanceConst = right.fDistanceConst;
       fLastLocation = right.fLastLocation;
       fLastValue = right.fLastValue;
 
       fCountCalls = 0;
       fCountEvaluations = 0;
-    
+
       return *this;
     }
 
@@ -92,15 +96,14 @@ class G4TCachedMagneticField : public G4MagneticField
       T_Field* aF = this->fpMagneticField->T_Field::Clone();
       G4TCachedMagneticField* cloned = new G4TCachedMagneticField(aF, this->fDistanceConst);
       cloned->fLastLocation = this->fLastLocation;
-      cloned->fLastValue    = this->fLastValue;
+      cloned->fLastValue = this->fLastValue;
       return cloned;
     }
 
     void ReportStatistics()
     {
-      G4cout << " Cached field: " << G4endl
-             << "   Number of calls:        " << fCountCalls << G4endl
-             << "   Number of evaluations : " << fCountEvaluations << G4endl;
+      G4cout << " Cached field: " << G4endl << "   Number of calls:        " << fCountCalls
+             << G4endl << "   Number of evaluations : " << fCountEvaluations << G4endl;
     }
 
     virtual void GetFieldValue(const G4double Point[4], G4double* Bfield) const
@@ -109,7 +112,7 @@ class G4TCachedMagneticField : public G4MagneticField
 
       G4double distSq = (newLocation - fLastLocation).mag2();
       fCountCalls++;
-      if(distSq < fDistanceConst * fDistanceConst)
+      if (distSq < fDistanceConst * fDistanceConst)
       {
         Bfield[0] = fLastValue.x();
         Bfield[1] = fLastValue.y();
@@ -131,7 +134,7 @@ class G4TCachedMagneticField : public G4MagneticField
     G4int GetCountEvaluations() const { return fCountEvaluations; }
     void ClearCounts()
     {
-      fCountCalls       = 0;
+      fCountCalls = 0;
       fCountEvaluations = 0;
     }
 

@@ -46,6 +46,7 @@
 class GFlashEnergySpot
 {
   public:
+
     GFlashEnergySpot();
     GFlashEnergySpot(const G4ThreeVector& point, G4double E);
     ~GFlashEnergySpot();
@@ -57,6 +58,7 @@ class GFlashEnergySpot
     inline G4ThreeVector GetPosition() const { return Point; }
 
   private:
+
     G4double Energy;  // energy deposition
     G4ThreeVector Point;  // locus of energy deposition
 };

@@ -144,23 +144,27 @@ G4FastSimulationManagerProcess::~G4FastSimulationManagerProcess()
 // -----------------------
 void G4FastSimulationManagerProcess::SetWorldVolume(G4String newWorldName)
 {
-  if (fIsTrackingTime) {
+  if (fIsTrackingTime)
+  {
     G4ExceptionDescription ed;
     ed << "G4FastSimulationManagerProcess `" << GetProcessName()
        << "': changing of world volume at tracking time is not allowed." << G4endl;
     G4Exception("G4FastSimulationManagerProcess::SetWorldVolume(const G4String)", "FastSim002",
                 JustWarning, ed, "Call ignored.");
   }
-  else {
+  else
+  {
     G4VPhysicalVolume* newWorld = fTransportationManager->IsWorldExisting(newWorldName);
-    if (newWorld == nullptr) {
+    if (newWorld == nullptr)
+    {
       G4ExceptionDescription tellWhatIsWrong;
       tellWhatIsWrong << "Volume newWorldName = `" << newWorldName
                       << "' is not a parallel world nor the mass world volume." << G4endl;
       G4Exception("G4FastSimulationManagerProcess::SetWorldVolume(const G4String)", "FastSim003",
                   FatalException, tellWhatIsWrong);
     }
-    if (verboseLevel > 0) {
+    if (verboseLevel > 0)
+    {
       if (fWorldVolume != nullptr)
         G4cout << "G4FastSimulationManagerProcess `" << GetProcessName()
                << "': changing world volume from '" << fWorldVolume->GetName() << "' to `"
@@ -177,7 +181,8 @@ void G4FastSimulationManagerProcess::SetWorldVolume(G4VPhysicalVolume* newWorld)
 {
   if (newWorld != nullptr)
     SetWorldVolume(newWorld->GetName());
-  else {
+  else
+  {
     G4ExceptionDescription tellWhatIsWrong;
     tellWhatIsWrong << "Null pointer passed for world volume." << G4endl;
     G4Exception("G4FastSimulationManagerProcess::SetWorldVolume(const G4VPhysicalVolume* newWorld)",
@@ -230,13 +235,16 @@ G4FastSimulationManagerProcess::PostStepGetPhysicalInteractionLength(const G4Tra
   else
     currentVolume = track.GetVolume();
 
-  if (currentVolume != nullptr) {
+  if (currentVolume != nullptr)
+  {
     fFastSimulationManager = currentVolume->GetLogicalVolume()->GetFastSimulationManager();
-    if (fFastSimulationManager != nullptr) {
+    if (fFastSimulationManager != nullptr)
+    {
       // Ask for trigger:
       fFastSimulationTrigger =
         fFastSimulationManager->PostStepGetFastSimulationManagerTrigger(track, fGhostNavigator);
-      if (fFastSimulationTrigger) {
+      if (fFastSimulationTrigger)
+      {
         // Take control over stepping:
         *condition = ExclusivelyForced;
         return 0.0;
@@ -275,7 +283,8 @@ G4double G4FastSimulationManagerProcess::AlongStepGetPhysicalInteractionLength(
   // -- geometry. Warn user in case along used for
   // -- mass geometry ?
   // --------------------------------------------------
-  if (fIsGhostGeometry) {
+  if (fIsGhostGeometry)
+  {
     static G4ThreadLocal G4FieldTrack* endTrack_G4MT_TLS_ = nullptr;
     if (endTrack_G4MT_TLS_ == nullptr) endTrack_G4MT_TLS_ = new G4FieldTrack('0');
     G4FieldTrack& endTrack = *endTrack_G4MT_TLS_;
@@ -290,12 +299,14 @@ G4double G4FastSimulationManagerProcess::AlongStepGetPhysicalInteractionLength(
     // ------------------------------------------
     // Determination of the proposed step length:
     // ------------------------------------------
-    if (currentMinimumStep <= fGhostSafety && currentMinimumStep > 0.) {
+    if (currentMinimumStep <= fGhostSafety && currentMinimumStep > 0.)
+    {
       // -- No chance to limit the step, as proposed move inside safety
       returnedStep = currentMinimumStep;
       proposedSafety = fGhostSafety - currentMinimumStep;
     }
-    else {
+    else
+    {
       // -- Proposed move exceeds safety, need to state
       G4FieldTrackUpdator::Update(&fFieldTrack, &track);
       returnedStep = fPathFinder->ComputeStep(fFieldTrack, currentMinimumStep, fGhostNavigatorIndex,
@@ -344,11 +355,13 @@ G4FastSimulationManagerProcess::AtRestGetPhysicalInteractionLength(const G4Track
   else
     currentVolume = track.GetVolume();
   fFastSimulationManager = currentVolume->GetLogicalVolume()->GetFastSimulationManager();
-  if (fFastSimulationManager != nullptr) {
+  if (fFastSimulationManager != nullptr)
+  {
     // Ask for trigger:
     fFastSimulationTrigger =
       fFastSimulationManager->AtRestGetFastSimulationManagerTrigger(track, fGhostNavigator);
-    if (fFastSimulationTrigger) {
+    if (fFastSimulationTrigger)
+    {
       // Dirty trick to take control over stepping. Does anyone will ever use that ?
       *condition = NotForced;
       return -1.0;

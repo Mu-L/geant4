@@ -42,7 +42,7 @@
 // Use: Parameters may be used in run time or at initialisation
 //
 // Meaning of parameters:
-// - Warning   energy: below this, looping tracks can be killed without any message  
+// - Warning   energy: below this, looping tracks can be killed without any message
 // - Important energy: between warning E and this, looping tracks will complain and die
 // - Number of Trials: above 'important energy' looping tracks get this number of chances.
 
@@ -51,81 +51,84 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4TransportationParameters_hh
-#define G4TransportationParameters_hh
+#ifndef G4TRANSPORTATIONPARAMETERS_HH
+#define G4TRANSPORTATIONPARAMETERS_HH
 
 #include "globals.hh"
 
 class G4TransportationParameters
 {
-public:
-  static   G4TransportationParameters* Instance();
+  public:
 
-  ~G4TransportationParameters() = default;
+    static G4TransportationParameters* Instance();
 
-  G4bool   SetNumberOfTrials(  G4int val );
+    ~G4TransportationParameters() = default;
 
-   // All three methods below enforce the relation WarningE <= ImportantE   
-  G4bool   SetWarningEnergy(   G4double val );
-  G4bool   SetImportantEnergy( G4double val );
-   //  If the relation fails, the methods above warn and use the new value for both.
-  G4bool   SetWarningAndImportantEnergies( G4double warnE, G4double imprtE );
-   //  If the relation does *not* hold, it warns and
-   //     uses the smaller as the 'warning Energy'
-   //     and  the larger  as the 'important energy'
+    G4bool SetNumberOfTrials(G4int val);
 
-  G4int    GetNumberOfTrials() const { return fNumberOfTrials; }
-  G4double GetWarningEnergy() const { return fWarningEnergy; }
-  G4double GetImportantEnergy() const { return fImportantEnergy; }
-  G4bool   IsMagneticMomentEnabled() const { return fUseMagneticMoment; }
+    // All three methods below enforce the relation WarningE <= ImportantE
+    G4bool SetWarningEnergy(G4double val);
+    G4bool SetImportantEnergy(G4double val);
+    //  If the relation fails, the methods above warn and use the new value for both.
+    G4bool SetWarningAndImportantEnergies(G4double warnE, G4double imprtE);
+    //  If the relation does *not* hold, it warns and
+    //     uses the smaller as the 'warning Energy'
+    //     and  the larger  as the 'important energy'
 
-  G4bool   EnableUseOfMagneticMoment(G4bool useMoment=true);
-   // Whether to deflect particles with force due to magnetic moment
+    G4int GetNumberOfTrials() const { return fNumberOfTrials; }
+    G4double GetWarningEnergy() const { return fWarningEnergy; }
+    G4double GetImportantEnergy() const { return fImportantEnergy; }
+    G4bool IsMagneticMomentEnabled() const { return fUseMagneticMoment; }
 
-  G4bool   SetHighLooperThresholds(); // Shortcut method - old values (meant for HEP)
-  G4bool   SetIntermediateLooperThresholds();  // Intermediate values - also used as default
-  G4bool   SetLowLooperThresholds();  // Set low thresholds - for low-E applications
-  G4bool   SetSilenceAllLooperWarnings(G4bool val=true);
-  // return value = success or failure of setting the parameter
-  
-  G4bool   GetSilenceAllLooperWarnings(){ return fSilenceLooperWarnings; }
+    G4bool EnableUseOfMagneticMoment(G4bool useMoment = true);
+    // Whether to deflect particles with force due to magnetic moment
 
-  void     ReportLockError(G4String methodName, G4bool verbose= false) const;
-   // Report error - in case the state of G4 is incorrect, and update methods fail
-   
-  // Probe whether the 'default' instance exists, without creating it
-  static G4bool  Exists() { return theInstance != nullptr; } 
+    G4bool SetHighLooperThresholds();  // Shortcut method - old values (meant for HEP)
+    G4bool SetIntermediateLooperThresholds();  // Intermediate values - also used as default
+    G4bool SetLowLooperThresholds();  // Set low thresholds - for low-E applications
+    G4bool SetSilenceAllLooperWarnings(G4bool val = true);
+    // return value = success or failure of setting the parameter
 
-   // printing
-  void StreamInfo(std::ostream& os) const;
-  void Dump() const;
-  friend std::ostream& operator<< (std::ostream& os, const G4TransportationParameters&);
-   
-private:
-  G4TransportationParameters();
-  //  Currently private - but potentially will open it up, to allow per-particle specialisation
+    G4bool GetSilenceAllLooperWarnings() { return fSilenceLooperWarnings; }
 
-  // void   Initialise();
+    void ReportLockError(G4String methodName, G4bool verbose = false) const;
+    // Report error - in case the state of G4 is incorrect, and update methods fail
 
-  G4bool IsLocked() const;
+    // Probe whether the 'default' instance exists, without creating it
+    static G4bool Exists() { return theInstance != nullptr; }
 
-  void   PrintWarning(G4ExceptionDescription& ed) const; 
+    // printing
+    void StreamInfo(std::ostream& os) const;
+    void Dump() const;
+    friend std::ostream& operator<<(std::ostream& os, const G4TransportationParameters&);
 
-private:
-  static   G4TransportationParameters* theInstance;
+  private:
 
-  // STATE
-  // Values for initialising 'loopers' parameters of Transport process
-  G4double fWarningEnergy   =  -1.0;  //  Warn above this energy
-  G4double fImportantEnergy =  -1.0;  //  Give a few trials above this E
-  G4int    fNumberOfTrials  =    10;  //  Number of trials an important looper survives
+    G4TransportationParameters();
+    //  Currently private - but potentially will open it up, to allow per-particle specialisation
 
-  // Flags for use of gravity field(s) or fields which interact with the magnetic moment
-  G4bool   fUseMagneticMoment = false;
-  G4bool   fUseGravity        = false;
+    // void   Initialise();
 
-  // Flag to *Supress* all 'looper' warnings   
-  G4bool   fSilenceLooperWarnings= false;  
+    G4bool IsLocked() const;
+
+    void PrintWarning(G4ExceptionDescription& ed) const;
+
+  private:
+
+    static G4TransportationParameters* theInstance;
+
+    // STATE
+    // Values for initialising 'loopers' parameters of Transport process
+    G4double fWarningEnergy = -1.0;  //  Warn above this energy
+    G4double fImportantEnergy = -1.0;  //  Give a few trials above this E
+    G4int fNumberOfTrials = 10;  //  Number of trials an important looper survives
+
+    // Flags for use of gravity field(s) or fields which interact with the magnetic moment
+    G4bool fUseMagneticMoment = false;
+    G4bool fUseGravity = false;
+
+    // Flag to *Supress* all 'looper' warnings
+    G4bool fSilenceLooperWarnings = false;
 };
 
 #endif

@@ -29,10 +29,12 @@
 #ifndef G4_KAON_HYP_SAMPLER_HH
 #define G4_KAON_HYP_SAMPLER_HH
 
-
 #include "G4CascadeSampler.hh"
 
 // Entire interface is inherited from base (struct makes default public:)
-struct G4KaonHypSampler : public G4CascadeSampler<31,6> { G4KaonHypSampler(); };
+struct G4KaonHypSampler : public G4CascadeSampler<31, 6>
+{
+    G4KaonHypSampler();
+};
 
-#endif	/* G4_KAON_HYP_SAMPLER_HH */
+#endif /* G4_KAON_HYP_SAMPLER_HH */

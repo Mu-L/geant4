@@ -32,8 +32,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4eInverseIonisation_h
-#define G4eInverseIonisation_h 1
+#ifndef G4EINVERSEIONISATION_HH
+#define G4EINVERSEIONISATION_HH
 
 #include "G4VAdjointReverseReaction.hh"
 
@@ -41,16 +41,17 @@ class G4VEmAdjointModel;
 
 class G4eInverseIonisation : public G4VAdjointReverseReaction
 {
- public:
-  G4eInverseIonisation(G4bool whichScatCase, const G4String& process_name,
-                       G4VEmAdjointModel* aEmAdjointModel);
-  ~G4eInverseIonisation() override = default;
+  public:
 
-  void ProcessDescription(std::ostream&) const override;
-  void DumpInfo() const override { ProcessDescription(G4cout); };
+    G4eInverseIonisation(G4bool whichScatCase, const G4String& process_name,
+                         G4VEmAdjointModel* aEmAdjointModel);
+    ~G4eInverseIonisation() override = default;
 
-  G4eInverseIonisation(G4eInverseIonisation&) = delete;
-  G4eInverseIonisation& operator=(const G4eInverseIonisation& right) = delete;
+    void ProcessDescription(std::ostream&) const override;
+    void DumpInfo() const override { ProcessDescription(G4cout); };
+
+    G4eInverseIonisation(G4eInverseIonisation&) = delete;
+    G4eInverseIonisation& operator=(const G4eInverseIonisation& right) = delete;
 };
 
 #endif

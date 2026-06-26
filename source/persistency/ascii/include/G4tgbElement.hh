@@ -31,15 +31,15 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgbElement_hh
-#define G4tgbElement_hh 1
+#ifndef G4TGBELEMENT_HH
+#define G4TGBELEMENT_HH
 
-#include <vector>
-#include <string>
-
-#include "globals.hh"
-#include "G4tgrElement.hh"
 #include "G4Element.hh"
+#include "G4tgrElement.hh"
+#include "globals.hh"
+
+#include <string>
+#include <vector>
 
 class G4tgbElement
 {
@@ -49,11 +49,11 @@ class G4tgbElement
     ~G4tgbElement() {}
 
     G4tgbElement(G4tgrElement* hg);
-      // Construct the G4tgbElement from the corresponding HgElement
+    // Construct the G4tgbElement from the corresponding HgElement
 
     G4Element* BuildG4ElementSimple();
     G4Element* BuildG4ElementFromIsotopes();
-      // Build a G4Element out of this HElement
+    // Build a G4Element out of this HElement
 
     const G4String& GetName() const { return theTgrElem->GetName(); }
     const G4String& GetType() const { return theTgrElem->GetType(); }

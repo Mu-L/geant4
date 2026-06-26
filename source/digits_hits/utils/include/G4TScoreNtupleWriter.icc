@@ -28,8 +28,8 @@
 // Author: Ivana Hrivnacova, 30/10/2018
 // --------------------------------------------------------------------
 
-#include "G4TScoreNtupleWriterMessenger.hh"
 #include "G4THitsMap.hh"
+#include "G4TScoreNtupleWriterMessenger.hh"
 #include "G4Threading.hh"
 
 //_____________________________________________________________________________
@@ -38,29 +38,29 @@
 //
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 G4TScoreNtupleWriter<T>::G4TScoreNtupleWriter()
-  : G4VScoreNtupleWriter()
-  , fMessenger(nullptr)
-  , fHCIds()
-  , fAnalysisManager(nullptr)
-  , fDefaultFileType("root")
-  , fFileName("scoring")
-  , fVerboseLevel(1)
-  , fMergeNtuples(false)
-  , fHasAnalysisFile(false)
-  , fIsBooked(false)
-  , fIsInitialized(false)
-  , fFirstNtupleId(0)
+  : G4VScoreNtupleWriter(),
+    fMessenger(nullptr),
+    fHCIds(),
+    fAnalysisManager(nullptr),
+    fDefaultFileType("root"),
+    fFileName("scoring"),
+    fVerboseLevel(1),
+    fMergeNtuples(false),
+    fHasAnalysisFile(false),
+    fIsBooked(false),
+    fIsInitialized(false),
+    fFirstNtupleId(0)
 {
-  if(G4Threading::IsMasterThread())
+  if (G4Threading::IsMasterThread())
   {
     fMessenger = new G4TScoreNtupleWriterMessenger<T>(this);
   }
 }
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 G4TScoreNtupleWriter<T>::~G4TScoreNtupleWriter()
 {
   delete fMessenger;
@@ -71,10 +71,11 @@ G4TScoreNtupleWriter<T>::~G4TScoreNtupleWriter()
 //
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 void G4TScoreNtupleWriter<T>::CreateAnalysisManager()
 {
-  if(fAnalysisManager) {
+  if (fAnalysisManager)
+  {
     return;
   }
 
@@ -91,7 +92,7 @@ void G4TScoreNtupleWriter<T>::CreateAnalysisManager()
 //
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 G4VScoreNtupleWriter* G4TScoreNtupleWriter<T>::CreateInstance() const
 {
   auto instance = new G4TScoreNtupleWriter();
@@ -108,35 +109,34 @@ G4VScoreNtupleWriter* G4TScoreNtupleWriter<T>::CreateInstance() const
 //
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 G4bool G4TScoreNtupleWriter<T>::Book(G4HCofThisEvent* hce)
 {
 #ifdef G4VERBOSE
-  if(fVerboseLevel > 1)
+  if (fVerboseLevel > 1)
   {
     G4cout << "--- G4TScoreNtupleWriter<T>::Book" << G4endl;
   }
 #endif
-  if(!hce)
-    return false;
+  if (!hce) return false;
 
   // book collection ID if DoubleHitsMap
-  if(fHCIds.size() == 0)
+  if (fHCIds.size() == 0)
   {
 #ifdef G4VERBOSE
-    if(fVerboseLevel > 1)
+    if (fVerboseLevel > 1)
     {
       G4cout << "--- going to fill fHCIds " << G4endl;
     }
 #endif
-    for(G4int i = 0; i < hce->GetNumberOfCollections(); ++i)
+    for (G4int i = 0; i < hce->GetNumberOfCollections(); ++i)
     {
       auto hitsMap = dynamic_cast<G4THitsMap<G4double>*>(hce->GetHC(i));
 
-      if(hitsMap)
+      if (hitsMap)
       {
 #ifdef G4VERBOSE
-        if(fVerboseLevel > 1)
+        if (fVerboseLevel > 1)
         {
           G4cout << "--- adding hcID = " << i << G4endl;
         }
@@ -147,22 +147,22 @@ G4bool G4TScoreNtupleWriter<T>::Book(G4HCofThisEvent* hce)
   }
 
   // Create analysis manager
-  if(fHCIds.size())
+  if (fHCIds.size())
   {
     CreateAnalysisManager();
   }
 
   // Create ntuples (only once)
-  if(!fIsInitialized)
+  if (!fIsInitialized)
   {
 #ifdef G4VERBOSE
-    if(fVerboseLevel > 1)
+    if (fVerboseLevel > 1)
     {
       G4cout << "-- going to create ntuples " << G4endl;
     }
 #endif
     auto first = true;
-    for(auto id : fHCIds)
+    for (auto id : fHCIds)
     {
       auto hitsMap = static_cast<G4THitsMap<G4double>*>(hce->GetHC(id));
 
@@ -172,11 +172,11 @@ G4bool G4TScoreNtupleWriter<T>::Book(G4HCofThisEvent* hce)
       ntupleName.append(hitsMap->GetName());
 
       G4int ntupleId = fAnalysisManager->CreateNtuple(ntupleName, ntupleName);
-      if(first)
+      if (first)
       {
         fFirstNtupleId = ntupleId;
 #ifdef G4VERBOSE
-        if(fVerboseLevel > 1)
+        if (fVerboseLevel > 1)
         {
           G4cout << "-- set first ntuple Id " << fFirstNtupleId << G4endl;
         }
@@ -203,61 +203,60 @@ G4bool G4TScoreNtupleWriter<T>::Book(G4HCofThisEvent* hce)
 }
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 void G4TScoreNtupleWriter<T>::OpenFile()
 {
 #ifdef G4VERBOSE
-  if(fVerboseLevel > 1)
+  if (fVerboseLevel > 1)
   {
     G4cout << "--- G4TScoreNtupleWriter<T>::OpenFile" << G4endl;
   }
 #endif
 
-  if(fAnalysisManager->IsOpenFile())
-    return;
+  if (fAnalysisManager->IsOpenFile()) return;
 
 #ifdef G4VERBOSE
-  if(fVerboseLevel > 1)
+  if (fVerboseLevel > 1)
   {
     G4cout << "--- G4TScoreNtupleWriter<T>::OpenFile executing" << G4endl;
   }
 #endif
 
-  if(fAnalysisManager->GetFileName() == "")
+  if (fAnalysisManager->GetFileName() == "")
   {
     fAnalysisManager->SetFileName(fFileName);
   }
   fAnalysisManager->OpenFile();
 
 #ifdef G4VERBOSE
-  if(fVerboseLevel > 1)
+  if (fVerboseLevel > 1)
   {
-    G4cout << "--- G4TScoreNtupleWriter<T>::OpenFile isOpenFile: "
-           << fAnalysisManager->IsOpenFile() << G4endl;
+    G4cout << "--- G4TScoreNtupleWriter<T>::OpenFile isOpenFile: " << fAnalysisManager->IsOpenFile()
+           << G4endl;
   }
 #endif
 
   fHasAnalysisFile = fHasAnalysisFile || fAnalysisManager->IsOpenFile();
-    // Do not overwrite file ownership
-    // if merging is activated and file is not open on workers
+  // Do not overwrite file ownership
+  // if merging is activated and file is not open on workers
 }
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 void G4TScoreNtupleWriter<T>::Fill(G4HCofThisEvent* hce, G4int eventNumber)
 {
 #ifdef G4VERBOSE
-  if(fVerboseLevel > 1)
+  if (fVerboseLevel > 1)
   {
     G4cout << "--- start G4TScoreNtupleWriter<T>::Fill" << G4endl;
   }
 #endif
 
   auto counter = 0;
-  for(auto id : fHCIds)
+  for (auto id : fHCIds)
   {
 #ifdef G4VERBOSE
-    if(fVerboseLevel > 1)
+    if (fVerboseLevel > 1)
     {
       G4cout << "in loop over fHCIds, counter " << counter << G4endl;
     }
@@ -269,21 +268,18 @@ void G4TScoreNtupleWriter<T>::Fill(G4HCofThisEvent* hce, G4int eventNumber)
 
     // fill hits in ntuple
     std::map<G4int, G4double*>::iterator it;
-    for(it = hitsMap->GetMap()->begin(); it != hitsMap->GetMap()->end(); it++)
+    for (it = hitsMap->GetMap()->begin(); it != hitsMap->GetMap()->end(); it++)
     {
-      fAnalysisManager->FillNtupleIColumn(counter + fFirstNtupleId, 0,
-                                          eventNumber);
-      fAnalysisManager->FillNtupleIColumn(counter + fFirstNtupleId, 1,
-                                          it->first);
-      fAnalysisManager->FillNtupleDColumn(counter + fFirstNtupleId, 2,
-                                          *(it->second));
+      fAnalysisManager->FillNtupleIColumn(counter + fFirstNtupleId, 0, eventNumber);
+      fAnalysisManager->FillNtupleIColumn(counter + fFirstNtupleId, 1, it->first);
+      fAnalysisManager->FillNtupleDColumn(counter + fFirstNtupleId, 2, *(it->second));
       fAnalysisManager->AddNtupleRow(counter + fFirstNtupleId);
     }
     counter++;
   }
 
 #ifdef G4VERBOSE
-  if(fVerboseLevel > 1)
+  if (fVerboseLevel > 1)
   {
     G4cout << "--- done G4TScoreNtupleWriter<T>::Fill" << G4endl;
   }
@@ -291,20 +287,20 @@ void G4TScoreNtupleWriter<T>::Fill(G4HCofThisEvent* hce, G4int eventNumber)
 }
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 void G4TScoreNtupleWriter<T>::Write()
 {
 #ifdef G4VERBOSE
-  if(fVerboseLevel > 1)
+  if (fVerboseLevel > 1)
   {
     G4cout << "--- start G4TScoreNtupleWriter<T>::Write" << G4endl;
   }
 #endif
 
-  if(fHasAnalysisFile)
+  if (fHasAnalysisFile)
   {
 #ifdef G4VERBOSE
-    if(fVerboseLevel > 1)
+    if (fVerboseLevel > 1)
     {
       G4cout << "--- G4TScoreNtupleWriter<T>::Write - has file" << G4endl;
     }
@@ -315,7 +311,7 @@ void G4TScoreNtupleWriter<T>::Write()
   }
 
 #ifdef G4VERBOSE
-  if(fVerboseLevel > 1)
+  if (fVerboseLevel > 1)
   {
     G4cout << "--- done G4TScoreNtupleWriter<T>::Write" << G4endl;
   }
@@ -323,40 +319,40 @@ void G4TScoreNtupleWriter<T>::Write()
 }
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 void G4TScoreNtupleWriter<T>::SetDefaultFileType(const G4String& value)
 {
   fDefaultFileType = value;
-  if(fAnalysisManager)
+  if (fAnalysisManager)
   {
     fAnalysisManager->SetDefaultFileType(value);
   }
 }
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 void G4TScoreNtupleWriter<T>::SetFileName(const G4String& fileName)
 {
   fFileName = fileName;
 }
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 void G4TScoreNtupleWriter<T>::SetVerboseLevel(G4int value)
 {
   fVerboseLevel = value;
-  if(fAnalysisManager)
+  if (fAnalysisManager)
   {
     fAnalysisManager->SetVerboseLevel(value);
   }
 }
 
 //_____________________________________________________________________________
-template <typename T>
+template<typename T>
 void G4TScoreNtupleWriter<T>::SetNtupleMerging(G4bool value)
 {
   fMergeNtuples = value;
-  if(fAnalysisManager)
+  if (fAnalysisManager)
   {
     fAnalysisManager->SetNtupleMerging(value);
   }

@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  10th February 1997
 // G4OpenGLImmediateSceneHandler - no Display lists.
 
@@ -37,37 +37,39 @@
 
 class G4OpenGLImmediate;
 
-class G4OpenGLImmediateSceneHandler: public G4OpenGLSceneHandler {
+class G4OpenGLImmediateSceneHandler : public G4OpenGLSceneHandler
+{
+  public:
 
-public:
+    G4OpenGLImmediateSceneHandler(G4VGraphicsSystem& system, const G4String& name);
+    virtual ~G4OpenGLImmediateSceneHandler();
+    void BeginPrimitives(const G4Transform3D& objectTransformation);
+    void EndPrimitives();
+    void BeginPrimitives2D(const G4Transform3D& objectTransformation);
+    void EndPrimitives2D();
+    void BeginModeling();
+    void EndModeling();
+    using G4VSceneHandler::AddPrimitive;
+    void AddPrimitive(const G4Polyline&);
+    void AddPrimitive(const G4Polymarker&);
+    void AddPrimitive(const G4Text& text);
+    void AddPrimitive(const G4Circle&);
+    void AddPrimitive(const G4Square&);
+    void AddPrimitive(const G4Polyhedron&);
 
-  G4OpenGLImmediateSceneHandler (G4VGraphicsSystem& system, const G4String& name);
-  virtual ~G4OpenGLImmediateSceneHandler ();
-  void BeginPrimitives (const G4Transform3D& objectTransformation);
-  void EndPrimitives ();
-  void BeginPrimitives2D (const G4Transform3D& objectTransformation);
-  void EndPrimitives2D ();
-  void BeginModeling ();
-  void EndModeling ();
-  using G4VSceneHandler::AddPrimitive;
-  void AddPrimitive (const G4Polyline&);
-  void AddPrimitive (const G4Polymarker&);
-  void AddPrimitive (const G4Text& text);
-  void AddPrimitive (const G4Circle&);
-  void AddPrimitive (const G4Square&);
-  void AddPrimitive (const G4Polyhedron&);
+  protected:
 
-protected:
+    G4bool AddPrimitivePreamble(const G4VMarker& visible);
+    G4bool AddPrimitivePreamble(const G4Polyline& visible);
+    G4bool AddPrimitivePreamble(const G4Polyhedron& visible);
 
-  G4bool AddPrimitivePreamble(const G4VMarker& visible);
-  G4bool AddPrimitivePreamble(const G4Polyline& visible);
-  G4bool AddPrimitivePreamble(const G4Polyhedron& visible);
+    void ClearTransientStore();
 
-  void ClearTransientStore ();
+    static G4int fSceneIdCount;  // static counter for OpenGLImmediate scenes.
 
-  static G4int    fSceneIdCount;  // static counter for OpenGLImmediate scenes.
   private:
-  bool AddPrimitivePreambleInternal(const G4Visible& visible, bool isMarker, bool isPolyline);
+
+    bool AddPrimitivePreambleInternal(const G4Visible& visible, bool isMarker, bool isPolyline);
 };
 
 #endif

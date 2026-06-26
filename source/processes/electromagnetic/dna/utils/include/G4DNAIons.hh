@@ -26,12 +26,12 @@
 // 31.07.2013: Derived from G4Ions for MT migration (SI)
 // Suggested by Makoto et al.
 
-#ifndef G4DNAIons_h
-#define G4DNAIons_h 1
+#ifndef G4DNAIONS_HH
+#define G4DNAIONS_HH
 
-#include "globals.hh"
-#include "G4ios.hh"
 #include "G4ParticleDefinition.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 // ######################################################################
 // ###                          G4DNAIons                                 ###
@@ -39,88 +39,69 @@
 
 class G4DNAIons : public G4ParticleDefinition
 {
- // Class Description
- //  This is the base class for all Geant4-DNA nuclei, including
- //  charged states 
+    // Class Description
+    //  This is the base class for all Geant4-DNA nuclei, including
+    //  charged states
 
- protected:
-   G4DNAIons(){};
+  protected:
 
+    G4DNAIons() {};
 
- public:
-   G4DNAIons(
-       const G4String&     aName,        G4double            mass,
-       G4double            width,        G4double            charge,   
-       G4int               iSpin,        G4int               iParity,    
-       G4int               iConjugation, G4int               iIsospin,   
-       G4int               iIsospin3,    G4int               gParity,
-       const G4String&     pType,        G4int               lepton,      
-       G4int               baryon,       G4int               encoding,
-       G4bool              stable,       G4double            lifetime,
-       G4DecayTable        *decaytable,  G4bool              shortlived,
-       const G4String&     subType ="",
-       G4int               anti_encoding =0,
-       G4double            excitation = 0.0, 
-       G4int               isomer = 0
-   );
+  public:
 
- public:
-      			~G4DNAIons() override;
-   G4DNAIons*    		IonsDefinition();
-   G4DNAIons*    		Ions();
+    G4DNAIons(const G4String& aName, G4double mass, G4double width, G4double charge, G4int iSpin,
+              G4int iParity, G4int iConjugation, G4int iIsospin, G4int iIsospin3, G4int gParity,
+              const G4String& pType, G4int lepton, G4int baryon, G4int encoding, G4bool stable,
+              G4double lifetime, G4DecayTable* decaytable, G4bool shortlived,
+              const G4String& subType = "", G4int anti_encoding = 0, G4double excitation = 0.0,
+              G4int isomer = 0);
 
- public:
-  
-  // Get excitation energy of nucleus
-  G4double GetExcitationEnergy() const ; 
-  
-  // Get Isomer level (=0 for ground state)
-  G4int GetIsomerLevel() const; 
-   
+  public:
+
+    ~G4DNAIons() override;
+    G4DNAIons* IonsDefinition();
+    G4DNAIons* Ions();
+
+  public:
+
+    // Get excitation energy of nucleus
+    G4double GetExcitationEnergy() const;
+
+    // Get Isomer level (=0 for ground state)
+    G4int GetIsomerLevel() const;
+
   private:
-  G4double theExcitationEnergy; 
-  G4int    theIsomerLevel;
 
+    G4double theExcitationEnergy;
+    G4int theIsomerLevel;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
- G4DNAIons* G4DNAIons::IonsDefinition()
+inline G4DNAIons* G4DNAIons::IonsDefinition()
 {
   return this;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
- G4DNAIons* G4DNAIons::Ions() 
+inline G4DNAIons* G4DNAIons::Ions()
 {
   return this;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
- G4double G4DNAIons::GetExcitationEnergy() const 
+inline G4double G4DNAIons::GetExcitationEnergy() const
 {
   return theExcitationEnergy;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline
- G4int G4DNAIons::GetIsomerLevel() const
+inline G4int G4DNAIons::GetIsomerLevel() const
 {
   return theIsomerLevel;
 }
-    
+
 #endif
-
-
-
-
-
-
-
-

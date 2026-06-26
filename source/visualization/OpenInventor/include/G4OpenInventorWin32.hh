@@ -34,10 +34,12 @@
 
 #include "G4OpenInventorWin.hh"
 
-class G4OpenInventorWin32: public G4OpenInventorWin {
-public:
-  G4OpenInventorWin32 () {}
-  virtual ~G4OpenInventorWin32 () {}
+class G4OpenInventorWin32 : public G4OpenInventorWin
+{
+  public:
+
+    G4OpenInventorWin32() {}
+    virtual ~G4OpenInventorWin32() {}
 };
 
 #endif

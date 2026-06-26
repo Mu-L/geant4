@@ -31,8 +31,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPElasticData_h
-#define G4ParticleHPElasticData_h 1
+#ifndef G4PARTICLEHPELASTICDATA_HH
+#define G4PARTICLEHPELASTICDATA_HH
 
 // Class Description
 // Cross-section data set for a high precision (based on evaluated data
@@ -51,6 +51,7 @@
 class G4ParticleHPElasticData : public G4VCrossSectionDataSet
 {
   public:
+
     G4ParticleHPElasticData();
 
     ~G4ParticleHPElasticData() override;
@@ -65,6 +66,7 @@ class G4ParticleHPElasticData : public G4VCrossSectionDataSet
     // G4bool IsApplicable(const G4DynamicParticle*, const G4Element*);
 
   public:
+
     // G4bool IsZAApplicable( const G4DynamicParticle* , G4double /*ZZ*/, G4double /*AA*/)
     //{ return false;}
 
@@ -78,6 +80,7 @@ class G4ParticleHPElasticData : public G4VCrossSectionDataSet
     void CrossSectionDescription(std::ostream&) const override;
 
   private:
+
     G4PhysicsTable* theCrossSections;
     G4bool instanceOfWorker;
 

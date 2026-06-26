@@ -25,56 +25,58 @@
 //
 //
 
-#ifndef G4CollisionNN_h
-#define G4CollisionNN_h
+#ifndef G4COLLISIONNN_HH
+#define G4COLLISIONNN_HH
 
-#include "globals.hh"
-#include "G4GeneralNNCollision.hh"
 #include "G4CollisionVector.hh"
+#include "G4GeneralNNCollision.hh"
 #include "G4VCrossSectionSource.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4KineticTrack;
 
 class G4CollisionNN : public G4GeneralNNCollision
 {
+  public:
 
-public:
+    G4CollisionNN();
 
-  G4CollisionNN();
+    virtual ~G4CollisionNN();
 
-  virtual ~G4CollisionNN();
+    G4bool operator==(const G4CollisionNN& right) const;
+    G4bool operator!=(const G4CollisionNN& right) const;
 
-  G4bool operator==(const G4CollisionNN &right) const;
-  G4bool operator!=(const G4CollisionNN &right) const;
+    virtual G4String GetName() const { return "NN CollisionComposite"; }
 
-  virtual G4String GetName() const { return "NN CollisionComposite"; }
+    virtual G4double CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const;
 
-  virtual G4double CrossSection(const G4KineticTrack& trk1, 
-				const G4KineticTrack& trk2) const;
+  private:
 
-private:
-  G4CollisionNN(const G4CollisionNN &);
-  G4CollisionNN & operator= (const G4CollisionNN &);
+    G4CollisionNN(const G4CollisionNN&);
+    G4CollisionNN& operator=(const G4CollisionNN&);
 
+  protected:
 
-protected:
+    virtual const G4VCrossSectionSource* GetCrossSectionSource() const
+    {
+      return crossSectionSource;
+    }
+    virtual const G4VAngularDistribution* GetAngularDistribution() const { return 0; }
 
-  virtual const G4VCrossSectionSource* GetCrossSectionSource() const { return crossSectionSource; }
-  virtual const G4VAngularDistribution* GetAngularDistribution() const { return 0; }
+    virtual const G4CollisionVector* GetComponents() const { return components; }
 
-  virtual const G4CollisionVector* GetComponents() const { return components; } 
+    virtual const std::vector<G4String>& GetListOfColliders(G4int whichOne) const;
 
-  virtual const std::vector<G4String>& GetListOfColliders(G4int whichOne) const;  
+  private:
 
-private:  
+    G4CollisionVector* components;
 
-  G4CollisionVector* components;
+    G4VCrossSectionSource* crossSectionSource;
 
-  G4VCrossSectionSource* crossSectionSource;
-
-  std::vector<G4String> colliders1;
-  std::vector<G4String> colliders2;
+    std::vector<G4String> colliders1;
+    std::vector<G4String> colliders2;
 };
 
 #endif

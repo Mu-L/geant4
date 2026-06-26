@@ -37,7 +37,7 @@
 //
 // Base process class for nuclear capture of negatively charged particles
 //
-// Modifications: 
+// Modifications:
 //  20120928  M. Kelsey -- Add GetMeanLifeTime() here, instead of in base.
 //  20121004  K. Genser -- defined two argument constructor with defaults
 //  20121016  K. Genser -- Reverting to use one argument c'tor
@@ -45,96 +45,95 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef G4HadronStoppingProcess_h
-#define G4HadronStoppingProcess_h 1
- 
-#include "globals.hh"
-#include "G4HadronicProcess.hh"
-#include "G4ParticleDefinition.hh"
+#ifndef G4HADRONSTOPPINGPROCESS_HH
+#define G4HADRONSTOPPINGPROCESS_HH
+
 #include "G4ElementSelector.hh"
-#include "G4HadronicInteraction.hh"
-#include "G4Track.hh"
-#include "G4Step.hh"
 #include "G4ForceCondition.hh"
-#include "G4HadronicProcessType.hh"
 #include "G4HadFinalState.hh"
+#include "G4HadronicInteraction.hh"
+#include "G4HadronicProcess.hh"
+#include "G4HadronicProcessType.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4Step.hh"
+#include "G4Track.hh"
+#include "globals.hh"
 
 class G4HadronStoppingProcess : public G4HadronicProcess
-{ 
-public:
- 
-  explicit G4HadronStoppingProcess(const G4String& name = "hadronCaptureAtRest");
+{
+  public:
 
-  virtual ~G4HadronStoppingProcess();
+    explicit G4HadronStoppingProcess(const G4String& name = "hadronCaptureAtRest");
 
-  virtual G4bool IsApplicable(const G4ParticleDefinition&);
+    virtual ~G4HadronStoppingProcess();
 
-  virtual void PreparePhysicsTable(const G4ParticleDefinition&);
+    virtual G4bool IsApplicable(const G4ParticleDefinition&);
 
-  virtual void BuildPhysicsTable(const G4ParticleDefinition&);
+    virtual void PreparePhysicsTable(const G4ParticleDefinition&);
 
-  virtual G4double 
-  AtRestGetPhysicalInteractionLength(const G4Track& track,
-				     G4ForceCondition* condition);
+    virtual void BuildPhysicsTable(const G4ParticleDefinition&);
 
-  virtual G4double 
-  PostStepGetPhysicalInteractionLength(const G4Track& track,
-				       G4double   previousStepSize,
-				       G4ForceCondition* condition);
+    virtual G4double AtRestGetPhysicalInteractionLength(const G4Track& track,
+                                                        G4ForceCondition* condition);
 
-  virtual G4VParticleChange* AtRestDoIt(const G4Track&, const G4Step&);
+    virtual G4double PostStepGetPhysicalInteractionLength(const G4Track& track,
+                                                          G4double previousStepSize,
+                                                          G4ForceCondition* condition);
 
-  virtual void ProcessDescription(std::ostream& outFile) const;
+    virtual G4VParticleChange* AtRestDoIt(const G4Track&, const G4Step&);
 
-  inline void SetElementSelector(G4ElementSelector* ptr);
+    virtual void ProcessDescription(std::ostream& outFile) const;
 
-  inline void SetEmCascade(G4HadronicInteraction* ptr);
+    inline void SetElementSelector(G4ElementSelector* ptr);
 
-  inline void SetBoundDecay(G4HadronicInteraction* ptr);
+    inline void SetEmCascade(G4HadronicInteraction* ptr);
 
-protected:
-  // set effective lifetime for at-rest process (default is forced action)
-  // FIXME: This should be computed by subprocesses via cross-section analogue
-  G4double GetMeanLifeTime(const G4Track& /*aTrack*/,
-                           G4ForceCondition* /*condition*/) { return -1.0; }
+    inline void SetBoundDecay(G4HadronicInteraction* ptr);
 
-private:
+  protected:
 
-  // hide assignment operator as private 
-  G4HadronStoppingProcess& operator=(const G4HadronStoppingProcess &right);
-  G4HadronStoppingProcess(const G4HadronStoppingProcess& );
+    // set effective lifetime for at-rest process (default is forced action)
+    // FIXME: This should be computed by subprocesses via cross-section analogue
+    G4double GetMeanLifeTime(const G4Track& /*aTrack*/, G4ForceCondition* /*condition*/)
+    {
+      return -1.0;
+    }
 
-  G4ElementSelector* fElementSelector;
+  private:
 
-  G4HadronicInteraction* fEmCascade;
-  G4HadronicInteraction* fBoundDecay;
+    // hide assignment operator as private
+    G4HadronStoppingProcess& operator=(const G4HadronStoppingProcess& right);
+    G4HadronStoppingProcess(const G4HadronStoppingProcess&);
 
-  G4int emcID;
-  G4int ncID;
-  G4int dioID;
+    G4ElementSelector* fElementSelector;
 
-  // This is shadowing "result" in the cc file and
-  // looks to be unnecessary.  Removed by DHW, 12 June 2012   
-  // G4HadFinalState result;   
+    G4HadronicInteraction* fEmCascade;
+    G4HadronicInteraction* fBoundDecay;
+
+    G4int emcID;
+    G4int ncID;
+    G4int dioID;
+
+    // This is shadowing "result" in the cc file and
+    // looks to be unnecessary.  Removed by DHW, 12 June 2012
+    // G4HadFinalState result;
 };
 
-inline void 
-G4HadronStoppingProcess::SetElementSelector(G4ElementSelector* ptr)
+inline void G4HadronStoppingProcess::SetElementSelector(G4ElementSelector* ptr)
 {
-  if(fElementSelector != ptr) {
+  if (fElementSelector != ptr)
+  {
     delete fElementSelector;
     fElementSelector = ptr;
   }
 }
 
-inline void 
-G4HadronStoppingProcess::SetEmCascade(G4HadronicInteraction* ptr)
+inline void G4HadronStoppingProcess::SetEmCascade(G4HadronicInteraction* ptr)
 {
   fEmCascade = ptr;
 }
 
-inline void 
-G4HadronStoppingProcess::SetBoundDecay(G4HadronicInteraction* ptr)
+inline void G4HadronStoppingProcess::SetBoundDecay(G4HadronicInteraction* ptr)
 {
   fBoundDecay = ptr;
 }

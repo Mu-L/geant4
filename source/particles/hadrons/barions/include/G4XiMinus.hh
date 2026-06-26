@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4XiMinus_h
-#define G4XiMinus_h 1
+#ifndef G4XIMINUS_HH
+#define G4XIMINUS_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4XiMinus : public G4ParticleDefinition
 {
   public:
+
     static G4XiMinus* Definition();
     static G4XiMinus* XiMinusDefinition();
     static G4XiMinus* XiMinus();
 
   private:
+
     G4XiMinus() {}
     ~G4XiMinus() override = default;
 

@@ -34,11 +34,13 @@
 #ifndef G4ELECTRIC_FIELD_HH
 #define G4ELECTRIC_FIELD_HH
 
-#include "G4Types.hh"
 #include "G4ElectroMagneticField.hh"
+#include "G4Types.hh"
 
 /**
  * @brief G4ElectricField is an abstract class for electric field.
+ * @ingroup geometry_magneticfield
+ *
  * It implements inquiry function interface.
  */
 
@@ -56,7 +58,7 @@ class G4ElectricField : public G4ElectroMagneticField
      * Copy constructor and assignment operator.
      */
     G4ElectricField(const G4ElectricField& r) = default;
-    G4ElectricField& operator = (const G4ElectricField& p);
+    G4ElectricField& operator=(const G4ElectricField& p);
 
     /**
      * Returns true, since an electric field can change track energy.
@@ -66,8 +68,7 @@ class G4ElectricField : public G4ElectroMagneticField
     /**
      * Interface for returning the field value 'Bfield' on given time 'Point'.
      */
-    void GetFieldValue( const G4double Point[4],
-                              G4double* Bfield ) const override = 0;
+    void GetFieldValue(const G4double Point[4], G4double* Bfield) const override = 0;
 };
 
 #endif

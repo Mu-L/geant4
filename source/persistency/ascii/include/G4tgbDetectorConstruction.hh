@@ -33,8 +33,8 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgbDetectorConstruction_hh
-#define G4tgbDetectorConstruction_hh 1
+#ifndef G4TGBDETECTORCONSTRUCTION_HH
+#define G4TGBDETECTORCONSTRUCTION_HH
 
 #include "globals.hh"
 

@@ -17,11 +17,11 @@
 /process/em/deexcitationIgnoreCut true
 #
 # Physics
-# - To use Geant4-DNA constructor X, X=0, 2, 4, or 6 (recommended)
-#/dna/test/addPhysics DNA_Opt0
+# - To use Geant4-DNA constructor X, X=2, 4, 6, or 8
 #/dna/test/addPhysics DNA_Opt2
 /dna/test/addPhysics DNA_Opt4
 #/dna/test/addPhysics DNA_Opt6
+#/dna/test/addPhysics DNA_Opt8
 #
 # Run initialization
 /run/initialize

@@ -27,10 +27,11 @@
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
 #include "G4RootAnalysisManager.hh"
-#include "G4RootFileManager.hh"
-#include "G4RootNtupleFileManager.hh"
+
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
+#include "G4RootFileManager.hh"
+#include "G4RootNtupleFileManager.hh"
 #include "G4ThreadLocalSingleton.hh"
 #include "G4Threading.hh"
 
@@ -51,8 +52,7 @@ G4bool G4RootAnalysisManager::IsInstance()
 }
 
 //_____________________________________________________________________________
-G4RootAnalysisManager::G4RootAnalysisManager()
- : G4ToolsAnalysisManager("Root")
+G4RootAnalysisManager::G4RootAnalysisManager() : G4ToolsAnalysisManager("Root")
 {
   // File manager
   fFileManager = std::make_shared<G4RootFileManager>(fState);
@@ -76,8 +76,7 @@ G4RootAnalysisManager::~G4RootAnalysisManager()
 //
 
 //_____________________________________________________________________________
-void G4RootAnalysisManager::SetNtupleMerging(G4bool mergeNtuples,
-                                             G4int  nofNtupleFiles)
+void G4RootAnalysisManager::SetNtupleMerging(G4bool mergeNtuples, G4int nofNtupleFiles)
 {
   fNtupleFileManager->SetNtupleMerging(mergeNtuples, nofNtupleFiles);
 }

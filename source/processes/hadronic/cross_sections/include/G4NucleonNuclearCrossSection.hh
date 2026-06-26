@@ -33,11 +33,11 @@
 // 05.03.2024 V.Ivanchenko removed obsolete methods and calls
 //
 
-#ifndef G4NucleonNuclearCrossSection_h
-#define G4NucleonNuclearCrossSection_h
+#ifndef G4NUCLEONNUCLEARCROSSSECTION_HH
+#define G4NUCLEONNUCLEARCROSSSECTION_HH
 
-#include "G4VCrossSectionDataSet.hh"
 #include "G4ParticleDefinition.hh"
+#include "G4VCrossSectionDataSet.hh"
 #include "globals.hh"
 
 class G4ComponentBarNucleonNucleusXsc;
@@ -45,50 +45,46 @@ class G4ParticleDefinition;
 
 class G4NucleonNuclearCrossSection : public G4VCrossSectionDataSet
 {
-public:
-  
-  G4NucleonNuclearCrossSection();
-  ~G4NucleonNuclearCrossSection() override = default;
-    
-  static const char* Default_Name() { return "BarashenkovNucleonXS"; }
+  public:
 
-  G4bool IsElementApplicable(const G4DynamicParticle* aParticle,
-			     G4int Z, const G4Material* mat) final;
+    G4NucleonNuclearCrossSection();
+    ~G4NucleonNuclearCrossSection() override = default;
 
-  // return inelastic x-section
-  G4double GetElementCrossSection(const G4DynamicParticle* aParticle, 
-                                  G4int Z, const G4Material* mat=nullptr) final;
+    static const char* Default_Name() { return "BarashenkovNucleonXS"; }
 
-  void CrossSectionDescription(std::ostream&) const final;
+    G4bool IsElementApplicable(const G4DynamicParticle* aParticle, G4int Z,
+                               const G4Material* mat) final;
 
-  // return elastic x-section
-  inline G4double GetElasticCrossSection(const G4DynamicParticle* aParticle,
-					 G4int Z);
+    // return inelastic x-section
+    G4double GetElementCrossSection(const G4DynamicParticle* aParticle, G4int Z,
+                                    const G4Material* mat = nullptr) final;
 
-  // access methods should be called after ComputeCrossSection(...)
-  inline G4double GetTotalXsc()     { return fTotalXsc; };
-  inline G4double GetInelasticXsc() { return fInelasticXsc; };
-  inline G4double GetElasticXsc()   { return fElasticXsc; };
+    void CrossSectionDescription(std::ostream&) const final;
 
-  G4NucleonNuclearCrossSection& operator=
-  (const G4NucleonNuclearCrossSection &right) = delete;
-  G4NucleonNuclearCrossSection(const G4NucleonNuclearCrossSection&) = delete;
+    // return elastic x-section
+    inline G4double GetElasticCrossSection(const G4DynamicParticle* aParticle, G4int Z);
 
-private:
+    // access methods should be called after ComputeCrossSection(...)
+    inline G4double GetTotalXsc() { return fTotalXsc; };
+    inline G4double GetInelasticXsc() { return fInelasticXsc; };
+    inline G4double GetElasticXsc() { return fElasticXsc; };
 
-  void ComputeCrossSections(const G4ParticleDefinition*, 
-                            G4double kinEnergy, G4int Z);
+    G4NucleonNuclearCrossSection& operator=(const G4NucleonNuclearCrossSection& right) = delete;
+    G4NucleonNuclearCrossSection(const G4NucleonNuclearCrossSection&) = delete;
 
-  G4ComponentBarNucleonNucleusXsc* fBarash;
+  private:
 
-  G4double fTotalXsc{0.0};
-  G4double fInelasticXsc{0.0};
-  G4double fElasticXsc{0.0};
+    void ComputeCrossSections(const G4ParticleDefinition*, G4double kinEnergy, G4int Z);
+
+    G4ComponentBarNucleonNucleusXsc* fBarash;
+
+    G4double fTotalXsc{0.0};
+    G4double fInelasticXsc{0.0};
+    G4double fElasticXsc{0.0};
 };
 
-inline
-G4double G4NucleonNuclearCrossSection::GetElasticCrossSection(
-         const G4DynamicParticle* dp, G4int Z)
+inline G4double G4NucleonNuclearCrossSection::GetElasticCrossSection(const G4DynamicParticle* dp,
+                                                                     G4int Z)
 {
   ComputeCrossSections(dp->GetDefinition(), dp->GetKineticEnergy(), Z);
   return fElasticXsc;

@@ -40,14 +40,17 @@ G4ParticleHPVector* G4ParticleHPPartial::GetY(G4double e1)
 {
   auto aBuffer = new G4ParticleHPVector();
   G4int i;
-  if (nData == 1) {
-    for (i = 0; i < data[0].GetVectorLength(); i++) {
+  if (nData == 1)
+  {
+    for (i = 0; i < data[0].GetVectorLength(); i++)
+    {
       aBuffer->SetInterpolationManager(data[0].GetInterpolationManager());
       aBuffer->SetData(i, data[0].GetX(i), data[0].GetY(i));
     }
     return aBuffer;
   }
-  for (i = 0; i < nData; i++) {
+  for (i = 0; i < nData; i++)
+  {
     if (X[i] > e1) break;
   }
   if (i == nData) i--;
@@ -56,32 +59,40 @@ G4ParticleHPVector* G4ParticleHPPartial::GetY(G4double e1)
   G4int i1 = 0, ib = 0;
   G4double E1 = X[i - 1];
   G4double E2 = X[i];
-  for (G4int ii = 0; ii < data[i].GetVectorLength(); ii++) {
+  for (G4int ii = 0; ii < data[i].GetVectorLength(); ii++)
+  {
     x1 = data[i - 1].GetX(std::min(i1, data[i - 1].GetVectorLength() - 1));
     x2 = data[i].GetX(ii);
-    if (x1 < x2 && i1 < data[i - 1].GetVectorLength()) {
+    if (x1 < x2 && i1 < data[i - 1].GetVectorLength())
+    {
       y1 = data[i - 1].GetY(i1);
       y2 = data[i].GetY(x1);
-      if (E2 - E1 != 0) {
+      if (E2 - E1 != 0)
+      {
         y = theInt.Interpolate(theManager.GetScheme(i), e1, E1, E2, y1, y2);
       }
-      else {
+      else
+      {
         y = 0.5 * (y1 + y2);
       }
       aBuffer->SetData(ib, x1, y);
       aBuffer->SetScheme(ib++, data[i - 1].GetScheme(i1));
       i1++;
-      if (x2 - x1 > 0.001 * x1) {
+      if (x2 - x1 > 0.001 * x1)
+      {
         ii--;
       }
     }
-    else {
+    else
+    {
       y1 = data[i - 1].GetY(x2);
       y2 = data[i].GetY(ii);
-      if (E2 - E1 != 0) {
+      if (E2 - E1 != 0)
+      {
         y = theInt.Interpolate(theManager.GetScheme(i), e1, E1, E2, y1, y2);
       }
-      else {
+      else
+      {
         y = 0.5 * (y1 + y2);
       }
       aBuffer->SetData(ib, x2, y);
@@ -95,26 +106,32 @@ G4ParticleHPVector* G4ParticleHPPartial::GetY(G4double e1)
 G4double G4ParticleHPPartial::Sample(G4double x)
 {
   G4int i;
-  for (i = 0; i < nData; i++) {
+  for (i = 0; i < nData; i++)
+  {
     if (x < X[i]) break;
   }
   G4ParticleHPVector theBuff;
-  if (i == 0) {
+  if (i == 0)
+  {
     theBuff.SetInterpolationManager(data[0].GetInterpolationManager());
-    for (G4int ii = 0; ii < GetNEntries(0); ii++) {
+    for (G4int ii = 0; ii < GetNEntries(0); ii++)
+    {
       theBuff.SetX(ii, GetX(0, ii));
       theBuff.SetY(ii, GetY(0, ii));
     }
   }
   // else if(i==nData-1) this line will be delete
-  else if (i == nData) {
-    for (i = 0; i < GetNEntries(nData - 1); i++) {
+  else if (i == nData)
+  {
+    for (i = 0; i < GetNEntries(nData - 1); i++)
+    {
       theBuff.SetX(i, GetX(nData - 1, i));
       theBuff.SetY(i, GetY(nData - 1, i));
       theBuff.SetInterpolationManager(data[nData - 1].GetInterpolationManager());
     }
   }
-  else {
+  else
+  {
     G4int low = i - 1;
     G4int high = low + 1;
     G4double x1, x2, y1, y2;
@@ -123,7 +140,8 @@ G4double G4ParticleHPPartial::Sample(G4double x)
     x2 = X[high];
     while (i1 < GetNEntries(low) || i2 < GetNEntries(high))  // Loop checking, 11.05.2015, T. Koi
     {
-      if ((GetX(low, i1) < GetX(high, i2) && i1 < GetNEntries(low)) || (i2 == GetNEntries(high))) {
+      if ((GetX(low, i1) < GetX(high, i2) && i1 < GetNEntries(low)) || (i2 == GetNEntries(high)))
+      {
         theBuff.SetX(ii, GetX(low, i1));
         y1 = GetY(low, i1);
         y2 = GetY(high, GetX(low, i1));  // prob at ident theta
@@ -134,7 +152,8 @@ G4double G4ParticleHPPartial::Sample(G4double x)
         i1++;
         ii++;
       }
-      else {
+      else
+      {
         theBuff.SetX(ii, GetX(high, i2));
         //*******************************************************************************
         // Change by E.Mendoza and D.Cano (CIEMAT):

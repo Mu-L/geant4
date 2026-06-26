@@ -55,8 +55,8 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4MuBetheBlochModel_h
-#define G4MuBetheBlochModel_h 1
+#ifndef G4MUBETHEBLOCHMODEL_HH
+#define G4MUBETHEBLOCHMODEL_HH
 
 #include "G4VEmModel.hh"
 
@@ -65,76 +65,60 @@ class G4EmCorrections;
 
 class G4MuBetheBlochModel : public G4VEmModel
 {
+  public:
 
-public:
+    explicit G4MuBetheBlochModel(const G4ParticleDefinition* p = nullptr,
+                                 const G4String& nam = "MuBetheBloch");
 
-  explicit G4MuBetheBlochModel(const G4ParticleDefinition* p = nullptr,
-                               const G4String& nam = "MuBetheBloch");
+    ~G4MuBetheBlochModel() override = default;
 
-  ~G4MuBetheBlochModel() override = default;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    G4double MinEnergyCut(const G4ParticleDefinition*, const G4MaterialCutsCouple*) override;
 
-  G4double MinEnergyCut(const G4ParticleDefinition*,
-			const G4MaterialCutsCouple*) override;
-			
-  G4double ComputeCrossSectionPerElectron(
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy);
-				 
-  G4double ComputeCrossSectionPerAtom(
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double Z, G4double A,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
-				 				 
-  G4double CrossSectionPerVolume(const G4Material*,
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
+    G4double ComputeCrossSectionPerElectron(const G4ParticleDefinition*, G4double kineticEnergy,
+                                            G4double cutEnergy, G4double maxEnergy);
 
-  G4double ComputeDEDXPerVolume(const G4Material*,
-                                const G4ParticleDefinition*,
-                                G4double kineticEnergy,
-                                G4double cutEnergy) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kineticEnergy,
+                                        G4double Z, G4double A, G4double cutEnergy,
+                                        G4double maxEnergy) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-				const G4MaterialCutsCouple*,
-				const G4DynamicParticle*,
-				G4double tmin,
-				G4double maxEnergy) override;
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy,
+                                   G4double maxEnergy) override;
 
-  // hide assignment operator
-  G4MuBetheBlochModel & operator=(const  G4MuBetheBlochModel &right) = delete;
-  G4MuBetheBlochModel(const  G4MuBetheBlochModel&) = delete;
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                  G4double kineticEnergy, G4double cutEnergy) override;
 
-protected:
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  G4double MaxSecondaryEnergy(const G4ParticleDefinition*,
-                              G4double kinEnergy) override;
+    // hide assignment operator
+    G4MuBetheBlochModel& operator=(const G4MuBetheBlochModel& right) = delete;
+    G4MuBetheBlochModel(const G4MuBetheBlochModel&) = delete;
 
-private:
+  protected:
 
-  void SetParticle(const G4ParticleDefinition* p);
+    G4double MaxSecondaryEnergy(const G4ParticleDefinition*, G4double kinEnergy) override;
 
-  const G4ParticleDefinition* particle = nullptr;
-  G4ParticleDefinition*       theElectron = nullptr;
-  G4ParticleChangeForLoss*    fParticleChange = nullptr;
-  G4EmCorrections*            corr = nullptr;
+  private:
 
-  G4double limitRadCorrection;
-  G4double limitKinEnergy;
-  G4double logLimitKinEnergy;
-  G4double mass = 1.0;
-  G4double massSquare = 1.0;
-  G4double ratio = 1.0;
-  G4double twoln10;
-  G4double alphaprime;
-  static G4double xgi[8],wgi[8];
+    void SetParticle(const G4ParticleDefinition* p);
+
+    const G4ParticleDefinition* particle = nullptr;
+    G4ParticleDefinition* theElectron = nullptr;
+    G4ParticleChangeForLoss* fParticleChange = nullptr;
+    G4EmCorrections* corr = nullptr;
+
+    G4double limitRadCorrection;
+    G4double limitKinEnergy;
+    G4double logLimitKinEnergy;
+    G4double mass = 1.0;
+    G4double massSquare = 1.0;
+    G4double ratio = 1.0;
+    G4double twoln10;
+    G4double alphaprime;
+    static G4double xgi[8], wgi[8];
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....

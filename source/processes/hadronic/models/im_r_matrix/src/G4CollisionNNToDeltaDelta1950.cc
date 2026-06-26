@@ -25,22 +25,20 @@
 //
 //
 
-#include "globals.hh"
 #include "G4CollisionNNToDeltaDelta1950.hh"
+
 #include "G4ConcreteNNToDeltaDeltastar.hh"
+#include "globals.hh"
 
 G4CollisionNNToDeltaDelta1950::G4CollisionNNToDeltaDelta1950()
-{ 
-	components=0;
-	MakeNNToDeltaDelta<Dm_1950PC, D0_1950PC, Dp_1950PC, Dpp_1950PC,
-	                   G4ConcreteNNToDeltaDeltastar>::Make(this);
+{
+  components = 0;
+  MakeNNToDeltaDelta<Dm_1950PC, D0_1950PC, Dp_1950PC, Dpp_1950PC,
+                     G4ConcreteNNToDeltaDeltastar>::Make(this);
 }
 
 G4CollisionNNToDeltaDelta1950::~G4CollisionNNToDeltaDelta1950()
 {
-	if (components) delete components;
-	components=0;
+  if (components) delete components;
+  components = 0;
 }
-
-
-

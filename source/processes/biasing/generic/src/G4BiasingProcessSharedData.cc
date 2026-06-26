@@ -28,4 +28,5 @@
 
 #include "G4BiasingProcessSharedData.hh"
 
-G4MapCache< const G4ProcessManager*, G4BiasingProcessSharedData* > G4BiasingProcessSharedData::fSharedDataMap;
+G4MapCache<const G4ProcessManager*, G4BiasingProcessSharedData*>
+  G4BiasingProcessSharedData::fSharedDataMap;

@@ -27,376 +27,373 @@
 // Rastislav Ondrasek, Pierre-Luc Gagnon, Frederick Jones TRIUMF
 
 #ifndef HookEventProcState_H
-#define HookEventProcState_H 1
+#define HookEventProcState_H
 #include "G4VStateDependent.hh"
 
 class G4OpenInventorXtExaminerViewer;
 
 class HookEventProcState : public G4VStateDependent
 {
-private:
-   G4OpenInventorXtExaminerViewer *viewer;
-public:
-   HookEventProcState(G4OpenInventorXtExaminerViewer*);
-   ~HookEventProcState();
+  private:
 
-   virtual G4bool Notify(G4ApplicationState requiredState);
+    G4OpenInventorXtExaminerViewer* viewer;
+
+  public:
+
+    HookEventProcState(G4OpenInventorXtExaminerViewer*);
+    ~HookEventProcState();
+
+    virtual G4bool Notify(G4ApplicationState requiredState);
 };
 #endif /* HookEventProcState_H */
-
 
 #ifndef G4OPENINVENTORXTEXAMINERVIEWER_HH
 #define G4OPENINVENTORXTEXAMINERVIEWER_HH
 
-#include <map>
-#include <vector>
-#include <fstream>
 #include <Inventor/SbLinear.h>
-#include <Inventor/nodes/SoLineSet.h>
-#include <Inventor/nodes/SoEventCallback.h>
 #include <Inventor/Xt/viewers/SoXtExaminerViewer.h>
 #include <Inventor/events/SoKeyboardEvent.h>
+#include <Inventor/nodes/SoEventCallback.h>
+#include <Inventor/nodes/SoLineSet.h>
+
+#include <fstream>
+#include <map>
+#include <vector>
 
 class SoCoordinate3;
 class SoFont;
 class SoText2;
 class SoPointSet;
 
-class G4OpenInventorXtExaminerViewer : public SoXtExaminerViewer {
+class G4OpenInventorXtExaminerViewer : public SoXtExaminerViewer
+{
+    friend class G4OpenInventorXtExaminerViewerMessenger;
+    // FWJ
+    friend class G4OpenInventorXtExtendedViewer;
 
-  friend class G4OpenInventorXtExaminerViewerMessenger;
-  // FWJ
-  friend class G4OpenInventorXtExtendedViewer;
+  private:
 
-private:
-  Widget prevViewPtButton, nextViewPtButton;
-  Widget menuBar, fileMenu, openFileDialog, newFileDialog,
-  loadRefCoordsDialog, saveRefCoordsDialog,
-  loadSceneGraphDialog, saveSceneGraphDialog,
-  viewPtSelection, listsDialog, myShellDialog, myViewPtList, myElementList;
+    Widget prevViewPtButton, nextViewPtButton;
+    Widget menuBar, fileMenu, openFileDialog, newFileDialog, loadRefCoordsDialog,
+      saveRefCoordsDialog, loadSceneGraphDialog, saveSceneGraphDialog, viewPtSelection, listsDialog,
+      myShellDialog, myViewPtList, myElementList;
 
-  static G4OpenInventorXtExaminerViewer *viewer;
-  void (*escapeCallback)(void *);
-  void * examinerObject;
-  SbBool lshiftdown, rshiftdown, lctrldown, rctrldown;
-  
-public:
+    static G4OpenInventorXtExaminerViewer* viewer;
+    void (*escapeCallback)(void*);
+    void* examinerObject;
+    SbBool lshiftdown, rshiftdown, lctrldown, rctrldown;
 
-  // Same constructor as the ExaminerViewer
-  G4OpenInventorXtExaminerViewer(Widget parent = NULL,
-	     const char *name = NULL,
-	     SbBool embed = TRUE, 
-	     SoXtFullViewer::BuildFlag flag = BUILD_ALL,
-	     SoXtViewer::Type type = BROWSER);
+  public:
 
-  ~G4OpenInventorXtExaminerViewer();
+    // Same constructor as the ExaminerViewer
+    G4OpenInventorXtExaminerViewer(Widget parent = NULL, const char* name = NULL,
+                                   SbBool embed = TRUE, SoXtFullViewer::BuildFlag flag = BUILD_ALL,
+                                   SoXtViewer::Type type = BROWSER);
 
-  template <class T> void parseString(T &t, const std::string &s, bool &error);
+    ~G4OpenInventorXtExaminerViewer();
 
-  Widget addMenu(std::string name);
-  void addButton(Widget menu, std::string name, XtCallbackProc);
-  Widget getMenuBar() { return menuBar; }
-  Widget getMenu() { return fileMenu; }
-  void warningMsgDialog(std::string, String, XtCallbackProc);
-  bool warningFlag;
+    template<class T>
+    void parseString(T& t, const std::string& s, bool& error);
 
-  std::string saveScenegraphFileName;
-  Widget saveScenegraphWidget;
-  std::string saveRefCoordsFileName;
-  Widget saveRefCoordsWidget;
+    Widget addMenu(std::string name);
+    void addButton(Widget menu, std::string name, XtCallbackProc);
+    Widget getMenuBar() { return menuBar; }
+    Widget getMenu() { return fileMenu; }
+    void warningMsgDialog(std::string, String, XtCallbackProc);
+    bool warningFlag;
 
-  Widget createScale(Widget, char *, int, float);
-  void addEscapeCallback(void (*cb)(void *), void *);
-  bool abbrOutputFlag;
-  bool pickRefPathFlag;
-  bool viewingBeforePickRef;
-   // FWJ
-   //  SoNode * superimposition;
-		     
-protected:
-  // Same constructor as the ExaminerViewer 
-  G4OpenInventorXtExaminerViewer(Widget parent,
-	     const char *name,
-	     SbBool embed,
-	     SoXtFullViewer::BuildFlag flag,
-	     SoXtViewer::Type type,
-	     SbBool build);
+    std::string saveScenegraphFileName;
+    Widget saveScenegraphWidget;
+    std::string saveRefCoordsFileName;
+    Widget saveRefCoordsWidget;
 
-  // Overloaded for adding the MenuBar
-  Widget buildWidget(Widget parent);
-  // Overloaded so additional buttons can be added
-  virtual void createViewerButtons (Widget parent, SbPList * buttonlist);
-  // Overloaded for catching various keyboard events  
-  virtual SbBool processSoEvent(const SoEvent * const event);
-  void moveCamera(float dist = 0, bool lookdown = false);
-  std::string curEltName;
-  SbVec3f camUpVec;
-  SbVec3f camDir;
-  void rotateCamera();
-  void updateViewParams(SoKeyboardEvent::Key);
-  bool loadViewPts();
-  virtual void afterRealizeHook();
+    Widget createScale(Widget, char*, int, float);
+    void addEscapeCallback(void (*cb)(void*), void*);
+    bool abbrOutputFlag;
+    bool pickRefPathFlag;
+    bool viewingBeforePickRef;
+    // FWJ
+    //  SoNode * superimposition;
 
-private:
-  // Each constructor calls this generic constructor
-  void constructor(const SbBool build);
+  protected:
 
-  // FWJ DISABLED
-  //  static G4OpenInventorXtExaminerViewer *getObject();
+    // Same constructor as the ExaminerViewer
+    G4OpenInventorXtExaminerViewer(Widget parent, const char* name, SbBool embed,
+                                   SoXtFullViewer::BuildFlag flag, SoXtViewer::Type type,
+                                   SbBool build);
 
-  HookEventProcState *hookBeamOn;
-  friend class HookEventProcState;
-  bool newEvents;
-  static void sceneChangeCB(void *, SoSensor *);
-    
-  void setViewPt();
-  void writeViewPtIdx();
-  void cleanUpAfterPrevFile();
-  
-  void popUpFileSelDialog(Widget&, std::string, std::string, XtCallbackProc);
-  static void cancelFileSelDialogCB(Widget, XtPointer, XtPointer);
-  static void openViewPtFileCB(Widget, XtPointer, XtPointer);
-  static void viewPtFileSelectedCB(Widget, XtPointer, XtPointer);
-  static void newViewPtFileCB(Widget, XtPointer, XtPointer);
-  static void createNewVPFileCB(Widget, XtPointer, XtPointer);
-  static void overwriteFileCB(Widget, XtPointer, XtPointer);
-  static void loadRefCoordsDialogCB(Widget, XtPointer, XtPointer);	//pop file dialog
-  static void loadRefCoordsCB(Widget, XtPointer, XtPointer);			//execute loading
-  static void saveRefCoordsDialogCB(Widget, XtPointer, XtPointer);	//pop file dialog
-  static void saveRefCoordsCB(Widget, XtPointer, XtPointer);			//execute saving
-  static void saveRefCoordsOverWriteCB(Widget, XtPointer, XtPointer);
-  static void loadSceneGraphDialogCB(Widget, XtPointer, XtPointer);
-  static void loadSceneGraphCB(Widget, XtPointer, XtPointer);
-  static void saveSceneGraphDialogCB(Widget, XtPointer, XtPointer);
-  static void saveSceneGraphCB(Widget, XtPointer, XtPointer);
-  static void saveSceneGraphOverWriteCB(Widget, XtPointer, XtPointer);
-  static void mouseoverCB(void *aThis, SoEventCallback *eventCB);
-  static void pickingCB(void *aThis, SoEventCallback *eventCB);
+    // Overloaded for adding the MenuBar
+    Widget buildWidget(Widget parent);
+    // Overloaded so additional buttons can be added
+    virtual void createViewerButtons(Widget parent, SbPList* buttonlist);
+    // Overloaded for catching various keyboard events
+    virtual SbBool processSoEvent(const SoEvent* const event);
+    void moveCamera(float dist = 0, bool lookdown = false);
+    std::string curEltName;
+    SbVec3f camUpVec;
+    SbVec3f camDir;
+    void rotateCamera();
+    void updateViewParams(SoKeyboardEvent::Key);
+    bool loadViewPts();
+    virtual void afterRealizeHook();
 
-  		     
-  // Viewpoint operations
-  void addViewPoints();
-  static void closeListsDialogCB(Widget, XtPointer, XtPointer);
-  static void loadBookmarkCB(Widget, XtPointer, XtPointer);
-  static void renameBookmarkCB(Widget, XtPointer, XtPointer);
-  void renameViewPt(char *vpName);
-  static void sortBookmarksCB(Widget, XtPointer, XtPointer);
-  void sortViewPts(std::vector<std::string>);
-  static void deleteBookmarkCB(Widget, XtPointer, XtPointer);
-  static void deleteViewPtCB(Widget, XtPointer, XtPointer);
-  void deleteViewPt(char *vpName = NULL);
-    
-  // Animation
-  static void animateRefParticleCB(Widget, XtPointer, XtPointer);
-  static void animateSensorCB(void *, SoSensor *);
-  static void animateSensorRotationCB(void *, SoSensor *);
-  void animateRefParticle();
-  void saveCurCamera();
-  void restoreCamera();
-  double animateBtwPtsPeriod, speedStep;
-  void incSpeed();
-  void decSpeed();
-  
-  SoTimerSensor *animateSensor;
-  SoTimerSensor *animateSensorRotation;
-  SoNodeSensor *sceneChangeSensor;
-  SbVec3f camStartPos, camEndPos;
-  SbRotation camStartOrient, camEndOrient;
-  
-  static void prevViewPtCB(Widget, XtPointer, XtPointer);
-  static void nextViewPtCB(Widget, XtPointer, XtPointer);
-  static void saveViewPtCB(Widget, XtPointer, XtPointer);
-  static void abbrOutputCB(Widget, XtPointer, XtPointer);
-  static void pickRefPathCB(Widget, XtPointer, XtPointer);
-  static void switchWireFrameCB(Widget, XtPointer, XtPointer);
-  static void constructListsDialog(Widget, XtPointer, XtPointer);
-  void saveViewPt(char *name);
-  
+  private:
 
-  static void lookAtSceneElementCB(Widget, XtPointer, XtPointer);
-  static void cancelSceneElementSelectionCB(Widget, XtPointer, XtPointer);
+    // Each constructor calls this generic constructor
+    void constructor(const SbBool build);
 
-  void setReferencePath(SoLineSet*, SoCoordinate3*, bool append = false);
-  void setReferencePathZPos();
-  void findAndSetRefPath();
-  SoCoordinate3* getCoordsNode(SoFullPath *path);
-  void getSceneElements(); // reads elements from the scene graph
-  float sqrlen(const SbVec3f&);
-  void distanceToTrajectory(const SbVec3f&, float&, SbVec3f&, int&);
-  void sortElements();
-  void createElementsList(Widget);
-  static void closeMainWindowCB(Widget, XtPointer, XtPointer);
-  void evenOutRefParticlePts();
+    // FWJ DISABLED
+    //  static G4OpenInventorXtExaminerViewer *getObject();
 
-  static void gotoRefPathStartCB(Widget, XtPointer, XtPointer);
-  void gotoRefPathStart();
-  static void invertRefPathCB(Widget, XtPointer, XtPointer);
-  void invertRefPath();
+    HookEventProcState* hookBeamOn;
+    friend class HookEventProcState;
+    bool newEvents;
+    static void sceneChangeCB(void*, SoSensor*);
 
-  enum CameraType {
-    PERSPECTIVE,
-    ORTHOGRAPHIC
-  };
+    void setViewPt();
+    void writeViewPtIdx();
+    void cleanUpAfterPrevFile();
 
-    
-  enum State {
-    GENERAL,
-    BEAMLINE,
-    VIEWPOINT,
-    ANIMATION,
-    REVERSED_ANIMATION,
-    PAUSED_ANIMATION,
-    ROTATING
-  };
+    void popUpFileSelDialog(Widget&, std::string, std::string, XtCallbackProc);
+    static void cancelFileSelDialogCB(Widget, XtPointer, XtPointer);
+    static void openViewPtFileCB(Widget, XtPointer, XtPointer);
+    static void viewPtFileSelectedCB(Widget, XtPointer, XtPointer);
+    static void newViewPtFileCB(Widget, XtPointer, XtPointer);
+    static void createNewVPFileCB(Widget, XtPointer, XtPointer);
+    static void overwriteFileCB(Widget, XtPointer, XtPointer);
+    static void loadRefCoordsDialogCB(Widget, XtPointer, XtPointer);  // pop file dialog
+    static void loadRefCoordsCB(Widget, XtPointer, XtPointer);  // execute loading
+    static void saveRefCoordsDialogCB(Widget, XtPointer, XtPointer);  // pop file dialog
+    static void saveRefCoordsCB(Widget, XtPointer, XtPointer);  // execute saving
+    static void saveRefCoordsOverWriteCB(Widget, XtPointer, XtPointer);
+    static void loadSceneGraphDialogCB(Widget, XtPointer, XtPointer);
+    static void loadSceneGraphCB(Widget, XtPointer, XtPointer);
+    static void saveSceneGraphDialogCB(Widget, XtPointer, XtPointer);
+    static void saveSceneGraphCB(Widget, XtPointer, XtPointer);
+    static void saveSceneGraphOverWriteCB(Widget, XtPointer, XtPointer);
+    static void mouseoverCB(void* aThis, SoEventCallback* eventCB);
+    static void pickingCB(void* aThis, SoEventCallback* eventCB);
 
-  // For storing the view point
-  struct viewPtData {
-	  char* viewPtName;
-	  int viewportMapping;
-	  SbVec3f position;
-	  SbRotation orientation;
-	  float	aspectRatio;
-	  float nearDistance;
-	  float	farDistance;
-	  float	focalDistance;
-	  CameraType camType;
-	  float	height;
-  };
+    // Viewpoint operations
+    void addViewPoints();
+    static void closeListsDialogCB(Widget, XtPointer, XtPointer);
+    static void loadBookmarkCB(Widget, XtPointer, XtPointer);
+    static void renameBookmarkCB(Widget, XtPointer, XtPointer);
+    void renameViewPt(char* vpName);
+    static void sortBookmarksCB(Widget, XtPointer, XtPointer);
+    void sortViewPts(std::vector<std::string>);
+    static void deleteBookmarkCB(Widget, XtPointer, XtPointer);
+    static void deleteViewPtCB(Widget, XtPointer, XtPointer);
+    void deleteViewPt(char* vpName = NULL);
 
-   // FWJ removed unneeded assignment operator
-   struct sceneElement {
-      std::string name;
-      SoFullPath* path;
-      SbVec3f center;
-      float closestPointZCoord;
-   };
+    // Animation
+    static void animateRefParticleCB(Widget, XtPointer, XtPointer);
+    static void animateSensorCB(void*, SoSensor*);
+    static void animateSensorRotationCB(void*, SoSensor*);
+    void animateRefParticle();
+    void saveCurCamera();
+    void restoreCamera();
+    double animateBtwPtsPeriod, speedStep;
+    void incSpeed();
+    void decSpeed();
 
-   struct elementForSorting {
-      float closestPointZCoord;
-      SbVec3f closestPoint;
-      float smallestDistance;
-      float distanceToBeamlineStart;
-      std::string name;
+    SoTimerSensor* animateSensor;
+    SoTimerSensor* animateSensorRotation;
+    SoNodeSensor* sceneChangeSensor;
+    SbVec3f camStartPos, camEndPos;
+    SbRotation camStartOrient, camEndOrient;
 
-      G4bool operator<(elementForSorting const &other) const
-      {
-         if (closestPointZCoord < other.closestPointZCoord)
-            return true;
-         if (closestPointZCoord > other.closestPointZCoord)
-            return false;
+    static void prevViewPtCB(Widget, XtPointer, XtPointer);
+    static void nextViewPtCB(Widget, XtPointer, XtPointer);
+    static void saveViewPtCB(Widget, XtPointer, XtPointer);
+    static void abbrOutputCB(Widget, XtPointer, XtPointer);
+    static void pickRefPathCB(Widget, XtPointer, XtPointer);
+    static void switchWireFrameCB(Widget, XtPointer, XtPointer);
+    static void constructListsDialog(Widget, XtPointer, XtPointer);
+    void saveViewPt(char* name);
 
-         // otherwise closestPointZCoord == other.closestPointZCoord.
-         // Compare the distances from the center of the element to
-         // the start of the beamline.
-         if (distanceToBeamlineStart < other.distanceToBeamlineStart)
-            return true;
-         if (distanceToBeamlineStart > other.distanceToBeamlineStart)
-            return false;
+    static void lookAtSceneElementCB(Widget, XtPointer, XtPointer);
+    static void cancelSceneElementSelectionCB(Widget, XtPointer, XtPointer);
 
-         // In case both closestPointZCoord and smallestDistance are
-         // equal, we have two exactly overlapping elements, if so
-         // the order doesn't matter
-         return true;
-      }
-  };
+    void setReferencePath(SoLineSet*, SoCoordinate3*, bool append = false);
+    void setReferencePathZPos();
+    void findAndSetRefPath();
+    SoCoordinate3* getCoordsNode(SoFullPath* path);
+    void getSceneElements();  // reads elements from the scene graph
+    float sqrlen(const SbVec3f&);
+    void distanceToTrajectory(const SbVec3f&, float&, SbVec3f&, int&);
+    void sortElements();
+    void createElementsList(Widget);
+    static void closeMainWindowCB(Widget, XtPointer, XtPointer);
+    void evenOutRefParticlePts();
 
-  bool zcoordSetFlag;
+    static void gotoRefPathStartCB(Widget, XtPointer, XtPointer);
+    void gotoRefPathStart();
+    static void invertRefPathCB(Widget, XtPointer, XtPointer);
+    void invertRefPath();
 
-  std::vector<sceneElement> sceneElements;
-  std::vector<viewPtData> viewPtList;
-  std::string fileName;
-  std::ifstream fileIn;
-  std::ofstream fileOut; 
-  int viewPtIdx;
-  int MAX_VP_IDX;
-  int MAX_VP_NAME;
-  
-  // For storing coordinate points of the reference particle
-  std::vector<SbVec3f> refParticleTrajectory;
-  // For displaying distance during anim and beamline modes
-  std::vector<float> refZPositions;
+    enum CameraType
+    {
+      PERSPECTIVE,
+      ORTHOGRAPHIC
+    };
 
-  int refParticleIdx;
-  int prevRefIdx;
-  float distance;
-  State currentState, prevState, beforePausing;
-  char* curViewPtName;
-  
-  int step;
-  SbVec3f prevPt;
-  SbVec3f prevParticleDir;
-  void* prevColorField;
-  
-  viewPtData camB4Animation;
-  bool returnToSaveVP;
-  bool returnToAnim;
-  SoCamera* myCam;
-  void setStartingPtForAnimation(); 
-  float left_right, up_down;    
-  SbVec3f rotAxis; // For 90 degree rotations
-  int rotCnt;  // # of steps rotation is split into
+    enum State
+    {
+      GENERAL,
+      BEAMLINE,
+      VIEWPOINT,
+      ANIMATION,
+      REVERSED_ANIMATION,
+      PAUSED_ANIMATION,
+      ROTATING
+    };
 
-  static void getViewPtNameCB(Widget, XtPointer, XtPointer);
-  static void getViewPtNameCancelCB(Widget, XtPointer, XtPointer);
-  std::string viewPtAutoName();
+    // For storing the view point
+    struct viewPtData
+    {
+        char* viewPtName;
+        int viewportMapping;
+        SbVec3f position;
+        SbRotation orientation;
+        float aspectRatio;
+        float nearDistance;
+        float farDistance;
+        float focalDistance;
+        CameraType camType;
+        float height;
+    };
 
-  ////////////////////////ANIM_SPEED_INDICATOR///////////////////////
-  SoSearchAction * searcher;
+    // FWJ removed unneeded assignment operator
+    struct sceneElement
+    {
+        std::string name;
+        SoFullPath* path;
+        SbVec3f center;
+        float closestPointZCoord;
+    };
 
-  SoNode * superimposition;
-  SoCoordinate3 * sgeometry;
-  SoScale * sscale;
-  
-  SoTranslation * stranslation;
-  SoTranslation * curInfoTrans;
-  SoTranslation * mouseOverTransSolid;
-  SoTranslation * mouseOverTransMaterial;
-  SoTranslation * mouseOverTransLogName;
-  SoTranslation * mouseOverTransZPos;
+    struct elementForSorting
+    {
+        float closestPointZCoord;
+        SbVec3f closestPoint;
+        float smallestDistance;
+        float distanceToBeamlineStart;
+        std::string name;
 
-  // Used for 2 similar purposes: 1. Displays z position during animation
-  //                              2. Displays name of the current viewpoint
-  SoText2 * curInfoText;
-  /* Need to use many different fields for mouseover
-   * because newlines are ignored when the scene is rendered */
-  SoText2 * mouseOverTextSolid;
-  SoText2 * mouseOverTextMaterial;
-  SoText2 * mouseOverTextLogName;
-  SoText2 * mouseOverTextZPos;
-   
-  SoFont * curInfoFont;
-  SoFont * mouseOverFontSolid;
-  SoFont * mouseOverFontMaterial;
-  SoFont * mouseOverFontLogName;
-  SoFont * mouseOverFontZPos;
-  SoSwitch * axisSwitch;
-  SoSwitch * animSpeedOutlineSwitch; 
-  SoSwitch * animSpeedSwitch;
-  SoSwitch * curInfoSwitch;
-    
-  SoNode * getSuperimpositionNode(SoNode *, const char * name);
+        G4bool operator<(elementForSorting const& other) const
+        {
+          if (closestPointZCoord < other.closestPointZCoord) return true;
+          if (closestPointZCoord > other.closestPointZCoord) return false;
 
-  void superimpositionEvent(SoAction * action);
-  static void superimpositionCB(void * closure, SoAction * action);
+          // otherwise closestPointZCoord == other.closestPointZCoord.
+          // Compare the distances from the center of the element to
+          // the start of the beamline.
+          if (distanceToBeamlineStart < other.distanceToBeamlineStart) return true;
+          if (distanceToBeamlineStart > other.distanceToBeamlineStart) return false;
 
-  virtual void actualRedraw(void);
-  void updateSpeedIndicator(void);
+          // In case both closestPointZCoord and smallestDistance are
+          // equal, we have two exactly overlapping elements, if so
+          // the order doesn't matter
+          return true;
+        }
+    };
 
-  float maxSpeed; 
-  ////////////////////////ANIM_SPEED_INDICATOR///////////////////////
+    bool zcoordSetFlag;
 
-  // FWJ added for Ortho camera
-  float defaultHeight;
-  float defaultHeightAngle;
-  // FWJ add look-ahead for animation tracking on curves
-  G4int pathLookahead;
-  
-  // Used by G4 app during element rotations, stores previous view
-  SbVec3f upVector, offsetFromCenter, center;   
-  bool rotUpVec;
+    std::vector<sceneElement> sceneElements;
+    std::vector<viewPtData> viewPtList;
+    std::string fileName;
+    std::ifstream fileIn;
+    std::ofstream fileOut;
+    int viewPtIdx;
+    int MAX_VP_IDX;
+    int MAX_VP_NAME;
 
-  SoSeparator* newSceneGraph;
+    // For storing coordinate points of the reference particle
+    std::vector<SbVec3f> refParticleTrajectory;
+    // For displaying distance during anim and beamline modes
+    std::vector<float> refZPositions;
 
+    int refParticleIdx;
+    int prevRefIdx;
+    float distance;
+    State currentState, prevState, beforePausing;
+    char* curViewPtName;
 
+    int step;
+    SbVec3f prevPt;
+    SbVec3f prevParticleDir;
+    void* prevColorField;
+
+    viewPtData camB4Animation;
+    bool returnToSaveVP;
+    bool returnToAnim;
+    SoCamera* myCam;
+    void setStartingPtForAnimation();
+    float left_right, up_down;
+    SbVec3f rotAxis;  // For 90 degree rotations
+    int rotCnt;  // # of steps rotation is split into
+
+    static void getViewPtNameCB(Widget, XtPointer, XtPointer);
+    static void getViewPtNameCancelCB(Widget, XtPointer, XtPointer);
+    std::string viewPtAutoName();
+
+    ////////////////////////ANIM_SPEED_INDICATOR///////////////////////
+    SoSearchAction* searcher;
+
+    SoNode* superimposition;
+    SoCoordinate3* sgeometry;
+    SoScale* sscale;
+
+    SoTranslation* stranslation;
+    SoTranslation* curInfoTrans;
+    SoTranslation* mouseOverTransSolid;
+    SoTranslation* mouseOverTransMaterial;
+    SoTranslation* mouseOverTransLogName;
+    SoTranslation* mouseOverTransZPos;
+
+    // Used for 2 similar purposes: 1. Displays z position during animation
+    //                              2. Displays name of the current viewpoint
+    SoText2* curInfoText;
+    /* Need to use many different fields for mouseover
+     * because newlines are ignored when the scene is rendered */
+    SoText2* mouseOverTextSolid;
+    SoText2* mouseOverTextMaterial;
+    SoText2* mouseOverTextLogName;
+    SoText2* mouseOverTextZPos;
+
+    SoFont* curInfoFont;
+    SoFont* mouseOverFontSolid;
+    SoFont* mouseOverFontMaterial;
+    SoFont* mouseOverFontLogName;
+    SoFont* mouseOverFontZPos;
+    SoSwitch* axisSwitch;
+    SoSwitch* animSpeedOutlineSwitch;
+    SoSwitch* animSpeedSwitch;
+    SoSwitch* curInfoSwitch;
+
+    SoNode* getSuperimpositionNode(SoNode*, const char* name);
+
+    void superimpositionEvent(SoAction* action);
+    static void superimpositionCB(void* closure, SoAction* action);
+
+    virtual void actualRedraw(void);
+    void updateSpeedIndicator(void);
+
+    float maxSpeed;
+    ////////////////////////ANIM_SPEED_INDICATOR///////////////////////
+
+    // FWJ added for Ortho camera
+    float defaultHeight;
+    float defaultHeightAngle;
+    // FWJ add look-ahead for animation tracking on curves
+    G4int pathLookahead;
+
+    // Used by G4 app during element rotations, stores previous view
+    SbVec3f upVector, offsetFromCenter, center;
+    bool rotUpVec;
+
+    SoSeparator* newSceneGraph;
 };
 #endif /* G4OPENINVENTORXTEXAMINERVIEWER_HH */

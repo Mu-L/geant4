@@ -32,16 +32,15 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgbRotationMatrix_hh
-#define G4tgbRotationMatrix_hh 1
+#ifndef G4TGBROTATIONMATRIX_HH
+#define G4TGBROTATIONMATRIX_HH
 
+#include "G4RotationMatrix.hh"
+#include "G4tgrRotationMatrix.hh"
 #include "globals.hh"
 
-#include <vector>
 #include <string>
-
-#include "G4tgrRotationMatrix.hh"
-#include "G4RotationMatrix.hh"
+#include <vector>
 
 class G4tgbRotationMatrix
 {
@@ -51,14 +50,14 @@ class G4tgbRotationMatrix
     ~G4tgbRotationMatrix();
 
     G4tgbRotationMatrix(G4tgrRotationMatrix* tgr);
-      // Construct the G4tgbRotationMatrix (fill its data members)
-      // interpreting the data in the list of words 'wl'
+    // Construct the G4tgbRotationMatrix (fill its data members)
+    // interpreting the data in the list of words 'wl'
 
     G4RotationMatrix* BuildG4RotMatrix();
     G4RotationMatrix* BuildG4RotMatrixFrom3(std::vector<G4double>& values);
     G4RotationMatrix* BuildG4RotMatrixFrom6(std::vector<G4double>& values);
     G4RotationMatrix* BuildG4RotMatrixFrom9(std::vector<G4double>& values);
-      // Build a G4RotationMatrix transforming theValues
+    // Build a G4RotationMatrix transforming theValues
 
     const G4String& GetName() { return theTgrRM->GetName(); }
 

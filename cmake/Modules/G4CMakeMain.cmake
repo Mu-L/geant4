@@ -112,6 +112,12 @@ if(GEANT4_ENABLE_TESTING)
 endif()
 
 #-----------------------------------------------------------------------
+# - Doxygen for toolkit code
+if(EXISTS ${PROJECT_SOURCE_DIR}/doc)
+  add_subdirectory(doc)
+endif()
+
+#-----------------------------------------------------------------------
 # - Examples build/install
 # ON by default for end users. Developers can switch this OFF if they
 # need to save time/space

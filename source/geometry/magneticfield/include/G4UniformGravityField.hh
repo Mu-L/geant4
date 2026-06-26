@@ -35,15 +35,16 @@
 #ifndef G4UNIFORMGRAVITYFIELD_HH
 #define G4UNIFORMGRAVITYFIELD_HH
 
-#include <CLHEP/Units/PhysicalConstants.h>
-
-#include "G4Types.hh"
-#include "G4ThreeVector.hh"
 #include "G4Field.hh"
+#include "G4ThreeVector.hh"
+#include "G4Types.hh"
+
+#include <CLHEP/Units/PhysicalConstants.h>
 
 /**
  * @brief G4UniformGravityField is a class for defining a uniform
  * gravitation field.
+ * @ingroup geometry_magneticfield
  */
 
 class G4UniformGravityField : public G4Field
@@ -55,14 +56,14 @@ class G4UniformGravityField : public G4Field
      * to 'FieldVector'.
      *  @param[in] FieldVector The field vector value.
      */
-    G4UniformGravityField(const G4ThreeVector& FieldVector );
+    G4UniformGravityField(const G4ThreeVector& FieldVector);
 
     /**
      * Alternative constructor for G4UniformGravityField.
      *  @param[in] gy The gravitation field value (default is the Standard
      *             Gravitational field on earth's surface.
      */
-    G4UniformGravityField(const G4double gy = -9.81*CLHEP::m/CLHEP::s/CLHEP::s);
+    G4UniformGravityField(const G4double gy = -9.81 * CLHEP::m / CLHEP::s / CLHEP::s);
 
     /**
      * Default Destructor.
@@ -84,7 +85,7 @@ class G4UniformGravityField : public G4Field
      * Returns the field value 'field' on given time 'Point'.
      */
     void GetFieldValue(const G4double Point[4], G4double* field) const override;
-    
+
     /**
      * Returns a pointer to a new allocated clone of this object.
      */

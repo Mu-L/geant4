@@ -27,8 +27,8 @@
 //
 //
 
-#ifndef G4RTXScanner_H
-#define G4RTXScanner_H 1
+#ifndef G4RTXSCANNER_HH
+#define G4RTXSCANNER_HH
 
 // class description:
 //
@@ -43,36 +43,36 @@
 
 class G4ViewParameters;
 
-class G4RTXScanner: public G4VRTScanner {
+class G4RTXScanner : public G4VRTScanner
+{
+  public:  // with description
 
-public: // with description
+    G4RTXScanner();
+    virtual ~G4RTXScanner();
 
-  G4RTXScanner();
-  virtual ~G4RTXScanner();
+    // Compiler defaults for copy constructor and assignmemt.
 
-  // Compiler defaults for copy constructor and assignmemt.
+    virtual void Initialize(G4int nRow, G4int nColumn);
+    // Intialises scanner for window with nRow rows and nColumn columns.
 
-  virtual void Initialize(G4int nRow, G4int nColumn);
-  // Intialises scanner for window with nRow rows and nColumn columns.
+    virtual G4bool Coords(G4int& iRow, G4int& iColumn);
+    // Supplies coordinate (iRow,iColumn) and returns false when the
+    // sequence has finished, i.e., on the call *after* suplying the
+    // last valid coordinate.
 
-  virtual G4bool Coords(G4int& iRow, G4int& iColumn);
-  // Supplies coordinate (iRow,iColumn) and returns false when the
-  // sequence has finished, i.e., on the call *after* suplying the
-  // last valid coordinate.
+    virtual void Draw(unsigned char red, unsigned char green, unsigned char blue);
+    // Draw coloured square at current position.
 
-  virtual void Draw
-  (unsigned char red, unsigned char green, unsigned char blue);
-  // Draw coloured square at current position.
+    G4bool GetXWindow(const G4String& name, G4ViewParameters&);
 
-  G4bool GetXWindow(const G4String& name, G4ViewParameters&);
+  protected:
 
-protected:
-  G4int theNRow, theNColumn, theStep, theIRow, theIColumn;
-  // X Window variables...
-  Display* display;
-  Window win;
-  GC gc;
-  XStandardColormap *scmap;
+    G4int theNRow, theNColumn, theStep, theIRow, theIColumn;
+    // X Window variables...
+    Display* display;
+    Window win;
+    GC gc;
+    XStandardColormap* scmap;
 };
 
 #endif

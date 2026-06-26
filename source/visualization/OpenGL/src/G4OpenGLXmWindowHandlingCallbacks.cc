@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  16th June 1997
 // G4OpenGLXmWindowHandlingCallbacks : Callback functions for
 //                                     (Motif) widgets to use.
@@ -33,67 +33,50 @@
 
 #include "G4OpenGLXmViewer.hh"
 
-void G4OpenGLXmViewer::resize_callback (Widget w, 
-				      XtPointer clientData, 
-				      XtPointer x) 
+void G4OpenGLXmViewer::resize_callback(Widget w, XtPointer clientData, XtPointer x)
 {
-  expose_callback(w,clientData,x);
+  expose_callback(w, clientData, x);
 }
 
-
-
-void G4OpenGLXmViewer::expose_callback (Widget w, 
-				      XtPointer clientData, 
-				      XtPointer) 
+void G4OpenGLXmViewer::expose_callback(Widget w, XtPointer clientData, XtPointer)
 {
-  G4OpenGLXmViewer* pView = (G4OpenGLXmViewer*) clientData;
+  G4OpenGLXmViewer* pView = (G4OpenGLXmViewer*)clientData;
   Dimension width, height;
 
-  XtVaGetValues (w, 
-		 XmNwidth, &width, 
-		 XmNheight, &height, 
-		 NULL);
+  XtVaGetValues(w, XmNwidth, &width, XmNheight, &height, NULL);
 
-  pView->ResizeWindow(width,height);
+  pView->ResizeWindow(width, height);
 
-//??????????????????????????? This might be a problem in MT mode.
-//  glXMakeCurrent (pView->dpy, XtWindow(pView->glxarea), pView->cxMaster);
-//  pView->SetView ();
-//  pView->ClearView ();
-//  pView->DrawView ();
-//???????????????????????????? Commented out 14/06/16  JA
+  //??????????????????????????? This might be a problem in MT mode.
+  //  glXMakeCurrent (pView->dpy, XtWindow(pView->glxarea), pView->cxMaster);
+  //  pView->SetView ();
+  //  pView->ClearView ();
+  //  pView->DrawView ();
+  //???????????????????????????? Commented out 14/06/16  JA
 }
 
-void G4OpenGLXmViewer::print_callback (Widget, 
-				    XtPointer clientData, 
-				    XtPointer) 
+void G4OpenGLXmViewer::print_callback(Widget, XtPointer clientData, XtPointer)
 {
-  G4OpenGLXViewer* pView = (G4OpenGLXmViewer*) clientData;
+  G4OpenGLXViewer* pView = (G4OpenGLXmViewer*)clientData;
   pView->exportImage();
 }
 
-void G4OpenGLXmViewer::set_print_colour_callback (Widget w,
-						XtPointer clientData,
-						XtPointer) 
+void G4OpenGLXmViewer::set_print_colour_callback(Widget w, XtPointer clientData, XtPointer)
 {
   G4OpenGLXmViewer* pView = (G4OpenGLXmViewer*)clientData;
-  
-  G4int choice = get_int_userData (w);
-  
-  pView->fPrintColour=(G4bool)choice;
+
+  G4int choice = get_int_userData(w);
+
+  pView->fPrintColour = (G4bool)choice;
   G4cout << "Print colour set to " << pView->fPrintColour;
-  
 }
 
-void G4OpenGLXmViewer::set_print_style_callback (Widget w,
-					       XtPointer clientData,
-					       XtPointer) 
+void G4OpenGLXmViewer::set_print_style_callback(Widget w, XtPointer clientData, XtPointer)
 {
   G4OpenGLXmViewer* pView = (G4OpenGLXmViewer*)clientData;
-  
-  G4int choice = get_int_userData (w);
-  
-  pView->fVectoredPs=(G4bool)choice;
+
+  G4int choice = get_int_userData(w);
+
+  pView->fVectoredPs = (G4bool)choice;
   G4cout << "`Produce vectored PostScript ?' set to : " << pView->fPrintColour;
-  
 }

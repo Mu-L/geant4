@@ -31,8 +31,8 @@
 
 // Author: M.Asai, May 2006
 // --------------------------------------------------------------------
-#ifndef G4MatScanMessenger_hh
-#define G4MatScanMessenger_hh 1
+#ifndef G4MATSCANMESSENGER_HH
+#define G4MATSCANMESSENGER_HH
 
 #include "G4UImessenger.hh"
 
@@ -45,10 +45,12 @@ class G4UIcmdWithABool;
 class G4UIcmdWithAString;
 class G4MaterialScanner;
 class G4UIcmdWithAnInteger;
+class G4UIcmdWithAString;
 
 class G4MatScanMessenger : public G4UImessenger
 {
   public:
+
     G4MatScanMessenger(G4MaterialScanner* p1);
     ~G4MatScanMessenger() override;
 
@@ -56,6 +58,7 @@ class G4MatScanMessenger : public G4UImessenger
     void SetNewValue(G4UIcommand* command, G4String newValue) override;
 
   private:
+
     G4MaterialScanner* theScanner = nullptr;
 
     G4UIdirectory* msDirectory = nullptr;
@@ -67,7 +70,10 @@ class G4MatScanMessenger : public G4UImessenger
     G4UIcmdWithABool* regSenseCmd = nullptr;
     G4UIcmdWithAString* regionCmd = nullptr;
     G4UIcmdWith3VectorAndUnit* eyePosCmd = nullptr;
-    G4UIcmdWithAnInteger * verboseCmd = nullptr;
+    G4UIcommand* thinCmd = nullptr;
+    G4UIcmdWithAnInteger* verboseCmd = nullptr;
+    G4UIcommand* defPartCmd = nullptr;
+    G4UIcmdWithAString* oFileCmd = nullptr;
 };
 
 #endif

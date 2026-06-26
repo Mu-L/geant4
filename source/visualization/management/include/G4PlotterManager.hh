@@ -32,105 +32,114 @@
 #include "G4Plotter.hh"
 #include "G4UImessenger.hh"
 
-#include <vector>
 #include <utility>
+#include <vector>
 
-class G4PlotterManager {
-public:
-  static G4PlotterManager& GetInstance ();
-  G4Plotter& GetPlotter(const G4String& a_name);
-  void List() const;
+class G4PlotterManager
+{
+  public:
 
-  using StyleItem = std::pair<G4String,G4String>;
-  using Style = std::vector<StyleItem>;
-  using NamedStyle = std::pair<G4String,Style>;
-  using Styles = std::vector<NamedStyle>;
-  const Styles& GetStyles() const {return fStyles;}
-  Styles& GetStyles() {return fStyles;}
+    static G4PlotterManager& GetInstance();
+    G4Plotter& GetPlotter(const G4String& a_name);
+    void List() const;
 
-private:
-  G4PlotterManager();
-  virtual ~G4PlotterManager();
-  G4PlotterManager (const G4PlotterManager&);
-  G4PlotterManager& operator = (const G4PlotterManager&);
+    using StyleItem = std::pair<G4String, G4String>;
+    using Style = std::vector<StyleItem>;
+    using NamedStyle = std::pair<G4String, Style>;
+    using Styles = std::vector<NamedStyle>;
+    const Styles& GetStyles() const { return fStyles; }
+    Styles& GetStyles() { return fStyles; }
 
-  void ListStyles() const;
-  Style* FindStyle(const G4String& name);
-  void SelectStyle(const G4String& style);
-  void RemoveStyle(const G4String& name);
-  void PrintStyle(const G4String&) const;
-  void AddStyleParameter(const G4String& param,const G4String& value);
+  private:
 
-  typedef std::pair<G4String,G4Plotter> NamedPlotter;
-  std::vector<NamedPlotter> fPlotters;
+    G4PlotterManager();
+    virtual ~G4PlotterManager();
+    G4PlotterManager(const G4PlotterManager&);
+    G4PlotterManager& operator=(const G4PlotterManager&);
 
-  G4String fCurrentStyle;
-  Styles fStyles;
+    void ListStyles() const;
+    Style* FindStyle(const G4String& name);
+    void SelectStyle(const G4String& style);
+    void RemoveStyle(const G4String& name);
+    void PrintStyle(const G4String&) const;
+    void AddStyleParameter(const G4String& param, const G4String& value);
 
-  class Messenger: public G4UImessenger {
-  public:  
-    Messenger(G4PlotterManager& aPlotterManager):fPlotterManager(aPlotterManager) {
-      G4UIparameter* parameter;
-      //////////////////////////////////////////////////////////
-      //////////////////////////////////////////////////////////
-      //////////////////////////////////////////////////////////
-      remove_style = new G4UIcommand("/vis/plotter/style/remove",this);
-      remove_style->SetGuidance("Remove a named style.");
+    typedef std::pair<G4String, G4Plotter> NamedPlotter;
+    std::vector<NamedPlotter> fPlotters;
 
-      parameter = new G4UIparameter("name",'s',false);
-      remove_style->SetParameter(parameter);
+    G4String fCurrentStyle;
+    Styles fStyles;
 
-      //////////////////////////////////////////////////////////
-      //////////////////////////////////////////////////////////
-      select_style = new G4UIcommand("/vis/plotter/style/select",this);
-      select_style->SetGuidance("Select a named style for further style/add commands.");
-      select_style->SetGuidance("If not existing, the named style is created.");
+    class Messenger : public G4UImessenger
+    {
+      public:
 
-      parameter = new G4UIparameter("name",'s',false);
-      select_style->SetParameter(parameter);
+        Messenger(G4PlotterManager& aPlotterManager) : fPlotterManager(aPlotterManager)
+        {
+          G4UIparameter* parameter;
+          //////////////////////////////////////////////////////////
+          //////////////////////////////////////////////////////////
+          //////////////////////////////////////////////////////////
+          remove_style = new G4UIcommand("/vis/plotter/style/remove", this);
+          remove_style->SetGuidance("Remove a named style.");
 
-      //////////////////////////////////////////////////////////
-      //////////////////////////////////////////////////////////
-      add_style_parameter = new G4UIcommand("/vis/plotter/style/add",this);
-      add_style_parameter->SetGuidance("Add a (parameter,value) to the current named style.");
+          parameter = new G4UIparameter("name", 's', false);
+          remove_style->SetParameter(parameter);
 
-      parameter = new G4UIparameter("parameter",'s',false);
-      add_style_parameter->SetParameter (parameter);
-  
-      parameter = new G4UIparameter("value",'s',false);
-      add_style_parameter->SetParameter (parameter);
+          //////////////////////////////////////////////////////////
+          //////////////////////////////////////////////////////////
+          select_style = new G4UIcommand("/vis/plotter/style/select", this);
+          select_style->SetGuidance("Select a named style for further style/add commands.");
+          select_style->SetGuidance("If not existing, the named style is created.");
 
-      //////////////////////////////////////////////////////////
-      //////////////////////////////////////////////////////////
-      list_styles = new G4UIcommand("/vis/plotter/style/list", this);
-      list_styles->SetGuidance("List known not embedded styles.");
-      
-      //////////////////////////////////////////////////////////
-      //////////////////////////////////////////////////////////
-      print_style = new G4UIcommand("/vis/plotter/style/print", this);
-      print_style->SetGuidance("Print a style.");
+          parameter = new G4UIparameter("name", 's', false);
+          select_style->SetParameter(parameter);
 
-      parameter = new G4UIparameter("style",'s',false);
-      print_style->SetParameter (parameter);
-    }
-    virtual ~Messenger() {
-      delete remove_style;
-      delete select_style;
-      delete add_style_parameter;
-      delete list_styles;
-      delete print_style;
-    }
-    virtual void SetNewValue(G4UIcommand*,G4String);
-  private:  
-    G4PlotterManager& fPlotterManager;
-    G4UIcommand* remove_style; 
-    G4UIcommand* select_style;
-    G4UIcommand* add_style_parameter;
-    G4UIcommand* list_styles;
-    G4UIcommand* print_style;
-  };
-  
-  Messenger* fMessenger;
+          //////////////////////////////////////////////////////////
+          //////////////////////////////////////////////////////////
+          add_style_parameter = new G4UIcommand("/vis/plotter/style/add", this);
+          add_style_parameter->SetGuidance("Add a (parameter,value) to the current named style.");
+
+          parameter = new G4UIparameter("parameter", 's', false);
+          add_style_parameter->SetParameter(parameter);
+
+          parameter = new G4UIparameter("value", 's', false);
+          add_style_parameter->SetParameter(parameter);
+
+          //////////////////////////////////////////////////////////
+          //////////////////////////////////////////////////////////
+          list_styles = new G4UIcommand("/vis/plotter/style/list", this);
+          list_styles->SetGuidance("List known not embedded styles.");
+
+          //////////////////////////////////////////////////////////
+          //////////////////////////////////////////////////////////
+          print_style = new G4UIcommand("/vis/plotter/style/print", this);
+          print_style->SetGuidance("Print a style.");
+
+          parameter = new G4UIparameter("style", 's', false);
+          print_style->SetParameter(parameter);
+        }
+        virtual ~Messenger()
+        {
+          delete remove_style;
+          delete select_style;
+          delete add_style_parameter;
+          delete list_styles;
+          delete print_style;
+        }
+        virtual void SetNewValue(G4UIcommand*, G4String);
+
+      private:
+
+        G4PlotterManager& fPlotterManager;
+        G4UIcommand* remove_style;
+        G4UIcommand* select_style;
+        G4UIcommand* add_style_parameter;
+        G4UIcommand* list_styles;
+        G4UIcommand* print_style;
+    };
+
+    Messenger* fMessenger;
 };
 
 #endif

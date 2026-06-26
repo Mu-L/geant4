@@ -38,30 +38,29 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "G4NeutronKillerMessenger.hh"
+
+#include "G4NeutronKiller.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIdirectory.hh"
-#include "G4NeutronKiller.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4NeutronKillerMessenger::G4NeutronKillerMessenger(G4NeutronKiller* p)
-  :killer(p)
+G4NeutronKillerMessenger::G4NeutronKillerMessenger(G4NeutronKiller* p) : killer(p)
 {
-
   dir = new G4UIdirectory("/physics_engine/neutron/");
   dir->SetGuidance("control on neutrons");
 
-  eCmd = new G4UIcmdWithADoubleAndUnit("/physics_engine/neutron/energyLimit",this);
+  eCmd = new G4UIcmdWithADoubleAndUnit("/physics_engine/neutron/energyLimit", this);
   eCmd->SetGuidance("Set tracking cut - min energy of a particle.");
-  eCmd->SetParameterName("energyLimit",false);
+  eCmd->SetParameterName("energyLimit", false);
   eCmd->SetUnitCategory("Energy");
-  eCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  eCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 
-  tCmd = new G4UIcmdWithADoubleAndUnit("/physics_engine/neutron/timeLimit",this);
+  tCmd = new G4UIcmdWithADoubleAndUnit("/physics_engine/neutron/timeLimit", this);
   tCmd->SetGuidance("Set time limit.");
-  tCmd->SetParameterName("timeLimit",false);
+  tCmd->SetParameterName("timeLimit", false);
   tCmd->SetUnitCategory("Time");
-  tCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  tCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -70,18 +69,16 @@ G4NeutronKillerMessenger::~G4NeutronKillerMessenger()
 {
   delete eCmd;
   delete tCmd;
-  delete dir;  
+  delete dir;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void G4NeutronKillerMessenger::SetNewValue(G4UIcommand* command, G4String val)
-{ 
-  if (command == eCmd)
-    killer->SetKinEnergyLimit(eCmd->GetNewDoubleValue(val));
+{
+  if (command == eCmd) killer->SetKinEnergyLimit(eCmd->GetNewDoubleValue(val));
 
-  if (command == tCmd)
-    killer->SetTimeLimit(tCmd->GetNewDoubleValue(val));
+  if (command == tCmd) killer->SetTimeLimit(tCmd->GetNewDoubleValue(val));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

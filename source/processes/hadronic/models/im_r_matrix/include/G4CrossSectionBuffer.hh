@@ -23,38 +23,40 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4CrossSectionBuffer_h
-#define G4CrossSectionBuffer_h
+#ifndef G4CROSSSECTIONBUFFER_HH
+#define G4CROSSSECTIONBUFFER_HH
+
+#include "G4KineticTrack.hh"
+#include "G4ParticleDefinition.hh"
+#include "globals.hh"
+
+#include <CLHEP/Units/SystemOfUnits.h>
 
 #include <utility>
 #include <vector>
-#include <CLHEP/Units/SystemOfUnits.h>
-
-#include "globals.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4KineticTrack.hh"
 
 class G4CrossSectionBuffer
 {
   public:
-  
-    G4CrossSectionBuffer(const G4ParticleDefinition * aA, const G4ParticleDefinition * aB)
-    : theA(aA), theB(aB) {}
-    
-    G4bool InCharge(const G4ParticleDefinition * aA, const G4ParticleDefinition * aB) const
+
+    G4CrossSectionBuffer(const G4ParticleDefinition* aA, const G4ParticleDefinition* aB)
+      : theA(aA), theB(aB)
+    {}
+
+    G4bool InCharge(const G4ParticleDefinition* aA, const G4ParticleDefinition* aB) const
     {
       G4bool result = false;
-      if(aA == theA)
+      if (aA == theA)
       {
-        if(aB == theB) result = true;
+        if (aB == theB) result = true;
       }
-      else if(aA == theB)
+      else if (aA == theB)
       {
-        if(aB == theA) result = true;
+        if (aB == theA) result = true;
       }
       return result;
     }
-    
+
     void push_back(G4double S, G4double x)
     {
       std::pair<G4double, G4double> aNew;
@@ -64,61 +66,63 @@ class G4CrossSectionBuffer
     }
     G4double CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const
     {
-      G4double sqrts = (trk1.Get4Momentum()+trk2.Get4Momentum()).mag();
+      G4double sqrts = (trk1.Get4Momentum() + trk2.Get4Momentum()).mag();
       G4double x1(1), y1(0);
       G4double x2(2), y2(0);
-      
-      if(theData.size()==1) return theData[theData.size()-1].second;
-      
-      for(size_t i=0; i<theData.size(); i++)
+
+      if (theData.size() == 1) return theData[theData.size() - 1].second;
+
+      for (size_t i = 0; i < theData.size(); i++)
       {
-        if(theData[i].first>sqrts)
-	{
-	  if(0==i)
-	  {
-	    x1 = theData[i].first;
-	    y1 = theData[i].second;
-	    x2 = theData[i+1].first;
-	    y2 = theData[i+1].second;
-	  }
-	  else if(theData.size()-1==i)
-	  {
-	    x1 = theData[theData.size()-2].first;
-	    y1 = theData[theData.size()-2].second;
-	    x2 = theData[theData.size()-1].first;
-	    y2 = theData[theData.size()-1].second;
-	  }
-	  else
-	  {
-	    x1 = theData[i-1].first;
-	    y1 = theData[i-1].second;
-	    x2 = theData[i].first;
-	    y2 = theData[i].second;
-	  }
-	  break;
-	}
+        if (theData[i].first > sqrts)
+        {
+          if (0 == i)
+          {
+            x1 = theData[i].first;
+            y1 = theData[i].second;
+            x2 = theData[i + 1].first;
+            y2 = theData[i + 1].second;
+          }
+          else if (theData.size() - 1 == i)
+          {
+            x1 = theData[theData.size() - 2].first;
+            y1 = theData[theData.size() - 2].second;
+            x2 = theData[theData.size() - 1].first;
+            y2 = theData[theData.size() - 1].second;
+          }
+          else
+          {
+            x1 = theData[i - 1].first;
+            y1 = theData[i - 1].second;
+            x2 = theData[i].first;
+            y2 = theData[i].second;
+          }
+          break;
+        }
       }
       // LINLIN interpolation
       // G4cerr << "!!!!!! "<<sqrts<<" "<<x1<<" "<<x2<<" "<<y1<<" "<<y2<<" "<<i<<G4endl;
-      G4double result = y1 + (sqrts-x1) * (y2-y1)/(x2-x1);
-      if(result<0) result = 0;
-      if(y1<0.01*CLHEP::millibarn) result = 0;
+      G4double result = y1 + (sqrts - x1) * (y2 - y1) / (x2 - x1);
+      if (result < 0) result = 0;
+      if (y1 < 0.01 * CLHEP::millibarn) result = 0;
       return result;
     }
-    
+
     void Print()
     {
-      for(size_t i=0;i<theData.size(); i++)
+      for (size_t i = 0; i < theData.size(); i++)
       {
-        G4cerr << "sqrts = "<<theData[i].first<<", X = "<<theData[i].second/CLHEP::millibarn<<G4endl;
+        G4cerr << "sqrts = " << theData[i].first << ", X = " << theData[i].second / CLHEP::millibarn
+               << G4endl;
       }
     }
-  
+
   private:
-  std::vector<std::pair<G4double, G4double> > theData;
-  
-  const G4ParticleDefinition * theA;
-  const G4ParticleDefinition * theB;
+
+    std::vector<std::pair<G4double, G4double>> theData;
+
+    const G4ParticleDefinition* theA;
+    const G4ParticleDefinition* theB;
 };
 
 #endif

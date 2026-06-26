@@ -25,23 +25,24 @@
 //
 //
 //
-// 
+//
 // John Allison  2nd April 1996
 
 #ifndef G4GRAPHICSSYSTEMLIST_HH
 #define G4GRAPHICSSYSTEMLIST_HH
 
-#include <vector>
 #include "G4VGraphicsSystem.hh"
 
-class G4GraphicsSystemList: public std::vector<G4VGraphicsSystem*> {
-public:
-  void remove(G4VGraphicsSystem*);
+#include <vector>
+
+class G4GraphicsSystemList : public std::vector<G4VGraphicsSystem*>
+{
+  public:
+
+    void remove(G4VGraphicsSystem*);
 };
 
-typedef std::vector<G4VGraphicsSystem*>::iterator
-        G4GraphicsSystemListIterator;
-typedef std::vector<G4VGraphicsSystem*>::const_iterator
-        G4GraphicsSystemListConstIterator;
+typedef std::vector<G4VGraphicsSystem*>::iterator G4GraphicsSystemListIterator;
+typedef std::vector<G4VGraphicsSystem*>::const_iterator G4GraphicsSystemListConstIterator;
 
 #endif

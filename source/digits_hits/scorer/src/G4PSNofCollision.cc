@@ -39,20 +39,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 G4PSNofCollision::G4PSNofCollision(const G4String& name, G4int depth)
-  : G4VPrimitiveScorer(name, depth) 
+  : G4VPrimitiveScorer(name, depth)
 {
   SetUnit("");
 }
 
 G4bool G4PSNofCollision::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
-  if(aStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary)
-    return true;
+  if (aStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary) return true;
 
-  G4int index  = GetIndex(aStep);
+  G4int index = GetIndex(aStep);
   G4double val = 1.0;
-  if(weighted)
-    val *= aStep->GetPreStepPoint()->GetWeight();
+  if (weighted) val *= aStep->GetPreStepPoint()->GetWeight();
   EvtMap->add(index, val);
   return true;
 }
@@ -60,39 +58,41 @@ G4bool G4PSNofCollision::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 void G4PSNofCollision::Initialize(G4HCofThisEvent* HCE)
 {
   EvtMap = new G4THitsMap<G4double>(detector->GetName(), GetName());
-  if(HCID < 0)
+  if (HCID < 0)
   {
     HCID = GetCollectionID(0);
   }
-  HCE->AddHitsCollection(HCID, (G4VHitsCollection*) EvtMap);
+  HCE->AddHitsCollection(HCID, (G4VHitsCollection*)EvtMap);
 }
 
-void G4PSNofCollision::clear() { EvtMap->clear(); }
+void G4PSNofCollision::clear()
+{
+  EvtMap->clear();
+}
 
 void G4PSNofCollision::PrintAll()
 {
   G4cout << " MultiFunctionalDet  " << detector->GetName() << G4endl;
   G4cout << " PrimitiveScorer " << GetName() << G4endl;
   G4cout << " Number of entries " << EvtMap->entries() << G4endl;
-  for(const auto& [copy, collisions] : *(EvtMap->GetMap()))
+  for (const auto& [copy, collisions] : *(EvtMap->GetMap()))
   {
-    G4cout << "  copy no.: " << copy
-           << "  collisions: " << *(collisions) / GetUnitValue()
+    G4cout << "  copy no.: " << copy << "  collisions: " << *(collisions) / GetUnitValue()
            << " [collision] " << G4endl;
   }
 }
 
 void G4PSNofCollision::SetUnit(const G4String& unit)
 {
-  if(unit.empty())
+  if (unit.empty())
   {
-    unitName  = unit;
+    unitName = unit;
     unitValue = 1.0;
   }
   else
   {
-    G4String msg = "Invalid unit [" + unit + "] (Current  unit is [" +
-                   GetUnit() + "] ) for " + GetName();
+    G4String msg =
+      "Invalid unit [" + unit + "] (Current  unit is [" + GetUnit() + "] ) for " + GetName();
     G4Exception("G4PSNofCollision::SetUnit", "DetPS0009", JustWarning, msg);
   }
 }

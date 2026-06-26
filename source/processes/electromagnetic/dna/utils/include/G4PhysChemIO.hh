@@ -29,74 +29,74 @@
  *  Created on: 3 févr. 2017
  *      Author: matkara
  */
-#ifndef G4PHYSCHEMIO_HH_
-#define G4PHYSCHEMIO_HH_
+#ifndef G4PHYSCHEMIO_HH
+#define G4PHYSCHEMIO_HH
 
 #include "G4VPhysChemIO.hh"
 
 //------------------------------------------------------------------------------
-namespace G4PhysChemIO{
-  
-class FormattedText: public G4VPhysChemIO
+namespace G4PhysChemIO
 {
-public:
-  FormattedText();
-  ~FormattedText() override;
-  
-  void InitializeMaster() override{}
-  void InitializeThread() override{}
-  void InitializeFile() override;
-  
-  void NewRun() override{}
-  void NewEvent() override{}
-  
-  /**
-   * When DNA physics model create a water molecule, you'll get a notification
-   * through this method.
-   * The ElectronicModification is a flag telling whether the molecule
-   * is ionized or excited, the electronic level is calculated by the
-   * model and the IncomingTrack is the track responsible for the creation
-   * of this molecule (electron, proton...)
-   */
-  void CreateWaterMolecule(G4int electronicModif,
-                                   G4int /*electronicLevel*/,
-                                   G4double energy,
-                                   const G4Track* /*theIncomingTrack*/) override;
-  
-  /**
-   * Same idea as the previous method but for solvated electron.
-   * This method should be used by the physics model of the ElectronSolvatation
-   * process.
-   */
-  void CreateSolvatedElectron(const G4Track* /*theIncomingTrack*/,
-                                      G4ThreeVector* finalPosition = nullptr) override;
-  
-  //============================================================================
-  // FILE OPERATIONS
-  //============================================================================
-  
-  /**
-   * Tells the chemistry manager to write into a file
-   * the position and electronic state of the water molecule
-   * and the position thermalized or not of the solvated electron
-   */
-  void WriteInto(const G4String&,
-                         std::ios_base::openmode mode = std::ios_base::out) override;
-  void AddEmptyLineInOutputFile() override;
-  
-  /**
-   * Close the file specified with WriteInto
-   */
-  void CloseFile() override;
-  
-protected:
-  G4int fRunID; // unused
-  G4int fEventID; // unused
-  G4bool fFileInitialized;
-  std::ofstream fOfstream;
+
+class FormattedText : public G4VPhysChemIO
+{
+  public:
+
+    FormattedText();
+    ~FormattedText() override;
+
+    void InitializeMaster() override {}
+    void InitializeThread() override {}
+    void InitializeFile() override;
+
+    void NewRun() override {}
+    void NewEvent() override {}
+
+    /**
+     * When DNA physics model create a water molecule, you'll get a notification
+     * through this method.
+     * The ElectronicModification is a flag telling whether the molecule
+     * is ionized or excited, the electronic level is calculated by the
+     * model and the IncomingTrack is the track responsible for the creation
+     * of this molecule (electron, proton...)
+     */
+    void CreateWaterMolecule(G4int electronicModif, G4int /*electronicLevel*/, G4double energy,
+                             const G4Track* /*theIncomingTrack*/) override;
+
+    /**
+     * Same idea as the previous method but for solvated electron.
+     * This method should be used by the physics model of the ElectronSolvatation
+     * process.
+     */
+    void CreateSolvatedElectron(const G4Track* /*theIncomingTrack*/,
+                                G4ThreeVector* finalPosition = nullptr) override;
+
+    //============================================================================
+    // FILE OPERATIONS
+    //============================================================================
+
+    /**
+     * Tells the chemistry manager to write into a file
+     * the position and electronic state of the water molecule
+     * and the position thermalized or not of the solvated electron
+     */
+    void WriteInto(const G4String&, std::ios_base::openmode mode = std::ios_base::out) override;
+    void AddEmptyLineInOutputFile() override;
+
+    /**
+     * Close the file specified with WriteInto
+     */
+    void CloseFile() override;
+
+  protected:
+
+    G4int fRunID;  // unused
+    G4int fEventID;  // unused
+    G4bool fFileInitialized;
+    std::ofstream fOfstream;
 };
 
 //------------------------------------------------------------------------------
-}
+}  // namespace G4PhysChemIO
 
-#endif // G4PHYSCHEMIO_HH_
+#endif  // G4PHYSCHEMIO_HH_

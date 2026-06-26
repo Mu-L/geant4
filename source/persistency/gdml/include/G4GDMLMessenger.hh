@@ -31,12 +31,12 @@
 
 // Author: Witold Pokorski, October 2010
 // --------------------------------------------------------------------
-#ifndef G4GDMLMessenger_hh
-#define G4GDMLMessenger_hh 1
+#ifndef G4GDMLMESSENGER_HH
+#define G4GDMLMESSENGER_HH
 
-#include "globals.hh"
 #include "G4UImessenger.hh"
 #include "G4VPhysicalVolume.hh"
+#include "globals.hh"
 
 class G4GDMLParser;
 class G4UIdirectory;

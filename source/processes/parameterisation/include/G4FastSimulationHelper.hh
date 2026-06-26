@@ -39,8 +39,8 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4FastSimulationHelper_h
-#define G4FastSimulationHelper_h 1
+#ifndef G4FASTSIMULATIONHELPER_HH
+#define G4FASTSIMULATIONHELPER_HH
 
 #include "globals.hh"
 
@@ -50,6 +50,7 @@ class G4FastSmulationManagerProcess;
 class G4FastSimulationHelper
 {
   public:
+
     // Activate fast simulation for particle with pmanager in the mass geometry: (without geometry
     // name) or activate fast simulation for particle with pmanager in the parallel geometry:
     static void ActivateFastSimulation(G4ProcessManager* pmanager,

@@ -28,18 +28,22 @@
 //
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
-#ifndef G4RootFile_h
-#define G4RootFile_h 1
+#ifndef G4ROOTFILE_HH
+#define G4ROOTFILE_HH
 
-namespace tools {
-namespace wroot {
+#include <memory>
+#include <tuple>
+
+namespace tools
+{
+namespace wroot
+{
 class directory;
 class file;
-}
-}
+}  // namespace wroot
+}  // namespace tools
 
-using G4RootFile = std::tuple<std::shared_ptr<tools::wroot::file>,
-                              tools::wroot::directory*,
+using G4RootFile = std::tuple<std::shared_ptr<tools::wroot::file>, tools::wroot::directory*,
                               tools::wroot::directory*>;
 
 #endif

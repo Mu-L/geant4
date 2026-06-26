@@ -24,40 +24,35 @@
 // ********************************************************************
 //
 //
-// J. M. Quesada (August 2008).  
+// J. M. Quesada (August 2008).
 // Based  on previous work by V. Lara
 //
 // Modified:
-// 20.08.2010 V.Ivanchenko added int Z and A and cleanup; added 
+// 20.08.2010 V.Ivanchenko added int Z and A and cleanup; added
 //                        G4ParticleDefinition to constructor
 
-
-#ifndef G4PreCompoundNucleon_h
-#define G4PreCompoundNucleon_h 1
+#ifndef G4PRECOMPOUNDNUCLEON_HH
+#define G4PRECOMPOUNDNUCLEON_HH
 
 #include "G4PreCompoundFragment.hh"
 
 class G4PreCompoundNucleon : public G4PreCompoundFragment
 {
-public:  
+  public:
 
-  G4PreCompoundNucleon(const G4ParticleDefinition*,
-                       G4VCoulombBarrier* p = nullptr);
-  
-  ~G4PreCompoundNucleon() override = default;
+    G4PreCompoundNucleon(const G4ParticleDefinition*, G4VCoulombBarrier* p = nullptr);
 
-  G4PreCompoundNucleon(const G4PreCompoundNucleon &right) = delete;
-  const G4PreCompoundNucleon& 
-  operator= (const G4PreCompoundNucleon &right) = delete;
-  G4bool operator==(const G4PreCompoundNucleon &right) const = delete;
-  G4bool operator!=(const G4PreCompoundNucleon &right) const = delete;
+    ~G4PreCompoundNucleon() override = default;
 
-protected:
+    G4PreCompoundNucleon(const G4PreCompoundNucleon& right) = delete;
+    const G4PreCompoundNucleon& operator=(const G4PreCompoundNucleon& right) = delete;
+    G4bool operator==(const G4PreCompoundNucleon& right) const = delete;
+    G4bool operator!=(const G4PreCompoundNucleon& right) const = delete;
 
-  G4double ProbabilityDistributionFunction(G4double eKin,
-					   const G4Fragment&) override;
-  virtual G4double 
-  GetRj(G4int NumberParticles, G4int NumberCharged) const = 0;
+  protected:
+
+    G4double ProbabilityDistributionFunction(G4double eKin, const G4Fragment&) override;
+    virtual G4double GetRj(G4int NumberParticles, G4int NumberCharged) const = 0;
 };
 
 #endif

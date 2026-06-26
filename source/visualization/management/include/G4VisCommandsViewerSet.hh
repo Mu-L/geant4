@@ -43,61 +43,65 @@ class G4UIcmdWithAnInteger;
 class G4UIcmdWithADouble;
 class G4UIcmdWith3VectorAndUnit;
 
-class G4VisCommandsViewerSet: public G4VVisCommand {
-public:
-  G4VisCommandsViewerSet ();
-  virtual ~G4VisCommandsViewerSet ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandsViewerSet (const G4VisCommandsViewerSet&);
-  G4VisCommandsViewerSet& operator = (const G4VisCommandsViewerSet&);
-  G4UIcmdWithAString*   fpCommandAll;
-  G4UIcmdWithABool*     fpCommandAutoRefresh;
-  G4UIcmdWithABool*     fpCommandAuxEdge;
-  G4UIcommand*          fpCommandBackground;
-  G4UIcommand*          fpCommandCulling;
-  G4UIcmdWithAString*   fpCommandCutawayMode;
-  G4UIcommand*          fpCommandDefaultColour;
-  G4UIcommand*          fpCommandDefaultTextColour;
-  G4UIcmdWithADouble*   fpCommandDotsSize;
-  G4UIcmdWithABool*     fpCommandDotsSmooth;
-  G4UIcmdWithABool*     fpCommandEdge;
-  G4UIcommand*          fpCommandExplodeFactor;
-  G4UIcmdWithADouble*   fpCommandGlobalMarkerScale;
-  G4UIcmdWithADouble*   fpCommandGlobalLineWidthScale;
-  G4UIcmdWithABool*     fpCommandHiddenEdge;
-  G4UIcmdWithABool*     fpCommandHiddenMarker;
-  G4UIcmdWithAString*   fpCommandLightsMove;
-  G4UIcommand*          fpCommandLightsThetaPhi;
-  G4UIcommand*          fpCommandLightsVector;
-  G4ThreeVector         fLightsVector;
-  G4UIcmdWithAnInteger* fpCommandLineSegments;
-  G4UIcmdWithoutParameter* fpCommandLineWidth;
-  G4UIcmdWithAnInteger* fpCommandNumberOfCloudPoints;
-  G4UIcmdWithABool*     fpCommandPicking;
-  G4UIcommand*          fpCommandProjection;
-  G4UIcmdWithAString*   fpCommandRotationStyle;
-  G4UIcommand*          fpCommandSectionPlane;
-  G4UIcmdWithABool*     fpCommandSpecialMeshRendering;
-  G4UIcmdWithAString*   fpCommandSpecialMeshRenderingOption;
-  G4UIcommand*          fpCommandSpecialMeshVolumes;
-  G4UIcmdWithAString*   fpCommandStyle;
-  G4UIcmdWith3VectorAndUnit* fpCommandTargetPoint;
-  G4UIcommand*          fpCommandTransparencyByDepth;
-  G4UIcommand*          fpCommandUpThetaPhi;
-  G4UIcommand*          fpCommandUpVector;
-  G4ThreeVector         fUpVector;
-  G4UIcommand*          fpCommandViewpointThetaPhi;
-  G4UIcommand*          fpCommandViewpointVector;
-  G4ThreeVector         fViewpointVector;
-  G4UIdirectory*        fpTimeWindowDirectory;
-  G4UIcommand*          fpCommandTimeWindowDisplayHeadTime;
-  G4UIcommand*          fpCommandTimeWindowDisplayLightFront;
-  G4UIcommand*          fpCommandTimeWindowEndTime;
-  G4UIcmdWithADouble*   fpCommandTimeWindowFadeFactor;
-  G4UIcommand*          fpCommandTimeWindowStartTime;
-  G4UIcmdWithABool*     fpCommandZoomToCursor;
+class G4VisCommandsViewerSet : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandsViewerSet();
+    virtual ~G4VisCommandsViewerSet();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandsViewerSet(const G4VisCommandsViewerSet&);
+    G4VisCommandsViewerSet& operator=(const G4VisCommandsViewerSet&);
+    G4UIcmdWithAString* fpCommandAll;
+    G4UIcmdWithABool* fpCommandAutoRefresh;
+    G4UIcmdWithABool* fpCommandAuxEdge;
+    G4UIcommand* fpCommandBackground;
+    G4UIcommand* fpCommandCulling;
+    G4UIcmdWithAString* fpCommandCutawayMode;
+    G4UIcommand* fpCommandDefaultColour;
+    G4UIcommand* fpCommandDefaultTextColour;
+    G4UIcmdWithADouble* fpCommandDotsSize;
+    G4UIcmdWithABool* fpCommandDotsSmooth;
+    G4UIcmdWithABool* fpCommandEdge;
+    G4UIcommand* fpCommandExplodeFactor;
+    G4UIcmdWithADouble* fpCommandGlobalMarkerScale;
+    G4UIcmdWithADouble* fpCommandGlobalLineWidthScale;
+    G4UIcmdWithABool* fpCommandHiddenEdge;
+    G4UIcmdWithABool* fpCommandHiddenMarker;
+    G4UIcmdWithAString* fpCommandLightsMove;
+    G4UIcommand* fpCommandLightsThetaPhi;
+    G4UIcommand* fpCommandLightsVector;
+    G4ThreeVector fLightsVector;
+    G4UIcmdWithAnInteger* fpCommandLineSegments;
+    G4UIcmdWithoutParameter* fpCommandLineWidth;
+    G4UIcmdWithAnInteger* fpCommandNumberOfCloudPoints;
+    G4UIcmdWithABool* fpCommandPicking;
+    G4UIcommand* fpCommandProjection;
+    G4UIcmdWithAString* fpCommandRotationStyle;
+    G4UIcommand* fpCommandSectionPlane;
+    G4UIcmdWithABool* fpCommandSpecialMeshRendering;
+    G4UIcmdWithAString* fpCommandSpecialMeshRenderingOption;
+    G4UIcommand* fpCommandSpecialMeshVolumes;
+    G4UIcmdWithAString* fpCommandStyle;
+    G4UIcmdWith3VectorAndUnit* fpCommandTargetPoint;
+    G4UIcommand* fpCommandTransparencyByDepth;
+    G4UIcommand* fpCommandUpThetaPhi;
+    G4UIcommand* fpCommandUpVector;
+    G4ThreeVector fUpVector;
+    G4UIcommand* fpCommandViewpointThetaPhi;
+    G4UIcommand* fpCommandViewpointVector;
+    G4ThreeVector fViewpointVector;
+    G4UIdirectory* fpTimeWindowDirectory;
+    G4UIcommand* fpCommandTimeWindowDisplayHeadTime;
+    G4UIcommand* fpCommandTimeWindowDisplayLightFront;
+    G4UIcommand* fpCommandTimeWindowEndTime;
+    G4UIcmdWithADouble* fpCommandTimeWindowFadeFactor;
+    G4UIcommand* fpCommandTimeWindowStartTime;
+    G4UIcmdWithABool* fpCommandZoomToCursor;
 };
 
 #endif

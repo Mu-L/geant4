@@ -27,17 +27,24 @@
 //
 
 #include "G4DCtable.hh"
+
 #include "G4VDigitizerModule.hh"
 
-G4DCtable::G4DCtable() {;}
+G4DCtable::G4DCtable()
+{
+  ;
+}
 
-G4DCtable::~G4DCtable() {;}
+G4DCtable::~G4DCtable()
+{
+  ;
+}
 
 G4int G4DCtable::Registor(const G4String& DMname, const G4String& DCname)
 {
-  for(std::size_t i=0; i<DClist.size(); ++i)
+  for (std::size_t i = 0; i < DClist.size(); ++i)
   {
-    if(DClist[i]==DCname && DMlist[i]==DMname) return -1;
+    if (DClist[i] == DCname && DMlist[i] == DMname) return -1;
   }
   DClist.push_back(DCname);
   DMlist.push_back(DMname);
@@ -47,27 +54,27 @@ G4int G4DCtable::Registor(const G4String& DMname, const G4String& DCname)
 G4int G4DCtable::GetCollectionID(const G4String& DCname) const
 {
   G4int i = -1;
-  if(DCname.find("/")==std::string::npos) // DCname only
+  if (DCname.find("/") == std::string::npos)  // DCname only
   {
-    for(std::size_t j=0; j<DClist.size(); ++j)
+    for (std::size_t j = 0; j < DClist.size(); ++j)
     {
-      if(DClist[j]==DCname)
-      { 
-        if(i>=0) return -2;
+      if (DClist[j] == DCname)
+      {
+        if (i >= 0) return -2;
         i = (G4int)j;
       }
     }
   }
   else
   {
-    for(std::size_t j=0; j<DClist.size(); ++j)
+    for (std::size_t j = 0; j < DClist.size(); ++j)
     {
       G4String tgt = DMlist[j];
       tgt += "/";
       tgt += DClist[j];
-      if(tgt==DCname)
+      if (tgt == DCname)
       {
-        if(i>=0) return -2;
+        if (i >= 0) return -2;
         i = (G4int)j;
       }
     }
@@ -77,27 +84,27 @@ G4int G4DCtable::GetCollectionID(const G4String& DCname) const
 
 G4int G4DCtable::GetCollectionID(G4VDigitizerModule* aDM) const
 {
-  if(aDM->GetNumberOfCollections()<1)
+  if (aDM->GetNumberOfCollections() < 1)
   {
     G4cerr << "Digitizer Module <" << aDM->GetName()
-           << "> does not have a registered digits collection."
-           << G4endl;
+           << "> does not have a registered digits collection." << G4endl;
     return -1;
   }
-  if(aDM->GetNumberOfCollections()>1)
+  if (aDM->GetNumberOfCollections() > 1)
   {
     G4cerr << "Digitizer Module <" << aDM->GetName()
-           << "> has more than one registered digits collections."
-           << G4endl;
+           << "> has more than one registered digits collections." << G4endl;
     G4cerr << "Candidates are : ";
-    for(G4int j=0; j<aDM->GetNumberOfCollections(); ++j)
-    { G4cerr << aDM->GetCollectionName(j) << " "; }
+    for (G4int j = 0; j < aDM->GetNumberOfCollections(); ++j)
+    {
+      G4cerr << aDM->GetCollectionName(j) << " ";
+    }
     G4cerr << G4endl;
     return -1;
   }
-  for(std::size_t k=0; k<DMlist.size(); ++k)
+  for (std::size_t k = 0; k < DMlist.size(); ++k)
   {
-    if(DMlist[k]==aDM->GetName()) return (G4int)k;
+    if (DMlist[k] == aDM->GetName()) return (G4int)k;
   }
   return -1;
 }

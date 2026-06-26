@@ -36,43 +36,37 @@
 //
 #include "G4QGSPLundStrFragmProtonBuilder.hh"
 //
-#include "G4SystemOfUnits.hh"
+#include "G4BGGNucleonInelasticXS.hh"
+#include "G4HadronicParameters.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4BGGNucleonInelasticXS.hh"
-#include "G4HadronicParameters.hh"
+#include "G4SystemOfUnits.hh"
 
-G4QGSPLundStrFragmProtonBuilder::
-G4QGSPLundStrFragmProtonBuilder(G4bool quasiElastic) 
+G4QGSPLundStrFragmProtonBuilder::G4QGSPLundStrFragmProtonBuilder(G4bool quasiElastic)
 {
-  theMin = 100*GeV;
+  theMin = 100 * GeV;
   theModel = new G4TheoFSGenerator("QGSP");
 
-  G4QGSModel< G4QGSParticipants >* theStringModel = 
-    new G4QGSModel< G4QGSParticipants >;
+  G4QGSModel<G4QGSParticipants>* theStringModel = new G4QGSModel<G4QGSParticipants>;
   theStringModel->SetFragmentationModel(new G4ExcitedStringDecay());
 
-  G4GeneratorPrecompoundInterface* theCascade = 
-    new G4GeneratorPrecompoundInterface();
+  G4GeneratorPrecompoundInterface* theCascade = new G4GeneratorPrecompoundInterface();
 
   theModel->SetTransport(theCascade);
   theModel->SetHighEnergyGenerator(theStringModel);
   if (quasiElastic)
-    {
-      theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
-    } 
+  {
+    theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
+  }
 }
 
-void G4QGSPLundStrFragmProtonBuilder::
-Build(G4HadronInelasticProcess * aP)
+void G4QGSPLundStrFragmProtonBuilder::Build(G4HadronInelasticProcess* aP)
 {
   aP->AddDataSet(new G4BGGNucleonInelasticXS(G4Proton::Proton()));
   theModel->SetMinEnergy(theMin);
-  theModel->SetMaxEnergy( G4HadronicParameters::Instance()->GetMaxEnergy() );
+  theModel->SetMaxEnergy(G4HadronicParameters::Instance()->GetMaxEnergy());
   aP->RegisterMe(theModel);
 }
 
-G4QGSPLundStrFragmProtonBuilder::~G4QGSPLundStrFragmProtonBuilder() 
-{}
-
+G4QGSPLundStrFragmProtonBuilder::~G4QGSPLundStrFragmProtonBuilder() {}

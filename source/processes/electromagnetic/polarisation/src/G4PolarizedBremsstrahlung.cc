@@ -38,8 +38,7 @@
 #include "G4PolarizedBremsstrahlungModel.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-G4PolarizedBremsstrahlung::G4PolarizedBremsstrahlung(const G4String& name)
-  : G4eBremsstrahlung(name)
+G4PolarizedBremsstrahlung::G4PolarizedBremsstrahlung(const G4String& name) : G4eBremsstrahlung(name)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -52,14 +51,14 @@ void G4PolarizedBremsstrahlung::ProcessDescription(std::ostream& out) const
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-void G4PolarizedBremsstrahlung::InitialiseEnergyLossProcess(
-  const G4ParticleDefinition*, const G4ParticleDefinition*)
+void G4PolarizedBremsstrahlung::InitialiseEnergyLossProcess(const G4ParticleDefinition*,
+                                                            const G4ParticleDefinition*)
 {
-  if(!isInitialised)
+  if (!isInitialised)
   {
     isInitialised = true;
     G4VEmFluctuationModel* fm = nullptr;
-    G4VEmModel* em        = new G4PolarizedBremsstrahlungModel;
+    G4VEmModel* em = new G4PolarizedBremsstrahlungModel;
     G4EmParameters* param = G4EmParameters::Instance();
     em->SetLowEnergyLimit(param->MinKinEnergy());
     em->SetHighEnergyLimit(param->MaxKinEnergy());

@@ -26,11 +26,11 @@
 //
 //
 // V.Ivanchenko 13.04.2015
-// 
+//
 // J.M. Quesada 22.04.2015 several fixes
 
-#ifndef G4ChatterjeeCrossSection_h
-#define G4ChatterjeeCrossSection_h 1
+#ifndef G4CHATTERJEECROSSSECTION_HH
+#define G4CHATTERJEECROSSSECTION_HH
 
 #include "globals.hh"
 
@@ -39,11 +39,10 @@
 
 class G4ChatterjeeCrossSection
 {
-public:
+  public:
 
-  static G4double ComputeCrossSection(G4double K, G4double cb, 
-                                      G4double resA13, G4double amu1, 
-				      G4int idx, G4int Z, G4int resA);
+    static G4double ComputeCrossSection(G4double K, G4double cb, G4double resA13, G4double amu1,
+                                        G4int idx, G4int Z, G4int resA);
 };
 
 #endif

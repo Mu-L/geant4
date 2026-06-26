@@ -50,26 +50,29 @@ G4int G4ExcitedNucleonConstructor::GetEncoding(G4int iIsoSpin3, G4int idxState)
 {
   G4int encoding;
   // Delta has exceptinal encoding
-  if ((idxState == 1)      // N(1520)
-      || (idxState == 6)   // N(1700)
-      || (idxState == 8)   // N(1720)
-      || (idxState == 9)   // N(1900)
-      || (idxState == 12)) // N(2190)
+  if ((idxState == 1)  // N(1520)
+      || (idxState == 6)  // N(1700)
+      || (idxState == 8)  // N(1720)
+      || (idxState == 9)  // N(1900)
+      || (idxState == 12))  // N(2190)
   {
     encoding = GetEncodingOffset(idxState);
-    if ((iIsoSpin3 == 3) || (iIsoSpin3 == -3)) {
+    if ((iIsoSpin3 == 3) || (iIsoSpin3 == -3))
+    {
       // normal encoding
       encoding += 1000 * GetQuarkContents(0, iIsoSpin3);
       encoding += 100 * GetQuarkContents(1, iIsoSpin3);
       encoding += 10 * GetQuarkContents(2, iIsoSpin3);
     }
-    else if (iIsoSpin3 == +1) {
+    else if (iIsoSpin3 == +1)
+    {
       // 1st <--> 2nd quark
       encoding += 1000 * GetQuarkContents(0, iIsoSpin3);
       encoding += 10 * GetQuarkContents(1, iIsoSpin3);
       encoding += 100 * GetQuarkContents(2, iIsoSpin3);
     }
-    else if (iIsoSpin3 == -1) {
+    else if (iIsoSpin3 == -1)
+    {
       // 1st <--> 0th quark
       encoding += 100 * GetQuarkContents(0, iIsoSpin3);
       encoding += 1000 * GetQuarkContents(1, iIsoSpin3);
@@ -91,39 +94,48 @@ G4DecayTable* G4ExcitedNucleonConstructor::CreateDecayTable(const G4String& pare
   auto decayTable = new G4DecayTable();
 
   G4double br;
-  if ((br = bRatio[iState][NGamma]) > 0.0) {
+  if ((br = bRatio[iState][NGamma]) > 0.0)
+  {
     AddNGammaMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][NPi]) > 0.0) {
+  if ((br = bRatio[iState][NPi]) > 0.0)
+  {
     AddNPiMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][NEta]) > 0.0) {
+  if ((br = bRatio[iState][NEta]) > 0.0)
+  {
     AddNEtaMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][NOmega]) > 0.0) {
+  if ((br = bRatio[iState][NOmega]) > 0.0)
+  {
     AddNOmegaMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][NRho]) > 0.0) {
+  if ((br = bRatio[iState][NRho]) > 0.0)
+  {
     AddNRhoMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][N2Pi]) > 0.0) {
+  if ((br = bRatio[iState][N2Pi]) > 0.0)
+  {
     AddN2PiMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][DeltaPi]) > 0.0) {
+  if ((br = bRatio[iState][DeltaPi]) > 0.0)
+  {
     AddDeltaPiMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][NStarPi]) > 0.0) {
+  if ((br = bRatio[iState][NStarPi]) > 0.0)
+  {
     AddNStarPiMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][LambdaK]) > 0.0) {
+  if ((br = bRatio[iState][LambdaK]) > 0.0)
+  {
     AddLambdaKMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
@@ -138,10 +150,12 @@ G4DecayTable* G4ExcitedNucleonConstructor::AddNGammaMode(G4DecayTable* decayTabl
 
   //
   G4String daughterN;
-  if (iIso3 == +1) {
+  if (iIso3 == +1)
+  {
     daughterN = "proton";
   }
-  else {
+  else
+  {
     daughterN = "neutron";
   }
   if (fAnti) daughterN = "anti_" + daughterN;
@@ -165,11 +179,13 @@ G4DecayTable* G4ExcitedNucleonConstructor::AddNPiMode(G4DecayTable* decayTable,
 
   // ------------ N pi0 ------------
   // determine daughters
-  if (iIso3 == +1) {
+  if (iIso3 == +1)
+  {
     daughterN = "proton";
     daughterPi = "pi0";
   }
-  else {
+  else
+  {
     daughterN = "neutron";
     daughterPi = "pi0";
   }
@@ -181,21 +197,27 @@ G4DecayTable* G4ExcitedNucleonConstructor::AddNPiMode(G4DecayTable* decayTable,
 
   // -------------N pi +/- --------------
   // determine daughters
-  if (iIso3 == +1) {
+  if (iIso3 == +1)
+  {
     daughterN = "neutron";
-    if (!fAnti) {
+    if (!fAnti)
+    {
       daughterPi = "pi+";
     }
-    else {
+    else
+    {
       daughterPi = "pi-";
     }
   }
-  else {
+  else
+  {
     daughterN = "proton";
-    if (!fAnti) {
+    if (!fAnti)
+    {
       daughterPi = "pi-";
     }
-    else {
+    else
+    {
       daughterPi = "pi+";
     }
   }
@@ -219,10 +241,12 @@ G4DecayTable* G4ExcitedNucleonConstructor::AddNEtaMode(G4DecayTable* decayTable,
 
   // ------------ N eta------------
   // determine daughters
-  if (iIso3 == +1) {
+  if (iIso3 == +1)
+  {
     daughterN = "proton";
   }
-  else {
+  else
+  {
     daughterN = "neutron";
   }
   if (fAnti) daughterN = "anti_" + daughterN;
@@ -244,10 +268,12 @@ G4DecayTable* G4ExcitedNucleonConstructor::AddNOmegaMode(G4DecayTable* decayTabl
 
   // ------------ N omega------------
   // determine daughters
-  if (iIso3 == +1) {
+  if (iIso3 == +1)
+  {
     daughterN = "proton";
   }
-  else {
+  else
+  {
     daughterN = "neutron";
   }
   if (fAnti) daughterN = "anti_" + daughterN;
@@ -270,11 +296,13 @@ G4DecayTable* G4ExcitedNucleonConstructor::AddNRhoMode(G4DecayTable* decayTable,
 
   // ------------ N rho0 ------------
   // determine daughters
-  if (iIso3 == +1) {
+  if (iIso3 == +1)
+  {
     daughterN = "proton";
     daughterRho = "rho0";
   }
-  else {
+  else
+  {
     daughterN = "neutron";
     daughterRho = "rho0";
   }
@@ -286,21 +314,27 @@ G4DecayTable* G4ExcitedNucleonConstructor::AddNRhoMode(G4DecayTable* decayTable,
 
   // -------------N rho+/- --------------
   // determine daughters
-  if (iIso3 == +1) {
+  if (iIso3 == +1)
+  {
     daughterN = "neutron";
-    if (!fAnti) {
+    if (!fAnti)
+    {
       daughterRho = "rho+";
     }
-    else {
+    else
+    {
       daughterRho = "rho-";
     }
   }
-  else {
+  else
+  {
     daughterN = "proton";
-    if (!fAnti) {
+    if (!fAnti)
+    {
       daughterRho = "rho-";
     }
-    else {
+    else
+    {
       daughterRho = "rho+";
     }
   }
@@ -330,12 +364,14 @@ G4DecayTable* G4ExcitedNucleonConstructor::AddN2PiMode(G4DecayTable* decayTable,
 
   // -------------N pi+ pi- --------------
   // determine daughters
-  if (iIso3 == +1) {
+  if (iIso3 == +1)
+  {
     daughterN = "proton";
     daughterPi1 = "pi+";
     daughterPi2 = "pi-";
   }
-  else {
+  else
+  {
     daughterN = "neutron";
     daughterPi1 = "pi+";
     daughterPi2 = "pi-";
@@ -349,12 +385,14 @@ G4DecayTable* G4ExcitedNucleonConstructor::AddN2PiMode(G4DecayTable* decayTable,
 
   // -------------N pi0 pi0 --------------
   // determine daughters
-  if (iIso3 == +1) {
+  if (iIso3 == +1)
+  {
     daughterN = "proton";
     daughterPi1 = "pi0";
     daughterPi2 = "pi0";
   }
-  else {
+  else
+  {
     daughterN = "neutron";
     daughterPi1 = "pi0";
     daughterPi2 = "pi0";
@@ -380,11 +418,13 @@ G4DecayTable* G4ExcitedNucleonConstructor::AddNStarPiMode(G4DecayTable* decayTab
 
   // ------------ N pi0 ------------
   // determine daughters
-  if (iIso3 == +1) {
+  if (iIso3 == +1)
+  {
     daughterN = "N(1440)+";
     daughterPi = "pi0";
   }
-  else {
+  else
+  {
     daughterN = "N(1440)0";
     daughterPi = "pi0";
   }
@@ -396,21 +436,27 @@ G4DecayTable* G4ExcitedNucleonConstructor::AddNStarPiMode(G4DecayTable* decayTab
 
   // -------------N pi +/- --------------
   // determine daughters
-  if (iIso3 == +1) {
+  if (iIso3 == +1)
+  {
     daughterN = "N(1440)0";
-    if (!fAnti) {
+    if (!fAnti)
+    {
       daughterPi = "pi+";
     }
-    else {
+    else
+    {
       daughterPi = "pi-";
     }
   }
-  else {
+  else
+  {
     daughterN = "N(1440)+";
-    if (!fAnti) {
+    if (!fAnti)
+    {
       daughterPi = "pi-";
     }
-    else {
+    else
+    {
       daughterPi = "pi+";
     }
   }
@@ -436,22 +482,28 @@ G4DecayTable* G4ExcitedNucleonConstructor::AddDeltaPiMode(G4DecayTable* decayTab
 
   // ------------ Delta pi+/- ------------
   // determine daughters
-  if (iIso3 == +1) {
+  if (iIso3 == +1)
+  {
     daughterDelta = "delta0";
-    if (!fAnti) {
+    if (!fAnti)
+    {
       daughterPi = "pi+";
     }
-    else {
+    else
+    {
       daughterPi = "pi-";
     }
     r = br / 6.0;
   }
-  else {
+  else
+  {
     daughterDelta = "delta+";
-    if (!fAnti) {
+    if (!fAnti)
+    {
       daughterPi = "pi-";
     }
-    else {
+    else
+    {
       daughterPi = "pi+";
     }
     r = br / 6.0;
@@ -464,22 +516,28 @@ G4DecayTable* G4ExcitedNucleonConstructor::AddDeltaPiMode(G4DecayTable* decayTab
 
   // ------------ Delta pi+/- ------------
   // determine daughters
-  if (iIso3 == +1) {
+  if (iIso3 == +1)
+  {
     daughterDelta = "delta++";
-    if (!fAnti) {
+    if (!fAnti)
+    {
       daughterPi = "pi-";
     }
-    else {
+    else
+    {
       daughterPi = "pi+";
     }
     r = br / 2.0;
   }
-  else {
+  else
+  {
     daughterDelta = "delta-";
-    if (!fAnti) {
+    if (!fAnti)
+    {
       daughterPi = "pi+";
     }
-    else {
+    else
+    {
       daughterPi = "pi-";
     }
     r = br / 2.0;
@@ -492,12 +550,14 @@ G4DecayTable* G4ExcitedNucleonConstructor::AddDeltaPiMode(G4DecayTable* decayTab
 
   // ------------ Delta pi0 ------------
   // determine daughters
-  if (iIso3 == +1) {
+  if (iIso3 == +1)
+  {
     daughterDelta = "delta+";
     daughterPi = "pi0";
     r = br / 3.0;
   }
-  else {
+  else
+  {
     daughterDelta = "delta0";
     daughterPi = "pi0";
     r = br / 3.0;
@@ -522,19 +582,25 @@ G4DecayTable* G4ExcitedNucleonConstructor::AddLambdaKMode(G4DecayTable* decayTab
 
   // ------------ N pi0 ------------
   // determine daughters
-  if (iIso3 == +1) {
-    if (!fAnti) {
+  if (iIso3 == +1)
+  {
+    if (!fAnti)
+    {
       daughterK = "kaon+";
     }
-    else {
+    else
+    {
       daughterK = "kaon-";
     }
   }
-  else {
-    if (!fAnti) {
+  else
+  {
+    if (!fAnti)
+    {
       daughterK = "kaon0";
     }
-    else {
+    else
+    {
       daughterK = "anti_kaon0";
     }
   }

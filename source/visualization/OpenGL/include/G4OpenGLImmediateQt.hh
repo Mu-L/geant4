@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // OpenGLImmediateQt graphics system factory.
 
 #ifndef G4OPENGLIMMEDIATEQT_HH
@@ -33,11 +33,13 @@
 
 #include "G4OpenGLQt.hh"
 
-class G4OpenGLImmediateQt: public G4OpenGLQt {
-public:
-  G4OpenGLImmediateQt ();
-  G4VSceneHandler* CreateSceneHandler (const G4String& name = "");
-  G4VViewer*  CreateViewer  (G4VSceneHandler&, const G4String& name = "");
+class G4OpenGLImmediateQt : public G4OpenGLQt
+{
+  public:
+
+    G4OpenGLImmediateQt();
+    G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
+    G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "");
 };
 
 #endif

@@ -25,78 +25,82 @@
 //
 //  MR - 04/04/2012
 //  Based on G4DNACrossSectionDataSet
-// 
+//
 
-#ifndef  G4MICROELECCROSSSECTIONDATASET_HH
-#define  G4MICROELECCROSSSECTIONDATASET_HH 1
-
-#include <CLHEP/Units/SystemOfUnits.h>
+#ifndef G4MICROELECCROSSSECTIONDATASET_HH
+#define G4MICROELECCROSSSECTIONDATASET_HH
 
 #include "G4ShellEMDataSet.hh"
 
+#include <CLHEP/Units/SystemOfUnits.h>
+
 class G4MicroElecCrossSectionDataSet : public G4VEMDataSet
-{ 
+{
+  public:
 
-public:
-  explicit G4MicroElecCrossSectionDataSet(G4VDataSetAlgorithm* algo, 
-			   G4double xUnit=CLHEP::MeV, 
-			   G4double dataUnit=CLHEP::barn);
-  ~G4MicroElecCrossSectionDataSet();
+    explicit G4MicroElecCrossSectionDataSet(G4VDataSetAlgorithm* algo, G4double xUnit = CLHEP::MeV,
+                                            G4double dataUnit = CLHEP::barn);
+    ~G4MicroElecCrossSectionDataSet();
 
-  G4double FindValue(G4double e, G4int componentId=0) const override;
-  void PrintData(void) const override;
+    G4double FindValue(G4double e, G4int componentId = 0) const override;
+    void PrintData(void) const override;
 
-  const G4VEMDataSet*  GetComponent(G4int componentId) const override
-  { return components[componentId]; }
+    const G4VEMDataSet* GetComponent(G4int componentId) const override
+    {
+      return components[componentId];
+    }
 
-  void AddComponent(G4VEMDataSet* dataSet) override
-  { components.push_back(dataSet); }
+    void AddComponent(G4VEMDataSet* dataSet) override { components.push_back(dataSet); }
 
-  size_t NumberOfComponents(void) const override
-  { return components.size(); }
+    size_t NumberOfComponents(void) const override { return components.size(); }
 
-  const G4DataVector& GetEnergies(G4int componentId) const override
-  { return GetComponent(componentId)->GetEnergies(0); }
+    const G4DataVector& GetEnergies(G4int componentId) const override
+    {
+      return GetComponent(componentId)->GetEnergies(0);
+    }
 
-  const G4DataVector& GetData(G4int componentId) const override
-  { return GetComponent(componentId)->GetData(0); }
+    const G4DataVector& GetData(G4int componentId) const override
+    {
+      return GetComponent(componentId)->GetData(0);
+    }
 
-  const G4DataVector& GetLogEnergies(G4int componentId) const override
-  { return GetComponent(componentId)->GetLogEnergies(0); }
+    const G4DataVector& GetLogEnergies(G4int componentId) const override
+    {
+      return GetComponent(componentId)->GetLogEnergies(0);
+    }
 
-  const G4DataVector& GetLogData(G4int componentId) const override
-  { return GetComponent(componentId)->GetLogData(0); }
+    const G4DataVector& GetLogData(G4int componentId) const override
+    {
+      return GetComponent(componentId)->GetLogData(0);
+    }
 
-  void SetEnergiesData(G4DataVector* x, G4DataVector* values, 
-		       G4int componentId) override;
+    void SetEnergiesData(G4DataVector* x, G4DataVector* values, G4int componentId) override;
 
-  void SetLogEnergiesData(G4DataVector* x,
-			  G4DataVector* values,
-			  G4DataVector* log_x, 
-			  G4DataVector* log_values,
-			  G4int componentId) override;
+    void SetLogEnergiesData(G4DataVector* x, G4DataVector* values, G4DataVector* log_x,
+                            G4DataVector* log_values, G4int componentId) override;
 
-  G4bool LoadData(const G4String & argFileName) override;
-  G4bool LoadNonLogData(const G4String & argFileName) override;
+    G4bool LoadData(const G4String& argFileName) override;
+    G4bool LoadNonLogData(const G4String& argFileName) override;
 
-  G4bool SaveData(const G4String & argFileName) const override;
- 
-  G4double RandomSelect(G4int /*componentId */) const override { return -1.; };
+    G4bool SaveData(const G4String& argFileName) const override;
 
-  G4MicroElecCrossSectionDataSet(const G4MicroElecCrossSectionDataSet & copy) = delete;
-  G4MicroElecCrossSectionDataSet& operator=(const G4MicroElecCrossSectionDataSet & right) = delete;
+    G4double RandomSelect(G4int /*componentId */) const override { return -1.; };
 
-private:
-  G4String FullFileName(const G4String & argFileName) const;
-  G4double GetUnitEnergies() const { return unitEnergies; }
-  G4double GetUnitData() const { return unitData; }
-  const G4VDataSetAlgorithm* GetAlgorithm() const { return algorithm; } 
-  void CleanUpComponents();
+    G4MicroElecCrossSectionDataSet(const G4MicroElecCrossSectionDataSet& copy) = delete;
+    G4MicroElecCrossSectionDataSet& operator=(const G4MicroElecCrossSectionDataSet& right) = delete;
 
-  std::vector<G4VEMDataSet*> components;          // Owned pointers
-  G4VDataSetAlgorithm* algorithm;           // Owned pointer 
-  
-  G4double unitEnergies;
-  G4double unitData; 
+  private:
+
+    G4String FullFileName(const G4String& argFileName) const;
+    G4double GetUnitEnergies() const { return unitEnergies; }
+    G4double GetUnitData() const { return unitData; }
+    const G4VDataSetAlgorithm* GetAlgorithm() const { return algorithm; }
+    void CleanUpComponents();
+
+    std::vector<G4VEMDataSet*> components;  // Owned pointers
+    G4VDataSetAlgorithm* algorithm;  // Owned pointer
+
+    G4double unitEnergies;
+    G4double unitData;
 };
 #endif /* G4MicroElecCrossSectionDataSet_HH */

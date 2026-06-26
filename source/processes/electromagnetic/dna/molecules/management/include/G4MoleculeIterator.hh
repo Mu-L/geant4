@@ -30,8 +30,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -40,91 +40,80 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#ifndef G4MOLECULEITERATOR_HH_
-#define G4MOLECULEITERATOR_HH_
+#ifndef G4MOLECULEITERATOR_HH
+#define G4MOLECULEITERATOR_HH
+
+#include "globals.hh"
 
 #include <map>
-#include "globals.hh"
 
 template<typename MOLECULE>
 class G4MoleculeIterator
 {
-protected:
-  using MAP = std::map<G4String, MOLECULE *>;
-  MAP* fMap;
-  G4bool fDefined;
-  typename MAP::iterator fIt;
+  protected:
 
-public:
-  G4MoleculeIterator(MAP& _map) :
-      fMap(&_map)
-  {
-    fDefined = false;
-  }
+    using MAP = std::map<G4String, MOLECULE*>;
+    MAP* fMap;
+    G4bool fDefined;
+    typename MAP::iterator fIt;
 
-  virtual ~G4MoleculeIterator()
-  = default;
+  public:
 
-  G4MoleculeIterator(const G4MoleculeIterator& right)
-  {
-    fMap = right.fMap;
-    fDefined = right.fDefined;
-    fIt = right.fIt;
-  }
+    G4MoleculeIterator(MAP& _map) : fMap(&_map) { fDefined = false; }
 
-  G4MoleculeIterator& operator=(const G4MoleculeIterator& right)
-  {
-    if (this == &right) return *this;
-    fMap = right.fMap;
-    fDefined = right.fDefined;
-    fIt = right.fIt;
-    return *this;
-  }
+    virtual ~G4MoleculeIterator() = default;
 
-  G4bool operator++(int)
-  {
-    if (!fDefined) return false;
-    fIt++;
-    return static_cast<G4bool>(fIt != fMap->end());
-  }
-
-  G4bool operator++()
-  {
-    if (!fDefined) return false;
-    fIt++;
-    return static_cast<G4bool>(fIt != fMap->end());
-  }
-
-  void reset()
-  {
-    fDefined = false;
-  }
-
-  G4bool operator()()
-  {
-    if (!fDefined)
+    G4MoleculeIterator(const G4MoleculeIterator& right)
     {
-      fDefined = true;
-      fIt = fMap->begin();
-      return true;
+      fMap = right.fMap;
+      fDefined = right.fDefined;
+      fIt = right.fIt;
     }
-    
-    fIt++;
-   
-    return static_cast<G4bool>(fIt != fMap->end());
-  }
 
-  const G4String& Name()
-  {
-    return fIt->first;
-  }
+    G4MoleculeIterator& operator=(const G4MoleculeIterator& right)
+    {
+      if (this == &right) return *this;
+      fMap = right.fMap;
+      fDefined = right.fDefined;
+      fIt = right.fIt;
+      return *this;
+    }
 
-  MOLECULE* value()
-  {
-    return fIt->second;
-  }
+    G4bool operator++(int)
+    {
+      if (!fDefined) return false;
+      fIt++;
+      return static_cast<G4bool>(fIt != fMap->end());
+    }
+
+    G4bool operator++()
+    {
+      if (!fDefined) return false;
+      fIt++;
+      return static_cast<G4bool>(fIt != fMap->end());
+    }
+
+    void reset() { fDefined = false; }
+
+    G4bool operator()()
+    {
+      if (!fDefined)
+      {
+        fDefined = true;
+        fIt = fMap->begin();
+        return true;
+      }
+
+      fIt++;
+
+      return static_cast<G4bool>(fIt != fMap->end());
+    }
+
+    const G4String& Name() { return fIt->first; }
+
+    MOLECULE* value() { return fIt->second; }
 };
 
 #endif /* G4MOLECULEITERATOR_HH_ */

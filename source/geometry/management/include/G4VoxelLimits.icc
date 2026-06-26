@@ -22,124 +22,107 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // G4VoxelLimits inline implementation
 //
 // Author: Paul Kent (CERN), 13.07.1995
 // --------------------------------------------------------------------
 
-inline
-G4double G4VoxelLimits::GetMaxXExtent() const
+inline G4double G4VoxelLimits::GetMaxXExtent() const
 {
   return fxAxisMax;
 }
 
-inline
-G4double G4VoxelLimits::GetMaxYExtent() const
+inline G4double G4VoxelLimits::GetMaxYExtent() const
 {
   return fyAxisMax;
 }
 
-inline
-G4double G4VoxelLimits::GetMaxZExtent() const
+inline G4double G4VoxelLimits::GetMaxZExtent() const
 {
   return fzAxisMax;
 }
 
-inline
-G4double G4VoxelLimits::GetMinXExtent() const
+inline G4double G4VoxelLimits::GetMinXExtent() const
 {
   return fxAxisMin;
 }
 
-inline
-G4double G4VoxelLimits::GetMinYExtent() const
+inline G4double G4VoxelLimits::GetMinYExtent() const
 {
   return fyAxisMin;
 }
 
-inline
-G4double G4VoxelLimits::GetMinZExtent() const
+inline G4double G4VoxelLimits::GetMinZExtent() const
 {
   return fzAxisMin;
 }
 
-inline
-G4double G4VoxelLimits::GetMaxExtent(const EAxis pAxis) const
+inline G4double G4VoxelLimits::GetMaxExtent(const EAxis pAxis) const
 {
-  if (pAxis==kXAxis)
+  if (pAxis == kXAxis)
   {
     return GetMaxXExtent();
   }
-  if (pAxis==kYAxis)
+  if (pAxis == kYAxis)
   {
     return GetMaxYExtent();
   }
-  assert(pAxis==kZAxis);
+  assert(pAxis == kZAxis);
   return GetMaxZExtent();
 }
 
-inline
-G4double G4VoxelLimits::GetMinExtent(const EAxis pAxis) const
+inline G4double G4VoxelLimits::GetMinExtent(const EAxis pAxis) const
 {
-  if (pAxis==kXAxis)
+  if (pAxis == kXAxis)
   {
     return GetMinXExtent();
   }
-  if (pAxis==kYAxis)
+  if (pAxis == kYAxis)
   {
     return GetMinYExtent();
   }
-  assert(pAxis==kZAxis);
+  assert(pAxis == kZAxis);
   return GetMinZExtent();
 }
 
-inline
-G4bool G4VoxelLimits::IsXLimited() const
+inline G4bool G4VoxelLimits::IsXLimited() const
 {
-  return fxAxisMin!=-kInfinity||fxAxisMax!=kInfinity;
+  return fxAxisMin != -kInfinity || fxAxisMax != kInfinity;
 }
 
-inline
-G4bool G4VoxelLimits::IsYLimited() const
+inline G4bool G4VoxelLimits::IsYLimited() const
 {
-  return fyAxisMin!=-kInfinity||fyAxisMax!=kInfinity;
+  return fyAxisMin != -kInfinity || fyAxisMax != kInfinity;
 }
 
-inline
-G4bool G4VoxelLimits::IsZLimited() const
+inline G4bool G4VoxelLimits::IsZLimited() const
 {
-  return fzAxisMin!=-kInfinity||fzAxisMax!=kInfinity;
+  return fzAxisMin != -kInfinity || fzAxisMax != kInfinity;
 }
 
-inline
-G4bool G4VoxelLimits::IsLimited() const
+inline G4bool G4VoxelLimits::IsLimited() const
 {
-  return (IsXLimited()||IsYLimited()||IsZLimited());
+  return (IsXLimited() || IsYLimited() || IsZLimited());
 }
 
-inline
-G4bool G4VoxelLimits::IsLimited(const EAxis pAxis) const
+inline G4bool G4VoxelLimits::IsLimited(const EAxis pAxis) const
 {
-  if (pAxis==kXAxis)
+  if (pAxis == kXAxis)
   {
     return IsXLimited();
   }
-  if (pAxis==kYAxis)
+  if (pAxis == kYAxis)
   {
     return IsYLimited();
   }
-  assert(pAxis==kZAxis);
+  assert(pAxis == kZAxis);
   return IsZLimited();
 }
 
-inline
-G4bool G4VoxelLimits::Inside(const G4ThreeVector& pVec) const
+inline G4bool G4VoxelLimits::Inside(const G4ThreeVector& pVec) const
 {
-  return (GetMinXExtent()<=pVec.x()) &&
-	  (GetMaxXExtent()>=pVec.x()) &&
-	  (GetMinYExtent()<=pVec.y()) &&
-	  (GetMaxYExtent()>=pVec.y()) &&
-	  (GetMinZExtent()<=pVec.z()) &&
-	  (GetMaxZExtent()>=pVec.z());
+  return (GetMinXExtent() <= pVec.x()) && (GetMaxXExtent() >= pVec.x())
+         && (GetMinYExtent() <= pVec.y()) && (GetMaxYExtent() >= pVec.y())
+         && (GetMinZExtent() <= pVec.z()) && (GetMaxZExtent() >= pVec.z());
 }

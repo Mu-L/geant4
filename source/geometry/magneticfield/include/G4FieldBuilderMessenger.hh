@@ -47,6 +47,7 @@ class G4UIcmdWithAnInteger;
 /**
  * @brief G4FieldBuilderMessenger is messenger class that defines
  * commands for G4FieldBuilder.
+ * @ingroup geometry_magneticfield
  */
 
 class G4FieldBuilderMessenger : public G4UImessenger
@@ -82,7 +83,7 @@ class G4FieldBuilderMessenger : public G4UImessenger
     // Commands data members
 
     /** Command: fieldType. */
-    G4UIcmdWithAnInteger* fVerboseLevelCmd = nullptr; 
+    G4UIcmdWithAnInteger* fVerboseLevelCmd = nullptr;
 };
 
 #endif

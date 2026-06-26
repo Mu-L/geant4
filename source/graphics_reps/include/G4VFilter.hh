@@ -31,63 +31,60 @@
 #ifndef G4VFILTER_HH
 #define G4VFILTER_HH
 
-#include "globals.hh"
 #include "G4String.hh"
+#include "globals.hh"
+
 #include <iostream>
 
-template <typename T>
-class G4VFilter {
+template<typename T>
+class G4VFilter
+{
+  public:  // With description
 
-public: // With description
+    typedef T Type;
 
-  typedef T Type;
+    // Construct with filter name
+    G4VFilter(const G4String& name);
 
-  // Construct with filter name
-  G4VFilter(const G4String& name);
+    virtual ~G4VFilter();
 
-  virtual ~G4VFilter();
-  
-  // Filter method
-  virtual G4bool Accept(const T&) const = 0;
+    // Filter method
+    virtual G4bool Accept(const T&) const = 0;
 
-  // Print configuration
-  virtual void PrintAll(std::ostream& ostr) const = 0;
-  
-  // Reset 
-  virtual void Reset() = 0;
+    // Print configuration
+    virtual void PrintAll(std::ostream& ostr) const = 0;
 
-  // Filter name
-  G4String Name() const;
-  G4String GetName() const;
+    // Reset
+    virtual void Reset() = 0;
 
-private:
+    // Filter name
+    G4String Name() const;
+    G4String GetName() const;
 
-  // Data member
-  G4String fName;
+  private:
 
+    // Data member
+    G4String fName;
 };
 
-template <typename T>
-G4VFilter<T>::G4VFilter(const G4String& name)
-  :fName(name) 
+template<typename T>
+G4VFilter<T>::G4VFilter(const G4String& name) : fName(name)
 {}
 
-template <typename T>
-G4VFilter<T>::~G4VFilter() {}
+template<typename T>
+G4VFilter<T>::~G4VFilter()
+{}
 
-template <typename T>
-G4String 
-G4VFilter<T>::Name() const 
+template<typename T>
+G4String G4VFilter<T>::Name() const
 {
   return fName;
 }
 
-template <typename T>
-G4String 
-G4VFilter<T>::GetName() const 
+template<typename T>
+G4String G4VFilter<T>::GetName() const
 {
   return Name();
 }
 
 #endif
-

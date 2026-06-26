@@ -25,52 +25,42 @@
 //
 //
 //
-// 
+//
 // John Allison  15th July 2012
 // Model that knows how to draw an arrow.
 
 #include "G4ArrowModel.hh"
 
-#include "G4PhysicalConstants.hh"
-#include "G4VGraphicsScene.hh"
-#include "G4VisAttributes.hh"
-#include "G4Tubs.hh"
-#include "G4Tet.hh"
-#include "G4Polyhedron.hh"
-#include "G4Vector3D.hh"
-#include "G4Point3D.hh"
-#include "G4Transform3D.hh"
 #include "G4GeometryTolerance.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4Point3D.hh"
+#include "G4Polyhedron.hh"
+#include "G4Tet.hh"
+#include "G4Transform3D.hh"
+#include "G4Tubs.hh"
+#include "G4VGraphicsScene.hh"
+#include "G4Vector3D.hh"
+#include "G4VisAttributes.hh"
 
 #include <cmath>
 
-G4ArrowModel::~G4ArrowModel ()
+G4ArrowModel::~G4ArrowModel()
 {
   delete fpHeadPolyhedron;
   delete fpShaftPolyhedron;
 }
 
-G4ArrowModel::G4ArrowModel
-(G4double x1, G4double y1, G4double z1,
- G4double x2, G4double y2, G4double z2,
- G4double width, const G4Colour& colour,
- const G4String& description,
- G4int lineSegmentsPerCircle,
- const G4Transform3D& transform)
-: fpShaftPolyhedron(nullptr)
-, fpHeadPolyhedron(nullptr)
-, fTransform(transform)
+G4ArrowModel::G4ArrowModel(G4double x1, G4double y1, G4double z1, G4double x2, G4double y2,
+                           G4double z2, G4double width, const G4Colour& colour,
+                           const G4String& description, G4int lineSegmentsPerCircle,
+                           const G4Transform3D& transform)
+  : fpShaftPolyhedron(nullptr), fpHeadPolyhedron(nullptr), fTransform(transform)
 {
   fType = "G4ArrowModel";
   fGlobalTag = fType;
   fGlobalDescription = fType + ": " + description;
-  fExtent = G4VisExtent
-    (std::min(x1,x2),
-     std::max(x1,x2),
-     std::min(y1,y2),
-     std::max(y1,y2),
-     std::min(z1,z2),
-     std::max(z1,z2));
+  fExtent = G4VisExtent(std::min(x1, x2), std::max(x1, x2), std::min(y1, y2), std::max(y1, y2),
+                        std::min(z1, z2), std::max(z1, z2));
 
   // Force number of line segments per circle (aka number of rotation steps)
   G4int tempN = G4Polyhedron::GetNumberOfRotationSteps();
@@ -79,48 +69,52 @@ G4ArrowModel::G4ArrowModel
   // Make a cylinder slightly shorter than the arrow length so that it
   // doesn't stick out of the head.
   const G4double tolerance = G4GeometryTolerance::GetInstance()->GetRadialTolerance();
-  
-  G4double totalLength = std::hypot(x2-x1, y2-y1, z2-z1);
+
+  G4double totalLength = std::hypot(x2 - x1, y2 - y1, z2 - z1);
   if (totalLength < tolerance)
-    {totalLength = tolerance;}
-  
-  G4double shaftRadius = width/6.;
+  {
+    totalLength = tolerance;
+  }
+
+  G4double shaftRadius = width / 6.;
   if (shaftRadius < tolerance)
-    {shaftRadius = tolerance;}
+  {
+    shaftRadius = tolerance;
+  }
 
   // case 1 - arrow length >> width -> arrow head is width and 1.5x width tall
   // case 2 - arrow length <  width -> arrow head is made to be 0.5x length
-  G4double arrowLength = std::min(1.5*width, 0.5*totalLength);
+  G4double arrowLength = std::min(1.5 * width, 0.5 * totalLength);
 
   G4double shaftLength = totalLength - arrowLength;
-  if (shaftLength < 2*tolerance)
-    {shaftLength = 2*tolerance;}
+  if (shaftLength < 2 * tolerance)
+  {
+    shaftLength = 2 * tolerance;
+  }
 
-  const G4Tubs shaft("shaft",0.,shaftRadius,0.5*shaftLength,0.,twopi);
+  const G4Tubs shaft("shaft", 0., shaftRadius, 0.5 * shaftLength, 0., twopi);
   fpShaftPolyhedron = shaft.CreatePolyhedron();
   // translate the polyhedron down w.r.t. the centre of the whole arrow
   if (fpShaftPolyhedron)
-    {fpShaftPolyhedron->Transform(G4Translate3D(0,0,-0.5*arrowLength));}
+  {
+    fpShaftPolyhedron->Transform(G4Translate3D(0, 0, -0.5 * arrowLength));
+  }
 
   // Locate the head at +halfShaftLength.
-  const G4double zHi  = 0.5*totalLength;
+  const G4double zHi = 0.5 * totalLength;
   const G4double zLow = zHi - arrowLength;
-  const G4double rExt = 0.5*width;
-  const G4double xExt = std::sqrt(3.)*rExt/2.;
-  const G4Tet head("head",
-                   G4ThreeVector(0.,0.,zHi),
-                   G4ThreeVector(0.,rExt,zLow),
-                   G4ThreeVector(xExt,-rExt/2.,zLow),
-                   G4ThreeVector(-xExt,-rExt/2.,zLow));
+  const G4double rExt = 0.5 * width;
+  const G4double xExt = std::sqrt(3.) * rExt / 2.;
+  const G4Tet head("head", G4ThreeVector(0., 0., zHi), G4ThreeVector(0., rExt, zLow),
+                   G4ThreeVector(xExt, -rExt / 2., zLow), G4ThreeVector(-xExt, -rExt / 2., zLow));
   fpHeadPolyhedron = head.CreatePolyhedron();
 
   // Transform to position
-  const G4Vector3D arrowDirection = G4Vector3D(x2-x1,y2-y1,z2-z1).unit();
+  const G4Vector3D arrowDirection = G4Vector3D(x2 - x1, y2 - y1, z2 - z1).unit();
   const G4double theta = arrowDirection.theta();
   const G4double phi = arrowDirection.phi();
-  const G4Point3D arrowCentre(0.5*(x1+x2),0.5*(y1+y2),0.5*(z1+z2));
-  const G4Transform3D tr =
-    G4Translate3D(arrowCentre) * G4RotateZ3D(phi) * G4RotateY3D(theta);
+  const G4Point3D arrowCentre(0.5 * (x1 + x2), 0.5 * (y1 + y2), 0.5 * (z1 + z2));
+  const G4Transform3D tr = G4Translate3D(arrowCentre) * G4RotateZ3D(phi) * G4RotateY3D(theta);
   if (fpShaftPolyhedron) fpShaftPolyhedron->Transform(tr);
   if (fpHeadPolyhedron) fpHeadPolyhedron->Transform(tr);
 
@@ -134,9 +128,10 @@ G4ArrowModel::G4ArrowModel
   G4Polyhedron::SetNumberOfRotationSteps(tempN);
 }
 
-void G4ArrowModel::DescribeYourselfTo (G4VGraphicsScene& sceneHandler)
+void G4ArrowModel::DescribeYourselfTo(G4VGraphicsScene& sceneHandler)
 {
-  if (fpShaftPolyhedron && fpHeadPolyhedron) {
+  if (fpShaftPolyhedron && fpHeadPolyhedron)
+  {
     sceneHandler.BeginPrimitives(fTransform);
     sceneHandler.AddPrimitive(*fpShaftPolyhedron);
     sceneHandler.AddPrimitive(*fpHeadPolyhedron);

@@ -48,11 +48,11 @@
 #ifndef G4RANDOMDIR_HH
 #define G4RANDOMDIR_HH
 
-#include <CLHEP/Units/PhysicalConstants.h>
-
 #include "G4ThreeVector.hh"
 #include "Randomize.hh"
 #include "globals.hh"
+
+#include <CLHEP/Units/PhysicalConstants.h>
 
 // G.Marsaglia (1972) method
 inline G4ThreeVector G4RandomDirection()
@@ -63,14 +63,14 @@ inline G4ThreeVector G4RandomDirection()
     u = 2. * G4UniformRand() - 1.;
     v = 2. * G4UniformRand() - 1.;
     b = u * u + v * v;
-  } while(b > 1.);
+  } while (b > 1.);
   G4double a = 2. * std::sqrt(1. - b);
   return G4ThreeVector(a * u, a * v, 2. * b - 1.);
 }
 
 inline G4ThreeVector G4RandomDirection(G4double cosTheta)
 {
-  G4double z   = (1. - cosTheta) * G4UniformRand() + cosTheta;
+  G4double z = (1. - cosTheta) * G4UniformRand() + cosTheta;
   G4double rho = std::sqrt((1. + z) * (1. - z));
   G4double phi = CLHEP::twopi * G4UniformRand();
   return G4ThreeVector(rho * std::cos(phi), rho * std::sin(phi), z);

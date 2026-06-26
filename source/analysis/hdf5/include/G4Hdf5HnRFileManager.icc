@@ -28,59 +28,55 @@
 
 #include "G4AnalysisUtilities.hh"
 
-#include "toolx/hdf5/header"
-#include "toolx/hdf5/h2file"
 #include "tools/histo/h1d"
 #include "tools/histo/h2d"
 #include "tools/histo/h3d"
 #include "tools/histo/p1d"
 #include "tools/histo/p2d"
+#include "toolx/hdf5/h2file"
+#include "toolx/hdf5/header"
 
 //_____________________________________________________________________________
-template <typename HT>
-inline
-G4bool G4Hdf5HnRFileManager<HT>::ReadT(
-  hid_t directory, const G4String& htName, HT*& ht)
+template<typename HT>
+inline G4bool G4Hdf5HnRFileManager<HT>::ReadT(hid_t directory, const G4String& htName, HT*& ht)
 {
   return toolx::hdf5::read_histo(G4cout, directory, htName, ht);
 }
 
 //_____________________________________________________________________________
-template <>
-inline
-G4bool G4Hdf5HnRFileManager<tools::histo::p1d>::ReadT(
-  hid_t directory, const G4String& htName, tools::histo::p1d*& ht)
+template<>
+inline G4bool G4Hdf5HnRFileManager<tools::histo::p1d>::ReadT(hid_t directory,
+                                                             const G4String& htName,
+                                                             tools::histo::p1d*& ht)
 {
   return toolx::hdf5::read_profile(G4cout, directory, htName, ht);
 }
 
 //_____________________________________________________________________________
-template <>
-inline
-G4bool G4Hdf5HnRFileManager<tools::histo::p2d>::ReadT(
-  hid_t directory, const G4String& htName, tools::histo::p2d*& ht)
+template<>
+inline G4bool G4Hdf5HnRFileManager<tools::histo::p2d>::ReadT(hid_t directory,
+                                                             const G4String& htName,
+                                                             tools::histo::p2d*& ht)
 {
   return toolx::hdf5::read_profile(G4cout, directory, htName, ht);
 }
 
 //_____________________________________________________________________________
-template <typename HT>
-inline
-HT* G4Hdf5HnRFileManager<HT>::Read(
-  const G4String& htName, const G4String& fileName, const G4String& dirName,
-  G4bool /*isUserFileName*/)
+template<typename HT>
+inline HT* G4Hdf5HnRFileManager<HT>::Read(const G4String& htName, const G4String& fileName,
+                                          const G4String& dirName, G4bool /*isUserFileName*/)
 {
   // Get directory
   auto directory = fRFileManager->GetHistoRDirectory(fileName, dirName, false);
-  if ( directory < 0 ) return nullptr;
+  if (directory < 0) return nullptr;
 
   // Read hn
   HT* ht = nullptr;
-  if ( ! ReadT(directory, htName, ht) ) {
-    G4Analysis::Warn(
-      "Streaming " + htName + " from file " + fileName + " failed.",
-      fkClass, "ReadTImpl");
-    return  nullptr;
+  if (!ReadT(directory, htName, ht))
+  {
+    G4Analysis::Warn("Streaming " + htName + " from file " + fileName + " failed.", fkClass,
+                     "ReadTImpl");
+    return nullptr;
   }
 
   return ht;

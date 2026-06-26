@@ -33,7 +33,6 @@
 //
 // History
 //   October 18th, 2021 : first implementation
-//
 // ********************************************************************
 //
 /// \file PhysicsConfigurator.cc
@@ -85,6 +84,7 @@ G4VModularPhysicsList* PhysicsConfigurator::Construct(G4String physName)
   g4plr->AddPhysicsExtension("OPTICAL", "G4OpticalPhysics");
   g4plr->AddPhysicsExtension("STEPLIMIT", "G4StepLimiterPhysics");
   g4plr->AddPhysicsExtension("NEUTRONLIMIT", "G4NeutronTrackingCut");
+
   if(verbose)
   {
     g4pcr->PrintAvailablePhysicsConstructors();

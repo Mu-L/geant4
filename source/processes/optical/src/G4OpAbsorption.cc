@@ -46,18 +46,18 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-#include "G4ios.hh"
+#include "G4OpAbsorption.hh"
+
 #include "G4OpProcessSubType.hh"
 #include "G4OpticalParameters.hh"
-
-#include "G4OpAbsorption.hh"
+#include "G4ios.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 G4OpAbsorption::G4OpAbsorption(const G4String& processName, G4ProcessType type)
   : G4VDiscreteProcess(processName, type)
 {
   Initialise();
-  if(verboseLevel > 0)
+  if (verboseLevel > 0)
   {
     G4cout << GetProcessName() << " is created " << G4endl;
   }
@@ -80,18 +80,17 @@ void G4OpAbsorption::Initialise()
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-G4VParticleChange* G4OpAbsorption::PostStepDoIt(const G4Track& aTrack,
-                                                const G4Step& aStep)
+G4VParticleChange* G4OpAbsorption::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 {
   aParticleChange.Initialize(aTrack);
 
   const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
-  G4double thePhotonMomentum         = aParticle->GetTotalMomentum();
+  G4double thePhotonMomentum = aParticle->GetTotalMomentum();
 
   aParticleChange.ProposeLocalEnergyDeposit(thePhotonMomentum);
   aParticleChange.ProposeTrackStatus(fStopAndKill);
 
-  if(verboseLevel > 1)
+  if (verboseLevel > 1)
   {
     G4cout << "\n** OpAbsorption: Photon absorbed! **" << G4endl;
   }
@@ -99,21 +98,18 @@ G4VParticleChange* G4OpAbsorption::PostStepDoIt(const G4Track& aTrack,
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-G4double G4OpAbsorption::GetMeanFreePath(const G4Track& aTrack, G4double,
-                                         G4ForceCondition*)
+G4double G4OpAbsorption::GetMeanFreePath(const G4Track& aTrack, G4double, G4ForceCondition*)
 {
   const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
-  G4MaterialPropertiesTable* MPT =
-    aTrack.GetMaterial()->GetMaterialPropertiesTable();
+  G4MaterialPropertiesTable* MPT = aTrack.GetMaterial()->GetMaterialPropertiesTable();
   G4double attLength = DBL_MAX;
 
-  if(MPT)
+  if (MPT)
   {
     G4MaterialPropertyVector* attVector = MPT->GetProperty(kABSLENGTH);
-    if(attVector)
+    if (attVector)
     {
-      attLength =
-        attVector->Value(aParticle->GetTotalMomentum(), idx_absorption);
+      attLength = attVector->Value(aParticle->GetTotalMomentum(), idx_absorption);
     }
   }
 

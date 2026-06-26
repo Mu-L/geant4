@@ -26,19 +26,21 @@
 
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
-#ifndef G4TFileManager_h
-#define G4TFileManager_h 1
+#ifndef G4TFILEMANAGER_HH
+#define G4TFILEMANAGER_HH
 
+#include "G4AnalysisManagerState.hh"
 #include "G4TFileInformation.hh"
 
-#include <vector>
 #include <memory>
 #include <string_view>
+#include <vector>
 
-template <typename FT>
+template<typename FT>
 class G4TFileManager
 {
   public:
+
     explicit G4TFileManager(const G4AnalysisManagerState& state);
     G4TFileManager() = delete;
     virtual ~G4TFileManager();
@@ -62,31 +64,33 @@ class G4TFileManager
     void ClearData();
 
   protected:
+
     // Methods to be implemented per file type manipulate file
     virtual std::shared_ptr<FT> CreateFileImpl(const G4String& fileName) = 0;
     virtual G4bool WriteFileImpl(std::shared_ptr<FT> file) = 0;
     virtual G4bool CloseFileImpl(std::shared_ptr<FT> file) = 0;
 
   private:
+
     // Methods
-    void FileNotFoundWarning(const G4String& fileName,
-          std::string_view functionName) const;
+    void FileNotFoundWarning(const G4String& fileName, std::string_view functionName) const;
     G4TFileInformation<FT>* GetFileInfoInFunction(const G4String& fileName,
-      std::string_view functionName, G4bool warn = true) const;
-    std::shared_ptr<FT> GetFileInFunction(const G4String& fileName,
-      std::string_view functionName, G4bool warn = true) const;
+                                                  std::string_view functionName,
+                                                  G4bool warn = true) const;
+    std::shared_ptr<FT> GetFileInFunction(const G4String& fileName, std::string_view functionName,
+                                          G4bool warn = true) const;
 
     G4bool WriteTFile(std::shared_ptr<FT> file, const G4String& fileName);
     G4bool CloseTFile(std::shared_ptr<FT> file, const G4String& fileName);
     G4bool DeleteEmptyFile(const G4String& fileName);
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4TFileManager<FT>" };
+    static constexpr std::string_view fkClass{"G4TFileManager<FT>"};
 
     // Data members
     const G4AnalysisManagerState& fAMState;
     std::map<G4String, G4TFileInformation<FT>*> fFileMap;
- };
+};
 
 #include "G4TFileManager.icc"
 

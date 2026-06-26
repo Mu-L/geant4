@@ -6,12 +6,22 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-06-15 Gabriele Cosmo (materials-V11-03-06)
+## 2026-06-19 Ben Morgan (materials-V11-04-03)
+- Apply clang-format to all C++ files.
+
+## 2026-06-15 Gabriele Cosmo (materials-V11-04-02)
 - In G4NistManager, fixed implementation of SetDensityEffectCalculatorFlag(..)
   and removed redundant unused vectors data members for elements and materials.
   Addressing problem report #2739.
 - Added explicitly deleted copy constructor and assignment operator for
   G4NistManager. Addressing problem report #2738.
+
+## 2026-02-05 Vladimir Ivanchenko (materials-V11-04-01)
+- G4NistMaterialBuilder - added a new material "G4_BlackBody", which is
+  needed for simulation of the Compton process on black body photons 
+
+## 2026-01-09 Ben Morgan (materials-V11-04-00)
+- Update header guards to style/format required by Geant4 coding guidelines.
 
 ## 2025-10-16 Dmitri Konstantinov (materials-V11-03-05)
 - G4AtomicFormFactor: corrected k conversion and 4*pi factor.

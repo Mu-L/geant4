@@ -31,23 +31,22 @@
 ///
 //      File name:     G4CrossSectionVector
 //
-//      Author:        
-// 
+//      Author:
+//
 //      Creation date: 15 April 1999
 //
-//      Modifications: 
-//      
+//      Modifications:
+//
 // -------------------------------------------------------------------
 
 #ifndef G4CROSSSECTIONVECTOR_HH
 #define G4CROSSSECTIONVECTOR_HH
 
-#include "globals.hh"
-#include <vector>
 #include "G4CrossSectionSourcePtr.hh"
+#include "globals.hh"
+
+#include <vector>
 
 typedef std::vector<G4CrossSectionSourcePtr> G4CrossSectionVector;
 
 #endif
-
-

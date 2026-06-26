@@ -40,7 +40,10 @@
 
 /**
  * @brief G4ExplicitEuler implements an Explicit Euler stepper for magnetic
- * field: x_1 = x_0 + h * dx_0. The most simple approach for solving linear
+ * field: x_1 = x_0 + h * dx_0.
+ * @ingroup geometry_magneticfield
+ *
+ * The most simple approach for solving linear
  * differential equations. Takes the current derivative and adds it to the
  * current position.
  */
@@ -54,8 +57,7 @@ class G4ExplicitEuler : public G4MagErrorStepper
      *  @param[in] EqRhs Pointer to the provided equation of motion.
      *  @param[in] numberOfVariables The number of integration variables.
      */
-    G4ExplicitEuler(G4EquationOfMotion* EqRhs,
-                    G4int numberOfVariables = 6) ;
+    G4ExplicitEuler(G4EquationOfMotion* EqRhs, G4int numberOfVariables = 6);
 
     /**
      * Default Destructor.
@@ -69,10 +71,8 @@ class G4ExplicitEuler : public G4MagErrorStepper
      *  @param[in] h The given step size.
      *  @param[out] yout Integration output.
      */
-    void DumbStepper( const G4double y[],
-                       const G4double dydx[],
-                             G4double h,
-                             G4double yout[] ) override;
+    void DumbStepper(const G4double y[], const G4double dydx[], G4double h,
+                     G4double yout[]) override;
 
     /**
      * Returns the order, 1, of integration.

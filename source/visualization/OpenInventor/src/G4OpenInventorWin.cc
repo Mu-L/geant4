@@ -30,39 +30,37 @@
 // this :
 #include "G4OpenInventorWin.hh"
 
-#include <Inventor/Win/SoWin.h>
-
 #include "G4OpenInventorSceneHandler.hh"
 #include "G4OpenInventorWinViewer.hh"
 #include "G4Win32.hh"
 
-G4OpenInventorWin::G4OpenInventorWin ()
-:G4OpenInventor("OpenInventorWin","OIWin32",G4VGraphicsSystem::threeD)
-,fInited(false)
-{
-}
+#include <Inventor/Win/SoWin.h>
 
-void G4OpenInventorWin::Initialize ()
-{
-  if(fInited) return; //Done
+G4OpenInventorWin::G4OpenInventorWin()
+  : G4OpenInventor("OpenInventorWin", "OIWin32", G4VGraphicsSystem::threeD), fInited(false)
+{}
 
-  SetInteractorManager (G4Win32::getInstance());
-  GetInteractorManager () -> RemoveDispatcher((G4DispatchFunction)G4Win32::DispatchWin32Event);
-  GetInteractorManager () -> AddDispatcher((G4DispatchFunction)SoWin::dispatchEvent);
+void G4OpenInventorWin::Initialize()
+{
+  if (fInited) return;  // Done
+
+  SetInteractorManager(G4Win32::getInstance());
+  GetInteractorManager()->RemoveDispatcher((G4DispatchFunction)G4Win32::DispatchWin32Event);
+  GetInteractorManager()->AddDispatcher((G4DispatchFunction)SoWin::dispatchEvent);
 
   HWND toplevel = (HWND)GetInteractorManager()->GetMainInteractor();
 
-  if(!SoWin::getTopLevelWidget()) SoWin::init(toplevel);
+  if (!SoWin::getTopLevelWidget()) SoWin::init(toplevel);
 
   InitNodes();
 
   fInited = true;
 }
 
-G4OpenInventorWin::~G4OpenInventorWin () {}
-G4VViewer* G4OpenInventorWin::CreateViewer (G4VSceneHandler& scene, const G4String& name) 
+G4OpenInventorWin::~G4OpenInventorWin() {}
+G4VViewer* G4OpenInventorWin::CreateViewer(G4VSceneHandler& scene, const G4String& name)
 {
   Initialize();
   G4OpenInventorSceneHandler* pScene = (G4OpenInventorSceneHandler*)&scene;
-  return new G4OpenInventorWinViewer (*pScene, name);
+  return new G4OpenInventorWinViewer(*pScene, name);
 }

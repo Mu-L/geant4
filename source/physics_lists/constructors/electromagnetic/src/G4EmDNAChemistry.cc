@@ -24,42 +24,37 @@
 // ********************************************************************
 //
 #include "G4EmDNAChemistry.hh"
+
 #include "G4ChemDissociationChannels.hh"
-
-#include "G4SystemOfUnits.hh"
-
-#include "G4DNAWaterDissociationDisplacer.hh"
 #include "G4DNAChemistryManager.hh"
-#include "G4ProcessManager.hh"
-
 #include "G4DNAGenericIonsManager.hh"
+#include "G4DNAWaterDissociationDisplacer.hh"
+#include "G4ProcessManager.hh"
+#include "G4SystemOfUnits.hh"
 
 // *** Processes and models for Geant4-DNA
 
-#include "G4DNAElectronSolvation.hh"
-
-#include "G4DNAVibExcitation.hh"
-#include "G4DNASancheExcitationModel.hh"
-
-#include "G4DNAMolecularDissociation.hh"
 #include "G4DNABrownianTransportation.hh"
+#include "G4DNAElectronHoleRecombination.hh"
+#include "G4DNAElectronSolvation.hh"
+#include "G4DNAMolecularDissociation.hh"
 #include "G4DNAMolecularReactionTable.hh"
 #include "G4DNAMolecularStepByStepModel.hh"
-#include "G4VDNAReactionModel.hh"
+#include "G4DNASancheExcitationModel.hh"
 #include "G4DNASmoluchowskiReactionModel.hh"
-
-#include "G4DNAElectronHoleRecombination.hh"
+#include "G4DNAVibExcitation.hh"
+#include "G4VDNAReactionModel.hh"
 // particles
 
 #include "G4Electron.hh"
-#include "G4MoleculeTable.hh"
 #include "G4H2O.hh"
+#include "G4MoleculeTable.hh"
 #include "G4PhysicsListHelper.hh"
 
 /****/
 #include "G4DNAMoleculeEncounterStepper.hh"
-#include "G4ProcessTable.hh"
 #include "G4MolecularConfiguration.hh"
+#include "G4ProcessTable.hh"
 /****/
 
 // factory
@@ -69,8 +64,7 @@ G4_DECLARE_PHYSCONSTR_FACTORY(G4EmDNAChemistry);
 
 #include "G4Threading.hh"
 
-G4EmDNAChemistry::G4EmDNAChemistry() :
-    G4VUserChemistryList(true)
+G4EmDNAChemistry::G4EmDNAChemistry() : G4VUserChemistryList(true)
 {
   G4DNAChemistryManager::Instance()->SetChemistryList(this);
 }
@@ -91,64 +85,51 @@ void G4EmDNAChemistry::ConstructDissociationChannels()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void G4EmDNAChemistry::ConstructReactionTable(G4DNAMolecularReactionTable*
-                                              theReactionTable)
+void G4EmDNAChemistry::ConstructReactionTable(G4DNAMolecularReactionTable* theReactionTable)
 {
   //-----------------------------------
-  //Get the molecular configuration
-  G4MolecularConfiguration* OH =
-   G4MoleculeTable::Instance()->GetConfiguration("°OH");
-  G4MolecularConfiguration* OHm =
-   G4MoleculeTable::Instance()->GetConfiguration("OHm");
-  G4MolecularConfiguration* e_aq =
-   G4MoleculeTable::Instance()->GetConfiguration("e_aq");
-  G4MolecularConfiguration* H2 =
-   G4MoleculeTable::Instance()->GetConfiguration("H2");
-  G4MolecularConfiguration* H3Op =
-   G4MoleculeTable::Instance()->GetConfiguration("H3Op");
-  G4MolecularConfiguration* H =
-   G4MoleculeTable::Instance()->GetConfiguration("H");
-  G4MolecularConfiguration* H2O2 =
-   G4MoleculeTable::Instance()->GetConfiguration("H2O2");
+  // Get the molecular configuration
+  G4MolecularConfiguration* OH = G4MoleculeTable::Instance()->GetConfiguration("°OH");
+  G4MolecularConfiguration* OHm = G4MoleculeTable::Instance()->GetConfiguration("OHm");
+  G4MolecularConfiguration* e_aq = G4MoleculeTable::Instance()->GetConfiguration("e_aq");
+  G4MolecularConfiguration* H2 = G4MoleculeTable::Instance()->GetConfiguration("H2");
+  G4MolecularConfiguration* H3Op = G4MoleculeTable::Instance()->GetConfiguration("H3Op");
+  G4MolecularConfiguration* H = G4MoleculeTable::Instance()->GetConfiguration("H");
+  G4MolecularConfiguration* H2O2 = G4MoleculeTable::Instance()->GetConfiguration("H2O2");
 
   //------------------------------------------------------------------
   // e_aq + e_aq + 2H2O -> H2 + 2OH-
   G4DNAMolecularReactionData* reactionData =
-   new G4DNAMolecularReactionData(0.5e10 * (1e-3 * m3 / (mole * s)), e_aq, e_aq);
+    new G4DNAMolecularReactionData(0.5e10 * (1e-3 * m3 / (mole * s)), e_aq, e_aq);
   reactionData->AddProduct(OHm);
   reactionData->AddProduct(OHm);
   reactionData->AddProduct(H2);
   theReactionTable->SetReaction(reactionData);
   //------------------------------------------------------------------
   // e_aq + *OH -> OH-
-  reactionData = new G4DNAMolecularReactionData(
-      2.95e10 * (1e-3 * m3 / (mole * s)), e_aq, OH);
+  reactionData = new G4DNAMolecularReactionData(2.95e10 * (1e-3 * m3 / (mole * s)), e_aq, OH);
   reactionData->AddProduct(OHm);
   theReactionTable->SetReaction(reactionData);
   //------------------------------------------------------------------
   // e_aq + H* + H2O -> H2 + OH-
-  reactionData = new G4DNAMolecularReactionData(
-      2.65e10 * (1e-3 * m3 / (mole * s)), e_aq, H);
+  reactionData = new G4DNAMolecularReactionData(2.65e10 * (1e-3 * m3 / (mole * s)), e_aq, H);
   reactionData->AddProduct(OHm);
   reactionData->AddProduct(H2);
   theReactionTable->SetReaction(reactionData);
   //------------------------------------------------------------------
   // e_aq + H3O+ -> H* + H2O
-  reactionData = new G4DNAMolecularReactionData(
-      2.11e10 * (1e-3 * m3 / (mole * s)), e_aq, H3Op);
+  reactionData = new G4DNAMolecularReactionData(2.11e10 * (1e-3 * m3 / (mole * s)), e_aq, H3Op);
   reactionData->AddProduct(H);
   theReactionTable->SetReaction(reactionData);
   //------------------------------------------------------------------
   // e_aq + H2O2 -> OH- + *OH
-  reactionData = new G4DNAMolecularReactionData(
-      1.41e10 * (1e-3 * m3 / (mole * s)), e_aq, H2O2);
+  reactionData = new G4DNAMolecularReactionData(1.41e10 * (1e-3 * m3 / (mole * s)), e_aq, H2O2);
   reactionData->AddProduct(OHm);
   reactionData->AddProduct(OH);
   theReactionTable->SetReaction(reactionData);
   //------------------------------------------------------------------
   // *OH + *OH -> H2O2
-  reactionData = new G4DNAMolecularReactionData(
-      0.44e10 * (1e-3 * m3 / (mole * s)), OH, OH);
+  reactionData = new G4DNAMolecularReactionData(0.44e10 * (1e-3 * m3 / (mole * s)), OH, OH);
   reactionData->AddProduct(H2O2);
   theReactionTable->SetReaction(reactionData);
   //------------------------------------------------------------------
@@ -156,8 +137,7 @@ void G4EmDNAChemistry::ConstructReactionTable(G4DNAMolecularReactionTable*
   theReactionTable->SetReaction(1.44e10 * (1e-3 * m3 / (mole * s)), OH, H);
   //------------------------------------------------------------------
   // *H + *H -> H2
-  reactionData = new G4DNAMolecularReactionData(
-      1.20e10 * (1e-3 * m3 / (mole * s)), H, H);
+  reactionData = new G4DNAMolecularReactionData(1.20e10 * (1e-3 * m3 / (mole * s)), H, H);
   reactionData->AddProduct(H2);
   theReactionTable->SetReaction(reactionData);
   //------------------------------------------------------------------
@@ -177,16 +157,16 @@ void G4EmDNAChemistry::ConstructProcess()
   // Anyway, solvation of electrons is taken into account from 7.4 eV
   // So below this threshold, for now, no accurate modeling is done
   //
-  G4VProcess* pProcess = G4ProcessTable::GetProcessTable()->
-                                   FindProcess("e-_G4DNAVibExcitation", "e-");
+  G4VProcess* pProcess =
+    G4ProcessTable::GetProcessTable()->FindProcess("e-_G4DNAVibExcitation", "e-");
 
   if (pProcess != nullptr)
   {
-    G4DNAVibExcitation* pVibExcitation = (G4DNAVibExcitation*) pProcess;
+    G4DNAVibExcitation* pVibExcitation = (G4DNAVibExcitation*)pProcess;
     G4VEmModel* pModel = pVibExcitation->EmModel();
     G4DNASancheExcitationModel* pSancheExcitationMod =
-        dynamic_cast<G4DNASancheExcitationModel*>(pModel);
-    if(pSancheExcitationMod != nullptr)
+      dynamic_cast<G4DNASancheExcitationModel*>(pModel);
+    if (pSancheExcitationMod != nullptr)
     {
       pSancheExcitationMod->ExtendLowEnergyLimit(0.025 * eV);
     }
@@ -196,7 +176,7 @@ void G4EmDNAChemistry::ConstructProcess()
   // Electron Solvatation
   //
   pProcess = G4ProcessTable::GetProcessTable()->FindProcess("e-_G4DNAElectronSolvation", "e-");
-  
+
   if (pProcess == nullptr)
   {
     pPhysicsListHelper->RegisterProcess(new G4DNAElectronSolvation("e-_G4DNAElectronSolvation"),
@@ -220,10 +200,12 @@ void G4EmDNAChemistry::ConstructProcess()
     }
     else
     {
-      pMoleculeDef->GetProcessManager()->AddRestProcess(new G4DNAElectronHoleRecombination(), 2);
-      G4DNAMolecularDissociation* pDissociationProcess = new G4DNAMolecularDissociation("H2O_DNAMolecularDecay");
+      const auto ElectronHoleRecombination = new G4DNAElectronHoleRecombination();
+      ElectronHoleRecombination->SetVerboseLevel(GetVerboseLevel());
+      pMoleculeDef->GetProcessManager()->AddRestProcess(ElectronHoleRecombination, 2);
+      const auto pDissociationProcess = new G4DNAMolecularDissociation("H2O_DNAMolecularDecay");
       pDissociationProcess->SetDisplacer(pMoleculeDef, new G4DNAWaterDissociationDisplacer);
-      pDissociationProcess->SetVerboseLevel(1);
+      pDissociationProcess->SetVerbose(GetVerboseLevel());
 
       pMoleculeDef->GetProcessManager()->AddRestProcess(pDissociationProcess, 1);
     }
@@ -234,16 +216,15 @@ void G4EmDNAChemistry::ConstructProcess()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void G4EmDNAChemistry::ConstructTimeStepModel(G4DNAMolecularReactionTable*
-                                              reactionTable)
+void G4EmDNAChemistry::ConstructTimeStepModel(G4DNAMolecularReactionTable* reactionTable)
 {
   G4VDNAReactionModel* reactionRadiusComputer = new G4DNASmoluchowskiReactionModel();
   reactionTable->PrintTable(reactionRadiusComputer);
 
   G4DNAMolecularStepByStepModel* stepByStep = new G4DNAMolecularStepByStepModel();
   stepByStep->SetReactionModel(reactionRadiusComputer);
-//  ((G4DNAMoleculeEncounterStepper*) stepByStep->GetTimeStepper())->
-//  SetVerbose(5);
+  //  ((G4DNAMoleculeEncounterStepper*) stepByStep->GetTimeStepper())->
+  //  SetVerbose(5);
 
   RegisterTimeStepModel(stepByStep, 0);
 }

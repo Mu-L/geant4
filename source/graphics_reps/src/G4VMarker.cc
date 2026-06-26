@@ -25,66 +25,65 @@
 //
 //
 //
-// 
+//
 
 #include "G4VMarker.hh"
 
 #include "G4VisAttributes.hh"
 
-G4VMarker::G4VMarker ():
-  fWorldSize  (0.),
-  fScreenSize (0.),
-  fFillStyle  (noFill)
+G4VMarker::G4VMarker() : fWorldSize(0.), fScreenSize(0.), fFillStyle(noFill) {}
+
+G4VMarker::G4VMarker(const G4Point3D& pos)
+  : fPosition(pos), fWorldSize(0.), fScreenSize(0.), fFillStyle(noFill)
 {}
 
-G4VMarker::G4VMarker (const G4Point3D& pos):
-  fPosition   (pos),
-  fWorldSize  (0.),
-  fScreenSize (0.),
-  fFillStyle  (noFill)
-{}
+G4VMarker::~G4VMarker() = default;
 
-G4VMarker::~G4VMarker () = default;
-
-G4bool G4VMarker::operator != (const G4VMarker& mk) const {
-  return ( (G4Visible::operator != (mk))   ||
-           (fWorldSize  != mk.fWorldSize)  ||
-           (fScreenSize != mk.fScreenSize) ||
-           (fFillStyle  != mk.fFillStyle)  ||
-           !(fPosition  == mk.fPosition)   );
+G4bool G4VMarker::operator!=(const G4VMarker& mk) const
+{
+  return ((G4Visible::operator!=(mk)) || (fWorldSize != mk.fWorldSize)
+          || (fScreenSize != mk.fScreenSize) || (fFillStyle != mk.fFillStyle)
+          || !(fPosition == mk.fPosition));
 }
 
-std::ostream& operator << (std::ostream& os, const G4VMarker& marker) {
-  os << "G4VMarker: position: " << marker.fPosition
-     << ", world size: " << marker.fWorldSize
-     << ", screen size: " << marker.fScreenSize
-     << ", fill style: ";
-  switch (marker.fFillStyle) {
-  case G4VMarker::noFill:
-    os << "no fill";
-    break;
-  case G4VMarker::hashed:
-    os << "hashed";
-    break;
-  case G4VMarker::filled:
-    os << "filled";
-    break;
-  default:
-    os << "unrecognised"; break;
+std::ostream& operator<<(std::ostream& os, const G4VMarker& marker)
+{
+  os << "G4VMarker: position: " << marker.fPosition << ", world size: " << marker.fWorldSize
+     << ", screen size: " << marker.fScreenSize << ", fill style: ";
+  switch (marker.fFillStyle)
+  {
+    case G4VMarker::noFill:
+      os << "no fill";
+      break;
+    case G4VMarker::hashed:
+      os << "hashed";
+      break;
+    case G4VMarker::filled:
+      os << "filled";
+      break;
+    default:
+      os << "unrecognised";
+      break;
   }
-  os << "\n    " << (const G4Visible&) marker;
+  os << "\n    " << (const G4Visible&)marker;
   return os;
 }
 
-G4VMarker::SizeType G4VMarker::GetSizeType () const {
+G4VMarker::SizeType G4VMarker::GetSizeType() const
+{
   SizeType type = none;
-  if (fWorldSize != 0.0) type = world;
-  else if (fScreenSize != 0.0) type = screen;
+  if (fWorldSize != 0.0)
+    type = world;
+  else if (fScreenSize != 0.0)
+    type = screen;
   return type;
 }
 
-void G4VMarker::SetSize (SizeType sizeType, G4double size) {
+void G4VMarker::SetSize(SizeType sizeType, G4double size)
+{
   fWorldSize = fScreenSize = 0.;
-  if (sizeType == world) fWorldSize = size;
-  else if (sizeType == screen) fScreenSize = size;
+  if (sizeType == world)
+    fWorldSize = size;
+  else if (sizeType == screen)
+    fScreenSize = size;
 }

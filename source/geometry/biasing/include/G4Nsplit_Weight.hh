@@ -26,10 +26,10 @@
 // G4Nsplit_Weight
 //
 // Class description:
-// 
+//
 // A class (struct) used by importance sampling. It contains the number
 // of tracks a mother track should be split into and their weight.
- 
+
 // Author: Michael Dressel (CERN), 2002
 // ----------------------------------------------------------------------
 #ifndef G4NSPLIT_WEIGHT_HH
@@ -39,6 +39,8 @@
 
 /**
  * @brief G4Nsplit_Weight is a class (struct) used by importance sampling.
+ * @ingroup geometry_biasing
+ *
  * It contains the number of tracks a mother track should be split into and
  * their associated weight.
  */

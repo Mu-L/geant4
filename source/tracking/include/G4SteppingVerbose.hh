@@ -34,45 +34,48 @@
 //     Katsuya Amako  (e-mail: Katsuya.Amako@kek.jp)
 //     Takashi Sasaki (e-mail: Takashi.Sasaki@kek.jp)
 //---------------------------------------------------------------------
-#ifndef G4SteppingVerose_hh
-#define G4SteppingVerose_hh 1
+#ifndef G4STEPPINGVEROSE_HH
+#define G4STEPPINGVEROSE_HH
 
 #include "G4VSteppingVerbose.hh"
 
 class G4SteppingVerbose : public G4VSteppingVerbose
 {
- public:
-  // Constructor/Destructor
+  public:
 
-  G4SteppingVerbose() = default;
-  ~G4SteppingVerbose() override = default;
+    // Constructor/Destructor
 
-  G4VSteppingVerbose* Clone() override { return new G4SteppingVerbose; }
+    G4SteppingVerbose() = default;
+    ~G4SteppingVerbose() override = default;
 
-  // Methods to be invoked in the SteppingManager
+    G4VSteppingVerbose* Clone() override { return new G4SteppingVerbose; }
 
-  void NewStep() override;
-  void AtRestDoItInvoked() override;
-  void AlongStepDoItAllDone() override;
-  void PostStepDoItAllDone() override;
-  void AlongStepDoItOneByOne() override;
-  void PostStepDoItOneByOne() override;
-  void StepInfo() override;
-  void TrackingStarted() override;
-  void DPSLStarted() override;
-  void DPSLUserLimit() override;
-  void DPSLPostStep() override;
-  void DPSLAlongStep() override;
-  void VerboseTrack() override;
-  void VerboseParticleChange() override;
-  virtual void ShowStep() const;
+    // Methods to be invoked in the SteppingManager
 
- public:
-  static void UseBestUnit(G4int prec = 4);
-  static G4int BestUnitPrecision();
+    void NewStep() override;
+    void AtRestDoItInvoked() override;
+    void AlongStepDoItAllDone() override;
+    void PostStepDoItAllDone() override;
+    void AlongStepDoItOneByOne() override;
+    void PostStepDoItOneByOne() override;
+    void StepInfo() override;
+    void TrackingStarted() override;
+    void DPSLStarted() override;
+    void DPSLUserLimit() override;
+    void DPSLPostStep() override;
+    void DPSLAlongStep() override;
+    void VerboseTrack() override;
+    void VerboseParticleChange() override;
+    virtual void ShowStep() const;
 
- private:
-  static G4int useBestUnitPrecision;
+  public:
+
+    static void UseBestUnit(G4int prec = 4);
+    static G4int BestUnitPrecision();
+
+  private:
+
+    static G4int useBestUnitPrecision;
 };
 
 #endif

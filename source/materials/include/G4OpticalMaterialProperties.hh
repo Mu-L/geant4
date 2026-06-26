@@ -43,8 +43,8 @@
 // specify it in decreasing value and call ConvertToEnergy().
 // -------------------------------------------------------------------
 
-#ifndef G4OPTICALMATERIALPROPERTIES
-#define G4OPTICALMATERIALPROPERTIES
+#ifndef G4OPTICALMATERIALPROPERTIES_HH
+#define G4OPTICALMATERIALPROPERTIES_HH
 
 #include "G4MaterialPropertyVector.hh"
 
@@ -56,7 +56,8 @@ namespace G4OpticalMaterialProperties
 {
 void ConvertToEnergy(std::vector<G4double>& wavelength)
 {
-  for (auto& val : wavelength) {
+  for (auto& val : wavelength)
+  {
     val = CLHEP::h_Planck * CLHEP::c_light / (val / 1000.);
   }
 }
@@ -64,7 +65,8 @@ void ConvertToEnergy(std::vector<G4double>& wavelength)
 G4MaterialPropertyVector* GetRefractiveIndex(const G4String& material)
 {
   G4MaterialPropertyVector* v = nullptr;
-  if (material == "Air") {
+  if (material == "Air")
+  {
     // P. E. Ciddor. Refractive index of air: new equations for the visible
     // and near infrared, Appl. Optics 35, 1566-1573 (1996) via
     // refractiveindex.info
@@ -116,7 +118,8 @@ G4MaterialPropertyVector* GetRefractiveIndex(const G4String& material)
     ConvertToEnergy(wl);
     v = new G4MaterialPropertyVector(wl, ri);
   }
-  else if (material == "Water") {
+  else if (material == "Water")
+  {
     // M. Daimon and A. Masumura. Measurement of the refractive index of
     // distilled water from the near-infrared region to the ultraviolet
     // region, Appl. Opt. 46, 3811-3820 (2007) via refractiveindex.info
@@ -168,7 +171,8 @@ G4MaterialPropertyVector* GetRefractiveIndex(const G4String& material)
     ConvertToEnergy(wl);
     v = new G4MaterialPropertyVector(wl, ri);
   }
-  else if (material == "PMMA") {
+  else if (material == "PMMA")
+  {
     // G. Beadie, M. Brindza, R. A. Flynn, A. Rosenberg, and J. S. Shirk.
     // Refractive index measurements of poly(methyl methacrylate) (PMMA) from
     // 0.4-1.6 μm, Appl. Opt. 54, F139-F143 (2015) via refractiveindex.info
@@ -220,7 +224,8 @@ G4MaterialPropertyVector* GetRefractiveIndex(const G4String& material)
     ConvertToEnergy(wl);
     v = new G4MaterialPropertyVector(wl, ri);
   }
-  else if (material == "Fused Silica") {
+  else if (material == "Fused Silica")
+  {
     // 1) I. H. Malitson. Interspecimen comparison of the refractive index of
     // fused silica, J. Opt. Soc. Am. 55, 1205-1208 (1965)  2) C. Z. Tan.
     // Determination of refractive index of silica glass for infrared
@@ -278,7 +283,8 @@ G4MaterialPropertyVector* GetRefractiveIndex(const G4String& material)
     v = new G4MaterialPropertyVector(wl, ri);
   }
 
-  else {
+  else
+  {
     G4ExceptionDescription ed;
     ed << "Material " << material << " not found.";
     G4Exception("G4OpticalMaterialProperties::GetRefractiveIndex", "mat400", FatalException, ed);
@@ -290,7 +296,8 @@ G4MaterialPropertyVector* GetRefractiveIndex(const G4String& material)
 
 G4MaterialPropertyVector* GetProperty(const G4String& key, const G4String& mat)
 {
-  if (key == "RINDEX") {
+  if (key == "RINDEX")
+  {
     return GetRefractiveIndex(mat);
   }
 

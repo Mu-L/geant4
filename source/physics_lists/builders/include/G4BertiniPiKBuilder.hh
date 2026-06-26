@@ -36,37 +36,36 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4BertiniPiKBuilder_h
-#define G4BertiniPiKBuilder_h 1
+#ifndef G4BERTINIPIKBUILDER_HH
+#define G4BERTINIPIKBUILDER_HH
 
-#include "globals.hh"
-
+#include "G4CascadeInterface.hh"
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
 #include "G4VPiKBuilder.hh"
-#include "G4CascadeInterface.hh"   
-
+#include "globals.hh"
 
 class G4BertiniPiKBuilder : public G4VPiKBuilder
 {
-  public: 
+  public:
+
     G4BertiniPiKBuilder();
     virtual ~G4BertiniPiKBuilder() {}
 
-    virtual void Build(G4HadronElasticProcess *) final override {}
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
-    virtual void SetMaxEnergy(G4double aM) final override {theMax = aM;}
+    virtual void Build(G4HadronElasticProcess*) final override {}
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
-    using G4VPiKBuilder::Build; //Prevent Compilation warning
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+    virtual void SetMaxEnergy(G4double aM) final override { theMax = aM; }
+
+    using G4VPiKBuilder::Build;  // Prevent Compilation warning
 
   private:
-    G4VCrossSectionDataSet * kaonxs;
-    G4CascadeInterface * theModel;    
+
+    G4VCrossSectionDataSet* kaonxs;
+    G4CascadeInterface* theModel;
     G4double theMin;
     G4double theMax;
 };
 
 #endif
-

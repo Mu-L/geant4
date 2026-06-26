@@ -33,144 +33,112 @@ extern G4GEOM_DLL G4Allocator<G4NavigationLevelRep>*& aNavigLevelRepAllocator();
 // Constructors
 //--------------
 
-inline
-G4NavigationLevelRep::G4NavigationLevelRep( G4VPhysicalVolume* pPhysVol,
-                                      const G4AffineTransform& afTransform,
-                                            EVolume            volTp,
-                                            G4int              repNo )
-   :  sTransform(afTransform),
-      sPhysicalVolumePtr(pPhysVol),
-      sReplicaNo(repNo),
-      sVolumeType(volTp)
+inline G4NavigationLevelRep::G4NavigationLevelRep(G4VPhysicalVolume* pPhysVol,
+                                                  const G4AffineTransform& afTransform,
+                                                  EVolume volTp, G4int repNo)
+  : sTransform(afTransform), sPhysicalVolumePtr(pPhysVol), sReplicaNo(repNo), sVolumeType(volTp)
+{}
+
+inline G4NavigationLevelRep::G4NavigationLevelRep() : sVolumeType(kReplica) {}
+
+inline G4NavigationLevelRep::G4NavigationLevelRep(G4VPhysicalVolume* pPhysVol,
+                                                  const G4AffineTransform& levelAbove,
+                                                  const G4AffineTransform& relativeCurrent,
+                                                  EVolume volTp, G4int repNo)
+  : sPhysicalVolumePtr(pPhysVol), sReplicaNo(repNo), sVolumeType(volTp)
 {
+  sTransform.InverseProduct(levelAbove, relativeCurrent);
 }
 
-inline
-G4NavigationLevelRep::G4NavigationLevelRep()
-   :  sVolumeType(kReplica)
-{
-}
-
-inline
-G4NavigationLevelRep::G4NavigationLevelRep( G4VPhysicalVolume* pPhysVol,
-                                      const G4AffineTransform& levelAbove,
-                                      const G4AffineTransform& relativeCurrent,
-                                            EVolume            volTp,
-                                            G4int              repNo )
-   :  sPhysicalVolumePtr(pPhysVol),
-      sReplicaNo(repNo),
-      sVolumeType(volTp)
-{
-  sTransform.InverseProduct( levelAbove, relativeCurrent );
-}
-
-inline
-G4NavigationLevelRep::G4NavigationLevelRep( G4NavigationLevelRep& right )
-   :  sTransform(right.sTransform), 
-      sPhysicalVolumePtr(right.sPhysicalVolumePtr),
-      sReplicaNo(right.sReplicaNo),
-      sVolumeType(right.sVolumeType)
-{
-}
+inline G4NavigationLevelRep::G4NavigationLevelRep(G4NavigationLevelRep& right)
+  : sTransform(right.sTransform),
+    sPhysicalVolumePtr(right.sPhysicalVolumePtr),
+    sReplicaNo(right.sReplicaNo),
+    sVolumeType(right.sVolumeType)
+{}
 
 // Destructor
 //--------------
 
-inline
-G4NavigationLevelRep::~G4NavigationLevelRep()
+inline G4NavigationLevelRep::~G4NavigationLevelRep()
 {
 #ifdef DEBUG_NAVIG_LEVEL
-  if(fCountRef>0)
+  if (fCountRef > 0)
   {
-    G4Exception("G4NavigationLevelRep::~G4NavigationLevelRep()",
-                "GeomVol0003", FatalException,
+    G4Exception("G4NavigationLevelRep::~G4NavigationLevelRep()", "GeomVol0003", FatalException,
                 "Deletion of data-level object with positive reference count.");
-  } 
+  }
 #endif
 }
 
 // Operators
 // --------------
 
-inline
-G4NavigationLevelRep& 
-G4NavigationLevelRep::operator=( const G4NavigationLevelRep& right )
+inline G4NavigationLevelRep& G4NavigationLevelRep::operator=(const G4NavigationLevelRep& right)
 {
-  if ( &right != this )
+  if (&right != this)
   {
-    sTransform = right.sTransform;  
+    sTransform = right.sTransform;
     sPhysicalVolumePtr = right.sPhysicalVolumePtr;
     sVolumeType = right.sVolumeType;
-    sReplicaNo =  right.sReplicaNo;
+    sReplicaNo = right.sReplicaNo;
     fCountRef = right.fCountRef;
   }
   return *this;
-} 
+}
 
 // Accessors
 // --------------
 
-inline
-G4VPhysicalVolume*
-G4NavigationLevelRep::GetPhysicalVolume()
+inline G4VPhysicalVolume* G4NavigationLevelRep::GetPhysicalVolume()
 {
-  return sPhysicalVolumePtr; 
+  return sPhysicalVolumePtr;
 }
 
-inline
-const G4AffineTransform&
-G4NavigationLevelRep::GetTransform() const 
+inline const G4AffineTransform& G4NavigationLevelRep::GetTransform() const
 {
-  return sTransform; 
-} 
-
-inline
-const G4AffineTransform*
-G4NavigationLevelRep::GetTransformPtr() const 
-{
-  return &sTransform; 
-} 
-
-inline
-EVolume G4NavigationLevelRep::GetVolumeType() const 
-{
-  return sVolumeType; 
+  return sTransform;
 }
 
-inline
-G4int G4NavigationLevelRep::GetReplicaNo() const 
+inline const G4AffineTransform* G4NavigationLevelRep::GetTransformPtr() const
 {
-  return sReplicaNo; 
+  return &sTransform;
 }
 
-inline
-void G4NavigationLevelRep::AddAReference() 
+inline EVolume G4NavigationLevelRep::GetVolumeType() const
 {
-  ++fCountRef; 
+  return sVolumeType;
 }
 
-inline
-G4bool G4NavigationLevelRep::RemoveAReference() 
+inline G4int G4NavigationLevelRep::GetReplicaNo() const
 {
-  return( --fCountRef <= 0 ); 
+  return sReplicaNo;
+}
+
+inline void G4NavigationLevelRep::AddAReference()
+{
+  ++fCountRef;
+}
+
+inline G4bool G4NavigationLevelRep::RemoveAReference()
+{
+  return (--fCountRef <= 0);
 }
 
 // There is no provision that this class is subclassed.
 // If it is subclassed & new data members are added then the
-// following "new" & "delete" will fail and give errors. 
+// following "new" & "delete" will fail and give errors.
 //
-inline
-void* G4NavigationLevelRep::operator new(size_t)
+inline void* G4NavigationLevelRep::operator new(size_t)
 {
   if (aNavigLevelRepAllocator() == nullptr)
   {
     aNavigLevelRepAllocator() = new G4Allocator<G4NavigationLevelRep>;
   }
-  return (void *) aNavigLevelRepAllocator()->MallocSingle();
+  return (void*)aNavigLevelRepAllocator()->MallocSingle();
 }
 
-inline
-void G4NavigationLevelRep::operator delete(void* aLevelRep)
+inline void G4NavigationLevelRep::operator delete(void* aLevelRep)
 {
-  aNavigLevelRepAllocator()->FreeSingle((G4NavigationLevelRep *) aLevelRep);
+  aNavigLevelRepAllocator()->FreeSingle((G4NavigationLevelRep*)aLevelRep);
 }

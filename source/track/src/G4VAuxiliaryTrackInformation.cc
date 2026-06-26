@@ -30,13 +30,29 @@
 
 #include "G4VAuxiliaryTrackInformation.hh"
 
-G4VAuxiliaryTrackInformation::G4VAuxiliaryTrackInformation() { ; }
+G4VAuxiliaryTrackInformation::G4VAuxiliaryTrackInformation()
+{
+  ;
+}
 
-G4VAuxiliaryTrackInformation::~G4VAuxiliaryTrackInformation() { ; }
+G4VAuxiliaryTrackInformation::~G4VAuxiliaryTrackInformation()
+{
+  ;
+}
 
 void G4VAuxiliaryTrackInformation::Print() const
 {
   G4cout << "G4VAuxiliaryTrackInformation base class -- no concrete "
             "information available"
          << G4endl;
+}
+
+G4VAuxiliaryTrackInformation* G4VAuxiliaryTrackInformation::Clone() const
+{
+  //  G4ExceptionDescription ed;
+  //  ed << "Base-class method is invoked.\n"
+  //     << "Clone() method of the derived concrete class must be implemented.";
+  //  G4Exception("G4VAuxiliaryTrackInformation::Clone()","VAuxTrk000",
+  //    FatalException,ed);
+  return nullptr;
 }

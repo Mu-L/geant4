@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,9 +41,10 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#pragma once
+#ifndef G4DNAMOLECULARSTEPBYSTEPMODEL_HH
+#define G4DNAMOLECULARSTEPBYSTEPMODEL_HH
 
 #include <G4String.hh>
 #include <G4VITStepModel.hh>
@@ -52,17 +53,18 @@ class G4DNAMolecularReactionTable;
 class G4VDNAReactionModel;
 
 /**
-  * G4DNAMolecularStepByStepModel :
-  *  - TimeStepper : G4DNAMolecularEncounterStepper
-  *  - ReactionProcess : G4DNAMolecularReaction
-  * Before each step, the next minimum encounter time is calculated for each
-  * pair of molecule. The minimum time step is selected. All the molecules are stepped
-  * within this time step. Then, only the relevant pair of molecules are checked for
-  * reaction.
-  */
+ * G4DNAMolecularStepByStepModel :
+ *  - TimeStepper : G4DNAMolecularEncounterStepper
+ *  - ReactionProcess : G4DNAMolecularReaction
+ * Before each step, the next minimum encounter time is calculated for each
+ * pair of molecule. The minimum time step is selected. All the molecules are stepped
+ * within this time step. Then, only the relevant pair of molecules are checked for
+ * reaction.
+ */
 class G4DNAMolecularStepByStepModel : public G4VITStepModel
 {
-public:
+  public:
+
     G4DNAMolecularStepByStepModel(const G4String& name = "DNAMolecularStepByStepModel");
     G4DNAMolecularStepByStepModel(const G4String& name,
                                   std::unique_ptr<G4VITTimeStepComputer> pTimeStepper,
@@ -77,8 +79,10 @@ public:
     void SetReactionModel(G4VDNAReactionModel*);
     G4VDNAReactionModel* GetReactionModel();
 
-protected:
+  protected:
+
     const G4DNAMolecularReactionTable*& fMolecularReactionTable;
     std::unique_ptr<G4VDNAReactionModel> fpReactionModel;
 };
 
+#endif

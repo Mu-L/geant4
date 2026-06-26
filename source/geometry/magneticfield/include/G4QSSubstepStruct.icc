@@ -28,7 +28,7 @@
 // Author: Mattias Portnoy (Univ. Buenos Aires), 2024
 // --------------------------------------------------------------------
 
-inline Substep::Substep()  
+inline Substep::Substep()
 {
   for (G4int i = 1; i < MAX_QSS_ORDER; ++i)
   {
@@ -45,7 +45,7 @@ inline Substep::Substep()
 
 inline Substeps::Substeps()
 {
-  _substeps = static_cast<Substep *>(malloc((_arrlength) * sizeof(Substep)));    
+  _substeps = static_cast<Substep*>(malloc((_arrlength) * sizeof(Substep)));
 }
 
 // ----------------------------------------------------------------------------
@@ -57,7 +57,7 @@ inline Substeps::~Substeps()
 
 // ----------------------------------------------------------------------------
 
-// Mimics the functionality of GNU method reallocarray 
+// Mimics the functionality of GNU method reallocarray
 inline void* Substeps::safe_reallocarray(void* ptr, size_t numMembers, size_t size)
 {
   if (size != 0 && numMembers > std::numeric_limits<size_t>::max() / size)
@@ -66,19 +66,19 @@ inline void* Substeps::safe_reallocarray(void* ptr, size_t numMembers, size_t si
   }
   return realloc(ptr, numMembers * size);
 }
- 
+
 // ----------------------------------------------------------------------------
 
 inline void Substeps::resize()
 {
-  _arrlength = std::fmax(_arrlength*2, 1500);
-  _substeps = static_cast<Substep *>(safe_reallocarray(_substeps, _arrlength, sizeof(Substep)));
-  if( _substeps == nullptr )
-  { 
-     G4ExceptionDescription ermsg;
-     ermsg << "QSS2: Size of state exceed available memory : number of elemets = " << _arrlength
-           << " size of each element= " << sizeof(Substep) << G4endl;
-     G4Exception( "G4QSSubstepStruct::resize", "GeomField0008", FatalException, ermsg ); 
+  _arrlength = std::fmax(_arrlength * 2, 1500);
+  _substeps = static_cast<Substep*>(safe_reallocarray(_substeps, _arrlength, sizeof(Substep)));
+  if (_substeps == nullptr)
+  {
+    G4ExceptionDescription ermsg;
+    ermsg << "QSS2: Size of state exceed available memory : number of elemets = " << _arrlength
+          << " size of each element= " << sizeof(Substep) << G4endl;
+    G4Exception("G4QSSubstepStruct::resize", "GeomField0008", FatalException, ermsg);
   }
 }
 
@@ -88,7 +88,7 @@ inline Substep* Substeps::create_substep()
 {
   current_substep_index++;
 
-  if (unlikely( current_substep_index >= _arrlength ))
+  if (unlikely(current_substep_index >= _arrlength))
   {
     resize();
   }

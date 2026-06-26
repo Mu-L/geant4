@@ -43,16 +43,19 @@
 // ###                        DINEUTRON                                ###
 // ######################################################################
 
-class G4Dineutron : public G4VShortLivedParticle {
-private:
-  static G4Dineutron* theInstance;
-  G4Dineutron();
-  virtual ~G4Dineutron() { theInstance = 0; }
-  
-public:
-  static G4Dineutron* Definition();
-  static G4Dineutron* DineutronDefinition();
-  static G4Dineutron* Dineutron();
+class G4Dineutron : public G4VShortLivedParticle
+{
+  private:
+
+    static G4Dineutron* theInstance;
+    G4Dineutron();
+    virtual ~G4Dineutron() { theInstance = 0; }
+
+  public:
+
+    static G4Dineutron* Definition();
+    static G4Dineutron* DineutronDefinition();
+    static G4Dineutron* Dineutron();
 };
 
-#endif	/* G4DINEUTRON_HH */
+#endif /* G4DINEUTRON_HH */

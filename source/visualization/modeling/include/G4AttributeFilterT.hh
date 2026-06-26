@@ -38,106 +38,114 @@
 #include "G4SmartFilter.hh"
 #include "G4VAttValueFilter.hh"
 
-#include <vector>
 #include <utility>
+#include <vector>
 
-template <typename T>
-class G4AttributeFilterT : public G4SmartFilter<T> {
+template<typename T>
+class G4AttributeFilterT : public G4SmartFilter<T>
+{
+  public:
 
-public:
- 
-  // Construct with filter name
-  G4AttributeFilterT(const G4String& name = "Unspecified");
-  
-  // Destructor
-  virtual ~G4AttributeFilterT();
+    // Construct with filter name
+    G4AttributeFilterT(const G4String& name = "Unspecified");
 
-  // Evaluate
-  virtual bool Evaluate(const T&) const;
+    // Destructor
+    virtual ~G4AttributeFilterT();
 
-  // Print configuration
-  virtual void Print(std::ostream& ostr) const;
+    // Evaluate
+    virtual bool Evaluate(const T&) const;
 
-  // Clear filter
-  virtual void Clear();
+    // Print configuration
+    virtual void Print(std::ostream& ostr) const;
 
-  // Configuration functions
-  void Set(const G4String& name);
-  void AddInterval(const G4String&);
-  void AddValue(const G4String&);
+    // Clear filter
+    virtual void Clear();
 
-private:
+    // Configuration functions
+    void Set(const G4String& name);
+    void AddInterval(const G4String&);
+    void AddValue(const G4String&);
 
-  enum Config {Interval, SingleValue};
+  private:
 
-  typedef std::pair<G4String, Config> Pair;
-  typedef std::vector<Pair> ConfigVect;
+    enum Config
+    {
+      Interval,
+      SingleValue
+    };
 
-  // Data members
-  G4String fAttName;
-  ConfigVect fConfigVect;
+    typedef std::pair<G4String, Config> Pair;
+    typedef std::vector<Pair> ConfigVect;
 
-  // Caching
-  mutable G4bool fFirst;
-  mutable G4VAttValueFilter* filter;
+    // Data members
+    G4String fAttName;
+    ConfigVect fConfigVect;
 
+    // Caching
+    mutable G4bool fFirst;
+    mutable G4VAttValueFilter* filter;
 };
 
-template <typename T>
+template<typename T>
 G4AttributeFilterT<T>::G4AttributeFilterT(const G4String& name)
-  :G4SmartFilter<T>(name)
-  ,fAttName("")
-  ,fFirst(true)
-  ,filter(0)
+  : G4SmartFilter<T>(name), fAttName(""), fFirst(true), filter(0)
 {}
 
-template <typename T>
-G4AttributeFilterT<T>::~G4AttributeFilterT() 
+template<typename T>
+G4AttributeFilterT<T>::~G4AttributeFilterT()
 {
   delete filter;
 }
 
-template <typename T>
-G4bool
-G4AttributeFilterT<T>::Evaluate(const T& object) const
+template<typename T>
+G4bool G4AttributeFilterT<T>::Evaluate(const T& object) const
 {
   // Return true (i.e., do not filter out) if attribute name has not yet been set.
   if (fAttName.empty()) return true;
-  
+
   // ...or required attribute value has not yet been set
   if (fConfigVect.size() == 0) return true;
 
-  if (fFirst) {
-
+  if (fFirst)
+  {
     fFirst = false;
 
     // Get attribute definition
     G4AttDef attDef;
-    
-    // Expect definition to exist    
-    if (!G4AttUtils::ExtractAttDef(object, fAttName, attDef)) {
+
+    // Expect definition to exist
+    if (!G4AttUtils::ExtractAttDef(object, fAttName, attDef))
+    {
       static G4bool warnedUnableToExtract = false;
-      if (!warnedUnableToExtract) {
-	G4ExceptionDescription ed;
-	ed <<"Unable to extract attribute definition named "<<fAttName<<'\n'
-        << "Available attributes:\n"
-        << *object.GetAttDefs();
-	G4Exception
-	  ("G4AttributeFilterT::Evaluate", "modeling0102", JustWarning, ed, "Invalid attribute definition");
-	warnedUnableToExtract = true;
+      if (!warnedUnableToExtract)
+      {
+        G4ExceptionDescription ed;
+        ed << "Unable to extract attribute definition named " << fAttName << '\n'
+           << "Available attributes:\n"
+           << *object.GetAttDefs();
+        G4Exception("G4AttributeFilterT::Evaluate", "modeling0102", JustWarning, ed,
+                    "Invalid attribute definition");
+        warnedUnableToExtract = true;
       }
       return false;
     }
-    
+
     // Get new G4AttValue filter
     filter = G4AttFilterUtils::GetNewFilter(attDef);
 
     // Load both interval and single valued data.
     typename ConfigVect::const_iterator iter = fConfigVect.begin();
-    
-    while (iter != fConfigVect.end()) {
-      if (iter->second == G4AttributeFilterT<T>::Interval) {filter->LoadIntervalElement(iter->first);}
-      else if (iter->second == G4AttributeFilterT<T>::SingleValue) {filter->LoadSingleValueElement(iter->first);}
+
+    while (iter != fConfigVect.end())
+    {
+      if (iter->second == G4AttributeFilterT<T>::Interval)
+      {
+        filter->LoadIntervalElement(iter->first);
+      }
+      else if (iter->second == G4AttributeFilterT<T>::SingleValue)
+      {
+        filter->LoadSingleValueElement(iter->first);
+      }
       iter++;
     }
   }
@@ -146,86 +154,84 @@ G4AttributeFilterT<T>::Evaluate(const T& object) const
   G4AttValue attVal;
 
   // Expect value to exist
-  if (!G4AttUtils::ExtractAttValue(object, fAttName, attVal)) {
+  if (!G4AttUtils::ExtractAttValue(object, fAttName, attVal))
+  {
     static G4bool warnedUnableToExtract = false;
-    if (!warnedUnableToExtract) {
+    if (!warnedUnableToExtract)
+    {
       G4ExceptionDescription ed;
-      ed <<"Unable to extract attribute definition named "<<fAttName<<'\n'
-      << "Available attributes:\n"
-      << *object.GetAttDefs();
-      G4Exception
-	("G4AttributeFilterT::Evaluate", "modeling0103", JustWarning, ed, "InvalidAttributeValue");
+      ed << "Unable to extract attribute definition named " << fAttName << '\n'
+         << "Available attributes:\n"
+         << *object.GetAttDefs();
+      G4Exception("G4AttributeFilterT::Evaluate", "modeling0103", JustWarning, ed,
+                  "InvalidAttributeValue");
       warnedUnableToExtract = true;
     }
     return false;
   }
 
-  if (G4SmartFilter<T>::GetVerbose()) {
-    G4cout<<"G4AttributeFilterT processing attribute named "<<fAttName;
-    G4cout<<" with value "<<attVal.GetValue()<<G4endl;
+  if (G4SmartFilter<T>::GetVerbose())
+  {
+    G4cout << "G4AttributeFilterT processing attribute named " << fAttName;
+    G4cout << " with value " << attVal.GetValue() << G4endl;
   }
 
   // Pass subfilter
   return (filter->Accept(attVal));
 }
 
-template <typename T>
-void
-G4AttributeFilterT<T>::Clear()
+template<typename T>
+void G4AttributeFilterT<T>::Clear()
 {
   fConfigVect.clear();
   if (0 != filter) filter->Reset();
 }
 
-template <typename T>
-void
-G4AttributeFilterT<T>::Print(std::ostream& ostr) const
+template<typename T>
+void G4AttributeFilterT<T>::Print(std::ostream& ostr) const
 {
-  ostr<<"Printing data for G4Attribute filter named: "<<G4VFilter<T>::Name()<<std::endl;
-  ostr<<"Filtered attribute name: "<<fAttName<<std::endl;
-  ostr<<"Printing sub filter data:"<<std::endl;
+  ostr << "Printing data for G4Attribute filter named: " << G4VFilter<T>::Name() << std::endl;
+  ostr << "Filtered attribute name: " << fAttName << std::endl;
+  ostr << "Printing sub filter data:" << std::endl;
   if (0 != filter) filter->PrintAll(ostr);
 }
 
-template <typename T>
-void
-G4AttributeFilterT<T>::Set(const G4String& name)
+template<typename T>
+void G4AttributeFilterT<T>::Set(const G4String& name)
 {
   fAttName = name;
 }
 
-template <typename T>
-void
-G4AttributeFilterT<T>::AddInterval(const G4String& interval)
+template<typename T>
+void G4AttributeFilterT<T>::AddInterval(const G4String& interval)
 {
   std::pair<G4String, Config> myPair(interval, G4AttributeFilterT<T>::Interval);
 
   typename ConfigVect::iterator iter = std::find(fConfigVect.begin(), fConfigVect.end(), myPair);
-  
-  if (iter != fConfigVect.end()) {
+
+  if (iter != fConfigVect.end())
+  {
     G4ExceptionDescription ed;
-    ed <<"Interval "<< interval <<" already exists";
-    G4Exception
-      ("G4AttributeFilterT::AddInterval", "modeling0104", JustWarning, ed);
+    ed << "Interval " << interval << " already exists";
+    G4Exception("G4AttributeFilterT::AddInterval", "modeling0104", JustWarning, ed);
     return;
   }
 
   fConfigVect.push_back(std::move(myPair));
 }
 
-template <typename T>
-void
-G4AttributeFilterT<T>::AddValue(const G4String& value)
+template<typename T>
+void G4AttributeFilterT<T>::AddValue(const G4String& value)
 {
   std::pair<G4String, Config> myPair(value, G4AttributeFilterT<T>::SingleValue);
 
   typename ConfigVect::iterator iter = std::find(fConfigVect.begin(), fConfigVect.end(), myPair);
-  
-  if (iter != fConfigVect.end()) {
+
+  if (iter != fConfigVect.end())
+  {
     G4ExceptionDescription ed;
-    ed <<"Single value "<< value <<" already exists";
-    G4Exception
-      ("G4AttributeFilterT::AddValue", "modeling0105", JustWarning, ed);
+    ed << "Single value " << value << " already exists";
+    G4Exception("G4AttributeFilterT::AddValue", "modeling0105", JustWarning, ed);
     return;
   }
   fConfigVect.push_back(std::move(myPair));

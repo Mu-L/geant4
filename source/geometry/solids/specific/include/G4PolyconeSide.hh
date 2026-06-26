@@ -33,7 +33,7 @@
 //                   const G4PolyconeSideRZ* tail,
 //                   const G4PolyconeSideRZ* head,
 //                   const G4PolyconeSideRZ* nextRZ,
-//                         G4double phiStart, G4double deltaPhi, 
+//                         G4double phiStart, G4double deltaPhi,
 //                         G4bool phiIsOpen, G4bool isAllBehind=false )
 //
 // Values for r1,z1 and r2,z2 should be specified in clockwise order in (r,z).
@@ -49,11 +49,11 @@ class G4IntersectingCone;
 
 struct G4PolyconeSideRZ
 {
-  G4double r, z;  // start of vector
+    G4double r, z;  // start of vector
 };
 
 // ----------------------------------------------------------------------------
-// MT-specific utility code 
+// MT-specific utility code
 
 #include "G4GeomSplitter.hh"
 
@@ -66,14 +66,17 @@ class G4PlSideData
 
     void initialize()
     {
-      fPhix = 0.; fPhiy = 0.; fPhiz = 0.; fPhik = 0.;
+      fPhix = 0.;
+      fPhiy = 0.;
+      fPhiz = 0.;
+      fPhik = 0.;
     }
 
-    G4double fPhix=0., fPhiy=0., fPhiz=0., fPhik=0.;   // Cached values for phi
+    G4double fPhix = 0., fPhiy = 0., fPhiz = 0., fPhik = 0.;  // Cached values for phi
 };
 
-// The type G4PlSideManager is introduced to 
-// encapsulate the methods used by both the master thread and 
+// The type G4PlSideManager is introduced to
+// encapsulate the methods used by both the master thread and
 // worker threads to allocate memory space for the fields encapsulated
 // by the class G4PlSideData.
 //
@@ -85,6 +88,7 @@ using G4PlSideManager = G4GeomSplitter<G4PlSideData>;
 /**
  * @brief G4PolyconeSide is a utility class implementing a face that
  * represents one conical side of a polycone.
+ * @ingroup geometry_solids_specific
  */
 
 class G4PolyconeSide : public G4VCSGface
@@ -102,24 +106,21 @@ class G4PolyconeSide : public G4VCSGface
      *  @param[in] phiIsOpen Flag indicating if it is a Phi section.
      *  @param[in] isAllBehind Indicating if entire surface is behind normal.
      */
-    G4PolyconeSide( const G4PolyconeSideRZ* prevRZ,
-                    const G4PolyconeSideRZ* tail,
-                    const G4PolyconeSideRZ* head,
-                    const G4PolyconeSideRZ* nextRZ,
-                          G4double phiStart, G4double deltaPhi, 
-                          G4bool phiIsOpen, G4bool isAllBehind = false );
+    G4PolyconeSide(const G4PolyconeSideRZ* prevRZ, const G4PolyconeSideRZ* tail,
+                   const G4PolyconeSideRZ* head, const G4PolyconeSideRZ* nextRZ, G4double phiStart,
+                   G4double deltaPhi, G4bool phiIsOpen, G4bool isAllBehind = false);
 
     /**
      * Destructor.
      */
     ~G4PolyconeSide() override;
-  
+
     /**
      * Copy constructor and assignment operator.
      */
-    G4PolyconeSide( const G4PolyconeSide& source );
-    G4PolyconeSide& operator=( const G4PolyconeSide& source );
-  
+    G4PolyconeSide(const G4PolyconeSide& source);
+    G4PolyconeSide& operator=(const G4PolyconeSide& source);
+
     /**
      * Determines the distance along a line to the face.
      *  @param[in] p Position.
@@ -134,10 +135,9 @@ class G4PolyconeSide : public G4VCSGface
      *  @param[out] allBehind Flag, true, if entire surface is behind normal.
      *  @returns true if there is an intersection, false otherwise.
      */
-    G4bool Intersect(const G4ThreeVector& p, const G4ThreeVector& v,  
-                           G4bool outgoing, G4double surfTolerance,
-                           G4double& distance, G4double &distFromSurface,
-                           G4ThreeVector& normal, G4bool& isAllBehind) override;
+    G4bool Intersect(const G4ThreeVector& p, const G4ThreeVector& v, G4bool outgoing,
+                     G4double surfTolerance, G4double& distance, G4double& distFromSurface,
+                     G4ThreeVector& normal, G4bool& isAllBehind) override;
 
     /**
      * Determines the distance of a point from either the inside or outside
@@ -148,8 +148,8 @@ class G4PolyconeSide : public G4VCSGface
      *  @returns The distance to the closest surface satisfying requirements
      *           or kInfinity if no such surface exists.
      */
-    G4double Distance( const G4ThreeVector& p, G4bool outgoing ) override;
-  
+    G4double Distance(const G4ThreeVector& p, G4bool outgoing) override;
+
     /**
      * Determines whether a point is inside, outside, or on the surface of
      * the face.
@@ -161,24 +161,22 @@ class G4PolyconeSide : public G4VCSGface
      *           kOutside if the point is closest to the outside surface;
      *           kSurface if the point is withing tolerance of the surface.
      */
-    EInside Inside( const G4ThreeVector& p, G4double tolerance, 
-                          G4double* bestDistance ) override;
-  
+    EInside Inside(const G4ThreeVector& p, G4double tolerance, G4double* bestDistance) override;
+
     /**
      * Returns the normal of surface closest to the point.
      *  @param[in] p Position.
      *  @param[out] bestDistance Distance to the closest surface (in or out).
      *  @returns The normal of the surface nearest the point.
      */
-    G4ThreeVector Normal( const G4ThreeVector& p,
-                                G4double* bestDistance ) override;
+    G4ThreeVector Normal(const G4ThreeVector& p, G4double* bestDistance) override;
 
     /**
      * Returns the face extent along the axis.
      *  @param[in] axis Unit vector defining the direction.
      *  @returns The largest point along the given axis of the face's extent.
      */
-    G4double Extent( const G4ThreeVector axis ) override;
+    G4double Extent(const G4ThreeVector axis) override;
 
     /**
      * Calculates the extent of the face for the voxel navigator.
@@ -188,16 +186,14 @@ class G4PolyconeSide : public G4VCSGface
      *             the shape before testing.
      *  @param[out] extentList The list of (voxel) extents along the axis.
      */
-    void CalculateExtent( const EAxis axis, 
-                          const G4VoxelLimits& voxelLimit,
-                          const G4AffineTransform& tranform,
-                                G4SolidExtentList& extentList ) override;
+    void CalculateExtent(const EAxis axis, const G4VoxelLimits& voxelLimit,
+                         const G4AffineTransform& tranform, G4SolidExtentList& extentList) override;
 
     /**
      * Method invoked by the copy constructor or the assignment operator.
      * Its purpose is to return a pointer to a duplicate copy of the face.
      */
-    inline G4VCSGface* Clone() override { return new G4PolyconeSide( *this ); }
+    inline G4VCSGface* Clone() override { return new G4PolyconeSide(*this); }
 
     /**
      * Returning an estimation of the face surface area, in internal units.
@@ -208,7 +204,7 @@ class G4PolyconeSide : public G4VCSGface
      * Returns a random point located and uniformly distributed on the face.
      */
     G4ThreeVector GetPointOnFace() override;
-  
+
     /**
      * Fake default constructor for usage restricted to direct object
      * persistency for clients requiring preallocation of memory for
@@ -219,7 +215,7 @@ class G4PolyconeSide : public G4VCSGface
     /**
      * Returns the instance ID.
      */
-    inline G4int GetInstanceID() const  { return instanceID; }
+    inline G4int GetInstanceID() const { return instanceID; }
 
     /**
      * Returns the private data instance manager.
@@ -239,10 +235,9 @@ class G4PolyconeSide : public G4VCSGface
      *           edges, signed by whether the point is in inside or outside
      *           the shape.
      */
-    G4double DistanceAway( const G4ThreeVector& p, G4bool opposite,
-                                 G4double& distOutside,
-                                 G4double* rzNorm = nullptr );
-      
+    G4double DistanceAway(const G4ThreeVector& p, G4bool opposite, G4double& distOutside,
+                          G4double* rzNorm = nullptr);
+
     /**
      * Special version of DistanceAway() for Inside. Opposite parameter is not
      * used, instead use sign of rx for choosing the side.
@@ -251,72 +246,68 @@ class G4PolyconeSide : public G4VCSGface
      *  @param[out] edgeRZnorm If negative, the point is inside.
      *  @returns The distance from the conical plane.
      */
-    G4double DistanceAway( const G4ThreeVector& p, G4double& distOutside,
-                                 G4double* edgeRZnorm );
+    G4double DistanceAway(const G4ThreeVector& p, G4double& distOutside, G4double* edgeRZnorm);
 
     /**
      * Decides if a point is on a cone and returns the 'normal' if it is.
      *  @returns true if the point is on the cone.
      */
-    G4bool PointOnCone( const G4ThreeVector& hit, G4double normSign,
-                        const G4ThreeVector& p,
-                        const G4ThreeVector& v, G4ThreeVector& normal );
+    G4bool PointOnCone(const G4ThreeVector& hit, G4double normSign, const G4ThreeVector& p,
+                       const G4ThreeVector& v, G4ThreeVector& normal);
 
     /**
      * Copies parameters from other object; used in copy constructor and
      * assignment operator.
      */
-    void CopyStuff( const G4PolyconeSide& source );
-  
+    void CopyStuff(const G4PolyconeSide& source);
+
     /**
      * Decides the point at which two 2-dimensional lines intersect.
      * It is assumed that the lines are *not* parallel.
      */
-    static void FindLineIntersect( G4double x1, G4double y1,
-                                   G4double tx1, G4double ty1,
-                                   G4double x2, G4double y2,
-                                   G4double tx2, G4double ty2,
-                                   G4double& x, G4double& y );
+    static void FindLineIntersect(G4double x1, G4double y1, G4double tx1, G4double ty1, G4double x2,
+                                  G4double y2, G4double tx2, G4double ty2, G4double& x,
+                                  G4double& y);
 
     /**
      * Calculates Phi for a given 3-vector (point 'p'), if not already cached
      * for the same point, in the attempt to avoid consecutive computation of
      * the same quantity.
      */
-    G4double GetPhi( const G4ThreeVector& p );
+    G4double GetPhi(const G4ThreeVector& p);
 
   private:
 
-    G4double r[2], z[2]; // r, z parameters, in specified order
-    G4double startPhi,   // Start phi (0 to 2pi), if phiIsOpen
-             deltaPhi;   // Delta phi (0 to 2pi), if phiIsOpen
-    G4bool phiIsOpen = false; // True if there is a phi slice
-    G4bool allBehind = false; // True if the entire solid is "behind" this face
-  
+    G4double r[2], z[2];  // r, z parameters, in specified order
+    G4double startPhi,  // Start phi (0 to 2pi), if phiIsOpen
+      deltaPhi;  // Delta phi (0 to 2pi), if phiIsOpen
+    G4bool phiIsOpen = false;  // True if there is a phi slice
+    G4bool allBehind = false;  // True if the entire solid is "behind" this face
+
     G4IntersectingCone* cone = nullptr;  // Our intersecting utility class
-  
+
     G4double rNorm, zNorm;  // Normal to surface in r,z space
-    G4double rS, zS;        // Unit vector along surface in r,z space
-    G4double length;        // Length of face in r,z space
+    G4double rS, zS;  // Unit vector along surface in r,z space
+    G4double length;  // Length of face in r,z space
     G4double prevRS,
-             prevZS;        // Unit vector along previous polyconeSide
+      prevZS;  // Unit vector along previous polyconeSide
     G4double nextRS,
-             nextZS;        // Unit vector along next polyconeSide
-  
+      nextZS;  // Unit vector along next polyconeSide
+
     G4double rNormEdge[2],
-             zNormEdge[2];  // Normal to edges
+      zNormEdge[2];  // Normal to edges
 
     G4int ncorners = 0;
-    G4ThreeVector* corners = nullptr; // The coordinates of the corners
-                                      // (if phiIsOpen)
+    G4ThreeVector* corners = nullptr;  // The coordinates of the corners
+                                       // (if phiIsOpen)
 
-    G4double kCarTolerance;       // Geometrical surface thickness
-    G4double fSurfaceArea = 0.0;  // Used for surface calculation 
+    G4double kCarTolerance;  // Geometrical surface thickness
+    G4double fSurfaceArea = 0.0;  // Used for surface calculation
 
     G4int instanceID;
-      // This field is used as instance ID.
+    // This field is used as instance ID.
     G4GEOM_DLL static G4PlSideManager subInstanceManager;
-      // This field helps to use the class G4PlSideManager introduced above.
+    // This field helps to use the class G4PlSideManager introduced above.
 };
 
 #endif

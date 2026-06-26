@@ -32,13 +32,13 @@
 // File name:     G4hZiegler1985p
 //
 // Author:        V.Ivanchenko (Vladimir.Ivanchenko@cern.ch)
-// 
+//
 // Creation date: 20 July 2000
 //
-// Modifications: 
+// Modifications:
 // 20/07/2000  V.Ivanchenko First implementation
 //
-// Class Description: 
+// Class Description:
 //
 // Electronic stopping power parametrised according to
 // J.F.Ziegler, J.P.Biersack, U.Littmark The Stoping and
@@ -48,32 +48,31 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4hZiegler1985p_h
-#define G4hZiegler1985p_h 1
+#ifndef G4HZIEGLER1985P_HH
+#define G4HZIEGLER1985P_HH
 
-#include "globals.hh"
 #include "G4VhElectronicStoppingPower.hh"
+#include "globals.hh"
 
 class G4Material;
 
 class G4hZiegler1985p : public G4VhElectronicStoppingPower
 {
-public:
-  explicit G4hZiegler1985p();
-  ~G4hZiegler1985p();
+  public:
 
-  G4bool HasMaterial(const G4Material* material) override;
+    explicit G4hZiegler1985p();
+    ~G4hZiegler1985p();
 
-  G4double StoppingPower(const G4Material* material,
-                               G4double kineticEnergy) override;
+    G4bool HasMaterial(const G4Material* material) override;
 
-  G4double ElectronicStoppingPower(G4double z,
-                                   G4double kineticEnergy) const override;
- 
-private:
-  static const G4double a[92][8];
-  const G4double protonMassAMU;
+    G4double StoppingPower(const G4Material* material, G4double kineticEnergy) override;
 
+    G4double ElectronicStoppingPower(G4double z, G4double kineticEnergy) const override;
+
+  private:
+
+    static const G4double a[92][8];
+    const G4double protonMassAMU;
 };
 
 #endif

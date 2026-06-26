@@ -36,18 +36,18 @@
 // by I.Hrivnacova, 27 Sep 99
 
 #ifndef G3ROTTABLEH_HH
-#define G3ROTTABLEH_HH 1
+#define G3ROTTABLEH_HH
+
+#include "globals.hh"
 
 #include "G3RotTableEntry.hh"
 #include "G3toG4Defs.hh"
-
-#include "globals.hh"
 
 #include <vector>
 
 class G4Material;
 
-typedef std::vector<G3RotTableEntry*>  G3RotMatrixVector;
+typedef std::vector<G3RotTableEntry*> G3RotMatrixVector;
 
 class G3RotTable
 {
@@ -55,7 +55,7 @@ class G3RotTable
 
     G3RotTable();
     virtual ~G3RotTable();
-    
+
     // methods
 
     G4RotationMatrix* Get(G4int id) const;
@@ -64,7 +64,7 @@ class G3RotTable
 
   private:
 
-    G3RotMatrixVector*  fRotVector;
+    G3RotMatrixVector* fRotVector;
 };
 
 extern G3G4DLL_API G3RotTable G3Rot;

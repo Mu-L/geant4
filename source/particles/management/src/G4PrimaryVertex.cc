@@ -56,9 +56,11 @@ G4PrimaryVertex::G4PrimaryVertex(const G4PrimaryVertex& right)
 
 G4PrimaryVertex::~G4PrimaryVertex()
 {
-  if (theParticle != nullptr) {
+  if (theParticle != nullptr)
+  {
     G4PrimaryParticle* theNext = theParticle;
-    while (theNext != nullptr) {
+    while (theNext != nullptr)
+    {
       G4PrimaryParticle* thisPrimary = theNext;
       theNext = thisPrimary->GetNext();
       thisPrimary->ClearNext();
@@ -78,7 +80,8 @@ G4PrimaryVertex::~G4PrimaryVertex()
 
 G4PrimaryVertex& G4PrimaryVertex::operator=(const G4PrimaryVertex& right)
 {
-  if (this != &right) {
+  if (this != &right)
+  {
     X0 = right.X0;
     Y0 = right.Y0;
     Z0 = right.Z0;
@@ -89,7 +92,8 @@ G4PrimaryVertex& G4PrimaryVertex::operator=(const G4PrimaryVertex& right)
     delete theParticle;
     theParticle = nullptr;
     theTail = nullptr;
-    if (right.theParticle != nullptr) {
+    if (right.theParticle != nullptr)
+    {
       theParticle = new G4PrimaryParticle(*(right.theParticle));
       theTail = theParticle;
       G4PrimaryParticle* np = theParticle->GetNext();
@@ -103,7 +107,8 @@ G4PrimaryVertex& G4PrimaryVertex::operator=(const G4PrimaryVertex& right)
     delete nextVertex;
     nextVertex = nullptr;
     tailVertex = nullptr;
-    if (right.nextVertex != nullptr) {
+    if (right.nextVertex != nullptr)
+    {
       nextVertex = new G4PrimaryVertex(*(right.nextVertex));
       tailVertex = nextVertex;
       G4PrimaryVertex* nv = nextVertex->GetNext();
@@ -132,9 +137,11 @@ G4bool G4PrimaryVertex::operator!=(const G4PrimaryVertex& right) const
 
 G4PrimaryParticle* G4PrimaryVertex::GetPrimary(G4int i) const
 {
-  if (i >= 0 && i < numberOfParticle) {
+  if (i >= 0 && i < numberOfParticle)
+  {
     G4PrimaryParticle* particle = theParticle;
-    for (G4int j = 0; j < i; ++j) {
+    for (G4int j = 0; j < i; ++j)
+    {
       if (particle == nullptr) return nullptr;
       particle = particle->GetNext();
     }
@@ -153,7 +160,8 @@ void G4PrimaryVertex::Print() const
   G4cout << "  -- Primary particles :: "
          << "   # of primaries =" << numberOfParticle << G4endl;
   if (theParticle != nullptr) theParticle->Print();
-  if (nextVertex != nullptr) {
+  if (nextVertex != nullptr)
+  {
     G4cout << "Next Vertex " << G4endl;
     nextVertex->Print();
   }

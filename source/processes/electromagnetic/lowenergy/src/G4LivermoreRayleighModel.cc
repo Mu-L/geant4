@@ -60,7 +60,8 @@ G4LivermoreRayleighModel::G4LivermoreRayleighModel() : G4VEmModel("LivermoreRayl
   // 1 = calculation of cross sections, file openings...
   // 2 = entering in methods
 
-  if (verboseLevel > 0) {
+  if (verboseLevel > 0)
+  {
     G4cout << "G4LivermoreRayleighModel is constructed " << G4endl;
   }
 }
@@ -69,9 +70,12 @@ G4LivermoreRayleighModel::G4LivermoreRayleighModel() : G4VEmModel("LivermoreRayl
 
 G4LivermoreRayleighModel::~G4LivermoreRayleighModel()
 {
-  if (IsMaster()) {
-    for (G4int i = 0; i <= maxZ; ++i) {
-      if (nullptr != dataCS[i]) {
+  if (IsMaster())
+  {
+    for (G4int i = 0; i <= maxZ; ++i)
+    {
+      if (nullptr != dataCS[i])
+      {
         delete dataCS[i];
         dataCS[i] = nullptr;
       }
@@ -84,28 +88,33 @@ G4LivermoreRayleighModel::~G4LivermoreRayleighModel()
 void G4LivermoreRayleighModel::Initialise(const G4ParticleDefinition* particle,
                                           const G4DataVector& cuts)
 {
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "Calling Initialise() of G4LivermoreRayleighModel." << G4endl
            << "Energy range: " << LowEnergyLimit() / eV << " eV - " << HighEnergyLimit() / GeV
            << " GeV" << G4endl;
   }
 
-  if (IsMaster()) {
+  if (IsMaster())
+  {
     // Initialise element selector
     InitialiseElementSelectors(particle, cuts);
 
     // Access to elements
     const G4ElementTable* elemTable = G4Element::GetElementTable();
     std::size_t numElems = (*elemTable).size();
-    for (std::size_t ie = 0; ie < numElems; ++ie) {
+    for (std::size_t ie = 0; ie < numElems; ++ie)
+    {
       const G4Element* elem = (*elemTable)[ie];
       const G4int Z = std::min(maxZ, elem->GetZasInt());
-      if (dataCS[Z] == nullptr) {
+      if (dataCS[Z] == nullptr)
+      {
         ReadData(Z);
       }
     }
   }
-  if (isInitialised) {
+  if (isInitialised)
+  {
     return;
   }
   fParticleChange = GetParticleChangeForGamma();
@@ -124,13 +133,16 @@ void G4LivermoreRayleighModel::InitialiseLocal(const G4ParticleDefinition*, G4VE
 const G4String& G4LivermoreRayleighModel::FindDirectoryPath()
 {
   // no check in this method - environment variable is check by utility
-  if (gDataDirectory.empty()) {
+  if (gDataDirectory.empty())
+  {
     auto param = G4EmParameters::Instance();
     std::ostringstream ost;
-    if (param->LivermoreDataDir() == "livermore") {
+    if (param->LivermoreDataDir() == "livermore")
+    {
       ost << param->GetDirLEDATA() << "/livermore/rayl/";
     }
-    else {
+    else
+    {
       ost << param->GetDirLEDATA() << "/epics2017/rayl/";
     }
     gDataDirectory = ost.str();
@@ -142,12 +154,14 @@ const G4String& G4LivermoreRayleighModel::FindDirectoryPath()
 
 void G4LivermoreRayleighModel::ReadData(const G4int ZZ)
 {
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "Calling ReadData() of G4LivermoreRayleighModel for Z=" << ZZ << G4endl;
   }
   const G4int Z = std::min(ZZ, maxZ);
 
-  if (nullptr != dataCS[Z]) {
+  if (nullptr != dataCS[Z])
+  {
     return;
   }
 
@@ -158,7 +172,8 @@ void G4LivermoreRayleighModel::ReadData(const G4int ZZ)
 
   std::ifstream finCS(ostCS.str().c_str());
 
-  if (!finCS.is_open()) {
+  if (!finCS.is_open())
+  {
     G4ExceptionDescription ed;
     ed << "G4LivermoreRayleighModel data file <" << ostCS.str().c_str() << "> is not opened!"
        << G4endl;
@@ -166,8 +181,10 @@ void G4LivermoreRayleighModel::ReadData(const G4int ZZ)
                 "G4LEDATA version should be G4EMLOW8.0 or later.");
     return;
   }
-  else {
-    if (verboseLevel > 3) {
+  else
+  {
+    if (verboseLevel > 3)
+    {
       G4cout << "File " << ostCS.str() << " is opened by G4LivermoreRayleighModel" << G4endl;
     }
     dataCS[Z]->Retrieve(finCS, true);
@@ -180,17 +197,20 @@ G4double G4LivermoreRayleighModel::ComputeCrossSectionPerAtom(const G4ParticleDe
                                                               G4double GammaEnergy, G4double Z,
                                                               G4double, G4double, G4double)
 {
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "G4LivermoreRayleighModel::ComputeCrossSectionPerAtom()" << G4endl;
   }
 
-  if (GammaEnergy < lowEnergyLimit) {
+  if (GammaEnergy < lowEnergyLimit)
+  {
     return 0.0;
   }
 
   G4double xs = 0.0;
   G4int intZ = G4lrint(Z);
-  if (intZ < 1 || intZ > maxZ) {
+  if (intZ < 1 || intZ > maxZ)
+  {
     return xs;
   }
 
@@ -198,24 +218,29 @@ G4double G4LivermoreRayleighModel::ComputeCrossSectionPerAtom(const G4ParticleDe
 
   // if element was not initialised
   // do initialisation safely for MT mode
-  if (nullptr == pv) {
+  if (nullptr == pv)
+  {
     InitialiseForElement(nullptr, intZ);
     pv = dataCS[intZ];
-    if (nullptr == pv) {
+    if (nullptr == pv)
+    {
       return xs;
     }
   }
 
   auto n = G4int(pv->GetVectorLength() - 1);
   G4double e = GammaEnergy / MeV;
-  if (e >= pv->Energy(n)) {
+  if (e >= pv->Energy(n))
+  {
     xs = (*pv)[n] / (e * e);
   }
-  else if (e >= pv->Energy(0)) {
+  else if (e >= pv->Energy(0))
+  {
     xs = pv->Value(e) / (e * e);
   }
 
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "****** DEBUG: tcs value for Z=" << Z << " at energy (MeV)=" << e << G4endl;
     G4cout << "  cs (Geant4 internal unit)=" << xs << G4endl;
     G4cout << "    -> first E*E*cs value in CS data file (iu) =" << (*pv)[0] << G4endl;
@@ -232,7 +257,8 @@ void G4LivermoreRayleighModel::SampleSecondaries(std::vector<G4DynamicParticle*>
                                                  const G4DynamicParticle* aDynamicGamma, G4double,
                                                  G4double)
 {
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "Calling SampleSecondaries() of G4LivermoreRayleighModel" << G4endl;
   }
   G4double photonEnergy0 = aDynamicGamma->GetKineticEnergy();
@@ -252,11 +278,13 @@ void G4LivermoreRayleighModel::SampleSecondaries(std::vector<G4DynamicParticle*>
 
 void G4LivermoreRayleighModel::InitialiseForElement(const G4ParticleDefinition*, G4int Z)
 {
-  if (nullptr != dataCS[Z]) {
+  if (nullptr != dataCS[Z])
+  {
     return;
   }
   G4AutoLock l(&LivermoreRayleighModelMutex);
-  if (nullptr == dataCS[Z]) {
+  if (nullptr == dataCS[Z])
+  {
     ReadData(Z);
   }
   l.unlock();

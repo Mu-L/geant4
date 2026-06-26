@@ -27,8 +27,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPAngularP_h
-#define G4ParticleHPAngularP_h 1
+#ifndef G4PARTICLEHPANGULARP_HH
+#define G4PARTICLEHPANGULARP_HH
 
 #include "G4InterpolationManager.hh"
 #include "G4ParticleHPInterpolator.hh"
@@ -39,6 +39,7 @@
 class G4ParticleHPAngularP
 {
   public:
+
     G4ParticleHPAngularP()
     {
       theCosTh = nullptr;
@@ -60,7 +61,8 @@ class G4ParticleHPAngularP
       theManager.Init(aDataFile);
       eNeu *= CLHEP::eV;
       Init(eNeu, nProb);
-      for (G4int iii = 0; iii < nProb; iii++) {
+      for (G4int iii = 0; iii < nProb; iii++)
+      {
         aDataFile >> cosTheta >> probDist;
         SetCosTh(iii, cosTheta);
         SetProb(iii, probDist);
@@ -88,7 +90,8 @@ class G4ParticleHPAngularP
       G4int i;
       G4double rand = G4UniformRand();
       G4double run = 0, runo = 0;
-      for (i = 0; i < GetNumberOfPoints(); i++) {
+      for (i = 0; i < GetNumberOfPoints(); i++)
+      {
         runo = run;
         run += GetProb(i);
         if (run > rand) break;
@@ -100,6 +103,7 @@ class G4ParticleHPAngularP
     }
 
   private:
+
     G4double theEnergy;  // neutron energy
     G4ParticleHPInterpolator theInt;  // knows tointerpolate
     G4int nCoeff;

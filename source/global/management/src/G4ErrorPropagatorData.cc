@@ -32,8 +32,7 @@
 
 //---------------------------------------------------------------------
 
-G4ThreadLocal G4ErrorPropagatorData*
-  G4ErrorPropagatorData::fpInstance = nullptr;
+G4ThreadLocal G4ErrorPropagatorData* G4ErrorPropagatorData::fpInstance = nullptr;
 G4ThreadLocal G4int G4ErrorPropagatorData::theVerbosity = 0;
 
 // --------------------------------------------------------------------
@@ -45,7 +44,7 @@ G4ErrorPropagatorData::~G4ErrorPropagatorData()
 // --------------------------------------------------------------------
 G4ErrorPropagatorData* G4ErrorPropagatorData::GetErrorPropagatorData()
 {
-  if(fpInstance == nullptr)
+  if (fpInstance == nullptr)
   {
     fpInstance = new G4ErrorPropagatorData;
   }
@@ -53,7 +52,13 @@ G4ErrorPropagatorData* G4ErrorPropagatorData::GetErrorPropagatorData()
 }
 
 // --------------------------------------------------------------------
-G4int G4ErrorPropagatorData::verbose() { return theVerbosity; }
+G4int G4ErrorPropagatorData::verbose()
+{
+  return theVerbosity;
+}
 
 // --------------------------------------------------------------------
-void G4ErrorPropagatorData::SetVerbose(G4int ver) { theVerbosity = ver; }
+void G4ErrorPropagatorData::SetVerbose(G4int ver)
+{
+  theVerbosity = ver;
+}

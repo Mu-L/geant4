@@ -42,8 +42,8 @@
 
 // Author: A.Dotti, 17 January 2016
 // --------------------------------------------------------------------
-#ifndef G4MultiRunAction_hh
-#define G4MultiRunAction_hh 1
+#ifndef G4MULTIRUNACTION_HH
+#define G4MULTIRUNACTION_HH
 
 #include "G4UserRunAction.hh"
 
@@ -56,6 +56,7 @@ using G4UserRunActionVector = std::vector<G4UserRunActionUPtr>;
 class G4MultiRunAction : public G4UserRunAction, public G4UserRunActionVector
 {
   public:
+
     G4MultiRunAction() = default;
     ~G4MultiRunAction() override = default;
     G4Run* GenerateRun() override;

@@ -48,15 +48,15 @@
 
 // Author: Makoto Asai, 1997
 // --------------------------------------------------------------------
-#ifndef G4ParticleGun_hh
-#define G4ParticleGun_hh 1
+#ifndef G4PARTICLEGUN_HH
+#define G4PARTICLEGUN_HH
 
-#include "globals.hh"
-#include "G4VPrimaryGenerator.hh"
-#include "G4ThreeVector.hh"
 #include "G4ParticleDefinition.hh"
-#include "G4PrimaryVertex.hh"
 #include "G4ParticleMomentum.hh"
+#include "G4PrimaryVertex.hh"
+#include "G4ThreeVector.hh"
+#include "G4VPrimaryGenerator.hh"
+#include "globals.hh"
 
 class G4Event;
 class G4ParticleGunMessenger;
@@ -67,11 +67,10 @@ class G4ParticleGun : public G4VPrimaryGenerator
 
     G4ParticleGun();
     explicit G4ParticleGun(G4int numberofparticles);
-    explicit G4ParticleGun(G4ParticleDefinition* particleDef, 
-                  G4int numberofparticles = 1);
-      // Costructors. "numberofparticles" is the number of particles to be
-      // shot at one invokation of GeneratePrimaryVertex() method.
-      // All particles are shot with the same physical quantities.
+    explicit G4ParticleGun(G4ParticleDefinition* particleDef, G4int numberofparticles = 1);
+    // Costructors. "numberofparticles" is the number of particles to be
+    // shot at one invokation of GeneratePrimaryVertex() method.
+    // All particles are shot with the same physical quantities.
 
     ~G4ParticleGun() override;
 
@@ -81,11 +80,11 @@ class G4ParticleGun : public G4VPrimaryGenerator
     G4bool operator!=(const G4ParticleGun&) const = delete;
 
     void GeneratePrimaryVertex(G4Event* evt) override;
-      // Creates a primary vertex at the given point
-      // and put primary particles to it.
+    // Creates a primary vertex at the given point
+    // and put primary particles to it.
 
     // Followings are the Set methods for the particle properties.
-    // SetParticleDefinition() should be called first.  
+    // SetParticleDefinition() should be called first.
     // By using SetParticleMomentum(), both particle_momentum_direction and
     // particle_energy(Kinetic Energy) are set.
     //
@@ -94,51 +93,42 @@ class G4ParticleGun : public G4VPrimaryGenerator
     void SetParticleMomentum(G4double aMomentum);
     void SetParticleMomentum(G4ParticleMomentum aMomentum);
     inline void SetParticleMomentumDirection(G4ParticleMomentum aMomDirection)
-      { particle_momentum_direction =  aMomDirection.unit(); }
-    inline void SetParticleCharge(G4double aCharge)
-      { particle_charge = aCharge; }
-    inline void SetParticlePolarization(G4ThreeVector aVal)
-      { particle_polarization = aVal; }
-    inline void SetNumberOfParticles(G4int i)
-      { NumberOfParticlesToBeGenerated = i; }
-    inline void SetParticleWeight(G4double w)
-      { particle_weight = w; }
+    {
+      particle_momentum_direction = aMomDirection.unit();
+    }
+    inline void SetParticleCharge(G4double aCharge) { particle_charge = aCharge; }
+    inline void SetParticlePolarization(G4ThreeVector aVal) { particle_polarization = aVal; }
+    inline void SetNumberOfParticles(G4int i) { NumberOfParticlesToBeGenerated = i; }
+    inline void SetParticleWeight(G4double w) { particle_weight = w; }
 
-    inline G4ParticleDefinition* GetParticleDefinition() const
-      { return particle_definition; }
+    inline G4ParticleDefinition* GetParticleDefinition() const { return particle_definition; }
     inline G4ParticleMomentum GetParticleMomentumDirection() const
-      { return particle_momentum_direction; }
-    inline G4double GetParticleEnergy() const
-      { return particle_energy; }
-    inline G4double GetParticleMomentum() const
-      { return particle_momentum; }
-    inline G4double GetParticleCharge() const
-      { return particle_charge; }
-    inline G4ThreeVector GetParticlePolarization() const
-      { return particle_polarization; }
-    inline G4int GetNumberOfParticles() const
-      { return NumberOfParticlesToBeGenerated; }
-    inline G4double GetParticleWeight() const
-      { return particle_weight; }
+    {
+      return particle_momentum_direction;
+    }
+    inline G4double GetParticleEnergy() const { return particle_energy; }
+    inline G4double GetParticleMomentum() const { return particle_momentum; }
+    inline G4double GetParticleCharge() const { return particle_charge; }
+    inline G4ThreeVector GetParticlePolarization() const { return particle_polarization; }
+    inline G4int GetNumberOfParticles() const { return NumberOfParticlesToBeGenerated; }
+    inline G4double GetParticleWeight() const { return particle_weight; }
 
-  protected:  
+  protected:
 
-     virtual void SetInitialValues();
+    virtual void SetInitialValues();
 
-     G4int                 NumberOfParticlesToBeGenerated = 0;
-     G4ParticleDefinition* particle_definition = nullptr;
-     G4ParticleMomentum    particle_momentum_direction;
-     G4double              particle_energy = 0.0;
-     G4double              particle_momentum = 0.0;
-     G4double              particle_charge = 0.0;
-     G4ThreeVector         particle_polarization;
-     G4double              particle_weight = 1.0;
+    G4int NumberOfParticlesToBeGenerated = 0;
+    G4ParticleDefinition* particle_definition = nullptr;
+    G4ParticleMomentum particle_momentum_direction;
+    G4double particle_energy = 0.0;
+    G4double particle_momentum = 0.0;
+    G4double particle_charge = 0.0;
+    G4ThreeVector particle_polarization;
+    G4double particle_weight = 1.0;
 
   private:
 
-     G4ParticleGunMessenger* theMessenger = nullptr;
+    G4ParticleGunMessenger* theMessenger = nullptr;
 };
 
 #endif
-
-

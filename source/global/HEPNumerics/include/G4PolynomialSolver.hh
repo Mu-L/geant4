@@ -89,35 +89,37 @@
 // Author: E.Medernach, 19.12.2000 - First implementation
 // --------------------------------------------------------------------
 #ifndef G4POL_SOLVER_HH
-#define G4POL_SOLVER_HH 1
+#define G4POL_SOLVER_HH
 
 #include "globals.hh"
 
-template <class T, class F>
+template<class T, class F>
 class G4PolynomialSolver
 {
- public:
-  G4PolynomialSolver(T* typeF, F func, F deriv, G4double precision);
-  ~G4PolynomialSolver();
+  public:
 
-  G4double solve(G4double IntervalMin, G4double IntervalMax);
+    G4PolynomialSolver(T* typeF, F func, F deriv, G4double precision);
+    ~G4PolynomialSolver();
 
- private:
-  G4double Newton(G4double IntervalMin, G4double IntervalMax);
-  // General Newton method with Bezier Clipping
+    G4double solve(G4double IntervalMin, G4double IntervalMax);
 
-  // Works for polynomial of order less or equal than 4.
-  // But could be changed to work for polynomial of any order providing
-  // that we find the bezier control points.
+  private:
 
-  G4int BezierClipping(G4double* IntervalMin, G4double* IntervalMax);
-  // This is just one iteration of Bezier Clipping
+    G4double Newton(G4double IntervalMin, G4double IntervalMax);
+    // General Newton method with Bezier Clipping
 
-  T* FunctionClass;
-  F Function;
-  F Derivative;
+    // Works for polynomial of order less or equal than 4.
+    // But could be changed to work for polynomial of any order providing
+    // that we find the bezier control points.
 
-  G4double Precision;
+    G4int BezierClipping(G4double* IntervalMin, G4double* IntervalMax);
+    // This is just one iteration of Bezier Clipping
+
+    T* FunctionClass;
+    F Function;
+    F Derivative;
+
+    G4double Precision;
 };
 
 #include "G4PolynomialSolver.icc"

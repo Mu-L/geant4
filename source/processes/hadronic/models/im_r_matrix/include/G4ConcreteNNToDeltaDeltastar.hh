@@ -25,39 +25,41 @@
 //
 //
 
-#ifndef G4ConcreteNNToDeltaDeltastar_h
-#define G4ConcreteNNToDeltaDeltastar_h
+#ifndef G4CONCRETENNTODELTADELTASTAR_HH
+#define G4CONCRETENNTODELTADELTASTAR_HH
 
-#include "globals.hh"
-#include "G4VScatteringCollision.hh"
-#include "G4VCrossSectionSource.hh"
-#include "G4VAngularDistribution.hh"
-#include "G4KineticTrackVector.hh"
-#include <vector>
-#include "G4XDeltaDeltastarTable.hh"
 #include "G4ConcreteNNTwoBodyResonance.hh"
+#include "G4KineticTrackVector.hh"
+#include "G4VAngularDistribution.hh"
+#include "G4VCrossSectionSource.hh"
+#include "G4VScatteringCollision.hh"
+#include "G4XDeltaDeltastarTable.hh"
+#include "globals.hh"
 
-//class G4KineticTrack;
+#include <vector>
+
+// class G4KineticTrack;
 
 class G4ConcreteNNToDeltaDeltastar : public G4ConcreteNNTwoBodyResonance
 {
-public:
-  G4ConcreteNNToDeltaDeltastar(const G4ParticleDefinition* aPrimary,
-		       const G4ParticleDefinition* bPriamry,
-		       const G4ParticleDefinition* aSecondary,
-		       const G4ParticleDefinition* bSecondary);
+  public:
 
-  virtual ~G4ConcreteNNToDeltaDeltastar();  
-  virtual G4String GetName() const { return "ConcreteNNToNDeltaStar"; }
+    G4ConcreteNNToDeltaDeltastar(const G4ParticleDefinition* aPrimary,
+                                 const G4ParticleDefinition* bPriamry,
+                                 const G4ParticleDefinition* aSecondary,
+                                 const G4ParticleDefinition* bSecondary);
 
-private:
-  G4ConcreteNNToDeltaDeltastar(const G4ConcreteNNToDeltaDeltastar &);
-  G4ConcreteNNToDeltaDeltastar & operator= (const G4ConcreteNNToDeltaDeltastar &);
+    virtual ~G4ConcreteNNToDeltaDeltastar();
+    virtual G4String GetName() const { return "ConcreteNNToNDeltaStar"; }
 
-private:  
+  private:
 
-  static G4ThreadLocal G4XDeltaDeltastarTable *theSigmaTable_G4MT_TLS_;
+    G4ConcreteNNToDeltaDeltastar(const G4ConcreteNNToDeltaDeltastar&);
+    G4ConcreteNNToDeltaDeltastar& operator=(const G4ConcreteNNToDeltaDeltastar&);
 
+  private:
+
+    static G4ThreadLocal G4XDeltaDeltastarTable* theSigmaTable_G4MT_TLS_;
 };
 
 #endif

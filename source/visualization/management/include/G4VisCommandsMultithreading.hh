@@ -35,32 +35,39 @@
 class G4UIcmdWithAnInteger;
 class G4UIcmdWithAString;
 
-class G4VisCommandMultithreadingActionOnEventQueueFull: public G4VVisCommand {
-public:
-  G4VisCommandMultithreadingActionOnEventQueueFull();
-  virtual ~G4VisCommandMultithreadingActionOnEventQueueFull();
-  G4String GetCurrentValue(G4UIcommand* command);
-  void SetNewValue(G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandMultithreadingActionOnEventQueueFull
-  (const G4VisCommandMultithreadingActionOnEventQueueFull&);
-  G4VisCommandMultithreadingActionOnEventQueueFull& operator=
-  (const G4VisCommandMultithreadingActionOnEventQueueFull&);
-  G4UIcmdWithAString* fpCommand;
+class G4VisCommandMultithreadingActionOnEventQueueFull : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandMultithreadingActionOnEventQueueFull();
+    virtual ~G4VisCommandMultithreadingActionOnEventQueueFull();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandMultithreadingActionOnEventQueueFull(
+      const G4VisCommandMultithreadingActionOnEventQueueFull&);
+    G4VisCommandMultithreadingActionOnEventQueueFull&
+    operator=(const G4VisCommandMultithreadingActionOnEventQueueFull&);
+    G4UIcmdWithAString* fpCommand;
 };
 
-class G4VisCommandMultithreadingMaxEventQueueSize: public G4VVisCommand {
-public:
-  G4VisCommandMultithreadingMaxEventQueueSize();
-  virtual ~G4VisCommandMultithreadingMaxEventQueueSize();
-  G4String GetCurrentValue(G4UIcommand* command);
-  void SetNewValue(G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandMultithreadingMaxEventQueueSize
-  (const G4VisCommandMultithreadingMaxEventQueueSize&);
-  G4VisCommandMultithreadingMaxEventQueueSize& operator=
-  (const G4VisCommandMultithreadingMaxEventQueueSize&);
-  G4UIcmdWithAnInteger* fpCommand;
+class G4VisCommandMultithreadingMaxEventQueueSize : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandMultithreadingMaxEventQueueSize();
+    virtual ~G4VisCommandMultithreadingMaxEventQueueSize();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandMultithreadingMaxEventQueueSize(const G4VisCommandMultithreadingMaxEventQueueSize&);
+    G4VisCommandMultithreadingMaxEventQueueSize&
+    operator=(const G4VisCommandMultithreadingMaxEventQueueSize&);
+    G4UIcmdWithAnInteger* fpCommand;
 };
 
 #endif

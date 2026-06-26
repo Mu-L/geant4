@@ -43,38 +43,42 @@
 #define G4_CASCADE_CHANNEL_TABLES_HH
 
 #include "globals.hh"
+
 #include <iosfwd>
 #include <map>
 
 class G4CascadeChannel;
 
+class G4CascadeChannelTables
+{
+  public:
 
-class G4CascadeChannelTables {
-public:
-  // Argument is interaction code, product of G4InuclEP types
-  static const G4CascadeChannel* GetTable(G4int initialState);
+    // Argument is interaction code, product of G4InuclEP types
+    static const G4CascadeChannel* GetTable(G4int initialState);
 
-  // Arguments are individual G4InuclElementaryParticle types
-  static const G4CascadeChannel* GetTable(G4int had1, G4int had2);
+    // Arguments are individual G4InuclElementaryParticle types
+    static const G4CascadeChannel* GetTable(G4int had1, G4int had2);
 
-  // Convenience functions for diagnostic output
-  static void Print(std::ostream& os=G4cout);
-  static void PrintTable(G4int initialState, std::ostream& os=G4cout);
+    // Convenience functions for diagnostic output
+    static void Print(std::ostream& os = G4cout);
+    static void PrintTable(G4int initialState, std::ostream& os = G4cout);
 
-public:
-  ~G4CascadeChannelTables();
+  public:
 
-private:
-  static const G4CascadeChannelTables& instance();		// Singleton
-  static G4ThreadLocal G4CascadeChannelTables* theInstance;	// per thread
+    ~G4CascadeChannelTables();
 
-  G4CascadeChannelTables();
+  private:
 
-  // Fetch table from map if already registered, or return null
-  const G4CascadeChannel* FindTable(G4int initialState) const;
+    static const G4CascadeChannelTables& instance();  // Singleton
+    static G4ThreadLocal G4CascadeChannelTables* theInstance;  // per thread
 
-  typedef std::map<G4int, G4CascadeChannel*> TableMap;
-  TableMap tables;
+    G4CascadeChannelTables();
+
+    // Fetch table from map if already registered, or return null
+    const G4CascadeChannel* FindTable(G4int initialState) const;
+
+    typedef std::map<G4int, G4CascadeChannel*> TableMap;
+    TableMap tables;
 };
 
-#endif	/* G4_CASCADE_CHANNEL_TABLES_HH */
+#endif /* G4_CASCADE_CHANNEL_TABLES_HH */

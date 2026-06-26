@@ -23,7 +23,7 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// V. Ivanchenko 23 September 2023 
+// V. Ivanchenko 23 September 2023
 //
 // Cross-section data set for a high precision (based on evaluated data
 // libraries) description of neutron elastic process below 20 MeV.
@@ -31,22 +31,24 @@
 // is not considered in this cross section.
 //
 
-#ifndef G4NeutronHPElasticXS_h
-#define G4NeutronHPElasticXS_h 1
+#ifndef G4NEUTRONHPELASTICXS_HH
+#define G4NEUTRONHPELASTICXS_HH
 
 #include "G4CrossSectionHP.hh"
+
 #include <fstream>
 
 class G4NeutronHPElasticXS final : public G4CrossSectionHP
 {
   public:
+
     G4NeutronHPElasticXS();
 
     ~G4NeutronHPElasticXS() override = default;
 
     void CrossSectionDescription(std::ostream&) const final;
 
-    G4NeutronHPElasticXS & operator=(const G4NeutronHPElasticXS &right) = delete;
+    G4NeutronHPElasticXS& operator=(const G4NeutronHPElasticXS& right) = delete;
     G4NeutronHPElasticXS(const G4NeutronHPElasticXS&) = delete;
 };
 

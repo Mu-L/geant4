@@ -27,9 +27,10 @@
 // Author: Ivana Hrivnacova, 10/09/2014  (ivana@ipno.in2p3.fr)
 
 #include "G4XmlRFileManager.hh"
-#include "G4XmlHnRFileManager.hh"
+
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
+#include "G4XmlHnRFileManager.hh"
 
 #include "toolx/raxml"
 
@@ -37,8 +38,7 @@ using namespace G4Analysis;
 using namespace tools;
 
 //_____________________________________________________________________________
-G4XmlRFileManager::G4XmlRFileManager(const G4AnalysisManagerState& state)
- : G4VRFileManager(state)
+G4XmlRFileManager::G4XmlRFileManager(const G4AnalysisManagerState& state) : G4VRFileManager(state)
 {
   // Create helpers defined in the base class
   fH1RFileManager = std::make_shared<G4XmlHnRFileManager<histo::h1d>>(this);
@@ -51,7 +51,8 @@ G4XmlRFileManager::G4XmlRFileManager(const G4AnalysisManagerState& state)
 //_____________________________________________________________________________
 G4XmlRFileManager::~G4XmlRFileManager()
 {
-  for ( auto& rfile : fRFiles ) {
+  for (auto& rfile : fRFiles)
+  {
     delete rfile.second;
   }
 
@@ -74,7 +75,8 @@ G4bool G4XmlRFileManager::OpenRFile(const G4String& fileName)
   G4bool verbose = false;
 
   // create factory (if it does not yet exist)
-  if (fReadFactory == nullptr) {
+  if (fReadFactory == nullptr)
+  {
     fReadFactory = new tools::xml::default_factory();
   }
 
@@ -87,19 +89,22 @@ G4bool G4XmlRFileManager::OpenRFile(const G4String& fileName)
   objs.clear();
 
   G4bool compressed = false;
-  if ( ! newFile->load_file(name, compressed) ) {
-    Warn(G4String( "Cannot open file ") + name, fkClass, "OpenRFile");
+  if (!newFile->load_file(name, compressed))
+  {
+    Warn(G4String("Cannot open file ") + name, fkClass, "OpenRFile");
     delete newFile;
     return false;
   }
 
   // add file in a map and delete the previous file if it exists
   auto it = fRFiles.find(name);
-  if ( it != fRFiles.end() ) {
+  if (it != fRFiles.end())
+  {
     delete it->second;
     it->second = newFile;
   }
-  else {
+  else
+  {
     fRFiles[name] = newFile;
   }
 
@@ -116,7 +121,8 @@ toolx::raxml* G4XmlRFileManager::GetRFile(const G4String& fileName) const
   G4String name = GetFullFileName(fileName, isPerThread);
 
   auto it = fRFiles.find(name);
-  if (it != fRFiles.end()) {
+  if (it != fRFiles.end())
+  {
     return it->second;
   }
   return nullptr;

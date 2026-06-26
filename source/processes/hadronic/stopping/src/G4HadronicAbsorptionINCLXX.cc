@@ -39,46 +39,46 @@
 //
 //---------------------------------------------------------------------------
 
-#include <iostream>
-
-#include "G4SystemOfUnits.hh"
 #include "G4HadronicAbsorptionINCLXX.hh"
-#include "G4PreCompoundModel.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4ParticleTypes.hh"
+
 #include "G4HadronicInteractionRegistry.hh"
 #include "G4HadronicParameters.hh"
-#include "G4INCLXXInterface.hh" 
+#include "G4INCLXXInterface.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTypes.hh"
+#include "G4PreCompoundModel.hh"
+#include "G4SystemOfUnits.hh"
 
+#include <iostream>
 
-G4HadronicAbsorptionINCLXX::G4HadronicAbsorptionINCLXX( G4ParticleDefinition* pdef ) : 
-  G4HadronStoppingProcess( "hINCLXXCaptureAtRest" ), pdefApplicable( pdef ) 
+G4HadronicAbsorptionINCLXX::G4HadronicAbsorptionINCLXX(G4ParticleDefinition* pdef)
+  : G4HadronStoppingProcess("hINCLXXCaptureAtRest"), pdefApplicable(pdef)
 {
   G4INCLXXInterface* theModel = new G4INCLXXInterface;
-  G4double theMin =  0.0*GeV;
-  G4double theMax =  0.2*GeV;
-  if (pdef == G4AntiNeutron::AntiNeutron()) {
-    theMax =  0.01*GeV;
+  G4double theMin = 0.0 * GeV;
+  G4double theMax = 0.2 * GeV;
+  if (pdef == G4AntiNeutron::AntiNeutron())
+  {
+    theMax = 0.01 * GeV;
   }
-  theModel->SetMinEnergy( theMin );
-  theModel->SetMaxEnergy( theMax );
-  RegisterMe( theModel );
+  theModel->SetMinEnergy(theMin);
+  theModel->SetMaxEnergy(theMax);
+  RegisterMe(theModel);
 }
-
 
 G4HadronicAbsorptionINCLXX::~G4HadronicAbsorptionINCLXX() {}
 
-
 // Applies to constructor-specified particle, or to all known cases
-G4bool G4HadronicAbsorptionINCLXX::IsApplicable( const G4ParticleDefinition& particle ) {
-  return ( (  pdefApplicable == nullptr  && ( &particle == G4AntiProton::Definition() || &particle == G4AntiNeutron::Definition() ) )
-	   || ( &particle == pdefApplicable ) );
+G4bool G4HadronicAbsorptionINCLXX::IsApplicable(const G4ParticleDefinition& particle)
+{
+  return ((pdefApplicable == nullptr
+           && (&particle == G4AntiProton::Definition() || &particle == G4AntiNeutron::Definition()))
+          || (&particle == pdefApplicable));
 }
 
-
 // Documentation of purpose
-void G4HadronicAbsorptionINCLXX::ProcessDescription( std::ostream& os ) const {
+void G4HadronicAbsorptionINCLXX::ProcessDescription(std::ostream& os) const
+{
   os << "Stopping and absorption of anti_proton using INCLXX model.\n"
-     << "Geant4 PreCompound model is used for nuclear de-excitation."
-     << std::endl;
+     << "Geant4 PreCompound model is used for nuclear de-excitation." << std::endl;
 }

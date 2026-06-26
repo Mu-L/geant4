@@ -37,10 +37,10 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4UCNProcessSubType_h
-#define G4UCNProcessSubType_h 1
+#ifndef G4UCNPROCESSSUBTYPE_HH
+#define G4UCNPROCESSSUBTYPE_HH
 
-enum G4UCNProcessSubType 
+enum G4UCNProcessSubType
 {
   fUCNLoss = 41,
   fUCNAbsorption = 42,

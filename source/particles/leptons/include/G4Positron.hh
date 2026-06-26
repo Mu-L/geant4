@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4Positron_h
-#define G4Positron_h 1
+#ifndef G4POSITRON_HH
+#define G4POSITRON_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4Positron : public G4ParticleDefinition
 {
   public:
+
     static G4Positron* Definition();
     static G4Positron* PositronDefinition();
     static G4Positron* Positron();
 
   private:
+
     G4Positron() {}
     ~G4Positron() override = default;
 

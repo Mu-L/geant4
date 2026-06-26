@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4KaonMinus_h
-#define G4KaonMinus_h 1
+#ifndef G4KAONMINUS_HH
+#define G4KAONMINUS_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4KaonMinus : public G4ParticleDefinition
 {
   public:
+
     static G4KaonMinus* Definition();
     static G4KaonMinus* KaonMinusDefinition();
     static G4KaonMinus* KaonMinus();
 
   private:
+
     G4KaonMinus() {}
     ~G4KaonMinus() override = default;
 

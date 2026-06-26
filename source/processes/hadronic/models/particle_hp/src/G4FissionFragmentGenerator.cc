@@ -128,21 +128,26 @@ G4FissionFragmentGenerator::G4GenerateFission(G4long NumberOfFissions,
   // std::vector< G4DynamicParticleVector* > FissionEvents(NumberOfFissions);
   std::vector<G4DynamicParticleVector*> FissionEvents(0);
 
-  if (Projectile.GetDefinition() == G4Neutron::Neutron()) {
-    if (static_cast<int>(IsReconstructionNeeded_) == TRUE) {
+  if (Projectile.GetDefinition() == G4Neutron::Neutron())
+  {
+    if (static_cast<int>(IsReconstructionNeeded_) == TRUE)
+    {
       // TODO Eliminate potential need for restructuring during run phase
       // InitializeFissionProductYieldClass();
     }
 
-    if (nullptr != YieldData_) {
-      for (G4long i = 0; i < NumberOfFissions; i++) {
-	FissionEvents.push_back(YieldData_->G4GetFission());
-	// FIXME Use particle momentum in balance equation
-	// FissionEvents.push_back(YieldData_->G4GetFission(Projectile.Get4Momentum()));
+    if (nullptr != YieldData_)
+    {
+      for (G4long i = 0; i < NumberOfFissions; i++)
+      {
+        FissionEvents.push_back(YieldData_->G4GetFission());
+        // FIXME Use particle momentum in balance equation
+        // FissionEvents.push_back(YieldData_->G4GetFission(Projectile.Get4Momentum()));
       }
     }
   }
-  else {
+  else
+  {
     FissionEvents.push_back(nullptr);
   }
 
@@ -154,7 +159,8 @@ G4Ions* G4FissionFragmentGenerator::G4GenerateFissionProduct()
 {
   G4FFG_FUNCTIONENTER__
 
-  if (static_cast<int>(IsReconstructionNeeded_) == TRUE) {
+  if (static_cast<int>(IsReconstructionNeeded_) == TRUE)
+  {
     // TODO Eliminate potential need for restructuring during run phase
     // InitializeFissionProductYieldClass();
   }
@@ -244,11 +250,13 @@ void G4FissionFragmentGenerator::G4SetAlphaProduction(G4double WhatAlphaProducti
   G4FFG_FUNCTIONENTER__
 
   AlphaProduction_ = WhatAlphaProduction;
-  if (YieldData_ != nullptr) {
+  if (YieldData_ != nullptr)
+  {
     YieldData_->G4SetAlphaProduction(AlphaProduction_);
   }
 
-  if ((Verbosity_ & G4FFGEnumerations::UPDATES) != 0) {
+  if ((Verbosity_ & G4FFGEnumerations::UPDATES) != 0)
+  {
     G4FFG_SPACING__
     G4FFG_LOCATION__
 
@@ -263,11 +271,13 @@ void G4FissionFragmentGenerator::G4SetTernaryProbability(G4double WhatTernaryPro
   G4FFG_FUNCTIONENTER__
 
   TernaryProbability_ = WhatTernaryProbability;
-  if (YieldData_ != nullptr) {
+  if (YieldData_ != nullptr)
+  {
     YieldData_->G4SetTernaryProbability(TernaryProbability_);
   }
 
-  if ((Verbosity_ & G4FFGEnumerations::UPDATES) != 0) {
+  if ((Verbosity_ & G4FFGEnumerations::UPDATES) != 0)
+  {
     G4FFG_SPACING__
     G4FFG_LOCATION__
 
@@ -285,17 +295,21 @@ void G4FissionFragmentGenerator::G4SetCause(G4FFGEnumerations::FissionCause Whic
                          || WhichCause == G4FFGEnumerations::NEUTRON_INDUCED);
   G4bool IsSameCause = (Cause_ == WhichCause);
 
-  if (!IsSameCause && IsValidCause) {
+  if (!IsSameCause && IsValidCause)
+  {
     Cause_ = WhichCause;
-    if (Cause_ == G4FFGEnumerations::SPONTANEOUS) {
+    if (Cause_ == G4FFGEnumerations::SPONTANEOUS)
+    {
       IncidentEnergy_ = 0;
     }
     IsReconstructionNeeded_ = TRUE;
   }
 
-  if (Verbosity_ != G4FFGEnumerations::SILENT) {
+  if (Verbosity_ != G4FFGEnumerations::SILENT)
+  {
     G4String CauseString;
-    switch (WhichCause) {
+    switch (WhichCause)
+    {
       case G4FFGEnumerations::SPONTANEOUS:
         CauseString = "SPONTANEOUS";
         break;
@@ -310,26 +324,32 @@ void G4FissionFragmentGenerator::G4SetCause(G4FFGEnumerations::FissionCause Whic
         break;
     }
 
-    if ((Verbosity_ & G4FFGEnumerations::WARNING) != 0) {
+    if ((Verbosity_ & G4FFGEnumerations::WARNING) != 0)
+    {
       G4FFG_SPACING__
       G4FFG_LOCATION__
 
-      if (IsValidCause) {
-        if (IsSameCause && YieldData_ != nullptr) {
+      if (IsValidCause)
+      {
+        if (IsSameCause && YieldData_ != nullptr)
+        {
           G4cout << " -- Already set to use " << CauseString
                  << " as the fission cause. Yield data class will not be reconstructed." << G4endl;
         }
-        else if (YieldData_ == nullptr) {
+        else if (YieldData_ == nullptr)
+        {
           G4cout << " -- Yield data class not yet constructed. " << CauseString
                  << " will be applied when it is constructed." << G4endl;
         }
       }
-      else {
+      else
+      {
         G4cout << " -- Invalid cause of fission" << G4endl;
       }
     }
 
-    if (((Verbosity_ & G4FFGEnumerations::UPDATES) != 0) && IsValidCause) {
+    if (((Verbosity_ & G4FFGEnumerations::UPDATES) != 0) && IsValidCause)
+    {
       G4FFG_SPACING__
       G4FFG_LOCATION__
 
@@ -344,38 +364,47 @@ void G4FissionFragmentGenerator::G4SetIncidentEnergy(G4double WhatIncidentEnergy
 {
   G4FFG_FUNCTIONENTER__
 
-  if (Cause_ != G4FFGEnumerations::SPONTANEOUS) {
+  if (Cause_ != G4FFGEnumerations::SPONTANEOUS)
+  {
     IncidentEnergy_ = WhatIncidentEnergy;
-    if (YieldData_ != nullptr) {
+    if (YieldData_ != nullptr)
+    {
       YieldData_->G4SetEnergy(IncidentEnergy_);
     }
   }
 
-  if (Verbosity_ != G4FFGEnumerations::SILENT) {
+  if (Verbosity_ != G4FFGEnumerations::SILENT)
+  {
     std::ostringstream EnergyString;
-    if (IncidentEnergy_ / GeV > 1) {
+    if (IncidentEnergy_ / GeV > 1)
+    {
       EnergyString << IncidentEnergy_ / GeV << " GeV";
     }
-    else if (IncidentEnergy_ / MeV > 1) {
+    else if (IncidentEnergy_ / MeV > 1)
+    {
       EnergyString << IncidentEnergy_ / MeV << " MeV";
     }
-    else if (IncidentEnergy_ / keV > 1) {
+    else if (IncidentEnergy_ / keV > 1)
+    {
       EnergyString << IncidentEnergy_ / keV << " keV";
     }
-    else {
+    else
+    {
       EnergyString << IncidentEnergy_ / eV << " eV";
     }
 
     if (((Verbosity_ & G4FFGEnumerations::ENERGY_INFO) != 0)
         || ((Verbosity_ & G4FFGEnumerations::WARNING) != 0))
     {
-      if (Cause_ == G4FFGEnumerations::SPONTANEOUS && IncidentEnergy_ != 0) {
+      if (Cause_ == G4FFGEnumerations::SPONTANEOUS && IncidentEnergy_ != 0)
+      {
         G4FFG_SPACING__
         G4FFG_LOCATION__
 
         G4cout << " -- Cannot set a non-zero energy for spontaneous fission" << G4endl;
       }
-      else if (YieldData_ == nullptr) {
+      else if (YieldData_ == nullptr)
+      {
         G4FFG_SPACING__
         G4FFG_LOCATION__
 
@@ -403,21 +432,26 @@ void G4FissionFragmentGenerator::G4SetIsotope(G4int WhichIsotope)
 
   G4bool IsSameIsotope = (Isotope_ == WhichIsotope);
 
-  if (!IsSameIsotope) {
+  if (!IsSameIsotope)
+  {
     Isotope_ = WhichIsotope;
     IsReconstructionNeeded_ = TRUE;
   }
 
-  if (Verbosity_ != G4FFGEnumerations::SILENT) {
-    if ((Verbosity_ & G4FFGEnumerations::WARNING) != 0) {
-      if (IsSameIsotope && YieldData_ != nullptr) {
+  if (Verbosity_ != G4FFGEnumerations::SILENT)
+  {
+    if ((Verbosity_ & G4FFGEnumerations::WARNING) != 0)
+    {
+      if (IsSameIsotope && YieldData_ != nullptr)
+      {
         G4FFG_SPACING__
         G4FFG_LOCATION__
 
         G4cout << " -- Isotope " << Isotope_
                << " already in use. Yield data class will not be reconstructed." << G4endl;
       }
-      else if (YieldData_ == nullptr) {
+      else if (YieldData_ == nullptr)
+      {
         G4FFG_SPACING__
         G4FFG_LOCATION__
 
@@ -426,7 +460,8 @@ void G4FissionFragmentGenerator::G4SetIsotope(G4int WhichIsotope)
       }
     }
 
-    if ((Verbosity_ & G4FFGEnumerations::UPDATES) != 0) {
+    if ((Verbosity_ & G4FFGEnumerations::UPDATES) != 0)
+    {
       G4FFG_SPACING__
       G4FFG_LOCATION__
 
@@ -445,14 +480,17 @@ void G4FissionFragmentGenerator::G4SetMetaState(G4FFGEnumerations::MetaState Whi
                              && WhichMetaState <= G4FFGEnumerations::MetaStateLast);
   G4bool IsSameMetaState = (MetaState_ == WhichMetaState);
 
-  if (!IsSameMetaState && IsValidMetaState) {
+  if (!IsSameMetaState && IsValidMetaState)
+  {
     MetaState_ = WhichMetaState;
     IsReconstructionNeeded_ = TRUE;
   }
 
-  if (Verbosity_ != G4FFGEnumerations::SILENT) {
+  if (Verbosity_ != G4FFGEnumerations::SILENT)
+  {
     G4String MetaName;
-    switch (MetaState_) {
+    switch (MetaState_)
+    {
       case G4FFGEnumerations::GROUND_STATE:
         MetaName = "GROUND_STATE";
         break;
@@ -466,28 +504,34 @@ void G4FissionFragmentGenerator::G4SetMetaState(G4FFGEnumerations::MetaState Whi
         break;
     }
 
-    if ((Verbosity_ & G4FFGEnumerations::WARNING) != 0) {
+    if ((Verbosity_ & G4FFGEnumerations::WARNING) != 0)
+    {
       G4FFG_SPACING__
       G4FFG_LOCATION__
 
       std::ostringstream Temp;
-      if (IsValidMetaState) {
-        if (IsSameMetaState && YieldData_ != nullptr) {
+      if (IsValidMetaState)
+      {
+        if (IsSameMetaState && YieldData_ != nullptr)
+        {
           G4cout << " -- Already set to use " << MetaName
                  << " as the metastable state. Yield data class will not be reconstructed"
                  << G4endl;
         }
-        else if (YieldData_ == nullptr) {
+        else if (YieldData_ == nullptr)
+        {
           G4cout << " -- Yield data class not yet constructed. " << MetaName
                  << " will be applied when it is constructed." << G4endl;
         }
       }
-      else {
+      else
+      {
         G4cout << " -- Invalid metastable state." << G4endl;
       }
     }
 
-    if (((Verbosity_ & G4FFGEnumerations::UPDATES) != 0) && IsValidMetaState) {
+    if (((Verbosity_ & G4FFGEnumerations::UPDATES) != 0) && IsValidMetaState)
+    {
       G4FFG_SPACING__
       G4FFG_LOCATION__
 
@@ -507,14 +551,17 @@ void G4FissionFragmentGenerator ::G4SetSamplingScheme(
                           && NewScheme <= G4FFGEnumerations::FissionSamplingSchemeLast);
   G4bool IsSameScheme = (NewScheme == SamplingScheme_);
 
-  if (!IsSameScheme && IsValidScheme) {
+  if (!IsSameScheme && IsValidScheme)
+  {
     SamplingScheme_ = NewScheme;
     IsReconstructionNeeded_ = TRUE;
   }
 
-  if (Verbosity_ != G4FFGEnumerations::SILENT) {
+  if (Verbosity_ != G4FFGEnumerations::SILENT)
+  {
     G4String SchemeString;
-    switch (SamplingScheme_) {
+    switch (SamplingScheme_)
+    {
       case G4FFGEnumerations::NORMAL:
         SchemeString = "NORMAL";
         break;
@@ -528,27 +575,33 @@ void G4FissionFragmentGenerator ::G4SetSamplingScheme(
         break;
     }
 
-    if ((Verbosity_ & G4FFGEnumerations::WARNING) != 0) {
+    if ((Verbosity_ & G4FFGEnumerations::WARNING) != 0)
+    {
       G4FFG_SPACING__
       G4FFG_LOCATION__
 
-      if (IsValidScheme) {
-        if (IsSameScheme && YieldData_ != nullptr) {
+      if (IsValidScheme)
+      {
+        if (IsSameScheme && YieldData_ != nullptr)
+        {
           G4cout << " -- Already set to use " << SchemeString
                  << " as the sampling scheme. Yield data class will not be reconstructed."
                  << G4endl;
         }
-        else if (YieldData_ == nullptr) {
+        else if (YieldData_ == nullptr)
+        {
           G4cout << " -- Yield data class not yet constructed. " << SchemeString
                  << " will be applied when it is constructed." << G4endl;
         }
       }
-      else {
+      else
+      {
         G4cout << " -- Invalid sampling scheme." << G4endl;
       }
     }
 
-    if (((Verbosity_ & G4FFGEnumerations::UPDATES) != 0) && IsValidScheme) {
+    if (((Verbosity_ & G4FFGEnumerations::UPDATES) != 0) && IsValidScheme)
+    {
       G4FFG_SPACING__
       G4FFG_LOCATION__
 
@@ -567,14 +620,17 @@ void G4FissionFragmentGenerator::G4SetYieldType(G4FFGEnumerations::YieldType Whi
                              || WhichYieldType == G4FFGEnumerations::CUMULATIVE);
   G4bool IsSameYieldType = (YieldType_ == WhichYieldType);
 
-  if (!IsSameYieldType && IsValidYieldType) {
+  if (!IsSameYieldType && IsValidYieldType)
+  {
     YieldType_ = WhichYieldType;
     IsReconstructionNeeded_ = TRUE;
   }
 
-  if (Verbosity_ != G4FFGEnumerations::SILENT) {
+  if (Verbosity_ != G4FFGEnumerations::SILENT)
+  {
     G4String YieldString;
-    switch ((int)YieldType_) {
+    switch ((int)YieldType_)
+    {
       case G4FFGEnumerations::INDEPENDENT:
         YieldString = "INDEPENDENT";
         break;
@@ -588,24 +644,29 @@ void G4FissionFragmentGenerator::G4SetYieldType(G4FFGEnumerations::YieldType Whi
         break;
     }
 
-    if ((Verbosity_ & G4FFGEnumerations::WARNING) != 0) {
+    if ((Verbosity_ & G4FFGEnumerations::WARNING) != 0)
+    {
       G4FFG_SPACING__
       G4FFG_LOCATION__
 
-      if (IsValidYieldType) {
-        if (IsSameYieldType && YieldData_ != nullptr) {
-        }
-        else if (YieldData_ == nullptr) {
+      if (IsValidYieldType)
+      {
+        if (IsSameYieldType && YieldData_ != nullptr)
+        {}
+        else if (YieldData_ == nullptr)
+        {
           G4cout << " -- Yield data class not yet constructed. Yield type " << YieldString
                  << " will be applied when it is constructed." << G4endl;
         }
       }
-      else {
+      else
+      {
         G4cout << " -- Invalid yield type." << G4endl;
       }
     }
 
-    if (((Verbosity_ & G4FFGEnumerations::UPDATES) != 0) && IsValidYieldType) {
+    if (((Verbosity_ & G4FFGEnumerations::UPDATES) != 0) && IsValidYieldType)
+    {
       G4FFG_SPACING__
       G4FFG_LOCATION__
 
@@ -622,7 +683,8 @@ void G4FissionFragmentGenerator::G4SetVerbosity(G4int Verbosity)
 
   Verbosity_ = Verbosity;
 
-  if (YieldData_ != nullptr) {
+  if (YieldData_ != nullptr)
+  {
     YieldData_->G4SetVerbosity(Verbosity_);
   }
 
@@ -633,10 +695,12 @@ bool G4FissionFragmentGenerator::InitializeFissionProductYieldClass(std::istring
 {
   G4FFG_FUNCTIONENTER__
 
-  if (YieldData_ != nullptr) {
+  if (YieldData_ != nullptr)
+  {
     delete YieldData_;
 
-    if ((Verbosity_ & G4FFGEnumerations::UPDATES) != 0) {
+    if ((Verbosity_ & G4FFGEnumerations::UPDATES) != 0)
+    {
       G4FFG_SPACING__
       G4FFG_LOCATION__
 
@@ -644,29 +708,35 @@ bool G4FissionFragmentGenerator::InitializeFissionProductYieldClass(std::istring
     }
   }
 
-  try {
-    if (SamplingScheme_ == G4FFGEnumerations::NORMAL) {
+  try
+  {
+    if (SamplingScheme_ == G4FFGEnumerations::NORMAL)
+    {
       YieldData_ = new G4FPYNormalFragmentDist(Isotope_, MetaState_, Cause_, YieldType_, Verbosity_,
                                                dataStream);
     }
-    else {
+    else
+    {
       YieldData_ = new G4FPYBiasedLightFragmentDist(Isotope_, MetaState_, Cause_, YieldType_,
                                                     Verbosity_, dataStream);
     }
 
-    if (AlphaProduction_ != 0 && TernaryProbability_ != 0) {
+    if (AlphaProduction_ != 0 && TernaryProbability_ != 0)
+    {
       YieldData_->G4SetTernaryProbability(TernaryProbability_);
       YieldData_->G4SetAlphaProduction(AlphaProduction_);
     }
 
-    if ((Verbosity_ & G4FFGEnumerations::UPDATES) != 0) {
+    if ((Verbosity_ & G4FFGEnumerations::UPDATES) != 0)
+    {
       G4FFG_SPACING__
       G4FFG_LOCATION__
 
       G4cout << " -- Yield data class constructed with defined values." << G4endl;
     }
   }
-  catch (std::exception& e) {
+  catch (std::exception& e)
+  {
     YieldData_ = nullptr;
   }
 

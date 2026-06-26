@@ -26,10 +26,10 @@
 /// @file G4CopyRandomState.hh
 /// @brief Helper function for copying random state files in G4run
 /// @author Ben Morgan
-/// @date 2023-06-05 
+/// @date 2023-06-05
 
-#ifndef G4CopyRandomState_hh
-#define G4CopyRandomState_hh
+#ifndef G4COPYRANDOMSTATE_HH
+#define G4COPYRANDOMSTATE_HH
 
 #include "G4Exception.hh"
 #include "G4Filesystem.hh"
@@ -39,12 +39,14 @@
 /// Return true if file `source` is successfully copied to `dest`
 /// Convert any thrown exception to JustWarning G4Exception
 inline G4bool G4CopyRandomState(const G4fs::path& source, const G4fs::path& dest,
-                              const G4String& callsite)
+                                const G4String& callsite)
 {
-  try {
+  try
+  {
     G4fs::copy_file(source, dest);
   }
-  catch (G4fs::filesystem_error const& ex) {
+  catch (G4fs::filesystem_error const& ex)
+  {
     G4ExceptionDescription ed;
     ed << "Failed to copy " << ex.path1() << " to " << ex.path2() << " , error:\n"
        << "  code   : " << ex.code().value() << '\n'

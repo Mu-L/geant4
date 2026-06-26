@@ -27,15 +27,16 @@
 // Author: Ivana Hrivnacova, 25/07/2014 (ivana@ipno.in2p3.fr)
 
 #include "G4CsvRNtupleManager.hh"
-#include "G4CsvRFileManager.hh"
+
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
+#include "G4CsvRFileManager.hh"
 
 using namespace G4Analysis;
 
 //_____________________________________________________________________________
 G4CsvRNtupleManager::G4CsvRNtupleManager(const G4AnalysisManagerState& state)
- : G4TRNtupleManager<tools::rcsv::ntuple>(state)
+  : G4TRNtupleManager<tools::rcsv::ntuple>(state)
 {}
 
 //
@@ -43,10 +44,8 @@ G4CsvRNtupleManager::G4CsvRNtupleManager(const G4AnalysisManagerState& state)
 //
 
 //_____________________________________________________________________________
-G4int G4CsvRNtupleManager::ReadNtupleImpl(const G4String& ntupleName,
-                                          const G4String& fileName,
-                                          const G4String& dirName,
-                                          G4bool isUserFileName)
+G4int G4CsvRNtupleManager::ReadNtupleImpl(const G4String& ntupleName, const G4String& fileName,
+                                          const G4String& dirName, G4bool isUserFileName)
 {
   Message(kVL4, "read", "ntuple", ntupleName);
 
@@ -54,17 +53,19 @@ G4int G4CsvRNtupleManager::ReadNtupleImpl(const G4String& ntupleName,
   // but apply the ntuple name and the thread suffixes
   // only if fileName is not provided explicitly
   G4String fullFileName = fileName;
-  if ( ! isUserFileName ) {
+  if (!isUserFileName)
+  {
     fullFileName = fFileManager->GetNtupleFileName(ntupleName);
   }
 
   // Update directory path
-  if ( ! dirName.empty() ) {
+  if (!dirName.empty())
+  {
     fullFileName = "./" + dirName + "/" + fullFileName;
   }
 
   // Open file
-  if ( ! fFileManager->OpenRFile(fullFileName) ) return kInvalidId;
+  if (!fFileManager->OpenRFile(fullFileName)) return kInvalidId;
   auto ntupleFile = fFileManager->GetRFile(fullFileName);
 
   // Create ntuple
@@ -77,15 +78,17 @@ G4int G4CsvRNtupleManager::ReadNtupleImpl(const G4String& ntupleName,
 }
 
 //_____________________________________________________________________________
-G4bool G4CsvRNtupleManager::GetTNtupleRow(
-  G4TRNtupleDescription<tools::rcsv::ntuple>* ntupleDescription)
+G4bool
+G4CsvRNtupleManager::GetTNtupleRow(G4TRNtupleDescription<tools::rcsv::ntuple>* ntupleDescription)
 {
   auto ntuple = ntupleDescription->fNtuple;
 
   auto isInitialized = ntupleDescription->fIsInitialized;
-  if ( ! isInitialized ) {
+  if (!isInitialized)
+  {
     auto ntupleBinding = ntupleDescription->fNtupleBinding;
-    if ( ! ntuple->initialize(G4cout, *ntupleBinding) ) {
+    if (!ntuple->initialize(G4cout, *ntupleBinding))
+    {
       Warn("Ntuple initialization failed !!", fkClass, "GetTNtupleRow");
       return false;
     }
@@ -94,8 +97,10 @@ G4bool G4CsvRNtupleManager::GetTNtupleRow(
   }
 
   auto next = ntuple->next();
-  if ( next ) {
-    if ( ! ntuple->get_row() ) {
+  if (next)
+  {
+    if (!ntuple->get_row())
+    {
       Warn("Ntuple get_row() failed !!", fkClass, "GetTNtupleRow");
       return false;
     }

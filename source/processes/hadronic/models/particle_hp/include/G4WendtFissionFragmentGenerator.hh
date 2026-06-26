@@ -30,8 +30,8 @@
  * Created on June 21, 2013, 13:58 MST
  */
 
-#ifndef G4WendtFissionFragmentGenerator_h
-#define G4WendtFissionFragmentGenerator_h 1
+#ifndef G4WENDTFISSIONFRAGMENTGENERATOR_HH
+#define G4WENDTFISSIONFRAGMENTGENERATOR_HH
 
 #include "G4FissionFragmentGenerator.hh"
 #include "G4HadFinalState.hh"
@@ -41,6 +41,7 @@
 class G4WendtFissionFragmentGenerator
 {
   public:
+
     G4HadFinalState* ApplyYourself(const G4HadProjectile& projectile, G4int Z, G4int A);
     static G4WendtFissionFragmentGenerator* GetInstance()
     {
@@ -53,6 +54,7 @@ class G4WendtFissionFragmentGenerator
     ~G4WendtFissionFragmentGenerator();
 
   private:
+
     // SINGLETON!!!
     G4WendtFissionFragmentGenerator();
     G4WendtFissionFragmentGenerator(G4WendtFissionFragmentGenerator const&) = delete;

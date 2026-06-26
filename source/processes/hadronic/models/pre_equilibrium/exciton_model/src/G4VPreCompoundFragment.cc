@@ -31,17 +31,18 @@
 //                         use int Z and A and cleanup
 
 #include "G4VPreCompoundFragment.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4NucleiProperties.hh"
-#include "G4NuclearLevelData.hh"
-#include "G4DeexPrecoParameters.hh"
-#include "G4VCoulombBarrier.hh"
-#include "G4InterfaceToXS.hh"
 
-G4VPreCompoundFragment::G4VPreCompoundFragment(
-  const G4ParticleDefinition* part, G4VCoulombBarrier* aCoulombBarrier)
+#include "G4DeexPrecoParameters.hh"
+#include "G4InterfaceToXS.hh"
+#include "G4NuclearLevelData.hh"
+#include "G4NucleiProperties.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4VCoulombBarrier.hh"
+
+G4VPreCompoundFragment::G4VPreCompoundFragment(const G4ParticleDefinition* part,
+                                               G4VCoulombBarrier* aCoulombBarrier)
   : theA(part->GetBaryonNumber()),
-    theZ(G4lrint(part->GetPDGCharge()/CLHEP::eplus)),
+    theZ(G4lrint(part->GetPDGCharge() / CLHEP::eplus)),
     particle(part),
     theCoulombBarrierPtr(aCoulombBarrier)
 {
@@ -51,17 +52,32 @@ G4VPreCompoundFragment::G4VPreCompoundFragment(
   OPTxs = theParameters->GetDeexModelType();
   g4calc = G4Pow::GetInstance();
 
-  if (1 == theZ && 1 == theA) { index = 1; }
-  else if (1 == theZ && 2 == theA) { index = 2; }
-  else if (1 == theZ && 3 == theA) { index = 3; }
-  else if (2 == theZ && 3 == theA) { index = 4; }
-  else if (2 == theZ && 4 == theA) { index = 5; }
+  if (1 == theZ && 1 == theA)
+  {
+    index = 1;
+  }
+  else if (1 == theZ && 2 == theA)
+  {
+    index = 2;
+  }
+  else if (1 == theZ && 3 == theA)
+  {
+    index = 3;
+  }
+  else if (2 == theZ && 3 == theA)
+  {
+    index = 4;
+  }
+  else if (2 == theZ && 4 == theA)
+  {
+    index = 5;
+  }
 
-  if (OPTxs == 1) {
+  if (OPTxs == 1)
+  {
     fXSection = new G4InterfaceToXS(particle, index);
   }
-  InitialiseIntegrator(0.005, 0.25, 1.10, 0.5*CLHEP::MeV,
-		       0.2*CLHEP::MeV, 5*CLHEP::MeV);
+  InitialiseIntegrator(0.005, 0.25, 1.10, 0.5 * CLHEP::MeV, 0.2 * CLHEP::MeV, 5 * CLHEP::MeV);
 }
 
 G4VPreCompoundFragment::~G4VPreCompoundFragment()
@@ -70,25 +86,21 @@ G4VPreCompoundFragment::~G4VPreCompoundFragment()
   delete fXSection;
 }
 
-std::ostream& 
-operator << (std::ostream &out, const G4VPreCompoundFragment &theFragment)
+std::ostream& operator<<(std::ostream& out, const G4VPreCompoundFragment& theFragment)
 {
   out << &theFragment;
-  return out; 
-}
-
-std::ostream& 
-operator << (std::ostream &out, const G4VPreCompoundFragment *theFragment)
-{
-  out 
-    << "PreCompoundModel Emitted Fragment: Z= " << theFragment->GetZ() 
-    << " A= " << theFragment->GetA()
-    << " Mass(GeV)= " << theFragment->GetNuclearMass()/CLHEP::GeV;
   return out;
 }
 
-G4bool 
-G4VPreCompoundFragment::Initialize(const G4Fragment& aFragment)
+std::ostream& operator<<(std::ostream& out, const G4VPreCompoundFragment* theFragment)
+{
+  out << "PreCompoundModel Emitted Fragment: Z= " << theFragment->GetZ()
+      << " A= " << theFragment->GetA()
+      << " Mass(GeV)= " << theFragment->GetNuclearMass() / CLHEP::GeV;
+  return out;
+}
+
+G4bool G4VPreCompoundFragment::Initialize(const G4Fragment& aFragment)
 {
   theFragA = aFragment.GetA_asInt();
   theFragZ = aFragment.GetZ_asInt();
@@ -98,39 +110,49 @@ G4VPreCompoundFragment::Initialize(const G4Fragment& aFragment)
   theMinKinEnergy = theMaxKinEnergy = theCoulombBarrier = 0.0;
   if ((theResA < theResZ) || (theResA < theA) || (theResZ < theZ)
       || (theResA == theA && theResZ < theZ)
-      || ((theResA > 1) && (theResA == theResZ || theResZ == 0))) {
+      || ((theResA > 1) && (theResA == theResZ || theResZ == 0)))
+  {
     return false;
   }
   pFragment = &aFragment;
   theResMass = G4NucleiProperties::GetNuclearMass(theResA, theResZ);
   G4double Ecm = aFragment.GetMomentum().m();
-  if (Ecm <= theResMass + theMass) { return 0.0; }
+  if (Ecm <= theResMass + theMass)
+  {
+    return 0.0;
+  }
 
   theResA13 = g4calc->Z13(theResA);
   G4int nex = aFragment.GetNumberOfExcitons();
 
   G4double elim = 0.0;
-  if (0 < theZ) {
-    theCoulombBarrier = theCoulombBarrierPtr->
-      GetCoulombBarrier(theResA + nex, theResZ, aFragment.GetExcitationEnergy());
-    elim = (0 < OPTxs) ? theCoulombBarrier*0.5 : theCoulombBarrier;
+  if (0 < theZ)
+  {
+    theCoulombBarrier = theCoulombBarrierPtr->GetCoulombBarrier(theResA + nex, theResZ,
+                                                                aFragment.GetExcitationEnergy());
+    elim = (0 < OPTxs) ? theCoulombBarrier * 0.5 : theCoulombBarrier;
   }
-      
-  // Compute Maximal Kinetic Energy which can be carried by fragments 
+
+  // Compute Maximal Kinetic Energy which can be carried by fragments
   // after separation - the true assimptotic value
   theMaxKinEnergy =
-    0.5*((Ecm - theResMass)*(Ecm + theResMass) + theMass*theMass)/Ecm - theMass;
+    0.5 * ((Ecm - theResMass) * (Ecm + theResMass) + theMass * theMass) / Ecm - theMass;
   G4double resM = Ecm - theMass - elim;
-  if (resM < theResMass) { return false; }
-  theMinKinEnergy =
-    0.5*((Ecm - resM)*(Ecm + resM) + theMass*theMass)/Ecm - theMass;
+  if (resM < theResMass)
+  {
+    return false;
+  }
+  theMinKinEnergy = 0.5 * ((Ecm - resM) * (Ecm + resM) + theMass * theMass) / Ecm - theMass;
   theMinKinEnergy = std::max(theMinKinEnergy, 0.0);
 
-  if (theMinKinEnergy >= theMaxKinEnergy) { return false; }
+  if (theMinKinEnergy >= theMaxKinEnergy)
+  {
+    return false;
+  }
   // Calculate masses
-  theReducedMass = theResMass*theMass/(theResMass + theMass);
+  theReducedMass = theResMass * theMass / (theResMass + theMass);
 
-  // Compute Binding Energies for fragments 
+  // Compute Binding Energies for fragments
   // needed to separate a fragment from the nucleus
   theBindingEnergy = theResMass + theMass - aFragment.GetGroundStateMass();
   return true;
@@ -140,7 +162,8 @@ G4double G4VPreCompoundFragment::CalcEmissionProbability(const G4Fragment& fr)
 {
   G4bool ok = Initialize(fr);
   theEmissionProbability = 0.0;
-  if (ok) {
+  if (ok)
+  {
     theEmissionProbability = ComputeIntegral(theMinKinEnergy, theMaxKinEnergy);
   }
   return theEmissionProbability;

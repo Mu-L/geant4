@@ -34,32 +34,34 @@
 // Class Description:
 //   polarized version of G4eBremsstrahlung
 
-#ifndef G4PolarizedBremsstrahlung_h
-#define G4PolarizedBremsstrahlung_h 1
+#ifndef G4POLARIZEDBREMSSTRAHLUNG_HH
+#define G4POLARIZEDBREMSSTRAHLUNG_HH
 
-#include "globals.hh"
 #include "G4eBremsstrahlung.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 
 class G4PolarizedBremsstrahlung : public G4eBremsstrahlung
 {
- public:
-  explicit G4PolarizedBremsstrahlung(const G4String& name = "pol-eBrem");
-  virtual ~G4PolarizedBremsstrahlung() override;
+  public:
 
-  virtual void ProcessDescription(std::ostream&) const override;
-  virtual void DumpInfo() const override { ProcessDescription(G4cout); };
+    explicit G4PolarizedBremsstrahlung(const G4String& name = "pol-eBrem");
+    virtual ~G4PolarizedBremsstrahlung() override;
 
-  G4PolarizedBremsstrahlung& operator=(const G4PolarizedBremsstrahlung& right) =
-    delete;
-  G4PolarizedBremsstrahlung(const G4PolarizedBremsstrahlung&) = delete;
+    virtual void ProcessDescription(std::ostream&) const override;
+    virtual void DumpInfo() const override { ProcessDescription(G4cout); };
 
- protected:
-  virtual void InitialiseEnergyLossProcess(
-    const G4ParticleDefinition*, const G4ParticleDefinition*) override;
+    G4PolarizedBremsstrahlung& operator=(const G4PolarizedBremsstrahlung& right) = delete;
+    G4PolarizedBremsstrahlung(const G4PolarizedBremsstrahlung&) = delete;
 
-private:
-  G4bool isInitialised = false;
+  protected:
+
+    virtual void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
+                                             const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool isInitialised = false;
 };
 #endif

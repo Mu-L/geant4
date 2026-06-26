@@ -42,15 +42,15 @@
 //
 // Implementation of the bremssrahlung energy spectrum using
 // 1. S.M. Seltzer and M.J. Berger Nucl. Instr. Meth. B12 (1985) 95
-// 2. S.M. Seltzer and M.J. Berger Atomic data and Nuclear Data 
+// 2. S.M. Seltzer and M.J. Berger Atomic data and Nuclear Data
 //    Tables 35 (1986) 345
 // Cross section computation in the base class G4eBremsstrahlungRelModel
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4LivermoreBremsstrahlungModel_h
-#define G4LivermoreBremsstrahlungModel_h 1
+#ifndef G4LIVERMOREBREMSSTRAHLUNGMODEL_HH
+#define G4LIVERMOREBREMSSTRAHLUNGMODEL_HH
 
 #include "G4eBremsstrahlungRelModel.hh"
 #include "globals.hh"
@@ -59,40 +59,41 @@ class G4Physics2DVector;
 
 class G4LivermoreBremsstrahlungModel : public G4eBremsstrahlungRelModel
 {
-public:
-  explicit G4LivermoreBremsstrahlungModel(const G4ParticleDefinition* p = nullptr, 
-					  const G4String& nam = "LowEnBrem");
-  virtual ~G4LivermoreBremsstrahlungModel();
-  
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
-  void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
+  public:
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-				 const G4MaterialCutsCouple*,
-				 const G4DynamicParticle*,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
+    explicit G4LivermoreBremsstrahlungModel(const G4ParticleDefinition* p = nullptr,
+                                            const G4String& nam = "LowEnBrem");
+    virtual ~G4LivermoreBremsstrahlungModel();
 
-  inline void SetBicubicInterpolationFlag(G4bool);
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
 
-  G4LivermoreBremsstrahlungModel & operator=(const  G4LivermoreBremsstrahlungModel &right) = delete;
-  G4LivermoreBremsstrahlungModel(const  G4LivermoreBremsstrahlungModel&) = delete;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double cutEnergy,
+                           G4double maxEnergy) override;
 
-protected:
-  G4double ComputeDXSectionPerAtom(G4double gammaEnergy) override;
-  G4String DirectoryPath() const;
+    inline void SetBicubicInterpolationFlag(G4bool);
 
-private:
-  void ReadData(G4int Z, const char* path = 0);
+    G4LivermoreBremsstrahlungModel& operator=(const G4LivermoreBremsstrahlungModel& right) = delete;
+    G4LivermoreBremsstrahlungModel(const G4LivermoreBremsstrahlungModel&) = delete;
 
-  static G4Physics2DVector* dataSB[101];
-  static G4double ylimit[101];
-  static G4double expnumlim;
+  protected:
 
-  G4int  nwarn = 0;
-  size_t idx = 0;
-  size_t idy = 0;
-  G4bool useBicubicInterpolation;
+    G4double ComputeDXSectionPerAtom(G4double gammaEnergy) override;
+    G4String DirectoryPath() const;
+
+  private:
+
+    void ReadData(G4int Z, const char* path = 0);
+
+    static G4Physics2DVector* dataSB[101];
+    static G4double ylimit[101];
+    static G4double expnumlim;
+
+    G4int nwarn = 0;
+    size_t idx = 0;
+    size_t idy = 0;
+    G4bool useBicubicInterpolation;
 };
 
 inline void G4LivermoreBremsstrahlungModel::SetBicubicInterpolationFlag(G4bool val)
@@ -101,6 +102,5 @@ inline void G4LivermoreBremsstrahlungModel::SetBicubicInterpolationFlag(G4bool v
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
 
 #endif

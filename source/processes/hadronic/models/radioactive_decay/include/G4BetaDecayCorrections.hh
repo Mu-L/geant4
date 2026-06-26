@@ -27,38 +27,37 @@
 //  Date:   5 August 2011
 //
 
-#ifndef G4BetaDecayCorrections_h
-#define G4BetaDecayCorrections_h 1
+#ifndef G4BETADECAYCORRECTIONS_HH
+#define G4BETADECAYCORRECTIONS_HH
 
 #include "G4BetaDecayType.hh"
-
 
 class G4BetaDecayCorrections
 {
   public:
+
     G4BetaDecayCorrections(const G4int Z, const G4int A);
-    
+
     ~G4BetaDecayCorrections() {};
 
     G4double FermiFunction(const G4double& W);
 
-    G4double ShapeFactor(const G4BetaDecayType&,
-                         const G4double& p_e, const G4double& e_nu);
+    G4double ShapeFactor(const G4BetaDecayType&, const G4double& p_e, const G4double& e_nu);
 
   private:
+
     G4double ModSquared(const G4double& x, G4double y);
     G4double Gamma(const G4double& arg);
 
     const G4int Z;
     const G4int A;
     G4double alphaZ;
-    G4double Rnuc;    // Nuclear radius  
-    G4double V0;      // Electron screening potential  
+    G4double Rnuc;  // Nuclear radius
+    G4double V0;  // Electron screening potential
     G4double gamma0;
-    G4double imMax;   // largest allowed im argument of ModSquared
+    G4double imMax;  // largest allowed im argument of ModSquared
 
-    G4double gc[6];   // Real gamma function polynomial coefficients 
+    G4double gc[6];  // Real gamma function polynomial coefficients
 };
 
 #endif
-

@@ -67,12 +67,14 @@ G4Element::G4Element(const G4String& name, const G4String& symbol, G4double zeff
   : fName(name), fSymbol(symbol)
 {
   G4int iz = G4lrint(zeff);
-  if (iz < 1) {
+  if (iz < 1)
+  {
     G4ExceptionDescription ed;
     ed << "Failed to create G4Element " << name << " Z= " << zeff << " < 1 !";
     G4Exception("G4Element::G4Element()", "mat011", FatalException, ed);
   }
-  if (std::abs(zeff - iz) > perMillion) {
+  if (std::abs(zeff - iz) > perMillion)
+  {
     G4ExceptionDescription ed;
     ed << "G4Element Warning:  " << name << " Z= " << zeff << " A= " << aeff / (g / mole);
     G4Exception("G4Element::G4Element()", "mat017", JustWarning, ed);
@@ -84,11 +86,13 @@ G4Element::G4Element(const G4String& name, const G4String& symbol, G4double zeff
   fAeff = aeff;
   fNeff = fAeff / (g / mole);
 
-  if (fNeff < 1.0) {
+  if (fNeff < 1.0)
+  {
     fNeff = 1.0;
   }
 
-  if (fNeff < zeff) {
+  if (fNeff < zeff)
+  {
     G4ExceptionDescription ed;
     ed << "Failed to create G4Element " << name << " with Z= " << zeff << "  N= " << fNeff
        << "   N < Z is not allowed" << G4endl;
@@ -101,7 +105,8 @@ G4Element::G4Element(const G4String& name, const G4String& symbol, G4double zeff
 
   AddNaturalIsotopes();
 
-  for (G4int i = 0; i < fNbOfAtomicShells; ++i) {
+  for (G4int i = 0; i < fNbOfAtomicShells; ++i)
+  {
     fAtomicShells[i] = G4AtomicShells::GetBindingEnergy(iz, i);
     fNbOfShellElectrons[i] = G4AtomicShells::GetNumberOfElectrons(iz, i);
   }
@@ -118,13 +123,15 @@ G4Element::G4Element(const G4String& name, const G4String& symbol, G4int nIsotop
 {
   InitializePointers();
 
-  if (0 >= nIsotopes) {
+  if (0 >= nIsotopes)
+  {
     G4ExceptionDescription ed;
     ed << "Failed to create G4Element " << name << " <" << symbol << "> with " << nIsotopes
        << " isotopes.";
     G4Exception("G4Element::G4Element()", "mat012", FatalException, ed);
   }
-  else {
+  else
+  {
     auto n = (std::size_t)nIsotopes;
     theIsotopeVector = new G4IsotopeVector(n, nullptr);
     fRelativeAbundanceVector = new G4double[nIsotopes];
@@ -137,7 +144,8 @@ G4Element::G4Element(const G4String& name, const G4String& symbol, G4int nIsotop
 
 void G4Element::AddIsotope(G4Isotope* isotope, G4double abundance)
 {
-  if (theIsotopeVector == nullptr) {
+  if (theIsotopeVector == nullptr)
+  {
     G4ExceptionDescription ed;
     ed << "Failed to add Isotope to G4Element " << fName << " with Z= " << fZeff
        << "  N= " << fNeff;
@@ -147,12 +155,15 @@ void G4Element::AddIsotope(G4Isotope* isotope, G4double abundance)
   G4int iz = isotope->GetZ();
 
   // filling ...
-  if (fNumberOfIsotopes < (G4int)theIsotopeVector->size()) {
+  if (fNumberOfIsotopes < (G4int)theIsotopeVector->size())
+  {
     // check same Z
-    if (fNumberOfIsotopes == 0) {
+    if (fNumberOfIsotopes == 0)
+    {
       fZeff = G4double(iz);
     }
-    else if (G4double(iz) != fZeff) {
+    else if (G4double(iz) != fZeff)
+    {
       G4ExceptionDescription ed;
       ed << "Failed to add Isotope Z= " << iz << " to G4Element " << fName
          << " with different Z= " << fZeff << fNeff;
@@ -164,7 +175,8 @@ void G4Element::AddIsotope(G4Isotope* isotope, G4double abundance)
     (*theIsotopeVector)[fNumberOfIsotopes] = isotope;
     ++fNumberOfIsotopes;
   }
-  else {
+  else
+  {
     G4ExceptionDescription ed;
     ed << "Failed to add Isotope Z= " << iz << " to G4Element " << fName
        << " - more isotopes than declared.";
@@ -173,20 +185,25 @@ void G4Element::AddIsotope(G4Isotope* isotope, G4double abundance)
   }
 
   // filled.
-  if (fNumberOfIsotopes == (G4int)theIsotopeVector->size()) {
+  if (fNumberOfIsotopes == (G4int)theIsotopeVector->size())
+  {
     G4double wtSum = 0.0;
     fAeff = 0.0;
-    for (G4int i = 0; i < fNumberOfIsotopes; ++i) {
+    for (G4int i = 0; i < fNumberOfIsotopes; ++i)
+    {
       fAeff += fRelativeAbundanceVector[i] * (*theIsotopeVector)[i]->GetA();
       wtSum += fRelativeAbundanceVector[i];
     }
-    if (wtSum > 0.0) {
+    if (wtSum > 0.0)
+    {
       fAeff /= wtSum;
     }
     fNeff = fAeff / (g / mole);
 
-    if (wtSum != 1.0) {
-      for (G4int i = 0; i < fNumberOfIsotopes; ++i) {
+    if (wtSum != 1.0)
+    {
+      for (G4int i = 0; i < fNumberOfIsotopes; ++i)
+      {
         fRelativeAbundanceVector[i] /= wtSum;
       }
     }
@@ -195,7 +212,8 @@ void G4Element::AddIsotope(G4Isotope* isotope, G4double abundance)
     fAtomicShells = new G4double[fNbOfAtomicShells];
     fNbOfShellElectrons = new G4int[fNbOfAtomicShells];
 
-    for (G4int j = 0; j < fNbOfAtomicShells; ++j) {
+    for (G4int j = 0; j < fNbOfAtomicShells; ++j)
+    {
       fAtomicShells[j] = G4AtomicShells::GetBindingEnergy(iz, j);
       fNbOfShellElectrons[j] = G4AtomicShells::GetNumberOfElectrons(iz, j);
     }
@@ -292,11 +310,13 @@ void G4Element::ComputeLradTsaiFactor()
   G4int iz = G4lrint(fZeff) - 1;
   static const G4double log184 = G4Log(184.15);
   static const G4double log1194 = G4Log(1194.);
-  if (iz <= 3) {
+  if (iz <= 3)
+  {
     Lrad = Lrad_light[iz];
     Lprad = Lprad_light[iz];
   }
-  else {
+  else
+  {
     Lrad = log184 - logZ3;
     Lprad = log1194 - 2 * logZ3;
   }
@@ -313,19 +333,24 @@ void G4Element::AddNaturalIsotopes()
   G4int n = nist->GetNumberOfNistIsotopes(Z);
   G4int N0 = nist->GetNistFirstIsotopeN(Z);
 
-  if (fSymbol.empty()) {
+  if (fSymbol.empty())
+  {
     const std::vector<G4String>& elmnames = G4NistManager::Instance()->GetNistElementNames();
-    if (Z < (G4int)elmnames.size()) {
+    if (Z < (G4int)elmnames.size())
+    {
       fSymbol = elmnames[Z];
     }
-    else {
+    else
+    {
       fSymbol = fName;
     }
   }
 
   fNumberOfIsotopes = 0;
-  for (G4int i = 0; i < n; ++i) {
-    if (nist->GetIsotopeAbundance(Z, N0 + i) > 0.0) {
+  for (G4int i = 0; i < n; ++i)
+  {
+    if (nist->GetIsotopeAbundance(Z, N0 + i) > 0.0)
+    {
       ++fNumberOfIsotopes;
     }
   }
@@ -333,10 +358,12 @@ void G4Element::AddNaturalIsotopes()
   fRelativeAbundanceVector = new G4double[fNumberOfIsotopes];
   G4int idx = 0;
   G4double xsum = 0.0;
-  for (G4int i = 0; i < n; ++i) {
+  for (G4int i = 0; i < n; ++i)
+  {
     G4int N = N0 + i;
     G4double x = nist->GetIsotopeAbundance(Z, N);
-    if (x > 0.0) {
+    if (x > 0.0)
+    {
       std::ostringstream strm;
       strm << fSymbol << N;
       (*theIsotopeVector)[idx] = new G4Isotope(strm.str(), Z, N, 0.0, 0);
@@ -345,8 +372,10 @@ void G4Element::AddNaturalIsotopes()
       ++idx;
     }
   }
-  if (xsum != 0.0 && xsum != 1.0) {
-    for (G4int i = 0; i < idx; ++i) {
+  if (xsum != 0.0 && xsum != 1.0)
+  {
+    for (G4int i = 0; i < idx; ++i)
+    {
       fRelativeAbundanceVector[i] /= xsum;
     }
   }
@@ -357,7 +386,8 @@ void G4Element::AddNaturalIsotopes()
 
 G4double G4Element::GetAtomicShell(G4int i) const
 {
-  if (i < 0 || i >= fNbOfAtomicShells) {
+  if (i < 0 || i >= fNbOfAtomicShells)
+  {
     G4ExceptionDescription ed;
     ed << "Invalid argument " << i << " in for G4Element " << fName << " with Z= " << fZeff
        << " and Nshells= " << fNbOfAtomicShells;
@@ -371,7 +401,8 @@ G4double G4Element::GetAtomicShell(G4int i) const
 
 G4int G4Element::GetNbOfShellElectrons(G4int i) const
 {
-  if (i < 0 || i >= fNbOfAtomicShells) {
+  if (i < 0 || i >= fNbOfAtomicShells)
+  {
     G4ExceptionDescription ed;
     ed << "Invalid argument " << i << " for G4Element " << fName << " with Z= " << fZeff
        << " and Nshells= " << fNbOfAtomicShells;
@@ -385,12 +416,14 @@ G4int G4Element::GetNbOfShellElectrons(G4int i) const
 
 G4ElementTable& G4Element::GetElementTableRef()
 {
-  struct Holder {
-    G4ElementTable instance;
-    ~Holder() {
-      for(auto item : instance)
-        delete item;
-    }
+  struct Holder
+  {
+      G4ElementTable instance;
+      ~Holder()
+      {
+        for (auto item : instance)
+          delete item;
+      }
   };
   static Holder _holder;
   return _holder.instance;
@@ -405,23 +438,27 @@ const G4ElementTable* G4Element::GetElementTable()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-size_t G4Element::GetNumberOfElements() { return GetElementTableRef().size(); }
+size_t G4Element::GetNumberOfElements()
+{
+  return GetElementTableRef().size();
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4Element* G4Element::GetElement(const G4String& elementName, G4bool warning)
 {
   // search the element by its name
-  for (auto const & J : GetElementTableRef())
+  for (auto const& J : GetElementTableRef())
   {
-    if(J->GetName() == elementName)
+    if (J->GetName() == elementName)
     {
       return J;
     }
   }
 
   // the element does not exist in the table
-  if (warning) {
+  if (warning)
+  {
     G4cout << "\n---> warning from G4Element::GetElement(). The element: " << elementName
            << " does not exist in the table. Return NULL pointer." << G4endl;
   }
@@ -442,7 +479,8 @@ std::ostream& operator<<(std::ostream& flux, const G4Element* element)
        << "   A = " << std::setw(6) << std::setprecision(3) << (element->fAeff) / (g / mole)
        << " g/mole";
 
-  for (G4int i = 0; i < element->fNumberOfIsotopes; i++) {
+  for (G4int i = 0; i < element->fNumberOfIsotopes; i++)
+  {
     flux << "\n         ---> " << (*(element->theIsotopeVector))[i]
          << "   abundance: " << std::setw(6) << std::setprecision(3)
          << (element->fRelativeAbundanceVector[i]) / perCent << " %";
@@ -468,7 +506,8 @@ std::ostream& operator<<(std::ostream& flux, const G4ElementTable& ElementTable)
   // Dump info for all known elements
   flux << "\n***** Table : Nb of elements = " << ElementTable.size() << " *****\n" << G4endl;
 
-  for (auto const & i : ElementTable) {
+  for (auto const& i : ElementTable)
+  {
     flux << i << G4endl << G4endl;
   }
 
@@ -482,7 +521,8 @@ std::ostream& operator<<(std::ostream& flux, const G4ElementVector& ElementVecto
   // Dump info for all known elements
   flux << "\n***** Vector : Nb of elements = " << ElementVector.size() << " *****\n" << G4endl;
 
-  for (auto const & i : ElementVector) {
+  for (auto const& i : ElementVector)
+  {
     flux << i << G4endl << G4endl;
   }
 

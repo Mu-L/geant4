@@ -50,10 +50,12 @@ class QTreeWidgetItem;
 class G4VtkQtViewer : public QVTKOpenGLNativeWidget, public G4VtkViewer
 {
   public:
+
     using PVNodeID = G4PhysicalVolumeModel::G4PhysicalVolumeNodeID;
     using PVPath = std::vector<PVNodeID>;
 
   public:
+
     G4VtkQtViewer(G4VSceneHandler&, const G4String& name);
     ~G4VtkQtViewer() override;
     void Initialise() override;
@@ -106,6 +108,7 @@ class G4VtkQtViewer : public QVTKOpenGLNativeWidget, public G4VtkViewer
     void SetWidgetInteractor(vtkAbstractWidget* widget) override;
 
   private:
+
     G4UIQt* fUiQt;
     QWidget* fGLWidget;
 

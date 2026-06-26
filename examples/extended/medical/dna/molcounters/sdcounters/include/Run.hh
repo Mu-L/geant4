@@ -44,7 +44,10 @@
 
 #include "G4Run.hh"
 
-class G4VPrimitiveScorer;
+class G4MoleculeCounterScorer;
+class G4MoleculeReactionCounterScorer;
+class ScoreMoleculeCounts;
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 class Run : public G4Run
 {
@@ -54,23 +57,24 @@ class Run : public G4Run
 
     void Merge(const G4Run*) override;
 
-    inline G4VPrimitiveScorer* GetBasicMoleculeScorerWithVariablePrecision() const
+    inline G4MoleculeCounterScorer* GetBasicMoleculeScorerWithVariablePrecision() const
     {
       return fScorerMoleculesBasicVariablePrecision;
     }
-    inline G4VPrimitiveScorer* GetBasicMoleculeScorer() const
-    {
-      return fScorerMoleculesBasic;
-    }
-    inline G4VPrimitiveScorer* GetBasicReactionScorer() const
+    inline G4MoleculeCounterScorer* GetBasicMoleculeScorer() const { return fScorerMoleculesBasic; }
+    inline G4MoleculeReactionCounterScorer* GetBasicReactionScorer() const
     {
       return fScorerReactionsBasic;
     }
 
+    inline ScoreMoleculeCounts* GetScorerMolecules() const { return fScorerMolecules; }
+
   private:
-    G4VPrimitiveScorer* fScorerMoleculesBasic = nullptr;
-    G4VPrimitiveScorer* fScorerMoleculesBasicVariablePrecision = nullptr;
-    G4VPrimitiveScorer* fScorerReactionsBasic = nullptr;
+    G4MoleculeCounterScorer* fScorerMoleculesBasic = nullptr;
+    G4MoleculeCounterScorer* fScorerMoleculesBasicVariablePrecision = nullptr;
+    G4MoleculeReactionCounterScorer* fScorerReactionsBasic = nullptr;
+
+    ScoreMoleculeCounts* fScorerMolecules = nullptr;
 };
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 #endif

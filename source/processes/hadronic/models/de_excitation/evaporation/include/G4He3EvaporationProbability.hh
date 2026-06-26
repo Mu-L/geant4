@@ -32,35 +32,29 @@
 // Modified:
 // 17-11-2010 V.Ivanchenko integer Z and A
 //
-#ifndef G4He3EvaporationProbability_h
-#define G4He3EvaporationProbability_h 1
+#ifndef G4HE3EVAPORATIONPROBABILITY_HH
+#define G4HE3EVAPORATIONPROBABILITY_HH
 
 #include "G4EvaporationProbability.hh"
 
 class G4He3EvaporationProbability : public G4EvaporationProbability
 {
-public:
+  public:
 
-  G4He3EvaporationProbability();
+    G4He3EvaporationProbability();
 
-  ~G4He3EvaporationProbability() override = default;
+    ~G4He3EvaporationProbability() override = default;
 
-  G4He3EvaporationProbability(const G4He3EvaporationProbability &right) = delete;
-  const G4He3EvaporationProbability & operator=
-  (const G4He3EvaporationProbability &right) = delete;
-  G4bool operator==(const G4He3EvaporationProbability &right) const = delete;
-  G4bool operator!=(const G4He3EvaporationProbability &right) const = delete;
+    G4He3EvaporationProbability(const G4He3EvaporationProbability& right) = delete;
+    const G4He3EvaporationProbability& operator=(const G4He3EvaporationProbability& right) = delete;
+    G4bool operator==(const G4He3EvaporationProbability& right) const = delete;
+    G4bool operator!=(const G4He3EvaporationProbability& right) const = delete;
 
-protected:
+  protected:
 
-  G4double CalcAlphaParam(const G4Fragment & fragment) override;
- 
-  G4double CalcBetaParam(const G4Fragment & fragment) override;
+    G4double CalcAlphaParam(const G4Fragment& fragment) override;
+
+    G4double CalcBetaParam(const G4Fragment& fragment) override;
 };
 
-
 #endif
-
-
-
-

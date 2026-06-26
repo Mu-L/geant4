@@ -56,8 +56,8 @@
 //    printElement   name        output element  parameters
 //    printMaterial  name        output material parameters
 
-#ifndef G4NistMessenger_h
-#define G4NistMessenger_h 1
+#ifndef G4NISTMESSENGER_HH
+#define G4NISTMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -70,31 +70,33 @@ class G4UIcommand;
 
 class G4NistMessenger : public G4UImessenger
 {
- public:
-  explicit G4NistMessenger(G4NistManager*);
-  ~G4NistMessenger() override;
+  public:
 
-  void SetNewValue(G4UIcommand*, G4String) override;
+    explicit G4NistMessenger(G4NistManager*);
+    ~G4NistMessenger() override;
 
- private:
-  G4NistManager* manager;
+    void SetNewValue(G4UIcommand*, G4String) override;
 
-  G4UIdirectory* matDir;
-  G4UIcmdWithAnInteger* verCmd;
+  private:
 
-  G4UIdirectory* nistDir;
-  G4UIcmdWithAString* prtElmCmd;
-  G4UIcmdWithAnInteger* przElmCmd;
-  G4UIcmdWithAString* lisMatCmd;
+    G4NistManager* manager;
 
-  G4UIdirectory* g4Dir;
-  G4UIcmdWithAString* g4ElmCmd;
-  G4UIcmdWithAString* g4MatCmd;
-  G4UIcmdWithAString* g4DensCmd;
-  G4UIcmdWithAString* densCmd;
-  G4UIcmdWithAString* adensCmd;
+    G4UIdirectory* matDir;
+    G4UIcmdWithAnInteger* verCmd;
 
-  G4UIcommand* fPosiCmd;
+    G4UIdirectory* nistDir;
+    G4UIcmdWithAString* prtElmCmd;
+    G4UIcmdWithAnInteger* przElmCmd;
+    G4UIcmdWithAString* lisMatCmd;
+
+    G4UIdirectory* g4Dir;
+    G4UIcmdWithAString* g4ElmCmd;
+    G4UIcmdWithAString* g4MatCmd;
+    G4UIcmdWithAString* g4DensCmd;
+    G4UIcmdWithAString* densCmd;
+    G4UIcmdWithAString* adensCmd;
+
+    G4UIcommand* fPosiCmd;
 };
 
 #endif

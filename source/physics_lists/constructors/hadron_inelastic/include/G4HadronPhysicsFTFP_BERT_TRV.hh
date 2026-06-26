@@ -26,7 +26,7 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   
+// ClassName:
 //
 // Author: 2007  Gunter Folger
 //   created from G4HadronPhysicsFTFP
@@ -40,22 +40,22 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4HadronPhysicsFTFP_BERT_TRV_h
-#define G4HadronPhysicsFTFP_BERT_TRV_h 1
+#ifndef G4HADRONPHYSICSFTFP_BERT_TRV_HH
+#define G4HADRONPHYSICSFTFP_BERT_TRV_HH
 
 #include "G4HadronPhysicsFTFP_BERT.hh"
 
 class G4HadronPhysicsFTFP_BERT_TRV : public G4HadronPhysicsFTFP_BERT
 {
-  public: 
-    G4HadronPhysicsFTFP_BERT_TRV(G4int verbose =1);
-    G4HadronPhysicsFTFP_BERT_TRV(const G4String& name, G4bool quasiElastic=false);
+  public:
+
+    G4HadronPhysicsFTFP_BERT_TRV(G4int verbose = 1);
+    G4HadronPhysicsFTFP_BERT_TRV(const G4String& name, G4bool quasiElastic = false);
     virtual ~G4HadronPhysicsFTFP_BERT_TRV();
 
     // copy constructor and hide assignment operator
-    G4HadronPhysicsFTFP_BERT_TRV(G4HadronPhysicsFTFP_BERT_TRV &) = delete;
-    G4HadronPhysicsFTFP_BERT_TRV & operator =
-    (const G4HadronPhysicsFTFP_BERT_TRV &right) = delete;
+    G4HadronPhysicsFTFP_BERT_TRV(G4HadronPhysicsFTFP_BERT_TRV&) = delete;
+    G4HadronPhysicsFTFP_BERT_TRV& operator=(const G4HadronPhysicsFTFP_BERT_TRV& right) = delete;
 };
 
 #endif

@@ -31,13 +31,12 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgbIsotope_hh
-#define G4tgbIsotope_hh 1
+#ifndef G4TGBISOTOPE_HH
+#define G4TGBISOTOPE_HH
 
-#include "globals.hh"
-
-#include "G4tgrIsotope.hh"
 #include "G4Isotope.hh"
+#include "G4tgrIsotope.hh"
+#include "globals.hh"
 
 class G4tgbIsotope
 {
@@ -47,10 +46,10 @@ class G4tgbIsotope
     ~G4tgbIsotope();
 
     G4tgbIsotope(G4tgrIsotope* hg);
-      // Construct the G4tgbIsotope from the corresponding HgIsotope
+    // Construct the G4tgbIsotope from the corresponding HgIsotope
 
     G4Isotope* BuildG4Isotope();
-      // Build a G4Isotope out of this HIsotope
+    // Build a G4Isotope out of this HIsotope
 
     const G4String& GetName() const { return theTgrIsot->GetName(); }
 

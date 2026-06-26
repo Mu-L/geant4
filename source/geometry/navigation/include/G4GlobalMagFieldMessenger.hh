@@ -27,7 +27,7 @@
 //
 // Class description:
 //
-// Global uniform magnetic field messenger class. 
+// Global uniform magnetic field messenger class.
 //
 // It defines UI commands:
 // - /globalField/setValue vx vy vz unit
@@ -35,16 +35,16 @@
 //
 // It creates/deletes the global uniform magnetic field and
 // activates/inactivates it according to the set field value.
-// The field value can be changed either interactively via 
+// The field value can be changed either interactively via
 // the UI command or via SetFieldValue() function.
 
 // Author: Ivana Hrivnacova (IN2P3/IJCLab Orsay), 28 August 2013
 // --------------------------------------------------------------------
-#ifndef G4GlobalMagFieldMessenger_hh
-#define G4GlobalMagFieldMessenger_hh 1
+#ifndef G4GLOBALMAGFIELDMESSENGER_HH
+#define G4GLOBALMAGFIELDMESSENGER_HH
 
-#include "globals.hh"
 #include "G4UImessenger.hh"
+#include "globals.hh"
 
 class G4UniformMagField;
 class G4UIdirectory;
@@ -53,7 +53,10 @@ class G4UIcmdWithAnInteger;
 
 /**
  * @brief G4GlobalMagFieldMessenger, a global uniform magnetic field messenger
- * class. It creates/deletes the global uniform magnetic field and
+ * class.
+ * @ingroup geometry_navigation
+ *
+ * It creates/deletes the global uniform magnetic field and
  * activates/inactivates it according to the set field value.
  * The field value can be changed either interactively via the UI command or
  * via the SetFieldValue() function.
@@ -68,7 +71,7 @@ class G4GlobalMagFieldMessenger : public G4UImessenger
      */
     G4GlobalMagFieldMessenger(const G4ThreeVector& value = G4ThreeVector());
     ~G4GlobalMagFieldMessenger() override;
-    
+
     /**
      * Setter for UI command.
      */
@@ -79,17 +82,17 @@ class G4GlobalMagFieldMessenger : public G4UImessenger
      */
     void SetFieldValue(const G4ThreeVector& value);
     G4ThreeVector GetFieldValue() const;
-    
+
     /**
      * Verbosity control.
      */
     inline void SetVerboseLevel(G4int verboseLevel);
     inline G4int GetVerboseLevel() const;
-    
+
   private:
 
     void SetField(const G4ThreeVector& value, const G4String& inFunction);
-    
+
     G4UniformMagField* fMagField = nullptr;
     G4int fVerboseLevel = 0;
 
@@ -111,5 +114,5 @@ inline G4int G4GlobalMagFieldMessenger::GetVerboseLevel() const
 {
   return fVerboseLevel;
 }
-    
+
 #endif

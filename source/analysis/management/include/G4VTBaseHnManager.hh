@@ -28,26 +28,27 @@
 //
 // Author: Ivana Hrivnacova, 10/08/2022  (ivana@ipno.in2p3.fr)
 
-#ifndef G4VTBaseHnManager_h
-#define G4VTBaseHnManager_h 1
+#ifndef G4VTBASEHNMANAGER_HH
+#define G4VTBASEHNMANAGER_HH
 
 #include "G4HnInformation.hh"
 #include "globals.hh"
 
-#include <vector>
-#include <memory>
 #include <array>
+#include <memory>
+#include <vector>
 
 class G4HnManager;
 
-template <unsigned int DIM>
+template<unsigned int DIM>
 class G4VTBaseHnManager
 {
-  // Disable using the object managers outside
-  friend class G4VAnalysisManager;
-  friend class G4VAnalysisReader;
+    // Disable using the object managers outside
+    friend class G4VAnalysisManager;
+    friend class G4VAnalysisReader;
 
   public:
+
     G4VTBaseHnManager() = default;
     virtual ~G4VTBaseHnManager() = default;
 
@@ -57,16 +58,15 @@ class G4VTBaseHnManager
 
     // Methods for handling histograms
     virtual G4int Create(const G4String& name, const G4String& title,
-               const std::array<G4HnDimension, DIM>& bins,
-               const std::array<G4HnDimensionInformation, DIM>& hnInfo) = 0;
+                         const std::array<G4HnDimension, DIM>& bins,
+                         const std::array<G4HnDimensionInformation, DIM>& hnInfo) = 0;
 
     // virtual G4int Create(const G4String& name, const G4String& title,
     //            const std::array<std::vector<G4double>, DIM> edges,
     //            const std::array<G4HnDimensionInformation, DIM>& hnInfo) = 0;
 
-    virtual G4bool Set(G4int id,
-               const std::array<G4HnDimension, DIM>& bins,
-               const std::array<G4HnDimensionInformation, DIM>& hnInfo) = 0;
+    virtual G4bool Set(G4int id, const std::array<G4HnDimension, DIM>& bins,
+                       const std::array<G4HnDimensionInformation, DIM>& hnInfo) = 0;
 
     // virtual G4bool Set(G4int id,
     //            const std::array<std::vector<G4double>, DIM>& edges,
@@ -78,11 +78,11 @@ class G4VTBaseHnManager
     virtual G4bool Fill(G4int id, std::array<G4double, DIM> value, G4double weight = 1.0) = 0;
 
     // Access methods
-    virtual G4int  GetId(const G4String& name, G4bool warn = true) const = 0;
-    virtual G4int  GetNofHns(G4bool onlyExisting) const = 0;
+    virtual G4int GetId(const G4String& name, G4bool warn = true) const = 0;
+    virtual G4int GetNofHns(G4bool onlyExisting) const = 0;
 
     // Access to bins parameters
-    virtual G4int    GetNbins(unsigned int idim, G4int id) const = 0;
+    virtual G4int GetNbins(unsigned int idim, G4int id) const = 0;
     virtual G4double GetMinValue(unsigned int idim, G4int id) const = 0;
     virtual G4double GetMaxValue(unsigned int idim, G4int id) const = 0;
     virtual G4double GetWidth(unsigned int idim, G4int id) const = 0;

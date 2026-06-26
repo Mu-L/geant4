@@ -28,25 +28,30 @@
 //
 // Author:	Michael Kelsey (SLAC) <kelsey@slac.stanford.edu>
 
-#ifndef G4HadPhaseSpaceKopylov_HH
-#define G4HadPhaseSpaceKopylov_HH 1
+#ifndef G4HADPHASESPACEKOPYLOV_HH
+#define G4HADPHASESPACEKOPYLOV_HH
 
 #include "G4VHadPhaseSpaceAlgorithm.hh"
 
+class G4HadPhaseSpaceKopylov : public G4VHadPhaseSpaceAlgorithm
+{
+  public:
 
-class G4HadPhaseSpaceKopylov : public G4VHadPhaseSpaceAlgorithm {
-public:
-  G4HadPhaseSpaceKopylov(G4int verbose=0)
-    : G4VHadPhaseSpaceAlgorithm("G4HadPhaseSpaceKopylov",verbose) {;}
-  virtual ~G4HadPhaseSpaceKopylov() {;}
+    G4HadPhaseSpaceKopylov(G4int verbose = 0)
+      : G4VHadPhaseSpaceAlgorithm("G4HadPhaseSpaceKopylov", verbose)
+    {
+      ;
+    }
+    virtual ~G4HadPhaseSpaceKopylov() { ; }
 
-protected:
-  virtual void GenerateMultiBody(G4double initialMass,
-				 const std::vector<G4double>& masses,
-				 std::vector<G4LorentzVector>& finalState);
+  protected:
 
-protected:
-  G4double BetaKopylov(G4int K) const;
+    virtual void GenerateMultiBody(G4double initialMass, const std::vector<G4double>& masses,
+                                   std::vector<G4LorentzVector>& finalState);
+
+  protected:
+
+    G4double BetaKopylov(G4int K) const;
 };
 
-#endif	/* G4HadPhaseSpaceKopylov_HH */
+#endif /* G4HadPhaseSpaceKopylov_HH */

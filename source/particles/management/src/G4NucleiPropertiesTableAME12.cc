@@ -51,23 +51,27 @@ G4ThreadLocal G4double G4NucleiPropertiesTableAME12::electronMass[ZMax];
 //
 G4int G4NucleiPropertiesTableAME12::GetIndex(G4int Z, G4int A)
 {
-  if (A > G4NucleiPropertiesTableAME12::MaxA) {
+  if (A > G4NucleiPropertiesTableAME12::MaxA)
+  {
     G4Exception("G4NucleiPropertiesTableAME12::GetIndex", "PART201", EventMustBeAborted,
                 "Nucleon number larger than 293");
     return -1;
   }
-  if (A < 1) {
+  if (A < 1)
+  {
     G4Exception("G4NucleiPropertiesTableAME12::GetIndex", "Illegal arguemntPART201",
                 EventMustBeAborted, " Nucleon number is negative");
     return -1;
   }
-  if (Z > A) {
+  if (Z > A)
+  {
     G4Exception("G4NucleiPropertiesTableAME12::GetIndex", "PART201", EventMustBeAborted,
                 "Nucleon number smaller than Z");
     return -1;
   }
 
-  for (G4int i = shortTable[A - 1]; i < shortTable[A]; ++i) {
+  for (G4int i = shortTable[A - 1]; i < shortTable[A]; ++i)
+  {
     if (indexArray[0][i] == Z) return i;
   }
   return -1;
@@ -87,10 +91,12 @@ G4int G4NucleiPropertiesTableAME12::MaxZ(G4int A)
 
 G4double G4NucleiPropertiesTableAME12::GetNuclearMass(G4int Z, G4int A)
 {
-  if (!isIntialized) {
+  if (!isIntialized)
+  {
     // calculate electron mass in orbit with binding energy
     isIntialized = true;
-    for (G4int iz = 1; iz < ZMax; iz += 1) {
+    for (G4int iz = 1; iz < ZMax; iz += 1)
+    {
       electronMass[iz] = iz * electron_mass_c2 - (14.4381 * std::pow(G4double(iz), 2.39)) * eV
                          - (1.55468 * 1e-6 * std::pow(G4double(iz), 5.35)) * eV;
     }
@@ -106,7 +112,8 @@ G4double G4NucleiPropertiesTableAME12::GetNuclearMass(G4int Z, G4int A)
 G4double G4NucleiPropertiesTableAME12::GetMassExcess(G4int Z, G4int A)
 {
   G4int i = GetIndex(Z, A);
-  if (i >= 0) {
+  if (i >= 0)
+  {
     return MassExcess[i] * keV;
   }
 
@@ -116,7 +123,8 @@ G4double G4NucleiPropertiesTableAME12::GetMassExcess(G4int Z, G4int A)
 G4double G4NucleiPropertiesTableAME12::GetBindingEnergy(G4int Z, G4int A)
 {
   G4int i = GetIndex(Z, A);
-  if (i >= 0) {
+  if (i >= 0)
+  {
     return (G4double(A - Z) * MassExcess[0] + G4double(Z) * MassExcess[1] - MassExcess[i]) * keV;
   }
 
@@ -126,7 +134,8 @@ G4double G4NucleiPropertiesTableAME12::GetBindingEnergy(G4int Z, G4int A)
 G4double G4NucleiPropertiesTableAME12::GetBetaDecayEnergy(G4int Z, G4int A)
 {
   G4int i = GetIndex(Z, A);
-  if (i >= 0) {
+  if (i >= 0)
+  {
     return BetaEnergy[i] * keV;
   }
 
@@ -136,7 +145,8 @@ G4double G4NucleiPropertiesTableAME12::GetBetaDecayEnergy(G4int Z, G4int A)
 G4double G4NucleiPropertiesTableAME12::GetAtomicMass(G4int Z, G4int A)
 {
   G4int i = GetIndex(Z, A);
-  if (i >= 0) {
+  if (i >= 0)
+  {
     return MassExcess[i] * keV + G4double(A) * amu_c2;
   }
 

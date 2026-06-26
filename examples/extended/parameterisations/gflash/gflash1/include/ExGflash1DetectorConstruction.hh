@@ -36,14 +36,10 @@ class G4LogicalVolume;
 class G4VPhysicalVolume;
 class G4Region;
 
-class GFlashHomoShowerParameterisation;
-class GFlashShowerModel;
-class GFlashHitMaker;
-class GFlashParticleBounds;
-
 class ExGflash1DetectorConstruction : public G4VUserDetectorConstruction
 {
   public:
+
     ExGflash1DetectorConstruction();
     ~ExGflash1DetectorConstruction() override;
 
@@ -53,14 +49,10 @@ class ExGflash1DetectorConstruction : public G4VUserDetectorConstruction
     const G4VPhysicalVolume* GetCristal(int aNumCrystal) { return fCrystalPhys[aNumCrystal]; };
 
   private:
+
     G4LogicalVolume* fCrystalLog{nullptr};
     G4VPhysicalVolume* fCrystalPhys[100]{};
     G4Region* fRegion{nullptr};
-
-    inline static G4ThreadLocal GFlashShowerModel* fFastShowerModel = nullptr;
-    inline static G4ThreadLocal GFlashHomoShowerParameterisation* fParameterisation = nullptr;
-    inline static G4ThreadLocal GFlashParticleBounds* fParticleBounds = nullptr;
-    inline static G4ThreadLocal GFlashHitMaker* fHitMaker = nullptr;
 };
 
 #endif

@@ -27,32 +27,33 @@
 // by V. Lara
 //
 // Modified:
-// 23.08.2010 V.Ivanchenko general cleanup, move constructor and destructor 
+// 23.08.2010 V.Ivanchenko general cleanup, move constructor and destructor
 //            the source, use G4Pow
 
 #include "G4HETCProton.hh"
-#include "G4Proton.hh"
-#include "G4CoulombBarrier.hh"
 
-G4HETCProton::G4HETCProton() 
-  : G4HETCChargedFragment(G4Proton::Proton(), new G4CoulombBarrier(1, 1))
+#include "G4CoulombBarrier.hh"
+#include "G4Proton.hh"
+
+G4HETCProton::G4HETCProton() : G4HETCChargedFragment(G4Proton::Proton(), new G4CoulombBarrier(1, 1))
 {}
 
 G4double G4HETCProton::GetAlpha() const
 {
   G4double C = 0.0;
-  if (theResZ <= 70) 
-    {
-      C = 0.10;
-    } 
-  else 
-    {
-      C = ((((0.15417e-06*theResZ) - 0.29875e-04)*theResZ 
-	    + 0.21071e-02)*theResZ - 0.66612e-01)*theResZ + 0.98375;
-    }
+  if (theResZ <= 70)
+  {
+    C = 0.10;
+  }
+  else
+  {
+    C = ((((0.15417e-06 * theResZ) - 0.29875e-04) * theResZ + 0.21071e-02) * theResZ - 0.66612e-01)
+          * theResZ
+        + 0.98375;
+  }
   return 1.0 + C;
 }
-  
+
 G4double G4HETCProton::GetSpinFactor() const
 {
   // 2s+1
@@ -64,16 +65,16 @@ G4double G4HETCProton::K(const G4Fragment& aFragment) const
   // Number of protons in emitted fragment
   G4int Pa = theZ;
 
-  G4double r = G4double(theResZ)/G4double(theResA);
+  G4double r = G4double(theResZ) / G4double(theResA);
 
   G4int P = aFragment.GetNumberOfParticles();
   G4int H = aFragment.GetNumberOfHoles();
 
   G4double result = 0.0;
   if (P > 0)
-    {
-      result = (H*r + Pa)/(P*r);
-    }
+  {
+    result = (H * r + Pa) / (P * r);
+  }
 
-  return std::max(0.0,result);
+  return std::max(0.0, result);
 }

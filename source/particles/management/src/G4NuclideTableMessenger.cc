@@ -91,15 +91,18 @@ G4NuclideTableMessenger::~G4NuclideTableMessenger()
 
 void G4NuclideTableMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
-  if (command == halflifeCmd) {
+  if (command == halflifeCmd)
+  {
     // Command   /particle/manage/nuclideTable/min_halflife
     theNuclideTable->SetThresholdOfHalfLife(halflifeCmd->GetNewDoubleValue(newValue));
   }
-  else if (command == meanlifeCmd) {
+  else if (command == meanlifeCmd)
+  {
     // Command   /particle/manage/nuclideTable/min_meanlife
     theNuclideTable->SetMeanLifeThreshold(meanlifeCmd->GetNewDoubleValue(newValue));
   }
-  else if (command == lToleranceCmd) {
+  else if (command == lToleranceCmd)
+  {
     // Command   /particle/manage/nuclideTable/level_tolerance
     theNuclideTable->SetLevelTolerance(lToleranceCmd->GetNewDoubleValue(newValue));
   }

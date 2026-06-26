@@ -26,8 +26,8 @@
 
 // Author: Ivana Hrivnacova, 04/07/2012  (ivana@ipno.in2p3.fr)
 
-#ifndef G4BinScheme_h
-#define G4BinScheme_h 1
+#ifndef G4BINSCHEME_HH
+#define G4BINSCHEME_HH
 
 #include "G4Fcn.hh"
 #include "globals.hh"
@@ -36,24 +36,24 @@
 
 // Enumeration for definition available binning schemes
 
-enum class G4BinScheme {
+enum class G4BinScheme
+{
   kLinear,
   kLog,
   kUser
 };
 
 // Utility function
-namespace G4Analysis {
+namespace G4Analysis
+{
 
 G4BinScheme GetBinScheme(const G4String& binSchemeName);
 
-void ComputeEdges(G4int nbins, G4double xmin, G4double xmax,
-                  G4double unit, G4Fcn fcn, G4BinScheme,
+void ComputeEdges(G4int nbins, G4double xmin, G4double xmax, G4double unit, G4Fcn fcn, G4BinScheme,
                   std::vector<G4double>& edges);
 
-void ComputeEdges(const std::vector<G4double>& edges,
-                  G4double unit, G4Fcn fcn,
+void ComputeEdges(const std::vector<G4double>& edges, G4double unit, G4Fcn fcn,
                   std::vector<G4double>& newEdges);
-}
+}  // namespace G4Analysis
 
 #endif

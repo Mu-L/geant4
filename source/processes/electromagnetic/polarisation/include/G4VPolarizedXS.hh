@@ -34,61 +34,60 @@
 //   polarization for the final state of a given process
 //   empoying the differential cross section
 
-#ifndef G4VPolarizedXS_h
-#define G4VPolarizedXS_h 1
+#ifndef G4VPOLARIZEDXS_HH
+#define G4VPOLARIZEDXS_HH
 
 #include "G4StokesVector.hh"
 
 class G4VPolarizedXS
 {
- public:
-  G4VPolarizedXS();
-  virtual ~G4VPolarizedXS();
+  public:
 
-  virtual void Initialize(G4double, G4double, G4double,
-                          const G4StokesVector& p0, const G4StokesVector& p1,
-                          G4int flag = 0) = 0;
+    G4VPolarizedXS();
+    virtual ~G4VPolarizedXS();
 
-  virtual G4double XSection(const G4StokesVector& pol2,
-                            const G4StokesVector& pol3) = 0;
+    virtual void Initialize(G4double, G4double, G4double, const G4StokesVector& p0,
+                            const G4StokesVector& p1, G4int flag = 0) = 0;
 
-  virtual G4double TotalXSection(G4double xmin, G4double xmax, G4double y,
-                                 const G4StokesVector& pol0,
-                                 const G4StokesVector& pol1);
+    virtual G4double XSection(const G4StokesVector& pol2, const G4StokesVector& pol3) = 0;
 
-  // return expected mean polarisation
-  virtual G4StokesVector GetPol2();
-  virtual G4StokesVector GetPol3();
+    virtual G4double TotalXSection(G4double xmin, G4double xmax, G4double y,
+                                   const G4StokesVector& pol0, const G4StokesVector& pol1);
 
-  // return basic kinematics properties
-  //   minimal gamma value in TotalXSection
-  inline G4double GetYmin() { return fYmin; }
-  //   minimal energy fraction in TotalXSection
-  virtual G4double GetXmin(G4double y);
-  //   maximal energy fraction in TotalXSection
-  virtual G4double GetXmax(G4double y);
+    // return expected mean polarisation
+    virtual G4StokesVector GetPol2();
+    virtual G4StokesVector GetPol3();
 
-  inline void SetMaterial(G4double A, G4double Z, G4double coul)
-  {
-    fA    = A;
-    fZ    = Z;
-    fCoul = coul;
-  }
+    // return basic kinematics properties
+    //   minimal gamma value in TotalXSection
+    inline G4double GetYmin() { return fYmin; }
+    //   minimal energy fraction in TotalXSection
+    virtual G4double GetXmin(G4double y);
+    //   maximal energy fraction in TotalXSection
+    virtual G4double GetXmax(G4double y);
 
-  G4VPolarizedXS& operator=(const G4VPolarizedXS& right) = delete;
-  G4VPolarizedXS(const G4VPolarizedXS&)                  = delete;
+    inline void SetMaterial(G4double A, G4double Z, G4double coul)
+    {
+      fA = A;
+      fZ = Z;
+      fCoul = coul;
+    }
 
- protected:
-  // define kinematics properties
-  inline void SetXmin(G4double xmin) { fXmin = xmin; }
-  inline void SetXmax(G4double xmax) { fXmax = xmax; }
-  inline void SetYmin(G4double ymin) { fYmin = ymin; }
+    G4VPolarizedXS& operator=(const G4VPolarizedXS& right) = delete;
+    G4VPolarizedXS(const G4VPolarizedXS&) = delete;
 
-  // kinematic properties
-  G4double fXmin, fXmax, fYmin;
-  // material properties
-  G4double fA, fZ;
-  G4double fCoul;
+  protected:
+
+    // define kinematics properties
+    inline void SetXmin(G4double xmin) { fXmin = xmin; }
+    inline void SetXmax(G4double xmax) { fXmax = xmax; }
+    inline void SetYmin(G4double ymin) { fYmin = ymin; }
+
+    // kinematic properties
+    G4double fXmin, fXmax, fYmin;
+    // material properties
+    G4double fA, fZ;
+    G4double fCoul;
 };
 
 #endif

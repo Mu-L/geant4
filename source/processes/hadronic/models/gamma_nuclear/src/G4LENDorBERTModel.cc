@@ -24,53 +24,64 @@
 // ********************************************************************
 //
 #include "G4LENDorBERTModel.hh"
-#include "G4LENDCombinedModel.hh"
+
 #include "G4CascadeInterface.hh"
 #include "G4DynamicParticle.hh"
+#include "G4LENDCombinedModel.hh"
 #include "G4PhysicsModelCatalog.hh"
 
-G4LENDorBERTModel::G4LENDorBERTModel( G4ParticleDefinition* pd )
-  :G4LENDModel( "LENDorBERTModel" ), secID( -1 ) {
-   proj = pd;
-   lend = new G4LENDCombinedModel( proj ); 
-   bert = new G4CascadeInterface;
-   secID = G4PhysicsModelCatalog::GetModelID( "model_" + GetModelName() );
+G4LENDorBERTModel::G4LENDorBERTModel(G4ParticleDefinition* pd)
+  : G4LENDModel("LENDorBERTModel"), secID(-1)
+{
+  proj = pd;
+  lend = new G4LENDCombinedModel(proj);
+  bert = new G4CascadeInterface;
+  secID = G4PhysicsModelCatalog::GetModelID("model_" + GetModelName());
 }
 
-void G4LENDorBERTModel::BuildPhysicsTable(const G4ParticleDefinition& projectile) {
-   lend->BuildPhysicsTable( projectile );
-   create_used_target_map();
+void G4LENDorBERTModel::BuildPhysicsTable(const G4ParticleDefinition& projectile)
+{
+  lend->BuildPhysicsTable(projectile);
+  create_used_target_map();
 }
 
-G4HadFinalState * G4LENDorBERTModel::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& aTarg ){
-   //G4cout << "Hello from G4LENDorBERTModel::ApplyYourself" << G4endl;
+G4HadFinalState* G4LENDorBERTModel::ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& aTarg)
+{
+  // G4cout << "Hello from G4LENDorBERTModel::ApplyYourself" << G4endl;
 
-   G4int iZ = aTarg.GetZ_asInt();
-   G4int iA = aTarg.GetA_asInt();
-   G4int iM = 0;
-   if ( aTarg.GetIsotope() != nullptr ) iM = aTarg.GetIsotope()->Getm();
+  G4int iZ = aTarg.GetZ_asInt();
+  G4int iA = aTarg.GetA_asInt();
+  G4int iM = 0;
+  if (aTarg.GetIsotope() != nullptr) iM = aTarg.GetIsotope()->Getm();
 
-   G4DynamicParticle* dp = new G4DynamicParticle( aTrack.GetDefinition() , G4ThreeVector(0.,0.,1.) , aTrack.GetKineticEnergy() );
-   G4bool lendIsOK = lend->HasData( dp , iZ , iA , iM , aTarg.GetIsotope() , nullptr , aTrack.GetMaterial() );
-   delete dp;
+  G4DynamicParticle* dp = new G4DynamicParticle(aTrack.GetDefinition(), G4ThreeVector(0., 0., 1.),
+                                                aTrack.GetKineticEnergy());
+  G4bool lendIsOK =
+    lend->HasData(dp, iZ, iA, iM, aTarg.GetIsotope(), nullptr, aTrack.GetMaterial());
+  delete dp;
 
-   G4HadronicInteraction* model = nullptr;
-   if ( lendIsOK ) { 
-      //G4cout << "LEND is selected" << G4endl;
-      model = lend;
-   } else { 
-      //G4cout << "BERT is selected" << G4endl;
-      model = bert;
-   }
+  G4HadronicInteraction* model = nullptr;
+  if (lendIsOK)
+  {
+    // G4cout << "LEND is selected" << G4endl;
+    model = lend;
+  }
+  else
+  {
+    // G4cout << "BERT is selected" << G4endl;
+    model = bert;
+  }
 
-   G4HadFinalState* result = model->ApplyYourself(aTrack,aTarg);
-   
-   // Assign the creator model ID to the secondaries
-   if ( result != nullptr ) {
-     for ( size_t i = 0; i < result->GetNumberOfSecondaries(); ++i ) {
-       result->GetSecondary( i )->SetCreatorModelID( secID );
-     }
-   }
+  G4HadFinalState* result = model->ApplyYourself(aTrack, aTarg);
 
-   return result;
+  // Assign the creator model ID to the secondaries
+  if (result != nullptr)
+  {
+    for (size_t i = 0; i < result->GetNumberOfSecondaries(); ++i)
+    {
+      result->GetSecondary(i)->SetCreatorModelID(secID);
+    }
+  }
+
+  return result;
 }

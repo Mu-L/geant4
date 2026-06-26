@@ -29,44 +29,36 @@
 // --------------------------------------------------------------------
 
 #include "G4MaterialCutsCouple.hh"
+
 #include "G4Material.hh"
 
 #include <iomanip>
 
 // --------------------------------------------------------------------
-G4MaterialCutsCouple::G4MaterialCutsCouple()
-{
-}
-  
-// --------------------------------------------------------------------
-G4MaterialCutsCouple::G4MaterialCutsCouple(const G4Material* material,
-                                           G4ProductionCuts* cut)
-  : isMaterialModified(true),
-    fMaterial(material),
-    fCuts(cut)
-{
-}
+G4MaterialCutsCouple::G4MaterialCutsCouple() {}
 
 // --------------------------------------------------------------------
-G4MaterialCutsCouple::G4MaterialCutsCouple(const G4MaterialCutsCouple& right) 
+G4MaterialCutsCouple::G4MaterialCutsCouple(const G4Material* material, G4ProductionCuts* cut)
+  : isMaterialModified(true), fMaterial(material), fCuts(cut)
+{}
+
+// --------------------------------------------------------------------
+G4MaterialCutsCouple::G4MaterialCutsCouple(const G4MaterialCutsCouple& right)
   : fMaterial(nullptr), fCuts(nullptr)
 {
   *this = right;
 }
 
 // --------------------------------------------------------------------
-G4MaterialCutsCouple::~G4MaterialCutsCouple()
-{
-}
+G4MaterialCutsCouple::~G4MaterialCutsCouple() {}
 
 // --------------------------------------------------------------------
-G4MaterialCutsCouple&
-G4MaterialCutsCouple::operator=(const G4MaterialCutsCouple& right)
+G4MaterialCutsCouple& G4MaterialCutsCouple::operator=(const G4MaterialCutsCouple& right)
 {
-  if (&right==this) return *this;
+  if (&right == this) return *this;
 
   fMaterial = right.fMaterial;
-  fCuts     = right.fCuts; 
+  fCuts = right.fCuts;
   isMaterialModified = right.isMaterialModified;
   indexNumber = right.indexNumber;
   isUsedInGeometry = right.isUsedInGeometry;

@@ -45,17 +45,18 @@
 // 25-07-05 Move constructor and destructor to the body (V.Ivanchenko)
 //
 //
-// Class Description: 
+// Class Description:
 //
 // Abstract class for interface to simualtion of energy loss fluctuations
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4VEmFluctuationModel_h
-#define G4VEmFluctuationModel_h 1
+#ifndef G4VEMFLUCTUATIONMODEL_HH
+#define G4VEMFLUCTUATIONMODEL_HH
 
 #include "globals.hh"
+
 #include <CLHEP/Random/RandomEngine.h>
 
 class G4ParticleDefinition;
@@ -64,64 +65,55 @@ class G4Material;
 class G4MaterialCutsCouple;
 class G4LossTableManager;
 
-class G4VEmFluctuationModel 
+class G4VEmFluctuationModel
 {
+  public:
 
-public:
+    explicit G4VEmFluctuationModel(const G4String& nam);
 
-  explicit G4VEmFluctuationModel(const G4String& nam);
+    virtual ~G4VEmFluctuationModel();
 
-  virtual ~G4VEmFluctuationModel();
+    //------------------------------------------------------------------------
+    // Virtual methods to be implemented for the concrete model
+    //------------------------------------------------------------------------
 
-  //------------------------------------------------------------------------
-  // Virtual methods to be implemented for the concrete model
-  //------------------------------------------------------------------------
+    virtual G4double SampleFluctuations(const G4MaterialCutsCouple*, const G4DynamicParticle*,
+                                        const G4double tcut, const G4double tmax,
+                                        const G4double length, const G4double meanLoss) = 0;
 
-  virtual G4double SampleFluctuations(const G4MaterialCutsCouple*,
-				      const G4DynamicParticle*,
-				      const G4double tcut,
-				      const G4double tmax,
-				      const G4double length,
-				      const G4double meanLoss) = 0;
+    virtual G4double Dispersion(const G4Material*, const G4DynamicParticle*, const G4double tcut,
+                                const G4double tmax, const G4double length) = 0;
 
-  virtual G4double Dispersion(const G4Material*,
-                              const G4DynamicParticle*,
-			      const G4double tcut,
-			      const G4double tmax,
-			      const G4double length) = 0;
+    //------------------------------------------------------------------------
+    // Methods with standard implementation; may be overwritten if needed
+    //------------------------------------------------------------------------
 
-  //------------------------------------------------------------------------
-  // Methods with standard implementation; may be overwritten if needed 
-  //------------------------------------------------------------------------
+    virtual void InitialiseMe(const G4ParticleDefinition*);
 
-  virtual void InitialiseMe(const G4ParticleDefinition*);
+    virtual void SetParticleAndCharge(const G4ParticleDefinition*, G4double q2);
 
-  virtual void SetParticleAndCharge(const G4ParticleDefinition*, G4double q2);
+    //------------------------------------------------------------------------
+    // Generic methods common to all models
+    //------------------------------------------------------------------------
 
-  //------------------------------------------------------------------------
-  // Generic methods common to all models
-  //------------------------------------------------------------------------
+    inline const G4String& GetName() const;
 
-  inline const G4String& GetName() const;
+    // hide assignment operator
+    G4VEmFluctuationModel& operator=(const G4VEmFluctuationModel& right) = delete;
+    G4VEmFluctuationModel(const G4VEmFluctuationModel&) = delete;
 
-  // hide assignment operator
-  G4VEmFluctuationModel & 
-    operator=(const  G4VEmFluctuationModel &right) = delete;
-  G4VEmFluctuationModel(const  G4VEmFluctuationModel&) = delete;
+  private:
 
-private:
-
-  const G4String      name;
-  G4LossTableManager* fManager;
+    const G4String name;
+    G4LossTableManager* fManager;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline const G4String& G4VEmFluctuationModel::GetName() const 
+inline const G4String& G4VEmFluctuationModel::GetName() const
 {
   return name;
 }
 
 #endif
-

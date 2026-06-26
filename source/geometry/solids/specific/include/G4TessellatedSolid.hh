@@ -91,35 +91,35 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UTESSELLATEDSOLID 1
+#  define G4GEOM_USE_UTESSELLATEDSOLID 1
 #endif
 
 #if defined(G4GEOM_USE_UTESSELLATEDSOLID)
-  #define G4UTessellatedSolid G4TessellatedSolid
-  #include "G4UTessellatedSolid.hh"
+#  define G4UTessellatedSolid G4TessellatedSolid
+#  include "G4UTessellatedSolid.hh"
 #else
 
-#include <iostream>
-#include <vector>
-#include <set>
-#include <map>
+#  include "G4Types.hh"
+#  include "G4VFacet.hh"
+#  include "G4VSolid.hh"
+#  include "G4Voxelizer.hh"
 
-#include "G4Types.hh"
-#include "G4VSolid.hh"
-#include "G4Voxelizer.hh"
-#include "G4VFacet.hh"
+#  include <iostream>
+#  include <map>
+#  include <set>
+#  include <vector>
 
 struct G4VertexInfo
 {
-  G4int id;
-  G4double mag2;
+    G4int id;
+    G4double mag2;
 };
 
 class G4VertexComparator
 {
   public:
 
-    G4bool operator() (const G4VertexInfo& l, const G4VertexInfo& r) const
+    G4bool operator()(const G4VertexInfo& l, const G4VertexInfo& r) const
     {
       return l.mag2 == r.mag2 ? l.id < r.id : l.mag2 < r.mag2;
     }
@@ -127,6 +127,8 @@ class G4VertexComparator
 
 /**
  * @brief G4TessellatedSolid is a solid defined by a number of facets.
+ * @ingroup geometry_solids_specific
+ *
  * It is important that the supplied facets shall form a fully enclose space
  * which is the solid. The facets can be of two types, G4TriangularFacet and
  * G4QuadrangularFacet.
@@ -139,18 +141,18 @@ class G4TessellatedSolid : public G4VSolid
     /**
      * Default Constructor.
      */
-    G4TessellatedSolid ();
+    G4TessellatedSolid();
 
     /**
      * Constructor with solid's name.
      *  @param[in] name The name of the solid.
      */
-    G4TessellatedSolid (const G4String& name);
+    G4TessellatedSolid(const G4String& name);
 
     /**
      * Destructor. Clearing all allocated facets and data.
      */
-    ~G4TessellatedSolid () override;
+    ~G4TessellatedSolid() override;
 
     /**
      * Fake default constructor for usage restricted to direct object
@@ -162,8 +164,8 @@ class G4TessellatedSolid : public G4VSolid
     /**
      * Copy constructor and assignment operator.
      */
-    G4TessellatedSolid (const G4TessellatedSolid& ts);
-    G4TessellatedSolid& operator= (const G4TessellatedSolid& right);
+    G4TessellatedSolid(const G4TessellatedSolid& ts);
+    G4TessellatedSolid& operator=(const G4TessellatedSolid& right);
 
     /**
      * Operator +=, allowing to add two tessellated solids together, so
@@ -171,42 +173,37 @@ class G4TessellatedSolid : public G4VSolid
      * on the right. To note that copies of the facets are generated, rather
      * than using the original facet set of the solid on the right.
      */
-    G4TessellatedSolid& operator+= (const G4TessellatedSolid& right);
+    G4TessellatedSolid& operator+=(const G4TessellatedSolid& right);
 
     /**
      * Methods for adding or retrieving a facet given an index.
      */
-    G4bool AddFacet (G4VFacet* aFacet);
-    inline G4VFacet* GetFacet (G4int i) const;
+    G4bool AddFacet(G4VFacet* aFacet);
+    inline G4VFacet* GetFacet(G4int i) const;
 
     /**
      * Accessors.
      */
-    G4int GetNumberOfFacets () const;
-    G4int GetFacetIndex (const G4ThreeVector& p) const;
-    G4double GetMinXExtent () const;
-    G4double GetMaxXExtent () const;
-    G4double GetMinYExtent () const;
-    G4double GetMaxYExtent () const;
-    G4double GetMinZExtent () const;
-    G4double GetMaxZExtent () const;
-
+    G4int GetNumberOfFacets() const;
+    G4int GetFacetIndex(const G4ThreeVector& p) const;
+    G4double GetMinXExtent() const;
+    G4double GetMaxXExtent() const;
+    G4double GetMinYExtent() const;
+    G4double GetMaxYExtent() const;
+    G4double GetMinZExtent() const;
+    G4double GetMaxZExtent() const;
 
     /**
      * Concrete implementations of the expected query interfaces for
      * solids, as defined in the base class G4VSolid.
      */
-    EInside Inside (const G4ThreeVector& p) const override;
+    EInside Inside(const G4ThreeVector& p) const override;
     G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
-    G4double DistanceToIn(const G4ThreeVector& p,
-                                  const G4ThreeVector& v)const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
     G4double DistanceToIn(const G4ThreeVector& p) const override;
     G4double DistanceToOut(const G4ThreeVector& p) const override;
-    G4double DistanceToOut(const G4ThreeVector& p,
-                                   const G4ThreeVector& v,
-                                   const G4bool calcNorm,
-                                         G4bool* validNorm,
-                                         G4ThreeVector* norm) const override;
+    G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v, const G4bool calcNorm,
+                           G4bool* validNorm, G4ThreeVector* norm) const override;
 
     /**
      * Returns the outwards pointing unit normal of the shape for the
@@ -215,7 +212,7 @@ class G4TessellatedSolid : public G4VSolid
      *  @param[out] n The returned normal vector.
      *  @returns false if not a valid normal.
      */
-    virtual G4bool Normal (const G4ThreeVector& p, G4ThreeVector& n) const;
+    virtual G4bool Normal(const G4ThreeVector& p, G4ThreeVector& n) const;
 
     /**
      * Returns the the safety distance from outside the solid at a point 'p'.
@@ -224,8 +221,7 @@ class G4TessellatedSolid : public G4VSolid
      *              returns the distance to the voxels bounding-box.
      *  @returns The safety distance.
      */
-    virtual G4double SafetyFromOutside(const G4ThreeVector& p,
-                                             G4bool aAccurate = false) const;
+    virtual G4double SafetyFromOutside(const G4ThreeVector& p, G4bool aAccurate = false) const;
 
     /**
      * Returns the the safety distance from inside the solid at a point 'p'.
@@ -233,18 +229,17 @@ class G4TessellatedSolid : public G4VSolid
      *  @param[in] aAccurate Not used.
      *  @returns The safety distance.
      */
-    virtual G4double SafetyFromInside (const G4ThreeVector& p,
-                                             G4bool aAccurate = false) const;
+    virtual G4double SafetyFromInside(const G4ThreeVector& p, G4bool aAccurate = false) const;
 
     /**
      * Returns the type ID, "G4TessellatedSolid" of the solid.
      */
-    G4GeometryType GetEntityType () const override;
+    G4GeometryType GetEntityType() const override;
 
     /**
      * Returns true as the solid has only planar faces.
      */
-    G4bool IsFaceted () const override;
+    G4bool IsFaceted() const override;
 
     /**
      * Streams the object contents to an output stream.
@@ -273,8 +268,8 @@ class G4TessellatedSolid : public G4VSolid
     /**
      * Modifier and accessor to close/finalise the solid.
      */
-    void SetSolidClosed (const G4bool t);
-    G4bool GetSolidClosed () const;
+    void SetSolidClosed(const G4bool t);
+    G4bool GetSolidClosed() const;
 
     /**
      * Checks the structure of the solid.
@@ -306,10 +301,9 @@ class G4TessellatedSolid : public G4VSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Computes the bounding limits of the solid.
@@ -343,35 +337,28 @@ class G4TessellatedSolid : public G4VSolid
     /**
      * Resetting/copying data, used in constructors and operators.
      */
-    void DeleteObjects ();
-    void CopyObjects (const G4TessellatedSolid& s);
+    void DeleteObjects();
+    void CopyObjects(const G4TessellatedSolid& s);
 
     /**
      * Internal methods used for computing distances with or without voxels.
      */
-    G4double DistanceToOutNoVoxels(const G4ThreeVector& p,
-                                   const G4ThreeVector& v,
-                                         G4ThreeVector& aNormalVector,
-                                         G4bool&        aConvex,
-                                         G4double aPstep = kInfinity) const;
+    G4double DistanceToOutNoVoxels(const G4ThreeVector& p, const G4ThreeVector& v,
+                                   G4ThreeVector& aNormalVector, G4bool& aConvex,
+                                   G4double aPstep = kInfinity) const;
     G4double DistanceToInCandidates(const std::vector<G4int>& candidates,
                                     const G4ThreeVector& aPoint,
                                     const G4ThreeVector& aDirection) const;
-    void DistanceToOutCandidates(const std::vector<G4int>& candidates,
-                                 const G4ThreeVector& aPoint,
-                                 const G4ThreeVector& direction,
-                                       G4double& minDist,
-                                       G4ThreeVector& minNormal,
-                                       G4int& minCandidate) const;
-    G4double DistanceToInNoVoxels(const G4ThreeVector& p,
-                                  const G4ThreeVector& v,
-                                        G4double aPstep = kInfinity) const;
-    G4double DistanceToInCore(const G4ThreeVector &p, const G4ThreeVector& v,
-                                    G4double aPstep = kInfinity) const;
+    void DistanceToOutCandidates(const std::vector<G4int>& candidates, const G4ThreeVector& aPoint,
+                                 const G4ThreeVector& direction, G4double& minDist,
+                                 G4ThreeVector& minNormal, G4int& minCandidate) const;
+    G4double DistanceToInNoVoxels(const G4ThreeVector& p, const G4ThreeVector& v,
+                                  G4double aPstep = kInfinity) const;
+    G4double DistanceToInCore(const G4ThreeVector& p, const G4ThreeVector& v,
+                              G4double aPstep = kInfinity) const;
     G4double DistanceToOutCore(const G4ThreeVector& p, const G4ThreeVector& v,
-                                     G4ThreeVector& aNormalVector,
-                                     G4bool& aConvex,
-                                     G4double aPstep = kInfinity) const;
+                               G4ThreeVector& aNormalVector, G4bool& aConvex,
+                               G4double aPstep = kInfinity) const;
 
     /**
      * Finds those facets that have surface planes that bound the volume.
@@ -383,7 +370,7 @@ class G4TessellatedSolid : public G4VSolid
      * Internal methods used for checking if a point 'p' is inside the solid
      * in presence or not of voxels.
      */
-    EInside InsideNoVoxels (const G4ThreeVector& p) const;
+    EInside InsideNoVoxels(const G4ThreeVector& p) const;
     EInside InsideVoxels(const G4ThreeVector& p) const;
 
     /**
@@ -402,9 +389,8 @@ class G4TessellatedSolid : public G4VSolid
      * Utilities for preparation of voxels indeces. Used in Voxelize() function.
      */
     void PrecalculateInsides();
-    G4int SetAllUsingStack(const std::vector<G4int>& voxel,
-                           const std::vector<G4int>& max,
-                                 G4bool status, G4SurfBits& checked);
+    G4int SetAllUsingStack(const std::vector<G4int>& voxel, const std::vector<G4int>& max,
+                           G4bool status, G4SurfBits& checked);
 
     /**
      * Utility to compare sorted voxels.
@@ -412,28 +398,25 @@ class G4TessellatedSolid : public G4VSolid
     static G4bool CompareSortedVoxel(const std::pair<G4int, G4double>& l,
                                      const std::pair<G4int, G4double>& r);
 
-
     /**
-      * Prepares a set of predefined random vectors, used to generate rays
-      * from a user-defined point. Used in Inside() function to determine
-      * whether the point is inside or outside of the tessellated solid.
-      * All vectors should be unit vectors.
-      */
+     * Prepares a set of predefined random vectors, used to generate rays
+     * from a user-defined point. Used in Inside() function to determine
+     * whether the point is inside or outside of the tessellated solid.
+     * All vectors should be unit vectors.
+     */
     void SetRandomVectors();
 
     /**
      * Computes the minimum distance of a point 'p' from a 'facet'.
      */
-    G4double MinDistanceFacet(const G4ThreeVector& p, G4bool simple,
-                                    G4VFacet* &facet) const;
+    G4double MinDistanceFacet(const G4ThreeVector& p, G4bool simple, G4VFacet*& facet) const;
 
     /**
      * Computes if a point 'p' is outside or not of the computed extent,
      * given a 'tolerance'. Used internally in Inside() functions.
      *  @returns true if the point is within the extent.
      */
-    inline G4bool OutsideOfExtent(const G4ThreeVector& p,
-                                        G4double tolerance = 0.0) const;
+    inline G4bool OutsideOfExtent(const G4ThreeVector& p, G4double tolerance = 0.0) const;
 
   protected:
 
@@ -445,16 +428,16 @@ class G4TessellatedSolid : public G4VSolid
     mutable G4Polyhedron* fpPolyhedron = nullptr;
 
     std::vector<G4VFacet*> fFacets;
-    std::set<G4VFacet*> fExtremeFacets; // Does all other facets lie on
-                                        // or behind this surface?
+    std::set<G4VFacet*> fExtremeFacets;  // Does all other facets lie on
+                                         // or behind this surface?
 
     G4GeometryType fGeometryType;
-    G4double       fCubicVolume = 0.0;
-    G4double       fSurfaceArea = 0.0;
+    G4double fCubicVolume = 0.0;
+    G4double fSurfaceArea = 0.0;
 
     std::vector<G4ThreeVector> fVertexList;
 
-    std::set<G4VertexInfo,G4VertexComparator> fFacetList;
+    std::set<G4VertexInfo, G4VertexComparator> fFacetList;
 
     G4ThreeVector fMinExtent, fMaxExtent;
 
@@ -473,7 +456,7 @@ class G4TessellatedSolid : public G4VSolid
 // Inline Methods
 ///////////////////////////////////////////////////////////////////////////////
 
-inline G4VFacet* G4TessellatedSolid::GetFacet (G4int i) const
+inline G4VFacet* G4TessellatedSolid::GetFacet(G4int i) const
 {
   return fFacets[i];
 }
@@ -488,15 +471,11 @@ inline G4Voxelizer& G4TessellatedSolid::GetVoxels()
   return fVoxels;
 }
 
-inline G4bool G4TessellatedSolid::OutsideOfExtent(const G4ThreeVector& p,
-                                                  G4double tolerance) const
+inline G4bool G4TessellatedSolid::OutsideOfExtent(const G4ThreeVector& p, G4double tolerance) const
 {
-  return ( p.x() < fMinExtent.x() - tolerance
-        || p.x() > fMaxExtent.x() + tolerance
-        || p.y() < fMinExtent.y() - tolerance
-        || p.y() > fMaxExtent.y() + tolerance
-        || p.z() < fMinExtent.z() - tolerance
-        || p.z() > fMaxExtent.z() + tolerance);
+  return (p.x() < fMinExtent.x() - tolerance || p.x() > fMaxExtent.x() + tolerance
+          || p.y() < fMinExtent.y() - tolerance || p.y() > fMaxExtent.y() + tolerance
+          || p.z() < fMinExtent.z() - tolerance || p.z() > fMaxExtent.z() + tolerance);
 }
 
 #endif

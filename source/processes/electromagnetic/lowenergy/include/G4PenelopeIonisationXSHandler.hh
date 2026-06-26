@@ -28,25 +28,26 @@
 //
 // History:
 // -----------
-// 09 Mar 2012   L. Pandola   1st implementation. 
+// 09 Mar 2012   L. Pandola   1st implementation.
 //
 // -------------------------------------------------------------------
 //
 //! Class description:
 //!  This class is meant to calculate, store and provide the shell-per-shell
 //!  and the total ionisation cross section calculated by the Penelope model.
-//! The information is provided to other physics models, notably: Penelope 
-//! ionisation model and Penelope "PIXE" model. Cross sections are calculated 
+//! The information is provided to other physics models, notably: Penelope
+//! ionisation model and Penelope "PIXE" model. Cross sections are calculated
 //! per material-cut couple and stored as G4PenelopeCrossSection objects.
 //!
 // -------------------------------------------------------------------
 
 #ifndef G4PENELOPEIONISATIONXSHANDLER_HH
-#define G4PENELOPEIONISATIONXSHANDLER_HH 1
+#define G4PENELOPEIONISATIONXSHANDLER_HH
 
-#include "globals.hh"
 #include "G4DataVector.hh"
 #include "G4Material.hh"
+#include "globals.hh"
+
 #include <map>
 
 class G4PhysicsFreeVector;
@@ -56,60 +57,60 @@ class G4PenelopeOscillatorManager;
 class G4PenelopeOscillator;
 class G4PenelopeCrossSection;
 
-class G4PenelopeIonisationXSHandler 
+class G4PenelopeIonisationXSHandler
 {
-public:  
-  //! Constructor. nBins is the number of intervals in the 
-  //! energy grid. By default the energy grid goes from 100 eV
-  //! to 100 GeV.
-  explicit G4PenelopeIonisationXSHandler(size_t nBins=200);
-  
-  //! Destructor. Clean all tables.
-  virtual ~G4PenelopeIonisationXSHandler();
+  public:
 
-  //!Returns the density coeection for the material at the given energy
-  G4double GetDensityCorrection(const G4Material*,const G4double energy) const;
-  //! Returns the table of cross sections for the given particle, given 
-  //! material and given cut as a G4PenelopeCrossSection* pointer.
-  const G4PenelopeCrossSection* GetCrossSectionTableForCouple(const G4ParticleDefinition*,
-							      const G4Material*,const G4double cut) const;
-  //!Setter for the verbosity level
-  void SetVerboseLevel(G4int vl){fVerboseLevel = vl;};
+    //! Constructor. nBins is the number of intervals in the
+    //! energy grid. By default the energy grid goes from 100 eV
+    //! to 100 GeV.
+    explicit G4PenelopeIonisationXSHandler(size_t nBins = 200);
 
-  //! This can be inkoved only by the master
-  void BuildXSTable(const G4Material*,G4double cut,
-		    const G4ParticleDefinition*,G4bool isMaster=true);
+    //! Destructor. Clean all tables.
+    virtual ~G4PenelopeIonisationXSHandler();
 
-  G4PenelopeIonisationXSHandler & operator=(const G4PenelopeIonisationXSHandler &right) = delete;
-  G4PenelopeIonisationXSHandler(const G4PenelopeIonisationXSHandler&) = delete;
+    //! Returns the density coeection for the material at the given energy
+    G4double GetDensityCorrection(const G4Material*, const G4double energy) const;
+    //! Returns the table of cross sections for the given particle, given
+    //! material and given cut as a G4PenelopeCrossSection* pointer.
+    const G4PenelopeCrossSection* GetCrossSectionTableForCouple(const G4ParticleDefinition*,
+                                                                const G4Material*,
+                                                                const G4double cut) const;
+    //! Setter for the verbosity level
+    void SetVerboseLevel(G4int vl) { fVerboseLevel = vl; };
 
-private:
-  void BuildDeltaTable(const G4Material*);
+    //! This can be inkoved only by the master
+    void BuildXSTable(const G4Material*, G4double cut, const G4ParticleDefinition*,
+                      G4bool isMaster = true);
 
-  G4DataVector* ComputeShellCrossSectionsElectron(G4PenelopeOscillator* ,
-						  G4double energy,G4double cut,
-					          G4double delta);
-    
-  G4DataVector* ComputeShellCrossSectionsPositron(G4PenelopeOscillator* ,
-						  G4double energy,G4double cut,
-		                                  G4double delta);
+    G4PenelopeIonisationXSHandler& operator=(const G4PenelopeIonisationXSHandler& right) = delete;
+    G4PenelopeIonisationXSHandler(const G4PenelopeIonisationXSHandler&) = delete;
 
-  //Oscillator manager
-  G4PenelopeOscillatorManager* fOscManager;
+  private:
 
-  //G4PenelopeCrossSection takes care of the logs
-  std::map< std::pair<const G4Material*,G4double>, G4PenelopeCrossSection*> *fXSTableElectron;
-  std::map< std::pair<const G4Material*,G4double>, G4PenelopeCrossSection*> *fXSTablePositron;
-  
-  //delta vs. log(energy)
-  std::map<const G4Material*,G4PhysicsFreeVector*> *fDeltaTable;
+    void BuildDeltaTable(const G4Material*);
 
-  //energy grid
-  G4PhysicsLogVector* fEnergyGrid;
- 
-  G4int fVerboseLevel;
-  size_t fNBins;
+    G4DataVector* ComputeShellCrossSectionsElectron(G4PenelopeOscillator*, G4double energy,
+                                                    G4double cut, G4double delta);
+
+    G4DataVector* ComputeShellCrossSectionsPositron(G4PenelopeOscillator*, G4double energy,
+                                                    G4double cut, G4double delta);
+
+    // Oscillator manager
+    G4PenelopeOscillatorManager* fOscManager;
+
+    // G4PenelopeCrossSection takes care of the logs
+    std::map<std::pair<const G4Material*, G4double>, G4PenelopeCrossSection*>* fXSTableElectron;
+    std::map<std::pair<const G4Material*, G4double>, G4PenelopeCrossSection*>* fXSTablePositron;
+
+    // delta vs. log(energy)
+    std::map<const G4Material*, G4PhysicsFreeVector*>* fDeltaTable;
+
+    // energy grid
+    G4PhysicsLogVector* fEnergyGrid;
+
+    G4int fVerboseLevel;
+    size_t fNBins;
 };
 
 #endif
-

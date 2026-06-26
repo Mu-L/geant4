@@ -25,16 +25,16 @@
 //
 
 #include "G4DNAChargeDecrease.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4LowEnergyEmProcessSubType.hh"
+
 #include "G4DNADingfelderChargeDecreaseModel.hh"
 #include "G4DNAIonChargeDecreaseModel.hh"
+#include "G4LowEnergyEmProcessSubType.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4DNAChargeDecrease::G4DNAChargeDecrease(const G4String& processName,
-                                         G4ProcessType type) :
-    G4VEmProcess(processName, type) 
+G4DNAChargeDecrease::G4DNAChargeDecrease(const G4String& processName, G4ProcessType type)
+  : G4VEmProcess(processName, type)
 {
   SetBuildTableFlag(false);
   SetProcessSubType(fLowEnergyChargeDecrease);
@@ -45,25 +45,28 @@ G4DNAChargeDecrease::G4DNAChargeDecrease(const G4String& processName,
 G4bool G4DNAChargeDecrease::IsApplicable(const G4ParticleDefinition& p)
 {
   G4String name = p.GetParticleName();
-  return (p.IsGeneralIon() ||
-	  name == "proton" || name == "alpha+" || name == "alpha");
+  return (p.IsGeneralIon() || name == "proton" || name == "alpha+" || name == "alpha");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void G4DNAChargeDecrease::InitialiseProcess(const G4ParticleDefinition* p)
 {
-  if (!isInitialised) {
+  if (!isInitialised)
+  {
     isInitialised = true;
 
     auto mod = EmModel();
-    if (nullptr == mod) { 
-    
+    if (nullptr == mod)
+    {
       G4String name = p->GetParticleName();
 
-      if (name == "proton" || name == "alpha+" || name == "alpha") {
+      if (name == "proton" || name == "alpha+" || name == "alpha")
+      {
         SetEmModel(new G4DNADingfelderChargeDecreaseModel());
-      } else {
+      }
+      else
+      {
         SetEmModel(new G4DNAIonChargeDecreaseModel());
       }
     }
@@ -78,8 +81,7 @@ void G4DNAChargeDecrease::InitialiseProcess(const G4ParticleDefinition* p)
 
 void G4DNAChargeDecrease::ProcessDescription(std::ostream& out) const
 {
-  out << " Total cross sections computed from " << EmModel()->GetName()
-      << " model" << G4endl;
+  out << " Total cross sections computed from " << EmModel()->GetName() << " model" << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

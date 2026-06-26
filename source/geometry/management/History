@@ -6,15 +6,15 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-06-12 Evgueni Tcherniaev (geommng-V11-03-13)
+## 2026-06-12 Evgueni Tcherniaev (geommng-V11-04-08)
 - Fixed G4GeomTools::TriangulatePolygon, this addresses issue VECGEOM-653
 
-## 2026-05-20 Gabriele Cosmo, Dmitri Konstantinov
+## 2026-05-20 Gabriele Cosmo, Dmitri Konstantinov (geommng-V11-04-07)
 - In G4GeometryManager, fix resetting of flags in function OpenGeometry()
   to allow for proper destruction of voxelisation data and geometry rebuild.
   Addressing problem report #2733.
 
-## 2026-04-28 Gabriele Cosmo, Ben Morgan
+## 2026-04-28 Gabriele Cosmo, Ben Morgan (geommng-V11-04-06)
 - Updated Reallocate() function in G4GeomSplitter to zero-initialise any slots
   added beyond the previous allocated space, ensuring that uninitialised slots
   in the master array contain null pointers, which then propagate correctly via
@@ -22,17 +22,17 @@ It must **not** be used as a substitute for writing good git commit messages!
   in setups with relatively complex geometry being re-initialised between runs
   (see GitLab issue #287).
   
-## 2026-04-24 Gabriele Cosmo
+## 2026-04-24 Gabriele Cosmo (geommng-V11-04-05)
 - Removed G4Exception in G4VSolid default implementation of ComputeDimensions().
   Dispatching for ComputeDimensions() is enabled only for solids where full
   parameterisation is allowed, for all others it is simply disabled and
   performing no actions.
 
-## 2026-04-21 Gabriele Cosmo
+## 2026-04-21 Gabriele Cosmo (geommng-V11-04-04)
 - Use shared_ptr for the shared voxelisation helper in G4GeometryManager
   and simplified the destructor.
 
-## 2026-04-14 Vladimir Ivanchenko
+## 2026-04-14 Vladimir Ivanchenko (geommng-V11-04-03)
 - G4PhysicsVolumeStore, G4LogicalVolumeStore, G4SolidStore, G4RegionStore
   added CleanStore private method called from class destructor and from
   method Clean() in order to avoid minor memory leak at exit. The problem
@@ -40,14 +40,14 @@ It must **not** be used as a substitute for writing good git commit messages!
   but this manager may be already deleted and a new instance of it is created
   and never deleted.
 
-## 2026-04-09 Gabriele Cosmo
+## 2026-04-09 Gabriele Cosmo (geommng-V11-04-02)
 - Removed redundant virtual destructor in G4TouchableHistory, as no longer
   necessary. Updated comments and descriptions.
 
-## 2026-04-07 Gabriele Cosmo
+## 2026-04-07 Gabriele Cosmo (geommng-V11-04-01)
 - Fixed error/warning codes in G4VoxelisationHelper and minor cleanup.
 
-## 2026-03-10 Gabriele Cosmo
+## 2026-03-10 Gabriele Cosmo (geommng-V11-04-00)
 - In G4VoxelisationHelper, moved checks printouts in method
   ReportWorkerIsDoneOptimising(..) under verbosity control.
 

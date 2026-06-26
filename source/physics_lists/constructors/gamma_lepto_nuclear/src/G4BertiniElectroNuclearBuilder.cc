@@ -30,59 +30,50 @@
 //
 // Author: 2002 H.P. Wellisch
 //
-// Modified: 
-// 25.04.2006 V.Ivanchenko fix destructor 
+// Modified:
+// 25.04.2006 V.Ivanchenko fix destructor
 //
 //----------------------------------------------------------------------------
 //
 
 #include "G4BertiniElectroNuclearBuilder.hh"
 
-#include "globals.hh"
-#include "G4ios.hh"
-#include "G4SystemOfUnits.hh"
-
+#include "G4ElectroVDNuclearModel.hh"
+#include "G4Electron.hh"
+#include "G4ElectronNuclearProcess.hh"
+#include "G4ExcitedStringDecay.hh"
+#include "G4Gamma.hh"
+#include "G4GammaGeneralProcess.hh"
+#include "G4GammaParticipants.hh"
+#include "G4GeneratorPrecompoundInterface.hh"
+#include "G4HadronicParameters.hh"
+#include "G4LossTableManager.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
-#include "G4Gamma.hh"
-#include "G4Electron.hh"
-#include "G4Positron.hh"
-#include "G4ProcessManager.hh"
-#include "G4GammaGeneralProcess.hh"
-#include "G4LossTableManager.hh"
-
-#include "G4ElectroVDNuclearModel.hh"
-#include "G4ElectronNuclearProcess.hh"
-#include "G4PositronNuclearProcess.hh"
 #include "G4PhotoNuclearCrossSection.hh"
-
-#include "G4ios.hh"
-
-#include "G4TheoFSGenerator.hh"
-#include "G4GeneratorPrecompoundInterface.hh"
-#include "G4QGSModel.hh"
-#include "G4GammaParticipants.hh"
+#include "G4Positron.hh"
+#include "G4PositronNuclearProcess.hh"
+#include "G4ProcessManager.hh"
 #include "G4QGSMFragmentation.hh"
-#include "G4ExcitedStringDecay.hh"
+#include "G4QGSModel.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4TheoFSGenerator.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
-
-#include "G4HadronicParameters.hh"
-
-G4BertiniElectroNuclearBuilder::G4BertiniElectroNuclearBuilder(G4bool eNucl)
-  : eActivated(eNucl)
-{}
+G4BertiniElectroNuclearBuilder::G4BertiniElectroNuclearBuilder(G4bool eNucl) : eActivated(eNucl) {}
 
 void G4BertiniElectroNuclearBuilder::Build()
 {
   // gamma
-  thePhotoNuclearProcess = new G4HadronInelasticProcess( "photonNuclear", G4Gamma::Definition() );
-  thePhotoNuclearProcess->AddDataSet( new G4PhotoNuclearCrossSection() );
+  thePhotoNuclearProcess = new G4HadronInelasticProcess("photonNuclear", G4Gamma::Definition());
+  thePhotoNuclearProcess->AddDataSet(new G4PhotoNuclearCrossSection());
   theGammaReaction = new G4CascadeInterface();
 
   auto theModel = new G4TheoFSGenerator;
 
-  auto theStringModel = new G4QGSModel< G4GammaParticipants >;
-  auto theStringDecay = new G4ExcitedStringDecay( new G4QGSMFragmentation() );
+  auto theStringModel = new G4QGSModel<G4GammaParticipants>;
+  auto theStringDecay = new G4ExcitedStringDecay(new G4QGSMFragmentation());
   theStringModel->SetFragmentationModel(theStringDecay);
 
   auto theCascade = new G4GeneratorPrecompoundInterface();
@@ -92,24 +83,27 @@ void G4BertiniElectroNuclearBuilder::Build()
 
   G4ProcessManager* aProcMan = nullptr;
 
-  theGammaReaction->SetMaxEnergy(3.5*GeV);
+  theGammaReaction->SetMaxEnergy(3.5 * GeV);
   thePhotoNuclearProcess->RegisterMe(theGammaReaction);
-  theModel->SetMinEnergy(3.*GeV);
-  theModel->SetMaxEnergy( G4HadronicParameters::Instance()->GetMaxEnergy() );
+  theModel->SetMinEnergy(3. * GeV);
+  theModel->SetMaxEnergy(G4HadronicParameters::Instance()->GetMaxEnergy());
   thePhotoNuclearProcess->RegisterMe(theModel);
-  
-  G4GammaGeneralProcess* sp = 
+
+  G4GammaGeneralProcess* sp =
     dynamic_cast<G4GammaGeneralProcess*>(G4LossTableManager::Instance()->GetGammaGeneralProcess());
-  if ( nullptr != sp ) {
+  if (nullptr != sp)
+  {
     sp->AddHadProcess(thePhotoNuclearProcess);
-  } else {
+  }
+  else
+  {
     aProcMan = G4Gamma::Gamma()->GetProcessManager();
     aProcMan->AddDiscreteProcess(thePhotoNuclearProcess);
   }
 
   // e+, e-
-  if (eActivated) {  
-
+  if (eActivated)
+  {
     auto theElectronNuclearProcess = new G4ElectronNuclearProcess();
     auto thePositronNuclearProcess = new G4PositronNuclearProcess();
     auto theElectroReaction = new G4ElectroVDNuclearModel();
@@ -117,10 +111,9 @@ void G4BertiniElectroNuclearBuilder::Build()
     aProcMan = G4Electron::Electron()->GetProcessManager();
     theElectronNuclearProcess->RegisterMe(theElectroReaction);
     aProcMan->AddDiscreteProcess(theElectronNuclearProcess);
-  
+
     aProcMan = G4Positron::Positron()->GetProcessManager();
     thePositronNuclearProcess->RegisterMe(theElectroReaction);
     aProcMan->AddDiscreteProcess(thePositronNuclearProcess);
   }
 }
-

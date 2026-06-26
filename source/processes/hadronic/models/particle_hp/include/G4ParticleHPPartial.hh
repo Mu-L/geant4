@@ -28,8 +28,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPPartial_h
-#define G4ParticleHPPartial_h 1
+#ifndef G4PARTICLEHPPARTIAL_HH
+#define G4PARTICLEHPPARTIAL_HH
 
 #include "G4InterpolationManager.hh"
 #include "G4ParticleHPInterpolator.hh"
@@ -41,6 +41,7 @@
 class G4ParticleHPPartial
 {
   public:
+
     G4ParticleHPPartial(G4int n)
     {
       X = new G4double[n];
@@ -68,7 +69,8 @@ class G4ParticleHPPartial
     {
       G4int i;
       G4double e;
-      for (i = 0; i < nData; i++) {
+      for (i = 0; i < nData; i++)
+      {
         aDataFile >> e;
         e *= CLHEP::eV;
         SetX(i, e);
@@ -83,7 +85,8 @@ class G4ParticleHPPartial
       G4int neg;
       aDataFile >> neg;
       data[i].InitInterpolation(aDataFile);
-      for (ii = 0; ii < neg; ii++) {
+      for (ii = 0; ii < neg; ii++)
+      {
         aDataFile >> eg >> pg;
         eg *= unit;
         SetX(i, ii, eg);
@@ -116,6 +119,7 @@ class G4ParticleHPPartial
     G4double Sample(G4double x);
 
   private:
+
     G4double* X;
     G4double* T;
     G4ParticleHPVector* data;

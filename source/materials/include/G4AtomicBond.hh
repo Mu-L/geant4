@@ -29,71 +29,73 @@
 //
 // Class Description:
 
-#ifndef G4AtomicBond_H
-#define G4AtomicBond_H 1
+#ifndef G4ATOMICBOND_HH
+#define G4ATOMICBOND_HH
 
 #include "G4Element.hh"
 #include "globals.hh"
 
 class G4AtomicBond
 {
- public:
-  enum theBondType
-  {
-    Ionic = 0,
-    Covalent = 1,
-    Metallic = 2,
-    NA = -1
-  };
+  public:
 
-  G4AtomicBond(theBondType aType, G4Element* firstAtomKind, G4int firstAtomNumber,
-    G4Element* secondAtomKind, G4int secondAtomNumber)
-    : theFirstAtomKind(firstAtomKind),
-      theFirstAtomNumber(firstAtomNumber),
-      theSecondAtomKind(secondAtomKind),
-      theSecondAtomNumber(secondAtomNumber),
-      theType(aType)
-  {}
+    enum theBondType
+    {
+      Ionic = 0,
+      Covalent = 1,
+      Metallic = 2,
+      NA = -1
+    };
 
-  virtual ~G4AtomicBond() = default;
+    G4AtomicBond(theBondType aType, G4Element* firstAtomKind, G4int firstAtomNumber,
+                 G4Element* secondAtomKind, G4int secondAtomNumber)
+      : theFirstAtomKind(firstAtomKind),
+        theFirstAtomNumber(firstAtomNumber),
+        theSecondAtomKind(secondAtomKind),
+        theSecondAtomNumber(secondAtomNumber),
+        theType(aType)
+    {}
 
-  inline G4Element* GetFirstAtomKind() const { return theFirstAtomKind; };
-  void SetFirstAtomKind(G4Element* aElement) { theFirstAtomKind = aElement; };
+    virtual ~G4AtomicBond() = default;
 
-  inline G4int GetFirstAtomNumber() const { return theFirstAtomNumber; };
-  void SetFirstAtomNumber(G4int aInt) { theFirstAtomNumber = aInt; };
+    inline G4Element* GetFirstAtomKind() const { return theFirstAtomKind; };
+    void SetFirstAtomKind(G4Element* aElement) { theFirstAtomKind = aElement; };
 
-  inline G4Element* GetSecondAtomKind() const { return theSecondAtomKind; };
-  void SetSecondAtomKind(G4Element* aElement) { theSecondAtomKind = aElement; };
+    inline G4int GetFirstAtomNumber() const { return theFirstAtomNumber; };
+    void SetFirstAtomNumber(G4int aInt) { theFirstAtomNumber = aInt; };
 
-  inline G4int GetSecondAtomNumber() const { return theSecondAtomNumber; };
-  void SetSecondAtomNumber(G4int aInt) { theSecondAtomNumber = aInt; };
+    inline G4Element* GetSecondAtomKind() const { return theSecondAtomKind; };
+    void SetSecondAtomKind(G4Element* aElement) { theSecondAtomKind = aElement; };
 
-  inline theBondType GetType() const { return theType; };
-  void SetType(theBondType aType) { theType = aType; };
+    inline G4int GetSecondAtomNumber() const { return theSecondAtomNumber; };
+    void SetSecondAtomNumber(G4int aInt) { theSecondAtomNumber = aInt; };
 
-  inline G4bool GetAromaticity() const { return theAromaticity; };
-  void SetAromaticity(G4bool aBool) { theAromaticity = aBool; };
+    inline theBondType GetType() const { return theType; };
+    void SetType(theBondType aType) { theType = aType; };
 
- private:
-  // The indexes of the two atoms connected by the bond are stored
-  // theFirstAtomKind is the index in the vector of G4Elements in the array
-  // and theFirstAtomNumber is the index in the vector of G4ThreeVector in
-  // the G4CrystalLattice. For the second atom theSecondAtomKind and
-  // theSecondAtomNumber are used.
-  G4Element* theFirstAtomKind;
-  G4int theFirstAtomNumber;
+    inline G4bool GetAromaticity() const { return theAromaticity; };
+    void SetAromaticity(G4bool aBool) { theAromaticity = aBool; };
 
-  G4Element* theSecondAtomKind;
-  G4int theSecondAtomNumber;
+  private:
 
-  // theType stores which kind of bond is the G4AtomicBond object
-  // there are three types: Ionic, Covalent and Metallic
-  // and they are enumerate in the theBondType enum.
-  theBondType theType;
+    // The indexes of the two atoms connected by the bond are stored
+    // theFirstAtomKind is the index in the vector of G4Elements in the array
+    // and theFirstAtomNumber is the index in the vector of G4ThreeVector in
+    // the G4CrystalLattice. For the second atom theSecondAtomKind and
+    // theSecondAtomNumber are used.
+    G4Element* theFirstAtomKind;
+    G4int theFirstAtomNumber;
 
-  // theAromaticity stores if the bond is aromatic.
-  G4bool theAromaticity{false};
+    G4Element* theSecondAtomKind;
+    G4int theSecondAtomNumber;
+
+    // theType stores which kind of bond is the G4AtomicBond object
+    // there are three types: Ionic, Covalent and Metallic
+    // and they are enumerate in the theBondType enum.
+    theBondType theType;
+
+    // theAromaticity stores if the bond is aromatic.
+    G4bool theAromaticity{false};
 };
 
 #endif

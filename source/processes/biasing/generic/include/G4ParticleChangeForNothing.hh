@@ -31,8 +31,8 @@
 //
 // Author: Marc Verderi, November 2013.
 // ---------------------------------------------------------------
-#ifndef G4ParticleChangeForNothing_hh
-#define G4ParticleChangeForNothing_hh 1
+#ifndef G4PARTICLECHANGEFORNOTHING_HH
+#define G4PARTICLECHANGEFORNOTHING_HH
 
 #include "G4VParticleChange.hh"
 
@@ -51,9 +51,9 @@ class G4ParticleChangeForNothing : public G4VParticleChange
       theNumberOfSecondaries = 0;
     }
 
-    virtual G4Step* UpdateStepForAtRest   (G4Step* step) { return step; }
+    virtual G4Step* UpdateStepForAtRest(G4Step* step) { return step; }
     virtual G4Step* UpdateStepForAlongStep(G4Step* step) { return step; }
-    virtual G4Step* UpdateStepForPostStep (G4Step* step) { return step; }
+    virtual G4Step* UpdateStepForPostStep(G4Step* step) { return step; }
 };
 
 #endif

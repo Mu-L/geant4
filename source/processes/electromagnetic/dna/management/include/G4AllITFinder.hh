@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,25 +41,25 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#ifndef G4AllITFinder_h
-#define G4AllITFinder_h 1
-#include "globals.hh"
+#ifndef G4ALLITFINDER_HH
+#define G4ALLITFINDER_HH
 #include "G4ITType.hh"
-#include "G4ThreeVector.hh"
 #include "G4KDTreeResult.hh"
+#include "G4ThreeVector.hh"
+#include "globals.hh"
 
 #include <map>
-#include <vector>
 #include <memory>
+#include <vector>
 
 class G4IT;
 class G4VITFinder;
 class G4ITBox;
 class G4Track;
 template<typename T>
-  class G4ITFinder;
+class G4ITFinder;
 
 /**
  * Holds all IT Manager, and take care of deleting them
@@ -69,87 +69,75 @@ template<typename T>
 
 class G4AllITFinder
 {
-public:
-  static G4AllITFinder* Instance();
-  static void DeleteInstance();
-  /**
-   * To delete the Instance you should use DeleteInstance()
-   * rather than the destructor
-   */
+  public:
 
-  ~G4AllITFinder();
+    static G4AllITFinder* Instance();
+    static void DeleteInstance();
+    /**
+     * To delete the Instance you should use DeleteInstance()
+     * rather than the destructor
+     */
 
-  G4VITFinder* GetInstance(G4ITType);
-  G4ITBox* GetBox(const G4Track*);
+    ~G4AllITFinder();
 
-  void RegisterManager(G4VITFinder* manager);
-  void Push(G4Track* track);
+    G4VITFinder* GetInstance(G4ITType);
+    G4ITBox* GetBox(const G4Track*);
 
-  /**
-   * Set General verbose for all IT Manager
-   * See ITManager builder
-   */
-  void SetVerboseLevel(G4int level)
-  {
-    fVerbose = level;
-  }
-  G4int GetVerboseLevel()
-  {
-    return fVerbose;
-  }
+    void RegisterManager(G4VITFinder* manager);
+    void Push(G4Track* track);
 
-  void UpdatePositionMap();
+    /**
+     * Set General verbose for all IT Manager
+     * See ITManager builder
+     */
+    void SetVerboseLevel(G4int level) { fVerbose = level; }
+    G4int GetVerboseLevel() { return fVerbose; }
 
-  template<typename T>
-    inline G4KDTreeResultHandle FindNearest(const G4ThreeVector& pos,
-                                            const T* it);
-  template<typename T>
+    void UpdatePositionMap();
+
+    template<typename T>
+    inline G4KDTreeResultHandle FindNearest(const G4ThreeVector& pos, const T* it);
+    template<typename T>
     inline G4KDTreeResultHandle FindNearest(const T* it0, const T* it);
-  template<typename T>
-    inline G4KDTreeResultHandle FindNearestInRange(const G4ThreeVector& pos,
-                                                   const T* it,
+    template<typename T>
+    inline G4KDTreeResultHandle FindNearestInRange(const G4ThreeVector& pos, const T* it,
                                                    G4double range);
-  template<typename T>
-    inline G4KDTreeResultHandle FindNearestInRange(const T* it0,
-                                                   const T* it,
-                                                   G4double range);
+    template<typename T>
+    inline G4KDTreeResultHandle FindNearestInRange(const T* it0, const T* it, G4double range);
 
-private:
-  G4AllITFinder();
-  static G4ThreadLocal G4AllITFinder* fpInstance;
-  std::map<G4ITType, G4VITFinder*> fITSubManager;
+  private:
 
-  int fVerbose;
+    G4AllITFinder();
+    static G4ThreadLocal G4AllITFinder* fpInstance;
+    std::map<G4ITType, G4VITFinder*> fITSubManager;
+
+    int fVerbose;
 };
 
 template<typename T>
-  inline G4KDTreeResultHandle G4AllITFinder::FindNearest(const G4ThreeVector& pos,
-                                                         const T* it)
-  {
-    return G4ITFinder<T>::Instance()->FindNearest(pos, it);
-  }
+inline G4KDTreeResultHandle G4AllITFinder::FindNearest(const G4ThreeVector& pos, const T* it)
+{
+  return G4ITFinder<T>::Instance()->FindNearest(pos, it);
+}
 
 template<typename T>
-  inline G4KDTreeResultHandle G4AllITFinder::FindNearest(const T* it0,
-                                                         const T* it)
-  {
-    return G4ITFinder<T>::Instance()->FindNearest(it0, it);
-  }
+inline G4KDTreeResultHandle G4AllITFinder::FindNearest(const T* it0, const T* it)
+{
+  return G4ITFinder<T>::Instance()->FindNearest(it0, it);
+}
 
 template<typename T>
-  inline G4KDTreeResultHandle G4AllITFinder::FindNearestInRange(const G4ThreeVector& pos,
-                                                                const T* it,
-                                                                G4double range)
-  {
-    return G4ITFinder<T>::Instance()->FindNearestInRange(pos, it, range);
-  }
+inline G4KDTreeResultHandle G4AllITFinder::FindNearestInRange(const G4ThreeVector& pos, const T* it,
+                                                              G4double range)
+{
+  return G4ITFinder<T>::Instance()->FindNearestInRange(pos, it, range);
+}
 
 template<typename T>
-  inline G4KDTreeResultHandle G4AllITFinder::FindNearestInRange(const T* it0,
-                                                                const T* it,
-                                                                G4double range)
-  {
-    return G4ITFinder<T>::Instance()->FindNearestInRange(it0, it, range);
-  }
+inline G4KDTreeResultHandle G4AllITFinder::FindNearestInRange(const T* it0, const T* it,
+                                                              G4double range)
+{
+  return G4ITFinder<T>::Instance()->FindNearestInRange(it0, it, range);
+}
 
 #endif

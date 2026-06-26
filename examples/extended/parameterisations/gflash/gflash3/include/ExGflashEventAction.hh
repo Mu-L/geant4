@@ -31,11 +31,11 @@
 
 #include "G4Timer.hh"
 #include "G4UserEventAction.hh"
-#include "globals.hh"
 
 class ExGflashEventAction : public G4UserEventAction
 {
   public:
+
     ExGflashEventAction();
     ~ExGflashEventAction() override;
 
@@ -43,6 +43,7 @@ class ExGflashEventAction : public G4UserEventAction
     void EndOfEventAction(const G4Event*) override;
 
   private:
+
     G4int fNevent{0};
     G4double fDtime{0.0};
     G4int fCalorimeterCollectionId{-1};

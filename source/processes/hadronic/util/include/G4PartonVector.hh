@@ -25,8 +25,8 @@
 //
 //
 //
-#ifndef G4PartonVector_h
-#define G4PartonVector_h 1
+#ifndef G4PARTONVECTOR_HH
+#define G4PARTONVECTOR_HH
 
 // ------------------------------------------------------------
 //      GEANT 4 class header file
@@ -36,9 +36,13 @@
 // ------------------------------------------------------------
 
 #include "G4Parton.hh"
+
 #include <vector>
 
-typedef std::vector<G4Parton *> G4PartonVector;
-struct DeleteParton{ void operator()(G4Parton*aP){delete aP;} };
+typedef std::vector<G4Parton*> G4PartonVector;
+struct DeleteParton
+{
+    void operator()(G4Parton* aP) { delete aP; }
+};
 
 #endif

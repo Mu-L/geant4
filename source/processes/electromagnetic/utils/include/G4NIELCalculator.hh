@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4NIELCalculator_h
-#define G4NIELCalculator_h 1
+#ifndef G4NIELCALCULATOR_HH
+#define G4NIELCALCULATOR_HH
 
 // -------------------------------------------------------------
 //
@@ -41,10 +41,10 @@
 //
 //
 // Class Description:
-// This is a helper class to compute NIEL in user stepping action 
+// This is a helper class to compute NIEL in user stepping action
 // or sensitive detector code. User should provide G4VEmModel
 // objects, which has NIEL model
-// 
+//
 // -------------------------------------------------------------
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -59,33 +59,32 @@ class G4VEmModel;
 
 class G4NIELCalculator
 {
-public: 
+  public:
 
-  explicit G4NIELCalculator(G4VEmModel*, G4int verb);
+    explicit G4NIELCalculator(G4VEmModel*, G4int verb);
 
-  ~G4NIELCalculator() = default;
+    ~G4NIELCalculator() = default;
 
-  // initialisation before start of run
-  void Initialise();
+    // initialisation before start of run
+    void Initialise();
 
-  // compute nuclear stopping power
-  G4double ComputeNIEL(const G4Step*);
+    // compute nuclear stopping power
+    G4double ComputeNIEL(const G4Step*);
 
-  // kinetic energy of recoil nucleus or zero
-  G4double RecoilEnergy(const G4Step*);
+    // kinetic energy of recoil nucleus or zero
+    G4double RecoilEnergy(const G4Step*);
 
-  // replace model of NIEL
-  void AddEmModel(G4VEmModel*); 
+    // replace model of NIEL
+    void AddEmModel(G4VEmModel*);
 
-  // hide assignment operator
-  G4NIELCalculator & operator=(const G4NIELCalculator &right) = delete;
-  G4NIELCalculator(const G4NIELCalculator&) = delete;
+    // hide assignment operator
+    G4NIELCalculator& operator=(const G4NIELCalculator& right) = delete;
+    G4NIELCalculator(const G4NIELCalculator&) = delete;
 
-private:
+  private:
 
-  G4VEmModel* fModel;  
-  G4int fVerbose;             
+    G4VEmModel* fModel;
+    G4int fVerbose;
 };
 
 #endif
-

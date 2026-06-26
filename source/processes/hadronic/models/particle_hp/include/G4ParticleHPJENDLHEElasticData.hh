@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPJENDLHEElasticData_h
-#define G4ParticleHPJENDLHEElasticData_h 1
+#ifndef G4PARTICLEHPJENDLHEELASTICDATA_HH
+#define G4PARTICLEHPJENDLHEELASTICDATA_HH
 
 // Class Description
 // Cross-section data set for a high precision (based on JENDL_HE evaluated data
@@ -41,6 +41,7 @@
 class G4ParticleHPJENDLHEElasticData : public G4ParticleHPJENDLHEData
 {
   public:
+
     G4ParticleHPJENDLHEElasticData();
 };
 

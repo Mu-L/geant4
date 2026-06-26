@@ -33,7 +33,7 @@
 //
 // History
 //   October 18th, 2021 : first implementation
-//
+//   March 28th, 2026: Modified by Ilker Parmaksiz for latest Opticks
 // ********************************************************************
 //
 /// \file ActionInitialization.cc
@@ -47,7 +47,7 @@
 #include "PrimaryGeneratorAction.hh"
 #include "RunAction.hh"
 #include "StackingAction.hh"
-
+#include "SteppingAction.hh"
 
 ActionInitialization::ActionInitialization()
   : G4VUserActionInitialization()
@@ -63,4 +63,5 @@ void ActionInitialization::Build() const
   SetUserAction(new PrimaryGeneratorAction());
   SetUserAction(new StackingAction());
   SetUserAction(new EventAction());
+  SetUserAction(new SteppingAction());
 }

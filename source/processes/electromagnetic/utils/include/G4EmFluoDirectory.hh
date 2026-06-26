@@ -36,10 +36,10 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4EmFluoDirectory_h
-#define G4EmFluoDirectory_h 1
+#ifndef G4EMFLUODIRECTORY_HH
+#define G4EMFLUODIRECTORY_HH
 
-enum G4EmFluoDirectory 
+enum G4EmFluoDirectory
 {
   fluoDefault = 0,
   fluoBearden,

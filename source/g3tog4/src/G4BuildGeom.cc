@@ -25,39 +25,40 @@
 //
 //
 //
-// modified by I. Hrivnacova, 13.10.99 
+// modified by I. Hrivnacova, 13.10.99
 
-#include <iomanip>
-#include <fstream>
-#include "globals.hh"
-#include "G3toG4.hh"
-#include "G3MatTable.hh"
-#include "G3MedTable.hh"
-#include "G3RotTable.hh"
-#include "G3VolTable.hh"
-#include "G3PartTable.hh"
-#include "G3DetTable.hh"
-#include "G3toG4BuildTree.hh"
 #include "G4GeometryManager.hh"
 #include "G4LogicalVolume.hh"
 #include "G4LogicalVolumeStore.hh"
 #include "G4PVPlacement.hh"
 #include "G4VisAttributes.hh"
+#include "globals.hh"
+
+#include "G3DetTable.hh"
+#include "G3MatTable.hh"
+#include "G3MedTable.hh"
+#include "G3PartTable.hh"
+#include "G3RotTable.hh"
+#include "G3VolTable.hh"
+#include "G3toG4.hh"
+#include "G3toG4BuildTree.hh"
+
+#include <fstream>
+#include <iomanip>
 
 extern std::ofstream ofile;
 
-void G3CLRead(G4String &, char *);
+void G3CLRead(G4String&, char*);
 void checkVol(G4LogicalVolume*, G4int);
 void checkVol();
 
-
-G4LogicalVolume* G4BuildGeom(G4String& inFile){
-
-  G4int irot=0;
+G4LogicalVolume* G4BuildGeom(G4String& inFile)
+{
+  G4int irot = 0;
   G4gsrotm(0, 90, 0, 90, 90, 0, 0);
 
   G4cout << "Instantiated unit rotation matrix irot=" << irot << G4endl;
- 
+
   // Read the call List and interpret to Generate Geant4 geometry
 
   G4cout << "Reading the call List file " << inFile << "..." << G4endl;
@@ -86,22 +87,22 @@ G4LogicalVolume* G4BuildGeom(G4String& inFile){
 
   // position the top logical volume
   // (in Geant3 the top volume is not positioned)
-  // 
+  //
   new G4PVPlacement(0, G4ThreeVector(), topLV->GetName(), topLV, 0, false, 0);
 
   // mark as invisible
 
   topLV->SetVisAttributes(G4VisAttributes::GetInvisible());
-    
+
   G4cout << "Top-level G3toG4 logical volume " << topLV->GetName() << " "
          << *(topLV->GetVisAttributes()) << G4endl;
-        
-        // check the geometry here
 
-  #ifdef G3G4DEBUG
-    G4cout << "scan through G4LogicalVolumeStore:" << G4endl;
-    checkVol();
-  #endif
+  // check the geometry here
+
+#ifdef G3G4DEBUG
+  G4cout << "scan through G4LogicalVolumeStore:" << G4endl;
+  checkVol();
+#endif
 
   return topLV;
 }
@@ -110,7 +111,7 @@ void checkVol()
 {
   G4LogicalVolumeStore* theStore = G4LogicalVolumeStore::GetInstance();
   G4LogicalVolume* ll = (*theStore)[0];
-  G4int level=0;
+  G4int level = 0;
   checkVol(ll, level);
 }
 
@@ -119,30 +120,18 @@ void checkVol(G4LogicalVolume* _lvol, G4int level)
   G4LogicalVolume* _ldvol;
   G4VPhysicalVolume* _pdvol;
   ++level;
-  
-  std::size_t ndau = _lvol -> GetNoDaughters();
-  
-  G4cout << "G44LogicalVolume " << _lvol->GetName() << " at level " << level
-	 << " contains " << ndau << " daughters." << G4endl;
-  for (std::size_t idau=0; idau<ndau; ++idau)
+
+  std::size_t ndau = _lvol->GetNoDaughters();
+
+  G4cout << "G44LogicalVolume " << _lvol->GetName() << " at level " << level << " contains " << ndau
+         << " daughters." << G4endl;
+  for (std::size_t idau = 0; idau < ndau; ++idau)
   {
-    _pdvol = _lvol-> GetDaughter(idau);
-    _ldvol = _pdvol -> GetLogicalVolume();
-    G4cout << "G4VPhysical volume " << std::setw(5) << _pdvol -> GetName() 
-	 << " (G4LogicalVolume " << std::setw(5) << _ldvol->GetName() << ")" 
-	 << G4endl;
+    _pdvol = _lvol->GetDaughter(idau);
+    _ldvol = _pdvol->GetLogicalVolume();
+    G4cout << "G4VPhysical volume " << std::setw(5) << _pdvol->GetName() << " (G4LogicalVolume "
+           << std::setw(5) << _ldvol->GetName() << ")" << G4endl;
     checkVol(_ldvol, level);
   }
   return;
 }
-
-
-
-
-
-
-
-
-
-
-

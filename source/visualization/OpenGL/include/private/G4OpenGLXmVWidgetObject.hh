@@ -25,36 +25,38 @@
 //
 //
 //
-// 
-//Virtual base class for all Motif widgets.
+//
+// Virtual base class for all Motif widgets.
 
 #ifndef G4OPENGLXMVWIDGETOBJECT_HH
 #define G4OPENGLXMVWIDGETOBJECT_HH
 
 #include "globals.hh"
+
 #include <Xm/Xm.h>
 
 class G4OpenGLXmViewer;
-class G4OpenGLXmVWidgetObject {
+class G4OpenGLXmVWidgetObject
+{
+  public:
 
-public:
+    G4OpenGLXmVWidgetObject();  // constructor
+    virtual ~G4OpenGLXmVWidgetObject();  // destructor
 
-  G4OpenGLXmVWidgetObject ();          //constructor
-  virtual ~G4OpenGLXmVWidgetObject (); //destructor
-  
-  G4OpenGLXmViewer* GetView ();  //access to the pView
-  void ProcesspView ();
+    G4OpenGLXmViewer* GetView();  // access to the pView
+    void ProcesspView();
 
-protected:
-  G4OpenGLXmVWidgetObject (const G4OpenGLXmVWidgetObject&);
-  G4OpenGLXmVWidgetObject& operator = (const G4OpenGLXmVWidgetObject&);
-  G4OpenGLXmViewer* pView;
-  Colormap cmap;
-  Pixel borcol;
-  Pixel bgnd;
-  unsigned int depth;
-  Visual* visual;
-  Widget top;
+  protected:
+
+    G4OpenGLXmVWidgetObject(const G4OpenGLXmVWidgetObject&);
+    G4OpenGLXmVWidgetObject& operator=(const G4OpenGLXmVWidgetObject&);
+    G4OpenGLXmViewer* pView;
+    Colormap cmap;
+    Pixel borcol;
+    Pixel bgnd;
+    unsigned int depth;
+    Visual* visual;
+    Widget top;
 };
 
 #endif

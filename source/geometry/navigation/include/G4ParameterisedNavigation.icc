@@ -22,7 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // Class G4ParameterisedNavigation Inline implementation
 //
 // Author: Paul Kent (CERN), August 1996
@@ -32,18 +32,18 @@
 // IdentifyAndPlaceSolid
 // ********************************************************************
 //
-inline G4VSolid* G4ParameterisedNavigation::
-IdentifyAndPlaceSolid( G4int num,
-                       G4VPhysicalVolume* apparentPhys, // PhysV or PhysT
-                       G4VPVParameterisation* curParam  )
+inline G4VSolid*
+G4ParameterisedNavigation::IdentifyAndPlaceSolid(G4int num,
+                                                 G4VPhysicalVolume* apparentPhys,  // PhysV or PhysT
+                                                 G4VPVParameterisation* curParam)
 {
-  G4VSolid *sampleSolid; 
+  G4VSolid* sampleSolid;
 
   sampleSolid = curParam->ComputeSolid(num, apparentPhys);
   sampleSolid->ComputeDimensions(curParam, num, apparentPhys);
   curParam->ComputeTransformation(num, apparentPhys);
 
-  return sampleSolid; 
+  return sampleSolid;
 }
 
 // ********************************************************************
@@ -51,15 +51,15 @@ IdentifyAndPlaceSolid( G4int num,
 // ********************************************************************
 //
 inline G4SmartVoxelNode*
-G4ParameterisedNavigation::ParamVoxelLocate( G4SmartVoxelHeader* pHead,
-                                       const G4ThreeVector& localPoint )
+G4ParameterisedNavigation::ParamVoxelLocate(G4SmartVoxelHeader* pHead,
+                                            const G4ThreeVector& localPoint)
 {
   // If no parameterisation axis is specified, adopt default
   // location strategy as for placements
-  //  
-  if ( pHead->GetParamAxis()==kUndefined )
+  //
+  if (pHead->GetParamAxis() == kUndefined)
   {
-    fVoxelNode = G4VoxelNavigation::VoxelLocate(pHead,localPoint);
+    fVoxelNode = G4VoxelNavigation::VoxelLocate(pHead, localPoint);
   }
   else
   {
@@ -70,27 +70,24 @@ G4ParameterisedNavigation::ParamVoxelLocate( G4SmartVoxelHeader* pHead,
     targetHeaderAxis = pHead->GetAxis();
     targetHeaderNoSlices = G4int(pHead->GetNoSlices());
     targetHeaderMin = pHead->GetMinExtent();
-    targetHeaderNodeWidth = (pHead->GetMaxExtent()-targetHeaderMin)
-                          / targetHeaderNoSlices;
-    targetNodeNo = G4int ( (localPoint(targetHeaderAxis)-targetHeaderMin)
-                           / targetHeaderNodeWidth );
+    targetHeaderNodeWidth = (pHead->GetMaxExtent() - targetHeaderMin) / targetHeaderNoSlices;
+    targetNodeNo = G4int((localPoint(targetHeaderAxis) - targetHeaderMin) / targetHeaderNodeWidth);
     // Rounding protection
     //
-    if ( targetNodeNo<0 )
+    if (targetNodeNo < 0)
     {
       targetNodeNo = 0;
     }
-    else if ( targetNodeNo>=targetHeaderNoSlices )
+    else if (targetNodeNo >= targetHeaderNoSlices)
     {
-      targetNodeNo = targetHeaderNoSlices-1;
+      targetNodeNo = targetHeaderNoSlices - 1;
     }
     fVoxelAxis = targetHeaderAxis;
     fVoxelNoSlices = targetHeaderNoSlices;
     fVoxelSliceWidth = targetHeaderNodeWidth;
     fVoxelNodeNo = targetNodeNo;
-    fVoxelHeader = pHead;    
+    fVoxelHeader = pHead;
     fVoxelNode = pHead->GetSlice(targetNodeNo)->GetNode();
   }
   return fVoxelNode;
 }
-

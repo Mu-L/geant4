@@ -38,23 +38,19 @@
 #  define G4_TLS 1
 
 #  if defined(G4MULTITHREADED)
-#    if(defined(__MACH__) && defined(__clang__)) ||                            \
-      (defined(__linux__) && defined(__clang__))
+#    if (defined(__MACH__) && defined(__clang__)) || (defined(__linux__) && defined(__clang__))
 #      define G4ThreadLocalStatic static thread_local
 #      define G4ThreadLocal thread_local
-#    elif((defined(__linux__) || defined(__MACH__)) &&                         \
-          !defined(__INTEL_COMPILER) && defined(__GNUC__) &&                   \
-          (__GNUC__ >= 4 && __GNUC_MINOR__ < 9))
+#    elif ((defined(__linux__) || defined(__MACH__)) && !defined(__INTEL_COMPILER) \
+           && defined(__GNUC__) && (__GNUC__ >= 4 && __GNUC_MINOR__ < 9))
 #      define G4ThreadLocalStatic static __thread
 #      define G4ThreadLocal thread_local
-#    elif((defined(__linux__) || defined(__MACH__)) &&                         \
-            !defined(__INTEL_COMPILER) && defined(__GNUC__) &&                 \
-            (__GNUC__ >= 4 && __GNUC_MINOR__ >= 9) ||                          \
-          __GNUC__ >= 5)
+#    elif ((defined(__linux__) || defined(__MACH__)) && !defined(__INTEL_COMPILER) \
+             && defined(__GNUC__) && (__GNUC__ >= 4 && __GNUC_MINOR__ >= 9)        \
+           || __GNUC__ >= 5)
 #      define G4ThreadLocalStatic static thread_local
 #      define G4ThreadLocal thread_local
-#    elif((defined(__linux__) || defined(__MACH__)) &&                         \
-          defined(__INTEL_COMPILER))
+#    elif ((defined(__linux__) || defined(__MACH__)) && defined(__INTEL_COMPILER))
 #      if __INTEL_COMPILER >= 1500
 #        define G4ThreadLocalStatic static thread_local
 #        define G4ThreadLocal thread_local
@@ -69,7 +65,7 @@
 #      define G4ThreadLocalStatic static thread_local
 #      define G4ThreadLocal thread_local
 #    else
-#      error                                                                   \
+#      error \
         "No Thread Local Storage (TLS) technology supported for this platform. Use sequential build !"
 #    endif
 #  else

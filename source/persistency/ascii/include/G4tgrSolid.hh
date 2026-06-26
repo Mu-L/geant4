@@ -31,13 +31,13 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrSolid_hh
-#define G4tgrSolid_hh 1
+#ifndef G4TGRSOLID_HH
+#define G4TGRSOLID_HH
+
+#include "G4ThreeVector.hh"
+#include "globals.hh"
 
 #include <vector>
-
-#include "globals.hh"
-#include "G4ThreeVector.hh"
 
 class G4tgrSolid
 {
@@ -64,11 +64,11 @@ class G4tgrSolid
   protected:
 
     G4String theName;
-      // Name of the solid
+    // Name of the solid
     G4String theType;
-      // Type of the solid (Simple, Boolean, Box, Tube, ...)
+    // Type of the solid (Simple, Boolean, Box, Tube, ...)
     std::vector<std::vector<G4double>*> theSolidParams;
-      // Vectors of parameters
+    // Vectors of parameters
 };
 
 #endif

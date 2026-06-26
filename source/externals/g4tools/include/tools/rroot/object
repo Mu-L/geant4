@@ -6,17 +6,21 @@
 
 #include "buffer"
 
-namespace tools {
-namespace rroot {
+namespace tools
+{
+namespace rroot
+{
 
-inline bool Object_stream(buffer& a_buffer,uint32& a_id,uint32& a_bits) {
+inline bool Object_stream(buffer& a_buffer, uint32& a_id, uint32& a_bits)
+{
   short v;
-  if(!a_buffer.read_version(v)) return false;
-  if(!a_buffer.read(a_id)) return false;
-  if(!a_buffer.read(a_bits)) return false;
+  if (!a_buffer.read_version(v)) return false;
+  if (!a_buffer.read(a_id)) return false;
+  if (!a_buffer.read(a_bits)) return false;
   return true;
 }
 
-}}
+}  // namespace rroot
+}  // namespace tools
 
 #endif

@@ -29,8 +29,8 @@
 //
 // Author: Ivana Hrivnacova, 09/04/2014 (ivana@ipno.in2p3.fr)
 
-#ifndef G4RootRNtupleManager_h
-#define G4RootRNtupleManager_h 1
+#ifndef G4ROOTRNTUPLEMANAGER_HH
+#define G4ROOTRNTUPLEMANAGER_HH
 
 #include "G4TRNtupleManager.hh"
 #include "globals.hh"
@@ -45,34 +45,34 @@ struct G4RootRNtupleDescription;
 
 class G4RootRNtupleManager : public G4TRNtupleManager<tools::rroot::ntuple>
 {
-  friend class G4RootAnalysisReader;
+    friend class G4RootAnalysisReader;
 
   public:
+
     explicit G4RootRNtupleManager(const G4AnalysisManagerState& state);
     G4RootRNtupleManager() = delete;
     ~G4RootRNtupleManager() override = default;
 
   private:
+
     // Set methods
     void SetFileManager(std::shared_ptr<G4RootRFileManager> fileManager);
 
     // Methods from the base class
     G4int ReadNtupleImpl(const G4String& ntupleName, const G4String& fileName,
-      const G4String& dirName, G4bool isUserFileName) final;
+                         const G4String& dirName, G4bool isUserFileName) final;
     G4bool GetTNtupleRow(G4TRNtupleDescription<tools::rroot::ntuple>* ntupleDescription) final;
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4RootPNtupleManager" };
+    static constexpr std::string_view fkClass{"G4RootPNtupleManager"};
 
     // Data members
-    std::shared_ptr<G4RootRFileManager>  fFileManager { nullptr };
+    std::shared_ptr<G4RootRFileManager> fFileManager{nullptr};
 };
 
-inline void
-G4RootRNtupleManager::SetFileManager(std::shared_ptr<G4RootRFileManager> fileManager)
+inline void G4RootRNtupleManager::SetFileManager(std::shared_ptr<G4RootRFileManager> fileManager)
 {
   fFileManager = std::move(fileManager);
 }
 
 #endif
-

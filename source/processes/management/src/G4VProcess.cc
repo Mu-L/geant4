@@ -32,18 +32,17 @@
 
 #include "G4VProcess.hh"
 
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
-
-#include "G4ProcessTable.hh"
-#include "G4PhysicsTable.hh"
-#include "G4MaterialTable.hh"
 #include "G4ElementTable.hh"
 #include "G4ElementVector.hh"
 #include "G4Log.hh"
+#include "G4MaterialTable.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4PhysicsTable.hh"
+#include "G4ProcessTable.hh"
+#include "G4SystemOfUnits.hh"
 
 // --------------------------------------------------------------------
-G4VProcess::G4VProcess(const G4String& aName, G4ProcessType aType )
+G4VProcess::G4VProcess(const G4String& aName, G4ProcessType aType)
   : theProcessName(aName), theProcessType(aType)
 {
   pParticleChange = &aParticleChange;
@@ -52,9 +51,7 @@ G4VProcess::G4VProcess(const G4String& aName, G4ProcessType aType )
 }
 
 // --------------------------------------------------------------------
-G4VProcess::G4VProcess()
-{
-}
+G4VProcess::G4VProcess() {}
 
 // --------------------------------------------------------------------
 G4VProcess::~G4VProcess()
@@ -73,14 +70,13 @@ G4VProcess::G4VProcess(const G4VProcess& right)
     enablePostStepDoIt(right.enablePostStepDoIt),
     masterProcessShadow(right.masterProcessShadow),
     fProcessTable(right.fProcessTable)
-{
-}
+{}
 
 // --------------------------------------------------------------------
 void G4VProcess::ResetNumberOfInteractionLengthLeft()
 {
-  theNumberOfInteractionLengthLeft =  -1.*G4Log( G4UniformRand() );
-  theInitialNumberOfInteractionLength = theNumberOfInteractionLengthLeft; 
+  theNumberOfInteractionLengthLeft = -1. * G4Log(G4UniformRand());
+  theInitialNumberOfInteractionLength = theNumberOfInteractionLengthLeft;
 }
 
 // --------------------------------------------------------------------
@@ -90,10 +86,9 @@ void G4VProcess::StartTracking(G4Track*)
   theNumberOfInteractionLengthLeft = -1.0;
   theInitialNumberOfInteractionLength = -1.0;
 #ifdef G4VERBOSE
-  if (verboseLevel>2)
+  if (verboseLevel > 2)
   {
-    G4cout << "G4VProcess::StartTracking() - [" << theProcessName << "]"
-           << G4endl;
+    G4cout << "G4VProcess::StartTracking() - [" << theProcessName << "]" << G4endl;
   }
 #endif
 }
@@ -102,53 +97,74 @@ void G4VProcess::StartTracking(G4Track*)
 void G4VProcess::EndTracking()
 {
 #ifdef G4VERBOSE
-  if (verboseLevel>2)
+  if (verboseLevel > 2)
   {
-    G4cout << "G4VProcess::EndTracking() - [" << theProcessName << "]"
-           << G4endl;
+    G4cout << "G4VProcess::EndTracking() - [" << theProcessName << "]" << G4endl;
   }
 #endif
   theNumberOfInteractionLengthLeft = -1.0;
   currentInteractionLength = -1.0;
-  theInitialNumberOfInteractionLength=-1.0;
+  theInitialNumberOfInteractionLength = -1.0;
 }
 
 // --------------------------------------------------------------------
 namespace
 {
-  static const G4String typeNotDefined = "NotDefined";
-  static const G4String typeTransportation = "Transportation";
-  static const G4String typeElectromagnetic = "Electromagnetic";
-  static const G4String typeOptical = "Optical";
-  static const G4String typeHadronic = "Hadronic";
-  static const G4String typePhotolepton_hadron = "Photolepton_hadron";
-  static const G4String typeDecay = "Decay";
-  static const G4String typeGeneral = "General";
-  static const G4String typeParameterisation = "Parameterisation";
-  static const G4String typeUserDefined = "UserDefined";
-  static const G4String typePhonon = "Phonon";
-  static const G4String noType = "------";
-}
+static const G4String typeNotDefined = "NotDefined";
+static const G4String typeTransportation = "Transportation";
+static const G4String typeElectromagnetic = "Electromagnetic";
+static const G4String typeOptical = "Optical";
+static const G4String typeHadronic = "Hadronic";
+static const G4String typePhotolepton_hadron = "Photolepton_hadron";
+static const G4String typeDecay = "Decay";
+static const G4String typeGeneral = "General";
+static const G4String typeParameterisation = "Parameterisation";
+static const G4String typeUserDefined = "UserDefined";
+static const G4String typePhonon = "Phonon";
+static const G4String noType = "------";
+}  // namespace
 
 // --------------------------------------------------------------------
-const G4String& G4VProcess::GetProcessTypeName(G4ProcessType aType ) 
+const G4String& G4VProcess::GetProcessTypeName(G4ProcessType aType)
 {
   switch (aType)
   {
-    case fNotDefined:         return typeNotDefined; break;
-    case fTransportation:     return typeTransportation; break;
-    case fElectromagnetic:    return typeElectromagnetic; break;
-    case fOptical:            return typeOptical; break;
-    case fHadronic:           return typeHadronic; break;
-    case fPhotolepton_hadron: return typePhotolepton_hadron; break;
-    case fDecay:              return typeDecay; break;
-    case fGeneral:            return typeGeneral; break;
-    case fParameterisation:   return typeParameterisation; break;
-    case fUserDefined:        return typeUserDefined; break;
-    case fPhonon:             return typePhonon; break;
-    default: ;
+    case fNotDefined:
+      return typeNotDefined;
+      break;
+    case fTransportation:
+      return typeTransportation;
+      break;
+    case fElectromagnetic:
+      return typeElectromagnetic;
+      break;
+    case fOptical:
+      return typeOptical;
+      break;
+    case fHadronic:
+      return typeHadronic;
+      break;
+    case fPhotolepton_hadron:
+      return typePhotolepton_hadron;
+      break;
+    case fDecay:
+      return typeDecay;
+      break;
+    case fGeneral:
+      return typeGeneral;
+      break;
+    case fParameterisation:
+      return typeParameterisation;
+      break;
+    case fUserDefined:
+      return typeUserDefined;
+      break;
+    case fPhonon:
+      return typePhonon;
+      break;
+    default:;
   }
-  return noType;  
+  return noType;
 }
 
 // --------------------------------------------------------------------
@@ -166,15 +182,15 @@ G4bool G4VProcess::operator==(const G4VProcess& right) const
 // --------------------------------------------------------------------
 G4bool G4VProcess::operator!=(const G4VProcess& right) const
 {
-  return (this !=  &right);
+  return (this != &right);
 }
 
 // --------------------------------------------------------------------
 void G4VProcess::DumpInfo() const
 {
-  G4cout << "Process Name " << theProcessName ;
+  G4cout << "Process Name " << theProcessName;
   G4cout << " : Type[" << GetProcessTypeName(theProcessType) << "]";
-  G4cout << " : SubType[" << theProcessSubType << "]"<< G4endl;
+  G4cout << " : SubType[" << theProcessSubType << "]" << G4endl;
 }
 
 // --------------------------------------------------------------------
@@ -182,23 +198,22 @@ void G4VProcess::ProcessDescription(std::ostream& outFile) const
 {
   outFile << "This process has not yet been described\n";
 }
- 
+
 // --------------------------------------------------------------------
-const G4String& G4VProcess::
-GetPhysicsTableFileName( const G4ParticleDefinition* particle,
-                         const G4String& directory,
-                         const G4String& tableName,
-                               G4bool ascii )
+const G4String& G4VProcess::GetPhysicsTableFileName(const G4ParticleDefinition* particle,
+                                                    const G4String& directory,
+                                                    const G4String& tableName, G4bool ascii)
 {
   G4String thePhysicsTableFileExt;
-  if (ascii) thePhysicsTableFileExt = ".asc";
-  else       thePhysicsTableFileExt = ".dat";
+  if (ascii)
+    thePhysicsTableFileExt = ".asc";
+  else
+    thePhysicsTableFileExt = ".dat";
 
   thePhysicsTableFileName = directory + "/";
-  thePhysicsTableFileName += tableName + "." +  theProcessName + ".";
-  thePhysicsTableFileName += particle->GetParticleName()
-                           + thePhysicsTableFileExt;
-  
+  thePhysicsTableFileName += tableName + "." + theProcessName + ".";
+  thePhysicsTableFileName += particle->GetParticleName() + thePhysicsTableFileExt;
+
   return thePhysicsTableFileName;
 }
 

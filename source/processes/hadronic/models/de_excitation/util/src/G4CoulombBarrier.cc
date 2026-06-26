@@ -27,54 +27,53 @@
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara (Dec 1999)
 //
-// 14-11-2007 modified barrier by JMQ (test30) 
-// 15-11-2010 V.Ivanchenko use G4Pow and cleanup 
+// 14-11-2007 modified barrier by JMQ (test30)
+// 15-11-2010 V.Ivanchenko use G4Pow and cleanup
 
 #include "G4CoulombBarrier.hh"
+
+#include "G4NuclearRadii.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4NuclearRadii.hh"
 
 namespace
 {
-  constexpr G4double e0 = 2*CLHEP::MeV;
+constexpr G4double e0 = 2 * CLHEP::MeV;
 }
 
-G4CoulombBarrier::G4CoulombBarrier(G4int A, G4int Z)
-  : G4VCoulombBarrier(A, Z)
+G4CoulombBarrier::G4CoulombBarrier(G4int A, G4int Z) : G4VCoulombBarrier(A, Z)
 {
-  factor = CLHEP::elm_coupling*Z;
-  theRho = 0.5*G4NuclearRadii::RadiusCB(Z, A);
+  factor = CLHEP::elm_coupling * Z;
+  theRho = 0.5 * G4NuclearRadii::RadiusCB(Z, A);
 }
 
-G4double G4CoulombBarrier::GetCoulombBarrier(
-         G4int ARes, G4int ZRes, G4double U) const 
+G4double G4CoulombBarrier::GetCoulombBarrier(G4int ARes, G4int ZRes, G4double U) const
 {
-  G4double cb = factor*ZRes/(G4NuclearRadii::RadiusCB(ZRes,ARes) + theRho);
-  cb /= (1.0 + std::sqrt( U / ((ARes + theA)*e0)));
+  G4double cb = factor * ZRes / (G4NuclearRadii::RadiusCB(ZRes, ARes) + theRho);
+  cb /= (1.0 + std::sqrt(U / ((ARes + theA) * e0)));
   return cb;
 }
 
-G4double G4CoulombBarrier::BarrierPenetrationFactor(G4int aZ) const 
+G4double G4CoulombBarrier::BarrierPenetrationFactor(G4int aZ) const
 {
-  // Data comes from 
+  // Data comes from
   // Dostrovsky, Fraenkel and Friedlander
   // Physical Review, vol 116, num. 3 1959
-  // 
+  //
   // const G4int size = 5;
   // const G4double Zlist[size] = {10.0, 20.0, 30.0, 50.0, 70.0};
   // const G4double Kprot[size] = {0.42, 0.58, 0.68, 0.77, 0.80};
-  // 
+  //
   G4double res = 1.0;
-  if(theZ == 1) {
-    res = (aZ >= 70) ? 0.80 :
-    (((0.2357e-5*aZ) - 0.42679e-3)*aZ + 0.27035e-1)*aZ + 0.19025;
-    res += 0.06*(theA - 1);
-
-  } else if(theZ == 2 && theA <= 4) {
-    res = (aZ >= 70) ? 0.98 :
-    (((0.23684e-5*aZ) - 0.42143e-3)*aZ + 0.25222e-1)*aZ + 0.46699;
-    res += 0.12*(4 - theA);
+  if (theZ == 1)
+  {
+    res = (aZ >= 70) ? 0.80 : (((0.2357e-5 * aZ) - 0.42679e-3) * aZ + 0.27035e-1) * aZ + 0.19025;
+    res += 0.06 * (theA - 1);
+  }
+  else if (theZ == 2 && theA <= 4)
+  {
+    res = (aZ >= 70) ? 0.98 : (((0.23684e-5 * aZ) - 0.42143e-3) * aZ + 0.25222e-1) * aZ + 0.46699;
+    res += 0.12 * (4 - theA);
   }
   return res;
 }

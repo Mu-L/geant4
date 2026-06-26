@@ -28,7 +28,7 @@
 // Author: Youhei Morita, 12.09.2001
 // --------------------------------------------------------------------
 #ifndef G4MCTGENPARTICLE_HH
-#define G4MCTGENPARTICLE_HH 1
+#define G4MCTGENPARTICLE_HH
 
 #include <algorithm>
 

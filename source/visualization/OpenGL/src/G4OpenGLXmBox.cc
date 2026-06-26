@@ -25,17 +25,18 @@
 //
 //
 //
-//Box container class
+// Box container class
+
+#include "G4OpenGLXmBox.hh"
 
 #include "G4OpenGLXmFramedBox.hh"
-#include "G4OpenGLXmBox.hh"
 #include "G4OpenGLXmVWidgetComponent.hh"
 #include "G4OpenGLXmVWidgetShell.hh"
+
 #include <Xm/RowColumn.h>
 #include <Xm/Xm.h>
 
-G4OpenGLXmBox::G4OpenGLXmBox (const char* n, 
-			      G4bool r)
+G4OpenGLXmBox::G4OpenGLXmBox(const char* n, G4bool r)
 {
   name = n;
   radio = r;
@@ -43,62 +44,50 @@ G4OpenGLXmBox::G4OpenGLXmBox (const char* n,
   box_row_col = NULL;
 }
 
-G4OpenGLXmBox::~G4OpenGLXmBox () 
-{}
+G4OpenGLXmBox::~G4OpenGLXmBox() {}
 
-void G4OpenGLXmBox::AddChild (G4OpenGLXmVWidgetComponent* component)
+void G4OpenGLXmBox::AddChild(G4OpenGLXmVWidgetComponent* component)
 {
   component->AddYourselfTo(this);
   Cardinal num_children;
-  XtVaGetValues (box_row_col,
-		 XmNnumChildren, &num_children,
-		 NULL);
-//  G4cout << name << " now parents " << num_children << " children." << G4endl;
+  XtVaGetValues(box_row_col, XmNnumChildren, &num_children, NULL);
+  //  G4cout << name << " now parents " << num_children << " children." << G4endl;
 }
 
-void G4OpenGLXmBox::AddYourselfTo (G4OpenGLXmVWidgetShell* window)
+void G4OpenGLXmBox::AddYourselfTo(G4OpenGLXmVWidgetShell* window)
 {
+  pView = window->GetView();
+  ProcesspView();
+  parent = window->GetPointerToWidget();
 
-  pView = window->GetView ();
-  ProcesspView ();
-  parent = window->GetPointerToWidget ();
-  
-  box_row_col =  XtVaCreateManagedWidget (name,
-					  xmRowColumnWidgetClass,
-					  *parent,
-					  
-					  XmNadjustMargin, True,
-					  XmNisHomogeneous, False,
-					  XmNlabelString, (XmString)name,
-					  XmNradioAlwaysOne, radio,
-					  XmNradioBehavior, radio,
-					  
-					  XtNvisual, visual,
-					  XtNdepth, depth,
-					  XtNcolormap, cmap,
-					  XtNborderColor, borcol,
-					  XtNbackground, bgnd,
-					  
-					  NULL);
-  
+  box_row_col =
+    XtVaCreateManagedWidget(name, xmRowColumnWidgetClass, *parent,
+
+                            XmNadjustMargin, True, XmNisHomogeneous, False, XmNlabelString,
+                            (XmString)name, XmNradioAlwaysOne, radio, XmNradioBehavior, radio,
+
+                            XtNvisual, visual, XtNdepth, depth, XtNcolormap, cmap, XtNborderColor,
+                            borcol, XtNbackground, bgnd,
+
+                            NULL);
 }
 
-Widget* G4OpenGLXmBox::GetPointerToParent ()
+Widget* G4OpenGLXmBox::GetPointerToParent()
 {
   return parent;
 }
 
-Widget* G4OpenGLXmBox::GetPointerToWidget ()
+Widget* G4OpenGLXmBox::GetPointerToWidget()
 {
   return &box_row_col;
 }
 
-const char* G4OpenGLXmBox::GetName ()
+const char* G4OpenGLXmBox::GetName()
 {
   return name;
 }
 
-void G4OpenGLXmBox::SetName (const char* n)
+void G4OpenGLXmBox::SetName(const char* n)
 {
   name = n;
 }

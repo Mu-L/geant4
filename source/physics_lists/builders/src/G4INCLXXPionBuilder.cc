@@ -23,33 +23,34 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
- #include "G4INCLXXPionBuilder.hh"
- #include "G4SystemOfUnits.hh"
- #include "G4ParticleDefinition.hh"
- #include "G4ParticleTable.hh"
- #include "G4ProcessManager.hh"
- #include "G4BGGPionInelasticXS.hh"
+#include "G4INCLXXPionBuilder.hh"
 
+#include "G4BGGPionInelasticXS.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "G4ProcessManager.hh"
+#include "G4SystemOfUnits.hh"
 
- G4INCLXXPionBuilder::
- G4INCLXXPionBuilder() 
- {
-   theMin = 0*GeV;
-   theMax = 20.0*GeV;
-   theModel = new G4INCLXXInterface();
-   theModel->SetMinEnergy(theMin);
-   theModel->SetMaxEnergy(theMax); 
- }
+G4INCLXXPionBuilder::G4INCLXXPionBuilder()
+{
+  theMin = 0 * GeV;
+  theMax = 20.0 * GeV;
+  theModel = new G4INCLXXInterface();
+  theModel->SetMinEnergy(theMin);
+  theModel->SetMaxEnergy(theMax);
+}
 
- void G4INCLXXPionBuilder::
- Build(G4HadronInelasticProcess * aP)
- {
-   theModel->SetMinEnergy(theMin);
-   theModel->SetMaxEnergy(theMax);
-   if ( aP->GetParticleDefinition() == G4PionPlus::Definition() ) { 
-     aP->AddDataSet( new G4BGGPionInelasticXS( G4PionPlus::Definition() ) );
-   } else if ( aP->GetParticleDefinition() == G4PionMinus::Definition() ) { 
-     aP->AddDataSet( new G4BGGPionInelasticXS( G4PionMinus::Definition() ) );
-   }
-   aP->RegisterMe(theModel);
- }
+void G4INCLXXPionBuilder::Build(G4HadronInelasticProcess* aP)
+{
+  theModel->SetMinEnergy(theMin);
+  theModel->SetMaxEnergy(theMax);
+  if (aP->GetParticleDefinition() == G4PionPlus::Definition())
+  {
+    aP->AddDataSet(new G4BGGPionInelasticXS(G4PionPlus::Definition()));
+  }
+  else if (aP->GetParticleDefinition() == G4PionMinus::Definition())
+  {
+    aP->AddDataSet(new G4BGGPionInelasticXS(G4PionMinus::Definition()));
+  }
+  aP->RegisterMe(theModel);
+}

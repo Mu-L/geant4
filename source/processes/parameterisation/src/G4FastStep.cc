@@ -211,7 +211,8 @@ G4Track* G4FastStep::CreateSecondaryTrack(const G4DynamicParticle& dynamics, G4T
   // -----------------------------------
   // Convert to global system if needed:
   // -----------------------------------
-  if (localCoordinates) {
+  if (localCoordinates)
+  {
     // -- Momentum Direction:
     globalDynamics->SetMomentumDirection(
       fFastTrack->GetInverseAffineTransformation()->TransformAxis(
@@ -382,33 +383,39 @@ G4bool G4FastStep::CheckIt(const G4Track& aTrack)
 
   // Energy should not be larger than the initial value
   accuracy = (theEnergyChange - aTrack.GetKineticEnergy()) / MeV;
-  if (accuracy > GetAccuracyForWarning()) {
+  if (accuracy > GetAccuracyForWarning())
+  {
     G4ExceptionDescription ed;
     ed << "The energy becomes larger than the initial value, difference = " << accuracy << " MeV"
        << G4endl;
     G4Exception("G4FastStep::CheckIt(const G4Track& aTrack)", "FastSim006", JustWarning, ed);
     itsOK = false;
-    if (accuracy > GetAccuracyForException()) {
+    if (accuracy > GetAccuracyForException())
+    {
       exitWithError = true;
     }
   }
 
   G4bool itsOKforMomentum = true;
-  if (theEnergyChange > 0.) {
+  if (theEnergyChange > 0.)
+  {
     accuracy = std::abs(theMomentumChange.mag2() - 1.0);
-    if (accuracy > GetAccuracyForWarning()) {
+    if (accuracy > GetAccuracyForWarning())
+    {
       G4ExceptionDescription ed;
       ed << "The Momentum Change is not a unit vector, difference = " << accuracy << G4endl;
       G4Exception("G4FastStep::CheckIt(const G4Track& aTrack)", "FastSim007", JustWarning, ed);
       itsOK = itsOKforMomentum = false;
-      if (accuracy > GetAccuracyForException()) {
+      if (accuracy > GetAccuracyForException())
+      {
         exitWithError = true;
       }
     }
   }
 
   accuracy = (aTrack.GetGlobalTime() - theTimeChange) / ns;
-  if (accuracy > GetAccuracyForWarning()) {
+  if (accuracy > GetAccuracyForWarning())
+  {
     G4ExceptionDescription ed;
     ed << "The global time is getting backward, difference = " << accuracy << " ns" << G4endl;
     G4Exception("G4FastStep::CheckIt(const G4Track& aTrack)", "FastSim008", JustWarning, ed);
@@ -416,28 +423,32 @@ G4bool G4FastStep::CheckIt(const G4Track& aTrack)
   }
 
   accuracy = (aTrack.GetProperTime() - theProperTimeChange) / ns;
-  if (accuracy > GetAccuracyForWarning()) {
+  if (accuracy > GetAccuracyForWarning())
+  {
     G4ExceptionDescription ed;
     ed << "The proper time is getting backward, difference = " << accuracy << " ns" << G4endl;
     G4Exception("G4FastStep::CheckIt(const G4Track& aTrack)", "FastSim009", JustWarning, ed);
     itsOK = false;
   }
 
-  if (!itsOK) {
+  if (!itsOK)
+  {
     G4cout << "ERROR - G4FastStep::CheckIt() " << G4endl;
     G4cout << "        Pointer : " << this << G4endl;
     DumpInfo();
   }
 
   // Exit with error
-  if (exitWithError) {
+  if (exitWithError)
+  {
     G4ExceptionDescription ed;
     ed << "An inaccuracy in G4FastStep is beyond tolerance." << G4endl;
     G4Exception("G4FastStep::CheckIt(const G4Track& aTrack)", "FastSim010", FatalException, ed);
   }
 
   // correction for Momentum only.
-  if (!itsOKforMomentum) {
+  if (!itsOKforMomentum)
+  {
     G4double vmag = theMomentumChange.mag();
     theMomentumChange = (1. / vmag) * theMomentumChange;
   }

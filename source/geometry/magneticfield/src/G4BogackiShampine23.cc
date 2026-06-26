@@ -31,7 +31,7 @@
 //   "A 3(2) pair of Runge - Kutta formulas"
 //    by P. Bogacki and L. F. Shampine,
 //    Appl. Math. Lett., vol. 2, no. 4, pp. 321-325, Jan. 1989.
-// 
+//
 // The Bogacki shampine method has the following Butcher's tableau
 //
 // 0  |
@@ -47,77 +47,67 @@
 // --------------------------------------------------------------------
 
 #include "G4BogackiShampine23.hh"
-#include "G4LineSection.hh"
+
 #include "G4FieldUtils.hh"
+#include "G4LineSection.hh"
 
 using namespace field_utils;
 
-G4BogackiShampine23::G4BogackiShampine23(G4EquationOfMotion* EqRhs,
-                                         G4int integrationVariables)
+G4BogackiShampine23::G4BogackiShampine23(G4EquationOfMotion* EqRhs, G4int integrationVariables)
   : G4MagIntegratorStepper(EqRhs, integrationVariables)
 {
   SetIntegrationOrder(3);
   SetFSAL(true);
 }
 
-void G4BogackiShampine23::makeStep(const G4double yInput[],
-                                   const G4double dydx[],
-                                   const G4double hstep,
-                                   G4double yOutput[],
-                                   G4double* dydxOutput,
+void G4BogackiShampine23::makeStep(const G4double yInput[], const G4double dydx[],
+                                   const G4double hstep, G4double yOutput[], G4double* dydxOutput,
                                    G4double* yError) const
 {
-
   G4double yTemp[G4FieldTrack::ncompSVEC];
-  for(G4int i = GetNumberOfVariables(); i < GetNumberOfStateVariables(); ++i)
-  { 
+  for (G4int i = GetNumberOfVariables(); i < GetNumberOfStateVariables(); ++i)
+  {
     yOutput[i] = yTemp[i] = yInput[i];
   }
 
-  G4double ak2[G4FieldTrack::ncompSVEC],
-           ak3[G4FieldTrack::ncompSVEC];
+  G4double ak2[G4FieldTrack::ncompSVEC], ak3[G4FieldTrack::ncompSVEC];
 
-  const G4double b21 = 0.5 ,
-                 b31 = 0., b32 = 3.0 / 4.0,
-                 b41 = 2.0 / 9.0, b42 = 1.0 / 3.0, b43 = 4.0 / 9.0;
+  const G4double b21 = 0.5, b31 = 0., b32 = 3.0 / 4.0, b41 = 2.0 / 9.0, b42 = 1.0 / 3.0,
+                 b43 = 4.0 / 9.0;
 
-  const G4double dc1 = b41 - 7.0 / 24.0,  dc2 = b42 - 1.0 / 4.0,
-                 dc3 = b43 - 1.0 / 3.0,   dc4 = - 1.0 / 8.0;
- 
+  const G4double dc1 = b41 - 7.0 / 24.0, dc2 = b42 - 1.0 / 4.0, dc3 = b43 - 1.0 / 3.0,
+                 dc4 = -1.0 / 8.0;
+
   // RightHandSide(yInput, dydx);
-  for(G4int i = 0; i < GetNumberOfVariables(); ++i)
+  for (G4int i = 0; i < GetNumberOfVariables(); ++i)
   {
     yTemp[i] = yInput[i] + b21 * hstep * dydx[i];
   }
-    
+
   RightHandSide(yTemp, ak2);
-  for(G4int i = 0; i < GetNumberOfVariables(); ++i)
+  for (G4int i = 0; i < GetNumberOfVariables(); ++i)
   {
     yTemp[i] = yInput[i] + hstep * (b31 * dydx[i] + b32 * ak2[i]);
   }
 
   RightHandSide(yTemp, ak3);
-  for(G4int i = 0; i < GetNumberOfVariables(); ++i)
+  for (G4int i = 0; i < GetNumberOfVariables(); ++i)
   {
-    yOutput[i] = yInput[i] + hstep * (b41*dydx[i] + b42*ak2[i] + b43*ak3[i]);
+    yOutput[i] = yInput[i] + hstep * (b41 * dydx[i] + b42 * ak2[i] + b43 * ak3[i]);
   }
-    
+
   if ((dydxOutput != nullptr) && (yError != nullptr))
   {
     RightHandSide(yOutput, dydxOutput);
-    for(G4int i = 0; i < GetNumberOfVariables(); ++i)
+    for (G4int i = 0; i < GetNumberOfVariables(); ++i)
     {
-      yError[i] = hstep * (dc1 * dydx[i] + dc2 * ak2[i] + 
-                           dc3 * ak3[i] + dc4 * dydxOutput[i]);
+      yError[i] = hstep * (dc1 * dydx[i] + dc2 * ak2[i] + dc3 * ak3[i] + dc4 * dydxOutput[i]);
     }
   }
 }
 
-void G4BogackiShampine23::Stepper(const G4double yInput[],
-                                  const G4double dydx[],
-                                  G4double hstep,
-                                  G4double yOutput[],
-                                  G4double yError[])
+void G4BogackiShampine23::Stepper(const G4double yInput[], const G4double dydx[], G4double hstep,
+                                  G4double yOutput[], G4double yError[])
 {
   copy(fyIn, yInput);
   copy(fdydx, dydx);
@@ -128,12 +118,8 @@ void G4BogackiShampine23::Stepper(const G4double yInput[],
   copy(yOutput, fyOut);
 }
 
-void G4BogackiShampine23::Stepper(const G4double yInput[],
-                                  const G4double dydx[],
-                                  G4double hstep,
-                                  G4double yOutput[],
-                                  G4double yError[],
-                                  G4double dydxOutput[])
+void G4BogackiShampine23::Stepper(const G4double yInput[], const G4double dydx[], G4double hstep,
+                                  G4double yOutput[], G4double yError[], G4double dydxOutput[])
 {
   copy(fyIn, yInput);
   copy(fdydx, dydx);

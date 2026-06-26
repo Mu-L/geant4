@@ -31,12 +31,12 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrIsotope_hh
-#define G4tgrIsotope_hh 1
-
-#include <vector>
+#ifndef G4TGRISOTOPE_HH
+#define G4TGRISOTOPE_HH
 
 #include "globals.hh"
+
+#include <vector>
 
 class G4tgrIsotope
 {
@@ -46,8 +46,8 @@ class G4tgrIsotope
     ~G4tgrIsotope();
 
     G4tgrIsotope(const std::vector<G4String>& wl);
-      // Construct the G4tgrIsotope (fill its data members)
-      // interpreting the data in the list of words 'wl'
+    // Construct the G4tgrIsotope (fill its data members)
+    // interpreting the data in the list of words 'wl'
 
     // Retrieval methods
 
@@ -60,10 +60,10 @@ class G4tgrIsotope
 
   private:
 
-    G4String theName = ""; // name of the Isotope
-    G4int theZ = 0;        // atomic number
-    G4int theN = 0;        // number of nucleons
-    G4double theA = 0.0;   // mass
+    G4String theName = "";  // name of the Isotope
+    G4int theZ = 0;  // atomic number
+    G4int theN = 0;  // number of nucleons
+    G4double theA = 0.0;  // mass
 };
 
 #endif

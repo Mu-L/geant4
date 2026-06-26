@@ -43,66 +43,56 @@
 
 #include "globals.hh"
 
+#include <iostream>
+#include <map>
 #include <set>
 #include <vector>
-#include <map>
-#include <iostream>
 
 class G4AttValue;
 class G4AttDef;
 
-class G4AttCheck {
+class G4AttCheck
+{
+  public:  // With description
 
-public: // With description
+    G4AttCheck(const std::vector<G4AttValue>* values,
+               const std::map<G4String, G4AttDef>* definitions);
 
-  G4AttCheck
-  (const std::vector<G4AttValue>* values,
-   const std::map<G4String,G4AttDef>* definitions);
+    ~G4AttCheck() = default;
 
-  ~G4AttCheck() = default;
+    const std::vector<G4AttValue>* GetAttValues() const { return fpValues; }
 
-  const std::vector<G4AttValue>* GetAttValues() const {
-    return fpValues;
-  }
+    const std::map<G4String, G4AttDef>* GetAttDefs() const { return fpDefinitions; }
 
-  const std::map<G4String,G4AttDef>* GetAttDefs() const {
-    return fpDefinitions;
-  }
+    G4bool Check(const G4String& leader = "") const;
+    // Check only.  Silent unless error - then G4cerr.  Returns error.
+    // Provide leader, e.g., name of calling function.
 
-  G4bool Check(const G4String& leader = "") const;
-  // Check only.  Silent unless error - then G4cerr.  Returns error.
-  // Provide leader, e.g., name of calling function.
+    G4bool Standard(std::vector<G4AttValue>* standardValues,
+                    std::map<G4String, G4AttDef>* standardDefinitions) const;
+    // Places standard versions in provided containers and returns error.
 
-  G4bool Standard
-  (std::vector<G4AttValue>* standardValues,
-   std::map<G4String,G4AttDef>* standardDefinitions)
-    const;
-  // Places standard versions in provided containers and returns error.
+    friend std::ostream& operator<<(std::ostream&, const G4AttCheck&);
 
-  friend std::ostream& operator<< (std::ostream&, const G4AttCheck&);
+  private:
 
-private:
+    void
+    AddValuesAndDefs(std::vector<G4AttValue>* newValues,
+                     std::map<G4String, G4AttDef>* newDefinitions, const G4String& oldName,
+                     const G4String& name, const G4String& value, const G4String& extra,
+                     const G4String& description = "") const;  // Utility function for Standard.
 
-  void AddValuesAndDefs
-  (std::vector<G4AttValue>* newValues,
-   std::map<G4String,G4AttDef>* newDefinitions,
-   const G4String& oldName,
-   const G4String& name,
-   const G4String& value,
-   const G4String& extra,
-   const G4String& description = "") const;   // Utility function for Standard.
+    void Init();  // Initialises maps and sets
 
-  void Init();   // Initialises maps and sets
+    const std::vector<G4AttValue>* fpValues;
+    const std::map<G4String, G4AttDef>* fpDefinitions;
 
-  const std::vector<G4AttValue>* fpValues;
-  const std::map<G4String,G4AttDef>* fpDefinitions;
-
-  static G4ThreadLocal G4bool fFirst;  // Flag for initialising the following containers.
-  static G4ThreadLocal std::set<G4String> *fUnitCategories;  // Set of legal unit categories.
-  static G4ThreadLocal std::map<G4String,G4String> *fStandardUnits;  // Standard units.
-  static G4ThreadLocal std::set<G4String> *fCategories;      // Set of legal categories.
-  static G4ThreadLocal std::set<G4String> *fUnits;           // Set of legal units.
-  static G4ThreadLocal std::set<G4String> *fValueTypes;      // Set of legal value types.
+    static G4ThreadLocal G4bool fFirst;  // Flag for initialising the following containers.
+    static G4ThreadLocal std::set<G4String>* fUnitCategories;  // Set of legal unit categories.
+    static G4ThreadLocal std::map<G4String, G4String>* fStandardUnits;  // Standard units.
+    static G4ThreadLocal std::set<G4String>* fCategories;  // Set of legal categories.
+    static G4ThreadLocal std::set<G4String>* fUnits;  // Set of legal units.
+    static G4ThreadLocal std::set<G4String>* fValueTypes;  // Set of legal value types.
 };
 
-#endif //G4ATTCHECK_HH
+#endif  // G4ATTCHECK_HH

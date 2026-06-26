@@ -32,25 +32,27 @@
 //
 #include "G4ParticleHPIsoData.hh"
 
-#include "G4Neutron.hh"
-#include "G4ParticleHPDataUsed.hh"
-#include "G4ParticleHPManager.hh"
 #include "G4Alpha.hh"
 #include "G4Deuteron.hh"
 #include "G4He3.hh"
+#include "G4Neutron.hh"
+#include "G4ParticleHPDataUsed.hh"
+#include "G4ParticleHPManager.hh"
 #include "G4Proton.hh"
 #include "G4Triton.hh"
-//#include <stdlib.h>
+// #include <stdlib.h>
 #include <fstream>
 
 void G4ParticleHPIsoData::FillChannelData(G4ParticleHPVector* aBuffer)
 {
-  if (theChannelData != nullptr) {
-    G4Exception("G4ParticleHPIsoData::FillChannelData","hadhp02",
-                FatalException, "Inconsistency: the data uploaded next time");
+  if (theChannelData != nullptr)
+  {
+    G4Exception("G4ParticleHPIsoData::FillChannelData", "hadhp02", FatalException,
+                "Inconsistency: the data uploaded next time");
   }
   theChannelData = new G4ParticleHPVector;
-  for (G4int i = 0; i < aBuffer->GetVectorLength(); ++i) {
+  for (G4int i = 0; i < aBuffer->GetVectorLength(); ++i)
+  {
     theChannelData->SetPoint(i, aBuffer->GetPoint(i));
   }
   theChannelData->Hash();
@@ -75,16 +77,18 @@ G4bool G4ParticleHPIsoData::Init(G4int A, G4int Z, G4int M, G4double abun, const
     G4cout << "G4ParticleHPIsoData::Init = " << filename << " " << A << " " << Z << G4endl;
 #endif
 
-  if (Z == 1 && (aFile.GetZ() != Z || aFile.GetA() != A)) {
-    if (man->GetDEBUG())
-      G4cout << "Skipped = " << filename << " " << A << " " << Z << G4endl;
-    // 080901 TKDB No more necessary below protection, cross sections set to 0 
+  if (Z == 1 && (aFile.GetZ() != Z || aFile.GetA() != A))
+  {
+    if (man->GetDEBUG()) G4cout << "Skipped = " << filename << " " << A << " " << Z << G4endl;
+    // 080901 TKDB No more necessary below protection, cross sections set to 0
   }
-  if (!theChannel) { /*theChannel.close()*/
+  if (!theChannel)
+  { /*theChannel.close()*/
     return false;
   }
   // accommodating deficiencie of some compilers
-  if (theChannel.eof()) { /*theChannel.close()*/
+  if (theChannel.eof())
+  { /*theChannel.close()*/
     return false;
   }
   G4int dummy;
@@ -105,13 +109,15 @@ void G4ParticleHPIsoData::Init(G4int A, G4int Z, G4int M, G4double abun,
   G4String baseName = man->GetParticleHPPath(projectile);
 
   G4String dirName;
-  if (projectile == G4Neutron::Neutron()) {
+  if (projectile == G4Neutron::Neutron())
+  {
     dirName = baseName + "/Fission";
     if (Z > 87)  // TK Modifed for ENDF VII.0
     {
       Init(A, Z, M, abun, dirName, "/CrossSection");
     }
-    else {
+    else
+    {
       theChannelData = new G4ParticleHPVector;
     }
     theFissionData = theChannelData;

@@ -50,7 +50,7 @@
 // 
 
 #ifndef G4NUDEXNEUTRONCAPTUREMODEL_HH
-#define G4NUDEXNEUTRONCAPTUREMODEL_HH 1
+#define G4NUDEXNEUTRONCAPTUREMODEL_HH
 
 #include "globals.hh"
 #include "G4HadronicInteraction.hh"

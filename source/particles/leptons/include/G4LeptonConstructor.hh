@@ -26,15 +26,17 @@
 // --------------------------------------------------------------
 //	GEANT 4 class implementatLepton file
 //
-#ifndef G4LeptonConstructor_h
-#define G4LeptonConstructor_h 1
+#ifndef G4LEPTONCONSTRUCTOR_HH
+#define G4LEPTONCONSTRUCTOR_HH
 
 class G4LeptonConstructor
 {
   public:
+
     static void ConstructParticle();
 
   protected:
+
     static void ConstructELeptons();
     static void ConstructMuLeptons();
     static void ConstructTauLeptons();

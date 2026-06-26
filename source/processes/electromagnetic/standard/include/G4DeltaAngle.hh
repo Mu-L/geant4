@@ -32,55 +32,52 @@
 // File name:  G4DeltaAngle
 //
 // Author:     Vladimir Ivantchenko
-// 
+//
 // Creation date: 23 August 2013
 //
-// Modifications: 
+// Modifications:
 //
-// Class Description: 
+// Class Description:
 //
-// Delta-electron Angular Distribution Generation 
+// Delta-electron Angular Distribution Generation
 //
 // -------------------------------------------------------------------
 //
 
-#ifndef G4DeltaAngle_h
-#define G4DeltaAngle_h 1
+#ifndef G4DELTAANGLE_HH
+#define G4DELTAANGLE_HH
 
 #include "G4VEmAngularDistribution.hh"
+
 #include <vector>
 
 class G4ParticleDefinition;
 
 class G4DeltaAngle : public G4VEmAngularDistribution
 {
+  public:
 
-public:
+    explicit G4DeltaAngle(const G4String& name = "");
 
-  explicit G4DeltaAngle(const G4String& name = "");
+    ~G4DeltaAngle() override;
 
-  ~G4DeltaAngle() override;
+    G4ThreeVector& SampleDirection(const G4DynamicParticle* dp, G4double kinEnergyFinal, G4int Z,
+                                   const G4Material* mat = nullptr) final;
 
-  G4ThreeVector& SampleDirection(const G4DynamicParticle* dp,
-                                 G4double kinEnergyFinal, G4int Z,
-                                 const G4Material* mat = nullptr) final;
+    G4ThreeVector& SampleDirectionForShell(const G4DynamicParticle* dp, G4double kinEnergyFinal,
+                                           G4int Z, G4int shellIdx,
+                                           const G4Material* mat = nullptr) final;
 
-  G4ThreeVector& SampleDirectionForShell(const G4DynamicParticle* dp,
-                                         G4double kinEnergyFinal,
-                                         G4int Z, G4int shellIdx,
-                                         const G4Material* mat = nullptr) final;
+    // hide assignment operator
+    G4DeltaAngle& operator=(const G4DeltaAngle& right) = delete;
+    G4DeltaAngle(const G4DeltaAngle&) = delete;
 
-  // hide assignment operator 
-  G4DeltaAngle & operator=(const G4DeltaAngle &right) = delete;
-  G4DeltaAngle(const G4DeltaAngle&) = delete;
+  private:
 
-private:
-
-  const G4ParticleDefinition* fElectron;
-  G4int                 nprob;
-  G4int                 fShellIdx;
-  std::vector<G4double> prob;
+    const G4ParticleDefinition* fElectron;
+    G4int nprob;
+    G4int fShellIdx;
+    std::vector<G4double> prob;
 };
 
 #endif
-

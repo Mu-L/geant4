@@ -34,80 +34,76 @@ Carlo simulation, New J. Phys., vol. 21, 2019, pp. 113006 (1-10),
 https://doi.org/10.1088/1367-2630/ab4d8a
 */
 
-#ifndef G4JAEAPolarizedElasticScatteringModel_h
-#define G4JAEAPolarizedElasticScatteringModel_h 1
+#ifndef G4JAEAPOLARIZEDELASTICSCATTERINGMODEL_HH
+#define G4JAEAPOLARIZEDELASTICSCATTERINGMODEL_HH
 
-#include "G4VEmModel.hh"
+#include "G4DataVector.hh"
 #include "G4ParticleChangeForGamma.hh"
 #include "G4PhysicsFreeVector.hh"
 #include "G4ProductionCutsTable.hh"
-#include "G4DataVector.hh"
+#include "G4VEmModel.hh"
 
 class G4JAEAPolarizedElasticScatteringModel : public G4VEmModel
 {
-public:
-  explicit G4JAEAPolarizedElasticScatteringModel();
-  virtual ~G4JAEAPolarizedElasticScatteringModel();
+  public:
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    explicit G4JAEAPolarizedElasticScatteringModel();
+    virtual ~G4JAEAPolarizedElasticScatteringModel();
 
-  void InitialiseLocal(const G4ParticleDefinition*,
-		       G4VEmModel* masterModel) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel* masterModel) override;
 
-  G4double ComputeCrossSectionPerAtom(
-				      const G4ParticleDefinition*,
-                                      G4double kinEnergy,
-                                      G4double Z,
-                                      G4double A=0,
-                                      G4double cut=0,
-                                      G4double emax=DBL_MAX) override;
+    void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A = 0, G4double cut = 0,
+                                        G4double emax = DBL_MAX) override;
 
-  inline void SetLowEnergyThreshold(G4double val){lowEnergyLimit = val;};
-  inline void SetPolarizationSensitvity(G4bool,G4bool,G4bool);
-  
-  void SetDebugVerbosity(G4int val){verboseLevel = val;};
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  G4JAEAPolarizedElasticScatteringModel & operator=(const G4JAEAPolarizedElasticScatteringModel &right) = delete;
-  G4JAEAPolarizedElasticScatteringModel(const G4JAEAPolarizedElasticScatteringModel&) = delete;
+    inline void SetLowEnergyThreshold(G4double val) { lowEnergyLimit = val; };
+    inline void SetPolarizationSensitvity(G4bool, G4bool, G4bool);
 
-private:
-  void ReadData(std::size_t Z, const char* path = 0);
-  G4double GeneratePolarizedPhi(G4double Sigma_para,G4double Sigma_perp, G4double initial_Pol_Plane);
+    void SetDebugVerbosity(G4int val) { verboseLevel = val; };
 
-  static const G4int maxZ = 99;
-  static G4PhysicsFreeVector* dataCS[maxZ+1];
-  static G4DataVector* Polarized_ES_Data[maxZ+1];
-  G4double distribution[181];
-  G4double cdistribution[181];
-    
-  G4ParticleChangeForGamma* fParticleChange;
-  G4double lowEnergyLimit;
+    G4JAEAPolarizedElasticScatteringModel&
+    operator=(const G4JAEAPolarizedElasticScatteringModel& right) = delete;
+    G4JAEAPolarizedElasticScatteringModel(const G4JAEAPolarizedElasticScatteringModel&) = delete;
 
-  G4int verboseLevel;
-  
-  G4bool fLinearPolarizationSensitvity1;
-  G4bool fLinearPolarizationSensitvity2;
-  G4bool fCircularPolarizationSensitvity;
-  G4bool isInitialised;
+  private:
+
+    void ReadData(std::size_t Z, const char* path = 0);
+    G4double GeneratePolarizedPhi(G4double Sigma_para, G4double Sigma_perp,
+                                  G4double initial_Pol_Plane);
+
+    static const G4int maxZ = 99;
+    static G4PhysicsFreeVector* dataCS[maxZ + 1];
+    static G4DataVector* Polarized_ES_Data[maxZ + 1];
+    G4double distribution[181];
+    G4double cdistribution[181];
+
+    G4ParticleChangeForGamma* fParticleChange;
+    G4double lowEnergyLimit;
+
+    G4int verboseLevel;
+
+    G4bool fLinearPolarizationSensitvity1;
+    G4bool fLinearPolarizationSensitvity2;
+    G4bool fCircularPolarizationSensitvity;
+    G4bool isInitialised;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 inline void G4JAEAPolarizedElasticScatteringModel::SetPolarizationSensitvity(G4bool linear1,
-									     G4bool linear2, 
-									     G4bool circular)
+                                                                             G4bool linear2,
+                                                                             G4bool circular)
 {
-  fLinearPolarizationSensitvity1=linear1;
-  fLinearPolarizationSensitvity2=linear2;
-  fCircularPolarizationSensitvity=circular;
+  fLinearPolarizationSensitvity1 = linear1;
+  fLinearPolarizationSensitvity2 = linear2;
+  fCircularPolarizationSensitvity = circular;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

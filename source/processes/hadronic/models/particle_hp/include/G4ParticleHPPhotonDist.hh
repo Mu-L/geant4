@@ -34,8 +34,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPPhotonDist_h
-#define G4ParticleHPPhotonDist_h 1
+#ifndef G4PARTICLEHPPHOTONDIST_HH
+#define G4PARTICLEHPPHOTONDIST_HH
 
 #include "G4Cache.hh"
 #include "G4Gamma.hh"
@@ -56,6 +56,7 @@
 class G4ParticleHPPhotonDist
 {
   public:
+
     G4ParticleHPPhotonDist()
     {
       disType = nullptr;
@@ -95,15 +96,18 @@ class G4ParticleHPPhotonDist
       delete[] distribution;
       delete[] probs;
 
-      if (theLegendre != nullptr) {
+      if (theLegendre != nullptr)
+      {
         for (G4int i = 0; i < (nDiscrete2 - nIso); i++)
           if (theLegendre[i] != nullptr) delete[] theLegendre[i];
 
         delete[] theLegendre;
       }
 
-      if (partials != nullptr) {
-        for (G4int i = 0; i < nPartials; i++) {
+      if (partials != nullptr)
+      {
+        for (G4int i = 0; i < nPartials; i++)
+        {
           delete partials[i];
         }
 
@@ -133,6 +137,7 @@ class G4ParticleHPPhotonDist
     inline G4double GetLevelEnergy() { return theBaseEnergy; }
 
   private:
+
     G4int repFlag{0};  // representation as multiplicities or transition probability arrays.
     G4double targetMass{0.0};
 

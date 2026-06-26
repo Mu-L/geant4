@@ -23,22 +23,23 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// V. Ivanchenko September 2023 
-//               
-// G4CrossSectionHP is a generic class implementing 
+// V. Ivanchenko September 2023
+//
+// G4CrossSectionHP is a generic class implementing
 // cross sections for neutrons, protons and light ions
 // It is an alternative to code developed by J.P. Wellisch & T.Koi
 //
 
-#ifndef G4CrossSectionHP_h
-#define G4CrossSectionHP_h 1
+#ifndef G4CROSSSECTIONHP_HH
+#define G4CROSSSECTIONHP_HH
 
+#include "G4ElementData.hh"
+#include "G4LorentzVector.hh"
+#include "G4PhysicsVector.hh"
+#include "G4ThreeVector.hh"
 #include "G4VCrossSectionDataSet.hh"
 #include "globals.hh"
-#include "G4ElementData.hh"
-#include "G4PhysicsVector.hh"
-#include "G4LorentzVector.hh"
-#include "G4ThreeVector.hh"
+
 #include <vector>
 
 class G4DynamicParticle;
@@ -50,35 +51,29 @@ class G4Material;
 class G4CrossSectionHP : public G4VCrossSectionDataSet
 {
   public:
-    explicit G4CrossSectionHP(const G4ParticleDefinition*,
-                              const G4String& nameData,
-                              const G4String& nameDir, G4double emaxHP,
-                              G4int zmin, G4int zmax);
+
+    explicit G4CrossSectionHP(const G4ParticleDefinition*, const G4String& nameData,
+                              const G4String& nameDir, G4double emaxHP, G4int zmin, G4int zmax);
 
     ~G4CrossSectionHP() override = default;
 
-    G4bool IsIsoApplicable(const G4DynamicParticle*, G4int Z, G4int A,
-                           const G4Element*, const G4Material*) override;
+    G4bool IsIsoApplicable(const G4DynamicParticle*, G4int Z, G4int A, const G4Element*,
+                           const G4Material*) override;
 
-    G4double GetIsoCrossSection(const G4DynamicParticle*, G4int Z, G4int A,
-                                const G4Isotope*, const G4Element*,
-                                const G4Material*) override;
+    G4double GetIsoCrossSection(const G4DynamicParticle*, G4int Z, G4int A, const G4Isotope*,
+                                const G4Element*, const G4Material*) override;
 
-    G4double ComputeIsoCrossSection(G4double kinEnergy, G4double loge,
-                                    const G4ParticleDefinition*,
-                                    G4int Z, G4int A,
-                                    const G4Isotope* iso,
-                                    const G4Element* elm,
+    G4double ComputeIsoCrossSection(G4double kinEnergy, G4double loge, const G4ParticleDefinition*,
+                                    G4int Z, G4int A, const G4Isotope* iso, const G4Element* elm,
                                     const G4Material* mat) override;
 
-    const G4Isotope* SelectIsotope(const G4Element*, G4double kinEnergy,
-                                   G4double logE) override;
+    const G4Isotope* SelectIsotope(const G4Element*, G4double kinEnergy, G4double logE) override;
 
     void BuildPhysicsTable(const G4ParticleDefinition&) override;
 
     void DumpPhysicsTable(const G4ParticleDefinition&) override;
 
-    G4CrossSectionHP & operator=(const G4CrossSectionHP &right) = delete;
+    G4CrossSectionHP& operator=(const G4CrossSectionHP& right) = delete;
     G4CrossSectionHP(const G4CrossSectionHP&) = delete;
 
   protected:
@@ -93,8 +88,7 @@ class G4CrossSectionHP : public G4VCrossSectionDataSet
 
     void PrepareCache(const G4Material*);
 
-    G4double IsoCrossSection(const G4double kinE, const G4double loge,
-			     const G4int Z, const G4int A,
+    G4double IsoCrossSection(const G4double kinE, const G4double loge, const G4int Z, const G4int A,
                              const G4double temperature);
 
     inline G4double GetCrossSection(const G4int Z, const G4int A);
@@ -121,7 +115,7 @@ class G4CrossSectionHP : public G4VCrossSectionDataSet
 
     // cache
     const G4Material* fCurrentMat{nullptr};
-    std::vector<std::pair<G4int, G4int> > fZA;
+    std::vector<std::pair<G4int, G4int>> fZA;
     std::vector<G4double> fIsoXS;
     std::vector<G4double> fTemp;
 
@@ -130,12 +124,13 @@ class G4CrossSectionHP : public G4VCrossSectionDataSet
     G4ElementData* fData{nullptr};
 };
 
-inline G4double
-G4CrossSectionHP::GetCrossSection(const G4int Z, const G4int A)
+inline G4double G4CrossSectionHP::GetCrossSection(const G4int Z, const G4int A)
 {
   G4double res = 0.0;
-  for (std::size_t i=0; i<fZA.size(); ++i) {
-    if (Z == fZA[i].first && A == fZA[i].second) {
+  for (std::size_t i = 0; i < fZA.size(); ++i)
+  {
+    if (Z == fZA[i].first && A == fZA[i].second)
+    {
       res = fIsoXS[i];
       break;
     }
@@ -146,8 +141,10 @@ G4CrossSectionHP::GetCrossSection(const G4int Z, const G4int A)
 inline G4bool G4CrossSectionHP::CheckCache(const G4int Z)
 {
   G4bool res = false;
-  for (auto const & p : fZA) {
-    if (Z == p.first) {
+  for (auto const& p : fZA)
+  {
+    if (Z == p.first)
+    {
       res = true;
       break;
     }
@@ -156,13 +153,16 @@ inline G4bool G4CrossSectionHP::CheckCache(const G4int Z)
 }
 
 inline G4double G4CrossSectionHP::GetMaxHPEnergy() const
-{ 
+{
   return emax;
 }
 
 inline void G4CrossSectionHP::SetBinSearch(G4int n)
 {
-  if (n > 0) { binSearch = n; }
+  if (n > 0)
+  {
+    binSearch = n;
+  }
 }
 
 #endif

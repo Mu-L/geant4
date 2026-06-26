@@ -76,9 +76,8 @@ G4ParticleHPElasticFS::G4ParticleHPElasticFS()
   frameFlag = 0;
 }
 
-void G4ParticleHPElasticFS::Init(G4double A, G4double Z, G4int M,
-                                 const G4String& dirName, const G4String&,
-                                 G4ParticleDefinition*)
+void G4ParticleHPElasticFS::Init(G4double A, G4double Z, G4int M, const G4String& dirName,
+                                 const G4String&, G4ParticleDefinition*)
 {
   G4String tString = "/FS";
   G4bool dbool = true;
@@ -88,9 +87,10 @@ void G4ParticleHPElasticFS::Init(G4double A, G4double Z, G4int M,
   const G4String& filename = aFile.GetName();
   SetAZMs(aFile);
 
-  InitializeScatteringKernelParameters(); // Initialize DBRC variables
+  InitializeScatteringKernelParameters();  // Initialize DBRC variables
 
-  if (!dbool) {
+  if (!dbool)
+  {
     hasAnyData = false;
     hasFSData = false;
     hasXsec = false;
@@ -103,7 +103,8 @@ void G4ParticleHPElasticFS::Init(G4double A, G4double Z, G4int M,
   // 130205 END
   theData >> repFlag >> targetMass >> frameFlag;
 
-  if (repFlag == 1) {
+  if (repFlag == 1)
+  {
     G4int nEnergy;
     theData >> nEnergy;
     theCoefficients = new G4ParticleHPLegendreStore(nEnergy);
@@ -111,34 +112,39 @@ void G4ParticleHPElasticFS::Init(G4double A, G4double Z, G4int M,
     G4double temp, energy;
     G4int tempdep, nLegendre;
     G4int i, ii;
-    for (i = 0; i < nEnergy; i++) {
+    for (i = 0; i < nEnergy; i++)
+    {
       theData >> temp >> energy >> tempdep >> nLegendre;
       energy *= eV;
       theCoefficients->Init(i, energy, nLegendre);
       theCoefficients->SetTemperature(i, temp);
       G4double coeff = 0;
-      for (ii = 0; ii < nLegendre; ii++) {
+      for (ii = 0; ii < nLegendre; ii++)
+      {
         // load legendre coefficients.
         theData >> coeff;
         theCoefficients->SetCoeff(i, ii + 1, coeff);  // @@@HPW@@@
       }
     }
   }
-  else if (repFlag == 2) {
+  else if (repFlag == 2)
+  {
     G4int nEnergy;
     theData >> nEnergy;
     theProbArray = new G4ParticleHPPartial(nEnergy, nEnergy);
     theProbArray->InitInterpolation(theData);
     G4double temp, energy;
     G4int tempdep, nPoints;
-    for (G4int i = 0; i < nEnergy; i++) {
+    for (G4int i = 0; i < nEnergy; i++)
+    {
       theData >> temp >> energy >> tempdep >> nPoints;
       energy *= eV;
       theProbArray->InitInterpolation(i, theData);
       theProbArray->SetT(i, temp);
       theProbArray->SetX(i, energy);
       G4double prob, costh;
-      for (G4int ii = 0; ii < nPoints; ii++) {
+      for (G4int ii = 0; ii < nPoints; ii++)
+      {
         // fill probability arrays.
         theData >> costh >> prob;
         theProbArray->SetX(i, ii, costh);
@@ -147,10 +153,12 @@ void G4ParticleHPElasticFS::Init(G4double A, G4double Z, G4int M,
       theProbArray->DoneSetXY(i);
     }
   }
-  else if (repFlag == 3) {
+  else if (repFlag == 3)
+  {
     G4int nEnergy_Legendre;
     theData >> nEnergy_Legendre;
-    if (nEnergy_Legendre <= 0) {
+    if (nEnergy_Legendre <= 0)
+    {
       std::stringstream iss;
       iss << "G4ParticleHPElasticFS::Init Data Error repFlag is 3 but nEnergy_Legendre <= 0";
       iss << "Z, A and M of problematic file is " << theNDLDataZ << ", " << theNDLDataA << " and "
@@ -162,13 +170,15 @@ void G4ParticleHPElasticFS::Init(G4double A, G4double Z, G4int M,
     G4double temp, energy;
     G4int tempdep, nLegendre;
 
-    for (G4int i = 0; i < nEnergy_Legendre; i++) {
+    for (G4int i = 0; i < nEnergy_Legendre; i++)
+    {
       theData >> temp >> energy >> tempdep >> nLegendre;
       energy *= eV;
       theCoefficients->Init(i, energy, nLegendre);
       theCoefficients->SetTemperature(i, temp);
       G4double coeff = 0;
-      for (G4int ii = 0; ii < nLegendre; ii++) {
+      for (G4int ii = 0; ii < nLegendre; ii++)
+      {
         // load legendre coefficients.
         theData >> coeff;
         theCoefficients->SetCoeff(i, ii + 1, coeff);  // @@@HPW@@@
@@ -182,7 +192,8 @@ void G4ParticleHPElasticFS::Init(G4double A, G4double Z, G4int M,
     theProbArray = new G4ParticleHPPartial(nEnergy_Prob, nEnergy_Prob);
     theProbArray->InitInterpolation(theData);
     G4int nPoints;
-    for (G4int i = 0; i < nEnergy_Prob; i++) {
+    for (G4int i = 0; i < nEnergy_Prob; i++)
+    {
       theData >> temp >> energy >> tempdep >> nPoints;
       energy *= eV;
 
@@ -196,7 +207,8 @@ void G4ParticleHPElasticFS::Init(G4double A, G4double Z, G4int M,
       theProbArray->SetT(i, temp);
       theProbArray->SetX(i, energy);
       G4double prob, costh;
-      for (G4int ii = 0; ii < nPoints; ii++) {
+      for (G4int ii = 0; ii < nPoints; ii++)
+      {
         // fill probability arrays.
         theData >> costh >> prob;
         theProbArray->SetX(i, ii, costh);
@@ -205,10 +217,12 @@ void G4ParticleHPElasticFS::Init(G4double A, G4double Z, G4int M,
       theProbArray->DoneSetXY(i);
     }
   }
-  else if (repFlag == 0) {
+  else if (repFlag == 0)
+  {
     theData >> frameFlag;
   }
-  else {
+  else
+  {
     G4cout << "unusable number for repFlag: repFlag=" << repFlag << G4endl;
     throw G4HadronicException(__FILE__, __LINE__,
                               "G4ParticleHPElasticFS::Init -- unusable number for repFlag");
@@ -255,30 +269,38 @@ G4HadFinalState* G4ParticleHPElasticFS::ApplyYourself(const G4HadProjectile& the
   eKinetic = boosted.GetKineticEnergy();  // get kinetic energy for scattering
   G4double cosTh = -2;
 
-  if (repFlag == 1) {
+  if (repFlag == 1)
+  {
     cosTh = theCoefficients->SampleElastic(eKinetic);
   }
-  else if (repFlag == 2) {
+  else if (repFlag == 2)
+  {
     cosTh = theProbArray->Sample(eKinetic);
   }
-  else if (repFlag == 3) {
-    if (eKinetic <= tE_of_repFlag3) {
+  else if (repFlag == 3)
+  {
+    if (eKinetic <= tE_of_repFlag3)
+    {
       cosTh = theCoefficients->SampleElastic(eKinetic);
     }
-    else {
+    else
+    {
       cosTh = theProbArray->Sample(eKinetic);
     }
   }
-  else if (repFlag == 0) {
+  else if (repFlag == 0)
+  {
     cosTh = 2. * G4UniformRand() - 1.;
   }
-  else {
+  else
+  {
     G4cout << "Unusable number for repFlag: repFlag=" << repFlag << G4endl;
     throw G4HadronicException(__FILE__, __LINE__,
                               "G4ParticleHPElasticFS::Init -- unusable number for repFlag");
   }
 
-  if (cosTh < -1.1) {
+  if (cosTh < -1.1)
+  {
     return nullptr;
   }
 
@@ -288,7 +310,8 @@ G4HadFinalState* G4ParticleHPElasticFS::ApplyYourself(const G4HadProjectile& the
   G4double theta = std::acos(cosTh);
   G4double sinth = std::sin(theta);
 
-  if (frameFlag == 1) {
+  if (frameFlag == 1)
+  {
     // Projectile scattering values cosTh are in target rest frame
     // In this frame, do relativistic calculation of scattered projectile and
     // target 4-momenta
@@ -337,7 +360,8 @@ G4HadFinalState* G4ParticleHPElasticFS::ApplyYourself(const G4HadProjectile& the
     if (theTarget.GetKineticEnergy() <= 0)
       theTarget.SetTotalEnergy(theTarget.GetMass() * (1. + G4Pow::GetInstance()->powA(10, -15.65)));
   }
-  else if (frameFlag == 2) {
+  else if (frameFlag == 2)
+  {
     // Projectile scattering values cosTh taken from center of mass tabulation
 
     G4LorentzVector proj(nEnergy, the3Neutron);
@@ -371,17 +395,20 @@ G4HadFinalState* G4ParticleHPElasticFS::ApplyYourself(const G4HadProjectile& the
     theTarget.SetTotalEnergy(targ.e());
 
     // 080904 Add Protection for very low energy (1e-6eV) scattering
-    if (theNeutron.GetKineticEnergy() <= 0) {
+    if (theNeutron.GetKineticEnergy() <= 0)
+    {
       theNeutron.SetTotalEnergy(theNeutron.GetMass()
                                 * (1. + G4Pow::GetInstance()->powA(10, -15.65)));
     }
 
     // 080904 Add Protection for very low energy (1e-6eV) scattering
-    if (theTarget.GetKineticEnergy() <= 0) {
+    if (theTarget.GetKineticEnergy() <= 0)
+    {
       theTarget.SetTotalEnergy(theTarget.GetMass() * (1. + G4Pow::GetInstance()->powA(10, -15.65)));
     }
   }
-  else {
+  else
+  {
     G4cout << "Value of frameFlag (1=LAB, 2=CMS): " << frameFlag;
     throw G4HadronicException(__FILE__, __LINE__,
                               "G4ParticleHPElasticFS::ApplyYourSelf frameflag incorrect");
@@ -430,7 +457,8 @@ G4ReactionProduct G4ParticleHPElasticFS::GetBiasedThermalNucleus(const G4double 
 
   // Set threshold for SVT algorithm
   G4double E_threshold = svtEmax;
-  if (svtEmax == -1.) {
+  if (svtEmax == -1.)
+  {
     // If E_neutron <= 400*kB*T (400 is a common value encounter in MC neutron transport code)
     // then apply the Sampling ot the Velocity of the Target (SVT) method;
     // else consider the target nucleus being without motion
@@ -438,7 +466,8 @@ G4ReactionProduct G4ParticleHPElasticFS::GetBiasedThermalNucleus(const G4double 
   }
 
   // If DBRC is enabled and the nucleus is heavy enough, then update the energy threshold
-  if (dbrcUse && aMass >= dbrcAmin) {
+  if (dbrcUse && aMass >= dbrcAmin)
+  {
     E_threshold = std::max(svtEmax, dbrcEmax);
   }
 
@@ -447,7 +476,8 @@ G4ReactionProduct G4ParticleHPElasticFS::GetBiasedThermalNucleus(const G4double 
   G4bool dbrcIsOn = dbrcUse && E_neutron >= dbrcEmin && aMass >= dbrcAmin && E_neutron <= dbrcEmax;
 
   G4Nucleus aNucleus;
-  if (E_neutron > E_threshold || !dbrcIsOn) {
+  if (E_neutron > E_threshold || !dbrcIsOn)
+  {
     // Apply only the SVT algorithm, not the DBRC one
     return aNucleus.GetBiasedThermalNucleus(targetMass, aVelocity, temp);
   }
@@ -486,14 +516,18 @@ G4ReactionProduct G4ParticleHPElasticFS::GetBiasedThermalNucleus(const G4double 
     0.5 * G4Neutron::Neutron()->GetPDGMass() * (vN_norm + 4. / beta) * (vN_norm + 4. / beta);
   G4double xsMax = xsForDBRC->GetMaxY(eMin, eMax);
 
-  do {
-    do {
+  do
+  {
+    do
+    {
       // Sample the target velocity vT in the laboratory frame
-      if (G4UniformRand() < cdf0) {
+      if (G4UniformRand() < cdf0)
+      {
         // Sample in C45 from https://laws.lanl.gov/vhosts/mcnp.lanl.gov/pdf_files/la-9721.pdf
         x2 = -std::log(G4UniformRand() * G4UniformRand());
       }
-      else {
+      else
+      {
         // Sample in C61 from https://laws.lanl.gov/vhosts/mcnp.lanl.gov/pdf_files/la-9721.pdf
         G4double ampl = std::cos(CLHEP::pi / 2.0 * G4UniformRand());
         x2 = -std::log(G4UniformRand()) - std::log(G4UniformRand()) * ampl * ampl;

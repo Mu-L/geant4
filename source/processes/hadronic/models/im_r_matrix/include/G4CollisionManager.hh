@@ -23,47 +23,48 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4CollisionManager_hh
-#define G4CollisionManager_hh
+#ifndef G4COLLISIONMANAGER_HH
+#define G4COLLISIONMANAGER_HH
 
-#include "globals.hh"
-#include "G4ListOfCollisions.hh"
 #include "G4KineticTrackVector.hh"
+#include "G4ListOfCollisions.hh"
+#include "globals.hh"
 
 class G4KineticTrack;
 class G4CollisionInitialState;
 
 class G4CollisionManager
 {
-public:
-  G4CollisionManager();
-  ~G4CollisionManager();
+  public:
 
-  G4int Entries();
-  void AddCollision(G4double time, G4KineticTrack * proj,
-		    G4KineticTrack * target = nullptr);
-  void AddCollision(G4CollisionInitialState * collision)
-  {
-    theCollisionList->push_back(collision);
-  }
-  void RemoveCollision(G4CollisionInitialState * collision);
-  void RemoveTracksCollisions(G4KineticTrackVector * ktv);
-  void ClearAndDestroy();
-  G4CollisionInitialState * GetNextCollision();
-  void Print();
+    G4CollisionManager();
+    ~G4CollisionManager();
 
-private:
-  G4CollisionManager(const G4CollisionManager &);
-  G4CollisionManager & operator= (const G4CollisionManager &);
+    G4int Entries();
+    void AddCollision(G4double time, G4KineticTrack* proj, G4KineticTrack* target = nullptr);
+    void AddCollision(G4CollisionInitialState* collision)
+    {
+      theCollisionList->push_back(collision);
+    }
+    void RemoveCollision(G4CollisionInitialState* collision);
+    void RemoveTracksCollisions(G4KineticTrackVector* ktv);
+    void ClearAndDestroy();
+    G4CollisionInitialState* GetNextCollision();
+    void Print();
 
-private:
-  G4ListOfCollisions * theCollisionList;   //was sorted (by time) vector...
+  private:
+
+    G4CollisionManager(const G4CollisionManager&);
+    G4CollisionManager& operator=(const G4CollisionManager&);
+
+  private:
+
+    G4ListOfCollisions* theCollisionList;  // was sorted (by time) vector...
 };
 
 inline G4int G4CollisionManager::Entries()
 {
   return (G4int)theCollisionList->size();
 }
-
 
 #endif

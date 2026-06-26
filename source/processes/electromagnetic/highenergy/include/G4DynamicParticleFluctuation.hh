@@ -40,47 +40,41 @@
 // Class Description:
 //
 // Implementation of energy loss fluctuations using G4DynamicParticle
-// information and without any access to G4ParticleDefinition. 
+// information and without any access to G4ParticleDefinition.
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4DynamicParticleFluctuation_h
-#define G4DynamicParticleFluctuation_h 1
+#ifndef G4DYNAMICPARTICLEFLUCTUATION_HH
+#define G4DYNAMICPARTICLEFLUCTUATION_HH
 
-#include "G4UniversalFluctuation.hh"
 #include "G4DynamicParticle.hh"
+#include "G4UniversalFluctuation.hh"
 
 class G4DynamicParticleFluctuation : public G4UniversalFluctuation
 {
+  public:
 
-public:
+    G4DynamicParticleFluctuation(const G4String& nam = "dynPartFluc");
 
-  G4DynamicParticleFluctuation(const G4String& nam = "dynPartFluc");
+    ~G4DynamicParticleFluctuation() override = default;
 
-  ~G4DynamicParticleFluctuation() override = default;
+    G4double SampleFluctuations(const G4MaterialCutsCouple*, const G4DynamicParticle*,
+                                const G4double, const G4double, const G4double,
+                                const G4double) override;
 
-  G4double SampleFluctuations(const G4MaterialCutsCouple*,
-			      const G4DynamicParticle*,
-                              const G4double, const G4double,
-			      const G4double, const G4double) override;
+    G4double Dispersion(const G4Material*, const G4DynamicParticle*, const G4double, const G4double,
+                        const G4double) override;
 
-  G4double Dispersion(const G4Material*,
-		      const G4DynamicParticle*,
-                      const G4double, const G4double,
-                      const G4double) override;
+    // hide assignment operator
+    G4DynamicParticleFluctuation& operator=(const G4DynamicParticleFluctuation& right) = delete;
+    G4DynamicParticleFluctuation(const G4DynamicParticleFluctuation&) = delete;
 
-  // hide assignment operator
-  G4DynamicParticleFluctuation & operator=
-  (const G4DynamicParticleFluctuation &right) = delete;
-  G4DynamicParticleFluctuation(const G4DynamicParticleFluctuation&) = delete;
+  private:
 
-private:
-
-  void InitialiseLocal(const G4DynamicParticle*);
+    void InitialiseLocal(const G4DynamicParticle*);
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

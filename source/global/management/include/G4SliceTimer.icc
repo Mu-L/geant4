@@ -30,7 +30,7 @@
 
 inline void G4SliceTimer::Start()
 {
-  fValidTimes    = false;
+  fValidTimes = false;
   fStartRealTime = times(&fStartTimes);
 }
 
@@ -45,9 +45,12 @@ inline void G4SliceTimer::Stop()
 
 inline void G4SliceTimer::Clear()
 {
-  fRealElapsed   = 0.;
+  fRealElapsed = 0.;
   fSystemElapsed = 0.;
-  fUserElapsed   = 0.;
+  fUserElapsed = 0.;
 }
 
-inline G4bool G4SliceTimer::IsValid() const { return fValidTimes; }
+inline G4bool G4SliceTimer::IsValid() const
+{
+  return fValidTimes;
+}

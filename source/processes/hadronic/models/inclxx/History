@@ -6,7 +6,19 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-02-20 Alberto Ribon (hadr-inclxx-V11-03-04)
+## 2026-06-07 Gabriele Cosmo (hadr-inclxx-V11-04-03)
+- In G4INCLKinematicsUtils, added protections in function momentumInCM() to
+  avoid potential square root of negative number leading to observed FPE in
+  system testing.
+- Avoid unnecessary use of generic pow() in momentumInCM() functions.
+
+## 2026-05-24 Ben Morgan (hadr-inclxx-V11-04-02)
+- Add .clang-format file to explicitly exclude inclxx code from formatting.
+  - As code may be imported from upstream, we want to retain formatting to
+    ensure future imports are clear.
+  - To be reviewed in future once process clarified.
+
+## 2026-02-20 Alberto Ribon (hadr-inclxx-V11-04-01)
 Two independent bug-fixes provided by Jean-Christophe David and Jason Hirtz :
 - G4INCLNNToNSK2piChannel.cc : replaced "if(iso==-2)" with "else if(iso==-2)".
   (The problem was reported by Julia Yarba).
@@ -14,7 +26,7 @@ Two independent bug-fixes provided by Jean-Christophe David and Jason Hirtz :
   concerning the cross sections N Nbar -> N Nbar + 2 pions.
   The fix consists in exchanging the lines number 509 and 513.
 
-## 2025-12-09 Gabriele Cosmo
+## 2025-12-09 Gabriele Cosmo (hadr-inclxx-V11-04-00)
 - Fixed reported Coverity defects for use of std::move() in G4INCLCascade.cc
   and G4INCLNbarAtrestEntryChannel.cc. Use G4 types consistently.
 

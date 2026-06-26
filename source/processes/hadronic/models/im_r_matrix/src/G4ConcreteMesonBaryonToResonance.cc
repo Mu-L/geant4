@@ -24,64 +24,73 @@
 // ********************************************************************
 //
 
-#include "globals.hh"
-#include "G4XAnnihilationChannel.hh"
 #include "G4ConcreteMesonBaryonToResonance.hh"
 
-G4BaryonWidth*           G4ConcreteMesonBaryonToResonance::baryonWidth = nullptr;
-G4BaryonPartialWidth*    G4ConcreteMesonBaryonToResonance::baryonPartialWidth = nullptr;
+#include "G4XAnnihilationChannel.hh"
+#include "globals.hh"
+
+G4BaryonWidth* G4ConcreteMesonBaryonToResonance::baryonWidth = nullptr;
+G4BaryonPartialWidth* G4ConcreteMesonBaryonToResonance::baryonPartialWidth = nullptr;
 G4ParticleTypeConverter* G4ConcreteMesonBaryonToResonance::particleTypeConverter = nullptr;
 
 #ifdef G4MULTITHREADED
 G4Mutex G4ConcreteMesonBaryonToResonance::concreteMesonBaryonToResonanceMutex = G4MUTEX_INITIALIZER;
 #endif
 
-G4BaryonWidth & G4ConcreteMesonBaryonToResonance::theBaryonWidth()
+G4BaryonWidth& G4ConcreteMesonBaryonToResonance::theBaryonWidth()
 {
-  if(!baryonWidth) { G4ConcreteMesonBaryonToResonance::InitialisePointers(); }
+  if (!baryonWidth)
+  {
+    G4ConcreteMesonBaryonToResonance::InitialisePointers();
+  }
   return *baryonWidth;
 }
 
-G4BaryonPartialWidth & G4ConcreteMesonBaryonToResonance::theBaryonPartialWidth()
+G4BaryonPartialWidth& G4ConcreteMesonBaryonToResonance::theBaryonPartialWidth()
 {
-  if(!baryonPartialWidth) { G4ConcreteMesonBaryonToResonance::InitialisePointers(); }
+  if (!baryonPartialWidth)
+  {
+    G4ConcreteMesonBaryonToResonance::InitialisePointers();
+  }
   return *baryonPartialWidth;
 }
 
-G4ParticleTypeConverter & G4ConcreteMesonBaryonToResonance::myConv() 
+G4ParticleTypeConverter& G4ConcreteMesonBaryonToResonance::myConv()
 {
-  if(!particleTypeConverter) { G4ConcreteMesonBaryonToResonance::InitialisePointers(); }
+  if (!particleTypeConverter)
+  {
+    G4ConcreteMesonBaryonToResonance::InitialisePointers();
+  }
   return *particleTypeConverter;
 }
 
-G4ConcreteMesonBaryonToResonance::G4ConcreteMesonBaryonToResonance(const G4ParticleDefinition* aPrimary,
-								   const G4ParticleDefinition* bPrimary,
-								   const G4ParticleDefinition* aSecondary,
-								   const G4String& partWidthLabel)
+G4ConcreteMesonBaryonToResonance::G4ConcreteMesonBaryonToResonance(
+  const G4ParticleDefinition* aPrimary, const G4ParticleDefinition* bPrimary,
+  const G4ParticleDefinition* aSecondary, const G4String& partWidthLabel)
   : thePrimary1(aPrimary), thePrimary2(bPrimary), theSecondary(aSecondary)
 {
-  crossSectionSource = new G4XAnnihilationChannel(aSecondary, 
-						  theBaryonWidth(),
-						  theBaryonPartialWidth(),
-						  partWidthLabel);
+  crossSectionSource = new G4XAnnihilationChannel(aSecondary, theBaryonWidth(),
+                                                  theBaryonPartialWidth(), partWidthLabel);
   InitialisePointers();
 }
 
 G4ConcreteMesonBaryonToResonance::~G4ConcreteMesonBaryonToResonance()
-{ 
+{
   delete crossSectionSource;
 }
 
 void G4ConcreteMesonBaryonToResonance::InitialisePointers()
 {
-  if(!baryonWidth) {
+  if (!baryonWidth)
+  {
 #ifdef G4MULTITHREADED
     G4MUTEXLOCK(&concreteMesonBaryonToResonanceMutex);
-    if (!baryonWidth)  { 
+    if (!baryonWidth)
+    {
 #endif
       baryonWidth = new G4BaryonWidth();
       baryonPartialWidth = new G4BaryonPartialWidth();
-      particleTypeConverter = new G4ParticleTypeConverter(); 
+      particleTypeConverter = new G4ParticleTypeConverter();
 #ifdef G4MULTITHREADED
     }
     G4MUTEXUNLOCK(&concreteMesonBaryonToResonanceMutex);
@@ -89,25 +98,32 @@ void G4ConcreteMesonBaryonToResonance::InitialisePointers()
   }
 }
 
-G4bool G4ConcreteMesonBaryonToResonance::IsInCharge(const G4KineticTrack& trk1, 
-						    const G4KineticTrack& trk2) const
+G4bool G4ConcreteMesonBaryonToResonance::IsInCharge(const G4KineticTrack& trk1,
+                                                    const G4KineticTrack& trk2) const
 {
-  if (myConv().GetGenericType(trk1)==myConv().GetGenericType(thePrimary1) && 
-      myConv().GetGenericType(trk2)==myConv().GetGenericType(thePrimary2)) return true;
-  if (myConv().GetGenericType(trk1)==myConv().GetGenericType(thePrimary2) && 
-      myConv().GetGenericType(trk2)==myConv().GetGenericType(thePrimary1)) return true;
+  if (myConv().GetGenericType(trk1) == myConv().GetGenericType(thePrimary1)
+      && myConv().GetGenericType(trk2) == myConv().GetGenericType(thePrimary2))
+    return true;
+  if (myConv().GetGenericType(trk1) == myConv().GetGenericType(thePrimary2)
+      && myConv().GetGenericType(trk2) == myConv().GetGenericType(thePrimary1))
+    return true;
   return false;
 }
 
-const G4ParticleDefinition* G4ConcreteMesonBaryonToResonance::GetOutgoingParticle(const G4KineticTrack& trk1, 
-										  const G4KineticTrack& trk2) const
+const G4ParticleDefinition*
+G4ConcreteMesonBaryonToResonance::GetOutgoingParticle(const G4KineticTrack& trk1,
+                                                      const G4KineticTrack& trk2) const
 {
-  G4int secondaryIso3 = trk1.GetDefinition()->GetPDGiIsospin3() + trk2.GetDefinition()->GetPDGiIsospin3();
+  G4int secondaryIso3 =
+    trk1.GetDefinition()->GetPDGiIsospin3() + trk2.GetDefinition()->GetPDGiIsospin3();
   const G4ParticleDefinition* state;
-  if ( (state = myConv().FindIso3State(myConv().GetGenericType(theSecondary), secondaryIso3)) == NULL) 
+  if ((state = myConv().FindIso3State(myConv().GetGenericType(theSecondary), secondaryIso3))
+      == NULL)
   {
-    G4cerr << "for "<<static_cast<G4int>(myConv().GetGenericType(theSecondary))<<" "<<secondaryIso3<<G4endl;
-    throw G4HadronicException(__FILE__, __LINE__, "G4ConcreteMesonBaryonToResonance: Can't find iso3 state!");
+    G4cerr << "for " << static_cast<G4int>(myConv().GetGenericType(theSecondary)) << " "
+           << secondaryIso3 << G4endl;
+    throw G4HadronicException(__FILE__, __LINE__,
+                              "G4ConcreteMesonBaryonToResonance: Can't find iso3 state!");
   }
   return state;
 }

@@ -38,12 +38,13 @@
 #ifndef G4FIELDTRACK_HH
 #define G4FIELDTRACK_HH
 
-#include "G4ThreeVector.hh"
 #include "G4ChargeState.hh"
+#include "G4ThreeVector.hh"
 
 /**
  * @brief G4FieldTrack defines a data structure bringing together a magnetic
  * track's state (position, momentum direction & modulus, energy, spin, etc. ).
+ * @ingroup geometry_magneticfield
  */
 
 class G4FieldTrack
@@ -63,16 +64,11 @@ class G4FieldTrack
      *  @param[in] curve_length Length of curve.
      *  @param[in] PDGspin Spin.
      */
-    G4FieldTrack( const G4ThreeVector& pPosition, 
-                        G4double LaboratoryTimeOfFlight,
-                  const G4ThreeVector& pMomentumDirection,
-                        G4double kineticEnergy,
-                        G4double restMass_c2,
-                        G4double charge, 
-                  const G4ThreeVector& polarization,
-                        G4double magnetic_dipole_moment = 0.0,
-                        G4double curve_length = 0.0,
-                        G4double PDGspin = -1.0 );
+    G4FieldTrack(const G4ThreeVector& pPosition, G4double LaboratoryTimeOfFlight,
+                 const G4ThreeVector& pMomentumDirection, G4double kineticEnergy,
+                 G4double restMass_c2, G4double charge, const G4ThreeVector& polarization,
+                 G4double magnetic_dipole_moment = 0.0, G4double curve_length = 0.0,
+                 G4double PDGspin = -1.0);
 
     /**
      * Older constructor for G4FieldTrack, similar to above but missing charge.
@@ -87,21 +83,16 @@ class G4FieldTrack
      *  @param[in] polarization Polarisation vector.
      *  @param[in] PDGspin Spin.
      */
-    G4FieldTrack( const G4ThreeVector& pPosition, 
-                  const G4ThreeVector& pMomentumDirection,
-                        G4double       curve_length,
-                        G4double       kineticEnergy,
-                  const G4double       restMass_c2,
-                        G4double       velocity,
-                        G4double       LaboratoryTimeOfFlight = 0.0,
-                        G4double       ProperTimeOfFlight = 0.0, 
-                  const G4ThreeVector* pPolarization = nullptr,
-                        G4double       PDGspin = -1.0 );
+    G4FieldTrack(const G4ThreeVector& pPosition, const G4ThreeVector& pMomentumDirection,
+                 G4double curve_length, G4double kineticEnergy, const G4double restMass_c2,
+                 G4double velocity, G4double LaboratoryTimeOfFlight = 0.0,
+                 G4double ProperTimeOfFlight = 0.0, const G4ThreeVector* pPolarization = nullptr,
+                 G4double PDGspin = -1.0);
 
     /**
      * Empty init constructor.
      */
-    G4FieldTrack( char );
+    G4FieldTrack(char);
 
     /**
      * Default Destructor.
@@ -111,14 +102,14 @@ class G4FieldTrack
     /**
      * Copy constructor and assignment operator.
      */
-    inline G4FieldTrack( const G4FieldTrack& pFieldTrack ); 
-    inline G4FieldTrack& operator= ( const G4FieldTrack& rStVec );
+    inline G4FieldTrack(const G4FieldTrack& pFieldTrack);
+    inline G4FieldTrack& operator=(const G4FieldTrack& rStVec);
 
     /**
      * Move constructor and move assignment operator.
      */
-    inline G4FieldTrack(G4FieldTrack&& from) noexcept ;
-    inline G4FieldTrack& operator=(G4FieldTrack&& from) noexcept ;
+    inline G4FieldTrack(G4FieldTrack&& from) noexcept;
+    inline G4FieldTrack& operator=(G4FieldTrack&& from) noexcept;
 
     /**
      * Streaming operator.
@@ -133,18 +124,15 @@ class G4FieldTrack
      *  @param[in] pMomentumDirection Direction vector.
      *  @param[in] kineticEnergy Kinetic energy value.
      */
-    inline void UpdateState( const G4ThreeVector& pPosition, 
-                                   G4double LaboratoryTimeOfFlight,
-                             const G4ThreeVector& pMomentumDirection,
-                                   G4double kineticEnergy); 
+    inline void UpdateState(const G4ThreeVector& pPosition, G4double LaboratoryTimeOfFlight,
+                            const G4ThreeVector& pMomentumDirection, G4double kineticEnergy);
 
     /**
      * Updates momentum, direction and kinetic energy.
      *  @param[in] kineticEnergy Kinetic energy value.
      *  @param[in] pMomentumDirection Direction vector.
      */
-    inline void UpdateFourMomentum( G4double kineticEnergy, 
-                                    const G4ThreeVector& momentumDirection ); 
+    inline void UpdateFourMomentum(G4double kineticEnergy, const G4ThreeVector& momentumDirection);
 
     /**
      * Sets the charges and moments that are not given as DBL_MAX.
@@ -153,10 +141,9 @@ class G4FieldTrack
      *  @param[in] electric_dipole_moment Electric dipole moment.
      *  @param[in] magnetic_charge Magnetic charge.
      */
-    void SetChargeAndMoments(G4double charge, 
-                             G4double magnetic_dipole_moment = DBL_MAX,
+    void SetChargeAndMoments(G4double charge, G4double magnetic_dipole_moment = DBL_MAX,
                              G4double electric_dipole_moment = DBL_MAX,
-                             G4double magnetic_charge = DBL_MAX );
+                             G4double magnetic_charge = DBL_MAX);
 
     /**
      * Setter and getter for PDG spin.
@@ -167,8 +154,8 @@ class G4FieldTrack
     /**
      * Accessors.
      */
-    inline G4ThreeVector GetMomentum() const;   
-    inline G4ThreeVector GetPosition() const; 
+    inline G4ThreeVector GetMomentum() const;
+    inline G4ThreeVector GetPosition() const;
     inline const G4ThreeVector& GetMomentumDir() const;
     inline G4ThreeVector GetMomentumDirection() const;
     inline G4double GetCurveLength() const;
@@ -182,8 +169,8 @@ class G4FieldTrack
     /**
      * Getter and setter for polarisation.
      */
-    inline G4ThreeVector GetPolarization() const; 
-    inline void SetPolarization( const G4ThreeVector& vecPol );
+    inline G4ThreeVector GetPolarization() const;
+    inline void SetPolarization(const G4ThreeVector& vecPol);
 
     /**
      * Setters for momentum. SetMomentumDir() does not change momentum
@@ -195,26 +182,28 @@ class G4FieldTrack
     /**
      * Modifiers.
      */
-    inline void SetPosition(const G4ThreeVector& nPos); 
+    inline void SetPosition(const G4ThreeVector& nPos);
     inline void SetRestMass(G4double Mass_c2);
-    inline void SetCurveLength(G4double nCurve_s); // Distance along curve.
-    inline void SetKineticEnergy(G4double nEnergy); // Does not modify momentum.
-    inline void SetLabTimeOfFlight(G4double tofLab); 
+    inline void SetCurveLength(G4double nCurve_s);  // Distance along curve.
+    inline void SetKineticEnergy(G4double nEnergy);  // Does not modify momentum.
+    inline void SetLabTimeOfFlight(G4double tofLab);
     inline void SetProperTimeOfFlight(G4double tofProper);
 
-    enum { ncompSVEC = 12 }; // Needed; should be used only for RK integration driver
+    enum
+    {
+      ncompSVEC = 12
+    };  // Needed; should be used only for RK integration driver
 
     /**
      * Dumps/loads values to/from a provided array 'valArray'.
      */
-    inline void DumpToArray(G4double valArr[ncompSVEC]) const; 
-    void LoadFromArray(const G4double valArr[ncompSVEC],
-                             G4int noVarsIntegrated);
+    inline void DumpToArray(G4double valArr[ncompSVEC]) const;
+    void LoadFromArray(const G4double valArr[ncompSVEC], G4int noVarsIntegrated);
 
     /**
      * More setters/getter foe spin, now obsolete.
      */
-    inline void InitialiseSpin( const G4ThreeVector& vecPolarization );
+    inline void InitialiseSpin(const G4ThreeVector& vecPolarization);
     inline G4ThreeVector GetSpin() const;
     inline void SetSpin(const G4ThreeVector& vSpin);
 
@@ -223,9 +212,9 @@ class G4FieldTrack
     /**
      * Implementation method. Obsolete.
      */
-    inline G4FieldTrack& SetCurvePnt(const G4ThreeVector& pPosition, 
-                                     const G4ThreeVector& pMomentum,
-                                           G4double       s_curve );
+    inline G4FieldTrack& SetCurvePnt(const G4ThreeVector& pPosition, const G4ThreeVector& pMomentum,
+                                     G4double s_curve);
+
   private:
 
     G4double SixVector[6];
@@ -237,7 +226,7 @@ class G4FieldTrack
     G4ThreeVector fPolarization;
     G4ThreeVector fMomentumDir;
     G4ChargeState fChargeState;
-}; 
+};
 
 #include "G4FieldTrack.icc"
 

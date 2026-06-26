@@ -32,28 +32,27 @@
 //	    NIM B, vol. 288, pp. 66 - 73, 2012.
 //
 //
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo...... 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "G4MicroElecElastic.hh"
+
 #include "G4DummyModel.hh"
-#include "G4SystemOfUnits.hh"
 #include "G4LowEnergyEmProcessSubType.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 using namespace std;
 
-G4MicroElecElastic::G4MicroElecElastic(const G4String& processName,
-  G4ProcessType type):G4VEmProcess (processName, type),
-    isInitialised(false)
+G4MicroElecElastic::G4MicroElecElastic(const G4String& processName, G4ProcessType type)
+  : G4VEmProcess(processName, type), isInitialised(false)
 {
   SetProcessSubType(fLowEnergyElastic);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
- 
-G4MicroElecElastic::~G4MicroElecElastic()
-{}
+
+G4MicroElecElastic::~G4MicroElecElastic() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -66,13 +65,13 @@ G4bool G4MicroElecElastic::IsApplicable(const G4ParticleDefinition& p)
 
 void G4MicroElecElastic::InitialiseProcess(const G4ParticleDefinition*)
 {
-  if(!isInitialised) 
+  if (!isInitialised)
   {
     isInitialised = true;
     SetBuildTableFlag(false);
-    if(!EmModel()) SetEmModel(new G4DummyModel());
+    if (!EmModel()) SetEmModel(new G4DummyModel());
     AddEmModel(2, EmModel());
-  } 
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

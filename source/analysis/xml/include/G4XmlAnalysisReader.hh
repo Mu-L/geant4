@@ -29,8 +29,8 @@
 
 // Author: Ivana Hrivnacova, 25/07/2014 (ivana@ipno.in2p3.fr)
 
-#ifndef G4XmlAnalysisReader_h
-#define G4XmlAnalysisReader_h 1
+#ifndef G4XMLANALYSISREADER_HH
+#define G4XMLANALYSISREADER_HH
 
 #include "G4ToolsAnalysisReader.hh"
 #include "globals.hh"
@@ -43,14 +43,15 @@
 class G4XmlAnalysisReader;
 class G4XmlRFileManager;
 class G4XmlRNtupleManager;
-template <class T>
+template<class T>
 class G4ThreadLocalSingleton;
 
 class G4XmlAnalysisReader : public G4ToolsAnalysisReader
 {
-  friend class G4ThreadLocalSingleton<G4XmlAnalysisReader>;
+    friend class G4ThreadLocalSingleton<G4XmlAnalysisReader>;
 
   public:
+
     ~G4XmlAnalysisReader() override;
 
     // Static methods
@@ -62,27 +63,28 @@ class G4XmlAnalysisReader : public G4ToolsAnalysisReader
     using G4VAnalysisReader::GetNtuple;
 
   protected:
+
     G4XmlAnalysisReader();
 
     // Virtual methods from base class
     G4bool CloseFilesImpl(G4bool reset) final;
 
   private:
+
     // Static data members
-    inline static G4XmlAnalysisReader* fgMasterInstance { nullptr };
+    inline static G4XmlAnalysisReader* fgMasterInstance{nullptr};
 
     // Methods
     G4bool Reset();
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4XmlAnalysisReader" };
+    static constexpr std::string_view fkClass{"G4XmlAnalysisReader"};
 
     // Data members
-    std::shared_ptr<G4XmlRNtupleManager> fNtupleManager { nullptr };
-    std::shared_ptr<G4XmlRFileManager>   fFileManager { nullptr };
+    std::shared_ptr<G4XmlRNtupleManager> fNtupleManager{nullptr};
+    std::shared_ptr<G4XmlRFileManager> fFileManager{nullptr};
 };
 
 #include "G4XmlAnalysisReader.icc"
 
 #endif
-

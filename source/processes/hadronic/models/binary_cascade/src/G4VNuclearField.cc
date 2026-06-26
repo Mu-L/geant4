@@ -25,29 +25,27 @@
 //
 //
 // -------------------------------------------------------------------
-//      GEANT 4 class implementation file 
+//      GEANT 4 class implementation file
 //
 //      CERN, Geneva, Switzerland
 //
 //      File name:     G4VNuclearField.cc
 //
 //      Author:        Alessandro Brunengo (Alessandro.Brunengo@ge.infn.it)
-// 
+//
 //      Creation date: 5 June 2000
 // -------------------------------------------------------------------
 #include "G4VNuclearField.hh"
-#include "globals.hh"
+
 #include "G4SystemOfUnits.hh"
+#include "globals.hh"
 
-G4VNuclearField::G4VNuclearField(G4V3DNucleus * aNucleus) : 
-theNucleus(aNucleus),
-radius(aNucleus->GetOuterRadius() + 4*fermi)
+G4VNuclearField::G4VNuclearField(G4V3DNucleus* aNucleus)
+  : theNucleus(aNucleus), radius(aNucleus->GetOuterRadius() + 4 * fermi)
 {}
 
-G4VNuclearField::G4VNuclearField(const  G4VNuclearField &right) :
-theNucleus(right.theNucleus),
-radius(right.radius)
+G4VNuclearField::G4VNuclearField(const G4VNuclearField& right)
+  : theNucleus(right.theNucleus), radius(right.radius)
 {}
 
-G4VNuclearField::~G4VNuclearField()
-{}
+G4VNuclearField::~G4VNuclearField() {}

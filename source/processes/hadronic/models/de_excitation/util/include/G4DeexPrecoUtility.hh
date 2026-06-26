@@ -31,36 +31,31 @@
 // Utilities used at initialisation of the de-excitation module
 //
 
-#ifndef G4DeexPrecoUtility_h
-#define G4DeexPrecoUtility_h 1
+#ifndef G4DEEXPRECOUTILITY_HH
+#define G4DEEXPRECOUTILITY_HH
 
 #include "globals.hh"
 
 class G4DeexPrecoUtility
 {
-public:
+  public:
 
-  // Compute correction factor
-  // Data comes from Dostrovsky, Fraenkel and Friedlander
-  // Physical Review, vol 116, num. 3 1959
+    // Compute correction factor
+    // Data comes from Dostrovsky, Fraenkel and Friedlander
+    // Physical Review, vol 116, num. 3 1959
 
-  static G4double CorrectionFactor(const G4int index, const G4int Z,
-				   const G4double A13,
-				   const G4double bCoulomb,
-				   const G4double ekin);
+    static G4double CorrectionFactor(const G4int index, const G4int Z, const G4double A13,
+                                     const G4double bCoulomb, const G4double ekin);
 
-  static G4double ProtonKValue(const G4int Z);
+    static G4double ProtonKValue(const G4int Z);
 
-  static G4double AlphaKValue(const G4int Z);
+    static G4double AlphaKValue(const G4int Z);
 
-  static G4double ProtonCValue(const G4int Z);
+    static G4double ProtonCValue(const G4int Z);
 
-  static G4double AlphaCValue(const G4int Z);
+    static G4double AlphaCValue(const G4int Z);
 
-  static G4double LevelDensity(const G4int Z, const G4int A, const G4int index);
-
+    static G4double LevelDensity(const G4int Z, const G4int A, const G4int index);
 };
 
 #endif
-
-

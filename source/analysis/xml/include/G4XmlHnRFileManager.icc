@@ -29,14 +29,12 @@
 #include "toolx/raxml"
 
 //_____________________________________________________________________________
-template <typename HT>
-inline
-HT* G4XmlHnRFileManager<HT>::Read(
-  const G4String& htName, const G4String& fileName, const G4String& /*dirName*/,
-  G4bool /*isUserFileName*/)
+template<typename HT>
+inline HT* G4XmlHnRFileManager<HT>::Read(const G4String& htName, const G4String& fileName,
+                                         const G4String& /*dirName*/, G4bool /*isUserFileName*/)
 {
   auto handler = fRFileManager->GetHandler<HT>(fileName, htName, "Read");
-  if ( ! handler ) return nullptr;
+  if (!handler) return nullptr;
 
   return static_cast<HT*>(handler->object());
 }

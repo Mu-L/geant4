@@ -32,8 +32,8 @@
 
 // Author: Hisaya Kurashige, 8 March 1997
 // --------------------------------------------------------------------
-#ifndef G4TrackFastVector_hh
-#define G4TrackFastVector_hh 1
+#ifndef G4TRACKFASTVECTOR_HH
+#define G4TRACKFASTVECTOR_HH
 
 #include "G4FastVector.hh"
 

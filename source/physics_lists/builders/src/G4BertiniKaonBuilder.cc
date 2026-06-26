@@ -36,32 +36,29 @@
 //----------------------------------------------------------------------------
 //
 #include "G4BertiniKaonBuilder.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4ComponentGGHadronNucleusXsc.hh"
+#include "G4CrossSectionInelastic.hh"
+#include "G4HadronicParameters.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4ComponentGGHadronNucleusXsc.hh"
-#include "G4CrossSectionInelastic.hh"
+#include "G4SystemOfUnits.hh"
 
-#include "G4HadronicParameters.hh"
+G4BertiniKaonBuilder::G4BertiniKaonBuilder()
+{
+  kaonCrossSection = new G4CrossSectionInelastic(new G4ComponentGGHadronNucleusXsc);
+  theMin = 0.0;
+  theMax = G4HadronicParameters::Instance()->GetMaxEnergyTransitionFTF_Cascade();
+  theModel = new G4CascadeInterface;
+  theModel->SetMinEnergy(theMin);
+  theModel->SetMaxEnergy(theMax);
+}
 
-
-G4BertiniKaonBuilder::
-G4BertiniKaonBuilder() 
- {
-   kaonCrossSection = new G4CrossSectionInelastic( new G4ComponentGGHadronNucleusXsc );
-   theMin = 0.0;
-   theMax = G4HadronicParameters::Instance()->GetMaxEnergyTransitionFTF_Cascade();
-   theModel = new G4CascadeInterface;
-   theModel->SetMinEnergy(theMin);
-   theModel->SetMaxEnergy(theMax); 
- }
-
-void G4BertiniKaonBuilder::
-Build(G4HadronInelasticProcess * aP)
- {
-   aP->RegisterMe(theModel);
-   theModel->SetMinEnergy(theMin);
-   theModel->SetMaxEnergy(theMax);
-   aP->AddDataSet(kaonCrossSection);
- }
+void G4BertiniKaonBuilder::Build(G4HadronInelasticProcess* aP)
+{
+  aP->RegisterMe(theModel);
+  theModel->SetMinEnergy(theMin);
+  theModel->SetMaxEnergy(theMax);
+  aP->AddDataSet(kaonCrossSection);
+}

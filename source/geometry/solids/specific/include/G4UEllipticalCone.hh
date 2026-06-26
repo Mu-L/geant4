@@ -36,21 +36,22 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedEllipticalCone.h>
+#  include "G4Polyhedron.hh"
 
-#include "G4Polyhedron.hh"
+#  include <VecGeom/volumes/UnplacedEllipticalCone.h>
 
 /**
  * @brief G4UEllipticalCone is a wrapper class for G4EllipticalCone
  * to make use of VecGeom EllipticalCone.
+ * @ingroup geometry_solids_specific
  */
 
 class G4UEllipticalCone : public G4UAdapter<vecgeom::UnplacedEllipticalCone>
 {
-  using Shape_t = vecgeom::UnplacedEllipticalCone;
-  using Base_t  = G4UAdapter<vecgeom::UnplacedEllipticalCone>;
+    using Shape_t = vecgeom::UnplacedEllipticalCone;
+    using Base_t = G4UAdapter<vecgeom::UnplacedEllipticalCone>;
 
   public:
 
@@ -62,11 +63,8 @@ class G4UEllipticalCone : public G4UAdapter<vecgeom::UnplacedEllipticalCone>
      *  @param[in] zMax The Z-coordinate at the apex.
      *  @param[in] pzTopCut Upper cut plane level.
      */
-    G4UEllipticalCone(const G4String& name,
-                            G4double pxSemiAxis,
-                            G4double pySemiAxis,
-                            G4double zMax,
-                            G4double pzTopCut);
+    G4UEllipticalCone(const G4String& name, G4double pxSemiAxis, G4double pySemiAxis, G4double zMax,
+                      G4double pzTopCut);
 
     /**
      * Default destructor.
@@ -82,18 +80,18 @@ class G4UEllipticalCone : public G4UAdapter<vecgeom::UnplacedEllipticalCone>
     /**
      * Accessors.
      */
-    G4double GetSemiAxisMin () const;
-    G4double GetSemiAxisMax () const;
-    G4double GetSemiAxisX () const;
-    G4double GetSemiAxisY () const;
+    G4double GetSemiAxisMin() const;
+    G4double GetSemiAxisMax() const;
+    G4double GetSemiAxisX() const;
+    G4double GetSemiAxisY() const;
     G4double GetZMax() const;
     G4double GetZTopCut() const;
 
     /**
      * Modifiers.
      */
-    void SetSemiAxis (G4double x, G4double y, G4double z);
-    void SetZCut (G4double newzTopCut);
+    void SetSemiAxis(G4double x, G4double y, G4double z);
+    void SetZCut(G4double newzTopCut);
 
     /**
      * Returns the type ID, "G4EllipticalCone" of the solid.
@@ -117,10 +115,9 @@ class G4UEllipticalCone : public G4UAdapter<vecgeom::UnplacedEllipticalCone>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                           G4double& pmin, G4double& pmax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pmin,
+                           G4double& pmax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.
@@ -130,8 +127,8 @@ class G4UEllipticalCone : public G4UAdapter<vecgeom::UnplacedEllipticalCone>
     /**
      * Copy constructor and assignment operator.
      */
-    G4UEllipticalCone( const G4UEllipticalCone& source );
-    G4UEllipticalCone& operator=( const G4UEllipticalCone& source );
+    G4UEllipticalCone(const G4UEllipticalCone& source);
+    G4UEllipticalCone& operator=(const G4UEllipticalCone& source);
 };
 
 // --------------------------------------------------------------------

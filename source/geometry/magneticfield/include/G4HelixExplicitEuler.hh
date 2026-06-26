@@ -42,7 +42,10 @@
 /**
  * @brief G4HelixExplicitEuler implements an Explicit Euler stepper for
  * magnetic field: x_1 = x_0 + helix(h), with helix(h) being a helix piece
- * of length h. A simple approach for solving linear differential equations.
+ * of length h.
+ * @ingroup geometry_magneticfield
+ *
+ * A simple approach for solving linear differential equations.
  * Takes the current derivative and adds it to the current position.
  */
 
@@ -69,11 +72,8 @@ class G4HelixExplicitEuler : public G4MagHelicalStepper
      *  @param[out] yout Integration output.
      *  @param[out] yerr Integration error.
      */
-    void Stepper( const G4double y[],
-                  const G4double* na,
-                        G4double h,
-                        G4double yout[],
-                        G4double yerr[]  ) override; 
+    void Stepper(const G4double y[], const G4double* na, G4double h, G4double yout[],
+                 G4double yerr[]) override;
 
     /**
      * The stepper function for the integration.
@@ -82,11 +82,8 @@ class G4HelixExplicitEuler : public G4MagHelicalStepper
      *  @param[in] h The given step size.
      *  @param[out] yout Integration output.
      */
-    void DumbStepper( const G4double y[],
-                            G4ThreeVector Bfld,
-                            G4double h,
-                            G4double yout[]) override;
-   
+    void DumbStepper(const G4double y[], G4ThreeVector Bfld, G4double h, G4double yout[]) override;
+
     /**
      * Returns the distance from chord line.
      */

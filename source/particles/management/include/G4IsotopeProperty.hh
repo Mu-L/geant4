@@ -31,8 +31,8 @@
 
 // Author: H.Kurashige, 5 October 1999
 // --------------------------------------------------------------------
-#ifndef G4IsotopeProperty_hh
-#define G4IsotopeProperty_hh 1
+#ifndef G4ISOTOPEPROPERTY_HH
+#define G4ISOTOPEPROPERTY_HH
 
 #include "G4Ions.hh"
 #include "globals.hh"
@@ -41,6 +41,7 @@ class G4DecayTable;
 class G4IsotopeProperty
 {
   public:
+
     // Constructor & destructor
     G4IsotopeProperty() = default;
     virtual ~G4IsotopeProperty();
@@ -93,6 +94,7 @@ class G4IsotopeProperty
     void DumpInfo() const;
 
   private:
+
     G4int fAtomicNumber = 0;  // number of proton
     G4int fAtomicMass = 0;  // number of nucleon
     G4int fISpin = 0;  // total angular momentum (in unit of 1/2)

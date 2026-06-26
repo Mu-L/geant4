@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,27 +41,28 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
 #ifndef G4TRACKINGINFORMATION_HH
 #define G4TRACKINGINFORMATION_HH
 
-#include "globals.hh"
-#include <vector>
-#include <map>
+#include "G4ITStepProcessorState_Lock.hh"
 #include "G4StepStatus.hh"
 #include "G4ThreeVector.hh"
 #include "G4TouchableHandle.hh"
 #include "G4TrackState.hh"
 #include "G4memory.hh"
-#include "G4ITStepProcessorState_Lock.hh"
+#include "globals.hh"
+
+#include <map>
+#include <vector>
 
 class G4ITStepProcessor;
 
-using  G4SelectedAtRestDoItVector = std::vector<G4int>;
-using  G4SelectedAlongStepDoItVector = std::vector<G4int>;
-using  G4SelectedPostStepDoItVector = std::vector<G4int>;
-using  G4SelectedPostStepAtTimeDoItVector = std::vector<G4int>;
+using G4SelectedAtRestDoItVector = std::vector<G4int>;
+using G4SelectedAlongStepDoItVector = std::vector<G4int>;
+using G4SelectedPostStepDoItVector = std::vector<G4int>;
+using G4SelectedPostStepAtTimeDoItVector = std::vector<G4int>;
 
 class G4Trajectory_Lock;
 class G4Track;
@@ -78,136 +79,122 @@ struct G4ITNavigatorState_Lock;
  */
 class G4TrackingInformation
 {
-public:
-  G4TrackingInformation();
-  ~G4TrackingInformation();
+  public:
 
-  //________________________________________________
-  /** If the track is the one having the minimum step time,
-   *  then it "leads" the step. It will interact will all the
-   *  other tracks will be transported.
-   */
-  inline bool IsLeadingStep()
-  {
-    return fStepLeader;
-  }
-  inline void SetLeadingStep(bool value)
-  {
-    fStepLeader = value;
-  }
+    G4TrackingInformation();
+    ~G4TrackingInformation();
 
-  //________________________________________________
-  /** Every process should store the information
-   * computed at the InteractionLegth stage in the track.
-   */
+    //________________________________________________
+    /** If the track is the one having the minimum step time,
+     *  then it "leads" the step. It will interact will all the
+     *  other tracks will be transported.
+     */
+    inline bool IsLeadingStep() { return fStepLeader; }
+    inline void SetLeadingStep(bool value) { fStepLeader = value; }
 
-  G4shared_ptr<G4ProcessState_Lock> GetProcessState(size_t index);
+    //________________________________________________
+    /** Every process should store the information
+     * computed at the InteractionLegth stage in the track.
+     */
 
-  inline void RecordProcessState(G4shared_ptr<G4ProcessState_Lock>,
-                                 size_t index);
+    G4shared_ptr<G4ProcessState_Lock> GetProcessState(size_t index);
 
-  //___________________________________________________
+    inline void RecordProcessState(G4shared_ptr<G4ProcessState_Lock>, size_t index);
 
-  void SetStepProcessorState(G4ITStepProcessorState_Lock*);
-  G4ITStepProcessorState_Lock* GetStepProcessorState();
+    //___________________________________________________
 
-  /*
-   std::map<int,G4VTrackStateHandle> fTrackStates;
-   std::map<void*,G4VTrackStateHandle> fMultipleTrackStates;
+    void SetStepProcessorState(G4ITStepProcessorState_Lock*);
+    G4ITStepProcessorState_Lock* GetStepProcessorState();
 
-   void SetTrackState(void* adress, G4VTrackStateHandle state)
-   {
-   fMultipleTrackStates[adress] = state;
-   }
-   G4VTrackStateHandle GetTrackState(void* adress)
-   {
-   return fMultipleTrackStates[adress];
-   }
+    /*
+     std::map<int,G4VTrackStateHandle> fTrackStates;
+     std::map<void*,G4VTrackStateHandle> fMultipleTrackStates;
 
-   void SetTrackState(G4VTrackStateHandle state)
-   {
-   fTrackStates[state->GetID()] = state;
-   }
-   template<typename T> G4VTrackStateHandle GetTrackState()
-   {
-   return fTrackStates[G4TrackStateID<T>::GetID()] ;
-   }
-   */
+     void SetTrackState(void* adress, G4VTrackStateHandle state)
+     {
+     fMultipleTrackStates[adress] = state;
+     }
+     G4VTrackStateHandle GetTrackState(void* adress)
+     {
+     return fMultipleTrackStates[adress];
+     }
 
-  G4TrackStateManager& GetTrackStateManager()
-  {
-    return fTrackStateManager;
-  }
-  /*
-   G4TrackStateManager& GetTrackStateManager() const
-   {
-   return fTrackStateManager;
-   }
-   */
-  inline G4Trajectory_Lock* GetTrajectory_Lock()
-  {
-    return fpTrajectory_Lock;
-  }
+     void SetTrackState(G4VTrackStateHandle state)
+     {
+     fTrackStates[state->GetID()] = state;
+     }
+     template<typename T> G4VTrackStateHandle GetTrackState()
+     {
+     return fTrackStates[G4TrackStateID<T>::GetID()] ;
+     }
+     */
 
-  inline void SetTrajectory_Lock(G4Trajectory_Lock* trajLock)
-  {
-    fpTrajectory_Lock = trajLock;
-  }
+    G4TrackStateManager& GetTrackStateManager() { return fTrackStateManager; }
+    /*
+     G4TrackStateManager& GetTrackStateManager() const
+     {
+     return fTrackStateManager;
+     }
+     */
+    inline G4Trajectory_Lock* GetTrajectory_Lock() { return fpTrajectory_Lock; }
 
-  void RecordCurrentPositionNTime(G4Track*);
-  inline const G4ThreeVector& GetPreStepPosition() const;
-  inline G4double GetPreStepLocalTime() const;
-  inline G4double GetPreStepGlobalTime() const;
+    inline void SetTrajectory_Lock(G4Trajectory_Lock* trajLock) { fpTrajectory_Lock = trajLock; }
 
-  inline void SetNavigatorState(G4ITNavigatorState_Lock *);
-  inline G4ITNavigatorState_Lock* GetNavigatorState() const;
+    void RecordCurrentPositionNTime(G4Track*);
+    inline const G4ThreeVector& GetPreStepPosition() const;
+    inline G4double GetPreStepLocalTime() const;
+    inline G4double GetPreStepGlobalTime() const;
 
-  //-------------
-protected:
-  //-------------
-  friend class G4ITStepProcessor;
-  //_______________________________________________________
-  G4bool fStepLeader{false};
-  //_______________________________________________________
-  G4Trajectory_Lock* fpTrajectory_Lock;
+    inline void SetNavigatorState(G4ITNavigatorState_Lock*);
+    inline G4ITNavigatorState_Lock* GetNavigatorState() const;
 
-  G4TrackStateManager fTrackStateManager;
+    //-------------
 
-  //_______________________________________________________
-  G4ThreeVector fRecordedTrackPosition;
-  G4double fRecordedTrackLocalTime;
-  G4double fRecordedTrackGlobalTime;
+  protected:
 
-  //_______________________________________________________
-  G4ITNavigatorState_Lock* fNavigatorState;
-//    G4SaveNavigatorState_Lock* fNavigatorState;
+    //-------------
+    friend class G4ITStepProcessor;
+    //_______________________________________________________
+    G4bool fStepLeader{false};
+    //_______________________________________________________
+    G4Trajectory_Lock* fpTrajectory_Lock;
 
-//_______________________________________________________
-  /** Holds the information related to processes
-   *  Indexed on GetPhysIntVector
-   * (cf. G4ITStepProcessor header)
-   */
-//    std::vector<G4ProcessState_Lock*> fProcessState;
-  std::vector<G4shared_ptr<G4ProcessState_Lock> > fProcessState;
+    G4TrackStateManager fTrackStateManager;
 
-  //_______________________________________________________
-  G4ITStepProcessorState_Lock* fpStepProcessorState{nullptr};
+    //_______________________________________________________
+    G4ThreeVector fRecordedTrackPosition;
+    G4double fRecordedTrackLocalTime;
+    G4double fRecordedTrackGlobalTime;
 
-  //_______________________________________________________
-  /** Copy constructor
-   *  \param other Object to copy from
-   */
-  G4TrackingInformation(const G4TrackingInformation& other);
+    //_______________________________________________________
+    G4ITNavigatorState_Lock* fNavigatorState;
+    //    G4SaveNavigatorState_Lock* fNavigatorState;
 
-  /** Assignment operator
-   *  \param other Object to assign from
-   *  \return A reference to this
-   */
-  G4TrackingInformation& operator=(const G4TrackingInformation& other);
+    //_______________________________________________________
+    /** Holds the information related to processes
+     *  Indexed on GetPhysIntVector
+     * (cf. G4ITStepProcessor header)
+     */
+    //    std::vector<G4ProcessState_Lock*> fProcessState;
+    std::vector<G4shared_ptr<G4ProcessState_Lock>> fProcessState;
+
+    //_______________________________________________________
+    G4ITStepProcessorState_Lock* fpStepProcessorState{nullptr};
+
+    //_______________________________________________________
+    /** Copy constructor
+     *  \param other Object to copy from
+     */
+    G4TrackingInformation(const G4TrackingInformation& other);
+
+    /** Assignment operator
+     *  \param other Object to assign from
+     *  \return A reference to this
+     */
+    G4TrackingInformation& operator=(const G4TrackingInformation& other);
 };
 
-inline
-void G4TrackingInformation::SetStepProcessorState(G4ITStepProcessorState_Lock* state)
+inline void G4TrackingInformation::SetStepProcessorState(G4ITStepProcessorState_Lock* state)
 {
   fpStepProcessorState = state;
 }
@@ -224,9 +211,8 @@ inline G4ITStepProcessorState_Lock* G4TrackingInformation::GetStepProcessorState
  fProcessState[index] = state;
  }*/
 
-inline
-void G4TrackingInformation::RecordProcessState(G4shared_ptr<G4ProcessState_Lock> state,
-                                               size_t index)
+inline void G4TrackingInformation::RecordProcessState(G4shared_ptr<G4ProcessState_Lock> state,
+                                                      size_t index)
 {
   fProcessState[index] = std::move(state);
 }
@@ -257,4 +243,4 @@ inline G4ITNavigatorState_Lock* G4TrackingInformation::GetNavigatorState() const
   return fNavigatorState;
 }
 
-#endif // G4TRACKINGINFORMATION_HH
+#endif  // G4TRACKINGINFORMATION_HH

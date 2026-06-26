@@ -29,6 +29,7 @@
 #define G4POINT3D_HH
 
 #include "globals.hh"
+
 #include <CLHEP/Geometry/Point3D.h>
 
 using G4Point3D = HepGeom::Point3D<G4double>;

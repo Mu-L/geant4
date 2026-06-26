@@ -30,12 +30,12 @@
 #ifndef MESHDEFS_HH
 #define MESHDEFS_HH
 
-#include <CLHEP/Units/PhysicalConstants.h>
-
 #include "G4Types.hh"
 
+#include <CLHEP/Units/PhysicalConstants.h>
+
 /** Angle for mesh `wedges' in rads. Works best when simple fraction of pi/2. */
-const G4double kMeshAngleDefault = (CLHEP::pi/4);
+const G4double kMeshAngleDefault = (CLHEP::pi / 4);
 
 /** Min wedges+1 to make. */
 const G4int kMinMeshSections = 3;

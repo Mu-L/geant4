@@ -34,33 +34,33 @@
 // - Created:   P. Arce, September 2004
 //---------------------------------------------------------------------
 
-#ifndef G4ErrorMagFieldLimitProcess_h
-#define G4ErrorMagFieldLimitProcess_h 1
+#ifndef G4ERRORMAGFIELDLIMITPROCESS_HH
+#define G4ERRORMAGFIELDLIMITPROCESS_HH
 
-#include "G4ios.hh"
-#include "globals.hh"
-#include "G4VDiscreteProcess.hh"
-#include "G4PhysicsTable.hh"
-#include "G4PhysicsLogVector.hh"
+#include "G4Electron.hh"
 #include "G4ElementTable.hh"
 #include "G4Gamma.hh"
-#include "G4Electron.hh"
+#include "G4PhysicsLogVector.hh"
+#include "G4PhysicsTable.hh"
 #include "G4Step.hh"
+#include "G4VDiscreteProcess.hh"
 #include "G4VErrorLimitProcess.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 //-----------------------------------------------------------------
 
 class G4ErrorMagFieldLimitProcess : public G4VErrorLimitProcess
 {
- public:  // with description
-  G4ErrorMagFieldLimitProcess(
-    const G4String& processName = "G4ErrorMagFieldLimit");
-  ~G4ErrorMagFieldLimitProcess();
+  public:  // with description
 
-  virtual G4double PostStepGetPhysicalInteractionLength(
-    const G4Track& track, G4double previousStepSize,
-    G4ForceCondition* condition);
-  // Returns the step length.
+    G4ErrorMagFieldLimitProcess(const G4String& processName = "G4ErrorMagFieldLimit");
+    ~G4ErrorMagFieldLimitProcess();
+
+    virtual G4double PostStepGetPhysicalInteractionLength(const G4Track& track,
+                                                          G4double previousStepSize,
+                                                          G4ForceCondition* condition);
+    // Returns the step length.
 };
 
 #endif

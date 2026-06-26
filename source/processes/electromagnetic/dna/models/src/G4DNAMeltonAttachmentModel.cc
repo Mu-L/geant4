@@ -28,26 +28,27 @@
 // Created by Z. Francis
 
 #include "G4DNAMeltonAttachmentModel.hh"
-#include "G4SystemOfUnits.hh"
+
 #include "G4DNAChemistryManager.hh"
 #include "G4DNAMolecularMaterial.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 using namespace std;
 
-//#define MELTON_VERBOSE // prevent checking conditions at run time
+// #define MELTON_VERBOSE // prevent checking conditions at run time
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4DNAMeltonAttachmentModel::G4DNAMeltonAttachmentModel(const G4ParticleDefinition*,
-                                                       const G4String& nam) :
-G4VEmModel(nam) 
+                                                       const G4String& nam)
+  : G4VEmModel(nam)
 {
   fpWaterDensity = nullptr;
 
-  SetLowEnergyLimit(4.*eV);
-  SetHighEnergyLimit(13.*eV);
+  SetLowEnergyLimit(4. * eV);
+  SetHighEnergyLimit(13. * eV);
 
   verboseLevel = 0;
   // Verbosity scale:
@@ -60,15 +61,12 @@ G4VEmModel(nam)
 #ifdef MELTON_VERBOSE
   if (verboseLevel > 0)
   {
-    G4cout << "Melton Attachment model is constructed "
-           << G4endl
-           << "Energy range: "
-           << LowEnergyLimit() / eV << " eV - "
-           << HighEnergyLimit() / eV << " eV"
-           << G4endl;
+    G4cout << "Melton Attachment model is constructed " << G4endl
+           << "Energy range: " << LowEnergyLimit() / eV << " eV - " << HighEnergyLimit() / eV
+           << " eV" << G4endl;
   }
 #endif
-  
+
   fParticleChangeForGamma = nullptr;
   fDissociationFlag = true;
   fData = nullptr;
@@ -91,82 +89,70 @@ void G4DNAMeltonAttachmentModel::Initialise(const G4ParticleDefinition* particle
                                             const G4DataVector& /*cuts*/)
 {
 #ifdef MELTON_VERBOSE
-  if (verboseLevel > 3)
-    G4cout
-      << "Calling G4DNAMeltonAttachmentModel::Initialise()" << G4endl;
+  if (verboseLevel > 3) G4cout << "Calling G4DNAMeltonAttachmentModel::Initialise()" << G4endl;
 #endif
 
   // Only electron
-  
-  if(particle->GetParticleName() != "e-")
+
+  if (particle->GetParticleName() != "e-")
   {
-    G4Exception("G4DNAMeltonAttachmentModel::Initialise",
-                "em0002",
-                FatalException,
+    G4Exception("G4DNAMeltonAttachmentModel::Initialise", "em0002", FatalException,
                 "Model not applicable to particle type.");
   }
-  
+
   // Energy limits
 
-  if (LowEnergyLimit() < 4.*eV)
+  if (LowEnergyLimit() < 4. * eV)
   {
     G4ExceptionDescription errMsg;
-    errMsg << "G4DNAMeltonAttachmentModel: low energy limit increased from " <<
-    LowEnergyLimit()/eV << " eV to " << 4.  << " eV" << G4endl;
-    
-    G4Exception("G4DNAMeltonAttachmentModel::Initialise",
-                "Melton_LowerEBoundary",
-                JustWarning,
+    errMsg << "G4DNAMeltonAttachmentModel: low energy limit increased from "
+           << LowEnergyLimit() / eV << " eV to " << 4. << " eV" << G4endl;
+
+    G4Exception("G4DNAMeltonAttachmentModel::Initialise", "Melton_LowerEBoundary", JustWarning,
                 errMsg);
-    
-    SetLowEnergyLimit(4*eV);
+
+    SetLowEnergyLimit(4 * eV);
   }
 
-  if (HighEnergyLimit() > 13.*eV)
+  if (HighEnergyLimit() > 13. * eV)
   {
     G4ExceptionDescription errMsg;
-    errMsg << "G4DNAMeltonAttachmentModel: high energy limit decreased from " <<
-    HighEnergyLimit()/eV << " eV to " << 13. << " eV" << G4endl;
-    
-    G4Exception("G4DNAMeltonAttachmentModel::Initialise",
-                "Melton_HigherEBoundary",
-                JustWarning,
+    errMsg << "G4DNAMeltonAttachmentModel: high energy limit decreased from "
+           << HighEnergyLimit() / eV << " eV to " << 13. << " eV" << G4endl;
+
+    G4Exception("G4DNAMeltonAttachmentModel::Initialise", "Melton_HigherEBoundary", JustWarning,
                 errMsg);
-    
-    SetHighEnergyLimit(13.*eV);
+
+    SetHighEnergyLimit(13. * eV);
   }
 
   // Reading of data files
 
-  G4double scaleFactor = 1e-18*cm2;
+  G4double scaleFactor = 1e-18 * cm2;
 
   // For total cross section
   G4String fileElectron("dna/sigma_attachment_e_melton");
 
-  fData = new G4DNACrossSectionDataSet(new G4LogLogInterpolation(),
-                                        eV, scaleFactor);
+  fData = new G4DNACrossSectionDataSet(new G4LogLogInterpolation(), eV, scaleFactor);
   fData->LoadData(fileElectron);
 
-
 #ifdef MELTON_VERBOSE
-  if( verboseLevel >0)
+  if (verboseLevel > 0)
   {
     if (verboseLevel > 2)
     {
       G4cout << "Loaded cross section data for Melton Attachment model" << G4endl;
     }
-    
+
     G4cout << "Melton Attachment model is initialized " << G4endl
-    << "Energy range: "
-    << LowEnergyLimit() / eV << " eV - "
-    << HighEnergyLimit() / eV << " eV"
-    << G4endl;
+           << "Energy range: " << LowEnergyLimit() / eV << " eV - " << HighEnergyLimit() / eV
+           << " eV" << G4endl;
   }
-#endif 
-  
+#endif
+
   // Initialize water density pointer
-  fpWaterDensity = G4DNAMolecularMaterial::Instance()->
-      GetNumMolPerVolTableFor(G4Material::GetMaterial("G4_WATER"));
+  fpWaterDensity = G4DNAMolecularMaterial::Instance()->GetNumMolPerVolTableFor(
+    G4Material::GetMaterial("G4_WATER"));
 
   if (isInitialised) return;
 
@@ -176,18 +162,13 @@ void G4DNAMeltonAttachmentModel::Initialise(const G4ParticleDefinition* particle
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double
-G4DNAMeltonAttachmentModel::CrossSectionPerVolume(const G4Material* material,
-                                                const G4ParticleDefinition*,
-                                                G4double ekin,
-                                                G4double,
-                                                G4double)
+G4double G4DNAMeltonAttachmentModel::CrossSectionPerVolume(const G4Material* material,
+                                                           const G4ParticleDefinition*,
+                                                           G4double ekin, G4double, G4double)
 {
 #ifdef MELTON_VERBOSE
   if (verboseLevel > 3)
-    G4cout
-      << "Calling CrossSectionPerVolume() of G4DNAMeltonAttachmentModel"
-      << G4endl;
+    G4cout << "Calling CrossSectionPerVolume() of G4DNAMeltonAttachmentModel" << G4endl;
 #endif
 
   // Calculate total cross section for model
@@ -196,68 +177,58 @@ G4DNAMeltonAttachmentModel::CrossSectionPerVolume(const G4Material* material,
 
   G4double waterDensity = (*fpWaterDensity)[material->GetIndex()];
 
-  if (ekin >= LowEnergyLimit() && ekin <= HighEnergyLimit())
-    sigma = fData->FindValue(ekin);
-    
+  if (ekin >= LowEnergyLimit() && ekin <= HighEnergyLimit()) sigma = fData->FindValue(ekin);
+
 #ifdef MELTON_VERBOSE
   if (verboseLevel > 2)
   {
     G4cout << "__________________________________" << G4endl;
     G4cout << "=== G4DNAMeltonAttachmentModel - XS INFO START" << G4endl;
-    G4cout << "--- Kinetic energy(eV)=" << ekin/eV
-           << " particle : " << particleDefinition->GetParticleName()
+    G4cout << "--- Kinetic energy(eV)=" << ekin / eV
+           << " particle : " << particleDefinition->GetParticleName() << G4endl;
+    G4cout << "--- Cross section per water molecule (cm^2)=" << sigma / cm / cm << G4endl;
+    G4cout << "--- Cross section per water molecule (cm^-1)=" << sigma * waterDensity / (1. / cm)
            << G4endl;
-    G4cout << "--- Cross section per water molecule (cm^2)="
-           << sigma/cm/cm << G4endl;
-    G4cout << "--- Cross section per water molecule (cm^-1)="
-           << sigma*waterDensity/(1./cm) << G4endl;
     G4cout << "--- G4DNAMeltonAttachmentModel - XS INFO END" << G4endl;
   }
 #endif
 
-  return sigma*waterDensity;
+  return sigma * waterDensity;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void
-G4DNAMeltonAttachmentModel::
-SampleSecondaries(std::vector<G4DynamicParticle*>* /*fvect*/,
-                  const G4MaterialCutsCouple* /*couple*/,
-                  const G4DynamicParticle* aDynamicElectron,
-                  G4double,
-                  G4double)
+void G4DNAMeltonAttachmentModel::SampleSecondaries(std::vector<G4DynamicParticle*>* /*fvect*/,
+                                                   const G4MaterialCutsCouple* /*couple*/,
+                                                   const G4DynamicParticle* aDynamicElectron,
+                                                   G4double, G4double)
 {
-  
 #ifdef MELTON_VERBOSE
   if (verboseLevel > 3)
-    G4cout
-    << "Calling SampleSecondaries() of G4DNAMeltonAttachmentModel" << G4endl;
+    G4cout << "Calling SampleSecondaries() of G4DNAMeltonAttachmentModel" << G4endl;
 #endif
-  
+
   // Electron is killed
-  
+
   G4double electronEnergy0 = aDynamicElectron->GetKineticEnergy();
 
-  if (!statCode)     
-  {     
-      fParticleChangeForGamma->SetProposedKineticEnergy(0.);
-      fParticleChangeForGamma->ProposeTrackStatus(fStopAndKill);
-      fParticleChangeForGamma->ProposeLocalEnergyDeposit(electronEnergy0);
+  if (!statCode)
+  {
+    fParticleChangeForGamma->SetProposedKineticEnergy(0.);
+    fParticleChangeForGamma->ProposeTrackStatus(fStopAndKill);
+    fParticleChangeForGamma->ProposeLocalEnergyDeposit(electronEnergy0);
   }
 
-  else 
+  else
   {
-      fParticleChangeForGamma->SetProposedKineticEnergy(electronEnergy0);
-      fParticleChangeForGamma->ProposeLocalEnergyDeposit(electronEnergy0);
+    fParticleChangeForGamma->SetProposedKineticEnergy(electronEnergy0);
+    fParticleChangeForGamma->ProposeLocalEnergyDeposit(electronEnergy0);
   }
-  
-  if(fDissociationFlag)
+
+  if (fDissociationFlag)
   {
-    G4DNAChemistryManager::Instance()->
-      CreateWaterMolecule(eDissociativeAttachment,
-                          -1,
-                          fParticleChangeForGamma->GetCurrentTrack());
+    G4DNAChemistryManager::Instance()->CreateWaterMolecule(
+      eDissociativeAttachment, -1, fParticleChangeForGamma->GetCurrentTrack());
   }
   return;
 }

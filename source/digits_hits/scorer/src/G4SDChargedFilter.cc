@@ -27,10 +27,11 @@
 //
 // G4VSensitiveDetector
 #include "G4SDChargedFilter.hh"
+
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
 #include "G4Step.hh"
 #include "G4TouchableHistory.hh"
-#include "G4ParticleTable.hh"
-#include "G4ParticleDefinition.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // class description:
@@ -42,9 +43,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-G4SDChargedFilter::G4SDChargedFilter(const G4String& name)
-  : G4VSDFilter(name)
-{}
+G4SDChargedFilter::G4SDChargedFilter(const G4String& name) : G4VSDFilter(name) {}
 
 G4bool G4SDChargedFilter::Accept(const G4Step* aStep) const
 {

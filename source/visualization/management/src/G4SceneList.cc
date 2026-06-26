@@ -27,9 +27,11 @@
 
 #include "G4SceneList.hh"
 
-void G4SceneList::remove(G4Scene* scene) {
+void G4SceneList::remove(G4Scene* scene)
+{
   G4SceneListIterator iScene;
-  for (iScene = begin(); iScene != end(); ++iScene) {
+  for (iScene = begin(); iScene != end(); ++iScene)
+  {
     if (*iScene == scene) break;
   }
   if (iScene != end()) erase(iScene);

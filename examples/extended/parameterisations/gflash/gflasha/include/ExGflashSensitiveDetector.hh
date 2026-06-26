@@ -33,11 +33,9 @@
 
 #include "G4VGFlashSensitiveDetector.hh"
 #include "G4VSensitiveDetector.hh"
-#include "globals.hh"
 
 class G4GFlashSpot;
 class ExGflashDetectorConstruction;
-
 class G4Step;
 class G4HCofThisEvent;
 class G4TouchableHistory;

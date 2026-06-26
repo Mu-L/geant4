@@ -25,7 +25,7 @@
 //
 //
 // Author: Alfonso Mantero
-//         
+//
 //
 // History:
 // -----------
@@ -38,25 +38,24 @@
 // Further documentation available from http://goo.gl/4bQgf
 // -------------------------------------------------------------------
 
-
 #ifndef G4VECPSSRKMODEL_HH
-#define G4VECPSSRKMODEL_HH 1
+#define G4VECPSSRKMODEL_HH
 
 #include "globals.hh"
 
-class G4VecpssrKModel 
+class G4VecpssrKModel
 
 {
-public:
-  explicit G4VecpssrKModel();
-  virtual ~G4VecpssrKModel();
-			     
-  virtual G4double CalculateCrossSection(G4int zTarget,G4double massIncident, 
-					 G4double energyIncident) = 0;
-   
-  G4VecpssrKModel(const G4VecpssrKModel&) = delete;
-  G4VecpssrKModel & operator = (const G4VecpssrKModel &right) = delete;
+  public:
 
+    explicit G4VecpssrKModel();
+    virtual ~G4VecpssrKModel();
+
+    virtual G4double CalculateCrossSection(G4int zTarget, G4double massIncident,
+                                           G4double energyIncident) = 0;
+
+    G4VecpssrKModel(const G4VecpssrKModel&) = delete;
+    G4VecpssrKModel& operator=(const G4VecpssrKModel& right) = delete;
 };
 
 #endif

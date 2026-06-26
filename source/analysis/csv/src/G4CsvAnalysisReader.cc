@@ -27,6 +27,7 @@
 // Author: Ivana Hrivnacova, 05/09/2014 (ivana@ipno.in2p3.fr)
 
 #include "G4CsvAnalysisReader.hh"
+
 #include "G4CsvRFileManager.hh"
 #include "G4CsvRNtupleManager.hh"
 #include "G4ThreadLocalSingleton.hh"
@@ -42,10 +43,9 @@ G4CsvAnalysisReader* G4CsvAnalysisReader::Instance()
 }
 
 //_____________________________________________________________________________
-G4CsvAnalysisReader::G4CsvAnalysisReader()
- : G4ToolsAnalysisReader("Csv")
+G4CsvAnalysisReader::G4CsvAnalysisReader() : G4ToolsAnalysisReader("Csv")
 {
-  if ( ! G4Threading::IsWorkerThread() ) fgMasterInstance = this;
+  if (!G4Threading::IsWorkerThread()) fgMasterInstance = this;
 
   // Create managers
   fNtupleManager = std::make_shared<G4CsvRNtupleManager>(fState);
@@ -60,7 +60,7 @@ G4CsvAnalysisReader::G4CsvAnalysisReader()
 //_____________________________________________________________________________
 G4CsvAnalysisReader::~G4CsvAnalysisReader()
 {
-  if ( fState.GetIsMaster() ) fgMasterInstance = nullptr;
+  if (fState.GetIsMaster()) fgMasterInstance = nullptr;
 }
 
 //
@@ -70,7 +70,7 @@ G4CsvAnalysisReader::~G4CsvAnalysisReader()
 //_____________________________________________________________________________
 G4bool G4CsvAnalysisReader::Reset()
 {
-// Reset histograms and ntuple
+  // Reset histograms and ntuple
 
   auto result = true;
 
@@ -85,13 +85,14 @@ G4bool G4CsvAnalysisReader::Reset()
 //
 
 //_____________________________________________________________________________
-G4bool  G4CsvAnalysisReader::CloseFilesImpl(G4bool reset)
+G4bool G4CsvAnalysisReader::CloseFilesImpl(G4bool reset)
 {
   Message(kVL4, "close", "files");
 
   auto result = true;
 
-  if (reset) {
+  if (reset)
+  {
     result &= Reset();
   }
 

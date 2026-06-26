@@ -50,37 +50,29 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4BraggNoDeltaModel::G4BraggNoDeltaModel(const G4ParticleDefinition*p,
-					 const G4String& nam) :
-  G4BraggIonModel(p, nam)
+G4BraggNoDeltaModel::G4BraggNoDeltaModel(const G4ParticleDefinition* p, const G4String& nam)
+  : G4BraggIonModel(p, nam)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4BraggNoDeltaModel::~G4BraggNoDeltaModel()
-{}
+G4BraggNoDeltaModel::~G4BraggNoDeltaModel() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double G4BraggNoDeltaModel::ComputeDEDXPerVolume(
-                            const G4Material* material,
-			    const G4ParticleDefinition* pd,
-                            G4double kinEnergy, G4double)
+G4double G4BraggNoDeltaModel::ComputeDEDXPerVolume(const G4Material* material,
+                                                   const G4ParticleDefinition* pd,
+                                                   G4double kinEnergy, G4double)
 {
-  return 
-    G4BraggIonModel::ComputeDEDXPerVolume(material, pd, kinEnergy, DBL_MAX);
+  return G4BraggIonModel::ComputeDEDXPerVolume(material, pd, kinEnergy, DBL_MAX);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double G4BraggNoDeltaModel::CrossSectionPerVolume(
-                            const G4Material*,
-			    const G4ParticleDefinition*,
-			    G4double, G4double, G4double)
+G4double G4BraggNoDeltaModel::CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                                    G4double, G4double, G4double)
 {
   return 0.0;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-

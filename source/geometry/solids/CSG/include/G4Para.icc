@@ -26,38 +26,32 @@
 // Implementation of inline methods of G4Para
 // --------------------------------------------------------------------
 
-inline
-G4double G4Para::GetZHalfLength() const
+inline G4double G4Para::GetZHalfLength() const
 {
   return fDz;
 }
 
-inline
-G4ThreeVector G4Para::GetSymAxis() const
+inline G4ThreeVector G4Para::GetSymAxis() const
 {
-  return G4ThreeVector(fTthetaCphi,fTthetaSphi,1.).unit();
+  return G4ThreeVector(fTthetaCphi, fTthetaSphi, 1.).unit();
 }
 
-inline
-G4double G4Para::GetYHalfLength() const
+inline G4double G4Para::GetYHalfLength() const
 {
   return fDy;
 }
 
-inline
-G4double G4Para::GetXHalfLength() const
+inline G4double G4Para::GetXHalfLength() const
 {
   return fDx;
 }
 
-inline
-G4double G4Para::GetTanAlpha() const
+inline G4double G4Para::GetTanAlpha() const
 {
   return fTalpha;
 }
-    
-inline
-void G4Para::SetXHalfLength(G4double val)
+
+inline void G4Para::SetXHalfLength(G4double val)
 {
   fDx = val;
 
@@ -69,8 +63,7 @@ void G4Para::SetXHalfLength(G4double val)
   MakePlanes();
 }
 
-inline
-void G4Para::SetYHalfLength(G4double val)
+inline void G4Para::SetYHalfLength(G4double val)
 {
   fDy = val;
 
@@ -82,8 +75,7 @@ void G4Para::SetYHalfLength(G4double val)
   MakePlanes();
 }
 
-inline
-void G4Para::SetZHalfLength(G4double val)
+inline void G4Para::SetZHalfLength(G4double val)
 {
   fDz = val;
 
@@ -95,8 +87,7 @@ void G4Para::SetZHalfLength(G4double val)
   MakePlanes();
 }
 
-inline
-void G4Para::SetAlpha(G4double alpha)
+inline void G4Para::SetAlpha(G4double alpha)
 {
   fTalpha = std::tan(alpha);
 
@@ -107,8 +98,7 @@ void G4Para::SetAlpha(G4double alpha)
   MakePlanes();
 }
 
-inline
-void G4Para::SetTanAlpha(G4double val)
+inline void G4Para::SetTanAlpha(G4double val)
 {
   fTalpha = val;
 
@@ -119,12 +109,11 @@ void G4Para::SetTanAlpha(G4double val)
   MakePlanes();
 }
 
-inline
-void G4Para::SetThetaAndPhi(G4double pTheta, G4double pPhi)
+inline void G4Para::SetThetaAndPhi(G4double pTheta, G4double pPhi)
 {
   G4double tanTheta = std::tan(pTheta);
-  fTthetaCphi = tanTheta*std::cos(pPhi);
-  fTthetaSphi = tanTheta*std::sin(pPhi);
+  fTthetaCphi = tanTheta * std::cos(pPhi);
+  fTthetaSphi = tanTheta * std::sin(pPhi);
 
   fCubicVolume = 0.;
   fSurfaceArea = 0.;
@@ -133,15 +122,14 @@ void G4Para::SetThetaAndPhi(G4double pTheta, G4double pPhi)
   MakePlanes();
 }
 
-inline G4double G4Para::GetPhi() const       
+inline G4double G4Para::GetPhi() const
 {
-   return std::atan2(fTthetaSphi,fTthetaCphi);
+  return std::atan2(fTthetaSphi, fTthetaCphi);
 }
 
 inline G4double G4Para::GetTheta() const
 {
-   return std::atan(std::sqrt(fTthetaCphi*fTthetaCphi
-                              +fTthetaSphi*fTthetaSphi));
+  return std::atan(std::sqrt(fTthetaCphi * fTthetaCphi + fTthetaSphi * fTthetaSphi));
 }
 
 inline G4double G4Para::GetAlpha() const

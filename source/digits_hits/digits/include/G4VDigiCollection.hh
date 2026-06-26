@@ -35,8 +35,8 @@
 //
 // Author: Makoto Asai
 // --------------------------------------------------------------------
-#ifndef G4VDigiCollection_h
-#define G4VDigiCollection_h 1
+#ifndef G4VDIGICOLLECTION_HH
+#define G4VDIGICOLLECTION_HH
 
 #include "globals.hh"
 

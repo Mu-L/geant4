@@ -35,8 +35,8 @@
 
 // Author: M.Asai (SLAC), 9 June 2006
 // --------------------------------------------------------------------
-#ifndef G4VUserParallelWorld_hh
-#define G4VUserParallelWorld_hh 1
+#ifndef G4VUSERPARALLELWORLD_HH
+#define G4VUSERPARALLELWORLD_HH
 
 #include "globals.hh"
 
@@ -47,6 +47,7 @@ class G4VSensitiveDetector;
 class G4VUserParallelWorld
 {
   public:
+
     G4VUserParallelWorld(const G4String& worldName);
     virtual ~G4VUserParallelWorld() = default;
 
@@ -56,6 +57,7 @@ class G4VUserParallelWorld
     inline const G4String& GetName() { return fWorldName; }
 
   protected:
+
     G4VPhysicalVolume* GetWorld();
 
     void SetSensitiveDetector(const G4String& logVolName, G4VSensitiveDetector* aSD,
@@ -63,6 +65,7 @@ class G4VUserParallelWorld
     void SetSensitiveDetector(G4LogicalVolume* logVol, G4VSensitiveDetector* aSD);
 
   protected:
+
     G4String fWorldName = "ParallelWorld";
 };
 

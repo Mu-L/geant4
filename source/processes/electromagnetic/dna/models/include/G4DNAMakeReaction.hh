@@ -24,9 +24,8 @@
 // ********************************************************************
 //
 
-
-#ifndef G4DNAMakeReaction_hh
-#define G4DNAMakeReaction_hh 1
+#ifndef G4DNAMAKEREACTION_HH
+#define G4DNAMAKEREACTION_HH
 
 #include "G4VITReactionProcess.hh"
 class G4DNAMolecularReactionTable;
@@ -37,30 +36,30 @@ class G4DNAScavengerMaterial;
 
 class G4DNAMakeReaction : public G4VITReactionProcess
 {
-public:
+  public:
+
     G4DNAMakeReaction();
     explicit G4DNAMakeReaction(G4VDNAReactionModel*);
     ~G4DNAMakeReaction() override = default;
     G4DNAMakeReaction(const G4DNAMakeReaction& other) = delete;
     G4DNAMakeReaction& operator=(const G4DNAMakeReaction& other) = delete;
-    G4bool TestReactibility(const G4Track&,
-                            const G4Track&,
-                            G4double currentStepTime,
+    G4bool TestReactibility(const G4Track&, const G4Track&, G4double currentStepTime,
                             G4bool userStepTimeLimit) override;
 
-    std::vector<std::unique_ptr<G4ITReactionChange>> FindReaction(G4ITReactionSet*,
-    		const G4double, const G4double, const G4bool) override;
+    std::vector<std::unique_ptr<G4ITReactionChange>>
+    FindReaction(G4ITReactionSet*, const G4double, const G4double, const G4bool) override;
 
     std::unique_ptr<G4ITReactionChange> MakeReaction(const G4Track&, const G4Track&) override;
     void SetReactionModel(G4VDNAReactionModel*);
     void UpdatePositionForReaction(G4Track&, G4Track&);
     void SetTimeStepComputer(G4VITTimeStepComputer*);
-protected:
+
+  protected:
+
     const G4DNAMolecularReactionTable*& fMolReactionTable;
     G4VDNAReactionModel* fpReactionModel;
     G4VITTimeStepComputer* fpTimeStepper;
     G4double fTimeStep;
     G4DNAScavengerMaterial* fpScavengerMaterial{nullptr};
-
 };
 #endif

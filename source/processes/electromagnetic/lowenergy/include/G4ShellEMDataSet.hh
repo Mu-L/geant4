@@ -33,7 +33,7 @@
 //  9 Mar 2008   MGP                 Cleaned up unreadable code modified by former developer
 //                                   (Further clean-up needed)
 // 15 Jul 2009   N.A.Karakatsanis    New methods added for loading logarithmic data
-//                                   to enhance computing performance of interpolation 
+//                                   to enhance computing performance of interpolation
 //
 // -------------------------------------------------------------------
 
@@ -45,69 +45,82 @@
 
 // -------------------------------------------------------------------
 
-#ifndef  G4SHELLEMDATASET_HH
-#define  G4SHELLEMDATASET_HH 1
+#ifndef G4SHELLEMDATASET_HH
+#define G4SHELLEMDATASET_HH
 
-#include <vector>
+#include "G4VEMDataSet.hh"
+#include "globals.hh"
+
 #include <CLHEP/Units/SystemOfUnits.h>
 
-#include "globals.hh"
-#include "G4VEMDataSet.hh"
+#include <vector>
 
 class G4VDataSetAlgorithm;
 
-class G4ShellEMDataSet : public G4VEMDataSet 
-{ 
-public:
-  explicit G4ShellEMDataSet(G4int Z, 
-		   G4VDataSetAlgorithm* algo, 
-		   G4double eUnit=CLHEP::MeV, 
-		   G4double dataUnit=CLHEP::barn);
-  virtual ~G4ShellEMDataSet();
- 
-  G4double FindValue(G4double energy, G4int componentId=0) const override;
-  
-  void PrintData(void) const override;
+class G4ShellEMDataSet : public G4VEMDataSet
+{
+  public:
 
-  const G4VEMDataSet*  GetComponent(G4int componentId) const override { return components[componentId]; }
-  void AddComponent(G4VEMDataSet* dataSet) override { components.push_back(dataSet); }
-  size_t NumberOfComponents(void) const override { return components.size(); }
+    explicit G4ShellEMDataSet(G4int Z, G4VDataSetAlgorithm* algo, G4double eUnit = CLHEP::MeV,
+                              G4double dataUnit = CLHEP::barn);
+    virtual ~G4ShellEMDataSet();
 
-  const G4DataVector& GetEnergies(G4int componentId) const override { return GetComponent(componentId)->GetEnergies(0); }
-  const G4DataVector& GetData(G4int componentId) const override { return GetComponent(componentId)->GetData(0); }
-  const G4DataVector& GetLogEnergies(G4int componentId) const override
-  { return GetComponent(componentId)->GetLogEnergies(0); }
-  const G4DataVector& GetLogData(G4int componentId) const override { return GetComponent(componentId)->GetLogData(0); }
+    G4double FindValue(G4double energy, G4int componentId = 0) const override;
 
-  void SetEnergiesData(G4DataVector* energies, G4DataVector* data, G4int componentId) override;
-  void SetLogEnergiesData(G4DataVector* energies,
-			  G4DataVector* data,
-			  G4DataVector* log_energies, 
-			  G4DataVector* log_data,
-			  G4int componentId) override;
+    void PrintData(void) const override;
 
-  G4bool LoadData(const G4String& fileName) override;
-  G4bool LoadNonLogData(const G4String& fileName) override;
-  G4bool SaveData(const G4String& fileName) const override;
-  G4double RandomSelect(G4int /*componentId = 0*/) const override { return -1.; };
+    const G4VEMDataSet* GetComponent(G4int componentId) const override
+    {
+      return components[componentId];
+    }
+    void AddComponent(G4VEMDataSet* dataSet) override { components.push_back(dataSet); }
+    size_t NumberOfComponents(void) const override { return components.size(); }
 
-  G4ShellEMDataSet(const G4ShellEMDataSet& copy) = delete;
-  G4ShellEMDataSet& operator=(const G4ShellEMDataSet& right) = delete;
+    const G4DataVector& GetEnergies(G4int componentId) const override
+    {
+      return GetComponent(componentId)->GetEnergies(0);
+    }
+    const G4DataVector& GetData(G4int componentId) const override
+    {
+      return GetComponent(componentId)->GetData(0);
+    }
+    const G4DataVector& GetLogEnergies(G4int componentId) const override
+    {
+      return GetComponent(componentId)->GetLogEnergies(0);
+    }
+    const G4DataVector& GetLogData(G4int componentId) const override
+    {
+      return GetComponent(componentId)->GetLogData(0);
+    }
 
-protected:
-  G4double GetUnitEnergies() const { return unitEnergies; }
-  G4double GetUnitData() const { return unitData; }
-  const G4VDataSetAlgorithm* GetAlgorithm() const { return algorithm; }   
-  void CleanUpComponents();
+    void SetEnergiesData(G4DataVector* energies, G4DataVector* data, G4int componentId) override;
+    void SetLogEnergiesData(G4DataVector* energies, G4DataVector* data, G4DataVector* log_energies,
+                            G4DataVector* log_data, G4int componentId) override;
 
-private:
-  G4String FullFileName(const G4String& fileName) const;
+    G4bool LoadData(const G4String& fileName) override;
+    G4bool LoadNonLogData(const G4String& fileName) override;
+    G4bool SaveData(const G4String& fileName) const override;
+    G4double RandomSelect(G4int /*componentId = 0*/) const override { return -1.; };
 
-  std::vector<G4VEMDataSet*> components;          // Owned pointers
-  G4VDataSetAlgorithm* algorithm;           // Owned pointer 
-  
-  G4double unitEnergies;
-  G4double unitData;
-  G4int z;
+    G4ShellEMDataSet(const G4ShellEMDataSet& copy) = delete;
+    G4ShellEMDataSet& operator=(const G4ShellEMDataSet& right) = delete;
+
+  protected:
+
+    G4double GetUnitEnergies() const { return unitEnergies; }
+    G4double GetUnitData() const { return unitData; }
+    const G4VDataSetAlgorithm* GetAlgorithm() const { return algorithm; }
+    void CleanUpComponents();
+
+  private:
+
+    G4String FullFileName(const G4String& fileName) const;
+
+    std::vector<G4VEMDataSet*> components;  // Owned pointers
+    G4VDataSetAlgorithm* algorithm;  // Owned pointer
+
+    G4double unitEnergies;
+    G4double unitData;
+    G4int z;
 };
 #endif /* G4SHELLEMDATASET_HH */

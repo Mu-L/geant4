@@ -38,33 +38,27 @@
 // This class provides construction of default EM standard physics
 //
 
-#ifndef G4EmStandardPhysicsSS_h
-#define G4EmStandardPhysicsSS_h 1
+#ifndef G4EMSTANDARDPHYSICSSS_HH
+#define G4EMSTANDARDPHYSICSSS_HH
 
-#include "G4VPhysicsConstructor.hh"
 #include "G4EmParticleList.hh"
+#include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class G4EmStandardPhysicsSS : public G4VPhysicsConstructor
 {
-public:
+  public:
 
-  explicit G4EmStandardPhysicsSS(G4int ver = 1);
+    explicit G4EmStandardPhysicsSS(G4int ver = 1);
 
-  ~G4EmStandardPhysicsSS() override;
+    ~G4EmStandardPhysicsSS() override;
 
-  void ConstructParticle() override;
-  void ConstructProcess() override;
+    void ConstructParticle() override;
+    void ConstructProcess() override;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-
-
-
-
-

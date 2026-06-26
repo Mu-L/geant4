@@ -43,19 +43,24 @@ G4ExcitedBaryonConstructor::G4ExcitedBaryonConstructor(G4int nStates, G4int isoS
 
 void G4ExcitedBaryonConstructor::Construct(G4int idx)
 {
-  if (idx < 0) {
-    for (G4int state = 0; state < NumberOfStates; state += 1) {
+  if (idx < 0)
+  {
+    for (G4int state = 0; state < NumberOfStates; state += 1)
+    {
       ConstructParticle(state);
       ConstructAntiParticle(state);
     }
   }
-  else if (idx < NumberOfStates) {
+  else if (idx < NumberOfStates)
+  {
     ConstructParticle(idx);
     ConstructAntiParticle(idx);
   }
-  else {
+  else
+  {
 #ifdef G4VERBOSE
-    if (G4ParticleTable::GetParticleTable()->GetVerboseLevel() > 1) {
+    if (G4ParticleTable::GetParticleTable()->GetVerboseLevel() > 1)
+    {
       G4cerr << "G4ExcitedBaryonConstructor::Construct()";
       G4cerr << "   illegal index os state = " << idx << G4endl;
     }
@@ -78,7 +83,8 @@ void G4ExcitedBaryonConstructor::ConstructParticle(G4int idx)
   G4String name;
   G4ParticleDefinition* particle;
 
-  for (G4int iIso3 = -1 * iIsoSpin; iIso3 <= iIsoSpin; iIso3 += 2) {
+  for (G4int iIso3 = -1 * iIsoSpin; iIso3 <= iIsoSpin; iIso3 += 2)
+  {
     name = GetName(iIso3, idx);
 
     // clang-format off
@@ -111,7 +117,8 @@ void G4ExcitedBaryonConstructor::ConstructAntiParticle(G4int idx)
   G4String name;
   G4ParticleDefinition* particle;
 
-  for (G4int iIso3 = -1 * iIsoSpin; iIso3 <= iIsoSpin; iIso3 += 2) {
+  for (G4int iIso3 = -1 * iIsoSpin; iIso3 <= iIsoSpin; iIso3 += 2)
+  {
     name = GetName(iIso3, idx);
     name = "anti_" + name;
 
@@ -142,7 +149,8 @@ G4double G4ExcitedBaryonConstructor::GetCharge(G4int iIsoSpin3)
   };
   // clang-format on
 
-  for (G4int idx = 0; idx < 3; idx += 1) {
+  for (G4int idx = 0; idx < 3; idx += 1)
+  {
     charge += quark_charge[GetQuarkContents(idx, iIsoSpin3)] * eplus;
   }
   return charge;
@@ -154,10 +162,12 @@ G4int G4ExcitedBaryonConstructor::GetEncoding(G4int iIsoSpin3, G4int idxState)
   encoding += 1000 * GetQuarkContents(0, iIsoSpin3);
   encoding += 100 * GetQuarkContents(1, iIsoSpin3);
   encoding += 10 * GetQuarkContents(2, iIsoSpin3);
-  if (GetiSpin(idxState) < 9) {
+  if (GetiSpin(idxState) < 9)
+  {
     encoding += GetiSpin(idxState) + 1;
   }
-  else {
+  else
+  {
     encoding += (GetiSpin(idxState) + 1) * 10000000;
   }
   return encoding;

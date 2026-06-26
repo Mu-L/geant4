@@ -40,10 +40,16 @@ geant4_add_module(G4navigation
     G4SimpleLocator.hh
     G4TransportationManager.hh
     G4TransportationManager.icc
+    G4TouchableCollector.hh
+    G4TouchableWalker.hh
     G4VExternalNavigation.hh
     G4VIntersectionLocator.hh
     G4VIntersectionLocator.icc
     G4VNavigation.hh
+    G4VTouchableVisitor.hh
+    G4VVolumeVisitor.hh
+    G4VolumeTreeReporter.hh
+    G4VolumeTreeWalker.hh
     G4VoxelNavigation.hh
     G4VoxelNavigation.icc
     G4VoxelSafety.hh
@@ -73,12 +79,16 @@ geant4_add_module(G4navigation
     G4SafetyCalculator.cc
     G4SafetyHelper.cc
     G4SimpleLocator.cc
+    G4TouchableCollector.cc
+    G4TouchableWalker.cc
     G4TransportationManager.cc
     G4VExternalNavigation.cc
     G4VIntersectionLocator.cc
+    G4VolumeTreeReporter.cc
+    G4VolumeTreeWalker.cc
     G4VoxelNavigation.cc
     G4VoxelSafety.cc)
 
 geant4_module_link_libraries(G4navigation
   PUBLIC G4geometrymng G4magneticfield G4graphics_reps G4globman G4intercoms G4hepgeometry
-  PRIVATE G4volumes G4materials)
+  PRIVATE G4volumes G4materials G4geomBoolean G4specsolids G4heprandom)

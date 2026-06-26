@@ -29,95 +29,79 @@
 // Supervision: John Apostolakis (CERN)
 // --------------------------------------------------------------------
 
-inline
-G4bool G4BFieldIntegrationDriver::AccurateAdvance(G4FieldTrack& track,
-                                  G4double hstep,
-                                  G4double eps,
-                                  G4double hinitial)
+inline G4bool G4BFieldIntegrationDriver::AccurateAdvance(G4FieldTrack& track, G4double hstep,
+                                                         G4double eps, G4double hinitial)
 {
   return fCurrDriver->AccurateAdvance(track, hstep, eps, hinitial);
 }
 
-inline
-G4bool G4BFieldIntegrationDriver::DoesReIntegrate() const
+inline G4bool G4BFieldIntegrationDriver::DoesReIntegrate() const
 {
   return fCurrDriver->DoesReIntegrate();
 }
-   
-inline
-G4EquationOfMotion* G4BFieldIntegrationDriver::GetEquationOfMotion()
+
+inline G4EquationOfMotion* G4BFieldIntegrationDriver::GetEquationOfMotion()
 {
   return fCurrDriver->GetEquationOfMotion();
 }
 
-inline
-G4MagIntegratorStepper* G4BFieldIntegrationDriver::GetStepper()
+inline G4MagIntegratorStepper* G4BFieldIntegrationDriver::GetStepper()
 {
   return fCurrDriver->GetStepper();
 }
 
-inline
-G4double G4BFieldIntegrationDriver::ComputeNewStepSize(G4double errMaxNorm,
-                                       G4double hstepCurrent)
+inline G4double G4BFieldIntegrationDriver::ComputeNewStepSize(G4double errMaxNorm,
+                                                              G4double hstepCurrent)
 {
   return fCurrDriver->ComputeNewStepSize(errMaxNorm, hstepCurrent);
 }
 
-inline
-void G4BFieldIntegrationDriver::SetVerboseLevel(G4int level)
+inline void G4BFieldIntegrationDriver::SetVerboseLevel(G4int level)
 {
   fSmallStepDriver->SetVerboseLevel(level);
   fLargeStepDriver->SetVerboseLevel(level);
 }
 
-inline
-G4int G4BFieldIntegrationDriver::GetVerboseLevel() const
+inline G4int G4BFieldIntegrationDriver::GetVerboseLevel() const
 {
   return fCurrDriver->GetVerboseLevel();
 }
 
-inline
-void G4BFieldIntegrationDriver::OnComputeStep(const G4FieldTrack* track)
+inline void G4BFieldIntegrationDriver::OnComputeStep(const G4FieldTrack* track)
 {
   fSmallStepDriver->OnComputeStep(track);
   fLargeStepDriver->OnComputeStep(track);
 }
 
-inline
-void G4BFieldIntegrationDriver::OnStartTracking()
+inline void G4BFieldIntegrationDriver::OnStartTracking()
 {
   fSmallStepDriver->OnStartTracking();
   fLargeStepDriver->OnStartTracking();
 }
 
-inline
-void G4BFieldIntegrationDriver::StreamInfo( std::ostream& os ) const
+inline void G4BFieldIntegrationDriver::StreamInfo(std::ostream& os) const
 {
   os << "Small Step Driver Info: " << std::endl;
   fSmallStepDriver->StreamInfo(os);
-  os << "Large Step Driver Info: " << std::endl;        
+  os << "Large Step Driver Info: " << std::endl;
   fLargeStepDriver->StreamInfo(os);
 }
-   
+
 /** ----------------- Deprecated methods ----------------------------------- **/
 
-inline
-void G4BFieldIntegrationDriver::GetDerivatives(const G4FieldTrack& track,
-                                                     G4double dydx[]) const
+inline void G4BFieldIntegrationDriver::GetDerivatives(const G4FieldTrack& track,
+                                                      G4double dydx[]) const
 {
   fCurrDriver->GetDerivatives(track, dydx);
 }
 
-inline
-void G4BFieldIntegrationDriver::GetDerivatives(const G4FieldTrack& track,
-                                                     G4double dydx[],
-                                                     G4double field[]) const
+inline void G4BFieldIntegrationDriver::GetDerivatives(const G4FieldTrack& track, G4double dydx[],
+                                                      G4double field[]) const
 {
   fCurrDriver->GetDerivatives(track, dydx, field);
 }
 
-inline
-const G4MagIntegratorStepper* G4BFieldIntegrationDriver::GetStepper() const
+inline const G4MagIntegratorStepper* G4BFieldIntegrationDriver::GetStepper() const
 {
   return fCurrDriver->GetStepper();
 }

@@ -39,7 +39,8 @@ G4ElementDataRegistry* G4ElementDataRegistry::instance = nullptr;
 
 G4ElementDataRegistry* G4ElementDataRegistry::Instance()
 {
-  if (instance == nullptr) {
+  if (instance == nullptr)
+  {
     static G4ElementDataRegistry manager;
     instance = &manager;
   }
@@ -50,7 +51,8 @@ G4ElementDataRegistry* G4ElementDataRegistry::Instance()
 
 G4ElementDataRegistry::~G4ElementDataRegistry()
 {
-  for (auto const & ptr : elmdata) {
+  for (auto const& ptr : elmdata)
+  {
     delete ptr;
   }
   elmdata.clear();
@@ -58,14 +60,19 @@ G4ElementDataRegistry::~G4ElementDataRegistry()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4ElementDataRegistry::G4ElementDataRegistry()
-{}
+G4ElementDataRegistry::G4ElementDataRegistry() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void G4ElementDataRegistry::RegisterMe(G4ElementData* p)
 {
-  for (auto const & ptr : elmdata) { if (ptr == p) { return; } }
+  for (auto const& ptr : elmdata)
+  {
+    if (ptr == p)
+    {
+      return;
+    }
+  }
   elmdata.push_back(p);
 }
 
@@ -73,9 +80,14 @@ void G4ElementDataRegistry::RegisterMe(G4ElementData* p)
 
 void G4ElementDataRegistry::RemoveMe(G4ElementData* p)
 {
-  if (nullptr == p) { return; }
-  for (std::size_t i=0; i<elmdata.size(); ++i) {
-    if (p == elmdata[i]) {
+  if (nullptr == p)
+  {
+    return;
+  }
+  for (std::size_t i = 0; i < elmdata.size(); ++i)
+  {
+    if (p == elmdata[i])
+    {
       elmdata[i] = nullptr;
       return;
     }
@@ -87,8 +99,10 @@ void G4ElementDataRegistry::RemoveMe(G4ElementData* p)
 G4ElementData* G4ElementDataRegistry::GetElementDataByName(const G4String& nam)
 {
   G4ElementData* ptr = nullptr;
-  for (auto const & p : elmdata) {
-    if (p->GetName() == nam) {
+  for (auto const& p : elmdata)
+  {
+    if (p->GetName() == nam)
+    {
       ptr = p;
       break;
     }
@@ -98,11 +112,12 @@ G4ElementData* G4ElementDataRegistry::GetElementDataByName(const G4String& nam)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4ElementData*
-G4ElementDataRegistry::NewElementData(const G4String& nam, G4int n)
+G4ElementData* G4ElementDataRegistry::NewElementData(const G4String& nam, G4int n)
 {
-  for (auto const & p : elmdata) {
-    if (p->GetName() == nam) {
+  for (auto const& p : elmdata)
+  {
+    if (p->GetName() == nam)
+    {
       return p;
     }
   }

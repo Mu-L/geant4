@@ -27,32 +27,30 @@
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara (Nov 1999)
 //
-// J.M. Quesada (July 2009) C's and k's  values according to Furihata's paper 
+// J.M. Quesada (July 2009) C's and k's  values according to Furihata's paper
 // (based on notes added on proof in Dostrovskii's paper)
 
 #include "G4AlphaGEMProbability.hh"
+
 #include "G4SystemOfUnits.hh"
 
-G4AlphaGEMProbability::G4AlphaGEMProbability() :
-    G4GEMProbability(4,2,0.0) // A,Z,Gamma
+G4AlphaGEMProbability::G4AlphaGEMProbability() : G4GEMProbability(4, 2, 0.0)  // A,Z,Gamma
 {
-    ExcitEnergies.push_back(20.01E+3*keV);
-    ExcitSpins.push_back(0.0);
-    ExcitLifetimes.push_back(207.0*keV);
+  ExcitEnergies.push_back(20.01E+3 * keV);
+  ExcitSpins.push_back(0.0);
+  ExcitLifetimes.push_back(207.0 * keV);
 
-    ExcitEnergies.push_back(21.18E+3*keV);
-    ExcitSpins.push_back(0.0);
-    ExcitLifetimes.push_back(0.73*MeV);
+  ExcitEnergies.push_back(21.18E+3 * keV);
+  ExcitSpins.push_back(0.0);
+  ExcitLifetimes.push_back(0.73 * MeV);
 
-    ExcitEnergies.push_back(22.02E+3*keV);
-    ExcitSpins.push_back(2.0);
-    ExcitLifetimes.push_back(1.83*MeV);
+  ExcitEnergies.push_back(22.02E+3 * keV);
+  ExcitSpins.push_back(2.0);
+  ExcitLifetimes.push_back(1.83 * MeV);
 
-    ExcitEnergies.push_back(25.33E+3*keV);
-    ExcitSpins.push_back(1.0);
-    ExcitLifetimes.push_back(2.36*MeV);
+  ExcitEnergies.push_back(25.33E+3 * keV);
+  ExcitSpins.push_back(1.0);
+  ExcitLifetimes.push_back(2.36 * MeV);
 }
 
-G4AlphaGEMProbability::~G4AlphaGEMProbability()
-{}
-
+G4AlphaGEMProbability::~G4AlphaGEMProbability() {}

@@ -32,41 +32,42 @@
 //
 // Modified:
 // 16.11.2005 G.Folger: don't  keep processes as data members, but new these
-// 13.06.2006 G.Folger: (re)move elastic scatterring 
+// 13.06.2006 G.Folger: (re)move elastic scatterring
 // 12.04.2017 A.Dotti move to new design with base class
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4NeutronBuilder_h
-#define G4NeutronBuilder_h 1
+#ifndef G4NEUTRONBUILDER_HH
+#define G4NEUTRONBUILDER_HH
 
+#include "G4HadronInelasticProcess.hh"
+#include "G4NeutronCaptureProcess.hh"
+#include "G4NeutronFissionProcess.hh"
 #include "G4PhysicsBuilderInterface.hh"
+#include "G4VNeutronBuilder.hh"
 #include "globals.hh"
 
-#include "G4NeutronFissionProcess.hh"
-#include "G4NeutronCaptureProcess.hh"
-#include "G4HadronInelasticProcess.hh"
-#include "G4VNeutronBuilder.hh"
 #include <vector>
 
 class G4NeutronBuilder : public G4PhysicsBuilderInterface
 {
-  public: 
+  public:
+
     G4NeutronBuilder(G4bool fissionFlag = false);
     virtual ~G4NeutronBuilder() {}
 
-  public: 
+  public:
+
     virtual void Build() final override;
-    virtual void RegisterMe(G4PhysicsBuilderInterface * aB) final override;
+    virtual void RegisterMe(G4PhysicsBuilderInterface* aB) final override;
 
   private:
-    G4HadronInelasticProcess * theNeutronInelastic;
-    G4NeutronFissionProcess * theNeutronFission;
-    G4NeutronCaptureProcess  * theNeutronCapture;
-    
-    std::vector<G4VNeutronBuilder *> theModelCollections;
 
+    G4HadronInelasticProcess* theNeutronInelastic;
+    G4NeutronFissionProcess* theNeutronFission;
+    G4NeutronCaptureProcess* theNeutronCapture;
+
+    std::vector<G4VNeutronBuilder*> theModelCollections;
 };
 
 #endif
-

@@ -38,12 +38,10 @@
 
 #include "G4VCrossSectionRatio.hh"
 
-G4VCrossSectionRatio::G4VCrossSectionRatio(const G4String& nam, G4int verb) 
-  : G4VCrossSectionDataSet(nam) 
+G4VCrossSectionRatio::G4VCrossSectionRatio(const G4String& nam, G4int verb)
+  : G4VCrossSectionDataSet(nam)
 {
   SetVerboseLevel(verb);
 }
 
-G4VCrossSectionRatio::~G4VCrossSectionRatio()
-{}
-
+G4VCrossSectionRatio::~G4VCrossSectionRatio() {}

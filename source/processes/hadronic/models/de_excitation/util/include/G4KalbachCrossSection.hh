@@ -26,11 +26,11 @@
 //
 //
 // V.Ivanchenko 13.04.2015
-// 
+//
 // J.M. Quesada 22.04.2015 several fixes
 
-#ifndef G4KalbachCrossSection_h
-#define G4KalbachCrossSection_h 1
+#ifndef G4KALBACHCROSSSECTION_HH
+#define G4KALBACHCROSSSECTION_HH
 
 #include "globals.hh"
 
@@ -39,14 +39,12 @@
 
 class G4KalbachCrossSection
 {
-public:
+  public:
 
-  static G4double ComputePowerParameter(G4int resA, G4int idx);
+    static G4double ComputePowerParameter(G4int resA, G4int idx);
 
-  static G4double ComputeCrossSection(G4double K, G4double cb,  
-				      G4double resA13, G4double amu1, 
-				      G4int idx, G4int Z, G4int A, 
-				      G4int resA);
+    static G4double ComputeCrossSection(G4double K, G4double cb, G4double resA13, G4double amu1,
+                                        G4int idx, G4int Z, G4int A, G4int resA);
 };
 
 #endif

@@ -192,7 +192,14 @@ LUPI_HOST_DEVICE void GRIN_inelasticForEnergy::serialize( LUPI::DataBuffer &a_bu
 /* *********************************************************************************************************//**
  ***********************************************************************************************************/
 
-LUPI_HOST_DEVICE GRIN_inelastic::GRIN_inelastic( ) {
+LUPI_HOST_DEVICE GRIN_inelastic::GRIN_inelastic( ) :
+        m_neutronIndex( 0 ),
+        m_neutronUserParticleIndex( -1 ),
+        m_neutronMass( 0.0 ),
+        m_targetIntid( 0 ),
+        m_targetIndex( 0 ),
+        m_targetUserParticleIndex( -1 ),
+        m_targetMass( 0.0 ) {
 
 }
 
@@ -311,7 +318,8 @@ LUPI_HOST_DEVICE void GRIN_inelastic::serialize( LUPI::DataBuffer &a_buffer, LUP
 /* *********************************************************************************************************//**
  ***********************************************************************************************************/
 
-LUPI_HOST_DEVICE GRIN_captureToCompound::GRIN_captureToCompound( ) {
+LUPI_HOST_DEVICE GRIN_captureToCompound::GRIN_captureToCompound( ) :
+        m_index( 0 ) {
 
 }
 

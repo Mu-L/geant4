@@ -35,8 +35,8 @@
 //     Makoto  Asai   (e-mail: asai@slac.stanford.edu)
 //     Takashi Sasaki (e-mail: Takashi.Sasaki@kek.jp)
 // ---------------------------------------------------------------
-#ifndef G4SmoothTrajectoryPoint_hh
-#define G4SmoothTrajectoryPoint_hh 1
+#ifndef G4SMOOTHTRAJECTORYPOINT_HH
+#define G4SMOOTHTRAJECTORYPOINT_HH
 
 #include "G4Allocator.hh"  // Include from 'particle+matter'
 #include "G4ThreeVector.hh"  // Include from 'geometry'
@@ -49,47 +49,50 @@ class G4ClonedSmoothTrajectoryPoint;
 
 class G4SmoothTrajectoryPoint : public G4VTrajectoryPoint
 {
-  friend class G4ClonedSmoothTrajectoryPoint;
+    friend class G4ClonedSmoothTrajectoryPoint;
 
- public:
-  G4SmoothTrajectoryPoint() = default;
-  G4SmoothTrajectoryPoint(G4ThreeVector pos, std::vector<G4ThreeVector>* auxiliaryPoints);
-  // No auxiliary points setter, so must set the points in the
-  // constructor already
-  G4SmoothTrajectoryPoint(G4ThreeVector pos);
-  ~G4SmoothTrajectoryPoint() override;
-  G4SmoothTrajectoryPoint(const G4SmoothTrajectoryPoint& right);
-  G4SmoothTrajectoryPoint& operator=(const G4SmoothTrajectoryPoint&) = delete;
+  public:
 
-  // Operators
-  //
-  inline void* operator new(size_t);
-  inline void operator delete(void* aTrajectoryPoint);
-  inline G4bool operator==(const G4SmoothTrajectoryPoint& right) const;
+    G4SmoothTrajectoryPoint() = default;
+    G4SmoothTrajectoryPoint(G4ThreeVector pos, std::vector<G4ThreeVector>* auxiliaryPoints);
+    // No auxiliary points setter, so must set the points in the
+    // constructor already
+    G4SmoothTrajectoryPoint(G4ThreeVector pos);
+    ~G4SmoothTrajectoryPoint() override;
+    G4SmoothTrajectoryPoint(const G4SmoothTrajectoryPoint& right);
+    G4SmoothTrajectoryPoint& operator=(const G4SmoothTrajectoryPoint&) = delete;
 
-  // Get/Set functions
-  //
-  inline const G4ThreeVector GetPosition() const override { return fPosition; }
-  inline const std::vector<G4ThreeVector>* GetAuxiliaryPoints() const override
-  {
-    return fAuxiliaryPointVector;
-  }
+    // Operators
+    //
+    inline void* operator new(size_t);
+    inline void operator delete(void* aTrajectoryPoint);
+    inline G4bool operator==(const G4SmoothTrajectoryPoint& right) const;
 
-  // Get method for HEPRep style attributes
-  //
-  const std::map<G4String, G4AttDef>* GetAttDefs() const override;
-  std::vector<G4AttValue>* CreateAttValues() const override;
+    // Get/Set functions
+    //
+    inline const G4ThreeVector GetPosition() const override { return fPosition; }
+    inline const std::vector<G4ThreeVector>* GetAuxiliaryPoints() const override
+    {
+      return fAuxiliaryPointVector;
+    }
 
- private:
-  G4ThreeVector fPosition{0., 0., 0.};
-  std::vector<G4ThreeVector>* fAuxiliaryPointVector = nullptr;
+    // Get method for HEPRep style attributes
+    //
+    const std::map<G4String, G4AttDef>* GetAttDefs() const override;
+    std::vector<G4AttValue>* CreateAttValues() const override;
+
+  private:
+
+    G4ThreeVector fPosition{0., 0., 0.};
+    std::vector<G4ThreeVector>* fAuxiliaryPointVector = nullptr;
 };
 
 extern G4TRACKING_DLL G4Allocator<G4SmoothTrajectoryPoint>*& aSmoothTrajectoryPointAllocator();
 
 inline void* G4SmoothTrajectoryPoint::operator new(size_t)
 {
-  if (aSmoothTrajectoryPointAllocator() == nullptr) {
+  if (aSmoothTrajectoryPointAllocator() == nullptr)
+  {
     aSmoothTrajectoryPointAllocator() = new G4Allocator<G4SmoothTrajectoryPoint>;
   }
   return (void*)aSmoothTrajectoryPointAllocator()->MallocSingle();

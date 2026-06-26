@@ -32,33 +32,32 @@
 //  Authors: D.H. Wright (SLAC) on base of F. Lei and P.R. Truscott code
 //  Date:   9 August 2017
 //
-//  30 May 2024   V. Ivanchenko rename the class 
+//  30 May 2024   V. Ivanchenko rename the class
 //
 //  Description: This class is the extension of simulation of radioactive
-//               decays allowing several biasing modes. 
+//               decays allowing several biasing modes.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4RadioactiveDecay_h
-#define G4RadioactiveDecay_h 1
-
-#include "G4VRadioactiveDecay.hh"
-
-#include <vector>
-#include <map>
-#include <CLHEP/Units/SystemOfUnits.h>
-
-#include "G4ios.hh"
-#include "globals.hh"
-#include "G4VRestDiscreteProcess.hh"
-#include "G4ParticleChangeForRadDecay.hh"
+#ifndef G4RADIOACTIVEDECAY_HH
+#define G4RADIOACTIVEDECAY_HH
 
 #include "G4NucleusLimits.hh"
-#include "G4RadioactiveDecayRatesToDaughter.hh"
+#include "G4ParticleChangeForRadDecay.hh"
 #include "G4RadioactiveDecayChainsFromParent.hh"
+#include "G4RadioactiveDecayRatesToDaughter.hh"
 #include "G4RadioactivityTable.hh"
-#include "G4ThreeVector.hh"
 #include "G4Threading.hh"
+#include "G4ThreeVector.hh"
+#include "G4VRadioactiveDecay.hh"
+#include "G4VRestDiscreteProcess.hh"
+#include "G4ios.hh"
+#include "globals.hh"
+
+#include <CLHEP/Units/SystemOfUnits.h>
+
+#include <map>
+#include <vector>
 
 class G4Fragment;
 class G4RadioactivationMessenger;
@@ -69,14 +68,13 @@ typedef std::map<G4String, G4DecayTable*> DecayTableMap;
 
 class G4RadioactiveDecay : public G4VRadioactiveDecay
 {
-  public: // with description
+  public:  // with description
 
-    G4RadioactiveDecay(const G4String& processName="RadioactiveDecay",
-                      const G4double timeThresholdForRadioactiveDecays=-1.0);
+    G4RadioactiveDecay(const G4String& processName = "RadioactiveDecay",
+                       const G4double timeThresholdForRadioactiveDecays = -1.0);
     ~G4RadioactiveDecay() override;
 
-    G4VParticleChange* DecayIt(const G4Track& theTrack,
-                               const G4Step&  theStep) override;
+    G4VParticleChange* DecayIt(const G4Track& theTrack, const G4Step& theStep) override;
 
     void ProcessDescription(std::ostream& outFile) const override;
 
@@ -84,12 +82,12 @@ class G4RadioactiveDecay : public G4VRadioactiveDecay
     void SetDecayBias(const G4String& filename);
 
     // Set the half-life threshold for isomer production
-    void SetHLThreshold(G4double hl) {halflifethreshold = hl;}
+    void SetHLThreshold(G4double hl) { halflifethreshold = hl; }
 
     void SetSourceTimeProfile(const G4String& filename);
     // Set source exposure function using histograms in "filename"
 
-    G4bool IsRateTableReady(const G4ParticleDefinition &);
+    G4bool IsRateTableReady(const G4ParticleDefinition&);
     // Returns true if the coefficient and decay time table for all the
     // descendants of the specified isotope are ready.
     // used in VR decay mode only
@@ -98,49 +96,50 @@ class G4RadioactiveDecay : public G4VRadioactiveDecay
     // Calculates the coefficient and decay time table for all the descendents
     // of the specified isotope.  Adds the calculated table to the private data
     // member "theParentChainTable".
-    // used in VR decay mode only 
+    // used in VR decay mode only
 
     void GetChainsFromParent(const G4ParticleDefinition&);
     // Used to retrieve the coefficient and decay time table for all the
     // descendants of the specified isotope from "theParentChainTable"
     // and place it in "chainsFromParent".
-    // used in VR decay mode only 
+    // used in VR decay mode only
 
-    void SetDecayRate(G4int,G4int,G4double, G4int, std::vector<G4double>&,
+    void SetDecayRate(G4int, G4int, G4double, G4int, std::vector<G4double>&,
                       std::vector<G4double>&);
     // Sets "theDecayRate" with data supplied in the arguements.
-    // used in VR decay mode only 
+    // used in VR decay mode only
 
     std::vector<G4RadioactivityTable*>& GetTheRadioactivityTables()
-       {return theRadioactivityTables;}
+    {
+      return theRadioactivityTables;
+    }
     // Return vector of G4Radioactivity map - should be used in VR mode only
-
 
     // Controls whether G4RadioactiveDecay runs in analogue mode or
     // variance reduction mode.  SetBRBias, SetSplitNuclei and
     // SetSourceTimeProfile all turn off analogue mode and use VR mode
-    inline void SetAnalogueMonteCarlo (G4bool r) {
-      AnalogueMC = r;
-    }
+    inline void SetAnalogueMonteCarlo(G4bool r) { AnalogueMC = r; }
 
     // Returns true if the simulation is an analogue Monte Carlo, and false if
     // any of the biassing schemes have been selected.
-    inline G4bool IsAnalogueMonteCarlo () {return AnalogueMC;}
+    inline G4bool IsAnalogueMonteCarlo() { return AnalogueMC; }
 
-     // Sets whether branching ration bias scheme applies.
-    inline void SetBRBias(G4bool r) {
+    // Sets whether branching ration bias scheme applies.
+    inline void SetBRBias(G4bool r)
+    {
       BRBias = r;
       AnalogueMC = false;
     }
 
     // Sets the number of times a nucleus will decay when biased
-    inline void SetSplitNuclei(G4int r) {
+    inline void SetSplitNuclei(G4int r)
+    {
       NSplit = r;
       AnalogueMC = false;
     }
 
     //  Returns the nuclear splitting number
-    inline G4int GetSplitNuclei () {return NSplit;}
+    inline G4int GetSplitNuclei() { return NSplit; }
 
     G4RadioactiveDecay(const G4RadioactiveDecay& right) = delete;
     G4RadioactiveDecay& operator=(const G4RadioactiveDecay& right) = delete;
@@ -151,14 +150,11 @@ class G4RadioactiveDecay : public G4VRadioactiveDecay
     G4double GetDecayTime();
     G4int GetDecayTimeBin(const G4double aDecayTime);
 
-    G4double GetMeanLifeTime(const G4Track& theTrack,
-                             G4ForceCondition* condition) override;
+    G4double GetMeanLifeTime(const G4Track& theTrack, G4ForceCondition* condition) override;
 
-    //Add gamma,Xray,conversion,and auger electrons for bias mode
-    void AddDeexcitationSpectrumForBiasMode(G4ParticleDefinition* apartDef,
-                                            G4double weight,
-                                            G4double currenTime,
-                                            std::vector<double>& weights_v,
+    // Add gamma,Xray,conversion,and auger electrons for bias mode
+    void AddDeexcitationSpectrumForBiasMode(G4ParticleDefinition* apartDef, G4double weight,
+                                            G4double currenTime, std::vector<double>& weights_v,
                                             std::vector<double>& times_v,
                                             std::vector<G4DynamicParticle*>& secondaries_v);
 
@@ -189,4 +185,3 @@ class G4RadioactiveDecay : public G4VRadioactiveDecay
 };
 
 #endif
-

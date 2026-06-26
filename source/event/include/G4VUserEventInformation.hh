@@ -30,23 +30,23 @@
 // Abstract class the user can derive from for tuning user's
 // information associating with a G4Event class object.
 //
-// It is user's responsibility to construct a concrete class object 
+// It is user's responsibility to construct a concrete class object
 // and set the pointer to a proper G4Event object.
 //
 // To set a pointer of a concrete class object to G4Event in
 // G4UserEventAction concrete implementation, given the G4Event
 // object is available only by "pointer to const", SetUserEventInformation()
 // method of G4EventManager is available.
-// Alternatively, the user may modify GenerateEvent() method of 
-// his/her own RunManager. 
+// Alternatively, the user may modify GenerateEvent() method of
+// his/her own RunManager.
 //
 // The concrete class object is deleted by the Geant4 kernel when
 // associated G4Event object is deleted.
 
 // Author: Makoto Asai (SLAC)
 // --------------------------------------------------------------------
-#ifndef G4VUserEventInformation_hh
-#define G4VUserEventInformation_hh 1
+#ifndef G4VUSEREVENTINFORMATION_HH
+#define G4VUSEREVENTINFORMATION_HH
 
 class G4VUserEventInformation
 {

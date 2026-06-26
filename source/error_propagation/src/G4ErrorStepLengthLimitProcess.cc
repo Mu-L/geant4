@@ -30,6 +30,7 @@
 //
 
 #include "G4ErrorStepLengthLimitProcess.hh"
+
 #include "G4ErrorMessenger.hh"
 #include "G4SystemOfUnits.hh"
 
@@ -38,8 +39,7 @@
 #endif
 
 //------------------------------------------------------------------------
-G4ErrorStepLengthLimitProcess::G4ErrorStepLengthLimitProcess(
-  const G4String& processName)
+G4ErrorStepLengthLimitProcess::G4ErrorStepLengthLimitProcess(const G4String& processName)
   : G4VErrorLimitProcess(processName)
 {
   theStepLimit = 1000. * mm;  // kInfinity;
@@ -49,17 +49,17 @@ G4ErrorStepLengthLimitProcess::G4ErrorStepLengthLimitProcess(
 G4ErrorStepLengthLimitProcess::~G4ErrorStepLengthLimitProcess() {}
 
 //------------------------------------------------------------------------
-G4double G4ErrorStepLengthLimitProcess::PostStepGetPhysicalInteractionLength(
-  const G4Track&, G4double, G4ForceCondition* condition)
+G4double
+G4ErrorStepLengthLimitProcess::PostStepGetPhysicalInteractionLength(const G4Track&, G4double,
+                                                                    G4ForceCondition* condition)
 {
   *condition = NotForced;
 
 #ifdef G4VERBOSE
-  if(G4ErrorPropagatorData::verbose() >= 3)
+  if (G4ErrorPropagatorData::verbose() >= 3)
   {
-    G4cout
-      << "G4ErrorStepLengthLimitProcess::PostStepGetPhysicalInteractionLength "
-      << theStepLimit << G4endl;
+    G4cout << "G4ErrorStepLengthLimitProcess::PostStepGetPhysicalInteractionLength " << theStepLimit
+           << G4endl;
   }
 #endif
 

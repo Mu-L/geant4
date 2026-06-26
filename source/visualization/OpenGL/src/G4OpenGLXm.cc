@@ -30,24 +30,20 @@
 
 #include "G4OpenGLXm.hh"
 
-#include "G4UImanager.hh"
 #include "G4UIbatch.hh"
+#include "G4UImanager.hh"
 
-G4OpenGLXm::G4OpenGLXm (const G4String& name,
-                        const G4String& nickname,
-                        const G4String& description,
-                        Functionality f):
-G4VGraphicsSystem (name,
-                   nickname,
-                   description,
-                   f)
+G4OpenGLXm::G4OpenGLXm(const G4String& name, const G4String& nickname, const G4String& description,
+                       Functionality f)
+  : G4VGraphicsSystem(name, nickname, description, f)
 {}
 
-G4bool G4OpenGLXm::IsUISessionCompatible () const
+G4bool G4OpenGLXm::IsUISessionCompatible() const
 {
   // Xm windows are not appropriate in a batch session.
   G4UIsession* baseSession = G4UImanager::GetUIpointer()->GetBaseSession();
   if (baseSession == nullptr  // Pure batch session
-      || dynamic_cast<G4UIbatch*>(baseSession) != nullptr) return false;
+      || dynamic_cast<G4UIbatch*>(baseSession) != nullptr)
+    return false;
   return true;
 }

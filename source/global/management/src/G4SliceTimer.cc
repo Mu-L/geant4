@@ -29,6 +29,7 @@
 // --------------------------------------------------------------------
 
 #include "G4SliceTimer.hh"
+
 #include "G4ios.hh"
 
 #if defined(IRIX6_2)
@@ -42,7 +43,7 @@ std::ostream& operator<<(std::ostream& os, const G4SliceTimer& t)
 {
   // Print timer status n std::ostream
 
-  if(t.IsValid())
+  if (t.IsValid())
   {
     os << "User = " << t.GetUserElapsed() << "s Real = " << t.GetRealElapsed()
        << "s Sys = " << t.GetSystemElapsed() << "s";
@@ -55,7 +56,10 @@ std::ostream& operator<<(std::ostream& os, const G4SliceTimer& t)
 }
 
 // --------------------------------------------------------------------
-G4SliceTimer::G4SliceTimer() { Clear(); }
+G4SliceTimer::G4SliceTimer()
+{
+  Clear();
+}
 
 // --------------------------------------------------------------------
 G4double G4SliceTimer::GetRealElapsed() const

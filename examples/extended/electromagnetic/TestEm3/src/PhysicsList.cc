@@ -33,10 +33,10 @@
 #include "StepMax.hh"
 
 #include "G4DecayPhysics.hh"
-#include "G4EmDNAPhysics.hh"
 #include "G4EmDNAPhysics_option2.hh"
 #include "G4EmDNAPhysics_option4.hh"
 #include "G4EmDNAPhysics_option6.hh"
+#include "G4EmDNAPhysics_option8.hh"
 #include "G4EmLivermorePhysics.hh"
 #include "G4EmLowEPPhysics.hh"
 #include "G4EmPenelopePhysics.hh"
@@ -53,16 +53,6 @@
 #include "G4ProcessManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
-
-// particles
-
-#include "G4BaryonConstructor.hh"
-#include "G4BosonConstructor.hh"
-#include "G4DNAGenericIonsManager.hh"
-#include "G4IonConstructor.hh"
-#include "G4LeptonConstructor.hh"
-#include "G4MesonConstructor.hh"
-#include "G4ShortLivedConstructor.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -86,6 +76,7 @@ PhysicsList::PhysicsList()
 PhysicsList::~PhysicsList()
 {
   delete fEmPhysicsList;
+  delete fDecayPhysics;
   delete fMessenger;
 }
 
@@ -93,32 +84,11 @@ PhysicsList::~PhysicsList()
 
 void PhysicsList::ConstructParticle()
 {
-  G4BosonConstructor pBosonConstructor;
-  pBosonConstructor.ConstructParticle();
-
-  G4LeptonConstructor pLeptonConstructor;
-  pLeptonConstructor.ConstructParticle();
-
-  G4MesonConstructor pMesonConstructor;
-  pMesonConstructor.ConstructParticle();
-
-  G4BaryonConstructor pBaryonConstructor;
-  pBaryonConstructor.ConstructParticle();
-
-  G4IonConstructor pIonConstructor;
-  pIonConstructor.ConstructParticle();
-
-  G4ShortLivedConstructor sLivedConstructor;
-  sLivedConstructor.ConstructParticle();
-
-  // Geant4-DNA
-
-  G4DNAGenericIonsManager* genericIonsManager;
-  genericIonsManager = G4DNAGenericIonsManager::Instance();
-  genericIonsManager->GetIon("alpha++");
-  genericIonsManager->GetIon("alpha+");
-  genericIonsManager->GetIon("helium");
-  genericIonsManager->GetIon("hydrogen");
+  fEmPhysicsList->ConstructParticle();
+  fDecayPhysics->ConstructParticle();
+  if (nullptr != fHadPhysicsList) {
+    fHadPhysicsList->ConstructParticle();
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -128,7 +98,7 @@ void PhysicsList::ConstructProcess()
   AddTransportation();
   fEmPhysicsList->ConstructProcess();
   fDecayPhysics->ConstructProcess();
-  if (fHadPhysicsList) {
+  if (nullptr != fHadPhysicsList) {
     fHadPhysicsList->ConstructProcess();
   }
   AddStepMax();
@@ -223,11 +193,6 @@ void PhysicsList::AddPhysicsList(const G4String& name)
     delete fEmPhysicsList;
     fEmPhysicsList = new G4EmLivermorePhysics();
   }
-  else if (name == "dna") {
-    fEmName = name;
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics();
-  }
   else if (name == "dna_opt2") {
     fEmName = name;
     delete fEmPhysicsList;
@@ -242,6 +207,11 @@ void PhysicsList::AddPhysicsList(const G4String& name)
     fEmName = name;
     delete fEmPhysicsList;
     fEmPhysicsList = new G4EmDNAPhysics_option6();
+  }
+  else if (name == "dna_opt8") {
+    fEmName = name;
+    delete fEmPhysicsList;
+    fEmPhysicsList = new G4EmDNAPhysics_option8();
   }
   else if (name == "had_elastic" && !fHadPhysicsList) {
     fHadPhysicsList = new G4HadronElasticPhysics();

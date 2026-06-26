@@ -43,37 +43,37 @@
 //
 ///////////////////////////////////////////////////////////////////////
 
-#include "G4UCNProcessSubType.hh"
-
 #include "G4UCNAbsorption.hh"
 
-//#include "G4Nucleus.hh"
-//#include "G4ReactionProduct.hh"
-//#include "G4NucleiPropertiesTable.hh"
+#include "G4UCNProcessSubType.hh"
 
-#include "G4SystemOfUnits.hh"
+// #include "G4Nucleus.hh"
+// #include "G4ReactionProduct.hh"
+// #include "G4NucleiPropertiesTable.hh"
+
 #include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
 
 /////////////////////////
 // Class Implementation
 /////////////////////////
 
-        //////////////
-        // Operators
-        //////////////
+//////////////
+// Operators
+//////////////
 
 // G4UCNAbsorption::operator=(const G4UCNAbsorption &right)
 // {
 // }
 
-        /////////////////
-        // Constructors
-        /////////////////
+/////////////////
+// Constructors
+/////////////////
 
-G4UCNAbsorption::G4UCNAbsorption(const G4String& processName,G4ProcessType type)
-               : G4VDiscreteProcess(processName, type)
+G4UCNAbsorption::G4UCNAbsorption(const G4String& processName, G4ProcessType type)
+  : G4VDiscreteProcess(processName, type)
 {
-  if (verboseLevel>0) G4cout << GetProcessName() << " is created " << G4endl;
+  if (verboseLevel > 0) G4cout << GetProcessName() << " is created " << G4endl;
 
   SetProcessSubType(fUCNAbsorption);
 }
@@ -82,131 +82,127 @@ G4UCNAbsorption::G4UCNAbsorption(const G4String& processName,G4ProcessType type)
 // {
 // }
 
-        ////////////////
-        // Destructors
-        ////////////////
+////////////////
+// Destructors
+////////////////
 
-G4UCNAbsorption::~G4UCNAbsorption(){}
+G4UCNAbsorption::~G4UCNAbsorption() {}
 
-        ////////////
-        // Methods
-        ////////////
+////////////
+// Methods
+////////////
 
 // PostStepDoIt
 // -------------
 
-G4VParticleChange*
-G4UCNAbsorption::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
+G4VParticleChange* G4UCNAbsorption::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 {
   aParticleChange.Initialize(aTrack);
 
   aParticleChange.ProposeTrackStatus(fStopAndKill);
 
-  if ( verboseLevel > 0 ) G4cout << "UCNABSORPTION at: " 
-     << aTrack.GetProperTime()/s << "s, "
-     << aTrack.GetGlobalTime()/s << "s. "
-     << ", after track length " << aTrack.GetTrackLength()/cm << "cm, "
-           << "in volume "
-           << aStep.GetPostStepPoint()->GetPhysicalVolume()->GetName()
-           << G4endl;
-  
+  if (verboseLevel > 0)
+    G4cout << "UCNABSORPTION at: " << aTrack.GetProperTime() / s << "s, "
+           << aTrack.GetGlobalTime() / s << "s. "
+           << ", after track length " << aTrack.GetTrackLength() / cm << "cm, "
+           << "in volume " << aStep.GetPostStepPoint()->GetPhysicalVolume()->GetName() << G4endl;
+
   return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 }
 
 // GetMeanFreePath
 // ---------------
 
-G4double G4UCNAbsorption::GetMeanFreePath(const G4Track& aTrack,
-                                          G4double ,
-                                          G4ForceCondition* )
+G4double G4UCNAbsorption::GetMeanFreePath(const G4Track& aTrack, G4double, G4ForceCondition*)
 {
   G4double AttenuationLength = DBL_MAX;
 
   const G4Material* aMaterial = aTrack.GetMaterial();
-  G4MaterialPropertiesTable* aMaterialPropertiesTable =
-                                     aMaterial->GetMaterialPropertiesTable();
+  G4MaterialPropertiesTable* aMaterialPropertiesTable = aMaterial->GetMaterialPropertiesTable();
 
   G4double losscs = 0.0;
-  if (aMaterialPropertiesTable) {
-     losscs = aMaterialPropertiesTable->GetConstProperty("ABSCS");
-//     if (losscs == 0.0)
-//       G4cout << "No UCN Absorption length specified" << G4endl;
+  if (aMaterialPropertiesTable)
+  {
+    losscs = aMaterialPropertiesTable->GetConstProperty("ABSCS");
+    //     if (losscs == 0.0)
+    //       G4cout << "No UCN Absorption length specified" << G4endl;
   }
-//  else G4cout << "No UCN Absorption length specified" << G4endl;
- 
-  if (losscs) {
+  //  else G4cout << "No UCN Absorption length specified" << G4endl;
 
+  if (losscs)
+  {
     // Calculate a UCN absorption length for this cross section
 
     // *** Thermal boost ***
 
     // Prepare neutron
 
-    //G4double theA = aMaterial->GetElement(0)->GetN();
-    //G4double theZ = aMaterial->GetElement(0)->GetZ();
+    // G4double theA = aMaterial->GetElement(0)->GetN();
+    // G4double theZ = aMaterial->GetElement(0)->GetZ();
 
-    //G4ReactionProduct 
-    //  theNeutron(const_cast<G4ParticleDefinition *>(aTrack.GetDefinition()));
-    //theNeutron.SetMomentum(aTrack.GetMomentum());
-    //theNeutron.SetKineticEnergy(aTrack.GetKineticEnergy());
-    //G4ThreeVector neuVelo = theNeutron.GetMomentum()/
-    //                        aTrack.GetDefinition()->GetPDGMass());
+    // G4ReactionProduct
+    //   theNeutron(const_cast<G4ParticleDefinition *>(aTrack.GetDefinition()));
+    // theNeutron.SetMomentum(aTrack.GetMomentum());
+    // theNeutron.SetKineticEnergy(aTrack.GetKineticEnergy());
+    // G4ThreeVector neuVelo = theNeutron.GetMomentum()/
+    //                         aTrack.GetDefinition()->GetPDGMass());
 
     // Prepare properly biased thermal nucleus
 
-    //G4double theA = aMaterial->GetElement(0)->GetN();
-    //G4double theZ = aMaterial->GetElement(0)->GetZ();
+    // G4double theA = aMaterial->GetElement(0)->GetN();
+    // G4double theZ = aMaterial->GetElement(0)->GetZ();
 
-    //G4double eps = 0.0001;
+    // G4double eps = 0.0001;
 
-    //G4double eleMass =
-    //             G4NucleiPropertiesTable::
-    //               GetNuclearMass(static_cast<G4int>(theZ+eps),
-    //                              static_cast<G4int>(theA+eps))) 
-    //                              / G4Neutron::Neutron()->GetPDGMass();
+    // G4double eleMass =
+    //              G4NucleiPropertiesTable::
+    //                GetNuclearMass(static_cast<G4int>(theZ+eps),
+    //                               static_cast<G4int>(theA+eps)))
+    //                               / G4Neutron::Neutron()->GetPDGMass();
 
-    //G4Nucleus aNuc;
+    // G4Nucleus aNuc;
 
-    //G4ReactionProduct aThermalNuc =
-    //  aNuc.GetBiasedThermalNucleus(eleMass,
-    //                               neuVelo,
-    //                               aMaterial->GetTemperature());
+    // G4ReactionProduct aThermalNuc =
+    //   aNuc.GetBiasedThermalNucleus(eleMass,
+    //                                neuVelo,
+    //                                aMaterial->GetTemperature());
 
     // Boost to rest system and return
 
-    //G4ReactionProduct boosted;
-    //boosted.Lorentz(theNeutron, aThermalNuc);
+    // G4ReactionProduct boosted;
+    // boosted.Lorentz(theNeutron, aThermalNuc);
 
-    //G4double vel = sqrt(2*boosted.GetKineticEnergy()/
-    //                       neutron_mass_c2*c_squared);
+    // G4double vel = sqrt(2*boosted.GetKineticEnergy()/
+    //                        neutron_mass_c2*c_squared);
 
     G4double density = aMaterial->GetTotNbOfAtomsPerVolume();
 
-    // Calculate cross section for a constant loss 
+    // Calculate cross section for a constant loss
 
     G4double vel = aTrack.GetVelocity();
-    
-    //G4cout << aTrack.GetVelocity()/meter*second << " "
-    //       << vel/meter*second << "meters/second" << G4endl;
-   
+
+    // G4cout << aTrack.GetVelocity()/meter*second << " "
+    //        << vel/meter*second << "meters/second" << G4endl;
+
     // Input data is normally taken from the website:
     // http://rrdjazz.nist.gov/resources/n-lengths/list.html
     // and coresponds to 2200 m/s fast neutrons
 
-    G4double crossect = losscs*barn*2200.*meter/second/vel;   
-    
+    G4double crossect = losscs * barn * 2200. * meter / second / vel;
+
     // In principle, if one asks for the MaterialProperty incoherent cross
     // section, one could put the formula for inelastic up scattering here
     // and add the cross section to the absorption
-    
-    //    sigma inelastic = ... ignatovic, p. 174.
-    
-    // attenuation length in mm
-    AttenuationLength = 1./density/crossect;
 
-    if (verboseLevel>0) G4cout << "UCNABSORPTION with" 
-        << " AttenuationLength: " << AttenuationLength/m << "m"
-        << " CrossSection: " << crossect/barn << "barn" << G4endl;
+    //    sigma inelastic = ... ignatovic, p. 174.
+
+    // attenuation length in mm
+    AttenuationLength = 1. / density / crossect;
+
+    if (verboseLevel > 0)
+      G4cout << "UCNABSORPTION with"
+             << " AttenuationLength: " << AttenuationLength / m << "m"
+             << " CrossSection: " << crossect / barn << "barn" << G4endl;
   }
 
   return AttenuationLength;

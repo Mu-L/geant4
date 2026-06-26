@@ -30,47 +30,46 @@
  *      Author: kara
  */
 
-#pragma once
+#ifndef G4MANYFASTLISTS_HH
+#define G4MANYFASTLISTS_HH
 
 #include "G4FastList.hh"
+
 #include <set>
 
 template<class OBJECT>
-  struct G4ManyFastLists_iterator;
+struct G4ManyFastLists_iterator;
 
 /*
  * Roll over many list as if it was one
  */
 template<class OBJECT>
-  class G4ManyFastLists : public G4FastList<OBJECT>::Watcher
-  {
+class G4ManyFastLists : public G4FastList<OBJECT>::Watcher
+{
   protected:
+
     using ManyLists = G4FastList<G4FastList<OBJECT>>;
     ManyLists fAssociatedLists;
     // TODO use "marked list" insted of vector
 
-    using WatcherSet = std::set<typename G4FastList<OBJECT>::Watcher*,
-        sortWatcher<OBJECT>>;
+    using WatcherSet = std::set<typename G4FastList<OBJECT>::Watcher*, sortWatcher<OBJECT>>;
     WatcherSet* fMainListWatchers;
 
   public:
+
     using iterator = G4ManyFastLists_iterator<OBJECT>;
 
-    G4ManyFastLists() : G4FastList<OBJECT>::Watcher(),
-        fAssociatedLists(), fMainListWatchers(nullptr)
-    {
-    }
+    G4ManyFastLists()
+      : G4FastList<OBJECT>::Watcher(), fAssociatedLists(), fMainListWatchers(nullptr)
+    {}
 
     ~G4ManyFastLists() override = default;
 
-    virtual void NotifyDeletingList(G4FastList<OBJECT>* __list)
-    {
-      fAssociatedLists.pop(__list);
-    }
+    virtual void NotifyDeletingList(G4FastList<OBJECT>* __list) { fAssociatedLists.pop(__list); }
 
     void AddGlobalWatcher(typename G4FastList<OBJECT>::Watcher* watcher)
     {
-      if(fMainListWatchers == nullptr)
+      if (fMainListWatchers == nullptr)
       {
         fMainListWatchers = new WatcherSet();
       }
@@ -80,59 +79,59 @@ template<class OBJECT>
       typename ManyLists::iterator it = fAssociatedLists.begin();
       typename ManyLists::iterator _end = fAssociatedLists.end();
 
-      for(;it != _end ;++it)
+      for (; it != _end; ++it)
       {
         watcher->Watch(*it);
-//        (*it)->AddWatcher(watcher);
-//        (*it)->AddWatcher(watcher);
+        //        (*it)->AddWatcher(watcher);
+        //        (*it)->AddWatcher(watcher);
       }
     }
 
     inline void Add(G4FastList<OBJECT>* __list)
     {
       if (__list == nullptr) return;
-      fAssociatedLists.push_back(__list); // TODO use the table doubling tech
+      fAssociatedLists.push_back(__list);  // TODO use the table doubling tech
       //__list->AddWatcher(this);
       this->Watch(__list);
 
-      if(fMainListWatchers == nullptr) return;
+      if (fMainListWatchers == nullptr) return;
 
       auto it_watcher = fMainListWatchers->begin();
       auto end_watcher = fMainListWatchers->end();
 
-//      G4cout << "G4ManyFastLists::Add -- N watchers ="
-//             << fMainListWatchers->size()
-//             << G4endl;
+      //      G4cout << "G4ManyFastLists::Add -- N watchers ="
+      //             << fMainListWatchers->size()
+      //             << G4endl;
 
-      for(;it_watcher != end_watcher ;++it_watcher)
+      for (; it_watcher != end_watcher; ++it_watcher)
       {
-//        G4cout << " *** *** *** WATCH --- "
-//                           << (*it_watcher)->GetWatcherName()
-//                           << G4endl;
+        //        G4cout << " *** *** *** WATCH --- "
+        //                           << (*it_watcher)->GetWatcherName()
+        //                           << G4endl;
         (*it_watcher)->Watch(__list);
       }
 
-      if(__list->empty() == false)
+      if (__list->empty() == false)
       {
         it_watcher = fMainListWatchers->begin();
 
-        for(;it_watcher != end_watcher ;++it_watcher)
+        for (; it_watcher != end_watcher; ++it_watcher)
         {
           typename G4FastList<OBJECT>::iterator it_obj = __list->begin();
-          for(;it_obj != __list->end() ;++it_obj)
+          for (; it_obj != __list->end(); ++it_obj)
           {
-//            G4cout << " *** *** *** NOTIFY ADD OBJ --- "
-//                   << (*it_watcher)->GetWatcherName()
-//                   << G4endl;
+            //            G4cout << " *** *** *** NOTIFY ADD OBJ --- "
+            //                   << (*it_watcher)->GetWatcherName()
+            //                   << G4endl;
 
-            (*it_watcher)->NotifyAddObject(*it_obj,__list);
+            (*it_watcher)->NotifyAddObject(*it_obj, __list);
           }
         }
       }
-//      else
-//      {
-//        G4cout << "__list->empty() == true" << G4endl;
-//      }
+      //      else
+      //      {
+      //        G4cout << "__list->empty() == true" << G4endl;
+      //      }
 
       /*
       typename ManyLists::const_iterator __it = fAssociatedLists
@@ -149,24 +148,24 @@ template<class OBJECT>
     inline void Remove(G4FastList<OBJECT>* __list)
     {
       if (__list == nullptr) return;
-      fAssociatedLists.pop(__list); // TODO use the table doubling tech
+      fAssociatedLists.pop(__list);  // TODO use the table doubling tech
       __list->RemoveWatcher(this);
       this->StopWatching(__list);
 
       auto it = fMainListWatchers->begin();
       auto _end = fMainListWatchers->end();
 
-      for(;it != _end ;++it)
+      for (; it != _end; ++it)
       {
         (*it)->StopWatching(__list);
       }
 
-//      typename ManyLists::node* __node = __list->GetListNode();
-//      if(__node)
-//      {
-//        __list->SetListNode(0);
-//        delete __node;
-//      }
+      //      typename ManyLists::node* __node = __list->GetListNode();
+      //      if(__node)
+      //      {
+      //        __list->SetListNode(0);
+      //        delete __node;
+      //      }
     }
 
     inline bool Holds(OBJECT* __track) const
@@ -201,12 +200,12 @@ template<class OBJECT>
           next++;
           Remove(*__it);
           typename ManyLists::node* __node = __it.GetNode();
-          if(__node)
+          if (__node)
           {
             __node->GetObject()->SetListNode(nullptr);
             delete __node;
           }
-//          delete (*__it);
+          //          delete (*__it);
 
           __it = next;
         }
@@ -226,11 +225,11 @@ template<class OBJECT>
     inline iterator end();
 
     void pop(OBJECT*);
-  };
+};
 
 template<class OBJECT>
-  struct G4ManyFastLists_iterator
-  {
+struct G4ManyFastLists_iterator
+{
     using ManyLists = G4FastList<G4FastList<OBJECT>>;
 
     using _Self = G4ManyFastLists_iterator;
@@ -241,56 +240,34 @@ template<class OBJECT>
     ManyLists* fLists;
 
   private:
+
     G4ManyFastLists_iterator() = default;
 
   public:
+
     explicit G4ManyFastLists_iterator(G4FastList_iterator<OBJECT> __x,
-                                      typename ManyLists::iterator __it,
-                                      ManyLists* __lists) :
-        fIterator(__x), fCurrentListIt(__it), fLists(__lists)
-    {
-    }
+                                      typename ManyLists::iterator __it, ManyLists* __lists)
+      : fIterator(__x), fCurrentListIt(__it), fLists(__lists)
+    {}
 
     G4ManyFastLists_iterator(const G4ManyFastLists_iterator& __x) = default;
     _Self& operator=(const G4ManyFastLists_iterator& __x) = default;
 
-    _Node* GetNode()
-    {
-      return fIterator.GetNode();
-    }
+    _Node* GetNode() { return fIterator.GetNode(); }
 
-    G4FastList<OBJECT>* GetTrackList()
-    {
-      return *fCurrentListIt;
-    }
+    G4FastList<OBJECT>* GetTrackList() { return *fCurrentListIt; }
 
-    OBJECT* operator*()
-    {
-      return *fIterator;
-    }
-    const OBJECT* operator*() const
-    {
-      return *fIterator;
-    }
-    OBJECT* operator->()
-    {
-      return *fIterator;
-    }
-    const OBJECT* operator->() const
-    {
-      return *fIterator;
-    }
+    OBJECT* operator*() { return *fIterator; }
+    const OBJECT* operator*() const { return *fIterator; }
+    OBJECT* operator->() { return *fIterator; }
+    const OBJECT* operator->() const { return *fIterator; }
 
     _Self UpdateToNextValidList();
     _Self& operator++();
 
-    _Self operator++(int)
-    {
-      return operator++();
-    }
+    _Self operator++(int) { return operator++(); }
 
-    _Self&
-    operator--()
+    _Self& operator--()
     {
       if (fLists->empty())
       {
@@ -338,22 +315,17 @@ template<class OBJECT>
       return *this;
     }
 
-    _Self operator--(int)
-    {
-      return operator--();
-    }
+    _Self operator--(int) { return operator--(); }
 
     G4bool operator==(const _Self& __x) const
     {
       return (fIterator == __x.fIterator && fCurrentListIt == __x.fCurrentListIt);
-    } // Fast check
+    }  // Fast check
 
-    G4bool operator!=(const _Self& __x) const
-    {
-      return !(this->operator ==(__x));
-    }
+    G4bool operator!=(const _Self& __x) const { return !(this->operator==(__x)); }
 
   protected:
+
     void HasReachedEnd()
     {
       if (fLists->empty() == false)
@@ -365,59 +337,58 @@ template<class OBJECT>
         fIterator = G4FastList_iterator<OBJECT>();
       }
     }
-  };
+};
 
 template<class OBJECT>
-  typename G4ManyFastLists<OBJECT>::iterator G4ManyFastLists<OBJECT>::begin()
+typename G4ManyFastLists<OBJECT>::iterator G4ManyFastLists<OBJECT>::begin()
+{
+  if (fAssociatedLists.empty())
   {
-    if (fAssociatedLists.empty())
-    {
-      return G4ManyFastLists_iterator<OBJECT>(G4FastList_iterator<OBJECT>(),
-                                             fAssociatedLists.end(),
-                                             &fAssociatedLists);
-    }
-
-    typename G4FastList<OBJECT>::iterator trackList_it;
-    int i = 0;
-
-    typename ManyLists::iterator it = fAssociatedLists.begin();
-    typename ManyLists::iterator _end = fAssociatedLists.end();
-
-    while (it != _end)
-    {
-      if (*it && (*it)->empty() == false)
-      {
-        trackList_it = (*it)->begin();
-        break;
-      }
-      i++;
-      it++;
-    };
-
-    if (i == fAssociatedLists.size() || it == _end)
-    {
-      return end();
-    }
-
-    return G4ManyFastLists_iterator<OBJECT>(trackList_it,
-//                                           fAssociatedLists.begin(),
-                                            it,
-                                           &fAssociatedLists);
+    return G4ManyFastLists_iterator<OBJECT>(G4FastList_iterator<OBJECT>(), fAssociatedLists.end(),
+                                            &fAssociatedLists);
   }
+
+  typename G4FastList<OBJECT>::iterator trackList_it;
+  int i = 0;
+
+  typename ManyLists::iterator it = fAssociatedLists.begin();
+  typename ManyLists::iterator _end = fAssociatedLists.end();
+
+  while (it != _end)
+  {
+    if (*it && (*it)->empty() == false)
+    {
+      trackList_it = (*it)->begin();
+      break;
+    }
+    i++;
+    it++;
+  };
+
+  if (i == fAssociatedLists.size() || it == _end)
+  {
+    return end();
+  }
+
+  return G4ManyFastLists_iterator<OBJECT>(
+    trackList_it,
+    //                                           fAssociatedLists.begin(),
+    it, &fAssociatedLists);
+}
 
 template<class OBJECT>
 typename G4ManyFastLists<OBJECT>::iterator G4ManyFastLists<OBJECT>::end()
+{
+  if (fAssociatedLists.empty())
   {
-    if (fAssociatedLists.empty())
-    {
-      return G4ManyFastLists_iterator<OBJECT>(G4FastList_iterator<OBJECT>(),
-                                             fAssociatedLists.end(),
-                                             &fAssociatedLists);
-    }
-
-    return G4ManyFastLists_iterator<OBJECT>((fAssociatedLists.end()--)->end(),
-                                           fAssociatedLists.end(),
-                                           &fAssociatedLists);
+    return G4ManyFastLists_iterator<OBJECT>(G4FastList_iterator<OBJECT>(), fAssociatedLists.end(),
+                                            &fAssociatedLists);
   }
 
+  return G4ManyFastLists_iterator<OBJECT>((fAssociatedLists.end()--)->end(), fAssociatedLists.end(),
+                                          &fAssociatedLists);
+}
+
 #include "G4ManyFastLists.icc"
+
+#endif

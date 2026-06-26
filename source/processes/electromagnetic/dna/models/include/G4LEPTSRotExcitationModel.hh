@@ -23,35 +23,32 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4LEPTSRotExcitationModel_h
-#define G4LEPTSRotExcitationModel_h
-#include "G4VLEPTSModel.hh"
+#ifndef G4LEPTSROTEXCITATIONMODEL_HH
+#define G4LEPTSROTEXCITATIONMODEL_HH
 #include "G4ParticleChangeForGamma.hh"
+#include "G4VLEPTSModel.hh"
 
-class G4LEPTSRotExcitationModel : public G4VLEPTSModel 
-{ 
-public:
-  G4LEPTSRotExcitationModel(const G4String& modelName ="G4LEPTSRotExcitationModel");
-  ~G4LEPTSRotExcitationModel() override;
+class G4LEPTSRotExcitationModel : public G4VLEPTSModel
+{
+  public:
 
-  void Initialise(const G4ParticleDefinition*, 
-                          const G4DataVector&) override;
+    G4LEPTSRotExcitationModel(const G4String& modelName = "G4LEPTSRotExcitationModel");
+    ~G4LEPTSRotExcitationModel() override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-                                 const G4MaterialCutsCouple*,
-                                 const G4DynamicParticle*,
-                                 G4double tmin = 0.0,
-                                 G4double tmax = DBL_MAX) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
- // main method to compute cross section per Volume
-  G4double CrossSectionPerVolume(const G4Material*,
-                                         const G4ParticleDefinition*,
-                                         G4double kineticEnergy,
-                                         G4double cutEnergy = 0.0,
-                                         G4double maxEnergy = DBL_MAX) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin = 0.0,
+                           G4double tmax = DBL_MAX) override;
 
-private:
-  G4ParticleChangeForGamma* fParticleChangeForGamma;
+    // main method to compute cross section per Volume
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy = 0.0,
+                                   G4double maxEnergy = DBL_MAX) override;
+
+  private:
+
+    G4ParticleChangeForGamma* fParticleChangeForGamma;
 };
 
 #endif

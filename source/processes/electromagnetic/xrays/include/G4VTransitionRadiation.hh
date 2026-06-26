@@ -31,10 +31,9 @@
 // 29.02.04, V.Ivanchenko created
 // 28.07.05, P.Gumplinger add G4ProcessType to constructor
 
-#ifndef G4VTransitionRadiation_h
-#define G4VTransitionRadiation_h
+#ifndef G4VTRANSITIONRADIATION_HH
+#define G4VTRANSITIONRADIATION_HH
 
-#include "globals.hh"
 #include "G4ForceCondition.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4Region.hh"
@@ -42,6 +41,7 @@
 #include "G4Track.hh"
 #include "G4VDiscreteProcess.hh"
 #include "G4VParticleChange.hh"
+#include "globals.hh"
 
 #include <vector>
 
@@ -51,53 +51,52 @@ class G4VTRModel;
 
 class G4VTransitionRadiation : public G4VDiscreteProcess
 {
- public:
-  // Constructors
-  explicit G4VTransitionRadiation(const G4String& processName = "TR",
-                                  G4ProcessType type = fElectromagnetic);
+  public:
 
-  // Destructor
-  virtual ~G4VTransitionRadiation();
+    // Constructors
+    explicit G4VTransitionRadiation(const G4String& processName = "TR",
+                                    G4ProcessType type = fElectromagnetic);
 
-  virtual G4bool IsApplicable(
-    const G4ParticleDefinition& aParticleType) override;
+    // Destructor
+    virtual ~G4VTransitionRadiation();
 
-  void ProcessDescription(std::ostream&) const override;
-  void DumpInfo() const override { ProcessDescription(G4cout); };
+    virtual G4bool IsApplicable(const G4ParticleDefinition& aParticleType) override;
 
-  virtual G4double GetMeanFreePath(const G4Track& track, G4double,
-                                   G4ForceCondition* condition) override;
+    void ProcessDescription(std::ostream&) const override;
+    void DumpInfo() const override { ProcessDescription(G4cout); };
 
-  virtual G4VParticleChange* PostStepDoIt(const G4Track& track,
-                                          const G4Step& step) override;
+    virtual G4double GetMeanFreePath(const G4Track& track, G4double,
+                                     G4ForceCondition* condition) override;
 
-  void SetRegion(const G4Region* reg);
+    virtual G4VParticleChange* PostStepDoIt(const G4Track& track, const G4Step& step) override;
 
-  void SetModel(G4VTRModel* m);
+    void SetRegion(const G4Region* reg);
 
-  void Clear();
+    void SetModel(G4VTRModel* m);
 
-  // hide assignment operator
-  G4VTransitionRadiation& operator=(const G4VTransitionRadiation& right) =
-    delete;
-  G4VTransitionRadiation(const G4VTransitionRadiation&) = delete;
+    void Clear();
 
- private:
-  G4LossTableManager* theManager;
-  const G4Region* region;
-  G4VTRModel* model;
+    // hide assignment operator
+    G4VTransitionRadiation& operator=(const G4VTransitionRadiation& right) = delete;
+    G4VTransitionRadiation(const G4VTransitionRadiation&) = delete;
 
-  std::vector<const G4Material*> materials;
-  std::vector<G4double> steps;
-  std::vector<G4ThreeVector> normals;
+  private:
 
-  G4ThreeVector startingPosition;
-  G4ThreeVector startingDirection;
+    G4LossTableManager* theManager;
+    const G4Region* region;
+    G4VTRModel* model;
 
-  G4double gammaMin;
-  G4double cosDThetaMax;
+    std::vector<const G4Material*> materials;
+    std::vector<G4double> steps;
+    std::vector<G4ThreeVector> normals;
 
-  G4int nSteps;
+    G4ThreeVector startingPosition;
+    G4ThreeVector startingDirection;
+
+    G4double gammaMin;
+    G4double cosDThetaMax;
+
+    G4int nSteps;
 };
 
 #endif  // G4VTransitionRadiation_h

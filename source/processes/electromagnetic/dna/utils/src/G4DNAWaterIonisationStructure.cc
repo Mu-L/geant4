@@ -24,29 +24,27 @@
 // ********************************************************************
 
 #include "G4DNAWaterIonisationStructure.hh"
+
 #include "G4SystemOfUnits.hh"
 
-G4DNAWaterIonisationStructure::G4DNAWaterIonisationStructure() 
+G4DNAWaterIonisationStructure::G4DNAWaterIonisationStructure()
 {
-  energyConstant.push_back(10.79*eV);
-  energyConstant.push_back(13.39*eV);
-  energyConstant.push_back(16.05*eV);
-  energyConstant.push_back(32.30*eV);
-  energyConstant.push_back(539.0*eV);
+  energyConstant.push_back(10.79 * eV);
+  energyConstant.push_back(13.39 * eV);
+  energyConstant.push_back(16.05 * eV);
+  energyConstant.push_back(32.30 * eV);
+  energyConstant.push_back(539.0 * eV);
 
   nLevels = (G4int)energyConstant.size();
 }
 
-
-G4DNAWaterIonisationStructure::~G4DNAWaterIonisationStructure()
-= default;
- 
+G4DNAWaterIonisationStructure::~G4DNAWaterIonisationStructure() = default;
 
 G4double G4DNAWaterIonisationStructure::IonisationEnergy(G4int level)
 {
   G4double ionisation = 0.;
 
-  if (level >=0 && level < nLevels) ionisation = energyConstant[level];
+  if (level >= 0 && level < nLevels) ionisation = energyConstant[level];
 
   return ionisation;
 }

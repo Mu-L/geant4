@@ -36,21 +36,22 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedEllipsoid.h>
+#  include "G4Polyhedron.hh"
 
-#include "G4Polyhedron.hh"
+#  include <VecGeom/volumes/UnplacedEllipsoid.h>
 
 /**
  * @brief G4UEllipsoid is a wrapper class for G4Ellipsoid to make use
  * of VecGeom Ellipsoid.
+ * @ingroup geometry_solids_specific
  */
 
 class G4UEllipsoid : public G4UAdapter<vecgeom::UnplacedEllipsoid>
 {
-  using Shape_t = vecgeom::UnplacedEllipsoid;
-  using Base_t  = G4UAdapter<vecgeom::UnplacedEllipsoid>;
+    using Shape_t = vecgeom::UnplacedEllipsoid;
+    using Base_t = G4UAdapter<vecgeom::UnplacedEllipsoid>;
 
   public:
 
@@ -63,12 +64,8 @@ class G4UEllipsoid : public G4UAdapter<vecgeom::UnplacedEllipsoid>
      *  @param[in] pzBottomCut Optional lower cut plane level in Z.
      *  @param[in] pzTopCut Optional upper cut plane level in Z.
      */
-    G4UEllipsoid(const G4String& name,
-                       G4double pxSemiAxis,
-                       G4double pySemiAxis,
-                       G4double pzSemiAxis,
-                       G4double pzBottomCut = 0.0,
-                       G4double pzTopCut = 0.0);
+    G4UEllipsoid(const G4String& name, G4double pxSemiAxis, G4double pySemiAxis,
+                 G4double pzSemiAxis, G4double pzBottomCut = 0.0, G4double pzTopCut = 0.0);
 
     /**
      * Default destructor.
@@ -87,15 +84,15 @@ class G4UEllipsoid : public G4UAdapter<vecgeom::UnplacedEllipsoid>
     G4double GetDx() const;
     G4double GetDy() const;
     G4double GetDz() const;
-    G4double GetSemiAxisMax (G4int i) const;
+    G4double GetSemiAxisMax(G4int i) const;
     G4double GetZBottomCut() const;
     G4double GetZTopCut() const;
 
     /**
      * Modifiers.
      */
-    void SetSemiAxis (G4double x, G4double y, G4double z);
-    void SetZCuts (G4double newzBottomCut, G4double newzTopCut);
+    void SetSemiAxis(G4double x, G4double y, G4double z);
+    void SetZCuts(G4double newzBottomCut, G4double newzTopCut);
 
     /**
      * Returns the type ID, "G4Ellipsoid" of the solid.
@@ -119,10 +116,9 @@ class G4UEllipsoid : public G4UAdapter<vecgeom::UnplacedEllipsoid>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                           G4double& pmin, G4double& pmax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pmin,
+                           G4double& pmax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.
@@ -132,8 +128,8 @@ class G4UEllipsoid : public G4UAdapter<vecgeom::UnplacedEllipsoid>
     /**
      * Copy constructor and assignment operator.
      */
-    G4UEllipsoid( const G4UEllipsoid &source );
-    G4UEllipsoid &operator=( const G4UEllipsoid &source );
+    G4UEllipsoid(const G4UEllipsoid& source);
+    G4UEllipsoid& operator=(const G4UEllipsoid& source);
 };
 
 // --------------------------------------------------------------------

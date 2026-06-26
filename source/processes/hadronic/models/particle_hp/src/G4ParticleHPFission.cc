@@ -50,9 +50,12 @@ G4ParticleHPFission::~G4ParticleHPFission()
 {
   // Vector is shared, only master deletes it
   // delete [] theFission;
-  if (!G4Threading::IsMasterThread()) {
-    if (theFission != nullptr) {
-      for (auto it = theFission->cbegin(); it != theFission->cend(); ++it) {
+  if (!G4Threading::IsMasterThread())
+  {
+    if (theFission != nullptr)
+    {
+      for (auto it = theFission->cbegin(); it != theFission->cend(); ++it)
+      {
         delete *it;
       }
       theFission->clear();
@@ -67,14 +70,16 @@ G4HadFinalState* G4ParticleHPFission::ApplyYourself(const G4HadProjectile& aTrac
   const G4Material* theMaterial = aTrack.GetMaterial();
   auto n = (G4int)theMaterial->GetNumberOfElements();
   std::size_t index = theMaterial->GetElement(0)->GetIndex();
-  if (n != 1) {
+  if (n != 1)
+  {
     auto xSec = new G4double[n];
     G4double sum = 0;
     G4int i;
     const G4double* NumAtomsPerVolume = theMaterial->GetVecNbOfAtomsPerVolume();
     G4double rWeight;
     G4ParticleHPThermalBoost aThermalE;
-    for (i = 0; i < n; ++i) {
+    for (i = 0; i < n; ++i)
+    {
       index = theMaterial->GetElement(i)->GetIndex();
       rWeight = NumAtomsPerVolume[i];
       xSec[i] = ((*theFission)[index])
@@ -85,7 +90,8 @@ G4HadFinalState* G4ParticleHPFission::ApplyYourself(const G4HadProjectile& aTrac
     }
     G4double random = G4UniformRand();
     G4double running = 0;
-    for (i = 0; i < n; ++i) {
+    for (i = 0; i < n; ++i)
+    {
       running += xSec[i];
       index = theMaterial->GetElement(i)->GetIndex();
       // if(random<=running/sum) break;
@@ -102,7 +108,8 @@ G4HadFinalState* G4ParticleHPFission::ApplyYourself(const G4HadProjectile& aTrac
   const G4Element* target_element = (*G4Element::GetElementTable())[index];
   const G4Isotope* target_isotope = nullptr;
   auto iele = (G4int)target_element->GetNumberOfIsotopes();
-  for (G4int j = 0; j != iele; ++j) {
+  for (G4int j = 0; j != iele; ++j)
+  {
     target_isotope = target_element->GetIsotope(j);
     if (target_isotope->GetN()
         == G4ParticleHPManager::GetInstance()->GetReactionWhiteBoard()->GetTargA())
@@ -136,12 +143,14 @@ void G4ParticleHPFission::BuildPhysicsTable(const G4ParticleDefinition&)
 
   theFission = hpmanager->GetFissionFinalStates();
 
-  if (G4Threading::IsMasterThread()) {
+  if (G4Threading::IsMasterThread())
+  {
     if (theFission == nullptr) theFission = new std::vector<G4ParticleHPChannel*>;
 
     if (numEle == (G4int)G4Element::GetNumberOfElements()) return;
 
-    if (theFission->size() == G4Element::GetNumberOfElements()) {
+    if (theFission->size() == G4Element::GetNumberOfElements())
+    {
       numEle = (G4int)G4Element::GetNumberOfElements();
       return;
     }
@@ -154,9 +163,11 @@ void G4ParticleHPFission::BuildPhysicsTable(const G4ParticleDefinition&)
     G4String tString = "/Fission";
     dirName = dirName + tString;
 
-    for (G4int i = numEle; i < (G4int)G4Element::GetNumberOfElements(); ++i) {
+    for (G4int i = numEle; i < (G4int)G4Element::GetNumberOfElements(); ++i)
+    {
       theFission->push_back(new G4ParticleHPChannel);
-      if ((*(G4Element::GetElementTable()))[i]->GetZ() > 87) {  // TK modified for ENDF-VII
+      if ((*(G4Element::GetElementTable()))[i]->GetZ() > 87)
+      {  // TK modified for ENDF-VII
         ((*theFission)[i])->Init((*(G4Element::GetElementTable()))[i], dirName);
         ((*theFission)[i])->Register(new G4ParticleHPFissionFS);
       }

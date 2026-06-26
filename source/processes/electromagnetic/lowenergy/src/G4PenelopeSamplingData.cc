@@ -33,10 +33,9 @@
 #include "G4PenelopeSamplingData.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo...
-G4PenelopeSamplingData::G4PenelopeSamplingData(G4int nPoints) : 
-  fNP(nPoints)
+G4PenelopeSamplingData::G4PenelopeSamplingData(G4int nPoints) : fNP(nPoints)
 {
-  //create vectors
+  // create vectors
   fX = new G4DataVector();
   fPAC = new G4DataVector();
   fA = new G4DataVector();
@@ -62,16 +61,14 @@ size_t G4PenelopeSamplingData::GetNumberOfStoredPoints()
 {
   size_t points = fX->size();
 
-  //check everything is all right
-  if (fPAC->size() != points || fA->size() != points || 
-      fB->size() != points || fITTL->size() != points ||
-      fITTU->size() != points)
-    {
-      G4ExceptionDescription ed;
-      ed << "Data vectors look to have different dimensions !" << G4endl;
-      G4Exception("G4PenelopeSamplingData::GetNumberOfStoredPoints()","em2040",
-		  FatalException,ed);      
-    }
+  // check everything is all right
+  if (fPAC->size() != points || fA->size() != points || fB->size() != points
+      || fITTL->size() != points || fITTU->size() != points)
+  {
+    G4ExceptionDescription ed;
+    ed << "Data vectors look to have different dimensions !" << G4endl;
+    G4Exception("G4PenelopeSamplingData::GetNumberOfStoredPoints()", "em2040", FatalException, ed);
+  }
   return points;
 }
 
@@ -84,7 +81,7 @@ void G4PenelopeSamplingData::Clear()
   if (fB) delete fB;
   if (fITTL) delete fITTL;
   if (fITTU) delete fITTU;
-  //create vectors
+  // create vectors
   fX = new G4DataVector();
   fPAC = new G4DataVector();
   fA = new G4DataVector();
@@ -94,8 +91,8 @@ void G4PenelopeSamplingData::Clear()
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo...
-void G4PenelopeSamplingData::AddPoint(G4double x0,G4double pac0,G4double a0,G4double b0,
-					size_t ITTL0,size_t ITTU0)
+void G4PenelopeSamplingData::AddPoint(G4double x0, G4double pac0, G4double a0, G4double b0,
+                                      size_t ITTL0, size_t ITTU0)
 {
   fX->push_back(x0);
   fPAC->push_back(pac0);
@@ -104,30 +101,29 @@ void G4PenelopeSamplingData::AddPoint(G4double x0,G4double pac0,G4double a0,G4do
   fITTL->push_back(ITTL0);
   fITTU->push_back(ITTU0);
 
-  //check how many points we do have now
+  // check how many points we do have now
   size_t nOfPoints = GetNumberOfStoredPoints();
 
   if (nOfPoints > ((size_t)fNP))
-    {
-      G4cout << "G4PenelopeSamplingData::AddPoint() " << G4endl;
-      G4cout << "WARNING: Up to now there are " << nOfPoints << " points in the table" << G4endl;
-      G4cout << "while the anticipated (declared) number is " << fNP << G4endl;
-    }
-    return;
+  {
+    G4cout << "G4PenelopeSamplingData::AddPoint() " << G4endl;
+    G4cout << "WARNING: Up to now there are " << nOfPoints << " points in the table" << G4endl;
+    G4cout << "while the anticipated (declared) number is " << fNP << G4endl;
+  }
+  return;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo..
 void G4PenelopeSamplingData::DumpTable()
 {
-  
   G4cout << "*************************************************************************" << G4endl;
   G4cout << GetNumberOfStoredPoints() << " points" << G4endl;
   G4cout << "*************************************************************************" << G4endl;
-  for (size_t i=0;i<GetNumberOfStoredPoints();i++)
-    {
-      G4cout << i << " " << (*fX)[i] << " " << (*fPAC)[i] << " " << (*fA)[i] << " " << 
-	(*fB)[i] << " " << (*fITTL)[i] << " " << (*fITTU)[i] << G4endl;
-    }
+  for (size_t i = 0; i < GetNumberOfStoredPoints(); i++)
+  {
+    G4cout << i << " " << (*fX)[i] << " " << (*fPAC)[i] << " " << (*fA)[i] << " " << (*fB)[i] << " "
+           << (*fITTL)[i] << " " << (*fITTU)[i] << G4endl;
+  }
   G4cout << "*************************************************************************" << G4endl;
 }
 
@@ -170,36 +166,37 @@ G4double G4PenelopeSamplingData::GetB(size_t index)
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo..
 G4double G4PenelopeSamplingData::SampleValue(G4double maxRand)
 {
-  //One passes here a random number in (0,1).
-  //Notice: it possible that is between (0,b) with b<1
+  // One passes here a random number in (0,1).
+  // Notice: it possible that is between (0,b) with b<1
   size_t points = GetNumberOfStoredPoints();
- 
-  size_t itn = (size_t) (maxRand*(points-1)); 
+
+  size_t itn = (size_t)(maxRand * (points - 1));
   size_t i = (*fITTL)[itn];
   size_t j = (*fITTU)[itn];
 
-  while ((j-i) > 1)
-    {
-      size_t k = (i+j)/2;
-      if (maxRand > (*fPAC)[k])
-	i = k;
-      else
-	j = k;
-    }
+  while ((j - i) > 1)
+  {
+    size_t k = (i + j) / 2;
+    if (maxRand > (*fPAC)[k])
+      i = k;
+    else
+      j = k;
+  }
 
-  //Sampling from the rational inverse cumulative distribution
+  // Sampling from the rational inverse cumulative distribution
   G4double result = 0;
 
   G4double rr = maxRand - (*fPAC)[i];
   if (rr > 1e-16)
-    {
-      G4double d = (*fPAC)[i+1]-(*fPAC)[i];
-      result = (*fX)[i]+
-	((1.0+(*fA)[i]+(*fB)[i])*d*rr/
-	 (d*d+((*fA)[i]*d+(*fB)[i]*rr)*rr))*((*fX)[i+1]-(*fX)[i]);      
-    }
+  {
+    G4double d = (*fPAC)[i + 1] - (*fPAC)[i];
+    result =
+      (*fX)[i]
+      + ((1.0 + (*fA)[i] + (*fB)[i]) * d * rr / (d * d + ((*fA)[i] * d + (*fB)[i] * rr) * rr))
+          * ((*fX)[i + 1] - (*fX)[i]);
+  }
   else
-    result = (*fX)[i]; 
-  
+    result = (*fX)[i];
+
   return result;
 }

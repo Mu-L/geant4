@@ -27,39 +27,33 @@
 /// \brief Definition of the G4PhononReflection class
 //
 //
-#ifndef G4PhononReflection_h
-#define G4PhononReflection_h 1
+#ifndef G4PHONONREFLECTION_HH
+#define G4PHONONREFLECTION_HH
 
 #include "G4VPhononProcess.hh"
 
+class G4PhononReflection : public G4VPhononProcess
+{
+  public:
 
-class G4PhononReflection : public G4VPhononProcess {
-public:
-  G4PhononReflection(const G4String& processName ="phononReflection" );
-  virtual ~G4PhononReflection();
-  
-  virtual G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step& );
-  
-protected:
-  virtual G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*);
+    G4PhononReflection(const G4String& processName = "phononReflection");
+    virtual ~G4PhononReflection();
 
-private:
-  G4double kCarTolerance;
+    virtual G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&);
 
-private:
-  // hide assignment operator as private 
-  G4PhononReflection(G4PhononReflection&);
-  G4PhononReflection& operator=(const G4PhononReflection& right);
+  protected:
+
+    virtual G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*);
+
+  private:
+
+    G4double kCarTolerance;
+
+  private:
+
+    // hide assignment operator as private
+    G4PhononReflection(G4PhononReflection&);
+    G4PhononReflection& operator=(const G4PhononReflection& right);
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-

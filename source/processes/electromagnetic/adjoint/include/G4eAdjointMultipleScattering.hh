@@ -33,37 +33,39 @@
 //
 //------------------------------------------------------------------------------
 
-#ifndef G4eAdjointMultipleScattering_h
-#define G4eAdjointMultipleScattering_h 1
+#ifndef G4EADJOINTMULTIPLESCATTERING_HH
+#define G4EADJOINTMULTIPLESCATTERING_HH
 
 #include "G4VMultipleScattering.hh"
 
 class G4eAdjointMultipleScattering : public G4VMultipleScattering
 
 {
- public:
-  explicit G4eAdjointMultipleScattering(const G4String& processName = "msc");
+  public:
 
-  ~G4eAdjointMultipleScattering() override = default;
+    explicit G4eAdjointMultipleScattering(const G4String& processName = "msc");
 
-  void StartTracking(G4Track*) override;
+    ~G4eAdjointMultipleScattering() override = default;
 
-  // returns true for charged particles, false otherwise
-  G4bool IsApplicable(const G4ParticleDefinition& p) override;
+    void StartTracking(G4Track*) override;
 
-  void ProcessDescription(std::ostream&) const override;
-  void DumpInfo() const override { ProcessDescription(G4cout); };
-  void StreamProcessInfo(std::ostream& outFile) const override;
+    // returns true for charged particles, false otherwise
+    G4bool IsApplicable(const G4ParticleDefinition& p) override;
 
-  G4eAdjointMultipleScattering(G4eAdjointMultipleScattering&) = delete;
-  G4eAdjointMultipleScattering& operator                      =(
-    const G4eAdjointMultipleScattering& right) = delete;
+    void ProcessDescription(std::ostream&) const override;
+    void DumpInfo() const override { ProcessDescription(G4cout); };
+    void StreamProcessInfo(std::ostream& outFile) const override;
 
- protected:
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+    G4eAdjointMultipleScattering(G4eAdjointMultipleScattering&) = delete;
+    G4eAdjointMultipleScattering& operator=(const G4eAdjointMultipleScattering& right) = delete;
 
- private:
-  G4bool fIsInitialized = false;
+  protected:
+
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool fIsInitialized = false;
 };
 
 #endif

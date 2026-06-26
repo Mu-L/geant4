@@ -29,44 +29,43 @@
 //
 
 #include "G4RayTracerX.hh"
+
 #include "G4RayTracerFeatures.hh"
 #include "G4RayTracerSceneHandler.hh"
 #include "G4RayTracerXViewer.hh"
 
 #define G4warn G4cerr
 
-G4RayTracerX::G4RayTracerX():
-  G4VGraphicsSystem("RayTracerX",
-		    "RTX",
-		    RAYTRACER_FEATURES,
-		    G4VGraphicsSystem::threeD)
+G4RayTracerX::G4RayTracerX()
+  : G4VGraphicsSystem("RayTracerX", "RTX", RAYTRACER_FEATURES, G4VGraphicsSystem::threeD)
 {}
 
-G4RayTracerX::~G4RayTracerX()
-{}
+G4RayTracerX::~G4RayTracerX() {}
 
-G4VSceneHandler* G4RayTracerX::CreateSceneHandler (const G4String& name) {
-  G4VSceneHandler* pSceneHandler = new G4RayTracerSceneHandler (*this, name);
+G4VSceneHandler* G4RayTracerX::CreateSceneHandler(const G4String& name)
+{
+  G4VSceneHandler* pSceneHandler = new G4RayTracerSceneHandler(*this, name);
   return pSceneHandler;
 }
 
-G4VViewer* G4RayTracerX::CreateViewer (G4VSceneHandler& sceneHandler,
-				       const G4String& name) {
-  G4VViewer* pViewer = new G4RayTracerXViewer (sceneHandler, name);
-  if (pViewer) {
-    if (pViewer->GetViewId() < 0) {
-      G4warn <<
-        "G4RayTracerX::CreateViewer: ERROR flagged by negative"
-        " view id in G4RayTracerXViewer creation."
-        "\n Destroying view and returning null pointer."
+G4VViewer* G4RayTracerX::CreateViewer(G4VSceneHandler& sceneHandler, const G4String& name)
+{
+  G4VViewer* pViewer = new G4RayTracerXViewer(sceneHandler, name);
+  if (pViewer)
+  {
+    if (pViewer->GetViewId() < 0)
+    {
+      G4warn << "G4RayTracerX::CreateViewer: ERROR flagged by negative"
+                " view id in G4RayTracerXViewer creation."
+                "\n Destroying view and returning null pointer."
              << G4endl;
       delete pViewer;
       pViewer = 0;
     }
   }
-  else {
-    G4warn <<
-      "G4RayTracerX::CreateViewer: ERROR: null pointer on new G4RayTracerXViewer."
+  else
+  {
+    G4warn << "G4RayTracerX::CreateViewer: ERROR: null pointer on new G4RayTracerXViewer."
            << G4endl;
   }
   return pViewer;

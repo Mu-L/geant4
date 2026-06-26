@@ -111,8 +111,14 @@ void RunAction::EndOfRunAction(const G4Run *run) {
       LET_mean += *LET;
       LET_square += (*LET) * (*LET);
     }
-    LET_mean /= nOfEvent;
-    LET_square = std::sqrt(LET_square / nOfEvent - std::pow(LET_mean, 2));
+    if (nOfEvent > 0) {
+      LET_mean /= nOfEvent;
+      G4double variance = (LET_square / nOfEvent) - std::pow(LET_mean, 2);
+      if (variance < 0) {
+        variance = 0;
+      }
+      LET_square = std::sqrt(variance);
+    }
 
     if (nOfEvent > 1) {
       out << std::setw(12) << "LET" << std::setw(12) << LET_mean << std::setw(12) << "LET_SD"

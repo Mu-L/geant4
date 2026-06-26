@@ -37,46 +37,42 @@
 //		and SetNucleus() here.
 
 #include "G4VParticipants.hh"
+
 #include "G4Fancy3DNucleus.hh"
 
-
-G4VParticipants::G4VParticipants() : theNucleus(nullptr), 
-                                     theProjectileNucleus(nullptr)
-{}
+G4VParticipants::G4VParticipants() : theNucleus(nullptr), theProjectileNucleus(nullptr) {}
 
 G4VParticipants::~G4VParticipants()
 {
   // G4cout << "G4VParticipants::~G4VParticipants()" << G4endl;
-  if ( theNucleus != nullptr ) delete theNucleus;
-  if ( theProjectileNucleus != nullptr ) delete theProjectileNucleus;
+  if (theNucleus != nullptr) delete theNucleus;
+  if (theProjectileNucleus != nullptr) delete theProjectileNucleus;
 }
 
 void G4VParticipants::Init(G4int theA, G4int theZ)
 {
-  if ( theNucleus == nullptr ) theNucleus = new G4Fancy3DNucleus();
+  if (theNucleus == nullptr) theNucleus = new G4Fancy3DNucleus();
   theNucleus->Init(theA, theZ);
   theNucleus->SortNucleonsIncZ();
 }
 
-void G4VParticipants::SetNucleus(G4V3DNucleus * aNucleus)
+void G4VParticipants::SetNucleus(G4V3DNucleus* aNucleus)
 {
   if (theNucleus != nullptr) delete theNucleus;
   theNucleus = aNucleus;
 }
 
 void G4VParticipants::InitProjectileNucleus(G4int theA, G4int theZ,
-					    G4int numberOfLambdasOrAntiLambdas)
+                                            G4int numberOfLambdasOrAntiLambdas)
 {
-  if ( theProjectileNucleus == nullptr ) 
-    theProjectileNucleus = new G4Fancy3DNucleus();
+  if (theProjectileNucleus == nullptr) theProjectileNucleus = new G4Fancy3DNucleus();
 
   theProjectileNucleus->Init(theA, theZ, numberOfLambdasOrAntiLambdas);
   theProjectileNucleus->SortNucleonsDecZ();
 }
 
-void G4VParticipants::SetProjectileNucleus(G4V3DNucleus * aNucleus)
+void G4VParticipants::SetProjectileNucleus(G4V3DNucleus* aNucleus)
 {
   if (theProjectileNucleus != nullptr) delete theProjectileNucleus;
   theProjectileNucleus = aNucleus;
 }
-

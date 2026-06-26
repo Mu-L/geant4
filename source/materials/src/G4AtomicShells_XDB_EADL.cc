@@ -1201,7 +1201,8 @@ const G4int G4AtomicShells_XDB_EADL::fNumberOfElectrons[2171] =
 G4int G4AtomicShells_XDB_EADL::GetNumberOfShells(G4int Z)
 {
 #ifdef G4VERBOSE
-  if (Z < 0 || Z > 120) {
+  if (Z < 0 || Z > 120)
+  {
     Z = PrintErrorZ(Z, "GetNumberOfShells");
   }
 #endif
@@ -1211,10 +1212,12 @@ G4int G4AtomicShells_XDB_EADL::GetNumberOfShells(G4int Z)
 G4double G4AtomicShells_XDB_EADL::GetBindingEnergy(G4int Z, G4int ShellNb)
 {
 #ifdef G4VERBOSE
-  if (Z < 0 || Z > 120) {
+  if (Z < 0 || Z > 120)
+  {
     Z = PrintErrorZ(Z, "GetBindingEnergy");
   }
-  if (ShellNb < 0 || ShellNb >= fNumberOfShells[Z]) {
+  if (ShellNb < 0 || ShellNb >= fNumberOfShells[Z])
+  {
     ShellNb = PrintErrorShell(Z, ShellNb, "GetBindingEnergy");
   }
 #endif
@@ -1224,10 +1227,12 @@ G4double G4AtomicShells_XDB_EADL::GetBindingEnergy(G4int Z, G4int ShellNb)
 G4int G4AtomicShells_XDB_EADL::GetNumberOfElectrons(G4int Z, G4int ShellNb)
 {
 #ifdef G4VERBOSE
-  if (Z < 0 || Z > 120) {
+  if (Z < 0 || Z > 120)
+  {
     Z = PrintErrorZ(Z, "GetNumberOfElectrons");
   }
-  if (ShellNb < 0 || ShellNb >= fNumberOfShells[Z]) {
+  if (ShellNb < 0 || ShellNb >= fNumberOfShells[Z])
+  {
     ShellNb = PrintErrorShell(Z, ShellNb, "GetNumberOfElectrons");
   }
 #endif
@@ -1239,15 +1244,18 @@ G4int G4AtomicShells_XDB_EADL::GetNumberOfElectrons(G4int Z, G4int ShellNb)
 G4int G4AtomicShells_XDB_EADL::GetNumberOfFreeElectrons(G4int Z, G4double th)
 {
 #ifdef G4VERBOSE
-  if (Z < 0 || Z > 120) {
+  if (Z < 0 || Z > 120)
+  {
     Z = PrintErrorZ(Z, "GetNumberOfFreeElectrons");
   }
 #endif
   G4int idx = fIndexOfShells[Z];
   G4int idxmax = idx + fNumberOfShells[Z];
   G4int n = 0;
-  for (G4int i = idx; i < idxmax; ++i) {
-    if (fBindingEnergies[i] * CLHEP::keV <= th) {
+  for (G4int i = idx; i < idxmax; ++i)
+  {
+    if (fBindingEnergies[i] * CLHEP::keV <= th)
+    {
       n += fNumberOfElectrons[i];
     }
   }
@@ -1257,14 +1265,16 @@ G4int G4AtomicShells_XDB_EADL::GetNumberOfFreeElectrons(G4int Z, G4double th)
 G4double G4AtomicShells_XDB_EADL::GetTotalBindingEnergy(G4int Z)
 {
 #ifdef G4VERBOSE
-  if (Z < 0 || Z > 120) {
+  if (Z < 0 || Z > 120)
+  {
     Z = PrintErrorZ(Z, "GetTotalBindingEnergy");
   }
 #endif
   G4int idx = fIndexOfShells[Z];
   G4int idxmax = idx + fNumberOfShells[Z];
   G4double energy = 0.0;
-  for (G4int i = idx; i < idxmax; ++i) {
+  for (G4int i = idx; i < idxmax; ++i)
+  {
     energy += fBindingEnergies[i];
   }
   return energy * CLHEP::keV;

@@ -57,12 +57,12 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4GammaConversion_h
-#define G4GammaConversion_h 1
+#ifndef G4GAMMACONVERSION_HH
+#define G4GAMMACONVERSION_HH
 
-#include "globals.hh"
-#include "G4VEmProcess.hh"
 #include "G4Gamma.hh"
+#include "G4VEmProcess.hh"
+#include "globals.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -74,35 +74,33 @@ class G4DynamicParticle;
 class G4GammaConversion : public G4VEmProcess
 
 {
-public:  // with description
+  public:  // with description
 
-  explicit G4GammaConversion(const G4String& processName ="conv",
-			     G4ProcessType type = fElectromagnetic);
+    explicit G4GammaConversion(const G4String& processName = "conv",
+                               G4ProcessType type = fElectromagnetic);
 
-  ~G4GammaConversion() override;
+    ~G4GammaConversion() override;
 
-  // true for Gamma only.
-  G4bool IsApplicable(const G4ParticleDefinition&) final;
+    // true for Gamma only.
+    G4bool IsApplicable(const G4ParticleDefinition&) final;
 
-  G4double MinPrimaryEnergy(const G4ParticleDefinition*,
-			    const G4Material*) override;
+    G4double MinPrimaryEnergy(const G4ParticleDefinition*, const G4Material*) override;
 
-  // print documentation in html format
-  void ProcessDescription(std::ostream&) const override;
+    // print documentation in html format
+    void ProcessDescription(std::ostream&) const override;
 
-  G4GammaConversion & operator=(const  G4GammaConversion &right) = delete;
-  G4GammaConversion(const  G4GammaConversion&) = delete;
+    G4GammaConversion& operator=(const G4GammaConversion& right) = delete;
+    G4GammaConversion(const G4GammaConversion&) = delete;
 
-protected:
+  protected:
 
-  virtual void InitialiseProcess(const G4ParticleDefinition*) override;
+    virtual void InitialiseProcess(const G4ParticleDefinition*) override;
 
-private:
-     
-  G4bool isInitialised = false;
+  private:
+
+    G4bool isInitialised = false;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-  
+
 #endif
- 

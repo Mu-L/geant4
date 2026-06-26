@@ -25,12 +25,12 @@
 //
 // --------------------------------------------------------------------------
 //
-//      GEANT4 header file 
+//      GEANT4 header file
 //
 //      File name:     G4ChargedUnknownParticle.hh
 //
 //      Author:        A.Ribon
-// 
+//
 //      Creation date: August 2024
 //
 //      Description:   This class is similar to G4UnknownParticle,
@@ -44,23 +44,26 @@
 //                     ionisation and multiple scattering.
 //
 //      Modifications:
-//      
+//
 // --------------------------------------------------------------------------
 //
 
-#ifndef G4ChargedUnknownParticle_h
-#define G4ChargedUnknownParticle_h 1
+#ifndef G4CHARGEDUNKNOWNPARTICLE_HH
+#define G4CHARGEDUNKNOWNPARTICLE_HH
 
 #include "G4ParticleDefinition.hh"
 
-
-class G4ChargedUnknownParticle : public G4ParticleDefinition {
+class G4ChargedUnknownParticle : public G4ParticleDefinition
+{
   public:
+
     static G4ChargedUnknownParticle* Definition();
     static G4ChargedUnknownParticle* ChargedUnknownParticleDefinition();
     static G4ChargedUnknownParticle* ChargedUnknownParticle();
+
   private:
-  G4ChargedUnknownParticle() = default;
+
+    G4ChargedUnknownParticle() = default;
     ~G4ChargedUnknownParticle() = default;
     static G4ChargedUnknownParticle* theInstance;
 };

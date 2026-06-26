@@ -6,7 +6,7 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-06-03 Gabriele Cosmo, Dmitri Konstantinov (procscore-V11-03-01)
+## 2026-06-03 Gabriele Cosmo, Dmitri Konstantinov (procscore-V11-04-00)
 - Fixed setting of parallel world navigator in G4ParallelWorldProcess to avoid
   reported cases of stale pointers when geometry gets rebuilt/reinitialised.
 - Avoid string copy in input in G4ParallelWorldProcess::SetParallelWorld(..).

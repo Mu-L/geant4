@@ -50,7 +50,8 @@ namespace G4ArrayOps
 template<class T>
 void Set(G4int Elements, T* To, T Value)
 {
-  for (G4int position = 0; position < Elements; position++) {
+  for (G4int position = 0; position < Elements; position++)
+  {
     To[position] = Value;
   }
 }
@@ -59,7 +60,8 @@ void Set(G4int Elements, T* To, T Value)
 template<class T>
 void Copy(G4int Elements, T* To, T* From)
 {
-  for (G4int position = 0; position < Elements; position++) {
+  for (G4int position = 0; position < Elements; position++)
+  {
     To[position] = From[position];
   }
 }
@@ -70,11 +72,13 @@ void Copy(G4int Elements, T* To, T* From)
 template<class T>
 void Add(G4int Elements, T* To, T* A1, T* A2 = nullptr)
 {
-  if (A2 == nullptr) {
+  if (A2 == nullptr)
+  {
     A2 = To;
   }
 
-  for (G4int position = 0; position < Elements; position++) {
+  for (G4int position = 0; position < Elements; position++)
+  {
     To[position] = A2[position] + A1[position];
   }
 }
@@ -85,11 +89,13 @@ void Add(G4int Elements, T* To, T* A1, T* A2 = nullptr)
 template<class T>
 void Add(G4int Elements, T* To, T A1, T* A2 = NULL)
 {
-  if (A2 == NULL) {
+  if (A2 == NULL)
+  {
     A2 = To;
   }
 
-  for (G4int position = 0; position < Elements; position++) {
+  for (G4int position = 0; position < Elements; position++)
+  {
     To[position] = A1 + A2[position];
   }
 }
@@ -100,12 +106,14 @@ void Add(G4int Elements, T* To, T A1, T* A2 = NULL)
 template<class T>
 void Subtract(G4int Elements, T* To, T* Minuend, T* Subtrahend = NULL)
 {
-  if (Subtrahend == NULL) {
+  if (Subtrahend == NULL)
+  {
     Subtrahend = Minuend;
     Minuend = To;
   }
 
-  for (G4int position = 0; position < Elements; position++) {
+  for (G4int position = 0; position < Elements; position++)
+  {
     To[position] = Minuend[position] - Subtrahend[position];
   }
 }
@@ -116,11 +124,13 @@ void Subtract(G4int Elements, T* To, T* Minuend, T* Subtrahend = NULL)
 template<class T>
 void Multiply(G4int Elements, T* To, T* M1, T* M2 = nullptr)
 {
-  if (M2 == nullptr) {
+  if (M2 == nullptr)
+  {
     M2 = To;
   }
 
-  for (G4int position = 0; position < Elements; position++) {
+  for (G4int position = 0; position < Elements; position++)
+  {
     To[position] = M2[position] * M1[position];
   }
 }
@@ -131,11 +141,13 @@ void Multiply(G4int Elements, T* To, T* M1, T* M2 = nullptr)
 template<class T>
 void Multiply(G4int Elements, T* To, T M1, T* M2 = NULL)
 {
-  if (M2 == NULL) {
+  if (M2 == NULL)
+  {
     M2 = To;
   }
 
-  for (G4int position = 0; position < Elements; position++) {
+  for (G4int position = 0; position < Elements; position++)
+  {
     To[position] = M2[position] * M1;
   }
 }
@@ -146,12 +158,14 @@ void Multiply(G4int Elements, T* To, T M1, T* M2 = NULL)
 template<class T>
 void Divide(G4int Elements, T* To, T* Numerator, T* Denominator = NULL)
 {
-  if (Denominator == NULL) {
+  if (Denominator == NULL)
+  {
     Denominator = Numerator;
     Numerator = To;
   }
 
-  for (G4int position = 0; position < Elements; position++) {
+  for (G4int position = 0; position < Elements; position++)
+  {
     To[position] = Numerator[position] / Denominator[position];
   }
 }
@@ -162,11 +176,13 @@ void Divide(G4int Elements, T* To, T* Numerator, T* Denominator = NULL)
 template<class T>
 void Divide(G4int Elements, T* To, T Numerator, T* Denominator = NULL)
 {
-  if (Denominator == nullptr) {
+  if (Denominator == nullptr)
+  {
     Denominator = To;
   }
 
-  for (G4int position = 0; position < Elements; position++) {
+  for (G4int position = 0; position < Elements; position++)
+  {
     To[position] = Numerator / Denominator[position];
   }
 }
@@ -174,7 +190,8 @@ void Divide(G4int Elements, T* To, T Numerator, T* Denominator = NULL)
 template<class T>
 void DeleteVectorOfPointers(std::vector<T>& Vector)
 {
-  for (unsigned int i = 0; i < Vector.size(); i++) {
+  for (unsigned int i = 0; i < Vector.size(); i++)
+  {
     delete Vector[i];
   }
 

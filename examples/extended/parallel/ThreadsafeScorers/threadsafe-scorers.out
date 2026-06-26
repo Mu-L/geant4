@@ -11,7 +11,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -149,6 +149,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 1
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            1 MeV
 Linear loss limit                                  0.01
@@ -915,7 +916,7 @@ Index : 2     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 10000
-  User=14.200000s Real=18.186634s Sys=0.620000s
+  User=13.720000s Real=18.241675s Sys=0.590000s
  ###### EndOfTSRunAction ###### 
 ============================================================
  opened file mfd_tl_EnergyDeposit.out for output
@@ -1166,8 +1167,8 @@ Run Summary
            120    319603 [sigma: 413.211 | error: 0.0308131 | coeff: 0.0308131 | eff: 1 | fom: 75.2316 | r2int: 0.000947778 | r2eff: 0 | hits: 568 ] keV
            121    389082 [sigma: 451.049 | error: 0.0320846 | coeff: 0.0320846 | eff: 1 | fom: 69.387 | r2int: 0.00102808 | r2eff: 0 | hits: 766 ] keV
            122    350309 [sigma: 464.579 | error: 0.0357336 | coeff: 0.0357336 | eff: 1 | fom: 55.9395 | r2int: 0.00127513 | r2eff: 0 | hits: 726 ] keV
-           123    335586 [sigma: 486.59 | error: 0.0379771 | coeff: 0.0379771 | eff: 1 | fom: 46.2238 | r2int: 0.00144015 | r2eff: 0 | hits: 686 ] keV
-           124    342007 [sigma: 460.374 | error: 0.0326688 | coeff: 0.0326688 | eff: 1 | fom: 62.4657 | r2int: 0.00106544 | r2eff: 0 | hits: 589 ] keV
+           123    335586 [sigma: 486.59 | error: 0.0379771 | coeff: 0.0379771 | eff: 1 | fom: 49.5255 | r2int: 0.00144015 | r2eff: 0 | hits: 686 ] keV
+           124    342007 [sigma: 460.374 | error: 0.0326688 | coeff: 0.0326688 | eff: 1 | fom: 66.9276 | r2int: 0.00106544 | r2eff: 0 | hits: 589 ] keV
 ============================================================
  closed file mfd_tl_EnergyDeposit.out for output
 ============================================================
@@ -1427,131 +1428,131 @@ Run Summary
            122       22792.000000 steps
            123       20462.000000 steps
            124       15679.000000 steps
-             0    55 [sigma: 18.5733 | error: 0.827183 | coeff: 0.827183 | eff: 1 | fom: 0.0974329 | r2int: 0.570193 | r2eff: 0 | hits: 6 ] steps
-             1    5 [sigma: 0.5 | error: 0.2 | coeff: 0.2 | eff: 1 | fom: 1.66667 | r2int: 0.03 | r2eff: 0 | hits: 4 ] steps
-             2    10 [sigma: 1.0328 | error: 0.252982 | coeff: 0.252982 | eff: 1 | fom: 1.04167 | r2int: 0.0533333 | r2eff: 0 | hits: 6 ] steps
-             3    21 [sigma: 1.80278 | error: 0.257539 | coeff: 0.257539 | eff: 1 | fom: 1.00513 | r2int: 0.0589569 | r2eff: 0 | hits: 9 ] steps
-             4    91 [sigma: 13.9056 | error: 0.374304 | coeff: 0.374304 | eff: 1 | fom: 0.475837 | r2int: 0.116753 | r2eff: 0 | hits: 6 ] steps
-             5    16 [sigma: 2.21467 | error: 0.366217 | coeff: 0.366217 | eff: 1 | fom: 0.497087 | r2int: 0.114955 | r2eff: 0 | hits: 7 ] steps
-             6    16 [sigma: 2.48998 | error: 0.347985 | coeff: 0.347985 | eff: 1 | fom: 0.550538 | r2int: 0.096875 | r2eff: 0 | hits: 5 ] steps
-             7    23 [sigma: 5.41295 | error: 0.526249 | coeff: 0.526249 | eff: 1 | fom: 0.240728 | r2int: 0.22155 | r2eff: 0 | hits: 5 ] steps
-             8    52 [sigma: 7.67753 | error: 0.442934 | coeff: 0.442934 | eff: 1 | fom: 0.339805 | r2int: 0.174392 | r2eff: 0 | hits: 9 ] steps
-             9    61 [sigma: 12.7048 | error: 0.58909 | coeff: 0.58909 | eff: 1 | fom: 0.192108 | r2int: 0.303648 | r2eff: 0 | hits: 8 ] steps
-            10    14 [sigma: 2.48998 | error: 0.397697 | coeff: 0.397697 | eff: 1 | fom: 0.421505 | r2int: 0.126531 | r2eff: 0 | hits: 5 ] steps
-            11    45 [sigma: 6.72947 | error: 0.395655 | coeff: 0.395655 | eff: 1 | fom: 0.425868 | r2int: 0.13418 | r2eff: 0 | hits: 7 ] steps
-            12    35 [sigma: 5.56776 | error: 0.420883 | coeff: 0.420883 | eff: 1 | fom: 0.376344 | r2int: 0.151837 | r2eff: 0 | hits: 7 ] steps
-            13    53 [sigma: 4.42844 | error: 0.250667 | coeff: 0.250667 | eff: 1 | fom: 1.061 | r2int: 0.0558522 | r2eff: 0 | hits: 9 ] steps
-            14    134 [sigma: 15.0953 | error: 0.275938 | coeff: 0.275938 | eff: 1 | fom: 0.875561 | r2int: 0.0634514 | r2eff: 0 | hits: 6 ] steps
-            15    29 [sigma: 7.60044 | error: 0.641972 | coeff: 0.641972 | eff: 1 | fom: 0.161762 | r2int: 0.34344 | r2eff: 0 | hits: 6 ] steps
-            16    50 [sigma: 5.33631 | error: 0.282371 | coeff: 0.282371 | eff: 1 | fom: 0.83612 | r2int: 0.0683429 | r2eff: 0 | hits: 7 ] steps
-            17    45 [sigma: 7.1614 | error: 0.421051 | coeff: 0.421051 | eff: 1 | fom: 0.376045 | r2int: 0.151958 | r2eff: 0 | hits: 7 ] steps
-            18    42 [sigma: 6.97615 | error: 0.439456 | coeff: 0.439456 | eff: 1 | fom: 0.345205 | r2int: 0.165533 | r2eff: 0 | hits: 7 ] steps
-            19    44 [sigma: 6.07493 | error: 0.36529 | coeff: 0.36529 | eff: 1 | fom: 0.499613 | r2int: 0.114374 | r2eff: 0 | hits: 7 ] steps
-            20    58 [sigma: 8.38252 | error: 0.354016 | coeff: 0.354016 | eff: 1 | fom: 0.531942 | r2int: 0.104439 | r2eff: 0 | hits: 6 ] steps
-            21    118 [sigma: 23.2886 | error: 0.592084 | coeff: 0.592084 | eff: 1 | fom: 0.19017 | r2int: 0.311612 | r2eff: 0 | hits: 9 ] steps
-            22    32 [sigma: 12.083 | error: 0.75519 | coeff: 0.75519 | eff: 1 | fom: 0.116895 | r2int: 0.427734 | r2eff: 0 | hits: 4 ] steps
-            23    63 [sigma: 14.9633 | error: 0.581784 | coeff: 0.581784 | eff: 1 | fom: 0.196963 | r2int: 0.282061 | r2eff: 0 | hits: 6 ] steps
-            24    17 [sigma: 8.0829 | error: 0.823529 | coeff: 0.823529 | eff: 1 | fom: 0.0982993 | r2int: 0.452134 | r2eff: 0 | hits: 3 ] steps
-            25    97 [sigma: 15.3116 | error: 0.473554 | coeff: 0.473554 | eff: 1 | fom: 0.297283 | r2int: 0.199336 | r2eff: 0 | hits: 9 ] steps
-            26    191 [sigma: 11.812 | error: 0.27657 | coeff: 0.27657 | eff: 1 | fom: 0.871561 | r2int: 0.0726666 | r2eff: 0 | hits: 20 ] steps
-            27    127 [sigma: 6.13291 | error: 0.226503 | coeff: 0.226503 | eff: 1 | fom: 1.29945 | r2int: 0.0489716 | r2eff: 0 | hits: 22 ] steps
-            28    106 [sigma: 3.441 | error: 0.168679 | coeff: 0.168679 | eff: 1 | fom: 2.34309 | r2int: 0.0273987 | r2eff: 0 | hits: 27 ] steps
-            29    48 [sigma: 3.02563 | error: 0.259895 | coeff: 0.259895 | eff: 1 | fom: 0.986988 | r2int: 0.0635723 | r2eff: 0 | hits: 17 ] steps
-            30    75 [sigma: 6.2069 | error: 0.298391 | coeff: 0.298391 | eff: 1 | fom: 0.748752 | r2int: 0.082188 | r2eff: 0 | hits: 13 ] steps
-            31    292 [sigma: 12.0648 | error: 0.206589 | coeff: 0.206589 | eff: 1 | fom: 1.56204 | r2int: 0.040972 | r2eff: 0 | hits: 25 ] steps
-            32    203 [sigma: 8.54117 | error: 0.218627 | coeff: 0.218627 | eff: 1 | fom: 1.39477 | r2int: 0.0460273 | r2eff: 0 | hits: 27 ] steps
-            33    316 [sigma: 11.5569 | error: 0.203626 | coeff: 0.203626 | eff: 1 | fom: 1.60783 | r2int: 0.0401262 | r2eff: 0 | hits: 31 ] steps
-            34    103 [sigma: 5.40092 | error: 0.251475 | coeff: 0.251475 | eff: 1 | fom: 1.05419 | r2int: 0.0604901 | r2eff: 0 | hits: 23 ] steps
-            35    108 [sigma: 5.99019 | error: 0.235317 | coeff: 0.235317 | eff: 1 | fom: 1.20393 | r2int: 0.0522977 | r2eff: 0 | hits: 18 ] steps
-            36    318 [sigma: 11.5354 | error: 0.201969 | coeff: 0.201969 | eff: 1 | fom: 1.63433 | r2int: 0.0394756 | r2eff: 0 | hits: 31 ] steps
-            37    319 [sigma: 7.3195 | error: 0.13957 | coeff: 0.13957 | eff: 1 | fom: 3.42236 | r2int: 0.0189533 | r2eff: 0 | hits: 37 ] steps
-            38    294 [sigma: 10.3482 | error: 0.202197 | coeff: 0.202197 | eff: 1 | fom: 1.63065 | r2int: 0.0396447 | r2eff: 0 | hits: 33 ] steps
-            39    132 [sigma: 7.61671 | error: 0.264425 | coeff: 0.264425 | eff: 1 | fom: 0.95346 | r2int: 0.0665912 | r2eff: 0 | hits: 21 ] steps
-            40    113 [sigma: 4.72733 | error: 0.191711 | coeff: 0.191711 | eff: 1 | fom: 1.81391 | r2int: 0.0350029 | r2eff: 0 | hits: 21 ] steps
-            41    243 [sigma: 8.49434 | error: 0.181637 | coeff: 0.181637 | eff: 1 | fom: 2.02068 | r2int: 0.0317702 | r2eff: 0 | hits: 27 ] steps
-            42    206 [sigma: 10.6918 | error: 0.264648 | coeff: 0.264648 | eff: 1 | fom: 0.951855 | r2int: 0.0673449 | r2eff: 0 | hits: 26 ] steps
-            43    306 [sigma: 8.712 | error: 0.153319 | coeff: 0.153319 | eff: 1 | fom: 2.83607 | r2int: 0.0226961 | r2eff: 0 | hits: 29 ] steps
-            44    158 [sigma: 10.2038 | error: 0.258323 | coeff: 0.258323 | eff: 1 | fom: 0.99904 | r2int: 0.0625601 | r2eff: 0 | hits: 16 ] steps
-            45    76 [sigma: 7.76439 | error: 0.288961 | coeff: 0.288961 | eff: 1 | fom: 0.79842 | r2int: 0.0730609 | r2eff: 0 | hits: 8 ] steps
-            46    75 [sigma: 3.85473 | error: 0.185313 | coeff: 0.185313 | eff: 1 | fom: 1.94133 | r2int: 0.0316991 | r2eff: 0 | hits: 13 ] steps
-            47    103 [sigma: 8.75571 | error: 0.340028 | coeff: 0.340028 | eff: 1 | fom: 0.576607 | r2int: 0.108393 | r2eff: 0 | hits: 16 ] steps
-            48    126 [sigma: 10.0987 | error: 0.320593 | coeff: 0.320593 | eff: 1 | fom: 0.648635 | r2int: 0.0963561 | r2eff: 0 | hits: 16 ] steps
-            49    33 [sigma: 5.85235 | error: 0.532032 | coeff: 0.532032 | eff: 1 | fom: 0.235523 | r2int: 0.251607 | r2eff: 0 | hits: 9 ] steps
-            50    641 [sigma: 28.5708 | error: 0.248168 | coeff: 0.248168 | eff: 1 | fom: 1.08247 | r2int: 0.0596006 | r2eff: 0 | hits: 31 ] steps
-            51    599 [sigma: 22.3876 | error: 0.264281 | coeff: 0.264281 | eff: 1 | fom: 0.954505 | r2int: 0.0684474 | r2eff: 0 | hits: 50 ] steps
-            52    687 [sigma: 18.9668 | error: 0.225982 | coeff: 0.225982 | eff: 1 | fom: 1.30545 | r2int: 0.0503056 | r2eff: 0 | hits: 67 ] steps
-            53    567 [sigma: 18.8249 | error: 0.259308 | coeff: 0.259308 | eff: 1 | fom: 0.991467 | r2int: 0.0661382 | r2eff: 0 | hits: 61 ] steps
-            54    485 [sigma: 15.7716 | error: 0.220553 | coeff: 0.220553 | eff: 1 | fom: 1.37052 | r2int: 0.047586 | r2eff: 0 | hits: 46 ] steps
-            55    868 [sigma: 35.7604 | error: 0.291318 | coeff: 0.291318 | eff: 1 | fom: 0.785549 | r2int: 0.083169 | r2eff: 0 | hits: 50 ] steps
-            56    887 [sigma: 8.93995 | error: 0.0956165 | coeff: 0.0956165 | eff: 1 | fom: 7.29194 | r2int: 0.00904093 | r2eff: 0 | hits: 90 ] steps
-            57    850 [sigma: 8.72015 | error: 0.102076 | coeff: 0.102076 | eff: 1 | fom: 6.39828 | r2int: 0.0103142 | r2eff: 0 | hits: 99 ] steps
-            58    757 [sigma: 9.98057 | error: 0.114939 | coeff: 0.114939 | eff: 1 | fom: 5.04634 | r2int: 0.0130371 | r2eff: 0 | hits: 76 ] steps
-            59    544 [sigma: 13.1229 | error: 0.185291 | coeff: 0.185291 | eff: 1 | fom: 1.94177 | r2int: 0.033751 | r2eff: 0 | hits: 59 ] steps
-            60    532 [sigma: 12.4362 | error: 0.181073 | coeff: 0.181073 | eff: 1 | fom: 2.03331 | r2int: 0.0322408 | r2eff: 0 | hits: 60 ] steps
-            61    729 [sigma: 8.38307 | error: 0.106641 | coeff: 0.106641 | eff: 1 | fom: 5.86218 | r2int: 0.0112401 | r2eff: 0 | hits: 86 ] steps
-            62    986 [sigma: 8.65036 | error: 0.0877318 | coeff: 0.0877318 | eff: 1 | fom: 8.66153 | r2int: 0.0076199 | r2eff: 0 | hits: 100 ] steps
-            63    933 [sigma: 12.4792 | error: 0.126183 | coeff: 0.126183 | eff: 1 | fom: 4.18707 | r2int: 0.0157431 | r2eff: 0 | hits: 89 ] steps
-            64    316 [sigma: 9.90331 | error: 0.228156 | coeff: 0.228156 | eff: 1 | fom: 1.2807 | r2int: 0.0510728 | r2eff: 0 | hits: 53 ] steps
-            65    635 [sigma: 15.34 | error: 0.170819 | coeff: 0.170819 | eff: 1 | fom: 2.28473 | r2int: 0.0285957 | r2eff: 0 | hits: 50 ] steps
-            66    741 [sigma: 9.67205 | error: 0.108424 | coeff: 0.108424 | eff: 1 | fom: 5.67099 | r2int: 0.0115854 | r2eff: 0 | hits: 69 ] steps
-            67    765 [sigma: 10.2365 | error: 0.123367 | coeff: 0.123367 | eff: 1 | fom: 4.38037 | r2int: 0.0150404 | r2eff: 0 | hits: 85 ] steps
-            68    743 [sigma: 10.0375 | error: 0.127448 | coeff: 0.127448 | eff: 1 | fom: 4.10432 | r2int: 0.0160605 | r2eff: 0 | hits: 89 ] steps
-            69    439 [sigma: 10.5313 | error: 0.176284 | coeff: 0.176284 | eff: 1 | fom: 2.14528 | r2int: 0.0305005 | r2eff: 0 | hits: 54 ] steps
-            70    180 [sigma: 8.32951 | error: 0.26583 | coeff: 0.26583 | eff: 1 | fom: 0.943412 | r2int: 0.0685241 | r2eff: 0 | hits: 33 ] steps
-            71    742 [sigma: 49.9257 | error: 0.489845 | coeff: 0.489845 | eff: 1 | fom: 0.277838 | r2int: 0.23542 | r2eff: 0 | hits: 53 ] steps
-            72    604 [sigma: 15.8808 | error: 0.203662 | coeff: 0.203662 | eff: 1 | fom: 1.60727 | r2int: 0.040787 | r2eff: 0 | hits: 60 ] steps
-            73    479 [sigma: 10.6348 | error: 0.164655 | coeff: 0.164655 | eff: 1 | fom: 2.459 | r2int: 0.0266184 | r2eff: 0 | hits: 55 ] steps
-            74    406 [sigma: 21.7028 | error: 0.316245 | coeff: 0.316245 | eff: 1 | fom: 0.666593 | r2int: 0.0971535 | r2eff: 0 | hits: 35 ] steps
-            75    3966 [sigma: 50.1602 | error: 0.143091 | coeff: 0.143091 | eff: 1 | fom: 3.25601 | r2int: 0.020315 | r2eff: 0 | hits: 128 ] steps
-            76    5071 [sigma: 37.4762 | error: 0.108866 | coeff: 0.108866 | eff: 1 | fom: 5.62503 | r2int: 0.0117972 | r2eff: 0 | hits: 217 ] steps
-            77    4066 [sigma: 25.6132 | error: 0.0938583 | coeff: 0.0938583 | eff: 1 | fom: 7.56768 | r2int: 0.00876971 | r2eff: 0 | hits: 222 ] steps
-            78    5976 [sigma: 44.0107 | error: 0.106723 | coeff: 0.106723 | eff: 1 | fom: 5.85322 | r2int: 0.0113355 | r2eff: 0 | hits: 210 ] steps
-            79    4496 [sigma: 35.6189 | error: 0.105102 | coeff: 0.105102 | eff: 1 | fom: 6.03514 | r2int: 0.0109836 | r2eff: 0 | hits: 176 ] steps
-            80    5513 [sigma: 35.3774 | error: 0.0949641 | coeff: 0.0949641 | eff: 1 | fom: 7.39248 | r2int: 0.008977 | r2eff: 0 | hits: 219 ] steps
-            81    3756 [sigma: 11.0984 | error: 0.0527754 | coeff: 0.0527754 | eff: 1 | fom: 23.9357 | r2int: 0.00277651 | r2eff: 0 | hits: 319 ] steps
-            82    3910 [sigma: 11.9581 | error: 0.0546237 | coeff: 0.0546237 | eff: 1 | fom: 22.3432 | r2int: 0.0029744 | r2eff: 0 | hits: 319 ] steps
-            83    3190 [sigma: 9.87656 | error: 0.054863 | coeff: 0.054863 | eff: 1 | fom: 22.1487 | r2int: 0.00300037 | r2eff: 0 | hits: 314 ] steps
-            84    4587 [sigma: 32.0931 | error: 0.101871 | coeff: 0.101871 | eff: 1 | fom: 6.42402 | r2int: 0.0103288 | r2eff: 0 | hits: 212 ] steps
-            85    5003 [sigma: 35.4221 | error: 0.104298 | coeff: 0.104298 | eff: 1 | fom: 6.12859 | r2int: 0.0108279 | r2eff: 0 | hits: 217 ] steps
-            86    3389 [sigma: 10.6793 | error: 0.0549424 | coeff: 0.0549424 | eff: 1 | fom: 22.0848 | r2int: 0.00300874 | r2eff: 0 | hits: 304 ] steps
-            87    4245 [sigma: 12.0136 | error: 0.0530209 | coeff: 0.0530209 | eff: 1 | fom: 23.7145 | r2int: 0.00280321 | r2eff: 0 | hits: 351 ] steps
-            88    3675 [sigma: 11.1139 | error: 0.0535888 | coeff: 0.0535888 | eff: 1 | fom: 23.2145 | r2int: 0.00286262 | r2eff: 0 | hits: 314 ] steps
-            89    4611 [sigma: 30.3805 | error: 0.0981694 | coeff: 0.0981694 | eff: 1 | fom: 6.91762 | r2int: 0.00959382 | r2eff: 0 | hits: 222 ] steps
-            90    5018 [sigma: 28.2116 | error: 0.0828185 | coeff: 0.0828185 | eff: 1 | fom: 9.71972 | r2int: 0.0068273 | r2eff: 0 | hits: 217 ] steps
-            91    3340 [sigma: 9.89876 | error: 0.0530991 | coeff: 0.0530991 | eff: 1 | fom: 23.6448 | r2int: 0.00281073 | r2eff: 0 | hits: 321 ] steps
-            92    3607 [sigma: 11.0157 | error: 0.0557298 | coeff: 0.0557298 | eff: 1 | fom: 21.4652 | r2int: 0.00309648 | r2eff: 0 | hits: 333 ] steps
-            93    3614 [sigma: 11.0464 | error: 0.0556932 | coeff: 0.0556932 | eff: 1 | fom: 21.4934 | r2int: 0.00309239 | r2eff: 0 | hits: 332 ] steps
-            94    4198 [sigma: 28.2287 | error: 0.102201 | coeff: 0.102201 | eff: 1 | fom: 6.38265 | r2int: 0.0103998 | r2eff: 0 | hits: 231 ] steps
-            95    2898 [sigma: 33.5951 | error: 0.136181 | coeff: 0.136181 | eff: 1 | fom: 3.59481 | r2int: 0.0184109 | r2eff: 0 | hits: 138 ] steps
-            96    4731 [sigma: 34.3537 | error: 0.105728 | coeff: 0.105728 | eff: 1 | fom: 5.96391 | r2int: 0.0111256 | r2eff: 0 | hits: 212 ] steps
-            97    5926 [sigma: 36.1098 | error: 0.0949875 | coeff: 0.0949875 | eff: 1 | fom: 7.38884 | r2int: 0.00898549 | r2eff: 0 | hits: 243 ] steps
-            98    3973 [sigma: 28.1725 | error: 0.100031 | coeff: 0.100031 | eff: 1 | fom: 6.66257 | r2int: 0.00995587 | r2eff: 0 | hits: 199 ] steps
-            99    3467 [sigma: 39.9814 | error: 0.13742 | coeff: 0.13742 | eff: 1 | fom: 3.5303 | r2int: 0.0187511 | r2eff: 0 | hits: 142 ] steps
-           100    14799 [sigma: 32.0885 | error: 0.0541639 | coeff: 0.0541639 | eff: 1 | fom: 22.7242 | r2int: 0.00292902 | r2eff: 0 | hits: 624 ] steps
-           101    19996 [sigma: 34.4401 | error: 0.0469163 | coeff: 0.0469163 | eff: 1 | fom: 30.2874 | r2int: 0.00219817 | r2eff: 0 | hits: 742 ] steps
-           102    23618 [sigma: 39.7204 | error: 0.0481296 | coeff: 0.0481296 | eff: 1 | fom: 28.7795 | r2int: 0.00231363 | r2eff: 0 | hits: 819 ] steps
-           103    20922 [sigma: 33.3022 | error: 0.04488 | coeff: 0.04488 | eff: 1 | fom: 33.0981 | r2int: 0.00201168 | r2eff: 0 | hits: 795 ] steps
-           104    17157 [sigma: 33.3405 | error: 0.0492761 | coeff: 0.0492761 | eff: 1 | fom: 27.4559 | r2int: 0.00242436 | r2eff: 0 | hits: 643 ] steps
-           105    20962 [sigma: 35.5564 | error: 0.0468541 | coeff: 0.0468541 | eff: 1 | fom: 30.3679 | r2int: 0.00219243 | r2eff: 0 | hits: 763 ] steps
-           106    24705 [sigma: 34.8989 | error: 0.0425432 | coeff: 0.0425432 | eff: 1 | fom: 36.8339 | r2int: 0.00180793 | r2eff: 0 | hits: 907 ] steps
-           107    26733 [sigma: 36.3998 | error: 0.0423851 | coeff: 0.0423851 | eff: 1 | fom: 37.1093 | r2int: 0.00179464 | r2eff: 0 | hits: 969 ] steps
-           108    24536 [sigma: 31.6329 | error: 0.0402154 | coeff: 0.0402154 | eff: 1 | fom: 41.2215 | r2int: 0.00161562 | r2eff: 0 | hits: 973 ] steps
-           109    20584 [sigma: 36.3955 | error: 0.0491595 | coeff: 0.0491595 | eff: 1 | fom: 27.5863 | r2int: 0.00241353 | r2eff: 0 | hits: 773 ] steps
-           110    20266 [sigma: 38.4215 | error: 0.0521619 | coeff: 0.0521619 | eff: 1 | fom: 24.502 | r2int: 0.00271727 | r2eff: 0 | hits: 757 ] steps
-           111    24118 [sigma: 32.7909 | error: 0.0416625 | coeff: 0.0416625 | eff: 1 | fom: 38.4077 | r2int: 0.00173391 | r2eff: 0 | hits: 939 ] steps
-           112    27762 [sigma: 35.9029 | error: 0.0412622 | coeff: 0.0412622 | eff: 1 | fom: 39.1565 | r2int: 0.0017009 | r2eff: 0 | hits: 1018 ] steps
-           113    27701 [sigma: 36.1984 | error: 0.0413232 | coeff: 0.0413232 | eff: 1 | fom: 39.041 | r2int: 0.0017059 | r2eff: 0 | hits: 1000 ] steps
-           114    20680 [sigma: 33.2877 | error: 0.0456984 | coeff: 0.0456984 | eff: 1 | fom: 31.9232 | r2int: 0.00208575 | r2eff: 0 | hits: 806 ] steps
-           115    17704 [sigma: 30.6986 | error: 0.0471378 | coeff: 0.0471378 | eff: 1 | fom: 30.0033 | r2int: 0.00221897 | r2eff: 0 | hits: 739 ] steps
-           116    24197 [sigma: 34.4125 | error: 0.0431837 | coeff: 0.0431837 | eff: 1 | fom: 35.7494 | r2int: 0.00186281 | r2eff: 0 | hits: 922 ] steps
-           117    26911 [sigma: 35.4794 | error: 0.0417539 | coeff: 0.0417539 | eff: 1 | fom: 38.2397 | r2int: 0.00174165 | r2eff: 0 | hits: 1003 ] steps
-           118    26984 [sigma: 34.9784 | error: 0.040786 | coeff: 0.040786 | eff: 1 | fom: 40.0762 | r2int: 0.00166182 | r2eff: 0 | hits: 990 ] steps
-           119    20505 [sigma: 32.8974 | error: 0.0444034 | coeff: 0.0444034 | eff: 1 | fom: 33.8125 | r2int: 0.00196909 | r2eff: 0 | hits: 766 ] steps
-           120    14995 [sigma: 29.1833 | error: 0.0479493 | coeff: 0.0479493 | eff: 1 | fom: 28.9964 | r2int: 0.00229535 | r2eff: 0 | hits: 607 ] steps
-           121    21450 [sigma: 33.5762 | error: 0.0451779 | coeff: 0.0451779 | eff: 1 | fom: 32.663 | r2int: 0.00203859 | r2eff: 0 | hits: 833 ] steps
-           122    22792 [sigma: 35.8056 | error: 0.044239 | coeff: 0.044239 | eff: 1 | fom: 34.0642 | r2int: 0.00195462 | r2eff: 0 | hits: 793 ] steps
-           123    20462 [sigma: 36.5266 | error: 0.0486581 | coeff: 0.0486581 | eff: 1 | fom: 28.1577 | r2int: 0.00236443 | r2eff: 0 | hits: 743 ] steps
-           124    15679 [sigma: 30.9323 | error: 0.0497142 | coeff: 0.0497142 | eff: 1 | fom: 26.9741 | r2int: 0.00246761 | r2eff: 0 | hits: 635 ] steps
+             0    55 [sigma: 18.5733 | error: 0.827183 | coeff: 0.827183 | eff: 1 | fom: 0.104392 | r2int: 0.570193 | r2eff: 0 | hits: 6 ] steps
+             1    5 [sigma: 0.5 | error: 0.2 | coeff: 0.2 | eff: 1 | fom: 1.78571 | r2int: 0.03 | r2eff: 0 | hits: 4 ] steps
+             2    10 [sigma: 1.0328 | error: 0.252982 | coeff: 0.252982 | eff: 1 | fom: 1.11607 | r2int: 0.0533333 | r2eff: 0 | hits: 6 ] steps
+             3    21 [sigma: 1.80278 | error: 0.257539 | coeff: 0.257539 | eff: 1 | fom: 1.07692 | r2int: 0.0589569 | r2eff: 0 | hits: 9 ] steps
+             4    91 [sigma: 13.9056 | error: 0.374304 | coeff: 0.374304 | eff: 1 | fom: 0.509826 | r2int: 0.116753 | r2eff: 0 | hits: 6 ] steps
+             5    16 [sigma: 2.21467 | error: 0.366217 | coeff: 0.366217 | eff: 1 | fom: 0.532594 | r2int: 0.114955 | r2eff: 0 | hits: 7 ] steps
+             6    16 [sigma: 2.48998 | error: 0.347985 | coeff: 0.347985 | eff: 1 | fom: 0.589862 | r2int: 0.096875 | r2eff: 0 | hits: 5 ] steps
+             7    23 [sigma: 5.41295 | error: 0.526249 | coeff: 0.526249 | eff: 1 | fom: 0.257923 | r2int: 0.22155 | r2eff: 0 | hits: 5 ] steps
+             8    52 [sigma: 7.67753 | error: 0.442934 | coeff: 0.442934 | eff: 1 | fom: 0.364077 | r2int: 0.174392 | r2eff: 0 | hits: 9 ] steps
+             9    61 [sigma: 12.7048 | error: 0.58909 | coeff: 0.58909 | eff: 1 | fom: 0.20583 | r2int: 0.303648 | r2eff: 0 | hits: 8 ] steps
+            10    14 [sigma: 2.48998 | error: 0.397697 | coeff: 0.397697 | eff: 1 | fom: 0.451613 | r2int: 0.126531 | r2eff: 0 | hits: 5 ] steps
+            11    45 [sigma: 6.72947 | error: 0.395655 | coeff: 0.395655 | eff: 1 | fom: 0.456287 | r2int: 0.13418 | r2eff: 0 | hits: 7 ] steps
+            12    35 [sigma: 5.56776 | error: 0.420883 | coeff: 0.420883 | eff: 1 | fom: 0.403226 | r2int: 0.151837 | r2eff: 0 | hits: 7 ] steps
+            13    53 [sigma: 4.42844 | error: 0.250667 | coeff: 0.250667 | eff: 1 | fom: 1.13679 | r2int: 0.0558522 | r2eff: 0 | hits: 9 ] steps
+            14    134 [sigma: 15.0953 | error: 0.275938 | coeff: 0.275938 | eff: 1 | fom: 0.938101 | r2int: 0.0634514 | r2eff: 0 | hits: 6 ] steps
+            15    29 [sigma: 7.60044 | error: 0.641972 | coeff: 0.641972 | eff: 1 | fom: 0.173316 | r2int: 0.34344 | r2eff: 0 | hits: 6 ] steps
+            16    50 [sigma: 5.33631 | error: 0.282371 | coeff: 0.282371 | eff: 1 | fom: 0.895843 | r2int: 0.0683429 | r2eff: 0 | hits: 7 ] steps
+            17    45 [sigma: 7.1614 | error: 0.421051 | coeff: 0.421051 | eff: 1 | fom: 0.402905 | r2int: 0.151958 | r2eff: 0 | hits: 7 ] steps
+            18    42 [sigma: 6.97615 | error: 0.439456 | coeff: 0.439456 | eff: 1 | fom: 0.369863 | r2int: 0.165533 | r2eff: 0 | hits: 7 ] steps
+            19    44 [sigma: 6.07493 | error: 0.36529 | coeff: 0.36529 | eff: 1 | fom: 0.5353 | r2int: 0.114374 | r2eff: 0 | hits: 7 ] steps
+            20    58 [sigma: 8.38252 | error: 0.354016 | coeff: 0.354016 | eff: 1 | fom: 0.569938 | r2int: 0.104439 | r2eff: 0 | hits: 6 ] steps
+            21    118 [sigma: 23.2886 | error: 0.592084 | coeff: 0.592084 | eff: 1 | fom: 0.203753 | r2int: 0.311612 | r2eff: 0 | hits: 9 ] steps
+            22    32 [sigma: 12.083 | error: 0.75519 | coeff: 0.75519 | eff: 1 | fom: 0.125245 | r2int: 0.427734 | r2eff: 0 | hits: 4 ] steps
+            23    63 [sigma: 14.9633 | error: 0.581784 | coeff: 0.581784 | eff: 1 | fom: 0.211032 | r2int: 0.282061 | r2eff: 0 | hits: 6 ] steps
+            24    17 [sigma: 8.0829 | error: 0.823529 | coeff: 0.823529 | eff: 1 | fom: 0.105321 | r2int: 0.452134 | r2eff: 0 | hits: 3 ] steps
+            25    97 [sigma: 15.3116 | error: 0.473554 | coeff: 0.473554 | eff: 1 | fom: 0.318517 | r2int: 0.199336 | r2eff: 0 | hits: 9 ] steps
+            26    191 [sigma: 11.812 | error: 0.27657 | coeff: 0.27657 | eff: 1 | fom: 0.933815 | r2int: 0.0726666 | r2eff: 0 | hits: 20 ] steps
+            27    127 [sigma: 6.13291 | error: 0.226503 | coeff: 0.226503 | eff: 1 | fom: 1.39227 | r2int: 0.0489716 | r2eff: 0 | hits: 22 ] steps
+            28    106 [sigma: 3.441 | error: 0.168679 | coeff: 0.168679 | eff: 1 | fom: 2.51045 | r2int: 0.0273987 | r2eff: 0 | hits: 27 ] steps
+            29    48 [sigma: 3.02563 | error: 0.259895 | coeff: 0.259895 | eff: 1 | fom: 1.05749 | r2int: 0.0635723 | r2eff: 0 | hits: 17 ] steps
+            30    75 [sigma: 6.2069 | error: 0.298391 | coeff: 0.298391 | eff: 1 | fom: 0.802234 | r2int: 0.082188 | r2eff: 0 | hits: 13 ] steps
+            31    292 [sigma: 12.0648 | error: 0.206589 | coeff: 0.206589 | eff: 1 | fom: 1.67362 | r2int: 0.040972 | r2eff: 0 | hits: 25 ] steps
+            32    203 [sigma: 8.54117 | error: 0.218627 | coeff: 0.218627 | eff: 1 | fom: 1.4944 | r2int: 0.0460273 | r2eff: 0 | hits: 27 ] steps
+            33    316 [sigma: 11.5569 | error: 0.203626 | coeff: 0.203626 | eff: 1 | fom: 1.72268 | r2int: 0.0401262 | r2eff: 0 | hits: 31 ] steps
+            34    103 [sigma: 5.40092 | error: 0.251475 | coeff: 0.251475 | eff: 1 | fom: 1.12949 | r2int: 0.0604901 | r2eff: 0 | hits: 23 ] steps
+            35    108 [sigma: 5.99019 | error: 0.235317 | coeff: 0.235317 | eff: 1 | fom: 1.28993 | r2int: 0.0522977 | r2eff: 0 | hits: 18 ] steps
+            36    318 [sigma: 11.5354 | error: 0.201969 | coeff: 0.201969 | eff: 1 | fom: 1.75106 | r2int: 0.0394756 | r2eff: 0 | hits: 31 ] steps
+            37    319 [sigma: 7.3195 | error: 0.13957 | coeff: 0.13957 | eff: 1 | fom: 3.66681 | r2int: 0.0189533 | r2eff: 0 | hits: 37 ] steps
+            38    294 [sigma: 10.3482 | error: 0.202197 | coeff: 0.202197 | eff: 1 | fom: 1.74712 | r2int: 0.0396447 | r2eff: 0 | hits: 33 ] steps
+            39    132 [sigma: 7.61671 | error: 0.264425 | coeff: 0.264425 | eff: 1 | fom: 1.02156 | r2int: 0.0665912 | r2eff: 0 | hits: 21 ] steps
+            40    113 [sigma: 4.72733 | error: 0.191711 | coeff: 0.191711 | eff: 1 | fom: 1.94347 | r2int: 0.0350029 | r2eff: 0 | hits: 21 ] steps
+            41    243 [sigma: 8.49434 | error: 0.181637 | coeff: 0.181637 | eff: 1 | fom: 2.16502 | r2int: 0.0317702 | r2eff: 0 | hits: 27 ] steps
+            42    206 [sigma: 10.6918 | error: 0.264648 | coeff: 0.264648 | eff: 1 | fom: 1.01985 | r2int: 0.0673449 | r2eff: 0 | hits: 26 ] steps
+            43    306 [sigma: 8.712 | error: 0.153319 | coeff: 0.153319 | eff: 1 | fom: 3.03865 | r2int: 0.0226961 | r2eff: 0 | hits: 29 ] steps
+            44    158 [sigma: 10.2038 | error: 0.258323 | coeff: 0.258323 | eff: 1 | fom: 1.0704 | r2int: 0.0625601 | r2eff: 0 | hits: 16 ] steps
+            45    76 [sigma: 7.76439 | error: 0.288961 | coeff: 0.288961 | eff: 1 | fom: 0.85545 | r2int: 0.0730609 | r2eff: 0 | hits: 8 ] steps
+            46    75 [sigma: 3.85473 | error: 0.185313 | coeff: 0.185313 | eff: 1 | fom: 2.08 | r2int: 0.0316991 | r2eff: 0 | hits: 13 ] steps
+            47    103 [sigma: 8.75571 | error: 0.340028 | coeff: 0.340028 | eff: 1 | fom: 0.617794 | r2int: 0.108393 | r2eff: 0 | hits: 16 ] steps
+            48    126 [sigma: 10.0987 | error: 0.320593 | coeff: 0.320593 | eff: 1 | fom: 0.694966 | r2int: 0.0963561 | r2eff: 0 | hits: 16 ] steps
+            49    33 [sigma: 5.85235 | error: 0.532032 | coeff: 0.532032 | eff: 1 | fom: 0.252346 | r2int: 0.251607 | r2eff: 0 | hits: 9 ] steps
+            50    641 [sigma: 28.5708 | error: 0.248168 | coeff: 0.248168 | eff: 1 | fom: 1.15979 | r2int: 0.0596006 | r2eff: 0 | hits: 31 ] steps
+            51    599 [sigma: 22.3876 | error: 0.264281 | coeff: 0.264281 | eff: 1 | fom: 1.02268 | r2int: 0.0684474 | r2eff: 0 | hits: 50 ] steps
+            52    687 [sigma: 18.9668 | error: 0.225982 | coeff: 0.225982 | eff: 1 | fom: 1.3987 | r2int: 0.0503056 | r2eff: 0 | hits: 67 ] steps
+            53    567 [sigma: 18.8249 | error: 0.259308 | coeff: 0.259308 | eff: 1 | fom: 1.06229 | r2int: 0.0661382 | r2eff: 0 | hits: 61 ] steps
+            54    485 [sigma: 15.7716 | error: 0.220553 | coeff: 0.220553 | eff: 1 | fom: 1.46841 | r2int: 0.047586 | r2eff: 0 | hits: 46 ] steps
+            55    868 [sigma: 35.7604 | error: 0.291318 | coeff: 0.291318 | eff: 1 | fom: 0.84166 | r2int: 0.083169 | r2eff: 0 | hits: 50 ] steps
+            56    887 [sigma: 8.93995 | error: 0.0956165 | coeff: 0.0956165 | eff: 1 | fom: 7.8128 | r2int: 0.00904093 | r2eff: 0 | hits: 90 ] steps
+            57    850 [sigma: 8.72015 | error: 0.102076 | coeff: 0.102076 | eff: 1 | fom: 6.8553 | r2int: 0.0103142 | r2eff: 0 | hits: 99 ] steps
+            58    757 [sigma: 9.98057 | error: 0.114939 | coeff: 0.114939 | eff: 1 | fom: 5.40679 | r2int: 0.0130371 | r2eff: 0 | hits: 76 ] steps
+            59    544 [sigma: 13.1229 | error: 0.185291 | coeff: 0.185291 | eff: 1 | fom: 2.08047 | r2int: 0.033751 | r2eff: 0 | hits: 59 ] steps
+            60    532 [sigma: 12.4362 | error: 0.181073 | coeff: 0.181073 | eff: 1 | fom: 2.17854 | r2int: 0.0322408 | r2eff: 0 | hits: 60 ] steps
+            61    729 [sigma: 8.38307 | error: 0.106641 | coeff: 0.106641 | eff: 1 | fom: 6.2809 | r2int: 0.0112401 | r2eff: 0 | hits: 86 ] steps
+            62    986 [sigma: 8.65036 | error: 0.0877318 | coeff: 0.0877318 | eff: 1 | fom: 9.28021 | r2int: 0.0076199 | r2eff: 0 | hits: 100 ] steps
+            63    933 [sigma: 12.4792 | error: 0.126183 | coeff: 0.126183 | eff: 1 | fom: 4.48615 | r2int: 0.0157431 | r2eff: 0 | hits: 89 ] steps
+            64    316 [sigma: 9.90331 | error: 0.228156 | coeff: 0.228156 | eff: 1 | fom: 1.37218 | r2int: 0.0510728 | r2eff: 0 | hits: 53 ] steps
+            65    635 [sigma: 15.34 | error: 0.170819 | coeff: 0.170819 | eff: 1 | fom: 2.44792 | r2int: 0.0285957 | r2eff: 0 | hits: 50 ] steps
+            66    741 [sigma: 9.67205 | error: 0.108424 | coeff: 0.108424 | eff: 1 | fom: 6.07606 | r2int: 0.0115854 | r2eff: 0 | hits: 69 ] steps
+            67    765 [sigma: 10.2365 | error: 0.123367 | coeff: 0.123367 | eff: 1 | fom: 4.69325 | r2int: 0.0150404 | r2eff: 0 | hits: 85 ] steps
+            68    743 [sigma: 10.0375 | error: 0.127448 | coeff: 0.127448 | eff: 1 | fom: 4.39749 | r2int: 0.0160605 | r2eff: 0 | hits: 89 ] steps
+            69    439 [sigma: 10.5313 | error: 0.176284 | coeff: 0.176284 | eff: 1 | fom: 2.29851 | r2int: 0.0305005 | r2eff: 0 | hits: 54 ] steps
+            70    180 [sigma: 8.32951 | error: 0.26583 | coeff: 0.26583 | eff: 1 | fom: 1.0108 | r2int: 0.0685241 | r2eff: 0 | hits: 33 ] steps
+            71    742 [sigma: 49.9257 | error: 0.489845 | coeff: 0.489845 | eff: 1 | fom: 0.297684 | r2int: 0.23542 | r2eff: 0 | hits: 53 ] steps
+            72    604 [sigma: 15.8808 | error: 0.203662 | coeff: 0.203662 | eff: 1 | fom: 1.72207 | r2int: 0.040787 | r2eff: 0 | hits: 60 ] steps
+            73    479 [sigma: 10.6348 | error: 0.164655 | coeff: 0.164655 | eff: 1 | fom: 2.63464 | r2int: 0.0266184 | r2eff: 0 | hits: 55 ] steps
+            74    406 [sigma: 21.7028 | error: 0.316245 | coeff: 0.316245 | eff: 1 | fom: 0.714207 | r2int: 0.0971535 | r2eff: 0 | hits: 35 ] steps
+            75    3966 [sigma: 50.1602 | error: 0.143091 | coeff: 0.143091 | eff: 1 | fom: 3.48858 | r2int: 0.020315 | r2eff: 0 | hits: 128 ] steps
+            76    5071 [sigma: 37.4762 | error: 0.108866 | coeff: 0.108866 | eff: 1 | fom: 6.02682 | r2int: 0.0117972 | r2eff: 0 | hits: 217 ] steps
+            77    4066 [sigma: 25.6132 | error: 0.0938583 | coeff: 0.0938583 | eff: 1 | fom: 8.10823 | r2int: 0.00876971 | r2eff: 0 | hits: 222 ] steps
+            78    5976 [sigma: 44.0107 | error: 0.106723 | coeff: 0.106723 | eff: 1 | fom: 6.27131 | r2int: 0.0113355 | r2eff: 0 | hits: 210 ] steps
+            79    4496 [sigma: 35.6189 | error: 0.105102 | coeff: 0.105102 | eff: 1 | fom: 6.46622 | r2int: 0.0109836 | r2eff: 0 | hits: 176 ] steps
+            80    5513 [sigma: 35.3774 | error: 0.0949641 | coeff: 0.0949641 | eff: 1 | fom: 7.92051 | r2int: 0.008977 | r2eff: 0 | hits: 219 ] steps
+            81    3756 [sigma: 11.0984 | error: 0.0527754 | coeff: 0.0527754 | eff: 1 | fom: 25.6454 | r2int: 0.00277651 | r2eff: 0 | hits: 319 ] steps
+            82    3910 [sigma: 11.9581 | error: 0.0546237 | coeff: 0.0546237 | eff: 1 | fom: 23.9392 | r2int: 0.0029744 | r2eff: 0 | hits: 319 ] steps
+            83    3190 [sigma: 9.87656 | error: 0.054863 | coeff: 0.054863 | eff: 1 | fom: 23.7308 | r2int: 0.00300037 | r2eff: 0 | hits: 314 ] steps
+            84    4587 [sigma: 32.0931 | error: 0.101871 | coeff: 0.101871 | eff: 1 | fom: 6.88288 | r2int: 0.0103288 | r2eff: 0 | hits: 212 ] steps
+            85    5003 [sigma: 35.4221 | error: 0.104298 | coeff: 0.104298 | eff: 1 | fom: 6.56634 | r2int: 0.0108279 | r2eff: 0 | hits: 217 ] steps
+            86    3389 [sigma: 10.6793 | error: 0.0549424 | coeff: 0.0549424 | eff: 1 | fom: 23.6623 | r2int: 0.00300874 | r2eff: 0 | hits: 304 ] steps
+            87    4245 [sigma: 12.0136 | error: 0.0530209 | coeff: 0.0530209 | eff: 1 | fom: 25.4084 | r2int: 0.00280321 | r2eff: 0 | hits: 351 ] steps
+            88    3675 [sigma: 11.1139 | error: 0.0535888 | coeff: 0.0535888 | eff: 1 | fom: 24.8727 | r2int: 0.00286262 | r2eff: 0 | hits: 314 ] steps
+            89    4611 [sigma: 30.3805 | error: 0.0981694 | coeff: 0.0981694 | eff: 1 | fom: 7.41173 | r2int: 0.00959382 | r2eff: 0 | hits: 222 ] steps
+            90    5018 [sigma: 28.2116 | error: 0.0828185 | coeff: 0.0828185 | eff: 1 | fom: 10.414 | r2int: 0.0068273 | r2eff: 0 | hits: 217 ] steps
+            91    3340 [sigma: 9.89876 | error: 0.0530991 | coeff: 0.0530991 | eff: 1 | fom: 25.3337 | r2int: 0.00281073 | r2eff: 0 | hits: 321 ] steps
+            92    3607 [sigma: 11.0157 | error: 0.0557298 | coeff: 0.0557298 | eff: 1 | fom: 22.9984 | r2int: 0.00309648 | r2eff: 0 | hits: 333 ] steps
+            93    3614 [sigma: 11.0464 | error: 0.0556932 | coeff: 0.0556932 | eff: 1 | fom: 23.0286 | r2int: 0.00309239 | r2eff: 0 | hits: 332 ] steps
+            94    4198 [sigma: 28.2287 | error: 0.102201 | coeff: 0.102201 | eff: 1 | fom: 6.83856 | r2int: 0.0103998 | r2eff: 0 | hits: 231 ] steps
+            95    2898 [sigma: 33.5951 | error: 0.136181 | coeff: 0.136181 | eff: 1 | fom: 3.85158 | r2int: 0.0184109 | r2eff: 0 | hits: 138 ] steps
+            96    4731 [sigma: 34.3537 | error: 0.105728 | coeff: 0.105728 | eff: 1 | fom: 6.3899 | r2int: 0.0111256 | r2eff: 0 | hits: 212 ] steps
+            97    5926 [sigma: 36.1098 | error: 0.0949875 | coeff: 0.0949875 | eff: 1 | fom: 7.91661 | r2int: 0.00898549 | r2eff: 0 | hits: 243 ] steps
+            98    3973 [sigma: 28.1725 | error: 0.100031 | coeff: 0.100031 | eff: 1 | fom: 7.13846 | r2int: 0.00995587 | r2eff: 0 | hits: 199 ] steps
+            99    3467 [sigma: 39.9814 | error: 0.13742 | coeff: 0.13742 | eff: 1 | fom: 3.78246 | r2int: 0.0187511 | r2eff: 0 | hits: 142 ] steps
+           100    14799 [sigma: 32.0885 | error: 0.0541639 | coeff: 0.0541639 | eff: 1 | fom: 24.3474 | r2int: 0.00292902 | r2eff: 0 | hits: 624 ] steps
+           101    19996 [sigma: 34.4401 | error: 0.0469163 | coeff: 0.0469163 | eff: 1 | fom: 32.4508 | r2int: 0.00219817 | r2eff: 0 | hits: 742 ] steps
+           102    23618 [sigma: 39.7204 | error: 0.0481296 | coeff: 0.0481296 | eff: 1 | fom: 30.8352 | r2int: 0.00231363 | r2eff: 0 | hits: 819 ] steps
+           103    20922 [sigma: 33.3022 | error: 0.04488 | coeff: 0.04488 | eff: 1 | fom: 35.4622 | r2int: 0.00201168 | r2eff: 0 | hits: 795 ] steps
+           104    17157 [sigma: 33.3405 | error: 0.0492761 | coeff: 0.0492761 | eff: 1 | fom: 29.417 | r2int: 0.00242436 | r2eff: 0 | hits: 643 ] steps
+           105    20962 [sigma: 35.5564 | error: 0.0468541 | coeff: 0.0468541 | eff: 1 | fom: 32.537 | r2int: 0.00219243 | r2eff: 0 | hits: 763 ] steps
+           106    24705 [sigma: 34.8989 | error: 0.0425432 | coeff: 0.0425432 | eff: 1 | fom: 39.4649 | r2int: 0.00180793 | r2eff: 0 | hits: 907 ] steps
+           107    26733 [sigma: 36.3998 | error: 0.0423851 | coeff: 0.0423851 | eff: 1 | fom: 39.76 | r2int: 0.00179464 | r2eff: 0 | hits: 969 ] steps
+           108    24536 [sigma: 31.6329 | error: 0.0402154 | coeff: 0.0402154 | eff: 1 | fom: 44.1659 | r2int: 0.00161562 | r2eff: 0 | hits: 973 ] steps
+           109    20584 [sigma: 36.3955 | error: 0.0491595 | coeff: 0.0491595 | eff: 1 | fom: 29.5567 | r2int: 0.00241353 | r2eff: 0 | hits: 773 ] steps
+           110    20266 [sigma: 38.4215 | error: 0.0521619 | coeff: 0.0521619 | eff: 1 | fom: 26.2521 | r2int: 0.00271727 | r2eff: 0 | hits: 757 ] steps
+           111    24118 [sigma: 32.7909 | error: 0.0416625 | coeff: 0.0416625 | eff: 1 | fom: 41.1512 | r2int: 0.00173391 | r2eff: 0 | hits: 939 ] steps
+           112    27762 [sigma: 35.9029 | error: 0.0412622 | coeff: 0.0412622 | eff: 1 | fom: 41.9534 | r2int: 0.0017009 | r2eff: 0 | hits: 1018 ] steps
+           113    27701 [sigma: 36.1984 | error: 0.0413232 | coeff: 0.0413232 | eff: 1 | fom: 41.8296 | r2int: 0.0017059 | r2eff: 0 | hits: 1000 ] steps
+           114    20680 [sigma: 33.2877 | error: 0.0456984 | coeff: 0.0456984 | eff: 1 | fom: 34.2035 | r2int: 0.00208575 | r2eff: 0 | hits: 806 ] steps
+           115    17704 [sigma: 30.6986 | error: 0.0471378 | coeff: 0.0471378 | eff: 1 | fom: 32.1464 | r2int: 0.00221897 | r2eff: 0 | hits: 739 ] steps
+           116    24197 [sigma: 34.4125 | error: 0.0431837 | coeff: 0.0431837 | eff: 1 | fom: 38.3029 | r2int: 0.00186281 | r2eff: 0 | hits: 922 ] steps
+           117    26911 [sigma: 35.4794 | error: 0.0417539 | coeff: 0.0417539 | eff: 1 | fom: 40.9712 | r2int: 0.00174165 | r2eff: 0 | hits: 1003 ] steps
+           118    26984 [sigma: 34.9784 | error: 0.040786 | coeff: 0.040786 | eff: 1 | fom: 42.9387 | r2int: 0.00166182 | r2eff: 0 | hits: 990 ] steps
+           119    20505 [sigma: 32.8974 | error: 0.0444034 | coeff: 0.0444034 | eff: 1 | fom: 36.2276 | r2int: 0.00196909 | r2eff: 0 | hits: 766 ] steps
+           120    14995 [sigma: 29.1833 | error: 0.0479493 | coeff: 0.0479493 | eff: 1 | fom: 31.0676 | r2int: 0.00229535 | r2eff: 0 | hits: 607 ] steps
+           121    21450 [sigma: 33.5762 | error: 0.0451779 | coeff: 0.0451779 | eff: 1 | fom: 34.9961 | r2int: 0.00203859 | r2eff: 0 | hits: 833 ] steps
+           122    22792 [sigma: 35.8056 | error: 0.044239 | coeff: 0.044239 | eff: 1 | fom: 36.4973 | r2int: 0.00195462 | r2eff: 0 | hits: 793 ] steps
+           123    20462 [sigma: 36.5266 | error: 0.0486581 | coeff: 0.0486581 | eff: 1 | fom: 30.169 | r2int: 0.00236443 | r2eff: 0 | hits: 743 ] steps
+           124    15679 [sigma: 30.9323 | error: 0.0497142 | coeff: 0.0497142 | eff: 1 | fom: 28.9009 | r2int: 0.00246761 | r2eff: 0 | hits: 635 ] steps
 ============================================================
  closed file mfd_tl_NumberOfSteps.out for output
 ============================================================

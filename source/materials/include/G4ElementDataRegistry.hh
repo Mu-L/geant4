@@ -28,39 +28,38 @@
 // This is a singleton class to store shared G4ElementData
 //
 
-#ifndef G4ElementDataRegistry_h
-#define G4ElementDataRegistry_h 1
+#ifndef G4ELEMENTDATAREGISTRY_HH
+#define G4ELEMENTDATAREGISTRY_HH
+
+#include "G4ElementData.hh"
 
 #include <vector>
-#include "G4ElementData.hh"
 
 class G4ElementDataRegistry
 {
- public:
+  public:
 
-  static G4ElementDataRegistry* Instance();
+    static G4ElementDataRegistry* Instance();
 
-  ~G4ElementDataRegistry();
+    ~G4ElementDataRegistry();
 
-  void RegisterMe(G4ElementData* p);
+    void RegisterMe(G4ElementData* p);
 
-  void RemoveMe(G4ElementData* p);
+    void RemoveMe(G4ElementData* p);
 
-  const std::vector<G4ElementData*>& GetElementData() const {
-    return elmdata;
-  }
+    const std::vector<G4ElementData*>& GetElementData() const { return elmdata; }
 
-  G4ElementData* GetElementDataByName(const G4String&);
+    G4ElementData* GetElementDataByName(const G4String&);
 
-  G4ElementData* NewElementData(const G4String&, G4int length);
+    G4ElementData* NewElementData(const G4String&, G4int length);
 
- private:
+  private:
 
-  G4ElementDataRegistry();
+    G4ElementDataRegistry();
 
-  static G4ElementDataRegistry* instance;
+    static G4ElementDataRegistry* instance;
 
-  std::vector<G4ElementData*> elmdata;
+    std::vector<G4ElementData*> elmdata;
 };
 
 #endif

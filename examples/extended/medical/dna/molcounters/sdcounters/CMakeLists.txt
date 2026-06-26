@@ -45,6 +45,7 @@ target_link_libraries(molcounters_sdcounters ${Geant4_LIBRARIES})
 #
 file(GLOB SCRIPTS
         ${PROJECT_SOURCE_DIR}/*.in
+        ${PROJECT_SOURCE_DIR}/*.mac
         ${PROJECT_SOURCE_DIR}/*.ipynb
         ${PROJECT_SOURCE_DIR}/*.C)
 

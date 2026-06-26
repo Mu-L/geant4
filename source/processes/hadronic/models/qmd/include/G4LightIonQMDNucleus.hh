@@ -27,89 +27,90 @@
 //      GEANT4 Class file
 //
 //
-//      File name: G4LightIonQMDNucleus.hh 
+//      File name: G4LightIonQMDNucleus.hh
 //
-//      Author: Koi, Tatsumi (tkoi@slac.stanford.edu)       
-// 
+//      Author: Koi, Tatsumi (tkoi@slac.stanford.edu)
+//
 //      Creation date: 3 April 2007
 // -------------------------------------------------------------------
 // 230309 Skyrme-QMD parameters added by Y-H. Sato and A. Haga
 // 230309 Total energy evaluated by Lorentz covariant version by Y-H. Sato and A. Haga
-#ifndef G4LightIonQMDNucleus_hh
-#define G4LightIonQMDNucleus_hh
+#ifndef G4LIGHTIONQMDNUCLEUS_HH
+#define G4LIGHTIONQMDNUCLEUS_HH
 
-#include "G4QMDSystem.hh"
 #include "G4LightIonQMDParameters.hh"
+#include "G4QMDSystem.hh"
 
 class G4LightIonQMDNucleus : public G4QMDSystem
 {
-   public:
-      G4LightIonQMDNucleus();
-      //virtual ~G4LightIonQMDNucleus();
+  public:
 
-      G4LorentzVector Get4Momentum();
+    G4LightIonQMDNucleus();
+    // virtual ~G4LightIonQMDNucleus();
 
-      // Number of Nucleons (Proton or Neutron)
-      G4int GetMassNumber();
+    G4LorentzVector Get4Momentum();
 
-      // Number of Protons
-      G4int GetAtomicNumber();
+    // Number of Nucleons (Proton or Neutron)
+    G4int GetMassNumber();
 
-      void CalEnergyAndAngularMomentumInCM();
+    // Number of Protons
+    G4int GetAtomicNumber();
 
-      // rest mass from G4NucleiPropertiesTable
-      G4double GetNuclearMass();
+    void CalEnergyAndAngularMomentumInCM();
 
-      void SetTotalPotential( G4double x ){ potentialEnergy = x; };
-      G4double GetExcitationEnergy(){ return excitationEnergy; };
+    // rest mass from G4NucleiPropertiesTable
+    G4double GetNuclearMass();
 
-      G4int GetAngularMomentum(){ return jj; };
+    void SetTotalPotential(G4double x) { potentialEnergy = x; };
+    G4double GetExcitationEnergy() { return excitationEnergy; };
 
-   private:
+    G4int GetAngularMomentum() { return jj; };
 
-      G4double hbc;
+  private:
 
-      std::vector < G4ThreeVector > rcm, pcm;
-      std::vector < G4double > es;
-      G4int jj;
+    G4double hbc;
 
-      G4double potentialEnergy;
-      G4double excitationEnergy;
-      //G4double bindingEnergy;
+    std::vector<G4ThreeVector> rcm, pcm;
+    std::vector<G4double> es;
+    G4int jj;
 
-      //G4double kineticEnergyPerNucleon;
-      //G4double bindingEnergyPerNucleon;
-      //G4double potentialEnergyPerNucleon;
-    
-      G4double GetNuclPotential( G4int );
-    
-      //G4double rclds;
-    
-      G4double rho0;
-      G4double epsx , epscl;
-    
-      G4double cpc;
-    
-      //G4int icoul, irelcr;
-      G4int irelcr;
-      G4double gamm, c0, c3, cs, cl, wl;
-      //G4double c0w, c3w, clw, c0sw;
-      G4double c0w, clw, c0sw;
-    
-      G4double c0g,c3g,csg,pag;
-    
-      G4double cpw,cph;
-    
-      // Skyrme-QMD
-      G4double gtau0;
-      G4double g0;
-      G4double g0iso;
-      G4double eta;
-      G4double kappas;
-    
-      G4double pag_tau;
-      G4double cg0;
-      G4double cgtau0;
+    G4double potentialEnergy;
+    G4double excitationEnergy;
+    // G4double bindingEnergy;
+
+    // G4double kineticEnergyPerNucleon;
+    // G4double bindingEnergyPerNucleon;
+    // G4double potentialEnergyPerNucleon;
+
+    G4double GetNuclPotential(G4int);
+
+    // G4double rclds;
+
+    G4double rho0;
+    G4double epsx, epscl;
+
+    G4double cpc;
+
+    // G4int icoul, irelcr;
+    G4int irelcr;
+    G4double gamm, c0, c3, cs, cl, wl;
+    // G4double c0w, c3w, clw, c0sw;
+    G4double c0w, clw, c0sw;
+
+    G4double c0g, c3g, csg, pag;
+
+    G4double cpw, cph;
+
+    // Skyrme-QMD
+    G4double gtau0;
+    G4double g0;
+    G4double g0iso;
+    G4double eta;
+    G4double kappas;
+
+    G4double pag_tau;
+    G4double cg0;
+    G4double cgtau0;
 };
 
 #endif

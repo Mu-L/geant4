@@ -28,9 +28,7 @@
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara (Oct 1998)
 
-
 #include "G4VFissionBarrier.hh"
 
 G4VFissionBarrier::G4VFissionBarrier() {}
 G4VFissionBarrier::~G4VFissionBarrier() {}
-

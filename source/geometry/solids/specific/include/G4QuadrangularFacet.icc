@@ -26,28 +26,27 @@
 // Implementation of inline methods of G4QuadrangularFacet
 // --------------------------------------------------------------------
 
-inline G4int G4QuadrangularFacet::GetNumberOfVertices () const
+inline G4int G4QuadrangularFacet::GetNumberOfVertices() const
 {
   return 4;
 }
 
-inline G4ThreeVector G4QuadrangularFacet::GetVertex (G4int i) const
+inline G4ThreeVector G4QuadrangularFacet::GetVertex(G4int i) const
 {
   return i == 3 ? fFacet2.GetVertex(2) : fFacet1.GetVertex(i);
 }
 
-
-inline G4double G4QuadrangularFacet::GetRadius () const
+inline G4double G4QuadrangularFacet::GetRadius() const
 {
   return fRadius;
 }
 
-inline G4ThreeVector G4QuadrangularFacet::GetCircumcentre () const
+inline G4ThreeVector G4QuadrangularFacet::GetCircumcentre() const
 {
   return fCircumcentre;
 }
 
-inline void G4QuadrangularFacet::SetVertex (G4int i, const G4ThreeVector &val)
+inline void G4QuadrangularFacet::SetVertex(G4int i, const G4ThreeVector& val)
 {
   switch (i)
   {
@@ -65,7 +64,7 @@ inline void G4QuadrangularFacet::SetVertex (G4int i, const G4ThreeVector &val)
     case 3:
       fFacet2.SetVertex(2, val);
       break;
-    }
+  }
 }
 
 inline void G4QuadrangularFacet::SetVertices(std::vector<G4ThreeVector>* v)
@@ -74,18 +73,17 @@ inline void G4QuadrangularFacet::SetVertices(std::vector<G4ThreeVector>* v)
   fFacet2.SetVertices(v);
 }
 
-inline G4bool G4QuadrangularFacet::IsDefined () const
+inline G4bool G4QuadrangularFacet::IsDefined() const
 {
   return fFacet1.IsDefined();
 }
 
-inline G4int G4QuadrangularFacet::GetVertexIndex (G4int i) const
+inline G4int G4QuadrangularFacet::GetVertexIndex(G4int i) const
 {
   return i == 3 ? fFacet2.GetVertexIndex(2) : fFacet1.GetVertexIndex(i);
 }
 
-
-inline void G4QuadrangularFacet::SetVertexIndex (G4int i, G4int val)
+inline void G4QuadrangularFacet::SetVertexIndex(G4int i, G4int val)
 {
   switch (i)
   {

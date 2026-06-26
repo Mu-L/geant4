@@ -32,208 +32,209 @@
 // - Imported from CLHEP and modified:   P. Arce    May 2007
 // --------------------------------------------------------------------
 
-#ifndef G4ErrorSymMatrix_hh
-#define G4ErrorSymMatrix_hh
+#ifndef G4ERRORSYMMATRIX_HH
+#define G4ERRORSYMMATRIX_HH
+
+#include "globals.hh"
 
 #include <vector>
-#include "globals.hh"
 
 class G4ErrorMatrix;
 
 class G4ErrorSymMatrix
 {
- public:  // with description
-  inline G4ErrorSymMatrix();
-  // Default constructor. Gives 0x0 symmetric matrix.
-  // Another G4ErrorSymMatrix can be assigned to it.
+  public:  // with description
 
-  explicit G4ErrorSymMatrix(G4int p);
-  G4ErrorSymMatrix(G4int p, G4int);
-  // Constructor. Gives p x p symmetric matrix.
-  // With a second argument, the matrix is initialized. 0 means a zero
-  // matrix, 1 means the identity matrix.
+    inline G4ErrorSymMatrix();
+    // Default constructor. Gives 0x0 symmetric matrix.
+    // Another G4ErrorSymMatrix can be assigned to it.
 
-  G4ErrorSymMatrix(const G4ErrorSymMatrix& m1);
-  G4ErrorSymMatrix(G4ErrorSymMatrix&&) = default;
-  // Copy and move constructor.
+    explicit G4ErrorSymMatrix(G4int p);
+    G4ErrorSymMatrix(G4int p, G4int);
+    // Constructor. Gives p x p symmetric matrix.
+    // With a second argument, the matrix is initialized. 0 means a zero
+    // matrix, 1 means the identity matrix.
 
-  // Constructor from DiagMatrix
+    G4ErrorSymMatrix(const G4ErrorSymMatrix& m1);
+    G4ErrorSymMatrix(G4ErrorSymMatrix&&) = default;
+    // Copy and move constructor.
 
-  virtual ~G4ErrorSymMatrix();
-  // Destructor.
+    // Constructor from DiagMatrix
 
-  inline G4int num_row() const;
-  inline G4int num_col() const;
-  // Returns number of rows/columns.
+    virtual ~G4ErrorSymMatrix();
+    // Destructor.
 
-  const G4double& operator()(G4int row, G4int col) const;
-  G4double& operator()(G4int row, G4int col);
-  // Read and write a G4ErrorSymMatrix element.
-  // ** Note that indexing starts from (1,1). **
+    inline G4int num_row() const;
+    inline G4int num_col() const;
+    // Returns number of rows/columns.
 
-  const G4double& fast(G4int row, G4int col) const;
-  G4double& fast(G4int row, G4int col);
-  // fast element access.
-  // Must be row>=col;
-  // ** Note that indexing starts from (1,1). **
+    const G4double& operator()(G4int row, G4int col) const;
+    G4double& operator()(G4int row, G4int col);
+    // Read and write a G4ErrorSymMatrix element.
+    // ** Note that indexing starts from (1,1). **
 
-  void assign(const G4ErrorMatrix& m2);
-  // Assigns m2 to s, assuming m2 is a symmetric matrix.
+    const G4double& fast(G4int row, G4int col) const;
+    G4double& fast(G4int row, G4int col);
+    // fast element access.
+    // Must be row>=col;
+    // ** Note that indexing starts from (1,1). **
 
-  void assign(const G4ErrorSymMatrix& m2);
-  // Another form of assignment. For consistency.
+    void assign(const G4ErrorMatrix& m2);
+    // Assigns m2 to s, assuming m2 is a symmetric matrix.
 
-  G4ErrorSymMatrix& operator*=(G4double t);
-  // Multiply a G4ErrorSymMatrix by a floating number.
+    void assign(const G4ErrorSymMatrix& m2);
+    // Another form of assignment. For consistency.
 
-  G4ErrorSymMatrix& operator/=(G4double t);
-  // Divide a G4ErrorSymMatrix by a floating number.
+    G4ErrorSymMatrix& operator*=(G4double t);
+    // Multiply a G4ErrorSymMatrix by a floating number.
 
-  G4ErrorSymMatrix& operator+=(const G4ErrorSymMatrix& m2);
-  G4ErrorSymMatrix& operator-=(const G4ErrorSymMatrix& m2);
-  // Add or subtract a G4ErrorSymMatrix.
+    G4ErrorSymMatrix& operator/=(G4double t);
+    // Divide a G4ErrorSymMatrix by a floating number.
 
-  G4ErrorSymMatrix& operator=(const G4ErrorSymMatrix& m2);
-  G4ErrorSymMatrix& operator=(G4ErrorSymMatrix&&) = default;
-  // Assignment and move operators.
-  // Notice that there is no G4ErrorSymMatrix = Matrix.
+    G4ErrorSymMatrix& operator+=(const G4ErrorSymMatrix& m2);
+    G4ErrorSymMatrix& operator-=(const G4ErrorSymMatrix& m2);
+    // Add or subtract a G4ErrorSymMatrix.
 
-  G4ErrorSymMatrix operator-() const;
-  // unary minus, ie. flip the sign of each element.
+    G4ErrorSymMatrix& operator=(const G4ErrorSymMatrix& m2);
+    G4ErrorSymMatrix& operator=(G4ErrorSymMatrix&&) = default;
+    // Assignment and move operators.
+    // Notice that there is no G4ErrorSymMatrix = Matrix.
 
-  G4ErrorSymMatrix T() const;
-  // Returns the transpose of a G4ErrorSymMatrix (which is itself).
+    G4ErrorSymMatrix operator-() const;
+    // unary minus, ie. flip the sign of each element.
 
-  G4ErrorSymMatrix apply(G4double (*f)(G4double, G4int, G4int)) const;
-  // Apply a function to all elements of the matrix.
+    G4ErrorSymMatrix T() const;
+    // Returns the transpose of a G4ErrorSymMatrix (which is itself).
 
-  G4ErrorSymMatrix similarity(const G4ErrorMatrix& m1) const;
-  G4ErrorSymMatrix similarity(const G4ErrorSymMatrix& m1) const;
-  // Returns m1*s*m1.T().
+    G4ErrorSymMatrix apply(G4double (*f)(G4double, G4int, G4int)) const;
+    // Apply a function to all elements of the matrix.
 
-  G4ErrorSymMatrix similarityT(const G4ErrorMatrix& m1) const;
-  // temporary. test of new similarity.
-  // Returns m1.T()*s*m1.
+    G4ErrorSymMatrix similarity(const G4ErrorMatrix& m1) const;
+    G4ErrorSymMatrix similarity(const G4ErrorSymMatrix& m1) const;
+    // Returns m1*s*m1.T().
 
-  G4ErrorSymMatrix sub(G4int min_row, G4int max_row) const;
-  // Returns a sub matrix of a G4ErrorSymMatrix.
+    G4ErrorSymMatrix similarityT(const G4ErrorMatrix& m1) const;
+    // temporary. test of new similarity.
+    // Returns m1.T()*s*m1.
 
-  void sub(G4int row, const G4ErrorSymMatrix& m1);
-  // Sub matrix of this G4ErrorSymMatrix is replaced with m1.
+    G4ErrorSymMatrix sub(G4int min_row, G4int max_row) const;
+    // Returns a sub matrix of a G4ErrorSymMatrix.
 
-  G4ErrorSymMatrix sub(G4int min_row, G4int max_row);
-  // SGI CC bug. I have to have both with/without const. I should not need
-  // one without const.
+    void sub(G4int row, const G4ErrorSymMatrix& m1);
+    // Sub matrix of this G4ErrorSymMatrix is replaced with m1.
 
-  inline G4ErrorSymMatrix inverse(G4int& ifail) const;
-  // Invert a Matrix. The matrix is not changed
-  // Returns 0 when successful, otherwise non-zero.
+    G4ErrorSymMatrix sub(G4int min_row, G4int max_row);
+    // SGI CC bug. I have to have both with/without const. I should not need
+    // one without const.
 
-  void invert(G4int& ifail);
-  // Invert a Matrix.
-  // N.B. the contents of the matrix are replaced by the inverse.
-  // Returns ierr = 0 when successful, otherwise non-zero.
-  // This method has less overhead then inverse().
+    inline G4ErrorSymMatrix inverse(G4int& ifail) const;
+    // Invert a Matrix. The matrix is not changed
+    // Returns 0 when successful, otherwise non-zero.
 
-  G4double determinant() const;
-  // calculate the determinant of the matrix.
+    void invert(G4int& ifail);
+    // Invert a Matrix.
+    // N.B. the contents of the matrix are replaced by the inverse.
+    // Returns ierr = 0 when successful, otherwise non-zero.
+    // This method has less overhead then inverse().
 
-  G4double trace() const;
-  // calculate the trace of the matrix (sum of diagonal elements).
+    G4double determinant() const;
+    // calculate the determinant of the matrix.
 
-  class G4ErrorSymMatrix_row
-  {
-   public:
-    inline G4ErrorSymMatrix_row(G4ErrorSymMatrix&, G4int);
-    inline G4double& operator[](G4int);
+    G4double trace() const;
+    // calculate the trace of the matrix (sum of diagonal elements).
 
-   private:
-    G4ErrorSymMatrix& _a;
-    G4int _r;
-  };
-  class G4ErrorSymMatrix_row_const
-  {
-   public:
-    inline G4ErrorSymMatrix_row_const(const G4ErrorSymMatrix&, G4int);
-    inline const G4double& operator[](G4int) const;
+    class G4ErrorSymMatrix_row
+    {
+      public:
 
-   private:
-    const G4ErrorSymMatrix& _a;
-    G4int _r;
-  };
-  // helper class to implement m[i][j]
+        inline G4ErrorSymMatrix_row(G4ErrorSymMatrix&, G4int);
+        inline G4double& operator[](G4int);
 
-  inline G4ErrorSymMatrix_row operator[](G4int);
-  inline G4ErrorSymMatrix_row_const operator[](G4int) const;
-  // Read or write a matrix element.
-  // While it may not look like it, you simply do m[i][j] to get an
-  // element.
-  // ** Note that the indexing starts from [0][0]. **
+      private:
 
-  // Special-case inversions for 5x5 and 6x6 symmetric positive definite:
-  // These set ifail=0 and invert if the matrix was positive definite;
-  // otherwise ifail=1 and the matrix is left unaltered.
+        G4ErrorSymMatrix& _a;
+        G4int _r;
+    };
+    class G4ErrorSymMatrix_row_const
+    {
+      public:
 
-  void invertCholesky5(G4int& ifail);
-  void invertCholesky6(G4int& ifail);
+        inline G4ErrorSymMatrix_row_const(const G4ErrorSymMatrix&, G4int);
+        inline const G4double& operator[](G4int) const;
 
-  // Inversions for 5x5 and 6x6 forcing use of specific methods:  The
-  // behavior (though not the speed) will be identical to invert(ifail).
+      private:
 
-  void invertHaywood4(G4int& ifail);
-  void invertHaywood5(G4int& ifail);
-  void invertHaywood6(G4int& ifail);
-  void invertBunchKaufman(G4int& ifail);
+        const G4ErrorSymMatrix& _a;
+        G4int _r;
+    };
+    // helper class to implement m[i][j]
 
- protected:
-  inline G4int num_size() const;
+    inline G4ErrorSymMatrix_row operator[](G4int);
+    inline G4ErrorSymMatrix_row_const operator[](G4int) const;
+    // Read or write a matrix element.
+    // While it may not look like it, you simply do m[i][j] to get an
+    // element.
+    // ** Note that the indexing starts from [0][0]. **
 
- private:
-  friend class G4ErrorSymMatrix_row;
-  friend class G4ErrorSymMatrix_row_const;
-  friend class G4ErrorMatrix;
+    // Special-case inversions for 5x5 and 6x6 symmetric positive definite:
+    // These set ifail=0 and invert if the matrix was positive definite;
+    // otherwise ifail=1 and the matrix is left unaltered.
 
-  friend void tridiagonal(G4ErrorSymMatrix* a, G4ErrorMatrix* hsm);
-  friend G4double condition(const G4ErrorSymMatrix& m);
-  friend void diag_step(G4ErrorSymMatrix* t, G4int begin, G4int end);
-  friend void diag_step(G4ErrorSymMatrix* t, G4ErrorMatrix* u, G4int begin,
-                        G4int end);
-  friend G4ErrorMatrix diagonalize(G4ErrorSymMatrix* s);
-  friend void house_with_update2(G4ErrorSymMatrix* a, G4ErrorMatrix* v,
-                                 G4int row, G4int col);
+    void invertCholesky5(G4int& ifail);
+    void invertCholesky6(G4int& ifail);
 
-  friend G4ErrorSymMatrix operator+(const G4ErrorSymMatrix& m1,
-                                    const G4ErrorSymMatrix& m2);
-  friend G4ErrorSymMatrix operator-(const G4ErrorSymMatrix& m1,
-                                    const G4ErrorSymMatrix& m2);
-  friend G4ErrorMatrix operator*(const G4ErrorSymMatrix& m1,
-                                 const G4ErrorSymMatrix& m2);
-  friend G4ErrorMatrix operator*(const G4ErrorSymMatrix& m1,
-                                 const G4ErrorMatrix& m2);
-  friend G4ErrorMatrix operator*(const G4ErrorMatrix& m1,
-                                 const G4ErrorSymMatrix& m2);
-  // Multiply a Matrix by a Matrix or Vector.
+    // Inversions for 5x5 and 6x6 forcing use of specific methods:  The
+    // behavior (though not the speed) will be identical to invert(ifail).
 
-  // Returns v * v.T();
+    void invertHaywood4(G4int& ifail);
+    void invertHaywood5(G4int& ifail);
+    void invertHaywood6(G4int& ifail);
+    void invertBunchKaufman(G4int& ifail);
 
-  std::vector<G4double> m;
+  protected:
 
-  G4int nrow;
-  G4int size;  // total number of elements
+    inline G4int num_size() const;
 
-  static G4ThreadLocal G4double posDefFraction5x5;
-  static G4ThreadLocal G4double adjustment5x5;
-  static const G4double CHOLESKY_THRESHOLD_5x5;
-  static const G4double CHOLESKY_CREEP_5x5;
+  private:
 
-  static G4ThreadLocal G4double posDefFraction6x6;
-  static G4ThreadLocal G4double adjustment6x6;
-  static const G4double CHOLESKY_THRESHOLD_6x6;
-  static const G4double CHOLESKY_CREEP_6x6;
+    friend class G4ErrorSymMatrix_row;
+    friend class G4ErrorSymMatrix_row_const;
+    friend class G4ErrorMatrix;
 
-  void invert4(G4int& ifail);
-  void invert5(G4int& ifail);
-  void invert6(G4int& ifail);
+    friend void tridiagonal(G4ErrorSymMatrix* a, G4ErrorMatrix* hsm);
+    friend G4double condition(const G4ErrorSymMatrix& m);
+    friend void diag_step(G4ErrorSymMatrix* t, G4int begin, G4int end);
+    friend void diag_step(G4ErrorSymMatrix* t, G4ErrorMatrix* u, G4int begin, G4int end);
+    friend G4ErrorMatrix diagonalize(G4ErrorSymMatrix* s);
+    friend void house_with_update2(G4ErrorSymMatrix* a, G4ErrorMatrix* v, G4int row, G4int col);
+
+    friend G4ErrorSymMatrix operator+(const G4ErrorSymMatrix& m1, const G4ErrorSymMatrix& m2);
+    friend G4ErrorSymMatrix operator-(const G4ErrorSymMatrix& m1, const G4ErrorSymMatrix& m2);
+    friend G4ErrorMatrix operator*(const G4ErrorSymMatrix& m1, const G4ErrorSymMatrix& m2);
+    friend G4ErrorMatrix operator*(const G4ErrorSymMatrix& m1, const G4ErrorMatrix& m2);
+    friend G4ErrorMatrix operator*(const G4ErrorMatrix& m1, const G4ErrorSymMatrix& m2);
+    // Multiply a Matrix by a Matrix or Vector.
+
+    // Returns v * v.T();
+
+    std::vector<G4double> m;
+
+    G4int nrow;
+    G4int size;  // total number of elements
+
+    static G4ThreadLocal G4double posDefFraction5x5;
+    static G4ThreadLocal G4double adjustment5x5;
+    static const G4double CHOLESKY_THRESHOLD_5x5;
+    static const G4double CHOLESKY_CREEP_5x5;
+
+    static G4ThreadLocal G4double posDefFraction6x6;
+    static G4ThreadLocal G4double adjustment6x6;
+    static const G4double CHOLESKY_THRESHOLD_6x6;
+    static const G4double CHOLESKY_CREEP_6x6;
+
+    void invert4(G4int& ifail);
+    void invert5(G4int& ifail);
+    void invert6(G4int& ifail);
 };
 
 //
@@ -257,14 +258,12 @@ G4ErrorSymMatrix operator/(const G4ErrorSymMatrix& m1, G4double t);
 
 G4ErrorMatrix operator+(const G4ErrorMatrix& m1, const G4ErrorSymMatrix& s2);
 G4ErrorMatrix operator+(const G4ErrorSymMatrix& s1, const G4ErrorMatrix& m2);
-G4ErrorSymMatrix operator+(const G4ErrorSymMatrix& s1,
-                           const G4ErrorSymMatrix& s2);
+G4ErrorSymMatrix operator+(const G4ErrorSymMatrix& s1, const G4ErrorSymMatrix& s2);
 // Addition operators
 
 G4ErrorMatrix operator-(const G4ErrorMatrix& m1, const G4ErrorSymMatrix& s2);
 G4ErrorMatrix operator-(const G4ErrorSymMatrix& m1, const G4ErrorMatrix& m2);
-G4ErrorSymMatrix operator-(const G4ErrorSymMatrix& s1,
-                           const G4ErrorSymMatrix& s2);
+G4ErrorSymMatrix operator-(const G4ErrorSymMatrix& s1, const G4ErrorSymMatrix& s2);
 // subtraction operators
 
 G4ErrorSymMatrix dsum(const G4ErrorSymMatrix& s1, const G4ErrorSymMatrix& s2);
@@ -281,8 +280,7 @@ G4ErrorMatrix diagonalize(G4ErrorSymMatrix* s);
 // Diagonalize a symmetric matrix.
 // It returns the matrix U so that s_old = U * s_diag * U.T()
 
-void house_with_update2(G4ErrorSymMatrix* a, G4ErrorMatrix* v, G4int row = 1,
-                        G4int col = 1);
+void house_with_update2(G4ErrorSymMatrix* a, G4ErrorMatrix* v, G4int row = 1, G4int col = 1);
 // Finds and does Householder reflection on matrix.
 
 void tridiagonal(G4ErrorSymMatrix* a, G4ErrorMatrix* hsm);

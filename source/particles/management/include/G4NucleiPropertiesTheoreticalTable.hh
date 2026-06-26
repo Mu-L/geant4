@@ -33,8 +33,8 @@
 
 // Author: Tatsumi Koi, SLAC
 // --------------------------------------------------------------------
-#ifndef G4NucleiPropertiesTheoreticalTable_hh
-#define G4NucleiPropertiesTheoreticalTable_hh 1
+#ifndef G4NUCLEIPROPERTIESTHEORETICALTABLE_HH
+#define G4NUCLEIPROPERTIESTHEORETICALTABLE_HH
 
 #include "globals.hh"
 
@@ -43,6 +43,7 @@ class G4NucleiProperties;
 class G4NucleiPropertiesTheoreticalTable
 {
   public:
+
     ~G4NucleiPropertiesTheoreticalTable() = default;
 
     enum
@@ -55,6 +56,7 @@ class G4NucleiPropertiesTheoreticalTable
     friend class G4NucleiProperties;
 
   private:
+
     // Default constructor
     G4NucleiPropertiesTheoreticalTable() {}
 

@@ -23,10 +23,10 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4SHARED_PTR_HH_
-#define G4SHARED_PTR_HH_
+#ifndef G4SHARED_PTR_HH
+#define G4SHARED_PTR_HH
 
-//#if __cplusplus >= 201103L
+// #if __cplusplus >= 201103L
 #include <memory>
 
 #define G4shared_ptr std::shared_ptr
@@ -64,51 +64,51 @@ template< typename T >
 class enable_shared_from_this
 {
 protected:
-	enable_shared_from_this()
+  enable_shared_from_this()
 { }
 
-	~enable_shared_from_this()
-	{ }
+  ~enable_shared_from_this()
+  { }
 
-	enable_shared_from_this( enable_shared_from_this const & )
-	{ }
+  enable_shared_from_this( enable_shared_from_this const & )
+  { }
 
-	enable_shared_from_this &
-	operator = ( enable_shared_from_this const & )
-	{
-		return *this;
-	}
+  enable_shared_from_this &
+  operator = ( enable_shared_from_this const & )
+  {
+    return *this;
+  }
 
 public:
-	shared_ptr<T>
-	shared_from_this()
-	{
-		shared_ptr<T>  p( weak_this_ );
-		// assert( p.get() == this );
-		return p;
-	}
+  shared_ptr<T>
+  shared_from_this()
+  {
+    shared_ptr<T>  p( weak_this_ );
+    // assert( p.get() == this );
+    return p;
+  }
 
-	shared_ptr<T const>
-	shared_from_this() const
-	{
-		shared_ptr<T const>  p( weak_this_ );
-		// assert( p.get() == this );
-		return p;
-	}
+  shared_ptr<T const>
+  shared_from_this() const
+  {
+    shared_ptr<T const>  p( weak_this_ );
+    // assert( p.get() == this );
+    return p;
+  }
 
 public: // actually private, but avoids compiler template friendship issues
 
-	// Note: invoked automatically by shared_ptr; do not call
-	template< typename X, typename Y >
-	void
-	_internal_accept_owner( shared_ptr<X> const * ppx, Y * py ) const
-	{
-		if( weak_this_.expired() )
-			weak_this_ = shared_ptr<T>( *ppx, py );
-	}
+  // Note: invoked automatically by shared_ptr; do not call
+  template< typename X, typename Y >
+  void
+  _internal_accept_owner( shared_ptr<X> const * ppx, Y * py ) const
+  {
+    if( weak_this_.expired() )
+      weak_this_ = shared_ptr<T>( *ppx, py );
+  }
 
 private:
-	mutable weak_ptr<T>  weak_this_;
+  mutable weak_ptr<T>  weak_this_;
 };  // enable_shared_from_this<>
 
 
@@ -120,25 +120,25 @@ namespace detail
 class esft2_deleter_wrapper
 {
 private:
-	shared_ptr<void>  deleter_;
+  shared_ptr<void>  deleter_;
 
 public:
-	esft2_deleter_wrapper(){ }
+  esft2_deleter_wrapper(){ }
 
-	template< typename T >
-	void
-	set_deleter( shared_ptr<T> const & deleter )
-	{
-		deleter_ = deleter;
-	}
+  template< typename T >
+  void
+  set_deleter( shared_ptr<T> const & deleter )
+  {
+    deleter_ = deleter;
+  }
 
-	template< typename T >
-	void
-	operator () ( T* )
-	{
-		assert( deleter_.use_count() <= 1 );
-		deleter_.reset();
-	}
+  template< typename T >
+  void
+  operator () ( T* )
+  {
+    assert( deleter_.use_count() <= 1 );
+    deleter_.reset();
+  }
 };
 
 } // namespace detail
@@ -148,87 +148,87 @@ class enable_shared_from_this2
 {
 protected:
 
-	enable_shared_from_this2(){ }
+  enable_shared_from_this2(){ }
 
-	enable_shared_from_this2( enable_shared_from_this2 const & )
-	{ }
+  enable_shared_from_this2( enable_shared_from_this2 const & )
+  { }
 
-	enable_shared_from_this2 & operator = ( enable_shared_from_this2 const & )
-	{
-		return *this;
-	}
+  enable_shared_from_this2 & operator = ( enable_shared_from_this2 const & )
+  {
+    return *this;
+  }
 
-	~enable_shared_from_this2()
-	{
-		assert( shared_this_.use_count() <= 1 ); // ensure no dangling shared_ptrs
-	}
+  ~enable_shared_from_this2()
+  {
+    assert( shared_this_.use_count() <= 1 ); // ensure no dangling shared_ptrs
+  }
 
 private:
-	mutable  weak_ptr<T>    weak_this_;
-	mutable  shared_ptr<T>  shared_this_;
+  mutable  weak_ptr<T>    weak_this_;
+  mutable  shared_ptr<T>  shared_this_;
 
 public:
 
-	shared_ptr<T>
-	shared_from_this()
-	{
-		init_weak_once();
-		return shared_ptr<T>( weak_this_ );
-	}
+  shared_ptr<T>
+  shared_from_this()
+  {
+    init_weak_once();
+    return shared_ptr<T>( weak_this_ );
+  }
 
-	shared_ptr<T const>
-	shared_from_this() const
-	{
-		init_weak_once();
-		return shared_ptr<T>( weak_this_ );
-	}
+  shared_ptr<T const>
+  shared_from_this() const
+  {
+    init_weak_once();
+    return shared_ptr<T>( weak_this_ );
+  }
 
 private:
 
-	void init_weak_once() const
-	{
-		if( weak_this_._empty() )
-		{
-			shared_this_.reset( static_cast< T* >( 0 )
-					, detail::esft2_deleter_wrapper()
-			);
-			weak_this_ = shared_this_;
-		}
-	}
+  void init_weak_once() const
+  {
+    if( weak_this_._empty() )
+    {
+      shared_this_.reset( static_cast< T* >( 0 )
+          , detail::esft2_deleter_wrapper()
+      );
+      weak_this_ = shared_this_;
+    }
+  }
 
 public:  // actually private, but avoids compiler template friendship issues
 
 // Note: invoked automatically by shared_ptr; do not call
-	template< typename X, typename Y >
-	void
-	_internal_accept_owner( shared_ptr<X> * ppx, Y * py ) const
-	{
-		assert( ppx != 0 );
+  template< typename X, typename Y >
+  void
+  _internal_accept_owner( shared_ptr<X> * ppx, Y * py ) const
+  {
+    assert( ppx != 0 );
 
-		if( weak_this_.use_count() == 0 )
-			weak_this_ = shared_ptr<T>( *ppx, py );
-		else if( shared_this_.use_count() != 0 )
-		{
-			assert( ppx->unique() ); // no weak_ptrs should exist either, but there's no way to check that
+    if( weak_this_.use_count() == 0 )
+      weak_this_ = shared_ptr<T>( *ppx, py );
+    else if( shared_this_.use_count() != 0 )
+    {
+      assert( ppx->unique() ); // no weak_ptrs should exist either, but there's no way to check that
 
-			detail::esft2_deleter_wrapper *  pd
-			= //boost::
-					get_deleter<detail::esft2_deleter_wrapper>( shared_this_ );
-			assert( pd != 0 );
+      detail::esft2_deleter_wrapper *  pd
+      = //boost::
+          get_deleter<detail::esft2_deleter_wrapper>( shared_this_ );
+      assert( pd != 0 );
 
-			pd->set_deleter( *ppx );
+      pd->set_deleter( *ppx );
 
-			ppx->reset( shared_this_, ppx->get() );
-			shared_this_.reset();
-		}
-	}
+      ppx->reset( shared_this_, ppx->get() );
+      shared_this_.reset();
+    }
+  }
 };  // enable_shared_from_this2<>
 }
 
 namespace G4
 {
-	using CLHEP::enable_shared_from_this;
-	using CLHEP::enable_shared_from_this2;
+  using CLHEP::enable_shared_from_this;
+  using CLHEP::enable_shared_from_this2;
 }
 #endif
 */

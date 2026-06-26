@@ -22,37 +22,36 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // Class G4VExternalPhysicalVolume Implementation
 //
 // Author: John Apostolakis (CERN), October 2019
 // ----------------------------------------------------------------------
 
 #include "G4VExternalPhysicalVolume.hh"
+
 #include "G4AffineTransform.hh"
-#include "G4UnitsTable.hh"
 #include "G4LogicalVolume.hh"
+#include "G4UnitsTable.hh"
 #include "G4VSolid.hh"
 
 // ----------------------------------------------------------------------
 // Constructor
 //
-G4VExternalPhysicalVolume::
-G4VExternalPhysicalVolume( G4RotationMatrix* pRot,
-                     const G4ThreeVector& tlate,
-                           G4LogicalVolume* pLogical,
-                     const G4String& pName,
-                           G4VPhysicalVolume* pMother )
-   : G4VPhysicalVolume(pRot, tlate, pName, pLogical, pMother)
+G4VExternalPhysicalVolume::G4VExternalPhysicalVolume(G4RotationMatrix* pRot,
+                                                     const G4ThreeVector& tlate,
+                                                     G4LogicalVolume* pLogical,
+                                                     const G4String& pName,
+                                                     G4VPhysicalVolume* pMother)
+  : G4VPhysicalVolume(pRot, tlate, pName, pLogical, pMother)
 {
   if (pMother != nullptr)
   {
     G4LogicalVolume* motherLogical = pMother->GetLogicalVolume();
     if (pLogical == motherLogical)
     {
-      G4Exception("G4VExternalPhysicalVolume::G4VExternalPhysicalVolume()",
-                  "GeomVol0002", FatalException,
-                  "Cannot place a volume inside itself!");
+      G4Exception("G4VExternalPhysicalVolume::G4VExternalPhysicalVolume()", "GeomVol0002",
+                  FatalException, "Cannot place a volume inside itself!");
     }
     SetMotherLogical(motherLogical);
     motherLogical->AddDaughter(this);
@@ -63,10 +62,7 @@ G4VExternalPhysicalVolume( G4RotationMatrix* pRot,
 // Fake default constructor - sets only member data and allocates memory
 //                            for usage restricted to object persistency.
 //
-G4VExternalPhysicalVolume::G4VExternalPhysicalVolume( __void__& a )
-  : G4VPhysicalVolume(a)
-{
-}
+G4VExternalPhysicalVolume::G4VExternalPhysicalVolume(__void__& a) : G4VPhysicalVolume(a) {}
 
 // ----------------------------------------------------------------------
 // IsMany
@@ -111,8 +107,8 @@ G4VPVParameterisation* G4VExternalPhysicalVolume::GetParameterisation() const
 // ----------------------------------------------------------------------
 // GetReplicationData
 //
-void G4VExternalPhysicalVolume::
-GetReplicationData( EAxis&, G4int&, G4double&, G4double&, G4bool& ) const
+void G4VExternalPhysicalVolume::GetReplicationData(EAxis&, G4int&, G4double&, G4double&,
+                                                   G4bool&) const
 {
   // No-operations
 }
@@ -125,7 +121,7 @@ GetReplicationData( EAxis&, G4int&, G4double&, G4double&, G4bool& ) const
 G4bool G4VExternalPhysicalVolume::IsRegularStructure() const
 {
   return false;
-}           
+}
 
 // ----------------------------------------------------------------------
 // IsRegularRepeatedStructure
@@ -134,8 +130,8 @@ G4bool G4VExternalPhysicalVolume::IsRegularStructure() const
 //
 G4int G4VExternalPhysicalVolume::GetRegularStructureId() const
 {
-  return 0;  
-}           
+  return 0;
+}
 
 // ----------------------------------------------------------------------
 // VolumeType

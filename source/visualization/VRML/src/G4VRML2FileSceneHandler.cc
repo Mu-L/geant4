@@ -28,60 +28,60 @@
 // G4VRML2FileSceneHandler.cc
 // Satoshi Tanaka & Yasuhide Sawada
 
-//#define DEBUG_FR_SCENE
-
-#include <fstream>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <cmath>
-#include <sstream>
-#include <iomanip>
-
-#include "globals.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4LogicalVolume.hh"
-#include "G4VisManager.hh"
-#include "G4VisAttributes.hh"
-#include "G4VModel.hh"
-#include "G4Scene.hh"
-#include "G4Polyhedron.hh"
-#include "G4Box.hh"
-#include "G4Cons.hh"
-#include "G4Polyline.hh"
-#include "G4Trd.hh"
-#include "G4Tubs.hh"
-#include "G4Text.hh"
-#include "G4Circle.hh"
-#include "G4Square.hh"
+// #define DEBUG_FR_SCENE
 
 #include "G4VRML2FileSceneHandler.hh"
-#include "G4VRML2FileViewer.hh"
+
+#include "G4Box.hh"
+#include "G4Circle.hh"
+#include "G4Cons.hh"
+#include "G4LogicalVolume.hh"
+#include "G4Polyhedron.hh"
+#include "G4Polyline.hh"
+#include "G4Scene.hh"
+#include "G4Square.hh"
+#include "G4Text.hh"
+#include "G4Trd.hh"
+#include "G4Tubs.hh"
+#include "G4VModel.hh"
+#include "G4VPhysicalVolume.hh"
 #include "G4VRML2File.hh"
+#include "G4VRML2FileViewer.hh"
+#include "G4VisAttributes.hh"
+#include "G4VisManager.hh"
+#include "globals.hh"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <cmath>
+#include <fstream>
+#include <iomanip>
+#include <sstream>
 
 // CONST
 
-const char WRL_FILE_HEADER[]       = "g4_";
-const char ENV_WRL_FILE_HEADER[]   = "G4VRMLFILE_HEADER";
-const char ENV_WRL_FILE_NAME[]     = "G4VRMLFILE_FILE_NAME";
-const char ENV_VRML_VIEWER[]       = "G4VRMLFILE_VIEWER";
-const char NO_VRML_VIEWER[]        = "NONE";
-const char VRMLFILE_DEST_DIR[]     = "G4VRMLFILE_DEST_DIR";
+const char WRL_FILE_HEADER[] = "g4_";
+const char ENV_WRL_FILE_HEADER[] = "G4VRMLFILE_HEADER";
+const char ENV_WRL_FILE_NAME[] = "G4VRMLFILE_FILE_NAME";
+const char ENV_VRML_VIEWER[] = "G4VRMLFILE_VIEWER";
+const char NO_VRML_VIEWER[] = "NONE";
+const char VRMLFILE_DEST_DIR[] = "G4VRMLFILE_DEST_DIR";
 const int DEFAULT_MAX_WRL_FILE_NUM = 100;
 
-G4VRML2FileSceneHandler::G4VRML2FileSceneHandler(G4VRML2File& system,
-                                                 const G4String& name)
-  : G4VSceneHandler(system, fSceneIdCount++, name)
-  , fSystem(system)
-  , fFlagDestOpen(false)
-  , fPVPickable(false)
-  , fDest()
+G4VRML2FileSceneHandler::G4VRML2FileSceneHandler(G4VRML2File& system, const G4String& name)
+  : G4VSceneHandler(system, fSceneIdCount++, name),
+    fSystem(system),
+    fFlagDestOpen(false),
+    fPVPickable(false),
+    fDest()
 {
   // output file name
   strcpy(fVRMLFileName, "");
 
   // destination directory
-  if(std::getenv(VRMLFILE_DEST_DIR) == NULL)
+  if (std::getenv(VRMLFILE_DEST_DIR) == NULL)
   {
     strcpy(fVRMLFileDestDir, "");
   }
@@ -92,7 +92,7 @@ G4VRML2FileSceneHandler::G4VRML2FileSceneHandler(G4VRML2File& system,
 
   // maximum number of g4.prim files in the dest directory
   fMaxFileNum = DEFAULT_MAX_WRL_FILE_NUM;  // initialization
-  if(std::getenv("G4VRMLFILE_MAX_FILE_NUM") != NULL)
+  if (std::getenv("G4VRMLFILE_MAX_FILE_NUM") != NULL)
   {
     sscanf(std::getenv("G4VRMLFILE_MAX_FILE_NUM"), "%d", &fMaxFileNum);
   }
@@ -100,18 +100,18 @@ G4VRML2FileSceneHandler::G4VRML2FileSceneHandler(G4VRML2File& system,
   {
     fMaxFileNum = DEFAULT_MAX_WRL_FILE_NUM;
   }
-  if(fMaxFileNum < 1)
+  if (fMaxFileNum < 1)
   {
     fMaxFileNum = 1;
   }
 
   // PV name pickability
-  if(std::getenv("G4VRML_PV_PICKABLE") != NULL)
+  if (std::getenv("G4VRML_PV_PICKABLE") != NULL)
   {
     int is_pickable;
     sscanf(std::getenv("G4VRML_PV_PICKABLE"), "%d", &is_pickable);
 
-    if(is_pickable)
+    if (is_pickable)
     {
       SetPVPickability(true);
     }
@@ -124,7 +124,7 @@ G4VRML2FileSceneHandler::G4VRML2FileSceneHandler(G4VRML2File& system,
 G4VRML2FileSceneHandler::~G4VRML2FileSceneHandler()
 {
 #if defined DEBUG_FR_SCENE
-  if(G4VisManager::GetVerbosity() >= G4VisManager::errors)
+  if (G4VisManager::GetVerbosity() >= G4VisManager::errors)
     G4cout << "***** ~G4VRML2FileSceneHandler" << G4endl;
 #endif
   VRMLEndModeling();
@@ -144,19 +144,19 @@ void G4VRML2FileSceneHandler::connectPort()
   // dest directory (null if no environmental variables is set)
   strcpy(fVRMLFileName, fVRMLFileDestDir);
   // add filename if environment variable supplied
-  if(std::getenv(ENV_WRL_FILE_NAME))
+  if (std::getenv(ENV_WRL_FILE_NAME))
   {
     strcat(fVRMLFileName, std::getenv(ENV_WRL_FILE_NAME));
   }
   else
   {
     // Determine VRML file name
-    for(int i = 0; i < fMaxFileNum; i++)
+    for (int i = 0; i < fMaxFileNum; i++)
     {
       // Message in the final execution
-      if(i == MAX_FILE_INDEX)
+      if (i == MAX_FILE_INDEX)
       {
-        if(G4VisManager::GetVerbosity() >= G4VisManager::errors)
+        if (G4VisManager::GetVerbosity() >= G4VisManager::errors)
         {
           G4cout << "===========================================" << G4endl;
           G4cout << "WARNING MESSAGE from VRML2FILE driver:     " << G4endl;
@@ -171,7 +171,7 @@ void G4VRML2FileSceneHandler::connectPort()
       // re-determine file name as G4VRMLFILE_DEST_DIR/g4_XX.wrl
       std::ostringstream filename;
       filename << fVRMLFileDestDir;
-      if(std::getenv(ENV_WRL_FILE_HEADER) == NULL)
+      if (std::getenv(ENV_WRL_FILE_HEADER) == NULL)
       {
         filename << WRL_FILE_HEADER;
       }
@@ -186,7 +186,7 @@ void G4VRML2FileSceneHandler::connectPort()
       // check validity of the file name
       std::ifstream fin;
       fin.open(fVRMLFileName);
-      if(!fin)
+      if (!fin)
       {
         // new file
         fin.close();
@@ -202,12 +202,11 @@ void G4VRML2FileSceneHandler::connectPort()
   }
 
   // open a VRML 2.0 file with determined file name
-  if(G4VisManager::GetVerbosity() >= G4VisManager::errors)
+  if (G4VisManager::GetVerbosity() >= G4VisManager::errors)
   {
     G4cout << "===========================================" << G4endl;
     G4cout << "Output VRML 2.0 file: " << fVRMLFileName << G4endl;
-    G4cout << "Maximum number of files in the destination directory: "
-           << fMaxFileNum << G4endl;
+    G4cout << "Maximum number of files in the destination directory: " << fMaxFileNum << G4endl;
     G4cout << "  (Customizable with the environment variable: "
               "G4VRMLFILE_MAX_FILE_NUM) "
            << G4endl;
@@ -222,7 +221,7 @@ void G4VRML2FileSceneHandler::closePort()
   char command[256];
   char viewer[256];
   strcpy(viewer, NO_VRML_VIEWER);  // initialization
-  if(std::getenv(ENV_VRML_VIEWER))
+  if (std::getenv(ENV_VRML_VIEWER))
   {
     strcpy(viewer, std::getenv(ENV_VRML_VIEWER));
   }
@@ -230,27 +229,23 @@ void G4VRML2FileSceneHandler::closePort()
   // close VRML file
   fDest.close();
   fFlagDestOpen = false;
-  if(G4VisManager::GetVerbosity() >= G4VisManager::errors)
-    G4cout << "*** VRML 2.0 File  " << fVRMLFileName << "  is generated."
-           << G4endl;
+  if (G4VisManager::GetVerbosity() >= G4VisManager::errors)
+    G4cout << "*** VRML 2.0 File  " << fVRMLFileName << "  is generated." << G4endl;
 
   // Invoke viewer
 
-  if(!strcmp(viewer, NO_VRML_VIEWER))
+  if (!strcmp(viewer, NO_VRML_VIEWER))
   {
-    if(G4VisManager::GetVerbosity() >= G4VisManager::errors)
+    if (G4VisManager::GetVerbosity() >= G4VisManager::errors)
     {
       G4cout << "MESSAGE from VRML2FILE driver:" << G4endl;
       G4cout << "    Set an environmental variable  ";
       G4cout << ENV_VRML_VIEWER << G4endl;
-      G4cout << "    if you want to visualize the generated VRML file"
-             << G4endl;
+      G4cout << "    if you want to visualize the generated VRML file" << G4endl;
       G4cout << "    automatically.  For example, " << G4endl;
       G4cout << "    setenv  " << ENV_VRML_VIEWER << "  vrwave " << G4endl;
-      G4cout << "ALSO you may change the file header with "
-             << ENV_WRL_FILE_HEADER << G4endl;
-      G4cout << "    or the whole filename with " << ENV_WRL_FILE_NAME
-             << G4endl;
+      G4cout << "ALSO you may change the file header with " << ENV_WRL_FILE_HEADER << G4endl;
+      G4cout << "    or the whole filename with " << ENV_WRL_FILE_NAME << G4endl;
     }
   }
   else
@@ -259,14 +254,12 @@ void G4VRML2FileSceneHandler::closePort()
     ossCommand << viewer << ' ' << fVRMLFileName;
     strncpy(command, ossCommand.str().c_str(), sizeof(command) - 1);
     command[sizeof(command) - 1] = '\0';
-    int iErr                     = system(command);
-    if(iErr != 0)
+    int iErr = system(command);
+    if (iErr != 0)
     {
       G4ExceptionDescription ed;
-      ed << "Error " << iErr << " when calling system with \"" << command
-         << "\".";
-      G4Exception("G4VRML2FileSceneHandler::closePort()", "VRML-2006",
-                  JustWarning, ed);
+      ed << "Error " << iErr << " when calling system with \"" << command << "\".";
+      G4Exception("G4VRML2FileSceneHandler::closePort()", "VRML-2006", JustWarning, ed);
     }
   }
 }

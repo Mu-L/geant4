@@ -42,7 +42,8 @@ G4MoleculeCounterTimeComparer::G4MoleculeCounterTimeComparer(
 G4MoleculeCounterTimeComparer&
 G4MoleculeCounterTimeComparer::operator=(const G4MoleculeCounterTimeComparer& other)
 {
-  switch (other.fType) {
+  switch (other.fType)
+  {
     case TimeComparerType::VariablePrecision:
       SetVariablePrecision(other.fVariablePrecision);
       break;
@@ -71,7 +72,8 @@ void G4MoleculeCounterTimeComparer::SetVariablePrecision(
     fVariablePrecision.emplace(*key, *val);
   }
 
-  if (fVariablePrecision.empty()) {
+  if (fVariablePrecision.empty())
+  {
     G4Exception("G4MoleculeCounterTimeComparer::SetVariablePrecision()",
                 "G4MoleculeCounterTimeComparer", FatalException, "Precision map cannot be empty!");
   }
@@ -83,7 +85,8 @@ void G4MoleculeCounterTimeComparer::SetVariablePrecision(
   fType = TimeComparerType::VariablePrecision;
   fVariablePrecision = resolutionMap;
 
-  if (fVariablePrecision.empty()) {
+  if (fVariablePrecision.empty())
+  {
     G4Exception("G4MoleculeCounterTimeComparer::SetVariablePrecision()",
                 "G4MoleculeCounterTimeComparer", FatalException, "Precision map cannot be empty!");
   }
@@ -99,22 +102,27 @@ G4double G4MoleculeCounterTimeComparer::GetPrecisionAtTime(G4double time) const
 
 G4bool G4MoleculeCounterTimeComparer::operator()(const G4double& a, const G4double& b) const
 {
-  if (fType == G4MoleculeCounterTimeComparer::FixedPrecision) {
-    if (std::fabs(a - b) < fPrecision) {
+  if (fType == G4MoleculeCounterTimeComparer::FixedPrecision)
+  {
+    if (std::fabs(a - b) < fPrecision)
+    {
       return false;
     }
   }
-  else if (fType == G4MoleculeCounterTimeComparer::VariablePrecision) {
+  else if (fType == G4MoleculeCounterTimeComparer::VariablePrecision)
+  {
     const auto it_a = fVariablePrecision.upper_bound(a);
     const auto it_b = fVariablePrecision.upper_bound(b);
     auto precision = fVariablePrecision.crbegin()->second;
     if (it_a != fVariablePrecision.cend() && it_b != fVariablePrecision.cend())
       precision = std::min(it_a->second, it_b->second);
-    if (std::fabs(a - b) < precision) {
+    if (std::fabs(a - b) < precision)
+    {
       return false;
     }
   }
-  else {
+  else
+  {
     G4Exception("G4MoleculeCounterTimeComparer::operator()", "G4MoleculeCounterTimeComparer",
                 FatalException, "Unknown comparison type");
   }

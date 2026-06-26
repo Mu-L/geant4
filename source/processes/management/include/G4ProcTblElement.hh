@@ -31,55 +31,54 @@
 
 // Author: H.Kurashige, 4 August 1998
 // --------------------------------------------------------------------
-#ifndef G4ProcTblElement_hh
-#define G4ProcTblElement_hh 1
+#ifndef G4PROCTBLELEMENT_HH
+#define G4PROCTBLELEMENT_HH
+
+#include "G4ParticleDefinition.hh"
+#include "G4ProcessManager.hh"
+#include "G4VProcess.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 #include <vector>
 
-#include "globals.hh"
-#include "G4ios.hh"
-
-#include "G4ParticleDefinition.hh"
-#include "G4VProcess.hh"
-#include "G4ProcessManager.hh"
-
 class G4ProcTblElement
 {
-  friend class G4ProcessTable;
+    friend class G4ProcessTable;
 
-  using G4ProcMgrVector = std::vector<G4ProcessManager*>;
+    using G4ProcMgrVector = std::vector<G4ProcessManager*>;
 
   public:
 
     G4ProcTblElement(const G4ProcTblElement& right);
     G4ProcTblElement(G4VProcess* aProcess);
-      // Constructors
+    // Constructors
 
     ~G4ProcTblElement();
-      // Destructor
+    // Destructor
 
     G4ProcTblElement& operator=(const G4ProcTblElement& right);
-      // Assignment operator
+    // Assignment operator
 
     G4bool operator==(const G4ProcTblElement& right) const;
     G4bool operator!=(const G4ProcTblElement& right) const;
-      // Equality operators
+    // Equality operators
 
   protected:
 
     G4ProcTblElement();
 
-    inline G4int Length() const ;
+    inline G4int Length() const;
     inline void Insert(G4ProcessManager* aProcMgr);
     inline void Remove(G4ProcessManager* aProcMgr);
 
-    inline G4VProcess*       GetProcess() const;
-    inline const G4String&   GetProcessName() const;
+    inline G4VProcess* GetProcess() const;
+    inline const G4String& GetProcessName() const;
     inline G4ProcessManager* GetProcessManager(G4int index) const;
 
-    inline const G4ProcMgrVector* GetProcMgrVector() const; 
-  
-    inline G4int  GetIndex(const G4ProcessManager* pManager) const;
+    inline const G4ProcMgrVector* GetProcMgrVector() const;
+
+    inline G4int GetIndex(const G4ProcessManager* pManager) const;
     inline G4bool Contains(const G4ProcessManager* pManager) const;
 
   private:

@@ -23,31 +23,31 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4BertiniElectroNuclearBuilder_h
-#define G4BertiniElectroNuclearBuilder_h 1
+#ifndef G4BERTINIELECTRONUCLEARBUILDER_HH
+#define G4BERTINIELECTRONUCLEARBUILDER_HH
 
-#include "globals.hh"
 #include "G4CascadeInterface.hh"
 #include "G4HadronInelasticProcess.hh"
+#include "globals.hh"
 
-class G4BertiniElectroNuclearBuilder 
+class G4BertiniElectroNuclearBuilder
 {
-public: 
-  explicit G4BertiniElectroNuclearBuilder(G4bool eNucl);
-  virtual ~G4BertiniElectroNuclearBuilder() = default;
+  public:
 
-  virtual void Build();
+    explicit G4BertiniElectroNuclearBuilder(G4bool eNucl);
+    virtual ~G4BertiniElectroNuclearBuilder() = default;
 
-  G4BertiniElectroNuclearBuilder& operator=
-  (const G4BertiniElectroNuclearBuilder& right) = delete;
-  G4BertiniElectroNuclearBuilder(const G4BertiniElectroNuclearBuilder&) = delete;
+    virtual void Build();
 
-protected:
+    G4BertiniElectroNuclearBuilder& operator=(const G4BertiniElectroNuclearBuilder& right) = delete;
+    G4BertiniElectroNuclearBuilder(const G4BertiniElectroNuclearBuilder&) = delete;
 
-  G4HadronInelasticProcess* thePhotoNuclearProcess{nullptr};
-  G4CascadeInterface* theGammaReaction{nullptr};
+  protected:
 
-  G4bool eActivated;
+    G4HadronInelasticProcess* thePhotoNuclearProcess{nullptr};
+    G4CascadeInterface* theGammaReaction{nullptr};
+
+    G4bool eActivated;
 };
 
 #endif

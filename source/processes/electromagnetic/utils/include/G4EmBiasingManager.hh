@@ -44,13 +44,14 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4EmBiasingManager_h
-#define G4EmBiasingManager_h 1
+#ifndef G4EMBIASINGMANAGER_HH
+#define G4EMBIASINGMANAGER_HH
 
-#include "globals.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4DynamicParticle.hh"
+#include "G4ParticleDefinition.hh"
 #include "Randomize.hh"
+#include "globals.hh"
+
 #include <vector>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -63,145 +64,122 @@ class G4MaterialCutsCouple;
 class G4ParticleChangeForLoss;
 class G4ParticleChangeForGamma;
 
-class G4EmBiasingManager 
+class G4EmBiasingManager
 {
-public:
+  public:
 
-  G4EmBiasingManager();
+    G4EmBiasingManager();
 
-  ~G4EmBiasingManager();
+    ~G4EmBiasingManager();
 
-  void Initialise(const G4ParticleDefinition& part,
-		  const G4String& procName, G4int verbose);
+    void Initialise(const G4ParticleDefinition& part, const G4String& procName, G4int verbose);
 
-  // default parameters are possible
-  void ActivateForcedInteraction(G4double length = 0.0, 
-				 const G4String& r = "");
+    // default parameters are possible
+    void ActivateForcedInteraction(G4double length = 0.0, const G4String& r = "");
 
-  // no default parameters
-  void ActivateSecondaryBiasing(const G4String& region, G4double factor,
-				G4double energyLimit);
+    // no default parameters
+    void ActivateSecondaryBiasing(const G4String& region, G4double factor, G4double energyLimit);
 
-  // return forced step limit
-  G4double GetStepLimit(G4int coupleIdx, G4double previousStep);
+    // return forced step limit
+    G4double GetStepLimit(G4int coupleIdx, G4double previousStep);
 
-  // return weight of splitting or Russian roulette
-  // G4DynamicParticle may be deleted
-  // two functions are required because of the different ParticleChange
-  // ApplySecondaryBiasing() are wrappers
+    // return weight of splitting or Russian roulette
+    // G4DynamicParticle may be deleted
+    // two functions are required because of the different ParticleChange
+    // ApplySecondaryBiasing() are wrappers
 
-  // for G4VEmProcess 
-  G4double ApplySecondaryBiasing(std::vector<G4DynamicParticle*>&, 
-				 const G4Track& track,
-				 G4VEmModel* currentModel,
-				 G4ParticleChangeForGamma* pParticleChange,
-				 G4double& eloss,
-				 G4int coupleIdx,
-				 G4double tcut,
-				 G4double safety = 0.0);
+    // for G4VEmProcess
+    G4double ApplySecondaryBiasing(std::vector<G4DynamicParticle*>&, const G4Track& track,
+                                   G4VEmModel* currentModel,
+                                   G4ParticleChangeForGamma* pParticleChange, G4double& eloss,
+                                   G4int coupleIdx, G4double tcut, G4double safety = 0.0);
 
-  // for G4VEnergyLossProcess 
-  G4double ApplySecondaryBiasing(std::vector<G4DynamicParticle*>&,
-				 const G4Track& track,
-				 G4VEmModel* currentModel,
-				 G4ParticleChangeForLoss* pParticleChange,
-				 G4double& eloss, 
-   			         G4int coupleIdx,  
-				 G4double tcut, 
-				 G4double safety = 0.0);
+    // for G4VEnergyLossProcess
+    G4double ApplySecondaryBiasing(std::vector<G4DynamicParticle*>&, const G4Track& track,
+                                   G4VEmModel* currentModel,
+                                   G4ParticleChangeForLoss* pParticleChange, G4double& eloss,
+                                   G4int coupleIdx, G4double tcut, G4double safety = 0.0);
 
-  // for G4VEnergyLossProcess 
-  G4double ApplySecondaryBiasing(std::vector<G4Track*>&,
-				 G4int coupleIdx);
+    // for G4VEnergyLossProcess
+    G4double ApplySecondaryBiasing(std::vector<G4Track*>&, G4int coupleIdx);
 
-  inline G4bool SecondaryBiasingRegion(G4int coupleIdx);
+    inline G4bool SecondaryBiasingRegion(G4int coupleIdx);
 
-  inline G4bool ForcedInteractionRegion(G4int coupleIdx);
+    inline G4bool ForcedInteractionRegion(G4int coupleIdx);
 
-  inline void ResetForcedInteraction();
+    inline void ResetForcedInteraction();
 
-  G4bool CheckDirection(G4ThreeVector pos, G4ThreeVector momdir) const;
+    G4bool CheckDirection(G4ThreeVector pos, G4ThreeVector momdir) const;
 
-  G4bool  GetDirectionalSplitting() { return fDirectionalSplitting; }
-  void    SetDirectionalSplitting(G4bool v) { fDirectionalSplitting = v; }
+    G4bool GetDirectionalSplitting() { return fDirectionalSplitting; }
+    void SetDirectionalSplitting(G4bool v) { fDirectionalSplitting = v; }
 
-  void SetDirectionalSplittingTarget(G4ThreeVector v) 
-    { fDirectionalSplittingTarget = v; }
-  void SetDirectionalSplittingRadius(G4double r) 
-    { fDirectionalSplittingRadius = r; }
-  G4double GetWeight(G4int i);
+    void SetDirectionalSplittingTarget(G4ThreeVector v) { fDirectionalSplittingTarget = v; }
+    void SetDirectionalSplittingRadius(G4double r) { fDirectionalSplittingRadius = r; }
+    G4double GetWeight(G4int i);
 
-  // hide copy constructor and assignment operator
-  G4EmBiasingManager(G4EmBiasingManager &) = delete;
-  G4EmBiasingManager & operator=(const G4EmBiasingManager &right) = delete;
+    // hide copy constructor and assignment operator
+    G4EmBiasingManager(G4EmBiasingManager&) = delete;
+    G4EmBiasingManager& operator=(const G4EmBiasingManager& right) = delete;
 
-private:
+  private:
 
-  void ApplyRangeCut(std::vector<G4DynamicParticle*>& vd,
-		     const G4Track& track,
-		     G4double& eloss, 
-		     G4double safety);
+    void ApplyRangeCut(std::vector<G4DynamicParticle*>& vd, const G4Track& track, G4double& eloss,
+                       G4double safety);
 
-  G4double ApplySplitting(std::vector<G4DynamicParticle*>& vd,
-			  const G4Track& track,
-			  G4VEmModel* currentModel, 
-			  G4int index,
-			  G4double tcut);
+    G4double ApplySplitting(std::vector<G4DynamicParticle*>& vd, const G4Track& track,
+                            G4VEmModel* currentModel, G4int index, G4double tcut);
 
-  G4double ApplyDirectionalSplitting(std::vector<G4DynamicParticle*>& vd,
-        const G4Track& track,
-        G4VEmModel* currentModel, 
-        G4int index,
-        G4double tcut,
-        G4ParticleChangeForGamma* partChange);
+    G4double ApplyDirectionalSplitting(std::vector<G4DynamicParticle*>& vd, const G4Track& track,
+                                       G4VEmModel* currentModel, G4int index, G4double tcut,
+                                       G4ParticleChangeForGamma* partChange);
 
-  G4double ApplyDirectionalSplitting(std::vector<G4DynamicParticle*>& vd,
-        const G4Track& track,
-        G4VEmModel* currentModel, 
-        G4int index,
-        G4double tcut);
+    G4double ApplyDirectionalSplitting(std::vector<G4DynamicParticle*>& vd, const G4Track& track,
+                                       G4VEmModel* currentModel, G4int index, G4double tcut);
 
-  inline G4double ApplyRussianRoulette(std::vector<G4DynamicParticle*>& vd,
-				       G4int index); 
+    inline G4double ApplyRussianRoulette(std::vector<G4DynamicParticle*>& vd, G4int index);
 
-  G4VEnergyLossProcess* eIonisation = nullptr;
+    G4VEnergyLossProcess* eIonisation = nullptr;
 
-  const G4ParticleDefinition* theElectron;
-  const G4ParticleDefinition* theGamma;
+    const G4ParticleDefinition* theElectron;
+    const G4ParticleDefinition* theGamma;
 
-  G4double fSafetyMin;
-  G4double currentStepLimit = 0.0;
-  G4double fDirectionalSplittingRadius = 0.0;
+    G4double fSafetyMin;
+    G4double currentStepLimit = 0.0;
+    G4double fDirectionalSplittingRadius = 0.0;
 
-  G4int nForcedRegions = 0;
-  G4int nSecBiasedRegions = 0;
+    G4int nForcedRegions = 0;
+    G4int nSecBiasedRegions = 0;
 
-  G4bool startTracking = true;
-  G4bool fDirectionalSplitting = false;
+    G4bool startTracking = true;
+    G4bool fDirectionalSplitting = false;
 
-  G4ThreeVector fDirectionalSplittingTarget;
-  std::vector<G4double> fDirectionalSplittingWeights;
+    G4ThreeVector fDirectionalSplittingTarget;
+    std::vector<G4double> fDirectionalSplittingWeights;
 
-  std::vector<G4double>        lengthForRegion;
-  std::vector<G4double>        secBiasedWeight;
-  std::vector<G4double>        secBiasedEnegryLimit;
+    std::vector<G4double> lengthForRegion;
+    std::vector<G4double> secBiasedWeight;
+    std::vector<G4double> secBiasedEnegryLimit;
 
-  std::vector<const G4Region*> forcedRegions;
-  std::vector<const G4Region*> secBiasedRegions;
+    std::vector<const G4Region*> forcedRegions;
+    std::vector<const G4Region*> secBiasedRegions;
 
-  std::vector<G4int>           nBremSplitting;
-  std::vector<G4int>           idxForcedCouple;
-  std::vector<G4int>           idxSecBiasedCouple;
+    std::vector<G4int> nBremSplitting;
+    std::vector<G4int> idxForcedCouple;
+    std::vector<G4int> idxSecBiasedCouple;
 
-  std::vector<G4DynamicParticle*> tmpSecondaries;
+    std::vector<G4DynamicParticle*> tmpSecondaries;
 };
 
-inline G4bool 
-G4EmBiasingManager::SecondaryBiasingRegion(G4int coupleIdx)
+inline G4bool G4EmBiasingManager::SecondaryBiasingRegion(G4int coupleIdx)
 {
   G4bool res = false;
-  if(nSecBiasedRegions > 0) {
-    if(idxSecBiasedCouple[coupleIdx] >= 0) { res = true; }
+  if (nSecBiasedRegions > 0)
+  {
+    if (idxSecBiasedCouple[coupleIdx] >= 0)
+    {
+      res = true;
+    }
   }
   return res;
 }
@@ -209,8 +187,12 @@ G4EmBiasingManager::SecondaryBiasingRegion(G4int coupleIdx)
 inline G4bool G4EmBiasingManager::ForcedInteractionRegion(G4int coupleIdx)
 {
   G4bool res = false;
-  if(nForcedRegions > 0) {
-    if(idxForcedCouple[coupleIdx] >= 0) { res = true; }
+  if (nForcedRegions > 0)
+  {
+    if (idxForcedCouple[coupleIdx] >= 0)
+    {
+      res = true;
+    }
   }
   return res;
 }
@@ -222,14 +204,15 @@ inline void G4EmBiasingManager::ResetForcedInteraction()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline G4double
-G4EmBiasingManager::ApplyRussianRoulette(std::vector<G4DynamicParticle*>& vd,
-					 G4int index)
+inline G4double G4EmBiasingManager::ApplyRussianRoulette(std::vector<G4DynamicParticle*>& vd,
+                                                         G4int index)
 {
-  size_t n = vd.size();
+  std::size_t n = vd.size();
   G4double weight = secBiasedWeight[index];
-  for(size_t k=0; k<n; ++k) {
-    if(G4UniformRand()*weight > 1.0) {
+  for (std::size_t k = 0; k < n; ++k)
+  {
+    if (G4UniformRand() * weight > 1.0)
+    {
       const G4DynamicParticle* dp = vd[k];
       delete dp;
       vd[k] = nullptr;

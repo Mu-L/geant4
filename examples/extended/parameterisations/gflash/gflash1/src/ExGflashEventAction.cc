@@ -33,16 +33,9 @@
 #include "ExGflashHit.hh"
 
 #include "G4Event.hh"
-#include "G4EventManager.hh"
 #include "G4SDManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4TrajectoryContainer.hh"
-#include "G4UImanager.hh"
-// std
-#include <algorithm>
-#include <iostream>
-// Gflash
-using namespace std;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -52,7 +45,8 @@ ExGflashEventAction::ExGflashEventAction() = default;
 
 ExGflashEventAction::~ExGflashEventAction()
 {
-  if (fNevent > 0) {
+  if (fNevent > 0)
+  {
     G4cout << "Internal Real Elapsed Time /event is: " << fDtime / fNevent << G4endl;
   }
 }
@@ -94,16 +88,11 @@ void ExGflashEventAction::EndOfEventAction(const G4Event* evt)
   G4double totE = 0;
   // Read out of the crysta ECAL
   THC = (ExGflashHitsCollection*)(HCE->GetHC(fCalorimeterCollectionId));
-  if (THC) {
+  if (THC)
+  {
     /// Hits in sensitive Detector
     int n_hit = THC->entries();
     G4cout << "  " << n_hit << " hits are stored in ExGflashHitsCollection " << G4endl;
-    G4PrimaryVertex* pvertex = evt->GetPrimaryVertex();
-    /// Computing (x,y,z) of vertex of initial particles
-    G4ThreeVector vtx = pvertex->GetPosition();
-    G4PrimaryParticle* pparticle = pvertex->GetPrimary();
-    // direction of the Shower
-    G4ThreeVector mom = pparticle->GetMomentum() / pparticle->GetMomentum().mag();
 
     //@@@ ExGflashEventAction: Magicnumber
     G4double energyincrystal[100];
@@ -112,44 +101,36 @@ void ExGflashEventAction::EndOfEventAction(const G4Event* evt)
       energyincrystal[i] = 0.;
     for (int i = 0; i < 100; i++)
       hitsincrystal[i] = 0.;
-
     //@@@ ExGflashEventAction: Magicnumber
+
     /// For all Hits in sensitive detector
-    for (int i = 0; i < n_hit; i++) {
+    for (int i = 0; i < n_hit; i++)
+    {
       G4double estep = (*THC)[i]->GetEdep() / GeV;
-      if (estep > 0.0) {
+      if (estep > 0.0)
+      {
         totE += (*THC)[i]->GetEdep() / GeV;
         G4int num = (*THC)[i]->GetCrystalNum();
 
         energyincrystal[num] += (*THC)[i]->GetEdep() / GeV;
         hitsincrystal[num]++;
-        // G4cout << num << G4endl;
-        //   G4cout << " Crystal Nummer " <<  (*THC)[i]->GetCrystalNum()  << G4endl;
-        //   G4cout <<  (*THC)[i]->GetCrystalNum() /10 <<
-        //  "  "<<(*THC)[i]->GetCrystalNum()%10 << G4endl;
-
-        G4ThreeVector hitpos = (*THC)[i]->GetPos();
-        G4ThreeVector l(hitpos.x(), hitpos.y(), hitpos.z());
-        // distance from shower start
-        l = l - vtx;
-        // projection on shower axis = longitudinal profile
-        G4ThreeVector longitudinal = l;
-        // shower profiles (Radial)
-        G4ThreeVector radial = vtx.cross(l);
       }
     }
     G4double max = 0;
     G4int index = 0;
     // Find crystal with maximum energy
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 100; i++)
+    {
       // G4cout << i <<"  " << energyincrystal[i] << G4endl;
-      if (max < energyincrystal[i]) {
+      if (max < energyincrystal[i])
+      {
         max = energyincrystal[i];
         index = i;
       }
     }
     // G4cout << index <<" NMAX  " << index << G4endl;
 
+    //@@@ ExGflashEventAction: array bounds check
     // 3x3 matrix of crystals around the crystal with the maximum energy deposit
     G4double e3x3 = energyincrystal[index] + energyincrystal[index + 1] + energyincrystal[index - 1]
                     + energyincrystal[index - 10] + energyincrystal[index - 9]
@@ -178,8 +159,9 @@ void ExGflashEventAction::EndOfEventAction(const G4Event* evt)
                    + hitsincrystal[index + 11] + hitsincrystal[index + 9]
                    + hitsincrystal[index + 12] + hitsincrystal[index + 8];
 
-    G4cout << "   e1  " << energyincrystal[index] << "   e3x3  " << e3x3 << "   GeV  e5x5  " << e5x5
-           << G4endl;
+    // Print E deposited and number of hits
+    G4cout << "   e1  " << energyincrystal[index] << "   e3x3  " << e3x3 << "    e5x5  " << e5x5
+           << " (GeV)" << G4endl;
 
     G4cout << "   num1  " << hitsincrystal[index] << "   num3x3  " << num3x3 << "    num5x5  "
            << num5x5 << G4endl;
@@ -188,7 +170,8 @@ void ExGflashEventAction::EndOfEventAction(const G4Event* evt)
   G4cout << " Total energy deposited in the calorimeter: " << totE << " (GeV)" << G4endl;
   G4TrajectoryContainer* trajectoryContainer = evt->GetTrajectoryContainer();
   G4int n_trajectories = 0;
-  if (trajectoryContainer) {
+  if (trajectoryContainer)
+  {
     n_trajectories = trajectoryContainer->entries();
   }
   G4cout << "    " << n_trajectories << " trajectories stored in this event." << G4endl;

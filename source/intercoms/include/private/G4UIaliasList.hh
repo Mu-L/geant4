@@ -32,8 +32,8 @@
 
 // Author: M.Asai, 1 October 2001
 // --------------------------------------------------------------------
-#ifndef G4UIaliasList_hh
-#define G4UIaliasList_hh 1
+#ifndef G4UIALIASLIST_HH
+#define G4UIALIASLIST_HH
 
 #include "globals.hh"
 
@@ -42,6 +42,7 @@
 class G4UIaliasList
 {
   public:
+
     // Add or update alias from aliasName to command path aliasValue
     void ChangeAlias(const char* aliasName, const char* aliasValue);
 
@@ -56,6 +57,7 @@ class G4UIaliasList
     void List() const;
 
   private:
+
     // Adds a new alias/value pair to the map
     void AddNewAlias(const char* aliasName, const char* aliasValue);
 

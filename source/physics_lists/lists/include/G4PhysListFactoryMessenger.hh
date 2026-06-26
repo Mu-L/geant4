@@ -33,32 +33,34 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4PhysListFactoryMessenger_h
-#define G4PhysListFactoryMessenger_h 1
+#ifndef G4PHYSLISTFACTORYMESSENGER_HH
+#define G4PHYSLISTFACTORYMESSENGER_HH
 
-#include "G4UImessenger.hh"
-#include "G4UIdirectory.hh"
 #include "G4UIcmdWithoutParameter.hh"
 #include "G4UIcommand.hh"
+#include "G4UIdirectory.hh"
+#include "G4UImessenger.hh"
 
 class G4VModularPhysicsList;
 
-class G4PhysListFactoryMessenger: public G4UImessenger
+class G4PhysListFactoryMessenger : public G4UImessenger
 {
-public:
-  G4PhysListFactoryMessenger(G4VModularPhysicsList* pl);
-  ~G4PhysListFactoryMessenger() override;
+  public:
 
-  void SetNewValue(G4UIcommand* aComm, G4String aS) override;
+    G4PhysListFactoryMessenger(G4VModularPhysicsList* pl);
+    ~G4PhysListFactoryMessenger() override;
 
-private:
-  G4VModularPhysicsList*   thePhysList;
-  G4UIcommand*             theRadDecay;
-  G4UIcommand*             theOptical;
-  G4UIcommand*             theThermal;
-  G4UIcommand*             theNeutrino;
-  G4UIcommand*             theChargeEx;
-  G4UIdirectory*           theDir;
+    void SetNewValue(G4UIcommand* aComm, G4String aS) override;
+
+  private:
+
+    G4VModularPhysicsList* thePhysList;
+    G4UIcommand* theRadDecay;
+    G4UIcommand* theOptical;
+    G4UIcommand* theThermal;
+    G4UIcommand* theNeutrino;
+    G4UIcommand* theChargeEx;
+    G4UIdirectory* theDir;
 };
 
 #endif

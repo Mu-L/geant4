@@ -28,8 +28,8 @@
 
 // Author: Ivana Hrivnacova, 26/08/2021  (ivana@ipno.in2p3.fr)
 
-#ifndef G4XmlHnRFileManager_h
-#define G4XmlHnRFileManager_h 1
+#ifndef G4XMLHNRFILEMANAGER_HH
+#define G4XMLHNRFILEMANAGER_HH
 
 #include "G4VTHnRFileManager.hh"
 
@@ -37,24 +37,27 @@
 
 class G4XmlRFileManager;
 
-template <typename HT>
+template<typename HT>
 class G4XmlHnRFileManager : public G4VTHnRFileManager<HT>
 {
   public:
+
     G4XmlHnRFileManager(G4XmlRFileManager* rfileManger)
-      : G4VTHnRFileManager<HT>(), fRFileManager(rfileManger) {}
+      : G4VTHnRFileManager<HT>(), fRFileManager(rfileManger)
+    {}
     G4XmlHnRFileManager() = delete;
     ~G4XmlHnRFileManager() override = default;
 
     // Methods for writing objects
     HT* Read(const G4String& htName, const G4String& fileName, const G4String& dirName,
-      G4bool isUserFileName) final;
+             G4bool isUserFileName) final;
 
   private:
+
     // Static data members
-    static constexpr std::string_view fkClass { "G4XmlHnRFileManager<HT>" };
+    static constexpr std::string_view fkClass{"G4XmlHnRFileManager<HT>"};
     // Data members
-    G4XmlRFileManager* fRFileManager { nullptr };
+    G4XmlRFileManager* fRFileManager{nullptr};
 };
 
 // inline functions

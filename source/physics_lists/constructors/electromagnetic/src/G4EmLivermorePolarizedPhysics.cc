@@ -25,6 +25,7 @@
 //
 
 #include "G4EmLivermorePolarizedPhysics.hh"
+
 #include "G4EmParameters.hh"
 
 // factory
@@ -34,8 +35,7 @@ G4_DECLARE_PHYSCONSTR_FACTORY(G4EmLivermorePolarizedPhysics);
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4EmLivermorePolarizedPhysics::G4EmLivermorePolarizedPhysics(G4int ver, 
-							     const G4String&)
+G4EmLivermorePolarizedPhysics::G4EmLivermorePolarizedPhysics(G4int ver, const G4String&)
   : G4EmLivermorePhysics(ver, "G4EmLivermorePolarized")
 {
   G4EmParameters* param = G4EmParameters::Instance();
@@ -44,7 +44,6 @@ G4EmLivermorePolarizedPhysics::G4EmLivermorePolarizedPhysics(G4int ver,
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4EmLivermorePolarizedPhysics::~G4EmLivermorePolarizedPhysics()
-{}
+G4EmLivermorePolarizedPhysics::~G4EmLivermorePolarizedPhysics() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

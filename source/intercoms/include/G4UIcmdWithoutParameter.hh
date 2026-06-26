@@ -33,14 +33,15 @@
 
 // Author: M.Asai, 1998
 // --------------------------------------------------------------------
-#ifndef G4UIcmdWithoutParameter_hh
-#define G4UIcmdWithoutParameter_hh 1
+#ifndef G4UICMDWITHOUTPARAMETER_HH
+#define G4UICMDWITHOUTPARAMETER_HH
 
 #include "G4UIcommand.hh"
 
 class G4UIcmdWithoutParameter : public G4UIcommand
 {
   public:
+
     // Constructor. The command string with full path directory
     // and the pointer to the messenger must be given
     G4UIcmdWithoutParameter(const char* theCommandPath, G4UImessenger* theMessenger);

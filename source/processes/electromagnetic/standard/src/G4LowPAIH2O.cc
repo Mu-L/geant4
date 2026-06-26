@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // G4LowPAIH2O.cc -- class implementation file
 //
 // GEANT 4 class implementation file
@@ -37,31 +37,30 @@
 //
 // History:
 //
-// 20.07.23 V. Grichine, 1st version 
+// 20.07.23 V. Grichine, 1st version
 //
 
 #include "G4LowPAIH2O.hh"
-#include "G4LowDataH2O.hh"
 
-#include "globals.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4ios.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4Integrator.hh"
-#include "G4PhysicsLogVector.hh"
-#include "G4PhysicsTable.hh"
-#include "Randomize.hh"
-#include "G4Poisson.hh"
-#include "G4RandomDirection.hh"
 #include "G4Electron.hh"
-#include "G4Proton.hh"
-#include "G4ParticleChangeForLoss.hh"
-#include "G4NistManager.hh"
+#include "G4Integrator.hh"
+#include "G4LowDataH2O.hh"
 #include "G4Material.hh"
 #include "G4MaterialCutsCouple.hh"
+#include "G4NistManager.hh"
+#include "G4ParticleChangeForLoss.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4PhysicsLogVector.hh"
+#include "G4PhysicsTable.hh"
+#include "G4Poisson.hh"
+#include "G4Proton.hh"
+#include "G4RandomDirection.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4VEmAngularDistribution.hh"
-
+#include "G4ios.hh"
+#include "Randomize.hh"
+#include "globals.hh"
 
 using namespace std;
 using namespace CLHEP;
@@ -70,44 +69,43 @@ using namespace CLHEP;
 //
 // Constructor
 
-G4LowPAIH2O::G4LowPAIH2O( const G4ParticleDefinition* p,
-	       const G4String& nam )
-    : G4VEmModel(nam) , G4VEmFluctuationModel(nam)
+G4LowPAIH2O::G4LowPAIH2O(const G4ParticleDefinition* p, const G4String& nam)
+  : G4VEmModel(nam), G4VEmFluctuationModel(nam)
 {
-  fCof  = fine_structure_const/hbarc/pi;
+  fCof = fine_structure_const / hbarc / pi;
   fBeta = 0.5;
-  fBe2  = fBeta*fBeta;
+  fBe2 = fBeta * fBeta;
   fTkin = eV * 1.;
-  fBias = 1.; // 
+  fBias = 1.;  //
   G4NistManager* man = G4NistManager::Instance();
   fMat = man->FindOrBuildMaterial("G4_WATER");
   // (?)
-  fElectronDensity   = fMat->GetElectronDensity();
+  fElectronDensity = fMat->GetElectronDensity();
   fNat = fMat->GetTotNbOfAtomsPerVolume();
   // G4cout<<"fNat = "<<fNat*cm3<<" 1/cm3"<<G4endl;
   fNel = fMat->GetTotNbOfElectPerVolume();
   // G4cout<<"fNel = "<<fNel*cm3<<" 1/cm3"<<G4endl;
   theElectron = G4Electron::Electron();
-  theProton   = G4Proton::Proton();
+  theProton = G4Proton::Proton();
   fParticleChange = nullptr;
   const G4DataVector cuts;
-  
-  if( IsMaster() )
+
+  if (IsMaster())
   {
     InitialiseElementSelectors(p, cuts);
   }
-  if(nullptr == fParticleChange)
+  if (nullptr == fParticleChange)
   {
     fParticleChange = GetParticleChangeForLoss();
   }
-  fTotBin = 200; //
-  fBinTr  = 100;
-  fBmin   = 1.e-3;
-  fBmax   = 0.98; // gamma ~ 4 min of dE/dx
-  
-  fBetaVector = new G4PhysicsLogVector( fBmin, fBmax, fTotBin );
+  fTotBin = 200;  //
+  fBinTr = 100;
+  fBmin = 1.e-3;
+  fBmax = 0.98;  // gamma ~ 4 min of dE/dx
 
-  fWmin = eV  * 0.1; //
+  fBetaVector = new G4PhysicsLogVector(fBmin, fBmax, fTotBin);
+
+  fWmin = eV * 0.1;  //
   InitRuthELF();
   // BuildPhysicsTable(theProton);
   // BuildPhysicsTable(theElectron);
@@ -119,14 +117,14 @@ G4LowPAIH2O::G4LowPAIH2O( const G4ParticleDefinition* p,
 
 G4LowPAIH2O::~G4LowPAIH2O()
 {
-  if(fBetaVector) delete fBetaVector;
-  if(fTransferVector) delete fTransferVector;
-  if(fPrEnergyTable)
+  if (fBetaVector) delete fBetaVector;
+  if (fTransferVector) delete fTransferVector;
+  if (fPrEnergyTable)
   {
     fPrEnergyTable->clearAndDestroy();
     delete fPrEnergyTable;
   }
-  if(fElEnergyTable)
+  if (fElEnergyTable)
   {
     fElEnergyTable->clearAndDestroy();
     delete fElEnergyTable;
@@ -135,37 +133,35 @@ G4LowPAIH2O::~G4LowPAIH2O()
 
 //////////////////////////////////////////
 
-void G4LowPAIH2O::Initialise( const G4ParticleDefinition* pd,
-			      const G4DataVector&               )
+void G4LowPAIH2O::Initialise(const G4ParticleDefinition* pd, const G4DataVector&)
 {
-  if(nullptr == fParticleChange)
+  if (nullptr == fParticleChange)
   {
     fParticleChange = GetParticleChangeForLoss();
   }
   // InitRuthELF();
-  BuildPhysicsTable( pd ); 
+  BuildPhysicsTable(pd);
   return;
 }
 
 ////////////////////////////////
 
-void G4LowPAIH2O::InitialiseLocal(const G4ParticleDefinition* pd,
-                                          G4VEmModel* masterModel)
+void G4LowPAIH2O::InitialiseLocal(const G4ParticleDefinition* pd, G4VEmModel* masterModel)
 {
-  if(nullptr == fParticleChange)
+  if (nullptr == fParticleChange)
   {
     fParticleChange = GetParticleChangeForLoss();
   }
   SetElementSelectors(masterModel->GetElementSelectors());
-  BuildPhysicsTable( pd ); 
+  BuildPhysicsTable(pd);
   return;
 }
 
 ////////////////////////////////////////////
 
 void G4LowPAIH2O::Initialize()
-{ 
-  if( nullptr == fParticleChange )
+{
+  if (nullptr == fParticleChange)
   {
     fParticleChange = GetParticleChangeForLoss();
   }
@@ -183,26 +179,29 @@ void G4LowPAIH2O::InitRuthELF()
 
   nn = theBin;
 
-  for( i = 0; i < nn; ++i )
+  for (i = 0; i < nn; ++i)
   {
-    ee   = theEsum[i];   
-    elf  = theELFsum[i];
+    ee = theEsum[i];
+    elf = theELFsum[i];
     ruth = theRuthSum[i];
     fEsum.push_back(ee);
     fELFsum.push_back(elf);
     fRuthSum.push_back(ruth);
   }
-  G4cout<<G4endl;
+  G4cout << G4endl;
 }
 
 //////////////////////////////////////////////////
 
-void G4LowPAIH2O::BuildPhysicsTable(const G4ParticleDefinition* pd )
+void G4LowPAIH2O::BuildPhysicsTable(const G4ParticleDefinition* pd)
 {
-  if( pd == theProton )        BuildPrEnergyTable();
-  else if( pd == theElectron ) BuildElEnergyTable();
-  else G4cout<<" G4LowPAIH2O::BuildPhysicsTable is not applicable for "
-	     <<pd->GetParticleName()<<G4endl;
+  if (pd == theProton)
+    BuildPrEnergyTable();
+  else if (pd == theElectron)
+    BuildElEnergyTable();
+  else
+    G4cout << " G4LowPAIH2O::BuildPhysicsTable is not applicable for " << pd->GetParticleName()
+           << G4endl;
   return;
 }
 
@@ -210,46 +209,43 @@ void G4LowPAIH2O::BuildPhysicsTable(const G4ParticleDefinition* pd )
 //
 // Biased dN/dx
 
-G4double G4LowPAIH2O::CrossSectionPerVolume(const G4Material*,
-                                 const G4ParticleDefinition* pd,
-                                 G4double Tkin,
-					    G4double, // cutEnergy,
-					    G4double ) // maxEnergy)
+G4double G4LowPAIH2O::CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition* pd,
+                                            G4double Tkin,
+                                            G4double,  // cutEnergy,
+                                            G4double)  // maxEnergy)
 {
   G4double dNdx(0.);
-  
-  if( pd == theProton )        dNdx = GetPrdNdx( Tkin );
-  else if( pd == theElectron ) dNdx = GetEldNdx( Tkin );
-  else G4cout<<" G4LowPAIH2O::CrossSectionPerVolume is not applicable for "
-	     <<pd->GetParticleName()<<G4endl;
-  dNdx /= fBias; //
+
+  if (pd == theProton)
+    dNdx = GetPrdNdx(Tkin);
+  else if (pd == theElectron)
+    dNdx = GetEldNdx(Tkin);
+  else
+    G4cout << " G4LowPAIH2O::CrossSectionPerVolume is not applicable for " << pd->GetParticleName()
+           << G4endl;
+  dNdx /= fBias;  //
 
   return dNdx;
 }
 
 ///////////////////////////
 
-G4double G4LowPAIH2O::CrossSectionPerAtom(  const G4ParticleDefinition* pd,
-                                 G4double Tkin,
-					    G4double, // Z,
-					    G4double, //  A,
-                                 G4double cutEnergy,
-                                 G4double maxEnergy)
+G4double G4LowPAIH2O::CrossSectionPerAtom(const G4ParticleDefinition* pd, G4double Tkin,
+                                          G4double,  // Z,
+                                          G4double,  //  A,
+                                          G4double cutEnergy, G4double maxEnergy)
 {
-  return CrossSectionPerVolume(nullptr, pd, Tkin, cutEnergy, maxEnergy)/fNat;
+  return CrossSectionPerVolume(nullptr, pd, Tkin, cutEnergy, maxEnergy) / fNat;
 }
 
 /////////////////////////////
 
-G4double G4LowPAIH2O::ComputeCrossSectionPerElectron(
-                                 const G4ParticleDefinition* pd,
-                                 G4double Tkin,
-                                 G4double cutEnergy,
-                                 G4double maxEnergy)
+G4double G4LowPAIH2O::ComputeCrossSectionPerElectron(const G4ParticleDefinition* pd, G4double Tkin,
+                                                     G4double cutEnergy, G4double maxEnergy)
 {
-  return CrossSectionPerVolume(nullptr, pd, Tkin, cutEnergy, maxEnergy)/fNel;
+  return CrossSectionPerVolume(nullptr, pd, Tkin, cutEnergy, maxEnergy) / fNel;
 }
-  
+
 ////////////////////////////////////////////////
 
 void G4LowPAIH2O::BuildPrEnergyTable()
@@ -262,29 +258,28 @@ void G4LowPAIH2O::BuildPrEnergyTable()
   G4Integrator<G4LowPAIH2O, G4double (G4LowPAIH2O::*)(G4double)> integral;
   fPrEnergyTable = new G4PhysicsTable();
 
-  for( iBeta = 0; iBeta < fTotBin; ++iBeta )  
+  for (iBeta = 0; iBeta < fTotBin; ++iBeta)
   {
     be = fBetaVector->GetLowEdgeEnergy(iBeta);
-    be2 = be*be;
+    be2 = be * be;
     SetBe2(be2);
-    gg = sqrt( 1./( 1. - be2 ) );
-    tp = ( gg - 1.)*mp;
+    gg = sqrt(1. / (1. - be2));
+    tp = (gg - 1.) * mp;
     fWmax = GetProtonTmax(tp);
-    if( fWmax <= fWmin ) fWmax = fWmin*1.01;
-    fTransferVector = new G4PhysicsLogVector( fWmin, fWmax, fBinTr );
+    if (fWmax <= fWmin) fWmax = fWmin * 1.01;
+    fTransferVector = new G4PhysicsLogVector(fWmin, fWmax, fBinTr);
     fPrWmaxVector.push_back(fWmax);
     sum = 0.;
-    fTransferVector->PutValue(fBinTr-1,sum);
-    
-    for( iTransfer = fBinTr-2; iTransfer >= 0; --iTransfer)
+    fTransferVector->PutValue(fBinTr - 1, sum);
+
+    for (iTransfer = fBinTr - 2; iTransfer >= 0; --iTransfer)
     {
-      tmp = integral.Legendre10( this, &G4LowPAIH2O::PrPAId2Ndxdw,
-				 fTransferVector->GetLowEdgeEnergy(iTransfer),
-				 fTransferVector->GetLowEdgeEnergy(iTransfer+1)
-			       );
-      sum += tmp*fCof/be2;
+      tmp = integral.Legendre10(this, &G4LowPAIH2O::PrPAId2Ndxdw,
+                                fTransferVector->GetLowEdgeEnergy(iTransfer),
+                                fTransferVector->GetLowEdgeEnergy(iTransfer + 1));
+      sum += tmp * fCof / be2;
       // G4cout<<sum*micrometer<<", ";
-      fTransferVector->PutValue(iTransfer,sum);
+      fTransferVector->PutValue(iTransfer, sum);
     }
     fPrEnergyTable->insertAt(iBeta, fTransferVector);
   }
@@ -293,79 +288,79 @@ void G4LowPAIH2O::BuildPrEnergyTable()
 
 ////////////////////////////////////////////////
 
-G4double G4LowPAIH2O::GetPrTransfer( G4double Tkin) 
+G4double G4LowPAIH2O::GetPrTransfer(G4double Tkin)
 {
   // std::size_t
-    G4int iBeta(0), iTransfer(0);
+  G4int iBeta(0), iTransfer(0);
   G4double be(0.), be2(0.), gg(1.), mp = proton_mass_c2;
   G4double rr1(0.), rr2(0.), tr1(0.), tr2(0.), transfer(0.);
   G4double mean1(0.), mean2(0.);
-  gg  = 1. + Tkin/mp;
-  be2 = 1. - 1./gg/gg;
-  if( be2 < 0. ) be2 = 0.;
+  gg = 1. + Tkin / mp;
+  be2 = 1. - 1. / gg / gg;
+  if (be2 < 0.) be2 = 0.;
   be = sqrt(be2);
-  
-  for( iBeta = 0; iBeta < fTotBin; ++iBeta )  
-  {
-    if( be <= fBetaVector->GetLowEdgeEnergy(iBeta) ) break;
-  }
-  if (iBeta == 0 || iBeta == fTotBin-1)
-  {
-    rr1 = G4UniformRand()*(*(*fPrEnergyTable)(iBeta))(0);
 
-    for( iTransfer = fBinTr-2; iTransfer >= 0; --iTransfer)
+  for (iBeta = 0; iBeta < fTotBin; ++iBeta)
+  {
+    if (be <= fBetaVector->GetLowEdgeEnergy(iBeta)) break;
+  }
+  if (iBeta == 0 || iBeta == fTotBin - 1)
+  {
+    rr1 = G4UniformRand() * (*(*fPrEnergyTable)(iBeta))(0);
+
+    for (iTransfer = fBinTr - 2; iTransfer >= 0; --iTransfer)
     {
-      if( (*(*fPrEnergyTable)(iBeta))(iTransfer) >= rr1 ) break;
+      if ((*(*fPrEnergyTable)(iBeta))(iTransfer) >= rr1) break;
     }
-    if( iTransfer == 0 || iTransfer == fBinTr-2 )
+    if (iTransfer == 0 || iTransfer == fBinTr - 2)
     {
       transfer = (*fPrEnergyTable)(iBeta)->GetLowEdgeEnergy(iTransfer);
     }
     else
     {
-      tr1 = (*fPrEnergyTable)(iBeta)->GetLowEdgeEnergy(iTransfer-1); 
+      tr1 = (*fPrEnergyTable)(iBeta)->GetLowEdgeEnergy(iTransfer - 1);
       tr2 = (*fPrEnergyTable)(iBeta)->GetLowEdgeEnergy(iTransfer);
-      transfer = tr1 + (tr2-tr1)*G4UniformRand();
+      transfer = tr1 + (tr2 - tr1) * G4UniformRand();
     }
   }
   else
   {
-    rr1 = G4UniformRand()*(*(*fPrEnergyTable)(iBeta-1))(0);
+    rr1 = G4UniformRand() * (*(*fPrEnergyTable)(iBeta - 1))(0);
 
-    for( iTransfer = fBinTr-2; iTransfer >= 0; --iTransfer)
+    for (iTransfer = fBinTr - 2; iTransfer >= 0; --iTransfer)
     {
-      if( (*(*fPrEnergyTable)(iBeta-1))(iTransfer) >= rr1 ) break;
+      if ((*(*fPrEnergyTable)(iBeta - 1))(iTransfer) >= rr1) break;
     }
-    if( iTransfer == 0 || iTransfer == fBinTr-2 )
+    if (iTransfer == 0 || iTransfer == fBinTr - 2)
     {
-      transfer = (*fPrEnergyTable)(iBeta-1)->GetLowEdgeEnergy(iTransfer);
+      transfer = (*fPrEnergyTable)(iBeta - 1)->GetLowEdgeEnergy(iTransfer);
     }
     else
     {
-      tr1 = (*fPrEnergyTable)(iBeta-1)->GetLowEdgeEnergy(iTransfer-1); 
-      tr2 = (*fPrEnergyTable)(iBeta-1)->GetLowEdgeEnergy(iTransfer);
-      mean1 = tr1 + (tr2-tr1)*G4UniformRand();
-    }    
-    rr2 = G4UniformRand()*(*(*fPrEnergyTable)(iBeta))(0);
-
-    for( iTransfer = fBinTr-2; iTransfer >= 0; --iTransfer)
-    {
-      if( (*(*fPrEnergyTable)(iBeta))(iTransfer) >= rr2 ) break;
+      tr1 = (*fPrEnergyTable)(iBeta - 1)->GetLowEdgeEnergy(iTransfer - 1);
+      tr2 = (*fPrEnergyTable)(iBeta - 1)->GetLowEdgeEnergy(iTransfer);
+      mean1 = tr1 + (tr2 - tr1) * G4UniformRand();
     }
-    if( iTransfer == 0 || iTransfer == fBinTr-2 )
+    rr2 = G4UniformRand() * (*(*fPrEnergyTable)(iBeta))(0);
+
+    for (iTransfer = fBinTr - 2; iTransfer >= 0; --iTransfer)
     {
-      transfer = (*fPrEnergyTable)(iBeta-1)->GetLowEdgeEnergy(iTransfer);
+      if ((*(*fPrEnergyTable)(iBeta))(iTransfer) >= rr2) break;
+    }
+    if (iTransfer == 0 || iTransfer == fBinTr - 2)
+    {
+      transfer = (*fPrEnergyTable)(iBeta - 1)->GetLowEdgeEnergy(iTransfer);
     }
     else
     {
-      tr1 = (*fPrEnergyTable)(iBeta)->GetLowEdgeEnergy(iTransfer-1); 
+      tr1 = (*fPrEnergyTable)(iBeta)->GetLowEdgeEnergy(iTransfer - 1);
       tr2 = (*fPrEnergyTable)(iBeta)->GetLowEdgeEnergy(iTransfer);
-      mean2 = tr1 + (tr2-tr1)*G4UniformRand();
+      mean2 = tr1 + (tr2 - tr1) * G4UniformRand();
     }
-    transfer = mean1 + ( mean2 - mean1 )*G4UniformRand();
-  }  
-  transfer *= CorrectPrTransfer( Tkin );
-  // G4cout<<transfer/eV<<" ";  
+    transfer = mean1 + (mean2 - mean1) * G4UniformRand();
+  }
+  transfer *= CorrectPrTransfer(Tkin);
+  // G4cout<<transfer/eV<<" ";
   return transfer;
 }
 
@@ -373,19 +368,22 @@ G4double G4LowPAIH2O::GetPrTransfer( G4double Tkin)
 //
 // Correction for dN/dx -> dE/dx
 
-G4double G4LowPAIH2O::CorrectPrTransfer( G4double Tkin)
+G4double G4LowPAIH2O::CorrectPrTransfer(G4double Tkin)
 {
   // tuning
-  G4double Tref = keV * 100.; // 100.; //
-  G4double T2   = Tref *  1.; //1.1; //
-  G4double T1   = Tref * 1.; // 0.9; // 0.8; //
-  G4double rat2 = Tkin/T2;
-  G4double rat1 = Tkin/T1;
+  G4double Tref = keV * 100.;  // 100.; //
+  G4double T2 = Tref * 1.;  // 1.1; //
+  G4double T1 = Tref * 1.;  // 0.9; // 0.8; //
+  G4double rat2 = Tkin / T2;
+  G4double rat1 = Tkin / T1;
   G4double yy(0.);
-  G4double kk = 0.22; // 0.24; //  
-  if( Tkin >= T2 )     yy = kk/pow( rat2, 0.15); //
-  else if( Tkin <= T1) yy = kk/pow( rat1, 0.75); //
-  else                 yy = kk * 1.; //  1.2; //  1.1; // 
+  G4double kk = 0.22;  // 0.24; //
+  if (Tkin >= T2)
+    yy = kk / pow(rat2, 0.15);  //
+  else if (Tkin <= T1)
+    yy = kk / pow(rat1, 0.75);  //
+  else
+    yy = kk * 1.;  //  1.2; //  1.1; //
 
   return yy;
 }
@@ -394,108 +392,115 @@ G4double G4LowPAIH2O::CorrectPrTransfer( G4double Tkin)
 //
 // Correction for dN/dx -> dE/dx
 
-G4double G4LowPAIH2O::CorrectElTransfer( G4double Tkin)
+G4double G4LowPAIH2O::CorrectElTransfer(G4double Tkin)
 {
   // tuning
-  G4double Tref = eV * 70.; // 100.; //
-  G4double T2   = Tref *  1.; //1.1; //
-  G4double T1   = Tref * 1.; // 0.9; // 0.8; //
-  G4double rat2 = Tkin/T2;
-  G4double rat1 = T1/Tkin; // Tkin/T1; //
+  G4double Tref = eV * 70.;  // 100.; //
+  G4double T2 = Tref * 1.;  // 1.1; //
+  G4double T1 = Tref * 1.;  // 0.9; // 0.8; //
+  G4double rat2 = Tkin / T2;
+  G4double rat1 = T1 / Tkin;  // Tkin/T1; //
   G4double yy(0.);
-  G4double kk = 0.6; // 0.55; //  0.22; // 
-  if( Tkin >= T2 )     yy = kk/pow( rat2, 0.2); // 0.4); //
-  else if( Tkin <= T1) yy = kk*pow( rat1, 0.9); // 0.75); //
-  else                 yy = kk * 1.; //  1.2; //  1.1; // 
+  G4double kk = 0.6;  // 0.55; //  0.22; //
+  if (Tkin >= T2)
+    yy = kk / pow(rat2, 0.2);  // 0.4); //
+  else if (Tkin <= T1)
+    yy = kk * pow(rat1, 0.9);  // 0.75); //
+  else
+    yy = kk * 1.;  //  1.2; //  1.1; //
 
   return yy;
 }
 
 ////////////////////////////////////////////////
 
-G4double G4LowPAIH2O::GetPrdNdx( G4double Tkin) 
+G4double G4LowPAIH2O::GetPrdNdx(G4double Tkin)
 {
   // std::size_t
-    G4int iBeta(0);
+  G4int iBeta(0);
   G4double be(0.), be2(0.), gg(1.), mp = proton_mass_c2;
-  G4double rr1(0.), rr2(0.),  dndx(0.);
-  gg  = 1. + Tkin/mp;
-  be2 = 1. - 1./gg/gg;
-  if(be2 < 0.) be2 = 0.;
+  G4double rr1(0.), rr2(0.), dndx(0.);
+  gg = 1. + Tkin / mp;
+  be2 = 1. - 1. / gg / gg;
+  if (be2 < 0.) be2 = 0.;
   be = sqrt(be2);
-  for( iBeta = 0; iBeta < fTotBin; ++iBeta )  
+  for (iBeta = 0; iBeta < fTotBin; ++iBeta)
   {
-    if( be <= fBetaVector->GetLowEdgeEnergy(iBeta) ) break;
+    if (be <= fBetaVector->GetLowEdgeEnergy(iBeta)) break;
   }
-  if (iBeta <= 0 )
+  if (iBeta <= 0)
   {
     dndx = (*(*fPrEnergyTable)(0))(0);
   }
-  else if (iBeta >= fTotBin-1)
+  else if (iBeta >= fTotBin - 1)
   {
-    dndx = (*(*fPrEnergyTable)(fTotBin-1))(0);
+    dndx = (*(*fPrEnergyTable)(fTotBin - 1))(0);
   }
   else
   {
-    rr1 = (*(*fPrEnergyTable)(iBeta-1))(0); 
+    rr1 = (*(*fPrEnergyTable)(iBeta - 1))(0);
     rr2 = (*(*fPrEnergyTable)(iBeta))(0);
-    dndx = rr1 +(rr2-rr1)*G4UniformRand();
+    dndx = rr1 + (rr2 - rr1) * G4UniformRand();
   }
   return dndx;
 }
 
 ////////////////////////////////////////////////
 
-G4double G4LowPAIH2O::GetPrMFP( G4double Tkin) 
+G4double G4LowPAIH2O::GetPrMFP(G4double Tkin)
 {
   G4double dndx = GetPrdNdx(Tkin);
   G4double mfp(0.);
-  if( dndx > 0.) mfp = 1./dndx;
-  else           mfp = DBL_MAX;
+  if (dndx > 0.)
+    mfp = 1. / dndx;
+  else
+    mfp = DBL_MAX;
   return mfp;
 }
 
 ////////////////////////////////////////////////
 
-G4double G4LowPAIH2O::GetEldNdx( G4double Tkin) 
+G4double G4LowPAIH2O::GetEldNdx(G4double Tkin)
 {
   // std::size_t
-    G4int iBeta(0);
+  G4int iBeta(0);
   G4double be(0.), be2(0.), gg(1.), me = electron_mass_c2;
-  G4double rr1(0.), rr2(0.),  dndx(0.);
-  gg  = 1. + Tkin/me;
-  be2 = 1. - 1./gg/gg;
-  if(be2 < 0.) be2 = 0.;
+  G4double rr1(0.), rr2(0.), dndx(0.);
+  gg = 1. + Tkin / me;
+  be2 = 1. - 1. / gg / gg;
+  if (be2 < 0.) be2 = 0.;
   be = sqrt(be2);
-  for( iBeta = 0; iBeta < fTotBin; ++iBeta )  
+  for (iBeta = 0; iBeta < fTotBin; ++iBeta)
   {
-    if( be <= fBetaVector->GetLowEdgeEnergy(iBeta) ) break;
+    if (be <= fBetaVector->GetLowEdgeEnergy(iBeta)) break;
   }
-  if (iBeta <= 0 )
+  if (iBeta <= 0)
   {
     dndx = (*(*fElEnergyTable)(0))(0);
   }
-  else if (iBeta >= fTotBin-1)
+  else if (iBeta >= fTotBin - 1)
   {
-    dndx = (*(*fElEnergyTable)(fTotBin-1))(0);
+    dndx = (*(*fElEnergyTable)(fTotBin - 1))(0);
   }
   else
   {
-    rr1  = (*(*fElEnergyTable)(iBeta-1))(0); 
-    rr2  = (*(*fElEnergyTable)(iBeta))(0);
-    dndx = rr1 + ( rr2 - rr1 )*G4UniformRand();
+    rr1 = (*(*fElEnergyTable)(iBeta - 1))(0);
+    rr2 = (*(*fElEnergyTable)(iBeta))(0);
+    dndx = rr1 + (rr2 - rr1) * G4UniformRand();
   }
   return dndx;
 }
 
 ////////////////////////////////////////////////
 
-G4double G4LowPAIH2O::GetElMFP( G4double Tkin) 
+G4double G4LowPAIH2O::GetElMFP(G4double Tkin)
 {
   G4double dndx = GetEldNdx(Tkin);
   G4double mfp(0.);
-  if( dndx > 0.) mfp = 1./dndx;
-  else           mfp = DBL_MAX;  
+  if (dndx > 0.)
+    mfp = 1. / dndx;
+  else
+    mfp = DBL_MAX;
   return mfp;
 }
 
@@ -511,32 +516,31 @@ void G4LowPAIH2O::BuildElEnergyTable()
   G4Integrator<G4LowPAIH2O, G4double (G4LowPAIH2O::*)(G4double)> integral;
   fElEnergyTable = new G4PhysicsTable();
 
-  for( iBeta = 0; iBeta < fTotBin; ++iBeta )  
+  for (iBeta = 0; iBeta < fTotBin; ++iBeta)
   {
     be = fBetaVector->GetLowEdgeEnergy(iBeta);
-    be2 = be*be;
+    be2 = be * be;
     SetBe2(be2);
-    gg = sqrt( 1./( 1. - be2 ) );
-    tp = ( gg - 1.)*me;
+    gg = sqrt(1. / (1. - be2));
+    tp = (gg - 1.) * me;
     fWmax = GetElectronTmax(tp);
-    if( fWmax <= fWmin ) fWmax = fWmin*1.01;
-    fTransferVector = new G4PhysicsLogVector( fWmin, fWmax, fBinTr );
+    if (fWmax <= fWmin) fWmax = fWmin * 1.01;
+    fTransferVector = new G4PhysicsLogVector(fWmin, fWmax, fBinTr);
 
     sum = 0.;
-    fTransferVector->PutValue( fBinTr-1, sum );
-    
-    for( iTransfer = fBinTr-2; iTransfer >= 0; --iTransfer)
+    fTransferVector->PutValue(fBinTr - 1, sum);
+
+    for (iTransfer = fBinTr - 2; iTransfer >= 0; --iTransfer)
     {
-      tmp = integral.Legendre10( this, &G4LowPAIH2O::ElPAId2Ndxdw,
-				 fTransferVector->GetLowEdgeEnergy(iTransfer),
-				 fTransferVector->GetLowEdgeEnergy(iTransfer+1)
-			       );
-      
-      sum += tmp; // *fCof/be2;
-      
-      fTransferVector->PutValue( iTransfer, sum );
+      tmp = integral.Legendre10(this, &G4LowPAIH2O::ElPAId2Ndxdw,
+                                fTransferVector->GetLowEdgeEnergy(iTransfer),
+                                fTransferVector->GetLowEdgeEnergy(iTransfer + 1));
+
+      sum += tmp;  // *fCof/be2;
+
+      fTransferVector->PutValue(iTransfer, sum);
     }
-    fElEnergyTable->insertAt( iBeta, fTransferVector );
+    fElEnergyTable->insertAt(iBeta, fTransferVector);
   }
   return;
 }
@@ -545,223 +549,225 @@ void G4LowPAIH2O::BuildElEnergyTable()
 //
 // return d2Ndxdw  (?) collision electron limit
 
-G4double G4LowPAIH2O::ElPAId2Ndxdw( G4double omega )
+G4double G4LowPAIH2O::ElPAId2Ndxdw(G4double omega)
 {
-  G4double be2  = GetBe2();
-  omega *= 1.7; // tune from p to e-
-  
-  G4double elf  = GetSumELF(omega);
+  G4double be2 = GetBe2();
+  omega *= 1.7;  // tune from p to e-
+
+  G4double elf = GetSumELF(omega);
   G4double ruth = GetSumRuth(omega);
-  G4double me   = electron_mass_c2;
-  
-  G4double d2Ndxdw = elf; // 0.; //
+  G4double me = electron_mass_c2;
 
-  d2Ndxdw *= log( 2*me*be2/omega );
-  
+  G4double d2Ndxdw = elf;  // 0.; //
+
+  d2Ndxdw *= log(2 * me * be2 / omega);
+
   d2Ndxdw += ruth;
-  
-  d2Ndxdw *= fCof/be2;
 
-  d2Ndxdw *= 1.3; // norm  to max exp
-  
+  d2Ndxdw *= fCof / be2;
+
+  d2Ndxdw *= 1.3;  // norm  to max exp
+
   return d2Ndxdw;
 }
 
 ////////////////////////////////////////////////
 
-G4double G4LowPAIH2O::GetElTransfer( G4double Tkin) 
+G4double G4LowPAIH2O::GetElTransfer(G4double Tkin)
 {
   // std::size_t
   G4int iBeta, iTransfer;
   G4double be(0.), be2(0.), gg(1.), me = electron_mass_c2;
   G4double rr1(0.), rr2(0.), tr1(0.), tr2(0.), transfer(0.);
   G4double mean1(0.), mean2(0.);
-  gg  = 1. + Tkin/me;
-  be2 = 1. - 1./gg/gg;
-  if( be2 < 0.) be2 = 0.;
+  gg = 1. + Tkin / me;
+  be2 = 1. - 1. / gg / gg;
+  if (be2 < 0.) be2 = 0.;
   be = sqrt(be2);
-  
-  for( iBeta = 0; iBeta < fTotBin; ++iBeta )  
-  {
-    if( be <= fBetaVector->GetLowEdgeEnergy(iBeta) ) break;
-  }
-  if (iBeta == 0 || iBeta == fTotBin-1)
-  {
-    rr1 = G4UniformRand()*(*(*fElEnergyTable)(iBeta))(0);
 
-    for( iTransfer = fBinTr-2; iTransfer >= 0; --iTransfer)
+  for (iBeta = 0; iBeta < fTotBin; ++iBeta)
+  {
+    if (be <= fBetaVector->GetLowEdgeEnergy(iBeta)) break;
+  }
+  if (iBeta == 0 || iBeta == fTotBin - 1)
+  {
+    rr1 = G4UniformRand() * (*(*fElEnergyTable)(iBeta))(0);
+
+    for (iTransfer = fBinTr - 2; iTransfer >= 0; --iTransfer)
     {
-      if( (*(*fElEnergyTable)(iBeta))(iTransfer) >= rr1 ) break;
+      if ((*(*fElEnergyTable)(iBeta))(iTransfer) >= rr1) break;
     }
-    if( iTransfer == 0 || iTransfer == fBinTr-2 )
+    if (iTransfer == 0 || iTransfer == fBinTr - 2)
     {
       transfer = (*fElEnergyTable)(iBeta)->GetLowEdgeEnergy(iTransfer);
     }
     else
     {
-      tr1 = (*fElEnergyTable)(iBeta)->GetLowEdgeEnergy(iTransfer-1); 
+      tr1 = (*fElEnergyTable)(iBeta)->GetLowEdgeEnergy(iTransfer - 1);
       tr2 = (*fElEnergyTable)(iBeta)->GetLowEdgeEnergy(iTransfer);
-      transfer = tr1 + (tr2-tr1)*G4UniformRand();
+      transfer = tr1 + (tr2 - tr1) * G4UniformRand();
     }
   }
   else
   {
-    rr1 = G4UniformRand()*(*(*fElEnergyTable)(iBeta-1))(0);
+    rr1 = G4UniformRand() * (*(*fElEnergyTable)(iBeta - 1))(0);
 
-    for( iTransfer = fBinTr-2; iTransfer >= 0; --iTransfer)
+    for (iTransfer = fBinTr - 2; iTransfer >= 0; --iTransfer)
     {
-      if( (*(*fElEnergyTable)(iBeta-1))(iTransfer) >= rr1 ) break;
+      if ((*(*fElEnergyTable)(iBeta - 1))(iTransfer) >= rr1) break;
     }
-    if( iTransfer == 0 || iTransfer == fBinTr-2 )
+    if (iTransfer == 0 || iTransfer == fBinTr - 2)
     {
-      transfer = (*fElEnergyTable)(iBeta-1)->GetLowEdgeEnergy(iTransfer);
+      transfer = (*fElEnergyTable)(iBeta - 1)->GetLowEdgeEnergy(iTransfer);
     }
     else
     {
-      tr1 = (*fElEnergyTable)(iBeta-1)->GetLowEdgeEnergy(iTransfer-1); 
-      tr2 = (*fElEnergyTable)(iBeta-1)->GetLowEdgeEnergy(iTransfer);
-      mean1 = tr1 + (tr2-tr1)*G4UniformRand();
-    }    
-    rr2 = G4UniformRand()*(*(*fElEnergyTable)(iBeta))(0);
-
-    for( iTransfer = fBinTr-2; iTransfer >= 0; --iTransfer)
-    {
-      if( (*(*fElEnergyTable)(iBeta))(iTransfer) >= rr2 ) break;
+      tr1 = (*fElEnergyTable)(iBeta - 1)->GetLowEdgeEnergy(iTransfer - 1);
+      tr2 = (*fElEnergyTable)(iBeta - 1)->GetLowEdgeEnergy(iTransfer);
+      mean1 = tr1 + (tr2 - tr1) * G4UniformRand();
     }
-    if( iTransfer == 0 || iTransfer == fBinTr-2 )
+    rr2 = G4UniformRand() * (*(*fElEnergyTable)(iBeta))(0);
+
+    for (iTransfer = fBinTr - 2; iTransfer >= 0; --iTransfer)
     {
-      transfer = (*fElEnergyTable)(iBeta-1)->GetLowEdgeEnergy(iTransfer);
+      if ((*(*fElEnergyTable)(iBeta))(iTransfer) >= rr2) break;
+    }
+    if (iTransfer == 0 || iTransfer == fBinTr - 2)
+    {
+      transfer = (*fElEnergyTable)(iBeta - 1)->GetLowEdgeEnergy(iTransfer);
     }
     else
     {
-      tr1 = (*fElEnergyTable)(iBeta)->GetLowEdgeEnergy(iTransfer-1); 
+      tr1 = (*fElEnergyTable)(iBeta)->GetLowEdgeEnergy(iTransfer - 1);
       tr2 = (*fElEnergyTable)(iBeta)->GetLowEdgeEnergy(iTransfer);
-      mean2 = tr1 + (tr2-tr1)*G4UniformRand();
+      mean2 = tr1 + (tr2 - tr1) * G4UniformRand();
     }
-    transfer = mean1 +(mean2-mean1)*G4UniformRand();
+    transfer = mean1 + (mean2 - mean1) * G4UniformRand();
   }
-  transfer *= CorrectElTransfer( Tkin );
-  if( transfer < 0. ) return 0.;
-  // G4cout<<transfer/eV<<" ";    
+  transfer *= CorrectElTransfer(Tkin);
+  if (transfer < 0.) return 0.;
+  // G4cout<<transfer/eV<<" ";
   return transfer;
 }
 
 //////////////////////////////////////////////////
- 
-G4double G4LowPAIH2O::PrPAId2Ndxdw( G4double omega )
+
+G4double G4LowPAIH2O::PrPAId2Ndxdw(G4double omega)
 {
-  G4double be2  = GetBe2();
-  G4double elf  = GetSumELF(omega);
+  G4double be2 = GetBe2();
+  G4double elf = GetSumELF(omega);
   G4double ruth = GetSumRuth(omega);
-  G4double me   = electron_mass_c2;  
+  G4double me = electron_mass_c2;
   G4double d2Ndxdw = elf;
 
-  d2Ndxdw *= log( 2*me*be2/omega );
-  
+  d2Ndxdw *= log(2 * me * be2 / omega);
+
   d2Ndxdw += ruth;
-  
+
   return d2Ndxdw;
 }
 
 ///////////////////////////////////////////////
 
-void G4LowPAIH2O::SampleSecondaries( std::vector<G4DynamicParticle*>* vdp,
-                                     const G4MaterialCutsCouple*, // matCC,
-                                     const G4DynamicParticle* dp,
-                                     G4double, // tmin,
-                                     G4double) // maxEnergy   )
+void G4LowPAIH2O::SampleSecondaries(std::vector<G4DynamicParticle*>* vdp,
+                                    const G4MaterialCutsCouple*,  // matCC,
+                                    const G4DynamicParticle* dp,
+                                    G4double,  // tmin,
+                                    G4double)  // maxEnergy   )
 {
   G4double kineticEnergy = dp->GetKineticEnergy();
   const G4ParticleDefinition* pd = dp->GetDefinition();
 
   G4double deltaTkin(0.);
-  if( pd == theProton )        deltaTkin = GetPrTransfer(kineticEnergy); 
-  else if( pd == theElectron ) deltaTkin = GetElTransfer(kineticEnergy);
+  if (pd == theProton)
+    deltaTkin = GetPrTransfer(kineticEnergy);
+  else if (pd == theElectron)
+    deltaTkin = GetElTransfer(kineticEnergy);
   else
   {
-    G4cout<<" G4LowPAIH2O::SampleSecondaries is not applicable for "
-	     <<pd->GetParticleName()<<G4endl;
+    G4cout << " G4LowPAIH2O::SampleSecondaries is not applicable for " << pd->GetParticleName()
+           << G4endl;
     return;
   }
-  G4ThreeVector direction= dp->GetMomentumDirection();
+  G4ThreeVector direction = dp->GetMomentumDirection();
   fMass = pd->GetPDGMass();
-  G4double totalMomentum = sqrt( kineticEnergy*( kineticEnergy + 2.*fMass ) );
+  G4double totalMomentum = sqrt(kineticEnergy * (kineticEnergy + 2. * fMass));
 
-  if( !(deltaTkin <= 0.) && !(deltaTkin > 0))
+  if (!(deltaTkin <= 0.) && !(deltaTkin > 0))
   {
-    G4cout<<"G4LowPAIH2O::SampleSecondaries; deltaTkin = "<<deltaTkin/keV
-          <<" keV "<< " for Tkin(MeV)= " << kineticEnergy << G4endl;
+    G4cout << "G4LowPAIH2O::SampleSecondaries; deltaTkin = " << deltaTkin / keV << " keV "
+           << " for Tkin(MeV)= " << kineticEnergy << G4endl;
     return;
   }
-  if( deltaTkin < 0.)
+  if (deltaTkin < 0.)
   {
-    G4cout<<deltaTkin/eV<<"-"<<kineticEnergy/MeV<<", ";
+    G4cout << deltaTkin / eV << "-" << kineticEnergy / MeV << ", ";
     return;
-  }  
-  if( kineticEnergy > deltaTkin) kineticEnergy -= deltaTkin;
+  }
+  if (kineticEnergy > deltaTkin)
+    kineticEnergy -= deltaTkin;
   else
   {
     deltaTkin = kineticEnergy;
     kineticEnergy = 0.;
   }
-  G4double momD = sqrt( deltaTkin*( deltaTkin + 2.*electron_mass_c2 ) );
-  G4ThreeVector dirD = G4RandomDirection(); // low e- cloud
-  
-  G4ThreeVector dir = totalMomentum*direction - dirD*momD;
+  G4double momD = sqrt(deltaTkin * (deltaTkin + 2. * electron_mass_c2));
+  G4ThreeVector dirD = G4RandomDirection();  // low e- cloud
+
+  G4ThreeVector dir = totalMomentum * direction - dirD * momD;
   direction = dir.unit();
   fParticleChange->SetProposedKineticEnergy(kineticEnergy);
   fParticleChange->SetProposedMomentumDirection(direction);
 
-  if( deltaTkin < eV * 1.) // 10.) //
+  if (deltaTkin < eV * 1.)  // 10.) //
   {
     fParticleChange->ProposeLocalEnergyDeposit(deltaTkin);
   }
   else
   {
-    auto deltaRay = new G4DynamicParticle( theElectron, dirD, deltaTkin ); 
-    vdp->push_back( deltaRay );
+    auto deltaRay = new G4DynamicParticle(theElectron, dirD, deltaTkin);
+    vdp->push_back(deltaRay);
   }
   return;
 }
 
 /////////////////////////////////////////
 
-G4double G4LowPAIH2O::SampleFluctuations(const G4MaterialCutsCouple*,
-				      const G4DynamicParticle* dp,
-					 const G4double, // tcut,
-					 const G4double, // tmax,
-                                      const G4double length,
-					 const G4double) // meanLoss )
+G4double G4LowPAIH2O::SampleFluctuations(const G4MaterialCutsCouple*, const G4DynamicParticle* dp,
+                                         const G4double,  // tcut,
+                                         const G4double,  // tmax,
+                                         const G4double length,
+                                         const G4double)  // meanLoss )
 {
   G4double eloss(0.), mfp(0.), sumW(0.), sumL(0.), transfer(0.);
   G4double Tkin = dp->GetKineticEnergy();
   const G4ParticleDefinition* pd = dp->GetDefinition();
-  
-  if( pd != theProton &&  pd != theElectron)   
+
+  if (pd != theProton && pd != theElectron)
   {
     eloss = 0.;
     return eloss;
   }
-  
-  if( pd == theProton )
+
+  if (pd == theProton)
   {
     do
     {
-      mfp      = GetPrMFP(Tkin);
-      sumL    += RandExponential::shoot(mfp);
+      mfp = GetPrMFP(Tkin);
+      sumL += RandExponential::shoot(mfp);
       transfer = GetPrTransfer(Tkin);
-      sumW    += transfer;
+      sumW += transfer;
       // nn++;
-      if( Tkin >= transfer ) Tkin    -= transfer;
+      if (Tkin >= transfer)
+        Tkin -= transfer;
       else
       {
-	transfer = Tkin;
-	Tkin     = 0.;
+        transfer = Tkin;
+        Tkin = 0.;
       }
-    }
-    while( sumL <= length && Tkin >= keV * 0.01 ); //
+    } while (sumL <= length && Tkin >= keV * 0.01);  //
   }
-  else if( pd == theElectron ) // e-
+  else if (pd == theElectron)  // e-
   {
     do
     {
@@ -770,54 +776,57 @@ G4double G4LowPAIH2O::SampleFluctuations(const G4MaterialCutsCouple*,
       transfer = GetElTransfer(Tkin);
       sumW += transfer;
       Tkin -= transfer;
-    }
-    while( sumL <= length && Tkin >= 0. );
+    } while (sumL <= length && Tkin >= 0.);
   }
   eloss = sumW;
-  if(eloss < 0.) { eloss = 0.; }
-  fParticleChange->SetProposedKineticEnergy( Tkin ); 
-  fParticleChange->ProposeLocalEnergyDeposit( eloss );
+  if (eloss < 0.)
+  {
+    eloss = 0.;
+  }
+  fParticleChange->SetProposedKineticEnergy(Tkin);
+  fParticleChange->ProposeLocalEnergyDeposit(eloss);
   // G4cout<<Tkin/MeV<<"/"<<eloss/eV<<"/"<<nn<<", ";
-  
+
   return eloss;
 }
 
 /////////////////////////////////////////////
 
-void G4LowPAIH2O::CorrectionsAlongStep(const G4Material*,
-				       const G4ParticleDefinition* pd,
-				       const G4double Tkin,
-				       const G4double,
-				       const G4double& length,
-				       G4double& eloss)
+void G4LowPAIH2O::CorrectionsAlongStep(const G4Material*, const G4ParticleDefinition* pd,
+                                       const G4double Tkin, const G4double, const G4double& length,
+                                       G4double& eloss)
 {
   G4double mfp(0.), sumW(0.);
-  
-  if     ( pd == theProton )    mfp = GetPrMFP(Tkin);
-  else if( pd == theElectron )  mfp = GetElMFP(Tkin);
+
+  if (pd == theProton)
+    mfp = GetPrMFP(Tkin);
+  else if (pd == theElectron)
+    mfp = GetElMFP(Tkin);
   else
   {
     eloss = 0.;
     return;
   }
-  G4int NN = static_cast<G4int>(RandPoisson::shoot(length/mfp)); 
-  
-  if( pd == theProton )
+  G4int NN = static_cast<G4int>(RandPoisson::shoot(length / mfp));
+
+  if (pd == theProton)
   {
-    for (G4int nn = 0; nn < NN; ++nn )
+    for (G4int nn = 0; nn < NN; ++nn)
     {
-      sumW += GetPrTransfer( Tkin );
+      sumW += GetPrTransfer(Tkin);
     }
   }
-  else // e-
+  else  // e-
   {
-    for (G4int nn = 0; nn < NN; ++nn )
+    for (G4int nn = 0; nn < NN; ++nn)
     {
-      sumW += GetElTransfer( Tkin );
+      sumW += GetElTransfer(Tkin);
     }
   }
-  if( sumW < Tkin ) eloss = sumW;
-  else              eloss = Tkin;
+  if (sumW < Tkin)
+    eloss = sumW;
+  else
+    eloss = Tkin;
   // G4cout<<eloss/eV<<".. ";
   fParticleChange->ProposeLocalEnergyDeposit(eloss);
   fParticleChange->SetProposedKineticEnergy(Tkin);
@@ -827,14 +836,14 @@ void G4LowPAIH2O::CorrectionsAlongStep(const G4Material*,
 /////////////////////////////////////////////
 //
 // Transition from secondary e- to radicals
- 
-G4double G4LowPAIH2O::GetElectronTmax( G4double tt )
+
+G4double G4LowPAIH2O::GetElectronTmax(G4double tt)
 {
   fTkin = tt;
-  return tt*0.5;
+  return tt * 0.5;
 
-  // algorithm below is doing the same 
-  /*  
+  // algorithm below is doing the same
+  /*
   G4double tmax(0.), cof(1.);
   G4double mt = eV * 18.; // 32.; // 30.; // 50.; //
   G4double dt = eV * 10.; // 5.; // 20.; // 25.; //
@@ -849,7 +858,7 @@ G4double G4LowPAIH2O::GetElectronTmax( G4double tt )
   else         tmax = tt*( lim2 - dlim*exp(+xx) );
 
   dt = mt *0.5; // eV * 38.; // 27.; //
-  
+
   if(tt > mt+dt) tmax = tt*0.5;
   else if (tt < mt-dt) tmax = tt;
   else
@@ -860,28 +869,27 @@ G4double G4LowPAIH2O::GetElectronTmax( G4double tt )
   tmax = tt * 0.5; //
 
   if( tmax > tt ) tmax = tt;
-  
+
   return tmax;
   */
 }
 
 /////////////////////////////////////////////////////
 
-G4double G4LowPAIH2O::GetProtonTmax( G4double Tkin )
+G4double G4LowPAIH2O::GetProtonTmax(G4double Tkin)
 {
   G4double mp = proton_mass_c2;
-  G4double Et = eV * 13.6; // 
-  G4double tau      = Tkin/mp;
-  G4double gamma    = tau + 1.0;
-  G4double bg2      = tau*( tau + 2.0 );
+  G4double Et = eV * 13.6;  //
+  G4double tau = Tkin / mp;
+  G4double gamma = tau + 1.0;
+  G4double bg2 = tau * (tau + 2.0);
   // G4double beta2    = bg2/(gamma*gamma);
   G4double me = electron_mass_c2;
-  G4double rateMass = me/mp;
+  G4double rateMass = me / mp;
 
-  if( Tkin < Et ) rateMass = 1.;
+  if (Tkin < Et) rateMass = 1.;
 
-  G4double Tmax     = 2.0*me*bg2
-                   /( 1. + 2.*gamma*rateMass + rateMass*rateMass );
+  G4double Tmax = 2.0 * me * bg2 / (1. + 2. * gamma * rateMass + rateMass * rateMass);
 
   return Tmax;
 }

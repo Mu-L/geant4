@@ -28,33 +28,36 @@
 
 #include "G4OpenGLFontBaseStore.hh"
 
-std::map<G4VViewer*,std::vector<G4OpenGLFontBaseStore::FontInfo> >
-G4OpenGLFontBaseStore::fFontBaseMap;
+std::map<G4VViewer*, std::vector<G4OpenGLFontBaseStore::FontInfo>>
+  G4OpenGLFontBaseStore::fFontBaseMap;
 
-void G4OpenGLFontBaseStore::AddFontBase
-(G4VViewer* viewer, G4int fontBase,
- G4double size, const G4String& fontName,
- G4int width) {
+void G4OpenGLFontBaseStore::AddFontBase(G4VViewer* viewer, G4int fontBase, G4double size,
+                                        const G4String& fontName, G4int width)
+{
   fFontBaseMap[viewer].push_back(FontInfo(fontName, size, fontBase, width));
 }
 
-const G4OpenGLFontBaseStore::FontInfo&
-G4OpenGLFontBaseStore::GetFontInfo
-(G4VViewer* viewer, G4double size) {
-  std::map<G4VViewer*,std::vector<FontInfo> >::const_iterator i =
-    fFontBaseMap.find(viewer);
-  if (i != fFontBaseMap.end()) {
+const G4OpenGLFontBaseStore::FontInfo& G4OpenGLFontBaseStore::GetFontInfo(G4VViewer* viewer,
+                                                                          G4double size)
+{
+  std::map<G4VViewer*, std::vector<FontInfo>>::const_iterator i = fFontBaseMap.find(viewer);
+  if (i != fFontBaseMap.end())
+  {
     G4double sizeDiscrepancy = 9999.;
     std::vector<FontInfo>::const_iterator j, k;
-    for (j = i->second.begin(); j != i->second.end(); ++j) {
+    for (j = i->second.begin(); j != i->second.end(); ++j)
+    {
       G4double d = std::abs(size - j->fSize);
-      if (d < sizeDiscrepancy) {
-	sizeDiscrepancy = d;
-	k = j;
+      if (d < sizeDiscrepancy)
+      {
+        sizeDiscrepancy = d;
+        k = j;
       }
     }
     return *k;
-  } else {
+  }
+  else
+  {
     // No font found for requested viewer.
     static const FontInfo nullFontInfo;  // Default struct, fontBase = -1;
     return nullFontInfo;

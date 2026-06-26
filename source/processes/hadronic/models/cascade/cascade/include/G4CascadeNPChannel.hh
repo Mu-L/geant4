@@ -32,22 +32,21 @@
 #include "G4CascadeFunctions.hh"
 #include "G4PionNucSampler.hh"
 
-struct G4CascadeNPChannelData {
-  typedef G4CascadeData<30,1,9,22,38,53,69,78,86> data_t;
-  static const data_t data;
+struct G4CascadeNPChannelData
+{
+    typedef G4CascadeData<30, 1, 9, 22, 38, 53, 69, 78, 86> data_t;
+    static const data_t data;
 };
 
+class G4CascadeNPChannel : public G4CascadeFunctions<G4CascadeNPChannelData, G4PionNucSampler>
+{
+  public:
 
-class G4CascadeNPChannel
-  : public G4CascadeFunctions<G4CascadeNPChannelData,G4PionNucSampler> {
-public:
-  G4CascadeNPChannel()
-    : G4CascadeFunctions<G4CascadeNPChannelData,G4PionNucSampler>() {;}
-  virtual ~G4CascadeNPChannel() {;}
+    G4CascadeNPChannel() : G4CascadeFunctions<G4CascadeNPChannelData, G4PionNucSampler>() { ; }
+    virtual ~G4CascadeNPChannel() { ; }
 
-  // Will replace interpolation of 0-10 MeV bin on total and elastic
-  virtual G4double 
-  findCrossSection(G4double ke, const G4double (&xsec)[30]) const;
+    // Will replace interpolation of 0-10 MeV bin on total and elastic
+    virtual G4double findCrossSection(G4double ke, const G4double (&xsec)[30]) const;
 };
 
-#endif	/* G4_CASCADE_NP_CHANNEL_HH */
+#endif /* G4_CASCADE_NP_CHANNEL_HH */

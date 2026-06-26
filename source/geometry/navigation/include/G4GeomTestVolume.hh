@@ -32,10 +32,12 @@
 
 // Author: Gabriele Cosmo (CERN), 22 August 2013
 // --------------------------------------------------------------------
-#ifndef G4GeomTestVolume_hh
-#define G4GeomTestVolume_hh 1
+#ifndef G4GEOMTESTVOLUME_HH
+#define G4GEOMTESTVOLUME_HH
 
 #include "G4ThreeVector.hh"
+
+#include <vector>
 
 class G4VPhysicalVolume;
 class G4GeomTestLogger;
@@ -44,6 +46,7 @@ class G4GeomTestLogger;
  * @brief G4GeomTestVolume allows to check for inconsistencies in the
  * geometric boundaries of a physical volume and the boundaries of all
  * its immediate daughters.
+ * @ingroup geometry_navigation
  */
 
 class G4GeomTestVolume
@@ -53,10 +56,9 @@ class G4GeomTestVolume
     /**
      * Constructor and Destructor.
      */
-    G4GeomTestVolume( G4VPhysicalVolume *theTarget,
-                      G4double theTolerance = 0.0,    // mm
-                      G4int numberOfPoints = 10000,
-                      G4bool theVerbosity = true);
+    G4GeomTestVolume(G4VPhysicalVolume* theTarget,
+                     G4double theTolerance = 0.0,  // mm
+                     G4int numberOfPoints = 10000, G4bool theVerbosity = true);
     ~G4GeomTestVolume();
 
     /**
@@ -96,15 +98,17 @@ class G4GeomTestVolume
      *  @note Depending on the complexity of the geometry, this may require
      *  long computational time.
      */
-    void TestRecursiveOverlap( G4int sLevel=0, G4int depth=-1 );
+    void TestRecursiveOverlap(G4int sLevel = 0, G4int depth = -1);
 
   private:
 
-    G4VPhysicalVolume *target;        // Target volume
-    G4double tolerance;               // Error tolerance
-    G4int resolution;                 // Number of points to test
-    G4int maxErr = 1;                 // Maximum number of errors to report
-    G4bool verbosity;                 // Verbosity level for overlaps check
+    void CheckVolumes(const std::vector<G4VPhysicalVolume*>& volumes) const;
+
+    G4VPhysicalVolume* target;  // Target volume
+    G4double tolerance;  // Error tolerance
+    G4int resolution;  // Number of points to test
+    G4int maxErr = 1;  // Maximum number of errors to report
+    G4bool verbosity;  // Verbosity level for overlaps check
 };
 
 #endif

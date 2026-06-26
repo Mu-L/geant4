@@ -43,16 +43,19 @@
 // ###                        UNBOUNDPN                               ###
 // ######################################################################
 
-class G4UnboundPN : public G4VShortLivedParticle {
-private:
-  static G4UnboundPN* theInstance;
-  G4UnboundPN();
-  ~G4UnboundPN() { theInstance = 0; }
-  
-public:
-  static G4UnboundPN* Definition();
-  static G4UnboundPN* UnboundPNDefinition();
-  static G4UnboundPN* UnboundPN();
+class G4UnboundPN : public G4VShortLivedParticle
+{
+  private:
+
+    static G4UnboundPN* theInstance;
+    G4UnboundPN();
+    ~G4UnboundPN() { theInstance = 0; }
+
+  public:
+
+    static G4UnboundPN* Definition();
+    static G4UnboundPN* UnboundPNDefinition();
+    static G4UnboundPN* UnboundPN();
 };
 
-#endif	/* G4UNBOUNDPN_HH */
+#endif /* G4UNBOUNDPN_HH */

@@ -25,51 +25,52 @@
 //
 //
 //
-// 
+//
 // OpenGLImmediateQt graphics system factory.
 
-#include "G4VisFeaturesOfOpenGL.hh"
-#include "G4VSceneHandler.hh"
+#include "G4OpenGLImmediateQt.hh"
+
+#include "G4OpenGLImmediateQtViewer.hh"
+#include "G4OpenGLImmediateSceneHandler.hh"
 #include "G4OpenGLSceneHandler.hh"
 #include "G4OpenGLViewer.hh"
-#include "G4OpenGLImmediateQt.hh"
-#include "G4OpenGLImmediateQtViewer.hh"
 #include "G4OpenGLViewerMessenger.hh"
-#include "G4OpenGLImmediateSceneHandler.hh"
+#include "G4VSceneHandler.hh"
+#include "G4VisFeaturesOfOpenGL.hh"
 
-G4OpenGLImmediateQt::G4OpenGLImmediateQt ():
-  G4OpenGLQt ("OpenGLImmediateQt",
-              "OGLIQt",
-              G4VisFeaturesOfOpenGLIQt (),
-              G4VGraphicsSystem::threeD)
+G4OpenGLImmediateQt::G4OpenGLImmediateQt()
+  : G4OpenGLQt("OpenGLImmediateQt", "OGLIQt", G4VisFeaturesOfOpenGLIQt(), G4VGraphicsSystem::threeD)
 {
   G4OpenGLViewerMessenger::GetInstance();
 }
 
-G4VSceneHandler* G4OpenGLImmediateQt::CreateSceneHandler
-(const G4String& name) {
-  G4VSceneHandler* pScene = new G4OpenGLImmediateSceneHandler (*this, name);
-  return    pScene;
+G4VSceneHandler* G4OpenGLImmediateQt::CreateSceneHandler(const G4String& name)
+{
+  G4VSceneHandler* pScene = new G4OpenGLImmediateSceneHandler(*this, name);
+  return pScene;
 }
 
-G4VViewer* G4OpenGLImmediateQt::CreateViewer
-(G4VSceneHandler& scene, const G4String& name) {
+G4VViewer* G4OpenGLImmediateQt::CreateViewer(G4VSceneHandler& scene, const G4String& name)
+{
   G4VViewer* pView = 0;
-  pView = new G4OpenGLImmediateQtViewer
-    ((G4OpenGLImmediateSceneHandler&) scene, name);
-  if (pView) {
-    if (pView -> GetViewId () < 0) {
+  pView = new G4OpenGLImmediateQtViewer((G4OpenGLImmediateSceneHandler&)scene, name);
+  if (pView)
+  {
+    if (pView->GetViewId() < 0)
+    {
       G4cerr << "G4OpenGLImmediateQt::CreateViewer: error flagged by negative"
-	" view id in G4OpenGLImmediateQtViewer creation."
-	"\n Destroying view and returning null pointer."
-	   << G4endl;
+                " view id in G4OpenGLImmediateQtViewer creation."
+                "\n Destroying view and returning null pointer."
+             << G4endl;
       delete pView;
       pView = 0;
     }
   }
-  else {
+  else
+  {
     G4cerr << "G4OpenGLImmediateQt::CreateViewer: null pointer on"
-      " new G4OpenGLImmediateQtViewer." << G4endl;
+              " new G4OpenGLImmediateQtViewer."
+           << G4endl;
   }
   return pView;
 }

@@ -29,12 +29,13 @@
  *  Created on: Jul 23, 2019
  *      Author: W. G. Shin
  *              J. Ramos-Mendez and B. Faddegon
-*/
+ */
 
 #include "G4Oxygen.hh"
+
+#include "G4ParticleTable.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4ParticleTable.hh"
 
 // ######################################################################
 // ###                         Oxygen                               ###
@@ -48,7 +49,7 @@ G4Oxygen* G4Oxygen::Definition()
   // search in particle table]
   G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
   G4ParticleDefinition* anInstance = pTable->FindParticle(name);
-//    G4ParticleDefinition* anInstance = 0;
+  //    G4ParticleDefinition* anInstance = 0;
   if (anInstance == nullptr)
   {
     const G4String formatedName = "O";
@@ -68,10 +69,11 @@ G4Oxygen* G4Oxygen::Definition()
     //    );
 
     G4double mass = 15.99773 * g / Avogadro * c_squared;
-    anInstance = new G4MoleculeDefinition(name, mass, 2.0e-9 * (m * m / s), 0, 0,
-                                          2.0 * angstrom, 1);
-    ((G4MoleculeDefinition*) anInstance)->SetLevelOccupation(0); // Set 2 electrons on 1 single occupancy
-    ((G4MoleculeDefinition*) anInstance)->SetFormatedName(formatedName);
+    anInstance =
+      new G4MoleculeDefinition(name, mass, 2.0e-9 * (m * m / s), 0, 0, 2.0 * angstrom, 1);
+    ((G4MoleculeDefinition*)anInstance)
+      ->SetLevelOccupation(0);  // Set 2 electrons on 1 single occupancy
+    ((G4MoleculeDefinition*)anInstance)->SetFormatedName(formatedName);
   }
   theInstance = static_cast<G4Oxygen*>(anInstance);
   return theInstance;

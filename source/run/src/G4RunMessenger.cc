@@ -31,9 +31,9 @@
 #include "G4RunMessenger.hh"
 
 #include "G4MTRunManager.hh"
-#include "G4SubEvtRunManager.hh"
 #include "G4ProductionCutsTable.hh"
 #include "G4RunManager.hh"
+#include "G4SubEvtRunManager.hh"
 #include "G4Tokenizer.hh"
 #include "G4UIcmdWithABool.hh"
 #include "G4UIcmdWithAString.hh"
@@ -373,13 +373,14 @@ G4RunMessenger::G4RunMessenger(G4RunManager* runMgr) : runManager(runMgr)
   procUICmds->SetGuidance("This commands is meaningful only in MT mode.");
   procUICmds->AvailableForStates(G4State_PreInit, G4State_Idle, G4State_GeomClosed);
 
-  trajMergeCmd = new G4UIcmdWithABool("/run/trajectoriesToBeMerged",this);
+  trajMergeCmd = new G4UIcmdWithABool("/run/trajectoriesToBeMerged", this);
   trajMergeCmd->SetGuidance("Merge trajectories created in sub-event parallel mode.");
   trajMergeCmd->SetGuidance("In sub-event parallel mode, trajectories created in worker ");
   trajMergeCmd->SetGuidance("threads are not merged to the event in the master thread by default ");
   trajMergeCmd->SetGuidance("due to the performance overhead caused by copying them.");
   trajMergeCmd->SetGuidance("This command enables the merging.");
-  trajMergeCmd->SetGuidance("/tracking/storeTrajectory command must be set to create trajectories.");
+  trajMergeCmd->SetGuidance(
+    "/tracking/storeTrajectory command must be set to create trajectories.");
   trajMergeCmd->SetGuidance("This command is valid only for sub-event parallel mode.");
   trajMergeCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
   trajMergeCmd->SetParameterName("flag", true);
@@ -431,74 +432,93 @@ G4RunMessenger::~G4RunMessenger()
 // --------------------------------------------------------------------
 void G4RunMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
-  if (command == beamOnCmd) {
+  if (command == beamOnCmd)
+  {
     G4int nev;
     G4int nst;
     const auto nv = (const char*)newValue;
     std::istringstream is(nv);
     is >> nev >> macroFileName >> nst;
-    if (macroFileName == "***NULL***") {
+    if (macroFileName == "***NULL***")
+    {
       runManager->BeamOn(nev);
     }
-    else {
+    else
+    {
       runManager->BeamOn(nev, macroFileName, nst);
     }
   }
-  else if (command == verboseCmd) {
+  else if (command == verboseCmd)
+  {
     runManager->SetVerboseLevel(verboseCmd->GetNewIntValue(newValue));
   }
-  else if (command == printProgCmd) {
+  else if (command == printProgCmd)
+  {
     runManager->SetPrintProgress(printProgCmd->GetNewIntValue(newValue));
   }
-  else if (command == nThreadsCmd) {
+  else if (command == nThreadsCmd)
+  {
     G4RunManager::RMType rmType = runManager->GetRunManagerType();
-    if (rmType == G4RunManager::masterRM) {
+    if (rmType == G4RunManager::masterRM)
+    {
       static_cast<G4MTRunManager*>(runManager)
         ->SetNumberOfThreads(nThreadsCmd->GetNewIntValue(newValue));
     }
-    else if (rmType == G4RunManager::sequentialRM) {
+    else if (rmType == G4RunManager::sequentialRM)
+    {
       G4cout << "*** /run/numberOfThreads command is issued in sequential mode."
              << "\nCommand is ignored." << G4endl;
     }
-    else {
+    else
+    {
       G4Exception("G4RunMessenger::ApplyNewCommand", "Run0901", FatalException,
                   "/run/numberOfThreads command is issued to local thread.");
     }
   }
-  else if (command == maxThreadsCmd) {
+  else if (command == maxThreadsCmd)
+  {
     G4RunManager::RMType rmType = runManager->GetRunManagerType();
-    if (rmType == G4RunManager::masterRM) {
+    if (rmType == G4RunManager::masterRM)
+    {
       static_cast<G4MTRunManager*>(runManager)
         ->SetNumberOfThreads(G4Threading::G4GetNumberOfCores());
     }
-    else if (rmType == G4RunManager::sequentialRM) {
+    else if (rmType == G4RunManager::sequentialRM)
+    {
       G4cout << "*** /run/useMaximumLogicalCores command is issued in "
                 "sequential mode."
              << "\nCommand is ignored." << G4endl;
     }
-    else {
+    else
+    {
       G4Exception("G4RunMessenger::ApplyNewCommand", "Run0901", FatalException,
                   "/run/useMaximumLogicalCores command is issued to local thread.");
     }
   }
-  else if (command == pinAffinityCmd) {
+  else if (command == pinAffinityCmd)
+  {
     G4RunManager::RMType rmType = runManager->GetRunManagerType();
-    if (rmType == G4RunManager::masterRM) {
+    if (rmType == G4RunManager::masterRM)
+    {
       static_cast<G4MTRunManager*>(runManager)
         ->SetPinAffinity(pinAffinityCmd->GetNewIntValue(newValue));
     }
-    else if (rmType == G4RunManager::sequentialRM) {
+    else if (rmType == G4RunManager::sequentialRM)
+    {
       G4cout << "*** /run/pinAffinity command is issued in sequential mode."
              << "\nCommand is ignored." << G4endl;
     }
-    else {
+    else
+    {
       G4Exception("G4RunMessenger::ApplyNewCommand", "Run0901", FatalException,
                   "/run/pinAffinity command is issued to local thread.");
     }
   }
-  else if (command == evModCmd) {
+  else if (command == evModCmd)
+  {
     G4RunManager::RMType rmType = runManager->GetRunManagerType();
-    if (rmType == G4RunManager::masterRM) {
+    if (rmType == G4RunManager::masterRM)
+    {
       G4int nevMod = 0;
       G4int sOnce = 0;
       const auto nv = (const char*)newValue;
@@ -507,143 +527,184 @@ void G4RunMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
       static_cast<G4MTRunManager*>(runManager)->SetEventModulo(nevMod);
       G4MTRunManager::SetSeedOncePerCommunication(sOnce);
     }
-    else if (rmType == G4RunManager::sequentialRM) {
+    else if (rmType == G4RunManager::sequentialRM)
+    {
       G4cout << "*** /run/eventModulo command is issued in sequential mode."
              << "\nCommand is ignored." << G4endl;
     }
-    else if (rmType == G4RunManager::subEventMasterRM) {
+    else if (rmType == G4RunManager::subEventMasterRM)
+    {
       G4cout << "*** /run/eventModulo command is issued in sub-event parallel mode."
              << "\nCommand is ignored." << G4endl;
     }
-    else {
+    else
+    {
       G4Exception("G4RunMessenger::ApplyNewCommand", "Run0902", FatalException,
                   "/run/eventModulo command is issued to worker thread.");
     }
   }
-  else if (command == dumpRegCmd) {
-    if (newValue == "**ALL**") {
+  else if (command == dumpRegCmd)
+  {
+    if (newValue == "**ALL**")
+    {
       runManager->DumpRegion();
     }
-    else {
+    else
+    {
       runManager->DumpRegion(newValue);
     }
   }
-  else if (command == dumpCoupleCmd) {
+  else if (command == dumpCoupleCmd)
+  {
     G4ProductionCutsTable::GetProductionCutsTable()->DumpCouples();
   }
-  else if (command == optCmd) {
+  else if (command == optCmd)
+  {
     runManager->SetGeometryToBeOptimized(optCmd->GetNewBoolValue(newValue));
   }
-  else if (command == brkBoECmd) {
+  else if (command == brkBoECmd)
+  {
     G4UImanager::GetUIpointer()->SetPauseAtBeginOfEvent(brkBoECmd->GetNewBoolValue(newValue));
   }
-  else if (command == brkEoECmd) {
+  else if (command == brkEoECmd)
+  {
     G4UImanager::GetUIpointer()->SetPauseAtEndOfEvent(brkEoECmd->GetNewBoolValue(newValue));
   }
-  else if (command == abortCmd) {
+  else if (command == abortCmd)
+  {
     runManager->AbortRun(abortCmd->GetNewBoolValue(newValue));
   }
-  else if (command == abortEventCmd) {
+  else if (command == abortEventCmd)
+  {
     runManager->AbortEvent();
   }
-  else if (command == initCmd) {
+  else if (command == initCmd)
+  {
     runManager->Initialize();
   }
-  else if (command == geomCmd) {
+  else if (command == geomCmd)
+  {
     runManager->GeometryHasBeenModified(false);
   }
-  else if (command == geomRebCmd) {
+  else if (command == geomRebCmd)
+  {
     runManager->ReinitializeGeometry(geomRebCmd->GetNewBoolValue(newValue), false);
   }
-  else if (command == undertakeOptCmd) {
+  else if (command == undertakeOptCmd)
+  {
     runManager->GeometryOptimisation();
   }
-  else if (command == physCmd) {
+  else if (command == physCmd)
+  {
     runManager->PhysicsHasBeenModified();
   }
-  else if (command == seedCmd) {
+  else if (command == seedCmd)
+  {
     G4Tokenizer next(newValue);
     G4int idx = 0;
     G4long seeds[100];
     G4String vl;
-    while (!(vl = next()).empty()) {
+    while (!(vl = next()).empty())
+    {
       seeds[idx] = StoL(vl);
       ++idx;
     }
-    if (idx < 2) {
+    if (idx < 2)
+    {
       G4cerr << "/random/setSeeds should have at least two values. "
                 "Command ignored."
              << G4endl;
     }
-    else {
+    else
+    {
       seeds[idx] = 0;
       G4Random::setTheSeeds(seeds);
     }
   }
-  else if (command == randDirCmd) {
+  else if (command == randDirCmd)
+  {
     runManager->SetRandomNumberStoreDir(newValue);
   }
-  else if (command == savingFlagCmd) {
+  else if (command == savingFlagCmd)
+  {
     runManager->SetRandomNumberStore(savingFlagCmd->GetNewBoolValue(newValue));
   }
-  else if (command == saveThisRunCmd) {
+  else if (command == saveThisRunCmd)
+  {
     runManager->rndmSaveThisRun();
   }
-  else if (command == saveThisEventCmd) {
+  else if (command == saveThisEventCmd)
+  {
     runManager->rndmSaveThisEvent();
   }
-  else if (command == restoreRandCmd) {
+  else if (command == restoreRandCmd)
+  {
     runManager->RestoreRandomNumberStatus(newValue);
   }
-  else if (command == randEvtCmd) {
+  else if (command == randEvtCmd)
+  {
     runManager->StoreRandomNumberStatusToG4Event(randEvtCmd->GetNewIntValue(newValue));
   }
-  else if (command == saveEachEventCmd) {
+  else if (command == saveEachEventCmd)
+  {
     runManager->SetRandomNumberStorePerEvent(saveEachEventCmd->GetNewBoolValue(newValue));
   }
-  else if (command == constScoreCmd) {
+  else if (command == constScoreCmd)
+  {
     runManager->ConstructScoringWorlds();
   }
-  else if (command == restoreRandCmdMT) {
+  else if (command == restoreRandCmdMT)
+  {
     runManager->RestoreRndmEachEvent(restoreRandCmdMT->GetNewBoolValue(newValue));
   }
-  else if (command == procUICmds) {
+  else if (command == procUICmds)
+  {
     G4RunManager::RMType rmType = runManager->GetRunManagerType();
-    if (rmType == G4RunManager::masterRM) {
+    if (rmType == G4RunManager::masterRM)
+    {
       auto rm = dynamic_cast<G4MTRunManager*>(runManager);
-      if (rm != nullptr) {
+      if (rm != nullptr)
+      {
         rm->RequestWorkersProcessCommandsStack();
       }
-      else {
+      else
+      {
         G4Exception("G4RunManager::ApplyNewCommand", "Run0128", FatalException,
                     "/run/workersProcessCmds command issued on a "
                     "non-G4MTRunManager class instance.");
       }
     }
-    else if (rmType == G4RunManager::sequentialRM) {
+    else if (rmType == G4RunManager::sequentialRM)
+    {
       G4cout << "*** /run/workersProcessCmds command is issued in sequential mode."
              << "\nCommand is ignored." << G4endl;
     }
-    else {
+    else
+    {
       G4Exception("G4RunMessenger::ApplyNewCommand", "Run0129", FatalException,
                   "/run/workersProcessCmds command is issued to local thread.");
     }
   }
-  else if (command == trajMergeCmd) {
+  else if (command == trajMergeCmd)
+  {
     G4RunManager::RMType rmType = runManager->GetRunManagerType();
-    if (rmType == G4RunManager::subEventMasterRM) {
+    if (rmType == G4RunManager::subEventMasterRM)
+    {
       auto rm = dynamic_cast<G4SubEvtRunManager*>(runManager);
-      if (rm != nullptr) {
+      if (rm != nullptr)
+      {
         rm->TrajectoriesToBeMerged(trajMergeCmd->GetNewBoolValue(newValue));
       }
-      else {
+      else
+      {
         G4ExceptionDescription ed;
         ed << "/run/trajectoriesToBeMerged command is issued on a RunManager class "
            << "instance that is not G4SubEvtRunManager.";
         G4Exception("G4RunManager::ApplyNewCommand", "Run0129", FatalException, ed);
       }
     }
-    else {
+    else
+    {
       G4cout << "*** /run/trajectoriesToBeMerged command is issued on a RunManager "
              << "class instance that is not G4SubEvtRunManager."
              << "\nCommand is ignored." << G4endl;
@@ -656,35 +717,45 @@ G4String G4RunMessenger::GetCurrentValue(G4UIcommand* command)
 {
   G4String cv;
 
-  if (command == verboseCmd) {
+  if (command == verboseCmd)
+  {
     cv = verboseCmd->ConvertToString(runManager->GetVerboseLevel());
   }
-  else if (command == printProgCmd) {
+  else if (command == printProgCmd)
+  {
     cv = printProgCmd->ConvertToString(runManager->GetPrintProgress());
   }
-  else if (command == randDirCmd) {
+  else if (command == randDirCmd)
+  {
     cv = runManager->GetRandomNumberStoreDir();
   }
-  else if (command == randEvtCmd) {
+  else if (command == randEvtCmd)
+  {
     cv = randEvtCmd->ConvertToString(runManager->GetFlagRandomNumberStatusToG4Event());
   }
-  else if (command == nThreadsCmd) {
+  else if (command == nThreadsCmd)
+  {
     G4RunManager::RMType rmType = runManager->GetRunManagerType();
-    if (rmType == G4RunManager::masterRM) {
+    if (rmType == G4RunManager::masterRM)
+    {
       cv = nThreadsCmd->ConvertToString(
         static_cast<G4MTRunManager*>(runManager)->GetNumberOfThreads());
     }
-    else if (rmType == G4RunManager::sequentialRM) {
+    else if (rmType == G4RunManager::sequentialRM)
+    {
       cv = "0";
     }
   }
-  else if (command == evModCmd) {
+  else if (command == evModCmd)
+  {
     G4RunManager::RMType rmType = runManager->GetRunManagerType();
-    if (rmType == G4RunManager::masterRM) {
+    if (rmType == G4RunManager::masterRM)
+    {
       cv = evModCmd->ConvertToString(static_cast<G4MTRunManager*>(runManager)->GetEventModulo())
            + " " + evModCmd->ConvertToString(G4MTRunManager::SeedOncePerCommunication());
     }
-    else if (rmType == G4RunManager::sequentialRM) {
+    else if (rmType == G4RunManager::sequentialRM)
+    {
       G4cout << "*** /run/eventModulo command is valid only in MT mode." << G4endl;
     }
   }

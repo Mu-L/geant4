@@ -34,7 +34,7 @@ o Global
 o Interfaces
   ----------
   + G4UIQt: reimplemented the command search feature for the Help tree,
-    addressing problem report #2683.
+    addressing problem report #2693.
     Fix in ComputeStringMatchScore(..) in setting number of elements for a
     QVector; use G4 types where appropriate. Fixed compilation warning for
     implicit type conversion on macOS/XCode.

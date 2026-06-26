@@ -25,16 +25,17 @@
 //
 //
 // --------------------------------------------------------------------
-#ifndef G4HadLeadBias_h
-#define G4HadLeadBias_h
+#ifndef G4HADLEADBIAS_HH
+#define G4HADLEADBIAS_HH
 
 #include "G4VLeadingParticleBiasing.hh"
 
 class G4HadLeadBias : public G4VLeadingParticleBiasing
 {
-public:
-  virtual G4HadFinalState * Bias(G4HadFinalState * result);
-  virtual ~G4HadLeadBias() {};
+  public:
+
+    virtual G4HadFinalState* Bias(G4HadFinalState* result);
+    virtual ~G4HadLeadBias() {};
 };
 
 #endif

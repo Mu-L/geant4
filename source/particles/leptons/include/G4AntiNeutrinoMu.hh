@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4AntiNeutrinoMu_h
-#define G4AntiNeutrinoMu_h 1
+#ifndef G4ANTINEUTRINOMU_HH
+#define G4ANTINEUTRINOMU_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4AntiNeutrinoMu : public G4ParticleDefinition
 {
   public:
+
     static G4AntiNeutrinoMu* Definition();
     static G4AntiNeutrinoMu* AntiNeutrinoMuDefinition();
     static G4AntiNeutrinoMu* AntiNeutrinoMu();
 
   private:
+
     G4AntiNeutrinoMu() {}
     ~G4AntiNeutrinoMu() override = default;
 

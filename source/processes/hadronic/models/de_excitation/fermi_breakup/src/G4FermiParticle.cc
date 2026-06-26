@@ -77,8 +77,10 @@ void G4FermiParticle::RecalculateExcitationEnergy()
 {
   excitationEnergy_ =
     momentum_.mag() - G4FermiNucleiProperties::GetNuclearMass(atomicMass_, chargeNumber_);
-  if (excitationEnergy_ < 0.) {
-    if (excitationEnergy_ < -10.0 * CLHEP::eV) {
+  if (excitationEnergy_ < 0.)
+  {
+    if (excitationEnergy_ < -10.0 * CLHEP::eV)
+    {
       G4ExceptionDescription ed;
       ed << "Excitation energy is too negative: " << excitationEnergy_ / CLHEP::MeV << " MeV";
       G4Exception("G4FermiParticle::RecalculateExcitationEnergy()", "Fermi001", JustWarning, ed);

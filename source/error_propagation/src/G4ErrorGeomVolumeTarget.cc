@@ -30,9 +30,10 @@
 //
 
 #include "G4ErrorGeomVolumeTarget.hh"
+
 #include "G4Point3D.hh"
-#include "G4ThreeVector.hh"
 #include "G4Step.hh"
+#include "G4ThreeVector.hh"
 
 #ifdef G4VERBOSE
 #  include "G4ErrorPropagatorData.hh"  //for verbosity checking
@@ -48,17 +49,16 @@ G4ErrorGeomVolumeTarget::G4ErrorGeomVolumeTarget(const G4String& name)
 //------------------------------------------------------------------------
 G4bool G4ErrorGeomVolumeTarget::TargetReached(const G4Step* aStep)
 {
-  if(aStep->GetTrack()->GetNextVolume() != 0)
+  if (aStep->GetTrack()->GetNextVolume() != 0)
   {
 #ifdef G4VERBOSE
-    if(G4ErrorPropagatorData::verbose() >= 3)
+    if (G4ErrorPropagatorData::verbose() >= 3)
     {
       G4cout << " G4ErrorGeomVolumeTarget::TargetReached( "
-             << aStep->GetTrack()->GetNextVolume()->GetName() << " =? "
-             << theName << G4endl;
+             << aStep->GetTrack()->GetNextVolume()->GetName() << " =? " << theName << G4endl;
     }
 #endif
-    if(aStep->GetTrack()->GetNextVolume()->GetName() == theName)
+    if (aStep->GetTrack()->GetNextVolume()->GetName() == theName)
     {
       return 1;
     }

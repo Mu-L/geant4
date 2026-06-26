@@ -7,6 +7,9 @@ It must **not** be used as a substitute for writing good git commit messages!
 -------------------------------------------------------------------------------
 
 
+## 2026-04-17 Sebastien Incerti (neuron-V11-04-00)
+- Reduction of the number of DNA physics constructors in the perspective of Geant4 12
+
 ## 2025-10-16 Batmunkh Munkhbaatar (neuron-V11-03-00)
 - Added UI commands to calculate water radiolysis products in specific regions
 - Commented out the initialization in main to allow G4DNAPhysicsActivator to 

@@ -30,10 +30,10 @@
 #
 # Physics
 # - To use Geant4-DNA constructor X, X=0, 2, 4, or 6 (recommended)
-#/radial/addPhysics DNA_Opt0
 /radial/addPhysics DNA_Opt2
 #/radial/addPhysics DNA_Opt4
 #/radial/addPhysics DNA_Opt6
+#/radial/addPhysics DNA_Opt8
 #
 # Heavy ions tracking cut
 #/radial/addIonsTrackingCut false

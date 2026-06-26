@@ -6,22 +6,32 @@
 
 #include <string>
 
-namespace tools {
-namespace wroot {
-  class buffer;
-}}
+namespace tools
+{
+namespace wroot
+{
+class buffer;
+}
+}  // namespace tools
 
-namespace tools {
-namespace wroot {
+namespace tools
+{
+namespace wroot
+{
 
-class ibo {
-public:
-  virtual ~ibo() {}
-public:
-  virtual const std::string& store_cls() const = 0;
-  virtual bool stream(buffer&) const = 0;
+class ibo
+{
+  public:
+
+    virtual ~ibo() {}
+
+  public:
+
+    virtual const std::string& store_cls() const = 0;
+    virtual bool stream(buffer&) const = 0;
 };
 
-}}
+}  // namespace wroot
+}  // namespace tools
 
 #endif

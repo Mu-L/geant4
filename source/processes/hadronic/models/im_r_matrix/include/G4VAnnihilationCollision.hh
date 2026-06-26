@@ -32,72 +32,72 @@
 //      File name:     G4VElasticCollision
 //
 //      Author:        Maria Grazia Pia
-// 
+//
 //      Creation date: 15 April 1999
 //
-//      Modifications: 
-//      
+//      Modifications:
+//
 // -------------------------------------------------------------------
 
 #ifndef G4VANNIHILATIONCOLLISION_HH
 #define G4VANNIHILATIONCOLLISION_HH
 
-#include "globals.hh"
+#include "G4KineticTrackVector.hh"
 #include "G4Log.hh"
+#include "G4VAngularDistribution.hh"
 #include "G4VCollision.hh"
 #include "G4VCrossSectionSource.hh"
-#include "G4VAngularDistribution.hh"
-#include "G4KineticTrackVector.hh"
+#include "globals.hh"
 
 class G4KineticTrack;
 
-
 class G4VAnnihilationCollision : public G4VCollision
 {
+  public:
 
-public:
+    G4VAnnihilationCollision();
 
-  G4VAnnihilationCollision();
+    virtual ~G4VAnnihilationCollision();
 
-  virtual ~G4VAnnihilationCollision();
+    G4bool operator==(const G4VAnnihilationCollision& right) const;
+    G4bool operator!=(const G4VAnnihilationCollision& right) const;
 
-  G4bool operator==(const G4VAnnihilationCollision &right) const;
-  G4bool operator!=(const G4VAnnihilationCollision &right) const;
+    virtual G4KineticTrackVector* FinalState(const G4KineticTrack& trk1,
+                                             const G4KineticTrack& trk2) const;
+    virtual const G4VAngularDistribution* GetAngularDistribution() const
+    {
+      return theAngularDistribution;
+    }
 
-  virtual G4KineticTrackVector* FinalState(const G4KineticTrack& trk1, 
-					      const G4KineticTrack& trk2) const;
-  virtual const G4VAngularDistribution* GetAngularDistribution() const
-  {
-    return theAngularDistribution;
-  }
+  protected:
 
-protected:
+    virtual const G4ParticleDefinition* GetOutgoingParticle(const G4KineticTrack& trk1,
+                                                            const G4KineticTrack& trk2) const = 0;
 
-  virtual const G4ParticleDefinition* GetOutgoingParticle(const G4KineticTrack& trk1, 
-							  const G4KineticTrack& trk2) const = 0;
+  private:
 
-private:  
+    double BrWigInt0(const double x, const double gamma, const double m0) const
+    {
+      return 2.0 * gamma * std::atan(2.0 * (x - m0) / gamma);
+    }
 
-  double BrWigInt0(const double x, const double gamma, const double m0) const
-    { return 2.0*gamma*std::atan( 2.0 * (x-m0)/ gamma  ); }
+    G4double BrWigInt1(const G4double x, const G4double gamma, const G4double m0) const
+    {
+      return 0.5 * gamma * gamma * G4Log((x - m0) * (x - m0) + gamma * gamma / 4.0)
+             + m0 * BrWigInt0(x, gamma, m0);
+    }
 
-  G4double BrWigInt1(const G4double x, const G4double gamma, const G4double m0) const
-    { return 0.5*gamma*gamma*G4Log( (x-m0)*(x-m0)+gamma*gamma/4.0 ) + m0*BrWigInt0(x,gamma,m0); }
+    double BrWigInv(const double x, const double gamma, const double m0) const
+    {
+      return 0.5 * gamma * std::tan(0.5 * x / gamma) + m0;
+    }
 
-  double BrWigInv(const double x, const double gamma, const double m0) const
-    { return 0.5*gamma*std::tan( 0.5*x/gamma )+m0; }
-  
-  double SampleResonanceMass(const double poleMass, 
-			     const double width,
-			     const double minMass,
-			     const double maxMass) const;
-private:
+    double SampleResonanceMass(const double poleMass, const double width, const double minMass,
+                               const double maxMass) const;
 
- G4VAngularDistribution * theAngularDistribution;
+  private:
 
-};    
-
-
-
+    G4VAngularDistribution* theAngularDistribution;
+};
 
 #endif

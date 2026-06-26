@@ -33,22 +33,22 @@
 // 20130620  Fix Coverity #50296, recursive #include.
 // 20130924  M. Kelsey -- Use G4Log, G4Exp for CPU speedup
 
-#ifndef G4ParamExpTwoBodyAngDst_icc
-#define G4ParamExpTwoBodyAngDst_icc 1
+#ifndef G4PARAMEXPTWOBODYANGDST_ICC
+#define G4PARAMEXPTWOBODYANGDST_ICC
 
-#include "G4Log.hh"
 #include "G4Exp.hh"
+#include "G4Log.hh"
 #include "Randomize.hh"
+
 #include <cfloat>
 
-
-template <G4int NKEBINS> G4double
-G4ParamExpTwoBodyAngDst<NKEBINS>::
-GetCosTheta(const G4double& ekin, const G4double& pcm) const
+template<G4int NKEBINS>
+G4double G4ParamExpTwoBodyAngDst<NKEBINS>::GetCosTheta(const G4double& ekin,
+                                                       const G4double& pcm) const
 {
-  if (verboseLevel>3) {
-    G4cout << theName << "::GetCosTheta: ekin " << ekin << " pcm " << pcm
-	   << G4endl;
+  if (verboseLevel > 3)
+  {
+    G4cout << theName << "::GetCosTheta: ekin " << ekin << " pcm " << pcm << G4endl;
   }
 
   // Get parameter values for interaction energy
@@ -58,36 +58,39 @@ GetCosTheta(const G4double& ekin, const G4double& pcm) const
   G4double pFrac = interpolator.interpolate(ekin, angleCut);
 
   // Bound parameters by their physical ranges
-  pCos = std::max(-1., std::min(pCos,1.));
-  pFrac = std::max(0., std::min(pFrac,1.));
+  pCos = std::max(-1., std::min(pCos, 1.));
+  pFrac = std::max(0., std::min(pFrac, 1.));
 
-  if (verboseLevel>3) {
-    G4cout << " pFrac " << pFrac << " pA " << pA << " pC " << pC
-	   << " pCos " << pCos << G4endl;
+  if (verboseLevel > 3)
+  {
+    G4cout << " pFrac " << pFrac << " pA " << pA << " pC " << pC << " pCos " << pCos << G4endl;
   }
 
-  G4bool smallAngle = (G4UniformRand() < pFrac);	// 0 < theta < theta0
+  G4bool smallAngle = (G4UniformRand() < pFrac);  // 0 < theta < theta0
 
-  G4double term1 = 2.0 * pcm*pcm * (smallAngle ? pA : pC);
+  G4double term1 = 2.0 * pcm * pcm * (smallAngle ? pA : pC);
 
-  if (std::abs(term1) < 1e-7) return 1.0;	// No actual scattering here!
+  if (std::abs(term1) < 1e-7) return 1.0;  // No actual scattering here!
   if (term1 > DBL_MAX_EXP) return 1.0;
 
-  G4double term2 = G4Exp(-2.0*term1);
-  G4double randScale = (G4Exp(-term1*(1.0 - pCos)) - term2)/(1.0 - term2);
+  G4double term2 = G4Exp(-2.0 * term1);
+  G4double randScale = (G4Exp(-term1 * (1.0 - pCos)) - term2) / (1.0 - term2);
 
   G4double randVal;
-  if (smallAngle) randVal = (1.0 - randScale)*G4UniformRand() + randScale;
-  else randVal = randScale*G4UniformRand();
+  if (smallAngle)
+    randVal = (1.0 - randScale) * G4UniformRand() + randScale;
+  else
+    randVal = randScale * G4UniformRand();
 
-  G4double costh = 1.0 + G4Log(randVal*(1.0 - term2) + term2)/term1;
+  G4double costh = 1.0 + G4Log(randVal * (1.0 - term2) + term2) / term1;
 
-  if (verboseLevel>3) {
-    G4cout << " term1 " << term1 << " term2 " << term2 << " randVal "
-	   << randVal << " => costheta " << costh << G4endl;
+  if (verboseLevel > 3)
+  {
+    G4cout << " term1 " << term1 << " term2 " << term2 << " randVal " << randVal << " => costheta "
+           << costh << G4endl;
   }
 
   return costh;
 }
 
-#endif	/* G4ParamExpTwoBodyAngDst_icc */
+#endif /* G4ParamExpTwoBodyAngDst_icc */

@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  30th October 1996
 
 // Class Description:
@@ -35,57 +35,57 @@
 // the visualization system is free to choose some.
 // Class Description - End:
 
-
 #ifndef G4VISIBLE_HH
 #define G4VISIBLE_HH
 
 #include "globals.hh"
+
 #include <iostream>
 
 class G4VisAttributes;
 
-class G4Visible {
+class G4Visible
+{
+    friend std::ostream& operator<<(std::ostream& os, const G4Visible& v);
 
-  friend std::ostream& operator << (std::ostream& os, const G4Visible& v);
+  public:  // With description
 
-public: // With description
+    G4Visible();
+    G4Visible(const G4Visible&);
+    G4Visible(G4Visible&&);
+    G4Visible(const G4VisAttributes*);
 
-  G4Visible ();
-  G4Visible (const G4Visible&);
-  G4Visible (G4Visible&&);
-  G4Visible (const G4VisAttributes*);
+    virtual ~G4Visible();
 
-  virtual ~G4Visible ();
+    G4Visible& operator=(const G4Visible&);
+    G4Visible& operator=(G4Visible&&);
 
-  G4Visible& operator= (const G4Visible&);
-  G4Visible& operator= (G4Visible&&);
+    G4bool operator!=(const G4Visible& right) const;
 
-  G4bool operator != (const G4Visible& right) const;
+    const G4VisAttributes* GetVisAttributes() const;
 
-  const G4VisAttributes* GetVisAttributes () const;
+    void SetVisAttributes(const G4VisAttributes*);
+    // The G4VisAttributes object is not stored in a G4Visible; only a
+    // reference, a const pointer, is kept.  Therefore the
+    // G4VisAttributes object to which it refers must have a life long
+    // enough to satisfy all uses of the G4Visible object.  E.g., if the
+    // G4Visible object is created on the heap (using `new') then the
+    // associated G4VisAttributes object would normally also be created
+    // on the heap and managed in the same way.
 
-  void SetVisAttributes (const G4VisAttributes*);
-  // The G4VisAttributes object is not stored in a G4Visible; only a
-  // reference, a const pointer, is kept.  Therefore the
-  // G4VisAttributes object to which it refers must have a life long
-  // enough to satisfy all uses of the G4Visible object.  E.g., if the
-  // G4Visible object is created on the heap (using `new') then the
-  // associated G4VisAttributes object would normally also be created
-  // on the heap and managed in the same way.
+    void SetVisAttributes(const G4VisAttributes&);
+    // A copy of the G4VisAttributes object is created on the heap to
+    // ensure a long life.
 
-  void SetVisAttributes (const G4VisAttributes&);
-  // A copy of the G4VisAttributes object is created on the heap to
-  // ensure a long life.
+    // Access functions to the string for user customizable information
+    virtual const G4String& GetInfo() const;
+    virtual void SetInfo(const G4String& info);
 
-  // Access functions to the string for user customizable information
-  virtual   const G4String&  GetInfo() const;
-  virtual   void             SetInfo(const G4String& info);
+  protected:
 
-protected:
-
-  G4String  fInfo;   // String for user customizable information
-  const G4VisAttributes* fpVisAttributes;
-  G4bool fAllocatedVisAttributes;
+    G4String fInfo;  // String for user customizable information
+    const G4VisAttributes* fpVisAttributes;
+    G4bool fAllocatedVisAttributes;
 };
 
 #include "G4Visible.icc"

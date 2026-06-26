@@ -31,7 +31,7 @@
 // Class description:
 //
 // This is an interface for configurators setting up processes
-// needed for importance sampling and scoring. 
+// needed for importance sampling and scoring.
 // The Configurator may be given a pointer to another Configurator.
 // If a configurator will be given a pointer to another configurator
 // it may obtain a G4VTrackTerminator from the given Configurator.
@@ -39,30 +39,30 @@
 
 // Author: Michael Dressel (Michael.Dressel@cern.ch)
 // ----------------------------------------------------------------------
-#ifndef G4VSamplerConfigurator_hh
-#define G4VSamplerConfigurator_hh G4VSamplerConfigurator_hh
+#ifndef G4VSAMPLERCONFIGURATOR_HH
+#define G4VSAMPLERCONFIGURATOR_HH
 
 #include "G4Types.hh"
+
 #include <vector>
 
 class G4VTrackTerminator;
 
 class G4VSamplerConfigurator
 {
+  public:  // with description
 
-public:  // with description
+    G4VSamplerConfigurator();
+    virtual ~G4VSamplerConfigurator();
 
-  G4VSamplerConfigurator();
-  virtual ~G4VSamplerConfigurator();
-
-  virtual void Configure(G4VSamplerConfigurator *preConf) = 0;
+    virtual void Configure(G4VSamplerConfigurator* preConf) = 0;
     // Do the configuration, if preConf is given a
     // G4VTrackTerminator may be obtained from it.
 
-  virtual const G4VTrackTerminator *GetTrackTerminator() const = 0;
+    virtual const G4VTrackTerminator* GetTrackTerminator() const = 0;
     // Return a G4VTrackTerminator or 0.
 };
 
-typedef std::vector<G4VSamplerConfigurator *> G4Configurators;
+typedef std::vector<G4VSamplerConfigurator*> G4Configurators;
 
 #endif

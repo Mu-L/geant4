@@ -32,8 +32,8 @@
 //
 // Original author: Jonas Hahnfeld, 2022
 
-#ifndef G4TrasportationWithMsc_h
-#define G4TrasportationWithMsc_h 1
+#ifndef G4TRASPORTATIONWITHMSC_HH
+#define G4TRASPORTATIONWITHMSC_HH
 
 #include "G4Transportation.hh"
 
@@ -57,6 +57,7 @@ class G4VMscModel;
 class G4TransportationWithMsc : public G4Transportation
 {
   public:
+
     enum class ScatteringType
     {
       MultipleScattering,
@@ -75,6 +76,7 @@ class G4TransportationWithMsc : public G4Transportation
     void AddSSModel(G4VEmModel* model, G4int order = 0, const G4Region* region = nullptr);
 
   public:
+
     void PreparePhysicsTable(const G4ParticleDefinition& part) override;
     void BuildPhysicsTable(const G4ParticleDefinition& part) override;
 
@@ -86,6 +88,7 @@ class G4TransportationWithMsc : public G4Transportation
                                                    G4GPILSelection* selection) override;
 
   private:
+
     const ScatteringType fType;
     G4bool fMultipleSteps = false;
 

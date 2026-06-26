@@ -33,37 +33,37 @@
 //
 // Modified:
 // 18.07.2017 A.Dotti: refactoring following new standard
-// 02.10.2020 V.Ivanchenko: use more methods from G4HadronPhysicsFTFP_BERT 
-//            base class; code clean-up 
+// 02.10.2020 V.Ivanchenko: use more methods from G4HadronPhysicsFTFP_BERT
+//            base class; code clean-up
 //----------------------------------------------------------------------------
 //
-#ifndef G4HadronPhysicsNuBeam_h
-#define G4HadronPhysicsNuBeam_h 1
+#ifndef G4HADRONPHYSICSNUBEAM_HH
+#define G4HADRONPHYSICSNUBEAM_HH
 
 #include "G4HadronPhysicsFTFP_BERT.hh"
 
 class G4HadronPhysicsNuBeam : public G4HadronPhysicsFTFP_BERT
 {
+  public:
 
-public: 
-  G4HadronPhysicsNuBeam(G4int verbose =1);
-  G4HadronPhysicsNuBeam(const G4String& name, G4bool quasiElastic=false);
-  virtual ~G4HadronPhysicsNuBeam() {}
+    G4HadronPhysicsNuBeam(G4int verbose = 1);
+    G4HadronPhysicsNuBeam(const G4String& name, G4bool quasiElastic = false);
+    virtual ~G4HadronPhysicsNuBeam() {}
 
-  void ConstructProcess() override;
+    void ConstructProcess() override;
 
-  // copy constructor and hide assignment operator
-  G4HadronPhysicsNuBeam(G4HadronPhysicsNuBeam &) = delete;
-  G4HadronPhysicsNuBeam & operator =
-  (const G4HadronPhysicsNuBeam &right) = delete;
+    // copy constructor and hide assignment operator
+    G4HadronPhysicsNuBeam(G4HadronPhysicsNuBeam&) = delete;
+    G4HadronPhysicsNuBeam& operator=(const G4HadronPhysicsNuBeam& right) = delete;
 
-protected:
-  //Modify the minimum needed
-  virtual void Proton() override;
+  protected:
 
-private:
-  G4double maxFTFP_proton;
+    // Modify the minimum needed
+    virtual void Proton() override;
+
+  private:
+
+    G4double maxFTFP_proton;
 };
 
 #endif
-

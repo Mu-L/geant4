@@ -32,13 +32,13 @@
 // created by the user to describe his/her field configuration.
 //
 // We have established a convention for the electromagnetic field components:
-// In the GetValue() method, the return values of Bfield will have 
+// In the GetValue() method, the return values of Bfield will have
 // the following meaning
 //  - Components 0, 1 and 2 are the Magnetic Field (x, y, z respectively);
 //  - Components 3, 4 and 5 are the Electric field (x, y, z respectively).
-// 
+//
 // Note 1: one or the other field could optional, depending on the Equation
-// Note 2: such a convention is required between any field and its 
+// Note 2: such a convention is required between any field and its
 //         corresponding equation of motion.
 
 // Author: John Apostolakis (CERN), 12.11.1998 - Created
@@ -63,15 +63,14 @@ class G4ElectroMagneticField : public G4Field
      * Copy constructor and assignment operator.
      */
     G4ElectroMagneticField(const G4ElectroMagneticField& r) = default;
-    G4ElectroMagneticField& operator = (const G4ElectroMagneticField& p);
+    G4ElectroMagneticField& operator=(const G4ElectroMagneticField& p);
 
     /**
      * Interface for returning the field value 'Bfield' on given time 'Point'.
      * Returns as Bfield[0], [1], [2] the magnetic field x, y & z components
      * and as Bfield[3], [4], [5] the electric field x, y & z components.
      */
-    void GetFieldValue(const G4double Point[4],
-                             G4double* Bfield ) const override = 0;
+    void GetFieldValue(const G4double Point[4], G4double* Bfield) const override = 0;
 
     /**
      * For field with an electric component it should return true.

@@ -25,36 +25,35 @@
 //
 
 #include "G4DNAGenericIonsManager.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
+
 #include "G4Alpha.hh"
 #include "G4DNAIons.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4DNAGenericIonsManager * G4DNAGenericIonsManager :: Instance()
+G4DNAGenericIonsManager* G4DNAGenericIonsManager ::Instance()
 {
- if (theInstance == nullptr)
-  theInstance=new G4DNAGenericIonsManager;
- 
- return theInstance;
+  if (theInstance == nullptr) theInstance = new G4DNAGenericIonsManager;
+
+  return theInstance;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4ParticleDefinition * G4DNAGenericIonsManager :: GetIon(const G4String & name)
+G4ParticleDefinition* G4DNAGenericIonsManager ::GetIon(const G4String& name)
 {
- auto i = map.find(name);
- 
- if (i==map.end())
-  return nullptr;
-  
- return i->second;
+  auto i = map.find(name);
+
+  if (i == map.end()) return nullptr;
+
+  return i->second;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4DNAGenericIonsManager :: G4DNAGenericIonsManager()
+G4DNAGenericIonsManager ::G4DNAGenericIonsManager()
 {
   //               name             mass          width         charge
   //             2*spin           parity  C-conjugation
@@ -62,122 +61,65 @@ G4DNAGenericIonsManager :: G4DNAGenericIonsManager()
   //               type    lepton number  baryon number   PDG encoding
   //             stable         lifetime    decay table
   //         shortlived          subType  anti_encoding
-  //         excitation   
-  
- G4DNAIons *helium;
- G4DNAIons *hydrogen;
- G4DNAIons *alphaPlus;
- G4DNAIons *positronium1s;
- G4DNAIons *positronium2s;
- 
- G4DNAIons *carbon;
- G4DNAIons *nitrogen;
- G4DNAIons *oxygen;
- G4DNAIons *silicon;
- G4DNAIons *iron;
+  //         excitation
 
- iron=     new G4DNAIons(
-			"iron",    52.5672*GeV,       0.0*MeV,  +26.0*eplus,
-			0,              +1,             0,
-			0,               0,             0,
-			"DNAion",              +26,            +56,           0,
-			true,                -1.0,             nullptr,       
-			false,		      "",               0,             
-			0.0);
+  G4DNAIons* helium;
+  G4DNAIons* hydrogen;
+  G4DNAIons* alphaPlus;
+  G4DNAIons* positronium1s;
+  G4DNAIons* positronium2s;
 
- silicon=  new G4DNAIons(
-            "silicon",    26.161011669*GeV,       0.0*MeV,  +14.0*eplus,
-            0,              +1,             0,
-            0,               0,             0,
-            "DNAion",              +14,            +28,           0,
-            true,                -1.0,             nullptr,
-            false,		      "",               0,
-            0.0);
+  G4DNAIons* carbon;
+  G4DNAIons* nitrogen;
+  G4DNAIons* oxygen;
+  G4DNAIons* silicon;
+  G4DNAIons* iron;
+
+  iron = new G4DNAIons("iron", 52.5672 * GeV, 0.0 * MeV, +26.0 * eplus, 0, +1, 0, 0, 0, 0, "DNAion",
+                       +26, +56, 0, true, -1.0, nullptr, false, "", 0, 0.0);
+
+  silicon = new G4DNAIons("silicon", 26.161011669 * GeV, 0.0 * MeV, +14.0 * eplus, 0, +1, 0, 0, 0,
+                          0, "DNAion", +14, +28, 0, true, -1.0, nullptr, false, "", 0, 0.0);
 
   // mass is average for all Si isotopes
 
- oxygen=   new G4DNAIons(
-			"oxygen",    15.0074*GeV,       0.0*MeV,  +8.0*eplus,
-			0,              +1,             0,
-			0,               0,             0,
-			"DNAion",              +8,            +16,           0,
-			true,                -1.0,             nullptr,       
-			false,		      "",               0,             
-			0.0);
+  oxygen = new G4DNAIons("oxygen", 15.0074 * GeV, 0.0 * MeV, +8.0 * eplus, 0, +1, 0, 0, 0, 0,
+                         "DNAion", +8, +16, 0, true, -1.0, nullptr, false, "", 0, 0.0);
 
+  nitrogen = new G4DNAIons("nitrogen", 13.132 * GeV, 0.0 * MeV, +7.0 * eplus, 0, +1, 0, 0, 0, 0,
+                           "DNAion", +7, +14, 0, true, -1.0, nullptr, false, "", 0, 0.0);
 
- nitrogen= new G4DNAIons(
-			"nitrogen",    13.132*GeV,       0.0*MeV,  +7.0*eplus,
-			0,              +1,             0,
-			0,               0,             0,
-			"DNAion",              +7,            +14,           0,
-			true,                -1.0,             nullptr,       
-			false,		      "",               0,             
-			0.0);
+  carbon = new G4DNAIons("carbon", 11.267025440 * GeV, 0.0 * MeV, +6.0 * eplus, 0, +1, 0, 0, 0, 0,
+                         "DNAion", +6, +12, 0, true, -1.0, nullptr, false, "", 0, 0.0);
 
- carbon=   new G4DNAIons(
-			"carbon",    11.267025440*GeV,       0.0*MeV,  +6.0*eplus,
-			0,              +1,             0,
-			0,               0,             0,
-			"DNAion",              +6,            +12,           0,
-			true,                -1.0,             nullptr,       
-			false,		      "",               0,             
-			0.0);
- 
- helium=   new G4DNAIons(
-			"helium",    3.727417*GeV,       0.0*MeV,  +0.0*eplus,
-			0,              +1,             0,
-			0,               0,             0,
-			"DNAion",		+2,	       +4,	     0,
-			true,                -1.0,             nullptr,       
-			false,		      "",               0,             
-			0.0);
+  helium = new G4DNAIons("helium", 3.727417 * GeV, 0.0 * MeV, +0.0 * eplus, 0, +1, 0, 0, 0, 0,
+                         "DNAion", +2, +4, 0, true, -1.0, nullptr, false, "", 0, 0.0);
 
- alphaPlus= new G4DNAIons("alpha+",    3.727417*GeV,       0.0*MeV,  +1.0*eplus,
-                               1,              +1,             0,
-                               0,               0,             0,
-                       "DNAion",              +1,            +4,           0,
-			true,            -1.0,             nullptr, false,
-			      "",               0,             0.0);
+  alphaPlus = new G4DNAIons("alpha+", 3.727417 * GeV, 0.0 * MeV, +1.0 * eplus, 1, +1, 0, 0, 0, 0,
+                            "DNAion", +1, +4, 0, true, -1.0, nullptr, false, "", 0, 0.0);
 
- hydrogen= new G4DNAIons("hydrogen",   0.9382723*GeV,       0.0*MeV,  +0.0*eplus,
-                               0,              +1,             0,
-                               0,               0,             0,
-                       "DNAion",              +1,            +1,           0,
-		        true,            -1.0,             nullptr, false,
-			      "",               0,             0.0);
+  hydrogen = new G4DNAIons("hydrogen", 0.9382723 * GeV, 0.0 * MeV, +0.0 * eplus, 0, +1, 0, 0, 0, 0,
+                           "DNAion", +1, +1, 0, true, -1.0, nullptr, false, "", 0, 0.0);
 
- positronium1s= new G4DNAIons("Ps-1s",   2*electron_mass_c2,      0.0*MeV,  +0.0*eplus,
-                               0,               0,             0,
-                               0,               0,             0,
-                       "DNAion",               0,             0,           0,
-		            true,            -1.0,             nullptr, false,
-			      "",               0,             0.0);
+  positronium1s = new G4DNAIons("Ps-1s", 2 * electron_mass_c2, 0.0 * MeV, +0.0 * eplus, 0, 0, 0, 0,
+                                0, 0, "DNAion", 0, 0, 0, true, -1.0, nullptr, false, "", 0, 0.0);
 
- positronium2s= new G4DNAIons("Ps-2s",   2*electron_mass_c2,      0.0*MeV,  +0.0*eplus,
-                               0,               0,             0,
-                               0,               0,             0,
-                       "DNAion",               0,             0,           0,
-		            true,            -1.0,             nullptr, false,
-			      "",               0,             0.0);
+  positronium2s = new G4DNAIons("Ps-2s", 2 * electron_mass_c2, 0.0 * MeV, +0.0 * eplus, 0, 0, 0, 0,
+                                0, 0, "DNAion", 0, 0, 0, true, -1.0, nullptr, false, "", 0, 0.0);
 
-
- map["helium"  ]=helium;
- map["hydrogen"]=hydrogen;
- map["alpha+"  ]=alphaPlus;
- map["alpha++" ]=G4Alpha::Alpha();
- map["Ps-1s"   ]=positronium1s;
- map["Ps-2s"   ]=positronium2s;
- map["carbon"  ]=carbon;
- map["nitrogen"]=nitrogen;
- map["oxygen"  ]=oxygen;
- map["silicon" ]=silicon;
- map["iron"    ]=iron;
-
-
+  map["helium"] = helium;
+  map["hydrogen"] = hydrogen;
+  map["alpha+"] = alphaPlus;
+  map["alpha++"] = G4Alpha::Alpha();
+  map["Ps-1s"] = positronium1s;
+  map["Ps-2s"] = positronium2s;
+  map["carbon"] = carbon;
+  map["nitrogen"] = nitrogen;
+  map["oxygen"] = oxygen;
+  map["silicon"] = silicon;
+  map["iron"] = iron;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4DNAGenericIonsManager * G4DNAGenericIonsManager::theInstance(nullptr);
-   
+G4DNAGenericIonsManager* G4DNAGenericIonsManager::theInstance(nullptr);

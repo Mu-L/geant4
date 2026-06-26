@@ -6,7 +6,7 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-05-21 Gabriele Cosmo (proccuts-V11-03-01)
+## 2026-05-21 Gabriele Cosmo (proccuts-V11-04-03)
 - Fixed MT data race in G4ProductionCuts, which can be caused in MT mode by
   workers replaying broadcast UI commands in G4WorkerRunManager, so that
   "/run/setCut" can make several workers concurrently call SetDefaultCutValue()
@@ -18,13 +18,13 @@ It must **not** be used as a substitute for writing good git commit messages!
   smallest correct patch here is to serialize access to G4ProductionCuts
   during command replay and physics-table update.
 
-## 2026-04-25 Makoto Asai
+## 2026-04-25 Makoto Asai (proccuts-V11-04-02)
 - G4VRangeToEnergyConverter - instantiate energy bin vector object only once
   unless it is requested to rebuild by methods such as SetEnergyRange().
   This fix enables the use of UI command such as /cuts/setLowEdge at the
   Pre_Init state before initializing the run manager (#285).
   
-## 2026-04-21 Makoto Asai on behalf of Vladimir Ivantchenko
+## 2026-04-21 Makoto Asai on behalf of Vladimir Ivantchenko (proccuts-V11-04-01)
 - G4VRangeToEnergyConverter - restore low energy cut limit as it was from the 
   1st day of Geant4, i.e. 990 eV instead of 1 keV. It was an overlooked
   leftover since version 11.0. This fix is now needed to control numerical
@@ -33,7 +33,7 @@ It must **not** be used as a substitute for writing good git commit messages!
   G4VRangeToEnergyConverter that this MR reverts was accidentally changed in
   proccuts-V11-04-00 (!5596)
 
-## 2026-04-12 Vladimir Ivantchenko
+## 2026-04-12 Vladimir Ivantchenko (proccuts-V11-04-00)
 - G4VRangeToEnergyConverter - fixed minor memory leak at exit
 
 ## 2025-03-25 Ivana Hrivnacova (proccuts-V11-03-00)

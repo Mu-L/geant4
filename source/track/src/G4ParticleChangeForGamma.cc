@@ -25,19 +25,20 @@
 //
 // G4ParticleChangeForGamma class implementation
 //
-// Author: Hisaya Kurashige, 23 March 1998  
+// Author: Hisaya Kurashige, 23 March 1998
 // Revision: Vladimir Ivantchenko, 15 April 2005
 // --------------------------------------------------------------------
 
 #include "G4ParticleChangeForGamma.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4Track.hh"
-#include "G4Step.hh"
+
 #include "G4DynamicParticle.hh"
 #include "G4ExceptionSeverity.hh"
+#include "G4Step.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4Track.hh"
 
 // --------------------------------------------------------------------
-G4ParticleChangeForGamma::G4ParticleChangeForGamma() 
+G4ParticleChangeForGamma::G4ParticleChangeForGamma()
 {
   // Disable flag to avoid check of each secondary at each step
   debugFlag = false;
@@ -48,8 +49,8 @@ G4ParticleChangeForGamma::G4ParticleChangeForGamma()
 void G4ParticleChangeForGamma::AddSecondary(G4DynamicParticle* aParticle)
 {
   // create track
-  G4Track* aTrack = new G4Track(aParticle, theCurrentTrack->GetGlobalTime(),
-                                theCurrentTrack->GetPosition());
+  G4Track* aTrack =
+    new G4Track(aParticle, theCurrentTrack->GetGlobalTime(), theCurrentTrack->GetPosition());
 
   // touchable handle is copied to keep the pointer
   aTrack->SetTouchableHandle(theCurrentTrack->GetTouchableHandle());
@@ -64,7 +65,7 @@ G4Step* G4ParticleChangeForGamma::UpdateStepForAtRest(G4Step* pStep)
   pStep->AddTotalEnergyDeposit(theLocalEnergyDeposit);
   pStep->SetStepLength(0.0);
 
-  if(isParentWeightProposed)
+  if (isParentWeightProposed)
   {
     pStep->GetPostStepPoint()->SetWeight(theParentWeight);
   }
@@ -81,24 +82,25 @@ G4Step* G4ParticleChangeForGamma::UpdateStepForPostStep(G4Step* pStep)
   pPostStepPoint->SetPolarization(proposedPolarization);
 
   // update velocity for scattering process and particles with mass
-  if(proposedKinEnergy > 0.0) 
+  if (proposedKinEnergy > 0.0)
   {
     pPostStepPoint->SetKineticEnergy(proposedKinEnergy);
     G4double mass = theCurrentTrack->GetDefinition()->GetPDGMass();
     G4double v = CLHEP::c_light;
-    if(mass > 0.0) { 
-      v *= std::sqrt(proposedKinEnergy*(proposedKinEnergy + 2*mass))/
-	(proposedKinEnergy + mass);
+    if (mass > 0.0)
+    {
+      v *=
+        std::sqrt(proposedKinEnergy * (proposedKinEnergy + 2 * mass)) / (proposedKinEnergy + mass);
     }
     pPostStepPoint->SetVelocity(v);
   }
-  else 
+  else
   {
     pPostStepPoint->SetKineticEnergy(0.0);
     pPostStepPoint->SetVelocity(0.0);
   }
 
-  if(isParentWeightProposed)
+  if (isParentWeightProposed)
   {
     pPostStepPoint->SetWeight(theParentWeight);
   }
@@ -117,12 +119,8 @@ void G4ParticleChangeForGamma::DumpInfo() const
   G4long oldprc = G4cout.precision(8);
   G4cout << "      -----------------------------------------------" << G4endl;
   G4cout << "        G4ParticleChangeForGamma proposes: " << G4endl;
-  G4cout << "        Kinetic Energy (MeV): " << std::setw(20)
-         << proposedKinEnergy / MeV << G4endl;
-  G4cout << "        Momentum Direction: " << std::setw(20)
-         << proposedMomentumDirection << G4endl;
-  G4cout << "        Polarization: " << std::setw(20) << proposedPolarization
-         << G4endl;
+  G4cout << "        Kinetic Energy (MeV): " << std::setw(20) << proposedKinEnergy / MeV << G4endl;
+  G4cout << "        Momentum Direction: " << std::setw(20) << proposedMomentumDirection << G4endl;
+  G4cout << "        Polarization: " << std::setw(20) << proposedPolarization << G4endl;
   G4cout.precision(oldprc);
 }
-

@@ -6,7 +6,21 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
-## 2026-05-19 G.Cosmo (emutils-V11-03-16)
+## 2026-05-22 A. Ribon (emutils-V11-04-12)
+- G4EmTableUtil, G4EmUtility, G4LossTableManager, G4VEnergyLossProcess :
+  rolled back to their version as in 11.4.ref02, i.e. before emutils-V11-04-05,
+  in order to recover the reproduciblity in MT mode.
+  Notes:
+  * The changes in G4EmDataRegistry and G4VMultipleScattering made in
+    emutils-V11-04-05 have been kept (because they are not causing problems
+    to the reproducibility: for G4VMultipleScattering.cc, the changes are
+    trivial and not related to parallel physics initialisation; 
+    for G4EmDataRegistry, new methods, related to parallel physics 
+    initialisation, have been added, but they are not used).
+  * The optimized computation of mass ratio for ions introduced in
+    emutils-V11-04-07 in G4VEnergyLossProcess has been integrated.
+
+## 2026-05-19 G.Cosmo (emutils-V11-04-11)
 - Fixed MT data race in G4EmParameters::fIsPrinted, by making the shared
   print-suppression flag atomic. Worker threads can concurrently call
   G4LossTableManager::ResetParameters() and write SetIsPrintedFlag(true)
@@ -14,21 +28,68 @@ It must **not** be used as a substitute for writing good git commit messages!
   fix is to use std::atomic<G4bool> with atomic load/store, rather than a
   broader lock around table preparation.
 
-## 2026-05-11 V.Ivanchenko
+## 2026-05-11 V.Ivanchenko (emutils-V11-04-10)
 - G4EmCalculator - fixed problem #2712 - computation of EM corrections for
     ion ionisation in the G4BetaBlockModel
+- G4EmSaturation, G4EmBiasingManager - use std::size_t.
 
-## 2026-04-02 V.Ivanchenko
+## 2026-04-14 V.Ivanchenko (emutils-V11-04-09)
+- G4EmParameters - fixed typo - restore info printout.
+- G4EmDataHandler - fixed destruction at exit.
+
+## 2026-04-07 V.Ivanchenko (emutils-V11-04-08)
+- G4EmParameters, G4EmLowEParameters - added extra parameters and extend
+  information printout for energy transition between DNA and standard models.
+  New parameters for e-, protons, and ions.
+- G4EmLowEParameterMessenger - added UI commands for transition energies.
+
+## 2026-04-02 V.Ivanchenko (emutils-V11-04-07)
 - G4ionEffectiveCharge - renamed private method EffectiveCharge(...) ->
   ComputeCharge(..); return unitless charge square ratio and effective charge
   in units of charge; added comments to all methods in header file.
+- G4VEnergyLossProcess - optimized computation of mass ratio for ions.
+- G4EmCalculator - fixed Coverity report on computation of ion dEdx.
+- These modification does not change algorithms, numerically results are
+  unchanged. The cache for effective charge used in 11.4 does not yet returned.
 
-## 2026-03-26 D.Konstantinov
+## 2026-03-26 D.Konstantinov (emutils-V11-04-06)
 - G4ionEffectiveCharge - removed hidden mutable chargeCorrection member state.
   EffectiveChargeSquareRatio() depended on a member variable written as a side
   effect by EffectiveCharge(). This was sensitive to compiler optimization and
   inlining, causing wrong q2 values for ions and breaking event reproducibility
   on Windows MSVC. chargeCorrection is now returned via an output parameter.
+
+## 2026-03-06 V.Ivanchenko (emutils-V11-04-05)
+- G4EmDataRegistry, G4EmTableUtil, G4EmUtility, G4LossTableManager,
+  G4VEnergyLossProcess, G4VMultipleScattering - the first implementation
+  of parallel initialisation of EM physics.
+
+## 2026-02-17 G.Cosmo (emutils-V11-04-04)
+- Fixed compilation warnings for implicit type conversions on macOS/XCode.
+
+## 2026-02-15 V.Ivanchenko (emutils-V11-04-03)
+- G4LossTableBuilder - in order to avoid data race in backward propagator add
+  extra logical parameter to public methods, should not affect any existing
+  application. 
+
+## 2026-01-30 V.Ivanchenko (emutils-V11-04-02)
+- Most classes from the sublibrary are modified to prepare implementation of
+  parallel initialisation of EM physics: computation of physics tables are
+  performed using static utilities; tables and vector built during
+  initialisation are stored in static area; processes for different particles
+  may be initialized independently. Also some technical things were done during
+  this process: more use of const pointers and methods; improved debug printouts;
+  removed old commented debug printouts; removed TABS; improved comments;
+  removed unused headers. Results of 25 EM tests show full numerical agreement
+  with the results of the 11.4 release.
+
+## 2026-01-16 S.Okada (emutils-V11-04-01)
+- G4EmParameters, G4EmLowEParameters - added member functions to enable/disable
+  the usage of multiple ionisation for DNA physics
+- G4EmLowEParametersMessenger - added corresponding command
+
+## 2025-12-28 V.Ivanchenko (emutils-V11-04-00)
+- G4EmCalculator - fixed Coverity warnings by addition of check on energy
 
 ## 2025-11-06 V.Ivanchenko (emutils-V11-03-15)
 - G4EmParameters - fixed typo in printout
@@ -38,7 +99,7 @@ It must **not** be used as a substitute for writing good git commit messages!
   processes and models
 
 ## 2025-09-10 V.Ivanchenko (emutils-V11-03-13)
-- G4EmParameters, G4EmLowEParameters - added DNA upper limits in energy 
+- G4EmParameters, G4EmLowEParameters - added DNA upper limits in energy
 
 ## 2025-08-04 V.Ivanchenko (emutils-V11-03-12)
 - G4EmCalculator - fixed Coverity warning
@@ -146,7 +207,7 @@ It must **not** be used as a substitute for writing good git commit messages!
     for atomic de-excitation (fluorescence, Auger e-, PIXE).
 
 ## 2024-05-22 V.Ivanchenko (emutils-V11-02-07)
-- G4EmUtility - simplify computation of cross section maximum for discrete 
+- G4EmUtility - simplify computation of cross section maximum for discrete
     processes to fix the problem of FPE if -O3 compiler option is used.
 
 ## 2024-05-20 H. Tran (emutils-V11-02-06)
@@ -177,7 +238,7 @@ chemistry time step model
 ## 2023-04-04 V.Ivanchenko (emutils-V11-02-02)
 - G4EmParameters - increased low-limit on maxKinEnergy parameter from
     10 MeV to 600 MeV in order to have standard ionisation and
-    multiple scattering always defined for DNA physics configurations. 
+    multiple scattering always defined for DNA physics configurations.
 
 ## 2024-04-03 S.Okada (emutils-V11-02-01)
 - G4LowEnergyEmProcessSubType

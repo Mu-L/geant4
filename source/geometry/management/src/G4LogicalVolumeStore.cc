@@ -28,15 +28,15 @@
 // Authors: Gabriele Cosmo & Paul Kent (CERN), 10.07.1995 - Initial version
 // --------------------------------------------------------------------
 
-#include "G4Types.hh"
 #include "G4LogicalVolumeStore.hh"
-#include "G4GeometryManager.hh"
 
 #include "G4AutoLock.hh"
+#include "G4GeometryManager.hh"
+#include "G4Types.hh"
 
 namespace
 {
-  G4Mutex mapMutex = G4MUTEX_INITIALIZER;
+G4Mutex mapMutex = G4MUTEX_INITIALIZER;
 }
 
 // ***************************************************************************
@@ -53,7 +53,7 @@ G4ThreadLocal G4bool G4LogicalVolumeStore::locked = false;
 // ***************************************************************************
 //
 G4LogicalVolumeStore::G4LogicalVolumeStore()
-  
+
 {
   reserve(100);
 }
@@ -94,17 +94,25 @@ void G4LogicalVolumeStore::CleanStore()
   // Locks store for deletion of volumes. De-registration will be
   // performed at this stage. G4LogicalVolumes will not de-register themselves.
   //
-  locked = true;  
+  locked = true;
 
   G4LogicalVolumeStore* store = GetInstance();
 
-  for(const auto & pos : *store)
+  for (const auto& pos : *store)
   {
-    if (fgNotifier != nullptr) { fgNotifier->NotifyDeRegistration(); }
-    if (pos != nullptr) { pos->Lock(); delete pos; }
+    if (fgNotifier != nullptr)
+    {
+      fgNotifier->NotifyDeRegistration();
+    }
+    if (pos != nullptr)
+    {
+      pos->Lock();
+      delete pos;
+    }
   }
 
-  store->bmap.clear(); store->mvalid = false;
+  store->bmap.clear();
+  store->mvalid = false;
   locked = false;
   store->clear();
 }
@@ -126,9 +134,12 @@ void G4LogicalVolumeStore::SetNotifier(G4VStoreNotifier* pNotifier)
 void G4LogicalVolumeStore::UpdateMap()
 {
   G4AutoLock l(&mapMutex);  // to avoid thread contention at initialisation
-  if (mvalid) { return; }
+  if (mvalid)
+  {
+    return;
+  }
   bmap.clear();
-  for(const auto & pos : *GetInstance())
+  for (const auto& pos : *GetInstance())
   {
     const G4String& vol_name = pos->GetName();
     auto it = bmap.find(vol_name);
@@ -138,7 +149,7 @@ void G4LogicalVolumeStore::UpdateMap()
     }
     else
     {
-      std::vector<G4LogicalVolume*> vol_vec { pos };
+      std::vector<G4LogicalVolume*> vol_vec{pos};
       bmap.insert(std::make_pair(vol_name, vol_vec));
     }
   }
@@ -162,10 +173,13 @@ void G4LogicalVolumeStore::Register(G4LogicalVolume* pVolume)
   }
   else
   {
-    std::vector<G4LogicalVolume*> vol_vec { pVolume };
+    std::vector<G4LogicalVolume*> vol_vec{pVolume};
     store->bmap.insert(std::make_pair(vol_name, vol_vec));
   }
-  if (fgNotifier != nullptr) { fgNotifier->NotifyRegistration(); }
+  if (fgNotifier != nullptr)
+  {
+    fgNotifier->NotifyRegistration();
+  }
   store->mvalid = true;
 }
 
@@ -176,12 +190,15 @@ void G4LogicalVolumeStore::Register(G4LogicalVolume* pVolume)
 void G4LogicalVolumeStore::DeRegister(G4LogicalVolume* pVolume)
 {
   G4LogicalVolumeStore* store = GetInstance();
-  if (!locked)    // Do not de-register if locked !
+  if (!locked)  // Do not de-register if locked !
   {
-    if (fgNotifier != nullptr) { fgNotifier->NotifyDeRegistration(); }
-    for (auto i=store->cbegin(); i!=store->cend(); ++i)
+    if (fgNotifier != nullptr)
     {
-      if (**i==*pVolume)
+      fgNotifier->NotifyDeRegistration();
+    }
+    for (auto i = store->cbegin(); i != store->cend(); ++i)
+    {
+      if (**i == *pVolume)
       {
         store->erase(i);
         break;
@@ -193,9 +210,9 @@ void G4LogicalVolumeStore::DeRegister(G4LogicalVolume* pVolume)
     {
       if (it->second.size() > 1)
       {
-        for (auto i=it->second.cbegin(); i!=it->second.cend(); ++i)
+        for (auto i = it->second.cbegin(); i != it->second.cend(); ++i)
         {
-          if (**i==*pVolume)
+          if (**i == *pVolume)
           {
             it->second.erase(i);
             break;
@@ -214,38 +231,36 @@ void G4LogicalVolumeStore::DeRegister(G4LogicalVolume* pVolume)
 // Retrieve the first or last volume pointer in the container having that name
 // ***************************************************************************
 //
-G4LogicalVolume*
-G4LogicalVolumeStore::GetVolume(const G4String& name, G4bool verbose,
-                                G4bool reverseSearch) const
+G4LogicalVolume* G4LogicalVolumeStore::GetVolume(const G4String& name, G4bool verbose,
+                                                 G4bool reverseSearch) const
 {
   G4LogicalVolumeStore* store = GetInstance();
-  if (!store->mvalid)  { store->UpdateMap(); }
-  auto pos = store->bmap.find(name);
-  if(pos != store->bmap.cend())
+  if (!store->mvalid)
   {
-    if ((verbose) && (pos->second.size()>1))
+    store->UpdateMap();
+  }
+  auto pos = store->bmap.find(name);
+  if (pos != store->bmap.cend())
+  {
+    if ((verbose) && (pos->second.size() > 1))
     {
       std::ostringstream message;
-      message << "There exists more than ONE logical volume in store named: "
-              << name << "!" << G4endl
-              << "Returning the first found.";
-      G4Exception("G4LogicalVolumeStore::GetVolume()",
-                  "GeomMgt1001", JustWarning, message);
+      message << "There exists more than ONE logical volume in store named: " << name << "!"
+              << G4endl << "Returning the first found.";
+      G4Exception("G4LogicalVolumeStore::GetVolume()", "GeomMgt1001", JustWarning, message);
     }
-    if(reverseSearch)
+    if (reverseSearch)
     {
-      return pos->second[pos->second.size()-1];
+      return pos->second[pos->second.size() - 1];
     }
     return pos->second[0];
   }
   if (verbose)
   {
-     std::ostringstream message;
-     message << "Volume NOT found in store !" << G4endl
-             << "        Volume " << name << " NOT found in store !" << G4endl
-             << "        Returning NULL pointer.";
-     G4Exception("G4LogicalVolumeStore::GetVolume()",
-                 "GeomMgt1001", JustWarning, message);
+    std::ostringstream message;
+    message << "Volume NOT found in store !" << G4endl << "        Volume " << name
+            << " NOT found in store !" << G4endl << "        Returning NULL pointer.";
+    G4Exception("G4LogicalVolumeStore::GetVolume()", "GeomMgt1001", JustWarning, message);
   }
   return nullptr;
 }

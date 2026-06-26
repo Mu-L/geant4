@@ -4,6 +4,7 @@
 // G.Barrand: pure header version of fpng found at https://github.com/richgel999/fpng
 //            The original namespace fpng had been changed to tools::fpng to avoid
 //            clashes with potential other usage of fpng within the same software.
+// clang-format off
 
 // fpng.h - unlicense (see end of fpng.cpp)
 

@@ -32,12 +32,12 @@
 //  gain of energy of charged particles when they are tracked back.
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4ContinuousGainOfEnergy_h
-#define G4ContinuousGainOfEnergy_h 1
+#ifndef G4CONTINUOUSGAINOFENERGY_HH
+#define G4CONTINUOUSGAINOFENERGY_HH
 
-#include "globals.hh"
 #include "G4ProductionCutsTable.hh"
 #include "G4VContinuousProcess.hh"
+#include "globals.hh"
 
 class G4Material;
 class G4MaterialCutsCouple;
@@ -50,67 +50,66 @@ class G4VEnergyLossProcess;
 
 class G4ContinuousGainOfEnergy : public G4VContinuousProcess
 {
- public:
-  explicit G4ContinuousGainOfEnergy(const G4String& name = "EnergyGain",
-                                    G4ProcessType type   = fElectromagnetic);
+  public:
 
-  ~G4ContinuousGainOfEnergy() override;
+    explicit G4ContinuousGainOfEnergy(const G4String& name = "EnergyGain",
+                                      G4ProcessType type = fElectromagnetic);
 
-  G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&) override;
+    ~G4ContinuousGainOfEnergy() override;
 
-  void SetLossFluctuations(G4bool val);
+    G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&) override;
 
-  inline void SetDirectEnergyLossProcess(G4VEnergyLossProcess* aProcess)
-  {
-    fDirectEnergyLossProcess = aProcess;
-  };
+    void SetLossFluctuations(G4bool val);
 
-  void SetDirectParticle(G4ParticleDefinition* p);
+    inline void SetDirectEnergyLossProcess(G4VEnergyLossProcess* aProcess)
+    {
+      fDirectEnergyLossProcess = aProcess;
+    };
 
-  void ProcessDescription(std::ostream&) const override;
-  void DumpInfo() const override { ProcessDescription(G4cout); };
+    void SetDirectParticle(G4ParticleDefinition* p);
 
-  G4ContinuousGainOfEnergy(G4ContinuousGainOfEnergy&) = delete;
-  G4ContinuousGainOfEnergy& operator=(const G4ContinuousGainOfEnergy& right) =
-    delete;
+    void ProcessDescription(std::ostream&) const override;
+    void DumpInfo() const override { ProcessDescription(G4cout); };
 
- protected:
-  G4double GetContinuousStepLimit(const G4Track& track,
-                                  G4double previousStepSize,
-                                  G4double currentMinimumStep,
-                                  G4double& currentSafety) override;
+    G4ContinuousGainOfEnergy(G4ContinuousGainOfEnergy&) = delete;
+    G4ContinuousGainOfEnergy& operator=(const G4ContinuousGainOfEnergy& right) = delete;
 
- private:
-  void DefineMaterial(const G4MaterialCutsCouple* couple);
-  void SetDynamicMassCharge(const G4Track& track, G4double energy);
+  protected:
 
-  const G4Material* fCurrentMaterial = nullptr;
-  const G4MaterialCutsCouple* fCurrentCouple = nullptr;
+    G4double GetContinuousStepLimit(const G4Track& track, G4double previousStepSize,
+                                    G4double currentMinimumStep, G4double& currentSafety) override;
 
-  G4VEmModel* fCurrentModel                      = nullptr;
-  G4VEnergyLossProcess* fDirectEnergyLossProcess = nullptr;
-  G4ParticleDefinition* fDirectPartDef           = nullptr;
+  private:
 
-  G4double fCurrentTcut      = 0.;
-  G4double fPreStepKinEnergy = 1.;
-  G4double fLinLossLimit     = 0.05;
-  G4double fMassRatio        = 1.;
+    void DefineMaterial(const G4MaterialCutsCouple* couple);
+    void SetDynamicMassCharge(const G4Track& track, G4double energy);
 
-  size_t fCurrentCoupleIndex = 9999999;
+    const G4Material* fCurrentMaterial = nullptr;
+    const G4MaterialCutsCouple* fCurrentCouple = nullptr;
 
-  G4bool fIsIon                      = false;
-  G4bool fLossFluctuationFlag        = true;
-  G4bool fLossFluctuationArePossible = true;
+    G4VEmModel* fCurrentModel = nullptr;
+    G4VEnergyLossProcess* fDirectEnergyLossProcess = nullptr;
+    G4ParticleDefinition* fDirectPartDef = nullptr;
+
+    G4double fCurrentTcut = 0.;
+    G4double fPreStepKinEnergy = 1.;
+    G4double fLinLossLimit = 0.05;
+    G4double fMassRatio = 1.;
+
+    size_t fCurrentCoupleIndex = 9999999;
+
+    G4bool fIsIon = false;
+    G4bool fLossFluctuationFlag = true;
+    G4bool fLossFluctuationArePossible = true;
 };
 
 ///////////////////////////////////////////////////////
-inline void G4ContinuousGainOfEnergy::DefineMaterial(
-  const G4MaterialCutsCouple* couple)
+inline void G4ContinuousGainOfEnergy::DefineMaterial(const G4MaterialCutsCouple* couple)
 {
-  if(couple != fCurrentCouple)
+  if (couple != fCurrentCouple)
   {
-    fCurrentCouple      = couple;
-    fCurrentMaterial    = couple->GetMaterial();
+    fCurrentCouple = couple;
+    fCurrentMaterial = couple->GetMaterial();
     fCurrentCoupleIndex = couple->GetIndex();
 
     const std::vector<G4double>* aVec =

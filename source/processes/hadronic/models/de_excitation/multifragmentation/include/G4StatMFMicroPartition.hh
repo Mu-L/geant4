@@ -28,94 +28,86 @@
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara
 
-#ifndef G4StatMFMicroPartition_h
-#define G4StatMFMicroPartition_h 1
+#ifndef G4STATMFMICROPARTITION_HH
+#define G4STATMFMICROPARTITION_HH
 
-#include  <vector>
-
-#include "globals.hh"
-#include "G4StatMFParameters.hh"
 #include "G4StatMFChannel.hh"
+#include "G4StatMFParameters.hh"
+#include "globals.hh"
 
-class G4StatMFMicroPartition {
+#include <vector>
 
-public:
+class G4StatMFMicroPartition
+{
+  public:
+
     // Constructor
-    G4StatMFMicroPartition(G4int A, G4int Z) :
-	theA(A), theZ(Z), _Probability(0.0), _Temperature(0.0), 
-	_Entropy(0.0) {};
-
+    G4StatMFMicroPartition(G4int A, G4int Z)
+      : theA(A), theZ(Z), _Probability(0.0), _Temperature(0.0), _Entropy(0.0) {};
 
     // Destructor
     ~G4StatMFMicroPartition() {};
 
+  private:
 
-private:
     // Default constructor
     G4StatMFMicroPartition() {};
-	
+
     // Copy constructor
-    G4StatMFMicroPartition(const G4StatMFMicroPartition & right);
+    G4StatMFMicroPartition(const G4StatMFMicroPartition& right);
 
     // operators
-    G4StatMFMicroPartition & operator=(const G4StatMFMicroPartition & right);
-public:
-    G4bool operator==(const G4StatMFMicroPartition & right) const;
-    G4bool operator!=(const G4StatMFMicroPartition & right) const;
+    G4StatMFMicroPartition& operator=(const G4StatMFMicroPartition& right);
 
-public:
+  public:
+
+    G4bool operator==(const G4StatMFMicroPartition& right) const;
+    G4bool operator!=(const G4StatMFMicroPartition& right) const;
+
+  public:
 
     // Gives fragments charges
-    G4StatMFChannel * ChooseZ(G4int A0, G4int Z0, G4double MeanT);	
+    G4StatMFChannel* ChooseZ(G4int A0, G4int Z0, G4double MeanT);
 
-    G4double GetProbability(void)
-	{ return _Probability; }
-	
+    G4double GetProbability(void) { return _Probability; }
+
     void SetPartitionFragment(G4int anA)
-	{ 
-	    _thePartition.push_back(anA);
-	    CoulombFreeEnergy(anA);
-	}
-	
-    void Normalize(G4double Normalization)
-	{ _Probability /= Normalization; }
+    {
+      _thePartition.push_back(anA);
+      CoulombFreeEnergy(anA);
+    }
 
-    G4double CalcPartitionProbability(G4double U,
-				      G4double FreeInternalE0,
-				      G4double SCompound);
-								
-    G4double GetTemperature(void)
-	{
-	    return _Temperature;
-	}
-	
-    G4double GetEntropy(void)
-	{
-	    return _Entropy;
-	}
+    void Normalize(G4double Normalization) { _Probability /= Normalization; }
 
-private:
+    G4double CalcPartitionProbability(G4double U, G4double FreeInternalE0, G4double SCompound);
+
+    G4double GetTemperature(void) { return _Temperature; }
+
+    G4double GetEntropy(void) { return _Entropy; }
+
+  private:
 
     void CoulombFreeEnergy(G4int anA);
 
-    G4double CalcPartitionTemperature(G4double U, 
-				      G4double FreeInternalE0);
+    G4double CalcPartitionTemperature(G4double U, G4double FreeInternalE0);
 
     G4double GetPartitionEnergy(G4double T);
-	
+
     G4double GetCoulombEnergy(void);
 
     G4double GetDegeneracyFactor(G4int A);
-	
-    G4double InvLevelDensity(G4double Af) 
-	{
-	    // Calculate Inverse Density Level
-	    // Epsilon0*(1 + 3 /(Af - 1))
-	    if (Af < 1.5) return 0.0;
-	    else return G4StatMFParameters::GetEpsilon0()*(1.0+3.0/(Af - 1.0));
-	}
 
-private:
+    G4double InvLevelDensity(G4double Af)
+    {
+      // Calculate Inverse Density Level
+      // Epsilon0*(1 + 3 /(Af - 1))
+      if (Af < 1.5)
+        return 0.0;
+      else
+        return G4StatMFParameters::GetEpsilon0() * (1.0 + 3.0 / (Af - 1.0));
+    }
+
+  private:
 
     // A and Z of initial nucleus
     G4int theA;
@@ -123,18 +115,17 @@ private:
 
     // Partition probability
     G4double _Probability;
-	
+
     // Partition temperature
     G4double _Temperature;
-	
+
     // Partition entropy
     G4double _Entropy;
-	
+
     // The partition itself
     std::vector<G4int> _thePartition;
-	
-    std::vector<G4double> _theCoulombFreeEnergy;
 
+    std::vector<G4double> _theCoulombFreeEnergy;
 };
 
 #endif

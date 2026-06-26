@@ -24,8 +24,8 @@
 // ********************************************************************
 //
 
-#ifndef TRANSPORTATION_H
-#define TRANSPORTATION_H
+#ifndef G4CHEMREBOUNDTRANSPORTATION_HH
+#define G4CHEMREBOUNDTRANSPORTATION_HH
 
 #include "G4DNABoundingBox.hh"
 #include "G4ITReaction.hh"
@@ -39,9 +39,11 @@ class G4ChemReboundTransportation : public G4ITTransportation
 {
     using MolConf = const G4MolecularConfiguration*;
 
-public:
+  public:
+
     explicit G4ChemReboundTransportation(const G4String& aName = "ChemReboundTransportation",
-                                       const G4DNABoundingBox* = nullptr, G4int verbosityLevel = 0);
+                                         const G4DNABoundingBox* = nullptr,
+                                         G4int verbosityLevel = 0);
     ~G4ChemReboundTransportation() override = default;
     G4ChemReboundTransportation(const G4ChemReboundTransportation&) = delete;
     G4ChemReboundTransportation& operator=(const G4ChemReboundTransportation&) = delete;
@@ -61,12 +63,14 @@ public:
     static G4double calculateNextCoordinate(G4double nextPos, G4double high, G4double low);
     G4double GetTimeToBoundary(const G4Track& track);
 
-protected:
+  protected:
+
     //________________________________________________________________
     // Process information
     struct G4ITBrownianState : public G4ITTransportationState
     {
-    public:
+      public:
+
         G4ITBrownianState();
         ~G4ITBrownianState() override = default;
         G4String GetType() override { return "Rebound"; }

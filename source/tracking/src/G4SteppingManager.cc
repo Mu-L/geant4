@@ -60,22 +60,28 @@ G4SteppingManager::G4SteppingManager()
 
 #ifdef G4VERBOSE
   fVerbose = G4VSteppingVerbose::GetInstance();
-  if (fVerbose == nullptr) {
-    if (G4VSteppingVerbose::GetMasterInstance() == nullptr) {
+  if (fVerbose == nullptr)
+  {
+    if (G4VSteppingVerbose::GetMasterInstance() == nullptr)
+    {
       G4int prec = G4SteppingVerbose::BestUnitPrecision();
-      if (prec > 0) {
+      if (prec > 0)
+      {
         fVerbose = new G4SteppingVerboseWithUnits(prec);
       }
-      else {
+      else
+      {
         fVerbose = new G4SteppingVerbose();
       }
     }
-    else {
+    else
+    {
       fVerbose = G4VSteppingVerbose::GetMasterInstance()->Clone();
     }
     KillVerbose = true;
   }
-  else {
+  else
+  {
     KillVerbose = false;
   }
   fVerbose->SetManager(this);
@@ -124,13 +130,16 @@ G4StepStatus G4SteppingManager::Stepping()
 // Prelude
 //--------
 #ifdef G4VERBOSE
-  if (verboseLevel > 0) {
+  if (verboseLevel > 0)
+  {
     fVerbose->NewStep();
   }
-  else if (verboseLevel == -1) {
+  else if (verboseLevel == -1)
+  {
     G4VSteppingVerbose::SetSilent(1);
   }
-  else {
+  else
+  {
     G4VSteppingVerbose::SetSilent(0);
   }
 #endif
@@ -163,8 +172,10 @@ G4StepStatus G4SteppingManager::Stepping()
   // AtRest Processes
   //-----------------
 
-  if (fTrack->GetTrackStatus() == fStopButAlive) {
-    if (MAXofAtRestLoops > 0) {
+  if (fTrack->GetTrackStatus() == fStopButAlive)
+  {
+    if (MAXofAtRestLoops > 0)
+    {
       InvokeAtRestDoItProcs();
       fStepStatus = fAtRestDoItProc;
       fStep->GetPostStepPoint()->SetStepStatus(fStepStatus);
@@ -182,7 +193,8 @@ G4StepStatus G4SteppingManager::Stepping()
   // AlongStep and PostStep Processes
   //---------------------------------
 
-  else {
+  else
+  {
     // Find minimum Step length demanded by active disc./cont. processes
     DefinePhysicalStepLength();
 
@@ -241,16 +253,19 @@ G4StepStatus G4SteppingManager::Stepping()
   //
   fCurrentVolume = fStep->GetPreStepPoint()->GetPhysicalVolume();
   StepControlFlag = fStep->GetControlFlag();
-  if (fCurrentVolume != nullptr && StepControlFlag != AvoidHitInvocation) {
+  if (fCurrentVolume != nullptr && StepControlFlag != AvoidHitInvocation)
+  {
     fSensitive = fStep->GetPreStepPoint()->GetSensitiveDetector();
-    if (fSensitive != nullptr) {
+    if (fSensitive != nullptr)
+    {
       fSensitive->Hit(fStep);
     }
   }
 
   // User intervention process
   //
-  if (fUserSteppingAction != nullptr) {
+  if (fUserSteppingAction != nullptr)
+  {
     fUserSteppingAction->UserSteppingAction(fStep);
   }
 
@@ -300,25 +315,30 @@ void G4SteppingManager::SetInitialStep(G4Track* valueTrack)
   // If the primary track has 'zero' kinetic energy, set the track
   // state to 'StopButAlive'
   //
-  if (fTrack->GetKineticEnergy() <= 0.0) {
+  if (fTrack->GetKineticEnergy() <= 0.0)
+  {
     fTrack->SetTrackStatus(fStopButAlive);
   }
 
   // Set Touchable to track and a private attribute of G4SteppingManager
 
-  if (! fTrack->GetTouchableHandle()) {
+  if (!fTrack->GetTouchableHandle())
+  {
     G4ThreeVector direction = fTrack->GetMomentumDirection();
     fNavigator->LocateGlobalPointAndSetup(fTrack->GetPosition(), &direction, false, false);
     fTouchableHandle = fNavigator->CreateTouchableHistory();
     fTrack->SetTouchableHandle(fTouchableHandle);
     fTrack->SetNextTouchableHandle(fTouchableHandle);
   }
-  else {
+  else
+  {
     fTrack->SetNextTouchableHandle(fTouchableHandle = fTrack->GetTouchableHandle());
     G4VPhysicalVolume* oldTopVolume = fTrack->GetTouchableHandle()->GetVolume();
-    G4VPhysicalVolume* newTopVolume = fNavigator->ResetHierarchyAndLocate(fTrack->GetPosition(),
-      fTrack->GetMomentumDirection(), *((G4TouchableHistory*)fTrack->GetTouchableHandle()()));
-    if (newTopVolume != oldTopVolume || oldTopVolume->GetRegularStructureId() == 1) {
+    G4VPhysicalVolume* newTopVolume =
+      fNavigator->ResetHierarchyAndLocate(fTrack->GetPosition(), fTrack->GetMomentumDirection(),
+                                          *((G4TouchableHistory*)fTrack->GetTouchableHandle()()));
+    if (newTopVolume != oldTopVolume || oldTopVolume->GetRegularStructureId() == 1)
+    {
       fTouchableHandle = fNavigator->CreateTouchableHistory();
       fTrack->SetTouchableHandle(fTouchableHandle);
       fTrack->SetNextTouchableHandle(fTouchableHandle);
@@ -327,13 +347,15 @@ void G4SteppingManager::SetInitialStep(G4Track* valueTrack)
 
   // Set OriginTouchableHandle for primary track
   //
-  if (fTrack->GetParentID() == 0) {
+  if (fTrack->GetParentID() == 0)
+  {
     fTrack->SetOriginTouchableHandle(fTrack->GetTouchableHandle());
   }
 
   // Set vertex information of G4Track at here
   //
-  if (fTrack->GetCurrentStepNumber() == 0) {
+  if (fTrack->GetCurrentStepNumber() == 0)
+  {
     fTrack->SetVertexPosition(fTrack->GetPosition());
     fTrack->SetVertexMomentumDirection(fTrack->GetMomentumDirection());
     fTrack->SetVertexKineticEnergy(fTrack->GetKineticEnergy());
@@ -345,14 +367,16 @@ void G4SteppingManager::SetInitialStep(G4Track* valueTrack)
 
   // If track is already outside the world boundary, kill it
   //
-  if (fCurrentVolume == nullptr) {
+  if (fCurrentVolume == nullptr)
+  {
     // If the track is a primary, stop processing
-    if (fTrack->GetParentID() == 0) {
+    if (fTrack->GetParentID() == 0)
+    {
       G4cerr << "ERROR - G4SteppingManager::SetInitialStep()" << G4endl
              << "        Primary particle starting at - " << fTrack->GetPosition()
              << " - is outside of the world volume." << G4endl;
       G4Exception("G4SteppingManager::SetInitialStep()", "Tracking0010", FatalException,
-        "Primary vertex outside of the world!");
+                  "Primary vertex outside of the world!");
     }
 
     fTrack->SetTrackStatus(fStopAndKill);
@@ -360,7 +384,8 @@ void G4SteppingManager::SetInitialStep(G4Track* valueTrack)
            << "          Initial track position is outside world! - " << fTrack->GetPosition()
            << G4endl;
   }
-  else {
+  else
+  {
     // Initial set up for attributes of 'Step'
     fStep->InitializeStep(fTrack);
   }
@@ -379,13 +404,14 @@ void G4SteppingManager::GetProcessNumber()
 #endif
 
   G4ProcessManager* pm = fTrack->GetDefinition()->GetProcessManager();
-  if (pm == nullptr) {
+  if (pm == nullptr)
+  {
     G4cerr << "ERROR - G4SteppingManager::GetProcessNumber()" << G4endl
            << "        ProcessManager is NULL for particle = "
            << fTrack->GetDefinition()->GetParticleName()
            << ", PDG_code = " << fTrack->GetDefinition()->GetPDGEncoding() << G4endl;
     G4Exception("G4SteppingManager::GetProcessNumber()", "Tracking0011", FatalException,
-      "Process Manager is not found.");
+                "Process Manager is not found.");
     return;
   }
 
@@ -419,9 +445,8 @@ void G4SteppingManager::GetProcessNumber()
   G4cout << "G4SteppingManager::GetProcessNumber: #ofPostStep=" << MAXofPostStepLoops << G4endl;
 #endif
 
-  if (SizeOfSelectedDoItVector < MAXofAtRestLoops ||
-      SizeOfSelectedDoItVector < MAXofAlongStepLoops ||
-      SizeOfSelectedDoItVector < MAXofPostStepLoops)
+  if (SizeOfSelectedDoItVector < MAXofAtRestLoops || SizeOfSelectedDoItVector < MAXofAlongStepLoops
+      || SizeOfSelectedDoItVector < MAXofPostStepLoops)
   {
     G4cerr << "ERROR - G4SteppingManager::GetProcessNumber()" << G4endl
            << "        SizeOfSelectedDoItVector= " << SizeOfSelectedDoItVector
@@ -429,7 +454,7 @@ void G4SteppingManager::GetProcessNumber()
            << "        or MAXofAlongStepLoops= " << MAXofAlongStepLoops
            << " or MAXofPostStepLoops= " << MAXofPostStepLoops << G4endl;
     G4Exception("G4SteppingManager::GetProcessNumber()", "Tracking0012", FatalException,
-      "The array size is smaller than the actual No of processes.");
+                "The array size is smaller than the actual No of processes.");
   }
 }
 
@@ -456,9 +481,11 @@ void G4SteppingManager::DefinePhysicalStepLength()
   //
   fPostStepDoItProcTriggered = MAXofPostStepLoops;
 
-  for (std::size_t np = 0; np < MAXofPostStepLoops; ++np) {
+  for (std::size_t np = 0; np < MAXofPostStepLoops; ++np)
+  {
     fCurrentProcess = (*fPostStepGetPhysIntVector)((G4int)np);
-    if (fCurrentProcess == nullptr) {
+    if (fCurrentProcess == nullptr)
+    {
       (*fSelectedPostStepDoItVector)[np] = InActivated;
       continue;
     }  // NULL means the process is inactivated by a user on fly
@@ -468,7 +495,8 @@ void G4SteppingManager::DefinePhysicalStepLength()
     if (verboseLevel > 0) fVerbose->DPSLPostStep();
 #endif
 
-    switch (fCondition) {
+    switch (fCondition)
+    {
       case ExclusivelyForced:
         (*fSelectedPostStepDoItVector)[np] = ExclusivelyForced;
         fStepStatus = fExclusivelyForcedProc;
@@ -477,7 +505,7 @@ void G4SteppingManager::DefinePhysicalStepLength()
       case Conditionally:
         // (*fSelectedPostStepDoItVector)[np] = Conditionally;
         G4Exception("G4SteppingManager::DefinePhysicalStepLength()", "Tracking1001", FatalException,
-          "This feature no more supported");
+                    "This feature no more supported");
         break;
       case Forced:
         (*fSelectedPostStepDoItVector)[np] = Forced;
@@ -490,14 +518,17 @@ void G4SteppingManager::DefinePhysicalStepLength()
         break;
     }
 
-    if (fCondition == ExclusivelyForced) {
-      for (std::size_t nrest = np + 1; nrest < MAXofPostStepLoops; ++nrest) {
+    if (fCondition == ExclusivelyForced)
+    {
+      for (std::size_t nrest = np + 1; nrest < MAXofPostStepLoops; ++nrest)
+      {
         (*fSelectedPostStepDoItVector)[nrest] = InActivated;
       }
       return;  // Take note the 'return' at here !!!
     }
 
-    if (physIntLength < PhysicalStep) {
+    if (physIntLength < PhysicalStep)
+    {
       PhysicalStep = physIntLength;
       fStepStatus = fPostStepDoItProc;
       fPostStepDoItProcTriggered = G4int(np);
@@ -505,8 +536,10 @@ void G4SteppingManager::DefinePhysicalStepLength()
     }
   }
 
-  if (fPostStepDoItProcTriggered < MAXofPostStepLoops) {
-    if ((*fSelectedPostStepDoItVector)[fPostStepDoItProcTriggered] == InActivated) {
+  if (fPostStepDoItProcTriggered < MAXofPostStepLoops)
+  {
+    if ((*fSelectedPostStepDoItVector)[fPostStepDoItProcTriggered] == InActivated)
+    {
       (*fSelectedPostStepDoItVector)[fPostStepDoItProcTriggered] = NotForced;
     }
   }
@@ -517,24 +550,27 @@ void G4SteppingManager::DefinePhysicalStepLength()
   G4double safetyProposedToAndByProcess = proposedSafety;
   G4bool delegateToTransportation = false;
 
-  for (std::size_t kp = 0; kp < MAXofAlongStepLoops; ++kp) {
+  for (std::size_t kp = 0; kp < MAXofAlongStepLoops; ++kp)
+  {
     fCurrentProcess = (*fAlongStepGetPhysIntVector)[(G4int)kp];
     if (fCurrentProcess == nullptr) continue;
     // NULL means the process is inactivated by a user on fly
 
-    physIntLength = fCurrentProcess->AlongStepGPIL(
-      *fTrack, fPreviousStepSize, PhysicalStep, safetyProposedToAndByProcess, &fGPILSelection);
+    physIntLength = fCurrentProcess->AlongStepGPIL(*fTrack, fPreviousStepSize, PhysicalStep,
+                                                   safetyProposedToAndByProcess, &fGPILSelection);
 #ifdef G4VERBOSE
     if (verboseLevel > 0) fVerbose->DPSLAlongStep();
 #endif
 
-    if (physIntLength < PhysicalStep) {
+    if (physIntLength < PhysicalStep)
+    {
       PhysicalStep = physIntLength;
 
       // Check if the process wants to be the GPIL winner. For example,
       // multi-scattering proposes Step limit, but won't be the winner
       //
-      if (fGPILSelection == CandidateForSelection) {
+      if (fGPILSelection == CandidateForSelection)
+      {
         fStepStatus = fAlongStepDoItProc;
         fStep->GetPostStepPoint()->SetProcessDefinedStep(fCurrentProcess);
       }
@@ -546,7 +582,8 @@ void G4SteppingManager::DefinePhysicalStepLength()
 
       // Transportation is assumed to be the last process in the vector
       // Transportation is winning
-      if (kp == MAXofAlongStepLoops - 1) {
+      if (kp == MAXofAlongStepLoops - 1)
+      {
         // This used to set fStepStatus = fGeomBoundary, but it was moved to
         // G4Transportation::AlongStepDoIt where the process can actually
         // decide if there is a volume boundary.
@@ -557,18 +594,21 @@ void G4SteppingManager::DefinePhysicalStepLength()
     // Make sure to check the safety, even if Step is not limited
     // by this process
     //
-    if (safetyProposedToAndByProcess < proposedSafety) {
+    if (safetyProposedToAndByProcess < proposedSafety)
+    {
       // proposedSafety keeps the smallest value
       //
       proposedSafety = safetyProposedToAndByProcess;
     }
-    else {
+    else
+    {
       // safetyProposedToAndByProcess always proposes a valid safety
       //
       safetyProposedToAndByProcess = proposedSafety;
     }
   }
-  if (delegateToTransportation) {
+  if (delegateToTransportation)
+  {
     fStepStatus = fGeomBoundary;
     fStep->GetPostStepPoint()->SetProcessDefinedStep(fCurrentProcess);
   }
@@ -583,7 +623,8 @@ G4int G4SteppingManager::ProcessSecondariesFromParticleChange()
   G4int pushedSecondaries = 0;
 
   num2ndaries = fParticleChange->GetNumberOfSecondaries();
-  if (num2ndaries == 0) {
+  if (num2ndaries == 0)
+  {
     return 0;
   }
 
@@ -591,7 +632,8 @@ G4int G4SteppingManager::ProcessSecondariesFromParticleChange()
   // "combined" process such as G4GammaGeneralProcess.
   const G4VProcess* creatorProcess = fCurrentProcess->GetCreatorProcess();
 
-  for (G4int DSecLoop = 0; DSecLoop < num2ndaries; ++DSecLoop) {
+  for (G4int DSecLoop = 0; DSecLoop < num2ndaries; ++DSecLoop)
+  {
     tempSecondaryTrack = fParticleChange->GetSecondary(DSecLoop);
 
     // Set parentID
@@ -603,27 +645,32 @@ G4int G4SteppingManager::ProcessSecondariesFromParticleChange()
     // If this 2ndry particle has 'zero' kinetic energy, make sure
     // it invokes a rest process at the beginning of the tracking
     //
-    if (tempSecondaryTrack->GetKineticEnergy() <= DBL_MIN) {
+    if (tempSecondaryTrack->GetKineticEnergy() <= DBL_MIN)
+    {
       G4ProcessManager* pm = tempSecondaryTrack->GetDefinition()->GetProcessManager();
-      if (pm == nullptr) {
+      if (pm == nullptr)
+      {
         G4ExceptionDescription ED;
         ED << "A track without proper process manager is pushed\n"
            << "into the track stack.\n"
            << " Particle name : " << tempSecondaryTrack->GetDefinition()->GetParticleName()
            << " -- created by " << creatorProcess->GetProcessName() << ".";
         G4Exception("G4SteppingManager::ProcessSecondariesFromParticleChange()", "Tracking10051",
-          FatalException, ED);
+                    FatalException, ED);
       }
-      if (pm->GetAtRestProcessVector()->entries() > 0) {
+      if (pm->GetAtRestProcessVector()->entries() > 0)
+      {
         tempSecondaryTrack->SetTrackStatus(fStopButAlive);
         fSecondary->push_back(tempSecondaryTrack);
         ++pushedSecondaries;
       }
-      else {
+      else
+      {
         delete tempSecondaryTrack;
       }
     }
-    else {
+    else
+    {
       fSecondary->push_back(tempSecondaryTrack);
       ++pushedSecondaries;
     }
@@ -645,21 +692,26 @@ void G4SteppingManager::InvokeAtRestDoItProcs()
   fAtRestDoItProcTriggered = 0;
   shortestLifeTime = DBL_MAX;
 
-  for (std::size_t ri = 0; ri < MAXofAtRestLoops; ++ri) {
+  for (std::size_t ri = 0; ri < MAXofAtRestLoops; ++ri)
+  {
     fCurrentProcess = (*fAtRestGetPhysIntVector)[(G4int)ri];
-    if (fCurrentProcess == nullptr) {
+    if (fCurrentProcess == nullptr)
+    {
       (*fSelectedAtRestDoItVector)[ri] = InActivated;
       continue;
     }  // nullptr means the process is inactivated by a user on fly
 
     lifeTime = fCurrentProcess->AtRestGPIL(*fTrack, &fCondition);
 
-    if (fCondition == Forced) {
+    if (fCondition == Forced)
+    {
       (*fSelectedAtRestDoItVector)[ri] = Forced;
     }
-    else {
+    else
+    {
       (*fSelectedAtRestDoItVector)[ri] = InActivated;
-      if (lifeTime < shortestLifeTime) {
+      if (lifeTime < shortestLifeTime)
+      {
         shortestLifeTime = lifeTime;
         fAtRestDoItProcTriggered = G4int(ri);
         fStep->GetPostStepPoint()->SetProcessDefinedStep(fCurrentProcess);
@@ -680,12 +732,14 @@ void G4SteppingManager::InvokeAtRestDoItProcs()
   {
     // invoke selected process
     //
-    for (std::size_t np = 0; np < MAXofAtRestLoops; ++np) {
+    for (std::size_t np = 0; np < MAXofAtRestLoops; ++np)
+    {
       //
       // Note: DoItVector has inverse order against GetPhysIntVector
       //       and SelectedAtRestDoItVector.
       //
-      if ((*fSelectedAtRestDoItVector)[MAXofAtRestLoops - np - 1] != InActivated) {
+      if ((*fSelectedAtRestDoItVector)[MAXofAtRestLoops - np - 1] != InActivated)
+      {
         fCurrentProcess = (*fAtRestDoItVector)[(G4int)np];
         fParticleChange = fCurrentProcess->AtRestDoIt(*fTrack, *fStep);
 
@@ -719,13 +773,15 @@ void G4SteppingManager::InvokeAlongStepDoItProcs()
   // If the current Step is defined by a 'ExclusivelyForced'
   // PostStepDoIt, then don't invoke any AlongStepDoIt
   //
-  if (fStepStatus == fExclusivelyForcedProc) {
+  if (fStepStatus == fExclusivelyForcedProc)
+  {
     return;  // Take note 'return' is here !!!
   }
 
   // Invoke all active continuous processes
   //
-  for (std::size_t ci = 0; ci < MAXofAlongStepLoops; ++ci) {
+  for (std::size_t ci = 0; ci < MAXofAlongStepLoops; ++ci)
+  {
     fCurrentProcess = (*fAlongStepDoItVector)[(G4int)ci];
     if (fCurrentProcess == nullptr) continue;
     // NULL means the process is inactivated by a user on fly.
@@ -754,7 +810,8 @@ void G4SteppingManager::InvokeAlongStepDoItProcs()
   fStep->UpdateTrack();
   G4TrackStatus fNewStatus = fTrack->GetTrackStatus();
 
-  if (fNewStatus == fAlive && fTrack->GetKineticEnergy() <= DBL_MIN) {
+  if (fNewStatus == fAlive && fTrack->GetKineticEnergy() <= DBL_MIN)
+  {
     if (MAXofAtRestLoops > 0)
       fNewStatus = fStopButAlive;
     else
@@ -769,20 +826,23 @@ void G4SteppingManager::InvokePostStepDoItProcs()
 {
   // Invoke the specified discrete processes
   //
-  for (std::size_t np = 0; np < MAXofPostStepLoops; ++np) {
+  for (std::size_t np = 0; np < MAXofPostStepLoops; ++np)
+  {
     //
     // Note: DoItVector has inverse order against GetPhysIntVector
     //       and SelectedPostStepDoItVector.
     //
     G4int Cond = (*fSelectedPostStepDoItVector)[MAXofPostStepLoops - np - 1];
-    if (Cond != InActivated) {
-      if (((Cond == NotForced) && (fStepStatus == fPostStepDoItProc)) ||
-          ((Cond == Forced) && (fStepStatus != fExclusivelyForcedProc)) ||
-          ((Cond == ExclusivelyForced) && (fStepStatus == fExclusivelyForcedProc)) ||
-          ((Cond == StronglyForced)))
+    if (Cond != InActivated)
+    {
+      if (((Cond == NotForced) && (fStepStatus == fPostStepDoItProc))
+          || ((Cond == Forced) && (fStepStatus != fExclusivelyForcedProc))
+          || ((Cond == ExclusivelyForced) && (fStepStatus == fExclusivelyForcedProc))
+          || ((Cond == StronglyForced)))
       {
         InvokePSDIP(np);
-        if ((np == 0) && (fTrack->GetNextVolume() == nullptr)) {
+        if ((np == 0) && (fTrack->GetNextVolume() == nullptr))
+        {
           fStepStatus = fWorldBoundary;
           fStep->GetPostStepPoint()->SetStepStatus(fStepStatus);
         }
@@ -792,10 +852,13 @@ void G4SteppingManager::InvokePostStepDoItProcs()
     // Exit from PostStepLoop if the track has been killed,
     // but extra treatment for processes with Strongly Forced flag
     //
-    if (fTrack->GetTrackStatus() == fStopAndKill) {
-      for (std::size_t np1 = np + 1; np1 < MAXofPostStepLoops; ++np1) {
+    if (fTrack->GetTrackStatus() == fStopAndKill)
+    {
+      for (std::size_t np1 = np + 1; np1 < MAXofPostStepLoops; ++np1)
+      {
         G4int Cond2 = (*fSelectedPostStepDoItVector)[MAXofPostStepLoops - np1 - 1];
-        if (Cond2 == StronglyForced) {
+        if (Cond2 == StronglyForced)
+        {
           InvokePSDIP(np1);
         }
       }

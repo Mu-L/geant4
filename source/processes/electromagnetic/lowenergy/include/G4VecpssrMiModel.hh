@@ -25,7 +25,7 @@
 //
 //
 // Author: Alfonso Mantero
-//         
+//
 //
 // History:
 // -----------
@@ -39,40 +39,38 @@
 
 // -------------------------------------------------------------------
 
-
 #ifndef G4VECPSSRMIMODEL_HH
-#define G4VECPSSRMIMODEL_HH 1
+#define G4VECPSSRMIMODEL_HH
 
 #include "globals.hh"
 
-class G4VecpssrMiModel 
+class G4VecpssrMiModel
 {
+  public:
 
-public:
+    G4VecpssrMiModel();
 
-  G4VecpssrMiModel();
+    virtual ~G4VecpssrMiModel();
 
-  virtual ~G4VecpssrMiModel();
-			     
-  virtual G4double CalculateM1CrossSection(G4int zTarget,G4double massIncident, G4double energyIncident) = 0;
+    virtual G4double CalculateM1CrossSection(G4int zTarget, G4double massIncident,
+                                             G4double energyIncident) = 0;
 
-  virtual G4double CalculateM2CrossSection(G4int zTarget,G4double massIncident, G4double energyIncident) = 0;
+    virtual G4double CalculateM2CrossSection(G4int zTarget, G4double massIncident,
+                                             G4double energyIncident) = 0;
 
-  virtual G4double CalculateM3CrossSection(G4int zTarget,G4double massIncident, G4double energyIncident) = 0;
+    virtual G4double CalculateM3CrossSection(G4int zTarget, G4double massIncident,
+                                             G4double energyIncident) = 0;
 
-  virtual G4double CalculateM4CrossSection(G4int zTarget,G4double massIncident, G4double energyIncident) = 0;
+    virtual G4double CalculateM4CrossSection(G4int zTarget, G4double massIncident,
+                                             G4double energyIncident) = 0;
 
-  virtual G4double CalculateM5CrossSection(G4int zTarget,G4double massIncident, G4double energyIncident) = 0;
-				    
+    virtual G4double CalculateM5CrossSection(G4int zTarget, G4double massIncident,
+                                             G4double energyIncident) = 0;
 
-   
+  private:
 
-private:
-
-
-  G4VecpssrMiModel(const G4VecpssrMiModel&);
-  G4VecpssrMiModel & operator = (const G4VecpssrMiModel &right);
-
+    G4VecpssrMiModel(const G4VecpssrMiModel&);
+    G4VecpssrMiModel& operator=(const G4VecpssrMiModel& right);
 };
 
 #endif

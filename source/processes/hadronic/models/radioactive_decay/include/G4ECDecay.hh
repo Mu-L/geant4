@@ -29,23 +29,22 @@
 //  Author: D.H. Wright (SLAC)                                                //
 //  Date:   25 November 2014                                                  //
 //  Description: performs electron capture decay of radioactive nuclei, and   //
-//               returns daughter particles in rest frame of parent nucleus   // 
+//               returns daughter particles in rest frame of parent nucleus   //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4ECDecay_h
-#define G4ECDecay_h 1
+#ifndef G4ECDECAY_HH
+#define G4ECDECAY_HH
 
 #include "G4NuclearDecay.hh"
-
 
 class G4ECDecay : public G4NuclearDecay
 {
   public:
-    G4ECDecay(const G4ParticleDefinition* theParentNucleus,
-              const G4double& theBR, const G4double& Qvalue,
-              const G4double& excitation, const G4Ions::G4FloatLevelBase& flb,
-              const G4RadioactiveDecayMode& mode);
+
+    G4ECDecay(const G4ParticleDefinition* theParentNucleus, const G4double& theBR,
+              const G4double& Qvalue, const G4double& excitation,
+              const G4Ions::G4FloatLevelBase& flb, const G4RadioactiveDecayMode& mode);
 
     virtual ~G4ECDecay();
 
@@ -53,22 +52,21 @@ class G4ECDecay : public G4NuclearDecay
 
     virtual void DumpNuclearInfo();
 
-    void SetARM(G4bool onoff) {applyARM = onoff;}
+    void SetARM(G4bool onoff) { applyARM = onoff; }
 
   private:
+
     void DefineSubshellProbabilities(G4int Z, G4int A);
 
-
   private:
+
     const G4double transitionQ;
-    G4double PL1,PL2,PM1,PM2,PN1,PN2;
+    G4double PL1, PL2, PM1, PM2, PN1, PN2;
     G4bool applyARM;
 
-    //Ratio of subshells probability
+    // Ratio of subshells probability
     static const G4double PL2overPL1[100];
     static const G4double PM2overPM1[100];
     static const G4double PN2overPN1[100];
-
 };
 #endif
-

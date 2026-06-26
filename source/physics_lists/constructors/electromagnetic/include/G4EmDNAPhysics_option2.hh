@@ -25,8 +25,8 @@
 //
 //
 
-#ifndef G4EmDNAPhysics_option2_h
-#define G4EmDNAPhysics_option2_h 1
+#ifndef G4EMDNAPHYSICS_OPTION2_HH
+#define G4EMDNAPHYSICS_OPTION2_HH
 
 #include "G4EmDNAPhysics.hh"
 #include "globals.hh"
@@ -35,21 +35,15 @@
 
 class G4EmDNAPhysics_option2 : public G4EmDNAPhysics
 {
-public:
+  public:
 
-  explicit G4EmDNAPhysics_option2(G4int ver=1, const G4String& name="G4EmDNAPhysics_option2");
+    explicit G4EmDNAPhysics_option2(G4int ver = 1, const G4String& name = "G4EmDNAPhysics_option2");
 
-  ~G4EmDNAPhysics_option2() override = default;
+    ~G4EmDNAPhysics_option2() override = default;
 
-  void ConstructProcess() override;
+    void ConstructProcess() override;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-
-
-
-
-

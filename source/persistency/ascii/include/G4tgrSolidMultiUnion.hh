@@ -33,15 +33,15 @@
 //
 // Author: P.Heidary, AEOI - November 2021
 // --------------------------------------------------------------------
-#ifndef G4tgrSolidMultiUnion_hh
-#define G4tgrSolidMultiUnion_hh 1
+#ifndef G4TGRSOLIDMULTIUNION_HH
+#define G4TGRSOLIDMULTIUNION_HH
 
-#include <vector>
-
-#include "globals.hh"
-#include "G4tgrSolid.hh"
 #include "G4RotationMatrix.hh"
 #include "G4Transform3D.hh"
+#include "G4tgrSolid.hh"
+#include "globals.hh"
+
+#include <vector>
 
 class G4tgrSolidMultiUnion : public G4tgrSolid
 {
@@ -60,42 +60,40 @@ class G4tgrSolidMultiUnion : public G4tgrSolid
   private:
 
     // Placement and rotation of current solid
-    G4String          theRotMatName;
-    G4ThreeVector     thePosition;
+    G4String theRotMatName;
+    G4ThreeVector thePosition;
     G4RotationMatrix* theRotMat;
-    G4Transform3D     tr1;
-    G4int             nSolid;
+    G4Transform3D tr1;
+    G4int nSolid;
 
     // Vectors of parameters.
     std::vector<std::vector<G4double>*> theSolidParams;
 
     // Array to store Solids and Transformations.
-    std::vector<G4Transform3D>     theTransformations;
+    std::vector<G4Transform3D> theTransformations;
     std::vector<const G4tgrSolid*> theSolids;
 };
 
 inline const G4tgrSolid* G4tgrSolidMultiUnion::GetSolid(G4int ii) const
 {
-  if(ii > nSolid)
+  if (ii > nSolid)
   {
     std::ostringstream message;
-    message << "Only " << nSolid + 1 << " G4tgrSolids are available! " << 
-    " Asking for... " << ii + 1;
-    G4Exception("G4tgrSolidMultiUnion::GetSolid()", "InvalidInput", FatalException,
-                message);
+    message << "Only " << nSolid + 1 << " G4tgrSolids are available! " << " Asking for... "
+            << ii + 1;
+    G4Exception("G4tgrSolidMultiUnion::GetSolid()", "InvalidInput", FatalException, message);
   }
   return theSolids[ii];
 }
 
 inline const G4Transform3D G4tgrSolidMultiUnion::GetTransformation(G4int ii) const
 {
-  if(ii > nSolid)
+  if (ii > nSolid)
   {
     std::ostringstream message;
-    message << "Only " << nSolid + 1 << " G4tgrSolids are available! " << 
-    " Asking for... " << ii + 1;
-    G4Exception("G4tgrSolidMultiUnion::GetSolid()", "InvalidInput", FatalException,
-                message);
+    message << "Only " << nSolid + 1 << " G4tgrSolids are available! " << " Asking for... "
+            << ii + 1;
+    G4Exception("G4tgrSolidMultiUnion::GetSolid()", "InvalidInput", FatalException, message);
   }
   return theTransformations[ii];
 }

@@ -30,17 +30,17 @@
 // ----------------------------------------------------------------------
 
 #include "G4IStore.hh"
-#include "G4VPhysicalVolume.hh"
+
+#include "G4AutoLock.hh"
 #include "G4GeometryCell.hh"
 #include "G4GeometryCellStepStream.hh"
 #include "G4LogicalVolume.hh"
 #include "G4TransportationManager.hh"
-
-#include "G4AutoLock.hh"
+#include "G4VPhysicalVolume.hh"
 
 namespace
 {
-  G4Mutex IStoreMutex = G4MUTEX_INITIALIZER;
+G4Mutex IStoreMutex = G4MUTEX_INITIALIZER;
 }
 
 // ***************************************************************************
@@ -50,19 +50,17 @@ G4ThreadLocal G4IStore* G4IStore::fInstance = nullptr;
 
 G4IStore::G4IStore()
   : fWorldVolume(G4TransportationManager::GetTransportationManager()
-                 ->GetNavigatorForTracking()->GetWorldVolume())
-{
-}
+                   ->GetNavigatorForTracking()
+                   ->GetWorldVolume())
+{}
 
 G4IStore::G4IStore(const G4String& ParallelWorldName)
-  : fWorldVolume(G4TransportationManager::GetTransportationManager()
-                 ->GetParallelWorld(ParallelWorldName))
+  : fWorldVolume(
+      G4TransportationManager::GetTransportationManager()->GetParallelWorld(ParallelWorldName))
 {
 #ifdef G4VERBOSE
-  G4cout << " G4IStore:: ParallelWorldName = "
-         << ParallelWorldName << G4endl;
-  G4cout << " G4IStore:: fParallelWorldVolume = "
-         << fWorldVolume->GetName() << G4endl;
+  G4cout << " G4IStore:: ParallelWorldName = " << ParallelWorldName << G4endl;
+  G4cout << " G4IStore:: fParallelWorldVolume = " << fWorldVolume->GetName() << G4endl;
 #endif
 }
 
@@ -75,7 +73,8 @@ void G4IStore::SetWorldVolume()
 {
   G4cout << " G4IStore:: SetWorldVolume " << G4endl;
   fWorldVolume = G4TransportationManager::GetTransportationManager()
-                 ->GetNavigatorForTracking()->GetWorldVolume();
+                   ->GetNavigatorForTracking()
+                   ->GetWorldVolume();
   G4cout << " World volume is: " << fWorldVolume->GetName() << G4endl;
   // fGeometryCelli = new G4GeometryCellImportance;
 }
@@ -83,8 +82,7 @@ void G4IStore::SetWorldVolume()
 void G4IStore::SetParallelWorldVolume(const G4String& paraName)
 {
   G4cout << " G4IStore:: SetParallelWorldVolume " << G4endl;
-  fWorldVolume = G4TransportationManager::GetTransportationManager()
-                 ->GetParallelWorld(paraName);
+  fWorldVolume = G4TransportationManager::GetTransportationManager()->GetParallelWorld(paraName);
   G4cout << " ParallelWorld volume is: " << fWorldVolume->GetName() << G4endl;
   // fGeometryCelli = new G4GeometryCellImportance;
 }
@@ -104,14 +102,13 @@ void G4IStore::SetInternalIterator(const G4GeometryCell& gCell) const
   fCurrentIterator = fGeometryCelli.find(gCell);
 }
 
-void G4IStore::AddImportanceGeometryCell(G4double importance,
-                                         const G4GeometryCell& gCell)
+void G4IStore::AddImportanceGeometryCell(G4double importance, const G4GeometryCell& gCell)
 {
-  if (importance < 0 )
+  if (importance < 0)
   {
     Error("AddImportanceGeometryCell() - Invalid importance value given.");
-  }  
-  if (!IsInWorld(gCell.GetPhysicalVolume()) )
+  }
+  if (!IsInWorld(gCell.GetPhysicalVolume()))
   {
     Error("AddImportanceGeometryCell() - Physical volume not found!");
   }
@@ -123,17 +120,15 @@ void G4IStore::AddImportanceGeometryCell(G4double importance,
   fGeometryCelli[gCell] = importance;
 }
 
-void G4IStore::AddImportanceGeometryCell(G4double importance,
-                                         const G4VPhysicalVolume& aVolume,
+void G4IStore::AddImportanceGeometryCell(G4double importance, const G4VPhysicalVolume& aVolume,
                                          G4int aRepNum)
 {
   AddImportanceGeometryCell(importance, G4GeometryCell(aVolume, aRepNum));
 }
 
-void G4IStore::ChangeImportance(G4double importance,
-                                const G4GeometryCell& gCell)
+void G4IStore::ChangeImportance(G4double importance, const G4GeometryCell& gCell)
 {
-  if (importance < 0 )
+  if (importance < 0)
   {
     Error("ChangeImportance() - Invalid importance value given.");
   }
@@ -147,19 +142,16 @@ void G4IStore::ChangeImportance(G4double importance,
     Error("ChangeImportance() - Region does not exist!");
   }
   fGeometryCelli[gCell] = importance;
-
 }
 
-void G4IStore::ChangeImportance(G4double importance,
-                                const G4VPhysicalVolume& aVolume,
+void G4IStore::ChangeImportance(G4double importance, const G4VPhysicalVolume& aVolume,
                                 G4int aRepNum)
 {
   ChangeImportance(importance, G4GeometryCell(aVolume, aRepNum));
 }
 
-G4double G4IStore::GetImportance(const G4VPhysicalVolume& aVolume,
-                                 G4int aRepNum) const
-{  
+G4double G4IStore::GetImportance(const G4VPhysicalVolume& aVolume, G4int aRepNum) const
+{
   G4AutoLock l(&IStoreMutex);
   SetInternalIterator(G4GeometryCell(aVolume, aRepNum));
   auto gCellIterator = fCurrentIterator;
@@ -182,8 +174,7 @@ G4double G4IStore::GetImportance(const G4GeometryCell& gCell) const
   if (gCellIterator == fGeometryCelli.cend())
   {
     std::ostringstream err_mess;
-    err_mess << "GetImportance() - Region does not exist!" << G4endl
-             << "Geometry cell, " << gCell
+    err_mess << "GetImportance() - Region does not exist!" << G4endl << "Geometry cell, " << gCell
              << ", not found in: " << fGeometryCelli << ".";
     Error(err_mess.str());
     return 0.;
@@ -198,8 +189,8 @@ G4bool G4IStore::IsKnown(const G4GeometryCell& gCell) const
 {
   G4AutoLock l(&IStoreMutex);
   G4bool inWorldKnown(IsInWorld(gCell.GetPhysicalVolume()));
-                      
-  if ( inWorldKnown )
+
+  if (inWorldKnown)
   {
     SetInternalIterator(gCell);
     inWorldKnown = (fCurrentIterator != fGeometryCelli.cend());
@@ -238,7 +229,7 @@ G4IStore* G4IStore::GetInstance()
 #endif
     fInstance = new G4IStore();
   }
-  return fInstance;    
+  return fInstance;
 }
 
 // ***************************************************************************
@@ -251,10 +242,9 @@ G4IStore* G4IStore::GetInstance(const G4String& ParallelWorldName)
   if (fInstance == nullptr)
   {
 #ifdef G4VERBOSE
-    G4cout << "G4IStore:: Creating new Parallel IStore "
-           << ParallelWorldName << G4endl;
+    G4cout << "G4IStore:: Creating new Parallel IStore " << ParallelWorldName << G4endl;
 #endif
     fInstance = new G4IStore(ParallelWorldName);
   }
-  return fInstance;    
+  return fInstance;
 }

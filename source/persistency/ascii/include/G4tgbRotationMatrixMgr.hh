@@ -32,18 +32,16 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgbRotationMatrixMgr_hh
-#define G4tgbRotationMatrixMgr_hh 1
+#ifndef G4TGBROTATIONMATRIXMGR_HH
+#define G4TGBROTATIONMATRIXMGR_HH
 
+#include "G4tgbRotationMatrix.hh"
 #include "globals.hh"
 
 #include <iostream>
 #include <map>
 
-#include "G4tgbRotationMatrix.hh"
-
-using G4mstgbrotm = std::map<G4String, G4tgbRotationMatrix*,
-                             std::less<G4String>>;
+using G4mstgbrotm = std::map<G4String, G4tgbRotationMatrix*, std::less<G4String>>;
 using G4msg4rotm = std::map<G4String, G4RotationMatrix*, std::less<G4String>>;
 
 class G4tgbRotationMatrixMgr
@@ -53,18 +51,18 @@ class G4tgbRotationMatrixMgr
     ~G4tgbRotationMatrixMgr();
 
     static G4tgbRotationMatrixMgr* GetInstance();
-      // Get only instance (if it does not exists, create it)
+    // Get only instance (if it does not exists, create it)
 
     G4RotationMatrix* FindOrBuildG4RotMatrix(const G4String& name);
-      // Look for a G4RotationMatrix and if not found create it
-      // from the corresponding G4tgbRotationMatrix
+    // Look for a G4RotationMatrix and if not found create it
+    // from the corresponding G4tgbRotationMatrix
     G4RotationMatrix* FindG4RotMatrix(const G4String& name);
-      // Look for a G4RotationMatrix and if not found return nullptr
+    // Look for a G4RotationMatrix and if not found return nullptr
 
     G4tgbRotationMatrix* FindOrBuildTgbRotMatrix(const G4String& name);
-      // Look for an G4tgbRotationMatrix and if not found exit
+    // Look for an G4tgbRotationMatrix and if not found exit
     G4tgbRotationMatrix* FindTgbRotMatrix(const G4String& name);
-      // Look for an G4tgbRotationMatrix and if not found return nullptr
+    // Look for an G4tgbRotationMatrix and if not found return nullptr
 
     const G4mstgbrotm GetTgbRotMatList() const { return theTgbRotMats; }
     const G4msg4rotm& GetG4RotMatList() const { return theG4RotMats; }

@@ -34,28 +34,24 @@
 #include "ExGflashSensitiveDetector.hh"
 
 // G4 Classes
-#include "G4AutoDelete.hh"
 #include "G4Box.hh"
 #include "G4Colour.hh"
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"
 #include "G4NistManager.hh"
 #include "G4PVPlacement.hh"
+#include "G4Region.hh"
 #include "G4RunManager.hh"
 #include "G4SDManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4ThreeVector.hh"
-#include "G4VPhysicalVolume.hh"
 #include "G4VisAttributes.hh"
-#include "globals.hh"
 
 // fast simulation
 #include "GFlashHitMaker.hh"
 #include "GFlashHomoShowerParameterisation.hh"
 #include "GFlashParticleBounds.hh"
 #include "GFlashShowerModel.hh"
-
-#include "G4FastSimulationManager.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -81,10 +77,6 @@ ExGflashDetectorConstruction::ExGflashDetectorConstruction()
 ExGflashDetectorConstruction::~ExGflashDetectorConstruction()
 {
   delete fGflashMessenger;
-  delete fFastShowerModel;
-  delete fParameterisation;
-  delete fParticleBounds;
-  delete fHitMaker;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -121,10 +113,10 @@ G4VPhysicalVolume* ExGflashDetectorConstruction::Construct()
   G4double experimentalHall_y = calo_yside * 4;
   G4double experimentalHall_z = calo_zside * 4;
 
-  G4VSolid* experimentalHall_box = new G4Box("expHall_box",  // World Volume
-                                             experimentalHall_x,  // x size
-                                             experimentalHall_y,  // y size
-                                             experimentalHall_z);  // z size
+  auto experimentalHall_box = new G4Box("expHall_box",  // World Volume
+                                        experimentalHall_x,  // x size
+                                        experimentalHall_y,  // y size
+                                        experimentalHall_z);  // z size
 
   auto experimentalHall_log = new G4LogicalVolume(experimentalHall_box, fHallMat, "expHall_log",
                                                   nullptr,  // opt: fieldManager
@@ -153,15 +145,17 @@ G4VPhysicalVolume* ExGflashDetectorConstruction::Construct()
                     experimentalHall_log, false, 1);
 
   // Crystals
-  G4VSolid* crystal_box = new G4Box("Crystal",  // its name
-                                    fCrystalWidth / 2, fCrystalWidth / 2, fCrystalLength / 2);
+  auto crystal_box = new G4Box("Crystal",  // its name
+                               fCrystalWidth / 2, fCrystalWidth / 2, fCrystalLength / 2);
   // size
   fCrystal_log = new G4LogicalVolume(crystal_box,  // its solid
                                      fDetMat,  // its material
                                      "Crystal_log");  // its name
 
-  for (G4int i = 0; i < fNbOfCrystals; i++) {
-    for (G4int j = 0; j < fNbOfCrystals; j++) {
+  for (G4int i = 0; i < fNbOfCrystals; i++)
+  {
+    for (G4int j = 0; j < fNbOfCrystals; j++)
+    {
       G4int n = i * 10 + j;
       G4ThreeVector crystalPos((i * fCrystalWidth) - (calo_xside - fCrystalWidth) / 2.,
                                (j * fCrystalWidth) - (calo_yside - fCrystalWidth) / 2., 0);
@@ -189,7 +183,6 @@ G4VPhysicalVolume* ExGflashDetectorConstruction::Construct()
   // define the fParameterisation region
   //  G4cout << "\n ---> DetectorConstruction Region Definition" << G4endl;
   fRegion = new G4Region("crystals");
-  calo_log->SetRegion(fRegion);
   fRegion->AddRootLogicalVolume(calo_log);
 
   return experimentalHall_phys;
@@ -199,45 +192,38 @@ G4VPhysicalVolume* ExGflashDetectorConstruction::Construct()
 
 void ExGflashDetectorConstruction::ConstructSDandField()
 {
+  // -- sensitive detectors:
+
+  G4SDManager* SDman = G4SDManager::GetSDMpointer();
+
+  auto SD = new ExGflashSensitiveDetector("Calorimeter", this);
+
+  SDman->AddNewDetector(SD);
+  fCrystal_log->SetSensitiveDetector(SD);
+
   // -- fast simulation models:
   // **********************************************
   // * Initializing shower modell
   // ***********************************************
-  if (fParameterisation != nullptr) {
-    fParameterisation->SetMaterial(fDetMat);
-    if (fVerbose > 3) G4cout << "Info " << __func__ << " Param Mat " << fDetMat << G4endl;
-    fParameterisation->PrintMaterial(fDetMat);
-  }
-  else {
-    // -- sensitive detectors:
 
-    G4SDManager* SDman = G4SDManager::GetSDMpointer();
+  if (fVerbose > 3) G4cout << "\n--> Creating shower parameterization models" << G4endl;
+  auto fFastShowerModel = new GFlashShowerModel("fFastShowerModel", fRegion);
+  auto fParameterisation = new GFlashHomoShowerParameterisation(fDetMat, new ExGflashHomoShowerTuning());
+  fFastShowerModel->SetParameterisation(fParameterisation);
+  // Energy Cuts to kill particles:
+  auto fParticleBounds = new GFlashParticleBounds();
+  fFastShowerModel->SetParticleBounds(fParticleBounds);
+  // Makes the EnergieSpots
+  auto fHitMaker = new GFlashHitMaker();
+  fFastShowerModel->SetHitMaker(fHitMaker);
+  if (fVerbose > 3) G4cout << "end shower parameterization." << G4endl;
 
-    auto SD = new ExGflashSensitiveDetector("Calorimeter", this);
-
-    SDman->AddNewDetector(SD);
-    if (fCrystal_log != nullptr) {
-      fCrystal_log->SetSensitiveDetector(SD);
-    }
-
-    if (fVerbose > 3) G4cout << "\n--> Creating shower parameterization models" << G4endl;
-    fFastShowerModel = new GFlashShowerModel("fFastShowerModel", fRegion);
-    fParameterisation =
-      new GFlashHomoShowerParameterisation(fDetMat, new ExGflashHomoShowerTuning());
-    fFastShowerModel->SetParameterisation(*fParameterisation);
-    // Energy Cuts to kill particles:
-    fParticleBounds = new GFlashParticleBounds();
-    fFastShowerModel->SetParticleBounds(*fParticleBounds);
-    // Makes the EnergieSpots
-    fHitMaker = new GFlashHitMaker();
-    fFastShowerModel->SetHitMaker(*fHitMaker);
-    if (fVerbose > 3) G4cout << "end shower parameterization." << G4endl;
-  }
   // **********************************************
   // Get Rad Len and R moliere from parameterisation
   fSDRadLen = fParameterisation->GetX0();
   fSDRm = fParameterisation->GetRm();
-  if (fVerbose > 2) {
+  if (fVerbose > 2)
+  {
     G4cout << "Info " << __func__ << "Total Calorimeter size" << G4endl;
     auto calo_xyside = fCrystalWidth * fNbOfCrystals;
     G4cout << "Info Z " << __func__ << " " << fCrystalLength / cm << " cm "
@@ -252,7 +238,8 @@ void ExGflashDetectorConstruction::ConstructSDandField()
 void ExGflashDetectorConstruction::SetLBining(G4ThreeVector Value)
 {
   fNLtot = (G4int)Value(0);
-  if (fNLtot > kMaxBin) {
+  if (fNLtot > kMaxBin)
+  {
     G4cout << "\n ---> warning from SetLBining: " << fNLtot << " truncated to " << kMaxBin
            << G4endl;
     fNLtot = kMaxBin;
@@ -265,7 +252,8 @@ void ExGflashDetectorConstruction::SetLBining(G4ThreeVector Value)
 void ExGflashDetectorConstruction::SetRBining(G4ThreeVector Value)
 {
   fNRtot = (G4int)Value(0);
-  if (fNRtot > kMaxBin) {
+  if (fNRtot > kMaxBin)
+  {
     G4cout << "\n ---> warning from SetRBining: " << fNRtot << " truncated to " << kMaxBin
            << G4endl;
     fNRtot = kMaxBin;
@@ -280,9 +268,11 @@ void ExGflashDetectorConstruction::SetMaterial(G4String mat)
   // search the material by its name
   G4Material* pttoMaterial = G4NistManager::Instance()->FindOrBuildMaterial(mat);
 
-  if (pttoMaterial != nullptr && fDetMat != pttoMaterial) {
+  if (pttoMaterial != nullptr && fDetMat != pttoMaterial)
+  {
     fDetMat = pttoMaterial;
-    if (fCrystal_log != nullptr) {
+    if (fCrystal_log != nullptr)
+    {
       fCrystal_log->SetMaterial(fDetMat);
     }
     G4RunManager::GetRunManager()->PhysicsHasBeenModified();

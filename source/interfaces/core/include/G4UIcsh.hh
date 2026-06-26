@@ -26,8 +26,8 @@
 //
 //
 
-#ifndef G4UIcsh_h
-#define G4UIcsh_h
+#ifndef G4UICSH_HH
+#define G4UICSH_HH
 
 #include "G4VUIshell.hh"
 
@@ -38,11 +38,12 @@
 
 class G4UIcsh : public G4VUIshell
 {
- public:
-  G4UIcsh(const G4String& prompt = "%s> ");
-  ~G4UIcsh() override;
+  public:
 
-  G4String GetCommandLineString(const char* msg = nullptr) override;
+    G4UIcsh(const G4String& prompt = "%s> ");
+    ~G4UIcsh() override;
+
+    G4String GetCommandLineString(const char* msg = nullptr) override;
 };
 
 #endif

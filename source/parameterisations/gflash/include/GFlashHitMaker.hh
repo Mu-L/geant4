@@ -39,14 +39,14 @@
 // Author: Joanna Weng - 9.11.04
 //---------------------------------------------------------------
 #ifndef GFlashHitMaker_h
-#define GFlashHitMaker_h 1
+#define GFlashHitMaker_h
 
-#include "G4TouchableHandle.hh"
+#include "G4FastTrack.hh"
+#include "G4GFlashSpot.hh"
 #include "G4Navigator.hh"
+#include "G4TouchableHandle.hh"
 
 #include "GFlashEnergySpot.hh"
-#include "G4GFlashSpot.hh"
-#include "G4FastTrack.hh"
 
 class G4Step;
 class G4StepPoint;
@@ -55,6 +55,7 @@ class G4VProcess;
 class GFlashHitMaker
 {
   public:
+
     GFlashHitMaker();
     ~GFlashHitMaker();
 
@@ -64,6 +65,7 @@ class GFlashHitMaker
     inline void SetProcess(G4VProcess* proc) { fpProcess = proc; }
 
   private:
+
     G4TouchableHandle fTouchableHandle;
     G4Navigator* fpNavigator;
     G4bool fNaviSetup;
@@ -75,6 +77,7 @@ class GFlashHitMaker
     G4VProcess* fpProcess = nullptr;
 
   private:
+
     GFlashHitMaker(const GFlashHitMaker&) {}
     GFlashHitMaker& operator=(const GFlashHitMaker&) { return *this; }
 };

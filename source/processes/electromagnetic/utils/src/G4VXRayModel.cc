@@ -37,19 +37,20 @@
 //
 
 #include "G4VXRayModel.hh"
+
+#include "G4DynamicParticle.hh"
 #include "G4LogicalVolume.hh"
 #include "G4LossTableManager.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4DynamicParticle.hh"
 #include "G4OpticalParameters.hh"
+#include "G4ParticleDefinition.hh"
 #include "G4Track.hh"
+
 #include <iostream>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4VXRayModel::G4VXRayModel(const G4String& nam)
-  : pName(nam)
+G4VXRayModel::G4VXRayModel(const G4String& nam) : pName(nam)
 {
   Register();
 }
@@ -94,7 +95,10 @@ G4double G4VXRayModel::Initialise(std::vector<const G4LogicalVolume*>* ptr)
 {
   // definition of logical volumes
   pLogicalVolumes = ptr;
-  if (nullptr != ptr) { nVolumes = (G4int)(ptr->size()); }
+  if (nullptr != ptr)
+  {
+    nVolumes = (G4int)(ptr->size());
+  }
   auto params = G4OpticalParameters::Instance();
 
   // these parameters used by Cerenkov models
@@ -111,17 +115,20 @@ G4double G4VXRayModel::Initialise(std::vector<const G4LogicalVolume*>* ptr)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void  G4VXRayModel::InitialiseModel()
-{}
+void G4VXRayModel::InitialiseModel() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4bool G4VXRayModel::StepLimit(std::size_t idx, const G4Track& track,
-			       G4double preStepBeta, G4double& limit)
+G4bool G4VXRayModel::StepLimit(std::size_t idx, const G4Track& track, G4double preStepBeta,
+                               G4double& limit)
 {
-  if (preStepBeta <= pBetaMin) { return false; }
+  if (preStepBeta <= pBetaMin)
+  {
+    return false;
+  }
   pCurrentLV = nullptr;
-  if (idx < nVolumes) {
+  if (idx < nVolumes)
+  {
     pIndex = idx;
     pCurrentLV = (*pLogicalVolumes)[idx];
   }
@@ -139,8 +146,7 @@ G4bool G4VXRayModel::StepLimitForVolume(G4double&)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void G4VXRayModel::SampleXRays(std::vector<G4Track*>&, const G4Step&)
-{}
+void G4VXRayModel::SampleXRays(std::vector<G4Track*>&, const G4Step&) {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

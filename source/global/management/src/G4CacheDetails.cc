@@ -33,8 +33,7 @@
 #include "G4CacheDetails.hh"
 
 // --------------------------------------------------------------------
-G4CacheReference<G4double>::cache_container*&
-G4CacheReference<G4double>::cache()
+G4CacheReference<G4double>::cache_container*& G4CacheReference<G4double>::cache()
 {
   G4ThreadLocalStatic std::vector<G4double>* _instance = nullptr;
   return _instance;

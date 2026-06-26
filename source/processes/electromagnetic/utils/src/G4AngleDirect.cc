@@ -30,29 +30,27 @@
 //
 // File name:     G4AngleDirect
 //
-// Author:        V. Ivanchenko 
-// 
+// Author:        V. Ivanchenko
+//
 // Creation date: 03 October 2013
 //
-// Modifications: 
+// Modifications:
 //
 // -------------------------------------------------------------------
 //
-//    
+//
 
 #include "G4AngleDirect.hh"
 
-G4AngleDirect::G4AngleDirect() : G4VEmAngularDistribution("AngleDirect")
-{}
+G4AngleDirect::G4AngleDirect() : G4VEmAngularDistribution("AngleDirect") {}
 
 G4AngleDirect::~G4AngleDirect() = default;
 
-G4ThreeVector& G4AngleDirect::SampleDirection(const G4DynamicParticle* dp,
-					      G4double, G4int,
-					      const G4Material*)
+G4ThreeVector& G4AngleDirect::SampleDirection(const G4DynamicParticle* dp, G4double, G4int,
+                                              const G4Material*)
 {
   fLocalDirection = dp->GetMomentumDirection();
-  return fLocalDirection; 
+  return fLocalDirection;
 }
 
-//    
+//

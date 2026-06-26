@@ -51,30 +51,37 @@ G4ParticleHPInelasticData::G4ParticleHPInelasticData(G4ParticleDefinition* proje
 {
   const char* dataDirVariable;
   G4String particleName;
-  if (projectile == G4Neutron::Neutron()) {
+  if (projectile == G4Neutron::Neutron())
+  {
     dataDirVariable = "G4NEUTRONHPDATA";
   }
-  else if (projectile == G4Proton::Proton()) {
+  else if (projectile == G4Proton::Proton())
+  {
     dataDirVariable = "G4PROTONHPDATA";
     particleName = "Proton";
   }
-  else if (projectile == G4Deuteron::Deuteron()) {
+  else if (projectile == G4Deuteron::Deuteron())
+  {
     dataDirVariable = "G4DEUTERONHPDATA";
     particleName = "Deuteron";
   }
-  else if (projectile == G4Triton::Triton()) {
+  else if (projectile == G4Triton::Triton())
+  {
     dataDirVariable = "G4TRITONHPDATA";
     particleName = "Triton";
   }
-  else if (projectile == G4He3::He3()) {
+  else if (projectile == G4He3::He3())
+  {
     dataDirVariable = "G4HE3HPDATA";
     particleName = "He3";
   }
-  else if (projectile == G4Alpha::Alpha()) {
+  else if (projectile == G4Alpha::Alpha())
+  {
     dataDirVariable = "G4ALPHAHPDATA";
     particleName = "Alpha";
   }
-  else {
+  else
+  {
     G4String message(
       "G4ParticleHPInelasticData may only be called for neutron, proton, deuteron, triton, He3 or "
       "alpha, while it is called for "
@@ -94,15 +101,18 @@ G4ParticleHPInelasticData::G4ParticleHPInelasticData(G4ParticleDefinition* proje
   }
 
   G4String dirName;
-  if (G4FindDataDir(dataDirVariable) != nullptr) {
+  if (G4FindDataDir(dataDirVariable) != nullptr)
+  {
     dirName = G4FindDataDir(dataDirVariable);
   }
-  else {
+  else
+  {
     G4String baseName = G4FindDataDir("G4PARTICLEHPDATA");
     dirName = baseName + "/" + particleName;
   }
 #ifdef G4VERBOSE
-  if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0) {
+  if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0)
+  {
     G4cout << "@@@ G4ParticleHPInelasticData instantiated for particle "
            << projectile->GetParticleName() << " data directory variable is " << dataDirVariable
            << " pointing to " << dirName << G4endl;
@@ -117,10 +127,12 @@ G4ParticleHPInelasticData::G4ParticleHPInelasticData(G4ParticleDefinition* proje
 
   theHPData = nullptr;
   instanceOfWorker = false;
-  if (G4Threading::IsMasterThread()) {
+  if (G4Threading::IsMasterThread())
+  {
     theHPData = new G4ParticleHPData(theProjectile);
   }
-  else {
+  else
+  {
     instanceOfWorker = true;
   }
   element_cache = nullptr;
@@ -131,12 +143,14 @@ G4ParticleHPInelasticData::G4ParticleHPInelasticData(G4ParticleDefinition* proje
 
 G4ParticleHPInelasticData::~G4ParticleHPInelasticData()
 {
-  if (theCrossSections != nullptr && !instanceOfWorker) {
+  if (theCrossSections != nullptr && !instanceOfWorker)
+  {
     theCrossSections->clearAndDestroy();
     delete theCrossSections;
     theCrossSections = nullptr;
   }
-  if (theHPData != nullptr && !instanceOfWorker) {
+  if (theHPData != nullptr && !instanceOfWorker)
+  {
     delete theHPData;
     theHPData = nullptr;
   }
@@ -169,7 +183,8 @@ G4double G4ParticleHPInelasticData::GetIsoCrossSection(const G4DynamicParticle* 
 
 void G4ParticleHPInelasticData::BuildPhysicsTable(const G4ParticleDefinition& projectile)
 {
-  if (G4Threading::IsWorkerThread()) {
+  if (G4Threading::IsWorkerThread())
+  {
     theCrossSections = G4ParticleHPManager::GetInstance()->GetInelasticCrossSections(&projectile);
     return;
   }
@@ -185,7 +200,8 @@ void G4ParticleHPInelasticData::BuildPhysicsTable(const G4ParticleDefinition& pr
   // make a PhysicsVector for each element
 
   auto theElementTable = G4Element::GetElementTable();
-  for (std::size_t i = 0; i < numberOfElements; ++i) {
+  for (std::size_t i = 0; i < numberOfElements; ++i)
+  {
     G4PhysicsVector* physVec = theHPData->MakePhysicsVector((*theElementTable)[i], this);
     theCrossSections->push_back(physVec);
   }
@@ -214,16 +230,19 @@ void G4ParticleHPInelasticData::DumpPhysicsTable(const G4ParticleDefinition&)
   std::size_t numberOfElements = G4Element::GetNumberOfElements();
   auto theElementTable = G4Element::GetElementTable();
 
-  for (std::size_t i = 0; i < numberOfElements; ++i) {
+  for (std::size_t i = 0; i < numberOfElements; ++i)
+  {
     G4cout << (*theElementTable)[i]->GetName() << G4endl;
 
     G4int ie = 0;
 
-    for (ie = 0; ie < 130; ie++) {
+    for (ie = 0; ie < 130; ie++)
+    {
       G4double eKinetic = 1.0e-5 * G4Pow::GetInstance()->powA(10.0, ie / 10.0) * CLHEP::eV;
       G4bool outOfRange = false;
 
-      if (eKinetic < 20 * CLHEP::MeV) {
+      if (eKinetic < 20 * CLHEP::MeV)
+      {
         G4cout << eKinetic / CLHEP::eV << " "
                << (*((*theCrossSections)(i))).GetValue(eKinetic, outOfRange) / CLHEP::barn
                << G4endl;
@@ -244,10 +263,12 @@ G4double G4ParticleHPInelasticData::GetCrossSection(const G4DynamicParticle* pro
   // prepare neutron
   G4double eKinetic = projectile->GetKineticEnergy();
 
-  if (G4ParticleHPManager::GetInstance()->GetNeglectDoppler()) {
+  if (G4ParticleHPManager::GetInstance()->GetNeglectDoppler())
+  {
     // NEGLECT_DOPPLER
     G4double factor = 1.0;
-    if (eKinetic < aT * CLHEP::k_Boltzmann) {
+    if (eKinetic < aT * CLHEP::k_Boltzmann)
+    {
       // below 0.1 eV neutrons
       // Have to do some, but now just igonre.
       // Will take care after performance check.
@@ -295,15 +316,18 @@ G4double G4ParticleHPInelasticData::GetCrossSection(const G4DynamicParticle* pro
       boosted.Lorentz(theNeutron, aThermalNuc);
       G4double theEkin = boosted.GetKineticEnergy();
       aXsection = (*((*theCrossSections)(index))).GetValue(theEkin, outOfRange);
-      if (aXsection < 0) {
-        if (failCount < 1000) {
+      if (aXsection < 0)
+      {
+        if (failCount < 1000)
+        {
           ++failCount;
 #ifndef G4PHP_DOPPLER_LOOP_ONCE
           --counter;
           continue;
 #endif
         }
-        else {
+        else
+        {
           aXsection = 0;
         }
       }

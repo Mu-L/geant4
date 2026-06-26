@@ -31,14 +31,10 @@
 #include "G4tgbMaterialMixture.hh"
 
 // --------------------------------------------------------------------
-G4tgbMaterialMixture::G4tgbMaterialMixture()
-{
-}
+G4tgbMaterialMixture::G4tgbMaterialMixture() {}
 
 // --------------------------------------------------------------------
-G4tgbMaterialMixture::~G4tgbMaterialMixture()
-{
-}
+G4tgbMaterialMixture::~G4tgbMaterialMixture() {}
 
 // --------------------------------------------------------------------
 const G4String& G4tgbMaterialMixture::GetComponent(G4int i) const
@@ -53,13 +49,10 @@ G4double G4tgbMaterialMixture::GetFraction(G4int i) const
 }
 
 // --------------------------------------------------------------------
-G4tgbMaterialMixture&
-G4tgbMaterialMixture::operator=(const G4tgbMaterialMixture&)
+G4tgbMaterialMixture& G4tgbMaterialMixture::operator=(const G4tgbMaterialMixture&)
 {
   return *this;
 }
 
 // --------------------------------------------------------------------
-void G4tgbMaterialMixture::TransformToFractionsByWeight()
-{
-}
+void G4tgbMaterialMixture::TransformToFractionsByWeight() {}

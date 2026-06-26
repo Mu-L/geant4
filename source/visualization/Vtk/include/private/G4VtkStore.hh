@@ -54,12 +54,12 @@
 #include <vtkPolyDataNormals.h>
 #include <vtkProperty.h>
 #include <vtkRenderer.h>
+#include <vtkSmartPointer.h>
 #include <vtkStripper.h>
 #include <vtkStructuredGrid.h>
 #include <vtkTensorGlyphColor.h>
 #include <vtkTriangleFilter.h>
 #include <vtkVertexGlyphFilter.h>
-#include <vtkSmartPointer.h>
 
 #include <map>
 #include <vector>
@@ -97,6 +97,7 @@ class G4VtkTensorGlyphPolydataPipeline;
 class G4VtkStore
 {
   public:
+
     G4VtkStore(G4String name);
     ~G4VtkStore();
 
@@ -113,7 +114,7 @@ class G4VtkStore
     void AddPrimitiveTensorGlyph(const G4Polyhedron& polyhedron, const G4VtkVisContext& vc);
     void AddPrimitiveAppend(const G4Polyhedron& polyhedron, const G4VtkVisContext& vc);
     void AddPrimitiveTransformBake(const G4Polyhedron& polyhedron, const G4VtkVisContext& vc);
-    void AddCompound(const G4Mesh& mesh,  const G4VtkVisContext& vc);
+    void AddCompound(const G4Mesh& mesh, const G4VtkVisContext& vc);
 
     void UpdatePlanePipelines(G4String name, G4String type, const G4Plane3D);
 
@@ -167,6 +168,7 @@ class G4VtkStore
     }
 
   private:
+
     G4String name;
     std::map<std::size_t, std::shared_ptr<G4VtkPolydataPolylinePipeline>> polylinePipeMap;
     std::map<std::size_t, std::shared_ptr<G4VtkPolydataPolyline2DPipeline>> polyline2DPipeMap;

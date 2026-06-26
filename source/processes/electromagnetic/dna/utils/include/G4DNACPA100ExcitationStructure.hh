@@ -38,8 +38,8 @@
 //
 // Based on the study by S. Zein et. al. Nucl. Inst. Meth. B 488 (2021) 70-82
 
-#ifndef G4DNACPA100ExcitationStructure_hh
-#define G4DNACPA100ExcitationStructure_hh 1
+#ifndef G4DNACPA100EXCITATIONSTRUCTURE_HH
+#define G4DNACPA100EXCITATIONSTRUCTURE_HH
 #include "globals.hh"
 
 #include <vector>
@@ -47,16 +47,15 @@ class G4Material;
 class G4DNACPA100ExcitationStructure
 {
   public:
+
     G4DNACPA100ExcitationStructure();
     ~G4DNACPA100ExcitationStructure() = default;
     G4double ExcitationEnergy(const std::size_t& level, const std::size_t& MatID);
     G4double UEnergy(const std::size_t& level, const std::size_t& MatID);
-    inline std::size_t NumberOfLevels(const std::size_t& MatID)
-    {
-      return fnLevels[MatID];
-    }
+    inline std::size_t NumberOfLevels(const std::size_t& MatID) { return fnLevels[MatID]; }
 
   private:
+
     void InitialiseGuanine();
     void InitialiseWater();
     void InitialiseDeoxyribose();

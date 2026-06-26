@@ -25,16 +25,16 @@
 //
 
 #include "G4DNAChargeIncrease.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4LowEnergyEmProcessSubType.hh"
+
 #include "G4DNADingfelderChargeIncreaseModel.hh"
 #include "G4DNAIonChargeIncreaseModel.hh"
+#include "G4LowEnergyEmProcessSubType.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4DNAChargeIncrease::G4DNAChargeIncrease(const G4String& processName,
-                                         G4ProcessType type) :
-    G4VEmProcess(processName, type) 
+G4DNAChargeIncrease::G4DNAChargeIncrease(const G4String& processName, G4ProcessType type)
+  : G4VEmProcess(processName, type)
 {
   SetBuildTableFlag(false);
   SetProcessSubType(fLowEnergyChargeIncrease);
@@ -45,25 +45,28 @@ G4DNAChargeIncrease::G4DNAChargeIncrease(const G4String& processName,
 G4bool G4DNAChargeIncrease::IsApplicable(const G4ParticleDefinition& p)
 {
   G4String name = p.GetParticleName();
-  return (p.IsGeneralIon() ||
-	  name == "hydrogen" || name == "alpha+" || name == "helium");
+  return (p.IsGeneralIon() || name == "hydrogen" || name == "alpha+" || name == "helium");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void G4DNAChargeIncrease::InitialiseProcess(const G4ParticleDefinition* p)
 {
-  if (!isInitialised) {
+  if (!isInitialised)
+  {
     isInitialised = true;
 
     auto mod = EmModel();
-    if (nullptr == mod) { 
-    
+    if (nullptr == mod)
+    {
       G4String name = p->GetParticleName();
 
-      if (name == "hydrogen" || name == "alpha+" || name == "helium") {
+      if (name == "hydrogen" || name == "alpha+" || name == "helium")
+      {
         SetEmModel(new G4DNADingfelderChargeIncreaseModel());
-      } else {
+      }
+      else
+      {
         SetEmModel(new G4DNAIonChargeIncreaseModel());
       }
     }
@@ -78,8 +81,7 @@ void G4DNAChargeIncrease::InitialiseProcess(const G4ParticleDefinition* p)
 
 void G4DNAChargeIncrease::ProcessDescription(std::ostream& out) const
 {
-  out << " Total cross sections computed from " << EmModel()->GetName()
-      << " model" << G4endl;
+  out << " Total cross sections computed from " << EmModel()->GetName() << " model" << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

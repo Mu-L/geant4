@@ -40,6 +40,7 @@
 /**
  * @brief G4DormandPrinceRK56 implements the 6(5) embedded Runge-Kutta
  * non-FSAL method.
+ * @ingroup geometry_magneticfield
  */
 
 class G4DormandPrinceRK56 : public G4MagIntegratorStepper
@@ -52,21 +53,20 @@ class G4DormandPrinceRK56 : public G4MagIntegratorStepper
      *  @param[in] numberOfVariables The number of integration variables.
      *  @param[in] primary Flag for initialisation of the auxiliary stepper.
      */
-    G4DormandPrinceRK56( G4EquationOfMotion* EqRhs,
-                         G4int numberOfVariables = 6,
-                         G4bool primary = true ) ;
-    
+    G4DormandPrinceRK56(G4EquationOfMotion* EqRhs, G4int numberOfVariables = 6,
+                        G4bool primary = true);
+
     /**
      * Destructor.
      */
-    ~G4DormandPrinceRK56() override ;
-    
+    ~G4DormandPrinceRK56() override;
+
     /**
      * Copy constructor and assignment operator not allowed.
      */
     G4DormandPrinceRK56(const G4DormandPrinceRK56&) = delete;
     G4DormandPrinceRK56& operator=(const G4DormandPrinceRK56&) = delete;
-    
+
     /**
      * The stepper for the Runge Kutta integration.
      * The stepsize is fixed, with the step size given by 'h'.
@@ -78,12 +78,9 @@ class G4DormandPrinceRK56 : public G4MagIntegratorStepper
      *  @param[out] yout Integration output.
      *  @param[out] yerr The estimated error.
      */
-    void Stepper( const G4double y[],
-                  const G4double dydx[],
-                        G4double h,
-                        G4double yout[],
-                        G4double yerr[] ) override ;
-    
+    void Stepper(const G4double y[], const G4double dydx[], G4double h, G4double yout[],
+                 G4double yerr[]) override;
+
     /**
      * Returns the distance from chord line.
      */
@@ -98,88 +95,73 @@ class G4DormandPrinceRK56 : public G4MagIntegratorStepper
      * Returns the stepper type-ID, "kDormandPrinceRK56".
      */
     inline G4StepperType StepperType() const override { return kDormandPrinceRK56; }
-    
+
     /**
      * Prepares the interpolant and calculates the extra stages.
      * Fifth order interpolant with one extra function evaluation per step.
      */
-    void SetupInterpolate_low( const G4double yInput[],
-                               const G4double dydx[],
-                               const G4double Step );
+    void SetupInterpolate_low(const G4double yInput[], const G4double dydx[], const G4double Step);
 
     /**
      * Wrappers for SetupInterpolate_low() above.
      */
-    inline void SetupInterpolate( const G4double yInput[],
-                                  const G4double dydx[],
-                                  const G4double Step )
+    inline void SetupInterpolate(const G4double yInput[], const G4double dydx[],
+                                 const G4double Step)
     {
-      SetupInterpolate_low( yInput, dydx, Step);
+      SetupInterpolate_low(yInput, dydx, Step);
     }
     inline void SetupInterpolation()
     {
-      SetupInterpolate( fLastInitialVector, fLastDyDx, fLastStepLength);
+      SetupInterpolate(fLastInitialVector, fLastDyDx, fLastStepLength);
     }
 
     /**
      * Calculates the output at the tau fraction of Step.
      */
-    void Interpolate_low( const G4double yInput[],
-                          const G4double dydx[],
-                          const G4double Step,
-                                G4double yOut[],
-                                G4double tau );
+    void Interpolate_low(const G4double yInput[], const G4double dydx[], const G4double Step,
+                         G4double yOut[], G4double tau);
 
     /**
      * Wrappers for Interpolate_low() above.
      */
-    inline void Interpolate( const G4double yInput[],
-                             const G4double dydx[],
-                             const G4double Step,
-                                   G4double yOut[],
-                                   G4double tau )
+    inline void Interpolate(const G4double yInput[], const G4double dydx[], const G4double Step,
+                            G4double yOut[], G4double tau)
     {
-      Interpolate_low( yInput, dydx, Step, yOut, tau);
+      Interpolate_low(yInput, dydx, Step, yOut, tau);
     }
-    inline void Interpolate( G4double tau, G4double yOut[])
+    inline void Interpolate(G4double tau, G4double yOut[])
     {
-      Interpolate( fLastInitialVector, fLastDyDx, fLastStepLength, yOut, tau );
+      Interpolate(fLastInitialVector, fLastDyDx, fLastStepLength, yOut, tau);
     }
 
     /**
      * Prepares the interpolant and calculates the extra stages.
      * Sixth order interpolant with 3 additional stages per step.
      */
-    void SetupInterpolate_high( const G4double yInput[],
-                                const G4double dydx[],
-                                const G4double Step );
-    
+    void SetupInterpolate_high(const G4double yInput[], const G4double dydx[], const G4double Step);
+
     /**
      * Calculates the output at the tau fraction of Step, using
      * the polynomial coefficients and the respective stages.
      */
-    void Interpolate_high( const G4double yInput[],
-                           const G4double dydx[],
-                           const G4double Step,
-                                 G4double yOut[],
-                                 G4double tau );
-    
+    void Interpolate_high(const G4double yInput[], const G4double dydx[], const G4double Step,
+                          G4double yOut[], G4double tau);
+
   private:
 
     /** For storing intermediate 'k' values in stepper. */
     G4double *ak2, *ak3, *ak4, *ak5, *ak6, *ak7, *ak8, *ak9;
 
     /** For the additional stages of Interpolant. */
-    G4double *ak10_low, *ak10, *ak11, * ak12;
+    G4double *ak10_low, *ak10, *ak11, *ak12;
 
     G4double *yTemp, *yIn;
-    
+
     G4double fLastStepLength = -1.0;
 
     /** For DistChord() calculations. */
-    G4double *fLastInitialVector, *fLastFinalVector,
-             *fLastDyDx, *fMidVector, *fMidError;
-    
+    G4double *fLastInitialVector, *fLastFinalVector, *fLastDyDx, *fMidVector, *fMidError;
+
     G4DormandPrinceRK56* fAuxStepper = nullptr;
 };
 

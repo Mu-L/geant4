@@ -35,19 +35,21 @@
 //
 // ----------------------------------------------------------------------
 
-#ifndef G4GenericMuonicAtom_h
-#define G4GenericMuonicAtom_h 1
+#ifndef G4GENERICMUONICATOM_HH
+#define G4GENERICMUONICATOM_HH
 
 #include "G4MuonicAtom.hh"
 
 class G4GenericMuonicAtom : public G4MuonicAtom
 {
   public:
+
     static G4GenericMuonicAtom* Definition();
     static G4GenericMuonicAtom* GenericMuonicAtomDefinition();
     static G4GenericMuonicAtom* GenericMuonicAtom();
 
   private:
+
     G4GenericMuonicAtom() {}
     ~G4GenericMuonicAtom() override = default;
 

@@ -41,29 +41,28 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4HadronPhysicsFTFQGSP_BERT_h
-#define G4HadronPhysicsFTFQGSP_BERT_h 1
+#ifndef G4HADRONPHYSICSFTFQGSP_BERT_HH
+#define G4HADRONPHYSICSFTFQGSP_BERT_HH
 
 #include "G4HadronPhysicsFTFP_BERT.hh"
 
 class G4HadronPhysicsFTFQGSP_BERT : public G4HadronPhysicsFTFP_BERT
 {
-  public: 
-    G4HadronPhysicsFTFQGSP_BERT(G4int verbose =1);
-    G4HadronPhysicsFTFQGSP_BERT(const G4String& name, G4bool quasiElastic=false);
+  public:
+
+    G4HadronPhysicsFTFQGSP_BERT(G4int verbose = 1);
+    G4HadronPhysicsFTFQGSP_BERT(const G4String& name, G4bool quasiElastic = false);
     virtual ~G4HadronPhysicsFTFQGSP_BERT();
 
     void ConstructProcess() override;
 
     // copy constructor and hide assignment operator
-    G4HadronPhysicsFTFQGSP_BERT(G4HadronPhysicsFTFQGSP_BERT &) = delete;
-    G4HadronPhysicsFTFQGSP_BERT & operator =
-    (const G4HadronPhysicsFTFQGSP_BERT &right) = delete;
+    G4HadronPhysicsFTFQGSP_BERT(G4HadronPhysicsFTFQGSP_BERT&) = delete;
+    G4HadronPhysicsFTFQGSP_BERT& operator=(const G4HadronPhysicsFTFQGSP_BERT& right) = delete;
 
   protected:
-    void DumpBanner() override;
 
+    void DumpBanner() override;
 };
 
 #endif
-

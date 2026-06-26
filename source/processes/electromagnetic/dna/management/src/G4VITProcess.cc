@@ -32,15 +32,14 @@
 
 #include <memory>
 
-/*G4ThreadLocal*/size_t *G4VITProcess::fNbProcess = nullptr;
+/*G4ThreadLocal*/ size_t* G4VITProcess::fNbProcess = nullptr;
 
-G4VITProcess::G4VITProcess(const G4String& name, G4ProcessType type) :
-    G4VProcess(name, type)
+G4VITProcess::G4VITProcess(const G4String& name, G4ProcessType type) : G4VProcess(name, type)
 //    fpState (0)//,
-//fProcessID(fNbProcess)
+// fProcessID(fNbProcess)
 {
   fpState.reset();
-  if(fNbProcess == nullptr) fNbProcess = new size_t(0);
+  if (fNbProcess == nullptr) fNbProcess = new size_t(0);
   fProcessID = *fNbProcess;
   (*fNbProcess)++;
   SetInstantiateProcessState(true);
@@ -57,45 +56,42 @@ G4VITProcess::G4ProcessState::G4ProcessState()
   currentInteractionLength = -1.0;
 }
 
-G4VITProcess::G4ProcessState::~G4ProcessState()
-= default;
+G4VITProcess::G4ProcessState::~G4ProcessState() = default;
 
-G4VITProcess::~G4VITProcess()
-= default;
+G4VITProcess::~G4VITProcess() = default;
 
-G4VITProcess::G4VITProcess(const G4VITProcess& other) :
-    G4VProcess(other), fProcessID(other.fProcessID)
+G4VITProcess::G4VITProcess(const G4VITProcess& other)
+  : G4VProcess(other), fProcessID(other.fProcessID)
 {
-  //copy ctor
-  //fpState                             = 0 ;
-  currentInteractionLength            = nullptr;
-  theInteractionTimeLeft              = nullptr;
-  theNumberOfInteractionLengthLeft    = nullptr;
-  fInstantiateProcessState            = other.fInstantiateProcessState;
-  fProposesTimeStep                   = other.fProposesTimeStep;
+  // copy ctor
+  // fpState                             = 0 ;
+  currentInteractionLength = nullptr;
+  theInteractionTimeLeft = nullptr;
+  theNumberOfInteractionLengthLeft = nullptr;
+  fInstantiateProcessState = other.fInstantiateProcessState;
+  fProposesTimeStep = other.fProposesTimeStep;
 }
 
 G4VITProcess& G4VITProcess::operator=(const G4VITProcess& rhs)
 {
-  if (this == &rhs) return *this; // handle self assignment
-  //assignment operator
+  if (this == &rhs) return *this;  // handle self assignment
+  // assignment operator
   return *this;
 }
 
 void G4VITProcess::StartTracking(G4Track* track)
 {
   G4TrackingInformation* trackingInfo = GetIT(track)->GetTrackingInfo();
-  if(InstantiateProcessState())
+  if (InstantiateProcessState())
   {
     //        fpState = new G4ProcessState();
     fpState = std::make_shared<G4ProcessState>();
   }
 
-  theNumberOfInteractionLengthLeft    = &(fpState->theNumberOfInteractionLengthLeft );
-  theInteractionTimeLeft              = &(fpState->theInteractionTimeLeft           );
-  currentInteractionLength            = &(fpState->currentInteractionLength         );
-  trackingInfo->RecordProcessState(fpState,fProcessID);
+  theNumberOfInteractionLengthLeft = &(fpState->theNumberOfInteractionLengthLeft);
+  theInteractionTimeLeft = &(fpState->theInteractionTimeLeft);
+  currentInteractionLength = &(fpState->currentInteractionLength);
+  trackingInfo->RecordProcessState(fpState, fProcessID);
   //    fpState = 0;
   fpState.reset();
 }
-

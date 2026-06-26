@@ -27,25 +27,27 @@
 // Author: Ivana Hrivnacova, IJCLab IN2P3/CNRS, 18/06/2013
 
 #include "G4AccumulableManager.hh"
+
+#include "G4AutoLock.hh"
 #include "G4ThreadLocalSingleton.hh"
 #include "G4Threading.hh"
-#include "G4AutoLock.hh"
 
 // mutex in a file scope
 
-namespace {
-  //Mutex to lock master manager when merging accumulables
-  G4Mutex mergeMutex = G4MUTEX_INITIALIZER;
+namespace
+{
+// Mutex to lock master manager when merging accumulables
+G4Mutex mergeMutex = G4MUTEX_INITIALIZER;
 
-  void RangeException(const G4String& where, const G4String& message)
-  {
-    G4ExceptionDescription description;
-    description << "Invalid range " << message;
-    G4String method("G4AccumulableManager::");
-    method.append(where);
-    G4Exception(where, "Analysis_W001", JustWarning, description);
-  }
+void RangeException(const G4String& where, const G4String& message)
+{
+  G4ExceptionDescription description;
+  description << "Invalid range " << message;
+  G4String method("G4AccumulableManager::");
+  method.append(where);
+  G4Exception(where, "Analysis_W001", JustWarning, description);
 }
+}  // namespace
 
 //_____________________________________________________________________________
 G4AccumulableManager* G4AccumulableManager::Instance()
@@ -57,7 +59,8 @@ G4AccumulableManager* G4AccumulableManager::Instance()
 //_____________________________________________________________________________
 G4AccumulableManager::G4AccumulableManager()
 {
-  if (!G4Threading::IsWorkerThread()) {
+  if (!G4Threading::IsWorkerThread())
+  {
     fgMasterInstance = this;
   }
 }
@@ -66,7 +69,8 @@ G4AccumulableManager::G4AccumulableManager()
 G4AccumulableManager::~G4AccumulableManager()
 {
   // delete only accumulables create by the mager itself
-  for ( auto it : fAccumulablesToDelete ) {
+  for (auto it : fAccumulablesToDelete)
+  {
     delete it;
   }
 }
@@ -87,10 +91,10 @@ G4String G4AccumulableManager::GenerateName() const
 }
 
 //_____________________________________________________________________________
-G4bool G4AccumulableManager::CheckName(
-  const G4String& name, const G4String& where) const
+G4bool G4AccumulableManager::CheckName(const G4String& name, const G4String& where) const
 {
-  if (fMap.find(name) == fMap.end()) {
+  if (fMap.find(name) == fMap.end())
+  {
     return true;
   }
 
@@ -104,15 +108,16 @@ G4bool G4AccumulableManager::CheckName(
 }
 
 //_____________________________________________________________________________
-G4bool G4AccumulableManager::CheckType(
-  G4VAccumulable* accumulable, G4AccType type, G4bool warn) const
+G4bool G4AccumulableManager::CheckType(G4VAccumulable* accumulable, G4AccType type,
+                                       G4bool warn) const
 {
-  if (accumulable->GetType() != type) {
-    if (warn) {
+  if (accumulable->GetType() != type)
+  {
+    if (warn)
+    {
       G4ExceptionDescription description;
       description << "      " << accumulable->GetName() << ": Incompatible type.";
-      G4Exception("G4AccumulableManager::CheckType",
-                  "Analysis_W001", JustWarning, description);
+      G4Exception("G4AccumulableManager::CheckType", "Analysis_W001", JustWarning, description);
     }
     return false;
   }
@@ -128,18 +133,21 @@ G4bool G4AccumulableManager::Register(G4VAccumulable* accumulable)
 {
   auto name = accumulable->GetName();
 
-  if (G4Accumulables::VerboseLevel > 1 ) {
+  if (G4Accumulables::VerboseLevel > 1)
+  {
     G4cout << "Going to register accumulable \"" << name << "\"" << G4endl;
   }
 
   // do not accept name if it is already used
-  if (!CheckName(name, "RegisterAccumulable")) {
+  if (!CheckName(name, "RegisterAccumulable"))
+  {
     return false;
   }
 
   // generate name if empty
-  if (name.length() == 0u) {
-    name =  GenerateName();
+  if (name.length() == 0u)
+  {
+    name = GenerateName();
     accumulable->SetName(name);
   }
 
@@ -149,7 +157,8 @@ G4bool G4AccumulableManager::Register(G4VAccumulable* accumulable)
   fMap[name] = accumulable;
   fVector.push_back(accumulable);
 
-  if (G4Accumulables::VerboseLevel > 0 ) {
+  if (G4Accumulables::VerboseLevel > 0)
+  {
     G4cout << "Accumulable registered as \"" << accumulable->GetName() << "\"" << G4endl;
   }
 
@@ -164,17 +173,18 @@ G4bool G4AccumulableManager::RegisterAccumulable(G4VAccumulable* accumulable)
 }
 
 //_____________________________________________________________________________
-G4VAccumulable*
-G4AccumulableManager::GetAccumulable(const G4String& name, G4bool warn) const
+G4VAccumulable* G4AccumulableManager::GetAccumulable(const G4String& name, G4bool warn) const
 {
   // get G4VParammeter from the map
   auto it = fMap.find(name);
-  if ( it == fMap.end() ) {
-    if ( warn) {
+  if (it == fMap.end())
+  {
+    if (warn)
+    {
       G4ExceptionDescription description;
       description << "Accumulable " << name << " does not exist.";
-      G4Exception("G4AccumulableManager::GetAccumulable",
-                  "Analysis_W001", JustWarning, description);
+      G4Exception("G4AccumulableManager::GetAccumulable", "Analysis_W001", JustWarning,
+                  description);
     }
     return nullptr;
   }
@@ -183,16 +193,17 @@ G4AccumulableManager::GetAccumulable(const G4String& name, G4bool warn) const
 }
 
 //_____________________________________________________________________________
-G4VAccumulable*
-G4AccumulableManager::GetAccumulable(G4int id, G4bool warn) const
+G4VAccumulable* G4AccumulableManager::GetAccumulable(G4int id, G4bool warn) const
 {
   // get G4VParammeter from the vector
-  if ( id < 0 || id >= G4int(fVector.size()) ) {
-    if ( warn) {
+  if (id < 0 || id >= G4int(fVector.size()))
+  {
+    if (warn)
+    {
       G4ExceptionDescription description;
       description << "Accumulable " << id << " does not exist.";
-      G4Exception("G4AccumulableManager::GetAccumulable",
-                  "Analysis_W001", JustWarning, description);
+      G4Exception("G4AccumulableManager::GetAccumulable", "Analysis_W001", JustWarning,
+                  description);
     }
     return nullptr;
   }
@@ -205,18 +216,18 @@ void G4AccumulableManager::Merge()
 {
   // Do nothing if  there are no accumulables registered
   // or if master thread
-  if ((fVector.size() == 0u) || (!G4Threading::IsWorkerThread())) {
+  if ((fVector.size() == 0u) || (!G4Threading::IsWorkerThread()))
+  {
     return;
   }
 
   // The manager on mastter must exist
-  if (fgMasterInstance == nullptr) {
+  if (fgMasterInstance == nullptr)
+  {
     G4ExceptionDescription description;
-    description
-      << "No master G4AccumulableManager instance exists." << G4endl
-      << "Accumulables will not be merged.";
-      G4Exception("G4AccumulableManager::Merge()",
-                "Analysis_W001", JustWarning, description);
+    description << "No master G4AccumulableManager instance exists." << G4endl
+                << "Accumulables will not be merged.";
+    G4Exception("G4AccumulableManager::Merge()", "Analysis_W001", JustWarning, description);
     return;
   }
 
@@ -227,7 +238,8 @@ void G4AccumulableManager::Merge()
 
   // the other manager has the vector with the "same" accumulables
   auto it = fVector.begin();
-  for ( auto itMaster : fgMasterInstance->fVector ) {
+  for (auto itMaster : fgMasterInstance->fVector)
+  {
     // G4VAccumulable* masterAccumulable = itMaster;
     // G4VAccumulable* accumulable = *(it++);
     // masterAccumulable->Merge(*(accumulable));
@@ -239,9 +251,10 @@ void G4AccumulableManager::Merge()
 //_____________________________________________________________________________
 void G4AccumulableManager::Reset()
 {
-// Reset all accummulables
+  // Reset all accummulables
 
-  for ( auto it : fVector ) {
+  for (auto it : fVector)
+  {
     it->Reset();
   }
 }
@@ -249,49 +262,50 @@ void G4AccumulableManager::Reset()
 //_____________________________________________________________________________
 void G4AccumulableManager::Print(G4PrintOptions options) const
 {
-  for ( auto it : fVector ) {
+  for (auto it : fVector)
+  {
     it->Print(options);
   }
 }
 
 //_____________________________________________________________________________
-void G4AccumulableManager::Print(
-  G4int startId, G4int count, G4PrintOptions options) const
+void G4AccumulableManager::Print(G4int startId, G4int count, G4PrintOptions options) const
 {
   // check if range is within limits
-  if ( startId < 0 || startId >= G4int(fVector.size()) ||
-       count <= 0 || startId + count > G4int(fVector.size()) ) {
-    RangeException("Print",
-      std::to_string(startId) + ", " + std::to_string(count));
+  if (startId < 0 || startId >= G4int(fVector.size()) || count <= 0
+      || startId + count > G4int(fVector.size()))
+  {
+    RangeException("Print", std::to_string(startId) + ", " + std::to_string(count));
     return;
   }
 
-  for ( auto id = startId; id < startId + count; ++id ) {
+  for (auto id = startId; id < startId + count; ++id)
+  {
     fVector[id]->Print(options);
   }
 }
 
 //_____________________________________________________________________________
-void G4AccumulableManager::Print(
-  std::vector<G4VAccumulable*>::iterator startIt,
-  std::vector<G4VAccumulable*>::iterator endIt,
-  G4PrintOptions options) const
+void G4AccumulableManager::Print(std::vector<G4VAccumulable*>::iterator startIt,
+                                 std::vector<G4VAccumulable*>::iterator endIt,
+                                 G4PrintOptions options) const
 {
   // check if range is within limits
-  if ( startIt == fVector.end() || endIt == fVector.end() ) {
+  if (startIt == fVector.end() || endIt == fVector.end())
+  {
     RangeException("Print", "[startIt, endIt]");
     return;
   }
 
-  for ( auto it = startIt; it != endIt; ++it ) {
+  for (auto it = startIt; it != endIt; ++it)
+  {
     (*it)->Print(options);
   }
 }
 
 //_____________________________________________________________________________
-void G4AccumulableManager::Print(
-  std::vector<G4VAccumulable*>::iterator startIt, std::size_t count,
-  G4PrintOptions options) const
+void G4AccumulableManager::Print(std::vector<G4VAccumulable*>::iterator startIt, std::size_t count,
+                                 G4PrintOptions options) const
 {
-  Print(startIt, startIt+count, options);
+  Print(startIt, startIt + count, options);
 }

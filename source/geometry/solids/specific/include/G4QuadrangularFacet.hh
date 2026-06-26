@@ -33,7 +33,7 @@
 // It is defined by four fVertices, which shall be in the same plane and be
 // supplied in anti-clockwise order looking from the outsider of the solid
 // where it belongs. Its constructor:
-//   
+//
 //   G4QuadrangularFacet (const G4ThreeVector& Pt0, const G4ThreeVector& vt1,
 //                        const G4ThreeVector& vt2, const G4ThreeVector& vt3,
 //                        G4FacetVertexType);
@@ -43,8 +43,8 @@
 //      are the four fVertices required in anti-clockwise order when looking
 //      from the outsider.
 //   2) G4FacetvertexType = "RELATIVE": in this case the first vertex is Pt0,
-//      the second vertex is Pt0+vt1, the third vertex is Pt0+vt2 and 
-//      the fourth vertex is Pt0+vt3, in anti-clockwise order when looking 
+//      the second vertex is Pt0+vt1, the third vertex is Pt0+vt2 and
+//      the fourth vertex is Pt0+vt3, in anti-clockwise order when looking
 //      from the outsider.
 
 // Author: P.R.Truscott (QinetiQ Ltd, UK), 31.10.2004 - Created
@@ -53,16 +53,18 @@
 #ifndef G4QUADRANGULARFACET_HH
 #define G4QUADRANGULARFACET_HH
 
-#include "G4VFacet.hh"
-#include "G4Types.hh"
 #include "G4ThreeVector.hh"
 #include "G4TriangularFacet.hh"
+#include "G4Types.hh"
+#include "G4VFacet.hh"
 
 /**
  * @brief G4QuadrangularFacet defines a facet with 4 vertices, used for the
- * contruction of G4TessellatedSolid. Vertices shall be in the same plane and
- * be supplied in anti-clockwise order looking from the outsider of the solid
- * where it belongs.
+ * contruction of G4TessellatedSolid.
+ * @ingroup geometry_solids_specific
+ *
+ * Vertices shall be in the same plane and be supplied in anti-clockwise order
+ * looking from the outsider of the solid where it belongs.
  */
 
 class G4QuadrangularFacet : public G4VFacet
@@ -82,35 +84,35 @@ class G4QuadrangularFacet : public G4VFacet
      *                          third vertex is Pt0+vt2 and fourth is Pt0+vt3,
      *                          still in anti-clockwise order.
      */
-    G4QuadrangularFacet (const G4ThreeVector& Pt0, const G4ThreeVector& vt1,
-                         const G4ThreeVector& vt2, const G4ThreeVector& vt3,
-                               G4FacetVertexType vType);
+    G4QuadrangularFacet(const G4ThreeVector& Pt0, const G4ThreeVector& vt1,
+                        const G4ThreeVector& vt2, const G4ThreeVector& vt3,
+                        G4FacetVertexType vType);
 
     /**
      * Default Destructor.
      */
-    ~G4QuadrangularFacet () override = default;
+    ~G4QuadrangularFacet() override = default;
 
     /**
      * Copy constructor and assignment operator.
      */
-    G4QuadrangularFacet (const G4QuadrangularFacet& right);
-    G4QuadrangularFacet& operator=(const G4QuadrangularFacet& right);    
+    G4QuadrangularFacet(const G4QuadrangularFacet& right);
+    G4QuadrangularFacet& operator=(const G4QuadrangularFacet& right);
 
     /**
      * Returns a pointer to a newly allocated duplicate copy of the facet.
      */
-    G4VFacet* GetClone () override;
+    G4VFacet* GetClone() override;
 
     /**
      * Determines the vector between p and the closest point on the facet to p.
      */
-    G4ThreeVector Distance (const G4ThreeVector& p);
+    G4ThreeVector Distance(const G4ThreeVector& p);
 
     /**
      * Determines the closest distance between point p and the facet.
      */
-    G4double Distance (const G4ThreeVector& p, G4double minDist) override;
+    G4double Distance(const G4ThreeVector& p, G4double minDist) override;
 
     /**
      * Determines the distance to point 'p'. kInfinity is returned if either:
@@ -119,14 +121,13 @@ class G4QuadrangularFacet : public G4VFacet
      * (2) outgoing is FALSE and the dot product of the normal vector to the
      * facet and the displacement vector from p to the triangle is positive.
      */
-    G4double Distance (const G4ThreeVector& p, G4double minDist,
-                       const G4bool outgoing) override;
+    G4double Distance(const G4ThreeVector& p, G4double minDist, const G4bool outgoing) override;
 
     /**
      * Calculates the furthest the quadrangle extends in fA particular
      * direction defined by the vector axis.
      */
-    G4double Extent (const G4ThreeVector axis) override;
+    G4double Extent(const G4ThreeVector axis) override;
 
     /**
      * Finds the next intersection when going from 'p' in the direction of 'v'.
@@ -135,68 +136,66 @@ class G4QuadrangularFacet : public G4VFacet
      * going in through the face.
      *  @returns true if there is an intersection, false otherwise.
      */
-    G4bool Intersect  (const G4ThreeVector& p, const G4ThreeVector& v,
-                       const G4bool outgoing, G4double& distance,
-                             G4double& distFromSurface,
-                             G4ThreeVector& normal) override;
+    G4bool Intersect(const G4ThreeVector& p, const G4ThreeVector& v, const G4bool outgoing,
+                     G4double& distance, G4double& distFromSurface, G4ThreeVector& normal) override;
     /**
      * Returns the normal vector to the face.
      */
-    G4ThreeVector GetSurfaceNormal () const override;
+    G4ThreeVector GetSurfaceNormal() const override;
 
     /**
      * Auxiliary method for returning the surface area.
      */
-    G4double GetArea () const override;
+    G4double GetArea() const override;
 
     /**
      * Auxiliary method to get a uniform random point on the facet.
      */
-    G4ThreeVector GetPointOnFace () const override;
+    G4ThreeVector GetPointOnFace() const override;
 
     /**
      * Returns the type ID, "G4QuadrangularFacet" of the facet.
      */
-    G4GeometryType GetEntityType () const override;
+    G4GeometryType GetEntityType() const override;
 
     /**
      * Returns true if the facet is defined.
      */
-    inline G4bool IsDefined () const override;
+    inline G4bool IsDefined() const override;
 
     /**
      * Returns the number of vertices, i.e. 4.
      */
-    inline G4int GetNumberOfVertices () const override;
+    inline G4int GetNumberOfVertices() const override;
 
     /**
      * Returns the vertex based on the index 'i'.
      */
-    inline G4ThreeVector GetVertex (G4int i) const override;
+    inline G4ThreeVector GetVertex(G4int i) const override;
 
     /**
      * Methods to set the vertices.
      */
-    inline void SetVertex (G4int i, const G4ThreeVector& val) override;
+    inline void SetVertex(G4int i, const G4ThreeVector& val) override;
     inline void SetVertices(std::vector<G4ThreeVector>* v) override;
 
     /**
      * Returns the radius to the anchor point and centered on the circumcentre.
      */
-    inline G4double GetRadius () const override;
+    inline G4double GetRadius() const override;
 
     /**
      * Returns the circumcentre point of the facet.
      */
-    inline G4ThreeVector GetCircumcentre () const override;
+    inline G4ThreeVector GetCircumcentre() const override;
 
   private:
 
     /**
      * Private accessor/setter for the vertex index.
      */
-    inline G4int GetVertexIndex (G4int i) const override;
-    inline void SetVertexIndex (G4int i, G4int val) override;
+    inline G4int GetVertexIndex(G4int i) const override;
+    inline void SetVertexIndex(G4int i, G4int val) override;
 
     /**
      * Returns the allocated memory (sizeof) by the facet.

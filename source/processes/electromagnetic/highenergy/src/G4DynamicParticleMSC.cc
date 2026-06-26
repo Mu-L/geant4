@@ -41,28 +41,28 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include "G4DynamicParticleMSC.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
+
 #include "G4EmProcessSubType.hh"
-#include "G4LossTableManager.hh"
-#include "G4Step.hh"
-#include "G4Track.hh"
-#include "G4Log.hh"
 #include "G4Exp.hh"
+#include "G4Log.hh"
+#include "G4LossTableManager.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4Step.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4Track.hh"
 
 namespace
 {
-  constexpr G4double c_highland = 13.6*CLHEP::MeV;
+constexpr G4double c_highland = 13.6 * CLHEP::MeV;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4DynamicParticleMSC::G4DynamicParticleMSC()
-  : G4VContinuousDiscreteProcess("dynPartMSC")
+G4DynamicParticleMSC::G4DynamicParticleMSC() : G4VContinuousDiscreteProcess("dynPartMSC")
 {
   SetVerboseLevel(1);
   SetProcessSubType(fDynamicMultipleScattering);
-  lManager = G4LossTableManager::Instance();  
+  lManager = G4LossTableManager::Instance();
   lManager->Register(this);
 }
 
@@ -82,15 +82,15 @@ void G4DynamicParticleMSC::PreStepInitialisation(const G4Track& track)
   auto dpart = track.GetDynamicParticle();
   fEkinPreStep = dpart->GetKineticEnergy();
   fBeta = dpart->GetBeta();
-  fCharge = dpart->GetCharge()/CLHEP::eplus;
+  fCharge = dpart->GetCharge() / CLHEP::eplus;
   fMass = std::max(dpart->GetMass(), CLHEP::electron_mass_c2);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double G4DynamicParticleMSC::AlongStepGetPhysicalInteractionLength(
-                                  const G4Track& track, G4double, G4double, G4double&,
-                                  G4GPILSelection* selection)
+G4double G4DynamicParticleMSC::AlongStepGetPhysicalInteractionLength(const G4Track& track, G4double,
+                                                                     G4double, G4double&,
+                                                                     G4GPILSelection* selection)
 {
   *selection = CandidateForSelection;
   PreStepInitialisation(track);
@@ -101,9 +101,8 @@ G4double G4DynamicParticleMSC::AlongStepGetPhysicalInteractionLength(
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double G4DynamicParticleMSC::PostStepGetPhysicalInteractionLength(
-                                  const G4Track&, G4double,
-                                  G4ForceCondition* condition)
+G4double G4DynamicParticleMSC::PostStepGetPhysicalInteractionLength(const G4Track&, G4double,
+                                                                    G4ForceCondition* condition)
 {
   *condition = NotForced;
   return DBL_MAX;
@@ -111,33 +110,41 @@ G4double G4DynamicParticleMSC::PostStepGetPhysicalInteractionLength(
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4VParticleChange* G4DynamicParticleMSC::AlongStepDoIt(const G4Track& track,
-						              const G4Step& step)
+G4VParticleChange* G4DynamicParticleMSC::AlongStepDoIt(const G4Track& track, const G4Step& step)
 {
   fParticleChange.InitialiseMSC(track, step);
 
   // no energy loss
-  if (fCharge == 0.0) { return &fParticleChange; }
+  if (fCharge == 0.0)
+  {
+    return &fParticleChange;
+  }
 
   G4double geomLength = step.GetStepLength();
-  G4double y = geomLength/fMaterial->GetRadlen();
-  G4double theta0 = c_highland*std::abs(fCharge)*std::sqrt(y)*
-    (1.0 + 0.038*G4Log(y*fCharge*fCharge/(fBeta*fBeta)))/fBeta;
+  G4double y = geomLength / fMaterial->GetRadlen();
+  G4double theta0 = c_highland * std::abs(fCharge) * std::sqrt(y)
+                    * (1.0 + 0.038 * G4Log(y * fCharge * fCharge / (fBeta * fBeta))) / fBeta;
 
-  if (theta0 < 0.001) { return &fParticleChange; }
+  if (theta0 < 0.001)
+  {
+    return &fParticleChange;
+  }
   G4double cost = 1.0;
   G4double r = G4UniformRand();
-  if (theta0 < 1.0) {
-    G4double theta2 = theta0*theta0;
-    cost -= theta2*G4Log(1.0 + r*(G4Exp(2.0/theta2) - 1.0));
-  } else {
-    cost -= 2.0*r;
+  if (theta0 < 1.0)
+  {
+    G4double theta2 = theta0 * theta0;
+    cost -= theta2 * G4Log(1.0 + r * (G4Exp(2.0 / theta2) - 1.0));
   }
-  G4double phi = CLHEP::twopi*G4UniformRand();
-  G4double sint = std::sqrt((1.0 - cost)*(1.0 + cost));
-  fNewDir.set(sint*std::cos(phi), sint*std::sin(phi), cost);
+  else
+  {
+    cost -= 2.0 * r;
+  }
+  G4double phi = CLHEP::twopi * G4UniformRand();
+  G4double sint = std::sqrt((1.0 - cost) * (1.0 + cost));
+  fNewDir.set(sint * std::cos(phi), sint * std::sin(phi), cost);
   fNewDir.rotateUz(step.GetPostStepPoint()->GetMomentumDirection());
-  
+
   fParticleChange.ProposeMomentumDirection(fNewDir);
   fParticleChange.ProposeTrueStepLength(geomLength);
   return &fParticleChange;
@@ -146,7 +153,7 @@ G4VParticleChange* G4DynamicParticleMSC::AlongStepDoIt(const G4Track& track,
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4double G4DynamicParticleMSC::GetMeanFreePath(const G4Track&, G4double,
-					       G4ForceCondition* condition)
+                                               G4ForceCondition* condition)
 {
   *condition = Forced;
   return DBL_MAX;
@@ -155,14 +162,13 @@ G4double G4DynamicParticleMSC::GetMeanFreePath(const G4Track&, G4double,
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4double G4DynamicParticleMSC::GetContinuousStepLimit(const G4Track& track,
-						      G4double previousStepSize,
+                                                      G4double previousStepSize,
                                                       G4double currentMinimalStep,
-						      G4double& currentSafety)
+                                                      G4double& currentSafety)
 {
   G4GPILSelection selection = NotCandidateForSelection;
-  G4double x = AlongStepGetPhysicalInteractionLength(track, previousStepSize,
-						     currentMinimalStep,
-					             currentSafety, &selection);
+  G4double x = AlongStepGetPhysicalInteractionLength(track, previousStepSize, currentMinimalStep,
+                                                     currentSafety, &selection);
   return x;
 }
 

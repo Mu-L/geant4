@@ -36,43 +36,47 @@
 // by I.Hrivnacova, 27 Sep 99
 
 #ifndef G3ROTTABLEENTRY_HH
-#define G3ROTTABLEENTRY_HH 1
+#define G3ROTTABLEENTRY_HH
 
-#include "globals.hh"
 #include "G4RotationMatrix.hh"
+#include "globals.hh"
 
 class G3toG4RotationMatrix;
 
-class G3RotTableEntry 
+class G3RotTableEntry
 {
   public:  // with description
 
     G3RotTableEntry(G4int id, G4RotationMatrix* matrix);
     G3RotTableEntry(const G3RotTableEntry& right);
     virtual ~G3RotTableEntry();
-    
+
     // operators
     G3RotTableEntry& operator=(const G3RotTableEntry& right);
     G4bool operator==(const G3RotTableEntry& right) const;
     G4bool operator!=(const G3RotTableEntry& right) const;
 
     // get methods
-    G4int       GetID() const;
+    G4int GetID() const;
     G4RotationMatrix* GetMatrix() const;
-    
+
   private:
 
-    // data members  
-    G4int              fID;
-    G4RotationMatrix*  fMatrix;
+    // data members
+    G4int fID;
+    G4RotationMatrix* fMatrix;
 };
 
 // inline methods
 
 inline G4int G3RotTableEntry::GetID() const
-{ return fID; }
+{
+  return fID;
+}
 
 inline G4RotationMatrix* G3RotTableEntry::GetMatrix() const
-{ return fMatrix; }
+{
+  return fMatrix;
+}
 
 #endif

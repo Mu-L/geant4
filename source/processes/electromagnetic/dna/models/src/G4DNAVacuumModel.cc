@@ -26,15 +26,17 @@
 //
 
 #include "G4DNAVacuumModel.hh"
+
 #include "G4DNAMolecularMaterial.hh"
 
-G4DNAVacuumModel::G4DNAVacuumModel(
-  const G4String& applyToMaterial, const G4ParticleDefinition*, const G4String& nam)
+G4DNAVacuumModel::G4DNAVacuumModel(const G4String& applyToMaterial, const G4ParticleDefinition*,
+                                   const G4String& nam)
   : G4VDNAModel(nam, applyToMaterial)
 {
   verboseLevel = 0;
 
-  if (verboseLevel > 0) {
+  if (verboseLevel > 0)
+  {
     G4cout << "G4DNAVacuumModel is constructed " << G4endl;
   }
 }
@@ -48,13 +50,14 @@ G4DNAVacuumModel::~G4DNAVacuumModel()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4DNAVacuumModel::Initialise(
-  const G4ParticleDefinition* particle, const G4DataVector& /*cuts*/)
+void G4DNAVacuumModel::Initialise(const G4ParticleDefinition* particle,
+                                  const G4DataVector& /*cuts*/)
 {
-  if (verboseLevel > 3) {
+  if (verboseLevel > 3)
+  {
     G4cout << "Calling G4DNAVacuumModel::Initialise()" << G4endl;
   }
-  if(G4Material::GetMaterial("G4_Galactic",false) != nullptr)
+  if (G4Material::GetMaterial("G4_Galactic", false) != nullptr)
   {
     auto index = (G4int)G4Material::GetMaterial("G4_Galactic")->GetIndex();
     EnableForMaterialAndParticle(index, particle);
@@ -63,10 +66,13 @@ void G4DNAVacuumModel::Initialise(
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double G4DNAVacuumModel::CrossSectionPerVolume(const G4Material* /*material*/, const G4ParticleDefinition* /*particleDefinition*/,
-  G4double /*ekin*/, G4double /*emin*/, G4double /*emax*/)
+G4double G4DNAVacuumModel::CrossSectionPerVolume(const G4Material* /*material*/,
+                                                 const G4ParticleDefinition* /*particleDefinition*/,
+                                                 G4double /*ekin*/, G4double /*emin*/,
+                                                 G4double /*emax*/)
 {
-  if (verboseLevel > 3) {
+  if (verboseLevel > 3)
+  {
     G4cout << "Calling CrossSectionPerVolume() of G4DNAVacuumModel" << G4endl;
   }
 
@@ -76,10 +82,12 @@ G4double G4DNAVacuumModel::CrossSectionPerVolume(const G4Material* /*material*/,
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void G4DNAVacuumModel::SampleSecondaries(std::vector<G4DynamicParticle*>* /*fvect*/,
-  const G4MaterialCutsCouple* /*couple*/,
-  const G4DynamicParticle* /*aDynamicParticle*/, G4double /*tmin*/, G4double /*tmax*/)
+                                         const G4MaterialCutsCouple* /*couple*/,
+                                         const G4DynamicParticle* /*aDynamicParticle*/,
+                                         G4double /*tmin*/, G4double /*tmax*/)
 {
-  if (verboseLevel > 3) {
+  if (verboseLevel > 3)
+  {
     G4cout << "Calling SampleSecondaries() of G4DNAVacuumModel" << G4endl;
   }
 }

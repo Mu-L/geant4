@@ -66,13 +66,15 @@ G4int G4VPrimitiveScorer::GetIndex(G4Step* aStep)
 
 void G4VPrimitiveScorer::CheckAndSetUnit(const G4String& unit, const G4String& category)
 {
-  if (G4UnitDefinition::GetCategory(unit) == category) {
+  if (G4UnitDefinition::GetCategory(unit) == category)
+  {
     unitName = unit;
     unitValue = G4UnitDefinition::GetValueOf(unit);
   }
-  else {
-    G4String msg = "Invalid unit [" + unit + "] (Current  unit is [" + GetUnit() +
-                   "] ) requested for " + GetName();
+  else
+  {
+    G4String msg = "Invalid unit [" + unit + "] (Current  unit is [" + GetUnit()
+                   + "] ) requested for " + GetName();
     G4Exception("G4VPrimitiveScorer::CheckAndSetUnit", "Det0151", JustWarning, msg);
   }
 }
@@ -85,8 +87,10 @@ G4VSolid* G4VPrimitiveScorer::ComputeSolid(G4Step* aStep, G4int replicaIdx)
   auto physVol = preStep->GetPhysicalVolume();
   G4VPVParameterisation* physParam = physVol->GetParameterisation();
 
-  if (physParam != nullptr) {  // for parameterized volume
-    if (replicaIdx < 0) {
+  if (physParam != nullptr)
+  {  // for parameterized volume
+    if (replicaIdx < 0)
+    {
       G4ExceptionDescription desc;
       desc << "Incorrect replica number --- GetReplicaNumber : " << replicaIdx << G4endl;
       G4Exception("G4VPrimitiveScorer::ComputeSolid", "DetPS0001", JustWarning, desc);
@@ -95,7 +99,8 @@ G4VSolid* G4VPrimitiveScorer::ComputeSolid(G4Step* aStep, G4int replicaIdx)
     solid = physParam->ComputeSolid(replicaIdx, physVol);
     solid->ComputeDimensions(physParam, replicaIdx, physVol);
   }
-  else {  // for ordinary volume
+  else
+  {  // for ordinary volume
     solid = physVol->GetLogicalVolume()->GetSolid();
   }
 

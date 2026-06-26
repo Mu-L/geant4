@@ -29,8 +29,8 @@
 
 // Authors: H.Yoshida, M.Nagamatu - November 1998
 // --------------------------------------------------------------------
-#ifndef G4ios_hh
-#define G4ios_hh 1
+#ifndef G4IOS_HH
+#define G4IOS_HH
 
 #include "G4Types.hh"
 
@@ -59,7 +59,7 @@ void G4iosInitialization();
 void G4iosFinalization();
 
 // Redirect messages sent to G4cout etc to this destination
-// Callee retains ownership of the destination pointer and must call 
+// Callee retains ownership of the destination pointer and must call
 // this function again with `nullptr` on destination destruction.
 void G4iosSetDestination(G4coutDestination* sink);
 

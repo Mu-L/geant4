@@ -31,11 +31,11 @@
 //  Adjoint EM model for discrete reverse ion ionisation
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4AdjointIonIonisationModel_h
-#define G4AdjointIonIonisationModel_h 1
+#ifndef G4ADJOINTIONIONISATIONMODEL_HH
+#define G4ADJOINTIONIONISATIONMODEL_HH
 
-#include "globals.hh"
 #include "G4VEmAdjointModel.hh"
+#include "globals.hh"
 
 class G4Track;
 class G4ParticleChange;
@@ -45,60 +45,59 @@ class G4VParticleChange;
 
 class G4AdjointIonIonisationModel : public G4VEmAdjointModel
 {
- public:
-  G4AdjointIonIonisationModel();
+  public:
 
-  ~G4AdjointIonIonisationModel() override;
+    G4AdjointIonIonisationModel();
 
-  void SampleSecondaries(const G4Track& aTrack, G4bool isScatProjToProj,
-                         G4ParticleChange* fParticleChange) override;
+    ~G4AdjointIonIonisationModel() override;
 
-  G4double DiffCrossSectionPerAtomPrimToSecond(
-    G4double kinEnergyProj,  // kin energy of primary before interaction
-    G4double kinEnergyProd,  // kinetic energy of the secondary particle
-    G4double Z, G4double A = 0.) override;
+    void SampleSecondaries(const G4Track& aTrack, G4bool isScatProjToProj,
+                           G4ParticleChange* fParticleChange) override;
 
-  void CorrectPostStepWeight(G4ParticleChange* fParticleChange,
-                             G4double old_weight, G4double adjointPrimKinEnergy,
-                             G4double projectileKinEnergy,
-                             G4bool isScatProjToProj) override;
+    G4double DiffCrossSectionPerAtomPrimToSecond(
+      G4double kinEnergyProj,  // kin energy of primary before interaction
+      G4double kinEnergyProd,  // kinetic energy of the secondary particle
+      G4double Z, G4double A = 0.) override;
 
-  G4double GetSecondAdjEnergyMaxForScatProjToProj(
-    G4double primAdjEnergy) override;
+    void CorrectPostStepWeight(G4ParticleChange* fParticleChange, G4double old_weight,
+                               G4double adjointPrimKinEnergy, G4double projectileKinEnergy,
+                               G4bool isScatProjToProj) override;
 
-  G4double GetSecondAdjEnergyMinForScatProjToProj(G4double primAdjEnergy,
-                                                  G4double tcut = 0.) override;
+    G4double GetSecondAdjEnergyMaxForScatProjToProj(G4double primAdjEnergy) override;
 
-  G4double GetSecondAdjEnergyMaxForProdToProj(G4double primAdjEnergy) override;
+    G4double GetSecondAdjEnergyMinForScatProjToProj(G4double primAdjEnergy,
+                                                    G4double tcut = 0.) override;
 
-  G4double GetSecondAdjEnergyMinForProdToProj(G4double primAdjEnergy) override;
+    G4double GetSecondAdjEnergyMaxForProdToProj(G4double primAdjEnergy) override;
 
-  inline void SetUseOnlyBragg(G4bool aBool) { fUseOnlyBragg = aBool; }
+    G4double GetSecondAdjEnergyMinForProdToProj(G4double primAdjEnergy) override;
 
-  void SetIon(G4ParticleDefinition* adj_ion, G4ParticleDefinition* fwd_ion);
+    inline void SetUseOnlyBragg(G4bool aBool) { fUseOnlyBragg = aBool; }
 
-  G4AdjointIonIonisationModel(G4AdjointIonIonisationModel&) = delete;
-  G4AdjointIonIonisationModel& operator=(
-    const G4AdjointIonIonisationModel& right) = delete;
+    void SetIon(G4ParticleDefinition* adj_ion, G4ParticleDefinition* fwd_ion);
 
- private:
-  void DefineProjectileProperty();
+    G4AdjointIonIonisationModel(G4AdjointIonIonisationModel&) = delete;
+    G4AdjointIonIonisationModel& operator=(const G4AdjointIonIonisationModel& right) = delete;
 
-  G4VEmModel* fBraggIonDirectEMModel;
-  G4VEmModel* fBetheBlochDirectEMModel;
+  private:
 
-  // projectile properties
-  G4double fMass           = 0.;
-  G4double fSpin           = 0.;
-  G4double fMagMoment2     = 0.;
-  G4double fChargeSquare   = 0.;
-  G4double fMassRatio      = 0.;
-  G4double fRatio          = 0.;
-  G4double fOnePlusRatio2  = 0.;
-  G4double fOneMinusRatio2 = 0.;
-  G4double fFormFact       = 0.;
+    void DefineProjectileProperty();
 
-  G4bool fUseOnlyBragg = false;
+    G4VEmModel* fBraggIonDirectEMModel;
+    G4VEmModel* fBetheBlochDirectEMModel;
+
+    // projectile properties
+    G4double fMass = 0.;
+    G4double fSpin = 0.;
+    G4double fMagMoment2 = 0.;
+    G4double fChargeSquare = 0.;
+    G4double fMassRatio = 0.;
+    G4double fRatio = 0.;
+    G4double fOnePlusRatio2 = 0.;
+    G4double fOneMinusRatio2 = 0.;
+    G4double fFormFact = 0.;
+
+    G4bool fUseOnlyBragg = false;
 };
 
 #endif

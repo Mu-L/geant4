@@ -34,188 +34,181 @@
 #ifndef G4VISCOMMANDLISTMANAGER_HH
 #define G4VISCOMMANDLISTMANAGER_HH
 
-#include "G4UImessenger.hh"
 #include "G4String.hh"
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcommand.hh"
+#include "G4UImessenger.hh"
 
-template <typename Manager>
-class G4VisCommandListManagerList : public G4UImessenger {
+template<typename Manager>
+class G4VisCommandListManagerList : public G4UImessenger
+{
+  public:  // With description
 
-public: // With description
+    G4VisCommandListManagerList(Manager*, const G4String& placement);
+    // Input list manager and command placement
 
-  G4VisCommandListManagerList(Manager*, const G4String& placement);
-  // Input list manager and command placement
+    virtual ~G4VisCommandListManagerList();
 
-  virtual ~G4VisCommandListManagerList();
+    G4String GetCurrentValue(G4UIcommand*);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
 
-  G4String GetCurrentValue(G4UIcommand*);
-  void SetNewValue(G4UIcommand* command, G4String newValue);
+    G4String Placement() const;
 
-  G4String Placement() const;
+  private:
 
-private:
+    // Data members
+    Manager* fpManager;
+    G4String fPlacement;
 
-  // Data members
-  Manager* fpManager;
-  G4String fPlacement;
-
-  G4UIcmdWithAString* fpCommand;
-
+    G4UIcmdWithAString* fpCommand;
 };
 
 // List command
-template <typename Manager>
-G4VisCommandListManagerList<Manager>::G4VisCommandListManagerList(Manager* manager, const G4String& placement)
-  :fpManager(manager)
-  ,fPlacement(placement)
-{  
-  G4String command = Placement()+"/list";
-  
-  fpCommand = new G4UIcmdWithAString(command, this);      
+template<typename Manager>
+G4VisCommandListManagerList<Manager>::G4VisCommandListManagerList(Manager* manager,
+                                                                  const G4String& placement)
+  : fpManager(manager), fPlacement(placement)
+{
+  G4String command = Placement() + "/list";
+
+  fpCommand = new G4UIcmdWithAString(command, this);
   fpCommand->SetGuidance("List objects registered with list manager");
-  fpCommand->SetParameterName("name", true);       
+  fpCommand->SetParameterName("name", true);
 }
 
-template <typename Manager>
+template<typename Manager>
 G4VisCommandListManagerList<Manager>::~G4VisCommandListManagerList()
 {
   delete fpCommand;
 }
 
-template <typename Manager>
-G4String
-G4VisCommandListManagerList<Manager>::Placement() const
+template<typename Manager>
+G4String G4VisCommandListManagerList<Manager>::Placement() const
 {
   return fPlacement;
 }
 
-template <typename Manager>
-G4String 
-G4VisCommandListManagerList<Manager>::GetCurrentValue(G4UIcommand*) 
+template<typename Manager>
+G4String G4VisCommandListManagerList<Manager>::GetCurrentValue(G4UIcommand*)
 {
   return "";
 }
 
-template <typename Manager>
-void G4VisCommandListManagerList<Manager>::SetNewValue(G4UIcommand*, G4String name) 
+template<typename Manager>
+void G4VisCommandListManagerList<Manager>::SetNewValue(G4UIcommand*, G4String name)
 {
-  G4cout<<"Listing models available in "<<Placement()<<G4endl;
+  G4cout << "Listing models available in " << Placement() << G4endl;
 
-  assert (0 != fpManager);
+  assert(0 != fpManager);
   fpManager->Print(G4cout, name);
-}    
-
-//Select command
-template <typename Manager>
-class G4VisCommandListManagerSelect : public G4UImessenger {
-
-public: // With description
-
-  G4VisCommandListManagerSelect(Manager*, const G4String& placement);
-  // Input list manager and command placement
-
-  virtual ~G4VisCommandListManagerSelect();
-
-  G4String GetCurrentValue(G4UIcommand*);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-
-private:
-
-  Manager* fpManager;
-  G4String fPlacement;
-
-  G4UIcmdWithAString* fpCommand;
-
-};
-
-template <typename Manager>
-G4VisCommandListManagerSelect<Manager>::G4VisCommandListManagerSelect(Manager* manager, const G4String& placement)
-  :fpManager(manager)
-  ,fPlacement(placement)
-{  
-  G4String command = placement+"/select";
-  G4String guidance = "Select created object";
- 
-  fpCommand = new G4UIcmdWithAString(command, this);      
-  fpCommand->SetGuidance(guidance);
-  fpCommand->SetParameterName("name", false);       
 }
 
-template <typename Manager>
+// Select command
+template<typename Manager>
+class G4VisCommandListManagerSelect : public G4UImessenger
+{
+  public:  // With description
+
+    G4VisCommandListManagerSelect(Manager*, const G4String& placement);
+    // Input list manager and command placement
+
+    virtual ~G4VisCommandListManagerSelect();
+
+    G4String GetCurrentValue(G4UIcommand*);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    Manager* fpManager;
+    G4String fPlacement;
+
+    G4UIcmdWithAString* fpCommand;
+};
+
+template<typename Manager>
+G4VisCommandListManagerSelect<Manager>::G4VisCommandListManagerSelect(Manager* manager,
+                                                                      const G4String& placement)
+  : fpManager(manager), fPlacement(placement)
+{
+  G4String command = placement + "/select";
+  G4String guidance = "Select created object";
+
+  fpCommand = new G4UIcmdWithAString(command, this);
+  fpCommand->SetGuidance(guidance);
+  fpCommand->SetParameterName("name", false);
+}
+
+template<typename Manager>
 G4VisCommandListManagerSelect<Manager>::~G4VisCommandListManagerSelect()
 {
   delete fpCommand;
 }
 
-template <typename Manager>
-G4String 
-G4VisCommandListManagerSelect<Manager>::GetCurrentValue(G4UIcommand*) 
+template<typename Manager>
+G4String G4VisCommandListManagerSelect<Manager>::GetCurrentValue(G4UIcommand*)
 {
   return "";
 }
 
-template <typename Manager>
-void G4VisCommandListManagerSelect<Manager>::SetNewValue(G4UIcommand*, G4String name) 
+template<typename Manager>
+void G4VisCommandListManagerSelect<Manager>::SetNewValue(G4UIcommand*, G4String name)
 {
-  assert (0 != fpManager);
+  assert(0 != fpManager);
   fpManager->SetCurrent(name);
-}    
-
-// Mode command
-template <typename Manager>
-class G4VisCommandManagerMode : public G4UImessenger {
-
-public: // With description
-
-  G4VisCommandManagerMode(Manager*, const G4String& placement);
-
-  virtual ~G4VisCommandManagerMode();
-
-  G4String GetCurrentValue(G4UIcommand*);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-
-private:
-
-  Manager* fpManager;
-  G4String fPlacement;
-
-  G4UIcmdWithAString* fpCommand;
-
-};
-template <typename Manager>
-G4VisCommandManagerMode<Manager>::G4VisCommandManagerMode(Manager* manager, const G4String& placement)
-  :fpManager(manager)
-  ,fPlacement(placement)
-{  
-  G4String command = fPlacement+"/mode";
-  
-  fpCommand = new G4UIcmdWithAString(command, this);      
-  fpCommand->SetGuidance("Set mode of operation");
-  fpCommand->SetParameterName("mode", false);       
-  fpCommand->SetCandidates("soft hard");       
 }
 
-template <typename Manager>
+// Mode command
+template<typename Manager>
+class G4VisCommandManagerMode : public G4UImessenger
+{
+  public:  // With description
+
+    G4VisCommandManagerMode(Manager*, const G4String& placement);
+
+    virtual ~G4VisCommandManagerMode();
+
+    G4String GetCurrentValue(G4UIcommand*);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    Manager* fpManager;
+    G4String fPlacement;
+
+    G4UIcmdWithAString* fpCommand;
+};
+template<typename Manager>
+G4VisCommandManagerMode<Manager>::G4VisCommandManagerMode(Manager* manager,
+                                                          const G4String& placement)
+  : fpManager(manager), fPlacement(placement)
+{
+  G4String command = fPlacement + "/mode";
+
+  fpCommand = new G4UIcmdWithAString(command, this);
+  fpCommand->SetGuidance("Set mode of operation");
+  fpCommand->SetParameterName("mode", false);
+  fpCommand->SetCandidates("soft hard");
+}
+
+template<typename Manager>
 G4VisCommandManagerMode<Manager>::~G4VisCommandManagerMode()
 {
   delete fpCommand;
 }
 
-template <typename Manager>
-G4String 
-G4VisCommandManagerMode<Manager>::GetCurrentValue(G4UIcommand*) 
+template<typename Manager>
+G4String G4VisCommandManagerMode<Manager>::GetCurrentValue(G4UIcommand*)
 {
   return "";
 }
 
-template <typename Manager>
-void G4VisCommandManagerMode<Manager>::SetNewValue(G4UIcommand*, G4String name) 
+template<typename Manager>
+void G4VisCommandManagerMode<Manager>::SetNewValue(G4UIcommand*, G4String name)
 {
-  assert (0 != fpManager);
+  assert(0 != fpManager);
   fpManager->SetMode(name);
   G4VVisManager* visManager = G4VVisManager::GetConcreteInstance();
   if (visManager) visManager->NotifyHandlers();
-}    
+}
 
 #endif

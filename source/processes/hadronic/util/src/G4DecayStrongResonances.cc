@@ -30,44 +30,31 @@
 //
 // File name:     G4DecayStrongResonances
 //
-// Modified:  
+// Modified:
 // 02.11.2010 V.Ivanchenko moved constructor and destructor to source
 // 07.27.2011 M.Kelsey -- Use new decay utility to process input list
 
 #include "G4DecayStrongResonances.hh"
 
 #include "G4DecayKineticTracks.hh"
-#include "G4HadTmpUtil.hh"
-#include <algorithm>
 
+G4ReactionProductVector* G4DecayStrongResonances::Propagate(G4KineticTrackVector* theSecondaries,
+                                                            G4V3DNucleus*)
+{
+  G4DecayKineticTracks decay(theSecondaries);  // Changes input list in situ
 
-G4DecayStrongResonances::G4DecayStrongResonances() {}
-
-G4DecayStrongResonances::~G4DecayStrongResonances() {}
-
-G4ReactionProductVector* 
-G4DecayStrongResonances::Propagate(G4KineticTrackVector* theSecondaries, 
-				   G4V3DNucleus* ) {
-  G4DecayKineticTracks decay(theSecondaries);	// Changes input list in situ
-     
   // translate to ReactionProducts
-  G4ReactionProductVector * theResult;
-  try { theResult = new G4ReactionProductVector; }
-  catch(...) {
-    throw G4HadronicException(__FILE__, __LINE__, "DecayStrongRes: out of memory ");
+  G4ReactionProductVector* theResult = new G4ReactionProductVector;
+  if (nullptr == theSecondaries || theSecondaries->empty())
+  {
+    return theResult;
   }
 
-  G4ReactionProduct * it = NULL;
-
-  G4KineticTrackVector::iterator secIter = theSecondaries->begin();
-  for(; secIter != theSecondaries->end(); ++secIter) {
-    G4KineticTrack* aSecondary = *secIter;
-    if (!aSecondary) continue;		// Skip null pointers
-
-    try { it = new G4ReactionProduct();	}
-    catch(...) {
-      throw G4HadronicException(__FILE__, __LINE__, "DecayStrongRes: out of memory ");
-    }
+  theResult->reserve(theSecondaries->size());
+  for (auto& aSecondary : *theSecondaries)
+  {
+    if (nullptr == aSecondary) continue;  // Skip null pointers
+    auto it = new G4ReactionProduct();
 
     it->SetDefinition(aSecondary->GetDefinition());
     it->SetMass(aSecondary->GetDefinition()->GetPDGMass());
@@ -77,14 +64,9 @@ G4DecayStrongResonances::Propagate(G4KineticTrackVector* theSecondaries,
     it->SetParentResonanceDef(aSecondary->GetParentResonanceDef());
     it->SetParentResonanceID(aSecondary->GetParentResonanceID());
     delete aSecondary;
-    try	{ theResult->push_back(it); }
-    catch(...){
-      throw G4HadronicException(__FILE__, __LINE__, "DecayStrongRes: push to result failed - out of mem.");
-    }
+    theResult->push_back(it);
   }
   delete theSecondaries;
 
   return theResult;
 }
-
-

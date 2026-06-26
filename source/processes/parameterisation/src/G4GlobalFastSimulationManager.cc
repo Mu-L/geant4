@@ -63,10 +63,11 @@
 // --------------------------------------------------
 // -- static methods to retrieve the manager pointer:
 // --------------------------------------------------
+
 G4GlobalFastSimulationManager* G4GlobalFastSimulationManager::GetGlobalFastSimulationManager()
 {
-  static G4ThreadLocalSingleton<G4GlobalFastSimulationManager> instance;
-  return instance.Instance();
+  static G4ThreadLocal G4GlobalFastSimulationManager instance;
+  return &instance;
 }
 
 G4GlobalFastSimulationManager* G4GlobalFastSimulationManager::GetInstance()
@@ -150,7 +151,8 @@ void G4GlobalFastSimulationManager::ShowSetup()
   // -- loop on regions to get the list of world volumes:
   // ----------------------------------------------------
   G4cout << "\nFast simulation setup:" << G4endl;
-  for (auto& region : *regions) {
+  for (auto& region : *regions)
+  {
     world = region->GetWorldPhysical();
     if (world == nullptr)  // region does not belong to any (existing) world
     {
@@ -158,11 +160,13 @@ void G4GlobalFastSimulationManager::ShowSetup()
     }
     G4bool newWorld = true;
     for (auto& ii : worldDone)
-      if (ii == world) {
+      if (ii == world)
+      {
         newWorld = false;
         break;
       }
-    if (newWorld) {
+    if (newWorld)
+    {
       worldDone.push_back(world);
       G4Region* worldRegion = world->GetLogicalVolume()->GetRegion();
       // -- preambule: print physical volume and region names...
@@ -180,14 +184,17 @@ void G4GlobalFastSimulationManager::ShowSetup()
       // -- show to what particles this G4FSMP is attached to:
       std::vector<G4ParticleDefinition*> particlesKnown;
       for (auto& ip : fFSMPVector)
-        if (ip->GetWorldVolume() == world) {
+        if (ip->GetWorldVolume() == world)
+        {
           G4cout << "        o G4FastSimulationProcess: '" << ip->GetProcessName() << "'" << G4endl;
           G4cout << "                      Attached to:";
           G4ParticleTable* particles = G4ParticleTable::GetParticleTable();
-          for (G4int iParticle = 0; iParticle < particles->entries(); iParticle++) {
+          for (G4int iParticle = 0; iParticle < particles->entries(); iParticle++)
+          {
             G4ParticleDefinition* particle = particles->GetParticle(iParticle);
             G4ProcessVector* processes = particle->GetProcessManager()->GetProcessList();
-            if (processes->contains(ip)) {
+            if (processes->contains(ip))
+            {
               G4cout << " " << particle->GetParticleName();
               findG4FSMP = true;
               particlesKnown.push_back(particle);
@@ -212,20 +219,25 @@ void G4GlobalFastSimulationManager::DisplayRegion(
     indent += "    ";
   G4cout << indent << "Region: `" << region->GetName() << "'" << G4endl;
   G4FastSimulationManager* fastSimManager = region->GetFastSimulationManager();
-  if (fastSimManager != nullptr) {
+  if (fastSimManager != nullptr)
+  {
     indent += "    ";
     G4cout << indent << "Model(s):" << G4endl;
     indent += "    ";
-    for (auto im : fastSimManager->GetFastSimulationModelList()) {
+    for (auto im : fastSimManager->GetFastSimulationModelList())
+    {
       G4cout << indent << "`" << im->GetName() << "'";
       G4cout << " ; applicable to:";
       G4ParticleTable* particles = G4ParticleTable::GetParticleTable();
-      for (G4int iParticle = 0; iParticle < particles->entries(); iParticle++) {
-        if (im->IsApplicable(*(particles->GetParticle(iParticle)))) {
+      for (G4int iParticle = 0; iParticle < particles->entries(); iParticle++)
+      {
+        if (im->IsApplicable(*(particles->GetParticle(iParticle))))
+        {
           G4cout << " " << particles->GetParticle(iParticle)->GetParticleName();
           G4bool known(false);
           for (auto& l : particlesKnown)
-            if (l == particles->GetParticle(iParticle)) {
+            if (l == particles->GetParticle(iParticle))
+            {
               known = true;
               break;
             }
@@ -238,9 +250,11 @@ void G4GlobalFastSimulationManager::DisplayRegion(
 
   // -- all that to check mothership of "region"
   G4PhysicalVolumeStore* physVolStore = G4PhysicalVolumeStore::GetInstance();
-  for (auto physVol : *physVolStore) {
+  for (auto physVol : *physVolStore)
+  {
     if (physVol->GetLogicalVolume()->IsRootRegion())
-      if (physVol->GetMotherLogical() != nullptr) {
+      if (physVol->GetMotherLogical() != nullptr)
+      {
         G4Region* thisVolMotherRegion = physVol->GetMotherLogical()->GetRegion();
         if (thisVolMotherRegion == region)
           DisplayRegion(physVol->GetLogicalVolume()->GetRegion(), depth + 1, particlesKnown);
@@ -254,16 +268,20 @@ void G4GlobalFastSimulationManager::DisplayRegion(
 
 void G4GlobalFastSimulationManager::ListEnvelopes(const G4String& aName, listType theType)
 {
-  if (theType == ISAPPLICABLE) {
+  if (theType == ISAPPLICABLE)
+  {
     for (auto& ManagedManager : ManagedManagers)
       ManagedManager->ListModels(aName);
     return;
   }
 
-  if (aName == "all") {
+  if (aName == "all")
+  {
     G4int titled = 0;
-    for (auto& ManagedManager : ManagedManagers) {
-      if (theType == NAMES_ONLY) {
+    for (auto& ManagedManager : ManagedManagers)
+    {
+      if (theType == NAMES_ONLY)
+      {
         if ((titled++) == 0) G4cout << "Current Envelopes for Fast Simulation:\n";
         G4cout << "   ";
         ManagedManager->ListTitle();
@@ -273,9 +291,11 @@ void G4GlobalFastSimulationManager::ListEnvelopes(const G4String& aName, listTyp
         ManagedManager->ListModels();
     }
   }
-  else {
+  else
+  {
     for (auto& ManagedManager : ManagedManagers)
-      if (aName == ManagedManager->GetEnvelope()->GetName()) {
+      if (aName == ManagedManager->GetEnvelope()->GetName())
+      {
         ManagedManager->ListModels();
         break;
       }
@@ -294,7 +314,8 @@ G4VFastSimulationModel* G4GlobalFastSimulationManager::GetFastSimulationModel(
   G4VFastSimulationModel* model = nullptr;
   // -- flag used to navigate accross the various managers;
   bool foundPrevious(false);
-  for (auto ManagedManager : ManagedManagers) {
+  for (auto ManagedManager : ManagedManagers)
+  {
     model = ManagedManager->GetFastSimulationModel(modelName, previousFound, foundPrevious);
     if (model != nullptr) break;
   }

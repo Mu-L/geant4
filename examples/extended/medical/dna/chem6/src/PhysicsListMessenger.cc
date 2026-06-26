@@ -39,6 +39,9 @@
 // The Geant4-DNA web site is available at http://geant4-dna.org
 
 #include "PhysicsListMessenger.hh"
+
+#include <G4UIcmdWithAnInteger.hh>
+
 #include "PhysicsList.hh"
 
 #include "G4UIcmdWithAString.hh"
@@ -46,12 +49,17 @@
 
 PhysicsListMessenger::PhysicsListMessenger(PhysicsList *pPhys)
   : G4UImessenger(), fPhysicsList(pPhys) {
-
   fListCmd = std::make_unique<G4UIcmdWithAString>("/chem/phys/registerPhysics", this);
   fListCmd->SetGuidance("Register physics list");
   fListCmd->SetParameterName("PList", false);
   fListCmd->AvailableForStates(G4State_PreInit);
   fListCmd->SetToBeBroadcasted(false);
+
+  fVerbosePhysicsCoChem = std::make_unique<G4UIcmdWithAnInteger>("/chem/phys/PhysChemVerbose", this);
+  fVerbosePhysicsCoChem->SetGuidance("Verbose for PhyChem");
+  fVerbosePhysicsCoChem->SetParameterName("PhyChem", false);
+  fVerbosePhysicsCoChem->AvailableForStates(G4State_PreInit);
+  fVerbosePhysicsCoChem->SetToBeBroadcasted(false);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -59,6 +67,9 @@ PhysicsListMessenger::PhysicsListMessenger(PhysicsList *pPhys)
 void PhysicsListMessenger::SetNewValue(G4UIcommand *command, const G4String newValue) {
   if (command == fListCmd.get()) {
     fPhysicsList->RegisterConstructor(newValue);
+  }
+  if (command == fVerbosePhysicsCoChem.get()) {
+    fPhysicsList->SetVerboseLevel(fVerbosePhysicsCoChem->GetNewIntValue(newValue));
   }
 }
 

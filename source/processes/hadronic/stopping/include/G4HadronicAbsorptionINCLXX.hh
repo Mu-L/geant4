@@ -36,31 +36,33 @@
 // Class Description:
 //
 // Intermediate base class for hadronic absorption at rest using
-// INCLXX model, and Precompound for the nuclear de-excitation. 
+// INCLXX model, and Precompound for the nuclear de-excitation.
 //
 //---------------------------------------------------------------------------
 
-#ifndef G4HadronicAbsorptionINCLXX_h
-#define G4HadronicAbsorptionINCLXX_h 1
+#ifndef G4HADRONICABSORPTIONINCLXX_HH
+#define G4HADRONICABSORPTIONINCLXX_HH
 
-#include "globals.hh"
 #include "G4HadronStoppingProcess.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 
-
-class G4HadronicAbsorptionINCLXX : public G4HadronStoppingProcess {
+class G4HadronicAbsorptionINCLXX : public G4HadronStoppingProcess
+{
   public:
-    G4HadronicAbsorptionINCLXX( G4ParticleDefinition* pdef = nullptr ); 
+
+    G4HadronicAbsorptionINCLXX(G4ParticleDefinition* pdef = nullptr);
     virtual ~G4HadronicAbsorptionINCLXX();
 
-    G4bool IsApplicable( const G4ParticleDefinition& );
-    void ProcessDescription( std::ostream& outFile ) const;
+    G4bool IsApplicable(const G4ParticleDefinition&);
+    void ProcessDescription(std::ostream& outFile) const;
 
-    G4HadronicAbsorptionINCLXX& operator=( const G4HadronicAbsorptionINCLXX& ) = delete;
-    G4HadronicAbsorptionINCLXX( const G4HadronicAbsorptionINCLXX& ) = delete;
+    G4HadronicAbsorptionINCLXX& operator=(const G4HadronicAbsorptionINCLXX&) = delete;
+    G4HadronicAbsorptionINCLXX(const G4HadronicAbsorptionINCLXX&) = delete;
 
   private:
+
     G4ParticleDefinition* pdefApplicable;
 };
 

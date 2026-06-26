@@ -1,7 +1,7 @@
-%global geant4_version 11.4.2
+%global geant4_version 11.5.0-beta
 
 %global NEUTRONHPDATA G4NDL.4.7.1
-%global LEDATA G4EMLOW.8.8
+%global LEDATA G4EMLOW.9.0
 %global LEVELGAMMADATA G4PhotonEvaporation.6.1.2
 %global RADIOACTIVEDATA G4RadioactiveDecay.6.1.2
 %global PARTICLEXSDATA G4PARTICLEXS.4.2
@@ -261,6 +261,12 @@ tar xzf %{SOURCE15} -C %{buildroot}/%{_datadir}/%{name}/data
 %endif
 
 %changelog
+* Thu Jun 26 2026 Gabriele Cosmo <Gabriele.Cosmo@cern.ch> - 11.5.0-b
+- Update to version 11.5.0-beta
+
+* Mon Jun 15 2026 Ben Morgan <Ben.Morgan@warwick.ac.uk> - 11.4.2-1
+- Updated dataset: G4EMLOW-9.0
+
 * Fri Jun 12 2026 Gabriele Cosmo <Gabriele.Cosmo@cern.ch> - 11.4.2
 - Update to version 11.4.2
 

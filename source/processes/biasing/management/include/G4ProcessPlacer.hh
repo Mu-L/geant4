@@ -27,16 +27,16 @@
 //
 // Class description:
 //
-// Used internally by importance sampling and scoring. 
+// Used internally by importance sampling and scoring.
 // See G4VProcessPlacer.
 //
 // Author: Michael Dressel, CERN
 // --------------------------------------------------------------------
-#ifndef G4ProcessPlacer_hh
-#define G4ProcessPlacer_hh 1
+#ifndef G4PROCESSPLACER_HH
+#define G4PROCESSPLACER_HH
 
-#include "G4Types.hh"
 #include "G4String.hh"
+#include "G4Types.hh"
 #include "G4VProcessPlacer.hh"
 
 class G4ProcessManager;
@@ -44,48 +44,46 @@ class G4ProcessVector;
 
 class G4ProcessPlacer : public G4VProcessPlacer
 {
+  public:
 
- public:
-
-  explicit G4ProcessPlacer(const G4String& particlename);
+    explicit G4ProcessPlacer(const G4String& particlename);
     // create a process placer for a particle type
 
-  virtual ~G4ProcessPlacer();
+    virtual ~G4ProcessPlacer();
 
-  virtual void AddProcessAsLastDoIt(G4VProcess* process);
-    // place a post step do it process such that the 
+    virtual void AddProcessAsLastDoIt(G4VProcess* process);
+    // place a post step do it process such that the
     // PostStepDoIt function is called last
-    // THE ORDER CHANGES BY SUBSEQUENT CALLS     
+    // THE ORDER CHANGES BY SUBSEQUENT CALLS
 
-  virtual void AddProcessAsSecondDoIt(G4VProcess* process);
-    // place a post step do it process such that the 
+    virtual void AddProcessAsSecondDoIt(G4VProcess* process);
+    // place a post step do it process such that the
     // PostStepDoIt function is called second
-    // THE ORDER CHANGES BY SUBSEQUENT CALLS         
+    // THE ORDER CHANGES BY SUBSEQUENT CALLS
 
-  virtual void RemoveProcess(G4VProcess* process);
-    // removes a given process 
+    virtual void RemoveProcess(G4VProcess* process);
+    // removes a given process
 
-  enum SecondOrLast
-  {
-    eSecond = 1,            
-    eLast = 0
-  };
+    enum SecondOrLast
+    {
+      eSecond = 1,
+      eLast = 0
+    };
 
- private:
+  private:
 
-  G4ProcessManager* GetProcessManager();
-  void AddProcessAs(G4VProcess* process, SecondOrLast);
+    G4ProcessManager* GetProcessManager();
+    void AddProcessAs(G4VProcess* process, SecondOrLast);
 
-  void PrintProcVec(G4ProcessVector* processVec);
-  void PrintAlongStepGPILVec();  
-  void PrintAlongStepDoItVec();  
-  void PrintPostStepGPILVec();  
-  void PrintPostStepDoItVec();  
+    void PrintProcVec(G4ProcessVector* processVec);
+    void PrintAlongStepGPILVec();
+    void PrintAlongStepDoItVec();
+    void PrintPostStepGPILVec();
+    void PrintPostStepDoItVec();
 
- private:
+  private:
 
-  G4String fParticleName;
-
+    G4String fParticleName;
 };
 
 #endif

@@ -38,53 +38,48 @@
 //
 
 #include "G4EmStandardPhysicsWVI.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4EmParameters.hh"
-#include "G4EmBuilder.hh"
-#include "G4LossTableManager.hh"
 
-#include "G4ComptonScattering.hh"
-#include "G4GammaConversion.hh"
-#include "G4PhotoElectricEffect.hh"
-#include "G4RayleighScattering.hh"
-
-#include "G4KleinNishinaModel.hh"
-#include "G4LivermorePhotoElectricModel.hh"
-#include "G4eMultipleScattering.hh"
-#include "G4hMultipleScattering.hh"
-#include "G4CoulombScattering.hh"
-#include "G4WentzelVIModel.hh"
-#include "G4WentzelVIRelModel.hh"
-#include "G4UrbanMscModel.hh"
-#include "G4hCoulombScatteringModel.hh"
-#include "G4eCoulombScatteringModel.hh"
-
-#include "G4eIonisation.hh"
-#include "G4eBremsstrahlung.hh"
-#include "G4eplusAnnihilation.hh"
-#include "G4UAtomicDeexcitation.hh"
-
-#include "G4hIonisation.hh"
-#include "G4ionIonisation.hh"
-#include "G4BetheHeitler5DModel.hh"
 #include "G4AtimaEnergyLossModel.hh"
 #include "G4AtimaFluctuations.hh"
-#include "G4IonParametrisedLossModel.hh"
-#include "G4LindhardSorensenIonModel.hh"
+#include "G4BetheHeitler5DModel.hh"
 #include "G4BraggIonModel.hh"
-#include "G4IonFluctuations.hh"
-#include "G4NuclearStopping.hh"
-#include "G4eplusTo2or3GammaModel.hh"
-
-#include "G4Gamma.hh"
-#include "G4Electron.hh"
-#include "G4Positron.hh"
-#include "G4GenericIon.hh"
-
-#include "G4PhysicsListHelper.hh"
 #include "G4BuilderType.hh"
+#include "G4ComptonScattering.hh"
+#include "G4CoulombScattering.hh"
+#include "G4Electron.hh"
+#include "G4EmBuilder.hh"
 #include "G4EmModelActivator.hh"
+#include "G4EmParameters.hh"
+#include "G4Gamma.hh"
+#include "G4GammaConversion.hh"
+#include "G4GenericIon.hh"
+#include "G4IonFluctuations.hh"
+#include "G4IonParametrisedLossModel.hh"
+#include "G4KleinNishinaModel.hh"
+#include "G4LindhardSorensenIonModel.hh"
+#include "G4LivermorePhotoElectricModel.hh"
+#include "G4LossTableManager.hh"
+#include "G4NuclearStopping.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4PhotoElectricEffect.hh"
+#include "G4PhysicsListHelper.hh"
+#include "G4Positron.hh"
+#include "G4RayleighScattering.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4UAtomicDeexcitation.hh"
+#include "G4UrbanMscModel.hh"
+#include "G4WentzelVIModel.hh"
+#include "G4WentzelVIRelModel.hh"
+#include "G4eBremsstrahlung.hh"
+#include "G4eCoulombScatteringModel.hh"
+#include "G4eIonisation.hh"
+#include "G4eMultipleScattering.hh"
+#include "G4eplusAnnihilation.hh"
+#include "G4eplusTo2or3GammaModel.hh"
+#include "G4hCoulombScatteringModel.hh"
+#include "G4hIonisation.hh"
+#include "G4hMultipleScattering.hh"
+#include "G4ionIonisation.hh"
 
 // factory
 #include "G4PhysicsConstructorFactory.hh"
@@ -93,26 +88,25 @@ G4_DECLARE_PHYSCONSTR_FACTORY(G4EmStandardPhysicsWVI);
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4EmStandardPhysicsWVI::G4EmStandardPhysicsWVI(G4int ver)
-  : G4VPhysicsConstructor("G4EmStandardWVI")
+G4EmStandardPhysicsWVI::G4EmStandardPhysicsWVI(G4int ver) : G4VPhysicsConstructor("G4EmStandardWVI")
 {
   G4EmParameters* param = G4EmParameters::Instance();
   param->SetDefaults();
   param->SetVerbose(ver);
-  param->SetMinEnergy(10*CLHEP::eV);
-  param->SetLowestElectronEnergy(100*CLHEP::eV);
+  param->SetMinEnergy(10 * CLHEP::eV);
+  param->SetLowestElectronEnergy(100 * CLHEP::eV);
   param->SetNumberOfBinsPerDecade(20);
   param->ActivateAngularGeneratorForIonisation(true);
-  param->SetStepFunction(0.2, 100*CLHEP::um);
-  param->SetStepFunctionMuHad(0.2, 50*CLHEP::um);
-  param->SetStepFunctionLightIons(0.1, 20*CLHEP::um);
-  param->SetStepFunctionIons(0.1, 1*CLHEP::um);
+  param->SetStepFunction(0.2, 100 * CLHEP::um);
+  param->SetStepFunctionMuHad(0.2, 50 * CLHEP::um);
+  param->SetStepFunctionLightIons(0.1, 20 * CLHEP::um);
+  param->SetStepFunctionIons(0.1, 1 * CLHEP::um);
   param->SetUseMottCorrection(true);
   param->SetMuHadLateralDisplacement(true);
   param->SetUseICRU90Data(true);
   param->SetMscThetaLimit(0.15);
   param->SetFluo(true);
-  param->SetMaxNIELEnergy(1*CLHEP::MeV);
+  param->SetMaxNIELEnergy(1 * CLHEP::MeV);
   SetPhysicsType(bElectromagnetic);
 }
 
@@ -132,7 +126,8 @@ void G4EmStandardPhysicsWVI::ConstructParticle()
 
 void G4EmStandardPhysicsWVI::ConstructProcess()
 {
-  if(verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "### " << GetPhysicsName() << " Construct Processes " << G4endl;
   }
   G4EmBuilder::PrepareEMPhysics();
@@ -145,13 +140,14 @@ void G4EmStandardPhysicsWVI::ConstructProcess()
   // nuclear stopping is enabled if th eenergy limit above zero
   G4double nielEnergyLimit = param->MaxNIELEnergy();
   G4NuclearStopping* pnuc = nullptr;
-  if(nielEnergyLimit > 0.0) {
+  if (nielEnergyLimit > 0.0)
+  {
     pnuc = new G4NuclearStopping();
     pnuc->SetMaxKinEnergy(nielEnergyLimit);
   }
 
-  // high energy limit for e+- scattering models 
-  G4double highEnergyLimit = 1*CLHEP::MeV;
+  // high energy limit for e+- scattering models
+  G4double highEnergyLimit = 1 * CLHEP::MeV;
 
   // Add gamma EM processes
   G4ParticleDefinition* particle = G4Gamma::Gamma();
@@ -163,7 +159,8 @@ void G4EmStandardPhysicsWVI::ConstructProcess()
   cs->SetEmModel(new G4KleinNishinaModel());
 
   G4GammaConversion* gc = new G4GammaConversion();
-  if(param->EnablePolarisation()) {
+  if (param->EnablePolarisation())
+  {
     gc->SetEmModel(new G4BetheHeitler5DModel());
   }
 
@@ -183,9 +180,9 @@ void G4EmStandardPhysicsWVI::ConstructProcess()
   msc->SetEmModel(msc1);
   msc->SetEmModel(msc2);
 
-  G4eCoulombScatteringModel* ssm = new G4eCoulombScatteringModel(); 
+  G4eCoulombScatteringModel* ssm = new G4eCoulombScatteringModel();
   G4CoulombScattering* ss = new G4CoulombScattering();
-  ss->SetEmModel(ssm); 
+  ss->SetEmModel(ssm);
   ss->SetMinKinEnergy(highEnergyLimit);
   ssm->SetLowEnergyLimit(highEnergyLimit);
   ssm->SetActivationLowEnergyLimit(highEnergyLimit);
@@ -206,9 +203,9 @@ void G4EmStandardPhysicsWVI::ConstructProcess()
   msc->SetEmModel(msc1);
   msc->SetEmModel(msc2);
 
-  ssm = new G4eCoulombScatteringModel(); 
+  ssm = new G4eCoulombScatteringModel();
   ss = new G4CoulombScattering();
-  ss->SetEmModel(ssm); 
+  ss->SetEmModel(ssm);
   ss->SetMinKinEnergy(highEnergyLimit);
   ssm->SetLowEnergyLimit(highEnergyLimit);
   ssm->SetActivationLowEnergyLimit(highEnergyLimit);
@@ -230,7 +227,10 @@ void G4EmStandardPhysicsWVI::ConstructProcess()
   ionIoni->SetEmModel(new G4AtimaEnergyLossModel());
   ph->RegisterProcess(hmsc, particle);
   ph->RegisterProcess(ionIoni, particle);
-  if(nullptr != pnuc) { ph->RegisterProcess(pnuc, particle); }
+  if (nullptr != pnuc)
+  {
+    ph->RegisterProcess(pnuc, particle);
+  }
 
   // muons, hadrons, ions
   G4EmBuilder::ConstructCharged(hmsc, pnuc);

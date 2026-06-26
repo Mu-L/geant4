@@ -30,7 +30,7 @@
 // G4MscStepLimitType.hh
 //
 // Class Description:
-//   This is an enumerator to define type of multiple scattering 
+//   This is an enumerator to define type of multiple scattering
 //   step limitation
 //
 // Author:        Vladimir Ivanchenko
@@ -40,8 +40,8 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4MscStepLimitType_h
-#define G4MscStepLimitType_h 1
+#ifndef G4MSCSTEPLIMITTYPE_HH
+#define G4MSCSTEPLIMITTYPE_HH
 
 enum G4MscStepLimitType
 {
@@ -51,5 +51,3 @@ enum G4MscStepLimitType
   fUseDistanceToBoundary
 };
 #endif
-
-

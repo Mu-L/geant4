@@ -37,19 +37,21 @@
 //    The use of adjoint particles instead of "normal" particles
 //    during a reverse simulation is based on an idea of M. Asai
 //
-#ifndef G4AdjointGamma_h
-#define G4AdjointGamma_h 1
+#ifndef G4ADJOINTGAMMA_HH
+#define G4ADJOINTGAMMA_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4AdjointGamma : public G4ParticleDefinition
 {
   public:
+
     static G4AdjointGamma* Definition();
     static G4AdjointGamma* AdjointGammaDefinition();
     static G4AdjointGamma* AdjointGamma();
 
   private:
+
     G4AdjointGamma() {}
     ~G4AdjointGamma() override = default;
 

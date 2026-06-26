@@ -48,46 +48,45 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4eeToHadrons_h
-#define G4eeToHadrons_h 1
+#ifndef G4EETOHADRONS_HH
+#define G4EETOHADRONS_HH
 
-#include "G4VEmProcess.hh"
 #include "G4Positron.hh"
+#include "G4VEmProcess.hh"
 #include "G4eeToHadronsMultiModel.hh"
 
 class G4eeToHadrons : public G4VEmProcess
 {
+  public:
 
-public:
+    explicit G4eeToHadrons(const G4String& name = "ee2hadr");
 
-  explicit G4eeToHadrons(const G4String& name = "ee2hadr");
+    ~G4eeToHadrons() override;
 
-  ~G4eeToHadrons() override;
+    G4bool IsApplicable(const G4ParticleDefinition& p) override;
 
-  G4bool IsApplicable(const G4ParticleDefinition& p) override;
+    // Set the factor to artificially increase the crossSection (default 1)
+    void SetCrossSecFactor(G4double fac);
 
-  // Set the factor to artificially increase the crossSection (default 1)
-  void SetCrossSecFactor(G4double fac);
+    // print description in html
+    void ProcessDescription(std::ostream&) const override;
 
-  // print description in html
-  void ProcessDescription(std::ostream&) const override;
+    // hide assignment operator
+    G4eeToHadrons& operator=(const G4eeToHadrons& right) = delete;
+    G4eeToHadrons(const G4eeToHadrons&) = delete;
 
-  // hide assignment operator
-  G4eeToHadrons & operator=(const G4eeToHadrons &right) = delete;
-  G4eeToHadrons(const G4eeToHadrons&) = delete;
+  protected:
 
-protected:
+    // Print out of the class parameters
+    void StreamProcessInfo(std::ostream& outFile) const override;
 
-  // Print out of the class parameters
-  void StreamProcessInfo(std::ostream& outFile) const override;
+    void InitialiseProcess(const G4ParticleDefinition*) override;
 
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+  private:
 
-private:
-
-  G4eeToHadronsMultiModel*  multimodel = nullptr;
-  G4double                  csFactor = 1.0;
-  G4bool                    isInitialised = false;
+    G4eeToHadronsMultiModel* multimodel = nullptr;
+    G4double csFactor = 1.0;
+    G4bool isInitialised = false;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

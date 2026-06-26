@@ -38,8 +38,8 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4FastTrack_h
-#define G4FastTrack_h
+#ifndef G4FASTTRACK_HH
+#define G4FASTTRACK_HH
 
 #include "G4AffineTransform.hh"
 #include "G4LogicalVolume.hh"
@@ -73,6 +73,7 @@ using G4Envelope = G4Region;
 class G4FastTrack
 {
   public:  // without description
+
     //------------------------
     // Constructor/Destructor
     //------------------------
@@ -144,6 +145,7 @@ class G4FastTrack
     const G4AffineTransform* GetInverseAffineTransformation() const;
 
   private:
+
     //-----------------
     // Private members
     //-----------------

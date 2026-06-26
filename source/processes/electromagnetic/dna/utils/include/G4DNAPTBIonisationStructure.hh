@@ -27,40 +27,44 @@
 // Models come from
 // M. Bug et al, Rad. Phys and Chem. 130, 459-479 (2017)
 
-#ifndef G4DNAPTBIonisationStructure_HH
-#define G4DNAPTBIonisationStructure_HH 1
+#ifndef G4DNAPTBIONISATIONSTRUCTURE_HH
+#define G4DNAPTBIONISATIONSTRUCTURE_HH
 #include "globals.hh"
+
 #include <map>
 #include <vector>
 class G4Material;
 class G4DNAPTBIonisationStructure
 {
- public:
-  G4DNAPTBIonisationStructure();
-  ~G4DNAPTBIonisationStructure() = default;
-  G4double IonisationEnergy(G4int level, const size_t& materialName);
-  G4int NumberOfLevels(const size_t& materialName);
-  G4DNAPTBIonisationStructure(const G4DNAPTBIonisationStructure&) = delete;  // prevent copy-construction
-  G4DNAPTBIonisationStructure& operator=(
-    const G4DNAPTBIonisationStructure& right) = delete;  // prevent assignement
+  public:
 
- private:
-  // Number of Ionisation levels of the water molecule
-  std::map<size_t, G4int> nLevels;
-  std::map<size_t, std::vector<G4double>> energyConstant;
-  size_t ReplaceMaterial(const size_t& materialID);
-  G4Material* fpGuanine_PU = nullptr;
-  G4Material* fpTHF = nullptr;
-  G4Material* fpPY = nullptr;
-  G4Material* fpPU = nullptr;
-  G4Material* fpTMP = nullptr;
-  G4Material* fpG4_WATER = nullptr;
-  G4Material* fpBackbone_THF = nullptr;
-  G4Material* fpCytosine_PY = nullptr;
-  G4Material* fpThymine_PY = nullptr;
-  G4Material* fpAdenine_PU = nullptr;
-  G4Material* fpBackbone_TMP = nullptr;
-  G4Material* fpN2 = nullptr;
+    G4DNAPTBIonisationStructure();
+    ~G4DNAPTBIonisationStructure() = default;
+    G4double IonisationEnergy(G4int level, const size_t& materialName);
+    G4int NumberOfLevels(const size_t& materialName);
+    G4DNAPTBIonisationStructure(const G4DNAPTBIonisationStructure&) =
+      delete;  // prevent copy-construction
+    G4DNAPTBIonisationStructure&
+    operator=(const G4DNAPTBIonisationStructure& right) = delete;  // prevent assignement
+
+  private:
+
+    // Number of Ionisation levels of the water molecule
+    std::map<size_t, G4int> nLevels;
+    std::map<size_t, std::vector<G4double>> energyConstant;
+    size_t ReplaceMaterial(const size_t& materialID);
+    G4Material* fpGuanine_PU = nullptr;
+    G4Material* fpTHF = nullptr;
+    G4Material* fpPY = nullptr;
+    G4Material* fpPU = nullptr;
+    G4Material* fpTMP = nullptr;
+    G4Material* fpG4_WATER = nullptr;
+    G4Material* fpBackbone_THF = nullptr;
+    G4Material* fpCytosine_PY = nullptr;
+    G4Material* fpThymine_PY = nullptr;
+    G4Material* fpAdenine_PU = nullptr;
+    G4Material* fpBackbone_TMP = nullptr;
+    G4Material* fpN2 = nullptr;
 };
 
 #endif

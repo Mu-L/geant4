@@ -24,7 +24,8 @@
 // ********************************************************************
 //
 //
-#pragma once
+#ifndef G4EMDNACHEMISTRY_OPTION2_HH
+#define G4EMDNACHEMISTRY_OPTION2_HH
 #include "G4VPhysicsConstructor.hh"
 #include "G4VUserChemistryList.hh"
 #include "globals.hh"
@@ -36,18 +37,18 @@ class G4MolecularConfiguration;
 
 class G4EmDNAChemistry_option2 : public G4VUserChemistryList, public G4VPhysicsConstructor
 {
- public:
-  G4EmDNAChemistry_option2();
-  ~G4EmDNAChemistry_option2() override = default;
+  public:
 
-  void ConstructParticle() override
-  {
-    ConstructMolecule();
-  }
-  void ConstructMolecule() override;
-  void ConstructProcess() override;
+    G4EmDNAChemistry_option2();
+    ~G4EmDNAChemistry_option2() override = default;
 
-  void ConstructDissociationChannels() override;
-  void ConstructReactionTable(G4DNAMolecularReactionTable* pTable) override;
-  void ConstructTimeStepModel(G4DNAMolecularReactionTable* pTable) override;
+    void ConstructParticle() override { ConstructMolecule(); }
+    void ConstructMolecule() override;
+    void ConstructProcess() override;
+
+    void ConstructDissociationChannels() override;
+    void ConstructReactionTable(G4DNAMolecularReactionTable* pTable) override;
+    void ConstructTimeStepModel(G4DNAMolecularReactionTable* pTable) override;
 };
+
+#endif

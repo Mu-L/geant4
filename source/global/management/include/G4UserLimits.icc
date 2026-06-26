@@ -31,37 +31,41 @@
 // - 08-04-1998: M.Maire: new data members
 // --------------------------------------------------------------------
 
-inline G4UserLimits::G4UserLimits(G4double ustepMax, G4double utrakMax,
-                                  G4double utimeMax, G4double uekinMin,
-                                  G4double urangMin)
-  : fMaxStep(ustepMax)
-  , fMaxTrack(utrakMax)
-  , fMaxTime(utimeMax)
-  , fMinEkine(uekinMin)
-  , fMinRange(urangMin)
-  , fType("base")
-{}
-
-// --------------------------------------------------------------------
-
-inline G4UserLimits::G4UserLimits(const G4String& type, G4double ustepMax,
-                                  G4double utrakMax, G4double utimeMax,
+inline G4UserLimits::G4UserLimits(G4double ustepMax, G4double utrakMax, G4double utimeMax,
                                   G4double uekinMin, G4double urangMin)
-  : fMaxStep(ustepMax)
-  , fMaxTrack(utrakMax)
-  , fMaxTime(utimeMax)
-  , fMinEkine(uekinMin)
-  , fMinRange(urangMin)
-  , fType(type)
+  : fMaxStep(ustepMax),
+    fMaxTrack(utrakMax),
+    fMaxTime(utimeMax),
+    fMinEkine(uekinMin),
+    fMinRange(urangMin),
+    fType("base")
 {}
 
 // --------------------------------------------------------------------
 
-inline const G4String& G4UserLimits::GetType() const { return fType; }
+inline G4UserLimits::G4UserLimits(const G4String& type, G4double ustepMax, G4double utrakMax,
+                                  G4double utimeMax, G4double uekinMin, G4double urangMin)
+  : fMaxStep(ustepMax),
+    fMaxTrack(utrakMax),
+    fMaxTime(utimeMax),
+    fMinEkine(uekinMin),
+    fMinRange(urangMin),
+    fType(type)
+{}
 
 // --------------------------------------------------------------------
 
-inline void G4UserLimits::SetType(const G4String& type) { fType = type; }
+inline const G4String& G4UserLimits::GetType() const
+{
+  return fType;
+}
+
+// --------------------------------------------------------------------
+
+inline void G4UserLimits::SetType(const G4String& type)
+{
+  fType = type;
+}
 
 // --------------------------------------------------------------------
 

@@ -33,8 +33,9 @@
 // -------------------------------------------------------------------
 
 #include "G4IT.hh"
-#include "G4KDTree.hh"
+
 #include "G4ITBox.hh"
+#include "G4KDTree.hh"
 #include "G4Track.hh"
 #include "G4TrackList.hh"
 #include "G4TrackingInformation.hh"
@@ -56,7 +57,8 @@ G4IT* GetIT(const G4Track& track)
 }
 
 template<>
-G4KDNode<G4IT>::~G4KDNode(){
+G4KDNode<G4IT>::~G4KDNode()
+{
   fPoint->SetNode(nullptr);
 }
 
@@ -64,8 +66,8 @@ G4KDNode<G4IT>::~G4KDNode(){
 //
 // Constructors / Destructors
 //
-G4IT::G4IT() :
-    G4VUserTrackInformation("G4IT"),
+G4IT::G4IT()
+  : G4VUserTrackInformation("G4IT"),
     fpTrack(nullptr),
     fpPreviousIT(nullptr),
     fpNextIT(nullptr),
@@ -79,8 +81,8 @@ G4IT::G4IT() :
 }
 
 // Use only by inheriting classes
-G4IT::G4IT(const G4IT& /*right*/) :
-    G4VUserTrackInformation("G4IT"),
+G4IT::G4IT(const G4IT& /*right*/)
+  : G4VUserTrackInformation("G4IT"),
     fpTrack(nullptr),
     fpPreviousIT(nullptr),
     fpNextIT(nullptr),
@@ -97,13 +99,10 @@ G4IT::G4IT(const G4IT& /*right*/) :
 G4IT& G4IT::operator=(const G4IT& right)
 {
   G4ExceptionDescription exceptionDescription;
-  exceptionDescription
-      << "The assignment operator of G4IT should not be used, "
-          "this feature is not supported."
-      << "If really needed, please contact the developers.";
-  G4Exception("G4IT::operator=(const G4IT& right)",
-              "G4IT001",
-              FatalException,
+  exceptionDescription << "The assignment operator of G4IT should not be used, "
+                          "this feature is not supported."
+                       << "If really needed, please contact the developers.";
+  G4Exception("G4IT::operator=(const G4IT& right)", "G4IT001", FatalException,
               exceptionDescription);
 
   if (this == &right) return *this;
@@ -121,8 +120,8 @@ G4IT& G4IT::operator=(const G4IT& right)
   return *this;
 }
 
-G4IT::G4IT(G4Track * aTrack) :
-    G4VUserTrackInformation("G4IT"),
+G4IT::G4IT(G4Track* aTrack)
+  : G4VUserTrackInformation("G4IT"),
     fpPreviousIT(nullptr),
     fpNextIT(nullptr),
     fpTrackingInformation(new G4TrackingInformation())
@@ -138,19 +137,19 @@ G4IT::G4IT(G4Track * aTrack) :
 
 void G4IT::TakeOutBox()
 {
-  if(fpITBox != nullptr)
+  if (fpITBox != nullptr)
   {
     fpITBox->Extract(this);
     fpITBox = nullptr;
   }
 
-  if(fpTrackNode != nullptr)
+  if (fpTrackNode != nullptr)
   {
     delete fpTrackNode;
     fpTrackNode = nullptr;
   }
 
-  if(fpKDNode != nullptr)
+  if (fpKDNode != nullptr)
   {
     InactiveNode(fpKDNode);
     fpKDNode = nullptr;
@@ -161,15 +160,15 @@ G4IT::~G4IT()
 {
   TakeOutBox();
 
-  if(fpTrackingInformation != nullptr)
+  if (fpTrackingInformation != nullptr)
   {
     delete fpTrackingInformation;
     fpTrackingInformation = nullptr;
   }
 
-// Note :
-// G4ITTrackingManager will delete fTrackNode.
-// fKDNode will be deleted when the KDTree is rebuilt
+  // Note :
+  // G4ITTrackingManager will delete fTrackNode.
+  // fKDNode will be deleted when the KDTree is rebuilt
 }
 
 //------------------------------------------------------------------------------
@@ -183,9 +182,8 @@ G4bool G4IT::operator<(const G4IT& right) const
   {
     return (this->diff(right));
   }
-  
+
   return (GetITType() < right.GetITType());
- 
 }
 
 G4bool G4IT::operator==(const G4IT& right) const
@@ -237,4 +235,3 @@ const G4ThreeVector& G4IT::GetPreStepPosition() const
 {
   return fpTrackingInformation->GetPreStepPosition();
 }
-

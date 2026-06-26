@@ -28,60 +28,58 @@
 // by V. Ivanchenko (July 2016)
 //
 
-#ifndef G4FermiFragmentsPoolVI_hh 
-#define G4FermiFragmentsPoolVI_hh 1
+#ifndef G4FERMIFRAGMENTSPOOLVI_HH
+#define G4FERMIFRAGMENTSPOOLVI_HH
 
-#include "globals.hh"
+#include "G4FermiChannels.hh"
 #include "G4FermiFragment.hh"
 #include "G4FermiPair.hh"
-#include "G4FermiChannels.hh"
+#include "globals.hh"
 
 #include <vector>
 
 class G4FermiFragmentsPoolVI
 {
-public:
+  public:
 
-  G4FermiFragmentsPoolVI();
+    G4FermiFragmentsPoolVI();
 
-  ~G4FermiFragmentsPoolVI();
+    ~G4FermiFragmentsPoolVI();
 
-  void Initialise();
+    void Initialise();
 
-  const G4FermiChannels* ClosestChannels(const G4int Z, const G4int A,
-                                         const G4double mass) const;
+    const G4FermiChannels* ClosestChannels(const G4int Z, const G4int A, const G4double mass) const;
 
-  void DumpFragment(const G4FermiFragment*) const;
+    void DumpFragment(const G4FermiFragment*) const;
 
-  void Dump() const;
+    void Dump() const;
 
-  G4bool HasDecay(const G4int Z, const G4int A, const G4double eexc) const;
+    G4bool HasDecay(const G4int Z, const G4int A, const G4double eexc) const;
 
-  G4bool IsInitialized() const { return isInitialized; };
+    G4bool IsInitialized() const { return isInitialized; };
 
-  G4FermiFragmentsPoolVI(const G4FermiFragmentsPoolVI &right) = delete;  
-  const G4FermiFragmentsPoolVI & operator=
-  (const G4FermiFragmentsPoolVI &right) = delete;
-  G4bool operator==(const G4FermiFragmentsPoolVI &right) const = delete;
-  G4bool operator!=(const G4FermiFragmentsPoolVI &right) const = delete;
-  
-private:
+    G4FermiFragmentsPoolVI(const G4FermiFragmentsPoolVI& right) = delete;
+    const G4FermiFragmentsPoolVI& operator=(const G4FermiFragmentsPoolVI& right) = delete;
+    G4bool operator==(const G4FermiFragmentsPoolVI& right) const = delete;
+    G4bool operator!=(const G4FermiFragmentsPoolVI& right) const = delete;
 
-  G4bool IsInThePool(const G4int Z, const G4int A, const G4double exc) const;
+  private:
 
-  G4double fTolerance{0.0};
-  G4double fElim{0.0};
+    G4bool IsInThePool(const G4int Z, const G4int A, const G4double exc) const;
 
-  const G4int maxZ{9};
-  const G4int maxA{17};
+    G4double fTolerance{0.0};
+    G4double fElim{0.0};
 
-  G4bool isInitialized{false};
+    const G4int maxZ{9};
+    const G4int maxA{17};
 
-  // pool 
-  std::vector<const G4FermiFragment*> fragment_pool;
+    G4bool isInitialized{false};
 
-  // list of channels sorted by Z and A
-  std::vector<G4FermiChannels*>* list_c[9][17] = {{nullptr}};
+    // pool
+    std::vector<const G4FermiFragment*> fragment_pool;
+
+    // list of channels sorted by Z and A
+    std::vector<G4FermiChannels*>* list_c[9][17] = {{nullptr}};
 };
 
 #endif

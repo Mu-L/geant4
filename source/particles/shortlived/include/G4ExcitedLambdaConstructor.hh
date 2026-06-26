@@ -29,8 +29,8 @@
 //      History: first implementation, based on object model of
 //      10 oct 1998  H.Kurashige
 // ---------------------------------------------------------------
-#ifndef G4ExcitedLambdaConstructor_h
-#define G4ExcitedLambdaConstructor_h 1
+#ifndef G4EXCITEDLAMBDACONSTRUCTOR_HH
+#define G4EXCITEDLAMBDACONSTRUCTOR_HH
 
 #include "G4ExcitedBaryonConstructor.hh"
 #include "globals.hh"
@@ -39,7 +39,9 @@ class G4ExcitedLambdaConstructor : public G4ExcitedBaryonConstructor
 {
     // This class is a utility class for construction
     // short lived particles
+
   public:
+
     enum
     {
       NStates = 12
@@ -51,10 +53,12 @@ class G4ExcitedLambdaConstructor : public G4ExcitedBaryonConstructor
     };
 
   public:
+
     G4ExcitedLambdaConstructor();
     ~G4ExcitedLambdaConstructor() override = default;
 
   protected:
+
     G4bool Exist(G4int) override { return true; }
 
     G4int GetQuarkContents(G4int, G4int) override;
@@ -70,6 +74,7 @@ class G4ExcitedLambdaConstructor : public G4ExcitedBaryonConstructor
                                    G4bool fAnti = false) override;
 
   private:
+
     G4DecayTable* AddNKMode(G4DecayTable* table, const G4String& name, G4double br, G4int iIso3,
                             G4bool fAnti);
     G4DecayTable* AddNKStarMode(G4DecayTable* table, const G4String& name, G4double br, G4int iIso3,
@@ -86,6 +91,7 @@ class G4ExcitedLambdaConstructor : public G4ExcitedBaryonConstructor
                                      G4int iIso3, G4bool fAnti);
 
   private:
+
     enum
     {
       LambdaIsoSpin = 0
@@ -140,15 +146,18 @@ inline G4int G4ExcitedLambdaConstructor::GetEncodingOffset(G4int iState)
 inline G4int G4ExcitedLambdaConstructor::GetQuarkContents(G4int iQ, G4int)
 {
   G4int quark = 0;
-  if (iQ == 0) {
+  if (iQ == 0)
+  {
     // s-quark
     quark = 3;
   }
-  else if (iQ == 1) {
+  else if (iQ == 1)
+  {
     // d-quark
     quark = 1;
   }
-  else if (iQ == 2) {
+  else if (iQ == 2)
+  {
     // u-quark
     quark = 2;
   }

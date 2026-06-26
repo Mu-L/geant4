@@ -25,13 +25,13 @@
 //
 // Geant4 header G4EmDNAPhysicsActivator
 //
-// Author V.Ivanchenko 
+// Author V.Ivanchenko
 //
 // Build DNA physics on top of standard physics for given region
-// 
+//
 
-#ifndef G4EmDNAPhysicsActivator_h
-#define G4EmDNAPhysicsActivator_h 1
+#ifndef G4EMDNAPHYSICSACTIVATOR_HH
+#define G4EMDNAPHYSICSACTIVATOR_HH
 
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
@@ -44,43 +44,31 @@ class G4Region;
 
 class G4EmDNAPhysicsActivator : public G4VPhysicsConstructor
 {
-public:
+  public:
 
-  explicit G4EmDNAPhysicsActivator(G4int ver = 1);
+    explicit G4EmDNAPhysicsActivator(G4int ver = 1);
 
-  ~G4EmDNAPhysicsActivator() override = default;
+    ~G4EmDNAPhysicsActivator() override = default;
 
-  void ConstructParticle() override;
-  void ConstructProcess() override;
+    void ConstructParticle() override;
+    void ConstructProcess() override;
 
-private:
+  private:
 
-  void DeactivateElectronProcesses(const G4double emaxDNA,
-                                   const G4double emax,
+    void DeactivateElectronProcesses(const G4double emaxDNA, const G4double emax, const G4Region*);
+
+    void DeactivateHadronProcesses(G4ParticleDefinition*, const G4double emaxDNA,
+                                   const G4double emax, const G4Region*);
+
+    void DeactivateNuclearStopping(const G4ParticleDefinition*, const G4double emaxDNA,
                                    const G4Region*);
 
-  void DeactivateHadronProcesses(G4ParticleDefinition*,
-                                 const G4double emaxDNA,
-                                 const G4double emax,
-                                 const G4Region*);
+    G4bool IsVerbose() const;
 
-  void DeactivateIonProcesses(G4ParticleDefinition*,
-                              const G4double emaxDNA,
-                              const G4double emax,
-                              const G4Region*);
-
-  void DeactivateNuclearStopping(const G4ParticleDefinition*,
-                                 const G4double emaxDNA,
-                                 const G4Region*);
- 
-  G4bool IsVerbose() const;
-
-  G4int verbose;
-  G4EmParameters* theParameters;
+    G4int verbose;
+    G4EmParameters* theParameters;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-

@@ -100,7 +100,8 @@ void G4VtkPolydataInstanceBakePipeline::addInstance(G4double dx, G4double dy, G4
   fStart = iFace;
 
   G4bool notLastFace;
-  do {
+  do
+  {
     G4Point3D vertex[4];
     G4int edgeFlag[4];
     G4Normal3D normals[4];
@@ -109,7 +110,8 @@ void G4VtkPolydataInstanceBakePipeline::addInstance(G4double dx, G4double dy, G4
 
     vtkSmartPointer<vtkIdList> poly = vtkSmartPointer<vtkIdList>::New();
     // loop over vertices
-    for (int i = 0; i < nEdges; i++) {
+    for (int i = 0; i < nEdges; i++)
+    {
       // note : G4Transform3D does not have a matrix element constructor
       G4Point3D bakedVertex =
         G4Point3D(vertex[i].x() * r00 + vertex[i].y() * r01 + vertex[i].z() * r02 + dx,

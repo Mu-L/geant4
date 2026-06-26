@@ -28,32 +28,32 @@
 //
 // History:
 // -----------
-// 18 Mar 2010   L. Pandola   1st implementation. 
-// 09 Mar 2012   L. Pandola   Add public method (and machinery) to return 
-//                            the absolute and the normalized shell cross 
+// 18 Mar 2010   L. Pandola   1st implementation.
+// 09 Mar 2012   L. Pandola   Add public method (and machinery) to return
+//                            the absolute and the normalized shell cross
 //                            sections independently.
 //
 // -------------------------------------------------------------------
 //
 // Class description:
-// This class is a container for cross sections and transport momenta 
-// calculated by Penelope models (ionisation, bremsstrahlung). It stores 
+// This class is a container for cross sections and transport momenta
+// calculated by Penelope models (ionisation, bremsstrahlung). It stores
 // PhysicsTables/PhysicsVectors of
-// a) the "hard quantities" (above the threshold), 0-th order (cross section) 
+// a) the "hard quantities" (above the threshold), 0-th order (cross section)
 //     1-st order (= stopping XS), 2-nd order (= straggling XS)
-// b) the "soft quantities" (below threshold), 0-th order (cross section) 
+// b) the "soft quantities" (below threshold), 0-th order (cross section)
 //     1-st order (= stopping XS), 2-nd order (= straggling XS)
 // c) total hard cross sections for individual oscillators
-// vs. energy. Two versions are available, one with normalized values 
+// vs. energy. Two versions are available, one with normalized values
 // (good for sampling) and one with absolute values.
-// 
-// The interface *always* uses energy and cross sections, while internally 
+//
+// The interface *always* uses energy and cross sections, while internally
 // log(energy) and log(XS) are used.
 //
-// One instance per each cut-material couple should be created by the 
-// calling class. 
+// One instance per each cut-material couple should be created by the
+// calling class.
 //
-// Public method to retrieve hard cross section, soft stopping power, 
+// Public method to retrieve hard cross section, soft stopping power,
 // total cross section and hard shell cross sections.
 //
 // Notice: all quantities stored here are *per molecule*
@@ -61,7 +61,7 @@
 // -------------------------------------------------------------------
 
 #ifndef G4PENELOPECROSSSECTION_HH
-#define G4PENELOPECROSSSECTION_HH 1
+#define G4PENELOPECROSSSECTION_HH
 
 #include "globals.hh"
 
@@ -70,59 +70,56 @@ class G4DataVector;
 
 class G4PenelopeCrossSection
 {
+  public:
 
-public:
-  //constructor: one has to give the number of points in each PhysicsVector 
-  //(= dimension of the energy grid) and the number of shells (0 is the 
-  //default).
-  explicit G4PenelopeCrossSection(size_t nOfEnergyPoints,size_t nOfShells=0);
-  //
-  ~G4PenelopeCrossSection();
+    // constructor: one has to give the number of points in each PhysicsVector
+    //(= dimension of the energy grid) and the number of shells (0 is the
+    // default).
+    explicit G4PenelopeCrossSection(size_t nOfEnergyPoints, size_t nOfShells = 0);
+    //
+    ~G4PenelopeCrossSection();
 
-  //! Returns total cross section at the given energy
-  G4double GetTotalCrossSection(G4double energy) const;
-  //! Returns hard cross section at the given energy
-  G4double GetHardCrossSection(G4double energy) const;
-  //! Returns the total stopping power due to soft collisions
-  G4double GetSoftStoppingPower(G4double energy) const;
-  //! Returns the hard cross section for the given shell (per molecule)
-  G4double GetShellCrossSection(size_t shellID,G4double energy) const;
-  //! Returns the hard cross section for the given shell (normalized to 1)
-  G4double GetNormalizedShellCrossSection(size_t shellID,G4double energy) const;
+    //! Returns total cross section at the given energy
+    G4double GetTotalCrossSection(G4double energy) const;
+    //! Returns hard cross section at the given energy
+    G4double GetHardCrossSection(G4double energy) const;
+    //! Returns the total stopping power due to soft collisions
+    G4double GetSoftStoppingPower(G4double energy) const;
+    //! Returns the hard cross section for the given shell (per molecule)
+    G4double GetShellCrossSection(size_t shellID, G4double energy) const;
+    //! Returns the hard cross section for the given shell (normalized to 1)
+    G4double GetNormalizedShellCrossSection(size_t shellID, G4double energy) const;
 
-  size_t GetNumberOfShells() const {return fNumberOfShells;};
+    size_t GetNumberOfShells() const { return fNumberOfShells; };
 
-  //!
-  //! Public interface for the master thread
-  //! 
-  void AddCrossSectionPoint(size_t binNumber, 
-                            G4double energy,G4double XH0, G4double XH1, 
-			    G4double XH2,
-			    G4double XS0, G4double XS1, G4double XS2);
-  void AddShellCrossSectionPoint(size_t binNumber,
-			         size_t shellID,G4double energy,G4double xs);
-  void NormalizeShellCrossSections();
+    //!
+    //! Public interface for the master thread
+    //!
+    void AddCrossSectionPoint(size_t binNumber, G4double energy, G4double XH0, G4double XH1,
+                              G4double XH2, G4double XS0, G4double XS1, G4double XS2);
+    void AddShellCrossSectionPoint(size_t binNumber, size_t shellID, G4double energy, G4double xs);
+    void NormalizeShellCrossSections();
 
-  G4PenelopeCrossSection & operator=(const G4PenelopeCrossSection &right) = delete;
-  G4PenelopeCrossSection(const G4PenelopeCrossSection&) = delete;
+    G4PenelopeCrossSection& operator=(const G4PenelopeCrossSection& right) = delete;
+    G4PenelopeCrossSection(const G4PenelopeCrossSection&) = delete;
 
-private:  
-  //all tables are log. XS vs. log E
+  private:
 
-  //XS0, XS1, XS2 in Penelope nomenclature
-  G4PhysicsTable* fSoftCrossSections;
+    // all tables are log. XS vs. log E
 
-  //XH0, XH1, XH2 in Penelope nomenclature
-  G4PhysicsTable* fHardCrossSections;
-  
-  //XS for individual shells
-  G4PhysicsTable* fShellCrossSections;
-  G4PhysicsTable* fShellNormalizedCrossSections;
+    // XS0, XS1, XS2 in Penelope nomenclature
+    G4PhysicsTable* fSoftCrossSections;
 
-  size_t fNumberOfEnergyPoints;
-  size_t fNumberOfShells;
-  G4bool fIsNormalized;
+    // XH0, XH1, XH2 in Penelope nomenclature
+    G4PhysicsTable* fHardCrossSections;
+
+    // XS for individual shells
+    G4PhysicsTable* fShellCrossSections;
+    G4PhysicsTable* fShellNormalizedCrossSections;
+
+    size_t fNumberOfEnergyPoints;
+    size_t fNumberOfShells;
+    G4bool fIsNormalized;
 };
 
 #endif
-

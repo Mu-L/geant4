@@ -33,14 +33,15 @@
 // Author: Joanna Weng - 9.11.2004
 // ------------------------------------------------------------
 
-#include "G4VisAttributes.hh"
-#include "G4Colour.hh"
-#include "G4Polyline.hh"
-#include "G4VVisManager.hh"
-#include "G4Step.hh"
 #include "GFlashEnergySpot.hh"
 
-GFlashEnergySpot::GFlashEnergySpot() : Energy (0.) {}
+#include "G4Colour.hh"
+#include "G4Polyline.hh"
+#include "G4Step.hh"
+#include "G4VVisManager.hh"
+#include "G4VisAttributes.hh"
+
+GFlashEnergySpot::GFlashEnergySpot() : Energy(0.) {}
 
 GFlashEnergySpot::GFlashEnergySpot(const G4ThreeVector& point, G4double E)
 {

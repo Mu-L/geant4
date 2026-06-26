@@ -96,6 +96,25 @@ std::string const &ArgumentBase::value( std::size_t a_index ) const {
 }
 
 /* *********************************************************************************************************//**
+ * Returns the last value for this argument or the **a_default** if no value is present.
+ * This should only be used for optional arguments.
+ *
+ * @param a_default             [in]    The default value to return if no value present.
+ *
+ * @return                              Returns the std::string of the last value entered or **a_default** if no value present.
+ ***********************************************************************************************************/
+
+std::string ArgumentBase::valueWithDefault( std::string const &a_default ) const {
+
+    if( ( m_argumentType == ArgumentType::True ) || ( m_argumentType == ArgumentType::False ) || ( m_argumentType == ArgumentType::Count ) )
+        throw Exception( "Argument type for " + name( ) + " does not support calling default() method." );
+
+    if( m_values.size( ) == 0 ) return( a_default );
+
+    return( m_values.back( ) );
+}
+
+/* *********************************************************************************************************//**
  * Add *a_name* as an optional name for *this*.
  *
  * @param a_name            [in]    The name to add.
@@ -258,6 +277,17 @@ OptionBoolean::OptionBoolean( ArgumentType a_argumentType, std::string const &a_
 
 OptionBoolean::~OptionBoolean( ) {
 
+}
+
+/* *********************************************************************************************************//**
+ * Returns **true** if the state of the option is **true** and **false** otherwise.
+ *
+ * @return                              Returns a bool.
+ ***********************************************************************************************************/
+
+bool OptionBoolean::isTrue( ) const {
+
+    return( counts() == 0 ? m_default : !m_default );
 }
 
 /* *********************************************************************************************************//**

@@ -24,24 +24,25 @@
 // ********************************************************************
 //
 //
-#ifndef G4ChemicalMoleculeFinder_hh
-#define G4ChemicalMoleculeFinder_hh 1
+#ifndef G4CHEMICALMOLECULEFINDER_HH
+#define G4CHEMICALMOLECULEFINDER_HH
 
-#include "G4OctreeFinder.hh"
-#include "G4Molecule.hh"
 #include "G4ITTrackHolder.hh"
+#include "G4Molecule.hh"
+#include "G4OctreeFinder.hh"
+
 #include <map>
 
 using G4ChemicalMoleculeFinder = G4OctreeFinder<G4Molecule, G4TrackList>;
 
-#define BuildChemicalMoleculeFinder()\
-std::map<int,PriorityList*>& listMap = G4ITTrackHolder::Instance()->GetLists();\
-auto it = listMap.begin();\
-auto end = listMap.end();\
-std::map<int,G4TrackList*> trackMap;\
-for (; it!= end; it++)\
-{trackMap.insert(std::make_pair(it->first,\
-(it->second->GetMainList())));\
-}\
-G4ChemicalMoleculeFinder::Instance()->BuildTreeMap(trackMap);
+#define BuildChemicalMoleculeFinder()                                              \
+  std::map<int, PriorityList*>& listMap = G4ITTrackHolder::Instance()->GetLists(); \
+  auto it = listMap.begin();                                                       \
+  auto end = listMap.end();                                                        \
+  std::map<int, G4TrackList*> trackMap;                                            \
+  for (; it != end; it++)                                                          \
+  {                                                                                \
+    trackMap.insert(std::make_pair(it->first, (it->second->GetMainList())));       \
+  }                                                                                \
+  G4ChemicalMoleculeFinder::Instance()->BuildTreeMap(trackMap);
 #endif

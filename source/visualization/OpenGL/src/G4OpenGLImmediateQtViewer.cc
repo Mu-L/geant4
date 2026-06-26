@@ -30,107 +30,115 @@
 //                                G4OpenGLImmediateViewer.
 
 #include "G4OpenGLImmediateQtViewer.hh"
-#include "G4OpenGLImmediateSceneHandler.hh"
 
-#include "G4ios.hh"
+#include "G4OpenGLImmediateSceneHandler.hh"
 #include "G4Threading.hh"
+#include "G4ios.hh"
+
 #include <qapplication.h>
 #include <qtabwidget.h>
 #if 0x060000 <= QT_VERSION
-#include "G4Qt.hh"
+#  include "G4Qt.hh"
 #endif
 
-G4OpenGLImmediateQtViewer::G4OpenGLImmediateQtViewer
-(G4OpenGLImmediateSceneHandler& sceneHandler,
- const G4String&  name):
-  G4VViewer (sceneHandler, sceneHandler.IncrementViewCount (), name),
-  G4OpenGLViewer (sceneHandler),
-  G4OpenGLQtViewer (sceneHandler),
-  G4OpenGLImmediateViewer (sceneHandler)
+G4OpenGLImmediateQtViewer::G4OpenGLImmediateQtViewer(G4OpenGLImmediateSceneHandler& sceneHandler,
+                                                     const G4String& name)
+  : G4VViewer(sceneHandler, sceneHandler.IncrementViewCount(), name),
+    G4OpenGLViewer(sceneHandler),
+    G4OpenGLQtViewer(sceneHandler),
+    G4OpenGLImmediateViewer(sceneHandler)
 {
 #if QT_VERSION < 0x060000
   fQGLWidgetInitialiseCompleted = false;
 
-  setFocusPolicy(Qt::StrongFocus); // enable keybord events
+  setFocusPolicy(Qt::StrongFocus);  // enable keybord events
   fHasToRepaint = false;
   fPaintEventLock = false;
   fUpdateGLLock = false;
 
   if (fViewId < 0) return;  // In case error in base class instantiation.
 #else
-  setFocusPolicy(Qt::StrongFocus); // enable keybord events
+  setFocusPolicy(Qt::StrongFocus);  // enable keybord events
 #endif
 }
 
 G4OpenGLImmediateQtViewer::~G4OpenGLImmediateQtViewer() {}
 
-void G4OpenGLImmediateQtViewer::Initialise() {
+void G4OpenGLImmediateQtViewer::Initialise()
+{
 #if QT_VERSION < 0x060000
-  
+
   fQGLWidgetInitialiseCompleted = false;
-  CreateMainWindow (this,QString(GetName()));
+  CreateMainWindow(this, QString(GetName()));
 
   makeCurrent();
-  glDrawBuffer (GL_BACK);
-  
+  glDrawBuffer(GL_BACK);
+
   // set the good tab active
-  if (G4QGLWidgetType::parentWidget()) {
-    auto *parentTab = dynamic_cast<QTabWidget*> (G4QGLWidgetType::parentWidget()->parent()) ;
-    if (parentTab) {
-      parentTab->setCurrentIndex(parentTab->count()-1);
+  if (G4QGLWidgetType::parentWidget())
+  {
+    auto* parentTab = dynamic_cast<QTabWidget*>(G4QGLWidgetType::parentWidget()->parent());
+    if (parentTab)
+    {
+      parentTab->setCurrentIndex(parentTab->count() - 1);
     }
   }
-  
+
   fQGLWidgetInitialiseCompleted = true;
 #else
-  CreateMainWindow (this,QString(GetName()));
+  CreateMainWindow(this, QString(GetName()));
   // Set jpg as default export format for Qt viewer
   setExportImageFormat("jpg");
 #endif
 }
 
 #if QT_VERSION < 0x060000
-void G4OpenGLImmediateQtViewer::initializeGL () {
-
-  InitializeGLView ();
+void G4OpenGLImmediateQtViewer::initializeGL()
+{
+  InitializeGLView();
 
   // If a double buffer context has been forced upon us, ignore the
   // back buffer for this OpenGLImmediate view.
-  //  glDrawBuffer (GL_FRONT); // FIXME : Ne marche pas avec cette ligne, mais affiche le run correctement...
+  //  glDrawBuffer (GL_FRONT); // FIXME : Ne marche pas avec cette ligne, mais affiche le run
+  //  correctement...
 
-  if (fSceneHandler.GetScene() == 0) {
-    fHasToRepaint =false;
-  } else {
-    fHasToRepaint =true;
+  if (fSceneHandler.GetScene() == 0)
+  {
+    fHasToRepaint = false;
+  }
+  else
+  {
+    fHasToRepaint = true;
   }
 
   // Set the component visible
-  
+
   // and update it immediatly before wait for SessionStart() (batch mode)
-//  QCoreApplication::sendPostedEvents () ;
+  //  QCoreApplication::sendPostedEvents () ;
 
   // Set jpg as default export format for Qt viewer
   setExportImageFormat("jpg");
 }
 #endif
 
-
-void  G4OpenGLImmediateQtViewer::DrawView() {
+void G4OpenGLImmediateQtViewer::DrawView()
+{
 #if QT_VERSION < 0x060000
 #else
-  if(IsGettingPickInfos()) {
+  if (IsGettingPickInfos())
+  {
     paintGL();
     return;
   }
 #endif
-  if (G4Threading::IsMasterThread()) {
+  if (G4Threading::IsMasterThread())
+  {
     updateQWidget();
   }
 }
 
-
-void G4OpenGLImmediateQtViewer::ComputeView () {
-
+void G4OpenGLImmediateQtViewer::ComputeView()
+{
 #if QT_VERSION < 0x060000
   makeCurrent();
   // If a double buffer context has been forced upon us, ignore the
@@ -140,135 +148,144 @@ void G4OpenGLImmediateQtViewer::ComputeView () {
 
   G4ViewParameters::DrawingStyle dstyle = GetViewParameters().GetDrawingStyle();
 
-  if(dstyle!=G4ViewParameters::hlr &&
-     haloing_enabled) {
-
-    HaloingFirstPass ();
-    NeedKernelVisit ();
-    ProcessView ();
+  if (dstyle != G4ViewParameters::hlr && haloing_enabled)
+  {
+    HaloingFirstPass();
+    NeedKernelVisit();
+    ProcessView();
     FinishView();
-    HaloingSecondPass ();
-
+    HaloingSecondPass();
   }
 
-  NeedKernelVisit ();  // Always need to visit G4 kernel.
-  ProcessView ();
+  NeedKernelVisit();  // Always need to visit G4 kernel.
+  ProcessView();
 
-  if (isRecording()) {
+  if (isRecording())
+  {
     savePPMToTemp();
   }
-   
+
 #if QT_VERSION < 0x060000
   fHasToRepaint = true;
 #endif
 }
 
 /**
-   - Lors du resize de la fenetre, on doit non pas redessiner le detecteur, mais aussi les evenements
+   - Lors du resize de la fenetre, on doit non pas redessiner le detecteur, mais aussi les
+   evenements
 */
-void G4OpenGLImmediateQtViewer::resizeGL(
- int aWidth
-,int aHeight)
-{  
-  if ((aWidth > 0) && (aHeight > 0)) {
+void G4OpenGLImmediateQtViewer::resizeGL(int aWidth, int aHeight)
+{
+  if ((aWidth > 0) && (aHeight > 0))
+  {
 #if QT_VERSION < 0x060000
-    ResizeWindow(aWidth,aHeight);
+    ResizeWindow(aWidth, aHeight);
     fHasToRepaint = sizeHasChanged();
 #else
-    ResizeWindow(devicePixelRatio()*aWidth,devicePixelRatio()*aHeight);
+    ResizeWindow(devicePixelRatio() * aWidth, devicePixelRatio() * aHeight);
 #endif
   }
 }
-
 
 void G4OpenGLImmediateQtViewer::paintGL()
 {
 #if QT_VERSION < 0x060000
   updateToolbarAndMouseContextMenu();
 #else
-  //G.Barrand: don't do any change in the GUI here, just "paint" this widget!
+  // G.Barrand: don't do any change in the GUI here, just "paint" this widget!
 #endif
 
 #if QT_VERSION < 0x060000
-  if (fPaintEventLock) {
-//    return ;
+  if (fPaintEventLock)
+  {
+    //    return ;
   }
-  if (!fQGLWidgetInitialiseCompleted) {
+  if (!fQGLWidgetInitialiseCompleted)
+  {
     fPaintEventLock = false;
     return;
   }
-  if ((getWinWidth() == 0) && (getWinHeight() == 0)) {
-      return;
+  if ((getWinWidth() == 0) && (getWinHeight() == 0))
+  {
+    return;
   }
 
   // DO NOT RESIZE IF SIZE HAS NOT CHANGE
-  if ( !fHasToRepaint) {
+  if (!fHasToRepaint)
+  {
     // L. Garnier : Trap to get the size with mac OSX 10.6 and Qt 4.6(devel)
     // Tested on Qt4.5 on mac, 4.4 on windows, 4.5 on unbuntu
     int sw = 0;
     int sh = 0;
-    if (!isMaximized() && !isFullScreen()) {
+    if (!isMaximized() && !isFullScreen())
+    {
       sw = normalGeometry().width();
       sh = normalGeometry().height();
-    } else {
+    }
+    else
+    {
       sw = frameGeometry().width();
       sh = frameGeometry().height();
     }
-    if ((getWinWidth() == (unsigned int)sw) &&(getWinHeight() == (unsigned int)sh)) {
+    if ((getWinWidth() == (unsigned int)sw) && (getWinHeight() == (unsigned int)sh))
+    {
       return;
-
-    } else if ((sw == 0) && (sh == 0)) { // NOT A TOP LEVEL WIDGET
-      if (((getWinWidth() == (unsigned int)width())) &&(getWinHeight() == (unsigned int) height())) { 
+    }
+    else if ((sw == 0) && (sh == 0))
+    {  // NOT A TOP LEVEL WIDGET
+      if (((getWinWidth() == (unsigned int)width())) && (getWinHeight() == (unsigned int)height()))
+      {
         return;
       }
     }
   }
 #else
-  if ((getWinWidth() == 0) && (getWinHeight() == 0)) return; //G.Barrand: needed?
+  if ((getWinWidth() == 0) && (getWinHeight() == 0)) return;  // G.Barrand: needed?
 #endif
 
 #if QT_VERSION < 0x060000
 #else
-  InitializeGLView ();
-  glDrawBuffer (GL_BACK);
+  InitializeGLView();
+  glDrawBuffer(GL_BACK);
 #endif
 
   SetView();
-   
-  ClearView (); //ok, put the background correct
+
+  ClearView();  // ok, put the background correct
   ComputeView();
 
 #if QT_VERSION < 0x060000
-  fHasToRepaint = false; // could be set to false by ComputeView
+  fHasToRepaint = false;  // could be set to false by ComputeView
 
   fPaintEventLock = false;
 #endif
 }
 
-void G4OpenGLImmediateQtViewer::mousePressEvent(QMouseEvent *event)
+void G4OpenGLImmediateQtViewer::mousePressEvent(QMouseEvent* event)
 {
   G4MousePressEvent(event);
 }
 
-void G4OpenGLImmediateQtViewer::keyPressEvent (QKeyEvent * event) 
+void G4OpenGLImmediateQtViewer::keyPressEvent(QKeyEvent* event)
 {
   G4keyPressEvent(event);
 }
 
-void G4OpenGLImmediateQtViewer::keyReleaseEvent (QKeyEvent * event)
+void G4OpenGLImmediateQtViewer::keyReleaseEvent(QKeyEvent* event)
 {
   G4keyReleaseEvent(event);
 }
 
-void G4OpenGLImmediateQtViewer::wheelEvent (QWheelEvent * event)
+void G4OpenGLImmediateQtViewer::wheelEvent(QWheelEvent* event)
 {
   G4wheelEvent(event);
 }
 
 #if QT_VERSION < 0x060000
-void G4OpenGLImmediateQtViewer::showEvent (QShowEvent *) 
+void G4OpenGLImmediateQtViewer::showEvent(QShowEvent*)
 {
-  if (fQGLWidgetInitialiseCompleted) {
+  if (fQGLWidgetInitialiseCompleted)
+  {
     fHasToRepaint = true;
   }
 }
@@ -278,77 +295,81 @@ void G4OpenGLImmediateQtViewer::showEvent (QShowEvent *)
  * This function was build in order to make a zoom on double clic event.
  * It was think to build a rubberband on the zoom area, but never work fine
  */
-void G4OpenGLImmediateQtViewer::mouseDoubleClickEvent(QMouseEvent *)
+void G4OpenGLImmediateQtViewer::mouseDoubleClickEvent(QMouseEvent*)
 {
   G4MouseDoubleClickEvent();
 }
 
-void G4OpenGLImmediateQtViewer::mouseReleaseEvent(QMouseEvent *event)
+void G4OpenGLImmediateQtViewer::mouseReleaseEvent(QMouseEvent* event)
 {
   G4MouseReleaseEvent(event);
 }
 
-void G4OpenGLImmediateQtViewer::mouseMoveEvent(QMouseEvent *event)
+void G4OpenGLImmediateQtViewer::mouseMoveEvent(QMouseEvent* event)
 {
   G4MouseMoveEvent(event);
 }
 
-
-void G4OpenGLImmediateQtViewer::contextMenuEvent(QContextMenuEvent *e)
+void G4OpenGLImmediateQtViewer::contextMenuEvent(QContextMenuEvent* e)
 {
   G4manageContextMenuEvent(e);
 }
 
 #if QT_VERSION < 0x060000
-void G4OpenGLImmediateQtViewer::paintEvent(QPaintEvent *) {
-  if (! fQGLWidgetInitialiseCompleted) {
+void G4OpenGLImmediateQtViewer::paintEvent(QPaintEvent*)
+{
+  if (!fQGLWidgetInitialiseCompleted)
+  {
     return;
   }
   // Force a repaint next time if the FRAMEBUFFER is not READY
   fHasToRepaint = isFramebufferReady();
-  if ( fHasToRepaint) {
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+  if (fHasToRepaint)
+  {
+#  if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     updateGL();
-#else
+#  else
     // Not sure this is correct....
     paintGL();
-#endif
+#  endif
   }
 }
 #endif
 
-
-void G4OpenGLImmediateQtViewer::updateQWidget() {
+void G4OpenGLImmediateQtViewer::updateQWidget()
+{
 #if QT_VERSION < 0x060000
-  if (fUpdateGLLock) {
+  if (fUpdateGLLock)
+  {
     return;
   }
-  
-  if (! isCurrentWidget()){
+
+  if (!isCurrentWidget())
+  {
     return;
   }
-  
+
   fUpdateGLLock = true;
-  fHasToRepaint= true;
+  fHasToRepaint = true;
   repaint();
   updateViewerPropertiesTableWidget();
   updateSceneTreeWidget();
-  fUpdateGLLock= false;
+  fUpdateGLLock = false;
 #else
-  //if (!isCurrentWidget()) return; //G.Barrand: Qt must know if it has to activate paintGL() if the widget is not visible.
-  //G.Barrand: don't do any change in the GUI here, just ask to "paint" this widget!
+  // if (!isCurrentWidget()) return; //G.Barrand: Qt must know if it has to activate paintGL() if
+  // the widget is not visible. G.Barrand: don't do any change in the GUI here, just ask to "paint"
+  // this widget!
   update();
 #endif
 }
 
-
-void G4OpenGLImmediateQtViewer::ShowView ()
+void G4OpenGLImmediateQtViewer::ShowView()
 {
 #if QT_VERSION < 0x060000
   fHasToRepaint = true;
   activateWindow();
 #else
   activateWindow();
-  ((QApplication*)G4Qt::getInstance ())->processEvents();
+  ((QApplication*)G4Qt::getInstance())->processEvents();
 #endif
 }

@@ -33,10 +33,10 @@
 // Author:        Laszlo Urban
 //
 // Creation date: 24.10.2006 cloned from G4MultipleScattering
-// 
+//
 // Modified:
 // 12-02-07 skin can be changed via UI command (VI)
-// 20.03.07 Remove local parameter skin, set facgeom=0.1(V.Ivanchenko) 
+// 20.03.07 Remove local parameter skin, set facgeom=0.1(V.Ivanchenko)
 //
 // -----------------------------------------------------------------------------
 //
@@ -44,17 +44,17 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "G4MuMultipleScattering.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4WentzelVIModel.hh"
-#include "G4UrbanMscModel.hh"
+
 #include "G4MscStepLimitType.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4UrbanMscModel.hh"
+#include "G4WentzelVIModel.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 using namespace std;
 
-G4MuMultipleScattering::G4MuMultipleScattering(const G4String& pnam)
-  : G4VMultipleScattering(pnam)
+G4MuMultipleScattering::G4MuMultipleScattering(const G4String& pnam) : G4VMultipleScattering(pnam)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -69,8 +69,14 @@ G4bool G4MuMultipleScattering::IsApplicable(const G4ParticleDefinition& p)
 void G4MuMultipleScattering::InitialiseProcess(const G4ParticleDefinition*)
 {
   // Modification of parameters between runs
-  if(isInitialized) { return; }
-  if(nullptr == EmModel(0)) { SetEmModel(new G4UrbanMscModel()); }
+  if (isInitialized)
+  {
+    return;
+  }
+  if (nullptr == EmModel(0))
+  {
+    SetEmModel(new G4UrbanMscModel());
+  }
   AddEmModel(1, EmModel(0));
   isInitialized = true;
 }
@@ -79,21 +85,18 @@ void G4MuMultipleScattering::InitialiseProcess(const G4ParticleDefinition*)
 
 void G4MuMultipleScattering::StreamProcessInfo(std::ostream& out) const
 {
-  out << "      RangeFactor= " << RangeFactor()
-      << ", stepLimType: " << StepLimitType()
+  out << "      RangeFactor= " << RangeFactor() << ", stepLimType: " << StepLimitType()
       << ", latDisp: " << LateralDisplasmentFlag()
-      << ", polarAngLim(deg)= " << PolarAngleLimit()/degree
-      << G4endl;
+      << ", polarAngLim(deg)= " << PolarAngleLimit() / degree << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void G4MuMultipleScattering::ProcessDescription(std::ostream& out) const
 {
-  out << 
-  "  Muon multiple scattering. Simulates combined effects of elastic\n" <<
-  "    scattering at the end of the step, to save computing time. May be\n" <<
-  "    combined with Coulomb scattering in a 'mixed' scattering algorithm.";
+  out << "  Muon multiple scattering. Simulates combined effects of elastic\n"
+      << "    scattering at the end of the step, to save computing time. May be\n"
+      << "    combined with Coulomb scattering in a 'mixed' scattering algorithm.";
   G4VMultipleScattering::ProcessDescription(out);
 }
 

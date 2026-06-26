@@ -40,8 +40,7 @@
 #include "G4SystemOfUnits.hh"
 #include "G4UrbanMscModel.hh"
 
-G4AdjointhMultipleScattering::G4AdjointhMultipleScattering(
-  const G4String& processName)
+G4AdjointhMultipleScattering::G4AdjointhMultipleScattering(const G4String& processName)
   : G4VMultipleScattering(processName)
 {}
 
@@ -58,10 +57,8 @@ void G4AdjointhMultipleScattering::ProcessDescription(std::ostream& out) const
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 void G4AdjointhMultipleScattering::StreamProcessInfo(std::ostream& out) const
 {
-  out << "      RangeFactor= " << RangeFactor()
-      << ", step limit type: " << StepLimitType()
-      << ", lateralDisplacement: " << LateralDisplasmentFlag()
-      << ", skin= " << Skin() << G4endl;
+  out << "      RangeFactor= " << RangeFactor() << ", step limit type: " << StepLimitType()
+      << ", lateralDisplacement: " << LateralDisplasmentFlag() << ", skin= " << Skin() << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -71,10 +68,9 @@ G4bool G4AdjointhMultipleScattering::IsApplicable(const G4ParticleDefinition& p)
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-void G4AdjointhMultipleScattering::InitialiseProcess(
-  const G4ParticleDefinition*)
+void G4AdjointhMultipleScattering::InitialiseProcess(const G4ParticleDefinition*)
 {
-  if(fIsInitialized)
+  if (fIsInitialized)
   {
     return;
   }

@@ -25,17 +25,10 @@
 /// \file ExGflashSensitiveDetector.cc
 /// \brief Implementation of the ExGflashSensitiveDetector class
 
-// Created by Joanna Weng 26.11.2004
 #include "ExGflashSensitiveDetector.hh"
-
-#include "ExGflashDetectorConstruction.hh"
-#include "ExGflashHit.hh"
 
 #include "G4GFlashSpot.hh"
 #include "G4Step.hh"
-#include "G4TouchableHistory.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4VTouchable.hh"
 
 // WARNING :  You have to use also  G4VGFlashSensitiveDetector() as base class
 
@@ -57,7 +50,8 @@ ExGflashSensitiveDetector::~ExGflashSensitiveDetector() = default;
 
 void ExGflashSensitiveDetector::Initialize(G4HCofThisEvent* HCE)
 {
-  if (fHCID < 0) {
+  if (fHCID < 0)
+  {
     fHCID = GetCollectionID(0);
   }
   fCaloHitsCollection =

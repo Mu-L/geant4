@@ -25,41 +25,41 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  7th February 1997
 // Class G4OpenGLImmediateViewer : Encapsulates the `immediateness' of
 //                               an OpenGL view, for inheritance by
 //                               derived (X, Xm...) classes.
 
 #include "G4OpenGLImmediateViewer.hh"
+
 #include "G4OpenGLImmediateSceneHandler.hh"
 
-G4OpenGLImmediateViewer::G4OpenGLImmediateViewer (G4OpenGLImmediateSceneHandler& scene):
-G4VViewer (scene, -1),
-G4OpenGLViewer (scene)
+G4OpenGLImmediateViewer::G4OpenGLImmediateViewer(G4OpenGLImmediateSceneHandler& scene)
+  : G4VViewer(scene, -1), G4OpenGLViewer(scene)
 {}
 
-void G4OpenGLImmediateViewer::ProcessView ()
+void G4OpenGLImmediateViewer::ProcessView()
 {
   const G4Planes& cutaways = fVP.GetCutawayPlanes();
-  G4bool cutawayUnion = fVP.IsCutaway() &&
-    fVP.GetCutawayMode() == G4ViewParameters::cutawayUnion;
-  size_t nPasses = cutawayUnion? cutaways.size(): 1;
-  for (size_t i = 0; i < nPasses; ++i) {
-
-    if (cutawayUnion) {
+  G4bool cutawayUnion = fVP.IsCutaway() && fVP.GetCutawayMode() == G4ViewParameters::cutawayUnion;
+  size_t nPasses = cutawayUnion ? cutaways.size() : 1;
+  for (size_t i = 0; i < nPasses; ++i)
+  {
+    if (cutawayUnion)
+    {
       double a[4];
       a[0] = cutaways[i].a();
       a[1] = cutaways[i].b();
       a[2] = cutaways[i].c();
       a[3] = cutaways[i].d();
-      glClipPlane (GL_CLIP_PLANE2, a);
-      glEnable (GL_CLIP_PLANE2);
+      glClipPlane(GL_CLIP_PLANE2, a);
+      glEnable(GL_CLIP_PLANE2);
     }
 
-    NeedKernelVisit ();  // Always need to visit G4 kernel.
-    G4VViewer::ProcessView ();
+    NeedKernelVisit();  // Always need to visit G4 kernel.
+    G4VViewer::ProcessView();
 
-    if (cutawayUnion) glDisable (GL_CLIP_PLANE2);
+    if (cutawayUnion) glDisable(GL_CLIP_PLANE2);
   }
 }

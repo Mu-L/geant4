@@ -23,25 +23,27 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// V. Ivanchenko 20 October 2023 
+// V. Ivanchenko 20 October 2023
 //
 
 #include "G4ParticleHPInelasticXS.hh"
+
 #include "G4ParticleHPManager.hh"
 #include "G4SystemOfUnits.hh"
 
 G4ParticleHPInelasticXS::G4ParticleHPInelasticXS(const G4ParticleDefinition* p)
   : G4CrossSectionHP(p, p->GetParticleName() + "InelasticHP",
-		     G4ParticleHPManager::GetInstance()->GetParticleHPPath(p) + "/Inelastic/CrossSection/",
-                     200*CLHEP::MeV, 0, 100), part(p)
+                     G4ParticleHPManager::GetInstance()->GetParticleHPPath(p)
+                       + "/Inelastic/CrossSection/",
+                     200 * CLHEP::MeV, 0, 100),
+    part(p)
 {
   // is the current default, while data should be applicable up to 200 MeV
-  SetMaxKinEnergy(30*CLHEP::MeV);
+  SetMaxKinEnergy(30 * CLHEP::MeV);
 }
 
 void G4ParticleHPInelasticXS::CrossSectionDescription(std::ostream& outF) const
 {
   outF << "High Precision cross data based on Evaluated Nuclear Data Files"
-       << " (JEFF) for inelastic reaction of " << part->GetParticleName()
-       << " below 200 MeV";
+       << " (JEFF) for inelastic reaction of " << part->GetParticleName() << " below 200 MeV";
 }

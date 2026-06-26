@@ -26,13 +26,12 @@
 // 20110922  M. Kelsey -- Implement new stream operator<< here
 
 #include "G4FissionConfiguration.hh"
+
 #include <iostream>
 
-std::ostream& operator<<(std::ostream& os, const G4FissionConfiguration& fis) {
-  os << " new configuration " << G4endl
-     << " a1 " << fis.afirst << " z1 " << fis.zfirst << " ez " << fis.ezet
-     << " ekin " << fis.ekin << " epot " << fis.epot;
+std::ostream& operator<<(std::ostream& os, const G4FissionConfiguration& fis)
+{
+  os << " new configuration " << G4endl << " a1 " << fis.afirst << " z1 " << fis.zfirst << " ez "
+     << fis.ezet << " ekin " << fis.ekin << " epot " << fis.epot;
   return os;
 }
-
-

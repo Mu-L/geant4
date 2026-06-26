@@ -35,8 +35,8 @@
 
 // Author: Makoto Asai (SLAC), 1998
 // --------------------------------------------------------------------
-#ifndef G4UIcommand_hh
-#define G4UIcommand_hh 1
+#ifndef G4UICOMMAND_HH
+#define G4UICOMMAND_HH
 
 #include "G4ApplicationState.hh"
 #include "G4ThreeVector.hh"
@@ -50,6 +50,7 @@ class G4UImessenger;
 class G4UIcommand
 {
   public:
+
     // Dummy default constructor
     G4UIcommand() = default;
 
@@ -175,6 +176,7 @@ class G4UIcommand
     }
 
   public:
+
     enum CommandType
     {
       BaseClassCmd,
@@ -196,6 +198,7 @@ class G4UIcommand
     inline void SetDefaultSortFlag(G4bool val) { ifSort = val; }
 
   protected:
+
     G4int CheckNewValue(const char* newValue);
 
     G4bool toBeBroadcasted = false;
@@ -208,9 +211,11 @@ class G4UIcommand
     G4bool ifSort = false;
 
   private:
+
     void G4UIcommandCommonConstructorCode(const char* theCommandPath);
 
   private:
+
     CommandType commandType = BaseClassCmd;
     G4UImessenger* messenger = nullptr;
     G4String commandPath;

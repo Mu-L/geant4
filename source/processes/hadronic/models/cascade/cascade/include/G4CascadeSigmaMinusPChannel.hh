@@ -36,11 +36,13 @@
 #include "G4CascadeFunctions.hh"
 #include "G4KaonHypSampler.hh"
 
-struct G4CascadeSigmaMinusPChannelData {
-  typedef G4CascadeData<31,3,12,33,59,30,20> data_t;
-  static const data_t data;
+struct G4CascadeSigmaMinusPChannelData
+{
+    typedef G4CascadeData<31, 3, 12, 33, 59, 30, 20> data_t;
+    static const data_t data;
 };
 
-typedef G4CascadeFunctions<G4CascadeSigmaMinusPChannelData,G4KaonHypSampler> G4CascadeSigmaMinusPChannel;
+typedef G4CascadeFunctions<G4CascadeSigmaMinusPChannelData, G4KaonHypSampler>
+  G4CascadeSigmaMinusPChannel;
 
 #endif

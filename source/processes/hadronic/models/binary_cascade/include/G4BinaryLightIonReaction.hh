@@ -23,43 +23,46 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4BinaryLightIonReaction_h
-#define G4BinaryLightIonReaction_h 1
+#ifndef G4BINARYLIGHTIONREACTION_HH
+#define G4BINARYLIGHTIONREACTION_HH
 
 #include "G4BinaryCascade.hh"
-#include "G4PreCompoundModel.hh"
-#include "G4HadFinalState.hh"
 #include "G4ExcitationHandler.hh"
+#include "G4HadFinalState.hh"
+#include "G4PreCompoundModel.hh"
 
 class G4BinaryLightIonReaction : public G4HadronicInteraction
 {
   public:
+
     G4BinaryLightIonReaction(G4VPreCompoundModel* ptr = 0);
     virtual ~G4BinaryLightIonReaction();
-    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
-                                              G4Nucleus& theNucleus);
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& theNucleus);
     inline void SetPrecompound(G4VPreCompoundModel* ptr);
     inline void SetDeExcitation(G4ExcitationHandler* ptr);
 
-    virtual void ModelDescription(std::ostream&) const ;
+    virtual void ModelDescription(std::ostream&) const;
 
   private:
+
     G4bool EnergyAndMomentumCorrector(G4ReactionProductVector* products,
-               G4LorentzVector& TotalCollisionMom);
-    G4bool SetLighterAsProjectile(G4LorentzVector & mom,const G4LorentzRotation & toBreit);
-    G4ReactionProductVector * FuseNucleiAndPrompound(const G4LorentzVector & mom);
-    G4ReactionProductVector * Interact(G4LorentzVector & mom, const G4LorentzRotation & );
+                                      G4LorentzVector& TotalCollisionMom);
+    G4bool SetLighterAsProjectile(G4LorentzVector& mom, const G4LorentzRotation& toBreit);
+    G4ReactionProductVector* FuseNucleiAndPrompound(const G4LorentzVector& mom);
+    G4ReactionProductVector* Interact(G4LorentzVector& mom, const G4LorentzRotation&);
     G4double GetProjectileExcitation();
-    void DeExciteSpectatorNucleus(G4ReactionProductVector * spectators, G4ReactionProductVector * cascaders,
-                           G4double theStatisticalExEnergy, G4LorentzVector & momentum);
-    G4LorentzVector SortResult(G4ReactionProductVector * result,G4ReactionProductVector * spectators,G4ReactionProductVector * cascaders);
+    void DeExciteSpectatorNucleus(G4ReactionProductVector* spectators,
+                                  G4ReactionProductVector* cascaders,
+                                  G4double theStatisticalExEnergy, G4LorentzVector& momentum);
+    G4LorentzVector SortResult(G4ReactionProductVector* result, G4ReactionProductVector* spectators,
+                               G4ReactionProductVector* cascaders);
 
     G4BinaryCascade* theModel;
     G4ExcitationHandler* theHandler;
     G4VPreCompoundModel* theProjectileFragmentation;
     G4HadFinalState theResult;
-    G4int pA, pZ, tA, tZ,spectatorA,spectatorZ;
-    G4Fancy3DNucleus * projectile3dNucleus, * target3dNucleus;
+    G4int pA, pZ, tA, tZ, spectatorA, spectatorZ;
+    G4Fancy3DNucleus *projectile3dNucleus, *target3dNucleus;
     G4FermiMomentum theFermi;
     G4LorentzVector pInitialState, pFinalState;
 
@@ -68,7 +71,10 @@ class G4BinaryLightIonReaction : public G4HadronicInteraction
 };
 inline void G4BinaryLightIonReaction::SetPrecompound(G4VPreCompoundModel* ptr)
 {
-  if(ptr) { theProjectileFragmentation = ptr; }
+  if (ptr)
+  {
+    theProjectileFragmentation = ptr;
+  }
   theHandler = theProjectileFragmentation->GetExcitationHandler();
 }
 inline void G4BinaryLightIonReaction::SetDeExcitation(G4ExcitationHandler* ptr)

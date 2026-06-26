@@ -37,11 +37,12 @@ class G4VSceneHandler;
 
 class G4VRML2File : public G4VGraphicsSystem
 {
- public:
-  G4VRML2File();
-  virtual ~G4VRML2File();
-  G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
-  G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "");
+  public:
+
+    G4VRML2File();
+    virtual ~G4VRML2File();
+    G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
+    G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "");
 };
 
 #endif  // G4VRML2FILE_HH

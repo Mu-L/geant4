@@ -43,11 +43,12 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4CrossSectionInelastic_h
-#define G4CrossSectionInelastic_h 1
+#ifndef G4CROSSSECTIONINELASTIC_HH
+#define G4CROSSSECTIONINELASTIC_HH
 
-#include "globals.hh"
 #include "G4VCrossSectionDataSet.hh"
+#include "globals.hh"
+
 #include <iostream>
 
 class G4ParticleDefinition;
@@ -59,41 +60,34 @@ class G4NistManager;
 
 class G4CrossSectionInelastic : public G4VCrossSectionDataSet
 {
-public:
+  public:
 
-  G4CrossSectionInelastic(G4VComponentCrossSection*,
-			  G4int zmin = 1, G4int zmax = 256, 
-			  G4double Emin = 0.0, G4double Emax = DBL_MAX);
+    G4CrossSectionInelastic(G4VComponentCrossSection*, G4int zmin = 1, G4int zmax = 256,
+                            G4double Emin = 0.0, G4double Emax = DBL_MAX);
 
-  virtual ~G4CrossSectionInelastic();
-   
-  virtual
-  G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z,
-			     const G4Material* mat = 0);
+    virtual ~G4CrossSectionInelastic();
 
-  virtual
-  G4double GetElementCrossSection(const G4DynamicParticle*, 
-				  G4int Z, 
-				  const G4Material* mat = 0);
+    virtual G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z,
+                                       const G4Material* mat = 0);
 
-  virtual
-  void BuildPhysicsTable(const G4ParticleDefinition&);
+    virtual G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z,
+                                            const G4Material* mat = 0);
 
-  virtual
-  void DumpPhysicsTable(const G4ParticleDefinition&);
+    virtual void BuildPhysicsTable(const G4ParticleDefinition&);
 
-  virtual void CrossSectionDescription(std::ostream&) const;
+    virtual void DumpPhysicsTable(const G4ParticleDefinition&);
 
-private:
+    virtual void CrossSectionDescription(std::ostream&) const;
 
-  G4CrossSectionInelastic & operator=(const G4CrossSectionInelastic &right);
-  G4CrossSectionInelastic(const G4CrossSectionInelastic&);
+  private:
 
-  G4NistManager* nist;
-  G4VComponentCrossSection* component;
-  G4int Zmin;
-  G4int Zmax;
+    G4CrossSectionInelastic& operator=(const G4CrossSectionInelastic& right);
+    G4CrossSectionInelastic(const G4CrossSectionInelastic&);
 
+    G4NistManager* nist;
+    G4VComponentCrossSection* component;
+    G4int Zmin;
+    G4int Zmax;
 };
 
 #endif

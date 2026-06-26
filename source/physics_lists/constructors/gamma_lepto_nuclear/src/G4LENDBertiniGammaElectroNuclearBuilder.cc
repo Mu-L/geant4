@@ -30,46 +30,50 @@
 //
 // Author: 2017 Oct. T. Koi
 //
-// Modified: 
+// Modified:
 //----------------------------------------------------------------------------
 //
 
 #include "G4LENDBertiniGammaElectroNuclearBuilder.hh"
-#include "G4LENDorBERTModel.hh"
+
+#include "G4Gamma.hh"
 #include "G4LENDCombinedCrossSection.hh"
-
-#include "globals.hh"
-#include "G4ios.hh"
-#include "G4SystemOfUnits.hh"
-
+#include "G4LENDorBERTModel.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
-#include "G4Gamma.hh"
 #include "G4ProcessManager.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
-G4LENDBertiniGammaElectroNuclearBuilder::G4LENDBertiniGammaElectroNuclearBuilder(G4bool eNucl) : 
-G4BertiniElectroNuclearBuilder( eNucl )
+G4LENDBertiniGammaElectroNuclearBuilder::G4LENDBertiniGammaElectroNuclearBuilder(G4bool eNucl)
+  : G4BertiniElectroNuclearBuilder(eNucl)
 {}
 
 void G4LENDBertiniGammaElectroNuclearBuilder::Build()
 {
-  //G4cout << "G4LENDBertiniGammaElectroNuclearBuilder::Build()" << G4endl;
+  // G4cout << "G4LENDBertiniGammaElectroNuclearBuilder::Build()" << G4endl;
 
   G4BertiniElectroNuclearBuilder::Build();
 
-  if ( !G4FindDataDir("G4LENDDATA") ) {
-    G4String message = "\n Skipping activation of Low Energy Nuclear Data (LEND) model for gamma nuclear interactions.\n The LEND model needs data files and they are available from ftp://gdo-nuclear.ucllnl.org/GND_after2013/GND_v1.3.tar.gz.\n Please set the environment variable G4LENDDATA to point to the directory named v1.3 extracted from the archive file.\n"; 
-    G4Exception( "G4LENDBertiniGammaElectroNuclearBuilder::Build()"
-                 , "G4LENDBertiniGammaElectroNuclearBuilder001"
-                 , JustWarning , message);
+  if (!G4FindDataDir("G4LENDDATA"))
+  {
+    G4String message =
+      "\n Skipping activation of Low Energy Nuclear Data (LEND) model for gamma nuclear "
+      "interactions.\n The LEND model needs data files and they are available from "
+      "ftp://gdo-nuclear.ucllnl.org/GND_after2013/GND_v1.3.tar.gz.\n Please set the environment "
+      "variable G4LENDDATA to point to the directory named v1.3 extracted from the archive file.\n";
+    G4Exception("G4LENDBertiniGammaElectroNuclearBuilder::Build()",
+                "G4LENDBertiniGammaElectroNuclearBuilder001", JustWarning, message);
     return;
   }
-   
-  theGammaReaction->SetMinEnergy(20*MeV);
-  G4LENDorBERTModel* theGammaReactionLowE = new G4LENDorBERTModel( G4Gamma::Gamma() );
+
+  theGammaReaction->SetMinEnergy(20 * MeV);
+  G4LENDorBERTModel* theGammaReactionLowE = new G4LENDorBERTModel(G4Gamma::Gamma());
   theGammaReactionLowE->DumpLENDTargetInfo(true);
-  G4LENDCombinedCrossSection* theGammaCrossSectionLowE = new G4LENDCombinedCrossSection( G4Gamma::Gamma() );
-  theGammaReactionLowE->SetMaxEnergy(20*MeV);
+  G4LENDCombinedCrossSection* theGammaCrossSectionLowE =
+    new G4LENDCombinedCrossSection(G4Gamma::Gamma());
+  theGammaReactionLowE->SetMaxEnergy(20 * MeV);
   thePhotoNuclearProcess->RegisterMe(theGammaReactionLowE);
-  thePhotoNuclearProcess->AddDataSet(theGammaCrossSectionLowE); 
+  thePhotoNuclearProcess->AddDataSet(theGammaCrossSectionLowE);
 }

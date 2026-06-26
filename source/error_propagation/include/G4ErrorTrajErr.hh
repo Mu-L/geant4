@@ -35,8 +35,8 @@
 // - Created:   P. Arce
 // --------------------------------------------------------------------
 
-#ifndef G4ErrorTrajErr_hh
-#define G4ErrorTrajErr_hh
+#ifndef G4ERRORTRAJERR_HH
+#define G4ERRORTRAJERR_HH
 
 #include "G4ErrorSymMatrix.hh"
 

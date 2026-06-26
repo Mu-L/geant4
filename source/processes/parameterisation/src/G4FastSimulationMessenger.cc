@@ -91,7 +91,8 @@ G4FastSimulationMessenger::~G4FastSimulationMessenger()
 void G4FastSimulationMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
   if (command == fShowSetupCmd) fGlobalFastSimulationManager->ShowSetup();
-  if (command == fListEnvelopesCmd) {
+  if (command == fListEnvelopesCmd)
+  {
     if (newValue == "all")
       fGlobalFastSimulationManager->ListEnvelopes();
     else

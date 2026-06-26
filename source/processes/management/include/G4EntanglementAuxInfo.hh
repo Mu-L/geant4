@@ -47,32 +47,32 @@
 //
 // See G4VEntanglementClipBoard.hh for more infromation.
 
-#ifndef G4EntanglementAuxInfo_hh
-#define G4EntanglementAuxInfo_hh
+#ifndef G4ENTANGLEMENTAUXINFO_HH
+#define G4ENTANGLEMENTAUXINFO_HH
 
 #include "G4VAuxiliaryTrackInformation.hh"
+#include "G4VEntanglementClipBoard.hh"
 
 #include <memory>
 
-#include "G4VEntanglementClipBoard.hh"
+class G4EntanglementAuxInfo : public G4VAuxiliaryTrackInformation
+{
+  public:
 
-class G4EntanglementAuxInfo : public G4VAuxiliaryTrackInformation {
+    G4EntanglementAuxInfo(const std::shared_ptr<G4VEntanglementClipBoard>& clipBoard)
+      : fEntanglementClipBoard(clipBoard)
+    {}
 
-public:
+    ~G4EntanglementAuxInfo() {}
 
-  G4EntanglementAuxInfo
-  (const std::shared_ptr<G4VEntanglementClipBoard>& clipBoard)
-  : fEntanglementClipBoard(clipBoard) {}
+    G4VEntanglementClipBoard* GetEntanglementClipBoard() const
+    {
+      return fEntanglementClipBoard.get();
+    }
 
-  ~G4EntanglementAuxInfo() {}
+  private:
 
-  G4VEntanglementClipBoard* GetEntanglementClipBoard() const
-  {return fEntanglementClipBoard.get();}
-
-private:
-
-  std::shared_ptr<G4VEntanglementClipBoard> fEntanglementClipBoard;
-
+    std::shared_ptr<G4VEntanglementClipBoard> fEntanglementClipBoard;
 };
 
 #endif

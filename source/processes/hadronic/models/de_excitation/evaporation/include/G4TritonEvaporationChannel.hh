@@ -30,29 +30,30 @@
 //
 // 17-11-2010 V.Ivanchenko cleanup
 
-#ifndef G4TritonEvaporationChannel_h
-#define G4TritonEvaporationChannel_h 1
+#ifndef G4TRITONEVAPORATIONCHANNEL_HH
+#define G4TRITONEVAPORATIONCHANNEL_HH
 
 #include "G4EvaporationChannel.hh"
 #include "G4TritonEvaporationProbability.hh"
 
 class G4TritonEvaporationChannel : public G4EvaporationChannel
 {
-public:
-  // only available constructor
-  explicit G4TritonEvaporationChannel();
+  public:
 
-  // destructor
-  ~G4TritonEvaporationChannel() override = default;
+    // only available constructor
+    explicit G4TritonEvaporationChannel();
 
-private:
-  const G4TritonEvaporationChannel & operator=
-  (const G4TritonEvaporationChannel & right);  
-  G4TritonEvaporationChannel(const G4TritonEvaporationChannel & right);
-  G4bool operator==(const G4TritonEvaporationChannel & right) const;
-  G4bool operator!=(const G4TritonEvaporationChannel & right) const;
+    // destructor
+    ~G4TritonEvaporationChannel() override = default;
 
-  G4TritonEvaporationProbability pr;
+  private:
+
+    const G4TritonEvaporationChannel& operator=(const G4TritonEvaporationChannel& right);
+    G4TritonEvaporationChannel(const G4TritonEvaporationChannel& right);
+    G4bool operator==(const G4TritonEvaporationChannel& right) const;
+    G4bool operator!=(const G4TritonEvaporationChannel& right) const;
+
+    G4TritonEvaporationProbability pr;
 };
 
 #endif

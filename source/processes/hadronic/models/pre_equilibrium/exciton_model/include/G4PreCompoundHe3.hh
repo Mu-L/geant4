@@ -27,45 +27,38 @@
 // by V. Lara
 //
 // Modified:
-// J. M. Quesada (July 08) cleanup 
-// 20.08.2010 V.Ivanchenko added int Z and A and cleanup; added 
+// J. M. Quesada (July 08) cleanup
+// 20.08.2010 V.Ivanchenko added int Z and A and cleanup; added
 //                        G4ParticleDefinition to constructor,
 //                        moved constructor and destructor to source
 
-#ifndef G4PreCompoundHe3_h
-#define G4PreCompoundHe3_h 1
+#ifndef G4PRECOMPOUNDHE3_HH
+#define G4PRECOMPOUNDHE3_HH
 
 #include "G4PreCompoundIon.hh"
 
 class G4PreCompoundHe3 : public G4PreCompoundIon
 {
-public:
+  public:
 
-  G4PreCompoundHe3();
+    G4PreCompoundHe3();
 
-  ~G4PreCompoundHe3() override = default;
+    ~G4PreCompoundHe3() override = default;
 
-  G4PreCompoundHe3(const G4PreCompoundHe3 &right) = delete;
-  const G4PreCompoundHe3& 
-  operator= (const G4PreCompoundHe3 &right) = delete;
-  G4bool operator==(const G4PreCompoundHe3 &right) const = delete;
-  G4bool operator!=(const G4PreCompoundHe3 &right) const = delete;
+    G4PreCompoundHe3(const G4PreCompoundHe3& right) = delete;
+    const G4PreCompoundHe3& operator=(const G4PreCompoundHe3& right) = delete;
+    G4bool operator==(const G4PreCompoundHe3& right) const = delete;
+    G4bool operator!=(const G4PreCompoundHe3& right) const = delete;
 
-protected:
+  protected:
 
-  G4double GetRj(G4int NumberParticles, G4int NumberCharged) const override;
+    G4double GetRj(G4int NumberParticles, G4int NumberCharged) const override;
 
-  G4double FactorialFactor(G4int N, G4int P) const override;
+    G4double FactorialFactor(G4int N, G4int P) const override;
 
-  G4double CoalescenceFactor(G4int A) const override;
+    G4double CoalescenceFactor(G4int A) const override;
 
-  G4double GetAlpha() const override;
+    G4double GetAlpha() const override;
 };
 
 #endif
-
-
-
-
-
- 

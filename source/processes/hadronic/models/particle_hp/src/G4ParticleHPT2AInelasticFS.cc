@@ -61,27 +61,33 @@ void G4ParticleHPT2AInelasticFS::Init(G4double A, G4double Z, G4int M, const G4S
   G4ParticleHPInelasticBaseFS::Init(A, Z, M, dirName, aFSType, projectile);
   G4double ResidualA = 0;
   G4double ResidualZ = 0;
-  if (projectile == G4Neutron::Neutron()) {
+  if (projectile == G4Neutron::Neutron())
+  {
     ResidualA = A - 10;
     ResidualZ = Z - 5;
   }
-  else if (projectile == G4Proton::Proton()) {
+  else if (projectile == G4Proton::Proton())
+  {
     ResidualA = A - 10;
     ResidualZ = Z - 4;
   }
-  else if (projectile == G4Deuteron::Deuteron()) {
+  else if (projectile == G4Deuteron::Deuteron())
+  {
     ResidualA = A - 9;
     ResidualZ = Z - 4;
   }
-  else if (projectile == G4Triton::Triton()) {
+  else if (projectile == G4Triton::Triton())
+  {
     ResidualA = A - 8;
     ResidualZ = Z - 4;
   }
-  else if (projectile == G4He3::He3()) {
+  else if (projectile == G4He3::He3())
+  {
     ResidualA = A - 8;
     ResidualZ = Z - 3;
   }
-  else if (projectile == G4Alpha::Alpha()) {
+  else if (projectile == G4Alpha::Alpha())
+  {
     ResidualA = A - 7;
     ResidualZ = Z - 3;
   }

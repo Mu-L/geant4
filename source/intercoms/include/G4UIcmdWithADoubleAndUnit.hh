@@ -33,14 +33,15 @@
 
 // Author: M.Asai, 1998
 // --------------------------------------------------------------------
-#ifndef G4UIcmdWithADoubleAndUnit_hh
-#define G4UIcmdWithADoubleAndUnit_hh 1
+#ifndef G4UICMDWITHADOUBLEANDUNIT_HH
+#define G4UICMDWITHADOUBLEANDUNIT_HH
 
 #include "G4UIcommand.hh"
 
 class G4UIcmdWithADoubleAndUnit : public G4UIcommand
 {
   public:
+
     // Constructor. The command string with full path directory
     // and the pointer to the messenger must be given
     G4UIcmdWithADoubleAndUnit(const char* theCommandPath, G4UImessenger* theMessenger);

@@ -40,56 +40,46 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4HadronElasticPhysics_h
-#define G4HadronElasticPhysics_h 1
+#ifndef G4HADRONELASTICPHYSICS_HH
+#define G4HADRONELASTICPHYSICS_HH
 
-#include "globals.hh"
-#include "G4VPhysicsConstructor.hh"
 #include "G4HadronElastic.hh"
 #include "G4HadronicProcess.hh"
+#include "G4VPhysicsConstructor.hh"
+#include "globals.hh"
 
 class G4VCrossSectionDataSet;
 class G4ParticleDefinition;
 
 class G4HadronElasticPhysics : public G4VPhysicsConstructor
 {
-public: 
+  public:
 
-  explicit G4HadronElasticPhysics(G4int ver = 1, 
-				  const G4String& nam = "hElasticWEL_CHIPS_XS");
+    explicit G4HadronElasticPhysics(G4int ver = 1, const G4String& nam = "hElasticWEL_CHIPS_XS");
 
-  ~G4HadronElasticPhysics() override = default;
+    ~G4HadronElasticPhysics() override = default;
 
-  // This method will be invoked in the Construct() method. 
-  // each particle type will be instantiated
-  void ConstructParticle() override;
- 
-  // This method will be invoked in the Construct() method.
-  // each physics process will be instantiated and
-  // registered to the process manager of each particle type 
-  void ConstructProcess() override;
+    // This method will be invoked in the Construct() method.
+    // each particle type will be instantiated
+    void ConstructParticle() override;
 
-  G4HadronicProcess* GetElasticProcess(const G4ParticleDefinition* part) const;
+    // This method will be invoked in the Construct() method.
+    // each physics process will be instantiated and
+    // registered to the process manager of each particle type
+    void ConstructProcess() override;
 
-  G4HadronElastic* GetElasticModel(const G4ParticleDefinition* part) const;
+    G4HadronicProcess* GetElasticProcess(const G4ParticleDefinition* part) const;
 
-  G4HadronicProcess* GetNeutronProcess() const;
+    G4HadronElastic* GetElasticModel(const G4ParticleDefinition* part) const;
 
-  G4HadronElastic* GetNeutronModel() const;
+    G4HadronicProcess* GetNeutronProcess() const;
 
-  void AddXSection(const G4ParticleDefinition*, G4VCrossSectionDataSet*) const; 
+    G4HadronElastic* GetNeutronModel() const;
 
-  // copy constructor and hide assignment operator
-  G4HadronElasticPhysics(G4HadronElasticPhysics &) = delete;
-  G4HadronElasticPhysics & operator=(const G4HadronElasticPhysics &right) = delete;
+    void AddXSection(const G4ParticleDefinition*, G4VCrossSectionDataSet*) const;
 
+    // copy constructor and hide assignment operator
+    G4HadronElasticPhysics(G4HadronElasticPhysics&) = delete;
+    G4HadronElasticPhysics& operator=(const G4HadronElasticPhysics& right) = delete;
 };
 #endif
-
-
-
-
-
-
-
-

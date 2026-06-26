@@ -37,54 +37,49 @@
 
 #include "Randomize.hh"
 
-G4VPolarizedXS::G4VPolarizedXS()
-  : fXmin(0)
-  , fXmax(1.)
-  , fYmin(1.)
-  , fA(1.)
-  , fZ(1.)
-  , fCoul(0.)
-{}
+G4VPolarizedXS::G4VPolarizedXS() : fXmin(0), fXmax(1.), fYmin(1.), fA(1.), fZ(1.), fCoul(0.) {}
 
 G4VPolarizedXS::~G4VPolarizedXS() {}
 
-void G4VPolarizedXS::Initialize(G4double, G4double, G4double,
-                                const G4StokesVector&, const G4StokesVector&,
-                                G4int)
+void G4VPolarizedXS::Initialize(G4double, G4double, G4double, const G4StokesVector&,
+                                const G4StokesVector&, G4int)
 {}
 
 G4StokesVector G4VPolarizedXS::GetPol2()
 {
   // neglects correlation effects!
-  G4double invXsecTotal =
-    1. / XSection(G4StokesVector::ZERO, G4StokesVector::ZERO);
+  G4double invXsecTotal = 1. / XSection(G4StokesVector::ZERO, G4StokesVector::ZERO);
   G4double xsPol1 = XSection(G4StokesVector::P1, G4StokesVector::ZERO);
   G4double xsPol2 = XSection(G4StokesVector::P2, G4StokesVector::ZERO);
   G4double xsPol3 = XSection(G4StokesVector::P3, G4StokesVector::ZERO);
-  return G4StokesVector(G4ThreeVector(
-    invXsecTotal * xsPol1, invXsecTotal * xsPol2, invXsecTotal * xsPol3));
+  return G4StokesVector(
+    G4ThreeVector(invXsecTotal * xsPol1, invXsecTotal * xsPol2, invXsecTotal * xsPol3));
 }
 
 G4StokesVector G4VPolarizedXS::GetPol3()
 {
   // neglects correlation effects!
-  G4double invXsecTotal =
-    1. / XSection(G4StokesVector::ZERO, G4StokesVector::ZERO);
+  G4double invXsecTotal = 1. / XSection(G4StokesVector::ZERO, G4StokesVector::ZERO);
   G4double xsPol1 = XSection(G4StokesVector::ZERO, G4StokesVector::P1);
   G4double xsPol2 = XSection(G4StokesVector::ZERO, G4StokesVector::P2);
   G4double xsPol3 = XSection(G4StokesVector::ZERO, G4StokesVector::P3);
-  return G4StokesVector(G4ThreeVector(
-    invXsecTotal * xsPol1, invXsecTotal * xsPol2, invXsecTotal * xsPol3));
+  return G4StokesVector(
+    G4ThreeVector(invXsecTotal * xsPol1, invXsecTotal * xsPol2, invXsecTotal * xsPol3));
 }
 
 // minimal energy fraction in TotalXSection
-G4double G4VPolarizedXS::GetXmin(G4double /*y*/) { return fXmin; }
+G4double G4VPolarizedXS::GetXmin(G4double /*y*/)
+{
+  return fXmin;
+}
 
 // maximal energy fraction in TotalXSection
-G4double G4VPolarizedXS::GetXmax(G4double /*y*/) { return fXmax; }
+G4double G4VPolarizedXS::GetXmax(G4double /*y*/)
+{
+  return fXmax;
+}
 
-G4double G4VPolarizedXS::TotalXSection(G4double, G4double, G4double,
-                                       const G4StokesVector&,
+G4double G4VPolarizedXS::TotalXSection(G4double, G4double, G4double, const G4StokesVector&,
                                        const G4StokesVector&)
 {
   G4ExceptionDescription ed;

@@ -45,6 +45,7 @@
 class G4ShiftedGaussian
 {
   public:
+
     // Constructor definition
     /** Default constructor
      *  - Usage: No arguments required
@@ -59,10 +60,12 @@ class G4ShiftedGaussian
     G4ShiftedGaussian(G4int Verbosity);
 
   protected:
+
     /** Initialize is a common function called by all constructors. */
     void Initialize();
 
   public:
+
     // Functions
     /** Returns the shifted mean that correlates to a \p RequestedMean and
      *  \p RequestedStdDev pair. 0 is returned if there is no associated value.
@@ -93,6 +96,7 @@ class G4ShiftedGaussian
     void G4SetVerbosity(G4int WhatVerbosity);
 
   protected:
+
     /** Contains the adjusted mean of the POSITIVE only Gaussian distribution
      *  associated with a \p RequestedMean and \p RequestedStdDev pair.
      */
@@ -101,7 +105,9 @@ class G4ShiftedGaussian
     G4int Verbosity_;
 
     // Destructor function(s)
+
   public:
+
     /** Default deconstructor. */
     ~G4ShiftedGaussian();
 };

@@ -25,8 +25,8 @@
 //
 //
 //
-// 
-//Top level shell class
+//
+// Top level shell class
 
 #ifndef G4OPENGLXMTOPLEVELSHELL_HH
 #define G4OPENGLXMTOPLEVELSHELL_HH
@@ -37,24 +37,25 @@ class G4OpenGLXmVWidgetContainer;
 
 class G4OpenGLXmTopLevelShell : public G4OpenGLXmVWidgetShell
 {
+  public:
 
-public:
-  G4OpenGLXmTopLevelShell(G4OpenGLXmViewer*, char*);   //constructor
-  virtual ~G4OpenGLXmTopLevelShell();  //destructor
+    G4OpenGLXmTopLevelShell(G4OpenGLXmViewer*, char*);  // constructor
+    virtual ~G4OpenGLXmTopLevelShell();  // destructor
 
-  void AddChild (G4OpenGLXmVWidgetContainer*);
-  void Realize ();
+    void AddChild(G4OpenGLXmVWidgetContainer*);
+    void Realize();
 
-  Widget* GetPointerToWidget ();
-  char* GetName ();
+    Widget* GetPointerToWidget();
+    char* GetName();
 
-private:
-  G4OpenGLXmTopLevelShell (const G4OpenGLXmTopLevelShell&);
-  G4OpenGLXmTopLevelShell& operator = (const G4OpenGLXmTopLevelShell&);
-  char* name;
-  Widget toplevel;
-  Widget top_box;
-  Widget frame;
+  private:
+
+    G4OpenGLXmTopLevelShell(const G4OpenGLXmTopLevelShell&);
+    G4OpenGLXmTopLevelShell& operator=(const G4OpenGLXmTopLevelShell&);
+    char* name;
+    Widget toplevel;
+    Widget top_box;
+    Widget frame;
 };
 
 #endif

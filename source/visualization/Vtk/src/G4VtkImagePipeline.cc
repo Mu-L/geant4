@@ -33,13 +33,13 @@
 
 #include <vtkImageActor.h>
 #include <vtkImageAlgorithm.h>
+#include <vtkImageFlip.h>
 #include <vtkImageMapper3D.h>
 #include <vtkImageProperty.h>
 #include <vtkImageReader2.h>
 #include <vtkImageReader2Factory.h>
 #include <vtkMatrix4x4.h>
 #include <vtkSmartPointer.h>
-#include <vtkImageFlip.h>
 
 G4VtkImagePipeline::G4VtkImagePipeline(const G4String& nameIn, const G4VtkVisContext& vcIn)
   : G4VVtkPipeline(nameIn, "G4VtkImagePipeline", vcIn, false, vcIn.fViewer->renderer)

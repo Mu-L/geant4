@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4ParticleHPThreadLocalManager_h
-#define G4ParticleHPThreadLocalManager_h 1
+#ifndef G4PARTICLEHPTHREADLOCALMANAGER_HH
+#define G4PARTICLEHPTHREADLOCALMANAGER_HH
 
 // Class Description
 // ThreadLocalManager of NeutronHP
@@ -42,17 +42,20 @@ class G4ParticleHPThreadLocalManager
     friend class G4ThreadLocalSingleton<G4ParticleHPThreadLocalManager>;
 
   public:
+
     static G4ParticleHPThreadLocalManager* GetInstance();
     G4ParticleHPReactionWhiteBoard* GetReactionWhiteBoard();
     void OpenReactionWhiteBoard();
     void CloseReactionWhiteBoard();
 
   private:
+
     G4ParticleHPThreadLocalManager();
     G4ParticleHPThreadLocalManager(const G4ParticleHPThreadLocalManager&);
     ~G4ParticleHPThreadLocalManager() = default;
 
   private:
+
     G4ParticleHPReactionWhiteBoard* RWB{nullptr};
 };
 #endif

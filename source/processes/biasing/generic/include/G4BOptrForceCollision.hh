@@ -35,14 +35,14 @@
 //
 // Author: Marc Verderi, November 2013.
 // --------------------------------------------------------------------
-#ifndef G4BOptrForceCollision_hh
-#define G4BOptrForceCollision_hh 1
+#ifndef G4BOPTRFORCECOLLISION_HH
+#define G4BOPTRFORCECOLLISION_HH
 
-#include "G4VBiasingOperator.hh"
 #include "G4ThreeVector.hh"
+#include "G4VBiasingOperator.hh"
 
-#include <vector>
 #include <map>
+#include <vector>
 
 class G4BOptnForceFreeFlight;
 class G4BOptnForceCommonTruncatedExp;
@@ -56,50 +56,48 @@ class G4BOptrForceCollision : public G4VBiasingOperator
 {
   public:
 
-    G4BOptrForceCollision(const G4String& particleToForce,
-                          const G4String& name="ForceCollision");
+    G4BOptrForceCollision(const G4String& particleToForce, const G4String& name = "ForceCollision");
     G4BOptrForceCollision(const G4ParticleDefinition* particleToForce,
-                          const G4String& name="ForceCollision");
+                          const G4String& name = "ForceCollision");
     ~G4BOptrForceCollision();
-  
+
     virtual void Configure() final;
     virtual void ConfigureForWorker() final;
     virtual void StartRun() final;
-    virtual void StartTracking( const G4Track* track ) final;
-    virtual void ExitBiasing( const G4Track*, const G4BiasingProcessInterface* ) final {};
+    virtual void StartTracking(const G4Track* track) final;
+    virtual void ExitBiasing(const G4Track*, const G4BiasingProcessInterface*) final {};
     virtual void EndTracking() final;
 
     // -- operation applied:
-    void OperationApplied( const G4BiasingProcessInterface* callingProcess,
-                                 G4BiasingAppliedCase biasingCase,
-                                 G4VBiasingOperation* operationApplied,
-                           const G4VParticleChange* particleChangeProduced ) final;
-    void OperationApplied( const G4BiasingProcessInterface* callingProcess,
-                                 G4BiasingAppliedCase biasingCase,
-                                 G4VBiasingOperation* occurenceOperationApplied,
-                                 G4double weightForOccurenceInteraction,
-                                 G4VBiasingOperation* finalStateOperationApplied,
-                           const G4VParticleChange* particleChangeProduced ) final;
+    void OperationApplied(const G4BiasingProcessInterface* callingProcess,
+                          G4BiasingAppliedCase biasingCase, G4VBiasingOperation* operationApplied,
+                          const G4VParticleChange* particleChangeProduced) final;
+    void OperationApplied(const G4BiasingProcessInterface* callingProcess,
+                          G4BiasingAppliedCase biasingCase,
+                          G4VBiasingOperation* occurenceOperationApplied,
+                          G4double weightForOccurenceInteraction,
+                          G4VBiasingOperation* finalStateOperationApplied,
+                          const G4VParticleChange* particleChangeProduced) final;
 
   private:
 
     // -- Mandatory from base class :
     virtual G4VBiasingOperation*
     ProposeNonPhysicsBiasingOperation(const G4Track* track,
-                         const G4BiasingProcessInterface* callingProcess) final;
+                                      const G4BiasingProcessInterface* callingProcess) final;
     virtual G4VBiasingOperation*
     ProposeOccurenceBiasingOperation(const G4Track* track,
-                         const G4BiasingProcessInterface* callingProcess) final;
+                                     const G4BiasingProcessInterface* callingProcess) final;
     virtual G4VBiasingOperation*
     ProposeFinalStateBiasingOperation(const G4Track* track,
-                         const G4BiasingProcessInterface* callingProcess) final;
+                                      const G4BiasingProcessInterface* callingProcess) final;
 
   private:
 
     G4int fForceCollisionModelID = 0;
     const G4Track* fCurrentTrack = nullptr;
     G4BOptrForceCollisionTrackData* fCurrentTrackData = nullptr;
-    std::map< const G4BiasingProcessInterface*, G4BOptnForceFreeFlight* > fFreeFlightOperations;
+    std::map<const G4BiasingProcessInterface*, G4BOptnForceFreeFlight*> fFreeFlightOperations;
     G4BOptnForceCommonTruncatedExp* fSharedForceInteractionOperation = nullptr;
     G4BOptnCloning* fCloningOperation = nullptr;
     G4double fInitialTrackWeight = -1.0;

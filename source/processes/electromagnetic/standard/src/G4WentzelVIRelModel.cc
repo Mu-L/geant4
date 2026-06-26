@@ -31,7 +31,7 @@
 //
 // File name:   G4WentzelVIRelModel
 //
-// Author:      V.Ivanchenko 
+// Author:      V.Ivanchenko
 //
 // Creation date: 08.06.2012 from G4WentzelVIRelModel
 //
@@ -52,16 +52,17 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "G4WentzelVIRelModel.hh"
-#include "G4WentzelVIRelXSection.hh"
-#include "G4WentzelOKandVIxSection.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4Material.hh"
-#include "G4ElementVector.hh"
-#include "G4ProductionCutsTable.hh"
-#include "G4NistManager.hh"
-#include "G4EmParameters.hh"
+
 #include "G4AutoLock.hh"
+#include "G4ElementVector.hh"
+#include "G4EmParameters.hh"
+#include "G4Material.hh"
+#include "G4NistManager.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4ProductionCutsTable.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4WentzelOKandVIxSection.hh"
+#include "G4WentzelVIRelXSection.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -69,11 +70,10 @@ std::vector<G4double> G4WentzelVIRelModel::effMass;
 
 namespace
 {
-  G4Mutex theWVIRelMutex = G4MUTEX_INITIALIZER;
+G4Mutex theWVIRelMutex = G4MUTEX_INITIALIZER;
 }
 
-G4WentzelVIRelModel::G4WentzelVIRelModel() :
-  G4WentzelVIModel(true, "WentzelVIRel")
+G4WentzelVIRelModel::G4WentzelVIRelModel() : G4WentzelVIModel(true, "WentzelVIRel")
 {
   fNistManager = G4NistManager::Instance();
   auto ptr = new G4WentzelVIRelXSection();
@@ -86,13 +86,12 @@ G4WentzelVIRelModel::~G4WentzelVIRelModel() = default;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void G4WentzelVIRelModel::Initialise(const G4ParticleDefinition* p,
-                                     const G4DataVector& cuts)
+void G4WentzelVIRelModel::Initialise(const G4ParticleDefinition* p, const G4DataVector& cuts)
 {
   // Access to materials
-  const G4ProductionCutsTable* theCoupleTable =
-    G4ProductionCutsTable::GetProductionCutsTable();
-  if(theCoupleTable->GetTableSize() != effMass.size()) {
+  const G4ProductionCutsTable* theCoupleTable = G4ProductionCutsTable::GetProductionCutsTable();
+  if (theCoupleTable->GetTableSize() != effMass.size())
+  {
     ComputeEffectiveMass();
   }
 
@@ -101,46 +100,52 @@ void G4WentzelVIRelModel::Initialise(const G4ParticleDefinition* p,
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4WentzelVIRelModel::DefineMaterial(const G4MaterialCutsCouple* cup) 
-{ 
-  if(cup != currentCouple) {
+void G4WentzelVIRelModel::DefineMaterial(const G4MaterialCutsCouple* cup)
+{
+  if (cup != currentCouple)
+  {
     currentCouple = cup;
-    SetCurrentCouple(cup); 
+    SetCurrentCouple(cup);
     currentMaterial = cup->GetMaterial();
-    currentMaterialIndex = currentCouple->GetIndex(); 
+    currentMaterialIndex = currentCouple->GetIndex();
     GetWVICrossSection()->SetTargetMass(effMass[currentMaterialIndex]);
   }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4double G4WentzelVIRelModel::ComputeCrossSectionPerAtom( 
-                             const G4ParticleDefinition* p,
-                             G4double kinEnergy,
-                             G4double Z, G4double,
-                             G4double cutEnergy, G4double)
+G4double G4WentzelVIRelModel::ComputeCrossSectionPerAtom(const G4ParticleDefinition* p,
+                                                         G4double kinEnergy, G4double Z, G4double,
+                                                         G4double cutEnergy, G4double)
 {
   G4double cross = 0.0;
-  if(p != particle) { SetupParticle(p); }
-  if(kinEnergy < lowEnergyLimit) { return cross; }
-  if(nullptr == CurrentCouple()) {
-    G4Exception("G4WentzelVIRelModel::ComputeCrossSectionPerAtom", "em0011",
-                FatalException, " G4MaterialCutsCouple is not defined");
+  if (p != particle)
+  {
+    SetupParticle(p);
+  }
+  if (kinEnergy < lowEnergyLimit)
+  {
+    return cross;
+  }
+  if (nullptr == CurrentCouple())
+  {
+    G4Exception("G4WentzelVIRelModel::ComputeCrossSectionPerAtom", "em0011", FatalException,
+                " G4MaterialCutsCouple is not defined");
     return cross;
   }
   DefineMaterial(CurrentCouple());
   G4int iz = G4lrint(Z);
-  G4double tmass = (1 == iz) ? CLHEP::proton_mass_c2
-    : fNistManager->GetAtomicMassAmu(iz)*amu_c2;
+  G4double tmass = (1 == iz) ? CLHEP::proton_mass_c2 : fNistManager->GetAtomicMassAmu(iz) * amu_c2;
   wokvi->SetTargetMass(tmass);
   cosTetMaxNuc = wokvi->SetupKinematic(kinEnergy, currentMaterial);
-  if(cosTetMaxNuc < 1.0) {
+  if (cosTetMaxNuc < 1.0)
+  {
     G4double cost = wokvi->SetupTarget(iz, cutEnergy);
     cross = wokvi->ComputeTransportCrossSectionPerAtom(cost);
-    /*    
-    //if(p->GetParticleName() == "e-")      
-    G4cout << "G4WentzelVIRelModel::CS: Z= " << G4int(Z) 
-           << " e(MeV)= " << kinEnergy 
+    /*
+    //if(p->GetParticleName() == "e-")
+    G4cout << "G4WentzelVIRelModel::CS: Z= " << G4int(Z)
+           << " e(MeV)= " << kinEnergy
            << " 1-cosN= " << 1 - cosTetMaxNuc << " cross(bn)= " << cross/barn
            << " " << particle->GetParticleName() << G4endl;
     */
@@ -152,29 +157,33 @@ G4double G4WentzelVIRelModel::ComputeCrossSectionPerAtom(
 
 void G4WentzelVIRelModel::ComputeEffectiveMass()
 {
-  const G4ProductionCutsTable* theCoupleTable =
-    G4ProductionCutsTable::GetProductionCutsTable();
+  const G4ProductionCutsTable* theCoupleTable = G4ProductionCutsTable::GetProductionCutsTable();
   std::size_t ncouples = (G4int)theCoupleTable->GetTableSize();
-  if(ncouples == effMass.size()) { return; }
+  if (ncouples == effMass.size())
+  {
+    return;
+  }
 
   G4AutoLock l(&theWVIRelMutex);
-  if(ncouples != effMass.size()) {
+  if (ncouples != effMass.size())
+  {
     effMass.resize(ncouples, 0.0);
-    for(std::size_t i=0; i<ncouples; ++i) {
-      const G4Material* mat = 
-	theCoupleTable->GetMaterialCutsCouple((G4int)i)->GetMaterial();
+    for (std::size_t i = 0; i < ncouples; ++i)
+    {
+      const G4Material* mat = theCoupleTable->GetMaterialCutsCouple((G4int)i)->GetMaterial();
       const G4ElementVector* elmVector = mat->GetElementVector();
       std::size_t nelm = mat->GetNumberOfElements();
       G4double sum = 0.0;
-      G4double norm= 0.0;
-      for(std::size_t j=0; j<nelm; ++j) {
-	G4int Z = (*elmVector)[j]->GetZasInt();
-	G4double mass = fNistManager->GetAtomicMassAmu(Z)*CLHEP::amu_c2;
-	G4int Z2 = Z*Z;
-	sum += mass*Z2;
-	norm += Z2;
+      G4double norm = 0.0;
+      for (std::size_t j = 0; j < nelm; ++j)
+      {
+        G4int Z = (*elmVector)[j]->GetZasInt();
+        G4double mass = fNistManager->GetAtomicMassAmu(Z) * CLHEP::amu_c2;
+        G4int Z2 = Z * Z;
+        sum += mass * Z2;
+        norm += Z2;
       }
-      effMass[i] = (0.0 < norm) ? sum/norm : sum;
+      effMass[i] = (0.0 < norm) ? sum / norm : sum;
     }
   }
   l.unlock();

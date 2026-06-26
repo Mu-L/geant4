@@ -36,7 +36,7 @@
 
 #ifndef G4EVAPORATIONINUCL_COLLIDER_HH
 #define G4EVAPORATIONINUCL_COLLIDER_HH
- 
+
 #include "G4CascadeDeexciteBase.hh"
 
 class G4InuclParticle;
@@ -44,22 +44,24 @@ class G4CollisionOutput;
 class G4EquilibriumEvaporator;
 class G4BigBanger;
 
-class G4EvaporationInuclCollider : public G4CascadeDeexciteBase {
-public:
-  G4EvaporationInuclCollider();
-  ~G4EvaporationInuclCollider();
+class G4EvaporationInuclCollider : public G4CascadeDeexciteBase
+{
+  public:
 
-  virtual void deExcite(const G4Fragment& target, G4CollisionOutput& output);
-  
-private: 
-  G4EquilibriumEvaporator* theEquilibriumEvaporator;
+    G4EvaporationInuclCollider();
+    ~G4EvaporationInuclCollider();
 
-private:
-  // Copying of modules is forbidden
-  G4EvaporationInuclCollider(const G4EvaporationInuclCollider&);
-  G4EvaporationInuclCollider& operator=(const G4EvaporationInuclCollider&);
-};        
+    virtual void deExcite(const G4Fragment& target, G4CollisionOutput& output);
+
+  private:
+
+    G4EquilibriumEvaporator* theEquilibriumEvaporator;
+
+  private:
+
+    // Copying of modules is forbidden
+    G4EvaporationInuclCollider(const G4EvaporationInuclCollider&);
+    G4EvaporationInuclCollider& operator=(const G4EvaporationInuclCollider&);
+};
 
 #endif /* G4EVAPORATIONINUCL_COLLIDER_HH */
-
-

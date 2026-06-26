@@ -34,34 +34,37 @@
 // 12.04.2017 A.Dotti move to new design with base class
 //----------------------------------------------------------------------------
 //
- #include "G4DeuteronBuilder.hh"
- #include "G4ParticleDefinition.hh"
- #include "G4ParticleTable.hh"
- #include "G4ProcessManager.hh"
+#include "G4DeuteronBuilder.hh"
 
- 
- void G4DeuteronBuilder::Build()
- {
-   std::vector<G4VDeuteronBuilder *>::iterator i;
-   for(i=theModelCollections.begin(); i!=theModelCollections.end(); i++)
-   {
-     (*i)->Build(theDeuteronInelastic);
-   }
-   G4ProcessManager * theProcMan = G4Deuteron::Deuteron()->GetProcessManager();
-   theProcMan->AddDiscreteProcess(theDeuteronInelastic);
- }
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "G4ProcessManager.hh"
 
- G4DeuteronBuilder::G4DeuteronBuilder()
- {
-   theDeuteronInelastic=new G4HadronInelasticProcess( "dInelastic", G4Deuteron::Definition() );
- }
+void G4DeuteronBuilder::Build()
+{
+  std::vector<G4VDeuteronBuilder*>::iterator i;
+  for (i = theModelCollections.begin(); i != theModelCollections.end(); i++)
+  {
+    (*i)->Build(theDeuteronInelastic);
+  }
+  G4ProcessManager* theProcMan = G4Deuteron::Deuteron()->GetProcessManager();
+  theProcMan->AddDiscreteProcess(theDeuteronInelastic);
+}
 
- void G4DeuteronBuilder::RegisterMe(G4PhysicsBuilderInterface* aB) {
-   auto bld = dynamic_cast<G4VDeuteronBuilder*>(aB);
-   if ( bld != nullptr ) {
-       theModelCollections.push_back(bld);
-   } else {
-       G4PhysicsBuilderInterface::RegisterMe(aB);
-   }
- }
+G4DeuteronBuilder::G4DeuteronBuilder()
+{
+  theDeuteronInelastic = new G4HadronInelasticProcess("dInelastic", G4Deuteron::Definition());
+}
 
+void G4DeuteronBuilder::RegisterMe(G4PhysicsBuilderInterface* aB)
+{
+  auto bld = dynamic_cast<G4VDeuteronBuilder*>(aB);
+  if (bld != nullptr)
+  {
+    theModelCollections.push_back(bld);
+  }
+  else
+  {
+    G4PhysicsBuilderInterface::RegisterMe(aB);
+  }
+}

@@ -37,27 +37,31 @@
 class G4InuclParticle;
 class G4CollisionOutput;
 
-class G4VCascadeCollider {
-public:
-  G4VCascadeCollider(const G4String& name, G4int verbose=0);
+class G4VCascadeCollider
+{
+  public:
 
-  virtual ~G4VCascadeCollider() {}
+    G4VCascadeCollider(const G4String& name, G4int verbose = 0);
 
-  virtual void collide(G4InuclParticle* bullet, G4InuclParticle* target,
-		       G4CollisionOutput& output) = 0;
+    virtual ~G4VCascadeCollider() {}
 
-  virtual void setVerboseLevel(G4int verbose=0) { verboseLevel=verbose; }
+    virtual void collide(G4InuclParticle* bullet, G4InuclParticle* target,
+                         G4CollisionOutput& output) = 0;
 
-protected:
-  G4String theName;
-  G4int verboseLevel;
+    virtual void setVerboseLevel(G4int verbose = 0) { verboseLevel = verbose; }
 
-  virtual void setName(const G4String& name) { theName = name; }
+  protected:
 
-private:
-  // Copying of modules is forbidden
-  G4VCascadeCollider(const G4VCascadeCollider&);
-  G4VCascadeCollider& operator=(const G4VCascadeCollider&);
-};        
+    G4String theName;
+    G4int verboseLevel;
 
-#endif	/* G4V_CASCADE_COLLIDER_HH */
+    virtual void setName(const G4String& name) { theName = name; }
+
+  private:
+
+    // Copying of modules is forbidden
+    G4VCascadeCollider(const G4VCascadeCollider&);
+    G4VCascadeCollider& operator=(const G4VCascadeCollider&);
+};
+
+#endif /* G4V_CASCADE_COLLIDER_HH */

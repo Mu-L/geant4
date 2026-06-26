@@ -31,25 +31,24 @@
 
 #include "G4GPSModel.hh"
 
-#include "G4VGraphicsScene.hh"
-#include "G4GeneralParticleSourceData.hh"
-#include "G4VisAttributes.hh"
-#include "G4GeometryTolerance.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4Transform3D.hh"
-#include "G4Point3D.hh"
-#include "G4Circle.hh"
-#include "G4Tubs.hh"
 #include "G4Box.hh"
-#include "G4EllipticalTube.hh"
-#include "G4Orb.hh"
+#include "G4Circle.hh"
 #include "G4Ellipsoid.hh"
+#include "G4EllipticalTube.hh"
+#include "G4GeneralParticleSourceData.hh"
+#include "G4GeometryTolerance.hh"
+#include "G4Orb.hh"
 #include "G4Para.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4Point3D.hh"
+#include "G4Transform3D.hh"
+#include "G4Tubs.hh"
+#include "G4VGraphicsScene.hh"
+#include "G4VisAttributes.hh"
 
 #include <sstream>
 
-G4GPSModel::G4GPSModel (const G4Colour& colour)
-: fColour(colour)
+G4GPSModel::G4GPSModel(const G4Colour& colour) : fColour(colour)
 {
   fType = "G4GPSModel";
   std::ostringstream oss;
@@ -58,19 +57,19 @@ G4GPSModel::G4GPSModel (const G4Colour& colour)
   fGlobalDescription = fGlobalTag;
 }
 
-G4GPSModel::~G4GPSModel () {}
+G4GPSModel::~G4GPSModel() {}
 
-G4String G4GPSModel::GetCurrentTag () const
+G4String G4GPSModel::GetCurrentTag() const
 {
-return "";
+  return "";
 }
 
-G4String G4GPSModel::GetCurrentDescription () const
+G4String G4GPSModel::GetCurrentDescription() const
 {
-  return "G4GPSModel " + GetCurrentTag ();
+  return "G4GPSModel " + GetCurrentTag();
 }
 
-void G4GPSModel::DescribeYourselfTo (G4VGraphicsScene& sceneHandler)
+void G4GPSModel::DescribeYourselfTo(G4VGraphicsScene& sceneHandler)
 // The main task of a model is to describe itself to the graphics scene
 // handler (a object which inherits G4VSceneHandler, which inherits
 // G4VGraphicsScene).
@@ -85,8 +84,8 @@ void G4GPSModel::DescribeYourselfTo (G4VGraphicsScene& sceneHandler)
   if (!pGPSData) return;
 
   G4int nSources = pGPSData->GetSourceVectorSize();
-  for (G4int iSource = 0; iSource < nSources; ++iSource) {
-
+  for (G4int iSource = 0; iSource < nSources; ++iSource)
+  {
     const G4SingleParticleSource* pCurrentSingleSource = pGPSData->GetCurrentSource(iSource);
     if (!pCurrentSingleSource) return;
 
@@ -98,38 +97,38 @@ void G4GPSModel::DescribeYourselfTo (G4VGraphicsScene& sceneHandler)
     // Type can be: Point, Plane, Surface or Volume
     // Shape can be: Square, Circle, Ellipse, Rectangle,
     //    Sphere, Ellipsoid, Cylinder, Parallelepiped
-//    G4cout
-//    << "G4GPSModel::DescribeYourselfTo"
-//    << ": PosDisType: " << Type
-//    << ", Shape: " << Shape
-//    << G4endl;
+    //    G4cout
+    //    << "G4GPSModel::DescribeYourselfTo"
+    //    << ": PosDisType: " << Type
+    //    << ", Shape: " << Shape
+    //    << G4endl;
 
     const G4double& halfx = pSPSPosDistribution->GetHalfX();
     const G4double& halfy = pSPSPosDistribution->GetHalfY();
     const G4double& halfz = pSPSPosDistribution->GetHalfZ();
-    const G4double& Radius  = pSPSPosDistribution->GetRadius();
+    const G4double& Radius = pSPSPosDistribution->GetRadius();
     const G4double& Radius0 = pSPSPosDistribution->GetRadius0();
     const G4double& ParAlpha = pSPSPosDistribution->GetParAlpha();
     const G4double& ParTheta = pSPSPosDistribution->GetParTheta();
-    const G4double& ParPhi   = pSPSPosDistribution->GetParPhi();
+    const G4double& ParPhi = pSPSPosDistribution->GetParPhi();
 
     const G4ThreeVector& Rotx = pSPSPosDistribution->GetRotx();
     const G4ThreeVector& Roty = pSPSPosDistribution->GetRoty();
     const G4ThreeVector& Rotz = pSPSPosDistribution->GetRotz();
 
     const G4ThreeVector& position = pSPSPosDistribution->GetCentreCoords();
-    G4Transform3D transform(CLHEP::HepXHat,CLHEP::HepYHat,CLHEP::HepZHat,Rotx,Roty,Rotz);
+    G4Transform3D transform(CLHEP::HepXHat, CLHEP::HepYHat, CLHEP::HepZHat, Rotx, Roty, Rotz);
     transform = G4Translate3D(position) * transform;
 
     G4double surfaceTolerance = G4GeometryTolerance::GetInstance()->GetSurfaceTolerance();
-    G4double smallHalfThickness = 10.*surfaceTolerance;
+    G4double smallHalfThickness = 10. * surfaceTolerance;
 
     G4VisAttributes gpsAtts;
     gpsAtts.SetColour(fColour);
     gpsAtts.SetForceSolid();
-    
-    if (Type == "Point") {
 
+    if (Type == "Point")
+    {
       G4Circle circle;
       circle.SetPosition(position);
       circle.SetScreenDiameter(10.);
@@ -137,49 +136,56 @@ void G4GPSModel::DescribeYourselfTo (G4VGraphicsScene& sceneHandler)
       sceneHandler.BeginPrimitives(transform);
       sceneHandler.AddPrimitive(circle);
       sceneHandler.EndPrimitives();
-
-    } else if (Type == "Plane") {
-
+    }
+    else if (Type == "Plane")
+    {
       // Code based on G4SPSPosDistribution::GeneratePointsInPlane.
-      sceneHandler.PreAddSolid(transform,gpsAtts);
-      if (Shape == "Circle") {
-        sceneHandler.AddSolid
-        (G4Tubs("GPS_Circle",0.,Radius,smallHalfThickness,0.,twopi));
-      } else if (Shape == "Annulus") {
-        sceneHandler.AddSolid
-        (G4Tubs("GPS_Annulus",Radius0,Radius,smallHalfThickness,0.,twopi));
-      } else if (Shape == "Ellipse") {
-        sceneHandler.AddSolid
-        (G4EllipticalTube("GPS_Ellipse",halfx,halfy,smallHalfThickness));
-      } else if (Shape == "Square") {
-        sceneHandler.AddSolid
-        (G4Box("GPS_Ellipse",halfx,halfx,smallHalfThickness));
-      } else if (Shape == "Rectangle") {
-        sceneHandler.AddSolid
-        (G4Box("GPS_Rectangle",halfx,halfy,smallHalfThickness));
+      sceneHandler.PreAddSolid(transform, gpsAtts);
+      if (Shape == "Circle")
+      {
+        sceneHandler.AddSolid(G4Tubs("GPS_Circle", 0., Radius, smallHalfThickness, 0., twopi));
+      }
+      else if (Shape == "Annulus")
+      {
+        sceneHandler.AddSolid(
+          G4Tubs("GPS_Annulus", Radius0, Radius, smallHalfThickness, 0., twopi));
+      }
+      else if (Shape == "Ellipse")
+      {
+        sceneHandler.AddSolid(G4EllipticalTube("GPS_Ellipse", halfx, halfy, smallHalfThickness));
+      }
+      else if (Shape == "Square")
+      {
+        sceneHandler.AddSolid(G4Box("GPS_Ellipse", halfx, halfx, smallHalfThickness));
+      }
+      else if (Shape == "Rectangle")
+      {
+        sceneHandler.AddSolid(G4Box("GPS_Rectangle", halfx, halfy, smallHalfThickness));
       }
       sceneHandler.PostAddSolid();
-
-    } else if (Type == "Surface" || Type == "Volume") {
-      
+    }
+    else if (Type == "Surface" || Type == "Volume")
+    {
       // Code based on G4SPSPosDistribution::GeneratePointsOnSurface.
       // and           G4SPSPosDistribution::GeneratePointsInVolume.
-      sceneHandler.PreAddSolid(transform,gpsAtts);
-      if (Shape == "Sphere") {
-        sceneHandler.AddSolid
-        (G4Orb("GPS_Sphere",Radius));
-      } else if (Shape == "Ellipsoid") {
-        sceneHandler.AddSolid
-        (G4Ellipsoid("GPS_Ellipsoid",halfx,halfy,halfz));
-      } else if (Shape == "Cylinder") {
-        sceneHandler.AddSolid
-        (G4Tubs("GPS_Cylinder",0.,Radius, halfz, 0., twopi));
-      } else if (Shape == "Para") {
-        sceneHandler.AddSolid
-        (G4Para("GPS_Para",halfx,halfy,halfz,ParAlpha,ParTheta,ParPhi));
+      sceneHandler.PreAddSolid(transform, gpsAtts);
+      if (Shape == "Sphere")
+      {
+        sceneHandler.AddSolid(G4Orb("GPS_Sphere", Radius));
+      }
+      else if (Shape == "Ellipsoid")
+      {
+        sceneHandler.AddSolid(G4Ellipsoid("GPS_Ellipsoid", halfx, halfy, halfz));
+      }
+      else if (Shape == "Cylinder")
+      {
+        sceneHandler.AddSolid(G4Tubs("GPS_Cylinder", 0., Radius, halfz, 0., twopi));
+      }
+      else if (Shape == "Para")
+      {
+        sceneHandler.AddSolid(G4Para("GPS_Para", halfx, halfy, halfz, ParAlpha, ParTheta, ParPhi));
       }
       sceneHandler.PostAddSolid();
-
     }
   }
 }

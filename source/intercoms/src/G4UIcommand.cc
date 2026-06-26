@@ -64,7 +64,8 @@ void G4UIcommand::G4UIcommandCommonConstructorCode(const char* theCommandPath)
     toBeBroadcasted = false;
     G4UImanager::GetMasterUIpointer()->AddNewCommand(this);
   }
-  else {
+  else
+  {
     G4UImanager::GetUIpointer()->AddNewCommand(this);
   }
 #else
@@ -75,13 +76,16 @@ void G4UIcommand::G4UIcommandCommonConstructorCode(const char* theCommandPath)
 // --------------------------------------------------------------------
 void G4UIcommand::SetCommandType(CommandType typ)
 {
-  if (messenger == nullptr) {  // this must be a directory
-    if (typ != CmdDirectory) {
+  if (messenger == nullptr)
+  {  // this must be a directory
+    if (typ != CmdDirectory)
+    {
       G4ExceptionDescription ed;
       ed << "A UI command <" << commandPath << "> is defined without vaild messenger.";
       G4Exception("G4UIcommand::SetCommandType", "UI2031", FatalException, ed);
     }
-    else if (commandPath.back() != '/') {
+    else if (commandPath.back() != '/')
+    {
       G4ExceptionDescription ed;
       ed << "G4UIcommand Warning : \n"
          << "  <" << commandPath << "> must be a directory."
@@ -97,11 +101,13 @@ void G4UIcommand::SetCommandType(CommandType typ)
 G4UIcommand::~G4UIcommand()
 {
   G4UImanager* fUImanager = G4UImanager::GetUIpointer();
-  if (fUImanager != nullptr) {
+  if (fUImanager != nullptr)
+  {
     fUImanager->RemoveCommand(this);
   }
 
-  for (const auto& p : parameter) {
+  for (const auto& p : parameter)
+  {
     delete p;
   }
 }
@@ -123,19 +129,25 @@ G4int G4UIcommand::DoIt(const G4String& parameterList)
 {
   G4String correctParameters;
   std::size_t n_parameterEntry = parameter.size();
-  if (n_parameterEntry != 0) {
+  if (n_parameterEntry != 0)
+  {
     G4String aToken;
     G4String correctToken;
     G4Tokenizer parameterToken(parameterList);
-    for (std::size_t i_thParameter = 0; i_thParameter < n_parameterEntry; ++i_thParameter) {
-      if (i_thParameter > 0) {
+    for (std::size_t i_thParameter = 0; i_thParameter < n_parameterEntry; ++i_thParameter)
+    {
+      if (i_thParameter > 0)
+      {
         correctParameters.append(" ");
       }
       aToken = parameterToken();
-      if (aToken.length() > 0 && aToken[0] == '"') {
-        while (aToken.back() != '"' || (aToken.length() == 1 && aToken[0] == '"')) {
+      if (aToken.length() > 0 && aToken[0] == '"')
+      {
+        while (aToken.back() != '"' || (aToken.length() == 1 && aToken[0] == '"'))
+        {
           G4String additionalToken = parameterToken();
-          if (additionalToken.empty()) {
+          if (additionalToken.empty())
+          {
             return G4int(fParameterUnreadable + i_thParameter);
           }
           aToken += " ";
@@ -146,34 +158,45 @@ G4int G4UIcommand::DoIt(const G4String& parameterList)
                && parameter[i_thParameter]->GetParameterType() == 's')
       {
         G4String anotherToken;
-        while (!((anotherToken = parameterToken()).empty())) {
+        while (!((anotherToken = parameterToken()).empty()))
+        {
           std::size_t idxs = anotherToken.find('#');
-          if (idxs == std::string::npos) {
+          if (idxs == std::string::npos)
+          {
             aToken += " ";
             aToken += anotherToken;
           }
-          else if (idxs > 0) {
+          else if (idxs > 0)
+          {
             aToken += " ";
             aToken += anotherToken.substr(0, idxs);
             break;
           }
-          else {
+          else
+          {
             break;
           }
         }
       }
 
-      if (aToken.empty() || aToken == "!") {
-        if (parameter[i_thParameter]->IsOmittable()) {
-          if (parameter[i_thParameter]->GetCurrentAsDefault()) {
+      if (aToken.empty() || aToken == "!")
+      {
+        if (parameter[i_thParameter]->IsOmittable())
+        {
+          if (parameter[i_thParameter]->GetCurrentAsDefault())
+          {
             G4Tokenizer cvSt(messenger->GetCurrentValue(this));
             G4String parVal;
-            for (std::size_t ii = 0; ii < i_thParameter; ++ii) {
+            for (std::size_t ii = 0; ii < i_thParameter; ++ii)
+            {
               parVal = cvSt();
-              if (parVal[0] == '"') {
-                while (parVal.back() != '"') {
+              if (parVal[0] == '"')
+              {
+                while (parVal.back() != '"')
+                {
                   G4String additionalToken = cvSt();
-                  if (additionalToken.empty()) {
+                  if (additionalToken.empty())
+                  {
                     return G4int(fParameterUnreadable + i_thParameter);
                   }
                   parVal += " ";
@@ -182,10 +205,13 @@ G4int G4UIcommand::DoIt(const G4String& parameterList)
               }
             }
             G4String aCVToken = cvSt();
-            if (aCVToken[0] == '"') {
-              while (aCVToken.back() != '"') {
+            if (aCVToken[0] == '"')
+            {
+              while (aCVToken.back() != '"')
+              {
                 G4String additionalToken = cvSt();
-                if (additionalToken.empty()) {
+                if (additionalToken.empty())
+                {
                   return G4int(fParameterUnreadable + i_thParameter);
                 }
                 aCVToken += " ";
@@ -194,17 +220,21 @@ G4int G4UIcommand::DoIt(const G4String& parameterList)
             }
             correctParameters.append(aCVToken);
           }
-          else {
+          else
+          {
             correctParameters.append(parameter[i_thParameter]->GetDefaultValue());
           }
         }
-        else {
+        else
+        {
           return G4int(fParameterUnreadable + i_thParameter);
         }
       }
-      else {
+      else
+      {
         G4int stat = parameter[i_thParameter]->CheckNewValue(aToken);
-        if (stat != 0) {
+        if (stat != 0)
+        {
           return stat + G4int(i_thParameter);
         }
         correctParameters.append(aToken);
@@ -212,11 +242,13 @@ G4int G4UIcommand::DoIt(const G4String& parameterList)
     }
   }
 
-  if (CheckNewValue(correctParameters) != 0) {
+  if (CheckNewValue(correctParameters) != 0)
+  {
     return fParameterOutOfRange + 99;
   }
 
-  if (workerThreadOnly && G4Threading::IsMasterThread()) {
+  if (workerThreadOnly && G4Threading::IsMasterThread())
+  {
     return 0;
   }
 
@@ -269,8 +301,10 @@ G4bool G4UIcommand::IsAvailable()
 {
   G4ApplicationState currentState = G4StateManager::GetStateManager()->GetCurrentState();
 
-  for (const auto& s : availabelStateList) {
-    if (s == currentState) {
+  for (const auto& s : availabelStateList)
+  {
+    if (s == currentState)
+    {
       return true;
     }
   }
@@ -299,7 +333,8 @@ G4String G4UIcommand::UnitsList(const char* unitCategory)
     return ud->GetName() == unitCategory;
   });
 
-  if (ucatIter == std::cend(UTbl)) {
+  if (ucatIter == std::cend(UTbl))
+  {
     G4cerr << "Unit category <" << unitCategory << "> is not defined." << G4endl;
     return G4String();
   }
@@ -308,7 +343,8 @@ G4String G4UIcommand::UnitsList(const char* unitCategory)
   G4String nameList;
   G4UnitsContainer& UCnt = (*ucatIter)->GetUnitsList();
 
-  for (const auto& uDef : UCnt) {
+  for (const auto& uDef : UCnt)
+  {
     symList += uDef->GetSymbol();
     symList += " ";
     nameList += uDef->GetName();
@@ -324,23 +360,28 @@ void G4UIcommand::List()
 {
   G4cout << G4endl;
   G4cout << G4endl;
-  if (commandPath.back() != '/') {
+  if (commandPath.back() != '/')
+  {
     G4cout << "Command " << commandPath << G4endl;
   }
-  if (workerThreadOnly) {
+  if (workerThreadOnly)
+  {
     G4cout << "    ---- available only in worker thread" << G4endl;
   }
 
   G4cout << "Guidance :" << G4endl;
-  for (const auto& i_thGuidance : commandGuidance) {
+  for (const auto& i_thGuidance : commandGuidance)
+  {
     G4cout << i_thGuidance << G4endl;
   }
 
-  if (!rangeExpression.empty()) {
+  if (!rangeExpression.empty())
+  {
     G4cout << " Range of parameters : " << rangeExpression << G4endl;
   }
 
-  for (const auto& i_thParameter : parameter) {
+  for (const auto& i_thParameter : parameter)
+  {
     i_thParameter->List();
   }
   G4cout << G4endl;
@@ -368,7 +409,8 @@ G4String G4UIcommand::ConvertToString(G4long longValue)
 G4String G4UIcommand::ConvertToString(G4double doubleValue)
 {
   std::ostringstream os;
-  if (G4UImanager::DoublePrecisionStr()) {
+  if (G4UImanager::DoublePrecisionStr())
+  {
     os << std::setprecision(17);
   }
   os << doubleValue;
@@ -379,7 +421,8 @@ G4String G4UIcommand::ConvertToString(G4double doubleValue)
 G4String G4UIcommand::ConvertToString(G4double doubleValue, const char* unitName)
 {
   std::ostringstream os;
-  if (G4UImanager::DoublePrecisionStr()) {
+  if (G4UImanager::DoublePrecisionStr())
+  {
     os << std::setprecision(17);
   }
   os << doubleValue / ValueOf(unitName) << " " << unitName;
@@ -390,7 +433,8 @@ G4String G4UIcommand::ConvertToString(G4double doubleValue, const char* unitName
 G4String G4UIcommand::ConvertToString(const G4ThreeVector& vec)
 {
   std::ostringstream os;
-  if (G4UImanager::DoublePrecisionStr()) {
+  if (G4UImanager::DoublePrecisionStr())
+  {
     os << std::setprecision(17);
   }
   os << vec.x() << " " << vec.y() << " " << vec.z();
@@ -403,7 +447,8 @@ G4String G4UIcommand::ConvertToString(const G4ThreeVector& vec, const char* unit
   G4double uv = ValueOf(unitName);
 
   std::ostringstream os;
-  if (G4UImanager::DoublePrecisionStr()) {
+  if (G4UImanager::DoublePrecisionStr())
+  {
     os << std::setprecision(17);
   }
   os << vec.x() / uv << " " << vec.y() / uv << " " << vec.z() / uv << " " << unitName;
@@ -475,7 +520,8 @@ G4ThreeVector G4UIcommand::ConvertToDimensioned3Vector(const char* st)
 
 G4int G4UIcommand::CheckNewValue(const char* newValue)
 {
-  if (!G4UIparsing::RangeCheck(*this, newValue)) {
+  if (!G4UIparsing::RangeCheck(*this, newValue))
+  {
     return fParameterOutOfRange;
   }
   return 0;  // succeeded

@@ -26,35 +26,32 @@
 //
 //
 // -------------------------------------------------------------------
-//      GEANT 4 class header file 
+//      GEANT 4 class header file
 //
 //      CERN, Geneva, Switzerland
 //
 //      File name:     G4KM_DummyField.hh
 //
 //      Author:        Alessandro Brunengo (Alessandro.Brunengo@ge.infn.it)
-// 
+//
 //      Creation date: 5 June 2000
 // -------------------------------------------------------------------
 
-#ifndef G4KM_DummyField_hh
-#define G4KM_DummyField_hh
+#ifndef G4KM_DUMMYFIELD_HH
+#define G4KM_DUMMYFIELD_HH
 
-#include "globals.hh"
 #include "G4MagneticField.hh"
+#include "globals.hh"
 
 class G4KM_DummyField : public G4MagneticField
 {
-public:
-  
-  G4KM_DummyField() { }
-  ~G4KM_DummyField() { }
+  public:
 
-  void  GetFieldValue(const G4double [], G4double * ) const { }
-  G4Field* Clone() const { return new G4KM_DummyField; }
+    G4KM_DummyField() {}
+    ~G4KM_DummyField() {}
+
+    void GetFieldValue(const G4double[], G4double*) const {}
+    G4Field* Clone() const { return new G4KM_DummyField; }
 };
 
 #endif
-
-
-

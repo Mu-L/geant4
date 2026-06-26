@@ -9,7 +9,7 @@
 // * include a list of copyright holders.                             *
 // *                                                                  *
 // * Neither the authors of this software system, nor their employing *
-// * institutes,nor the agencies providing financial support for this * 
+// * institutes,nor the agencies providing financial support for this *
 // * work  make  any representation or  warranty, express or implied, *
 // * regarding  this  software system or assume any liability for its *
 // * use.  Please see the license in the file  LICENSE  and URL above *
@@ -29,7 +29,7 @@
 //
 // Container for magnetic charge and moments.
 
-// Authors: J.Apostolakis (CERN), P.Gumplinger (TRIUMF), 10.04.2013  
+// Authors: J.Apostolakis (CERN), P.Gumplinger (TRIUMF), 10.04.2013
 // -------------------------------------------------------------------
 #ifndef G4CHARGESTATE_HH
 #define G4CHARGESTATE_HH
@@ -38,6 +38,7 @@
 
 /**
  * @brief G4ChargeState is a container for magnetic charge and moments.
+ * @ingroup geometry_magneticfield
  */
 
 class G4ChargeState
@@ -52,17 +53,14 @@ class G4ChargeState
      *  @param[in] electric_dipole_moment Electric dipole moment.
      *  @param[in] magnetic_charge Magnetic charge for monopoles.
      */
-    inline G4ChargeState(G4double charge,
-                         G4double magnetic_dipole_moment,
-                         G4double pdgSpin, 
-                         G4double electric_dipole_moment = 0.0,
-                         G4double magnetic_charge = 0.0);
+    inline G4ChargeState(G4double charge, G4double magnetic_dipole_moment, G4double pdgSpin,
+                         G4double electric_dipole_moment = 0.0, G4double magnetic_charge = 0.0);
 
     /**
      * Copy constructor and assignment operator.
      */
-    inline G4ChargeState( const G4ChargeState& right );
-    inline G4ChargeState& operator = ( const G4ChargeState& right );
+    inline G4ChargeState(const G4ChargeState& right);
+    inline G4ChargeState& operator=(const G4ChargeState& right);
 
     /**
      * Default Destructor.
@@ -73,11 +71,10 @@ class G4ChargeState
      * Revises the charge, pdgSpin, and optionally both moments and
      * magnetic charge.
      */
-    void SetChargeSpinMoments(G4double charge,
-                              G4double pdgSpin,  
-                              G4double magnetic_dipole_moment= DBL_MAX,
-                              G4double electric_dipole_moment= DBL_MAX,
-                              G4double magnetic_charge= DBL_MAX );
+    void SetChargeSpinMoments(G4double charge, G4double pdgSpin,
+                              G4double magnetic_dipole_moment = DBL_MAX,
+                              G4double electric_dipole_moment = DBL_MAX,
+                              G4double magnetic_charge = DBL_MAX);
 
     /**
      * Revises the charge (in units of the positron charge).
@@ -103,26 +100,21 @@ class G4ChargeState
      * Auxiliary methods to set several properties at once.
      */
     inline void SetChargeMdm(G4double charge, G4double mag_dipole_moment);
-    inline void SetChargeMdmSpin(G4double charge,
-                                 G4double magnetic_dipole_moment,
+    inline void SetChargeMdmSpin(G4double charge, G4double magnetic_dipole_moment,
                                  G4double pdgSpin);
-    inline void SetChargeSpin(G4double charge,
-                              G4double pdgSpin); 
-    inline void SetChargeDipoleMoments(G4double charge,
-                                       G4double magnetic_dipole_moment,
+    inline void SetChargeSpin(G4double charge, G4double pdgSpin);
+    inline void SetChargeDipoleMoments(G4double charge, G4double magnetic_dipole_moment,
                                        G4double electric_dipole_moment);
-    inline void SetChargesAndMoments(G4double charge,
-                                     G4double magnetic_dipole_moment, 
-                                     G4double electric_dipole_moment,
-                                     G4double magnetic_charge );
+    inline void SetChargesAndMoments(G4double charge, G4double magnetic_dipole_moment,
+                                     G4double electric_dipole_moment, G4double magnetic_charge);
 
-   private:
+  private:
 
-     G4double fCharge;
-     G4double fSpin;
-     G4double fMagn_dipole;
-     G4double fElec_dipole;
-     G4double fMagneticCharge;  // for magnetic monopole
+    G4double fCharge;
+    G4double fSpin;
+    G4double fMagn_dipole;
+    G4double fElec_dipole;
+    G4double fMagneticCharge;  // for magnetic monopole
 };
 
 // Inline methods implementation

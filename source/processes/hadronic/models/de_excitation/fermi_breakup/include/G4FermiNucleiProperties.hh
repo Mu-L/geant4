@@ -33,12 +33,14 @@
 
 #include "G4FermiDataTypes.hh"
 #include "globals.hh"
+
 #include <vector>
 
 // Caches values from larger G4NucleiProperties(x5-10 speed boost)
 class G4FermiNucleiProperties
 {
   public:
+
     void Initialize() { *this = G4FermiNucleiProperties(); }
 
     template<typename DataSource>
@@ -54,7 +56,8 @@ class G4FermiNucleiProperties
       static_assert(
         std::is_same_v<typename Iter::value_type, std::pair<const G4FermiNucleiData, G4double>>,
         "invalid iterator");
-      for (auto it = begin; it != end; ++it) {
+      for (auto it = begin; it != end; ++it)
+      {
         InsertNuclei(it->first.atomicMass, it->first.chargeNumber, it->second);
       }
     }
@@ -79,6 +82,7 @@ class G4FermiNucleiProperties
     }
 
   private:
+
     G4FermiNucleiProperties();
 
     G4double GetNuclearMassImpl(G4FermiAtomicMass atomicMass,

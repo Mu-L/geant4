@@ -26,26 +26,29 @@
 //
 //---------------------------------------------------------------------------
 
-#ifndef G4HadronPhysicsQGSP_BIC_AllHP_h
-#define G4HadronPhysicsQGSP_BIC_AllHP_h 1
+#ifndef G4HADRONPHYSICSQGSP_BIC_ALLHP_HH
+#define G4HADRONPHYSICSQGSP_BIC_ALLHP_HH
 
 #include "G4HadronPhysicsQGSP_BIC_HP.hh"
 
-
-class G4HadronPhysicsQGSP_BIC_AllHP : public G4HadronPhysicsQGSP_BIC_HP {
+class G4HadronPhysicsQGSP_BIC_AllHP : public G4HadronPhysicsQGSP_BIC_HP
+{
   public:
-    G4HadronPhysicsQGSP_BIC_AllHP( G4int verbose = 1 );
-    G4HadronPhysicsQGSP_BIC_AllHP( const G4String& name, G4bool quasiElastic = true );
+
+    G4HadronPhysicsQGSP_BIC_AllHP(G4int verbose = 1);
+    G4HadronPhysicsQGSP_BIC_AllHP(const G4String& name, G4bool quasiElastic = true);
     ~G4HadronPhysicsQGSP_BIC_AllHP() override = default;
 
     // copy constructor and hide assignment operator
-    G4HadronPhysicsQGSP_BIC_AllHP(G4HadronPhysicsQGSP_BIC_AllHP &) = delete;
-    G4HadronPhysicsQGSP_BIC_AllHP & operator =
-    (const G4HadronPhysicsQGSP_BIC_AllHP &right) = delete;
+    G4HadronPhysicsQGSP_BIC_AllHP(G4HadronPhysicsQGSP_BIC_AllHP&) = delete;
+    G4HadronPhysicsQGSP_BIC_AllHP& operator=(const G4HadronPhysicsQGSP_BIC_AllHP& right) = delete;
+
   protected:
+
     void Proton() override;
 
   private:
+
     G4double maxHP_proton;
     G4double minBIC_proton;
 };

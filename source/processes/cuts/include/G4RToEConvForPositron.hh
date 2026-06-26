@@ -31,25 +31,23 @@
 
 // Author: H.Kurashige, 05 October 2002 - First implementation
 // --------------------------------------------------------------------
-#ifndef G4RToEConvForPositron_hh
-#define G4RToEConvForPositron_hh 1
+#ifndef G4RTOECONVFORPOSITRON_HH
+#define G4RTOECONVFORPOSITRON_HH
 
-#include "globals.hh"
 #include "G4VRangeToEnergyConverter.hh"
+#include "globals.hh"
 
 class G4RToEConvForPositron : public G4VRangeToEnergyConverter
 {
-public:
+  public:
 
-  explicit G4RToEConvForPositron();
+    explicit G4RToEConvForPositron();
 
-  virtual ~G4RToEConvForPositron();
+    virtual ~G4RToEConvForPositron();
 
-protected:
+  protected:
 
-  G4double ComputeValue(const G4int Z, const G4double kinEnergy) final;
-
+    G4double ComputeValue(const G4int Z, const G4double kinEnergy) final;
 };
-
 
 #endif

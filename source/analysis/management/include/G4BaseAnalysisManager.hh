@@ -29,20 +29,20 @@
 
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
-#ifndef G4BaseAnalysisManager_h
-#define G4BaseAnalysisManager_h 1
-
-#include "G4Fcn.hh"
-#include "G4BinScheme.hh"
-#include "globals.hh"
+#ifndef G4BASEANALYSISMANAGER_HH
+#define G4BASEANALYSISMANAGER_HH
 
 #include "G4AnalysisManagerState.hh"
+#include "G4BinScheme.hh"
+#include "G4Fcn.hh"
+#include "globals.hh"
 
 #include <string_view>
 
 class G4BaseAnalysisManager
 {
   public:
+
     explicit G4BaseAnalysisManager(const G4AnalysisManagerState& state);
     G4BaseAnalysisManager() = delete;
     virtual ~G4BaseAnalysisManager() = default;
@@ -51,54 +51,57 @@ class G4BaseAnalysisManager
     // starting from 0; with the following function it is possible to
     // change the first Id to start from other value
     G4bool SetFirstId(G4int firstId);
-    void  SetLockFirstId(G4bool lockFirstId);
+    void SetLockFirstId(G4bool lockFirstId);
 
     // Access method
     G4int GetFirstId() const;
     G4int GetCycle() const;
 
   protected:
+
     // Methods for verbose
     G4bool IsVerbose(G4int verboseLevel) const;
-    void Message(G4int level,
-                 const G4String& action,
-                 const G4String& objectType,
-                 const G4String& objectName = "",
-                 G4bool success = true) const;
+    void Message(G4int level, const G4String& action, const G4String& objectType,
+                 const G4String& objectName = "", G4bool success = true) const;
 
     // Data members
     const G4AnalysisManagerState& fState;
-    G4int    fFirstId { 0 };
-    G4bool   fLockFirstId { false };
+    G4int fFirstId{0};
+    G4bool fLockFirstId{false};
 
   private:
+
     // Static data members
-    static constexpr std::string_view fkClass { "G4BaseAnalysisManager" };
+    static constexpr std::string_view fkClass{"G4BaseAnalysisManager"};
 };
 
 // inline functions
 
 inline G4bool G4BaseAnalysisManager::IsVerbose(G4int verboseLevel) const
-{ return fState.IsVerbose(verboseLevel); }
+{
+  return fState.IsVerbose(verboseLevel);
+}
 
-inline void G4BaseAnalysisManager::Message(
-  G4int level, const G4String& action, const G4String& objectType,
-  const G4String& objectName, G4bool success) const
+inline void G4BaseAnalysisManager::Message(G4int level, const G4String& action,
+                                           const G4String& objectType, const G4String& objectName,
+                                           G4bool success) const
 {
   fState.Message(level, action, objectType, objectName, success);
 }
 
-inline void G4BaseAnalysisManager::SetLockFirstId(G4bool lockFirstId) {
+inline void G4BaseAnalysisManager::SetLockFirstId(G4bool lockFirstId)
+{
   fLockFirstId = lockFirstId;
 }
 
-inline G4int G4BaseAnalysisManager::GetFirstId() const {
+inline G4int G4BaseAnalysisManager::GetFirstId() const
+{
   return fFirstId;
 }
 
-inline G4int G4BaseAnalysisManager::GetCycle() const {
+inline G4int G4BaseAnalysisManager::GetCycle() const
+{
   return fState.GetCycle();
 }
 
 #endif
-

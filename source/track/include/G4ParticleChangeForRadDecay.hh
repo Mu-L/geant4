@@ -31,8 +31,8 @@
 
 // Author: Hisaya Kurashige, 25 January 2000
 // --------------------------------------------------------------------
-#ifndef G4ParticleChangeForRadDecay_hh
-#define G4ParticleChangeForRadDecay_hh 1
+#ifndef G4PARTICLECHANGEFORRADDECAY_HH
+#define G4PARTICLECHANGEFORRADDECAY_HH
 
 #include "G4ParticleChangeForDecay.hh"
 

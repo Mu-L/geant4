@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,15 +41,18 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#pragma once
+#ifndef G4VITSTEPMODEL_HH
+#define G4VITSTEPMODEL_HH
 
-#include "AddClone_def.hh"
-#include "G4VITTimeStepComputer.hh"
-#include "G4VITReactionProcess.hh"
 #include "G4ITReactionTable.hh"
 #include "G4ITType.hh"
+#include "G4VITReactionProcess.hh"
+#include "G4VITTimeStepComputer.hh"
+
+#include "AddClone_def.hh"
+
 #include <memory>
 
 /**
@@ -60,7 +63,8 @@
  */
 class G4VITStepModel
 {
-public:
+  public:
+
     G4VITStepModel(const G4String& aName = "NoName");
     G4VITStepModel(std::unique_ptr<G4VITTimeStepComputer> pTimeStepper,
                    std::unique_ptr<G4VITReactionProcess> pReactionProcess,
@@ -75,7 +79,7 @@ public:
     void PrepareNewTimeStep();
 
     void GetApplicable(G4ITType& type1, G4ITType& type2);
-    virtual void PrintInfo() {;}
+    virtual void PrintInfo() { ; }
 
     G4VITTimeStepComputer* GetTimeStepper();
     const G4String& GetName();
@@ -84,13 +88,16 @@ public:
     void SetReactionTable(G4ITReactionTable*);
     const G4ITReactionTable* GetReactionTable();
 
-protected:
+  protected:
+
     G4String fName;
 
     std::unique_ptr<G4VITTimeStepComputer> fpTimeStepper;
     std::unique_ptr<G4VITReactionProcess> fpReactionProcess;
-    const G4ITReactionTable* fpReactionTable ;
+    const G4ITReactionTable* fpReactionTable;
 
     G4ITType fType1;
     G4ITType fType2;
 };
+
+#endif

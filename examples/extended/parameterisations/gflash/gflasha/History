@@ -4,8 +4,21 @@ See `CONTRIBUTING.rst` for details of **required** info/format for each entry,
 which **must** added in reverse chronological order (newest at the top). It must **not**
 be used as a substitute for writing good git commit messages!
 
+## 2026-05-28   I. Semeniouk  (exgflasha-V11-04-02)
+  - remove delete GFlash classes in DetectorConstruction
+  - remove static G4ThreadLocal pointers to GFlash classes
+
+## 2026-04-08   I. Semeniouk  (exgflasha-V11-04-01)
+ - code cleanup
+ - pass Gflash classes by pointer
+ - History file indentation fix
+
+## 2026-03-04   I. Semeniouk  (exgflasha-V11-04-00)
+ - ExGflashMessenger - limit max number of crystals per raw/col
+ - ExGflashDetectorConstruction - not use GFlashHomoShowerParameterisation::SetMaterial call, potentially erroneous.
+
 ## 2024-10-28   I. Semeniouk  (exgflasha-V11-02-02)
-- ExGflashHistoManager - fix fVerbose used but uninitialised
+ - ExGflashHistoManager - fix fVerbose used but uninitialised
 
 ## 2024-10-21   I. Semeniouk  (exgflasha-V11-02-01)
  - Code cleanup

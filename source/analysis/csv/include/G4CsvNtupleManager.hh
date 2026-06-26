@@ -28,8 +28,8 @@
 //
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
-#ifndef G4CsvNtupleManager_h
-#define G4CsvNtupleManager_h 1
+#ifndef G4CSVNTUPLEMANAGER_HH
+#define G4CSVNTUPLEMANAGER_HH
 
 #include "G4TNtupleManager.hh"
 #include "globals.hh"
@@ -45,18 +45,19 @@ using CsvNtupleDescription = G4TNtupleDescription<tools::wcsv::ntuple, std::ofst
 
 class G4CsvFileManager;
 
-class G4CsvNtupleManager : public G4TNtupleManager<tools::wcsv::ntuple,
-                                                   std::ofstream>
+class G4CsvNtupleManager : public G4TNtupleManager<tools::wcsv::ntuple, std::ofstream>
 {
-  friend class G4CsvAnalysisManager;
-  friend class G4CsvNtupleFileManager;
+    friend class G4CsvAnalysisManager;
+    friend class G4CsvNtupleFileManager;
 
   public:
+
     explicit G4CsvNtupleManager(const G4AnalysisManagerState& state);
     G4CsvNtupleManager() = delete;
     ~G4CsvNtupleManager() override = default;
 
   private:
+
     // Functions specific to the output type
 
     // Set methods
@@ -77,30 +78,35 @@ class G4CsvNtupleManager : public G4TNtupleManager<tools::wcsv::ntuple,
     G4bool WriteHeader(tools::wcsv::ntuple* ntuple) const;
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4CsvNtupleManager" };
+    static constexpr std::string_view fkClass{"G4CsvNtupleManager"};
 
     // data members
-    std::shared_ptr<G4CsvFileManager>  fFileManager { nullptr };
-    G4bool  fIsCommentedHeader { true };
-    G4bool  fIsHippoHeader { false };
+    std::shared_ptr<G4CsvFileManager> fFileManager{nullptr};
+    G4bool fIsCommentedHeader{true};
+    G4bool fIsHippoHeader{false};
 };
 
 // inline functions
 
-inline void
-G4CsvNtupleManager::SetFileManager(std::shared_ptr<G4CsvFileManager> fileManager)
+inline void G4CsvNtupleManager::SetFileManager(std::shared_ptr<G4CsvFileManager> fileManager)
 {
   fFileManager = std::move(fileManager);
 }
 
 inline const std::vector<G4TNtupleDescription<tools::wcsv::ntuple, std::ofstream>*>&
 G4CsvNtupleManager::GetNtupleDescriptionVector() const
-{ return fNtupleDescriptionVector; }
+{
+  return fNtupleDescriptionVector;
+}
 
 inline void G4CsvNtupleManager::SetIsCommentedHeader(G4bool isCommentedHeader)
-{ fIsCommentedHeader = isCommentedHeader; }
+{
+  fIsCommentedHeader = isCommentedHeader;
+}
 
 inline void G4CsvNtupleManager::SetIsHippoHeader(G4bool isHippoHeader)
-{ fIsHippoHeader = isHippoHeader; }
+{
+  fIsHippoHeader = isHippoHeader;
+}
 
 #endif

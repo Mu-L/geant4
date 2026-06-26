@@ -27,63 +27,55 @@
 #include <mutex>
 
 #ifndef G4GMAKE
-#include "G4FindDataDir.hh"
-#include "G4Filesystem.hh"
-#include "G4Exception.hh"
+#  include "G4Exception.hh"
+#  include "G4Filesystem.hh"
+#  include "G4FindDataDir.hh"
 
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
+#  include <cstdio>
+#  include <cstdlib>
+#  include <cstring>
 
-#if defined(_WIN32)
-#define setenv(name, value, overwrite) _putenv_s(name, value)
-#endif
+#  if defined(_WIN32)
+#    define setenv(name, value, overwrite) _putenv_s(name, value)
+#  endif
 
 using namespace G4fs;
 
-static const char * const system_paths[] = {
-  GEANT4_INSTALL_FULL_DATADIR,
-  CMAKE_INSTALL_PREFIX,
-#if defined(_MSC_VER)
-  "C:\\Program Files",
-  "C:\\Geant4"
-#else
-  "/usr/local",
-  "/usr",
-  "/cvmfs/geant4.cern.ch"
-#endif
+static const char* const system_paths[] = {GEANT4_INSTALL_FULL_DATADIR, CMAKE_INSTALL_PREFIX,
+#  if defined(_MSC_VER)
+                                           "C:\\Program Files", "C:\\Geant4"
+#  else
+                                           "/usr/local", "/usr", "/cvmfs/geant4.cern.ch"
+#  endif
 };
 
-static const char * const data_paths[] = {
-  ".",
-  GEANT4_INSTALL_DATADIR,
-  CMAKE_INSTALL_DATADIR,
-  "share/Geant4/data",
-  "share/geant4/data",
-  "share/data",
-  "data"
-};
+static const char* const data_paths[] = {".",
+                                         GEANT4_INSTALL_DATADIR,
+                                         CMAKE_INSTALL_DATADIR,
+                                         "share/Geant4/data",
+                                         "share/geant4/data",
+                                         "share/data",
+                                         "data"};
 
 static const char* G4GetDataDir(const char* name)
 {
   for (const auto& d : dataset_definitions)
-    if (strcmp(name, d.env) == 0)
-      return d.dir;
+    if (strcmp(name, d.env) == 0) return d.dir;
 
   return nullptr;
 }
 
 static const char* G4FindDataDir(const char* name, const path& prefix, const path& dataset)
 {
-  if (!is_directory(prefix))
-    return nullptr;
+  if (!is_directory(prefix)) return nullptr;
 
-  for (const auto data_path : data_paths) {
+  for (const auto data_path : data_paths)
+  {
     path datadir = prefix;
-    if (strcmp(data_path,".") == 0)
-      datadir /=  dataset;
+    if (strcmp(data_path, ".") == 0)
+      datadir /= dataset;
     else
-      datadir /=  path(data_path) / dataset;
+      datadir /= path(data_path) / dataset;
     if (is_directory(absolute(datadir)))
       return setenv(name, absolute(datadir).string().c_str(), 0) == 0 ? std::getenv(name) : nullptr;
   }
@@ -93,29 +85,31 @@ static const char* G4FindDataDir(const char* name, const path& prefix, const pat
 
 const char* G4FindDataDir(const char* name)
 {
-#if defined(G4MULTITHREADED)
+#  if defined(G4MULTITHREADED)
   static std::mutex mutex;
   std::lock_guard<std::mutex> lock(mutex);
-#endif
+#  endif
 
   /* If environment variable is set for this dataset, use it */
-  if (const char *datadir = std::getenv(name))
-    return datadir;
+  if (const char* datadir = std::getenv(name)) return datadir;
 
   /* If we know which directory/version to search for, try to find it */
-  if (const char *dataset = G4GetDataDir(name)) {
+  if (const char* dataset = G4GetDataDir(name))
+  {
     /* If GEANT4_DATA_DIR environment variable is set, use it and don't search further */
-    if (const char *basedir = std::getenv("GEANT4_DATA_DIR")) {
+    if (const char* basedir = std::getenv("GEANT4_DATA_DIR"))
+    {
       if (is_directory(basedir)) return G4FindDataDir(name, basedir, dataset);
 
-      G4Exception("G4FindDataDir", "Invalid GEANT4_DATA_DIR", JustWarning, "The GEANT4_DATA_DIR environment variable points to an invalid directory.\n"
-                  "Will try fallback locations now. Correct the variable to disable this behaviour.");
+      G4Exception(
+        "G4FindDataDir", "Invalid GEANT4_DATA_DIR", JustWarning,
+        "The GEANT4_DATA_DIR environment variable points to an invalid directory.\n"
+        "Will try fallback locations now. Correct the variable to disable this behaviour.");
     }
 
     /* If GEANT4_DATA_DIR environment variable is not set, search in default system paths */
     for (const auto prefix : system_paths)
-      if (const auto datadir = G4FindDataDir(name, prefix, dataset))
-        return datadir;
+      if (const auto datadir = G4FindDataDir(name, prefix, dataset)) return datadir;
   }
 
   return nullptr;
@@ -123,17 +117,16 @@ const char* G4FindDataDir(const char* name)
 
 #else
 // Support GNUmake builds
-#include <cstdlib>
+#  include <cstdlib>
 
 const char* G4FindDataDir(const char* name)
 {
-#if defined(G4MULTITHREADED)
+#  if defined(G4MULTITHREADED)
   static std::mutex mutex;
   std::lock_guard<std::mutex> lock(mutex);
-#endif
+#  endif
   /* If environment variable is set for this dataset, use it */
-  if (const char *datadir = std::getenv(name))
-    return datadir;
+  if (const char* datadir = std::getenv(name)) return datadir;
 
   return nullptr;
 }

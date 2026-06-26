@@ -31,33 +31,32 @@
 // Collections of hadrons pdg codes
 //
 
-#ifndef G4HadParticles_h
-#define G4HadParticles_h 1
+#ifndef G4HADPARTICLES_HH
+#define G4HADPARTICLES_HH
 
 #include "globals.hh"
+
 #include <vector>
 
 class G4HadParticles
 {
-public:
+  public:
 
-  // several vectors of PDG codes for hadron physics
-  static const std::vector<G4int>& GetLightHadrons();
-  static const std::vector<G4int>& GetHyperons();
-  static const std::vector<G4int>& GetAntiHyperons();
-  static const std::vector<G4int>& GetKaons();
-  static const std::vector<G4int>& GetBCHadrons();
-  static const std::vector<G4int>& GetLightIons();
-  static const std::vector<G4int>& GetLightAntiIons();
-  static const std::vector<G4int>& GetHyperNuclei();
-  static const std::vector<G4int>& GetHyperAntiNuclei();
+    // several vectors of PDG codes for hadron physics
+    static const std::vector<G4int>& GetLightHadrons();
+    static const std::vector<G4int>& GetHyperons();
+    static const std::vector<G4int>& GetAntiHyperons();
+    static const std::vector<G4int>& GetKaons();
+    static const std::vector<G4int>& GetBCHadrons();
+    static const std::vector<G4int>& GetLightIons();
+    static const std::vector<G4int>& GetLightAntiIons();
+    static const std::vector<G4int>& GetHyperNuclei();
+    static const std::vector<G4int>& GetHyperAntiNuclei();
 
-  // several vectors of PDG codes for EM physics
-  static const std::vector<G4int>& GetHeavyChargedParticles();
-  static const std::vector<G4int>& GetBCChargedHadrons();
-  static const std::vector<G4int>& GetChargedHyperNuclei();
+    // several vectors of PDG codes for EM physics
+    static const std::vector<G4int>& GetHeavyChargedParticles();
+    static const std::vector<G4int>& GetBCChargedHadrons();
+    static const std::vector<G4int>& GetChargedHyperNuclei();
 };
 
 #endif
-
-

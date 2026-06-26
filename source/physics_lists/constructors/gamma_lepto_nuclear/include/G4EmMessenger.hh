@@ -34,54 +34,56 @@
 // 09.11.2005 V.Ivanchenko edit to provide a standard
 // 19.06.2006 V.Ivanchenko add mu-nuclear process
 // 31.01.2018 V.Grichine, activation of neutrino-electron process
-// 03.10.2018 V Grichine activation of total nneutrino-electron process 
+// 03.10.2018 V Grichine activation of total nneutrino-electron process
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4EmMessenger_h
-#define G4EmMessenger_h 1
+#ifndef G4EMMESSENGER_HH
+#define G4EMMESSENGER_HH
 
 class G4EmExtraPhysics;
 
-#include "G4UImessenger.hh"
-#include "G4UIdirectory.hh"
 #include "G4UIcmdWithABool.hh"
 #include "G4UIcmdWithADouble.hh"
-#include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
+#include "G4UIcmdWithAString.hh"
+#include "G4UIdirectory.hh"
+#include "G4UImessenger.hh"
 
 //////////////////////////////////////
 
-class G4EmMessenger: public G4UImessenger
+class G4EmMessenger : public G4UImessenger
 {
-public:
-  explicit G4EmMessenger(G4EmExtraPhysics* af);
-  ~G4EmMessenger() override;
+  public:
 
-  void SetNewValue(G4UIcommand* aComm, G4String aS) override;
+    explicit G4EmMessenger(G4EmExtraPhysics* af);
+    ~G4EmMessenger() override;
 
-private:
-  G4EmExtraPhysics* theB;
+    void SetNewValue(G4UIcommand* aComm, G4String aS) override;
 
-  G4UIcmdWithABool* theSynch;
-  G4UIcmdWithABool* theSynchAll;
-  G4UIcmdWithABool* theGN;
-  G4UIcmdWithABool* theGLENDN;
-  G4UIcmdWithABool* theEN;
-  G4UIcmdWithABool* theMUN;
-  G4UIcmdWithABool* theGMM;
-  G4UIcmdWithABool* theMMM;
-  G4UIcmdWithABool* thePMM;
-  G4UIcmdWithABool* thePH;
-  G4UIcmdWithABool* theXS;
+  private:
 
-  G4UIcmdWithADouble* theGMM1;
-  G4UIcmdWithADouble* thePMM1;
-  G4UIcmdWithADouble* thePH1;
-  G4UIcmdWithADoubleAndUnit* theGNlowe;
+    G4EmExtraPhysics* theB;
 
-  G4UIdirectory* aDir1;
-  G4UIdirectory* aDir2;
+    G4UIcmdWithABool* theSynch;
+    G4UIcmdWithABool* theSynchAll;
+    G4UIcmdWithABool* theGN;
+    G4UIcmdWithABool* theGLENDN;
+    G4UIcmdWithABool* theEN;
+    G4UIcmdWithABool* theMUN;
+    G4UIcmdWithABool* theGMM;
+    G4UIcmdWithABool* theMMM;
+    G4UIcmdWithABool* thePMM;
+    G4UIcmdWithABool* thePH;
+    G4UIcmdWithABool* theXS;
+
+    G4UIcmdWithADouble* theGMM1;
+    G4UIcmdWithADouble* thePMM1;
+    G4UIcmdWithADouble* thePH1;
+    G4UIcmdWithADoubleAndUnit* theGNlowe;
+
+    G4UIdirectory* aDir1;
+    G4UIdirectory* aDir2;
 };
 
 #endif

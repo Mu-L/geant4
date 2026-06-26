@@ -30,41 +30,37 @@
 // Modified:
 // 21.03.2013 V.Ivanchenko redesigned and cleaned up
 
-#ifndef G4ShellCorrection_h
-#define G4ShellCorrection_h 1
+#ifndef G4SHELLCORRECTION_HH
+#define G4SHELLCORRECTION_HH
 
-#include "globals.hh"
-#include "G4CookShellCorrections.hh"
 #include "G4CameronGilbertShellCorrections.hh"
-#include "G4CameronTruranHilfShellCorrections.hh"
 #include "G4CameronShellPlusPairingCorrections.hh"
+#include "G4CameronTruranHilfShellCorrections.hh"
+#include "G4CookShellCorrections.hh"
+#include "globals.hh"
 
 class G4ShellCorrection
 {
-public:
+  public:
 
-  G4ShellCorrection();
+    G4ShellCorrection();
 
-  ~G4ShellCorrection() = default;
+    ~G4ShellCorrection() = default;
 
-  const G4CameronTruranHilfShellCorrections* 
-        GetCameronTruranHilfShellCorrections() const;
+    const G4CameronTruranHilfShellCorrections* GetCameronTruranHilfShellCorrections() const;
 
-  const G4CameronShellPlusPairingCorrections* 
-        GetCameronShellPlusPairingCorrections() const;
+    const G4CameronShellPlusPairingCorrections* GetCameronShellPlusPairingCorrections() const;
 
-  G4double GetShellCorrection(G4int A, G4int Z) const;
+    G4double GetShellCorrection(G4int A, G4int Z) const;
 
-  G4ShellCorrection(const G4ShellCorrection& right) = delete;
-  const G4ShellCorrection& operator=
-  (const G4ShellCorrection& right) = delete;
+    G4ShellCorrection(const G4ShellCorrection& right) = delete;
+    const G4ShellCorrection& operator=(const G4ShellCorrection& right) = delete;
 
-private:
+  private:
 
-  G4CookShellCorrections theCookShellCorrections;
-  G4CameronGilbertShellCorrections theCameronGilbertShellCorrections;
-  G4CameronTruranHilfShellCorrections theCameronTruranHilfShellCorrections;
-  G4CameronShellPlusPairingCorrections theCameronShellPlusPairingCorrections;
-
+    G4CookShellCorrections theCookShellCorrections;
+    G4CameronGilbertShellCorrections theCameronGilbertShellCorrections;
+    G4CameronTruranHilfShellCorrections theCameronTruranHilfShellCorrections;
+    G4CameronShellPlusPairingCorrections theCameronShellPlusPairingCorrections;
 };
 #endif

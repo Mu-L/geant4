@@ -76,21 +76,24 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UTORUS 1
+#  define G4GEOM_USE_UTORUS 1
 #endif
 
 #if (defined(G4GEOM_USE_UTORUS) && defined(G4GEOM_USE_SYS_USOLIDS))
-  #define G4UTorus G4Torus
-  #include "G4UTorus.hh"
+#  define G4UTorus G4Torus
+#  include "G4UTorus.hh"
 #else
 
-#include <CLHEP/Units/PhysicalConstants.h>
+#  include "G4CSGSolid.hh"
 
-#include "G4CSGSolid.hh"
+#  include <CLHEP/Units/PhysicalConstants.h>
 
 /**
  * @brief G4Torus represents a torus or torus segment with curved sides
- * parallel to the z-axis. The torus has a specified swept radius about which
+ * parallel to the z-axis.
+ * @ingroup geometry_solids_csg
+ *
+ * The torus has a specified swept radius about which
  * it is centered, and a given minimum and maximum radius. A minimum radius
  * of 0 signifies a filled torus.
  * The torus segment is specified by starting and delta angles for phi,
@@ -100,7 +103,6 @@
 
 class G4Torus : public G4CSGSolid
 {
-
   public:
 
     /**
@@ -113,12 +115,8 @@ class G4Torus : public G4CSGSolid
      *             adjusted such that fSPhi+fDPhi<=2PI, fSPhi>-2PI.
      *  @param[in] pDPhi Delta angle of the segment in radians.
      */
-    G4Torus(const G4String& pName,
-                  G4double pRmin,
-                  G4double pRmax,
-                  G4double pRtor,
-                  G4double pSPhi,
-                  G4double pDPhi);
+    G4Torus(const G4String& pName, G4double pRmin, G4double pRmax, G4double pRtor, G4double pSPhi,
+            G4double pDPhi);
 
     /**
      * Default destructor.
@@ -133,10 +131,10 @@ class G4Torus : public G4CSGSolid
     inline G4double GetRtor() const;
     inline G4double GetSPhi() const;
     inline G4double GetDPhi() const;
-    inline G4double GetSinStartPhi () const;
-    inline G4double GetCosStartPhi () const;
-    inline G4double GetSinEndPhi   () const;
-    inline G4double GetCosEndPhi   () const;
+    inline G4double GetSinStartPhi() const;
+    inline G4double GetCosStartPhi() const;
+    inline G4double GetSinEndPhi() const;
+    inline G4double GetCosEndPhi() const;
 
     /**
      * Returning an estimation of the solid volume (capacity) and
@@ -149,8 +147,7 @@ class G4Torus : public G4CSGSolid
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(      G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -170,24 +167,21 @@ class G4Torus : public G4CSGSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pmin, G4double& pmax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pmin,
+                           G4double& pmax) const override;
 
     /**
      * Concrete implementations of the expected query interfaces for
      * solids, as defined in the base class G4VSolid.
      */
     EInside Inside(const G4ThreeVector& p) const override;
-    G4ThreeVector SurfaceNormal( const G4ThreeVector& p) const override;
-    G4double DistanceToIn(const G4ThreeVector& p,
-                          const G4ThreeVector& v) const override;
+    G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
     G4double DistanceToIn(const G4ThreeVector& p) const override;
-    G4double DistanceToOut(const G4ThreeVector& p,const G4ThreeVector& v,
-                           const G4bool calcNorm = false,
-                                 G4bool* validNorm = nullptr,
-                                 G4ThreeVector* n = nullptr) const override;
+    G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
     G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
@@ -215,14 +209,14 @@ class G4Torus : public G4CSGSolid
     /**
      * Methods for creating graphical representations (i.e. for visualisation).
      */
-    void DescribeYourselfTo (G4VGraphicsScene& scene) const override;
-    G4Polyhedron* CreatePolyhedron () const override;
+    void DescribeYourselfTo(G4VGraphicsScene& scene) const override;
+    G4Polyhedron* CreatePolyhedron() const override;
 
     /**
      * Checks and sets all the parameters given in input. Used in constructor.
      */
-    void SetAllParameters(G4double pRmin, G4double pRmax, G4double pRtor,
-                          G4double pSPhi, G4double pDPhi);
+    void SetAllParameters(G4double pRmin, G4double pRmax, G4double pRtor, G4double pSPhi,
+                          G4double pDPhi);
 
     /**
      * Fake default constructor for usage restricted to direct object
@@ -243,10 +237,8 @@ class G4Torus : public G4CSGSolid
      * Calculates the real roots to the torus surface, using the
      * G4JTPolynomialSolver class. Returns negative solutions as well.
      */
-    void TorusRootsJT(const G4ThreeVector& p,
-                      const G4ThreeVector& v,
-                            G4double r,
-                            std::vector<G4double>& roots) const ;
+    void TorusRootsJT(const G4ThreeVector& p, const G4ThreeVector& v, G4double r,
+                      std::vector<G4double>& roots) const;
 
     /**
      * Interface method for DistanceToIn() and DistanceToOut().
@@ -254,16 +246,14 @@ class G4Torus : public G4CSGSolid
      * polynomial root finding.
      *  @returns The smalles possible distance to the surface.
      */
-    G4double SolveNumericJT(const G4ThreeVector& p,
-                            const G4ThreeVector& v,
-                                  G4double r,
-                                  G4bool IsDistanceToIn) const;
+    G4double SolveNumericJT(const G4ThreeVector& p, const G4ThreeVector& v, G4double r,
+                            G4bool IsDistanceToIn) const;
 
     /**
      * Algorithm for SurfaceNormal() following the original specification
      * for points not on the surface.
      */
-    G4ThreeVector ApproxSurfaceNormal( const G4ThreeVector& p) const;
+    G4ThreeVector ApproxSurfaceNormal(const G4ThreeVector& p) const;
 
   private:
 
@@ -277,9 +267,8 @@ class G4Torus : public G4CSGSolid
     G4double halfCarTolerance, halfAngTolerance;
 };
 
-#include "G4Torus.icc"
+#  include "G4Torus.icc"
 
 #endif  // defined(G4GEOM_USE_UTORUS) && defined(G4GEOM_USE_SYS_USOLIDS)
 
-
-#endif // G4TORUS_HH
+#endif  // G4TORUS_HH

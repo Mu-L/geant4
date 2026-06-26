@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  15th July 2012
 //
 // Class Description:
@@ -44,31 +44,28 @@
 class G4Colour;
 class G4Polyhedron;
 
-class G4ArrowModel: public G4VModel {
+class G4ArrowModel : public G4VModel
+{
+  public:  // With description
 
-public: // With description
+    G4ArrowModel(G4double x1, G4double y1, G4double z1, G4double x2, G4double y2, G4double z2,
+                 G4double width, const G4Colour& colour, const G4String& description = "",
+                 G4int lineSegmentsPerCircle = 6, const G4Transform3D& transform = G4Transform3D());
 
-  G4ArrowModel(G4double x1, G4double y1, G4double z1,
-	       G4double x2, G4double y2, G4double z2,
-	       G4double width, const G4Colour& colour,
-	       const G4String& description = "",
-               G4int lineSegmentsPerCircle = 6,
-	       const G4Transform3D& transform = G4Transform3D());
+    virtual ~G4ArrowModel();
 
-  virtual ~G4ArrowModel ();
+    void DescribeYourselfTo(G4VGraphicsScene&) override;
+    // The main task of a model is to describe itself to the graphics scene.
 
-  void DescribeYourselfTo (G4VGraphicsScene&) override;
-  // The main task of a model is to describe itself to the graphics scene.
+  private:
 
-private:
+    // Private copy contructor and assignment to forbid use...
+    G4ArrowModel(const G4ArrowModel&);
+    G4ArrowModel& operator=(const G4ArrowModel&);
 
-  // Private copy contructor and assignment to forbid use...
-  G4ArrowModel (const G4ArrowModel&);
-  G4ArrowModel& operator = (const G4ArrowModel&);
-
-  G4Polyhedron* fpShaftPolyhedron;
-  G4Polyhedron* fpHeadPolyhedron;
-  G4Transform3D fTransform;
+    G4Polyhedron* fpShaftPolyhedron;
+    G4Polyhedron* fpHeadPolyhedron;
+    G4Transform3D fTransform;
 };
 
 #endif

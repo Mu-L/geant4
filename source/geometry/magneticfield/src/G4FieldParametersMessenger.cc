@@ -29,8 +29,8 @@
 // --------------------------------------------------------------------
 
 #include "G4FieldParametersMessenger.hh"
-#include "G4FieldParameters.hh"
 
+#include "G4FieldParameters.hh"
 #include "G4UIcmdWithABool.hh"
 #include "G4UIcmdWithADouble.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
@@ -39,8 +39,7 @@
 #include "G4UIdirectory.hh"
 
 //_____________________________________________________________________________
-G4FieldParametersMessenger::G4FieldParametersMessenger(
-  G4FieldParameters* fieldParameters)
+G4FieldParametersMessenger::G4FieldParametersMessenger(G4FieldParameters* fieldParameters)
   : fFieldParameters(fieldParameters)
 {
   // Standard constructor
@@ -63,13 +62,12 @@ G4FieldParametersMessenger::G4FieldParametersMessenger(
   G4String candidates;
   for (G4int i = kMagnetic; i <= kGravity; ++i)
   {
-    auto  ft = (G4FieldType)i;
+    auto ft = (G4FieldType)i;
     candidates += G4FieldParameters::FieldTypeName(ft);
     candidates += " ";
   }
   fFieldTypeCmd->SetCandidates(candidates);
-  fFieldTypeCmd->AvailableForStates(
-    G4State_PreInit, G4State_Init, G4State_Idle);
+  fFieldTypeCmd->AvailableForStates(G4State_PreInit, G4State_Init, G4State_Idle);
 
   commandName = directoryName;
   commandName.append("equationType");
@@ -85,8 +83,7 @@ G4FieldParametersMessenger::G4FieldParametersMessenger(
     candidates += " ";
   }
   fEquationTypeCmd->SetCandidates(candidates);
-  fEquationTypeCmd->AvailableForStates(
-    G4State_PreInit, G4State_Init, G4State_Idle);
+  fEquationTypeCmd->AvailableForStates(G4State_PreInit, G4State_Init, G4State_Idle);
 
   commandName = directoryName;
   commandName.append("stepperType");
@@ -98,15 +95,17 @@ G4FieldParametersMessenger::G4FieldParametersMessenger(
   fStepperTypeCmd->SetParameterName("StepperType", false);
   candidates = "";
   for (G4int i = kCashKarpRKF45; i <= kRK547FEq3; ++i)
-  {    
+  {
     auto st = (G4StepperType)i;
-    if (st == kUserStepper) { continue; }
+    if (st == kUserStepper)
+    {
+      continue;
+    }
     candidates += G4FieldParameters::StepperTypeName(st);
     candidates += " ";
   }
   fStepperTypeCmd->SetCandidates(candidates);
-  fStepperTypeCmd->AvailableForStates(
-    G4State_PreInit, G4State_Init, G4State_Idle);
+  fStepperTypeCmd->AvailableForStates(G4State_PreInit, G4State_Init, G4State_Idle);
 
   commandName = directoryName;
   commandName.append("setMinimumStep");
@@ -115,8 +114,7 @@ G4FieldParametersMessenger::G4FieldParametersMessenger(
   fSetMinimumStepCmd->SetParameterName("StepMinimum", false);
   fSetMinimumStepCmd->SetDefaultUnit("mm");
   fSetMinimumStepCmd->SetUnitCategory("Length");
-  fSetMinimumStepCmd->AvailableForStates(
-    G4State_PreInit, G4State_Init, G4State_Idle);
+  fSetMinimumStepCmd->AvailableForStates(G4State_PreInit, G4State_Init, G4State_Idle);
 
   commandName = directoryName;
   commandName.append("setDeltaChord");
@@ -125,48 +123,39 @@ G4FieldParametersMessenger::G4FieldParametersMessenger(
   fSetDeltaChordCmd->SetParameterName("DeltaChord", false);
   fSetDeltaChordCmd->SetDefaultUnit("mm");
   fSetDeltaChordCmd->SetUnitCategory("Length");
-  fSetDeltaChordCmd->AvailableForStates(
-    G4State_PreInit, G4State_Init, G4State_Idle);
+  fSetDeltaChordCmd->AvailableForStates(G4State_PreInit, G4State_Init, G4State_Idle);
 
   commandName = directoryName;
   commandName.append("setDeltaOneStep");
   fSetDeltaOneStepCmd = new G4UIcmdWithADoubleAndUnit(commandName, this);
-  fSetDeltaOneStepCmd->SetGuidance(
-    "Set delta one step in global field manager");
+  fSetDeltaOneStepCmd->SetGuidance("Set delta one step in global field manager");
   fSetDeltaOneStepCmd->SetParameterName("DeltaOneStep", false);
   fSetDeltaOneStepCmd->SetDefaultUnit("mm");
   fSetDeltaOneStepCmd->SetUnitCategory("Length");
-  fSetDeltaOneStepCmd->AvailableForStates(
-    G4State_PreInit, G4State_Init, G4State_Idle);
+  fSetDeltaOneStepCmd->AvailableForStates(G4State_PreInit, G4State_Init, G4State_Idle);
 
   commandName = directoryName;
   commandName.append("setDeltaIntersection");
   fSetDeltaIntersectionCmd = new G4UIcmdWithADoubleAndUnit(commandName, this);
-  fSetDeltaIntersectionCmd->SetGuidance(
-    "Set delta intersection in global field manager");
+  fSetDeltaIntersectionCmd->SetGuidance("Set delta intersection in global field manager");
   fSetDeltaIntersectionCmd->SetParameterName("DeltaIntersection", false);
   fSetDeltaIntersectionCmd->SetDefaultUnit("mm");
   fSetDeltaIntersectionCmd->SetUnitCategory("Length");
-  fSetDeltaIntersectionCmd->AvailableForStates(
-    G4State_PreInit, G4State_Init, G4State_Idle);
+  fSetDeltaIntersectionCmd->AvailableForStates(G4State_PreInit, G4State_Init, G4State_Idle);
 
   commandName = directoryName;
   commandName.append("setMinimumEpsilonStep");
   fSetMinimumEpsilonStepCmd = new G4UIcmdWithADouble(commandName, this);
-  fSetMinimumEpsilonStepCmd->SetGuidance(
-    "Set minimum epsilon step in global field manager");
+  fSetMinimumEpsilonStepCmd->SetGuidance("Set minimum epsilon step in global field manager");
   fSetMinimumEpsilonStepCmd->SetParameterName("MinimumEpsilonStep", false);
-  fSetMinimumEpsilonStepCmd->AvailableForStates(
-    G4State_PreInit, G4State_Init, G4State_Idle);
+  fSetMinimumEpsilonStepCmd->AvailableForStates(G4State_PreInit, G4State_Init, G4State_Idle);
 
   commandName = directoryName;
   commandName.append("setMaximumEpsilonStep");
   fSetMaximumEpsilonStepCmd = new G4UIcmdWithADouble(commandName, this);
-  fSetMaximumEpsilonStepCmd->SetGuidance(
-    "Set maximum epsilon step in global field manager");
+  fSetMaximumEpsilonStepCmd->SetGuidance("Set maximum epsilon step in global field manager");
   fSetMaximumEpsilonStepCmd->SetParameterName("MaximumEpsilonStep", false);
-  fSetMaximumEpsilonStepCmd->AvailableForStates(
-    G4State_PreInit, G4State_Init, G4State_Idle);
+  fSetMaximumEpsilonStepCmd->AvailableForStates(G4State_PreInit, G4State_Init, G4State_Idle);
 
   commandName = directoryName;
   commandName.append("setConstDistance");
@@ -185,8 +174,7 @@ G4FieldParametersMessenger::G4FieldParametersMessenger(
   commandName.append("printParameters");
   fPrintParametersCmd = new G4UIcmdWithoutParameter(commandName, this);
   fPrintParametersCmd->SetGuidance("Prints all accuracy parameters.");
-  fPrintParametersCmd->AvailableForStates(
-    G4State_PreInit, G4State_Init, G4State_Idle);
+  fPrintParametersCmd->AvailableForStates(G4State_PreInit, G4State_Init, G4State_Idle);
 }
 
 //_____________________________________________________________________________
@@ -212,8 +200,7 @@ G4FieldParametersMessenger::~G4FieldParametersMessenger()
 //
 
 //_____________________________________________________________________________
-void G4FieldParametersMessenger::SetNewValue(
-  G4UIcommand* command, G4String newValues)
+void G4FieldParametersMessenger::SetNewValue(G4UIcommand* command, G4String newValues)
 {
   // Apply command to the associated object.
 
@@ -230,7 +217,7 @@ void G4FieldParametersMessenger::SetNewValue(
     }
     return;
   }
-  
+
   if (command == fEquationTypeCmd)
   {
     for (G4int i = kEqMagnetic; i <= kEqEMfieldWithEDM; ++i)
@@ -261,29 +248,25 @@ void G4FieldParametersMessenger::SetNewValue(
 
   if (command == fSetMinimumStepCmd)
   {
-    fFieldParameters->SetMinimumStep(
-      fSetMinimumStepCmd->GetNewDoubleValue(newValues));
+    fFieldParameters->SetMinimumStep(fSetMinimumStepCmd->GetNewDoubleValue(newValues));
     return;
   }
 
   if (command == fSetDeltaChordCmd)
   {
-    fFieldParameters->SetDeltaChord(
-      fSetDeltaChordCmd->GetNewDoubleValue(newValues));
+    fFieldParameters->SetDeltaChord(fSetDeltaChordCmd->GetNewDoubleValue(newValues));
     return;
   }
 
   if (command == fSetDeltaOneStepCmd)
   {
-    fFieldParameters->SetDeltaOneStep(
-      fSetDeltaOneStepCmd->GetNewDoubleValue(newValues));
+    fFieldParameters->SetDeltaOneStep(fSetDeltaOneStepCmd->GetNewDoubleValue(newValues));
     return;
   }
 
   if (command == fSetDeltaIntersectionCmd)
   {
-    fFieldParameters->SetDeltaIntersection(
-      fSetDeltaIntersectionCmd->GetNewDoubleValue(newValues));
+    fFieldParameters->SetDeltaIntersection(fSetDeltaIntersectionCmd->GetNewDoubleValue(newValues));
     return;
   }
 
@@ -303,8 +286,7 @@ void G4FieldParametersMessenger::SetNewValue(
 
   if (command == fSetConstDistanceCmd)
   {
-    fFieldParameters->SetConstDistance(
-      fSetConstDistanceCmd->GetNewDoubleValue(newValues));
+    fFieldParameters->SetConstDistance(fSetConstDistanceCmd->GetNewDoubleValue(newValues));
     return;
   }
 

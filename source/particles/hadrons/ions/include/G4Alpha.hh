@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4Alpha_h
-#define G4Alpha_h 1
+#ifndef G4ALPHA_HH
+#define G4ALPHA_HH
 
 #include "G4Ions.hh"
 
 class G4Alpha : public G4Ions
 {
   public:
+
     static G4Alpha* Definition();
     static G4Alpha* AlphaDefinition();
     static G4Alpha* Alpha();
 
   private:
+
     G4Alpha() {}
     ~G4Alpha() override = default;
 

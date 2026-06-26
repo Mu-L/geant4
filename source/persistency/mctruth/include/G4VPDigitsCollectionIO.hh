@@ -32,7 +32,7 @@
 // Author: Youhei Morita, 16.08.2001
 // --------------------------------------------------------------------
 #ifndef G4VPDIGITSCOLLECTIONIO_HH
-#define G4VPDIGITSCOLLECTIONIO_HH 1
+#define G4VPDIGITSCOLLECTIONIO_HH
 
 #include "G4VDigiCollection.hh"
 
@@ -41,32 +41,32 @@ class G4VPDigitsCollectionIO
   public:
 
     G4VPDigitsCollectionIO(const G4String& detName, const G4String& colName);
-      // Constructor
+    // Constructor
 
     virtual ~G4VPDigitsCollectionIO() {}
-      // Destructor
+    // Destructor
 
     virtual G4bool Store(const G4VDigiCollection*) = 0;
-      // Pure virtual method for storing the digit collection.
-      // Each persistency package should implement a concrete method
-      // with this signature
+    // Pure virtual method for storing the digit collection.
+    // Each persistency package should implement a concrete method
+    // with this signature
 
     virtual G4bool Retrieve(G4VDigiCollection*&) = 0;
-      // Pure virtual method for retrieving the digit collection.
-      // Each persistency package should implement a concrete method
-      // with this signature
+    // Pure virtual method for retrieving the digit collection.
+    // Each persistency package should implement a concrete method
+    // with this signature
 
     G4bool operator==(const G4VPDigitsCollectionIO& right) const;
-      // Virtual operator for comparing digit collections with names
+    // Virtual operator for comparing digit collections with names
 
     const G4String& DMname() { return f_detName; }
-      // Returns the digitizer module name
+    // Returns the digitizer module name
 
     const G4String& CollectionName() { return f_colName; }
-      // Returns the digit collection name
+    // Returns the digit collection name
 
     void SetVerboseLevel(G4int v) { m_verbose = v; }
-      // Sets the verbose level
+    // Sets the verbose level
 
   protected:
 

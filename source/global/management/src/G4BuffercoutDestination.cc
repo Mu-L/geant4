@@ -37,51 +37,59 @@
 // Private class to implement buffering of logging via an ostringstream
 class G4BuffercoutDestination::BufferImpl
 {
- public:
-  using FlushFn_t = std::function<void(const std::string&)>;
+  public:
 
- public:
-  explicit BufferImpl(std::size_t maxSize) : m_maxSize(maxSize) {}
-  explicit BufferImpl(std::size_t maxSize, FlushFn_t&& f) : m_maxSize(maxSize), m_flushFn(std::move(f)) {}
+    using FlushFn_t = std::function<void(const std::string&)>;
 
-  ~BufferImpl() = default;
+  public:
 
-  // Set number of characters to hold before Flush() will be called
-  // If buffer exceeds new maximum, Flush() will not be called until next call to Receive()
-  void SetMaxSize(std::size_t n) { m_maxSize = n; }
+    explicit BufferImpl(std::size_t maxSize) : m_maxSize(maxSize) {}
+    explicit BufferImpl(std::size_t maxSize, FlushFn_t&& f)
+      : m_maxSize(maxSize), m_flushFn(std::move(f))
+    {}
 
-  // Reset buffer without flushing
-  void Reset()
-  {
-    m_buffer.str("");
-    m_buffer.clear();
-    m_currentSize = 0;
-  }
+    ~BufferImpl() = default;
 
-  G4int Receive(const G4String& msg)
-  {
-    m_currentSize += msg.size();
-    m_buffer << msg;
+    // Set number of characters to hold before Flush() will be called
+    // If buffer exceeds new maximum, Flush() will not be called until next call to Receive()
+    void SetMaxSize(std::size_t n) { m_maxSize = n; }
 
-    if (m_maxSize > 0 && m_currentSize > m_maxSize) {
-      return Flush();
+    // Reset buffer without flushing
+    void Reset()
+    {
+      m_buffer.str("");
+      m_buffer.clear();
+      m_currentSize = 0;
     }
-    return 0;
-  }
 
-  // Flush buffer to destination and reset it
-  G4int Flush()
-  {
-    m_flushFn(m_buffer.str());
-    Reset();
-    return 0;
-  }
+    G4int Receive(const G4String& msg)
+    {
+      m_currentSize += msg.size();
+      m_buffer << msg;
 
- private:
-  std::size_t m_maxSize = 0;
-  std::ostringstream m_buffer;
-  std::size_t m_currentSize = 0;
-  FlushFn_t m_flushFn = [](auto& s) { std::cout << s << std::flush; };
+      if (m_maxSize > 0 && m_currentSize > m_maxSize)
+      {
+        return Flush();
+      }
+      return 0;
+    }
+
+    // Flush buffer to destination and reset it
+    G4int Flush()
+    {
+      m_flushFn(m_buffer.str());
+      Reset();
+      return 0;
+    }
+
+  private:
+
+    std::size_t m_maxSize = 0;
+    std::ostringstream m_buffer;
+    std::size_t m_currentSize = 0;
+    FlushFn_t m_flushFn = [](auto& s) {
+      std::cout << s << std::flush;
+    };
 };
 
 // --------------------------------------------------------------------
@@ -93,7 +101,10 @@ G4BuffercoutDestination::G4BuffercoutDestination(std::size_t max)
 {}
 
 // --------------------------------------------------------------------
-G4BuffercoutDestination::~G4BuffercoutDestination() { Finalize(); }
+G4BuffercoutDestination::~G4BuffercoutDestination()
+{
+  Finalize();
+}
 
 // --------------------------------------------------------------------
 void G4BuffercoutDestination::Finalize()

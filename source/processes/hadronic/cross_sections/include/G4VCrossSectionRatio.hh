@@ -35,15 +35,15 @@
 //
 // Modifications:
 //
- 
+
 //
 // Class Description
 // This is a base class for hadronic cross section ratio
 // quasi-elastic/inelastic or diffractive/elastic
 // Class Description - End
 
-#ifndef G4VCrossSectionRatio_h
-#define G4VCrossSectionRatio_h 1
+#ifndef G4VCROSSSECTIONRATIO_HH
+#define G4VCROSSSECTIONRATIO_HH
 
 #include "G4VCrossSectionDataSet.hh"
 
@@ -51,22 +51,19 @@ class G4ParticleDefinition;
 
 class G4VCrossSectionRatio : G4VCrossSectionDataSet
 {
-public: 
+  public:
 
-  G4VCrossSectionRatio(const G4String& nam = "XSRatio", G4int verb = 0);
+    G4VCrossSectionRatio(const G4String& nam = "XSRatio", G4int verb = 0);
 
-  ~G4VCrossSectionRatio() override;
+    ~G4VCrossSectionRatio() override;
 
-  virtual
-  G4double ComputeRatio(const G4ParticleDefinition*,
-			G4double kinEnergy, 
-			G4int /*Z*/, G4int /*A*/) = 0;
+    virtual G4double ComputeRatio(const G4ParticleDefinition*, G4double kinEnergy, G4int /*Z*/,
+                                  G4int /*A*/) = 0;
 
-private:
+  private:
 
-  G4VCrossSectionRatio & operator=(const G4VCrossSectionRatio &right);
-  G4VCrossSectionRatio(const G4VCrossSectionRatio&);
-
+    G4VCrossSectionRatio& operator=(const G4VCrossSectionRatio& right);
+    G4VCrossSectionRatio(const G4VCrossSectionRatio&);
 };
 
 #endif

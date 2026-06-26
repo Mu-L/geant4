@@ -37,20 +37,21 @@
 // --------------------------------------------------------------------
 
 #include "G4RichTrajectory.hh"
-#include "G4ClonedRichTrajectory.hh"
 
-#include "G4ParticleTable.hh"
 #include "G4AttDef.hh"
 #include "G4AttDefStore.hh"
 #include "G4AttValue.hh"
+#include "G4ClonedRichTrajectory.hh"
+#include "G4ParticleTable.hh"
 #include "G4PhysicsModelCatalog.hh"
 #include "G4RichTrajectoryPoint.hh"
 #include "G4UIcommand.hh"
 #include "G4UnitsTable.hh"
 #include "G4VProcess.hh"
 
-namespace {
- G4Mutex CloneRichTrajectoryMutex = G4MUTEX_INITIALIZER;
+namespace
+{
+G4Mutex CloneRichTrajectoryMutex = G4MUTEX_INITIALIZER;
 }
 
 // #define G4ATTDEBUG
@@ -100,8 +101,7 @@ G4RichTrajectory::G4RichTrajectory(const G4Track* aTrack)
   fpRichPointContainer->push_back(new G4RichTrajectoryPoint(aTrack));
 }
 
-G4RichTrajectory::G4RichTrajectory(G4RichTrajectory& right)
-: G4VTrajectory()
+G4RichTrajectory::G4RichTrajectory(G4RichTrajectory& right) : G4VTrajectory()
 {
   ParticleName = right.ParticleName;
   PDGCharge = right.PDGCharge;
@@ -112,7 +112,8 @@ G4RichTrajectory::G4RichTrajectory(G4RichTrajectory& right)
   initialMomentum = right.initialMomentum;
   positionRecord = new G4TrajectoryPointContainer();
 
-  for (auto& i : *right.positionRecord) {
+  for (auto& i : *right.positionRecord)
+  {
     auto rightPoint = (G4RichTrajectoryPoint*)i;
     positionRecord->push_back(new G4RichTrajectoryPoint(*rightPoint));
   }
@@ -126,7 +127,8 @@ G4RichTrajectory::G4RichTrajectory(G4RichTrajectory& right)
   fpEndingProcess = right.fpEndingProcess;
   fFinalKineticEnergy = right.fFinalKineticEnergy;
   fpRichPointContainer = new G4TrajectoryPointContainer;
-  for (auto& i : *right.fpRichPointContainer) {
+  for (auto& i : *right.fpRichPointContainer)
+  {
     auto rightPoint = (G4RichTrajectoryPoint*)i;
     fpRichPointContainer->push_back(new G4RichTrajectoryPoint(*rightPoint));
   }
@@ -134,8 +136,10 @@ G4RichTrajectory::G4RichTrajectory(G4RichTrajectory& right)
 
 G4RichTrajectory::~G4RichTrajectory()
 {
-  if (fpRichPointContainer != nullptr) {
-    for (auto& i : *fpRichPointContainer) {
+  if (fpRichPointContainer != nullptr)
+  {
+    for (auto& i : *fpRichPointContainer)
+    {
       delete i;
     }
     fpRichPointContainer->clear();
@@ -152,7 +156,8 @@ void G4RichTrajectory::AppendStep(const G4Step* aStep)
   //
   const G4Track* track = aStep->GetTrack();
   const G4StepPoint* postStepPoint = aStep->GetPostStepPoint();
-  if (track->GetCurrentStepNumber() > 0) {
+  if (track->GetCurrentStepNumber() > 0)
+  {
     fpFinalVolume = track->GetTouchableHandle();
     fpFinalNextVolume = track->GetNextTouchableHandle();
     fpEndingProcess = postStepPoint->GetProcessDefinedStep();
@@ -167,7 +172,8 @@ void G4RichTrajectory::MergeTrajectory(G4VTrajectory* secondTrajectory)
 
   auto seco = (G4RichTrajectory*)secondTrajectory;
   G4int ent = seco->GetPointEntries();
-  for (G4int i = 1; i < ent; ++i) {
+  for (G4int i = 1; i < ent; ++i)
+  {
     // initial point of the second trajectory should not be merged
     //
     fpRichPointContainer->push_back((*(seco->fpRichPointContainer))[i]);
@@ -198,7 +204,8 @@ const std::map<G4String, G4AttDef>* G4RichTrajectory::GetAttDefs() const
 {
   G4bool isNew;
   std::map<G4String, G4AttDef>* store = G4AttDefStore::GetInstance("G4RichTrajectory", isNew);
-  if (isNew) {
+  if (isNew)
+  {
     G4String ID;
 
     ID = "ID";
@@ -269,7 +276,8 @@ static G4String Path(const G4TouchableHandle& th)
 {
   std::ostringstream oss;
   G4int depth = th->GetHistoryDepth();
-  for (G4int i = depth; i >= 0; --i) {
+  for (G4int i = depth; i >= 0; --i)
+  {
     oss << th->GetVolume(i)->GetName() << ':' << th->GetCopyNumber(i);
     if (i != 0) oss << '/';
   }
@@ -279,7 +287,7 @@ static G4String Path(const G4TouchableHandle& th)
 std::vector<G4AttValue>* G4RichTrajectory::CreateAttValues() const
 {
   // Create base class att values...
-  //std::vector<G4AttValue>* values = G4VTrajectory::CreateAttValues();
+  // std::vector<G4AttValue>* values = G4VTrajectory::CreateAttValues();
   auto values = new std::vector<G4AttValue>;
   values->push_back(G4AttValue("ID", G4UIcommand::ConvertToString(fTrackID), ""));
   values->push_back(G4AttValue("PID", G4UIcommand::ConvertToString(fParentID), ""));
@@ -291,21 +299,26 @@ std::vector<G4AttValue>* G4RichTrajectory::CreateAttValues() const
   values->push_back(G4AttValue("IMag", G4BestUnit(initialMomentum.mag(), "Energy"), ""));
   values->push_back(G4AttValue("NTP", G4UIcommand::ConvertToString(GetPointEntries()), ""));
 
-  if (fpInitialVolume && (fpInitialVolume->GetVolume() != nullptr)) {
+  if (fpInitialVolume && (fpInitialVolume->GetVolume() != nullptr))
+  {
     values->push_back(G4AttValue("IVPath", Path(fpInitialVolume), ""));
   }
-  else {
+  else
+  {
     values->push_back(G4AttValue("IVPath", "None", ""));
   }
 
-  if (fpInitialNextVolume && (fpInitialNextVolume->GetVolume() != nullptr)) {
+  if (fpInitialNextVolume && (fpInitialNextVolume->GetVolume() != nullptr))
+  {
     values->push_back(G4AttValue("INVPath", Path(fpInitialNextVolume), ""));
   }
-  else {
+  else
+  {
     values->push_back(G4AttValue("INVPath", "None", ""));
   }
 
-  if (fpCreatorProcess != nullptr) {
+  if (fpCreatorProcess != nullptr)
+  {
     values->push_back(G4AttValue("CPN", fpCreatorProcess->GetProcessName(), ""));
     G4ProcessType type = fpCreatorProcess->GetProcessType();
     values->push_back(G4AttValue("CPTN", G4VProcess::GetProcessTypeName(type), ""));
@@ -313,33 +326,40 @@ std::vector<G4AttValue>* G4RichTrajectory::CreateAttValues() const
     const G4String& creatorModelName = G4PhysicsModelCatalog::GetModelNameFromID(fCreatorModelID);
     values->push_back(G4AttValue("CMN", creatorModelName, ""));
   }
-  else {
+  else
+  {
     values->push_back(G4AttValue("CPN", "None", ""));
     values->push_back(G4AttValue("CPTN", "None", ""));
     values->push_back(G4AttValue("CMID", "None", ""));
     values->push_back(G4AttValue("CMN", "None", ""));
   }
 
-  if (fpFinalVolume && (fpFinalVolume->GetVolume() != nullptr)) {
+  if (fpFinalVolume && (fpFinalVolume->GetVolume() != nullptr))
+  {
     values->push_back(G4AttValue("FVPath", Path(fpFinalVolume), ""));
   }
-  else {
+  else
+  {
     values->push_back(G4AttValue("FVPath", "None", ""));
   }
 
-  if (fpFinalNextVolume && (fpFinalNextVolume->GetVolume() != nullptr)) {
+  if (fpFinalNextVolume && (fpFinalNextVolume->GetVolume() != nullptr))
+  {
     values->push_back(G4AttValue("FNVPath", Path(fpFinalNextVolume), ""));
   }
-  else {
+  else
+  {
     values->push_back(G4AttValue("FNVPath", "None", ""));
   }
 
-  if (fpEndingProcess != nullptr) {
+  if (fpEndingProcess != nullptr)
+  {
     values->push_back(G4AttValue("EPN", fpEndingProcess->GetProcessName(), ""));
     G4ProcessType type = fpEndingProcess->GetProcessType();
     values->push_back(G4AttValue("EPTN", G4VProcess::GetProcessTypeName(type), ""));
   }
-  else {
+  else
+  {
     values->push_back(G4AttValue("EPN", "None", ""));
     values->push_back(G4AttValue("EPTN", "None", ""));
   }
@@ -364,4 +384,3 @@ G4VTrajectory* G4RichTrajectory::CloneForMaster() const
   auto* cloned = new G4ClonedRichTrajectory(*this);
   return cloned;
 }
-

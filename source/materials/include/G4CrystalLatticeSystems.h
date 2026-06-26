@@ -30,8 +30,8 @@
 // Class Description:
 //
 
-#ifndef G4LatticeSystems_H
-#define G4LatticeSystems_H 1
+#ifndef G4LATTICESYSTEMS_HH
+#define G4LATTICESYSTEMS_HH
 
 // Lattice Systems
 enum theLatticeSystemType

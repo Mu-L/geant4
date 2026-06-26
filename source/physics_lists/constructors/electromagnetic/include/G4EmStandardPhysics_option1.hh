@@ -39,11 +39,11 @@
 //
 // This class provides construction of EM standard physics using set of options
 // allowing speed up simulation. Results for simulation in thin layers of
-// materials with different density may be biased. 
+// materials with different density may be biased.
 //
 
-#ifndef G4EmStandardPhysics_option1_h
-#define G4EmStandardPhysics_option1_h 1
+#ifndef G4EMSTANDARDPHYSICS_OPTION1_HH
+#define G4EMSTANDARDPHYSICS_OPTION1_HH
 
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
@@ -52,22 +52,16 @@
 
 class G4EmStandardPhysics_option1 : public G4VPhysicsConstructor
 {
-public:
+  public:
 
-  explicit G4EmStandardPhysics_option1(G4int ver=1, const G4String& name="");
+    explicit G4EmStandardPhysics_option1(G4int ver = 1, const G4String& name = "");
 
-  ~G4EmStandardPhysics_option1() override;
+    ~G4EmStandardPhysics_option1() override;
 
-  void ConstructParticle() override;
-  void ConstructProcess() override;
+    void ConstructParticle() override;
+    void ConstructProcess() override;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-
-
-
-
-
-

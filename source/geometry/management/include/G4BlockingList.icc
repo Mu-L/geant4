@@ -40,29 +40,29 @@ inline void G4BlockingList::BlockVolume(const G4int vol)
 
 inline G4bool G4BlockingList::IsBlocked(const G4int vol) const
 {
-  return fBlockingList[vol]==fBlockTagNo;
+  return fBlockingList[vol] == fBlockTagNo;
 }
 
 inline void G4BlockingList::Reset()
 {
-  if ( fBlockTagNo!=kBlockTagNoMax )
+  if (fBlockTagNo != kBlockTagNoMax)
   {
     fBlockTagNo += 1;
   }
   else
   {
     FullyReset();
-  }    
+  }
 }
 
 inline void G4BlockingList::Enlarge(const G4int nv)
 {
-  std::size_t len=fBlockingList.size();
-  if ( G4int(len)<nv )
+  std::size_t len = fBlockingList.size();
+  if (G4int(len) < nv)
   {
-    std::size_t newlen = (nv/fStride+1)*fStride;
+    std::size_t newlen = (nv / fStride + 1) * fStride;
     fBlockingList.resize(newlen);
-    for (auto i=len; i<newlen; ++i)
+    for (auto i = len; i < newlen; ++i)
     {
       fBlockingList[i] = 0;
     }

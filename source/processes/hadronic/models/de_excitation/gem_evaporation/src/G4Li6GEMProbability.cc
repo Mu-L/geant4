@@ -29,44 +29,42 @@
 //
 
 #include "G4Li6GEMProbability.hh"
+
 #include "G4SystemOfUnits.hh"
 
-G4Li6GEMProbability::G4Li6GEMProbability() :
-  G4GEMProbability(6,3,1.0) // A,Z,Spin
+G4Li6GEMProbability::G4Li6GEMProbability() : G4GEMProbability(6, 3, 1.0)  // A,Z,Spin
 {
-  ExcitEnergies.push_back(2186.0*keV);
+  ExcitEnergies.push_back(2186.0 * keV);
   ExcitSpins.push_back(3.0);
-  ExcitLifetimes.push_back(fPlanck/(24.0*keV));
-  
-  ExcitEnergies.push_back(3562.88*keV);
+  ExcitLifetimes.push_back(fPlanck / (24.0 * keV));
+
+  ExcitEnergies.push_back(3562.88 * keV);
   ExcitSpins.push_back(0.0);
-  ExcitLifetimes.push_back(fPlanck/(8.2*eV));
+  ExcitLifetimes.push_back(fPlanck / (8.2 * eV));
 
-  ExcitEnergies.push_back(4312.0*keV);
+  ExcitEnergies.push_back(4312.0 * keV);
   ExcitSpins.push_back(2.0);
-  ExcitLifetimes.push_back(fPlanck/(1.7*MeV));
+  ExcitLifetimes.push_back(fPlanck / (1.7 * MeV));
 
-  ExcitEnergies.push_back(5366.0*keV);
+  ExcitEnergies.push_back(5366.0 * keV);
   ExcitSpins.push_back(2.0);
-  ExcitLifetimes.push_back(fPlanck/(540.0*keV));
+  ExcitLifetimes.push_back(fPlanck / (540.0 * keV));
 
-  ExcitEnergies.push_back(5.65E+3*keV);
+  ExcitEnergies.push_back(5.65E+3 * keV);
   ExcitSpins.push_back(1.0);
-  ExcitLifetimes.push_back(fPlanck/(1.5*MeV));
+  ExcitLifetimes.push_back(fPlanck / (1.5 * MeV));
 
-  ExcitEnergies.push_back(15800.0*keV);
+  ExcitEnergies.push_back(15800.0 * keV);
   ExcitSpins.push_back(3.0);
-  ExcitLifetimes.push_back(fPlanck/(17.8*MeV));
+  ExcitLifetimes.push_back(fPlanck / (17.8 * MeV));
 
-  ExcitEnergies.push_back(23.0E+3*keV);
+  ExcitEnergies.push_back(23.0E+3 * keV);
   ExcitSpins.push_back(4.0);
-  ExcitLifetimes.push_back(fPlanck/(12.0*MeV));
+  ExcitLifetimes.push_back(fPlanck / (12.0 * MeV));
 
-  ExcitEnergies.push_back(25.0E+3*keV);
+  ExcitEnergies.push_back(25.0E+3 * keV);
   ExcitSpins.push_back(4.0);
-  ExcitLifetimes.push_back(fPlanck/(4.0*MeV));
-
+  ExcitLifetimes.push_back(fPlanck / (4.0 * MeV));
 }
 
-G4Li6GEMProbability::~G4Li6GEMProbability()
-{}
+G4Li6GEMProbability::~G4Li6GEMProbability() {}

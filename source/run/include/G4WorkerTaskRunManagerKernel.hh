@@ -51,18 +51,20 @@
 //     to implement worker behavior
 //
 
-#ifndef G4WorkerTaskRunManagerKernel_h
-#define G4WorkerTaskRunManagerKernel_h 1
+#ifndef G4WORKERTASKRUNMANAGERKERNEL_HH
+#define G4WORKERTASKRUNMANAGERKERNEL_HH
 
 #include "G4RunManagerKernel.hh"
 
 class G4WorkerTaskRunManagerKernel : public G4RunManagerKernel
 {
   public:
+
     G4WorkerTaskRunManagerKernel();
     ~G4WorkerTaskRunManagerKernel() override;
 
   protected:
+
     // Overwrite default behavior
     void SetupShadowProcess() const override;
 };

@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,8 +41,7 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
-
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
 #ifndef G4DNASECONDORDERREACTION_HH
 #define G4DNASECONDORDERREACTION_HH
@@ -53,12 +52,13 @@ class G4MolecularConfiguration;
 
 class G4DNASecondOrderReaction : public G4VITProcess
 {
-public:
-    G4DNASecondOrderReaction(const G4String& aName =  "DNASecondOrderReaction",
+  public:
+
+    G4DNASecondOrderReaction(const G4String& aName = "DNASecondOrderReaction",
                              G4ProcessType type = fDecay);
     ~G4DNASecondOrderReaction() override;
 
-    G4IT_ADD_CLONE(G4VITProcess,G4DNASecondOrderReaction)
+    G4IT_ADD_CLONE(G4VITProcess, G4DNASecondOrderReaction)
 
     G4DNASecondOrderReaction(const G4DNASecondOrderReaction&);
     G4DNASecondOrderReaction& operator=(const G4DNASecondOrderReaction&);
@@ -66,57 +66,47 @@ public:
 
     void SetReaction(const G4MolecularConfiguration*, const G4Material*, double /*reactionRate*/);
 
-public :
-   void BuildPhysicsTable(const G4ParticleDefinition&) override;
-   G4double PostStepGetPhysicalInteractionLength(
-                           const G4Track& track,
-               G4double   previousStepSize,
-               G4ForceCondition* condition
-              ) override;
+  public:
 
-   G4VParticleChange* PostStepDoIt(
-               const G4Track& ,
-               const G4Step&
-              ) override;
+    void BuildPhysicsTable(const G4ParticleDefinition&) override;
+    G4double PostStepGetPhysicalInteractionLength(const G4Track& track, G4double previousStepSize,
+                                                  G4ForceCondition* condition) override;
 
-   G4double AtRestGetPhysicalInteractionLength(
-                           const G4Track& ,
-               G4ForceCondition*
-              ) override{ return -1.0; }
+    G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&) override;
 
-   G4VParticleChange* AtRestDoIt(
-               const G4Track& ,
-               const G4Step&
-              ) override{return nullptr;}
+    G4double AtRestGetPhysicalInteractionLength(const G4Track&, G4ForceCondition*) override
+    {
+      return -1.0;
+    }
 
-   //  no operation in  AlongStepDoIt
-   G4double AlongStepGetPhysicalInteractionLength(
-                           const G4Track&,
-               G4double  ,
-               G4double  ,
-               G4double& ,
-                           G4GPILSelection*
-                          ) override{ return -1.0; }
+    G4VParticleChange* AtRestDoIt(const G4Track&, const G4Step&) override { return nullptr; }
 
-   //  no operation in  AlongStepDoIt
-   G4VParticleChange* AlongStepDoIt(
-               const G4Track& ,
-               const G4Step&
-                          ) override {return nullptr;}
+    //  no operation in  AlongStepDoIt
+    G4double AlongStepGetPhysicalInteractionLength(const G4Track&, G4double, G4double, G4double&,
+                                                   G4GPILSelection*) override
+    {
+      return -1.0;
+    }
 
-protected:
+    //  no operation in  AlongStepDoIt
+    G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&) override { return nullptr; }
+
+  protected:
+
     struct SecondOrderReactionState : public G4ProcessState
     {
         SecondOrderReactionState();
-        ~SecondOrderReactionState() override= default;
+        ~SecondOrderReactionState() override = default;
         G4double fPreviousTimeAtPreStepPoint;
         G4bool fIsInGoodMaterial;
     };
 
-private :
+  private:
+
     void Create();
 
-protected:
+  protected:
+
     G4bool fIsInitialized;
 
     G4double fReturnedValue;
@@ -131,4 +121,4 @@ protected:
     const G4Material* fpMaterial;
 };
 
-#endif // G4DNASECONDORDERREACTION_HH
+#endif  // G4DNASECONDORDERREACTION_HH

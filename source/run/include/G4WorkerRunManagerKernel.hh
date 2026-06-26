@@ -50,18 +50,20 @@
 
 // Authors: M.Asai, A.Dotti (SLAC), 2013
 // --------------------------------------------------------------------
-#ifndef G4WorkerRunManagerKernel_hh
-#define G4WorkerRunManagerKernel_hh 1
+#ifndef G4WORKERRUNMANAGERKERNEL_HH
+#define G4WORKERRUNMANAGERKERNEL_HH
 
 #include "G4RunManagerKernel.hh"
 
 class G4WorkerRunManagerKernel : public G4RunManagerKernel
 {
   public:
+
     G4WorkerRunManagerKernel();
     ~G4WorkerRunManagerKernel() override;
 
   protected:
+
     // Overwrite default behavior.
     void SetupShadowProcess() const override;
 };

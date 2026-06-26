@@ -42,52 +42,46 @@
 //
 
 #include "G4EmStandardPhysicsSS.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4EmParameters.hh"
-#include "G4EmBuilder.hh"
-#include "G4LossTableManager.hh"
 
-#include "G4ComptonScattering.hh"
-#include "G4GammaConversion.hh"
-#include "G4PhotoElectricEffect.hh"
-#include "G4RayleighScattering.hh"
 #include "G4BetheHeitler5DModel.hh"
-#include "G4hMultipleScattering.hh"
-
-#include "G4KleinNishinaModel.hh"
-#include "G4LivermorePhotoElectricModel.hh"
+#include "G4ComptonScattering.hh"
 #include "G4CoulombScattering.hh"
-#include "G4eCoulombScatteringModel.hh"
-#include "G4hCoulombScatteringModel.hh"
+#include "G4EmBuilder.hh"
+#include "G4EmParameters.hh"
+#include "G4GammaConversion.hh"
+#include "G4IonFluctuations.hh"
+#include "G4KleinNishinaModel.hh"
+#include "G4LindhardSorensenIonModel.hh"
 #include "G4LivermorePhotoElectricModel.hh"
 #include "G4LivermorePolarizedRayleighModel.hh"
+#include "G4LossTableManager.hh"
+#include "G4ParticleDefinition.hh"
 #include "G4PhotoElectricAngularGeneratorPolarized.hh"
-#include "G4LindhardSorensenIonModel.hh"
-#include "G4IonFluctuations.hh"
+#include "G4PhotoElectricEffect.hh"
+#include "G4RayleighScattering.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4eCoulombScatteringModel.hh"
+#include "G4hCoulombScatteringModel.hh"
+#include "G4hMultipleScattering.hh"
 
-//#include "G4eSingleCoulombScatteringModel.hh"
-#include "G4eDPWACoulombScatteringModel.hh"
-
-#include "G4eIonisation.hh"
-#include "G4eBremsstrahlung.hh"
-#include "G4eplusAnnihilation.hh"
+// #include "G4eSingleCoulombScatteringModel.hh"
+#include "G4BuilderType.hh"
+#include "G4Electron.hh"
+#include "G4EmModelActivator.hh"
+#include "G4Gamma.hh"
+#include "G4GammaGeneralProcess.hh"
+#include "G4GenericIon.hh"
+#include "G4ParticleTable.hh"
+#include "G4PhysicsListHelper.hh"
+#include "G4Positron.hh"
 #include "G4UAtomicDeexcitation.hh"
+#include "G4eBremsstrahlung.hh"
+#include "G4eDPWACoulombScatteringModel.hh"
+#include "G4eIonisation.hh"
 #include "G4ePairProduction.hh"
-
+#include "G4eplusAnnihilation.hh"
 #include "G4hIonisation.hh"
 #include "G4ionIonisation.hh"
-
-#include "G4ParticleTable.hh"
-#include "G4Gamma.hh"
-#include "G4Electron.hh"
-#include "G4Positron.hh"
-#include "G4GenericIon.hh"
-
-#include "G4PhysicsListHelper.hh"
-#include "G4BuilderType.hh"
-#include "G4EmModelActivator.hh"
-#include "G4GammaGeneralProcess.hh"
 
 // factory
 #include "G4PhysicsConstructorFactory.hh"
@@ -96,16 +90,15 @@ G4_DECLARE_PHYSCONSTR_FACTORY(G4EmStandardPhysicsSS);
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4EmStandardPhysicsSS::G4EmStandardPhysicsSS(G4int ver)
-  : G4VPhysicsConstructor("G4EmStandardSS")
+G4EmStandardPhysicsSS::G4EmStandardPhysicsSS(G4int ver) : G4VPhysicsConstructor("G4EmStandardSS")
 {
   SetVerboseLevel(ver);
   G4EmParameters* param = G4EmParameters::Instance();
   param->SetDefaults();
   param->SetVerbose(ver);
-  param->SetLowestElectronEnergy(10*CLHEP::eV);
+  param->SetLowestElectronEnergy(10 * CLHEP::eV);
   param->SetMscThetaLimit(0.0);
-  param->SetUseMottCorrection(true); // use Mott-correction for e-/e+ msc gs
+  param->SetUseMottCorrection(true);  // use Mott-correction for e-/e+ msc gs
   param->SetAuger(true);
   param->SetPixe(true);
   SetPhysicsType(bElectromagnetic);
@@ -113,8 +106,7 @@ G4EmStandardPhysicsSS::G4EmStandardPhysicsSS(G4int ver)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4EmStandardPhysicsSS::~G4EmStandardPhysicsSS()
-{}
+G4EmStandardPhysicsSS::~G4EmStandardPhysicsSS() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -128,7 +120,8 @@ void G4EmStandardPhysicsSS::ConstructParticle()
 
 void G4EmStandardPhysicsSS::ConstructProcess()
 {
-  if(verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "### " << GetPhysicsName() << " Construct Processes " << G4endl;
   }
   G4EmBuilder::PrepareEMPhysics();
@@ -146,7 +139,8 @@ void G4EmStandardPhysicsSS::ConstructProcess()
   G4PhotoElectricEffect* pe = new G4PhotoElectricEffect();
   G4VEmModel* peModel = new G4LivermorePhotoElectricModel();
   pe->SetEmModel(peModel);
-  if(param->EnablePolarisation()) {
+  if (param->EnablePolarisation())
+  {
     peModel->SetAngularDistribution(new G4PhotoElectricAngularGeneratorPolarized());
   }
 
@@ -161,11 +155,13 @@ void G4EmStandardPhysicsSS::ConstructProcess()
 
   // default Rayleigh scattering is Livermore
   G4RayleighScattering* rl = new G4RayleighScattering();
-  if(param->EnablePolarisation()) {
+  if (param->EnablePolarisation())
+  {
     rl->SetEmModel(new G4LivermorePolarizedRayleighModel());
   }
 
-  if(param->GeneralProcessActive()) {
+  if (param->GeneralProcessActive())
+  {
     G4GammaGeneralProcess* sp = new G4GammaGeneralProcess();
     sp->AddEmProcess(pe);
     sp->AddEmProcess(cs);
@@ -173,7 +169,9 @@ void G4EmStandardPhysicsSS::ConstructProcess()
     sp->AddEmProcess(rl);
     G4LossTableManager::Instance()->SetGammaGeneralProcess(sp);
     ph->RegisterProcess(sp, particle);
-  } else {
+  }
+  else
+  {
     ph->RegisterProcess(pe, particle);
     ph->RegisterProcess(cs, particle);
     ph->RegisterProcess(gc, particle);
@@ -183,9 +181,12 @@ void G4EmStandardPhysicsSS::ConstructProcess()
   particle = G4Electron::Electron();
 
   G4VEmModel* ss = nullptr;
-  if(param->UseMottCorrection()) {
+  if (param->UseMottCorrection())
+  {
     ss = new G4eDPWACoulombScatteringModel();
-  } else {
+  }
+  else
+  {
     ss = new G4eCoulombScatteringModel(false);
   }
   ph->RegisterProcess(new G4eIonisation(), particle);
@@ -198,9 +199,12 @@ void G4EmStandardPhysicsSS::ConstructProcess()
   // e+
   particle = G4Positron::Positron();
 
-  if(param->UseMottCorrection()) {
+  if (param->UseMottCorrection())
+  {
     ss = new G4eDPWACoulombScatteringModel();
-  } else {
+  }
+  else
+  {
     ss = new G4eCoulombScatteringModel(false);
   }
   ph->RegisterProcess(new G4eIonisation(), particle);

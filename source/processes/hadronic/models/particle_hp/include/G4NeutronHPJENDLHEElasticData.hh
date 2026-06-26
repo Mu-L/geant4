@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4NeutronHPJENDLHEElasticData_h
-#define G4NeutronHPJENDLHEElasticData_h
+#ifndef G4NEUTRONHPJENDLHEELASTICDATA_HH
+#define G4NEUTRONHPJENDLHEELASTICDATA_HH
 
 #include "G4ParticleHPJENDLHEElasticData.hh"
 using G4NeutronHPJENDLHEElasticData = G4ParticleHPJENDLHEElasticData;

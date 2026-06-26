@@ -29,28 +29,28 @@
 // --------------------------------------------------------------------
 
 #include "G4RToEConvForGamma.hh"
+
+#include "G4Exp.hh"
+#include "G4Log.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4Log.hh"
-#include "G4Exp.hh"
 #include "G4Pow.hh"
+#include "G4SystemOfUnits.hh"
 
 // --------------------------------------------------------------------
-G4RToEConvForGamma::G4RToEConvForGamma()  
-  : G4VRangeToEnergyConverter()
-{    
+G4RToEConvForGamma::G4RToEConvForGamma() : G4VRangeToEnergyConverter()
+{
   theParticle = G4ParticleTable::GetParticleTable()->FindParticle("gamma");
   if (theParticle == nullptr)
   {
 #ifdef G4VERBOSE
-    if (GetVerboseLevel()>0)
+    if (GetVerboseLevel() > 0)
     {
       G4cout << " G4RToEConvForGamma::G4RToEConvForGamma() - ";
       G4cout << "Gamma is not defined !!" << G4endl;
     }
 #endif
-  } 
+  }
   else
   {
     fPDG = theParticle->GetPDGEncoding();
@@ -58,60 +58,58 @@ G4RToEConvForGamma::G4RToEConvForGamma()
 }
 
 // --------------------------------------------------------------------
-G4RToEConvForGamma::~G4RToEConvForGamma()  
-{}
+G4RToEConvForGamma::~G4RToEConvForGamma() {}
 
 // --------------------------------------------------------------------
-G4double G4RToEConvForGamma::ComputeValue(const G4int Z, 
-                                          const G4double energy) 
+G4double G4RToEConvForGamma::ComputeValue(const G4int Z, const G4double energy)
 {
   // Compute the "absorption" cross-section of the photon "absorption".
   // Cross-section means here the sum of the cross-sections of the
   // pair production, Compton scattering and photoelectric processes
 
-  const G4double t1keV = 1.*CLHEP::keV;
-  const G4double t200keV = 200.*CLHEP::keV;
-  const G4double t100MeV = 100.*CLHEP::MeV;
+  const G4double t1keV = 1. * CLHEP::keV;
+  const G4double t200keV = 200. * CLHEP::keV;
+  const G4double t100MeV = 100. * CLHEP::MeV;
 
-  G4double Zsquare = Z*Z;
+  G4double Zsquare = Z * Z;
   G4double Zlog = G4Pow::GetInstance()->logZ(Z);
-  G4double Zlogsquare = Zlog*Zlog;
+  G4double Zlogsquare = Zlog * Zlog;
 
-  G4double tmin = (0.552+218.5/Z+557.17/Zsquare)*CLHEP::MeV;
-  G4double tlow = 0.2*G4Exp(-7.355/std::sqrt(Z))*CLHEP::MeV;
+  G4double tmin = (0.552 + 218.5 / Z + 557.17 / Zsquare) * CLHEP::MeV;
+  G4double tlow = 0.2 * G4Exp(-7.355 / std::sqrt(Z)) * CLHEP::MeV;
 
-  G4double smin = (0.01239+0.005585*Zlog-0.000923*Zlogsquare)*G4Exp(1.5*Zlog);
-  G4double s200keV = (0.2651-0.1501*Zlog+0.02283*Zlogsquare)*Zsquare;
+  G4double smin = (0.01239 + 0.005585 * Zlog - 0.000923 * Zlogsquare) * G4Exp(1.5 * Zlog);
+  G4double s200keV = (0.2651 - 0.1501 * Zlog + 0.02283 * Zlogsquare) * Zsquare;
 
-  G4double cminlog = G4Log(tmin/t200keV); 
-  G4double cmin = G4Log(s200keV/smin)/(cminlog*cminlog);
+  G4double cminlog = G4Log(tmin / t200keV);
+  G4double cmin = G4Log(s200keV / smin) / (cminlog * cminlog);
 
-  G4double slowlog = G4Log(t200keV/tlow);
-  G4double slow = s200keV * G4Exp(0.042*Z*slowlog*slowlog);
-  G4double logtlow = G4Log(tlow/t1keV);
-  G4double clow = G4Log(300.*Zsquare/slow)/logtlow;
-  G4double chigh = (7.55e-5 - 0.0542e-5*Z)*Zsquare*Z/G4Log(t100MeV/tmin);
+  G4double slowlog = G4Log(t200keV / tlow);
+  G4double slow = s200keV * G4Exp(0.042 * Z * slowlog * slowlog);
+  G4double logtlow = G4Log(tlow / t1keV);
+  G4double clow = G4Log(300. * Zsquare / slow) / logtlow;
+  G4double chigh = (7.55e-5 - 0.0542e-5 * Z) * Zsquare * Z / G4Log(t100MeV / tmin);
 
   // Calculate the cross-section (using an approximate empirical formula)
   G4double xs;
-  if ( energy < tlow )
+  if (energy < tlow)
   {
-    xs = (energy < t1keV) ? slow*G4Exp(clow*logtlow) :
-      slow*G4Exp(clow*G4Log(tlow/energy));
+    xs =
+      (energy < t1keV) ? slow * G4Exp(clow * logtlow) : slow * G4Exp(clow * G4Log(tlow / energy));
   }
-  else if ( energy < t200keV )
+  else if (energy < t200keV)
   {
-    G4double x = G4Log(t200keV/energy);
-    xs = s200keV * G4Exp(0.042*Z*x*x);
+    G4double x = G4Log(t200keV / energy);
+    xs = s200keV * G4Exp(0.042 * Z * x * x);
   }
-  else if( energy<tmin )
+  else if (energy < tmin)
   {
-    const G4double x = G4Log(tmin/energy);
-    xs = smin * G4Exp(cmin*x*x);
+    const G4double x = G4Log(tmin / energy);
+    xs = smin * G4Exp(cmin * x * x);
   }
   else
   {
-    xs = smin + chigh*G4Log(energy/tmin);
+    xs = smin + chigh * G4Log(energy / tmin);
   }
   return xs * CLHEP::barn;
 }

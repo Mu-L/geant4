@@ -30,6 +30,7 @@
 // --------------------------------------------------------------------
 
 #include "G4OrderedTable.hh"
+
 #include "G4DataVector.hh"
 
 #include <fstream>
@@ -38,20 +39,20 @@
 
 // --------------------------------------------------------------------
 G4OrderedTable::G4OrderedTable(std::size_t cap)
-  : std::vector<G4DataVector*>(cap, (G4DataVector*) nullptr)
+  : std::vector<G4DataVector*>(cap, (G4DataVector*)nullptr)
 {}
 
 // --------------------------------------------------------------------
 void G4OrderedTable::clearAndDestroy()
 {
   G4DataVector* a = nullptr;
-  while(!empty())
+  while (!empty())
   {
     a = back();
     pop_back();
-    for(auto i = cbegin(); i != cend(); ++i)
+    for (auto i = cbegin(); i != cend(); ++i)
     {
-      if(*i == a)
+      if (*i == a)
       {
         erase(i);
         --i;
@@ -68,7 +69,7 @@ G4bool G4OrderedTable::Store(const G4String& fileName, G4bool ascii)
   std::ofstream fOut;
 
   // open output file //
-  if(!ascii)
+  if (!ascii)
   {
     fOut.open(fileName, std::ios::out | std::ios::binary);
   }
@@ -78,7 +79,7 @@ G4bool G4OrderedTable::Store(const G4String& fileName, G4bool ascii)
   }
 
   // check if the file has been opened successfully
-  if(!fOut)
+  if (!fOut)
   {
 #ifdef G4VERBOSE
     G4cerr << "G4OrderedTable::::Store():";
@@ -89,9 +90,9 @@ G4bool G4OrderedTable::Store(const G4String& fileName, G4bool ascii)
   }
 
   auto tableSize = G4int(size());  // Number of elements
-  if(!ascii)
+  if (!ascii)
   {
-    fOut.write((char*) (&tableSize), sizeof tableSize);
+    fOut.write((char*)(&tableSize), sizeof tableSize);
   }
   else
   {
@@ -99,11 +100,11 @@ G4bool G4OrderedTable::Store(const G4String& fileName, G4bool ascii)
   }
 
   G4int vType = G4DataVector::T_G4DataVector;  // Data Vector
-  for(const auto itr : *this)
+  for (const auto itr : *this)
   {
-    if(!ascii)
+    if (!ascii)
     {
-      fOut.write((char*) (&vType), sizeof vType);
+      fOut.write((char*)(&vType), sizeof vType);
     }
     else
     {
@@ -120,7 +121,7 @@ G4bool G4OrderedTable::Retrieve(const G4String& fileName, G4bool ascii)
 {
   std::ifstream fIn;
   // open input file //
-  if(!ascii)
+  if (!ascii)
   {
     fIn.open(fileName, std::ios::in | std::ios::binary);
   }
@@ -130,7 +131,7 @@ G4bool G4OrderedTable::Retrieve(const G4String& fileName, G4bool ascii)
   }
 
   // check if the file has been opened successfully
-  if(!fIn)
+  if (!fIn)
   {
 #ifdef G4VERBOSE
     G4cerr << "G4OrderedTable::Retrieve():";
@@ -145,15 +146,15 @@ G4bool G4OrderedTable::Retrieve(const G4String& fileName, G4bool ascii)
 
   // Number of elements
   G4int tableSize = 0;
-  if(!ascii)
+  if (!ascii)
   {
-    fIn.read((char*) (&tableSize), sizeof tableSize);
+    fIn.read((char*)(&tableSize), sizeof tableSize);
   }
   else
   {
     fIn >> tableSize;
   }
-  if(tableSize <= 0)
+  if (tableSize <= 0)
   {
 #ifdef G4VERBOSE
     G4cerr << "G4OrderedTable::Retrieve():";
@@ -164,18 +165,18 @@ G4bool G4OrderedTable::Retrieve(const G4String& fileName, G4bool ascii)
   reserve(tableSize);
 
   // Physics Vector
-  for(G4int idx = 0; idx < tableSize; ++idx)
+  for (G4int idx = 0; idx < tableSize; ++idx)
   {
     G4int vType = 0;
-    if(!ascii)
+    if (!ascii)
     {
-      fIn.read((char*) (&vType), sizeof vType);
+      fIn.read((char*)(&vType), sizeof vType);
     }
     else
     {
       fIn >> vType;
     }
-    if(vType != G4DataVector::T_G4DataVector)
+    if (vType != G4DataVector::T_G4DataVector)
     {
 #ifdef G4VERBOSE
       G4cerr << "G4OrderedTable::Retrieve():";
@@ -188,12 +189,11 @@ G4bool G4OrderedTable::Retrieve(const G4String& fileName, G4bool ascii)
 
     auto* pVec = new G4DataVector;
 
-    if(!(pVec->Retrieve(fIn, ascii)))
+    if (!(pVec->Retrieve(fIn, ascii)))
     {
 #ifdef G4VERBOSE
       G4cerr << "G4OrderedTable::Retrieve(): ";
-      G4cerr << " Error in retreiving " << idx
-             << "-th Physics Vector from file: ";
+      G4cerr << " Error in retreiving " << idx << "-th Physics Vector from file: ";
       G4cerr << fileName << G4endl;
 #endif
       fIn.close();
@@ -213,7 +213,7 @@ std::ostream& operator<<(std::ostream& out, G4OrderedTable& right)
 {
   // Printout Data Vector
   std::size_t i = 0;
-  for(const auto itr : right)
+  for (const auto itr : right)
   {
     out << std::setw(8) << i << "-th Vector   ";
     out << ": Type    " << G4DataVector::T_G4DataVector << G4endl;

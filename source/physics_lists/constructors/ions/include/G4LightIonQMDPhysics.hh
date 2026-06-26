@@ -27,7 +27,7 @@
 //---------------------------------------------------------------------------
 //
 // ClassName:    G4LightIonQMDPhysics
-// 
+//
 // Author:       Yoshihide Sato - November 2023
 //
 // Description:  Variant of G4IonQMDPhysics in which G4LightIonQMDReaction
@@ -41,11 +41,11 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4LightIonQMDPhysics_h
-#define G4LightIonQMDPhysics_h 1
+#ifndef G4LIGHTIONQMDPHYSICS_HH
+#define G4LIGHTIONQMDPHYSICS_HH
 
-#include "globals.hh"
 #include "G4VPhysicsConstructor.hh"
+#include "globals.hh"
 
 #include <vector>
 
@@ -57,39 +57,34 @@ class G4VCrossSectionDataSet;
 
 class G4LightIonQMDPhysics : public G4VPhysicsConstructor
 {
-public:
-  G4LightIonQMDPhysics(G4int verb = 0);
-  G4LightIonQMDPhysics(const G4String& name, G4int ver = 0);
-  ~G4LightIonQMDPhysics() override;
+  public:
 
-  // This method will be invoked in the Construct() method.
-  // each particle type will be instantiated
-  void ConstructParticle() override;
+    G4LightIonQMDPhysics(G4int verb = 0);
+    G4LightIonQMDPhysics(const G4String& name, G4int ver = 0);
+    ~G4LightIonQMDPhysics() override;
 
-  // This method will be invoked in the Construct() method.
-  // each physics process will be instantiated and
-  // registered to the process manager of each particle type
-  void ConstructProcess() override;
+    // This method will be invoked in the Construct() method.
+    // each particle type will be instantiated
+    void ConstructParticle() override;
 
-private:
+    // This method will be invoked in the Construct() method.
+    // each physics process will be instantiated and
+    // registered to the process manager of each particle type
+    void ConstructProcess() override;
 
-  void AddProcess(const G4String&,
-		  G4ParticleDefinition*, 
-		  G4BinaryLightIonReaction*,
-          G4QMDReaction*,
-		  G4LightIonQMDReaction*,
-		  G4HadronicInteraction*,
-		  G4VCrossSectionDataSet*);
+  private:
 
-  G4double eminQMD;
-  G4double emaxQMD;
-  G4double eminLIQMD;
-  G4double emaxLIQMD;
-  G4double overlap;
-   
-  G4int  verbose;
+    void AddProcess(const G4String&, G4ParticleDefinition*, G4BinaryLightIonReaction*,
+                    G4QMDReaction*, G4LightIonQMDReaction*, G4HadronicInteraction*,
+                    G4VCrossSectionDataSet*);
+
+    G4double eminQMD;
+    G4double emaxQMD;
+    G4double eminLIQMD;
+    G4double emaxLIQMD;
+    G4double overlap;
+
+    G4int verbose;
 };
 
-
 #endif
-

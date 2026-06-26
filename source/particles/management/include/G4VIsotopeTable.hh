@@ -32,8 +32,8 @@
 
 // Author: H.Kurashige, 5 October 1999
 // --------------------------------------------------------------------
-#ifndef G4VIsotopeTable_hh
-#define G4VIsotopeTable_hh 1
+#ifndef G4VISOTOPETABLE_HH
+#define G4VISOTOPETABLE_HH
 
 #include "G4Ions.hh"
 #include "G4ios.hh"
@@ -44,6 +44,7 @@ class G4IsotopeProperty;
 class G4VIsotopeTable
 {
   public:
+
     // Constructors
     G4VIsotopeTable() = default;
     explicit G4VIsotopeTable(const G4String&);
@@ -87,6 +88,7 @@ class G4VIsotopeTable
     const G4String& GetName() const;
 
   private:
+
     G4String fName = "";
     G4int verboseLevel = 0;
 };

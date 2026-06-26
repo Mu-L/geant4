@@ -30,16 +30,17 @@
 //              in the CM for the n p -> n p reaction
 //
 
-#ifndef G4NP2NPAngDst_h
-#define G4NP2NPAngDst_h 1
+#ifndef G4NP2NPANGDST_HH
+#define G4NP2NPANGDST_HH
 
 #include "G4NumIntTwoBodyAngDst.hh"
 
+class G4NP2NPAngDst : public G4NumIntTwoBodyAngDst<11, 19>
+{
+  public:
 
-class G4NP2NPAngDst : public G4NumIntTwoBodyAngDst<11,19> {
-public:
-  G4NP2NPAngDst(G4int verbose = 0);
-  virtual ~G4NP2NPAngDst() {;}
+    G4NP2NPAngDst(G4int verbose = 0);
+    virtual ~G4NP2NPAngDst() { ; }
 };
 
 #endif

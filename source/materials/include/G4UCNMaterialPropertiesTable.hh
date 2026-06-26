@@ -43,131 +43,139 @@
 //           Thanks to Geza Zsigmond
 
 #ifndef G4UCNMATERIALPROPERTIESTABLE_HH
-#define G4UCNMATERIALPROPERTIESTABLE_HH 1
+#define G4UCNMATERIALPROPERTIESTABLE_HH
 
 #include "G4MaterialPropertiesTable.hh"
 
 class G4UCNMaterialPropertiesTable : public G4MaterialPropertiesTable
 {
- public:
-  G4UCNMaterialPropertiesTable();
-  ~G4UCNMaterialPropertiesTable() override;
+  public:
 
-  // returns the pointer to the mr-reflection table
-  G4double* GetMicroRoughnessTable();
+    G4UCNMaterialPropertiesTable();
+    ~G4UCNMaterialPropertiesTable() override;
 
-  // returns the pointer to the mr-transmission table
-  G4double* GetMicroRoughnessTransTable();
+    // returns the pointer to the mr-reflection table
+    G4double* GetMicroRoughnessTable();
 
-  // Assigns double-array to the table-pointers, currently not used
-  void LoadMicroRoughnessTables(G4double*, G4double*, G4double*, G4double*);
+    // returns the pointer to the mr-transmission table
+    G4double* GetMicroRoughnessTransTable();
 
-  // Creates new double arrays and assigns them to the table pointers
-  void InitMicroRoughnessTables();
+    // Assigns double-array to the table-pointers, currently not used
+    void LoadMicroRoughnessTables(G4double*, G4double*, G4double*, G4double*);
 
-  // Reads the MR-parameters from the corresponding fields and starts
-  // the computation of the mr-tables
-  void ComputeMicroRoughnessTables();
+    // Creates new double arrays and assigns them to the table pointers
+    void InitMicroRoughnessTables();
 
-  // returns the integral prob. value for a theta_i - E pair
-  G4double GetMRIntProbability(G4double, G4double);
+    // Reads the MR-parameters from the corresponding fields and starts
+    // the computation of the mr-tables
+    void ComputeMicroRoughnessTables();
 
-  // returns the maximum prob. value for a theta_i - E pair
-  G4double GetMRMaxProbability(G4double, G4double);
+    // returns the integral prob. value for a theta_i - E pair
+    G4double GetMRIntProbability(G4double, G4double);
 
-  // sets the maximum prob. value for a theta_i - E pair
-  void SetMRMaxProbability(G4double, G4double, G4double);
+    // returns the maximum prob. value for a theta_i - E pair
+    G4double GetMRMaxProbability(G4double, G4double);
 
-  // returns the mr-prob.
+    // sets the maximum prob. value for a theta_i - E pair
+    void SetMRMaxProbability(G4double, G4double, G4double);
 
-  // arguments:
-  //         1) theta_i
-  //         2) Energy
-  //         3) V_F
-  //         4) theta_o
-  //         5) phi_o
-  G4double GetMRProbability(G4double, G4double, G4double, G4double, G4double);
+    // returns the mr-prob.
 
-  // returns the integral transmission prob. value for a theta_i - E pair
-  G4double GetMRIntTransProbability(G4double, G4double);
+    // arguments:
+    //         1) theta_i
+    //         2) Energy
+    //         3) V_F
+    //         4) theta_o
+    //         5) phi_o
+    G4double GetMRProbability(G4double, G4double, G4double, G4double, G4double);
 
-  // returns the maximum transmission prob. for a theta_i - E pair
-  G4double GetMRMaxTransProbability(G4double, G4double);
+    // returns the integral transmission prob. value for a theta_i - E pair
+    G4double GetMRIntTransProbability(G4double, G4double);
 
-  // sets the maximum prob. value for a theta_i - E pair
-  void SetMRMaxTransProbability(G4double, G4double, G4double);
+    // returns the maximum transmission prob. for a theta_i - E pair
+    G4double GetMRMaxTransProbability(G4double, G4double);
 
-  // returns the mr-transmission-prob.
-  // arguments:
-  //         1) theta_i
-  //         2) E
-  //         3) V_F
-  //         4) theta_o
-  //         5) phi_o
-  G4double GetMRTransProbability(G4double, G4double, G4double, G4double, G4double);
+    // sets the maximum prob. value for a theta_i - E pair
+    void SetMRMaxTransProbability(G4double, G4double, G4double);
 
-  // Checks if the validity condition for the microroughness model are
-  // satisfied, cf. Steyerl-paper p. 175
-  G4bool ConditionsValid(G4double E, G4double VFermi, G4double theta_i);
+    // returns the mr-transmission-prob.
+    // arguments:
+    //         1) theta_i
+    //         2) E
+    //         3) V_F
+    //         4) theta_o
+    //         5) phi_o
+    G4double GetMRTransProbability(G4double, G4double, G4double, G4double, G4double);
 
-  // Checks if the validity conditions for the transmission of the
-  // microroughness model are satisfied
-  G4bool TransConditionsValid(G4double E, G4double VFermi, G4double theta_i);
+    // Checks if the validity condition for the microroughness model are
+    // satisfied, cf. Steyerl-paper p. 175
+    G4bool ConditionsValid(G4double E, G4double VFermi, G4double theta_i);
 
-  // Adds the values for mr-related units to the MaterialPropertiesTable
-  // arguments:
-  //         1) w
-  //         2) b
-  //         3) number of angles theta_i in the look-up tables
-  //         4) number of energies in the look-up tables
-  //         5) minimum value of theta_i
-  //         6) maximum value of theta_i
-  //         7) minimum value of E
-  //         8) maximum value of E
-  //         9) number of angles theta_o in the look-up table calculation
-  //        10) number of angles phi_o   in the look-up table calculation
-  //        11) angular cut
-  void SetMicroRoughnessParameters(G4double, G4double, G4int, G4int, G4double, G4double, G4double,
-    G4double, G4int, G4int, G4double);
+    // Checks if the validity conditions for the transmission of the
+    // microroughness model are satisfied
+    G4bool TransConditionsValid(G4double E, G4double VFermi, G4double theta_i);
 
-  // returns b
-  G4double GetRMS() const;
+    // Adds the values for mr-related units to the MaterialPropertiesTable
+    // arguments:
+    //         1) w
+    //         2) b
+    //         3) number of angles theta_i in the look-up tables
+    //         4) number of energies in the look-up tables
+    //         5) minimum value of theta_i
+    //         6) maximum value of theta_i
+    //         7) minimum value of E
+    //         8) maximum value of E
+    //         9) number of angles theta_o in the look-up table calculation
+    //        10) number of angles phi_o   in the look-up table calculation
+    //        11) angular cut
+    void SetMicroRoughnessParameters(G4double, G4double, G4int, G4int, G4double, G4double, G4double,
+                                     G4double, G4int, G4int, G4double);
 
-  // returns w
-  G4double GetCorrLen() const;
+    // returns b
+    G4double GetRMS() const;
 
- private:
-  // Pointer to the integral reflection probability table
-  G4double* theMicroRoughnessTable;
+    // returns w
+    G4double GetCorrLen() const;
 
-  // Pointer to the maximum reflection probability table
-  G4double* maxMicroRoughnessTable;
+  private:
 
-  // Pointer to the integral transmission probability table
-  G4double* theMicroRoughnessTransTable;
+    // Pointer to the integral reflection probability table
+    G4double* theMicroRoughnessTable;
 
-  // Pointer to the maximum transmission probability table
-  G4double* maxMicroRoughnessTransTable;
+    // Pointer to the maximum reflection probability table
+    G4double* maxMicroRoughnessTable;
 
-  G4double theta_i_min;
-  G4double theta_i_max;
-  G4double Emin;
-  G4double Emax;
-  G4int no_theta_i;
-  G4int noE;
-  G4double theta_i_step;
-  G4double E_step;
+    // Pointer to the integral transmission probability table
+    G4double* theMicroRoughnessTransTable;
 
-  // RMS roughness and correlation length
-  G4double b, w;
-  G4double AngCut;
+    // Pointer to the maximum transmission probability table
+    G4double* maxMicroRoughnessTransTable;
+
+    G4double theta_i_min;
+    G4double theta_i_max;
+    G4double Emin;
+    G4double Emax;
+    G4int no_theta_i;
+    G4int noE;
+    G4double theta_i_step;
+    G4double E_step;
+
+    // RMS roughness and correlation length
+    G4double b, w;
+    G4double AngCut;
 };
 
 // ==========================================================================
 // inline functions
 // ==========================================================================
 
-inline G4double G4UCNMaterialPropertiesTable::GetRMS() const { return b; }
-inline G4double G4UCNMaterialPropertiesTable::GetCorrLen() const { return w; }
+inline G4double G4UCNMaterialPropertiesTable::GetRMS() const
+{
+  return b;
+}
+inline G4double G4UCNMaterialPropertiesTable::GetCorrLen() const
+{
+  return w;
+}
 
 #endif

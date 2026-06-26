@@ -24,7 +24,7 @@
 #
 # -> 2) Geant4-DNA Physics in the target regionTarget
 # use /process/em/AddDNARegion regionTarget X
-# where X is DNA_Opt0 or DNA_Opt2 or DNA_Opt4 or DNA_Opt6
+# where X is DNA_Opt2 or DNA_Opt4 or DNA_Opt6 or DNA_Opt8
 /process/em/AddDNARegion regionTarget DNA_Opt4
 #
 # -> 3) If needed, to add radioactive radioactive decay

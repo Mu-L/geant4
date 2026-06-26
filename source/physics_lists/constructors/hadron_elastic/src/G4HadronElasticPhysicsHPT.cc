@@ -43,45 +43,49 @@
 //
 
 #include "G4HadronElasticPhysicsHPT.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4HadronicParameters.hh"
+#include "G4HadronicProcess.hh"
 #include "G4Neutron.hh"
 #include "G4ParticleDefinition.hh"
-#include "G4HadronicProcess.hh"
 #include "G4ParticleHPThermalScattering.hh"
 #include "G4ParticleHPThermalScatteringData.hh"
-#include "G4HadronicParameters.hh"
 #include "G4PhysListUtil.hh"
 #include "G4PhysicsConstructorFactory.hh"
+#include "G4SystemOfUnits.hh"
 
+G4_DECLARE_PHYSCONSTR_FACTORY(G4HadronElasticPhysicsHPT);
 
-G4_DECLARE_PHYSCONSTR_FACTORY( G4HadronElasticPhysicsHPT );
-
-
-G4HadronElasticPhysicsHPT::G4HadronElasticPhysicsHPT( G4int ver ) : G4HadronElasticPhysicsHP( ver ) {
-  if ( ver > 1 ) G4cout << "### G4HadronElasticPhysicsHPT: " << GetPhysicsName() << G4endl;
+G4HadronElasticPhysicsHPT::G4HadronElasticPhysicsHPT(G4int ver) : G4HadronElasticPhysicsHP(ver)
+{
+  if (ver > 1) G4cout << "### G4HadronElasticPhysicsHPT: " << GetPhysicsName() << G4endl;
 }
 
-
-void G4HadronElasticPhysicsHPT::ConstructProcess() {
+void G4HadronElasticPhysicsHPT::ConstructProcess()
+{
   G4HadronElasticPhysicsHP::ConstructProcess();
   const G4Neutron* neutron = G4Neutron::Neutron();
-  G4HadronicProcess* neutronElasticProcess = G4PhysListUtil::FindElasticProcess( neutron );
-  if ( neutronElasticProcess == nullptr ) {
-    G4cout << "### " << GetPhysicsName() 
-           << " WARNING: Fail to add thermal neutron scattering" << G4endl;
+  G4HadronicProcess* neutronElasticProcess = G4PhysListUtil::FindElasticProcess(neutron);
+  if (neutronElasticProcess == nullptr)
+  {
+    G4cout << "### " << GetPhysicsName() << " WARNING: Fail to add thermal neutron scattering"
+           << G4endl;
     return;
   }
   std::size_t sizeInteractionList = neutronElasticProcess->GetHadronicInteractionList().size();
-  if ( sizeInteractionList < 1 ) {
-    G4cout << "### " << GetPhysicsName() 
-           << " WARNING: Fail to add thermal neutron scattering !  sizeInteractionList=" 
+  if (sizeInteractionList < 1)
+  {
+    G4cout << "### " << GetPhysicsName()
+           << " WARNING: Fail to add thermal neutron scattering !  sizeInteractionList="
            << sizeInteractionList << G4endl;
     return;
   }
-  neutronElasticProcess->GetHadronicInteractionList()[ sizeInteractionList-1 ]->SetMinEnergy( 4.0*CLHEP::eV );
-  neutronElasticProcess->RegisterMe( new G4ParticleHPThermalScattering );
-  neutronElasticProcess->AddDataSet( new G4ParticleHPThermalScatteringData );
-  if ( G4HadronicParameters::Instance()->GetVerboseLevel() > 1 ) {
+  neutronElasticProcess->GetHadronicInteractionList()[sizeInteractionList - 1]->SetMinEnergy(
+    4.0 * CLHEP::eV);
+  neutronElasticProcess->RegisterMe(new G4ParticleHPThermalScattering);
+  neutronElasticProcess->AddDataSet(new G4ParticleHPThermalScatteringData);
+  if (G4HadronicParameters::Instance()->GetVerboseLevel() > 1)
+  {
     G4cout << "### HadronElasticPhysicsHPT is constructed " << G4endl;
   }
 }

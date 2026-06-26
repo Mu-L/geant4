@@ -29,6 +29,7 @@
 // --------------------------------------------------------------------
 
 #include "G4SurfBits.hh"
+
 #include "G4ios.hh"
 
 //______________________________________________________________________________
@@ -36,21 +37,24 @@ G4SurfBits::G4SurfBits(unsigned int nBits) : fNBits(nBits)
 {
   // G4SurfBits constructor.  All bits set to 0
 
-  if (fNBits <= 0) { fNBits = 0; }
-  fNBytes  = fNBits != 0u ? ((fNBits-1)/8) + 1 : 1;
+  if (fNBits <= 0)
+  {
+    fNBits = 0;
+  }
+  fNBytes = fNBits != 0u ? ((fNBits - 1) / 8) + 1 : 1;
   fAllBits = new unsigned char[fNBytes];
   // this is redundant only with libNew
-  std::memset(fAllBits,0,fNBytes);
+  std::memset(fAllBits, 0, fNBytes);
 }
 
 //______________________________________________________________________________
-G4SurfBits::G4SurfBits(const G4SurfBits &original)
+G4SurfBits::G4SurfBits(const G4SurfBits& original)
   : fNBits(original.fNBits), fNBytes(original.fNBytes)
 {
   // G4SurfBits copy constructor
 
   fAllBits = new unsigned char[fNBytes];
-  std::memcpy(fAllBits,original.fAllBits,fNBytes);
+  std::memcpy(fAllBits, original.fAllBits, fNBytes);
 }
 
 //______________________________________________________________________________
@@ -60,13 +64,13 @@ G4SurfBits& G4SurfBits::operator=(const G4SurfBits& rhs)
   if (this != &rhs)
   {
     //      TObject::operator=(rhs);
-    fNBits   = rhs.fNBits;
-    fNBytes  = rhs.fNBytes;
-    delete [] fAllBits;
+    fNBits = rhs.fNBits;
+    fNBytes = rhs.fNBytes;
+    delete[] fAllBits;
     if (fNBytes != 0)
     {
       fAllBits = new unsigned char[fNBytes];
-      std::memcpy(fAllBits,rhs.fAllBits,fNBytes);
+      std::memcpy(fAllBits, rhs.fAllBits, fNBytes);
     }
     else
     {
@@ -81,7 +85,7 @@ G4SurfBits::~G4SurfBits()
 {
   // G4SurfBits destructor
 
-  delete [] fAllBits;
+  delete[] fAllBits;
 }
 
 //______________________________________________________________________________
@@ -89,10 +93,10 @@ void G4SurfBits::Clear()
 {
   // Clear the value.
 
-  delete [] fAllBits;
+  delete[] fAllBits;
   fAllBits = nullptr;
-  fNBits   = 0;
-  fNBytes  = 0;
+  fNBits = 0;
+  fNBytes = 0;
 }
 
 //______________________________________________________________________________
@@ -100,34 +104,40 @@ void G4SurfBits::Compact()
 {
   // Reduce the storage used by the object to a minimun
 
-  if ((fNBits == 0u) || (fAllBits == nullptr)) { return; }
+  if ((fNBits == 0u) || (fAllBits == nullptr))
+  {
+    return;
+  }
   unsigned int needed;
-  for(needed=fNBytes-1; needed > 0 && fAllBits[needed]==0; ) { --needed; }
+  for (needed = fNBytes - 1; needed > 0 && fAllBits[needed] == 0;)
+  {
+    --needed;
+  }
   ++needed;
 
-  if (needed!=fNBytes)
+  if (needed != fNBytes)
   {
     unsigned char* old_location = fAllBits;
     fAllBits = new unsigned char[needed];
 
-    std::memcpy(fAllBits,old_location,needed);
-    delete [] old_location;
+    std::memcpy(fAllBits, old_location, needed);
+    delete[] old_location;
 
     fNBytes = needed;
-    fNBits = 8*fNBytes;
+    fNBits = 8 * fNBytes;
   }
 }
 
 //______________________________________________________________________________
-void G4SurfBits::Output(std::ostream &os) const
+void G4SurfBits::Output(std::ostream& os) const
 {
   // Print the value to the std::ostream
-  for(unsigned int i=0; i<fNBytes; ++i)
+  for (unsigned int i = 0; i < fNBytes; ++i)
   {
     unsigned char val = fAllBits[fNBytes - 1 - i];
-    for (unsigned int j=0; j<8; ++j)
+    for (unsigned int j = 0; j < 8; ++j)
     {
-      os << (G4bool)(val&0x80);
+      os << (G4bool)(val & 0x80);
       val <<= 1;
     }
   }
@@ -138,12 +148,15 @@ void G4SurfBits::Print() const
 {
   // Print the list of active bits
   G4int count = 0;
-  for(unsigned int i=0; i<fNBytes; ++i)
+  for (unsigned int i = 0; i < fNBytes; ++i)
   {
     unsigned char val = fAllBits[i];
-    for (unsigned int j=0; j<8; ++j)
+    for (unsigned int j = 0; j < 8; ++j)
     {
-      if ((val & 1) != 0) { G4cout << " bit:" << count << " = 1" << G4endl; }
+      if ((val & 1) != 0)
+      {
+        G4cout << " bit:" << count << " = 1" << G4endl;
+      }
       ++count;
       val = val >> 1;
     }
@@ -153,7 +166,10 @@ void G4SurfBits::Print() const
 //______________________________________________________________________________
 void G4SurfBits::ResetAllBits(G4bool value)
 {
-  if (fAllBits != nullptr) { std::memset(fAllBits, value ? 0xFF : 0, fNBytes); }
+  if (fAllBits != nullptr)
+  {
+    std::memset(fAllBits, value ? 0xFF : 0, fNBytes);
+  }
 }
 
 //______________________________________________________________________________
@@ -165,7 +181,7 @@ void G4SurfBits::ReserveBytes(unsigned int nbytes)
   {
     // do it in this order to remain exception-safe.
     auto newBits = new unsigned char[nbytes];
-    delete [] fAllBits;
+    delete[] fAllBits;
     fNBytes = nbytes;
     fAllBits = newBits;
   }
@@ -175,11 +191,11 @@ void G4SurfBits::ReserveBytes(unsigned int nbytes)
 void G4SurfBits::set(unsigned int nBits, const char* array)
 {
   // set all the bytes
-  unsigned int nbytes=(nBits+7)>>3;
+  unsigned int nbytes = (nBits + 7) >> 3;
 
   ReserveBytes(nbytes);
 
-  fNBits=nBits;
+  fNBits = nBits;
   std::memcpy(fAllBits, array, nbytes);
 }
 
@@ -187,7 +203,7 @@ void G4SurfBits::set(unsigned int nBits, const char* array)
 void G4SurfBits::Get(char* array) const
 {
   // Copy all the bytes.
-  std::memcpy(array, fAllBits, (fNBits+7)>>3);
+  std::memcpy(array, fAllBits, (fNBits + 7) >> 3);
 }
 
 // If we are on a little endian machine, a bitvector represented using

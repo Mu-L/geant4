@@ -36,9 +36,9 @@
 #ifndef G4TWISTTUBSHYPESIDE_HH
 #define G4TWISTTUBSHYPESIDE_HH
 
-#include "G4VTwistSurface.hh"
 #include "G4Integrator.hh"
 #include "G4SimpleIntegration.hh"
+#include "G4VTwistSurface.hh"
 
 /**
  * @brief G4TwistTubsHypeSide describes hyperbolic boundary surface
@@ -49,7 +49,7 @@
 class G4TwistTubsHypeSide : public G4VTwistSurface
 {
   public:
-                       
+
     /**
      * Constructs a cylinder hyperbolic boundary surface, given its parameters.
      *  @param[in] name The surface name.
@@ -69,17 +69,14 @@ class G4TwistTubsHypeSide : public G4VTwistSurface
     G4TwistTubsHypeSide(const G4String& name,
                         const G4RotationMatrix& rot,  // 0.5*(phi-width segment)
                         const G4ThreeVector& tlate,
-                        const G4int handedness,   // R-hand = 1, L-hand = -1
-                        const G4double kappa,     // tan(TwistAngle/2)/fZHalfLen
-                        const G4double tanstereo, // tan(stereo angle)
-                        const G4double r0,        // radius at z = 0
-                        const EAxis axis0 = kPhi,
-                        const EAxis axis1 = kZAxis,
-                              G4double axis0min = -kInfinity,
-                              G4double axis1min = -kInfinity,
-                              G4double axis0max = kInfinity,
-                              G4double axis1max = kInfinity); 
-                             
+                        const G4int handedness,  // R-hand = 1, L-hand = -1
+                        const G4double kappa,  // tan(TwistAngle/2)/fZHalfLen
+                        const G4double tanstereo,  // tan(stereo angle)
+                        const G4double r0,  // radius at z = 0
+                        const EAxis axis0 = kPhi, const EAxis axis1 = kZAxis,
+                        G4double axis0min = -kInfinity, G4double axis1min = -kInfinity,
+                        G4double axis0max = kInfinity, G4double axis1max = kInfinity);
+
     /**
      * Alternative Construct for a cylinder hyperbolic boundary surface.
      *  @param[in] name The surface name.
@@ -95,18 +92,11 @@ class G4TwistTubsHypeSide : public G4VTwistSurface
      *  @param[in] TanOuterStereo Tangent outer stereo angle.
      *  @param[in] handedness Orientation: R-hand = 1, L-hand = -1.
      */
-   G4TwistTubsHypeSide(const G4String&  name,
-                             G4double   EndInnerRadius[2],
-                             G4double   EndOuterRadius[2],
-                             G4double   DPhi,
-                             G4double   EndPhi[2],
-                             G4double   EndZ[2], 
-                             G4double   InnerRadius,
-                             G4double   OuterRadius,
-                             G4double   Kappa,
-                             G4double   TanInnerStereo,
-                             G4double   TanOuterStereo,
-                             G4int      handedness) ;
+    G4TwistTubsHypeSide(const G4String& name, G4double EndInnerRadius[2],
+                        G4double EndOuterRadius[2], G4double DPhi, G4double EndPhi[2],
+                        G4double EndZ[2], G4double InnerRadius, G4double OuterRadius,
+                        G4double Kappa, G4double TanInnerStereo, G4double TanOuterStereo,
+                        G4int handedness);
 
     /**
      * Default destructor.
@@ -124,14 +114,10 @@ class G4TwistTubsHypeSide : public G4VTwistSurface
      *  @param[in] validate Adopted validation criteria.
      *  @returns The number of solutions.
      */
-    G4int DistanceToSurface(const G4ThreeVector& gp,
-                            const G4ThreeVector& gv,
-                                  G4ThreeVector  gxx[],
-                                  G4double       distance[],
-                                  G4int          areacode[],
-                                  G4bool         isvalid[],
+    G4int DistanceToSurface(const G4ThreeVector& gp, const G4ThreeVector& gv, G4ThreeVector gxx[],
+                            G4double distance[], G4int areacode[], G4bool isvalid[],
                             EValidate validate = kValidateWithTol) override;
-                                                   
+
     /**
      * Returns the safety distance to surface, given point 'gp'.
      *  @param[in] gp The point from where computing the safety distance.
@@ -140,11 +126,9 @@ class G4TwistTubsHypeSide : public G4VTwistSurface
      *  @param[out] areacode The location vector based on number of solutions.
      *  @returns The number of solutions.
      */
-    G4int DistanceToSurface(const G4ThreeVector& gp,
-                                  G4ThreeVector  gxx[],
-                                  G4double       distance[],
-                                  G4int          areacode[]) override;
- 
+    G4int DistanceToSurface(const G4ThreeVector& gp, G4ThreeVector gxx[], G4double distance[],
+                            G4int areacode[]) override;
+
     /**
      * Returns a normal vector at a surface (or very close to the surface)
      * point at 'p'.
@@ -152,19 +136,17 @@ class G4TwistTubsHypeSide : public G4VTwistSurface
      *  @param[in] isGlobal If true, it returns the normal in global coordinates.
      *  @returns The normal vector.
      */
-    G4ThreeVector GetNormal(const G4ThreeVector& p,
-                                  G4bool isGlobal = false) override ;
+    G4ThreeVector GetNormal(const G4ThreeVector& p, G4bool isGlobal = false) override;
 
     /**
      * Returns if point at 'gp' is inside surface.
      */
-    EInside Inside(const G4ThreeVector& gp) ;
+    EInside Inside(const G4ThreeVector& gp);
 
     /**
      * Gets Rho at p.z() on Hyperbolic Surface.
      */
-    inline G4double GetRhoAtPZ(const G4ThreeVector& p,
-                                     G4bool isglobal = false) const ;
+    inline G4double GetRhoAtPZ(const G4ThreeVector& p, G4bool isglobal = false) const;
 
     /**
      * Fake default constructor for usage restricted to direct object
@@ -178,99 +160,94 @@ class G4TwistTubsHypeSide : public G4VTwistSurface
     /**
      * Returns point on surface given 'phi' and 'z'.
      */
-    inline G4ThreeVector SurfacePoint(G4double phi, G4double z,
-                                      G4bool isGlobal = false) override ;  
+    inline G4ThreeVector SurfacePoint(G4double phi, G4double z, G4bool isGlobal = false) override;
 
     /**
      * Internal accessors.
      */
-    inline G4double GetBoundaryMin(G4double phi) override ;
-    inline G4double GetBoundaryMax(G4double phi) override ;
-    inline G4double GetSurfaceArea() override ;
-    void GetFacets( G4int m, G4int n, G4double xyz[][3],
-                    G4int faces[][4], G4int iside ) override ;
-    
+    inline G4double GetBoundaryMin(G4double phi) override;
+    inline G4double GetBoundaryMax(G4double phi) override;
+    inline G4double GetSurfaceArea() override;
+    void GetFacets(G4int m, G4int n, G4double xyz[][3], G4int faces[][4], G4int iside) override;
+
     /**
      * Returns the area code for point 'xx' using or not surface tolerance.
      */
-    G4int GetAreaCode(const G4ThreeVector& xx, 
-                            G4bool withTol = true) override;
-    G4int GetAreaCodeInPhi(const G4ThreeVector& xx, 
-                                 G4bool withTol = true);
+    G4int GetAreaCode(const G4ThreeVector& xx, G4bool withTol = true) override;
+    G4int GetAreaCodeInPhi(const G4ThreeVector& xx, G4bool withTol = true);
 
     /**
      * Setters.
      */
     void SetCorners() override;
-    void SetCorners(G4double EndInnerRadius[2],
-                    G4double EndOuterRadius[2],
-                    G4double DPhi,
-                    G4double EndPhi[2],
-                    G4double EndZ[2]);
+    void SetCorners(G4double EndInnerRadius[2], G4double EndOuterRadius[2], G4double DPhi,
+                    G4double EndPhi[2], G4double EndZ[2]);
     void SetBoundaries() override;
 
   private:
-   
-    G4double fKappa;        // std::tan(TwistedAngle/2)/HalfLenZ;
-    G4double fTanStereo;    // std::tan(StereoAngle)
-    G4double fTan2Stereo;   // std::tan(StereoAngle)**2
-    G4double fR0;           // radius at z = 0
-    G4double fR02;          // radius**2 at z = 0
-    G4double fDPhi ;        // segment
+
+    G4double fKappa;  // std::tan(TwistedAngle/2)/HalfLenZ;
+    G4double fTanStereo;  // std::tan(StereoAngle)
+    G4double fTan2Stereo;  // std::tan(StereoAngle)**2
+    G4double fR0;  // radius at z = 0
+    G4double fR02;  // radius**2 at z = 0
+    G4double fDPhi;  // segment
 };
 
 //========================================================
 // inline functions
 //========================================================
 
-inline
-G4double G4TwistTubsHypeSide::GetRhoAtPZ(const G4ThreeVector& p,
-                                               G4bool isglobal) const 
+inline G4double G4TwistTubsHypeSide::GetRhoAtPZ(const G4ThreeVector& p, G4bool isglobal) const
 {
   // Get Rho at p.z() on Hyperbolic Surface.
   G4ThreeVector tmpp;
-  if (isglobal) { tmpp = fRot.inverse()*p - fTrans; }
-  else          { tmpp = p; }
+  if (isglobal)
+  {
+    tmpp = fRot.inverse() * p - fTrans;
+  }
+  else
+  {
+    tmpp = p;
+  }
 
-  return std::sqrt(fR02 + tmpp.z() * tmpp.z() * fTan2Stereo); 
+  return std::sqrt(fR02 + tmpp.z() * tmpp.z() * fTan2Stereo);
 }
 
-inline
-G4ThreeVector G4TwistTubsHypeSide::
-SurfacePoint(G4double phi , G4double z , G4bool isGlobal)
+inline G4ThreeVector G4TwistTubsHypeSide::SurfacePoint(G4double phi, G4double z, G4bool isGlobal)
 {
-  G4double rho = std::sqrt(fR02 + z * z * fTan2Stereo) ;
+  G4double rho = std::sqrt(fR02 + z * z * fTan2Stereo);
 
-  G4ThreeVector SurfPoint (rho*std::cos(phi), rho*std::sin(phi), z) ;
+  G4ThreeVector SurfPoint(rho * std::cos(phi), rho * std::sin(phi), z);
 
-  if (isGlobal) { return (fRot * SurfPoint + fTrans); }
+  if (isGlobal)
+  {
+    return (fRot * SurfPoint + fTrans);
+  }
   return SurfPoint;
 }
 
-inline
-G4double G4TwistTubsHypeSide::GetBoundaryMin(G4double z)
+inline G4double G4TwistTubsHypeSide::GetBoundaryMin(G4double z)
 {
-  G4ThreeVector ptmp(0,0,z) ;  // temporary point with z Komponent only
-  G4ThreeVector lowerlimit;    // lower phi-boundary limit at z = ptmp.z()
+  G4ThreeVector ptmp(0, 0, z);  // temporary point with z Komponent only
+  G4ThreeVector lowerlimit;  // lower phi-boundary limit at z = ptmp.z()
   lowerlimit = GetBoundaryAtPZ(sAxis0 & sAxisMin, ptmp);
-  return  std::atan2( lowerlimit.y(), lowerlimit.x() ) ;  
+  return std::atan2(lowerlimit.y(), lowerlimit.x());
 }
 
-inline
-G4double G4TwistTubsHypeSide::GetBoundaryMax(G4double z )
+inline G4double G4TwistTubsHypeSide::GetBoundaryMax(G4double z)
 {
-  G4ThreeVector ptmp(0,0,z) ;  // temporary point with z Komponent only
-  G4ThreeVector upperlimit;    // upper phi-boundary limit at z = ptmp.z()
+  G4ThreeVector ptmp(0, 0, z);  // temporary point with z Komponent only
+  G4ThreeVector upperlimit;  // upper phi-boundary limit at z = ptmp.z()
   upperlimit = GetBoundaryAtPZ(sAxis0 & sAxisMax, ptmp);
-  return   std::atan2( upperlimit.y(), upperlimit.x() ) ;
+  return std::atan2(upperlimit.y(), upperlimit.x());
 }
 
-inline
-G4double G4TwistTubsHypeSide::GetSurfaceArea()
+inline G4double G4TwistTubsHypeSide::GetSurfaceArea()
 {
   // approximation with tube surface
 
-  return ( fAxisMax[1] - fAxisMin[1] ) * fR0 * fDPhi ;
+  return (fAxisMax[1] - fAxisMin[1]) * fR0 * fDPhi;
 }
 
 #endif

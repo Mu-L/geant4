@@ -30,13 +30,13 @@
 //
 // Author:    V.Ivanchenko  02.03.2011
 //
-// Modified: 
+// Modified:
 //
 //---------------------------------------------------------------------------
 //
 
-#ifndef G4IonPhysics_h
-#define G4IonPhysics_h 1
+#ifndef G4IONPHYSICS_HH
+#define G4IONPHYSICS_HH
 
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
@@ -47,35 +47,26 @@ class G4FTFBuilder;
 
 class G4IonPhysics : public G4VPhysicsConstructor
 {
-public:
+  public:
 
-  G4IonPhysics(G4int ver = 0);
-  G4IonPhysics(const G4String& nname, G4int ver = 0);
-  ~G4IonPhysics() override;
+    G4IonPhysics(G4int ver = 0);
+    G4IonPhysics(const G4String& nname, G4int ver = 0);
+    ~G4IonPhysics() override;
 
-  // This method will be invoked in the Construct() method.
-  // each physics process will be instantiated and
-  // registered to the process manager of each particle type
-  void ConstructParticle() override;
-  void ConstructProcess() override;
+    // This method will be invoked in the Construct() method.
+    // each physics process will be instantiated and
+    // registered to the process manager of each particle type
+    void ConstructParticle() override;
+    void ConstructProcess() override;
 
-private:
+  private:
 
-  virtual void AddProcess(const G4String&, G4ParticleDefinition*,
-			  G4HadronicInteraction*, G4HadronicInteraction*, 
-			  G4VCrossSectionDataSet*);
+    virtual void AddProcess(const G4String&, G4ParticleDefinition*, G4HadronicInteraction*,
+                            G4HadronicInteraction*, G4VCrossSectionDataSet*);
 
-protected:
+  protected:
 
-  G4int verbose;
+    G4int verbose;
 };
 
 #endif
-
-
-
-
-
-
-
-

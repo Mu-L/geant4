@@ -54,36 +54,39 @@
 
 class G4UniformRandPool
 {
- public:
-  G4UniformRandPool();
-  explicit G4UniformRandPool(G4int ps);
-  ~G4UniformRandPool();
+  public:
 
-  void Resize(G4int newSize);
-  void GetMany(G4double* rnds, G4int howMany);
-  inline G4double GetOne();
-  inline G4int GetPoolSize() const;
+    G4UniformRandPool();
+    explicit G4UniformRandPool(G4int ps);
+    ~G4UniformRandPool();
 
-  // These two static methods are used to
-  // simulate the calls of CLHEP::HepRandom
-  //
-  static G4double flat();
-  static void flatArray(G4int howmany, G4double* rnds);
+    void Resize(G4int newSize);
+    void GetMany(G4double* rnds, G4int howMany);
+    inline G4double GetOne();
+    inline G4int GetPoolSize() const;
 
- private:
-  void Fill(G4int howmany);
+    // These two static methods are used to
+    // simulate the calls of CLHEP::HepRandom
+    //
+    static G4double flat();
+    static void flatArray(G4int howmany, G4double* rnds);
 
- private:
-  G4int size{G4UNIFORMRANDPOOL_DEFAULT_POOLSIZE};
-  G4double* buffer{nullptr};
-  G4int currentIdx{0};
+  private:
+
+    void Fill(G4int howmany);
+
+  private:
+
+    G4int size{G4UNIFORMRANDPOOL_DEFAULT_POOLSIZE};
+    G4double* buffer{nullptr};
+    G4int currentIdx{0};
 };
 
 inline G4double G4UniformRandPool::GetOne()
 {
   // No more available numbers, re-fill
   //
-  if(currentIdx >= /*(unsigned int)*/ size)
+  if (currentIdx >= /*(unsigned int)*/ size)
   {
     Fill(/*(unsigned int)*/ size);
   }

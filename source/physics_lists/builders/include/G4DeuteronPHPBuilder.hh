@@ -35,45 +35,37 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4DeuteronPHPBuilder_h
-#define G4DeuteronPHPBuilder_h 1
-
-#include "globals.hh"
+#ifndef G4DEUTERONPHPBUILDER_HH
+#define G4DEUTERONPHPBUILDER_HH
 
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
-#include "G4VDeuteronBuilder.hh"
-
 #include "G4ParticleHPInelastic.hh"
+#include "G4VDeuteronBuilder.hh"
+#include "globals.hh"
 
 class G4DeuteronPHPBuilder : public G4VDeuteronBuilder
 {
-public: 
-  G4DeuteronPHPBuilder();
-  virtual ~G4DeuteronPHPBuilder() {}
-  
-public: 
-  virtual void Build(G4HadronInelasticProcess * aP) final override;
-  virtual void Build(G4HadronElasticProcess * aP) final override;
-  
-  virtual void SetMinEnergy(G4double aM) final override
-  {
-    theMin=aM;
-  }
-  virtual void SetMaxEnergy(G4double aM) final override
-  {
-    theMax=aM;
-  }
-  
-  using G4VDeuteronBuilder::Build; //Prevent compiler warning
+  public:
 
-private:
-  G4double theMin;
-  G4double theMax;
-  G4ParticleHPInelastic*  theParticlePHPModel;
-  
+    G4DeuteronPHPBuilder();
+    virtual ~G4DeuteronPHPBuilder() {}
+
+  public:
+
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
+    virtual void Build(G4HadronElasticProcess* aP) final override;
+
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+    virtual void SetMaxEnergy(G4double aM) final override { theMax = aM; }
+
+    using G4VDeuteronBuilder::Build;  // Prevent compiler warning
+
+  private:
+
+    G4double theMin;
+    G4double theMax;
+    G4ParticleHPInelastic* theParticlePHPModel;
 };
 
-
 #endif
-

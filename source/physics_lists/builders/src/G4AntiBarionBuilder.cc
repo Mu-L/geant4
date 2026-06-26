@@ -36,6 +36,7 @@
 //----------------------------------------------------------------------------
 //
 #include "G4AntiBarionBuilder.hh"
+
 #include "G4HadronicBuilder.hh"
 
 void G4AntiBarionBuilder::Build()

@@ -29,23 +29,23 @@
 //
 
 ///////////////////////
-//G4RayTrajectoryPoint.cc
+// G4RayTrajectoryPoint.cc
 ///////////////////////
 
-#include"G4RayTrajectoryPoint.hh"
+#include "G4RayTrajectoryPoint.hh"
 
 G4Allocator<G4RayTrajectoryPoint>*& rayTrajectoryPointAllocator()
 {
-    G4ThreadLocalStatic G4Allocator<G4RayTrajectoryPoint>* _instance = nullptr;
-    return _instance;
+  G4ThreadLocalStatic G4Allocator<G4RayTrajectoryPoint>* _instance = nullptr;
+  return _instance;
 }
 
-G4RayTrajectoryPoint :: G4RayTrajectoryPoint()
-  :preStepAtt(0)
-  ,postStepAtt(0)
-  ,stepLength(0.)
-{;}
+G4RayTrajectoryPoint ::G4RayTrajectoryPoint() : preStepAtt(0), postStepAtt(0), stepLength(0.)
+{
+  ;
+}
 
-G4RayTrajectoryPoint :: ~G4RayTrajectoryPoint()
-{;}
-
+G4RayTrajectoryPoint ::~G4RayTrajectoryPoint()
+{
+  ;
+}

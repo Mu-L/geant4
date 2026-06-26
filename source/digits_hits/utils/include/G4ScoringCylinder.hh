@@ -27,11 +27,11 @@
 //
 // Author: Makoto Asai
 // --------------------------------------------------------------------
-#ifndef G4ScoringCylinder_h
-#define G4ScoringCylinder_h 1
+#ifndef G4SCORINGCYLINDER_HH
+#define G4SCORINGCYLINDER_HH
 
-#include "globals.hh"
 #include "G4VScoringMesh.hh"
+#include "globals.hh"
 
 #include <vector>
 
@@ -41,44 +41,43 @@ class G4VPrimitiveScorer;
 
 class G4ScoringCylinder : public G4VScoringMesh
 {
- public:
+  public:
 
-  G4ScoringCylinder(const G4String& wName);
-  ~G4ScoringCylinder() override = default;
+    G4ScoringCylinder(const G4String& wName);
+    ~G4ScoringCylinder() override = default;
 
-  void List() const override;
-  void Draw(RunScore* map, G4VScoreColorMap* colorMap,
-            G4int axflg = 111) override;
-  void DrawColumn(RunScore* map, G4VScoreColorMap* colorMap,
-                  G4int idxProj, G4int idxColumn) override;
+    void List() const override;
+    void Draw(RunScore* map, G4VScoreColorMap* colorMap, G4int axflg = 111) override;
+    void DrawColumn(RunScore* map, G4VScoreColorMap* colorMap, G4int idxProj,
+                    G4int idxColumn) override;
 
-  void SetRMin(G4double rMin) { fSize[0] = rMin; }
-  void SetRMax(G4double rMax) { fSize[1] = rMax; }
-  void SetZSize(G4double zSize) { fSize[2] = zSize; }  // half height
+    void SetRMin(G4double rMin) { fSize[0] = rMin; }
+    void SetRMax(G4double rMax) { fSize[1] = rMax; }
+    void SetZSize(G4double zSize) { fSize[2] = zSize; }  // half height
 
-  void RegisterPrimitives(std::vector<G4VPrimitiveScorer*>& vps);
+    void RegisterPrimitives(std::vector<G4VPrimitiveScorer*>& vps);
 
-  // get 3D index (z,phi,r) from sequential index
-  void GetRZPhi(G4int index, G4int q[3]) const;
+    // get 3D index (z,phi,r) from sequential index
+    void GetRZPhi(G4int index, G4int q[3]) const;
 
- protected:
+  protected:
 
-  void SetupGeometry(G4VPhysicalVolume* fWorldPhys) override;
+    void SetupGeometry(G4VPhysicalVolume* fWorldPhys) override;
 
- private:
+  private:
 
-  // Xin Dong 09302011 for Scorers
-  enum IDX
-  {
-    IZ,
-    IPHI,
-    IR
-  };
+    // Xin Dong 09302011 for Scorers
+    enum IDX
+    {
+      IZ,
+      IPHI,
+      IR
+    };
 
-  void DumpVolumes();
-  void DumpSolids(G4int);
-  void DumpLogVols(G4int);
-  void DumpPhysVols(G4int);
+    void DumpVolumes();
+    void DumpSolids(G4int);
+    void DumpLogVols(G4int);
+    void DumpPhysVols(G4int);
 };
 
 #endif

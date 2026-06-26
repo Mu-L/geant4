@@ -30,8 +30,8 @@
 //
 // --------------------------------------------------------------------------
 
-#ifndef G4XrayReflection_h
-#define G4XrayReflection_h 1
+#ifndef G4XRAYREFLECTION_HH
+#define G4XRAYREFLECTION_HH
 
 #include "G4Gamma.hh"
 #include "G4VEmProcess.hh"
@@ -46,6 +46,7 @@ class G4PropagatorInField;
 class G4XrayReflection : public G4VDiscreteProcess
 {
   public:  // with description
+
     explicit G4XrayReflection(const G4String& processName = "XrayReflection",
                               G4ProcessType type = fElectromagnetic);
     ~G4XrayReflection() override = default;
@@ -71,6 +72,7 @@ class G4XrayReflection : public G4VDiscreteProcess
     void SaveHenkeDataAsMaterialProperty();  // Save Henke data as Material propoerty
 
   private:
+
     G4VPhysicalVolume* fLastVolume = nullptr;
     G4ThreeVector fSurfaceNormal;
     static G4double fSurfaceRoughness;  // same value in all threads

@@ -31,30 +31,27 @@
 #ifndef G4ATTDEFT_HH
 #define G4ATTDEFT_HH
 
-#include "globals.hh"
 #include "G4AttDef.hh"
 #include "G4TypeKeyT.hh"
+#include "globals.hh"
 
-template <typename T>  
-class G4AttDefT : public G4AttDef {
+template<typename T>
+class G4AttDefT : public G4AttDef
+{
+  public:
 
-public:
-  
-  typedef T Type;
+    typedef T Type;
 
-  // Constructor
-  G4AttDefT(const G4String& name,
-            const G4String& desc,
-            const G4String& category,
-            const G4String& extra="")    
-    :G4AttDef(name, desc, category, extra, G4TypeKeyT<T>())
-  {}
-  
-  // Destructor
-  virtual ~G4AttDefT() {};
-  
-private:
+    // Constructor
+    G4AttDefT(const G4String& name, const G4String& desc, const G4String& category,
+              const G4String& extra = "")
+      : G4AttDef(name, desc, category, extra, G4TypeKeyT<T>())
+    {}
 
+    // Destructor
+    virtual ~G4AttDefT() {};
+
+  private:
 };
 
 #endif

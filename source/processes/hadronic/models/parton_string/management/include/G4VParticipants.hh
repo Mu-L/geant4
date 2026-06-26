@@ -26,8 +26,8 @@
 //
 //
 
-#ifndef G4VParticipants_h
-#define G4VParticipants_h 1
+#ifndef G4VPARTICIPANTS_HH
+#define G4VPARTICIPANTS_HH
 
 // ------------------------------------------------------------
 //      GEANT 4 class header file
@@ -43,42 +43,43 @@
 
 class G4V3DNucleus;
 
-class G4VParticipants 
+class G4VParticipants
 {
   public:
+
     G4VParticipants();
     virtual ~G4VParticipants();
 
-    G4VParticipants(const G4VParticipants &right) = delete;
-    const G4VParticipants & operator=(const G4VParticipants &right) = delete;
-    G4bool operator==(const G4VParticipants &right) const = delete;
-    G4bool operator!=(const G4VParticipants &right) const = delete;
+    G4VParticipants(const G4VParticipants& right) = delete;
+    const G4VParticipants& operator=(const G4VParticipants& right) = delete;
+    G4bool operator==(const G4VParticipants& right) const = delete;
+    G4bool operator!=(const G4VParticipants& right) const = delete;
 
     virtual void Init(G4int theZ, G4int theA);
     virtual void SetNucleus(G4V3DNucleus* aNucleus);
     virtual G4V3DNucleus* GetWoundedNucleus() const;
 
     virtual void InitProjectileNucleus(G4int theZ, G4int theA,
-				       G4int numberOfLambdasOrAntiLambdas = 0);
+                                       G4int numberOfLambdasOrAntiLambdas = 0);
     virtual void SetProjectileNucleus(G4V3DNucleus* aNucleus);
     virtual G4V3DNucleus* GetProjectileNucleus() const;
 
   protected:
+
     G4V3DNucleus* theNucleus;
-    G4V3DNucleus* theProjectileNucleus;        
+    G4V3DNucleus* theProjectileNucleus;
 };
 
-// Class G4VParticipants 
+// Class G4VParticipants
 
-inline G4V3DNucleus * G4VParticipants::GetWoundedNucleus() const
+inline G4V3DNucleus* G4VParticipants::GetWoundedNucleus() const
 {
   return theNucleus;
 }
 
-inline G4V3DNucleus * G4VParticipants::GetProjectileNucleus() const 
+inline G4V3DNucleus* G4VParticipants::GetProjectileNucleus() const
 {
   return theProjectileNucleus;
 }
 
 #endif
-

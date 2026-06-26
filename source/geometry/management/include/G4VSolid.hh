@@ -48,8 +48,9 @@
 #ifndef G4VSOLID_HH
 #define G4VSOLID_HH
 
-#include "G4Types.hh"
 #include "G4String.hh"
+#include "G4Types.hh"
+
 #include "geomdefs.hh"
 
 class G4AffineTransform;
@@ -64,6 +65,7 @@ class G4VisExtent;
 class G4DisplacedSolid;
 
 #include "G4ThreeVector.hh"
+
 #include <vector>
 
 using G4ThreeVectorList = std::vector<G4ThreeVector>;
@@ -134,10 +136,9 @@ class G4VSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    virtual G4bool CalculateExtent(const EAxis pAxis,
-				   const G4VoxelLimits& pVoxelLimit,
-				   const G4AffineTransform& pTransform,
-				   G4double& pMin, G4double& pMax) const = 0;
+    virtual G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                                   const G4AffineTransform& pTransform, G4double& pMin,
+                                   G4double& pMax) const = 0;
 
     /**
      * Returns the characterisation of a point at offset 'p' respect
@@ -167,8 +168,7 @@ class G4VSolid
      *  @param[in] v The normalised direction vector.
      *  @returns The distance to enter the shape.
      */
-    virtual G4double DistanceToIn(const G4ThreeVector& p,
-                                  const G4ThreeVector& v) const = 0;
+    virtual G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const = 0;
 
     /**
      * Calculates the distance to the nearest surface of a shape from an
@@ -194,11 +194,9 @@ class G4VSolid
      *              'calcNorm' must be true, otherwise it is unused.
      *  @returns The distance to exit the shape.
      */
-    virtual G4double DistanceToOut(const G4ThreeVector& p,
-				   const G4ThreeVector& v,
-				   const G4bool calcNorm = false,
-				   G4bool* validNorm = nullptr,
-				   G4ThreeVector* n = nullptr) const = 0;
+    virtual G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                                   const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                                   G4ThreeVector* n = nullptr) const = 0;
 
     /**
      * Calculates the distance to the nearest surface of a shape from an
@@ -215,8 +213,7 @@ class G4VSolid
      * dispatching enabled in derived classes for those solids
      * implementing such feature.
      */
-    virtual void ComputeDimensions(G4VPVParameterisation* p,
-	                           const G4int n,
+    virtual void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                                    const G4VPhysicalVolume* pRep);
 
     /**
@@ -283,7 +280,7 @@ class G4VSolid
      * A "double dispatch" function which identifies the solid
      * to the graphics scene for visualization.
      */
-    virtual void DescribeYourselfTo (G4VGraphicsScene& scene) const = 0;
+    virtual void DescribeYourselfTo(G4VGraphicsScene& scene) const = 0;
 
     /**
      * Provides extent (bounding box) as possible hint to the graphics view.
@@ -357,9 +354,8 @@ class G4VSolid
      *  @param[out] pMax The maximum extent value.
      */
     void CalculateClippedPolygonExtent(G4ThreeVectorList& pPolygon,
-				       const G4VoxelLimits& pVoxelLimit,
-				       const EAxis pAxis,
-				       G4double& pMin, G4double& pMax) const;
+                                       const G4VoxelLimits& pVoxelLimit, const EAxis pAxis,
+                                       G4double& pMin, G4double& pMax) const;
 
     /**
      * Calculates the maximum and minimum extents of the polygon described
@@ -376,11 +372,9 @@ class G4VSolid
      *  @param[out] pMin The minimum extent value.
      *  @param[out] pMax The maximum extent value.
      */
-    void ClipCrossSection(G4ThreeVectorList* pVertices,
-			  const G4int pSectionIndex,
-			  const G4VoxelLimits& pVoxelLimit,
-			  const EAxis pAxis,
-			  G4double& pMin, G4double& pMax) const;
+    void ClipCrossSection(G4ThreeVectorList* pVertices, const G4int pSectionIndex,
+                          const G4VoxelLimits& pVoxelLimit, const EAxis pAxis, G4double& pMin,
+                          G4double& pMax) const;
 
     /**
      * Calculates the maximum and minimum extents of the polygons
@@ -398,11 +392,9 @@ class G4VSolid
      *  @param[out] pMin The minimum extent value.
      *  @param[out] pMax The maximum extent value.
      */
-    void ClipBetweenSections(G4ThreeVectorList* pVertices,
-			     const G4int pSectionIndex,
-			     const G4VoxelLimits& pVoxelLimit,
-			     const EAxis pAxis,
-			     G4double& pMin, G4double& pMax) const;
+    void ClipBetweenSections(G4ThreeVectorList* pVertices, const G4int pSectionIndex,
+                             const G4VoxelLimits& pVoxelLimit, const EAxis pAxis, G4double& pMin,
+                             G4double& pMax) const;
 
     /**
      * Clips the specified convex polygon to the given limits, where
@@ -413,8 +405,7 @@ class G4VSolid
      *  @param[in] pVoxelLimit The limiting space dictated by voxels.
      *  @param[in] pAxis The axis along which apply the clipping.
      */
-    void ClipPolygon(G4ThreeVectorList& pPolygon,
-		     const G4VoxelLimits& pVoxelLimit,
+    void ClipPolygon(G4ThreeVectorList& pPolygon, const G4VoxelLimits& pVoxelLimit,
                      const EAxis pAxis) const;
 
   protected:
@@ -433,9 +424,8 @@ class G4VSolid
      *  @param[out] outputPolygon The resulting polygon.
      *  @param[in] pVoxelLimit The limiting space dictated by voxels.
      */
-    void ClipPolygonToSimpleLimits(G4ThreeVectorList& pPolygon,
-				   G4ThreeVectorList& outputPolygon,
-			     const G4VoxelLimits& pVoxelLimit) const;
+    void ClipPolygonToSimpleLimits(G4ThreeVectorList& pPolygon, G4ThreeVectorList& outputPolygon,
+                                   const G4VoxelLimits& pVoxelLimit) const;
 
   private:
 
@@ -443,7 +433,7 @@ class G4VSolid
     G4String fshapeName;
 };
 
-/// 
+///
 /**
  * Streaming operator. Outputs the solid information to the given stream.
  */

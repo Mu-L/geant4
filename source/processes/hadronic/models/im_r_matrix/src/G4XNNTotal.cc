@@ -24,19 +24,19 @@
 // ********************************************************************
 //
 
-#include "globals.hh"
 #include "G4XNNTotal.hh"
-#include "G4XNNTotalLowE.hh"
-#include "G4XPDGTotal.hh"
-#include "G4VCrossSectionSource.hh"
+
+#include "G4CrossSectionVector.hh"
 #include "G4KineticTrack.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4Proton.hh"
-#include "G4CrossSectionVector.hh"
-
+#include "G4VCrossSectionSource.hh"
+#include "G4XNNTotalLowE.hh"
+#include "G4XPDGTotal.hh"
+#include "globals.hh"
 
 G4XNNTotal::G4XNNTotal()
-{ 
+{
   components = new G4CrossSectionVector;
 
   G4VCrossSectionSource* xNNTotalLowE = new G4XNNTotalLowE;
@@ -46,37 +46,33 @@ G4XNNTotal::G4XNNTotal()
   components->push_back(xNNTotalHighE);
 }
 
-
 G4XNNTotal::~G4XNNTotal()
-{ 
-  if (components != nullptr) 
+{
+  if (components != nullptr)
+  {
+    std::size_t nComponents = GetComponents()->size();
+    for (std::size_t i = 0; i < nComponents; ++i)
     {
-      std::size_t nComponents = GetComponents()->size();
-      for (std::size_t i=0; i<nComponents; ++i)
-	{
-          G4CrossSectionSourcePtr componentPtr = (*components)[i];
-	  G4VCrossSectionSource* component = componentPtr();
-	  delete component;
-	  component = nullptr;
-	  componentPtr = nullptr;
-	}
+      G4CrossSectionSourcePtr componentPtr = (*components)[i];
+      G4VCrossSectionSource* component = componentPtr();
+      delete component;
+      component = nullptr;
+      componentPtr = nullptr;
     }
+  }
   delete components;
   components = nullptr;
 }
 
-
-G4bool G4XNNTotal::operator==(const G4XNNTotal &right) const
+G4bool G4XNNTotal::operator==(const G4XNNTotal& right) const
 {
-  return (this == (G4XNNTotal*) &right);
+  return (this == (G4XNNTotal*)&right);
 }
 
-
-G4bool G4XNNTotal::operator!=(const G4XNNTotal &right) const
+G4bool G4XNNTotal::operator!=(const G4XNNTotal& right) const
 {
-  return (this != (G4XNNTotal*) &right);
+  return (this != (G4XNNTotal*)&right);
 }
-
 
 G4String G4XNNTotal::Name() const
 {

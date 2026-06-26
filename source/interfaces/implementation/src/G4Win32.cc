@@ -43,7 +43,8 @@ G4Win32* G4Win32::getInstance()
 /***************************************************************************/
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 {
-  if (instance == NULL) {
+  if (instance == NULL)
+  {
     instance = new G4Win32();
   }
   return instance;
@@ -53,7 +54,8 @@ G4Win32::G4Win32()
 /***************************************************************************/
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 {
-  if (Win32Inited == false) {  // Should be Done once.
+  if (Win32Inited == false)
+  {  // Should be Done once.
 
     WNDCLASS wc;
     wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -69,11 +71,12 @@ G4Win32::G4Win32()
     ::RegisterClass(&wc);
 
     char winName[] = "Test";
-    topWindow =
-      ::CreateWindowEx(WS_EX_CLIENTEDGE, (PTSTR)className, (PTSTR)winName, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT,
-        CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, ::GetModuleHandle(NULL), NULL);
+    topWindow = ::CreateWindowEx(WS_EX_CLIENTEDGE, (PTSTR)className, (PTSTR)winName,
+                                 WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+                                 CW_USEDEFAULT, NULL, NULL, ::GetModuleHandle(NULL), NULL);
 
-    if (topWindow == NULL) {
+    if (topWindow == NULL)
+    {
       G4cout << "G4Win32: Unable to create Win32 window." << G4endl;
     }
 
@@ -88,7 +91,8 @@ G4Win32::~G4Win32()
 /***************************************************************************/
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 {
-  if (this == instance) {
+  if (this == instance)
+  {
     instance = NULL;
   }
 }
@@ -115,7 +119,8 @@ void G4Win32::FlushAndWaitExecution()
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 {
   MSG event;
-  while (::PeekMessage(&event, NULL, 0, 0, PM_REMOVE)) {
+  while (::PeekMessage(&event, NULL, 0, 0, PM_REMOVE))
+  {
     ::TranslateMessage(&event);
     ::DispatchMessage(&event);
   }

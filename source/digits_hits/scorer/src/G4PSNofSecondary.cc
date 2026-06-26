@@ -27,6 +27,7 @@
 //
 // G4PSNofSecondary
 #include "G4PSNofSecondary.hh"
+
 #include "G4VScoreHistFiller.hh"
 
 // (Description)
@@ -47,35 +48,29 @@ G4PSNofSecondary::G4PSNofSecondary(const G4String& name, G4int depth)
 G4bool G4PSNofSecondary::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
   //- check for newly produced particle. e.g. first step.
-  if(aStep->GetTrack()->GetCurrentStepNumber() != 1)
-    return false;
+  if (aStep->GetTrack()->GetCurrentStepNumber() != 1) return false;
   //- check for this is not a primary particle. e.g. ParentID > 0 .
-  if(aStep->GetTrack()->GetParentID() == 0)
-    return false;
+  if (aStep->GetTrack()->GetParentID() == 0) return false;
   //- check the particle if the partifle definition is given.
-  if((particleDef != nullptr) && particleDef != aStep->GetTrack()->GetDefinition())
-    return false;
+  if ((particleDef != nullptr) && particleDef != aStep->GetTrack()->GetDefinition()) return false;
   //
   //- This is a newly produced secondary particle.
-  G4int index     = GetIndex(aStep);
+  G4int index = GetIndex(aStep);
   G4double weight = 1.0;
-  if(weighted)
-    weight *= aStep->GetPreStepPoint()->GetWeight();
+  if (weighted) weight *= aStep->GetPreStepPoint()->GetWeight();
   EvtMap->add(index, weight);
 
-  if(!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
+  if (!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
   {
     auto filler = G4VScoreHistFiller::Instance();
-    if(filler == nullptr)
+    if (filler == nullptr)
     {
-      G4Exception(
-        "G4PSVolumeFlux::ProcessHits", "SCORER0123", JustWarning,
-        "G4TScoreHistFiller is not instantiated!! Histogram is not filled.");
+      G4Exception("G4PSVolumeFlux::ProcessHits", "SCORER0123", JustWarning,
+                  "G4TScoreHistFiller is not instantiated!! Histogram is not filled.");
     }
     else
     {
-      filler->FillH1(hitIDMap[index],
-                     aStep->GetPreStepPoint()->GetKineticEnergy(), weight);
+      filler->FillH1(hitIDMap[index], aStep->GetPreStepPoint()->GetKineticEnergy(), weight);
     }
   }
 
@@ -84,15 +79,13 @@ G4bool G4PSNofSecondary::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 
 void G4PSNofSecondary::SetParticle(const G4String& particleName)
 {
-  G4ParticleDefinition* pd =
-    G4ParticleTable::GetParticleTable()->FindParticle(particleName);
-  if(pd == nullptr)
+  G4ParticleDefinition* pd = G4ParticleTable::GetParticleTable()->FindParticle(particleName);
+  if (pd == nullptr)
   {
     G4String msg = "Particle <";
     msg += particleName;
     msg += "> not found.";
-    G4Exception("G4PSNofSecondary::SetParticle", "DetPS0101", FatalException,
-                msg);
+    G4Exception("G4PSNofSecondary::SetParticle", "DetPS0101", FatalException, msg);
   }
   particleDef = pd;
 }
@@ -100,38 +93,40 @@ void G4PSNofSecondary::SetParticle(const G4String& particleName)
 void G4PSNofSecondary::Initialize(G4HCofThisEvent* HCE)
 {
   EvtMap = new G4THitsMap<G4double>(detector->GetName(), GetName());
-  if(HCID < 0)
+  if (HCID < 0)
   {
     HCID = GetCollectionID(0);
   }
-  HCE->AddHitsCollection(HCID, (G4VHitsCollection*) EvtMap);
+  HCE->AddHitsCollection(HCID, (G4VHitsCollection*)EvtMap);
 }
 
-void G4PSNofSecondary::clear() { EvtMap->clear(); }
+void G4PSNofSecondary::clear()
+{
+  EvtMap->clear();
+}
 
 void G4PSNofSecondary::PrintAll()
 {
   G4cout << " PrimitiveScorer " << GetName() << G4endl;
   G4cout << " Number of entries " << EvtMap->entries() << G4endl;
-  for(const auto& [copy, secondaries] : *(EvtMap->GetMap()))
+  for (const auto& [copy, secondaries] : *(EvtMap->GetMap()))
   {
-    G4cout << "  copy no.: " << copy
-           << "  num of secondaries: " << *(secondaries) / GetUnitValue()
+    G4cout << "  copy no.: " << copy << "  num of secondaries: " << *(secondaries) / GetUnitValue()
            << G4endl;
   }
 }
 
 void G4PSNofSecondary::SetUnit(const G4String& unit)
 {
-  if(unit.empty())
+  if (unit.empty())
   {
-    unitName  = unit;
+    unitName = unit;
     unitValue = 1.0;
   }
   else
   {
-    G4String msg = "Invalid unit [" + unit + "] (Current  unit is [" +
-                   GetUnit() + "] ) for " + GetName();
+    G4String msg =
+      "Invalid unit [" + unit + "] (Current  unit is [" + GetUnit() + "] ) for " + GetName();
     G4Exception("G4PSNofSecondary::SetUnit", "DetPS0010", JustWarning, msg);
   }
 }

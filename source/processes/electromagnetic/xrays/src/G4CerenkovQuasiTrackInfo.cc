@@ -26,18 +26,17 @@
 
 G4Allocator<G4CerenkovQuasiTrackInfo>*& aCerenkovATIAllocator()
 {
-  G4ThreadLocalStatic G4Allocator<G4CerenkovQuasiTrackInfo>* _instance =
-    nullptr;
+  G4ThreadLocalStatic G4Allocator<G4CerenkovQuasiTrackInfo>* _instance = nullptr;
   return _instance;
 }
 
-G4CerenkovQuasiTrackInfo::G4CerenkovQuasiTrackInfo(
-  const G4QuasiOpticalData& aOpticalData,
-  G4double aPreNumPhotons, G4double aPostNumPhotons)
-  : G4VAuxiliaryTrackInformation()
-  , fQuasiOpticalData(aOpticalData) 
-  , fPreNumPhotons(aPreNumPhotons)
-  , fPostNumPhotons(aPostNumPhotons)
+G4CerenkovQuasiTrackInfo::G4CerenkovQuasiTrackInfo(const G4QuasiOpticalData& aOpticalData,
+                                                   G4double aPreNumPhotons,
+                                                   G4double aPostNumPhotons)
+  : G4VAuxiliaryTrackInformation(),
+    fQuasiOpticalData(aOpticalData),
+    fPreNumPhotons(aPreNumPhotons),
+    fPostNumPhotons(aPostNumPhotons)
 {}
 
 void G4CerenkovQuasiTrackInfo::Print() const
@@ -45,15 +44,20 @@ void G4CerenkovQuasiTrackInfo::Print() const
   G4cout << "Auxiliary track information for a Cerenkov step" << G4endl;
 }
 
-G4CerenkovQuasiTrackInfo* G4CerenkovQuasiTrackInfo::Cast(
-  const G4VAuxiliaryTrackInformation* const aATI)
+G4CerenkovQuasiTrackInfo*
+G4CerenkovQuasiTrackInfo::Cast(const G4VAuxiliaryTrackInformation* const aATI)
 {
   G4CerenkovQuasiTrackInfo* CATI = nullptr;
-  if(aATI != nullptr)
+  if (aATI != nullptr)
   {
     // No change will be done to the pointer and to the pointed data
     auto temp = const_cast<G4VAuxiliaryTrackInformation*>(aATI);
     CATI = dynamic_cast<G4CerenkovQuasiTrackInfo*>(temp);
   }
   return CATI;
+}
+
+G4CerenkovQuasiTrackInfo* G4CerenkovQuasiTrackInfo::Clone() const
+{
+  return new G4CerenkovQuasiTrackInfo(fQuasiOpticalData, fPreNumPhotons, fPostNumPhotons);
 }

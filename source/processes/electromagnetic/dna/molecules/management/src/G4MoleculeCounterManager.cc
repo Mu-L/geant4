@@ -42,7 +42,8 @@ static G4Mutex workerInstancesMutex;
 
 const G4MoleculeCounterManager* G4MoleculeCounterManager::fpMasterInstance = nullptr;
 std::vector<const G4MoleculeCounterManager*> G4MoleculeCounterManager::fWorkerInstances = {};
-G4ThreadLocal std::unique_ptr<G4MoleculeCounterManager> G4MoleculeCounterManager::fpInstance = nullptr;
+G4ThreadLocal std::unique_ptr<G4MoleculeCounterManager> G4MoleculeCounterManager::fpInstance =
+  nullptr;
 
 //------------------------------------------------------------------------------
 
@@ -66,8 +67,10 @@ G4MoleculeCounterManager::~G4MoleculeCounterManager()
   // The manager owns all the counters as raw pointers, clean up:
   DeregisterAllCounters();
 
-  if (fVerbosity > 0) {
-    if (GetResetCountersBeforeRun() && !fBeginOfRunTriggered.load()) {
+  if (fVerbosity > 0)
+  {
+    if (GetResetCountersBeforeRun() && !fBeginOfRunTriggered.load())
+    {
       G4Exception("G4MoleculeCounterManager::~G4MoleculeCounterManager", "MOLMAN000", JustWarning,
                   "The molecule counter manager was configured to reset counters before each run"
                   " but the BeginOfRunAction was never triggered!\n"
@@ -88,23 +91,28 @@ G4MoleculeCounterManager::~G4MoleculeCounterManager()
   }
 
   // Handle the recorded master and worker instances
-  if (G4Threading::IsMasterThread()) {
-    // This is the master's dtor: set the master const* to nullptr (as it will point to nothing of use)
+  if (G4Threading::IsMasterThread())
+  {
+    // This is the master's dtor: set the master const* to nullptr (as it will point to nothing of
+    // use)
     G4AutoLock lockMaster(&masterInstanceMutex);
     fpMasterInstance = nullptr;
   }
-  else {
+  else
+  {
     // This is a worker's dtor: make sure that this worker is still in the list of instances.
     // If not, throw a warning (something fishy going on?)
     // Either way, set this worker's const* to nullptr in the list of instances.
     G4AutoLock lock(&workerInstancesMutex);
     auto it = std::find(fWorkerInstances.begin(), fWorkerInstances.end(), this);
-    if (it == fWorkerInstances.end()) {
+    if (it == fWorkerInstances.end())
+    {
       G4Exception(
         "G4MoleculeCounterManager::~G4MoleculeCounterManager", "MOLMAN_DTOR", JustWarning,
         "The destroyed instance of G4MoleculeCounterManager has not been registered as a worker!");
     }
-    else {
+    else
+    {
       (*it) = nullptr;
     }
   }
@@ -112,20 +120,25 @@ G4MoleculeCounterManager::~G4MoleculeCounterManager()
 
 void G4MoleculeCounterManager::RegisterInstance()
 {
-  if (fInstancesRegistered) {
+  if (fInstancesRegistered)
+  {
     G4Exception("G4MoleculeCounterManager::RegisterInstance", "MOLMAN000", FatalException,
                 "Instances were already registered once!");
   }
-  else {
-    if (G4Threading::IsMasterThread()) {
+  else
+  {
+    if (G4Threading::IsMasterThread())
+    {
       G4AutoLock lock(&masterInstanceMutex);
-      if (fpMasterInstance != nullptr) {
+      if (fpMasterInstance != nullptr)
+      {
         G4Exception("G4MoleculeCounterManager::RegisterInstance", "MOLMAN000", FatalException,
                     "Master instance was set already!");
       }
       fpMasterInstance = Instance();
     }
-    else {
+    else
+    {
       G4AutoLock lock(&workerInstancesMutex);
       fWorkerInstances.push_back(Instance());
     }
@@ -135,7 +148,8 @@ void G4MoleculeCounterManager::RegisterInstance()
 
 G4MoleculeCounterManager* G4MoleculeCounterManager::Instance()
 {
-  if (fpInstance == nullptr) {
+  if (fpInstance == nullptr)
+  {
     G4AutoLock lock(&managerInstance);
     fpInstance = std::make_unique<G4MoleculeCounterManager>(G4MoleculeCounterManager::Private());
     fpInstance->RegisterInstance();
@@ -152,7 +166,8 @@ void G4MoleculeCounterManager::DeleteInstance()
 {
   G4AutoLock lock(&managerInstance);
 
-  if (fpInstance != nullptr) {
+  if (fpInstance != nullptr)
+  {
     fpInstance.reset();
     // this should (test!) trigger the dtor, which will delete/deregister the counters
   }
@@ -166,18 +181,21 @@ void G4MoleculeCounterManager::DeleteInstance()
 
 void G4MoleculeCounterManager::Initialize()
 {
-  if (fVerbosity > 0) {
+  if (fVerbosity > 0)
+  {
     G4cout << "G4MoleculeCounterManager::Initialize ("
            << (G4Threading::IsMasterThread() ? "master" : "worker") << ")" << G4endl;
   }
 
-  if (G4Threading::IsMultithreadedApplication()) {
+  if (G4Threading::IsMultithreadedApplication())
+  {
     if (G4Threading::IsWorkerThread())
       InitializeWorker();
     else
       InitializeMaster();
   }
-  else {
+  else
+  {
     InitializeMaster();
   }
 }
@@ -187,6 +205,23 @@ void G4MoleculeCounterManager::InitializeMaster()
   if (fIsInitialized) return;
   for (auto& counter : fCounters)
     counter.second->Initialize();
+
+  if (GetAccumulateCounterIntoMaster() && !GetResetCountersBeforeEvent()
+      && !GetResetCountersBeforeRun())
+  {
+    G4Exception("G4MoleculeCounterManager::Initialize", "MOLMAN000", JustWarning,
+                "The molecule counter manager is set to accumulate counters into "
+                "the master thread. But this will *NOT* be triggered automatically, "
+                "since the counters are not reset before events or runs!");
+  }
+
+  if (!ManagerFlagsAreReasonable())
+  {
+    G4Exception("G4MoleculeCounterManager::Initialize", "MOLMAN000", JustWarning,
+                "The molecule counter manager tried to verify its settings "
+                "but it appears that the selection of accumulate and reset "
+                "flags does not match any reasonable configuration!");
+  }
 }
 
 void G4MoleculeCounterManager::InitializeWorker()
@@ -205,7 +240,8 @@ void G4MoleculeCounterManager::InitializeWorker()
 void G4MoleculeCounterManager::AddMoleculeWithoutTrack(const G4MolecularConfiguration* molecule,
                                                        G4double time, G4int n)
 {
-  for (auto& [id, counter] : fCounters) {
+  for (auto& [id, counter] : fCounters)
+  {
     counter->AddMolecule(counter->BuildSimpleIndex(molecule), time, n);
   }
 }
@@ -213,21 +249,24 @@ void G4MoleculeCounterManager::AddMoleculeWithoutTrack(const G4MolecularConfigur
 void G4MoleculeCounterManager::RemoveMoleculeWithoutTrack(const G4MolecularConfiguration* molecule,
                                                           G4double time, G4int n)
 {
-  for (auto& [id, counter] : fCounters) {
+  for (auto& [id, counter] : fCounters)
+  {
     counter->RemoveMolecule(counter->BuildSimpleIndex(molecule), time, n);
   }
 }
 
 void G4MoleculeCounterManager::AddMolecule(const G4Track* aTrack, G4double time, G4int n)
 {
-  for (auto& [id, counter] : fCounters) {
+  for (auto& [id, counter] : fCounters)
+  {
     counter->AddMolecule(counter->BuildIndex(aTrack), time, n);
   }
 }
 
 void G4MoleculeCounterManager::RemoveMolecule(const G4Track* aTrack, G4double time, G4int n)
 {
-  for (auto& [id, counter] : fCounters) {
+  for (auto& [id, counter] : fCounters)
+  {
     counter->RemoveMolecule(counter->BuildIndex(aTrack), time, n);
   }
 }
@@ -235,8 +274,10 @@ void G4MoleculeCounterManager::RemoveMolecule(const G4Track* aTrack, G4double ti
 void G4MoleculeCounterManager::AddMolecule(const G4Track* aTrack, const G4StepPoint* aStepPoint,
                                            G4double time, G4int n)
 {
-  for (auto& [id, counter] : fCounters) {
-    if (counter->GetSensitiveToStepping()) {
+  for (auto& [id, counter] : fCounters)
+  {
+    if (counter->GetSensitiveToStepping())
+    {
       counter->AddMolecule(counter->BuildIndex(aTrack, aStepPoint), time, n);
     }
   }
@@ -245,8 +286,10 @@ void G4MoleculeCounterManager::AddMolecule(const G4Track* aTrack, const G4StepPo
 void G4MoleculeCounterManager::RemoveMolecule(const G4Track* aTrack, const G4StepPoint* aStepPoint,
                                               G4double time, G4int n)
 {
-  for (auto& [id, counter] : fCounters) {
-    if (counter->GetSensitiveToStepping()) {
+  for (auto& [id, counter] : fCounters)
+  {
+    if (counter->GetSensitiveToStepping())
+    {
       counter->RemoveMolecule(counter->BuildIndex(aTrack, aStepPoint), time, n);
     }
   }
@@ -257,7 +300,8 @@ void G4MoleculeCounterManager::RemoveMolecule(const G4Track* aTrack, const G4Ste
 void G4MoleculeCounterManager::RecordReaction(const G4DNAMolecularReactionData* reactionData,
                                               G4double time, G4int n)
 {
-  for (auto& [id, counter] : fReactionCounters) {
+  for (auto& [id, counter] : fReactionCounters)
+  {
     counter->RecordReaction(counter->BuildSimpleIndex(reactionData), time, n);
   }
 }
@@ -280,13 +324,16 @@ void G4MoleculeCounterManager::NotifyOfStep(const G4Step* aStep)
 {
   const G4Track* aTrack = aStep->GetTrack();
 
-  for (auto& [id, counter] : fCounters) {
+  for (auto& [id, counter] : fCounters)
+  {
     auto preStepIndex = counter->BuildIndex(aTrack, aStep->GetPreStepPoint());
     auto postStepIndex = counter->BuildIndex(aTrack, aStep->GetPostStepPoint());
 
-    if (!(*preStepIndex == *postStepIndex)) {
+    if (!(*preStepIndex == *postStepIndex))
+    {
 #ifdef G4VERBOSE
-      if (GetVerbosity() > 1) {
+      if (GetVerbosity() > 1)
+      {
         G4cout << "G4MoleculeCounterManager::NotifyOfStep for counter " << counter->GetName()
                << ":\n-- Pre = " << preStepIndex->GetInfo() << "\n"
                << "-- Post = " << postStepIndex->GetInfo() << G4endl;
@@ -300,10 +347,39 @@ void G4MoleculeCounterManager::NotifyOfStep(const G4Step* aStep)
 
 void G4MoleculeCounterManager::NotifyOfFinalize()
 {
-  for (auto& [id, counter] : fCounters) {
+  for (auto& [id, counter] : fCounters)
+  {
     counter->SchedulerFinalizedTracking();
   }
 }
+
+//------------------------------------------------------------------------------
+
+void G4MoleculeCounterManager::NotifyOfMesoscopicMeshSnapshot(const G4DNAMesh* const mesh,
+                                                              G4double time)
+{
+  if (!fIsActive) return;
+  for (auto& [id, counter] : fCounters)
+  {
+    auto* mc = dynamic_cast<G4VMoleculeCounterMeshSupport*>(counter);
+    if (mc == nullptr)
+    {
+      if (counter->GetType() != G4VMoleculeCounter::MoleculeCounterType::Mesoscopic)
+      {
+        G4ExceptionDescription errMsg;
+        errMsg << "The molecule counter `" << counter->GetName()
+               << "` type is `Mesoscopic` but it does not "
+                  "derive from G4VMoleculeCounterMeshSupport!";
+        G4Exception("G4MoleculeCounterManager::NotifyOfMesoscopicMeshSnapshot", "MOLMAN010",
+                    JustWarning, errMsg);
+      }
+      continue;
+    }
+    mc->SetMeshSnapshot(mesh, time);
+  }
+}
+
+//------------------------------------------------------------------------------
 
 //
 // Broadcast Functions
@@ -311,21 +387,24 @@ void G4MoleculeCounterManager::NotifyOfFinalize()
 
 void G4MoleculeCounterManager::BroadcastIgnoreMolecule(const G4MoleculeDefinition* molecule)
 {
-  for (auto& [id, counter] : fCounters) {
+  for (auto& [id, counter] : fCounters)
+  {
     counter->IgnoreMolecule(molecule);
   }
 }
 
 void G4MoleculeCounterManager::BroadcastIgnoreReactant(const G4MolecularConfiguration* molecule)
 {
-  for (auto& [id, counter] : fCounters) {
+  for (auto& [id, counter] : fCounters)
+  {
     counter->IgnoreReactant(molecule);
   }
 }
 
 void G4MoleculeCounterManager::BroadcastRegisterAllMoleculesAndReactants()
 {
-  for (auto& [id, counter] : fCounters) {
+  for (auto& [id, counter] : fCounters)
+  {
     counter->RegisterAll();
   }
 }
@@ -366,12 +445,14 @@ G4int G4MoleculeCounterManager::RegisterCounter(std::unique_ptr<G4VMoleculeReact
 
 void G4MoleculeCounterManager::DeregisterAllCounters()
 {
-  for (auto& [id, ctr] : fCounters) {
+  for (auto& [id, ctr] : fCounters)
+  {
     delete ctr;
   }
   fCounters.clear();
 
-  for (auto& [id, ctr] : fReactionCounters) {
+  for (auto& [id, ctr] : fReactionCounters)
+  {
     delete ctr;
   }
   fReactionCounters.clear();
@@ -385,7 +466,8 @@ void G4MoleculeCounterManager::DeregisterAllCounters()
 
 void G4MoleculeCounterManager::ResetCounters()
 {
-  if (fVerbosity > 0) {
+  if (fVerbosity > 0)
+  {
     G4cout << "G4MoleculeCounterManager::ResetCounters ("
            << (G4Threading::IsMasterThread() ? "master" : "worker") << ")" << G4endl;
   }
@@ -402,7 +484,8 @@ void G4MoleculeCounterManager::ActivateCounterAtTimes(G4int id, G4double aboveTi
                                                       G4double belowTime, G4bool aboveTimeInclusive,
                                                       G4bool belowTimeInclusive)
 {
-  if (fVerbosity > 0) {
+  if (fVerbosity > 0)
+  {
     G4cout << "G4MoleculeCounterManager::ActivateCounterAtTimes ("
            << (G4Threading::IsMasterThread() ? "master" : "worker") << ")" << G4endl;
   }
@@ -417,7 +500,8 @@ void G4MoleculeCounterManager::ActivateReactionCounterAtTimes(G4int id, G4double
                                                               G4bool aboveTimeInclusive,
                                                               G4bool belowTimeInclusive)
 {
-  if (fVerbosity > 0) {
+  if (fVerbosity > 0)
+  {
     G4cout << "G4MoleculeCounterManager::ActivateReactionCounterAtTimes ("
            << (G4Threading::IsMasterThread() ? "master" : "worker") << ")" << G4endl;
   }
@@ -432,13 +516,16 @@ void G4MoleculeCounterManager::ActivateReactionCounterAtTimes(G4int id, G4double
 G4VMoleculeCounter* G4MoleculeCounterManager::GetEditableMoleculeCounter(G4int id) const
 {
   auto it = fCounters.find(id);
-  if (it == fCounters.end()) {
+  if (it == fCounters.end())
+  {
     G4ExceptionDescription description;
     description << "No molecule counter with Id = " << id << " was found!\n";
     G4Exception("G4MoleculeCounterManager::GetMoleculeCounter", "MOLMAN001", FatalErrorInArgument,
                 description);
     return nullptr;
-  }else{
+  }
+  else
+  {
     return it->second;
   }
 }
@@ -452,10 +539,12 @@ std::vector<const G4VMoleculeCounter*> G4MoleculeCounterManager::GetMoleculeCoun
   return output;
 }
 
-std::vector<const G4VMoleculeCounter*> G4MoleculeCounterManager::GetMoleculeCounters(G4String name) const
+std::vector<const G4VMoleculeCounter*>
+G4MoleculeCounterManager::GetMoleculeCounters(G4String name) const
 {
   std::vector<const G4VMoleculeCounter*> output;
-  for (auto& [id, counter] : fCounters) {
+  for (auto& [id, counter] : fCounters)
+  {
     if (name == counter->GetName()) output.push_back(counter);
   }
   return output;
@@ -467,13 +556,15 @@ G4VMoleculeReactionCounter*
 G4MoleculeCounterManager::GetEditableMoleculeReactionCounter(G4int id) const
 {
   auto it = fReactionCounters.find(id);
-  if (it == fReactionCounters.end()) {
+  if (it == fReactionCounters.end())
+  {
     G4ExceptionDescription description;
     description << "No molecule reaction counter with Id = " << id << " was found!\n";
     G4Exception("G4MoleculeCounterManager::GetMoleculeReactionCounter", "MOLMAN001",
                 FatalErrorInArgument, description);
     return nullptr;
-  }else
+  }
+  else
   {
     return it->second;
   }
@@ -493,7 +584,8 @@ std::vector<const G4VMoleculeReactionCounter*>
 G4MoleculeCounterManager::GetMoleculeReactionCounters(G4String name) const
 {
   std::vector<const G4VMoleculeReactionCounter*> output;
-  for (auto& [id, counter] : fReactionCounters) {
+  for (auto& [id, counter] : fReactionCounters)
+  {
     if (name == counter->GetName()) output.push_back(counter);
   }
   return output;
@@ -505,7 +597,8 @@ void G4MoleculeCounterManager::BeginOfEventAction(const G4Event*)
 {
   fBeginOfEventTriggered = true;
 
-  if (GetResetCountersBeforeEvent()) {
+  if (GetResetCountersBeforeEvent())
+  {
     // trigger reset if:
     // * is not an MT app (master = worker)
     // * is an MT app, master, and we want to reset the master
@@ -524,7 +617,8 @@ void G4MoleculeCounterManager::BeginOfRunAction(const G4Run*)
 {
   fBeginOfRunTriggered = true;
 
-  if (GetResetCountersBeforeRun()) {
+  if (GetResetCountersBeforeRun())
+  {
     // trigger reset if:
     // * is not an MT app (master = worker)
     // * is an MT app, master, and we want to reset the master
@@ -541,12 +635,11 @@ void G4MoleculeCounterManager::BeginOfRunAction(const G4Run*)
 
 void G4MoleculeCounterManager::EndOfEventAction(const G4Event*)
 {
-  // EndOfEvent is never triggered on the master of a G4MT
+  // Note: EndOfEvent is never triggered on the master of a G4MT
+
   if (GetAccumulateCounterIntoMaster() && GetResetCountersBeforeEvent()
       && G4Threading::IsMultithreadedApplication() && G4Threading::IsWorkerThread())
-  {
     AbsorbWorkerManagerCounters(this);
-  }
 }
 
 //------------------------------------------------------------------------------
@@ -554,9 +647,9 @@ void G4MoleculeCounterManager::EndOfEventAction(const G4Event*)
 void G4MoleculeCounterManager::EndOfRunAction(const G4Run*)
 {
   if (GetAccumulateCounterIntoMaster() && GetResetCountersBeforeRun()
-      && !GetResetCountersBeforeEvent() &&
-      // if ResetBeforeEvent, AbsorbWorkerManagerCounters will have been triggered already
-      G4Threading::IsMultithreadedApplication() && G4Threading::IsMasterThread())
+      && !GetResetCountersBeforeEvent()  // if ResetBeforeEvent, AbsorbWorkerManagerCounters will
+                                         // have been triggered already
+      && G4Threading::IsMultithreadedApplication() && G4Threading::IsMasterThread())
     AbsorbWorkerManagerCounters();
 }
 
@@ -565,7 +658,8 @@ void G4MoleculeCounterManager::EndOfRunAction(const G4Run*)
 void G4MoleculeCounterManager::AbsorbWorkerManagerCounters(
   const G4MoleculeCounterManager* selectedWorker)
 {
-  if (selectedWorker == nullptr && !G4Threading::IsMasterThread()) {
+  if (selectedWorker == nullptr && !G4Threading::IsMasterThread())
+  {
     // Can only call without worker from master thread!
     G4ExceptionDescription description;
     description << "This method may only be called from the master thread!";
@@ -577,16 +671,22 @@ void G4MoleculeCounterManager::AbsorbWorkerManagerCounters(
   G4AutoLock lockMaster(&masterInstanceMutex);
   G4AutoLock lockWorker(&workerInstancesMutex);
 
-  for (auto const& worker : fWorkerInstances) {
-    if (selectedWorker == nullptr || worker != selectedWorker) continue;
+  for (auto const& worker : fWorkerInstances)
+  {
+    if (selectedWorker != nullptr && worker != selectedWorker) continue;
+    // "when called to absorb selectedWorker, ensure that we only absorb worker == selectedWorker"
+    // EndOfEventAction calls this with selectedWorker
+    // EndOfRunAction calls this with nullptr
 
-    for (auto& [id, masterCounter] : fpMasterInstance->fCounters) {
+    for (auto& [id, masterCounter] : fpMasterInstance->fCounters)
+    {
       // acquire worker counter
       auto workerCounter = worker->GetMoleculeCounter(id);
       masterCounter->AbsorbCounter(workerCounter);
     }
 
-    for (auto& [id, masterCounter] : fpMasterInstance->fReactionCounters) {
+    for (auto& [id, masterCounter] : fpMasterInstance->fReactionCounters)
+    {
       // acquire worker counter
       auto workerCounter = worker->GetMoleculeReactionCounter(id);
       masterCounter->AbsorbCounter(workerCounter);
@@ -600,7 +700,8 @@ void G4MoleculeCounterManager::DumpMasterCounters() const
 {
   G4AutoLock lock(&masterInstanceMutex);
 
-  for (auto const& pCounter : fpMasterInstance->GetMoleculeCounters()) {
+  for (auto const& pCounter : fpMasterInstance->GetMoleculeCounters())
+  {
     G4cout << "===========================================================================  \n"
            << " >> [MASTER] Dumping Molecule Counter `" << pCounter->GetName() << "`\n"
            << G4endl;
@@ -609,7 +710,8 @@ void G4MoleculeCounterManager::DumpMasterCounters() const
            << G4endl;
   }
 
-  for (auto const& pCounter : fpMasterInstance->GetMoleculeReactionCounters()) {
+  for (auto const& pCounter : fpMasterInstance->GetMoleculeReactionCounters())
+  {
     G4cout << "===========================================================================  \n"
            << " >> [MASTER] Dumping Molecule Reaction Counter `" << pCounter->GetName() << "`\n"
            << G4endl;
@@ -625,8 +727,10 @@ void G4MoleculeCounterManager::DumpWorkerCounters() const
 {
   G4AutoLock lock(&workerInstancesMutex);
 
-  for (auto const& worker : G4MoleculeCounterManager::fWorkerInstances) {
-    for (auto const& pCounter : worker->GetMoleculeCounters()) {
+  for (auto const& worker : G4MoleculeCounterManager::fWorkerInstances)
+  {
+    for (auto const& pCounter : worker->GetMoleculeCounters())
+    {
       G4cout << "===========================================================================  \n"
              << " >> [WORKER<" << worker << ">] Dumping Molecule Counter `" << pCounter->GetName()
              << "`\n"
@@ -636,7 +740,8 @@ void G4MoleculeCounterManager::DumpWorkerCounters() const
              << G4endl;
     }
 
-    for (auto const& pCounter : worker->GetMoleculeReactionCounters()) {
+    for (auto const& pCounter : worker->GetMoleculeReactionCounters())
+    {
       G4cout << "===========================================================================  \n"
              << " >> [WORKER<" << worker << ">] Dumping Molecule Reaction Counter `"
              << pCounter->GetName() << "`\n"
@@ -646,6 +751,78 @@ void G4MoleculeCounterManager::DumpWorkerCounters() const
              << G4endl;
     }
   }
+}
+
+//------------------------------------------------------------------------------
+
+G4bool G4MoleculeCounterManager::ManagerFlagsAreReasonable() const
+{
+  // Assumes UserScorer::EndOfEvent + Run::Merge
+  auto case1 = GetResetCountersBeforeEvent();
+
+  // Assumes UserScorer::EndOfRun + Run::Merge
+  auto case2 = !GetResetCountersBeforeEvent() && GetResetCountersBeforeRun();
+
+  // Assumes RunAction::EndOfRun(Master) accessing CounterManager
+  auto case3 = GetResetCountersBeforeEvent() && GetAccumulateCounterIntoMaster()
+               && !GetResetMasterCounterWithWorkers();
+
+  // Assumes RunAction::EndOfRun(Master) accessing CounterManager
+  auto case4 = !GetResetCountersBeforeEvent() && GetResetCountersBeforeRun()
+               && GetAccumulateCounterIntoMaster() && !GetResetMasterCounterWithWorkers();
+
+  // Assumes RunAction::EndOfRun(Worker) accessing CounterManager
+  auto case5 = !GetResetCountersBeforeEvent() && GetResetCountersBeforeRun();
+
+  if (fVerbosity > 0)
+  {
+    G4cout << "--------------------------------------------------------------------------------"
+           << G4endl;
+    G4cout << " ::           G4MoleculeCounterManager::ManagerFlagsAreReasonable()          :: "
+           << G4endl;
+    G4cout << "--------------------------------------------------------------------------------"
+           << G4endl;
+    G4cout << "  Manager flags are set to:" << std::boolalpha
+           << "\n   - ResetCountersBeforeEvent      = " << GetResetCountersBeforeEvent()
+           << "\n   - ResetCountersBeforeRun        = " << GetResetCountersBeforeRun()
+           << "\n   - AccumulateCounterIntoMaster   = " << GetAccumulateCounterIntoMaster()
+           << "\n   - ResetMasterCounterWithWorkers = " << GetResetMasterCounterWithWorkers()
+           << G4endl;
+    G4cout << "\n  The G4MoleculeCounterManager has verified the accumulation and reset\n"
+           << "   flags and identified that they match the following cases:" << G4endl;
+    if (case1)
+    {
+      G4cout << " (case1) assumes UserScorer::EndOfEvent + Run::Merge + \n"
+             << "         RunAction::EndOfRunAction->UserScorer" << G4endl;
+    }
+    if (case2)
+    {
+      G4cout << " (case2) assumes UserScorer::EndOfRun + Run::Merge + \n"
+             << "         RunAction::EndOfRunAction->UserScorer" << G4endl;
+    }
+    if (case3)
+    {
+      G4cout << " (case3) assumes RunAction::EndOfRunAction(Master)->CounterManager" << G4endl;
+    }
+    if (case4)
+    {
+      G4cout << " (case4) assumes RunAction::EndOfRunAction(Master)->CounterManager" << G4endl;
+    }
+    if (case5)
+    {
+      G4cout << " (case5) assumes RunAction::EndOfRunAction(Worker)->CounterManager" << G4endl;
+    }
+    G4cout << "--------------------------------------------------------------------------------"
+           << G4endl;
+    G4cout << "  Ensure that your code is using any of these pipelines to extract the\n"
+           << "   molecule counter data from the manager." << G4endl;
+    G4cout << "--------------------------------------------------------------------------------"
+           << G4endl;
+    G4cout << "--------------------------------------------------------------------------------"
+           << G4endl;
+  }
+
+  return case1 || case2 || case3 || case4 || case5;
 }
 
 //------------------------------------------------------------------------------
@@ -661,7 +838,8 @@ G4bool G4MoleculeCounterManager::GetResetCountersBeforeEvent() const
 }
 void G4MoleculeCounterManager::SetResetCountersBeforeEvent(G4bool flag)
 {
-  if (G4StateManager::GetStateManager()->GetCurrentState() == G4State_PreInit) {
+  if (G4StateManager::GetStateManager()->GetCurrentState() == G4State_PreInit)
+  {
     fResetCountersBeforeEvent = flag;
   }
   else

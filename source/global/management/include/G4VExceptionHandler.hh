@@ -22,43 +22,50 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-//
-// G4VExceptionHandler
-//
-// Class description:
-//
-// Abstract base class which needs to be notified when a G4Exception occurs.
-// The concrete class object derived from this base class will be
-// automatically registered to G4StateManager and the virtual method Notify()
-// will be invoked when the G4Exception occurs.
-
+//! @file G4VExceptionHandler.hh
+// ********************************************************************
 // Author: M.Asai, August 2002
 // --------------------------------------------------------------------
-#ifndef G4VExceptionHandler_hh
-#define G4VExceptionHandler_hh 1
+#ifndef G4VEXCEPTIONHANDLER_HH
+#define G4VEXCEPTIONHANDLER_HH
 
 #include "G4ExceptionSeverity.hh"
 #include "G4Types.hh"
 
+/**
+ * @ingroup global_management
+ * Abstract base class which needs to be notified when a G4Exception occurs.
+ *
+ * The concrete class object derived from this base class will be
+ * automatically registered to G4StateManager and the virtual method Notify()
+ * will be invoked when the G4Exception occurs.
+ *
+ * @sa G4StateManager
+ * @sa G4Exception
+ */
 class G4VExceptionHandler
 {
- public:
-  G4VExceptionHandler();
-  virtual ~G4VExceptionHandler() = default;
-  G4bool operator==(const G4VExceptionHandler& right) const;
-  G4bool operator!=(const G4VExceptionHandler& right) const;
+  public:
 
-  virtual G4bool Notify(const char* originOfException,
-                        const char* exceptionCode, G4ExceptionSeverity severity,
-                        const char* description) = 0;
-  // Pure virtual method which will be invoked by G4StateManager when
-  // a G4Exception occurs.
-  // If TRUE is returned, a core dump will be generated,
-  // while if FALSE is returned, program execution continues.
+    G4VExceptionHandler();
+    virtual ~G4VExceptionHandler() = default;
+    G4bool operator==(const G4VExceptionHandler& right) const;
+    G4bool operator!=(const G4VExceptionHandler& right) const;
 
- private:
-  G4VExceptionHandler(const G4VExceptionHandler& right);
-  G4VExceptionHandler& operator=(const G4VExceptionHandler& right);
+    /**
+     * Pure virtual method which will be invoked by G4StateManager when
+     * a G4Exception occurs.
+     *
+     * If TRUE is returned, a core dump will be generated,
+     * while if FALSE is returned, program execution continues.
+     */
+    virtual G4bool Notify(const char* originOfException, const char* exceptionCode,
+                          G4ExceptionSeverity severity, const char* description) = 0;
+
+  private:
+
+    G4VExceptionHandler(const G4VExceptionHandler& right);
+    G4VExceptionHandler& operator=(const G4VExceptionHandler& right);
 };
 
 #endif

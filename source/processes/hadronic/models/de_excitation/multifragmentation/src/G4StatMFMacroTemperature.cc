@@ -27,27 +27,29 @@
 // by V. Lara
 //
 // Modified:
-// 25.07.08 I.Pshenichnov (in collaboration with Alexander Botvina and Igor 
-//          Mishustin (FIAS, Frankfurt, INR, Moscow and Kurchatov Institute, 
+// 25.07.08 I.Pshenichnov (in collaboration with Alexander Botvina and Igor
+//          Mishustin (FIAS, Frankfurt, INR, Moscow and Kurchatov Institute,
 //          Moscow, pshenich@fias.uni-frankfurt.de) make algorithm closer to
 //          original MF model
 // 16.04.10 V.Ivanchenko improved logic of solving equation for temperature
-//          to protect code from rare unwanted exception; moved constructor 
-//          and destructor to source  
+//          to protect code from rare unwanted exception; moved constructor
+//          and destructor to source
 // 28.10.10 V.Ivanchenko defined members in constructor and cleaned up
 // 13.08.2025 V.Ivanchenko rewrite
 
 #include "G4StatMFMacroTemperature.hh"
-#include "G4StatMFParameters.hh"
-#include "G4StatMFMacroChemicalPotential.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4Pow.hh"
 
-namespace {
-  const G4double t1 = 1*CLHEP::MeV;
-  const G4double t2 = 50*CLHEP::MeV;
-}
+#include "G4PhysicalConstants.hh"
+#include "G4Pow.hh"
+#include "G4StatMFMacroChemicalPotential.hh"
+#include "G4StatMFParameters.hh"
+#include "G4SystemOfUnits.hh"
+
+namespace
+{
+const G4double t1 = 1 * CLHEP::MeV;
+const G4double t2 = 50 * CLHEP::MeV;
+}  // namespace
 
 G4StatMFMacroTemperature::G4StatMFMacroTemperature()
 {
@@ -62,11 +64,9 @@ G4StatMFMacroTemperature::~G4StatMFMacroTemperature()
   delete theChemPot;
 }
 
-void G4StatMFMacroTemperature::Initialise(const G4int anA, const G4int aZ, 
-					  const G4double ExEnergy,
-					  const G4double FreeE0,
-					  const G4double kappa, 
-					  std::vector<G4VStatMFMacroCluster*>* v)
+void G4StatMFMacroTemperature::Initialise(const G4int anA, const G4int aZ, const G4double ExEnergy,
+                                          const G4double FreeE0, const G4double kappa,
+                                          std::vector<G4VStatMFMacroCluster*>* v)
 {
   theA = anA;
   theZ = aZ;
@@ -76,49 +76,48 @@ void G4StatMFMacroTemperature::Initialise(const G4int anA, const G4int aZ,
   fClusters = v;
 }
 
-G4double G4StatMFMacroTemperature::CalcTemperature(void) 
+G4double G4StatMFMacroTemperature::CalcTemperature(void)
 {
-  fMeanTemperature = std::max(std::min(std::sqrt(fExEnergy/(theA*0.12)), t2), t1);
+  fMeanTemperature = std::max(std::min(std::sqrt(fExEnergy / (theA * 0.12)), t2), t1);
   fSolver->FindRoot(fMeanTemperature);
   return fMeanTemperature;
 }
 
 G4double G4StatMFMacroTemperature::FragsExcitEnergy(const G4double T)
-// Calculates excitation energy per nucleon and summed fragment 
+// Calculates excitation energy per nucleon and summed fragment
 // multiplicity and entropy
 {
   // Model Parameters
   G4Pow* g4calc = G4Pow::GetInstance();
-  G4double R0 = G4StatMFParameters::Getr0()*g4calc->Z13(theA);
-  G4double R = R0*g4calc->A13(1.0 + G4StatMFParameters::GetKappaCoulomb());
-  G4double FreeVol = fKappa*(4.*CLHEP::pi/3.)*R0*R0*R0; 
- 
+  G4double R0 = G4StatMFParameters::Getr0() * g4calc->Z13(theA);
+  G4double R = R0 * g4calc->A13(1.0 + G4StatMFParameters::GetKappaCoulomb());
+  G4double FreeVol = fKappa * (4. * CLHEP::pi / 3.) * R0 * R0 * R0;
+
   // Calculate Chemical potentials
   CalcChemicalPotentialNu(T);
 
   // Average total fragment energy and mean entropy
   G4double AverageEnergy = 0.0;
   fMeanEntropy = 0.0;
-  for (auto const ptr : *fClusters) {
+  for (auto const ptr : *fClusters)
+  {
     fMeanEntropy += ptr->CalcEntropy(T, FreeVol);
     AverageEnergy += ptr->GetMeanMultiplicity() * ptr->CalcEnergy(T);
   }
-    
-  // Add Coulomb energy			
-  AverageEnergy += 0.6*CLHEP::elm_coupling*(theZ*theZ)/R;
+
+  // Add Coulomb energy
+  AverageEnergy += 0.6 * CLHEP::elm_coupling * (theZ * theZ) / R;
 
   // Excitation energy per nucleon
   return AverageEnergy - fFreeInternalE0;
 }
 
 void G4StatMFMacroTemperature::CalcChemicalPotentialNu(const G4double T)
-// Calculates the chemical potential \nu 
+// Calculates the chemical potential \nu
 {
   theChemPot->Initialise(theA, theZ, fKappa, T, fClusters);
 
   fChemPotentialNu = theChemPot->CalcChemicalPotentialNu();
   fChemPotentialMu = theChemPot->GetChemicalPotentialMu();
-  fMeanMultiplicity = theChemPot->GetMeanMultiplicity();		
+  fMeanMultiplicity = theChemPot->GetMeanMultiplicity();
 }
-
-

@@ -54,8 +54,7 @@ G4ParticleHPElementData::~G4ParticleHPElementData()
   delete[] theIsotopeWiseData;
 }
 
-void G4ParticleHPElementData::Init(G4Element* theElement,
-                                   G4ParticleDefinition* projectile,
+void G4ParticleHPElementData::Init(G4Element* theElement, G4ParticleDefinition* projectile,
                                    const char* dataDirVariable)
 {
   auto nIso = (G4int)theElement->GetNumberOfIsotopes();
@@ -63,7 +62,8 @@ void G4ParticleHPElementData::Init(G4Element* theElement,
   const std::size_t dsize = nIso > 0 ? nIso : 1;
   theIsotopeWiseData = new G4ParticleHPIsoData[dsize];
 
-  for (G4int i1 = 0; i1 < nIso; ++i1) {
+  for (G4int i1 = 0; i1 < nIso; ++i1)
+  {
     G4int A = theElement->GetIsotope(i1)->GetN();
     G4int M = theElement->GetIsotope(i1)->Getm();
     G4double frac = theElement->GetRelativeAbundanceVector()[i1] / CLHEP::perCent;
@@ -71,8 +71,7 @@ void G4ParticleHPElementData::Init(G4Element* theElement,
   }
 }
 
-void G4ParticleHPElementData::UpdateData(G4int A, G4int Z, G4int M, G4int index,
-                                         G4double abundance,
+void G4ParticleHPElementData::UpdateData(G4int A, G4int Z, G4int M, G4int index, G4double abundance,
                                          G4ParticleDefinition* projectile,
                                          const char* dataDirVariable)
 {
@@ -98,7 +97,8 @@ void G4ParticleHPElementData::UpdateData(G4int A, G4int Z, G4int M, G4int index,
 
 void G4ParticleHPElementData::Harmonise(G4ParticleHPVector*& theStore, G4ParticleHPVector* theNew)
 {
-  if (theNew == nullptr) {
+  if (theNew == nullptr)
+  {
     return;
   }
   G4int s_tmp = 0, n = 0, m_tmp = 0;
@@ -116,7 +116,8 @@ void G4ParticleHPElementData::Harmonise(G4ParticleHPVector*& theStore, G4Particl
   while (a < active->GetVectorLength()
          && p < passive->GetVectorLength())  // Loop checking, 11.05.2015, T. Koi
   {
-    if (active->GetEnergy(a) <= passive->GetEnergy(p)) {
+    if (active->GetEnergy(a) <= passive->GetEnergy(p))
+    {
       theMerge->SetData(m_tmp, active->GetEnergy(a), active->GetXsec(a));
       G4double x = theMerge->GetEnergy(m_tmp);
       G4double y = std::max(0., passive->GetXsec(x));
@@ -124,7 +125,8 @@ void G4ParticleHPElementData::Harmonise(G4ParticleHPVector*& theStore, G4Particl
       ++m_tmp;
       ++a;
     }
-    else {
+    else
+    {
       tmp = active;
       t = a;
       active = passive;
@@ -149,40 +151,36 @@ void G4ParticleHPElementData::Harmonise(G4ParticleHPVector*& theStore, G4Particl
   theStore = theMerge;
 }
 
-G4ParticleHPVector*
-G4ParticleHPElementData::MakePhysicsVector(G4Element* theElement,
-                                           G4ParticleDefinition* projectile,
-                                           G4ParticleHPFissionData* theSet,
-                                           char* dataDirVariable)
+G4ParticleHPVector* G4ParticleHPElementData::MakePhysicsVector(G4Element* theElement,
+                                                               G4ParticleDefinition* projectile,
+                                                               G4ParticleHPFissionData* theSet,
+                                                               char* dataDirVariable)
 {
   Init(theElement, projectile, dataDirVariable);
   return GetData(theSet);
 }
 
-G4ParticleHPVector*
-G4ParticleHPElementData::MakePhysicsVector(G4Element* theElement,
-                                           G4ParticleDefinition* projectile,
-                                           G4NeutronHPCaptureData* theSet,
-                                           char* dataDirVariable)
+G4ParticleHPVector* G4ParticleHPElementData::MakePhysicsVector(G4Element* theElement,
+                                                               G4ParticleDefinition* projectile,
+                                                               G4NeutronHPCaptureData* theSet,
+                                                               char* dataDirVariable)
 {
   Init(theElement, projectile, dataDirVariable);
   return GetData(theSet);
 }
 
-G4ParticleHPVector*
-G4ParticleHPElementData::MakePhysicsVector(G4Element* theElement,
-                                           G4ParticleDefinition* projectile,
-                                           G4ParticleHPElasticData* theSet,
-                                           char* dataDirVariable)
+G4ParticleHPVector* G4ParticleHPElementData::MakePhysicsVector(G4Element* theElement,
+                                                               G4ParticleDefinition* projectile,
+                                                               G4ParticleHPElasticData* theSet,
+                                                               char* dataDirVariable)
 {
   Init(theElement, projectile, dataDirVariable);
   return GetData(theSet);
 }
-G4ParticleHPVector*
-G4ParticleHPElementData::MakePhysicsVector(G4Element* theElement,
-                                           G4ParticleDefinition* projectile,
-                                           G4ParticleHPInelasticData* theSet,
-                                           char* dataDirVariable)
+G4ParticleHPVector* G4ParticleHPElementData::MakePhysicsVector(G4Element* theElement,
+                                                               G4ParticleDefinition* projectile,
+                                                               G4ParticleHPInelasticData* theSet,
+                                                               char* dataDirVariable)
 {
   Init(theElement, projectile, dataDirVariable);
   return GetData(theSet);

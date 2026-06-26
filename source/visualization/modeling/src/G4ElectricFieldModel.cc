@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // Michael Kelsey  31st January 2019 -- Adapted from new G4MagneticFieldModel
 //
 // Class Description:
@@ -33,19 +33,19 @@
 // Model that knows how to draw the electric field.
 
 #include "G4ElectricFieldModel.hh"
+
 #include "G4Field.hh"
 #include "G4Point3D.hh"
 
-
 // Return electric field vector for display
 
-void G4ElectricFieldModel::
-GetFieldAtLocation(const G4Field* field, const G4Point3D& position,
-		   G4double time, G4Point3D& result) const {
-  if (!field) return;			// No action if no field
+void G4ElectricFieldModel::GetFieldAtLocation(const G4Field* field, const G4Point3D& position,
+                                              G4double time, G4Point3D& result) const
+{
+  if (!field) return;  // No action if no field
 
-  G4double xyzt[4] = { position.x(), position.y(), position.z(), time };
-  G4double BEvals[6] = {0.};		// Field returns {Bx,By,Bz,Ex,Ey,Ez}
+  G4double xyzt[4] = {position.x(), position.y(), position.z(), time};
+  G4double BEvals[6] = {0.};  // Field returns {Bx,By,Bz,Ex,Ey,Ez}
   field->GetFieldValue(xyzt, BEvals);
 
   result.set(BEvals[3], BEvals[4], BEvals[5]);

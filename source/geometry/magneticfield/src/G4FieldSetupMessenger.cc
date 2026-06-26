@@ -29,16 +29,15 @@
 // --------------------------------------------------------------------
 
 #include "G4FieldSetupMessenger.hh"
+
 #include "G4FieldSetup.hh"
 #include "G4LogicalVolume.hh"
-
 #include "G4UIcmdWithAnInteger.hh"
 #include "G4UIcmdWithoutParameter.hh"
 #include "G4UIdirectory.hh"
 
 //_____________________________________________________________________________
-G4FieldSetupMessenger::G4FieldSetupMessenger(G4FieldSetup* fieldSetup)
-  : fFieldSetup(fieldSetup)
+G4FieldSetupMessenger::G4FieldSetupMessenger(G4FieldSetup* fieldSetup) : fFieldSetup(fieldSetup)
 {
   // Standard constructor
 
@@ -69,8 +68,7 @@ G4FieldSetupMessenger::~G4FieldSetupMessenger()
 //
 
 //_____________________________________________________________________________
-void G4FieldSetupMessenger::SetNewValue(
-  G4UIcommand* command, G4String /*newValues*/)
+void G4FieldSetupMessenger::SetNewValue(G4UIcommand* command, G4String /*newValues*/)
 {
   // Apply command to the associated object.
 

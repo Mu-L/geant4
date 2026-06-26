@@ -31,11 +31,11 @@
 
 #include "G4ErrorTrackLengthTarget.hh"
 
-#include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
-#include "G4VProcess.hh"
-#include "G4ProcessVector.hh"
+#include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
+#include "G4ProcessVector.hh"
+#include "G4VProcess.hh"
 
 #ifdef G4VERBOSE
 #  include "G4ErrorPropagatorData.hh"  //for verbosity checking
@@ -43,8 +43,7 @@
 
 //----------------------------------------------------------------------------
 G4ErrorTrackLengthTarget::G4ErrorTrackLengthTarget(const G4double maxTrkLength)
-  : G4VDiscreteProcess("G4ErrorTrackLengthTarget")
-  , theMaximumTrackLength(maxTrkLength)
+  : G4VDiscreteProcess("G4ErrorTrackLengthTarget"), theMaximumTrackLength(maxTrkLength)
 {
   theType = G4ErrorTarget_TrkL;
 
@@ -54,28 +53,28 @@ G4ErrorTrackLengthTarget::G4ErrorTrackLengthTarget(const G4double maxTrkLength)
   // loop over all particles in G4ParticleTable
 
   theParticleIterator->reset();
-  while((*theParticleIterator)())  // Loop checking, 06.08.2015, G.Cosmo
+  while ((*theParticleIterator)())  // Loop checking, 06.08.2015, G.Cosmo
   {
     G4ParticleDefinition* particle = theParticleIterator->value();
-    G4ProcessManager* pmanager     = particle->GetProcessManager();
-    if(!particle->IsShortLived())
+    G4ProcessManager* pmanager = particle->GetProcessManager();
+    if (!particle->IsShortLived())
     {
       // Add transportation process for all particles other than  "shortlived"
-      if(pmanager == 0)
+      if (pmanager == 0)
       {
         // Error !! no process manager
         G4String particleName = particle->GetParticleName();
-        G4Exception("G4ErrorTrackLengthTarget::G4ErrorTrackLengthTarget",
-                    "No process manager", RunMustBeAborted, particleName);
+        G4Exception("G4ErrorTrackLengthTarget::G4ErrorTrackLengthTarget", "No process manager",
+                    RunMustBeAborted, particleName);
       }
       else
       {
         G4ProcessVector* procvec = pmanager->GetProcessList();
         std::size_t isiz = (G4int)procvec->size();
 
-        for(G4int ii = 0; ii < (G4int)isiz; ++ii)
+        for (G4int ii = 0; ii < (G4int)isiz; ++ii)
         {
-          if(((*procvec)[ii])->GetProcessName() == "G4ErrorTrackLengthTarget")
+          if (((*procvec)[ii])->GetProcessName() == "G4ErrorTrackLengthTarget")
           {
             pmanager->RemoveProcess((*procvec)[ii]);
           }
@@ -92,20 +91,20 @@ G4ErrorTrackLengthTarget::G4ErrorTrackLengthTarget(const G4double maxTrkLength)
 }
 
 //-----------------------------------------------------------------------
-G4double G4ErrorTrackLengthTarget::PostStepGetPhysicalInteractionLength(
-  const G4Track& track, G4double, G4ForceCondition* condition)
+G4double G4ErrorTrackLengthTarget::PostStepGetPhysicalInteractionLength(const G4Track& track,
+                                                                        G4double,
+                                                                        G4ForceCondition* condition)
 {
   *condition = NotForced;
   return GetMeanFreePath(track, 0., condition);
 }
 
 //-----------------------------------------------------------------------
-G4double G4ErrorTrackLengthTarget::GetMeanFreePath(const class G4Track& track,
-                                                   G4double,
+G4double G4ErrorTrackLengthTarget::GetMeanFreePath(const class G4Track& track, G4double,
                                                    enum G4ForceCondition*)
 {
 #ifdef G4VERBOSE
-  if(G4ErrorPropagatorData::verbose() >= 3)
+  if (G4ErrorPropagatorData::verbose() >= 3)
   {
     G4cout << " G4ErrorTrackLengthTarget::GetMeanFreePath "
            << theMaximumTrackLength - track.GetTrackLength() << G4endl;
@@ -115,8 +114,7 @@ G4double G4ErrorTrackLengthTarget::GetMeanFreePath(const class G4Track& track,
   return theMaximumTrackLength - track.GetTrackLength();
 }
 
-G4VParticleChange* G4ErrorTrackLengthTarget::PostStepDoIt(const G4Track& aTrack,
-                                                          const G4Step&)
+G4VParticleChange* G4ErrorTrackLengthTarget::PostStepDoIt(const G4Track& aTrack, const G4Step&)
 {
   theParticleChange.Initialize(aTrack);
   return &theParticleChange;
@@ -125,6 +123,6 @@ G4VParticleChange* G4ErrorTrackLengthTarget::PostStepDoIt(const G4Track& aTrack,
 //-----------------------------------------------------------------------
 void G4ErrorTrackLengthTarget::Dump(const G4String& msg) const
 {
-  G4cout << msg << "G4ErrorTrackLengthTarget: max track length = "
-         << theMaximumTrackLength << G4endl;
+  G4cout << msg << "G4ErrorTrackLengthTarget: max track length = " << theMaximumTrackLength
+         << G4endl;
 }

@@ -29,30 +29,31 @@
 // Visualisation attribute utility functions.
 //
 #include "G4AttUtils.hh"
+
 #include "G4DimensionedDouble.hh"
 #include "G4DimensionedThreeVector.hh"
 #include "G4ThreeVector.hh"
 #include "G4TypeKeyT.hh"
 
-namespace G4AttUtils 
-{  
-  // Get G4TypeKey information for old style G4AttDef's
-  G4TypeKey GetKey(const G4AttDef& def) 
-  {
-    G4String type = def.GetValueType();
-    
-    G4bool withUnit = (def.GetExtra() == "G4BestUnit");
-    
-    // Known conversions
-    if (type == "G4String") return G4TypeKeyT<G4String>();
-    if (type == "G4int") return G4TypeKeyT<G4int>();
-    if (type == "G4double" && !withUnit) return G4TypeKeyT<G4double>();
-    if (type == "G4double" && withUnit) return G4TypeKeyT<G4DimensionedDouble>();
-    if (type == "G4ThreeVector" && !withUnit) return G4TypeKeyT<G4ThreeVector>();
-    if (type == "G4ThreeVector" && withUnit) return G4TypeKeyT<G4DimensionedThreeVector>();
-    if (type == "G4bool") return G4TypeKeyT<G4bool>();
-    
-    // Return default (invalid) key
-    return G4TypeKey();
-  }
+namespace G4AttUtils
+{
+// Get G4TypeKey information for old style G4AttDef's
+G4TypeKey GetKey(const G4AttDef& def)
+{
+  G4String type = def.GetValueType();
+
+  G4bool withUnit = (def.GetExtra() == "G4BestUnit");
+
+  // Known conversions
+  if (type == "G4String") return G4TypeKeyT<G4String>();
+  if (type == "G4int") return G4TypeKeyT<G4int>();
+  if (type == "G4double" && !withUnit) return G4TypeKeyT<G4double>();
+  if (type == "G4double" && withUnit) return G4TypeKeyT<G4DimensionedDouble>();
+  if (type == "G4ThreeVector" && !withUnit) return G4TypeKeyT<G4ThreeVector>();
+  if (type == "G4ThreeVector" && withUnit) return G4TypeKeyT<G4DimensionedThreeVector>();
+  if (type == "G4bool") return G4TypeKeyT<G4bool>();
+
+  // Return default (invalid) key
+  return G4TypeKey();
 }
+}  // namespace G4AttUtils

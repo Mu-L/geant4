@@ -44,11 +44,11 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-#ifndef G4EmParametersMessenger_h
-#define G4EmParametersMessenger_h 1
+#ifndef G4EMPARAMETERSMESSENGER_HH
+#define G4EMPARAMETERSMESSENGER_HH
 
-#include "globals.hh"
 #include "G4UImessenger.hh"
+#include "globals.hh"
 
 class G4UIdirectory;
 class G4UIcommand;
@@ -62,96 +62,93 @@ class G4EmParameters;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-class G4EmParametersMessenger: public G4UImessenger
+class G4EmParametersMessenger : public G4UImessenger
 {
-public:   // with description
-  
-  explicit G4EmParametersMessenger(G4EmParameters*);
-  ~G4EmParametersMessenger() override;
+  public:  // with description
 
-  void SetNewValue(G4UIcommand*, G4String) override;
+    explicit G4EmParametersMessenger(G4EmParameters*);
+    ~G4EmParametersMessenger() override;
 
-  G4EmParametersMessenger & operator=
-  (const G4EmParametersMessenger &right) = delete;
-  G4EmParametersMessenger(const G4EmParametersMessenger&) = delete;
+    void SetNewValue(G4UIcommand*, G4String) override;
 
-private:
+    G4EmParametersMessenger& operator=(const G4EmParametersMessenger& right) = delete;
+    G4EmParametersMessenger(const G4EmParametersMessenger&) = delete;
 
-  G4EmParameters* theParameters;
+  private:
 
-  G4UIdirectory* gconvDirectory;
-  G4UIdirectory* eLossDirectory;
-  G4UIdirectory* mscDirectory;
-  G4UIdirectory* emDirectory;
-  G4UIdirectory* dnaDirectory;
+    G4EmParameters* theParameters;
 
-  G4UIcmdWithABool* flucCmd;
-  G4UIcmdWithABool* intCmd;
-  G4UIcmdWithABool* rangeCmd;
-  G4UIcmdWithABool* lpmCmd;
-  G4UIcmdWithABool* rsCmd;
-  G4UIcmdWithABool* aplCmd;
-  G4UIcmdWithABool* latCmd;
-  G4UIcmdWithABool* lat96Cmd;
-  G4UIcmdWithABool* mulatCmd;
-  G4UIcmdWithABool* delCmd;
-  G4UIcmdWithABool* mottCmd;
-  G4UIcmdWithABool* birksCmd;
-  G4UIcmdWithABool* sharkCmd;
-  G4UIcmdWithABool* poCmd;
-  G4UIcmdWithABool* onIsolatedCmd;
-  G4UIcmdWithABool* sampleTCmd;
-  G4UIcmdWithABool* icru90Cmd;
-  G4UIcmdWithABool* mudatCmd;
-  G4UIcmdWithABool* peKCmd;
-  G4UIcmdWithABool* mscPCmd;
-  G4UIcmdWithABool* pepicsCmd;
-  G4UIcmdWithABool* f3gCmd;
-  G4UIcmdWithABool* fRiGeCmd;
+    G4UIdirectory* gconvDirectory;
+    G4UIdirectory* eLossDirectory;
+    G4UIdirectory* mscDirectory;
+    G4UIdirectory* emDirectory;
+    G4UIdirectory* dnaDirectory;
 
-  G4UIcmdWithADoubleAndUnit* minEnCmd;
-  G4UIcmdWithADoubleAndUnit* maxEnCmd;
-  G4UIcmdWithADoubleAndUnit* max5DCmd;
-  G4UIcmdWithADoubleAndUnit* cenCmd;
-  G4UIcmdWithADoubleAndUnit* lowEnCmd;
-  G4UIcmdWithADoubleAndUnit* lowEn3Cmd;
-  G4UIcmdWithADoubleAndUnit* lowhEnCmd;
-  G4UIcmdWithADouble*        lllCmd;
-  G4UIcmdWithADoubleAndUnit* brCmd;
-  G4UIcmdWithADoubleAndUnit* br1Cmd;
-  G4UIcmdWithADouble*        labCmd;
-  G4UIcmdWithADouble*        mscfCmd;
-  G4UIcmdWithADoubleAndUnit* angCmd;
-  G4UIcmdWithADoubleAndUnit* msceCmd;
-  G4UIcmdWithADoubleAndUnit* nielCmd;
-  G4UIcmdWithADouble*        frCmd;
-  G4UIcmdWithADouble*        fr1Cmd;
-  G4UIcmdWithADouble*        fgCmd;
-  G4UIcmdWithADouble*        safCmd;
-  G4UIcmdWithADoubleAndUnit* llimCmd;
-  G4UIcmdWithADouble*        skinCmd;
-  G4UIcmdWithADouble*        screCmd;
+    G4UIcmdWithABool* flucCmd;
+    G4UIcmdWithABool* intCmd;
+    G4UIcmdWithABool* rangeCmd;
+    G4UIcmdWithABool* lpmCmd;
+    G4UIcmdWithABool* rsCmd;
+    G4UIcmdWithABool* aplCmd;
+    G4UIcmdWithABool* latCmd;
+    G4UIcmdWithABool* lat96Cmd;
+    G4UIcmdWithABool* mulatCmd;
+    G4UIcmdWithABool* delCmd;
+    G4UIcmdWithABool* mottCmd;
+    G4UIcmdWithABool* birksCmd;
+    G4UIcmdWithABool* sharkCmd;
+    G4UIcmdWithABool* poCmd;
+    G4UIcmdWithABool* onIsolatedCmd;
+    G4UIcmdWithABool* sampleTCmd;
+    G4UIcmdWithABool* icru90Cmd;
+    G4UIcmdWithABool* mudatCmd;
+    G4UIcmdWithABool* peKCmd;
+    G4UIcmdWithABool* mscPCmd;
+    G4UIcmdWithABool* pepicsCmd;
+    G4UIcmdWithABool* f3gCmd;
+    G4UIcmdWithABool* fRiGeCmd;
 
-  G4UIcmdWithAnInteger*      amCmd;
-  G4UIcmdWithAnInteger*      verCmd;
-  G4UIcmdWithAnInteger*      ver1Cmd;
-  G4UIcmdWithAnInteger*      ver2Cmd;
-  G4UIcmdWithAnInteger*      nFreeCmd;
-  G4UIcmdWithAnInteger*      tripletCmd;
+    G4UIcmdWithADoubleAndUnit* minEnCmd;
+    G4UIcmdWithADoubleAndUnit* maxEnCmd;
+    G4UIcmdWithADoubleAndUnit* max5DCmd;
+    G4UIcmdWithADoubleAndUnit* cenCmd;
+    G4UIcmdWithADoubleAndUnit* lowEnCmd;
+    G4UIcmdWithADoubleAndUnit* lowEn3Cmd;
+    G4UIcmdWithADoubleAndUnit* lowhEnCmd;
+    G4UIcmdWithADouble* lllCmd;
+    G4UIcmdWithADoubleAndUnit* brCmd;
+    G4UIcmdWithADoubleAndUnit* br1Cmd;
+    G4UIcmdWithADouble* labCmd;
+    G4UIcmdWithADouble* mscfCmd;
+    G4UIcmdWithADoubleAndUnit* angCmd;
+    G4UIcmdWithADoubleAndUnit* msceCmd;
+    G4UIcmdWithADoubleAndUnit* nielCmd;
+    G4UIcmdWithADouble* frCmd;
+    G4UIcmdWithADouble* fr1Cmd;
+    G4UIcmdWithADouble* fgCmd;
+    G4UIcmdWithADouble* safCmd;
+    G4UIcmdWithADoubleAndUnit* llimCmd;
+    G4UIcmdWithADouble* skinCmd;
+    G4UIcmdWithADouble* screCmd;
 
-  G4UIcmdWithAString*        transWithMscCmd;
-  G4UIcmdWithAString*        mscCmd;
-  G4UIcmdWithAString*        msc1Cmd;
-  G4UIcmdWithAString*        nffCmd;
-  G4UIcmdWithAString*        ssCmd;
-  G4UIcmdWithAString*        fluc1Cmd;
-  G4UIcmdWithAString*        fluc2Cmd;
-  G4UIcmdWithAString*        fluc3Cmd;
-  G4UIcmdWithAString*        posiCmd;
+    G4UIcmdWithAnInteger* amCmd;
+    G4UIcmdWithAnInteger* verCmd;
+    G4UIcmdWithAnInteger* ver1Cmd;
+    G4UIcmdWithAnInteger* ver2Cmd;
+    G4UIcmdWithAnInteger* nFreeCmd;
+    G4UIcmdWithAnInteger* tripletCmd;
 
-  G4UIcommand*               dumpCmd;
+    G4UIcmdWithAString* transWithMscCmd;
+    G4UIcmdWithAString* mscCmd;
+    G4UIcmdWithAString* msc1Cmd;
+    G4UIcmdWithAString* nffCmd;
+    G4UIcmdWithAString* ssCmd;
+    G4UIcmdWithAString* fluc1Cmd;
+    G4UIcmdWithAString* fluc2Cmd;
+    G4UIcmdWithAString* fluc3Cmd;
+    G4UIcmdWithAString* posiCmd;
 
+    G4UIcommand* dumpCmd;
 };
 
 #endif
-

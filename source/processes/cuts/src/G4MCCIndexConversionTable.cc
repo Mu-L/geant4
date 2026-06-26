@@ -28,12 +28,10 @@
 // Author: H.Kurashige, 20 August 2004 - First implementation
 //---------------------------------------------------------------------
 
-#include  "G4MCCIndexConversionTable.hh"
+#include "G4MCCIndexConversionTable.hh"
 
 // --------------------------------------------------------------------
-G4MCCIndexConversionTable::G4MCCIndexConversionTable()
-{
-} 
+G4MCCIndexConversionTable::G4MCCIndexConversionTable() {}
 
 // --------------------------------------------------------------------
 G4MCCIndexConversionTable::~G4MCCIndexConversionTable()
@@ -44,8 +42,7 @@ G4MCCIndexConversionTable::~G4MCCIndexConversionTable()
 // --------------------------------------------------------------------
 void G4MCCIndexConversionTable::Reset(std::size_t siz)
 {
-  // reset conversion table 
+  // reset conversion table
   vecNewIndex.clear();
   vecNewIndex.resize(siz, -1);
 }
- 

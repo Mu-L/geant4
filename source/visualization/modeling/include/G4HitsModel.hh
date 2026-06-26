@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  26th August 1998.
 //
 // Class Description:
@@ -43,23 +43,22 @@
 
 class G4VHit;
 
-class G4HitsModel: public G4VModel {
+class G4HitsModel : public G4VModel
+{
+  public:  // With description
 
-public: // With description
+    G4HitsModel();
 
-  G4HitsModel ();
-   
-  virtual ~G4HitsModel ();
+    virtual ~G4HitsModel();
 
-  virtual void DescribeYourselfTo (G4VGraphicsScene&);
-  // The main task of a model is to describe itself to the graphics scene.
+    virtual void DescribeYourselfTo(G4VGraphicsScene&);
+    // The main task of a model is to describe itself to the graphics scene.
 
-  const G4VHit* GetCurrentHit() const
-  {return fpCurrentHit;}
+    const G4VHit* GetCurrentHit() const { return fpCurrentHit; }
 
-private:
+  private:
 
-  const G4VHit* fpCurrentHit;
+    const G4VHit* fpCurrentHit;
 };
 
 #endif

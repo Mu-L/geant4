@@ -33,19 +33,21 @@
 // **********************************************************************
 //
 
-#ifndef G4AntiSigmabZero_h
-#define G4AntiSigmabZero_h 1
+#ifndef G4ANTISIGMABZERO_HH
+#define G4ANTISIGMABZERO_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4AntiSigmabZero : public G4ParticleDefinition
 {
   public:
+
     static G4AntiSigmabZero* Definition();
     static G4AntiSigmabZero* AntiSigmabZeroDefinition();
     static G4AntiSigmabZero* AntiSigmabZero();
 
   private:
+
     G4AntiSigmabZero() {}
     ~G4AntiSigmabZero() override = default;
 

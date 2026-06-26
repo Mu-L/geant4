@@ -35,25 +35,24 @@
 #include "G4PhysicsLinearVector.hh"
 
 // --------------------------------------------------------------------
-G4PhysicsLinearVector::G4PhysicsLinearVector(G4bool spline)
-  : G4PhysicsVector(spline)
+G4PhysicsLinearVector::G4PhysicsLinearVector(G4bool spline) : G4PhysicsVector(spline)
 {
   type = T_G4PhysicsLinearVector;
 }
 
 // --------------------------------------------------------------------
-G4PhysicsLinearVector::G4PhysicsLinearVector(G4double Emin, G4double Emax,
-                                             std::size_t Nbin, G4bool spline)
+G4PhysicsLinearVector::G4PhysicsLinearVector(G4double Emin, G4double Emax, std::size_t Nbin,
+                                             G4bool spline)
   : G4PhysicsVector(spline)
 {
   numberOfNodes = Nbin + 1;
   if (Nbin < 1 || Emin >= Emax)
   {
     G4ExceptionDescription ed;
-    ed << "G4PhysicsLinearVector with wrong parameters: theNbin= " << Nbin
-       << " Emin= " << Emin << " Emax= " << Emax;
-    G4Exception("G4PhysicsLinearVector::G4PhysicsLinearVector()", "glob03",
-                FatalException, ed, "theNbins should be > 0 and Emax > Emin");
+    ed << "G4PhysicsLinearVector with wrong parameters: theNbin= " << Nbin << " Emin= " << Emin
+       << " Emax= " << Emax;
+    G4Exception("G4PhysicsLinearVector::G4PhysicsLinearVector()", "glob03", FatalException, ed,
+                "theNbins should be > 0 and Emax > Emin");
   }
   if (numberOfNodes < 2)
   {
@@ -68,7 +67,7 @@ G4PhysicsLinearVector::G4PhysicsLinearVector(G4double Emin, G4double Emax,
   Initialise();
   if (2 < numberOfNodes)
   {
-    for(std::size_t i = 1; i <= idxmax; ++i)
+    for (std::size_t i = 1; i <= idxmax; ++i)
     {
       binVector[i] = edgeMin + i / invdBin;
     }
@@ -78,7 +77,7 @@ G4PhysicsLinearVector::G4PhysicsLinearVector(G4double Emin, G4double Emax,
 // --------------------------------------------------------------------
 void G4PhysicsLinearVector::Initialise()
 {
-  idxmax  = numberOfNodes - 2;
+  idxmax = numberOfNodes - 2;
   edgeMin = binVector[0];
   edgeMax = binVector[numberOfNodes - 1];
   invdBin = (idxmax + 1) / (edgeMax - edgeMin);

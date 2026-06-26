@@ -44,49 +44,40 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4DipBustGenerator_h
-#define G4DipBustGenerator_h 1
+#ifndef G4DIPBUSTGENERATOR_HH
+#define G4DIPBUSTGENERATOR_HH
 
+#include "G4VEmAngularDistribution.hh"
 #include "G4ios.hh"
 #include "globals.hh"
-#include "G4VEmAngularDistribution.hh"
 
 class G4DipBustGenerator : public G4VEmAngularDistribution
 {
+  public:
 
-public:
+    explicit G4DipBustGenerator(const G4String& name = "");
 
-  explicit G4DipBustGenerator(const G4String& name = "");
+    ~G4DipBustGenerator() override;
 
-  ~G4DipBustGenerator() override;
+    G4ThreeVector& SampleDirection(const G4DynamicParticle* dp, G4double out_energy, G4int Z,
+                                   const G4Material* mat = nullptr) final;
 
-  G4ThreeVector& SampleDirection(const G4DynamicParticle* dp,
-				 G4double out_energy, G4int Z,
-				 const G4Material* mat = nullptr) final;
+    void SamplePairDirections(const G4DynamicParticle* dp, G4double elecKinEnergy,
+                              G4double posiKinEnergy, G4ThreeVector& dirElectron,
+                              G4ThreeVector& dirPositron, G4int Z = 0,
+                              const G4Material* mat = nullptr) final;
 
-  void SamplePairDirections(const G4DynamicParticle* dp,
-			    G4double elecKinEnergy,
-			    G4double posiKinEnergy,
-			    G4ThreeVector& dirElectron,
-			    G4ThreeVector& dirPositron,
-			    G4int Z = 0,
-			    const G4Material* mat = nullptr) final;
+    G4double PolarAngle(G4double initial_energy, G4double final_energy, G4int Z);
 
-  G4double PolarAngle(G4double initial_energy,
-		      G4double final_energy,
-		      G4int Z);
+    void PrintGeneratorInformation() const final;
 
-  void PrintGeneratorInformation() const final;
+    // hide assignment operator
+    G4DipBustGenerator& operator=(const G4DipBustGenerator& right) = delete;
+    G4DipBustGenerator(const G4DipBustGenerator&) = delete;
 
-  // hide assignment operator
-  G4DipBustGenerator & operator=(const  G4DipBustGenerator &right) = delete;
-  G4DipBustGenerator(const  G4DipBustGenerator&) = delete;
+  private:
 
-private:
-
-  G4double SampleCosTheta(G4double kinEnergy);
-
+    G4double SampleCosTheta(G4double kinEnergy);
 };
 
 #endif
-

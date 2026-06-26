@@ -25,25 +25,23 @@
 //
 //
 // -------------------------------------------------------------------
-//      GEANT 4 class implementation file 
+//      GEANT 4 class implementation file
 //
 //      CERN, Geneva, Switzerland
 //
 //      File name:     G4VFieldPropagation.cc
 //
 //      Author:        Alessandro Brunengo (Alessandro.Brunengo@ge.infn.it)
-// 
+//
 //      Creation date: 6 June 2000
 // -------------------------------------------------------------------
 #include "G4VFieldPropagation.hh"
-#include "globals.hh"
+
 #include "G4HadronicException.hh"
+#include "globals.hh"
 
-G4VFieldPropagation::G4VFieldPropagation()
-{ }
+G4VFieldPropagation::G4VFieldPropagation() {}
 
-G4VFieldPropagation::G4VFieldPropagation(const  G4VFieldPropagation &)
-{ }
+G4VFieldPropagation::G4VFieldPropagation(const G4VFieldPropagation&) {}
 
-G4VFieldPropagation::~G4VFieldPropagation()
-{ }
+G4VFieldPropagation::~G4VFieldPropagation() {}

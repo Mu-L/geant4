@@ -25,8 +25,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPJENDLHEData_h
-#define G4ParticleHPJENDLHEData_h 1
+#ifndef G4PARTICLEHPJENDLHEDATA_HH
+#define G4PARTICLEHPJENDLHEDATA_HH
 
 // Class Description
 // Cross-section data set for a high precision (based on JENDL_HE evaluated data
@@ -49,6 +49,7 @@
 class G4ParticleHPJENDLHEData : public G4VCrossSectionDataSet
 {
   public:
+
     G4ParticleHPJENDLHEData();
     G4ParticleHPJENDLHEData(const G4String&, G4ParticleDefinition*);
 
@@ -68,6 +69,7 @@ class G4ParticleHPJENDLHEData : public G4VCrossSectionDataSet
     void DumpPhysicsTable(const G4ParticleDefinition&) override;
 
   private:
+
     std::vector<G4bool> vElement;
 
     std::map<G4int, std::map<G4int, G4PhysicsVector*>*> mIsotope;

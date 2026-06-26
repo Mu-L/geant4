@@ -30,45 +30,39 @@
 
 #include "G4SolidsWorkspace.hh"
 
-#include "G4VSolid.hh"
-
+#include "G4AutoLock.hh"
 #include "G4PolyconeSide.hh"
 #include "G4PolyhedraSide.hh"
-
-#include "G4AutoLock.hh"
+#include "G4VSolid.hh"
 
 namespace
 {
-  G4SolidsWorkspace::pool_type thePool;
+G4SolidsWorkspace::pool_type thePool;
 }
 
-G4SolidsWorkspace::pool_type*
-G4SolidsWorkspace::GetPool() { return &thePool; }
-
-G4SolidsWorkspace::G4SolidsWorkspace(G4bool verbose)
-   : fVerbose(verbose)
+G4SolidsWorkspace::pool_type* G4SolidsWorkspace::GetPool()
 {
-  fpPolyconeSideSIM=
-      &const_cast<G4PlSideManager&>(G4PolyconeSide::GetSubInstanceManager());
-  fpPolyhedraSideSIM=
-      &const_cast<G4PhSideManager&>(G4PolyhedraSide::GetSubInstanceManager());
+  return &thePool;
+}
+
+G4SolidsWorkspace::G4SolidsWorkspace(G4bool verbose) : fVerbose(verbose)
+{
+  fpPolyconeSideSIM = &const_cast<G4PlSideManager&>(G4PolyconeSide::GetSubInstanceManager());
+  fpPolyhedraSideSIM = &const_cast<G4PhSideManager&>(G4PolyhedraSide::GetSubInstanceManager());
 
   // Copy information from master into PolyCone/Gon Sides in this thread.
   InitialiseWorkspace();
 
   // Capture its address of PolyCone/Gon Sides in this thread
-  fPolyconeSideOffset = fpPolyconeSideSIM->GetOffset();                                
+  fPolyconeSideOffset = fpPolyconeSideSIM->GetOffset();
   fPolyhedraSideOffset = fpPolyhedraSideSIM->GetOffset();
 }
 
-
-void
-G4SolidsWorkspace::UseWorkspace()
+void G4SolidsWorkspace::UseWorkspace()
 {
-  if( fVerbose )
-  { 
-    G4cout << "G4SolidsWorkspace::UseWorkspace: Copying geometry - Start "
-           << G4endl;
+  if (fVerbose)
+  {
+    G4cout << "G4SolidsWorkspace::UseWorkspace: Copying geometry - Start " << G4endl;
   }
 
   // Geometry related, split classes mechanism: instantiate sub-instance
@@ -78,27 +72,23 @@ G4SolidsWorkspace::UseWorkspace()
   fpPolyhedraSideSIM->UseWorkArea(fPolyhedraSideOffset);
 }
 
-
 void G4SolidsWorkspace::ReleaseWorkspace()
-  //  The opposite of Use Workspace - let go of it.
+//  The opposite of Use Workspace - let go of it.
 {
   fpPolyconeSideSIM->UseWorkArea(nullptr);
   fpPolyhedraSideSIM->UseWorkArea(nullptr);
 }
 
-void G4SolidsWorkspace::InitialiseSolids()
-{
-}
+void G4SolidsWorkspace::InitialiseSolids() {}
 
-void
-G4SolidsWorkspace::InitialiseWorkspace()
+void G4SolidsWorkspace::InitialiseWorkspace()
 {
-  if( fVerbose )
-  { 
+  if (fVerbose)
+  {
     G4cout << "G4SolidsWorkspace::InitialiseWorkspace: "
            << "Copying geometry - Start " << G4endl;
   }
-    
+
   // Geometry related, split classes mechanism:
   // Do *NOT* instantiate sub-instance for this thread, just copy the contents!!
   //
@@ -108,9 +98,9 @@ G4SolidsWorkspace::InitialiseWorkspace()
   // Additional initialization if needed - beyond copying memory
   //
   InitialiseSolids();
-  
-  if( fVerbose )
-  { 
+
+  if (fVerbose)
+  {
     G4cout << "G4SolidsWorkspace::CreateAndUseWorkspace: "
            << "Copying geometry - Done!" << G4endl;
   }

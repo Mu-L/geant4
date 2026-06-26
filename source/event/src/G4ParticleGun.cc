@@ -29,10 +29,11 @@
 // --------------------------------------------------------------------
 
 #include "G4ParticleGun.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4PrimaryParticle.hh"
-#include "G4ParticleGunMessenger.hh"
+
 #include "G4Event.hh"
+#include "G4ParticleGunMessenger.hh"
+#include "G4PrimaryParticle.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4ios.hh"
 
 G4ParticleGun::G4ParticleGun()
@@ -46,12 +47,11 @@ G4ParticleGun::G4ParticleGun(G4int numberofparticles)
   NumberOfParticlesToBeGenerated = numberofparticles;
 }
 
-G4ParticleGun::G4ParticleGun(G4ParticleDefinition* particleDef,
-                             G4int numberofparticles)
+G4ParticleGun::G4ParticleGun(G4ParticleDefinition* particleDef, G4int numberofparticles)
 {
   SetInitialValues();
   NumberOfParticlesToBeGenerated = numberofparticles;
-  SetParticleDefinition( particleDef );
+  SetParticleDefinition(particleDef);
 }
 
 void G4ParticleGun::SetInitialValues()
@@ -74,82 +74,74 @@ G4ParticleGun::~G4ParticleGun()
   delete theMessenger;
 }
 
-void G4ParticleGun::
-SetParticleDefinition(G4ParticleDefinition* aParticleDefinition)
-{ 
-  if(aParticleDefinition == nullptr)
+void G4ParticleGun::SetParticleDefinition(G4ParticleDefinition* aParticleDefinition)
+{
+  if (aParticleDefinition == nullptr)
   {
-    G4Exception("G4ParticleGun::SetParticleDefinition()", "Event0101",
-                FatalException, "Null pointer is given.");
+    G4Exception("G4ParticleGun::SetParticleDefinition()", "Event0101", FatalException,
+                "Null pointer is given.");
   }
-  if(aParticleDefinition->IsShortLived())
+  if (aParticleDefinition->IsShortLived())
   {
-    if(aParticleDefinition->GetDecayTable() == nullptr)
+    if (aParticleDefinition->GetDecayTable() == nullptr)
     {
       G4ExceptionDescription ED;
       ED << "G4ParticleGun does not support shooting a short-lived "
          << "particle without a valid decay table." << G4endl;
-      ED << "G4ParticleGun::SetParticleDefinition for "
-         << aParticleDefinition->GetParticleName() << " is ignored." << G4endl;
-      G4Exception("G4ParticleGun::SetParticleDefinition()", "Event0102",
-                  JustWarning, ED);
+      ED << "G4ParticleGun::SetParticleDefinition for " << aParticleDefinition->GetParticleName()
+         << " is ignored." << G4endl;
+      G4Exception("G4ParticleGun::SetParticleDefinition()", "Event0102", JustWarning, ED);
       return;
     }
   }
-  particle_definition = aParticleDefinition; 
+  particle_definition = aParticleDefinition;
   particle_charge = particle_definition->GetPDGCharge();
-  if(particle_momentum>0.0)
+  if (particle_momentum > 0.0)
   {
     G4double mass = particle_definition->GetPDGMass();
-    particle_energy =
-      std::sqrt(particle_momentum*particle_momentum+mass*mass)-mass;
+    particle_energy = std::sqrt(particle_momentum * particle_momentum + mass * mass) - mass;
   }
 }
 
 void G4ParticleGun::SetParticleEnergy(G4double aKineticEnergy)
 {
   particle_energy = aKineticEnergy;
-  if(particle_momentum>0.0)
+  if (particle_momentum > 0.0)
   {
-    if(particle_definition != nullptr)
+    if (particle_definition != nullptr)
     {
-      G4cout << "G4ParticleGun::" << particle_definition->GetParticleName()
-             << G4endl;
+      G4cout << "G4ParticleGun::" << particle_definition->GetParticleName() << G4endl;
     }
     else
     {
       G4cout << "G4ParticleGun::" << " " << G4endl;
     }
-    G4cout << " was defined in terms of Momentum: " 
-           << particle_momentum/GeV << "GeV/c" << G4endl;
-    G4cout << " is now defined in terms of KineticEnergy: " 
-           << particle_energy/GeV   << "GeV"   << G4endl;
+    G4cout << " was defined in terms of Momentum: " << particle_momentum / GeV << "GeV/c" << G4endl;
+    G4cout << " is now defined in terms of KineticEnergy: " << particle_energy / GeV << "GeV"
+           << G4endl;
     particle_momentum = 0.0;
   }
 }
 
 void G4ParticleGun::SetParticleMomentum(G4double aMomentum)
 {
-  if(particle_energy>0.0)
+  if (particle_energy > 0.0)
   {
-    if(particle_definition != nullptr)
+    if (particle_definition != nullptr)
     {
-      G4cout << "G4ParticleGun::" << particle_definition->GetParticleName()
-             << G4endl;
+      G4cout << "G4ParticleGun::" << particle_definition->GetParticleName() << G4endl;
     }
     else
     {
       G4cout << "G4ParticleGun::" << " " << G4endl;
     }
-    G4cout << " was defined in terms of KineticEnergy: "
-           << particle_energy/GeV << "GeV"   << G4endl;
-    G4cout << " is now defined in terms Momentum: "
-           << aMomentum/GeV       << "GeV/c" << G4endl;
-  }
-  if(particle_definition == nullptr)
-  {
-    G4cout << "Particle Definition not defined yet for G4ParticleGun"
+    G4cout << " was defined in terms of KineticEnergy: " << particle_energy / GeV << "GeV"
            << G4endl;
+    G4cout << " is now defined in terms Momentum: " << aMomentum / GeV << "GeV/c" << G4endl;
+  }
+  if (particle_definition == nullptr)
+  {
+    G4cout << "Particle Definition not defined yet for G4ParticleGun" << G4endl;
     G4cout << "Zero Mass is assumed" << G4endl;
     particle_momentum = aMomentum;
     particle_energy = aMomentum;
@@ -158,82 +150,72 @@ void G4ParticleGun::SetParticleMomentum(G4double aMomentum)
   {
     G4double mass = particle_definition->GetPDGMass();
     particle_momentum = aMomentum;
-    particle_energy =
-      std::sqrt(particle_momentum*particle_momentum+mass*mass)-mass;
+    particle_energy = std::sqrt(particle_momentum * particle_momentum + mass * mass) - mass;
   }
 }
- 
+
 void G4ParticleGun::SetParticleMomentum(G4ParticleMomentum aMomentum)
 {
-  if(particle_energy>0.0)
+  if (particle_energy > 0.0)
   {
-    if(particle_definition != nullptr)
+    if (particle_definition != nullptr)
     {
-      G4cout << "G4ParticleGun::" << particle_definition->GetParticleName()
-             << G4endl;
+      G4cout << "G4ParticleGun::" << particle_definition->GetParticleName() << G4endl;
     }
     else
     {
       G4cout << "G4ParticleGun::" << " " << G4endl;
     }
-    G4cout << " was defined in terms of KineticEnergy: "
-           << particle_energy/GeV << "GeV"   << G4endl;
-    G4cout << " is now defined in terms Momentum: "
-           << aMomentum.mag()/GeV << "GeV/c" << G4endl;
-  }
-  if(particle_definition == nullptr)
-  {
-    G4cout << "Particle Definition not defined yet for G4ParticleGun"
+    G4cout << " was defined in terms of KineticEnergy: " << particle_energy / GeV << "GeV"
            << G4endl;
+    G4cout << " is now defined in terms Momentum: " << aMomentum.mag() / GeV << "GeV/c" << G4endl;
+  }
+  if (particle_definition == nullptr)
+  {
+    G4cout << "Particle Definition not defined yet for G4ParticleGun" << G4endl;
     G4cout << "Zero Mass is assumed" << G4endl;
     particle_momentum_direction = aMomentum.unit();
     particle_momentum = aMomentum.mag();
     particle_energy = aMomentum.mag();
-  } 
-  else 
+  }
+  else
   {
-    G4double mass =  particle_definition->GetPDGMass();
+    G4double mass = particle_definition->GetPDGMass();
     particle_momentum = aMomentum.mag();
     particle_momentum_direction = aMomentum.unit();
-    particle_energy = 
-      std::sqrt(particle_momentum*particle_momentum+mass*mass)-mass;
+    particle_energy = std::sqrt(particle_momentum * particle_momentum + mass * mass) - mass;
   }
 }
 
 void G4ParticleGun::GeneratePrimaryVertex(G4Event* evt)
 {
-  if(particle_definition == nullptr) 
+  if (particle_definition == nullptr)
   {
     G4ExceptionDescription ED;
     ED << "Particle definition is not defined." << G4endl;
-    ED << "G4ParticleGun::SetParticleDefinition() has to be invoked beforehand."
-       << G4endl;
-    G4Exception("G4ParticleGun::GeneratePrimaryVertex()", "Event0109",
-                FatalException, ED);
+    ED << "G4ParticleGun::SetParticleDefinition() has to be invoked beforehand." << G4endl;
+    G4Exception("G4ParticleGun::GeneratePrimaryVertex()", "Event0109", FatalException, ED);
     return;
   }
 
   // Create a new vertex
   //
-  auto* vertex = 
-    new G4PrimaryVertex(particle_position,particle_time);
+  auto* vertex = new G4PrimaryVertex(particle_position, particle_time);
 
   // Create new primaries and set them to the vertex
   //
-  G4double mass =  particle_definition->GetPDGMass();
-  for( G4int i=0; i<NumberOfParticlesToBeGenerated; ++i )
+  G4double mass = particle_definition->GetPDGMass();
+  for (G4int i = 0; i < NumberOfParticlesToBeGenerated; ++i)
   {
-    auto* particle =
-      new G4PrimaryParticle(particle_definition);
-    particle->SetKineticEnergy( particle_energy );
-    particle->SetMass( mass );
-    particle->SetMomentumDirection( particle_momentum_direction );
-    particle->SetCharge( particle_charge );
-    particle->SetPolarization(particle_polarization.x(),
-                              particle_polarization.y(),
+    auto* particle = new G4PrimaryParticle(particle_definition);
+    particle->SetKineticEnergy(particle_energy);
+    particle->SetMass(mass);
+    particle->SetMomentumDirection(particle_momentum_direction);
+    particle->SetCharge(particle_charge);
+    particle->SetPolarization(particle_polarization.x(), particle_polarization.y(),
                               particle_polarization.z());
-    particle->SetWeight( particle_weight );
-    vertex->SetPrimary( particle );
+    particle->SetWeight(particle_weight);
+    vertex->SetPrimary(particle);
   }
-  evt->AddPrimaryVertex( vertex );
+  evt->AddPrimaryVertex(vertex);
 }

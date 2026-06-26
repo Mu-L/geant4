@@ -27,9 +27,9 @@
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
 #include "G4HnManager.hh"
-#include "G4HnMessenger.hh"
 
 #include "G4AnalysisUtilities.hh"
+#include "G4HnMessenger.hh"
 #include "G4VFileManager.hh"
 
 #include <utility>
@@ -45,7 +45,8 @@ G4HnManager::G4HnManager(G4String hnType, const G4AnalysisManagerState& state)
 //_____________________________________________________________________________
 G4HnManager::~G4HnManager()
 {
-  for ( auto info : fHnVector ) {
+  for (auto info : fHnVector)
+  {
     delete info;
   }
 }
@@ -55,77 +56,90 @@ G4HnManager::~G4HnManager()
 //
 
 //_____________________________________________________________________________
-void  G4HnManager::SetActivation(G4HnInformation* info, G4bool activation)
+void G4HnManager::SetActivation(G4HnInformation* info, G4bool activation)
 {
-// Set activation to a given object
+  // Set activation to a given object
 
   // Do nothing if activation does not change
-  if ( info->GetActivation() == activation ) return;
+  if (info->GetActivation() == activation) return;
 
   // Change activation and account it in fNofActiveObjects
   info->SetActivation(activation);
-  if (activation) {
+  if (activation)
+  {
     fNofActiveObjects++;
   }
-  else {
+  else
+  {
     fNofActiveObjects--;
   }
 }
 
 //_____________________________________________________________________________
-void  G4HnManager::SetPlotting(G4HnInformation* info, G4bool plotting)
+void G4HnManager::SetPlotting(G4HnInformation* info, G4bool plotting)
 {
   // Do nothing if ascii does not change
-  if ( info->GetPlotting() == plotting ) return;
+  if (info->GetPlotting() == plotting) return;
 
   // Change Plotting and account it in fNofPlottingObjects
   info->SetPlotting(plotting);
-  if (plotting) {
+  if (plotting)
+  {
     fNofPlottingObjects++;
   }
-  else {
+  else
+  {
     fNofPlottingObjects--;
   }
 }
 
 //_____________________________________________________________________________
-void  G4HnManager::SetFileName(G4HnInformation* info, const G4String& fileName)
+void G4HnManager::SetFileName(G4HnInformation* info, const G4String& fileName)
 {
   // Do nothing if file name does not change
-  if ( info->GetFileName() == fileName ) return;
+  if (info->GetFileName() == fileName) return;
 
   auto hnFileName = fileName;
   auto extension = GetExtension(fileName);
-  if (extension.size() != 0u) {
+  if (extension.size() != 0u)
+  {
     // Check if valid extension (if present)
     auto output = G4Analysis::GetOutput(extension);
-    if ( output == G4AnalysisOutput::kNone ) {
-      Warn("The file extension " + extension + " is not supported.",
-        fkClass, "SetFileName");
+    if (output == G4AnalysisOutput::kNone)
+    {
+      Warn("The file extension " + extension + " is not supported.", fkClass, "SetFileName");
       return;
     }
   }
-  else {
-    if (fDefaultFileType.size() != 0u) {
-      //add extension if missing and file type is defined
+  else
+  {
+    if (fDefaultFileType.size() != 0u)
+    {
+      // add extension if missing and file type is defined
       hnFileName = fileName + "." + fDefaultFileType;
     }
   }
 
   // Save the info and account a new file name if file manager
   info->SetFileName(hnFileName);
-  if (fFileManager) {
+  if (fFileManager)
+  {
     fFileManager->AddFileName(hnFileName);
-  } else {
-    Warn("Failed to set fileName " + fileName +
-         " for object " + info->GetName() + ".\nFile manager is not set.",
+  }
+  else
+  {
+    Warn("Failed to set fileName " + fileName + " for object " + info->GetName()
+           + ".\nFile manager is not set.",
          fkClass, "SetFileName");
     return;
   }
 
-  if ( hnFileName != "" ) {
+  if (hnFileName != "")
+  {
     fNofFileNameObjects++;
-  } else {
+  }
+  else
+  {
     fNofFileNameObjects--;
   }
 }
@@ -157,17 +171,30 @@ void G4HnManager::AddHnInformation(G4HnInformation* info, G4int index)
   // previous histogram was deleted with 'keepSetting' set true.
 
   auto previousInfo = fHnVector[index];
-  if (previousInfo->GetDeletedPair().second) {
+  if (previousInfo->GetDeletedPair().second)
+  {
     info->Update(*previousInfo);
   }
   delete previousInfo;
 
   fHnVector[index] = info;
 
-  if (info->GetActivation()) { ++fNofActiveObjects; }
-  if (info->GetAscii())      { ++fNofAsciiObjects; }
-  if (info->GetPlotting())   { ++fNofPlottingObjects; }
-  if (! info->GetFileName().empty()) { ++fNofFileNameObjects; }
+  if (info->GetActivation())
+  {
+    ++fNofActiveObjects;
+  }
+  if (info->GetAscii())
+  {
+    ++fNofAsciiObjects;
+  }
+  if (info->GetPlotting())
+  {
+    ++fNofPlottingObjects;
+  }
+  if (!info->GetFileName().empty())
+  {
+    ++fNofFileNameObjects;
+  }
 }
 
 //_____________________________________________________________________________
@@ -175,16 +202,29 @@ void G4HnManager::SetHnDeleted(G4HnInformation* info, G4bool keepSetting)
 {
   info->SetDeleted(true, keepSetting);
 
-  if (info->GetActivation()) { --fNofActiveObjects; }
-  if (info->GetAscii())      { --fNofAsciiObjects; }
-  if (info->GetPlotting())   { --fNofPlottingObjects; }
-  if (! info->GetFileName().empty()) { --fNofFileNameObjects; }
+  if (info->GetActivation())
+  {
+    --fNofActiveObjects;
+  }
+  if (info->GetAscii())
+  {
+    --fNofAsciiObjects;
+  }
+  if (info->GetPlotting())
+  {
+    --fNofPlottingObjects;
+  }
+  if (!info->GetFileName().empty())
+  {
+    --fNofFileNameObjects;
+  }
 }
 
 //_____________________________________________________________________________
 void G4HnManager::ClearData()
 {
-  for ( auto info : fHnVector ) {
+  for (auto info : fHnVector)
+  {
     delete info;
   }
   fHnVector.clear();
@@ -192,14 +232,15 @@ void G4HnManager::ClearData()
 }
 
 //_____________________________________________________________________________
-G4HnInformation* G4HnManager::GetHnInformation(G4int id,
-                                 std::string_view functionName, G4bool warn) const
+G4HnInformation* G4HnManager::GetHnInformation(G4int id, std::string_view functionName,
+                                               G4bool warn) const
 {
   G4int index = id - fFirstId;
-  if ( index < 0 || index >= G4int(fHnVector.size()) ) {
-    if ( warn ) {
-      Warn(fHnType + " histogram " + to_string(id) + " does not exist.",
-        fkClass, functionName);
+  if (index < 0 || index >= G4int(fHnVector.size()))
+  {
+    if (warn)
+    {
+      Warn(fHnType + " histogram " + to_string(id) + " does not exist.", fkClass, functionName);
     }
     return nullptr;
   }
@@ -207,9 +248,9 @@ G4HnInformation* G4HnManager::GetHnInformation(G4int id,
 }
 
 //_____________________________________________________________________________
-G4HnDimensionInformation* G4HnManager::GetHnDimensionInformation(G4int id,
-                                G4int dimension,
-                                std::string_view functionName, G4bool warn) const
+G4HnDimensionInformation* G4HnManager::GetHnDimensionInformation(G4int id, G4int dimension,
+                                                                 std::string_view functionName,
+                                                                 G4bool warn) const
 {
   auto info = GetHnInformation(id, functionName, warn);
   if (info == nullptr) return nullptr;
@@ -220,31 +261,31 @@ G4HnDimensionInformation* G4HnManager::GetHnDimensionInformation(G4int id,
 //_____________________________________________________________________________
 G4bool G4HnManager::IsActive() const
 {
-  return ( fNofActiveObjects > 0 );
+  return (fNofActiveObjects > 0);
 }
 
 //_____________________________________________________________________________
 G4bool G4HnManager::IsAscii() const
 {
-  return ( fNofAsciiObjects > 0 );
+  return (fNofAsciiObjects > 0);
 }
 
 //_____________________________________________________________________________
 G4bool G4HnManager::IsPlotting() const
 {
-  return ( fNofPlottingObjects > 0 );
+  return (fNofPlottingObjects > 0);
 }
 
 //_____________________________________________________________________________
 G4bool G4HnManager::IsFileName() const
 {
-  return ( fNofFileNameObjects > 0 );
+  return (fNofFileNameObjects > 0);
 }
 
 //_____________________________________________________________________________
-void  G4HnManager::SetActivation(G4int id, G4bool activation)
+void G4HnManager::SetActivation(G4int id, G4bool activation)
 {
-// Set activation to a given object
+  // Set activation to a given object
 
   auto info = GetHnInformation(id, "SetActivation");
 
@@ -254,41 +295,44 @@ void  G4HnManager::SetActivation(G4int id, G4bool activation)
 }
 
 //_____________________________________________________________________________
-void  G4HnManager::SetActivation(G4bool activation)
+void G4HnManager::SetActivation(G4bool activation)
 {
-// Set activation to all objects of the given type
+  // Set activation to all objects of the given type
 
-  //std::vector<G4HnInformation*>::iterator it;
-  //for ( it = fHnVector.begin(); it != fHnVector.end(); it++ ) {
-  //   G4HnInformation* info = *it;
+  // std::vector<G4HnInformation*>::iterator it;
+  // for ( it = fHnVector.begin(); it != fHnVector.end(); it++ ) {
+  //    G4HnInformation* info = *it;
 
-  for ( auto info : fHnVector )  {
+  for (auto info : fHnVector)
+  {
     SetActivation(info, activation);
   }
 }
 
 //_____________________________________________________________________________
-void  G4HnManager::SetAscii(G4int id, G4bool ascii)
+void G4HnManager::SetAscii(G4int id, G4bool ascii)
 {
   auto info = GetHnInformation(id, "SetAscii");
 
   if (info == nullptr) return;
 
   // Do nothing if ascii does not change
-  if ( info->GetAscii() == ascii ) return;
+  if (info->GetAscii() == ascii) return;
 
   // Change ascii and account it in fNofAsciiObjects
   info->SetAscii(ascii);
-  if (ascii) {
+  if (ascii)
+  {
     fNofAsciiObjects++;
   }
-  else {
+  else
+  {
     fNofAsciiObjects--;
   }
 }
 
 //_____________________________________________________________________________
-void  G4HnManager::SetPlotting(G4int id, G4bool plotting)
+void G4HnManager::SetPlotting(G4int id, G4bool plotting)
 {
   auto info = GetHnInformation(id, "SetPlotting");
 
@@ -298,17 +342,18 @@ void  G4HnManager::SetPlotting(G4int id, G4bool plotting)
 }
 
 //_____________________________________________________________________________
-void  G4HnManager::SetPlotting(G4bool plotting)
+void G4HnManager::SetPlotting(G4bool plotting)
 {
-// Set plotting to all objects of the given type
+  // Set plotting to all objects of the given type
 
-  for ( auto info : fHnVector )  {
+  for (auto info : fHnVector)
+  {
     SetPlotting(info, plotting);
   }
 }
 
 //_____________________________________________________________________________
-void  G4HnManager::SetFileName(G4int id, const G4String& fileName)
+void G4HnManager::SetFileName(G4int id, const G4String& fileName)
 {
   auto info = GetHnInformation(id, "SetFileName");
 
@@ -318,11 +363,12 @@ void  G4HnManager::SetFileName(G4int id, const G4String& fileName)
 }
 
 //_____________________________________________________________________________
-void  G4HnManager::SetFileName(const G4String& fileName)
+void G4HnManager::SetFileName(const G4String& fileName)
 {
-// Set plotting to all objects of the given type
+  // Set plotting to all objects of the given type
 
-  for ( auto info : fHnVector )  {
+  for (auto info : fHnVector)
+  {
     SetFileName(info, fileName);
   }
 }

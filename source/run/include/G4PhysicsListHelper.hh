@@ -32,8 +32,8 @@
 
 // Author: H.Kurashige, 29 April 2011
 // --------------------------------------------------------------------
-#ifndef G4PhysicsListHelper_hh
-#define G4PhysicsListHelper_hh 1
+#ifndef G4PHYSICSLISTHELPER_HH
+#define G4PHYSICSLISTHELPER_HH
 
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
@@ -51,6 +51,7 @@ class G4PhysicsListHelper
     friend class G4ThreadLocalSingleton<G4PhysicsListHelper>;
 
   public:
+
     // Returns the pointer to the physics list helper
     static G4PhysicsListHelper* GetPhysicsListHelper();
 
@@ -85,6 +86,7 @@ class G4PhysicsListHelper
     G4int GetVerboseLevel() const;
 
   private:
+
     // Hidden constructor and destructor.
     G4PhysicsListHelper();
     ~G4PhysicsListHelper();
@@ -93,6 +95,7 @@ class G4PhysicsListHelper
     void ReadInDefaultOrderingParameter();
 
   private:
+
     using G4OrdParamTable = std::vector<G4PhysicsListOrderingParameter>;
 
     static G4ThreadLocal G4PhysicsListHelper* pPLHelper;

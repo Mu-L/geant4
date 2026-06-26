@@ -31,14 +31,14 @@
 
 // Author: P.Arce, CIEMAT (November 2007)
 // --------------------------------------------------------------------
-#ifndef G4tgrRotationMatrixFactory_hh
-#define G4tgrRotationMatrixFactory_hh 1
+#ifndef G4TGRROTATIONMATRIXFACTORY_HH
+#define G4TGRROTATIONMATRIXFACTORY_HH
 
-#include <vector>
-#include <map>
-
-#include "globals.hh"
 #include "G4tgrRotationMatrix.hh"
+#include "globals.hh"
+
+#include <map>
+#include <vector>
 
 using G4mstgrrotm = std::map<G4String, G4tgrRotationMatrix*>;
 
@@ -47,22 +47,19 @@ class G4tgrRotationMatrixFactory
   public:
 
     static G4tgrRotationMatrixFactory* GetInstance();
-      // Get the only instance (it it does not exists, create it)
+    // Get the only instance (it it does not exists, create it)
 
     G4tgrRotationMatrix* AddRotMatrix(const std::vector<G4String>& wl);
-      // Build a G4tgrRotationMatrix and add it to theTgrRotMats
+    // Build a G4tgrRotationMatrix and add it to theTgrRotMats
 
     G4tgrRotationMatrix* FindRotMatrix(const G4String& rotm);
-      // Look for an G4tgrRotationMatrix and if not found return 0
+    // Look for an G4tgrRotationMatrix and if not found return 0
 
     const G4mstgrrotm& GetRotMatMap() const { return theTgrRotMats; }
-    std::vector<G4tgrRotationMatrix*> GetRotMatList() const
-    {
-      return theTgrRotMatList;
-    }
+    std::vector<G4tgrRotationMatrix*> GetRotMatList() const { return theTgrRotMatList; }
 
     void DumpRotmList();
-      // Dump list of rotation matrices
+    // Dump list of rotation matrices
 
   private:
 

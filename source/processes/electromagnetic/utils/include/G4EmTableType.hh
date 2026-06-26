@@ -39,8 +39,8 @@
 // 06.04.21 Removed two types (V.Ivanchenko)
 //
 //---------------------------------------------------------------
-#ifndef G4EmTableType_h
-#define G4EmTableType_h 1
+#ifndef G4EMTABLETYPE_HH
+#define G4EMTABLETYPE_HH
 
 #include "G4Types.hh"
 
@@ -63,13 +63,11 @@ enum G4CrossSectionType
 
 struct G4TwoPeaksXS
 {
-  G4double e1peak;
-  G4double e1deep;
-  G4double e2peak;
-  G4double e2deep;
-  G4double e3peak;
+    G4double e1peak;
+    G4double e1deep;
+    G4double e2peak;
+    G4double e2deep;
+    G4double e3peak;
 };
 
 #endif
-
-

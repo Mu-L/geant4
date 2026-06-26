@@ -26,8 +26,8 @@
 //
 //
 
-#ifndef G4VUIshell_h
-#define G4VUIshell_h 1
+#ifndef G4VUISHELL_HH
+#define G4VUISHELL_HH
 
 #include "globals.hh"
 
@@ -66,64 +66,78 @@ class G4UIcommandTree;
 
 class G4VUIshell
 {
- public:
-  G4VUIshell(const G4String& prompt = "> ");
-  virtual ~G4VUIshell();
+  public:
 
-  void SetNColumn(G4int ncol);
-  void SetPrompt(const G4String& prompt);
-  void SetCurrentDirectory(const G4String& ccd);
-  virtual void SetLsColor(TermColorIndex, TermColorIndex);
+    G4VUIshell(const G4String& prompt = "> ");
+    virtual ~G4VUIshell();
 
-  // shell commands
-  virtual void ShowCurrentDirectory() const;
+    void SetNColumn(G4int ncol);
+    void SetPrompt(const G4String& prompt);
+    void SetCurrentDirectory(const G4String& ccd);
+    virtual void SetLsColor(TermColorIndex, TermColorIndex);
 
-  //  "candidate" is specified with full path.
-  virtual void ListCommand(const G4String& input, const G4String& candidate = "") const;
+    // shell commands
+    virtual void ShowCurrentDirectory() const;
 
-  // get command string from a command line
-  virtual G4String GetCommandLineString(const char* msg = nullptr) = 0;
+    //  "candidate" is specified with full path.
+    virtual void ListCommand(const G4String& input, const G4String& candidate = "") const;
 
-  virtual void ResetTerminal();
+    // get command string from a command line
+    virtual G4String GetCommandLineString(const char* msg = nullptr) = 0;
 
- protected:
-  // make prompt string
-  virtual void MakePrompt(const char* msg = nullptr); 
+    virtual void ResetTerminal();
 
-  // get tree node
-  G4UIcommandTree* GetCommandTree(const G4String& dir) const;
+  protected:
 
-  // absolute path name (ignore command)
-  G4String GetAbsCommandDirPath(const G4String& apath) const;
-  
-  // tail of path ( xxx/xxx/zzz -> zzz, trancated //// -> /)
-  G4String GetCommandPathTail(const G4String& apath) const;
+    // make prompt string
+    virtual void MakePrompt(const char* msg = nullptr);
 
-  G4String promptSetting;  // including %-directive
-  G4String promptString;
-  G4int nColumn;  // column size of terminal (default=80)
+    // get tree node
+    G4UIcommandTree* GetCommandTree(const G4String& dir) const;
 
-  // color code support (effective if your terminal supports color code.)
-  // default setting is off.
-  G4bool lsColorFlag;  // color flag for list command
-  TermColorIndex directoryColor;
-  TermColorIndex commandColor;
+    // absolute path name (ignore command)
+    G4String GetAbsCommandDirPath(const G4String& apath) const;
 
-  // for treating G4 command tree...
-  G4String currentCommandDir;  // current command directory (absolute path)
+    // tail of path ( xxx/xxx/zzz -> zzz, trancated //// -> /)
+    G4String GetCommandPathTail(const G4String& apath) const;
+
+    G4String promptSetting;  // including %-directive
+    G4String promptString;
+    G4int nColumn;  // column size of terminal (default=80)
+
+    // color code support (effective if your terminal supports color code.)
+    // default setting is off.
+    G4bool lsColorFlag;  // color flag for list command
+    TermColorIndex directoryColor;
+    TermColorIndex commandColor;
+
+    // for treating G4 command tree...
+    G4String currentCommandDir;  // current command directory (absolute path)
 };
 
 // ====================================================================
 //   inline functions
 // ====================================================================
-inline void G4VUIshell::SetNColumn(G4int ncol) { nColumn = ncol; }
+inline void G4VUIshell::SetNColumn(G4int ncol)
+{
+  nColumn = ncol;
+}
 
-inline void G4VUIshell::SetPrompt(const G4String& prompt) { promptSetting = prompt; }
+inline void G4VUIshell::SetPrompt(const G4String& prompt)
+{
+  promptSetting = prompt;
+}
 
-inline void G4VUIshell::SetCurrentDirectory(const G4String& dir) { currentCommandDir = dir; }
+inline void G4VUIshell::SetCurrentDirectory(const G4String& dir)
+{
+  currentCommandDir = dir;
+}
 
 inline void G4VUIshell::SetLsColor(TermColorIndex, TermColorIndex) {}
 
-inline void G4VUIshell::ShowCurrentDirectory() const { G4cout << currentCommandDir << G4endl; }
+inline void G4VUIshell::ShowCurrentDirectory() const
+{
+  G4cout << currentCommandDir << G4endl;
+}
 
 #endif

@@ -33,19 +33,21 @@
 // **********************************************************************
 //
 
-#ifndef G4SigmabPlus_h
-#define G4SigmabPlus_h 1
+#ifndef G4SIGMABPLUS_HH
+#define G4SIGMABPLUS_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4SigmabPlus : public G4ParticleDefinition
 {
   public:
+
     static G4SigmabPlus* Definition();
     static G4SigmabPlus* SigmabPlusDefinition();
     static G4SigmabPlus* SigmabPlus();
 
   private:
+
     G4SigmabPlus() {}
     ~G4SigmabPlus() override = default;
 

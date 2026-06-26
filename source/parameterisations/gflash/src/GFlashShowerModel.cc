@@ -33,24 +33,25 @@
 // Authors: E.Barberio & Joanna Weng - 9.11.2004
 // ------------------------------------------------------------
 
-#include "G4Electron.hh"
-#include "G4Positron.hh"
-#include "G4NeutrinoE.hh"
-#include "G4NeutrinoMu.hh"
-#include "G4NeutrinoTau.hh"
+#include "GFlashShowerModel.hh"
+
 #include "G4AntiNeutrinoE.hh"
 #include "G4AntiNeutrinoMu.hh"
 #include "G4AntiNeutrinoTau.hh"
+#include "G4Electron.hh"
+#include "G4LogicalVolume.hh"
+#include "G4NeutrinoE.hh"
+#include "G4NeutrinoMu.hh"
+#include "G4NeutrinoTau.hh"
 #include "G4PionZero.hh"
+#include "G4Positron.hh"
 #include "G4VProcess.hh"
 #include "G4ios.hh"
-#include "G4LogicalVolume.hh"
-#include "geomdefs.hh"
 
-#include "GFlashShowerModel.hh"
+#include "GFlashEnergySpot.hh"
 #include "GFlashHomoShowerParameterisation.hh"
 #include "GFlashSamplingShowerParameterisation.hh"
-#include "GFlashEnergySpot.hh"
+#include "geomdefs.hh"
 
 GFlashShowerModel::GFlashShowerModel(G4String modelName, G4Envelope* envelope)
   : G4VFastSimulationModel(modelName, envelope), PBound(0), Parameterisation(0), HMaker(0)
@@ -91,7 +92,8 @@ G4bool GFlashShowerModel::ModelTrigger(const G4FastTrack& fastTrack)
 
 {
   G4bool select = false;
-  if (FlagParamType != 0) {
+  if (FlagParamType != 0)
+  {
     G4double ParticleEnergy = fastTrack.GetPrimaryTrack()->GetKineticEnergy();
     G4ParticleDefinition& ParticleType = *(fastTrack.GetPrimaryTrack()->GetDefinition());
     if (ParticleEnergy > PBound->GetMinEneToParametrise(ParticleType)
@@ -117,7 +119,8 @@ G4bool GFlashShowerModel::CheckParticleDefAndContainment(const G4FastTrack& fast
       || ParticleType == G4Positron::PositronDefinition())
   {
     filter = true;
-    if (FlagParticleContainment == 1) {
+    if (FlagParticleContainment == 1)
+    {
       filter = CheckContainment(fastTrack);
     }
   }
@@ -146,7 +149,8 @@ G4bool GFlashShowerModel::CheckContainment(const G4FastTrack& fastTrack)
   G4int NlateralInside = 0;
   // pointer to solid we're in
   G4VSolid* SolidCalo = fastTrack.GetEnvelopeSolid();
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 4; i++)
+  {
     // polar coordinates
     Position = InitialPositionShower + Z * DirectionShower + R * CosPhi[i] * OrthoShower
                + R * SinPhi[i] * CrossShower;
@@ -221,21 +225,25 @@ void GFlashShowerModel::ElectronDoIt(const G4FastTrack& fastTrack, G4FastStep& f
   /// Begin Longitudinal Loop
   //-------------------------
 
-  do {
+  do
+  {
     // determine step size=min(1Xo,next boundary)
     G4double stepLength = StepInX0 * Parameterisation->GetX0();
-    if (Bound < stepLength) {
+    if (Bound < stepLength)
+    {
       Dz = Bound;
       Bound = 0.00;
     }
-    else {
+    else
+    {
       Dz = stepLength;
       Bound = Bound - Dz;
     }
     ZEndStep = ZEndStep + Dz;
 
     // Determine Energy Release in Step
-    if (EnergyNow > EnergyStop) {
+    if (EnergyNow > EnergyStop)
+    {
       LastEneIntegral = EneIntegral;
       EneIntegral = Parameterisation->IntegrateEneLongitudinal(ZEndStep);
       DEne = std::min(EnergyNow, (EneIntegral - LastEneIntegral) * Energy);
@@ -245,7 +253,8 @@ void GFlashShowerModel::ElectronDoIt(const G4FastTrack& fastTrack, G4FastStep& f
         std::max(1., std::floor((NspIntegral - LastNspIntegral) * Parameterisation->GetNspot()));
     }
     // end of the shower
-    else {
+    else
+    {
       DEne = EnergyNow;
       DNsp = std::max(1., std::floor((1. - NspIntegral) * Parameterisation->GetNspot()));
     }
@@ -255,7 +264,8 @@ void GFlashShowerModel::ElectronDoIt(const G4FastTrack& fastTrack, G4FastStep& f
     //
     GFlashSamplingShowerParameterisation* sp =
       dynamic_cast<GFlashSamplingShowerParameterisation*>(Parameterisation);
-    if (sp) {
+    if (sp)
+    {
       G4double DEneSampling = sp->ApplySampling(DEne, Energy);
       DEne = DEneSampling;
     }
@@ -266,7 +276,8 @@ void GFlashShowerModel::ElectronDoIt(const G4FastTrack& fastTrack, G4FastStep& f
     StepLenght = Dz / 2.00;
 
     // generate spots & hits:
-    for (G4int i = 0; i < DNsp; ++i) {
+    for (G4int i = 0; i < DNsp; ++i)
+    {
       GFlashEnergySpot Spot;
 
       // Spot energy: the same for all spots

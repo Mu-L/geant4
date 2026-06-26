@@ -32,19 +32,13 @@
 
 // this :
 #include <HEPVis/misc/SoStyleCache.h>
-
-#include <Inventor/nodes/SoMaterial.h>
 #include <Inventor/nodes/SoDrawStyle.h>
 #include <Inventor/nodes/SoLightModel.h>
+#include <Inventor/nodes/SoMaterial.h>
 #include <Inventor/nodes/SoResetTransform.h>
 
 //////////////////////////////////////////////////////////////////////////////
-SoStyleCache::SoStyleCache(
-) 
-:fMaterials(0)
-,fLineStyles(0)
-,fLightModels(0)
-,fResetTransform(0)
+SoStyleCache::SoStyleCache() : fMaterials(0), fLineStyles(0), fLightModels(0), fResetTransform(0)
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
@@ -58,25 +52,21 @@ SoStyleCache::SoStyleCache(
   addChild(fResetTransform);
 }
 //////////////////////////////////////////////////////////////////////////////
-SoStyleCache::~SoStyleCache(
-) 
+SoStyleCache::~SoStyleCache()
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
-{
-}
+{}
 //////////////////////////////////////////////////////////////////////////////
-SoMaterial* SoStyleCache::getMaterial(
- const SbColor& aRGB
-,float aTransparency
-) 
+SoMaterial* SoStyleCache::getMaterial(const SbColor& aRGB, float aTransparency)
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
   int number = fMaterials->getNumChildren();
-  for(int index=0;index<number;index++) { 
+  for (int index = 0; index < number; index++)
+  {
     SoMaterial* material = (SoMaterial*)fMaterials->getChild(index);
-    if( (material->diffuseColor[0]==aRGB) &&
-        (material->transparency[0]==aTransparency) ) {
+    if ((material->diffuseColor[0] == aRGB) && (material->transparency[0] == aTransparency))
+    {
       return material;
     }
   }
@@ -87,21 +77,17 @@ SoMaterial* SoStyleCache::getMaterial(
   return material;
 }
 //////////////////////////////////////////////////////////////////////////////
-SoMaterial* SoStyleCache::getMaterial(
- float aRed
-,float aGreen
-,float aBlue
-,float aTransparency
-) 
+SoMaterial* SoStyleCache::getMaterial(float aRed, float aGreen, float aBlue, float aTransparency)
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
-  SbColor aRGB(aRed,aGreen,aBlue);
+  SbColor aRGB(aRed, aGreen, aBlue);
   int number = fMaterials->getNumChildren();
-  for(int index=0;index<number;index++) { 
+  for (int index = 0; index < number; index++)
+  {
     SoMaterial* material = (SoMaterial*)fMaterials->getChild(index);
-    if( (material->diffuseColor[0]==aRGB) &&
-        (material->transparency[0]==aTransparency) ) {
+    if ((material->diffuseColor[0] == aRGB) && (material->transparency[0] == aTransparency))
+    {
       return material;
     }
   }
@@ -116,7 +102,7 @@ SoMaterial* SoStyleCache::getMaterial(
 SoDrawStyle* SoStyleCache::getLineStyle(
  SbLineStyle aStyle
 ,float aWidth
-) 
+)
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
@@ -136,7 +122,7 @@ SoDrawStyle* SoStyleCache::getLineStyle(
     break;
   }
   int number = fLineStyles->getNumChildren();
-  for(int index=0;index<number;index++) { 
+  for(int index=0;index<number;index++) {
     SoDrawStyle* drawStyle = (SoDrawStyle*)fLineStyles->getChild(index);
     if( (drawStyle->style.getValue()==SoDrawStyle::LINES) &&
         (drawStyle->lineWidth.getValue()==aWidth) &&
@@ -153,19 +139,18 @@ SoDrawStyle* SoStyleCache::getLineStyle(
 }
 */
 //////////////////////////////////////////////////////////////////////////////
-SoDrawStyle* SoStyleCache::getLineStyle(
- unsigned short aPattern
-,float aWidth
-) 
+SoDrawStyle* SoStyleCache::getLineStyle(unsigned short aPattern, float aWidth)
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
   int number = fLineStyles->getNumChildren();
-  for(int index=0;index<number;index++) { 
+  for (int index = 0; index < number; index++)
+  {
     SoDrawStyle* drawStyle = (SoDrawStyle*)fLineStyles->getChild(index);
-    if( (drawStyle->style.getValue()==SoDrawStyle::LINES) &&
-        (drawStyle->lineWidth.getValue()==aWidth) &&
-        (drawStyle->linePattern.getValue()==aPattern) ) {
+    if ((drawStyle->style.getValue() == SoDrawStyle::LINES)
+        && (drawStyle->lineWidth.getValue() == aWidth)
+        && (drawStyle->linePattern.getValue() == aPattern))
+    {
       return drawStyle;
     }
   }
@@ -177,8 +162,7 @@ SoDrawStyle* SoStyleCache::getLineStyle(
   return drawStyle;
 }
 //////////////////////////////////////////////////////////////////////////////
-SoLightModel* SoStyleCache::getLightModelPhong(
-) 
+SoLightModel* SoStyleCache::getLightModelPhong()
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
@@ -188,8 +172,7 @@ SoLightModel* SoStyleCache::getLightModelPhong(
   return lightModel;
 }
 //////////////////////////////////////////////////////////////////////////////
-SoLightModel* SoStyleCache::getLightModelBaseColor(
-) 
+SoLightModel* SoStyleCache::getLightModelBaseColor()
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
@@ -199,8 +182,7 @@ SoLightModel* SoStyleCache::getLightModelBaseColor(
   return lightModel;
 }
 //////////////////////////////////////////////////////////////////////////////
-SoResetTransform* SoStyleCache::getResetTransform(
-) 
+SoResetTransform* SoStyleCache::getResetTransform()
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {

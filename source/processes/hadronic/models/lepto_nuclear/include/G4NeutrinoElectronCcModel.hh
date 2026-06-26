@@ -28,67 +28,61 @@
 // Geant4 Header : G4NeutrinoElectronCcModel
 //
 // Author : V.Grichine 26.4.17
-//  
+//
 // Modified:
 //
 // Class Description
-// Default model for neutrino-electron 'inelastic' (charge current) scattering; 
+// Default model for neutrino-electron 'inelastic' (charge current) scattering;
 // Class Description - End
 
-#ifndef G4NeutrinoElectronCcModel_h
-#define G4NeutrinoElectronCcModel_h 1
- 
-#include "globals.hh"
-#include "G4HadronicInteraction.hh"
+#ifndef G4NEUTRINOELECTRONCCMODEL_HH
+#define G4NEUTRINOELECTRONCCMODEL_HH
+
 #include "G4HadProjectile.hh"
-#include "G4Nucleus.hh"
+#include "G4HadronicInteraction.hh"
 #include "G4NucleiProperties.hh"
+#include "G4Nucleus.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 
 class G4NeutrinoElectronCcModel : public G4HadronicInteraction
 {
-public:
+  public:
 
-  G4NeutrinoElectronCcModel(const G4String& name = "nu-e-inelastic");
+    G4NeutrinoElectronCcModel(const G4String& name = "nu-e-inelastic");
 
-  virtual ~G4NeutrinoElectronCcModel();
+    virtual ~G4NeutrinoElectronCcModel();
 
-  virtual G4bool IsApplicable(const G4HadProjectile & aTrack, 
-  			      G4Nucleus & targetNucleus);
+    virtual G4bool IsApplicable(const G4HadProjectile& aTrack, G4Nucleus& targetNucleus);
 
-  virtual G4HadFinalState * ApplyYourself(const G4HadProjectile & aTrack, 
-					  G4Nucleus & targetNucleus);
+    virtual G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& targetNucleus);
 
-  // sample recoil electron energy in lab frame
+    // sample recoil electron energy in lab frame
 
-  G4double SampleCosCMS(const G4HadProjectile* aParticle);
+    G4double SampleCosCMS(const G4HadProjectile* aParticle);
 
-  void SetCutEnergy(G4double ec){fCutEnergy=ec;};
-  G4double GetCutEnergy(){return fCutEnergy;};
+    void SetCutEnergy(G4double ec) { fCutEnergy = ec; };
+    G4double GetCutEnergy() { return fCutEnergy; };
 
+    virtual void ModelDescription(std::ostream&) const;
 
-  
-  virtual void ModelDescription(std::ostream&) const;
+  private:
 
-private:
+    G4ParticleDefinition* theNeutrinoE;
+    G4ParticleDefinition* theAntiNeutrinoE;
+    G4ParticleDefinition* theNeutrinoMu;
+    G4ParticleDefinition* theAntiNeutrinoMu;
+    G4ParticleDefinition* theNeutrinoTau;
+    G4ParticleDefinition* theAntiNeutrinoTau;
 
-  G4ParticleDefinition* theNeutrinoE;
-  G4ParticleDefinition* theAntiNeutrinoE;
-  G4ParticleDefinition* theNeutrinoMu;
-  G4ParticleDefinition* theAntiNeutrinoMu;
-  G4ParticleDefinition* theNeutrinoTau;
-  G4ParticleDefinition* theAntiNeutrinoTau;
-  
-  G4ParticleDefinition* theMuonMinus;
-  G4ParticleDefinition* theTauMinus;
- 
-  G4double fSin2tW;    // sin^2theta_Weinberg
-  G4double fCutEnergy; // minimal recoil electron energy detected
+    G4ParticleDefinition* theMuonMinus;
+    G4ParticleDefinition* theTauMinus;
 
-  G4int secID;  // Creator model ID for the secondaries created by this model  
+    G4double fSin2tW;  // sin^2theta_Weinberg
+    G4double fCutEnergy;  // minimal recoil electron energy detected
+
+    G4int secID;  // Creator model ID for the secondaries created by this model
 };
-
-
 
 #endif

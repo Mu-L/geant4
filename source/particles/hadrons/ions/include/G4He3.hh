@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4He3_h
-#define G4He3_h 1
+#ifndef G4HE3_HH
+#define G4HE3_HH
 
 #include "G4Ions.hh"
 
 class G4He3 : public G4Ions
 {
   public:
+
     static G4He3* Definition();
     static G4He3* He3Definition();
     static G4He3* He3();
 
   private:
+
     G4He3() {}
     ~G4He3() override = default;
 

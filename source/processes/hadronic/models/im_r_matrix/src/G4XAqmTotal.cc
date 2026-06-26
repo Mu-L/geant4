@@ -31,52 +31,47 @@
 //
 //      File name:     G4XAqmTotal
 //
-//      Author:        
-// 
+//      Author:
+//
 //      Creation date: 15 April 1999
 //
-//      Modifications: 
-//      
-// Additive Quark Model total cross section 
+//      Modifications:
+//
+// Additive Quark Model total cross section
 // (H.J. Lipkin and F. Scheck, Phys.Rev. 16 (1966) 71
 //
 // -------------------------------------------------------------------
 
-#include "globals.hh"
-#include "G4ios.hh"
-#include "G4Pow.hh"
-#include "G4SystemOfUnits.hh"
 #include "G4XAqmTotal.hh"
+
 #include "G4KineticTrack.hh"
 #include "G4ParticleDefinition.hh"
-
+#include "G4Pow.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 // Validity range of this cross-section
 const G4double G4XAqmTotal::_lowLimit = 0.;
 const G4double G4XAqmTotal::_highLimit = DBL_MAX;
 
 G4XAqmTotal::G4XAqmTotal()
-{ 
-  // As a first approximation the model is assumed to be valid over 
+{
+  // As a first approximation the model is assumed to be valid over
   // the entire energy range
 }
 
+G4XAqmTotal::~G4XAqmTotal() {}
 
-G4XAqmTotal::~G4XAqmTotal()
-{ }
-
-
-G4bool G4XAqmTotal::operator==(const G4XAqmTotal &right) const
+G4bool G4XAqmTotal::operator==(const G4XAqmTotal& right) const
 {
-  return (this == (G4XAqmTotal *) &right);
+  return (this == (G4XAqmTotal*)&right);
 }
 
-
-G4bool G4XAqmTotal::operator!=(const G4XAqmTotal &right) const
+G4bool G4XAqmTotal::operator!=(const G4XAqmTotal& right) const
 {
-  return (this != (G4XAqmTotal *) &right);
+  return (this != (G4XAqmTotal*)&right);
 }
-
 
 G4double G4XAqmTotal::CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const
 {
@@ -87,26 +82,26 @@ G4double G4XAqmTotal::CrossSection(const G4KineticTrack& trk1, const G4KineticTr
   G4int sTrk1 = def1->GetQuarkContent(3) + def1->GetAntiQuarkContent(3);
   const G4ParticleDefinition* def2 = trk2.GetDefinition();
   G4int sTrk2 = def2->GetQuarkContent(3) + def2->GetAntiQuarkContent(3);
-  
-  // Get non-strange quark content
-  G4int qTrk1 = def1->GetQuarkContent(1) + def1->GetAntiQuarkContent(1) +
-                def1->GetQuarkContent(2) + def1->GetAntiQuarkContent(2) +
-                def1->GetQuarkContent(4) + def1->GetAntiQuarkContent(4) +
-                def1->GetQuarkContent(5) + def1->GetAntiQuarkContent(5) +
-                def1->GetQuarkContent(6) + def1->GetAntiQuarkContent(6);
 
-  G4int qTrk2 = def2->GetQuarkContent(1) + def2->GetAntiQuarkContent(1) +
-                def2->GetQuarkContent(2) + def2->GetAntiQuarkContent(2) +
-                def2->GetQuarkContent(4) + def2->GetAntiQuarkContent(4) +
-                def2->GetQuarkContent(5) + def2->GetAntiQuarkContent(5) +
-                def2->GetQuarkContent(6) + def2->GetAntiQuarkContent(6);
+  // Get non-strange quark content
+  G4int qTrk1 = def1->GetQuarkContent(1) + def1->GetAntiQuarkContent(1) + def1->GetQuarkContent(2)
+                + def1->GetAntiQuarkContent(2) + def1->GetQuarkContent(4)
+                + def1->GetAntiQuarkContent(4) + def1->GetQuarkContent(5)
+                + def1->GetAntiQuarkContent(5) + def1->GetQuarkContent(6)
+                + def1->GetAntiQuarkContent(6);
+
+  G4int qTrk2 = def2->GetQuarkContent(1) + def2->GetAntiQuarkContent(1) + def2->GetQuarkContent(2)
+                + def2->GetAntiQuarkContent(2) + def2->GetQuarkContent(4)
+                + def2->GetAntiQuarkContent(4) + def2->GetQuarkContent(5)
+                + def2->GetAntiQuarkContent(5) + def2->GetQuarkContent(6)
+                + def2->GetAntiQuarkContent(6);
 
   G4double sRatio1 = 0.;
   if (qTrk1 != 0) sRatio1 = sTrk1 / qTrk1;
-  
+
   G4double sRatio2 = 0.;
   if (qTrk2 != 0) sRatio2 = sTrk2 / qTrk2;
-  
+
   // Calculate the number of colliding mesons
   G4int nMesons = 0;
   G4int nQ1 = sTrk1 + qTrk1;
@@ -116,11 +111,11 @@ G4double G4XAqmTotal::CrossSection(const G4KineticTrack& trk1, const G4KineticTr
   if (nQ2 == 2) nMesons++;
 
   // Cross-section (units to be checked!)
-  sigma = 40. * G4Pow::GetInstance()->powN((2.0/3.0),nMesons) * (1. - 0.4 * sRatio1) * (1. - 0.4 * sRatio2) * millibarn;
+  sigma = 40. * G4Pow::GetInstance()->powN((2.0 / 3.0), nMesons) * (1. - 0.4 * sRatio1)
+          * (1. - 0.4 * sRatio2) * millibarn;
 
   return sigma;
 }
-
 
 G4String G4XAqmTotal::Name() const
 {
@@ -128,11 +123,9 @@ G4String G4XAqmTotal::Name() const
   return name;
 }
 
-
-
 G4bool G4XAqmTotal::IsValid(G4double e) const
 {
-  G4bool answer = InLimits(e,_lowLimit,_highLimit);
+  G4bool answer = InLimits(e, _lowLimit, _highLimit);
 
   return answer;
 }

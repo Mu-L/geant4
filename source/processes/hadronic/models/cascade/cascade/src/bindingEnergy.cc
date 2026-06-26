@@ -32,8 +32,8 @@
 #include "G4InuclSpecialFunctions.hh"
 #include "G4NucleiProperties.hh"
 
-
-G4double G4InuclSpecialFunctions::bindingEnergy(G4int A, G4int Z) {
+G4double G4InuclSpecialFunctions::bindingEnergy(G4int A, G4int Z)
+{
   // NOTE:  Test condition copied from G4NucleiProperties.cc; not encapsulated
   if (A < 1 || Z < 0 || Z > A) return 0.;
 

@@ -37,19 +37,25 @@
 #ifndef G4VFACET_HH
 #define G4VFACET_HH
 
+#include "G4ThreeVector.hh"
+#include "G4VSolid.hh"
+#include "globals.hh"
+
+#include "windefs.hh"
+
 #include <iostream>
 #include <vector>
 
-#include "globals.hh"
-#include "windefs.hh"
-#include "G4ThreeVector.hh"
-#include "G4VSolid.hh"
-
-enum G4FacetVertexType { ABSOLUTE, RELATIVE };
+enum G4FacetVertexType
+{
+  ABSOLUTE,
+  RELATIVE
+};
 
 /**
  * @brief G4VFacet is a base class defining the facets which are components
  * of a G4TessellatedSolid shape.
+ * @ingroup geometry_solids_specific
  */
 
 class G4VFacet
@@ -65,58 +71,58 @@ class G4VFacet
     /**
      * Equality operator.
      */
-    G4bool operator== (const G4VFacet& right) const;
+    G4bool operator==(const G4VFacet& right) const;
 
     /**
      * Returns the number of vertices of the facet.
      */
-    virtual G4int GetNumberOfVertices () const = 0;
+    virtual G4int GetNumberOfVertices() const = 0;
 
     /**
      * Returns the vertex based on the index 'i'.
      */
-    virtual G4ThreeVector GetVertex (G4int i) const = 0;
+    virtual G4ThreeVector GetVertex(G4int i) const = 0;
 
     /**
      * Methods to set the vertices.
      */
-    virtual void SetVertex (G4int i, const G4ThreeVector& val) = 0;
+    virtual void SetVertex(G4int i, const G4ThreeVector& val) = 0;
     virtual void SetVertices(std::vector<G4ThreeVector>* vertices) = 0;
 
     /**
      * Returns the type ID of the facet.
      */
-    virtual G4GeometryType GetEntityType () const = 0;
+    virtual G4GeometryType GetEntityType() const = 0;
 
     /**
      * Returns the normal vector to the facet.
      */
-    virtual G4ThreeVector GetSurfaceNormal () const = 0;
+    virtual G4ThreeVector GetSurfaceNormal() const = 0;
 
     /**
      * Returns true if the facet is defined.
      */
-    virtual G4bool IsDefined () const = 0;
+    virtual G4bool IsDefined() const = 0;
 
     /**
      * Returns the circumcentre point of the facet.
      */
-    virtual G4ThreeVector GetCircumcentre () const = 0;
+    virtual G4ThreeVector GetCircumcentre() const = 0;
 
     /**
      * Returns the radius to the anchor point and centered on the circumcentre.
      */
-    virtual G4double GetRadius () const = 0;
+    virtual G4double GetRadius() const = 0;
 
     /**
      * Returns a pointer to a newly allocated duplicate copy of the facet.
      */
-    virtual G4VFacet* GetClone () = 0;
+    virtual G4VFacet* GetClone() = 0;
 
     /**
      * Determines the closest distance between point p and the facet.
      */
-    virtual G4double Distance (const G4ThreeVector&, G4double minDist) = 0;
+    virtual G4double Distance(const G4ThreeVector&, G4double minDist) = 0;
 
     /**
      * Determines the distance to point 'p'. kInfinity is returned if either:
@@ -125,14 +131,13 @@ class G4VFacet
      * (2) outgoing is FALSE and the dot product of the normal vector to the
      * facet and the displacement vector from p to the triangle is positive.
      */
-    virtual G4double Distance (const G4ThreeVector&, G4double minDist,
-                               const G4bool) = 0;
+    virtual G4double Distance(const G4ThreeVector&, G4double minDist, const G4bool) = 0;
 
     /**
      * Calculates the furthest the triangle extends in fA particular
      * direction defined by the vector axis.
      */
-    virtual G4double Extent (const G4ThreeVector axis) = 0;
+    virtual G4double Extent(const G4ThreeVector axis) = 0;
 
     /**
      * Finds the next intersection when going from 'p' in the direction of 'v'.
@@ -141,10 +146,9 @@ class G4VFacet
      * going in through the face.
      *  @returns true if there is an intersection, false otherwise.
      */
-    virtual G4bool Intersect (const G4ThreeVector& p, const G4ThreeVector& v,
-                              const G4bool outgoing, G4double& distance,
-                                    G4double& distFromSurface,
-                                    G4ThreeVector& normal) = 0;
+    virtual G4bool Intersect(const G4ThreeVector& p, const G4ThreeVector& v, const G4bool outgoing,
+                             G4double& distance, G4double& distFromSurface,
+                             G4ThreeVector& normal) = 0;
 
     /**
      * Auxiliary method for returning the surface area.
@@ -159,7 +163,7 @@ class G4VFacet
     /**
      * Adds a translation 'v' to the vertices of the facet.
      */
-    void ApplyTranslation (const G4ThreeVector& v);
+    void ApplyTranslation(const G4ThreeVector& v);
 
     /**
      * Streams the object contents to an output stream.
@@ -175,9 +179,8 @@ class G4VFacet
      * Logger methods for allocated memory of facets.
      */
     virtual G4int AllocatedMemory() = 0;
-    virtual void SetVertexIndex (G4int i, G4int j) = 0;
-    virtual G4int GetVertexIndex (G4int i) const = 0;
-
+    virtual void SetVertexIndex(G4int i, G4int j) = 0;
+    virtual G4int GetVertexIndex(G4int i) const = 0;
 
   protected:
 

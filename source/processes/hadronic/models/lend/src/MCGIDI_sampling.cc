@@ -284,6 +284,34 @@ LUPI_HOST_DEVICE void Input::setTemperatureAndEnergy( double a_temperature, doub
     m_modelEnergy = a_energy;
 }
 
+/* *********************************************************************************************************//**
+ * This function returns a string representation of an **SampledType** value.
+ *
+ * @param a_sampledType         [in]    The **SampledType** value.
+ *
+ * @return                              A std::string instance.
+ ***********************************************************************************************************/
+
+std::string sampleTypeToString( SampledType a_sampledType ) {
+
+    switch( a_sampledType ) {
+    case SampledType::firstTwoBody :
+        return( "firstTwoBody" );
+        break;
+    case SampledType::secondTwoBody:
+        return( "secondTwoBody" );
+        break;
+    case SampledType::uncorrelatedBody:
+        return( "uncorrelatedBody" );
+        break;
+    case  SampledType::unspecified:
+        return( "unspecified" );
+        break;
+    }
+
+    return( "" );
+}
+
 }           // End of namespace Sampling.
 
 }           // End of namespace MCGIDI.

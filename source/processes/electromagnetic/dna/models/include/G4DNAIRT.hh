@@ -29,11 +29,10 @@
  *  Created on: Jul 23, 2019
  *      Author: W. G. Shin
  *              J. Ramos-Mendez and B. Faddegon
-*/
+ */
 
-#ifndef G4DNAIRT_HH_
-#define G4DNAIRT_HH_
-
+#ifndef G4DNAIRT_HH
+#define G4DNAIRT_HH
 
 #include "G4DNAMolecularReaction.hh"
 #include "G4DNAMolecularReactionTable.hh"
@@ -59,7 +58,7 @@ class G4ErrorFunction;
 
 class G4DNAIRT : public G4VITReactionProcess
 {
-public:
+  public:
 
     G4DNAIRT();
     explicit G4DNAIRT(G4VDNAReactionModel*);
@@ -67,11 +66,9 @@ public:
     G4DNAIRT(const G4DNAIRT& other) = delete;
     G4DNAIRT& operator=(const G4DNAIRT& other) = delete;
 
-    G4bool TestReactibility(const G4Track&,
-                            const G4Track&,
-                            G4double ,
-                            G4bool ) override;
-    std::vector<std::unique_ptr<G4ITReactionChange>> FindReaction(G4ITReactionSet*, const G4double, const G4double, const G4bool) override;
+    G4bool TestReactibility(const G4Track&, const G4Track&, G4double, G4bool) override;
+    std::vector<std::unique_ptr<G4ITReactionChange>>
+    FindReaction(G4ITReactionSet*, const G4double, const G4double, const G4bool) override;
     std::unique_ptr<G4ITReactionChange> MakeReaction(const G4Track&, const G4Track&) override;
 
     void SetReactionModel(G4VDNAReactionModel*);
@@ -81,20 +78,23 @@ public:
     void IRTSampling();
     void Sampling(G4Track*);
 
-    G4double GetIndependentReactionTime(const G4MolecularConfiguration*, const G4MolecularConfiguration*, G4double);
+    G4double GetIndependentReactionTime(const G4MolecularConfiguration*,
+                                        const G4MolecularConfiguration*, G4double);
     G4int FindBin(G4int, G4double, G4double, G4double);
-    G4double SamplePDC(G4double , G4double );
+    G4double SamplePDC(G4double, G4double);
 
-protected:
+  protected:
+
     const G4DNAMolecularReactionTable*& fMolReactionTable;
     G4VDNAReactionModel* fpReactionModel;
 
-private:
+  private:
+
     G4ITTrackHolder* fTrackHolder;
     G4ITReactionSet* fReactionSet;
     G4ErrorFunction* erfc;
 
-    std::map<G4int,std::map<G4int,std::map<G4int,std::vector<G4Track*>>>> spaceBinned;
+    std::map<G4int, std::map<G4int, std::map<G4int, std::vector<G4Track*>>>> spaceBinned;
 
     G4double fRCutOff;
     G4double timeMin;

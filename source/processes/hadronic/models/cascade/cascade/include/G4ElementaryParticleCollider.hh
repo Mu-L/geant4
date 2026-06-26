@@ -64,72 +64,72 @@
 #include "G4CascadeInterpolator.hh"
 #include "G4InuclElementaryParticle.hh"
 #include "G4LorentzVector.hh"
+
 #include <iosfwd>
 #include <vector>
 
 class G4CollisionOutput;
 
+class G4ElementaryParticleCollider : public G4CascadeColliderBase
+{
+  public:
 
-class G4ElementaryParticleCollider : public G4CascadeColliderBase {
-public:
-  G4ElementaryParticleCollider();
-  virtual ~G4ElementaryParticleCollider() {};
-  
-  void collide(G4InuclParticle* bullet, G4InuclParticle* target,
-	       G4CollisionOutput& output);
+    G4ElementaryParticleCollider();
+    virtual ~G4ElementaryParticleCollider() {};
 
-  void setNucleusState(G4int a, G4int z) {	// Nucleus to use for recoil
-    nucleusA = a; nucleusZ = z;
-  }
+    void collide(G4InuclParticle* bullet, G4InuclParticle* target, G4CollisionOutput& output);
 
-private:
-  G4int generateMultiplicity(G4int is, G4double ekin) const;
+    void setNucleusState(G4int a, G4int z)
+    {  // Nucleus to use for recoil
+      nucleusA = a;
+      nucleusZ = z;
+    }
 
-  void generateOutgoingPartTypes(G4int is, G4int mult, G4double ekin);
+  private:
 
-  void generateSCMfinalState(G4double ekin, G4double etot_scm,
-			     G4InuclElementaryParticle* particle1,
-			     G4InuclElementaryParticle* particle2); 
+    G4int generateMultiplicity(G4int is, G4double ekin) const;
 
-  // Pion (or photon) absorption on a dibaryon
-  void generateSCMpionAbsorption(G4double etot_scm,
-				 G4InuclElementaryParticle* particle1,
-				 G4InuclElementaryParticle* particle2); 
+    void generateOutgoingPartTypes(G4int is, G4int mult, G4double ekin);
 
-  // Muon absorption on a dibaryon (with outgoing neutrino)
-  void generateSCMmuonAbsorption(G4double etot_scm,
-				 G4InuclElementaryParticle* particle1,
-				 G4InuclElementaryParticle* particle2); 
+    void generateSCMfinalState(G4double ekin, G4double etot_scm,
+                               G4InuclElementaryParticle* particle1,
+                               G4InuclElementaryParticle* particle2);
 
-  // Pion absorption on a single nucleon (charge exchange)
-  void generateSCMpionNAbsorption(G4double etot_scm,
-				  G4InuclElementaryParticle* particle1,
-				  G4InuclElementaryParticle* particle2); 
+    // Pion (or photon) absorption on a dibaryon
+    void generateSCMpionAbsorption(G4double etot_scm, G4InuclElementaryParticle* particle1,
+                                   G4InuclElementaryParticle* particle2);
 
-  G4bool pionNucleonAbsorption(G4double ekin) const;
+    // Muon absorption on a dibaryon (with outgoing neutrino)
+    void generateSCMmuonAbsorption(G4double etot_scm, G4InuclElementaryParticle* particle1,
+                                   G4InuclElementaryParticle* particle2);
 
-  void fillOutgoingMasses();		// Fill mass arrays from particle types
+    // Pion absorption on a single nucleon (charge exchange)
+    void generateSCMpionNAbsorption(G4double etot_scm, G4InuclElementaryParticle* particle1,
+                                    G4InuclElementaryParticle* particle2);
 
-  // Utility class to generate final-state kinematics
-  G4CascadeFinalStateGenerator fsGenerator;
+    G4bool pionNucleonAbsorption(G4double ekin) const;
 
-  // Internal buffers for lists of secondaries
-  std::vector<G4InuclElementaryParticle> particles;
-  std::vector<G4LorentzVector> scm_momentums;
-  std::vector<G4double> modules;
-  std::vector<G4double> masses;
-  std::vector<G4double> masses2;
-  std::vector<G4int> particle_kinds;
+    void fillOutgoingMasses();  // Fill mass arrays from particle types
 
-  // Nuclear environment (to do pion-nucleon absorption)
-  G4int nucleusA, nucleusZ;
+    // Utility class to generate final-state kinematics
+    G4CascadeFinalStateGenerator fsGenerator;
 
-private:
-  // Copying of modules is forbidden
-  G4ElementaryParticleCollider(const G4ElementaryParticleCollider&);
-  G4ElementaryParticleCollider& operator=(const G4ElementaryParticleCollider&);
+    // Internal buffers for lists of secondaries
+    std::vector<G4InuclElementaryParticle> particles;
+    std::vector<G4LorentzVector> scm_momentums;
+    std::vector<G4double> modules;
+    std::vector<G4double> masses;
+    std::vector<G4double> masses2;
+    std::vector<G4int> particle_kinds;
+
+    // Nuclear environment (to do pion-nucleon absorption)
+    G4int nucleusA, nucleusZ;
+
+  private:
+
+    // Copying of modules is forbidden
+    G4ElementaryParticleCollider(const G4ElementaryParticleCollider&);
+    G4ElementaryParticleCollider& operator=(const G4ElementaryParticleCollider&);
 };
 
-#endif	/* G4ELEMENTARY_PARTICLE_COLLIDER_HH */
-
-
+#endif /* G4ELEMENTARY_PARTICLE_COLLIDER_HH */

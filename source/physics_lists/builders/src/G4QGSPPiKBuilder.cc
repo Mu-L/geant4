@@ -38,51 +38,46 @@
 //----------------------------------------------------------------------------
 //
 #include "G4QGSPPiKBuilder.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4BGGPionInelasticXS.hh"
+#include "G4HadronicParameters.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4BGGPionInelasticXS.hh"
-#include "G4HadronicParameters.hh"
+#include "G4SystemOfUnits.hh"
 
-
-G4QGSPPiKBuilder::
-G4QGSPPiKBuilder(G4bool quasiElastic) 
-{    
+G4QGSPPiKBuilder::G4QGSPPiKBuilder(G4bool quasiElastic)
+{
   theMin = G4HadronicParameters::Instance()->GetMinEnergyTransitionQGS_FTF();
   theModel = new G4TheoFSGenerator("QGSP");
 
-  G4QGSModel< G4QGSParticipants >* theStringModel = 
-    new G4QGSModel< G4QGSParticipants >;
-  G4ExcitedStringDecay* theStringDecay = 
-    new G4ExcitedStringDecay(new G4QGSMFragmentation);
+  G4QGSModel<G4QGSParticipants>* theStringModel = new G4QGSModel<G4QGSParticipants>;
+  G4ExcitedStringDecay* theStringDecay = new G4ExcitedStringDecay(new G4QGSMFragmentation);
   theStringModel->SetFragmentationModel(theStringDecay);
 
-  G4GeneratorPrecompoundInterface* theCascade = 
-    new G4GeneratorPrecompoundInterface();
+  G4GeneratorPrecompoundInterface* theCascade = new G4GeneratorPrecompoundInterface();
 
   theModel->SetTransport(theCascade);
   theModel->SetHighEnergyGenerator(theStringModel);
   if (quasiElastic)
-    {
-      theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
-    } 
-}
- 
-G4QGSPPiKBuilder::
-~G4QGSPPiKBuilder() 
-{
+  {
+    theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
+  }
 }
 
-void G4QGSPPiKBuilder::
-Build(G4HadronInelasticProcess * aP)
+G4QGSPPiKBuilder::~G4QGSPPiKBuilder() {}
+
+void G4QGSPPiKBuilder::Build(G4HadronInelasticProcess* aP)
 {
   theModel->SetMinEnergy(theMin);
-  theModel->SetMaxEnergy( G4HadronicParameters::Instance()->GetMaxEnergy() );
-  if ( aP->GetParticleDefinition() == G4PionPlus::Definition() ) { 
-    aP->AddDataSet( new G4BGGPionInelasticXS( G4PionPlus::Definition() ) );
-  } else if ( aP->GetParticleDefinition() == G4PionMinus::Definition() ) { 
-    aP->AddDataSet( new G4BGGPionInelasticXS( G4PionMinus::Definition() ) );
+  theModel->SetMaxEnergy(G4HadronicParameters::Instance()->GetMaxEnergy());
+  if (aP->GetParticleDefinition() == G4PionPlus::Definition())
+  {
+    aP->AddDataSet(new G4BGGPionInelasticXS(G4PionPlus::Definition()));
+  }
+  else if (aP->GetParticleDefinition() == G4PionMinus::Definition())
+  {
+    aP->AddDataSet(new G4BGGPionInelasticXS(G4PionMinus::Definition()));
   }
   aP->RegisterMe(theModel);
 }

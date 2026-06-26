@@ -38,11 +38,10 @@
 
 #include "G4FastSimulationPhysics.hh"
 
-#include "G4ParticleDefinition.hh"
-#include "G4ProcessManager.hh"
-
 #include "G4FastSimulationHelper.hh"
 #include "G4FastSimulationManagerProcess.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ProcessManager.hh"
 
 // factory
 #include "G4PhysicsConstructorFactory.hh"
@@ -52,86 +51,93 @@ G4_DECLARE_PHYSCONSTR_FACTORY(G4FastSimulationPhysics);
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4FastSimulationPhysics::G4FastSimulationPhysics(const G4String& name)
-  :  G4VPhysicsConstructor(name),
-     fVerbose(false)
-{;}
+  : G4VPhysicsConstructor(name), fVerbose(false)
+{
+  ;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4FastSimulationPhysics::~G4FastSimulationPhysics()
-{;}
+{
+  ;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void G4FastSimulationPhysics::ActivateFastSimulation(const G4String particleName, const G4String parallelGeometryName)
+void G4FastSimulationPhysics::ActivateFastSimulation(const G4String particleName,
+                                                     const G4String parallelGeometryName)
 {
   fParticlesUnderFastSimulation.push_back(particleName);
-  fGeometries                  .push_back(parallelGeometryName);
+  fGeometries.push_back(parallelGeometryName);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void G4FastSimulationPhysics::ConstructParticle()
-{;}
+{
+  ;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void G4FastSimulationPhysics::ConstructProcess()
 {
-  
   auto myParticleIterator = GetParticleIterator();
   myParticleIterator->reset();
-  
-  while ( (*myParticleIterator)() )
+
+  while ((*myParticleIterator)())
+  {
+    G4ParticleDefinition* particle = myParticleIterator->value();
+    G4String particleName = particle->GetParticleName();
+    G4ProcessManager* pmanager = particle->GetProcessManager();
+
+    // -- include fast simulation manager process interface:
+    auto itr = std::find(fParticlesUnderFastSimulation.begin(), fParticlesUnderFastSimulation.end(),
+                         particleName);
+
+    if (itr != fParticlesUnderFastSimulation.end())
     {
-      G4ParticleDefinition*     particle = myParticleIterator->value();
-      G4String              particleName = particle->GetParticleName();
-      G4ProcessManager*         pmanager = particle->GetProcessManager();
-      
-      // -- include fast simulation manager process interface:
-      auto itr = std::find( fParticlesUnderFastSimulation.begin(),
-			    fParticlesUnderFastSimulation.end(),
-			    particleName                           );
-      
-      if ( itr != fParticlesUnderFastSimulation.end() )
-	{
-	  std::size_t ipos = itr - fParticlesUnderFastSimulation.begin();
-	  const G4String& geometry = fGeometries[ipos];
-	  if ( geometry == "" ) G4FastSimulationHelper::ActivateFastSimulation(pmanager);
-	  else                  G4FastSimulationHelper::ActivateFastSimulation(pmanager, geometry);
-	}
+      std::size_t ipos = itr - fParticlesUnderFastSimulation.begin();
+      const G4String& geometry = fGeometries[ipos];
+      if (geometry == "")
+        G4FastSimulationHelper::ActivateFastSimulation(pmanager);
+      else
+        G4FastSimulationHelper::ActivateFastSimulation(pmanager, geometry);
     }
+  }
 
   // -- tells what is done:
-  if ( fVerbose )
+  if (fVerbose)
+  {
+    // -- print:
+    myParticleIterator->reset();
+
+    while ((*myParticleIterator)())
     {
-      // -- print:
-      myParticleIterator->reset();
-      
-      while ( (*myParticleIterator)() )
-	{
-	  G4ParticleDefinition*     particle = myParticleIterator->value();
-	  G4String              particleName = particle->GetParticleName();
-	  G4ProcessManager*         pmanager = particle->GetProcessManager();
-	  
-	  G4bool isUnderFastSimulation(false);
-	  G4String processAndGeometryNames;
-	  
-	  G4ProcessVector*  vprocess = pmanager->GetProcessList();
-	  for (G4int ip = 0 ; ip < (G4int)vprocess->size() ; ++ip)
-	    {
-	      G4VProcess* process = (*vprocess)[ip];
-	      G4FastSimulationManagerProcess* pb = dynamic_cast< G4FastSimulationManagerProcess* >(process);
-	      if ( pb != nullptr )
-		{
-		  isUnderFastSimulation = true;
-		  processAndGeometryNames += pb->GetProcessName();
-		  processAndGeometryNames += "[geom:";
-		  processAndGeometryNames += pb->GetWorldVolume()->GetName();
-		  processAndGeometryNames += "] ";
-		}
-	    }
-	  if ( isUnderFastSimulation ) G4cout << std::setw(14) << particleName << " : " << processAndGeometryNames << G4endl;
-	}
+      G4ParticleDefinition* particle = myParticleIterator->value();
+      G4String particleName = particle->GetParticleName();
+      G4ProcessManager* pmanager = particle->GetProcessManager();
+
+      G4bool isUnderFastSimulation(false);
+      G4String processAndGeometryNames;
+
+      G4ProcessVector* vprocess = pmanager->GetProcessList();
+      for (G4int ip = 0; ip < (G4int)vprocess->size(); ++ip)
+      {
+        G4VProcess* process = (*vprocess)[ip];
+        G4FastSimulationManagerProcess* pb = dynamic_cast<G4FastSimulationManagerProcess*>(process);
+        if (pb != nullptr)
+        {
+          isUnderFastSimulation = true;
+          processAndGeometryNames += pb->GetProcessName();
+          processAndGeometryNames += "[geom:";
+          processAndGeometryNames += pb->GetWorldVolume()->GetName();
+          processAndGeometryNames += "] ";
+        }
+      }
+      if (isUnderFastSimulation)
+        G4cout << std::setw(14) << particleName << " : " << processAndGeometryNames << G4endl;
     }
+  }
 }

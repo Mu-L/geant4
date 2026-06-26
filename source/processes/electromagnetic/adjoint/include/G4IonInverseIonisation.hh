@@ -31,26 +31,27 @@
 //  Adjoint/reverse discrete ionisation for ions
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4IonInverseIonisation_h
-#define G4IonInverseIonisation_h 1
+#ifndef G4IONINVERSEIONISATION_HH
+#define G4IONINVERSEIONISATION_HH
 
-#include "globals.hh"
 #include "G4VAdjointReverseReaction.hh"
+#include "globals.hh"
 
 class G4AdjointIonIonisationModel;
 
 class G4IonInverseIonisation : public G4VAdjointReverseReaction
 {
- public:
-  explicit G4IonInverseIonisation(G4bool whichScatCase, const G4String& process_name,
-                                  G4AdjointIonIonisationModel* aEmAdjointModel);
-  ~G4IonInverseIonisation() override = default;
+  public:
 
-  void ProcessDescription(std::ostream&) const override;
-  void DumpInfo() const override { ProcessDescription(G4cout); }
+    explicit G4IonInverseIonisation(G4bool whichScatCase, const G4String& process_name,
+                                    G4AdjointIonIonisationModel* aEmAdjointModel);
+    ~G4IonInverseIonisation() override = default;
 
-  G4IonInverseIonisation(G4IonInverseIonisation&) = delete;
-  G4IonInverseIonisation& operator=(const G4IonInverseIonisation& right) = delete;
+    void ProcessDescription(std::ostream&) const override;
+    void DumpInfo() const override { ProcessDescription(G4cout); }
+
+    G4IonInverseIonisation(G4IonInverseIonisation&) = delete;
+    G4IonInverseIonisation& operator=(const G4IonInverseIonisation& right) = delete;
 };
 
 #endif

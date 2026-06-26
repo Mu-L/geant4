@@ -24,8 +24,8 @@
 // ********************************************************************
 //
 
-#ifndef G4ParticleHPManager_h
-#define G4ParticleHPManager_h 1
+#ifndef G4PARTICLEHPMANAGER_HH
+#define G4PARTICLEHPMANAGER_HH
 
 // 121031 First implementation done by T. Koi (SLAC/PPA)
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
@@ -119,10 +119,7 @@ class G4ParticleHPManager
     G4PhysicsTable* GetFissionCrossSections() const { return theFissionCrossSections; }
 
     std::vector<G4ParticleHPChannel*>* GetElasticFinalStates() const { return theElasticFSs; }
-    void RegisterElasticFinalStates(std::vector<G4ParticleHPChannel*>* val)
-    {
-      theElasticFSs = val;
-    }
+    void RegisterElasticFinalStates(std::vector<G4ParticleHPChannel*>* val) { theElasticFSs = val; }
 
     std::vector<G4ParticleHPChannelList*>*
     GetInelasticFinalStates(const G4ParticleDefinition* part) const
@@ -136,15 +133,9 @@ class G4ParticleHPManager
     }
 
     std::vector<G4ParticleHPChannel*>* GetCaptureFinalStates() const { return theCaptureFSs; }
-    void RegisterCaptureFinalStates(std::vector<G4ParticleHPChannel*>* val)
-    {
-      theCaptureFSs = val;
-    }
+    void RegisterCaptureFinalStates(std::vector<G4ParticleHPChannel*>* val) { theCaptureFSs = val; }
     std::vector<G4ParticleHPChannel*>* GetFissionFinalStates() const { return theFissionFSs; }
-    void RegisterFissionFinalStates(std::vector<G4ParticleHPChannel*>* val)
-    {
-      theFissionFSs = val;
-    }
+    void RegisterFissionFinalStates(std::vector<G4ParticleHPChannel*>* val) { theFissionFSs = val; }
 
     std::map<G4int, std::map<G4double, G4ParticleHPVector*>*>*
     GetThermalScatteringCoherentCrossSections() const
@@ -208,13 +199,18 @@ class G4ParticleHPManager
       theTSInelasticFinalStates = val;
     }
 
-    std::vector< std::map< G4int, G4ParticleHPIsoProbabilityTable* > >* GetProbabilityTables() const
-      { return theProbabilityTables; }
-    void RegisterProbabilityTables( std::vector< std::map< G4int, G4ParticleHPIsoProbabilityTable* > >* val ) 
-      { theProbabilityTables = val; }
+    std::vector<std::map<G4int, G4ParticleHPIsoProbabilityTable*>>* GetProbabilityTables() const
+    {
+      return theProbabilityTables;
+    }
+    void
+    RegisterProbabilityTables(std::vector<std::map<G4int, G4ParticleHPIsoProbabilityTable*>>* val)
+    {
+      theProbabilityTables = val;
+    }
 
-    std::vector< std::pair< G4double, G4double > >* GetURRlimits() const { return theURRlimits; }
-    void RegisterURRlimits( std::vector< std::pair< G4double, G4double > >* val ) { theURRlimits = val; }
+    std::vector<std::pair<G4double, G4double>>* GetURRlimits() const { return theURRlimits; }
+    void RegisterURRlimits(std::vector<std::pair<G4double, G4double>>* val) { theURRlimits = val; }
 
     G4double GetMinADBRC() const { return theMinADBRC; }
     G4double GetMinEnergyDBRC() const { return theMinEnergyDBRC; }
@@ -226,8 +222,8 @@ class G4ParticleHPManager
     void SetMaxEnergyDBRC(G4double val) { theMaxEnergyDBRC = val; }
     void SetMaxEnergyDoppler(G4double val) { theMaxEnergyDoppler = val; }
 
-    G4ParticleHPManager(G4ParticleHPManager &) = delete;
-    G4ParticleHPManager & operator=(const G4ParticleHPManager &right) = delete;
+    G4ParticleHPManager(G4ParticleHPManager&) = delete;
+    G4ParticleHPManager& operator=(const G4ParticleHPManager& right) = delete;
 
   private:
 
@@ -266,13 +262,16 @@ class G4ParticleHPManager
     std::vector<G4ParticleHPChannel*>* theFissionFSs{nullptr};
 
     std::map<G4int, std::map<G4double, G4ParticleHPVector*>*>* theTSCoherentCrossSections{nullptr};
-    std::map<G4int, std::map<G4double, G4ParticleHPVector*>*>* theTSIncoherentCrossSections{nullptr};
+    std::map<G4int, std::map<G4double, G4ParticleHPVector*>*>* theTSIncoherentCrossSections{
+      nullptr};
     std::map<G4int, std::map<G4double, G4ParticleHPVector*>*>* theTSInelasticCrossSections{nullptr};
 
     std::map<G4int, std::map<G4double, std::vector<std::pair<G4double, G4double>*>*>*>*
       theTSCoherentFinalStates{nullptr};
-    std::map<G4int, std::map<G4double, std::vector<E_isoAng*>*>*>* theTSIncoherentFinalStates{nullptr};
-    std::map<G4int, std::map<G4double, std::vector<E_P_E_isoAng*>*>*>* theTSInelasticFinalStates{nullptr};
+    std::map<G4int, std::map<G4double, std::vector<E_isoAng*>*>*>* theTSIncoherentFinalStates{
+      nullptr};
+    std::map<G4int, std::map<G4double, std::vector<E_P_E_isoAng*>*>*>* theTSInelasticFinalStates{
+      nullptr};
 
     G4double theMinADBRC{200.};
     G4double theMinEnergyDBRC;
@@ -281,8 +280,7 @@ class G4ParticleHPManager
 
     G4String fDataPath[6]{""};
 
-    std::vector< std::map< G4int, G4ParticleHPIsoProbabilityTable* > >* theProbabilityTables{nullptr};
-    std::vector< std::pair< G4double, G4double > >* theURRlimits{nullptr};
-
+    std::vector<std::map<G4int, G4ParticleHPIsoProbabilityTable*>>* theProbabilityTables{nullptr};
+    std::vector<std::pair<G4double, G4double>>* theURRlimits{nullptr};
 };
 #endif

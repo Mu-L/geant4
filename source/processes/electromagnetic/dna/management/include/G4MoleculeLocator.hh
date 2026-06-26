@@ -27,11 +27,10 @@
 // Author: Christian Velten (2025)
 
 #ifndef G4MOLECULELOCATOR_HH
-#define G4MOLECULELOCATOR_HH 1
-#pragma once
+#define G4MOLECULELOCATOR_HH
 
-#include "G4TouchableHandle.hh"
 #include "G4ThreadLocalSingleton.hh"
+#include "G4TouchableHandle.hh"
 
 #include <memory>
 
@@ -40,13 +39,16 @@ class G4ITNavigator;
 
 class G4MoleculeLocator final
 {
-  friend class G4ThreadLocalSingleton<G4MoleculeLocator>;
+    friend class G4ThreadLocalSingleton<G4MoleculeLocator>;
+
   public:
+
     static G4MoleculeLocator* Instance();
 
     ~G4MoleculeLocator() = default;
 
   private:
+
     G4MoleculeLocator();
     G4MoleculeLocator(const G4MoleculeLocator&) = delete;
     G4MoleculeLocator(G4MoleculeLocator&&) = delete;
@@ -61,6 +63,7 @@ class G4MoleculeLocator final
     void Initialize();
 
   public:
+
     void LocateMoleculeSetStateAndTouchable(G4Track*);
     G4TouchableHandle LocateMoleculeTrack(const G4Track*);
 };

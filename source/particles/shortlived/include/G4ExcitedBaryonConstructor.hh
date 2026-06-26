@@ -29,8 +29,8 @@
 //      History: first implementation, based on object model of
 //      10 oct 1998  H.Kurashige
 // ---------------------------------------------------------------
-#ifndef G4ExcitedBaryonConstructor_h
-#define G4ExcitedBaryonConstructor_h 1
+#ifndef G4EXCITEDBARYONCONSTRUCTOR_HH
+#define G4EXCITEDBARYONCONSTRUCTOR_HH
 
 #include "globals.hh"
 class G4DecayTable;
@@ -41,12 +41,14 @@ class G4ExcitedBaryonConstructor
     // short lived particles
 
   public:
+
     G4ExcitedBaryonConstructor(G4int nStates = 0, G4int isoSpin = 0);
     virtual ~G4ExcitedBaryonConstructor() = default;
 
     virtual void Construct(G4int indexOfState = -1);
 
   protected:
+
     virtual void ConstructParticle(G4int indexOfState);
     virtual void ConstructAntiParticle(G4int indexOfState);
 
@@ -67,6 +69,7 @@ class G4ExcitedBaryonConstructor
     virtual G4DecayTable* CreateDecayTable(const G4String&, G4int, G4int, G4bool) = 0;
 
   protected:
+
     G4int NumberOfStates;
     G4int iIsoSpin;
 

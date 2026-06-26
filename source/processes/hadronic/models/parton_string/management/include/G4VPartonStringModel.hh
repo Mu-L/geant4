@@ -25,8 +25,8 @@
 //
 //
 //
-#ifndef G4VPartonStringModel_h
-#define G4VPartonStringModel_h 1
+#ifndef G4VPARTONSTRINGMODEL_HH
+#define G4VPARTONSTRINGMODEL_HH
 
 // ------------------------------------------------------------
 //      GEANT 4 class header file
@@ -38,49 +38,52 @@
 
 // Modified at 8-Oct-1998 by Maxim Komogorov. Method EnergyAndMomentumCorrector was added.
 
-#include "G4StringModel.hh"
-#include "G4VParticipants.hh"
-#include "G4ReactionProductVector.hh"
 #include "G4ExcitedString.hh"
 #include "G4ExcitedStringVector.hh"
-#include "G4VStringFragmentation.hh"
-#include "G4V3DNucleus.hh"
 #include "G4KineticTrackVector.hh"
+#include "G4ReactionProductVector.hh"
+#include "G4StringModel.hh"
+#include "G4V3DNucleus.hh"
+#include "G4VParticipants.hh"
+#include "G4VStringFragmentation.hh"
 
 class G4VPartonStringModel : public G4VHighEnergyGenerator
 {
   public:
+
     G4VPartonStringModel(const G4String& modelName = "Parton String Model");
     ~G4VPartonStringModel() override;
 
-    G4VPartonStringModel(const G4VPartonStringModel &right) = delete;
-    const G4VPartonStringModel & operator=
-    (const G4VPartonStringModel &right) = delete;
-    G4bool operator==(const G4VPartonStringModel &right) const = delete;
-    G4bool operator!=(const G4VPartonStringModel &right) const = delete;
+    G4VPartonStringModel(const G4VPartonStringModel& right) = delete;
+    const G4VPartonStringModel& operator=(const G4VPartonStringModel& right) = delete;
+    G4bool operator==(const G4VPartonStringModel& right) const = delete;
+    G4bool operator!=(const G4VPartonStringModel& right) const = delete;
 
-    void SetFragmentationModel(G4VStringFragmentation * aModel);
-    G4KineticTrackVector * Scatter(const G4Nucleus &theNucleus, 
-                           const G4DynamicParticle &thePrimary) override;
+    void SetFragmentationModel(G4VStringFragmentation* aModel);
+    G4KineticTrackVector* Scatter(const G4Nucleus& theNucleus,
+                                  const G4DynamicParticle& thePrimary) override;
     void ModelDescription(std::ostream& outFile) const override;
-    G4V3DNucleus * GetProjectileNucleus() const override;
+    G4V3DNucleus* GetProjectileNucleus() const override;
 
-  protected:        
-    virtual void Init(const G4Nucleus &theNucleus, const G4DynamicParticle &thePrimary) = 0;
-    virtual G4ExcitedStringVector * GetStrings() = 0;
+  protected:
 
-    G4bool EnergyAndMomentumCorrector(G4KineticTrackVector* Output, G4LorentzVector& TotalCollisionMomentum);   
+    virtual void Init(const G4Nucleus& theNucleus, const G4DynamicParticle& thePrimary) = 0;
+    virtual G4ExcitedStringVector* GetStrings() = 0;
+
+    G4bool EnergyAndMomentumCorrector(G4KineticTrackVector* Output,
+                                      G4LorentzVector& TotalCollisionMomentum);
 
   private:
-    G4VStringFragmentation * stringFragmentationModel;
+
+    G4VStringFragmentation* stringFragmentationModel;
 };
 
-inline void G4VPartonStringModel::SetFragmentationModel(G4VStringFragmentation * aModel)
+inline void G4VPartonStringModel::SetFragmentationModel(G4VStringFragmentation* aModel)
 {
-  if(aModel != stringFragmentationModel) {
+  if (aModel != stringFragmentationModel)
+  {
     stringFragmentationModel = aModel;
   }
 }
 
 #endif
-

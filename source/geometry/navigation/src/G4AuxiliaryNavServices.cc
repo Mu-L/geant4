@@ -29,26 +29,24 @@
 // --------------------------------------------------------------------
 
 #include "G4AuxiliaryNavServices.hh"
+
 #include "G4GeometryTolerance.hh"
 
 // The existence a method here allows compilers to find the inline method
 // (which are the core of this class)
-// [ Compilers store the inline method in the module with the first 
+// [ Compilers store the inline method in the module with the first
 //   non-inline method.]
 // If this method did not exist, there would be none.
 
 void G4AuxiliaryNavServices::ReportTolerances()
 {
-   G4long oldPrec = G4cout.precision(16);
-   
-   G4cout << " Cartesian Tolerance (kCarTolerance): "
-          << G4GeometryTolerance::GetInstance()->GetSurfaceTolerance()
-          << " (global) " << G4endl;
-   G4cout << " Radial Tolerance (kRadTolerance): "
-          << G4GeometryTolerance::GetInstance()->GetRadialTolerance()
-          << " (global) " << G4endl;
-   G4cout << " Angular Tolerance (kAngTolerance): "
-          << G4GeometryTolerance::GetInstance()->GetAngularTolerance()
-          << " (global) " << G4endl;
-   G4cout.precision(oldPrec); 
+  G4long oldPrec = G4cout.precision(16);
+
+  G4cout << " Cartesian Tolerance (kCarTolerance): "
+         << G4GeometryTolerance::GetInstance()->GetSurfaceTolerance() << " (global) " << G4endl;
+  G4cout << " Radial Tolerance (kRadTolerance): "
+         << G4GeometryTolerance::GetInstance()->GetRadialTolerance() << " (global) " << G4endl;
+  G4cout << " Angular Tolerance (kAngTolerance): "
+         << G4GeometryTolerance::GetInstance()->GetAngularTolerance() << " (global) " << G4endl;
+  G4cout.precision(oldPrec);
 }

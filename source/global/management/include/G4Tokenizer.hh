@@ -33,68 +33,63 @@
 
 // Author: G.Cosmo, 11 October 2001
 // --------------------------------------------------------------------
-#ifndef G4Tokenizer_hh
-#define G4Tokenizer_hh 1
+#ifndef G4TOKENIZER_HH
+#define G4TOKENIZER_HH
 
 #include "G4String.hh"
 
 class G4Tokenizer
 {
- public:
-  G4Tokenizer(const G4String& stn)
-    : string2tokenize(stn)
-    , actual(0)
-  {}
+  public:
 
-  G4String operator()(const char* str = " \t\n", std::size_t l = 0)
-  {
-    std::size_t i, j, tmp;
-    G4bool hasws = false;
-    if(l == 0)
-      l = strlen(str);
+    G4Tokenizer(const G4String& stn) : string2tokenize(stn), actual(0) {}
 
-    // Skip leading delimeters
-    while(actual < string2tokenize.size())
+    G4String operator()(const char* str = " \t\n", std::size_t l = 0)
     {
-      for(i = 0; i < l; ++i)
+      std::size_t i, j, tmp;
+      G4bool hasws = false;
+      if (l == 0) l = strlen(str);
+
+      // Skip leading delimeters
+      while (actual < string2tokenize.size())
       {
-        if(string2tokenize[(G4int)actual] == str[i])
-          hasws = true;
+        for (i = 0; i < l; ++i)
+        {
+          if (string2tokenize[(G4int)actual] == str[i]) hasws = true;
+        }
+        if (hasws)
+        {
+          ++actual;
+          hasws = false;
+        }
+        else
+          break;
       }
-      if(hasws)
+
+      for (j = actual; j < string2tokenize.size(); ++j)
       {
-        ++actual;
-        hasws = false;
+        for (i = 0; i < l; ++i)
+          if (string2tokenize[(G4int)j] == str[i]) break;
+        if (i < l) break;
+      }
+      if (j != string2tokenize.size())
+      {
+        tmp = actual;
+        actual = j + 1;
+        return string2tokenize.substr(tmp, j - tmp);
       }
       else
-        break;
+      {
+        tmp = actual;
+        actual = j;
+        return string2tokenize.substr(tmp, j - tmp);
+      }
     }
 
-    for(j = actual; j < string2tokenize.size(); ++j)
-    {
-      for(i = 0; i < l; ++i)
-        if(string2tokenize[(G4int)j] == str[i])
-          break;
-      if(i < l)
-        break;
-    }
-    if(j != string2tokenize.size())
-    {
-      tmp    = actual;
-      actual = j + 1;
-      return string2tokenize.substr(tmp, j - tmp);
-    }
-    else
-    {
-      tmp    = actual;
-      actual = j;
-      return string2tokenize.substr(tmp, j - tmp);
-    }
-  }
+  private:
 
- private:
-  G4String string2tokenize;
-  std::size_t actual;
+    G4String string2tokenize;
+    std::size_t actual;
 };
 
 #endif

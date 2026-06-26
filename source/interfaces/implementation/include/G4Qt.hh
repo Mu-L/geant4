@@ -48,23 +48,25 @@ class QString;
 
 class G4Qt : public G4VInteractorManager
 {
- public:
-  static G4Qt* getInstance();
-  static G4Qt* getInstance(int, char**, char*);
-  G4bool Inited() override;
-  void* GetEvent() override;
-  void FlushAndWaitExecution() override;
-  ~G4Qt() override;
-  bool IsExternalApp();
+  public:
 
- private:
-  G4Qt(const G4Qt&);
-  G4Qt(int, char**, char*);
-  G4Qt& operator=(const G4Qt&);
-  static G4Qt* instance;  // Pointer to single instance.
-  int argn;
-  char** args;
-  bool externalApp;
+    static G4Qt* getInstance();
+    static G4Qt* getInstance(int, char**, char*);
+    G4bool Inited() override;
+    void* GetEvent() override;
+    void FlushAndWaitExecution() override;
+    ~G4Qt() override;
+    bool IsExternalApp();
+
+  private:
+
+    G4Qt(const G4Qt&);
+    G4Qt(int, char**, char*);
+    G4Qt& operator=(const G4Qt&);
+    static G4Qt* instance;  // Pointer to single instance.
+    int argn;
+    char** args;
+    bool externalApp;
 };
 
 #endif

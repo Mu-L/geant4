@@ -37,45 +37,37 @@
 //----------------------------------------------------------------------------
 //
 #include "G4QGSBinaryNeutronBuilder.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4BGGNucleonInelasticXS.hh"
+#include "G4HadronicParameters.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4BGGNucleonInelasticXS.hh"
-#include "G4HadronicParameters.hh"
+#include "G4SystemOfUnits.hh"
 
-
-G4QGSBinaryNeutronBuilder::
-G4QGSBinaryNeutronBuilder(G4bool quasiElastic) 
+G4QGSBinaryNeutronBuilder::G4QGSBinaryNeutronBuilder(G4bool quasiElastic)
 {
   theMin = G4HadronicParameters::Instance()->GetMinEnergyTransitionQGS_FTF();
   theModel = new G4TheoFSGenerator("QGSB");
 
-  G4QGSModel< G4QGSParticipants >* theStringModel = 
-    new G4QGSModel< G4QGSParticipants >;
-  G4ExcitedStringDecay* theStringDecay = 
-    new G4ExcitedStringDecay(new G4QGSMFragmentation);
+  G4QGSModel<G4QGSParticipants>* theStringModel = new G4QGSModel<G4QGSParticipants>;
+  G4ExcitedStringDecay* theStringDecay = new G4ExcitedStringDecay(new G4QGSMFragmentation);
   theStringModel->SetFragmentationModel(theStringDecay);
 
   theModel->SetTransport(new G4BinaryCascade());
   theModel->SetHighEnergyGenerator(theStringModel);
   if (quasiElastic)
-    {
-      theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
-    } 
+  {
+    theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
+  }
 }
 
-G4QGSBinaryNeutronBuilder::
-~G4QGSBinaryNeutronBuilder() 
-{
-}
+G4QGSBinaryNeutronBuilder::~G4QGSBinaryNeutronBuilder() {}
 
-void G4QGSBinaryNeutronBuilder::
-Build(G4HadronInelasticProcess * aP)
+void G4QGSBinaryNeutronBuilder::Build(G4HadronInelasticProcess* aP)
 {
   theModel->SetMinEnergy(theMin);
-  theModel->SetMaxEnergy( G4HadronicParameters::Instance()->GetMaxEnergy() );
+  theModel->SetMaxEnergy(G4HadronicParameters::Instance()->GetMaxEnergy());
   aP->RegisterMe(theModel);
-    aP->AddDataSet(new G4BGGNucleonInelasticXS(G4Neutron::Neutron()));
+  aP->AddDataSet(new G4BGGNucleonInelasticXS(G4Neutron::Neutron()));
 }
-

@@ -25,8 +25,8 @@
 //
 //
 //
-// 
-//Box container class
+//
+// Box container class
 
 #ifndef G4OPENGLXMBOX_HH
 #define G4OPENGLXMBOX_HH
@@ -39,30 +39,32 @@ class G4OpenGLXmVWidgetShell;
 
 class G4OpenGLXmBox : public G4OpenGLXmVWidgetContainer
 {
+  public:
 
-public:
-  G4OpenGLXmBox (const char* = NULL,
-		 G4bool = False);   //constructor
-  virtual ~G4OpenGLXmBox ();  //destructor
+    G4OpenGLXmBox(const char* = NULL,
+                  G4bool = False);  // constructor
+    virtual ~G4OpenGLXmBox();  // destructor
 
-  void AddChild (G4OpenGLXmVWidgetComponent*);
-  void AddYourselfTo (G4OpenGLXmVWidgetShell*);
+    void AddChild(G4OpenGLXmVWidgetComponent*);
+    void AddYourselfTo(G4OpenGLXmVWidgetShell*);
 
-  Widget* GetPointerToParent ();
-  Widget* GetPointerToWidget ();
-  
-  const char* GetName ();
-  void SetName (const char*);
+    Widget* GetPointerToParent();
+    Widget* GetPointerToWidget();
 
-protected:
-  const char* name;
-  Widget* parent;
-  Widget box_row_col;
-  G4bool radio;
+    const char* GetName();
+    void SetName(const char*);
 
-private:
-  G4OpenGLXmBox (const G4OpenGLXmBox&);
-  G4OpenGLXmBox& operator = (const G4OpenGLXmBox&);
+  protected:
+
+    const char* name;
+    Widget* parent;
+    Widget box_row_col;
+    G4bool radio;
+
+  private:
+
+    G4OpenGLXmBox(const G4OpenGLXmBox&);
+    G4OpenGLXmBox& operator=(const G4OpenGLXmBox&);
 };
 
 #endif

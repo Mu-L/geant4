@@ -29,11 +29,11 @@
 // --------------------------------------------------------------------
 
 #include "G4ClonedTrajectoryPoint.hh"
-#include "G4TrajectoryPoint.hh"
 
 #include "G4AttDef.hh"
 #include "G4AttDefStore.hh"
 #include "G4AttValue.hh"
+#include "G4TrajectoryPoint.hh"
 #include "G4UnitsTable.hh"
 
 // #define G4ATTDEBUG
@@ -47,7 +47,9 @@ G4Allocator<G4ClonedTrajectoryPoint>*& aClonedTrajectoryPointAllocator()
   return _instance;
 }
 
-G4ClonedTrajectoryPoint::G4ClonedTrajectoryPoint(const G4TrajectoryPoint& right) : fPosition(right.fPosition) {}
+G4ClonedTrajectoryPoint::G4ClonedTrajectoryPoint(const G4TrajectoryPoint& right)
+  : fPosition(right.fPosition)
+{}
 
 G4ClonedTrajectoryPoint::~G4ClonedTrajectoryPoint() = default;
 
@@ -55,7 +57,8 @@ const std::map<G4String, G4AttDef>* G4ClonedTrajectoryPoint::GetAttDefs() const
 {
   G4bool isNew;
   std::map<G4String, G4AttDef>* store = G4AttDefStore::GetInstance("G4TrajectoryPoint", isNew);
-  if (isNew) {
+  if (isNew)
+  {
     G4String Pos("Pos");
     (*store)[Pos] = G4AttDef(Pos, "Position", "Physics", "G4BestUnit", "G4ThreeVector");
   }

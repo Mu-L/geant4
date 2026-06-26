@@ -36,27 +36,23 @@
 // ------------------------------------------------------------
 
 #include "G4VITDiscreteProcess.hh"
-#include "G4SystemOfUnits.hh"
 
-#include "G4Step.hh"
-#include "G4Track.hh"
 #include "G4MaterialTable.hh"
+#include "G4Step.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4Track.hh"
 #include "G4VParticleChange.hh"
 
-G4VITDiscreteProcess::G4VITDiscreteProcess() :
-    G4VITProcess("No Name Discrete Process")
+G4VITDiscreteProcess::G4VITDiscreteProcess() : G4VITProcess("No Name Discrete Process")
 {
-  G4Exception("G4VDiscreteProcess::G4VDiscreteProcess()",
-              "ProcMan102",
-              JustWarning,
+  G4Exception("G4VDiscreteProcess::G4VDiscreteProcess()", "ProcMan102", JustWarning,
               "Default constructor is called");
 }
 
 //------------------------------------------------------------------------------
 
-G4VITDiscreteProcess::G4VITDiscreteProcess(const G4String& aName,
-                                           G4ProcessType aType) :
-    G4VITProcess(aName, aType)
+G4VITDiscreteProcess::G4VITDiscreteProcess(const G4String& aName, G4ProcessType aType)
+  : G4VITProcess(aName, aType)
 {
   enableAtRestDoIt = false;
   enableAlongStepDoIt = false;
@@ -64,33 +60,31 @@ G4VITDiscreteProcess::G4VITDiscreteProcess(const G4String& aName,
 
 //------------------------------------------------------------------------------
 
-G4VITDiscreteProcess::~G4VITDiscreteProcess()
-= default;
+G4VITDiscreteProcess::~G4VITDiscreteProcess() = default;
 
 //------------------------------------------------------------------------------
 
-G4VITDiscreteProcess::G4VITDiscreteProcess(G4VITDiscreteProcess& right) 
-    
-= default;
+G4VITDiscreteProcess::G4VITDiscreteProcess(G4VITDiscreteProcess& right)
+
+  = default;
 
 //------------------------------------------------------------------------------
 
-G4double
-G4VITDiscreteProcess::
-PostStepGetPhysicalInteractionLength(const G4Track& track,
-                                     G4double previousStepSize,
-                                     G4ForceCondition* condition)
+G4double G4VITDiscreteProcess::PostStepGetPhysicalInteractionLength(const G4Track& track,
+                                                                    G4double previousStepSize,
+                                                                    G4ForceCondition* condition)
 {
-  if((previousStepSize < 0.0)
-      || (fpState->theNumberOfInteractionLengthLeft <= 0.0))
+  if ((previousStepSize < 0.0) || (fpState->theNumberOfInteractionLengthLeft <= 0.0))
   {
     // beginning of tracking (or just after DoIt of this process)
     ResetNumberOfInteractionLengthLeft();
-  } else if(previousStepSize > 0.0)
+  }
+  else if (previousStepSize > 0.0)
   {
     // subtract NumberOfInteractionLengthLeft
     SubtractNumberOfInteractionLengthLeft(previousStepSize);
-  } else
+  }
+  else
   {
     // zero step
     //  DO NOTHING
@@ -100,21 +94,19 @@ PostStepGetPhysicalInteractionLength(const G4Track& track,
   *condition = NotForced;
 
   // get mean free path
-  fpState->currentInteractionLength = GetMeanFreePath(track,
-                                             previousStepSize,
-                                             condition);
+  fpState->currentInteractionLength = GetMeanFreePath(track, previousStepSize, condition);
 
   G4double value;
-  if(fpState->currentInteractionLength < DBL_MAX)
+  if (fpState->currentInteractionLength < DBL_MAX)
   {
-    value = fpState->theNumberOfInteractionLengthLeft
-            * fpState->currentInteractionLength;
-  } else
+    value = fpState->theNumberOfInteractionLengthLeft * fpState->currentInteractionLength;
+  }
+  else
   {
     value = DBL_MAX;
   }
 #ifdef G4VERBOSE
-  if(verboseLevel > 1)
+  if (verboseLevel > 1)
   {
     G4cout << "G4VDiscreteProcess::PostStepGetPhysicalInteractionLength ";
     G4cout << "[ " << GetProcessName() << "]" << G4endl;
@@ -128,10 +120,9 @@ PostStepGetPhysicalInteractionLength(const G4Track& track,
 
 //------------------------------------------------------------------------------
 
-G4VParticleChange* G4VITDiscreteProcess::PostStepDoIt(const G4Track&,
-                                                      const G4Step&)
+G4VParticleChange* G4VITDiscreteProcess::PostStepDoIt(const G4Track&, const G4Step&)
 {
-//  clear NumberOfInteractionLengthLeft
+  //  clear NumberOfInteractionLengthLeft
   ClearNumberOfInteractionLengthLeft();
 
   return pParticleChange;

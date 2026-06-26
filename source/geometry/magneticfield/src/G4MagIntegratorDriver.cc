@@ -29,42 +29,41 @@
 //         W.Wander (MIT), 28.01.1998 - Added ability for low order integrators
 // --------------------------------------------------------------------
 
+#include "G4MagIntegratorDriver.hh"
+
+#include "G4FieldTrack.hh"
+#include "G4GeometryTolerance.hh"
+#include "G4SystemOfUnits.hh"
+#include "globals.hh"
+
 #include <iomanip>
 
-#include "globals.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4GeometryTolerance.hh"
-#include "G4MagIntegratorDriver.hh"
-#include "G4FieldTrack.hh"
-
-#ifdef   G4DEBUG_FIELD
-#include "G4DriverReporter.hh"
+#ifdef G4DEBUG_FIELD
+#  include "G4DriverReporter.hh"
 #endif
 
 // ---------------------------------------------------------
 
 //  Constructor
 //
-G4MagInt_Driver::G4MagInt_Driver( G4double                hminimum, 
-                                  G4MagIntegratorStepper* pStepper,
-                                  G4int                   numComponents,
-                                  G4int                   statisticsVerbose)
-  : fNoIntegrationVariables(numComponents), 
-    fNoVars( std::max( fNoIntegrationVariables, fMinNoVars )),
+G4MagInt_Driver::G4MagInt_Driver(G4double hminimum, G4MagIntegratorStepper* pStepper,
+                                 G4int numComponents, G4int statisticsVerbose)
+  : fNoIntegrationVariables(numComponents),
+    fNoVars(std::max(fNoIntegrationVariables, fMinNoVars)),
     fStatisticsVerboseLevel(statisticsVerbose)
-{  
+{
   // In order to accomodate "Laboratory Time", which is [7], fMinNoVars=8
   // is required. For proper time of flight and spin,  fMinNoVars must be 12
 
-  RenewStepperAndAdjust( pStepper );
+  RenewStepperAndAdjust(pStepper);
   fMinimumStep = hminimum;
 
   fMaxNoSteps = fMaxStepBase / pIntStepper->IntegratorOrder();
 #ifdef G4DEBUG_FIELD
-  fVerboseLevel=2;
+  fVerboseLevel = 2;
 #endif
 
-  if( (fVerboseLevel > 0) || (fStatisticsVerboseLevel > 1) )
+  if ((fVerboseLevel > 0) || (fStatisticsVerboseLevel > 1))
   {
     G4cout << "MagIntDriver version: Accur-Adv: "
            << "invE_nS, QuickAdv-2sqrt with Statistics "
@@ -82,8 +81,8 @@ G4MagInt_Driver::G4MagInt_Driver( G4double                hminimum,
 //  Destructor
 //
 G4MagInt_Driver::~G4MagInt_Driver()
-{ 
-  if( fStatisticsVerboseLevel > 1 )
+{
+  if (fStatisticsVerboseLevel > 1)
   {
     PrintStatisticsReport();
   }
@@ -91,16 +90,13 @@ G4MagInt_Driver::~G4MagInt_Driver()
 
 // ---------------------------------------------------------
 
-G4bool
-G4MagInt_Driver::AccurateAdvance(G4FieldTrack& y_current,
-                                 G4double      hstep,
-                                 G4double      eps,
-                                 G4double      hinitial )
+G4bool G4MagInt_Driver::AccurateAdvance(G4FieldTrack& y_current, G4double hstep, G4double eps,
+                                        G4double hinitial)
 {
   // Runge-Kutta driver with adaptive stepsize control. Integrate starting
-  // values at y_current over hstep x2 with accuracy eps. 
-  // On output ystart is replaced by values at the end of the integration 
-  // interval. RightHandSide is the right-hand side of ODE system. 
+  // values at y_current over hstep x2 with accuracy eps.
+  // On output ystart is replaced by values at the end of the integration
+  // interval. RightHandSide is the right-hand side of ODE system.
   // The source is similar to odeint routine from NRC p.721-722 .
 
   G4int nstp, i;
@@ -109,16 +105,16 @@ G4MagInt_Driver::AccurateAdvance(G4FieldTrack& y_current,
 #ifdef G4DEBUG_FIELD
   G4int no_warnings = 0;
   static G4int dbg = 1;
-  static G4int nStpPr = 50;   // For debug printing of long integrations
+  static G4int nStpPr = 50;  // For debug printing of long integrations
   G4double ySubStepStart[G4FieldTrack::ncompSVEC];
-  G4FieldTrack  yFldTrkStart(y_current);
+  G4FieldTrack yFldTrkStart(y_current);
 #endif
 
   G4double y[G4FieldTrack::ncompSVEC] = {0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};
   G4double dydx[G4FieldTrack::ncompSVEC] = {0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};
   G4double ystart[G4FieldTrack::ncompSVEC] = {0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};
   G4double yEnd[G4FieldTrack::ncompSVEC] = {0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};
-  G4double  x1, x2;
+  G4double x1, x2;
   G4bool succeeded = true;
 
   G4double startCurveLength;
@@ -129,155 +125,164 @@ G4MagInt_Driver::AccurateAdvance(G4FieldTrack& y_current,
 
   //  Ensure that hstep > 0
   //
-  if( hstep <= 0.0 )
-  { 
-    if( hstep == 0.0 )
+  if (hstep <= 0.0)
+  {
+    if (hstep == 0.0)
     {
       std::ostringstream message;
       message << "Proposed step is zero; hstep = " << hstep << " !";
-      G4Exception("G4MagInt_Driver::AccurateAdvance()", 
-                  "GeomField1001", JustWarning, message);
-      return succeeded; 
+      G4Exception("G4MagInt_Driver::AccurateAdvance()", "GeomField1001", JustWarning, message);
+      return succeeded;
     }
 
     std::ostringstream message;
-    message << "Invalid run condition." << G4endl
-            << "Proposed step is negative; hstep = " << hstep << "." << G4endl
-            << "Requested step cannot be negative! Aborting event.";
-    G4Exception("G4MagInt_Driver::AccurateAdvance()", 
-                "GeomField0003", EventMustBeAborted, message);
+    message << "Invalid run condition." << G4endl << "Proposed step is negative; hstep = " << hstep
+            << "." << G4endl << "Requested step cannot be negative! Aborting event.";
+    G4Exception("G4MagInt_Driver::AccurateAdvance()", "GeomField0003", EventMustBeAborted, message);
     return false;
   }
 
-  y_current.DumpToArray( ystart );
+  y_current.DumpToArray(ystart);
 
-  startCurveLength= y_current.GetCurveLength();
-  x1= startCurveLength; 
-  x2= x1 + hstep;
+  startCurveLength = y_current.GetCurveLength();
+  x1 = startCurveLength;
+  x2 = x1 + hstep;
 
-  if ( (hinitial > 0.0) && (hinitial < hstep)
-    && (hinitial > perMillion * hstep) )
+  if ((hinitial > 0.0) && (hinitial < hstep) && (hinitial > perMillion * hstep))
   {
-     h = hinitial;
+    h = hinitial;
   }
   else  //  Initial Step size "h" defaults to the full interval
   {
-     h = hstep;
+    h = hstep;
   }
 
   x = x1;
 
-  for ( i=0; i<nvar; ++i)  { y[i] = ystart[i]; }
+  for (i = 0; i < nvar; ++i)
+  {
+    y[i] = ystart[i];
+  }
 
-  G4bool lastStep= false;
+  G4bool lastStep = false;
   nstp = 1;
 
   do
   {
-    G4ThreeVector StartPos( y[0], y[1], y[2] );
+    G4ThreeVector StartPos(y[0], y[1], y[2]);
 
 #ifdef G4DEBUG_FIELD
-    G4double xSubStepStart= x; 
-    for (i=0; i<nvar; ++i)  { ySubStepStart[i] = y[i]; }
+    G4double xSubStepStart = x;
+    for (i = 0; i < nvar; ++i)
+    {
+      ySubStepStart[i] = y[i];
+    }
     yFldTrkStart.LoadFromArray(y, fNoIntegrationVariables);
     yFldTrkStart.SetCurveLength(x);
 #endif
 
-    pIntStepper->RightHandSide( y, dydx );
+    pIntStepper->RightHandSide(y, dydx);
     ++fNoTotalSteps;
 
     // Perform the Integration
-    //      
-    if( h > fMinimumStep )
-    { 
-      OneGoodStep(y,dydx,x,h,eps,hdid,hnext) ;
+    //
+    if (h > fMinimumStep)
+    {
+      OneGoodStep(y, dydx, x, h, eps, hdid, hnext);
       //--------------------------------------
 #ifdef G4DEBUG_FIELD
-      if (dbg>2)
+      if (dbg > 2)
       {
-         // PrintStatus( ySubStepStart, xSubStepStart, y, x, h,  nstp); // Only
-        G4DriverReporter::PrintStatus( ySubStepStart, xSubStepStart, y, x, h,  nstp, nvar);
+        // PrintStatus( ySubStepStart, xSubStepStart, y, x, h,  nstp); // Only
+        G4DriverReporter::PrintStatus(ySubStepStart, xSubStepStart, y, x, h, nstp, nvar);
       }
 #endif
     }
     else
     {
-      G4FieldTrack yFldTrk( G4ThreeVector(0,0,0), 
-                            G4ThreeVector(0,0,0), 0., 0., 0., 0. );
-      G4double dchord_step, dyerr, dyerr_len;   // What to do with these ?
-      yFldTrk.LoadFromArray(y, fNoIntegrationVariables); 
-      yFldTrk.SetCurveLength( x );
+      G4FieldTrack yFldTrk(G4ThreeVector(0, 0, 0), G4ThreeVector(0, 0, 0), 0., 0., 0., 0.);
+      G4double dchord_step, dyerr, dyerr_len;  // What to do with these ?
+      yFldTrk.LoadFromArray(y, fNoIntegrationVariables);
+      yFldTrk.SetCurveLength(x);
 
-      QuickAdvance( yFldTrk, dydx, h, dchord_step, dyerr_len );
+      QuickAdvance(yFldTrk, dydx, h, dchord_step, dyerr_len);
       //-----------------------------------------------------
 
-      yFldTrk.DumpToArray(y);    
+      yFldTrk.DumpToArray(y);
 
 #ifdef G4FLD_STATS
-      ++fNoSmallSteps; 
-      if ( dyerr_len > fDyerr_max )  { fDyerr_max = dyerr_len; }
+      ++fNoSmallSteps;
+      if (dyerr_len > fDyerr_max)
+      {
+        fDyerr_max = dyerr_len;
+      }
       fDyerrPos_smTot += dyerr_len;
       fSumH_sm += h;  // Length total for 'small' steps
-      if (nstp==1)  { ++fNoInitialSmallSteps; }
+      if (nstp == 1)
+      {
+        ++fNoInitialSmallSteps;
+      }
 #endif
 #ifdef G4DEBUG_FIELD
-      if (dbg>1)
+      if (dbg > 1)
       {
-        if(fNoSmallSteps<2) { PrintStatus(ySubStepStart, x1, y, x, h, -nstp); }
-        G4cout << "Another sub-min step, no " << fNoSmallSteps 
-               << " of " << fNoTotalSteps << " this time " << nstp << G4endl; 
-        PrintStatus( ySubStepStart, x1, y, x, h,  nstp);   // Only this
-        G4cout << " dyerr= " << dyerr_len << " relative = " << dyerr_len / h 
-               << " epsilon= " << eps << " hstep= " << hstep 
-               << " h= " << h << " hmin= " << fMinimumStep << G4endl;
+        if (fNoSmallSteps < 2)
+        {
+          PrintStatus(ySubStepStart, x1, y, x, h, -nstp);
+        }
+        G4cout << "Another sub-min step, no " << fNoSmallSteps << " of " << fNoTotalSteps
+               << " this time " << nstp << G4endl;
+        PrintStatus(ySubStepStart, x1, y, x, h, nstp);  // Only this
+        G4cout << " dyerr= " << dyerr_len << " relative = " << dyerr_len / h << " epsilon= " << eps
+               << " hstep= " << hstep << " h= " << h << " hmin= " << fMinimumStep << G4endl;
       }
-#endif        
-      if( h == 0.0 )
-      { 
-        G4Exception("G4MagInt_Driver::AccurateAdvance()",
-                    "GeomField0003", FatalException,
-                    "Integration Step became Zero!"); 
+#endif
+      if (h == 0.0)
+      {
+        G4Exception("G4MagInt_Driver::AccurateAdvance()", "GeomField0003", FatalException,
+                    "Integration Step became Zero!");
       }
       dyerr = dyerr_len / h;
       hdid = h;
       x += hdid;
 
       // Compute suggested new step
-      hnext = ComputeNewStepSize( dyerr/eps, h);
+      hnext = ComputeNewStepSize(dyerr / eps, h);
     }
 
-    G4ThreeVector EndPos( y[0], y[1], y[2] );
+    G4ThreeVector EndPos(y[0], y[1], y[2]);
 
-#ifdef  G4DEBUG_FIELD
-    if( (dbg>0) && (dbg<=2) && (nstp>nStpPr))
+#ifdef G4DEBUG_FIELD
+    if ((dbg > 0) && (dbg <= 2) && (nstp > nStpPr))
     {
-      if( nstp==nStpPr )  { G4cout << "***** Many steps ****" << G4endl; }
-      G4cout << "MagIntDrv: " ; 
-      G4cout << "hdid="  << std::setw(12) << hdid  << " "
-             << "hnext=" << std::setw(12) << hnext << " " 
-             << "hstep=" << std::setw(12) << hstep << " (requested) " 
-             << G4endl;
-      PrintStatus( ystart, x1, y, x, h, (nstp==nStpPr) ? -nstp: nstp); 
+      if (nstp == nStpPr)
+      {
+        G4cout << "***** Many steps ****" << G4endl;
+      }
+      G4cout << "MagIntDrv: ";
+      G4cout << "hdid=" << std::setw(12) << hdid << " "
+             << "hnext=" << std::setw(12) << hnext << " "
+             << "hstep=" << std::setw(12) << hstep << " (requested) " << G4endl;
+      PrintStatus(ystart, x1, y, x, h, (nstp == nStpPr) ? -nstp : nstp);
     }
 #endif
 
     // Check the endpoint
-    G4double endPointDist= (EndPos-StartPos).mag(); 
-    if ( endPointDist >= hdid*(1.+perMillion) )
+    G4double endPointDist = (EndPos - StartPos).mag();
+    if (endPointDist >= hdid * (1. + perMillion))
     {
       ++fNoBadSteps;
 
       // Issue a warning only for gross differences -
       // we understand how small difference occur.
-      if ( endPointDist >= hdid*(1.+perThousand) )
-      { 
+      if (endPointDist >= hdid * (1. + perThousand))
+      {
 #ifdef G4DEBUG_FIELD
         if (dbg)
         {
-          WarnEndPointTooFar ( endPointDist, hdid, eps, dbg ); 
-          G4cerr << "  Total steps:  bad " << fNoBadSteps
-                 << " current h= " << hdid << G4endl;
-          PrintStatus( ystart, x1, y, x, hstep, no_warnings?nstp:-nstp);  
+          WarnEndPointTooFar(endPointDist, hdid, eps, dbg);
+          G4cerr << "  Total steps:  bad " << fNoBadSteps << " current h= " << hdid << G4endl;
+          PrintStatus(ystart, x1, y, x, hstep, no_warnings ? nstp : -nstp);
         }
         ++no_warnings;
 #endif
@@ -285,25 +290,25 @@ G4MagInt_Driver::AccurateAdvance(G4FieldTrack& y_current,
     }
 
     //  Avoid numerous small last steps
-    if( (h < eps * hstep) || (h < fSmallestFraction * startCurveLength) )
+    if ((h < eps * hstep) || (h < fSmallestFraction * startCurveLength))
     {
       // No more integration -- the next step will not happen
-      lastStep = true;  
+      lastStep = true;
     }
     else
     {
       // Check the proposed next stepsize
-      if(std::fabs(hnext) <= Hmin())
+      if (std::fabs(hnext) <= Hmin())
       {
-#ifdef  G4DEBUG_FIELD
+#ifdef G4DEBUG_FIELD
         // If simply a very small interval is being integrated, do not warn
-        if( (x < x2 * (1-eps) ) &&        // The last step can be small: OK
-            (std::fabs(hstep) > Hmin()) ) // and if we are asked, it's OK
+        if ((x < x2 * (1 - eps)) &&  // The last step can be small: OK
+            (std::fabs(hstep) > Hmin()))  // and if we are asked, it's OK
         {
-          if(dbg>0)
+          if (dbg > 0)
           {
-            WarnSmallStepSize( hnext, hstep, h, x-x1, nstp );  
-            PrintStatus( ystart, x1, y, x, hstep, no_warnings?nstp:-nstp);
+            WarnSmallStepSize(hnext, hstep, h, x - x1, nstp);
+            PrintStatus(ystart, x1, y, x, hstep, no_warnings ? nstp : -nstp);
           }
           ++no_warnings;
         }
@@ -317,62 +322,63 @@ G4MagInt_Driver::AccurateAdvance(G4FieldTrack& y_current,
       }
 
       //  Ensure that the next step does not overshoot
-      if ( x+h > x2 )
-      {                // When stepsize overshoots, decrease it!
-        h = x2 - x ;   // Must cope with difficult rounding-error
-      }                // issues if hstep << x2
+      if (x + h > x2)
+      {  // When stepsize overshoots, decrease it!
+        h = x2 - x;  // Must cope with difficult rounding-error
+      }  // issues if hstep << x2
 
-      if ( h == 0.0 )
+      if (h == 0.0)
       {
         // Cannot progress - accept this as last step - by default
         lastStep = true;
 #ifdef G4DEBUG_FIELD
-        if (dbg>2)
+        if (dbg > 2)
         {
-          int prec= G4cout.precision(12); 
-          G4cout << "Warning: G4MagIntegratorDriver::AccurateAdvance"
-                 << G4endl
-                 << "  Integration step 'h' became "
-                 << h << " due to roundoff. " << G4endl
-                 << " Calculated as difference of x2= "<< x2 << " and x=" << x
+          int prec = G4cout.precision(12);
+          G4cout << "Warning: G4MagIntegratorDriver::AccurateAdvance" << G4endl
+                 << "  Integration step 'h' became " << h << " due to roundoff. " << G4endl
+                 << " Calculated as difference of x2= " << x2 << " and x=" << x
                  << "  Forcing termination of advance." << G4endl;
           G4cout.precision(prec);
-        }          
+        }
 #endif
       }
     }
-  } while ( ((++nstp)<=fMaxNoSteps) && (x < x2) && (!lastStep) );
+  } while (((++nstp) <= fMaxNoSteps) && (x < x2) && (!lastStep));
   // Loop checking, 07.10.2016, J. Apostolakis
 
-     // Have we reached the end ?
-     // --> a better test might be x-x2 > an_epsilon
+  // Have we reached the end ?
+  // --> a better test might be x-x2 > an_epsilon
 
-  succeeded = (x>=x2);  // If it was a "forced" last step
+  succeeded = (x >= x2);  // If it was a "forced" last step
 
-  for (i=0; i<nvar; ++i)  { yEnd[i] = y[i]; }
+  for (i = 0; i < nvar; ++i)
+  {
+    yEnd[i] = y[i];
+  }
 
   // Put back the values.
-  y_current.LoadFromArray( yEnd, fNoIntegrationVariables );
-  y_current.SetCurveLength( x );
+  y_current.LoadFromArray(yEnd, fNoIntegrationVariables);
+  y_current.SetCurveLength(x);
 
-  if(nstp > fMaxNoSteps)
+  if (nstp > fMaxNoSteps)
   {
     succeeded = false;
 #ifdef G4DEBUG_FIELD
     ++no_warnings;
     if (dbg)
     {
-      WarnTooManyStep( x1, x2, x );  //  Issue WARNING
-      PrintStatus( yEnd, x1, y, x, hstep, -nstp);
+      WarnTooManyStep(x1, x2, x);  //  Issue WARNING
+      PrintStatus(yEnd, x1, y, x, hstep, -nstp);
     }
 #endif
   }
 
 #ifdef G4DEBUG_FIELD
-  if( dbg && no_warnings )
+  if (dbg && no_warnings)
   {
     G4cerr << "G4MagIntegratorDriver exit status: no-steps " << nstp << G4endl;
-    PrintStatus( yEnd, x1, y, x, hstep, nstp);
+    PrintStatus(yEnd, x1, y, x, hstep, nstp);
   }
 #endif
 
@@ -381,99 +387,82 @@ G4MagInt_Driver::AccurateAdvance(G4FieldTrack& y_current,
 
 // ---------------------------------------------------------
 
-void
-G4MagInt_Driver::WarnSmallStepSize( G4double hnext, G4double hstep, 
-                                    G4double h, G4double xDone,
-                                    G4int nstp)
+void G4MagInt_Driver::WarnSmallStepSize(G4double hnext, G4double hstep, G4double h, G4double xDone,
+                                        G4int nstp)
 {
   static G4ThreadLocal G4int noWarningsIssued = 0;
-  const  G4int maxNoWarnings = 10;   // Number of verbose warnings
+  const G4int maxNoWarnings = 10;  // Number of verbose warnings
   std::ostringstream message;
-  if( (noWarningsIssued < maxNoWarnings) || fVerboseLevel > 10 )
+  if ((noWarningsIssued < maxNoWarnings) || fVerboseLevel > 10)
   {
     message << "The stepsize for the next iteration, " << hnext
             << ", is too small - in Step number " << nstp << "." << G4endl
-            << "The minimum for the driver is " << Hmin()  << G4endl
+            << "The minimum for the driver is " << Hmin() << G4endl
             << "Requested integr. length was " << hstep << " ." << G4endl
-            << "The size of this sub-step was " << h     << " ." << G4endl
+            << "The size of this sub-step was " << h << " ." << G4endl
             << "The integrations has already gone " << xDone;
   }
   else
   {
-    message << "Too small 'next' step " << hnext
-            << ", step-no: " << nstp << G4endl
-            << ", this sub-step: " << h     
-            << ",  req_tot_len: " << hstep 
-            << ", done: " << xDone << ", min: " << Hmin();
+    message << "Too small 'next' step " << hnext << ", step-no: " << nstp << G4endl
+            << ", this sub-step: " << h << ",  req_tot_len: " << hstep << ", done: " << xDone
+            << ", min: " << Hmin();
   }
-  G4Exception("G4MagInt_Driver::WarnSmallStepSize()", "GeomField1001",
-              JustWarning, message);
+  G4Exception("G4MagInt_Driver::WarnSmallStepSize()", "GeomField1001", JustWarning, message);
   ++noWarningsIssued;
 }
 
 // ---------------------------------------------------------
 
-void
-G4MagInt_Driver::WarnTooManyStep( G4double x1start, 
-                                  G4double x2end, 
-                                  G4double xCurrent )
+void G4MagInt_Driver::WarnTooManyStep(G4double x1start, G4double x2end, G4double xCurrent)
 {
-   std::ostringstream message;
-   message << "The number of steps used in the Integration driver"
-           << " (Runge-Kutta) is too many." << G4endl
-           << "Integration of the interval was not completed !" << G4endl
-           << "Only a " << (xCurrent-x1start)*100/(x2end-x1start)
-           << " % fraction of it was done.";
-   G4Exception("G4MagInt_Driver::WarnTooManyStep()", "GeomField1001",
-               JustWarning, message);
+  std::ostringstream message;
+  message << "The number of steps used in the Integration driver"
+          << " (Runge-Kutta) is too many." << G4endl
+          << "Integration of the interval was not completed !" << G4endl << "Only a "
+          << (xCurrent - x1start) * 100 / (x2end - x1start) << " % fraction of it was done.";
+  G4Exception("G4MagInt_Driver::WarnTooManyStep()", "GeomField1001", JustWarning, message);
 }
 
 // ---------------------------------------------------------
 
-void
-G4MagInt_Driver::WarnEndPointTooFar (G4double endPointDist, 
-                                     G4double h , 
-                                     G4double eps,
-                                     G4int    dbg)
+void G4MagInt_Driver::WarnEndPointTooFar(G4double endPointDist, G4double h, G4double eps, G4int dbg)
 {
   static G4ThreadLocal G4double maxRelError = 0.0;
   G4bool isNewMax, prNewMax;
 
   isNewMax = endPointDist > (1.0 + maxRelError) * h;
   prNewMax = endPointDist > (1.0 + 1.05 * maxRelError) * h;
-  if( isNewMax ) { maxRelError= endPointDist / h - 1.0; }
+  if (isNewMax)
+  {
+    maxRelError = endPointDist / h - 1.0;
+  }
 
-  if( (dbg != 0) && (h > G4GeometryTolerance::GetInstance()->GetSurfaceTolerance()) 
-          && ( (dbg>1) || prNewMax || (endPointDist >= h*(1.+eps) ) ) )
-  { 
+  if ((dbg != 0) && (h > G4GeometryTolerance::GetInstance()->GetSurfaceTolerance())
+      && ((dbg > 1) || prNewMax || (endPointDist >= h * (1. + eps))))
+  {
     static G4ThreadLocal G4int noWarnings = 0;
     std::ostringstream message;
-    if( (noWarnings++ < 10) || (dbg>2) )
+    if ((noWarnings++ < 10) || (dbg > 2))
     {
       message << "The integration produced an end-point which " << G4endl
-              << "is further from the start-point than the curve length."
-              << G4endl;
+              << "is further from the start-point than the curve length." << G4endl;
     }
-    message << "  Distance of endpoints = " << endPointDist
-            << ", curve length = " << h << G4endl
+    message << "  Distance of endpoints = " << endPointDist << ", curve length = " << h << G4endl
             << "  Difference (curveLen-endpDist)= " << (h - endPointDist)
-            << ", relative = " << (h-endPointDist) / h 
-            << ", epsilon =  " << eps;
-    G4Exception("G4MagInt_Driver::WarnEndPointTooFar()", "GeomField1001",
-                JustWarning, message);
+            << ", relative = " << (h - endPointDist) / h << ", epsilon =  " << eps;
+    G4Exception("G4MagInt_Driver::WarnEndPointTooFar()", "GeomField1001", JustWarning, message);
   }
 }
 
 // ---------------------------------------------------------
 
-void
-G4MagInt_Driver::OneGoodStep(      G4double y[],        // InOut
-                             const G4double dydx[],
-                                   G4double& x,         // InOut
-                                   G4double htry,
-                                   G4double eps_rel_max,
-                                   G4double& hdid,      // Out
-                                   G4double& hnext )    // Out
+void G4MagInt_Driver::OneGoodStep(G4double y[],  // InOut
+                                  const G4double dydx[],
+                                  G4double& x,  // InOut
+                                  G4double htry, G4double eps_rel_max,
+                                  G4double& hdid,  // Out
+                                  G4double& hnext)  // Out
 
 // Driver for one Runge-Kutta Step with monitoring of local truncation error
 // to ensure accuracy and adjust stepsize. Input are dependent variable
@@ -481,7 +470,7 @@ G4MagInt_Driver::OneGoodStep(      G4double y[],        // InOut
 // starting value of the independent variable x . Also input are stepsize
 // to be attempted htry, and the required accuracy eps. On output y and x
 // are replaced by their new values, hdid is the stepsize that was actually
-// accomplished, and hnext is the estimated next stepsize. 
+// accomplished, and hnext is the estimated next stepsize.
 // This is similar to the function rkqs from the book:
 // Numerical Recipes in C: The Art of Scientific Computing (NRC), Second
 // Edition, by William H. Press, Saul A. Teukolsky, William T.
@@ -490,99 +479,107 @@ G4MagInt_Driver::OneGoodStep(      G4double y[],        // InOut
 
 {
   G4double errmax_sq;
-  G4double h, htemp, xnew ;
+  G4double h, htemp, xnew;
 
   G4double yerr[G4FieldTrack::ncompSVEC], ytemp[G4FieldTrack::ncompSVEC];
 
-  h = htry ; // Set stepsize to the initial trial value
+  h = htry;  // Set stepsize to the initial trial value
 
-  G4double inv_eps_vel_sq = 1.0 / (eps_rel_max*eps_rel_max);
+  G4double inv_eps_vel_sq = 1.0 / (eps_rel_max * eps_rel_max);
 
-  G4double errpos_sq = 0.0;    // square of displacement error
-  G4double errvel_sq = 0.0;    // square of momentum vector difference
-  G4double errspin_sq = 0.0;   // square of spin vector difference
+  G4double errpos_sq = 0.0;  // square of displacement error
+  G4double errvel_sq = 0.0;  // square of momentum vector difference
+  G4double errspin_sq = 0.0;  // square of spin vector difference
 
-  const G4int max_trials=100; 
+  const G4int max_trials = 100;
 
-  G4ThreeVector Spin(y[9],y[10],y[11]);
+  G4ThreeVector Spin(y[9], y[10], y[11]);
   G4double spin_mag2 = Spin.mag2();
-  G4bool hasSpin = (spin_mag2 > 0.0); 
+  G4bool hasSpin = (spin_mag2 > 0.0);
 
-  for (G4int iter=0; iter<max_trials; ++iter)
+  for (G4int iter = 0; iter < max_trials; ++iter)
   {
-    pIntStepper-> Stepper(y,dydx,h,ytemp,yerr); 
+    pIntStepper->Stepper(y, dydx, h, ytemp, yerr);
     //            *******
-    G4double eps_pos = eps_rel_max * std::max(h, fMinimumStep); 
-    G4double inv_eps_pos_sq = 1.0 / (eps_pos*eps_pos); 
+    G4double eps_pos = eps_rel_max * std::max(h, fMinimumStep);
+    G4double inv_eps_pos_sq = 1.0 / (eps_pos * eps_pos);
 
     // Evaluate accuracy
     //
-    errpos_sq =  sqr(yerr[0]) + sqr(yerr[1]) + sqr(yerr[2]) ;
-    errpos_sq *= inv_eps_pos_sq; // Scale relative to required tolerance
+    errpos_sq = sqr(yerr[0]) + sqr(yerr[1]) + sqr(yerr[2]);
+    errpos_sq *= inv_eps_pos_sq;  // Scale relative to required tolerance
 
     // Accuracy for momentum
-    G4double magvel_sq=  sqr(y[3]) + sqr(y[4]) + sqr(y[5]) ;
-    G4double sumerr_sq =  sqr(yerr[3]) + sqr(yerr[4]) + sqr(yerr[5]) ; 
-    if( magvel_sq > 0.0 )
-    { 
-       errvel_sq = sumerr_sq / magvel_sq; 
+    G4double magvel_sq = sqr(y[3]) + sqr(y[4]) + sqr(y[5]);
+    G4double sumerr_sq = sqr(yerr[3]) + sqr(yerr[4]) + sqr(yerr[5]);
+    if (magvel_sq > 0.0)
+    {
+      errvel_sq = sumerr_sq / magvel_sq;
     }
     else
     {
-       std::ostringstream message;
-       message << "Found case of zero momentum." << G4endl
-               << "- iteration= " << iter << "; h= " << h;
-       G4Exception("G4MagInt_Driver::OneGoodStep()",
-                   "GeomField1001", JustWarning, message);
-       errvel_sq = sumerr_sq; 
+      std::ostringstream message;
+      message << "Found case of zero momentum." << G4endl << "- iteration= " << iter
+              << "; h= " << h;
+      G4Exception("G4MagInt_Driver::OneGoodStep()", "GeomField1001", JustWarning, message);
+      errvel_sq = sumerr_sq;
     }
     errvel_sq *= inv_eps_vel_sq;
-    errmax_sq = std::max( errpos_sq, errvel_sq ); // Square of maximum error
+    errmax_sq = std::max(errpos_sq, errvel_sq);  // Square of maximum error
 
-    if( hasSpin )
-    { 
+    if (hasSpin)
+    {
       // Accuracy for spin
-      errspin_sq =  ( sqr(yerr[9]) + sqr(yerr[10]) + sqr(yerr[11]) )
-                    /  spin_mag2; // ( sqr(y[9]) + sqr(y[10]) + sqr(y[11]) );
+      errspin_sq = (sqr(yerr[9]) + sqr(yerr[10]) + sqr(yerr[11]))
+                   / spin_mag2;  // ( sqr(y[9]) + sqr(y[10]) + sqr(y[11]) );
       errspin_sq *= inv_eps_vel_sq;
-      errmax_sq = std::max( errmax_sq, errspin_sq ); 
+      errmax_sq = std::max(errmax_sq, errspin_sq);
     }
 
-    if ( errmax_sq <= 1.0 )  { break; } // Step succeeded. 
+    if (errmax_sq <= 1.0)
+    {
+      break;
+    }  // Step succeeded.
 
     // Step failed; compute the size of retrial Step.
-    htemp = GetSafety() * h * std::pow( errmax_sq, 0.5*GetPshrnk() );
+    htemp = GetSafety() * h * std::pow(errmax_sq, 0.5 * GetPshrnk());
 
-    if (htemp >= 0.1*h)  { h = htemp; }  // Truncation error too large,
-    else  { h = 0.1*h; }                 // reduce stepsize, but no more
-                                         // than a factor of 10
+    if (htemp >= 0.1 * h)
+    {
+      h = htemp;
+    }  // Truncation error too large,
+    else
+    {
+      h = 0.1 * h;
+    }  // reduce stepsize, but no more
+       // than a factor of 10
     xnew = x + h;
-    if(xnew == x)
+    if (xnew == x)
     {
       std::ostringstream message;
-      message << "Stepsize underflow in Stepper !" << G4endl
-              << "- Step's start x=" << x << " and end x= " << xnew 
-              << " are equal !! " << G4endl
-              << "  Due to step-size= " << h 
+      message << "Stepsize underflow in Stepper !" << G4endl << "- Step's start x=" << x
+              << " and end x= " << xnew << " are equal !! " << G4endl << "  Due to step-size= " << h
               << ". Note that input step was " << htry;
-      G4Exception("G4MagInt_Driver::OneGoodStep()",
-                  "GeomField1001", JustWarning, message);
+      G4Exception("G4MagInt_Driver::OneGoodStep()", "GeomField1001", JustWarning, message);
       break;
     }
   }
 
   // Compute size of next Step
-  if (errmax_sq > errcon*errcon)
-  { 
-    hnext = GetSafety()*h*std::pow(errmax_sq, 0.5*GetPgrow());
+  if (errmax_sq > errcon * errcon)
+  {
+    hnext = GetSafety() * h * std::pow(errmax_sq, 0.5 * GetPgrow());
   }
   else
   {
-    hnext = max_stepping_increase*h ; // No more than a factor of 5 increase
+    hnext = max_stepping_increase * h;  // No more than a factor of 5 increase
   }
   x += (hdid = h);
 
-  for(G4int k=0; k<fNoIntegrationVariables; ++k) { y[k] = ytemp[k]; }
+  for (G4int k = 0; k < fNoIntegrationVariables; ++k)
+  {
+    y[k] = ytemp[k];
+  }
 
   return;
 }
@@ -591,65 +588,63 @@ G4MagInt_Driver::OneGoodStep(      G4double y[],        // InOut
 
 // QuickAdvance just tries one Step - it does not ensure accuracy
 //
-G4bool G4MagInt_Driver::QuickAdvance(G4FieldTrack& y_posvel,    // INOUT
-                               const G4double      dydx[],  
-                                     G4double      hstep,       // In
-                                     G4double&     dchord_step,
-                                     G4double&     dyerr_pos_sq,
-                                     G4double&     dyerr_mom_rel_sq )  
+G4bool G4MagInt_Driver::QuickAdvance(G4FieldTrack& y_posvel,  // INOUT
+                                     const G4double dydx[],
+                                     G4double hstep,  // In
+                                     G4double& dchord_step, G4double& dyerr_pos_sq,
+                                     G4double& dyerr_mom_rel_sq)
 {
-  G4Exception("G4MagInt_Driver::QuickAdvance()", "GeomField0001",
-              FatalException, "Not yet implemented."); 
+  G4Exception("G4MagInt_Driver::QuickAdvance()", "GeomField0001", FatalException,
+              "Not yet implemented.");
 
   // Use the parameters of this method, to please compiler
   //
-  dchord_step = dyerr_pos_sq = hstep * hstep * dydx[0]; 
+  dchord_step = dyerr_pos_sq = hstep * hstep * dydx[0];
   dyerr_mom_rel_sq = y_posvel.GetPosition().mag2();
   return true;
 }
 
 //----------------------------------------------------------------------
 
-G4bool G4MagInt_Driver::QuickAdvance(G4FieldTrack& y_posvel,    // INOUT
-                               const G4double      dydx[],  
-                                     G4double      hstep,       // In
-                                     G4double&     dchord_step,
-                                     G4double&     dyerr )
+G4bool G4MagInt_Driver::QuickAdvance(G4FieldTrack& y_posvel,  // INOUT
+                                     const G4double dydx[],
+                                     G4double hstep,  // In
+                                     G4double& dchord_step, G4double& dyerr)
 {
-  G4double dyerr_pos_sq, dyerr_mom_rel_sq;  
-  G4double yerr_vec[G4FieldTrack::ncompSVEC],
-           yarrin[G4FieldTrack::ncompSVEC], yarrout[G4FieldTrack::ncompSVEC]; 
+  G4double dyerr_pos_sq, dyerr_mom_rel_sq;
+  G4double yerr_vec[G4FieldTrack::ncompSVEC], yarrin[G4FieldTrack::ncompSVEC],
+    yarrout[G4FieldTrack::ncompSVEC];
   G4double s_start;
   G4double dyerr_mom_sq, vel_mag_sq, inv_vel_mag_sq;
 
   // Move data into array
-  y_posvel.DumpToArray( yarrin );      //  yarrin  <== y_posvel 
+  y_posvel.DumpToArray(yarrin);  //  yarrin  <== y_posvel
   s_start = y_posvel.GetCurveLength();
 
   // Do an Integration Step
-  pIntStepper-> Stepper(yarrin, dydx, hstep, yarrout, yerr_vec) ; 
+  pIntStepper->Stepper(yarrin, dydx, hstep, yarrout, yerr_vec);
 
   // Estimate curve-chord distance
-  dchord_step= pIntStepper-> DistChord();
+  dchord_step = pIntStepper->DistChord();
 
   // Put back the values.  yarrout ==> y_posvel
-  y_posvel.LoadFromArray( yarrout, fNoIntegrationVariables );
-  y_posvel.SetCurveLength( s_start + hstep );
+  y_posvel.LoadFromArray(yarrout, fNoIntegrationVariables);
+  y_posvel.SetCurveLength(s_start + hstep);
 
-#ifdef  G4DEBUG_FIELD
-  if(fVerboseLevel>2)
+#ifdef G4DEBUG_FIELD
+  if (fVerboseLevel > 2)
   {
     G4cout << "G4MagIntDrv: Quick Advance" << G4endl;
-    PrintStatus( yarrin, s_start, yarrout, s_start+hstep, hstep,  1); 
+    PrintStatus(yarrin, s_start, yarrout, s_start + hstep, hstep, 1);
   }
 #endif
 
-  // A single measure of the error   
-  //      TO-DO :  account for  energy,  spin, ... ? 
-  vel_mag_sq   = ( sqr(yarrout[3])+sqr(yarrout[4])+sqr(yarrout[5]) );
-  inv_vel_mag_sq = 1.0 / vel_mag_sq; 
-  dyerr_pos_sq = ( sqr(yerr_vec[0])+sqr(yerr_vec[1])+sqr(yerr_vec[2]));
-  dyerr_mom_sq = ( sqr(yerr_vec[3])+sqr(yerr_vec[4])+sqr(yerr_vec[5]));
+  // A single measure of the error
+  //      TO-DO :  account for  energy,  spin, ... ?
+  vel_mag_sq = (sqr(yarrout[3]) + sqr(yarrout[4]) + sqr(yarrout[5]));
+  inv_vel_mag_sq = 1.0 / vel_mag_sq;
+  dyerr_pos_sq = (sqr(yerr_vec[0]) + sqr(yerr_vec[1]) + sqr(yerr_vec[2]));
+  dyerr_mom_sq = (sqr(yerr_vec[3]) + sqr(yerr_vec[4]) + sqr(yerr_vec[5]));
   dyerr_mom_rel_sq = dyerr_mom_sq * inv_vel_mag_sq;
 
   // Calculate also the change in the momentum squared also ???
@@ -658,17 +653,17 @@ G4bool G4MagInt_Driver::QuickAdvance(G4FieldTrack& y_posvel,    // INOUT
 
 #ifdef RETURN_A_NEW_STEP_LENGTH
   // The following step cannot be done here because "eps" is not known.
-  dyerr_len = std::sqrt( dyerr_len_sq ); 
-  dyerr_len_sq /= eps ;
+  dyerr_len = std::sqrt(dyerr_len_sq);
+  dyerr_len_sq /= eps;
 
   // Look at the velocity deviation ?
   //  sqr(yerr_vec[3])+sqr(yerr_vec[4])+sqr(yerr_vec[5]));
 
   // Set suggested new step
-  hstep = ComputeNewStepSize( dyerr_len, hstep);
+  hstep = ComputeNewStepSize(dyerr_len, hstep);
 #endif
 
-  if( dyerr_pos_sq > ( dyerr_mom_rel_sq * sqr(hstep) ) )
+  if (dyerr_pos_sq > (dyerr_mom_rel_sq * sqr(hstep)))
   {
     dyerr = std::sqrt(dyerr_pos_sq);
   }
@@ -684,46 +679,45 @@ G4bool G4MagInt_Driver::QuickAdvance(G4FieldTrack& y_posvel,    // INOUT
 // --------------------------------------------------------------------------
 
 #ifdef QUICK_ADV_ARRAY_IN_AND_OUT
-G4bool  G4MagInt_Driver::QuickAdvance(G4double  yarrin[],    // In
-                                const G4double  dydx[],  
-                                      G4double  hstep,       // In
-                                      G4double  yarrout[],
-                                      G4double& dchord_step,
-                                      G4double& dyerr )      // In length
+G4bool G4MagInt_Driver::QuickAdvance(G4double yarrin[],  // In
+                                     const G4double dydx[],
+                                     G4double hstep,  // In
+                                     G4double yarrout[], G4double& dchord_step,
+                                     G4double& dyerr)  // In length
 {
-  G4Exception("G4MagInt_Driver::QuickAdvance()", "GeomField0001",
-              FatalException, "Not yet implemented.");
+  G4Exception("G4MagInt_Driver::QuickAdvance()", "GeomField0001", FatalException,
+              "Not yet implemented.");
   dyerr = dchord_step = hstep * yarrin[0] * dydx[0];
-  yarrout[0]= yarrin[0];
+  yarrout[0] = yarrin[0];
 }
-#endif 
+#endif
 
 // --------------------------------------------------------------------------
 
 // This method computes new step sizes - but does not limit changes to
 // within  certain factors
-// 
-G4double G4MagInt_Driver::
-ComputeNewStepSize_WithoutReductionLimit(G4double  errMaxNorm,    // max error  (normalised)
-                   G4double  hstepCurrent)  // current step size
+//
+G4double G4MagInt_Driver::ComputeNewStepSize_WithoutReductionLimit(
+  G4double errMaxNorm,  // max error  (normalised)
+  G4double hstepCurrent)  // current step size
 {
   G4double hnew;
 
   // Compute size of next Step for a failed step
-  if(errMaxNorm > 1.0 )
+  if (errMaxNorm > 1.0)
   {
     // Step failed; compute the size of retrial Step.
-    hnew = GetSafety()*hstepCurrent*std::pow(errMaxNorm,GetPshrnk()) ;
+    hnew = GetSafety() * hstepCurrent * std::pow(errMaxNorm, GetPshrnk());
   }
-  else if(errMaxNorm > 0.0 )
+  else if (errMaxNorm > 0.0)
   {
     // Compute size of next Step for a successful step
-    hnew = GetSafety()*hstepCurrent*std::pow(errMaxNorm,GetPgrow()) ;
+    hnew = GetSafety() * hstepCurrent * std::pow(errMaxNorm, GetPgrow());
   }
   else
   {
     // if error estimate is zero (possible) or negative (dubious)
-    hnew = max_stepping_increase * hstepCurrent; 
+    hnew = max_stepping_increase * hstepCurrent;
   }
 
   return hnew;
@@ -731,204 +725,182 @@ ComputeNewStepSize_WithoutReductionLimit(G4double  errMaxNorm,    // max error  
 
 // ---------------------------------------------------------------------------
 
-G4double 
-G4MagInt_Driver::ComputeNewStepSize(
-                          G4double  errMaxNorm,    // max error  (normalised)
-                          G4double  hstepCurrent)  // current step size
+G4double G4MagInt_Driver::ComputeNewStepSize(G4double errMaxNorm,  // max error  (normalised)
+                                             G4double hstepCurrent)  // current step size
 {
-   // Legacy behaviour:
-   return ComputeNewStepSize_WithoutReductionLimit( errMaxNorm, hstepCurrent );
-   // 'Improved' behaviour - at least more consistent with other step estimates:
-   // return ComputeNewStepSize_WithinLimits( errMaxNorm, hstepCurrent );
+  // Legacy behaviour:
+  return ComputeNewStepSize_WithoutReductionLimit(errMaxNorm, hstepCurrent);
+  // 'Improved' behaviour - at least more consistent with other step estimates:
+  // return ComputeNewStepSize_WithinLimits( errMaxNorm, hstepCurrent );
 }
 
 // This method computes new step sizes limiting changes within certain factors
-// 
+//
 // It shares its logic with AccurateAdvance.
 // They are kept separate currently for optimisation.
 //
-G4double 
-G4MagInt_Driver::ComputeNewStepSize_WithinLimits( 
-                          G4double  errMaxNorm,    // max error  (normalised)
-                          G4double  hstepCurrent)  // current step size
+G4double
+G4MagInt_Driver::ComputeNewStepSize_WithinLimits(G4double errMaxNorm,  // max error  (normalised)
+                                                 G4double hstepCurrent)  // current step size
 {
   G4double hnew;
 
   // Compute size of next Step for a failed step
-  if (errMaxNorm > 1.0 )
+  if (errMaxNorm > 1.0)
   {
     // Step failed; compute the size of retrial Step.
-    hnew = GetSafety()*hstepCurrent*std::pow(errMaxNorm,GetPshrnk()) ;
-  
-    if (hnew < max_stepping_decrease*hstepCurrent)
+    hnew = GetSafety() * hstepCurrent * std::pow(errMaxNorm, GetPshrnk());
+
+    if (hnew < max_stepping_decrease * hstepCurrent)
     {
-      hnew = max_stepping_decrease*hstepCurrent ;
-                         // reduce stepsize, but no more
-                         // than this factor (value= 1/10)
+      hnew = max_stepping_decrease * hstepCurrent;
+      // reduce stepsize, but no more
+      // than this factor (value= 1/10)
     }
   }
   else
   {
     // Compute size of next Step for a successful step
     if (errMaxNorm > errcon)
-     { hnew = GetSafety()*hstepCurrent*std::pow(errMaxNorm,GetPgrow()); }
+    {
+      hnew = GetSafety() * hstepCurrent * std::pow(errMaxNorm, GetPgrow());
+    }
     else  // No more than a factor of 5 increase
-     { hnew = max_stepping_increase * hstepCurrent; }
+    {
+      hnew = max_stepping_increase * hstepCurrent;
+    }
   }
   return hnew;
 }
 
 // ---------------------------------------------------------------------------
 
-void G4MagInt_Driver::PrintStatus( const G4double* StartArr,  
-                                         G4double  xstart,
-                                   const G4double* CurrentArr, 
-                                         G4double  xcurrent,
-                                         G4double  requestStep, 
-                                         G4int     subStepNo )
-  // Potentially add as arguments:  
-  //                                 <dydx>           - as Initial Force
-  //                                 stepTaken(hdid)  - last step taken
-  //                                 nextStep (hnext) - proposal for size
+void G4MagInt_Driver::PrintStatus(const G4double* StartArr, G4double xstart,
+                                  const G4double* CurrentArr, G4double xcurrent,
+                                  G4double requestStep, G4int subStepNo)
+// Potentially add as arguments:
+//                                 <dydx>           - as Initial Force
+//                                 stepTaken(hdid)  - last step taken
+//                                 nextStep (hnext) - proposal for size
 {
-   G4FieldTrack  StartFT(G4ThreeVector(0,0,0),
-                 G4ThreeVector(0,0,0), 0., 0., 0., 0. );
-   G4FieldTrack  CurrentFT (StartFT);
+  G4FieldTrack StartFT(G4ThreeVector(0, 0, 0), G4ThreeVector(0, 0, 0), 0., 0., 0., 0.);
+  G4FieldTrack CurrentFT(StartFT);
 
-   StartFT.LoadFromArray( StartArr, fNoIntegrationVariables); 
-   StartFT.SetCurveLength( xstart);
-   CurrentFT.LoadFromArray( CurrentArr, fNoIntegrationVariables); 
-   CurrentFT.SetCurveLength( xcurrent );
+  StartFT.LoadFromArray(StartArr, fNoIntegrationVariables);
+  StartFT.SetCurveLength(xstart);
+  CurrentFT.LoadFromArray(CurrentArr, fNoIntegrationVariables);
+  CurrentFT.SetCurveLength(xcurrent);
 
-   PrintStatus(StartFT, CurrentFT, requestStep, subStepNo ); 
+  PrintStatus(StartFT, CurrentFT, requestStep, subStepNo);
 }
 
 // ---------------------------------------------------------------------------
 
-void G4MagInt_Driver::PrintStatus(const G4FieldTrack& StartFT,
-                                  const G4FieldTrack& CurrentFT, 
-                                        G4double      requestStep, 
-                                        G4int         subStepNo)
+void G4MagInt_Driver::PrintStatus(const G4FieldTrack& StartFT, const G4FieldTrack& CurrentFT,
+                                  G4double requestStep, G4int subStepNo)
 {
-    G4int verboseLevel= fVerboseLevel;
-    const G4int noPrecision = 5;
-    G4long oldPrec= G4cout.precision(noPrecision);
-    // G4cout.setf(ios_base::fixed,ios_base::floatfield);
+  G4int verboseLevel = fVerboseLevel;
+  const G4int noPrecision = 5;
+  G4long oldPrec = G4cout.precision(noPrecision);
+  // G4cout.setf(ios_base::fixed,ios_base::floatfield);
 
-    const G4ThreeVector StartPosition=       StartFT.GetPosition();
-    const G4ThreeVector StartUnitVelocity=   StartFT.GetMomentumDir();
-    const G4ThreeVector CurrentPosition=     CurrentFT.GetPosition();
-    const G4ThreeVector CurrentUnitVelocity= CurrentFT.GetMomentumDir();
+  const G4ThreeVector StartPosition = StartFT.GetPosition();
+  const G4ThreeVector StartUnitVelocity = StartFT.GetMomentumDir();
+  const G4ThreeVector CurrentPosition = CurrentFT.GetPosition();
+  const G4ThreeVector CurrentUnitVelocity = CurrentFT.GetMomentumDir();
 
-    G4double  DotStartCurrentVeloc= StartUnitVelocity.dot(CurrentUnitVelocity);
+  G4double DotStartCurrentVeloc = StartUnitVelocity.dot(CurrentUnitVelocity);
 
-    G4double step_len= CurrentFT.GetCurveLength() - StartFT.GetCurveLength();
-    G4double subStepSize = step_len;
-     
-    if( (subStepNo <= 1) || (verboseLevel > 3) )
-    {
-       subStepNo = - subStepNo;        // To allow printing banner
+  G4double step_len = CurrentFT.GetCurveLength() - StartFT.GetCurveLength();
+  G4double subStepSize = step_len;
 
-       G4cout << std::setw( 6)  << " " << std::setw( 25)
-              << " G4MagInt_Driver: Current Position  and  Direction" << " "
-              << G4endl; 
-       G4cout << std::setw( 5) << "Step#" << " "
-              << std::setw( 7) << "s-curve" << " "
-              << std::setw( 9) << "X(mm)" << " "
-              << std::setw( 9) << "Y(mm)" << " "  
-              << std::setw( 9) << "Z(mm)" << " "
-              << std::setw( 8) << " N_x " << " "
-              << std::setw( 8) << " N_y " << " "
-              << std::setw( 8) << " N_z " << " "
-              << std::setw( 8) << " N^2-1 " << " "
-              << std::setw(10) << " N(0).N " << " "
-              << std::setw( 7) << "KinEner " << " "
-              << std::setw(12) << "Track-l" << " "   // Add the Sub-step ??
-              << std::setw(12) << "Step-len" << " " 
-              << std::setw(12) << "Step-len" << " " 
-              << std::setw( 9) << "ReqStep" << " "  
-              << G4endl;
-    }
+  if ((subStepNo <= 1) || (verboseLevel > 3))
+  {
+    subStepNo = -subStepNo;  // To allow printing banner
 
-    if( (subStepNo <= 0) )
-    {
-      PrintStat_Aux( StartFT,  requestStep, 0., 
-                       0,        0.0,         1.0);
-    }
+    G4cout << std::setw(6) << " " << std::setw(25)
+           << " G4MagInt_Driver: Current Position  and  Direction" << " " << G4endl;
+    G4cout << std::setw(5) << "Step#" << " " << std::setw(7) << "s-curve" << " " << std::setw(9)
+           << "X(mm)" << " " << std::setw(9) << "Y(mm)" << " " << std::setw(9) << "Z(mm)" << " "
+           << std::setw(8) << " N_x " << " " << std::setw(8) << " N_y " << " " << std::setw(8)
+           << " N_z " << " " << std::setw(8) << " N^2-1 " << " " << std::setw(10) << " N(0).N "
+           << " " << std::setw(7) << "KinEner " << " " << std::setw(12) << "Track-l"
+           << " "  // Add the Sub-step ??
+           << std::setw(12) << "Step-len" << " " << std::setw(12) << "Step-len" << " "
+           << std::setw(9) << "ReqStep" << " " << G4endl;
+  }
 
-    if( verboseLevel <= 3 )
-    {
-      G4cout.precision(noPrecision);
-      PrintStat_Aux( CurrentFT, requestStep, step_len, 
-                     subStepNo, subStepSize, DotStartCurrentVeloc );
-    }
+  if ((subStepNo <= 0))
+  {
+    PrintStat_Aux(StartFT, requestStep, 0., 0, 0.0, 1.0);
+  }
 
-    G4cout.precision(oldPrec);
+  if (verboseLevel <= 3)
+  {
+    G4cout.precision(noPrecision);
+    PrintStat_Aux(CurrentFT, requestStep, step_len, subStepNo, subStepSize, DotStartCurrentVeloc);
+  }
+
+  G4cout.precision(oldPrec);
 }
 
 // ---------------------------------------------------------------------------
 
-void G4MagInt_Driver::PrintStat_Aux(const G4FieldTrack& aFieldTrack,
-                                          G4double      requestStep, 
-                                          G4double      step_len,
-                                          G4int         subStepNo,
-                                          G4double      subStepSize,
-                                          G4double      dotVeloc_StartCurr)
+void G4MagInt_Driver::PrintStat_Aux(const G4FieldTrack& aFieldTrack, G4double requestStep,
+                                    G4double step_len, G4int subStepNo, G4double subStepSize,
+                                    G4double dotVeloc_StartCurr)
 {
-    const G4ThreeVector Position = aFieldTrack.GetPosition();
-    const G4ThreeVector UnitVelocity = aFieldTrack.GetMomentumDir();
- 
-    if( subStepNo >= 0)
-    {
-       G4cout << std::setw( 5) << subStepNo << " ";
-    }
-    else
-    {
-       G4cout << std::setw( 5) << "Start" << " ";
-    }
-    G4double curveLen= aFieldTrack.GetCurveLength();
-    G4cout << std::setw( 7) << curveLen;
-    G4cout << std::setw( 9) << Position.x() << " "
-           << std::setw( 9) << Position.y() << " "
-           << std::setw( 9) << Position.z() << " "
-           << std::setw( 8) << UnitVelocity.x() << " "
-           << std::setw( 8) << UnitVelocity.y() << " "
-           << std::setw( 8) << UnitVelocity.z() << " ";
-    G4long oldprec= G4cout.precision(3);
-    G4cout << std::setw( 8) << UnitVelocity.mag2()-1.0 << " ";
-    G4cout.precision(6);
-    G4cout << std::setw(10) << dotVeloc_StartCurr << " ";
-    G4cout.precision(oldprec);
-    G4cout << std::setw( 7) << aFieldTrack.GetKineticEnergy();
-    G4cout << std::setw(12) << step_len << " ";
+  const G4ThreeVector Position = aFieldTrack.GetPosition();
+  const G4ThreeVector UnitVelocity = aFieldTrack.GetMomentumDir();
 
-    static G4ThreadLocal G4double oldCurveLength = 0.0;
-    static G4ThreadLocal G4double oldSubStepLength = 0.0;
-    static G4ThreadLocal G4int oldSubStepNo = -1;
+  if (subStepNo >= 0)
+  {
+    G4cout << std::setw(5) << subStepNo << " ";
+  }
+  else
+  {
+    G4cout << std::setw(5) << "Start" << " ";
+  }
+  G4double curveLen = aFieldTrack.GetCurveLength();
+  G4cout << std::setw(7) << curveLen;
+  G4cout << std::setw(9) << Position.x() << " " << std::setw(9) << Position.y() << " "
+         << std::setw(9) << Position.z() << " " << std::setw(8) << UnitVelocity.x() << " "
+         << std::setw(8) << UnitVelocity.y() << " " << std::setw(8) << UnitVelocity.z() << " ";
+  G4long oldprec = G4cout.precision(3);
+  G4cout << std::setw(8) << UnitVelocity.mag2() - 1.0 << " ";
+  G4cout.precision(6);
+  G4cout << std::setw(10) << dotVeloc_StartCurr << " ";
+  G4cout.precision(oldprec);
+  G4cout << std::setw(7) << aFieldTrack.GetKineticEnergy();
+  G4cout << std::setw(12) << step_len << " ";
 
-    G4double subStep_len = 0.0;
-    if( curveLen > oldCurveLength )
-    {
-      subStep_len= curveLen - oldCurveLength;
-    }
-    else if (subStepNo == oldSubStepNo)
-    {
-      subStep_len= oldSubStepLength;
-    }
-    oldCurveLength= curveLen;
-    oldSubStepLength= subStep_len;
+  static G4ThreadLocal G4double oldCurveLength = 0.0;
+  static G4ThreadLocal G4double oldSubStepLength = 0.0;
+  static G4ThreadLocal G4int oldSubStepNo = -1;
 
-    G4cout << std::setw(12) << subStep_len << " "; 
-    G4cout << std::setw(12) << subStepSize << " "; 
-    if( requestStep != -1.0 )
-    {
-      G4cout << std::setw( 9) << requestStep << " ";
-    }
-    else
-    {
-       G4cout << std::setw( 9) << " InitialStep " << " ";
-    }
-    G4cout << G4endl;
+  G4double subStep_len = 0.0;
+  if (curveLen > oldCurveLength)
+  {
+    subStep_len = curveLen - oldCurveLength;
+  }
+  else if (subStepNo == oldSubStepNo)
+  {
+    subStep_len = oldSubStepLength;
+  }
+  oldCurveLength = curveLen;
+  oldSubStepLength = subStep_len;
+
+  G4cout << std::setw(12) << subStep_len << " ";
+  G4cout << std::setw(12) << subStepSize << " ";
+  if (requestStep != -1.0)
+  {
+    G4cout << std::setw(9) << requestStep << " ";
+  }
+  else
+  {
+    G4cout << std::setw(9) << " InitialStep " << " ";
+  }
+  G4cout << G4endl;
 }
 
 // ---------------------------------------------------------------------------
@@ -940,118 +912,110 @@ void G4MagInt_Driver::PrintStatisticsReport()
 
   G4cout << "G4MagInt_Driver Statistics of steps undertaken. " << G4endl;
   G4cout << "G4MagInt_Driver: Number of Steps: "
-         << " Total= " <<  fNoTotalSteps
-         << " Bad= "   <<  fNoBadSteps 
-         << " Small= " <<  fNoSmallSteps 
-         << " Non-initial small= " << (fNoSmallSteps-fNoInitialSmallSteps)
-         << G4endl;
- G4cout.precision(oldPrec);
+         << " Total= " << fNoTotalSteps << " Bad= " << fNoBadSteps << " Small= " << fNoSmallSteps
+         << " Non-initial small= " << (fNoSmallSteps - fNoInitialSmallSteps) << G4endl;
+  G4cout.precision(oldPrec);
 }
- 
+
 // ---------------------------------------------------------------------------
 
 void G4MagInt_Driver::SetSmallestFraction(G4double newFraction)
 {
-  if( (newFraction > 1.e-16) && (newFraction < 1e-8) )
+  if ((newFraction > 1.e-16) && (newFraction < 1e-8))
   {
-    fSmallestFraction= newFraction;
+    fSmallestFraction = newFraction;
   }
   else
-  { 
+  {
     std::ostringstream message;
-    message << "Smallest Fraction not changed. " << G4endl
-            << "  Proposed value was " << newFraction << G4endl
-            << "  Value must be between 1.e-8 and 1.e-16";
-    G4Exception("G4MagInt_Driver::SetSmallestFraction()",
-                "GeomField1001", JustWarning, message);
+    message << "Smallest Fraction not changed. " << G4endl << "  Proposed value was " << newFraction
+            << G4endl << "  Value must be between 1.e-8 and 1.e-16";
+    G4Exception("G4MagInt_Driver::SetSmallestFraction()", "GeomField1001", JustWarning, message);
   }
 }
 
-void G4MagInt_Driver::
-GetDerivatives(const G4FieldTrack& y_curr, G4double* dydx) const
+void G4MagInt_Driver::GetDerivatives(const G4FieldTrack& y_curr, G4double* dydx) const
 {
-    G4double ytemp[G4FieldTrack::ncompSVEC];
-    y_curr.DumpToArray(ytemp);
-    pIntStepper->RightHandSide(ytemp, dydx);
-      // Avoid virtual call for GetStepper
-      // Was: GetStepper()->ComputeRightHandSide(ytemp, dydx);
+  G4double ytemp[G4FieldTrack::ncompSVEC];
+  y_curr.DumpToArray(ytemp);
+  pIntStepper->RightHandSide(ytemp, dydx);
+  // Avoid virtual call for GetStepper
+  // Was: GetStepper()->ComputeRightHandSide(ytemp, dydx);
 }
 
-void G4MagInt_Driver::GetDerivatives(const G4FieldTrack& track,
-                                     G4double dydx[],
+void G4MagInt_Driver::GetDerivatives(const G4FieldTrack& track, G4double dydx[],
                                      G4double field[]) const
 {
-    G4double ytemp[G4FieldTrack::ncompSVEC];
-    track.DumpToArray(ytemp);
-    pIntStepper->RightHandSide(ytemp, dydx, field);
+  G4double ytemp[G4FieldTrack::ncompSVEC];
+  track.DumpToArray(ytemp);
+  pIntStepper->RightHandSide(ytemp, dydx, field);
 }
 
 G4EquationOfMotion* G4MagInt_Driver::GetEquationOfMotion()
 {
-    return pIntStepper->GetEquationOfMotion();
+  return pIntStepper->GetEquationOfMotion();
 }
 
-void G4MagInt_Driver::SetEquationOfMotion(G4EquationOfMotion *equation)
+void G4MagInt_Driver::SetEquationOfMotion(G4EquationOfMotion* equation)
 {
-    pIntStepper->SetEquationOfMotion(equation);
+  pIntStepper->SetEquationOfMotion(equation);
 }
 
 const G4MagIntegratorStepper* G4MagInt_Driver::GetStepper() const
 {
-    return pIntStepper;
+  return pIntStepper;
 }
 
 G4MagIntegratorStepper* G4MagInt_Driver::GetStepper()
 {
-    return pIntStepper;
+  return pIntStepper;
 }
 
-void G4MagInt_Driver::
-RenewStepperAndAdjust(G4MagIntegratorStepper* pItsStepper)
-{  
-    pIntStepper = pItsStepper;
-    ReSetParameters();
-}
-
-void G4MagInt_Driver::StreamInfo( std::ostream& os ) const
+void G4MagInt_Driver::RenewStepperAndAdjust(G4MagIntegratorStepper* pItsStepper)
 {
-    os << "State of G4MagInt_Driver: " << std::endl;
-    os << "  Max number of Steps = " << fMaxNoSteps
-       << "    (base # = " << fMaxStepBase << " )" << std::endl;
-    os << "  Safety factor       = " << safety  << std::endl;
-    os << "  Power - shrink      = " << pshrnk << std::endl;
-    os << "  Power - grow        = " << pgrow << std::endl;
-    os << "  threshold (errcon)  = " << errcon << std::endl;
-
-    os << "    fMinimumStep =      " << fMinimumStep  << std::endl;
-    os << "    Smallest Fraction = " << fSmallestFraction << std::endl;
-
-    os << "    No Integrat Vars  = " << fNoIntegrationVariables << std::endl;
-    os << "    Min No Vars       = " << fMinNoVars << std::endl;
-    os << "    Num-Vars          = " << fNoVars << std::endl;
-    
-    os << "    verbose level     = " << fVerboseLevel << std::endl;
-    os << "    Reintegrates      = " << DoesReIntegrate() << std::endl;
+  pIntStepper = pItsStepper;
+  ReSetParameters();
 }
 
-void PrintInfo( const G4MagInt_Driver & magDrv, std::ostream& os )
+void G4MagInt_Driver::StreamInfo(std::ostream& os) const
 {
-    os << "State of G4MagInt_Driver: " << std::endl;
-    os << "  Max number of Steps = " << magDrv.GetMaxNoSteps();
-    //   << "    (base # = " << magDrv.fMaxStepBase << " )" << std::endl;
-    os << "  Safety factor       = " << magDrv.GetSafety()  << std::endl;
-    os << "  Power - shrink      = " << magDrv.GetPshrnk() << std::endl;
-    os << "  Power - grow        = " << magDrv.GetPgrow() << std::endl;
-    os << "  threshold (errcon)  = " << magDrv.GetErrcon() << std::endl;
+  os << "State of G4MagInt_Driver: " << std::endl;
+  os << "  Max number of Steps = " << fMaxNoSteps << "    (base # = " << fMaxStepBase << " )"
+     << std::endl;
+  os << "  Safety factor       = " << safety << std::endl;
+  os << "  Power - shrink      = " << pshrnk << std::endl;
+  os << "  Power - grow        = " << pgrow << std::endl;
+  os << "  threshold (errcon)  = " << errcon << std::endl;
 
-    os << "    fMinimumStep =      " << magDrv.GetHmin()  << std::endl;
-    os << "    Smallest Fraction = " << magDrv.GetSmallestFraction() << std::endl;
+  os << "    fMinimumStep =      " << fMinimumStep << std::endl;
+  os << "    Smallest Fraction = " << fSmallestFraction << std::endl;
 
-    /*****
-    os << "    No Integrat Vars  = " << magDrv.GetNoIntegrationVariables << std::endl;
-    os << "    Min No Vars       = " << magDrv.GetMinNoVars << std::endl;
-    os << "    Num-Vars          = " << magDrv.GetNoVars << std::endl;
-    *****/
-    os << "    verbose level     = " << magDrv.GetVerboseLevel() << std::endl;
-    os << "    Reintegrates      = " << magDrv.DoesReIntegrate() << std::endl;
+  os << "    No Integrat Vars  = " << fNoIntegrationVariables << std::endl;
+  os << "    Min No Vars       = " << fMinNoVars << std::endl;
+  os << "    Num-Vars          = " << fNoVars << std::endl;
+
+  os << "    verbose level     = " << fVerboseLevel << std::endl;
+  os << "    Reintegrates      = " << DoesReIntegrate() << std::endl;
+}
+
+void PrintInfo(const G4MagInt_Driver& magDrv, std::ostream& os)
+{
+  os << "State of G4MagInt_Driver: " << std::endl;
+  os << "  Max number of Steps = " << magDrv.GetMaxNoSteps();
+  //   << "    (base # = " << magDrv.fMaxStepBase << " )" << std::endl;
+  os << "  Safety factor       = " << magDrv.GetSafety() << std::endl;
+  os << "  Power - shrink      = " << magDrv.GetPshrnk() << std::endl;
+  os << "  Power - grow        = " << magDrv.GetPgrow() << std::endl;
+  os << "  threshold (errcon)  = " << magDrv.GetErrcon() << std::endl;
+
+  os << "    fMinimumStep =      " << magDrv.GetHmin() << std::endl;
+  os << "    Smallest Fraction = " << magDrv.GetSmallestFraction() << std::endl;
+
+  /*****
+  os << "    No Integrat Vars  = " << magDrv.GetNoIntegrationVariables << std::endl;
+  os << "    Min No Vars       = " << magDrv.GetMinNoVars << std::endl;
+  os << "    Num-Vars          = " << magDrv.GetNoVars << std::endl;
+  *****/
+  os << "    verbose level     = " << magDrv.GetVerboseLevel() << std::endl;
+  os << "    Reintegrates      = " << magDrv.DoesReIntegrate() << std::endl;
 }

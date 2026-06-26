@@ -38,33 +38,34 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4KaonBuilder_h
-#define G4KaonBuilder_h 1
-
-#include "G4PhysicsBuilderInterface.hh"
-#include "globals.hh"
+#ifndef G4KAONBUILDER_HH
+#define G4KAONBUILDER_HH
 
 #include "G4HadronInelasticProcess.hh"
+#include "G4PhysicsBuilderInterface.hh"
 #include "G4VKaonBuilder.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4KaonBuilder : public G4PhysicsBuilderInterface
 {
-  public: 
+  public:
+
     G4KaonBuilder();
     virtual ~G4KaonBuilder() {}
 
     virtual void Build() final override;
-    virtual void RegisterMe(G4PhysicsBuilderInterface * aB) final override;
+    virtual void RegisterMe(G4PhysicsBuilderInterface* aB) final override;
 
   private:
+
     G4HadronInelasticProcess* theKaonPlusInelastic;
     G4HadronInelasticProcess* theKaonMinusInelastic;
     G4HadronInelasticProcess* theKaonZeroLInelastic;
     G4HadronInelasticProcess* theKaonZeroSInelastic;
-     
-    std::vector<G4VKaonBuilder *> theModelCollections;
+
+    std::vector<G4VKaonBuilder*> theModelCollections;
 };
 
 #endif
-

@@ -23,13 +23,13 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-//  
-#ifndef G4HadronicEPTestMessenger_h
-#define G4HadronicEPTestMessenger_h 1
+//
+#ifndef G4HADRONICEPTESTMESSENGER_HH
+#define G4HADRONICEPTESTMESSENGER_HH
 
 // Class description:
 // Messenger class to enable control of energy/momentum testing for
-// hadronic processes and models.  
+// hadronic processes and models.
 
 // Class Description - End
 
@@ -38,32 +38,32 @@
 // Date:   1 April 2010
 //
 
-#include "G4UImessenger.hh"
 #include "G4HadronicProcessStore.hh"
+#include "G4UImessenger.hh"
 
 class G4UIdirectory;
 class G4UIcmdWithADoubleAndUnit;
 class G4UIcmdWithAnInteger;
 class G4UIcmdWithADouble;
 
-
-class G4HadronicEPTestMessenger: public G4UImessenger
+class G4HadronicEPTestMessenger : public G4UImessenger
 {
- public: //with description
-   G4HadronicEPTestMessenger(G4HadronicProcessStore* theProcessStore);
+  public:  // with description
 
-   ~G4HadronicEPTestMessenger();
+    G4HadronicEPTestMessenger(G4HadronicProcessStore* theProcessStore);
 
-   void SetNewValue (G4UIcommand *command, G4String newValues);
+    ~G4HadronicEPTestMessenger();
 
- private:
-   G4HadronicProcessStore* theProcessStore;
-  
-   G4UIdirectory*                 heptstDirectory;
-   G4UIcmdWithAnInteger*          reportLvlCmd;
-   G4UIcmdWithADouble*            procRelLvlCmd;
-   G4UIcmdWithADoubleAndUnit*     procAbsLvlCmd;
+    void SetNewValue(G4UIcommand* command, G4String newValues);
+
+  private:
+
+    G4HadronicProcessStore* theProcessStore;
+
+    G4UIdirectory* heptstDirectory;
+    G4UIcmdWithAnInteger* reportLvlCmd;
+    G4UIcmdWithADouble* procRelLvlCmd;
+    G4UIcmdWithADoubleAndUnit* procAbsLvlCmd;
 };
 
 #endif
-

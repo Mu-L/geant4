@@ -35,21 +35,22 @@
 //              by G. Folger, V. Ivantchenko, T. Koi and D.H. Wright
 
 // Class Description
-// This is the class to which cross section data sets may be registered. 
+// This is the class to which cross section data sets may be registered.
 // An instance of it is contained in each hadronic process, allowing
 // the use of the AddDataSet() method to tailor the cross sections to
 // your application.
 // Class Description - End
 
-#ifndef G4CrossSectionDataStore_h
-#define G4CrossSectionDataStore_h 1
+#ifndef G4CROSSSECTIONDATASTORE_HH
+#define G4CROSSSECTIONDATASTORE_HH
 
-#include "globals.hh"
-#include "G4VCrossSectionDataSet.hh"
 #include "G4DynamicParticle.hh"
 #include "G4PhysicsVector.hh"
-#include <vector>
+#include "G4VCrossSectionDataSet.hh"
+#include "globals.hh"
+
 #include <iostream>
+#include <vector>
 
 class G4Nucleus;
 class G4ParticleDefinition;
@@ -60,74 +61,69 @@ class G4NistManager;
 
 class G4CrossSectionDataStore
 {
-public:
+  public:
 
-  G4CrossSectionDataStore();
+    G4CrossSectionDataStore();
 
-  ~G4CrossSectionDataStore() = default;
+    ~G4CrossSectionDataStore() = default;
 
-  // Run time cross section per unit volume
-  inline G4double GetCrossSection(const G4DynamicParticle*, const G4Material*);
-  G4double ComputeCrossSection(const G4DynamicParticle*, const G4Material*);
+    // Run time cross section per unit volume
+    inline G4double GetCrossSection(const G4DynamicParticle*, const G4Material*);
+    G4double ComputeCrossSection(const G4DynamicParticle*, const G4Material*);
 
-  // Cross section per element
-  G4double GetCrossSection(const G4DynamicParticle*, 
-			   const G4Element*, const G4Material*);
+    // Cross section per element
+    G4double GetCrossSection(const G4DynamicParticle*, const G4Element*, const G4Material*);
 
-  // Cross section per isotope 
-  G4double GetCrossSection(const G4DynamicParticle*, G4int Z, G4int A,
-                           const G4Isotope*,
-			   const G4Element*, const G4Material*);
+    // Cross section per isotope
+    G4double GetCrossSection(const G4DynamicParticle*, G4int Z, G4int A, const G4Isotope*,
+                             const G4Element*, const G4Material*);
 
-  // Sample Z and A of a target nucleus and upload into G4Nucleus
-  const G4Element* SampleZandA(const G4DynamicParticle*, const G4Material*,
-			       G4Nucleus& target);
+    // Sample Z and A of a target nucleus and upload into G4Nucleus
+    const G4Element* SampleZandA(const G4DynamicParticle*, const G4Material*, G4Nucleus& target);
 
-  // Initialisation before run
-  void BuildPhysicsTable(const G4ParticleDefinition&);
+    // Initialisation before run
+    void BuildPhysicsTable(const G4ParticleDefinition&);
 
-  // Dump store to G4cout
-  void DumpPhysicsTable(const G4ParticleDefinition&);
+    // Dump store to G4cout
+    void DumpPhysicsTable(const G4ParticleDefinition&);
 
-  // Dump store as html
-  void DumpHtml(const G4ParticleDefinition&, std::ofstream&) const;
-  void PrintCrossSectionHtml(const G4VCrossSectionDataSet *cs,
-                             const G4String&, const G4String&) const;
-  
-  void AddDataSet(G4VCrossSectionDataSet*);
-  void AddDataSet(G4VCrossSectionDataSet*, std::size_t);
-  inline const std::vector<G4VCrossSectionDataSet*>& GetDataSetList() const;
+    // Dump store as html
+    void DumpHtml(const G4ParticleDefinition&, std::ofstream&) const;
+    void PrintCrossSectionHtml(const G4VCrossSectionDataSet* cs, const G4String&,
+                               const G4String&) const;
 
-  inline void SetVerboseLevel(G4int value);
+    void AddDataSet(G4VCrossSectionDataSet*);
+    void AddDataSet(G4VCrossSectionDataSet*, std::size_t);
+    inline const std::vector<G4VCrossSectionDataSet*>& GetDataSetList() const;
 
-  // may be used by special processes
-  inline void SetForcedElement(const G4Element*);
+    inline void SetVerboseLevel(G4int value);
 
-  G4CrossSectionDataStore & operator=
-  (const G4CrossSectionDataStore &right) = delete;
-  G4CrossSectionDataStore(const G4CrossSectionDataStore&) = delete;
+    // may be used by special processes
+    inline void SetForcedElement(const G4Element*);
 
-private:
+    G4CrossSectionDataStore& operator=(const G4CrossSectionDataStore& right) = delete;
+    G4CrossSectionDataStore(const G4CrossSectionDataStore&) = delete;
 
-  G4double GetIsoCrossSection(const G4DynamicParticle*, G4int Z, G4int A,
-			      const G4Isotope*, const G4Element*,
-                              const G4Material*, const G4int index);
+  private:
 
-  G4String HtmlFileName(const G4String & in) const;
+    G4double GetIsoCrossSection(const G4DynamicParticle*, G4int Z, G4int A, const G4Isotope*,
+                                const G4Element*, const G4Material*, const G4int index);
 
-  G4NistManager* nist;
-  const G4Material* currentMaterial = nullptr;
-  const G4ParticleDefinition* matParticle = nullptr;
-  const G4Element* forcedElement = nullptr;
-  G4double matKinEnergy = 0.0;
-  G4double matCrossSection = 0.0;
+    G4String HtmlFileName(const G4String& in) const;
 
-  G4int nDataSetList = 0;
-  G4int verboseLevel = 1;
+    G4NistManager* nist;
+    const G4Material* currentMaterial = nullptr;
+    const G4ParticleDefinition* matParticle = nullptr;
+    const G4Element* forcedElement = nullptr;
+    G4double matKinEnergy = 0.0;
+    G4double matCrossSection = 0.0;
 
-  std::vector<G4VCrossSectionDataSet*> dataSetList;
-  std::vector<G4double> xsecelm;
-  std::vector<G4double> xseciso;
+    G4int nDataSetList = 0;
+    G4int verboseLevel = 1;
+
+    std::vector<G4VCrossSectionDataSet*> dataSetList;
+    std::vector<G4double> xsecelm;
+    std::vector<G4double> xseciso;
 };
 
 inline void G4CrossSectionDataStore::SetVerboseLevel(G4int value)
@@ -140,18 +136,17 @@ inline void G4CrossSectionDataStore::SetForcedElement(const G4Element* ptr)
   forcedElement = ptr;
 }
 
-inline const std::vector<G4VCrossSectionDataSet*>&
-G4CrossSectionDataStore::GetDataSetList() const
+inline const std::vector<G4VCrossSectionDataSet*>& G4CrossSectionDataStore::GetDataSetList() const
 {
   return dataSetList;
 }
 
-inline G4double 
-G4CrossSectionDataStore::GetCrossSection(const G4DynamicParticle* dp,
-                                         const G4Material* mat)
+inline G4double G4CrossSectionDataStore::GetCrossSection(const G4DynamicParticle* dp,
+                                                         const G4Material* mat)
 {
-  if(dp->GetKineticEnergy() != matKinEnergy || mat != currentMaterial ||
-     dp->GetDefinition() != matParticle) {
+  if (dp->GetKineticEnergy() != matKinEnergy || mat != currentMaterial
+      || dp->GetDefinition() != matParticle)
+  {
     ComputeCrossSection(dp, mat);
   }
   return matCrossSection;

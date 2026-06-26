@@ -36,21 +36,22 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedCutTube.h>
+#  include "G4Polyhedron.hh"
 
-#include "G4Polyhedron.hh"
+#  include <VecGeom/volumes/UnplacedCutTube.h>
 
 /**
  * @brief G4UCutTubs is a wrapper class for G4CutTubs to make use of
  * VecGeom CutTube.
+ * @ingroup geometry_solids_csg
  */
 
 class G4UCutTubs : public G4UAdapter<vecgeom::UnplacedCutTube>
 {
-  using Shape_t = vecgeom::UnplacedCutTube;
-  using Base_t = G4UAdapter<vecgeom::UnplacedCutTube>;
+    using Shape_t = vecgeom::UnplacedCutTube;
+    using Base_t = G4UAdapter<vecgeom::UnplacedCutTube>;
 
   public:
 
@@ -65,14 +66,8 @@ class G4UCutTubs : public G4UAdapter<vecgeom::UnplacedCutTube>
      *  @param[in] pLowNorm Outside normal vector at -Z.
      *  @param[in] pHighNorm Outside normal vector at +Z.
      */
-    G4UCutTubs( const G4String& pName,
-                      G4double pRMin,
-                      G4double pRMax,
-                      G4double pDz,
-                      G4double pSPhi,
-                      G4double pDPhi,
-                      const G4ThreeVector& pLowNorm,
-                      const G4ThreeVector& pHighNorm );
+    G4UCutTubs(const G4String& pName, G4double pRMin, G4double pRMax, G4double pDz, G4double pSPhi,
+               G4double pDPhi, const G4ThreeVector& pLowNorm, const G4ThreeVector& pHighNorm);
 
     /**
      * Default destructor.
@@ -88,27 +83,27 @@ class G4UCutTubs : public G4UAdapter<vecgeom::UnplacedCutTube>
     /**
      * Accessors.
      */
-    G4double GetInnerRadius   () const;
-    G4double GetOuterRadius   () const;
-    G4double GetZHalfLength   () const;
-    G4double GetStartPhiAngle () const;
-    G4double GetDeltaPhiAngle () const;
-    G4double GetSinStartPhi   () const;
-    G4double GetCosStartPhi   () const;
-    G4double GetSinEndPhi     () const;
-    G4double GetCosEndPhi     () const;
-    G4ThreeVector GetLowNorm  () const;
-    G4ThreeVector GetHighNorm () const;  
+    G4double GetInnerRadius() const;
+    G4double GetOuterRadius() const;
+    G4double GetZHalfLength() const;
+    G4double GetStartPhiAngle() const;
+    G4double GetDeltaPhiAngle() const;
+    G4double GetSinStartPhi() const;
+    G4double GetCosStartPhi() const;
+    G4double GetSinEndPhi() const;
+    G4double GetCosEndPhi() const;
+    G4ThreeVector GetLowNorm() const;
+    G4ThreeVector GetHighNorm() const;
 
     /**
      * Modifiers.
      */
-    void SetInnerRadius   (G4double newRMin);
-    void SetOuterRadius   (G4double newRMax);
-    void SetZHalfLength   (G4double newDz);
-    void SetStartPhiAngle (G4double newSPhi, G4bool trig=true);
-    void SetDeltaPhiAngle (G4double newDPhi);
-    
+    void SetInnerRadius(G4double newRMin);
+    void SetOuterRadius(G4double newRMax);
+    void SetZHalfLength(G4double newDz);
+    void SetStartPhiAngle(G4double newSPhi, G4bool trig = true);
+    void SetDeltaPhiAngle(G4double newDPhi);
+
     /**
      * Returns the type ID, "G4CutTubs" of the solid.
      */
@@ -131,10 +126,9 @@ class G4UCutTubs : public G4UAdapter<vecgeom::UnplacedCutTube>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                           G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.
@@ -145,7 +139,7 @@ class G4UCutTubs : public G4UAdapter<vecgeom::UnplacedCutTube>
      * Copy constructor and assignment operator.
      */
     G4UCutTubs(const G4UCutTubs& rhs);
-    G4UCutTubs& operator=(const G4UCutTubs& rhs); 
+    G4UCutTubs& operator=(const G4UCutTubs& rhs);
 
   private:
 

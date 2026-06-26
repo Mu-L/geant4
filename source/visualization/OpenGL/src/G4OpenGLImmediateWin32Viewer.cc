@@ -25,88 +25,84 @@
 //
 //
 //
-// 
+//
 // Class G4OpenGLImmediateWin32Viewer : a class derived from G4OpenGLWin32Viewer and
 //                                G4OpenGLImmediateViewer.
 
 #include "G4OpenGLImmediateWin32Viewer.hh"
-#include "G4OpenGLImmediateSceneHandler.hh"
 
+#include "G4OpenGLImmediateSceneHandler.hh"
 #include "G4ios.hh"
 
-G4OpenGLImmediateWin32Viewer::G4OpenGLImmediateWin32Viewer
-(G4OpenGLImmediateSceneHandler& sceneHandler,
- const G4String&  name):
-G4OpenGLViewer (sceneHandler),
-G4OpenGLWin32Viewer (sceneHandler),
-G4OpenGLImmediateViewer (sceneHandler),
-G4VViewer (sceneHandler, sceneHandler.IncrementViewCount (), name) {
-
+G4OpenGLImmediateWin32Viewer::G4OpenGLImmediateWin32Viewer(
+  G4OpenGLImmediateSceneHandler& sceneHandler, const G4String& name)
+  : G4OpenGLViewer(sceneHandler),
+    G4OpenGLWin32Viewer(sceneHandler),
+    G4OpenGLImmediateViewer(sceneHandler),
+    G4VViewer(sceneHandler, sceneHandler.IncrementViewCount(), name)
+{
   if (fViewId < 0) return;  // In case error in base class instantiation.
 }
 
-void G4OpenGLImmediateWin32Viewer::Initialise () {
+void G4OpenGLImmediateWin32Viewer::Initialise()
+{
+  // ensure a suitable window was found
 
-// ensure a suitable window was found
-
-  CreateGLWin32Context ();
-  CreateMainWindow ();
-  CreateFontLists ();
+  CreateGLWin32Context();
+  CreateMainWindow();
+  CreateFontLists();
 
   // If a double buffer context has been forced upon us, ignore the
   // back buffer for this OpenGLImmediate view.
-  glDrawBuffer (GL_FRONT);
+  glDrawBuffer(GL_FRONT);
 
   // clear the buffers and window.
-  ClearView ();
-  FinishView ();
+  ClearView();
+  FinishView();
 
-  glDepthFunc (GL_LEQUAL);
-  glDepthMask (GL_TRUE);
+  glDepthFunc(GL_LEQUAL);
+  glDepthMask(GL_TRUE);
 }
 
-void G4OpenGLImmediateWin32Viewer::DrawView () {
-
+void G4OpenGLImmediateWin32Viewer::DrawView()
+{
   // If a double buffer context has been forced upon us, ignore the
   // back buffer for this OpenGLImmediate view.
-  glDrawBuffer (GL_FRONT);
+  glDrawBuffer(GL_FRONT);
 
   G4ViewParameters::DrawingStyle style = GetViewParameters().GetDrawingStyle();
 
-  glViewport (0, 0, getWinWidth(), getWinHeight());
+  glViewport(0, 0, getWinWidth(), getWinHeight());
 
-  if(style!=G4ViewParameters::hlr &&
-     haloing_enabled) {
+  if (style != G4ViewParameters::hlr && haloing_enabled)
+  {
+    HaloingFirstPass();
+    NeedKernelVisit();
+    ProcessView();
+    glFlush();
 
-    HaloingFirstPass ();
-    NeedKernelVisit ();
-    ProcessView ();
-    glFlush ();
-
-    HaloingSecondPass ();
-
+    HaloingSecondPass();
   }
 
-  NeedKernelVisit ();  // Always need to visit G4 kernel.
-  ProcessView ();
-  FinishView ();
-
+  NeedKernelVisit();  // Always need to visit G4 kernel.
+  ProcessView();
+  FinishView();
 }
 
 //////////////////////////////////////////////////////////////////////////////
-void G4OpenGLImmediateWin32Viewer::FinishView (
-) 
+void G4OpenGLImmediateWin32Viewer::FinishView()
 //////////////////////////////////////////////////////////////////////////////
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 {
-  if(!fHDC) return;
+  if (!fHDC) return;
 
-  glFlush ();
+  glFlush();
 
   // Empty the Windows message queue :
   MSG event;
-  while ( ::PeekMessage(&event, NULL, 0, 0, PM_REMOVE) ) {
+  while (::PeekMessage(&event, NULL, 0, 0, PM_REMOVE))
+  {
     ::TranslateMessage(&event);
-    ::DispatchMessage (&event);
+    ::DispatchMessage(&event);
   }
 }

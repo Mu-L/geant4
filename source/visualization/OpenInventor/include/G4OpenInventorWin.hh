@@ -32,15 +32,21 @@
 
 #include "G4OpenInventor.hh"
 
-class G4OpenInventorWin: public G4OpenInventor {
-public:
-  G4OpenInventorWin ();
-  virtual ~G4OpenInventorWin ();
-  G4VViewer* CreateViewer(G4VSceneHandler&,const G4String& name = "");
-private:
-  virtual void Initialize();
-private:
-  bool fInited;
+class G4OpenInventorWin : public G4OpenInventor
+{
+  public:
+
+    G4OpenInventorWin();
+    virtual ~G4OpenInventorWin();
+    G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "");
+
+  private:
+
+    virtual void Initialize();
+
+  private:
+
+    bool fInited;
 };
 
 #endif

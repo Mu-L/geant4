@@ -38,12 +38,12 @@
 // by I.Hrivnacova, 27 Sep 99
 
 #ifndef G3MEDTABLE_HH
-#define G3MEDTABLE_HH 1
+#define G3MEDTABLE_HH
+
+#include "globals.hh"
 
 #include "G3MedTableEntry.hh"
 #include "G3toG4Defs.hh"
-
-#include "globals.hh"
 
 #include <vector>
 
@@ -51,26 +51,26 @@ class G4Material;
 class G4MagneticField;
 class G4UserLimits;
 
-typedef std::vector<G3MedTableEntry*>  G3MediumVector;
+typedef std::vector<G3MedTableEntry*> G3MediumVector;
 
 class G3MedTable
 {
-  public: // with description
+  public:  // with description
 
     G3MedTable();
     virtual ~G3MedTable();
-    
+
     // methods
     G3MedTableEntry* get(G4int id) const;
-    void put(G4int id, G4Material* material, G4MagneticField* field,
-             G4UserLimits* limits, G4int isvol);
+    void put(G4int id, G4Material* material, G4MagneticField* field, G4UserLimits* limits,
+             G4int isvol);
     G4int GetSize() const;
-    G3MedTableEntry*  GetMTE(G4int i) const;
+    G3MedTableEntry* GetMTE(G4int i) const;
     void Clear();
 
   private:
 
-    G3MediumVector*  fMedVector;
+    G3MediumVector* fMedVector;
 };
 
 extern G3G4DLL_API G3MedTable G3Med;

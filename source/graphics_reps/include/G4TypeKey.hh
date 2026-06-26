@@ -32,46 +32,50 @@
 #define G4TYPEKEY_HH
 
 #include "globals.hh"
+
 #include <ostream>
 
-class G4TypeKey {
+class G4TypeKey
+{
+  public:
 
-public:
+    using Key = unsigned long;
 
-  using Key = unsigned long;
+    // Constructor
+    G4TypeKey() = default;
 
-  // Constructor
-  G4TypeKey() = default;
+    // Destructor
+    virtual ~G4TypeKey() = default;
 
-  // Destructor
-  virtual ~G4TypeKey() = default;
+    G4bool IsValid() { return (0 != fMyKey); }
 
-  G4bool IsValid() {
-    return (0 != fMyKey);
-  }
-  
-  // Operators
-  Key operator()() const {return fMyKey;}  
-  G4bool operator==(const G4TypeKey& rhs) const {return fMyKey == rhs.fMyKey;}
-  G4bool operator!=(const G4TypeKey& rhs) const {return !operator==(rhs);}
-  G4bool operator<(const G4TypeKey& rhs) const {return fMyKey < rhs.fMyKey;}
-  G4bool operator>(const G4TypeKey& rhs) const {return fMyKey > rhs.fMyKey;}
+    // Operators
+    Key operator()() const { return fMyKey; }
+    G4bool operator==(const G4TypeKey& rhs) const { return fMyKey == rhs.fMyKey; }
+    G4bool operator!=(const G4TypeKey& rhs) const { return !operator==(rhs); }
+    G4bool operator<(const G4TypeKey& rhs) const { return fMyKey < rhs.fMyKey; }
+    G4bool operator>(const G4TypeKey& rhs) const { return fMyKey > rhs.fMyKey; }
 
-  friend std::ostream& operator<<(std::ostream& out, const G4TypeKey& key){ 
-    return out<< key.fMyKey;
-  }
+    friend std::ostream& operator<<(std::ostream& out, const G4TypeKey& key)
+    {
+      return out << key.fMyKey;
+    }
 
-protected:
+  protected:
 
-  Key NextKey() const {
-    static G4ThreadLocal Key *npKey = nullptr ;
-    if (npKey == nullptr) { npKey = new Key; *npKey = 0; }
-    Key &nKey = *npKey;
-    return ++nKey;
-  }
+    Key NextKey() const
+    {
+      static G4ThreadLocal Key* npKey = nullptr;
+      if (npKey == nullptr)
+      {
+        npKey = new Key;
+        *npKey = 0;
+      }
+      Key& nKey = *npKey;
+      return ++nKey;
+    }
 
-  Key fMyKey{0};
-
+    Key fMyKey{0};
 };
 
 #endif

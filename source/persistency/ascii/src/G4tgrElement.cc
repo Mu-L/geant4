@@ -31,11 +31,7 @@
 #include "G4tgrElement.hh"
 
 // --------------------------------------------------------------------
-G4tgrElement::G4tgrElement()
-{
-}
+G4tgrElement::G4tgrElement() {}
 
 // --------------------------------------------------------------------
-G4tgrElement::~G4tgrElement()
-{
-}
+G4tgrElement::~G4tgrElement() {}

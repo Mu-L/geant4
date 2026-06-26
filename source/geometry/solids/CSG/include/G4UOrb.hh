@@ -36,20 +36,21 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedOrb.h>
+#  include "G4Polyhedron.hh"
 
-#include "G4Polyhedron.hh"
+#  include <VecGeom/volumes/UnplacedOrb.h>
 
 /**
  * @brief G4UOrb is a wrapper class for G4Orb to make use of VecGeom Orb.
+ * @ingroup geometry_solids_csg
  */
 
 class G4UOrb : public G4UAdapter<vecgeom::UnplacedOrb>
 {
-  using Shape_t = vecgeom::UnplacedOrb;
-  using Base_t  = G4UAdapter<vecgeom::UnplacedOrb>;
+    using Shape_t = vecgeom::UnplacedOrb;
+    using Base_t = G4UAdapter<vecgeom::UnplacedOrb>;
 
   public:
 
@@ -59,18 +60,17 @@ class G4UOrb : public G4UAdapter<vecgeom::UnplacedOrb>
      *  @param[in] pRmax Outer radius.
      */
     G4UOrb(const G4String& pName, G4double pRmax);
-       
+
     /**
      * Default destructor.
      */
     ~G4UOrb() override = default;
-    
+
     /**
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -108,10 +108,9 @@ class G4UOrb : public G4UAdapter<vecgeom::UnplacedOrb>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pmin, G4double& pmax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pmin,
+                           G4double& pmax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.
@@ -122,7 +121,7 @@ class G4UOrb : public G4UAdapter<vecgeom::UnplacedOrb>
      * Copy constructor and assignment operator.
      */
     G4UOrb(const G4UOrb& rhs);
-    G4UOrb& operator=(const G4UOrb& rhs); 
+    G4UOrb& operator=(const G4UOrb& rhs);
 };
 
 // --------------------------------------------------------------------

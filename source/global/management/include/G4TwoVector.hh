@@ -28,9 +28,10 @@
 // Author: G.Cosmo (CERN), 1997
 // --------------------------------------------------------------------
 #ifndef G4TWOVECTOR_HH
-#define G4TWOVECTOR_HH 1
+#define G4TWOVECTOR_HH
 
 #include "globals.hh"
+
 #include <CLHEP/Vector/TwoVector.h>
 
 using G4TwoVector = CLHEP::Hep2Vector;

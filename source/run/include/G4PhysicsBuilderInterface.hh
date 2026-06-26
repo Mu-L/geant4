@@ -31,14 +31,15 @@
 
 // Author: A.Dotti, 9 April 2016
 // --------------------------------------------------------------------
-#ifndef G4PhysicsBuilderInterface_hh
-#define G4PhysicsBuilderInterface_hh 1
+#ifndef G4PHYSICSBUILDERINTERFACE_HH
+#define G4PHYSICSBUILDERINTERFACE_HH
 
 #include "globals.hh"
 
 class G4PhysicsBuilderInterface
 {
   public:
+
     G4PhysicsBuilderInterface() = default;
     virtual ~G4PhysicsBuilderInterface() = default;
 

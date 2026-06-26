@@ -39,7 +39,8 @@ std::size_t G4VtkPolydataSpherePipeline::MakeHash(const G4VisAttributes* pVA)
   return std::hash<G4VisAttributes>{}(*pVA);
 }
 
-G4VtkPolydataSpherePipeline::G4VtkPolydataSpherePipeline(G4String nameIn, const G4VtkVisContext& vcIn,
+G4VtkPolydataSpherePipeline::G4VtkPolydataSpherePipeline(G4String nameIn,
+                                                         const G4VtkVisContext& vcIn,
                                                          const G4VisAttributes* pVisAttributes)
   : G4VtkPolydataPipeline(nameIn, vcIn)
 {

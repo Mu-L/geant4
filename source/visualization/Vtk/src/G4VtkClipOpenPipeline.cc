@@ -29,6 +29,7 @@
 #include "G4VtkVisContext.hh"
 
 #include <vtkActor.h>
+#include <vtkClipClosedSurface.h>
 #include <vtkClipPolyData.h>
 #include <vtkPlane.h>
 #include <vtkPolyDataAlgorithm.h>
@@ -36,7 +37,6 @@
 #include <vtkPolyDataNormals.h>
 #include <vtkProperty.h>
 #include <vtkSmartPointer.h>
-#include <vtkClipClosedSurface.h>
 
 G4VtkClipOpenPipeline::G4VtkClipOpenPipeline(G4String nameIn, const G4VtkVisContext& vcIn,
                                              vtkSmartPointer<vtkPolyDataAlgorithm> filter,
@@ -72,19 +72,23 @@ G4VtkClipOpenPipeline::G4VtkClipOpenPipeline(G4String nameIn, const G4VtkVisCont
   actor->SetVisibility(1);
 
   // colour parameters
-  if (useVcColour) {
+  if (useVcColour)
+  {
     actor->GetProperty()->SetOpacity(vc.alpha);
     actor->GetProperty()->SetColor(vc.red, vc.green, vc.blue);
   }
 
   // set actor properties from vis context
-  if (vc.fDrawingStyle == G4ViewParameters::hsr) {
+  if (vc.fDrawingStyle == G4ViewParameters::hsr)
+  {
     actor->GetProperty()->SetRepresentationToSurface();
   }
-  else if (vc.fDrawingStyle == G4ViewParameters::hlr) {
+  else if (vc.fDrawingStyle == G4ViewParameters::hlr)
+  {
     actor->GetProperty()->SetRepresentationToSurface();
   }
-  else if (vc.fDrawingStyle == G4ViewParameters::wireframe) {
+  else if (vc.fDrawingStyle == G4ViewParameters::wireframe)
+  {
     actor->GetProperty()->SetRepresentationToWireframe();
   }
 

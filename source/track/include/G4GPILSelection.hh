@@ -34,8 +34,8 @@
 //   Katsuya Amako  (e-mail: Katsuya.Amako@kek.jp)
 //   Takashi Sasaki (e-mail: Takashi.Sasaki@kek.jp)
 // --------------------------------------------------------------------
-#ifndef G4GPILSelection_hh
-#define G4GPILSelection_hh 1
+#ifndef G4GPILSELECTION_HH
+#define G4GPILSELECTION_HH
 
 enum G4GPILSelection
 {

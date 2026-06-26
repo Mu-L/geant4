@@ -30,8 +30,8 @@
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 // V. Ivanchenko, July-2023 Basic revision of particle HP classes
 //
-#ifndef G4ParticleHPContAngularPar_h
-#define G4ParticleHPContAngularPar_h 1
+#ifndef G4PARTICLEHPCONTANGULARPAR_HH
+#define G4PARTICLEHPCONTANGULARPAR_HH
 
 #include "G4Cache.hh"
 #include "G4InterpolationManager.hh"
@@ -50,16 +50,17 @@ class G4ParticleHPContAngularPar
 {
     struct toBeCached
     {
-      G4bool fresh{true};
-      G4double currentMeanEnergy{-2.0};
-      G4double remaining_energy{0.0};
-      G4double theTargetCode{-1.0};
-      G4ReactionProduct* theTarget{nullptr};
-      G4ReactionProduct* thePrimary{nullptr};
-      toBeCached() = default;
+        G4bool fresh{true};
+        G4double currentMeanEnergy{-2.0};
+        G4double remaining_energy{0.0};
+        G4double theTargetCode{-1.0};
+        G4ReactionProduct* theTarget{nullptr};
+        G4ReactionProduct* thePrimary{nullptr};
+        toBeCached() = default;
     };
 
   public:
+
     G4ParticleHPContAngularPar(const G4ParticleDefinition* p = nullptr);
     G4ParticleHPContAngularPar(G4ParticleHPContAngularPar&);
 
@@ -67,8 +68,8 @@ class G4ParticleHPContAngularPar
 
     void Init(std::istream& aDataFile, const G4ParticleDefinition* projectile);
 
-    G4ReactionProduct* Sample(G4double anEnergy, G4double massCode,
-                              G4double mass, G4int angularRep, G4int interpol);
+    G4ReactionProduct* Sample(G4double anEnergy, G4double massCode, G4double mass, G4int angularRep,
+                              G4int interpol);
 
     G4double GetEnergy() const { return theEnergy; }
 
@@ -118,9 +119,10 @@ class G4ParticleHPContAngularPar
 
     void Dump() const;
 
-    G4ParticleHPContAngularPar& operator=(const G4ParticleHPContAngularPar &right) = delete;
+    G4ParticleHPContAngularPar& operator=(const G4ParticleHPContAngularPar& right) = delete;
 
   private:
+
     // incoming particle
     G4double theEnergy{0.0};
     G4double theMinEner{DBL_MAX};

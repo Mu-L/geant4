@@ -32,59 +32,51 @@
 // File name:  G4ModifiedMephi
 //
 // Author:        V. Ivanchenko
-// 
+//
 // Creation date: 27 October 2020
 //
-// Modifications: 
+// Modifications:
 //
-// Class Description: 
+// Class Description:
 //
-// Bremsstrahlung Angular Distribution Generation 
+// Bremsstrahlung Angular Distribution Generation
 // A.G. Bogdanov et al., IEEE Trans. Nuc. Sci., Vol.53, No.2, 2006
 //
 // -------------------------------------------------------------------
 //
 
-#ifndef G4ModifiedMephi_h
-#define G4ModifiedMephi_h 1
+#ifndef G4MODIFIEDMEPHI_HH
+#define G4MODIFIEDMEPHI_HH
 
+#include "G4VEmAngularDistribution.hh"
 #include "G4ios.hh"
 #include "globals.hh"
-#include "G4VEmAngularDistribution.hh"
 
 class G4ModifiedMephi : public G4VEmAngularDistribution
 {
+  public:
 
-public:
+    explicit G4ModifiedMephi(const G4String& name = "");
 
-  explicit G4ModifiedMephi(const G4String& name = "");
+    ~G4ModifiedMephi() override;
 
-  ~G4ModifiedMephi() override;
+    G4ThreeVector& SampleDirection(const G4DynamicParticle* dp, G4double gEnergy, G4int Z,
+                                   const G4Material* mat = nullptr) final;
 
-  G4ThreeVector& SampleDirection(const G4DynamicParticle* dp,
-                                 G4double gEnergy, G4int Z,
-                                 const G4Material* mat = nullptr) final;
+    void SamplePairDirections(const G4DynamicParticle* dp, G4double elecKinEnergy,
+                              G4double posiKinEnergy, G4ThreeVector& dirElectron,
+                              G4ThreeVector& dirPositron, G4int Z = 0,
+                              const G4Material* mat = nullptr) final;
 
-  void SamplePairDirections(const G4DynamicParticle* dp,
-			    G4double elecKinEnergy,
-                            G4double posiKinEnergy,
-                            G4ThreeVector& dirElectron,
-                            G4ThreeVector& dirPositron,
-                            G4int Z = 0,
-                            const G4Material* mat = nullptr) final;
+    void PrintGeneratorInformation() const override;
 
-  void PrintGeneratorInformation() const override;
+    // hide assignment operator
+    G4ModifiedMephi& operator=(const G4ModifiedMephi& right) = delete;
+    G4ModifiedMephi(const G4ModifiedMephi&) = delete;
 
-  // hide assignment operator 
-  G4ModifiedMephi & operator=(const  G4ModifiedMephi &right) = delete;
-  G4ModifiedMephi(const  G4ModifiedMephi&) = delete;
+  private:
 
-private:
-
-  G4double SampleCosTheta(G4double primKinEnergy, G4double gEnergy,
-                          G4double mass);
-
+    G4double SampleCosTheta(G4double primKinEnergy, G4double gEnergy, G4double mass);
 };
 
 #endif
-

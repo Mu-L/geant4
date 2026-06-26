@@ -24,8 +24,8 @@
 // ********************************************************************
 //
 
-#ifndef _G4MOLECULETABLEMESSENGER_HH
-#define _G4MOLECULETABLEMESSENGER_HH
+#ifndef G4MOLECULETABLEMESSENGER_HH
+#define G4MOLECULETABLEMESSENGER_HH
 
 #include <G4UImessenger.hh>
 
@@ -39,16 +39,16 @@ class G4UIcmdWithABool;
 
 class G4MoleculeTableMessenger : public G4UImessenger
 {
- public:
-  G4MoleculeTableMessenger();
-  ~G4MoleculeTableMessenger() override;
-  void SetNewValue(G4UIcommand * command,G4String newValue) override;
+  public:
 
- protected:
-  std::unique_ptr<G4UIcmdWithoutParameter> fpPrintTable;
-  std::unique_ptr<G4UIcmdWithAString> fpSpecies;
+    G4MoleculeTableMessenger();
+    ~G4MoleculeTableMessenger() override;
+    void SetNewValue(G4UIcommand* command, G4String newValue) override;
 
+  protected:
+
+    std::unique_ptr<G4UIcmdWithoutParameter> fpPrintTable;
+    std::unique_ptr<G4UIcmdWithAString> fpSpecies;
 };
-
 
 #endif  // GEANT4_G4MOLECULETABLEMESSENGER_HH

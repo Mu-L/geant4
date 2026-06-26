@@ -33,7 +33,8 @@ G4DNAPTBExcitationStructure::G4DNAPTBExcitationStructure()
   fpN2 = G4Material::GetMaterial("N2", false);
 
   //  taken directly from PTra code by MPietrzak
-  if (fpN2 != nullptr) {
+  if (fpN2 != nullptr)
+  {
     auto index = fpN2->GetIndex();
     energyConstant[index].push_back(1.85 * eV);
     energyConstant[index].push_back(2.15 * eV);
@@ -66,23 +67,25 @@ G4DNAPTBExcitationStructure::G4DNAPTBExcitationStructure()
     energyConstant[index].push_back(39.23 * eV);
   }
 
-  for (const auto& [index, levels] : energyConstant) {
+  for (const auto& [index, levels] : energyConstant)
+  {
     nExcLevels[index] = (G4int)levels.size();
   }
 }
 
-G4double G4DNAPTBExcitationStructure::ExcitationEnergy(
-  const G4int& ExcLevel, const size_t& materialID)
+G4double G4DNAPTBExcitationStructure::ExcitationEnergy(const G4int& ExcLevel,
+                                                       const size_t& materialID)
 {
   size_t matNameModif = ReplaceMaterial(materialID);
 
   // check if the material exist in the map
-  if (energyConstant.find(matNameModif) == energyConstant.end()) {
+  if (energyConstant.find(matNameModif) == energyConstant.end())
+  {
     std::ostringstream oss;
     oss << "Material name was not found in energyConstantMap. Problematic material is: "
         << matNameModif;
-    G4Exception(
-      "G4DNAPTBExcitationStructure::ExcitationEnergy", "em0002", FatalException, oss.str().c_str());
+    G4Exception("G4DNAPTBExcitationStructure::ExcitationEnergy", "em0002", FatalException,
+                oss.str().c_str());
   }
 
   G4double excitation = 0.;
@@ -98,12 +101,13 @@ G4int G4DNAPTBExcitationStructure::NumberOfExcLevels(const size_t& matID)
   auto matNameModif = ReplaceMaterial(matID);
 
   // check if the material exist in the map
-  if (nExcLevels.find(matNameModif) == nExcLevels.end()) {
+  if (nExcLevels.find(matNameModif) == nExcLevels.end())
+  {
     std::ostringstream oss;
     oss << "Material name was not found in energyConstantMap. Problematic material is: "
         << matNameModif;
     G4Exception("G4DNAPTBNDExcitationStructure::NumberOfExcLevels", "em0002", FatalException,
-      oss.str().c_str());
+                oss.str().c_str());
   }
 
   return nExcLevels[matNameModif];
@@ -113,7 +117,8 @@ size_t G4DNAPTBExcitationStructure::ReplaceMaterial(const size_t& materialID)
 {
   auto output = materialID;
   auto G4_N2 = G4Material::GetMaterial("G4_N2", false)->GetIndex();
-  if (materialID == G4_N2) {
+  if (materialID == G4_N2)
+  {
     output = fpN2->GetIndex();
   }
 

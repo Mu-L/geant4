@@ -35,26 +35,26 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4HadronElasticPhysicsPHP_h
-#define G4HadronElasticPhysicsPHP_h 1
+#ifndef G4HADRONELASTICPHYSICSPHP_HH
+#define G4HADRONELASTICPHYSICSPHP_HH
 
 #include "G4HadronElasticPhysics.hh"
 
 class G4HadronElasticPhysicsPHP : public G4HadronElasticPhysics
 {
-public: 
+  public:
 
-  explicit G4HadronElasticPhysicsPHP(G4int ver = 1); 
+    explicit G4HadronElasticPhysicsPHP(G4int ver = 1);
 
-  ~G4HadronElasticPhysicsPHP() override = default;
+    ~G4HadronElasticPhysicsPHP() override = default;
 
-  // This method will be invoked in the Construct() method.
-  // each physics process will be instantiated and
-  // registered to the process manager of each particle type 
-  void ConstructProcess() final;
+    // This method will be invoked in the Construct() method.
+    // each physics process will be instantiated and
+    // registered to the process manager of each particle type
+    void ConstructProcess() final;
 
-  G4HadronElasticPhysicsPHP(const G4HadronElasticPhysicsPHP&) = delete;
-  G4HadronElasticPhysicsPHP& operator=(const G4HadronElasticPhysicsPHP&) = delete;
+    G4HadronElasticPhysicsPHP(const G4HadronElasticPhysicsPHP&) = delete;
+    G4HadronElasticPhysicsPHP& operator=(const G4HadronElasticPhysicsPHP&) = delete;
 };
 
 #endif

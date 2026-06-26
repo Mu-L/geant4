@@ -25,23 +25,22 @@
 //
 //
 
-#include "globals.hh"
 #include "G4CollisionNNToNDelta.hh"
+
 #include "G4ConcreteNNToNDelta.hh"
 #include "G4ShortLivedConstructor.hh"
+#include "globals.hh"
 
 G4CollisionNNToNDelta::G4CollisionNNToNDelta()
-{ 
-	components=0;
-	G4ShortLivedConstructor ShortLived;
-	ShortLived.ConstructParticle();
-	MakeNNToNDelta<DeltamPC, Delta0PC, DeltapPC, DeltappPC, G4ConcreteNNToNDelta>::Make(this);
+{
+  components = 0;
+  G4ShortLivedConstructor ShortLived;
+  ShortLived.ConstructParticle();
+  MakeNNToNDelta<DeltamPC, Delta0PC, DeltapPC, DeltappPC, G4ConcreteNNToNDelta>::Make(this);
 }
 
 G4CollisionNNToNDelta::~G4CollisionNNToNDelta()
 {
-	if (components) delete components;
-	components=0;
+  if (components) delete components;
+  components = 0;
 }
-
-

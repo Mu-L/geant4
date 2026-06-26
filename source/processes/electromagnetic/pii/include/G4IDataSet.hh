@@ -40,38 +40,40 @@
 
 // -------------------------------------------------------------------
 
-#ifndef  G4IDATASET_HH
-#define  G4IDATASET_HH 1
+#ifndef G4IDATASET_HH
+#define G4IDATASET_HH
 
-#include "globals.hh"
 #include "G4DataVector.hh"
+#include "globals.hh"
 
-class G4IDataSet 
-{ 
-public:
-  G4IDataSet() { }
-  virtual ~G4IDataSet() { }
-  
-  virtual G4double FindValue(G4double x, G4int componentId = 0) const = 0;
- 
-  virtual void PrintData(void) const = 0;
-  
-  virtual const G4IDataSet* GetComponent(G4int componentId) const = 0;
-  virtual void AddComponent(G4IDataSet* dataSet) = 0;
-  virtual size_t NumberOfComponents(void) const = 0;
- 
-  virtual const G4DataVector& GetEnergies(G4int componentId) const = 0;
-  virtual const G4DataVector& GetData(G4int componentId) const = 0;
-  virtual void SetEnergiesData(G4DataVector* x, G4DataVector* data, G4int component=0) = 0;
- 
-  virtual G4bool LoadData(const G4String& fileName) = 0;
-  virtual G4bool SaveData(const G4String& fileName) const = 0;
+class G4IDataSet
+{
+  public:
 
-  virtual G4double RandomSelect(G4int componentId = 0) const = 0;
-   
-private:
-  // Hide copy constructor and assignment operator 
-  G4IDataSet(const G4IDataSet& copy);
-  G4IDataSet& operator=(const G4IDataSet& right);
+    G4IDataSet() {}
+    virtual ~G4IDataSet() {}
+
+    virtual G4double FindValue(G4double x, G4int componentId = 0) const = 0;
+
+    virtual void PrintData(void) const = 0;
+
+    virtual const G4IDataSet* GetComponent(G4int componentId) const = 0;
+    virtual void AddComponent(G4IDataSet* dataSet) = 0;
+    virtual size_t NumberOfComponents(void) const = 0;
+
+    virtual const G4DataVector& GetEnergies(G4int componentId) const = 0;
+    virtual const G4DataVector& GetData(G4int componentId) const = 0;
+    virtual void SetEnergiesData(G4DataVector* x, G4DataVector* data, G4int component = 0) = 0;
+
+    virtual G4bool LoadData(const G4String& fileName) = 0;
+    virtual G4bool SaveData(const G4String& fileName) const = 0;
+
+    virtual G4double RandomSelect(G4int componentId = 0) const = 0;
+
+  private:
+
+    // Hide copy constructor and assignment operator
+    G4IDataSet(const G4IDataSet& copy);
+    G4IDataSet& operator=(const G4IDataSet& right);
 };
 #endif /* G4IDATASET_HH */

@@ -46,13 +46,16 @@ std::size_t GetSlot(G4FermiAtomicMass atomicMass, G4FermiChargeNumber chargeNumb
 
 G4FermiNucleiProperties::G4FermiNucleiProperties()
 {
-  for (auto a = 1; a < MAX_A; ++a) {
-    for (auto z = 0; z <= a; ++z) {
+  for (auto a = 1; a < MAX_A; ++a)
+  {
+    for (auto z = 0; z <= a; ++z)
+    {
       const auto atomicMass = G4FermiAtomicMass(a);
       const auto chargeNumber = G4FermiChargeNumber(z);
 
       const auto mass = G4NucleiProperties::GetNuclearMass(a, z);
-      if (mass > 0.) {
+      if (mass > 0.)
+      {
         InsertNuclei(atomicMass, chargeNumber, mass, G4NucleiProperties::IsInStableTable(a, z));
       }
     }
@@ -67,7 +70,8 @@ G4double G4FermiNucleiProperties::GetNuclearMassImpl(G4FermiAtomicMass atomicMas
                    "invalid nuclei A = " << atomicMass << ", Z = " << chargeNumber);
 
   const auto slot = GetSlot(atomicMass, chargeNumber);
-  if (slot < nucleiMasses_.size() && nucleiMasses_[slot].isCached) {
+  if (slot < nucleiMasses_.size() && nucleiMasses_[slot].isCached)
+  {
     return nucleiMasses_[slot].mass;
   }
 
@@ -78,8 +82,7 @@ G4bool G4FermiNucleiProperties::IsStableImpl(G4FermiAtomicMass atomicMass,
                                              G4FermiChargeNumber chargeNumber) const
 {
   if (atomicMass < 1_m || chargeNumber < 0_c
-      || static_cast<std::uint32_t>(chargeNumber)
-      > static_cast<std::uint32_t>(atomicMass))
+      || static_cast<std::uint32_t>(chargeNumber) > static_cast<std::uint32_t>(atomicMass))
   {
     return false;
   }
@@ -94,7 +97,8 @@ void G4FermiNucleiProperties::InsertNuclei(G4FermiAtomicMass atomicMass,
                                            G4bool isStable)
 {
   const auto slot = GetSlot(atomicMass, chargeNumber);
-  if (slot >= nucleiMasses_.size()) {
+  if (slot >= nucleiMasses_.size())
+  {
     nucleiMasses_.resize(slot + static_cast<std::uint32_t>(atomicMass));
   }
 

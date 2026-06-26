@@ -28,29 +28,37 @@
 #ifndef G4TOOLSSGNODE_HH
 #define G4TOOLSSGNODE_HH
 
-#include <tools/sg/separator>
-
 #include "G4PhysicalVolumeModel.hh"
 
-class G4ToolsSGNode: public tools::sg::separator {
-  typedef tools::sg::separator parent;
-public:
-  G4ToolsSGNode():parent(),fPVNodeID(0) {}
-  virtual ~G4ToolsSGNode() = default;
-public:
-  G4ToolsSGNode(const G4ToolsSGNode& a_from):parent(a_from),fPVNodeID(a_from.fPVNodeID) {}
-  G4ToolsSGNode& operator=(const G4ToolsSGNode& a_from) {
-    parent::operator=(a_from);
-    fPVNodeID = a_from.fPVNodeID;
-    return *this;
-  }
-public:
-  const G4PhysicalVolumeModel::G4PhysicalVolumeNodeID& GetPVNodeID () const
-  {return fPVNodeID;}
-  void SetPVNodeID(const G4PhysicalVolumeModel::G4PhysicalVolumeNodeID& id)
-  {fPVNodeID = id;}
-private:
-  G4PhysicalVolumeModel::G4PhysicalVolumeNodeID fPVNodeID;
+#include <tools/sg/separator>
+
+class G4ToolsSGNode : public tools::sg::separator
+{
+    typedef tools::sg::separator parent;
+
+  public:
+
+    G4ToolsSGNode() : parent(), fPVNodeID(0) {}
+    virtual ~G4ToolsSGNode() = default;
+
+  public:
+
+    G4ToolsSGNode(const G4ToolsSGNode& a_from) : parent(a_from), fPVNodeID(a_from.fPVNodeID) {}
+    G4ToolsSGNode& operator=(const G4ToolsSGNode& a_from)
+    {
+      parent::operator=(a_from);
+      fPVNodeID = a_from.fPVNodeID;
+      return *this;
+    }
+
+  public:
+
+    const G4PhysicalVolumeModel::G4PhysicalVolumeNodeID& GetPVNodeID() const { return fPVNodeID; }
+    void SetPVNodeID(const G4PhysicalVolumeModel::G4PhysicalVolumeNodeID& id) { fPVNodeID = id; }
+
+  private:
+
+    G4PhysicalVolumeModel::G4PhysicalVolumeNodeID fPVNodeID;
 };
 
 #endif

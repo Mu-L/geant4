@@ -37,9 +37,12 @@
 // Author: Jonathan Madsen (May 28th 2020)
 // ---------------------------------------------------------------
 
-#pragma once
+#ifndef G4TASKGROUP_HH
+#define G4TASKGROUP_HH
 
 #include "PTL/TaskGroup.hh"
 
-template <typename _Tp, typename _Arg = _Tp>
+template<typename _Tp, typename _Arg = _Tp>
 using G4TaskGroup = PTL::TaskGroup<_Tp, _Arg>;
+
+#endif

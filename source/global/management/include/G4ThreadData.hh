@@ -30,8 +30,11 @@
 //  Author: Jonathan Madsen (May 28th 2020)
 //  ---------------------------------------------------------------
 
-#pragma once
+#ifndef G4THREADDATA_HH
+#define G4THREADDATA_HH
 
 #include "PTL/ThreadData.hh"
 
 using G4ThreadData = PTL::ThreadData;
+
+#endif

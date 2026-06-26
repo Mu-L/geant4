@@ -78,7 +78,8 @@ static const G4bool tcsh_build = false;
 G4UIExecutive::G4UIExecutive(G4int argc, char** argv, const G4String& type)
   : selected(kNone), session(nullptr), shell(nullptr), isGUI(false), verbose(true)
 {
-  if (verbose) {
+  if (verbose)
+  {
     G4cout << "Available UI session types: [ ";
     if (qt_build) G4cout << "Qt, ";
     if (xm_build) G4cout << "Xm, ";
@@ -90,13 +91,14 @@ G4UIExecutive::G4UIExecutive(G4int argc, char** argv, const G4String& type)
   // selecting session type...
   // 1st priority : in case argumant specified
   G4String stype = G4StrUtil::to_lower_copy(type);  // session type is case-insensitive.
-  if (! type.empty()) SelectSessionByArg(stype);
+  if (!type.empty()) SelectSessionByArg(stype);
 
   // 2nd priority : refer environment variables (as backword compatibility)
   if (selected == kNone) SelectSessionByEnv();
 
   // 3rd priority : refer $HOME/.g4session
-  if (selected == kNone) {
+  if (selected == kNone)
+  {
     const G4String& appinput = argv[0];
     G4String appname = "";
     std::size_t islash = appinput.find_last_of("/\\");
@@ -112,7 +114,8 @@ G4UIExecutive::G4UIExecutive(G4int argc, char** argv, const G4String& type)
   if (selected == kNone) SelectSessionByBestGuess();
 
   // instantiate a session...
-  switch (selected) {
+  switch (selected)
+  {
     case kQt:
 #if defined(G4UI_BUILD_QT_SESSION)
       session = new G4UIQt(argc, argv);
@@ -134,7 +137,7 @@ G4UIExecutive::G4UIExecutive(G4int argc, char** argv, const G4String& type)
 #endif
       break;
     case kTcsh:
-#if ! (defined(WIN32) || defined(__MINGW32__))
+#if !(defined(WIN32) || defined(__MINGW32__))
       DISCARD_PARAMETER(argc);
       DISCARD_PARAMETER(argv);
       shell = new G4UItcsh;
@@ -151,11 +154,12 @@ G4UIExecutive::G4UIExecutive(G4int argc, char** argv, const G4String& type)
   }
 
   // fallback (csh)
-  if (session == nullptr) {
+  if (session == nullptr)
+  {
     G4Exception("G4UIExecutive::G4UIExecutive()", "UI0002", JustWarning,
-      "Specified session type is not build in your system,\n"
-      "or no session type is specified.\n"
-      "A fallback session type is used.");
+                "Specified session type is not build in your system,\n"
+                "or no session type is specified.\n"
+                "A fallback session type is used.");
 
     selected = kCsh;
     DISCARD_PARAMETER(argc);
@@ -166,7 +170,10 @@ G4UIExecutive::G4UIExecutive(G4int argc, char** argv, const G4String& type)
 }
 
 // --------------------------------------------------------------------------
-G4UIExecutive::~G4UIExecutive() { delete session; }
+G4UIExecutive::~G4UIExecutive()
+{
+  delete session;
+}
 
 // --------------------------------------------------------------------------
 void G4UIExecutive::SelectSessionByArg(const G4String& stype)
@@ -221,7 +228,8 @@ void G4UIExecutive::SelectSessionByFile(const G4String& appname)
   G4String default_session = "";
   G4int iline = 1;
   sessionMap.clear();
-  while (fsession.good()) {
+  while (fsession.good())
+  {
     if (fsession.eof()) break;
     fsession.getline(linebuf, BUFSIZE);
     const G4String& aline = G4StrUtil::strip_copy(linebuf);
@@ -229,7 +237,8 @@ void G4UIExecutive::SelectSessionByFile(const G4String& appname)
     if (aline.empty()) continue;
     if (iline == 1)
       default_session = aline;
-    else {
+    else
+    {
       size_t idx = aline.find_first_of(' ');
       if (idx == G4String::npos) break;
       G4String aname = aline.substr(0, idx);
@@ -289,4 +298,7 @@ void G4UIExecutive::SetLsColor(TermColorIndex dirColor, TermColorIndex cmdColor)
 }
 
 // --------------------------------------------------------------------------
-void G4UIExecutive::SessionStart() { session->SessionStart(); }
+void G4UIExecutive::SessionStart()
+{
+  session->SessionStart();
+}

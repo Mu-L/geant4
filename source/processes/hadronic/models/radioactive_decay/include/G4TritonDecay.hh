@@ -27,24 +27,23 @@
 //                                                                            //
 //  File:   G4TritonDecay.hh   based  G4Alpha                                                //
 //  Author: A.Mereagglia (CENBG), imported in G4 respository by L.Desorgher         //
-//  Date:   24 June 2019 , imported on 31 October 2019                                                  //
-//  Description:          //
+//  Date:   24 June 2019 , imported on 31 October 2019 // Description:          //
 //                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4TritonDecay_h
-#define G4TritonDecay_h 1
+#ifndef G4TRITONDECAY_HH
+#define G4TRITONDECAY_HH
 
 #include "G4NuclearDecay.hh"
-
 
 class G4TritonDecay : public G4NuclearDecay
 {
   public:
-    G4TritonDecay(const G4ParticleDefinition* theParentNucleus,
-                 const G4double& theBR, const G4double& Qvalue,
-                 const G4double& excitation, const G4Ions::G4FloatLevelBase& flb);
+
+    G4TritonDecay(const G4ParticleDefinition* theParentNucleus, const G4double& theBR,
+                  const G4double& Qvalue, const G4double& excitation,
+                  const G4Ions::G4FloatLevelBase& flb);
 
     virtual ~G4TritonDecay();
 
@@ -53,7 +52,7 @@ class G4TritonDecay : public G4NuclearDecay
     virtual void DumpNuclearInfo();
 
   private:
+
     const G4double transitionQ;
 };
 #endif
-

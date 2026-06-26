@@ -35,68 +35,68 @@
 //
 // Modifications:
 //
- 
+
 //
 // Class Description
 // This is a singleton keeping pointers to all cross section data sets
 // Class Description - End
 
-#ifndef G4CrossSectionDataSetRegistry_h
-#define G4CrossSectionDataSetRegistry_h 1
+#ifndef G4CROSSSECTIONDATASETREGISTRY_HH
+#define G4CROSSSECTIONDATASETREGISTRY_HH
 
-#include <vector>
-#include <map>
-#include "globals.hh"
 #include "G4ThreadLocalSingleton.hh"
+#include "globals.hh"
+
+#include <map>
+#include <vector>
 
 class G4VCrossSectionDataSet;
 class G4VComponentCrossSection;
 
 class G4CrossSectionDataSetRegistry
 {
-friend class G4ThreadLocalSingleton<G4CrossSectionDataSetRegistry>;
+    friend class G4ThreadLocalSingleton<G4CrossSectionDataSetRegistry>;
 
-public:
+  public:
 
-  static G4CrossSectionDataSetRegistry* Instance();
-  // access 
-  
-  ~G4CrossSectionDataSetRegistry();
-  
-  void Register(G4VCrossSectionDataSet*);
-  //register new cross section
+    static G4CrossSectionDataSetRegistry* Instance();
+    // access
 
-  void DeRegister(G4VCrossSectionDataSet*);
-  //deregister cross section
+    ~G4CrossSectionDataSetRegistry();
 
-  void Register(G4VComponentCrossSection*);
-  //register new cross section component
+    void Register(G4VCrossSectionDataSet*);
+    // register new cross section
 
-  void DeRegister(G4VComponentCrossSection*);
-  //deregister cross section component
+    void DeRegister(G4VCrossSectionDataSet*);
+    // deregister cross section
 
-  void DeleteComponent(G4VComponentCrossSection*);
-  //deregister and delete cross section component
+    void Register(G4VComponentCrossSection*);
+    // register new cross section component
 
-  void Clean();
-  //clean the store
-      
-  G4VCrossSectionDataSet* GetCrossSectionDataSet(const G4String& name, G4bool warning=false);
+    void DeRegister(G4VComponentCrossSection*);
+    // deregister cross section component
 
-  G4VComponentCrossSection* GetComponentCrossSection(const G4String& name);
+    void DeleteComponent(G4VComponentCrossSection*);
+    // deregister and delete cross section component
 
-  G4CrossSectionDataSetRegistry(G4CrossSectionDataSetRegistry&) = delete;
-  G4CrossSectionDataSetRegistry& operator=
-  (const G4CrossSectionDataSetRegistry &right) = delete;
+    void Clean();
+    // clean the store
 
-private:
+    G4VCrossSectionDataSet* GetCrossSectionDataSet(const G4String& name, G4bool warning = false);
 
-  G4CrossSectionDataSetRegistry();
+    G4VComponentCrossSection* GetComponentCrossSection(const G4String& name);
 
-  static G4ThreadLocal G4CrossSectionDataSetRegistry* instance;
-  
-  std::vector <G4VCrossSectionDataSet*> xSections;
-  std::vector <G4VComponentCrossSection*> xComponents;
+    G4CrossSectionDataSetRegistry(G4CrossSectionDataSetRegistry&) = delete;
+    G4CrossSectionDataSetRegistry& operator=(const G4CrossSectionDataSetRegistry& right) = delete;
+
+  private:
+
+    G4CrossSectionDataSetRegistry();
+
+    static G4ThreadLocal G4CrossSectionDataSetRegistry* instance;
+
+    std::vector<G4VCrossSectionDataSet*> xSections;
+    std::vector<G4VComponentCrossSection*> xComponents;
 };
 
 #endif

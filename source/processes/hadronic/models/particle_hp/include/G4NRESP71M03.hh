@@ -36,6 +36,7 @@
 class G4NRESP71M03
 {
   public:
+
     G4NRESP71M03() { ; };
     ~G4NRESP71M03() { ; };
 
@@ -51,6 +52,7 @@ class G4NRESP71M03
                             G4ReactionProduct* theProds);
 
   private:
+
     // Defining the arrays with the angular distribution data
     static const G4int ndist = 32;  // Number of angular distributions.
     static const G4int nrhos = 51;  // Number of Rho values.

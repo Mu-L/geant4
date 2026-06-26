@@ -25,8 +25,8 @@
 //
 //
 //
-// 
-//Base class for all Motif window widgets (shells)
+//
+// Base class for all Motif window widgets (shells)
 
 #ifndef G4OPENGLXMVWIDGETSHELL_HH
 #define G4OPENGLXMVWIDGETSHELL_HH
@@ -37,16 +37,16 @@ class G4OpenGLXmVWidgetContainer;
 
 class G4OpenGLXmVWidgetShell : public G4OpenGLXmVWidgetObject
 {
+  public:
 
-public:
-  G4OpenGLXmVWidgetShell();   //constructor
-  virtual ~G4OpenGLXmVWidgetShell();  //destructor
+    G4OpenGLXmVWidgetShell();  // constructor
+    virtual ~G4OpenGLXmVWidgetShell();  // destructor
 
-  virtual Widget* GetPointerToWidget() = 0;
-  virtual void AddChild (G4OpenGLXmVWidgetContainer*) = 0;
-  virtual void Realize () = 0;
+    virtual Widget* GetPointerToWidget() = 0;
+    virtual void AddChild(G4OpenGLXmVWidgetContainer*) = 0;
+    virtual void Realize() = 0;
 
-private:
+  private:
 };
 
 #endif

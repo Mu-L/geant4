@@ -75,7 +75,7 @@ G4bool HodoscopeSD::ProcessHits(G4Step* step, G4TouchableHistory*)
   auto ix = -1;
   for (std::size_t i = 0; i < fHitsCollection->entries(); ++i) {
     if ((*fHitsCollection)[i]->GetID() == copyNo) {
-      ix = i;
+      ix = static_cast<G4int>(i);
       break;
     }
   }

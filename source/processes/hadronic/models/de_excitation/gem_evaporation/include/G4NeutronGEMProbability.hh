@@ -26,36 +26,33 @@
 //
 //
 // Hadronic Process: Nuclear De-excitations
-// by V. Lara (Nov 1999) 
+// by V. Lara (Nov 1999)
 //
-// J.M. Quesada (July 2009) alpha's and beta's  values according to Furihata's paper 
+// J.M. Quesada (July 2009) alpha's and beta's  values according to Furihata's paper
 // (based on notes added on proof in Dostrovskii's paper)
 
-
-#ifndef G4NeutronGEMProbability_h
-#define G4NeutronGEMProbability_h 1
-
+#ifndef G4NEUTRONGEMPROBABILITY_HH
+#define G4NEUTRONGEMPROBABILITY_HH
 
 #include "G4GEMProbability.hh"
 
-
 class G4NeutronGEMProbability : public G4GEMProbability
 {
-public:
-  // Only available constructor
-  G4NeutronGEMProbability();
-  
-  ~G4NeutronGEMProbability();
+  public:
 
-private:  
-  // Copy constructor
-  G4NeutronGEMProbability(const G4NeutronGEMProbability &right);
-  
-  const G4NeutronGEMProbability & operator=(const G4NeutronGEMProbability &right);
-  G4bool operator==(const G4NeutronGEMProbability &right) const;
-  G4bool operator!=(const G4NeutronGEMProbability &right) const;
-  
+    // Only available constructor
+    G4NeutronGEMProbability();
+
+    ~G4NeutronGEMProbability();
+
+  private:
+
+    // Copy constructor
+    G4NeutronGEMProbability(const G4NeutronGEMProbability& right);
+
+    const G4NeutronGEMProbability& operator=(const G4NeutronGEMProbability& right);
+    G4bool operator==(const G4NeutronGEMProbability& right) const;
+    G4bool operator!=(const G4NeutronGEMProbability& right) const;
 };
-
 
 #endif

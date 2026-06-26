@@ -25,33 +25,35 @@
 //
 //
 
-#ifndef   G4DNAGENERICIONSMANAGER_HH
- #define  G4DNAGENERICIONSMANAGER_HH 1
- 
- #include "globals.hh"
- 
- #include <map>
- 
- class G4DNAIons;
- class G4ParticleDefinition;
- 
- class G4DNAGenericIonsManager
- {
-  public:
-                                        ~G4DNAGenericIonsManager() = delete;
-                                         G4DNAGenericIonsManager(const G4DNAGenericIonsManager &) = delete;
-   const G4DNAGenericIonsManager        &operator=(const G4DNAGenericIonsManager &) = delete;
+#ifndef G4DNAGENERICIONSMANAGER_HH
+#define G4DNAGENERICIONSMANAGER_HH
 
-   static G4DNAGenericIonsManager *      Instance();
-   G4ParticleDefinition *                GetIon(const G4String & name);
+#include "globals.hh"
+
+#include <map>
+
+class G4DNAIons;
+class G4ParticleDefinition;
+
+class G4DNAGenericIonsManager
+{
+  public:
+
+    ~G4DNAGenericIonsManager() = delete;
+    G4DNAGenericIonsManager(const G4DNAGenericIonsManager&) = delete;
+    const G4DNAGenericIonsManager& operator=(const G4DNAGenericIonsManager&) = delete;
+
+    static G4DNAGenericIonsManager* Instance();
+    G4ParticleDefinition* GetIon(const G4String& name);
 
   private:
-                                         G4DNAGenericIonsManager();
 
-   static G4DNAGenericIonsManager *      theInstance;
-   
-   using IonsMap = std::map<G4String, G4ParticleDefinition *>;
+    G4DNAGenericIonsManager();
 
-   IonsMap                               map;
- };
+    static G4DNAGenericIonsManager* theInstance;
+
+    using IonsMap = std::map<G4String, G4ParticleDefinition*>;
+
+    IonsMap map;
+};
 #endif /* G4DNAGENERICIONSMANAGER_HH */

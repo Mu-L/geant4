@@ -29,25 +29,22 @@
 // --------------------------------------------------------------------
 
 #include "G4PVDivision.hh"
+
 #include "G4LogicalVolume.hh"
-#include "G4VSolid.hh"
-#include "G4ReflectedSolid.hh"
 #include "G4ParameterisationBox.hh"
-#include "G4ParameterisationTubs.hh"
 #include "G4ParameterisationCons.hh"
-#include "G4ParameterisationTrd.hh"
 #include "G4ParameterisationPara.hh"
 #include "G4ParameterisationPolycone.hh"
 #include "G4ParameterisationPolyhedra.hh"
+#include "G4ParameterisationTrd.hh"
+#include "G4ParameterisationTubs.hh"
+#include "G4ReflectedSolid.hh"
+#include "G4VSolid.hh"
 
 //--------------------------------------------------------------------------
-G4PVDivision::G4PVDivision(const G4String& pName,
-                                 G4LogicalVolume* pLogical,
-                                 G4LogicalVolume* pMotherLogical,
-                           const EAxis pAxis,
-                           const G4int nDivs,
-                           const G4double width,
-                           const G4double offset )
+G4PVDivision::G4PVDivision(const G4String& pName, G4LogicalVolume* pLogical,
+                           G4LogicalVolume* pMotherLogical, const EAxis pAxis, const G4int nDivs,
+                           const G4double width, const G4double offset)
   : G4PVReplica(pName, nDivs, pAxis, pLogical, pMotherLogical)
 {
   if (pMotherLogical == nullptr)
@@ -55,8 +52,7 @@ G4PVDivision::G4PVDivision(const G4String& pName,
     std::ostringstream message;
     message << "Invalid setup." << G4endl
             << "NULL pointer specified as mother for volume: " << pName;
-    G4Exception("G4PVDivision::G4PVDivision()", "GeomDiv0002",
-                FatalException, message);
+    G4Exception("G4PVDivision::G4PVDivision()", "GeomDiv0002", FatalException, message);
     return;
   }
   if (pLogical == pMotherLogical)
@@ -64,33 +60,25 @@ G4PVDivision::G4PVDivision(const G4String& pName,
     std::ostringstream message;
     message << "Invalid setup." << G4endl
             << "Cannot place a volume inside itself! Volume: " << pName;
-    G4Exception("G4PVDivision::G4PVDivision()", "GeomDiv0002",
-                FatalException, message);
+    G4Exception("G4PVDivision::G4PVDivision()", "GeomDiv0002", FatalException, message);
   }
   pMotherLogical->AddDaughter(this);
   SetMotherLogical(pMotherLogical);
-  SetParameterisation(pMotherLogical, pAxis, nDivs,
-                      width, offset, DivNDIVandWIDTH);
-  CheckAndSetParameters (pAxis, nDivs, width, offset,
-                         DivNDIVandWIDTH, pMotherLogical);
+  SetParameterisation(pMotherLogical, pAxis, nDivs, width, offset, DivNDIVandWIDTH);
+  CheckAndSetParameters(pAxis, nDivs, width, offset, DivNDIVandWIDTH, pMotherLogical);
 }
 
 //--------------------------------------------------------------------------
-G4PVDivision::G4PVDivision(const G4String& pName,
-                                 G4LogicalVolume* pLogical,
-                                 G4LogicalVolume* pMotherLogical,
-                           const EAxis pAxis,
-                           const G4int nDivs,
-                           const G4double offset )
+G4PVDivision::G4PVDivision(const G4String& pName, G4LogicalVolume* pLogical,
+                           G4LogicalVolume* pMotherLogical, const EAxis pAxis, const G4int nDivs,
+                           const G4double offset)
   : G4PVReplica(pName, nDivs, pAxis, pLogical, pMotherLogical)
 {
   if (pMotherLogical == nullptr)
   {
     std::ostringstream message;
-    message << "Invalid setup." << G4endl
-            << "NULL pointer specified as mother! Volume: " << pName;
-    G4Exception("G4PVDivision::G4PVDivision()", "GeomDiv0002",
-                FatalException, message);
+    message << "Invalid setup." << G4endl << "NULL pointer specified as mother! Volume: " << pName;
+    G4Exception("G4PVDivision::G4PVDivision()", "GeomDiv0002", FatalException, message);
     return;
   }
   if (pLogical == pMotherLogical)
@@ -98,55 +86,44 @@ G4PVDivision::G4PVDivision(const G4String& pName,
     std::ostringstream message;
     message << "Invalid setup." << G4endl
             << "Cannot place a volume inside itself! Volume: " << pName;
-    G4Exception("G4PVDivision::G4PVDivision()", "GeomDiv0002",
-                FatalException, message);
+    G4Exception("G4PVDivision::G4PVDivision()", "GeomDiv0002", FatalException, message);
   }
   pMotherLogical->AddDaughter(this);
   SetMotherLogical(pMotherLogical);
   SetParameterisation(pMotherLogical, pAxis, nDivs, 0., offset, DivNDIV);
-  CheckAndSetParameters (pAxis, nDivs, 0., offset, DivNDIV, pMotherLogical);
+  CheckAndSetParameters(pAxis, nDivs, 0., offset, DivNDIV, pMotherLogical);
 }
 
 //--------------------------------------------------------------------------
-G4PVDivision::G4PVDivision(const G4String& pName,
-                                 G4LogicalVolume* pLogical,
-                                 G4LogicalVolume* pMotherLogical,
-                           const EAxis pAxis,
-                           const G4double width,
-                           const G4double offset )
+G4PVDivision::G4PVDivision(const G4String& pName, G4LogicalVolume* pLogical,
+                           G4LogicalVolume* pMotherLogical, const EAxis pAxis, const G4double width,
+                           const G4double offset)
   : G4PVReplica(pName, 0, pAxis, pLogical, pMotherLogical)
 {
   if (pMotherLogical == nullptr)
   {
     std::ostringstream message;
-    message << "Invalid setup." << G4endl
-            << "NULL pointer specified as mother! Volume: " + pName;
-    G4Exception("G4PVDivision::G4PVDivision()", "GeomDiv0002",
-                FatalException, message);
+    message << "Invalid setup." << G4endl << "NULL pointer specified as mother! Volume: " + pName;
+    G4Exception("G4PVDivision::G4PVDivision()", "GeomDiv0002", FatalException, message);
     return;
   }
   if (pLogical == pMotherLogical)
   {
     std::ostringstream message;
     message << "Invalid setup." << G4endl
-            << "Cannot place a volume inside itself! Volume: "+ pName;
-    G4Exception("G4PVDivision::G4PVDivision()", "GeomDiv0002",
-                FatalException, message);
+            << "Cannot place a volume inside itself! Volume: " + pName;
+    G4Exception("G4PVDivision::G4PVDivision()", "GeomDiv0002", FatalException, message);
   }
   pMotherLogical->AddDaughter(this);
   SetMotherLogical(pMotherLogical);
   SetParameterisation(pMotherLogical, pAxis, 0, width, offset, DivWIDTH);
-  CheckAndSetParameters (pAxis, 0, width, offset, DivWIDTH, pMotherLogical);
+  CheckAndSetParameters(pAxis, 0, width, offset, DivWIDTH, pMotherLogical);
 }
 
 //--------------------------------------------------------------------------
-G4PVDivision::G4PVDivision(const G4String& pName,
-                                 G4LogicalVolume* pLogical,
-                                 G4VPhysicalVolume* pMotherPhysical,
-                           const EAxis pAxis,
-                           const G4int nDivs,
-                           const G4double width,
-                           const G4double offset )
+G4PVDivision::G4PVDivision(const G4String& pName, G4LogicalVolume* pLogical,
+                           G4VPhysicalVolume* pMotherPhysical, const EAxis pAxis, const G4int nDivs,
+                           const G4double width, const G4double offset)
   : G4PVReplica(pName, nDivs, pAxis, pLogical,
                 pMotherPhysical != nullptr ? pMotherPhysical->GetLogicalVolume() : nullptr)
 {
@@ -155,8 +132,7 @@ G4PVDivision::G4PVDivision(const G4String& pName,
     std::ostringstream message;
     message << "Invalid setup." << G4endl
             << "NULL pointer specified as mother for volume: " << pName;
-    G4Exception("G4PVDivision::G4PVDivision()", "GeomDiv0002",
-                FatalException, message);
+    G4Exception("G4PVDivision::G4PVDivision()", "GeomDiv0002", FatalException, message);
     return;
   }
   G4LogicalVolume* pMotherLogical = pMotherPhysical->GetLogicalVolume();
@@ -165,27 +141,20 @@ G4PVDivision::G4PVDivision(const G4String& pName,
     std::ostringstream message;
     message << "Invalid setup." << G4endl
             << "Cannot place a volume inside itself! Volume: " << pName;
-    G4Exception("G4PVDivision::G4PVDivision()", "GeomDiv0002",
-                FatalException, message);
+    G4Exception("G4PVDivision::G4PVDivision()", "GeomDiv0002", FatalException, message);
   }
   pMotherLogical->AddDaughter(this);
   SetMotherLogical(pMotherLogical);
-  SetParameterisation(pMotherLogical, pAxis, nDivs,
-                      width, offset, DivNDIVandWIDTH);
-  CheckAndSetParameters (pAxis, nDivs, width, offset,
-                         DivNDIVandWIDTH, pMotherLogical);
+  SetParameterisation(pMotherLogical, pAxis, nDivs, width, offset, DivNDIVandWIDTH);
+  CheckAndSetParameters(pAxis, nDivs, width, offset, DivNDIVandWIDTH, pMotherLogical);
 }
 
 //--------------------------------------------------------------------------
-void
-G4PVDivision::CheckAndSetParameters( const EAxis pAxis,
-                                     const G4int nDivs,
-                                     const G4double width,
-                                     const G4double offset, 
-                                           DivisionType divType,
-                                     const G4LogicalVolume* pMotherLogical )
+void G4PVDivision::CheckAndSetParameters(const EAxis pAxis, const G4int nDivs, const G4double width,
+                                         const G4double offset, DivisionType divType,
+                                         const G4LogicalVolume* pMotherLogical)
 {
-  if( divType == DivWIDTH )
+  if (divType == DivWIDTH)
   {
     fnReplicas = fparam->GetNoDiv();
   }
@@ -193,13 +162,13 @@ G4PVDivision::CheckAndSetParameters( const EAxis pAxis,
   {
     fnReplicas = nDivs;
   }
-  if (fnReplicas < 1 )
+  if (fnReplicas < 1)
   {
-    G4Exception("G4PVDivision::CheckAndSetParameters()", "GeomDiv0002",
-                FatalException, "Illegal number of replicas!");
+    G4Exception("G4PVDivision::CheckAndSetParameters()", "GeomDiv0002", FatalException,
+                "Illegal number of replicas!");
   }
 
-  if( divType != DivNDIV)
+  if (divType != DivNDIV)
   {
     fwidth = fparam->GetWidth();
   }
@@ -207,18 +176,18 @@ G4PVDivision::CheckAndSetParameters( const EAxis pAxis,
   {
     fwidth = width;
   }
-  if( fwidth < 0 )
+  if (fwidth < 0)
   {
-    G4Exception("G4PVDivision::CheckAndSetParameters()", "GeomDiv0002",
-                FatalException, "Width must be positive!");
+    G4Exception("G4PVDivision::CheckAndSetParameters()", "GeomDiv0002", FatalException,
+                "Width must be positive!");
   }
-  
+
   foffset = offset;
   fdivAxis = pAxis;
 
   //!!!!! axis has to be x/y/z in G4VoxelLimits::GetMinExtent
   //
-  if( pAxis == kRho || pAxis == kRadial3D || pAxis == kPhi )
+  if (pAxis == kRho || pAxis == kRadial3D || pAxis == kPhi)
   {
     faxis = kZAxis;
   }
@@ -226,14 +195,14 @@ G4PVDivision::CheckAndSetParameters( const EAxis pAxis,
   {
     faxis = pAxis;
   }
-  
+
   // Create rotation matrix: for phi axis it will be changed
   // in G4VPVParameterisation::ComputeTransformation, for others
   // it will stay the unity
   //
-  auto  pRMat = new G4RotationMatrix();
+  auto pRMat = new G4RotationMatrix();
   SetRotation(pRMat);
-  
+
   switch (faxis)
   {
     case kPhi:
@@ -244,11 +213,10 @@ G4PVDivision::CheckAndSetParameters( const EAxis pAxis,
     case kZAxis:
       break;
     default:
-      G4Exception("G4PVDivision::CheckAndSetParameters()", "GeomDiv0002",
-                  FatalException, "Unknown axis of replication.");
+      G4Exception("G4PVDivision::CheckAndSetParameters()", "GeomDiv0002", FatalException,
+                  "Unknown axis of replication.");
       break;
   }
-
 
   //----- Check that mother solid is of the same type than
   //      daughter solid (otherwise, the corresponding
@@ -256,15 +224,12 @@ G4PVDivision::CheckAndSetParameters( const EAxis pAxis,
   //
   G4String msolType = pMotherLogical->GetSolid()->GetEntityType();
   G4String dsolType = GetLogicalVolume()->GetSolid()->GetEntityType();
-  if( msolType != dsolType && ( msolType != "G4Trd" || dsolType != "G4Trap" ) )
+  if (msolType != dsolType && (msolType != "G4Trd" || dsolType != "G4Trap"))
   {
     std::ostringstream message;
-    message << "Incorrect solid type for division of volume "
-            << GetName() << "." << G4endl
-            << "It is: " << msolType
-            << ", while it should be: " << dsolType << "!";
-    G4Exception("G4PVDivision::CheckAndSetParameters()",
-                "GeomDiv0002", FatalException, message );
+    message << "Incorrect solid type for division of volume " << GetName() << "." << G4endl
+            << "It is: " << msolType << ", while it should be: " << dsolType << "!";
+    G4Exception("G4PVDivision::CheckAndSetParameters()", "GeomDiv0002", FatalException, message);
   }
 }
 
@@ -279,14 +244,14 @@ EAxis G4PVDivision::GetDivisionAxis() const
 
 //--------------------------------------------------------------------------
 G4bool G4PVDivision::IsParameterised() const
-{ 
+{
   return true;
 }
 
 //--------------------------------------------------------------------------
 G4bool G4PVDivision::IsMany() const
 {
-  return false; 
+  return false;
 }
 
 //--------------------------------------------------------------------------
@@ -308,11 +273,8 @@ G4VPVParameterisation* G4PVDivision::GetParameterisation() const
 }
 
 //--------------------------------------------------------------------------
-void G4PVDivision::GetReplicationData(EAxis& axis,
-                                      G4int& nDivs,
-                                      G4double& width,
-                                      G4double& offset,
-                                      G4bool& consuming ) const
+void G4PVDivision::GetReplicationData(EAxis& axis, G4int& nDivs, G4double& width, G4double& offset,
+                                      G4bool& consuming) const
 {
   axis = faxis;
   nDivs = fnReplicas;
@@ -331,14 +293,11 @@ EVolume G4PVDivision::VolumeType() const
 // TODO: this method should check that the child lv is of the correct type,
 //       else the ComputeDimensions will never be called
 //
-void G4PVDivision::SetParameterisation( G4LogicalVolume* motherLogical,
-                                  const EAxis axis,
-                                  const G4int nDivs,
-                                  const G4double width,
-                                  const G4double offset,
-                                        DivisionType divType )
+void G4PVDivision::SetParameterisation(G4LogicalVolume* motherLogical, const EAxis axis,
+                                       const G4int nDivs, const G4double width,
+                                       const G4double offset, DivisionType divType)
 {
-  // Check that solid is compatible with mother solid and axis of division   
+  // Check that solid is compatible with mother solid and axis of division
   // CheckSolid( solid, motherSolid );
   // G4cout << " Axis " << axis << G4endl;
 
@@ -347,181 +306,158 @@ void G4PVDivision::SetParameterisation( G4LogicalVolume* motherLogical,
 
   // If the solid is a reflected one, update type to its
   // real constituent solid.
-  // 
+  //
   if (mSolidType == "G4ReflectedSolid")
   {
-      mSolidType = ((G4ReflectedSolid*)mSolid)->GetConstituentMovedSolid()
-                 ->GetEntityType(); 
-  }    
+    mSolidType = ((G4ReflectedSolid*)mSolid)->GetConstituentMovedSolid()->GetEntityType();
+  }
 
   // Parameterisation type depend of mother solid type and axis of division
   //
-  if( mSolidType == "G4Box" )
+  if (mSolidType == "G4Box")
   {
-    switch( axis )
+    switch (axis)
     {
       case kXAxis:
-        fparam = new G4ParameterisationBoxX( axis, nDivs, width,
-                                             offset, mSolid, divType );
+        fparam = new G4ParameterisationBoxX(axis, nDivs, width, offset, mSolid, divType);
         break;
       case kYAxis:
-        fparam = new G4ParameterisationBoxY( axis, nDivs, width,
-                                             offset, mSolid, divType );
+        fparam = new G4ParameterisationBoxY(axis, nDivs, width, offset, mSolid, divType);
         break;
       case kZAxis:
-        fparam = new G4ParameterisationBoxZ( axis, nDivs, width,
-                                             offset, mSolid, divType );
+        fparam = new G4ParameterisationBoxZ(axis, nDivs, width, offset, mSolid, divType);
         break;
       default:
-        ErrorInAxis( axis, mSolid );
+        ErrorInAxis(axis, mSolid);
         break;
     }
   }
-  else if( mSolidType == "G4Tubs" )
+  else if (mSolidType == "G4Tubs")
   {
-    switch( axis )
+    switch (axis)
     {
       case kRho:
-        fparam = new G4ParameterisationTubsRho( axis, nDivs, width,
-                                                offset, mSolid, divType );
+        fparam = new G4ParameterisationTubsRho(axis, nDivs, width, offset, mSolid, divType);
         break;
       case kPhi:
-        fparam = new G4ParameterisationTubsPhi( axis, nDivs, width,
-                                                offset, mSolid, divType );
+        fparam = new G4ParameterisationTubsPhi(axis, nDivs, width, offset, mSolid, divType);
         break;
       case kZAxis:
-        fparam = new G4ParameterisationTubsZ( axis, nDivs, width,
-                                              offset, mSolid, divType );
+        fparam = new G4ParameterisationTubsZ(axis, nDivs, width, offset, mSolid, divType);
         break;
       default:
-        ErrorInAxis( axis, mSolid );
+        ErrorInAxis(axis, mSolid);
         break;
     }
   }
-  else if( mSolidType == "G4Cons" )
+  else if (mSolidType == "G4Cons")
   {
-    switch( axis )
+    switch (axis)
     {
       case kRho:
-        fparam = new G4ParameterisationConsRho( axis, nDivs, width,
-                                                offset, mSolid, divType );
+        fparam = new G4ParameterisationConsRho(axis, nDivs, width, offset, mSolid, divType);
         break;
       case kPhi:
-        fparam = new G4ParameterisationConsPhi( axis, nDivs, width,
-                                                offset, mSolid, divType );
+        fparam = new G4ParameterisationConsPhi(axis, nDivs, width, offset, mSolid, divType);
         break;
       case kZAxis:
-        fparam = new G4ParameterisationConsZ( axis, nDivs, width,
-                                              offset, mSolid, divType );
+        fparam = new G4ParameterisationConsZ(axis, nDivs, width, offset, mSolid, divType);
         break;
       default:
-        ErrorInAxis( axis, mSolid );
+        ErrorInAxis(axis, mSolid);
         break;
     }
   }
-  else if( mSolidType == "G4Trd" )
-  { 
-    switch( axis )
+  else if (mSolidType == "G4Trd")
+  {
+    switch (axis)
     {
       case kXAxis:
-        fparam = new G4ParameterisationTrdX( axis, nDivs, width,
-                                             offset, mSolid, divType );
+        fparam = new G4ParameterisationTrdX(axis, nDivs, width, offset, mSolid, divType);
         break;
       case kYAxis:
-        fparam = new G4ParameterisationTrdY( axis, nDivs, width,
-                                             offset, mSolid, divType );
+        fparam = new G4ParameterisationTrdY(axis, nDivs, width, offset, mSolid, divType);
         break;
       case kZAxis:
-        fparam = new G4ParameterisationTrdZ( axis, nDivs, width,
-                                             offset, mSolid, divType );
+        fparam = new G4ParameterisationTrdZ(axis, nDivs, width, offset, mSolid, divType);
         break;
       default:
-        ErrorInAxis( axis, mSolid );
+        ErrorInAxis(axis, mSolid);
         break;
     }
   }
-  else if( mSolidType == "G4Para" )
-  { 
-    switch( axis )
+  else if (mSolidType == "G4Para")
+  {
+    switch (axis)
     {
       case kXAxis:
-        fparam = new G4ParameterisationParaX( axis, nDivs, width,
-                                             offset, mSolid, divType );
+        fparam = new G4ParameterisationParaX(axis, nDivs, width, offset, mSolid, divType);
         break;
       case kYAxis:
-        fparam = new G4ParameterisationParaY( axis, nDivs, width,
-                                             offset, mSolid, divType );
+        fparam = new G4ParameterisationParaY(axis, nDivs, width, offset, mSolid, divType);
         break;
       case kZAxis:
-        fparam = new G4ParameterisationParaZ( axis, nDivs, width,
-                                             offset, mSolid, divType );
+        fparam = new G4ParameterisationParaZ(axis, nDivs, width, offset, mSolid, divType);
         break;
       default:
-        ErrorInAxis( axis, mSolid );
+        ErrorInAxis(axis, mSolid);
         break;
     }
   }
-//  else if( mSolidType == "G4Trap" )
-//  {
-//  }
-  else if( mSolidType == "G4Polycone" )
+  //  else if( mSolidType == "G4Trap" )
+  //  {
+  //  }
+  else if (mSolidType == "G4Polycone")
   {
-    switch( axis )
+    switch (axis)
     {
       case kRho:
-        fparam = new G4ParameterisationPolyconeRho( axis, nDivs, width,
-                                                    offset, mSolid, divType );
+        fparam = new G4ParameterisationPolyconeRho(axis, nDivs, width, offset, mSolid, divType);
         break;
       case kPhi:
-        fparam = new G4ParameterisationPolyconePhi( axis, nDivs, width,
-                                                    offset, mSolid, divType );
+        fparam = new G4ParameterisationPolyconePhi(axis, nDivs, width, offset, mSolid, divType);
         break;
       case kZAxis:
-        fparam = new G4ParameterisationPolyconeZ( axis, nDivs, width,
-                                                  offset, mSolid, divType );
+        fparam = new G4ParameterisationPolyconeZ(axis, nDivs, width, offset, mSolid, divType);
         break;
       default:
-        ErrorInAxis( axis, mSolid );
-      break;
+        ErrorInAxis(axis, mSolid);
+        break;
     }
   }
-  else if( mSolidType == "G4Polyhedra" )
+  else if (mSolidType == "G4Polyhedra")
   {
-    switch( axis )
+    switch (axis)
     {
       case kRho:
-        fparam = new G4ParameterisationPolyhedraRho( axis, nDivs, width,
-                                                    offset, mSolid, divType );
+        fparam = new G4ParameterisationPolyhedraRho(axis, nDivs, width, offset, mSolid, divType);
         break;
       case kPhi:
-        fparam = new G4ParameterisationPolyhedraPhi( axis, nDivs, width,
-                                                    offset, mSolid, divType );
+        fparam = new G4ParameterisationPolyhedraPhi(axis, nDivs, width, offset, mSolid, divType);
         break;
       case kZAxis:
-        fparam = new G4ParameterisationPolyhedraZ( axis, nDivs, width,
-                                                  offset, mSolid, divType );
+        fparam = new G4ParameterisationPolyhedraZ(axis, nDivs, width, offset, mSolid, divType);
         break;
       default:
-        ErrorInAxis( axis, mSolid );
-      break;
+        ErrorInAxis(axis, mSolid);
+        break;
     }
   }
   else
   {
     std::ostringstream message;
-    message << "Solid type " << mSolidType << " not supported!"  << G4endl
-            << "Divisions for " << mSolidType << " are not implemented.";
-    G4Exception("G4PVDivision::SetParameterisation()", "GeomDiv0001",
-                FatalException, message);
+    message << "Solid type " << mSolidType << " not supported!" << G4endl << "Divisions for "
+            << mSolidType << " are not implemented.";
+    G4Exception("G4PVDivision::SetParameterisation()", "GeomDiv0001", FatalException, message);
   }
 }
 
 //--------------------------------------------------------------------------
-void G4PVDivision::ErrorInAxis( EAxis axis, G4VSolid* solid )
+void G4PVDivision::ErrorInAxis(EAxis axis, G4VSolid* solid)
 {
-  G4String error = "Trying to divide solid " + solid->GetName()
-                 + " of type " + solid->GetEntityType() + " along axis ";
-  switch( axis )
+  G4String error = "Trying to divide solid " + solid->GetName() + " of type "
+                   + solid->GetEntityType() + " along axis ";
+  switch (axis)
   {
     case kXAxis:
       error += "X.";
@@ -544,8 +480,7 @@ void G4PVDivision::ErrorInAxis( EAxis axis, G4VSolid* solid )
     default:
       break;
   }
-  G4Exception("G4PVDivision::ErrorInAxis()", "GeomDiv0002",
-              FatalException, error);
+  G4Exception("G4PVDivision::ErrorInAxis()", "GeomDiv0002", FatalException, error);
 }
 
 // The next methods are for specialised repeated volumes (replicas,
@@ -558,12 +493,12 @@ void G4PVDivision::ErrorInAxis( EAxis axis, G4VSolid* solid )
 G4bool G4PVDivision::IsRegularStructure() const
 {
   return false;
-}           
+}
 
 // ----------------------------------------------------------------------
 // GetRegularStructureId()
 //
 G4int G4PVDivision::GetRegularStructureId() const
 {
-  return 0;  
-}           
+  return 0;
+}

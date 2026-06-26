@@ -26,36 +26,36 @@
 //
 //
 //
-// Created:  Mar. 31, 2009  Akinori Kimura  
+// Created:  Mar. 31, 2009  Akinori Kimura
 //
 // GMocren-file driver factory.
 //
-#ifndef G4GMocrenFile_HH
-#define G4GMocrenFile_HH
+#ifndef G4GMOCRENFILE_HH
+#define G4GMOCRENFILE_HH
 
 #include "G4VGraphicsSystem.hh"
 
-	//----- prototype
+//----- prototype
 class G4VSceneHandler;
 class G4GMocrenMessenger;
 
-	//----------------------------//
-	//----- class G4GMocrenFile -----// 
-	//----------------------------//
-class G4GMocrenFile: public G4VGraphicsSystem {
+//----------------------------//
+//----- class G4GMocrenFile -----//
+//----------------------------//
+class G4GMocrenFile : public G4VGraphicsSystem
+{
+  public:
 
-public:
-  G4GMocrenFile ();
-  virtual ~G4GMocrenFile ();
-  G4VSceneHandler * CreateSceneHandler (const G4String& name = "");
-  G4VViewer *  CreateViewer  (G4VSceneHandler&,
-			     const G4String& name = "");
+    G4GMocrenFile();
+    virtual ~G4GMocrenFile();
+    G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
+    G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "");
 
-private:
-  G4VViewer * kViewer;
-  G4VSceneHandler * kSceneHandler;
-  G4GMocrenMessenger * kMessenger;
+  private:
 
+    G4VViewer* kViewer;
+    G4VSceneHandler* kSceneHandler;
+    G4GMocrenMessenger* kMessenger;
 };
 
 #endif

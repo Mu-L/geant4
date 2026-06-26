@@ -28,12 +28,12 @@
 
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
-#ifndef G4XmlFileManager_h
-#define G4XmlFileManager_h 1
+#ifndef G4XMLFILEMANAGER_HH
+#define G4XMLFILEMANAGER_HH
 
-#include "G4VTFileManager.hh"
-#include "G4TNtupleDescription.hh"
 #include "G4TFileManager.hh"
+#include "G4TNtupleDescription.hh"
+#include "G4VTFileManager.hh"
 #include "globals.hh"
 
 #include "tools/waxml/ntuple"
@@ -50,6 +50,7 @@ class G4AnalysisManagerState;
 class G4XmlFileManager : public G4VTFileManager<std::ofstream>
 {
   public:
+
     explicit G4XmlFileManager(const G4AnalysisManagerState& state);
     G4XmlFileManager() = delete;
     ~G4XmlFileManager() override = default;
@@ -68,17 +69,19 @@ class G4XmlFileManager : public G4VTFileManager<std::ofstream>
     G4bool CloseNtupleFile(XmlNtupleDescription* ntupleDescription);
 
   protected:
+
     // Methods derived from templated base class
     std::shared_ptr<std::ofstream> CreateFileImpl(const G4String& fileName) final;
     G4bool WriteFileImpl(std::shared_ptr<std::ofstream> file) final;
     G4bool CloseFileImpl(std::shared_ptr<std::ofstream> file) final;
 
   private:
+
     // Utility method
     G4String GetNtupleFileName(XmlNtupleDescription* ntupleDescription);
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4XmlFileManager" };
+    static constexpr std::string_view fkClass{"G4XmlFileManager"};
 };
 
 #endif

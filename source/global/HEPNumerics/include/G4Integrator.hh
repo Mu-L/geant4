@@ -34,89 +34,89 @@
 //         E.TCherniaev advises
 // --------------------------------------------------------------------
 #ifndef G4INTEGRATOR_HH
-#define G4INTEGRATOR_HH 1
+#define G4INTEGRATOR_HH
 
 #include "G4Types.hh"
+
 #include <CLHEP/Units/PhysicalConstants.h>
+
 #include <cmath>
 
-template <class T, class F>
+template<class T, class F>
 class G4Integrator
 {
- public:
-  G4Integrator() { ; }
-  ~G4Integrator() { ; }
+  public:
 
-  G4double Simpson(T& typeT, F f, G4double a, G4double b, G4int n);
-  G4double Simpson(T* ptrT, F f, G4double a, G4double b, G4int n);
-  G4double Simpson(G4double (*f)(G4double), G4double a, G4double b, G4int n);
-  // Simpson integration method
+    G4Integrator() { ; }
+    ~G4Integrator() { ; }
 
-  G4double AdaptiveGauss(T& typeT, F f, G4double a, G4double b, G4double e);
-  G4double AdaptiveGauss(T* ptrT, F f, G4double a, G4double b, G4double e);
-  G4double AdaptiveGauss(G4double (*f)(G4double), G4double a, G4double b,
-                         G4double e);
-  // Adaptive Gauss method
+    G4double Simpson(T& typeT, F f, G4double a, G4double b, G4int n);
+    G4double Simpson(T* ptrT, F f, G4double a, G4double b, G4int n);
+    G4double Simpson(G4double (*f)(G4double), G4double a, G4double b, G4int n);
+    // Simpson integration method
 
-  // Integration methods involving orthogohol polynomials
+    G4double AdaptiveGauss(T& typeT, F f, G4double a, G4double b, G4double e);
+    G4double AdaptiveGauss(T* ptrT, F f, G4double a, G4double b, G4double e);
+    G4double AdaptiveGauss(G4double (*f)(G4double), G4double a, G4double b, G4double e);
+    // Adaptive Gauss method
 
-  G4double Legendre(T& typeT, F f, G4double a, G4double b, G4int n);
-  G4double Legendre(T* ptrT, F f, G4double a, G4double b, G4int n);
-  G4double Legendre(G4double (*f)(G4double), G4double a, G4double b, G4int n);
-  //
-  // Methods involving Legendre polynomials
+    // Integration methods involving orthogohol polynomials
 
-  G4double Legendre10(T& typeT, F f, G4double a, G4double b);
-  G4double Legendre10(T* ptrT, F f, G4double a, G4double b);
-  G4double Legendre10(G4double (*f)(G4double), G4double a, G4double b);
-  //
-  // Legendre10 is very fast and accurate enough
+    G4double Legendre(T& typeT, F f, G4double a, G4double b, G4int n);
+    G4double Legendre(T* ptrT, F f, G4double a, G4double b, G4int n);
+    G4double Legendre(G4double (*f)(G4double), G4double a, G4double b, G4int n);
+    //
+    // Methods involving Legendre polynomials
 
-  G4double Legendre96(T& typeT, F f, G4double a, G4double b);
-  G4double Legendre96(T* ptrT, F f, G4double a, G4double b);
-  G4double Legendre96(G4double (*f)(G4double), G4double a, G4double b);
-  //
-  // Legendre96 is very accurate and fast enough
+    G4double Legendre10(T& typeT, F f, G4double a, G4double b);
+    G4double Legendre10(T* ptrT, F f, G4double a, G4double b);
+    G4double Legendre10(G4double (*f)(G4double), G4double a, G4double b);
+    //
+    // Legendre10 is very fast and accurate enough
 
-  G4double Chebyshev(T& typeT, F f, G4double a, G4double b, G4int n);
-  G4double Chebyshev(T* ptrT, F f, G4double a, G4double b, G4int n);
-  G4double Chebyshev(G4double (*f)(G4double), G4double a, G4double b, G4int n);
-  //
-  // Methods involving Chebyshev  polynomials
+    G4double Legendre96(T& typeT, F f, G4double a, G4double b);
+    G4double Legendre96(T* ptrT, F f, G4double a, G4double b);
+    G4double Legendre96(G4double (*f)(G4double), G4double a, G4double b);
+    //
+    // Legendre96 is very accurate and fast enough
 
-  G4double Laguerre(T& typeT, F f, G4double alpha, G4int n);
-  G4double Laguerre(T* ptrT, F f, G4double alpha, G4int n);
-  G4double Laguerre(G4double (*f)(G4double), G4double alpha, G4int n);
-  //
-  // Method involving Laguerre polynomials
+    G4double Chebyshev(T& typeT, F f, G4double a, G4double b, G4int n);
+    G4double Chebyshev(T* ptrT, F f, G4double a, G4double b, G4int n);
+    G4double Chebyshev(G4double (*f)(G4double), G4double a, G4double b, G4int n);
+    //
+    // Methods involving Chebyshev  polynomials
 
-  G4double Hermite(T& typeT, F f, G4int n);
-  G4double Hermite(T* ptrT, F f, G4int n);
-  G4double Hermite(G4double (*f)(G4double), G4int n);
-  //
-  // Method involving Hermite polynomials
+    G4double Laguerre(T& typeT, F f, G4double alpha, G4int n);
+    G4double Laguerre(T* ptrT, F f, G4double alpha, G4int n);
+    G4double Laguerre(G4double (*f)(G4double), G4double alpha, G4int n);
+    //
+    // Method involving Laguerre polynomials
 
-  G4double Jacobi(T& typeT, F f, G4double alpha, G4double beta, G4int n);
-  G4double Jacobi(T* ptrT, F f, G4double alpha, G4double beta, G4int n);
-  G4double Jacobi(G4double (*f)(G4double), G4double alpha, G4double beta,
-                  G4int n);
-  // Method involving Jacobi polynomials
+    G4double Hermite(T& typeT, F f, G4int n);
+    G4double Hermite(T* ptrT, F f, G4int n);
+    G4double Hermite(G4double (*f)(G4double), G4int n);
+    //
+    // Method involving Hermite polynomials
 
- protected:
-  // Auxiliary functions for adaptive Gauss method
+    G4double Jacobi(T& typeT, F f, G4double alpha, G4double beta, G4int n);
+    G4double Jacobi(T* ptrT, F f, G4double alpha, G4double beta, G4int n);
+    G4double Jacobi(G4double (*f)(G4double), G4double alpha, G4double beta, G4int n);
+    // Method involving Jacobi polynomials
 
-  G4double Gauss(T& typeT, F f, G4double a, G4double b);
-  G4double Gauss(T* ptrT, F f, G4double a, G4double b);
-  G4double Gauss(G4double (*f)(G4double), G4double a, G4double b);
+  protected:
 
-  void AdaptGauss(T& typeT, F f, G4double a, G4double b, G4double e,
-                  G4double& sum, G4int& n);
-  void AdaptGauss(T* typeT, F f, G4double a, G4double b, G4double e,
-                  G4double& sum, G4int& n);
-  void AdaptGauss(G4double (*f)(G4double), G4double a, G4double b, G4double e,
-                  G4double& sum, G4int& n);
+    // Auxiliary functions for adaptive Gauss method
 
-  G4double GammaLogarithm(G4double xx);
+    G4double Gauss(T& typeT, F f, G4double a, G4double b);
+    G4double Gauss(T* ptrT, F f, G4double a, G4double b);
+    G4double Gauss(G4double (*f)(G4double), G4double a, G4double b);
+
+    void AdaptGauss(T& typeT, F f, G4double a, G4double b, G4double e, G4double& sum, G4int& n);
+    void AdaptGauss(T* typeT, F f, G4double a, G4double b, G4double e, G4double& sum, G4int& n);
+    void AdaptGauss(G4double (*f)(G4double), G4double a, G4double b, G4double e, G4double& sum,
+                    G4int& n);
+
+    G4double GammaLogarithm(G4double xx);
 };
 
 #include "G4Integrator.icc"

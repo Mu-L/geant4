@@ -29,8 +29,8 @@
 
 // Author: Ivana Hrivnacova, 20/07/2017 (ivana@ipno.in2p3.fr)
 
-#ifndef G4Hdf5AnalysisManager_h
-#define G4Hdf5AnalysisManager_h 1
+#ifndef G4HDF5ANALYSISMANAGER_HH
+#define G4HDF5ANALYSISMANAGER_HH
 
 #include "G4ToolsAnalysisManager.hh"
 #include "globals.hh"
@@ -42,14 +42,15 @@
 
 class G4Hdf5AnalysisManager;
 class G4Hdf5NtupleFileManager;
-template <class T>
+template<class T>
 class G4ThreadLocalSingleton;
 
 class G4Hdf5AnalysisManager : public G4ToolsAnalysisManager
 {
-  friend class G4ThreadLocalSingleton<G4Hdf5AnalysisManager>;
+    friend class G4ThreadLocalSingleton<G4Hdf5AnalysisManager>;
 
   public:
+
     ~G4Hdf5AnalysisManager() override;
 
     // Static methods
@@ -67,22 +68,23 @@ class G4Hdf5AnalysisManager : public G4ToolsAnalysisManager
     std::vector<toolx::hdf5::ntuple*>::const_iterator EndConstNtuple() const;
 
   protected:
+
     // Virtual methods from base class
     G4bool OpenFileImpl(const G4String& fileName) final;
     G4bool CloseFileImpl(G4bool reset) final;
 
   private:
+
     G4Hdf5AnalysisManager();
 
     // Static data members
-    inline static G4ThreadLocal G4bool fgIsInstance { false };
-    static constexpr std::string_view fkClass { "G4Hdf5AnalysisManager" };
+    inline static G4ThreadLocal G4bool fgIsInstance{false};
+    static constexpr std::string_view fkClass{"G4Hdf5AnalysisManager"};
 
     // Data members
-    std::shared_ptr<G4Hdf5NtupleFileManager>  fNtupleFileManager { nullptr };
+    std::shared_ptr<G4Hdf5NtupleFileManager> fNtupleFileManager{nullptr};
 };
 
 #include "G4Hdf5AnalysisManager.icc"
 
 #endif
-

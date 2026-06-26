@@ -25,37 +25,40 @@
 //
 //
 //
-#include "globals.hh"
 #include "G3DetTableEntry.hh"
-#include "G4VSensitiveDetector.hh"
 
-G3DetTableEntry::G3DetTableEntry(G4String& set, G4String& det, G4int id, 
-				 G4VSensitiveDetector* D){
+#include "G4VSensitiveDetector.hh"
+#include "globals.hh"
+
+G3DetTableEntry::G3DetTableEntry(G4String& set, G4String& det, G4int id, G4VSensitiveDetector* D)
+{
   _set = set;
   _det = det;
-  _id  = id;
+  _id = id;
   _detpt = D;
 }
 
-G3DetTableEntry::~G3DetTableEntry(){;}
+G3DetTableEntry::~G3DetTableEntry()
+{
+  ;
+}
 
-G4VSensitiveDetector* 
-G3DetTableEntry::GetSD(){
+G4VSensitiveDetector* G3DetTableEntry::GetSD()
+{
   return _detpt;
 }
 
-G4String 
-G3DetTableEntry::GetSet(){
+G4String G3DetTableEntry::GetSet()
+{
   return _set;
 }
 
-G4String 
-G3DetTableEntry::GetDet(){
+G4String G3DetTableEntry::GetDet()
+{
   return _det;
 }
 
-G4int
-G3DetTableEntry::GetID(){
+G4int G3DetTableEntry::GetID()
+{
   return _id;
 }
-

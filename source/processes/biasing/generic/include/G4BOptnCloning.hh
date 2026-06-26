@@ -29,14 +29,14 @@
 //
 // A G4VBiasingOperation to clone a track, allowing to set
 // weight arbitrary weights.
-//    
+//
 // Author: Marc Verderi, November 2013.
 // --------------------------------------------------------------------
-#ifndef G4BOptnCloning_hh
-#define G4BOptnCloning_hh 1
+#ifndef G4BOPTNCLONING_HH
+#define G4BOPTNCLONING_HH
 
-#include "G4VBiasingOperation.hh"
 #include "G4ParticleChange.hh"
+#include "G4VBiasingOperation.hh"
 
 class G4BOptnCloning : public G4VBiasingOperation
 {
@@ -46,29 +46,31 @@ class G4BOptnCloning : public G4VBiasingOperation
     G4BOptnCloning(const G4String& name);
     // -- destructor:
     virtual ~G4BOptnCloning();
-  
+
     // -- Methods from G4VBiasingOperation interface:
     // -------------------------------------------
     // -- Unsed:
     virtual const G4VBiasingInteractionLaw*
-    ProvideOccurenceBiasingInteractionLaw( const G4BiasingProcessInterface*,
-                  G4ForceCondition& ) { return nullptr; }
-    virtual G4VParticleChange*
-    ApplyFinalStateBiasing( const G4BiasingProcessInterface*,
-                  const G4Track*, const G4Step*, G4bool& ) { return nullptr; }
-    // -- Used:
-    virtual G4double
-    DistanceToApplyOperation( const G4Track*,
-                  G4double, G4ForceCondition* condition )
+    ProvideOccurenceBiasingInteractionLaw(const G4BiasingProcessInterface*, G4ForceCondition&)
     {
-      *condition = NotForced; return 0.; // -- acts immediately
+      return nullptr;
     }
-    virtual G4VParticleChange*
-    GenerateBiasingFinalState( const G4Track*, const G4Step* );
+    virtual G4VParticleChange* ApplyFinalStateBiasing(const G4BiasingProcessInterface*,
+                                                      const G4Track*, const G4Step*, G4bool&)
+    {
+      return nullptr;
+    }
+    // -- Used:
+    virtual G4double DistanceToApplyOperation(const G4Track*, G4double, G4ForceCondition* condition)
+    {
+      *condition = NotForced;
+      return 0.;  // -- acts immediately
+    }
+    virtual G4VParticleChange* GenerateBiasingFinalState(const G4Track*, const G4Step*);
 
     // -- Additional methods, specific to this class:
     // ----------------------------------------------
-    void SetCloneWeights( G4double clone1Weight, G4double clone2Weight )
+    void SetCloneWeights(G4double clone1Weight, G4double clone2Weight)
     {
       fClone1W = clone1Weight;
       fClone2W = clone2Weight;

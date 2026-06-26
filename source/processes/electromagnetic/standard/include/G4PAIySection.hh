@@ -22,11 +22,11 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // G4PAIySection.hh -- header file
 //
 //
-// Preparation of ionizing collision cross section according to Photo Absorption 
+// Preparation of ionizing collision cross section according to Photo Absorption
 // Ionization (PAI) model for simulation of ionization energy losses in very thin
 // absorbers. Author: Vladimir.Grichine@cern.ch
 //
@@ -34,202 +34,204 @@
 //
 // 01.10.07, V.Ivanchenko create using V.Grichine G4PAIxSection class
 // 21.11.10, V.Grichine   fVerbose and SetVerbose added
-// 28.10.11, V.Ivanchenko Migration of exceptions to the new design 
+// 28.10.11, V.Ivanchenko Migration of exceptions to the new design
 
 #ifndef G4PAIYSECTION_HH
-#define G4PAIYSECTION_HH
+#  define G4PAIYSECTION_HH
 
-#include "G4ios.hh"
-#include "globals.hh"
-#include "Randomize.hh"
-
-#include "G4SandiaTable.hh"
+#  include "G4SandiaTable.hh"
+#  include "G4ios.hh"
+#  include "Randomize.hh"
+#  include "globals.hh"
 
 class G4PAIySection
 {
-public:
+  public:
 
-  explicit G4PAIySection();
-          
-  ~G4PAIySection() = default;
+    explicit G4PAIySection();
 
-  void Initialize(const G4Material* material, G4double maxEnergyTransfer, 
-                  G4double betaGammaSq, G4SandiaTable*);
+    ~G4PAIySection() = default;
 
-  void ComputeLowEnergyCof(const G4Material* material);
+    void Initialize(const G4Material* material, G4double maxEnergyTransfer, G4double betaGammaSq,
+                    G4SandiaTable*);
 
-  void InitPAI();
+    void ComputeLowEnergyCof(const G4Material* material);
 
-  void NormShift( G4double betaGammaSq );
-  
-  void SplainPAI( G4double betaGammaSq );
-                    
-  // Physical methods
-  G4double RutherfordIntegral( G4int intervalNumber,
-                               G4double limitLow,
-                               G4double limitHigh     );
+    void InitPAI();
 
-  G4double ImPartDielectricConst( G4int intervalNumber,
-                                  G4double energy        );
+    void NormShift(G4double betaGammaSq);
 
-  G4double RePartDielectricConst(G4double energy);
+    void SplainPAI(G4double betaGammaSq);
 
-  G4double DifPAIySection( G4int intervalNumber,
-                           G4double betaGammaSq    );
+    // Physical methods
+    G4double RutherfordIntegral(G4int intervalNumber, G4double limitLow, G4double limitHigh);
 
-  G4double PAIdNdxCerenkov( G4int intervalNumber,
-                            G4double betaGammaSq    );
+    G4double ImPartDielectricConst(G4int intervalNumber, G4double energy);
 
-  G4double PAIdNdxPlasmon( G4int intervalNumber,
-                           G4double betaGammaSq    );
+    G4double RePartDielectricConst(G4double energy);
 
-  void     IntegralPAIySection();
-  void     IntegralCerenkov();
-  void     IntegralPlasmon();
+    G4double DifPAIySection(G4int intervalNumber, G4double betaGammaSq);
 
-  G4double SumOverInterval(G4int intervalNumber);
-  G4double SumOverIntervaldEdx(G4int intervalNumber);
-  G4double SumOverInterCerenkov(G4int intervalNumber);
-  G4double SumOverInterPlasmon(G4int intervalNumber);
+    G4double PAIdNdxCerenkov(G4int intervalNumber, G4double betaGammaSq);
 
-  G4double SumOverBorder( G4int intervalNumber,
-                          G4double energy          );
-  G4double SumOverBorderdEdx( G4int intervalNumber,
-                              G4double energy          );
-  G4double SumOverBordCerenkov( G4int intervalNumber,
-                                G4double energy          );
-  G4double SumOverBordPlasmon( G4int intervalNumber,
-                               G4double energy          );
+    G4double PAIdNdxPlasmon(G4int intervalNumber, G4double betaGammaSq);
 
-  G4double GetStepEnergyLoss( G4double step );
-  G4double GetStepCerenkovLoss( G4double step );
-  G4double GetStepPlasmonLoss( G4double step );
+    void IntegralPAIySection();
+    void IntegralCerenkov();
+    void IntegralPlasmon();
 
-  G4double GetLorentzFactor(G4int j) const;
-         
-  // Inline access functions
+    G4double SumOverInterval(G4int intervalNumber);
+    G4double SumOverIntervaldEdx(G4int intervalNumber);
+    G4double SumOverInterCerenkov(G4int intervalNumber);
+    G4double SumOverInterPlasmon(G4int intervalNumber);
 
-  inline G4int GetNumberOfGammas() const { return fNumberOfGammas; }
-          
-  inline G4int GetSplineSize() const { return fSplineNumber; }
-          
-  inline G4int GetIntervalNumber() const { return fIntervalNumber; }
+    G4double SumOverBorder(G4int intervalNumber, G4double energy);
+    G4double SumOverBorderdEdx(G4int intervalNumber, G4double energy);
+    G4double SumOverBordCerenkov(G4int intervalNumber, G4double energy);
+    G4double SumOverBordPlasmon(G4int intervalNumber, G4double energy);
 
-  inline G4double GetEnergyInterval(G4int i){ return fEnergyInterval[i]; } 
+    G4double GetStepEnergyLoss(G4double step);
+    G4double GetStepCerenkovLoss(G4double step);
+    G4double GetStepPlasmonLoss(G4double step);
 
-  inline G4double GetDifPAIySection(G4int i){ return fDifPAIySection[i]; } 
-  inline G4double GetPAIdNdxCrenkov(G4int i){ return fdNdxCerenkov[i]; } 
-  inline G4double GetPAIdNdxPlasmon(G4int i){ return fdNdxPlasmon[i]; } 
-          
-  inline G4double GetMeanEnergyLoss() const {return fIntegralPAIySection[0]; }
-  inline G4double GetMeanCerenkovLoss() const {return fIntegralCerenkov[0]; }
-  inline G4double GetMeanPlasmonLoss() const {return fIntegralPlasmon[0]; }
+    G4double GetLorentzFactor(G4int j) const;
 
-  inline G4double GetNormalizationCof() const { return fNormalizationCof; }
-          
-  inline G4double GetPAItable(G4int i,G4int j) const;
-                    
-  inline G4double GetSplineEnergy(G4int i) const;
-          
-  inline G4double GetIntegralPAIySection(G4int i) const;
-  inline G4double GetIntegralPAIdEdx(G4int i) const;
-  inline G4double GetIntegralCerenkov(G4int i) const;
-  inline G4double GetIntegralPlasmon(G4int i) const;
+    // Inline access functions
 
-  inline void SetVerbose(G4int v) { fVerbose = v; };
+    inline G4int GetNumberOfGammas() const { return fNumberOfGammas; }
 
-  G4PAIySection & operator=(const G4PAIySection &right) = delete;
-  G4PAIySection(const G4PAIySection&) = delete;
+    inline G4int GetSplineSize() const { return fSplineNumber; }
 
-private :
+    inline G4int GetIntervalNumber() const { return fIntervalNumber; }
 
-  void CallError(G4int i, const G4String& methodName) const;
+    inline G4double GetEnergyInterval(G4int i) { return fEnergyInterval[i]; }
 
-  // Local class constants
- 
-  static const G4double fDelta; // energy shift from interval border = 0.001
-  static const G4double fError; // error in lin-log approximation = 0.005
+    inline G4double GetDifPAIySection(G4int i) { return fDifPAIySection[i]; }
+    inline G4double GetPAIdNdxCrenkov(G4int i) { return fdNdxCerenkov[i]; }
+    inline G4double GetPAIdNdxPlasmon(G4int i) { return fdNdxPlasmon[i]; }
 
-  static G4int fNumberOfGammas; // = 111;
-  static const G4double fLorentzFactor[112];  //  static gamma array
+    inline G4double GetMeanEnergyLoss() const { return fIntegralPAIySection[0]; }
+    inline G4double GetMeanCerenkovLoss() const { return fIntegralCerenkov[0]; }
+    inline G4double GetMeanPlasmonLoss() const { return fIntegralPlasmon[0]; }
 
-  static
-  const G4int fRefGammaNumber; // The number of gamma for creation of spline (15)
+    inline G4double GetNormalizationCof() const { return fNormalizationCof; }
 
-  G4int    fIntervalNumber ;   //  The number of energy intervals
-  G4double fNormalizationCof;  // Normalization cof for PhotoAbsorptionXsection
+    inline G4double GetPAItable(G4int i, G4int j) const;
 
-  G4double betaBohr;
-  G4double betaBohr4;
+    inline G4double GetSplineEnergy(G4int i) const;
 
-  G4double fDensity;            // Current density
-  G4double fElectronDensity;    // Current electron (number) density
-  G4double fLowEnergyCof;       // Correction cof for low energy region
-  G4int    fSplineNumber;       // Current size of spline
-  G4int    fVerbose;            // verbose flag
+    inline G4double GetIntegralPAIySection(G4int i) const;
+    inline G4double GetIntegralPAIdEdx(G4int i) const;
+    inline G4double GetIntegralCerenkov(G4int i) const;
+    inline G4double GetIntegralPlasmon(G4int i) const;
 
-  G4SandiaTable*  fSandia;
+    inline void SetVerbose(G4int v) { fVerbose = v; };
 
-  G4DataVector fEnergyInterval;
-  G4DataVector fA1; 
-  G4DataVector fA2;
-  G4DataVector fA3; 
-  G4DataVector fA4;
+    G4PAIySection& operator=(const G4PAIySection& right) = delete;
+    G4PAIySection(const G4PAIySection&) = delete;
 
-  static
-  const G4int  fMaxSplineSize; // Max size of output splain arrays = 500
+  private:
 
-  G4DataVector fSplineEnergy;          // energy points of splain
-  G4DataVector fRePartDielectricConst; // Real part of dielectric const
-  G4DataVector fImPartDielectricConst; // Imaginary part of dielectric const
-  G4DataVector fIntegralTerm;          // Integral term in PAI cross section
-  G4DataVector fDifPAIySection;        // Differential PAI cross section
-  G4DataVector fdNdxCerenkov;          // dNdx of Cerenkov collisions
-  G4DataVector fdNdxPlasmon;           // dNdx of Plasmon collisions
+    void CallError(G4int i, const G4String& methodName) const;
 
-  G4DataVector fIntegralPAIySection;   // Integral PAI cross section  ?
-  G4DataVector fIntegralPAIdEdx;       // Integral PAI dEdx  ?
-  G4DataVector fIntegralCerenkov;      // Integral Cerenkov N>omega  ?
-  G4DataVector fIntegralPlasmon;       // Integral Plasmon N>omega  ?
+    // Local class constants
 
-  G4double     fPAItable[500][112];    // Output array
+    static const G4double fDelta;  // energy shift from interval border = 0.001
+    static const G4double fError;  // error in lin-log approximation = 0.005
+
+    static G4int fNumberOfGammas;  // = 111;
+    static const G4double fLorentzFactor[112];  //  static gamma array
+
+    static const G4int fRefGammaNumber;  // The number of gamma for creation of spline (15)
+
+    G4int fIntervalNumber;  //  The number of energy intervals
+    G4double fNormalizationCof;  // Normalization cof for PhotoAbsorptionXsection
+
+    G4double betaBohr;
+    G4double betaBohr4;
+
+    G4double fDensity;  // Current density
+    G4double fElectronDensity;  // Current electron (number) density
+    G4double fLowEnergyCof;  // Correction cof for low energy region
+    G4int fSplineNumber;  // Current size of spline
+    G4int fVerbose;  // verbose flag
+
+    G4SandiaTable* fSandia;
+
+    G4DataVector fEnergyInterval;
+    G4DataVector fA1;
+    G4DataVector fA2;
+    G4DataVector fA3;
+    G4DataVector fA4;
+
+    static const G4int fMaxSplineSize;  // Max size of output splain arrays = 500
+
+    G4DataVector fSplineEnergy;  // energy points of splain
+    G4DataVector fRePartDielectricConst;  // Real part of dielectric const
+    G4DataVector fImPartDielectricConst;  // Imaginary part of dielectric const
+    G4DataVector fIntegralTerm;  // Integral term in PAI cross section
+    G4DataVector fDifPAIySection;  // Differential PAI cross section
+    G4DataVector fdNdxCerenkov;  // dNdx of Cerenkov collisions
+    G4DataVector fdNdxPlasmon;  // dNdx of Plasmon collisions
+
+    G4DataVector fIntegralPAIySection;  // Integral PAI cross section  ?
+    G4DataVector fIntegralPAIdEdx;  // Integral PAI dEdx  ?
+    G4DataVector fIntegralCerenkov;  // Integral Cerenkov N>omega  ?
+    G4DataVector fIntegralPlasmon;  // Integral Plasmon N>omega  ?
+
+    G4double fPAItable[500][112];  // Output array
 };
 
 inline G4double G4PAIySection::GetPAItable(G4int i, G4int j) const
 {
-   return fPAItable[i][j];
+  return fPAItable[i][j];
 }
 
-inline G4double G4PAIySection::GetSplineEnergy(G4int i) const 
+inline G4double G4PAIySection::GetSplineEnergy(G4int i) const
 {
-  if(i < 1 || i > fSplineNumber) { CallError(i, "GetSplineEnergy"); }
+  if (i < 1 || i > fSplineNumber)
+  {
+    CallError(i, "GetSplineEnergy");
+  }
   return fSplineEnergy[i];
 }
-  
-inline G4double G4PAIySection::GetIntegralPAIySection(G4int i) const 
+
+inline G4double G4PAIySection::GetIntegralPAIySection(G4int i) const
 {
-  if(i < 1 || i > fSplineNumber) { CallError(i, "GetIntegralPAIySection"); }
+  if (i < 1 || i > fSplineNumber)
+  {
+    CallError(i, "GetIntegralPAIySection");
+  }
   return fIntegralPAIySection[i];
 }
 
-inline G4double G4PAIySection::GetIntegralPAIdEdx(G4int i) const 
+inline G4double G4PAIySection::GetIntegralPAIdEdx(G4int i) const
 {
-  if(i < 1 || i > fSplineNumber) { CallError(i, "GetIntegralPAIdEdx"); }
+  if (i < 1 || i > fSplineNumber)
+  {
+    CallError(i, "GetIntegralPAIdEdx");
+  }
   return fIntegralPAIdEdx[i];
 }
 
-inline G4double G4PAIySection::GetIntegralCerenkov(G4int i) const 
+inline G4double G4PAIySection::GetIntegralCerenkov(G4int i) const
 {
-  if(i < 1 || i > fSplineNumber) { CallError(i, "GetIntegralCerenkov"); }
+  if (i < 1 || i > fSplineNumber)
+  {
+    CallError(i, "GetIntegralCerenkov");
+  }
   return fIntegralCerenkov[i];
 }
 
-inline G4double G4PAIySection::GetIntegralPlasmon(G4int i) const 
+inline G4double G4PAIySection::GetIntegralPlasmon(G4int i) const
 {
-  if(i < 1 || i > fSplineNumber) { CallError(i, "GetIntegralPlasmon"); }
+  if (i < 1 || i > fSplineNumber)
+  {
+    CallError(i, "GetIntegralPlasmon");
+  }
   return fIntegralPlasmon[i];
 }
 
-#endif   
+#endif
 
 // -----------------   end of G4PAIySection header file    -------------------

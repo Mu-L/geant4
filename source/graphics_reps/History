@@ -6,6 +6,12 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-06-19 Ben Morgan (greps-V11-04-01)
+- Apply clang-format to all C++ files.
+
+## 2026-01-09 Ben Morgan (greps-V11-04-00)
+- Update header guards to style/format required by Geant4 coding guidelines.
+
 ## 2025-11-07 John Allison (greps-V11-03-03)
 - G4AttDef.hh, G4AttValue.hh, G4AttCheck.hh, G4AttHolder.hh:
   - Fix link to description of HepRep data communication format (used by G4Atts).

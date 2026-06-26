@@ -53,6 +53,7 @@
 class G4FissionProductYieldDist
 {
   public:
+
     // Constructor definition
     /** Default constructor
      *  - Usage:
@@ -83,6 +84,7 @@ class G4FissionProductYieldDist
                               std::istringstream& dataStream);
 
   private:
+
     /** Initialize is a common function called by all constructors. */
     void Initialize(std::istringstream& dataStream);
 
@@ -91,6 +93,7 @@ class G4FissionProductYieldDist
 #endif
 
   public:
+
     // Functions
     /** Generates a fission event using default sampling and returns the pointer
      *  to that fission event.
@@ -162,6 +165,7 @@ class G4FissionProductYieldDist
     void G4SetVerbosity(G4int WhatVerbosity);
 
   protected:
+
     // Variables
     // Class descriptor variables
     /** Number in ZZZAAA format of the isotope that
@@ -351,13 +355,16 @@ class G4FissionProductYieldDist
     virtual void SortProbability(G4ENDFYieldDataContainer* YieldData);
 
     // Destructor function(s)
+
   public:
+
     /** Default deconstructor. It is a virtual function since
      *  G4FissionProductYieldDist is a parent class
      */
     virtual ~G4FissionProductYieldDist();
 
   protected:
+
     /** Recursively burns each branch in a probability tree. */
     void BurnTree(ProbabilityBranch* Branch);
 };

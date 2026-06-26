@@ -40,12 +40,15 @@
 
 class G4VisManager;
 
-class G4VisStateDependent: public G4VStateDependent {
-  friend class G4VisManager;
-private:
-  G4VisStateDependent (G4VisManager *);
-  G4bool Notify (G4ApplicationState requestedState);
-  G4VisManager* fpVisManager;
+class G4VisStateDependent : public G4VStateDependent
+{
+    friend class G4VisManager;
+
+  private:
+
+    G4VisStateDependent(G4VisManager*);
+    G4bool Notify(G4ApplicationState requestedState);
+    G4VisManager* fpVisManager;
 };
 
 #endif

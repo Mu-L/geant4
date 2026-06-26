@@ -39,8 +39,8 @@
 
 // Author: A.Dotti (SLAC), 5 July 2013
 // --------------------------------------------------------------------
-#ifndef G4TemplateRNGHelper_hh
-#define G4TemplateRNGHelper_hh 1
+#ifndef G4TEMPLATERNGHELPER_HH
+#define G4TEMPLATERNGHELPER_HH
 
 #include "globals.hh"
 
@@ -51,10 +51,12 @@ template<class T>
 class G4TemplateRNGHelper
 {
   public:
+
     using SeedsQueue = std::vector<T>;
     using SeedsQueueSize_type = typename SeedsQueue::size_type;
 
   public:
+
     // The container is modeled as a (shared) singleton
     static G4TemplateRNGHelper<T>* GetInstance();
     static G4TemplateRNGHelper<T>* GetInstanceIfExist();
@@ -64,7 +66,8 @@ class G4TemplateRNGHelper
     virtual const T GetSeed(const G4int& sdId)
     {
       G4int seedId = sdId - 2 * offset;
-      if (seedId < static_cast<G4int>(seeds.size())) {
+      if (seedId < static_cast<G4int>(seeds.size()))
+      {
         T& seed = seeds[seedId];
         return seed;
       }
@@ -82,7 +85,8 @@ class G4TemplateRNGHelper
     void Fill(G4double* dbl, G4int nev, G4int nev_tot, G4int nrpe)
     {
       seeds.clear();
-      for (G4int i = 0; i < nrpe * nev; ++i) {
+      for (G4int i = 0; i < nrpe * nev; ++i)
+      {
         seeds.push_back((G4long)(100000000L * dbl[i]));
       }
       offset = 0;
@@ -95,7 +99,8 @@ class G4TemplateRNGHelper
     {
       if (nev == 0) return;
       seeds.clear();
-      for (G4int i = 0; i < nRandParEvent * nev; ++i) {
+      for (G4int i = 0; i < nRandParEvent * nev; ++i)
+      {
         seeds.push_back((G4long)(100000000L * dbl[i]));
       }
       offset += nev_filled;
@@ -109,6 +114,7 @@ class G4TemplateRNGHelper
     virtual void Clear() { seeds.clear(); }
 
   protected:
+
     SeedsQueue seeds;
     // Note: following numbers are number of events.
     //       seeds are generated for nRandParEvent times n_event
@@ -118,9 +124,11 @@ class G4TemplateRNGHelper
     G4int nRandParEvent = 0;
 
   private:
+
     G4TemplateRNGHelper() = default;
 
   private:
+
     static G4TemplateRNGHelper<T>* instance;
 };
 

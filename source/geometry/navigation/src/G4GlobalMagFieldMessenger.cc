@@ -29,14 +29,15 @@
 // --------------------------------------------------------------------
 
 #include "G4GlobalMagFieldMessenger.hh"
-#include "G4UniformMagField.hh"
+
 #include "G4FieldManager.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4TransportationManager.hh"
-#include "G4UIdirectory.hh"
 #include "G4UIcmdWith3VectorAndUnit.hh"
 #include "G4UIcmdWithAnInteger.hh"
+#include "G4UIdirectory.hh"
+#include "G4UniformMagField.hh"
 #include "G4UnitsTable.hh"
-#include "G4SystemOfUnits.hh"
 
 //______________________________________________________________________________
 
@@ -44,24 +45,24 @@ G4GlobalMagFieldMessenger::G4GlobalMagFieldMessenger(const G4ThreeVector& value)
 {
   fDirectory = new G4UIdirectory("/globalField/");
   fDirectory->SetGuidance("Global uniform magnetic field UI commands");
-  
-  fSetValueCmd = new G4UIcmdWith3VectorAndUnit("/globalField/setValue",this);
+
+  fSetValueCmd = new G4UIcmdWith3VectorAndUnit("/globalField/setValue", this);
   fSetValueCmd->SetGuidance("Set uniform magnetic field value.");
   fSetValueCmd->SetParameterName("Bx", "By", "By", false);
   fSetValueCmd->SetUnitCategory("Magnetic flux density");
-  fSetValueCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-  
-  fSetVerboseCmd = new G4UIcmdWithAnInteger("/globalField/verbose",this);
+  fSetValueCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+
+  fSetVerboseCmd = new G4UIcmdWithAnInteger("/globalField/verbose", this);
   fSetVerboseCmd->SetGuidance("Set verbose level: ");
   fSetVerboseCmd->SetGuidance("  0: no output");
   fSetVerboseCmd->SetGuidance("  1: printing new field value");
   fSetVerboseCmd->SetParameterName("globalFieldVerbose", false);
   fSetVerboseCmd->SetRange("globalFieldVerbose>=0");
-  fSetVerboseCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-  
+  fSetVerboseCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+
   // Create field
   fMagField = new G4UniformMagField(value);
-  
+
   // Set field value (the field is not activated if value is zero)
   SetField(value, "G4GlobalMagFieldMessenger::G4GlobalMagFieldMessenger");
 }
@@ -78,52 +79,49 @@ G4GlobalMagFieldMessenger::~G4GlobalMagFieldMessenger()
 
 //______________________________________________________________________________
 
-void G4GlobalMagFieldMessenger::SetField(const G4ThreeVector& value,
-                                         const G4String& /*inFunction*/)
+void G4GlobalMagFieldMessenger::SetField(const G4ThreeVector& value, const G4String& /*inFunction*/)
 {
   // Get field manager (or create it if it does not yet exist)
-  G4FieldManager* fieldManager
-    = G4TransportationManager::GetTransportationManager()->GetFieldManager();
+  G4FieldManager* fieldManager =
+    G4TransportationManager::GetTransportationManager()->GetFieldManager();
 
   // Inactivate field if its value is zero
-  if ( value == G4ThreeVector() )
+  if (value == G4ThreeVector())
   {
     fieldManager->SetDetectorField(nullptr);
     fieldManager->CreateChordFinder(nullptr);
-    
-    if ( fVerboseLevel > 0 )
+
+    if (fVerboseLevel > 0)
     {
       G4cout << "Magnetic field is inactive, fieldValue = (0,0,0)." << G4endl;
     }
-  } 
+  }
   else
-  { 
+  {
     fMagField->SetFieldValue(value);
     fieldManager->SetDetectorField(fMagField);
     fieldManager->CreateChordFinder(fMagField);
-    
-    if ( fVerboseLevel > 0 )
+
+    if (fVerboseLevel > 0)
     {
-      G4cout << "Magnetic field is active, fieldValue = (" 
-             << G4BestUnit(value, "Magnetic flux density") 
-             << ")." << G4endl;
+      G4cout << "Magnetic field is active, fieldValue = ("
+             << G4BestUnit(value, "Magnetic flux density") << ")." << G4endl;
     }
-  }  
+  }
 }
 
 //______________________________________________________________________________
 
 void G4GlobalMagFieldMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
-  if ( command == fSetValueCmd )
+  if (command == fSetValueCmd)
   {
-    SetField(fSetValueCmd->GetNew3VectorValue(newValue),
-             "G4GlobalMagFieldMessenger::SetNewValue");
+    SetField(fSetValueCmd->GetNew3VectorValue(newValue), "G4GlobalMagFieldMessenger::SetNewValue");
   }
-  else if ( command == fSetVerboseCmd )
+  else if (command == fSetVerboseCmd)
   {
     SetVerboseLevel(fSetVerboseCmd->GetNewIntValue(newValue));
-  }  
+  }
 }
 
 //______________________________________________________________________________
@@ -131,13 +129,16 @@ void G4GlobalMagFieldMessenger::SetNewValue(G4UIcommand* command, G4String newVa
 void G4GlobalMagFieldMessenger::SetFieldValue(const G4ThreeVector& value)
 {
   SetField(value, "G4GlobalMagFieldMessenger::SetFieldValue");
-}  
+}
 
 //______________________________________________________________________________
 
 G4ThreeVector G4GlobalMagFieldMessenger::GetFieldValue() const
 {
-  if ( fMagField != nullptr ) { return fMagField->GetConstantFieldValue(); }
-  
+  if (fMagField != nullptr)
+  {
+    return fMagField->GetConstantFieldValue();
+  }
+
   return {};
-}  
+}

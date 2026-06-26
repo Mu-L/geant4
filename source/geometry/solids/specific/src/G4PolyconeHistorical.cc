@@ -30,69 +30,68 @@
 
 #include "G4PolyconeHistorical.hh"
 
-G4PolyconeHistorical::
-G4PolyconeHistorical( G4int z_planes )
-  : Num_z_planes(z_planes)
+G4PolyconeHistorical::G4PolyconeHistorical(G4int z_planes) : Num_z_planes(z_planes)
 {
-  Z_values  = new G4double[z_planes];
-  Rmin      = new G4double[z_planes];
-  Rmax      = new G4double[z_planes];
-  
-  for( G4int i = 0; i < z_planes; ++i)
+  Z_values = new G4double[z_planes];
+  Rmin = new G4double[z_planes];
+  Rmax = new G4double[z_planes];
+
+  for (G4int i = 0; i < z_planes; ++i)
   {
     Z_values[i] = 0.0;
-    Rmin[i]     = 0.0;
-    Rmax[i]     = 0.0;
+    Rmin[i] = 0.0;
+    Rmax[i] = 0.0;
   }
 }
 
 G4PolyconeHistorical::~G4PolyconeHistorical()
 {
-  delete [] Z_values;
-  delete [] Rmin;
-  delete [] Rmax;
+  delete[] Z_values;
+  delete[] Rmin;
+  delete[] Rmax;
 }
 
-G4PolyconeHistorical::
-G4PolyconeHistorical( const G4PolyconeHistorical& source )
+G4PolyconeHistorical::G4PolyconeHistorical(const G4PolyconeHistorical& source)
 {
-  Start_angle   = source.Start_angle;
+  Start_angle = source.Start_angle;
   Opening_angle = source.Opening_angle;
-  Num_z_planes  = source.Num_z_planes;
-  
-  Z_values  = new G4double[Num_z_planes];
-  Rmin      = new G4double[Num_z_planes];
-  Rmax      = new G4double[Num_z_planes];
-  
-  for( G4int i = 0; i < Num_z_planes; ++i)
+  Num_z_planes = source.Num_z_planes;
+
+  Z_values = new G4double[Num_z_planes];
+  Rmin = new G4double[Num_z_planes];
+  Rmax = new G4double[Num_z_planes];
+
+  for (G4int i = 0; i < Num_z_planes; ++i)
   {
     Z_values[i] = source.Z_values[i];
-    Rmin[i]     = source.Rmin[i];
-    Rmax[i]     = source.Rmax[i];
+    Rmin[i] = source.Rmin[i];
+    Rmax[i] = source.Rmax[i];
   }
 }
 
-G4PolyconeHistorical&
-G4PolyconeHistorical::operator=( const G4PolyconeHistorical& right )
+G4PolyconeHistorical& G4PolyconeHistorical::operator=(const G4PolyconeHistorical& right)
 {
-  if ( &right == this ) { return *this; }
+  if (&right == this)
+  {
+    return *this;
+  }
 
-  Start_angle   = right.Start_angle;
+  Start_angle = right.Start_angle;
   Opening_angle = right.Opening_angle;
-  Num_z_planes  = right.Num_z_planes;
-  
-  delete [] Z_values;
-  delete [] Rmin;
-  delete [] Rmax;
-  Z_values  = new G4double[Num_z_planes];
-  Rmin      = new G4double[Num_z_planes];
-  Rmax      = new G4double[Num_z_planes];
-  
-  for( G4int i = 0; i < Num_z_planes; ++i)
+  Num_z_planes = right.Num_z_planes;
+
+  delete[] Z_values;
+  delete[] Rmin;
+  delete[] Rmax;
+  Z_values = new G4double[Num_z_planes];
+  Rmin = new G4double[Num_z_planes];
+  Rmax = new G4double[Num_z_planes];
+
+  for (G4int i = 0; i < Num_z_planes; ++i)
   {
     Z_values[i] = right.Z_values[i];
-    Rmin[i]     = right.Rmin[i];
-    Rmax[i]     = right.Rmax[i];
+    Rmin[i] = right.Rmin[i];
+    Rmax[i] = right.Rmax[i];
   }
 
   return *this;

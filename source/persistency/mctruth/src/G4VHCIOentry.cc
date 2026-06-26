@@ -29,11 +29,11 @@
 // --------------------------------------------------------------------
 
 #include "G4VHCIOentry.hh"
+
 #include "G4HCIOcatalog.hh"
 
 // --------------------------------------------------------------------
-G4VHCIOentry::G4VHCIOentry(const G4String& n)
-  : m_name(n)
+G4VHCIOentry::G4VHCIOentry(const G4String& n) : m_name(n)
 {
   G4HCIOcatalog* c = G4HCIOcatalog::GetHCIOcatalog();
   c->RegisterEntry(this);

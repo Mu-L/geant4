@@ -165,8 +165,8 @@ http://geant4-dna.org
 2 - PHYSICS LIST
 
     The physics list can use the recommended G4EmDNAPhysics_option2,
-    G4EmDNAPhysics_option4 or
-    G4EmDNAPhysics_option6 constructors.
+    G4EmDNAPhysics_option4, G4EmDNAPhysics_option6, or G4EmDNAPhysics_option8 
+    constructors.
 
 3 - PRIMARY GENERATOR
 

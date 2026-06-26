@@ -36,10 +36,11 @@
 
 // Author: M.Asai
 // --------------------------------------------------------------------
-#ifndef G4VDigitizerModule_hh
-#define G4VDigitizerModule_hh 1
+#ifndef G4VDIGITIZERMODULE_HH
+#define G4VDIGITIZERMODULE_HH
 
 #include "globals.hh"
+
 #include <vector>
 
 class G4DigiManager;
@@ -47,7 +48,7 @@ class G4VDigiCollection;
 
 class G4VDigitizerModule
 {
-  public: // with description
+  public:  // with description
 
     G4VDigitizerModule(const G4String& modName);
     // Constructor. The user's concrete class must use this constructor
@@ -66,19 +67,15 @@ class G4VDigitizerModule
 
   public:
 
-    inline G4int GetNumberOfCollections() const
-    { return G4int(collectionName.size()); }
-    inline const G4String& GetCollectionName(G4int i) const
-    { return collectionName[i]; }
-    inline const G4String& GetName() const
-    { return moduleName; }
-    inline void SetVerboseLevel(G4int val)
-    { verboseLevel = val; }
+    inline G4int GetNumberOfCollections() const { return G4int(collectionName.size()); }
+    inline const G4String& GetCollectionName(G4int i) const { return collectionName[i]; }
+    inline const G4String& GetName() const { return moduleName; }
+    inline void SetVerboseLevel(G4int val) { verboseLevel = val; }
 
   protected:
 
     void StoreDigiCollection(G4VDigiCollection* aDC);
-    void StoreDigiCollection(G4int DCID,G4VDigiCollection* aDC);
+    void StoreDigiCollection(G4int DCID, G4VDigiCollection* aDC);
 
   protected:
 

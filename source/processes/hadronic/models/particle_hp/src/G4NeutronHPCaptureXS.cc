@@ -23,31 +23,33 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// V. Ivanchenko 23 September 2023 
+// V. Ivanchenko 23 September 2023
 //
 
 #include "G4NeutronHPCaptureXS.hh"
+
 #include "G4Neutron.hh"
 #include "G4ParticleHPManager.hh"
 #include "G4SystemOfUnits.hh"
 
 G4NeutronHPCaptureXS::G4NeutronHPCaptureXS()
   : G4CrossSectionHP(G4Neutron::Neutron(), "neutronCaptureHP",
-		     G4ParticleHPManager::GetInstance()->GetNeutronHPPath() + "/Capture/CrossSection/",
-                     20*CLHEP::MeV, 0, 100)
+                     G4ParticleHPManager::GetInstance()->GetNeutronHPPath()
+                       + "/Capture/CrossSection/",
+                     20 * CLHEP::MeV, 0, 100)
 {}
 
-G4bool G4NeutronHPCaptureXS::IsElementApplicable(const G4DynamicParticle* dp, 
-                                                 G4int, const G4Material*)
+G4bool G4NeutronHPCaptureXS::IsElementApplicable(const G4DynamicParticle* dp, G4int,
+                                                 const G4Material*)
 {
-  return ( dp->GetKineticEnergy() > GetMaxHPEnergy() );
+  return (dp->GetKineticEnergy() > GetMaxHPEnergy());
 }
 
-G4double G4NeutronHPCaptureXS::GetElementCrossSection(const G4DynamicParticle*, 
-			                              G4int, const G4Material*)
+G4double G4NeutronHPCaptureXS::GetElementCrossSection(const G4DynamicParticle*, G4int,
+                                                      const G4Material*)
 {
   return 0.0;
-} 
+}
 
 void G4NeutronHPCaptureXS::CrossSectionDescription(std::ostream& outF) const
 {

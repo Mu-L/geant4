@@ -28,43 +28,46 @@
 //
 //
 
-#include "G4RTJpeg.hh"
 #include "G4RTJpegMaker.hh"
+
+#include "G4RTJpeg.hh"
 #include "G4RTJpegCoder.hh"
+
 #include <fstream>
 
 G4RTJpegMaker::G4RTJpegMaker()
-{;}
+{
+  ;
+}
 
 G4RTJpegMaker::~G4RTJpegMaker()
-{;}
-
-void G4RTJpegMaker::CreateFigureFile(const G4String& fileName,
-              int nColumn, int nRow,
-              u_char* colorR,
-              u_char* colorG,
-	      u_char* colorB)
 {
-        G4JpegCoder aFigure(colorR,colorG,colorB);
-        G4JpegProperty aProperty;
-        aProperty.nColumn = nColumn;
-        aProperty.nRow = nRow;
-        aProperty.Units = 0;
-        aProperty.HDensity = 1;
-        aProperty.VDensity = 1;
-        aProperty.ExtensionCode = 0;
-        aProperty.Comment = "Geant4 Ray Tracer Version 1.0 by M.Asai K.Minamimoto C.Kishinaga";
+  ;
+}
 
-        aFigure.SetJpegProperty(aProperty);
-        aFigure.DoCoding();
+void G4RTJpegMaker::CreateFigureFile(const G4String& fileName, int nColumn, int nRow,
+                                     u_char* colorR, u_char* colorG, u_char* colorB)
+{
+  G4JpegCoder aFigure(colorR, colorG, colorB);
+  G4JpegProperty aProperty;
+  aProperty.nColumn = nColumn;
+  aProperty.nRow = nRow;
+  aProperty.Units = 0;
+  aProperty.HDensity = 1;
+  aProperty.VDensity = 1;
+  aProperty.ExtensionCode = 0;
+  aProperty.Comment = "Geant4 Ray Tracer Version 1.0 by M.Asai K.Minamimoto C.Kishinaga";
 
-        char* jpegAddress;
-        int jpegSize;
+  aFigure.SetJpegProperty(aProperty);
+  aFigure.DoCoding();
 
-        aFigure.GetJpegData(&jpegAddress,jpegSize);
+  char* jpegAddress;
+  int jpegSize;
 
-        std::ofstream ofs;
-        ofs.open(fileName,std::ios::out|std::ios::trunc|std::ios::binary);
-        ofs.write(jpegAddress,jpegSize);
-        ofs.close();
+  aFigure.GetJpegData(&jpegAddress, jpegSize);
+
+  std::ofstream ofs;
+  ofs.open(fileName, std::ios::out | std::ios::trunc | std::ios::binary);
+  ofs.write(jpegAddress, jpegSize);
+  ofs.close();
 }

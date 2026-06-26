@@ -38,112 +38,149 @@ class G4UIcmdWithAnInteger;
 class G4UIcmdWithADouble;
 class G4UIcmdWithAString;
 
-class G4VisCommandSetArrow3DLineSegmentsPerCircle: public G4VVisCommand {
-public:
-  G4VisCommandSetArrow3DLineSegmentsPerCircle ();
-  virtual ~G4VisCommandSetArrow3DLineSegmentsPerCircle ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandSetArrow3DLineSegmentsPerCircle (const G4VisCommandSetArrow3DLineSegmentsPerCircle&);
-  G4VisCommandSetArrow3DLineSegmentsPerCircle& operator = (const G4VisCommandSetArrow3DLineSegmentsPerCircle&);
-  G4UIcmdWithAnInteger* fpCommand;
+class G4VisCommandSetArrow3DLineSegmentsPerCircle : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandSetArrow3DLineSegmentsPerCircle();
+    virtual ~G4VisCommandSetArrow3DLineSegmentsPerCircle();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandSetArrow3DLineSegmentsPerCircle(const G4VisCommandSetArrow3DLineSegmentsPerCircle&);
+    G4VisCommandSetArrow3DLineSegmentsPerCircle&
+    operator=(const G4VisCommandSetArrow3DLineSegmentsPerCircle&);
+    G4UIcmdWithAnInteger* fpCommand;
 };
 
-class G4VisCommandSetColour: public G4VVisCommand {
-public:
-  G4VisCommandSetColour ();
-  virtual ~G4VisCommandSetColour ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandSetColour (const G4VisCommandSetColour&);
-  G4VisCommandSetColour& operator = (const G4VisCommandSetColour&);
-  G4UIcommand* fpCommand;
+class G4VisCommandSetColour : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandSetColour();
+    virtual ~G4VisCommandSetColour();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandSetColour(const G4VisCommandSetColour&);
+    G4VisCommandSetColour& operator=(const G4VisCommandSetColour&);
+    G4UIcommand* fpCommand;
 };
 
-class G4VisCommandSetExtentForField: public G4VVisCommand {
-public:
-  G4VisCommandSetExtentForField ();
-  virtual ~G4VisCommandSetExtentForField ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandSetExtentForField (const G4VisCommandSetExtentForField&);
-  G4VisCommandSetExtentForField& operator = (const G4VisCommandSetExtentForField&);
-  G4UIcommand* fpCommand;
+class G4VisCommandSetExtentForField : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandSetExtentForField();
+    virtual ~G4VisCommandSetExtentForField();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandSetExtentForField(const G4VisCommandSetExtentForField&);
+    G4VisCommandSetExtentForField& operator=(const G4VisCommandSetExtentForField&);
+    G4UIcommand* fpCommand;
 };
 
-class G4VisCommandSetLineWidth: public G4VVisCommand {
-public:
-  G4VisCommandSetLineWidth ();
-  virtual ~G4VisCommandSetLineWidth ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandSetLineWidth (const G4VisCommandSetLineWidth&);
-  G4VisCommandSetLineWidth& operator = (const G4VisCommandSetLineWidth&);
-  G4UIcmdWithADouble* fpCommand;
+class G4VisCommandSetLineWidth : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandSetLineWidth();
+    virtual ~G4VisCommandSetLineWidth();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandSetLineWidth(const G4VisCommandSetLineWidth&);
+    G4VisCommandSetLineWidth& operator=(const G4VisCommandSetLineWidth&);
+    G4UIcmdWithADouble* fpCommand;
 };
 
-class G4VisCommandSetTextColour: public G4VVisCommand {
-public:
-  G4VisCommandSetTextColour ();
-  virtual ~G4VisCommandSetTextColour ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandSetTextColour (const G4VisCommandSetTextColour&);
-  G4VisCommandSetTextColour& operator = (const G4VisCommandSetTextColour&);
-  G4UIcommand* fpCommand;
+class G4VisCommandSetTextColour : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandSetTextColour();
+    virtual ~G4VisCommandSetTextColour();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandSetTextColour(const G4VisCommandSetTextColour&);
+    G4VisCommandSetTextColour& operator=(const G4VisCommandSetTextColour&);
+    G4UIcommand* fpCommand;
 };
 
-class G4VisCommandSetTextLayout: public G4VVisCommand {
-public:
-  G4VisCommandSetTextLayout ();
-  virtual ~G4VisCommandSetTextLayout ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandSetTextLayout (const G4VisCommandSetTextLayout&);
-  G4VisCommandSetTextLayout& operator = (const G4VisCommandSetTextLayout&);
-  G4UIcmdWithAString* fpCommand;
+class G4VisCommandSetTextLayout : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandSetTextLayout();
+    virtual ~G4VisCommandSetTextLayout();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandSetTextLayout(const G4VisCommandSetTextLayout&);
+    G4VisCommandSetTextLayout& operator=(const G4VisCommandSetTextLayout&);
+    G4UIcmdWithAString* fpCommand;
 };
 
-class G4VisCommandSetTextSize: public G4VVisCommand {
-public:
-  G4VisCommandSetTextSize ();
-  virtual ~G4VisCommandSetTextSize ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandSetTextSize (const G4VisCommandSetTextSize&);
-  G4VisCommandSetTextSize& operator = (const G4VisCommandSetTextSize&);
-  G4UIcmdWithADouble* fpCommand;
+class G4VisCommandSetTextSize : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandSetTextSize();
+    virtual ~G4VisCommandSetTextSize();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandSetTextSize(const G4VisCommandSetTextSize&);
+    G4VisCommandSetTextSize& operator=(const G4VisCommandSetTextSize&);
+    G4UIcmdWithADouble* fpCommand;
 };
 
-class G4VisCommandSetTouchable: public G4VVisCommand {
-public:
-  G4VisCommandSetTouchable ();
-  virtual ~G4VisCommandSetTouchable ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandSetTouchable (const G4VisCommandSetTouchable&);
-  G4VisCommandSetTouchable& operator = (const G4VisCommandSetTouchable&);
-  G4UIcommand* fpCommand;
+class G4VisCommandSetTouchable : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandSetTouchable();
+    virtual ~G4VisCommandSetTouchable();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandSetTouchable(const G4VisCommandSetTouchable&);
+    G4VisCommandSetTouchable& operator=(const G4VisCommandSetTouchable&);
+    G4UIcommand* fpCommand;
 };
 
-class G4VisCommandSetVolumeForField: public G4VVisCommand {
-public:
-  G4VisCommandSetVolumeForField ();
-  virtual ~G4VisCommandSetVolumeForField ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandSetVolumeForField (const G4VisCommandSetVolumeForField&);
-  G4VisCommandSetVolumeForField& operator = (const G4VisCommandSetVolumeForField&);
-  G4UIcommand* fpCommand;
+class G4VisCommandSetVolumeForField : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandSetVolumeForField();
+    virtual ~G4VisCommandSetVolumeForField();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandSetVolumeForField(const G4VisCommandSetVolumeForField&);
+    G4VisCommandSetVolumeForField& operator=(const G4VisCommandSetVolumeForField&);
+    G4UIcommand* fpCommand;
 };
 
 #endif

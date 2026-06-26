@@ -44,10 +44,12 @@ void G4ParticleHPAngular::Init(std::istream& aDataFile)
   //  G4cout << "here we are entering the Angular Init"<<G4endl;
   aDataFile >> theAngularDistributionType >> targetMass;
   aDataFile >> frameFlag;
-  if (theAngularDistributionType == 0) {
+  if (theAngularDistributionType == 0)
+  {
     theIsoFlag = true;
   }
-  else if (theAngularDistributionType == 1) {
+  else if (theAngularDistributionType == 1)
+  {
     theIsoFlag = false;
     G4int nEnergy;
     aDataFile >> nEnergy;
@@ -56,19 +58,22 @@ void G4ParticleHPAngular::Init(std::istream& aDataFile)
     G4double temp, energy;
     G4int tempdep, nLegendre;
     G4int i, ii;
-    for (i = 0; i < nEnergy; i++) {
+    for (i = 0; i < nEnergy; i++)
+    {
       aDataFile >> temp >> energy >> tempdep >> nLegendre;
       energy *= eV;
       theCoefficients->Init(i, energy, nLegendre);
       theCoefficients->SetTemperature(i, temp);
       G4double coeff = 0;
-      for (ii = 0; ii < nLegendre; ii++) {
+      for (ii = 0; ii < nLegendre; ii++)
+      {
         aDataFile >> coeff;
         theCoefficients->SetCoeff(i, ii + 1, coeff);
       }
     }
   }
-  else if (theAngularDistributionType == 2) {
+  else if (theAngularDistributionType == 2)
+  {
     theIsoFlag = false;
     G4int nEnergy;
     aDataFile >> nEnergy;
@@ -76,7 +81,8 @@ void G4ParticleHPAngular::Init(std::istream& aDataFile)
     theProbArray->InitInterpolation(aDataFile);
     G4double temp, energy;
     G4int tempdep;
-    for (G4int i = 0; i < nEnergy; i++) {
+    for (G4int i = 0; i < nEnergy; i++)
+    {
       aDataFile >> temp >> energy >> tempdep;
       energy *= eV;
       theProbArray->SetT(i, temp);
@@ -84,7 +90,8 @@ void G4ParticleHPAngular::Init(std::istream& aDataFile)
       theProbArray->InitData(i, aDataFile);
     }
   }
-  else {
+  else
+  {
     theIsoFlag = false;
     G4cout << "unknown distribution found for Angular: " << theAngularDistributionType << G4endl;
     throw G4HadronicException(__FILE__, __LINE__, "unknown distribution needs implementation!!!");
@@ -127,16 +134,20 @@ void G4ParticleHPAngular::SampleAndUpdate(G4ReactionProduct& aHadron)
     if(theAngularDistributionType == 2) cosTh = theProbArray->Sample(kineticEnergy);
     */
     //********************************************************************
-    if (theIsoFlag) {
+    if (theIsoFlag)
+    {
       cosTh = 2. * G4UniformRand() - 1;
     }
-    else if (theAngularDistributionType == 1) {
+    else if (theAngularDistributionType == 1)
+    {
       cosTh = theCoefficients->SampleMax(kineticEnergy);
     }
-    else if (theAngularDistributionType == 2) {
+    else if (theAngularDistributionType == 2)
+    {
       cosTh = theProbArray->Sample(kineticEnergy);
     }
-    else {
+    else
+    {
       G4cout << "unknown distribution found for Angular: " << theAngularDistributionType << G4endl;
       throw G4HadronicException(__FILE__, __LINE__, "unknown distribution needs implementation!!!");
     }
@@ -162,16 +173,20 @@ void G4ParticleHPAngular::SampleAndUpdate(G4ReactionProduct& aHadron)
     if(theAngularDistributionType == 2) cosTh = theProbArray->Sample(kineticEnergy);
     */
     //********************************************************************
-    if (theIsoFlag) {
+    if (theIsoFlag)
+    {
       cosTh = 2. * G4UniformRand() - 1;
     }
-    else if (theAngularDistributionType == 1) {
+    else if (theAngularDistributionType == 1)
+    {
       cosTh = theCoefficients->SampleMax(kineticEnergy);
     }
-    else if (theAngularDistributionType == 2) {
+    else if (theAngularDistributionType == 2)
+    {
       cosTh = theProbArray->Sample(kineticEnergy);
     }
-    else {
+    else
+    {
       G4cout << "unknown distribution found for Angular: " << theAngularDistributionType << G4endl;
       throw G4HadronicException(__FILE__, __LINE__, "unknown distribution needs implementation!!!");
     }
@@ -289,7 +304,8 @@ void G4ParticleHPAngular::SampleAndUpdate(G4ReactionProduct& aHadron)
 
     aHadron.Lorentz(aHadron, trafo);
   }
-  else {
+  else
+  {
     throw G4HadronicException(__FILE__, __LINE__, "Tried to sample non isotropic neutron angular");
   }
   aHadron.Lorentz(aHadron, -1. * (*fCache.Get().theTarget));

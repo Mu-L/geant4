@@ -35,6 +35,7 @@
 #include "G4GeometryManager.hh"
 #include "G4MSSteppingAction.hh"
 #include "G4MatScanMessenger.hh"
+#include "G4NistManager.hh"
 #include "G4ProcessManager.hh"
 #include "G4ProcessVector.hh"
 #include "G4RayShooter.hh"
@@ -61,6 +62,8 @@ G4MaterialScanner::G4MaterialScanner()
   nPhi = 36;
   phiMin = 0.0 * deg;
   phiSpan = 350.0 * deg;
+
+  ost = &G4cout;
 }
 
 // --------------------------------------------------------------------
@@ -69,6 +72,10 @@ G4MaterialScanner::~G4MaterialScanner()
   delete theRayShooter;
   delete theMatScannerSteppingAction;
   delete theMessenger;
+  if (ost != &G4cout)
+  {
+    delete ost;
+  }
 }
 
 // --------------------------------------------------------------------
@@ -76,12 +83,14 @@ void G4MaterialScanner::Scan()
 {
   G4StateManager* theStateMan = G4StateManager::GetStateManager();
   G4ApplicationState currentState = theStateMan->GetCurrentState();
-  if (currentState != G4State_Idle) {
+  if (currentState != G4State_Idle)
+  {
     G4cerr << "Illegal application state - Scan() ignored." << G4endl;
     return;
   }
 
-  if (theMatScannerSteppingAction == nullptr) {
+  if (theMatScannerSteppingAction == nullptr)
+  {
     theMatScannerSteppingAction = new G4MSSteppingAction();
   }
   StoreUserActions();
@@ -103,10 +112,10 @@ void G4MaterialScanner::StoreUserActions()
   theEventManager->SetUserAction(theMatScannerSteppingAction);
 
   G4SDManager* theSDMan = G4SDManager::GetSDMpointerIfExist();
-  if (theSDMan != nullptr) {
+  if (theSDMan != nullptr)
+  {
     theSDMan->Activate("/", false);
   }
-
 }
 
 // --------------------------------------------------------------------
@@ -118,7 +127,8 @@ void G4MaterialScanner::RestoreUserActions()
   theEventManager->SetUserAction(theUserSteppingAction);
 
   G4SDManager* theSDMan = G4SDManager::GetSDMpointerIfExist();
-  if (theSDMan != nullptr) {
+  if (theSDMan != nullptr)
+  {
     theSDMan->Activate("/", true);
   }
 }
@@ -126,12 +136,16 @@ void G4MaterialScanner::RestoreUserActions()
 // --------------------------------------------------------------------
 void G4MaterialScanner::DoScan()
 {
+  // Disable visualization
+  G4UImanager::GetUIpointer()->ApplyCommand("/vis/disable");
   // Confirm geometry is optimized and material table is updated
   G4UImanager::GetUIpointer()->ApplyCommand("/run/undertakeOptimisation");
   G4StateManager* theStateMan = G4StateManager::GetStateManager();
   theStateMan->SetNewState(G4State_Init);
   G4RunManagerKernel::GetRunManagerKernel()->UpdateRegion();
   theStateMan->SetNewState(G4State_Idle);
+
+  theMatScannerSteppingAction->SetThinMaterial(ignoreThinMaterial, thinDencity);
 
   G4ThreeVector center(0, 0, 0);
   G4Navigator* navigator =
@@ -140,18 +154,24 @@ void G4MaterialScanner::DoScan()
 
   theStateMan->SetNewState(G4State_GeomClosed);
 
+  std::ios::fmtflags os_flags(G4cout.flags());
   // Event loop
   G4int iEvent = 0;
-  for (G4int iTheta = 0; iTheta < nTheta; ++iTheta) {
+  for (G4int iTheta = 0; iTheta < nTheta; ++iTheta)
+  {
     G4double theta = thetaMin;
     if (iTheta > 0) theta += G4double(iTheta) * thetaSpan / G4double(nTheta - 1);
     G4double aveLength = 0.;
+    G4double aveMassThick = 0.;
     G4double aveX0 = 0.;
     G4double aveLambda = 0.;
-    G4cout << G4endl;
-    G4cout << "         Theta(deg)    Phi(deg)  Length(mm)          x0     lambda0" << G4endl;
-    G4cout << G4endl;
-    for (G4int iPhi = 0; iPhi < nPhi; ++iPhi) {
+    *(ost) << G4endl;
+    *(ost) << "              Theta         Phi      Length  Mass length         x0     lambda0"
+           << G4endl;
+    *(ost) << "              (deg)       (deg)        (cm)      (g/cm2)" << G4endl;
+    *(ost) << G4endl;
+    for (G4int iPhi = 0; iPhi < nPhi; ++iPhi)
+    {
       auto anEvent = new G4Event(iEvent++);
       G4double phi = phiMin;
       if (iPhi > 0) phi += G4double(iPhi) * phiSpan / G4double(nPhi - 1);
@@ -161,35 +181,45 @@ void G4MaterialScanner::DoScan()
       theMatScannerSteppingAction->Initialize(regionSensitive, theRegion);
       theEventManager->ProcessOneEvent(anEvent);
       G4double length = theMatScannerSteppingAction->GetTotalStepLength();
+      G4double massThick = theMatScannerSteppingAction->GetTotalMassThickness();
       G4double x0 = theMatScannerSteppingAction->GetX0();
       G4double lambda = theMatScannerSteppingAction->GetLambda0();
 
-      G4cout << "        " << std::setw(11) << theta / deg << " " << std::setw(11) << phi / deg
-             << " " << std::setw(11) << length / mm << " " << std::setw(11) << x0 << " "
-             << std::setw(11) << lambda;
-      if(1 == verbosity)
+      *(ost) << "        " << std::setprecision(2) << std::setw(11) << std::scientific
+             << theta / deg << " " << std::setw(11) << std::scientific << phi / deg << " "
+             << std::setw(11) << std::scientific << length / cm << " " << std::setw(11)
+             << std::scientific << massThick / (g / cm2) << " " << std::setw(11) << std::scientific
+             << x0 << " " << std::setw(11) << std::scientific << lambda << G4endl;
+      if (1 == verbosity)
       {
-        theMatScannerSteppingAction->PrintIntegratedMaterialVerbose(G4cout);
+        theMatScannerSteppingAction->PrintIntegratedMaterialVerbose(*(ost));
       }
-      else if(2 == verbosity)
+      else if (2 == verbosity)
       {
-        theMatScannerSteppingAction->PrintEachMaterialVerbose(G4cout);
+        theMatScannerSteppingAction->PrintEachMaterialVerbose(*(ost));
       }
-      G4cout << G4endl;
+      *(ost) << G4endl;
       delete anEvent;
-      aveLength += length / mm;
+      aveLength += length / cm;
+      aveMassThick += massThick / (g / cm2);
       aveX0 += x0;
       aveLambda += lambda;
     }
-    if (nPhi > 1) {
-      G4cout << G4endl;
-      G4cout << " ave. for theta = " << std::setw(11) << theta / deg << " : " << std::setw(11)
-             << aveLength / nPhi << " " << std::setw(11) << aveX0 / nPhi << " " << std::setw(11)
+    if (nPhi > 1)
+    {
+      *(ost) << G4endl;
+      *(ost) << " ave. for theta = " << std::setprecision(2) << std::setw(11) << std::scientific
+             << theta / deg << " : " << std::setw(11) << std::scientific << aveLength / nPhi << " "
+             << std::setw(11) << std::scientific << aveMassThick / nPhi << " " << std::setw(11)
+             << std::scientific << aveX0 / nPhi << " " << std::setw(11) << std::scientific
              << aveLambda / nPhi << G4endl;
     }
   }
+  G4cout.flags(os_flags);
 
   theStateMan->SetNewState(G4State_Idle);
+  // Enable visualization
+  G4UImanager::GetUIpointer()->ApplyCommand("/vis/enable");
   return;
 }
 
@@ -197,17 +227,62 @@ void G4MaterialScanner::DoScan()
 G4bool G4MaterialScanner::SetRegionName(const G4String& val)
 {
   G4Region* aRegion = G4RegionStore::GetInstance()->GetRegion(val);
-  if (aRegion != nullptr) {
+  if (aRegion != nullptr)
+  {
     theRegion = aRegion;
     regionName = val;
     return true;
   }
-
-  G4cerr << "Region <" << val << "> not found. Command ignored." << G4endl;
-  G4cerr << "Defined regions are : " << G4endl;
-  for (const auto& i : *G4RegionStore::GetInstance()) {
-    G4cerr << " " << i->GetName();
-  }
-  G4cerr << G4endl;
   return false;
+}
+
+// --------------------------------------------------------------------
+G4bool G4MaterialScanner::SetThinMaterial(G4bool flg, G4String& mat)
+{
+  if (flg)
+  {
+    auto pMat = G4Material::GetMaterial(mat, false);
+    if (!pMat) pMat = G4NistManager::Instance()->FindOrBuildMaterial(mat);
+    if (pMat)
+    {
+      ignoreThinMaterial = true;
+      thinDencity = pMat->GetDensity();
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  ignoreThinMaterial = false;
+  return true;
+}
+
+// --------------------------------------------------------------------
+void G4MaterialScanner::SetDetDefaultParticle(const G4ParticleDefinition* ptcl, G4double eKin)
+{
+  if (theMatScannerSteppingAction == nullptr)
+  {
+    theMatScannerSteppingAction = new G4MSSteppingAction();
+  }
+  theMatScannerSteppingAction->SetDetDefaultParticle(ptcl, eKin);
+}
+
+// --------------------------------------------------------------------
+void G4MaterialScanner::SetOutFile(G4String& fNm)
+{
+  if (fNm != fTarget)
+  {
+    if (fNm == "**Screen**")
+    {
+      ost = &G4cout;
+    }
+    else
+    {
+      if (ost != &G4cout) delete ost;
+      ost = new std::ofstream(fNm);
+    }
+    fTarget = fNm;
+  }
 }

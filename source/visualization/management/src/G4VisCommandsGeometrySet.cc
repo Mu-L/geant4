@@ -29,41 +29,46 @@
 
 #include "G4VisCommandsGeometrySet.hh"
 
-#include "G4UIcommand.hh"
-#include "G4VisManager.hh"
 #include "G4LogicalVolumeStore.hh"
+#include "G4UIcommand.hh"
 #include "G4UImanager.hh"
+#include "G4VisManager.hh"
 
 #include <sstream>
 
 #define G4warn G4cout
 
-void G4VVisCommandGeometrySet::Set
-(const G4String& requestedName,
- const G4VVisCommandGeometrySetFunction& setFunction,
- G4int requestedDepth)
+void G4VVisCommandGeometrySet::Set(const G4String& requestedName,
+                                   const G4VVisCommandGeometrySetFunction& setFunction,
+                                   G4int requestedDepth)
 {
   G4VisManager::Verbosity verbosity = fpVisManager->GetVerbosity();
   G4LogicalVolumeStore* pLVStore = G4LogicalVolumeStore::GetInstance();
   G4bool found = false;
-  for (auto* pLV : *pLVStore) {
+  for (auto* pLV : *pLVStore)
+  {
     const G4String& logVolName = pLV->GetName();
     if (logVolName == requestedName) found = true;
-    if (requestedName == "all" || logVolName == requestedName) {
+    if (requestedName == "all" || logVolName == requestedName)
+    {
       SetLVVisAtts(pLV, setFunction, 0, requestedDepth);
     }
   }
-  if (requestedName != "all" && !found) {
-    if (verbosity >= G4VisManager::errors) {
+  if (requestedName != "all" && !found)
+  {
+    if (verbosity >= G4VisManager::errors)
+    {
       G4warn << "ERROR: Logical volume \"" << requestedName
-	     << "\" not found in logical volume store." << G4endl;
+             << "\" not found in logical volume store." << G4endl;
     }
     return;
   }
   // Recalculate extent of any physical volume model in run duration lists
-  for (const auto& scene : fpVisManager->GetSceneList()) {
+  for (const auto& scene : fpVisManager->GetSceneList())
+  {
     const auto& runDurationModelList = scene->GetRunDurationModelList();
-    for (const auto& sceneModel : runDurationModelList) {
+    for (const auto& sceneModel : runDurationModelList)
+    {
       auto model = sceneModel.fpModel;
       auto pvModel = dynamic_cast<G4PhysicalVolumeModel*>(model);
       if (pvModel) pvModel->CalculateExtent();
@@ -71,42 +76,46 @@ void G4VVisCommandGeometrySet::Set
     // And re-calculate the scene's extent
     scene->CalculateExtent();
   }
-  if (fpVisManager->GetCurrentViewer()) {
+  if (fpVisManager->GetCurrentViewer())
+  {
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/scene/notifyHandlers");
   }
 }
 
-void G4VVisCommandGeometrySet::SetLVVisAtts
-(G4LogicalVolume* pLV,
- const G4VVisCommandGeometrySetFunction& setFunction,
- G4int depth, G4int requestedDepth)
+void G4VVisCommandGeometrySet::SetLVVisAtts(G4LogicalVolume* pLV,
+                                            const G4VVisCommandGeometrySetFunction& setFunction,
+                                            G4int depth, G4int requestedDepth)
 {
   G4VisManager::Verbosity verbosity = fpVisManager->GetVerbosity();
   const G4VisAttributes* oldVisAtts = pLV->GetVisAttributes();
-  fVisAttsMap.insert(std::make_pair(pLV,oldVisAtts));  // Store old vis atts.
-  G4VisAttributes* newVisAtts = new G4VisAttributes;   // Memory leak!
-  if (oldVisAtts) {
+  fVisAttsMap.insert(std::make_pair(pLV, oldVisAtts));  // Store old vis atts.
+  G4VisAttributes* newVisAtts = new G4VisAttributes;  // Memory leak!
+  if (oldVisAtts)
+  {
     *newVisAtts = *oldVisAtts;
   }
   setFunction(newVisAtts);  // Sets whatever attribute determined by
-			    // function object.
+                            // function object.
   pLV->SetVisAttributes(newVisAtts);
-  if (verbosity >= G4VisManager::confirmations) {
-    G4cout << "\nLogical Volume \"" << pLV->GetName()
-	   << "\": setting vis attributes:";
-    if (oldVisAtts) {
+  if (verbosity >= G4VisManager::confirmations)
+  {
+    G4cout << "\nLogical Volume \"" << pLV->GetName() << "\": setting vis attributes:";
+    if (oldVisAtts)
+    {
       G4cout << "\nwas: " << *oldVisAtts;
-    } else {
+    }
+    else
+    {
       G4cout << "\n(no old attributes)";
     }
-    G4cout << "\nnow: " << *newVisAtts
-	   << G4endl;
+    G4cout << "\nnow: " << *newVisAtts << G4endl;
   }
-  if (requestedDepth < 0 || depth < requestedDepth) {
+  if (requestedDepth < 0 || depth < requestedDepth)
+  {
     G4int nDaughters = (G4int)pLV->GetNoDaughters();
-    for (G4int i = 0; i < nDaughters; ++i) {
-      SetLVVisAtts(pLV->GetDaughter(i)->GetLogicalVolume(),
-		   setFunction, ++depth, requestedDepth);
+    for (G4int i = 0; i < nDaughters; ++i)
+    {
+      SetLVVisAtts(pLV->GetDaughter(i)->GetLogicalVolume(), setFunction, ++depth, requestedDepth);
     }
   }
 }
@@ -119,21 +128,20 @@ G4VisCommandGeometrySetColour::G4VisCommandGeometrySetColour()
   fpCommand = new G4UIcommand("/vis/geometry/set/colour", this);
   fpCommand->SetGuidance("Sets colour of logical volume(s).");
   fpCommand->SetGuidance("\"all\" sets all logical volumes.");
-  fpCommand->SetGuidance
-    ("Optionally propagates down hierarchy to given depth.");
+  fpCommand->SetGuidance("Optionally propagates down hierarchy to given depth.");
   G4UIparameter* parameter;
-  parameter = new G4UIparameter ("logical-volume-name", 's', omitable = true);
+  parameter = new G4UIparameter("logical-volume-name", 's', omitable = true);
   parameter->SetDefaultValue("all");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("depth", 'd', omitable = true);
   parameter->SetDefaultValue(0);
-  parameter->SetGuidance
-    ("Depth of propagation (-1 means unlimited depth).");
+  parameter->SetGuidance("Depth of propagation (-1 means unlimited depth).");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("red", 's', omitable = true);
   parameter->SetDefaultValue("1.");
-  parameter->SetGuidance
-    ("Red component or a string, e.g., \"blue\", in which case succeeding colour components are ignored.");
+  parameter->SetGuidance(
+    "Red component or a string, e.g., \"blue\", in which case succeeding colour components are "
+    "ignored.");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("green", 'd', omitable = true);
   parameter->SetDefaultValue(1.);
@@ -156,15 +164,14 @@ G4String G4VisCommandGeometrySetColour::GetCurrentValue(G4UIcommand*)
   return "";
 }
 
-void G4VisCommandGeometrySetColour::SetNewValue
-(G4UIcommand*, G4String newValue)
+void G4VisCommandGeometrySetColour::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4String name, redOrString;
   G4int requestedDepth;
   G4double green, blue, opacity;
   std::istringstream iss(newValue);
   iss >> name >> requestedDepth >> redOrString >> green >> blue >> opacity;
-  G4Colour colour(1,1,1,1);  // Default white and opaque.
+  G4Colour colour(1, 1, 1, 1);  // Default white and opaque.
   ConvertToColour(colour, redOrString, green, blue, opacity);
   G4VisCommandGeometrySetColourFunction setColour(colour);
   Set(name, setColour, requestedDepth);
@@ -178,16 +185,14 @@ G4VisCommandGeometrySetDaughtersInvisible::G4VisCommandGeometrySetDaughtersInvis
   fpCommand = new G4UIcommand("/vis/geometry/set/daughtersInvisible", this);
   fpCommand->SetGuidance("Makes daughters of logical volume(s) invisible.");
   fpCommand->SetGuidance("\"all\" sets all logical volumes.");
-  fpCommand->SetGuidance
-    ("Optionally propagates down hierarchy to given depth.");
+  fpCommand->SetGuidance("Optionally propagates down hierarchy to given depth.");
   G4UIparameter* parameter;
-  parameter = new G4UIparameter ("logical-volume-name", 's', omitable = true);
+  parameter = new G4UIparameter("logical-volume-name", 's', omitable = true);
   parameter->SetDefaultValue("all");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("depth", 'd', omitable = true);
   parameter->SetDefaultValue(0);
-  parameter->SetGuidance
-    ("Depth of propagation (-1 means unlimited depth).");
+  parameter->SetGuidance("Depth of propagation (-1 means unlimited depth).");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("daughtersInvisible", 'b', omitable = true);
   parameter->SetDefaultValue(true);
@@ -199,43 +204,42 @@ G4VisCommandGeometrySetDaughtersInvisible::~G4VisCommandGeometrySetDaughtersInvi
   delete fpCommand;
 }
 
-G4String
-G4VisCommandGeometrySetDaughtersInvisible::GetCurrentValue(G4UIcommand*)
+G4String G4VisCommandGeometrySetDaughtersInvisible::GetCurrentValue(G4UIcommand*)
 {
   return "";
 }
 
-void G4VisCommandGeometrySetDaughtersInvisible::SetNewValue
-(G4UIcommand*, G4String newValue)
+void G4VisCommandGeometrySetDaughtersInvisible::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4String name;
   G4int requestedDepth;
   G4String daughtersInvisibleString;
   std::istringstream iss(newValue);
   iss >> name >> requestedDepth >> daughtersInvisibleString;
-  G4bool daughtersInvisible =
-    G4UIcommand::ConvertToBool(daughtersInvisibleString);
+  G4bool daughtersInvisible = G4UIcommand::ConvertToBool(daughtersInvisibleString);
 
-  if (requestedDepth !=0) {
+  if (requestedDepth != 0)
+  {
     requestedDepth = 0;
-    if (fpVisManager->GetVerbosity() >= G4VisManager::warnings) {
-      G4warn << "Recursive application suppressed for this attribute."
-	     << G4endl;
+    if (fpVisManager->GetVerbosity() >= G4VisManager::warnings)
+    {
+      G4warn << "Recursive application suppressed for this attribute." << G4endl;
     }
   }
 
-  G4VisCommandGeometrySetDaughtersInvisibleFunction
-    setDaughtersInvisible(daughtersInvisible);
+  G4VisCommandGeometrySetDaughtersInvisibleFunction setDaughtersInvisible(daughtersInvisible);
   Set(name, setDaughtersInvisible, requestedDepth);
 
   G4VViewer* pViewer = fpVisManager->GetCurrentViewer();
-  if (pViewer) {
+  if (pViewer)
+  {
     const G4ViewParameters& viewParams = pViewer->GetViewParameters();
-    if (fpVisManager->GetVerbosity() >= G4VisManager::warnings) {
-      if (!viewParams.IsCulling()) {
-	G4warn <<
-	  "Culling must be on - \"/vis/viewer/set/culling global true\" - to see effect."
-	       << G4endl;
+    if (fpVisManager->GetVerbosity() >= G4VisManager::warnings)
+    {
+      if (!viewParams.IsCulling())
+      {
+        G4warn << "Culling must be on - \"/vis/viewer/set/culling global true\" - to see effect."
+               << G4endl;
       }
     }
   }
@@ -247,20 +251,18 @@ G4VisCommandGeometrySetForceAuxEdgeVisible::G4VisCommandGeometrySetForceAuxEdgeV
 {
   G4bool omitable;
   fpCommand = new G4UIcommand("/vis/geometry/set/forceAuxEdgeVisible", this);
-  fpCommand->SetGuidance
-    ("Forces auxiliary (soft) edges of logical volume(s) to be visible,"
+  fpCommand->SetGuidance(
+    "Forces auxiliary (soft) edges of logical volume(s) to be visible,"
     "\nregardless of the view parameters.");
   fpCommand->SetGuidance("\"all\" sets all logical volumes.");
-  fpCommand->SetGuidance
-    ("Optionally propagates down hierarchy to given depth.");
+  fpCommand->SetGuidance("Optionally propagates down hierarchy to given depth.");
   G4UIparameter* parameter;
-  parameter = new G4UIparameter ("logical-volume-name", 's', omitable = true);
+  parameter = new G4UIparameter("logical-volume-name", 's', omitable = true);
   parameter->SetDefaultValue("all");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("depth", 'd', omitable = true);
   parameter->SetDefaultValue(0);
-  parameter->SetGuidance
-    ("Depth of propagation (-1 means unlimited depth).");
+  parameter->SetGuidance("Depth of propagation (-1 means unlimited depth).");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("forceAuxEdgeVisible", 'b', omitable = true);
   parameter->SetDefaultValue(true);
@@ -272,25 +274,22 @@ G4VisCommandGeometrySetForceAuxEdgeVisible::~G4VisCommandGeometrySetForceAuxEdge
   delete fpCommand;
 }
 
-G4String
-G4VisCommandGeometrySetForceAuxEdgeVisible::GetCurrentValue(G4UIcommand*)
+G4String G4VisCommandGeometrySetForceAuxEdgeVisible::GetCurrentValue(G4UIcommand*)
 {
   return "";
 }
 
-void G4VisCommandGeometrySetForceAuxEdgeVisible::SetNewValue
-(G4UIcommand*, G4String newValue)
+void G4VisCommandGeometrySetForceAuxEdgeVisible::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4String name;
   G4int requestedDepth;
   G4String forceAuxEdgeVisibleString;
   std::istringstream iss(newValue);
   iss >> name >> requestedDepth >> forceAuxEdgeVisibleString;
-  G4bool forceAuxEdgeVisible =
-    G4UIcommand::ConvertToBool(forceAuxEdgeVisibleString);;
+  G4bool forceAuxEdgeVisible = G4UIcommand::ConvertToBool(forceAuxEdgeVisibleString);
+  ;
 
-  G4VisCommandGeometrySetForceAuxEdgeVisibleFunction
-    setForceAuxEdgeVisible(forceAuxEdgeVisible);
+  G4VisCommandGeometrySetForceAuxEdgeVisibleFunction setForceAuxEdgeVisible(forceAuxEdgeVisible);
   Set(name, setForceAuxEdgeVisible, requestedDepth);
 }
 
@@ -300,27 +299,24 @@ G4VisCommandGeometrySetForceCloud::G4VisCommandGeometrySetForceCloud()
 {
   G4bool omitable;
   fpCommand = new G4UIcommand("/vis/geometry/set/forceCloud", this);
-  fpCommand->SetGuidance
-  ("Forces logical volume(s) always to be drawn as a cloud of points,"
-   "\nregardless of the view parameters.");
+  fpCommand->SetGuidance(
+    "Forces logical volume(s) always to be drawn as a cloud of points,"
+    "\nregardless of the view parameters.");
   fpCommand->SetGuidance("\"all\" sets all logical volumes.");
-  fpCommand->SetGuidance
-    ("Optionally propagates down hierarchy to given depth.");
+  fpCommand->SetGuidance("Optionally propagates down hierarchy to given depth.");
   G4UIparameter* parameter;
-  parameter = new G4UIparameter ("logical-volume-name", 's', omitable = true);
+  parameter = new G4UIparameter("logical-volume-name", 's', omitable = true);
   parameter->SetDefaultValue("all");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("depth", 'd', omitable = true);
   parameter->SetDefaultValue(0);
-  parameter->SetGuidance
-    ("Depth of propagation (-1 means unlimited depth).");
+  parameter->SetGuidance("Depth of propagation (-1 means unlimited depth).");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("forceCloud", 'b', omitable = true);
   parameter->SetDefaultValue(true);
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("nPoints", 'd', omitable = true);
-  parameter->SetGuidance
-    ("<= 0 means under control of viewer.");
+  parameter->SetGuidance("<= 0 means under control of viewer.");
   parameter->SetDefaultValue(0);
   fpCommand->SetParameter(parameter);
 }
@@ -330,67 +326,63 @@ G4VisCommandGeometrySetForceCloud::~G4VisCommandGeometrySetForceCloud()
   delete fpCommand;
 }
 
-G4String
-G4VisCommandGeometrySetForceCloud::GetCurrentValue(G4UIcommand*)
+G4String G4VisCommandGeometrySetForceCloud::GetCurrentValue(G4UIcommand*)
 {
   return "";
 }
 
-void G4VisCommandGeometrySetForceCloud::SetNewValue
-(G4UIcommand*, G4String newValue)
+void G4VisCommandGeometrySetForceCloud::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4String name, forceCloudString;
   G4int requestedDepth, nPoints;
   std::istringstream iss(newValue);
   iss >> name >> requestedDepth >> forceCloudString >> nPoints;
-  G4bool forceCloud = G4UIcommand::ConvertToBool(forceCloudString);;
+  G4bool forceCloud = G4UIcommand::ConvertToBool(forceCloudString);
+  ;
 
-  G4VisCommandGeometrySetForceCloudFunction setForceCloud(forceCloud,nPoints);
+  G4VisCommandGeometrySetForceCloudFunction setForceCloud(forceCloud, nPoints);
   Set(name, setForceCloud, requestedDepth);
 }
 
 ////////////// /vis/geometry/set/forceLineSegmentsPerCircle /////////////////////////
 
-G4VisCommandGeometrySetForceLineSegmentsPerCircle::G4VisCommandGeometrySetForceLineSegmentsPerCircle()
+G4VisCommandGeometrySetForceLineSegmentsPerCircle::
+  G4VisCommandGeometrySetForceLineSegmentsPerCircle()
 {
   G4bool omitable;
   fpCommand = new G4UIcommand("/vis/geometry/set/forceLineSegmentsPerCircle", this);
-  fpCommand->SetGuidance
-    ("Forces number of line segments per circle, the precision with which a"
-     "\ncurved line or surface is represented by a polygon or polyhedron,"
-     "\nregardless of the view parameters.");
+  fpCommand->SetGuidance(
+    "Forces number of line segments per circle, the precision with which a"
+    "\ncurved line or surface is represented by a polygon or polyhedron,"
+    "\nregardless of the view parameters.");
   fpCommand->SetGuidance("\"all\" sets all logical volumes.");
-  fpCommand->SetGuidance
-    ("Optionally propagates down hierarchy to given depth.");
+  fpCommand->SetGuidance("Optionally propagates down hierarchy to given depth.");
   G4UIparameter* parameter;
-  parameter = new G4UIparameter ("logical-volume-name", 's', omitable = true);
+  parameter = new G4UIparameter("logical-volume-name", 's', omitable = true);
   parameter->SetDefaultValue("all");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("depth", 'd', omitable = true);
   parameter->SetDefaultValue(0);
-  parameter->SetGuidance
-    ("Depth of propagation (-1 means unlimited depth).");
+  parameter->SetGuidance("Depth of propagation (-1 means unlimited depth).");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("lineSegmentsPerCircle", 'd', omitable = true);
-  parameter->SetGuidance
-    ("<= 0 means not forced, i.e., under control of viewer.");
+  parameter->SetGuidance("<= 0 means not forced, i.e., under control of viewer.");
   parameter->SetDefaultValue(0);
   fpCommand->SetParameter(parameter);
 }
 
-G4VisCommandGeometrySetForceLineSegmentsPerCircle::~G4VisCommandGeometrySetForceLineSegmentsPerCircle()
+G4VisCommandGeometrySetForceLineSegmentsPerCircle::
+  ~G4VisCommandGeometrySetForceLineSegmentsPerCircle()
 {
   delete fpCommand;
 }
 
-G4String
-G4VisCommandGeometrySetForceLineSegmentsPerCircle::GetCurrentValue(G4UIcommand*)
+G4String G4VisCommandGeometrySetForceLineSegmentsPerCircle::GetCurrentValue(G4UIcommand*)
 {
   return "";
 }
 
-void G4VisCommandGeometrySetForceLineSegmentsPerCircle::SetNewValue
-(G4UIcommand*, G4String newValue)
+void G4VisCommandGeometrySetForceLineSegmentsPerCircle::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4String name;
   G4int requestedDepth;
@@ -398,8 +390,8 @@ void G4VisCommandGeometrySetForceLineSegmentsPerCircle::SetNewValue
   std::istringstream iss(newValue);
   iss >> name >> requestedDepth >> lineSegmentsPerCircle;
 
-  G4VisCommandGeometrySetForceLineSegmentsPerCircleFunction
-  setForceLineSegmentsPerCircle(lineSegmentsPerCircle);
+  G4VisCommandGeometrySetForceLineSegmentsPerCircleFunction setForceLineSegmentsPerCircle(
+    lineSegmentsPerCircle);
   Set(name, setForceLineSegmentsPerCircle, requestedDepth);
 }
 
@@ -409,20 +401,18 @@ G4VisCommandGeometrySetForceSolid::G4VisCommandGeometrySetForceSolid()
 {
   G4bool omitable;
   fpCommand = new G4UIcommand("/vis/geometry/set/forceSolid", this);
-  fpCommand->SetGuidance
-   ("Forces logical volume(s) always to be drawn solid (surface drawing),"
+  fpCommand->SetGuidance(
+    "Forces logical volume(s) always to be drawn solid (surface drawing),"
     "\nregardless of the view parameters.");
   fpCommand->SetGuidance("\"all\" sets all logical volumes.");
-  fpCommand->SetGuidance
-    ("Optionally propagates down hierarchy to given depth.");
+  fpCommand->SetGuidance("Optionally propagates down hierarchy to given depth.");
   G4UIparameter* parameter;
-  parameter = new G4UIparameter ("logical-volume-name", 's', omitable = true);
+  parameter = new G4UIparameter("logical-volume-name", 's', omitable = true);
   parameter->SetDefaultValue("all");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("depth", 'd', omitable = true);
   parameter->SetDefaultValue(0);
-  parameter->SetGuidance
-    ("Depth of propagation (-1 means unlimited depth).");
+  parameter->SetGuidance("Depth of propagation (-1 means unlimited depth).");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("force", 'b', omitable = true);
   parameter->SetDefaultValue(true);
@@ -434,14 +424,12 @@ G4VisCommandGeometrySetForceSolid::~G4VisCommandGeometrySetForceSolid()
   delete fpCommand;
 }
 
-G4String
-G4VisCommandGeometrySetForceSolid::GetCurrentValue(G4UIcommand*)
+G4String G4VisCommandGeometrySetForceSolid::GetCurrentValue(G4UIcommand*)
 {
   return "";
 }
 
-void G4VisCommandGeometrySetForceSolid::SetNewValue
-(G4UIcommand*, G4String newValue)
+void G4VisCommandGeometrySetForceSolid::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4String name;
   G4int requestedDepth;
@@ -460,20 +448,18 @@ G4VisCommandGeometrySetForceWireframe::G4VisCommandGeometrySetForceWireframe()
 {
   G4bool omitable;
   fpCommand = new G4UIcommand("/vis/geometry/set/forceWireframe", this);
-  fpCommand->SetGuidance
-   ("Forces logical volume(s) always to be drawn as wireframe,"
+  fpCommand->SetGuidance(
+    "Forces logical volume(s) always to be drawn as wireframe,"
     "\nregardless of the view parameters.");
   fpCommand->SetGuidance("\"all\" sets all logical volumes.");
-  fpCommand->SetGuidance
-    ("Optionally propagates down hierarchy to given depth.");
+  fpCommand->SetGuidance("Optionally propagates down hierarchy to given depth.");
   G4UIparameter* parameter;
-  parameter = new G4UIparameter ("logical-volume-name", 's', omitable = true);
+  parameter = new G4UIparameter("logical-volume-name", 's', omitable = true);
   parameter->SetDefaultValue("all");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("depth", 'd', omitable = true);
   parameter->SetDefaultValue(0);
-  parameter->SetGuidance
-    ("Depth of propagation (-1 means unlimited depth).");
+  parameter->SetGuidance("Depth of propagation (-1 means unlimited depth).");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("forceWireframe", 'b', omitable = true);
   parameter->SetDefaultValue(true);
@@ -485,14 +471,12 @@ G4VisCommandGeometrySetForceWireframe::~G4VisCommandGeometrySetForceWireframe()
   delete fpCommand;
 }
 
-G4String
-G4VisCommandGeometrySetForceWireframe::GetCurrentValue(G4UIcommand*)
+G4String G4VisCommandGeometrySetForceWireframe::GetCurrentValue(G4UIcommand*)
 {
   return "";
 }
 
-void G4VisCommandGeometrySetForceWireframe::SetNewValue
-(G4UIcommand*, G4String newValue)
+void G4VisCommandGeometrySetForceWireframe::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4String name;
   G4int requestedDepth;
@@ -501,8 +485,7 @@ void G4VisCommandGeometrySetForceWireframe::SetNewValue
   iss >> name >> requestedDepth >> forceWireframeString;
   G4bool forceWireframe = G4UIcommand::ConvertToBool(forceWireframeString);
 
-  G4VisCommandGeometrySetForceWireframeFunction
-    setForceWireframe(forceWireframe);
+  G4VisCommandGeometrySetForceWireframeFunction setForceWireframe(forceWireframe);
   Set(name, setForceWireframe, requestedDepth);
 }
 
@@ -514,16 +497,14 @@ G4VisCommandGeometrySetLineStyle::G4VisCommandGeometrySetLineStyle()
   fpCommand = new G4UIcommand("/vis/geometry/set/lineStyle", this);
   fpCommand->SetGuidance("Sets line style of logical volume(s) drawing.");
   fpCommand->SetGuidance("\"all\" sets all logical volumes.");
-  fpCommand->SetGuidance
-    ("Optionally propagates down hierarchy to given depth.");
+  fpCommand->SetGuidance("Optionally propagates down hierarchy to given depth.");
   G4UIparameter* parameter;
-  parameter = new G4UIparameter ("logical-volume-name", 's', omitable = true);
+  parameter = new G4UIparameter("logical-volume-name", 's', omitable = true);
   parameter->SetDefaultValue("all");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("depth", 'd', omitable = true);
   parameter->SetDefaultValue(0);
-  parameter->SetGuidance
-    ("Depth of propagation (-1 means unlimited depth).");
+  parameter->SetGuidance("Depth of propagation (-1 means unlimited depth).");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("lineStyle", 's', omitable = true);
   parameter->SetParameterCandidates("unbroken dashed dotted");
@@ -536,14 +517,12 @@ G4VisCommandGeometrySetLineStyle::~G4VisCommandGeometrySetLineStyle()
   delete fpCommand;
 }
 
-G4String
-G4VisCommandGeometrySetLineStyle::GetCurrentValue(G4UIcommand*)
+G4String G4VisCommandGeometrySetLineStyle::GetCurrentValue(G4UIcommand*)
 {
   return "";
 }
 
-void G4VisCommandGeometrySetLineStyle::SetNewValue
-(G4UIcommand*, G4String newValue)
+void G4VisCommandGeometrySetLineStyle::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4String name, lineStyleString;
   G4int requestedDepth;
@@ -566,16 +545,14 @@ G4VisCommandGeometrySetLineWidth::G4VisCommandGeometrySetLineWidth()
   fpCommand = new G4UIcommand("/vis/geometry/set/lineWidth", this);
   fpCommand->SetGuidance("Sets line width of logical volume(s) drawing.");
   fpCommand->SetGuidance("\"all\" sets all logical volumes.");
-  fpCommand->SetGuidance
-    ("Optionally propagates down hierarchy to given depth.");
+  fpCommand->SetGuidance("Optionally propagates down hierarchy to given depth.");
   G4UIparameter* parameter;
-  parameter = new G4UIparameter ("logical-volume-name", 's', omitable = true);
+  parameter = new G4UIparameter("logical-volume-name", 's', omitable = true);
   parameter->SetDefaultValue("all");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("depth", 'd', omitable = true);
   parameter->SetDefaultValue(0);
-  parameter->SetGuidance
-    ("Depth of propagation (-1 means unlimited depth).");
+  parameter->SetGuidance("Depth of propagation (-1 means unlimited depth).");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("lineWidth", 'd', omitable = true);
   parameter->SetDefaultValue(1.);
@@ -587,14 +564,12 @@ G4VisCommandGeometrySetLineWidth::~G4VisCommandGeometrySetLineWidth()
   delete fpCommand;
 }
 
-G4String
-G4VisCommandGeometrySetLineWidth::GetCurrentValue(G4UIcommand*)
+G4String G4VisCommandGeometrySetLineWidth::GetCurrentValue(G4UIcommand*)
 {
   return "";
 }
 
-void G4VisCommandGeometrySetLineWidth::SetNewValue
-(G4UIcommand*, G4String newValue)
+void G4VisCommandGeometrySetLineWidth::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4String name;
   G4int requestedDepth;
@@ -614,16 +589,14 @@ G4VisCommandGeometrySetVisibility::G4VisCommandGeometrySetVisibility()
   fpCommand = new G4UIcommand("/vis/geometry/set/visibility", this);
   fpCommand->SetGuidance("Sets visibility of logical volume(s).");
   fpCommand->SetGuidance("\"all\" sets all logical volumes.");
-  fpCommand->SetGuidance
-    ("Optionally propagates down hierarchy to given depth.");
+  fpCommand->SetGuidance("Optionally propagates down hierarchy to given depth.");
   G4UIparameter* parameter;
-  parameter = new G4UIparameter ("logical-volume-name", 's', omitable = true);
+  parameter = new G4UIparameter("logical-volume-name", 's', omitable = true);
   parameter->SetDefaultValue("all");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("depth", 'd', omitable = true);
   parameter->SetDefaultValue(0);
-  parameter->SetGuidance
-    ("Depth of propagation (-1 means unlimited depth).");
+  parameter->SetGuidance("Depth of propagation (-1 means unlimited depth).");
   fpCommand->SetParameter(parameter);
   parameter = new G4UIparameter("visibility", 'b', omitable = true);
   parameter->SetDefaultValue(true);
@@ -640,8 +613,7 @@ G4String G4VisCommandGeometrySetVisibility::GetCurrentValue(G4UIcommand*)
   return "";
 }
 
-void G4VisCommandGeometrySetVisibility::SetNewValue
-(G4UIcommand*, G4String newValue)
+void G4VisCommandGeometrySetVisibility::SetNewValue(G4UIcommand*, G4String newValue)
 {
   G4String name;
   G4int requestedDepth;
@@ -654,38 +626,40 @@ void G4VisCommandGeometrySetVisibility::SetNewValue
   Set(name, setVisibility, requestedDepth);
 
   G4VViewer* pViewer = fpVisManager->GetCurrentViewer();
-  if (pViewer) {
+  if (pViewer)
+  {
     const G4ViewParameters& viewParams = pViewer->GetViewParameters();
-    if (fpVisManager->GetVerbosity() >= G4VisManager::warnings) {
-      if (!viewParams.IsCulling() ||
-	  !viewParams.IsCullingInvisible()) {
-	G4warn <<
-	  "Culling must be on - \"/vis/viewer/set/culling global true\" and"
-	  "\n  \"/vis/viewer/set/culling invisible true\" - to see effect."
-	       << G4endl;
+    if (fpVisManager->GetVerbosity() >= G4VisManager::warnings)
+    {
+      if (!viewParams.IsCulling() || !viewParams.IsCullingInvisible())
+      {
+        G4warn << "Culling must be on - \"/vis/viewer/set/culling global true\" and"
+                  "\n  \"/vis/viewer/set/culling invisible true\" - to see effect."
+               << G4endl;
       }
     }
   }
 }
 
-void G4VisCommandGeometrySetVisibility::SetNewValueOnLV
-(G4LogicalVolume* pLV, G4int requestedDepth,G4bool visibility)
+void G4VisCommandGeometrySetVisibility::SetNewValueOnLV(G4LogicalVolume* pLV, G4int requestedDepth,
+                                                        G4bool visibility)
 {
   if (!pLV) return;
   G4VisCommandGeometrySetVisibilityFunction setVisibility(visibility);
   SetLVVisAtts(pLV, setVisibility, 0, requestedDepth);
 
   G4VViewer* pViewer = fpVisManager->GetCurrentViewer();
-  if (pViewer) {
+  if (pViewer)
+  {
     G4UImanager::GetUIpointer()->ApplyCommand("/vis/scene/notifyHandlers");
     const G4ViewParameters& viewParams = pViewer->GetViewParameters();
-    if (fpVisManager->GetVerbosity() >= G4VisManager::warnings) {
-      if (!viewParams.IsCulling() ||
-	  !viewParams.IsCullingInvisible()) {
-	G4warn <<
-	  "Culling must be on - \"/vis/viewer/set/culling global true\" and"
-	  "\n  \"/vis/viewer/set/culling invisible true\" - to see effect."
-	       << G4endl;
+    if (fpVisManager->GetVerbosity() >= G4VisManager::warnings)
+    {
+      if (!viewParams.IsCulling() || !viewParams.IsCullingInvisible())
+      {
+        G4warn << "Culling must be on - \"/vis/viewer/set/culling global true\" and"
+                  "\n  \"/vis/viewer/set/culling invisible true\" - to see effect."
+               << G4endl;
       }
     }
   }

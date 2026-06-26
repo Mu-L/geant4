@@ -44,20 +44,21 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4HadronInelasticQBBC_ABLA_h
-#define G4HadronInelasticQBBC_ABLA_h 1
+#ifndef G4HADRONINELASTICQBBC_ABLA_HH
+#define G4HADRONINELASTICQBBC_ABLA_HH
 
-#include "globals.hh"
 #include "G4VHadronPhysics.hh"
+#include "globals.hh"
 
+class G4HadronInelasticQBBC_ABLA : public G4VHadronPhysics
+{
+  public:
 
-class G4HadronInelasticQBBC_ABLA : public G4VHadronPhysics {
-  public: 
-    G4HadronInelasticQBBC_ABLA( G4int ver = 1 );
-  virtual ~G4HadronInelasticQBBC_ABLA() = default;
-  void ConstructProcess() override;
-  G4HadronInelasticQBBC_ABLA( G4HadronInelasticQBBC_ABLA& ) = delete;
-  G4HadronInelasticQBBC_ABLA& operator=( const G4HadronInelasticQBBC_ABLA& right ) = delete;
+    G4HadronInelasticQBBC_ABLA(G4int ver = 1);
+    virtual ~G4HadronInelasticQBBC_ABLA() = default;
+    void ConstructProcess() override;
+    G4HadronInelasticQBBC_ABLA(G4HadronInelasticQBBC_ABLA&) = delete;
+    G4HadronInelasticQBBC_ABLA& operator=(const G4HadronInelasticQBBC_ABLA& right) = delete;
 };
 
 #endif

@@ -33,44 +33,47 @@
 //
 // 15 Jul 2009   Nicolas A. Karakatsanis
 //
-//                           - LoadNonLogData method was created to load only the non-logarithmic data from G4EMLOW
-//                             dataset. It is essentially performing the data loading operations as in the past.
+//                           - LoadNonLogData method was created to load only the non-logarithmic
+//                           data from G4EMLOW
+//                             dataset. It is essentially performing the data loading operations as
+//                             in the past.
 //
-//                           - LoadData method was revised in order to calculate the logarithmic values of the data
-//                             It retrieves the data values from the G4EMLOW data files but, then, calculates the
-//                             respective log values and loads them to seperate data structures. 
+//                           - LoadData method was revised in order to calculate the logarithmic
+//                           values of the data
+//                             It retrieves the data values from the G4EMLOW data files but, then,
+//                             calculates the respective log values and loads them to seperate data
+//                             structures.
 //
-//                           - SetLogEnergiesData method was cretaed to set logarithmic values to G4 data vectors.
-//                             The EM data sets, initialized this way, contain both non-log and log values.
-//                             These initialized data sets can enhance the computing performance of data interpolation
-//                             operations
+//                           - SetLogEnergiesData method was cretaed to set logarithmic values to G4
+//                           data vectors.
+//                             The EM data sets, initialized this way, contain both non-log and log
+//                             values. These initialized data sets can enhance the computing
+//                             performance of data interpolation operations
 //
 // -------------------------------------------------------------------
 
 #include "G4CompositeEMDataSet.hh"
+
 #include "G4EMDataSet.hh"
 #include "G4VDataSetAlgorithm.hh"
+
 #include <fstream>
 #include <sstream>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4CompositeEMDataSet::G4CompositeEMDataSet(G4VDataSetAlgorithm* argAlgorithm, 
-					   G4double argUnitEnergies, 
-					   G4double argUnitData, 
-					   G4int argMinZ, 
-					   G4int argMaxZ)
-  :
-  algorithm(argAlgorithm),
-  unitEnergies(argUnitEnergies),
-  unitData(argUnitData),
-  minZ(argMinZ),
-  maxZ(argMaxZ)
+G4CompositeEMDataSet::G4CompositeEMDataSet(G4VDataSetAlgorithm* argAlgorithm,
+                                           G4double argUnitEnergies, G4double argUnitData,
+                                           G4int argMinZ, G4int argMaxZ)
+  : algorithm(argAlgorithm),
+    unitEnergies(argUnitEnergies),
+    unitData(argUnitData),
+    minZ(argMinZ),
+    maxZ(argMaxZ)
 {
-  if (algorithm == nullptr) 
-  G4Exception("G4CompositeEMDataSet::G4CompositeEMDataSet",
-	      "em1003",FatalException,"interpolation == 0");
-
+  if (algorithm == nullptr)
+    G4Exception("G4CompositeEMDataSet::G4CompositeEMDataSet", "em1003", FatalException,
+                "interpolation == 0");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -85,15 +88,14 @@ G4CompositeEMDataSet::~G4CompositeEMDataSet()
 G4double G4CompositeEMDataSet::FindValue(G4double argEnergy, G4int argComponentId) const
 {
   const G4VEMDataSet* component(GetComponent(argComponentId));
- 
+
   if (component) return component->FindValue(argEnergy);
 
   std::ostringstream message;
   message << "G4CompositeEMDataSet::FindValue - component " << argComponentId << " not found";
- 
-  G4Exception("G4CompositeEMDataSet::FindValue",
-	      "em1004",FatalException,message.str().c_str());
- 
+
+  G4Exception("G4CompositeEMDataSet::FindValue", "em1004", FatalException, message.str().c_str());
+
   return 0.;
 }
 
@@ -105,75 +107,74 @@ void G4CompositeEMDataSet::PrintData(void) const
 
   G4cout << "The data set has " << n << " components" << G4endl;
   G4cout << G4endl;
- 
+
   G4int i(0);
- 
-  while (i<n)
-    {
-      G4cout << "--- Component " << i << " ---" << G4endl;
-      GetComponent(i)->PrintData();
-      ++i;
-    }
+
+  while (i < n)
+  {
+    G4cout << "--- Component " << i << " ---" << G4endl;
+    GetComponent(i)->PrintData();
+    ++i;
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4CompositeEMDataSet::SetEnergiesData(G4DataVector* argEnergies, G4DataVector* argData, G4int argComponentId)
+void G4CompositeEMDataSet::SetEnergiesData(G4DataVector* argEnergies, G4DataVector* argData,
+                                           G4int argComponentId)
 {
-  G4VEMDataSet * component(components[argComponentId]);
- 
+  G4VEMDataSet* component(components[argComponentId]);
+
   if (component)
-    {
-      component->SetEnergiesData(argEnergies, argData, 0);
-      return;
-    }
+  {
+    component->SetEnergiesData(argEnergies, argData, 0);
+    return;
+  }
 
   std::ostringstream message;
   message << "G4CompositeEMDataSet::SetEnergiesData - component " << argComponentId << " not found";
- 
-  G4Exception("G4CompositeEMDataSet::SetEnergiesData",
-	      "em1004",FatalException,message.str().c_str());
+
+  G4Exception("G4CompositeEMDataSet::SetEnergiesData", "em1004", FatalException,
+              message.str().c_str());
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4CompositeEMDataSet::SetLogEnergiesData(G4DataVector* argEnergies, 
-                                              G4DataVector* argData,
+void G4CompositeEMDataSet::SetLogEnergiesData(G4DataVector* argEnergies, G4DataVector* argData,
                                               G4DataVector* argLogEnergies,
-                                              G4DataVector* argLogData, 
-                                              G4int argComponentId)
+                                              G4DataVector* argLogData, G4int argComponentId)
 {
-  G4VEMDataSet * component(components[argComponentId]);
- 
+  G4VEMDataSet* component(components[argComponentId]);
+
   if (component)
-    {
-      component->SetLogEnergiesData(argEnergies, argData, argLogEnergies, argLogData, 0);
-      return;
-    }
+  {
+    component->SetLogEnergiesData(argEnergies, argData, argLogEnergies, argLogData, 0);
+    return;
+  }
 
   std::ostringstream message;
   message << "G4CompositeEMDataSet::SetEnergiesData - component " << argComponentId << " not found";
- 
-  G4Exception("G4CompositeEMDataSet::SetLogEnergiesData",
-	      "em1004",FatalException,message.str().c_str());
+
+  G4Exception("G4CompositeEMDataSet::SetLogEnergiesData", "em1004", FatalException,
+              message.str().c_str());
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 G4bool G4CompositeEMDataSet::LoadData(const G4String& argFileName)
 {
-  CleanUpComponents(); 
+  CleanUpComponents();
 
-  for (G4int z(minZ); z<maxZ; ++z)
+  for (G4int z(minZ); z < maxZ; ++z)
+  {
+    G4VEMDataSet* component = new G4EMDataSet(z, algorithm->Clone(), unitEnergies, unitData);
+    if (!component->LoadData(argFileName))
     {
-      G4VEMDataSet* component = new G4EMDataSet(z, algorithm->Clone(), unitEnergies, unitData);
-      if (!component->LoadData(argFileName))
-	{
-	  delete component;
-	  return false;
-	}
-      AddComponent(component);
+      delete component;
+      return false;
     }
+    AddComponent(component);
+  }
   return true;
 }
 
@@ -181,18 +182,18 @@ G4bool G4CompositeEMDataSet::LoadData(const G4String& argFileName)
 
 G4bool G4CompositeEMDataSet::LoadNonLogData(const G4String& argFileName)
 {
-  CleanUpComponents(); 
+  CleanUpComponents();
 
-  for (G4int z(minZ); z<maxZ; ++z)
+  for (G4int z(minZ); z < maxZ; ++z)
+  {
+    G4VEMDataSet* component = new G4EMDataSet(z, algorithm->Clone(), unitEnergies, unitData);
+    if (!component->LoadNonLogData(argFileName))
     {
-      G4VEMDataSet* component = new G4EMDataSet(z, algorithm->Clone(), unitEnergies, unitData);
-      if (!component->LoadNonLogData(argFileName))
-	{
-	  delete component;
-	  return false;
-	}
-      AddComponent(component);
+      delete component;
+      return false;
     }
+    AddComponent(component);
+  }
   return true;
 }
 
@@ -200,23 +201,22 @@ G4bool G4CompositeEMDataSet::LoadNonLogData(const G4String& argFileName)
 
 G4bool G4CompositeEMDataSet::SaveData(const G4String& argFileName) const
 {
-  for (G4int z=minZ; z<maxZ; ++z)
-    {
-      const G4VEMDataSet* component(GetComponent(z-minZ));
-  
-      if (!component)
-	{
-	  std::ostringstream message;
-	  message << "G4CompositeEMDataSet::SaveData - component " << (z-minZ) << " not found";
-          G4Exception("G4CompositeEMDataSet::SaveData",
-	      "em1004",FatalException,message.str().c_str());
-	  return false;
-	}
+  for (G4int z = minZ; z < maxZ; ++z)
+  {
+    const G4VEMDataSet* component(GetComponent(z - minZ));
 
-      if (!component->SaveData(argFileName))
-	return false;
+    if (!component)
+    {
+      std::ostringstream message;
+      message << "G4CompositeEMDataSet::SaveData - component " << (z - minZ) << " not found";
+      G4Exception("G4CompositeEMDataSet::SaveData", "em1004", FatalException,
+                  message.str().c_str());
+      return false;
     }
- 
+
+    if (!component->SaveData(argFileName)) return false;
+  }
+
   return true;
 }
 
@@ -225,11 +225,10 @@ G4bool G4CompositeEMDataSet::SaveData(const G4String& argFileName) const
 void G4CompositeEMDataSet::CleanUpComponents(void)
 {
   while (!components.empty())
-    {
-      if (components.back())
-	delete components.back();
-      components.pop_back();
-    }
+  {
+    if (components.back()) delete components.back();
+    components.pop_back();
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -238,9 +237,9 @@ G4double G4CompositeEMDataSet::RandomSelect(G4int componentId) const
 {
   G4double value = 0.;
   if (componentId >= 0 && componentId < (G4int)components.size())
-    {
-      const G4VEMDataSet* dataSet = GetComponent(componentId);
-      value = dataSet->RandomSelect();
-    }
+  {
+    const G4VEMDataSet* dataSet = GetComponent(componentId);
+    value = dataSet->RandomSelect();
+  }
   return value;
 }

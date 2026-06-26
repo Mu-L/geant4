@@ -24,108 +24,106 @@
 // ********************************************************************
 //
 // Hadronic Process: Nuclear De-excitations
-// by V. Lara (Oct 1998) 
+// by V. Lara (Oct 1998)
 //
-// Modif (03 September 2008) by J. M. Quesada for external choice of inverse 
+// Modif (03 September 2008) by J. M. Quesada for external choice of inverse
 // cross section option
-// JMQ (06 September 2008) Also external choices have been added for 
-// superimposed Coulomb barrier (if useSICB is set true, by default is false) 
+// JMQ (06 September 2008) Also external choices have been added for
+// superimposed Coulomb barrier (if useSICB is set true, by default is false)
 //
 // V.Ivanchenko general clean-up since 2010
 //
 
-#ifndef G4VEmissionProbability_h
-#define G4VEmissionProbability_h 1
+#ifndef G4VEMISSIONPROBABILITY_HH
+#define G4VEMISSIONPROBABILITY_HH
 
-#include "globals.hh"
 #include "G4Fragment.hh"
 #include "G4VSIntegration.hh"
+#include "globals.hh"
 
 class G4NuclearLevelData;
 class G4Pow;
 
 class G4VEmissionProbability : G4VSIntegration
 {
-public:
+  public:
 
-  explicit G4VEmissionProbability(G4int Z, G4int A);
+    explicit G4VEmissionProbability(G4int Z, G4int A);
 
-  ~G4VEmissionProbability() override = default;
+    ~G4VEmissionProbability() override = default;
 
-  G4double ProbabilityDensityFunction(G4double energy) override;
+    G4double ProbabilityDensityFunction(G4double energy) override;
 
-  virtual void Initialise();
+    virtual void Initialise();
 
-  virtual G4double EmissionProbability(const G4Fragment & fragment, 
-  				       G4double anEnergy);
+    virtual G4double EmissionProbability(const G4Fragment& fragment, G4double anEnergy);
 
-  virtual G4double ComputeProbability(G4double anEnergy, G4double CB);
+    virtual G4double ComputeProbability(G4double anEnergy, G4double CB);
 
-  G4int GetZ(void) const { return theZ; }
-	
-  G4int GetA(void) const { return theA; }
+    G4int GetZ(void) const { return theZ; }
 
-  // Z, A, rmass are residual parameters
-  // fmass is SCM mass of decaying nucleus
-  // exc is an excitation of emitted fragment
-  void SetDecayKinematics(G4int rZ, G4int rA, G4double rmass, G4double fmass)
-  {
-    resZ = rZ;
-    resA = rA;
-    pMass = fmass;
-    pResMass = rmass;
-  }
+    G4int GetA(void) const { return theA; }
 
-  G4double GetRecoilExcitation() const { return fExcRes; };
+    // Z, A, rmass are residual parameters
+    // fmass is SCM mass of decaying nucleus
+    // exc is an excitation of emitted fragment
+    void SetDecayKinematics(G4int rZ, G4int rA, G4double rmass, G4double fmass)
+    {
+      resZ = rZ;
+      resA = rA;
+      pMass = fmass;
+      pResMass = rmass;
+    }
 
-  void SetEvapExcitation(G4double exc) { fExc = exc; };
+    G4double GetRecoilExcitation() const { return fExcRes; };
 
-  G4double GetProbability() const { return pProbability; };
+    void SetEvapExcitation(G4double exc) { fExc = exc; };
 
-  void ResetProbability() { pProbability = 0.0; };
+    G4double GetProbability() const { return pProbability; };
 
-  // this method may be called only if the probability is computed
-  // for given initial fragment and decay channel
-  G4double SampleEnergy();
+    void ResetProbability() { pProbability = 0.0; };
 
-  G4VEmissionProbability(const G4VEmissionProbability &right) = delete;
-  const G4VEmissionProbability & operator=
-  (const G4VEmissionProbability &right) = delete;
-  G4bool operator==(const G4VEmissionProbability &right) const = delete;
-  G4bool operator!=(const G4VEmissionProbability &right) const = delete;
+    // this method may be called only if the probability is computed
+    // for given initial fragment and decay channel
+    G4double SampleEnergy();
 
-protected:
+    G4VEmissionProbability(const G4VEmissionProbability& right) = delete;
+    const G4VEmissionProbability& operator=(const G4VEmissionProbability& right) = delete;
+    G4bool operator==(const G4VEmissionProbability& right) const = delete;
+    G4bool operator!=(const G4VEmissionProbability& right) const = delete;
 
-  void ResetIntegrator(G4double de, G4double eps);
+  protected:
 
-  G4double IntegrateProbability(G4double elow, G4double ehigh, G4double CB);
+    void ResetIntegrator(G4double de, G4double eps);
 
-  G4NuclearLevelData* pNuclearLevelData;
-  G4Pow* pG4pow;
+    G4double IntegrateProbability(G4double elow, G4double ehigh, G4double CB);
 
-  G4int OPTxs;
-  G4int pVerbose;
-  G4int theZ;
-  G4int theA;
-  G4int resZ = 0;
-  G4int resA = 0;
+    G4NuclearLevelData* pNuclearLevelData;
+    G4Pow* pG4pow;
 
-  G4double pMass = 0.0; // initial fragment
-  G4double pEvapMass = 0.0;
-  G4double pResMass = 0.0;
-  G4double pProbability = 0.0;
-  G4double pTolerance = 0.0;
-  G4double pWidth = 0.0;
+    G4int OPTxs;
+    G4int pVerbose;
+    G4int theZ;
+    G4int theA;
+    G4int resZ = 0;
+    G4int resA = 0;
 
-private:
+    G4double pMass = 0.0;  // initial fragment
+    G4double pEvapMass = 0.0;
+    G4double pResMass = 0.0;
+    G4double pProbability = 0.0;
+    G4double pTolerance = 0.0;
+    G4double pWidth = 0.0;
 
-  G4double FindRecoilExcitation(const G4double e);
+  private:
 
-  G4double fExc = 0.0;
-  G4double fExcRes = 0.0;
-  G4double eCoulomb = 0.0;
-  G4double fMaxLifeTime = 1.0; 
-  G4bool fFD = false;
+    G4double FindRecoilExcitation(const G4double e);
+
+    G4double fExc = 0.0;
+    G4double fExcRes = 0.0;
+    G4double eCoulomb = 0.0;
+    G4double fMaxLifeTime = 1.0;
+    G4bool fFD = false;
 };
 
 #endif

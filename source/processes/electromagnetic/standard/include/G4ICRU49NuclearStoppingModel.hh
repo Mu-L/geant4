@@ -32,22 +32,22 @@
 //
 // File name:     G4ICRU49NuclearStoppingModel
 //
-// Author:        V.Ivanchenko 
+// Author:        V.Ivanchenko
 //
-// Creation date: 20.07.2009 
+// Creation date: 20.07.2009
 //
 // Modifications:
 //
 //
 // Class Description:
 //
-// Implementation of the ICRU'49 model of nuclear stopping 
+// Implementation of the ICRU'49 model of nuclear stopping
 
 // -------------------------------------------------------------------
 //
 
-#ifndef G4ICRU49NuclearStoppingModel_h
-#define G4ICRU49NuclearStoppingModel_h 1
+#ifndef G4ICRU49NUCLEARSTOPPINGMODEL_HH
+#define G4ICRU49NUCLEARSTOPPINGMODEL_HH
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -60,46 +60,37 @@ class G4Pow;
 
 class G4ICRU49NuclearStoppingModel : public G4VEmModel
 {
+  public:
 
-public:
+    explicit G4ICRU49NuclearStoppingModel(const G4String& nam = "ICRU49NucStopping");
 
-  explicit G4ICRU49NuclearStoppingModel(const G4String& nam = 
-					"ICRU49NucStopping");
+    ~G4ICRU49NuclearStoppingModel() override;
 
-  ~G4ICRU49NuclearStoppingModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) final;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) final;
+    // main method to compute dEdx
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                  G4double kineticEnergy, G4double cutEnergy = DBL_MAX) final;
 
-  // main method to compute dEdx
-  G4double ComputeDEDXPerVolume(const G4Material*,
-				const G4ParticleDefinition*,
-				G4double kineticEnergy,
-				G4double cutEnergy = DBL_MAX) final;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double, G4double) final;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*, 
-			 G4double, G4double) final;
+    //  hide assignment operator
+    G4ICRU49NuclearStoppingModel& operator=(const G4ICRU49NuclearStoppingModel& right) = delete;
+    G4ICRU49NuclearStoppingModel(const G4ICRU49NuclearStoppingModel&) = delete;
 
-  //  hide assignment operator
-  G4ICRU49NuclearStoppingModel & operator=
-  (const  G4ICRU49NuclearStoppingModel &right) = delete;
-  G4ICRU49NuclearStoppingModel(const  G4ICRU49NuclearStoppingModel&) = delete;
+  private:
 
-private:
+    void InitialiseArray();
 
-  void InitialiseArray();
+    G4double NuclearStoppingPower(G4double kineticEnergy, G4double Z1, G4double Z2, G4double A1,
+                                  G4double A2);
 
-  G4double NuclearStoppingPower(G4double kineticEnergy,
-				G4double Z1, G4double Z2,
-				G4double A1, G4double A2);
-
-  G4Pow* g4calc;
-  G4double theZieglerFactor;
-  static G4double Z23[100];
+    G4Pow* g4calc;
+    G4double theZieglerFactor;
+    static G4double Z23[100];
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

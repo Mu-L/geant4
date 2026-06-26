@@ -25,80 +25,79 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  7th February 1997
 // Class G4OpenGLImmediateXViewer : a class derived from G4OpenGLXViewer and
 //                                G4OpenGLImmediateViewer.
 
 #include "G4OpenGLImmediateXViewer.hh"
+
 #include "G4OpenGLImmediateSceneHandler.hh"
-
-#include "G4ios.hh"
 #include "G4Threading.hh"
+#include "G4ios.hh"
 
-G4OpenGLImmediateXViewer::
-G4OpenGLImmediateXViewer (G4OpenGLImmediateSceneHandler& sceneHandler,
-			  const G4String&  name)
- : G4VViewer (sceneHandler, sceneHandler.IncrementViewCount (), name),
-   G4OpenGLViewer (sceneHandler),
-   G4OpenGLXViewer (sceneHandler),
-   G4OpenGLImmediateViewer (sceneHandler)
+G4OpenGLImmediateXViewer::G4OpenGLImmediateXViewer(G4OpenGLImmediateSceneHandler& sceneHandler,
+                                                   const G4String& name)
+  : G4VViewer(sceneHandler, sceneHandler.IncrementViewCount(), name),
+    G4OpenGLViewer(sceneHandler),
+    G4OpenGLXViewer(sceneHandler),
+    G4OpenGLImmediateViewer(sceneHandler)
 {
   if (fViewId < 0) return;  // In case error in base class instantiation.
 
-// ensure a suitable window was found
-  if (!vi_immediate) {
+  // ensure a suitable window was found
+  if (!vi_immediate)
+  {
     G4cerr << "G4OpenGLImmediateXViewer::G4OpenGLImmediateXViewer -"
-      " G4OpenGLXViewer couldn't get a visual." << G4endl;  
+              " G4OpenGLXViewer couldn't get a visual."
+           << G4endl;
     fViewId = -1;  // This flags an error.
     return;
   }
 }
 
-G4OpenGLImmediateXViewer::~G4OpenGLImmediateXViewer () {}
+G4OpenGLImmediateXViewer::~G4OpenGLImmediateXViewer() {}
 
-void G4OpenGLImmediateXViewer::Initialise () {
+void G4OpenGLImmediateXViewer::Initialise()
+{
+  CreateGLXContext(vi_immediate);
+  CreateMainWindow();
+  CreateFontLists();
 
-  CreateGLXContext (vi_immediate);
-  CreateMainWindow ();
-  CreateFontLists ();
-
-  InitializeGLView ();
+  InitializeGLView();
 
   // If a double buffer context has been forced upon us, ignore the
   // back buffer for this OpenGLImmediate view.
-  glDrawBuffer (GL_FRONT);
+  glDrawBuffer(GL_FRONT);
 
-  glDepthFunc (GL_LEQUAL);
-  glDepthMask (GL_TRUE);
+  glDepthFunc(GL_LEQUAL);
+  glDepthMask(GL_TRUE);
 }
 
-void G4OpenGLImmediateXViewer::DrawView () {
-
+void G4OpenGLImmediateXViewer::DrawView()
+{
   G4ViewParameters::DrawingStyle style = GetViewParameters().GetDrawingStyle();
 
-  if(style!=G4ViewParameters::hlr &&
-     haloing_enabled) {
+  if (style != G4ViewParameters::hlr && haloing_enabled)
+  {
+    HaloingFirstPass();
+    NeedKernelVisit();
+    ProcessView();
+    glFlush();
 
-    HaloingFirstPass ();
-    NeedKernelVisit ();
-    ProcessView ();
-    glFlush ();
-
-    HaloingSecondPass ();
-
+    HaloingSecondPass();
   }
 
-  NeedKernelVisit ();  // Always need to visit G4 kernel.
-  ProcessView ();
-  FinishView ();
-
+  NeedKernelVisit();  // Always need to visit G4 kernel.
+  ProcessView();
+  FinishView();
 }
 
-void G4OpenGLImmediateXViewer::FinishView () {
-//  glXWaitGL (); //Wait for effects of all previous OpenGL commands to
-                //be propagated before progressing.
-// JA: Commented out July 2021 - slows rendering down in some cases and I
-// don't see any adverse effects.
-  glFlush ();
+void G4OpenGLImmediateXViewer::FinishView()
+{
+  //  glXWaitGL (); //Wait for effects of all previous OpenGL commands to
+  // be propagated before progressing.
+  // JA: Commented out July 2021 - slows rendering down in some cases and I
+  // don't see any adverse effects.
+  glFlush();
 }

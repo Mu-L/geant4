@@ -29,15 +29,14 @@
 //
 
 #include "G4He6GEMProbability.hh"
+
 #include "G4SystemOfUnits.hh"
 
-G4He6GEMProbability::G4He6GEMProbability() :
-  G4GEMProbability(6,2,0.0) // A,Z,Spin
+G4He6GEMProbability::G4He6GEMProbability() : G4GEMProbability(6, 2, 0.0)  // A,Z,Spin
 {
-  ExcitEnergies.push_back(1797.0*keV);
+  ExcitEnergies.push_back(1797.0 * keV);
   ExcitSpins.push_back(2.0);
-  ExcitLifetimes.push_back(fPlanck/(113.0*keV));
+  ExcitLifetimes.push_back(fPlanck / (113.0 * keV));
 }
 
-G4He6GEMProbability::~G4He6GEMProbability()
-{}
+G4He6GEMProbability::~G4He6GEMProbability() {}

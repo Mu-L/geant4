@@ -31,10 +31,6 @@
 
 #include "G4DeuteronEvaporationChannel.hh"
 
-G4DeuteronEvaporationChannel::G4DeuteronEvaporationChannel() 
-  : G4EvaporationChannel(2,1,&pr) 
-{}
+G4DeuteronEvaporationChannel::G4DeuteronEvaporationChannel() : G4EvaporationChannel(2, 1, &pr) {}
 
-G4DeuteronEvaporationChannel::~G4DeuteronEvaporationChannel() 
-{}
-
+G4DeuteronEvaporationChannel::~G4DeuteronEvaporationChannel() {}

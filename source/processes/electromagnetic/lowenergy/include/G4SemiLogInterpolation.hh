@@ -42,41 +42,28 @@
 // -------------------------------------------------------------------
 
 #ifndef G4SEMILOGINTERPOLATION_HH
-#define G4SEMILOGINTERPOLATION_HH 1
+#define G4SEMILOGINTERPOLATION_HH
 
-#include "globals.hh"
-#include "G4VDataSetAlgorithm.hh"
 #include "G4DataVector.hh"
+#include "G4VDataSetAlgorithm.hh"
+#include "globals.hh"
 
-class G4SemiLogInterpolation : public G4VDataSetAlgorithm {
- public:
-  explicit G4SemiLogInterpolation();
+class G4SemiLogInterpolation : public G4VDataSetAlgorithm
+{
+  public:
 
-  ~G4SemiLogInterpolation();
- 
-  G4double Calculate(G4double point, G4int bin, 
-		     const G4DataVector& energies, 
-		     const G4DataVector& data) const override;
+    explicit G4SemiLogInterpolation();
 
-  G4double Calculate(G4double point, G4int bin,
-                     const G4DataVector& energies,
-                     const G4DataVector& data, 
-		     const G4DataVector& log_energies, 
-		     const G4DataVector& log_data) const override;
+    ~G4SemiLogInterpolation();
 
-  G4VDataSetAlgorithm* Clone() const override;
+    G4double Calculate(G4double point, G4int bin, const G4DataVector& energies,
+                       const G4DataVector& data) const override;
 
+    G4double Calculate(G4double point, G4int bin, const G4DataVector& energies,
+                       const G4DataVector& data, const G4DataVector& log_energies,
+                       const G4DataVector& log_data) const override;
+
+    G4VDataSetAlgorithm* Clone() const override;
 };
- 
+
 #endif
- 
-
-
-
-
-
-
-
-
-
-

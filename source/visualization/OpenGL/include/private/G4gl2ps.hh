@@ -25,58 +25,61 @@
 //
 //
 
-#ifndef G4gl2ps_h
-#define G4gl2ps_h 
+#ifndef G4GL2PS_HH
+#define G4GL2PS_HH
 
 #include "G4String.hh"
 
 #include <tools/gl2ps_def.h>
 
-class G4gl2ps {
+class G4gl2ps
+{
+  public:
 
-public:
- G4gl2ps();
- ~G4gl2ps();
+    G4gl2ps();
+    ~G4gl2ps();
 
- void setOpenGLFunctions(tools_gl2ps_gl_funcs_t*);
- void setFileName(const char*);
- void setExportImageFormat(unsigned int);
-  
- void setExportImageFormat_PS()  {setExportImageFormat(TOOLS_GL2PS_PS);}
- void setExportImageFormat_EPS() {setExportImageFormat(TOOLS_GL2PS_EPS);}
- void setExportImageFormat_TEX() {setExportImageFormat(TOOLS_GL2PS_TEX);}
- void setExportImageFormat_PDF() {setExportImageFormat(TOOLS_GL2PS_PDF);}
- void setExportImageFormat_SVG() {setExportImageFormat(TOOLS_GL2PS_SVG);}
- void setExportImageFormat_PGF() {setExportImageFormat(TOOLS_GL2PS_PGF);}
-  
- bool enableFileWriting();
- void disableFileWriting();
- bool fileWritingEnabled() const;
-  
- bool beginPage();
- bool endPage();
-  
- void setLineWidth(int);
- void setPointSize(int);
- void addTextOpt(const char*,const char*,
-                 tools_GLshort,tools_GLint,tools_GLfloat);
- void setViewport(int,int,int,int);
- bool extendBufferSize();
- void resetBufferSizeParameters();
- void setBufferSize(int);
+    void setOpenGLFunctions(tools_gl2ps_gl_funcs_t*);
+    void setFileName(const char*);
+    void setExportImageFormat(unsigned int);
 
- tools_GL2PScontextPointer context() const {return fContext;}
-protected:
- tools_gl2ps_gl_funcs_t fOpenGLFuncs;
- tools_GL2PScontextPointer fContext;
- FILE* fFile;
- G4String fFileName;
- int fViewport[4];
- int fBufferSize;
- int fBufferSizeLimit;
-private:
- unsigned int fExportImageFormat;
+    void setExportImageFormat_PS() { setExportImageFormat(TOOLS_GL2PS_PS); }
+    void setExportImageFormat_EPS() { setExportImageFormat(TOOLS_GL2PS_EPS); }
+    void setExportImageFormat_TEX() { setExportImageFormat(TOOLS_GL2PS_TEX); }
+    void setExportImageFormat_PDF() { setExportImageFormat(TOOLS_GL2PS_PDF); }
+    void setExportImageFormat_SVG() { setExportImageFormat(TOOLS_GL2PS_SVG); }
+    void setExportImageFormat_PGF() { setExportImageFormat(TOOLS_GL2PS_PGF); }
+
+    bool enableFileWriting();
+    void disableFileWriting();
+    bool fileWritingEnabled() const;
+
+    bool beginPage();
+    bool endPage();
+
+    void setLineWidth(int);
+    void setPointSize(int);
+    void addTextOpt(const char*, const char*, tools_GLshort, tools_GLint, tools_GLfloat);
+    void setViewport(int, int, int, int);
+    bool extendBufferSize();
+    void resetBufferSizeParameters();
+    void setBufferSize(int);
+
+    tools_GL2PScontextPointer context() const { return fContext; }
+
+  protected:
+
+    tools_gl2ps_gl_funcs_t fOpenGLFuncs;
+    tools_GL2PScontextPointer fContext;
+    FILE* fFile;
+    G4String fFileName;
+    int fViewport[4];
+    int fBufferSize;
+    int fBufferSizeLimit;
+
+  private:
+
+    unsigned int fExportImageFormat;
 };
 
 #endif
-

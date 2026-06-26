@@ -35,23 +35,25 @@
 #ifndef G4ABLA_DEEXCITATION_HH
 #define G4ABLA_DEEXCITATION_HH
 
-
 #include "G4CascadeDeexciteBase.hh"
 #include "globals.hh"
 
 class G4VPreCompoundModel;
 
-
-class G4AblaDeexcitation : public G4CascadeDeexciteBase {
+class G4AblaDeexcitation : public G4CascadeDeexciteBase
+{
   public:
+
     G4AblaDeexcitation();
     ~G4AblaDeexcitation() override;
-    void setVerboseLevel( G4int verbose ) override;
-    void deExcite( const G4Fragment& fragment, G4CollisionOutput& globalOutput ) override;
-    G4AblaDeexcitation( const G4AblaDeexcitation& ) = delete;
-    G4AblaDeexcitation& operator=( const G4AblaDeexcitation& ) = delete;
+    void setVerboseLevel(G4int verbose) override;
+    void deExcite(const G4Fragment& fragment, G4CollisionOutput& globalOutput) override;
+    G4AblaDeexcitation(const G4AblaDeexcitation&) = delete;
+    G4AblaDeexcitation& operator=(const G4AblaDeexcitation&) = delete;
+
   private:
+
     G4VPreCompoundModel* theDeExcitation;
 };
 
-#endif	/* G4ABLA_DEEXCITATION_HH */
+#endif /* G4ABLA_DEEXCITATION_HH */

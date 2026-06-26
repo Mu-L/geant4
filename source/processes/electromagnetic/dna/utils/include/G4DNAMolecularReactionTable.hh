@@ -43,16 +43,18 @@
 // J. Comput. Phys. 274 (2014) 841-882
 // Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#pragma once
+#ifndef G4DNAMOLECULARREACTIONTABLE_HH
+#define G4DNAMOLECULARREACTIONTABLE_HH
 
 #include "G4ITReactionTable.hh"
 #include "G4MolecularConfiguration.hh"
 #include "G4ReferenceCast.hh"
 #include "G4VDNAMolecularGeometry.hh"
-#include <vector>
-#include <map>
+
 #include <functional>
+#include <map>
 #include <memory>
+#include <vector>
 
 class G4VDNAReactionModel;
 class G4DNAMolecularReactionTable;
@@ -64,15 +66,14 @@ class G4ReactionTableMessenger;
  */
 class G4DNAMolecularReactionData
 {
-public:
+  public:
+
     //----------------------------------------------------------------------------
 
-    G4DNAMolecularReactionData(G4double reactionRate,
-                               const G4MolecularConfiguration* reactive1,
+    G4DNAMolecularReactionData(G4double reactionRate, const G4MolecularConfiguration* reactive1,
                                const G4MolecularConfiguration* reactive2);
 
-    G4DNAMolecularReactionData(G4double reactionRate,
-                               const G4String& reactive1,
+    G4DNAMolecularReactionData(G4double reactionRate, const G4String& reactive1,
                                const G4String& reactive2);
     ~G4DNAMolecularReactionData();
 
@@ -109,8 +110,7 @@ public:
     void SetReactant1(Reactant* reactive);
     void SetReactant2(Reactant* reactive);
 
-    void SetReactants(Reactant* reactive1,
-                      Reactant* reactive2);
+    void SetReactants(Reactant* reactive1, Reactant* reactive2);
 
     void AddProduct(Reactant* molecule);
 
@@ -127,25 +127,23 @@ public:
 
     //----------------------------------------------------------------------------
     // Temperature scaling
-    using RateParam = std::function<double (double)>;
+    using RateParam = std::function<double(double)>;
 
     static double PolynomialParam(double temp_K, std::vector<double> P);
     static double ArrehniusParam(double temp_K, std::vector<double> P);
-    static double ScaledParameterization(double temp_K,
-                                         double temp_init,
-                                         double rateCste_init);
+    static double ScaledParameterization(double temp_K, double temp_init, double rateCste_init);
 
     void SetPolynomialParameterization(const std::vector<double>& P);
 
     void SetArrehniusParameterization(double A0, double E_R);
-    void SetScaledParameterization(double temperature_K,
-                                   double rateCste);
+    void SetScaledParameterization(double temperature_K, double rateCste);
 
     void ScaleForNewTemperature(double temp_K);
 
     void ComputeEffectiveRadius();
 
-protected:
+  protected:
+
     G4DNAMolecularReactionData();
     Reactant* fpReactant1;
     Reactant* fpReactant2;
@@ -173,11 +171,13 @@ protected:
  */
 class G4DNAMolecularReactionTable : public G4ITReactionTable
 {
-protected:
+  protected:
+
     G4DNAMolecularReactionTable();
     static G4DNAMolecularReactionTable* fpInstance;
 
-public:
+  public:
+
     static G4DNAMolecularReactionTable* GetReactionTable();
     static G4DNAMolecularReactionTable* Instance();
     static void DeleteInstance();
@@ -202,13 +202,11 @@ public:
      * if this last argument is NULL then it will be interpreted as
      * a reaction giving no products
      */
-    void SetReaction(G4double observedReactionRate,
-                     Reactant* reactive1,
-                     Reactant* reactive2);
+    void SetReaction(G4double observedReactionRate, Reactant* reactive1, Reactant* reactive2);
 
     void SetReaction(G4DNAMolecularReactionData*);
 
-    void SetGeometry(G4VDNAMolecularGeometry* geometry){fGeometry = geometry;};
+    void SetGeometry(G4VDNAMolecularGeometry* geometry) { fGeometry = geometry; };
     G4VDNAMolecularGeometry* GetGeometry() const;
 
     Data* GetReactionData(Reactant*, Reactant*) const;
@@ -240,13 +238,16 @@ public:
 
     void Reset();
 
-protected:
+  protected:
+
     G4bool fVerbose{false};
 
     G4VDNAMolecularGeometry* fGeometry{nullptr};
     ReactionDataMap fReactionData;
-    ReactivesMV     fReactantsMV;
-    ReactionDataMV  fReactionDataMV;
+    ReactivesMV fReactantsMV;
+    ReactionDataMV fReactionDataMV;
     std::vector<std::unique_ptr<Data>> fVectorOfReactionData;
     std::unique_ptr<G4ReactionTableMessenger> fpMessenger;
 };
+
+#endif

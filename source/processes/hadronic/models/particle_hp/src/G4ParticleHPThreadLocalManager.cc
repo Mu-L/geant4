@@ -47,7 +47,8 @@ G4ParticleHPThreadLocalManager* G4ParticleHPThreadLocalManager::GetInstance()
 
 void G4ParticleHPThreadLocalManager::OpenReactionWhiteBoard()
 {
-  if (RWB != nullptr) {
+  if (RWB != nullptr)
+  {
     G4cout << "Warning: G4ParticleHPReactionWhiteBoard is tried doubly opening" << G4endl;
     return;
   }
@@ -57,7 +58,8 @@ void G4ParticleHPThreadLocalManager::OpenReactionWhiteBoard()
 
 G4ParticleHPReactionWhiteBoard* G4ParticleHPThreadLocalManager::GetReactionWhiteBoard()
 {
-  if (RWB == nullptr) {
+  if (RWB == nullptr)
+  {
     G4cout << "Warning: try to access G4ParticleHPReactionWhiteBoard before opening" << G4endl;
     RWB = new G4ParticleHPReactionWhiteBoard();
   }

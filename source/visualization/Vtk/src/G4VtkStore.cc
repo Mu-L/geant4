@@ -58,26 +58,26 @@
 #include "G4VtkUnstructuredGridPipeline.hh"
 
 #ifndef WIN32
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wextra-semi"
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wextra-semi"
 #endif
 
-#include <vtkNew.h>
-#include <vtkSmartPointer.h>
 #include <vtkBillboardTextActor3D.h>
 #include <vtkLine.h>
 #include <vtkMatrix3x3.h>
+#include <vtkNew.h>
 #include <vtkOBJReader.h>
 #include <vtkPLYReader.h>
-#include <vtkSTLReader.h>
 #include <vtkPolyDataReader.h>
 #include <vtkProperty.h>
 #include <vtkProperty2D.h>
 #include <vtkRegularPolygonSource.h>
+#include <vtkSTLReader.h>
+#include <vtkSmartPointer.h>
 #include <vtkTextProperty.h>
 
 #ifndef WIN32
-#pragma GCC diagnostic pop
+#  pragma GCC diagnostic pop
 #endif
 
 G4VtkStore::G4VtkStore(G4String nameIn) : name(nameIn) {}
@@ -130,52 +130,62 @@ void G4VtkStore::Clear()
   G4cout << "G4VtkStore::Clear() " << name << G4endl;
 #endif
 
-  for (const auto& v : polylinePipeMap) {
+  for (const auto& v : polylinePipeMap)
+  {
     v.second->Clear();
   }
   polylinePipeMap.clear();
 
-  for (const auto& v : polyline2DPipeMap) {
+  for (const auto& v : polyline2DPipeMap)
+  {
     v.second->Clear();
   }
   polyline2DPipeMap.clear();
 
-  for (const auto& v : circlePipeMap) {
+  for (const auto& v : circlePipeMap)
+  {
     v.second->Clear();
   }
   circlePipeMap.clear();
 
-  for (const auto& v : squarePipeMap) {
+  for (const auto& v : squarePipeMap)
+  {
     v.second->Clear();
   }
   squarePipeMap.clear();
 
-  for (const auto& v : textPipeMap) {
+  for (const auto& v : textPipeMap)
+  {
     v.second->Clear();
   }
   textPipeMap.clear();
 
-  for (const auto& v : text2DPipeMap) {
+  for (const auto& v : text2DPipeMap)
+  {
     v.second->Clear();
   }
   text2DPipeMap.clear();
 
-  for (const auto& v : separatePipeMap) {
+  for (const auto& v : separatePipeMap)
+  {
     v.second->Clear();
   }
   separatePipeMap.clear();
 
-  for (const auto& v : tensorGlyphPipeMap) {
+  for (const auto& v : tensorGlyphPipeMap)
+  {
     v.second->Clear();
   }
   tensorGlyphPipeMap.clear();
 
-  for (const auto& v : appendPipeMap) {
+  for (const auto& v : appendPipeMap)
+  {
     v.second->Clear();
   }
   appendPipeMap.clear();
 
-  for (const auto& v : bakePipeMap) {
+  for (const auto& v : bakePipeMap)
+  {
     v.second->Clear();
   }
   bakePipeMap.clear();
@@ -187,12 +197,14 @@ void G4VtkStore::ClearNonG4()
   G4cout << "G4VtkStore::Clear() " << name << G4endl;
 #endif
 
-  for (const auto& v : imagePipeMap) {
+  for (const auto& v : imagePipeMap)
+  {
     v.second->Clear();
   }
   imagePipeMap.clear();
 
-  for (const auto& v : sideloadPipeMap) {
+  for (const auto& v : sideloadPipeMap)
+  {
     v.second->Clear();
   }
   sideloadPipeMap.clear();
@@ -242,7 +254,8 @@ void G4VtkStore::Print()
   for (const auto& it : bakePipeMap)
     it.second->Print();
 
-  for (const auto& it : ugridPipeMap) {
+  for (const auto& it : ugridPipeMap)
+  {
     G4cout << it.first << G4endl;
     it.second->Print();
   }
@@ -254,45 +267,53 @@ void G4VtkStore::Print()
 void G4VtkStore::AddPrimitive(const G4Polyline& polyline, const G4VtkVisContext& vc)
 {
   G4VSceneHandler::MarkerSizeType sizeType;
-  if (vc.fProcessing2D) {
+  if (vc.fProcessing2D)
+  {
     sizeType = G4VSceneHandler::MarkerSizeType::screen;
   }
-  else {
+  else
+  {
     sizeType = G4VSceneHandler::MarkerSizeType::world;
   }
 
   // Get vis attributes - pick up defaults if none.
   const G4VisAttributes* pVA = vc.fViewer->GetApplicableVisAttributes(polyline.GetVisAttributes());
 
-  if (sizeType == G4VSceneHandler::MarkerSizeType::world) {
+  if (sizeType == G4VSceneHandler::MarkerSizeType::world)
+  {
     std::size_t hash = G4VtkPolydataPolylinePipeline::MakeHash(pVA);
     std::shared_ptr<G4VtkPolydataPolylinePipeline> pl;
 
-    if (polylinePipeMap.find(hash) == polylinePipeMap.end()) {
+    if (polylinePipeMap.find(hash) == polylinePipeMap.end())
+    {
       // Create new pipeline
       pl = std::make_shared<G4VtkPolydataPolylinePipeline>(G4String("name"), vc, pVA);
 
       // Add to map
       polylinePipeMap.insert(std::make_pair(hash, pl));
     }
-    else {
+    else
+    {
       pl = polylinePipeMap[hash];
     }
     pl->SetPolydata(polyline);
   }
 
-  else if (sizeType == G4VSceneHandler::MarkerSizeType::screen) {
+  else if (sizeType == G4VSceneHandler::MarkerSizeType::screen)
+  {
     std::size_t hash = G4VtkPolydataPolyline2DPipeline::MakeHash(pVA);
     std::shared_ptr<G4VtkPolydataPolyline2DPipeline> pl;
 
-    if (polyline2DPipeMap.find(hash) == polyline2DPipeMap.end()) {
+    if (polyline2DPipeMap.find(hash) == polyline2DPipeMap.end())
+    {
       // Create new pipeline
       pl = std::make_shared<G4VtkPolydataPolyline2DPipeline>(G4String("name"), vc, pVA);
 
       // Add to map
       polyline2DPipeMap.insert(std::make_pair(hash, pl));
     }
-    else {
+    else
+    {
       pl = polyline2DPipeMap[hash];
     }
     pl->SetPolydata(polyline);
@@ -302,16 +323,19 @@ void G4VtkStore::AddPrimitive(const G4Polyline& polyline, const G4VtkVisContext&
 void G4VtkStore::AddPrimitive(const G4Text& text, const G4VtkVisContext& vc)
 {
   G4VSceneHandler::MarkerSizeType sizeType;
-  if (vc.fProcessing2D) {
+  if (vc.fProcessing2D)
+  {
     sizeType = G4VSceneHandler::MarkerSizeType::screen;
   }
-  else {
+  else
+  {
     sizeType = G4VSceneHandler::MarkerSizeType::world;
   }
 
   auto pVA = vc.fViewer->GetApplicableVisAttributes(text.GetVisAttributes());
 
-  switch (sizeType) {
+  switch (sizeType)
+  {
     default:
     case (G4VSceneHandler::MarkerSizeType::screen): {
       std::size_t hash = G4VtkTextPipeline::MakeHash(text, vc, pVA);
@@ -332,28 +356,33 @@ void G4VtkStore::AddPrimitive(const G4Circle& circle, const G4VtkVisContext& vc)
 {
   G4VSceneHandler::MarkerSizeType sizeType;
 
-  if (vc.fProcessing2D) {
+  if (vc.fProcessing2D)
+  {
     sizeType = G4VSceneHandler::MarkerSizeType::screen;
   }
-  else {
+  else
+  {
     sizeType = G4VSceneHandler::MarkerSizeType::world;
   }
 
   // Get vis attributes - pick up defaults if none.
   const G4VisAttributes* pVA = vc.fViewer->GetApplicableVisAttributes(circle.GetVisAttributes());
 
-  if (sizeType == G4VSceneHandler::MarkerSizeType::world) {
+  if (sizeType == G4VSceneHandler::MarkerSizeType::world)
+  {
     std::size_t hash = G4VtkPolydataSpherePipeline::MakeHash(pVA);
     std::shared_ptr<G4VtkPolydataSpherePipeline> pl;
 
-    if (circlePipeMap.find(hash) == circlePipeMap.end()) {
+    if (circlePipeMap.find(hash) == circlePipeMap.end())
+    {
       // Create new pipeline
       pl = std::make_shared<G4VtkPolydataSpherePipeline>(G4String("name"), vc, pVA);
 
       // add to map
       circlePipeMap.insert(std::make_pair(hash, pl));
     }
-    else {
+    else
+    {
       pl = circlePipeMap[hash];
     }
 
@@ -369,28 +398,33 @@ void G4VtkStore::AddPrimitive(const G4Square& square, const G4VtkVisContext& vc)
 {
   G4VSceneHandler::MarkerSizeType sizeType;
 
-  if (vc.fProcessing2D) {
+  if (vc.fProcessing2D)
+  {
     sizeType = G4VSceneHandler::MarkerSizeType::screen;
   }
-  else {
+  else
+  {
     sizeType = G4VSceneHandler::MarkerSizeType::world;
   }
 
   // Get vis attributes - pick up defaults if none.
   const G4VisAttributes* pVA = vc.fViewer->GetApplicableVisAttributes(square.GetVisAttributes());
 
-  if (sizeType == G4VSceneHandler::MarkerSizeType::world) {
+  if (sizeType == G4VSceneHandler::MarkerSizeType::world)
+  {
     std::size_t hash = std::hash<G4VisAttributes>{}(*pVA);
 
     std::shared_ptr<G4VtkPolydataPolygonPipeline> pl;
-    if (squarePipeMap.find(hash) == squarePipeMap.end()) {
+    if (squarePipeMap.find(hash) == squarePipeMap.end())
+    {
       // Create new pipeline
       pl = std::make_shared<G4VtkPolydataPolygonPipeline>(G4String("name"), vc, pVA);
 
       // add to map
       squarePipeMap.insert(std::make_pair(hash, pl));
     }
-    else {
+    else
+    {
       pl = squarePipeMap[hash];
     }
 
@@ -405,7 +439,8 @@ void G4VtkStore::AddPrimitive(const G4Square& square, const G4VtkVisContext& vc)
 void G4VtkStore::AddPrimitiveSeparate(const G4Polyhedron& polyhedron, const G4VtkVisContext& vc)
 {
   // Return if empty polyhedron
-  if (polyhedron.GetNoFacets() == 0) {
+  if (polyhedron.GetNoFacets() == 0)
+  {
     return;
   }
 
@@ -422,16 +457,17 @@ void G4VtkStore::AddPrimitiveSeparate(const G4Polyhedron& polyhedron, const G4Vt
   G4Transform3D fInvObjTrans = vc.fTransform.inverse();
 
   pl->SetActorTransform(vc.fTransform.dx(), vc.fTransform.dy(), vc.fTransform.dz(),
-                        fInvObjTrans.xx(), fInvObjTrans.xy(), fInvObjTrans.xz(),
-                        fInvObjTrans.yx(), fInvObjTrans.yy(), fInvObjTrans.yz(),
-                        fInvObjTrans.zx(), fInvObjTrans.zy(), fInvObjTrans.zz());
+                        fInvObjTrans.xx(), fInvObjTrans.xy(), fInvObjTrans.xz(), fInvObjTrans.yx(),
+                        fInvObjTrans.yy(), fInvObjTrans.yz(), fInvObjTrans.zx(), fInvObjTrans.zy(),
+                        fInvObjTrans.zz());
   pl->SetActorColour(colour.GetRed(), colour.GetGreen(), colour.GetBlue(), colour.GetAlpha());
 }
 
 void G4VtkStore::AddPrimitiveTensorGlyph(const G4Polyhedron& polyhedron, const G4VtkVisContext& vc)
 {
   // Return if empty polyhedron
-  if (polyhedron.GetNoFacets() == 0) {
+  if (polyhedron.GetNoFacets() == 0)
+  {
     return;
   }
 
@@ -441,19 +477,21 @@ void G4VtkStore::AddPrimitiveTensorGlyph(const G4Polyhedron& polyhedron, const G
   auto transform = G4Translate3D(-centre.x(), -centre.y(), -centre.z());
 
   auto polyhedronNew = G4Polyhedron(polyhedron);
-  auto fTransformNew = G4Transform3D(vc.fTransform*transform.inverse());
+  auto fTransformNew = G4Transform3D(vc.fTransform * transform.inverse());
 
   polyhedronNew.Transform(transform);
 
   auto hash = G4VtkPolydataInstanceTensorPipeline::MakeHash(polyhedronNew, vc);
   std::shared_ptr<G4VtkPolydataInstanceTensorPipeline> pl;
 
-  if (tensorGlyphPipeMap.find(hash) == tensorGlyphPipeMap.end()) {
+  if (tensorGlyphPipeMap.find(hash) == tensorGlyphPipeMap.end())
+  {
     pl = std::make_shared<G4VtkPolydataInstanceTensorPipeline>(G4String("name"), vc);
     pl->SetPolydata(polyhedronNew);
     tensorGlyphPipeMap.insert(std::make_pair(hash, pl));
   }
-  else {
+  else
+  {
     pl = tensorGlyphPipeMap[hash];
   }
 
@@ -462,10 +500,9 @@ void G4VtkStore::AddPrimitiveTensorGlyph(const G4Polyhedron& polyhedron, const G
     vc.fViewer->GetApplicableVisAttributes(polyhedron.GetVisAttributes());
   G4Color colour = pVA->GetColour();
 
-  pl->addInstance(fTransformNew.dx(), fTransformNew.dy(), fTransformNew.dz(),
-                  fInvObjTrans.xx(), fInvObjTrans.xy(), fInvObjTrans.xz(),
-                  fInvObjTrans.yx(), fInvObjTrans.yy(), fInvObjTrans.yz(),
-                  fInvObjTrans.zx(), fInvObjTrans.zy(), fInvObjTrans.zz(),
+  pl->addInstance(fTransformNew.dx(), fTransformNew.dy(), fTransformNew.dz(), fInvObjTrans.xx(),
+                  fInvObjTrans.xy(), fInvObjTrans.xz(), fInvObjTrans.yx(), fInvObjTrans.yy(),
+                  fInvObjTrans.yz(), fInvObjTrans.zx(), fInvObjTrans.zy(), fInvObjTrans.zz(),
                   colour.GetRed(), colour.GetGreen(), colour.GetBlue(), colour.GetAlpha(),
                   G4String("null"));
 }
@@ -473,7 +510,8 @@ void G4VtkStore::AddPrimitiveTensorGlyph(const G4Polyhedron& polyhedron, const G
 void G4VtkStore::AddPrimitiveAppend(const G4Polyhedron& polyhedron, const G4VtkVisContext& vc)
 {
   // Empty polyhedron
-  if (polyhedron.GetNoFacets() == 0) {
+  if (polyhedron.GetNoFacets() == 0)
+  {
     return;
   }
 
@@ -483,36 +521,38 @@ void G4VtkStore::AddPrimitiveAppend(const G4Polyhedron& polyhedron, const G4VtkV
   auto transform = G4Translate3D(-centre.x(), -centre.y(), -centre.z());
 
   auto polyhedronNew = G4Polyhedron(polyhedron);
-  auto fTransformNew = G4Transform3D(vc.fTransform*transform.inverse());
+  auto fTransformNew = G4Transform3D(vc.fTransform * transform.inverse());
 
   polyhedronNew.Transform(transform);
 
   auto hash = G4VtkPolydataInstanceAppendPipeline::MakeHash(polyhedronNew, vc);
   std::shared_ptr<G4VtkPolydataInstanceAppendPipeline> pl;
 
-  if (appendPipeMap.find(hash) == appendPipeMap.end()) {
+  if (appendPipeMap.find(hash) == appendPipeMap.end())
+  {
     pl = std::make_shared<G4VtkPolydataInstanceAppendPipeline>(G4String("name"), vc);
     pl->SetPolydata(polyhedronNew);
     appendPipeMap.insert(std::make_pair(hash, pl));
   }
-  else {
+  else
+  {
     pl = appendPipeMap[hash];
   }
 
   G4Transform3D fInvObjTrans = fTransformNew.inverse();
 
-  pl->addInstance(fTransformNew.dx(), fTransformNew.dy(), fTransformNew.dz(),
-                  fInvObjTrans.xx(), fInvObjTrans.xy(), fInvObjTrans.xz(),
-                  fInvObjTrans.yx(), fInvObjTrans.yy(), fInvObjTrans.yz(),
-                  fInvObjTrans.zx(), fInvObjTrans.zy(), fInvObjTrans.zz(),
-                  0, 0, 0, 0, G4String("null"));
+  pl->addInstance(fTransformNew.dx(), fTransformNew.dy(), fTransformNew.dz(), fInvObjTrans.xx(),
+                  fInvObjTrans.xy(), fInvObjTrans.xz(), fInvObjTrans.yx(), fInvObjTrans.yy(),
+                  fInvObjTrans.yz(), fInvObjTrans.zx(), fInvObjTrans.zy(), fInvObjTrans.zz(), 0, 0,
+                  0, 0, G4String("null"));
 };
 
 void G4VtkStore::AddPrimitiveTransformBake(const G4Polyhedron& polyhedron,
                                            const G4VtkVisContext& vc)
 {
   // Empty polyhedron
-  if (polyhedron.GetNoFacets() == 0) {
+  if (polyhedron.GetNoFacets() == 0)
+  {
     return;
   }
 
@@ -522,7 +562,7 @@ void G4VtkStore::AddPrimitiveTransformBake(const G4Polyhedron& polyhedron,
   auto transform = G4Translate3D(-centre.x(), -centre.y(), -centre.z());
 
   auto polyhedronNew = G4Polyhedron(polyhedron);
-  auto fTransformNew = G4Transform3D(vc.fTransform*transform.inverse());
+  auto fTransformNew = G4Transform3D(vc.fTransform * transform.inverse());
 
   polyhedronNew.Transform(transform);
 
@@ -537,69 +577,77 @@ void G4VtkStore::AddPrimitiveTransformBake(const G4Polyhedron& polyhedron,
   std::size_t hash = G4VtkPolydataInstanceBakePipeline::MakeHash(polyhedronNew, vc);
 
   std::shared_ptr<G4VtkPolydataInstanceBakePipeline> pl;
-  if (bakePipeMap.find(hash) == bakePipeMap.end()) {
+  if (bakePipeMap.find(hash) == bakePipeMap.end())
+  {
     pl = std::make_shared<G4VtkPolydataInstanceBakePipeline>(G4String("none"), vc);
 
     bakePipeMap.insert(std::make_pair(hash, pl));
   }
-  else {
+  else
+  {
     pl = bakePipeMap[hash];
   }
 
   G4Transform3D fInvObjTrans = fTransformNew.inverse();
   pl->SetPolydata(polyhedronNew);
 
-  pl->addInstance(fTransformNew.dx(), fTransformNew.dy(), fTransformNew.dz(),
-                  fInvObjTrans.xx(), fInvObjTrans.xy(), fInvObjTrans.xz(),
-                  fInvObjTrans.yx(), fInvObjTrans.yy(), fInvObjTrans.yz(),
-                  fInvObjTrans.zx(), fInvObjTrans.zy(), fInvObjTrans.zz(),
+  pl->addInstance(fTransformNew.dx(), fTransformNew.dy(), fTransformNew.dz(), fInvObjTrans.xx(),
+                  fInvObjTrans.xy(), fInvObjTrans.xz(), fInvObjTrans.yx(), fInvObjTrans.yy(),
+                  fInvObjTrans.yz(), fInvObjTrans.zx(), fInvObjTrans.zy(), fInvObjTrans.zz(),
                   colour.GetRed(), colour.GetGreen(), colour.GetBlue(), colour.GetAlpha(),
                   G4String("null"));
 };
 
-void G4VtkStore::AddCompound(const G4Mesh& mesh, const G4VtkVisContext& vc) {
+void G4VtkStore::AddCompound(const G4Mesh& mesh, const G4VtkVisContext& vc)
+{
   const auto& container = mesh.GetContainerVolume();
   auto& containerName = const_cast<G4String&>(container->GetName());
 
-  auto pl = std::make_shared<G4VtkUnstructuredGridPipeline>(containerName,vc);
+  auto pl = std::make_shared<G4VtkUnstructuredGridPipeline>(containerName, vc);
   pl->SetUnstructuredGridData(mesh);
   ugridPipeMap.insert(std::make_pair(G4String("test"), pl));
 }
 
 void G4VtkStore::UpdatePlanePipelines(G4String nameIn, G4String type, const G4Plane3D plane)
 {
-  if (type == "clipper") {
+  if (type == "clipper")
+  {
     UpdateClipper(nameIn, plane);
   }
-  else if (type == "cutter") {
+  else if (type == "cutter")
+  {
     UpdateCutter(nameIn, plane);
   }
 }
 
 void G4VtkStore::AddClipper(G4String nameIn, const G4Plane3D& plane)
 {
-  for (const auto& v : separatePipeMap) {
+  for (const auto& v : separatePipeMap)
+  {
     auto clip_pl = new G4VtkClipClosedSurfacePipeline(nameIn, v.second->GetVtkVisContext(),
                                                       v.second->GetFinalFilter(), true);
     clip_pl->SetPlane(plane);
     v.second->AddChildPipeline(clip_pl);
   }
 
-  for (const auto& v : tensorGlyphPipeMap) {
+  for (const auto& v : tensorGlyphPipeMap)
+  {
     auto clip_pl = new G4VtkClipClosedSurfacePipeline(nameIn, v.second->GetVtkVisContext(),
                                                       v.second->GetFinalFilter());
     clip_pl->SetPlane(plane);
     v.second->AddChildPipeline(clip_pl);
   }
 
-  for (const auto& v : appendPipeMap) {
+  for (const auto& v : appendPipeMap)
+  {
     auto clip_pl = new G4VtkClipClosedSurfacePipeline(nameIn, v.second->GetVtkVisContext(),
                                                       v.second->GetFinalFilter(), true);
     clip_pl->SetPlane(plane);
     v.second->AddChildPipeline(clip_pl);
   }
 
-  for (const auto& v : bakePipeMap) {
+  for (const auto& v : bakePipeMap)
+  {
     auto clip_pl = new G4VtkClipClosedSurfacePipeline(nameIn, v.second->GetVtkVisContext(),
                                                       v.second->GetFinalFilter(), true);
     clip_pl->SetPlane(plane);
@@ -609,40 +657,52 @@ void G4VtkStore::AddClipper(G4String nameIn, const G4Plane3D& plane)
 
 void G4VtkStore::UpdateClipper(G4String nameIn, const G4Plane3D& plane)
 {
-  for (const auto& v : separatePipeMap) {
+  for (const auto& v : separatePipeMap)
+  {
     auto children = v.second->GetChildPipelines();
-    for (auto c : children) {
-      if (c->GetName() == nameIn) {
+    for (auto c : children)
+    {
+      if (c->GetName() == nameIn)
+      {
         auto cc = dynamic_cast<G4VtkClipClosedSurfacePipeline*>(c);
         cc->SetPlane(plane);
       }
     }
   }
 
-  for (const auto& v : tensorGlyphPipeMap) {
+  for (const auto& v : tensorGlyphPipeMap)
+  {
     auto children = v.second->GetChildPipelines();
-    for (auto c : children) {
-      if (c->GetName() == nameIn) {
+    for (auto c : children)
+    {
+      if (c->GetName() == nameIn)
+      {
         auto cc = dynamic_cast<G4VtkClipClosedSurfacePipeline*>(c);
         cc->SetPlane(plane);
       }
     }
   }
 
-  for (const auto& v : appendPipeMap) {
+  for (const auto& v : appendPipeMap)
+  {
     auto children = v.second->GetChildPipelines();
-    for (auto c : children) {
-      if (c->GetName() == nameIn) {
+    for (auto c : children)
+    {
+      if (c->GetName() == nameIn)
+      {
         auto cc = dynamic_cast<G4VtkClipClosedSurfacePipeline*>(c);
         cc->SetPlane(plane);
       }
     }
   }
 
-  for (const auto& v : bakePipeMap) {
+  for (const auto& v : bakePipeMap)
+  {
     auto children = v.second->GetChildPipelines();
-    for (auto c : children) {
-      if (c->GetName() == nameIn) {
+    for (auto c : children)
+    {
+      if (c->GetName() == nameIn)
+      {
         auto cc = dynamic_cast<G4VtkClipClosedSurfacePipeline*>(c);
         cc->SetPlane(plane);
       }
@@ -654,28 +714,32 @@ void G4VtkStore::RemoveClipper(G4String /*nameIn*/) {}
 
 void G4VtkStore::AddCutter(G4String nameIn, const G4Plane3D& plane)
 {
-  for (const auto& v : separatePipeMap) {
+  for (const auto& v : separatePipeMap)
+  {
     auto cut_pl = new G4VtkCutterPipeline(nameIn, v.second->GetVtkVisContext(),
                                           v.second->GetFinalFilter(), true);
     cut_pl->SetPlane(plane);
     v.second->AddChildPipeline(cut_pl);
   }
 
-  for (const auto& v : tensorGlyphPipeMap) {
+  for (const auto& v : tensorGlyphPipeMap)
+  {
     auto cut_pl =
       new G4VtkCutterPipeline(nameIn, v.second->GetVtkVisContext(), v.second->GetFinalFilter());
     cut_pl->SetPlane(plane);
     v.second->AddChildPipeline(cut_pl);
   }
 
-  for (const auto& v : appendPipeMap) {
+  for (const auto& v : appendPipeMap)
+  {
     auto cut_pl =
       new G4VtkCutterPipeline(nameIn, v.second->GetVtkVisContext(), v.second->GetFinalFilter());
     cut_pl->SetPlane(plane);
     v.second->AddChildPipeline(cut_pl);
   }
 
-  for (const auto& v : bakePipeMap) {
+  for (const auto& v : bakePipeMap)
+  {
     auto cut_pl =
       new G4VtkCutterPipeline(nameIn, v.second->GetVtkVisContext(), v.second->GetFinalFilter());
     cut_pl->SetPlane(plane);
@@ -685,40 +749,52 @@ void G4VtkStore::AddCutter(G4String nameIn, const G4Plane3D& plane)
 
 void G4VtkStore::UpdateCutter(G4String nameIn, const G4Plane3D& plane)
 {
-  for (const auto& v : separatePipeMap) {
+  for (const auto& v : separatePipeMap)
+  {
     auto children = v.second->GetChildPipelines();
-    for (auto c : children) {
-      if (c->GetName() == nameIn) {
+    for (auto c : children)
+    {
+      if (c->GetName() == nameIn)
+      {
         auto cc = dynamic_cast<G4VtkCutterPipeline*>(c);
         cc->SetPlane(plane);
       }
     }
   }
 
-  for (const auto& v : tensorGlyphPipeMap) {
+  for (const auto& v : tensorGlyphPipeMap)
+  {
     auto children = v.second->GetChildPipelines();
-    for (auto c : children) {
-      if (c->GetName() == nameIn) {
+    for (auto c : children)
+    {
+      if (c->GetName() == nameIn)
+      {
         auto cc = dynamic_cast<G4VtkCutterPipeline*>(c);
         cc->SetPlane(plane);
       }
     }
   }
 
-  for (const auto& v : appendPipeMap) {
+  for (const auto& v : appendPipeMap)
+  {
     auto children = v.second->GetChildPipelines();
-    for (auto c : children) {
-      if (c->GetName() == nameIn) {
+    for (auto c : children)
+    {
+      if (c->GetName() == nameIn)
+      {
         auto cc = dynamic_cast<G4VtkCutterPipeline*>(c);
         cc->SetPlane(plane);
       }
     }
   }
 
-  for (const auto& v : bakePipeMap) {
+  for (const auto& v : bakePipeMap)
+  {
     auto children = v.second->GetChildPipelines();
-    for (auto c : children) {
-      if (c->GetName() == nameIn) {
+    for (auto c : children)
+    {
+      if (c->GetName() == nameIn)
+      {
         auto cc = dynamic_cast<G4VtkCutterPipeline*>(c);
         cc->SetPlane(plane);
       }
@@ -737,40 +813,42 @@ void G4VtkStore::AddNonG4ObjectImage(const G4String& fileName, const G4VtkVisCon
 
 void G4VtkStore::AddNonG4ObjectPolydata(const G4String fileName, const G4VtkVisContext& vc)
 {
-
   vtkSmartPointer<vtkPolyData> pd;
 
-  if (fileName.find("obj") != G4String::npos) {
+  if (fileName.find("obj") != G4String::npos)
+  {
     vtkNew<vtkOBJReader> objReader;
     objReader->SetFileName(fileName.c_str());
     objReader->Update();
     pd = objReader->GetOutput();
   }
-  else if (fileName.find("ply") != G4String::npos) {
+  else if (fileName.find("ply") != G4String::npos)
+  {
     vtkNew<vtkPLYReader> plyReader;
     plyReader->SetFileName(fileName.c_str());
     plyReader->Update();
     pd = plyReader->GetOutput();
   }
-  else if (fileName.find("stl") != G4String::npos) {
+  else if (fileName.find("stl") != G4String::npos)
+  {
     vtkNew<vtkSTLReader> stlReader;
     stlReader->SetFileName(fileName.c_str());
     stlReader->Update();
     pd = stlReader->GetOutput();
   }
-  else if (fileName.find("vtp") != G4String::npos && fileName.find("vtu") != G4String::npos) {
+  else if (fileName.find("vtp") != G4String::npos && fileName.find("vtu") != G4String::npos)
+  {
     G4cout << "G4VtkStore::AddNonG4ObjectPolydata> vtp/vtu Warning not yet implemented" << G4endl;
   }
 
   auto pl = std::make_shared<G4VtkPolydataPipeline>(G4String("name"), vc);
 
-
   G4Transform3D fInvObjTrans = vc.fTransform.inverse();
   pl->SetPolydata(pd);
   pl->SetActorTransform(vc.fTransform.dx(), vc.fTransform.dy(), vc.fTransform.dz(),
-                        fInvObjTrans.xx(), fInvObjTrans.xy(), fInvObjTrans.xz(),
-                        fInvObjTrans.yx(), fInvObjTrans.yy(), fInvObjTrans.yz(),
-                        fInvObjTrans.zx(), fInvObjTrans.zy(), fInvObjTrans.zz());
+                        fInvObjTrans.xx(), fInvObjTrans.xy(), fInvObjTrans.xz(), fInvObjTrans.yx(),
+                        fInvObjTrans.yy(), fInvObjTrans.yz(), fInvObjTrans.zx(), fInvObjTrans.zy(),
+                        fInvObjTrans.zz());
   pl->SetActorColour(vc.red, vc.green, vc.blue, vc.alpha);
 }
 
@@ -778,22 +856,26 @@ void G4VtkStore::GetBounds(G4double maxBoundIn[6])
 {
   G4double maxBound[6] = {1e99, -1e99, 1e99, -1e99, 1e99, -1e99};
 
-  for (const auto& v : separatePipeMap) {
+  for (const auto& v : separatePipeMap)
+  {
     auto b = v.second->GetBounds();
     MaxBounds(maxBound, b);
   }
 
-  for (const auto& v : tensorGlyphPipeMap) {
+  for (const auto& v : tensorGlyphPipeMap)
+  {
     auto b = v.second->GetBounds();
     MaxBounds(maxBound, b);
   }
 
-  for (const auto& v : appendPipeMap) {
+  for (const auto& v : appendPipeMap)
+  {
     auto b = v.second->GetBounds();
     MaxBounds(maxBound, b);
   }
 
-  for (const auto& v : bakePipeMap) {
+  for (const auto& v : bakePipeMap)
+  {
     auto b = v.second->GetBounds();
     MaxBounds(maxBound, b);
   }

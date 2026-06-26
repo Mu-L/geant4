@@ -25,80 +25,64 @@
 //
 //
 //
-//Push button class. Inherits from G4OpenGLXmVWidgetComponent
+// Push button class. Inherits from G4OpenGLXmVWidgetComponent
+
+#include "G4OpenGLXmPushButton.hh"
 
 #include "G4OpenGLXmVWidgetComponent.hh"
 #include "G4OpenGLXmVWidgetContainer.hh"
-#include "G4OpenGLXmPushButton.hh"
+#include "globals.hh"
+
 #include <X11/Intrinsic.h>
 #include <Xm/PushB.h>
 
-#include "globals.hh"
-
-G4OpenGLXmPushButton::G4OpenGLXmPushButton (const char* n,
-					    XtCallbackRec* c)
-: button(0)
-, parent(0)
+G4OpenGLXmPushButton::G4OpenGLXmPushButton(const char* n, XtCallbackRec* c) : button(0), parent(0)
 {
   name = n;
   callback = c;
 }
 
-G4OpenGLXmPushButton::~G4OpenGLXmPushButton ()
-{}
+G4OpenGLXmPushButton::~G4OpenGLXmPushButton() {}
 
-void G4OpenGLXmPushButton::SetName (const char* n) 
+void G4OpenGLXmPushButton::SetName(const char* n)
 {
   name = n;
-  XmString button_string = XmStringCreateLocalized ((char*)name);
-  XtVaSetValues (button,
-		 XmNlabelString, button_string,
-		 NULL);
-  XmStringFree (button_string);
+  XmString button_string = XmStringCreateLocalized((char*)name);
+  XtVaSetValues(button, XmNlabelString, button_string, NULL);
+  XmStringFree(button_string);
 }
 
-const char* G4OpenGLXmPushButton::GetName () 
+const char* G4OpenGLXmPushButton::GetName()
 {
   return name;
 }
 
-void G4OpenGLXmPushButton::AddYourselfTo (G4OpenGLXmVWidgetContainer* container)
+void G4OpenGLXmPushButton::AddYourselfTo(G4OpenGLXmVWidgetContainer* container)
 {
+  pView = container->GetView();
+  ProcesspView();
+  parent = container->GetPointerToWidget();
 
-  pView = container->GetView ();
-  ProcesspView ();
-  parent = container->GetPointerToWidget ();
+  XmString button_str = XmStringCreateLocalized((char*)name);
+  button = XtVaCreateManagedWidget(name, xmPushButtonWidgetClass, *parent, XmNlabelString,
+                                   button_str, XmNalignment, XmALIGNMENT_CENTER, XmNuserData, pView,
 
-  XmString button_str = XmStringCreateLocalized ((char*)name);
-  button = XtVaCreateManagedWidget 
-    (name,
-     xmPushButtonWidgetClass,
-     *parent,
-     XmNlabelString, button_str,
-     XmNalignment, XmALIGNMENT_CENTER,
-     XmNuserData, pView,
+                                   XtNvisual, visual, XtNdepth, depth, XtNcolormap, cmap,
+                                   XtNborderColor, borcol, XtNbackground, bgnd,
 
-     XtNvisual, visual, 
-     XtNdepth, depth, 
-     XtNcolormap, cmap, 
-     XtNborderColor, borcol,
-     XtNbackground, bgnd,
-     
-     NULL);
-  
-  XtAddCallbacks (button,
-		  XmNarmCallback,
-		  callback);
-  
-  XmStringFree (button_str);
+                                   NULL);
+
+  XtAddCallbacks(button, XmNarmCallback, callback);
+
+  XmStringFree(button_str);
 }
 
-Widget* G4OpenGLXmPushButton::GetPointerToParent ()
+Widget* G4OpenGLXmPushButton::GetPointerToParent()
 {
   return parent;
 }
 
-Widget* G4OpenGLXmPushButton::GetPointerToWidget () 
+Widget* G4OpenGLXmPushButton::GetPointerToWidget()
 {
   return &button;
 }

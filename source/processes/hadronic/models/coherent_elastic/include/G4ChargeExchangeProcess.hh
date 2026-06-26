@@ -38,12 +38,12 @@
 // combination of Geant4 models
 // Class Description - End
 
-#ifndef G4ChargeExchangeProcess_h
-#define G4ChargeExchangeProcess_h 1
+#ifndef G4CHARGEEXCHANGEPROCESS_HH
+#define G4CHARGEEXCHANGEPROCESS_HH
 
-#include "globals.hh"
 #include "G4HadronicProcess.hh"
 #include "G4Nucleus.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 class G4CrossSectionDataStore;
@@ -51,63 +51,62 @@ class G4PhysicsLinearVector;
 
 class G4ChargeExchangeProcess : public G4HadronicProcess
 {
-public:
+  public:
 
-  G4ChargeExchangeProcess(const G4String& procName = "chargeExchange");
+    G4ChargeExchangeProcess(const G4String& procName = "chargeExchange");
 
-  virtual ~G4ChargeExchangeProcess();
+    virtual ~G4ChargeExchangeProcess();
 
-  virtual G4bool IsApplicable(const G4ParticleDefinition& aParticleType);
+    virtual G4bool IsApplicable(const G4ParticleDefinition& aParticleType);
 
-  virtual void BuildPhysicsTable(const G4ParticleDefinition& aParticleType);
+    virtual void BuildPhysicsTable(const G4ParticleDefinition& aParticleType);
 
-  virtual void DumpPhysicsTable(const G4ParticleDefinition& aParticleType);
+    virtual void DumpPhysicsTable(const G4ParticleDefinition& aParticleType);
 
-  virtual G4double GetElementCrossSection(const G4DynamicParticle* aParticle,
-					  const G4Element* anElement,
-					  const G4Material* mat = 0);
+    virtual G4double GetElementCrossSection(const G4DynamicParticle* aParticle,
+                                            const G4Element* anElement, const G4Material* mat = 0);
 
-private:
+  private:
 
-  const G4ParticleDefinition* theParticle;
+    const G4ParticleDefinition* theParticle;
 
-  const G4ParticleDefinition* theProton;
-  const G4ParticleDefinition* theNeutron;
-  const G4ParticleDefinition* theAProton;
-  const G4ParticleDefinition* theANeutron;
-  const G4ParticleDefinition* thePiPlus;
-  const G4ParticleDefinition* thePiMinus;
-  const G4ParticleDefinition* thePiZero;
-  const G4ParticleDefinition* theKPlus;
-  const G4ParticleDefinition* theKMinus;
-  const G4ParticleDefinition* theK0S;
-  const G4ParticleDefinition* theK0L;
-  const G4ParticleDefinition* theL;
-  const G4ParticleDefinition* theAntiL;
-  const G4ParticleDefinition* theSPlus;
-  const G4ParticleDefinition* theASPlus;
-  const G4ParticleDefinition* theSMinus;
-  const G4ParticleDefinition* theASMinus;
-  const G4ParticleDefinition* theS0;
-  const G4ParticleDefinition* theAS0;
-  const G4ParticleDefinition* theXiMinus;
-  const G4ParticleDefinition* theXi0;
-  const G4ParticleDefinition* theAXiMinus;
-  const G4ParticleDefinition* theAXi0;
-  const G4ParticleDefinition* theOmega;
-  const G4ParticleDefinition* theAOmega;
-  const G4ParticleDefinition* theD;
-  const G4ParticleDefinition* theT;
-  const G4ParticleDefinition* theA;
-  const G4ParticleDefinition* theHe3;
+    const G4ParticleDefinition* theProton;
+    const G4ParticleDefinition* theNeutron;
+    const G4ParticleDefinition* theAProton;
+    const G4ParticleDefinition* theANeutron;
+    const G4ParticleDefinition* thePiPlus;
+    const G4ParticleDefinition* thePiMinus;
+    const G4ParticleDefinition* thePiZero;
+    const G4ParticleDefinition* theKPlus;
+    const G4ParticleDefinition* theKMinus;
+    const G4ParticleDefinition* theK0S;
+    const G4ParticleDefinition* theK0L;
+    const G4ParticleDefinition* theL;
+    const G4ParticleDefinition* theAntiL;
+    const G4ParticleDefinition* theSPlus;
+    const G4ParticleDefinition* theASPlus;
+    const G4ParticleDefinition* theSMinus;
+    const G4ParticleDefinition* theASMinus;
+    const G4ParticleDefinition* theS0;
+    const G4ParticleDefinition* theAS0;
+    const G4ParticleDefinition* theXiMinus;
+    const G4ParticleDefinition* theXi0;
+    const G4ParticleDefinition* theAXiMinus;
+    const G4ParticleDefinition* theAXi0;
+    const G4ParticleDefinition* theOmega;
+    const G4ParticleDefinition* theAOmega;
+    const G4ParticleDefinition* theD;
+    const G4ParticleDefinition* theT;
+    const G4ParticleDefinition* theA;
+    const G4ParticleDefinition* theHe3;
 
-  G4CrossSectionDataStore* store;
-  G4PhysicsLinearVector*   factors;
+    G4CrossSectionDataStore* store;
+    G4PhysicsLinearVector* factors;
 
-  G4double        thEnergy;
+    G4double thEnergy;
 
-  G4int    pPDG;
-  G4bool   first;
+    G4int pPDG;
+    G4bool first;
 };
 
 #endif

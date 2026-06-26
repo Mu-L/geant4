@@ -32,14 +32,14 @@
 // Author: Zoltan Torzsok, November 2007
 // --------------------------------------------------------------------
 #ifndef G4GDMLWRITESOLIDS_HH
-#define G4GDMLWRITESOLIDS_HH 1
-
-#include "G4Types.hh"
+#define G4GDMLWRITESOLIDS_HH
 
 #include "G4GDMLWriteMaterials.hh"
 #include "G4MultiUnion.hh"
+#include "G4Types.hh"
 
 class G4BooleanSolid;
+class G4DisplacedSolid;
 class G4ScaledSolid;
 class G4Box;
 class G4Cons;
@@ -72,23 +72,38 @@ class G4OpticalSurface;
 
 class G4GDMLWriteSolids : public G4GDMLWriteMaterials
 {
-  class G4ThreeVectorCompare
-  {
-    public:
+    class G4ThreeVectorCompare
+    {
+      public:
 
-      G4bool operator()(const G4ThreeVector& t1, const G4ThreeVector& t2) const
-      {
-        if(t1.x() < t2.x()) { return true; }
-        if(t1.x() > t2.x()) { return false; }
+        G4bool operator()(const G4ThreeVector& t1, const G4ThreeVector& t2) const
+        {
+          if (t1.x() < t2.x())
+          {
+            return true;
+          }
+          if (t1.x() > t2.x())
+          {
+            return false;
+          }
 
-        if(t1.y() < t2.y()) { return true; }
-        if(t1.y() > t2.y()) { return false; }
+          if (t1.y() < t2.y())
+          {
+            return true;
+          }
+          if (t1.y() > t2.y())
+          {
+            return false;
+          }
 
-        if(t1.z() < t2.z()) { return true; }
+          if (t1.z() < t2.z())
+          {
+            return true;
+          }
 
-        return false;
-      }
-  };
+          return false;
+        }
+    };
 
   public:
 
@@ -100,9 +115,9 @@ class G4GDMLWriteSolids : public G4GDMLWriteMaterials
     G4GDMLWriteSolids();
     virtual ~G4GDMLWriteSolids();
 
-    void MultiUnionWrite(xercesc::DOMElement* solElement,
-                         const G4MultiUnion* const);
+    void MultiUnionWrite(xercesc::DOMElement* solElement, const G4MultiUnion* const);
     void BooleanWrite(xercesc::DOMElement*, const G4BooleanSolid* const);
+    void DisplacedWrite(xercesc::DOMElement*, const G4DisplacedSolid* const);
     void ScaledWrite(xercesc::DOMElement*, const G4ScaledSolid* const);
     void BoxWrite(xercesc::DOMElement*, const G4Box* const);
     void ConeWrite(xercesc::DOMElement*, const G4Cons* const);
@@ -115,12 +130,10 @@ class G4GDMLWriteSolids : public G4GDMLWriteMaterials
     void ParaWrite(xercesc::DOMElement*, const G4Para* const);
     void ParaboloidWrite(xercesc::DOMElement*, const G4Paraboloid* const);
     void PolyconeWrite(xercesc::DOMElement*, const G4Polycone* const);
-    void GenericPolyconeWrite(xercesc::DOMElement*,
-                              const G4GenericPolycone* const);
+    void GenericPolyconeWrite(xercesc::DOMElement*, const G4GenericPolycone* const);
     void PolyhedraWrite(xercesc::DOMElement*, const G4Polyhedra* const);
     void SphereWrite(xercesc::DOMElement*, const G4Sphere* const);
-    void TessellatedWrite(xercesc::DOMElement*,
-                          const G4TessellatedSolid* const);
+    void TessellatedWrite(xercesc::DOMElement*, const G4TessellatedSolid* const);
     void TetWrite(xercesc::DOMElement*, const G4Tet* const);
     void TorusWrite(xercesc::DOMElement*, const G4Torus* const);
     void GenTrapWrite(xercesc::DOMElement*, const G4GenericTrap* const);
@@ -132,11 +145,9 @@ class G4GDMLWriteSolids : public G4GDMLWriteMaterials
     void TwistedtrapWrite(xercesc::DOMElement*, const G4TwistedTrap* const);
     void TwistedtrdWrite(xercesc::DOMElement*, const G4TwistedTrd* const);
     void TwistedtubsWrite(xercesc::DOMElement*, const G4TwistedTubs* const);
-    void ZplaneWrite(xercesc::DOMElement*, const G4double&, const G4double&,
-                     const G4double&);
+    void ZplaneWrite(xercesc::DOMElement*, const G4double&, const G4double&, const G4double&);
     void RZPointWrite(xercesc::DOMElement*, const G4double&, const G4double&);
-    void OpticalSurfaceWrite(xercesc::DOMElement*,
-                             const G4OpticalSurface* const);
+    void OpticalSurfaceWrite(xercesc::DOMElement*, const G4OpticalSurface* const);
     void PropertyWrite(xercesc::DOMElement*, const G4OpticalSurface* const);
 
   protected:

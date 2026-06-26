@@ -31,43 +31,43 @@
 // particle type.
 // Class Description - End:
 
-#ifndef G4TRAJECTORYDRAWBYPARTICLEID
-#define G4TRAJECTORYDRAWBYPARTICLEID
+#ifndef G4TRAJECTORYDRAWBYPARTICLEID_HH
+#define G4TRAJECTORYDRAWBYPARTICLEID_HH
 
-#include "G4VTrajectoryModel.hh"
 #include "G4Colour.hh"
 #include "G4ModelColourMap.hh"
 #include "G4String.hh"
+#include "G4VTrajectoryModel.hh"
+
 #include <map>
 
-class G4TrajectoryDrawByParticleID : public G4VTrajectoryModel {
+class G4TrajectoryDrawByParticleID : public G4VTrajectoryModel
+{
+  public:  // With description
 
-public: // With description
- 
-  G4TrajectoryDrawByParticleID(const G4String& name = "Unspecified", G4VisTrajContext* context=0);
-  
-  virtual ~G4TrajectoryDrawByParticleID();
+    G4TrajectoryDrawByParticleID(const G4String& name = "Unspecified",
+                                 G4VisTrajContext* context = 0);
 
-  // Draw method
-  virtual void Draw(const G4VTrajectory& trajectory, 
-		    const G4bool& visible = true) const;
-  
-  virtual void Print(std::ostream& ostr) const;
-  // Print configuration
+    virtual ~G4TrajectoryDrawByParticleID();
 
-  void SetDefault(const G4String&);
-  void SetDefault(const G4Colour&);
+    // Draw method
+    virtual void Draw(const G4VTrajectory& trajectory, const G4bool& visible = true) const;
 
-  void Set(const G4String& particle, const G4String& colour);
-  void Set(const G4String& particle, const G4Colour& colour);
-  // Configuration functions
+    virtual void Print(std::ostream& ostr) const;
+    // Print configuration
 
-private:
+    void SetDefault(const G4String&);
+    void SetDefault(const G4Colour&);
 
-  // Data members
-  G4ModelColourMap<G4String> fMap;
-  G4Colour fDefault;
+    void Set(const G4String& particle, const G4String& colour);
+    void Set(const G4String& particle, const G4Colour& colour);
+    // Configuration functions
 
+  private:
+
+    // Data members
+    G4ModelColourMap<G4String> fMap;
+    G4Colour fDefault;
 };
 
 #endif

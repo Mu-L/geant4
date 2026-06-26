@@ -30,24 +30,25 @@
 // -----------
 //
 // -------------------------------------------------------------------
-#include <G4Scheduler.hh>
-#include <G4SchedulerMessenger.hh>
-#include "G4UIdirectory.hh"
-#include "G4UIcmdWithoutParameter.hh"
-#include "G4UIcmdWithAnInteger.hh"
-#include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWithABool.hh"
+#include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithAnInteger.hh"
+#include "G4UIcmdWithoutParameter.hh"
 #include "G4UIcommand.hh"
+#include "G4UIdirectory.hh"
 #include "G4UIparameter.hh"
 #include "G4ios.hh"
 
-G4SchedulerMessenger::G4SchedulerMessenger(G4Scheduler* stepMgr)
-  : fScheduler(stepMgr)
+#include <G4Scheduler.hh>
+#include <G4SchedulerMessenger.hh>
+
+G4SchedulerMessenger::G4SchedulerMessenger(G4Scheduler* stepMgr) : fScheduler(stepMgr)
 {
   fITDirectory = std::make_unique<G4UIdirectory>("/scheduler/");
-  fITDirectory->SetGuidance("Control commands for the time scheduler "
-                            "(dna chemistry applications).");
+  fITDirectory->SetGuidance(
+    "Control commands for the time scheduler "
+    "(dna chemistry applications).");
 
   // Set end time
   fEndTime = std::make_unique<G4UIcmdWithADoubleAndUnit>("/scheduler/endTime", this);
@@ -70,8 +71,9 @@ G4SchedulerMessenger::G4SchedulerMessenger(G4Scheduler* stepMgr)
 
   // Initialize
   fInitCmd = std::make_unique<G4UIcmdWithoutParameter>("/scheduler/initialize", this);
-  fInitCmd->SetGuidance("Initialize G4Scheduler. This is done "
-                        "for standalone application only (no physics).");
+  fInitCmd->SetGuidance(
+    "Initialize G4Scheduler. This is done "
+    "for standalone application only (no physics).");
   fInitCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 
   // Set Max Null time Step
@@ -107,8 +109,9 @@ G4SchedulerMessenger::G4SchedulerMessenger(G4Scheduler* stepMgr)
   fVerboseCmd->SetDefaultValue(1);
 
   fWhyDoYouStop = std::make_unique<G4UIcmdWithoutParameter>("/scheduler/whyDoYouStop", this);
-  fWhyDoYouStop->SetGuidance("Will print information on why the scheduler is "
-                             "stopping the process");
+  fWhyDoYouStop->SetGuidance(
+    "Will print information on why the scheduler is "
+    "stopping the process");
 
   fUseDefaultTimeSteps = std::make_unique<G4UIcmdWithABool>("/scheduler/useDefaultTimeSteps", this);
   fUseDefaultTimeSteps->SetGuidance(
@@ -117,56 +120,53 @@ G4SchedulerMessenger::G4SchedulerMessenger(G4Scheduler* stepMgr)
     "been set and if one will want to track down Brownian objects. "
     "NB: This command gets in conflicts with the declaration of time steps.");
 
-  fResetScavenger = std::make_unique<G4UIcmdWithABool>("/scheduler/ResetScavengerForEachBeamOn", this);
-  fResetScavenger->SetGuidance(
-    "Reset Scavenger information apres each BeamOn.");
+  fResetScavenger =
+    std::make_unique<G4UIcmdWithABool>("/scheduler/ResetScavengerForEachBeamOn", this);
+  fResetScavenger->SetGuidance("Reset Scavenger information apres each BeamOn.");
   fResetScavenger->SetDefaultValue(true);
-
 }
 
 G4SchedulerMessenger::~G4SchedulerMessenger() = default;
 
 void G4SchedulerMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
-  if(command == fProcessCmd.get())
+  if (command == fProcessCmd.get())
   {
     fScheduler->Process();
   }
-  else if(command == fEndTime.get())
+  else if (command == fEndTime.get())
   {
     fScheduler->SetEndTime(fEndTime->GetNewDoubleValue(newValue));
   }
-  else if(command == fTimeTolerance.get())
+  else if (command == fTimeTolerance.get())
   {
     fScheduler->SetTimeTolerance(fTimeTolerance->GetNewDoubleValue(newValue));
   }
-  else if(command == fVerboseCmd.get())
+  else if (command == fVerboseCmd.get())
   {
     fScheduler->SetVerbose(fVerboseCmd->GetNewIntValue(newValue));
   }
-  else if(command == fInitCmd.get())
+  else if (command == fInitCmd.get())
   {
     fScheduler->Initialize();
   }
-  else if(command == fMaxNULLTimeSteps.get())
+  else if (command == fMaxNULLTimeSteps.get())
   {
-    fScheduler->SetMaxZeroTimeAllowed(
-      fMaxNULLTimeSteps->GetNewIntValue(newValue));
+    fScheduler->SetMaxZeroTimeAllowed(fMaxNULLTimeSteps->GetNewIntValue(newValue));
   }
-  else if(command == fMaxStepNumber.get())
+  else if (command == fMaxStepNumber.get())
   {
     fScheduler->SetMaxNbSteps(fMaxStepNumber->GetNewIntValue(newValue));
   }
-  else if(command == fWhyDoYouStop.get())
+  else if (command == fWhyDoYouStop.get())
   {
     fScheduler->WhyDoYouStop();
   }
-  else if(command == fUseDefaultTimeSteps.get())
+  else if (command == fUseDefaultTimeSteps.get())
   {
-    fScheduler->UseDefaultTimeSteps(
-      fUseDefaultTimeSteps->GetNewBoolValue(newValue));
+    fScheduler->UseDefaultTimeSteps(fUseDefaultTimeSteps->GetNewBoolValue(newValue));
   }
-  else if(command == fResetScavenger.get())
+  else if (command == fResetScavenger.get())
   {
     fScheduler->ResetScavenger(fResetScavenger->GetNewBoolValue(newValue));
   }
@@ -176,35 +176,33 @@ G4String G4SchedulerMessenger::GetCurrentValue(G4UIcommand* command)
 {
   G4String cv;
 
-  if(command == fVerboseCmd.get())
+  if (command == fVerboseCmd.get())
   {
     cv = fVerboseCmd->ConvertToString(fScheduler->GetVerbose());
   }
-  else if(command == fEndTime.get())
+  else if (command == fEndTime.get())
   {
     cv = fEndTime->ConvertToString(fScheduler->GetEndTime());
   }
-  else if(command == fTimeTolerance.get())
+  else if (command == fTimeTolerance.get())
   {
     cv = fTimeTolerance->ConvertToString(fScheduler->GetTimeTolerance());
   }
-  else if(command == fInitCmd.get())
+  else if (command == fInitCmd.get())
   {
     cv = fInitCmd->ConvertToString(fScheduler->IsInitialized());
   }
-  else if(command == fMaxNULLTimeSteps.get())
+  else if (command == fMaxNULLTimeSteps.get())
   {
-    cv =
-      fMaxNULLTimeSteps->ConvertToString(fScheduler->GetMaxZeroTimeAllowed());
+    cv = fMaxNULLTimeSteps->ConvertToString(fScheduler->GetMaxZeroTimeAllowed());
   }
-  else if(command == fMaxStepNumber.get())
+  else if (command == fMaxStepNumber.get())
   {
     cv = fMaxStepNumber->ConvertToString(fScheduler->GetMaxNbSteps());
   }
-  else if(command == fUseDefaultTimeSteps.get())
+  else if (command == fUseDefaultTimeSteps.get())
   {
-    cv = fUseDefaultTimeSteps->ConvertToString(
-      fScheduler->AreDefaultTimeStepsUsed());
+    cv = fUseDefaultTimeSteps->ConvertToString(fScheduler->AreDefaultTimeStepsUsed());
   }
   return cv;
 }

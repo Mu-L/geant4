@@ -33,8 +33,8 @@
 
 // Author: H.Kurashige, 9 June 2003
 // --------------------------------------------------------------------
-#ifndef G4ParticlePropertyData_hh
-#define G4ParticlePropertyData_hh 1
+#ifndef G4PARTICLEPROPERTYDATA_HH
+#define G4PARTICLEPROPERTYDATA_HH
 
 #include "G4ios.hh"
 #include "globals.hh"
@@ -46,6 +46,7 @@ class G4ParticlePropertyData
     friend class G4ParticlePropertyTable;
 
   public:
+
     // The particle name should be assigned
     // The name cannot be changed except by assignment operator
     G4ParticlePropertyData(const G4String& particleName = "");
@@ -127,6 +128,7 @@ class G4ParticlePropertyData
     inline G4int GetVerboseLevel() const;
 
   private:
+
     // The name of the particle.
     G4String theParticleName = "";
 
@@ -191,6 +193,7 @@ class G4ParticlePropertyData
     G4int theAntiQuarkContent[NumberOfQuarkFlavor];
 
   private:
+
     G4bool fPDGMassModified = false;
     G4bool fPDGWidthModified = false;
     G4bool fPDGChargeModified = false;

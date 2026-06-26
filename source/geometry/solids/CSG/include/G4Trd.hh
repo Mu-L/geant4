@@ -46,19 +46,20 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UTRD 1
+#  define G4GEOM_USE_UTRD 1
 #endif
 
 #if defined(G4GEOM_USE_UTRD)
-  #define G4UTrd G4Trd
-  #include "G4UTrd.hh"
+#  define G4UTrd G4Trd
+#  include "G4UTrd.hh"
 #else
 
-#include "G4CSGSolid.hh"
-#include "G4Polyhedron.hh"
+#  include "G4CSGSolid.hh"
+#  include "G4Polyhedron.hh"
 
 /**
  * @brief G4Trd is a trapezoid with the X and Y dimensions varying along Z.
+ * @ingroup geometry_solids_csg
  */
 
 class G4Trd : public G4CSGSolid
@@ -74,15 +75,13 @@ class G4Trd : public G4CSGSolid
      *  @param[in] pdy2 Half-length along Y at the surface positioned at +dz.
      *  @param[in] pdz Half-length along Z axis.
      */
-    G4Trd( const G4String& pName,
-                 G4double pdx1, G4double pdx2,
-                 G4double pdy1, G4double pdy2,
-                 G4double pdz );
+    G4Trd(const G4String& pName, G4double pdx1, G4double pdx2, G4double pdy1, G4double pdy2,
+          G4double pdz);
 
     /**
      * Default destructor.
      */
-   ~G4Trd() override = default;
+    ~G4Trd() override = default;
 
     /**
      * Accessors.
@@ -91,7 +90,7 @@ class G4Trd : public G4CSGSolid
     inline G4double GetXHalfLength2() const;
     inline G4double GetYHalfLength1() const;
     inline G4double GetYHalfLength2() const;
-    inline G4double GetZHalfLength()  const;
+    inline G4double GetZHalfLength() const;
 
     /**
      * Modifiers.
@@ -105,9 +104,7 @@ class G4Trd : public G4CSGSolid
     /**
      * Sets all parameters, as for constructor. Checks and sets half-widths.
      */
-    void SetAllParameters ( G4double pdx1, G4double pdx2,
-                            G4double pdy1, G4double pdy2,
-                            G4double pdz );
+    void SetAllParameters(G4double pdx1, G4double pdx2, G4double pdy1, G4double pdy2, G4double pdz);
 
     /**
      * Returning an estimation of the solid volume (capacity) and
@@ -120,9 +117,8 @@ class G4Trd : public G4CSGSolid
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions( G4VPVParameterisation* p,
-                            const G4int n,
-                            const G4VPhysicalVolume* pRep ) override;
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
+                           const G4VPhysicalVolume* pRep) override;
 
     /**
      * Computes the bounding limits of the solid.
@@ -141,26 +137,22 @@ class G4Trd : public G4CSGSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Concrete implementations of the expected query interfaces for
      * solids, as defined in the base class G4VSolid.
      */
-    EInside Inside( const G4ThreeVector& p ) const override;
-    G4ThreeVector SurfaceNormal( const G4ThreeVector& p ) const override;
-    G4double DistanceToIn( const G4ThreeVector& p,
-                           const G4ThreeVector& v ) const override;
-    G4double DistanceToIn( const G4ThreeVector& p ) const override;
-    G4double DistanceToOut( const G4ThreeVector& p,
-                            const G4ThreeVector& v,
-                            const G4bool calcNorm = false,
-                                  G4bool* validNorm = nullptr,
-                                  G4ThreeVector* n = nullptr ) const override;
-    G4double DistanceToOut( const G4ThreeVector& p ) const override;
+    EInside Inside(const G4ThreeVector& p) const override;
+    G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
+    G4double DistanceToIn(const G4ThreeVector& p) const override;
+    G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
+    G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
      * Returns the type ID, "G4Trd" of the solid.
@@ -187,13 +179,13 @@ class G4Trd : public G4CSGSolid
     /**
      * Streams the object contents to an output stream.
      */
-    std::ostream& StreamInfo( std::ostream& os ) const override;
+    std::ostream& StreamInfo(std::ostream& os) const override;
 
     /**
      * Methods for creating graphical representations (i.e. for visualisation).
      */
-    void DescribeYourselfTo (G4VGraphicsScene& scene) const override;
-    G4Polyhedron* CreatePolyhedron () const override;
+    void DescribeYourselfTo(G4VGraphicsScene& scene) const override;
+    G4Polyhedron* CreatePolyhedron() const override;
 
     /**
      * Fake default constructor for usage restricted to direct object
@@ -224,16 +216,19 @@ class G4Trd : public G4CSGSolid
      * Algorithm for SurfaceNormal() following the original specification
      * for points not on the surface.
      */
-    G4ThreeVector ApproxSurfaceNormal( const G4ThreeVector& p ) const;
+    G4ThreeVector ApproxSurfaceNormal(const G4ThreeVector& p) const;
 
   private:
 
     G4double halfCarTolerance;
-    G4double fDx1,fDx2,fDy1,fDy2,fDz,fHx,fHy;
-    struct { G4double a,b,c,d; } fPlanes[4];
+    G4double fDx1, fDx2, fDy1, fDy2, fDz, fHx, fHy;
+    struct
+    {
+        G4double a, b, c, d;
+    } fPlanes[4];
 };
 
-#include "G4Trd.icc"
+#  include "G4Trd.icc"
 
 #endif
 

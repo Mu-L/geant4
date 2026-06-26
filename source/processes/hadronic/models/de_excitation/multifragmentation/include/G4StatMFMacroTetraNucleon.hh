@@ -28,39 +28,38 @@
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara
 
-#ifndef G4StatMFMacroTetraNucleon_h
-#define G4StatMFMacroTetraNucleon_h 1
+#ifndef G4STATMFMACROTETRANUCLEON_HH
+#define G4STATMFMACROTETRANUCLEON_HH
 
-#include "G4VStatMFMacroCluster.hh"
 #include "G4NucleiProperties.hh"
+#include "G4VStatMFMacroCluster.hh"
 
-class G4StatMFMacroTetraNucleon : public G4VStatMFMacroCluster {
+class G4StatMFMacroTetraNucleon : public G4VStatMFMacroCluster
+{
+  public:
 
-public:
+    G4StatMFMacroTetraNucleon();
 
-  G4StatMFMacroTetraNucleon();
+    ~G4StatMFMacroTetraNucleon();
 
-  ~G4StatMFMacroTetraNucleon();
-	
-  G4double CalcMeanMultiplicity(const G4double FreeVol, const G4double mu, 
-				const G4double nu, const G4double T);
-								
-  inline G4double CalcZARatio(const G4double ) {return theZARatio = 0.5;}
+    G4double CalcMeanMultiplicity(const G4double FreeVol, const G4double mu, const G4double nu,
+                                  const G4double T);
 
-  G4double CalcEnergy(const G4double T);
+    inline G4double CalcZARatio(const G4double) { return theZARatio = 0.5; }
 
-  G4double CalcEntropy(const G4double T, const G4double FreeVol);
+    G4double CalcEnergy(const G4double T);
 
-private:
+    G4double CalcEntropy(const G4double T, const G4double FreeVol);
 
-  // Copy constructor
-  G4StatMFMacroTetraNucleon(const G4StatMFMacroTetraNucleon & right);
+  private:
 
-  // operators
-  G4StatMFMacroTetraNucleon & operator=(const G4StatMFMacroTetraNucleon & right);
-  G4bool operator==(const G4StatMFMacroTetraNucleon & right) const;
-  G4bool operator!=(const G4StatMFMacroTetraNucleon & right) const;
+    // Copy constructor
+    G4StatMFMacroTetraNucleon(const G4StatMFMacroTetraNucleon& right);
 
+    // operators
+    G4StatMFMacroTetraNucleon& operator=(const G4StatMFMacroTetraNucleon& right);
+    G4bool operator==(const G4StatMFMacroTetraNucleon& right) const;
+    G4bool operator!=(const G4StatMFMacroTetraNucleon& right) const;
 };
 
 #endif

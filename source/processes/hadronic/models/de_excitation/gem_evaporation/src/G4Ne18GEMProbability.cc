@@ -29,45 +29,42 @@
 //
 
 #include "G4Ne18GEMProbability.hh"
+
 #include "G4SystemOfUnits.hh"
 
-G4Ne18GEMProbability::G4Ne18GEMProbability() :
-  G4GEMProbability(18,10,0.0) // A,Z,Spin
+G4Ne18GEMProbability::G4Ne18GEMProbability() : G4GEMProbability(18, 10, 0.0)  // A,Z,Spin
 {
-
-  ExcitEnergies.push_back(1887.3*keV);
+  ExcitEnergies.push_back(1887.3 * keV);
   ExcitSpins.push_back(2.0);
-  ExcitLifetimes.push_back(0.34*picosecond);
+  ExcitLifetimes.push_back(0.34 * picosecond);
 
-  ExcitEnergies.push_back(3376.2*keV);
+  ExcitEnergies.push_back(3376.2 * keV);
   ExcitSpins.push_back(4.0);
-  ExcitLifetimes.push_back(3.0*picosecond);
+  ExcitLifetimes.push_back(3.0 * picosecond);
 
-  ExcitEnergies.push_back(3576.0*keV);
+  ExcitEnergies.push_back(3576.0 * keV);
   ExcitSpins.push_back(0.0);
-  ExcitLifetimes.push_back(1.4*picosecond);
+  ExcitLifetimes.push_back(1.4 * picosecond);
 
-  ExcitEnergies.push_back(3616.4*keV);
+  ExcitEnergies.push_back(3616.4 * keV);
   ExcitSpins.push_back(2.0);
-  ExcitLifetimes.push_back(0.040*picosecond);
+  ExcitLifetimes.push_back(0.040 * picosecond);
 
-  ExcitEnergies.push_back(4510.0*keV);
+  ExcitEnergies.push_back(4510.0 * keV);
   ExcitSpins.push_back(1.0);
-  ExcitLifetimes.push_back(fPlanck/(40.0*keV));
+  ExcitLifetimes.push_back(fPlanck / (40.0 * keV));
 
-  ExcitEnergies.push_back(4580.0*keV);
+  ExcitEnergies.push_back(4580.0 * keV);
   ExcitSpins.push_back(0.0);
-  ExcitLifetimes.push_back(fPlanck/(40.0*keV));
+  ExcitLifetimes.push_back(fPlanck / (40.0 * keV));
 
-  ExcitEnergies.push_back(7062.0*keV);
+  ExcitEnergies.push_back(7062.0 * keV);
   ExcitSpins.push_back(2.0);
-  ExcitLifetimes.push_back(fPlanck/(180.0*keV));
+  ExcitLifetimes.push_back(fPlanck / (180.0 * keV));
 
-  ExcitEnergies.push_back(7915.0*keV);
+  ExcitEnergies.push_back(7915.0 * keV);
   ExcitSpins.push_back(2.0);
-  ExcitLifetimes.push_back(fPlanck/(50.0*keV));
-
+  ExcitLifetimes.push_back(fPlanck / (50.0 * keV));
 }
 
-G4Ne18GEMProbability::~G4Ne18GEMProbability()
-{}
+G4Ne18GEMProbability::~G4Ne18GEMProbability() {}

@@ -36,20 +36,18 @@
 // This utility class provide common computations for EM physics
 //
 
-#ifndef G4EmStandUtil_h
-#define G4EmStandUtil_h 1
+#ifndef G4EMSTANDUTIL_HH
+#define G4EMSTANDUTIL_HH
 
-#include "globals.hh"
 #include "G4VEmFluctuationModel.hh"
+#include "globals.hh"
 
 class G4EmStandUtil
 {
+  public:
 
-public:
-
-  // select model for energy loss fluctuations
-  static G4VEmFluctuationModel* ModelOfFluctuations(G4bool isIon = false);
-
+    // select model for energy loss fluctuations
+    static G4VEmFluctuationModel* ModelOfFluctuations(G4bool isIon = false);
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

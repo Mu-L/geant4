@@ -32,21 +32,19 @@
 
 #if !defined(G4GEOM_USE_UORB)
 
-#include "G4TwoVector.hh"
-#include "G4VoxelLimits.hh"
-#include "G4AffineTransform.hh"
-#include "G4BoundingEnvelope.hh"
-#include "G4QuickRand.hh"
-
-#include "G4VPVParameterisation.hh"
-
-#include "G4VGraphicsScene.hh"
-#include "G4VisExtent.hh"
-#include "G4AutoLock.hh"
+#  include "G4AffineTransform.hh"
+#  include "G4AutoLock.hh"
+#  include "G4BoundingEnvelope.hh"
+#  include "G4QuickRand.hh"
+#  include "G4TwoVector.hh"
+#  include "G4VGraphicsScene.hh"
+#  include "G4VPVParameterisation.hh"
+#  include "G4VisExtent.hh"
+#  include "G4VoxelLimits.hh"
 
 namespace
 {
-  G4Mutex orbMutex = G4MUTEX_INITIALIZER;
+G4Mutex orbMutex = G4MUTEX_INITIALIZER;
 }
 
 using namespace CLHEP;
@@ -55,8 +53,7 @@ using namespace CLHEP;
 //
 // Constructor
 
-G4Orb::G4Orb( const G4String& pName, G4double pRmax )
-  : G4CSGSolid(pName), fRmax(pRmax)
+G4Orb::G4Orb(const G4String& pName, G4double pRmax) : G4CSGSolid(pName), fRmax(pRmax)
 {
   Initialize();
 }
@@ -66,33 +63,33 @@ G4Orb::G4Orb( const G4String& pName, G4double pRmax )
 // Fake default constructor - sets only member data and allocates memory
 //                            for usage restricted to object persistency
 
-G4Orb::G4Orb( __void__& a )
-  : G4CSGSolid(a)
-{
-}
+G4Orb::G4Orb(__void__& a) : G4CSGSolid(a) {}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Assignment operator
 
-G4Orb& G4Orb::operator = (const G4Orb& rhs)
+G4Orb& G4Orb::operator=(const G4Orb& rhs)
 {
-   // Check assignment to self
-   //
-   if (this == &rhs)  { return *this; }
+  // Check assignment to self
+  //
+  if (this == &rhs)
+  {
+    return *this;
+  }
 
-   // Copy base class data
-   //
-   G4CSGSolid::operator=(rhs);
+  // Copy base class data
+  //
+  G4CSGSolid::operator=(rhs);
 
-   // Copy data
-   //
-   fRmax = rhs.fRmax;
-   halfRmaxTol = rhs.halfRmaxTol;
-   sqrRmaxPlusTol = rhs.sqrRmaxPlusTol;
-   sqrRmaxMinusTol = rhs.sqrRmaxMinusTol;
+  // Copy data
+  //
+  fRmax = rhs.fRmax;
+  halfRmaxTol = rhs.halfRmaxTol;
+  sqrRmaxPlusTol = rhs.sqrRmaxPlusTol;
+  sqrRmaxMinusTol = rhs.sqrRmaxMinusTol;
 
-   return *this;
+  return *this;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -105,16 +102,16 @@ void G4Orb::Initialize()
 
   // Check radius
   //
-  if ( fRmax < 10*kCarTolerance )
+  if (fRmax < 10 * kCarTolerance)
   {
     G4Exception("G4Orb::Initialize()", "GeomSolids0002", FatalException,
                 "Invalid radius < 10*kCarTolerance.");
   }
-  halfRmaxTol = 0.5 * std::max(kCarTolerance, fEpsilon*fRmax);
-  G4double rmaxPlusTol  = fRmax + halfRmaxTol;
+  halfRmaxTol = 0.5 * std::max(kCarTolerance, fEpsilon * fRmax);
+  G4double rmaxPlusTol = fRmax + halfRmaxTol;
   G4double rmaxMinusTol = fRmax - halfRmaxTol;
-  sqrRmaxPlusTol = rmaxPlusTol*rmaxPlusTol;
-  sqrRmaxMinusTol = rmaxMinusTol*rmaxMinusTol;
+  sqrRmaxPlusTol = rmaxPlusTol * rmaxPlusTol;
+  sqrRmaxMinusTol = rmaxMinusTol * rmaxMinusTol;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -122,11 +119,10 @@ void G4Orb::Initialize()
 // Dispatch to parameterisation for replication mechanism dimension
 // computation & modification
 
-void G4Orb::ComputeDimensions(       G4VPVParameterisation* p,
-                               const G4int n,
-                               const G4VPhysicalVolume* pRep )
+void G4Orb::ComputeDimensions(G4VPVParameterisation* p, const G4int n,
+                              const G4VPhysicalVolume* pRep)
 {
-  p->ComputeDimensions(*this,n,pRep);
+  p->ComputeDimensions(*this, n, pRep);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -136,20 +132,17 @@ void G4Orb::ComputeDimensions(       G4VPVParameterisation* p,
 void G4Orb::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
 {
   G4double radius = GetRadius();
-  pMin.set(-radius,-radius,-radius);
-  pMax.set( radius, radius, radius);
+  pMin.set(-radius, -radius, -radius);
+  pMax.set(radius, radius, radius);
 
   // Check correctness of the bounding box
   //
   if (pMin.x() >= pMax.x() || pMin.y() >= pMax.y() || pMin.z() >= pMax.z())
   {
     std::ostringstream message;
-    message << "Bad bounding box (min >= max) for solid: "
-            << GetName() << " !"
-            << "\npMin = " << pMin
-            << "\npMax = " << pMax;
-    G4Exception("G4Orb::BoundingLimits()", "GeomMgt0001",
-                JustWarning, message);
+    message << "Bad bounding box (min >= max) for solid: " << GetName() << " !"
+            << "\npMin = " << pMin << "\npMax = " << pMax;
+    G4Exception("G4Orb::BoundingLimits()", "GeomMgt0001", JustWarning, message);
     DumpInfo();
   }
 }
@@ -158,23 +151,22 @@ void G4Orb::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
 //
 // Calculate extent under transform and specified limit
 
-G4bool G4Orb::CalculateExtent(const EAxis pAxis,
-                              const G4VoxelLimits& pVoxelLimit,
-                              const G4AffineTransform& pTransform,
-                                        G4double& pMin, G4double& pMax) const
+G4bool G4Orb::CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                              const G4AffineTransform& pTransform, G4double& pMin,
+                              G4double& pMax) const
 {
   G4ThreeVector bmin, bmax;
   G4bool exist;
 
   // Get bounding box
-  BoundingLimits(bmin,bmax);
+  BoundingLimits(bmin, bmax);
 
   // Check bounding box
-  G4BoundingEnvelope bbox(bmin,bmax);
-#ifdef G4BBOX_EXTENT
-  return bbox.CalculateExtent(pAxis,pVoxelLimit,pTransform,pMin,pMax);
-#endif
-  if (bbox.BoundingBoxVsVoxelLimits(pAxis,pVoxelLimit,pTransform,pMin,pMax))
+  G4BoundingEnvelope bbox(bmin, bmax);
+#  ifdef G4BBOX_EXTENT
+  return bbox.CalculateExtent(pAxis, pVoxelLimit, pTransform, pMin, pMax);
+#  endif
+  if (bbox.BoundingBoxVsVoxelLimits(pAxis, pVoxelLimit, pTransform, pMin, pMax))
   {
     return exist = pMin < pMax;
   }
@@ -182,58 +174,64 @@ G4bool G4Orb::CalculateExtent(const EAxis pAxis,
   // Find bounding envelope and calculate extent
   //
   static const G4int NTHETA = 8;  // number of steps along Theta
-  static const G4int NPHI   = 16; // number of steps along Phi
-  static const G4double sinHalfTheta = std::sin(halfpi/NTHETA);
-  static const G4double cosHalfTheta = std::cos(halfpi/NTHETA);
-  static const G4double sinHalfPhi   = std::sin(pi/NPHI);
-  static const G4double cosHalfPhi   = std::cos(pi/NPHI);
-  static const G4double sinStepTheta = 2.*sinHalfTheta*cosHalfTheta;
-  static const G4double cosStepTheta = 1. - 2.*sinHalfTheta*sinHalfTheta;
-  static const G4double sinStepPhi   = 2.*sinHalfPhi*cosHalfPhi;
-  static const G4double cosStepPhi   = 1. - 2.*sinHalfPhi*sinHalfPhi;
+  static const G4int NPHI = 16;  // number of steps along Phi
+  static const G4double sinHalfTheta = std::sin(halfpi / NTHETA);
+  static const G4double cosHalfTheta = std::cos(halfpi / NTHETA);
+  static const G4double sinHalfPhi = std::sin(pi / NPHI);
+  static const G4double cosHalfPhi = std::cos(pi / NPHI);
+  static const G4double sinStepTheta = 2. * sinHalfTheta * cosHalfTheta;
+  static const G4double cosStepTheta = 1. - 2. * sinHalfTheta * sinHalfTheta;
+  static const G4double sinStepPhi = 2. * sinHalfPhi * cosHalfPhi;
+  static const G4double cosStepPhi = 1. - 2. * sinHalfPhi * sinHalfPhi;
 
   G4double radius = GetRadius();
-  G4double rtheta = radius/cosHalfTheta;
-  G4double rphi   = rtheta/cosHalfPhi;
+  G4double rtheta = radius / cosHalfTheta;
+  G4double rphi = rtheta / cosHalfPhi;
 
   // set reference circle
   G4TwoVector xy[NPHI];
   G4double sinCurPhi = sinHalfPhi;
   G4double cosCurPhi = cosHalfPhi;
-  for (auto & k : xy)
+  for (auto& k : xy)
   {
-    k.set(cosCurPhi,sinCurPhi);
+    k.set(cosCurPhi, sinCurPhi);
     G4double sinTmpPhi = sinCurPhi;
-    sinCurPhi = sinCurPhi*cosStepPhi + cosCurPhi*sinStepPhi;
-    cosCurPhi = cosCurPhi*cosStepPhi - sinTmpPhi*sinStepPhi;
+    sinCurPhi = sinCurPhi * cosStepPhi + cosCurPhi * sinStepPhi;
+    cosCurPhi = cosCurPhi * cosStepPhi - sinTmpPhi * sinStepPhi;
   }
 
   // set bounding circles
   G4ThreeVectorList circles[NTHETA];
-  for (auto & circle : circles) { circle.resize(NPHI); }
+  for (auto& circle : circles)
+  {
+    circle.resize(NPHI);
+  }
 
   G4double sinCurTheta = sinHalfTheta;
   G4double cosCurTheta = cosHalfTheta;
-  for (auto & circle : circles)
+  for (auto& circle : circles)
   {
-    G4double z = rtheta*cosCurTheta;
-    G4double rho = rphi*sinCurTheta;
-    for (G4int k=0; k<NPHI; ++k)
+    G4double z = rtheta * cosCurTheta;
+    G4double rho = rphi * sinCurTheta;
+    for (G4int k = 0; k < NPHI; ++k)
     {
-      circle[k].set(rho*xy[k].x(),rho*xy[k].y(),z);
+      circle[k].set(rho * xy[k].x(), rho * xy[k].y(), z);
     }
     G4double sinTmpTheta = sinCurTheta;
-    sinCurTheta = sinCurTheta*cosStepTheta + cosCurTheta*sinStepTheta;
-    cosCurTheta = cosCurTheta*cosStepTheta - sinTmpTheta*sinStepTheta;
+    sinCurTheta = sinCurTheta * cosStepTheta + cosCurTheta * sinStepTheta;
+    cosCurTheta = cosCurTheta * cosStepTheta - sinTmpTheta * sinStepTheta;
   }
 
   // set envelope and calculate extent
-  std::vector<const G4ThreeVectorList *> polygons;
+  std::vector<const G4ThreeVectorList*> polygons;
   polygons.resize(NTHETA);
-  for (G4int i=0; i<NTHETA; ++i) { polygons[i] = &circles[i]; }
+  for (G4int i = 0; i < NTHETA; ++i)
+  {
+    polygons[i] = &circles[i];
+  }
 
-  G4BoundingEnvelope benv(bmin,bmax,polygons);
-  exist = benv.CalculateExtent(pAxis,pVoxelLimit,pTransform,pMin,pMax);
+  G4BoundingEnvelope benv(bmin, bmax, polygons);
+  exist = benv.CalculateExtent(pAxis, pVoxelLimit, pTransform, pMin, pMax);
   return exist;
 }
 
@@ -241,10 +239,13 @@ G4bool G4Orb::CalculateExtent(const EAxis pAxis,
 //
 // Return whether point is inside/outside/on surface
 
-EInside G4Orb::Inside( const G4ThreeVector& p ) const
+EInside G4Orb::Inside(const G4ThreeVector& p) const
 {
   G4double rr = p.mag2();
-  if (rr > sqrRmaxPlusTol) { return kOutside; }
+  if (rr > sqrRmaxPlusTol)
+  {
+    return kOutside;
+  }
   return (rr > sqrRmaxMinusTol) ? kSurface : kInside;
 }
 
@@ -252,9 +253,9 @@ EInside G4Orb::Inside( const G4ThreeVector& p ) const
 //
 // Return unit normal of surface closest to p
 
-G4ThreeVector G4Orb::SurfaceNormal( const G4ThreeVector& p ) const
+G4ThreeVector G4Orb::SurfaceNormal(const G4ThreeVector& p) const
 {
-  return (1/p.mag())*p;
+  return (1 / p.mag()) * p;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -263,14 +264,16 @@ G4ThreeVector G4Orb::SurfaceNormal( const G4ThreeVector& p ) const
 // - return kInfinity if no intersection or
 //   intersection distance <= tolerance
 
-G4double G4Orb::DistanceToIn( const G4ThreeVector& p,
-                              const G4ThreeVector& v  ) const
+G4double G4Orb::DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const
 {
   // Check if point is on the surface and traveling away
   //
   G4double rr = p.mag2();
   G4double pv = p.dot(v);
-  if (rr >= sqrRmaxMinusTol && pv >= 0) { return kInfinity; }
+  if (rr >= sqrRmaxMinusTol && pv >= 0)
+  {
+    return kInfinity;
+  }
 
   // Find intersection
   //
@@ -280,8 +283,11 @@ G4double G4Orb::DistanceToIn( const G4ThreeVector& p,
   //    => r^2 + 2t(p.v) + t^2 = R^2
   //    => tmin = -(p.v) - Sqrt((p.v)^2 - (r^2 - R^2))
   //
-  G4double D  = pv*pv - rr + fRmax*fRmax;
-  if (D < 0) { return kInfinity; } // no intersection
+  G4double D = pv * pv - rr + fRmax * fRmax;
+  if (D < 0)
+  {
+    return kInfinity;
+  }  // no intersection
 
   G4double sqrtD = std::sqrt(D);
   G4double dist = -pv - sqrtD;
@@ -289,15 +295,18 @@ G4double G4Orb::DistanceToIn( const G4ThreeVector& p,
   // Avoid rounding errors due to precision issues seen on 64 bits systems.
   // Split long distances and recompute
   //
-  G4double Dmax = 32*fRmax;
+  G4double Dmax = 32 * fRmax;
   if (dist > Dmax)
   {
-    dist  = dist - 1.e-8*dist - fRmax; // to stay outside after the move
-    dist += DistanceToIn(p + dist*v, v);
+    dist = dist - 1.e-8 * dist - fRmax;  // to stay outside after the move
+    dist += DistanceToIn(p + dist * v, v);
     return (dist >= kInfinity) ? kInfinity : dist;
   }
 
-  if (sqrtD*2 <= halfRmaxTol) { return kInfinity; } // touch
+  if (sqrtD * 2 <= halfRmaxTol)
+  {
+    return kInfinity;
+  }  // touch
 
   return (dist < halfRmaxTol) ? 0. : dist;
 }
@@ -307,7 +316,7 @@ G4double G4Orb::DistanceToIn( const G4ThreeVector& p,
 // Calculate shortest distance to the boundary from outside
 // - Return 0 if point is inside
 
-G4double G4Orb::DistanceToIn( const G4ThreeVector& p ) const
+G4double G4Orb::DistanceToIn(const G4ThreeVector& p) const
 {
   G4double dist = p.mag() - fRmax;
   return (dist > 0) ? dist : 0.;
@@ -319,11 +328,8 @@ G4double G4Orb::DistanceToIn( const G4ThreeVector& p ) const
 // find normal at exit point, if required
 // - when leaving the surface, return 0
 
-G4double G4Orb::DistanceToOut( const G4ThreeVector& p,
-                               const G4ThreeVector& v,
-                               const G4bool calcNorm,
-                                     G4bool* validNorm,
-                                     G4ThreeVector* n ) const
+G4double G4Orb::DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v, const G4bool calcNorm,
+                              G4bool* validNorm, G4ThreeVector* n) const
 {
   // Check if point is on the surface and traveling away
   //
@@ -334,7 +340,7 @@ G4double G4Orb::DistanceToOut( const G4ThreeVector& p,
     if (calcNorm)
     {
       *validNorm = true;
-      *n = p*(1./std::sqrt(rr));
+      *n = p * (1. / std::sqrt(rr));
     }
     return 0.;
   }
@@ -347,14 +353,17 @@ G4double G4Orb::DistanceToOut( const G4ThreeVector& p,
   //    => r^2 + 2t(p.v) + t^2 = R^2
   //    => tmax = -(p.v) + Sqrt((p.v)^2 - (r^2 - R^2))
   //
-  G4double D  = pv*pv - rr + fRmax*fRmax;
+  G4double D = pv * pv - rr + fRmax * fRmax;
   G4double tmax = (D <= 0) ? 0. : std::sqrt(D) - pv;
-  if (tmax < halfRmaxTol) { tmax = 0.; }
+  if (tmax < halfRmaxTol)
+  {
+    tmax = 0.;
+  }
   if (calcNorm)
   {
     *validNorm = true;
-    G4ThreeVector ptmax = p + tmax*v;
-    *n = ptmax*(1./ptmax.mag());
+    G4ThreeVector ptmax = p + tmax * v;
+    *n = ptmax * (1. / ptmax.mag());
   }
   return tmax;
 }
@@ -363,24 +372,23 @@ G4double G4Orb::DistanceToOut( const G4ThreeVector& p,
 //
 // Calculate distance (<=actual) to closest surface of shape from inside
 
-G4double G4Orb::DistanceToOut( const G4ThreeVector& p ) const
+G4double G4Orb::DistanceToOut(const G4ThreeVector& p) const
 {
-#ifdef G4CSGDEBUG
-  if( Inside(p) == kOutside )
+#  ifdef G4CSGDEBUG
+  if (Inside(p) == kOutside)
   {
     std::ostringstream message;
     G4int oldprc = message.precision(16);
     message << "Point p is outside (!?) of solid: " << GetName() << "\n";
     message << "Position:\n";
-    message << "   p.x() = " << p.x()/mm << " mm\n";
-    message << "   p.y() = " << p.y()/mm << " mm\n";
-    message << "   p.z() = " << p.z()/mm << " mm";
+    message << "   p.x() = " << p.x() / mm << " mm\n";
+    message << "   p.y() = " << p.y() / mm << " mm\n";
+    message << "   p.z() = " << p.z() / mm << " mm";
     G4cout.precision(oldprc);
-    G4Exception("G4Trap::DistanceToOut(p)", "GeomSolids1002",
-                JustWarning, message );
+    G4Exception("G4Trap::DistanceToOut(p)", "GeomSolids1002", JustWarning, message);
     DumpInfo();
   }
-#endif
+#  endif
   G4double dist = fRmax - p.mag();
   return (dist > 0) ? dist : 0.;
 }
@@ -407,7 +415,7 @@ G4VSolid* G4Orb::Clone() const
 //
 // Stream object contents to an output stream
 
-std::ostream& G4Orb::StreamInfo( std::ostream& os ) const
+std::ostream& G4Orb::StreamInfo(std::ostream& os) const
 {
   G4long oldprc = os.precision(16);
   os << "-----------------------------------------------------------\n"
@@ -415,7 +423,7 @@ std::ostream& G4Orb::StreamInfo( std::ostream& os ) const
      << "    ===================================================\n"
      << " Solid type: G4Orb\n"
      << " Parameters: \n"
-     << "    outer radius: " << fRmax/mm << " mm \n"
+     << "    outer radius: " << fRmax / mm << " mm \n"
      << "-----------------------------------------------------------\n";
   os.precision(oldprc);
   return os;
@@ -430,12 +438,12 @@ G4ThreeVector G4Orb::GetPointOnSurface() const
   G4double u, v, b;
   do
   {
-    u = 2.*G4QuickRand() - 1.;
-    v = 2.*G4QuickRand() - 1.;
+    u = 2. * G4QuickRand() - 1.;
+    v = 2. * G4QuickRand() - 1.;
     b = sqr(u) + sqr(v);
-  } while(b > 1.);
-  G4double a = 2.*std::sqrt(1. - b);
-  return { fRmax*a*u, fRmax*a*v, fRmax*(2.*b - 1.) };
+  } while (b > 1.);
+  G4double a = 2. * std::sqrt(1. - b);
+  return {fRmax * a * u, fRmax * a * v, fRmax * (2. * b - 1.)};
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -447,7 +455,7 @@ G4double G4Orb::GetCubicVolume()
   if (fCubicVolume == 0)
   {
     G4AutoLock l(&orbMutex);
-    fCubicVolume = 4*CLHEP::pi*fRmax*fRmax*fRmax/3.;
+    fCubicVolume = 4 * CLHEP::pi * fRmax * fRmax * fRmax / 3.;
     l.unlock();
   }
   return fCubicVolume;
@@ -462,7 +470,7 @@ G4double G4Orb::GetSurfaceArea()
   if (fSurfaceArea == 0)
   {
     G4AutoLock l(&orbMutex);
-    fSurfaceArea = 4*CLHEP::pi*fRmax*fRmax;
+    fSurfaceArea = 4 * CLHEP::pi * fRmax * fRmax;
     l.unlock();
   }
   return fSurfaceArea;
@@ -471,9 +479,9 @@ G4double G4Orb::GetSurfaceArea()
 //
 // Methods for visualisation
 
-void G4Orb::DescribeYourselfTo ( G4VGraphicsScene& scene ) const
+void G4Orb::DescribeYourselfTo(G4VGraphicsScene& scene) const
 {
-  scene.AddSolid (*this);
+  scene.AddSolid(*this);
 }
 
 G4VisExtent G4Orb::GetExtent() const
@@ -481,9 +489,9 @@ G4VisExtent G4Orb::GetExtent() const
   return {-fRmax, fRmax, -fRmax, fRmax, -fRmax, fRmax};
 }
 
-G4Polyhedron* G4Orb::CreatePolyhedron () const
+G4Polyhedron* G4Orb::CreatePolyhedron() const
 {
-  return new G4PolyhedronSphere (0., fRmax, 0., 2*pi, 0., pi);
+  return new G4PolyhedronSphere(0., fRmax, 0., 2 * pi, 0., pi);
 }
 
 #endif

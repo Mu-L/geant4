@@ -36,8 +36,8 @@
 // 29-JUN-98 F.W.Jones: default data set G4HadronCrossSections
 //
 
-#ifndef G4HadronInelasticProcess_h
-#define G4HadronInelasticProcess_h 1
+#ifndef G4HADRONINELASTICPROCESS_HH
+#define G4HADRONINELASTICPROCESS_HH
 
 #include "G4HadronicProcess.hh"
 
@@ -45,28 +45,27 @@ class G4ParticleDefinition;
 
 class G4HadronInelasticProcess : public G4HadronicProcess
 {
-public:
-    
-  explicit G4HadronInelasticProcess(const G4String &processName,
-                                    const G4ParticleDefinition* particleDef = nullptr );
-    
-  ~G4HadronInelasticProcess() override;
-        
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
-  inline const G4ParticleDefinition* GetParticleDefinition() const;
-  
-private:
+  public:
 
-  // hide assignment operator as private 
-  G4HadronInelasticProcess& operator=
-  (const G4HadronInelasticProcess& right) = delete;
-  G4HadronInelasticProcess(const G4HadronInelasticProcess&) = delete;
+    explicit G4HadronInelasticProcess(const G4String& processName,
+                                      const G4ParticleDefinition* particleDef = nullptr);
 
-  const G4ParticleDefinition* fParticleDef;
+    ~G4HadronInelasticProcess() override;
+
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
+    inline const G4ParticleDefinition* GetParticleDefinition() const;
+
+  private:
+
+    // hide assignment operator as private
+    G4HadronInelasticProcess& operator=(const G4HadronInelasticProcess& right) = delete;
+    G4HadronInelasticProcess(const G4HadronInelasticProcess&) = delete;
+
+    const G4ParticleDefinition* fParticleDef;
 };
 
-
-inline const G4ParticleDefinition* G4HadronInelasticProcess::GetParticleDefinition() const {
+inline const G4ParticleDefinition* G4HadronInelasticProcess::GetParticleDefinition() const
+{
   return fParticleDef;
 }
 

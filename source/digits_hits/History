@@ -6,6 +6,12 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-06-19 Ben Morgan (digits_hits-V11-04-01)
+- Apply clang-format to all C++ files.
+
+## 2026-01-09 Ben Morgan (digits_hits-V11-04-00)
+- Update header guards to style/format required by Geant4 coding guidelines.
+
 ## 2025-10-30 I. Hrivnacova (digits_hits-V11-03-00)
 - G4VPrimitiveScorer : Implemented mechanism to weight score
   - The weighting is activated with 'scoreWeighted' option (default is off)

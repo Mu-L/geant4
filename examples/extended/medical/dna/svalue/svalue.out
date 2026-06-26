@@ -10,7 +10,7 @@
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -163,6 +163,7 @@ Use built-in Birks saturation                      0
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 1
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -203,11 +204,16 @@ Type of PIXE cross section for e+-                 Livermore
 =======================================================================
 ======                 DNA Physics Parameters                  ========
 =======================================================================
+Min DNA electron energy                            7.4 eV
+Min DNA proton energy                              100 eV
+Min DNA ion energy                                 1000 eV
 Max DNA electron energy                            1 MeV
-Max DNA ion energy                                 300 MeV
+Max DNA proton energy                              3e+08 MeV
+Max DNA ion energy                                 100 MeV/u
 Use fast sampling in DNA models                    1
 Use Stationary option in DNA models                0
 Use DNA with multiple scattering of e-             0
+Use DNA multiple ionisation                        0
 Use DNA e- solvation model type                    11003
 =======================================================================
 
@@ -364,7 +370,7 @@ DNADingfelderChargeDecreaseModel : Emin=    0 eV  Emax=  100 MeV
 
 msc:  for GenericIon  SubType= 10
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-            UrbanMsc : Emin=    1 MeV Emax=  600 MeV
+            UrbanMsc : Emin=    0 eV  Emax=  600 MeV
           StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:0 Skin=3 Llim=1 mm
 
 ionIoni:  for GenericIon  XStype:3  SubType=2
@@ -372,13 +378,13 @@ ionIoni:  for GenericIon  XStype:3  SubType=2
       Lambda tables from threshold to 600 MeV, 20 bins/decade, spline: 1
       StepFunction=(0.1, 0.001 mm), integ: 3, fluct: 1, linLossLim= 0.02
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-          BetheBloch : Emin=  300 MeV Emax=  600 MeV  deltaVI
+    LindhardSorensen : Emin=  100 MeV Emax=  600 MeV  deltaVI
       ===== Limit on energy threshold has been applied 
 
 GenericIon_G4DNAIonisation:  for GenericIon SubType=53 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNAIonIonisationModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNAIonIonisationModel : Emin=    0 eV  Emax=  100 MeV
+          DummyModel : Emin=  100 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 nuclearStopping:  for GenericIon SubType=8 BuildTable=0
@@ -418,7 +424,7 @@ ionIoni:  for alpha  XStype:3  SubType=2
       Lambda tables from threshold to 600 MeV, 20 bins/decade, spline: 1
       StepFunction=(0.1, 0.02 mm), integ: 3, fluct: 1, linLossLim= 0.02
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-          BetheBloch : Emin=  300 MeV Emax=  600 MeV  deltaVI
+          BetheBloch : Emin=397.26 MeV Emax=  600 MeV  deltaVI
       ===== Limit on energy threshold has been applied 
 
 alpha_G4DNAElastic:  for alpha SubType=51 BuildTable=0
@@ -429,20 +435,20 @@ alpha_G4DNAElastic:  for alpha SubType=51 BuildTable=0
 
 alpha_G4DNAExcitation:  for alpha SubType=52 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=397.26 MeV
+          DummyModel : Emin=397.26 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 alpha_G4DNAIonisation:  for alpha SubType=53 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNARuddIonisationExtendedModel : Emin=    0 eV  Emax=  300 MeV  deltaRudd Fluo
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNARuddIonisationExtendedModel : Emin=    0 eV  Emax=397.26 MeV  deltaRudd Fluo
+          DummyModel : Emin=397.26 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 alpha_G4DNAChargeDecrease:  for alpha SubType=56 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNADingfelderChargeDecreaseModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNADingfelderChargeDecreaseModel : Emin=    0 eV  Emax=  100 MeV
+          DummyModel : Emin=  100 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 msc:  for alpha+  SubType= 10
@@ -455,7 +461,7 @@ hIoni:  for alpha+  XStype:3  SubType=2
       Lambda tables from threshold to 600 MeV, 20 bins/decade, spline: 1
       StepFunction=(0.1, 0.05 mm), integ: 3, fluct: 1, linLossLim= 0.01
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-          BetheBloch : Emin=  300 MeV Emax=  600 MeV  deltaVI
+          BetheBloch : Emin=397.264 MeV Emax=  600 MeV  deltaVI
       ===== Limit on energy threshold has been applied 
 
 alpha+_G4DNAElastic:  for alpha+ SubType=51 BuildTable=0
@@ -466,26 +472,26 @@ alpha+_G4DNAElastic:  for alpha+ SubType=51 BuildTable=0
 
 alpha+_G4DNAExcitation:  for alpha+ SubType=52 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=397.264 MeV
+          DummyModel : Emin=397.264 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 alpha+_G4DNAIonisation:  for alpha+ SubType=53 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNARuddIonisationExtendedModel : Emin=    0 eV  Emax=  300 MeV  deltaRudd Fluo
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNARuddIonisationExtendedModel : Emin=    0 eV  Emax=397.264 MeV  deltaRudd Fluo
+          DummyModel : Emin=397.264 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 alpha+_G4DNAChargeIncrease:  for alpha+ SubType=57 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNADingfelderChargeIncreaseModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNADingfelderChargeIncreaseModel : Emin=    0 eV  Emax=  100 MeV
+          DummyModel : Emin=  100 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 alpha+_G4DNAChargeDecrease:  for alpha+ SubType=56 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNADingfelderChargeDecreaseModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNADingfelderChargeDecreaseModel : Emin=    0 eV  Emax=  100 MeV
+          DummyModel : Emin=  100 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 msc:  for anti_proton  SubType= 10
@@ -510,20 +516,20 @@ helium_G4DNAElastic:  for helium SubType=51 BuildTable=0
 
 helium_G4DNAExcitation:  for helium SubType=52 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNAMillerGreenExcitationModel : Emin=    0 eV  Emax=397.264 MeV
+          DummyModel : Emin=397.264 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 helium_G4DNAIonisation:  for helium SubType=53 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNARuddIonisationExtendedModel : Emin=    0 eV  Emax=  300 MeV  deltaRudd Fluo
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNARuddIonisationExtendedModel : Emin=    0 eV  Emax=397.264 MeV  deltaRudd Fluo
+          DummyModel : Emin=397.264 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 helium_G4DNAChargeIncrease:  for helium SubType=57 BuildTable=0
       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
-DNADingfelderChargeIncreaseModel : Emin=    0 eV  Emax=  300 MeV
-          DummyModel : Emin=  300 MeV Emax=  600 MeV
+DNADingfelderChargeIncreaseModel : Emin=    0 eV  Emax=  100 MeV
+          DummyModel : Emin=  100 MeV Emax=  600 MeV
           StepLim=UseSafety Rfact=0.04 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=1 Llim=1 mm
 
 hydrogen_G4DNAElastic:  for hydrogen SubType=51 BuildTable=0
@@ -649,7 +655,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=0.110000s Real=0.114233s Sys=0.000000s
+  User=0.110000s Real=0.109300s Sys=0.000000s
 
  ======================== run summary =====================
 
@@ -687,7 +693,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=0.220000s Real=0.217848s Sys=0.000000s
+  User=0.200000s Real=0.195576s Sys=0.000000s
 
  ======================== run summary =====================
 
@@ -725,7 +731,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=0.320000s Real=0.320568s Sys=0.000000s
+  User=0.280000s Real=0.282764s Sys=0.000000s
 
  ======================== run summary =====================
 
@@ -763,7 +769,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=0.440000s Real=0.442924s Sys=0.000000s
+  User=0.370000s Real=0.371021s Sys=0.000000s
 
  ======================== run summary =====================
 
@@ -801,7 +807,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=0.490000s Real=0.490609s Sys=0.000000s
+  User=0.450000s Real=0.453305s Sys=0.000000s
 
  ======================== run summary =====================
 
@@ -839,7 +845,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=0.600000s Real=0.591849s Sys=0.000000s
+  User=0.550000s Real=0.551967s Sys=0.000000s
 
  ======================== run summary =====================
 
@@ -877,7 +883,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=0.700000s Real=0.704816s Sys=0.000000s
+  User=0.640000s Real=0.640799s Sys=0.000000s
 
  ======================== run summary =====================
 
@@ -915,7 +921,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=0.830000s Real=0.827232s Sys=0.000000s
+  User=0.750000s Real=0.745542s Sys=0.000000s
 
  ======================== run summary =====================
 
@@ -953,7 +959,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=0.880000s Real=0.884104s Sys=0.000000s
+  User=0.800000s Real=0.802509s Sys=0.000000s
 
  ======================== run summary =====================
 
@@ -991,7 +997,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=0.990000s Real=0.991704s Sys=0.000000s
+  User=0.880000s Real=0.887275s Sys=0.000000s
 
  ======================== run summary =====================
 
@@ -1029,7 +1035,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=1.960000s Real=1.965188s Sys=0.000000s
+  User=1.790000s Real=1.796863s Sys=0.000000s
 
  ======================== run summary =====================
 
@@ -1067,7 +1073,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=2.990000s Real=2.996112s Sys=0.000000s
+  User=2.670000s Real=2.681579s Sys=0.000000s
 
  ======================== run summary =====================
 
@@ -1105,7 +1111,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=3.890000s Real=3.889965s Sys=0.000000s
+  User=3.550000s Real=3.551796s Sys=0.000000s
 
  ======================== run summary =====================
 
@@ -1143,7 +1149,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=4.880000s Real=4.883589s Sys=0.000000s
+  User=4.420000s Real=4.438526s Sys=0.000000s
 
  ======================== run summary =====================
 
@@ -1181,7 +1187,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=5.740000s Real=5.752253s Sys=0.000000s
+  User=5.330000s Real=5.346569s Sys=0.000000s
 
  ======================== run summary =====================
 
@@ -1219,7 +1225,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=6.840000s Real=6.877754s Sys=0.000000s
+  User=6.130000s Real=6.134533s Sys=0.000000s
 
  ======================== run summary =====================
 
@@ -1257,7 +1263,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=7.750000s Real=7.798134s Sys=0.020000s
+  User=7.100000s Real=7.175554s Sys=0.000000s
 
  ======================== run summary =====================
 
@@ -1295,7 +1301,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=8.690000s Real=8.751871s Sys=0.000000s
+  User=7.940000s Real=7.959835s Sys=0.000000s
 
  ======================== run summary =====================
 
@@ -1333,7 +1339,7 @@ Index : 0     used in the geometry : Yes
  Run terminated.
 Run Summary
   Number of events processed : 1000
-  User=9.450000s Real=9.765458s Sys=0.010000s
+  User=8.710000s Real=8.732050s Sys=0.000000s
 
  ======================== run summary =====================
 

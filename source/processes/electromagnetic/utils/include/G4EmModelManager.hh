@@ -66,68 +66,62 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4EmModelManager_h
-#define G4EmModelManager_h 1
+#ifndef G4EMMODELMANAGER_HH
+#define G4EMMODELMANAGER_HH
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-#include "globals.hh"
 #include "G4DataVector.hh"
-#include "G4EmTableType.hh"
-#include "G4EmProcessSubType.hh"
-#include "G4Region.hh"
-
-#include "G4VEmModel.hh"
-#include "G4VEmFluctuationModel.hh"
 #include "G4DynamicParticle.hh"
+#include "G4EmProcessSubType.hh"
+#include "G4EmTableType.hh"
+#include "G4Region.hh"
+#include "G4VEmFluctuationModel.hh"
+#include "G4VEmModel.hh"
+#include "globals.hh"
+
 #include <iostream>
 
 class G4RegionModels
 {
+    friend class G4EmModelManager;
 
-friend class G4EmModelManager;
+  private:
 
-private:
+    G4RegionModels(G4int nMod, std::vector<G4int>& indx, G4DataVector& lowE, const G4Region* reg);
 
-  G4RegionModels(G4int nMod, std::vector<G4int>& indx, 
-                 G4DataVector& lowE, const G4Region* reg);
+    ~G4RegionModels();
 
-  ~G4RegionModels();
+    inline G4int SelectIndex(G4double e) const
+    {
+      G4int idx = 0;
+      if (nModelsForRegion > 1)
+      {
+        idx = nModelsForRegion;
+        // Loop checking, 03-Aug-2015, Vladimir Ivanchenko
+        do
+        {
+          --idx;
+        } while (idx > 0 && e <= lowKineticEnergy[idx]);
+      }
+      return theListOfModelIndexes[idx];
+    };
 
-  inline G4int SelectIndex(G4double e) const {
-    G4int idx = 0;
-    if (nModelsForRegion>1) {
-      idx = nModelsForRegion;
-      // Loop checking, 03-Aug-2015, Vladimir Ivanchenko
-      do {--idx;} while (idx > 0 && e <= lowKineticEnergy[idx]);
-    }
-    return theListOfModelIndexes[idx];
-  };
+    inline G4int ModelIndex(G4int n) const { return theListOfModelIndexes[n]; };
 
-  inline G4int ModelIndex(G4int n) const {
-    return theListOfModelIndexes[n];
-  };
+    inline G4int NumberOfModels() const { return nModelsForRegion; };
 
-  inline G4int NumberOfModels() const {
-    return nModelsForRegion;
-  };
+    inline G4double LowEdgeEnergy(G4int n) const { return lowKineticEnergy[n]; };
 
-  inline G4double LowEdgeEnergy(G4int n) const {
-    return lowKineticEnergy[n];
-  };
+    inline const G4Region* Region() const { return theRegion; };
 
-  inline const G4Region* Region() const {
-    return theRegion;
-  };
+    G4RegionModels(G4RegionModels&) = delete;
+    G4RegionModels& operator=(const G4RegionModels& right) = delete;
 
-  G4RegionModels(G4RegionModels &) = delete;
-  G4RegionModels & operator=(const G4RegionModels &right) = delete;
-
-  const G4Region*    theRegion;
-  G4int              nModelsForRegion;
-  G4int*             theListOfModelIndexes;
-  G4double*          lowKineticEnergy;
-
+    const G4Region* theRegion;
+    G4int nModelsForRegion;
+    G4int* theListOfModelIndexes;
+    G4double* lowKineticEnergy;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -141,93 +135,91 @@ class G4MaterialCutsCouple;
 
 class G4EmModelManager
 {
-public:
+  public:
 
-  G4EmModelManager();
+    G4EmModelManager();
 
-  ~G4EmModelManager();
+    ~G4EmModelManager();
 
-  void Clear();
+    void Clear();
 
-  const G4DataVector* Initialise(const G4ParticleDefinition* part,
-                                 const G4ParticleDefinition* secPart,
-                                 G4int verb);
+    const G4DataVector* Initialise(const G4ParticleDefinition* part,
+                                   const G4ParticleDefinition* secPart, G4int verb);
 
-  void FillDEDXVector(G4PhysicsVector*, const G4MaterialCutsCouple*, 
-                      G4EmTableType t = fRestricted);
-
-  void FillLambdaVector(G4PhysicsVector*, const G4MaterialCutsCouple*, 
-                        G4bool startFromNull = true, 
+    void FillDEDXVector(G4PhysicsVector*, const G4MaterialCutsCouple*,
                         G4EmTableType t = fRestricted);
 
-  void AddEmModel(G4int, G4VEmModel*, G4VEmFluctuationModel* fm, 
-                  const G4Region* r);
+    void FillLambdaVector(G4PhysicsVector*, const G4MaterialCutsCouple*,
+                          G4bool startFromNull = true, G4EmTableType t = fRestricted);
 
-  // Get model pointer from the model list
-  G4VEmModel* GetModel(G4int idx, G4bool ver = false) const;
+    void AddEmModel(G4int, G4VEmModel*, G4VEmFluctuationModel* fm, const G4Region* r);
 
-  // Get model pointer from the model list for a given material cuts couple
-  // no check on material cuts couple index
-  G4VEmModel* GetRegionModel(G4int idx, std::size_t index_couple);
+    // Get model pointer from the model list
+    G4VEmModel* GetModel(G4int idx, G4bool ver = false) const;
 
-  // total number of models for material cut couples
-  // no check on material cuts couple index
-  G4int NumberOfRegionModels(std::size_t index_couple) const;
+    // Get model pointer from the model list for a given material cuts couple
+    // no check on material cuts couple index
+    G4VEmModel* GetRegionModel(G4int idx, std::size_t index_couple);
 
-  // Automatic documentation
-  void DumpModelList(std::ostream& out, G4int verb);
+    // total number of models for material cut couples
+    // no check on material cuts couple index
+    G4int NumberOfRegionModels(std::size_t index_couple) const;
 
-  // Select model for given material cuts couple index
-  inline G4VEmModel* SelectModel(G4double energy, std::size_t index);
+    // Automatic documentation
+    void DumpModelList(std::ostream& out, G4int verb);
 
-  // Access to cuts
-  inline const G4DataVector* Cuts() const;
+    // Select model for given material cuts couple index
+    inline G4VEmModel* SelectModel(G4double energy, std::size_t index);
 
-  // Set flag of fluorescence
-  inline void SetFluoFlag(G4bool val);
+    // Access to cuts
+    inline const G4DataVector* Cuts() const;
 
-  // total number of models
-  inline G4int NumberOfModels() const;
+    // Set flag of fluorescence
+    inline void SetFluoFlag(G4bool val);
 
-  // hide  assignment operator
-  G4EmModelManager(G4EmModelManager &) = delete;
-  G4EmModelManager & operator=(const G4EmModelManager &right) = delete;
+    // total number of models
+    inline G4int NumberOfModels() const;
 
-private:
+    // hide  assignment operator
+    G4EmModelManager(G4EmModelManager&) = delete;
+    G4EmModelManager& operator=(const G4EmModelManager& right) = delete;
 
-  const G4ParticleDefinition* particle = nullptr;
-  const G4DataVector*         theCuts = nullptr;
-  G4DataVector*               theCutsNew = nullptr;
+  private:
 
-  // may be changed in run time
-  G4RegionModels*             currRegionModel = nullptr;
-  G4VEmModel*                 currModel = nullptr;
+    const G4ParticleDefinition* particle = nullptr;
+    const G4DataVector* theCuts = nullptr;
+    G4DataVector* theCutsNew = nullptr;
 
-  G4int                       nEmModels = 0;
-  G4int                       nRegions = 0;
+    // may be changed in run time
+    G4RegionModels* currRegionModel = nullptr;
+    G4VEmModel* currModel = nullptr;
 
-  G4int                       verboseLevel = 0;
-  G4bool                      severalModels = true;
-  G4bool                      fluoFlag = false;
+    G4int nEmModels = 0;
+    G4int nRegions = 0;
 
-  std::vector<G4VEmModel*>             models;
-  std::vector<G4VEmFluctuationModel*>  flucModels;
-  std::vector<const G4Region*>         regions;
-  std::vector<G4int>                   orderOfModels;
-  std::vector<G4int>                   isUsed;
+    G4int verboseLevel = 0;
+    G4bool severalModels = true;
+    G4bool fluoFlag = false;
 
-  std::vector<G4int>            idxOfRegionModels;
-  std::vector<G4RegionModels*>  setOfRegionModels;
+    std::vector<G4VEmModel*> models;
+    std::vector<G4VEmFluctuationModel*> flucModels;
+    std::vector<const G4Region*> regions;
+    std::vector<G4int> orderOfModels;
+    std::vector<G4int> isUsed;
+
+    std::vector<G4int> idxOfRegionModels;
+    std::vector<G4RegionModels*> setOfRegionModels;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-inline 
-G4VEmModel* G4EmModelManager::SelectModel(G4double kinEnergy, std::size_t index)
+inline G4VEmModel* G4EmModelManager::SelectModel(G4double kinEnergy, std::size_t index)
 {
-  if(severalModels) {
-    if(nRegions > 1) {
+  if (severalModels)
+  {
+    if (nRegions > 1)
+    {
       currRegionModel = setOfRegionModels[idxOfRegionModels[index]];
     }
     currModel = models[currRegionModel->SelectIndex(kinEnergy)];
@@ -259,4 +251,3 @@ inline G4int G4EmModelManager::NumberOfModels() const
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #endif
-

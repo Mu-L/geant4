@@ -6,6 +6,9 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-04-20 Sebastien Incerti (dnadamage1-V11-04-00)
+- Reduction of the number of DNA physics constructors in the perspective of Geant4 12
+
 ## 2025-08-23 LE TUAN ANH (dnadamage1-V11-03-00)
 - Access DetectorConstruction via G4RunManager::GetUserDetectorConstruction
 - Use '=default' for trival deconstructors

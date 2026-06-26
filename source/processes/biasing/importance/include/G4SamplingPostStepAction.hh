@@ -35,8 +35,8 @@
 
 // Author: Michael Dressel (Michael.Dressel@cern.ch)
 // ----------------------------------------------------------------------
-#ifndef G4SamplingPostStepAction_hh
-#define G4SamplingPostStepAction_hh G4SamplingPostStepAction_hh
+#ifndef G4SAMPLINGPOSTSTEPACTION_HH
+#define G4SAMPLINGPOSTSTEPACTION_HH
 
 class G4VImportanceSplitExaminer;
 class G4ParticleChange;
@@ -47,30 +47,24 @@ class G4VTrackTerminator;
 
 class G4SamplingPostStepAction
 {
+  public:  // with description
 
-public:  // with description
-
-  explicit G4SamplingPostStepAction(const G4VTrackTerminator &TrackTerminator);
+    explicit G4SamplingPostStepAction(const G4VTrackTerminator& TrackTerminator);
     // Constructor
 
-  ~G4SamplingPostStepAction();
+    ~G4SamplingPostStepAction();
     // Destructor
-  
-  void DoIt(const G4Track& aTrack, 
-            G4ParticleChange *aParticleChange, 
-            const G4Nsplit_Weight &nw);
+
+    void DoIt(const G4Track& aTrack, G4ParticleChange* aParticleChange, const G4Nsplit_Weight& nw);
     // Do the PostStepDoIt part common to importance and weight window
-    // sampling in the 
+    // sampling in the
     // "mass" and "parallel" geometry.
-  
-private:
 
-  void Split(const G4Track &aTrack,
-             const G4Nsplit_Weight &nw,
-             G4ParticleChange *aParticleChange);
+  private:
 
-  const G4VTrackTerminator &fTrackTerminator;
+    void Split(const G4Track& aTrack, const G4Nsplit_Weight& nw, G4ParticleChange* aParticleChange);
 
+    const G4VTrackTerminator& fTrackTerminator;
 };
 
 #endif

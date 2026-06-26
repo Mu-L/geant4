@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 
 #ifndef G4OPENGLQTEXPORTDIALOG_HH
 #define G4OPENGLQTEXPORTDIALOG_HH
@@ -48,74 +48,76 @@ class QGroupBox;
 */
 class G4OpenGLQtExportDialog : public QDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
- public:
-  /** Construct a G4OpenGLQtExportDialog
-      @param parentw : parent widget
-      @param format  : format of save file in lower case
-      @param height  : height of the original file
-      @param width   : width of the original file
-  */
-  G4OpenGLQtExportDialog(QWidget* parentw, QString format, int height =0, int width=0);
+  public:
 
-  /** Destroys G4OpenGLQtExportDialog */
-  ~G4OpenGLQtExportDialog();
+    /** Construct a G4OpenGLQtExportDialog
+        @param parentw : parent widget
+        @param format  : format of save file in lower case
+        @param height  : height of the original file
+        @param width   : width of the original file
+    */
+    G4OpenGLQtExportDialog(QWidget* parentw, QString format, int height = 0, int width = 0);
 
-  /** @return the value of the slider if format has a slider widget, instead return -1 */
-  int getSliderValue();
+    /** Destroys G4OpenGLQtExportDialog */
+    ~G4OpenGLQtExportDialog();
 
-  /** return the new width for file if format has a width widget, instead return 
-      the original value */
-  int getWidth();
+    /** @return the value of the slider if format has a slider widget, instead return -1 */
+    int getSliderValue();
 
-  /** return the new height for file if format has a height widget, instead return
-      the original value  */
-  int getHeight();
+    /** return the new width for file if format has a width widget, instead return
+        the original value */
+    int getWidth();
 
-  /** return if vector EPS is checked, if button does'nt exist, return 0 */
-  bool getVectorEPS();
+    /** return the new height for file if format has a height widget, instead return
+        the original value  */
+    int getHeight();
+
+    /** return if vector EPS is checked, if button does'nt exist, return 0 */
+    bool getVectorEPS();
 
   public Q_SLOTS:
 
-   /** Called by a clic on modify/original size button.This will 
-	invert buttons and hide/unhide size
+    /** Called by a clic on modify/original size button.This will
+   invert buttons and hide/unhide size
+     */
+    void changeSizeBox();
+
+    /** Called by a clic on vectorEPS check box.If vectorEPS checkBox is checked,
+        it will enable change size buttons. Else it will disable them.
     */
-  void changeSizeBox();  
+    void changeVectorEPS();
 
-  /** Called by a clic on vectorEPS check box.If vectorEPS checkBox is checked,
-      it will enable change size buttons. Else it will disable them.
-  */
-  void changeVectorEPS();
+    /** Called by changing value in height lineEdit. If ratio is keep, will also change the width
+     */
+    void textWidthChanged(const QString&);
 
-  /** Called by changing value in height lineEdit. If ratio is keep, will also change the width
-   */
-  void textWidthChanged(const QString &); 
+    /** Called by changing value in width lineEdit. If ratio is keep, will also change the height
+     */
+    void textHeightChanged(const QString&);
 
-  /** Called by changing value in width lineEdit. If ratio is keep, will also change the height
-   */
-  void textHeightChanged(const QString &); 
+  private:
 
- private:
-  QString f_name, f_type, f_dir;
-//  QLabel* qualityLabel;
-//  bool expAll;
-  QPushButton* buttonOk;
-  QPushButton* buttonCancel;
+    QString f_name, f_type, f_dir;
+    //  QLabel* qualityLabel;
+    //  bool expAll;
+    QPushButton* buttonOk;
+    QPushButton* buttonCancel;
 
-  QGroupBox * sizeGroupBox;
+    QGroupBox* sizeGroupBox;
 
-  QCheckBox/** transparencyEPS,*boxTransparency,*/*vectorEPSCheckBox;
-  QCheckBox* ratioCheckBox;
-  QSlider * qualitySlider;
-//  QLabel *formatLabel;
-  QRadioButton* colorButton,*BWButton;
-  QRadioButton* original,* modify;
-  QLineEdit* height,*width;
-  QWidget* heightWidget,* widthWidget;
-  int originalWidth;
-  int originalHeight;
-  bool isChangingSize;
+    QCheckBox /** transparencyEPS,*boxTransparency,*/* vectorEPSCheckBox;
+    QCheckBox* ratioCheckBox;
+    QSlider* qualitySlider;
+    //  QLabel *formatLabel;
+    QRadioButton *colorButton, *BWButton;
+    QRadioButton *original, *modify;
+    QLineEdit *height, *width;
+    QWidget *heightWidget, *widthWidget;
+    int originalWidth;
+    int originalHeight;
+    bool isChangingSize;
 };
 
 #endif

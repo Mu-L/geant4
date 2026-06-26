@@ -31,20 +31,15 @@
 #include "G4OpenGLQt.hh"
 
 #include "G4UIQt.hh"
-#include "G4UImanager.hh"
 #include "G4UIbatch.hh"
+#include "G4UImanager.hh"
 
-G4OpenGLQt::G4OpenGLQt (const G4String& name,
-                        const G4String& nickname,
-                        const G4String& description,
-                        Functionality f):
-G4VGraphicsSystem (name,
-                   nickname,
-                   description,
-                   f)
+G4OpenGLQt::G4OpenGLQt(const G4String& name, const G4String& nickname, const G4String& description,
+                       Functionality f)
+  : G4VGraphicsSystem(name, nickname, description, f)
 {}
 
-G4bool G4OpenGLQt::IsUISessionCompatible () const
+G4bool G4OpenGLQt::IsUISessionCompatible() const
 {
   // Qt windows require a Qt session.
   G4UIsession* baseSession = G4UImanager::GetUIpointer()->GetBaseSession();

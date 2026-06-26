@@ -26,28 +26,26 @@
 // G4CascadeParamMessenger.hh
 // Function to define commands with relative paths instead of absolute
 //
-#ifndef G4CascadeParamMessenger_icc
-#define G4CascadeParamMessenger_icc
+#ifndef G4CASCADEPARAMMESSENGER_ICC
+#define G4CASCADEPARAMMESSENGER_ICC
 
-#include "G4UIdirectory.hh"
 #include "G4UIcommand.hh"
-
+#include "G4UIdirectory.hh"
 
 // Template argument must be subclass of G4UIcommand
 
-template <class T>
-T* G4CascadeParamMessenger::CreateCommand(const G4String& cmd,
-					  const G4String& desc) {
-
+template<class T>
+T* G4CascadeParamMessenger::CreateCommand(const G4String& cmd, const G4String& desc)
+{
   // If input name begins with '/', treat as absolute path
   G4String path = cmdDir->GetCommandPath();
   path += cmd;
 
-  T* theCmd = new T(path.c_str(), this);        // <T> must be G4UIcommand!
+  T* theCmd = new T(path.c_str(), this);  // <T> must be G4UIcommand!
   theCmd->SetGuidance(desc.c_str());
-  theCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  theCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 
   return theCmd;
 }
 
-#endif	/* G4CascadeParamMessenger_icc */
+#endif /* G4CascadeParamMessenger_icc */

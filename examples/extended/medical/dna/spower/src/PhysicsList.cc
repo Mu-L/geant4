@@ -42,11 +42,6 @@
 #include "PhysicsListMessenger.hh"
 #include "G4EmParameters.hh"
 
-#include "G4EmDNAPhysics_stationary.hh"
-#include "G4EmDNAPhysics_stationary_option2.hh"
-#include "G4EmDNAPhysics_stationary_option4.hh"
-#include "G4EmDNAPhysics_stationary_option6.hh"
-#include "G4EmDNAPhysics.hh"
 #include "G4EmDNAPhysics_option2.hh"
 #include "G4EmDNAPhysics_option4.hh"
 #include "G4EmDNAPhysics_option6.hh"
@@ -61,7 +56,7 @@ PhysicsList::PhysicsList()
   SetVerboseLevel(1);
 
   // EM physics
-  fEmName = "dna_stat_opt2";
+  fEmName = "dna_opt2";
   fEmPhysicsList = new G4EmDNAPhysics_option2();
   G4EmParameters::Instance()->SetDNAStationary(true);
 }
@@ -102,12 +97,7 @@ void PhysicsList::AddPhysicsList(const G4String& name)
 
   if (name == fEmName) return;
 
-  if (name == "dna_opt0") {
-    fEmName = name;
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics();
-  }
-  else if (name == "dna_opt2") {
+  if (name == "dna_opt2") {
     fEmName = name;
     delete fEmPhysicsList;
     fEmPhysicsList = new G4EmDNAPhysics_option2();
@@ -127,29 +117,11 @@ void PhysicsList::AddPhysicsList(const G4String& name)
     delete fEmPhysicsList;
     fEmPhysicsList = new G4EmDNAPhysics_option8();
   }
-  else if (name == "dna_stat") {
-    fEmName = name;
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics_stationary();
-  }
-  else if (name == "dna_stat_opt2") {
-    fEmName = name;
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics_stationary_option2();
-  }
-  else if (name == "dna_stat_opt4") {
-    fEmName = name;
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics_stationary_option4();
-  }
-  else if (name == "dna_stat_opt6") {
-    fEmName = name;
-    delete fEmPhysicsList;
-    fEmPhysicsList = new G4EmDNAPhysics_stationary_option6();
-  }
   else {
     G4cout << "PhysicsList::AddPhysicsList: <" << name << ">"
            << " is not defined" << G4endl;
   }
+
+  // Activate stationary mode 
   G4EmParameters::Instance()->SetDNAStationary(true);
 }

@@ -26,8 +26,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4VParticleHPEDis_h
-#define G4VParticleHPEDis_h 1
+#ifndef G4VPARTICLEHPEDIS_HH
+#define G4VPARTICLEHPEDIS_HH
 
 #include "G4ParticleHPVector.hh"
 #include "G4ios.hh"
@@ -39,6 +39,7 @@
 class G4VParticleHPEDis
 {
   public:
+
     G4VParticleHPEDis() = default;
     virtual ~G4VParticleHPEDis() = default;
 

@@ -26,64 +26,68 @@
 //
 // Jane Tinslay, John Allison, Joseph Perl October 2005
 
-#include "G4ModelCompoundCommandsT.hh"
-#include "G4ModelCommandsT.hh"
+#include "G4TrajectoryModelFactories.hh"
+
 #include "G4ModelCommandUtils.hh"
+#include "G4ModelCommandsT.hh"
+#include "G4ModelCompoundCommandsT.hh"
 #include "G4TrajectoryDrawByAttribute.hh"
 #include "G4TrajectoryDrawByCharge.hh"
+#include "G4TrajectoryDrawByEncounteredVolume.hh"
 #include "G4TrajectoryDrawByOriginVolume.hh"
 #include "G4TrajectoryDrawByParticleID.hh"
-#include "G4TrajectoryDrawByEncounteredVolume.hh"
 #include "G4TrajectoryGenericDrawer.hh"
-#include "G4TrajectoryModelFactories.hh"
 #include "G4VisTrajContext.hh"
 
 // Draw by attribute
 G4TrajectoryDrawByAttributeFactory::G4TrajectoryDrawByAttributeFactory()
-  :G4VModelFactory<G4VTrajectoryModel>("drawByAttribute") 
+  : G4VModelFactory<G4VTrajectoryModel>("drawByAttribute")
 {}
 
 G4TrajectoryDrawByAttributeFactory::~G4TrajectoryDrawByAttributeFactory() {}
 
-ModelAndMessengers
-G4TrajectoryDrawByAttributeFactory::Create(const G4String& placement, const G4String& name)
+ModelAndMessengers G4TrajectoryDrawByAttributeFactory::Create(const G4String& placement,
+                                                              const G4String& name)
 {
   Messengers messengers;
-  
-  // Create default context and model 
+
+  // Create default context and model
   G4VisTrajContext* context = new G4VisTrajContext("default");
 
   G4TrajectoryDrawByAttribute* model = new G4TrajectoryDrawByAttribute(name, context);
 
   // Create messengers for default context configuration
-  G4ModelCommandUtils::AddContextMsgrs(context, messengers, placement+"/"+name);
+  G4ModelCommandUtils::AddContextMsgrs(context, messengers, placement + "/" + name);
 
   messengers.push_back(new G4ModelCmdVerbose<G4TrajectoryDrawByAttribute>(model, placement));
-  messengers.push_back(new G4ModelCmdSetString<G4TrajectoryDrawByAttribute>(model, placement, "setAttribute"));
-  messengers.push_back(new G4ModelCmdAddIntervalContext<G4TrajectoryDrawByAttribute>(model, placement, "addInterval"));
-  messengers.push_back(new G4ModelCmdAddValueContext<G4TrajectoryDrawByAttribute>(model, placement, "addValue"));
+  messengers.push_back(
+    new G4ModelCmdSetString<G4TrajectoryDrawByAttribute>(model, placement, "setAttribute"));
+  messengers.push_back(
+    new G4ModelCmdAddIntervalContext<G4TrajectoryDrawByAttribute>(model, placement, "addInterval"));
+  messengers.push_back(
+    new G4ModelCmdAddValueContext<G4TrajectoryDrawByAttribute>(model, placement, "addValue"));
 
   return ModelAndMessengers(model, messengers);
 }
 
 G4TrajectoryGenericDrawerFactory::G4TrajectoryGenericDrawerFactory()
-  :G4VModelFactory<G4VTrajectoryModel>("generic") 
+  : G4VModelFactory<G4VTrajectoryModel>("generic")
 {}
 
 G4TrajectoryGenericDrawerFactory::~G4TrajectoryGenericDrawerFactory() {}
 
-ModelAndMessengers
-G4TrajectoryGenericDrawerFactory::Create(const G4String& placement, const G4String& name)
+ModelAndMessengers G4TrajectoryGenericDrawerFactory::Create(const G4String& placement,
+                                                            const G4String& name)
 {
   Messengers messengers;
-  
-  // Create default context and model 
+
+  // Create default context and model
   G4VisTrajContext* context = new G4VisTrajContext("default");
   G4TrajectoryGenericDrawer* model = new G4TrajectoryGenericDrawer(name, context);
 
   // Create messengers for default context configuration
-  G4ModelCommandUtils::AddContextMsgrs(context, messengers, placement+"/"+name);
-  
+  G4ModelCommandUtils::AddContextMsgrs(context, messengers, placement + "/" + name);
+
   // Verbose command
   messengers.push_back(new G4ModelCmdVerbose<G4TrajectoryGenericDrawer>(model, placement));
 
@@ -92,23 +96,23 @@ G4TrajectoryGenericDrawerFactory::Create(const G4String& placement, const G4Stri
 
 // drawByCharge
 G4TrajectoryDrawByChargeFactory::G4TrajectoryDrawByChargeFactory()
-  :G4VModelFactory<G4VTrajectoryModel>("drawByCharge") 
+  : G4VModelFactory<G4VTrajectoryModel>("drawByCharge")
 {}
 
 G4TrajectoryDrawByChargeFactory::~G4TrajectoryDrawByChargeFactory() {}
 
-ModelAndMessengers
-G4TrajectoryDrawByChargeFactory::Create(const G4String& placement, const G4String& name)
+ModelAndMessengers G4TrajectoryDrawByChargeFactory::Create(const G4String& placement,
+                                                           const G4String& name)
 {
   Messengers messengers;
-  
-  // Create default context and model 
+
+  // Create default context and model
   G4VisTrajContext* context = new G4VisTrajContext("default");
   G4TrajectoryDrawByCharge* model = new G4TrajectoryDrawByCharge(name, context);
 
   // Create messengers for default context configuration
-  G4ModelCommandUtils::AddContextMsgrs(context, messengers, placement+"/"+name);
-  
+  G4ModelCommandUtils::AddContextMsgrs(context, messengers, placement + "/" + name);
+
   // Create messengers for drawer
   messengers.push_back(new G4ModelCmdSetStringColour<G4TrajectoryDrawByCharge>(model, placement));
   messengers.push_back(new G4ModelCmdVerbose<G4TrajectoryDrawByCharge>(model, placement));
@@ -116,15 +120,15 @@ G4TrajectoryDrawByChargeFactory::Create(const G4String& placement, const G4Strin
   return ModelAndMessengers(model, messengers);
 }
 
-//Draw by particle ID
+// Draw by particle ID
 G4TrajectoryDrawByParticleIDFactory::G4TrajectoryDrawByParticleIDFactory()
-  :G4VModelFactory<G4VTrajectoryModel>("drawByParticleID") 
+  : G4VModelFactory<G4VTrajectoryModel>("drawByParticleID")
 {}
 
 G4TrajectoryDrawByParticleIDFactory::~G4TrajectoryDrawByParticleIDFactory() {}
 
-ModelAndMessengers
-G4TrajectoryDrawByParticleIDFactory::Create(const G4String& placement, const G4String& name)
+ModelAndMessengers G4TrajectoryDrawByParticleIDFactory::Create(const G4String& placement,
+                                                               const G4String& name)
 {
   Messengers messengers;
 
@@ -133,25 +137,27 @@ G4TrajectoryDrawByParticleIDFactory::Create(const G4String& placement, const G4S
   G4TrajectoryDrawByParticleID* model = new G4TrajectoryDrawByParticleID(name, context);
 
   // Create messengers for default context configuration
-  G4ModelCommandUtils::AddContextMsgrs(context, messengers, placement+"/"+name);
+  G4ModelCommandUtils::AddContextMsgrs(context, messengers, placement + "/" + name);
 
   // Create messengers for drawer
-  messengers.push_back(new G4ModelCmdSetStringColour<G4TrajectoryDrawByParticleID>(model, placement));
-  messengers.push_back(new G4ModelCmdSetDefaultColour<G4TrajectoryDrawByParticleID>(model, placement));
+  messengers.push_back(
+    new G4ModelCmdSetStringColour<G4TrajectoryDrawByParticleID>(model, placement));
+  messengers.push_back(
+    new G4ModelCmdSetDefaultColour<G4TrajectoryDrawByParticleID>(model, placement));
   messengers.push_back(new G4ModelCmdVerbose<G4TrajectoryDrawByParticleID>(model, placement));
 
   return ModelAndMessengers(model, messengers);
 }
 
-//Draw by origin volume
+// Draw by origin volume
 G4TrajectoryDrawByOriginVolumeFactory::G4TrajectoryDrawByOriginVolumeFactory()
-:G4VModelFactory<G4VTrajectoryModel>("drawByOriginVolume")
+  : G4VModelFactory<G4VTrajectoryModel>("drawByOriginVolume")
 {}
 
 G4TrajectoryDrawByOriginVolumeFactory::~G4TrajectoryDrawByOriginVolumeFactory() {}
 
-ModelAndMessengers
-G4TrajectoryDrawByOriginVolumeFactory::Create(const G4String& placement, const G4String& name)
+ModelAndMessengers G4TrajectoryDrawByOriginVolumeFactory::Create(const G4String& placement,
+                                                                 const G4String& name)
 {
   Messengers messengers;
 
@@ -160,39 +166,45 @@ G4TrajectoryDrawByOriginVolumeFactory::Create(const G4String& placement, const G
   G4TrajectoryDrawByOriginVolume* model = new G4TrajectoryDrawByOriginVolume(name, context);
 
   // Create messengers for default context configuration
-  G4ModelCommandUtils::AddContextMsgrs(context, messengers, placement+"/"+name);
+  G4ModelCommandUtils::AddContextMsgrs(context, messengers, placement + "/" + name);
 
   // Create messengers for drawer
-  messengers.push_back(new G4ModelCmdSetStringColour<G4TrajectoryDrawByOriginVolume>(model, placement));
-  messengers.push_back(new G4ModelCmdSetDefaultColour<G4TrajectoryDrawByOriginVolume>(model, placement));
+  messengers.push_back(
+    new G4ModelCmdSetStringColour<G4TrajectoryDrawByOriginVolume>(model, placement));
+  messengers.push_back(
+    new G4ModelCmdSetDefaultColour<G4TrajectoryDrawByOriginVolume>(model, placement));
   messengers.push_back(new G4ModelCmdVerbose<G4TrajectoryDrawByOriginVolume>(model, placement));
 
   return ModelAndMessengers(model, messengers);
 }
 
-//Draw by encountered volume
+// Draw by encountered volume
 G4TrajectoryDrawByEncounteredVolumeFactory::G4TrajectoryDrawByEncounteredVolumeFactory()
-:G4VModelFactory<G4VTrajectoryModel>("drawByEncounteredVolume")
+  : G4VModelFactory<G4VTrajectoryModel>("drawByEncounteredVolume")
 {}
 
 G4TrajectoryDrawByEncounteredVolumeFactory::~G4TrajectoryDrawByEncounteredVolumeFactory() {}
 
-ModelAndMessengers
-G4TrajectoryDrawByEncounteredVolumeFactory::Create(const G4String& placement, const G4String& name)
+ModelAndMessengers G4TrajectoryDrawByEncounteredVolumeFactory::Create(const G4String& placement,
+                                                                      const G4String& name)
 {
   Messengers messengers;
 
   // Create default context and model
   G4VisTrajContext* context = new G4VisTrajContext("default");
-  G4TrajectoryDrawByEncounteredVolume* model = new G4TrajectoryDrawByEncounteredVolume(name, context);
+  G4TrajectoryDrawByEncounteredVolume* model =
+    new G4TrajectoryDrawByEncounteredVolume(name, context);
 
   // Create messengers for default context configuration
-  G4ModelCommandUtils::AddContextMsgrs(context, messengers, placement+"/"+name);
+  G4ModelCommandUtils::AddContextMsgrs(context, messengers, placement + "/" + name);
 
   // Create messengers for drawer
-  messengers.push_back(new G4ModelCmdSetStringColour<G4TrajectoryDrawByEncounteredVolume>(model, placement));
-  messengers.push_back(new G4ModelCmdSetDefaultColour<G4TrajectoryDrawByEncounteredVolume>(model, placement));
-  messengers.push_back(new G4ModelCmdVerbose<G4TrajectoryDrawByEncounteredVolume>(model, placement));
+  messengers.push_back(
+    new G4ModelCmdSetStringColour<G4TrajectoryDrawByEncounteredVolume>(model, placement));
+  messengers.push_back(
+    new G4ModelCmdSetDefaultColour<G4TrajectoryDrawByEncounteredVolume>(model, placement));
+  messengers.push_back(
+    new G4ModelCmdVerbose<G4TrajectoryDrawByEncounteredVolume>(model, placement));
 
   return ModelAndMessengers(model, messengers);
 }

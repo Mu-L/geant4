@@ -33,30 +33,32 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4AlphaBuilder_h
-#define G4AlphaBuilder_h 1
-
-#include "G4PhysicsBuilderInterface.hh"
-#include "globals.hh"
+#ifndef G4ALPHABUILDER_HH
+#define G4ALPHABUILDER_HH
 
 #include "G4HadronInelasticProcess.hh"
+#include "G4PhysicsBuilderInterface.hh"
 #include "G4VAlphaBuilder.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4AlphaBuilder : public G4PhysicsBuilderInterface
 {
-  public: 
+  public:
+
     G4AlphaBuilder();
     virtual ~G4AlphaBuilder() {}
 
     virtual void Build() final override;
-    void RegisterMe(G4PhysicsBuilderInterface * aB) final override;// {theModelCollections.push_back(aB);}
+    void RegisterMe(
+      G4PhysicsBuilderInterface* aB) final override;  // {theModelCollections.push_back(aB);}
 
   private:
-    G4HadronInelasticProcess * theAlphaInelastic;
-    
-    std::vector<G4VAlphaBuilder *> theModelCollections;
+
+    G4HadronInelasticProcess* theAlphaInelastic;
+
+    std::vector<G4VAlphaBuilder*> theModelCollections;
 };
 
 #endif
-

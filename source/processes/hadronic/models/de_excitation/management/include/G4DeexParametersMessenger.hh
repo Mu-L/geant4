@@ -30,7 +30,7 @@
 //
 // File name:     G4DeexParametersMessenger
 //
-// Author:        Vladimir Ivanchenko 
+// Author:        Vladimir Ivanchenko
 //
 // Creation date: 17-10-2017
 //
@@ -47,11 +47,11 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-#ifndef G4DeexParametersMessenger_h
-#define G4DeexParametersMessenger_h 1
+#ifndef G4DEEXPARAMETERSMESSENGER_HH
+#define G4DEEXPARAMETERSMESSENGER_HH
 
-#include "globals.hh"
 #include "G4UImessenger.hh"
+#include "globals.hh"
 
 class G4UIdirectory;
 class G4UIcommand;
@@ -64,34 +64,32 @@ class G4DeexPrecoParameters;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-class G4DeexParametersMessenger: public G4UImessenger
+class G4DeexParametersMessenger : public G4UImessenger
 {
-public:
-  
-  explicit G4DeexParametersMessenger(G4DeexPrecoParameters*);
-  ~G4DeexParametersMessenger() override;
+  public:
 
-  void SetNewValue(G4UIcommand*, G4String) override;
+    explicit G4DeexParametersMessenger(G4DeexPrecoParameters*);
+    ~G4DeexParametersMessenger() override;
 
-  G4DeexParametersMessenger& operator=
-  (const G4DeexParametersMessenger& right) = delete;
-  G4DeexParametersMessenger(const G4DeexParametersMessenger&) = delete;
+    void SetNewValue(G4UIcommand*, G4String) override;
 
-private:
+    G4DeexParametersMessenger& operator=(const G4DeexParametersMessenger& right) = delete;
+    G4DeexParametersMessenger(const G4DeexParametersMessenger&) = delete;
 
-  G4DeexPrecoParameters*     theParameters;
+  private:
 
-  G4UIdirectory*             fDirectory;
+    G4DeexPrecoParameters* theParameters;
 
-  G4UIcmdWithABool*          readCmd;
-  G4UIcmdWithABool*          icCmd;
-  G4UIcmdWithABool*          corgCmd;
-  G4UIcmdWithABool*          isoCmd;
+    G4UIdirectory* fDirectory;
 
-  G4UIcmdWithAnInteger*      maxjCmd;
-  G4UIcmdWithAnInteger*      verbCmd;
-  G4UIcommand* xsTypeCmd;
+    G4UIcmdWithABool* readCmd;
+    G4UIcmdWithABool* icCmd;
+    G4UIcmdWithABool* corgCmd;
+    G4UIcmdWithABool* isoCmd;
+
+    G4UIcmdWithAnInteger* maxjCmd;
+    G4UIcmdWithAnInteger* verbCmd;
+    G4UIcommand* xsTypeCmd;
 };
 
 #endif
-

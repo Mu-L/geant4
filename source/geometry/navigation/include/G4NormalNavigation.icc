@@ -22,7 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // G4NormalNavigation Inline Implementation
 //
 // Author: Paul Kent (CERN), August 1996
@@ -32,46 +32,42 @@
 // LevelLocate
 // ********************************************************************
 //
-inline
-G4bool
-G4NormalNavigation::LevelLocate( G4NavigationHistory& history,
-                           const G4VPhysicalVolume* blockedVol,
-                           const G4int,
-                           const G4ThreeVector& globalPoint,
-                           const G4ThreeVector* globalDirection,
-                           const G4bool  pLocatedOnEdge, 
-                                 G4ThreeVector &localPoint )
+inline G4bool G4NormalNavigation::LevelLocate(G4NavigationHistory& history,
+                                              const G4VPhysicalVolume* blockedVol, const G4int,
+                                              const G4ThreeVector& globalPoint,
+                                              const G4ThreeVector* globalDirection,
+                                              const G4bool pLocatedOnEdge,
+                                              G4ThreeVector& localPoint)
 {
   G4VPhysicalVolume *targetPhysical, *samplePhysical;
-  G4LogicalVolume *targetLogical;
-  G4VSolid *sampleSolid;
+  G4LogicalVolume* targetLogical;
+  G4VSolid* sampleSolid;
   G4ThreeVector samplePoint;
   G4int targetNoDaughters;
-  
+
   targetPhysical = history.GetTopVolume();
   targetLogical = targetPhysical->GetLogicalVolume();
   targetNoDaughters = G4int(targetLogical->GetNoDaughters());
-  
+
   G4bool found = false;
 
-  if ( targetNoDaughters!=0 )
+  if (targetNoDaughters != 0)
   {
     //
     // Search daughters in volume
     //
-    for ( auto sampleNo=targetNoDaughters-1; sampleNo>=0; sampleNo-- )
+    for (auto sampleNo = targetNoDaughters - 1; sampleNo >= 0; sampleNo--)
     {
       samplePhysical = targetLogical->GetDaughter(sampleNo);
-      if ( samplePhysical!=blockedVol )
+      if (samplePhysical != blockedVol)
       {
         // Setup history
         //
         history.NewLevel(samplePhysical, kNormal, samplePhysical->GetCopyNo());
         sampleSolid = samplePhysical->GetLogicalVolume()->GetSolid();
         samplePoint = history.GetTopTransform().TransformPoint(globalPoint);
-        if( G4AuxiliaryNavServices::
-            CheckPointOnSurface(sampleSolid, samplePoint, globalDirection, 
-                                history.GetTopTransform(), pLocatedOnEdge) )
+        if (G4AuxiliaryNavServices::CheckPointOnSurface(sampleSolid, samplePoint, globalDirection,
+                                                        history.GetTopTransform(), pLocatedOnEdge))
         {
           // Enter this daughter
           //

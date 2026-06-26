@@ -31,8 +31,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPVector_h
-#define G4ParticleHPVector_h 1
+#ifndef G4PARTICLEHPVECTOR_HH
+#define G4PARTICLEHPVECTOR_HH
 
 #include "G4Exp.hh"
 #include "G4InterpolationManager.hh"
@@ -58,6 +58,7 @@ class G4ParticleHPVector
     friend G4ParticleHPVector& operator+(G4ParticleHPVector& left, G4ParticleHPVector& right);
 
   public:
+
     G4ParticleHPVector();
 
     G4ParticleHPVector(G4int n);
@@ -71,10 +72,12 @@ class G4ParticleHPVector
     inline void Times(G4double factor)
     {
       G4int i;
-      for (i = 0; i < nEntries; i++) {
+      for (i = 0; i < nEntries; i++)
+      {
         theData[i].SetY(theData[i].GetY() * factor);
       }
-      if (theIntegral != nullptr) {
+      if (theIntegral != nullptr)
+      {
         theIntegral[i] *= factor;
       }
     }
@@ -129,8 +132,10 @@ class G4ParticleHPVector
     {
       G4int i;
       G4double x, y;
-      for (i = 0; i < nEntries; i++) {
-        if (0 == (i + 1) % 10) {
+      for (i = 0; i < nEntries; i++)
+      {
+        if (0 == (i + 1) % 10)
+        {
           x = GetX(i);
           y = GetY(i);
           theHash.SetData(i, x, y);
@@ -146,36 +151,43 @@ class G4ParticleHPVector
 
     G4double GetXsec(G4double e);
 
-    G4int GetEnergyIndex(G4double &e);  // method added by M. Zmeskal 02/2024
+    G4int GetEnergyIndex(G4double& e);  // method added by M. Zmeskal 02/2024
 
     G4double GetXsec(G4double e, G4int min)
     {
       G4int i;
-      for (i = min; i < nEntries; i++) {
+      for (i = min; i < nEntries; i++)
+      {
         if (theData[i].GetX() > e) break;
       }
       G4int low = i - 1;
       G4int high = i;
-      if (i == 0) {
+      if (i == 0)
+      {
         low = 0;
         high = 1;
       }
-      else if (i == nEntries) {
+      else if (i == nEntries)
+      {
         low = nEntries - 2;
         high = nEntries - 1;
       }
       G4double y;
-      if (e < theData[nEntries - 1].GetX()) {
+      if (e < theData[nEntries - 1].GetX())
+      {
         // Protect against doubled-up x values
-        if ((theData[high].GetX() - theData[low].GetX()) / theData[high].GetX() < 0.000001) {
+        if ((theData[high].GetX() - theData[low].GetX()) / theData[high].GetX() < 0.000001)
+        {
           y = theData[low].GetY();
         }
-        else {
+        else
+        {
           y = theInt.Interpolate(theManager.GetScheme(high), e, theData[low].GetX(),
                                  theData[high].GetX(), theData[low].GetY(), theData[high].GetY());
         }
       }
-      else {
+      else
+      {
         y = theData[nEntries - 1].GetY();
       }
       return y;
@@ -204,12 +216,14 @@ class G4ParticleHPVector
     void Init(std::istream& aDataFile, G4int total, G4double ux = 1., G4double uy = 1.)
     {
       G4double x, y;
-      for (G4int i = 0; i < total; i++) {
+      for (G4int i = 0; i < total; i++)
+      {
         aDataFile >> x >> y;
         x *= ux;
         y *= uy;
         SetData(i, x, y);
-        if (0 == nEntries % 10) {
+        if (0 == nEntries % 10)
+        {
           theHash.SetData(nEntries - 1, x, y);
         }
       }
@@ -254,7 +268,8 @@ class G4ParticleHPVector
       while (a < active->GetVectorLength()
              && p < passive->GetVectorLength())  // Loop checking, 11.05.2015, T. Koi
       {
-        if (active->GetEnergy(a) <= passive->GetEnergy(p)) {
+        if (active->GetEnergy(a) <= passive->GetEnergy(p))
+        {
           G4double xa = active->GetEnergy(a);
           G4double yy = active->GetXsec(a);
           SetData(m_tmp, xa, yy);
@@ -267,7 +282,8 @@ class G4ParticleHPVector
           // if( std::abs(std::abs(xp-xa)/xa)<0.001 ) p++;
           if (!(xa == 0) && std::abs(std::abs(xp - xa) / xa) < 0.001) p++;
         }
-        else {
+        else
+        {
           tmp = active;
           t = a;
           active = passive;
@@ -301,10 +317,12 @@ class G4ParticleHPVector
     {
       G4double result;
       if (theIntegral == nullptr) IntegrateAndNormalise();
-      if (GetVectorLength() == 1) {
+      if (GetVectorLength() == 1)
+      {
         result = theData[0].GetX();
       }
-      else {
+      else
+      {
         G4int i;
         G4double rand = G4UniformRand();
 
@@ -315,7 +333,8 @@ class G4ParticleHPVector
         //      }
 
         // by this (begin)
-        for (i = GetVectorLength() - 1; i >= 0; i--) {
+        for (i = GetVectorLength() - 1; i >= 0; i--)
+        {
           if (rand > theIntegral[i] / theIntegral[GetVectorLength() - 1]) break;
         }
         if (i != GetVectorLength() - 1) i++;
@@ -346,7 +365,8 @@ class G4ParticleHPVector
       G4int i;
       if (theIntegral != nullptr) return;
       theIntegral = new G4double[nEntries];
-      if (nEntries == 1) {
+      if (nEntries == 1)
+      {
         theIntegral[0] = 1;
         return;
       }
@@ -354,10 +374,12 @@ class G4ParticleHPVector
       G4double sum = 0;
       G4double x1 = 0;
       G4double x0 = 0;
-      for (i = 1; i < GetVectorLength(); i++) {
+      for (i = 1; i < GetVectorLength(); i++)
+      {
         x1 = theData[i].GetX();
         x0 = theData[i - 1].GetX();
-        if (std::abs(x1 - x0) > std::abs(x1 * 0.0000001)) {
+        if (std::abs(x1 - x0) > std::abs(x1 * 0.0000001))
+        {
           //********************************************************************
           // EMendoza -> the interpolation scheme is not always lin-lin
           /*
@@ -370,15 +392,18 @@ class G4ParticleHPVector
           G4double y1 = theData[i].GetY();
           G4double integ = theInt.GetBinIntegral(aScheme, x0, x1, y0, y1);
 #if defined WIN32 - VC
-          if (!_finite(integ)) {
+          if (!_finite(integ))
+          {
             integ = 0;
           }
 #elif defined __IBMCPP__
-          if (isinf(integ) || isnan(integ)) {
+          if (isinf(integ) || isnan(integ))
+          {
             integ = 0;
           }
 #else
-          if (std::isinf(integ) || std::isnan(integ)) {
+          if (std::isinf(integ) || std::isnan(integ))
+          {
             integ = 0;
           }
 #endif
@@ -388,7 +413,8 @@ class G4ParticleHPVector
         theIntegral[i] = sum;
       }
       G4double total = theIntegral[GetVectorLength() - 1];
-      for (i = 1; i < GetVectorLength(); i++) {
+      for (i = 1; i < GetVectorLength(); i++)
+      {
         theIntegral[i] /= total;
       }
     }
@@ -396,42 +422,51 @@ class G4ParticleHPVector
     inline void Integrate()
     {
       G4int i;
-      if (nEntries == 1) {
+      if (nEntries == 1)
+      {
         totalIntegral = 0;
         return;
       }
       G4double sum = 0;
-      for (i = 1; i < GetVectorLength(); i++) {
-        if (std::abs((theData[i].GetX() - theData[i - 1].GetX()) / theData[i].GetX()) > 0.0000001) {
+      for (i = 1; i < GetVectorLength(); i++)
+      {
+        if (std::abs((theData[i].GetX() - theData[i - 1].GetX()) / theData[i].GetX()) > 0.0000001)
+        {
           G4double x1 = theData[i - 1].GetX();
           G4double x2 = theData[i].GetX();
           G4double y1 = theData[i - 1].GetY();
           G4double y2 = theData[i].GetY();
           G4InterpolationScheme aScheme = theManager.GetScheme(i);
-          if (aScheme == LINLIN || aScheme == CLINLIN || aScheme == ULINLIN) {
+          if (aScheme == LINLIN || aScheme == CLINLIN || aScheme == ULINLIN)
+          {
             sum += 0.5 * (y2 + y1) * (x2 - x1);
           }
-          else if (aScheme == LINLOG || aScheme == CLINLOG || aScheme == ULINLOG) {
+          else if (aScheme == LINLOG || aScheme == CLINLOG || aScheme == ULINLOG)
+          {
             G4double a = y1;
-            G4double b = (y2 - y1) / (G4Log(x2/x1));
+            G4double b = (y2 - y1) / (G4Log(x2 / x1));
             sum += (a - b) * (x2 - x1) + b * (x2 * G4Log(x2) - x1 * G4Log(x1));
           }
-          else if (aScheme == LOGLIN || aScheme == CLOGLIN || aScheme == ULOGLIN) {
+          else if (aScheme == LOGLIN || aScheme == CLOGLIN || aScheme == ULOGLIN)
+          {
             G4double a = G4Log(y1);
-            G4double b = (G4Log(y2/y1)) / (x2 - x1);
+            G4double b = (G4Log(y2 / y1)) / (x2 - x1);
             sum += (G4Exp(a) / b) * (G4Exp(b * x2) - G4Exp(b * x1));
           }
-          else if (aScheme == HISTO || aScheme == CHISTO || aScheme == UHISTO) {
+          else if (aScheme == HISTO || aScheme == CHISTO || aScheme == UHISTO)
+          {
             sum += y1 * (x2 - x1);
           }
-          else if (aScheme == LOGLOG || aScheme == CLOGLOG || aScheme == ULOGLOG) {
+          else if (aScheme == LOGLOG || aScheme == CLOGLOG || aScheme == ULOGLOG)
+          {
             G4double a = G4Log(y1);
-            G4double b = (G4Log(y2/y1)) / (G4Log(x2/x1));
+            G4double b = (G4Log(y2 / y1)) / (G4Log(x2 / x1));
             sum +=
               (G4Exp(a) / (b + 1))
               * (G4Pow::GetInstance()->powA(x2, b + 1) - G4Pow::GetInstance()->powA(x1, b + 1));
           }
-          else {
+          else
+          {
             throw G4HadronicException(
               __FILE__, __LINE__, "Unknown interpolation scheme in G4ParticleHPVector::Integrate");
           }
@@ -466,7 +501,8 @@ class G4ParticleHPVector
     {
       G4double running = 0.0;
       G4double weighted = 0.0;
-      for (G4int i = 1; i < nEntries; i++) {
+      for (G4int i = 1; i < nEntries; i++)
+      {
         running +=
           theInt.GetBinIntegral(theManager.GetScheme(i - 1), theData[i - 1].GetX(),
                                 theData[i].GetX(), theData[i - 1].GetY(), theData[i].GetY());
@@ -487,14 +523,17 @@ class G4ParticleHPVector
     G4double Get50percentBorder();
 
   private:
+
     void Check(G4int i);
 
     G4bool IsBlocked(G4double aX);
 
   private:
+
     G4ParticleHPInterpolator theLin;
 
   private:
+
     G4double totalIntegral;
 
     G4ParticleHPDataPoint* theData;  // the data

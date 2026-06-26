@@ -35,7 +35,7 @@
 //
 G4ProcessAttribute::G4ProcessAttribute()
 {
-  for (std::size_t idx=0; idx<G4ProcessManager::SizeOfProcVectorArray; ++idx)
+  for (std::size_t idx = 0; idx < G4ProcessManager::SizeOfProcVectorArray; ++idx)
   {
     idxProcVector[idx] = -1;
     ordProcVector[idx] = -1;
@@ -43,13 +43,12 @@ G4ProcessAttribute::G4ProcessAttribute()
 }
 
 // --------------------------------------------------------------------
-G4ProcessAttribute::G4ProcessAttribute(const G4VProcess* aProcess)
- : pProcess((G4VProcess*)aProcess)
+G4ProcessAttribute::G4ProcessAttribute(const G4VProcess* aProcess) : pProcess((G4VProcess*)aProcess)
 {
-  for(std::size_t idx=0; idx<G4ProcessManager::SizeOfProcVectorArray; ++idx)
+  for (std::size_t idx = 0; idx < G4ProcessManager::SizeOfProcVectorArray; ++idx)
   {
     idxProcVector[idx] = -1;
-    ordProcVector[idx] = 0; 
+    ordProcVector[idx] = 0;
   }
 }
 
@@ -57,13 +56,11 @@ G4ProcessAttribute::G4ProcessAttribute(const G4VProcess* aProcess)
 // Copy constructor
 //
 G4ProcessAttribute::G4ProcessAttribute(const G4ProcessAttribute& right)
-  : pProcess(right.pProcess),
-    isActive(right.isActive),
-    idxProcessList(right.idxProcessList)
+  : pProcess(right.pProcess), isActive(right.isActive), idxProcessList(right.idxProcessList)
 {
   // copy all contents in idxProcVector[] and ordProcVector[]; deep copy
   //
-  for (std::size_t idx=0; idx<G4ProcessManager::SizeOfProcVectorArray; ++idx)
+  for (std::size_t idx = 0; idx < G4ProcessManager::SizeOfProcVectorArray; ++idx)
   {
     idxProcVector[idx] = right.idxProcVector[idx];
     ordProcVector[idx] = right.ordProcVector[idx];
@@ -75,24 +72,23 @@ G4ProcessAttribute::G4ProcessAttribute(const G4ProcessAttribute& right)
 //
 G4ProcessAttribute::~G4ProcessAttribute()
 {
-   // do nothing
+  // do nothing
 }
 
 // --------------------------------------------------------------------
 // Assignment operator
 //
-G4ProcessAttribute&
-G4ProcessAttribute::operator=(const G4ProcessAttribute& right)
+G4ProcessAttribute& G4ProcessAttribute::operator=(const G4ProcessAttribute& right)
 {
   if (this != &right)
   {
-    pProcess       = right.pProcess;
+    pProcess = right.pProcess;
     idxProcessList = right.idxProcessList;
     isActive = right.isActive;
 
-    // copy all contents in idxProcVector[] and ordProcVector[]; deep copy 
+    // copy all contents in idxProcVector[] and ordProcVector[]; deep copy
     //
-    for (std::size_t idx=0; idx<G4ProcessManager::SizeOfProcVectorArray; ++idx)
+    for (std::size_t idx = 0; idx < G4ProcessManager::SizeOfProcVectorArray; ++idx)
     {
       idxProcVector[idx] = right.idxProcVector[idx];
       ordProcVector[idx] = right.ordProcVector[idx];

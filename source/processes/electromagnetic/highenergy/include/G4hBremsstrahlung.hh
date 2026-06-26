@@ -47,38 +47,37 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4hBremsstrahlung_h
-#define G4hBremsstrahlung_h 1
+#ifndef G4HBREMSSTRAHLUNG_HH
+#define G4HBREMSSTRAHLUNG_HH
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "globals.hh"
 #include "G4MuBremsstrahlung.hh"
+#include "globals.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class G4hBremsstrahlung : public G4MuBremsstrahlung
 
 {
-public:
+  public:
 
-  explicit G4hBremsstrahlung(const G4String& processName = "hBrems");
+    explicit G4hBremsstrahlung(const G4String& processName = "hBrems");
 
-  ~G4hBremsstrahlung() override;
+    ~G4hBremsstrahlung() override;
 
-  G4bool IsApplicable(const G4ParticleDefinition& p) override;
+    G4bool IsApplicable(const G4ParticleDefinition& p) override;
 
-  // print description in html
-  void ProcessDescription(std::ostream&) const override;
+    // print description in html
+    void ProcessDescription(std::ostream&) const override;
 
-  G4hBremsstrahlung & operator=(const G4hBremsstrahlung &right) = delete;
-  G4hBremsstrahlung(const G4hBremsstrahlung&) = delete;
+    G4hBremsstrahlung& operator=(const G4hBremsstrahlung& right) = delete;
+    G4hBremsstrahlung(const G4hBremsstrahlung&) = delete;
 
-protected:
+  protected:
 
-  void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
-				   const G4ParticleDefinition*) override;
-
+    void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
+                                     const G4ParticleDefinition*) override;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

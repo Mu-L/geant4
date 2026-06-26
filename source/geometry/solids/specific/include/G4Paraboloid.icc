@@ -26,20 +26,17 @@
 // Implementation of inline methods of G4Paraboloid
 // --------------------------------------------------------------------
 
-inline
-G4double G4Paraboloid::GetZHalfLength() const
+inline G4double G4Paraboloid::GetZHalfLength() const
 {
   return dz;
 }
 
-inline
-G4double G4Paraboloid::GetRadiusPlusZ() const
+inline G4double G4Paraboloid::GetRadiusPlusZ() const
 {
   return r2;
 }
 
-inline
-G4double G4Paraboloid::GetRadiusMinusZ() const
+inline G4double G4Paraboloid::GetRadiusMinusZ() const
 {
   return r1;
 }

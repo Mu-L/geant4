@@ -33,8 +33,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4WilsonAbrasionModel_h
-#define G4WilsonAbrasionModel_h
+#ifndef G4WILSONABRASIONMODEL_HH
+#define G4WILSONABRASIONMODEL_HH
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 //
 // MODULE:              G4WilsonAbrasionModel.hh
@@ -62,21 +62,20 @@
 // Variable fradius defined. See .cc file for more details.
 //
 
-#include "globals.hh"
-
-#include "G4HadronicInteraction.hh"
-#include "G4WilsonAblationModel.hh"
 #include "G4ExcitationHandler.hh"
-#include "G4HadFinalState.hh"
-#include "G4Track.hh"
-#include "G4Nucleus.hh"
 #include "G4Fragment.hh"
+#include "G4HadFinalState.hh"
 #include "G4HadProjectile.hh"
-
+#include "G4HadronicInteraction.hh"
+#include "G4Nucleus.hh"
+#include "G4Track.hh"
+#include "G4WilsonAblationModel.hh"
+#include "globals.hh"
 
 class G4WilsonAbrasionModel : public G4HadronicInteraction
 {
   public:
+
     G4WilsonAbrasionModel(G4bool useAblation1 = false);
     G4WilsonAbrasionModel(G4ExcitationHandler*);
     ~G4WilsonAbrasionModel();
@@ -89,20 +88,22 @@ class G4WilsonAbrasionModel : public G4HadronicInteraction
     void SetUseAblation(G4bool);
     G4bool GetUseAblation();
     void SetConserveMomentum(G4bool);
-    G4bool GetConserveMomentum();    
+    G4bool GetConserveMomentum();
     void SetExcitationHandler(G4ExcitationHandler*);
     G4ExcitationHandler* GetExcitationHandler();
 
     virtual void ModelDescription(std::ostream&) const;
 
   private:
+
     void PrintWelcomeMessage();
     G4Fragment* GetAbradedNucleons(G4int, G4double, G4double, G4double);
     G4double GetNucleonInducedExcitation(G4double, G4double, G4double);
     void SetConserveEnergy(G4bool);
     G4bool GetConserveEnergy();
-    
+
   private:
+
     G4double r0sq;
     G4double npK;
     G4bool useAblation;
@@ -116,28 +117,41 @@ class G4WilsonAbrasionModel : public G4HadronicInteraction
     G4int secID;  // Creator model ID for the secondaries created by this model
 };
 
-inline void
-G4WilsonAbrasionModel::SetExcitationHandler(G4ExcitationHandler* aExcitationHandler)
-  {theExcitationHandler = aExcitationHandler;}
-  
+inline void G4WilsonAbrasionModel::SetExcitationHandler(G4ExcitationHandler* aExcitationHandler)
+{
+  theExcitationHandler = aExcitationHandler;
+}
+
 inline G4ExcitationHandler* G4WilsonAbrasionModel::GetExcitationHandler()
-  {return theExcitationHandler;}
-  
+{
+  return theExcitationHandler;
+}
+
 inline G4bool G4WilsonAbrasionModel::GetUseAblation()
-  {return useAblation;}
-  
+{
+  return useAblation;
+}
+
 inline void G4WilsonAbrasionModel::SetConserveEnergy(G4bool conserveEnergy1)
-  {conserveEnergy = conserveEnergy1;}
+{
+  conserveEnergy = conserveEnergy1;
+}
 
 inline G4bool G4WilsonAbrasionModel::GetConserveEnergy()
-  {return conserveEnergy;}
-  
+{
+  return conserveEnergy;
+}
+
 inline void G4WilsonAbrasionModel::SetConserveMomentum(G4bool conserveMomentum1)
-  {conserveMomentum = conserveMomentum1;}
+{
+  conserveMomentum = conserveMomentum1;
+}
 
 inline G4bool G4WilsonAbrasionModel::GetConserveMomentum()
-  {return conserveMomentum;}
-  
+{
+  return conserveMomentum;
+}
+
 inline void G4WilsonAbrasionModel::SetVerboseLevel(G4int verboseLevel1)
 {
   verboseLevel = verboseLevel1;

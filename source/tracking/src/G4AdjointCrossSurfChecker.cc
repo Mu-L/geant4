@@ -46,7 +46,10 @@ G4ThreadLocal G4AdjointCrossSurfChecker* G4AdjointCrossSurfChecker::instance = n
 
 //////////////////////////////////////////////////////////////////////////////
 //
-G4AdjointCrossSurfChecker::~G4AdjointCrossSurfChecker() { delete instance; }
+G4AdjointCrossSurfChecker::~G4AdjointCrossSurfChecker()
+{
+  delete instance;
+}
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -59,7 +62,9 @@ G4AdjointCrossSurfChecker* G4AdjointCrossSurfChecker::GetInstance()
 //////////////////////////////////////////////////////////////////////////////
 //
 G4bool G4AdjointCrossSurfChecker::CrossingASphere(const G4Step* aStep, G4double sphere_radius,
-  G4ThreeVector sphere_center, G4ThreeVector& crossing_pos, G4double& cos_th, G4bool& GoingIn)
+                                                  G4ThreeVector sphere_center,
+                                                  G4ThreeVector& crossing_pos, G4double& cos_th,
+                                                  G4bool& GoingIn)
 {
   G4ThreeVector pos1 = aStep->GetPreStepPoint()->GetPosition() - sphere_center;
   G4ThreeVector pos2 = aStep->GetPostStepPoint()->GetPosition() - sphere_center;
@@ -67,16 +72,19 @@ G4bool G4AdjointCrossSurfChecker::CrossingASphere(const G4Step* aStep, G4double 
   G4double r2 = pos2.mag();
   G4bool did_cross = false;
 
-  if (r1 <= sphere_radius && r2 > sphere_radius) {
+  if (r1 <= sphere_radius && r2 > sphere_radius)
+  {
     did_cross = true;
     GoingIn = false;
   }
-  else if (r2 <= sphere_radius && r1 > sphere_radius) {
+  else if (r2 <= sphere_radius && r1 > sphere_radius)
+  {
     did_cross = true;
     GoingIn = true;
   }
 
-  if (did_cross) {
+  if (did_cross)
+  {
     G4ThreeVector dr = pos2 - pos1;
     G4double r12 = r1 * r1;
     G4double rdr = dr.mag();
@@ -96,24 +104,29 @@ G4bool G4AdjointCrossSurfChecker::CrossingASphere(const G4Step* aStep, G4double 
 //////////////////////////////////////////////////////////////////////////////
 //
 G4bool G4AdjointCrossSurfChecker::GoingInOrOutOfaVolume(const G4Step* aStep,
-  const G4String& volume_name, G4double&, G4bool& GoingIn)  // from external surface
+                                                        const G4String& volume_name, G4double&,
+                                                        G4bool& GoingIn)  // from external surface
 {
   G4bool step_at_boundary = (aStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary);
   G4bool did_cross = false;
-  if (step_at_boundary) {
+  if (step_at_boundary)
+  {
     const G4VTouchable* postStepTouchable = aStep->GetPostStepPoint()->GetTouchable();
     const G4VTouchable* preStepTouchable = aStep->GetPreStepPoint()->GetTouchable();
-    if ((preStepTouchable != nullptr) && (postStepTouchable != nullptr) &&
-        (postStepTouchable->GetVolume() != nullptr) && (preStepTouchable->GetVolume() != nullptr))
+    if ((preStepTouchable != nullptr) && (postStepTouchable != nullptr)
+        && (postStepTouchable->GetVolume() != nullptr)
+        && (preStepTouchable->GetVolume() != nullptr))
     {
       G4String post_vol_name = postStepTouchable->GetVolume()->GetName();
       G4String pre_vol_name = preStepTouchable->GetVolume()->GetName();
 
-      if (post_vol_name == volume_name) {
+      if (post_vol_name == volume_name)
+      {
         GoingIn = true;
         did_cross = true;
       }
-      else if (pre_vol_name == volume_name) {
+      else if (pre_vol_name == volume_name)
+      {
         GoingIn = false;
         did_cross = true;
       }
@@ -124,31 +137,35 @@ G4bool G4AdjointCrossSurfChecker::GoingInOrOutOfaVolume(const G4Step* aStep,
 
 /////////////////////////////////////////////////////////////////////////////
 //
-G4bool G4AdjointCrossSurfChecker::GoingInOrOutOfaVolumeByExtSurface(const G4Step* aStep,
-  const G4String& volume_name, const G4String& mother_logical_vol_name, G4double&,
+G4bool G4AdjointCrossSurfChecker::GoingInOrOutOfaVolumeByExtSurface(
+  const G4Step* aStep, const G4String& volume_name, const G4String& mother_logical_vol_name,
+  G4double&,
   G4bool& GoingIn)  // from external surf.
 {
   G4bool step_at_boundary = (aStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary);
   G4bool did_cross = false;
-  if (step_at_boundary) {
+  if (step_at_boundary)
+  {
     const G4VTouchable* postStepTouchable = aStep->GetPostStepPoint()->GetTouchable();
     const G4VTouchable* preStepTouchable = aStep->GetPreStepPoint()->GetTouchable();
     const G4VPhysicalVolume* postVol =
       (postStepTouchable != nullptr) ? postStepTouchable->GetVolume() : nullptr;
     const G4VPhysicalVolume* preVol =
       (preStepTouchable != nullptr) ? preStepTouchable->GetVolume() : nullptr;
-    if (preStepTouchable != nullptr && postStepTouchable != nullptr && postVol != nullptr &&
-        preVol != nullptr)
+    if (preStepTouchable != nullptr && postStepTouchable != nullptr && postVol != nullptr
+        && preVol != nullptr)
     {
       G4String post_vol_name = postVol->GetName();
       G4String post_log_vol_name = postVol->GetLogicalVolume()->GetName();
       G4String pre_vol_name = preVol->GetName();
       G4String pre_log_vol_name = preVol->GetLogicalVolume()->GetName();
-      if (post_vol_name == volume_name && pre_log_vol_name == mother_logical_vol_name) {
+      if (post_vol_name == volume_name && pre_log_vol_name == mother_logical_vol_name)
+      {
         GoingIn = true;
         did_cross = true;
       }
-      else if (pre_vol_name == volume_name && post_log_vol_name == mother_logical_vol_name) {
+      else if (pre_vol_name == volume_name && post_log_vol_name == mother_logical_vol_name)
+      {
         GoingIn = false;
         did_cross = true;
       }
@@ -160,12 +177,15 @@ G4bool G4AdjointCrossSurfChecker::GoingInOrOutOfaVolumeByExtSurface(const G4Step
 //////////////////////////////////////////////////////////////////////////////
 //
 G4bool G4AdjointCrossSurfChecker::CrossingAGivenRegisteredSurface(const G4Step* aStep,
-  const G4String& surface_name, G4ThreeVector& crossing_pos, G4double& cos_to_surface,
-  G4bool& GoingIn)
+                                                                  const G4String& surface_name,
+                                                                  G4ThreeVector& crossing_pos,
+                                                                  G4double& cos_to_surface,
+                                                                  G4bool& GoingIn)
 {
   G4int ind = FindRegisteredSurface(surface_name);
   G4bool did_cross = false;
-  if (ind >= 0) {
+  if (ind >= 0)
+  {
     did_cross = CrossingAGivenRegisteredSurface(aStep, ind, crossing_pos, cos_to_surface, GoingIn);
   }
   return did_cross;
@@ -174,7 +194,9 @@ G4bool G4AdjointCrossSurfChecker::CrossingAGivenRegisteredSurface(const G4Step* 
 //////////////////////////////////////////////////////////////////////////////
 //
 G4bool G4AdjointCrossSurfChecker::CrossingAGivenRegisteredSurface(const G4Step* aStep, G4int ind,
-  G4ThreeVector& crossing_pos, G4double& cos_to_surface, G4bool& GoingIn)
+                                                                  G4ThreeVector& crossing_pos,
+                                                                  G4double& cos_to_surface,
+                                                                  G4bool& GoingIn)
 {
   G4String surf_type = ListOfSurfaceType[ind];
   G4double radius = ListOfSphereRadius[ind];
@@ -183,16 +205,19 @@ G4bool G4AdjointCrossSurfChecker::CrossingAGivenRegisteredSurface(const G4Step* 
   G4String vol2 = ListOfVol2Name[ind];
 
   G4bool did_cross = false;
-  if (surf_type == "Sphere") {
+  if (surf_type == "Sphere")
+  {
     did_cross = CrossingASphere(aStep, radius, center, crossing_pos, cos_to_surface, GoingIn);
   }
-  else if (surf_type == "ExternalSurfaceOfAVolume") {
+  else if (surf_type == "ExternalSurfaceOfAVolume")
+  {
     did_cross = GoingInOrOutOfaVolumeByExtSurface(aStep, vol1, vol2, cos_to_surface, GoingIn);
     crossing_pos = aStep->GetPostStepPoint()->GetPosition();
   }
-  else if (surf_type == "BoundaryBetweenTwoVolumes") {
-    did_cross = CrossingAnInterfaceBetweenTwoVolumes(
-      aStep, vol1, vol2, crossing_pos, cos_to_surface, GoingIn);
+  else if (surf_type == "BoundaryBetweenTwoVolumes")
+  {
+    did_cross = CrossingAnInterfaceBetweenTwoVolumes(aStep, vol1, vol2, crossing_pos,
+                                                     cos_to_surface, GoingIn);
   }
   return did_cross;
 }
@@ -200,10 +225,15 @@ G4bool G4AdjointCrossSurfChecker::CrossingAGivenRegisteredSurface(const G4Step* 
 //////////////////////////////////////////////////////////////////////////////
 //
 G4bool G4AdjointCrossSurfChecker::CrossingOneOfTheRegisteredSurface(const G4Step* aStep,
-  G4String& surface_name, G4ThreeVector& crossing_pos, G4double& cos_to_surface, G4bool& GoingIn)
+                                                                    G4String& surface_name,
+                                                                    G4ThreeVector& crossing_pos,
+                                                                    G4double& cos_to_surface,
+                                                                    G4bool& GoingIn)
 {
-  for (std::size_t i = 0; i < ListOfSurfaceName.size(); ++i) {
-    if (CrossingAGivenRegisteredSurface(aStep, G4int(i), crossing_pos, cos_to_surface, GoingIn)) {
+  for (std::size_t i = 0; i < ListOfSurfaceName.size(); ++i)
+  {
+    if (CrossingAGivenRegisteredSurface(aStep, G4int(i), crossing_pos, cos_to_surface, GoingIn))
+    {
       surface_name = ListOfSurfaceName[i];
       return true;
     }
@@ -214,27 +244,36 @@ G4bool G4AdjointCrossSurfChecker::CrossingOneOfTheRegisteredSurface(const G4Step
 //////////////////////////////////////////////////////////////////////////////
 //
 G4bool G4AdjointCrossSurfChecker::CrossingAnInterfaceBetweenTwoVolumes(const G4Step* aStep,
-  const G4String& vol1_name, const G4String& vol2_name, G4ThreeVector&, G4double&, G4bool& GoingIn)
+                                                                       const G4String& vol1_name,
+                                                                       const G4String& vol2_name,
+                                                                       G4ThreeVector&, G4double&,
+                                                                       G4bool& GoingIn)
 {
   G4bool step_at_boundary = (aStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary);
   G4bool did_cross = false;
-  if (step_at_boundary) {
+  if (step_at_boundary)
+  {
     const G4VTouchable* postStepTouchable = aStep->GetPostStepPoint()->GetTouchable();
     const G4VTouchable* preStepTouchable = aStep->GetPreStepPoint()->GetTouchable();
-    if ((preStepTouchable != nullptr) && (postStepTouchable != nullptr)) {
+    if ((preStepTouchable != nullptr) && (postStepTouchable != nullptr))
+    {
       G4String post_vol_name = postStepTouchable->GetVolume()->GetName();
-      if (post_vol_name.empty()) {
+      if (post_vol_name.empty())
+      {
         post_vol_name = postStepTouchable->GetVolume()->GetLogicalVolume()->GetName();
       }
       G4String pre_vol_name = preStepTouchable->GetVolume()->GetName();
-      if (pre_vol_name.empty()) {
+      if (pre_vol_name.empty())
+      {
         pre_vol_name = preStepTouchable->GetVolume()->GetLogicalVolume()->GetName();
       }
-      if (pre_vol_name == vol1_name && post_vol_name == vol2_name) {
+      if (pre_vol_name == vol1_name && post_vol_name == vol2_name)
+      {
         GoingIn = true;
         did_cross = true;
       }
-      else if (pre_vol_name == vol2_name && post_vol_name == vol1_name) {
+      else if (pre_vol_name == vol2_name && post_vol_name == vol1_name)
+      {
         GoingIn = false;
         did_cross = true;
       }
@@ -245,12 +284,13 @@ G4bool G4AdjointCrossSurfChecker::CrossingAnInterfaceBetweenTwoVolumes(const G4S
 
 //////////////////////////////////////////////////////////////////////////////
 //
-G4bool G4AdjointCrossSurfChecker::AddaSphericalSurface(
-  const G4String& SurfaceName, G4double radius, G4ThreeVector pos, G4double& Area)
+G4bool G4AdjointCrossSurfChecker::AddaSphericalSurface(const G4String& SurfaceName, G4double radius,
+                                                       G4ThreeVector pos, G4double& Area)
 {
   G4int ind = FindRegisteredSurface(SurfaceName);
   Area = 4. * pi * radius * radius;
-  if (ind >= 0) {
+  if (ind >= 0)
+  {
     ListOfSurfaceType[ind] = "Sphere";
     ListOfSphereRadius[ind] = radius;
     ListOfSphereCenter[ind] = pos;
@@ -258,7 +298,8 @@ G4bool G4AdjointCrossSurfChecker::AddaSphericalSurface(
     ListOfVol2Name[ind] = "";
     AreaOfSurface[ind] = Area;
   }
-  else {
+  else
+  {
     ListOfSurfaceName.push_back(SurfaceName);
     ListOfSurfaceType.emplace_back("Sphere");
     ListOfSphereRadius.push_back(radius);
@@ -279,15 +320,19 @@ G4bool G4AdjointCrossSurfChecker::AddaSphericalSurfaceWithCenterAtTheCenterOfAVo
   G4VPhysicalVolume* thePhysicalVolume = nullptr;
   G4PhysicalVolumeStore* thePhysVolStore = G4PhysicalVolumeStore::GetInstance();
   thePhysicalVolume = thePhysVolStore->GetVolume(volume_name);
-  if (thePhysicalVolume != nullptr) {
+  if (thePhysicalVolume != nullptr)
+  {
     G4VPhysicalVolume* daughter = thePhysicalVolume;
     G4LogicalVolume* mother = thePhysicalVolume->GetMotherLogical();
     G4AffineTransform theTransformationFromPhysVolToWorld = G4AffineTransform();
-    while (mother != nullptr) {
+    while (mother != nullptr)
+    {
       theTransformationFromPhysVolToWorld *=
         G4AffineTransform(daughter->GetFrameRotation(), daughter->GetObjectTranslation());
-      for (std::size_t i = 0; i < thePhysVolStore->size(); ++i) {
-        if ((*thePhysVolStore)[i]->GetLogicalVolume() == mother) {
+      for (std::size_t i = 0; i < thePhysVolStore->size(); ++i)
+      {
+        if ((*thePhysVolStore)[i]->GetLogicalVolume() == mother)
+        {
           daughter = (*thePhysVolStore)[i];
           mother = daughter->GetMotherLogical();
           break;
@@ -298,7 +343,8 @@ G4bool G4AdjointCrossSurfChecker::AddaSphericalSurfaceWithCenterAtTheCenterOfAVo
     G4cout << "Center of the spherical surface is at the position: " << center / cm << " cm"
            << G4endl;
   }
-  else {
+  else
+  {
     return false;
   }
   return AddaSphericalSurface(SurfaceName, radius, center, area);
@@ -306,15 +352,17 @@ G4bool G4AdjointCrossSurfChecker::AddaSphericalSurfaceWithCenterAtTheCenterOfAVo
 
 //////////////////////////////////////////////////////////////////////////////
 //
-G4bool G4AdjointCrossSurfChecker::AddanExtSurfaceOfAvolume(
-  const G4String& SurfaceName, const G4String& volume_name, G4double& Area)
+G4bool G4AdjointCrossSurfChecker::AddanExtSurfaceOfAvolume(const G4String& SurfaceName,
+                                                           const G4String& volume_name,
+                                                           G4double& Area)
 {
   G4int ind = FindRegisteredSurface(SurfaceName);
 
   G4VPhysicalVolume* thePhysicalVolume = nullptr;
   G4PhysicalVolumeStore* thePhysVolStore = G4PhysicalVolumeStore::GetInstance();
   thePhysicalVolume = thePhysVolStore->GetVolume(volume_name);
-  if (thePhysicalVolume == nullptr) {
+  if (thePhysicalVolume == nullptr)
+  {
     return false;
   }
   Area = thePhysicalVolume->GetLogicalVolume()->GetSolid()->GetSurfaceArea();
@@ -322,7 +370,8 @@ G4bool G4AdjointCrossSurfChecker::AddanExtSurfaceOfAvolume(
   G4LogicalVolume* theMother = thePhysicalVolume->GetMotherLogical();
 
   if (theMother != nullptr) mother_vol_name = theMother->GetName();
-  if (ind >= 0) {
+  if (ind >= 0)
+  {
     ListOfSurfaceType[ind] = "ExternalSurfaceOfAVolume";
     ListOfSphereRadius[ind] = 0.;
     ListOfSphereCenter[ind] = G4ThreeVector(0., 0., 0.);
@@ -330,7 +379,8 @@ G4bool G4AdjointCrossSurfChecker::AddanExtSurfaceOfAvolume(
     ListOfVol2Name[ind] = std::move(mother_vol_name);
     AreaOfSurface[ind] = Area;
   }
-  else {
+  else
+  {
     ListOfSurfaceName.push_back(SurfaceName);
     ListOfSurfaceType.emplace_back("ExternalSurfaceOfAVolume");
     ListOfSphereRadius.push_back(0.);
@@ -345,11 +395,14 @@ G4bool G4AdjointCrossSurfChecker::AddanExtSurfaceOfAvolume(
 //////////////////////////////////////////////////////////////////////////////
 //
 G4bool G4AdjointCrossSurfChecker::AddanInterfaceBetweenTwoVolumes(const G4String& SurfaceName,
-  const G4String& volume_name1, const G4String& volume_name2, G4double& Area)
+                                                                  const G4String& volume_name1,
+                                                                  const G4String& volume_name2,
+                                                                  G4double& Area)
 {
   G4int ind = FindRegisteredSurface(SurfaceName);
   Area = -1.;  // the way to compute the surface is not known yet
-  if (ind >= 0) {
+  if (ind >= 0)
+  {
     ListOfSurfaceType[ind] = "BoundaryBetweenTwoVolumes";
     ListOfSphereRadius[ind] = 0.;
     ListOfSphereCenter[ind] = G4ThreeVector(0., 0., 0.);
@@ -357,7 +410,8 @@ G4bool G4AdjointCrossSurfChecker::AddanInterfaceBetweenTwoVolumes(const G4String
     ListOfVol2Name[ind] = volume_name2;
     AreaOfSurface[ind] = Area;
   }
-  else {
+  else
+  {
     ListOfSurfaceName.push_back(SurfaceName);
     ListOfSurfaceType.emplace_back("BoundaryBetweenTwoVolumes");
     ListOfSphereRadius.push_back(0.);
@@ -385,7 +439,8 @@ void G4AdjointCrossSurfChecker::ClearListOfSelectedSurface()
 //
 G4int G4AdjointCrossSurfChecker::FindRegisteredSurface(const G4String& name)
 {
-  for (std::size_t i = 0; i < ListOfSurfaceName.size(); ++i) {
+  for (std::size_t i = 0; i < ListOfSurfaceName.size(); ++i)
+  {
     if (name == ListOfSurfaceName[i]) return G4int(i);
   }
   return -1;

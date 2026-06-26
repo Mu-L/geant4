@@ -36,21 +36,26 @@
 #ifndef G4BULIRSCH_STOER_HH
 #define G4BULIRSCH_STOER_HH
 
-#include "G4ModifiedMidpoint.hh"
-
 #include "G4FieldTrack.hh"
+#include "G4ModifiedMidpoint.hh"
 
 /**
  * @brief G4BulirschStoer is a controlled driver that adjusts both step size
- * and order of the method. The algorithm uses the modified midpoint and
- * a polynomial extrapolation computes the solution.
+ * and order of the method.
+ * @ingroup geometry_magneticfield
+ *
+ * The algorithm uses the modified midpoint and a polynomial extrapolation computes the solution.
  */
 
 class G4BulirschStoer
 {
   public:
 
-    enum class step_result { success, fail };
+    enum class step_result
+    {
+      success,
+      fail
+    };
 
     /**
      * Constructor for G4BulirschStoer.
@@ -59,8 +64,8 @@ class G4BulirschStoer
      *  @param[in] eps_rel Relative tolerance.
      *  @param[in] max_dt Maximum allowed time step.
      */
-    G4BulirschStoer(G4EquationOfMotion* equation, G4int nvar,
-                    G4double eps_rel, G4double max_dt = DBL_MAX);
+    G4BulirschStoer(G4EquationOfMotion* equation, G4int nvar, G4double eps_rel,
+                    G4double max_dt = DBL_MAX);
 
     /**
      * Default Destructor.
@@ -82,8 +87,8 @@ class G4BulirschStoer
      *  @param[in,out] dt Step size.
      *  @returns success if step is not rejected.
      */
-    step_result try_step(const G4double in[], const G4double dxdt[],
-                         G4double& t, G4double out[], G4double& dt);
+    step_result try_step(const G4double in[], const G4double dxdt[], G4double& t, G4double out[],
+                         G4double& dt);
 
     /**
      * Resets the internal state of the stepper.
@@ -155,22 +160,22 @@ class G4BulirschStoer
     G4double m_err[G4FieldTrack::ncompSVEC];
 
     /** Stores the successive interval counts. */
-    G4int m_interval_sequence[m_k_max+1];
+    G4int m_interval_sequence[m_k_max + 1];
 
     /** Extrapolation coeffs (Neville's algorithm). */
-    G4double m_coeff[m_k_max+1][m_k_max];
+    G4double m_coeff[m_k_max + 1][m_k_max];
 
     /** Costs for interval count. */
-    G4int m_cost[m_k_max+1];
+    G4int m_cost[m_k_max + 1];
 
     /** Sequence of states for extrapolation. */
     G4double m_table[m_k_max][G4FieldTrack::ncompSVEC];
 
     /** Optimal step size. */
-    G4double h_opt[m_k_max+1];
+    G4double h_opt[m_k_max + 1];
 
     /** Work per unit step. */
-    G4double work[m_k_max+1];
+    G4double work[m_k_max + 1];
 };
 
 #include "G4BulirschStoer.icc"

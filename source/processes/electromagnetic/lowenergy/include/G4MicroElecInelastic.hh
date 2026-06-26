@@ -38,10 +38,10 @@
 //	    very low energy electromagnetic models for protons and
 //	    heavy ions in Si, NIM B, vol. 287, pp. 124-129, 2012.
 //
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo...... 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4MicroElecInelastic_h
-#define G4MicroElecInelastic_h 1
+#ifndef G4MICROELECINELASTIC_HH
+#define G4MICROELECINELASTIC_HH
 
 #include "G4VEmProcess.hh"
 
@@ -51,20 +51,23 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 class G4MicroElecInelastic : public G4VEmProcess
 {
-public: 
-  explicit G4MicroElecInelastic(const G4String& processName ="MicroElecIonisation",
-				G4ProcessType type = fElectromagnetic);
-  virtual ~G4MicroElecInelastic();
+  public:
 
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
+    explicit G4MicroElecInelastic(const G4String& processName = "MicroElecIonisation",
+                                  G4ProcessType type = fElectromagnetic);
+    virtual ~G4MicroElecInelastic();
 
-protected:
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
 
-private:   
-  G4bool       isInitialised;
+  protected:
+
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool isInitialised;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-  
+
 #endif

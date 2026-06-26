@@ -29,93 +29,114 @@
 #define G4TOOLSSGSCENEHANDLER_HH
 
 #include "G4VSceneHandler.hh"
-
 #include "G4VVisCommand.hh"
-
-#include <vector>
 
 #include <tools/sg/separator>
 
-namespace tools {namespace sg {class base_freetype;}}
-namespace tools {namespace sg {class plots;}}
+#include <vector>
+
+namespace tools
+{
+namespace sg
+{
+class base_freetype;
+}
+}  // namespace tools
+namespace tools
+{
+namespace sg
+{
+class plots;
+}
+}  // namespace tools
 
 class G4ToolsSGNode;
 
-class G4ToolsSGSceneHandler: public G4VSceneHandler {
-  typedef G4VSceneHandler parent;
-public:  
-  virtual void AddPrimitive(const G4Polyline&);
-  virtual void AddPrimitive(const G4Text&);
-  virtual void AddPrimitive(const G4Circle&);
-  virtual void AddPrimitive(const G4Square&);
-  virtual void AddPrimitive(const G4Polymarker&);
-  virtual void AddPrimitive(const G4Polyhedron&);
-  virtual void AddPrimitive(const G4Plotter&);
+class G4ToolsSGSceneHandler : public G4VSceneHandler
+{
+    typedef G4VSceneHandler parent;
 
-  using G4VSceneHandler::AddCompound;
-  virtual void AddCompound(const G4Mesh&);
+  public:
 
-  virtual void ClearStore ();
-  virtual void ClearTransientStore ();
+    virtual void AddPrimitive(const G4Polyline&);
+    virtual void AddPrimitive(const G4Text&);
+    virtual void AddPrimitive(const G4Circle&);
+    virtual void AddPrimitive(const G4Square&);
+    virtual void AddPrimitive(const G4Polymarker&);
+    virtual void AddPrimitive(const G4Polyhedron&);
+    virtual void AddPrimitive(const G4Plotter&);
 
-  G4ToolsSGSceneHandler(G4VGraphicsSystem& system,const G4String& name);
-  virtual ~G4ToolsSGSceneHandler();
+    using G4VSceneHandler::AddCompound;
+    virtual void AddCompound(const G4Mesh&);
 
-  tools::sg::separator& GetTransient2DObjects() {return fpTransient2DObjects;}
-  tools::sg::separator& GetPersistent2DObjects() {return fpPersistent2DObjects;}
-  tools::sg::separator& GetTransient3DObjects() {return fpTransient3DObjects;}
-  tools::sg::separator& GetPersistent3DObjects() {return fpPersistent3DObjects;}
-  
-  void TouchPlotters(tools::sg::node&);
+    virtual void ClearStore();
+    virtual void ClearTransientStore();
 
-  void SetMarkerScale(double);
+    G4ToolsSGSceneHandler(G4VGraphicsSystem& system, const G4String& name);
+    virtual ~G4ToolsSGSceneHandler();
 
-protected:  
-  G4ToolsSGSceneHandler(const G4ToolsSGSceneHandler&);
-  G4ToolsSGSceneHandler& operator=(const G4ToolsSGSceneHandler&){return *this;}
+    tools::sg::separator& GetTransient2DObjects() { return fpTransient2DObjects; }
+    tools::sg::separator& GetPersistent2DObjects() { return fpPersistent2DObjects; }
+    tools::sg::separator& GetTransient3DObjects() { return fpTransient3DObjects; }
+    tools::sg::separator& GetPersistent3DObjects() { return fpPersistent3DObjects; }
 
-protected:
-  void CreateSG();
-  void EstablishBaseNodes();
-  tools::sg::separator* GetOrCreateNode();  // For next solid or primitive
+    void TouchPlotters(tools::sg::node&);
 
-  void SetPlotterHistograms(tools::sg::plots&);
+    void SetMarkerScale(double);
 
-  static G4int fSceneIdCount;
+    void EmptyTrash();
 
-  tools::sg::separator fpTransient2DObjects;
-  tools::sg::separator fpPersistent2DObjects;
-  
-  tools::sg::separator fpTransient3DObjects;
-  tools::sg::separator fpPersistent3DObjects;
+  protected:
 
-  std::vector<G4ToolsSGNode*> fpPhysicalVolumeObjects;  // Multiple worlds
+    G4ToolsSGSceneHandler(const G4ToolsSGSceneHandler&);
+    G4ToolsSGSceneHandler& operator=(const G4ToolsSGSceneHandler&) { return *this; }
 
-  tools::sg::base_freetype* fFreetypeNode;
-  double fMarkerScale;
+  protected:
 
-  using Region_h1 = std::pair<unsigned int,int>;
-  using Region_h2 = std::pair<unsigned int,int>;
-  std::vector<Region_h1> fRegionH1s;
-  std::vector<Region_h2> fRegionH2s;
+    void EstablishBaseNodes();
+    tools::sg::separator* GetOrCreateNode();  // For next solid or primitive
 
-  class Messenger: public G4VVisCommand {
-  public:  
-    static void Create() {static Messenger s_messenger;}
-    virtual void SetNewValue(G4UIcommand*,G4String);
-  private:  
-    Messenger() {
-      //////////////////////////////////////////////////////////
-      //////////////////////////////////////////////////////////
-      print_plotter_params = new G4UIcommand("/vis/tsg/plotter/printParameters", this);
-      print_plotter_params->SetGuidance("Print available tools::sg::plotter parameters.");
-    }
-    virtual ~Messenger() {
-      delete print_plotter_params;
-    }
-    G4UIcommand* print_plotter_params;
-  };
+    void SetPlotterHistograms(tools::sg::plots&);
 
+    static G4int fSceneIdCount;
+
+    tools::sg::separator fpTransient2DObjects;
+    tools::sg::separator fpPersistent2DObjects;
+
+    tools::sg::separator fpTransient3DObjects;
+    tools::sg::separator fpPersistent3DObjects;
+
+    tools::sg::group fpTrash;
+
+    std::vector<G4ToolsSGNode*> fpPhysicalVolumeObjects;  // Multiple worlds
+
+    tools::sg::base_freetype* fFreetypeNode;
+    double fMarkerScale;
+
+    using Region_h1 = std::pair<unsigned int, int>;
+    using Region_h2 = std::pair<unsigned int, int>;
+    std::vector<Region_h1> fRegionH1s;
+    std::vector<Region_h2> fRegionH2s;
+
+    class Messenger : public G4VVisCommand
+    {
+      public:
+
+        static void Create() { static Messenger s_messenger; }
+        virtual void SetNewValue(G4UIcommand*, G4String);
+
+      private:
+
+        Messenger()
+        {
+          //////////////////////////////////////////////////////////
+          //////////////////////////////////////////////////////////
+          print_plotter_params = new G4UIcommand("/vis/tsg/plotter/printParameters", this);
+          print_plotter_params->SetGuidance("Print available tools::sg::plotter parameters.");
+        }
+        virtual ~Messenger() { delete print_plotter_params; }
+        G4UIcommand* print_plotter_params;
+    };
 };
 
 #endif

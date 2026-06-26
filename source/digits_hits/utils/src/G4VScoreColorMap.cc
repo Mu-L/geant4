@@ -27,31 +27,25 @@
 // --------------------------------------------------------------------
 
 #include "G4VScoreColorMap.hh"
-#include "G4VVisManager.hh"
-#include "G4VisAttributes.hh"
-#include "G4Text.hh"
+
 #include "G4Circle.hh"
-#include "G4Polyline.hh"
 #include "G4Colour.hh"
 #include "G4Polyhedron.hh"
+#include "G4Polyline.hh"
+#include "G4Text.hh"
+#include "G4VVisManager.hh"
+#include "G4VisAttributes.hh"
 
-#include <string>
-#include <sstream>
 #include <iomanip>
+#include <sstream>
+#include <string>
 
-G4VScoreColorMap::G4VScoreColorMap(const G4String& mName)
-  : fName(mName)
-{}
+G4VScoreColorMap::G4VScoreColorMap(const G4String& mName) : fName(mName) {}
 
 void G4VScoreColorMap::DrawColorChart(G4int _nPoint)
 {
   fVisManager = G4VVisManager::GetConcreteInstance();
-  if(fVisManager == nullptr)
-  {
-    G4cerr << "G4VScoringMesh::DrawColorChart(): no visualization system"
-           << G4endl;
-    return;
-  }
+  if (fVisManager == nullptr) return;
 
   DrawColorChartBar(_nPoint);
   DrawColorChartText(_nPoint);
@@ -59,19 +53,20 @@ void G4VScoreColorMap::DrawColorChart(G4int _nPoint)
 
 void G4VScoreColorMap::DrawColorChartBar(G4int _nPoint)
 {
-  G4double min  = this->GetMin();
-  G4double max  = this->GetMax();
-  G4double smin = -0.89, smax = smin + 0.05 * (_nPoint) *0.83, step = 0.001;
+  G4double min = this->GetMin();
+  G4double max = this->GetMax();
+  G4double smin = -0.89, smax = smin + 0.05 * (_nPoint) * 0.83, step = 0.001;
+  yoff = 1.7 * (smax - smin) * offset;
   G4double c[4];
 
   fVisManager->BeginDraw2D();
 
-  for(G4double y = smin; y < smax; y += step)
+  for (G4double y = smin; y < smax; y += step)
   {
     G4double ra = (y - smin) / (smax - smin), rb = 1. - ra;
     G4Polyline line;
-    line.push_back(G4Point3D(-0.96, y, 0.));
-    line.push_back(G4Point3D(-0.91, y, 0.));
+    line.push_back(G4Point3D(-0.96, y + yoff, 0.));
+    line.push_back(G4Point3D(-0.91, y + yoff, 0.));
     this->GetMapColor((ra * max + rb * min) / (ra + rb), c);
     G4Colour col(c[0], c[1], c[2]);
     G4VisAttributes att(col);
@@ -91,17 +86,17 @@ void G4VScoreColorMap::DrawColorChartText(G4int _nPoint)
 
   fVisManager->BeginDraw2D();
 
-  for(G4int n = 0; n < _nPoint; n++)
+  for (G4int n = 0; n < _nPoint; n++)
   {
     G4double a = n / (_nPoint - 1.), b = 1. - a;
     G4double v = (a * max + b * min) / (a + b);
     // background color
 
-    for(G4int l = 0; l < 21; l++)
+    for (G4int l = 0; l < 21; l++)
     {
       G4Polyline line;
-      line.push_back(G4Point3D(-0.9, -0.905 + 0.05 * n + 0.002 * l, 0.));
-      line.push_back(G4Point3D(-0.75, -0.905 + 0.05 * n + 0.002 * l, 0.));
+      line.push_back(G4Point3D(-0.9, -0.905 + 0.05 * n + 0.002 * l + yoff, 0.));
+      line.push_back(G4Point3D(-0.8, -0.905 + 0.05 * n + 0.002 * l + yoff, 0.));
       G4VisAttributes attblack(black);
       line.SetVisAttributes(&attblack);
       fVisManager->Draw2D(line);
@@ -110,9 +105,9 @@ void G4VScoreColorMap::DrawColorChartText(G4int _nPoint)
     // text
     std::ostringstream oss;
     oss << std::setw(8) << std::setprecision(1) << std::scientific << v;
-    G4String value  = oss.str();
+    G4String value = oss.str();
 
-    G4Text text(value, G4Point3D(-0.9, -0.9 + 0.05 * n, 0.4));
+    G4Text text(value, G4Point3D(-0.9, -0.9 + 0.05 * n + yoff, 0.4));
     G4double size = 12.;
     text.SetScreenSize(size);
     this->GetMapColor(v, c);
@@ -123,57 +118,27 @@ void G4VScoreColorMap::DrawColorChartText(G4int _nPoint)
     fVisManager->Draw2D(text);
   }
 
-  // draw ps name
+  // draw ps name and unit
   // background
-  G4double lpsname = 2. + fPSName.size() * 0.95;
-  if(lpsname > 0)
+  G4String txt = fMSName + "/" + fPSName + " [" + fPSUnit + "]";
+  G4double lpsname = txt.size();
+  for (G4int l = 0; l < 22; l++)
   {
-    for(G4int l = 0; l < 22; l++)
-    {
-      G4Polyline line;
-      line.push_back(G4Point3D(-0.92, -0.965 + 0.002 * l, 0.));
-      line.push_back(
-        G4Point3D(-0.92 + 0.025 * lpsname, -0.965 + 0.002 * l, 0.));
-      G4VisAttributes attblack(black);
-      line.SetVisAttributes(&attblack);
-      fVisManager->Draw2D(line);
-    }
-
-    // ps name
-    G4Text txtpsname(fPSName, G4Point3D(-0.9, -0.96, 0.1));
-    G4double size = 12.;
-    txtpsname.SetScreenSize(size);
-    G4Colour color(1., 1., 1.);
-    G4VisAttributes att(color);
-    txtpsname.SetVisAttributes(&att);
-    fVisManager->Draw2D(txtpsname);
+    G4Polyline line;
+    line.push_back(G4Point3D(-0.96, -0.965 + 0.002 * l + yoff, 0.));
+    line.push_back(G4Point3D(-0.96 + 0.01 * lpsname, -0.965 + 0.002 * l + yoff, 0.));
+    G4VisAttributes attblack(black);
+    line.SetVisAttributes(&attblack);
+    fVisManager->Draw2D(line);
   }
-
-  // draw unit
-  // background
-  G4double len = 2. + fPSUnit.size();
-  if(len > 0)
-  {
-    for(G4int l = 0; l < 21; l++)
-    {
-      G4Polyline line;
-      line.push_back(G4Point3D(-0.7, -0.9 + 0.002 * l, 0.));
-      line.push_back(G4Point3D(-0.7 + 0.025 * len, -0.9 + 0.002 * l, 0.));
-      G4VisAttributes attblack(black);
-      line.SetVisAttributes(&attblack);
-      fVisManager->Draw2D(line);
-    }
-
-    // unit
-    G4String psunit = "[" + fPSUnit + "]";
-    G4Text txtunit(psunit, G4Point3D(-0.69, -0.9, 0.1));
-    G4double size = 12.;
-    txtunit.SetScreenSize(size);
-    G4Colour color(1., 1., 1.);
-    G4VisAttributes att(color);
-    txtunit.SetVisAttributes(&att);
-    fVisManager->Draw2D(txtunit);
-  }
+  // ps name and unit
+  G4Text txtpsname(txt, G4Point3D(-0.96, -0.96 + yoff, 0.1));
+  G4double size = 12.;
+  txtpsname.SetScreenSize(size);
+  G4Colour color(1., 1., 1.);
+  G4VisAttributes att(color);
+  txtpsname.SetVisAttributes(&att);
+  fVisManager->Draw2D(txtpsname);
 
   fVisManager->EndDraw2D();
 }

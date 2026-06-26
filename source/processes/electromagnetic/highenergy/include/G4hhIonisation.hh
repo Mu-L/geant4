@@ -47,51 +47,50 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4hhIonisation_h
-#define G4hhIonisation_h 1
+#ifndef G4HHIONISATION_HH
+#define G4HHIONISATION_HH
 
+#include "G4VEmModel.hh"
 #include "G4VEnergyLossProcess.hh"
 #include "globals.hh"
-#include "G4VEmModel.hh"
 
 class G4Material;
 class G4VEmFluctuationModel;
 
 class G4hhIonisation : public G4VEnergyLossProcess
 {
+  public:
 
-public:
+    explicit G4hhIonisation(const G4String& name = "hhIoni");
 
-  explicit G4hhIonisation(const G4String& name = "hhIoni");
+    ~G4hhIonisation() override;
 
-  ~G4hhIonisation() override;
+    G4bool IsApplicable(const G4ParticleDefinition& p) override;
 
-  G4bool IsApplicable(const G4ParticleDefinition& p) override;
+    G4double MinPrimaryEnergy(const G4ParticleDefinition* p, const G4Material*,
+                              G4double cut) override;
 
-  G4double MinPrimaryEnergy(const G4ParticleDefinition* p,
-			    const G4Material*, G4double cut) override;
+    // print description in html
+    void ProcessDescription(std::ostream&) const override;
 
-  // print description in html
-  void ProcessDescription(std::ostream&) const override;
+    // hide assignment operator
+    G4hhIonisation& operator=(const G4hhIonisation& right) = delete;
+    G4hhIonisation(const G4hhIonisation&) = delete;
 
-  // hide assignment operator
-  G4hhIonisation & operator=(const G4hhIonisation &right) = delete;
-  G4hhIonisation(const G4hhIonisation&) = delete;
+  protected:
 
-protected:
+    void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
+                                     const G4ParticleDefinition*) override;
 
-  void InitialiseEnergyLossProcess(const G4ParticleDefinition*,
-                                   const G4ParticleDefinition*) override;
+  private:
 
-private:
+    const G4ParticleDefinition* theParticle = nullptr;
+    G4VEmFluctuationModel* flucModel = nullptr;
 
-  const G4ParticleDefinition* theParticle = nullptr;
-  G4VEmFluctuationModel* flucModel = nullptr;
+    G4double mass = 0.0;
+    G4double ratio = 0.0;
 
-  G4double mass = 0.0;
-  G4double ratio = 0.0;
-
-  G4bool isInitialised = false;
+    G4bool isInitialised = false;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

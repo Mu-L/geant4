@@ -32,7 +32,7 @@
 //
 // Author:        Vladimir Ivanchenko
 //
-// Creation date: 17-10-2017 
+// Creation date: 17-10-2017
 //
 // Modifications:
 //
@@ -43,80 +43,81 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 #include "G4DeexParametersMessenger.hh"
-#include "G4UIdirectory.hh"
-#include "G4UIcommand.hh"
-#include "G4UIparameter.hh"
+
+#include "G4DeexPrecoParameters.hh"
 #include "G4UIcmdWithABool.hh"
-#include "G4UIcmdWithAnInteger.hh"
 #include "G4UIcmdWithADouble.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithAnInteger.hh"
+#include "G4UIcommand.hh"
+#include "G4UIdirectory.hh"
 #include "G4UImanager.hh"
-#include "G4DeexPrecoParameters.hh"
+#include "G4UIparameter.hh"
 
 #include <sstream>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4DeexParametersMessenger::G4DeexParametersMessenger(G4DeexPrecoParameters* ptr) 
+G4DeexParametersMessenger::G4DeexParametersMessenger(G4DeexPrecoParameters* ptr)
   : theParameters(ptr)
 {
   fDirectory = new G4UIdirectory("/process/had/deex/");
   fDirectory->SetGuidance("Commands for nuclear de-excitation module.");
 
-  readCmd = new G4UIcmdWithABool("/process/had/deex/readICdata",this);
+  readCmd = new G4UIcmdWithABool("/process/had/deex/readICdata", this);
   readCmd->SetGuidance("Enable/disable download IC data per atomic shell.");
-  readCmd->SetParameterName("readIC",true);
+  readCmd->SetParameterName("readIC", true);
   readCmd->SetDefaultValue(false);
   readCmd->AvailableForStates(G4State_PreInit);
   readCmd->SetToBeBroadcasted(false);
 
-  icCmd = new G4UIcmdWithABool("/process/had/deex/setIC",this);
+  icCmd = new G4UIcmdWithABool("/process/had/deex/setIC", this);
   icCmd->SetGuidance("Enable/disable simulation of e- internal conversion.");
-  icCmd->SetParameterName("IC",true);
+  icCmd->SetParameterName("IC", true);
   icCmd->SetDefaultValue(true);
   icCmd->AvailableForStates(G4State_PreInit);
 
-  corgCmd = new G4UIcmdWithABool("/process/had/deex/correlatedGamma",this);
+  corgCmd = new G4UIcmdWithABool("/process/had/deex/correlatedGamma", this);
   corgCmd->SetGuidance("Enable/disable simulation of correlated gamma emission.");
-  corgCmd->SetParameterName("corrG",true);
+  corgCmd->SetParameterName("corrG", true);
   corgCmd->SetDefaultValue(false);
   corgCmd->AvailableForStates(G4State_PreInit);
   corgCmd->SetToBeBroadcasted(false);
 
-  isoCmd = new G4UIcmdWithABool("/process/had/deex/isomerProduction",this);
+  isoCmd = new G4UIcmdWithABool("/process/had/deex/isomerProduction", this);
   isoCmd->SetGuidance("Enable/disable simulation of long lived isomers.");
-  isoCmd->SetParameterName("isoProd",true);
+  isoCmd->SetParameterName("isoProd", true);
   isoCmd->SetDefaultValue(false);
   isoCmd->AvailableForStates(G4State_PreInit);
   isoCmd->SetToBeBroadcasted(false);
 
-  maxjCmd = new G4UIcmdWithAnInteger("/process/had/deex/maxTwoJ",this);
+  maxjCmd = new G4UIcmdWithAnInteger("/process/had/deex/maxTwoJ", this);
   maxjCmd->SetGuidance("Set max value for 2J for simulation of correlated gamma emission.");
-  maxjCmd->SetParameterName("max2J",true);
+  maxjCmd->SetParameterName("max2J", true);
   maxjCmd->SetDefaultValue(10);
   maxjCmd->AvailableForStates(G4State_PreInit);
   maxjCmd->SetToBeBroadcasted(false);
 
-  verbCmd = new G4UIcmdWithAnInteger("/process/had/deex/verbose",this);
+  verbCmd = new G4UIcmdWithAnInteger("/process/had/deex/verbose", this);
   verbCmd->SetGuidance("Set verbosity level.");
-  verbCmd->SetParameterName("verb",true);
+  verbCmd->SetParameterName("verb", true);
   verbCmd->SetDefaultValue(1);
   verbCmd->AvailableForStates(G4State_PreInit);
   verbCmd->SetToBeBroadcasted(false);
 
-  xsTypeCmd = new G4UIcommand("/process/had/deex/TypeXS",this);
+  xsTypeCmd = new G4UIcommand("/process/had/deex/TypeXS", this);
   xsTypeCmd->SetGuidance("Defined type of inverse x-section");
   xsTypeCmd->SetGuidance("  model      : PRECO or DEEX");
   xsTypeCmd->SetGuidance("  type of XS : Dostrovski, PARTICLEXS, Chatterjee, Kalbach");
   xsTypeCmd->AvailableForStates(G4State_PreInit);
   xsTypeCmd->SetToBeBroadcasted(false);
 
-  auto modName = new G4UIparameter("modName",'s',false);
+  auto modName = new G4UIparameter("modName", 's', false);
   xsTypeCmd->SetParameter(modName);
   modName->SetParameterCandidates("PRECO DEEX");
 
-  auto mtype = new G4UIparameter("TypeXS",'s',false);
+  auto mtype = new G4UIparameter("TypeXS", 's', false);
   xsTypeCmd->SetParameter(mtype);
   mtype->SetParameterCandidates("Dostrovski, PARTICLEXS, Chatterjee, Kalbach");
 }
@@ -138,33 +139,66 @@ G4DeexParametersMessenger::~G4DeexParametersMessenger()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4DeexParametersMessenger::SetNewValue(G4UIcommand* command, 
-					    G4String newValue)
+void G4DeexParametersMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
-  if (command == readCmd) {
+  if (command == readCmd)
+  {
     theParameters->SetStoreICLevelData(readCmd->GetNewBoolValue(newValue));
-  } else if (command == icCmd) {
+  }
+  else if (command == icCmd)
+  {
     theParameters->SetInternalConversionFlag(icCmd->GetNewBoolValue(newValue));
-  } else if (command == corgCmd) {
+  }
+  else if (command == corgCmd)
+  {
     theParameters->SetCorrelatedGamma(corgCmd->GetNewBoolValue(newValue));
-  } else if (command == isoCmd) {
+  }
+  else if (command == isoCmd)
+  {
     theParameters->SetIsomerProduction(isoCmd->GetNewBoolValue(newValue));
-  } else if (command == maxjCmd) { 
+  }
+  else if (command == maxjCmd)
+  {
     theParameters->SetTwoJMAX(maxjCmd->GetNewIntValue(newValue));
-  } else if (command == verbCmd) { 
+  }
+  else if (command == verbCmd)
+  {
     theParameters->SetVerbose(verbCmd->GetNewIntValue(newValue));
-  } else if (command == xsTypeCmd) {
-    G4String s1(""),s2("");
+  }
+  else if (command == xsTypeCmd)
+  {
+    G4String s1(""), s2("");
     std::istringstream is(newValue);
     is >> s1 >> s2;
     G4int n;
-    if (s2 == "Dostrovski") { n = 0; }
-    else if (s2 == "PARTICLEXS") { n = 1; }
-    else if (s2 == "Chatterjee") { n = 2; }
-    else if (s2 == "Kalbach") { n = 3; }
-    else { return; }
-    if (s1 == "PRECO") { theParameters->SetPrecoModelType(n); }
-    if (s1 == "DEEX") { theParameters->SetDeexModelType(n); }
+    if (s2 == "Dostrovski")
+    {
+      n = 0;
+    }
+    else if (s2 == "PARTICLEXS")
+    {
+      n = 1;
+    }
+    else if (s2 == "Chatterjee")
+    {
+      n = 2;
+    }
+    else if (s2 == "Kalbach")
+    {
+      n = 3;
+    }
+    else
+    {
+      return;
+    }
+    if (s1 == "PRECO")
+    {
+      theParameters->SetPrecoModelType(n);
+    }
+    if (s1 == "DEEX")
+    {
+      theParameters->SetDeexModelType(n);
+    }
   }
 }
 

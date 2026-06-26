@@ -29,8 +29,9 @@
 // --------------------------------------------------------------------
 
 #include "G4SubEvent.hh"
-#include "G4VTrajectory.hh"
+
 #include "G4Track.hh"
+#include "G4VTrajectory.hh"
 
 G4Allocator<G4SubEvent>*& aSubEventAllocator()
 {
@@ -45,7 +46,7 @@ G4SubEvent::~G4SubEvent()
 
 void G4SubEvent::clearAndDestroy()
 {
-  for(auto & i : *this)
+  for (auto& i : *this)
   {
     delete i.GetTrack();
     delete i.GetTrajectory();
@@ -55,15 +56,15 @@ void G4SubEvent::clearAndDestroy()
 
 G4StackedTrack G4SubEvent::PopFromStack()
 {
-  G4Exception("G4SubEvent::PopFromStack","EventStack0001",
-       FatalException,"This method must not be invoked.");
+  G4Exception("G4SubEvent::PopFromStack", "EventStack0001", FatalException,
+              "This method must not be invoked.");
   return G4StackedTrack(nullptr);
 }
 
 G4double G4SubEvent::getTotalEnergy() const
 {
   G4double totalEnergy = 0.0;
-  for (const auto & i : *this)
+  for (const auto& i : *this)
   {
     totalEnergy += i.GetTrack()->GetDynamicParticle()->GetTotalEnergy();
   }

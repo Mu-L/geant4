@@ -27,15 +27,16 @@
 /// \brief Implementation of the G4PhononReflection class
 //
 // This process handles the interaction of phonons with
-// boundaries. Implementation of this class is highly 
+// boundaries. Implementation of this class is highly
 // geometry dependent.Currently, phonons are killed when
-// they reach a boundary. If the other side of the 
+// they reach a boundary. If the other side of the
 // boundary was Al, a hit is registered.
-//  
+//
 //
 // 20131115  Throw exception if track's polarization state is invalid.
 
 #include "G4PhononReflection.hh"
+
 #include "G4ExceptionSeverity.hh"
 #include "G4GeometryTolerance.hh"
 #include "G4LatticePhysical.hh"
@@ -48,12 +49,17 @@
 #include "G4SystemOfUnits.hh"
 #include "G4VParticleChange.hh"
 
-
 G4PhononReflection::G4PhononReflection(const G4String& aName)
   : G4VPhononProcess(aName),
-    kCarTolerance(G4GeometryTolerance::GetInstance()->GetSurfaceTolerance()) {;}
+    kCarTolerance(G4GeometryTolerance::GetInstance()->GetSurfaceTolerance())
+{
+  ;
+}
 
-G4PhononReflection::~G4PhononReflection() {;}
+G4PhononReflection::~G4PhononReflection()
+{
+  ;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
@@ -62,8 +68,8 @@ G4PhononReflection::~G4PhononReflection() {;}
 // decides whether the step encountered a volume boundary and a
 // reflection should be applied
 
-G4double G4PhononReflection::GetMeanFreePath(const G4Track&, G4double,
-					     G4ForceCondition* condition) {
+G4double G4PhononReflection::GetMeanFreePath(const G4Track&, G4double, G4ForceCondition* condition)
+{
   *condition = Forced;
   return DBL_MAX;
 }
@@ -75,45 +81,46 @@ G4double G4PhononReflection::GetMeanFreePath(const G4Track&, G4double,
 // dependent.Currently, phonons are killed when they reach a
 // boundary. If the other side of the boundary was Al, a hit is
 // registered.
-  
-G4VParticleChange* G4PhononReflection::PostStepDoIt(const G4Track& aTrack,
-						    const G4Step& aStep) { 
+
+G4VParticleChange* G4PhononReflection::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
+{
   aParticleChange.Initialize(aTrack);
-   
-  //Check if current step is limited by a volume boundary
+
+  // Check if current step is limited by a volume boundary
   G4StepPoint* postStepPoint = aStep.GetPostStepPoint();
-  if (postStepPoint->GetStepStatus()!=fGeomBoundary) {
-    //make sure that correct phonon velocity is used after the step
+  if (postStepPoint->GetStepStatus() != fGeomBoundary)
+  {
+    // make sure that correct phonon velocity is used after the step
     int pol = GetPolarization(aTrack);
-    if (pol < 0 || pol > 2) {
-      G4Exception("G4PhononReflection::PostStepDoIt","Phonon001",
-		  EventMustBeAborted, "Track is not a phonon");
-      return &aParticleChange;		// NOTE: Will never get here
+    if (pol < 0 || pol > 2)
+    {
+      G4Exception("G4PhononReflection::PostStepDoIt", "Phonon001", EventMustBeAborted,
+                  "Track is not a phonon");
+      return &aParticleChange;  // NOTE: Will never get here
     }
 
     // FIXME:  This should be using wave-vector, shouldn't it?
     G4double vg = theLattice->MapKtoV(pol, aTrack.GetMomentumDirection());
-    
-    //Since step was not a volume boundary, just set correct phonon velocity and return
+
+    // Since step was not a volume boundary, just set correct phonon velocity and return
     aParticleChange.ProposeVelocity(vg);
     return &aParticleChange;
   }
-  
+
   // do nothing but return is the step is too short
   // This is to allow actual reflection where after
   // the first boundary crossing a second, infinitesimal
   // step occurs crossing back into the original volume
-  if (aTrack.GetStepLength()<=kCarTolerance/2) { 
+  if (aTrack.GetStepLength() <= kCarTolerance / 2)
+  {
     return &aParticleChange;
   }
-  
-  G4double eKin = aTrack.GetKineticEnergy();     
+
+  G4double eKin = aTrack.GetKineticEnergy();
   aParticleChange.ProposeNonIonizingEnergyDeposit(eKin);
   aParticleChange.ProposeTrackStatus(fStopAndKill);
-  
-  return &aParticleChange; 
+
+  return &aParticleChange;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-

@@ -36,85 +36,79 @@
 //
 // Stopping of mu-
 //
-// Modifications: 
+// Modifications:
 //   20160912 K.L. Genser made it rest process
 //
 //------------------------------------------------------------------------
 
-#ifndef G4MuonMinusAtomicCapture_h
-#define G4MuonMinusAtomicCapture_h 1
- 
-#include "globals.hh"
-#include "G4VRestProcess.hh"
-#include "G4ParticleDefinition.hh"
+#ifndef G4MUONMINUSATOMICCAPTURE_HH
+#define G4MUONMINUSATOMICCAPTURE_HH
+
 #include "G4ElementSelector.hh"
-#include "G4HadronicInteraction.hh"
-#include "G4Track.hh"
-#include "G4Step.hh"
 #include "G4ForceCondition.hh"
-#include "G4HadronicProcessType.hh"
 #include "G4HadFinalState.hh"
+#include "G4HadronicInteraction.hh"
+#include "G4HadronicProcessType.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4Step.hh"
+#include "G4Track.hh"
+#include "G4VRestProcess.hh"
+#include "globals.hh"
 
 class G4HadronicInteraction;
 
 class G4MuonMinusAtomicCapture : public G4VRestProcess
 
-{ 
-public:
- 
-  explicit G4MuonMinusAtomicCapture(const G4String& name
-                                    = "muMinusAtomicCaptureAtRest" );
+{
+  public:
 
-  ~G4MuonMinusAtomicCapture();
+    explicit G4MuonMinusAtomicCapture(const G4String& name = "muMinusAtomicCaptureAtRest");
 
-  G4bool IsApplicable(const G4ParticleDefinition&);
+    ~G4MuonMinusAtomicCapture();
 
-  virtual void PreparePhysicsTable(const G4ParticleDefinition&);
+    G4bool IsApplicable(const G4ParticleDefinition&);
 
-  virtual void BuildPhysicsTable(const G4ParticleDefinition&);
+    virtual void PreparePhysicsTable(const G4ParticleDefinition&);
 
-  virtual G4double 
-  AtRestGetPhysicalInteractionLength(const G4Track& track,
-				     G4ForceCondition* condition);
+    virtual void BuildPhysicsTable(const G4ParticleDefinition&);
 
-  virtual G4VParticleChange* AtRestDoIt(const G4Track&, const G4Step&);
+    virtual G4double AtRestGetPhysicalInteractionLength(const G4Track& track,
+                                                        G4ForceCondition* condition);
 
-  void ProcessDescription(std::ostream& outFile) const;
+    virtual G4VParticleChange* AtRestDoIt(const G4Track&, const G4Step&);
 
-  inline void SetElementSelector(G4ElementSelector* ptr);
+    void ProcessDescription(std::ostream& outFile) const;
 
-  inline void SetEmCascade(G4HadronicInteraction* ptr);
+    inline void SetElementSelector(G4ElementSelector* ptr);
 
-protected:
-  // set effective lifetime for at-rest process (default is forced action)
-  // FIXME: This should be computed by subprocesses via cross-section analogue
-  G4double GetMeanLifeTime(const G4Track& /*aTrack*/,
-                           G4ForceCondition* /*condition*/) { return -1.0; }
+    inline void SetEmCascade(G4HadronicInteraction* ptr);
 
-private:
+  protected:
 
-  // hide assignment operator as private 
-  G4MuonMinusAtomicCapture& operator=(const G4MuonMinusAtomicCapture &right);
-  G4MuonMinusAtomicCapture(const G4MuonMinusAtomicCapture& );
+    // set effective lifetime for at-rest process (default is forced action)
+    // FIXME: This should be computed by subprocesses via cross-section analogue
+    G4double GetMeanLifeTime(const G4Track& /*aTrack*/, G4ForceCondition* /*condition*/)
+    {
+      return -1.0;
+    }
 
-  G4ElementSelector* fElementSelector;
+  private:
 
-  G4HadronicInteraction* fEmCascade;
+    // hide assignment operator as private
+    G4MuonMinusAtomicCapture& operator=(const G4MuonMinusAtomicCapture& right);
+    G4MuonMinusAtomicCapture(const G4MuonMinusAtomicCapture&);
 
-  G4ParticleChange* theTotalResult;
+    G4ElementSelector* fElementSelector;
 
-  G4HadFinalState* result;
+    G4HadronicInteraction* fEmCascade;
 
-  G4HadProjectile thePro;
+    G4ParticleChange* theTotalResult;
 
-  G4Nucleus targetNucleus;
+    G4HadFinalState* result;
 
+    G4HadProjectile thePro;
+
+    G4Nucleus targetNucleus;
 };
 
 #endif
- 
-
-
-
-
-

@@ -31,22 +31,21 @@
 
 #include "G4PiNInelasticAngDst.hh"
 
-namespace {
-  static const G4double qxke[10] =
-    {0.0, 0.062, 0.12, 0.217, 0.533, 0.873, 1.34, 2.86, 5.86, 10.0};
+namespace
+{
+static const G4double qxke[10] = {0.0, 0.062, 0.12, 0.217, 0.533, 0.873, 1.34, 2.86, 5.86, 10.0};
 
-  static const G4double qxFrac[10] =
-    {0.0,   0.0,    0.1156, 0.5832, 0.8125, 0.3357, 0.3269, 0.7765, 0.8633, 1.0};
-  static const G4double qxA[10] =
-    {0.0,   0.0,    2.48,   7.93,  10.0,    9.78,   5.08,   8.13,   8.13,   8.13};
-  static const G4double qxC[10] =
-    {0.0, -39.58, -12.55,  -4.38,   1.81,  -1.99,  -0.33,   1.2,    1.43,   8.13};
-  static const G4double qxCos[10] =
-    {1.0,   1.0,    0.604, -0.033,  0.25,   0.55,   0.65,   0.80,   0.916,  0.916};
-}
+static const G4double qxFrac[10] = {0.0,    0.0,    0.1156, 0.5832, 0.8125,
+                                    0.3357, 0.3269, 0.7765, 0.8633, 1.0};
+static const G4double qxA[10] = {0.0, 0.0, 2.48, 7.93, 10.0, 9.78, 5.08, 8.13, 8.13, 8.13};
+static const G4double qxC[10] = {0.0, -39.58, -12.55, -4.38, 1.81, -1.99, -0.33, 1.2, 1.43, 8.13};
+static const G4double qxCos[10] = {1.0, 1.0, 0.604, -0.033, 0.25, 0.55, 0.65, 0.80, 0.916, 0.916};
+}  // namespace
 
 // Constructor passes arrays to templated base class
 
 G4PiNInelasticAngDst::G4PiNInelasticAngDst(G4int verbose)
-  : G4ParamExpTwoBodyAngDst<10>("G4PiNInelasticAngDist", qxke, qxFrac,
-			     qxA, qxC, qxCos, verbose) {;}
+  : G4ParamExpTwoBodyAngDst<10>("G4PiNInelasticAngDist", qxke, qxFrac, qxA, qxC, qxCos, verbose)
+{
+  ;
+}

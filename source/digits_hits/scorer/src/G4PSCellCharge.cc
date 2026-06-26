@@ -26,6 +26,7 @@
 //
 // G4PSCellCharge
 #include "G4PSCellCharge.hh"
+
 #include "G4Track.hh"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,13 +40,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 G4PSCellCharge::G4PSCellCharge(const G4String& name, G4int depth)
-  : G4PSCellCharge(name, "e+", depth) 
+  : G4PSCellCharge(name, "e+", depth)
 {}
 
 G4PSCellCharge::G4PSCellCharge(const G4String& name, const G4String& unit, G4int depth)
-  : G4VPrimitiveScorer(name, depth)
-  , HCID(-1)
-  , EvtMap(nullptr)
+  : G4VPrimitiveScorer(name, depth), HCID(-1), EvtMap(nullptr)
 {
   SetUnit(unit);
 }
@@ -53,9 +52,8 @@ G4PSCellCharge::G4PSCellCharge(const G4String& name, const G4String& unit, G4int
 G4bool G4PSCellCharge::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
   // Enter or First step of primary.
-  if(aStep->GetPreStepPoint()->GetStepStatus() == fGeomBoundary ||
-     (aStep->GetTrack()->GetParentID() == 0 &&
-      aStep->GetTrack()->GetCurrentStepNumber() == 1))
+  if (aStep->GetPreStepPoint()->GetStepStatus() == fGeomBoundary
+      || (aStep->GetTrack()->GetParentID() == 0 && aStep->GetTrack()->GetCurrentStepNumber() == 1))
   {
     G4double CellCharge = aStep->GetPreStepPoint()->GetCharge();
     CellCharge *= aStep->GetPreStepPoint()->GetWeight();
@@ -64,7 +62,7 @@ G4bool G4PSCellCharge::ProcessHits(G4Step* aStep, G4TouchableHistory*)
   }
 
   // Exit
-  if(aStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary)
+  if (aStep->GetPostStepPoint()->GetStepStatus() == fGeomBoundary)
   {
     G4double CellCharge = aStep->GetPreStepPoint()->GetCharge();
     CellCharge *= aStep->GetPreStepPoint()->GetWeight();
@@ -79,22 +77,23 @@ G4bool G4PSCellCharge::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 void G4PSCellCharge::Initialize(G4HCofThisEvent* HCE)
 {
   EvtMap = new G4THitsMap<G4double>(detector->GetName(), GetName());
-  if(HCID < 0)
-    HCID = GetCollectionID(0);
+  if (HCID < 0) HCID = GetCollectionID(0);
   HCE->AddHitsCollection(HCID, EvtMap);
 }
 
-void G4PSCellCharge::clear() { EvtMap->clear(); }
+void G4PSCellCharge::clear()
+{
+  EvtMap->clear();
+}
 
 void G4PSCellCharge::PrintAll()
 {
   G4cout << " MultiFunctionalDet  " << detector->GetName() << G4endl;
   G4cout << " PrimitiveScorer " << GetName() << G4endl;
   G4cout << " Number of entries " << EvtMap->entries() << G4endl;
-  for(const auto& [copy, charge] : *(EvtMap->GetMap()))
+  for (const auto& [copy, charge] : *(EvtMap->GetMap()))
   {
-    G4cout << "  copy no.: " << copy
-           << "  cell charge : " << *(charge) / GetUnitValue() << " ["
+    G4cout << "  copy no.: " << copy << "  cell charge : " << *(charge) / GetUnitValue() << " ["
            << GetUnit() << "]" << G4endl;
   }
 }

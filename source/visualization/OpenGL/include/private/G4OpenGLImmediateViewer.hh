@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  7th February 1997
 // Class G4OpenGLImmediateViewer : Encapsulates the `immediateness' of
 //                                 an OpenGL viewer, for inheritance by
@@ -40,11 +40,12 @@
 class G4OpenGLSceneHandler;
 class G4OpenGLImmediateSceneHandler;
 
-class G4OpenGLImmediateViewer: virtual public G4OpenGLViewer {
-  
-public:
-  G4OpenGLImmediateViewer (G4OpenGLImmediateSceneHandler& scene);
-  void ProcessView ();
+class G4OpenGLImmediateViewer : virtual public G4OpenGLViewer
+{
+  public:
+
+    G4OpenGLImmediateViewer(G4OpenGLImmediateSceneHandler& scene);
+    void ProcessView();
 };
 
 #endif

@@ -24,30 +24,34 @@
 // ********************************************************************
 //
 
-#ifndef G4DNAPTBExcitationStructure_h
-#define G4DNAPTBExcitationStructure_h 1
- 
+#ifndef G4DNAPTBEXCITATIONSTRUCTURE_HH
+#define G4DNAPTBEXCITATIONSTRUCTURE_HH
+
 #include "globals.hh"
-#include <vector>
+
 #include <map>
+#include <vector>
 class G4Material;
 class G4DNAPTBExcitationStructure
 {
-public:
+  public:
 
-  G4DNAPTBExcitationStructure();
-  ~G4DNAPTBExcitationStructure() = default;
-  G4double ExcitationEnergy(const G4int& ExcLevel, const size_t &materialID);
-  G4int NumberOfExcLevels(const size_t& materialID);
-  G4DNAPTBExcitationStructure(const G4DNAPTBExcitationStructure&) = delete;  // prevent copy-construction
-  G4DNAPTBExcitationStructure& operator=(
-    const G4DNAPTBExcitationStructure& right) = delete;  // prevent assignement
-private:
-  // Number of Excitation levels of the water molecule
-  std::map<size_t, G4int> nExcLevels;
-  std::map<size_t, std::vector<G4double> > energyConstant;
-  size_t ReplaceMaterial(const size_t &materialName);
-  G4Material* fpN2;
+    G4DNAPTBExcitationStructure();
+    ~G4DNAPTBExcitationStructure() = default;
+    G4double ExcitationEnergy(const G4int& ExcLevel, const size_t& materialID);
+    G4int NumberOfExcLevels(const size_t& materialID);
+    G4DNAPTBExcitationStructure(const G4DNAPTBExcitationStructure&) =
+      delete;  // prevent copy-construction
+    G4DNAPTBExcitationStructure&
+    operator=(const G4DNAPTBExcitationStructure& right) = delete;  // prevent assignement
+
+  private:
+
+    // Number of Excitation levels of the water molecule
+    std::map<size_t, G4int> nExcLevels;
+    std::map<size_t, std::vector<G4double>> energyConstant;
+    size_t ReplaceMaterial(const size_t& materialName);
+    G4Material* fpN2;
 };
 
 #endif

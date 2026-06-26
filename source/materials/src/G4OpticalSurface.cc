@@ -46,7 +46,8 @@
 
 G4OpticalSurface& G4OpticalSurface::operator=(const G4OpticalSurface& right)
 {
-  if (this != &right) {
+  if (this != &right)
+  {
     theName = right.theName;
     theType = right.theType;
     theModel = right.theModel;
@@ -75,7 +76,8 @@ G4OpticalSurface& G4OpticalSurface::operator=(const G4OpticalSurface& right)
 }
 
 G4OpticalSurface::G4OpticalSurface(const G4String& name, G4OpticalSurfaceModel model,
-  G4OpticalSurfaceFinish finish, G4SurfaceType type, G4double value)
+                                   G4OpticalSurfaceFinish finish, G4SurfaceType type,
+                                   G4double value)
   : G4SurfaceProperty(name, type), theModel(model), theFinish(finish)
 {
   AngularDistribution = nullptr;
@@ -85,7 +87,8 @@ G4OpticalSurface::G4OpticalSurface(const G4String& name, G4OpticalSurfaceModel m
 
   DichroicVector = nullptr;
 
-  switch (theModel) {
+  switch (theModel)
+  {
     case glisur:
       polish = value;
       sigma_alpha = 0.0;
@@ -101,7 +104,7 @@ G4OpticalSurface::G4OpticalSurface(const G4String& name, G4OpticalSurfaceModel m
       break;
     default:
       G4Exception("G4OpticalSurface::G4OpticalSurface()", "mat309", FatalException,
-        "Constructor called with INVALID model.");
+                  "Constructor called with INVALID model.");
   }
 }
 
@@ -155,15 +158,30 @@ G4bool G4OpticalSurface::operator!=(const G4OpticalSurface& right) const
   return (this != (G4OpticalSurface*)&right);
 }
 
-G4int G4OpticalSurface::GetInmax() const { return indexmax; }
+G4int G4OpticalSurface::GetInmax() const
+{
+  return indexmax;
+}
 
-G4int G4OpticalSurface::GetLUTbins() const { return LUTbins; }
+G4int G4OpticalSurface::GetLUTbins() const
+{
+  return LUTbins;
+}
 
-G4int G4OpticalSurface::GetRefMax() const { return RefMax; }
+G4int G4OpticalSurface::GetRefMax() const
+{
+  return RefMax;
+}
 
-G4int G4OpticalSurface::GetThetaIndexMax() const { return thetaIndexMax; }
+G4int G4OpticalSurface::GetThetaIndexMax() const
+{
+  return thetaIndexMax;
+}
 
-G4int G4OpticalSurface::GetPhiIndexMax() const { return phiIndexMax; }
+G4int G4OpticalSurface::GetPhiIndexMax() const
+{
+  return phiIndexMax;
+}
 
 void G4OpticalSurface::DumpInfo() const
 {
@@ -174,10 +192,12 @@ void G4OpticalSurface::DumpInfo() const
          << "  Surface model  = " << G4int(theModel) << G4endl << G4endl << "  Surface parameter "
          << G4endl << "  ----------------- " << G4endl;
 
-  if (theModel == glisur) {
+  if (theModel == glisur)
+  {
     G4cout << " polish: " << polish << G4endl;
   }
-  else {
+  else
+  {
     G4cout << " sigma_alpha: " << sigma_alpha << G4endl;
   }
   G4cout << G4endl;
@@ -199,26 +219,31 @@ void G4OpticalSurface::ReadDataFile()
 {
   // type and finish can be set in either order. Thus, we can't check
   // for consistency. Need to read file on setting either type or finish.
-  switch (theType) {
+  switch (theType)
+  {
     case dielectric_LUT:
-      if (AngularDistribution == nullptr) {
+      if (AngularDistribution == nullptr)
+      {
         AngularDistribution = new G4float[incidentIndexMax * thetaIndexMax * phiIndexMax];
       }
       ReadLUTFile();
       break;
     case dielectric_LUTDAVIS:
-      if (AngularDistributionLUT == nullptr) {
+      if (AngularDistributionLUT == nullptr)
+      {
         AngularDistributionLUT = new G4float[indexmax];
       }
       ReadLUTDAVISFile();
 
-      if (Reflectivity == nullptr) {
+      if (Reflectivity == nullptr)
+      {
         Reflectivity = new G4float[RefMax];
       }
       ReadReflectivityLUTFile();
       break;
     case dielectric_dichroic:
-      if (DichroicVector == nullptr) {
+      if (DichroicVector == nullptr)
+      {
         DichroicVector = new G4Physics2DVector();
       }
       ReadDichroicFile();
@@ -232,7 +257,8 @@ void G4OpticalSurface::ReadLUTFile()
 {
   G4String readLUTFileName;
 
-  switch (theFinish) {
+  switch (theFinish)
+  {
     case polishedlumirrorglue:
       readLUTFileName = "PolishedLumirrorGlue.z";
       break;
@@ -304,7 +330,8 @@ void G4OpticalSurface::ReadLUTFile()
   ReadCompressedFile(readLUTFileName, iss);
 
   size_t idxmax = incidentIndexMax * thetaIndexMax * phiIndexMax;
-  for (size_t i = 0; i < idxmax; ++i) {
+  for (size_t i = 0; i < idxmax; ++i)
+  {
     iss >> AngularDistribution[i];
   }
   G4cout << "LUT - data file: " << readLUTFileName << " read in! " << G4endl;
@@ -314,7 +341,8 @@ void G4OpticalSurface::ReadLUTDAVISFile()
 {
   G4String readLUTDAVISFileName;
 
-  switch (theFinish) {
+  switch (theFinish)
+  {
     case Rough_LUT:
       readLUTDAVISFileName = "Rough_LUT.z";
       break;
@@ -349,7 +377,8 @@ void G4OpticalSurface::ReadLUTDAVISFile()
   std::istringstream iss;
   ReadCompressedFile(readLUTDAVISFileName, iss);
 
-  for (size_t i = 0; i < indexmax; ++i) {
+  for (size_t i = 0; i < indexmax; ++i)
+  {
     iss >> AngularDistributionLUT[i];
   }
   G4cout << "LUT DAVIS - data file: " << readLUTDAVISFileName << " read in! " << G4endl;
@@ -359,7 +388,8 @@ void G4OpticalSurface::ReadReflectivityLUTFile()
 {
   G4String readReflectivityLUTFileName;
 
-  switch (theFinish) {
+  switch (theFinish)
+  {
     case Rough_LUT:
       readReflectivityLUTFileName = "Rough_LUTR.z";
       break;
@@ -394,7 +424,8 @@ void G4OpticalSurface::ReadReflectivityLUTFile()
   std::istringstream iss;
   ReadCompressedFile(readReflectivityLUTFileName, iss);
 
-  for (size_t i = 0; i < RefMax; ++i) {
+  for (size_t i = 0; i < RefMax; ++i)
+  {
     iss >> Reflectivity[i];
   }
   G4cout << "LUT DAVIS - reflectivity data file: " << readReflectivityLUTFileName << " read in! "
@@ -409,20 +440,23 @@ void G4OpticalSurface::ReadCompressedFile(const G4String& filename, std::istring
   G4String compfilename = path + "/" + filename;
   // create input stream with binary mode operation and position at end of file
   std::ifstream in(compfilename, std::ios::binary | std::ios::ate);
-  if (in.good()) {
+  if (in.good())
+  {
     // get current position in the stream (was set to the end)
     G4int fileSize = (G4int)in.tellg();
     // set current position being the beginning of the stream
     in.seekg(0, std::ios::beg);
     // create (zlib) byte buffer for the data
     auto compdata = new Bytef[fileSize];
-    while (in) {
+    while (in)
+    {
       in.read((char*)compdata, fileSize);
     }
     // create (zlib) byte buffer for the uncompressed data
     auto complen = (uLongf)(fileSize * 4);
     auto uncompdata = new Bytef[complen];
-    while (Z_OK != uncompress(uncompdata, &complen, compdata, fileSize)) {
+    while (Z_OK != uncompress(uncompdata, &complen, compdata, fileSize))
+    {
       // increase uncompressed byte buffer
       delete[] uncompdata;
       complen *= 2;
@@ -435,14 +469,16 @@ void G4OpticalSurface::ReadCompressedFile(const G4String& filename, std::istring
     // delete the uncompressed data buffer
     delete[] uncompdata;
   }
-  else {
+  else
+  {
     G4ExceptionDescription ed;
     ed << "Problem while trying to read " + compfilename + " data file.\n";
     G4Exception("G4OpticalSurface::ReadCompressedFile", "mat316", FatalException, ed);
     return;
   }
   // create the input string stream from the data string
-  if (dataString != nullptr) {
+  if (dataString != nullptr)
+  {
     iss.str(*dataString);
     in.close();
     delete dataString;
@@ -454,23 +490,26 @@ void G4OpticalSurface::ReadDichroicFile()
 {
   const char* datadir = G4FindDataDir("G4DICHROICDATA");
 
-  if (datadir == nullptr) {
+  if (datadir == nullptr)
+  {
     G4Exception("G4OpticalSurface::ReadDichroicFile()", "mat313", FatalException,
-      "Environment variable G4DICHROICDATA not defined");
+                "Environment variable G4DICHROICDATA not defined");
     return;
   }
 
   std::ostringstream ost;
   ost << datadir;
   std::ifstream fin(ost.str().c_str());
-  if (! fin.is_open()) {
+  if (!fin.is_open())
+  {
     G4ExceptionDescription ed;
     ed << "Dichroic surface data file <" << ost.str().c_str() << "> is not opened!" << G4endl;
     G4Exception("G4OpticalSurface::ReadDichroicFile()", "mat314", FatalException, ed, " ");
     return;
   }
 
-  if (! (DichroicVector->Retrieve(fin))) {
+  if (!(DichroicVector->Retrieve(fin)))
+  {
     G4ExceptionDescription ed;
     ed << "Dichroic surface data file <" << ost.str().c_str() << "> is not opened!" << G4endl;
     G4Exception("G4OpticalSurface::ReadDichroicFile()", "mat315", FatalException, ed, " ");
@@ -487,10 +526,12 @@ void G4OpticalSurface::ReadDichroicFile()
   G4cout << "numberOfXNodes: " << numberOfXNodes << G4endl;
   G4cout << "numberOfYNodes: " << numberOfYNodes << G4endl;
 
-  if (0 > numberOfXNodes || numberOfXNodes >= INT_MAX) {
+  if (0 > numberOfXNodes || numberOfXNodes >= INT_MAX)
+  {
     numberOfXNodes = 0;
   }
-  if (0 > numberOfYNodes || numberOfYNodes >= INT_MAX) {
+  if (0 > numberOfYNodes || numberOfYNodes >= INT_MAX)
+  {
     numberOfYNodes = 0;
   }
 
@@ -500,17 +541,21 @@ void G4OpticalSurface::ReadDichroicFile()
   xVector.resize(numberOfXNodes, 0.);
   yVector.resize(numberOfYNodes, 0.);
 
-  for (G4int i = 0; i < numberOfXNodes; ++i) {
+  for (G4int i = 0; i < numberOfXNodes; ++i)
+  {
     G4cout << "i: " << DichroicVector->GetX(i) << G4endl;
     xVector[i] = DichroicVector->GetX(i);
   }
-  for (G4int j = 0; j < numberOfYNodes; ++j) {
+  for (G4int j = 0; j < numberOfYNodes; ++j)
+  {
     G4cout << "j: " << DichroicVector->GetY(j) << G4endl;
     yVector[j] = DichroicVector->GetY(j);
   }
 
-  for (G4int j = 0; j < numberOfYNodes; ++j) {
-    for (G4int i = 0; i < numberOfXNodes; ++i) {
+  for (G4int j = 0; j < numberOfYNodes; ++j)
+  {
+    for (G4int i = 0; i < numberOfXNodes; ++i)
+    {
       G4cout << " i: " << i << " j: " << j << " " << DichroicVector->GetValue(i, j) << G4endl;
     }
   }

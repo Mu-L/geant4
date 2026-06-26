@@ -31,7 +31,7 @@
 //
 // File name:     G4HadronicProcessStore
 //
-// Author:        Vladimir Ivanchenko 
+// Author:        Vladimir Ivanchenko
 //
 // Creation date: 09.05.2008
 //
@@ -44,21 +44,21 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4HadronicProcessStore_h
-#define G4HadronicProcessStore_h 1
+#ifndef G4HADRONICPROCESSSTORE_HH
+#define G4HADRONICPROCESSSTORE_HH
 
-
-#include "globals.hh"
 #include "G4DynamicParticle.hh"
-#include "G4ThreeVector.hh"
-#include "G4HadronicProcess.hh"
 #include "G4HadronicInteraction.hh"
-#include "G4ParticleDefinition.hh"
+#include "G4HadronicProcess.hh"
 #include "G4HadronicProcessType.hh"
+#include "G4ParticleDefinition.hh"
 #include "G4ThreadLocalSingleton.hh"
+#include "G4ThreeVector.hh"
+#include "globals.hh"
+
+#include <iostream>
 #include <map>
 #include <vector>
-#include <iostream>
 
 class G4Element;
 class G4HadronicEPTestMessenger;
@@ -66,200 +66,165 @@ class G4HadronicParameters;
 
 class G4HadronicProcessStore
 {
+    friend class G4ThreadLocalSingleton<G4HadronicProcessStore>;
 
-friend class G4ThreadLocalSingleton<G4HadronicProcessStore>;
+  public:
 
-public:
+    static G4HadronicProcessStore* Instance();
 
-  static G4HadronicProcessStore* Instance();
+    ~G4HadronicProcessStore();
 
-  ~G4HadronicProcessStore();
+    G4double GetCrossSectionPerAtom(const G4ParticleDefinition* particle, G4double kineticEnergy,
+                                    const G4VProcess* process, const G4Element* element,
+                                    const G4Material* material = nullptr);
 
-  G4double GetCrossSectionPerAtom(
-    const G4ParticleDefinition* particle,
-    G4double kineticEnergy,
-    const G4VProcess* process,
-    const G4Element*  element,
-    const G4Material* material=nullptr);
-      
-  G4double GetCrossSectionPerVolume(
-    const G4ParticleDefinition* particle,
-    G4double kineticEnergy,
-    const G4VProcess* process,
-    const G4Material* material);
-    
-  G4double GetInelasticCrossSectionPerVolume(
-    const G4ParticleDefinition *aParticle,
-    G4double kineticEnergy,
-    const G4Material *material);
+    G4double GetCrossSectionPerVolume(const G4ParticleDefinition* particle, G4double kineticEnergy,
+                                      const G4VProcess* process, const G4Material* material);
 
-  G4double GetInelasticCrossSectionPerAtom(
-    const G4ParticleDefinition *aParticle,
-    G4double kineticEnergy,
-    const G4Element *anElement, 
-    const G4Material* mat=nullptr);
+    G4double GetInelasticCrossSectionPerVolume(const G4ParticleDefinition* aParticle,
+                                               G4double kineticEnergy, const G4Material* material);
 
-  G4double GetInelasticCrossSectionPerIsotope(
-    const G4ParticleDefinition *aParticle,
-    G4double kineticEnergy,
-    G4int Z, G4int A);
+    G4double GetInelasticCrossSectionPerAtom(const G4ParticleDefinition* aParticle,
+                                             G4double kineticEnergy, const G4Element* anElement,
+                                             const G4Material* mat = nullptr);
 
-  G4double GetElasticCrossSectionPerVolume(
-    const G4ParticleDefinition *aParticle,
-    G4double kineticEnergy,
-    const G4Material *material);
+    G4double GetInelasticCrossSectionPerIsotope(const G4ParticleDefinition* aParticle,
+                                                G4double kineticEnergy, G4int Z, G4int A);
 
-  G4double GetElasticCrossSectionPerAtom(
-    const G4ParticleDefinition *aParticle,
-    G4double kineticEnergy,
-    const G4Element *anElement, const G4Material* mat=0);
+    G4double GetElasticCrossSectionPerVolume(const G4ParticleDefinition* aParticle,
+                                             G4double kineticEnergy, const G4Material* material);
 
-  G4double GetElasticCrossSectionPerIsotope(
-    const G4ParticleDefinition *aParticle,
-    G4double kineticEnergy,
-    G4int Z, G4int A);
+    G4double GetElasticCrossSectionPerAtom(const G4ParticleDefinition* aParticle,
+                                           G4double kineticEnergy, const G4Element* anElement,
+                                           const G4Material* mat = 0);
 
-  G4double GetCaptureCrossSectionPerVolume(
-    const G4ParticleDefinition *aParticle,
-    G4double kineticEnergy,
-    const G4Material *material);
+    G4double GetElasticCrossSectionPerIsotope(const G4ParticleDefinition* aParticle,
+                                              G4double kineticEnergy, G4int Z, G4int A);
 
-  G4double GetCaptureCrossSectionPerAtom(
-    const G4ParticleDefinition *aParticle,
-    G4double kineticEnergy,
-    const G4Element *anElement, 
-    const G4Material* mat=nullptr);
+    G4double GetCaptureCrossSectionPerVolume(const G4ParticleDefinition* aParticle,
+                                             G4double kineticEnergy, const G4Material* material);
 
-  G4double GetCaptureCrossSectionPerIsotope(
-    const G4ParticleDefinition *aParticle,
-    G4double kineticEnergy,
-    G4int Z, G4int A);
+    G4double GetCaptureCrossSectionPerAtom(const G4ParticleDefinition* aParticle,
+                                           G4double kineticEnergy, const G4Element* anElement,
+                                           const G4Material* mat = nullptr);
 
-  G4double GetFissionCrossSectionPerVolume(
-    const G4ParticleDefinition *aParticle,
-    G4double kineticEnergy,
-    const G4Material *material);
+    G4double GetCaptureCrossSectionPerIsotope(const G4ParticleDefinition* aParticle,
+                                              G4double kineticEnergy, G4int Z, G4int A);
 
-  G4double GetFissionCrossSectionPerAtom(
-    const G4ParticleDefinition *aParticle,
-    G4double kineticEnergy,
-    const G4Element *anElement, 
-    const G4Material* mat=nullptr);
+    G4double GetFissionCrossSectionPerVolume(const G4ParticleDefinition* aParticle,
+                                             G4double kineticEnergy, const G4Material* material);
 
-  G4double GetFissionCrossSectionPerIsotope(
-    const G4ParticleDefinition *aParticle,
-    G4double kineticEnergy,
-    G4int Z, G4int A);
+    G4double GetFissionCrossSectionPerAtom(const G4ParticleDefinition* aParticle,
+                                           G4double kineticEnergy, const G4Element* anElement,
+                                           const G4Material* mat = nullptr);
 
-  G4double GetChargeExchangeCrossSectionPerVolume(
-    const G4ParticleDefinition *aParticle,
-    G4double kineticEnergy,
-    const G4Material *material);
+    G4double GetFissionCrossSectionPerIsotope(const G4ParticleDefinition* aParticle,
+                                              G4double kineticEnergy, G4int Z, G4int A);
 
-  G4double GetChargeExchangeCrossSectionPerAtom(
-    const G4ParticleDefinition *aParticle,
-    G4double kineticEnergy,
-    const G4Element *anElement, 
-    const G4Material* mat=nullptr);
+    G4double GetChargeExchangeCrossSectionPerVolume(const G4ParticleDefinition* aParticle,
+                                                    G4double kineticEnergy,
+                                                    const G4Material* material);
 
-  G4double GetChargeExchangeCrossSectionPerIsotope(
-    const G4ParticleDefinition *aParticle,
-    G4double kineticEnergy,
-    G4int Z, G4int A);
+    G4double GetChargeExchangeCrossSectionPerAtom(const G4ParticleDefinition* aParticle,
+                                                  G4double kineticEnergy,
+                                                  const G4Element* anElement,
+                                                  const G4Material* mat = nullptr);
 
-  // register/deregister processes following G4HadronicProcess interface
-  void Register(G4HadronicProcess*); 
+    G4double GetChargeExchangeCrossSectionPerIsotope(const G4ParticleDefinition* aParticle,
+                                                     G4double kineticEnergy, G4int Z, G4int A);
 
-  void RegisterParticle(G4HadronicProcess*,
-			const G4ParticleDefinition*); 
+    G4double GetInteractionLength(const G4Material* material, const G4ParticleDefinition* aParticle,
+                                  const G4double kineticEnergy);
 
-  void RegisterInteraction(G4HadronicProcess*,
-			   G4HadronicInteraction*); 
+    // register/deregister processes following G4HadronicProcess interface
+    void Register(G4HadronicProcess*);
 
-  void DeRegister(G4HadronicProcess*); 
+    void RegisterParticle(G4HadronicProcess*, const G4ParticleDefinition*);
 
-  // register/deregister processes following only G4VProcess interface
-  void RegisterExtraProcess(G4VProcess*); 
+    void RegisterInteraction(G4HadronicProcess*, G4HadronicInteraction*);
 
-  void RegisterParticleForExtraProcess(G4VProcess*,
-				       const G4ParticleDefinition*); 
+    void DeRegister(G4HadronicProcess*);
 
-  void DeRegisterExtraProcess(G4VProcess*); 
+    // register/deregister processes following only G4VProcess interface
+    void RegisterExtraProcess(G4VProcess*);
 
-  void SetBuildXSTable(G4bool val);
+    void RegisterParticleForExtraProcess(G4VProcess*, const G4ParticleDefinition*);
 
-  G4bool GetBuildXSTable() const;
+    void DeRegisterExtraProcess(G4VProcess*);
 
-  void PrintInfo(const G4ParticleDefinition*);
+    void SetBuildXSTable(G4bool val);
 
-  void Dump(G4int level);
-  void DumpHtml();
-  void PrintHtml(const G4ParticleDefinition*, std::ofstream&);
-  void PrintModelHtml(const G4HadronicInteraction * model) const;
+    G4bool GetBuildXSTable() const;
 
-  void SetVerbose(G4int val);
-  G4int GetVerbose();
-  // these methods are obsolete and will be removed
+    void PrintInfo(const G4ParticleDefinition*);
 
-  G4HadronicProcess* FindProcess(const G4ParticleDefinition*, 
-				 G4HadronicProcessType subType);
+    void Dump(G4int level);
+    void DumpHtml();
+    void PrintHtml(const G4ParticleDefinition*, std::ofstream&);
+    void PrintModelHtml(const G4HadronicInteraction* model) const;
 
-  // Energy-momentum non-conservation limits and reporting
-  void SetEpReportLevel(G4int level);
+    void SetVerbose(G4int val);
+    G4int GetVerbose();
+    // these methods are obsolete and will be removed
 
-  void SetProcessAbsLevel(G4double absoluteLevel);
+    G4HadronicProcess* FindProcess(const G4ParticleDefinition*, G4HadronicProcessType subType);
 
-  void SetProcessRelLevel(G4double relativeLevel);
+    // Energy-momentum non-conservation limits and reporting
+    void SetEpReportLevel(G4int level);
 
-private:
+    void SetProcessAbsLevel(G4double absoluteLevel);
 
-  // constructor
-  G4HadronicProcessStore();
+    void SetProcessRelLevel(G4double relativeLevel);
 
-  // print process info
-  void Print(G4int idxProcess, G4int idxParticle);
-  
-  G4String HtmlFileName(const G4String &) const;
+  private:
 
-  static G4ThreadLocal G4HadronicProcessStore* instance;
+    // constructor
+    G4HadronicProcessStore();
 
-  typedef const G4ParticleDefinition* PD;
-  typedef G4HadronicProcess* HP;
-  typedef G4HadronicInteraction* HI;
+    // print process info
+    void Print(G4int idxProcess, G4int idxParticle);
 
-  // hadronic processes following G4HadronicProcess interface
-  std::vector<G4HadronicProcess*> process;
-  std::vector<G4HadronicInteraction*> model;
-  std::vector<G4String> modelName;
-  std::vector<PD> particle;
-  std::vector<G4int> wasPrinted;
+    G4String HtmlFileName(const G4String&) const;
 
-  std::multimap<PD,HP> p_map;
-  std::multimap<HP,HI> m_map;
+    static G4ThreadLocal G4HadronicProcessStore* instance;
 
-  // hadronic processes following only G4VProcess interface
-  std::vector<G4VProcess*> extraProcess;
-  std::multimap<PD,G4VProcess*> ep_map;
+    typedef const G4ParticleDefinition* PD;
+    typedef G4HadronicProcess* HP;
+    typedef G4HadronicInteraction* HI;
 
-  G4HadronicParameters* param;
+    // hadronic processes following G4HadronicProcess interface
+    std::vector<G4HadronicProcess*> process;
+    std::vector<G4HadronicInteraction*> model;
+    std::vector<G4String> modelName;
+    std::vector<PD> particle;
+    std::vector<G4int> wasPrinted;
 
-  // counters and options
-  G4int n_proc = 0;
-  G4int n_model = 0;
-  G4int n_part = 0;
-  G4int n_extra = 0;
+    std::multimap<PD, HP> p_map;
+    std::multimap<HP, HI> m_map;
 
-  G4bool buildTableStart = true;
-  G4bool buildXSTable = false;
+    // hadronic processes following only G4VProcess interface
+    std::vector<G4VProcess*> extraProcess;
+    std::multimap<PD, G4VProcess*> ep_map;
 
-  // cache
-  HP currentProcess = nullptr;
-  PD currentParticle = nullptr;
-  PD theGenericIon;
+    G4HadronicParameters* param;
 
-  G4DynamicParticle localDP;
+    // counters and options
+    G4int n_proc = 0;
+    G4int n_model = 0;
+    G4int n_part = 0;
+    G4int n_extra = 0;
 
-  G4HadronicEPTestMessenger* theEPTestMessenger;
+    G4bool buildTableStart = true;
+    G4bool buildXSTable = false;
+
+    // cache
+    HP currentProcess = nullptr;
+    PD currentParticle = nullptr;
+    PD theGenericIon;
+
+    G4DynamicParticle localDP;
+
+    G4HadronicEPTestMessenger* theEPTestMessenger;
 };
 
 #endif

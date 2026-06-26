@@ -31,6 +31,7 @@
  */
 
 #include "G4MoleculeTable.hh"
+
 #include "G4MolecularConfiguration.hh"
 #include "G4MoleculeDefinition.hh"
 #include "G4MoleculeTableMessenger.hh"
@@ -39,15 +40,11 @@ G4MoleculeTable* G4MoleculeTable::fpgMoleculeTable(nullptr);
 
 //------------------------------------------------------------------------------
 
-G4MoleculeTable::G4MoleculeTable()
-  : fMoleculeDefTableMessenger(new G4MoleculeTableMessenger())
-{
-}
+G4MoleculeTable::G4MoleculeTable() : fMoleculeDefTableMessenger(new G4MoleculeTableMessenger()) {}
 
 //------------------------------------------------------------------------------
 
-G4MoleculeTable::~G4MoleculeTable()
-= default;
+G4MoleculeTable::~G4MoleculeTable() = default;
 
 //------------------------------------------------------------------------------
 
@@ -66,19 +63,15 @@ G4MoleculeTable* G4MoleculeTable::GetMoleculeTable()
 
 //------------------------------------------------------------------------------
 
-G4MoleculeDefinition*
-G4MoleculeTable::CreateMoleculeDefinition(const G4String& name,
-                                          double diffusion_coefficient)
+G4MoleculeDefinition* G4MoleculeTable::CreateMoleculeDefinition(const G4String& name,
+                                                                double diffusion_coefficient)
 {
-  return new G4MoleculeDefinition(name, -1 /* mass*/,
-                                  diffusion_coefficient);
+  return new G4MoleculeDefinition(name, -1 /* mass*/, diffusion_coefficient);
 }
 
 //------------------------------------------------------------------------------
 
-G4MoleculeDefinition*
-G4MoleculeTable::GetMoleculeDefinition(const G4String& name,
-                                       bool mustExist)
+G4MoleculeDefinition* G4MoleculeTable::GetMoleculeDefinition(const G4String& name, bool mustExist)
 {
   auto it = fMoleculeDefTable.find(name);
   G4MoleculeDefinition* definition(nullptr);
@@ -86,37 +79,29 @@ G4MoleculeTable::GetMoleculeDefinition(const G4String& name,
   {
     definition = it->second;
   }
-  else if(mustExist)
+  else if (mustExist)
   {
     // exception
     G4ExceptionDescription description;
-    description << "The molecule definition " << name
-                << " was NOT recorded in the table" << G4endl;
-    G4Exception("G4MoleculeTable::CreateMoleculeModel",
-                "MOLECULE_DEFINITION_NOT_CREATED",
-                FatalException,
-                description);
+    description << "The molecule definition " << name << " was NOT recorded in the table" << G4endl;
+    G4Exception("G4MoleculeTable::CreateMoleculeModel", "MOLECULE_DEFINITION_NOT_CREATED",
+                FatalException, description);
   }
   return definition;
 }
 
 //------------------------------------------------------------------------------
 
-G4MolecularConfiguration*
-G4MoleculeTable::GetConfiguration(const G4String& name, bool mustExist)
+G4MolecularConfiguration* G4MoleculeTable::GetConfiguration(const G4String& name, bool mustExist)
 {
-  G4MolecularConfiguration* species =
-      G4MolecularConfiguration::GetMolecularConfiguration(name);
+  G4MolecularConfiguration* species = G4MolecularConfiguration::GetMolecularConfiguration(name);
 
-  if(species == nullptr && mustExist)
+  if (species == nullptr && mustExist)
   {
     // exception
     G4ExceptionDescription description;
-    description << "The configuration " << name
-                << " was not recorded in the table" << G4endl;
-    G4Exception("G4MoleculeTable::GetConfiguration",
-                "CONF_NOT_CREATED",
-                FatalException,
+    description << "The configuration " << name << " was not recorded in the table" << G4endl;
+    G4Exception("G4MoleculeTable::GetConfiguration", "CONF_NOT_CREATED", FatalException,
                 description);
   }
 
@@ -125,11 +110,9 @@ G4MoleculeTable::GetConfiguration(const G4String& name, bool mustExist)
 
 //------------------------------------------------------------------------------
 
-G4MolecularConfiguration*
-G4MoleculeTable::GetConfiguration(G4int id)
+G4MolecularConfiguration* G4MoleculeTable::GetConfiguration(G4int id)
 {
-  G4MolecularConfiguration* species =
-        G4MolecularConfiguration::GetMolecularConfiguration(id);
+  G4MolecularConfiguration* species = G4MolecularConfiguration::GetMolecularConfiguration(id);
 
   return species;
 }
@@ -138,7 +121,6 @@ G4MoleculeTable::GetConfiguration(G4int id)
 
 void G4MoleculeTable::Insert(G4MoleculeDefinition* moleculeDefinition)
 {
-
   const G4String& name = moleculeDefinition->GetName();
   auto it = fMoleculeDefTable.find(name);
   if (it == fMoleculeDefTable.end())
@@ -149,10 +131,10 @@ void G4MoleculeTable::Insert(G4MoleculeDefinition* moleculeDefinition)
   {
     // exception
     G4ExceptionDescription description;
-    description << "The molecule definition " << name
-                << " was already recorded in the table" << G4endl;
-    G4Exception("G4MoleculeTable::CreateMoleculeDefinition",
-                "DEFINITION_ALREADY_CREATED", FatalException, description);
+    description << "The molecule definition " << name << " was already recorded in the table"
+                << G4endl;
+    G4Exception("G4MoleculeTable::CreateMoleculeDefinition", "DEFINITION_ALREADY_CREATED",
+                FatalException, description);
   }
 }
 
@@ -162,7 +144,7 @@ void G4MoleculeTable::PrepareMolecularConfiguration()
 {
   auto it = fMoleculeDefTable.begin();
 
-  for(; it != fMoleculeDefTable.end() ; ++it)
+  for (; it != fMoleculeDefTable.end(); ++it)
   {
     G4MolecularConfiguration::GetOrCreateMolecularConfiguration(it->second);
   }
@@ -170,58 +152,45 @@ void G4MoleculeTable::PrepareMolecularConfiguration()
 
 //------------------------------------------------------------------------------
 
-G4MolecularConfiguration*
-G4MoleculeTable::CreateConfiguration(const G4String& userIdentifier,
-                                     G4MoleculeDefinition* molDef)
+G4MolecularConfiguration* G4MoleculeTable::CreateConfiguration(const G4String& userIdentifier,
+                                                               G4MoleculeDefinition* molDef)
 {
   bool alreadyCreated(false);
 
   G4MolecularConfiguration* molConf =
-      G4MolecularConfiguration::CreateMolecularConfiguration(userIdentifier,
-                                                             molDef,
-                                                             alreadyCreated);
+    G4MolecularConfiguration::CreateMolecularConfiguration(userIdentifier, molDef, alreadyCreated);
 
   return molConf;
 }
 
 //------------------------------------------------------------------------------
 
-G4MolecularConfiguration*
-G4MoleculeTable::CreateConfiguration(const G4String& userIdentifier,
-                                     G4MoleculeDefinition* molDef,
-                                     const G4String& configurationLabel,
-                                     int charge)
+G4MolecularConfiguration* G4MoleculeTable::CreateConfiguration(const G4String& userIdentifier,
+                                                               G4MoleculeDefinition* molDef,
+                                                               const G4String& configurationLabel,
+                                                               int charge)
 {
   bool alreadyCreated(false);
 
-  G4MolecularConfiguration* molConf =
-      G4MolecularConfiguration::CreateMolecularConfiguration(userIdentifier,
-                                                             molDef,
-                                                             charge,
-                                                             configurationLabel,
-                                                             alreadyCreated);
+  G4MolecularConfiguration* molConf = G4MolecularConfiguration::CreateMolecularConfiguration(
+    userIdentifier, molDef, charge, configurationLabel, alreadyCreated);
 
   return molConf;
 }
 
 //------------------------------------------------------------------------------
 
-G4MolecularConfiguration*
-G4MoleculeTable::CreateConfiguration(const G4String& userIdentifier,
-                                     G4MoleculeDefinition* molDef,
-                                     int charge,
-                                     double diffusion_coefficient)
+G4MolecularConfiguration* G4MoleculeTable::CreateConfiguration(const G4String& userIdentifier,
+                                                               G4MoleculeDefinition* molDef,
+                                                               int charge,
+                                                               double diffusion_coefficient)
 {
   bool alreadyCreated(false);
 
-  G4MolecularConfiguration* molConf =
-        G4MolecularConfiguration::CreateMolecularConfiguration(userIdentifier,
-                                                               molDef,
-                                                               charge,
-                                                               userIdentifier,
-                                                               alreadyCreated);
+  G4MolecularConfiguration* molConf = G4MolecularConfiguration::CreateMolecularConfiguration(
+    userIdentifier, molDef, charge, userIdentifier, alreadyCreated);
 
-  if(diffusion_coefficient!=-1) // TODO
+  if (diffusion_coefficient != -1)  // TODO
   {
     molConf->SetDiffusionCoefficient(diffusion_coefficient);
   }
@@ -230,20 +199,15 @@ G4MoleculeTable::CreateConfiguration(const G4String& userIdentifier,
 
 //------------------------------------------------------------------------------
 
-G4MolecularConfiguration*
-G4MoleculeTable::CreateConfiguration(const G4String& userIdentifier,
-                                     const G4MoleculeDefinition* molDef,
-                                     const G4String& configurationLabel,
-                                     const G4ElectronOccupancy& eOcc)
+G4MolecularConfiguration* G4MoleculeTable::CreateConfiguration(const G4String& userIdentifier,
+                                                               const G4MoleculeDefinition* molDef,
+                                                               const G4String& configurationLabel,
+                                                               const G4ElectronOccupancy& eOcc)
 {
   bool alreadyCreated(false);
 
-  G4MolecularConfiguration* molConf =
-      G4MolecularConfiguration::CreateMolecularConfiguration(userIdentifier,
-                                                             molDef,
-                                                             configurationLabel,
-                                                             eOcc,
-                                                             alreadyCreated);
+  G4MolecularConfiguration* molConf = G4MolecularConfiguration::CreateMolecularConfiguration(
+    userIdentifier, molDef, configurationLabel, eOcc, alreadyCreated);
 
   return molConf;
 }

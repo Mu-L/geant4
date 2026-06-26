@@ -36,42 +36,46 @@
 // by I.Hrivnacova, 27 Sep 99
 
 #ifndef G3MATTABLEENTRY_HH
-#define G3MATTABLEENTRY_HH 1
+#define G3MATTABLEENTRY_HH
 
 #include "globals.hh"
 
 class G4Material;
 
-class G3MatTableEntry 
+class G3MatTableEntry
 {
-  public: // with description
-  
+  public:  // with description
+
     G3MatTableEntry(G4int id, G4Material* material);
     G3MatTableEntry(const G3MatTableEntry& right);
     virtual ~G3MatTableEntry();
-    
+
     // operators
     G3MatTableEntry& operator=(const G3MatTableEntry& right);
     G4bool operator==(const G3MatTableEntry& right) const;
     G4bool operator!=(const G3MatTableEntry& right) const;
 
     // get methods
-    G4int       GetID() const;
+    G4int GetID() const;
     G4Material* GetMaterial() const;
-    
+
   private:
-  
-    // data members  
-    G4int        fID;
-    G4Material*  fMaterial;
+
+    // data members
+    G4int fID;
+    G4Material* fMaterial;
 };
 
 // inline methods
 
 inline G4int G3MatTableEntry::GetID() const
-{ return fID; }
+{
+  return fID;
+}
 
 inline G4Material* G3MatTableEntry::GetMaterial() const
-{ return fMaterial; }
+{
+  return fMaterial;
+}
 
 #endif

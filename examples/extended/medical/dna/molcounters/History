@@ -6,6 +6,10 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-05-24 Christian Velten (molcounters-V11-04-00)
+- Added UI for counter examples
+- Added abstract base for molecule scorers
+
 ## 2025-11-10 G Cosmo (molcounters-V11-03-01)
 - Fixed coding conventions for tabs and long lines in source.
 

@@ -28,8 +28,8 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4VParticleHPEnergyAngular_h
-#define G4VParticleHPEnergyAngular_h 1
+#ifndef G4VPARTICLEHPENERGYANGULAR_HH
+#define G4VPARTICLEHPENERGYANGULAR_HH
 
 #include "G4Cache.hh"
 #include "G4ReactionProduct.hh"
@@ -49,6 +49,7 @@ class G4VParticleHPEnergyAngular
     };
 
   public:
+
     G4VParticleHPEnergyAngular()
     {
       theQValue = 0;
@@ -84,13 +85,14 @@ class G4VParticleHPEnergyAngular
     virtual void ClearHistories() {}
 
     G4VParticleHPEnergyAngular(G4VParticleHPEnergyAngular&) = delete;
-    G4VParticleHPEnergyAngular& operator=
-    (const G4VParticleHPEnergyAngular& right) = delete;
+    G4VParticleHPEnergyAngular& operator=(const G4VParticleHPEnergyAngular& right) = delete;
 
   protected:
+
     G4double GetQValue() const { return theQValue; }
 
   private:
+
     G4double theQValue;
 
     G4Cache<toBeCached> fCache;

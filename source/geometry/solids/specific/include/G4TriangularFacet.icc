@@ -26,33 +26,33 @@
 // Implementation of inline methods of G4TriangularFacet
 // --------------------------------------------------------------------
 
-inline G4bool G4TriangularFacet::IsDefined () const
+inline G4bool G4TriangularFacet::IsDefined() const
 {
   return fIsDefined;
 }
 
-inline G4int G4TriangularFacet::GetNumberOfVertices () const
+inline G4int G4TriangularFacet::GetNumberOfVertices() const
 {
   return 3;
 }
 
-inline G4ThreeVector G4TriangularFacet::GetVertex (G4int i) const
-{      
+inline G4ThreeVector G4TriangularFacet::GetVertex(G4int i) const
+{
   G4int indice = fIndices[i];
   return indice < 0 ? (*fVertices)[i] : (*fVertices)[indice];
 }
 
-inline void G4TriangularFacet::SetVertex (G4int i, const G4ThreeVector& val)
+inline void G4TriangularFacet::SetVertex(G4int i, const G4ThreeVector& val)
 {
   (*fVertices)[i] = val;
 }
 
-inline G4ThreeVector G4TriangularFacet::GetCircumcentre () const
+inline G4ThreeVector G4TriangularFacet::GetCircumcentre() const
 {
   return fCircumcentre;
 }
 
-inline G4double G4TriangularFacet::GetRadius () const
+inline G4double G4TriangularFacet::GetRadius() const
 {
   return fRadius;
 }
@@ -64,7 +64,7 @@ inline G4int G4TriangularFacet::AllocatedMemory()
   return size;
 }
 
-inline G4int G4TriangularFacet::GetVertexIndex (G4int i) const
+inline G4int G4TriangularFacet::GetVertexIndex(G4int i) const
 {
   if (i < 3)
   {
@@ -73,7 +73,7 @@ inline G4int G4TriangularFacet::GetVertexIndex (G4int i) const
   return 999999999;
 }
 
-inline void G4TriangularFacet::SetVertexIndex (G4int i, G4int j)
+inline void G4TriangularFacet::SetVertexIndex(G4int i, G4int j)
 {
   fIndices[i] = j;
 }

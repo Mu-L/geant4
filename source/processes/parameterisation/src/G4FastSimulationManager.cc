@@ -91,7 +91,8 @@ G4bool G4FastSimulationManager::ActivateFastSimulationModel(const G4String& aNam
   // Look for in the fInactivatedModels list, if found push_back it back to
   // the ModelList
   for (iModel = 0; iModel < (G4int)fInactivatedModels.size(); ++iModel)
-    if (fInactivatedModels[iModel]->GetName() == aName) {
+    if (fInactivatedModels[iModel]->GetName() == aName)
+    {
       ModelList.push_back(fInactivatedModels.removeAt(iModel));
       // forces the fApplicableModelList to be rebuild
       fLastCrossedParticle = nullptr;
@@ -105,7 +106,8 @@ G4bool G4FastSimulationManager::InActivateFastSimulationModel(const G4String& aN
   // Look for in the ModelList, if found remove from it and keep the pointer
   // on the fInactivatedModels list.
   for (G4int iModel = 0; iModel < (G4int)ModelList.size(); ++iModel)
-    if (ModelList[iModel]->GetName() == aName) {
+    if (ModelList[iModel]->GetName() == aName)
+    {
       fInactivatedModels.push_back(ModelList.removeAt(iModel));
       // forces the fApplicableModelList to be rebuild
       fLastCrossedParticle = nullptr;
@@ -120,17 +122,22 @@ G4FastSimulationManager::GetFastSimulationModel(const G4String& modelName,
                                                 G4bool& foundPrevious) const
 {
   G4VFastSimulationModel* model = nullptr;
-  for (auto iModel : ModelList) {
-    if (iModel->GetName() == modelName) {
-      if (previousFound == nullptr) {
+  for (auto iModel : ModelList)
+  {
+    if (iModel->GetName() == modelName)
+    {
+      if (previousFound == nullptr)
+      {
         model = iModel;
         break;
       }
-      if (iModel == previousFound) {
+      if (iModel == previousFound)
+      {
         foundPrevious = true;
         continue;
       }
-      if (foundPrevious) {
+      if (foundPrevious)
+      {
         model = iModel;
         break;
       }
@@ -141,7 +148,8 @@ G4FastSimulationManager::GetFastSimulationModel(const G4String& modelName,
 
 void G4FastSimulationManager::FlushModels()
 {
-  for (auto& iModel : ModelList) {
+  for (auto& iModel : ModelList)
+  {
     iModel->Flush();
   }
 }
@@ -173,14 +181,17 @@ G4FastSimulationManager::PostStepGetFastSimulationManagerTrigger(const G4Track& 
                                                                  const G4Navigator* theNavigator)
 {
   // If particle type changed re-build the fApplicableModelList.
-  if (fLastCrossedParticle != track.GetDefinition()) {
+  if (fLastCrossedParticle != track.GetDefinition())
+  {
     fLastCrossedParticle = track.GetDefinition();
     fApplicableModelList.clear();
     // If Model List is empty, do nothing !
     if (ModelList.empty()) return false;
 
-    for (auto iModel : ModelList) {
-      if (iModel->IsApplicable(*(track.GetDefinition()))) {
+    for (auto iModel : ModelList)
+    {
+      if (iModel->IsApplicable(*(track.GetDefinition())))
+      {
         fApplicableModelList.push_back(iModel);
       }
     }
@@ -202,7 +213,8 @@ G4FastSimulationManager::PostStepGetFastSimulationManagerTrigger(const G4Track& 
     // Asks the ModelTrigger method if it must be trigged now.
     //---------------------------------------------------
 
-    if (iModel->ModelTrigger(fFastTrack)) {
+    if (iModel->ModelTrigger(fFastTrack))
+    {
       //--------------------------------------------------
       // The model will be applied. Initializes the G4FastStep
       // with the current state of the G4Track and
@@ -237,14 +249,17 @@ G4FastSimulationManager::AtRestGetFastSimulationManagerTrigger(const G4Track& tr
                                                                const G4Navigator* theNavigator)
 {
   // If particle type changed re-build the fApplicableModelList.
-  if (fLastCrossedParticle != track.GetDefinition()) {
+  if (fLastCrossedParticle != track.GetDefinition())
+  {
     fLastCrossedParticle = track.GetDefinition();
     fApplicableModelList.clear();
     // If Model List is empty, do nothing !
     if (ModelList.empty()) return false;
 
-    for (auto iModel : ModelList) {
-      if (iModel->IsApplicable(*(track.GetDefinition()))) {
+    for (auto iModel : ModelList)
+    {
+      if (iModel->IsApplicable(*(track.GetDefinition())))
+      {
         fApplicableModelList.push_back(iModel);
       }
     }
@@ -261,8 +276,10 @@ G4FastSimulationManager::AtRestGetFastSimulationManagerTrigger(const G4Track& tr
   // --  is irrelevant here)
 
   // Loops on the models to see if one of them wants to trigger:
-  for (auto iModel : fApplicableModelList) {
-    if (iModel->AtRestModelTrigger(fFastTrack)) {
+  for (auto iModel : fApplicableModelList)
+  {
+    if (iModel->AtRestModelTrigger(fFastTrack))
+    {
       fFastStep.Initialize(fFastTrack);
       fTriggedFastSimulationModel = iModel;
       return true;
@@ -313,8 +330,10 @@ void G4FastSimulationManager::ListModels(const G4String& modelName) const
 
   // Active Models
   for (iModel = 0; iModel < ModelList.size(); ++iModel)
-    if (ModelList[iModel]->GetName() == modelName || modelName == "all") {
-      if ((titled++) == 0) {
+    if (ModelList[iModel]->GetName() == modelName || modelName == "all")
+    {
+      if ((titled++) == 0)
+      {
         G4cout << "In the envelope ";
         ListTitle();
         G4cout << ",\n";
@@ -323,7 +342,8 @@ void G4FastSimulationManager::ListModels(const G4String& modelName) const
 
       G4int list_started = 0;
       for (G4int iParticle = 0; iParticle < theParticleTable->entries(); iParticle++)
-        if (ModelList[iModel]->IsApplicable(*(theParticleTable->GetParticle(iParticle)))) {
+        if (ModelList[iModel]->IsApplicable(*(theParticleTable->GetParticle(iParticle))))
+        {
           if ((list_started++) != 0) G4cout << ", ";
           G4cout << theParticleTable->GetParticle(iParticle)->GetParticleName();
         }
@@ -332,8 +352,10 @@ void G4FastSimulationManager::ListModels(const G4String& modelName) const
 
   // Inactive Models
   for (iModel = 0; iModel < fInactivatedModels.size(); ++iModel)
-    if (fInactivatedModels[iModel]->GetName() == modelName || modelName == "all") {
-      if ((titled++) == 0) {
+    if (fInactivatedModels[iModel]->GetName() == modelName || modelName == "all")
+    {
+      if ((titled++) == 0)
+      {
         G4cout << "In the envelope ";
         ListTitle();
         G4cout << ",\n";
@@ -343,7 +365,8 @@ void G4FastSimulationManager::ListModels(const G4String& modelName) const
 
       G4int list_started = 0;
       for (G4int iParticle = 0; iParticle < theParticleTable->entries(); iParticle++)
-        if (fInactivatedModels[iModel]->IsApplicable(*(theParticleTable->GetParticle(iParticle)))) {
+        if (fInactivatedModels[iModel]->IsApplicable(*(theParticleTable->GetParticle(iParticle))))
+        {
           if ((list_started++) != 0) G4cout << ", ";
           G4cout << theParticleTable->GetParticle(iParticle)->GetParticleName();
         }
@@ -358,7 +381,8 @@ void G4FastSimulationManager::ListModels(const G4ParticleDefinition* particleDef
 
   // Active Models
   for (iModel = 0; iModel < ModelList.size(); ++iModel)
-    if (ModelList[iModel]->IsApplicable(*particleDefinition)) {
+    if (ModelList[iModel]->IsApplicable(*particleDefinition))
+    {
       G4cout << "Envelope ";
       ListTitle();
       G4cout << ", Model " << ModelList[iModel]->GetName() << "." << G4endl;
@@ -369,13 +393,15 @@ void G4FastSimulationManager::ListModels(const G4ParticleDefinition* particleDef
 
   // Inactive Models
   for (iModel = 0; iModel < fInactivatedModels.size(); ++iModel)
-    if (fInactivatedModels[iModel]->IsApplicable(*particleDefinition)) {
+    if (fInactivatedModels[iModel]->IsApplicable(*particleDefinition))
+    {
       G4cout << "Envelope ";
       ListTitle();
       G4cout << ", Model " << fInactivatedModels[iModel]->GetName() << " (inactivated)." << G4endl;
     }
 
-  if (!unique) {
+  if (!unique)
+  {
     G4ExceptionDescription ed;
     ed << "Two or more active Models are available for the same particle type, in the same "
           "envelope/region."

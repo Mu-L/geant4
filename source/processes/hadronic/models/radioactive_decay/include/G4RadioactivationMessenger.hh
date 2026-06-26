@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4RadioactivationMessenger_h
-#define G4RadioactivationMessenger_h 1
+#ifndef G4RADIOACTIVATIONMESSENGER_HH
+#define G4RADIOACTIVATIONMESSENGER_HH
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -40,31 +40,32 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "G4UImessenger.hh"
-#include "G4UIdirectory.hh"
-#include "G4UIcommand.hh"
 #include "G4UIcmdWithABool.hh"
-#include "G4UIcmdWithAnInteger.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWithAString.hh"
-#include "globals.hh"
-
+#include "G4UIcmdWithAnInteger.hh"
 #include "G4UIcmdWithNucleusLimits.hh"
+#include "G4UIcommand.hh"
+#include "G4UIdirectory.hh"
+#include "G4UImessenger.hh"
+#include "globals.hh"
 
 class G4RadioactiveDecay;
 
-class G4RadioactivationMessenger: public G4UImessenger
+class G4RadioactivationMessenger : public G4UImessenger
 {
   public:
+
     G4RadioactivationMessenger(G4RadioactiveDecay*);
     ~G4RadioactivationMessenger() override;
 
     void SetNewValue(G4UIcommand* command, G4String newValues) override;
 
   private:
+
     G4RadioactiveDecay* theRadDecay;
-  
-    G4UIdirectory* rdmDirectory;            
+
+    G4UIdirectory* rdmDirectory;
     G4UIcmdWithABool* analoguemcCmd;
     G4UIcmdWithAString* sourcetimeprofileCmd;
     G4UIcmdWithAString* decaybiasprofileCmd;
@@ -74,4 +75,3 @@ class G4RadioactivationMessenger: public G4UImessenger
 };
 
 #endif
-

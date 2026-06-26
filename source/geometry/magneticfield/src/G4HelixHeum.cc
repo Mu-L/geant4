@@ -28,7 +28,7 @@
 // Simple Heum:
 //        x_1 = x_0 + h *
 //                1/4 * dx(t0,x0)  +
-//                3/4 * dx(t0+2/3*h, x0+2/3*h*(dx(t0+h/3,x0+h/3*dx(t0,x0)))) 
+//                3/4 * dx(t0+2/3*h, x0+2/3*h*(dx(t0+h/3,x0+h/3*dx(t0,x0))))
 //
 //  Third order solver.
 //
@@ -36,39 +36,33 @@
 // -------------------------------------------------------------------
 
 #include "G4HelixHeum.hh"
+
 #include "G4ThreeVector.hh"
 
-G4HelixHeum::G4HelixHeum(G4Mag_EqRhs* EqRhs)
-  : G4MagHelicalStepper(EqRhs)
-{
-}
+G4HelixHeum::G4HelixHeum(G4Mag_EqRhs* EqRhs) : G4MagHelicalStepper(EqRhs) {}
 
-void
-G4HelixHeum::DumbStepper( const G4double  yIn[],
-                          G4ThreeVector   Bfld,
-                          G4double        h,
-                          G4double        yOut[])
+void G4HelixHeum::DumbStepper(const G4double yIn[], G4ThreeVector Bfld, G4double h, G4double yOut[])
 {
-  const G4int nvar = 6 ;
+  const G4int nvar = 6;
 
   G4ThreeVector Bfield_Temp, Bfield_Temp2;
-  G4double yTemp[6], yAdd1[6], yAdd2[6] , yTemp2[6];
+  G4double yTemp[6], yAdd1[6], yAdd2[6], yTemp2[6];
 
-  AdvanceHelix( yIn, Bfld, h, yAdd1 );
-  
-  AdvanceHelix( yIn, Bfld, h/3.0, yTemp );
-  MagFieldEvaluate(yTemp,Bfield_Temp);
+  AdvanceHelix(yIn, Bfld, h, yAdd1);
 
-  AdvanceHelix( yIn, Bfield_Temp, (2.0 / 3.0) * h, yTemp2 );
-  
-  MagFieldEvaluate(yTemp2,Bfield_Temp2);
+  AdvanceHelix(yIn, Bfld, h / 3.0, yTemp);
+  MagFieldEvaluate(yTemp, Bfield_Temp);
 
-  AdvanceHelix( yIn, Bfield_Temp2, h, yAdd2 );
+  AdvanceHelix(yIn, Bfield_Temp, (2.0 / 3.0) * h, yTemp2);
 
-  for( G4int i = 0; i < nvar; ++i )
+  MagFieldEvaluate(yTemp2, Bfield_Temp2);
+
+  AdvanceHelix(yIn, Bfield_Temp2, h, yAdd2);
+
+  for (G4int i = 0; i < nvar; ++i)
   {
-    yOut[i] = ( 0.25 * yAdd1[i] + 0.75 * yAdd2[i]);
+    yOut[i] = (0.25 * yAdd1[i] + 0.75 * yAdd2[i]);
   }
 
-  // NormaliseTangentVector( yOut );           
-}  
+  // NormaliseTangentVector( yOut );
+}

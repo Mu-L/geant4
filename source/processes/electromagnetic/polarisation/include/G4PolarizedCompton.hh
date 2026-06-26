@@ -37,12 +37,12 @@
 //
 // -----------------------------------------------------------------------------
 
-#ifndef PolarizedComptonScattering_h
-#define PolarizedComptonScattering_h 1
+#ifndef G4POLARIZEDCOMPTONSCATTERING_HH
+#define G4POLARIZEDCOMPTONSCATTERING_HH
 
-#include "globals.hh"
 #include "G4Gamma.hh"
 #include "G4VEmProcess.hh"
+#include "globals.hh"
 
 class G4DynamicParticle;
 class G4MaterialCutsCouple;
@@ -52,56 +52,58 @@ class G4PolarizedComptonModel;
 class G4PolarizedCompton : public G4VEmProcess
 
 {
- public:
-  explicit G4PolarizedCompton(const G4String& processName = "pol-compt",
-                              G4ProcessType type          = fElectromagnetic);
+  public:
 
-  virtual ~G4PolarizedCompton() override;
+    explicit G4PolarizedCompton(const G4String& processName = "pol-compt",
+                                G4ProcessType type = fElectromagnetic);
 
-  // true for Gamma only.
-  virtual G4bool IsApplicable(const G4ParticleDefinition&) override;
+    virtual ~G4PolarizedCompton() override;
 
-  virtual void ProcessDescription(std::ostream&) const override;
-  virtual void DumpInfo() const override { ProcessDescription(G4cout); };
+    // true for Gamma only.
+    virtual G4bool IsApplicable(const G4ParticleDefinition&) override;
 
-  void SetModel(const G4String& name);
+    virtual void ProcessDescription(std::ostream&) const override;
+    virtual void DumpInfo() const override { ProcessDescription(G4cout); };
 
-  G4PolarizedCompton& operator=(const G4PolarizedCompton& right) = delete;
-  G4PolarizedCompton(const G4PolarizedCompton&)                  = delete;
+    void SetModel(const G4String& name);
 
- protected:
-  virtual void InitialiseProcess(const G4ParticleDefinition*) override;
+    G4PolarizedCompton& operator=(const G4PolarizedCompton& right) = delete;
+    G4PolarizedCompton(const G4PolarizedCompton&) = delete;
 
-  virtual void BuildPhysicsTable(const G4ParticleDefinition&) override;
+  protected:
 
-  virtual G4double GetMeanFreePath(const G4Track& aTrack,
-                                   G4double previousStepSize,
-                                   G4ForceCondition* condition) override;
+    virtual void InitialiseProcess(const G4ParticleDefinition*) override;
 
-  virtual G4double PostStepGetPhysicalInteractionLength(
-    const G4Track& track, G4double previousStepSize,
-    G4ForceCondition* condition) override;
+    virtual void BuildPhysicsTable(const G4ParticleDefinition&) override;
 
- private:
-  static G4PhysicsTable* theAsymmetryTable;  // table for crosssection asymmetry
-  void CleanTable();
+    virtual G4double GetMeanFreePath(const G4Track& aTrack, G4double previousStepSize,
+                                     G4ForceCondition* condition) override;
 
-  void BuildAsymmetryTable(const G4ParticleDefinition& part);
+    virtual G4double PostStepGetPhysicalInteractionLength(const G4Track& track,
+                                                          G4double previousStepSize,
+                                                          G4ForceCondition* condition) override;
 
-  G4double ComputeAsymmetry(G4double energy, const G4MaterialCutsCouple* couple,
-                            const G4ParticleDefinition& particle, G4double cut,
-                            G4double& tAsymmetry);
+  private:
 
-  G4double ComputeSaturationFactor(const G4Track& aTrack);
+    static G4PhysicsTable* theAsymmetryTable;  // table for crosssection asymmetry
+    void CleanTable();
 
-  G4PolarizedComptonModel* fEmModel;
+    void BuildAsymmetryTable(const G4ParticleDefinition& part);
 
-  G4int fType;
+    G4double ComputeAsymmetry(G4double energy, const G4MaterialCutsCouple* couple,
+                              const G4ParticleDefinition& particle, G4double cut,
+                              G4double& tAsymmetry);
 
-  G4bool fBuildAsymmetryTable;
-  G4bool fUseAsymmetryTable;
+    G4double ComputeSaturationFactor(const G4Track& aTrack);
 
-  G4bool fIsInitialised;
+    G4PolarizedComptonModel* fEmModel;
+
+    G4int fType;
+
+    G4bool fBuildAsymmetryTable;
+    G4bool fUseAsymmetryTable;
+
+    G4bool fIsInitialised;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

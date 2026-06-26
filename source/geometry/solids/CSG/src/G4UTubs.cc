@@ -28,15 +28,18 @@
 // 30.10.13 G.Cosmo, CERN
 // --------------------------------------------------------------------
 
+// Geant4/VecGeom headers must be included in order
+// clang-format off
 #include "G4Tubs.hh"
 #include "G4UTubs.hh"
+// clang-format on
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include "G4GeomTools.hh"
-#include "G4AffineTransform.hh"
-#include "G4VPVParameterisation.hh"
-#include "G4BoundingEnvelope.hh"
+#  include "G4AffineTransform.hh"
+#  include "G4BoundingEnvelope.hh"
+#  include "G4GeomTools.hh"
+#  include "G4VPVParameterisation.hh"
 
 using namespace CLHEP;
 
@@ -45,38 +48,35 @@ using namespace CLHEP;
 // Constructor - check parameters, convert angles so 0<sphi+dpshi<=2_PI
 //             - note if pdphi>2PI then reset to 2PI
 
-G4UTubs::G4UTubs( const G4String& pName,
-                        G4double pRMin, G4double pRMax,
-                        G4double pDz,
-                        G4double pSPhi, G4double pDPhi )
+G4UTubs::G4UTubs(const G4String& pName, G4double pRMin, G4double pRMax, G4double pDz,
+                 G4double pSPhi, G4double pDPhi)
   : Base_t(pName, pRMin, pRMax, pDz, pSPhi, pDPhi)
-{
-}
+{}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Copy constructor
 
-G4UTubs::G4UTubs(const G4UTubs& rhs)
-  : Base_t(rhs)
-{
-}
+G4UTubs::G4UTubs(const G4UTubs& rhs) : Base_t(rhs) {}
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Assignment operator
 
-G4UTubs& G4UTubs::operator = (const G4UTubs& rhs) 
+G4UTubs& G4UTubs::operator=(const G4UTubs& rhs)
 {
-   // Check assignment to self
-   //
-   if (this == &rhs)  { return *this; }
+  // Check assignment to self
+  //
+  if (this == &rhs)
+  {
+    return *this;
+  }
 
-   // Copy base class data
-   //
-   Base_t::operator=(rhs);
+  // Copy base class data
+  //
+  Base_t::operator=(rhs);
 
-   return *this;
+  return *this;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -113,11 +113,11 @@ G4double G4UTubs::GetCosStartPhi() const
 }
 G4double G4UTubs::GetSinEndPhi() const
 {
-  return std::sin(GetStartPhiAngle()+GetDeltaPhiAngle());
+  return std::sin(GetStartPhiAngle() + GetDeltaPhiAngle());
 }
 G4double G4UTubs::GetCosEndPhi() const
 {
-  return std::cos(GetStartPhiAngle()+GetDeltaPhiAngle());
+  return std::cos(GetStartPhiAngle() + GetDeltaPhiAngle());
 }
 
 void G4UTubs::SetInnerRadius(G4double newRMin)
@@ -151,11 +151,10 @@ void G4UTubs::SetDeltaPhiAngle(G4double newDPhi)
 // Dispatch to parameterisation for replication mechanism dimension
 // computation & modification.
 
-void G4UTubs::ComputeDimensions(      G4VPVParameterisation* p,
-                                const G4int n,
-                                const G4VPhysicalVolume* pRep )
+void G4UTubs::ComputeDimensions(G4VPVParameterisation* p, const G4int n,
+                                const G4VPhysicalVolume* pRep)
 {
-  p->ComputeDimensions(*(G4Tubs*)this,n,pRep) ;
+  p->ComputeDimensions(*(G4Tubs*)this, n, pRep);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -177,24 +176,22 @@ void G4UTubs::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
 
   G4double rmin = GetInnerRadius();
   G4double rmax = GetOuterRadius();
-  G4double dz   = GetZHalfLength();
+  G4double dz = GetZHalfLength();
 
   // Find bounding box
   //
   if (GetDeltaPhiAngle() < twopi)
   {
-    G4TwoVector vmin,vmax;
-    G4GeomTools::DiskExtent(rmin,rmax,
-                            GetSinStartPhi(),GetCosStartPhi(),
-                            GetSinEndPhi(),GetCosEndPhi(),
-                            vmin,vmax);
-    pMin.set(vmin.x(),vmin.y(),-dz);
-    pMax.set(vmax.x(),vmax.y(), dz);
+    G4TwoVector vmin, vmax;
+    G4GeomTools::DiskExtent(rmin, rmax, GetSinStartPhi(), GetCosStartPhi(), GetSinEndPhi(),
+                            GetCosEndPhi(), vmin, vmax);
+    pMin.set(vmin.x(), vmin.y(), -dz);
+    pMax.set(vmax.x(), vmax.y(), dz);
   }
   else
   {
-    pMin.set(-rmax,-rmax,-dz);
-    pMax.set( rmax, rmax, dz);
+    pMin.set(-rmax, -rmax, -dz);
+    pMax.set(rmax, rmax, dz);
   }
 
   // Check correctness of the bounding box
@@ -202,12 +199,9 @@ void G4UTubs::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
   if (pMin.x() >= pMax.x() || pMin.y() >= pMax.y() || pMin.z() >= pMax.z())
   {
     std::ostringstream message;
-    message << "Bad bounding box (min >= max) for solid: "
-            << GetName() << " !"
-            << "\npMin = " << pMin
-            << "\npMax = " << pMax;
-    G4Exception("G4UTubs::BoundingLimits()", "GeomMgt0001",
-                JustWarning, message);
+    message << "Bad bounding box (min >= max) for solid: " << GetName() << " !"
+            << "\npMin = " << pMin << "\npMax = " << pMax;
+    G4Exception("G4UTubs::BoundingLimits()", "GeomMgt0001", JustWarning, message);
     StreamInfo(G4cout);
   }
 
@@ -216,21 +210,19 @@ void G4UTubs::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
   if (checkBBox)
   {
     U3Vector vmin, vmax;
-    Extent(vmin,vmax);
-    if (std::abs(pMin.x()-vmin.x()) > kCarTolerance ||
-        std::abs(pMin.y()-vmin.y()) > kCarTolerance ||
-        std::abs(pMin.z()-vmin.z()) > kCarTolerance ||
-        std::abs(pMax.x()-vmax.x()) > kCarTolerance ||
-        std::abs(pMax.y()-vmax.y()) > kCarTolerance ||
-        std::abs(pMax.z()-vmax.z()) > kCarTolerance)
+    Extent(vmin, vmax);
+    if (std::abs(pMin.x() - vmin.x()) > kCarTolerance
+        || std::abs(pMin.y() - vmin.y()) > kCarTolerance
+        || std::abs(pMin.z() - vmin.z()) > kCarTolerance
+        || std::abs(pMax.x() - vmax.x()) > kCarTolerance
+        || std::abs(pMax.y() - vmax.y()) > kCarTolerance
+        || std::abs(pMax.z() - vmax.z()) > kCarTolerance)
     {
       std::ostringstream message;
-      message << "Inconsistency in bounding boxes for solid: "
-              << GetName() << " !"
+      message << "Inconsistency in bounding boxes for solid: " << GetName() << " !"
               << "\nBBox min: wrapper = " << pMin << " solid = " << vmin
               << "\nBBox max: wrapper = " << pMax << " solid = " << vmax;
-      G4Exception("G4UTubs::BoundingLimits()", "GeomMgt0001",
-                  JustWarning, message);
+      G4Exception("G4UTubs::BoundingLimits()", "GeomMgt0001", JustWarning, message);
       checkBBox = false;
     }
   }
@@ -240,24 +232,22 @@ void G4UTubs::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
 //
 // Calculate extent under transform and specified limit
 
-G4bool
-G4UTubs::CalculateExtent(const EAxis pAxis,
-                         const G4VoxelLimits& pVoxelLimit,
-                         const G4AffineTransform& pTransform,
-                               G4double& pMin, G4double& pMax) const
+G4bool G4UTubs::CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                                const G4AffineTransform& pTransform, G4double& pMin,
+                                G4double& pMax) const
 {
   G4ThreeVector bmin, bmax;
   G4bool exist;
 
   // Get bounding box
-  BoundingLimits(bmin,bmax);
+  BoundingLimits(bmin, bmax);
 
   // Check bounding box
-  G4BoundingEnvelope bbox(bmin,bmax);
-#ifdef G4BBOX_EXTENT
-  if (true) return bbox.CalculateExtent(pAxis,pVoxelLimit,pTransform,pMin,pMax);
-#endif
-  if (bbox.BoundingBoxVsVoxelLimits(pAxis,pVoxelLimit,pTransform,pMin,pMax))
+  G4BoundingEnvelope bbox(bmin, bmax);
+#  ifdef G4BBOX_EXTENT
+  if (true) return bbox.CalculateExtent(pAxis, pVoxelLimit, pTransform, pMin, pMax);
+#  endif
+  if (bbox.BoundingBoxVsVoxelLimits(pAxis, pVoxelLimit, pTransform, pMin, pMax))
   {
     return exist = pMin < pMax;
   }
@@ -265,21 +255,21 @@ G4UTubs::CalculateExtent(const EAxis pAxis,
   // Get parameters of the solid
   G4double rmin = GetInnerRadius();
   G4double rmax = GetOuterRadius();
-  G4double dz   = GetZHalfLength();
+  G4double dz = GetZHalfLength();
   G4double dphi = GetDeltaPhiAngle();
 
   // Find bounding envelope and calculate extent
   //
-  const G4int NSTEPS = 24;            // number of steps for whole circle
-  G4double astep  = twopi/NSTEPS;     // max angle for one step
-  G4int    ksteps = (dphi <= astep) ? 1 : (G4int)((dphi-deg)/astep) + 1;
-  G4double ang    = dphi/ksteps;
+  const G4int NSTEPS = 24;  // number of steps for whole circle
+  G4double astep = twopi / NSTEPS;  // max angle for one step
+  G4int ksteps = (dphi <= astep) ? 1 : (G4int)((dphi - deg) / astep) + 1;
+  G4double ang = dphi / ksteps;
 
-  G4double sinHalf = std::sin(0.5*ang);
-  G4double cosHalf = std::cos(0.5*ang);
-  G4double sinStep = 2.*sinHalf*cosHalf;
-  G4double cosStep = 1. - 2.*sinHalf*sinHalf;
-  G4double rext    = rmax/cosHalf;
+  G4double sinHalf = std::sin(0.5 * ang);
+  G4double cosHalf = std::cos(0.5 * ang);
+  G4double sinStep = 2. * sinHalf * cosHalf;
+  G4double cosStep = 1. - 2. * sinHalf * sinHalf;
+  G4double rext = rmax / cosHalf;
 
   // bounding envelope for full cylinder consists of two polygons,
   // in other cases it is a sequence of quadrilaterals
@@ -288,60 +278,62 @@ G4UTubs::CalculateExtent(const EAxis pAxis,
     G4double sinCur = sinHalf;
     G4double cosCur = cosHalf;
 
-    G4ThreeVectorList baseA(NSTEPS),baseB(NSTEPS);
-    for (G4int k=0; k<NSTEPS; ++k)
+    G4ThreeVectorList baseA(NSTEPS), baseB(NSTEPS);
+    for (G4int k = 0; k < NSTEPS; ++k)
     {
-      baseA[k].set(rext*cosCur,rext*sinCur,-dz);
-      baseB[k].set(rext*cosCur,rext*sinCur, dz);
+      baseA[k].set(rext * cosCur, rext * sinCur, -dz);
+      baseB[k].set(rext * cosCur, rext * sinCur, dz);
 
       G4double sinTmp = sinCur;
-      sinCur = sinCur*cosStep + cosCur*sinStep;
-      cosCur = cosCur*cosStep - sinTmp*sinStep;
+      sinCur = sinCur * cosStep + cosCur * sinStep;
+      cosCur = cosCur * cosStep - sinTmp * sinStep;
     }
-    std::vector<const G4ThreeVectorList *> polygons(2);
+    std::vector<const G4ThreeVectorList*> polygons(2);
     polygons[0] = &baseA;
     polygons[1] = &baseB;
-    G4BoundingEnvelope benv(bmin,bmax,polygons);
-    exist = benv.CalculateExtent(pAxis,pVoxelLimit,pTransform,pMin,pMax);
+    G4BoundingEnvelope benv(bmin, bmax, polygons);
+    exist = benv.CalculateExtent(pAxis, pVoxelLimit, pTransform, pMin, pMax);
   }
   else
   {
     G4double sinStart = GetSinStartPhi();
     G4double cosStart = GetCosStartPhi();
-    G4double sinEnd   = GetSinEndPhi();
-    G4double cosEnd   = GetCosEndPhi();
-    G4double sinCur   = sinStart*cosHalf + cosStart*sinHalf;
-    G4double cosCur   = cosStart*cosHalf - sinStart*sinHalf;
+    G4double sinEnd = GetSinEndPhi();
+    G4double cosEnd = GetCosEndPhi();
+    G4double sinCur = sinStart * cosHalf + cosStart * sinHalf;
+    G4double cosCur = cosStart * cosHalf - sinStart * sinHalf;
 
     // set quadrilaterals
-    G4ThreeVectorList pols[NSTEPS+2];
-    for (G4int k=0; k<ksteps+2; ++k) pols[k].resize(4);
-    pols[0][0].set(rmin*cosStart,rmin*sinStart, dz);
-    pols[0][1].set(rmin*cosStart,rmin*sinStart,-dz);
-    pols[0][2].set(rmax*cosStart,rmax*sinStart,-dz);
-    pols[0][3].set(rmax*cosStart,rmax*sinStart, dz);
-    for (G4int k=1; k<ksteps+1; ++k)
+    G4ThreeVectorList pols[NSTEPS + 2];
+    for (G4int k = 0; k < ksteps + 2; ++k)
+      pols[k].resize(4);
+    pols[0][0].set(rmin * cosStart, rmin * sinStart, dz);
+    pols[0][1].set(rmin * cosStart, rmin * sinStart, -dz);
+    pols[0][2].set(rmax * cosStart, rmax * sinStart, -dz);
+    pols[0][3].set(rmax * cosStart, rmax * sinStart, dz);
+    for (G4int k = 1; k < ksteps + 1; ++k)
     {
-      pols[k][0].set(rmin*cosCur,rmin*sinCur, dz);
-      pols[k][1].set(rmin*cosCur,rmin*sinCur,-dz);
-      pols[k][2].set(rext*cosCur,rext*sinCur,-dz);
-      pols[k][3].set(rext*cosCur,rext*sinCur, dz);
+      pols[k][0].set(rmin * cosCur, rmin * sinCur, dz);
+      pols[k][1].set(rmin * cosCur, rmin * sinCur, -dz);
+      pols[k][2].set(rext * cosCur, rext * sinCur, -dz);
+      pols[k][3].set(rext * cosCur, rext * sinCur, dz);
 
       G4double sinTmp = sinCur;
-      sinCur = sinCur*cosStep + cosCur*sinStep;
-      cosCur = cosCur*cosStep - sinTmp*sinStep;
+      sinCur = sinCur * cosStep + cosCur * sinStep;
+      cosCur = cosCur * cosStep - sinTmp * sinStep;
     }
-    pols[ksteps+1][0].set(rmin*cosEnd,rmin*sinEnd, dz);
-    pols[ksteps+1][1].set(rmin*cosEnd,rmin*sinEnd,-dz);
-    pols[ksteps+1][2].set(rmax*cosEnd,rmax*sinEnd,-dz);
-    pols[ksteps+1][3].set(rmax*cosEnd,rmax*sinEnd, dz);
+    pols[ksteps + 1][0].set(rmin * cosEnd, rmin * sinEnd, dz);
+    pols[ksteps + 1][1].set(rmin * cosEnd, rmin * sinEnd, -dz);
+    pols[ksteps + 1][2].set(rmax * cosEnd, rmax * sinEnd, -dz);
+    pols[ksteps + 1][3].set(rmax * cosEnd, rmax * sinEnd, dz);
 
     // set envelope and calculate extent
-    std::vector<const G4ThreeVectorList *> polygons;
-    polygons.resize(ksteps+2);
-    for (G4int k=0; k<ksteps+2; ++k) polygons[k] = &pols[k];
-    G4BoundingEnvelope benv(bmin,bmax,polygons);
-    exist = benv.CalculateExtent(pAxis,pVoxelLimit,pTransform,pMin,pMax);
+    std::vector<const G4ThreeVectorList*> polygons;
+    polygons.resize(ksteps + 2);
+    for (G4int k = 0; k < ksteps + 2; ++k)
+      polygons[k] = &pols[k];
+    G4BoundingEnvelope benv(bmin, bmax, polygons);
+    exist = benv.CalculateExtent(pAxis, pVoxelLimit, pTransform, pMin, pMax);
   }
   return exist;
 }
@@ -352,11 +344,8 @@ G4UTubs::CalculateExtent(const EAxis pAxis,
 //
 G4Polyhedron* G4UTubs::CreatePolyhedron() const
 {
-  return new G4PolyhedronTubs(GetInnerRadius(),
-                              GetOuterRadius(),
-                              GetZHalfLength(),
-                              GetStartPhiAngle(),
-                              GetDeltaPhiAngle());
+  return new G4PolyhedronTubs(GetInnerRadius(), GetOuterRadius(), GetZHalfLength(),
+                              GetStartPhiAngle(), GetDeltaPhiAngle());
 }
 
 #endif  // G4GEOM_USE_USOLIDS

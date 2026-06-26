@@ -33,9 +33,9 @@
 // during the phase of filling the G3 tables (defining G3 geometry,
 // eg. by parsing the G3 input via clparse.cc).
 // See G3VolTable class description, too.
-// 
+//
 // Data members:
-//  fVname       volume name; 
+//  fVname       volume name;
 //  fShape       G3 shape name;
 //  fRpar        array of G3 volumes parameters;
 //  fNpar        number of G3 volumes parameters;
@@ -43,33 +43,35 @@
 //  fSolid       the G4VSolid of this volume;
 //  fLV          the G4LogicalVolume;
 //  fHasNegPars  true if G3 volume was defined with incomplete
-//               parameters; 
+//               parameters;
 //  fDaughters   vector of daughter VTEs (VTEs of volumes placed inside
-//               this volume); 
+//               this volume);
 //  fMothers     vector of mother VTEs (VTEs of volumes inside which this
 //               volume is placed);
 //  fClones      vector of clone VTEs (see explanation below);
 //  fG3Pos       vector of G3 positions (G3Pos objects)
 //  fDivision    G3Division object created in case the G4 volume
-//               was defined as division; 
+//               was defined as division;
 //
 // Clone volumes:
 // In case a G3 volume (e.g. XYZ) has changed its solid parameters
 // with its new position (placement with GSPOSP) a new G3VolTableEntry
 // (associated with this new solid) with a new name (XYZ_N)
 // is created and registered as a clone volume in the fClones vector
-// data member of its master G3VolTableEntry object. 
+// data member of its master G3VolTableEntry object.
 
 // ----------------------
 //
 // by I.Hrivnacova, 13.10.99
 
 #ifndef G3VOLTABLEENTRY_HH
-#define G3VOLTABLEENTRY_HH 1
+#define G3VOLTABLEENTRY_HH
 
 #include "globals.hh"
-#include "G3Pos.hh"
+
 #include "G3Division.hh"
+#include "G3Pos.hh"
+
 #include <vector>
 
 class G4LogicalVolume;
@@ -80,13 +82,12 @@ class G3VolTableEntry
 {
   public:  // with description
 
-    G3VolTableEntry(G4String& vname, G4String& shape, G4double* rpar, 
-                    G4int npar, G4int nmed, G4VSolid* solid, 
-		    G4bool hasNegPars);
+    G3VolTableEntry(G4String& vname, G4String& shape, G4double* rpar, G4int npar, G4int nmed,
+                    G4VSolid* solid, G4bool hasNegPars);
     virtual ~G3VolTableEntry();
 
     // operators
-    G4bool operator == ( const G3VolTableEntry& vte) const;
+    G4bool operator==(const G3VolTableEntry& vte) const;
 
     // methods
     void AddG3Pos(G3Pos* aG3Pos);
@@ -112,15 +113,15 @@ class G3VolTableEntry
     void SetHasMANY(G4bool hasMANY);
     void ClearG3PosCopy(G4int copy);
     void ClearDivision();
- 
+
     // get methods
-    G4String  GetName();
-    G4String  GetShape();
+    G4String GetName();
+    G4String GetShape();
     G4int GetNmed();
     G4int GetNpar();
     G4double* GetRpar();
     G4int NPCopies();
-    G3Pos* GetG3PosCopy(G4int copy=0);
+    G3Pos* GetG3PosCopy(G4int copy = 0);
     G3Division* GetDivision();
     G4bool HasNegPars();
     G4bool HasMANY();
@@ -132,13 +133,14 @@ class G3VolTableEntry
     G4int GetNoOverlaps();
     G3VolTableEntry* GetDaughter(G4int i);
     G3VolTableEntry* GetMother(G4int i);
-    G3VolTableEntry* GetMother();  
-      // return the first mother - to be removed
+    G3VolTableEntry* GetMother();
+    // return the first mother - to be removed
     G3VolTableEntry* GetClone(G4int i);
     G3VolTableEntry* GetMasterClone();
     std::vector<G3VolTableEntry*>* GetOverlaps();
 
   private:
+
     G4String fVname;
     G4String fShape;
     G4double* fRpar;
@@ -153,15 +155,19 @@ class G3VolTableEntry
     std::vector<G3VolTableEntry*> fClones;
     std::vector<G3VolTableEntry*> fOverlaps;
     std::vector<G3Pos*> fG3Pos;
-    G3Division*  fDivision;
+    G3Division* fDivision;
 };
 
 // inline methods
 
 inline void G3VolTableEntry::SetDivision(G3Division* division)
-{ fDivision = division; }
+{
+  fDivision = division;
+}
 
 inline G3Division* G3VolTableEntry::GetDivision()
-{ return fDivision; }
+{
+  return fDivision;
+}
 
 #endif

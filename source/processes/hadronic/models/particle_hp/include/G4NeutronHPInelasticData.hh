@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4NeutronHPInelasticData_h
-#define G4NeutronHPInelasticData_h
+#ifndef G4NEUTRONHPINELASTICDATA_HH
+#define G4NEUTRONHPINELASTICDATA_HH
 
 #include "G4ParticleHPInelasticData.hh"
 using G4NeutronHPInelasticData = G4ParticleHPInelasticData;

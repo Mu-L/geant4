@@ -25,12 +25,10 @@
 //
 //
 //
-//Base class for all Motif shell widgets
+// Base class for all Motif shell widgets
 
 #include "G4OpenGLXmVWidgetShell.hh"
 
-G4OpenGLXmVWidgetShell::G4OpenGLXmVWidgetShell ()
-{}
+G4OpenGLXmVWidgetShell::G4OpenGLXmVWidgetShell() {}
 
-G4OpenGLXmVWidgetShell::~G4OpenGLXmVWidgetShell ()
-{}
+G4OpenGLXmVWidgetShell::~G4OpenGLXmVWidgetShell() {}

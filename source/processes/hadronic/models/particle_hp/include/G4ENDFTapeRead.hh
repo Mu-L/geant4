@@ -47,6 +47,7 @@
 class G4ENDFTapeRead
 {
   public:
+
     // Constructor definition
     /** Default constructor
      *  - Usage:
@@ -86,12 +87,14 @@ class G4ENDFTapeRead
                    G4FFGEnumerations::FissionCause WhichCause, G4int Verbosity);
 
   protected:
+
     /** Initialize is a common function called by all constructors. */
     void Initialize(const G4String& dataFile);
     /** Initialize is a common function calles by all constructors */
     void Initialize(std::istringstream& dataStream);
 
   public:
+
     // Functions
     /** Returns and array containing the values of each of the energy groups
      *  - Usage: No arguments required
@@ -143,6 +146,7 @@ class G4ENDFTapeRead
     void G4SetVerbosity(G4int WhatVerbosity);
 
   private:
+
     // Functions
     /** Read in the data from an ENDF data tape. */
     void ReadInData(std::istringstream& dataStream);
@@ -162,7 +166,9 @@ class G4ENDFTapeRead
     const G4FFGEnumerations::YieldType YieldType_;
 
     // Destructor function(s)
+
   public:
+
     /** Default Deconstructor */
     ~G4ENDFTapeRead();
 };

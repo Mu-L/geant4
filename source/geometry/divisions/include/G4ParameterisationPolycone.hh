@@ -27,17 +27,17 @@
 //
 // Class description:
 //
-// These classes represent the parameterised positioning equivalent to 
+// These classes represent the parameterised positioning equivalent to
 // dividing a G4Polycone along one of each axis Rho, Phi, Z.
 
 // Author: Pedro Arce (CIEMAT), 09.05.2001 - Initial version
 //         Ivana Hrivnacova (Orsay), 08.04.2004 - Implemented reflection
 //---------------------------------------------------------------------
 #ifndef G4PARAMETERISATIONPOLYCONE_HH
-#define G4PARAMETERISATIONPOLYCONE_HH 1
+#define G4PARAMETERISATIONPOLYCONE_HH
 
-#include "G4VDivisionParameterisation.hh"
 #include "G4Polycone.hh"
+#include "G4VDivisionParameterisation.hh"
 
 class G4VPhysicalVolume;
 
@@ -59,12 +59,13 @@ class G4Polyhedra;
  * @brief G4VParameterisationPolycone is the base class for the parameterised
  * positioning equivalent to dividing a G4Polycone along one of each axis Rho,
  * Phi, Z.
+ * @ingroup geometry_divisions
  */
 
 class G4VParameterisationPolycone : public G4VDivisionParameterisation
-{ 
+{
   public:
-  
+
     /**
      * Initialises a parameterised polycone, given the axis of parameterisation
      * 'axis' and the number of divided slices 'nCopies'.
@@ -75,10 +76,9 @@ class G4VParameterisationPolycone : public G4VDivisionParameterisation
      *  @param[in] pSolid Pointer to the original shape to parameterise.
      *  @param[in] divType String identifier for the kind of division.
      */
-    G4VParameterisationPolycone( EAxis axis, G4int nCopies,
-                                 G4double offset, G4double step,
-                                 G4VSolid* pSolid, DivisionType divType );
-  
+    G4VParameterisationPolycone(EAxis axis, G4int nCopies, G4double offset, G4double step,
+                                G4VSolid* pSolid, DivisionType divType);
+
     /**
      * Default Destructor.
      */
@@ -88,10 +88,11 @@ class G4VParameterisationPolycone : public G4VDivisionParameterisation
 /**
  * @brief G4ParameterisationPolyconeRho represents the parameterised positioning
  * equivalent to dividing a G4Polycone along Rho axis.
+ * @ingroup geometry_divisions
  */
 
 class G4ParameterisationPolyconeRho : public G4VParameterisationPolycone
-{ 
+{
   public:
 
     /**
@@ -103,15 +104,13 @@ class G4ParameterisationPolyconeRho : public G4VParameterisationPolycone
      *  @param[in] pSolid Pointer to the original shape to parameterise.
      *  @param[in] divType String identifier for the kind of division.
      */
-    G4ParameterisationPolyconeRho( EAxis axis, G4int nCopies,
-                                   G4double offset, G4double step,
-                                   G4VSolid* pSolid,
-                                   DivisionType divType );
+    G4ParameterisationPolyconeRho(EAxis axis, G4int nCopies, G4double offset, G4double step,
+                                  G4VSolid* pSolid, DivisionType divType);
 
     /**
      * Default Destructor.
      */
-   ~G4ParameterisationPolyconeRho() override;
+    ~G4ParameterisationPolyconeRho() override;
 
     /**
      * Checks the validity of parameters given in input, issuing an exception.
@@ -127,46 +126,34 @@ class G4ParameterisationPolyconeRho : public G4VParameterisationPolycone
     /**
      * Concrete methods implementing the parameterisation.
      */
-    void ComputeTransformation( const G4int copyNo,
-                                      G4VPhysicalVolume* physVol ) const override;
-    void ComputeDimensions( G4Polycone& pcone, const G4int copyNo,
-                            const G4VPhysicalVolume* physVol ) const override;
+    void ComputeTransformation(const G4int copyNo, G4VPhysicalVolume* physVol) const override;
+    void ComputeDimensions(G4Polycone& pcone, const G4int copyNo,
+                           const G4VPhysicalVolume* physVol) const override;
 
   private:  // Dummy declarations to get rid of warnings ...
 
-    void ComputeDimensions (G4Trd&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Trap&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Box&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Orb&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Ellipsoid&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Sphere&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Torus&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Para&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Hype&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Tubs&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Cons&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Polyhedra&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Trd&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Trap&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Box&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Orb&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Ellipsoid&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Sphere&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Torus&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Para&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Hype&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Tubs&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Cons&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Polyhedra&, const G4int, const G4VPhysicalVolume*) const override {}
 };
 
 /**
  * @brief G4ParameterisationPolyconePhi represents the parameterised positioning
  * equivalent to dividing a G4Polycone along Phi axis.
+ * @ingroup geometry_divisions
  */
 
 class G4ParameterisationPolyconePhi : public G4VParameterisationPolycone
-{ 
+{
   public:
 
     /**
@@ -178,15 +165,13 @@ class G4ParameterisationPolyconePhi : public G4VParameterisationPolycone
      *  @param[in] pSolid Pointer to the original shape to parameterise.
      *  @param[in] divType String identifier for the kind of division.
      */
-    G4ParameterisationPolyconePhi( EAxis axis, G4int nCopies,
-                                   G4double offset, G4double step,
-                                   G4VSolid* pSolid,
-                                   DivisionType divType );
+    G4ParameterisationPolyconePhi(EAxis axis, G4int nCopies, G4double offset, G4double step,
+                                  G4VSolid* pSolid, DivisionType divType);
 
     /**
      * Default Destructor.
      */
-   ~G4ParameterisationPolyconePhi() override;
+    ~G4ParameterisationPolyconePhi() override;
 
     /**
      * Returns the max width along Phi.
@@ -197,46 +182,34 @@ class G4ParameterisationPolyconePhi : public G4VParameterisationPolycone
     /**
      * Concrete methods implementing the parameterisation.
      */
-    void ComputeTransformation( const G4int copyNo,
-                                      G4VPhysicalVolume* physVol ) const override;
-    void ComputeDimensions( G4Polycone& pcone, const G4int copyNo,
-                            const G4VPhysicalVolume* physVol ) const override;
+    void ComputeTransformation(const G4int copyNo, G4VPhysicalVolume* physVol) const override;
+    void ComputeDimensions(G4Polycone& pcone, const G4int copyNo,
+                           const G4VPhysicalVolume* physVol) const override;
 
   private:  // Dummy declarations to get rid of warnings ...
 
-    void ComputeDimensions (G4Trd&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Trap&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Box&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Orb&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Sphere&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Ellipsoid&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Torus&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Para&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Hype&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Tubs&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Cons&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Polyhedra&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Trd&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Trap&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Box&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Orb&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Sphere&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Ellipsoid&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Torus&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Para&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Hype&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Tubs&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Cons&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Polyhedra&, const G4int, const G4VPhysicalVolume*) const override {}
 };
 
 /**
  * @brief G4ParameterisationPolyconeZ represents the parameterised positioning
  * equivalent to dividing a G4Polycone along Z axis.
+ * @ingroup geometry_divisions
  */
 
 class G4ParameterisationPolyconeZ : public G4VParameterisationPolycone
-{ 
+{
   public:
 
     /**
@@ -248,15 +221,13 @@ class G4ParameterisationPolyconeZ : public G4VParameterisationPolycone
      *  @param[in] pSolid Pointer to the original shape to parameterise.
      *  @param[in] divType String identifier for the kind of division.
      */
-    G4ParameterisationPolyconeZ( EAxis axis, G4int nCopies,
-                                 G4double offset, G4double step,
-                                 G4VSolid* pSolid,
-                                 DivisionType divType );
+    G4ParameterisationPolyconeZ(EAxis axis, G4int nCopies, G4double offset, G4double step,
+                                G4VSolid* pSolid, DivisionType divType);
 
     /**
      * Default Destructor.
      */
-   ~G4ParameterisationPolyconeZ() override;
+    ~G4ParameterisationPolyconeZ() override;
 
     /**
      * Checks the validity of parameters given in input, issuing an exception.
@@ -272,47 +243,34 @@ class G4ParameterisationPolyconeZ : public G4VParameterisationPolycone
     /**
      * Concrete methods implementing the parameterisation.
      */
-    void ComputeTransformation( const G4int copyNo,
-                                      G4VPhysicalVolume* physVol ) const override;
-    void ComputeDimensions( G4Polycone& pcone, const G4int copyNo,
-                            const G4VPhysicalVolume* physVol ) const override;
+    void ComputeTransformation(const G4int copyNo, G4VPhysicalVolume* physVol) const override;
+    void ComputeDimensions(G4Polycone& pcone, const G4int copyNo,
+                           const G4VPhysicalVolume* physVol) const override;
 
   private:
 
     /**
      * Internal accessors for the original R parameters of the solid to divide.
      */
-    G4double GetR(G4double z, G4double z1, G4double r1,
-                  G4double z2, G4double r2) const;
+    G4double GetR(G4double z, G4double z1, G4double r1, G4double z2, G4double r2) const;
     G4double GetRmin(G4double z, G4int nsegment) const;
     G4double GetRmax(G4double z, G4int nsegment) const;
 
     // Dummy declarations to get rid of warnings ...
 
-    void ComputeDimensions (G4Trd&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Trap&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Box&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Orb&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Sphere&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Ellipsoid&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Torus&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Para&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Hype&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Tubs&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Cons&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Polyhedra&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Trd&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Trap&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Box&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Orb&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Sphere&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Ellipsoid&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Torus&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Para&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Hype&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Tubs&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Cons&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Polyhedra&, const G4int, const G4VPhysicalVolume*) const override {}
+
   private:
 
     G4int fNSegment = 0;

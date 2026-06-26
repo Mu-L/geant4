@@ -33,24 +33,24 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4HadronicProcessType_h
-#define G4HadronicProcessType_h 1
+#ifndef G4HADRONICPROCESSTYPE_HH
+#define G4HADRONICPROCESSTYPE_HH
 
 enum G4HadronicProcessType
 {
-  fHadronElastic =    111,
-  fNeutronGeneral =   116,
-  fHadronInelastic =  121,
-  fCapture =          131,
-  fMuAtomicCapture =  132,
-  fFission =          141,
-  fHadronAtRest =     151,
-  fLeptonAtRest =     152,
-  fChargeExchange =   161,
-  fNuOscillation =    165,
-  fNuElectron =       166,
-  fNuNucleus =        167,
+  fHadronElastic = 111,
+  fNeutronGeneral = 116,
+  fHadronInelastic = 121,
+  fCapture = 131,
+  fMuAtomicCapture = 132,
+  fFission = 141,
+  fHadronAtRest = 151,
+  fLeptonAtRest = 152,
+  fChargeExchange = 161,
+  fNuOscillation = 165,
+  fNuElectron = 166,
+  fNuNucleus = 167,
   fRadioactiveDecay = 210,
-  fEMDissociation =   310
+  fEMDissociation = 310
 };
 #endif

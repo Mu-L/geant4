@@ -32,8 +32,8 @@
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 // V. Ivanchenko July-2023 converted back
 //
-#ifndef G4NeutronHPCaptureData_h
-#define G4NeutronHPCaptureData_h 1
+#ifndef G4NEUTRONHPCAPTUREDATA_HH
+#define G4NEUTRONHPCAPTUREDATA_HH
 
 // Class Description
 // Cross-section data set for a high precision (based on evaluated data
@@ -55,15 +55,15 @@ class G4Material;
 class G4NeutronHPCaptureData : public G4VCrossSectionDataSet
 {
   public:
+
     G4NeutronHPCaptureData();
     ~G4NeutronHPCaptureData() override;
 
-    G4bool IsIsoApplicable(const G4DynamicParticle*, G4int Z, G4int A,
-                           const G4Element*, const G4Material*) override;
+    G4bool IsIsoApplicable(const G4DynamicParticle*, G4int Z, G4int A, const G4Element*,
+                           const G4Material*) override;
 
-    G4double GetIsoCrossSection(const G4DynamicParticle*, G4int Z, G4int A,
-                                const G4Isotope*, const G4Element*,
-                                const G4Material*) override;
+    G4double GetIsoCrossSection(const G4DynamicParticle*, G4int Z, G4int A, const G4Isotope*,
+                                const G4Element*, const G4Material*) override;
 
     G4double GetCrossSection(const G4DynamicParticle*, const G4Element*, G4double aT);
 
@@ -74,6 +74,7 @@ class G4NeutronHPCaptureData : public G4VCrossSectionDataSet
     void CrossSectionDescription(std::ostream&) const override;
 
   private:
+
     static G4PhysicsTable* theCrossSections;
     G4ParticleHPManager* fManager;
     G4double emax;

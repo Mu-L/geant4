@@ -39,86 +39,85 @@
 #ifndef G4CASCADE_COALESCENCE_HH
 #define G4CASCADE_COALESCENCE_HH
 
-#include "globals.hh"
 #include "G4InuclElementaryParticle.hh"
 #include "G4InuclNuclei.hh"
 #include "G4LorentzVector.hh"
-#include <vector>
+#include "globals.hh"
+
 #include <set>
+#include <vector>
 
 class G4CollisionOutput;
 
+class G4CascadeCoalescence
+{
+  public:
 
-class G4CascadeCoalescence {
-public:
-  G4CascadeCoalescence(G4int verbose=0);
-  virtual ~G4CascadeCoalescence();
+    G4CascadeCoalescence(G4int verbose = 0);
+    virtual ~G4CascadeCoalescence();
 
-  // Final state particle list is modified directly
-  void FindClusters(G4CollisionOutput& finalState);
+    // Final state particle list is modified directly
+    void FindClusters(G4CollisionOutput& finalState);
 
-  void setVerboseLevel(G4int verbose) { verboseLevel = verbose; }
+    void setVerboseLevel(G4int verbose) { verboseLevel = verbose; }
 
-private:
-  typedef std::vector<size_t> ClusterCandidate;	// Indices of constituents
+  private:
 
-  G4int verboseLevel;				// Control diagnostic messages
+    typedef std::vector<size_t> ClusterCandidate;  // Indices of constituents
 
-  std::vector<ClusterCandidate> allClusters;	// List of candidates found
-  std::set<size_t> usedNucleons;		// List of converted nucleons
+    G4int verboseLevel;  // Control diagnostic messages
 
-  G4CollisionOutput* thisFinalState;		// Pointers to current event
-  const std::vector<G4InuclElementaryParticle>* thisHadrons;
+    std::vector<ClusterCandidate> allClusters;  // List of candidates found
+    std::set<size_t> usedNucleons;  // List of converted nucleons
 
-  ClusterCandidate thisCluster;			// Reusable buffer for attempts
-  G4InuclNuclei thisLightIon;			// Reusable construction buffer
+    G4CollisionOutput* thisFinalState;  // Pointers to current event
+    const std::vector<G4InuclElementaryParticle>* thisHadrons;
 
-  const G4double dpMaxDoublet;			// Relative momenta for clusters
-  const G4double dpMaxTriplet;
-  const G4double dpMaxAlpha;
+    ClusterCandidate thisCluster;  // Reusable buffer for attempts
+    G4InuclNuclei thisLightIon;  // Reusable construction buffer
 
-  // Processing stages -- search, construct, cleanup
-  void selectCandidates();
-  void createNuclei();
-  void removeNucleons();
+    const G4double dpMaxDoublet;  // Relative momenta for clusters
+    const G4double dpMaxTriplet;
+    const G4double dpMaxAlpha;
 
-  // Do combinatorics of given nucleons to make candidates
-  void tryClusters(size_t idx1, size_t idx2);
-  void tryClusters(size_t idx1, size_t idx2, size_t idx3);
-  void tryClusters(size_t idx1, size_t idx2, size_t idx3, size_t idx4);
+    // Processing stages -- search, construct, cleanup
+    void selectCandidates();
+    void createNuclei();
+    void removeNucleons();
 
-  // Create cluster candidate with listed indices
-  void fillCluster(size_t idx1, size_t idx2);
-  void fillCluster(size_t idx1, size_t idx2, size_t idx3);
-  void fillCluster(size_t idx1, size_t idx2, size_t idx3, size_t idx4);
+    // Do combinatorics of given nucleons to make candidates
+    void tryClusters(size_t idx1, size_t idx2);
+    void tryClusters(size_t idx1, size_t idx2, size_t idx3);
+    void tryClusters(size_t idx1, size_t idx2, size_t idx3, size_t idx4);
 
-  // Check if indexed nucleon is already in a cluster
-  bool nucleonUsed(size_t idx) const {
-    return usedNucleons.find(idx) != usedNucleons.end();
-  }
+    // Create cluster candidate with listed indices
+    void fillCluster(size_t idx1, size_t idx2);
+    void fillCluster(size_t idx1, size_t idx2, size_t idx3);
+    void fillCluster(size_t idx1, size_t idx2, size_t idx3, size_t idx4);
 
-  // Evaluate conditions for cluster to form light ion
-  bool allNucleons(const ClusterCandidate& clus) const;
-  bool goodCluster(const ClusterCandidate& clus) const;
-  G4int clusterType(const ClusterCandidate& aCluster) const;
+    // Check if indexed nucleon is already in a cluster
+    bool nucleonUsed(size_t idx) const { return usedNucleons.find(idx) != usedNucleons.end(); }
 
-  // Extract hadron from final state list
-  const G4InuclElementaryParticle& getHadron(size_t idx) const {
-    return (*thisHadrons)[idx];
-  }
+    // Evaluate conditions for cluster to form light ion
+    bool allNucleons(const ClusterCandidate& clus) const;
+    bool goodCluster(const ClusterCandidate& clus) const;
+    G4int clusterType(const ClusterCandidate& aCluster) const;
 
-  // Convert candidate nucleon set into output nucleus (true == success)
-  bool makeLightIon(const ClusterCandidate& aCluster);
+    // Extract hadron from final state list
+    const G4InuclElementaryParticle& getHadron(size_t idx) const { return (*thisHadrons)[idx]; }
 
-  // Kinematics for cluster evaluations
-  G4LorentzVector getClusterMomentum(const ClusterCandidate& aCluster) const;
-  mutable G4LorentzVector pCluster;	// Reusable buffer to reduce churn
+    // Convert candidate nucleon set into output nucleus (true == success)
+    bool makeLightIon(const ClusterCandidate& aCluster);
 
-  G4double maxDeltaP(const ClusterCandidate& aCluster) const;
+    // Kinematics for cluster evaluations
+    G4LorentzVector getClusterMomentum(const ClusterCandidate& aCluster) const;
+    mutable G4LorentzVector pCluster;  // Reusable buffer to reduce churn
 
-  // Report cluster arguments for validation
-  void reportArgs(const G4String& name, const ClusterCandidate& clus) const;
-  void reportResult(const G4String& name, const G4InuclNuclei& nucl) const;
+    G4double maxDeltaP(const ClusterCandidate& aCluster) const;
+
+    // Report cluster arguments for validation
+    void reportArgs(const G4String& name, const ClusterCandidate& clus) const;
+    void reportResult(const G4String& name, const G4InuclNuclei& nucl) const;
 };
 
-#endif	/* G4CASCADE_COALESCENCE_HH */
+#endif /* G4CASCADE_COALESCENCE_HH */

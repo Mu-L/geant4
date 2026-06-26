@@ -33,11 +33,11 @@
 // - Created:   P. Arce
 // --------------------------------------------------------------------
 
-#ifndef G4ErrorMessenger_hh
-#define G4ErrorMessenger_hh
+#ifndef G4ERRORMESSENGER_HH
+#define G4ERRORMESSENGER_HH
 
-#include "globals.hh"
 #include "G4UImessenger.hh"
+#include "globals.hh"
 
 class G4UIdirectory;
 class G4UIcmdWithAString;
@@ -51,25 +51,26 @@ class G4ErrorEnergyLoss;
 
 class G4ErrorMessenger : public G4UImessenger
 {
- public:  // with description
-  G4ErrorMessenger(G4ErrorStepLengthLimitProcess* lengthAct,
-                   G4ErrorMagFieldLimitProcess* magAct,
-                   G4ErrorEnergyLoss* elossAct);
-  ~G4ErrorMessenger();
+  public:  // with description
 
-  void SetNewValue(G4UIcommand*, G4String);
+    G4ErrorMessenger(G4ErrorStepLengthLimitProcess* lengthAct, G4ErrorMagFieldLimitProcess* magAct,
+                     G4ErrorEnergyLoss* elossAct);
+    ~G4ErrorMessenger();
 
- private:
-  G4ErrorStepLengthLimitProcess* StepLengthAction;
-  G4ErrorMagFieldLimitProcess* MagFieldAction;
-  G4ErrorEnergyLoss* EnergyLossAction;
+    void SetNewValue(G4UIcommand*, G4String);
 
-  G4UIdirectory* myDir;
-  G4UIdirectory* myDirLimits;
+  private:
 
-  G4UIcmdWithADoubleAndUnit* StepLengthLimitCmd;
-  G4UIcmdWithADouble* MagFieldLimitCmd;
-  G4UIcmdWithADouble* EnergyLossCmd;
+    G4ErrorStepLengthLimitProcess* StepLengthAction;
+    G4ErrorMagFieldLimitProcess* MagFieldAction;
+    G4ErrorEnergyLoss* EnergyLossAction;
+
+    G4UIdirectory* myDir;
+    G4UIdirectory* myDirLimits;
+
+    G4UIcmdWithADoubleAndUnit* StepLengthLimitCmd;
+    G4UIcmdWithADouble* MagFieldLimitCmd;
+    G4UIcmdWithADouble* EnergyLossCmd;
 };
 
 #endif

@@ -63,11 +63,13 @@ void G4WorkerRunManagerKernel::SetupShadowProcess() const
   auto theParticleIterator = theParticleTable->GetIterator();
   theParticleIterator->reset();
   // loop on particles and get process manager from there list of processes
-  while ((*theParticleIterator)()) {
+  while ((*theParticleIterator)())
+  {
     G4ParticleDefinition* pd = theParticleIterator->value();
     G4ProcessManager* pm = pd->GetProcessManager();
     G4ProcessManager* pmM = pd->GetMasterProcessManager();
-    if (pm == nullptr || pmM == nullptr) {
+    if (pm == nullptr || pmM == nullptr)
+    {
       G4ExceptionDescription msg;
       msg << "Process manager or process manager shadow to master are not set.\n";
       msg << "Particle : " << pd->GetParticleName() << " (" << pd << "), proc-manager: " << pm;
@@ -77,15 +79,18 @@ void G4WorkerRunManagerKernel::SetupShadowProcess() const
     }
     G4ProcessVector& procs = *(pm->GetProcessList());
     G4ProcessVector& procsM = *(pmM->GetProcessList());
-    if (procs.size() != procsM.size()) {
+    if (procs.size() != procsM.size())
+    {
       G4cout << "G4WorkerRunManagerKernel::SetupShadowProcess() for particle <"
              << pd->GetParticleName() << ">" << G4endl;
       G4cout << " ProcessManager : " << pm << " ProcessManagerShadow : " << pmM << G4endl;
-      for (G4int iv1 = 0; iv1 < (G4int)procs.size(); ++iv1) {
+      for (G4int iv1 = 0; iv1 < (G4int)procs.size(); ++iv1)
+      {
         G4cout << "  " << iv1 << " - " << procs[iv1]->GetProcessName() << G4endl;
       }
       G4cout << "--------------------------------------------------------------" << G4endl;
-      for (G4int iv2 = 0; iv2 < (G4int)procsM.size(); ++iv2) {
+      for (G4int iv2 = 0; iv2 < (G4int)procsM.size(); ++iv2)
+      {
         G4cout << "  " << iv2 << " - " << procsM[iv2]->GetProcessName() << G4endl;
       }
       G4cout << "--------------------------------------------------------------" << G4endl;
@@ -101,7 +106,8 @@ void G4WorkerRunManagerKernel::SetupShadowProcess() const
     // process from master. Note that we rely on
     // processes being in the correct order!
     // We could use some checking using process name or type
-    for (G4int idx = 0; idx < (G4int)procs.size(); ++idx) {
+    for (G4int idx = 0; idx < (G4int)procs.size(); ++idx)
+    {
       procs[idx]->SetMasterProcess(procsM[idx]);
     }
   }

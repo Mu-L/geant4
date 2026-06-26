@@ -35,6 +35,7 @@ class G4VisAttributes;
 class G4VtkPolydataPolylinePipeline : public G4VtkPolydataPipeline
 {
   public:
+
     G4VtkPolydataPolylinePipeline(G4String name, const G4VtkVisContext& vc,
                                   const G4VisAttributes* pVA);
     ~G4VtkPolydataPolylinePipeline() override = default;

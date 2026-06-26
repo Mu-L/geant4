@@ -25,36 +25,40 @@
 //
 //
 //
-#ifndef G4ExcitedStringDecay_h
-#define G4ExcitedStringDecay_h 1
+#ifndef G4EXCITEDSTRINGDECAY_HH
+#define G4EXCITEDSTRINGDECAY_HH
 
-#include "globals.hh"
-#include "G4VStringFragmentation.hh"
 #include "G4ExcitedStringVector.hh"
 #include "G4KineticTrackVector.hh"
+#include "G4VStringFragmentation.hh"
+#include "globals.hh"
 
 class G4VLongitudinalStringDecay;
 
-class G4ExcitedStringDecay: public G4VStringFragmentation 
+class G4ExcitedStringDecay : public G4VStringFragmentation
 {
   public:
-      G4ExcitedStringDecay(G4VLongitudinalStringDecay* aStringDecay = nullptr);
-      virtual ~G4ExcitedStringDecay();
+
+    G4ExcitedStringDecay(G4VLongitudinalStringDecay* aStringDecay = nullptr);
+    virtual ~G4ExcitedStringDecay();
 
   private:
-      G4ExcitedStringDecay(const G4ExcitedStringDecay &right);
-      const G4ExcitedStringDecay & operator=(const G4ExcitedStringDecay &right);
-      G4bool operator==(const G4ExcitedStringDecay &right) const;
-      G4bool operator!=(const G4ExcitedStringDecay &right) const;
+
+    G4ExcitedStringDecay(const G4ExcitedStringDecay& right);
+    const G4ExcitedStringDecay& operator=(const G4ExcitedStringDecay& right);
+    G4bool operator==(const G4ExcitedStringDecay& right) const;
+    G4bool operator!=(const G4ExcitedStringDecay& right) const;
 
   public:
-      virtual G4KineticTrackVector * FragmentStrings(const G4ExcitedStringVector * theStrings);
+
+    virtual G4KineticTrackVector* FragmentStrings(const G4ExcitedStringVector* theStrings);
 
   private:
-      G4KineticTrackVector * FragmentString(const G4ExcitedString &theString);
-      G4bool EnergyAndMomentumCorrector(G4KineticTrackVector* Output, G4LorentzVector& TotalCollisionMom);   
-      G4VLongitudinalStringDecay * theStringDecay;
+
+    G4KineticTrackVector* FragmentString(const G4ExcitedString& theString);
+    G4bool EnergyAndMomentumCorrector(G4KineticTrackVector* Output,
+                                      G4LorentzVector& TotalCollisionMom);
+    G4VLongitudinalStringDecay* theStringDecay;
 };
 
 #endif
-

@@ -358,7 +358,7 @@ LUPI_HOST HeatedCrossSectionContinuousEnergy::HeatedCrossSectionContinuousEnergy
         if( ( a_settings._URR_mode( ) == Transporting::URR_mode::pdfs ) && ( URR_label != "" ) ) {
             if( reactionCrossSectionSuite.has( URR_label ) ) {
                 GIDI::Functions::URR_probabilityTables1d const &URR_probability_tables1d( *reactionCrossSectionSuite.get<GIDI::Functions::URR_probabilityTables1d>( URR_label ) );
-                URR_probabilityTables = Probabilities::parseProbability2d( URR_probability_tables1d.function2d( ), nullptr );
+                URR_probabilityTables = Probabilities::parseProbability2d( URR_probability_tables1d.function2d( ), a_setupInfo );
                 m_URR_mode = Transporting::URR_mode::pdfs;
             }
         }
@@ -383,14 +383,13 @@ LUPI_HOST HeatedCrossSectionContinuousEnergy::HeatedCrossSectionContinuousEnergy
 
             if( energies[reactionCrossSection3->start( )] > fixedGridPoints[0] ) {
                 int intStart = binarySearchVector( energies[reactionCrossSection3->start( )], fixedGridPoints ) + 1;
-                if (intStart < 0) {
-                    throw std::out_of_range( "Cross section out of range when initializing fixed grid!" );
-                }
+                if( intStart < 0 ) LUPI_THROW("Bad binary search results! Fixed grid energies out of order?");
                 start = static_cast<std::size_t>( intStart );
             }
 
             for( std::size_t i1 = 0; i1 < start; ++i1 ) reactionCrossSection4->set( i1, 0.0 );
             for( std::size_t i1 = start; i1 < fixedGridPoints.size( ); ++i1 ) {
+                if( fixedGridIndices[i1] < 0 ) LUPI_THROW("HeatedCrossSectionContinuousEnergy::HeatedCrossSectionContinuousEnergy: unexpected negative fixed grid index!");
                 std::size_t index = static_cast<std::size_t>( fixedGridIndices[i1] );
                 double fraction = ( fixedGridPoints[i1] - energies[index] ) / ( energies[index+1] - energies[index] );
 
@@ -1134,9 +1133,10 @@ LUPI_HOST_DEVICE double HeatedCrossSectionsContinuousEnergy::crossSection( URR_p
  * @param   a_numberAllocated           [in]        The length of memory allocated for *a_crossSectionVector*.
  * @param   a_crossSectionVector        [in/out]    The energy dependent, total cross section to add cross section data to.
  ***********************************************************************************************************/
- 
-LUPI_HOST_DEVICE void HeatedCrossSectionsContinuousEnergy::crossSectionVector( double a_temperature, double a_userFactor, 
-                std::size_t a_numberAllocated, double *a_crossSectionVector ) const {
+
+template<typename T>
+LUPI_HOST_DEVICE void HeatedCrossSectionsContinuousEnergy::crossSectionVectorT( double a_temperature, double a_userFactor, 
+                std::size_t a_numberAllocated, T *a_crossSectionVector ) const {
 
     std::size_t index1 = 0, index2 = 0;
     double fraction = 0.0;
@@ -1159,8 +1159,38 @@ LUPI_HOST_DEVICE void HeatedCrossSectionsContinuousEnergy::crossSectionVector( d
 
     if( a_numberAllocated < totalCrossSection1.size( ) ) LUPI_THROW( "HeatedCrossSectionsContinuousEnergy::crossSectionVector: a_numberAllocated too small." );
     for( std::size_t i1 = 0; i1 < size; ++i1 ) {
-        a_crossSectionVector[i1] += factor1 * totalCrossSection1[i1] + factor2 * totalCrossSection2[i1];
+        a_crossSectionVector[i1] += static_cast<T>( factor1 * totalCrossSection1[i1] + factor2 * totalCrossSection2[i1] );
     }
+}
+
+/* *********************************************************************************************************//**
+ * Adds the energy dependent, total cross section corresponding to the temperature *a_temperature* multiplied by *a_userFactor* to *a_crossSectionVector*.
+ *
+ * @param   a_temperature                   [in]        Specifies the temperature of the material.
+ * @param   a_userFactor                    [in]        User factor which all cross sections are multiplied by.
+ * @param   a_numberAllocated               [in]        The length of memory allocated for *a_crossSectionVector*.
+ * @param   a_crossSectionVector            [in/out]    The energy dependent, total cross section to add cross section data to.
+ ***********************************************************************************************************/
+ 
+LUPI_HOST_DEVICE void HeatedCrossSectionsContinuousEnergy::crossSectionVector( double a_temperature, double a_userFactor, 
+                std::size_t a_numberAllocated, double *a_crossSectionVector ) const {
+
+    crossSectionVectorT( a_temperature, a_userFactor, a_numberAllocated, a_crossSectionVector );
+}
+
+/* *********************************************************************************************************//**
+ * Adds the energy dependent, total cross section corresponding to the temperature *a_temperature* multiplied by *a_userFactor* to *a_crossSectionVector*.
+ *
+ * @param   a_temperature                   [in]        Specifies the temperature of the material.
+ * @param   a_userFactor                    [in]        User factor which all cross sections are multiplied by.
+ * @param   a_numberAllocated               [in]        The length of memory allocated for *a_crossSectionVector*.
+ * @param   a_crossSectionVector            [in/out]    The energy dependent, total cross section to add cross section data to.
+ ***********************************************************************************************************/
+ 
+LUPI_HOST_DEVICE void HeatedCrossSectionsContinuousEnergy::crossSectionVector( double a_temperature, double a_userFactor, 
+                std::size_t a_numberAllocated, float *a_crossSectionVector ) const {
+
+    crossSectionVectorT( a_temperature, a_userFactor, a_numberAllocated, a_crossSectionVector );
 }
 
 /* *********************************************************************************************************//**
@@ -1653,11 +1683,10 @@ LUPI_HOST HeatedCrossSectionMultiGroup::HeatedCrossSectionMultiGroup( LUPI::Stat
     GIDI::Vector vector;
 
     m_reactionCrossSections.reserve( a_reactions.size( ) );
-    int index = 0;                                      // Only used for debugging.
     GIDI::Transporting::MG MG_settings( a_settings.projectileID( ), GIDI::Transporting::Mode::multiGroup, a_settings.delayedNeutrons( ) );
     MG_settings.setThrowOnError( a_settings.throwOnError( ) );
 
-    for( std::vector<GIDI::Reaction const *>::const_iterator reactionIter = a_reactions.begin( ); reactionIter != a_reactions.end( ); ++reactionIter, ++index ) {
+    for( std::vector<GIDI::Reaction const *>::const_iterator reactionIter = a_reactions.begin( ); reactionIter != a_reactions.end( ); ++reactionIter ) {
         GIDI::Vector crossSectionVector = (*reactionIter)->multiGroupCrossSection( a_smr, MG_settings, a_temperatureInfo );
 
         vector = GIDI::collapse( crossSectionVector, a_settings, a_particles, 0.0 );
@@ -1977,8 +2006,9 @@ LUPI_HOST_DEVICE double HeatedCrossSectionsMultiGroup::crossSection( std::size_t
  * @param   a_crossSectionVector            [in/out]    The energy dependent, total cross section to add cross section data to.
  ***********************************************************************************************************/
  
-LUPI_HOST_DEVICE void HeatedCrossSectionsMultiGroup::crossSectionVector( double a_temperature, double a_userFactor, 
-                std::size_t a_numberAllocated, double *a_crossSectionVector ) const {
+template<typename T>
+LUPI_HOST_DEVICE void HeatedCrossSectionsMultiGroup::crossSectionVectorT( double a_temperature, double a_userFactor, 
+                std::size_t a_numberAllocated, T *a_crossSectionVector ) const {
 
     std::size_t index1 = 0, index2 = 0;
     double fraction = 0.0;
@@ -2001,8 +2031,38 @@ LUPI_HOST_DEVICE void HeatedCrossSectionsMultiGroup::crossSectionVector( double 
 
     if( a_numberAllocated < totalCrossSection1.size( ) ) LUPI_THROW( "HeatedCrossSectionsMultiGroup::crossSectionVector: a_numberAllocated too small." );
     for( std::size_t i1 = 0; i1 < size; ++i1 ) {
-        a_crossSectionVector[i1] += factor1 * totalCrossSection1[i1] + factor2 * totalCrossSection2[i1];
+        a_crossSectionVector[i1] += static_cast<T>( factor1 * totalCrossSection1[i1] + factor2 * totalCrossSection2[i1] );
     }
+}
+
+/* *********************************************************************************************************//**
+ * Adds the energy dependent, total cross section corresponding to the temperature *a_temperature* multiplied by *a_userFactor* to *a_crossSectionVector*.
+ *
+ * @param   a_temperature                   [in]        Specifies the temperature of the material.
+ * @param   a_userFactor                    [in]        User factor which all cross sections are multiplied by.
+ * @param   a_numberAllocated               [in]        The length of memory allocated for *a_crossSectionVector*.
+ * @param   a_crossSectionVector            [in/out]    The energy dependent, total cross section to add cross section data to.
+ ***********************************************************************************************************/
+ 
+LUPI_HOST_DEVICE void HeatedCrossSectionsMultiGroup::crossSectionVector( double a_temperature, double a_userFactor, 
+                std::size_t a_numberAllocated, double *a_crossSectionVector ) const {
+
+    crossSectionVectorT( a_temperature, a_userFactor, a_numberAllocated, a_crossSectionVector );
+}
+
+/* *********************************************************************************************************//**
+ * Adds the energy dependent, total cross section corresponding to the temperature *a_temperature* multiplied by *a_userFactor* to *a_crossSectionVector*.
+ *
+ * @param   a_temperature                   [in]        Specifies the temperature of the material.
+ * @param   a_userFactor                    [in]        User factor which all cross sections are multiplied by.
+ * @param   a_numberAllocated               [in]        The length of memory allocated for *a_crossSectionVector*.
+ * @param   a_crossSectionVector            [in/out]    The energy dependent, total cross section to add cross section data to.
+ ***********************************************************************************************************/
+ 
+LUPI_HOST_DEVICE void HeatedCrossSectionsMultiGroup::crossSectionVector( double a_temperature, double a_userFactor, 
+                std::size_t a_numberAllocated, float *a_crossSectionVector ) const {
+
+    crossSectionVectorT( a_temperature, a_userFactor, a_numberAllocated, a_crossSectionVector );
 }
 
 /* *********************************************************************************************************//**
@@ -2048,7 +2108,7 @@ LUPI_HOST_DEVICE double HeatedCrossSectionsMultiGroup::reactionCrossSection( std
 
     if( intEnergyIndex == -2 ) {
         energyIndex = 0; }
-    else {
+    else if ( intEnergyIndex == -1 ) {
         energyIndex = m_projectileMultiGroupBoundariesCollapsed.size( ) - 2;
     }
 

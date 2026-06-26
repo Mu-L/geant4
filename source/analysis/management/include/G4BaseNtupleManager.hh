@@ -29,8 +29,8 @@
 //
 // Author: Ivana Hrivnacova, 20/07/2017 (ivana@ipno.in2p3.fr)
 
-#ifndef G4BaseNtupleManager_h
-#define G4BaseNtupleManager_h 1
+#ifndef G4BASENTUPLEMANAGER_HH
+#define G4BASENTUPLEMANAGER_HH
 
 #include "G4VNtupleManager.hh"
 #include "globals.hh"
@@ -38,15 +38,17 @@
 class G4BaseNtupleManager : public G4VNtupleManager
 {
   public:
+
     explicit G4BaseNtupleManager(const G4AnalysisManagerState& state);
     G4BaseNtupleManager() = delete;
     ~G4BaseNtupleManager() override = default;
 
     // deleted copy constructor & assignment operator
     G4BaseNtupleManager(const G4BaseNtupleManager& rhs) = delete;
-    G4BaseNtupleManager& operator=(const G4BaseNtupleManager& rhs) =delete;
+    G4BaseNtupleManager& operator=(const G4BaseNtupleManager& rhs) = delete;
 
   protected:
+
     // Methods for handling ntuples
     G4int CreateNtuple(G4NtupleBooking* booking) override = 0;
 
@@ -69,8 +71,8 @@ class G4BaseNtupleManager : public G4VNtupleManager
     G4bool SetFirstNtupleColumnId(G4int firstId) final;
 
   protected:
-    G4int   fFirstNtupleColumnId { 0 };
+
+    G4int fFirstNtupleColumnId{0};
 };
 
 #endif
-

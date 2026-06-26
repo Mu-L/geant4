@@ -29,7 +29,7 @@
 //
 // Used internally by importance sampling in the "mass" geometry.
 // This process is a forced post step process. It will apply
-// importance sampling if the particle crosses a boundary in the 
+// importance sampling if the particle crosses a boundary in the
 // "mass" geometry.
 
 // Author: Michael Dressel, 2002
@@ -38,8 +38,8 @@
 #define G4IMPORTANCEPROCESS_HH
 
 #include "G4VProcess.hh"
-#include "G4VTrackTerminator.hh"
 #include "G4VTouchable.hh"
+#include "G4VTrackTerminator.hh"
 
 class G4SamplingPostStepAction;
 class G4VImportanceAlgorithm;
@@ -51,102 +51,91 @@ class G4TransportationManager;
 class G4PathFinder;
 
 #include "G4FieldTrack.hh"
+#include "G4MultiNavigator.hh"  // For ELimited enum
 #include "G4TouchableHandle.hh"
-#include "G4MultiNavigator.hh"   // For ELimited enum
 
 class G4ImportanceProcess : public G4VProcess, public G4VTrackTerminator
 {
+  public:
 
- public:
-
-  G4ImportanceProcess(const G4VImportanceAlgorithm &aImportanceAlgorithm,
-                      const G4VIStore &aIstore,
-                      const G4VTrackTerminator *TrackTerminator,
-                      const G4String &aName = "ImportanceProcess",
-                            G4bool para = false);
+    G4ImportanceProcess(const G4VImportanceAlgorithm& aImportanceAlgorithm,
+                        const G4VIStore& aIstore, const G4VTrackTerminator* TrackTerminator,
+                        const G4String& aName = "ImportanceProcess", G4bool para = false);
     // creates a G4ParticleChange
 
-  virtual ~G4ImportanceProcess();
+    virtual ~G4ImportanceProcess();
     // delete the G4ParticleChange
 
-  G4ImportanceProcess(const G4ImportanceProcess &) = delete;
-  G4ImportanceProcess &operator=(const G4ImportanceProcess &) = delete;
+    G4ImportanceProcess(const G4ImportanceProcess&) = delete;
+    G4ImportanceProcess& operator=(const G4ImportanceProcess&) = delete;
 
-  //--------------------------------------------------------------
-  // Set Parallel World
-  //--------------------------------------------------------------
+    //--------------------------------------------------------------
+    // Set Parallel World
+    //--------------------------------------------------------------
 
-  void SetParallelWorld(const G4String& parallelWorldName);
+    void SetParallelWorld(const G4String& parallelWorldName);
 
-  //--------------------------------------------------------------
-  //     Process interface
-  //--------------------------------------------------------------
+    //--------------------------------------------------------------
+    //     Process interface
+    //--------------------------------------------------------------
 
-  void StartTracking(G4Track*);
-  
+    void StartTracking(G4Track*);
 
-  virtual G4double 
-  PostStepGetPhysicalInteractionLength(const G4Track& aTrack,
-                                       G4double previousStepSize,
-                                       G4ForceCondition* condition);
+    virtual G4double PostStepGetPhysicalInteractionLength(const G4Track& aTrack,
+                                                          G4double previousStepSize,
+                                                          G4ForceCondition* condition);
     // make process beeing forced
 
-  virtual G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&);
+    virtual G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&);
     // manage the importance sampling in the "mass" geometry
 
-  virtual void KillTrack() const;
+    virtual void KillTrack() const;
     // used in case no scoring process follows that does the killing
 
-  virtual const G4String& GetName() const;
+    virtual const G4String& GetName() const;
 
-  //  no operation in  AtRestDoIt and  AlongStepDoIt
+    //  no operation in  AtRestDoIt and  AlongStepDoIt
 
-  virtual G4double 
-  AlongStepGetPhysicalInteractionLength(const G4Track&,
-                                        G4double  ,
-                                        G4double  ,
-                                        G4double& ,
-                                        G4GPILSelection*);
-  virtual G4double 
-  AtRestGetPhysicalInteractionLength(const G4Track& ,
-                                     G4ForceCondition*);
-  
-  virtual G4VParticleChange* AtRestDoIt(const G4Track&, const G4Step&);
-  virtual G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&);
-  
- private:
+    virtual G4double AlongStepGetPhysicalInteractionLength(const G4Track&, G4double, G4double,
+                                                           G4double&, G4GPILSelection*);
+    virtual G4double AtRestGetPhysicalInteractionLength(const G4Track&, G4ForceCondition*);
 
-  void SetParallelWorldNavigator(G4bool createIfMissing = false);
-  void CopyStep(const G4Step& step);
+    virtual G4VParticleChange* AtRestDoIt(const G4Track&, const G4Step&);
+    virtual G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&);
 
-  G4Step* fGhostStep = nullptr;
-  G4StepPoint* fGhostPreStepPoint = nullptr;
-  G4StepPoint* fGhostPostStepPoint = nullptr;
+  private:
 
-  G4ParticleChange* fParticleChange = nullptr;
-  const G4VImportanceAlgorithm &fImportanceAlgorithm;
-  const G4VIStore& fIStore;
-  G4SamplingPostStepAction* fPostStepAction = nullptr;
+    void SetParallelWorldNavigator(G4bool createIfMissing = false);
+    void CopyStep(const G4Step& step);
 
-  G4TransportationManager* fTransportationManager = nullptr;
-  G4PathFinder* fPathFinder = nullptr;
+    G4Step* fGhostStep = nullptr;
+    G4StepPoint* fGhostPreStepPoint = nullptr;
+    G4StepPoint* fGhostPostStepPoint = nullptr;
 
-  // -------------------------------
-  // Navigation in the Ghost World:
-  // -------------------------------
-  G4String             fGhostWorldName = "NoParallelWorld";
-  G4VPhysicalVolume*   fGhostWorld = nullptr;
-  G4Navigator*         fGhostNavigator = nullptr;
-  G4int                fNavigatorID = -1;
-  G4TouchableHandle    fOldGhostTouchable;
-  G4TouchableHandle    fNewGhostTouchable;
-  G4FieldTrack         fFieldTrack = '0';
-  G4double             fGhostSafety = -1;
-  G4bool               fOnBoundary = false;
+    G4ParticleChange* fParticleChange = nullptr;
+    const G4VImportanceAlgorithm& fImportanceAlgorithm;
+    const G4VIStore& fIStore;
+    G4SamplingPostStepAction* fPostStepAction = nullptr;
 
-  G4bool               fParaflag = false;
-  G4FieldTrack         fEndTrack = '0';
-  ELimited             feLimited = kDoNot;
+    G4TransportationManager* fTransportationManager = nullptr;
+    G4PathFinder* fPathFinder = nullptr;
+
+    // -------------------------------
+    // Navigation in the Ghost World:
+    // -------------------------------
+    G4String fGhostWorldName = "NoParallelWorld";
+    G4VPhysicalVolume* fGhostWorld = nullptr;
+    G4Navigator* fGhostNavigator = nullptr;
+    G4int fNavigatorID = -1;
+    G4TouchableHandle fOldGhostTouchable;
+    G4TouchableHandle fNewGhostTouchable;
+    G4FieldTrack fFieldTrack = '0';
+    G4double fGhostSafety = -1;
+    G4bool fOnBoundary = false;
+
+    G4bool fParaflag = false;
+    G4FieldTrack fEndTrack = '0';
+    ELimited feLimited = kDoNot;
 };
 
 #endif

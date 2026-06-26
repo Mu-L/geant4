@@ -57,12 +57,13 @@ using G4UserTrackingActionVector = std::vector<G4UserTrackingActionUPtr>;
 
 class G4MultiTrackingAction : public G4UserTrackingAction, public G4UserTrackingActionVector
 {
- public:
-  G4MultiTrackingAction() = default;
-  ~G4MultiTrackingAction() override = default;
-  void SetTrackingManagerPointer(G4TrackingManager* pVal) override;
-  void PreUserTrackingAction(const G4Track*) override;
-  void PostUserTrackingAction(const G4Track*) override;
+  public:
+
+    G4MultiTrackingAction() = default;
+    ~G4MultiTrackingAction() override = default;
+    void SetTrackingManagerPointer(G4TrackingManager* pVal) override;
+    void PreUserTrackingAction(const G4Track*) override;
+    void PostUserTrackingAction(const G4Track*) override;
 };
 
 #endif

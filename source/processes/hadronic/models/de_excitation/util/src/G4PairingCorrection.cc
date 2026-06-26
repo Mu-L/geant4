@@ -31,33 +31,33 @@
 // 21.03.2013 V.Ivanchenko redesigned and cleaned up
 
 #include "G4PairingCorrection.hh"
+
 #include "G4SystemOfUnits.hh"
 
 namespace
 {
-  const G4double PairingConstant = 12.0*CLHEP::MeV;
+const G4double PairingConstant = 12.0 * CLHEP::MeV;
 }
 
-G4PairingCorrection::G4PairingCorrection()
-{}
+G4PairingCorrection::G4PairingCorrection() {}
 
 G4double G4PairingCorrection::GetPairingCorrection(G4int A, G4int Z) const
 {
   G4double pairCorr = 0.0;
   G4int N = A - Z;
 
-  if (!theCameronGilbertPairingCorrections.GetPairingCorrection(N, Z,  pairCorr) ) {
-    pairCorr = (2 - A + 2*(Z/2) + 2*(N/2))
-      *PairingConstant/std::sqrt(static_cast<G4double>(A));
+  if (!theCameronGilbertPairingCorrections.GetPairingCorrection(N, Z, pairCorr))
+  {
+    pairCorr =
+      (2 - A + 2 * (Z / 2) + 2 * (N / 2)) * PairingConstant / std::sqrt(static_cast<G4double>(A));
   }
   return pairCorr;
 }
 
-G4double 
-G4PairingCorrection::GetFissionPairingCorrection(G4int A, G4int Z) const 
+G4double G4PairingCorrection::GetFissionPairingCorrection(G4int A, G4int Z) const
 {
   G4int N = A - Z;
-  G4double pairCorr = (2 - A + 2*(Z/2) + 2*(N/2))
-    *PairingConstant/std::sqrt(static_cast<G4double>(A));
+  G4double pairCorr =
+    (2 - A + 2 * (Z / 2) + 2 * (N / 2)) * PairingConstant / std::sqrt(static_cast<G4double>(A));
   return pairCorr;
 }

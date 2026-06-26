@@ -52,26 +52,32 @@ G4double G4ParticleHPField::GetY(G4double e, G4int j)
   G4int low = 0;
   G4int high = 0;
   G4int i;
-  for (i = 1; i < nEntries / 10; i++) {
+  for (i = 1; i < nEntries / 10; i++)
+  {
     if (theData[10 * i].GetX() > e) break;
   }
-  if (i == (nEntries / 10)) {
+  if (i == (nEntries / 10))
+  {
     i = 10 * i;
     while (i < nEntries)  // Loop checking, 11.05.2015, T. Koi
     {
       if (theData[i++].GetX() > e) break;
     }
-    if (i == nEntries) {
+    if (i == nEntries)
+    {
       low = nEntries - 1;
       high = nEntries - 2;
     }
-    else {
+    else
+    {
       low = i - 1;
       high = i;
     }
   }
-  else {
-    for (G4int jj = 0; jj < 10; jj++) {
+  else
+  {
+    for (G4int jj = 0; jj < 10; jj++)
+    {
       if (theData[i].GetX() < e) break;
       i--;
     }
@@ -91,9 +97,11 @@ G4double G4ParticleHPField::GetY(G4double e, G4int j)
 void G4ParticleHPField::Dump()
 {
   G4cout << nEntries << G4endl;
-  for (G4int i = 0; i < nEntries; ++i) {
+  for (G4int i = 0; i < nEntries; ++i)
+  {
     G4cout << theData[i].GetX() << " ";
-    for (G4int j = 0; j < theData[i].GetDepth(); ++j) {
+    for (G4int j = 0; j < theData[i].GetDepth(); ++j)
+    {
       G4cout << theData[i].GetY(j) << " ";
     }
     G4cout << G4endl;
@@ -105,11 +113,13 @@ void G4ParticleHPField::Check(G4int i)
   if (i > nEntries)
     throw G4HadronicException(__FILE__, __LINE__,
                               "Skipped some index numbers in G4ParticleHPField");
-  if (i == nPoints) {
+  if (i == nPoints)
+  {
     nPoints += 50;
     const std::size_t fsize = nPoints > 0 ? nPoints : 1;
     auto buff = new G4ParticleHPFieldPoint[fsize];
-    for (G4int j = 0; j < nEntries; ++j) {
+    for (G4int j = 0; j < nEntries; ++j)
+    {
       buff[j] = theData[j];
     }
     delete[] theData;

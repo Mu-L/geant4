@@ -30,20 +30,19 @@
 // Version: 2.0
 // --------------------------------------------------------------------
 
-#include "G4Event.hh"
-#include "Randomize.hh"
 #include "G4GeneralParticleSource.hh"
-#include "G4SingleParticleSource.hh"
-#include "G4UnitsTable.hh"
 
-#include "G4GeneralParticleSourceData.hh"
-
-#include "G4Threading.hh"
 #include "G4AutoLock.hh"
+#include "G4Event.hh"
+#include "G4GeneralParticleSourceData.hh"
+#include "G4SingleParticleSource.hh"
+#include "G4Threading.hh"
+#include "G4UnitsTable.hh"
+#include "Randomize.hh"
 
 namespace
 {
-  G4Mutex messangerInit = G4MUTEX_INITIALIZER;
+G4Mutex messangerInit = G4MUTEX_INITIALIZER;
 }
 
 G4GeneralParticleSource::G4GeneralParticleSource()
@@ -61,7 +60,7 @@ G4GeneralParticleSource::G4GeneralParticleSource()
   //
   G4AutoLock l(&messangerInit);
   static G4bool onlyOnce = false;
-  if ( !onlyOnce )
+  if (!onlyOnce)
   {
     theMessenger->SetParticleGun(GPSData->GetCurrentSource());
     IntensityNormalization();
@@ -90,38 +89,29 @@ void G4GeneralParticleSource::AddaSource(G4double aV)
 void G4GeneralParticleSource::IntensityNormalization()
 {
   GPSData->IntensityNormalise();
-  normalised=GPSData->Normalised();
+  normalised = GPSData->Normalised();
 }
 
 void G4GeneralParticleSource::ListSource()
 {
-  G4cout << "The number of particle sources is: "
-         << GPSData->GetIntensityVectorSize() << G4endl;
+  G4cout << "The number of particle sources is: " << GPSData->GetIntensityVectorSize() << G4endl;
   G4cout << " Multiple Vertex sources: " << GPSData->GetMultipleVertex();
   G4cout << " Flat Sampling flag: " << GPSData->GetFlatSampling() << G4endl;
   const G4int currentIdx = GPSData->GetCurrentSourceIdx();
-  for(G4int i=0; i<GPSData->GetIntensityVectorSize(); ++i)
+  for (G4int i = 0; i < GPSData->GetIntensityVectorSize(); ++i)
   {
-    G4cout << "\tsource " << i << " with intensity: "
-           << GPSData->GetIntensity(i) << G4endl;
+    G4cout << "\tsource " << i << " with intensity: " << GPSData->GetIntensity(i) << G4endl;
     const G4SingleParticleSource* thisSrc = GPSData->GetCurrentSource(i);
-    G4cout << " \t\tNum Particles: "<<thisSrc->GetNumberOfParticles()
-           << "; Particle type: "
-           << thisSrc->GetParticleDefinition()->GetParticleName() << G4endl;
-    G4cout << " \t\tEnergy: "
-	   << G4BestUnit(thisSrc->GetEneDist()->GetMonoEnergy(),"Energy") << G4endl;
-    G4cout << " \t\tDirection: "
-           << thisSrc->GetAngDist()->GetDirection() << "; Position: ";
-    G4cout << G4BestUnit(thisSrc->GetPosDist()->GetCentreCoords(),"Length")
+    G4cout << " \t\tNum Particles: " << thisSrc->GetNumberOfParticles()
+           << "; Particle type: " << thisSrc->GetParticleDefinition()->GetParticleName() << G4endl;
+    G4cout << " \t\tEnergy: " << G4BestUnit(thisSrc->GetEneDist()->GetMonoEnergy(), "Energy")
            << G4endl;
-    G4cout << " \t\tAngular Distribution: "
-           << thisSrc->GetAngDist()->GetDistType() << G4endl;
-    G4cout << " \t\tEnergy Distribution: "
-           << thisSrc->GetEneDist()->GetEnergyDisType() << G4endl;
-    G4cout << " \t\tPosition Distribution Type: "
-           << thisSrc->GetPosDist()->GetPosDisType();
-    G4cout << "; Position Shape: "
-           << thisSrc->GetPosDist()->GetPosDisShape() << G4endl;
+    G4cout << " \t\tDirection: " << thisSrc->GetAngDist()->GetDirection() << "; Position: ";
+    G4cout << G4BestUnit(thisSrc->GetPosDist()->GetCentreCoords(), "Length") << G4endl;
+    G4cout << " \t\tAngular Distribution: " << thisSrc->GetAngDist()->GetDistType() << G4endl;
+    G4cout << " \t\tEnergy Distribution: " << thisSrc->GetEneDist()->GetEnergyDisType() << G4endl;
+    G4cout << " \t\tPosition Distribution Type: " << thisSrc->GetPosDist()->GetPosDisType();
+    G4cout << "; Position Shape: " << thisSrc->GetPosDist()->GetPosDisShape() << G4endl;
   }
 
   // Set back previous source
@@ -131,7 +121,7 @@ void G4GeneralParticleSource::ListSource()
 void G4GeneralParticleSource::SetCurrentSourceto(G4int aV)
 {
   G4int id = aV;
-  if ( id < GPSData->GetIntensityVectorSize() )
+  if (id < GPSData->GetIntensityVectorSize())
   {
     // currentSourceIdx = aV;
     // currentSource = GPSData->GetCurrentSource(id);
@@ -142,8 +132,7 @@ void G4GeneralParticleSource::SetCurrentSourceto(G4int aV)
     G4ExceptionDescription msg;
     msg << "Trying to set source to index " << aV << " but only "
         << GPSData->GetIntensityVectorSize() << " sources are defined.";
-    G4Exception("G4GeneralParticleSoruce::SetCurrentSourceto", "G4GPS004",
-                FatalException, msg);
+    G4Exception("G4GeneralParticleSoruce::SetCurrentSourceto", "G4GPS004", FatalException, msg);
   }
 }
 
@@ -158,22 +147,21 @@ void G4GeneralParticleSource::SetCurrentSourceIntensity(G4double aV)
 void G4GeneralParticleSource::ClearAll()
 {
   GPSData->ClearSources();
-  normalised=GPSData->Normalised();
+  normalised = GPSData->Normalised();
 }
 
 void G4GeneralParticleSource::DeleteaSource(G4int aV)
 {
   G4int id = aV;
-  if ( id <= GPSData->GetIntensityVectorSize() )
+  if (id <= GPSData->GetIntensityVectorSize())
   {
     GPSData->DeleteASource(aV);
-    normalised=GPSData->Normalised();
+    normalised = GPSData->Normalised();
   }
   else
   {
     G4cout << " source index is invalid " << G4endl;
-    G4cout << "    it shall be <= "
-           << GPSData->GetIntensityVectorSize() << G4endl;
+    G4cout << "    it shall be <= " << GPSData->GetIntensityVectorSize() << G4endl;
   }
 }
 
@@ -185,7 +173,7 @@ void G4GeneralParticleSource::GeneratePrimaryVertex(G4Event* evt)
     if (GPSData->GetIntensityVectorSize() > 1)
     {
       // Try to minimize locks
-      if (! normalised )
+      if (!normalised)
       {
         // According to local variable, normalization is needed
         // Check with underlying shared resource, another
@@ -202,23 +190,24 @@ void G4GeneralParticleSource::GeneratePrimaryVertex(G4Event* evt)
         GPSData->Unlock();
       }
       G4double rndm = G4UniformRand();
-      G4int i = 0 ;
-      if (! GPSData->GetFlatSampling() )
+      G4int i = 0;
+      if (!GPSData->GetFlatSampling())
       {
-        while ( rndm > GPSData->GetSourceProbability(i) ) ++i;
-          currentSource = GPSData->GetCurrentSource(i);
+        while (rndm > GPSData->GetSourceProbability(i))
+          ++i;
+        currentSource = GPSData->GetCurrentSource(i);
       }
       else
       {
-        i = G4int (GPSData->GetIntensityVectorSize()*rndm);
+        i = G4int(GPSData->GetIntensityVectorSize() * rndm);
         currentSource = GPSData->GetCurrentSource(i);
       }
     }
     currentSource->GeneratePrimaryVertex(evt);
-  } 
+  }
   else
   {
-    for (G4int i = 0; i <  GPSData->GetIntensityVectorSize(); ++i)
+    for (G4int i = 0; i < GPSData->GetIntensityVectorSize(); ++i)
     {
       GPSData->GetCurrentSource(i)->GeneratePrimaryVertex(evt);
     }

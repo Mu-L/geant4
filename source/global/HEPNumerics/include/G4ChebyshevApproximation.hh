@@ -38,7 +38,7 @@
 // Author: V.Grichine, 24.04.1997
 // --------------------------------------------------------------------
 #ifndef G4CHEBYSHEVAPPROXIMATION_HH
-#define G4CHEBYSHEVAPPROXIMATION_HH 1
+#define G4CHEBYSHEVAPPROXIMATION_HH
 
 #include "globals.hh"
 
@@ -46,58 +46,59 @@ using function = G4double (*)(G4double);
 
 class G4ChebyshevApproximation
 {
- public:
-  G4ChebyshevApproximation(function pFunction, G4int n, G4double a, G4double b);
-  // Constructor for creation of Chebyshev coefficients for m-derivative
-  // from pFunction. The value of m ! MUST BE ! < n , because the result
-  // array of fChebyshevCof will be of (n-m) size.
-  // It creates the array fChebyshevCof[0,...,fNumber-1], fNumber = n ;
-  // which consists of Chebyshev coefficients describing the function pointed
-  // by pFunction. The values a and b fixe the interval of validity of
-  // Chebyshev approximation.
+  public:
 
-  G4ChebyshevApproximation(function pFunction, G4int n, G4int m, G4double a,
-                           G4double b);
-  // Constructor for creation of Chebyshev coefficients for m-derivative
-  // from pFunction. The value of m ! MUST BE ! < n , because the result
-  // array of fChebyshevCof will be of (n-m) size. There is a definite
-  // dependence between the proper selection of n, m, a and b values to get
-  // better accuracy of the derivative value.
+    G4ChebyshevApproximation(function pFunction, G4int n, G4double a, G4double b);
+    // Constructor for creation of Chebyshev coefficients for m-derivative
+    // from pFunction. The value of m ! MUST BE ! < n , because the result
+    // array of fChebyshevCof will be of (n-m) size.
+    // It creates the array fChebyshevCof[0,...,fNumber-1], fNumber = n ;
+    // which consists of Chebyshev coefficients describing the function pointed
+    // by pFunction. The values a and b fixe the interval of validity of
+    // Chebyshev approximation.
 
-  G4ChebyshevApproximation(function pFunction, G4double a, G4double b, G4int n);
-  // Constructor for creation of Chebyshev coefficients for integral
-  // from pFunction.
+    G4ChebyshevApproximation(function pFunction, G4int n, G4int m, G4double a, G4double b);
+    // Constructor for creation of Chebyshev coefficients for m-derivative
+    // from pFunction. The value of m ! MUST BE ! < n , because the result
+    // array of fChebyshevCof will be of (n-m) size. There is a definite
+    // dependence between the proper selection of n, m, a and b values to get
+    // better accuracy of the derivative value.
 
-  ~G4ChebyshevApproximation();
-  // Destructor deletes the array of Chebyshev coefficients
+    G4ChebyshevApproximation(function pFunction, G4double a, G4double b, G4int n);
+    // Constructor for creation of Chebyshev coefficients for integral
+    // from pFunction.
 
-  G4ChebyshevApproximation(const G4ChebyshevApproximation&) = delete;
-  G4ChebyshevApproximation& operator=(const G4ChebyshevApproximation&) = delete;
-  // Copy constructor and assignment operator not allowed.
+    ~G4ChebyshevApproximation();
+    // Destructor deletes the array of Chebyshev coefficients
 
-  G4double GetChebyshevCof(G4int number) const;
-  // Access function for Chebyshev coefficients
+    G4ChebyshevApproximation(const G4ChebyshevApproximation&) = delete;
+    G4ChebyshevApproximation& operator=(const G4ChebyshevApproximation&) = delete;
+    // Copy constructor and assignment operator not allowed.
 
-  G4double ChebyshevEvaluation(G4double x) const;
-  // Evaluate the value of fFunction at the point x via the Chebyshev
-  // coefficients fChebyshevCof[0,...,fNumber-1]
+    G4double GetChebyshevCof(G4int number) const;
+    // Access function for Chebyshev coefficients
 
-  void DerivativeChebyshevCof(G4double derCof[]) const;
-  // Returns the array derCof[0,...,fNumber-2], the Chebyshev coefficients
-  // of the derivative of the function whose coefficients are fChebyshevCof
+    G4double ChebyshevEvaluation(G4double x) const;
+    // Evaluate the value of fFunction at the point x via the Chebyshev
+    // coefficients fChebyshevCof[0,...,fNumber-1]
 
-  void IntegralChebyshevCof(G4double integralCof[]) const;
-  // This function produces the array integralCof[0,...,fNumber-1] , the
-  // Chebyshev coefficients of the integral of the function whose coefficients
-  // are fChebyshevCof. The constant of integration is set so that the integral
-  // vanishes at the point (fMean - fDiff)
+    void DerivativeChebyshevCof(G4double derCof[]) const;
+    // Returns the array derCof[0,...,fNumber-2], the Chebyshev coefficients
+    // of the derivative of the function whose coefficients are fChebyshevCof
 
- private:
-  function fFunction;       // pointer to a function considered
-  G4int fNumber;            // number of Chebyshev coefficients
-  G4double* fChebyshevCof;  // array of Chebyshev coefficients
-  G4double fMean;           // (a+b)/2 - mean point of interval
-  G4double fDiff;           // (b-a)/2 - half of the interval value
+    void IntegralChebyshevCof(G4double integralCof[]) const;
+    // This function produces the array integralCof[0,...,fNumber-1] , the
+    // Chebyshev coefficients of the integral of the function whose coefficients
+    // are fChebyshevCof. The constant of integration is set so that the integral
+    // vanishes at the point (fMean - fDiff)
+
+  private:
+
+    function fFunction;  // pointer to a function considered
+    G4int fNumber;  // number of Chebyshev coefficients
+    G4double* fChebyshevCof;  // array of Chebyshev coefficients
+    G4double fMean;  // (a+b)/2 - mean point of interval
+    G4double fDiff;  // (b-a)/2 - half of the interval value
 };
 
 #endif

@@ -29,25 +29,26 @@
 //
 // A displaced solid is a solid that has been shifted from its original
 // frame of reference to a new one. It is meant to be used **internally only**
-// for simplifying the implementation of "Boolean solids". 
+// for simplifying the implementation of "Boolean solids".
 
 // Author: Vladimir Grichine (CERN), 28.10.1998 - Created.
 // --------------------------------------------------------------------
 #ifndef G4DISPLACEDSOLID_HH
 #define G4DISPLACEDSOLID_HH
 
-#include "G4VSolid.hh"
+#include "G4AffineTransform.hh"
 #include "G4RotationMatrix.hh"
 #include "G4ThreeVector.hh"
 #include "G4Transform3D.hh"
-#include "G4AffineTransform.hh"
+#include "G4VSolid.hh"
 
 /**
  * @brief G4DisplacedSolid is a solid that has been shifted from its original
  * frame of reference to a new one.
  * @ingroup geometry_solids_boolean
  *
- * It is meant to be used **internally only**, for simplifying the implementation of "Boolean solids".
+ * It is meant to be used **internally only**, for simplifying the implementation of "Boolean
+ * solids".
  */
 
 class G4DisplacedSolid : public G4VSolid
@@ -61,10 +62,8 @@ class G4DisplacedSolid : public G4VSolid
      *  @param[in] rotMatrix Pointer to the rotation vector.
      *  @param[in] transVector The translation vector.
      */
-    G4DisplacedSolid( const G4String& pName,
-                            G4VSolid* pSolid ,
-                            G4RotationMatrix* rotMatrix,
-                      const G4ThreeVector& transVector  ) ;
+    G4DisplacedSolid(const G4String& pName, G4VSolid* pSolid, G4RotationMatrix* rotMatrix,
+                     const G4ThreeVector& transVector);
 
     /**
      * Constructor of a displaced solid with a transformation.
@@ -72,9 +71,7 @@ class G4DisplacedSolid : public G4VSolid
      *  @param[in] pSolid Pointer to the original reference solid.
      *  @param[in] transform The composed 3D transformation.
      */
-    G4DisplacedSolid( const G4String& pName,
-                            G4VSolid* pSolid ,
-                      const G4Transform3D& transform  ) ;
+    G4DisplacedSolid(const G4String& pName, G4VSolid* pSolid, const G4Transform3D& transform);
 
     /**
      * Constructor for use in instantiating a transient instance from a
@@ -83,14 +80,13 @@ class G4DisplacedSolid : public G4VSolid
      *  @param[in] pSolid Pointer to the original reference solid.
      *  @param[in] directTransform The internal transformation.
      */
-    G4DisplacedSolid( const G4String& pName,
-                            G4VSolid* pSolid ,
-                      const G4AffineTransform directTransform );
+    G4DisplacedSolid(const G4String& pName, G4VSolid* pSolid,
+                     const G4AffineTransform directTransform);
 
     /**
      * Destructor. Deletes all cached transformations.
      */
-    ~G4DisplacedSolid() override ;
+    ~G4DisplacedSolid() override;
 
     /**
      * Fake default constructor for usage restricted to direct object
@@ -108,7 +104,7 @@ class G4DisplacedSolid : public G4VSolid
     /**
      * Returns if the given point "p" is inside or not the solid.
      */
-    EInside Inside( const G4ThreeVector& p ) const override ; 
+    EInside Inside(const G4ThreeVector& p) const override;
 
     /**
      * Computes the bounding limits of the solid.
@@ -127,16 +123,15 @@ class G4DisplacedSolid : public G4VSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pMin, G4double& pMax) const override ;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Returns the outwards pointing unit normal of the shape for the
      * surface closest to the point at offset "p".
      */
-    G4ThreeVector SurfaceNormal( const G4ThreeVector& p ) const override ;
+    G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
 
     /**
      * Returns the distance along the normalised vector "v" to the shape,
@@ -145,14 +140,13 @@ class G4DisplacedSolid : public G4VSolid
      * surface/volume is discarded. Hence, it is tolerant of points on
      * the surface of the shape.
      */
-    G4double DistanceToIn( const G4ThreeVector& p,
-                           const G4ThreeVector& v  ) const override ;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
 
     /**
      * Calculates the safety distance to the nearest surface of a shape from
      * an outside point. The distance can be an underestimate.
      */
-    G4double DistanceToIn( const G4ThreeVector& p) const override ;
+    G4double DistanceToIn(const G4ThreeVector& p) const override;
 
     /**
      * Returns the distance along the normalised vector "v" to the shape,
@@ -167,20 +161,18 @@ class G4DisplacedSolid : public G4VSolid
      *              or on the exiting surface (calcNorm must be true, otherwise
      *              it is unused).
      *  @param[out] n The exiting outwards normal vector (undefined Magnitude).
-     *              (calcNorm must be true, otherwise it is unused). 
+     *              (calcNorm must be true, otherwise it is unused).
      *  @returns The distance value to exit the volume.
      */
-    G4double DistanceToOut( const G4ThreeVector& p,
-                            const G4ThreeVector& v,
-                            const G4bool calcNorm = false,
-                                  G4bool* validNorm = nullptr,
-                                  G4ThreeVector* n = nullptr ) const override ;
+    G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
 
     /**
      * Calculates the safety distance to the nearest surface of a shape from
      * an inside point "p". The distance can be an underestimate.
      */
-    G4double DistanceToOut( const G4ThreeVector& p ) const override ;
+    G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
      * Deletes cached transformations. Used in destructor.
@@ -214,7 +206,7 @@ class G4DisplacedSolid : public G4VSolid
     /**
      * Returns the type ID, "G4DisplacedSolid" of the solid.
      */
-    G4GeometryType  GetEntityType() const override;
+    G4GeometryType GetEntityType() const override;
 
     /**
      * Makes a clone of the object for use in multi-treading.
@@ -227,7 +219,7 @@ class G4DisplacedSolid : public G4VSolid
      * return nullptr.
      */
     const G4DisplacedSolid* GetDisplacedSolidPtr() const override;
-          G4DisplacedSolid* GetDisplacedSolidPtr() override;
+    G4DisplacedSolid* GetDisplacedSolidPtr() override;
 
     /**
      * Returns a pointer to the original not displaced solid.
@@ -237,30 +229,30 @@ class G4DisplacedSolid : public G4VSolid
     /**
      * Accessor/modifier for the associated internal transformation.
      */
-    G4AffineTransform GetTransform() const; 
-    void SetTransform(G4AffineTransform& ); 
+    G4AffineTransform GetTransform() const;
+    void SetTransform(G4AffineTransform&);
 
     /**
      * Accessor/modifier for the associated internal transformation, as above.
      */
-    G4AffineTransform GetDirectTransform() const; 
-    void SetDirectTransform(G4AffineTransform&); 
+    G4AffineTransform GetDirectTransform() const;
+    void SetDirectTransform(G4AffineTransform&);
 
     /**
      * Get/Set the rotation/translation, as applied to the frame of reference.
      */
     G4RotationMatrix GetFrameRotation() const;
     void SetFrameRotation(const G4RotationMatrix&);
-    G4ThreeVector GetFrameTranslation() const; 
-    void SetFrameTranslation(const G4ThreeVector&); 
+    G4ThreeVector GetFrameTranslation() const;
+    void SetFrameTranslation(const G4ThreeVector&);
 
     /**
      * Get/Set the rotation/translation, as applied to the object.
      */
     G4RotationMatrix GetObjectRotation() const;
     void SetObjectRotation(const G4RotationMatrix&);
-    G4ThreeVector GetObjectTranslation() const; 
-    void SetObjectTranslation(const G4ThreeVector&); 
+    G4ThreeVector GetObjectTranslation() const;
+    void SetObjectTranslation(const G4ThreeVector&);
 
     /**
      * Streams the object contents to an output stream.
@@ -270,9 +262,9 @@ class G4DisplacedSolid : public G4VSolid
     /**
      * Methods for creating graphical representations (i.e. for visualisation).
      */
-    void DescribeYourselfTo ( G4VGraphicsScene& scene ) const override ;
-    G4Polyhedron* CreatePolyhedron () const override ;
-    G4Polyhedron* GetPolyhedron () const override ;
+    void DescribeYourselfTo(G4VGraphicsScene& scene) const override;
+    G4Polyhedron* CreatePolyhedron() const override;
+    G4Polyhedron* GetPolyhedron() const override;
 
   protected:
 

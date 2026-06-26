@@ -5,6 +5,11 @@ which **must** added in reverse chronological order (newest at the top). It must
 be used as a substitute for writing good git commit messages!
 
 
+## 2026-06-03 J. Apostolakis (exGeometry-V11-04-00)
+- Added new example 'volumeTreeVisitors' to demonstrate G4TouchableWalker, 
+  its associated G4VTouchableVisitor interface and the concrete class
+  G4TouchableCollector.
+
 ## 2025-07-29 I. Hrivnacova (exGeometry-V11-03-00)
 - Migration of README pages to Markdown:
   - .README.txt replaced with README.md and removed README

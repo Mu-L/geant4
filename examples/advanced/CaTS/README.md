@@ -68,11 +68,12 @@ cmake -DCMAKE_BUILD_TYPE=Debug \
 
 make install
 cd ../CaTS-install/bin
-time ./CaTS -g  simpleLArTPC.gdml -pl 'FTFP_BERT+OPTICAL+STEPLIMIT'  -m time.mac
+source OpticksEnv # Environment Variables for Opticks
+time ./CaTS -g  simpleLArTPC_Opticks.gdml -pl 'FTFP_BERT+OPTICAL+STEPLIMIT'  -m time.mac
 
-Only the -g command line variable is mandatory! If you don't specify the macro file interactive mode is assumed:
+#Only the -g command line variable is mandatory! If you don't specify the macro file interactive mode is assumed:
 
-./CaTS -g simpleLArTPC.gdml -pl 'FTFP_BERT+OPTICAL+STEPLIMIT'
+./CaTS -g simpleLArTPC_Opticks.gdml -pl 'FTFP_BERT+OPTICAL+STEPLIMIT' 
 
 ```
 
@@ -115,4 +116,4 @@ root [1] TBrowser b
 
 For comparison one might want to disable Opticks and use Geant4 to generate and propagate optical photons:
     
-    time ./CaTS -g  simpleLArTPC.gdml -pl 'FTFP_BERT+OPTICAL+STEPLIMIT'  -m time_G4.mac
+    time ./CaTS -g  simpleLArTPC_Opticks.gdml  -pl 'FTFP_BERT+OPTICAL+STEPLIMIT'  -m time_G4.mac

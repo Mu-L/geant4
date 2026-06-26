@@ -32,7 +32,7 @@
 // Author: Youhei Morita, 16.08.2001
 // --------------------------------------------------------------------
 #ifndef G4VPHITSCOLLECTIONIO_HH
-#define G4VPHITSCOLLECTIONIO_HH 1
+#define G4VPHITSCOLLECTIONIO_HH
 
 #include "G4VHitsCollection.hh"
 
@@ -41,32 +41,32 @@ class G4VPHitsCollectionIO
   public:
 
     G4VPHitsCollectionIO(const G4String& detName, const G4String& colName);
-      // Constructor
+    // Constructor
 
-    virtual ~G4VPHitsCollectionIO(){};
-      // Destructor
+    virtual ~G4VPHitsCollectionIO() {};
+    // Destructor
 
     virtual G4bool Store(const G4VHitsCollection*) = 0;
-      // Pure virtual method for storing the hit collection.
-      // Each persistency package should implement a concrete method
-      // with this signature
+    // Pure virtual method for storing the hit collection.
+    // Each persistency package should implement a concrete method
+    // with this signature
 
     virtual G4bool Retrieve(G4VHitsCollection*&) = 0;
-      // Pure virtual method for retrieving the hit collection.
-      // Each persistency package should implement a concrete method
-      // with this signature
+    // Pure virtual method for retrieving the hit collection.
+    // Each persistency package should implement a concrete method
+    // with this signature
 
     G4bool operator==(const G4VPHitsCollectionIO& right) const;
-      // virtual operator for comparing hit collections with names
+    // virtual operator for comparing hit collections with names
 
     const G4String& SDname() { return f_detName; }
-      // Returns the sensitive detector name
+    // Returns the sensitive detector name
 
     const G4String& CollectionName() { return f_colName; }
-      // Returns the hit collection name
+    // Returns the hit collection name
 
     void SetVerboseLevel(G4int v) { m_verbose = v; }
-      // Sets the verbose level
+    // Sets the verbose level
 
   protected:
 

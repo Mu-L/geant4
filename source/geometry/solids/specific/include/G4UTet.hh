@@ -36,21 +36,21 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedTet.h>
+#  include "G4Polyhedron.hh"
 
-#include "G4Polyhedron.hh"
+#  include <VecGeom/volumes/UnplacedTet.h>
 
 /**
  * @brief G4UTet is a wrapper class for G4Tet to make use of VecGeom Tet.
+ * @ingroup geometry_solids_specific
  */
 
 class G4UTet : public G4UAdapter<vecgeom::UnplacedTet>
 {
-
-  using Shape_t = vecgeom::UnplacedTet;
-  using Base_t = G4UAdapter<vecgeom::UnplacedTet>;
+    using Shape_t = vecgeom::UnplacedTet;
+    using Base_t = G4UAdapter<vecgeom::UnplacedTet>;
 
   public:
 
@@ -63,12 +63,8 @@ class G4UTet : public G4UAdapter<vecgeom::UnplacedTet>
      *  @param[in] p4 Point 4.
      *  @param[in] degeneracyFlag Flag indicating degeneracy of points.
      */
-    G4UTet(const G4String& pName,
-           const G4ThreeVector& anchor,
-           const G4ThreeVector& p2,
-           const G4ThreeVector& p3,
-           const G4ThreeVector& p4,
-                 G4bool* degeneracyFlag = nullptr);
+    G4UTet(const G4String& pName, const G4ThreeVector& anchor, const G4ThreeVector& p2,
+           const G4ThreeVector& p3, const G4ThreeVector& p4, G4bool* degeneracyFlag = nullptr);
 
     /**
      * Default destructor.
@@ -79,8 +75,7 @@ class G4UTet : public G4UAdapter<vecgeom::UnplacedTet>
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -117,10 +112,9 @@ class G4UTet : public G4UAdapter<vecgeom::UnplacedTet>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.
@@ -130,14 +124,9 @@ class G4UTet : public G4UAdapter<vecgeom::UnplacedTet>
     /**
      * Modifier and accessors, for the four vertices of the shape.
      */
-    void SetVertices(const G4ThreeVector& anchor,
-                     const G4ThreeVector& p1,
-                     const G4ThreeVector& p2,
-                     const G4ThreeVector& p3,
-                     G4bool* degeneracyFlag = nullptr);
-    void GetVertices(G4ThreeVector& anchor,
-                     G4ThreeVector& p1,
-                     G4ThreeVector& p2,
+    void SetVertices(const G4ThreeVector& anchor, const G4ThreeVector& p1, const G4ThreeVector& p2,
+                     const G4ThreeVector& p3, G4bool* degeneracyFlag = nullptr);
+    void GetVertices(G4ThreeVector& anchor, G4ThreeVector& p1, G4ThreeVector& p2,
                      G4ThreeVector& p3) const;
     std::vector<G4ThreeVector> GetVertices() const;
 
@@ -147,10 +136,8 @@ class G4UTet : public G4UAdapter<vecgeom::UnplacedTet>
      * tolerance
      *  @returns true if the tetrahedron is degenerate.
      */
-    G4bool CheckDegeneracy(const G4ThreeVector& p0,
-                           const G4ThreeVector& p1,
-                           const G4ThreeVector& p2,
-                           const G4ThreeVector& p3) const;
+    G4bool CheckDegeneracy(const G4ThreeVector& p0, const G4ThreeVector& p1,
+                           const G4ThreeVector& p2, const G4ThreeVector& p3) const;
 
     /**
      * Copy constructor and assignment operator.
@@ -160,7 +147,7 @@ class G4UTet : public G4UAdapter<vecgeom::UnplacedTet>
 
   private:
 
-    G4ThreeVector fBmin, fBmax; // bounding box
+    G4ThreeVector fBmin, fBmax;  // bounding box
 };
 
 // --------------------------------------------------------------------

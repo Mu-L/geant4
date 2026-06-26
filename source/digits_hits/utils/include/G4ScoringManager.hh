@@ -35,143 +35,135 @@
 //
 // Author: Makoto Asai
 // --------------------------------------------------------------------
-#ifndef G4ScoringManager_h
-#define G4ScoringManager_h 1
+#ifndef G4SCORINGMANAGER_HH
+#define G4SCORINGMANAGER_HH
 
-#include "globals.hh"
-#include "G4VScoringMesh.hh"
 #include "G4VScoreWriter.hh"
+#include "G4VScoringMesh.hh"
+#include "globals.hh"
 
-#include <vector>
 #include <map>
+#include <vector>
 
 class G4ScoringMessenger;
 class G4ScoreQuantityMessenger;
 class G4VHitsCollection;
 class G4VScoreColorMap;
 
-using MeshVec = std::vector<G4VScoringMesh *>;
+using MeshVec = std::vector<G4VScoringMesh*>;
 using MeshVecItr = MeshVec::iterator;
 using MeshVecConstItr = MeshVec::const_iterator;
-using ColorMapDict = std::map<G4String, G4VScoreColorMap *>;
+using ColorMapDict = std::map<G4String, G4VScoreColorMap*>;
 using ColorMapDictItr = ColorMapDict::iterator;
 using ColorMapDictConstItr = ColorMapDict::const_iterator;
-using MeshMap = std::map<G4int, G4VScoringMesh *>;
+using MeshMap = std::map<G4int, G4VScoringMesh*>;
 using MeshMapItr = MeshMap::iterator;
 using MeshMapConstItr = MeshMap::const_iterator;
 
 class G4ScoringManager
 {
- public:
+  public:
 
-  static G4ScoringManager* GetScoringManager();
-  // Returns the pointer to the singleton object.
-  
-  static G4ScoringManager* GetScoringManagerIfExist();
+    static G4ScoringManager* GetScoringManager();
+    // Returns the pointer to the singleton object.
 
-  G4ScoringManager(const G4ScoringManager&) = delete;
-  G4ScoringManager& operator=(const G4ScoringManager&) = delete;
+    static G4ScoringManager* GetScoringManagerIfExist();
 
-  ~G4ScoringManager();
+    G4ScoringManager(const G4ScoringManager&) = delete;
+    G4ScoringManager& operator=(const G4ScoringManager&) = delete;
 
-  static void SetReplicaLevel(G4int);
-  static G4int GetReplicaLevel();
+    ~G4ScoringManager();
 
-  void RegisterScoreColorMap(G4VScoreColorMap* colorMap);
-  // Register a color map. Once registered, it is available by /score/draw and
-  // /score/drawColumn commands.
+    static void SetReplicaLevel(G4int);
+    static G4int GetReplicaLevel();
 
-  void Accumulate(G4VHitsCollection* map);
-  void Merge(const G4ScoringManager* scMan);
-  G4VScoringMesh* FindMesh(G4VHitsCollection* map);
-  G4VScoringMesh* FindMesh(const G4String&);
-  void List() const;
-  void Dump() const;
-  void DrawMesh(const G4String& meshName, const G4String& psName,
-                const G4String& colorMapName, G4int axflg = 111);
-  void DrawMesh(const G4String& meshName, const G4String& psName,
-                G4int idxPlane, G4int iColumn, const G4String& colorMapName);
-  void DumpQuantityToFile(const G4String& meshName, const G4String& psName,
-                          const G4String& fileName,
-                          const G4String& option = "");
-  void DumpAllQuantitiesToFile(const G4String& meshName,
-                               const G4String& fileName,
-                               const G4String& option = "");
-  G4VScoreColorMap* GetScoreColorMap(const G4String& mapName);
-  void ListScoreColorMaps();
+    void RegisterScoreColorMap(G4VScoreColorMap* colorMap);
+    // Register a color map. Once registered, it is available by /score/draw and
+    // /score/drawColumn commands.
 
-  inline void SetCurrentMesh(G4VScoringMesh* scm) { fCurrentMesh = scm; }
-  inline G4VScoringMesh* GetCurrentMesh() const { return fCurrentMesh; }
-  inline void CloseCurrentMesh() { fCurrentMesh = nullptr; }
-  inline void SetVerboseLevel(G4int vl)
-  {
-    verboseLevel = vl;
-    for(auto& itr : fMeshVec)
+    void Accumulate(G4VHitsCollection* map);
+    void Merge(const G4ScoringManager* scMan);
+    G4VScoringMesh* FindMesh(G4VHitsCollection* map);
+    G4VScoringMesh* FindMesh(const G4String&);
+    void List() const;
+    void Dump() const;
+    void DrawMesh(const G4String& meshName, const G4String& psName, const G4String& colorMapName,
+                  G4int axflg = 111, G4bool refreshDraw = true, G4int drawColorChart = 0);
+    void DrawMesh(const G4String& meshName, const G4String& psName, G4int idxPlane, G4int iColumn,
+                  const G4String& colorMapName);
+    void DumpQuantityToFile(const G4String& meshName, const G4String& psName,
+                            const G4String& fileName, const G4String& option = "");
+    void DumpAllQuantitiesToFile(const G4String& meshName, const G4String& fileName,
+                                 const G4String& option = "");
+    G4VScoreColorMap* GetScoreColorMap(const G4String& mapName);
+    void ListScoreColorMaps();
+
+    inline void SetCurrentMesh(G4VScoringMesh* scm) { fCurrentMesh = scm; }
+    inline G4VScoringMesh* GetCurrentMesh() const { return fCurrentMesh; }
+    inline void CloseCurrentMesh() { fCurrentMesh = nullptr; }
+    inline void SetVerboseLevel(G4int vl)
     {
-      itr->SetVerboseLevel(vl);
+      verboseLevel = vl;
+      for (auto& itr : fMeshVec)
+      {
+        itr->SetVerboseLevel(vl);
+      }
+      if (writer != nullptr) writer->SetVerboseLevel(vl);
     }
-    if(writer != nullptr)
-      writer->SetVerboseLevel(vl);
-  }
-  inline G4int GetVerboseLevel() const { return verboseLevel; }
-  inline std::size_t GetNumberOfMesh() const { return fMeshVec.size(); }
-  inline void RegisterScoringMesh(G4VScoringMesh* scm)
-  {
-    scm->SetVerboseLevel(verboseLevel);
-    fMeshVec.push_back(scm);
-    SetCurrentMesh(scm);
-  }
-  inline G4VScoringMesh* GetMesh(G4int i) const { return fMeshVec[i]; }
-  inline const G4String& GetWorldName(G4int i) const
-  {
-    return fMeshVec[i]->GetWorldName();
-  }
-
-  inline void SetScoreWriter(G4VScoreWriter* sw)
-  {
-    delete writer;
-    writer = sw;
-    if(writer != nullptr)
-      writer->SetVerboseLevel(verboseLevel);
-  }
-  // Replace score writers.
-
-  inline void SetFactor(G4double val = 1.0)
-  {
-    if(writer != nullptr)
-      writer->SetFactor(val);
-  }
-  inline G4double GetFactor() const
-  {
-    if(writer != nullptr)
+    inline G4int GetVerboseLevel() const { return verboseLevel; }
+    inline std::size_t GetNumberOfMesh() const { return fMeshVec.size(); }
+    inline void RegisterScoringMesh(G4VScoringMesh* scm)
     {
-      return writer->GetFactor();
+      scm->SetVerboseLevel(verboseLevel);
+      fMeshVec.push_back(scm);
+      SetCurrentMesh(scm);
     }
-    
-    return -1.0;
-  }
+    inline G4VScoringMesh* GetMesh(G4int i) const { return fMeshVec[i]; }
+    inline const G4String& GetWorldName(G4int i) const { return fMeshVec[i]->GetWorldName(); }
 
- protected:
+    inline void SetScoreWriter(G4VScoreWriter* sw)
+    {
+      delete writer;
+      writer = sw;
+      if (writer != nullptr) writer->SetVerboseLevel(verboseLevel);
+    }
+    // Replace score writers.
 
-  G4ScoringManager();
+    inline void SetFactor(G4double val = 1.0)
+    {
+      if (writer != nullptr) writer->SetFactor(val);
+    }
+    inline G4double GetFactor() const
+    {
+      if (writer != nullptr)
+      {
+        return writer->GetFactor();
+      }
 
- private:
+      return -1.0;
+    }
 
-  static G4ThreadLocal G4ScoringManager* fSManager;
-  static G4ThreadLocal G4int replicaLevel;
+  protected:
 
-  G4int verboseLevel;
-  G4ScoringMessenger* fMessenger;
-  G4ScoreQuantityMessenger* fQuantityMessenger;
+    G4ScoringManager();
 
-  MeshVec fMeshVec;
-  G4VScoringMesh* fCurrentMesh;
+  private:
 
-  G4VScoreWriter* writer;
-  G4VScoreColorMap* fDefaultLinearColorMap;
-  ColorMapDict* fColorMapDict;
+    static G4ThreadLocal G4ScoringManager* fSManager;
+    static G4ThreadLocal G4int replicaLevel;
 
-  MeshMap fMeshMap;
+    G4int verboseLevel;
+    G4ScoringMessenger* fMessenger;
+    G4ScoreQuantityMessenger* fQuantityMessenger;
+
+    MeshVec fMeshVec;
+    G4VScoringMesh* fCurrentMesh;
+
+    G4VScoreWriter* writer;
+    G4VScoreColorMap* fDefaultLinearColorMap;
+    ColorMapDict* fColorMapDict;
+
+    MeshMap fMeshMap;
 };
 
 #endif

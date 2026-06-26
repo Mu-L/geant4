@@ -36,36 +36,36 @@
 #ifndef G4FILECOUTDESTINATION_HH
 #define G4FILECOUTDESTINATION_HH
 
+#include "G4coutDestination.hh"
+
 #include <fstream>
 #include <memory>
 
-#include "G4coutDestination.hh"
-
 class G4FilecoutDestination : public G4coutDestination
 {
- public:
-  explicit G4FilecoutDestination(
-    const G4String& fname, std::ios_base::openmode mode = std::ios_base::app)
-    : m_name(fname)
-    , m_mode(mode)
-    , m_output(nullptr)
-  {}
-  ~G4FilecoutDestination() override;
+  public:
 
-  void SetFileName(const G4String& fname) { m_name = fname; }
+    explicit G4FilecoutDestination(const G4String& fname,
+                                   std::ios_base::openmode mode = std::ios_base::app)
+      : m_name(fname), m_mode(mode), m_output(nullptr)
+    {}
+    ~G4FilecoutDestination() override;
 
-  void Open(std::ios_base::openmode mode = std::ios_base::app);
-  // By default append to existing file
-  void Close();
+    void SetFileName(const G4String& fname) { m_name = fname; }
 
-  G4int ReceiveG4debug(const G4String& msg) override;
-  G4int ReceiveG4cout(const G4String& msg) override;
-  G4int ReceiveG4cerr(const G4String& msg) override;
+    void Open(std::ios_base::openmode mode = std::ios_base::app);
+    // By default append to existing file
+    void Close();
 
- private:
-  G4String m_name;
-  std::ios_base::openmode m_mode;
-  std::unique_ptr<std::ofstream> m_output;
+    G4int ReceiveG4debug(const G4String& msg) override;
+    G4int ReceiveG4cout(const G4String& msg) override;
+    G4int ReceiveG4cerr(const G4String& msg) override;
+
+  private:
+
+    G4String m_name;
+    std::ios_base::openmode m_mode;
+    std::unique_ptr<std::ofstream> m_output;
 };
 
 #endif

@@ -30,36 +30,46 @@
 // Modified:
 // 21.03.2013 V.Ivanchenko redesigned and cleaned up
 
-#ifndef G4CameronTruranHilfPairingCorrections_h
-#define G4CameronTruranHilfPairingCorrections_h 1
+#ifndef G4CAMERONTRURANHILFPAIRINGCORRECTIONS_HH
+#define G4CAMERONTRURANHILFPAIRINGCORRECTIONS_HH
 
 #include "globals.hh"
 
 class G4CameronTruranHilfPairingCorrections
 {
-public:
+  public:
 
-  explicit G4CameronTruranHilfPairingCorrections();
+    explicit G4CameronTruranHilfPairingCorrections();
 
-  inline G4bool GetPairingCorrection(G4int N, G4int Z, G4double& result) const
-  {
-    G4bool res = false;
-    if(Z >= ZTableMin && Z <= ZTableMax && N >= NTableMin && N <= NTableMax) { 
-      result = PairingZTable[Z-ZTableMin] + PairingNTable[N-NTableMin];
-      res = true; 
+    inline G4bool GetPairingCorrection(G4int N, G4int Z, G4double& result) const
+    {
+      G4bool res = false;
+      if (Z >= ZTableMin && Z <= ZTableMax && N >= NTableMin && N <= NTableMax)
+      {
+        result = PairingZTable[Z - ZTableMin] + PairingNTable[N - NTableMin];
+        res = true;
+      }
+      return res;
     }
-    return res;
-  }
-  
-  enum  { ZTableSize = 93, NTableSize = 146, ZTableMin = 10, ZTableMax = 102,
-	  NTableMin = 10, NTableMax = 155 };
-private:
 
-  G4CameronTruranHilfPairingCorrections(const G4CameronTruranHilfPairingCorrections & right) = delete;
-  const G4CameronTruranHilfPairingCorrections & operator=(const G4CameronTruranHilfPairingCorrections & right) = delete;
+    enum
+    {
+      ZTableSize = 93,
+      NTableSize = 146,
+      ZTableMin = 10,
+      ZTableMax = 102,
+      NTableMin = 10,
+      NTableMax = 155
+    };
 
-  static G4double PairingZTable[ZTableSize];
-  static G4double PairingNTable[NTableSize];
-	
+  private:
+
+    G4CameronTruranHilfPairingCorrections(const G4CameronTruranHilfPairingCorrections& right) =
+      delete;
+    const G4CameronTruranHilfPairingCorrections&
+    operator=(const G4CameronTruranHilfPairingCorrections& right) = delete;
+
+    static G4double PairingZTable[ZTableSize];
+    static G4double PairingNTable[NTableSize];
 };
 #endif

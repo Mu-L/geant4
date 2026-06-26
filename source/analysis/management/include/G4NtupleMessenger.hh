@@ -31,8 +31,8 @@
 //
 // Author: Ivana Hrivnacova, 05/05/2015  (ivana@ipno.in2p3.fr)
 
-#ifndef G4NtupleMessenger_h
-#define G4NtupleMessenger_h 1
+#ifndef G4NTUPLEMESSENGER_HH
+#define G4NTUPLEMESSENGER_HH
 
 #include "G4AnalysisUtilities.hh"
 #include "G4UImessenger.hh"
@@ -50,6 +50,7 @@ class G4UIcmdWithAString;
 class G4NtupleMessenger : public G4UImessenger
 {
   public:
+
     explicit G4NtupleMessenger(G4VAnalysisManager* manager);
     G4NtupleMessenger() = delete;
     ~G4NtupleMessenger() override;
@@ -58,8 +59,9 @@ class G4NtupleMessenger : public G4UImessenger
     void SetNewValue(G4UIcommand* command, G4String value) final;
 
   private:
+
     // Methods
-    template <typename CMD>
+    template<typename CMD>
     std::unique_ptr<CMD> CreateCommand(G4String name, G4String guidance);
     void AddIdParameter(G4UIcommand& command);
 
@@ -74,28 +76,27 @@ class G4NtupleMessenger : public G4UImessenger
     void ListCmd();
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4NtupleMessenger" };
+    static constexpr std::string_view fkClass{"G4NtupleMessenger"};
 
     // Data members
-    G4VAnalysisManager*  fManager { nullptr }; ///< Associated class
+    G4VAnalysisManager* fManager{nullptr};  ///< Associated class
 
-    std::unique_ptr<G4UIdirectory>      fNtupleDir;
-    std::unique_ptr<G4UIcommand>        fCreateCmd;
+    std::unique_ptr<G4UIdirectory> fNtupleDir;
+    std::unique_ptr<G4UIcommand> fCreateCmd;
     std::map<char, std::unique_ptr<G4UIcommand>> fCreateColumnCmds;
-    std::unique_ptr<G4UIcommand>        fFinishCmd;
-    std::unique_ptr<G4UIcommand>        fDeleteCmd;
-    std::unique_ptr<G4UIcommand>        fSetActivationCmd;
-    std::unique_ptr<G4UIcmdWithABool>   fSetActivationAllCmd;
-    std::unique_ptr<G4UIcommand>        fSetFileNameCmd;
+    std::unique_ptr<G4UIcommand> fFinishCmd;
+    std::unique_ptr<G4UIcommand> fDeleteCmd;
+    std::unique_ptr<G4UIcommand> fSetActivationCmd;
+    std::unique_ptr<G4UIcmdWithABool> fSetActivationAllCmd;
+    std::unique_ptr<G4UIcommand> fSetFileNameCmd;
     std::unique_ptr<G4UIcmdWithAString> fSetFileNameAllCmd;
-    std::unique_ptr<G4UIcommand>        fListCmd;
-    G4int fTmpNtupleId { G4Analysis::kInvalidId };
+    std::unique_ptr<G4UIcommand> fListCmd;
+    G4int fTmpNtupleId{G4Analysis::kInvalidId};
 };
 
 //_____________________________________________________________________________
-template <typename CMD>
-std::unique_ptr<CMD> G4NtupleMessenger::CreateCommand(
-  G4String name, G4String guidance)
+template<typename CMD>
+std::unique_ptr<CMD> G4NtupleMessenger::CreateCommand(G4String name, G4String guidance)
 {
   G4String fullName = "/analysis/ntuple/" + name;
 

@@ -22,7 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // G4PVPlacement
 //
 // Class description:
@@ -35,12 +35,16 @@
 #ifndef G4PVPLACEMENT_HH
 #define G4PVPLACEMENT_HH
 
-#include "G4VPhysicalVolume.hh"
 #include "G4Transform3D.hh"
+#include "G4VPhysicalVolume.hh"
+
+#include <cstdint>
+#include <vector>
 
 /**
  * @brief G4PVPlacement represents a single volume positioned within and
  * relative to a mother volume.
+ * @ingroup geometry_volumes
  */
 
 class G4PVPlacement : public G4VPhysicalVolume
@@ -68,25 +72,21 @@ class G4PVPlacement : public G4VPhysicalVolume
      *  @param[in] pSurfChk Boolean flag, if true activates check for overlaps
      *             with existing volumes (false by default).
      */
-    G4PVPlacement(G4RotationMatrix* pRot,
-            const G4ThreeVector& tlate,
-                  G4LogicalVolume* pCurrentLogical,
-            const G4String& pName,
-                  G4LogicalVolume* pMotherLogical,
-                  G4bool pMany,
-                  G4int  pCopyNo,
+    G4PVPlacement(G4RotationMatrix* pRot, const G4ThreeVector& tlate,
+                  G4LogicalVolume* pCurrentLogical, const G4String& pName,
+                  G4LogicalVolume* pMotherLogical, G4bool pMany, G4int pCopyNo,
                   G4bool pSurfChk = false);
 
     /**
      * Additional constructor, which expects a G4Transform3D object that
      * represents the direct rotation and translation of the solid (NOT of the
      * frame). The G4Transform3D argument should be constructed by:
-     *  i) First rotating it to align the solid to the system of 
-     *     reference of its mother volume *pMotherLogical, and 
+     *  i) First rotating it to align the solid to the system of
+     *     reference of its mother volume *pMotherLogical, and
      * ii) Then placing the solid at the location Transform3D.getTranslation(),
      *     with respect to the origin of the system of coordinates of the
-     *     mother volume.  
-     * This construct is useful for the people who prefer to think in terms 
+     *     mother volume.
+     * This construct is useful for the people who prefer to think in terms
      * of moving objects in a given reference frame.
      * All other arguments are the same as for the previous constructor.
      *  @param[in] Transform3D The transformation in the 3D space.
@@ -100,39 +100,26 @@ class G4PVPlacement : public G4VPhysicalVolume
      *  @param[in] pSurfChk Boolean flag, if true activates check for overlaps
      *             with existing volumes (false by default).
      */
-    G4PVPlacement(const G4Transform3D& Transform3D,
-                        G4LogicalVolume* pCurrentLogical,
-                  const G4String& pName,
-                        G4LogicalVolume* pMotherLogical,
-                        G4bool pMany,
-                        G4int pCopyNo,
-                        G4bool pSurfChk = false);
+    G4PVPlacement(const G4Transform3D& Transform3D, G4LogicalVolume* pCurrentLogical,
+                  const G4String& pName, G4LogicalVolume* pMotherLogical, G4bool pMany,
+                  G4int pCopyNo, G4bool pSurfChk = false);
 
     /**
      * A simple variation of the first constructor, only specifying the
      * mother volume as a pointer to its physical volume instead of its
      * logical volume. The effect is exactly the same.
      */
-    G4PVPlacement(G4RotationMatrix* pRot,
-            const G4ThreeVector& tlate,
-            const G4String& pName,
-                  G4LogicalVolume* pLogical,
-                  G4VPhysicalVolume* pMother,
-                  G4bool pMany,
-                  G4int pCopyNo,
-                  G4bool pSurfChk = false);
+    G4PVPlacement(G4RotationMatrix* pRot, const G4ThreeVector& tlate, const G4String& pName,
+                  G4LogicalVolume* pLogical, G4VPhysicalVolume* pMother, G4bool pMany,
+                  G4int pCopyNo, G4bool pSurfChk = false);
 
     /**
      * Utilises both variations above (from first and third constructors).
      * The effect is the same as for the second constructor.
      */
-    G4PVPlacement(const G4Transform3D& Transform3D,
-                  const G4String& pName,
-                        G4LogicalVolume* pLogical,
-                        G4VPhysicalVolume* pMother,
-                        G4bool pMany,
-                        G4int pCopyNo,
-                        G4bool pSurfChk = false);
+    G4PVPlacement(const G4Transform3D& Transform3D, const G4String& pName,
+                  G4LogicalVolume* pLogical, G4VPhysicalVolume* pMother, G4bool pMany,
+                  G4int pCopyNo, G4bool pSurfChk = false);
 
     /**
      * Fake default constructor for usage restricted to direct object
@@ -155,7 +142,7 @@ class G4PVPlacement : public G4VPhysicalVolume
     /**
      * Returns/sets the copy number associated to the volume.
      */
-    inline G4int GetCopyNo() const override  { return fcopyNo; }
+    inline G4int GetCopyNo() const override { return fcopyNo; }
     void SetCopyNo(G4int CopyNo) override;
 
     /**
@@ -172,8 +159,8 @@ class G4PVPlacement : public G4VPhysicalVolume
      *  @param[in] maxErr Maximum of overlaps errors to report (default is 1).
      *  @returns True if an overlap occurs.
      */
-    G4bool CheckOverlaps(G4int res = 1000, G4double tol = 0.,
-                         G4bool verbose = true, G4int maxErr = 1) override;
+    G4bool CheckOverlaps(G4int res = 1000, G4double tol = 0., G4bool verbose = true,
+                         G4int maxErr = 1) override;
 
     /**
      * Stub methods, unused for placed volumes.
@@ -182,28 +169,35 @@ class G4PVPlacement : public G4VPhysicalVolume
     G4bool IsReplicated() const override;
     G4bool IsParameterised() const override;
     G4VPVParameterisation* GetParameterisation() const override;
-    void GetReplicationData(EAxis& axis,
-                            G4int& nReplicas,
-                            G4double& width,
-                            G4double& offset,
+    void GetReplicationData(EAxis& axis, G4int& nReplicas, G4double& width, G4double& offset,
                             G4bool& consuming) const override;
 
     /**
      * Used only for specialised repeated volumes. Always false with Id 0.
      */
-    G4bool IsRegularStructure() const override; 
-    G4int GetRegularStructureId() const override; 
+    G4bool IsRegularStructure() const override;
+    G4int GetRegularStructureId() const override;
 
     /**
      * Returns the volume type characterisation.
      */
     EVolume VolumeType() const override;
-   
+
   private:
+
+    friend class G4GeomTestVolume;
+
+    /**
+     * Auxiliary functions for computing and reporting overlaps.
+     */
+    G4bool ComputeOverlaps(G4int res, G4double tol, G4int maxErr, std::uint64_t seed,
+                           G4bool& checked, G4bool& completed, std::vector<G4String>& warnings);
+    void ReportOverlaps(G4bool overlap, G4bool checked, G4bool completed,
+                        const std::vector<G4String>& warnings, G4bool verbose) const;
 
     /**
      * Auxiliary function for 2nd constructor (one with G4Transform3D).
-     * Creates a new RotMatrix on the heap (using "new") and copies 
+     * Creates a new RotMatrix on the heap (using "new") and copies
      * its argument into it.
      */
     static G4RotationMatrix* NewPtrRotMatrix(const G4RotationMatrix& RotMat);

@@ -36,8 +36,8 @@
 //
 //----------------------------------------------------------------------------
 
-#ifndef G4HyperonFTFPBuilder_h
-#define G4HyperonFTFPBuilder_h 1
+#ifndef G4HYPERONFTFPBUILDER_HH
+#define G4HYPERONFTFPBUILDER_HH
 
 #include "G4VHyperonBuilder.hh"
 #include "globals.hh"
@@ -46,24 +46,26 @@ class G4TheoFSGenerator;
 class G4CascadeInterface;
 class G4VCrossSectionDataSet;
 
+class G4HyperonFTFPBuilder : public G4VHyperonBuilder
+{
+  public:
 
-class G4HyperonFTFPBuilder : public G4VHyperonBuilder {
-  public: 
-    G4HyperonFTFPBuilder( G4bool quasiElastic = false );
+    G4HyperonFTFPBuilder(G4bool quasiElastic = false);
     virtual ~G4HyperonFTFPBuilder();
 
-    virtual void Build( G4HadronElasticProcess* ) final override {}
-    virtual void Build( G4HadronInelasticProcess* aP ) final override;
+    virtual void Build(G4HadronElasticProcess*) final override {}
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
     // The energy limits refer to the string model FTF:
     // -  the max energy is the same for hyperons and hyperons;
     // -  the min energy is for hyperons only (0.0 is assumed for antihyperons)
-    virtual void SetMinEnergy( G4double val ) final override { theMin = val; }
-    virtual void SetMaxEnergy( G4double val ) final override { theMax = val; }
+    virtual void SetMinEnergy(G4double val) final override { theMin = val; }
+    virtual void SetMaxEnergy(G4double val) final override { theMax = val; }
 
     using G4VHyperonBuilder::Build;  // Prevent compiler warning
 
-  private: 
+  private:
+
     G4TheoFSGenerator* theHyperonFTFP;
     G4TheoFSGenerator* theAntiHyperonFTFP;
     G4CascadeInterface* theBertini;

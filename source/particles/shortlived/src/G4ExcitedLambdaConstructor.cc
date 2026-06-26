@@ -53,31 +53,38 @@ G4DecayTable* G4ExcitedLambdaConstructor::CreateDecayTable(const G4String& paren
   auto decayTable = new G4DecayTable();
 
   G4double br;
-  if ((br = bRatio[iState][NK]) > 0.0) {
+  if ((br = bRatio[iState][NK]) > 0.0)
+  {
     AddNKMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][NKStar]) > 0.0) {
+  if ((br = bRatio[iState][NKStar]) > 0.0)
+  {
     AddNKStarMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][SigmaPi]) > 0.0) {
+  if ((br = bRatio[iState][SigmaPi]) > 0.0)
+  {
     AddSigmaPiMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][SigmaStarPi]) > 0.0) {
+  if ((br = bRatio[iState][SigmaStarPi]) > 0.0)
+  {
     AddSigmaStarPiMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][LambdaGamma]) > 0.0) {
+  if ((br = bRatio[iState][LambdaGamma]) > 0.0)
+  {
     AddLambdaGammaMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][LambdaEta]) > 0.0) {
+  if ((br = bRatio[iState][LambdaEta]) > 0.0)
+  {
     AddLambdaEtaMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
-  if ((br = bRatio[iState][LambdaOmega]) > 0.0) {
+  if ((br = bRatio[iState][LambdaOmega]) > 0.0)
+  {
     AddLambdaOmegaMode(decayTable, parentName, br, iIso3, fAnti);
   }
 
@@ -149,10 +156,12 @@ G4DecayTable* G4ExcitedLambdaConstructor::AddNKMode(G4DecayTable* decayTable,
   // ------------ N K- ------------
   // determine daughters
   daughterN = "proton";
-  if (!fAnti) {
+  if (!fAnti)
+  {
     daughterK = "kaon-";
   }
-  else {
+  else
+  {
     daughterK = "kaon+";
   }
   if (fAnti) daughterN = "anti_" + daughterN;
@@ -164,10 +173,12 @@ G4DecayTable* G4ExcitedLambdaConstructor::AddNKMode(G4DecayTable* decayTable,
   // ------------ N K0 ------------
   // determine daughters
   daughterN = "neutron";
-  if (!fAnti) {
+  if (!fAnti)
+  {
     daughterK = "anti_kaon0";
   }
-  else {
+  else
+  {
     daughterK = "kaon0";
   }
   if (fAnti) daughterN = "anti_" + daughterN;
@@ -191,10 +202,12 @@ G4DecayTable* G4ExcitedLambdaConstructor::AddNKStarMode(G4DecayTable* decayTable
   // ------------ N K- ------------
   // determine daughters
   daughterN = "proton";
-  if (!fAnti) {
+  if (!fAnti)
+  {
     daughterK = "k_star-";
   }
-  else {
+  else
+  {
     daughterK = "k_star+";
   }
   if (fAnti) daughterN = "anti_" + daughterN;
@@ -206,10 +219,12 @@ G4DecayTable* G4ExcitedLambdaConstructor::AddNKStarMode(G4DecayTable* decayTable
   // ------------ N K0 ------------
   // determine daughters
   daughterN = "neutron";
-  if (!fAnti) {
+  if (!fAnti)
+  {
     daughterK = "anti_k_star0";
   }
-  else {
+  else
+  {
     daughterK = "k_star0";
   }
   if (fAnti) daughterN = "anti_" + daughterN;
@@ -233,10 +248,12 @@ G4DecayTable* G4ExcitedLambdaConstructor::AddSigmaPiMode(G4DecayTable* decayTabl
   // ------------ Sigma+ pi - ------------
   // determine daughters
   daughterSigma = "sigma+";
-  if (!fAnti) {
+  if (!fAnti)
+  {
     daughterPi = "pi-";
   }
-  else {
+  else
+  {
     daughterPi = "pi+";
   }
   if (fAnti) daughterSigma = "anti_" + daughterSigma;
@@ -260,10 +277,12 @@ G4DecayTable* G4ExcitedLambdaConstructor::AddSigmaPiMode(G4DecayTable* decayTabl
   // ------------ Sigma- pi + ------------
   // determine daughters
   daughterSigma = "sigma-";
-  if (!fAnti) {
+  if (!fAnti)
+  {
     daughterPi = "pi+";
   }
-  else {
+  else
+  {
     daughterPi = "pi-";
   }
   if (fAnti) daughterSigma = "anti_" + daughterSigma;
@@ -287,10 +306,12 @@ G4DecayTable* G4ExcitedLambdaConstructor::AddSigmaStarPiMode(G4DecayTable* decay
   // ------------ Sigma+ pi - ------------
   // determine daughters
   daughterSigma = "sigma(1385)+";
-  if (!fAnti) {
+  if (!fAnti)
+  {
     daughterPi = "pi-";
   }
-  else {
+  else
+  {
     daughterPi = "pi+";
   }
   if (fAnti) daughterSigma = "anti_" + daughterSigma;
@@ -314,10 +335,12 @@ G4DecayTable* G4ExcitedLambdaConstructor::AddSigmaStarPiMode(G4DecayTable* decay
   // ------------ Sigma- pi + ------------
   // determine daughters
   daughterSigma = "sigma(1385)-";
-  if (!fAnti) {
+  if (!fAnti)
+  {
     daughterPi = "pi+";
   }
-  else {
+  else
+  {
     daughterPi = "pi-";
   }
   if (fAnti) daughterSigma = "anti_" + daughterSigma;

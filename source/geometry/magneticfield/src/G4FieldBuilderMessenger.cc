@@ -29,8 +29,8 @@
 // -------------------------------------------------------------------
 
 #include "G4FieldBuilderMessenger.hh"
-#include "G4FieldBuilder.hh"
 
+#include "G4FieldBuilder.hh"
 #include "G4UIcmdWithAnInteger.hh"
 #include "G4UIcmdWithoutParameter.hh"
 #include "G4UIdirectory.hh"
@@ -51,8 +51,7 @@ G4FieldBuilderMessenger::G4FieldBuilderMessenger(G4FieldBuilder* fieldBuilder)
   fVerboseLevelCmd->SetGuidance("Set verbose level");
   fVerboseLevelCmd->SetParameterName("VerboseLevel", false);
   // add possible values
-  fVerboseLevelCmd->AvailableForStates(
-    G4State_PreInit, G4State_Init, G4State_Idle);
+  fVerboseLevelCmd->AvailableForStates(G4State_PreInit, G4State_Init, G4State_Idle);
 }
 
 //_____________________________________________________________________________
@@ -69,8 +68,7 @@ G4FieldBuilderMessenger::~G4FieldBuilderMessenger()
 //
 
 //_____________________________________________________________________________
-void G4FieldBuilderMessenger::SetNewValue(
-  G4UIcommand* command, G4String newValues)
+void G4FieldBuilderMessenger::SetNewValue(G4UIcommand* command, G4String newValues)
 {
   // Apply command to the associated object.
 

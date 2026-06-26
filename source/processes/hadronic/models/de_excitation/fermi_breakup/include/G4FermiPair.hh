@@ -28,51 +28,49 @@
 // by V. Ivanchenko (July 2016)
 //
 
-#ifndef G4FermiPair_h
-#define G4FermiPair_h 1
+#ifndef G4FERMIPAIR_HH
+#define G4FERMIPAIR_HH
 
-#include "globals.hh"
 #include "G4FermiFragment.hh"
+#include "globals.hh"
 
-class G4FermiPair 
+class G4FermiPair
 {
-public:
+  public:
 
-  explicit G4FermiPair(const G4FermiFragment* f1, const G4FermiFragment* f2);
+    explicit G4FermiPair(const G4FermiFragment* f1, const G4FermiFragment* f2);
 
-  ~G4FermiPair() = default;
+    ~G4FermiPair() = default;
 
-  G4int GetA() const { return totalA; }
-  G4int GetZ() const { return totalZ; }
-  G4double GetMass() const { return mass; } 
-  G4double GetExcitationEnergy() const { return excitEnergy; }
-  G4double GetTotalEnergy() const { return mass + excitEnergy; }
-  const G4FermiFragment* GetFragment1() const { return fragment1; }
-  const G4FermiFragment* GetFragment2() const { return fragment2; }
+    G4int GetA() const { return totalA; }
+    G4int GetZ() const { return totalZ; }
+    G4double GetMass() const { return mass; }
+    G4double GetExcitationEnergy() const { return excitEnergy; }
+    G4double GetTotalEnergy() const { return mass + excitEnergy; }
+    const G4FermiFragment* GetFragment1() const { return fragment1; }
+    const G4FermiFragment* GetFragment2() const { return fragment2; }
 
-  G4double GetMinMass(G4double Eex) const;
+    G4double GetMinMass(G4double Eex) const;
 
-  void SetProbability(const G4double p) { prob = p; }
-  G4double Probability() const { return prob; }
-  
-  inline G4FermiPair(const G4FermiPair &) = delete;
-  inline const G4FermiPair & operator=(const G4FermiPair &) = delete;
-  inline G4bool operator==(const G4FermiPair &) const = delete;
-  inline G4bool operator!=(const G4FermiPair &) const = delete;
-  
-private:
+    void SetProbability(const G4double p) { prob = p; }
+    G4double Probability() const { return prob; }
 
-  G4int totalZ;
-  G4int totalA;
+    inline G4FermiPair(const G4FermiPair&) = delete;
+    inline const G4FermiPair& operator=(const G4FermiPair&) = delete;
+    inline G4bool operator==(const G4FermiPair&) const = delete;
+    inline G4bool operator!=(const G4FermiPair&) const = delete;
 
-  G4double mass;
-  G4double excitEnergy;
-  G4double prob{1.0};
+  private:
 
-  const G4FermiFragment* fragment1;
-  const G4FermiFragment* fragment2;
+    G4int totalZ;
+    G4int totalA;
+
+    G4double mass;
+    G4double excitEnergy;
+    G4double prob{1.0};
+
+    const G4FermiFragment* fragment1;
+    const G4FermiFragment* fragment2;
 };
 
 #endif
-
-

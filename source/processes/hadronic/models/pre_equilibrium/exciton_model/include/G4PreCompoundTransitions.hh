@@ -25,12 +25,12 @@
 //
 //
 // by V. Lara
-// 01.05.2008 J. M. Quesada . New methods for accessing to individual transition 
-//                 probabilities (landa+, landa-, landa0) from G4PreCompoundModel  
+// 01.05.2008 J. M. Quesada . New methods for accessing to individual transition
+//                 probabilities (landa+, landa-, landa0) from G4PreCompoundModel
 // 20.08.2010 V.Ivanchenko move constructor and destructor to the source
 
-#ifndef G4PreCompoundTransitions_h
-#define G4PreCompoundTransitions_h 1
+#ifndef G4PRECOMPOUNDTRANSITIONS_HH
+#define G4PRECOMPOUNDTRANSITIONS_HH
 
 // Compute transition probailities:
 // TransitionProb1 => probability of transition with  \Delta N = +2
@@ -49,30 +49,29 @@ class G4NuclearLevelData;
 
 class G4PreCompoundTransitions : public G4VPreCompoundTransitions
 {
-public:
+  public:
 
-  G4PreCompoundTransitions();
+    G4PreCompoundTransitions();
 
-  ~G4PreCompoundTransitions() override = default;
+    ~G4PreCompoundTransitions() override = default;
 
-  G4double CalculateProbability(const G4Fragment & aFragment) override;
-  
-  virtual void PerformTransition(G4Fragment & aFragment) override;
-  
-  G4PreCompoundTransitions(const G4PreCompoundTransitions &) = delete;
-  const G4PreCompoundTransitions& operator=
-  (const G4PreCompoundTransitions &right) = delete;
-  G4bool operator==(const G4PreCompoundTransitions &right) const = delete;
-  G4bool operator!=(const G4PreCompoundTransitions &right) const = delete;
+    G4double CalculateProbability(const G4Fragment& aFragment) override;
 
-private:
+    virtual void PerformTransition(G4Fragment& aFragment) override;
 
-  const G4ParticleDefinition* proton;
-  G4NuclearLevelData* fNuclData;
+    G4PreCompoundTransitions(const G4PreCompoundTransitions&) = delete;
+    const G4PreCompoundTransitions& operator=(const G4PreCompoundTransitions& right) = delete;
+    G4bool operator==(const G4PreCompoundTransitions& right) const = delete;
+    G4bool operator!=(const G4PreCompoundTransitions& right) const = delete;
 
-  G4double FermiEnergy;
-  G4double r0;  // Nuclear radius
-  G4int fVerbose{1};
+  private:
+
+    const G4ParticleDefinition* proton;
+    G4NuclearLevelData* fNuclData;
+
+    G4double FermiEnergy;
+    G4double r0;  // Nuclear radius
+    G4int fVerbose{1};
 };
 
 #endif

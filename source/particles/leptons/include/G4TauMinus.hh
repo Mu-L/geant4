@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4TauMinus_h
-#define G4TauMinus_h 1
+#ifndef G4TAUMINUS_HH
+#define G4TAUMINUS_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4TauMinus : public G4ParticleDefinition
 {
   public:
+
     static G4TauMinus* Definition();
     static G4TauMinus* TauMinusDefinition();
     static G4TauMinus* TauMinus();
 
   private:
+
     G4TauMinus() {}
     ~G4TauMinus() override = default;
 

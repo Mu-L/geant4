@@ -33,14 +33,14 @@
 //
 // ------------------------------------------------------------
 
-#ifndef G4SynchrotronRadiation_h
-#define G4SynchrotronRadiation_h 1
+#ifndef G4SYNCHROTRONRADIATION_HH
+#define G4SYNCHROTRONRADIATION_HH
 
-#include "globals.hh"
 #include "G4Step.hh"
 #include "G4ThreeVector.hh"
 #include "G4Track.hh"
 #include "G4VDiscreteProcess.hh"
+#include "globals.hh"
 
 class G4LossTableManager;
 class G4ParticleDefinition;
@@ -49,65 +49,62 @@ class G4VEmAngularDistribution;
 
 class G4SynchrotronRadiation : public G4VDiscreteProcess
 {
- public:
-  explicit G4SynchrotronRadiation(const G4String& pName = "SynRad",
-                                  G4ProcessType type    = fElectromagnetic);
+  public:
 
-  virtual ~G4SynchrotronRadiation();
+    explicit G4SynchrotronRadiation(const G4String& pName = "SynRad",
+                                    G4ProcessType type = fElectromagnetic);
 
-  G4SynchrotronRadiation& operator=(const G4SynchrotronRadiation& right) =
-    delete;
-  G4SynchrotronRadiation(const G4SynchrotronRadiation&) = delete;
+    virtual ~G4SynchrotronRadiation();
 
-  virtual G4double GetMeanFreePath(const G4Track& track,
-                                   G4double previousStepSize,
-                                   G4ForceCondition* condition) override;
+    G4SynchrotronRadiation& operator=(const G4SynchrotronRadiation& right) = delete;
+    G4SynchrotronRadiation(const G4SynchrotronRadiation&) = delete;
 
-  virtual G4VParticleChange* PostStepDoIt(const G4Track& track,
-                                          const G4Step& Step) override;
+    virtual G4double GetMeanFreePath(const G4Track& track, G4double previousStepSize,
+                                     G4ForceCondition* condition) override;
 
-  G4double GetPhotonEnergy(const G4Track& trackData, const G4Step& stepData);
+    virtual G4VParticleChange* PostStepDoIt(const G4Track& track, const G4Step& Step) override;
 
-  G4double GetRandomEnergySR(G4double, G4double, G4double);
+    G4double GetPhotonEnergy(const G4Track& trackData, const G4Step& stepData);
 
-  G4double InvSynFracInt(G4double x);
-  G4double Chebyshev(G4double a, G4double b, const G4double c[], G4int n,
-                     G4double x);
+    G4double GetRandomEnergySR(G4double, G4double, G4double);
 
-  virtual G4bool IsApplicable(const G4ParticleDefinition&) override;
-  virtual void BuildPhysicsTable(const G4ParticleDefinition&) override;
+    G4double InvSynFracInt(G4double x);
+    G4double Chebyshev(G4double a, G4double b, const G4double c[], G4int n, G4double x);
 
-  void ProcessDescription(std::ostream&) const override;
-  void DumpInfo() const override { ProcessDescription(G4cout); };
+    virtual G4bool IsApplicable(const G4ParticleDefinition&) override;
+    virtual void BuildPhysicsTable(const G4ParticleDefinition&) override;
 
-  void SetAngularGenerator(G4VEmAngularDistribution* p);
+    void ProcessDescription(std::ostream&) const override;
+    void DumpInfo() const override { ProcessDescription(G4cout); };
 
- private:
-  G4LossTableManager* theManager;
-  G4VEmAngularDistribution* genAngle;
-  G4ParticleDefinition* theGamma;
-  G4PropagatorInField* fFieldPropagator;
+    void SetAngularGenerator(G4VEmAngularDistribution* p);
 
-  G4bool FirstTime;
-  G4bool FirstTime1;
+  private:
 
-  G4int secID = -1;  // creator modelID
+    G4LossTableManager* theManager;
+    G4VEmAngularDistribution* genAngle;
+    G4ParticleDefinition* theGamma;
+    G4PropagatorInField* fFieldPropagator;
+
+    G4bool FirstTime;
+    G4bool FirstTime1;
+
+    G4int secID = -1;  // creator modelID
 };
 
 //////////////////////////  INLINE METHODS  /////////////////////////////
 
-inline G4double G4SynchrotronRadiation::Chebyshev(G4double a, G4double b,
-                                                  const G4double c[], G4int n,
-                                                  G4double x)
+inline G4double G4SynchrotronRadiation::Chebyshev(G4double a, G4double b, const G4double c[],
+                                                  G4int n, G4double x)
 {
   G4double y;
   G4double y2 = 2.0 * (y = (2.0 * x - a - b) / (b - a));  // Change of variable.
   G4double d = 0., dd = 0.;
-  for(G4int j = n - 1; j >= 1; --j)  // Clenshaw's recurrence.
+  for (G4int j = n - 1; j >= 1; --j)  // Clenshaw's recurrence.
   {
     G4double sv = d;
-    d           = y2 * d - dd + c[j];
-    dd          = sv;
+    d = y2 * d - dd + c[j];
+    dd = sv;
   }
   return y * d - dd + 0.5 * c[0];
 }

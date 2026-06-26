@@ -26,29 +26,28 @@
 //
 //
 
-#ifndef G4HETCEmissionFactory_hh
-#define G4HETCEmissionFactory_hh 
+#ifndef G4HETCEMISSIONFACTORY_HH
+#define G4HETCEMISSIONFACTORY_HH
 
 #include "G4VPreCompoundEmissionFactory.hh"
 
 class G4HETCEmissionFactory : public G4VPreCompoundEmissionFactory
 {
-public:
+  public:
 
-  G4HETCEmissionFactory();
-  virtual ~G4HETCEmissionFactory();
+    G4HETCEmissionFactory();
+    virtual ~G4HETCEmissionFactory();
 
-protected:
+  protected:
 
-  virtual std::vector<G4VPreCompoundFragment*> *  CreateFragmentVector();
+    virtual std::vector<G4VPreCompoundFragment*>* CreateFragmentVector();
 
-private:
+  private:
 
-  G4HETCEmissionFactory(const G4HETCEmissionFactory & );
-  const G4HETCEmissionFactory & operator=(const G4HETCEmissionFactory & val);
-  G4bool operator==(const G4HETCEmissionFactory & val) const;
-  G4bool operator!=(const G4HETCEmissionFactory & val) const;
-
+    G4HETCEmissionFactory(const G4HETCEmissionFactory&);
+    const G4HETCEmissionFactory& operator=(const G4HETCEmissionFactory& val);
+    G4bool operator==(const G4HETCEmissionFactory& val) const;
+    G4bool operator!=(const G4HETCEmissionFactory& val) const;
 };
 
 #endif

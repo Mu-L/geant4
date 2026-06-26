@@ -30,6 +30,7 @@
 // 20131111  Add verbosity to report creating secondaries
 
 #include "G4VPhononProcess.hh"
+
 #include "G4DynamicParticle.hh"
 #include "G4ExceptionSeverity.hh"
 #include "G4LatticeManager.hh"
@@ -44,113 +45,116 @@
 #include "G4ThreeVector.hh"
 #include "G4Track.hh"
 
-namespace {
-  const G4ThreeVector nullVec(0.,0.,0.);	// For convenience below
+namespace
+{
+const G4ThreeVector nullVec(0., 0., 0.);  // For convenience below
 }
 
 // Constructor and destructor
 
 G4VPhononProcess::G4VPhononProcess(const G4String& processName)
   : G4VDiscreteProcess(processName, fPhonon),
-    trackKmap(G4PhononTrackMap::GetInstance()), theLattice(0),
-    currentTrack(0) {}
+    trackKmap(G4PhononTrackMap::GetInstance()),
+    theLattice(0),
+    currentTrack(0)
+{}
 
-G4VPhononProcess::~G4VPhononProcess() {;}
-
+G4VPhononProcess::~G4VPhononProcess()
+{
+  ;
+}
 
 // Only applies to the known phonon polarization states
 
-G4bool G4VPhononProcess::IsApplicable(const G4ParticleDefinition& aPD) {
-  return (&aPD==G4PhononLong::Definition() ||
-	  &aPD==G4PhononTransFast::Definition() ||
-	  &aPD==G4PhononTransSlow::Definition() );
+G4bool G4VPhononProcess::IsApplicable(const G4ParticleDefinition& aPD)
+{
+  return (&aPD == G4PhononLong::Definition() || &aPD == G4PhononTransFast::Definition()
+          || &aPD == G4PhononTransSlow::Definition());
 }
-
 
 // Initialize wave vectors for currently active track(s)
 
-void G4VPhononProcess::StartTracking(G4Track* track) {
-  G4VProcess::StartTracking(track);	// Apply base class actions
+void G4VPhononProcess::StartTracking(G4Track* track)
+{
+  G4VProcess::StartTracking(track);  // Apply base class actions
 
   // FIXME:  THE WAVEVECTOR SHOULD BE COMPUTED BY INVERTING THE K/V MAP
-  if (!trackKmap->Find(track)) 
-    trackKmap->SetK(track, track->GetMomentumDirection());
+  if (!trackKmap->Find(track)) trackKmap->SetK(track, track->GetMomentumDirection());
 
-  currentTrack = track;			// Save for use by EndTracking
+  currentTrack = track;  // Save for use by EndTracking
 
   // Fetch lattice for current track once, use in subsequent steps
   G4LatticeManager* LM = G4LatticeManager::GetLatticeManager();
   theLattice = LM->GetLattice(track->GetVolume());
 }
 
-void G4VPhononProcess::EndTracking() {
-  G4VProcess::EndTracking();		// Apply base class actions
+void G4VPhononProcess::EndTracking()
+{
+  G4VProcess::EndTracking();  // Apply base class actions
   trackKmap->RemoveTrack(currentTrack);
   currentTrack = 0;
   theLattice = 0;
 }
 
-
 // For convenience, map phonon type to polarization code
 
-G4int G4VPhononProcess::GetPolarization(const G4Track& track) const {
+G4int G4VPhononProcess::GetPolarization(const G4Track& track) const
+{
   return G4PhononPolarization::Get(track.GetParticleDefinition());
 }
 
-
 // Generate random polarization from density of states
 
-G4int G4VPhononProcess::ChoosePolarization(G4double Ldos, G4double STdos,
-					   G4double FTdos) const {
+G4int G4VPhononProcess::ChoosePolarization(G4double Ldos, G4double STdos, G4double FTdos) const
+{
   G4double norm = Ldos + STdos + FTdos;
-  G4double cProbST = STdos/norm;
-  G4double cProbFT = FTdos/norm + cProbST;
+  G4double cProbST = STdos / norm;
+  G4double cProbFT = FTdos / norm + cProbST;
 
   // NOTE:  Order of selection done to match previous random sequences
   G4double modeMixer = G4UniformRand();
-  if (modeMixer<cProbST) return G4PhononPolarization::TransSlow;
-  if (modeMixer<cProbFT) return G4PhononPolarization::TransFast;
+  if (modeMixer < cProbST) return G4PhononPolarization::TransSlow;
+  if (modeMixer < cProbFT) return G4PhononPolarization::TransFast;
   return G4PhononPolarization::Long;
 }
 
-
 // Create new secondary track from phonon configuration
 
-G4Track* G4VPhononProcess::CreateSecondary(G4int polarization,
-					   const G4ThreeVector& waveVec,
-					   G4double energy) const {
-  if (verboseLevel>1) {
-    G4cout << GetProcessName() << " CreateSecondary pol " << polarization
-	   << " K " << waveVec << " E " << energy << G4endl;
+G4Track* G4VPhononProcess::CreateSecondary(G4int polarization, const G4ThreeVector& waveVec,
+                                           G4double energy) const
+{
+  if (verboseLevel > 1)
+  {
+    G4cout << GetProcessName() << " CreateSecondary pol " << polarization << " K " << waveVec
+           << " E " << energy << G4endl;
   }
 
   G4ThreeVector vgroup = theLattice->MapKtoVDir(polarization, waveVec);
-  if (verboseLevel>1) G4cout << " MapKtoVDir returned " << vgroup << G4endl;
+  if (verboseLevel > 1) G4cout << " MapKtoVDir returned " << vgroup << G4endl;
 
   vgroup = theLattice->RotateToGlobal(vgroup);
-  if (verboseLevel>1) G4cout << " RotateToGlobal returned " << vgroup << G4endl;
+  if (verboseLevel > 1) G4cout << " RotateToGlobal returned " << vgroup << G4endl;
 
-  if (verboseLevel && std::fabs(vgroup.mag()-1.) > 0.01) {
-    G4cout << "WARNING: " << GetProcessName() << " vgroup not a unit vector: "
-	   << vgroup << G4endl;
+  if (verboseLevel && std::fabs(vgroup.mag() - 1.) > 0.01)
+  {
+    G4cout << "WARNING: " << GetProcessName() << " vgroup not a unit vector: " << vgroup << G4endl;
   }
 
   G4ParticleDefinition* thePhonon = G4PhononPolarization::Get(polarization);
 
   // Secondaries are created at the current track coordinates
   G4Track* sec = new G4Track(new G4DynamicParticle(thePhonon, vgroup, energy),
-			     currentTrack->GetGlobalTime(),
-			     currentTrack->GetPosition());
+                             currentTrack->GetGlobalTime(), currentTrack->GetPosition());
 
   // Store wavevector in lookup table for future tracking
   trackKmap->SetK(sec, theLattice->RotateToGlobal(waveVec));
 
-  if (verboseLevel>1) {
-    G4cout << GetProcessName() << " secondary K rotated to "
-	   << trackKmap->GetK(sec) << G4endl;
+  if (verboseLevel > 1)
+  {
+    G4cout << GetProcessName() << " secondary K rotated to " << trackKmap->GetK(sec) << G4endl;
   }
 
-  sec->SetVelocity(theLattice->MapKtoV(polarization, waveVec));    
+  sec->SetVelocity(theLattice->MapKtoV(polarization, waveVec));
   sec->UseGivenVelocity(true);
 
   return sec;

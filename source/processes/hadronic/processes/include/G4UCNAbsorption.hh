@@ -42,15 +42,14 @@
 ////////////////////////////////////////////////////////////////////////
 
 #ifndef G4UCNABSORPTION_HH
-#define G4UCNABSORPTION_HH 1
+#define G4UCNABSORPTION_HH
 
 /////////////
 // Includes
 /////////////
 
-#include "G4VDiscreteProcess.hh"
-
 #include "G4Neutron.hh"
+#include "G4VDiscreteProcess.hh"
 
 // Class Description:
 // Discrete Process -- Bulk loss of Ultra Cold Neutrons.
@@ -64,55 +63,48 @@
 
 class G4UCNAbsorption : public G4VDiscreteProcess
 {
+  public:
 
-public:
+    ////////////////////////////////
+    // Constructors and Destructor
+    ////////////////////////////////
 
-        ////////////////////////////////
-        // Constructors and Destructor
-        ////////////////////////////////
+    G4UCNAbsorption(const G4String& processName = "UCNAbsorption", G4ProcessType type = fUCN);
+    virtual ~G4UCNAbsorption();
 
-        G4UCNAbsorption(const G4String& processName = "UCNAbsorption",
-                                 G4ProcessType type = fUCN);
-	virtual ~G4UCNAbsorption();
+  private:
 
-private:
+    G4UCNAbsorption(const G4UCNAbsorption& right);
 
-        G4UCNAbsorption(const G4UCNAbsorption &right);
+    //////////////
+    // Operators
+    //////////////
 
-        //////////////
-        // Operators
-        //////////////
+    G4UCNAbsorption& operator=(const G4UCNAbsorption& right);
 
-        G4UCNAbsorption& operator=(const G4UCNAbsorption &right);
+  public:
 
-public:
+    ////////////
+    // Methods
+    ////////////
 
-        ////////////
-        // Methods
-        ////////////
+    G4bool IsApplicable(const G4ParticleDefinition& aParticleType);
+    // Returns true -> 'is applicable' only for an UCN.
 
-        G4bool IsApplicable(const G4ParticleDefinition& aParticleType);
-        // Returns true -> 'is applicable' only for an UCN.
+    G4double GetMeanFreePath(const G4Track& aTrack, G4double, G4ForceCondition* condition);
 
-	G4double GetMeanFreePath(const G4Track& aTrack,
-				 G4double ,
-				 G4ForceCondition* condition);
+    G4VParticleChange* PostStepDoIt(const G4Track& aTrack, const G4Step& aStep);
 
-	G4VParticleChange* PostStepDoIt(const G4Track& aTrack,
- 				        const G4Step&  aStep);
-
-private:
-
+  private:
 };
 
 ////////////////////
 // Inline methods
 ////////////////////
 
-inline
-G4bool G4UCNAbsorption::IsApplicable(const G4ParticleDefinition& aParticleType)
+inline G4bool G4UCNAbsorption::IsApplicable(const G4ParticleDefinition& aParticleType)
 {
-   return ( &aParticleType == G4Neutron::NeutronDefinition() );
+  return (&aParticleType == G4Neutron::NeutronDefinition());
 }
 
 #endif /* G4UCNABSORPTION_HH */

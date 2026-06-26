@@ -37,39 +37,37 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4EmSecondaryParticleType_h
-#define G4EmSecondaryParticleType_h 1
+#ifndef G4EMSECONDARYPARTICLETYPE_HH
+#define G4EMSECONDARYPARTICLETYPE_HH
 
 enum G4EmSecondaryParticleType
-  {
-    _EM = 10000,
+{
+  _EM = 10000,
 
-    _DeltaElectron = 10010,
-    _DeltaEBelowCut = 10011,
-    _PhotoElectron = 10012,
-    _ComptonElectron = 10013,
-    _TripletElectron = 10014,
+  _DeltaElectron = 10010,
+  _DeltaEBelowCut = 10011,
+  _PhotoElectron = 10012,
+  _ComptonElectron = 10013,
+  _TripletElectron = 10014,
 
-    _Bremsstrahlung = 10020,
-    // Legacy name for compatibility with Geant4 11.0 and patch01.
-    _Bremsstruhlung = 10020,
-    _SplitBremsstrahlung = 10021,
-    _ComptonGamma = 10022,
-    _Annihilation = 10023,
-    _TripletGamma = 10024,
-    _GammaGammaEntanglement = 10025,
+  _Bremsstrahlung = 10020,
+  // Legacy name for compatibility with Geant4 11.0 and patch01.
+  _Bremsstruhlung = 10020,
+  _SplitBremsstrahlung = 10021,
+  _ComptonGamma = 10022,
+  _Annihilation = 10023,
+  _TripletGamma = 10024,
+  _GammaGammaEntanglement = 10025,
 
-    _PairProduction = 10030,
+  _PairProduction = 10030,
 
-    _Fluorescence = 10040,
-    _GammaPIXE = 10041,
+  _Fluorescence = 10040,
+  _GammaPIXE = 10041,
 
-    _AugerElectron = 10050,
-    _ePIXE = 10051,
+  _AugerElectron = 10050,
+  _ePIXE = 10051,
 
-    _IonRecoil = 10060
-  };
+  _IonRecoil = 10060
+};
 
 #endif
-
-

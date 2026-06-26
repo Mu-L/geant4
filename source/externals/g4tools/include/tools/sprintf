@@ -4,79 +4,50 @@
 #ifndef tools_sprintf
 #define tools_sprintf
 
+#include <cstdarg>
+#include <cstdio>
 #include <string>
-#include "snpf"
+#include <vector>
 
-namespace tools {
+namespace tools
+{
 
-inline bool vsprintf(std::string& a_string,int a_length,const char* a_format,va_list a_args){
-  a_string.clear();
-  if(a_length<0) return false;
-  if(!a_format) return false;
-  char* _s = new char[a_length+1];
-  if(!_s) return false;
-  _s[a_length] = '\0';
-  int n = vsnpf(_s,a_length+1,a_format,a_args);
-  if(n>a_length) {
-    delete [] _s;
-    return false;
-  }
-  if(_s[a_length]!='\0') {
-    delete [] _s;
-    return false;
-  }
-  a_string = _s;
-  delete [] _s;
-  return true;
+inline int vsnpf(char* a_s, size_t a_n, const char* a_fmt, va_list args)
+{
+  return std::vsnprintf(a_s, a_n, a_fmt, args);
 }
 
-
-inline bool sprintf(std::string& a_string,int a_length,const char* a_format,...){
-  a_string.clear();
-  if(a_length<0) return false;
-  if(!a_format) return false;
-  char* _s = new char[a_length+1];
-  if(!_s) return false;
-  _s[a_length] = '\0';
+inline int snpf(char* a_s, size_t a_n, const char* a_fmt, ...)
+{
   va_list args;
-  va_start(args,a_format);
-  int n = vsnpf(_s,a_length+1,a_format,args);
+  va_start(args, a_fmt);
+  int n = vsnpf(a_s, a_n, a_fmt, args);
   va_end(args);
-  if(n>a_length) {
-    delete [] _s;
-    return false;
-  }
-  if(_s[a_length]!='\0') {
-    delete [] _s;
-    return false;
-  }
-  a_string = _s;
-  delete [] _s;
+  return n;
+}
+
+inline bool vsprintf(std::string& a_string, int a_length, const char* a_format, va_list a_args)
+{
+  a_string.clear();
+  if (a_length < 0 || !a_format) return false;
+
+  std::vector<char> buf(static_cast<size_t>(a_length) + 1);
+  int n = vsnpf(buf.data(), buf.size(), a_format, a_args);
+
+  if (n < 0 || n > a_length) return false;
+  a_string.assign(buf.data(), static_cast<size_t>(n));
   return true;
 }
 
-inline bool print2s(std::string& a_string,int a_length,const char* a_format,...){
-  if(a_length<0) {a_string.clear();return false;}
-  if(!a_format) {a_string.clear();return false;}
-  a_string.assign(a_length,' '); //data = a_length+1
-  char* _s = const_cast<char*>(a_string.c_str());
-  //_s[a_length] shoulg be '\0'.
+inline bool sprintf(std::string& a_string, int a_length, const char* a_format, ...)
+{
   va_list args;
-  va_start(args,a_format);
-  int n = vsnpf(_s,a_length+1,a_format,args);
+  va_start(args, a_format);
+  bool result = vsprintf(a_string, a_length, a_format, args);
   va_end(args);
-  if(n>a_length) { //a_string is compromised.
-    a_string.clear(); //we cross fingers.
-    return false;
-  }
-  if(_s[a_length]!='\0') { //a_string is compromised.
-    a_string.clear(); //we cross fingers.
-    return false;
-  }
-  a_string.resize(n);
-  return true;
+  return result;
 }
 
-}
+}  // namespace tools
 
 #endif

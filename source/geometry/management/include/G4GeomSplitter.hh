@@ -22,23 +22,24 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // G4GeomSplitter
 //
 // Class description:
 //
 // Utility template class for splitting of RW data for thread-safety from
 // classes: G4LogicalVolume, G4Region, G4VPhysicalVolume, G4PolyconeSide
-// G4PolyhedraSide, G4PVReplica. 
+// G4PolyhedraSide, G4PVReplica.
 
 // Author: Xin Dong (Northeastern Univ.), 01.25.2009 - Initial version
 // ------------------------------------------------------------------------
 #ifndef G4GEOMSPLITTER_HH
 #define G4GEOMSPLITTER_HH
 
-#include "globals.hh"
-#include "geomwdefs.hh"
 #include "G4AutoLock.hh"
+#include "globals.hh"
+
+#include "geomwdefs.hh"
 
 /**
  * @brief G4GeomSplitter is an utility class for splitting of R/W data
@@ -48,7 +49,7 @@
  * T is the private data from the object to be split
  */
 
-template <class T>
+template<class T>
 class G4GeomSplitter
 {
   public:
@@ -56,11 +57,7 @@ class G4GeomSplitter
     /**
      * Constructor.
      */
-    G4GeomSplitter()
-      :  sharedOffset(nullptr)
-    {
-      G4MUTEXINIT(mutex);
-    }
+    G4GeomSplitter() : sharedOffset(nullptr) { G4MUTEXINIT(mutex); }
 
     /**
      * Reallocates data for a given 'size'.
@@ -69,11 +66,10 @@ class G4GeomSplitter
     {
       G4int oldspace = totalspace;
       totalspace = size;
-      T* newoffset = (T *) std::realloc(offset, totalspace*sizeof(T));
+      T* newoffset = (T*)std::realloc(offset, totalspace * sizeof(T));
       if (newoffset != nullptr && totalspace > oldspace)
       {
-        std::uninitialized_value_construct(newoffset+oldspace,
-                                           newoffset+totalspace);
+        std::uninitialized_value_construct(newoffset + oldspace, newoffset + totalspace);
       }
       return newoffset;
     }
@@ -88,11 +84,11 @@ class G4GeomSplitter
       ++totalobj;
       if (totalobj > totalspace)
       {
-        offset = Reallocate(totalspace+512);
+        offset = Reallocate(totalspace + 512);
         if (offset == nullptr)
         {
-           G4Exception("G4GeomSPlitter::CreateSubInstance()",
-                       "OutOfMemory", FatalException, "Cannot malloc space!");
+          G4Exception("G4GeomSPlitter::CreateSubInstance()", "OutOfMemory", FatalException,
+                      "Cannot malloc space!");
         }
         sharedOffset = offset;
       }
@@ -107,7 +103,7 @@ class G4GeomSplitter
       G4AutoLock l(&mutex);
       std::memcpy(offset, sharedOffset, totalspace * sizeof(T));
     }
-  
+
     /**
      * Invoked by each worker thread to copy all the subinstance array
      * from the master thread.
@@ -115,12 +111,15 @@ class G4GeomSplitter
     void SlaveCopySubInstanceArray()
     {
       G4AutoLock l(&mutex);
-      if (offset != nullptr)  { return; }
+      if (offset != nullptr)
+      {
+        return;
+      }
       offset = Reallocate(totalspace);
       if (offset == nullptr)
       {
-        G4Exception("G4GeomSplitter::SlaveCopySubInstanceArray()",
-                    "OutOfMemory", FatalException, "Cannot malloc space!");
+        G4Exception("G4GeomSplitter::SlaveCopySubInstanceArray()", "OutOfMemory", FatalException,
+                    "Cannot malloc space!");
       }
       l.unlock();
       CopyMasterContents();
@@ -134,16 +133,19 @@ class G4GeomSplitter
     void SlaveInitializeSubInstance()
     {
       G4AutoLock l(&mutex);
-      if (offset != nullptr)  { return; }
+      if (offset != nullptr)
+      {
+        return;
+      }
       offset = Reallocate(totalspace);
 
       if (offset == nullptr)
       {
-        G4Exception("G4GeomSplitter::SlaveInitializeSubInstance()",
-                    "OutOfMemory", FatalException, "Cannot malloc space!");
+        G4Exception("G4GeomSplitter::SlaveInitializeSubInstance()", "OutOfMemory", FatalException,
+                    "Cannot malloc space!");
       }
 
-      for (G4int i=0 ; i<totalspace; ++i)
+      for (G4int i = 0; i < totalspace; ++i)
       {
         offset[i].initialize();
       }
@@ -160,40 +162,41 @@ class G4GeomSplitter
       if (offset == nullptr)
       {
         SlaveInitializeSubInstance();
-        G4Exception("G4GeomSPlitter::SlaveReCopySubInstance()",
-                    "MissingInitialisation", JustWarning,
-                    "Must be called after Initialisation or first Copy.");
+        G4Exception("G4GeomSPlitter::SlaveReCopySubInstance()", "MissingInitialisation",
+                    JustWarning, "Must be called after Initialisation or first Copy.");
       }
       CopyMasterContents();
     }
-  
+
     /**
      * Invoked by all threads to free the subinstance array.
      */
     void FreeSlave()
     {
-      if (offset == nullptr)  { return; }
-      std::free( offset );
+      if (offset == nullptr)
+      {
+        return;
+      }
+      std::free(offset);
       offset = nullptr;
     }
 
     // Extension - to allow sharing of workspaces
-  
+
     /**
      * Returns a pointer to the split data.
      */
     T* GetOffset() { return offset; }
-  
+
     /**
      * Uses recycled work area - which was created previously.
      */
-    void UseWorkArea( T* newOffset )
+    void UseWorkArea(T* newOffset)
     {
-      if( (offset!=nullptr) && (offset!=newOffset) )
+      if ((offset != nullptr) && (offset != newOffset))
       {
-         G4Exception("G4GeomSplitter::UseWorkspace()", 
-                     "TwoWorkspaces", FatalException,
-                     "Thread already has workspace - cannot use another.");
+        G4Exception("G4GeomSplitter::UseWorkspace()", "TwoWorkspaces", FatalException,
+                    "Thread already has workspace - cannot use another.");
       }
       offset = newOffset;
     }
@@ -221,6 +224,7 @@ class G4GeomSplitter
     G4Mutex mutex;
 };
 
-template <typename T> G4ThreadLocal T* G4GeomSplitter<T>::offset = nullptr;
+template<typename T>
+G4ThreadLocal T* G4GeomSplitter<T>::offset = nullptr;
 
 #endif

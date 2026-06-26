@@ -41,21 +41,22 @@
 
 #include "ActionInitialization.hh"
 
-#include "ChemistrySteppingAction.hh"
-#include "ChemistryTrackingManager.hh"
-#include "EventAction.hh"
-#include "PrimaryGeneratorAction.hh"
-#include "RunAction.hh"
-#include "StackingAction.hh"
-#include "G4SystemOfUnits.hh"
-
 #include "G4DNAChemistryManager.hh"
 #include "G4H2O.hh"
 #include "G4MoleculeCounter.hh"
 #include "G4MoleculeCounterManager.hh"
 #include "G4MoleculeReactionCounter.hh"
 #include "G4Scheduler.hh"
+#include "G4SystemOfUnits.hh"
 #include "G4UserTimeStepAction.hh"
+
+#include "ChemistrySteppingAction.hh"
+#include "ChemistryTrackingManager.hh"
+#include "EventAction.hh"
+#include "MoleculeCounter.hh"
+#include "PrimaryGeneratorAction.hh"
+#include "RunAction.hh"
+#include "StackingAction.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 void ActionInitialization::BuildForMaster() const
@@ -94,6 +95,8 @@ void ActionInitialization::BuildMoleculeCounters() const
   // SetResetCountersBeforeRun is irrelevant when resetting before event
   // So we just set it to false here.
 
+  G4MoleculeCounterManager::Instance()->SetAccumulateCounterIntoMaster(false);
+
   // Register molecule counters
 
   // Basic (built-in) Counters
@@ -110,6 +113,31 @@ void ActionInitialization::BuildMoleculeCounters() const
     // The precision is changed with respect to chemistry time.
     auto counter = std::make_unique<G4MoleculeCounter>("BasicCounter_VariablePrecision");
     counter->IgnoreMolecule(G4H2O::Definition());
+    counter->SetTimeComparer(G4MoleculeCounterTimeComparer::CreateWithVariablePrecision({
+      {10 * ps, 5 * ps},
+      {100 * ps, 50 * ps},
+      {1000 * ps, 500 * ps},
+      {10 * ns, 5 * ns},
+      {1 * microsecond, 50 * ns},
+    }));
+    G4MoleculeCounterManager::Instance()->RegisterCounter(std::move(counter));
+  }
+
+  // Custom molecule counter, see: 10.1016/j.radphyschem.2023.111194
+  {
+    // Here we create a custom volume-aware molecule counter that uses variable time precision.
+    // This counter records not just the molecules but also the encompassing volume.
+    // Note:
+    // - For this counter you must set `SetSensitiveToStepping(true)`.
+    // - Other options (like SetNegativeCountsAreFatal) are optional but recommended
+    // - SetIgnoreMoleculePosition can be set to true to override this counter's volume-awareness
+    //   this would, in effect, make it the same as a BasicCounter `G4MoleculeCounter`
+    auto counter = std::make_unique<MoleculeCounter>("MoleculeCounter");
+    counter->SetVerbose(1);
+    counter->IgnoreMolecule(G4H2O::Definition());
+    counter->SetSensitiveToStepping(true);
+    counter->SetIgnoreMoleculePosition(false);
+    counter->SetNegativeCountsAreFatal(true);
     counter->SetTimeComparer(G4MoleculeCounterTimeComparer::CreateWithVariablePrecision({
       {10 * ps, 5 * ps},
       {100 * ps, 50 * ps},

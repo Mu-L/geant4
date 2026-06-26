@@ -35,40 +35,30 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4HadronElasticPhysicsLEND_h
-#define G4HadronElasticPhysicsLEND_h 1
+#ifndef G4HADRONELASTICPHYSICSLEND_HH
+#define G4HADRONELASTICPHYSICSLEND_HH
 
 #include "G4HadronElasticPhysics.hh"
 
 class G4HadronElasticPhysicsLEND : public G4HadronElasticPhysics
 {
-public: 
+  public:
 
-  explicit G4HadronElasticPhysicsLEND(G4int ver = 1, 
-				      const G4String& eval=""); 
+    explicit G4HadronElasticPhysicsLEND(G4int ver = 1, const G4String& eval = "");
 
-  virtual ~G4HadronElasticPhysicsLEND();
- 
-  // This method will be invoked in the Construct() method.
-  // each physics process will be instantiated and
-  // registered to the process manager of each particle type 
-  void ConstructProcess() final;
+    virtual ~G4HadronElasticPhysicsLEND();
 
-  G4HadronElasticPhysicsLEND(G4HadronElasticPhysicsLEND &) = delete;
-  G4HadronElasticPhysicsLEND & operator=
-  (const G4HadronElasticPhysicsLEND &right) = delete;
+    // This method will be invoked in the Construct() method.
+    // each physics process will be instantiated and
+    // registered to the process manager of each particle type
+    void ConstructProcess() final;
 
-private:
-  G4String evaluation;
+    G4HadronElasticPhysicsLEND(G4HadronElasticPhysicsLEND&) = delete;
+    G4HadronElasticPhysicsLEND& operator=(const G4HadronElasticPhysicsLEND& right) = delete;
+
+  private:
+
+    G4String evaluation;
 };
 
-
 #endif
-
-
-
-
-
-
-
-

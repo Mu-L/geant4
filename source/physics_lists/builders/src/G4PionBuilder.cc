@@ -37,40 +37,43 @@
 //----------------------------------------------------------------------------
 //
 #include "G4PionBuilder.hh"
+
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
 
 G4PionBuilder::G4PionBuilder()
-{  
-  thePionPlusInelastic=new  G4HadronInelasticProcess( "pi+Inelastic", G4PionPlus::Definition() );
-  thePionMinusInelastic=new G4HadronInelasticProcess( "pi-Inelastic", G4PionMinus::Definition() );
+{
+  thePionPlusInelastic = new G4HadronInelasticProcess("pi+Inelastic", G4PionPlus::Definition());
+  thePionMinusInelastic = new G4HadronInelasticProcess("pi-Inelastic", G4PionMinus::Definition());
 }
 
-void G4PionBuilder::
-Build()
+void G4PionBuilder::Build()
 {
-  std::vector<G4VPionBuilder *>::iterator i;
-  for(i=theModelCollections.begin(); i!=theModelCollections.end(); i++)
+  std::vector<G4VPionBuilder*>::iterator i;
+  for (i = theModelCollections.begin(); i != theModelCollections.end(); i++)
   {
     (*i)->Build(thePionPlusInelastic);
     (*i)->Build(thePionMinusInelastic);
   }
-  G4ProcessManager * theProcMan;
+  G4ProcessManager* theProcMan;
 
   theProcMan = G4PionPlus::PionPlus()->GetProcessManager();
   theProcMan->AddDiscreteProcess(thePionPlusInelastic);
-  
+
   theProcMan = G4PionMinus::PionMinus()->GetProcessManager();
   theProcMan->AddDiscreteProcess(thePionMinusInelastic);
 }
 
-void G4PionBuilder::RegisterMe(G4PhysicsBuilderInterface* aB) {
+void G4PionBuilder::RegisterMe(G4PhysicsBuilderInterface* aB)
+{
   auto bld = dynamic_cast<G4VPionBuilder*>(aB);
-  if ( bld != nullptr ) {
-      theModelCollections.push_back(bld);
-  } else {
-      G4PhysicsBuilderInterface::RegisterMe(aB);
+  if (bld != nullptr)
+  {
+    theModelCollections.push_back(bld);
+  }
+  else
+  {
+    G4PhysicsBuilderInterface::RegisterMe(aB);
   }
 }
-

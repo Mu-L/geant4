@@ -28,62 +28,61 @@
 // Author: John Apostolakis (CERN), 1999
 // --------------------------------------------------------------------
 
-#include "G4LineSection.hh" 
+#include "G4LineSection.hh"
 
-G4LineSection::G4LineSection( const G4ThreeVector& PntA, 
-                              const G4ThreeVector& PntB )
-  : EndpointA(PntA), VecAtoB(PntB-PntA)
-{ 
-  fABdistanceSq = VecAtoB.mag2();  
+G4LineSection::G4LineSection(const G4ThreeVector& PntA, const G4ThreeVector& PntB)
+  : EndpointA(PntA), VecAtoB(PntB - PntA)
+{
+  fABdistanceSq = VecAtoB.mag2();
 }
 
-G4double G4LineSection::Dist( const G4ThreeVector& OtherPnt ) const
+G4double G4LineSection::Dist(const G4ThreeVector& OtherPnt) const
 {
-  G4double       dist_sq;  
-  G4ThreeVector  VecAZ;
-  G4double sq_VecAZ, inner_prod, unit_projection ; 
+  G4double dist_sq;
+  G4ThreeVector VecAZ;
+  G4double sq_VecAZ, inner_prod, unit_projection;
 
-  VecAZ= OtherPnt - EndpointA;
+  VecAZ = OtherPnt - EndpointA;
   sq_VecAZ = VecAZ.mag2();
 
-  inner_prod= VecAtoB.dot( VecAZ );
-   
-  //  Determine  Projection(AZ on AB) / Length(AB) 
+  inner_prod = VecAtoB.dot(VecAZ);
+
+  //  Determine  Projection(AZ on AB) / Length(AB)
   //
-  if( fABdistanceSq != 0.0 )
+  if (fABdistanceSq != 0.0)
   {
     //  unit_projection= inner_prod * InvsqDistAB();
-    unit_projection = inner_prod/fABdistanceSq;
+    unit_projection = inner_prod / fABdistanceSq;
 
-    if( (0. <= unit_projection ) && (unit_projection <= 1.0 ) )
+    if ((0. <= unit_projection) && (unit_projection <= 1.0))
     {
-      dist_sq= sq_VecAZ -  unit_projection * inner_prod ;
+      dist_sq = sq_VecAZ - unit_projection * inner_prod;
     }
     else
     {
-     //  The perpendicular from the point to the line AB meets the line
-     //   in a point outside the line segment!
-     
-      if( unit_projection < 0. ) // A is the closest point
+      //  The perpendicular from the point to the line AB meets the line
+      //   in a point outside the line segment!
+
+      if (unit_projection < 0.)  // A is the closest point
       {
-        dist_sq= sq_VecAZ;  
+        dist_sq = sq_VecAZ;
       }
-      else                       // B is the closest point
+      else  // B is the closest point
       {
-        G4ThreeVector   EndpointB = EndpointA + VecAtoB;
-        G4ThreeVector   VecBZ =     OtherPnt - EndpointB;
-        dist_sq =  VecBZ.mag2();
+        G4ThreeVector EndpointB = EndpointA + VecAtoB;
+        G4ThreeVector VecBZ = OtherPnt - EndpointB;
+        dist_sq = VecBZ.mag2();
       }
     }
   }
   else
   {
-     dist_sq = (OtherPnt - EndpointA).mag2() ;   
-  }  
-  if( dist_sq < 0.0 )
+    dist_sq = (OtherPnt - EndpointA).mag2();
+  }
+  if (dist_sq < 0.0)
   {
-    dist_sq = 0.0 ;
+    dist_sq = 0.0;
   }
 
-  return std::sqrt(dist_sq) ;  
+  return std::sqrt(dist_sq);
 }

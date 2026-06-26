@@ -29,29 +29,24 @@
 // --------------------------------------------------------------------
 
 #include "G4tgrPlaceParameterisation.hh"
+
+#include "G4tgrMessenger.hh"
 #include "G4tgrUtils.hh"
 #include "G4tgrVolume.hh"
-#include "G4tgrMessenger.hh"
 
 // --------------------------------------------------------------------
-G4tgrPlaceParameterisation::G4tgrPlaceParameterisation()
-{
-}
+G4tgrPlaceParameterisation::G4tgrPlaceParameterisation() {}
 
 // --------------------------------------------------------------------
-G4tgrPlaceParameterisation::~G4tgrPlaceParameterisation()
-{
-}
+G4tgrPlaceParameterisation::~G4tgrPlaceParameterisation() {}
 
 // --------------------------------------------------------------------
-G4tgrPlaceParameterisation::
-G4tgrPlaceParameterisation(const std::vector<G4String>& wl)
+G4tgrPlaceParameterisation::G4tgrPlaceParameterisation(const std::vector<G4String>& wl)
 {
   theType = "PlaceParam";
 
   //---------- Check for exact number of words read
-  G4tgrUtils::CheckWLsize(wl, 7, WLSIZE_GE,
-                          "G4tgrPlaceParameterisation::ConstructVolume");
+  G4tgrUtils::CheckWLsize(wl, 7, WLSIZE_GE, "G4tgrPlaceParameterisation::ConstructVolume");
 
   //---------- the copy No
   theCopyNo = G4tgrUtils::GetInt(wl[2]) - 1;
@@ -66,13 +61,13 @@ G4tgrPlaceParameterisation(const std::vector<G4String>& wl)
   theRotMatName = G4tgrUtils::GetString(wl[5]);
 
   //---------- set the extra data
-  for(size_t ii = 6; ii < wl.size(); ii++)
+  for (size_t ii = 6; ii < wl.size(); ii++)
   {
     theExtraData.push_back(G4tgrUtils::GetDouble(wl[ii]));
   }
 
 #ifdef G4VERBOSE
-  if(G4tgrMessenger::GetVerboseLevel() >= 1)
+  if (G4tgrMessenger::GetVerboseLevel() >= 1)
   {
     G4cout << " Created " << *this << G4endl;
   }
@@ -80,13 +75,12 @@ G4tgrPlaceParameterisation(const std::vector<G4String>& wl)
 }
 
 // --------------------------------------------------------------------
-std::ostream& operator<<(std::ostream& os,
-                         const G4tgrPlaceParameterisation& obj)
+std::ostream& operator<<(std::ostream& os, const G4tgrPlaceParameterisation& obj)
 {
   os << "G4tgrPlaceParameterisation= in " << obj.theParentName
-     << " ParamTyep = " << obj.theParamType
-     << " RotMatName= " << obj.theRotMatName << " EXTRA DATA= ";
-  for(size_t ii = 0; ii < obj.theExtraData.size(); ii++)
+     << " ParamTyep = " << obj.theParamType << " RotMatName= " << obj.theRotMatName
+     << " EXTRA DATA= ";
+  for (size_t ii = 0; ii < obj.theExtraData.size(); ii++)
   {
     os << obj.theExtraData[ii] << " ";
   }

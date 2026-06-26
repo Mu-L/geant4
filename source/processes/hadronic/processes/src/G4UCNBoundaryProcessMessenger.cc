@@ -40,37 +40,34 @@
 //
 ///////////////////////////////////////////////////////////////////////
 
-#include "G4UCNBoundaryProcess.hh"
 #include "G4UCNBoundaryProcessMessenger.hh"
 
-#include "G4UIdirectory.hh"
-#include "G4UIcmdWithAnInteger.hh"
+#include "G4UCNBoundaryProcess.hh"
 #include "G4UIcmdWithABool.hh"
+#include "G4UIcmdWithAnInteger.hh"
+#include "G4UIdirectory.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4UCNBoundaryProcessMessenger::
-G4UCNBoundaryProcessMessenger(G4UCNBoundaryProcess* process)
-  : theUCNBoundaryProcess (process)
+G4UCNBoundaryProcessMessenger::G4UCNBoundaryProcessMessenger(G4UCNBoundaryProcess* process)
+  : theUCNBoundaryProcess(process)
 {
-  //G4cout << "Create messenger for the UCN boundary process " << G4endl;
+  // G4cout << "Create messenger for the UCN boundary process " << G4endl;
 
   boundaryDir = new G4UIdirectory("/ucnboundary/");
   boundaryDir->SetGuidance("savetofile parameters");
 
-  VerboseCmd = new G4UIcmdWithAnInteger("/ucnboundary/verbose",this);
-  VerboseCmd->SetGuidance("Set verbose level" );
-  VerboseCmd->SetParameterName("level",true);
+  VerboseCmd = new G4UIcmdWithAnInteger("/ucnboundary/verbose", this);
+  VerboseCmd->SetGuidance("Set verbose level");
+  VerboseCmd->SetParameterName("level", true);
   VerboseCmd->SetDefaultValue(1);
-  VerboseCmd->AvailableForStates(G4State_Idle,G4State_PreInit);
+  VerboseCmd->AvailableForStates(G4State_Idle, G4State_PreInit);
 
-  MicroRoughnessCmd =
-                new G4UIcmdWithABool("/ucnboundary/MicroRoughness",this);
-  MicroRoughnessCmd->
-                     SetGuidance("Decide if MicroRoughness Model is activated");
-  MicroRoughnessCmd->SetParameterName("MicroRough",false);
+  MicroRoughnessCmd = new G4UIcmdWithABool("/ucnboundary/MicroRoughness", this);
+  MicroRoughnessCmd->SetGuidance("Decide if MicroRoughness Model is activated");
+  MicroRoughnessCmd->SetParameterName("MicroRough", false);
   MicroRoughnessCmd->SetDefaultValue(true);
-  MicroRoughnessCmd->AvailableForStates(G4State_Idle,G4State_PreInit);
+  MicroRoughnessCmd->AvailableForStates(G4State_Idle, G4State_PreInit);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -83,13 +80,12 @@ G4UCNBoundaryProcessMessenger::~G4UCNBoundaryProcessMessenger()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4UCNBoundaryProcessMessenger::SetNewValue(G4UIcommand* command,
-                                                G4String newValue)
+void G4UCNBoundaryProcessMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
-  if( command == VerboseCmd ) theUCNBoundaryProcess->
-                        SetVerboseLevel(VerboseCmd->GetNewIntValue(newValue));
-  if( command == MicroRoughnessCmd ) theUCNBoundaryProcess->
-              SetMicroRoughness(MicroRoughnessCmd->GetNewBoolValue(newValue));
+  if (command == VerboseCmd)
+    theUCNBoundaryProcess->SetVerboseLevel(VerboseCmd->GetNewIntValue(newValue));
+  if (command == MicroRoughnessCmd)
+    theUCNBoundaryProcess->SetMicroRoughness(MicroRoughnessCmd->GetNewBoolValue(newValue));
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

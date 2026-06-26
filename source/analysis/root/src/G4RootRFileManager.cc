@@ -27,10 +27,11 @@
 // Author: Ivana Hrivnacova, 10/09/2014  (ivana@ipno.in2p3.fr)
 
 #include "G4RootRFileManager.hh"
-#include "G4RootRFileDef.hh"
-#include "G4RootHnRFileManager.hh"
+
 #include "G4AnalysisManagerState.hh"
 #include "G4AnalysisUtilities.hh"
+#include "G4RootHnRFileManager.hh"
+#include "G4RootRFileDef.hh"
 
 #include "tools/rroot/file"
 #include "toolx/zlib"
@@ -39,8 +40,7 @@ using namespace G4Analysis;
 using namespace tools;
 
 //_____________________________________________________________________________
-G4RootRFileManager::G4RootRFileManager(const G4AnalysisManagerState& state)
- : G4VRFileManager(state)
+G4RootRFileManager::G4RootRFileManager(const G4AnalysisManagerState& state) : G4VRFileManager(state)
 {
   // Create helpers defined in the base class
   fH1RFileManager = std::make_shared<G4RootHnRFileManager<histo::h1d>>(this);
@@ -54,10 +54,12 @@ G4RootRFileManager::G4RootRFileManager(const G4AnalysisManagerState& state)
 G4RootRFileManager::~G4RootRFileManager()
 {
   // Delete all open file and their directories
-  for ( auto& mapElement : fRFiles ) {
+  for (auto& mapElement : fRFiles)
+  {
     auto rfileTuple = mapElement.second;
     delete std::get<1>(*rfileTuple);  // histo directory
-    delete std::get<2>(*rfileTuple);; // ntuple directory
+    delete std::get<2>(*rfileTuple);
+    ;  // ntuple directory
     delete std::get<0>(*rfileTuple);  // rfile
     delete rfileTuple;
   }
@@ -68,8 +70,7 @@ G4RootRFileManager::~G4RootRFileManager()
 //
 
 //_____________________________________________________________________________
-G4bool G4RootRFileManager::OpenRFile(const G4String& fileName,
-                                     G4bool isPerThread)
+G4bool G4RootRFileManager::OpenRFile(const G4String& fileName, G4bool isPerThread)
 {
   // Get full file name
   G4String name = GetFullFileName(fileName, isPerThread);
@@ -78,9 +79,10 @@ G4bool G4RootRFileManager::OpenRFile(const G4String& fileName,
 
   // create new file
   auto newFile = new tools::rroot::file(G4cout, name);
-  newFile->add_unziper('Z',toolx::decompress_buffer);
+  newFile->add_unziper('Z', toolx::decompress_buffer);
 
-  if ( ! newFile->is_open() ) {
+  if (!newFile->is_open())
+  {
     Warn("Cannot open file " + name, fkClass, "OpenRFile");
     delete newFile;
     return false;
@@ -90,11 +92,13 @@ G4bool G4RootRFileManager::OpenRFile(const G4String& fileName,
 
   // add file in a map and delete the previous file if it exists
   auto it = fRFiles.find(name);
-  if ( it != fRFiles.end() ) {
+  if (it != fRFiles.end())
+  {
     delete it->second;
     it->second = newFileTuple;
   }
-  else {
+  else
+  {
     fRFiles[name] = newFileTuple;
   }
 
@@ -104,14 +108,14 @@ G4bool G4RootRFileManager::OpenRFile(const G4String& fileName,
 }
 
 //_____________________________________________________________________________
-G4RootRFile* G4RootRFileManager::GetRFile(const G4String& fileName,
-                                          G4bool isPerThread) const
+G4RootRFile* G4RootRFileManager::GetRFile(const G4String& fileName, G4bool isPerThread) const
 {
   // Get full file name
   G4String name = GetFullFileName(fileName, isPerThread);
 
   auto it = fRFiles.find(name);
-  if (it != fRFiles.end()) {
+  if (it != fRFiles.end())
+  {
     return it->second;
   }
   return nullptr;

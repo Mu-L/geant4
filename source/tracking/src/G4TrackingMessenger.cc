@@ -34,9 +34,16 @@
 
 #include "G4TrackingMessenger.hh"
 
+#include "G4ClonedRichTrajectory.hh"
+#include "G4ClonedRichTrajectoryPoint.hh"
+#include "G4ClonedSmoothTrajectory.hh"
+#include "G4ClonedSmoothTrajectoryPoint.hh"
+#include "G4ClonedTrajectory.hh"
+#include "G4ClonedTrajectoryPoint.hh"
 #include "G4IdentityTrajectoryFilter.hh"
 #include "G4PropagatorInField.hh"
 #include "G4SteppingManager.hh"
+#include "G4Threading.hh"
 #include "G4TrackStatus.hh"
 #include "G4TrackingManager.hh"
 #include "G4TransportationManager.hh"
@@ -44,13 +51,6 @@
 #include "G4UIcmdWithoutParameter.hh"
 #include "G4UIdirectory.hh"
 #include "G4UImanager.hh"
-#include "G4Threading.hh"
-#include "G4ClonedTrajectory.hh"
-#include "G4ClonedTrajectoryPoint.hh"
-#include "G4ClonedRichTrajectory.hh"
-#include "G4ClonedRichTrajectoryPoint.hh"
-#include "G4ClonedSmoothTrajectory.hh"
-#include "G4ClonedSmoothTrajectoryPoint.hh"
 #include "G4ios.hh"
 #include "globals.hh"
 
@@ -119,31 +119,37 @@ G4TrackingMessenger::~G4TrackingMessenger()
 void G4TrackingMessenger::SetNewValue(G4UIcommand* command, G4String newValues)
 ///////////////////////////////////////////////////////////////////////////////
 {
-  if (command == VerboseCmd) {
+  if (command == VerboseCmd)
+  {
     trackingManager->SetVerboseLevel(VerboseCmd->ConvertToInt(newValues));
   }
 
-  if (command == AbortCmd) {
+  if (command == AbortCmd)
+  {
     steppingManager->GetTrack()->SetTrackStatus(fStopAndKill);
     G4UImanager::GetUIpointer()->ApplyCommand("/control/exit");
   }
 
-  if (command == ResumeCmd) {
+  if (command == ResumeCmd)
+  {
     G4UImanager::GetUIpointer()->ApplyCommand("/control/exit");
   }
 
-  if (command == StoreTrajectoryCmd) {
+  if (command == StoreTrajectoryCmd)
+  {
     G4int trajType = StoreTrajectoryCmd->ConvertToInt(newValues);
-    if (trajType == 2 || trajType == 4) {
-
-      if (nullptr == auxiliaryPointsFilter) {
-	auxiliaryPointsFilter = new G4IdentityTrajectoryFilter;
+    if (trajType == 2 || trajType == 4)
+    {
+      if (nullptr == auxiliaryPointsFilter)
+      {
+        auxiliaryPointsFilter = new G4IdentityTrajectoryFilter;
       }
       G4TransportationManager::GetTransportationManager()
         ->GetPropagatorInField()
         ->SetTrajectoryFilter(auxiliaryPointsFilter);
     }
-    else {
+    else
+    {
       G4TransportationManager::GetTransportationManager()
         ->GetPropagatorInField()
         ->SetTrajectoryFilter(nullptr);
@@ -151,51 +157,57 @@ void G4TrackingMessenger::SetNewValue(G4UIcommand* command, G4String newValues)
     trackingManager->SetStoreTrajectory(trajType);
 
     // Make sure cloning works for sub-event parallel mode
-    if(G4Threading::IsMasterThread() && trajType>0) {
+    if (G4Threading::IsMasterThread() && trajType > 0)
+    {
       static G4bool traj_1 = false, traj_2 = false, traj_3 = false;
       G4VTrajectory* traj = nullptr;
       G4VTrajectoryPoint* trajp = nullptr;
-      switch (trajType) {
-       case 1:
-        if(!traj_1) {
-          traj = new G4ClonedTrajectory();
-          trajp = new G4ClonedTrajectoryPoint();
-          traj_1 = true;
-        }
-        break;
-       case 2:
-        if(!traj_2) {
-          traj = new G4ClonedSmoothTrajectory();
-          trajp = new G4ClonedSmoothTrajectoryPoint();
-          traj_2 = true;
-        }
-        break;
-       case 3:
-       case 4:
-        if(!traj_3) {
-          traj = new G4ClonedRichTrajectory();
-          trajp = new G4ClonedRichTrajectoryPoint();
-          traj_3 = true;
-        }
-        break;
-       default:
-        break;
+      switch (trajType)
+      {
+        case 1:
+          if (!traj_1)
+          {
+            traj = new G4ClonedTrajectory();
+            trajp = new G4ClonedTrajectoryPoint();
+            traj_1 = true;
+          }
+          break;
+        case 2:
+          if (!traj_2)
+          {
+            traj = new G4ClonedSmoothTrajectory();
+            trajp = new G4ClonedSmoothTrajectoryPoint();
+            traj_2 = true;
+          }
+          break;
+        case 3:
+        case 4:
+          if (!traj_3)
+          {
+            traj = new G4ClonedRichTrajectory();
+            trajp = new G4ClonedRichTrajectoryPoint();
+            traj_3 = true;
+          }
+          break;
+        default:
+          break;
       }
-      if(traj!=nullptr) delete traj;
-      if(trajp!=nullptr) delete trajp;
+      if (traj != nullptr) delete traj;
+      if (trajp != nullptr) delete trajp;
     }
   }
-
 }
 
 ////////////////////////////////////////////////////////////////////
 G4String G4TrackingMessenger::GetCurrentValue(G4UIcommand* command)
 ////////////////////////////////////////////////////////////////////
 {
-  if (command == VerboseCmd) {
+  if (command == VerboseCmd)
+  {
     return VerboseCmd->ConvertToString(trackingManager->GetVerboseLevel());
   }
-  if (command == StoreTrajectoryCmd) {
+  if (command == StoreTrajectoryCmd)
+  {
     return StoreTrajectoryCmd->ConvertToString(trackingManager->GetStoreTrajectory());
   }
   return G4String(1, '\0');

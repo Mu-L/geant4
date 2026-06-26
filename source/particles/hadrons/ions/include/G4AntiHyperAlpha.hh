@@ -27,19 +27,21 @@
 //
 //----------------------------------------------------------------------------
 
-#ifndef G4AntiHyperAlpha_h
-#define G4AntiHyperAlpha_h 1
+#ifndef G4ANTIHYPERALPHA_HH
+#define G4ANTIHYPERALPHA_HH
 
 #include "G4Ions.hh"
 
 class G4AntiHyperAlpha : public G4Ions
 {
   public:
+
     static G4AntiHyperAlpha* Definition();
     static G4AntiHyperAlpha* AntiHyperAlphaDefinition();
     static G4AntiHyperAlpha* AntiHyperAlpha();
 
   private:
+
     G4AntiHyperAlpha() {}
     ~G4AntiHyperAlpha() override = default;
 

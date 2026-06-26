@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // jck  17 Dec 1996
 // G4OpenGLInventorTransform3D provides SoSFMatrix transformation matrix
 // from G4Transform3D.
@@ -33,8 +33,8 @@
 #ifndef G4OPENINVENTORTRANSFORM3D_HH
 #define G4OPENINVENTORTRANSFORM3D_HH
 
-#include "G4Types.hh"
 #include "G4Transform3D.hh"
+#include "G4Types.hh"
 
 class SbMatrix;
 
@@ -42,8 +42,8 @@ class G4OpenInventorTransform3D : public G4Transform3D
 {
   public:
 
-    G4OpenInventorTransform3D (const G4Transform3D &t);
-    SbMatrix* GetSbMatrix () const;
+    G4OpenInventorTransform3D(const G4Transform3D& t);
+    SbMatrix* GetSbMatrix() const;
 
   private:
 

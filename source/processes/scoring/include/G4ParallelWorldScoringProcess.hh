@@ -33,8 +33,8 @@
 //
 // Author: M.Asai (SLAC), 2010.
 //---------------------------------------------------------------------
-#ifndef G4ParallelWorldScoringProcess_h
-#define G4ParallelWorldScoringProcess_h 1
+#ifndef G4PARALLELWORLDSCORINGPROCESS_HH
+#define G4PARALLELWORLDSCORINGPROCESS_HH
 
 #include "G4FieldTrack.hh"
 #include "G4TouchableHandle.hh"

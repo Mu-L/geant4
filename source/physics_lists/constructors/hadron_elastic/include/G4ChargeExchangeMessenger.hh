@@ -38,33 +38,33 @@
 #ifndef G4CHARGEEXCHANGEMESSENGER_HH
 #define G4CHARGEEXCHANGEMESSENGER_HH
 
-#include "G4UImessenger.hh"
-#include "G4UIdirectory.hh"
 #include "G4UIcmdWithADouble.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
+#include "G4UIdirectory.hh"
+#include "G4UImessenger.hh"
 
 class G4ChargeExchangePhysics;
 
-class G4ChargeExchangeMessenger: public G4UImessenger
+class G4ChargeExchangeMessenger : public G4UImessenger
 {
-public:
-  explicit G4ChargeExchangeMessenger(G4ChargeExchangePhysics* af);
-  ~G4ChargeExchangeMessenger() override;
+  public:
 
-  void SetNewValue(G4UIcommand* aComm, G4String aS) override;
+    explicit G4ChargeExchangeMessenger(G4ChargeExchangePhysics* af);
+    ~G4ChargeExchangeMessenger() override;
 
-  G4ChargeExchangeMessenger& operator=
-  (const G4ChargeExchangeMessenger& right) = delete;
-  G4ChargeExchangeMessenger(const G4ChargeExchangeMessenger&) = delete;
+    void SetNewValue(G4UIcommand* aComm, G4String aS) override;
 
-private:
+    G4ChargeExchangeMessenger& operator=(const G4ChargeExchangeMessenger& right) = delete;
+    G4ChargeExchangeMessenger(const G4ChargeExchangeMessenger&) = delete;
 
-  G4ChargeExchangePhysics* theB;
+  private:
 
-  G4UIcmdWithADouble* fCmd;
-  G4UIcmdWithADouble* fCmd1;
-  G4UIcmdWithADoubleAndUnit* lCmd;
-  G4UIdirectory* aDir;
+    G4ChargeExchangePhysics* theB;
+
+    G4UIcmdWithADouble* fCmd;
+    G4UIcmdWithADouble* fCmd1;
+    G4UIcmdWithADoubleAndUnit* lCmd;
+    G4UIdirectory* aDir;
 };
 
 #endif

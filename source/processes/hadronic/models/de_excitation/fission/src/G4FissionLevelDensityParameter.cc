@@ -33,6 +33,7 @@
 // J.M.Quesada (30.10.09):   retuning for IAEA spallation data
 
 #include "G4FissionLevelDensityParameter.hh"
+
 #include "G4NuclearLevelData.hh"
 
 G4FissionLevelDensityParameter::G4FissionLevelDensityParameter()
@@ -40,17 +41,24 @@ G4FissionLevelDensityParameter::G4FissionLevelDensityParameter()
   fNucData = G4NuclearLevelData::GetInstance();
 }
 
-G4FissionLevelDensityParameter::~G4FissionLevelDensityParameter()
-{}
+G4FissionLevelDensityParameter::~G4FissionLevelDensityParameter() {}
 
-G4double G4FissionLevelDensityParameter::
-LevelDensityParameter(G4int A, G4int Z, G4double U) const 
+G4double G4FissionLevelDensityParameter::LevelDensityParameter(G4int A, G4int Z, G4double U) const
 {
-  G4double EvapLDP = fNucData->GetLevelDensity(Z, A, U); 
+  G4double EvapLDP = fNucData->GetLevelDensity(Z, A, U);
 
-  if(Z >= 89)      { EvapLDP *= 1.05; }
-  else if(Z <= 85) { EvapLDP *= 1.03; }
-  else             { EvapLDP *= (1.03 + 0.005*(Z - 85)); }
+  if (Z >= 89)
+  {
+    EvapLDP *= 1.05;
+  }
+  else if (Z <= 85)
+  {
+    EvapLDP *= 1.03;
+  }
+  else
+  {
+    EvapLDP *= (1.03 + 0.005 * (Z - 85));
+  }
 
   return EvapLDP;
 }

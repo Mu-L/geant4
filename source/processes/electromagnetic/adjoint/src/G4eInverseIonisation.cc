@@ -37,8 +37,7 @@
 #include "G4VEmAdjointModel.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
-G4eInverseIonisation::G4eInverseIonisation(G4bool whichScatCase,
-                                           const G4String& process_name,
+G4eInverseIonisation::G4eInverseIonisation(G4bool whichScatCase, const G4String& process_name,
                                            G4VEmAdjointModel* aEmAdjointModel)
   : G4VAdjointReverseReaction(process_name, whichScatCase)
 {

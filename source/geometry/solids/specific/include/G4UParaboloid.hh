@@ -36,21 +36,22 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedParaboloid.h>
+#  include "G4Polyhedron.hh"
 
-#include "G4Polyhedron.hh"
+#  include <VecGeom/volumes/UnplacedParaboloid.h>
 
 /**
  * @brief G4UParaboloid is a wrapper class for G4Paraboloid
  * to make use of VecGeom Paraboloid.
+ * @ingroup geometry_solids_specific
  */
 
 class G4UParaboloid : public G4UAdapter<vecgeom::UnplacedParaboloid>
 {
-  using Shape_t = vecgeom::UnplacedParaboloid;
-  using Base_t  = G4UAdapter<vecgeom::UnplacedParaboloid>;
+    using Shape_t = vecgeom::UnplacedParaboloid;
+    using Base_t = G4UAdapter<vecgeom::UnplacedParaboloid>;
 
   public:
 
@@ -61,10 +62,7 @@ class G4UParaboloid : public G4UAdapter<vecgeom::UnplacedParaboloid>
      *  @param[in] rlo Radius at -Dz.
      *  @param[in] rhi Radius at +Dz greater than pR1.
      */
-    G4UParaboloid(const G4String& name,
-                        G4double dz,
-                        G4double rlo,
-                        G4double rhi);
+    G4UParaboloid(const G4String& name, G4double dz, G4double rlo, G4double rhi);
 
     /**
      * Default destructor.
@@ -113,10 +111,9 @@ class G4UParaboloid : public G4UAdapter<vecgeom::UnplacedParaboloid>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                           G4double& pmin, G4double& pmax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pmin,
+                           G4double& pmax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.
@@ -126,8 +123,8 @@ class G4UParaboloid : public G4UAdapter<vecgeom::UnplacedParaboloid>
     /**
      * Copy constructor and assignment operator.
      */
-    G4UParaboloid( const G4UParaboloid& source );
-    G4UParaboloid& operator=( const G4UParaboloid& source );
+    G4UParaboloid(const G4UParaboloid& source);
+    G4UParaboloid& operator=(const G4UParaboloid& source);
 };
 
 // --------------------------------------------------------------------

@@ -42,18 +42,19 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UTET 1
+#  define G4GEOM_USE_UTET 1
 #endif
 
 #if defined(G4GEOM_USE_UTET)
-  #define G4UTet G4Tet
-  #include "G4UTet.hh"
+#  define G4UTet G4Tet
+#  include "G4UTet.hh"
 #else
 
-#include "G4VSolid.hh"
+#  include "G4VSolid.hh"
 
 /**
  * @brief G4Tet is a tetrahedra solid, defined by 4 points in space.
+ * @ingroup geometry_solids_specific
  */
 
 class G4Tet : public G4VSolid
@@ -69,12 +70,8 @@ class G4Tet : public G4VSolid
      *  @param[in] p4 Point 4.
      *  @param[in] degeneracyFlag Flag indicating degeneracy of points.
      */
-    G4Tet(const G4String& pName,
-          const G4ThreeVector& anchor,
-          const G4ThreeVector& p2,
-          const G4ThreeVector& p3,
-          const G4ThreeVector& p4,
-                G4bool* degeneracyFlag = nullptr);
+    G4Tet(const G4String& pName, const G4ThreeVector& anchor, const G4ThreeVector& p2,
+          const G4ThreeVector& p3, const G4ThreeVector& p4, G4bool* degeneracyFlag = nullptr);
 
     /**
      * Destructor.
@@ -84,14 +81,9 @@ class G4Tet : public G4VSolid
     /**
      * Modifier and accessors, for the four vertices of the shape.
      */
-    void SetVertices(const G4ThreeVector& anchor,
-                     const G4ThreeVector& p1,
-                     const G4ThreeVector& p2,
-                     const G4ThreeVector& p3,
-                     G4bool* degeneracyFlag = nullptr);
-    void GetVertices(G4ThreeVector& anchor,
-                     G4ThreeVector& p1,
-                     G4ThreeVector& p2,
+    void SetVertices(const G4ThreeVector& anchor, const G4ThreeVector& p1, const G4ThreeVector& p2,
+                     const G4ThreeVector& p3, G4bool* degeneracyFlag = nullptr);
+    void GetVertices(G4ThreeVector& anchor, G4ThreeVector& p1, G4ThreeVector& p2,
                      G4ThreeVector& p3) const;
     std::vector<G4ThreeVector> GetVertices() const;
 
@@ -101,17 +93,14 @@ class G4Tet : public G4VSolid
      * tolerance
      *  @returns true if the tetrahedron is degenerate.
      */
-    G4bool CheckDegeneracy(const G4ThreeVector& p0,
-                           const G4ThreeVector& p1,
-                           const G4ThreeVector& p2,
-                           const G4ThreeVector& p3) const;
+    G4bool CheckDegeneracy(const G4ThreeVector& p0, const G4ThreeVector& p1,
+                           const G4ThreeVector& p2, const G4ThreeVector& p3) const;
 
     /**
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -132,25 +121,21 @@ class G4Tet : public G4VSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pmin, G4double& pmax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pmin,
+                           G4double& pmax) const override;
 
     /**
      * Concrete implementations of the expected query interfaces for
      * solids, as defined in the base class G4VSolid.
      */
     EInside Inside(const G4ThreeVector& p) const override;
-    G4ThreeVector SurfaceNormal( const G4ThreeVector& p) const override;
-    G4double DistanceToIn(const G4ThreeVector& p,
-                          const G4ThreeVector& v) const override;
+    G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
     G4double DistanceToIn(const G4ThreeVector& p) const override;
-    G4double DistanceToOut(const G4ThreeVector& p,
-                           const G4ThreeVector& v,
-                           const G4bool calcNorm = false,
-                                 G4bool* validNorm = nullptr,
-                                 G4ThreeVector* n = nullptr) const override;
+    G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
     G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
@@ -161,7 +146,7 @@ class G4Tet : public G4VSolid
     /**
      * Returns true as the solid has only planar faces.
      */
-    G4bool IsFaceted () const override;
+    G4bool IsFaceted() const override;
 
     /**
      * Makes a clone of the object for use in multi-treading.
@@ -190,10 +175,10 @@ class G4Tet : public G4VSolid
     /**
      * Methods for creating graphical representations (i.e. for visualisation).
      */
-    void DescribeYourselfTo (G4VGraphicsScene& scene) const override;
-    G4VisExtent GetExtent () const override;
-    G4Polyhedron* CreatePolyhedron () const override;
-    G4Polyhedron* GetPolyhedron () const override;
+    void DescribeYourselfTo(G4VGraphicsScene& scene) const override;
+    G4VisExtent GetExtent() const override;
+    G4Polyhedron* CreatePolyhedron() const override;
+    G4Polyhedron* GetPolyhedron() const override;
 
     /**
      * Fake default constructor for usage restricted to direct object
@@ -213,9 +198,7 @@ class G4Tet : public G4VSolid
     /**
      * Initialises the data members.
      */
-    void Initialize(const G4ThreeVector& p0,
-                    const G4ThreeVector& p1,
-                    const G4ThreeVector& p2,
+    void Initialize(const G4ThreeVector& p0, const G4ThreeVector& p1, const G4ThreeVector& p2,
                     const G4ThreeVector& p3);
 
     /**
@@ -227,16 +210,16 @@ class G4Tet : public G4VSolid
   private:
 
     G4double halfTolerance = 0;
-    G4double fCubicVolume = 0; // Volume
-    G4double fSurfaceArea = 0; // Surface area
+    G4double fCubicVolume = 0;  // Volume
+    G4double fSurfaceArea = 0;  // Surface area
     mutable G4bool fRebuildPolyhedron = false;
     mutable G4Polyhedron* fpPolyhedron = nullptr;
 
-    G4ThreeVector fVertex[4];   // thetrahedron vertices
-    G4ThreeVector fNormal[4];   // normals to faces
-    G4double fDist[4] = {0};    // distances from origin to faces
-    G4double fArea[4] = {0};    // face areas
-    G4ThreeVector fBmin, fBmax; // bounding box
+    G4ThreeVector fVertex[4];  // thetrahedron vertices
+    G4ThreeVector fNormal[4];  // normals to faces
+    G4double fDist[4] = {0};  // distances from origin to faces
+    G4double fArea[4] = {0};  // face areas
+    G4ThreeVector fBmin, fBmax;  // bounding box
 };
 
 #endif

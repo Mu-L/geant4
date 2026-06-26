@@ -50,6 +50,7 @@ class G4VProcess;
 class G4FastSimHitMaker
 {
   public:
+
     G4FastSimHitMaker();
     ~G4FastSimHitMaker();
 
@@ -66,6 +67,7 @@ class G4FastSimHitMaker
     inline void SetProcess(G4VProcess* proc) { fpProcess = proc; }
 
   private:
+
     /// Touchable
     G4TouchableHandle fTouchableHandle;
     /// Navigator

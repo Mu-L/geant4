@@ -25,58 +25,53 @@
 //
 //
 //
-#ifndef G4VKineticNucleon_h
-#define G4VKineticNucleon_h 1
+#ifndef G4VKINETICNUCLEON_HH
+#define G4VKINETICNUCLEON_HH
 
-#include "G4ThreeVector.hh"
 #include "G4LorentzVector.hh"
 #include "G4ParticleDefinition.hh"
+#include "G4ThreeVector.hh"
 
 class G4KineticTrackVector;
 
-class G4VKineticNucleon 
+class G4VKineticNucleon
 {
-
   public:
 
-      G4VKineticNucleon();
+    G4VKineticNucleon();
 
-      G4VKineticNucleon(const G4VKineticNucleon &right);
+    G4VKineticNucleon(const G4VKineticNucleon& right);
 
-      virtual ~G4VKineticNucleon();
+    virtual ~G4VKineticNucleon();
 
-      const G4VKineticNucleon& operator=(const G4VKineticNucleon& right);
+    const G4VKineticNucleon& operator=(const G4VKineticNucleon& right);
 
-      G4bool operator==(const G4VKineticNucleon& right) const;
+    G4bool operator==(const G4VKineticNucleon& right) const;
 
-      G4bool operator!=(const G4VKineticNucleon& right) const;
+    G4bool operator!=(const G4VKineticNucleon& right) const;
 
-      virtual G4KineticTrackVector* Decay();
+    virtual G4KineticTrackVector* Decay();
 
-      virtual const G4LorentzVector& Get4Momentum() const =0;
+    virtual const G4LorentzVector& Get4Momentum() const = 0;
 
-      virtual const G4ParticleDefinition* GetDefinition()const =0;
+    virtual const G4ParticleDefinition* GetDefinition() const = 0;
 
-      virtual const G4ThreeVector& GetPosition() const =0;
+    virtual const G4ThreeVector& GetPosition() const = 0;
 
   protected:
 
   private:
 };
 
-// Class G4VKineticNucleon 
-
-
+// Class G4VKineticNucleon
 
 inline G4KineticTrackVector* G4VKineticNucleon::Decay()
 {
   return NULL;
 }
 
-inline const G4VKineticNucleon& G4VKineticNucleon::operator=(const G4VKineticNucleon& )
+inline const G4VKineticNucleon& G4VKineticNucleon::operator=(const G4VKineticNucleon&)
 {
-	return *this;
+  return *this;
 }
 #endif
-
-

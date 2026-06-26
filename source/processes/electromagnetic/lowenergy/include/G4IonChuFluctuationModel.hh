@@ -32,15 +32,15 @@
 // File name:     IonChuFluctuationModel
 //
 // Author:        V.Ivanchenko (Vladimir.Ivanchenko@cern.ch)
-// 
+//
 // Creation date: 18 August 2000
 //
-// Modifications: 
+// Modifications:
 // 18/08/2000  V.Ivanchenko First implementation
 //
-// Class description: 
+// Class description:
 //
-// The aproximation of additional ion energy loss fluctuations 
+// The aproximation of additional ion energy loss fluctuations
 // W.K.Chu, In: Ion Beam Handbook for Material Analysis.
 // eds. J.W. Mayer and E. Rimini (Academic Press, New York, 1977).
 // Q.Yang et al., NIM B61(1991)149-155.
@@ -49,47 +49,42 @@
 
 // -------------------------------------------------------------------
 
-
-#ifndef G4IonChuFluctuationModel_h
-#define G4IonChuFluctuationModel_h 1
+#ifndef G4IONCHUFLUCTUATIONMODEL_HH
+#define G4IONCHUFLUCTUATIONMODEL_HH
 
 #include "G4VLowEnergyModel.hh"
 
 class G4IonChuFluctuationModel : public G4VLowEnergyModel
 {
-public: // With description
+  public:  // With description
 
-  explicit G4IonChuFluctuationModel(const G4String& name);
-  ~G4IonChuFluctuationModel();
+    explicit G4IonChuFluctuationModel(const G4String& name);
+    ~G4IonChuFluctuationModel();
 
-  G4double TheValue(const G4DynamicParticle* particle,
-	       	          const G4Material* material) override;
+    G4double TheValue(const G4DynamicParticle* particle, const G4Material* material) override;
 
-  G4double TheValue(const G4ParticleDefinition* aParticle,
-       		          const G4Material* material,
-                                G4double kineticEnergy) override;
+    G4double TheValue(const G4ParticleDefinition* aParticle, const G4Material* material,
+                      G4double kineticEnergy) override;
 
-  G4double HighEnergyLimit(const G4ParticleDefinition* aParticle,
-                           const G4Material* material) const override;
+    G4double HighEnergyLimit(const G4ParticleDefinition* aParticle,
+                             const G4Material* material) const override;
 
-  G4double LowEnergyLimit(const G4ParticleDefinition* aParticle,
-                          const G4Material* material) const override;
- 
-  G4double HighEnergyLimit(const G4ParticleDefinition* aParticle) const override;
+    G4double LowEnergyLimit(const G4ParticleDefinition* aParticle,
+                            const G4Material* material) const override;
 
-  G4double LowEnergyLimit(const G4ParticleDefinition* aParticle) const override;
- 
-  G4bool IsInCharge(const G4DynamicParticle* particle,
-		    const G4Material* material) const override;
+    G4double HighEnergyLimit(const G4ParticleDefinition* aParticle) const override;
 
-  G4bool IsInCharge(const G4ParticleDefinition* aParticle,
-		    const G4Material* material) const override;
+    G4double LowEnergyLimit(const G4ParticleDefinition* aParticle) const override;
 
-private:
-  G4double ChuFluctuationModel(const G4Material* material, 
-                                     G4double kineticEnergy,
-                                     G4double particleMass) const;
+    G4bool IsInCharge(const G4DynamicParticle* particle, const G4Material* material) const override;
 
+    G4bool IsInCharge(const G4ParticleDefinition* aParticle,
+                      const G4Material* material) const override;
+
+  private:
+
+    G4double ChuFluctuationModel(const G4Material* material, G4double kineticEnergy,
+                                 G4double particleMass) const;
 };
 
 #endif

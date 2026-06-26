@@ -62,23 +62,25 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_USPHERE 1
+#  define G4GEOM_USE_USPHERE 1
 #endif
 
 #if defined(G4GEOM_USE_USPHERE)
-  #define G4USphere G4Sphere
-  #include "G4USphere.hh"
+#  define G4USphere G4Sphere
+#  include "G4USphere.hh"
 #else
 
-#include <CLHEP/Units/PhysicalConstants.h>
-#include "G4CSGSolid.hh"
-#include "G4Polyhedron.hh"
+#  include "G4CSGSolid.hh"
+#  include "G4Polyhedron.hh"
+
+#  include <CLHEP/Units/PhysicalConstants.h>
 
 class G4VisExtent;
 
 /**
  * @brief G4Sphere is, in the general case, a section of a spherical shell,
  * between specified phi and theta angles.
+ * @ingroup geometry_solids_csg
  * The phi and theta segments are described by a starting angle and the +ve
  * delta angle for the shape. If the delta angle is >=2*pi, or >=pi the shape
  * is treated as continuous in phi or theta respectively.
@@ -100,10 +102,8 @@ class G4Sphere : public G4CSGSolid
      *  @param[in] pSTheta Starting Theta angle of the segment in radians.
      *  @param[in] pDTheta Delta Theta angle of the segment in radians.
      */
-    G4Sphere(const G4String& pName,
-                   G4double pRmin, G4double pRmax,
-                   G4double pSPhi, G4double pDPhi,
-                   G4double pSTheta, G4double pDTheta);
+    G4Sphere(const G4String& pName, G4double pRmin, G4double pRmax, G4double pSPhi, G4double pDPhi,
+             G4double pSTheta, G4double pDTheta);
 
     /**
      * Default destructor.
@@ -113,28 +113,28 @@ class G4Sphere : public G4CSGSolid
     /**
      * Accessors.
      */
-    inline G4double GetInnerRadius    () const;
-    inline G4double GetOuterRadius    () const;
-    inline G4double GetStartPhiAngle  () const;
-    inline G4double GetDeltaPhiAngle  () const;
+    inline G4double GetInnerRadius() const;
+    inline G4double GetOuterRadius() const;
+    inline G4double GetStartPhiAngle() const;
+    inline G4double GetDeltaPhiAngle() const;
     inline G4double GetStartThetaAngle() const;
     inline G4double GetDeltaThetaAngle() const;
-    inline G4double GetSinStartPhi    () const;
-    inline G4double GetCosStartPhi    () const;
-    inline G4double GetSinEndPhi      () const;
-    inline G4double GetCosEndPhi      () const;
-    inline G4double GetSinStartTheta  () const;
-    inline G4double GetCosStartTheta  () const;
-    inline G4double GetSinEndTheta    () const;
-    inline G4double GetCosEndTheta    () const;
+    inline G4double GetSinStartPhi() const;
+    inline G4double GetCosStartPhi() const;
+    inline G4double GetSinEndPhi() const;
+    inline G4double GetCosEndPhi() const;
+    inline G4double GetSinStartTheta() const;
+    inline G4double GetCosStartTheta() const;
+    inline G4double GetSinEndTheta() const;
+    inline G4double GetCosEndTheta() const;
 
     /**
      * Modifiers.
      */
-    inline void SetInnerRadius    (G4double newRMin);
-    inline void SetOuterRadius    (G4double newRmax);
-    inline void SetStartPhiAngle  (G4double newSphi, G4bool trig = true);
-    inline void SetDeltaPhiAngle  (G4double newDphi);
+    inline void SetInnerRadius(G4double newRMin);
+    inline void SetOuterRadius(G4double newRmax);
+    inline void SetStartPhiAngle(G4double newSphi, G4bool trig = true);
+    inline void SetDeltaPhiAngle(G4double newDphi);
     inline void SetStartThetaAngle(G4double newSTheta);
     inline void SetDeltaThetaAngle(G4double newDTheta);
 
@@ -149,8 +149,7 @@ class G4Sphere : public G4CSGSolid
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -170,25 +169,21 @@ class G4Sphere : public G4CSGSolid
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pmin, G4double& pmax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pmin,
+                           G4double& pmax) const override;
 
     /**
      * Concrete implementations of the expected query interfaces for
      * solids, as defined in the base class G4VSolid.
      */
     EInside Inside(const G4ThreeVector& p) const override;
-    G4ThreeVector SurfaceNormal( const G4ThreeVector& p) const override;
-    G4double DistanceToIn(const G4ThreeVector& p,
-                          const G4ThreeVector& v) const override;
+    G4ThreeVector SurfaceNormal(const G4ThreeVector& p) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
     G4double DistanceToIn(const G4ThreeVector& p) const override;
-    G4double DistanceToOut(const G4ThreeVector& p,
-                           const G4ThreeVector& v,
-                           const G4bool calcNorm = false,
-                                 G4bool* validNorm = nullptr,
-                                 G4ThreeVector* n = nullptr) const override;
+    G4double DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                           const G4bool calcNorm = false, G4bool* validNorm = nullptr,
+                           G4ThreeVector* n = nullptr) const override;
     G4double DistanceToOut(const G4ThreeVector& p) const override;
 
     /**
@@ -263,28 +258,27 @@ class G4Sphere : public G4CSGSolid
   private:
 
     /** Radial and angular tolerances. */
-    G4double fRminTolerance, fRmaxTolerance, kAngTolerance,
-             kRadTolerance, fEpsilon = 2.e-11;
+    G4double fRminTolerance, fRmaxTolerance, kAngTolerance, kRadTolerance, fEpsilon = 2.e-11;
 
     /** Radial and angular dimensions. */
     G4double fRmin, fRmax, fSPhi, fDPhi, fSTheta, fDTheta;
 
     /** Cached trigonometric values for Phi angle. */
-    G4double sinCPhi, cosCPhi, cosHDPhi, cosHDPhiOT, cosHDPhiIT,
-             sinSPhi, cosSPhi, sinEPhi, cosEPhi, hDPhi, cPhi, ePhi;
+    G4double sinCPhi, cosCPhi, cosHDPhi, cosHDPhiOT, cosHDPhiIT, sinSPhi, cosSPhi, sinEPhi, cosEPhi,
+      hDPhi, cPhi, ePhi;
 
     /** Cached trigonometric values for Theta angle. */
-    G4double sinSTheta, cosSTheta, sinETheta, cosETheta,
-             tanSTheta, tanSTheta2, tanETheta, tanETheta2, eTheta;
+    G4double sinSTheta, cosSTheta, sinETheta, cosETheta, tanSTheta, tanSTheta2, tanETheta,
+      tanETheta2, eTheta;
 
     /** Flags for identification of section, shell or full sphere. */
-    G4bool fFullPhiSphere=false, fFullThetaSphere=false, fFullSphere=true;
+    G4bool fFullPhiSphere = false, fFullThetaSphere = false, fFullSphere = true;
 
     /** Cached half tolerance values. */
     G4double halfCarTolerance, halfAngTolerance;
 };
 
-#include "G4Sphere.icc"
+#  include "G4Sphere.icc"
 
 #endif
 

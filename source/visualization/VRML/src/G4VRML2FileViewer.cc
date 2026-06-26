@@ -28,26 +28,26 @@
 // G4VRML2FileViewer.cc
 // Satoshi Tanaka & Yasuhide Sawada
 
-//#define DEBUG_FR_VIEW
+// #define DEBUG_FR_VIEW
+
+#include "G4VRML2FileViewer.hh"
+
+#include "G4Scene.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4VRML2File.hh"
+#include "G4VRML2FileSceneHandler.hh"
+#include "G4VisManager.hh"
+#include "G4ios.hh"
 
 #include <cmath>
 
-#include "G4VisManager.hh"
-#include "G4Scene.hh"
-#include "G4VRML2FileViewer.hh"
-#include "G4VRML2FileSceneHandler.hh"
-#include "G4VRML2File.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4ios.hh"
-
-G4VRML2FileViewer::G4VRML2FileViewer(G4VRML2FileSceneHandler& sceneHandler,
-                                     const G4String& name)
-  : G4VViewer(sceneHandler, sceneHandler.IncrementViewCount(), name)
-  , fSceneHandler(sceneHandler)
-  , fDest(sceneHandler.fDest)
+G4VRML2FileViewer::G4VRML2FileViewer(G4VRML2FileSceneHandler& sceneHandler, const G4String& name)
+  : G4VViewer(sceneHandler, sceneHandler.IncrementViewCount(), name),
+    fSceneHandler(sceneHandler),
+    fDest(sceneHandler.fDest)
 {
   fViewHalfAngle = 30. * deg;
-  fsin_VHA       = std::sin(fViewHalfAngle);
+  fsin_VHA = std::sin(fViewHalfAngle);
 }
 
 G4VRML2FileViewer::~G4VRML2FileViewer() {}
@@ -55,7 +55,7 @@ G4VRML2FileViewer::~G4VRML2FileViewer() {}
 void G4VRML2FileViewer::SetView()
 {
 #if defined DEBUG_FR_VIEW
-  if(G4VisManager::GetVerbosity() >= G4VisManager::errors)
+  if (G4VisManager::GetVerbosity() >= G4VisManager::errors)
     G4cout << "***** G4VRML2FileViewer::SetView(): No effects" << G4endl;
 #endif
 
@@ -66,7 +66,7 @@ void G4VRML2FileViewer::SetView()
 void G4VRML2FileViewer::DrawView()
 {
 #if defined DEBUG_FR_VIEW
-  if(G4VisManager::GetVerbosity() >= G4VisManager::errors)
+  if (G4VisManager::GetVerbosity() >= G4VisManager::errors)
     G4cout << "***** G4VRML2FileViewer::DrawView()" << G4endl;
 #endif
 
@@ -84,10 +84,10 @@ void G4VRML2FileViewer::DrawView()
 void G4VRML2FileViewer::ClearView(void)
 {
 #if defined DEBUG_FR_VIEW
-  if(G4VisManager::GetVerbosity() >= G4VisManager::errors)
+  if (G4VisManager::GetVerbosity() >= G4VisManager::errors)
     G4cout << "***** G4VRML2File1View::ClearView()" << G4endl;
 #endif
-  if(fSceneHandler.fFlagDestOpen)
+  if (fSceneHandler.fFlagDestOpen)
   {
     fSceneHandler.fDest.close();
     // Re-open with same filename...
@@ -102,7 +102,7 @@ void G4VRML2FileViewer::ClearView(void)
 void G4VRML2FileViewer::ShowView(void)
 {
 #if defined DEBUG_FR_VIEW
-  if(G4VisManager::GetVerbosity() >= G4VisManager::errors)
+  if (G4VisManager::GetVerbosity() >= G4VisManager::errors)
     G4cout << "***** G4VRML2FileViewer::ShowView()" << G4endl;
 #endif
   fSceneHandler.VRMLEndModeling();
@@ -111,7 +111,7 @@ void G4VRML2FileViewer::ShowView(void)
 void G4VRML2FileViewer::FinishView(void)
 {
 #if defined DEBUG_FR_VIEW
-  if(G4VisManager::GetVerbosity() >= G4VisManager::errors)
+  if (G4VisManager::GetVerbosity() >= G4VisManager::errors)
     G4cout << "***** G4VRML2FileViewer::FinishView(): No effects" << G4endl;
 #endif
 }
@@ -123,25 +123,23 @@ void G4VRML2FileViewer::SendViewParameters()
   // later due to user interaction via visualization system's GUI.)
 
 #if defined DEBUG_FR_VIEW
-  if(G4VisManager::GetVerbosity() >= G4VisManager::errors)
+  if (G4VisManager::GetVerbosity() >= G4VisManager::errors)
     G4cout << "***** G4VRML2FileViewer::SendViewParameters()\n";
 #endif
 
   // error recovery
-  if(fsin_VHA < 1.0e-6)
+  if (fsin_VHA < 1.0e-6)
   {
     return;
   }
 
   // camera distance
-  G4double extent_radius =
-    fSceneHandler.GetScene()->GetExtent().GetExtentRadius();
+  G4double extent_radius = fSceneHandler.GetScene()->GetExtent().GetExtentRadius();
   G4double camera_distance = extent_radius / fsin_VHA;
 
   // camera position on Z axis
   const G4Point3D& target_point =
-    fSceneHandler.GetScene()->GetStandardTargetPoint() +
-    fVP.GetCurrentTargetPoint();
+    fSceneHandler.GetScene()->GetStandardTargetPoint() + fVP.GetCurrentTargetPoint();
   G4double E_z = target_point.z() + camera_distance;
   G4Point3D E(0.0, 0.0, E_z);
 

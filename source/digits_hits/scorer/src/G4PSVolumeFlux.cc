@@ -36,29 +36,28 @@
 //
 #include "G4PSVolumeFlux.hh"
 
-#include "G4SystemOfUnits.hh"
-#include "G4StepStatus.hh"
-#include "G4Track.hh"
-#include "G4VSolid.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4VPVParameterisation.hh"
-#include "G4UnitsTable.hh"
 #include "G4GeometryTolerance.hh"
+#include "G4StepStatus.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4Track.hh"
+#include "G4UnitsTable.hh"
+#include "G4VPVParameterisation.hh"
+#include "G4VPhysicalVolume.hh"
 #include "G4VScoreHistFiller.hh"
+#include "G4VSolid.hh"
 
 G4PSVolumeFlux::G4PSVolumeFlux(const G4String& name, G4int direction, G4int depth)
-  : G4VPrimitivePlotter(name, depth)
-  , fDirection(direction)
+  : G4VPrimitivePlotter(name, depth), fDirection(direction)
 {}
 
 G4bool G4PSVolumeFlux::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 {
-  G4StepPoint* preStepPoint  = aStep->GetPreStepPoint();
+  G4StepPoint* preStepPoint = aStep->GetPreStepPoint();
   G4StepPoint* postStepPoint = aStep->GetPostStepPoint();
   G4StepPoint* thisStepPoint = nullptr;
-  if(fDirection == 1)  // Score only the inward particle
+  if (fDirection == 1)  // Score only the inward particle
   {
-    if(preStepPoint->GetStepStatus() == fGeomBoundary)
+    if (preStepPoint->GetStepStatus() == fGeomBoundary)
     {
       thisStepPoint = preStepPoint;
     }
@@ -67,9 +66,9 @@ G4bool G4PSVolumeFlux::ProcessHits(G4Step* aStep, G4TouchableHistory*)
       return false;
     }
   }
-  else if(fDirection == 2)  // Score only the outward particle
+  else if (fDirection == 2)  // Score only the outward particle
   {
-    if(postStepPoint->GetStepStatus() == fGeomBoundary)
+    if (postStepPoint->GetStepStatus() == fGeomBoundary)
     {
       thisStepPoint = postStepPoint;
     }
@@ -81,15 +80,15 @@ G4bool G4PSVolumeFlux::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 
   G4double flux = preStepPoint->GetWeight();
 
-  if(divare || divcos)
+  if (divare || divcos)
   {
-    G4VPhysicalVolume* physVol       = preStepPoint->GetPhysicalVolume();
+    G4VPhysicalVolume* physVol = preStepPoint->GetPhysicalVolume();
     G4VPVParameterisation* physParam = physVol->GetParameterisation();
-    G4VSolid* solid                  = nullptr;
-    if(physParam != nullptr)
+    G4VSolid* solid = nullptr;
+    if (physParam != nullptr)
     {  // for parameterized volume
-      auto idx = ((G4TouchableHistory*) (preStepPoint->GetTouchable()))
-                   ->GetReplicaNumber(indexDepth);
+      auto idx =
+        ((G4TouchableHistory*)(preStepPoint->GetTouchable()))->GetReplicaNumber(indexDepth);
       solid = physParam->ComputeSolid(idx, physVol);
       solid->ComputeDimensions(physParam, idx, physVol);
     }
@@ -98,38 +97,36 @@ G4bool G4PSVolumeFlux::ProcessHits(G4Step* aStep, G4TouchableHistory*)
       solid = physVol->GetLogicalVolume()->GetSolid();
     }
 
-    if(divare)
+    if (divare)
     {
       flux /= solid->GetSurfaceArea();
     }
 
-    if(divcos)
+    if (divcos)
     {
       G4TouchableHandle theTouchable = thisStepPoint->GetTouchableHandle();
-      G4ThreeVector pdirection       = thisStepPoint->GetMomentumDirection();
+      G4ThreeVector pdirection = thisStepPoint->GetMomentumDirection();
       G4ThreeVector localdir =
         theTouchable->GetHistory()->GetTopTransform().TransformAxis(pdirection);
       G4ThreeVector globalPos = thisStepPoint->GetPosition();
       G4ThreeVector localPos =
         theTouchable->GetHistory()->GetTopTransform().TransformPoint(globalPos);
       G4ThreeVector surfNormal = solid->SurfaceNormal(localPos);
-      G4double cosT            = surfNormal.cosTheta(localdir);
-      if(cosT != 0.)
-        flux /= std::abs(cosT);
+      G4double cosT = surfNormal.cosTheta(localdir);
+      if (cosT != 0.) flux /= std::abs(cosT);
     }
   }
 
   G4int index = GetIndex(aStep);
   EvtMap->add(index, flux);
 
-  if(!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
+  if (!hitIDMap.empty() && hitIDMap.find(index) != hitIDMap.cend())
   {
     auto filler = G4VScoreHistFiller::Instance();
-    if(filler == nullptr)
+    if (filler == nullptr)
     {
-      G4Exception(
-        "G4PSVolumeFlux::ProcessHits", "SCORER0123", JustWarning,
-        "G4TScoreHistFiller is not instantiated!! Histogram is not filled.");
+      G4Exception("G4PSVolumeFlux::ProcessHits", "SCORER0123", JustWarning,
+                  "G4TScoreHistFiller is not instantiated!! Histogram is not filled.");
     }
     else
     {
@@ -142,23 +139,23 @@ G4bool G4PSVolumeFlux::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 
 void G4PSVolumeFlux::Initialize(G4HCofThisEvent* HCE)
 {
-  if(HCID < 0)
-    HCID = GetCollectionID(0);
-  EvtMap = new G4THitsMap<G4double>(GetMultiFunctionalDetector()->GetName(),
-                                    GetName());
-  HCE->AddHitsCollection(HCID, (G4VHitsCollection*) EvtMap);
+  if (HCID < 0) HCID = GetCollectionID(0);
+  EvtMap = new G4THitsMap<G4double>(GetMultiFunctionalDetector()->GetName(), GetName());
+  HCE->AddHitsCollection(HCID, (G4VHitsCollection*)EvtMap);
 }
 
-void G4PSVolumeFlux::clear() { EvtMap->clear(); }
+void G4PSVolumeFlux::clear()
+{
+  EvtMap->clear();
+}
 
 void G4PSVolumeFlux::PrintAll()
 {
   G4cout << " MultiFunctionalDet  " << detector->GetName() << G4endl;
   G4cout << " PrimitiveScorer" << GetName() << G4endl;
   G4cout << " Number of entries " << EvtMap->entries() << G4endl;
-  for(const auto& [copy, flux] : *(EvtMap->GetMap()))
+  for (const auto& [copy, flux] : *(EvtMap->GetMap()))
   {
-    G4cout << "  copy no.: " << copy << "  flux  : " << *(flux)
-           << G4endl;
+    G4cout << "  copy no.: " << copy << "  flux  : " << *(flux) << G4endl;
   }
 }

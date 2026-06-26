@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4AntiDMesonZero_h
-#define G4AntiDMesonZero_h 1
+#ifndef G4ANTIDMESONZERO_HH
+#define G4ANTIDMESONZERO_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4AntiDMesonZero : public G4ParticleDefinition
 {
   public:
+
     static G4AntiDMesonZero* Definition();
     static G4AntiDMesonZero* AntiDMesonZeroDefinition();
     static G4AntiDMesonZero* AntiDMesonZero();
 
   private:
+
     G4AntiDMesonZero() {}
     ~G4AntiDMesonZero() override = default;
 

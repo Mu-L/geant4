@@ -37,7 +37,7 @@
 // Modified by J.L.Chuma, 08-Jul-97 to implement the Nucleus changes
 // Adding a registry for memory management of hadronic models, HPW 22-Mar-99
 // 23-Jan-2009 V.Ivanchenko move constructor and destructor to the body
-//                          and reorder methods in the header 
+//                          and reorder methods in the header
 // 29-Jun-2009 V.Ivanchenko add SampleInvariantT method
 // 29-Aug-2009 V.Ivanchenko moved G4ReactionDynamics to G4InelasticInteraction,
 //                          add const pointers, and added recoilEnergyThreshold
@@ -48,161 +48,147 @@
 // If you want to implement a new way of producing a final state, please,
 //  inherit from here.
 // Class Description - End
- 
-#ifndef G4HadronicInteraction_h
-#define G4HadronicInteraction_h 1
- 
+
+#ifndef G4HADRONICINTERACTION_HH
+#define G4HADRONICINTERACTION_HH
+
 #include "G4HadFinalState.hh"
+#include "G4HadProjectile.hh"
 #include "G4Material.hh"
 #include "G4Nucleus.hh"
 #include "G4Track.hh"
-#include "G4HadProjectile.hh"
 
 class G4HadronicInteractionRegistry;
 
 class G4HadronicInteraction
 {
-public: // With description
-    
-  explicit G4HadronicInteraction(const G4String& modelName = "HadronicModel");
-    
-  virtual ~G4HadronicInteraction();
-    
-  virtual G4HadFinalState *ApplyYourself(const G4HadProjectile &aTrack, 
-					 G4Nucleus & targetNucleus );
-  // The interface to implement for final state production code.
+  public:  // With description
 
-  virtual G4double SampleInvariantT(const G4ParticleDefinition* p, 
-				    G4double plab,
-				    G4int Z, G4int A);
-  // The interface to implement sampling of scattering or change exchange
-     
-  virtual G4bool IsApplicable(const G4HadProjectile & aTrack, 
-  			      G4Nucleus & targetNucleus);
- 
-  inline G4double GetMinEnergy() const
-  { return theMinEnergy; }
-    
-  G4double GetMinEnergy( const G4Material *aMaterial,
-			 const G4Element *anElement ) const;
-   
-  inline void SetMinEnergy( G4double anEnergy )
-  { theMinEnergy = anEnergy; }
-    
-  void SetMinEnergy( G4double anEnergy, const G4Element *anElement );
-    
-  void SetMinEnergy( G4double anEnergy, const G4Material *aMaterial );
-    
-  inline G4double GetMaxEnergy() const
-  { return theMaxEnergy; }
-    
-  G4double GetMaxEnergy( const G4Material *aMaterial,
-			 const G4Element *anElement ) const;
-    
-  inline void SetMaxEnergy( const G4double anEnergy )
-  { theMaxEnergy = anEnergy; }
-    
-  void SetMaxEnergy( G4double anEnergy, const G4Element *anElement );
-    
-  void SetMaxEnergy( G4double anEnergy, const G4Material *aMaterial );
+    explicit G4HadronicInteraction(const G4String& modelName = "HadronicModel");
 
-  inline G4int GetVerboseLevel() const
-  { return verboseLevel; }
+    virtual ~G4HadronicInteraction();
 
-  inline void SetVerboseLevel( G4int value )
-  { verboseLevel = value; }
+    virtual G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& targetNucleus);
+    // The interface to implement for final state production code.
 
-  inline const G4String& GetModelName() const
-  { return theModelName; }
+    virtual G4double SampleInvariantT(const G4ParticleDefinition* p, G4double plab, G4int Z,
+                                      G4int A);
+    // The interface to implement sampling of scattering or change exchange
 
-  void DeActivateFor(const G4Material* aMaterial);
- 
-  inline void ActivateFor( const G4Material *aMaterial ) 
-  { 
-    Block(); 
-    SetMaxEnergy(GetMaxEnergy(), aMaterial);
-    SetMinEnergy(GetMinEnergy(), aMaterial);
-  }
+    virtual G4bool IsApplicable(const G4HadProjectile& aTrack, G4Nucleus& targetNucleus);
 
-  void DeActivateFor( const G4Element *anElement ); 
-  inline void ActivateFor( const G4Element *anElement )
-  { 
-    Block(); 
-    SetMaxEnergy(GetMaxEnergy(), anElement);
-    SetMinEnergy(GetMinEnergy(), anElement);
-  }
+    inline G4double GetMinEnergy() const { return theMinEnergy; }
 
-  G4bool IsBlocked( const G4Material *aMaterial ) const;
-  G4bool IsBlocked( const G4Element *anElement) const;
+    G4double GetMinEnergy(const G4Material* aMaterial, const G4Element* anElement) const;
 
-  inline void SetRecoilEnergyThreshold(G4double val) 
-  { recoilEnergyThreshold = val; }
+    inline void SetMinEnergy(G4double anEnergy) { theMinEnergy = anEnergy; }
 
-  G4double GetRecoilEnergyThreshold() const 
-  { return recoilEnergyThreshold;}
+    void SetMinEnergy(G4double anEnergy, const G4Element* anElement);
 
-  virtual const std::pair<G4double, G4double> GetFatalEnergyCheckLevels() const;
+    void SetMinEnergy(G4double anEnergy, const G4Material* aMaterial);
 
-  virtual std::pair<G4double, G4double> GetEnergyMomentumCheckLevels() const;
+    inline G4double GetMaxEnergy() const { return theMaxEnergy; }
 
-  inline void 
-  SetEnergyMomentumCheckLevels(G4double relativeLevel, G4double absoluteLevel)
-  { epCheckLevels.first = relativeLevel;
-    epCheckLevels.second = absoluteLevel; }
+    G4double GetMaxEnergy(const G4Material* aMaterial, const G4Element* anElement) const;
 
-  virtual void ModelDescription(std::ostream& outFile) const ; //=0;
+    inline void SetMaxEnergy(const G4double anEnergy) { theMaxEnergy = anEnergy; }
 
-  // Initialisation before run
-  virtual void BuildPhysicsTable(const G4ParticleDefinition&);
-  virtual void InitialiseModel();
+    void SetMaxEnergy(G4double anEnergy, const G4Element* anElement);
 
-  G4HadronicInteraction(const G4HadronicInteraction &right ) = delete;
-  const G4HadronicInteraction& operator=(const G4HadronicInteraction &right) = delete;
-  G4bool operator==(const G4HadronicInteraction &right ) const = delete;
-  G4bool operator!=(const G4HadronicInteraction &right ) const = delete;
+    void SetMaxEnergy(G4double anEnergy, const G4Material* aMaterial);
 
-protected:
+    inline G4int GetVerboseLevel() const { return verboseLevel; }
 
-  inline void SetModelName(const G4String& nam) 
-  { theModelName = nam; }
+    inline void SetVerboseLevel(G4int value) { verboseLevel = value; }
 
-  inline G4bool IsBlocked() const { return isBlocked;}
-  inline void Block() { isBlocked = true; }
-    
-  G4HadFinalState theParticleChange;
-  // the G4HadFinalState object which is modified and returned
-  // by address by the ApplyYourself method,
-  // (instead of aParticleChange as found in G4VProcess)
-    
-  G4int verboseLevel;
-  // control flag for output messages
-  // 0: silent
-  // 1: warning messages
-  // 2: more
-  // (instead of verboseLevel as found in G4VProcess)
+    inline const G4String& GetModelName() const { return theModelName; }
 
-  // these two have global validity energy range    
-  G4double theMinEnergy;
-  G4double theMaxEnergy;
+    void DeActivateFor(const G4Material* aMaterial);
 
-  G4bool isBlocked;
+    inline void ActivateFor(const G4Material* aMaterial)
+    {
+      Block();
+      SetMaxEnergy(GetMaxEnergy(), aMaterial);
+      SetMinEnergy(GetMinEnergy(), aMaterial);
+    }
 
-private:       
-    
-  G4HadronicInteractionRegistry* registry;
+    void DeActivateFor(const G4Element* anElement);
+    inline void ActivateFor(const G4Element* anElement)
+    {
+      Block();
+      SetMaxEnergy(GetMaxEnergy(), anElement);
+      SetMinEnergy(GetMinEnergy(), anElement);
+    }
 
-  G4double recoilEnergyThreshold;
+    G4bool IsBlocked(const G4Material* aMaterial) const;
+    G4bool IsBlocked(const G4Element* anElement) const;
 
-  G4String theModelName;
+    inline void SetRecoilEnergyThreshold(G4double val) { recoilEnergyThreshold = val; }
 
-  std::pair<G4double, G4double> epCheckLevels;
+    G4double GetRecoilEnergyThreshold() const { return recoilEnergyThreshold; }
 
-  std::vector<std::pair<G4double, const G4Material *> > theMinEnergyList;
-  std::vector<std::pair<G4double, const G4Material *> > theMaxEnergyList;
-  std::vector<std::pair<G4double, const G4Element *> > theMinEnergyListElements;
-  std::vector<std::pair<G4double, const G4Element *> > theMaxEnergyListElements;
-  std::vector<const G4Material *> theBlockedList;
-  std::vector<const G4Element *> theBlockedListElements;
+    virtual const std::pair<G4double, G4double> GetFatalEnergyCheckLevels() const;
+
+    virtual std::pair<G4double, G4double> GetEnergyMomentumCheckLevels() const;
+
+    inline void SetEnergyMomentumCheckLevels(G4double relativeLevel, G4double absoluteLevel)
+    {
+      epCheckLevels.first = relativeLevel;
+      epCheckLevels.second = absoluteLevel;
+    }
+
+    virtual void ModelDescription(std::ostream& outFile) const;  //=0;
+
+    // Initialisation before run
+    virtual void BuildPhysicsTable(const G4ParticleDefinition&);
+    virtual void InitialiseModel();
+
+    G4HadronicInteraction(const G4HadronicInteraction& right) = delete;
+    const G4HadronicInteraction& operator=(const G4HadronicInteraction& right) = delete;
+    G4bool operator==(const G4HadronicInteraction& right) const = delete;
+    G4bool operator!=(const G4HadronicInteraction& right) const = delete;
+
+  protected:
+
+    inline void SetModelName(const G4String& nam) { theModelName = nam; }
+
+    inline G4bool IsBlocked() const { return isBlocked; }
+    inline void Block() { isBlocked = true; }
+
+    G4HadFinalState theParticleChange;
+    // the G4HadFinalState object which is modified and returned
+    // by address by the ApplyYourself method,
+    // (instead of aParticleChange as found in G4VProcess)
+
+    G4int verboseLevel;
+    // control flag for output messages
+    // 0: silent
+    // 1: warning messages
+    // 2: more
+    // (instead of verboseLevel as found in G4VProcess)
+
+    // these two have global validity energy range
+    G4double theMinEnergy;
+    G4double theMaxEnergy;
+
+    G4bool isBlocked;
+
+  private:
+
+    G4HadronicInteractionRegistry* registry;
+
+    G4double recoilEnergyThreshold;
+
+    G4String theModelName;
+
+    std::pair<G4double, G4double> epCheckLevels;
+
+    std::vector<std::pair<G4double, const G4Material*>> theMinEnergyList;
+    std::vector<std::pair<G4double, const G4Material*>> theMaxEnergyList;
+    std::vector<std::pair<G4double, const G4Element*>> theMinEnergyListElements;
+    std::vector<std::pair<G4double, const G4Element*>> theMaxEnergyListElements;
+    std::vector<const G4Material*> theBlockedList;
+    std::vector<const G4Element*> theBlockedListElements;
 };
- 
+
 #endif

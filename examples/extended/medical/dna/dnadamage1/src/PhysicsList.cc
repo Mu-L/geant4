@@ -29,14 +29,9 @@
 #include "PhysicsList.hh"
 
 #include "G4EmDNAChemistry_option2.hh"
-#include "G4EmDNAPhysics.hh"
-#include "G4EmDNAPhysics_option1.hh"
 #include "G4EmDNAPhysics_option2.hh"
-#include "G4EmDNAPhysics_option3.hh"
 #include "G4EmDNAPhysics_option4.hh"
-#include "G4EmDNAPhysics_option5.hh"
 #include "G4EmDNAPhysics_option6.hh"
-#include "G4EmDNAPhysics_option7.hh"
 #include "G4EmDNAPhysics_option8.hh"
 #include "G4PhysicsConstructorRegistry.hh"
 #include "G4SystemOfUnits.hh"
@@ -47,7 +42,7 @@ PhysicsList::PhysicsList()
 {
   SetDefaultCutValue(1.0 * nanometer);
   SetVerboseLevel(1);
-  RegisterConstructor("G4EmDNAPhysics");
+  RegisterConstructor("G4EmDNAPhysics_option2");
   RegisterConstructor("G4EmDNAChemistry_option2");
   // This example works only with G4EmDNAChemistry_option2
   G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(100 * eV, 1 * GeV);
@@ -91,36 +86,16 @@ void PhysicsList::RegisterConstructor(const G4String& name)
     G4cout << "===== Register constructor ==== " << name << G4endl;
   }
 
-  if (name == "G4EmDNAPhysics") {
-    fDNAPhysicsList.reset(new G4EmDNAPhysics(verboseLevel));
-    fPhysDNAName = name;
-  }
-  else if (name == "G4EmDNAPhysics_option1") {
-    fDNAPhysicsList.reset(new G4EmDNAPhysics_option1(verboseLevel));
-    fPhysDNAName = name;
-  }
-  else if (name == "G4EmDNAPhysics_option2") {
+  if (name == "G4EmDNAPhysics_option2") {
     fDNAPhysicsList.reset(new G4EmDNAPhysics_option2(verboseLevel));
-    fPhysDNAName = name;
-  }
-  else if (name == "G4EmDNAPhysics_option3") {
-    fDNAPhysicsList.reset(new G4EmDNAPhysics_option3(verboseLevel));
     fPhysDNAName = name;
   }
   else if (name == "G4EmDNAPhysics_option4") {
     fDNAPhysicsList.reset(new G4EmDNAPhysics_option4(verboseLevel));
     fPhysDNAName = name;
   }
-  else if (name == "G4EmDNAPhysics_option5") {
-    fDNAPhysicsList.reset(new G4EmDNAPhysics_option5(verboseLevel));
-    fPhysDNAName = name;
-  }
   else if (name == "G4EmDNAPhysics_option6") {
     fDNAPhysicsList.reset(new G4EmDNAPhysics_option6(verboseLevel));
-    fPhysDNAName = name;
-  }
-  else if (name == "G4EmDNAPhysics_option7") {
-    fDNAPhysicsList.reset(new G4EmDNAPhysics_option7(verboseLevel));
     fPhysDNAName = name;
   }
   else if (name == "G4EmDNAPhysics_option8") {

@@ -44,8 +44,8 @@
 
 // Author: M.Asai (SLAC), 17 April 2013
 // --------------------------------------------------------------------
-#ifndef G4VUserActionInitialization_hh
-#define G4VUserActionInitialization_hh 1
+#ifndef G4VUSERACTIONINITIALIZATION_HH
+#define G4VUSERACTIONINITIALIZATION_HH
 
 class G4VUserPrimaryGeneratorAction;
 class G4UserRunAction;
@@ -58,6 +58,7 @@ class G4VSteppingVerbose;
 class G4VUserActionInitialization
 {
   public:
+
     G4VUserActionInitialization() = default;
     virtual ~G4VUserActionInitialization() = default;
 
@@ -81,6 +82,7 @@ class G4VUserActionInitialization
     virtual G4VSteppingVerbose* InitializeSteppingVerbose() const { return nullptr; }
 
   protected:
+
     // These methods should be used to define user's action classes.
     void SetUserAction(G4VUserPrimaryGeneratorAction*) const;
     void SetUserAction(G4UserRunAction*) const;

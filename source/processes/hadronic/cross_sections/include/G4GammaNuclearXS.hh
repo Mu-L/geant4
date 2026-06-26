@@ -37,17 +37,18 @@
 //
 // Class Description:
 // This is a base class for gamma-nuclear cross section based on
-// data files from IAEA Evaluated Photonuclear Data Library (IAEA/PD-2019) 
+// data files from IAEA Evaluated Photonuclear Data Library (IAEA/PD-2019)
 // https://www-nds.iaea.org/photonuclear/
 // Database review:
 // https://www.sciencedirect.com/science/article/pii/S0090375219300699?via%3Dihub
 //
 
-#ifndef G4GammaNuclearXS_h
-#define G4GammaNuclearXS_h 1
+#ifndef G4GAMMANUCLEARXS_HH
+#define G4GAMMANUCLEARXS_HH
 
 #include "G4VCrossSectionDataSet.hh"
 #include "globals.hh"
+
 #include <vector>
 
 class G4DynamicParticle;
@@ -59,74 +60,70 @@ class G4PhotoNuclearCrossSection;
 
 class G4GammaNuclearXS final : public G4VCrossSectionDataSet
 {
-public: 
+  public:
 
-  G4GammaNuclearXS();
+    G4GammaNuclearXS();
 
-  ~G4GammaNuclearXS() override = default;
-    
-  static const char* Default_Name() { return "GammaNuclearXS"; }
+    ~G4GammaNuclearXS() override = default;
 
-  G4bool IsElementApplicable(const G4DynamicParticle*, 
-			     G4int Z, const G4Material*) final;
+    static const char* Default_Name() { return "GammaNuclearXS"; }
 
-  G4bool IsIsoApplicable(const G4DynamicParticle*, G4int Z, G4int A,
-			 const G4Element*, const G4Material* mat) final;
+    G4bool IsElementApplicable(const G4DynamicParticle*, G4int Z, const G4Material*) final;
 
-  G4double GetElementCrossSection(const G4DynamicParticle*, 
-			          G4int Z, 
-                                  const G4Material* mat = nullptr) final; 
+    G4bool IsIsoApplicable(const G4DynamicParticle*, G4int Z, G4int A, const G4Element*,
+                           const G4Material* mat) final;
 
-  G4double GetIsoCrossSection(const G4DynamicParticle*, G4int Z, G4int A,
-                              const G4Isotope* iso = nullptr,
-                              const G4Element* elm = nullptr,
-                              const G4Material* mat = nullptr) final;
+    G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z,
+                                    const G4Material* mat = nullptr) final;
 
-  const G4Isotope* SelectIsotope(const G4Element*, 
-                                 G4double kinEnergy, G4double logE) final;
+    G4double GetIsoCrossSection(const G4DynamicParticle*, G4int Z, G4int A,
+                                const G4Isotope* iso = nullptr, const G4Element* elm = nullptr,
+                                const G4Material* mat = nullptr) final;
 
-  void BuildPhysicsTable(const G4ParticleDefinition&) final;
+    const G4Isotope* SelectIsotope(const G4Element*, G4double kinEnergy, G4double logE) final;
 
-  G4double IsoCrossSection(const G4double ekin, const G4int Z, const G4int A);
+    void BuildPhysicsTable(const G4ParticleDefinition&) final;
 
-  G4double ElementCrossSection(const G4double ekin, const G4int Z);
+    G4double IsoCrossSection(const G4double ekin, const G4int Z, const G4int A);
 
-  G4double LowEnergyCrossSection(G4double ekin, G4int Z);
+    G4double ElementCrossSection(const G4double ekin, const G4int Z);
 
-  void CrossSectionDescription(std::ostream&) const final;
-      
-  G4GammaNuclearXS & operator=(const G4GammaNuclearXS &right) = delete;
-  G4GammaNuclearXS(const G4GammaNuclearXS&) = delete;
-  
-private: 
+    G4double LowEnergyCrossSection(G4double ekin, G4int Z);
 
-  void Initialise(G4int Z);
+    void CrossSectionDescription(std::ostream&) const final;
 
-  const G4String& FindDirectoryPath();
+    G4GammaNuclearXS& operator=(const G4GammaNuclearXS& right) = delete;
+    G4GammaNuclearXS(const G4GammaNuclearXS&) = delete;
 
-  G4PhysicsVector* RetrieveVector(std::ostringstream& in, G4bool warn, G4int Z);
-  
-  G4PhotoNuclearCrossSection* ggXsection = nullptr;
-  const G4ParticleDefinition* gamma;
+  private:
 
-  // Cache
-  G4double fXS = 0.0;  
-  G4double fEkin = 0.0;  
-  G4int fZ = 0;  
+    void Initialise(G4int Z);
 
-  static const G4int MAXZGAMMAXS = 95;
-  static const G4int MAXNFREE = 11;
-  static G4ElementData* data;
-  // The list of elements with non-linear parametrisation for better precision 
-  static const G4int freeVectorException[MAXNFREE];
-  // CHIPS photonuclear model had a problem with high energy parametrisation 
-  // for isotopes of H and He, coefficient is needed to connect isotope cross 
-  // section with element cross-section on high energies.
-  static G4double coeff[3][3]; 
-  static G4double xs150[MAXZGAMMAXS];
-  static G4String gDataDirectory;
+    const G4String& FindDirectoryPath();
 
-  std::vector<G4double> temp;
+    G4PhysicsVector* RetrieveVector(std::ostringstream& in, G4bool warn, G4int Z);
+
+    G4PhotoNuclearCrossSection* ggXsection = nullptr;
+    const G4ParticleDefinition* gamma;
+
+    // Cache
+    G4double fXS = 0.0;
+    G4double fEkin = 0.0;
+    G4int fZ = 0;
+
+    static const G4int MAXZGAMMAXS = 95;
+    static const G4int MAXNFREE = 11;
+    static G4ElementData* data;
+    // The list of elements with non-linear parametrisation for better precision
+    static const G4int freeVectorException[MAXNFREE];
+    // CHIPS photonuclear model had a problem with high energy parametrisation
+    // for isotopes of H and He, coefficient is needed to connect isotope cross
+    // section with element cross-section on high energies.
+    static G4double coeff[3][3];
+    static G4double xs150[MAXZGAMMAXS];
+    static G4String gDataDirectory;
+
+    std::vector<G4double> temp;
 };
 
 #endif

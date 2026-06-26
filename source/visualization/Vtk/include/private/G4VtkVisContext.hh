@@ -34,6 +34,7 @@ class G4VisAttributes;
 class G4VtkVisContext
 {
   public:
+
     const G4VtkViewer* fViewer;
     const G4VisAttributes* fVisAtt;
     G4bool fProcessing2D;

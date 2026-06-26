@@ -46,6 +46,7 @@
 class G4Abla
 {
   public:
+
     /**
      * This constructor is used by standalone test driver and the Geant4
      * interface.
@@ -109,7 +110,9 @@ class G4Abla
                             G4int eventnumber, G4int nucleusS);
 
     // Evaporation
+
   public:
+
     /**
      * Initialize ABLA evaporation code.
      *
@@ -477,6 +480,7 @@ class G4Abla
     G4double gethyperbinding(G4double A, G4double Z, G4int ny);
 
   public:
+
     // Utils
     G4int min(G4int a, G4int b);
     G4double min(G4double a, G4double b);
@@ -495,6 +499,7 @@ class G4Abla
     G4double dmin1(G4double a, G4double b, G4double c);
 
   private:
+
     G4int verboseLevel;
     G4int ilast;
     G4double T_freeze_out_in;

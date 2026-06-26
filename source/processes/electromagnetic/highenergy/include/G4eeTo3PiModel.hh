@@ -45,43 +45,42 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4eeTo3PiModel_h
-#define G4eeTo3PiModel_h 1
+#ifndef G4EETO3PIMODEL_HH
+#define G4EETO3PIMODEL_HH
 
 #include "G4Vee2hadrons.hh"
-#include "globals.hh"
 #include "G4eeCrossSections.hh"
+#include "globals.hh"
 
 class G4DynamicParticle;
 class G4PhysicsVector;
 
 class G4eeTo3PiModel : public G4Vee2hadrons
 {
+  public:
 
-public:
+    explicit G4eeTo3PiModel(G4eeCrossSections*, G4double, G4double);
 
-  explicit G4eeTo3PiModel(G4eeCrossSections*,G4double,G4double);
+    ~G4eeTo3PiModel() override;
 
-  ~G4eeTo3PiModel() override;
+    G4double PeakEnergy() const override;
 
-  G4double PeakEnergy() const override;
+    G4double ComputeCrossSection(G4double) const override;
 
-  G4double ComputeCrossSection(G4double) const override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, G4double,
+                           const G4ThreeVector&) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-              G4double, const G4ThreeVector&) override;
+    // hide assignment operator
+    G4eeTo3PiModel& operator=(const G4eeTo3PiModel& right) = delete;
+    G4eeTo3PiModel(const G4eeTo3PiModel&) = delete;
 
-  // hide assignment operator
-  G4eeTo3PiModel & operator=(const  G4eeTo3PiModel &right) = delete;
-  G4eeTo3PiModel(const  G4eeTo3PiModel&) = delete;
+  private:
 
-private:
-
-  G4double massPi;
-  G4double massPi0;
-  G4double massOm;
-  G4double massPhi;
-  G4double gmax;
+    G4double massPi;
+    G4double massPi0;
+    G4double massOm;
+    G4double massPhi;
+    G4double gmax;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

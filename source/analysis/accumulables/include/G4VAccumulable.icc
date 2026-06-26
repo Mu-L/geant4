@@ -29,14 +29,11 @@
 #include <utility>
 
 //_____________________________________________________________________________
-inline G4VAccumulable::G4VAccumulable(G4MergeMode mergeMode)
-  : fMergeMode(mergeMode)
-{}
+inline G4VAccumulable::G4VAccumulable(G4MergeMode mergeMode) : fMergeMode(mergeMode) {}
 
 //_____________________________________________________________________________
 inline G4VAccumulable::G4VAccumulable(const G4String& name, G4MergeMode mergeMode)
-  : fName(name),
-    fMergeMode(mergeMode)
+  : fName(name), fMergeMode(mergeMode)
 {}
 
 //
@@ -46,10 +43,12 @@ inline G4VAccumulable::G4VAccumulable(const G4String& name, G4MergeMode mergeMod
 //_____________________________________________________________________________
 inline void G4VAccumulable::PrintBase(G4PrintOptions options) const
 {
-  if (options.Has(G4PrintOptions::kName)) {
+  if (options.Has(G4PrintOptions::kName))
+  {
     G4cout << "\"" << GetName() << "\", ";
   }
-  if (options.Has(G4PrintOptions::kId)) {
+  if (options.Has(G4PrintOptions::kId))
+  {
     G4cout << "id: " << fId << ", ";
   }
 }
@@ -61,10 +60,10 @@ inline void G4VAccumulable::PrintBase(G4PrintOptions options) const
 //_____________________________________________________________________________
 inline void G4VAccumulable::SetName(const G4String& name)
 {
-  if ( fId != G4Accumulables::kInvalidId) {
-    G4Exception(
-      "G4VAccumulable::SetName", "Analysis_W001",
-      JustWarning, "Accumulable was already registered. Setting is ignored");
+  if (fId != G4Accumulables::kInvalidId)
+  {
+    G4Exception("G4VAccumulable::SetName", "Analysis_W001", JustWarning,
+                "Accumulable was already registered. Setting is ignored");
     return;
   }
 
@@ -86,10 +85,10 @@ inline void G4VAccumulable::SetMergeMode(G4MergeMode value)
 //_____________________________________________________________________________
 inline void G4VAccumulable::SetId(G4int id)
 {
-  if ( fId != G4Accumulables::kInvalidId) {
-    G4Exception(
-      "G4VAccumulable::SetId", "Analysis_W001",
-      JustWarning, "Accumulable was already registered. Setting is ignored");
+  if (fId != G4Accumulables::kInvalidId)
+  {
+    G4Exception("G4VAccumulable::SetId", "Analysis_W001", JustWarning,
+                "Accumulable was already registered. Setting is ignored");
     return;
   }
 

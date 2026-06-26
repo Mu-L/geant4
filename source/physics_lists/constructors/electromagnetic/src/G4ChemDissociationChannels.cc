@@ -55,21 +55,20 @@ void G4ChemDissociationChannels::ConstructMolecule()
   G4Electron_aq::Definition();
   G4H2O2::Definition();
   G4H2::Definition();
-  auto G4OHm = new G4MoleculeDefinition("OH",/*mass*/ 17.00734 * g / Avogadro * c_squared,
-                                        2.8e-9 * (m * m / s), -1,
-                                        5, 0.958 * angstrom, // radius
-                                        2 // number of atoms
-                                        );
+  auto G4OHm = new G4MoleculeDefinition("OH", /*mass*/ 17.00734 * g / Avogadro * c_squared,
+                                        2.8e-9 * (m * m / s), -1, 5, 0.958 * angstrom,  // radius
+                                        2  // number of atoms
+  );
 
   auto molTable = G4MoleculeTable::Instance();
 
   molTable->CreateConfiguration("H3Op", G4H3O::Definition());
   G4MolecularConfiguration* OHm =
     molTable->CreateConfiguration("OHm",  // just a tag to store and retrieve
-                                                             // from G4MoleculeTable
+                                          // from G4MoleculeTable
                                   G4OHm,
-      -1,  // charge
-      5.0e-9 * (m2 / s));
+                                  -1,  // charge
+                                  5.0e-9 * (m2 / s));
   OHm->SetMass(17.0079 * g / Avogadro * c_squared);
   molTable->CreateConfiguration("°OH", G4OH::Definition());
   molTable->CreateConfiguration("e_aq", G4Electron_aq::Definition());

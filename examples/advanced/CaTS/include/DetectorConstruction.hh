@@ -103,6 +103,7 @@ class DetectorConstruction final : public G4VUserDetectorConstruction
 private:
   G4bool verbose{ false };
   G4String gdmlFile;
+  std::map<G4String,G4int> fDetectIds;
   G4GDMLParser* parser{ nullptr };
   ColorReader* fReader{ nullptr };
 };

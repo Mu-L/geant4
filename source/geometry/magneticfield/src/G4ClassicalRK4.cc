@@ -29,21 +29,21 @@
 // -------------------------------------------------------------------
 
 #include "G4ClassicalRK4.hh"
+
 #include "G4ThreeVector.hh"
 
 //////////////////////////////////////////////////////////////////
 //
 // Constructor sets the number of variables (default = 6)
 //
-G4ClassicalRK4::
-G4ClassicalRK4(G4EquationOfMotion* EqRhs, G4int numberOfVariables)
+G4ClassicalRK4::G4ClassicalRK4(G4EquationOfMotion* EqRhs, G4int numberOfVariables)
   : G4MagErrorStepper(EqRhs, numberOfVariables)
 {
-   unsigned int noVariables= std::max(numberOfVariables,8); // For Time .. 7+1
- 
-   dydxm = new G4double[noVariables];
-   dydxt = new G4double[noVariables]; 
-   yt    = new G4double[noVariables]; 
+  unsigned int noVariables = std::max(numberOfVariables, 8);  // For Time .. 7+1
+
+  dydxm = new G4double[noVariables];
+  dydxt = new G4double[noVariables];
+  yt = new G4double[noVariables];
 }
 
 ////////////////////////////////////////////////////////////////
@@ -52,9 +52,9 @@ G4ClassicalRK4(G4EquationOfMotion* EqRhs, G4int numberOfVariables)
 //
 G4ClassicalRK4::~G4ClassicalRK4()
 {
-  delete [] dydxm;
-  delete [] dydxt;
-  delete [] yt;
+  delete[] dydxm;
+  delete[] dydxt;
+  delete[] yt;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -67,45 +67,45 @@ G4ClassicalRK4::~G4ClassicalRK4()
 // which returns derivatives dydx at x. The source is routine rk4 from
 // NRC p. 712-713 .
 //
-void
-G4ClassicalRK4::DumbStepper( const G4double yIn[],
-                             const G4double dydx[],
-                                   G4double h,
-                                   G4double yOut[])
+void G4ClassicalRK4::DumbStepper(const G4double yIn[], const G4double dydx[], G4double h,
+                                 G4double yOut[])
 {
-  const G4int nvar = GetNumberOfVariables();   //  fNumberOfVariables(); 
+  const G4int nvar = GetNumberOfVariables();  //  fNumberOfVariables();
   G4int i;
-  G4double hh = h*0.5, h6 = h/6.0;
+  G4double hh = h * 0.5, h6 = h / 6.0;
 
   // Initialise time to t0, needed when it is not updated by the integration.
-  //        [ Note: Only for time dependent fields (usually electric) 
-  //                  is it neccessary to integrate the time.] 
-  yt[7]   = yIn[7]; 
+  //        [ Note: Only for time dependent fields (usually electric)
+  //                  is it neccessary to integrate the time.]
+  yt[7] = yIn[7];
   yOut[7] = yIn[7];
 
-  for(i=0; i<nvar; ++i)
+  for (i = 0; i < nvar; ++i)
   {
-    yt[i] = yIn[i] + hh*dydx[i] ;             // 1st Step K1=h*dydx
+    yt[i] = yIn[i] + hh * dydx[i];  // 1st Step K1=h*dydx
   }
-  RightHandSide(yt,dydxt) ;                   // 2nd Step K2=h*dydxt
+  RightHandSide(yt, dydxt);  // 2nd Step K2=h*dydxt
 
-  for(i=0; i<nvar; ++i)
-  { 
-    yt[i] = yIn[i] + hh*dydxt[i] ;
+  for (i = 0; i < nvar; ++i)
+  {
+    yt[i] = yIn[i] + hh * dydxt[i];
   }
-  RightHandSide(yt,dydxm) ;                   // 3rd Step K3=h*dydxm
+  RightHandSide(yt, dydxm);  // 3rd Step K3=h*dydxm
 
-  for(i=0; i<nvar; ++i)
+  for (i = 0; i < nvar; ++i)
   {
-    yt[i] = yIn[i] + h*dydxm[i] ;
-    dydxm[i] += dydxt[i] ;                    // now dydxm=(K2+K3)/h
+    yt[i] = yIn[i] + h * dydxm[i];
+    dydxm[i] += dydxt[i];  // now dydxm=(K2+K3)/h
   }
-  RightHandSide(yt,dydxt) ;                   // 4th Step K4=h*dydxt
- 
-  for(i=0; i<nvar; ++i)    // Final RK4 output
+  RightHandSide(yt, dydxt);  // 4th Step K4=h*dydxt
+
+  for (i = 0; i < nvar; ++i)  // Final RK4 output
   {
-    yOut[i] = yIn[i]+h6*(dydx[i]+dydxt[i]+2.0*dydxm[i]); //+K1/6+K4/6+(K2+K3)/3
+    yOut[i] = yIn[i] + h6 * (dydx[i] + dydxt[i] + 2.0 * dydxm[i]);  //+K1/6+K4/6+(K2+K3)/3
   }
-  if ( nvar == 12 )  { NormalisePolarizationVector ( yOut ); }
-  
+  if (nvar == 12)
+  {
+    NormalisePolarizationVector(yOut);
+  }
+
 }  // end of DumbStepper ....................................................

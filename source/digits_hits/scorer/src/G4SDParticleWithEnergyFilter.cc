@@ -27,9 +27,10 @@
 //
 // G4VSensitiveDetector
 #include "G4SDParticleWithEnergyFilter.hh"
-#include "G4Step.hh"
-#include "G4ParticleTable.hh"
+
 #include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "G4Step.hh"
 
 ////////////////////////////////////////////////////////////////////////////////
 // class description:
@@ -42,13 +43,12 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-G4SDParticleWithEnergyFilter::G4SDParticleWithEnergyFilter(const G4String& name,
-                                                           G4double elow,
+G4SDParticleWithEnergyFilter::G4SDParticleWithEnergyFilter(const G4String& name, G4double elow,
                                                            G4double ehigh)
   : G4VSDFilter(name)
 {
   fParticleFilter = new G4SDParticleFilter(name);
-  fKineticFilter  = new G4SDKineticEnergyFilter(name, elow, ehigh);
+  fKineticFilter = new G4SDKineticEnergyFilter(name, elow, ehigh);
 }
 
 G4SDParticleWithEnergyFilter::~G4SDParticleWithEnergyFilter()
@@ -59,10 +59,8 @@ G4SDParticleWithEnergyFilter::~G4SDParticleWithEnergyFilter()
 
 G4bool G4SDParticleWithEnergyFilter::Accept(const G4Step* aStep) const
 {
-  if(!fParticleFilter->Accept(aStep))
-    return false;
-  if(!fKineticFilter->Accept(aStep))
-    return false;
+  if (!fParticleFilter->Accept(aStep)) return false;
+  if (!fKineticFilter->Accept(aStep)) return false;
   return true;
 }
 
@@ -71,8 +69,7 @@ void G4SDParticleWithEnergyFilter::add(const G4String& particleName)
   fParticleFilter->add(particleName);
 }
 
-void G4SDParticleWithEnergyFilter::SetKineticEnergy(G4double elow,
-                                                    G4double ehigh)
+void G4SDParticleWithEnergyFilter::SetKineticEnergy(G4double elow, G4double ehigh)
 {
   fKineticFilter->SetKineticEnergy(elow, ehigh);
 }
@@ -83,19 +80,17 @@ void G4SDParticleWithEnergyFilter::show()
   fKineticFilter->show();
 }
 
-G4SDParticleWithEnergyFilter::G4SDParticleWithEnergyFilter(
-  const G4SDParticleWithEnergyFilter& rhs)
+G4SDParticleWithEnergyFilter::G4SDParticleWithEnergyFilter(const G4SDParticleWithEnergyFilter& rhs)
   : G4VSDFilter(rhs.filterName)
 {
   fParticleFilter = new G4SDParticleFilter(*rhs.fParticleFilter);
-  fKineticFilter  = new G4SDKineticEnergyFilter(*rhs.fKineticFilter);
+  fKineticFilter = new G4SDKineticEnergyFilter(*rhs.fKineticFilter);
 }
 
-G4SDParticleWithEnergyFilter& G4SDParticleWithEnergyFilter::operator=(
-  const G4SDParticleWithEnergyFilter& rhs)
+G4SDParticleWithEnergyFilter&
+G4SDParticleWithEnergyFilter::operator=(const G4SDParticleWithEnergyFilter& rhs)
 {
-  if(this == &rhs)
-    return *this;
+  if (this == &rhs) return *this;
   G4VSDFilter::operator=(rhs);
   delete fParticleFilter;
   fParticleFilter = new G4SDParticleFilter(*(rhs.fParticleFilter));

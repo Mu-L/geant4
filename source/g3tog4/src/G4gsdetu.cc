@@ -27,21 +27,21 @@
 
 #include "G3toG4.hh"
 
-void PG4gsdetu(G4String *tokens)
+void PG4gsdetu(G4String* tokens)
 {
-    // fill the parameter containers
-    G3fillParams(tokens,PTgsdetu);
+  // fill the parameter containers
+  G3fillParams(tokens, PTgsdetu);
 
-    // interpret the parameters
-    G4String chset = Spar[0].data();
-    G4String chdet = Spar[1].data();
-    G4int nupar = Ipar[0];
-    G4double *upar = Rpar;
+  // interpret the parameters
+  G4String chset = Spar[0].data();
+  G4String chdet = Spar[1].data();
+  G4int nupar = Ipar[0];
+  G4double* upar = Rpar;
 
-    G4gsdetu(chset,chdet,nupar,upar);
+  G4gsdetu(chset, chdet, nupar, upar);
 }
 
 void G4gsdetu(G4String, G4String, G4int, G4double*)
 {
-    // $$$ nothing right now
+  // $$$ nothing right now
 }

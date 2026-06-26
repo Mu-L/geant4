@@ -42,12 +42,12 @@
 //
 // V.N.Baier, V.S. Fadin, V.A. Khose, E.A. Kuraev,
 // Physics Reports 78 (1981) 293-393.
-// 
+//
 // -------------------------------------------------------------------
 //
 
-#ifndef G4eplusTo3GammaOKVIModel_h
-#define G4eplusTo3GammaOKVIModel_h 1
+#ifndef G4EPLUSTO3GAMMAOKVIMODEL_HH
+#define G4EPLUSTO3GAMMAOKVIMODEL_HH
 
 #include "G4VEmModel.hh"
 
@@ -55,58 +55,53 @@ class G4ParticleChangeForGamma;
 
 class G4eplusTo3GammaOKVIModel : public G4VEmModel
 {
+  public:
 
-public:
+    explicit G4eplusTo3GammaOKVIModel(const G4ParticleDefinition* p = nullptr,
+                                      const G4String& nam = "eplus3ggOKVI");
 
-  explicit G4eplusTo3GammaOKVIModel(const G4ParticleDefinition* p = nullptr,
-                                    const G4String& nam = "eplus3ggOKVI");
+    ~G4eplusTo3GammaOKVIModel() override;
 
-  ~G4eplusTo3GammaOKVIModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    G4double ComputeCrossSectionPerElectron(G4double kinEnergy);
 
-  G4double ComputeCrossSectionPerElectron(G4double kinEnergy);
-  
-  G4double ComputeCrossSectionPerAtom(
-                                 const G4ParticleDefinition*,
-                                       G4double kinEnergy, 
-                                       G4double Z, 
-                                       G4double A = 0., 
-                                       G4double cutEnergy = 0.,
-                                       G4double maxEnergy = DBL_MAX) final;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A = 0., G4double cutEnergy = 0.,
+                                        G4double maxEnergy = DBL_MAX) final;
 
-  G4double CrossSectionPerVolume(const G4Material*,
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy = 0.0,
-				 G4double maxEnergy = DBL_MAX) final;
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy = 0.0,
+                                   G4double maxEnergy = DBL_MAX) final;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-				 const G4MaterialCutsCouple*,
-				 const G4DynamicParticle*,
-				 G4double tmin = 0.0,
-				 G4double maxEnergy = DBL_MAX) final;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin = 0.0,
+                           G4double maxEnergy = DBL_MAX) final;
 
-  G4double ComputeF(G4double fr1, G4double fr2, G4double fr3, G4double kinEnergy);
+    G4double ComputeF(G4double fr1, G4double fr2, G4double fr3, G4double kinEnergy);
 
-  G4double ComputeF0(G4double fr1, G4double fr2, G4double fr3);
+    G4double ComputeF0(G4double fr1, G4double fr2, G4double fr3);
 
-  G4double ComputeFS(G4double fr1, G4double fr2, G4double fr3, G4double kinEnergy);
+    G4double ComputeFS(G4double fr1, G4double fr2, G4double fr3, G4double kinEnergy);
 
-  inline void SetDelta(G4double val) { if(val > 0.0) { fDelta = val; } };
-  
-  // hide assignment operator
-  G4eplusTo3GammaOKVIModel & operator=
-  (const  G4eplusTo3GammaOKVIModel &right) = delete;
-  G4eplusTo3GammaOKVIModel(const  G4eplusTo3GammaOKVIModel&) = delete;
+    inline void SetDelta(G4double val)
+    {
+      if (val > 0.0)
+      {
+        fDelta = val;
+      }
+    };
 
-private:
+    // hide assignment operator
+    G4eplusTo3GammaOKVIModel& operator=(const G4eplusTo3GammaOKVIModel& right) = delete;
+    G4eplusTo3GammaOKVIModel(const G4eplusTo3GammaOKVIModel&) = delete;
 
-  G4double fDelta;
-  const G4ParticleDefinition* theGamma;
+  private:
+
+    G4double fDelta;
+    const G4ParticleDefinition* theGamma;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 
 #endif

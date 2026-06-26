@@ -40,6 +40,7 @@
 /**
  * @brief G4FSALBogackiShampine45 is an integrator of particle's equation of
  * motion based on the Bogacki-Shampine - 8 - 5(4) FSAL implementation.
+ * @ingroup geometry_magneticfield
  */
 
 class G4FSALBogackiShampine45 : public G4VFSALIntegrationStepper
@@ -52,15 +53,14 @@ class G4FSALBogackiShampine45 : public G4VFSALIntegrationStepper
      *  @param[in] numberOfVariables The number of integration variables.
      *  @param[in] primary Flag for initialisation of the auxiliary stepper.
      */
-    G4FSALBogackiShampine45(G4EquationOfMotion* EqRhs,
-                            G4int numberOfVariables = 6,
+    G4FSALBogackiShampine45(G4EquationOfMotion* EqRhs, G4int numberOfVariables = 6,
                             G4bool primary = true);
 
     /**
      * Destructor.
      */
     ~G4FSALBogackiShampine45() override;
-    
+
     /**
      * Copy constructor and assignment operator not allowed.
      */
@@ -79,13 +79,9 @@ class G4FSALBogackiShampine45 : public G4VFSALIntegrationStepper
      *  @param[out] yerr The estimated error.
      *  @param[out] nextDydx Last derivatives array for the next step.
      */
-    void Stepper( const G4double y[],
-                  const G4double dydx[],
-                        G4double h,
-                        G4double yout[],
-                        G4double yerr[],
-                        G4double nextDydx[]) override ;
-    
+    void Stepper(const G4double y[], const G4double dydx[], G4double h, G4double yout[],
+                 G4double yerr[], G4double nextDydx[]) override;
+
     /**
      * Calculates the output at the tau fraction of step.
      *  @param[in] yInput Starting values array of integration variables.
@@ -94,11 +90,8 @@ class G4FSALBogackiShampine45 : public G4VFSALIntegrationStepper
      *  @param[in] Step The given step size.
      *  @param[in] tau The tau fraction of the step.
      */
-    void interpolate( const G4double yInput[],
-                      const G4double dydx[],
-                            G4double yOut[],
-                            G4double Step,
-                            G4double tau ) ;
+    void interpolate(const G4double yInput[], const G4double dydx[], G4double yOut[], G4double Step,
+                     G4double tau);
 
     /**
      * Returns the distance from chord line.
@@ -109,26 +102,25 @@ class G4FSALBogackiShampine45 : public G4VFSALIntegrationStepper
      * Returns the order, 4, of integration.
      */
     inline G4int IntegratorOrder() const override { return 4; }
-    
+
   private:
-    
+
     /**
      * Init method used in constructor.
      */
-    void PrepareConstants(); 
-   
+    void PrepareConstants();
+
     /** Working arrays -- used during stepping. */
-    G4double *ak2, *ak3, *ak4, *ak5, *ak6, *ak7, *ak8, *ak9, *ak10, *ak11,
-             *DyDx, *yTemp, *yIn;
-    G4double *pseudoDydx_for_DistChord;
+    G4double *ak2, *ak3, *ak4, *ak5, *ak6, *ak7, *ak8, *ak9, *ak10, *ak11, *DyDx, *yTemp, *yIn;
+    G4double* pseudoDydx_for_DistChord;
 
     G4double fLastStepLength = -1.0;
-    G4double *fLastInitialVector, *fLastFinalVector,
-             *fLastDyDx, *fMidVector, *fMidError; // for DistChord calculations
+    G4double *fLastInitialVector, *fLastFinalVector, *fLastDyDx, *fMidVector,
+      *fMidError;  // for DistChord calculations
 
     /** Working array for interpolation. */
     G4double b[12];
-   
+
     G4FSALBogackiShampine45* fAuxStepper = nullptr;
 
     static G4bool fPreparedConstants;

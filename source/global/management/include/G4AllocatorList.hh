@@ -32,32 +32,36 @@
 
 // Authors: M.Asai (SLAC), G.Cosmo (CERN), June 2013
 // --------------------------------------------------------------------
-#ifndef G4AllocatorList_hh
-#define G4AllocatorList_hh 1
+#ifndef G4ALLOCATORLIST_HH
+#define G4ALLOCATORLIST_HH
 
 #include "globals.hh"
+
 #include <vector>
 
 class G4AllocatorBase;
 
 class G4AllocatorList
 {
- public:
-  static G4AllocatorList* GetAllocatorList();
-  static G4AllocatorList* GetAllocatorListIfExist();
+  public:
 
-  ~G4AllocatorList();
-  void Register(G4AllocatorBase*);
-  void Destroy(G4int nStat = 0, G4int verboseLevel = 0);
-  void Report(G4bool itemize = true) const;
-  inline std::size_t Size() const;
+    static G4AllocatorList* GetAllocatorList();
+    static G4AllocatorList* GetAllocatorListIfExist();
 
- private:
-  G4AllocatorList() = default;
+    ~G4AllocatorList();
+    void Register(G4AllocatorBase*);
+    void Destroy(G4int nStat = 0, G4int verboseLevel = 0);
+    void Report(G4bool itemize = true) const;
+    inline std::size_t Size() const;
 
- private:
-  static G4ThreadLocal G4AllocatorList* fAllocatorList;
-  std::vector<G4AllocatorBase*> fList;
+  private:
+
+    G4AllocatorList() = default;
+
+  private:
+
+    static G4ThreadLocal G4AllocatorList* fAllocatorList;
+    std::vector<G4AllocatorBase*> fList;
 };
 
 // --------------------------------------------------------------------

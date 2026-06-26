@@ -29,8 +29,8 @@
 // Revision:
 // - 12.06.2017, K L Genser
 // --------------------------------------------------------------------
-#ifndef G4MuonicAtomHelper_hh
-#define G4MuonicAtomHelper_hh 1
+#ifndef G4MUONICATOMHELPER_HH
+#define G4MUONICATOMHELPER_HH
 
 #include "G4Ions.hh"
 #include "G4MuonicAtom.hh"
@@ -38,6 +38,7 @@
 class G4MuonicAtomHelper
 {
   public:
+
     static G4MuonicAtom* ConstructMuonicAtom(const G4String& name, G4int encoding,
                                              G4Ions const* baseion);
 

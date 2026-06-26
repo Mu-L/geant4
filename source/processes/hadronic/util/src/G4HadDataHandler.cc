@@ -30,15 +30,15 @@
 //
 // File name:     G4HadDataHandler
 //
-// Author:        V. Ivanchenko 
-// 
+// Author:        V. Ivanchenko
+//
 // Creation date: 05 July 2022
 //
-// Modifications: 
+// Modifications:
 //
 // -------------------------------------------------------------------
 //
-//    
+//
 
 #include "G4HadDataHandler.hh"
 
@@ -51,11 +51,16 @@ G4HadDataHandler::G4HadDataHandler(std::size_t n) : tLength(n)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4HadDataHandler::~G4HadDataHandler() 
+G4HadDataHandler::~G4HadDataHandler()
 {
-  for(std::size_t i=0; i<tLength; ++i) {
-    for(std::size_t j = i+1; j<tLength; ++j) {
-      if(data[j] == data[i]) { data[j] = nullptr; }
+  for (std::size_t i = 0; i < tLength; ++i)
+  {
+    for (std::size_t j = i + 1; j < tLength; ++j)
+    {
+      if (data[j] == data[i])
+      {
+        data[j] = nullptr;
+      }
     }
     CleanTable(i);
   }
@@ -74,11 +79,17 @@ void G4HadDataHandler::AddTable(G4PhysicsTable* ptr)
 void G4HadDataHandler::UpdateTable(G4PhysicsTable* ptr, std::size_t idx)
 {
   // update table pointer but not delete previous
-  if(idx < tLength) { 
-    if(ptr != data[idx]) { data[idx] = ptr; }
-  } else {
-    G4cout << "### G4HadDataHandler::UpdateTable fail for idx=" << idx 
-           << " length=" << tLength << G4endl;
+  if (idx < tLength)
+  {
+    if (ptr != data[idx])
+    {
+      data[idx] = ptr;
+    }
+  }
+  else
+  {
+    G4cout << "### G4HadDataHandler::UpdateTable fail for idx=" << idx << " length=" << tLength
+           << G4endl;
   }
 }
 
@@ -86,7 +97,8 @@ void G4HadDataHandler::UpdateTable(G4PhysicsTable* ptr, std::size_t idx)
 
 void G4HadDataHandler::CleanTable(std::size_t idx)
 {
-  if(idx < tLength && nullptr != data[idx]) {
+  if (idx < tLength && nullptr != data[idx])
+  {
     data[idx]->clearAndDestroy();
     delete data[idx];
     data[idx] = nullptr;

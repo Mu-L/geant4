@@ -49,74 +49,83 @@
 
 #include <iomanip>
 
-
 // Find bin position (index and fraction) using input argument and array
 
-template <int NBINS>
-G4double G4CascadeInterpolator<NBINS>::getBin(const G4double x) const {
-  if (x == lastX) return lastVal;	// Avoid unnecessary work
+template<int NBINS>
+G4double G4CascadeInterpolator<NBINS>::getBin(const G4double x) const
+{
+  if (x == lastX) return lastVal;  // Avoid unnecessary work
 
   G4double xindex, xdiff, xbin;
 
   lastX = x;
-  if (x < xBins[0]) {			// Handle boundaries first
+  if (x < xBins[0])
+  {  // Handle boundaries first
     xindex = 0.;
-    xbin = xBins[1]-xBins[0];
-    xdiff = doExtrapolation ? x-xBins[0] : 0.;		// Less than zero
-  } else if (x >= xBins[last]) {
+    xbin = xBins[1] - xBins[0];
+    xdiff = doExtrapolation ? x - xBins[0] : 0.;  // Less than zero
+  }
+  else if (x >= xBins[last])
+  {
     xindex = last;
-    xbin = xBins[last]-xBins[last-1];
-    xdiff = doExtrapolation ? x-xBins[last] : 0.;
-  } else {				// Assume nBins small; linear search
+    xbin = xBins[last] - xBins[last - 1];
+    xdiff = doExtrapolation ? x - xBins[last] : 0.;
+  }
+  else
+  {  // Assume nBins small; linear search
     int i;
-    for (i=1; i<last && x>xBins[i]; i++) {;}	// Stops when x within bin i-1
-    xindex = i-1;
-    xbin = xBins[i] - xBins[i-1];
-    xdiff = x - xBins[i-1];
+    for (i = 1; i < last && x > xBins[i]; i++)
+    {
+      ;
+    }  // Stops when x within bin i-1
+    xindex = i - 1;
+    xbin = xBins[i] - xBins[i - 1];
+    xdiff = x - xBins[i - 1];
   }
 
 #ifdef G4CASCADE_DEBUG_SAMPLER
-  G4cout << " G4CascadeInterpolator<" << NBINS << ">: x=" << x
-	 << " index=" << xindex << " fraction=" << xdiff/xbin << G4endl;
+  G4cout << " G4CascadeInterpolator<" << NBINS << ">: x=" << x << " index=" << xindex
+         << " fraction=" << xdiff / xbin << G4endl;
 #endif
 
-  return (lastVal = xindex + xdiff/xbin);	// Save return value for later
+  return (lastVal = xindex + xdiff / xbin);  // Save return value for later
 }
-
 
 // Apply interpolation of input argument to user array
 
-template <int NBINS>
-G4double G4CascadeInterpolator<NBINS>::
-interpolate(const G4double x, const G4double (&yb)[nBins]) const {
+template<int NBINS>
+G4double G4CascadeInterpolator<NBINS>::interpolate(const G4double x,
+                                                   const G4double (&yb)[nBins]) const
+{
   getBin(x);
   return interpolate(yb);
 }
 
 // Apply last found interpolation to user array
 
-template <int NBINS>
-G4double G4CascadeInterpolator<NBINS>::
-interpolate(const G4double (&yb)[nBins]) const {
+template<int NBINS>
+G4double G4CascadeInterpolator<NBINS>::interpolate(const G4double (&yb)[nBins]) const
+{
   // Treat boundary extrapolations specially, otherwise just truncate
-  G4int i = (lastVal<0) ? 0 : (lastVal>G4double(last)) ? last-1 : G4int(lastVal);
-  G4double frac = lastVal - G4double(i);	// May be <0 or >1 if extrapolating
+  G4int i = (lastVal < 0) ? 0 : (lastVal > G4double(last)) ? last - 1 : G4int(lastVal);
+  G4double frac = lastVal - G4double(i);  // May be <0 or >1 if extrapolating
 
   // Special case:  if exactly on upper bin edge, just return value
-  return (i==last) ? yb[last] : (yb[i] + frac*(yb[i+1]-yb[i]));
+  return (i == last) ? yb[last] : (yb[i] + frac * (yb[i + 1] - yb[i]));
 }
-
 
 // Print bin edges for debugging
 
-template <int NBINS>
-void G4CascadeInterpolator<NBINS>::printBins(std::ostream& os) const {
+template<int NBINS>
+void G4CascadeInterpolator<NBINS>::printBins(std::ostream& os) const
+{
   os << " G4CascadeInterpolator<" << NBINS << "> : " << G4endl;
-  for (G4int k=0; k<NBINS; k++) {
+  for (G4int k = 0; k < NBINS; k++)
+  {
     os << " " << std::setw(6) << xBins[k];
-    if ((k+1)%10 == 0) os << G4endl;
+    if ((k + 1) % 10 == 0) os << G4endl;
   }
   os << G4endl;
 }
 
-#endif	/* G4CASCADE_INTERPOLATOR_ICC */
+#endif /* G4CASCADE_INTERPOLATOR_ICC */

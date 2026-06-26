@@ -42,10 +42,11 @@
 //
 // Author: M.Verderi (LLR), November 2013
 // --------------------------------------------------------------------
-#ifndef G4VBiasingInteractionLaw_hh
-#define G4VBiasingInteractionLaw_hh 1
+#ifndef G4VBIASINGINTERACTIONLAW_HH
+#define G4VBIASINGINTERACTIONLAW_HH
 
 #include "globals.hh"
+
 #include <vector>
 
 class G4BiasingProcessInterface;
@@ -54,8 +55,8 @@ class G4VBiasingInteractionLaw
 {
   public:
 
-    G4VBiasingInteractionLaw(const G4String& name)
-      : fName(name), fSampledInteractionLength(DBL_MAX) {}
+    G4VBiasingInteractionLaw(const G4String& name) : fName(name), fSampledInteractionLength(DBL_MAX)
+    {}
     virtual ~G4VBiasingInteractionLaw() = default;
 
     const G4String& GetName() const { return fName; }
@@ -85,10 +86,7 @@ class G4VBiasingInteractionLaw
       fSampledInteractionLength = UpdateInteractionLengthForStep(truePathLength);
       return fSampledInteractionLength;
     }
-    G4double GetSampledInteractionLength() const
-    {
-      return fSampledInteractionLength;
-    }
+    G4double GetSampledInteractionLength() const { return fSampledInteractionLength; }
 
   protected:
 
@@ -98,7 +96,9 @@ class G4VBiasingInteractionLaw
     // -- Convenience method, used in many daughters classes :
     // -- update the distribution for a made step of truePathLength size:
     virtual G4double UpdateInteractionLengthForStep(G4double /* truePathLength */)
-      { return DBL_MAX; }
+    {
+      return DBL_MAX;
+    }
 
   private:
 

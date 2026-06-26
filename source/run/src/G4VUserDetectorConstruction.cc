@@ -48,7 +48,8 @@
 void G4VUserDetectorConstruction::RegisterParallelWorld(G4VUserParallelWorld* aPW)
 {
   auto pwItr = std::find(parallelWorld.cbegin(), parallelWorld.cend(), aPW);
-  if (pwItr != parallelWorld.cend()) {
+  if (pwItr != parallelWorld.cend())
+  {
     G4String eM = "A parallel world <";
     eM += aPW->GetName();
     eM += "> is already registered to the user detector construction.";
@@ -62,7 +63,8 @@ void G4VUserDetectorConstruction::RegisterParallelWorld(G4VUserParallelWorld* aP
 G4int G4VUserDetectorConstruction::ConstructParallelGeometries()
 {
   G4int nP = 0;
-  for (const auto& pwItr : parallelWorld) {
+  for (const auto& pwItr : parallelWorld)
+  {
     pwItr->Construct();
     ++nP;
   }
@@ -72,7 +74,8 @@ G4int G4VUserDetectorConstruction::ConstructParallelGeometries()
 // --------------------------------------------------------------------
 void G4VUserDetectorConstruction::ConstructParallelSD()
 {
-  for (const auto& pwItr : parallelWorld) {
+  for (const auto& pwItr : parallelWorld)
+  {
     pwItr->ConstructSD();
   }
 }
@@ -101,19 +104,24 @@ void G4VUserDetectorConstruction::CloneF()
 
   FMtoFMmap masterToWorker;
   G4LogicalVolumeStore* const logVolStore = G4LogicalVolumeStore::GetInstance();
-  for (const auto& g4LogicalVolume : *logVolStore) {
+  for (const auto& g4LogicalVolume : *logVolStore)
+  {
     // Use shadow of master to get instance of FM
     G4FieldManager* masterFM = nullptr;  // g4LogicalVolume->fFieldManager;
     G4FieldManager* clonedFM = nullptr;
-    if (masterFM != nullptr) {
+    if (masterFM != nullptr)
+    {
       auto fmFound = masterToWorker.find(masterFM);
-      if (fmFound == masterToWorker.cend()) {
+      if (fmFound == masterToWorker.cend())
+      {
         // First time we see this SD, let's clone and remember...
-        try {
+        try
+        {
           auto insertedEl = masterToWorker.insert(FMpair(masterFM, masterFM->Clone()));
           clonedFM = (insertedEl.first)->second;
         }
-        catch (...) {
+        catch (...)
+        {
           G4ExceptionDescription msg;
           msg << "Cloning of G4FieldManager failed."
               << " But derived class does not implement cloning. Cannot "
@@ -121,7 +129,8 @@ void G4VUserDetectorConstruction::CloneF()
           G4Exception("G4VUserDetectorConstruction::CloneSD()", "Run0053", FatalException, msg);
         }
       }
-      else {
+      else
+      {
         // We have already seen this SD attached to a different LogicalVolume,
         // let's re-use previous clone
         clonedFM = (*fmFound).second;
@@ -146,19 +155,24 @@ void G4VUserDetectorConstruction::CloneSD()
   using SDpair = std::pair<G4VSensitiveDetector*, G4VSensitiveDetector*>;
   SDtoSDmap masterToWorker;
 
-  for (const auto& g4LogicalVolume : *logVolStore) {
+  for (const auto& g4LogicalVolume : *logVolStore)
+  {
     // Use shadow of master to get the instance of SD
     G4VSensitiveDetector* masterSD = nullptr;
     G4VSensitiveDetector* clonedSD = nullptr;
-    if (masterSD != nullptr) {
+    if (masterSD != nullptr)
+    {
       auto sdFound = masterToWorker.find(masterSD);
-      if (sdFound == masterToWorker.cend()) {
+      if (sdFound == masterToWorker.cend())
+      {
         // First time we see this SD, let's clone and remember...
-        try {
+        try
+        {
           auto insertedEl = masterToWorker.insert(SDpair(masterSD, masterSD->Clone()));
           clonedSD = (insertedEl.first)->second;
         }
-        catch (...) {
+        catch (...)
+        {
           G4ExceptionDescription msg;
           msg << "Cloning of G4VSensitiveDetector requested for:" << masterSD->GetName() << "\n"
 #ifndef WIN32
@@ -169,7 +183,8 @@ void G4VUserDetectorConstruction::CloneSD()
           G4Exception("G4VUserDetectorConstruction::CloneSD()", "Run0053", FatalException, msg);
         }
       }
-      else {
+      else
+      {
         // We have already seen this SD attached to a different LogicalVolume,
         // let's re-use previous clone
         clonedSD = (*sdFound).second;
@@ -187,8 +202,10 @@ void G4VUserDetectorConstruction::SetSensitiveDetector(const G4String& logVolNam
   G4LogicalVolumeStore* store = G4LogicalVolumeStore::GetInstance();
   auto volmap = store->GetMap();
   auto pos = volmap.find(logVolName);
-  if (pos != volmap.cend()) {
-    if ((pos->second.size() > 1) && !multi) {
+  if (pos != volmap.cend())
+  {
+    if ((pos->second.size() > 1) && !multi)
+    {
       G4String eM = "More than one logical volumes of name <";
       eM += pos->first;
       eM += "> are found and thus the sensitive detector <";
@@ -198,11 +215,13 @@ void G4VUserDetectorConstruction::SetSensitiveDetector(const G4String& logVolNam
                   FatalErrorInArgument, eM);
     }
     found = true;
-    for (auto& i : pos->second) {
+    for (auto& i : pos->second)
+    {
       SetSensitiveDetector(i, aSD);
     }
   }
-  if (!found) {
+  if (!found)
+  {
     G4String eM2 = "No logical volume of name <";
     eM2 += logVolName;
     eM2 += "> is found. The specified sensitive detector <";
@@ -227,22 +246,27 @@ void G4VUserDetectorConstruction::SetSensitiveDetector(G4LogicalVolume* logVol,
 
   // Get existing SD if already set and check if it is of the special type
   G4VSensitiveDetector* originalSD = logVol->GetSensitiveDetector();
-  if (originalSD == aSD) {
+  if (originalSD == aSD)
+  {
     G4ExceptionDescription msg;
     msg << "Attempting to add multiple times the same sensitive detector (\"";
     msg << originalSD->GetName() << "\") is not allowed, skipping.";
     G4Exception("G4VUserDetectorConstruction::SetSensitiveDetector", "Run0054", JustWarning, msg);
     return;
   }
-  if (originalSD == nullptr) {
+  if (originalSD == nullptr)
+  {
     logVol->SetSensitiveDetector(aSD);
   }
-  else {
+  else
+  {
     auto msd = dynamic_cast<G4MultiSensitiveDetector*>(originalSD);
-    if (msd != nullptr) {
+    if (msd != nullptr)
+    {
       msd->AddSD(aSD);
     }
-    else {
+    else
+    {
       std::ostringstream mn;
       mn << "/MultiSD_" << logVol->GetName() << "_" << logVol;
       const G4String msdname = mn.str();

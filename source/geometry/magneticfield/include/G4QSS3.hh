@@ -39,6 +39,7 @@
 
 /**
  * @brief G4QSS3 defines the QSS3 simulator engine used in QSS field stepper.
+ * @ingroup geometry_magneticfield
  */
 
 class G4QSS3
@@ -191,7 +192,10 @@ class G4QSS3
         else
         {
           mpr = lqu[var] / x[icf1];
-          if (mpr < 0) { mpr *= -1; }
+          if (mpr < 0)
+          {
+            mpr *= -1;
+          }
           time[var] = t + mpr;
         }
       }
@@ -204,9 +208,12 @@ class G4QSS3
       G4double* const lqu = simulator->lqu;
       G4double* const time = simulator->nextStateTime;
 
-      if (likely(x[cf3])) {
+      if (likely(x[cf3]))
+      {
         time[i] = t + std::cbrt(lqu[i] / std::fabs(x[cf3]));
-      } else {
+      }
+      else
+      {
         time[i] = Qss_misc::INF;
       }
     }
@@ -271,19 +278,25 @@ class G4QSS3
 
       if (coeff[2] == 0 || (1000 * std::fabs(coeff[2])) < std::fabs(coeff[1]))
       {
-        if (coeff[1] == 0) {
+        if (coeff[1] == 0)
+        {
           mpr = Qss_misc::INF;
-        } else {
+        }
+        else
+        {
           mpr = -coeff[0] / coeff[1];
         }
 
-        if (mpr < 0) { mpr = Qss_misc::INF; }
+        if (mpr < 0)
+        {
+          mpr = Qss_misc::INF;
+        }
       }
       else
       {
         G4double disc;
         disc = coeff[1] * coeff[1] - 4 * coeff[2] * coeff[0];
-        if (disc < 0)   // no real roots
+        if (disc < 0)  // no real roots
         {
           mpr = Qss_misc::INF;
         }
@@ -294,13 +307,19 @@ class G4QSS3
 
           sd = std::sqrt(disc);
           r1 = (-coeff[1] + sd) / cf2_d2;
-          if (r1 > 0) {
+          if (r1 > 0)
+          {
             mpr = r1;
-          } else {
-            mpr = Qss_misc::INF; 
+          }
+          else
+          {
+            mpr = Qss_misc::INF;
           }
           r1 = (-coeff[1] - sd) / cf2_d2;
-          if ((r1 > 0) && (r1 < mpr)) { mpr = r1; }
+          if ((r1 > 0) && (r1 < mpr))
+          {
+            mpr = r1;
+          }
         }
       }
 
@@ -352,22 +371,31 @@ class G4QSS3
           G4double sd, sx, t, r1, rsd;
           sd = std::sqrt(disc);
           rsd = r + sd;
-          if (rsd > 0) {
+          if (rsd > 0)
+          {
             sx = std::cbrt(rsd);
-          } else {
+          }
+          else
+          {
             sx = -std::cbrt(std::fabs(rsd));
           }
 
           rsd = r - sd;
-          if (rsd > 0) {
+          if (rsd > 0)
+          {
             t = std::cbrt(rsd);
-          } else {
+          }
+          else
+          {
             t = -std::cbrt(std::fabs(rsd));
           }
 
           r1 = sx + t - val;
 
-          if (r1 > 0) { mpr = r1; }
+          if (r1 > 0)
+          {
+            mpr = r1;
+          }
         }
         else
         {
@@ -381,11 +409,20 @@ class G4QSS3
           spt = rho13 * 2 * costh3;
           smti32 = -rho13 * sinth3 * sqrt3;
           r1 = spt - val;
-          if (r1 > 0) { mpr = r1; }
+          if (r1 > 0)
+          {
+            mpr = r1;
+          }
           r1 = -spt / 2 - val + smti32;
-          if ((r1 > 0) && (r1 < mpr)) { mpr = r1; }
+          if ((r1 > 0) && (r1 < mpr))
+          {
+            mpr = r1;
+          }
           r1 = r1 - 2 * smti32;
-          if ((r1 > 0) && (r1 < mpr)) { mpr = r1; }
+          if ((r1 > 0) && (r1 < mpr))
+          {
+            mpr = r1;
+          }
         }
       }
 
@@ -407,10 +444,16 @@ class G4QSS3
         {
           mpr = -coeff[0] / coeff[1];
           mpr2 = -cf0Alt / coeff[1];
-          if (mpr < 0 || (mpr2 > 0 && mpr2 < mpr)) { mpr = mpr2; }
+          if (mpr < 0 || (mpr2 > 0 && mpr2 < mpr))
+          {
+            mpr = mpr2;
+          }
         }
 
-        if (mpr < 0) { mpr = Qss_misc::INF; }
+        if (mpr < 0)
+        {
+          mpr = Qss_misc::INF;
+        }
       }
       else
       {
@@ -429,26 +472,38 @@ class G4QSS3
           G4double sd, r1;
           sd = std::sqrt(disc1);
           r1 = (-coeff[1] + sd) / cf2_d2;
-          if (r1 > 0) {
+          if (r1 > 0)
+          {
             mpr = r1;
-          } else {
+          }
+          else
+          {
             mpr = Qss_misc::INF;
           }
           r1 = (-coeff[1] - sd) / cf2_d2;
-          if ((r1 > 0) && (r1 < mpr)) { mpr = r1; }
+          if ((r1 > 0) && (r1 < mpr))
+          {
+            mpr = r1;
+          }
         }
         else if (disc1 < 0)
         {
           G4double sd, r1;
           sd = std::sqrt(disc2);
           r1 = (-coeff[1] + sd) / cf2_d2;
-          if (r1 > 0) {
+          if (r1 > 0)
+          {
             mpr = r1;
-          } else {
+          }
+          else
+          {
             mpr = Qss_misc::INF;
           }
           r1 = (-coeff[1] - sd) / cf2_d2;
-          if ((r1 > 0) && (r1 < mpr)) { mpr = r1; }
+          if ((r1 > 0) && (r1 < mpr))
+          {
+            mpr = r1;
+          }
         }
         else
         {
@@ -458,17 +513,29 @@ class G4QSS3
           r1 = (-coeff[1] + sd1) / cf2_d2;
           r2 = (-coeff[1] + sd2) / cf2_d2;
 
-          if (r1 > 0) {
+          if (r1 > 0)
+          {
             mpr = r1;
-          } else {
+          }
+          else
+          {
             mpr = Qss_misc::INF;
           }
           r1 = (-coeff[1] - sd1) / cf2_d2;
-          if ((r1 > 0) && (r1 < mpr)) { mpr = r1; }
+          if ((r1 > 0) && (r1 < mpr))
+          {
+            mpr = r1;
+          }
 
-          if (r2 > 0 && r2 < mpr) { mpr = r2; }
+          if (r2 > 0 && r2 < mpr)
+          {
+            mpr = r2;
+          }
           r2 = (-coeff[1] - sd2) / cf2_d2;
-          if ((r2 > 0) && (r2 < mpr)) { mpr = r2; }
+          if ((r2 > 0) && (r2 < mpr))
+          {
+            mpr = r2;
+          }
         }
       }
 
@@ -502,7 +569,10 @@ class G4QSS3
           mpr2 = min_pos_root_2(coeff);
         }
 
-        if (mpr2 > 0 && mpr2 < mpr) { mpr = mpr2; }
+        if (mpr2 > 0 && mpr2 < mpr)
+        {
+          mpr = mpr2;
+        }
       }
       else if (cf0Alt == 0)
       {
@@ -521,7 +591,10 @@ class G4QSS3
           mpr2 = min_pos_root_2(coeff);
         }
 
-        if (mpr2 > 0 && mpr2 < mpr) { mpr = mpr2; }
+        if (mpr2 > 0 && mpr2 < mpr)
+        {
+          mpr = mpr2;
+        }
       }
       else
       {
@@ -548,44 +621,62 @@ class G4QSS3
           G4double sd, sx, t, r1, rsd;
           sd = std::sqrt(disc);
           rsd = r + sd;
-          if (rsd > 0) {
+          if (rsd > 0)
+          {
             sx = std::cbrt(rsd);
-          } else {
+          }
+          else
+          {
             sx = -std::cbrt(std::fabs(rsd));
           }
 
           rsd = r - sd;
-          if (rsd > 0) {
+          if (rsd > 0)
+          {
             t = std::cbrt(rsd);
-          } else {
+          }
+          else
+          {
             t = -std::cbrt(std::fabs(rsd));
           }
 
           r1 = sx + t - val;
 
-          if (r1 > 0) { mpr = r1; }
+          if (r1 > 0)
+          {
+            mpr = r1;
+          }
 
           if (discAlt >= 0)
           {
             G4double sdAlt, sAlt, tAlt, r1Alt, rsdAlt;
             sdAlt = std::sqrt(discAlt);
             rsdAlt = rAlt + sdAlt;
-            if (rsdAlt > 0) {
+            if (rsdAlt > 0)
+            {
               sAlt = std::cbrt(rsdAlt);
-            } else {
+            }
+            else
+            {
               sAlt = -std::cbrt(std::fabs(rsdAlt));
             }
 
             rsdAlt = rAlt - sdAlt;
-            if (rsdAlt > 0) {
+            if (rsdAlt > 0)
+            {
               tAlt = std::cbrt(rsdAlt);
-            } else {
+            }
+            else
+            {
               tAlt = -std::cbrt(std::fabs(rsdAlt));
             }
 
             r1Alt = sAlt + tAlt - val;
 
-            if (r1Alt > 0 && r1Alt < mpr) { mpr = r1Alt; }
+            if (r1Alt > 0 && r1Alt < mpr)
+            {
+              mpr = r1Alt;
+            }
           }
           else
           {
@@ -599,11 +690,20 @@ class G4QSS3
             spt = rho13 * 2 * costh3;
             smti32 = -rho13 * sinth3 * sqrt3;
             r1Alt = spt - val;
-            if (r1Alt > 0 && r1Alt < mpr) { mpr = r1Alt; }
+            if (r1Alt > 0 && r1Alt < mpr)
+            {
+              mpr = r1Alt;
+            }
             r1Alt = -spt / 2 - val + smti32;
-            if (r1Alt > 0 && r1Alt < mpr) { mpr = r1Alt; }
+            if (r1Alt > 0 && r1Alt < mpr)
+            {
+              mpr = r1Alt;
+            }
             r1Alt = r1Alt - 2 * smti32;
-            if (r1Alt > 0 && r1Alt < mpr) { mpr = r1Alt; }
+            if (r1Alt > 0 && r1Alt < mpr)
+            {
+              mpr = r1Alt;
+            }
           }
         }
         else
@@ -618,33 +718,51 @@ class G4QSS3
           spt = rho13 * 2 * costh3;
           smti32 = -rho13 * sinth3 * sqrt3;
           r1 = spt - val;
-          if (r1 > 0) { mpr = r1; }
+          if (r1 > 0)
+          {
+            mpr = r1;
+          }
           r1 = -spt / 2 - val + smti32;
-          if ((r1 > 0) && (r1 < mpr)) { mpr = r1; }
+          if ((r1 > 0) && (r1 < mpr))
+          {
+            mpr = r1;
+          }
           r1 = r1 - 2 * smti32;
-          if ((r1 > 0) && (r1 < mpr)) { mpr = r1; }
+          if ((r1 > 0) && (r1 < mpr))
+          {
+            mpr = r1;
+          }
 
           if (discAlt >= 0)
           {
             G4double sdAlt, sAlt, tAlt, r1Alt, rsdAlt;
             sdAlt = std::sqrt(discAlt);
             rsdAlt = rAlt + sdAlt;
-            if (rsdAlt > 0) {
+            if (rsdAlt > 0)
+            {
               sAlt = std::cbrt(rsdAlt);
-            } else {
+            }
+            else
+            {
               sAlt = -std::cbrt(std::fabs(rsdAlt));
             }
 
             rsdAlt = rAlt - sdAlt;
-            if (rsdAlt > 0) {
+            if (rsdAlt > 0)
+            {
               tAlt = std::cbrt(rsdAlt);
-            } else {
+            }
+            else
+            {
               tAlt = -std::cbrt(std::fabs(rsdAlt));
             }
 
             r1Alt = sAlt + tAlt - val;
 
-            if (r1Alt > 0 && r1Alt < mpr) { mpr = r1Alt; }
+            if (r1Alt > 0 && r1Alt < mpr)
+            {
+              mpr = r1Alt;
+            }
           }
           else
           {
@@ -655,11 +773,20 @@ class G4QSS3
             sptAlt = rho13 * 2 * costh3Alt;
             smti32Alt = -rho13 * sinth3Alt * sqrt3;
             r1Alt = sptAlt - val;
-            if (r1Alt > 0 && r1Alt < mpr) { mpr = r1Alt; }
+            if (r1Alt > 0 && r1Alt < mpr)
+            {
+              mpr = r1Alt;
+            }
             r1Alt = -sptAlt / 2 - val + smti32Alt;
-            if (r1Alt > 0 && r1Alt < mpr) { mpr = r1Alt; }
+            if (r1Alt > 0 && r1Alt < mpr)
+            {
+              mpr = r1Alt;
+            }
             r1Alt = r1Alt - 2 * smti32Alt;
-            if (r1Alt > 0 && r1Alt < mpr) { mpr = r1Alt; }
+            if (r1Alt > 0 && r1Alt < mpr)
+            {
+              mpr = r1Alt;
+            }
           }
         }
       }

@@ -108,11 +108,12 @@ G4VtkPolydataPipeline::G4VtkPolydataPipeline(G4String nameIn, const G4VtkVisCont
   actor->SetVisibility(1);
 
   // set actor properties from vis context
-  if (vc.fDrawingStyle == G4ViewParameters::hsr) {
-  }
-  else if (vc.fDrawingStyle == G4ViewParameters::hlr) {
-  }
-  else if (vc.fDrawingStyle == G4ViewParameters::wireframe) {
+  if (vc.fDrawingStyle == G4ViewParameters::hsr)
+  {}
+  else if (vc.fDrawingStyle == G4ViewParameters::hlr)
+  {}
+  else if (vc.fDrawingStyle == G4ViewParameters::wireframe)
+  {
     actor->GetProperty()->SetRepresentationToWireframe();
   }
 
@@ -159,7 +160,8 @@ void G4VtkPolydataPipeline::SetPolydata(const G4Polyhedron& polyhedron)
 {
   G4bool notLastFace;
   int iVert = 0;
-  do {
+  do
+  {
     G4Point3D vertex[4];
     G4int edgeFlag[4];
     G4Normal3D normals[4];
@@ -168,7 +170,8 @@ void G4VtkPolydataPipeline::SetPolydata(const G4Polyhedron& polyhedron)
 
     vtkSmartPointer<vtkIdList> poly = vtkSmartPointer<vtkIdList>::New();
     // loop over vertices
-    for (int i = 0; i < nEdges; i++) {
+    for (int i = 0; i < nEdges; i++)
+    {
       polydataPoints->InsertNextPoint(vertex[i].x(), vertex[i].y(), vertex[i].z());
       poly->InsertNextId(iVert);
       iVert++;
@@ -178,20 +181,22 @@ void G4VtkPolydataPipeline::SetPolydata(const G4Polyhedron& polyhedron)
   } while (notLastFace);
 }
 
-void G4VtkPolydataPipeline::SetPolydata(vtkPolyData *polydataIn) {
+void G4VtkPolydataPipeline::SetPolydata(vtkPolyData* polydataIn)
+{
   polydata->DeepCopy(polydataIn);
 }
-
 
 void G4VtkPolydataPipeline::SetPolydata(const G4Polyline& polyline)
 {
   // Data data
   const size_t nLines = polyline.size();
 
-  for (size_t i = 0; i < nLines; ++i) {
+  for (size_t i = 0; i < nLines; ++i)
+  {
     auto id = polydataPoints->InsertNextPoint(polyline[i].x(), polyline[i].y(), polyline[i].z());
 
-    if (i < nLines - 1) {
+    if (i < nLines - 1)
+    {
       vtkSmartPointer<vtkLine> line = vtkSmartPointer<vtkLine>::New();
       line->GetPointIds()->SetId(0, id);
       line->GetPointIds()->SetId(1, id + 1);

@@ -26,9 +26,9 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   G4EmParticleList 
+// ClassName:   G4EmParticleList
 //
-// Author:      V.Ivanchenko 04.05.2017 
+// Author:      V.Ivanchenko 04.05.2017
 //
 // Modified:
 //
@@ -37,29 +37,65 @@
 
 #include "G4EmParticleList.hh"
 
-G4EmParticleList::G4EmParticleList() 
+G4EmParticleList::G4EmParticleList()
 {
-  pNames = 
-    { 
-        "gamma",            "e-",           "e+",           "mu+",        "mu-",
-          "pi+",           "pi-",        "kaon+",         "kaon-",     "proton",
-  "anti_proton",         "alpha",          "He3",    "GenericIon",         "B+",
-           "B-",            "D+",           "D-",           "Ds+",        "Ds-",
-     "anti_He3",    "anti_alpha","anti_deuteron","anti_lambda_c+","anti_omega-",
-"anti_sigma_c+","anti_sigma_c++",  "anti_sigma+",   "anti_sigma-","anti_triton",
-   "anti_xi_c+",      "anti_xi-",     "deuteron",     "lambda_c+",     "omega-",
-     "sigma_c+",     "sigma_c++",       "sigma+",        "sigma-",       "tau+",
-	 "tau-",        "triton",        "xi_c+",           "xi-",        "Bc+",
-	  "Bc-",      "omega_b-","anti_omega_b-",      "sigma_b+",   "sigma_b-",
-"anti_sigma_b+", "anti_sigma_b-",        "xi_b-",    "anti_xi_b-"
-    };
+  pNames = {"gamma",
+            "e-",
+            "e+",
+            "mu+",
+            "mu-",
+            "pi+",
+            "pi-",
+            "kaon+",
+            "kaon-",
+            "proton",
+            "anti_proton",
+            "alpha",
+            "He3",
+            "GenericIon",
+            "B+",
+            "B-",
+            "D+",
+            "D-",
+            "Ds+",
+            "Ds-",
+            "anti_He3",
+            "anti_alpha",
+            "anti_deuteron",
+            "anti_lambda_c+",
+            "anti_omega-",
+            "anti_sigma_c+",
+            "anti_sigma_c++",
+            "anti_sigma+",
+            "anti_sigma-",
+            "anti_triton",
+            "anti_xi_c+",
+            "anti_xi-",
+            "deuteron",
+            "lambda_c+",
+            "omega-",
+            "sigma_c+",
+            "sigma_c++",
+            "sigma+",
+            "sigma-",
+            "tau+",
+            "tau-",
+            "triton",
+            "xi_c+",
+            "xi-",
+            "Bc+",
+            "Bc-",
+            "omega_b-",
+            "anti_omega_b-",
+            "sigma_b+",
+            "sigma_b-",
+            "anti_sigma_b+",
+            "anti_sigma_b-",
+            "xi_b-",
+            "anti_xi_b-"};
 
-  cNames = 
-    { 
-           "e-",           "e+",           "mu+",        "mu-",           "pi+",
-          "pi-",        "kaon+",         "kaon-",     "proton",   "anti_proton",
-        "alpha",          "He3",    "GenericIon",   "deuteron",        "triton"
-    };
+  cNames = {"e-",     "e+",          "mu+",   "mu-", "pi+",        "pi-",      "kaon+", "kaon-",
+            "proton", "anti_proton", "alpha", "He3", "GenericIon", "deuteron", "triton"};
 }
 
 const std::vector<G4String>& G4EmParticleList::PartNames() const
@@ -71,4 +107,3 @@ const std::vector<G4String>& G4EmParticleList::EmChargedPartNames() const
 {
   return cNames;
 }
-

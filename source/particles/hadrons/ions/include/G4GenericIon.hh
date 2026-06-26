@@ -38,19 +38,21 @@
 // to this class in his/her UserPhysicsList
 // ----------------------------------------------------------------------
 
-#ifndef G4GenericIon_h
-#define G4GenericIon_h 1
+#ifndef G4GENERICION_HH
+#define G4GENERICION_HH
 
 #include "G4Ions.hh"
 
 class G4GenericIon : public G4Ions
 {
   public:
+
     static G4GenericIon* Definition();
     static G4GenericIon* GenericIonDefinition();
     static G4GenericIon* GenericIon();
 
   private:
+
     G4GenericIon() {}
     ~G4GenericIon() override = default;
 

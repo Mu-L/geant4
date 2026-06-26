@@ -28,14 +28,14 @@
 // Author: Youhei Morita, 12.09.2001
 // --------------------------------------------------------------------
 #ifndef G4MCTSIMVERTEX_HH
-#define G4MCTSIMVERTEX_HH 1
+#define G4MCTSIMVERTEX_HH
+
+#include "G4MCTSimParticle.hh"
+#include "G4ThreeVector.hh"
+#include "G4Types.hh"
 
 #include <iostream>
 #include <vector>
-
-#include "G4Types.hh"
-#include "G4ThreeVector.hh"
-#include "G4MCTSimParticle.hh"
 
 class G4MCTSimVertex
 {
@@ -43,14 +43,13 @@ class G4MCTSimVertex
 
     G4MCTSimVertex();
     G4MCTSimVertex(const G4ThreeVector& x, G4double t);
-    G4MCTSimVertex(const G4ThreeVector& x, G4double t,
-                   const G4String& vname, G4int ncopy,
+    G4MCTSimVertex(const G4ThreeVector& x, G4double t, const G4String& vname, G4int ncopy,
                    const G4String& pname);
     ~G4MCTSimVertex();
 
     inline G4MCTSimVertex(const G4MCTSimVertex& right);
     inline G4MCTSimVertex& operator=(const G4MCTSimVertex& right);
-      // copy constructor and assignment operator
+    // copy constructor and assignment operator
 
     inline void SetID(G4int i);
     inline G4int GetID() const;
@@ -107,17 +106,16 @@ inline G4MCTSimVertex::G4MCTSimVertex(const G4MCTSimVertex& right)
   *this = right;
 }
 
-inline G4MCTSimVertex& G4MCTSimVertex::operator=(
-  const G4MCTSimVertex& right)
+inline G4MCTSimVertex& G4MCTSimVertex::operator=(const G4MCTSimVertex& right)
 {
-  inParticleTrackID      = right.inParticleTrackID;
+  inParticleTrackID = right.inParticleTrackID;
   outParticleTrackIDList = right.outParticleTrackIDList;
 
-  id                 = right.id;
-  position           = right.position;
-  time               = right.time;
-  volumeName         = right.volumeName;
-  volumeNumber       = right.volumeNumber;
+  id = right.id;
+  position = right.position;
+  time = right.time;
+  volumeName = right.volumeName;
+  volumeNumber = right.volumeNumber;
   creatorProcessName = right.creatorProcessName;
 
   return *this;
@@ -228,7 +226,7 @@ inline G4int G4MCTSimVertex::AddOutParticle(G4int out)
 inline G4int G4MCTSimVertex::GetOutParticleTrackID(G4int i) const
 {
   G4int size = (G4int)outParticleTrackIDList.size();
-  if(i >= 0 && i < size)
+  if (i >= 0 && i < size)
     return outParticleTrackIDList[i];
   else
     return 0;

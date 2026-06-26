@@ -22,7 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // Class G4PVReplica Implementation
 //
 // Original author: Paul Kent (CERN), 29 July 1995 - First non-stub version
@@ -30,27 +30,23 @@
 // ----------------------------------------------------------------------
 
 #include "G4PVReplica.hh"
+
 #include "G4LogicalVolume.hh"
 
 // ----------------------------------------------------------------------
 G4PVRManager G4PVReplica::subInstanceManager;
-  // Helping in the use of the class G4PVRManager.
+// Helping in the use of the class G4PVRManager.
 
 #define G4MT_copyNo ((subInstanceManager.offset[instanceID]).fcopyNo)
-  // This macro changes the references to fields that are now encapsulated
-  // in the class G4ReplicaData.
+// This macro changes the references to fields that are now encapsulated
+// in the class G4ReplicaData.
 
 // ----------------------------------------------------------------------
-G4PVReplica::G4PVReplica( const G4String& pName,
-                                G4LogicalVolume* pLogical,
-                                G4VPhysicalVolume* pMother,
-                          const EAxis pAxis,
-                          const G4int nReplicas,
-                          const G4double width,
-                          const G4double offset )
+G4PVReplica::G4PVReplica(const G4String& pName, G4LogicalVolume* pLogical,
+                         G4VPhysicalVolume* pMother, const EAxis pAxis, const G4int nReplicas,
+                         const G4double width, const G4double offset)
   : G4VPhysicalVolume(nullptr, G4ThreeVector(), pName, pLogical, pMother)
 {
-
   instanceID = subInstanceManager.CreateSubInstance();
 
   if ((pMother == nullptr) || (pMother->GetLogicalVolume() == nullptr))
@@ -58,15 +54,14 @@ G4PVReplica::G4PVReplica( const G4String& pName,
     std::ostringstream message;
     message << "NULL pointer specified as mother volume." << G4endl
             << "The world volume cannot be sliced or parameterised !";
-    G4Exception("G4PVReplica::G4PVReplica()", "GeomVol0002",
-                FatalException, message);
+    G4Exception("G4PVReplica::G4PVReplica()", "GeomVol0002", FatalException, message);
     return;
   }
   G4LogicalVolume* motherLogical = pMother->GetLogicalVolume();
   if (pLogical == motherLogical)
   {
-    G4Exception("G4PVReplica::G4PVReplica()", "GeomVol0002",
-                FatalException, "Cannot place a volume inside itself!");
+    G4Exception("G4PVReplica::G4PVReplica()", "GeomVol0002", FatalException,
+                "Cannot place a volume inside itself!");
     return;
   }
   SetMotherLogical(motherLogical);
@@ -74,43 +69,34 @@ G4PVReplica::G4PVReplica( const G4String& pName,
   if (motherLogical->GetNoDaughters() != 1)
   {
     std::ostringstream message;
-    message << "Replica or parameterised volume must be the only daughter !"
-            << G4endl
+    message << "Replica or parameterised volume must be the only daughter !" << G4endl
             << "     Mother physical volume: " << pMother->GetName() << G4endl
             << "     Replicated volume: " << pName;
-    G4Exception("G4PVReplica::G4PVReplica()", "GeomVol0002",
-                FatalException, message);
+    G4Exception("G4PVReplica::G4PVReplica()", "GeomVol0002", FatalException, message);
     return;
   }
-  CheckAndSetParameters (pAxis, nReplicas, width, offset);
+  CheckAndSetParameters(pAxis, nReplicas, width, offset);
 }
 
 // ----------------------------------------------------------------------
-G4PVReplica::G4PVReplica( const G4String& pName,
-                                G4LogicalVolume* pLogical,
-                                G4LogicalVolume* pMotherLogical,
-                          const EAxis pAxis,
-                          const G4int nReplicas,
-                          const G4double width,
-                          const G4double offset )
+G4PVReplica::G4PVReplica(const G4String& pName, G4LogicalVolume* pLogical,
+                         G4LogicalVolume* pMotherLogical, const EAxis pAxis, const G4int nReplicas,
+                         const G4double width, const G4double offset)
   : G4VPhysicalVolume(nullptr, G4ThreeVector(), pName, pLogical, nullptr)
 {
-
   instanceID = subInstanceManager.CreateSubInstance();
 
   if (pMotherLogical == nullptr)
   {
     std::ostringstream message;
-    message << "NULL pointer specified as mother volume for "
-            << pName << ".";
-    G4Exception("G4PVReplica::G4PVReplica()", "GeomVol0002",
-                FatalException, message);
+    message << "NULL pointer specified as mother volume for " << pName << ".";
+    G4Exception("G4PVReplica::G4PVReplica()", "GeomVol0002", FatalException, message);
     return;
   }
   if (pLogical == pMotherLogical)
   {
-    G4Exception("G4PVReplica::G4PVReplica()", "GeomVol0002",
-                FatalException, "Cannot place a volume inside itself!");
+    G4Exception("G4PVReplica::G4PVReplica()", "GeomVol0002", FatalException,
+                "Cannot place a volume inside itself!");
     return;
   }
 
@@ -119,24 +105,18 @@ G4PVReplica::G4PVReplica( const G4String& pName,
   if (pMotherLogical->GetNoDaughters() != 1)
   {
     std::ostringstream message;
-    message << "Replica or parameterised volume must be the only daughter !"
-            << G4endl
-            << "     Mother logical volume: " << pMotherLogical->GetName()
-            << G4endl
+    message << "Replica or parameterised volume must be the only daughter !" << G4endl
+            << "     Mother logical volume: " << pMotherLogical->GetName() << G4endl
             << "     Replicated volume: " << pName;
-    G4Exception("G4PVReplica::G4PVReplica()", "GeomVol0002",
-                FatalException, message);
+    G4Exception("G4PVReplica::G4PVReplica()", "GeomVol0002", FatalException, message);
     return;
   }
-  CheckAndSetParameters (pAxis, nReplicas, width, offset);
+  CheckAndSetParameters(pAxis, nReplicas, width, offset);
 }
 
 // ----------------------------------------------------------------------
-G4PVReplica::G4PVReplica( const G4String& pName,
-                                G4int nReplicas,
-                                EAxis pAxis,
-                                G4LogicalVolume* pLogical,
-                                G4LogicalVolume* pMotherLogical )
+G4PVReplica::G4PVReplica(const G4String& pName, G4int nReplicas, EAxis pAxis,
+                         G4LogicalVolume* pLogical, G4LogicalVolume* pMotherLogical)
   : G4VPhysicalVolume(nullptr, G4ThreeVector(), pName, pLogical, nullptr)
 {
   // Constructor for derived type(s)
@@ -148,16 +128,14 @@ G4PVReplica::G4PVReplica( const G4String& pName,
   if (pMotherLogical == nullptr)
   {
     std::ostringstream message;
-    message << "NULL pointer specified as mother volume for "
-            << pName << ".";
-    G4Exception("G4PVReplica::G4PVReplica()", "GeomVol0002",
-                FatalException, message);
+    message << "NULL pointer specified as mother volume for " << pName << ".";
+    G4Exception("G4PVReplica::G4PVReplica()", "GeomVol0002", FatalException, message);
     return;
   }
   if (pLogical == pMotherLogical)
   {
-    G4Exception("G4PVReplica::G4PVReplica()", "GeomVol0002",
-                FatalException, "Cannot place a volume inside itself!");
+    G4Exception("G4PVReplica::G4PVReplica()", "GeomVol0002", FatalException,
+                "Cannot place a volume inside itself!");
     return;
   }
   CheckOnlyDaughter(pMotherLogical);
@@ -175,7 +153,7 @@ G4PVReplica::G4PVReplica( const G4String& pName,
     return;
   }
   **/
-  CheckAndSetParameters (pAxis, nReplicas, 0.0, 0.0);
+  CheckAndSetParameters(pAxis, nReplicas, 0.0, 0.0);
 }
 
 // ----------------------------------------------------------------------
@@ -184,39 +162,33 @@ void G4PVReplica::CheckOnlyDaughter(G4LogicalVolume* pMotherLogical)
   if (pMotherLogical->GetNoDaughters() != 0)
   {
     std::ostringstream message;
-    message << "Replica or parameterised volume must be the only daughter !"
-            << G4endl
-            << "     Mother logical volume: " << pMotherLogical->GetName()
-            << G4endl
+    message << "Replica or parameterised volume must be the only daughter !" << G4endl
+            << "     Mother logical volume: " << pMotherLogical->GetName() << G4endl
             << "     Replicated volume: " << this->GetName() << G4endl
-            << "     Existing 'sister': " << pMotherLogical->GetDaughter(0)
-                                              ->GetName(); 
-    G4Exception("G4PVReplica::G4PVReplica()", "GeomVol0002",
-                FatalException, message);
+            << "     Existing 'sister': " << pMotherLogical->GetDaughter(0)->GetName();
+    G4Exception("G4PVReplica::G4PVReplica()", "GeomVol0002", FatalException, message);
     return;
   }
 }
 
 // ----------------------------------------------------------------------
-void G4PVReplica::CheckAndSetParameters( const EAxis pAxis,
-                                         const G4int nReplicas,
-                                         const G4double width,
-                                         const G4double offset)
-{    
-  if (nReplicas<1)
+void G4PVReplica::CheckAndSetParameters(const EAxis pAxis, const G4int nReplicas,
+                                        const G4double width, const G4double offset)
+{
+  if (nReplicas < 1)
   {
-    G4Exception("G4PVReplica::CheckAndSetParameters()", "GeomVol0002",
-                FatalException, "Illegal number of replicas.");
+    G4Exception("G4PVReplica::CheckAndSetParameters()", "GeomVol0002", FatalException,
+                "Illegal number of replicas.");
   }
-  fnReplicas=nReplicas;
-  if (width<0)
+  fnReplicas = nReplicas;
+  if (width < 0)
   {
-    G4Exception("G4PVReplica::CheckAndSetParameters()", "GeomVol0002",
-                FatalException, "Width must be positive.");
+    G4Exception("G4PVReplica::CheckAndSetParameters()", "GeomVol0002", FatalException,
+                "Width must be positive.");
   }
-  fwidth  = width;
+  fwidth = width;
   foffset = offset;
-  faxis   = pAxis;
+  faxis = pAxis;
 
   // Create rotation matrix for phi axis case & check axis is valid
   //
@@ -227,8 +199,8 @@ void G4PVReplica::CheckAndSetParameters( const EAxis pAxis,
       pRMat = new G4RotationMatrix();
       if (pRMat == nullptr)
       {
-        G4Exception("G4PVReplica::CheckAndSetParameters()", "GeomVol0003",
-                    FatalException, "Rotation matrix allocation failed.");
+        G4Exception("G4PVReplica::CheckAndSetParameters()", "GeomVol0003", FatalException,
+                    "Rotation matrix allocation failed.");
       }
       SetRotation(pRMat);
       break;
@@ -239,14 +211,14 @@ void G4PVReplica::CheckAndSetParameters( const EAxis pAxis,
     case kUndefined:
       break;
     default:
-      G4Exception("G4PVReplica::CheckAndSetParameters()", "GeomVol0002",
-                  FatalException, "Unknown axis of replication.");
+      G4Exception("G4PVReplica::CheckAndSetParameters()", "GeomVol0002", FatalException,
+                  "Unknown axis of replication.");
       break;
   }
 }
 
 // ----------------------------------------------------------------------
-G4PVReplica::G4PVReplica( __void__& a )
+G4PVReplica::G4PVReplica(__void__& a)
   : G4VPhysicalVolume(a), faxis(kZAxis), fnReplicas(0), fwidth(0.), foffset(0.)
 {
   instanceID = subInstanceManager.CreateSubInstance();
@@ -255,7 +227,7 @@ G4PVReplica::G4PVReplica( __void__& a )
 // ----------------------------------------------------------------------
 G4bool G4PVReplica::IsMany() const
 {
-  return false; 
+  return false;
 }
 
 // ----------------------------------------------------------------------
@@ -265,7 +237,7 @@ G4int G4PVReplica::GetCopyNo() const
 }
 
 // ----------------------------------------------------------------------
-void  G4PVReplica::SetCopyNo(G4int newCopyNo)
+void G4PVReplica::SetCopyNo(G4int newCopyNo)
 {
   G4MT_copyNo = newCopyNo;
 }
@@ -301,11 +273,8 @@ EVolume G4PVReplica::VolumeType() const
 }
 
 // ----------------------------------------------------------------------
-void G4PVReplica::GetReplicationData( EAxis& axis,
-                                      G4int& nReplicas,
-                                      G4double& width,
-                                      G4double& offset,
-                                      G4bool& consuming ) const
+void G4PVReplica::GetReplicationData(EAxis& axis, G4int& nReplicas, G4double& width,
+                                     G4double& offset, G4bool& consuming) const
 {
   axis = faxis;
   nReplicas = fnReplicas;
@@ -317,20 +286,20 @@ void G4PVReplica::GetReplicationData( EAxis& axis,
 // ----------------------------------------------------------------------
 G4bool G4PVReplica::IsRegularStructure() const
 {
-  return (fRegularVolsId != 0); 
+  return (fRegularVolsId != 0);
 }
 
 // ----------------------------------------------------------------------
 G4int G4PVReplica::GetRegularStructureId() const
 {
-  return fRegularVolsId; 
+  return fRegularVolsId;
 }
 
 // ----------------------------------------------------------------------
-void G4PVReplica::SetRegularStructureId( G4int code )
+void G4PVReplica::SetRegularStructureId(G4int code)
 {
-  fRegularVolsId = code; 
-} 
+  fRegularVolsId = code;
+}
 
 // ----------------------------------------------------------------------
 // Returns the private data instance manager.
@@ -349,8 +318,7 @@ const G4PVRManager& G4PVReplica::GetSubInstanceManager()
 //
 void G4PVReplica::InitialiseWorker(G4PVReplica* pMasterObject)
 {
-  
-  G4VPhysicalVolume::InitialiseWorker( pMasterObject, nullptr, G4ThreeVector());
+  G4VPhysicalVolume::InitialiseWorker(pMasterObject, nullptr, G4ThreeVector());
   subInstanceManager.SlaveCopySubInstanceArray();
   G4MT_copyNo = -1;
 
@@ -369,8 +337,8 @@ void G4PVReplica::InitialiseWorker(G4PVReplica* pMasterObject)
       pRMat = new G4RotationMatrix();
       if (pRMat == nullptr)
       {
-        G4Exception("G4PVReplica::InitialiseWorker(...)", "GeomVol0003",
-                    FatalException, "Rotation matrix allocation failed.");
+        G4Exception("G4PVReplica::InitialiseWorker(...)", "GeomVol0003", FatalException,
+                    "Rotation matrix allocation failed.");
       }
       SetRotation(pRMat);
       break;
@@ -381,8 +349,8 @@ void G4PVReplica::InitialiseWorker(G4PVReplica* pMasterObject)
     case kUndefined:
       break;
     default:
-      G4Exception("G4PVReplica::InitialiseWorker(...)", "GeomVol0002",
-                  FatalException, "Unknown axis of replication.");
+      G4Exception("G4PVReplica::InitialiseWorker(...)", "GeomVol0002", FatalException,
+                  "Unknown axis of replication.");
       break;
   }
 }
@@ -394,7 +362,7 @@ void G4PVReplica::InitialiseWorker(G4PVReplica* pMasterObject)
 //
 void G4PVReplica::TerminateWorker(G4PVReplica* /*pMasterObject*/)
 {
-  if ( faxis==kPhi )
+  if (faxis == kPhi)
   {
     delete GetRotation();
   }

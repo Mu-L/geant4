@@ -31,21 +31,26 @@
 
 #include "G4HadNucl3BodyAngDst.hh"
 
-namespace {
-  // Powers of Ekin^0..3, blocks of S^0..3 for AB
-  static const G4double abC[2][4][4] = {
-    // -------- Initial state (h,K,Y,g)-nucleon, outgoing N --------
-    { { 0.1729, -0.145, 0.0454,-0.0048 }, {  7.108,-13.032, 8.3515,-1.4095 },
-      {-17.961, 41.781, -30.26, 5.3505 }, { 16.403,-40.799, 32.882,-6.0946 } 
-    },
-    // -------- Initial state (h,K,Y,g)-nucleon, outgoing h,K,Y --------
-    { { 0.0376, 0.2383,-0.1541,  0.025 }, { 1.4331, 1.8253,-1.5201, 0.3059 },
-      { -3.135, 1.7648,-1.5692, 0.3252 }, { 6.4864,-16.735, 17.185,-3.5277 } 
-    }
-  };
-}
+namespace
+{
+// Powers of Ekin^0..3, blocks of S^0..3 for AB
+static const G4double abC[2][4][4] = {
+  // -------- Initial state (h,K,Y,g)-nucleon, outgoing N --------
+  {{0.1729, -0.145, 0.0454, -0.0048},
+   {7.108, -13.032, 8.3515, -1.4095},
+   {-17.961, 41.781, -30.26, 5.3505},
+   {16.403, -40.799, 32.882, -6.0946}},
+  // -------- Initial state (h,K,Y,g)-nucleon, outgoing h,K,Y --------
+  {{0.0376, 0.2383, -0.1541, 0.025},
+   {1.4331, 1.8253, -1.5201, 0.3059},
+   {-3.135, 1.7648, -1.5692, 0.3252},
+   {6.4864, -16.735, 17.185, -3.5277}}};
+}  // namespace
 
 // Constructor passes arrays to templated base class
 
 G4HadNucl3BodyAngDst::G4HadNucl3BodyAngDst(G4int verbose)
-  : G4InuclParamAngDst("G4HadNucl3BodyAngDist", abC, verbose) {;}
+  : G4InuclParamAngDst("G4HadNucl3BodyAngDist", abC, verbose)
+{
+  ;
+}

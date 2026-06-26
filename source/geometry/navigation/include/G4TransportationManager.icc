@@ -35,10 +35,9 @@
 // Utility method to return the active navigator for tracking, always
 // the first in the collection of registered navigators.
 //
-inline
-G4Navigator* G4TransportationManager::GetNavigatorForTracking() const
+inline G4Navigator* G4TransportationManager::GetNavigatorForTracking() const
 {
-   return fNavigators[0];
+  return fNavigators[0];
 }
 
 // ----------------------------------------------------------------------------
@@ -47,11 +46,10 @@ G4Navigator* G4TransportationManager::GetNavigatorForTracking() const
 // Set the tracking world volume.
 // This method is to be invoked by G4RunManagerKernel.
 //
-inline 
-void G4TransportationManager::SetWorldForTracking(G4VPhysicalVolume* theWorld)
+inline void G4TransportationManager::SetWorldForTracking(G4VPhysicalVolume* theWorld)
 {
-   fWorlds[0] = theWorld;
-   fNavigators[0]->SetWorldVolume(theWorld);
+  fWorlds[0] = theWorld;
+  fNavigators[0]->SetWorldVolume(theWorld);
 }
 
 // ----------------------------------------------------------------------------
@@ -59,10 +57,9 @@ void G4TransportationManager::SetWorldForTracking(G4VPhysicalVolume* theWorld)
 //
 // Return the associated propagator in field.
 //
-inline
-G4PropagatorInField* G4TransportationManager::GetPropagatorInField() const
+inline G4PropagatorInField* G4TransportationManager::GetPropagatorInField() const
 {
-   return fPropagatorInField;
+  return fPropagatorInField;
 }
 
 // ----------------------------------------------------------------------------
@@ -70,11 +67,9 @@ G4PropagatorInField* G4TransportationManager::GetPropagatorInField() const
 //
 // Set the associated propagator in field.
 //
-inline
-void G4TransportationManager::
-SetPropagatorInField( G4PropagatorInField* newFieldPropagator )
+inline void G4TransportationManager::SetPropagatorInField(G4PropagatorInField* newFieldPropagator)
 {
-   fPropagatorInField = newFieldPropagator;
+  fPropagatorInField = newFieldPropagator;
 }
 
 // ----------------------------------------------------------------------------
@@ -82,10 +77,9 @@ SetPropagatorInField( G4PropagatorInField* newFieldPropagator )
 //
 // Return the associated field manager.
 //
-inline
-G4FieldManager* G4TransportationManager::GetFieldManager() const
+inline G4FieldManager* G4TransportationManager::GetFieldManager() const
 {
-   return fFieldManager;
+  return fFieldManager;
 }
 
 // ----------------------------------------------------------------------------
@@ -93,10 +87,9 @@ G4FieldManager* G4TransportationManager::GetFieldManager() const
 //
 // Return the number of active navigators.
 //
-inline
-size_t G4TransportationManager::GetNoActiveNavigators() const
+inline size_t G4TransportationManager::GetNoActiveNavigators() const
 {
-   return fActiveNavigators.size();
+  return fActiveNavigators.size();
 }
 
 // ----------------------------------------------------------------------------
@@ -104,12 +97,10 @@ size_t G4TransportationManager::GetNoActiveNavigators() const
 //
 // Return an iterator to the list of active navigators.
 //
-inline
-std::vector<G4Navigator*>::iterator
-G4TransportationManager::GetActiveNavigatorsIterator()
+inline std::vector<G4Navigator*>::iterator G4TransportationManager::GetActiveNavigatorsIterator()
 {
-   auto iter = std::vector<G4Navigator*>::iterator(fActiveNavigators.begin());
-   return iter;
+  auto iter = std::vector<G4Navigator*>::iterator(fActiveNavigators.begin());
+  return iter;
 }
 
 // ----------------------------------------------------------------------------
@@ -117,10 +108,9 @@ G4TransportationManager::GetActiveNavigatorsIterator()
 //
 // Return the number of registerd worlds.
 //
-inline
-size_t G4TransportationManager::GetNoWorlds() const
+inline size_t G4TransportationManager::GetNoWorlds() const
 {
-   return fWorlds.size();
+  return fWorlds.size();
 }
 
 // ----------------------------------------------------------------------------
@@ -128,12 +118,10 @@ size_t G4TransportationManager::GetNoWorlds() const
 //
 // Return an iterator to the list of registered worlds.
 //
-inline
-std::vector<G4VPhysicalVolume*>::iterator
-G4TransportationManager::GetWorldsIterator()
+inline std::vector<G4VPhysicalVolume*>::iterator G4TransportationManager::GetWorldsIterator()
 {
-   auto iter = std::vector<G4VPhysicalVolume*>::iterator(fWorlds.begin());
-   return iter;
+  auto iter = std::vector<G4VPhysicalVolume*>::iterator(fWorlds.begin());
+  return iter;
 }
 
 // ----------------------------------------------------------------------------
@@ -141,8 +129,7 @@ G4TransportationManager::GetWorldsIterator()
 //
 // Return pointer to the created navigation safety helper instance.
 //
-inline
-G4SafetyHelper* G4TransportationManager::GetSafetyHelper() const
+inline G4SafetyHelper* G4TransportationManager::GetSafetyHelper() const
 {
   return fSafetyHelper;
 }

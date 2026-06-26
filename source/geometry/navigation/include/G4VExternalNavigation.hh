@@ -33,7 +33,7 @@
 // Authors: V.Vlachoudis, G.Cosmo (CERN), 2019
 // --------------------------------------------------------------------
 #ifndef G4VEXTERNALNAVIGATION_HH
-#define G4VEXTERNALNAVIGATION_HH 1
+#define G4VEXTERNALNAVIGATION_HH
 
 #include "G4LogicalVolume.hh"
 #include "G4NavigationHistory.hh"
@@ -45,6 +45,7 @@
 /**
  * @brief G4VExternalNavigation is a pure virtual class to be specialised
  * by the user for tracking with an external navigation.
+ * @ingroup geometry_navigation
  */
 
 class G4VExternalNavigation : public G4VNavigation
@@ -72,9 +73,8 @@ class G4VExternalNavigation : public G4VNavigation
      *  @param[in] direction Not used.
      *  @returns Whether the point is inside the solid or not.
      */
-    virtual EInside Inside( const G4VSolid*      solid,
-                            const G4ThreeVector& position,
-                            const G4ThreeVector& direction );
+    virtual EInside Inside(const G4VSolid* solid, const G4ThreeVector& position,
+                           const G4ThreeVector& direction);
 
     /**
      * Updates any relevant internal state to take account that the location
@@ -85,8 +85,8 @@ class G4VExternalNavigation : public G4VNavigation
      *  @param[in] motherPhysical Volume to be considered.
      *  @param[in] localPoint Point to be checked.
      */
-     void RelocateWithinVolume( G4VPhysicalVolume* motherPhysical,
-                                const G4ThreeVector& localPoint ) override;
+    void RelocateWithinVolume(G4VPhysicalVolume* motherPhysical,
+                              const G4ThreeVector& localPoint) override;
 };
 
 #endif

@@ -90,6 +90,8 @@ LUPI_HOST Reaction::Reaction( GIDI::Reaction const &a_reaction, SetupInfo &a_set
         m_GRIN_inelastic( nullptr ),
         m_GRIN_capture( nullptr ) {
 
+    a_setupInfo.m_domainMin = a_reaction.domainMin( );
+    a_setupInfo.m_domainMax = a_reaction.domainMax( );
     a_setupInfo.m_hasFinalStatePhotons = false;
 #ifndef MCGIDI_USE_OUTPUT_CHANNEL
     OutputChannel *m_outputChannel;

@@ -33,30 +33,31 @@
 //
 
 #include "G4NucleonNuclearCrossSection.hh"
+
+#include "G4ComponentBarNucleonNucleusXsc.hh"
 #include "G4DynamicParticle.hh"
 #include "G4ParticleDefinition.hh"
-#include "G4ComponentBarNucleonNucleusXsc.hh"
 
 ///////////////////////////////////////////////////////////////////////////////
 
 G4NucleonNuclearCrossSection::G4NucleonNuclearCrossSection()
   : G4VCrossSectionDataSet(Default_Name())
 {
-  fBarash = new G4ComponentBarNucleonNucleusXsc();  
+  fBarash = new G4ComponentBarNucleonNucleusXsc();
 }
 
 ////////////////////////////////////////////////////////////////////////////
 
-G4bool G4NucleonNuclearCrossSection::IsElementApplicable(
-       const G4DynamicParticle*, G4int Z, const G4Material*)
+G4bool G4NucleonNuclearCrossSection::IsElementApplicable(const G4DynamicParticle*, G4int Z,
+                                                         const G4Material*)
 {
   return (Z > 1);
 }
 
 ////////////////////////////////////////////////////////////////////////////
 
-G4double G4NucleonNuclearCrossSection::GetElementCrossSection(
-         const G4DynamicParticle* dp, G4int Z, const G4Material*)
+G4double G4NucleonNuclearCrossSection::GetElementCrossSection(const G4DynamicParticle* dp, G4int Z,
+                                                              const G4Material*)
 {
   ComputeCrossSections(dp->GetDefinition(), dp->GetKineticEnergy(), Z);
   return fInelasticXsc;
@@ -64,9 +65,8 @@ G4double G4NucleonNuclearCrossSection::GetElementCrossSection(
 
 ////////////////////////////////////////////////////////////////////////////
 
-void G4NucleonNuclearCrossSection::ComputeCrossSections(
-            const G4ParticleDefinition* pd, 
-            G4double kinEnergy, G4int Z)
+void G4NucleonNuclearCrossSection::ComputeCrossSections(const G4ParticleDefinition* pd,
+                                                        G4double kinEnergy, G4int Z)
 {
   fBarash->ComputeCrossSections(pd, kinEnergy, Z);
   fTotalXsc = fBarash->GetTotalXsc();
@@ -76,16 +76,14 @@ void G4NucleonNuclearCrossSection::ComputeCrossSections(
 
 ////////////////////////////////////////////////////////////////////////////
 
-void
-G4NucleonNuclearCrossSection::CrossSectionDescription(std::ostream& outFile) const
+void G4NucleonNuclearCrossSection::CrossSectionDescription(std::ostream& outFile) const
 {
   outFile << "G4NucleonNuclearCrossSection is a variant of the Barashenkov\n"
           << "cross section parameterization to be used of protons and\n"
           << "nucleons on targets heavier than hydrogen.  It is intended for\n"
           << "use as a cross section component and is currently used by\n"
           << "G4BGGNucleonInelasticXS.  It is valid for incident energies up\n"
-          << "to 1 TeV.\n"; 
+          << "to 1 TeV.\n";
 }
 
 ////////////////////////////////////////////////////////////////////////////
-

@@ -25,48 +25,48 @@
 //
 //
 //
- // Hadronic Process: Energy Range Manager
- // original by H.P. Wellisch
- // modified by J.L. Chuma, TRIUMF, 22-Nov-1996
- // Last modified: 24-Mar-1997
- 
-#ifndef G4EnergyRangeManager_h
-#define G4EnergyRangeManager_h 1
- 
+// Hadronic Process: Energy Range Manager
+// original by H.P. Wellisch
+// modified by J.L. Chuma, TRIUMF, 22-Nov-1996
+// Last modified: 24-Mar-1997
+
+#ifndef G4ENERGYRANGEMANAGER_HH
+#define G4ENERGYRANGEMANAGER_HH
+
 #include "G4HadronicInteraction.hh"
+
 #include <vector>
- 
-class G4EnergyRangeManager 
-{     
-public:
-    
-  explicit G4EnergyRangeManager();
- 
-  ~G4EnergyRangeManager();
-        
-  void RegisterMe(G4HadronicInteraction* a);
-    
-  G4HadronicInteraction* GetHadronicInteraction(const G4HadProjectile & aHadProjectile, 
-                                                G4Nucleus & aTargetNucleus,
-						const G4Material *aMaterial,
-						const G4Element *anElement ) const;
 
-  std::vector<G4HadronicInteraction*>& GetHadronicInteractionList();
-    
-  void Dump( G4int verbose = 0 ); 
+class G4EnergyRangeManager
+{
+  public:
 
-  void BuildPhysicsTable(const G4ParticleDefinition&);
-    
-private:
+    explicit G4EnergyRangeManager();
 
-  G4EnergyRangeManager(const G4EnergyRangeManager& right);    
-  G4EnergyRangeManager& operator=( const G4EnergyRangeManager &right );
-  G4bool operator==( const G4EnergyRangeManager &right ) const;
-  G4bool operator!=( const G4EnergyRangeManager &right ) const;
-     
-  G4int theHadronicInteractionCounter;
-  std::vector<G4HadronicInteraction*> theHadronicInteraction;
+    ~G4EnergyRangeManager();
+
+    void RegisterMe(G4HadronicInteraction* a);
+
+    G4HadronicInteraction* GetHadronicInteraction(const G4HadProjectile& aHadProjectile,
+                                                  G4Nucleus& aTargetNucleus,
+                                                  const G4Material* aMaterial,
+                                                  const G4Element* anElement) const;
+
+    std::vector<G4HadronicInteraction*>& GetHadronicInteractionList();
+
+    void Dump(G4int verbose = 0);
+
+    void BuildPhysicsTable(const G4ParticleDefinition&);
+
+  private:
+
+    G4EnergyRangeManager(const G4EnergyRangeManager& right);
+    G4EnergyRangeManager& operator=(const G4EnergyRangeManager& right);
+    G4bool operator==(const G4EnergyRangeManager& right) const;
+    G4bool operator!=(const G4EnergyRangeManager& right) const;
+
+    G4int theHadronicInteractionCounter;
+    std::vector<G4HadronicInteraction*> theHadronicInteraction;
 };
 
 #endif
- 

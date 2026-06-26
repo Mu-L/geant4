@@ -28,14 +28,14 @@
 // G4VRML2File.cc
 // Satoshi Tanaka & Yasuhide Sawada
 
-#include <stdio.h>   // sscanf
-#include <stdlib.h>  // getenv
-
-#include "G4VSceneHandler.hh"
-
 #include "G4VRML2File.hh"
+
 #include "G4VRML2FileSceneHandler.hh"
 #include "G4VRML2FileViewer.hh"
+#include "G4VSceneHandler.hh"
+
+#include <stdio.h>  // sscanf
+#include <stdlib.h>  // getenv
 
 G4VRML2File::G4VRML2File()
   : G4VGraphicsSystem("VRML2FILE", "VRML2FILE", G4VGraphicsSystem::fileWriter)
@@ -52,13 +52,12 @@ G4VSceneHandler* G4VRML2File::CreateSceneHandler(const G4String& name)
   return p;
 }
 
-G4VViewer* G4VRML2File::CreateViewer(G4VSceneHandler& scene,
-                                     const G4String& name)
+G4VViewer* G4VRML2File::CreateViewer(G4VSceneHandler& scene, const G4String& name)
 {
   G4VViewer* pView = NULL;
 
-  G4VRML2FileSceneHandler* pScene = (G4VRML2FileSceneHandler*) &scene;
-  pView                           = new G4VRML2FileViewer(*pScene, name);
+  G4VRML2FileSceneHandler* pScene = (G4VRML2FileSceneHandler*)&scene;
+  pView = new G4VRML2FileViewer(*pScene, name);
 
   return pView;
 }

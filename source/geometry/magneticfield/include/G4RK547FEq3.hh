@@ -35,15 +35,16 @@
 // Author: Dmitry Sorokin (CERN, Google Summer of Code 2017), 02.11.2017
 // Supervision: John Apostolakis (CERN)
 // --------------------------------------------------------------------
-#ifndef G4RK547FEq3_HH
-#define G4RK547FEq3_HH
+#ifndef G4RK547FEQ3_HH
+#define G4RK547FEQ3_HH
 
-#include "G4MagIntegratorStepper.hh"
 #include "G4FieldTrack.hh"
+#include "G4MagIntegratorStepper.hh"
 
 /**
  * @brief G4RK547FEq3 is an implementation of the 7 stage embedded
  * Runge-Kutta 4,5 pair.
+ * @ingroup geometry_magneticfield
  */
 
 class G4RK547FEq3 : public G4MagIntegratorStepper
@@ -55,8 +56,7 @@ class G4RK547FEq3 : public G4MagIntegratorStepper
      *  @param[in] EqRhs Pointer to the provided equation of motion.
      *  @param[in] integrationVariables The number of integration variables.
      */
-    G4RK547FEq3(G4EquationOfMotion* EqRhs,
-                G4int integrationVariables = 6);
+    G4RK547FEq3(G4EquationOfMotion* EqRhs, G4int integrationVariables = 6);
 
     /**
      * Default Destructor.
@@ -67,7 +67,7 @@ class G4RK547FEq3 : public G4MagIntegratorStepper
      * Copy constructor and assignment operator not allowed.
      */
     G4RK547FEq3(const G4RK547FEq3&) = delete;
-    G4RK547FEq3& operator = (const G4RK547FEq3&) = delete;
+    G4RK547FEq3& operator=(const G4RK547FEq3&) = delete;
 
     /**
      * The stepper for the Runge Kutta integration.
@@ -80,11 +80,8 @@ class G4RK547FEq3 : public G4MagIntegratorStepper
      *  @param[out] yOutput Integration output.
      *  @param[out] yError The estimated error.
      */
-    void Stepper( const G4double yInput[],
-                  const G4double dydx[],
-                        G4double hstep,
-                        G4double yOutput[],
-                        G4double yError[] ) override;
+    void Stepper(const G4double yInput[], const G4double dydx[], G4double hstep, G4double yOutput[],
+                 G4double yError[]) override;
 
     /**
      * Same as the Stepper() function above, with dydx also in ouput.
@@ -95,12 +92,8 @@ class G4RK547FEq3 : public G4MagIntegratorStepper
      *  @param[out] yError The estimated error.
      *  @param[out] dydxOutput dydx in output.
      */
-    void Stepper( const G4double yInput[],
-                  const G4double dydx[],
-                        G4double hstep,
-                        G4double yOutput[],
-                        G4double yError[],
-                        G4double dydxOutput[] );
+    void Stepper(const G4double yInput[], const G4double dydx[], G4double hstep, G4double yOutput[],
+                 G4double yError[], G4double dydxOutput[]);
 
     /**
      * Returns the distance from chord line.
@@ -122,18 +115,14 @@ class G4RK547FEq3 : public G4MagIntegratorStepper
     /**
      * Utility method used in Stepper() for computing the actual step.
      */
-    void makeStep( const G4double yInput[],
-                   const G4double dydx[],
-                   const G4double hstep,
-                         G4double yOutput[],
-                         G4double* dydxOutput = nullptr,
-                         G4double* yError = nullptr) const;
+    void makeStep(const G4double yInput[], const G4double dydx[], const G4double hstep,
+                  G4double yOutput[], G4double* dydxOutput = nullptr,
+                  G4double* yError = nullptr) const;
+
   private:
 
-    G4double fyIn[G4FieldTrack::ncompSVEC],
-             fdydx[G4FieldTrack::ncompSVEC],
-             fyOut[G4FieldTrack::ncompSVEC],
-             fdydxOut[G4FieldTrack::ncompSVEC];
+    G4double fyIn[G4FieldTrack::ncompSVEC], fdydx[G4FieldTrack::ncompSVEC],
+      fyOut[G4FieldTrack::ncompSVEC], fdydxOut[G4FieldTrack::ncompSVEC];
 
     G4double fhstep = -1.0;
 };

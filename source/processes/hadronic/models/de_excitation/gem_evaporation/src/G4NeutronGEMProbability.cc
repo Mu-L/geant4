@@ -30,10 +30,7 @@
 
 #include "G4NeutronGEMProbability.hh"
 
-G4NeutronGEMProbability::G4NeutronGEMProbability() :
-    G4GEMProbability(1,0,1.0/2.0) // A,Z,Gamma
+G4NeutronGEMProbability::G4NeutronGEMProbability() : G4GEMProbability(1, 0, 1.0 / 2.0)  // A,Z,Gamma
 {}
 
-G4NeutronGEMProbability::~G4NeutronGEMProbability()
-{}
-
+G4NeutronGEMProbability::~G4NeutronGEMProbability() {}

@@ -57,7 +57,8 @@ void G4ParticleHPLabAngularEnergy::Init(std::istream& aDataFile)
   nCosTh = new G4int[esize];
   theData = new G4ParticleHPVector*[esize];
   theSecondManager = new G4InterpolationManager[esize];
-  for (G4int i = 0; i < nEnergies; ++i) {
+  for (G4int i = 0; i < nEnergies; ++i)
+  {
     aDataFile >> theEnergies[i];
     theEnergies[i] *= eV;
     aDataFile >> nCosTh[i];
@@ -65,7 +66,8 @@ void G4ParticleHPLabAngularEnergy::Init(std::istream& aDataFile)
     const std::size_t dsize = nCosTh[i] > 0 ? nCosTh[i] : 1;
     theData[i] = new G4ParticleHPVector[dsize];
     G4double label;
-    for (std::size_t ii = 0; ii < dsize; ++ii) {
+    for (std::size_t ii = 0; ii < dsize; ++ii)
+    {
       aDataFile >> label;
       theData[i][ii].SetLabel(label);
       theData[i][ii].Init(aDataFile, eV);
@@ -81,29 +83,36 @@ G4ReactionProduct* G4ParticleHPLabAngularEnergy::Sample(G4double anEnergy, G4dou
   auto Z = static_cast<G4int>(massCode / 1000);
   auto A = static_cast<G4int>(massCode - 1000 * Z);
 
-  if (massCode == 0) {
+  if (massCode == 0)
+  {
     result->SetDefinition(G4Gamma::Gamma());
   }
-  else if (A == 0) {
+  else if (A == 0)
+  {
     result->SetDefinition(G4Electron::Electron());
     if (Z == 1) result->SetDefinition(G4Positron::Positron());
   }
-  else if (A == 1) {
+  else if (A == 1)
+  {
     result->SetDefinition(G4Neutron::Neutron());
     if (Z == 1) result->SetDefinition(G4Proton::Proton());
   }
-  else if (A == 2) {
+  else if (A == 2)
+  {
     result->SetDefinition(G4Deuteron::Deuteron());
   }
-  else if (A == 3) {
+  else if (A == 3)
+  {
     result->SetDefinition(G4Triton::Triton());
     if (Z == 2) result->SetDefinition(G4He3::He3());
   }
-  else if (A == 4) {
+  else if (A == 4)
+  {
     result->SetDefinition(G4Alpha::Alpha());
     if (Z != 2) throw G4HadronicException(__FILE__, __LINE__, "Unknown ion case 1");
   }
-  else {
+  else
+  {
     throw G4HadronicException(__FILE__, __LINE__,
                               "G4ParticleHPLabAngularEnergy: Unknown ion case 2");
   }
@@ -112,7 +121,8 @@ G4ReactionProduct* G4ParticleHPLabAngularEnergy::Sample(G4double anEnergy, G4dou
   G4double cosTh, secEnergy;
   G4int i, it(0);
   // find the energy bin
-  for (i = 0; i < nEnergies; i++) {
+  for (i = 0; i < nEnergies; i++)
+  {
     it = i;
     if (anEnergy < theEnergies[i]) break;
   }
@@ -125,7 +135,8 @@ G4ReactionProduct* G4ParticleHPLabAngularEnergy::Sample(G4double anEnergy, G4dou
     // CosTheta:
     G4ParticleHPVector theThVec;
     theThVec.SetInterpolationManager(theSecondManager[it]);
-    for (i = 0; i < nCosTh[it]; i++) {
+    for (i = 0; i < nCosTh[it]; i++)
+    {
       theThVec.SetX(i, theData[it][i].GetLabel());
       theThVec.SetY(i, theData[it][i].GetIntegral());
     }
@@ -136,7 +147,8 @@ G4ReactionProduct* G4ParticleHPLabAngularEnergy::Sample(G4double anEnergy, G4dou
     // Now the secondary energy:
     G4double x, x1, x2, y1, y2, y, E;
     G4int i1(0);
-    for (i = 1; i < nCosTh[it]; i++) {
+    for (i = 1; i < nCosTh[it]; i++)
+    {
       i1 = i;
       if (cosTh < theData[it][i].GetLabel()) break;
     }
@@ -146,7 +158,8 @@ G4ReactionProduct* G4ParticleHPLabAngularEnergy::Sample(G4double anEnergy, G4dou
     x2 = theData[it][i1].GetLabel();
     G4ParticleHPVector theBuff1a;
     theBuff1a.SetInterpolationManager(theData[it][i1 - 1].GetInterpolationManager());
-    for (i = 0; i < theData[it][i1 - 1].GetVectorLength(); i++) {
+    for (i = 0; i < theData[it][i1 - 1].GetVectorLength(); i++)
+    {
       E = theData[it][i1 - 1].GetX(i);
       y1 = theData[it][i1 - 1].GetY(i);
       y2 = theData[it][i1].GetY(E);
@@ -155,7 +168,8 @@ G4ReactionProduct* G4ParticleHPLabAngularEnergy::Sample(G4double anEnergy, G4dou
     }
     G4ParticleHPVector theBuff2a;
     theBuff2a.SetInterpolationManager(theData[it][i1].GetInterpolationManager());
-    for (i = 0; i < theData[it][i1].GetVectorLength(); i++) {
+    for (i = 0; i < theData[it][i1].GetVectorLength(); i++)
+    {
       E = theData[it][i1].GetX(i);
       y1 = theData[it][i1 - 1].GetY(E);
       y2 = theData[it][i1].GetY(i);
@@ -173,12 +187,14 @@ G4ReactionProduct* G4ParticleHPLabAngularEnergy::Sample(G4double anEnergy, G4dou
     G4double x, x1, x2, y1, y2, y, tmp, E;
     // integrate the prob for each costh, and select theta.
     G4ParticleHPVector run1;
-    for (i = 0; i < nCosTh[it - 1]; i++) {
+    for (i = 0; i < nCosTh[it - 1]; i++)
+    {
       run1.SetX(i, theData[it - 1][i].GetLabel());
       run1.SetY(i, theData[it - 1][i].GetIntegral());
     }
     G4ParticleHPVector run2;
-    for (i = 0; i < nCosTh[it]; i++) {
+    for (i = 0; i < nCosTh[it]; i++)
+    {
       run2.SetX(i, theData[it][i].GetLabel());
       run2.SetY(i, theData[it][i].GetIntegral());
     }
@@ -188,7 +204,8 @@ G4ReactionProduct* G4ParticleHPLabAngularEnergy::Sample(G4double anEnergy, G4dou
     x2 = theEnergies[it];
     G4ParticleHPVector thBuff1;  // to be interpolated as run1.
     thBuff1.SetInterpolationManager(theSecondManager[it - 1]);
-    for (i = 0; i < run1.GetVectorLength(); i++) {
+    for (i = 0; i < run1.GetVectorLength(); i++)
+    {
       tmp = run1.GetX(i);  // theta
       y1 = run1.GetY(i);  // integral
       y2 = run2.GetY(tmp);
@@ -197,7 +214,8 @@ G4ReactionProduct* G4ParticleHPLabAngularEnergy::Sample(G4double anEnergy, G4dou
     }
     G4ParticleHPVector thBuff2;
     thBuff2.SetInterpolationManager(theSecondManager[it]);
-    for (i = 0; i < run2.GetVectorLength(); i++) {
+    for (i = 0; i < run2.GetVectorLength(); i++)
+    {
       tmp = run2.GetX(i);  // theta
       y1 = run1.GetY(tmp);  // integral
       y2 = run2.GetY(i);
@@ -232,7 +250,8 @@ G4ReactionProduct* G4ParticleHPLabAngularEnergy::Sample(G4double anEnergy, G4dou
     G4int i1(0), i2(0);
     // get the indixes of the vectors close to theta for low energy
     // first it-1 !!!! i.e. low in energy
-    for (i = 1; i < nCosTh[it - 1]; i++) {
+    for (i = 1; i < nCosTh[it - 1]; i++)
+    {
       i1 = i;
       if (cosTh < theData[it - 1][i].GetLabel()) break;
     }
@@ -242,7 +261,8 @@ G4ReactionProduct* G4ParticleHPLabAngularEnergy::Sample(G4double anEnergy, G4dou
     x2 = theData[it - 1][i1].GetLabel();
     G4ParticleHPVector theBuff1a;
     theBuff1a.SetInterpolationManager(theData[it - 1][i1 - 1].GetInterpolationManager());
-    for (i = 0; i < theData[it - 1][i1 - 1].GetVectorLength(); i++) {
+    for (i = 0; i < theData[it - 1][i1 - 1].GetVectorLength(); i++)
+    {
       E = theData[it - 1][i1 - 1].GetX(i);
       y1 = theData[it - 1][i1 - 1].GetY(i);
       y2 = theData[it - 1][i1].GetY(E);
@@ -251,7 +271,8 @@ G4ReactionProduct* G4ParticleHPLabAngularEnergy::Sample(G4double anEnergy, G4dou
     }
     G4ParticleHPVector theBuff2a;
     theBuff2a.SetInterpolationManager(theData[it - 1][i1].GetInterpolationManager());
-    for (i = 0; i < theData[it - 1][i1].GetVectorLength(); i++) {
+    for (i = 0; i < theData[it - 1][i1].GetVectorLength(); i++)
+    {
       E = theData[it - 1][i1].GetX(i);
       y1 = theData[it - 1][i1 - 1].GetY(E);
       y2 = theData[it - 1][i1].GetY(i);
@@ -263,7 +284,8 @@ G4ReactionProduct* G4ParticleHPLabAngularEnergy::Sample(G4double anEnergy, G4dou
 
     // get the indixes of the vectors close to theta for high energy
     // then it !!!! i.e. high in energy
-    for (i = 1; i < nCosTh[it]; i++) {
+    for (i = 1; i < nCosTh[it]; i++)
+    {
       i2 = i;
       if (cosTh < theData[it][i2].GetLabel()) break;
     }  // sonderfaelle mit i1 oder i2 head on fehlen. @@@@@
@@ -271,7 +293,8 @@ G4ReactionProduct* G4ParticleHPLabAngularEnergy::Sample(G4double anEnergy, G4dou
     x2 = theData[it][i2].GetLabel();
     G4ParticleHPVector theBuff1b;
     theBuff1b.SetInterpolationManager(theData[it][i2 - 1].GetInterpolationManager());
-    for (i = 0; i < theData[it][i2 - 1].GetVectorLength(); i++) {
+    for (i = 0; i < theData[it][i2 - 1].GetVectorLength(); i++)
+    {
       E = theData[it][i2 - 1].GetX(i);
       y1 = theData[it][i2 - 1].GetY(i);
       y2 = theData[it][i2].GetY(E);
@@ -282,7 +305,8 @@ G4ReactionProduct* G4ParticleHPLabAngularEnergy::Sample(G4double anEnergy, G4dou
     theBuff2b.SetInterpolationManager(theData[it][i2].GetInterpolationManager());
     // 080808  i1 -> i2
     // for(i=0;i<theData[it][i1].GetVectorLength(); i++)
-    for (i = 0; i < theData[it][i2].GetVectorLength(); i++) {
+    for (i = 0; i < theData[it][i2].GetVectorLength(); i++)
+    {
       // E = theData[it][i1].GetX(i);
       // y1 = theData[it][i1-1].GetY(E);
       // y2 = theData[it][i1].GetY(i);
@@ -301,7 +325,8 @@ G4ReactionProduct* G4ParticleHPLabAngularEnergy::Sample(G4double anEnergy, G4dou
     x2 = theEnergies[it];
     G4ParticleHPVector theOne1;
     theOne1.SetInterpolationManager(theStore1.GetInterpolationManager());
-    for (i = 0; i < theStore1.GetVectorLength(); i++) {
+    for (i = 0; i < theStore1.GetVectorLength(); i++)
+    {
       E = theStore1.GetX(i);
       y1 = theStore1.GetY(i);
       y2 = theStore2.GetY(E);
@@ -310,7 +335,8 @@ G4ReactionProduct* G4ParticleHPLabAngularEnergy::Sample(G4double anEnergy, G4dou
     }
     G4ParticleHPVector theOne2;
     theOne2.SetInterpolationManager(theStore2.GetInterpolationManager());
-    for (i = 0; i < theStore2.GetVectorLength(); i++) {
+    for (i = 0; i < theStore2.GetVectorLength(); i++)
+    {
       E = theStore2.GetX(i);
       y1 = theStore1.GetY(E);
       y2 = theStore2.GetY(i);

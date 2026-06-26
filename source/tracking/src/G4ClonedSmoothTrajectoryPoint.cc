@@ -29,11 +29,11 @@
 // --------------------------------------------------------------------
 
 #include "G4ClonedSmoothTrajectoryPoint.hh"
-#include "G4SmoothTrajectoryPoint.hh"
 
 #include "G4AttDef.hh"
 #include "G4AttDefStore.hh"
 #include "G4AttValue.hh"
+#include "G4SmoothTrajectoryPoint.hh"
 #include "G4UnitsTable.hh"
 
 // #define G4ATTDEBUG
@@ -56,14 +56,18 @@ G4ClonedSmoothTrajectoryPoint::G4ClonedSmoothTrajectoryPoint(const G4SmoothTraje
   : fPosition(right.fPosition), fAuxiliaryPointVector(right.fAuxiliaryPointVector)
 {}
 
-G4ClonedSmoothTrajectoryPoint::~G4ClonedSmoothTrajectoryPoint() { delete fAuxiliaryPointVector; }
+G4ClonedSmoothTrajectoryPoint::~G4ClonedSmoothTrajectoryPoint()
+{
+  delete fAuxiliaryPointVector;
+}
 
 const std::map<G4String, G4AttDef>* G4ClonedSmoothTrajectoryPoint::GetAttDefs() const
 {
   G4bool isNew;
   std::map<G4String, G4AttDef>* store =
     G4AttDefStore::GetInstance("G4ClonedSmoothTrajectoryPoint", isNew);
-  if (isNew) {
+  if (isNew)
+  {
     G4String Pos("Pos");
     (*store)[Pos] = G4AttDef(Pos, "Step Position", "Physics", "G4BestUnit", "G4ThreeVector");
     G4String Aux("Aux");
@@ -77,8 +81,10 @@ std::vector<G4AttValue>* G4ClonedSmoothTrajectoryPoint::CreateAttValues() const
 {
   auto values = new std::vector<G4AttValue>;
 
-  if (fAuxiliaryPointVector != nullptr) {
-    for (const auto& iAux : *fAuxiliaryPointVector) {
+  if (fAuxiliaryPointVector != nullptr)
+  {
+    for (const auto& iAux : *fAuxiliaryPointVector)
+    {
       values->push_back(G4AttValue("Aux", G4BestUnit(iAux, "Length"), ""));
     }
   }

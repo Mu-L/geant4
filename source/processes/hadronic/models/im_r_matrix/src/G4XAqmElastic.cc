@@ -31,51 +31,46 @@
 //
 //      File name:     G4XAqmElastic
 //
-//      Author:        
-// 
+//      Author:
+//
 //      Creation date: 15 April 1999
 //
-//      Modifications: 
-//      
-// Additive Quark Model Elastic cross section 
+//      Modifications:
+//
+// Additive Quark Model Elastic cross section
 // (H.J. Lipkin and F. Scheck, Phys.Rev. 16 (1966) 71
 //
 // -------------------------------------------------------------------
 
-#include "globals.hh"
-#include "G4ios.hh"
-#include "G4Pow.hh"
 #include "G4XAqmElastic.hh"
-#include "G4XAqmTotal.hh"
-#include "G4KineticTrack.hh"
 
+#include "G4KineticTrack.hh"
+#include "G4Pow.hh"
+#include "G4XAqmTotal.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
 // Validity range of this cross-section
 const G4double G4XAqmElastic::_lowLimit = 0.;
 const G4double G4XAqmElastic::_highLimit = DBL_MAX;
 
 G4XAqmElastic::G4XAqmElastic()
-{ 
-  // As a first approximation the model is assumed to be valid over 
+{
+  // As a first approximation the model is assumed to be valid over
   // the entire energy range
 }
 
+G4XAqmElastic::~G4XAqmElastic() {}
 
-G4XAqmElastic::~G4XAqmElastic()
-{ }
-
-
-G4bool G4XAqmElastic::operator==(const G4XAqmElastic &right) const
+G4bool G4XAqmElastic::operator==(const G4XAqmElastic& right) const
 {
-  return (this == (G4XAqmElastic *) &right);
+  return (this == (G4XAqmElastic*)&right);
 }
 
-
-G4bool G4XAqmElastic::operator!=(const G4XAqmElastic &right) const
+G4bool G4XAqmElastic::operator!=(const G4XAqmElastic& right) const
 {
-  return (this != (G4XAqmElastic *) &right);
+  return (this != (G4XAqmElastic*)&right);
 }
-
 
 G4double G4XAqmElastic::CrossSection(const G4KineticTrack& trk1, const G4KineticTrack& trk2) const
 {
@@ -87,17 +82,17 @@ G4double G4XAqmElastic::CrossSection(const G4KineticTrack& trk1, const G4Kinetic
 
   G4XAqmTotal aqmTotal;
 
-  G4double sigmaTot = aqmTotal.CrossSection(trk1,trk2);
-  sigma = coeff * G4Pow::GetInstance()->powA(sigmaTot,param);  
+  G4double sigmaTot = aqmTotal.CrossSection(trk1, trk2);
+  sigma = coeff * G4Pow::GetInstance()->powA(sigmaTot, param);
 
   // Verify that elastic cross section < total cross section
 
-  if (sigma > sigmaTot) 
-    throw G4HadronicException(__FILE__, __LINE__, "G4XAqmElastic::CrossSection - elastic cross section greater than total");
+  if (sigma > sigmaTot)
+    throw G4HadronicException(
+      __FILE__, __LINE__, "G4XAqmElastic::CrossSection - elastic cross section greater than total");
 
   return sigma;
 }
-
 
 G4String G4XAqmElastic::Name() const
 {
@@ -105,10 +100,9 @@ G4String G4XAqmElastic::Name() const
   return name;
 }
 
-
 G4bool G4XAqmElastic::IsValid(G4double e) const
 {
-  G4bool answer = InLimits(e,_lowLimit,_highLimit);
+  G4bool answer = InLimits(e, _lowLimit, _highLimit);
 
   return answer;
 }

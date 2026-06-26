@@ -33,19 +33,21 @@
 // **********************************************************************
 //
 
-#ifndef G4AntiXibMinus_h
-#define G4AntiXibMinus_h 1
+#ifndef G4ANTIXIBMINUS_HH
+#define G4ANTIXIBMINUS_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4AntiXibMinus : public G4ParticleDefinition
 {
   public:
+
     static G4AntiXibMinus* Definition();
     static G4AntiXibMinus* AntiXibMinusDefinition();
     static G4AntiXibMinus* AntiXibMinus();
 
   private:
+
     G4AntiXibMinus() {}
     ~G4AntiXibMinus() override = default;
 

@@ -31,14 +31,15 @@
 #include "G4ElectroMagneticField.hh"
 
 G4ElectroMagneticField::G4ElectroMagneticField()
-  : G4Field( false ) // No gravitational field (default)
-{
-}
+  : G4Field(false)  // No gravitational field (default)
+{}
 
-G4ElectroMagneticField& 
-G4ElectroMagneticField::operator = (const G4ElectroMagneticField& p)
+G4ElectroMagneticField& G4ElectroMagneticField::operator=(const G4ElectroMagneticField& p)
 {
-  if (&p == this) { return *this; }
+  if (&p == this)
+  {
+    return *this;
+  }
   G4Field::operator=(p);
   return *this;
 }

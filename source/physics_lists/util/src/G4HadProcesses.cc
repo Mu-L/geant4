@@ -35,22 +35,23 @@
 //
 
 #include "G4HadProcesses.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4PhysListUtil.hh"
-#include "G4ParticleTable.hh"
-#include "G4Neutron.hh"
-#include "G4CrossSectionDataSetRegistry.hh"
-#include "G4VCrossSectionDataSet.hh"
+
+#include "G4ComponentAntiNuclNuclearXS.hh"
 #include "G4ComponentGGHadronNucleusXsc.hh"
 #include "G4ComponentGGNuclNuclXsc.hh"
-#include "G4ComponentAntiNuclNuclearXS.hh"
+#include "G4CrossSectionDataSetRegistry.hh"
 #include "G4HadronicParameters.hh"
-#include "G4PhysicsListHelper.hh"
+#include "G4Neutron.hh"
 #include "G4NeutronCaptureProcess.hh"
-#include "G4NeutronRadCapture.hh"
-#include "G4NeutronInelasticXS.hh"
-#include "G4NeutronElasticXS.hh"
 #include "G4NeutronCaptureXS.hh"
+#include "G4NeutronElasticXS.hh"
+#include "G4NeutronInelasticXS.hh"
+#include "G4NeutronRadCapture.hh"
+#include "G4ParticleTable.hh"
+#include "G4PhysListUtil.hh"
+#include "G4PhysicsListHelper.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4VCrossSectionDataSet.hh"
 
 const G4ParticleDefinition* G4HadProcesses::FindParticle(const G4String& pname)
 {
@@ -64,7 +65,7 @@ G4HadronicProcess* G4HadProcesses::FindInelasticProcess(const G4ParticleDefiniti
 
 G4HadronicProcess* G4HadProcesses::FindInelasticProcess(const G4String& pname)
 {
-  return FindInelasticProcess( FindParticle(pname) );
+  return FindInelasticProcess(FindParticle(pname));
 }
 
 G4HadronicProcess* G4HadProcesses::FindElasticProcess(const G4ParticleDefinition* ptr)
@@ -74,7 +75,7 @@ G4HadronicProcess* G4HadProcesses::FindElasticProcess(const G4ParticleDefinition
 
 G4HadronicProcess* G4HadProcesses::FindElasticProcess(const G4String& pname)
 {
-  return FindElasticProcess( FindParticle(pname) );
+  return FindElasticProcess(FindParticle(pname));
 }
 
 G4HadronicProcess* G4HadProcesses::FindCaptureProcess()
@@ -91,13 +92,20 @@ G4CrossSectionInelastic* G4HadProcesses::InelasticXS(const G4String& compName)
 {
   G4CrossSectionInelastic* xs = nullptr;
   auto comp = G4CrossSectionDataSetRegistry::Instance()->GetComponentCrossSection(compName);
-  if( comp != nullptr ) {
+  if (comp != nullptr)
+  {
     xs = new G4CrossSectionInelastic(comp);
-  } else if( "Glauber-Gribov" == compName ) {
+  }
+  else if ("Glauber-Gribov" == compName)
+  {
     xs = new G4CrossSectionInelastic(new G4ComponentGGHadronNucleusXsc());
-  } else if( "Glauber-Gribov Nucl-nucl" == compName ) {
+  }
+  else if ("Glauber-Gribov Nucl-nucl" == compName)
+  {
     xs = new G4CrossSectionInelastic(new G4ComponentGGNuclNuclXsc());
-  } else if( "AntiAGlauber" == compName ) {
+  }
+  else if ("AntiAGlauber" == compName)
+  {
     xs = new G4CrossSectionInelastic(new G4ComponentAntiNuclNuclearXS());
   }
   return xs;
@@ -107,13 +115,20 @@ G4CrossSectionElastic* G4HadProcesses::ElasticXS(const G4String& compName)
 {
   G4CrossSectionElastic* xs = nullptr;
   auto comp = G4CrossSectionDataSetRegistry::Instance()->GetComponentCrossSection(compName);
-  if( comp != nullptr ) {
+  if (comp != nullptr)
+  {
     xs = new G4CrossSectionElastic(comp);
-  } else if( "Glauber-Gribov" == compName ) {
+  }
+  else if ("Glauber-Gribov" == compName)
+  {
     xs = new G4CrossSectionElastic(new G4ComponentGGHadronNucleusXsc());
-  } else if( "Glauber-Gribov Nucl-nucl" == compName ) {
+  }
+  else if ("Glauber-Gribov Nucl-nucl" == compName)
+  {
     xs = new G4CrossSectionElastic(new G4ComponentGGNuclNuclXsc());
-  } else if( "AntiAGlauber" == compName ) {
+  }
+  else if ("AntiAGlauber" == compName)
+  {
     xs = new G4CrossSectionElastic(new G4ComponentAntiNuclNuclearXS());
   }
   return xs;
@@ -123,11 +138,13 @@ G4bool G4HadProcesses::AddInelasticCrossSection(const G4ParticleDefinition* ptr,
                                                 G4VCrossSectionDataSet* xs)
 {
   G4bool isOK(false);
-  if( ptr != nullptr ) {
-    G4HadronicProcess* had = FindInelasticProcess( ptr );
-    if( had != nullptr ) {
+  if (ptr != nullptr)
+  {
+    G4HadronicProcess* had = FindInelasticProcess(ptr);
+    if (had != nullptr)
+    {
       isOK = true;
-      had->AddDataSet( xs );
+      had->AddDataSet(xs);
     }
   }
   return isOK;
@@ -135,17 +152,20 @@ G4bool G4HadProcesses::AddInelasticCrossSection(const G4ParticleDefinition* ptr,
 
 G4bool G4HadProcesses::AddInelasticCrossSection(const G4String& pname, G4VCrossSectionDataSet* xs)
 {
-  return AddInelasticCrossSection( FindParticle(pname), xs );
+  return AddInelasticCrossSection(FindParticle(pname), xs);
 }
 
-G4bool G4HadProcesses::AddElasticCrossSection(const G4ParticleDefinition* ptr, G4VCrossSectionDataSet* xs)
+G4bool G4HadProcesses::AddElasticCrossSection(const G4ParticleDefinition* ptr,
+                                              G4VCrossSectionDataSet* xs)
 {
   G4bool isOK(false);
-  if( ptr != nullptr ) {
-    G4HadronicProcess* had = FindElasticProcess( ptr );
-    if( had != nullptr ) {
+  if (ptr != nullptr)
+  {
+    G4HadronicProcess* had = FindElasticProcess(ptr);
+    if (had != nullptr)
+    {
       isOK = true;
-      had->AddDataSet( xs );
+      had->AddDataSet(xs);
     }
   }
   return isOK;
@@ -153,16 +173,17 @@ G4bool G4HadProcesses::AddElasticCrossSection(const G4ParticleDefinition* ptr, G
 
 G4bool G4HadProcesses::AddElasticCrossSection(const G4String& pname, G4VCrossSectionDataSet* xs)
 {
-  return AddElasticCrossSection( FindParticle(pname), xs );
+  return AddElasticCrossSection(FindParticle(pname), xs);
 }
 
 G4bool G4HadProcesses::AddCaptureCrossSection(G4VCrossSectionDataSet* xs)
 {
   G4bool isOK(false);
   G4HadronicProcess* had = FindCaptureProcess();
-  if( had != nullptr ) {
+  if (had != nullptr)
+  {
     isOK = true;
-    had->AddDataSet( xs );
+    had->AddDataSet(xs);
   }
   return isOK;
 }
@@ -171,9 +192,10 @@ G4bool G4HadProcesses::AddFissionCrossSection(G4VCrossSectionDataSet* xs)
 {
   G4bool isOK(false);
   G4HadronicProcess* had = FindFissionProcess();
-  if( had != nullptr ) {
+  if (had != nullptr)
+  {
     isOK = true;
-    had->AddDataSet( xs );
+    had->AddDataSet(xs);
   }
   return isOK;
 }
@@ -186,19 +208,23 @@ void G4HadProcesses::BuildNeutronInelasticAndCapture(G4HadronicProcess* nInel)
   G4HadronicProcess* nCap = new G4NeutronCaptureProcess("nCapture");
   nCap->RegisterMe(new G4NeutronRadCapture());
 
-  if ( useNeutronGeneral ) {
+  if (useNeutronGeneral)
+  {
     auto nGen = G4PhysListUtil::FindNeutronGeneralProcess();
     nGen->SetInelasticProcess(nInel);
     nGen->SetCaptureProcess(nCap);
-  } else {
+  }
+  else
+  {
     auto neutron = G4Neutron::Neutron();
     G4PhysicsListHelper* ph = G4PhysicsListHelper::GetPhysicsListHelper();
     nInel->AddDataSet(new G4NeutronInelasticXS());
     ph->RegisterProcess(nInel, neutron);
     ph->RegisterProcess(nCap, neutron);
   }
-  if ( param->ApplyFactorXS() ) {
-    nInel->MultiplyCrossSectionBy( param->XSFactorNucleonInelastic() );
+  if (param->ApplyFactorXS())
+  {
+    nInel->MultiplyCrossSectionBy(param->XSFactorNucleonInelastic());
   }
 }
 
@@ -207,16 +233,20 @@ void G4HadProcesses::BuildNeutronElastic(G4HadronicProcess* nEl)
   G4HadronicParameters* param = G4HadronicParameters::Instance();
   G4bool useNeutronGeneral = param->EnableNeutronGeneralProcess();
 
-  if ( useNeutronGeneral ) {
+  if (useNeutronGeneral)
+  {
     auto nGen = G4PhysListUtil::FindNeutronGeneralProcess();
     nGen->SetElasticProcess(nEl);
-  } else {
+  }
+  else
+  {
     auto neutron = G4Neutron::Neutron();
     nEl->AddDataSet(new G4NeutronElasticXS());
     G4PhysicsListHelper* ph = G4PhysicsListHelper::GetPhysicsListHelper();
     ph->RegisterProcess(nEl, neutron);
   }
-  if ( param->ApplyFactorXS() ) {
-    nEl->MultiplyCrossSectionBy( param->XSFactorNucleonElastic() );
+  if (param->ApplyFactorXS())
+  {
+    nEl->MultiplyCrossSectionBy(param->XSFactorNucleonElastic());
   }
 }

@@ -38,7 +38,7 @@
 // Author: V.Grichine, 18.04.1997
 // --------------------------------------------------------------------
 #ifndef G4VGAUSSIANQUADRATURE_HH
-#define G4VGAUSSIANQUADRATURE_HH 1
+#define G4VGAUSSIANQUADRATURE_HH
 
 #include "globals.hh"
 
@@ -46,31 +46,33 @@ using function = G4double (*)(G4double);
 
 class G4VGaussianQuadrature
 {
- public:
-  explicit G4VGaussianQuadrature(function pFunction);
-  // Base constructor
+  public:
 
-  virtual ~G4VGaussianQuadrature();
-  // Virtual destructor
+    explicit G4VGaussianQuadrature(function pFunction);
+    // Base constructor
 
-  G4VGaussianQuadrature(const G4VGaussianQuadrature&) = delete;
-  G4VGaussianQuadrature& operator=(const G4VGaussianQuadrature&) = delete;
+    virtual ~G4VGaussianQuadrature();
+    // Virtual destructor
 
-  G4double GetAbscissa(G4int index) const;
-  G4double GetWeight(G4int index) const;
-  G4int GetNumber() const;
-  // Access functions
+    G4VGaussianQuadrature(const G4VGaussianQuadrature&) = delete;
+    G4VGaussianQuadrature& operator=(const G4VGaussianQuadrature&) = delete;
 
- protected:
-  G4double GammaLogarithm(G4double xx);
-  // Auxiliary function which returns the value of std::log(gamma-function(x))
+    G4double GetAbscissa(G4int index) const;
+    G4double GetWeight(G4int index) const;
+    G4int GetNumber() const;
+    // Access functions
 
-  //  Data members common for GaussianQuadrature family
-  //
-  function fFunction;             // pointer to the function to be integrated
-  G4double* fAbscissa = nullptr;  // array of abscissas
-  G4double* fWeight   = nullptr;  // array of corresponding weights
-  G4int fNumber = 0;  // the number of points in fAbscissa and fWeight arrays
+  protected:
+
+    G4double GammaLogarithm(G4double xx);
+    // Auxiliary function which returns the value of std::log(gamma-function(x))
+
+    //  Data members common for GaussianQuadrature family
+    //
+    function fFunction;  // pointer to the function to be integrated
+    G4double* fAbscissa = nullptr;  // array of abscissas
+    G4double* fWeight = nullptr;  // array of corresponding weights
+    G4int fNumber = 0;  // the number of points in fAbscissa and fWeight arrays
 };
 
 #endif

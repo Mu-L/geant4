@@ -31,26 +31,26 @@
 //  Adjoint/reverse photo electric process
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4InversePEEffect_h
-#define G4InversePEEffect_h 1
+#ifndef G4INVERSEPEEFFECT_HH
+#define G4INVERSEPEEFFECT_HH
 
-#include "globals.hh"
 #include "G4VAdjointReverseReaction.hh"
+#include "globals.hh"
 
 class G4AdjointPhotoElectricModel;
 
 class G4InversePEEffect : public G4VAdjointReverseReaction
 {
- public:
-  explicit G4InversePEEffect(const G4String& process_name,
-                             G4AdjointPhotoElectricModel* aModel);
-  ~G4InversePEEffect() override;
+  public:
 
-  void ProcessDescription(std::ostream&) const override;
-  void DumpInfo() const override { ProcessDescription(G4cout); };
+    explicit G4InversePEEffect(const G4String& process_name, G4AdjointPhotoElectricModel* aModel);
+    ~G4InversePEEffect() override;
 
-  G4InversePEEffect(G4InversePEEffect&) = delete;
-  G4InversePEEffect& operator=(const G4InversePEEffect& right) = delete;
+    void ProcessDescription(std::ostream&) const override;
+    void DumpInfo() const override { ProcessDescription(G4cout); };
+
+    G4InversePEEffect(G4InversePEEffect&) = delete;
+    G4InversePEEffect& operator=(const G4InversePEEffect& right) = delete;
 };
 
 #endif

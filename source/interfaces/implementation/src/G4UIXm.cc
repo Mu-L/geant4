@@ -75,9 +75,11 @@ G4UIXm::G4UIXm(G4int argc, char** argv)
 
   Widget top = (Widget)interactorManager->GetMainInteractor();
 
-  if (std::getenv("XENVIRONMENT") == NULL) {
+  if (std::getenv("XENVIRONMENT") == NULL)
+  {
     XrmDatabase database = XrmGetDatabase(XtDisplay(top));
-    if (database != NULL) {
+    if (database != NULL)
+    {
       XrmPutLineResource(&database, "*topShadowColor:white");
       XrmPutLineResource(&database, "*bottomShadowColor:black");
       XrmPutLineResource(&database, "*foreground:black");
@@ -148,7 +150,8 @@ G4UIXm::~G4UIXm()
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 {
   G4UImanager* UI = G4UImanager::GetUIpointer();
-  if (UI != NULL) {
+  if (UI != NULL)
+  {
     UI->SetSession(NULL);
     UI->SetCoutDestination(NULL);
   }
@@ -164,7 +167,8 @@ G4UIsession* G4UIXm::SessionStart()
   exitSession = false;
   interactorManager->DisableSecondaryLoop();
   void* event;
-  while ((event = interactorManager->GetEvent()) != NULL) {
+  while ((event = interactorManager->GetEvent()) != NULL)
+  {
     interactorManager->DispatchEvent(event);
     if (exitSession == true) break;
   }
@@ -194,11 +198,13 @@ void G4UIXm::PauseSessionStart(const G4String& a_state)
 /***************************************************************************/
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 {
-  if (a_state == "G4_pause> ") {
+  if (a_state == "G4_pause> ")
+  {
     SecondaryLoop("Pause, type continue to exit this state");
   }
 
-  if (a_state == "EndOfEvent") {
+  if (a_state == "EndOfEvent")
+  {
     // Picking with feed back in event data Done here !!!
     SecondaryLoop("End of event, type continue to exit this state");
   }
@@ -212,7 +218,8 @@ void G4UIXm::SecondaryLoop(const G4String& a_prompt)
   Prompt(a_prompt);
   exitPause = false;
   void* event;
-  while ((event = interactorManager->GetEvent()) != NULL) {
+  while ((event = interactorManager->GetEvent()) != NULL)
+  {
     interactorManager->DispatchEvent(event);
     if (exitPause == true) break;
   }
@@ -252,7 +259,8 @@ G4bool G4UIXm::GetHelpChoice(G4int& aInt)
   Prompt("Help");
   exitHelp = false;
   void* event;
-  while ((event = interactorManager->GetEvent()) != NULL) {
+  while ((event = interactorManager->GetEvent()) != NULL)
+  {
     interactorManager->DispatchEvent(event);
     if (exitHelp == true) break;
   }
@@ -327,11 +335,13 @@ void G4UIXm::CommandEnteredCallback(Widget, XtPointer a_tag, XtPointer a_data)
   G4String scommand(ss);
   XtFree(ss);
 
-  if (This->fHelp == true) {
+  if (This->fHelp == true)
+  {
     exitHelp = true;
     This->fHelp = ConvertStringToInt(scommand.data(), This->fHelpChoice);
   }
-  else {
+  else
+  {
     This->ApplyShellCommand(scommand, exitSession, exitPause);
   }
 
@@ -383,15 +393,18 @@ char* XmConvertCompoundStringToString(XmString a_cps, G4int a_number)
   XmStringInitContext(&context, a_cps);
   G4int icount = 0;
   Boolean Done = False;
-  while (Done == False) {
+  while (Done == False)
+  {
     char* text = NULL;
     XmStringCharSet charset = NULL;
     XmStringDirection direct;
     Boolean sep;
-    if (XmStringGetNextSegment(context, &text, &charset, &direct, &sep) == True) {
+    if (XmStringGetNextSegment(context, &text, &charset, &direct, &sep) == True)
+    {
       XtFree(charset);
       if (sep == True) Done = True;
-      if (icount == a_number) {
+      if (icount == a_number)
+      {
         ss = text;
         break;
       }
@@ -410,7 +423,7 @@ void XmTextAppendString(Widget This, char* a_string)
 /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 {
   if (This == NULL) return;
-  if (! XtIsSubclass(This, xmTextWidgetClass)) return;
+  if (!XtIsSubclass(This, xmTextWidgetClass)) return;
   if (a_string == NULL) return;
   XmTextPosition lastpos = XmTextGetLastPosition(This);
   XmTextReplace(This, lastpos, lastpos, a_string);

@@ -27,8 +27,8 @@
 //
 // Author: Makoto Asai
 // --------------------------------------------------------------------
-#ifndef G4CollectionNameVector_H
-#define G4CollectionNameVector_H 1
+#ifndef G4COLLECTIONNAMEVECTOR_HH
+#define G4COLLECTIONNAMEVECTOR_HH
 
 #include "globals.hh"
 
@@ -36,11 +36,12 @@
 
 class G4CollectionNameVector : public std::vector<G4String>
 {
- public:
-  G4CollectionNameVector() {}
-  virtual ~G4CollectionNameVector() {}
+  public:
 
-  void insert(const G4String& str) { push_back(str); }
+    G4CollectionNameVector() {}
+    virtual ~G4CollectionNameVector() {}
+
+    void insert(const G4String& str) { push_back(str); }
 };
 
 #endif

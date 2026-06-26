@@ -29,23 +29,22 @@
 //
 
 #include "G4B8GEMProbability.hh"
+
 #include "G4SystemOfUnits.hh"
 
-G4B8GEMProbability::G4B8GEMProbability() :
-  G4GEMProbability(8,5,2.0) // A,Z,Spin
+G4B8GEMProbability::G4B8GEMProbability() : G4GEMProbability(8, 5, 2.0)  // A,Z,Spin
 {
-    ExcitEnergies.push_back(769.5*keV);
-    ExcitSpins.push_back(0.0);
-    ExcitLifetimes.push_back(fPlanck/(40.0*keV));
-    
-    ExcitEnergies.push_back(2320.0*keV);
-    ExcitSpins.push_back(3.0);
-    ExcitLifetimes.push_back(fPlanck/(350.0*keV));
-    
-    ExcitEnergies.push_back(10619.0*keV);
-    ExcitSpins.push_back(0.0);
-    ExcitLifetimes.push_back(fPlanck/(60.0*keV));
+  ExcitEnergies.push_back(769.5 * keV);
+  ExcitSpins.push_back(0.0);
+  ExcitLifetimes.push_back(fPlanck / (40.0 * keV));
+
+  ExcitEnergies.push_back(2320.0 * keV);
+  ExcitSpins.push_back(3.0);
+  ExcitLifetimes.push_back(fPlanck / (350.0 * keV));
+
+  ExcitEnergies.push_back(10619.0 * keV);
+  ExcitSpins.push_back(0.0);
+  ExcitLifetimes.push_back(fPlanck / (60.0 * keV));
 }
 
-G4B8GEMProbability::~G4B8GEMProbability()
-{}
+G4B8GEMProbability::~G4B8GEMProbability() {}

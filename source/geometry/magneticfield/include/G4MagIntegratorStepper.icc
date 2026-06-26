@@ -28,128 +28,114 @@
 // Author: John Apostolakis (CERN), 15.01.1997
 // --------------------------------------------------------------------
 
-inline
-G4int G4MagIntegratorStepper::IntegrationOrder()
+inline G4int G4MagIntegratorStepper::IntegrationOrder()
 {
   return fIntegrationOrder;
 }
-   
-inline
-G4EquationOfMotion* G4MagIntegratorStepper::GetEquationOfMotion()
-{
-  return fEquation_Rhs;
-} 
 
-inline
-const G4EquationOfMotion* G4MagIntegratorStepper::GetEquationOfMotion() const
+inline G4EquationOfMotion* G4MagIntegratorStepper::GetEquationOfMotion()
 {
   return fEquation_Rhs;
 }
 
-inline
-void G4MagIntegratorStepper::SetEquationOfMotion(G4EquationOfMotion* newEq)
+inline const G4EquationOfMotion* G4MagIntegratorStepper::GetEquationOfMotion() const
 {
-  if( newEq != nullptr )
+  return fEquation_Rhs;
+}
+
+inline void G4MagIntegratorStepper::SetEquationOfMotion(G4EquationOfMotion* newEq)
+{
+  if (newEq != nullptr)
   {
     fEquation_Rhs = newEq;
   }
-} 
+}
 
-inline
-unsigned long G4MagIntegratorStepper::GetfNoRHSCalls()
+inline unsigned long G4MagIntegratorStepper::GetfNoRHSCalls()
 {
   return fNoRHSCalls;
 }
 
-inline
-void G4MagIntegratorStepper::ResetfNORHSCalls()
+inline void G4MagIntegratorStepper::ResetfNORHSCalls()
 {
   fNoRHSCalls = 0;
 }
 
-inline
-G4bool G4MagIntegratorStepper::IsFSAL() const
+inline G4bool G4MagIntegratorStepper::IsFSAL() const
 {
   return fIsFSAL;
 }
 
-inline
-G4bool G4MagIntegratorStepper::isQSS() const
+inline G4bool G4MagIntegratorStepper::isQSS() const
 {
   return fIsQSS;
 }
 
-inline
-void G4MagIntegratorStepper::SetIsQSS(G4bool val)
+inline void G4MagIntegratorStepper::SetIsQSS(G4bool val)
 {
   fIsQSS = val;
 }
 
-inline
-void G4MagIntegratorStepper::SetIntegrationOrder(G4int order)
+inline void G4MagIntegratorStepper::SetIntegrationOrder(G4int order)
 {
   fIntegrationOrder = order;
 }
 
-inline
-void G4MagIntegratorStepper::SetFSAL(G4bool flag)
+inline void G4MagIntegratorStepper::SetFSAL(G4bool flag)
 {
   fIsFSAL = flag;
 }
 
-inline
-G4int G4MagIntegratorStepper::GetNumberOfVariables() const
+inline G4int G4MagIntegratorStepper::GetNumberOfVariables() const
 {
   return fNoIntegrationVariables;
 }
 
-
-inline
-G4int G4MagIntegratorStepper::GetNumberOfStateVariables() const
+inline G4int G4MagIntegratorStepper::GetNumberOfStateVariables() const
 {
   return fNoStateVariables;
 }
 
-inline
-void G4MagIntegratorStepper::RightHandSide(const G4double y[],
-                                                 G4double dydx[]) const
+inline void G4MagIntegratorStepper::RightHandSide(const G4double y[], G4double dydx[]) const
 {
   fEquation_Rhs->RightHandSide(y, dydx);
-  ++fNoRHSCalls; // IncrementRHSCalls();
+  ++fNoRHSCalls;  // IncrementRHSCalls();
 }
 
-inline
-void G4MagIntegratorStepper::RightHandSide(const G4double y[],
-                                                 G4double dydx[],
-                                                 G4double field[]) const
+inline void G4MagIntegratorStepper::RightHandSide(const G4double y[], G4double dydx[],
+                                                  G4double field[]) const
 {
   fEquation_Rhs->EvaluateRhsReturnB(y, dydx, field);
   ++fNoRHSCalls;
 }
 
-inline
-void G4MagIntegratorStepper::NormaliseTangentVector( G4double vec[6] )
+inline void G4MagIntegratorStepper::NormaliseTangentVector(G4double vec[6])
 {
-  G4double drds2 = vec[3]*vec[3]+vec[4]*vec[4]+vec[5]*vec[5];
+  G4double drds2 = vec[3] * vec[3] + vec[4] * vec[4] + vec[5] * vec[5];
 
-  if( std::fabs(drds2 - 1.0) > 1.e-14 )
+  if (std::fabs(drds2 - 1.0) > 1.e-14)
   {
     G4double normx = 1.0 / std::sqrt(drds2);
-    for(auto i=3; i<6; ++i) { vec[i] *= normx; }
+    for (auto i = 3; i < 6; ++i)
+    {
+      vec[i] *= normx;
+    }
   }
 }
 
-inline
-void G4MagIntegratorStepper::NormalisePolarizationVector( G4double vec[12] )
+inline void G4MagIntegratorStepper::NormalisePolarizationVector(G4double vec[12])
 {
-  G4double drds2 = vec[9]*vec[9]+vec[10]*vec[10]+vec[11]*vec[11];
+  G4double drds2 = vec[9] * vec[9] + vec[10] * vec[10] + vec[11] * vec[11];
 
-  if( drds2 > 0. )
+  if (drds2 > 0.)
   {
-    if( std::fabs(drds2 - 1.0) > 1.e-14 )
+    if (std::fabs(drds2 - 1.0) > 1.e-14)
     {
       G4double normx = 1.0 / std::sqrt(drds2);
-      for(auto i=9; i<12; ++i)  { vec[i] *= normx; }
+      for (auto i = 9; i < 12; ++i)
+      {
+        vec[i] *= normx;
+      }
     }
   }
 }

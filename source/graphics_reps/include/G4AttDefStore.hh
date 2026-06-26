@@ -29,27 +29,27 @@
 #define G4ATTDEFSTORE_HH
 
 #include "globals.hh"
+
 #include <map>
 
 class G4AttDef;
 
-namespace G4AttDefStore {
+namespace G4AttDefStore
+{
 
-  std::map<G4String,G4AttDef>*
-  GetInstance(const G4String& storeKey, G4bool& isNew);
-  // Returns a pointer to the definitions accessed by the given key.
-  // "isNew" is true if definitions pointer is new and therefore the
-  // needs filling.  The store keeps the ownership of the returned
-  // pointer.  See G4Trajectory::GetAttDefs for an example of the use
-  // of this class.
+std::map<G4String, G4AttDef>* GetInstance(const G4String& storeKey, G4bool& isNew);
+// Returns a pointer to the definitions accessed by the given key.
+// "isNew" is true if definitions pointer is new and therefore the
+// needs filling.  The store keeps the ownership of the returned
+// pointer.  See G4Trajectory::GetAttDefs for an example of the use
+// of this class.
 
-  G4bool GetStoreKey
-  (const std::map<G4String,G4AttDef>* definitions, G4String& key);
-  // Returns true and assigns key if definitions are amongst those
-  // maintained in the store.
+G4bool GetStoreKey(const std::map<G4String, G4AttDef>* definitions, G4String& key);
+// Returns true and assigns key if definitions are amongst those
+// maintained in the store.
 
-  extern std::map<G4String,std::map<G4String,G4AttDef>*> *m_defsmaps;
+extern std::map<G4String, std::map<G4String, G4AttDef>*>* m_defsmaps;
 
-}
+}  // namespace G4AttDefStore
 
-#endif //G4ATTDEFSTORE_H
+#endif  // G4ATTDEFSTORE_H

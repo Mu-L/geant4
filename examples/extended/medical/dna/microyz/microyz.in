@@ -10,6 +10,7 @@
 /microyz/phys/addPhysics  dna_opt2
 #/microyz/phys/addPhysics  dna_opt4
 #/microyz/phys/addPhysics  dna_opt6
+#/microyz/phys/addPhysics  dna_opt8
 #
 # Tracking cut
 /microyz/det/setTrackingCut 11 eV

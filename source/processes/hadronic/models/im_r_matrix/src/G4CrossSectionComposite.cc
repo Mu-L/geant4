@@ -31,42 +31,37 @@
 //
 //      File name:     G4CrossSectionComposite
 //
-//      Author:        
-// 
+//      Author:
+//
 //      Creation date: 15 April 1999
 //
-//      Modifications: 
-//      
+//      Modifications:
+//
 // -------------------------------------------------------------------
 
-#include "globals.hh"
 #include "G4CrossSectionComposite.hh"
-#include "G4VCrossSectionSource.hh"
-#include "G4KineticTrack.hh"
+
 #include "G4CrossSectionVector.hh"
+#include "G4KineticTrack.hh"
+#include "G4VCrossSectionSource.hh"
+#include "globals.hh"
 
-G4CrossSectionComposite::G4CrossSectionComposite()
-{ }
+G4CrossSectionComposite::G4CrossSectionComposite() {}
 
+G4CrossSectionComposite::~G4CrossSectionComposite() {}
 
-G4CrossSectionComposite::~G4CrossSectionComposite()
-{ }
-
-
-G4bool G4CrossSectionComposite::operator==(const G4CrossSectionComposite &right) const
+G4bool G4CrossSectionComposite::operator==(const G4CrossSectionComposite& right) const
 {
-  return (this == (G4CrossSectionComposite*) &right);
+  return (this == (G4CrossSectionComposite*)&right);
 }
 
-
-G4bool G4CrossSectionComposite::operator!=(const G4CrossSectionComposite &right) const
+G4bool G4CrossSectionComposite::operator!=(const G4CrossSectionComposite& right) const
 {
-  return (this != (G4CrossSectionComposite*) &right);
+  return (this != (G4CrossSectionComposite*)&right);
 }
 
-
-G4double G4CrossSectionComposite::CrossSection(const G4KineticTrack& trk1, 
-					       const G4KineticTrack& trk2) const
+G4double G4CrossSectionComposite::CrossSection(const G4KineticTrack& trk1,
+                                               const G4KineticTrack& trk2) const
 {
   // Cross section of composite is the sum of components cross sections
 
@@ -75,21 +70,20 @@ G4double G4CrossSectionComposite::CrossSection(const G4KineticTrack& trk1,
 
   const G4CrossSectionVector* components = GetComponents();
   if (components != 0)
+  {
+    std::size_t nComponents = GetComponents()->size();
+    for (std::size_t i = 0; i < nComponents; ++i)
     {
-      std::size_t nComponents = GetComponents()->size();
-      for (std::size_t i=0; i<nComponents; ++i)
-	{
-	  G4CrossSectionSourcePtr componentPtr = (*components)[i];
-	  G4VCrossSectionSource* component = componentPtr();
-	  if (component->IsValid(ecm))
-	    {
-	      crossSection += component->CrossSection(trk1,trk2);
-	    }
-	}
+      G4CrossSectionSourcePtr componentPtr = (*components)[i];
+      G4VCrossSectionSource* component = componentPtr();
+      if (component->IsValid(ecm))
+      {
+        crossSection += component->CrossSection(trk1, trk2);
+      }
     }
+  }
   return crossSection;
 }
-
 
 G4bool G4CrossSectionComposite::IsValid(G4double e) const
 {
@@ -97,19 +91,18 @@ G4bool G4CrossSectionComposite::IsValid(G4double e) const
   G4bool answer = false;
   const G4CrossSectionVector* components = GetComponents();
   if (components != 0)
+  {
+    std::size_t n = components->size();
+    for (std::size_t i = 0; i < n; ++i)
     {
-      std::size_t n = components->size();
-      for (std::size_t i=0; i<n; ++i)
-	{
-	  G4CrossSectionSourcePtr componentPtr = (*components)[i];
-	  G4VCrossSectionSource* component = componentPtr();
-	  if (component->IsValid(e)) 
-	    {
-	      answer = true;
-	      break;
-	    }
-	}
+      G4CrossSectionSourcePtr componentPtr = (*components)[i];
+      G4VCrossSectionSource* component = componentPtr();
+      if (component->IsValid(e))
+      {
+        answer = true;
+        break;
+      }
     }
+  }
   return answer;
 }
-

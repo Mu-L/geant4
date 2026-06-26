@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 
-#ifndef G4SimplePPReporter_h
-#define G4SimplePPReporter_h 1
+#ifndef G4SIMPLEPPREPORTER_HH
+#define G4SIMPLEPPREPORTER_HH
 
 #include "G4VParticlePropertyReporter.hh"
 #include "globals.hh"
@@ -32,6 +32,7 @@
 class G4SimplePPReporter : public G4VParticlePropertyReporter
 {
   public:
+
     void Print(const G4String& option = "") override;
 };
 

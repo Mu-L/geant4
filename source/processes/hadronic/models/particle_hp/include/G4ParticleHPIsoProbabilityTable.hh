@@ -26,13 +26,13 @@
 //
 // -------------------------------------------------------------------
 //
-//      Geant4 header file 
+//      Geant4 header file
 //
 //      File name: G4ParticleHPIsoProbabilityTable.hh
 //
 //      Authors: Marek Zmeskal (CTU, Czech Technical University in Prague, Czech Republic)
 //	         Loic Thulliez (CEA France)
-// 
+//
 //      Creation date: 4 June 2024
 //
 //      Description: Class for the probability table of the given isotope
@@ -41,18 +41,18 @@
 //                   finds the correct cross-section.
 //
 //      Modifications:
-//      
+//
 // -------------------------------------------------------------------
 //
 //
-#ifndef G4ParticleHPIsoProbabilityTable_h
-#define G4ParticleHPIsoProbabilityTable_h 1
+#ifndef G4PARTICLEHPISOPROBABILITYTABLE_HH
+#define G4PARTICLEHPISOPROBABILITYTABLE_HH
 
 #include "globals.hh"
 
-#include <vector>
-#include <thread>
 #include <map>
+#include <thread>
+#include <vector>
 
 class G4ParticleHPVector;
 class G4DynamicParticle;
@@ -60,45 +60,47 @@ class G4Element;
 
 class G4ParticleHPIsoProbabilityTable
 {
- public:
+  public:
 
-  G4ParticleHPIsoProbabilityTable() = default;
-  virtual ~G4ParticleHPIsoProbabilityTable();
-  virtual void Init( G4int, G4int, G4int, G4double, const G4String& );
-  virtual G4double GetCorrelatedIsoCrossSectionPT( const G4DynamicParticle*, G4int, const G4Element*, 
-                                                   G4double&, G4double&, std::thread::id& );
-  virtual G4double GetIsoCrossSectionPT( const G4DynamicParticle*, G4int, const G4Element*, G4double&, 
-                                         std::map< std::thread::id, G4double >&, std::thread::id& );
+    G4ParticleHPIsoProbabilityTable() = default;
+    virtual ~G4ParticleHPIsoProbabilityTable();
+    virtual void Init(G4int, G4int, G4int, G4double, const G4String&);
+    virtual G4double GetCorrelatedIsoCrossSectionPT(const G4DynamicParticle*, G4int,
+                                                    const G4Element*, G4double&, G4double&,
+                                                    std::thread::id&);
+    virtual G4double GetIsoCrossSectionPT(const G4DynamicParticle*, G4int, const G4Element*,
+                                          G4double&, std::map<std::thread::id, G4double>&,
+                                          std::thread::id&);
 
- protected:
+  protected:
 
-  G4double GetDopplerBroadenedElasticXS( const G4DynamicParticle*, G4int, G4int );
-  G4double GetDopplerBroadenedCaptureXS( const G4DynamicParticle*, G4int, G4int );
-  G4double GetDopplerBroadenedFissionXS( const G4DynamicParticle*, G4int, G4int );
-  G4double GetDopplerBroadenedInelasticXS( const G4DynamicParticle*, G4int, G4int );
+    G4double GetDopplerBroadenedElasticXS(const G4DynamicParticle*, G4int, G4int);
+    G4double GetDopplerBroadenedCaptureXS(const G4DynamicParticle*, G4int, G4int);
+    G4double GetDopplerBroadenedFissionXS(const G4DynamicParticle*, G4int, G4int);
+    G4double GetDopplerBroadenedInelasticXS(const G4DynamicParticle*, G4int, G4int);
 
-  G4int Z = 0;
-  G4int A = 0;
-  G4int m = -1;
-  G4double T = -1.;
+    G4int Z = 0;
+    G4int A = 0;
+    G4int m = -1;
+    G4double T = -1.;
 
-  G4double Emin = DBL_MAX;
-  G4double Emax = 0.;
-  G4int nEnergies = 0;
+    G4double Emin = DBL_MAX;
+    G4double Emax = 0.;
+    G4int nEnergies = 0;
 
-  std::map< std::thread::id, G4double > energy_cache;
-  std::map< std::thread::id, G4double > xsela_cache;
-  std::map< std::thread::id, G4double > xscap_cache;
-  std::map< std::thread::id, G4double > xsfiss_cache;
+    std::map<std::thread::id, G4double> energy_cache;
+    std::map<std::thread::id, G4double> xsela_cache;
+    std::map<std::thread::id, G4double> xscap_cache;
+    std::map<std::thread::id, G4double> xsfiss_cache;
 
-  G4ParticleHPVector* theEnergies = nullptr;
-  std::vector< std::vector< G4double >* >* theProbabilities = nullptr;
-  std::vector< std::vector< G4double >* >* theElasticData = nullptr;
-  std::vector< std::vector< G4double >* >* theCaptureData = nullptr;
-  std::vector< std::vector< G4double >* >* theFissionData = nullptr;
-  std::vector< std::vector< G4double >* >* theInelasticData = nullptr;
+    G4ParticleHPVector* theEnergies = nullptr;
+    std::vector<std::vector<G4double>*>* theProbabilities = nullptr;
+    std::vector<std::vector<G4double>*>* theElasticData = nullptr;
+    std::vector<std::vector<G4double>*>* theCaptureData = nullptr;
+    std::vector<std::vector<G4double>*>* theFissionData = nullptr;
+    std::vector<std::vector<G4double>*>* theInelasticData = nullptr;
 
-  G4String filename;
+    G4String filename;
 };
 
 #endif

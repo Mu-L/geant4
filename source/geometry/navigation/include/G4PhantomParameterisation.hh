@@ -26,7 +26,7 @@
 // G4PhantomParameterisation
 //
 // Class description:
-// 
+//
 // Describes regular parameterisations: a set of boxes of equal dimension
 // in the x, y and z dimensions. The G4PVParameterised volume using this
 // class must be placed inside a volume that is completely filled by these
@@ -34,15 +34,15 @@
 
 // Author: Pedro Arce (CIEMAT), May 2007
 //---------------------------------------------------------------------
-#ifndef G4PhantomParameterisation_HH
-#define G4PhantomParameterisation_HH 1
+#ifndef G4PHANTOMPARAMETERISATION_HH
+#define G4PHANTOMPARAMETERISATION_HH
 
-#include <vector>
-
+#include "G4AffineTransform.hh"
 #include "G4Types.hh"
 #include "G4VPVParameterisation.hh"
-#include "G4AffineTransform.hh"
-#include "G4VTouchable.hh" 
+#include "G4VTouchable.hh"
+
+#include <vector>
 
 class G4VPhysicalVolume;
 class G4VSolid;
@@ -67,6 +67,8 @@ class G4Polyhedra;
 /**
  * @brief G4PhantomParameterisation describes regular parameterisations: a set
  * of boxes of equal dimension in the x, y and z dimensions.
+ * @ingroup geometry_navigation
+ *
  * The G4PVParameterised volume using this class must be placed inside a volume
  * that is completely filled by these boxes.
  */
@@ -79,69 +81,53 @@ class G4PhantomParameterisation : public G4VPVParameterisation
      * Constructor and Destructor.
      */
     G4PhantomParameterisation();
-   ~G4PhantomParameterisation() override;
+    ~G4PhantomParameterisation() override;
 
-    void ComputeTransformation(const G4int, G4VPhysicalVolume *) const override;
-  
-    G4VSolid* ComputeSolid(const G4int, G4VPhysicalVolume *) override;
-  
-    G4Material* ComputeMaterial(const G4int repNo, 
-                                             G4VPhysicalVolume* currentVol,
-                                       const G4VTouchable* parentTouch=nullptr) override;
+    void ComputeTransformation(const G4int, G4VPhysicalVolume*) const override;
+
+    G4VSolid* ComputeSolid(const G4int, G4VPhysicalVolume*) override;
+
+    G4Material* ComputeMaterial(const G4int repNo, G4VPhysicalVolume* currentVol,
+                                const G4VTouchable* parentTouch = nullptr) override;
     /**
      * Dummy declarations ...
      */
-    void ComputeDimensions (G4Box &, const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Tubs&, const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Trd&, const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Trap&, const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Cons&, const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Orb&, const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Sphere&, const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Ellipsoid&,const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Torus&, const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Para&, const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Hype&, const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Polycone&, const G4int,
-                            const G4VPhysicalVolume*) const override {}
-    void ComputeDimensions (G4Polyhedra&, const G4int,
-                            const G4VPhysicalVolume*) const override {}
-  
+    void ComputeDimensions(G4Box&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Tubs&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Trd&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Trap&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Cons&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Orb&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Sphere&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Ellipsoid&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Torus&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Para&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Hype&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Polycone&, const G4int, const G4VPhysicalVolume*) const override {}
+    void ComputeDimensions(G4Polyhedra&, const G4int, const G4VPhysicalVolume*) const override {}
+
     /**
      * Saves as container solid the parent of the voxels.
      * Checks that the voxels fill it completely.
      */
-    void BuildContainerSolid( G4VPhysicalVolume* pPhysicalVol );
-    void BuildContainerSolid( G4VSolid* pMotherSolid );
+    void BuildContainerSolid(G4VPhysicalVolume* pPhysicalVol);
+    void BuildContainerSolid(G4VSolid* pMotherSolid);
 
-  
     /**
      * Gets the voxel number corresponding to the point in the container
      * frame. Uses 'localDir' to avoid precision problems at the surfaces.
      */
-    virtual G4int GetReplicaNo( const G4ThreeVector& localPoint,
-                                const G4ThreeVector& localDir );
+    virtual G4int GetReplicaNo(const G4ThreeVector& localPoint, const G4ThreeVector& localDir);
 
     /** Set and Get methods */
 
-    inline void SetMaterials(std::vector<G4Material*>& mates );
+    inline void SetMaterials(std::vector<G4Material*>& mates);
 
-    inline void SetMaterialIndices( std::size_t* matInd );
+    inline void SetMaterialIndices(std::size_t* matInd);
 
-    void SetVoxelDimensions( G4double halfx, G4double halfy, G4double halfz );
-    void SetNoVoxels( std::size_t nx, std::size_t ny, std::size_t nz );
-    
+    void SetVoxelDimensions(G4double halfx, G4double halfy, G4double halfz);
+    void SetNoVoxels(std::size_t nx, std::size_t ny, std::size_t nz);
+
     inline G4double GetVoxelHalfX() const;
     inline G4double GetVoxelHalfY() const;
     inline G4double GetVoxelHalfZ() const;
@@ -154,35 +140,34 @@ class G4PhantomParameterisation : public G4VPVParameterisation
     inline std::size_t* GetMaterialIndices() const;
     inline G4VSolid* GetContainerSolid() const;
 
-    G4ThreeVector GetTranslation(const G4int copyNo ) const;
+    G4ThreeVector GetTranslation(const G4int copyNo) const;
 
     G4bool SkipEqualMaterials() const;
-    void SetSkipEqualMaterials( G4bool skip );
+    void SetSkipEqualMaterials(G4bool skip);
 
-    std::size_t GetMaterialIndex( std::size_t nx, std::size_t ny, std::size_t nz) const;
-    std::size_t GetMaterialIndex( std::size_t copyNo) const;
+    std::size_t GetMaterialIndex(std::size_t nx, std::size_t ny, std::size_t nz) const;
+    std::size_t GetMaterialIndex(std::size_t copyNo) const;
 
-    G4Material* GetMaterial( std::size_t nx, std::size_t ny, std::size_t nz) const;
-    G4Material* GetMaterial( std::size_t copyNo ) const;
+    G4Material* GetMaterial(std::size_t nx, std::size_t ny, std::size_t nz) const;
+    G4Material* GetMaterial(std::size_t copyNo) const;
 
     /**
      * Checks that the voxels fill it completely.
      */
-    void CheckVoxelsFillContainer( G4double contX, G4double contY,
-                                   G4double contZ ) const;
+    void CheckVoxelsFillContainer(G4double contX, G4double contY, G4double contZ) const;
 
   private:
 
     /**
      * Converts the copyNo to voxel numbers in x, y and z.
      */
-    void ComputeVoxelIndices(const G4int copyNo, std::size_t& nx,
-                                   std::size_t& ny, std::size_t& nz ) const;
+    void ComputeVoxelIndices(const G4int copyNo, std::size_t& nx, std::size_t& ny,
+                             std::size_t& nz) const;
 
     /**
      * Checks that the copy number is within limits.
      */
-    void CheckCopyNo( const G4long copyNo ) const;
+    void CheckCopyNo(const G4long copyNo) const;
 
   protected:
 
@@ -208,7 +193,7 @@ class G4PhantomParameterisation : public G4VPVParameterisation
     G4VSolid* fContainerSolid = nullptr;
 
     /** Save position of container wall for speed-up. */
-    G4double fContainerWallX=0.0, fContainerWallY=0.0, fContainerWallZ=0.0;
+    G4double fContainerWallX = 0.0, fContainerWallY = 0.0, fContainerWallZ = 0.0;
 
     /** Relative surface tolerance. */
     G4double kCarTolerance;

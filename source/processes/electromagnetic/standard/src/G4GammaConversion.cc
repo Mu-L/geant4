@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// 
+//
 //------------------ G4GammaConversion physics process -------------------------
 //                   by Michel Maire, 24 May 1996
 //
@@ -33,18 +33,19 @@
 // -----------------------------------------------------------------------------
 
 #include "G4GammaConversion.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4PairProductionRelModel.hh"
+
 #include "G4Electron.hh"
 #include "G4EmParameters.hh"
+#include "G4PairProductionRelModel.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4GammaConversion::G4GammaConversion(const G4String& processName,
-  G4ProcessType type):G4VEmProcess (processName, type)
+G4GammaConversion::G4GammaConversion(const G4String& processName, G4ProcessType type)
+  : G4VEmProcess(processName, type)
 {
-  SetMinKinEnergy(2.0*CLHEP::electron_mass_c2);
+  SetMinKinEnergy(2.0 * CLHEP::electron_mass_c2);
   SetProcessSubType(fGammaConversion);
   SetStartFromNullFlag(true);
   SetBuildTableFlag(true);
@@ -53,7 +54,7 @@ G4GammaConversion::G4GammaConversion(const G4String& processName,
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
- 
+
 G4GammaConversion::~G4GammaConversion() = default;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
@@ -67,27 +68,30 @@ G4bool G4GammaConversion::IsApplicable(const G4ParticleDefinition& p)
 
 void G4GammaConversion::InitialiseProcess(const G4ParticleDefinition*)
 {
-  if(!isInitialised) {
+  if (!isInitialised)
+  {
     isInitialised = true;
     G4EmParameters* param = G4EmParameters::Instance();
-    G4double emin = std::max(param->MinKinEnergy(), 2*CLHEP::electron_mass_c2);
+    G4double emin = std::max(param->MinKinEnergy(), 2 * CLHEP::electron_mass_c2);
     G4double emax = param->MaxKinEnergy();
 
     SetMinKinEnergy(emin);
 
-    if(nullptr == EmModel(0)) { SetEmModel(new G4PairProductionRelModel()); }
+    if (nullptr == EmModel(0))
+    {
+      SetEmModel(new G4PairProductionRelModel());
+    }
     EmModel(0)->SetLowEnergyLimit(emin);
     EmModel(0)->SetHighEnergyLimit(emax);
     AddEmModel(1, EmModel(0));
-  } 
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double G4GammaConversion::MinPrimaryEnergy(const G4ParticleDefinition*,
-					     const G4Material*)
+G4double G4GammaConversion::MinPrimaryEnergy(const G4ParticleDefinition*, const G4Material*)
 {
-  return 2*CLHEP::electron_mass_c2;
+  return 2 * CLHEP::electron_mass_c2;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -98,4 +102,4 @@ void G4GammaConversion::ProcessDescription(std::ostream& out) const
   G4VEmProcess::ProcessDescription(out);
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.... 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

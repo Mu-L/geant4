@@ -31,33 +31,37 @@
 //
 // NOTE:  Coefficient arrays have fixed dimensions, validated by compiler
 
-#ifndef G4InuclParamAngDst_h
-#define G4InuclParamAngDst_h 1
+#ifndef G4INUCLPARAMANGDST_HH
+#define G4INUCLPARAMANGDST_HH
 
-#include "globals.hh"
 #include "G4VThreeBodyAngDst.hh"
+#include "globals.hh"
 
+class G4InuclParamAngDst : public G4VThreeBodyAngDst
+{
+  public:
 
-class G4InuclParamAngDst : public G4VThreeBodyAngDst {
-public:
-  // NOTE:  Array arguments must be STATIC, GLOBAL declarations
-  G4InuclParamAngDst(const G4String& name, 
-		     const G4double (&abnC)[2][4][4],
-		     G4int verbose=0)
-    : G4VThreeBodyAngDst(name, verbose), coeffAB(abnC) {;}
+    // NOTE:  Array arguments must be STATIC, GLOBAL declarations
+    G4InuclParamAngDst(const G4String& name, const G4double (&abnC)[2][4][4], G4int verbose = 0)
+      : G4VThreeBodyAngDst(name, verbose), coeffAB(abnC)
+    {
+      ;
+    }
 
-  virtual ~G4InuclParamAngDst() {;}
-  
-  virtual G4double GetCosTheta(G4int ptype, G4double ekin) const;
+    virtual ~G4InuclParamAngDst() { ; }
 
-  // FIXME: Must re-declare base class interface with call-through
-  //	    to avoid "hidden function" compiler warnings
-  virtual G4double GetCosTheta(const G4double& ekin, const G4double& pcm) const {
-    return G4VThreeBodyAngDst::GetCosTheta(ekin, pcm);
-  }
+    virtual G4double GetCosTheta(G4int ptype, G4double ekin) const;
 
-protected:
-  const G4double (&coeffAB)[2][4][4];	// (coeffs Ekin^0..3) * S^0..3
-};        
+    // FIXME: Must re-declare base class interface with call-through
+    //	    to avoid "hidden function" compiler warnings
+    virtual G4double GetCosTheta(const G4double& ekin, const G4double& pcm) const
+    {
+      return G4VThreeBodyAngDst::GetCosTheta(ekin, pcm);
+    }
 
-#endif	/* G4InuclParamAngDst_h */
+  protected:
+
+    const G4double (&coeffAB)[2][4][4];  // (coeffs Ekin^0..3) * S^0..3
+};
+
+#endif /* G4InuclParamAngDst_h */

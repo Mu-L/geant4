@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4Lambda_h
-#define G4Lambda_h 1
+#ifndef G4LAMBDA_HH
+#define G4LAMBDA_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4Lambda : public G4ParticleDefinition
 {
   public:
+
     static G4Lambda* Definition();
     static G4Lambda* LambdaDefinition();
     static G4Lambda* Lambda();
 
   private:
+
     G4Lambda() {}
     ~G4Lambda() override = default;
 

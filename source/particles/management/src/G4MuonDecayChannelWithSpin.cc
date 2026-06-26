@@ -50,7 +50,8 @@ G4MuonDecayChannelWithSpin::G4MuonDecayChannelWithSpin(const G4String& theParent
 G4MuonDecayChannelWithSpin&
 G4MuonDecayChannelWithSpin::operator=(const G4MuonDecayChannelWithSpin& right)
 {
-  if (this != &right) {
+  if (this != &right)
+  {
     kinematics_name = right.kinematics_name;
     verboseLevel = right.verboseLevel;
     rbranch = right.rbranch;
@@ -64,10 +65,12 @@ G4MuonDecayChannelWithSpin::operator=(const G4MuonDecayChannelWithSpin& right)
 
     // recreate array
     numberOfDaughters = right.numberOfDaughters;
-    if (numberOfDaughters > 0) {
+    if (numberOfDaughters > 0)
+    {
       daughters_name = new G4String*[numberOfDaughters];
       // copy daughters name
-      for (G4int index = 0; index < numberOfDaughters; ++index) {
+      for (G4int index = 0; index < numberOfDaughters; ++index)
+      {
         daughters_name[index] = new G4String(*right.daughters_name[index]);
       }
     }
@@ -96,7 +99,8 @@ G4DecayProducts* G4MuonDecayChannelWithSpin::DecayIt(G4double)
   // daughters'mass
   G4double daughtermass[3];
   // G4double sumofdaughtermass = 0.0;
-  for (G4int index = 0; index < 3; ++index) {
+  for (G4int index = 0; index < 3; ++index)
+  {
     daughtermass[index] = G4MT_daughters[index]->GetPDGMass();
     // sumofdaughtermass += daughtermass[index];
   }
@@ -136,7 +140,8 @@ G4DecayProducts* G4MuonDecayChannelWithSpin::DecayIt(G4double)
   // ***** sampling F(x,y) directly (brute force) *****
 
   const std::size_t MAX_LOOP = 10000;
-  for (std::size_t loop_count = 0; loop_count < MAX_LOOP; ++loop_count) {
+  for (std::size_t loop_count = 0; loop_count < MAX_LOOP; ++loop_count)
+  {
     // Sample the positron energy by sampling from F
 
     rndm = G4UniformRand();
@@ -180,7 +185,8 @@ G4DecayProducts* G4MuonDecayChannelWithSpin::DecayIt(G4double)
 
     FG = std::sqrt(x_squared - x0_squared) * F * (1. + (G / F) * ctheta);
 
-    if (FG > FG_max) {
+    if (FG > FG_max)
+    {
       G4Exception("G4MuonDecayChannelWithSpin::DecayIt()", "PART113", JustWarning,
                   "Problem in Muon Decay: FG > FG_max");
       FG_max = FG;
@@ -253,7 +259,8 @@ G4DecayProducts* G4MuonDecayChannelWithSpin::DecayIt(G4double)
 
   // output message
 #ifdef G4VERBOSE
-  if (GetVerboseLevel() > 1) {
+  if (GetVerboseLevel() > 1)
+  {
     G4cout << "G4MuonDecayChannelWithSpin::DecayIt ";
     G4cout << "  create decay products in rest frame " << G4endl;
     G4double TT = daughterparticle0->GetTotalEnergy() + daughterparticle1->GetTotalEnergy()
@@ -262,7 +269,8 @@ G4DecayProducts* G4MuonDecayChannelWithSpin::DecayIt(G4double)
     G4cout << "nu1" << daughterparticle1->GetTotalEnergy() / MeV << G4endl;
     G4cout << "nu2" << daughterparticle2->GetTotalEnergy() / MeV << G4endl;
     G4cout << "total" << (TT - parentmass) / keV << G4endl;
-    if (GetVerboseLevel() > 2) {
+    if (GetVerboseLevel() > 2)
+    {
       products->DumpInfo();
     }
   }
@@ -279,7 +287,8 @@ G4double G4MuonDecayChannelWithSpin::R_c(G4double x, G4double omega)
 
   G4double L2 = 0.0;
 
-  for (G4int n = 1; n <= n_max; ++n) {
+  for (G4int n = 1; n <= n_max; ++n)
+  {
     L2 += std::pow(x, n) / (n * n);
   }
 

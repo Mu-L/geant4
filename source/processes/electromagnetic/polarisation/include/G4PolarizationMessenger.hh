@@ -35,11 +35,11 @@
 //   Provides access to general polarization information and to
 //   polarization for logical volumes through macro files.
 
-#ifndef G4PolarizationMessenger_h
-#define G4PolarizationMessenger_h 1
+#ifndef G4POLARIZATIONMESSENGER_HH
+#define G4POLARIZATIONMESSENGER_HH
 
-#include "globals.hh"
 #include "G4UImessenger.hh"
+#include "globals.hh"
 
 class G4PolarizationManager;
 class G4UIcmdWithABool;
@@ -51,33 +51,34 @@ class G4UIdirectory;
 
 class G4PolarizationMessenger : public G4UImessenger
 {
- public:
-  explicit G4PolarizationMessenger(G4PolarizationManager* runMgr);
-  ~G4PolarizationMessenger() override;
+  public:
 
-  void SetNewValue(G4UIcommand* command, G4String newValues) override;
-  G4String GetCurrentValue(G4UIcommand* command) override;
+    explicit G4PolarizationMessenger(G4PolarizationManager* runMgr);
+    ~G4PolarizationMessenger() override;
 
-  G4PolarizationManager* polarizationManager;
+    void SetNewValue(G4UIcommand* command, G4String newValues) override;
+    G4String GetCurrentValue(G4UIcommand* command) override;
 
-  G4PolarizationMessenger& operator=(const G4PolarizationMessenger& right) =
-    delete;
-  G4PolarizationMessenger(const G4PolarizationMessenger&) = delete;
+    G4PolarizationManager* polarizationManager;
 
- private:
-  G4UIdirectory* polarizationDirectory;
+    G4PolarizationMessenger& operator=(const G4PolarizationMessenger& right) = delete;
+    G4PolarizationMessenger(const G4PolarizationMessenger&) = delete;
 
-  G4UIdirectory* managerDirectory;
-  G4UIcmdWithAnInteger* verboseCmd;
-  G4UIcmdWithABool* optActivateCmd;
+  private:
 
-  G4UIdirectory* volumeDirectory;
-  G4UIcmdWithoutParameter* printVolumeListCmd;
-  G4UIcommand* setPolarizationCmd;
+    G4UIdirectory* polarizationDirectory;
 
-  G4UIdirectory* testDirectory;
-  G4UIcmdWithoutParameter* testPolarizationTransformationCmd;
-  G4UIcmdWithoutParameter* testInteractionFrameCmd;
+    G4UIdirectory* managerDirectory;
+    G4UIcmdWithAnInteger* verboseCmd;
+    G4UIcmdWithABool* optActivateCmd;
+
+    G4UIdirectory* volumeDirectory;
+    G4UIcmdWithoutParameter* printVolumeListCmd;
+    G4UIcommand* setPolarizationCmd;
+
+    G4UIdirectory* testDirectory;
+    G4UIcmdWithoutParameter* testPolarizationTransformationCmd;
+    G4UIcmdWithoutParameter* testInteractionFrameCmd;
 };
 
 #endif

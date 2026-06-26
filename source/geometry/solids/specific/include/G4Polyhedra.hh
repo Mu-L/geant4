@@ -55,18 +55,18 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UPOLYHEDRA 1
+#  define G4GEOM_USE_UPOLYHEDRA 1
 #endif
 
 #if defined(G4GEOM_USE_UPOLYHEDRA)
-  #define G4UPolyhedra G4Polyhedra
-  #include "G4UPolyhedra.hh"
+#  define G4UPolyhedra G4Polyhedra
+#  include "G4UPolyhedra.hh"
 #else
 
-#include "G4VCSGfaceted.hh"
-#include "G4PolyhedraSide.hh"
-#include "G4PolyhedraHistorical.hh"
-#include "G4Polyhedron.hh"
+#  include "G4PolyhedraHistorical.hh"
+#  include "G4PolyhedraSide.hh"
+#  include "G4Polyhedron.hh"
+#  include "G4VCSGfaceted.hh"
 
 class G4EnclosingCylinder;
 class G4ReduciblePolygon;
@@ -74,6 +74,7 @@ class G4ReduciblePolygon;
 /**
  * @brief G4Polyhedra represents a composed closed polyhedra (PGON) made of
  * planar sizes along the Z axis, with or without cut in Phi.
+ * @ingroup geometry_solids_specific
  */
 
 class G4Polyhedra : public G4VCSGfaceted
@@ -92,13 +93,13 @@ class G4Polyhedra : public G4VCSGfaceted
      *  @param[in] rOuter Tangent distance to outer surface.
      */
     G4Polyhedra(const G4String& name,
-                      G4double phiStart,   // initial phi starting angle
-                      G4double phiTotal,   // total phi angle
-                      G4int numSide,       // number sides
-                      G4int numZPlanes,    // number of z planes
-                const G4double zPlane[],   // position of z planes
-                const G4double rInner[],   // tangent distance to inner surface
-                const G4double rOuter[] ); // tangent distance to outer surface
+                G4double phiStart,  // initial phi starting angle
+                G4double phiTotal,  // total phi angle
+                G4int numSide,  // number sides
+                G4int numZPlanes,  // number of z planes
+                const G4double zPlane[],  // position of z planes
+                const G4double rInner[],  // tangent distance to inner surface
+                const G4double rOuter[]);  // tangent distance to outer surface
 
     /**
      * Alternative constructor of a polyhedra, given corners coordinates.
@@ -111,12 +112,12 @@ class G4Polyhedra : public G4VCSGfaceted
      *  @param[in] z Z coordinates of corners.
      */
     G4Polyhedra(const G4String& name,
-                      G4double phiStart,   // initial phi starting angle
-                      G4double phiTotal,   // total phi angle
-                      G4int    numSide,    // number sides
-                      G4int    numRZ,      // number corners in r,z space
-                const G4double r[],        // r coordinates of these corners
-                const G4double z[] );      // z coordinates of these corners
+                G4double phiStart,  // initial phi starting angle
+                G4double phiTotal,  // total phi angle
+                G4int numSide,  // number sides
+                G4int numRZ,  // number corners in r,z space
+                const G4double r[],  // r coordinates of these corners
+                const G4double z[]);  // z coordinates of these corners
 
     /**
      * Destructor.
@@ -126,17 +127,17 @@ class G4Polyhedra : public G4VCSGfaceted
     /**
      * Accessors.
      */
-    inline G4int GetNumSide()        const;
-    inline G4double GetStartPhi()    const;
-    inline G4double GetEndPhi()      const;
+    inline G4int GetNumSide() const;
+    inline G4double GetStartPhi() const;
+    inline G4double GetEndPhi() const;
     inline G4double GetSinStartPhi() const;
     inline G4double GetCosStartPhi() const;
-    inline G4double GetSinEndPhi()   const;
-    inline G4double GetCosEndPhi()   const;
-    inline G4bool IsOpen()           const;
-    inline G4bool IsGeneric()        const;
-    inline G4int GetNumRZCorner()    const;
-    inline G4PolyhedraSideRZ GetCorner( const G4int index ) const;
+    inline G4double GetSinEndPhi() const;
+    inline G4double GetCosEndPhi() const;
+    inline G4bool IsOpen() const;
+    inline G4bool IsGeneric() const;
+    inline G4int GetNumRZCorner() const;
+    inline G4PolyhedraSideRZ GetCorner(const G4int index) const;
 
     /**
      * Returns internal scaled parameters.
@@ -155,10 +156,9 @@ class G4Polyhedra : public G4VCSGfaceted
      * solids, as defined in G4VSolid. Remaining functions are concretely
      * defined in the base class G4VCSGfaceted.
      */
-    EInside Inside( const G4ThreeVector& p ) const override;
-    G4double DistanceToIn( const G4ThreeVector& p,
-                           const G4ThreeVector& v ) const override;
-    G4double DistanceToIn( const G4ThreeVector& p ) const override;
+    EInside Inside(const G4ThreeVector& p) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
+    G4double DistanceToIn(const G4ThreeVector& p) const override;
 
     /**
      * Computes the bounding limits of the solid.
@@ -177,17 +177,15 @@ class G4Polyhedra : public G4VCSGfaceted
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pmin, G4double& pmax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pmin,
+                           G4double& pmax) const override;
 
     /**
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -198,7 +196,7 @@ class G4Polyhedra : public G4VCSGfaceted
     /**
      * Returns true as the solid has only planar faces.
      */
-    G4bool IsFaceted () const override;
+    G4bool IsFaceted() const override;
 
     /**
      * Makes a clone of the object for use in multi-treading.
@@ -222,7 +220,7 @@ class G4Polyhedra : public G4VCSGfaceted
     /**
      * Streams the object contents to an output stream.
      */
-    std::ostream& StreamInfo( std::ostream& os ) const override;
+    std::ostream& StreamInfo(std::ostream& os) const override;
 
     /**
      * Returns a pointer to a generated polyhedron used for visualisation.
@@ -244,8 +242,8 @@ class G4Polyhedra : public G4VCSGfaceted
     /**
      * Copy constructor and assignment operator.
      */
-    G4Polyhedra( const G4Polyhedra& source );
-    G4Polyhedra& operator=( const G4Polyhedra& source );
+    G4Polyhedra(const G4Polyhedra& source);
+    G4Polyhedra& operator=(const G4Polyhedra& source);
 
   private:
 
@@ -258,16 +256,16 @@ class G4Polyhedra : public G4VCSGfaceted
      * Generates the shape and is called by each constructor,
      * after the conversion of the arguments.
      */
-    void Create( G4double phiStart,           // initial phi starting angle
-                 G4double phiTotal,           // total phi angle
-                 G4int    numSide,            // number sides
-                 G4ReduciblePolygon* rz );    // rz coordinates
+    void Create(G4double phiStart,  // initial phi starting angle
+                G4double phiTotal,  // total phi angle
+                G4int numSide,  // number sides
+                G4ReduciblePolygon* rz);  // rz coordinates
 
     /**
      * Copy parameters from other solid or reset them.
      * Used in copy constructor and assignment operator.
      */
-    void CopyStuff( const G4Polyhedra& source );
+    void CopyStuff(const G4Polyhedra& source);
     void DeleteStuff();
 
     /**
@@ -278,22 +276,26 @@ class G4Polyhedra : public G4VCSGfaceted
 
   private:
 
-    G4int numSide = 0;    // Number of sides
-    G4double startPhi;    // Starting phi value (0 < phiStart < 2pi)
-    G4double endPhi;      // end phi value (0 < endPhi-phiStart < 2pi)
-    G4bool phiIsOpen = false;   // true if there is a phi segment
-    G4bool genericPgon = false; // true if created through 2nd generic ctor
+    G4int numSide = 0;  // Number of sides
+    G4double startPhi;  // Starting phi value (0 < phiStart < 2pi)
+    G4double endPhi;  // end phi value (0 < endPhi-phiStart < 2pi)
+    G4bool phiIsOpen = false;  // true if there is a phi segment
+    G4bool genericPgon = false;  // true if created through 2nd generic ctor
     G4int numCorner = 0;  // number RZ points
     G4PolyhedraSideRZ* corners = nullptr;  // our corners
-    G4PolyhedraHistorical* original_parameters = nullptr; // original input pars
+    G4PolyhedraHistorical* original_parameters = nullptr;  // original input pars
 
     G4EnclosingCylinder* enclosingCylinder = nullptr;
 
-    struct surface_element { G4double area=0.; G4int i0=0, i1=0, i2=0; };
+    struct surface_element
+    {
+        G4double area = 0.;
+        G4int i0 = 0, i1 = 0, i2 = 0;
+    };
     mutable std::vector<surface_element>* fElements = nullptr;
 };
 
-#include "G4Polyhedra.icc"
+#  include "G4Polyhedra.icc"
 
 #endif
 

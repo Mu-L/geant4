@@ -25,9 +25,8 @@
 //
 //
 
-
-#ifndef _G4CHEMTIMESTEPMODEL_HH
-#define _G4CHEMTIMESTEPMODEL_HH
+#ifndef G4CHEMTIMESTEPMODEL_HH
+#define G4CHEMTIMESTEPMODEL_HH
 
 enum class G4ChemTimeStepModel
 {

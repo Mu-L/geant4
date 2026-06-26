@@ -38,16 +38,15 @@
 //----------------------------------------------------------------------------
 //
 #include "G4FTFBinaryProtonBuilder.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4BGGNucleonInelasticXS.hh"
+#include "G4HadronicParameters.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4BGGNucleonInelasticXS.hh"
-#include "G4HadronicParameters.hh"
+#include "G4SystemOfUnits.hh"
 
-
-G4FTFBinaryProtonBuilder::
-G4FTFBinaryProtonBuilder(G4bool quasiElastic) 
+G4FTFBinaryProtonBuilder::G4FTFBinaryProtonBuilder(G4bool quasiElastic)
 {
   theMin = G4HadronicParameters::Instance()->GetMinEnergyTransitionFTF_Cascade();
   theMax = G4HadronicParameters::Instance()->GetMaxEnergy();
@@ -63,13 +62,13 @@ G4FTFBinaryProtonBuilder(G4bool quasiElastic)
   theModel->SetMinEnergy(theMin);
   theModel->SetMaxEnergy(theMax);
 
-  if (quasiElastic) {
-     theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
-  } 
+  if (quasiElastic)
+  {
+    theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
+  }
 }
 
-void G4FTFBinaryProtonBuilder::
-Build(G4HadronInelasticProcess * aP)
+void G4FTFBinaryProtonBuilder::Build(G4HadronInelasticProcess* aP)
 {
   theModel->SetMinEnergy(theMin);
   theModel->SetMaxEnergy(theMax);
@@ -77,8 +76,4 @@ Build(G4HadronInelasticProcess * aP)
   aP->AddDataSet(new G4BGGNucleonInelasticXS(G4Proton::Proton()));
 }
 
-G4FTFBinaryProtonBuilder::
-~G4FTFBinaryProtonBuilder() 
-{
-}
-
+G4FTFBinaryProtonBuilder::~G4FTFBinaryProtonBuilder() {}

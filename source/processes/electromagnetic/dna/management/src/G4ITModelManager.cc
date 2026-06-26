@@ -33,61 +33,60 @@
 // -------------------------------------------------------------------
 
 #include "G4ITModelManager.hh"
-#include "G4VITStepModel.hh"
+
 #include "G4ITType.hh"
 #include "G4UnitsTable.hh"
-
+#include "G4VITStepModel.hh"
 
 G4ITModelManager::G4ITModelManager()
-     
-= default;
+
+  = default;
 
 G4ITModelManager::~G4ITModelManager() = default;
 
 void G4ITModelManager::Initialize()
 {
-    std::sort(fModelInfoList.begin(), fModelInfoList.end(),
-              [](const ModelInfo& lhs, const ModelInfo& rhs) {
-                  return lhs.fStartingTime < rhs.fStartingTime;
-              });
+  std::sort(fModelInfoList.begin(), fModelInfoList.end(),
+            [](const ModelInfo& lhs, const ModelInfo& rhs) {
+              return lhs.fStartingTime < rhs.fStartingTime;
+            });
 
-    for (const auto& modelInfo : fModelInfoList)
-    {
-        modelInfo.fpModel->Initialize();
-    }
+  for (const auto& modelInfo : fModelInfoList)
+  {
+    modelInfo.fpModel->Initialize();
+  }
 
-    fIsInitialized = true;
+  fIsInitialized = true;
 }
 
-void G4ITModelManager::SetModel(G4VITStepModel* pModel,
-                                const G4double startingTime,
+void G4ITModelManager::SetModel(G4VITStepModel* pModel, const G4double startingTime,
                                 const G4double endTime)
 {
-    assert(pModel != nullptr);
-    if (fIsInitialized)
-    {
-        G4ExceptionDescription exceptionDescription;
-        exceptionDescription
-            << "You are trying to insert a new model after initializing the model manager.";
-        G4Exception("G4ITModelManager::SetModel", "ITModelManager001",
-                    FatalErrorInArgument, exceptionDescription);
-    }
+  assert(pModel != nullptr);
+  if (fIsInitialized)
+  {
+    G4ExceptionDescription exceptionDescription;
+    exceptionDescription
+      << "You are trying to insert a new model after initializing the model manager.";
+    G4Exception("G4ITModelManager::SetModel", "ITModelManager001", FatalErrorInArgument,
+                exceptionDescription);
+  }
 
-    fModelInfoList.emplace_back(ModelInfo({ startingTime, endTime, std::unique_ptr<G4VITStepModel>(pModel) }));
+  fModelInfoList.emplace_back(
+    ModelInfo({startingTime, endTime, std::unique_ptr<G4VITStepModel>(pModel)}));
 }
 
 std::vector<G4VITStepModel*> G4ITModelManager::GetActiveModels(G4double globalTime) const
 {
-    std::vector<G4VITStepModel*> activeModels;
+  std::vector<G4VITStepModel*> activeModels;
 
-    for (const auto& modelInfo : fModelInfoList)
+  for (const auto& modelInfo : fModelInfoList)
+  {
+    if (modelInfo.fStartingTime < globalTime && modelInfo.fEndTime > globalTime)
     {
-        if (modelInfo.fStartingTime < globalTime && modelInfo.fEndTime > globalTime)
-        {
-            activeModels.push_back(modelInfo.fpModel.get());
-        }
+      activeModels.push_back(modelInfo.fpModel.get());
     }
+  }
 
-    return activeModels;
+  return activeModels;
 }
-

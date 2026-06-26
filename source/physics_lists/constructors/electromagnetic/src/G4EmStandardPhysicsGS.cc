@@ -58,45 +58,38 @@
 
 #include "G4EmStandardPhysicsGS.hh"
 
-#include "G4SystemOfUnits.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4LossTableManager.hh"
+#include "G4BuilderType.hh"
+#include "G4ComptonScattering.hh"
+#include "G4CoulombScattering.hh"
+#include "G4Electron.hh"
+#include "G4EmBuilder.hh"
+#include "G4EmModelActivator.hh"
 #include "G4EmParameters.hh"
 #include "G4EmStandUtil.hh"
-#include "G4EmBuilder.hh"
-
-#include "G4ComptonScattering.hh"
-#include "G4GammaConversion.hh"
-#include "G4PhotoElectricEffect.hh"
-#include "G4LivermorePhotoElectricModel.hh"
-#include "G4RayleighScattering.hh"
-
-#include "G4hMultipleScattering.hh"
-#include "G4CoulombScattering.hh"
-#include "G4eCoulombScatteringModel.hh"
-#include "G4WentzelVIModel.hh"
-#include "G4GoudsmitSaundersonMscModel.hh"
-
-#include "G4eIonisation.hh"
-#include "G4PenelopeIonisationModel.hh"
-#include "G4eBremsstrahlung.hh"
-#include "G4SeltzerBergerModel.hh"
-#include "G4Generator2BS.hh"
-
-#include "G4eplusAnnihilation.hh"
-
-#include "G4hIonisation.hh"
-#include "G4ionIonisation.hh"
-
 #include "G4Gamma.hh"
-#include "G4Electron.hh"
-#include "G4Positron.hh"
-#include "G4GenericIon.hh"
-
-#include "G4PhysicsListHelper.hh"
-#include "G4BuilderType.hh"
-#include "G4EmModelActivator.hh"
+#include "G4GammaConversion.hh"
 #include "G4GammaGeneralProcess.hh"
+#include "G4Generator2BS.hh"
+#include "G4GenericIon.hh"
+#include "G4GoudsmitSaundersonMscModel.hh"
+#include "G4LivermorePhotoElectricModel.hh"
+#include "G4LossTableManager.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4PenelopeIonisationModel.hh"
+#include "G4PhotoElectricEffect.hh"
+#include "G4PhysicsListHelper.hh"
+#include "G4Positron.hh"
+#include "G4RayleighScattering.hh"
+#include "G4SeltzerBergerModel.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4WentzelVIModel.hh"
+#include "G4eBremsstrahlung.hh"
+#include "G4eCoulombScatteringModel.hh"
+#include "G4eIonisation.hh"
+#include "G4eplusAnnihilation.hh"
+#include "G4hIonisation.hh"
+#include "G4hMultipleScattering.hh"
+#include "G4ionIonisation.hh"
 
 // factory
 #include "G4PhysicsConstructorFactory.hh"
@@ -115,12 +108,12 @@ G4EmStandardPhysicsGS::G4EmStandardPhysicsGS(G4int ver, const G4String&)
   // use a denser discrete kinetic energy grid for more accurate interpolation
   param->SetNumberOfBinsPerDecade(16);
   // set the continuous step limit to: 0.2*Range that goes to Range below 10 um
-  param->SetStepFunction(0.2, 10*CLHEP::um);
+  param->SetStepFunction(0.2, 10 * CLHEP::um);
   // set the GS MSC model for e-/e+ to be used below 1.0 GeV with its (Mott,
   // screening, scattering power) corrections activated and with the accurate
   // stepping and boundary crossing algorithms (no other options since 11.4)
   // with a skin of 3 elastic MFP near boundary
-  param->SetMscEnergyLimit(1.0*CLHEP::GeV);
+  param->SetMscEnergyLimit(1.0 * CLHEP::GeV);
   param->SetUseMottCorrection(true);
   param->SetMscStepLimitType(fUseSafetyPlus);
   param->SetMscSkin(3);
@@ -134,8 +127,7 @@ G4EmStandardPhysicsGS::G4EmStandardPhysicsGS(G4int ver, const G4String&)
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4EmStandardPhysicsGS::~G4EmStandardPhysicsGS()
-{}
+G4EmStandardPhysicsGS::~G4EmStandardPhysicsGS() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -149,7 +141,8 @@ void G4EmStandardPhysicsGS::ConstructParticle()
 
 void G4EmStandardPhysicsGS::ConstructProcess()
 {
-  if(verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "### " << GetPhysicsName() << " Construct Processes " << G4endl;
   }
   G4EmBuilder::PrepareEMPhysics();
@@ -174,7 +167,8 @@ void G4EmStandardPhysicsGS::ConstructProcess()
   G4GammaConversion* gc = new G4GammaConversion;
   G4RayleighScattering* rs = new G4RayleighScattering;
 
-  if (G4EmParameters::Instance()->GeneralProcessActive()) {
+  if (G4EmParameters::Instance()->GeneralProcessActive())
+  {
     G4GammaGeneralProcess* sp = new G4GammaGeneralProcess();
     sp->AddEmProcess(pe);
     sp->AddEmProcess(cs);
@@ -182,7 +176,9 @@ void G4EmStandardPhysicsGS::ConstructProcess()
     sp->AddEmProcess(rs);
     G4LossTableManager::Instance()->SetGammaGeneralProcess(sp);
     ph->RegisterProcess(sp, particle);
-  } else {
+  }
+  else
+  {
     ph->RegisterProcess(pe, particle);
     ph->RegisterProcess(cs, particle);
     ph->RegisterProcess(gc, particle);
@@ -210,7 +206,7 @@ void G4EmStandardPhysicsGS::ConstructProcess()
   G4eIonisation* eioni = new G4eIonisation();
   eioni->SetFluctModel(G4EmStandUtil::ModelOfFluctuations());
   G4VEmModel* theIoniMod = new G4PenelopeIonisationModel();
-  theIoniMod->SetHighEnergyLimit(1.0*CLHEP::GeV);
+  theIoniMod->SetHighEnergyLimit(1.0 * CLHEP::GeV);
   eioni->AddEmModel(0, theIoniMod);
 
   // bremsstrahlung: Seltzer-Berger[:1.0 GeV] + extended Bethe–Heitler[1.0 GeV:]
@@ -221,7 +217,7 @@ void G4EmStandardPhysicsGS::ConstructProcess()
   br2->SetAngularDistribution(new G4Generator2BS());
   brem->SetEmModel(br1);
   brem->SetEmModel(br2);
-  br1->SetHighEnergyLimit(1.0*CLHEP::GeV);
+  br1->SetHighEnergyLimit(1.0 * CLHEP::GeV);
 
   ph->RegisterProcess(eioni, particle);
   ph->RegisterProcess(brem, particle);
@@ -248,7 +244,7 @@ void G4EmStandardPhysicsGS::ConstructProcess()
   eioni = new G4eIonisation();
   eioni->SetFluctModel(G4EmStandUtil::ModelOfFluctuations());
   G4VEmModel* pen = new G4PenelopeIonisationModel();
-  pen->SetHighEnergyLimit(1.0*CLHEP::GeV);
+  pen->SetHighEnergyLimit(1.0 * CLHEP::GeV);
   eioni->AddEmModel(0, pen);
 
   // bremsstrahlung: Seltzer-Berger[:1.0 GeV] + extended Bethe–Heitler[1.0 GeV:]
@@ -259,7 +255,7 @@ void G4EmStandardPhysicsGS::ConstructProcess()
   br2->SetAngularDistribution(new G4Generator2BS());
   brem->SetEmModel(br1);
   brem->SetEmModel(br2);
-  br1->SetHighEnergyLimit(1.0*CLHEP::GeV);
+  br1->SetHighEnergyLimit(1.0 * CLHEP::GeV);
 
   ph->RegisterProcess(eioni, particle);
   ph->RegisterProcess(brem, particle);

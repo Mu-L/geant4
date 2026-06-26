@@ -29,11 +29,12 @@
 // --------------------------------------------------------------------
 
 #include "G4MasterForwardcoutDestination.hh"
+
 #include "G4AutoLock.hh"
 
 namespace
 {
-  G4Mutex out_mutex = G4MUTEX_INITIALIZER;
+G4Mutex out_mutex = G4MUTEX_INITIALIZER;
 }
 
 // --------------------------------------------------------------------
@@ -43,7 +44,7 @@ G4int G4MasterForwardcoutDestination::ReceiveG4debug(const G4String& msg)
   // situation, send the message to the master, using a lock to serialize calls
   // Master is probably a (G)UI that is not thread-safe
 
-  if((masterG4coutDestination != nullptr) && this != masterG4coutDestination)
+  if ((masterG4coutDestination != nullptr) && this != masterG4coutDestination)
   {
     G4AutoLock l(&out_mutex);
     return masterG4coutDestination->ReceiveG4debug_(msg);
@@ -58,7 +59,7 @@ G4int G4MasterForwardcoutDestination::ReceiveG4cout(const G4String& msg)
   // situation, send the message to the master, using a lock to serialize calls
   // Master is probably a (G)UI that is not thread-safe
 
-  if((masterG4coutDestination != nullptr) && this != masterG4coutDestination)
+  if ((masterG4coutDestination != nullptr) && this != masterG4coutDestination)
   {
     G4AutoLock l(&out_mutex);
     return masterG4coutDestination->ReceiveG4cout_(msg);
@@ -69,7 +70,7 @@ G4int G4MasterForwardcoutDestination::ReceiveG4cout(const G4String& msg)
 // --------------------------------------------------------------------
 G4int G4MasterForwardcoutDestination::ReceiveG4cerr(const G4String& msg)
 {
-  if((masterG4coutDestination != nullptr) && this != masterG4coutDestination)
+  if ((masterG4coutDestination != nullptr) && this != masterG4coutDestination)
   {
     G4AutoLock l(&out_mutex);
     return masterG4coutDestination->ReceiveG4cerr_(msg);

@@ -22,44 +22,42 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // Class G4PVParameterised implementation
 //
 // Author: Paul Kent (CERN), 29 July 1995 - first non-stub version
 // ----------------------------------------------------------------------
 
 #include "G4PVParameterised.hh"
-#include "G4VPVParameterisation.hh"
+
 #include "G4AffineTransform.hh"
-#include "G4UnitsTable.hh"
-#include "G4VSolid.hh"
 #include "G4LogicalVolume.hh"
+#include "G4UnitsTable.hh"
+#include "G4VPVParameterisation.hh"
+#include "G4VSolid.hh"
 
 // ----------------------------------------------------------------------
 // Constructor
 //
-G4PVParameterised::G4PVParameterised( const G4String& pName,
-                                            G4LogicalVolume* pLogical,
-                                            G4VPhysicalVolume* pMotherPhysical,
-                                      const EAxis pAxis,
-                                      const G4int nReplicas,
-                                            G4VPVParameterisation* pParam,
-                                            G4bool pSurfChk )
-: G4PVReplica(pName, nReplicas, pAxis, pLogical,
-              pMotherPhysical != nullptr ? pMotherPhysical->GetLogicalVolume() : nullptr ),
+G4PVParameterised::G4PVParameterised(const G4String& pName, G4LogicalVolume* pLogical,
+                                     G4VPhysicalVolume* pMotherPhysical, const EAxis pAxis,
+                                     const G4int nReplicas, G4VPVParameterisation* pParam,
+                                     G4bool pSurfChk)
+  : G4PVReplica(pName, nReplicas, pAxis, pLogical,
+                pMotherPhysical != nullptr ? pMotherPhysical->GetLogicalVolume() : nullptr),
     fparam(pParam)
 {
-  G4LogicalVolume* motherLogical= pMotherPhysical != nullptr ?
-      pMotherPhysical->GetLogicalVolume() : nullptr;
+  G4LogicalVolume* motherLogical =
+    pMotherPhysical != nullptr ? pMotherPhysical->GetLogicalVolume() : nullptr;
 
-  SetMotherLogical( motherLogical );
-  if( motherLogical != nullptr )
+  SetMotherLogical(motherLogical);
+  if (motherLogical != nullptr)
   {
-    // Registration moved here to ensure that the volume is recognised as Parameterised     
+    // Registration moved here to ensure that the volume is recognised as Parameterised
     motherLogical->AddDaughter(this);
   }
 
-#ifdef G4VERBOSE  
+#ifdef G4VERBOSE
   if ((pMotherPhysical != nullptr) && (pMotherPhysical->IsParameterised()))
   {
     std::ostringstream message;
@@ -72,43 +70,42 @@ G4PVParameterised::G4PVParameterised( const G4String& pName,
          << "   Mother physical volume: " << pMotherPhysical->GetName() << G4endl
          << "   Parameterised volume: " << pName << G4endl
          << "  (To switch this warning off, compile with G4_NO_VERBOSE)";
-    G4Exception("G4PVParameterised::G4PVParameterised()", "GeomVol1002",
-                JustWarning, message, G4String(hint.str()));
+    G4Exception("G4PVParameterised::G4PVParameterised()", "GeomVol1002", JustWarning, message,
+                G4String(hint.str()));
   }
 #endif
-  if (pSurfChk) { CheckOverlaps(); }
+  if (pSurfChk)
+  {
+    CheckOverlaps();
+  }
 }
 
 // ----------------------------------------------------------------------
 // Constructor
 //
-G4PVParameterised::G4PVParameterised( const G4String& pName,
-                                            G4LogicalVolume* pLogical,
-                                            G4LogicalVolume* pMotherLogical,
-                                      const EAxis pAxis,
-                                      const G4int nReplicas,
-                                            G4VPVParameterisation* pParam,
-                                            G4bool pSurfChk )
-  : G4PVReplica(pName, nReplicas, pAxis, pLogical, pMotherLogical ),
-    fparam(pParam)
+G4PVParameterised::G4PVParameterised(const G4String& pName, G4LogicalVolume* pLogical,
+                                     G4LogicalVolume* pMotherLogical, const EAxis pAxis,
+                                     const G4int nReplicas, G4VPVParameterisation* pParam,
+                                     G4bool pSurfChk)
+  : G4PVReplica(pName, nReplicas, pAxis, pLogical, pMotherLogical), fparam(pParam)
 {
-  SetMotherLogical( pMotherLogical );
-  if( pMotherLogical != nullptr )
+  SetMotherLogical(pMotherLogical);
+  if (pMotherLogical != nullptr)
   {
     // Registration moved here to ensure that the volume is recognised as Parameterised
     pMotherLogical->AddDaughter(this);
   }
-  if (pSurfChk) { CheckOverlaps(); }
+  if (pSurfChk)
+  {
+    CheckOverlaps();
+  }
 }
 
 // ----------------------------------------------------------------------
 // Fake default constructor - sets only member data and allocates memory
 //                            for usage restricted to object persistency.
 //
-G4PVParameterised::G4PVParameterised( __void__& a )
-  : G4PVReplica(a)
-{
-}
+G4PVParameterised::G4PVParameterised(__void__& a) : G4PVReplica(a) {}
 
 // ----------------------------------------------------------------------
 // GetParameterisation
@@ -129,7 +126,7 @@ G4bool G4PVParameterised::IsParameterised() const
 // ----------------------------------------------------------------------
 // VolumeType
 //
-EVolume G4PVParameterised::VolumeType() const 
+EVolume G4PVParameterised::VolumeType() const
 {
   return kParameterised;
 }
@@ -137,11 +134,8 @@ EVolume G4PVParameterised::VolumeType() const
 // ----------------------------------------------------------------------
 // GetReplicationData
 //
-void G4PVParameterised::GetReplicationData( EAxis& axis,
-                                            G4int& nReplicas,
-                                            G4double& width,
-                                            G4double& offset,
-                                            G4bool& consuming) const
+void G4PVParameterised::GetReplicationData(EAxis& axis, G4int& nReplicas, G4double& width,
+                                           G4double& offset, G4bool& consuming) const
 {
   axis = faxis;
   nReplicas = fnReplicas;
@@ -153,22 +147,22 @@ void G4PVParameterised::GetReplicationData( EAxis& axis,
 // ----------------------------------------------------------------------
 // SetRegularStructureId
 //
-void  G4PVParameterised::SetRegularStructureId( G4int code )
+void G4PVParameterised::SetRegularStructureId(G4int code)
 {
-  G4PVReplica::SetRegularStructureId( code );
+  G4PVReplica::SetRegularStructureId(code);
   // To undertake additional preparation, a derived volume must
   // redefine this method, while calling also the above method
 }
 
-
 // ----------------------------------------------------------------------
 // CheckOverlaps
 //
-G4bool
-G4PVParameterised::CheckOverlaps(G4int res, G4double tol,
-                                 G4bool verbose, G4int maxErr)
+G4bool G4PVParameterised::CheckOverlaps(G4int res, G4double tol, G4bool verbose, G4int maxErr)
 {
-  if (res<=0) { return false; }
+  if (res <= 0)
+  {
+    return false;
+  }
 
   G4int trials = 0;
   G4bool retval = false;
@@ -180,11 +174,10 @@ G4PVParameterised::CheckOverlaps(G4int res, G4double tol,
 
   if (verbose)
   {
-    G4cout << "Checking overlaps for parameterised volume "
-           << GetName() << " ... ";
+    G4cout << "Checking overlaps for parameterised volume " << GetName() << " ... ";
   }
 
-  for (auto i=0; i<GetMultiplicity(); ++i)
+  for (auto i = 0; i < GetMultiplicity(); ++i)
   {
     solidA = fparam->ComputeSolid(i, this);
     solidA->ComputeDimensions(fparam, i, this);
@@ -192,43 +185,43 @@ G4PVParameterised::CheckOverlaps(G4int res, G4double tol,
 
     // Create the transformation from daughter to mother
     //
-    G4AffineTransform Tm( GetRotation(), GetTranslation() );
+    G4AffineTransform Tm(GetRotation(), GetTranslation());
 
     // Generate random points on surface according to the given resolution,
     // transform them to the mother's coordinate system and if no overlaps
     // with the mother volume, cache them in a vector for later use with
     // the daughters
     //
-    for (auto n=0; n<res; ++n)
+    for (auto n = 0; n < res; ++n)
     {
       G4ThreeVector mp = Tm.TransformPoint(solidA->GetPointOnSurface());
 
       // Checking overlaps with the mother volume
       //
-      if (motherSolid->Inside(mp)==kOutside)
+      if (motherSolid->Inside(mp) == kOutside)
       {
         G4double distin = motherSolid->DistanceToIn(mp);
         if (distin > tol)
         {
-          ++trials; retval = true;
+          ++trials;
+          retval = true;
           std::ostringstream message;
           message << "Overlap with mother volume !" << G4endl
-                  << "         Overlap is detected for volume "
-                  << GetName() << ", parameterised instance: " << i << G4endl
-                  << "          with its mother volume "
-                  << motherLog->GetName() << G4endl
+                  << "         Overlap is detected for volume " << GetName()
+                  << ", parameterised instance: " << i << G4endl
+                  << "          with its mother volume " << motherLog->GetName() << G4endl
                   << "          at mother local point " << mp << ", "
-                  << "overlapping by at least: "
-                  << G4BestUnit(distin, "Length");
-          if (trials>=maxErr)
+                  << "overlapping by at least: " << G4BestUnit(distin, "Length");
+          if (trials >= maxErr)
           {
-            message << G4endl
-                    << "NOTE: Reached maximum fixed number -" << maxErr
+            message << G4endl << "NOTE: Reached maximum fixed number -" << maxErr
                     << "- of overlaps reports for this volume !";
           }
-          G4Exception("G4PVParameterised::CheckOverlaps()",
-                      "GeomVol1002", JustWarning, message);
-          if (trials>=maxErr)  { return true; }
+          G4Exception("G4PVParameterised::CheckOverlaps()", "GeomVol1002", JustWarning, message);
+          if (trials >= maxErr)
+          {
+            return true;
+          }
         }
       }
       points.push_back(mp);
@@ -236,47 +229,47 @@ G4PVParameterised::CheckOverlaps(G4int res, G4double tol,
 
     // Checking overlaps with each other parameterised instance
     //
-    for (auto j=i+1; j<GetMultiplicity(); ++j)
+    for (auto j = i + 1; j < GetMultiplicity(); ++j)
     {
-      solidB = fparam->ComputeSolid(j,this);
+      solidB = fparam->ComputeSolid(j, this);
       solidB->ComputeDimensions(fparam, j, this);
       fparam->ComputeTransformation(j, this);
 
       // Create the transformation for daughter volume
       //
-      G4AffineTransform Td( GetRotation(), GetTranslation() );
+      G4AffineTransform Td(GetRotation(), GetTranslation());
 
-      for (const auto & point : points)
+      for (const auto& point : points)
       {
         // Transform each point according to daughter's frame
         //
         G4ThreeVector md = Td.InverseTransformPoint(point);
 
-        if (solidB->Inside(md)==kInside)
+        if (solidB->Inside(md) == kInside)
         {
           G4double distout = solidB->DistanceToOut(md);
           if (distout > tol)
           {
-            ++trials; retval = true;
+            ++trials;
+            retval = true;
             std::ostringstream message;
             message << "Overlap within parameterised volumes !" << G4endl
-                    << "          Overlap is detected for volume "
-                    << GetName() << ", parameterised instance: " << i << G4endl
-                    << "          with parameterised volume instance: " << j
-                    << G4endl
+                    << "          Overlap is detected for volume " << GetName()
+                    << ", parameterised instance: " << i << G4endl
+                    << "          with parameterised volume instance: " << j << G4endl
                     << "          at local point " << md << ", "
-                    << "overlapping by at least: "
-                    << G4BestUnit(distout, "Length")
+                    << "overlapping by at least: " << G4BestUnit(distout, "Length")
                     << ", related to volume instance: " << j << ".";
-            if (trials>=maxErr)
+            if (trials >= maxErr)
             {
-              message << G4endl
-                      << "NOTE: Reached maximum fixed number -" << maxErr
+              message << G4endl << "NOTE: Reached maximum fixed number -" << maxErr
                       << "- of overlaps reports for this volume !";
             }
-            G4Exception("G4PVParameterised::CheckOverlaps()",
-                        "GeomVol1002", JustWarning, message);
-            if (trials>=maxErr)  { return true; }
+            G4Exception("G4PVParameterised::CheckOverlaps()", "GeomVol1002", JustWarning, message);
+            if (trials >= maxErr)
+            {
+              return true;
+            }
           }
         }
       }

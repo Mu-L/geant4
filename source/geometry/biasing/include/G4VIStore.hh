@@ -28,9 +28,9 @@
 // Class description:
 //
 // An interface of an "importance store" used by importance sampling.
-// It defines how a importance value together with a "cell" 
+// It defines how a importance value together with a "cell"
 // (a G4VPhysicalVolume and a replica number) has to be added
-// to the "importance store" and how a importance value can be derived 
+// to the "importance store" and how a importance value can be derived
 // from the "importance store".
 
 // Author: Michael Dressel (CERN), 2002
@@ -45,13 +45,16 @@ class G4VPhysicalVolume;
 
 /**
  * @brief G4VIStore is an interface of an "importance store" used by importance
- * sampling. It defines how an importance value together with a "cell" 
+ * sampling.
+ * @ingroup geometry_biasing
+ *
+ * It defines how an importance value together with a "cell"
  * (a G4VPhysicalVolume and a replica number) has to be added to the
  * "importance store" and how a importance value can be derived from the
- * "importance store". 
+ * "importance store".
  */
 
-class  G4VIStore
+class G4VIStore
 {
   public:
 

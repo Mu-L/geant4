@@ -26,27 +26,31 @@
 
 // Author: Ivana Hrivnacova, 02/06/2015  (ivana@ipno.in2p3.fr)
 
-#include "G4HnInformation.hh"
 #include "G4PlotManager.hh"
+
 #include "G4AnalysisUtilities.hh"
+#include "G4HnInformation.hh"
 #include "G4ios.hh"
 
 #if defined(TOOLS_USE_FREETYPE)
-#include "toolx/sg/text_freetype"
-#include "toolx/xml/xml_style"
-#include "tools/xml/wrap_viewplot_fonts_google_style"
-  //inlib/xml/viewplot.style file embeded in an inline function.
-#include "tools/font/lato_regular_ttf"
-#include "tools/font/roboto_bold_ttf"
+#  include "tools/xml/wrap_viewplot_fonts_google_style"
+#  include "toolx/sg/text_freetype"
+#  include "toolx/xml/xml_style"
+// inlib/xml/viewplot.style file embeded in an inline function.
+#  include "tools/font/lato_regular_ttf"
+#  include "tools/font/roboto_bold_ttf"
 
-namespace {
+namespace
+{
 
 // from g4tools/test/viewplot.cpp
 //_____________________________________________________________________________
-void HD_style(tools::sg::plots& a_plots,float a_line_width) {
+void HD_style(tools::sg::plots& a_plots, float a_line_width)
+{
   std::vector<tools::sg::plotter*> plotters;
   a_plots.plotters(plotters);
-  for (auto* _plotter : plotters) {
+  for (auto* _plotter : plotters)
+  {
     _plotter->bins_style(0).line_width = a_line_width;
     _plotter->inner_frame_style().line_width = a_line_width;
     _plotter->grid_style().line_width = a_line_width;
@@ -78,7 +82,8 @@ void HD_style(tools::sg::plots& a_plots,float a_line_width) {
 
 // from g4tools/test/viewplot.cpp
 //_____________________________________________________________________________
-void regions_style(tools::sg::plots& a_plots,float a_plotter_scale = 1) {
+void regions_style(tools::sg::plots& a_plots, float a_plotter_scale = 1)
+{
   // Rescale some plotter parameters (for example margins) according to the number of regions.
   // We assume that these parameters had been set previously according to one plot per page.
   // Then this function must be applied after all the styles had been applied (because
@@ -86,25 +91,27 @@ void regions_style(tools::sg::plots& a_plots,float a_plotter_scale = 1) {
 
   float ww_wc = a_plots.width;
   float wh_wc = a_plots.height;
-  float rw_wc = ww_wc/a_plots.cols;
-  float rh_wc = wh_wc/a_plots.rows;
+  float rw_wc = ww_wc / a_plots.cols;
+  float rh_wc = wh_wc / a_plots.rows;
 
-  float cooking = 1.2f; //if increased the data area is diminished.
+  float cooking = 1.2f;  // if increased the data area is diminished.
 
-  float wfac = (rw_wc/ww_wc)*cooking;
-  float hfac = (rh_wc/wh_wc)*cooking;
+  float wfac = (rw_wc / ww_wc) * cooking;
+  float hfac = (rh_wc / wh_wc) * cooking;
 
-  float label_cooking = 1.6f; //if increased the labels are bigger.
+  float label_cooking = 1.6f;  // if increased the labels are bigger.
 
-  if((a_plots.cols.value()>=4)&&(a_plots.cols.value()>a_plots.rows.value())) label_cooking = 0.9f;
+  if ((a_plots.cols.value() >= 4) && (a_plots.cols.value() > a_plots.rows.value()))
+    label_cooking = 0.9f;
 
-  float title_cooking = 1.1f; //extra title cooking.
+  float title_cooking = 1.1f;  // extra title cooking.
 
   a_plots.plotter_scale = a_plotter_scale;
 
   std::vector<tools::sg::plotter*> plotters;
   a_plots.plotters(plotters);
-  for (auto* _plotter : plotters) {
+  for (auto* _plotter : plotters)
+  {
     _plotter->left_margin = _plotter->left_margin * wfac;
     _plotter->right_margin = _plotter->right_margin * wfac;
     _plotter->bottom_margin = _plotter->bottom_margin * hfac;
@@ -123,17 +130,19 @@ void regions_style(tools::sg::plots& a_plots,float a_plotter_scale = 1) {
 
 // from g4tools/test/viewplot.cpp
 //_____________________________________________________________________________
-bool load_embeded_styles(tools::xml::styles& a_styles) {
+bool load_embeded_styles(tools::xml::styles& a_styles)
+{
   std::string ss;
   unsigned int linen;
   const char** lines = viewplot_fonts_google_style(linen);
-  for(unsigned int index=0;index<linen;index++) {
+  for (unsigned int index = 0; index < linen; index++)
+  {
     std::string s = lines[index];
-    tools::replace(s,"@@double_quote@@","\"");
-    tools::replace(s,"@@back_slash@@","\\");
+    tools::replace(s, "@@double_quote@@", "\"");
+    tools::replace(s, "@@back_slash@@", "\\");
     ss += s + "\n";
   }
-  return toolx::xml::load_style_string(a_styles,ss);
+  return toolx::xml::load_style_string(a_styles, ss);
 }
 
 //_____________________________________________________________________________
@@ -141,16 +150,14 @@ const toolx::sg::text_freetype& GetTextFreetype()
 {
   static const toolx::sg::text_freetype ttf = [] {
     toolx::sg::text_freetype value;
-    value.add_embedded_font(tools::sg::font_lato_regular_ttf(),
-                            tools::font::lato_regular_ttf);
-    value.add_embedded_font(tools::sg::font_roboto_bold_ttf(),
-                            tools::font::roboto_bold_ttf);
+    value.add_embedded_font(tools::sg::font_lato_regular_ttf(), tools::font::lato_regular_ttf);
+    value.add_embedded_font(tools::sg::font_roboto_bold_ttf(), tools::font::roboto_bold_ttf);
     return value;
   }();
   return ttf;
 }
 
-}
+}  // namespace
 #endif
 
 using namespace G4Analysis;
@@ -160,35 +167,30 @@ using namespace G4Analysis;
 //
 
 //_____________________________________________________________________________
-G4PlotManager::G4PlotManager(const G4AnalysisManagerState& state)
- : fState(state)
+G4PlotManager::G4PlotManager(const G4AnalysisManagerState& state) : fState(state)
 {
 #if defined(TOOLS_USE_FREETYPE)
   //////////////////////////////////////////////////////////////////////////////
   /// plotting, high resolution with freetype fonts and by using styles : //////
   //////////////////////////////////////////////////////////////////////////////
-  fState.Message(kVL1,  "... using high resolution with Freetype fonts", "");
-  //Have vertical A4 :
-  // unsigned int ww = 2000; //to have better antialising on freetype fonts.
-  // float A4 = 29.7f/21.0f;
-  // unsigned int wh = (unsigned int)(float(ww)*A4*0.80);
-  fViewer = std::make_unique<tools::viewplot>(G4cout, GetTextFreetype(),
-                                    fPlotParameters.GetColumns(),
-                                    fPlotParameters.GetRows(),
-                                    fPlotParameters.GetWidth(),
-                                    fPlotParameters.GetHeight());
+  fState.Message(kVL1, "... using high resolution with Freetype fonts", "");
+  // Have vertical A4 :
+  //  unsigned int ww = 2000; //to have better antialising on freetype fonts.
+  //  float A4 = 29.7f/21.0f;
+  //  unsigned int wh = (unsigned int)(float(ww)*A4*0.80);
+  fViewer = std::make_unique<tools::viewplot>(
+    G4cout, GetTextFreetype(), fPlotParameters.GetColumns(), fPlotParameters.GetRows(),
+    fPlotParameters.GetWidth(), fPlotParameters.GetHeight());
   fViewer->plots().view_border = false;
   load_embeded_styles(fViewer->styles());
-  fViewer->styles().add_colormap("default",tools::sg::style_default_colormap());
-  fViewer->styles().add_colormap("ROOT",tools::sg::style_ROOT_colormap());
+  fViewer->styles().add_colormap("default", tools::sg::style_default_colormap());
+  fViewer->styles().add_colormap("ROOT", tools::sg::style_ROOT_colormap());
 #else
   // cretae a viewer with default parameters
-  fState.Message(kVL1,  "... using low resolution with Hershey fonts", "");
-  fViewer = std::make_unique<tools::viewplot>(G4cout,
-                                    fPlotParameters.GetColumns(),
-                                    fPlotParameters.GetRows(),
-                                    fPlotParameters.GetWidth(),
-                                    fPlotParameters.GetHeight());
+  fState.Message(kVL1, "... using low resolution with Hershey fonts", "");
+  fViewer = std::make_unique<tools::viewplot>(G4cout, fPlotParameters.GetColumns(),
+                                              fPlotParameters.GetRows(), fPlotParameters.GetWidth(),
+                                              fPlotParameters.GetHeight());
   fViewer->plots().view_border = false;
 #endif
 }
@@ -208,14 +210,14 @@ G4bool G4PlotManager::WritePage()
 #endif
 
   G4bool result = fViewer->write_page();
-  if ( ! result ) {
-    Warn("Cannot write a page in the plot file " + fFileName,
-      fkClass, "WritePage");
+  if (!result)
+  {
+    Warn("Cannot write a page in the plot file " + fFileName, fkClass, "WritePage");
   }
 
   // clear viewers plots
   fViewer->plots().init_sg();
-    //it will recreate the sg::plotters and then reset the styles on new ones.
+  // it will recreate the sg::plotters and then reset the styles on new ones.
 
   fState.Message(kVL3, "write a page in", "plot file", fFileName);
 
@@ -235,7 +237,8 @@ G4bool G4PlotManager::OpenFile(const G4String& fileName)
   fFileName = fileName;
 
   G4bool result = fViewer->open_file(fileName);
-  if ( ! result ) {
+  if (!result)
+  {
     Warn("Cannot open plot file " + fileName, fkClass, "OpenFile");
   }
 
@@ -250,7 +253,8 @@ G4bool G4PlotManager::CloseFile()
   fState.Message(kVL4, "close", "plot file", fFileName);
 
   G4bool result = fViewer->close_file();
-  if ( ! result ) {
+  if (!result)
+  {
     Warn("Cannot close the plot file", fkClass, "CloseFile");
   }
 

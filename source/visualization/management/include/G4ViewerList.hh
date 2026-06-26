@@ -25,18 +25,21 @@
 //
 //
 //
-// 
+//
 // John Allison  May 1996
 
 #ifndef G4VIEWERLIST_HH
 #define G4VIEWERLIST_HH
 
-#include <vector>
 #include "G4VViewer.hh"
 
-class G4ViewerList: public std::vector<G4VViewer*> {
-public:
-  void remove(G4VViewer*);
+#include <vector>
+
+class G4ViewerList : public std::vector<G4VViewer*>
+{
+  public:
+
+    void remove(G4VViewer*);
 };
 
 typedef std::vector<G4VViewer*>::iterator G4ViewerListIterator;

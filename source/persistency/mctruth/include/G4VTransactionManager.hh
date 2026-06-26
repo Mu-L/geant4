@@ -33,7 +33,7 @@
 // Author: Youhei Morita, 18.07.2001
 // --------------------------------------------------------------------
 #ifndef G4VTRANSACTIONMANAGER_HH
-#define G4VTRANSACTIONMANAGER_HH 1
+#define G4VTRANSACTIONMANAGER_HH
 
 #include "G4Types.hh"
 
@@ -42,33 +42,31 @@ class G4VTransactionManager
   public:
 
     G4VTransactionManager() {}
-      // Constructor
+    // Constructor
 
     virtual ~G4VTransactionManager() {}
-      // Destructor
+    // Destructor
 
     void SetVerboseLevel(G4int v) { m_verbose = v; }
-      // Set verbose level
+    // Set verbose level
 
-    virtual G4bool SelectReadFile(const G4String& obj,
-                                  const G4String& file) = 0;
-      // Set the input file name and open it for the object type "obj"
+    virtual G4bool SelectReadFile(const G4String& obj, const G4String& file) = 0;
+    // Set the input file name and open it for the object type "obj"
 
-    virtual G4bool SelectWriteFile(const G4String& obj,
-                                   const G4String& file) = 0;
-      // Set the output file name and open it for the object type "obj"
+    virtual G4bool SelectWriteFile(const G4String& obj, const G4String& file) = 0;
+    // Set the output file name and open it for the object type "obj"
 
     virtual G4bool StartUpdate() = 0;
-      // Start an update transaction for event store and retrieve
+    // Start an update transaction for event store and retrieve
 
     virtual G4bool StartRead() = 0;
-      // Start a read-only transaction for event store and retrieve
+    // Start a read-only transaction for event store and retrieve
 
     virtual void Commit() = 0;
-      // commit the transaction for event store and retrieve
+    // commit the transaction for event store and retrieve
 
     virtual void Abort() = 0;
-      // abort the transaction for event store and retrieve
+    // abort the transaction for event store and retrieve
 
   protected:
 

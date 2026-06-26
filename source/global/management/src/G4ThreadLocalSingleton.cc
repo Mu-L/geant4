@@ -44,8 +44,8 @@ G4Mutex& G4ThreadLocalSingleton<void>::GetMutex()
 
 void G4ThreadLocalSingleton<void>::Clear()
 {
-  G4AutoLock _lk{ GetMutex() };
-  for(const auto& itr : GetCallbacks())
+  G4AutoLock _lk{GetMutex()};
+  for (const auto& itr : GetCallbacks())
   {
     itr();
   }

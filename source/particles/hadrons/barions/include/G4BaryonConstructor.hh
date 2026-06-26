@@ -29,16 +29,19 @@
 // --------------------------------------------------------------
 //	GEANT 4 class implementation file
 //
-#ifndef G4BaryonConstructor_h
-#define G4BaryonConstructor_h 1
+#ifndef G4BARYONCONSTRUCTOR_HH
+#define G4BARYONCONSTRUCTOR_HH
 
 class G4BaryonConstructor
 {
     // This class is a utility class for construction
+
   public:
+
     static void ConstructParticle();
 
   protected:
+
     static void ConstructNucleons();
     static void ConstructStrangeBaryons();
     static void ConstructCharmBaryons();

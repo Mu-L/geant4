@@ -36,8 +36,8 @@
 //
 // -------------------------------------------------------------------
 
-#ifndef G4PolarizedPhotoElectricModel_h
-#define G4PolarizedPhotoElectricModel_h 1
+#ifndef G4POLARIZEDPHOTOELECTRICMODEL_HH
+#define G4POLARIZEDPHOTOELECTRICMODEL_HH
 
 #include "G4PEEffectFluoModel.hh"
 #include "G4StokesVector.hh"
@@ -46,29 +46,27 @@ class G4PolarizedPhotoElectricXS;
 
 class G4PolarizedPhotoElectricModel : public G4PEEffectFluoModel
 {
- public:
-  explicit G4PolarizedPhotoElectricModel(
-    const G4ParticleDefinition* p = nullptr,
-    const G4String& nam           = "Polarized-PhotoElectric");
+  public:
 
-  virtual ~G4PolarizedPhotoElectricModel() override;
+    explicit G4PolarizedPhotoElectricModel(const G4ParticleDefinition* p = nullptr,
+                                           const G4String& nam = "Polarized-PhotoElectric");
 
-  void Initialise(const G4ParticleDefinition* pd,
-                  const G4DataVector& dv) override;
+    virtual ~G4PolarizedPhotoElectricModel() override;
 
-  virtual void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-                                 const G4MaterialCutsCouple*,
-                                 const G4DynamicParticle*, G4double tmin,
-                                 G4double maxEnergy) override;
+    void Initialise(const G4ParticleDefinition* pd, const G4DataVector& dv) override;
 
-  G4PolarizedPhotoElectricModel& operator=(
-    const G4PolarizedPhotoElectricModel& right) = delete;
-  G4PolarizedPhotoElectricModel(const G4PolarizedPhotoElectricModel&) = delete;
+    virtual void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                                   const G4DynamicParticle*, G4double tmin,
+                                   G4double maxEnergy) override;
 
- private:
-  G4PolarizedPhotoElectricXS* fCrossSectionCalculator;
+    G4PolarizedPhotoElectricModel& operator=(const G4PolarizedPhotoElectricModel& right) = delete;
+    G4PolarizedPhotoElectricModel(const G4PolarizedPhotoElectricModel&) = delete;
 
-  G4int fVerboseLevel;
+  private:
+
+    G4PolarizedPhotoElectricXS* fCrossSectionCalculator;
+
+    G4int fVerboseLevel;
 };
 
 #endif

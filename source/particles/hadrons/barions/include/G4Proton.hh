@@ -32,19 +32,21 @@
 //  New implementation as a utility class  M.Asai, 26 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4Proton_h
-#define G4Proton_h 1
+#ifndef G4PROTON_HH
+#define G4PROTON_HH
 
 #include "G4Ions.hh"
 
 class G4Proton : public G4Ions
 {
   public:
+
     static G4Proton* Definition();
     static G4Proton* ProtonDefinition();
     static G4Proton* Proton();
 
   private:
+
     G4Proton() {}
     ~G4Proton() override = default;
 

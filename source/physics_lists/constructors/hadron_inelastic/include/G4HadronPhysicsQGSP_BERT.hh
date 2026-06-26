@@ -42,17 +42,17 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4HadronPhysicsQGSP_BERT_h
-#define G4HadronPhysicsQGSP_BERT_h 1
-
-#include "globals.hh"
+#ifndef G4HADRONPHYSICSQGSP_BERT_HH
+#define G4HADRONPHYSICSQGSP_BERT_HH
 
 #include "G4VPhysicsConstructor.hh"
+#include "globals.hh"
 
 class G4HadronPhysicsQGSP_BERT : public G4VPhysicsConstructor
 {
-  public: 
-    G4HadronPhysicsQGSP_BERT(G4int verbose =1);
+  public:
+
+    G4HadronPhysicsQGSP_BERT(G4int verbose = 1);
     G4HadronPhysicsQGSP_BERT(const G4String& name, G4bool quasiElastic = true);
     ~G4HadronPhysicsQGSP_BERT() override = default;
 
@@ -60,11 +60,11 @@ class G4HadronPhysicsQGSP_BERT : public G4VPhysicsConstructor
     void ConstructProcess() override;
 
     // copy constructor and hide assignment operator
-    G4HadronPhysicsQGSP_BERT(G4HadronPhysicsQGSP_BERT &) = delete;
-    G4HadronPhysicsQGSP_BERT & operator =
-    (const G4HadronPhysicsQGSP_BERT &right) = delete;
+    G4HadronPhysicsQGSP_BERT(G4HadronPhysicsQGSP_BERT&) = delete;
+    G4HadronPhysicsQGSP_BERT& operator=(const G4HadronPhysicsQGSP_BERT& right) = delete;
 
   protected:
+
     void CreateModels();
     virtual void Neutron();
     virtual void Proton();
@@ -91,9 +91,8 @@ class G4HadronPhysicsQGSP_BERT : public G4VPhysicsConstructor
     G4double maxBIC_neutron{0.0};
     G4double minBIC_neutron{0.0};
 
-    G4bool QuasiElasticFTF{false}; // Use built-in quasi-elastic (not add-on)
+    G4bool QuasiElasticFTF{false};  // Use built-in quasi-elastic (not add-on)
     G4bool QuasiElasticQGS{true};  // For QGS, it must use it
 };
 
 #endif
-

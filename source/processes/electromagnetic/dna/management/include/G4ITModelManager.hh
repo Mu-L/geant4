@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,13 +41,15 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-#pragma once
+#ifndef G4ITMODELMANAGER_HH
+#define G4ITMODELMANAGER_HH
 
 #include "globals.hh"
-#include <vector>
+
 #include <memory>
+#include <vector>
 
 class G4VITStepModel;
 
@@ -58,8 +60,8 @@ class G4VITStepModel;
  */
 class G4ITModelManager
 {
+  public:
 
-public:
     G4ITModelManager();
 
     ~G4ITModelManager();
@@ -74,7 +76,8 @@ public:
 
     std::vector<G4VITStepModel*> GetActiveModels(G4double globalTime) const;
 
-protected:
+  protected:
+
     struct ModelInfo
     {
         double fStartingTime;
@@ -85,3 +88,5 @@ protected:
     std::vector<ModelInfo> fModelInfoList;
     G4bool fIsInitialized{false};
 };
+
+#endif

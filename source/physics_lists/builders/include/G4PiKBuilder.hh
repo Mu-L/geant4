@@ -32,39 +32,40 @@
 //
 // Modified:
 // 16.11.2005 G.Folger: don't  keep processes as data members, but new these
-// 13.06.2006 G.Folger: (re)move elastic scatterring 
+// 13.06.2006 G.Folger: (re)move elastic scatterring
 // 12.04.2017 A.Dotti move to new design with base class
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4PiKBuilder_h
-#define G4PiKBuilder_h 1
+#ifndef G4PIKBUILDER_HH
+#define G4PIKBUILDER_HH
 
 #include "G4PhysicsBuilderInterface.hh"
+#include "G4VPiKBuilder.hh"
 #include "globals.hh"
 
-#include "G4VPiKBuilder.hh"
 #include <vector>
 
 class G4PiKBuilder : public G4PhysicsBuilderInterface
 {
-  public: 
+  public:
+
     G4PiKBuilder();
     virtual ~G4PiKBuilder() {}
 
     virtual void Build() final override;
-    virtual void RegisterMe(G4PhysicsBuilderInterface * aB) final override;
+    virtual void RegisterMe(G4PhysicsBuilderInterface* aB) final override;
 
   private:
+
     G4HadronInelasticProcess* thePionPlusInelastic;
     G4HadronInelasticProcess* thePionMinusInelastic;
     G4HadronInelasticProcess* theKaonPlusInelastic;
     G4HadronInelasticProcess* theKaonMinusInelastic;
     G4HadronInelasticProcess* theKaonZeroLInelastic;
     G4HadronInelasticProcess* theKaonZeroSInelastic;
-     
-    std::vector<G4VPiKBuilder *> theModelCollections;
+
+    std::vector<G4VPiKBuilder*> theModelCollections;
 };
 
 #endif
-

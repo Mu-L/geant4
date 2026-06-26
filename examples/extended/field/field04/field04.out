@@ -11,7 +11,7 @@ Environment variable "G4FORCE_RUN_MANAGER_TYPE" enabled with value == Serial. Fo
 
 
 **************************************************************
- Geant4 version Name: geant4-11-04-patch-02    (12-June-2026)
+ Geant4 version Name: geant4-11-04-ref-06    (30-June-2026)
                        Copyright : Geant4 Collaboration
                       References : NIM A 506 (2003), 250-303
                                  : IEEE-TNS 53 (2006), 270-278
@@ -109,8 +109,8 @@ New material nComponents= 2
 G4NistElementBuilder: Build Element <Be>  Z= 4  Aeff= 9.01218  with natural isotope composition
 G4NistMaterialBuilder::FindOrBuildMaterial Scintillator
 G4NistMaterialBuilder::FindOrBuildMaterial WARNING: material <Scintillator> is not found.
-New material Scintillator is prepared  nMaterials= 310 nComponents= 780 nCurrent= 2
-G4NistMaterialBuilder: BuildMaterial #309
+New material Scintillator is prepared  nMaterials= 311 nComponents= 781 nCurrent= 2
+G4NistMaterialBuilder: BuildMaterial #310
 New material nComponents= 2
 
 The materials defined are: 
@@ -265,6 +265,7 @@ Use built-in Birks saturation                      1
 Build CSDA range enabled                           0
 Use cut as a final range enabled                   0
 Enable angular generator interface                 0
+Enable parallel initialisation of physics tables   0
 Max kinetic energy for CSDA tables                 1 GeV
 Max kinetic energy for NIEL computation            0 eV 
 Linear loss limit                                  0.01
@@ -10998,7 +10999,7 @@ Step#      X         Y         Z        KineE    dEStep   StepLeng  TrakLeng    
  2669 -21.508078 cm  19.707951 cm  77.724853 cm  45.014014 MeV4.9322449e-17 meV         1 mm  2.6716173 m  CaptureMgnt  StepLimiter
  2670  -21.41786 cm  19.742111 cm  77.751192 cm  45.014014 MeV4.9322449e-17 meV         1 mm  2.6726173 m  CaptureMgnt  StepLimiter
  2671 -21.327432 cm  19.775712 cm  77.777531 cm  45.014014 MeV4.9322449e-17 meV         1 mm  2.6736173 m  CaptureMgnt  StepLimiter
- 2672 -21.236797 cm   19.80875 cm  77.803871 cm  45.014014 MeV4.9322449e-17 meV     
+ 2672 -21.236797 cm   19.80875 cm
 ============================================================================================
 ================= lines above cut to keep file within limits ===============================
 ============================================================================================

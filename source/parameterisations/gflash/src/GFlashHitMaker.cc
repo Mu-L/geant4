@@ -69,16 +69,19 @@ GFlashHitMaker::~GFlashHitMaker()
 void GFlashHitMaker::make(GFlashEnergySpot* aSpot, const G4FastTrack* aT)
 {
   // Locate the spot
-  if (!fNaviSetup) {
+  if (!fNaviSetup)
+  {
     // Choose the world volume that contains the sensitive detector based on its name (empty name
     // for mass geometry)
     G4VPhysicalVolume* worldWithSD = nullptr;
-    if (fWorldWithSdName.empty()) {
+    if (fWorldWithSdName.empty())
+    {
       worldWithSD = G4TransportationManager::GetTransportationManager()
                       ->GetNavigatorForTracking()
                       ->GetWorldVolume();
     }
-    else {
+    else
+    {
       worldWithSD =
         G4TransportationManager::GetTransportationManager()->GetParallelWorld(fWorldWithSdName);
     }
@@ -87,7 +90,8 @@ void GFlashHitMaker::make(GFlashEnergySpot* aSpot, const G4FastTrack* aT)
                                                      false);
     fNaviSetup = true;
   }
-  else {
+  else
+  {
     fpNavigator->LocateGlobalPointAndUpdateTouchable(aSpot->GetPosition(), fTouchableHandle());
   }
 
@@ -99,16 +103,19 @@ void GFlashHitMaker::make(GFlashEnergySpot* aSpot, const G4FastTrack* aT)
 
   G4VPhysicalVolume* pCurrentVolume = fTouchableHandle()->GetVolume();
   G4VSensitiveDetector* pSensitive;
-  if (pCurrentVolume != 0) {
+  if (pCurrentVolume != 0)
+  {
     pSensitive = pCurrentVolume->GetLogicalVolume()->GetSensitiveDetector();
     G4VGFlashSensitiveDetector* gflashSensitive =
       dynamic_cast<G4VGFlashSensitiveDetector*>(pSensitive);
-    if (gflashSensitive) {
+    if (gflashSensitive)
+    {
       // set spot information:
       G4GFlashSpot theSpot(aSpot, aT, fTouchableHandle);
       gflashSensitive->Hit(&theSpot);
     }
-    else if (pSensitive) {
+    else if (pSensitive)
+    {
       fpSpotS->SetTotalEnergyDeposit(aSpot->GetEnergy());
       fpSpotS->SetTrack(const_cast<G4Track*>(aT->GetPrimaryTrack()));
       fpSpotP->SetWeight(aT->GetPrimaryTrack()->GetWeight());
@@ -122,7 +129,8 @@ void GFlashHitMaker::make(GFlashEnergySpot* aSpot, const G4FastTrack* aT)
       pSensitive->Hit(fpSpotS);
     }
   }
-  else {
+  else
+  {
 #ifdef GFLASH_DEBUG
     G4cout << "GFlashHitMaker::Out of volume  " << G4endl;
 #endif

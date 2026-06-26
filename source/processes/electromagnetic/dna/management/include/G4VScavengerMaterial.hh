@@ -29,9 +29,10 @@
 
 class G4VScavengerMaterial
 {
- public:
-  G4VScavengerMaterial()          = default;
-  virtual ~G4VScavengerMaterial() = default;
-  virtual void Reset()          = 0;
+  public:
+
+    G4VScavengerMaterial() = default;
+    virtual ~G4VScavengerMaterial() = default;
+    virtual void Reset() = 0;
 };
 #endif  // G4VSCAVENGERMATERIAL_HH

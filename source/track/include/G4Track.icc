@@ -40,16 +40,16 @@ extern G4TRACK_DLL G4Allocator<G4Track>*& aTrackAllocator();
 
 inline void* G4Track::operator new(std::size_t)
 {
-  if(aTrackAllocator() == nullptr)
+  if (aTrackAllocator() == nullptr)
   {
     aTrackAllocator() = new G4Allocator<G4Track>;
   }
-  return (void*) aTrackAllocator()->MallocSingle();
+  return (void*)aTrackAllocator()->MallocSingle();
 }
 
 inline void G4Track::operator delete(void* aTrack)
 {
-  aTrackAllocator()->FreeSingle((G4Track*) aTrack);
+  aTrackAllocator()->FreeSingle((G4Track*)aTrack);
 }
 
 inline G4bool G4Track::operator==(const G4Track& trk)
@@ -150,9 +150,8 @@ inline void G4Track::SetProperTime(const G4double aValue)
 inline G4double G4Track::GetVelocity() const
 {
   return (useGivenVelocity) ? fVelocity
-                            : ((!is_OpticalPhoton)
-                                 ? CLHEP::c_light * fpDynamicParticle->GetBeta()
-                                 : CalculateVelocityForOpticalPhoton());
+                            : ((!is_OpticalPhoton) ? CLHEP::c_light * fpDynamicParticle->GetBeta()
+                                                   : CalculateVelocityForOpticalPhoton());
 }
 
 inline G4double G4Track::CalculateVelocity() const
@@ -332,6 +331,11 @@ inline void G4Track::IncrementCurrentStepNumber()
   ++fCurrentStepNumber;
 }
 
+inline void G4Track::IncrementCurrentStepNumber(const G4int nSteps)
+{
+  fCurrentStepNumber += nSteps;
+}
+
 // step length
 inline G4double G4Track::GetStepLength() const
 {
@@ -386,9 +390,9 @@ inline void G4Track::SetLogicalVolumeAtVertex(const G4LogicalVolume* aValue)
 
 inline const G4VProcess* G4Track::GetCreatorProcess() const
 {
- // If the pointer is null, this means the track is created
- // by the event generator, i.e. the primary track. If it is not
- // null, it points to the process which created this track.
+  // If the pointer is null, this means the track is created
+  // by the event generator, i.e. the primary track. If it is not
+  // null, it points to the process which created this track.
 
   return fpCreatorProcess;
 }
@@ -408,7 +412,7 @@ inline G4int G4Track::GetCreatorModelID() const
   return fCreatorModelID;
 }
 
-inline G4int G4Track::GetCreatorModelIndex() const 
+inline G4int G4Track::GetCreatorModelIndex() const
 {
   return G4PhysicsModelCatalog::GetModelIndex(fCreatorModelID);
 }
@@ -438,19 +442,23 @@ inline void G4Track::SetParentResonanceID(const G4int parentID)
   fParentResonanceID = parentID;
 }
 
-inline G4bool G4Track::HasParentResonance() const {
-  return ( fParentResonanceDef != nullptr );
+inline G4bool G4Track::HasParentResonance() const
+{
+  return (fParentResonanceDef != nullptr);
 }
 
-inline G4int G4Track::GetParentResonancePDGEncoding() const {
-  return ( fParentResonanceDef == nullptr ? 0 : fParentResonanceDef->GetPDGEncoding() );
+inline G4int G4Track::GetParentResonancePDGEncoding() const
+{
+  return (fParentResonanceDef == nullptr ? 0 : fParentResonanceDef->GetPDGEncoding());
 }
 
-inline G4String G4Track::GetParentResonanceName() const {
-  return ( fParentResonanceDef == nullptr ? G4String() : fParentResonanceDef->GetParticleName() );
+inline G4String G4Track::GetParentResonanceName() const
+{
+  return (fParentResonanceDef == nullptr ? G4String() : fParentResonanceDef->GetParticleName());
 }
 
-inline G4double G4Track::GetParentResonanceMass() const {
+inline G4double G4Track::GetParentResonanceMass() const
+{
   return fParentResonanceID * CLHEP::keV;  // the ID is the mass of the resonance in eV
 }
 
@@ -509,7 +517,7 @@ inline void G4Track::SetStep(const G4Step* aValue)
 }
 
 inline std::map<G4int, G4VAuxiliaryTrackInformation*>*
-           G4Track::GetAuxiliaryTrackInformationMap() const
+G4Track::GetAuxiliaryTrackInformationMap() const
 {
   return fpAuxiliaryTrackInformationMap;
 }

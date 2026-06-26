@@ -29,30 +29,29 @@
 // by V. Lara (Sept. 2001)
 //
 
-
-#ifndef G4ProtonGEMChannel_h
-#define G4ProtonGEMChannel_h 1
+#ifndef G4PROTONGEMCHANNEL_HH
+#define G4PROTONGEMCHANNEL_HH
 
 #include "G4GEMChannel.hh"
 #include "G4ProtonGEMProbability.hh"
 
 class G4ProtonGEMChannel : public G4GEMChannel
 {
-public:
-  // only available constructor
-  explicit G4ProtonGEMChannel() 
-    : G4GEMChannel(1,1,"proton",&theEvaporationProbability) {}
-    
-  // destructor
-  ~G4ProtonGEMChannel() {};
+  public:
 
-private:
-  const G4ProtonGEMChannel & operator=(const G4ProtonGEMChannel & right) = delete;  
-  G4ProtonGEMChannel(const G4ProtonGEMChannel & right) = delete;
-  G4bool operator==(const G4ProtonGEMChannel & right) const = delete;
-  G4bool operator!=(const G4ProtonGEMChannel & right) const = delete;
+    // only available constructor
+    explicit G4ProtonGEMChannel() : G4GEMChannel(1, 1, "proton", &theEvaporationProbability) {}
 
-  G4ProtonGEMProbability theEvaporationProbability;
+    // destructor
+    ~G4ProtonGEMChannel() {};
 
+  private:
+
+    const G4ProtonGEMChannel& operator=(const G4ProtonGEMChannel& right) = delete;
+    G4ProtonGEMChannel(const G4ProtonGEMChannel& right) = delete;
+    G4bool operator==(const G4ProtonGEMChannel& right) const = delete;
+    G4bool operator!=(const G4ProtonGEMChannel& right) const = delete;
+
+    G4ProtonGEMProbability theEvaporationProbability;
 };
 #endif

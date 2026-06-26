@@ -27,50 +27,48 @@
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara
 
-#ifndef G4StatMFMacroNucleon_h
-#define G4StatMFMacroNucleon_h 1
+#ifndef G4STATMFMACRONUCLEON_HH
+#define G4STATMFMACRONUCLEON_HH
 
 #include "G4VStatMFMacroCluster.hh"
 
+class G4StatMFMacroNucleon : public G4VStatMFMacroCluster
+{
+  public:
 
-class G4StatMFMacroNucleon : public G4VStatMFMacroCluster {
+    G4StatMFMacroNucleon();
 
-public:
+    ~G4StatMFMacroNucleon();
 
-  G4StatMFMacroNucleon(); 
+    G4double CalcMeanMultiplicity(const G4double FreeVol, const G4double mu, const G4double nu,
+                                  const G4double T);
 
-  ~G4StatMFMacroNucleon();
-	
-  G4double CalcMeanMultiplicity(const G4double FreeVol, const G4double mu, 
-				const G4double nu, const G4double T);
-	
-  inline G4double CalcZARatio(const G4double ) 
-  { 
-    theZARatio = 0.0;
-    if (_ProtonMeanMultiplicity+_NeutronMeanMultiplicity > 0.0) {
-      theZARatio = _ProtonMeanMultiplicity/
-	(_ProtonMeanMultiplicity+_NeutronMeanMultiplicity);
+    inline G4double CalcZARatio(const G4double)
+    {
+      theZARatio = 0.0;
+      if (_ProtonMeanMultiplicity + _NeutronMeanMultiplicity > 0.0)
+      {
+        theZARatio = _ProtonMeanMultiplicity / (_ProtonMeanMultiplicity + _NeutronMeanMultiplicity);
+      }
+      return theZARatio;
     }
-    return theZARatio; 
-  }					
-						
-  G4double CalcEnergy(const G4double T);
-	
-  G4double CalcEntropy(const G4double T, const G4double FreeVol);
 
-private:
+    G4double CalcEnergy(const G4double T);
 
-  // Copy constructor
-  G4StatMFMacroNucleon(const G4StatMFMacroNucleon & right);
+    G4double CalcEntropy(const G4double T, const G4double FreeVol);
 
-  // operators
-  G4StatMFMacroNucleon & operator=(const G4StatMFMacroNucleon & right);
-  G4bool operator==(const G4StatMFMacroNucleon & right) const;
-  G4bool operator!=(const G4StatMFMacroNucleon & right) const;
+  private:
 
-  G4double _NeutronMeanMultiplicity;
-  G4double _ProtonMeanMultiplicity;
+    // Copy constructor
+    G4StatMFMacroNucleon(const G4StatMFMacroNucleon& right);
 
+    // operators
+    G4StatMFMacroNucleon& operator=(const G4StatMFMacroNucleon& right);
+    G4bool operator==(const G4StatMFMacroNucleon& right) const;
+    G4bool operator!=(const G4StatMFMacroNucleon& right) const;
+
+    G4double _NeutronMeanMultiplicity;
+    G4double _ProtonMeanMultiplicity;
 };
 
 #endif

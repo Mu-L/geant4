@@ -42,6 +42,7 @@
 class G4AblaDataFile : public G4AblaVirtualData
 {
   public:
+
     G4AblaDataFile();
     virtual ~G4AblaDataFile() = default;
 
@@ -51,5 +52,6 @@ class G4AblaDataFile : public G4AblaVirtualData
     G4bool readData();
 
   private:
+
     G4int verboseLevel;
 };

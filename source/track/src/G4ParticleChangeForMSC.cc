@@ -25,19 +25,20 @@
 //
 // G4ParticleChangeForMSC class implementation
 //
-// Author: Hisaya Kurashige, 23 March 1998  
+// Author: Hisaya Kurashige, 23 March 1998
 // Revision: Vladimir Ivantchenko, 16 January 2004
 //                                 23 August 2022
 // --------------------------------------------------------------------
 
 #include "G4ParticleChangeForMSC.hh"
+
+#include "G4ExceptionSeverity.hh"
+#include "G4Step.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4Track.hh"
-#include "G4Step.hh"
-#include "G4ExceptionSeverity.hh"
 
 // --------------------------------------------------------------------
-G4ParticleChangeForMSC::G4ParticleChangeForMSC() 
+G4ParticleChangeForMSC::G4ParticleChangeForMSC()
 {
   // Disable flag that is enabled in G4VParticleChange if G4VERBOSE.
   debugFlag = false;
@@ -59,4 +60,3 @@ G4Step* G4ParticleChangeForMSC::UpdateStepForAlongStep(G4Step* pStep)
   pPostStepPoint->SetPosition(thePosition);
   return pStep;
 }
-

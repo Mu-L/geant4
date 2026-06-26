@@ -42,8 +42,8 @@
 #include "G4NistManager.hh"
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithAnInteger.hh"
-#include "G4UIdirectory.hh"
 #include "G4UIcommand.hh"
+#include "G4UIdirectory.hh"
 #include "G4UIparameter.hh"
 
 #include <sstream>
@@ -141,7 +141,7 @@ G4NistMessenger::G4NistMessenger(G4NistManager* man) : manager(man)
   fPosiCmd->AvailableForStates(G4State_PreInit);
   fPosiCmd->SetToBeBroadcasted(false);
 
-  auto p1 = new G4UIparameter("matname",'s', false);
+  auto p1 = new G4UIparameter("matname", 's', false);
   fPosiCmd->SetParameter(p1);
 
   auto p2 = new G4UIparameter("fraction", 'd', false);
@@ -165,7 +165,7 @@ G4NistMessenger::~G4NistMessenger()
   delete densCmd;
   delete adensCmd;
   delete fPosiCmd;
-  
+
   delete g4Dir;
   delete matDir;
 }
@@ -175,53 +175,72 @@ G4NistMessenger::~G4NistMessenger()
 void G4NistMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
   // G4cout << "G4NistMessenger::SetNewValue <" << newValue << ">" << G4endl;
-  if (command == verCmd) {
+  if (command == verCmd)
+  {
     manager->SetVerbose(verCmd->GetNewIntValue(newValue));
   }
-  else if (command == prtElmCmd) {
+  else if (command == prtElmCmd)
+  {
     manager->PrintElement(newValue);
   }
-  else if (command == przElmCmd) {
+  else if (command == przElmCmd)
+  {
     G4int Z = przElmCmd->GetNewIntValue(newValue);
-    if (Z >= 0 && Z < 108) {
+    if (Z >= 0 && Z < 108)
+    {
       manager->PrintElement(Z);
     }
   }
-  else if (command == lisMatCmd) {
+  else if (command == lisMatCmd)
+  {
     manager->ListMaterials(newValue);
   }
-  else if (command == g4ElmCmd) {
+  else if (command == g4ElmCmd)
+  {
     manager->PrintG4Element(newValue);
   }
-  else if (command == g4MatCmd) {
+  else if (command == g4MatCmd)
+  {
     manager->PrintG4Material(newValue);
   }
-  else if (command == g4DensCmd) {
+  else if (command == g4DensCmd)
+  {
     G4IonisParamMat::GetDensityEffectData()->PrintData(newValue);
   }
-  else if (command == densCmd) {
+  else if (command == densCmd)
+  {
     manager->SetDensityEffectCalculatorFlag(newValue, true);
   }
-  else if (command == adensCmd) {
+  else if (command == adensCmd)
+  {
     manager->SetDensityEffectCalculatorFlag(newValue, false);
   }
-  else if (command == fPosiCmd) {
+  else if (command == fPosiCmd)
+  {
     G4String mnam{""};
     G4double f{0.0};
     std::istringstream ss(newValue);
     ss >> mnam >> f;
-    // set fraction for all materials 
-    if (mnam == "all" || mnam == "none") {
-      if (mnam == "none" || f < 0.0) { f = 0.0; }
-      auto mtable = G4Material::GetMaterialTable();
-      for ( auto const & mat : *mtable ) {
-	mat->GetIonisation()->SetOrtoPositroniumFraction(f);
+    // set fraction for all materials
+    if (mnam == "all" || mnam == "none")
+    {
+      if (mnam == "none" || f < 0.0)
+      {
+        f = 0.0;
       }
-    } else {
-      // set fraction for one material 
+      auto mtable = G4Material::GetMaterialTable();
+      for (auto const& mat : *mtable)
+      {
+        mat->GetIonisation()->SetOrtoPositroniumFraction(f);
+      }
+    }
+    else
+    {
+      // set fraction for one material
       auto mat = manager->FindOrBuildMaterial(mnam, true);
-      if (nullptr != mat) { 
-	mat->GetIonisation()->SetOrtoPositroniumFraction(f);
+      if (nullptr != mat)
+      {
+        mat->GetIonisation()->SetOrtoPositroniumFraction(f);
       }
     }
   }

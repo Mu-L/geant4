@@ -34,24 +34,22 @@
 #define G4HITFILTERFACTORIES_HH
 
 #include "G4VFilter.hh"
-#include "G4VModelFactory.hh"
 #include "G4VHit.hh"
+#include "G4VModelFactory.hh"
 
 // Attribute filter
-class G4HitAttributeFilterFactory : public G4VModelFactory< G4VFilter<G4VHit>  > {
+class G4HitAttributeFilterFactory : public G4VModelFactory<G4VFilter<G4VHit>>
+{
+  public:  // With description
 
-public: // With description
+    typedef std::vector<G4UImessenger*> Messengers;
+    typedef std::pair<G4VFilter<G4VHit>*, Messengers> ModelAndMessengers;
 
-  typedef std::vector<G4UImessenger*> Messengers;
-  typedef std::pair< G4VFilter<G4VHit> *, Messengers > ModelAndMessengers;
+    G4HitAttributeFilterFactory();
 
-  G4HitAttributeFilterFactory();
+    virtual ~G4HitAttributeFilterFactory();
 
-  virtual ~G4HitAttributeFilterFactory();
-  
-  ModelAndMessengers Create(const G4String& placement, const G4String& name);
-    
+    ModelAndMessengers Create(const G4String& placement, const G4String& name);
 };
 
 #endif
-

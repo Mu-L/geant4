@@ -27,9 +27,11 @@
 
 #include "G4ViewerList.hh"
 
-void G4ViewerList::remove(G4VViewer* viewer) {
+void G4ViewerList::remove(G4VViewer* viewer)
+{
   G4ViewerListIterator iViewer;
-  for (iViewer = begin(); iViewer != end(); ++iViewer) {
+  for (iViewer = begin(); iViewer != end(); ++iViewer)
+  {
     if (*iViewer == viewer) break;
   }
   if (iViewer != end()) erase(iViewer);

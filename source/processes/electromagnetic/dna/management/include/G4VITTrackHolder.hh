@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,8 +41,7 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
-
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
 #ifndef G4VITTRACKHOLDER_HH
 #define G4VITTRACKHOLDER_HH
@@ -52,25 +51,24 @@
 class G4Track;
 
 /**
-  * G4ITTrackHolder is an empty interface that permits to push tracks to the IT system
-  * without actually depending on the IT tracking system.
-  * However, G4ITTrackHolder does not permit to retrieve any track.
-  */
+ * G4ITTrackHolder is an empty interface that permits to push tracks to the IT system
+ * without actually depending on the IT tracking system.
+ * However, G4ITTrackHolder does not permit to retrieve any track.
+ */
 
 class G4VITTrackHolder
 {
-protected :
+  protected:
+
     G4VITTrackHolder();
     virtual ~G4VITTrackHolder();
     static G4ThreadLocal G4VITTrackHolder* fInstance;
 
-public:
+  public:
+
     static G4VITTrackHolder* Instance();
     virtual void Push(G4Track*);
-    inline virtual size_t GetNTracks()
-    {
-      return 0;
-    }
+    inline virtual size_t GetNTracks() { return 0; }
 };
 
-#endif // G4ITTRACKHOLDER_HH
+#endif  // G4ITTRACKHOLDER_HH

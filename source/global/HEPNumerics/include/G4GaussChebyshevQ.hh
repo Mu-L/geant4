@@ -37,24 +37,25 @@
 // Author: V.Grichine, 13.05.1997
 // --------------------------------------------------------------------
 #ifndef G4GAUSSCHEBYSHEVQ_HH
-#define G4GAUSSCHEBYSHEVQ_HH 1
+#define G4GAUSSCHEBYSHEVQ_HH
 
 #include "G4VGaussianQuadrature.hh"
 
 class G4GaussChebyshevQ : public G4VGaussianQuadrature
 {
- public:
-  G4GaussChebyshevQ(function pFunction, G4int nChebyshev);
-  // Constructor for Gauss-Chebyshev quadrature method
+  public:
 
-  ~G4GaussChebyshevQ() override = default;
+    G4GaussChebyshevQ(function pFunction, G4int nChebyshev);
+    // Constructor for Gauss-Chebyshev quadrature method
 
-  G4GaussChebyshevQ(const G4GaussChebyshevQ&) = delete;
-  G4GaussChebyshevQ& operator=(const G4GaussChebyshevQ&) = delete;
+    ~G4GaussChebyshevQ() override = default;
 
-  G4double Integral(G4double a, G4double b) const;
-  // Integrates function pointed by fFunction from a to b by Gauss-Chebyshev
-  // quadrature method
+    G4GaussChebyshevQ(const G4GaussChebyshevQ&) = delete;
+    G4GaussChebyshevQ& operator=(const G4GaussChebyshevQ&) = delete;
+
+    G4double Integral(G4double a, G4double b) const;
+    // Integrates function pointed by fFunction from a to b by Gauss-Chebyshev
+    // quadrature method
 };
 
 #endif

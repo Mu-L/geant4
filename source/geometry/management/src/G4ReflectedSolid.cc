@@ -30,27 +30,23 @@
 
 #include "G4ReflectedSolid.hh"
 
-#include <sstream>
-
-#include "G4Point3D.hh"
-#include "G4Vector3D.hh"
-
 #include "G4AffineTransform.hh"
+#include "G4Point3D.hh"
+#include "G4Polyhedron.hh"
 #include "G4Transform3D.hh"
+#include "G4VGraphicsScene.hh"
+#include "G4VPVParameterisation.hh"
+#include "G4Vector3D.hh"
 #include "G4VoxelLimits.hh"
 
-#include "G4VPVParameterisation.hh"
-
-#include "G4VGraphicsScene.hh"
-#include "G4Polyhedron.hh"
+#include <sstream>
 
 /////////////////////////////////////////////////////////////////
 //
 // Constructor using HepTransform3D, in fact HepReflect3D
 
-G4ReflectedSolid::G4ReflectedSolid( const G4String& pName,
-                                          G4VSolid* pSolid ,
-                                    const G4Transform3D& transform )
+G4ReflectedSolid::G4ReflectedSolid(const G4String& pName, G4VSolid* pSolid,
+                                   const G4Transform3D& transform)
   : G4VSolid(pName)
 {
   fPtrSolid = pSolid;
@@ -60,10 +56,12 @@ G4ReflectedSolid::G4ReflectedSolid( const G4String& pName,
 ///////////////////////////////////////////////////////////////////
 //
 
-G4ReflectedSolid::~G4ReflectedSolid() 
+G4ReflectedSolid::~G4ReflectedSolid()
 {
-  delete fDirectTransform3D; fDirectTransform3D = nullptr;
-  delete fpPolyhedron; fpPolyhedron = nullptr;
+  delete fDirectTransform3D;
+  fDirectTransform3D = nullptr;
+  delete fpPolyhedron;
+  fpPolyhedron = nullptr;
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -82,7 +80,10 @@ G4ReflectedSolid& G4ReflectedSolid::operator=(const G4ReflectedSolid& rhs)
 {
   // Check assignment to self
   //
-  if (this == &rhs)  { return *this; }
+  if (this == &rhs)
+  {
+    return *this;
+  }
 
   // Copy base class data
   //
@@ -94,7 +95,8 @@ G4ReflectedSolid& G4ReflectedSolid::operator=(const G4ReflectedSolid& rhs)
   delete fDirectTransform3D;
   fDirectTransform3D = new G4Transform3D(*rhs.fDirectTransform3D);
   fRebuildPolyhedron = false;
-  delete fpPolyhedron; fpPolyhedron = nullptr;
+  delete fpPolyhedron;
+  fpPolyhedron = nullptr;
 
   return *this;
 }
@@ -102,41 +104,41 @@ G4ReflectedSolid& G4ReflectedSolid::operator=(const G4ReflectedSolid& rhs)
 ///////////////////////////////////////////////////////////////////
 //
 
-G4GeometryType G4ReflectedSolid::GetEntityType() const 
+G4GeometryType G4ReflectedSolid::GetEntityType() const
 {
   return {"G4ReflectedSolid"};
 }
 
-const G4ReflectedSolid* G4ReflectedSolid::GetReflectedSolidPtr() const   
+const G4ReflectedSolid* G4ReflectedSolid::GetReflectedSolidPtr() const
 {
   return this;
 }
 
-G4ReflectedSolid* G4ReflectedSolid::GetReflectedSolidPtr() 
+G4ReflectedSolid* G4ReflectedSolid::GetReflectedSolidPtr()
 {
   return this;
 }
 
 G4VSolid* G4ReflectedSolid::GetConstituentMovedSolid() const
-{ 
-  return fPtrSolid; 
-} 
+{
+  return fPtrSolid;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 //
 
-G4Transform3D  G4ReflectedSolid::GetTransform3D() const
+G4Transform3D G4ReflectedSolid::GetTransform3D() const
 {
   return fDirectTransform3D->inverse();
 }
 
-G4Transform3D  G4ReflectedSolid::GetDirectTransform3D() const
+G4Transform3D G4ReflectedSolid::GetDirectTransform3D() const
 {
   G4Transform3D aTransform = *fDirectTransform3D;
   return aTransform;
 }
 
-void G4ReflectedSolid::SetDirectTransform3D(G4Transform3D& transform) 
+void G4ReflectedSolid::SetDirectTransform3D(G4Transform3D& transform)
 {
   fDirectTransform3D = &transform;
   fRebuildPolyhedron = true;
@@ -146,10 +148,9 @@ void G4ReflectedSolid::SetDirectTransform3D(G4Transform3D& transform)
 //
 // Get bounding box
 
-void G4ReflectedSolid::BoundingLimits(G4ThreeVector& pMin,
-                                      G4ThreeVector& pMax) const
+void G4ReflectedSolid::BoundingLimits(G4ThreeVector& pMin, G4ThreeVector& pMax) const
 {
-  fPtrSolid->BoundingLimits(pMin,pMax);
+  fPtrSolid->BoundingLimits(pMin, pMax);
   G4double xmin = pMin.x(), ymin = pMin.y(), zmin = pMin.z();
   G4double xmax = pMax.x(), ymax = pMax.y(), zmax = pMax.z();
   G4double xx = fDirectTransform3D->xx();
@@ -160,9 +161,24 @@ void G4ReflectedSolid::BoundingLimits(G4ThreeVector& pMin,
   {
     // Special case of reflection in axis and pure translation
     //
-    if (xx == -1) { G4double tmp = -xmin; xmin = -xmax; xmax = tmp; }
-    if (yy == -1) { G4double tmp = -ymin; ymin = -ymax; ymax = tmp; }
-    if (zz == -1) { G4double tmp = -zmin; zmin = -zmax; zmax = tmp; }
+    if (xx == -1)
+    {
+      G4double tmp = -xmin;
+      xmin = -xmax;
+      xmax = tmp;
+    }
+    if (yy == -1)
+    {
+      G4double tmp = -ymin;
+      ymin = -ymax;
+      ymax = tmp;
+    }
+    if (zz == -1)
+    {
+      G4double tmp = -zmin;
+      zmin = -zmax;
+      zmax = tmp;
+    }
     xmin += fDirectTransform3D->dx();
     xmax += fDirectTransform3D->dx();
     ymin += fDirectTransform3D->dy();
@@ -174,32 +190,28 @@ void G4ReflectedSolid::BoundingLimits(G4ThreeVector& pMin,
   {
     // Use additional reflection in Z to set up affine transformation
     //
-    G4Transform3D transform3D = G4ReflectZ3D()*(*fDirectTransform3D);
-    G4AffineTransform transform(transform3D.getRotation().inverse(),
-                                transform3D.getTranslation());
-  
+    G4Transform3D transform3D = G4ReflectZ3D() * (*fDirectTransform3D);
+    G4AffineTransform transform(transform3D.getRotation().inverse(), transform3D.getTranslation());
+
     // Find bounding box
     //
     G4VoxelLimits unLimit;
-    fPtrSolid->CalculateExtent(kXAxis,unLimit,transform,xmin,xmax);
-    fPtrSolid->CalculateExtent(kYAxis,unLimit,transform,ymin,ymax);
-    fPtrSolid->CalculateExtent(kZAxis,unLimit,transform,zmin,zmax); 
+    fPtrSolid->CalculateExtent(kXAxis, unLimit, transform, xmin, xmax);
+    fPtrSolid->CalculateExtent(kYAxis, unLimit, transform, ymin, ymax);
+    fPtrSolid->CalculateExtent(kZAxis, unLimit, transform, zmin, zmax);
   }
 
-  pMin.set(xmin,ymin,-zmax);
-  pMax.set(xmax,ymax,-zmin);
+  pMin.set(xmin, ymin, -zmax);
+  pMax.set(xmax, ymax, -zmin);
 
   // Check correctness of the bounding box
   //
   if (pMin.x() >= pMax.x() || pMin.y() >= pMax.y() || pMin.z() >= pMax.z())
   {
     std::ostringstream message;
-    message << "Bad bounding box (min >= max) for solid: "
-            << GetName() << " !"
-            << "\npMin = " << pMin
-            << "\npMax = " << pMax;
-    G4Exception("G4ReflectedSolid::BoundingLimits()", "GeomMgt0001",
-                JustWarning, message);
+    message << "Bad bounding box (min >= max) for solid: " << GetName() << " !"
+            << "\npMin = " << pMin << "\npMax = " << pMax;
+    G4Exception("G4ReflectedSolid::BoundingLimits()", "GeomMgt0001", JustWarning, message);
     DumpInfo();
   }
 }
@@ -208,12 +220,9 @@ void G4ReflectedSolid::BoundingLimits(G4ThreeVector& pMin,
 //
 // Calculate extent under transform and specified limit
 
-G4bool 
-G4ReflectedSolid::CalculateExtent( const EAxis pAxis,
-                                   const G4VoxelLimits& pVoxelLimits,
-                                   const G4AffineTransform& pTransform,
-                                         G4double& pMin, 
-                                         G4double& pMax ) const 
+G4bool G4ReflectedSolid::CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimits,
+                                         const G4AffineTransform& pTransform, G4double& pMin,
+                                         G4double& pMax) const
 {
   // Separation of transformations. Calculation of the extent is done
   // in a reflection of the global space. In such way, the voxel is
@@ -223,18 +232,14 @@ G4ReflectedSolid::CalculateExtent( const EAxis pAxis,
   // Reflect voxel limits in Z
   //
   G4VoxelLimits limits;
-  limits.AddLimit(kXAxis, pVoxelLimits.GetMinXExtent(),
-                          pVoxelLimits.GetMaxXExtent());
-  limits.AddLimit(kYAxis, pVoxelLimits.GetMinYExtent(),
-                          pVoxelLimits.GetMaxYExtent());
-  limits.AddLimit(kZAxis,-pVoxelLimits.GetMaxZExtent(),
-                         -pVoxelLimits.GetMinZExtent());
+  limits.AddLimit(kXAxis, pVoxelLimits.GetMinXExtent(), pVoxelLimits.GetMaxXExtent());
+  limits.AddLimit(kYAxis, pVoxelLimits.GetMinYExtent(), pVoxelLimits.GetMaxYExtent());
+  limits.AddLimit(kZAxis, -pVoxelLimits.GetMaxZExtent(), -pVoxelLimits.GetMinZExtent());
 
   // Set affine transformation
   //
-  G4Transform3D transform3D = G4ReflectZ3D()*pTransform*(*fDirectTransform3D);
-  G4AffineTransform transform(transform3D.getRotation().inverse(),
-                              transform3D.getTranslation());
+  G4Transform3D transform3D = G4ReflectZ3D() * pTransform * (*fDirectTransform3D);
+  G4AffineTransform transform(transform3D.getRotation().inverse(), transform3D.getTranslation());
 
   // Find extent
   //
@@ -244,7 +249,9 @@ G4ReflectedSolid::CalculateExtent( const EAxis pAxis,
   }
   if (pAxis == kZAxis)
   {
-    G4double tmp= -pMin; pMin= -pMax; pMax= tmp;
+    G4double tmp = -pMin;
+    pMin = -pMax;
+    pMax = tmp;
   }
 
   return true;
@@ -252,37 +259,34 @@ G4ReflectedSolid::CalculateExtent( const EAxis pAxis,
 
 //////////////////////////////////////////////////////////////
 //
-// 
+//
 
-EInside G4ReflectedSolid::Inside(const G4ThreeVector& p ) const
+EInside G4ReflectedSolid::Inside(const G4ThreeVector& p) const
 {
-  G4ThreeVector newPoint = (*fDirectTransform3D)*G4Point3D(p);
-  return fPtrSolid->Inside(newPoint); 
+  G4ThreeVector newPoint = (*fDirectTransform3D) * G4Point3D(p);
+  return fPtrSolid->Inside(newPoint);
 }
 
 //////////////////////////////////////////////////////////////
 //
 //
 
-G4ThreeVector 
-G4ReflectedSolid::SurfaceNormal( const G4ThreeVector& p ) const 
+G4ThreeVector G4ReflectedSolid::SurfaceNormal(const G4ThreeVector& p) const
 {
-  G4ThreeVector newPoint = (*fDirectTransform3D)*G4Point3D(p);
+  G4ThreeVector newPoint = (*fDirectTransform3D) * G4Point3D(p);
   G4Vector3D normal = fPtrSolid->SurfaceNormal(newPoint);
-  return (*fDirectTransform3D)*normal;    
+  return (*fDirectTransform3D) * normal;
 }
 
 /////////////////////////////////////////////////////////////
 //
 // The same algorithm as in DistanceToIn(p)
 
-G4double 
-G4ReflectedSolid::DistanceToIn( const G4ThreeVector& p,
-                                const G4ThreeVector& v ) const 
-{    
-  G4ThreeVector newPoint     = (*fDirectTransform3D)*G4Point3D(p);
-  G4ThreeVector newDirection = (*fDirectTransform3D)*G4Vector3D(v);
-  return fPtrSolid->DistanceToIn(newPoint,newDirection);   
+G4double G4ReflectedSolid::DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const
+{
+  G4ThreeVector newPoint = (*fDirectTransform3D) * G4Point3D(p);
+  G4ThreeVector newDirection = (*fDirectTransform3D) * G4Vector3D(v);
+  return fPtrSolid->DistanceToIn(newPoint, newDirection);
 }
 
 ////////////////////////////////////////////////////////
@@ -290,62 +294,53 @@ G4ReflectedSolid::DistanceToIn( const G4ThreeVector& p,
 // Approximate nearest distance from the point p to the intersection of
 // two solids
 
-G4double 
-G4ReflectedSolid::DistanceToIn( const G4ThreeVector& p ) const 
+G4double G4ReflectedSolid::DistanceToIn(const G4ThreeVector& p) const
 {
-  G4ThreeVector newPoint = (*fDirectTransform3D)*G4Point3D(p);
-  return fPtrSolid->DistanceToIn(newPoint);   
+  G4ThreeVector newPoint = (*fDirectTransform3D) * G4Point3D(p);
+  return fPtrSolid->DistanceToIn(newPoint);
 }
 
 //////////////////////////////////////////////////////////
 //
 // The same algorithm as DistanceToOut(p)
 
-G4double 
-G4ReflectedSolid::DistanceToOut( const G4ThreeVector& p,
-                                 const G4ThreeVector& v,
-                                 const G4bool calcNorm,
-                                       G4bool* validNorm,
-                                       G4ThreeVector* n ) const 
+G4double G4ReflectedSolid::DistanceToOut(const G4ThreeVector& p, const G4ThreeVector& v,
+                                         const G4bool calcNorm, G4bool* validNorm,
+                                         G4ThreeVector* n) const
 {
-  G4ThreeVector solNorm; 
+  G4ThreeVector solNorm;
 
-  G4ThreeVector newPoint     = (*fDirectTransform3D)*G4Point3D(p);
-  G4ThreeVector newDirection = (*fDirectTransform3D)*G4Vector3D(v);
+  G4ThreeVector newPoint = (*fDirectTransform3D) * G4Point3D(p);
+  G4ThreeVector newDirection = (*fDirectTransform3D) * G4Vector3D(v);
 
-  G4double dist = fPtrSolid->DistanceToOut(newPoint, newDirection,
-                                           calcNorm, validNorm, &solNorm);
-  if(calcNorm)
-  { 
-    *n = (*fDirectTransform3D)*G4Vector3D(solNorm);
+  G4double dist = fPtrSolid->DistanceToOut(newPoint, newDirection, calcNorm, validNorm, &solNorm);
+  if (calcNorm)
+  {
+    *n = (*fDirectTransform3D) * G4Vector3D(solNorm);
   }
-  return dist;  
+  return dist;
 }
 
 //////////////////////////////////////////////////////////////
 //
 // Inverted algorithm of DistanceToIn(p)
 
-G4double 
-G4ReflectedSolid::DistanceToOut( const G4ThreeVector& p ) const 
+G4double G4ReflectedSolid::DistanceToOut(const G4ThreeVector& p) const
 {
-  G4ThreeVector newPoint = (*fDirectTransform3D)*G4Point3D(p);
-  return fPtrSolid->DistanceToOut(newPoint);   
+  G4ThreeVector newPoint = (*fDirectTransform3D) * G4Point3D(p);
+  return fPtrSolid->DistanceToOut(newPoint);
 }
 
 //////////////////////////////////////////////////////////////
 //
 //
 
-void 
-G4ReflectedSolid::ComputeDimensions(       G4VPVParameterisation*,
-                                     const G4int,
-                                     const G4VPhysicalVolume* ) 
+void G4ReflectedSolid::ComputeDimensions(G4VPVParameterisation*, const G4int,
+                                         const G4VPhysicalVolume*)
 {
   DumpInfo();
-  G4Exception("G4ReflectedSolid::ComputeDimensions()",
-               "GeomMgt0001", FatalException,
-               "Method not applicable in this context!");
+  G4Exception("G4ReflectedSolid::ComputeDimensions()", "GeomMgt0001", FatalException,
+              "Method not applicable in this context!");
 }
 
 //////////////////////////////////////////////////////////////
@@ -373,8 +368,8 @@ G4double G4ReflectedSolid::GetSurfaceArea()
 
 G4ThreeVector G4ReflectedSolid::GetPointOnSurface() const
 {
-  G4ThreeVector p  =  fPtrSolid->GetPointOnSurface();
-  return (*fDirectTransform3D)*G4Point3D(p);
+  G4ThreeVector p = fPtrSolid->GetPointOnSurface();
+  return (*fDirectTransform3D) * G4Point3D(p);
 }
 
 //////////////////////////////////////////////////////////////
@@ -433,20 +428,18 @@ std::ostream& G4ReflectedSolid::StreamInfo(std::ostream& os) const
 
 /////////////////////////////////////////////////
 //
-//                    
+//
 
-void 
-G4ReflectedSolid::DescribeYourselfTo ( G4VGraphicsScene& scene ) const 
+void G4ReflectedSolid::DescribeYourselfTo(G4VGraphicsScene& scene) const
 {
-  scene.AddSolid (*this);
+  scene.AddSolid(*this);
 }
 
 ////////////////////////////////////////////////////
 //
 //
 
-G4Polyhedron* 
-G4ReflectedSolid::CreatePolyhedron () const 
+G4Polyhedron* G4ReflectedSolid::CreatePolyhedron() const
 {
   G4Polyhedron* polyhedron = fPtrSolid->CreatePolyhedron();
   if (polyhedron != nullptr)
@@ -455,11 +448,9 @@ G4ReflectedSolid::CreatePolyhedron () const
     return polyhedron;
   }
   std::ostringstream message;
-  message << "Solid - " << GetName()
-          << " - original solid has no" << G4endl
+  message << "Solid - " << GetName() << " - original solid has no" << G4endl
           << "corresponding polyhedron. Returning NULL!";
-  G4Exception("G4ReflectedSolid::CreatePolyhedron()",
-              "GeomMgt1001", JustWarning, message);
+  G4Exception("G4ReflectedSolid::CreatePolyhedron()", "GeomMgt1001", JustWarning, message);
   return nullptr;
 }
 
@@ -467,12 +458,11 @@ G4ReflectedSolid::CreatePolyhedron () const
 //
 //
 
-G4Polyhedron*
-G4ReflectedSolid::GetPolyhedron () const
+G4Polyhedron* G4ReflectedSolid::GetPolyhedron() const
 {
-  if ((fpPolyhedron == nullptr) || fRebuildPolyhedron ||
-      (fpPolyhedron->GetNumberOfRotationStepsAtTimeOfCreation() !=
-       fpPolyhedron->GetNumberOfRotationSteps()))
+  if ((fpPolyhedron == nullptr) || fRebuildPolyhedron
+      || (fpPolyhedron->GetNumberOfRotationStepsAtTimeOfCreation()
+          != fpPolyhedron->GetNumberOfRotationSteps()))
   {
     fpPolyhedron = CreatePolyhedron();
     fRebuildPolyhedron = false;

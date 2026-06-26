@@ -26,8 +26,8 @@
 //
 //
 
-#ifndef G4DiffractiveSplitableHadron_h
-#define G4DiffractiveSplitableHadron_h 1
+#ifndef G4DIFFRACTIVESPLITABLEHADRON_HH
+#define G4DIFFRACTIVESPLITABLEHADRON_HH
 
 // ------------------------------------------------------------
 //      GEANT 4 class header file
@@ -37,38 +37,39 @@
 //       class splitting an interacting particle. Used by FTF String Model.
 // ------------------------------------------------------------
 
-#include "G4VSplitableHadron.hh"
 #include "G4Nucleon.hh"
 #include "G4Parton.hh"
+#include "G4VSplitableHadron.hh"
 
-
-class G4DiffractiveSplitableHadron : public G4VSplitableHadron {
+class G4DiffractiveSplitableHadron : public G4VSplitableHadron
+{
   public:
+
     G4DiffractiveSplitableHadron();
-    G4DiffractiveSplitableHadron( const G4ReactionProduct& aPrimary );
-    G4DiffractiveSplitableHadron( const G4Nucleon& aNucleon );
-    G4DiffractiveSplitableHadron( const G4VKineticNucleon* aNucleon );
+    G4DiffractiveSplitableHadron(const G4ReactionProduct& aPrimary);
+    G4DiffractiveSplitableHadron(const G4Nucleon& aNucleon);
+    G4DiffractiveSplitableHadron(const G4VKineticNucleon* aNucleon);
     ~G4DiffractiveSplitableHadron();
 
     void SplitUp();
-    G4Parton* GetNextParton() ;
+    G4Parton* GetNextParton();
     G4Parton* GetNextAntiParton();
 
-    void SetFirstParton( G4int PDGcode );
-    void SetSecondParton( G4int PDGcode );
+    void SetFirstParton(G4int PDGcode);
+    void SetSecondParton(G4int PDGcode);
 
   private:
-    G4DiffractiveSplitableHadron( const G4DiffractiveSplitableHadron& );
-    G4DiffractiveSplitableHadron& operator=( const G4DiffractiveSplitableHadron& );
-    G4bool operator==( const G4DiffractiveSplitableHadron& right ) const;
-    G4bool operator!=( const G4DiffractiveSplitableHadron& right ) const;
 
-    G4int Diquark( G4int aquark, G4int bquark, G4int Spin ) const;
-    void ChooseStringEnds( G4int PDGcode, G4int* aEnd, G4int* bEnd ) const;
+    G4DiffractiveSplitableHadron(const G4DiffractiveSplitableHadron&);
+    G4DiffractiveSplitableHadron& operator=(const G4DiffractiveSplitableHadron&);
+    G4bool operator==(const G4DiffractiveSplitableHadron& right) const;
+    G4bool operator!=(const G4DiffractiveSplitableHadron& right) const;
+
+    G4int Diquark(G4int aquark, G4int bquark, G4int Spin) const;
+    void ChooseStringEnds(G4int PDGcode, G4int* aEnd, G4int* bEnd) const;
 
     G4Parton* Parton[2];
-    G4int PartonIndex; 
+    G4int PartonIndex;
 };
 
 #endif
-

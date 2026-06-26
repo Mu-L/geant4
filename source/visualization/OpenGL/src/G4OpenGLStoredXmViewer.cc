@@ -25,107 +25,111 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  10th February 1997
-// Class G4OpenGLStoredXmViewer : a class derived from G4OpenGLXmViewer 
+// Class G4OpenGLStoredXmViewer : a class derived from G4OpenGLXmViewer
 //                              and G4OpenGLStoredViewer.
 
 #include "G4OpenGLStoredXmViewer.hh"
 
 #include "G4OpenGLStoredSceneHandler.hh"
-#include "G4ios.hh"
 #include "G4Threading.hh"
+#include "G4ios.hh"
 
-G4OpenGLStoredXmViewer::
-G4OpenGLStoredXmViewer (G4OpenGLStoredSceneHandler& sceneHandler,
-			const G4String& name)
- : G4VViewer (sceneHandler, sceneHandler.IncrementViewCount (), name),
-   G4OpenGLViewer (sceneHandler),
-   G4OpenGLXmViewer (sceneHandler),
-   G4OpenGLStoredViewer (sceneHandler)
+G4OpenGLStoredXmViewer::G4OpenGLStoredXmViewer(G4OpenGLStoredSceneHandler& sceneHandler,
+                                               const G4String& name)
+  : G4VViewer(sceneHandler, sceneHandler.IncrementViewCount(), name),
+    G4OpenGLViewer(sceneHandler),
+    G4OpenGLXmViewer(sceneHandler),
+    G4OpenGLStoredViewer(sceneHandler)
 {
-
   if (fViewId < 0) return;  // In case error in base class instantiation.
 
-  if (!vi_stored) {
+  if (!vi_stored)
+  {
     fViewId = -1;  // This flags an error.
     G4cerr << "G4OpenGLStoredXmViewer::G4OpenGLStoredXmViewer -"
-      " G4OpenGLXmViewer couldn't get a visual." << G4endl;
+              " G4OpenGLXmViewer couldn't get a visual."
+           << G4endl;
     return;
   }
 }
 
-G4OpenGLStoredXmViewer::~G4OpenGLStoredXmViewer ()
-{}
+G4OpenGLStoredXmViewer::~G4OpenGLStoredXmViewer() {}
 
-void G4OpenGLStoredXmViewer::Initialise () {
+void G4OpenGLStoredXmViewer::Initialise()
+{
+  CreateGLXContext(vi_stored);
+  CreateMainWindow();
+  CreateFontLists();
 
-  CreateGLXContext (vi_stored);
-  CreateMainWindow ();
-  CreateFontLists ();
+  InitializeGLView();
 
-  InitializeGLView ();
-
-  glDrawBuffer (GL_BACK);
+  glDrawBuffer(GL_BACK);
 }
 
-void G4OpenGLStoredXmViewer::DrawView () {
+void G4OpenGLStoredXmViewer::DrawView()
+{
 #ifdef G4DEBUG_VIS_OGL
   printf("G4OpenGLStoredXmViewer::DrawView \n");
 #endif
 
   G4ViewParameters::DrawingStyle style = GetViewParameters().GetDrawingStyle();
 
-  //See if things have changed from last time and remake if necessary...
-  // /vis/viewer/rebuild, but if not, make decision and set flag only
-  // if necessary...
-  if (!fNeedKernelVisit) KernelVisitDecision ();
+  // See if things have changed from last time and remake if necessary...
+  //  /vis/viewer/rebuild, but if not, make decision and set flag only
+  //  if necessary...
+  if (!fNeedKernelVisit) KernelVisitDecision();
   fLastVP = fVP;
-  G4bool kernelVisitWasNeeded = fNeedKernelVisit; // Keep (ProcessView resets).
-  ProcessView ();
+  G4bool kernelVisitWasNeeded = fNeedKernelVisit;  // Keep (ProcessView resets).
+  ProcessView();
 
-  if(style!=G4ViewParameters::hlr &&
-     haloing_enabled) {
-
-    HaloingFirstPass ();
-    DrawDisplayLists ();
+  if (style != G4ViewParameters::hlr && haloing_enabled)
+  {
+    HaloingFirstPass();
+    DrawDisplayLists();
 #ifdef G4DEBUG_VIS_OGL
     printf("G4OpenGLStoredXmViewer::DrawView () flush\n");
 #endif
-    glFlush ();
+    glFlush();
 
-    HaloingSecondPass ();
+    HaloingSecondPass();
 
-    DrawDisplayLists ();
-    FinishView ();
-
-  } else {
-
+    DrawDisplayLists();
+    FinishView();
+  }
+  else
+  {
 #ifdef G4DEBUG_VIS_OGL
     printf("G4OpenGLStoredXmViewer::DrawView not hlr \n");
 #endif
     // If kernel visit was needed, drawing and FinishView will already
     // have been done, so...
-    if (!kernelVisitWasNeeded) {
+    if (!kernelVisitWasNeeded)
+    {
 #ifdef G4DEBUG_VIS_OGL
       printf("G4OpenGLStoredXmViewer::ComputeView Don't need kernel Visit \n");
 #endif
-      DrawDisplayLists ();
-      FinishView ();
-    } else {
+      DrawDisplayLists();
+      FinishView();
+    }
+    else
+    {
 #ifdef G4DEBUG_VIS_OGL
       printf("G4OpenGLStoredXmViewer::ComputeView Need kernel Visit \n");
 #endif
-    // However, union cutaways are implemented in DrawDisplayLists, so make
-    // an extra pass...
-      if (fVP.IsCutaway() &&
-	  fVP.GetCutawayMode() == G4ViewParameters::cutawayUnion) {
-	ClearView();
-	DrawDisplayLists ();
-	FinishView ();
-      } else { // ADD TO AVOID KernelVisit=1 and nothing to display
-        DrawDisplayLists ();
-        FinishView ();
+      // However, union cutaways are implemented in DrawDisplayLists, so make
+      // an extra pass...
+      if (fVP.IsCutaway() && fVP.GetCutawayMode() == G4ViewParameters::cutawayUnion)
+      {
+        ClearView();
+        DrawDisplayLists();
+        FinishView();
+      }
+      else
+      {  // ADD TO AVOID KernelVisit=1 and nothing to display
+        DrawDisplayLists();
+        FinishView();
       }
     }
   }
@@ -134,18 +138,19 @@ void G4OpenGLStoredXmViewer::DrawView () {
 #endif
 }
 
-void G4OpenGLStoredXmViewer::FinishView () {
-//  glXWaitGL (); //Wait for effects of all previous OpenGL commands to
-                //be propogated before progressing.
-// JA: Commented out July 2021 - slows rendering down in some cases and I
-// don't see any adverse effects.
+void G4OpenGLStoredXmViewer::FinishView()
+{
+  //  glXWaitGL (); //Wait for effects of all previous OpenGL commands to
+  // be propogated before progressing.
+  // JA: Commented out July 2021 - slows rendering down in some cases and I
+  // don't see any adverse effects.
 
 #ifdef G4DEBUG_VIS_OGL
   printf("G4OpenGLStoredXmViewer::FinishView () flush \n");
 #endif
-  glFlush (); //FIXME
+  glFlush();  // FIXME
 
   GLint renderMode;
   glGetIntegerv(GL_RENDER_MODE, &renderMode);
-  if (renderMode == GL_RENDER) glXSwapBuffers (dpy, win);  
+  if (renderMode == GL_RENDER) glXSwapBuffers(dpy, win);
 }

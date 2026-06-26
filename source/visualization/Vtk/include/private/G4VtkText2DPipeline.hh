@@ -38,6 +38,7 @@ class vtkTextActor;
 class G4VtkText2DPipeline : public G4VVtkPipeline
 {
   public:
+
     G4VtkText2DPipeline(const G4Text& text, const G4VtkVisContext& vc,
                         const G4VisAttributes* pVisAttributes);
     ~G4VtkText2DPipeline() override = default;
@@ -57,6 +58,7 @@ class G4VtkText2DPipeline : public G4VVtkPipeline
                                 const G4VisAttributes* pVA);
 
   protected:
+
     vtkSmartPointer<vtkTextActor> actor;
 };
 

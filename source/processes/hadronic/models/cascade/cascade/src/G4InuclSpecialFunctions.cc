@@ -28,9 +28,8 @@
 // Original Author: Aatos Heikkinen, 2002
 // --------------------------------------------------------------------
 
-#include <cmath>
-
 #include "G4InuclSpecialFunctions.hh"
+
 #include "G4AutoDelete.hh"
 #include "G4Exp.hh"
 #include "G4Log.hh"
@@ -40,22 +39,23 @@
 #include "G4ThreeVector.hh"
 #include "Randomize.hh"
 
+#include <cmath>
 
 // Compute power series in random value, with powers-of-Ekin coeffciences
 
-G4double 
-G4InuclSpecialFunctions::randomInuclPowers(G4double ekin, 
-					   const G4double (&coeff)[4][4])
+G4double G4InuclSpecialFunctions::randomInuclPowers(G4double ekin, const G4double (&coeff)[4][4])
 {
   G4Pow* theG4Pow = G4Pow::GetInstance();
 
-  G4double S = G4UniformRand();		// Random fraction for expansion
+  G4double S = G4UniformRand();  // Random fraction for expansion
 
   G4double C, V;
-  G4double PQ=0., PR=0.;
-  for (G4int i=0; i<4; i++) {
+  G4double PQ = 0., PR = 0.;
+  for (G4int i = 0; i < 4; i++)
+  {
     V = 0.0;
-    for (G4int k=0; k<4; k++) {
+    for (G4int k = 0; k < 4; k++)
+    {
       C = coeff[i][k];
       V += C * theG4Pow->powN(ekin, k);
     }
@@ -64,10 +64,8 @@ G4InuclSpecialFunctions::randomInuclPowers(G4double ekin,
     PR += V * theG4Pow->powN(S, i);
   }
 
-  return std::sqrt(S) * (PR + (1-PQ)*(S*S*S*S));
+  return std::sqrt(S) * (PR + (1 - PQ) * (S * S * S * S));
 }
-
-
 
 G4double G4InuclSpecialFunctions::getAL(G4int A)
 {
@@ -78,26 +76,32 @@ G4double G4InuclSpecialFunctions::csNN(G4double e)
 {
   G4double snn;
 
-  if (e < 40.0) {
+  if (e < 40.0)
+  {
     snn = -1174.8 / (e * e) + 3088.5 / e + 5.3107;
-  } else {
+  }
+  else
+  {
     snn = 93074.0 / (e * e) - 11.148 / e + 22.429;
   }
 
-  return snn; 
+  return snn;
 }
 
 G4double G4InuclSpecialFunctions::csPN(G4double e)
 {
   G4double spn;
 
-  if (e < 40.0) {
+  if (e < 40.0)
+  {
     spn = -5057.4 / (e * e) + 9069.2 / e + 6.9466;
-  } else {
+  }
+  else
+  {
     spn = 239380.0 / (e * e) + 1802.0 / e + 27.147;
   }
 
-  return spn; 
+  return spn;
 }
 
 // calculates the nuclei Fermi energy for 0 - neutron and 1 - proton
@@ -106,7 +110,7 @@ G4double G4InuclSpecialFunctions::FermiEnergy(G4int A, G4int Z, G4int ntype)
 {
   G4Pow* g4pow = G4Pow::GetInstance();
   const G4double C = 55.4 / g4pow->Z23(A);
-  G4double arg = (ntype==0) ? g4pow->Z23(A-Z) : g4pow->Z23(Z);
+  G4double arg = (ntype == 0) ? g4pow->Z23(A - Z) : g4pow->Z23(Z);
 
   return C * arg;
 }
@@ -118,7 +122,7 @@ G4double G4InuclSpecialFunctions::G4cbrt(G4double x)
 
 G4double G4InuclSpecialFunctions::G4cbrt(G4int n)
 {
-  return n==0 ? 0. : (n<0?-1.:1.)*G4Pow::GetInstance()->Z13(std::abs(n));
+  return n == 0 ? 0. : (n < 0 ? -1. : 1.) * G4Pow::GetInstance()->Z13(std::abs(n));
 }
 
 G4double G4InuclSpecialFunctions::randomGauss(G4double sigma)
@@ -128,74 +132,76 @@ G4double G4InuclSpecialFunctions::randomGauss(G4double sigma)
   r1 = r1 > eps ? r1 : eps;
   G4double r2 = G4UniformRand();
   r2 = r2 > eps ? r2 : eps;
-  r2 = r2 < 1.0 - eps ? r2 : 1.0 - eps; 
+  r2 = r2 < 1.0 - eps ? r2 : 1.0 - eps;
 
-  return sigma * std::sin(twopi * r1) * std::sqrt(-2.0 * G4Log(r2)); 
-} 
+  return sigma * std::sin(twopi * r1) * std::sqrt(-2.0 * G4Log(r2));
+}
 
 G4double G4InuclSpecialFunctions::randomPHI()
-{ 
-  return twopi*G4UniformRand();
-} 
+{
+  return twopi * G4UniformRand();
+}
 
 std::pair<G4double, G4double> G4InuclSpecialFunctions::randomCOS_SIN()
 {
-  G4double CT = 1.0 - 2.0*G4UniformRand();
+  G4double CT = 1.0 - 2.0 * G4UniformRand();
 
-  return std::pair<G4double, G4double>(CT, std::sqrt(1.0 - CT*CT));
+  return std::pair<G4double, G4double>(CT, std::sqrt(1.0 - CT * CT));
 }
 
-G4LorentzVector 
-G4InuclSpecialFunctions::generateWithFixedTheta(G4double ct, G4double p, 
-						G4double mass)
+G4LorentzVector G4InuclSpecialFunctions::generateWithFixedTheta(G4double ct, G4double p,
+                                                                G4double mass)
 {
   G4double phi = randomPHI();
   G4double pt = p * std::sqrt(std::fabs(1.0 - ct * ct));
 
   // Buffers to avoid memory thrashing
-  static G4ThreadLocal G4ThreeVector *pvec_G4MT_TLS_ = 0;
-  if (!pvec_G4MT_TLS_) {
+  static G4ThreadLocal G4ThreeVector* pvec_G4MT_TLS_ = 0;
+  if (!pvec_G4MT_TLS_)
+  {
     pvec_G4MT_TLS_ = new G4ThreeVector;
     G4AutoDelete::Register(pvec_G4MT_TLS_);
   }
-  G4ThreeVector &pvec = *pvec_G4MT_TLS_;
+  G4ThreeVector& pvec = *pvec_G4MT_TLS_;
 
-  static G4ThreadLocal G4LorentzVector *momr_G4MT_TLS_ = 0;
-  if (!momr_G4MT_TLS_) {
+  static G4ThreadLocal G4LorentzVector* momr_G4MT_TLS_ = 0;
+  if (!momr_G4MT_TLS_)
+  {
     momr_G4MT_TLS_ = new G4LorentzVector;
     G4AutoDelete::Register(momr_G4MT_TLS_);
   }
-  G4LorentzVector &momr = *momr_G4MT_TLS_;
+  G4LorentzVector& momr = *momr_G4MT_TLS_;
 
-  pvec.set(pt*std::cos(phi), pt*std::sin(phi), p*ct);
+  pvec.set(pt * std::cos(phi), pt * std::sin(phi), p * ct);
   momr.setVectM(pvec, mass);
 
   return momr;
 }
 
-G4LorentzVector 
-G4InuclSpecialFunctions::generateWithRandomAngles(G4double p, G4double mass)
+G4LorentzVector G4InuclSpecialFunctions::generateWithRandomAngles(G4double p, G4double mass)
 {
   std::pair<G4double, G4double> COS_SIN = randomCOS_SIN();
   G4double phi = randomPHI();
   G4double pt = p * COS_SIN.second;
 
-  // Buffers to avoid memory thrashing  
-  static G4ThreadLocal G4ThreeVector *pvec_G4MT_TLS_ = 0;
-  if (!pvec_G4MT_TLS_) {
+  // Buffers to avoid memory thrashing
+  static G4ThreadLocal G4ThreeVector* pvec_G4MT_TLS_ = 0;
+  if (!pvec_G4MT_TLS_)
+  {
     pvec_G4MT_TLS_ = new G4ThreeVector;
     G4AutoDelete::Register(pvec_G4MT_TLS_);
   }
-  G4ThreeVector &pvec = *pvec_G4MT_TLS_;
+  G4ThreeVector& pvec = *pvec_G4MT_TLS_;
 
-  static G4ThreadLocal G4LorentzVector *momr_G4MT_TLS_ = 0;
-  if (!momr_G4MT_TLS_) {
+  static G4ThreadLocal G4LorentzVector* momr_G4MT_TLS_ = 0;
+  if (!momr_G4MT_TLS_)
+  {
     momr_G4MT_TLS_ = new G4LorentzVector;
     G4AutoDelete::Register(momr_G4MT_TLS_);
   }
-  G4LorentzVector &momr = *momr_G4MT_TLS_;
+  G4LorentzVector& momr = *momr_G4MT_TLS_;
 
-  pvec.set(pt*std::cos(phi), pt*std::sin(phi), p*COS_SIN.first);
+  pvec.set(pt * std::cos(phi), pt * std::sin(phi), p * COS_SIN.first);
   momr.setVectM(pvec, mass);
 
   return momr;

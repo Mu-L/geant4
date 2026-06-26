@@ -37,8 +37,8 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4PSDirectionFlag_h
-#define G4PSDirectionFlag_h 1
+#ifndef G4PSDIRECTIONFLAG_HH
+#define G4PSDIRECTIONFLAG_HH
 
 //////////////////
 enum G4PSFluxFlag

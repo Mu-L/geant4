@@ -26,9 +26,11 @@
 // 20110923  M. Kelsey -- Implement new stream operator<< here.
 
 #include "G4CascadeChannel.hh"
+
 #include <iostream>
 
-std::ostream& operator<<(std::ostream& os, const G4CascadeChannel& chan) {
+std::ostream& operator<<(std::ostream& os, const G4CascadeChannel& chan)
+{
   chan.printTable(os);
   return os;
 }

@@ -26,9 +26,9 @@
 //
 //---------------------------------------------------------------------------
 //
-// ClassName:   G4EmParticleList 
+// ClassName:   G4EmParticleList
 //
-// Author:      V.Ivanchenko 04.05.2017 
+// Author:      V.Ivanchenko 04.05.2017
 //
 // Modified:
 //
@@ -40,31 +40,31 @@
 //
 // class description - end
 
-
-#ifndef G4EmParticleList_h
-#define G4EmParticleList_h 1
+#ifndef G4EMPARTICLELIST_HH
+#define G4EMPARTICLELIST_HH
 
 #include "globals.hh"
+
 #include <vector>
 
-class G4EmParticleList {
+class G4EmParticleList
+{
+  public:
 
-public:
+    explicit G4EmParticleList();
 
-  explicit G4EmParticleList();
+    ~G4EmParticleList() = default;
 
-  ~G4EmParticleList() = default;
+    // list of names of main EM particles
+    const std::vector<G4String>& PartNames() const;
 
-  // list of names of main EM particles
-  const std::vector<G4String>& PartNames() const;
+    // minimal list of names of charged particles
+    const std::vector<G4String>& EmChargedPartNames() const;
 
-  // minimal list of names of charged particles
-  const std::vector<G4String>& EmChargedPartNames() const;  
+  private:
 
-private:
-  std::vector<G4String> pNames; 
-  std::vector<G4String> cNames; 
+    std::vector<G4String> pNames;
+    std::vector<G4String> cNames;
 };
 
 #endif
-

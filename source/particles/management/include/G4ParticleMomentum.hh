@@ -31,8 +31,8 @@
 // For this reason, it is recommended to use G4ThreeVector instead
 
 // --------------------------------------------------------------------
-#ifndef G4ParticleMomentum_hh
-#define G4ParticleMomentum_hh 1
+#ifndef G4PARTICLEMOMENTUM_HH
+#define G4PARTICLEMOMENTUM_HH
 
 #include "G4ThreeVector.hh"
 

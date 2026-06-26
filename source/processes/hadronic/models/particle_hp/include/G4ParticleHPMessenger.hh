@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4ParticleHPMessenger_h
-#define G4ParticleHPMessenger_h
+#ifndef G4PARTICLEHPMESSENGER_HH
+#define G4PARTICLEHPMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -40,12 +40,14 @@ class G4UIcmdWithADoubleAndUnit;
 class G4ParticleHPMessenger : public G4UImessenger
 {
   public:
+
     G4ParticleHPMessenger(G4ParticleHPManager*);
     ~G4ParticleHPMessenger() override;
 
     void SetNewValue(G4UIcommand*, G4String) override;
 
   private:
+
     G4ParticleHPManager* manager;
 
     G4UIdirectory* ParticleHPDir;

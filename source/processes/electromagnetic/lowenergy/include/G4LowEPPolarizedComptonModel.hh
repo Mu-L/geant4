@@ -45,7 +45,7 @@
 // |                                                                   |
 // | The author acknowledges the work of the Geant4 collaboration      |
 // | in developing the following algorithms that have been employed    |
-// | or adapeted for the present software:                             |    
+// | or adapeted for the present software:                             |
 // |                                                                   |
 // |  # sampling of photon scattering angle,                           |
 // |  # target element selection in composite materials,               |
@@ -65,23 +65,24 @@
 // |                                                                   |
 // *********************************************************************
 
-#ifndef G4LowEPPolarizedComptonModel_h
-#define G4LowEPPolarizedComptonModel_h 1
+#ifndef G4LOWEPPOLARIZEDCOMPTONMODEL_HH
+#define G4LOWEPPOLARIZEDCOMPTONMODEL_HH
 
-#include "G4VEmModel.hh"
-#include "G4PhysicsFreeVector.hh"
-#include <limits>
-#include "G4Electron.hh"
-#include "G4ParticleChangeForGamma.hh"
-#include "G4LossTableManager.hh"
-#include "G4VAtomDeexcitation.hh"
 #include "G4AtomicShell.hh"
-#include "G4Gamma.hh"
-#include "G4ShellData.hh"
 #include "G4DopplerProfile.hh"
-#include "G4Log.hh"
+#include "G4Electron.hh"
 #include "G4Exp.hh"
 #include "G4ForceCondition.hh"
+#include "G4Gamma.hh"
+#include "G4Log.hh"
+#include "G4LossTableManager.hh"
+#include "G4ParticleChangeForGamma.hh"
+#include "G4PhysicsFreeVector.hh"
+#include "G4ShellData.hh"
+#include "G4VAtomDeexcitation.hh"
+#include "G4VEmModel.hh"
+
+#include <limits>
 
 class G4ParticleChangeForGamma;
 class G4VAtomDeexcitation;
@@ -90,64 +91,60 @@ class G4DopplerProfile;
 
 class G4LowEPPolarizedComptonModel : public G4VEmModel
 {
-public:
-  explicit G4LowEPPolarizedComptonModel(const G4ParticleDefinition* p = nullptr, 
-		          const G4String& nam = "LowEPComptonModel");
-  virtual ~G4LowEPPolarizedComptonModel();
+  public:
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    explicit G4LowEPPolarizedComptonModel(const G4ParticleDefinition* p = nullptr,
+                                          const G4String& nam = "LowEPComptonModel");
+    virtual ~G4LowEPPolarizedComptonModel();
 
-  void InitialiseLocal(const G4ParticleDefinition*,
-		       G4VEmModel* masterModel) override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel* masterModel) override;
 
-  G4double ComputeCrossSectionPerAtom( const G4ParticleDefinition*,
-				       G4double kinEnergy,
-				       G4double Z,
-				       G4double A=0,
-				       G4double cut=0,
-				       G4double emax=DBL_MAX ) override;
+    void InitialiseForElement(const G4ParticleDefinition*, G4int Z) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kinEnergy, G4double Z,
+                                        G4double A = 0, G4double cut = 0,
+                                        G4double emax = DBL_MAX) override;
 
-  G4LowEPPolarizedComptonModel & operator=(const  G4LowEPPolarizedComptonModel &right) = delete;
-  G4LowEPPolarizedComptonModel(const  G4LowEPPolarizedComptonModel&) = delete;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-private:
-  void ReadData(size_t Z, const char* path = 0);
+    G4LowEPPolarizedComptonModel& operator=(const G4LowEPPolarizedComptonModel& right) = delete;
+    G4LowEPPolarizedComptonModel(const G4LowEPPolarizedComptonModel&) = delete;
 
-  G4double ComputeScatteringFunction(G4double x, G4int Z);
-  G4ThreeVector GetRandomPolarization(G4ThreeVector& direction0); // Random Polarization
-  G4ThreeVector GetPerpendicularPolarization(const G4ThreeVector& direction0, const G4ThreeVector& polarization0) const;
-  G4ThreeVector SetNewPolarization(G4double LowEPPCepsilon, G4double sinT2,
-                                   G4double phi, G4double cosTheta);
-  G4double SetPhi(G4double, G4double);
+  private:
 
-  void SystemOfRefChange(G4ThreeVector& direction0, G4ThreeVector& direction1,
-                         G4ThreeVector& polarization0, G4ThreeVector& polarization1);
+    void ReadData(size_t Z, const char* path = 0);
 
-  void SystemOfRefChangeElect(G4ThreeVector& pdirection, G4ThreeVector& edirection,
-                         G4ThreeVector& ppolarization);
+    G4double ComputeScatteringFunction(G4double x, G4int Z);
+    G4ThreeVector GetRandomPolarization(G4ThreeVector& direction0);  // Random Polarization
+    G4ThreeVector GetPerpendicularPolarization(const G4ThreeVector& direction0,
+                                               const G4ThreeVector& polarization0) const;
+    G4ThreeVector SetNewPolarization(G4double LowEPPCepsilon, G4double sinT2, G4double phi,
+                                     G4double cosTheta);
+    G4double SetPhi(G4double, G4double);
 
-  G4ThreeVector SetPerpendicularVector(G4ThreeVector& a); 
-  
-  G4ParticleChangeForGamma* fParticleChange;
-  G4VAtomDeexcitation*      fAtomDeexcitation;
+    void SystemOfRefChange(G4ThreeVector& direction0, G4ThreeVector& direction1,
+                           G4ThreeVector& polarization0, G4ThreeVector& polarization1);
 
-  static G4ShellData*       shellData;
-  static G4DopplerProfile*  profileData;
+    void SystemOfRefChangeElect(G4ThreeVector& pdirection, G4ThreeVector& edirection,
+                                G4ThreeVector& ppolarization);
 
-  static const G4int maxZ = 99;
-  static G4PhysicsFreeVector* data[100];
-  static const G4double ScatFuncFitParam[101][9];
-  
-  G4int verboseLevel;
-  G4bool isInitialised;
+    G4ThreeVector SetPerpendicularVector(G4ThreeVector& a);
+
+    G4ParticleChangeForGamma* fParticleChange;
+    G4VAtomDeexcitation* fAtomDeexcitation;
+
+    static G4ShellData* shellData;
+    static G4DopplerProfile* profileData;
+
+    static const G4int maxZ = 99;
+    static G4PhysicsFreeVector* data[100];
+    static const G4double ScatFuncFitParam[101][9];
+
+    G4int verboseLevel;
+    G4bool isInitialised;
 };
 
 //****************************************************************************

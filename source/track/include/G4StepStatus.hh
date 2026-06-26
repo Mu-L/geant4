@@ -33,8 +33,8 @@
 //   Katsuya Amako  (e-mail: Katsuya.Amako@kek.jp)
 //   Takashi Sasaki (e-mail: Takashi.Sasaki@kek.jp)
 // --------------------------------------------------------------------
-#ifndef G4StepStatus_hh
-#define G4StepStatus_hh 1
+#ifndef G4STEPSTATUS_HH
+#define G4STEPSTATUS_HH
 
 enum G4StepStatus
 {

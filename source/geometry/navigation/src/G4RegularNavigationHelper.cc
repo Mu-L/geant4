@@ -45,15 +45,14 @@ void G4RegularNavigationHelper::ClearStepLengths()
 
 // --------------------------------------------------------------------
 //
-void G4RegularNavigationHelper::AddStepLength( G4int copyNo, G4double slen )
+void G4RegularNavigationHelper::AddStepLength(G4int copyNo, G4double slen)
 {
-  theStepLengths.emplace_back(copyNo,slen );
+  theStepLengths.emplace_back(copyNo, slen);
 }
 
 // --------------------------------------------------------------------
 //
-const std::vector< std::pair<G4int,G4double> > &
-G4RegularNavigationHelper::GetStepLengths()
+const std::vector<std::pair<G4int, G4double>>& G4RegularNavigationHelper::GetStepLengths()
 {
   return theStepLengths;
 }

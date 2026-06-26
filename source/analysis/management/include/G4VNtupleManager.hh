@@ -29,8 +29,8 @@
 //
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
-#ifndef G4VNtupleManager_h
-#define G4VNtupleManager_h 1
+#ifndef G4VNTUPLEMANAGER_HH
+#define G4VNTUPLEMANAGER_HH
 
 #include "G4BaseAnalysisManager.hh"
 #include "globals.hh"
@@ -41,13 +41,13 @@ struct G4NtupleBooking;
 
 class G4VNtupleManager : public G4BaseAnalysisManager
 {
-  // Disable using the object managers outside G4VAnalysisManager and
-  // its messenger
-  friend class G4VAnalysisManager;
+    // Disable using the object managers outside G4VAnalysisManager and
+    // its messenger
+    friend class G4VAnalysisManager;
 
   public:
-    explicit G4VNtupleManager(const G4AnalysisManagerState& state)
-      : G4BaseAnalysisManager(state) {}
+
+    explicit G4VNtupleManager(const G4AnalysisManagerState& state) : G4BaseAnalysisManager(state) {}
     G4VNtupleManager() = delete;
     ~G4VNtupleManager() override = default;
 
@@ -56,6 +56,7 @@ class G4VNtupleManager : public G4BaseAnalysisManager
     G4VNtupleManager& operator=(const G4VNtupleManager& rhs) = delete;
 
   protected:
+
     // Methods for handling ntuples
     virtual G4int CreateNtuple(G4NtupleBooking* booking) = 0;
 
@@ -71,14 +72,13 @@ class G4VNtupleManager : public G4BaseAnalysisManager
     virtual G4bool FillNtupleIColumn(G4int ntupleId, G4int columnId, G4int value) = 0;
     virtual G4bool FillNtupleFColumn(G4int ntupleId, G4int columnId, G4float value) = 0;
     virtual G4bool FillNtupleDColumn(G4int ntupleId, G4int columnId, G4double value) = 0;
-    virtual G4bool FillNtupleSColumn(G4int ntupleId, G4int columnId,
-                                     const G4String& value) = 0;
+    virtual G4bool FillNtupleSColumn(G4int ntupleId, G4int columnId, const G4String& value) = 0;
     virtual G4bool AddNtupleRow(G4int ntupleId) = 0;
 
     // Activation option
-    virtual void  SetActivation(G4bool activation) = 0;
-    virtual void  SetActivation(G4int id, G4bool activation) = 0;
-    virtual G4bool  GetActivation(G4int id) const = 0;
+    virtual void SetActivation(G4bool activation) = 0;
+    virtual void SetActivation(G4int id, G4bool activation) = 0;
+    virtual G4bool GetActivation(G4int id) const = 0;
 
     // New cycle option
     virtual void SetNewCycle(G4bool value) = 0;

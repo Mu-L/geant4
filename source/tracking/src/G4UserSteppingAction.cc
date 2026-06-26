@@ -40,7 +40,8 @@
 G4UserSteppingAction::G4UserSteppingAction()
 /////////////////////////////////////////////////////////
 {
-  if (! (G4ParticleTable::GetParticleTable()->GetReadiness())) {
+  if (!(G4ParticleTable::GetParticleTable()->GetReadiness()))
+  {
     G4String msg;
     msg = " You are instantiating G4UserSteppingAction BEFORE your\n";
     msg += "G4VUserPhysicsList is instantiated and assigned to G4RunManager.\n";
@@ -48,8 +49,8 @@ G4UserSteppingAction::G4UserSteppingAction()
     msg += "please make sure that your main() instantiates G4VUserPhysicsList AND\n";
     msg += "set it to G4RunManager before instantiating other user action classes\n";
     msg += "such as G4UserSteppingAction.";
-    G4Exception(
-      "G4UserSteppingAction::G4UserSteppingAction()", "Tracking0002", FatalException, msg);
+    G4Exception("G4UserSteppingAction::G4UserSteppingAction()", "Tracking0002", FatalException,
+                msg);
   }
 }
 

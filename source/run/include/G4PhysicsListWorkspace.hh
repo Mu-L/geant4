@@ -39,8 +39,8 @@
 
 // Authors: J.Apostolakis, A.Dotti - 4 October 2013
 // --------------------------------------------------------------------
-#ifndef G4PhysicsListWorkspace_hh
-#define G4PhysicsListWorkspace_hh 1
+#ifndef G4PHYSICSLISTWORKSPACE_HH
+#define G4PHYSICSLISTWORKSPACE_HH
 
 #include "G4TWorkspacePool.hh"
 #include "G4VModularPhysicsList.hh"
@@ -50,9 +50,11 @@
 class G4PhysicsListWorkspace
 {
   public:
+
     using pool_type = G4TWorkspacePool<G4PhysicsListWorkspace>;
 
   public:
+
     G4PhysicsListWorkspace(G4bool verbose = false);
     ~G4PhysicsListWorkspace() = default;
 
@@ -74,9 +76,11 @@ class G4PhysicsListWorkspace
     static pool_type* GetPool();
 
   protected:  // Implementation methods
+
     void InitialisePhysicsList();
 
   private:  // Helper pointers - can be per instance or shared
+
     // Store SubInstanceManager object pointers (SIM pointers)
     G4VUPLManager* fpVUPLSIM = nullptr;
     G4VPCManager* fpVPCSIM = nullptr;

@@ -28,12 +28,12 @@
 // Author: Youhei Morita, 12.09.2001
 // --------------------------------------------------------------------
 #ifndef G4MCTGENEVENT_HH
-#define G4MCTGENEVENT_HH 1
+#define G4MCTGENEVENT_HH
+
+#include "G4Types.hh"
 
 #include <iostream>
 #include <vector>
-
-#include "G4Types.hh"
 
 class G4MCTGenEvent
 {
@@ -44,7 +44,7 @@ class G4MCTGenEvent
 
     inline G4MCTGenEvent(const G4MCTGenEvent& right);
     inline G4MCTGenEvent& operator=(const G4MCTGenEvent& right);
-      // copy constructor and assignment operator
+    // copy constructor and assignment operator
 
     G4int AddGenEvent(const void* genevent);
     G4int GetNofEvents() const;

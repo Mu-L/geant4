@@ -37,13 +37,11 @@
 //
 
 //////////////////////
-//G4RTSteppingAction
+// G4RTSteppingAction
 /////////////////////
 
-
-#ifndef G4RTSteppingAction_h
-#define G4RTSteppingAction_h 1
-
+#ifndef G4RTSTEPPINGACTION_HH
+#define G4RTSTEPPINGACTION_HH
 
 #include "G4UserSteppingAction.hh"
 #include "globals.hh"
@@ -51,15 +49,18 @@
 class G4RTSteppingAction : public G4UserSteppingAction
 {
   public:
+
     G4RTSteppingAction();
-    virtual ~G4RTSteppingAction(){;}
+    virtual ~G4RTSteppingAction() { ; }
 
     virtual void UserSteppingAction(const G4Step*);
 
   private:
+
     static G4bool ignoreTransparency;
 
   public:
+
     static void SetIgnoreTransparency(G4bool val);
     static G4bool GetIgnoreTransparency();
 };

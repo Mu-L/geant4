@@ -30,77 +30,65 @@
  *      Author: matkara
  */
 
-#ifndef SOURCE_PROCESSES_ELECTROMAGNETIC_DNA_MANAGEMENT_INCLUDE_G4VITDISCRETEPROCESS_HH_
-#define SOURCE_PROCESSES_ELECTROMAGNETIC_DNA_MANAGEMENT_INCLUDE_G4VITDISCRETEPROCESS_HH_
+#ifndef G4VITDISCRETEPROCESS_HH
+#define G4VITDISCRETEPROCESS_HH
+
+#include "G4ios.hh"
+#include "globals.hh"
 
 #include <G4VITProcess.hh>
-#include "globals.hh"
-#include "G4ios.hh"
 
-class G4VITDiscreteProcess: public G4VITProcess
+class G4VITDiscreteProcess : public G4VITProcess
 {
-  //  Abstract class which defines the public behavior of
-  //  discrete physics interactions.
-public:
+    //  Abstract class which defines the public behavior of
+    //  discrete physics interactions.
 
-  G4VITDiscreteProcess(const G4String&, G4ProcessType aType = fNotDefined);
-  G4VITDiscreteProcess(G4VITDiscreteProcess &);
+  public:
 
-  ~G4VITDiscreteProcess() override;
-  
-  G4VITDiscreteProcess & operator=(const G4VITDiscreteProcess &right) = delete;
+    G4VITDiscreteProcess(const G4String&, G4ProcessType aType = fNotDefined);
+    G4VITDiscreteProcess(G4VITDiscreteProcess&);
 
-public:
-  // with description
-  G4double PostStepGetPhysicalInteractionLength(const G4Track& track,
-                                                        G4double previousStepSize,
-                                                        G4ForceCondition* condition) override;
+    ~G4VITDiscreteProcess() override;
 
-  G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&) override;
+    G4VITDiscreteProcess& operator=(const G4VITDiscreteProcess& right) = delete;
 
-  //  no operation in  AtRestDoIt and  AlongStepDoIt
-  G4double AlongStepGetPhysicalInteractionLength(const G4Track&,
-                                                         G4double,
-                                                         G4double,
-                                                         G4double&,
-                                                         G4GPILSelection*) override
-  {
-    return -1.0;
-  }
-  ;
+  public:
 
-  G4double AtRestGetPhysicalInteractionLength(const G4Track&,
-                                                      G4ForceCondition*) override
-  {
-    return -1.0;
-  }
-  ;
+    // with description
+    G4double PostStepGetPhysicalInteractionLength(const G4Track& track, G4double previousStepSize,
+                                                  G4ForceCondition* condition) override;
 
-  //  no operation in  AtRestDoIt and  AlongStepDoIt
-  G4VParticleChange* AtRestDoIt(const G4Track&, const G4Step&) override
-  {
-    return nullptr;
-  }
-  ;
+    G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&) override;
 
-  G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&) override
-  {
-    return nullptr;
-  }
-  ;
+    //  no operation in  AtRestDoIt and  AlongStepDoIt
+    G4double AlongStepGetPhysicalInteractionLength(const G4Track&, G4double, G4double, G4double&,
+                                                   G4GPILSelection*) override
+    {
+      return -1.0;
+    };
 
-protected:
-  // with description
-  virtual G4double GetMeanFreePath(const G4Track& aTrack,
-                                   G4double previousStepSize,
-                                   G4ForceCondition* condition)=0;
-  //  Calculates from the macroscopic cross section a mean
-  //  free path, the value is returned in units of distance.
+    G4double AtRestGetPhysicalInteractionLength(const G4Track&, G4ForceCondition*) override
+    {
+      return -1.0;
+    };
 
-private:
-  // hide default constructor and assignment operator as private
-  G4VITDiscreteProcess();
+    //  no operation in  AtRestDoIt and  AlongStepDoIt
+    G4VParticleChange* AtRestDoIt(const G4Track&, const G4Step&) override { return nullptr; };
 
+    G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&) override { return nullptr; };
+
+  protected:
+
+    // with description
+    virtual G4double GetMeanFreePath(const G4Track& aTrack, G4double previousStepSize,
+                                     G4ForceCondition* condition) = 0;
+    //  Calculates from the macroscopic cross section a mean
+    //  free path, the value is returned in units of distance.
+
+  private:
+
+    // hide default constructor and assignment operator as private
+    G4VITDiscreteProcess();
 };
 
 #endif /* SOURCE_PROCESSES_ELECTROMAGNETIC_DNA_MANAGEMENT_INCLUDE_G4VITDISCRETEPROCESS_HH_ */

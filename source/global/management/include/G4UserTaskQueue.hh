@@ -30,8 +30,11 @@
 //  Author: Jonathan Madsen (May 28st 2020)
 //  ---------------------------------------------------------------
 
-#pragma once
+#ifndef G4USERTASKQUEUE_HH
+#define G4USERTASKQUEUE_HH
 
 #include "PTL/UserTaskQueue.hh"
 
 using G4UserTaskQueue = PTL::UserTaskQueue;
+
+#endif

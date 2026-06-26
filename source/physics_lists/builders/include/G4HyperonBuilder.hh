@@ -32,37 +32,41 @@
 // Modified:
 //---------------------------------------------------------------------------
 
-#ifndef G4HyperonBuilder_h
-#define G4HyperonBuilder_h 1
+#ifndef G4HYPERONBUILDER_HH
+#define G4HYPERONBUILDER_HH
 
 #include "G4PhysicsBuilderInterface.hh"
-#include "globals.hh"
 #include "G4VHyperonBuilder.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4HadronInelasticProcess;
 
+class G4HyperonBuilder : public G4PhysicsBuilderInterface
+{
+  public:
 
-class G4HyperonBuilder : public G4PhysicsBuilderInterface {
-  public: 
     G4HyperonBuilder();
     virtual ~G4HyperonBuilder() {}
     virtual void Build() final override;
-    virtual void RegisterMe( G4PhysicsBuilderInterface* aB ) final override;
+    virtual void RegisterMe(G4PhysicsBuilderInterface* aB) final override;
+
   private:
-    G4HadronInelasticProcess*         theLambdaInelastic;
-    G4HadronInelasticProcess*     theAntiLambdaInelastic;
-    G4HadronInelasticProcess*     theSigmaMinusInelastic;
+
+    G4HadronInelasticProcess* theLambdaInelastic;
+    G4HadronInelasticProcess* theAntiLambdaInelastic;
+    G4HadronInelasticProcess* theSigmaMinusInelastic;
     G4HadronInelasticProcess* theAntiSigmaMinusInelastic;
-    G4HadronInelasticProcess*      theSigmaPlusInelastic;
-    G4HadronInelasticProcess*  theAntiSigmaPlusInelastic;
-    G4HadronInelasticProcess*        theXiMinusInelastic;
-    G4HadronInelasticProcess*    theAntiXiMinusInelastic;
-    G4HadronInelasticProcess*         theXiZeroInelastic;
-    G4HadronInelasticProcess*     theAntiXiZeroInelastic;
-    G4HadronInelasticProcess*     theOmegaMinusInelastic;
+    G4HadronInelasticProcess* theSigmaPlusInelastic;
+    G4HadronInelasticProcess* theAntiSigmaPlusInelastic;
+    G4HadronInelasticProcess* theXiMinusInelastic;
+    G4HadronInelasticProcess* theAntiXiMinusInelastic;
+    G4HadronInelasticProcess* theXiZeroInelastic;
+    G4HadronInelasticProcess* theAntiXiZeroInelastic;
+    G4HadronInelasticProcess* theOmegaMinusInelastic;
     G4HadronInelasticProcess* theAntiOmegaMinusInelastic;
-    std::vector< G4VHyperonBuilder* > theModelCollections;
+    std::vector<G4VHyperonBuilder*> theModelCollections;
 };
 
 #endif

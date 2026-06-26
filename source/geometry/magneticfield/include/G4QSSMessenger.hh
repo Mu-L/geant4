@@ -29,9 +29,10 @@
 
 // Author: Leandro Gomez Vidal (Univ. Buenos Aires), October 2021
 // --------------------------------------------------------------------
-#ifndef G4QSSMessenger_HH
-#define G4QSSMessenger_HH
+#ifndef G4QSSMESSENGER_HH
+#define G4QSSMESSENGER_HH
 
+#include "G4QSSParameters.hh"
 #include "G4UIcmdWithABool.hh"
 #include "G4UIcmdWithADouble.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
@@ -40,8 +41,6 @@
 #include "G4UIcmdWithoutParameter.hh"
 #include "G4UIdirectory.hh"
 #include "G4UImessenger.hh"
-
-#include "G4QSSParameters.hh"
 
 class G4QSSMessenger : public G4UImessenger
 {
@@ -70,7 +69,7 @@ class G4QSSMessenger : public G4UImessenger
     inline G4int GetQssOrder() { return G4QSSParameters::Instance()->GetQssOrder(); }
     inline G4double Get_dQRel() { return G4QSSParameters::Instance()->Get_dQRel(); }
     inline G4double Get_dQMin() { return G4QSSParameters::Instance()->Get_dQMin(); }
-    inline G4int GetMaxSubsteps() { return G4QSSParameters::Instance()->GetMaxSubsteps(); }   
+    inline G4int GetMaxSubsteps() { return G4QSSParameters::Instance()->GetMaxSubsteps(); }
 
     enum StepperSelection
     {
@@ -91,25 +90,25 @@ class G4QSSMessenger : public G4UImessenger
      * it calls in G4QSSParameters.
      */
     G4bool SetQssOrder(G4int order);
-   
+
   private:
 
     /**
      * Internal methods -- could be suppressed in future.
      */
-    G4bool Set_dQMin( G4double dvalue );
-    G4bool Set_dQRel( G4double value );
-    G4bool SetMaxSubsteps( G4int number );
-   
+    G4bool Set_dQMin(G4double dvalue);
+    G4bool Set_dQRel(G4double value);
+    G4bool SetMaxSubsteps(G4int number);
+
   private:
 
-    StepperSelection _selectedStepper= StepperSelection::None;
+    StepperSelection _selectedStepper = StepperSelection::None;
 
-    G4UIdirectory*             qssCmdDir;
+    G4UIdirectory* qssCmdDir;
     G4UIcmdWithADoubleAndUnit* dQMinCmd;
-    G4UIcmdWithADouble*        dQRelCmd;
-    G4UIcmdWithAString*        stepperSelectorCmd;
-    G4UIcmdWithAnInteger*      maxSubstepsCmd;
+    G4UIcmdWithADouble* dQRelCmd;
+    G4UIcmdWithAString* stepperSelectorCmd;
+    G4UIcmdWithAnInteger* maxSubstepsCmd;
 };
 
 #endif

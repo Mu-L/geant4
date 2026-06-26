@@ -59,12 +59,13 @@
 
 // Author: A.Dotti (SLAC), 25 February 2013
 // --------------------------------------------------------------------
-#ifndef G4UserWorkerInitialization_hh
-#define G4UserWorkerInitialization_hh 1
+#ifndef G4USERWORKERINITIALIZATION_HH
+#define G4USERWORKERINITIALIZATION_HH
 
 class G4UserWorkerInitialization
 {
   public:
+
     G4UserWorkerInitialization() = default;
     virtual ~G4UserWorkerInitialization() = default;
 

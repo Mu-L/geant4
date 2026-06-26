@@ -39,8 +39,8 @@
 
 // Authors: P.Gumplinger and T.MacPhail, 17 August 2004
 // --------------------------------------------------------------------
-#ifndef G4MuonDecayChannelWithSpin_hh
-#define G4MuonDecayChannelWithSpin_hh 1
+#ifndef G4MUONDECAYCHANNELWITHSPIN_HH
+#define G4MUONDECAYCHANNELWITHSPIN_HH
 
 #include "G4MuonDecayChannel.hh"
 #include "G4ThreeVector.hh"
@@ -51,17 +51,20 @@
 class G4MuonDecayChannelWithSpin : public G4MuonDecayChannel
 {
   public:
+
     G4MuonDecayChannelWithSpin(const G4String& theParentName, G4double theBR);
     ~G4MuonDecayChannelWithSpin() override = default;
 
     G4DecayProducts* DecayIt(G4double) override;
 
   protected:
+
     // Copy constructor and assignment operator
     G4MuonDecayChannelWithSpin(const G4MuonDecayChannelWithSpin&) = default;
     G4MuonDecayChannelWithSpin& operator=(const G4MuonDecayChannelWithSpin&);
 
   private:
+
     G4MuonDecayChannelWithSpin() = default;
 
     // Radiative Correction Factors

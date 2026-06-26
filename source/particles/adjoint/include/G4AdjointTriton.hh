@@ -36,19 +36,21 @@
 //		The use of adjoint particles instead of "normal" particles during a reverse simulation
 //		is based on an idea of M. Asai.
 //
-#ifndef G4AdjointTriton_h
-#define G4AdjointTriton_h 1
+#ifndef G4ADJOINTTRITON_HH
+#define G4ADJOINTTRITON_HH
 
 #include "G4AdjointIons.hh"
 
 class G4AdjointTriton : public G4AdjointIons
 {
   public:
+
     static G4AdjointTriton* Definition();
     static G4AdjointTriton* TritonDefinition();
     static G4AdjointTriton* Triton();
 
   private:
+
     G4AdjointTriton() {}
     ~G4AdjointTriton() override = default;
 

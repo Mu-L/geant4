@@ -27,8 +27,8 @@
 //
 //
 
-#ifndef G4RTQtScanner_H
-#define G4RTQtScanner_H 1
+#ifndef G4RTQTSCANNER_HH
+#define G4RTQTSCANNER_HH
 
 // class description:
 //
@@ -44,35 +44,34 @@ class G4ViewParameters;
 class QLabel;
 class QImage;
 
-class G4RTQtScanner: public G4VRTScanner, QScrollArea {
+class G4RTQtScanner : public G4VRTScanner, QScrollArea
+{
+  public:  // with description
 
-  public: // with description
+    G4RTQtScanner();
+    virtual ~G4RTQtScanner();
 
-  G4RTQtScanner();
-  virtual ~G4RTQtScanner();
+    // Compiler defaults for copy constructor and assignmemt.
 
-  // Compiler defaults for copy constructor and assignmemt.
+    virtual void Initialize(G4int nRow, G4int nColumn);
+    // Intialises scanner for window with nRow rows and nColumn columns.
 
-  virtual void Initialize(G4int nRow, G4int nColumn);
-  // Intialises scanner for window with nRow rows and nColumn columns.
+    virtual G4bool Coords(G4int& iRow, G4int& iColumn);
+    // Supplies coordinate (iRow,iColumn) and returns false when the
+    // sequence has finished, i.e., on the call *after* suplying the
+    // last valid coordinate.
 
-  virtual G4bool Coords(G4int& iRow, G4int& iColumn);
-  // Supplies coordinate (iRow,iColumn) and returns false when the
-  // sequence has finished, i.e., on the call *after* suplying the
-  // last valid coordinate.
+    virtual void Draw(unsigned char red, unsigned char green, unsigned char blue);
+    // Draw coloured square at current position.
 
-  virtual void Draw
-  (unsigned char red, unsigned char green, unsigned char blue);
-  // Draw coloured square at current position.
+    G4bool GetQtWindow(const G4String& name, G4ViewParameters&);
 
-  G4bool GetQtWindow(const G4String& name, G4ViewParameters&);
+  protected:
 
-protected:
-
-  G4int theNRow, theNColumn, theIRow, theIColumn;
-  G4int theWindowSizeX, theWindowSizeY;
-  QLabel* fpImageLabel;
-  QImage* fpImage;
+    G4int theNRow, theNColumn, theIRow, theIColumn;
+    G4int theWindowSizeX, theWindowSizeY;
+    QLabel* fpImageLabel;
+    QImage* fpImage;
 };
 
 #endif

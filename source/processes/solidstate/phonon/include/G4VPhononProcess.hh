@@ -27,55 +27,56 @@
 /// \brief Definition of the G4VPhononProcess base class
 //
 //
-#ifndef G4VPhononProcess_h
-#define G4VPhononProcess_h 1
+#ifndef G4VPHONONPROCESS_HH
+#define G4VPHONONPROCESS_HH
 
-#include "globals.hh"
-#include "G4VDiscreteProcess.hh"
 #include "G4ThreeVector.hh"
+#include "G4VDiscreteProcess.hh"
+#include "globals.hh"
 
 class G4PhononTrackMap;
 class G4LatticePhysical;
 
+class G4VPhononProcess : public G4VDiscreteProcess
+{
+  public:
 
-class G4VPhononProcess : public G4VDiscreteProcess {
-public:
-  G4VPhononProcess(const G4String& processName);
-  virtual ~G4VPhononProcess();
+    G4VPhononProcess(const G4String& processName);
+    virtual ~G4VPhononProcess();
 
-  virtual G4bool IsApplicable(const G4ParticleDefinition& aPD);
+    virtual G4bool IsApplicable(const G4ParticleDefinition& aPD);
 
-  // Initialize wave vectors for currently active track(s)
-  // NOTE:  These functions must call back to base class implementations!
-  virtual void StartTracking(G4Track* track);
-  virtual void EndTracking();
+    // Initialize wave vectors for currently active track(s)
+    // NOTE:  These functions must call back to base class implementations!
+    virtual void StartTracking(G4Track* track);
+    virtual void EndTracking();
 
-protected:
-  // For convenience, map phonon type to polarization code
-  virtual G4int GetPolarization(const G4Track& track) const;
-  virtual G4int GetPolarization(const G4Track* track) const {
-    return GetPolarization(*track);
-  }
+  protected:
 
-  // For convenience, generate random polarization from density of states
-  // Values passed may be zero to suppress particular states
-  virtual G4int ChoosePolarization(G4double Ldos, G4double STdos,
-				   G4double FTdos) const;
+    // For convenience, map phonon type to polarization code
+    virtual G4int GetPolarization(const G4Track& track) const;
+    virtual G4int GetPolarization(const G4Track* track) const { return GetPolarization(*track); }
 
-  // Construct new track with correct momentum, position, etc.
-  virtual G4Track* CreateSecondary(G4int polarization, const G4ThreeVector& K,
-				   G4double energy) const;
+    // For convenience, generate random polarization from density of states
+    // Values passed may be zero to suppress particular states
+    virtual G4int ChoosePolarization(G4double Ldos, G4double STdos, G4double FTdos) const;
 
-protected:
-  G4PhononTrackMap* trackKmap;		// For convenient access by processes
-  const G4LatticePhysical* theLattice;
+    // Construct new track with correct momentum, position, etc.
+    virtual G4Track* CreateSecondary(G4int polarization, const G4ThreeVector& K,
+                                     G4double energy) const;
 
-private:
-  const G4Track* currentTrack;		// For use by Start/EndTracking
+  protected:
 
-  // hide assignment operators as private 
-  G4VPhononProcess(G4VPhononProcess&);
-  G4VPhononProcess& operator=(const G4VPhononProcess& right);
+    G4PhononTrackMap* trackKmap;  // For convenient access by processes
+    const G4LatticePhysical* theLattice;
+
+  private:
+
+    const G4Track* currentTrack;  // For use by Start/EndTracking
+
+    // hide assignment operators as private
+    G4VPhononProcess(G4VPhononProcess&);
+    G4VPhononProcess& operator=(const G4VPhononProcess& right);
 };
 
-#endif	/* G4VPhononProcess_h */
+#endif /* G4VPhononProcess_h */

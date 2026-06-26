@@ -46,9 +46,10 @@ G4ThreadLocal G4int G4VSteppingVerbose::SilentStepInfo = 0;
 G4VSteppingVerbose::G4VSteppingVerbose()
 //////////////////////////////////////////////////
 {
-  if (fInstance != nullptr) {
+  if (fInstance != nullptr)
+  {
     G4Exception("G4VSteppingVerbose::G4VSteppingVerbose()", "Tracking0014", FatalException,
-      "Only one SteppingVerbose class can be instantiated.");
+                "Only one SteppingVerbose class can be instantiated.");
   }
   fInstance = this;
   if (fMasterInstance == nullptr) fMasterInstance = this;
@@ -66,7 +67,7 @@ G4VSteppingVerbose* G4VSteppingVerbose::Clone()
 //////////////////////////////////////////////////////////////////
 {
   G4Exception("G4VSteppingVerbose::Clone", "TRKING000", FatalException,
-    "Base class method must not be invoked.");
+              "Base class method must not be invoked.");
   return nullptr;
 }
 //////////////////////////////////////////////////////////////////
@@ -147,14 +148,32 @@ void G4VSteppingVerbose::CopyState()
 
 void G4VSteppingVerbose::SetInstance(G4VSteppingVerbose* /*Instance*/) {}
 
-G4VSteppingVerbose* G4VSteppingVerbose::GetInstance() { return fInstance; }
+G4VSteppingVerbose* G4VSteppingVerbose::GetInstance()
+{
+  return fInstance;
+}
 
-G4VSteppingVerbose* G4VSteppingVerbose::GetMasterInstance() { return fMasterInstance; }
+G4VSteppingVerbose* G4VSteppingVerbose::GetMasterInstance()
+{
+  return fMasterInstance;
+}
 
-G4int G4VSteppingVerbose::GetSilent() { return Silent; }
+G4int G4VSteppingVerbose::GetSilent()
+{
+  return Silent;
+}
 
-void G4VSteppingVerbose::SetSilent(G4int fSilent) { Silent = fSilent; }
+void G4VSteppingVerbose::SetSilent(G4int fSilent)
+{
+  Silent = fSilent;
+}
 
-G4int G4VSteppingVerbose::GetSilentStepInfo() { return SilentStepInfo; }
+G4int G4VSteppingVerbose::GetSilentStepInfo()
+{
+  return SilentStepInfo;
+}
 
-void G4VSteppingVerbose::SetSilentStepInfo(G4int fSilent) { SilentStepInfo = fSilent; }
+void G4VSteppingVerbose::SetSilentStepInfo(G4int fSilent)
+{
+  SilentStepInfo = fSilent;
+}

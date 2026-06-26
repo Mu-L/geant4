@@ -32,40 +32,50 @@
 
 #include <toolx/Xt/zb_viewer>
 
-class session : public toolx::Xt::session {
-  using parent = toolx::Xt::session;
-public:
-  session(std::ostream& a_out)
-  :parent(a_out)
-  {
-    m_app_widget = (Widget)G4Xt::getInstance()->GetMainInteractor();
-    m_app_context = ::XtWidgetToApplicationContext(m_app_widget);
-    m_app_owner = false;
-  }
-  virtual ~session() {}
-protected:
-  session(const session& a_from):parent(a_from){}
-  session& operator=(const session& a_from){parent::operator=(a_from);return *this;}
+class session : public toolx::Xt::session
+{
+    using parent = toolx::Xt::session;
+
+  public:
+
+    session(std::ostream& a_out) : parent(a_out)
+    {
+      m_app_widget = (Widget)G4Xt::getInstance()->GetMainInteractor();
+      m_app_context = ::XtWidgetToApplicationContext(m_app_widget);
+      m_app_owner = false;
+    }
+    virtual ~session() {}
+
+  protected:
+
+    session(const session& a_from) : parent(a_from) {}
+    session& operator=(const session& a_from)
+    {
+      parent::operator=(a_from);
+      return *this;
+    }
 };
 
-G4ToolsSGXtZB::G4ToolsSGXtZB():
-parent
-("TOOLSSG_XT_ZB",
- "TSG_XT_ZB",
- "TOOLSSG_XT_ZB is a graphics driver based on the g4tools tools/sg scene graph logic where\n\
+G4ToolsSGXtZB::G4ToolsSGXtZB()
+  : parent(
+      "TOOLSSG_XT_ZB", "TSG_XT_ZB",
+      "TOOLSSG_XT_ZB is a graphics driver based on the g4tools tools/sg scene graph logic where\n\
  the rendering is done with the g4tools zbuffer and the windowing is done with the Xt toolkit.",
- parent::threeDInteractive)
-,fSGSession(nullptr)
+      parent::threeDInteractive),
+    fSGSession(nullptr)
 {}
 
-G4ToolsSGXtZB::~G4ToolsSGXtZB() {
+G4ToolsSGXtZB::~G4ToolsSGXtZB()
+{
   delete fSGSession;
 }
 
-void G4ToolsSGXtZB::Initialise() {
-  if(fSGSession) return; //done.
+void G4ToolsSGXtZB::Initialise()
+{
+  if (fSGSession) return;  // done.
   fSGSession = new session(G4cout);
-  if(!fSGSession->is_valid()) {
+  if (!fSGSession->is_valid())
+  {
     G4cerr << "G4ToolsSGXtZB::Initialise : session::is_valid() failed." << G4endl;
     delete fSGSession;
     fSGSession = nullptr;
@@ -73,31 +83,33 @@ void G4ToolsSGXtZB::Initialise() {
   }
 }
 
-G4VSceneHandler* G4ToolsSGXtZB::CreateSceneHandler(const G4String& a_name) {
+G4VSceneHandler* G4ToolsSGXtZB::CreateSceneHandler(const G4String& a_name)
+{
   G4VSceneHandler* pScene = new G4ToolsSGSceneHandler(*this, a_name);
   return pScene;
 }
 
-G4VViewer* G4ToolsSGXtZB::CreateViewer(G4VSceneHandler& a_scene,const G4String& a_name) {
-  if(!fSGSession) Initialise();
-  if(!fSGSession) return nullptr;
-  G4VViewer* pView =
-    new G4ToolsSGViewer<toolx::Xt::session,toolx::Xt::zb_viewer>(*fSGSession,(G4ToolsSGSceneHandler&)a_scene,a_name);
-  if (pView) {
-    if (pView->GetViewId() < 0) {
-      G4cerr <<
-      "G4ToolsSGXtZB::CreateViewer: ERROR flagged by negative"
-      " view id in G4ToolsSGViewer creation."
-      "\n Destroying view and returning null pointer."
-      << G4endl;
+G4VViewer* G4ToolsSGXtZB::CreateViewer(G4VSceneHandler& a_scene, const G4String& a_name)
+{
+  if (!fSGSession) Initialise();
+  if (!fSGSession) return nullptr;
+  G4VViewer* pView = new G4ToolsSGViewer<toolx::Xt::session, toolx::Xt::zb_viewer>(
+    *fSGSession, (G4ToolsSGSceneHandler&)a_scene, a_name);
+  if (pView)
+  {
+    if (pView->GetViewId() < 0)
+    {
+      G4cerr << "G4ToolsSGXtZB::CreateViewer: ERROR flagged by negative"
+                " view id in G4ToolsSGViewer creation."
+                "\n Destroying view and returning null pointer."
+             << G4endl;
       delete pView;
       pView = nullptr;
     }
   }
-  if (!pView) {
-    G4cerr <<
-    "G4ToolsSGXtZB::CreateViewer: ERROR: null pointer on new G4ToolsSGViewer."
-    << G4endl;
+  if (!pView)
+  {
+    G4cerr << "G4ToolsSGXtZB::CreateViewer: ERROR: null pointer on new G4ToolsSGViewer." << G4endl;
   }
   return pView;
 }

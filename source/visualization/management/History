@@ -6,6 +6,25 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-06-06 John Allison (visman-V11-04-03)
+- G4VisManager.cc: End-of-run bug fix.
+  - Test of isValidViewForRun was preventing printing of number of kept events
+    when vis was disabled. Moved to after test for ableness.
+
+## 2026-02-24 John Allison (visman-V11-04-02)
+- G4VSceneHandler.cc::GetMarkerSize:
+  - Fix missing "markerSizeType = screen" in the case of dots.
+
+## 2025-12-08 John Allison (visman-V11-04-01)
+- Clang-format protection for carefully crafted code in:
+  - G4VisManager, G4VSceneHandler, G4ViewParameters.
+
+## 2025-12-07 John Allison (visman-V11-04-00)
+- G4VisManager.cc: Improve end of run printing.
+  - PrintListOfPlots() and PrintNumberOfKeptEvents() even if vis is disabled,
+    with, in that case, a note to "/vis/enable" if you want actually to use
+    either of those features.
+
 ## 2025-11-07 John Allison (visman-V11-03-24)
 - G4VisExecutive.icc:
   - Remove all references to HepRep.

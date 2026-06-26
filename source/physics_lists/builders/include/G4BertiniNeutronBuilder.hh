@@ -36,41 +36,39 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4BertiniNeutronBuilder_h
-#define G4BertiniNeutronBuilder_h 1
+#ifndef G4BERTININEUTRONBUILDER_HH
+#define G4BERTININEUTRONBUILDER_HH
 
-#include "globals.hh"
-
+#include "G4CascadeInterface.hh"
 #include "G4HadronElasticProcess.hh"
-#include "G4NeutronFissionProcess.hh"
-#include "G4NeutronCaptureProcess.hh"
 #include "G4HadronInelasticProcess.hh"
+#include "G4NeutronCaptureProcess.hh"
+#include "G4NeutronFissionProcess.hh"
 #include "G4VNeutronBuilder.hh"
-
-#include "G4CascadeInterface.hh"   
+#include "globals.hh"
 
 class G4BertiniNeutronBuilder : public G4VNeutronBuilder
 {
-  public: 
+  public:
+
     G4BertiniNeutronBuilder();
     virtual ~G4BertiniNeutronBuilder() {}
 
-    virtual void Build(G4HadronElasticProcess *) final override {}
-    virtual void Build(G4NeutronFissionProcess *) final override {}
-    virtual void Build(G4NeutronCaptureProcess *) final override {}
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
-    virtual void SetMaxEnergy(G4double aM) final override {theMax = aM;}
+    virtual void Build(G4HadronElasticProcess*) final override {}
+    virtual void Build(G4NeutronFissionProcess*) final override {}
+    virtual void Build(G4NeutronCaptureProcess*) final override {}
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
+
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+    virtual void SetMaxEnergy(G4double aM) final override { theMax = aM; }
 
     using G4VNeutronBuilder::Build;
 
   private:
-    G4CascadeInterface * theModel;    
+
+    G4CascadeInterface* theModel;
     G4double theMin;
     G4double theMax;
-
 };
 
 #endif
-

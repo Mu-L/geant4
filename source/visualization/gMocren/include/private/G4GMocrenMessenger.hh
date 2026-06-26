@@ -25,14 +25,15 @@
 //
 //
 //
-// Created:  Mar. 31, 2009  Akinori Kimura  
+// Created:  Mar. 31, 2009  Akinori Kimura
 //
 // UI command definition for gMocren-file driver.
 //
 #ifndef G4GMOCRENMESSENGER_HH
-#define G4GMOCRENMESSENGER_HH 1
+#define G4GMOCRENMESSENGER_HH
 
 #include "G4UImessenger.hh"
+
 #include <vector>
 
 class G4UIdirectory;
@@ -41,67 +42,68 @@ class G4UIcmdWithAString;
 class G4UIcommand;
 class G4UIcmdWithoutParameter;
 
+class G4GMocrenMessenger : public G4UImessenger
+{
+  public:
 
-class G4GMocrenMessenger : public G4UImessenger {
-    
-public:
-  G4GMocrenMessenger();
-  virtual ~G4GMocrenMessenger();
+    G4GMocrenMessenger();
+    virtual ~G4GMocrenMessenger();
 
-  virtual G4String GetCurrentValue(G4UIcommand * command);
-  virtual void SetNewValue(G4UIcommand * command, G4String newValue);
-        
-  virtual G4String getEventNumberSuffix();
-  virtual G4bool appendGeometry();
-  virtual G4bool addPointAttributes();
-  virtual G4bool useSolids();
-  virtual G4bool writeInvisibles();
-  virtual G4String getVolumeName();
-  virtual std::vector<G4String> getHitNames();
-  virtual G4String getScoringMeshName();
-  virtual std::vector<G4String> getHitScorerNames();
-  virtual void list();
-  virtual void getNoVoxels(G4int & nx, G4int & ny, G4int & nz) const;
-  virtual G4bool getDrawVolumeGrid() {return kDrawVolumeGrid;}
+    virtual G4String GetCurrentValue(G4UIcommand* command);
+    virtual void SetNewValue(G4UIcommand* command, G4String newValue);
 
-private:            
-  G4UIdirectory* kgMocrenDirectory;
-        
-  G4String suffix;
-  G4UIcmdWithAString* setEventNumberSuffixCommand;
-        
-  G4bool geometry;
-  G4UIcmdWithABool* appendGeometryCommand;
+    virtual G4String getEventNumberSuffix();
+    virtual G4bool appendGeometry();
+    virtual G4bool addPointAttributes();
+    virtual G4bool useSolids();
+    virtual G4bool writeInvisibles();
+    virtual G4String getVolumeName();
+    virtual std::vector<G4String> getHitNames();
+    virtual G4String getScoringMeshName();
+    virtual std::vector<G4String> getHitScorerNames();
+    virtual void list();
+    virtual void getNoVoxels(G4int& nx, G4int& ny, G4int& nz) const;
+    virtual G4bool getDrawVolumeGrid() { return kDrawVolumeGrid; }
 
-  G4bool pointAttributes;
-  G4UIcmdWithABool* addPointAttributesCommand;
+  private:
 
-  G4bool solids;
-  G4UIcmdWithABool* useSolidsCommand;
+    G4UIdirectory* kgMocrenDirectory;
 
-  G4bool invisibles;
+    G4String suffix;
+    G4UIcmdWithAString* setEventNumberSuffixCommand;
 
-  G4String kgMocrenVolumeName;
-  G4UIcmdWithAString* kSetgMocrenVolumeNameCommand;
+    G4bool geometry;
+    G4UIcmdWithABool* appendGeometryCommand;
 
-  std::vector<G4String> kgMocrenHitNames;
-  G4UIcmdWithAString* kAddgMocrenHitNameCommand;
-  G4UIcmdWithoutParameter * kResetgMocrenHitNameCommand;
+    G4bool pointAttributes;
+    G4UIcmdWithABool* addPointAttributesCommand;
 
-  G4String kgMocrenScoringMeshName;
-  G4UIcmdWithAString * kSetgMocrenScoringMeshNameCommand;
+    G4bool solids;
+    G4UIcmdWithABool* useSolidsCommand;
 
-  std::vector<G4String> kgMocrenHitScorerNames;
-  G4UIcmdWithAString * kAddgMocrenHitScorerNameCommand;
-  G4UIcmdWithoutParameter * kResetgMocrenHitScorerNameCommand;
+    G4bool invisibles;
 
-  G4int kgMocrenNoVoxels[3];
-  G4UIcommand * kSetgMocrenNoVoxelsCommand;
+    G4String kgMocrenVolumeName;
+    G4UIcmdWithAString* kSetgMocrenVolumeNameCommand;
 
-  G4UIcmdWithoutParameter * kListgMocrenCommand;
+    std::vector<G4String> kgMocrenHitNames;
+    G4UIcmdWithAString* kAddgMocrenHitNameCommand;
+    G4UIcmdWithoutParameter* kResetgMocrenHitNameCommand;
 
-  G4bool kDrawVolumeGrid;
-  G4UIcmdWithABool* kDrawVolumeGridCommand;
+    G4String kgMocrenScoringMeshName;
+    G4UIcmdWithAString* kSetgMocrenScoringMeshNameCommand;
+
+    std::vector<G4String> kgMocrenHitScorerNames;
+    G4UIcmdWithAString* kAddgMocrenHitScorerNameCommand;
+    G4UIcmdWithoutParameter* kResetgMocrenHitScorerNameCommand;
+
+    G4int kgMocrenNoVoxels[3];
+    G4UIcommand* kSetgMocrenNoVoxelsCommand;
+
+    G4UIcmdWithoutParameter* kListgMocrenCommand;
+
+    G4bool kDrawVolumeGrid;
+    G4UIcmdWithABool* kDrawVolumeGridCommand;
 };
 
 #endif

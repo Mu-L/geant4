@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // John Allison  5th April 2001
 // A graphics system to dump geometry hierarchy to standard output as
 //   ASCII stream.
@@ -39,22 +39,26 @@
 
 class G4ASCIITreeMessenger;
 
-class G4ASCIITree: public G4VTree {
-public:
-  G4ASCIITree ();
-  virtual ~G4ASCIITree ();
-  G4VSceneHandler* CreateSceneHandler (const G4String& name = "");
-  G4VViewer*  CreateViewer  (G4VSceneHandler&, const G4String& name = "");
-  G4int    GetVerbosity() const {return fVerbosity;}
-  const std::vector<G4String>& GetVerbosityGuidance() const {return fVerbosityGuidance;}
-  G4String GetOutFileName () const {return fOutFileName;}
-  void SetVerbosity    (G4int verbosity) {fVerbosity = verbosity;}
-  void SetOutFileName (const G4String& name)  {fOutFileName = name;}
-protected:
-  G4int fVerbosity;
-  G4ASCIITreeMessenger* fpMessenger;
-  std::vector<G4String> fVerbosityGuidance;
-  G4String fOutFileName;
+class G4ASCIITree : public G4VTree
+{
+  public:
+
+    G4ASCIITree();
+    virtual ~G4ASCIITree();
+    G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
+    G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "");
+    G4int GetVerbosity() const { return fVerbosity; }
+    const std::vector<G4String>& GetVerbosityGuidance() const { return fVerbosityGuidance; }
+    G4String GetOutFileName() const { return fOutFileName; }
+    void SetVerbosity(G4int verbosity) { fVerbosity = verbosity; }
+    void SetOutFileName(const G4String& name) { fOutFileName = name; }
+
+  protected:
+
+    G4int fVerbosity;
+    G4ASCIITreeMessenger* fpMessenger;
+    std::vector<G4String> fVerbosityGuidance;
+    G4String fOutFileName;
 };
 
 #endif

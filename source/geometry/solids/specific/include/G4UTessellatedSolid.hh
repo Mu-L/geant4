@@ -36,22 +36,23 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedTessellated.h>
+#  include "G4Polyhedron.hh"
+#  include "G4VFacet.hh"
 
-#include "G4Polyhedron.hh"
-#include "G4VFacet.hh"
+#  include <VecGeom/volumes/UnplacedTessellated.h>
 
 /**
  * @brief G4UTessellatedSolid is a wrapper class for G4TessellatedSolid
  * to make use of VecGeom TessellatedSolid.
+ * @ingroup geometry_solids_specific
  */
 
 class G4UTessellatedSolid : public G4UAdapter<vecgeom::UnplacedTessellated>
 {
-  using Shape_t = vecgeom::UnplacedTessellated;
-  using Base_t  = G4UAdapter<vecgeom::UnplacedTessellated>;
+    using Shape_t = vecgeom::UnplacedTessellated;
+    using Base_t = G4UAdapter<vecgeom::UnplacedTessellated>;
 
   public:
 
@@ -69,7 +70,7 @@ class G4UTessellatedSolid : public G4UAdapter<vecgeom::UnplacedTessellated>
     /**
      * Destructor. Clearing all allocated facets and data.
      */
-   ~G4UTessellatedSolid() override;
+    ~G4UTessellatedSolid() override;
 
     /**
      * Methods for adding or retrieving a facet given an index.
@@ -137,10 +138,9 @@ class G4UTessellatedSolid : public G4UAdapter<vecgeom::UnplacedTessellated>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pMin, G4double& pMax) const override;  
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.
@@ -150,7 +150,7 @@ class G4UTessellatedSolid : public G4UAdapter<vecgeom::UnplacedTessellated>
     /**
      * Copy constructor and assignment operator.
      */
-    G4UTessellatedSolid( const G4UTessellatedSolid& source );
+    G4UTessellatedSolid(const G4UTessellatedSolid& source);
     G4UTessellatedSolid& operator=(const G4UTessellatedSolid& source);
 
   private:

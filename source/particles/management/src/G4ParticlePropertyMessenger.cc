@@ -106,32 +106,40 @@ void G4ParticlePropertyMessenger::SetNewValue(G4UIcommand* command, G4String new
 {
   auto currentParticle = const_cast<G4ParticleDefinition*>(theParticleTable->GetSelectedParticle());
 
-  if (currentParticle == nullptr) {
+  if (currentParticle == nullptr)
+  {
     G4cout << "Particle is not selected yet !! Command ignored." << G4endl;
     return;
   }
 
-  if (command == dumpCmd) {
+  if (command == dumpCmd)
+  {
     // Command   /particle/property/dump
     currentParticle->DumpTable();
   }
-  else if (command == lifetimeCmd) {
+  else if (command == lifetimeCmd)
+  {
     // Command   /particle/property/lifetime
     currentParticle->SetPDGLifeTime(lifetimeCmd->GetNewDoubleValue(newValue));
   }
-  else if (command == stableCmd) {
+  else if (command == stableCmd)
+  {
     // Command   /particle/property/stable
-    if (currentParticle->GetPDGLifeTime() < 0.0) {
+    if (currentParticle->GetPDGLifeTime() < 0.0)
+    {
       G4cout << "Life time is negative! Command ignored." << G4endl;
     }
-    else if (currentParticle->GetPDGMass() <= 0.0) {
+    else if (currentParticle->GetPDGMass() <= 0.0)
+    {
       G4cout << "Zero Mass! Command ignored." << G4endl;
     }
-    else {
+    else
+    {
       currentParticle->SetPDGStable(stableCmd->GetNewBoolValue(newValue));
     }
   }
-  else if (command == verboseCmd) {
+  else if (command == verboseCmd)
+  {
     // Command   /particle/property/Verbose
     currentParticle->SetVerboseLevel(verboseCmd->GetNewIntValue(newValue));
   }
@@ -142,19 +150,23 @@ G4String G4ParticlePropertyMessenger::GetCurrentValue(G4UIcommand* command)
   G4String returnValue(1, '\0');
 
   const G4ParticleDefinition* currentParticle = theParticleTable->GetSelectedParticle();
-  if (currentParticle == nullptr) {
+  if (currentParticle == nullptr)
+  {
     return returnValue;  // no particle is selected. return null
   }
 
-  if (command == stableCmd) {
+  if (command == stableCmd)
+  {
     // Command   /particle/property/stable
     returnValue = stableCmd->ConvertToString(currentParticle->GetPDGStable());
   }
-  else if (command == lifetimeCmd) {
+  else if (command == lifetimeCmd)
+  {
     // Command   /particle/property/lifetime
     returnValue = lifetimeCmd->ConvertToString(currentParticle->GetPDGLifeTime(), "ns");
   }
-  else if (command == verboseCmd) {
+  else if (command == verboseCmd)
+  {
     // Command   /particle/property/Verbose
     returnValue = verboseCmd->ConvertToString(currentParticle->GetVerboseLevel());
   }

@@ -50,8 +50,10 @@ G4MultiFunctionalDetector::~G4MultiFunctionalDetector()
 
 G4bool G4MultiFunctionalDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aTH)
 {
-  if (aStep->GetStepLength() > 0. || aStep->GetTotalEnergyDeposit() > 0.) {
-    for (auto pr : primitives) {
+  if (aStep->GetStepLength() > 0. || aStep->GetTotalEnergyDeposit() > 0.)
+  {
+    for (auto pr : primitives)
+    {
       pr->HitPrimitive(aStep, aTH);
     }
   }
@@ -60,8 +62,10 @@ G4bool G4MultiFunctionalDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*
 
 G4bool G4MultiFunctionalDetector::RegisterPrimitive(G4VPrimitiveScorer* aPS)
 {
-  for (auto pr : primitives) {
-    if (pr == aPS) {
+  for (auto pr : primitives)
+  {
+    if (pr == aPS)
+    {
       G4ExceptionDescription ED;
       ED << "Primitive <" << aPS->GetName() << "> is already defined in <" << SensitiveDetectorName
          << ">." << G4endl << "Method RegisterPrimitive() is ignored." << G4endl;
@@ -84,7 +88,8 @@ G4bool G4MultiFunctionalDetector::RegisterPrimitive(G4VPrimitiveScorer* aPS)
 G4bool G4MultiFunctionalDetector::RemovePrimitive(G4VPrimitiveScorer* aPS)
 {
   auto pr = std::find(primitives.begin(), primitives.end(), aPS);
-  if (pr != primitives.end()) {
+  if (pr != primitives.end())
+  {
     primitives.erase(pr);
     aPS->SetMultiFunctionalDetector(nullptr);
     return true;
@@ -96,35 +101,40 @@ G4bool G4MultiFunctionalDetector::RemovePrimitive(G4VPrimitiveScorer* aPS)
 
 void G4MultiFunctionalDetector::Initialize(G4HCofThisEvent* HC)
 {
-  for (auto pr : primitives) {
+  for (auto pr : primitives)
+  {
     pr->Initialize(HC);
   }
 }
 
 void G4MultiFunctionalDetector::EndOfEvent(G4HCofThisEvent* HC)
 {
-  for (auto pr : primitives) {
+  for (auto pr : primitives)
+  {
     pr->EndOfEvent(HC);
   }
 }
 
 void G4MultiFunctionalDetector::clear()
 {
-  for (auto pr : primitives) {
+  for (auto pr : primitives)
+  {
     pr->clear();
   }
 }
 
 void G4MultiFunctionalDetector::DrawAll()
 {
-  for (auto pr : primitives) {
+  for (auto pr : primitives)
+  {
     pr->DrawAll();
   }
 }
 
 void G4MultiFunctionalDetector::PrintAll()
 {
-  for (auto pr : primitives) {
+  for (auto pr : primitives)
+  {
     pr->PrintAll();
   }
 }

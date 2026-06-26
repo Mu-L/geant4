@@ -32,8 +32,8 @@
 
 // Author: H.Kurashige, 30 May 1997
 // --------------------------------------------------------------------
-#ifndef G4DalitzDecayChannel_hh
-#define G4DalitzDecayChannel_hh 1
+#ifndef G4DALITZDECAYCHANNEL_HH
+#define G4DALITZDECAYCHANNEL_HH
 
 #include "G4VDecayChannel.hh"
 #include "G4ios.hh"
@@ -42,6 +42,7 @@
 class G4DalitzDecayChannel : public G4VDecayChannel
 {
   public:
+
     G4DalitzDecayChannel(const G4String& theParentName, G4double theBR,
                          const G4String& theLeptonName, const G4String& theAntiLeptonName);
 
@@ -50,11 +51,13 @@ class G4DalitzDecayChannel : public G4VDecayChannel
     G4DecayProducts* DecayIt(G4double) override;
 
   protected:
+
     // Copy constructor and assignment operator
     G4DalitzDecayChannel(const G4DalitzDecayChannel&) = default;
     G4DalitzDecayChannel& operator=(const G4DalitzDecayChannel&);
 
   private:
+
     G4DalitzDecayChannel() = default;
 
     enum

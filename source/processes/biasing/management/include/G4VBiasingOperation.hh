@@ -49,12 +49,12 @@
 //
 // Author: Marc Verderi (LLR), November 2013
 // --------------------------------------------------------------------
-#ifndef G4VBiasingOperation_hh
-#define G4VBiasingOperation_hh 1
+#ifndef G4VBIASINGOPERATION_HH
+#define G4VBIASINGOPERATION_HH
 
-#include "globals.hh"
 #include "G4ForceCondition.hh"
 #include "G4GPILSelection.hh"
+#include "globals.hh"
 
 class G4VParticleChange;
 class G4Track;
@@ -93,7 +93,7 @@ class G4VBiasingOperation
     // ---- of the biasing operator, all methods below will be called for this operation.
     // ----
     // ---- I.1) Methods called in at the PostStepGetPhysicalInteractionLength(...) level :
-    // ---- 
+    // ----
     // ------ o Main and mandatory method for biasing of the PostStep process biasing occurrence :
     // ------   - propose an interaction law to be substituted to the process that is biased
     // ------   - the operation is told which is the G4BiasingProcessInterface calling it with
@@ -104,29 +104,34 @@ class G4VBiasingOperation
     // ------     to the operation is the one of the wrapped process, if proposeForceCondition is
     // ------     unchanged, this same value will be used as the biasing foroce condition)
     virtual const G4VBiasingInteractionLaw*
-    ProvideOccurenceBiasingInteractionLaw( const G4BiasingProcessInterface* /* callingProcess */ ,
-                                           G4ForceCondition& /* proposeForceCondition */ ) = 0;
+    ProvideOccurenceBiasingInteractionLaw(const G4BiasingProcessInterface* /* callingProcess */,
+                                          G4ForceCondition& /* proposeForceCondition */) = 0;
     // ----
     // ---- I.2) Methods called in at the AlongStepGetPhysicalInteractionLength(...) level :
-    // ---- 
+    // ----
     // ------ o Operation can optionnally limit GPIL Along Step:
-    virtual G4double ProposeAlongStepLimit( const G4BiasingProcessInterface* /* callingProcess */ )
-      { return DBL_MAX; }
+    virtual G4double ProposeAlongStepLimit(const G4BiasingProcessInterface* /* callingProcess */)
+    {
+      return DBL_MAX;
+    }
 
     // ------ o Operation can propose a GPILSelection in the AlongStepGPIL
     // ------   this selection superseeded the wrapped process selection
     // ------   if the wrapped process exists, and if has along methods:
-    virtual G4GPILSelection ProposeGPILSelection( const G4GPILSelection wrappedProcessSelection )
-      { return wrappedProcessSelection; }
-  
+    virtual G4GPILSelection ProposeGPILSelection(const G4GPILSelection wrappedProcessSelection)
+    {
+      return wrappedProcessSelection;
+    }
+
     // ----
     // ---- I.3) Methods called in at the AlongStepDoIt(...) level :
-    // ---- 
-    // ------ o Helper method to inform the operation of the move made in the along, and related non-interaction weight
+    // ----
+    // ------ o Helper method to inform the operation of the move made in the along, and related
+    // non-interaction weight
     // ------   applied to the primary track for this move:
-    virtual void AlongMoveBy( const G4BiasingProcessInterface* /* callingProcess */,
-                              const G4Step* /* step */,
-                                    G4double /* weightForNonInteraction */ ) {}
+    virtual void AlongMoveBy(const G4BiasingProcessInterface* /* callingProcess */,
+                             const G4Step* /* step */, G4double /* weightForNonInteraction */)
+    {}
 
     // ---- II. Biasing of the process post step final state:
     // ------------------------------------------------------
@@ -143,10 +148,10 @@ class G4VBiasingOperation
     // ------ This can be used in conjunction with an occurrence biasing, provided this final
     // ------ state biasing is uncorrelated with the occurrence biasing (as single multiplication
     // ------ of weights occur between these two biasings).
-    virtual G4VParticleChange* ApplyFinalStateBiasing( const G4BiasingProcessInterface*       /* callingProcess */,
-                                                       const G4Track* /* track */,
-                                                       const G4Step* /* step */,
-                                                             G4bool& /* forceBiasedFinalState */) = 0;
+    virtual G4VParticleChange*
+    ApplyFinalStateBiasing(const G4BiasingProcessInterface* /* callingProcess */,
+                           const G4Track* /* track */, const G4Step* /* step */,
+                           G4bool& /* forceBiasedFinalState */) = 0;
 
     // ---- III. Biasing of the process along step final state:
     // --------------------------------------------------------
@@ -161,18 +166,18 @@ class G4VBiasingOperation
     // ---- of the biasing operator, all methods below will be called for this operation.
     // -----
     // ---- 1) Method called in at the PostStepGetPhysicalInteractionLength(...) level :
-    // ---- 
+    // ----
     // ---- o Return to the distance at which the operation should be applied, or may
     // ----   play with the force condition flags.
-    virtual G4double DistanceToApplyOperation( const G4Track* /* track */,
-                                                     G4double /* previousStepSize */,
-                                                     G4ForceCondition* /* condition */) = 0;
+    virtual G4double DistanceToApplyOperation(const G4Track* /* track */,
+                                              G4double /* previousStepSize */,
+                                              G4ForceCondition* /* condition */) = 0;
     // ----
     // ---- 2) Method called in at the PostStepDoIt(...) level :
-    // ---- 
+    // ----
     // ---- o Generate the final state for biasing (eg: splitting, killing, etc.)
-    virtual G4VParticleChange* GenerateBiasingFinalState( const G4Track*               /* track */,
-                                                          const G4Step* /* step */) = 0;
+    virtual G4VParticleChange* GenerateBiasingFinalState(const G4Track* /* track */,
+                                                         const G4Step* /* step */) = 0;
 
     // ----------------------------------------
     // -- public interface and utility methods:

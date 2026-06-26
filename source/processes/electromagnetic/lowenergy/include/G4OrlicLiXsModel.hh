@@ -31,11 +31,10 @@
 //  23 Apr 2008   H. Ben Abdelouahed   1st implementation
 //  28 Apr 2008   MGP        Major revision according to a design iteration
 //  21 Apr 2009	  ALF Some correction for compatibility to G4VShellCrossSection
-//		  and changed name to G4OrlicLiCrossSection 
+//		  and changed name to G4OrlicLiCrossSection
 //  29 Oct 2011   ALF changed name to G4OrlicLiXsModel
 //
 // -------------------------------------------------------------------
-
 
 // Class description:
 // Low Energy Electromagnetic Physics, Cross section, proton ionisation, L shell
@@ -43,29 +42,30 @@
 
 // -------------------------------------------------------------------
 
+#ifndef G4ORLICLIXSMODEL_HH
+#define G4ORLICLIXSMODEL_HH
 
-#ifndef G4OrlicLiXsModel_hh
-#define G4OrlicLiXsModel_hh 1
-
-#include "globals.hh"
 #include "G4AtomicTransitionManager.hh"
+#include "globals.hh"
 
-class G4OrlicLiXsModel 
+class G4OrlicLiXsModel
 {
-public:
-  explicit G4OrlicLiXsModel();
-  virtual ~G4OrlicLiXsModel();
+  public:
 
-  //according to I.ORLIC, C.H.SOW and S.M.TANG,International Journal of PIXE.Vol.4(1997) 217-230			     
-  G4double CalculateL1CrossSection(G4int zTarget, G4double energyIncident);
-  G4double CalculateL2CrossSection(G4int zTarget, G4double energyIncident);				    
-  G4double CalculateL3CrossSection(G4int zTarget, G4double energyIncident);
+    explicit G4OrlicLiXsModel();
+    virtual ~G4OrlicLiXsModel();
 
-  G4OrlicLiXsModel(const G4OrlicLiXsModel&) = delete;
-  G4OrlicLiXsModel & operator = (const G4OrlicLiXsModel &right) = delete;
+    // according to I.ORLIC, C.H.SOW and S.M.TANG,International Journal of PIXE.Vol.4(1997) 217-230
+    G4double CalculateL1CrossSection(G4int zTarget, G4double energyIncident);
+    G4double CalculateL2CrossSection(G4int zTarget, G4double energyIncident);
+    G4double CalculateL3CrossSection(G4int zTarget, G4double energyIncident);
 
-private:
-  G4AtomicTransitionManager*  transitionManager;
+    G4OrlicLiXsModel(const G4OrlicLiXsModel&) = delete;
+    G4OrlicLiXsModel& operator=(const G4OrlicLiXsModel& right) = delete;
+
+  private:
+
+    G4AtomicTransitionManager* transitionManager;
 };
 
 #endif

@@ -32,45 +32,42 @@
 // File name:     G4ModifiedMephi
 //
 // Author:        V. Ivanchenko
-// 
+//
 // Creation date: 27 October 2020
 //
-// Modifications: 
+// Modifications:
 //
 //
 // -------------------------------------------------------------------
 //
 
 #include "G4ModifiedMephi.hh"
-#include "Randomize.hh"
+
 #include "G4Log.hh"
+#include "Randomize.hh"
+
 #include <CLHEP/Units/PhysicalConstants.h>
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4ModifiedMephi::G4ModifiedMephi(const G4String&)
-  : G4VEmAngularDistribution("ModifiedMephi")
-{}    
+G4ModifiedMephi::G4ModifiedMephi(const G4String&) : G4VEmAngularDistribution("ModifiedMephi") {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4ModifiedMephi::~G4ModifiedMephi() 
-{}
+G4ModifiedMephi::~G4ModifiedMephi() {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4ThreeVector& 
-G4ModifiedMephi::SampleDirection(const G4DynamicParticle* dp,
-                                 G4double gEnergy, G4int, 
-                                 const G4Material*)
+G4ThreeVector& G4ModifiedMephi::SampleDirection(const G4DynamicParticle* dp, G4double gEnergy,
+                                                G4int, const G4Material*)
 {
   // Sample gamma angle (Z - axis along the parent particle).
-  G4double cost = SampleCosTheta(dp->GetKineticEnergy(), gEnergy, 
-                                 dp->GetDefinition()->GetPDGMass());
-  G4double sint = std::sqrt((1.0 - cost)*(1.0 + cost));
-  G4double phi  = CLHEP::twopi*G4UniformRand(); 
+  G4double cost =
+    SampleCosTheta(dp->GetKineticEnergy(), gEnergy, dp->GetDefinition()->GetPDGMass());
+  G4double sint = std::sqrt((1.0 - cost) * (1.0 + cost));
+  G4double phi = CLHEP::twopi * G4UniformRand();
 
-  fLocalDirection.set(sint*std::cos(phi), sint*std::sin(phi), cost);
+  fLocalDirection.set(sint * std::cos(phi), sint * std::sin(phi), cost);
   fLocalDirection.rotateUz(dp->GetMomentumDirection());
 
   return fLocalDirection;
@@ -78,28 +75,23 @@ G4ModifiedMephi::SampleDirection(const G4DynamicParticle* dp,
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-G4double G4ModifiedMephi::SampleCosTheta(G4double primKinEnergy, 
-                                         G4double gEnergy,
-                                         G4double mass)
+G4double G4ModifiedMephi::SampleCosTheta(G4double primKinEnergy, G4double gEnergy, G4double mass)
 {
-  G4double gam  = 1.0 + primKinEnergy/mass;
-  G4double rmax = gam*CLHEP::halfpi*std::min(1.0, gam*mass/gEnergy - 1.0);
-  G4double rmax2= rmax*rmax;
-  G4double x = G4UniformRand()*rmax2/(1.0 + rmax2);
+  G4double gam = 1.0 + primKinEnergy / mass;
+  G4double rmax = gam * CLHEP::halfpi * std::min(1.0, gam * mass / gEnergy - 1.0);
+  G4double rmax2 = rmax * rmax;
+  G4double x = G4UniformRand() * rmax2 / (1.0 + rmax2);
 
-  return std::cos(std::sqrt(x/(1.0 - x))/gam);
+  return std::cos(std::sqrt(x / (1.0 - x)) / gam);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-void G4ModifiedMephi::SamplePairDirections(const G4DynamicParticle* dp,
-					   G4double elecKinEnergy,
-					   G4double posiKinEnergy,
-					   G4ThreeVector& dirElectron,
-					   G4ThreeVector& dirPositron,
-					   G4int, const G4Material*)
+void G4ModifiedMephi::SamplePairDirections(const G4DynamicParticle* dp, G4double elecKinEnergy,
+                                           G4double posiKinEnergy, G4ThreeVector& dirElectron,
+                                           G4ThreeVector& dirPositron, G4int, const G4Material*)
 {
-  G4double phi  = CLHEP::twopi * G4UniformRand();
+  G4double phi = CLHEP::twopi * G4UniformRand();
   G4double sinp = std::sin(phi);
   G4double cosp = std::cos(phi);
 
@@ -108,15 +100,15 @@ void G4ModifiedMephi::SamplePairDirections(const G4DynamicParticle* dp,
   G4double mass = dp->GetDefinition()->GetPDGMass();
 
   G4double cost = SampleCosTheta(ekin, etwo, mass);
-  G4double sint = std::sqrt((1.0 - cost)*(1.0 + cost));
+  G4double sint = std::sqrt((1.0 - cost) * (1.0 + cost));
 
-  dirElectron.set(sint*cosp, sint*sinp, cost);
+  dirElectron.set(sint * cosp, sint * sinp, cost);
   dirElectron.rotateUz(dp->GetMomentumDirection());
 
   cost = SampleCosTheta(ekin, etwo, mass);
-  sint = std::sqrt((1.0 - cost)*(1.0 + cost));
+  sint = std::sqrt((1.0 - cost) * (1.0 + cost));
 
-  dirPositron.set(-sint*cosp, -sint*sinp, cost);
+  dirPositron.set(-sint * cosp, -sint * sinp, cost);
   dirPositron.rotateUz(dp->GetMomentumDirection());
 }
 
@@ -126,6 +118,6 @@ void G4ModifiedMephi::PrintGeneratorInformation() const
 {
   G4cout << "\n" << G4endl;
   G4cout << "Angular Generator is Modified Mephi" << G4endl;
-} 
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

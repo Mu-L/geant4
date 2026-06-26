@@ -29,6 +29,7 @@
 //          (Fermi National Accelerator Laboratory)
 //
 // History: October 18th, 2021 : first implementation
+//          March 28th, 2026: Modified by Ilker Parmaksiz for latest Opticks
 // ********************************************************************
 //
 /// \file EventAction.cc
@@ -50,10 +51,9 @@
 #endif
 
 #ifdef WITH_G4OPTICKS
-#include "OpticksFlags.hh"
-#include "G4Opticks.hh"
-#include "G4OpticksHit.hh"
-#include <string>
+#include "SEvt.hh"
+#include "NP.hh"
+#include "G4CXOpticks.hh"
 #endif
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -68,45 +68,53 @@ void EventAction::EndOfEventAction(const G4Event* event)
 #ifdef WITH_G4OPTICKS
   if (ConfigurationManager::getInstance()->isEnable_opticks())
   {
-    G4Opticks* g4ok = G4Opticks::Get();
-    g4ok->propagateOpticalPhotons(event->GetEventID());
-    unsigned num_hits = g4ok->getNumHit();
-    G4cout << "EndOfEventAction: num_hits: " << num_hits << G4endl;
-    if (num_hits > 0)
+    G4int num_pht_collected  = SEvt::GetNumPhotonCollected(0);
+    G4int num_genstep        = SEvt::GetNumGenstepFromGenstep(0);
+    G4int max_pht_genstep    = SEvt::GetNumPhotonGenstepMax(0);
+
+    G4int eventid            = event->GetEventID();
+
+    if (num_pht_collected > 0)
     {
-      G4HCtable* hctable = G4SDManager::GetSDMpointer()->GetHCtable();
-      for (G4int i = 0; i < hctable->entries(); ++i)
+      if (verbose) G4cout << "EndOfEventAction:  Simulating  " << num_pht_collected << " in GPU." << G4endl;
+      G4CXOpticks::Get()->simulate(eventid, false); // Simulate Optical Photons within GPU.
+      cudaDeviceSynchronize();
+      G4int num_hits           = SEvt::GetNumHit(0);
+      G4cout << "EndOfEventAction: num_hits: " << num_hits << G4endl;
+      if (num_hits > 0)
       {
-        G4String sdn = hctable->GetSDname(i);
-        std::size_t found = sdn.find("PhotonDetector");
-        if (found != std::string::npos)
-	{
-          PhotonSD* aSD =
-            (PhotonSD*) G4SDManager::GetSDMpointer()->FindSensitiveDetector(sdn);
-          aSD->AddOpticksHits();
+        G4HCtable* hctable = G4SDManager::GetSDMpointer()->GetHCtable();
+        for (G4int i = 0; i < hctable->entries(); ++i)
+        {
+          G4String sdn = hctable->GetSDname(i);
+          std::size_t found = sdn.find("PhotonDetector");
+          if (found != std::string::npos)
+          {
+            PhotonSD* aSD =
+              (PhotonSD*) G4SDManager::GetSDMpointer()->FindSensitiveDetector(sdn);
+            aSD->AddOpticksHits();
+          }
         }
       }
-    }
-    if (verbose)
-    {
-      G4cout << "**************************************************" << G4endl;
-      G4cout << " EndOfEventAction: numphotons:   " << g4ok->getNumPhotons()
-             << " Gensteps: " << g4ok->getNumGensteps()
-             << "  Maxgensteps:  " << g4ok->getMaxGensteps() << G4endl;
-      G4cout << " EndOfEventAction: num_hits: " << g4ok->getNumHit() << G4endl;
-      G4cout << g4ok->dbgdesc() << G4endl;
-    }
-    g4ok->reset();
-    if (verbose)
-    {
-      G4cout << "========================== After reset: " << G4endl;
-      G4cout << " EndOfEventAction: numphotons:   " << g4ok->getNumPhotons()
-             << " Gensteps: " << g4ok->getNumGensteps()
-             << "  Maxgensteps:  " << g4ok->getMaxGensteps() << G4endl;
-      G4cout << "EndOfEventAction: num_hits: " << g4ok->getNumHit() << G4endl;
-      G4cout << g4ok->dbgdesc() << G4endl;
-      G4cout << "**************************************************" << G4endl;
-    }
+      if (verbose)
+      {
+        G4cout << "**************************************************" << G4endl;
+        G4cout << " EndOfEventAction: numphotons:   " << num_pht_collected
+               << " Gensteps: " << num_genstep
+               << "  Maxgensteps:  " << max_pht_genstep<< G4endl;
+        G4cout << " EndOfEventAction: num_hits: " << num_hits << G4endl;
+      }
+      G4CXOpticks::Get()->reset(eventid);
+      if (verbose)
+      {
+        G4cout << "========================== After reset: " << G4endl;
+        G4cout << " EndOfEventAction: numphotons:   " << num_pht_collected
+               << " Gensteps: " << num_genstep
+               << "  Maxgensteps:  " << max_pht_genstep << G4endl;
+        G4cout << "EndOfEventAction: num_hits: " << num_hits << G4endl;
+        G4cout << "**************************************************" << G4endl;
+      }
+    }else G4CXOpticks::Get()->reset(eventid);
   } // end isEnable_opticks
 #endif  // end WITH_G4OPTICKS
 

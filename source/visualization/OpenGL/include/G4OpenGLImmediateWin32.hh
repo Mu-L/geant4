@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // OpenGLImmediateWin32 graphics system factory.
 
 #ifndef G4OPENGLIMMEDIATEWIN32_HH
@@ -33,11 +33,13 @@
 
 #include "G4VGraphicsSystem.hh"
 
-class G4OpenGLImmediateWin32: public G4VGraphicsSystem {
-public:
-  G4OpenGLImmediateWin32 ();
-  G4VSceneHandler* CreateSceneHandler (const G4String& name = "");
-  G4VViewer*  CreateViewer  (G4VSceneHandler&, const G4String& name = "");
+class G4OpenGLImmediateWin32 : public G4VGraphicsSystem
+{
+  public:
+
+    G4OpenGLImmediateWin32();
+    G4VSceneHandler* CreateSceneHandler(const G4String& name = "");
+    G4VViewer* CreateViewer(G4VSceneHandler&, const G4String& name = "");
 };
 
 #endif

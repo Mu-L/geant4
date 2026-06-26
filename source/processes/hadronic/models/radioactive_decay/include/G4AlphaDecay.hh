@@ -29,22 +29,22 @@
 //  Author: D.H. Wright (SLAC)                                                //
 //  Date:   20 October 2014                                                   //
 //  Description: performs alpha emission from radioactive nuclei, and         //
-//               returns daughter particles in rest frame of parent nucleus   // 
+//               returns daughter particles in rest frame of parent nucleus   //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4AlphaDecay_h
-#define G4AlphaDecay_h 1
+#ifndef G4ALPHADECAY_HH
+#define G4ALPHADECAY_HH
 
 #include "G4NuclearDecay.hh"
-
 
 class G4AlphaDecay : public G4NuclearDecay
 {
   public:
-    G4AlphaDecay(const G4ParticleDefinition* theParentNucleus,
-                 const G4double& theBR, const G4double& Qvalue,
-                 const G4double& excitation, const G4Ions::G4FloatLevelBase& flb);
+
+    G4AlphaDecay(const G4ParticleDefinition* theParentNucleus, const G4double& theBR,
+                 const G4double& Qvalue, const G4double& excitation,
+                 const G4Ions::G4FloatLevelBase& flb);
 
     virtual ~G4AlphaDecay();
 
@@ -53,7 +53,7 @@ class G4AlphaDecay : public G4NuclearDecay
     virtual void DumpNuclearInfo();
 
   private:
+
     const G4double transitionQ;
 };
 #endif
-

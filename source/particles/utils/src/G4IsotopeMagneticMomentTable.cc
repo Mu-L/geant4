@@ -54,9 +54,11 @@ const G4double G4IsotopeMagneticMomentTable::nuclearMagneton =
 
 G4IsotopeMagneticMomentTable::G4IsotopeMagneticMomentTable() : G4VIsotopeTable("MagneticMoment")
 {
-  if (std::getenv("G4IONMAGNETICMOMENT") == nullptr) {
+  if (std::getenv("G4IONMAGNETICMOMENT") == nullptr)
+  {
 #ifdef G4VERBOSE
-    if (GetVerboseLevel() > 1) {
+    if (GetVerboseLevel() > 1)
+    {
       G4cout << "G4IsotopeMagneticMomentTable::G4IsotopeMagneticMomentTable():  "
              << "Please setenv G4IONMAGNETICMOMENT for the magnetic moment data." << G4endl;
       G4Exception("G4IsotopeMagneticMomentTable", "File Not Found", JustWarning,
@@ -71,9 +73,11 @@ G4IsotopeMagneticMomentTable::G4IsotopeMagneticMomentTable() : G4VIsotopeTable("
   G4String file = std::getenv("G4IONMAGNETICMOMENT");
   std::ifstream DataFile(file);
 
-  if (!DataFile) {
+  if (!DataFile)
+  {
 #ifdef G4VERBOSE
-    if (GetVerboseLevel() > 0) {
+    if (GetVerboseLevel() > 0)
+    {
       G4cout << "G4IsotopeMagneticMomentTable::G4IsotopeMagneticMomentTable():  " << file
              << " is not found " << G4endl;
     }
@@ -85,14 +89,16 @@ G4IsotopeMagneticMomentTable::G4IsotopeMagneticMomentTable() : G4VIsotopeTable("
 
   char inputChars[80] = {' '};
 
-  while (!DataFile.eof()) {  // Loop checking, 09.08.2015, K.Kurashige
+  while (!DataFile.eof())
+  {  // Loop checking, 09.08.2015, K.Kurashige
     DataFile.getline(inputChars, 80);
     G4String inputLine = inputChars;
     G4int ionA, ionZ, ionJ, isomer;
     G4double ionE, ionMu, ionLife;
     G4String ionName, ionLifeUnit;
 
-    if (inputChars[0] != '#' && inputLine.length() != 0) {
+    if (inputChars[0] != '#' && inputLine.length() != 0)
+    {
       std::istringstream tmpstream(inputLine);
       tmpstream >> ionZ >> ionName >> ionA >> isomer >> ionE >> ionLife >> ionLifeUnit >> ionJ
         >> ionMu;
@@ -119,7 +125,8 @@ G4IsotopeMagneticMomentTable::G4IsotopeMagneticMomentTable() : G4VIsotopeTable("
 
 G4IsotopeMagneticMomentTable::~G4IsotopeMagneticMomentTable()
 {
-  for (const auto& i : fIsotopeList) {
+  for (const auto& i : fIsotopeList)
+  {
     delete i;
   }
   fIsotopeList.clear();
@@ -138,31 +145,37 @@ G4IsotopeMagneticMomentTable::operator=(const G4IsotopeMagneticMomentTable&)
 
 G4bool G4IsotopeMagneticMomentTable::FindIsotope(G4IsotopeProperty* pP)
 {
-  for (const auto fP : fIsotopeList) {
+  for (const auto fP : fIsotopeList)
+  {
     // check Z
-    if (fP->GetAtomicNumber() > pP->GetAtomicNumber()) {
+    if (fP->GetAtomicNumber() > pP->GetAtomicNumber())
+    {
       // Not Found
       break;
     }
-    if (fP->GetAtomicNumber() < pP->GetAtomicNumber()) {
+    if (fP->GetAtomicNumber() < pP->GetAtomicNumber())
+    {
       // next
       continue;
     }
 
     // check A
-    if (fP->GetAtomicMass() != pP->GetAtomicMass()) {
+    if (fP->GetAtomicMass() != pP->GetAtomicMass())
+    {
       // next
       continue;
     }
 
     // check isomerLevel
-    if (fP->GetIsomerLevel() != pP->GetIsomerLevel()) {
+    if (fP->GetIsomerLevel() != pP->GetIsomerLevel())
+    {
       // next
       continue;
     }
 
     // check E
-    if (std::fabs(fP->GetEnergy() - pP->GetEnergy()) < levelTolerance) {
+    if (std::fabs(fP->GetEnergy() - pP->GetEnergy()) < levelTolerance)
+    {
       // Found
       return true;
     }
@@ -174,25 +187,30 @@ G4IsotopeProperty* G4IsotopeMagneticMomentTable::GetIsotope(G4int Z, G4int A, G4
                                                             G4Ions::G4FloatLevelBase /*flb*/)
 {
   G4IsotopeProperty* fProperty = nullptr;
-  for (const auto fP : fIsotopeList) {
+  for (const auto fP : fIsotopeList)
+  {
     // check Z
-    if (fP->GetAtomicNumber() > Z) {
+    if (fP->GetAtomicNumber() > Z)
+    {
       // Not Found
       break;
     }
-    if (fP->GetAtomicNumber() < Z) {
+    if (fP->GetAtomicNumber() < Z)
+    {
       // next
       continue;
     }
 
     // check A
-    if (fP->GetAtomicMass() != A) {
+    if (fP->GetAtomicMass() != A)
+    {
       // next
       continue;
     }
 
     // check E
-    if (std::fabs(fP->GetEnergy() - E) < levelTolerance) {
+    if (std::fabs(fP->GetEnergy() - E) < levelTolerance)
+    {
       // Found
       fProperty = fP;
       // fP->DumpInfo();
@@ -206,24 +224,29 @@ G4IsotopeProperty* G4IsotopeMagneticMomentTable::GetIsotope(G4int Z, G4int A, G4
 G4IsotopeProperty* G4IsotopeMagneticMomentTable::GetIsotopeByIsoLvl(G4int Z, G4int A, G4int lvl)
 {
   G4IsotopeProperty* fProperty = nullptr;
-  for (const auto fP : fIsotopeList) {
+  for (const auto fP : fIsotopeList)
+  {
     // check Z
-    if (fP->GetAtomicNumber() > Z) {
+    if (fP->GetAtomicNumber() > Z)
+    {
       // Not Found
       break;
     }
-    if (fP->GetAtomicNumber() < Z) {
+    if (fP->GetAtomicNumber() < Z)
+    {
       // next
       continue;
     }
     // check A
-    if (fP->GetAtomicMass() != A) {
+    if (fP->GetAtomicMass() != A)
+    {
       // next
       continue;
     }
 
     // check isomerLevel
-    if (fP->GetIsomerLevel() == lvl) {
+    if (fP->GetIsomerLevel() == lvl)
+    {
       // Found
       fProperty = fP;
       // fP->DumpInfo();

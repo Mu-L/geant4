@@ -52,10 +52,8 @@
 //
 // -------------------------------------------------------------------
 
-
-
-#ifndef G4eDPWACoulombScatteringModel_h
-#define G4eDPWACoulombScatteringModel_h 1
+#ifndef G4EDPWACOULOMBSCATTERINGMODEL_HH
+#define G4EDPWACOULOMBSCATTERINGMODEL_HH
 
 #include "G4VEmModel.hh"
 #include "globals.hh"
@@ -65,74 +63,67 @@ class G4ParticleChangeForGamma;
 class G4ParticleDefinition;
 class G4DataVector;
 
-class G4eDPWACoulombScatteringModel : public G4VEmModel {
+class G4eDPWACoulombScatteringModel : public G4VEmModel
+{
+  public:
 
-public:
+    /**
+     * Constructor.
+     *
+     * @param[in] ismixed  Indicates if the model is for mixed or for pure single
+     *                     Coulomb scattering. Different type of tables are pre-
+     *                     pared for sampling polar angle of Coulomb scattering
+     *                     for mixed and for pure single scattering models: cosine
+     *                     of the polar scattering angle can be sampled in a
+     *                     restriced inteval (see fMuMin parameter).
+     * @param[in] isscpcor Indicates if scattering power correction should be used.
+     *                     Note, scattering power correction accounts the effects
+     *                     angular deflections due to sub-threshold ionisations
+     *                     when ionisation is described by using condensed history
+     *                     model (should be active only in this case).
+     */
+    G4eDPWACoulombScatteringModel(G4bool ismixed = false, G4bool isscpcor = true);
 
-  /**
-   * Constructor.
-   *
-   * @param[in] ismixed  Indicates if the model is for mixed or for pure single
-   *                     Coulomb scattering. Different type of tables are pre-
-   *                     pared for sampling polar angle of Coulomb scattering
-   *                     for mixed and for pure single scattering models: cosine
-   *                     of the polar scattering angle can be sampled in a
-   *                     restriced inteval (see fMuMin parameter).
-   * @param[in] isscpcor Indicates if scattering power correction should be used.
-   *                     Note, scattering power correction accounts the effects
-   *                     angular deflections due to sub-threshold ionisations
-   *                     when ionisation is described by using condensed history
-   *                     model (should be active only in this case).
-   */
-  G4eDPWACoulombScatteringModel(G4bool ismixed=false, G4bool isscpcor=true);
+    ~G4eDPWACoulombScatteringModel() override;
 
-  ~G4eDPWACoulombScatteringModel() override;
+    //
+    // Interface methods:
 
-  //
-  // Interface methods:
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void     Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    void InitialiseLocal(const G4ParticleDefinition*, G4VEmModel*) override;
 
-  void     InitialiseLocal(const G4ParticleDefinition*, G4VEmModel*) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double ekin, G4double Z,
+                                        G4double A, G4double prodcut, G4double emax) override;
 
-  G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double ekin,
-                                      G4double Z, G4double A, G4double prodcut,
-                                      G4double emax) override;
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  void     SampleSecondaries(std::vector<G4DynamicParticle*>*,
-                             const G4MaterialCutsCouple*,
-                             const G4DynamicParticle*,
-                             G4double tmin,
-                             G4double maxEnergy) override;
+    G4double MinPrimaryEnergy(const G4Material*, const G4ParticleDefinition*, G4double) override;
 
-  G4double MinPrimaryEnergy(const G4Material*, const G4ParticleDefinition*,
-                            G4double) override;
+    void SetTheDCS(G4eDPWAElasticDCS* theDCS) { fTheDCS = theDCS; }
 
-  void     SetTheDCS(G4eDPWAElasticDCS* theDCS) { fTheDCS = theDCS; }
+    G4eDPWAElasticDCS* GetTheDCS() { return fTheDCS; }
 
-  G4eDPWAElasticDCS* GetTheDCS() { return fTheDCS; }
+  private:
 
-
-private:
-
-  // Indicates if the model is mixed: MSC for soft (theta<theta_c), Singe
-  // Scattering(SS) for hard scatterings(theta>theta_c). SS otherwise.
-  // Note, that while the model provides restricted (elastic and transport)
-  // cross sections, it's responsible to handle, i.e. provide final state,
-  // only for the Singe Scattering part in case of a mixed model.
-  G4bool                     fIsMixedModel;
-  // indicates if scattering power correction should be applied: correction due
-  // to deflection in case of sub-threshold, inelastic interactions -> only in
-  // case of condensed history simulation of inonisation!
-  G4bool                     fIsScpCorrection;
-  // mu(theta)=0.5[1-cos(theta)]: the model porvides final states \in [fMuMin,1]
-  // NOTE: `theta` for this limit can be set in `G4EmParameters::SetMscThetaLimit`
-  G4double                   fMuMin;
-  // the object that provides cross sections and polar angle of scattering
-  G4eDPWAElasticDCS*         fTheDCS;
-  // particle change
-  G4ParticleChangeForGamma*  fParticleChange;
-
+    // Indicates if the model is mixed: MSC for soft (theta<theta_c), Singe
+    // Scattering(SS) for hard scatterings(theta>theta_c). SS otherwise.
+    // Note, that while the model provides restricted (elastic and transport)
+    // cross sections, it's responsible to handle, i.e. provide final state,
+    // only for the Singe Scattering part in case of a mixed model.
+    G4bool fIsMixedModel;
+    // indicates if scattering power correction should be applied: correction due
+    // to deflection in case of sub-threshold, inelastic interactions -> only in
+    // case of condensed history simulation of inonisation!
+    G4bool fIsScpCorrection;
+    // mu(theta)=0.5[1-cos(theta)]: the model porvides final states \in [fMuMin,1]
+    // NOTE: `theta` for this limit can be set in `G4EmParameters::SetMscThetaLimit`
+    G4double fMuMin;
+    // the object that provides cross sections and polar angle of scattering
+    G4eDPWAElasticDCS* fTheDCS;
+    // particle change
+    G4ParticleChangeForGamma* fParticleChange;
 };
 
 #endif

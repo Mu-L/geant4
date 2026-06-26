@@ -27,26 +27,24 @@
 
 #include "G4RayTracerQtViewer.hh"
 
-#include "G4VSceneHandler.hh"
-#include "G4Scene.hh"
-#include "G4TheMTRayTracer.hh"
 #include "G4RTJpegMaker.hh"
 #include "G4RTQtScanner.hh"
+#include "G4Scene.hh"
+#include "G4TheMTRayTracer.hh"
 #include "G4UImanager.hh"
+#include "G4VSceneHandler.hh"
 
 #include <cstdlib>
 
-G4RayTracerQtViewer::G4RayTracerQtViewer
-(G4VSceneHandler& sceneHandler, const G4String& name):
-G4RayTracerViewer
-(sceneHandler, name,
- G4TheMTRayTracer::Instance(new G4RTJpegMaker, new G4RTQtScanner))
+G4RayTracerQtViewer::G4RayTracerQtViewer(G4VSceneHandler& sceneHandler, const G4String& name)
+  : G4RayTracerViewer(sceneHandler, name,
+                      G4TheMTRayTracer::Instance(new G4RTJpegMaker, new G4RTQtScanner))
 {}
 
 G4RayTracerQtViewer::~G4RayTracerQtViewer() {}
 
-void G4RayTracerQtViewer::Initialise() {
-
+void G4RayTracerQtViewer::Initialise()
+{
   G4RayTracerViewer::Initialise();
 
   fVP.SetAutoRefresh(true);
@@ -54,7 +52,8 @@ void G4RayTracerQtViewer::Initialise() {
 
   // Set up Qt Window...
   G4RTQtScanner* theQtScanner = (G4RTQtScanner*)theTracer->GetScanner();
-  if (!theQtScanner->GetQtWindow(fName,fVP)) {
+  if (!theQtScanner->GetQtWindow(fName, fVP))
+  {
     G4cerr << "G4RayTracerQtViewer::Initialise: No scanner" << G4endl;
     fViewId = -1;  // This flags an error.
     return;

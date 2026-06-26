@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Filter trajectories according to charge. Only registered 
+// Filter trajectories according to charge. Only registered
 // charges will pass the filter.
 //
 // Jane Tinslay, May 2006
@@ -34,40 +34,45 @@
 
 #include "G4SmartFilter.hh"
 #include "G4VTrajectory.hh"
+
 #include <vector>
 
-class G4TrajectoryChargeFilter : public G4SmartFilter<G4VTrajectory> {
+class G4TrajectoryChargeFilter : public G4SmartFilter<G4VTrajectory>
+{
+  public:  // With description
 
-public: // With description
- 
-  // Construct with filter name
-  G4TrajectoryChargeFilter(const G4String& name = "Unspecified");
-  
-  virtual ~G4TrajectoryChargeFilter();
+    // Construct with filter name
+    G4TrajectoryChargeFilter(const G4String& name = "Unspecified");
 
-  // Evaluate this trajectory
-  virtual bool Evaluate(const G4VTrajectory&) const;
+    virtual ~G4TrajectoryChargeFilter();
 
-  // Print configuration
-  virtual void Print(std::ostream& ostr) const;
+    // Evaluate this trajectory
+    virtual bool Evaluate(const G4VTrajectory&) const;
 
-  // Clear filter
-  virtual void Clear();
+    // Print configuration
+    virtual void Print(std::ostream& ostr) const;
 
-  // Configuration function
-  void Add(const G4String& particle);
+    // Clear filter
+    virtual void Clear();
 
-private:
+    // Configuration function
+    void Add(const G4String& particle);
 
-  enum MyCharge {Negative=-1, Neutral=0, Positive=1}; 
+  private:
 
-  G4bool ConvertToCharge(const G4String&, MyCharge&);
+    enum MyCharge
+    {
+      Negative = -1,
+      Neutral = 0,
+      Positive = 1
+    };
 
-  void Add(const MyCharge& chgear);  
+    G4bool ConvertToCharge(const G4String&, MyCharge&);
 
-  // Data member
-  std::vector<MyCharge> fCharges;
+    void Add(const MyCharge& chgear);
 
+    // Data member
+    std::vector<MyCharge> fCharges;
 };
 
 #endif

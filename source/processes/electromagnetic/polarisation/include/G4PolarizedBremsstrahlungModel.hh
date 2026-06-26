@@ -36,8 +36,8 @@
 //   electrons and positrons
 // -------------------------------------------------------------------
 
-#ifndef G4PolarizedBremsstrahlungModel_h
-#define G4PolarizedBremsstrahlungModel_h 1
+#ifndef G4POLARIZEDBREMSSTRAHLUNGMODEL_HH
+#define G4POLARIZEDBREMSSTRAHLUNGMODEL_HH
 
 #include "G4SeltzerBergerModel.hh"
 
@@ -49,29 +49,27 @@ class G4VPolarizedXS;
 
 class G4PolarizedBremsstrahlungModel : public G4SeltzerBergerModel
 {
- public:
-  explicit G4PolarizedBremsstrahlungModel(
-    const G4ParticleDefinition* p = nullptr, const G4String& nam = "PolBrem");
+  public:
 
-  virtual ~G4PolarizedBremsstrahlungModel() override;
+    explicit G4PolarizedBremsstrahlungModel(const G4ParticleDefinition* p = nullptr,
+                                            const G4String& nam = "PolBrem");
 
-  virtual void Initialise(const G4ParticleDefinition*,
-                          const G4DataVector&) override;
+    virtual ~G4PolarizedBremsstrahlungModel() override;
 
-  virtual void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-                                 const G4MaterialCutsCouple*,
-                                 const G4DynamicParticle*, G4double tmin,
-                                 G4double maxEnergy) override;
+    virtual void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  inline const G4Element* SelectedAtom();
+    virtual void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                                   const G4DynamicParticle*, G4double tmin,
+                                   G4double maxEnergy) override;
 
-  G4PolarizedBremsstrahlungModel& operator=(
-    const G4PolarizedBremsstrahlungModel& right) = delete;
-  G4PolarizedBremsstrahlungModel(const G4PolarizedBremsstrahlungModel&) =
-    delete;
+    inline const G4Element* SelectedAtom();
 
- private:
-  G4VPolarizedXS* fCrossSectionCalculator;
+    G4PolarizedBremsstrahlungModel& operator=(const G4PolarizedBremsstrahlungModel& right) = delete;
+    G4PolarizedBremsstrahlungModel(const G4PolarizedBremsstrahlungModel&) = delete;
+
+  private:
+
+    G4VPolarizedXS* fCrossSectionCalculator;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

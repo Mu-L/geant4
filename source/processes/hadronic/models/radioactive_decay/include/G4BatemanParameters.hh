@@ -23,8 +23,8 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4BatemanParameters_h
-#define G4BatemanParameters_h 1
+#ifndef G4BATEMANPARAMETERS_HH
+#define G4BATEMANPARAMETERS_HH
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
@@ -40,55 +40,51 @@
 
 #include "G4ios.hh"
 #include "globals.hh"
+
 #include <vector>
 
 class G4BatemanParameters
 {
+  public:
 
-public:
-  G4BatemanParameters();
+    G4BatemanParameters();
 
-  virtual ~G4BatemanParameters();
+    virtual ~G4BatemanParameters();
 
-  // copy constructor and assignment operator
-  G4BatemanParameters(const G4BatemanParameters &);
-  G4BatemanParameters& operator=(const G4BatemanParameters&);
+    // copy constructor and assignment operator
+    G4BatemanParameters(const G4BatemanParameters&);
+    G4BatemanParameters& operator=(const G4BatemanParameters&);
 
-  // equality operators
-  G4bool operator==(const G4BatemanParameters& right) const
-    {return (this == &right);};
-  G4bool operator!=(const G4BatemanParameters& right) const
-    {return (this != &right);};
+    // equality operators
+    G4bool operator==(const G4BatemanParameters& right) const { return (this == &right); };
+    G4bool operator!=(const G4BatemanParameters& right) const { return (this != &right); };
 
-  void DumpInfo();
+    void DumpInfo();
 
-  inline G4int GetZ() const {return Z;}
-  inline G4int GetA() const {return A;}
-  inline G4double GetE() const {return E;}
-  inline G4int GetGeneration() const {return generation;}
-  inline std::vector<G4double> GetAcoefficients() const
-    {return Acoeffs;}
-  inline std::vector<G4double> GetTaus() const {return taus;}
+    inline G4int GetZ() const { return Z; }
+    inline G4int GetA() const { return A; }
+    inline G4double GetE() const { return E; }
+    inline G4int GetGeneration() const { return generation; }
+    inline std::vector<G4double> GetAcoefficients() const { return Acoeffs; }
+    inline std::vector<G4double> GetTaus() const { return taus; }
 
-  inline void SetZ(G4int value) {Z = value;}
-  inline void SetA(G4int value) {A = value;}
-  inline void SetE(G4double value) {E = value;}
-  inline void SetGeneration(G4int value) {generation = value;}
-  inline void SetAcoefficients(std::vector<G4double> value)
-    {Acoeffs = value;}
-  inline void SetTaus(std::vector<G4double> value) {taus = value;}
+    inline void SetZ(G4int value) { Z = value; }
+    inline void SetA(G4int value) { A = value; }
+    inline void SetE(G4double value) { E = value; }
+    inline void SetGeneration(G4int value) { generation = value; }
+    inline void SetAcoefficients(std::vector<G4double> value) { Acoeffs = value; }
+    inline void SetTaus(std::vector<G4double> value) { taus = value; }
 
-  void SetParameters(G4int /*Z*/, G4int /*A*/, G4double /*E*/, G4int /*G*/,
-                     std::vector<G4double> /*Coeffs*/,
-                     std::vector<G4double> /*taus*/);
+    void SetParameters(G4int /*Z*/, G4int /*A*/, G4double /*E*/, G4int /*G*/,
+                       std::vector<G4double> /*Coeffs*/, std::vector<G4double> /*taus*/);
 
-private:
-  G4int Z;
-  G4int A;
-  G4double E;
-  G4int generation;
-  std::vector<G4double> Acoeffs;
-  std::vector<G4double> taus;
+  private:
 
+    G4int Z;
+    G4int A;
+    G4double E;
+    G4int generation;
+    std::vector<G4double> Acoeffs;
+    std::vector<G4double> taus;
 };
 #endif

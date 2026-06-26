@@ -36,8 +36,8 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4FastSimulationProcessType_h
-#define G4FastSimulationProcessType_h 1
+#ifndef G4FASTSIMULATIONPROCESSTYPE_HH
+#define G4FASTSIMULATIONPROCESSTYPE_HH
 
 enum G4FastSimulationProcessType
 {

@@ -38,26 +38,24 @@
 class G4AnalysisVerbose
 {
   public:
+
     G4AnalysisVerbose();
     ~G4AnalysisVerbose() = default;
 
-    void Message(G4int verboseLevel,
-                 const G4String& action,
-                 const G4String& object,
-                 const G4String& objectName,
-                 G4bool success = true) const;
+    void Message(G4int verboseLevel, const G4String& action, const G4String& object,
+                 const G4String& objectName, G4bool success = true) const;
 
   private:
+
     // Static data members
     static constexpr int fkMaxLevel = 4;
 
     // Data members
-    std::array<G4String, fkMaxLevel> fDoneText 
-      { { G4String("- done"), G4String("- done"), G4String(), G4String() } };
-    std::array<G4String, fkMaxLevel> fToBeDoneText 
-      { { G4String(), G4String(), G4String("done "), G4String("going to ") } };
-    G4String fFailureText
-      { "has failed" };
+    std::array<G4String, fkMaxLevel> fDoneText{
+      {G4String("- done"), G4String("- done"), G4String(), G4String()}};
+    std::array<G4String, fkMaxLevel> fToBeDoneText{
+      {G4String(), G4String(), G4String("done "), G4String("going to ")}};
+    G4String fFailureText{"has failed"};
 };
 
 #endif

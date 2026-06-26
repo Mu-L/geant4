@@ -27,8 +27,8 @@
 //
 //
 
-#ifndef G4VRTScanner_H
-#define G4VRTScanner_H 1
+#ifndef G4VRTSCANNER_HH
+#define G4VRTSCANNER_HH
 
 // class description:
 //
@@ -37,28 +37,25 @@
 
 #include "globals.hh"
 
-class G4VRTScanner {
+class G4VRTScanner
+{
+  public:  // with description
 
-public: // with description
+    G4VRTScanner();
+    virtual ~G4VRTScanner();
 
-  G4VRTScanner();
-  virtual ~G4VRTScanner();
-  
-  virtual void Initialize(G4int nRow, G4int nColumn) = 0;
-  // Intialises scanner for window with nRow rows and nColumn columns.
+    virtual void Initialize(G4int nRow, G4int nColumn) = 0;
+    // Intialises scanner for window with nRow rows and nColumn columns.
 
-  virtual G4bool Coords(G4int& iRow, G4int& iColumn) = 0;
-  // Supplies coordinate (iRow,iColumn) and returns false when the
-  // sequence has finished, i.e., on the call *after* suplying the
-  // last valid coordinate.
+    virtual G4bool Coords(G4int& iRow, G4int& iColumn) = 0;
+    // Supplies coordinate (iRow,iColumn) and returns false when the
+    // sequence has finished, i.e., on the call *after* suplying the
+    // last valid coordinate.
 
-  virtual void Draw
-  (unsigned char red, unsigned char green, unsigned char blue);
-  // Draw coloured square at current position.
-
+    virtual void Draw(unsigned char red, unsigned char green, unsigned char blue);
+    // Draw coloured square at current position.
 };
 
-inline
-void G4VRTScanner::Draw(unsigned char, unsigned char, unsigned char) {}
+inline void G4VRTScanner::Draw(unsigned char, unsigned char, unsigned char) {}
 
 #endif

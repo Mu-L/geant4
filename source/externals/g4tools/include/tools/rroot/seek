@@ -10,14 +10,20 @@
 
 #include "../typedefs"
 
-namespace tools {
-namespace rroot {
+namespace tools
+{
+namespace rroot
+{
 
 typedef int64 seek;
 typedef int seek32;
 
-inline uint32 big_file_version_tag() {return 1000;}
+inline uint32 big_file_version_tag()
+{
+  return 1000;
+}
 
-}}
+}  // namespace rroot
+}  // namespace tools
 
 #endif

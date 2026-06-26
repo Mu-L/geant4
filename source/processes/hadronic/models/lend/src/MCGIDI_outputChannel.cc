@@ -48,6 +48,8 @@ LUPI_HOST OutputChannel::OutputChannel( GIDI::OutputChannel const *a_outputChann
         m_products( ),
         m_totalDelayedNeutronMultiplicity( nullptr ) {
 
+    Distributions::Distribution *twobodyFirstProductDistribution = nullptr;
+
     if( a_outputChannel != nullptr ) {
         m_channelType = a_outputChannel->twoBody( ) ? ChannelType::twoBody : ChannelType::uncorrelatedBodies;
         m_isFission = a_outputChannel->isFission( );
@@ -64,8 +66,13 @@ LUPI_HOST OutputChannel::OutputChannel( GIDI::OutputChannel const *a_outputChann
         GIDI::Suite const &products = a_outputChannel->products( );
         if( m_channelType == ChannelType::twoBody ) {
             if( !a_setupInfo.m_protare.isTNSL_ProtareSingle( ) ) {
-                GIDI::Product const *product = products.get<GIDI::Product>( 1 );
-                a_setupInfo.m_product2Mass = product->particle( ).mass( "MeV/c**2" );         // Includes nuclear excitation energy.
+                a_setupInfo.m_twoBodyOrder = TwoBodyOrder::firstParticle;
+                GIDI::Product const *product0 = products.get<GIDI::Product>( 0 );
+                a_setupInfo.m_twobodyProduct1Mass = product0->particle( ).mass( "MeV/c**2" );         // Includes nuclear excitation energy.
+                a_setupInfo.m_productMass = a_setupInfo.m_twobodyProduct1Mass;
+                GIDI::Product const *product1 = products.get<GIDI::Product>( 1 );
+                a_setupInfo.m_twobodyProduct2Mass = product1->particle( ).mass( "MeV/c**2" );         // Includes nuclear excitation energy.
+                twobodyFirstProductDistribution = Distributions::parseGIDI( product0->distribution( ), a_setupInfo, a_settings );
             }
         }
 
@@ -114,17 +121,23 @@ LUPI_HOST OutputChannel::OutputChannel( GIDI::OutputChannel const *a_outputChann
             m_products.push_back( product );
         }
 
+        bool firstTwoBodyAdded = false;
         for( std::size_t i1 = 0; i1 < a_outputChannel->products( ).size( ); ++i1 ) {
             if( productsToDo.find( i1 ) == productsToDo.end( ) ) continue;
 
             GIDI::Product const *product = products.get<GIDI::Product>( i1 );
+
+            a_setupInfo.m_twobodyFirstProductDistribution = twobodyFirstProductDistribution;
 
             if( a_setupInfo.m_isPairProduction ) {
                 if( !a_settings.sampleNonTransportingParticles( ) ) continue;
                 if( a_setupInfo.m_protare.targetIntid( ) != MCGIDI_popsIntid( a_setupInfo.m_pops, product->particle( ).ID( ) ) ) continue;
             }
             a_setupInfo.m_twoBodyOrder = TwoBodyOrder::notApplicable;
-            if( m_channelType == ChannelType::twoBody ) a_setupInfo.m_twoBodyOrder = ( ( i1 == 0 ? TwoBodyOrder::firstParticle : TwoBodyOrder::secondParticle ) );
+            if( m_channelType == ChannelType::twoBody ) {
+                a_setupInfo.m_twoBodyOrder = ( ( ( i1 == 0 ) || ( !firstTwoBodyAdded ) ) ? TwoBodyOrder::firstParticle : TwoBodyOrder::secondParticle );
+                firstTwoBodyAdded = i1 == 0;
+            }
             m_products.push_back( new Product( product, a_setupInfo, a_settings, a_particles, m_isFission ) );
 
             if( addIncoherentPhotoAtomicScatteringElectron && ( product->particle( ).ID( ) == PoPI::IDs::photon ) ) {
@@ -154,19 +167,16 @@ LUPI_HOST OutputChannel::OutputChannel( GIDI::OutputChannel const *a_outputChann
 
                     GIDI::Functions::Function1dForm const *form1d = multiplicity.get<GIDI::Functions::Function1dForm>( 0 );
 
-                    if( form1d->type( ) == GIDI::FormType::unspecified1d ) {
+                    GIDI::Functions::XYs1d *multiplicityXYs1d = form1d->asXYs1d( true, 1e-4, 1e-6, 1e-6 );
+                    if( multiplicityXYs1d == nullptr ) {
+                        std::cerr << "OutputChannel::OutputChannel: GIDI::DelayedNeutron multiplicity failed to convert "
+                                + form1d->label( ) + " to asXYs1d." << std::endl;
                         missingData = true;
                         break;
                     }
 
-                    if( form1d->type( ) != GIDI::FormType::XYs1d ) {
-                        std::cerr << "OutputChannel::OutputChannel: GIDI::DelayedNeutron multiplicity type != GIDI::FormType::XYs1d" << std::endl;
-                        missingData = true;
-                        break;
-                    }
-
-                    GIDI::Functions::XYs1d const *multiplicityXYs1d = static_cast<GIDI::Functions::XYs1d const *>( form1d );
                     totalDelayedNeutronMultiplicity += *multiplicityXYs1d;
+                    delete multiplicityXYs1d;
 
                     m_delayedNeutrons.push_back( new DelayedNeutron( static_cast<int>( i1 ), delayedNeutron, a_setupInfo, a_settings, a_particles ) );
                 }
@@ -175,6 +185,8 @@ LUPI_HOST OutputChannel::OutputChannel( GIDI::OutputChannel const *a_outputChann
         }
 
         m_hasFinalStatePhotons = a_setupInfo.m_hasFinalStatePhotons;
+
+        deleteDistribution( twobodyFirstProductDistribution );
     }
 }
 

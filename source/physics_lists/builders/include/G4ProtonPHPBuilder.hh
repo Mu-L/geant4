@@ -32,41 +32,34 @@
 //----------------------------------------------------------------------------
 //
 
-#ifndef G4ProtonPHPBuilder_h
-#define G4ProtonPHPBuilder_h 1
-
-#include "globals.hh"
+#ifndef G4PROTONPHPBUILDER_HH
+#define G4PROTONPHPBUILDER_HH
 
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
-#include "G4VProtonBuilder.hh"
-
 #include "G4ParticleHPInelastic.hh"
+#include "G4VProtonBuilder.hh"
+#include "globals.hh"
 
 class G4ProtonPHPBuilder : public G4VProtonBuilder
 {
-public: 
-  G4ProtonPHPBuilder();
-  virtual ~G4ProtonPHPBuilder() {}
-  
-  virtual void Build(G4HadronInelasticProcess * aP) final override;
-  virtual void Build(G4HadronElasticProcess * aP) final override;
-  
-  virtual void SetMinEnergy(G4double aM) final override
-  {
-    theMin=aM;
-  }
-  virtual void SetMaxEnergy(G4double aM) final override
-  {
-    theMax=aM;
-  }
-  
-  using G4VProtonBuilder::Build; //Prevent compiler warning
+  public:
 
-private:
-  G4double theMin;
-  G4double theMax;
+    G4ProtonPHPBuilder();
+    virtual ~G4ProtonPHPBuilder() {}
+
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
+    virtual void Build(G4HadronElasticProcess* aP) final override;
+
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+    virtual void SetMaxEnergy(G4double aM) final override { theMax = aM; }
+
+    using G4VProtonBuilder::Build;  // Prevent compiler warning
+
+  private:
+
+    G4double theMin;
+    G4double theMax;
 };
 
 #endif
-

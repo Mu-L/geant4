@@ -45,36 +45,30 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4BraggNoDeltaModel_h
-#define G4BraggNoDeltaModel_h 1
+#ifndef G4BRAGGNODELTAMODEL_HH
+#define G4BRAGGNODELTAMODEL_HH
 
 #include "G4BraggIonModel.hh"
 
 class G4BraggNoDeltaModel : public G4BraggIonModel
 {
+  public:
 
-public:
+    explicit G4BraggNoDeltaModel(const G4ParticleDefinition* p = nullptr,
+                                 const G4String& nam = "BraggNoD");
 
-  explicit G4BraggNoDeltaModel(const G4ParticleDefinition* p = nullptr,
-                      const G4String& nam = "BraggNoD");
+    ~G4BraggNoDeltaModel() override;
 
-  ~G4BraggNoDeltaModel() override;
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                  G4double kineticEnergy, G4double cutEnergy) override;
 
-  G4double ComputeDEDXPerVolume(const G4Material*,
-				const G4ParticleDefinition*,
-				G4double kineticEnergy,
-				G4double cutEnergy) override;
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy,
+                                   G4double maxEnergy) override;
 
-  G4double CrossSectionPerVolume(const G4Material*,
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
-
-  // hide assignment operator
-  G4BraggNoDeltaModel & operator=(const  G4BraggNoDeltaModel &right) = delete;
-  G4BraggNoDeltaModel(const  G4BraggNoDeltaModel&) = delete;
-
+    // hide assignment operator
+    G4BraggNoDeltaModel& operator=(const G4BraggNoDeltaModel& right) = delete;
+    G4BraggNoDeltaModel(const G4BraggNoDeltaModel&) = delete;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....

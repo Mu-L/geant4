@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Filter trajectories according to particle type. Only registered 
+// Filter trajectories according to particle type. Only registered
 // particle types will pass the filter.
 //
 // Jane Tinslay, March 2006
@@ -34,34 +34,34 @@
 
 #include "G4SmartFilter.hh"
 #include "G4VTrajectory.hh"
+
 #include <vector>
 
-class G4TrajectoryParticleFilter : public G4SmartFilter<G4VTrajectory> {
+class G4TrajectoryParticleFilter : public G4SmartFilter<G4VTrajectory>
+{
+  public:  // With description
 
-public: // With description
- 
-  // Construct with filter name
-  G4TrajectoryParticleFilter(const G4String& name = "Unspecified");
-  
-  virtual ~G4TrajectoryParticleFilter();
+    // Construct with filter name
+    G4TrajectoryParticleFilter(const G4String& name = "Unspecified");
 
-  // Evaluate this trajectory
-  virtual bool Evaluate(const G4VTrajectory&) const;
+    virtual ~G4TrajectoryParticleFilter();
 
-  // Print configuration
-  virtual void Print(std::ostream& ostr) const;
+    // Evaluate this trajectory
+    virtual bool Evaluate(const G4VTrajectory&) const;
 
-  // Clear filter
-  virtual void Clear();
+    // Print configuration
+    virtual void Print(std::ostream& ostr) const;
 
-  // Configuration function
-  void Add(const G4String& particle);
+    // Clear filter
+    virtual void Clear();
 
-private:
+    // Configuration function
+    void Add(const G4String& particle);
 
-  // Data member
-  std::vector<G4String> fParticles;
+  private:
 
+    // Data member
+    std::vector<G4String> fParticles;
 };
 
 #endif

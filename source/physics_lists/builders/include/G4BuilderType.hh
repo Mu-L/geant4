@@ -37,21 +37,20 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4BuilderType_h
-#define G4BuilderType_h 1
+#ifndef G4BUILDERTYPE_HH
+#define G4BUILDERTYPE_HH
 
-enum G4BuilderType 
-{ 
-  bUnknown = 0, 
-  bTransportation = 1, 
-  bElectromagnetic = 2, 
+enum G4BuilderType
+{
+  bUnknown = 0,
+  bTransportation = 1,
+  bElectromagnetic = 2,
   bEmExtra = 3,
   bDecay = 4,
-  bHadronElastic = 5, 
+  bHadronElastic = 5,
   bHadronInelastic = 6,
   bStopping = 7,
   bIons = 8
 };
 
 #endif
-

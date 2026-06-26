@@ -34,7 +34,6 @@
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithAnInteger.hh"
-#include "G4UIcmdWithoutParameter.hh"
 #include "G4UIdirectory.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -87,7 +86,7 @@ ExGflashMessenger::ExGflashMessenger(ExGflashDetectorConstruction* Det) : fDetec
   fNbCrysCmd->SetGuidance("set numbber of crystals in row/col");
   fNbCrysCmd->SetGuidance("ncrys  - number of crystals ");
   fNbCrysCmd->SetParameterName("ncrys", false);
-  fNbCrysCmd->SetRange("ncrys > 0");
+  fNbCrysCmd->SetRange("ncrys > 0 && ncrys <= 10");
   fNbCrysCmd->AvailableForStates(G4State_PreInit);
   fNbCrysCmd->SetToBeBroadcasted(false);
 
@@ -131,31 +130,38 @@ ExGflashMessenger::~ExGflashMessenger()
 
 void ExGflashMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
-  if (command == fMaterCmd) {
+  if (command == fMaterCmd)
+  {
     fDetector->SetMaterial(newValue);
   }
 
-  if (command == fNbCrysCmd) {
+  if (command == fNbCrysCmd)
+  {
     fDetector->SetNbOfCrystals(fNbCrysCmd->GetNewIntValue(newValue));
   }
 
-  if (command == fWCrysCmd) {
+  if (command == fWCrysCmd)
+  {
     fDetector->SetCrystalWidth(fWCrysCmd->GetNewDoubleValue(newValue));
   }
 
-  if (command == fLCrysCmd) {
+  if (command == fLCrysCmd)
+  {
     fDetector->SetCrystalLength(fLCrysCmd->GetNewDoubleValue(newValue));
   }
 
-  if (command == fVerbose) {
+  if (command == fVerbose)
+  {
     fDetector->SetVerbose(fVerbose->GetNewIntValue(newValue));
   }
 
-  if (command == fLBinCmd) {
+  if (command == fLBinCmd)
+  {
     fDetector->SetLBining(fLBinCmd->GetNew3VectorValue(newValue));
   }
 
-  if (command == fRBinCmd) {
+  if (command == fRBinCmd)
+  {
     fDetector->SetRBining(fRBinCmd->GetNew3VectorValue(newValue));
   }
 }

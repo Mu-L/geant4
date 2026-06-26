@@ -12,7 +12,10 @@
 /slowing/det/setTrackingCut 9 eV
 #
 # Physics
-/slowing/phys/addPhysics  dna
+/slowing/phys/addPhysics  dna_opt2
+#/slowing/phys/addPhysics  dna_opt4
+#/slowing/phys/addPhysics  dna_opt6
+#/slowing/phys/addPhysics  dna_opt8
 #
 # Initialization
 /run/initialize

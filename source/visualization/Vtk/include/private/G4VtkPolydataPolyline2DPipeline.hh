@@ -39,6 +39,7 @@ class vtkActor2D;
 class G4VtkPolydataPolyline2DPipeline : public G4VtkPolydataPipeline
 {
   public:
+
     G4VtkPolydataPolyline2DPipeline(G4String name, const G4VtkVisContext& vc,
                                     const G4VisAttributes* pVA);
     ~G4VtkPolydataPolyline2DPipeline() override = default;
@@ -54,6 +55,7 @@ class G4VtkPolydataPolyline2DPipeline : public G4VtkPolydataPipeline
     static std::size_t MakeHash(const G4VisAttributes* va);
 
   protected:
+
     vtkSmartPointer<vtkPolyDataMapper2D> mapper2D;
     vtkSmartPointer<vtkActor2D> actor2D;
 };

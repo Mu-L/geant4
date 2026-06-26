@@ -32,12 +32,12 @@
 // Author: Zoltan Torzsok, November 2007
 // --------------------------------------------------------------------
 #ifndef G4GDMLWRITEMATERIALS_HH
-#define G4GDMLWRITEMATERIALS_HH 1
-
-#include "G4Types.hh"
-#include <vector>
+#define G4GDMLWRITEMATERIALS_HH
 
 #include "G4GDMLWriteDefine.hh"
+#include "G4Types.hh"
+
+#include <vector>
 
 class G4Isotope;
 class G4Element;
@@ -69,10 +69,8 @@ class G4GDMLWriteMaterials : public G4GDMLWriteDefine
     void ElementWrite(const G4Element* const);
     void MaterialWrite(const G4Material* const);
     void PropertyWrite(xercesc::DOMElement*, const G4Material* const);
-    void PropertyVectorWrite(const G4String&,
-                             const G4PhysicsFreeVector* const);
-    void PropertyConstWrite(const G4String&, const G4double,
-                            const G4MaterialPropertiesTable*);
+    void PropertyVectorWrite(const G4String&, const G4PhysicsFreeVector* const);
+    void PropertyConstWrite(const G4String&, const G4double, const G4MaterialPropertiesTable*);
 
   protected:
 

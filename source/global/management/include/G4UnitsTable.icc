@@ -33,30 +33,48 @@
 // --- G4UnitsDefinition
 // ---------------------
 
-inline const G4String& G4UnitDefinition::GetName() const { return Name; }
+inline const G4String& G4UnitDefinition::GetName() const
+{
+  return Name;
+}
 
 inline const G4String& G4UnitDefinition::GetSymbol() const
 {
   return SymbolName;
 }
 
-inline G4double G4UnitDefinition::GetValue() const { return Value; }
+inline G4double G4UnitDefinition::GetValue() const
+{
+  return Value;
+}
 
 // -------------------
 // --- G4UnitsCategory
 // -------------------
 
-inline const G4String& G4UnitsCategory::GetName() const { return Name; }
+inline const G4String& G4UnitsCategory::GetName() const
+{
+  return Name;
+}
 
-inline G4UnitsContainer& G4UnitsCategory::GetUnitsList() { return UnitsList; }
+inline G4UnitsContainer& G4UnitsCategory::GetUnitsList()
+{
+  return UnitsList;
+}
 
-inline G4int G4UnitsCategory::GetNameMxLen() const { return NameMxLen; }
+inline G4int G4UnitsCategory::GetNameMxLen() const
+{
+  return NameMxLen;
+}
 
-inline G4int G4UnitsCategory::GetSymbMxLen() const { return SymbMxLen; }
+inline G4int G4UnitsCategory::GetSymbMxLen() const
+{
+  return SymbMxLen;
+}
 
 inline void G4UnitsCategory::UpdateNameMxLen(G4int len)
 {
-  if(NameMxLen < len)
+  if (NameMxLen < len)
   {
     NameMxLen = len;
   }
@@ -64,15 +82,21 @@ inline void G4UnitsCategory::UpdateNameMxLen(G4int len)
 
 inline void G4UnitsCategory::UpdateSymbMxLen(G4int len)
 {
-  if(SymbMxLen < len)
+  if (SymbMxLen < len)
   {
     SymbMxLen = len;
   }
 }
 
-inline G4double* G4BestUnit::GetValue() { return Value; }
+inline G4double* G4BestUnit::GetValue()
+{
+  return Value;
+}
 
-inline const G4String& G4BestUnit::GetCategory() const { return Category; }
+inline const G4String& G4BestUnit::GetCategory() const
+{
+  return Category;
+}
 
 inline std::size_t G4BestUnit::GetIndexOfCategory() const
 {

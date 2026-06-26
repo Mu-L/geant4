@@ -24,53 +24,57 @@
 // ********************************************************************
 //
 //
-// Filter trajectories according to volume name. Only registered 
+// Filter trajectories according to volume name. Only registered
 // volumes will pass the filter.
 //
 // Jane Tinslay May 2006
 //
 #include "G4TrajectoryOriginVolumeFilter.hh"
+
 #include "G4TransportationManager.hh"
 #include "G4VTrajectoryPoint.hh"
 
 G4TrajectoryOriginVolumeFilter::G4TrajectoryOriginVolumeFilter(const G4String& name)
-  :G4SmartFilter<G4VTrajectory>(name)
+  : G4SmartFilter<G4VTrajectory>(name)
 {}
 
 G4TrajectoryOriginVolumeFilter::~G4TrajectoryOriginVolumeFilter() {}
 
-bool
-G4TrajectoryOriginVolumeFilter::Evaluate(const G4VTrajectory& traj) const
+bool G4TrajectoryOriginVolumeFilter::Evaluate(const G4VTrajectory& traj) const
 {
   G4VTrajectoryPoint* aTrajectoryPoint = traj.GetPoint(0);
-  assert (0 != aTrajectoryPoint);
+  assert(0 != aTrajectoryPoint);
 
   G4Navigator* navigator =
-  G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
-  
-  G4VPhysicalVolume* volume = navigator->LocateGlobalPointAndSetup
-  (aTrajectoryPoint->GetPosition(), nullptr,false,true);
+    G4TransportationManager::GetTransportationManager()->GetNavigatorForTracking();
+
+  G4VPhysicalVolume* volume =
+    navigator->LocateGlobalPointAndSetup(aTrajectoryPoint->GetPosition(), nullptr, false, true);
 
   // Logical volume
   G4LogicalVolume* logicalVolume = volume->GetLogicalVolume();
-  assert (0 != logicalVolume);
+  assert(0 != logicalVolume);
 
   // Get volume names
   G4String logicalName = logicalVolume->GetName();
   G4String physicalName = volume->GetName();
 
-  if (GetVerbose()) {
-    G4cout<<"G4TrajectoryOriginVolumeFilter processing trajectory with originating volume "<<G4endl;
-    G4cout<<"logical and physical names:  "<<logicalName<<" "<<physicalName<<G4endl;
+  if (GetVerbose())
+  {
+    G4cout << "G4TrajectoryOriginVolumeFilter processing trajectory with originating volume "
+           << G4endl;
+    G4cout << "logical and physical names:  " << logicalName << " " << physicalName << G4endl;
   }
   // Search for logical volume name
-  std::vector<G4String>::const_iterator iterLogical = std::find(fVolumes.begin(), fVolumes.end(), logicalName);
+  std::vector<G4String>::const_iterator iterLogical =
+    std::find(fVolumes.begin(), fVolumes.end(), logicalName);
 
   // Keep if logical volume registered
   if (iterLogical != fVolumes.end()) return true;
 
   // Repeat for physical volume name
-  std::vector<G4String>::const_iterator iterPhysical = std::find(fVolumes.begin(), fVolumes.end(), physicalName);
+  std::vector<G4String>::const_iterator iterPhysical =
+    std::find(fVolumes.begin(), fVolumes.end(), physicalName);
 
   if (iterPhysical != fVolumes.end()) return true;
 
@@ -78,26 +82,24 @@ G4TrajectoryOriginVolumeFilter::Evaluate(const G4VTrajectory& traj) const
   return false;
 }
 
-void
-G4TrajectoryOriginVolumeFilter::Add(const G4String& volume)
+void G4TrajectoryOriginVolumeFilter::Add(const G4String& volume)
 {
   fVolumes.push_back(volume);
 }
 
-void
-G4TrajectoryOriginVolumeFilter::Print(std::ostream& ostr) const
+void G4TrajectoryOriginVolumeFilter::Print(std::ostream& ostr) const
 {
-  ostr<<"Volume names registered: "<<G4endl;
+  ostr << "Volume names registered: " << G4endl;
   std::vector<G4String>::const_iterator iter = fVolumes.begin();
-  
-  while (iter != fVolumes.end()) {
-    ostr<<*iter<<G4endl;    
+
+  while (iter != fVolumes.end())
+  {
+    ostr << *iter << G4endl;
     iter++;
   }
 }
 
-void 
-G4TrajectoryOriginVolumeFilter::Clear()
+void G4TrajectoryOriginVolumeFilter::Clear()
 {
   // Clear volume vector
   fVolumes.clear();

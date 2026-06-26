@@ -31,26 +31,27 @@
 //		using interaction-specific distributions.
 //
 
-#ifndef G4CascadeFinalStateGenerator_hh
-#define G4CascadeFinalStateGenerator_hh 1
+#ifndef G4CASCADEFINALSTATEGENERATOR_HH
+#define G4CASCADEFINALSTATEGENERATOR_HH
 
-#include "globals.hh"
 #include "G4HadDecayGenerator.hh"
+#include "globals.hh"
+
 #include <vector>
 
 class G4InuclElementaryParticle;
 class G4CascadeFinalStateAlgorithm;
 
+class G4CascadeFinalStateGenerator : public G4HadDecayGenerator
+{
+  public:
 
-class G4CascadeFinalStateGenerator : public G4HadDecayGenerator {
-public:
-  G4CascadeFinalStateGenerator();
-  virtual ~G4CascadeFinalStateGenerator();
+    G4CascadeFinalStateGenerator();
+    virtual ~G4CascadeFinalStateGenerator();
 
-  // Configure algorithm (distributions) based on interaction
-  void Configure(G4InuclElementaryParticle* bullet,
-		 G4InuclElementaryParticle* target,
-		 const std::vector<G4int>& particle_kinds);
+    // Configure algorithm (distributions) based on interaction
+    void Configure(G4InuclElementaryParticle* bullet, G4InuclElementaryParticle* target,
+                   const std::vector<G4int>& particle_kinds);
 };
 
-#endif	/* G4CascadeFinalStateGenerator_hh */
+#endif /* G4CascadeFinalStateGenerator_hh */

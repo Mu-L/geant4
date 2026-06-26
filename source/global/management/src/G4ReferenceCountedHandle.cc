@@ -29,6 +29,7 @@
 // --------------------------------------------------------------------
 
 #include "G4ReferenceCountedHandle.hh"
+
 #include "G4Types.hh"
 
 G4Allocator<G4CountedObject<void>>*& aCountedObjectAllocator()
@@ -39,7 +40,6 @@ G4Allocator<G4CountedObject<void>>*& aCountedObjectAllocator()
 
 G4Allocator<G4ReferenceCountedHandle<void>>*& aRCHAllocator()
 {
-  G4ThreadLocalStatic G4Allocator<G4ReferenceCountedHandle<void>>* _instance =
-    nullptr;
+  G4ThreadLocalStatic G4Allocator<G4ReferenceCountedHandle<void>>* _instance = nullptr;
   return _instance;
 }

@@ -26,8 +26,8 @@
 
 // Author: Ivana Hrivnacova, IJCLab IN2P3/CNRS, 25/07/2024
 
-#ifndef G4AccType_h
-#define G4AccType_h 1
+#ifndef G4ACCTYPE_HH
+#define G4ACCTYPE_HH
 
 #include "globals.hh"
 
@@ -35,35 +35,39 @@
 
 // Enumeration for definition available accummulables
 
-enum class G4AccType {
-  kValue,        // G4AccValue<T>
-  kArray,        // G4AccArray<T>
-  kMap,          // G4AccMap<T>
-  kUnorderedMap, // G4AccUnorderedMap<T>
-  kVector,       // G4AccumulableVector<T>
-  kUser          // User type
+enum class G4AccType
+{
+  kValue,  // G4AccValue<T>
+  kArray,  // G4AccArray<T>
+  kMap,  // G4AccMap<T>
+  kUnorderedMap,  // G4AccUnorderedMap<T>
+  kVector,  // G4AccumulableVector<T>
+  kUser  // User type
 };
 
 // TODO: add G4String GetTypeName(G4AccType)
 
 // Helper class for printing
 //
-class G4PrintOptions {
+class G4PrintOptions
+{
   public:
-    enum Option : std::size_t {
-        kName = 0,
-        kType = 1,
-        kId = 2
+
+    enum Option : std::size_t
+    {
+      kName = 0,
+      kType = 1,
+      kId = 2
     };
 
-    G4PrintOptions() {
-        SetDefaults();
-    }
-    G4PrintOptions(std::initializer_list<Option> options) {
-        SetDefaults();
-        for (const Option& option : options) {
-            fValue.set(option);
-        }
+    G4PrintOptions() { SetDefaults(); }
+    G4PrintOptions(std::initializer_list<Option> options)
+    {
+      SetDefaults();
+      for (const Option& option : options)
+      {
+        fValue.set(option);
+      }
     }
     ~G4PrintOptions() = default;
 
@@ -71,8 +75,10 @@ class G4PrintOptions {
     bool Has(Option option) const { return fValue[option]; }
 
   private:
+
     // methods
-    void SetDefaults() {
+    void SetDefaults()
+    {
       fValue.set(kName);
       fValue.set(kType);
     }
@@ -87,12 +93,12 @@ namespace G4Accumulables
 
 // Constant expressions
 //
-constexpr G4int kInvalidId { -1 };
+constexpr G4int kInvalidId{-1};
 
 // Verbose level
 //
-[[maybe_unused]] static G4int VerboseLevel {1};
+[[maybe_unused]] static G4int VerboseLevel{1};
 
-}
+}  // namespace G4Accumulables
 
 #endif

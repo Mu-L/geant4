@@ -27,7 +27,7 @@
 // 20100319  M. Kelsey -- Remove "using" directory and unnecessary #includes,
 //		move ctor to .cc file
 // 20100407  M. Kelsey -- Create "partners thePartners" data member to act
-//		as buffer between ::generateInteractionPartners() and 
+//		as buffer between ::generateInteractionPartners() and
 //		::generateParticleFate(), and make "outgoing_cparticles" a
 //		data member returned from the latter by const-ref.  Replace
 //		return-by-value of initializeCascad() with an input buffer.
@@ -76,259 +76,260 @@
 #ifndef G4NUCLEI_MODEL_HH
 #define G4NUCLEI_MODEL_HH
 
-#include <algorithm>
-#include <vector>
-
-#include "G4InuclElementaryParticle.hh"
 #include "G4CascadParticle.hh"
 #include "G4CascadeInterpolator.hh"
 #include "G4CollisionOutput.hh"
+#include "G4InuclElementaryParticle.hh"
 #include "G4LorentzConvertor.hh"
+
+#include <algorithm>
+#include <vector>
 
 class G4InuclNuclei;
 class G4ElementaryParticleCollider;
 
-class G4NucleiModel {
-public:
-  G4NucleiModel();
-  G4NucleiModel(G4int a, G4int z);
-  explicit G4NucleiModel(G4InuclNuclei* nuclei);
+class G4NucleiModel
+{
+  public:
 
-  virtual ~G4NucleiModel();
+    G4NucleiModel();
+    G4NucleiModel(G4int a, G4int z);
+    explicit G4NucleiModel(G4InuclNuclei* nuclei);
 
-  void setVerboseLevel(G4int verbose) { verboseLevel = verbose; }
+    virtual ~G4NucleiModel();
 
-  void generateModel(G4InuclNuclei* nuclei);
-  void generateModel(G4int a, G4int z);
+    void setVerboseLevel(G4int verbose) { verboseLevel = verbose; }
 
-  // Arguments here are used for rescattering (::Propagate)
-  void reset(G4int nHitNeutrons=0, G4int nHitProtons=0,
-	     const std::vector<G4ThreeVector>* hitPoints=0);
+    void generateModel(G4InuclNuclei* nuclei);
+    void generateModel(G4int a, G4int z);
 
-  void printModel() const; 
+    // Arguments here are used for rescattering (::Propagate)
+    void reset(G4int nHitNeutrons = 0, G4int nHitProtons = 0,
+               const std::vector<G4ThreeVector>* hitPoints = 0);
 
-  G4double getDensity(G4int ip, G4int izone) const {
-    return nucleon_densities[ip - 1][izone];
-  }
+    void printModel() const;
 
-  G4double getFermiMomentum(G4int ip, G4int izone) const {
-    return fermi_momenta[ip - 1][izone];
-  }
+    G4double getDensity(G4int ip, G4int izone) const { return nucleon_densities[ip - 1][izone]; }
 
-  G4double getFermiKinetic(G4int ip, G4int izone) const;
+    G4double getFermiMomentum(G4int ip, G4int izone) const { return fermi_momenta[ip - 1][izone]; }
 
-  G4double getPotential(G4int ip, G4int izone) const {
-    if (ip == 9 || ip < 0) return 0.0;		// Photons and leptons
-    G4int ip0 = ip < 3 ? ip - 1 : 2;
-    if (ip > 10 && ip < 18) ip0 = 3;
-    if (ip > 20) ip0 = 4;
-    return izone < number_of_zones ? zone_potentials[ip0][izone] : 0.0;
-  }
+    G4double getFermiKinetic(G4int ip, G4int izone) const;
 
-  // Factor to convert GEANT4 lengths to internal units
-  G4double getRadiusUnits() const { return radiusUnits*CLHEP::fermi; }
+    G4double getPotential(G4int ip, G4int izone) const
+    {
+      if (ip == 9 || ip < 0) return 0.0;  // Photons and leptons
+      G4int ip0 = ip < 3 ? ip - 1 : 2;
+      if (ip > 10 && ip < 18) ip0 = 3;
+      if (ip > 20) ip0 = 4;
+      return izone < number_of_zones ? zone_potentials[ip0][izone] : 0.0;
+    }
 
-  G4double getRadius() const { return nuclei_radius; }
-  G4double getRadius(G4int izone) const {
-    return ( (izone<0) ? 0.
-	     : (izone<number_of_zones) ? zone_radii[izone] : nuclei_radius);
-  }
-  G4double getVolume(G4int izone) const {
-    return ( (izone<0) ? 0.
-	     : (izone<number_of_zones) ? zone_volumes[izone] : nuclei_volume);
-  }
+    // Factor to convert GEANT4 lengths to internal units
+    G4double getRadiusUnits() const { return radiusUnits * CLHEP::fermi; }
 
-  G4int getNumberOfZones() const { return number_of_zones; }
-  G4int getZone(G4double r) const {
-    for (G4int iz=0; iz<number_of_zones; iz++) if (r<zone_radii[iz]) return iz;
-    return number_of_zones;
-  }
+    G4double getRadius() const { return nuclei_radius; }
+    G4double getRadius(G4int izone) const
+    {
+      return ((izone < 0) ? 0. : (izone < number_of_zones) ? zone_radii[izone] : nuclei_radius);
+    }
+    G4double getVolume(G4int izone) const
+    {
+      return ((izone < 0) ? 0. : (izone < number_of_zones) ? zone_volumes[izone] : nuclei_volume);
+    }
 
-  G4int getNumberOfNeutrons() const { return neutronNumberCurrent; }
-  G4int getNumberOfProtons() const  { return protonNumberCurrent; }
+    G4int getNumberOfZones() const { return number_of_zones; }
+    G4int getZone(G4double r) const
+    {
+      for (G4int iz = 0; iz < number_of_zones; iz++)
+        if (r < zone_radii[iz]) return iz;
+      return number_of_zones;
+    }
 
-  G4bool empty() const { 
-    return neutronNumberCurrent < 1 && protonNumberCurrent < 1; 
-  }
+    G4int getNumberOfNeutrons() const { return neutronNumberCurrent; }
+    G4int getNumberOfProtons() const { return protonNumberCurrent; }
 
-  G4bool stillInside(const G4CascadParticle& cparticle) {
-    return cparticle.getCurrentZone() < number_of_zones;
-  }
+    G4bool empty() const { return neutronNumberCurrent < 1 && protonNumberCurrent < 1; }
 
+    G4bool stillInside(const G4CascadParticle& cparticle)
+    {
+      return cparticle.getCurrentZone() < number_of_zones;
+    }
 
-  G4CascadParticle initializeCascad(G4InuclElementaryParticle* particle);
+    G4CascadParticle initializeCascad(G4InuclElementaryParticle* particle);
 
-  typedef std::pair<std::vector<G4CascadParticle>, std::vector<G4InuclElementaryParticle> > modelLists;
+    typedef std::pair<std::vector<G4CascadParticle>, std::vector<G4InuclElementaryParticle>>
+      modelLists;
 
-  void initializeCascad(G4InuclNuclei* bullet, G4InuclNuclei* target,
-			modelLists& output);
+    void initializeCascad(G4InuclNuclei* bullet, G4InuclNuclei* target, modelLists& output);
 
+    std::pair<G4int, G4int> getTypesOfNucleonsInvolved() const
+    {
+      return std::pair<G4int, G4int>(current_nucl1, current_nucl2);
+    }
 
-  std::pair<G4int, G4int> getTypesOfNucleonsInvolved() const {
-    return std::pair<G4int, G4int>(current_nucl1, current_nucl2);
-  }
+    void generateParticleFate(G4CascadParticle& cparticle,
+                              G4ElementaryParticleCollider* theEPCollider,
+                              std::vector<G4CascadParticle>& cascade);
 
-  void generateParticleFate(G4CascadParticle& cparticle,
-			    G4ElementaryParticleCollider* theEPCollider,
-			    std::vector<G4CascadParticle>& cascade); 
+    G4bool forceFirst(const G4CascadParticle& cparticle) const;
+    G4bool isProjectile(const G4CascadParticle& cparticle) const;
+    G4bool worthToPropagate(const G4CascadParticle& cparticle) const;
 
-  G4bool forceFirst(const G4CascadParticle& cparticle) const;
-  G4bool isProjectile(const G4CascadParticle& cparticle) const;
-  G4bool worthToPropagate(const G4CascadParticle& cparticle) const; 
-    
-  G4InuclElementaryParticle generateNucleon(G4int type, G4int zone) const;
+    G4InuclElementaryParticle generateNucleon(G4int type, G4int zone) const;
 
-  G4LorentzVector generateNucleonMomentum(G4int type, G4int zone) const;
+    G4LorentzVector generateNucleonMomentum(G4int type, G4int zone) const;
 
-  G4double absorptionCrossSection(G4double e, G4int type) const;
-  G4double totalCrossSection(G4double ke, G4int rtype) const;
+    G4double absorptionCrossSection(G4double e, G4int type) const;
+    G4double totalCrossSection(G4double ke, G4int rtype) const;
 
-  // Identify whether given particle can interact with dibaryons
-  static G4bool useQuasiDeuteron(G4int ptype, G4int qdtype=0);
+    // Identify whether given particle can interact with dibaryons
+    static G4bool useQuasiDeuteron(G4int ptype, G4int qdtype = 0);
 
-protected:
-  G4bool passFermi(const std::vector<G4InuclElementaryParticle>& particles, 
-		   G4int zone);
+  protected:
 
-  G4bool passTrailing(const G4ThreeVector& hit_position);
+    G4bool passFermi(const std::vector<G4InuclElementaryParticle>& particles, G4int zone);
 
-  void boundaryTransition(G4CascadParticle& cparticle);
+    G4bool passTrailing(const G4ThreeVector& hit_position);
 
-  void choosePointAlongTraj(G4CascadParticle& cparticle);
+    void boundaryTransition(G4CascadParticle& cparticle);
 
-  G4InuclElementaryParticle generateQuasiDeuteron(G4int type1, 
-						  G4int type2,
-						  G4int zone) const;
+    void choosePointAlongTraj(G4CascadParticle& cparticle);
 
-  typedef std::pair<G4InuclElementaryParticle, G4double> partner;
+    G4InuclElementaryParticle generateQuasiDeuteron(G4int type1, G4int type2, G4int zone) const;
 
-  std::vector<partner> thePartners;		// Buffer for output below
-  void generateInteractionPartners(G4CascadParticle& cparticle);
+    typedef std::pair<G4InuclElementaryParticle, G4double> partner;
 
-  // Function for std::sort() to use in organizing partners by path length
-  static G4bool sortPartners(const partner& p1, const partner& p2) {
-    return (p2.second > p1.second);
-  }
+    std::vector<partner> thePartners;  // Buffer for output below
+    void generateInteractionPartners(G4CascadParticle& cparticle);
 
-  // Functions used to generate model nuclear structure
-  void fillBindingEnergies();
+    // Function for std::sort() to use in organizing partners by path length
+    static G4bool sortPartners(const partner& p1, const partner& p2)
+    {
+      return (p2.second > p1.second);
+    }
 
-  void fillZoneRadii(G4double nuclearRadius);
+    // Functions used to generate model nuclear structure
+    void fillBindingEnergies();
 
-  G4double fillZoneVolumes(G4double nuclearRadius);
+    void fillZoneRadii(G4double nuclearRadius);
 
-  void fillPotentials(G4int type, G4double tot_vol);
+    G4double fillZoneVolumes(G4double nuclearRadius);
 
-  G4double zoneIntegralWoodsSaxon(G4double ur1, G4double ur2,
-				  G4double nuclearRadius) const;
+    void fillPotentials(G4int type, G4double tot_vol);
 
-  G4double zoneIntegralGaussian(G4double ur1, G4double ur2,
-				G4double nuclearRadius) const; 
+    G4double zoneIntegralWoodsSaxon(G4double ur1, G4double ur2, G4double nuclearRadius) const;
 
-  G4double getRatio(G4int ip) const;	// Fraction of nucleons still available
+    G4double zoneIntegralGaussian(G4double ur1, G4double ur2, G4double nuclearRadius) const;
 
-  // Scale nuclear density with interactions so far
-  G4double getCurrentDensity(G4int ip, G4int izone) const;
+    G4double getRatio(G4int ip) const;  // Fraction of nucleons still available
 
-  // Average path length for any interaction of projectile and target
-  //	= 1. / (density * cross-section)
-  G4double inverseMeanFreePath(const G4CascadParticle& cparticle,
-			       const G4InuclElementaryParticle& target,
-			       G4int zone = -1);	// Override zone value
-  // NOTE:  Function is non-const in order to use dummy_converter
+    // Scale nuclear density with interactions so far
+    G4double getCurrentDensity(G4int ip, G4int izone) const;
 
-  // Use path-length and MFP (above) to throw random distance to collision
-  G4double generateInteractionLength(const G4CascadParticle& cparticle,
-				     G4double path, G4double invmfp) const;
+    // Average path length for any interaction of projectile and target
+    //	= 1. / (density * cross-section)
+    G4double inverseMeanFreePath(const G4CascadParticle& cparticle,
+                                 const G4InuclElementaryParticle& target,
+                                 G4int zone = -1);  // Override zone value
+    // NOTE:  Function is non-const in order to use dummy_converter
 
-  // Set scaling factor for effective number of di-nucleons in nucleus
-  void setDinucleonDensityScale();
+    // Use path-length and MFP (above) to throw random distance to collision
+    G4double generateInteractionLength(const G4CascadParticle& cparticle, G4double path,
+                                       G4double invmfp) const;
 
-private:
-  G4int verboseLevel;
+    // Set scaling factor for effective number of di-nucleons in nucleus
+    void setDinucleonDensityScale();
 
-  // Buffers for processing interactions on each cycle
-  G4LorentzConvertor dummy_convertor;	// For getting collision frame
-  G4CollisionOutput EPCoutput;		// For N-body inelastic collisions
+  private:
 
-  std::vector<G4InuclElementaryParticle> qdeutrons;	// For h+(NN) trials
-  std::vector<G4double> acsecs;
-    
-  std::vector<G4ThreeVector> coordinates;	// for initializeCascad()
-  std::vector<G4LorentzVector> momentums;
-  std::vector<G4InuclElementaryParticle> raw_particles;
+    G4int verboseLevel;
 
-  std::vector<G4ThreeVector> collisionPts;
+    // Buffers for processing interactions on each cycle
+    G4LorentzConvertor dummy_convertor;  // For getting collision frame
+    G4CollisionOutput EPCoutput;  // For N-body inelastic collisions
 
-  // Temporary buffers for computing nuclear model
-  G4double ur[7];		// Number of skin depths for each zone
-  G4double v[6];		// Density integrals by zone
-  G4double v1[6];		// Pseudo-volume (delta r^3) by zone
-  std::vector<G4double> rod;	// Nucleon density
-  std::vector<G4double> pf;	// Fermi momentum
-  std::vector<G4double> vz;	// Nucleon potential
+    std::vector<G4InuclElementaryParticle> qdeutrons;  // For h+(NN) trials
+    std::vector<G4double> acsecs;
 
-  // Nuclear model configuration
-  std::vector<std::vector<G4double> > nucleon_densities;
-  std::vector<std::vector<G4double> > zone_potentials;
-  std::vector<std::vector<G4double> > fermi_momenta;
-  std::vector<G4double> zone_radii;
-  std::vector<G4double> zone_volumes;
-  std::vector<G4double> binding_energies;
-  G4double nuclei_radius;
-  G4double nuclei_volume;
-  G4int number_of_zones;
+    std::vector<G4ThreeVector> coordinates;  // for initializeCascad()
+    std::vector<G4LorentzVector> momentums;
+    std::vector<G4InuclElementaryParticle> raw_particles;
 
-  G4int A;
-  G4int Z;
-  G4InuclNuclei* theNucleus;
+    std::vector<G4ThreeVector> collisionPts;
 
-  G4int neutronNumber;
-  G4int protonNumber;
+    // Temporary buffers for computing nuclear model
+    G4double ur[7];  // Number of skin depths for each zone
+    G4double v[6];  // Density integrals by zone
+    G4double v1[6];  // Pseudo-volume (delta r^3) by zone
+    std::vector<G4double> rod;  // Nucleon density
+    std::vector<G4double> pf;  // Fermi momentum
+    std::vector<G4double> vz;  // Nucleon potential
 
-  G4int neutronNumberCurrent;
-  G4int protonNumberCurrent;
+    // Nuclear model configuration
+    std::vector<std::vector<G4double>> nucleon_densities;
+    std::vector<std::vector<G4double>> zone_potentials;
+    std::vector<std::vector<G4double>> fermi_momenta;
+    std::vector<G4double> zone_radii;
+    std::vector<G4double> zone_volumes;
+    std::vector<G4double> binding_energies;
+    G4double nuclei_radius;
+    G4double nuclei_volume;
+    G4int number_of_zones;
 
-  G4int current_nucl1;
-  G4int current_nucl2;
+    G4int A;
+    G4int Z;
+    G4InuclNuclei* theNucleus;
 
-  G4double dinucleonDensityScale;
-  // Ratio of naive to effective number of di-nucleons as predicted in 
-  // local density approximation
-  // O. Benhar et al., arXiv:nucl-th/0301091v1. (2003)
+    G4int neutronNumber;
+    G4int protonNumber;
 
-  G4CascadeInterpolator<30> gammaQDinterp;	// quasideuteron interpolator
+    G4int neutronNumberCurrent;
+    G4int protonNumberCurrent;
 
-  // Symbolic names for nuclear potentials
-  enum PotentialType { WoodsSaxon=0, Gaussian=1 };
+    G4int current_nucl1;
+    G4int current_nucl2;
 
-  // Parameters for nuclear structure
-  const G4double crossSectionUnits;	// Scale from internal to natural units
-  const G4double radiusUnits;
-  const G4double skinDepth;		// Fraction of radius for outer skin
-  const G4double radiusScale;		// Coefficients for two-parameter fit
-  const G4double radiusScale2;		//   R = 1.16*cbrt(A) - 1.3456/cbrt(A)
-  const G4double radiusForSmall; 	// Average radius of light A<5 nuclei
-  const G4double radScaleAlpha;		// Scaling factor R_alpha/R_small
-  const G4double fermiMomentum;
-  const G4double R_nucleon;
-  const G4double gammaQDscale;		// Gamma/cluster scattering rescaling
-  const G4double potentialThickness;    // Defaulted to 1.0
+    G4double dinucleonDensityScale;
+    // Ratio of naive to effective number of di-nucleons as predicted in
+    // local density approximation
+    // O. Benhar et al., arXiv:nucl-th/0301091v1. (2003)
 
-  // Cutoffs for extreme values
-  static const G4double small;
-  static const G4double large;
-  static const G4double piTimes4thirds;  // FIXME:  We should not be using this!
+    G4CascadeInterpolator<30> gammaQDinterp;  // quasideuteron interpolator
 
-  static const G4double alfa3[3], alfa6[6];	// Zone boundaries in radii
-  static const G4double pion_vp;		// Flat potentials for pi, K, Y
-  static const G4double pion_vp_small;
-  static const G4double kaon_vp;
-  static const G4double hyperon_vp;
+    // Symbolic names for nuclear potentials
+    enum PotentialType
+    {
+      WoodsSaxon = 0,
+      Gaussian = 1
+    };
 
-  // Neutrons and protons, for computing trajectory placements
-  const G4InuclElementaryParticle neutronEP;
-  const G4InuclElementaryParticle protonEP;
-};        
+    // Parameters for nuclear structure
+    const G4double crossSectionUnits;  // Scale from internal to natural units
+    const G4double radiusUnits;
+    const G4double skinDepth;  // Fraction of radius for outer skin
+    const G4double radiusScale;  // Coefficients for two-parameter fit
+    const G4double radiusScale2;  //   R = 1.16*cbrt(A) - 1.3456/cbrt(A)
+    const G4double radiusForSmall;  // Average radius of light A<5 nuclei
+    const G4double radScaleAlpha;  // Scaling factor R_alpha/R_small
+    const G4double fermiMomentum;
+    const G4double R_nucleon;
+    const G4double gammaQDscale;  // Gamma/cluster scattering rescaling
+    const G4double potentialThickness;  // Defaulted to 1.0
 
-#endif // G4NUCLEI_MODEL_HH 
+    // Cutoffs for extreme values
+    static const G4double small;
+    static const G4double large;
+    static const G4double piTimes4thirds;  // FIXME:  We should not be using this!
+
+    static const G4double alfa3[3], alfa6[6];  // Zone boundaries in radii
+    static const G4double pion_vp;  // Flat potentials for pi, K, Y
+    static const G4double pion_vp_small;
+    static const G4double kaon_vp;
+    static const G4double hyperon_vp;
+
+    // Neutrons and protons, for computing trajectory placements
+    const G4InuclElementaryParticle neutronEP;
+    const G4InuclElementaryParticle protonEP;
+};
+
+#endif  // G4NUCLEI_MODEL_HH

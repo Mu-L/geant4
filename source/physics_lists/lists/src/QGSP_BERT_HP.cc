@@ -38,7 +38,7 @@
 // 26.04.2007 G.Folger: Enable quasielastic for QGS string model
 // 16.05.2007 V.Ivanchenko: rename EM builders
 // 04.06.2010 G.Folger: Use new ctor for builders
-// 16.08.2010 H.Kurashige: Remove inclusion of G4ParticleWithCuts 
+// 16.08.2010 H.Kurashige: Remove inclusion of G4ParticleWithCuts
 // 16.10.2012 A.Ribon: Use new default stopping
 // 12.10.2023 V.Ivanchenko added usage of alternative neutron HP models and
 //            processes
@@ -46,71 +46,69 @@
 //----------------------------------------------------------------------------
 //
 
-#include <iomanip>   
-
-#include "G4SystemOfUnits.hh"
-
-#include "globals.hh"
-#include "G4ios.hh"
+#include "QGSP_BERT_HP.hh"
 
 #include "G4DecayPhysics.hh"
-#include "G4RadioactiveDecayPhysics.hh"
-#include "G4EmStandardPhysics.hh"
 #include "G4EmExtraPhysics.hh"
-#include "G4IonPhysics.hh"
-#include "G4IonElasticPhysics.hh"
-#include "G4StoppingPhysics.hh"
+#include "G4EmStandardPhysics.hh"
 #include "G4HadronElasticPhysicsVI.hh"
-
-#include "QGSP_BERT_HP.hh"
 #include "G4HadronPhysicsQGSP_BERT_HP.hh"
+#include "G4IonElasticPhysics.hh"
+#include "G4IonPhysics.hh"
+#include "G4RadioactiveDecayPhysics.hh"
+#include "G4StoppingPhysics.hh"
+#include "G4SystemOfUnits.hh"
+#include "G4ios.hh"
+#include "globals.hh"
+
+#include <iomanip>
 
 QGSP_BERT_HP::QGSP_BERT_HP(G4int ver)
 {
-  if(ver > 0) {
-    G4cout << "<<< Geant4 Physics List simulation engine: QGSP_BERT_HP"<<G4endl;
-    G4cout <<G4endl;
+  if (ver > 0)
+  {
+    G4cout << "<<< Geant4 Physics List simulation engine: QGSP_BERT_HP" << G4endl;
+    G4cout << G4endl;
   }
 
-  defaultCutValue = 0.7*CLHEP::mm;  
+  defaultCutValue = 0.7 * CLHEP::mm;
   SetVerboseLevel(ver);
 
   // EM Physics
-  RegisterPhysics( new G4EmStandardPhysics(ver) );
+  RegisterPhysics(new G4EmStandardPhysics(ver));
 
   // Synchroton Radiation & GN Physics
-  RegisterPhysics( new G4EmExtraPhysics(ver) );
+  RegisterPhysics(new G4EmExtraPhysics(ver));
 
   // Decays
-  RegisterPhysics( new G4DecayPhysics(ver) );
-  RegisterPhysics( new G4RadioactiveDecayPhysics(ver) );
+  RegisterPhysics(new G4DecayPhysics(ver));
+  RegisterPhysics(new G4RadioactiveDecayPhysics(ver));
 
-   // Hadron Elastic scattering
-   RegisterPhysics( new G4HadronElasticPhysicsVI(ver) );
+  // Hadron Elastic scattering
+  RegisterPhysics(new G4HadronElasticPhysicsVI(ver));
 
   // Hadron Physics
-  RegisterPhysics( new G4HadronPhysicsQGSP_BERT_HP(ver));
+  RegisterPhysics(new G4HadronPhysicsQGSP_BERT_HP(ver));
 
   // Stopping Physics
-  RegisterPhysics( new G4StoppingPhysics(ver));
+  RegisterPhysics(new G4StoppingPhysics(ver));
 
   // Ion Physics
-  RegisterPhysics( new G4IonPhysics(ver));
-  RegisterPhysics( new G4IonElasticPhysics(ver) );
-
+  RegisterPhysics(new G4IonPhysics(ver));
+  RegisterPhysics(new G4IonElasticPhysics(ver));
 }
 
 void QGSP_BERT_HP::SetCuts()
 {
-  if (verboseLevel >1){
+  if (verboseLevel > 1)
+  {
     G4cout << "QGSP_BERT_HP::SetCuts:";
-  }  
-  //  " G4VUserPhysicsList::SetCutsWithDefault" method sets 
-  //   the default cut value for all particle types 
+  }
+  //  " G4VUserPhysicsList::SetCutsWithDefault" method sets
+  //   the default cut value for all particle types
 
-  SetCutsWithDefault();   
+  SetCutsWithDefault();
 
-  //Set proton cut value to 0 for producing low energy recoil nucleus 
-  SetCutValue(0, "proton");    
-    
+  // Set proton cut value to 0 for producing low energy recoil nucleus
+  SetCutValue(0, "proton");
 }

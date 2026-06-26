@@ -28,18 +28,16 @@
 // by V. Lara (Oct 1998)
 //
 // Modified:
-// 24.04.2010 (V.Ivanchenko) moved constructor and destructor to source; 
-//   added two new virtual methods EmittedFragment(s) to allow more 
+// 24.04.2010 (V.Ivanchenko) moved constructor and destructor to source;
+//   added two new virtual methods EmittedFragment(s) to allow more
 //   optimal work with G4Fragment objects; removed unnecesary exceptions
 // 28.10.2010 V.Ivanchenko defined members in constructor and cleaned up
 
 #include "G4VEvaporationChannel.hh"
 
-G4VEvaporationChannel::G4VEvaporationChannel(const G4String&)
-{}
+G4VEvaporationChannel::G4VEvaporationChannel(const G4String&) {}
 
-void G4VEvaporationChannel::Initialise()
-{}
+void G4VEvaporationChannel::Initialise() {}
 
 G4double G4VEvaporationChannel::GetLifeTime(G4Fragment*)
 {
@@ -56,11 +54,9 @@ G4double G4VEvaporationChannel::ComputeProbability(G4Fragment*, G4double)
   return 0.0;
 }
 
-void G4VEvaporationChannel::SetICM(G4bool)
-{}
+void G4VEvaporationChannel::SetICM(G4bool) {}
 
-void G4VEvaporationChannel::RDMForced(G4bool)
-{}
+void G4VEvaporationChannel::RDMForced(G4bool) {}
 
 G4Fragment* G4VEvaporationChannel::EmittedFragment(G4Fragment*)
 {
@@ -72,5 +68,4 @@ G4bool G4VEvaporationChannel::BreakUpChain(G4FragmentVector*, G4Fragment*)
   return false;
 }
 
-void G4VEvaporationChannel::Dump() const
-{}
+void G4VEvaporationChannel::Dump() const {}

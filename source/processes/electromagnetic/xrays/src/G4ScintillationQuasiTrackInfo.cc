@@ -26,17 +26,17 @@
 
 G4Allocator<G4ScintillationQuasiTrackInfo>*& aScintillationATIAllocator()
 {
-  G4ThreadLocalStatic G4Allocator<G4ScintillationQuasiTrackInfo>* _instance =
-    nullptr;
+  G4ThreadLocalStatic G4Allocator<G4ScintillationQuasiTrackInfo>* _instance = nullptr;
   return _instance;
 }
 
-G4ScintillationQuasiTrackInfo::G4ScintillationQuasiTrackInfo(
-  const G4QuasiOpticalData& aData, G4double aScintTime, G4double aRiseTime)
-  : G4VAuxiliaryTrackInformation()
-  , fQuasiOpticalData(aData) 
-  , fScintTime(aScintTime)
-  , fRiseTime(aRiseTime)
+G4ScintillationQuasiTrackInfo::G4ScintillationQuasiTrackInfo(const G4QuasiOpticalData& aData,
+                                                             G4double aScintTime,
+                                                             G4double aRiseTime)
+  : G4VAuxiliaryTrackInformation(),
+    fQuasiOpticalData(aData),
+    fScintTime(aScintTime),
+    fRiseTime(aRiseTime)
 {}
 
 void G4ScintillationQuasiTrackInfo::Print() const
@@ -44,15 +44,20 @@ void G4ScintillationQuasiTrackInfo::Print() const
   G4cout << "Auxiliary track information for a scintillation step" << G4endl;
 }
 
-G4ScintillationQuasiTrackInfo* G4ScintillationQuasiTrackInfo::Cast(
-  const G4VAuxiliaryTrackInformation* const aATI)
+G4ScintillationQuasiTrackInfo*
+G4ScintillationQuasiTrackInfo::Cast(const G4VAuxiliaryTrackInformation* const aATI)
 {
   G4ScintillationQuasiTrackInfo* SATI = nullptr;
-  if(aATI != nullptr)
+  if (aATI != nullptr)
   {
     // No change will be done to the pointer and to the pointed data
     auto temp = const_cast<G4VAuxiliaryTrackInformation*>(aATI);
     SATI = dynamic_cast<G4ScintillationQuasiTrackInfo*>(temp);
   }
   return SATI;
+}
+
+G4ScintillationQuasiTrackInfo* G4ScintillationQuasiTrackInfo::Clone() const
+{
+  return new G4ScintillationQuasiTrackInfo(fQuasiOpticalData, fScintTime, fRiseTime);
 }

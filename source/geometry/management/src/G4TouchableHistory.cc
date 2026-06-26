@@ -22,7 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // class G4TouchableHistory Implementation
 //
 // Author: Paul Kent (CERN), August 1996
@@ -36,30 +36,30 @@ G4Allocator<G4TouchableHistory>*& aTouchableHistoryAllocator()
   return _instance;
 }
 
-G4TouchableHistory::G4TouchableHistory()
-  : ftlate(G4ThreeVector(0.,0.,0.))
-    
-{ 
+G4TouchableHistory::G4TouchableHistory() : ftlate(G4ThreeVector(0., 0., 0.))
+
+{
   fhistory.SetFirstEntry(nullptr);
 }
 
-G4TouchableHistory::G4TouchableHistory( const G4NavigationHistory& history )
-  : fhistory(history)
+G4TouchableHistory::G4TouchableHistory(const G4NavigationHistory& history) : fhistory(history)
 {
   const G4AffineTransform& tf = fhistory.GetTopTransform();
   ftlate = tf.InverseNetTranslation();
   frot = tf.InverseNetRotation();
 }
 
-const G4ThreeVector&
-G4TouchableHistory::GetTranslation(G4int depth) const
-{ 
+const G4ThreeVector& G4TouchableHistory::GetTranslation(G4int depth) const
+{
   // The value returned will change at the next call
   // Copy it if you want to use it!
   //
   static G4ThreadLocal G4ThreeVector* ctrans = nullptr;
-  if ( ctrans == nullptr )  { ctrans = new G4ThreeVector; }
-  if(depth==0.0)
+  if (ctrans == nullptr)
+  {
+    ctrans = new G4ThreeVector;
+  }
+  if (depth == 0.0)
   {
     return ftlate;
   }
@@ -67,16 +67,18 @@ G4TouchableHistory::GetTranslation(G4int depth) const
   return *ctrans;
 }
 
-const G4RotationMatrix*
-G4TouchableHistory::GetRotation(G4int depth) const
-{ 
+const G4RotationMatrix* G4TouchableHistory::GetRotation(G4int depth) const
+{
   // The value returned will change at the next call
   // Copy it if you want to use it!
   //
   static G4ThreadLocal G4RotationMatrix* rotM = nullptr;
-  if ( rotM == nullptr )  { rotM = new G4RotationMatrix; }
+  if (rotM == nullptr)
+  {
+    rotM = new G4RotationMatrix;
+  }
 
-  if(depth==0.0)
+  if (depth == 0.0)
   {
     return &frot;
   }

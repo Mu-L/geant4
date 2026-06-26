@@ -4,6 +4,7 @@
 // G.Barrand: pure header version of toojpeg found at https://github.com/stbrumme/toojpeg
 //            The original namespace TooJpeg had been changed to tools::toojpeg to avoid
 //            clashes with potential other usage of toojpeg within the same software.
+// clang-format off
 
 /*
 zlib License

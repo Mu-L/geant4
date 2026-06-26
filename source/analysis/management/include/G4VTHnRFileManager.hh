@@ -28,21 +28,22 @@
 //
 // Author: Ivana Hrivnacova, 26/08/2021  (ivana@ipno.in2p3.fr)
 
-#ifndef G4VTHnRFileManager_h
-#define G4VTHnRFileManager_h 1
+#ifndef G4VTHNRFILEMANAGER_HH
+#define G4VTHNRFILEMANAGER_HH
 
 #include "globals.hh"
 
-template <typename HT>
+template<typename HT>
 class G4VTHnRFileManager
 {
   public:
+
     G4VTHnRFileManager() = default;
     virtual ~G4VTHnRFileManager() = default;
 
     // Methods for reading objects
-    virtual HT* Read(const G4String& htName, const G4String& fileName,
-                     const G4String& dirName,  G4bool isUserFileName) = 0;
+    virtual HT* Read(const G4String& htName, const G4String& fileName, const G4String& dirName,
+                     G4bool isUserFileName) = 0;
 };
 
 #endif

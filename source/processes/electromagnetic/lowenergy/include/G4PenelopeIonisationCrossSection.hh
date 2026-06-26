@@ -28,12 +28,12 @@
 //
 // History:
 // -----------
-// 14 Mar 2012   L. Pandola   1st implementation. 
+// 14 Mar 2012   L. Pandola   1st implementation.
 //
 // -------------------------------------------------------------------
 //
 //! Class description:
-//!  Access to Penelope ionisation cross sections for e- and e+. To be 
+//!  Access to Penelope ionisation cross sections for e- and e+. To be
 //!  registered as a specific model in G4UAtomicDeexcitation.
 //!
 //! NOTICE: working only for e- at the moment (no interface available for
@@ -42,10 +42,11 @@
 // -------------------------------------------------------------------
 
 #ifndef G4PENELOPEIONISATIONCROSSSECTION_HH
-#define G4PENELOPEIONISATIONCROSSSECTION_HH 1
+#define G4PENELOPEIONISATIONCROSSSECTION_HH
 
-#include "globals.hh"
 #include "G4VhShellCrossSection.hh"
+#include "globals.hh"
+
 #include <map>
 
 class G4AtomicTransitionManager;
@@ -56,66 +57,58 @@ class G4PenelopeIonisationXSHandler;
 
 class G4PenelopeIonisationCrossSection : public G4VhShellCrossSection
 {
-public:  
-  //! Constructor. 
-  explicit G4PenelopeIonisationCrossSection();
-  
-  //! Destructor. Clean all tables.
-  ~G4PenelopeIonisationCrossSection();
+  public:
 
-  //! Purely virtual method from the base interface. Returns the cross 
-  //! section for all levels of element Z in material mat at the 
-  //! given energy
-  std::vector<G4double> GetCrossSection(G4int Z,
-					G4double incidentEnergy,
-					G4double mass,
-					G4double deltaEnergy,
-					const G4Material* mat) override;
-  
-  //! Purely virtual method from the base interface. Returns the 
-  //! cross section for the given shell in the element Z of material 
-  //! mat at the specified energy
-  G4double CrossSection(G4int Z,
-			G4AtomicShellEnumerator shell,
-			G4double incidentEnergy,
-			G4double mass,
-			const G4Material* mat) override;
+    //! Constructor.
+    explicit G4PenelopeIonisationCrossSection();
 
-  //! Purely virtual method from the base interface. Returns the 
-  //! shell ionisation probabilities for the given Z in the
-  //! material mat at the specified energy.
-  std::vector<G4double> Probabilities(G4int Z,
-				      G4double incidentEnergy,
-				      G4double mass,
-				      G4double deltaEnergy,
-				      const G4Material* mat) override;
-  //! Getter/setter for the verbosity level
-  void SetVerbosityLevel(G4int vl){fVerboseLevel = vl;};
-  G4int GetVerbosityLevel(){return fVerboseLevel;};
+    //! Destructor. Clean all tables.
+    ~G4PenelopeIonisationCrossSection();
 
-  G4PenelopeIonisationCrossSection & operator=(const G4PenelopeIonisationCrossSection &right) 
-  = delete;
-  G4PenelopeIonisationCrossSection(const G4PenelopeIonisationCrossSection&) = delete;
+    //! Purely virtual method from the base interface. Returns the cross
+    //! section for all levels of element Z in material mat at the
+    //! given energy
+    std::vector<G4double> GetCrossSection(G4int Z, G4double incidentEnergy, G4double mass,
+                                          G4double deltaEnergy, const G4Material* mat) override;
 
-private:
-  //!The shells in Penelope are organized per *material*, rather than per 
-  //!element, so given a material one has to find the proper index for the 
-  //!given Z and shellID. An appropriate look-up table is used to avoid 
-  //!recalculation.
-  G4int FindShellIDIndex(const G4Material* mat,G4int Z,G4AtomicShellEnumerator shell);
+    //! Purely virtual method from the base interface. Returns the
+    //! cross section for the given shell in the element Z of material
+    //! mat at the specified energy
+    G4double CrossSection(G4int Z, G4AtomicShellEnumerator shell, G4double incidentEnergy,
+                          G4double mass, const G4Material* mat) override;
 
-  std::map< std::pair<const G4Material*,G4int>, G4DataVector*> *fShellIDTable;
+    //! Purely virtual method from the base interface. Returns the
+    //! shell ionisation probabilities for the given Z in the
+    //! material mat at the specified energy.
+    std::vector<G4double> Probabilities(G4int Z, G4double incidentEnergy, G4double mass,
+                                        G4double deltaEnergy, const G4Material* mat) override;
+    //! Getter/setter for the verbosity level
+    void SetVerbosityLevel(G4int vl) { fVerboseLevel = vl; };
+    G4int GetVerbosityLevel() { return fVerboseLevel; };
 
-  //Oscillator manager
-  G4PenelopeOscillatorManager* fOscManager;
-  G4PenelopeIonisationXSHandler* fCrossSectionHandler;
-  const G4AtomicTransitionManager* fTransitionManager;
- 
-  G4double fLowEnergyLimit;
-  G4double fHighEnergyLimit;
-  G4int fVerboseLevel;
-  G4int fNMaxLevels;
+    G4PenelopeIonisationCrossSection&
+    operator=(const G4PenelopeIonisationCrossSection& right) = delete;
+    G4PenelopeIonisationCrossSection(const G4PenelopeIonisationCrossSection&) = delete;
+
+  private:
+
+    //! The shells in Penelope are organized per *material*, rather than per
+    //! element, so given a material one has to find the proper index for the
+    //! given Z and shellID. An appropriate look-up table is used to avoid
+    //! recalculation.
+    G4int FindShellIDIndex(const G4Material* mat, G4int Z, G4AtomicShellEnumerator shell);
+
+    std::map<std::pair<const G4Material*, G4int>, G4DataVector*>* fShellIDTable;
+
+    // Oscillator manager
+    G4PenelopeOscillatorManager* fOscManager;
+    G4PenelopeIonisationXSHandler* fCrossSectionHandler;
+    const G4AtomicTransitionManager* fTransitionManager;
+
+    G4double fLowEnergyLimit;
+    G4double fHighEnergyLimit;
+    G4int fVerboseLevel;
+    G4int fNMaxLevels;
 };
 
 #endif
-

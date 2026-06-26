@@ -28,25 +28,30 @@
 // Modified at 8-Oct-1998 by Maxim Komogorov. Methods BoostBeam,Boost,Shift
 // were added.
 
-#ifndef G4KineticTrackVector_h
-#define G4KineticTrackVector_h 1
+#ifndef G4KINETICTRACKVECTOR_HH
+#define G4KINETICTRACKVECTOR_HH
 
-#include "globals.hh"
 #include "G4KineticTrack.hh"
+#include "globals.hh"
+
 #include <vector>
 
-class G4KineticTrackVector : public std::vector<G4KineticTrack *>
-    {
-public:
-  G4KineticTrackVector();
+class G4KineticTrackVector : public std::vector<G4KineticTrack*>
+{
+  public:
 
-public:
+    G4KineticTrackVector();
+
+  public:
+
     void BoostBeam(G4ThreeVector& BeamMom);
     void Boost(G4ThreeVector& Velocity);
     void Shift(G4ThreeVector& Pos);
-    };
+};
 
-struct DeleteKineticTrack{void operator()(G4KineticTrack * aT){delete aT;}};
+struct DeleteKineticTrack
+{
+    void operator()(G4KineticTrack* aT) { delete aT; }
+};
 
 #endif
-

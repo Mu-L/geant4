@@ -38,7 +38,8 @@
 G4ParticlePropertyData::G4ParticlePropertyData(const G4String& particleName)
   : theParticleName(particleName)
 {
-  for (std::size_t flv = 0; flv < NumberOfQuarkFlavor; ++flv) {
+  for (std::size_t flv = 0; flv < NumberOfQuarkFlavor; ++flv)
+  {
     theQuarkContent[flv] = 0;
     theAntiQuarkContent[flv] = 0;
   }
@@ -62,7 +63,8 @@ G4ParticlePropertyData::G4ParticlePropertyData(const G4ParticlePropertyData& rig
   theBaryonNumber = right.theBaryonNumber;
   thePDGEncoding = right.thePDGEncoding;
   theAntiPDGEncoding = right.theAntiPDGEncoding;
-  for (std::size_t flv = 0; flv < NumberOfQuarkFlavor; ++flv) {
+  for (std::size_t flv = 0; flv < NumberOfQuarkFlavor; ++flv)
+  {
     theQuarkContent[flv] = right.theQuarkContent[flv];
     theAntiQuarkContent[flv] = right.theAntiQuarkContent[flv];
   }
@@ -71,7 +73,8 @@ G4ParticlePropertyData::G4ParticlePropertyData(const G4ParticlePropertyData& rig
 
 G4ParticlePropertyData& G4ParticlePropertyData::operator=(const G4ParticlePropertyData& right)
 {
-  if (this != &right) {
+  if (this != &right)
+  {
     verboseLevel = right.verboseLevel;
     theParticleName = right.theParticleName;
     thePDGMass = right.thePDGMass;
@@ -88,7 +91,8 @@ G4ParticlePropertyData& G4ParticlePropertyData::operator=(const G4ParticleProper
     theBaryonNumber = right.theBaryonNumber;
     thePDGEncoding = right.thePDGEncoding;
     theAntiPDGEncoding = right.theAntiPDGEncoding;
-    for (std::size_t flv = 0; flv < NumberOfQuarkFlavor; ++flv) {
+    for (std::size_t flv = 0; flv < NumberOfQuarkFlavor; ++flv)
+    {
       theQuarkContent[flv] = right.theQuarkContent[flv];
       theAntiQuarkContent[flv] = right.theAntiQuarkContent[flv];
     }
@@ -143,10 +147,12 @@ void G4ParticlePropertyData::Print() const
   G4cout << " , " << thePDGiIsospin3 << "/2 ) " << G4endl;
   G4cout << " GParity : " << thePDGiGParity << G4endl;
   G4cout << " MagneticMoment [MeV/T]: ";
-  if (thePDGMagneticMoment != 0.0) {
+  if (thePDGMagneticMoment != 0.0)
+  {
     G4cout << thePDGMagneticMoment / MeV * tesla << G4endl;
   }
-  else {
+  else
+  {
     G4cout << "not defined " << G4endl;
   }
   G4cout << " Lepton number : " << theLeptonNumber;

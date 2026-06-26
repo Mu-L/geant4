@@ -36,21 +36,22 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedParallelepiped.h>
+#  include "G4Polyhedron.hh"
 
-#include "G4Polyhedron.hh"
+#  include <VecGeom/volumes/UnplacedParallelepiped.h>
 
 /**
  * @brief G4UPara is a wrapper class for G4Para to make use of
  * VecGeom Parallelepiped.
+ * @ingroup geometry_solids_csg
  */
 
-class G4UPara : public G4UAdapter<vecgeom::UnplacedParallelepiped> 
+class G4UPara : public G4UAdapter<vecgeom::UnplacedParallelepiped>
 {
-  using Shape_t = vecgeom::UnplacedParallelepiped;
-  using Base_t  = G4UAdapter<vecgeom::UnplacedParallelepiped>;
+    using Shape_t = vecgeom::UnplacedParallelepiped;
+    using Base_t = G4UAdapter<vecgeom::UnplacedParallelepiped>;
 
   public:
 
@@ -68,17 +69,15 @@ class G4UPara : public G4UAdapter<vecgeom::UnplacedParallelepiped>
      *  @param[in] pPhi Azimuthal angle of the line joining the centres of
      *             the faces at -dz and +dz in Z.
      */
-    G4UPara(const G4String& pName,
-                  G4double pDx, G4double pDy, G4double pDz,
-                  G4double pAlpha, G4double pTheta, G4double pPhi);
+    G4UPara(const G4String& pName, G4double pDx, G4double pDy, G4double pDz, G4double pAlpha,
+            G4double pTheta, G4double pPhi);
 
     /**
      * Constructs a parallelepiped, given a name and its 8 vertices.
      *  @param[in] pName The name of the solid.
      *  @param[in] pt Points of the 8 vertices.
      */
-    G4UPara(const G4String& pName,
-            const G4ThreeVector pt[8]);
+    G4UPara(const G4String& pName, const G4ThreeVector pt[8]);
 
     /**
      * Default destructor.
@@ -88,20 +87,20 @@ class G4UPara : public G4UAdapter<vecgeom::UnplacedParallelepiped>
     /**
      * Accessors.
      */
-    G4double GetZHalfLength()  const;
-    G4double GetYHalfLength()  const;
-    G4double GetXHalfLength()  const;
+    G4double GetZHalfLength() const;
+    G4double GetYHalfLength() const;
+    G4double GetXHalfLength() const;
     G4ThreeVector GetSymAxis() const;
-    G4double GetTanAlpha()     const;
+    G4double GetTanAlpha() const;
 
     /**
      * Accessors. Obtain (re)computed values of the original parameters.
      */
-    G4double GetAlpha()  const;
-    G4double GetTheta()  const;    
-    G4double GetPhi()    const;
+    G4double GetAlpha() const;
+    G4double GetTheta() const;
+    G4double GetPhi() const;
     // Obtain (re)computed values of original parameters
-   
+
     /**
      * Modifiers.
      */
@@ -115,15 +114,14 @@ class G4UPara : public G4UAdapter<vecgeom::UnplacedParallelepiped>
     /**
      * Sets all parameters, as for constructor.
      */
-    void SetAllParameters(G4double pDx, G4double pDy, G4double pDz,
-                          G4double pAlpha, G4double pTheta, G4double pPhi);
+    void SetAllParameters(G4double pDx, G4double pDy, G4double pDz, G4double pAlpha,
+                          G4double pTheta, G4double pPhi);
 
     /**
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -153,10 +151,9 @@ class G4UPara : public G4UAdapter<vecgeom::UnplacedParallelepiped>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Makes a clone of the object for use in multi-treading.
@@ -189,8 +186,11 @@ class G4UPara : public G4UAdapter<vecgeom::UnplacedParallelepiped>
 
   private:
 
-    G4double fTalpha,fTthetaCphi,fTthetaSphi;
-    struct { G4double a,b,c,d; } fPlanes[4];
+    G4double fTalpha, fTthetaCphi, fTthetaSphi;
+    struct
+    {
+        G4double a, b, c, d;
+    } fPlanes[4];
 };
 
 // --------------------------------------------------------------------

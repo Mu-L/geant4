@@ -25,51 +25,54 @@
 //
 //
 //
-// 
+//
 // Andrew Walkden  10th February 1997
 // OpenGL graphics system factory.
 
-
-#include "G4VisFeaturesOfOpenGL.hh"
-#include "G4VSceneHandler.hh"
-#include "G4OpenGLStoredSceneHandler.hh"
-#include "G4OpenGLViewer.hh"
 #include "G4OpenGLStoredX.hh"
-#include "G4OpenGLStoredXViewer.hh"
-#include "G4OpenGLViewerMessenger.hh"
 
-G4OpenGLStoredX::G4OpenGLStoredX ():
-  G4VGraphicsSystem ("OpenGLStoredX",
-		     "OGLSX",
-		     G4VisFeaturesOfOpenGLSX (),
-		     G4VGraphicsSystem::threeD)
+#include "G4OpenGLStoredSceneHandler.hh"
+#include "G4OpenGLStoredXViewer.hh"
+#include "G4OpenGLViewer.hh"
+#include "G4OpenGLViewerMessenger.hh"
+#include "G4VSceneHandler.hh"
+#include "G4VisFeaturesOfOpenGL.hh"
+
+G4OpenGLStoredX::G4OpenGLStoredX()
+  : G4VGraphicsSystem("OpenGLStoredX", "OGLSX", G4VisFeaturesOfOpenGLSX(),
+                      G4VGraphicsSystem::threeD)
 {
   G4OpenGLViewerMessenger::GetInstance();
 }
 
-G4OpenGLStoredX::~G4OpenGLStoredX () {}
+G4OpenGLStoredX::~G4OpenGLStoredX() {}
 
-G4VSceneHandler* G4OpenGLStoredX::CreateSceneHandler (const G4String& name) {
-  G4VSceneHandler* pScene = new G4OpenGLStoredSceneHandler (*this, name);
-  return    pScene;
+G4VSceneHandler* G4OpenGLStoredX::CreateSceneHandler(const G4String& name)
+{
+  G4VSceneHandler* pScene = new G4OpenGLStoredSceneHandler(*this, name);
+  return pScene;
 }
 
-G4VViewer* G4OpenGLStoredX::CreateViewer (G4VSceneHandler& scene,
-				      const G4String& name) {
-  G4VViewer* pView =
-    new G4OpenGLStoredXViewer ((G4OpenGLStoredSceneHandler&) scene, name);
-  if (pView) {
-    if (pView -> GetViewId () < 0) {
+G4VViewer* G4OpenGLStoredX::CreateViewer(G4VSceneHandler& scene, const G4String& name)
+{
+  G4VViewer* pView = new G4OpenGLStoredXViewer((G4OpenGLStoredSceneHandler&)scene, name);
+  if (pView)
+  {
+    if (pView->GetViewId() < 0)
+    {
       delete pView;
       pView = 0;
       G4cerr << "G4OpenGLStoredX::CreateViewer: error flagged by"
-	" negative view id in G4OpenGLStoredXViewer creation."
-	"\n Destroying view and returning null pointer." << G4endl;
+                " negative view id in G4OpenGLStoredXViewer creation."
+                "\n Destroying view and returning null pointer."
+             << G4endl;
     }
   }
-  else {
+  else
+  {
     G4cerr << "G4OpenGLStoredX::CreateViewer: null pointer on"
-      " new G4OpenGLStoredXViewer." << G4endl;
+              " new G4OpenGLStoredXViewer."
+           << G4endl;
   }
   return pView;
 }

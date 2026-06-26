@@ -27,33 +27,31 @@
 //
 // G4 Low-energy Model: Fission -- header file
 // F.W. Jones, TRIUMF, 03-DEC-96
-//  
+//
 // For further comments see G4LFission.cc.
 //
 // use -scheme for elastic scattering: HPW, 20th June 1997
 // most of the code comes from the old Low-energy Fission class
 
 // Class Description
-// Final state production model for induced fission; 
+// Final state production model for induced fission;
 // To be used in your physics list in case you need this physics.
-// In this case you want to register an object of this class with 
+// In this case you want to register an object of this class with
 // the corresponding process.
 // Class Description - End
 
+#ifndef G4LFISSION_HH
+#define G4LFISSION_HH
 
-#ifndef G4LFission_h
-#define G4LFission_h 1
- 
-#include "globals.hh"
-#include "Randomize.hh"
-#include "G4Proton.hh"
-#include "G4Neutron.hh"
 #include "G4Electron.hh"
 #include "G4Gamma.hh"
+#include "G4HadronicInteraction.hh"
+#include "G4Neutron.hh"
+#include "G4Proton.hh"
 #include "G4Step.hh"
 #include "G4TrackStatus.hh"
-#include "G4HadronicInteraction.hh"
-
+#include "Randomize.hh"
+#include "globals.hh"
 
 class G4LFission : public G4HadronicInteraction
 {
@@ -61,9 +59,8 @@ class G4LFission : public G4HadronicInteraction
 
     G4LFission(const G4String& name = "G4LFission");
     ~G4LFission();
- 
-    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
-                                   G4Nucleus& targetNucleus);
+
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& targetNucleus);
 
     static G4double Atomas(const G4double A, const G4double Z);
 

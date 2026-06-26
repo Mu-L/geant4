@@ -33,65 +33,66 @@
 
 // Author: H.Kurashige, 18 September 2001
 // --------------------------------------------------------------------
-#ifndef G4DataVector_hh
-#define G4DataVector_hh 1
+#ifndef G4DATAVECTOR_HH
+#define G4DATAVECTOR_HH
+
+#include "G4ios.hh"
+#include "globals.hh"
 
 #include <fstream>
 #include <iostream>
 #include <vector>
 
-#include "G4ios.hh"
-#include "globals.hh"
-
 class G4DataVector : public std::vector<G4double>
 {
- public:
-  G4DataVector() = default;
-  // Default constructor.
+  public:
 
-  G4DataVector(const G4DataVector&) = default;
-  G4DataVector(G4DataVector&&)      = default;
-  // Default copy&move constructors.
+    G4DataVector() = default;
+    // Default constructor.
 
-  explicit G4DataVector(std::size_t cap);
-  // Constructor given a 'capacity' defining the initial number of elements.
+    G4DataVector(const G4DataVector&) = default;
+    G4DataVector(G4DataVector&&) = default;
+    // Default copy&move constructors.
 
-  G4DataVector(std::size_t cap, G4double value);
-  // Constructor given a 'capacity' defining the initial number of elements
-  // and initialising them to 'value'.
+    explicit G4DataVector(std::size_t cap);
+    // Constructor given a 'capacity' defining the initial number of elements.
 
-  virtual ~G4DataVector() = default;
-  // Empty destructor
+    G4DataVector(std::size_t cap, G4double value);
+    // Constructor given a 'capacity' defining the initial number of elements
+    // and initialising them to 'value'.
 
-  G4DataVector& operator=(const G4DataVector&) = default;
-  G4DataVector& operator=(G4DataVector&&) = default;
-  // Default copy&move assignment operators.
+    virtual ~G4DataVector() = default;
+    // Empty destructor
 
-  inline void insertAt(std::size_t, const G4double&);
-  // Insert an element at given position
+    G4DataVector& operator=(const G4DataVector&) = default;
+    G4DataVector& operator=(G4DataVector&&) = default;
+    // Default copy&move assignment operators.
 
-  inline std::size_t index(const G4double&) const;
-  // Returns back index of the element same as given value
+    inline void insertAt(std::size_t, const G4double&);
+    // Insert an element at given position
 
-  inline G4bool contains(const G4double&) const;
-  // Returns 'true' if it contains the element same as given value
+    inline std::size_t index(const G4double&) const;
+    // Returns back index of the element same as given value
 
-  inline G4bool remove(const G4double&);
-  // Removes the first element same as given value
+    inline G4bool contains(const G4double&) const;
+    // Returns 'true' if it contains the element same as given value
 
-  inline std::size_t removeAll(const G4double&);
-  // Remove all elements same as given value
+    inline G4bool remove(const G4double&);
+    // Removes the first element same as given value
 
-  enum
-  {
-    T_G4DataVector = 100
-  };
+    inline std::size_t removeAll(const G4double&);
+    // Remove all elements same as given value
 
-  G4bool Store(std::ofstream& fOut, G4bool ascii = false);
-  G4bool Retrieve(std::ifstream& fIn, G4bool ascii = false);
-  // To store/retrieve persistent data to/from file streams.
+    enum
+    {
+      T_G4DataVector = 100
+    };
 
-  friend std::ostream& operator<<(std::ostream&, const G4DataVector&);
+    G4bool Store(std::ofstream& fOut, G4bool ascii = false);
+    G4bool Retrieve(std::ifstream& fIn, G4bool ascii = false);
+    // To store/retrieve persistent data to/from file streams.
+
+    friend std::ostream& operator<<(std::ostream&, const G4DataVector&);
 };
 
 #include "G4DataVector.icc"

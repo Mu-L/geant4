@@ -28,35 +28,34 @@
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara (Nov 1999)
 
-#ifndef G4VCoulombBarrier_h
-#define G4VCoulombBarrier_h 1
+#ifndef G4VCOULOMBBARRIER_HH
+#define G4VCOULOMBBARRIER_HH
 
 #include "globals.hh"
 
 class G4VCoulombBarrier
 {
-public:
+  public:
 
-  explicit G4VCoulombBarrier(G4int anA, G4int aZ);
-  virtual ~G4VCoulombBarrier() = default;
+    explicit G4VCoulombBarrier(G4int anA, G4int aZ);
+    virtual ~G4VCoulombBarrier() = default;
 
-  virtual G4double GetCoulombBarrier(G4int ARes, G4int ZRes, 
-				     G4double U = 0.0) const = 0;
+    virtual G4double GetCoulombBarrier(G4int ARes, G4int ZRes, G4double U = 0.0) const = 0;
 
-  virtual G4double BarrierPenetrationFactor(G4int aZ) const;
+    virtual G4double BarrierPenetrationFactor(G4int aZ) const;
 
-  void SetParameters(G4double rho, G4double r0); 
+    void SetParameters(G4double rho, G4double r0);
 
-  G4VCoulombBarrier(const G4VCoulombBarrier & right) = delete;
-  const G4VCoulombBarrier & operator=(const G4VCoulombBarrier & right) = delete;
+    G4VCoulombBarrier(const G4VCoulombBarrier& right) = delete;
+    const G4VCoulombBarrier& operator=(const G4VCoulombBarrier& right) = delete;
 
-protected:
-	
-  G4int theA;
-  G4int theZ;
+  protected:
 
-  G4double theRho{0.0};
-  G4double factor{0.0};
+    G4int theA;
+    G4int theZ;
+
+    G4double theRho{0.0};
+    G4double factor{0.0};
 };
 
 #endif

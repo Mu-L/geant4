@@ -45,33 +45,36 @@
 #define G4_CASCADE_FUNCTIONS_HH
 
 #include "G4CascadeChannel.hh"
-#include "globals.hh"
 #include "Randomize.hh"
+#include "globals.hh"
+
 #include <vector>
 
+template<class DATA, class SAMP>
+class G4CascadeFunctions : public G4CascadeChannel, public SAMP
+{
+  public:
 
-template <class DATA, class SAMP>
-class G4CascadeFunctions : public G4CascadeChannel, public SAMP {
-public:
-  G4CascadeFunctions();
-  virtual ~G4CascadeFunctions() {}
+    G4CascadeFunctions();
+    virtual ~G4CascadeFunctions() {}
 
-  virtual G4double getCrossSection(double ke) const {
-    return this->findCrossSection(ke, DATA::data.tot);
-  }
+    virtual G4double getCrossSection(double ke) const
+    {
+      return this->findCrossSection(ke, DATA::data.tot);
+    }
 
-  virtual G4double getCrossSectionSum(double ke) const {
-    return this->findCrossSection(ke, DATA::data.sum);
-  }
+    virtual G4double getCrossSectionSum(double ke) const
+    {
+      return this->findCrossSection(ke, DATA::data.sum);
+    }
 
-  virtual G4int getMultiplicity(G4double ke) const;
+    virtual G4int getMultiplicity(G4double ke) const;
 
-  virtual void getOutgoingParticleTypes(std::vector<G4int>& kinds,
-				       G4int mult, G4double ke) const;
+    virtual void getOutgoingParticleTypes(std::vector<G4int>& kinds, G4int mult, G4double ke) const;
 
-  virtual void printTable(std::ostream& os=G4cout) const;
+    virtual void printTable(std::ostream& os = G4cout) const;
 };
 
 #include "G4CascadeFunctions.icc"
 
-#endif	/* G4_CASCADE_FUNCTIONS_HH */
+#endif /* G4_CASCADE_FUNCTIONS_HH */

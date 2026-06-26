@@ -34,8 +34,8 @@
 // It is an alternative to the default model.
 //
 
-#ifndef G4PreCompoundTransitionsInt_h
-#define G4PreCompoundTransitionsInt_h 1
+#ifndef G4PRECOMPOUNDTRANSITIONSINT_HH
+#define G4PRECOMPOUNDTRANSITIONSINT_HH
 
 // Compute transition probailities:
 // TransitionProb1 => probability of transition with  \Delta N = +1
@@ -54,30 +54,29 @@ class G4NuclearLevelData;
 
 class G4PreCompoundTransitionsInt : public G4VPreCompoundTransitions
 {
-public:
+  public:
 
-  G4PreCompoundTransitionsInt(G4int verb);
+    G4PreCompoundTransitionsInt(G4int verb);
 
-  ~G4PreCompoundTransitionsInt() override = default;
+    ~G4PreCompoundTransitionsInt() override = default;
 
-  G4double CalculateProbability(const G4Fragment & aFragment) override;
-  
-  void PerformTransition(G4Fragment & aFragment) override;
-  
-  G4PreCompoundTransitionsInt(const G4PreCompoundTransitionsInt&) = delete;
-  const G4PreCompoundTransitionsInt& operator=
-  (const G4PreCompoundTransitionsInt& right) = delete;
-  G4bool operator==(const G4PreCompoundTransitionsInt& right) const = delete;
-  G4bool operator!=(const G4PreCompoundTransitionsInt& right) const = delete;
+    G4double CalculateProbability(const G4Fragment& aFragment) override;
 
-private:
+    void PerformTransition(G4Fragment& aFragment) override;
 
-  const G4ParticleDefinition* proton;
-  G4NuclearLevelData* fNuclData;
+    G4PreCompoundTransitionsInt(const G4PreCompoundTransitionsInt&) = delete;
+    const G4PreCompoundTransitionsInt& operator=(const G4PreCompoundTransitionsInt& right) = delete;
+    G4bool operator==(const G4PreCompoundTransitionsInt& right) const = delete;
+    G4bool operator!=(const G4PreCompoundTransitionsInt& right) const = delete;
 
-  G4double FermiEnergy;
-  G4double r0;  // Nuclear radius
-  G4int fVerbose;
+  private:
+
+    const G4ParticleDefinition* proton;
+    G4NuclearLevelData* fNuclData;
+
+    G4double FermiEnergy;
+    G4double r0;  // Nuclear radius
+    G4int fVerbose;
 };
 
 #endif

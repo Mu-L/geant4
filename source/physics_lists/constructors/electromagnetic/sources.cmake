@@ -11,18 +11,10 @@ geant4_add_module(G4phys_ctor_em
     G4EmDNAChemistry_option2.hh
     G4EmDNAChemistry_option3.hh
     G4EmDNAPhysics.hh
-    G4EmDNAPhysics_option1.hh
     G4EmDNAPhysics_option2.hh
-    G4EmDNAPhysics_option3.hh
     G4EmDNAPhysics_option4.hh
-    G4EmDNAPhysics_option5.hh
     G4EmDNAPhysics_option6.hh
-    G4EmDNAPhysics_option7.hh
     G4EmDNAPhysics_option8.hh
-    G4EmDNAPhysics_stationary.hh
-    G4EmDNAPhysics_stationary_option2.hh
-    G4EmDNAPhysics_stationary_option4.hh
-    G4EmDNAPhysics_stationary_option6.hh
     G4EmDNAPhysicsActivator.hh
     G4EmLivermorePhysics.hh
     G4EmLivermorePolarizedPhysics.hh
@@ -42,6 +34,7 @@ geant4_add_module(G4phys_ctor_em
     G4OpticalPhysics.hh
     G4ChemDissociationChannels.hh
     G4ChemDissociationChannels_option1.hh
+    G4ChemMIDissociationChannels.hh
   SOURCES
     G4ChargedUnknownPhysics.cc
     G4EmBuilder.cc
@@ -51,18 +44,10 @@ geant4_add_module(G4phys_ctor_em
     G4EmDNAChemistry_option2.cc
     G4EmDNAChemistry_option3.cc
     G4EmDNAPhysics.cc
-    G4EmDNAPhysics_option1.cc
     G4EmDNAPhysics_option2.cc
-    G4EmDNAPhysics_option3.cc
     G4EmDNAPhysics_option4.cc
-    G4EmDNAPhysics_option5.cc
     G4EmDNAPhysics_option6.cc
-    G4EmDNAPhysics_option7.cc
     G4EmDNAPhysics_option8.cc
-    G4EmDNAPhysics_stationary.cc
-    G4EmDNAPhysics_stationary_option2.cc
-    G4EmDNAPhysics_stationary_option4.cc
-    G4EmDNAPhysics_stationary_option6.cc
     G4EmDNAPhysicsActivator.cc
     G4EmLivermorePhysics.cc
     G4EmLivermorePolarizedPhysics.cc
@@ -81,7 +66,8 @@ geant4_add_module(G4phys_ctor_em
     G4GammaGeneralProcess.cc
     G4OpticalPhysics.cc
     G4ChemDissociationChannels.cc
-    G4ChemDissociationChannels_option1.cc)
+    G4ChemDissociationChannels_option1.cc
+    G4ChemMIDissociationChannels.cc)
 
 geant4_module_link_libraries(G4phys_ctor_em
   PUBLIC

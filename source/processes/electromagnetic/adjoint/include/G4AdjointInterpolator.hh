@@ -31,8 +31,8 @@
 //  Used by  G4AdjointCSManager for interpolation purpose.
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4AdjointInterpolator_h
-#define G4AdjointInterpolator_h 1
+#ifndef G4ADJOINTINTERPOLATOR_HH
+#define G4ADJOINTINTERPOLATOR_HH
 
 #include "globals.hh"
 
@@ -40,50 +40,51 @@
 
 class G4AdjointInterpolator
 {
- public:
-  static G4AdjointInterpolator* GetAdjointInterpolator();
-  static G4AdjointInterpolator* GetInstance();
+  public:
 
-  ~G4AdjointInterpolator();
+    static G4AdjointInterpolator* GetAdjointInterpolator();
+    static G4AdjointInterpolator* GetInstance();
 
-  // Caution: everywhere it is considered that x_vec increases monotically
+    ~G4AdjointInterpolator();
 
-  G4double LinearInterpolation(G4double& x, G4double& x1, G4double& x2,
-                               G4double& y1, G4double& y2);
+    // Caution: everywhere it is considered that x_vec increases monotically
 
-  G4double LogarithmicInterpolation(G4double& x, G4double& x1, G4double& x2,
-                                    G4double& y1, G4double& y2);
+    G4double LinearInterpolation(G4double& x, G4double& x1, G4double& x2, G4double& y1,
+                                 G4double& y2);
 
-  G4double ExponentialInterpolation(G4double& x, G4double& x1, G4double& x2,
-                                    G4double& y1, G4double& y2);
+    G4double LogarithmicInterpolation(G4double& x, G4double& x1, G4double& x2, G4double& y1,
+                                      G4double& y2);
 
-  G4double Interpolation(G4double& x, G4double& x1, G4double& x2, G4double& y1,
-                         G4double& y2, const G4String& InterPolMethod = "Log");
+    G4double ExponentialInterpolation(G4double& x, G4double& x1, G4double& x2, G4double& y1,
+                                      G4double& y2);
 
-  std::size_t FindPosition(G4double& x, std::vector<G4double>& x_vec,
-                      std::size_t ind_min = 0, std::size_t ind_max = 0);
+    G4double Interpolation(G4double& x, G4double& x1, G4double& x2, G4double& y1, G4double& y2,
+                           const G4String& InterPolMethod = "Log");
 
-  std::size_t FindPositionForLogVector(G4double& x, std::vector<G4double>& x_vec);
+    std::size_t FindPosition(G4double& x, std::vector<G4double>& x_vec, std::size_t ind_min = 0,
+                             std::size_t ind_max = 0);
 
-  // xvec should monotically increase
-  G4double Interpolate(G4double& x, std::vector<G4double>& x_vec,
-                       std::vector<G4double>& y_vec,
-                       const G4String& InterPolMethod = "Log");
+    std::size_t FindPositionForLogVector(G4double& x, std::vector<G4double>& x_vec);
 
-  G4double InterpolateWithIndexVector(
-    G4double& x, std::vector<G4double>& x_vec, std::vector<G4double>& y_vec,
-    std::vector<std::size_t>& index_vec, G4double x0,
-    G4double dx);  // xvec should monotically increase
+    // xvec should monotically increase
+    G4double Interpolate(G4double& x, std::vector<G4double>& x_vec, std::vector<G4double>& y_vec,
+                         const G4String& InterPolMethod = "Log");
 
-  G4double InterpolateForLogVector(G4double& x, std::vector<G4double>& x_vec,
-                                   std::vector<G4double>& y_vec);
+    G4double InterpolateWithIndexVector(G4double& x, std::vector<G4double>& x_vec,
+                                        std::vector<G4double>& y_vec,
+                                        std::vector<std::size_t>& index_vec, G4double x0,
+                                        G4double dx);  // xvec should monotically increase
 
-  G4AdjointInterpolator(G4AdjointInterpolator&) = delete;
-  G4AdjointInterpolator& operator=(const G4AdjointInterpolator& right) = delete;
+    G4double InterpolateForLogVector(G4double& x, std::vector<G4double>& x_vec,
+                                     std::vector<G4double>& y_vec);
 
- private:
-  G4AdjointInterpolator();
+    G4AdjointInterpolator(G4AdjointInterpolator&) = delete;
+    G4AdjointInterpolator& operator=(const G4AdjointInterpolator& right) = delete;
 
-  static G4ThreadLocal G4AdjointInterpolator* fInstance;
+  private:
+
+    G4AdjointInterpolator();
+
+    static G4ThreadLocal G4AdjointInterpolator* fInstance;
 };
 #endif

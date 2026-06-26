@@ -39,32 +39,32 @@ https://doi.org/10.11484/jaea-data-code-2018-007
 //         on base of G4LivermoreRayleighModel
 //
 
-#ifndef G4JAEAElasticScattering_h
-#define G4JAEAElasticScattering_h 1
+#ifndef G4JAEAELASTICSCATTERING_HH
+#define G4JAEAELASTICSCATTERING_HH
 
 #include "G4VEmProcess.hh"
 
-
 class G4JAEAElasticScattering : public G4VEmProcess
 {
-public:
-  //Constructor
-  explicit G4JAEAElasticScattering(const G4String& processName ="JAEA_ES",
-				   G4ProcessType type = fElectromagnetic);
-  //Destructor
-  ~G4JAEAElasticScattering() override;
-  
-  //true for gamma only
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
+  public:
 
-protected:
-  void InitialiseProcess(const G4ParticleDefinition*) override;
+    // Constructor
+    explicit G4JAEAElasticScattering(const G4String& processName = "JAEA_ES",
+                                     G4ProcessType type = fElectromagnetic);
+    // Destructor
+    ~G4JAEAElasticScattering() override;
 
-private:
-  G4bool isInitialised;
+    // true for gamma only
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
 
+  protected:
+
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool isInitialised;
 };
-
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 #endif

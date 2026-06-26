@@ -37,13 +37,14 @@
 #define G4EQMAGELECTRICFIELD_HH
 
 #include "G4ChargeState.hh"
-#include "G4EquationOfMotion.hh"
 #include "G4ElectroMagneticField.hh"
+#include "G4EquationOfMotion.hh"
 
 /**
  * @brief G4MonopoleEq defines the right-hand side of equation of motion
  * for monopole in a combined electric and magnetic field:
  * d(p_c)/ds=g{c-energyB_ - p_c x E}/pc.
+ * @ingroup geometry_magneticfield
  */
 
 class G4MonopoleEq : public G4EquationOfMotion
@@ -68,9 +69,8 @@ class G4MonopoleEq : public G4EquationOfMotion
      *  @param[in] MomentumXc Particle momentum.
      *  @param[in] mass Particle mass.
      */
-    void  SetChargeMomentumMass(G4ChargeState particleCharge,
-                                G4double MomentumXc,
-                                G4double mass) override;
+    void SetChargeMomentumMass(G4ChargeState particleCharge, G4double MomentumXc,
+                               G4double mass) override;
 
     /**
      * Calculates the value of the derivative, given the value of the field.
@@ -78,9 +78,8 @@ class G4MonopoleEq : public G4EquationOfMotion
      *  @param[in] Field Field value.
      *  @param[out] dydx Derivatives array.
      */
-    void EvaluateRhsGivenB(const G4double y[],
-                           const G4double Field[],
-                                 G4double dydx[] ) const override;
+    void EvaluateRhsGivenB(const G4double y[], const G4double Field[],
+                           G4double dydx[]) const override;
 
     /**
      * Returns the equation type-ID, "kEqMonopole".

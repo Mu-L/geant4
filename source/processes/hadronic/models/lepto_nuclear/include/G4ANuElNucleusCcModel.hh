@@ -29,73 +29,70 @@
 // Geant4 Header : G4ANuElNucleusCcModel
 //
 // Author : V.Grichine 12.2.19
-//  
+//
 // Modified:
 //
 // Class Description
-// Default model for muon neutrino-nucleus charge current scattering; 
+// Default model for muon neutrino-nucleus charge current scattering;
 // Class Description - End
 
-#ifndef G4ANuElNucleusCcModel_h
-#define G4ANuElNucleusCcModel_h 1
- 
-#include "globals.hh"
-#include "G4NeutrinoNucleusModel.hh"
+#ifndef G4ANUELNUCLEUSCCMODEL_HH
+#define G4ANUELNUCLEUSCCMODEL_HH
+
 #include "G4HadProjectile.hh"
-#include "G4Nucleus.hh"
-#include "G4NucleiProperties.hh"
 #include "G4LorentzVector.hh"
+#include "G4NeutrinoNucleusModel.hh"
+#include "G4NucleiProperties.hh"
+#include "G4Nucleus.hh"
 #include "G4Threading.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 class G4PreCompoundModel;
 class G4Nucleus;
 class G4Fragment;
 
-class G4ANuElNucleusCcModel : public G4NeutrinoNucleusModel      // G4HadronicInteraction
+class G4ANuElNucleusCcModel : public G4NeutrinoNucleusModel  // G4HadronicInteraction
 {
-public:
+  public:
 
-  G4ANuElNucleusCcModel(const G4String& name = "ANuElNuclCcModel");
+    G4ANuElNucleusCcModel(const G4String& name = "ANuElNuclCcModel");
 
-  virtual ~G4ANuElNucleusCcModel();
+    virtual ~G4ANuElNucleusCcModel();
 
-  virtual void InitialiseModel();
+    virtual void InitialiseModel();
 
-  virtual G4bool IsApplicable(const G4HadProjectile & aTrack, 
-  			      G4Nucleus & targetNucleus);
+    virtual G4bool IsApplicable(const G4HadProjectile& aTrack, G4Nucleus& targetNucleus);
 
-  virtual G4HadFinalState * ApplyYourself(const G4HadProjectile & aTrack, 
-					  G4Nucleus & targetNucleus);
+    virtual G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack, G4Nucleus& targetNucleus);
 
+    ////////// KR excitation kinematics ////////////////////
 
-  ////////// KR excitation kinematics ////////////////////
+    void SampleLVkr(const G4HadProjectile& aTrack, G4Nucleus& targetNucleus);
 
-  void SampleLVkr(const G4HadProjectile & aTrack, G4Nucleus & targetNucleus);
+    G4double GetMinNuElEnergy()
+    {
+      return fMel + 0.5 * fMel * fMel / fM1 + 0.05 * CLHEP::MeV;
+    };  // kinematics + accuracy for sqrts
 
-  G4double GetMinNuElEnergy(){ return fMel + 0.5*fMel*fMel/fM1 + 0.05*CLHEP::MeV; }; // kinematics + accuracy for sqrts
-  
-  G4double ThresholdEnergy(G4double mI, G4double mF, G4double mP) // for cluster decay
-  { 
-    G4double w = std::sqrt(fW2);
-    return w + 0.5*( (mP+mF)*(mP+mF)-(w+mI)*(w+mI) )/mI;
-  };
- 
-  virtual void ModelDescription(std::ostream&) const;
+    G4double ThresholdEnergy(G4double mI, G4double mF, G4double mP)  // for cluster decay
+    {
+      G4double w = std::sqrt(fW2);
+      return w + 0.5 * ((mP + mF) * (mP + mF) - (w + mI) * (w + mI)) / mI;
+    };
 
-private:
+    virtual void ModelDescription(std::ostream&) const;
 
-  G4ParticleDefinition* thePositron;
- 
-  G4bool fData, fMaster; // for one initialisation only
-  G4double fMel;
+  private:
+
+    G4ParticleDefinition* thePositron;
+
+    G4bool fData, fMaster;  // for one initialisation only
+    G4double fMel;
 
 #ifdef G4MULTITHREADED
-  static G4Mutex numuNucleusModel;
+    static G4Mutex numuNucleusModel;
 #endif
-  
 };
-
-
 
 #endif

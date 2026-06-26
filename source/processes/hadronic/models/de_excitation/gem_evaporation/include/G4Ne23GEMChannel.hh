@@ -29,29 +29,29 @@
 // by V. Lara (Sept. 2001)
 //
 
-#ifndef G4Ne23GEMChannel_h
-#define G4Ne23GEMChannel_h 1
+#ifndef G4NE23GEMCHANNEL_HH
+#define G4NE23GEMCHANNEL_HH
 
 #include "G4GEMChannel.hh"
 #include "G4Ne23GEMProbability.hh"
 
 class G4Ne23GEMChannel : public G4GEMChannel
 {
-public:
-  // only available constructor
-  explicit G4Ne23GEMChannel() 
-    : G4GEMChannel(23,10,"Ne23",&theEvaporationProbability) {}
-  
-  // destructor
-  ~G4Ne23GEMChannel() {};
-  
-private:
-  const G4Ne23GEMChannel & operator=(const G4Ne23GEMChannel & right) = delete;  
-  G4Ne23GEMChannel(const G4Ne23GEMChannel & right) = delete;
-  G4bool operator==(const G4Ne23GEMChannel & right) const = delete;
-  G4bool operator!=(const G4Ne23GEMChannel & right) const = delete;
-    
-  G4Ne23GEMProbability theEvaporationProbability;
-  
+  public:
+
+    // only available constructor
+    explicit G4Ne23GEMChannel() : G4GEMChannel(23, 10, "Ne23", &theEvaporationProbability) {}
+
+    // destructor
+    ~G4Ne23GEMChannel() {};
+
+  private:
+
+    const G4Ne23GEMChannel& operator=(const G4Ne23GEMChannel& right) = delete;
+    G4Ne23GEMChannel(const G4Ne23GEMChannel& right) = delete;
+    G4bool operator==(const G4Ne23GEMChannel& right) const = delete;
+    G4bool operator!=(const G4Ne23GEMChannel& right) const = delete;
+
+    G4Ne23GEMProbability theEvaporationProbability;
 };
 #endif

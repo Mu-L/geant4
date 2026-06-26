@@ -44,7 +44,8 @@ G4UIsession::G4UIsession(G4int iBatch) : ifBatch(iBatch) {}
 // --------------------------------------------------------------------
 G4UIsession::~G4UIsession()
 {
-  if (ifBatch == 0) {
+  if (ifBatch == 0)
+  {
     --inSession;
   }
 }

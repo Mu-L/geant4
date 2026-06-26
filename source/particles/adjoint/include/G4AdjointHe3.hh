@@ -36,19 +36,21 @@
 //		The use of adjoint particles instead of "normal" particles during a reverse simulation
 //		is based on an idea of M. Asai.
 //
-#ifndef G4AdjointHe3_h
-#define G4AdjointHe3_h 1
+#ifndef G4ADJOINTHE3_HH
+#define G4ADJOINTHE3_HH
 
 #include "G4AdjointIons.hh"
 
 class G4AdjointHe3 : public G4AdjointIons
 {
   public:
+
     static G4AdjointHe3* Definition();
     static G4AdjointHe3* He3Definition();
     static G4AdjointHe3* He3();
 
   private:
+
     G4AdjointHe3() {}
     ~G4AdjointHe3() override = default;
 

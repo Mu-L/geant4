@@ -46,27 +46,28 @@ class G4InuclParticle;
 class G4ExcitationHandler;
 class G4VPreCompoundModel;
 
+class G4PreCompoundDeexcitation : public G4CascadeDeexciteBase
+{
+  public:
 
-class G4PreCompoundDeexcitation : public G4CascadeDeexciteBase {
+    G4PreCompoundDeexcitation();
+    virtual ~G4PreCompoundDeexcitation();
 
-public:
-  G4PreCompoundDeexcitation();
-  virtual ~G4PreCompoundDeexcitation();
+    virtual void setVerboseLevel(G4int verbose);
 
-  virtual void setVerboseLevel(G4int verbose);
+    // Interface specific to pre-compound (post-cascade) processing
+    virtual void deExcite(const G4Fragment& fragment, G4CollisionOutput& globalOutput);
 
-  // Interface specific to pre-compound (post-cascade) processing
-  virtual void deExcite(const G4Fragment& fragment,
-			G4CollisionOutput& globalOutput);
+  private:
 
-private:
-  G4ExcitationHandler* theExcitationHandler;
-  G4VPreCompoundModel* theDeExcitation;
+    G4ExcitationHandler* theExcitationHandler;
+    G4VPreCompoundModel* theDeExcitation;
 
-private:
-  // Copying of modules is forbidden
-  G4PreCompoundDeexcitation(const G4PreCompoundDeexcitation&);
-  G4PreCompoundDeexcitation& operator=(const G4PreCompoundDeexcitation&);
+  private:
+
+    // Copying of modules is forbidden
+    G4PreCompoundDeexcitation(const G4PreCompoundDeexcitation&);
+    G4PreCompoundDeexcitation& operator=(const G4PreCompoundDeexcitation&);
 };
 
-#endif	/* G4PRECOMPOUND_DEEXCITATION_HH */
+#endif /* G4PRECOMPOUND_DEEXCITATION_HH */

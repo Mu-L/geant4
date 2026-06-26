@@ -35,8 +35,8 @@
 //
 // Author: Makoto Asai
 // --------------------------------------------------------------------
-#ifndef G4VHitsCollection_h
-#define G4VHitsCollection_h 1
+#ifndef G4VHITSCOLLECTION_HH
+#define G4VHITSCOLLECTION_HH
 
 #include "globals.hh"
 
@@ -44,34 +44,34 @@ class G4VHit;
 
 class G4VHitsCollection
 {
- public:
+  public:
 
-  G4VHitsCollection() = default;
-  G4VHitsCollection(const G4String& detName, const G4String& colNam);
-  virtual ~G4VHitsCollection() = default;
-  G4bool operator==(const G4VHitsCollection& right) const;
+    G4VHitsCollection() = default;
+    G4VHitsCollection(const G4String& detName, const G4String& colNam);
+    virtual ~G4VHitsCollection() = default;
+    G4bool operator==(const G4VHitsCollection& right) const;
 
-  virtual void DrawAllHits(){};
-  virtual void PrintAllHits(){};
+    virtual void DrawAllHits() {};
+    virtual void PrintAllHits() {};
 
-  inline const G4String& GetName() const { return collectionName; }
-  inline const G4String& GetSDname() const { return SDname; }
-  inline void SetColID(G4int i) { colID = i; }
-  inline G4int GetColID() const { return colID; }
+    inline const G4String& GetName() const { return collectionName; }
+    inline const G4String& GetSDname() const { return SDname; }
+    inline void SetColID(G4int i) { colID = i; }
+    inline G4int GetColID() const { return colID; }
 
-  // GetHit and GetSize are given a default implementation here so
-  // that the template G4THitsCollection can be used, but they
-  // are re-implemented G4THitsCollection.
-  virtual G4VHit* GetHit(std::size_t) const { return nullptr; }
-  virtual std::size_t GetSize() const { return 0; };
+    // GetHit and GetSize are given a default implementation here so
+    // that the template G4THitsCollection can be used, but they
+    // are re-implemented G4THitsCollection.
+    virtual G4VHit* GetHit(std::size_t) const { return nullptr; }
+    virtual std::size_t GetSize() const { return 0; };
 
- protected:
+  protected:
 
-  // Collection name
-  G4String collectionName = "Unknown";
-  G4String SDname = "Unknown";
-  // Collection ID
-  G4int colID = -1;
+    // Collection name
+    G4String collectionName = "Unknown";
+    G4String SDname = "Unknown";
+    // Collection ID
+    G4int colID = -1;
 };
 
 #endif

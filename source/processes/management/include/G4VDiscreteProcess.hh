@@ -34,89 +34,70 @@
 // - 2 December 1995, G.Cosmo - First implementation, based on object model
 // - 18 December 1996, H.Kurashige - New Physics scheme
 // --------------------------------------------------------------------
-#ifndef G4VDiscreteProcess_hh
-#define G4VDiscreteProcess_hh 1
-
-#include "globals.hh"
-#include "G4ios.hh"
+#ifndef G4VDISCRETEPROCESS_HH
+#define G4VDISCRETEPROCESS_HH
 
 #include "G4VProcess.hh"
+#include "G4ios.hh"
+#include "globals.hh"
 
-class G4VDiscreteProcess : public G4VProcess 
+class G4VDiscreteProcess : public G4VProcess
 {
-  public:     
+  public:
 
-    G4VDiscreteProcess(const G4String& aName,
-                       G4ProcessType aType = fNotDefined );
+    G4VDiscreteProcess(const G4String& aName, G4ProcessType aType = fNotDefined);
     G4VDiscreteProcess(G4VDiscreteProcess&);
 
     virtual ~G4VDiscreteProcess();
 
     G4VDiscreteProcess& operator=(const G4VDiscreteProcess&) = delete;
 
-    virtual G4double PostStepGetPhysicalInteractionLength(
-                             const G4Track& track,
-                             G4double previousStepSize,
-                             G4ForceCondition* condition
-                            );
+    virtual G4double PostStepGetPhysicalInteractionLength(const G4Track& track,
+                                                          G4double previousStepSize,
+                                                          G4ForceCondition* condition);
 
-    virtual G4VParticleChange* PostStepDoIt(
-                             const G4Track& ,
-                             const G4Step& 
-                            );
+    virtual G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&);
 
     // No operation in AtRestDoIt and AlongStepDoIt
     //
-    virtual G4double AlongStepGetPhysicalInteractionLength(
-                             const G4Track&,
-                             G4double  ,
-                             G4double  ,
-                             G4double& ,
-                             G4GPILSelection*
-                            ) { return -1.0; }
+    virtual G4double AlongStepGetPhysicalInteractionLength(const G4Track&, G4double, G4double,
+                                                           G4double&, G4GPILSelection*)
+    {
+      return -1.0;
+    }
 
-    virtual G4double AtRestGetPhysicalInteractionLength(
-                             const G4Track& ,
-                             G4ForceCondition* 
-                            ) { return -1.0; }
+    virtual G4double AtRestGetPhysicalInteractionLength(const G4Track&, G4ForceCondition*)
+    {
+      return -1.0;
+    }
 
     // No operation in AtRestDoIt and AlongStepDoIt
     //
-    virtual G4VParticleChange* AtRestDoIt(
-                             const G4Track& ,
-                             const G4Step&
-                            ) { return nullptr; }
+    virtual G4VParticleChange* AtRestDoIt(const G4Track&, const G4Step&) { return nullptr; }
 
-    virtual G4VParticleChange* AlongStepDoIt(
-                             const G4Track& ,
-                             const G4Step& 
-                            ) { return nullptr; }
+    virtual G4VParticleChange* AlongStepDoIt(const G4Track&, const G4Step&) { return nullptr; }
 
-    // cross section in the unit of inverse length as a 
-    // function of kinetic energy 
-    virtual G4double GetCrossSection(
-                             const G4double,
-                             const G4MaterialCutsCouple*
-                            ) { return 0.0; }
+    // cross section in the unit of inverse length as a
+    // function of kinetic energy
+    virtual G4double GetCrossSection(const G4double, const G4MaterialCutsCouple*) { return 0.0; }
 
     // minimal energy for non-zero cross section
-    virtual G4double MinPrimaryEnergy(
-                             const G4ParticleDefinition*,
-                             const G4Material*
-                            ) { return 0.0; }
- 
+    virtual G4double MinPrimaryEnergy(const G4ParticleDefinition*, const G4Material*)
+    {
+      return 0.0;
+    }
+
   protected:
 
-    virtual G4double GetMeanFreePath( const G4Track& aTrack,
-                                      G4double previousStepSize,
-                                      G4ForceCondition* condition ) = 0;
-      // Calculates from the macroscopic cross-section a mean
-      // free path, the value is returned in units of distance
- 
+    virtual G4double GetMeanFreePath(const G4Track& aTrack, G4double previousStepSize,
+                                     G4ForceCondition* condition) = 0;
+    // Calculates from the macroscopic cross-section a mean
+    // free path, the value is returned in units of distance
+
   private:
 
     G4VDiscreteProcess();
-      // Hidden default constructor
+    // Hidden default constructor
 };
 
 #endif

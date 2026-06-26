@@ -41,62 +41,65 @@
 // Revisions: G.Cosmo - 21 Obctober 2016, revised pool initialisation
 // ------------------------------------------------------------
 #ifndef G4TWORKSPACEPOOL_HH
-#define G4TWORKSPACEPOOL_HH 1
+#define G4TWORKSPACEPOOL_HH
 
 #include "globals.hh"
+
 #include "tls.hh"
 
-template <class T>
+template<class T>
 class G4TWorkspacePool
 {
- public:
-  inline T* CreateWorkspace();
-  // For use with simple MT mode - each thread gets a workspace
-  // and uses it until end
+  public:
 
-  inline void CreateAndUseWorkspace();
-  // Create it (as above) and use it
+    inline T* CreateWorkspace();
+    // For use with simple MT mode - each thread gets a workspace
+    // and uses it until end
 
-  inline T* FindOrCreateWorkspace();
-  // For use with 'dynamic' model of threading - workspaces can be recycled
-  // Reuse an existing workspace - or create a new one if needed.
-  // This will never fail, except if system is out of resources
+    inline void CreateAndUseWorkspace();
+    // Create it (as above) and use it
 
-  inline T* GetWorkspace() { return fMyWorkspace; }
-  // Give back the existing, active workspace for my thread / task
+    inline T* FindOrCreateWorkspace();
+    // For use with 'dynamic' model of threading - workspaces can be recycled
+    // Reuse an existing workspace - or create a new one if needed.
+    // This will never fail, except if system is out of resources
 
-  inline void Recycle(T* myWrkSpace);
-  // Keep the unused Workspace - for recycling
+    inline T* GetWorkspace() { return fMyWorkspace; }
+    // Give back the existing, active workspace for my thread / task
 
-  inline void CleanUpAndDestroyAllWorkspaces();
-  // To be called once at the end of the job
+    inline void Recycle(T* myWrkSpace);
+    // Keep the unused Workspace - for recycling
 
-  G4TWorkspacePool() {}
-  ~G4TWorkspacePool() {}
+    inline void CleanUpAndDestroyAllWorkspaces();
+    // To be called once at the end of the job
 
- private:
-  static G4ThreadLocal T* fMyWorkspace;
-  // The thread's workspace - if assigned
+    G4TWorkspacePool() {}
+    ~G4TWorkspacePool() {}
+
+  private:
+
+    static G4ThreadLocal T* fMyWorkspace;
+    // The thread's workspace - if assigned
 };
 
-template <typename T>
+template<typename T>
 G4ThreadLocal T* G4TWorkspacePool<T>::fMyWorkspace = nullptr;
 
 // -----------------------------
 // Inline methods implementation
 // -----------------------------
 
-template <class T>
+template<class T>
 T* G4TWorkspacePool<T>::CreateWorkspace()
 {
   T* wrk = nullptr;
-  if(fMyWorkspace == nullptr)
+  if (fMyWorkspace == nullptr)
   {
     wrk = new T;
-    if(wrk == nullptr)
+    if (wrk == nullptr)
     {
-      G4Exception("G4TWorspacePool<someType>::CreateWorkspace()", "MemoryError",
-                  FatalException, "Failed to create workspace.");
+      G4Exception("G4TWorspacePool<someType>::CreateWorkspace()", "MemoryError", FatalException,
+                  "Failed to create workspace.");
     }
     else
     {
@@ -105,25 +108,24 @@ T* G4TWorkspacePool<T>::CreateWorkspace()
   }
   else
   {
-    G4Exception("ParticlesWorspacePool::CreateWorkspace()", "InvalidCondition",
-                FatalException,
+    G4Exception("ParticlesWorspacePool::CreateWorkspace()", "InvalidCondition", FatalException,
                 "Cannot create workspace twice for the same thread.");
     wrk = fMyWorkspace;
   }
   return wrk;
 }
 
-template <class T>
+template<class T>
 void G4TWorkspacePool<T>::CreateAndUseWorkspace()
 {
   (this->CreateWorkspace())->UseWorkspace();
 }
 
-template <class T>
+template<class T>
 T* G4TWorkspacePool<T>::FindOrCreateWorkspace()
 {
   T* wrk = fMyWorkspace;
-  if(wrk == nullptr)
+  if (wrk == nullptr)
   {
     wrk = this->CreateWorkspace();
   }
@@ -133,17 +135,17 @@ T* G4TWorkspacePool<T>::FindOrCreateWorkspace()
   return wrk;
 }
 
-template <class T>
+template<class T>
 void G4TWorkspacePool<T>::Recycle(T* myWrkSpace)
 {
   myWrkSpace->ReleaseWorkspace();
   delete myWrkSpace;
 }
 
-template <class T>
+template<class T>
 void G4TWorkspacePool<T>::CleanUpAndDestroyAllWorkspaces()
 {
-  if(fMyWorkspace != nullptr)
+  if (fMyWorkspace != nullptr)
   {
     fMyWorkspace->DestroyWorkspace();
     delete fMyWorkspace;

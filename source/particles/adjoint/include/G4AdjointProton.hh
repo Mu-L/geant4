@@ -36,19 +36,21 @@
 //		The use of adjoint particles instead of "normal" particles during a reverse simulation
 //		is based on an idea of M. Asai.
 //
-#ifndef G4AdjointProton_h
-#define G4AdjointProton_h 1
+#ifndef G4ADJOINTPROTON_HH
+#define G4ADJOINTPROTON_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4AdjointProton : public G4ParticleDefinition
 {
   public:
+
     static G4AdjointProton* Definition();
     static G4AdjointProton* AdjointProtonDefinition();
     static G4AdjointProton* AdjointProton();
 
   private:
+
     G4AdjointProton() {}
     ~G4AdjointProton() override = default;
 

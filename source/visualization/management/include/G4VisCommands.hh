@@ -36,112 +36,148 @@ class G4UIcmdWithABool;
 class G4UIcmdWithAString;
 class G4UIcmdWithoutParameter;
 
-class G4VisCommandAbortReviewKeptEvents: public G4VVisCommand {
-public:
-  G4VisCommandAbortReviewKeptEvents ();
-  virtual ~G4VisCommandAbortReviewKeptEvents ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandAbortReviewKeptEvents (const G4VisCommandAbortReviewKeptEvents&);
-  G4VisCommandAbortReviewKeptEvents& operator = (const G4VisCommandAbortReviewKeptEvents&);
-  G4UIcmdWithABool* fpCommand;
+class G4VisCommandAbortReviewKeptEvents : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandAbortReviewKeptEvents();
+    virtual ~G4VisCommandAbortReviewKeptEvents();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandAbortReviewKeptEvents(const G4VisCommandAbortReviewKeptEvents&);
+    G4VisCommandAbortReviewKeptEvents& operator=(const G4VisCommandAbortReviewKeptEvents&);
+    G4UIcmdWithABool* fpCommand;
 };
 
-class G4VisCommandAbortReviewPlots: public G4VVisCommand {
-public:
-  G4VisCommandAbortReviewPlots ();
-  virtual ~G4VisCommandAbortReviewPlots ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandAbortReviewPlots (const G4VisCommandAbortReviewPlots&);
-  G4VisCommandAbortReviewPlots& operator = (const G4VisCommandAbortReviewKeptEvents&);
-  G4UIcmdWithABool* fpCommand;
+class G4VisCommandAbortReviewPlots : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandAbortReviewPlots();
+    virtual ~G4VisCommandAbortReviewPlots();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandAbortReviewPlots(const G4VisCommandAbortReviewPlots&);
+    G4VisCommandAbortReviewPlots& operator=(const G4VisCommandAbortReviewKeptEvents&);
+    G4UIcmdWithABool* fpCommand;
 };
 
-class G4VisCommandDrawOnlyToBeKeptEvents: public G4VVisCommand {
-public:
-  G4VisCommandDrawOnlyToBeKeptEvents ();
-  virtual ~G4VisCommandDrawOnlyToBeKeptEvents ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandDrawOnlyToBeKeptEvents (const G4VisCommandDrawOnlyToBeKeptEvents&);
-  G4VisCommandDrawOnlyToBeKeptEvents& operator = (const G4VisCommandDrawOnlyToBeKeptEvents&);
-  G4UIcmdWithABool* fpCommand;
+class G4VisCommandDrawOnlyToBeKeptEvents : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandDrawOnlyToBeKeptEvents();
+    virtual ~G4VisCommandDrawOnlyToBeKeptEvents();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandDrawOnlyToBeKeptEvents(const G4VisCommandDrawOnlyToBeKeptEvents&);
+    G4VisCommandDrawOnlyToBeKeptEvents& operator=(const G4VisCommandDrawOnlyToBeKeptEvents&);
+    G4UIcmdWithABool* fpCommand;
 };
 
-class G4VisCommandEnable: public G4VVisCommand {
-public:
-  G4VisCommandEnable ();
-  virtual ~G4VisCommandEnable ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandEnable (const G4VisCommandEnable&);
-  G4VisCommandEnable& operator = (const G4VisCommandEnable&);
-  G4UIcmdWithABool* fpCommand;
-  G4UIcmdWithoutParameter* fpCommand1;
+class G4VisCommandEnable : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandEnable();
+    virtual ~G4VisCommandEnable();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandEnable(const G4VisCommandEnable&);
+    G4VisCommandEnable& operator=(const G4VisCommandEnable&);
+    G4UIcmdWithABool* fpCommand;
+    G4UIcmdWithoutParameter* fpCommand1;
 };
 
-class G4VisCommandInitialize: public G4VVisCommand {
-public:
-  G4VisCommandInitialize ();
-  virtual ~G4VisCommandInitialize ();
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandInitialize (const G4VisCommandInitialize&);
-  G4VisCommandInitialize& operator = (const G4VisCommandInitialize&);
-  G4UIcmdWithoutParameter* fpCommand;
+class G4VisCommandInitialize : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandInitialize();
+    virtual ~G4VisCommandInitialize();
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandInitialize(const G4VisCommandInitialize&);
+    G4VisCommandInitialize& operator=(const G4VisCommandInitialize&);
+    G4UIcmdWithoutParameter* fpCommand;
 };
 
-class G4VisCommandList: public G4VVisCommand {
-public:
-  G4VisCommandList ();
-  virtual ~G4VisCommandList ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandList (const G4VisCommandList&);
-  G4VisCommandList& operator = (const G4VisCommandList&);
-  G4UIcmdWithAString* fpCommand;
+class G4VisCommandList : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandList();
+    virtual ~G4VisCommandList();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandList(const G4VisCommandList&);
+    G4VisCommandList& operator=(const G4VisCommandList&);
+    G4UIcmdWithAString* fpCommand;
 };
 
-class G4VisCommandReviewKeptEvents: public G4VVisCommand {
-public:
-  G4VisCommandReviewKeptEvents ();
-  virtual ~G4VisCommandReviewKeptEvents ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandReviewKeptEvents (const G4VisCommandReviewKeptEvents&);
-  G4VisCommandReviewKeptEvents& operator = (const G4VisCommandReviewKeptEvents&);
-  G4UIcmdWithAString* fpCommand;
+class G4VisCommandReviewKeptEvents : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandReviewKeptEvents();
+    virtual ~G4VisCommandReviewKeptEvents();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandReviewKeptEvents(const G4VisCommandReviewKeptEvents&);
+    G4VisCommandReviewKeptEvents& operator=(const G4VisCommandReviewKeptEvents&);
+    G4UIcmdWithAString* fpCommand;
 };
 
-class G4VisCommandReviewPlots: public G4VVisCommand {
-public:
-  G4VisCommandReviewPlots ();
-  virtual ~G4VisCommandReviewPlots ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandReviewPlots (const G4VisCommandReviewPlots&);
-  G4VisCommandReviewPlots& operator = (const G4VisCommandReviewPlots&);
-  G4UIcmdWithoutParameter* fpCommand;
+class G4VisCommandReviewPlots : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandReviewPlots();
+    virtual ~G4VisCommandReviewPlots();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandReviewPlots(const G4VisCommandReviewPlots&);
+    G4VisCommandReviewPlots& operator=(const G4VisCommandReviewPlots&);
+    G4UIcmdWithoutParameter* fpCommand;
 };
 
-class G4VisCommandVerbose: public G4VVisCommand {
-public:
-  G4VisCommandVerbose ();
-  virtual ~G4VisCommandVerbose ();
-  G4String GetCurrentValue (G4UIcommand* command);
-  void SetNewValue (G4UIcommand* command, G4String newValue);
-private:
-  G4VisCommandVerbose (const G4VisCommandVerbose&);
-  G4VisCommandVerbose& operator = (const G4VisCommandVerbose&);
-  G4UIcmdWithAString* fpCommand;
+class G4VisCommandVerbose : public G4VVisCommand
+{
+  public:
+
+    G4VisCommandVerbose();
+    virtual ~G4VisCommandVerbose();
+    G4String GetCurrentValue(G4UIcommand* command);
+    void SetNewValue(G4UIcommand* command, G4String newValue);
+
+  private:
+
+    G4VisCommandVerbose(const G4VisCommandVerbose&);
+    G4VisCommandVerbose& operator=(const G4VisCommandVerbose&);
+    G4UIcmdWithAString* fpCommand;
 };
 
 #endif

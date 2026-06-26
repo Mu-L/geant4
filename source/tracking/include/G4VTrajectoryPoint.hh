@@ -35,76 +35,79 @@
 //     Katsuya Amako  (e-mail: Katsuya.Amako@kek.jp)
 //     Takashi Sasaki (e-mail: Takashi.Sasaki@kek.jp)
 // --------------------------------------------------------------------
-#ifndef G4VTrajectoryPoint_hh
-#define G4VTrajectoryPoint_hh 1
+#ifndef G4VTRAJECTORYPOINT_HH
+#define G4VTRAJECTORYPOINT_HH
 
 #include "G4ThreeVector.hh"
 #include "globals.hh"
 
 #include <map>
-#include <vector>
 #include <memory>
+#include <vector>
 
 class G4AttDef;
 class G4AttValue;
 
 class G4VTrajectoryPoint
 {
- public:
-  // Constructor/Destructor
-  G4VTrajectoryPoint() = default;
-  virtual ~G4VTrajectoryPoint() = default;
+  public:
 
-  // Equality operator
-  G4bool operator==(const G4VTrajectoryPoint& right) const { return (this == &right); }
+    // Constructor/Destructor
+    G4VTrajectoryPoint() = default;
+    virtual ~G4VTrajectoryPoint() = default;
 
-  // Return point position
-  virtual const G4ThreeVector GetPosition() const = 0;
+    // Equality operator
+    G4bool operator==(const G4VTrajectoryPoint& right) const { return (this == &right); }
 
-  // Get method for a vector of auxiliary points.
-  // If implemented by a derived class, returns a pointer to a list
-  // of auxiliary points, e.g., intermediate points used during the
-  // calculation of the step that can be used for drawing a smoother
-  // trajectory. The user must test the validity of this pointer
-  virtual const std::vector<G4ThreeVector>* GetAuxiliaryPoints() const { return nullptr; }
+    // Return point position
+    virtual const G4ThreeVector GetPosition() const = 0;
 
-  // Get method for HEPRep style attribute definitions.
-  // If implemented by a derived class, returns a pointer to a map of
-  // attribute definitions for the attribute values below. The user
-  // must test the validity of this pointer. See G4Trajectory for an
-  // example of a concrete implementation of this method
-  virtual const std::map<G4String, G4AttDef>* GetAttDefs() const { return nullptr; }
+    // Get method for a vector of auxiliary points.
+    // If implemented by a derived class, returns a pointer to a list
+    // of auxiliary points, e.g., intermediate points used during the
+    // calculation of the step that can be used for drawing a smoother
+    // trajectory. The user must test the validity of this pointer
+    virtual const std::vector<G4ThreeVector>* GetAuxiliaryPoints() const { return nullptr; }
 
-  // Get method for HEPRep style attribute values.
-  // If implemented by a derived class, returns a pointer to a list
-  // of attribute values suitable, e.g., for picking. Each must
-  // refer to an attribute definition in the above map; its name is
-  // the key. The user must test the validity of this pointer (it
-  // must be non-zero and conform to the G4AttDefs, which may be
-  // checked with G4AttCheck) and delete the list after use. See
-  // G4Trajectory for an example of a concrete implementation of this
-  // method and G4VTrajectory::ShowTrajectory() for an example of its use.
-  // The caller is expected to take ownership of the returned pointer
-  // and delete it appropriately.
-  virtual std::vector<G4AttValue>* CreateAttValues() const { return nullptr; }
+    // Get method for HEPRep style attribute definitions.
+    // If implemented by a derived class, returns a pointer to a map of
+    // attribute definitions for the attribute values below. The user
+    // must test the validity of this pointer. See G4Trajectory for an
+    // example of a concrete implementation of this method
+    virtual const std::map<G4String, G4AttDef>* GetAttDefs() const { return nullptr; }
 
-  // Smart access function - creates on request and stores for future
-  // access. An invalid shared pointer means "not available". Usage:
-  //   const auto trajectoryPointAttValues = aTrajectoryPoint->GetAttValues();
-  //   if (trajectoryPointAttValues) { ...
-  // then use as a normal pointer, but do not delete - simply allow
-  // to go out of scope.
-  std::shared_ptr<std::vector<G4AttValue>> GetAttValues() const;
+    // Get method for HEPRep style attribute values.
+    // If implemented by a derived class, returns a pointer to a list
+    // of attribute values suitable, e.g., for picking. Each must
+    // refer to an attribute definition in the above map; its name is
+    // the key. The user must test the validity of this pointer (it
+    // must be non-zero and conform to the G4AttDefs, which may be
+    // checked with G4AttCheck) and delete the list after use. See
+    // G4Trajectory for an example of a concrete implementation of this
+    // method and G4VTrajectory::ShowTrajectory() for an example of its use.
+    // The caller is expected to take ownership of the returned pointer
+    // and delete it appropriately.
+    virtual std::vector<G4AttValue>* CreateAttValues() const { return nullptr; }
 
-protected:
-  G4VTrajectoryPoint(const G4VTrajectoryPoint& right) = default;
-  G4VTrajectoryPoint& operator=(const G4VTrajectoryPoint& right) = default;
-  G4VTrajectoryPoint(G4VTrajectoryPoint&&) = default;
-  G4VTrajectoryPoint& operator=(G4VTrajectoryPoint&&) = default;
+    // Smart access function - creates on request and stores for future
+    // access. An invalid shared pointer means "not available". Usage:
+    //   const auto trajectoryPointAttValues = aTrajectoryPoint->GetAttValues();
+    //   if (trajectoryPointAttValues) { ...
+    // then use as a normal pointer, but do not delete - simply allow
+    // to go out of scope.
+    std::shared_ptr<std::vector<G4AttValue>> GetAttValues() const;
 
-private:
-  // Cached att values
-  mutable std::shared_ptr<std::vector<G4AttValue>> fpAttValues;
+  protected:
+
+    G4VTrajectoryPoint(const G4VTrajectoryPoint& right) = default;
+    G4VTrajectoryPoint& operator=(const G4VTrajectoryPoint& right) = default;
+    G4VTrajectoryPoint(G4VTrajectoryPoint&&) = default;
+    G4VTrajectoryPoint& operator=(G4VTrajectoryPoint&&) = default;
+
+  private:
+
+    // Cached att values
+    mutable std::shared_ptr<std::vector<G4AttValue>> fpAttValues;
 };
 
 #endif

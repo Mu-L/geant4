@@ -25,14 +25,13 @@
 //
 //
 //
-// 
+//
 
 #include "G4VisFeaturesOfOpenInventor.hh"
 
-G4String G4VisFeaturesOfOpenInventor () {
-  return
-    "    Open Inventor Window/View/Scene."
-    "\n    Advantages:    Open Inventor feature set (interactivity, scene control)."
-    "\n    Disadvantages: Requires Open Inventor license ($$), Hepvis library (Free).";
+G4String G4VisFeaturesOfOpenInventor()
+{
+  return "    Open Inventor Window/View/Scene."
+         "\n    Advantages:    Open Inventor feature set (interactivity, scene control)."
+         "\n    Disadvantages: Requires Open Inventor license ($$), Hepvis library (Free).";
 }
-

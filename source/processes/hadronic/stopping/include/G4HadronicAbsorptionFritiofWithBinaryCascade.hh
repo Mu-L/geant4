@@ -37,7 +37,7 @@
 //
 // Intermediate base class for hadronic absorption at rest using
 // Fritiof (FTF) coupled with Binary Cascade (BIC) for the nuclear
-// de-excitation. 
+// de-excitation.
 //
 // Note: it is applicable only for anti_proton and anti_neutron,
 //       but not for light anti-ion because the propagate method
@@ -47,31 +47,34 @@
 //
 //---------------------------------------------------------------------------
 
-#ifndef G4HadronicAbsorptionFritiofWithBinaryCascade_h
-#define G4HadronicAbsorptionFritiofWithBinaryCascade_h 1
+#ifndef G4HADRONICABSORPTIONFRITIOFWITHBINARYCASCADE_HH
+#define G4HADRONICABSORPTIONFRITIOFWITHBINARYCASCADE_HH
 
-#include "globals.hh"
 #include "G4HadronStoppingProcess.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 
-class G4HadronicAbsorptionFritiofWithBinaryCascade : public G4HadronStoppingProcess { 
+class G4HadronicAbsorptionFritiofWithBinaryCascade : public G4HadronStoppingProcess
+{
+  public:
 
-public:
-  G4HadronicAbsorptionFritiofWithBinaryCascade( G4ParticleDefinition* pdef = 0 ); 
-  virtual ~G4HadronicAbsorptionFritiofWithBinaryCascade();
-  
-  G4bool IsApplicable( const G4ParticleDefinition& );
+    G4HadronicAbsorptionFritiofWithBinaryCascade(G4ParticleDefinition* pdef = 0);
+    virtual ~G4HadronicAbsorptionFritiofWithBinaryCascade();
 
-  void ProcessDescription( std::ostream& outFile ) const;
+    G4bool IsApplicable(const G4ParticleDefinition&);
 
-private:
-  // hide assignment operator as private 
-  G4HadronicAbsorptionFritiofWithBinaryCascade& operator=( const G4HadronicAbsorptionFritiofWithBinaryCascade& );
-  G4HadronicAbsorptionFritiofWithBinaryCascade( const G4HadronicAbsorptionFritiofWithBinaryCascade& );
-  
-  G4ParticleDefinition* pdefApplicable;
+    void ProcessDescription(std::ostream& outFile) const;
+
+  private:
+
+    // hide assignment operator as private
+    G4HadronicAbsorptionFritiofWithBinaryCascade&
+    operator=(const G4HadronicAbsorptionFritiofWithBinaryCascade&);
+    G4HadronicAbsorptionFritiofWithBinaryCascade(
+      const G4HadronicAbsorptionFritiofWithBinaryCascade&);
+
+    G4ParticleDefinition* pdefApplicable;
 };
 
 #endif
-

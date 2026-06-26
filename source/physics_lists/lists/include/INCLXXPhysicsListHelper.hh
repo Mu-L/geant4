@@ -33,15 +33,15 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef TINCLXXPhysicsListHelper_h
-#define TINCLXXPhysicsListHelper_h 1
+#ifndef TINCLXXPHYSICSLISTHELPER_HH
+#define TINCLXXPHYSICSLISTHELPER_HH
 
-#include <CLHEP/Units/SystemOfUnits.h>
-
-#include "globals.hh"
-#include "G4VModularPhysicsList.hh"
-#include "CompileTimeConstraints.hh"
 #include "G4String.hh"
+#include "G4VModularPhysicsList.hh"
+#include "globals.hh"
+
+#include "CompileTimeConstraints.hh"
+#include <CLHEP/Units/SystemOfUnits.h>
 
 /**
  * <h1>Physics list helper INCLXXPhysicsListHelper</h1>
@@ -78,30 +78,33 @@
  * @see G4IonINCLXXPhysics
  */
 template<class T, bool withNeutronHP, bool withFTFP>
-class TINCLXXPhysicsListHelper: public T
+class TINCLXXPhysicsListHelper : public T
 {
-public:
-  TINCLXXPhysicsListHelper(G4int ver = 1);
-  virtual ~TINCLXXPhysicsListHelper();
-  
-public:
-  // SetCuts() 
-  virtual void SetCuts();
+  public:
 
-private:
-  enum {ok = CompileTimeConstraints::IsA<T, G4VModularPhysicsList>::ok };
-  G4String name;
+    TINCLXXPhysicsListHelper(G4int ver = 1);
+    virtual ~TINCLXXPhysicsListHelper();
+
+  public:
+
+    // SetCuts()
+    virtual void SetCuts();
+
+  private:
+
+    enum
+    {
+      ok = CompileTimeConstraints::IsA<T, G4VModularPhysicsList>::ok
+    };
+    G4String name;
 };
 
 #include "INCLXXPhysicsListHelper.icc"
-typedef TINCLXXPhysicsListHelper<G4VModularPhysicsList,false,false> QGSP_INCLXX;
-typedef TINCLXXPhysicsListHelper<G4VModularPhysicsList,true, false> QGSP_INCLXX_HP;
-typedef TINCLXXPhysicsListHelper<G4VModularPhysicsList,false,true> FTFP_INCLXX;
-typedef TINCLXXPhysicsListHelper<G4VModularPhysicsList,true, true> FTFP_INCLXX_HP;
+typedef TINCLXXPhysicsListHelper<G4VModularPhysicsList, false, false> QGSP_INCLXX;
+typedef TINCLXXPhysicsListHelper<G4VModularPhysicsList, true, false> QGSP_INCLXX_HP;
+typedef TINCLXXPhysicsListHelper<G4VModularPhysicsList, false, true> FTFP_INCLXX;
+typedef TINCLXXPhysicsListHelper<G4VModularPhysicsList, true, true> FTFP_INCLXX_HP;
 
 // 2013 by D. Mancusi
 
 #endif
-
-
-

@@ -36,20 +36,21 @@
 
 #include "G4UAdapter.hh"
 
-#if ( defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS) )
+#if (defined(G4GEOM_USE_USOLIDS) || defined(G4GEOM_USE_PARTIAL_USOLIDS))
 
-#include <VecGeom/volumes/UnplacedTrapezoid.h>
+#  include "G4Polyhedron.hh"
 
-#include "G4Polyhedron.hh"
+#  include <VecGeom/volumes/UnplacedTrapezoid.h>
 
 /**
  * @brief G4UTrap is a wrapper class for G4Trap to make use of VecGeom Trapezoid.
+ * @ingroup geometry_solids_csg
  */
 
 class G4UTrap : public G4UAdapter<vecgeom::UnplacedTrapezoid>
 {
-  using Shape_t = vecgeom::UnplacedTrapezoid;
-  using Base_t = G4UAdapter<vecgeom::UnplacedTrapezoid>;
+    using Shape_t = vecgeom::UnplacedTrapezoid;
+    using Base_t = G4UAdapter<vecgeom::UnplacedTrapezoid>;
 
   public:
 
@@ -77,21 +78,16 @@ class G4UTrap : public G4UAdapter<vecgeom::UnplacedTrapezoid>
      *  @param[in] pAlp2 Angle with respect to the Y axis from the centre of the
      *             side at y=-pDy2 to the centre at y=+pDy2 of the face at +pDz.
      */
-    G4UTrap( const G4String& pName,
-                   G4double pDz,
-                   G4double pTheta, G4double pPhi,
-                   G4double pDy1, G4double pDx1, G4double pDx2,
-                   G4double pAlp1,
-                   G4double pDy2, G4double pDx3, G4double pDx4,
-                   G4double pAlp2 );
+    G4UTrap(const G4String& pName, G4double pDz, G4double pTheta, G4double pPhi, G4double pDy1,
+            G4double pDx1, G4double pDx2, G4double pAlp1, G4double pDy2, G4double pDx3,
+            G4double pDx4, G4double pAlp2);
 
     /**
      * Prepares plane equations and parameters from corner coordinates.
      *  @param[in] pName The name of the solid.
      *  @param[in] pt Points of the 8 vertices.
      */
-    G4UTrap( const G4String& pName,
-             const G4ThreeVector pt[8] ) ;
+    G4UTrap(const G4String& pName, const G4ThreeVector pt[8]);
 
     /**
      * Constructor for Right Angular Wedge from STEP (assumes pLTX<=pX).
@@ -101,10 +97,7 @@ class G4UTrap : public G4UAdapter<vecgeom::UnplacedTrapezoid>
      *  @param[in] pX Length along X at the wider side.
      *  @param[in] pLTX Length along X at the narrower side (plTX<=pX).
      */
-    G4UTrap( const G4String& pName,
-                   G4double pZ,
-                   G4double pY,
-                   G4double pX, G4double pLTX );
+    G4UTrap(const G4String& pName, G4double pZ, G4double pY, G4double pX, G4double pLTX);
 
     /**
      * Constructor for G4Trd.
@@ -115,10 +108,8 @@ class G4UTrap : public G4UAdapter<vecgeom::UnplacedTrapezoid>
      *  @param[in] pDy2 Half-length along Y at the surface positioned at +dz.
      *  @param[in] pDz Half-length along Z axis.
      */
-    G4UTrap( const G4String& pName,
-                   G4double pDx1,  G4double pDx2,
-                   G4double pDy1,  G4double pDy2,
-                   G4double pDz );
+    G4UTrap(const G4String& pName, G4double pDx1, G4double pDx2, G4double pDy1, G4double pDy2,
+            G4double pDz);
 
     /**
      * Constructor for G4Para.
@@ -133,16 +124,15 @@ class G4UTrap : public G4UAdapter<vecgeom::UnplacedTrapezoid>
      *  @param[in] pPhi Azimuthal angle of the line joining the centres of
      *             the faces at -dz and +dz in Z.
      */
-    G4UTrap(const G4String& pName,
-                  G4double pDx, G4double pDy, G4double pDz,
-                  G4double pAlpha, G4double pTheta, G4double pPhi );
+    G4UTrap(const G4String& pName, G4double pDx, G4double pDy, G4double pDz, G4double pAlpha,
+            G4double pTheta, G4double pPhi);
 
     /**
      * Constructor for "nominal" G4Trap whose parameters are to be set
      * by a G4VPVParamaterisation later on.
      *  @param[in] pName The name of the solid.
      */
-    G4UTrap( const G4String& pName );
+    G4UTrap(const G4String& pName);
 
     /**
      * Default destructor.
@@ -153,8 +143,7 @@ class G4UTrap : public G4UAdapter<vecgeom::UnplacedTrapezoid>
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions(G4VPVParameterisation* p,
-                           const G4int n,
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
                            const G4VPhysicalVolume* pRep) override;
 
     /**
@@ -170,15 +159,15 @@ class G4UTrap : public G4UAdapter<vecgeom::UnplacedTrapezoid>
      * Accessors. Returning the coordinates of a unit vector along a straight
      * line joining centers of -/+fDz planes.
      */
-    G4double GetZHalfLength()  const;
+    G4double GetZHalfLength() const;
     G4double GetYHalfLength1() const;
     G4double GetXHalfLength1() const;
     G4double GetXHalfLength2() const;
-    G4double GetTanAlpha1()    const;
+    G4double GetTanAlpha1() const;
     G4double GetYHalfLength2() const;
     G4double GetXHalfLength3() const;
     G4double GetXHalfLength4() const;
-    G4double GetTanAlpha2()    const;
+    G4double GetTanAlpha2() const;
 
     /**
      * More accessors.
@@ -189,8 +178,8 @@ class G4UTrap : public G4UAdapter<vecgeom::UnplacedTrapezoid>
     /**
      * Accessors obtaining (re)computed values of the original parameters.
      */
-    G4double GetPhi()    const;
-    G4double GetTheta()  const;
+    G4double GetPhi() const;
+    G4double GetTheta() const;
     G4double GetAlpha1() const;
     G4double GetAlpha2() const;
 
@@ -198,11 +187,9 @@ class G4UTrap : public G4UAdapter<vecgeom::UnplacedTrapezoid>
      * Sets all parameters, as for constructor. Checks and sets half-widths
      * as well as angles. Makes a final check of co-planarity.
      */
-    void SetAllParameters(G4double pDz, G4double pTheta, G4double pPhi,
-                          G4double pDy1, G4double pDx1, G4double pDx2,
-                          G4double pAlp1,
-                          G4double pDy2, G4double pDx3, G4double pDx4,
-                          G4double pAlp2);
+    void SetAllParameters(G4double pDz, G4double pTheta, G4double pPhi, G4double pDy1,
+                          G4double pDx1, G4double pDx2, G4double pAlp1, G4double pDy2,
+                          G4double pDx3, G4double pDx4, G4double pAlp2);
 
     /**
      * Returns the type ID, "G4Trap" of the solid.
@@ -231,10 +218,9 @@ class G4UTrap : public G4UAdapter<vecgeom::UnplacedTrapezoid>
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                           G4double& pMin, G4double& pMax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pMin,
+                           G4double& pMax) const override;
 
     /**
      * Returns a generated polyhedron as graphical representations.

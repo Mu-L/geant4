@@ -36,43 +36,45 @@
 //
 
 #include "G4FTFBuilder.hh"
-#include "G4FTFModel.hh"
+
+#include "G4BinaryCascade.hh"
+#include "G4ExcitationHandler.hh"
 #include "G4ExcitedStringDecay.hh"
-#include "G4TheoFSGenerator.hh"
+#include "G4FTFModel.hh"
 #include "G4GeneratorPrecompoundInterface.hh"
 #include "G4LundStringFragmentation.hh"
-#include "G4BinaryCascade.hh"
 #include "G4PreCompoundModel.hh"
-#include "G4ExcitationHandler.hh"
+#include "G4TheoFSGenerator.hh"
 
-G4FTFBuilder::G4FTFBuilder(const G4String& aName, G4PreCompoundModel* p) 
+G4FTFBuilder::G4FTFBuilder(const G4String& aName, G4PreCompoundModel* p)
   : G4VHadronModelBuilder(aName), fPreCompound(p)
 {}
 
-G4FTFBuilder::~G4FTFBuilder() 
-{}                                     
+G4FTFBuilder::~G4FTFBuilder() {}
 
 G4HadronicInteraction* G4FTFBuilder::BuildModel()
 {
   G4TheoFSGenerator* theFTFModel = new G4TheoFSGenerator(GetName());
-  G4FTFModel* fStringModel  = new G4FTFModel();
+  G4FTFModel* fStringModel = new G4FTFModel();
   fStringModel->SetFragmentationModel(new G4ExcitedStringDecay());
   theFTFModel->SetHighEnergyGenerator(fStringModel);
 
-  if(!fPreCompound) {
+  if (!fPreCompound)
+  {
     fPreCompound = new G4PreCompoundModel();
   }
 
-  if(GetName() == "FTFB") {
+  if (GetName() == "FTFB")
+  {
     G4BinaryCascade* bic = new G4BinaryCascade(fPreCompound);
     theFTFModel->SetTransport(bic);
-
-  } else {
-    G4GeneratorPrecompoundInterface* fPrecoInterface = 
+  }
+  else
+  {
+    G4GeneratorPrecompoundInterface* fPrecoInterface =
       new G4GeneratorPrecompoundInterface(fPreCompound);
     theFTFModel->SetTransport(fPrecoInterface);
   }
 
   return theFTFModel;
 }
-

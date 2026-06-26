@@ -24,8 +24,8 @@
 // ********************************************************************
 //
 //
-// G4MicroElecLOPhononModel.hh, 
-//                   	    	2020/05/20 P. Caron, C. Inguimbert are with ONERA [b] 
+// G4MicroElecLOPhononModel.hh,
+//                   	    	2020/05/20 P. Caron, C. Inguimbert are with ONERA [b]
 //				       	   Q. Gibaru is with CEA [a], ONERA [b] and CNES [c]
 //				           M. Raine and D. Lambert are with CEA [a]
 //
@@ -36,39 +36,42 @@
 //
 // Based on the following publications
 //
-//	- Q.Gibaru, C.Inguimbert, P.Caron, M.Raine, D.Lambert, J.Puech, 
-//	      Geant4 physics processes for microdosimetry and secondary electron emission simulation : 
+//	- Q.Gibaru, C.Inguimbert, P.Caron, M.Raine, D.Lambert, J.Puech,
+//	      Geant4 physics processes for microdosimetry and secondary electron emission simulation :
 //	      Extension of MicroElec to very low energies and new materials
 //	      NIM B, 2020, in review.
 //
 //
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo...... 
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef G4MICROELECLOPHONONSCATTERING_HH 
-#define G4MICROELECLOPHONONSCATTERING_HH 1 
+#ifndef G4MICROELECLOPHONONSCATTERING_HH
+#define G4MICROELECLOPHONONSCATTERING_HH
 
-#include "G4VEmProcess.hh"
 #include "G4Electron.hh"
 #include "G4MicroElecLOPhononModel.hh"
+#include "G4VEmProcess.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class G4MicroElecLOPhononScattering : public G4VEmProcess
 {
-public:
-  explicit G4MicroElecLOPhononScattering(const G4String& processName = "LOPhononScattering",
-				    G4ProcessType type = fElectromagnetic);
-  ~G4MicroElecLOPhononScattering() override;
-  
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
-  
-protected:
-  void InitialiseProcess(const G4ParticleDefinition*) override;
-  
-private:
-  G4bool isInitialised;
+  public:
+
+    explicit G4MicroElecLOPhononScattering(const G4String& processName = "LOPhononScattering",
+                                           G4ProcessType type = fElectromagnetic);
+    ~G4MicroElecLOPhononScattering() override;
+
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
+
+  protected:
+
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+
+  private:
+
+    G4bool isInitialised;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#endif 
+#endif

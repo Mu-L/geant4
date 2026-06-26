@@ -39,8 +39,8 @@
 
 // Author: H.Kurashige, 13 June 1997 - 1st version created
 // --------------------------------------------------------------------
-#ifndef G4ParticlePropertyMessenger_hh
-#define G4ParticlePropertyMessenger_hh 1
+#ifndef G4PARTICLEPROPERTYMESSENGER_HH
+#define G4PARTICLEPROPERTYMESSENGER_HH
 
 #include "G4UImessenger.hh"
 #include "globals.hh"
@@ -58,6 +58,7 @@ class G4UIcmdWithAnInteger;
 class G4ParticlePropertyMessenger : public G4UImessenger
 {
   public:
+
     G4ParticlePropertyMessenger(G4ParticleTable* pTable = nullptr);
     ~G4ParticlePropertyMessenger() override;
 
@@ -68,6 +69,7 @@ class G4ParticlePropertyMessenger : public G4UImessenger
     G4String GetCurrentValue(G4UIcommand* command) override;
 
   private:
+
     G4ParticleTable* theParticleTable = nullptr;
 
     G4UIdirectory* thisDirectory = nullptr;

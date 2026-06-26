@@ -49,10 +49,11 @@
 // 20130621  Add interface to take G4Fragment input instead of G4InuclNuclei.
 // 20140930  Change name from "const char*" to "const G4String"
 
-#include "G4VCascadeCollider.hh"
-#include "globals.hh"
 #include "G4CollisionOutput.hh"
 #include "G4LorentzVector.hh"
+#include "G4VCascadeCollider.hh"
+#include "globals.hh"
+
 #include <cmath>
 #include <vector>
 
@@ -61,119 +62,126 @@ class G4InuclElementaryParticle;
 class G4InuclNuclei;
 class G4InuclParticle;
 
-class G4CascadeCheckBalance : public G4VCascadeCollider {
-public:
-  static const G4double tolerance;	// Don't do floating zero!
+class G4CascadeCheckBalance : public G4VCascadeCollider
+{
+  public:
 
-  explicit G4CascadeCheckBalance(const G4String& owner="G4CascadeCheckBalance");
+    static const G4double tolerance;  // Don't do floating zero!
 
-  G4CascadeCheckBalance(G4double relative, G4double absolute,
-			const G4String& owner="G4CascadeCheckBalance");
-  virtual ~G4CascadeCheckBalance() {};
+    explicit G4CascadeCheckBalance(const G4String& owner = "G4CascadeCheckBalance");
 
-  void setOwner(const G4String& owner) { setName(owner); }
+    G4CascadeCheckBalance(G4double relative, G4double absolute,
+                          const G4String& owner = "G4CascadeCheckBalance");
+    virtual ~G4CascadeCheckBalance() {};
 
-  void setLimits(G4double relative, G4double absolute) {
-    setRelativeLimit(relative);
-    setAbsoluteLimit(absolute);
-  }
+    void setOwner(const G4String& owner) { setName(owner); }
 
-  void setRelativeLimit(G4double limit) { relativeLimit = limit; }
-  void setAbsoluteLimit(G4double limit) { absoluteLimit = limit; }
+    void setLimits(G4double relative, G4double absolute)
+    {
+      setRelativeLimit(relative);
+      setAbsoluteLimit(absolute);
+    }
 
-  void collide(G4InuclParticle* bullet, G4InuclParticle* target,
-	       G4CollisionOutput& output);
+    void setRelativeLimit(G4double limit) { relativeLimit = limit; }
+    void setAbsoluteLimit(G4double limit) { absoluteLimit = limit; }
 
-  // This is for use with G4VCascadeDeexcitation modules
-  void collide(const G4Fragment& fragment, G4CollisionOutput& output);
+    void collide(G4InuclParticle* bullet, G4InuclParticle* target, G4CollisionOutput& output);
 
-  // This is for use with G4EPCollider internal checks
-  void collide(G4InuclParticle* bullet, G4InuclParticle* target,
-	       const std::vector<G4InuclElementaryParticle>& particles);
+    // This is for use with G4VCascadeDeexcitation modules
+    void collide(const G4Fragment& fragment, G4CollisionOutput& output);
 
-  // This is for use with G4NucleiModel internal checks
-  void collide(G4InuclParticle* bullet, G4InuclParticle* target,
-	       const std::vector<G4CascadParticle>& particles);
+    // This is for use with G4EPCollider internal checks
+    void collide(G4InuclParticle* bullet, G4InuclParticle* target,
+                 const std::vector<G4InuclElementaryParticle>& particles);
 
-  // This is for use with G4IntraNucleiCascader
-  void collide(G4InuclParticle* bullet, G4InuclParticle* target,
-	       G4CollisionOutput& output,
-	       const std::vector<G4CascadParticle>& cparticles);
+    // This is for use with G4NucleiModel internal checks
+    void collide(G4InuclParticle* bullet, G4InuclParticle* target,
+                 const std::vector<G4CascadParticle>& particles);
 
-  // This is for use with G4BigBanger internal checks
-  void collide(const G4Fragment& target,
-	       const std::vector<G4InuclElementaryParticle>& particles);
+    // This is for use with G4IntraNucleiCascader
+    void collide(G4InuclParticle* bullet, G4InuclParticle* target, G4CollisionOutput& output,
+                 const std::vector<G4CascadParticle>& cparticles);
 
-  // This is for use with G4Fissioner internal checks
-  void collide(const G4Fragment& target,
-	       const std::vector<G4InuclNuclei>& fragments);
+    // This is for use with G4BigBanger internal checks
+    void collide(const G4Fragment& target, const std::vector<G4InuclElementaryParticle>& particles);
 
-  // Checks on conservation laws (kinematics, baryon number, charge, hyperons)
-  G4bool energyOkay() const;
-  G4bool ekinOkay() const;
-  G4bool momentumOkay() const;
-  G4bool baryonOkay() const;
-  G4bool chargeOkay() const;
-  G4bool strangeOkay() const;
+    // This is for use with G4Fissioner internal checks
+    void collide(const G4Fragment& target, const std::vector<G4InuclNuclei>& fragments);
 
-  // Global check, used by G4CascadeInterface validation loop
-  // NOTE:  Strangeness is not required to be conserved in final state
-  G4bool okay() const { return (energyOkay() && momentumOkay() &&
-				baryonOkay() && chargeOkay()); }
+    // Checks on conservation laws (kinematics, baryon number, charge, hyperons)
+    G4bool energyOkay() const;
+    G4bool ekinOkay() const;
+    G4bool momentumOkay() const;
+    G4bool baryonOkay() const;
+    G4bool chargeOkay() const;
+    G4bool strangeOkay() const;
 
-  // Calculations of conserved quantities from initial and final state
-  // FIXME:  Relative comparisons don't work for zero!
-  G4double deltaE() const { return (final.e() - initial.e()); }
-  G4double relativeE() const {
-    return ( (std::abs(deltaE())<tolerance) ? 0. : 
-	     (initial.e()<tolerance) ? 1. : deltaE()/initial.e() );
-  }
+    // Global check, used by G4CascadeInterface validation loop
+    // NOTE:  Strangeness is not required to be conserved in final state
+    G4bool okay() const { return (energyOkay() && momentumOkay() && baryonOkay() && chargeOkay()); }
 
-  G4double deltaKE() const { return (ekin(final) - ekin(initial)); }
-  G4double relativeKE() const {
-    return ( (std::abs(deltaKE())<tolerance) ? 0. : 
-	     (ekin(initial)<tolerance) ? 1. : deltaKE()/ekin(initial) );
-  }
+    // Calculations of conserved quantities from initial and final state
+    // FIXME:  Relative comparisons don't work for zero!
+    G4double deltaE() const { return (final.e() - initial.e()); }
+    G4double relativeE() const
+    {
+      return ((std::abs(deltaE()) < tolerance) ? 0.
+              : (initial.e() < tolerance)      ? 1.
+                                               : deltaE() / initial.e());
+    }
 
-  G4double deltaP() const { return deltaLV().rho(); }
-  G4double relativeP() const {
-    return ( (std::abs(deltaP())<tolerance) ? 0. : 
-	     (initial.rho()<tolerance) ? 1. : deltaP()/initial.rho() );
-  }
+    G4double deltaKE() const { return (ekin(final) - ekin(initial)); }
+    G4double relativeKE() const
+    {
+      return ((std::abs(deltaKE()) < tolerance) ? 0.
+              : (ekin(initial) < tolerance)     ? 1.
+                                                : deltaKE() / ekin(initial));
+    }
 
-  G4LorentzVector deltaLV() const { return final - initial; }
+    G4double deltaP() const { return deltaLV().rho(); }
+    G4double relativeP() const
+    {
+      return ((std::abs(deltaP()) < tolerance) ? 0.
+              : (initial.rho() < tolerance)    ? 1.
+                                               : deltaP() / initial.rho());
+    }
 
-  // Baryon number, charge, S are discrete; no bounds and no "relative" scale
-  G4int deltaB() const { return (finalBaryon - initialBaryon); }
-  G4int deltaQ() const { return (finalCharge - initialCharge); }
-  G4int deltaS() const { return (finalStrange- initialStrange); }
+    G4LorentzVector deltaLV() const { return final - initial; }
 
-protected:
-  // Utility function for kinetic energy
-  G4double ekin(const G4LorentzVector& p) const { return (p.e() - p.m()); }
+    // Baryon number, charge, S are discrete; no bounds and no "relative" scale
+    G4int deltaB() const { return (finalBaryon - initialBaryon); }
+    G4int deltaQ() const { return (finalCharge - initialCharge); }
+    G4int deltaS() const { return (finalStrange - initialStrange); }
 
-private:
-  G4double relativeLimit;	// Fractional bound on conservation
-  G4double absoluteLimit;	// Absolute (GeV) bound on conservation
+  protected:
 
-  G4LorentzVector initial;	// Four-vectors for computing violations
-  G4LorentzVector final;
+    // Utility function for kinetic energy
+    G4double ekin(const G4LorentzVector& p) const { return (p.e() - p.m()); }
 
-  G4int initialBaryon;		// Total baryon number
-  G4int finalBaryon;
+  private:
 
-  G4int initialCharge;		// Total charge
-  G4int finalCharge;
+    G4double relativeLimit;  // Fractional bound on conservation
+    G4double absoluteLimit;  // Absolute (GeV) bound on conservation
 
-  G4int initialStrange;		// Total strangeness (s-quark content)
-  G4int finalStrange;
+    G4LorentzVector initial;  // Four-vectors for computing violations
+    G4LorentzVector final;
 
-  G4CollisionOutput tempOutput;		// Buffer for direct-list interfaces
+    G4int initialBaryon;  // Total baryon number
+    G4int finalBaryon;
 
-private:
-  // Copying of modules is forbidden
-  G4CascadeCheckBalance(const G4CascadeCheckBalance&);
-  G4CascadeCheckBalance& operator=(const G4CascadeCheckBalance&);
+    G4int initialCharge;  // Total charge
+    G4int finalCharge;
+
+    G4int initialStrange;  // Total strangeness (s-quark content)
+    G4int finalStrange;
+
+    G4CollisionOutput tempOutput;  // Buffer for direct-list interfaces
+
+  private:
+
+    // Copying of modules is forbidden
+    G4CascadeCheckBalance(const G4CascadeCheckBalance&);
+    G4CascadeCheckBalance& operator=(const G4CascadeCheckBalance&);
 };
 
-#endif	/* G4CASCADE_CHECK_BALANCE_HH */
+#endif /* G4CASCADE_CHECK_BALANCE_HH */

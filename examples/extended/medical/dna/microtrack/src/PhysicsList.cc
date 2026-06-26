@@ -48,14 +48,9 @@
 
 // Physics packages (builders contained in the Geant4 source code)
 // Electromagnetic
-#include "G4EmDNAPhysics.hh"
-#include "G4EmDNAPhysics_option1.hh"
 #include "G4EmDNAPhysics_option2.hh"
-#include "G4EmDNAPhysics_option3.hh"
 #include "G4EmDNAPhysics_option4.hh"
-#include "G4EmDNAPhysics_option5.hh"
 #include "G4EmDNAPhysics_option6.hh"
-#include "G4EmDNAPhysics_option7.hh"
 #include "G4EmDNAPhysics_option8.hh"
 #include "G4EmLivermorePhysics.hh"
 #include "G4EmPenelopePhysics.hh"
@@ -140,29 +135,9 @@ void PhysicsList::AddPhysicsList(const G4String& name)
 
   if (name == fName) return;
 
-  if (name == "dna") {
-    fName = name;
-    fPhysicsList = std::make_unique<G4EmDNAPhysics>();
-    G4cout << fPhysicsList->GetPhysicsName()
-           << " physics package has been activated." << G4endl;
-  }
-  else if (name == "dna_opt1") {
-    fName = name;
-    fPhysicsList = std::make_unique<G4EmDNAPhysics_option1>();
-    G4cout << fPhysicsList->GetPhysicsName()
-           << " physics package has been activated." << G4endl;
-  }
-
-  else if (name == "dna_opt2") {
+  if (name == "dna_opt2") {
     fName = name;
     fPhysicsList = std::make_unique<G4EmDNAPhysics_option2>();
-    G4cout << fPhysicsList->GetPhysicsName()
-           << " physics package has been activated." << G4endl;
-  }
-
-  else if (name == "dna_opt3") {
-    fName = name;
-    fPhysicsList = std::make_unique<G4EmDNAPhysics_option3>();
     G4cout << fPhysicsList->GetPhysicsName()
            << " physics package has been activated." << G4endl;
   }
@@ -174,23 +149,9 @@ void PhysicsList::AddPhysicsList(const G4String& name)
            << " physics package has been activated." << G4endl;
   }
 
-  else if (name == "dna_opt5") {
-    fName = name;
-    fPhysicsList = std::make_unique<G4EmDNAPhysics_option5>();
-    G4cout << fPhysicsList->GetPhysicsName()
-           << " physics package has been activated." << G4endl;
-  }
-
   else if (name == "dna_opt6") {
     fName = name;
     fPhysicsList = std::make_unique<G4EmDNAPhysics_option6>();
-    G4cout << fPhysicsList->GetPhysicsName()
-           << " physics package has been activated." << G4endl;
-  }
-
-  else if (name == "dna_opt7") {
-    fName = name;
-    fPhysicsList = std::make_unique<G4EmDNAPhysics_option7>();
     G4cout << fPhysicsList->GetPhysicsName()
            << " physics package has been activated." << G4endl;
   }

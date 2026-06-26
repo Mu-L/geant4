@@ -26,19 +26,20 @@
 //
 // P. Arce, June-2014 Conversion neutron_hp to particle_hp
 //
-#ifndef G4ParticleHPLegendreStore_h
-#define G4ParticleHPLegendreStore_h 1
+#ifndef G4PARTICLEHPLEGENDRESTORE_HH
+#define G4PARTICLEHPLEGENDRESTORE_HH
 
 #include "G4InterpolationManager.hh"
 #include "G4ParticleHPLegendreTable.hh"
 #include "G4ios.hh"
 
-#include <vector>
 #include <fstream>
+#include <vector>
 
 class G4ParticleHPLegendreStore
 {
   public:
+
     G4ParticleHPLegendreStore(G4int n)
     {
       theCoeff.resize(n);
@@ -77,6 +78,7 @@ class G4ParticleHPLegendreStore
     void SetManager(G4InterpolationManager& aManager) { theManager = aManager; }
 
   private:
+
     G4int nEnergy;
     std::vector<G4ParticleHPLegendreTable> theCoeff;
     G4InterpolationManager theManager;  // interpolate between different Tables

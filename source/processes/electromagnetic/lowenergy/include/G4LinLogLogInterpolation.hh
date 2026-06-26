@@ -40,48 +40,32 @@
 // -------------------------------------------------------------------
 
 #ifndef G4LINLOGLOGINTERPOLATION_HH
-#define G4LINLOGLOGINTERPOLATION_HH 1
+#define G4LINLOGLOGINTERPOLATION_HH
 
-#include "globals.hh"
-#include "G4VDataSetAlgorithm.hh"
 #include "G4DataVector.hh"
+#include "G4VDataSetAlgorithm.hh"
+#include "globals.hh"
 
-class G4LinLogLogInterpolation : public G4VDataSetAlgorithm {
- 
-public:
+class G4LinLogLogInterpolation : public G4VDataSetAlgorithm
+{
+  public:
 
-  G4LinLogLogInterpolation();
+    G4LinLogLogInterpolation();
 
-  ~G4LinLogLogInterpolation();
- 
-  G4double Calculate(G4double point, G4int bin, 
-		     const G4DataVector& energies, 
-		     const G4DataVector& data) const;
+    ~G4LinLogLogInterpolation();
 
-  G4double Calculate(G4double point, G4int bin,
-                     const G4DataVector& energies,
-                     const G4DataVector& data, 
-		     const G4DataVector& log_energies, 
-		     const G4DataVector& log_data) const;
+    G4double Calculate(G4double point, G4int bin, const G4DataVector& energies,
+                       const G4DataVector& data) const;
 
-  virtual G4VDataSetAlgorithm* Clone() const; 
+    G4double Calculate(G4double point, G4int bin, const G4DataVector& energies,
+                       const G4DataVector& data, const G4DataVector& log_energies,
+                       const G4DataVector& log_data) const;
 
-private:
+    virtual G4VDataSetAlgorithm* Clone() const;
 
-  
-  // Hide copy constructor and assignment operator
+  private:
 
+    // Hide copy constructor and assignment operator
 };
- 
+
 #endif
- 
-
-
-
-
-
-
-
-
-
-

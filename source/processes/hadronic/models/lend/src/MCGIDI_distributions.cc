@@ -45,7 +45,7 @@ LUPI_HOST Distribution::Distribution( Type a_type, GIDI::Distributions::Distribu
         m_productFrame( a_distribution.productFrame( ) ),
         m_projectileMass( a_setupInfo.m_protare.projectileMass( ) ),
         m_targetMass( a_setupInfo.m_protare.targetMass( ) ),
-        m_productMass( a_setupInfo.m_product1Mass ) {                           // Includes nuclear excitation energy.
+        m_productMass( a_setupInfo.m_productMass ) {                            // Includes nuclear excitation energy.
 
 }
 
@@ -60,7 +60,7 @@ LUPI_HOST Distribution::Distribution( Type a_type, GIDI::Frame a_productFrame, S
         m_productFrame( a_productFrame ),
         m_projectileMass( a_setupInfo.m_protare.projectileMass( ) ),
         m_targetMass( a_setupInfo.m_protare.targetMass( ) ),
-        m_productMass( a_setupInfo.m_product1Mass ) {                           // Includes nuclear excitation energy.
+        m_productMass( a_setupInfo.m_productMass ) {                            // Includes nuclear excitation energy.
 
 }
 
@@ -134,12 +134,14 @@ LUPI_HOST_DEVICE AngularTwoBody::AngularTwoBody( ) :
 
 LUPI_HOST AngularTwoBody::AngularTwoBody( GIDI::Distributions::AngularTwoBody const &a_angularTwoBody, SetupInfo &a_setupInfo ) :
         Distribution( Type::angularTwoBody, a_angularTwoBody, a_setupInfo ),
-        m_residualMass( a_setupInfo.m_product2Mass ),                           // Includes nuclear excitation energy.
+        m_residualMass( a_setupInfo.m_twobodyProduct2Mass ),                    // Includes nuclear excitation energy.
         m_Q( a_setupInfo.m_Q ),
         m_twoBodyThreshold( a_setupInfo.m_reaction->twoBodyThreshold( ) ),
         m_Upscatter( false ),
-        m_angular( Probabilities::parseProbability2d_d1( a_angularTwoBody.angular( ), &a_setupInfo ) ),
+        m_angular( Probabilities::parseProbability2d_d1( a_angularTwoBody.angular( ), a_setupInfo ) ),
         m_modelDBRC_data( nullptr )  {
+
+    if( m_residualMass == productMass( ) ) m_residualMass = a_setupInfo.m_twobodyProduct1Mass;      // This distribution is for the residual, or both products are the same.
 
     if( a_setupInfo.m_protare.projectileIntid( ) == PoPI::Intids::neutron ) {
         m_Upscatter = a_setupInfo.m_reaction->ENDF_MT( ) == 2;
@@ -176,6 +178,22 @@ LUPI_HOST_DEVICE void AngularTwoBody::serialize( LUPI::DataBuffer &a_buffer, LUP
 }
 
 /* *********************************************************************************************************//**
+ * This method is for internal use only. This method returns the pointer to the angular data of *this* and
+ * sets the member **m_angular** to *nullptr*. The caller is responsible for freeing instance returned by
+ * the pointer.
+ *
+ * @return                  A pointer to the angular data of *this*.
+ ***********************************************************************************************************/
+
+LUPI_HOST Probabilities::ProbabilityBase2d_d1 *AngularTwoBody::stealAngular( ) {
+
+    Probabilities::ProbabilityBase2d_d1 *angular1 = m_angular;
+    m_angular = nullptr;
+
+    return( angular1 );
+}
+
+/* *********************************************************************************************************//**
  * This method sets *this* *m_modelDBRC_data* to *a_modelDBRC_data*. It also deletes the current *m_modelDBRC_data* member.
  *
  * @param a_modelDBRC_data      [in]    The instance storing data needed to treat the DRRC upscatter mode.
@@ -209,8 +227,8 @@ LUPI_HOST_DEVICE Uncorrelated::Uncorrelated( ) :
 
 LUPI_HOST Uncorrelated::Uncorrelated( GIDI::Distributions::Uncorrelated const &a_uncorrelated, SetupInfo &a_setupInfo ) :
         Distribution( Type::uncorrelated, a_uncorrelated, a_setupInfo ),
-        m_angular( Probabilities::parseProbability2d_d1( a_uncorrelated.angular( ), nullptr ) ),
-        m_energy( Probabilities::parseProbability2d( a_uncorrelated.energy( ), &a_setupInfo ) ) {
+        m_angular( Probabilities::parseProbability2d_d1( a_uncorrelated.angular( ), a_setupInfo ) ),
+        m_energy( Probabilities::parseProbability2d( a_uncorrelated.energy( ), a_setupInfo ) ) {
 
 }
 
@@ -317,8 +335,8 @@ LUPI_HOST_DEVICE EnergyAngularMC::EnergyAngularMC( ) :
 
 LUPI_HOST EnergyAngularMC::EnergyAngularMC( GIDI::Distributions::EnergyAngularMC const &a_energyAngularMC, SetupInfo &a_setupInfo ) :
         Distribution( Type::energyAngularMC, a_energyAngularMC, a_setupInfo ),
-        m_energy( Probabilities::parseProbability2d_d1( a_energyAngularMC.energy( ), nullptr ) ),
-        m_angularGivenEnergy( Probabilities::parseProbability3d( a_energyAngularMC.energyAngular( ) ) ) {
+        m_energy( Probabilities::parseProbability2d_d1( a_energyAngularMC.energy( ), a_setupInfo ) ),
+        m_angularGivenEnergy( Probabilities::parseProbability3d( a_energyAngularMC.energyAngular( ), a_setupInfo ) ) {
 
 }
 
@@ -370,8 +388,8 @@ LUPI_HOST_DEVICE AngularEnergyMC::AngularEnergyMC( ) :
 
 LUPI_HOST AngularEnergyMC::AngularEnergyMC( GIDI::Distributions::AngularEnergyMC const &a_angularEnergyMC, SetupInfo &a_setupInfo ) :
         Distribution( Type::angularEnergyMC, a_angularEnergyMC, a_setupInfo ),
-        m_angular( Probabilities::parseProbability2d_d1( a_angularEnergyMC.angular( ), nullptr ) ),
-        m_energyGivenAngular( Probabilities::parseProbability3d( a_angularEnergyMC.angularEnergy( ) ) ) {
+        m_angular( Probabilities::parseProbability2d_d1( a_angularEnergyMC.angular( ), a_setupInfo ) ),
+        m_energyGivenAngular( Probabilities::parseProbability3d( a_angularEnergyMC.angularEnergy( ), a_setupInfo ) ) {
 
 }
 
@@ -425,7 +443,7 @@ LUPI_HOST KalbachMann::KalbachMann( GIDI::Distributions::KalbachMann const &a_Ka
         Distribution( Type::KalbachMann, a_KalbachMann, a_setupInfo ),
         m_energyToMeVFactor( 1 ),                                           // FIXME.
         m_eb_massFactor( 1 ),                                               // FIXME.
-        m_f( Probabilities::parseProbability2d_d1( a_KalbachMann.f( ), nullptr ) ),
+        m_f( Probabilities::parseProbability2d_d1( a_KalbachMann.f( ), a_setupInfo ) ),
         m_r( Functions::parseFunction2d( a_KalbachMann.r( ) ) ),
         m_a( Functions::parseFunction2d( a_KalbachMann.a( ) ) ) {
 
@@ -487,6 +505,7 @@ LUPI_HOST_DEVICE void KalbachMann::serialize( LUPI::DataBuffer &a_buffer, LUPI::
  ***********************************************************************************************************/
 
 LUPI_HOST_DEVICE CoherentPhotoAtomicScattering::CoherentPhotoAtomicScattering( ) :
+        m_anomalousDataPresent( false ),
         m_realAnomalousFactor( nullptr ),
         m_imaginaryAnomalousFactor( nullptr ) {
 
@@ -976,7 +995,8 @@ LUPI_HOST_DEVICE void IncoherentPhotoAtomicScattering::serialize( LUPI::DataBuff
  * Default constructor used when broadcasting a Protare as needed by MPI or GPUs.
  ***********************************************************************************************************/
 
-LUPI_HOST_DEVICE IncoherentBoundToFreePhotoAtomicScattering::IncoherentBoundToFreePhotoAtomicScattering( ) {
+LUPI_HOST_DEVICE IncoherentBoundToFreePhotoAtomicScattering::IncoherentBoundToFreePhotoAtomicScattering( ) :
+        m_bindingEnergy( 0.0 ) {
 
 }
 
@@ -1376,6 +1396,11 @@ LUPI_HOST_DEVICE void IncoherentElasticTNSL::serialize( LUPI::DataBuffer &a_buff
     m_DebyeWallerIntegral = serializeFunction1d_d1( a_buffer, a_mode, m_DebyeWallerIntegral );
 }
 
+LUPI_HOST_DEVICE IncoherentElasticTNSL::~IncoherentElasticTNSL( ) {
+
+    delete m_DebyeWallerIntegral;
+}
+
 /*! \class Unspecified
  * This class represents the distribution for an outgoing product whose distribution is not specified.
  */
@@ -1500,18 +1525,18 @@ static LUPI_HOST Distribution *parseGIDI2( GIDI::Distributions::Distribution con
         GIDI::Distributions::Reference3d const *reference3d = static_cast<GIDI::Distributions::Reference3d const *>( &a_GIDI_distribution );
         GIDI::Distributions::Distribution const *linkedForm = static_cast<GIDI::Distributions::Distribution const *>( reference3d->findInAncestry( reference3d->href( ) ) );
         if( linkedForm == nullptr ) 
-            throw std::runtime_error( "MCGIDI::Distributions::parseGIDI: could not find link '" + a_GIDI_distribution.toXLink( ) + "." );
+            throw std::runtime_error( "MCGIDI::Distributions::parseGIDI2: could not find link '" + a_GIDI_distribution.toXLink( ) + "." );
         distribution = parseGIDI2( *linkedForm, a_setupInfo, a_settings ); }
         break;
     default :
-        throw std::runtime_error( "MCGIDI::Distributions::parseGIDI: unsupported distribution: " + a_GIDI_distribution.toXLink( ) + "." );
+        throw std::runtime_error( "MCGIDI::Distributions::parseGIDI2: unsupported distribution: " + a_GIDI_distribution.toXLink( ) + "." );
     }
 
     return( distribution );
 }
 
 /* *********************************************************************************************************//**
- * @param a_distribution        [in]    The GIDI::Protare whose data is to be used to construct *this*.
+ * @param a_distribution        [in]    The MCGIDI::Distributions::Distribution whose type is returned.
  *
  * @return                              The type of the distribution or Distributions::Type::none if *a_distribution* is a *nullptr* pointer.
  ***********************************************************************************************************/
@@ -1522,6 +1547,68 @@ LUPI_HOST_DEVICE Type DistributionType( Distribution const *a_distribution ) {
     return( a_distribution->type( ) );
 }
 
+}
+
+/* *********************************************************************************************************//**
+ * This function deletes an MCGIDI::Distributions::Distribution based on its type.
+ *
+ * @param a_distribution        [in]    The MCGIDI::Protare whose data is to be used to construct *this*.
+ *
+ * @return                              Always returns a **nullptr**.
+ ***********************************************************************************************************/
+
+LUPI_HOST_DEVICE Distributions::Distribution *deleteDistribution( Distributions::Distribution *a_distribution ) {
+
+    Distributions::Type type = Distributions::Type::none;
+    if( a_distribution != nullptr ) type = a_distribution->type( );
+    switch( type ) {
+    case Distributions::Type::none:
+        break;
+    case Distributions::Type::unspecified:
+        delete static_cast<Distributions::Unspecified *>( a_distribution );
+        break;
+    case Distributions::Type::angularTwoBody:
+        delete static_cast<Distributions::AngularTwoBody *>( a_distribution );
+        break;
+    case Distributions::Type::KalbachMann:
+        delete static_cast<Distributions::KalbachMann *>( a_distribution );
+        break;
+    case Distributions::Type::uncorrelated:
+        delete static_cast<Distributions::Uncorrelated *>( a_distribution );
+        break;
+    case Distributions::Type::branching3d:
+        delete static_cast<Distributions::Branching3d *>( a_distribution );
+        break;
+    case Distributions::Type::energyAngularMC:
+        delete static_cast<Distributions::EnergyAngularMC *>( a_distribution );
+        break;
+    case Distributions::Type::angularEnergyMC:
+        delete static_cast<Distributions::AngularEnergyMC *>( a_distribution );
+        break;
+    case Distributions::Type::coherentPhotoAtomicScattering:
+        delete static_cast<Distributions::CoherentPhotoAtomicScattering *>( a_distribution );
+        break;
+    case Distributions::Type::incoherentPhotoAtomicScattering:
+        delete static_cast<Distributions::IncoherentPhotoAtomicScattering *>( a_distribution );
+        break;
+    case Distributions::Type::incoherentBoundToFreePhotoAtomicScattering:
+        delete static_cast<Distributions::IncoherentBoundToFreePhotoAtomicScattering *>( a_distribution );
+        break;
+    case Distributions::Type::incoherentPhotoAtomicScatteringElectron:
+        delete static_cast<Distributions::IncoherentPhotoAtomicScatteringElectron *>( a_distribution );
+        break;
+    case Distributions::Type::pairProductionGamma:
+        delete static_cast<Distributions::PairProductionGamma *>( a_distribution );
+        break;
+    case Distributions::Type::coherentElasticTNSL:
+        delete static_cast<Distributions::CoherentElasticTNSL *>( a_distribution );
+        break;
+    case Distributions::Type::incoherentElasticTNSL:
+        delete static_cast<Distributions::IncoherentElasticTNSL *>( a_distribution );
+        break;
+    }
+
+    return( nullptr );
 }
 
 /* *********************************************************************************************************//**

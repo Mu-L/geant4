@@ -28,8 +28,8 @@
 
 // Author: Ivana Hrivnacova, 15/09/2020  (ivana@ipno.in2p3.fr)
 
-#ifndef G4RootHnFileManager_h
-#define G4RootHnFileManager_h 1
+#ifndef G4ROOTHNFILEMANAGER_HH
+#define G4ROOTHNFILEMANAGER_HH
 
 #include "G4VTHnFileManager.hh"
 #include "globals.hh"
@@ -38,12 +38,14 @@
 
 class G4RootFileManager;
 
-template <typename HT>
+template<typename HT>
 class G4RootHnFileManager : public G4VTHnFileManager<HT>
 {
   public:
+
     explicit G4RootHnFileManager(G4RootFileManager* fileManger)
-      : G4VTHnFileManager<HT>(), fFileManager(fileManger) {}
+      : G4VTHnFileManager<HT>(), fFileManager(fileManger)
+    {}
     G4RootHnFileManager() = delete;
     ~G4RootHnFileManager() override = default;
 
@@ -54,17 +56,17 @@ class G4RootHnFileManager : public G4VTHnFileManager<HT>
     G4bool Write(HT* ht, const G4String& htName, G4String& fileName) final;
 
   private:
+
     // Methods
     G4bool Write(tools::wroot::directory* directory, HT* ht, const G4String& htName);
 
     // Static data members
-    static constexpr std::string_view fkClass { "G4RootHnFileManager<HT>" };
+    static constexpr std::string_view fkClass{"G4RootHnFileManager<HT>"};
 
     // Data members
-    G4RootFileManager* fFileManager { nullptr };
+    G4RootFileManager* fFileManager{nullptr};
 };
 
 #include "G4RootHnFileManager.icc"
 
 #endif
-

@@ -41,11 +41,12 @@
 
 class G4RayTracerQt : public G4VGraphicsSystem
 {
-  public: // with description
+  public:  // with description
+
     G4RayTracerQt();
     ~G4RayTracerQt();
-    G4VSceneHandler* CreateSceneHandler (const G4String& );
-    G4VViewer* CreateViewer (G4VSceneHandler&, const G4String& );
+    G4VSceneHandler* CreateSceneHandler(const G4String&);
+    G4VViewer* CreateViewer(G4VSceneHandler&, const G4String&);
 };
 
 #endif

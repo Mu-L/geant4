@@ -24,45 +24,42 @@
 // ********************************************************************
 //
 
-#ifndef G4VNuclearField_h
-#define  G4VNuclearField_h 1
+#ifndef G4VNUCLEARFIELD_HH
+#define G4VNUCLEARFIELD_HH
 
-#include "globals.hh"
+#include "G4HadronicException.hh"
 #include "G4ThreeVector.hh"
 #include "G4V3DNucleus.hh"
-#include "G4HadronicException.hh"
+#include "globals.hh"
 
 class G4VNuclearField
 {
-public:
-  G4VNuclearField(G4V3DNucleus * aNucleus = 0);
-  virtual ~G4VNuclearField();
+  public:
 
-  void SetNucleus(G4V3DNucleus * aNucleus);
-  virtual G4double GetField(const G4ThreeVector & aPosition) = 0;
-  virtual G4double GetBarrier() = 0;
-  virtual G4double GetCoeff() { return 0; }
+    G4VNuclearField(G4V3DNucleus* aNucleus = 0);
+    virtual ~G4VNuclearField();
 
-protected:
-  G4V3DNucleus * theNucleus;
-  const G4double radius;
+    void SetNucleus(G4V3DNucleus* aNucleus);
+    virtual G4double GetField(const G4ThreeVector& aPosition) = 0;
+    virtual G4double GetBarrier() = 0;
+    virtual G4double GetCoeff() { return 0; }
 
-private:
+  protected:
 
-  G4VNuclearField(const  G4VNuclearField &right);
-  const G4VNuclearField & operator=(const G4VNuclearField & right);
-  G4bool operator==(const G4VNuclearField & right) const;
-  G4bool operator!=(const G4VNuclearField & right) const;
+    G4V3DNucleus* theNucleus;
+    const G4double radius;
 
+  private:
+
+    G4VNuclearField(const G4VNuclearField& right);
+    const G4VNuclearField& operator=(const G4VNuclearField& right);
+    G4bool operator==(const G4VNuclearField& right) const;
+    G4bool operator!=(const G4VNuclearField& right) const;
 };
 
-
-
-inline void G4VNuclearField::SetNucleus(G4V3DNucleus * aNucleus)
+inline void G4VNuclearField::SetNucleus(G4V3DNucleus* aNucleus)
 {
   theNucleus = aNucleus;
 }
 
-
 #endif
-

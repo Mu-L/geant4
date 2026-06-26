@@ -32,25 +32,24 @@
 //
 
 #include "G4IonsShenCrossSection.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
+
 #include "G4DynamicParticle.hh"
-#include "G4NucleiProperties.hh"
 #include "G4HadTmpUtil.hh"
 #include "G4NistManager.hh"
+#include "G4NucleiProperties.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4SystemOfUnits.hh"
 
 G4IonsShenCrossSection::G4IonsShenCrossSection()
   : G4VCrossSectionDataSet("IonsShen"),
-    upperLimit( 10*GeV ),
-//  lowerLimit( 10*MeV ),
-    r0 ( 1.1 )
+    upperLimit(10 * GeV),
+    //  lowerLimit( 10*MeV ),
+    r0(1.1)
 {}
 
-G4IonsShenCrossSection::~G4IonsShenCrossSection()
-{}
+G4IonsShenCrossSection::~G4IonsShenCrossSection() {}
 
-void
-G4IonsShenCrossSection::CrossSectionDescription(std::ostream& outFile) const
+void G4IonsShenCrossSection::CrossSectionDescription(std::ostream& outFile) const
 {
   outFile << "G4IonsShenCrossSection calculates the total reaction cross\n"
           << "section for nucleus-nucleus scattering using the Shen\n"
@@ -59,108 +58,106 @@ G4IonsShenCrossSection::CrossSectionDescription(std::ostream& outFile) const
           << "the cross section is constant.  Below 10 MeV/n zero cross\n"
           << "is returned.\n";
 }
-   
-G4bool G4IonsShenCrossSection::IsElementApplicable(const G4DynamicParticle* aDP, 
-						   G4int, const G4Material*)
+
+G4bool G4IonsShenCrossSection::IsElementApplicable(const G4DynamicParticle* aDP, G4int,
+                                                   const G4Material*)
 {
   return (1 <= aDP->GetDefinition()->GetBaryonNumber());
 }
 
-G4double 
-G4IonsShenCrossSection::GetElementCrossSection(const G4DynamicParticle* aParticle, 
-					       G4int Z, 
-					       const G4Material*)
+G4double G4IonsShenCrossSection::GetElementCrossSection(const G4DynamicParticle* aParticle, G4int Z,
+                                                        const G4Material*)
 {
   G4int A = G4lrint(G4NistManager::Instance()->GetAtomicMassAmu(Z));
   return GetIsoCrossSection(aParticle, Z, A);
 }
 
-G4double G4IonsShenCrossSection::GetIsoCrossSection(const G4DynamicParticle* aParticle, 
-						    G4int Zt, G4int At,  
-						    const G4Isotope*,
-						    const G4Element*,
-						    const G4Material*)
+G4double G4IonsShenCrossSection::GetIsoCrossSection(const G4DynamicParticle* aParticle, G4int Zt,
+                                                    G4int At, const G4Isotope*, const G4Element*,
+                                                    const G4Material*)
 
 {
-   G4double xsection = 0.0;
+  G4double xsection = 0.0;
 
-   G4int Ap = aParticle->GetDefinition()->GetBaryonNumber();
-   G4int Zp = G4lrint(aParticle->GetDefinition()->GetPDGCharge()/eplus); 
-   G4double ke_per_N = aParticle->GetKineticEnergy() / Ap; 
-   if ( ke_per_N > upperLimit ) { ke_per_N = upperLimit; }
+  G4int Ap = aParticle->GetDefinition()->GetBaryonNumber();
+  G4int Zp = G4lrint(aParticle->GetDefinition()->GetPDGCharge() / eplus);
+  G4double ke_per_N = aParticle->GetKineticEnergy() / Ap;
+  if (ke_per_N > upperLimit)
+  {
+    ke_per_N = upperLimit;
+  }
 
-   // Apply energy check, if less than lower limit then 0 value is returned
-   //if (  ke_per_N < lowerLimit ) { return xsection; }
+  // Apply energy check, if less than lower limit then 0 value is returned
+  // if (  ke_per_N < lowerLimit ) { return xsection; }
 
-   G4Pow* g4pow = G4Pow::GetInstance();
-  
-   G4double cubicrAt = g4pow->Z13(At);
-   G4double cubicrAp = g4pow->Z13(Ap);
- 
-   G4double Rt = 1.12 * cubicrAt - 0.94 * ( 1.0 / cubicrAt );
-   G4double Rp = 1.12 * cubicrAp - 0.94 * ( 1.0 / cubicrAp );
+  G4Pow* g4pow = G4Pow::GetInstance();
 
-   G4double r = Rt + Rp + 3.2;   // in fm
-   G4double b = 1.0;   // in MeV/fm
-   G4double targ_mass = G4NucleiProperties::GetNuclearMass(At, Zt);
+  G4double cubicrAt = g4pow->Z13(At);
+  G4double cubicrAp = g4pow->Z13(Ap);
 
-   G4double proj_mass = aParticle->GetMass();
-   G4double proj_momentum = aParticle->GetMomentum().mag();
+  G4double Rt = 1.12 * cubicrAt - 0.94 * (1.0 / cubicrAt);
+  G4double Rp = 1.12 * cubicrAp - 0.94 * (1.0 / cubicrAp);
 
-   G4double Ecm = calEcmValue (proj_mass, targ_mass, proj_momentum); 
+  G4double r = Rt + Rp + 3.2;  // in fm
+  G4double b = 1.0;  // in MeV/fm
+  G4double targ_mass = G4NucleiProperties::GetNuclearMass(At, Zt);
 
-   G4double B = 1.44 * Zt * Zp / r - b * Rt * Rp / ( Rt + Rp ); 
-   if(Ecm <= B) { return xsection; }
+  G4double proj_mass = aParticle->GetMass();
+  G4double proj_momentum = aParticle->GetMomentum().mag();
 
-   G4double c = calCeValue ( ke_per_N / MeV  );  
+  G4double Ecm = calEcmValue(proj_mass, targ_mass, proj_momentum);
 
-   G4double R1 = r0 * (cubicrAt + cubicrAp + 1.85*cubicrAt*cubicrAp/(cubicrAt + cubicrAp) - c); 
+  G4double B = 1.44 * Zt * Zp / r - b * Rt * Rp / (Rt + Rp);
+  if (Ecm <= B)
+  {
+    return xsection;
+  }
 
-   G4double R2 = 1.0 * ( At - 2 * Zt ) * Zp / ( Ap * At );
+  G4double c = calCeValue(ke_per_N / MeV);
 
+  G4double R1 = r0 * (cubicrAt + cubicrAp + 1.85 * cubicrAt * cubicrAp / (cubicrAt + cubicrAp) - c);
 
-   G4double R3 = (0.176 / g4pow->A13(Ecm)) * cubicrAt * cubicrAp /(cubicrAt + cubicrAp);
+  G4double R2 = 1.0 * (At - 2 * Zt) * Zp / (Ap * At);
 
-   G4double R = R1 + R2 + R3;
+  G4double R3 = (0.176 / g4pow->A13(Ecm)) * cubicrAt * cubicrAp / (cubicrAt + cubicrAp);
 
-   xsection = 10 * pi * R * R * ( 1 - B / Ecm );   
-   xsection = xsection * millibarn;   // mulitply xsection by millibarn
+  G4double R = R1 + R2 + R3;
 
-   return xsection; 
+  xsection = 10 * pi * R * R * (1 - B / Ecm);
+  xsection = xsection * millibarn;  // mulitply xsection by millibarn
+
+  return xsection;
 }
 
-G4double
-G4IonsShenCrossSection::calEcmValue(const G4double mp, const G4double mt,
-                                    const G4double Plab)
+G4double G4IonsShenCrossSection::calEcmValue(const G4double mp, const G4double mt,
+                                             const G4double Plab)
 {
-   G4double Elab = std::sqrt ( mp * mp + Plab * Plab );
-   G4double Ecm = std::sqrt ( mp * mp + mt * mt + 2 * Elab * mt );
-   G4double Pcm = Plab * mt / Ecm;
-   G4double KEcm = std::sqrt ( Pcm * Pcm + mp * mp ) - mp;
-   return KEcm;
+  G4double Elab = std::sqrt(mp * mp + Plab * Plab);
+  G4double Ecm = std::sqrt(mp * mp + mt * mt + 2 * Elab * mt);
+  G4double Pcm = Plab * mt / Ecm;
+  G4double KEcm = std::sqrt(Pcm * Pcm + mp * mp) - mp;
+  return KEcm;
 }
-
 
 G4double G4IonsShenCrossSection::calCeValue(const G4double ke)
 {
-  // Calculate c value 
-  // This value is indepenent from projectile and target particle 
-  // ke is projectile kinetic energy per nucleon in the Lab system 
-  // with MeV unit 
-  // fitting function is made by T. Koi 
-  // There are no data below 30 MeV/n in Kox et al., 
+  // Calculate c value
+  // This value is indepenent from projectile and target particle
+  // ke is projectile kinetic energy per nucleon in the Lab system
+  // with MeV unit
+  // fitting function is made by T. Koi
+  // There are no data below 30 MeV/n in Kox et al.,
 
-   G4double Ce; 
-   G4double log10_ke = std::log10 ( ke );   
-   if (log10_ke > 1.5) 
-   {
-     Ce = -10.0/std::pow(G4double(log10_ke), G4double(5)) + 2.0;
-   }
-   else
-   {
-     Ce = (-10.0/std::pow(G4double(1.5), G4double(5) ) + 2.0) /
-         std::pow(G4double(1.5) , G4double(3)) * std::pow(G4double(log10_ke), G4double(3));
-   }
-   return Ce;
+  G4double Ce;
+  G4double log10_ke = std::log10(ke);
+  if (log10_ke > 1.5)
+  {
+    Ce = -10.0 / std::pow(G4double(log10_ke), G4double(5)) + 2.0;
+  }
+  else
+  {
+    Ce = (-10.0 / std::pow(G4double(1.5), G4double(5)) + 2.0) / std::pow(G4double(1.5), G4double(3))
+         * std::pow(G4double(log10_ke), G4double(3));
+  }
+  return Ce;
 }
-

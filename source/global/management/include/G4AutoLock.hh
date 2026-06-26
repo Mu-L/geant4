@@ -269,306 +269,299 @@ int main()
 // Note: Note that G4TemplateAutoLock by itself is not thread-safe and
 //       cannot be shared among threads due to the locked switch
 //
-template <typename _Mutex_t>
+template<typename _Mutex_t>
 class G4TemplateAutoLock : public std::unique_lock<_Mutex_t>
 {
- public:
-  //------------------------------------------------------------------------//
-  // Some useful typedefs
-  //------------------------------------------------------------------------//
-  using unique_lock_t = std::unique_lock<_Mutex_t>;
-  using this_type = G4TemplateAutoLock<_Mutex_t>;
-  using mutex_type = typename unique_lock_t::mutex_type;
+  public:
 
- public:
-  //------------------------------------------------------------------------//
-  // STL-consistent reference form constructors
-  //------------------------------------------------------------------------//
+    //------------------------------------------------------------------------//
+    // Some useful typedefs
+    //------------------------------------------------------------------------//
+    using unique_lock_t = std::unique_lock<_Mutex_t>;
+    using this_type = G4TemplateAutoLock<_Mutex_t>;
+    using mutex_type = typename unique_lock_t::mutex_type;
 
-  // reference form is consistent with STL lock_guard types
-  // Locks the associated mutex by calling m.lock(). The behavior is
-  // undefined if the current thread already owns the mutex except when
-  // the mutex is recursive
-  G4TemplateAutoLock(mutex_type& _mutex)
-    : unique_lock_t(_mutex, std::defer_lock)
-  {
-    // call termination-safe locking. if serial, this call has no effect
-    _lock_deferred();
-  }
+  public:
 
-  // Tries to lock the associated mutex by calling
-  // m.try_lock_for(_timeout_duration). Blocks until specified
-  // _timeout_duration has elapsed or the lock is acquired, whichever comes
-  // first. May block for longer than _timeout_duration.
-  template <typename Rep, typename Period>
-  G4TemplateAutoLock(
-    mutex_type& _mutex,
-    const std::chrono::duration<Rep, Period>& _timeout_duration)
-    : unique_lock_t(_mutex, std::defer_lock)
-  {
-    // call termination-safe locking. if serial, this call has no effect
-    _lock_deferred(_timeout_duration);
-  }
+    //------------------------------------------------------------------------//
+    // STL-consistent reference form constructors
+    //------------------------------------------------------------------------//
 
-  // Tries to lock the associated mutex by calling
-  // m.try_lock_until(_timeout_time). Blocks until specified _timeout_time has
-  // been reached or the lock is acquired, whichever comes first. May block
-  // for longer than until _timeout_time has been reached.
-  template <typename Clock, typename Duration>
-  G4TemplateAutoLock(
-    mutex_type& _mutex,
-    const std::chrono::time_point<Clock, Duration>& _timeout_time)
-    : unique_lock_t(_mutex, std::defer_lock)
-  {
-    // call termination-safe locking. if serial, this call has no effect
-    _lock_deferred(_timeout_time);
-  }
+    // reference form is consistent with STL lock_guard types
+    // Locks the associated mutex by calling m.lock(). The behavior is
+    // undefined if the current thread already owns the mutex except when
+    // the mutex is recursive
+    G4TemplateAutoLock(mutex_type& _mutex) : unique_lock_t(_mutex, std::defer_lock)
+    {
+      // call termination-safe locking. if serial, this call has no effect
+      _lock_deferred();
+    }
 
-  // Does not lock the associated mutex.
-  G4TemplateAutoLock(mutex_type& _mutex, std::defer_lock_t _lock) noexcept
-    : unique_lock_t(_mutex, _lock)
-  {}
+    // Tries to lock the associated mutex by calling
+    // m.try_lock_for(_timeout_duration). Blocks until specified
+    // _timeout_duration has elapsed or the lock is acquired, whichever comes
+    // first. May block for longer than _timeout_duration.
+    template<typename Rep, typename Period>
+    G4TemplateAutoLock(mutex_type& _mutex,
+                       const std::chrono::duration<Rep, Period>& _timeout_duration)
+      : unique_lock_t(_mutex, std::defer_lock)
+    {
+      // call termination-safe locking. if serial, this call has no effect
+      _lock_deferred(_timeout_duration);
+    }
+
+    // Tries to lock the associated mutex by calling
+    // m.try_lock_until(_timeout_time). Blocks until specified _timeout_time has
+    // been reached or the lock is acquired, whichever comes first. May block
+    // for longer than until _timeout_time has been reached.
+    template<typename Clock, typename Duration>
+    G4TemplateAutoLock(mutex_type& _mutex,
+                       const std::chrono::time_point<Clock, Duration>& _timeout_time)
+      : unique_lock_t(_mutex, std::defer_lock)
+    {
+      // call termination-safe locking. if serial, this call has no effect
+      _lock_deferred(_timeout_time);
+    }
+
+    // Does not lock the associated mutex.
+    G4TemplateAutoLock(mutex_type& _mutex, std::defer_lock_t _lock) noexcept
+      : unique_lock_t(_mutex, _lock)
+    {}
 
 #ifdef G4MULTITHREADED
 
-  // Tries to lock the associated mutex without blocking by calling
-  // m.try_lock(). The behavior is undefined if the current thread already
-  // owns the mutex except when the mutex is recursive.
-  G4TemplateAutoLock(mutex_type& _mutex, std::try_to_lock_t _lock)
-    : unique_lock_t(_mutex, _lock)
-  {}
+    // Tries to lock the associated mutex without blocking by calling
+    // m.try_lock(). The behavior is undefined if the current thread already
+    // owns the mutex except when the mutex is recursive.
+    G4TemplateAutoLock(mutex_type& _mutex, std::try_to_lock_t _lock) : unique_lock_t(_mutex, _lock)
+    {}
 
-  // Assumes the calling thread already owns m
-  G4TemplateAutoLock(mutex_type& _mutex, std::adopt_lock_t _lock)
-    : unique_lock_t(_mutex, _lock)
-  {}
+    // Assumes the calling thread already owns m
+    G4TemplateAutoLock(mutex_type& _mutex, std::adopt_lock_t _lock) : unique_lock_t(_mutex, _lock)
+    {}
 
 #else
 
-  // serial dummy version (initializes unique_lock but does not lock)
-  G4TemplateAutoLock(mutex_type& _mutex, std::try_to_lock_t)
-    : unique_lock_t(_mutex, std::defer_lock)
-  {}
+    // serial dummy version (initializes unique_lock but does not lock)
+    G4TemplateAutoLock(mutex_type& _mutex, std::try_to_lock_t)
+      : unique_lock_t(_mutex, std::defer_lock)
+    {}
 
-  // serial dummy version (initializes unique_lock but does not lock)
-  G4TemplateAutoLock(mutex_type& _mutex, std::adopt_lock_t)
-    : unique_lock_t(_mutex, std::defer_lock)
-  {}
+    // serial dummy version (initializes unique_lock but does not lock)
+    G4TemplateAutoLock(mutex_type& _mutex, std::adopt_lock_t)
+      : unique_lock_t(_mutex, std::defer_lock)
+    {}
 
 #endif  // defined(G4MULTITHREADED)
 
- public:
-  //------------------------------------------------------------------------//
-  // Backwards compatibility versions (constructor with pointer to mutex)
-  //------------------------------------------------------------------------//
-  G4TemplateAutoLock(mutex_type* _mutex)
-    : unique_lock_t(*_mutex, std::defer_lock)
-  {
-    // call termination-safe locking. if serial, this call has no effect
-    _lock_deferred();
-  }
+  public:
 
-  G4TemplateAutoLock(mutex_type* _mutex, std::defer_lock_t _lock) noexcept
-    : unique_lock_t(*_mutex, _lock)
-  {}
+    //------------------------------------------------------------------------//
+    // Backwards compatibility versions (constructor with pointer to mutex)
+    //------------------------------------------------------------------------//
+    G4TemplateAutoLock(mutex_type* _mutex) : unique_lock_t(*_mutex, std::defer_lock)
+    {
+      // call termination-safe locking. if serial, this call has no effect
+      _lock_deferred();
+    }
+
+    G4TemplateAutoLock(mutex_type* _mutex, std::defer_lock_t _lock) noexcept
+      : unique_lock_t(*_mutex, _lock)
+    {}
 
 #if defined(G4MULTITHREADED)
 
-  G4TemplateAutoLock(mutex_type* _mutex, std::try_to_lock_t _lock)
-    : unique_lock_t(*_mutex, _lock)
-  {}
+    G4TemplateAutoLock(mutex_type* _mutex, std::try_to_lock_t _lock) : unique_lock_t(*_mutex, _lock)
+    {}
 
-  G4TemplateAutoLock(mutex_type* _mutex, std::adopt_lock_t _lock)
-    : unique_lock_t(*_mutex, _lock)
-  {}
+    G4TemplateAutoLock(mutex_type* _mutex, std::adopt_lock_t _lock) : unique_lock_t(*_mutex, _lock)
+    {}
 
 #else  // NOT defined(G4MULTITHREADED) -- i.e. serial
 
-  G4TemplateAutoLock(mutex_type* _mutex, std::try_to_lock_t)
-    : unique_lock_t(*_mutex, std::defer_lock)
-  {}
+    G4TemplateAutoLock(mutex_type* _mutex, std::try_to_lock_t)
+      : unique_lock_t(*_mutex, std::defer_lock)
+    {}
 
-  G4TemplateAutoLock(mutex_type* _mutex, std::adopt_lock_t)
-    : unique_lock_t(*_mutex, std::defer_lock)
-  {}
+    G4TemplateAutoLock(mutex_type* _mutex, std::adopt_lock_t)
+      : unique_lock_t(*_mutex, std::defer_lock)
+    {}
 
 #endif  // defined(G4MULTITHREADED)
 
- public:
-  //------------------------------------------------------------------------//
-  // Non-constructor overloads
-  //------------------------------------------------------------------------//
+  public:
+
+    //------------------------------------------------------------------------//
+    // Non-constructor overloads
+    //------------------------------------------------------------------------//
 
 #if defined(G4MULTITHREADED)
 
-  // overload nothing
+    // overload nothing
 
 #else  // NOT defined(G4MULTITHREADED) -- i.e. serial
 
-  // override unique lock member functions to keep from locking/unlocking
-  // but does not override in polymorphic usage
-  void lock() {}
-  void unlock() {}
-  bool try_lock() { return true; }
+    // override unique lock member functions to keep from locking/unlocking
+    // but does not override in polymorphic usage
+    void lock() {}
+    void unlock() {}
+    bool try_lock() { return true; }
 
-  template <typename Rep, typename Period>
-  bool try_lock_for(const std::chrono::duration<Rep, Period>&)
-  {
-    return true;
-  }
+    template<typename Rep, typename Period>
+    bool try_lock_for(const std::chrono::duration<Rep, Period>&)
+    {
+      return true;
+    }
 
-  template <typename Clock, typename Duration>
-  bool try_lock_until(const std::chrono::time_point<Clock, Duration>&)
-  {
-    return true;
-  }
+    template<typename Clock, typename Duration>
+    bool try_lock_until(const std::chrono::time_point<Clock, Duration>&)
+    {
+      return true;
+    }
 
-  void swap(this_type& other) noexcept { std::swap(*this, other); }
-  bool owns_lock() const noexcept { return false; }
+    void swap(this_type& other) noexcept { std::swap(*this, other); }
+    bool owns_lock() const noexcept { return false; }
 
-  // no need to overload
-  // explicit operator bool() const noexcept;
-  // this_type& operator=(this_type&& other);
-  // mutex_type* release() noexcept;
-  // mutex_type* mutex() const noexcept;
+    // no need to overload
+    // explicit operator bool() const noexcept;
+    // this_type& operator=(this_type&& other);
+    // mutex_type* release() noexcept;
+    // mutex_type* mutex() const noexcept;
 
 #endif  // defined(G4MULTITHREADED)
 
- private:
+  private:
+
 // helpful macros
 #define _is_stand_mutex(_Tp) (std::is_same<_Tp, G4Mutex>::value)
 #define _is_recur_mutex(_Tp) (std::is_same<_Tp, G4RecursiveMutex>::value)
 #define _is_other_mutex(_Tp) (!_is_stand_mutex(_Tp) && !_is_recur_mutex(_Tp))
 
-  template <typename _Tp                                             = _Mutex_t,
-            typename std::enable_if<_is_stand_mutex(_Tp), int>::type = 0>
-  std::string GetTypeString()
-  {
-    return "G4AutoLock<G4Mutex>";
-  }
+    template<typename _Tp = _Mutex_t, typename std::enable_if<_is_stand_mutex(_Tp), int>::type = 0>
+    std::string GetTypeString()
+    {
+      return "G4AutoLock<G4Mutex>";
+    }
 
-  template <typename _Tp                                             = _Mutex_t,
-            typename std::enable_if<_is_recur_mutex(_Tp), int>::type = 0>
-  std::string GetTypeString()
-  {
-    return "G4AutoLock<G4RecursiveMutex>";
-  }
+    template<typename _Tp = _Mutex_t, typename std::enable_if<_is_recur_mutex(_Tp), int>::type = 0>
+    std::string GetTypeString()
+    {
+      return "G4AutoLock<G4RecursiveMutex>";
+    }
 
-  template <typename _Tp                                             = _Mutex_t,
-            typename std::enable_if<_is_other_mutex(_Tp), int>::type = 0>
-  std::string GetTypeString()
-  {
-    return "G4AutoLock<UNKNOWN_MUTEX>";
-  }
+    template<typename _Tp = _Mutex_t, typename std::enable_if<_is_other_mutex(_Tp), int>::type = 0>
+    std::string GetTypeString()
+    {
+      return "G4AutoLock<UNKNOWN_MUTEX>";
+    }
 
 // pollution is bad
 #undef _is_stand_mutex
 #undef _is_recur_mutex
 #undef _is_other_mutex
 
-  // used in _lock_deferred chrono variants to avoid ununsed-variable warning
-  template <typename _Tp>
-  void suppress_unused_variable(const _Tp&)
-  {}
+    // used in _lock_deferred chrono variants to avoid ununsed-variable warning
+    template<typename _Tp>
+    void suppress_unused_variable(const _Tp&)
+    {}
 
-  //========================================================================//
-  // NOTE on _lock_deferred(...) variants:
-  //      a system_error in lock means that the mutex is unavailable
-  //      we want to throw the error that comes from locking an unavailable
-  //      mutex so that we know there is a memory leak
-  //      if the mutex is valid, this will hold until the other thread
-  //      finishes
+    //========================================================================//
+    // NOTE on _lock_deferred(...) variants:
+    //      a system_error in lock means that the mutex is unavailable
+    //      we want to throw the error that comes from locking an unavailable
+    //      mutex so that we know there is a memory leak
+    //      if the mutex is valid, this will hold until the other thread
+    //      finishes
 
-  // sometimes certain destructors use locks, this isn't an issue unless
-  // the object is leaked. When this occurs, the application finalization
-  // (i.e. the real or implied "return 0" part of main) will call destructors
-  // on Geant4 object after some static mutex variables are deleted, leading
-  // to the error code (typically on Clang compilers):
-  //      libc++abi.dylib: terminating with uncaught exception of type
-  //      std::__1::system_error: mutex lock failed: Invalid argument
-  // this function protects against this failure until such a time that
-  // these issues have been resolved
+    // sometimes certain destructors use locks, this isn't an issue unless
+    // the object is leaked. When this occurs, the application finalization
+    // (i.e. the real or implied "return 0" part of main) will call destructors
+    // on Geant4 object after some static mutex variables are deleted, leading
+    // to the error code (typically on Clang compilers):
+    //      libc++abi.dylib: terminating with uncaught exception of type
+    //      std::__1::system_error: mutex lock failed: Invalid argument
+    // this function protects against this failure until such a time that
+    // these issues have been resolved
 
-  //========================================================================//
-  // standard locking
-  inline void _lock_deferred()
-  {
+    //========================================================================//
+    // standard locking
+    inline void _lock_deferred()
+    {
 #if defined(G4MULTITHREADED)
-    try
-    {
-      this->unique_lock_t::lock();
-    } catch(std::system_error& e)
-    {
-      PrintLockErrorMessage(e);
-    }
+      try
+      {
+        this->unique_lock_t::lock();
+      }
+      catch (std::system_error& e)
+      {
+        PrintLockErrorMessage(e);
+      }
 #endif
-  }
-
-  //========================================================================//
-  // Tries to lock the associated mutex by calling
-  // m.try_lock_for(_timeout_duration). Blocks until specified
-  // _timeout_duration has elapsed or the lock is acquired, whichever comes
-  // first. May block for longer than _timeout_duration.
-  template <typename Rep, typename Period>
-  void _lock_deferred(
-    const std::chrono::duration<Rep, Period>& _timeout_duration)
-  {
-#if defined(G4MULTITHREADED)
-    try
-    {
-      this->unique_lock_t::try_lock_for(_timeout_duration);
-    } catch(std::system_error& e)
-    {
-      PrintLockErrorMessage(e);
     }
+
+    //========================================================================//
+    // Tries to lock the associated mutex by calling
+    // m.try_lock_for(_timeout_duration). Blocks until specified
+    // _timeout_duration has elapsed or the lock is acquired, whichever comes
+    // first. May block for longer than _timeout_duration.
+    template<typename Rep, typename Period>
+    void _lock_deferred(const std::chrono::duration<Rep, Period>& _timeout_duration)
+    {
+#if defined(G4MULTITHREADED)
+      try
+      {
+        this->unique_lock_t::try_lock_for(_timeout_duration);
+      }
+      catch (std::system_error& e)
+      {
+        PrintLockErrorMessage(e);
+      }
 #else
-    suppress_unused_variable(_timeout_duration);
+      suppress_unused_variable(_timeout_duration);
 #endif
-  }
-
-  //========================================================================//
-  // Tries to lock the associated mutex by calling
-  // m.try_lock_until(_timeout_time). Blocks until specified _timeout_time has
-  // been reached or the lock is acquired, whichever comes first. May block
-  // for longer than until _timeout_time has been reached.
-  template <typename Clock, typename Duration>
-  void _lock_deferred(
-    const std::chrono::time_point<Clock, Duration>& _timeout_time)
-  {
-#if defined(G4MULTITHREADED)
-    try
-    {
-      this->unique_lock_t::try_lock_until(_timeout_time);
-    } catch(std::system_error& e)
-    {
-      PrintLockErrorMessage(e);
     }
-#else
-    suppress_unused_variable(_timeout_time);
-#endif
-  }
 
-  //========================================================================//
-  // the message for what mutex lock fails due to deleted static mutex
-  // at termination
-  void PrintLockErrorMessage(std::system_error& e)
-  {
-    // use std::cout/std::endl to avoid include dependencies
-    using std::cout;
-    using std::endl;
-    // the error that comes from locking an unavailable mutex
+    //========================================================================//
+    // Tries to lock the associated mutex by calling
+    // m.try_lock_until(_timeout_time). Blocks until specified _timeout_time has
+    // been reached or the lock is acquired, whichever comes first. May block
+    // for longer than until _timeout_time has been reached.
+    template<typename Clock, typename Duration>
+    void _lock_deferred(const std::chrono::time_point<Clock, Duration>& _timeout_time)
+    {
+#if defined(G4MULTITHREADED)
+      try
+      {
+        this->unique_lock_t::try_lock_until(_timeout_time);
+      }
+      catch (std::system_error& e)
+      {
+        PrintLockErrorMessage(e);
+      }
+#else
+      suppress_unused_variable(_timeout_time);
+#endif
+    }
+
+    //========================================================================//
+    // the message for what mutex lock fails due to deleted static mutex
+    // at termination
+    void PrintLockErrorMessage(std::system_error& e)
+    {
+      // use std::cout/std::endl to avoid include dependencies
+      using std::cout;
+      using std::endl;
+      // the error that comes from locking an unavailable mutex
 #if defined(G4VERBOSE)
-    cout << "Non-critical error: mutex lock failure in "
-         << GetTypeString<mutex_type>() << ". "
-         << "If the app is terminating, Geant4 failed to "
-         << "delete an allocated resource and a Geant4 destructor is "
-         << "being called after the statics were destroyed. \n\t--> "
-         << "Exception: [code: " << e.code() << "] caught: " << e.what()
-         << endl;
+      cout << "Non-critical error: mutex lock failure in " << GetTypeString<mutex_type>() << ". "
+           << "If the app is terminating, Geant4 failed to "
+           << "delete an allocated resource and a Geant4 destructor is "
+           << "being called after the statics were destroyed. \n\t--> "
+           << "Exception: [code: " << e.code() << "] caught: " << e.what() << endl;
 #else
-    suppress_unused_variable(e);
+      suppress_unused_variable(e);
 #endif
-  }
+    }
 };
 
 // -------------------------------------------------------------------------- //
@@ -579,12 +572,12 @@ class G4TemplateAutoLock : public std::unique_lock<_Mutex_t>
 //
 // -------------------------------------------------------------------------- //
 
-using G4AutoLock          = G4TemplateAutoLock<G4Mutex>;
+using G4AutoLock = G4TemplateAutoLock<G4Mutex>;
 using G4RecursiveAutoLock = G4TemplateAutoLock<G4RecursiveMutex>;
 
 // provide abbriviated type if another mutex type is desired to be used
 // aside from above
-template <typename _Tp>
+template<typename _Tp>
 using G4TAutoLock = G4TemplateAutoLock<_Tp>;
 
 #endif  // G4AUTOLOCK_HH

@@ -28,62 +28,62 @@
 // by V. Ivanchenko (July 2016)
 //
 
-#ifndef G4FermiBreakUpVI_h
-#define G4FermiBreakUpVI_h 1
+#ifndef G4FERMIBREAKUPVI_HH
+#define G4FERMIBREAKUPVI_HH
 
+#include "G4FermiFragment.hh"
+#include "G4LorentzVector.hh"
+#include "G4ThreeVector.hh"
 #include "G4VFermiBreakUp.hh"
 #include "globals.hh"
-#include "G4FermiFragment.hh"
-#include "G4ThreeVector.hh"
-#include "G4LorentzVector.hh"
+
 #include <vector>
 
 class G4FermiFragmentsPoolVI;
 
-class G4FermiBreakUpVI final: public G4VFermiBreakUp 
+class G4FermiBreakUpVI final : public G4VFermiBreakUp
 {
-public:
+  public:
 
-  G4FermiBreakUpVI();
-  ~G4FermiBreakUpVI() override;
+    G4FermiBreakUpVI();
+    ~G4FermiBreakUpVI() override;
 
-  void Initialise() override;
+    void Initialise() override;
 
-  // check if the Fermi Break Up model can be used 
-  // mass is an effective mass of a fragment
-  G4bool IsApplicable(G4int ZZ, G4int AA, G4double eexc) const override;
+    // check if the Fermi Break Up model can be used
+    // mass is an effective mass of a fragment
+    G4bool IsApplicable(G4int ZZ, G4int AA, G4double eexc) const override;
 
-  // new interface - vector of products is added to the provided vector
-  // primary fragment is deleted or is modified and added to the list
-  // of products 
-  void BreakFragment(G4FragmentVector*, G4Fragment* theNucleus) override;
+    // new interface - vector of products is added to the provided vector
+    // primary fragment is deleted or is modified and added to the list
+    // of products
+    void BreakFragment(G4FragmentVector*, G4Fragment* theNucleus) override;
 
-  G4FermiBreakUpVI(const G4FermiBreakUpVI &right) = delete;  
-  const G4FermiBreakUpVI & operator=(const G4FermiBreakUpVI &right) = delete;
-  G4bool operator==(const G4FermiBreakUpVI &right) const = delete;
-  G4bool operator!=(const G4FermiBreakUpVI &right) const = delete;
-  
-private:
+    G4FermiBreakUpVI(const G4FermiBreakUpVI& right) = delete;
+    const G4FermiBreakUpVI& operator=(const G4FermiBreakUpVI& right) = delete;
+    G4bool operator==(const G4FermiBreakUpVI& right) const = delete;
+    G4bool operator!=(const G4FermiBreakUpVI& right) const = delete;
 
-  G4bool SampleDecay(const G4int z, const G4int a, const G4double mass,
-                     const G4double ext, G4LorentzVector&);
+  private:
 
-  static G4FermiFragmentsPoolVI* fPool;
+    G4bool SampleDecay(const G4int z, const G4int a, const G4double mass, const G4double ext,
+                       G4LorentzVector&);
 
-  const G4int maxZ{9};
-  const G4int maxA{17};
-  G4int secID;  // Creator model ID for the secondaries created by this model
-  
-  G4double fTolerance{0.0};
-  G4double fElim{0.0};
-  G4double fTimeLim{1.0}; // in ns
+    static G4FermiFragmentsPoolVI* fPool;
 
-  G4bool isFirst{false};
+    const G4int maxZ{9};
+    const G4int maxA{17};
+    G4int secID;  // Creator model ID for the secondaries created by this model
 
-  std::vector<G4double> prob;
-  std::vector<const G4FermiFragment*> frag;
-  std::vector<G4LorentzVector> lvect;
+    G4double fTolerance{0.0};
+    G4double fElim{0.0};
+    G4double fTimeLim{1.0};  // in ns
 
+    G4bool isFirst{false};
+
+    std::vector<G4double> prob;
+    std::vector<const G4FermiFragment*> frag;
+    std::vector<G4LorentzVector> lvect;
 };
 
 #endif

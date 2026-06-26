@@ -38,43 +38,45 @@
 #ifndef G4BUFFERCOUTDESTINATION_HH
 #define G4BUFFERCOUTDESTINATION_HH
 
+#include "G4coutDestination.hh"
+
 #include <memory>
 #include <sstream>
 
-#include "G4coutDestination.hh"
-
 class G4BuffercoutDestination : public G4coutDestination
 {
- public:
-  explicit G4BuffercoutDestination(std::size_t maxSize = 0);
-  ~G4BuffercoutDestination() override;
+  public:
 
-  G4int ReceiveG4debug(const G4String& msg) override;
-  G4int ReceiveG4cout(const G4String& msg) override;
-  G4int ReceiveG4cerr(const G4String& msg) override;
+    explicit G4BuffercoutDestination(std::size_t maxSize = 0);
+    ~G4BuffercoutDestination() override;
 
-  // Flush buffer to std output
-  virtual G4int FlushG4debug();
-   // Flush buffer to std output
-  virtual G4int FlushG4cout();
-  // Flush buffer to std error
-  virtual G4int FlushG4cerr();
-  
-  // Flush all buffers
-  virtual void Finalize();
+    G4int ReceiveG4debug(const G4String& msg) override;
+    G4int ReceiveG4cout(const G4String& msg) override;
+    G4int ReceiveG4cerr(const G4String& msg) override;
 
-  // Set maximum size of buffer, when buffer grows to specified size,
-  // it will trigger flush. Dimension in char
-  void SetMaxSize(std::size_t max);
-  std::size_t GetMaxSize() const { return m_maxSize; }
+    // Flush buffer to std output
+    virtual G4int FlushG4debug();
+    // Flush buffer to std output
+    virtual G4int FlushG4cout();
+    // Flush buffer to std error
+    virtual G4int FlushG4cerr();
 
- protected:
-  std::size_t m_maxSize = 0;
+    // Flush all buffers
+    virtual void Finalize();
 
-  class BufferImpl;
-  std::unique_ptr<BufferImpl> m_buffer_dbg;
-  std::unique_ptr<BufferImpl> m_buffer_out;
-  std::unique_ptr<BufferImpl> m_buffer_err;
+    // Set maximum size of buffer, when buffer grows to specified size,
+    // it will trigger flush. Dimension in char
+    void SetMaxSize(std::size_t max);
+    std::size_t GetMaxSize() const { return m_maxSize; }
+
+  protected:
+
+    std::size_t m_maxSize = 0;
+
+    class BufferImpl;
+    std::unique_ptr<BufferImpl> m_buffer_dbg;
+    std::unique_ptr<BufferImpl> m_buffer_out;
+    std::unique_ptr<BufferImpl> m_buffer_err;
 };
 
 #endif

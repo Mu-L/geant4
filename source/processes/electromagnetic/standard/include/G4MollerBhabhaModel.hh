@@ -52,8 +52,8 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4MollerBhabhaModel_h
-#define G4MollerBhabhaModel_h 1
+#ifndef G4MOLLERBHABHAMODEL_HH
+#define G4MOLLERBHABHAMODEL_HH
 
 #include "G4VEmModel.hh"
 
@@ -61,69 +61,54 @@ class G4ParticleChangeForLoss;
 
 class G4MollerBhabhaModel : public G4VEmModel
 {
+  public:
 
-public:
+    explicit G4MollerBhabhaModel(const G4ParticleDefinition* p = nullptr,
+                                 const G4String& nam = "MollerBhabha");
 
-  explicit G4MollerBhabhaModel(const G4ParticleDefinition* p = nullptr, 
-			       const G4String& nam = "MollerBhabha");
+    ~G4MollerBhabhaModel() override;
 
-  ~G4MollerBhabhaModel() override;
+    void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
 
-  void Initialise(const G4ParticleDefinition*, const G4DataVector&) override;
+    virtual G4double ComputeCrossSectionPerElectron(const G4ParticleDefinition*,
+                                                    G4double kineticEnergy, G4double cutEnergy,
+                                                    G4double maxEnergy);
 
-  virtual G4double ComputeCrossSectionPerElectron(
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy);
-				 
-  G4double ComputeCrossSectionPerAtom(
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double Z, G4double A,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
-				 				 
-  G4double CrossSectionPerVolume(const G4Material*,
-				 const G4ParticleDefinition*,
-				 G4double kineticEnergy,
-				 G4double cutEnergy,
-				 G4double maxEnergy) override;
-				 
-  G4double ComputeDEDXPerVolume(const G4Material*,
-				const G4ParticleDefinition*,
-				G4double kineticEnergy,
-				G4double cutEnergy) override;
+    G4double ComputeCrossSectionPerAtom(const G4ParticleDefinition*, G4double kineticEnergy,
+                                        G4double Z, G4double A, G4double cutEnergy,
+                                        G4double maxEnergy) override;
 
-  void SampleSecondaries(std::vector<G4DynamicParticle*>*,
-			 const G4MaterialCutsCouple*,
-			 const G4DynamicParticle*,
-			 G4double tmin,
-			 G4double maxEnergy) override;
+    G4double CrossSectionPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                   G4double kineticEnergy, G4double cutEnergy,
+                                   G4double maxEnergy) override;
 
-  // hide assignment operator 
-  G4MollerBhabhaModel & operator=(const  G4MollerBhabhaModel &right) = delete;
-  G4MollerBhabhaModel(const  G4MollerBhabhaModel&) = delete;
+    G4double ComputeDEDXPerVolume(const G4Material*, const G4ParticleDefinition*,
+                                  G4double kineticEnergy, G4double cutEnergy) override;
 
-protected:
+    void SampleSecondaries(std::vector<G4DynamicParticle*>*, const G4MaterialCutsCouple*,
+                           const G4DynamicParticle*, G4double tmin, G4double maxEnergy) override;
 
-  G4double MaxSecondaryEnergy(const G4ParticleDefinition*,
-			      G4double kinEnergy) final;
-			      
-  inline void SetParticle(const G4ParticleDefinition* p);
+    // hide assignment operator
+    G4MollerBhabhaModel& operator=(const G4MollerBhabhaModel& right) = delete;
+    G4MollerBhabhaModel(const G4MollerBhabhaModel&) = delete;
 
-  const G4ParticleDefinition* particle;
-  G4ParticleDefinition*       theElectron;
-  G4ParticleChangeForLoss*    fParticleChange;
+  protected:
 
-  G4bool   isElectron;
-  G4double twoln10;
-  G4double lowLimit;
-  
-private:
+    G4double MaxSecondaryEnergy(const G4ParticleDefinition*, G4double kinEnergy) final;
 
-  G4bool isInitialised;
+    inline void SetParticle(const G4ParticleDefinition* p);
 
+    const G4ParticleDefinition* particle;
+    G4ParticleDefinition* theElectron;
+    G4ParticleChangeForLoss* fParticleChange;
+
+    G4bool isElectron;
+    G4double twoln10;
+    G4double lowLimit;
+
+  private:
+
+    G4bool isInitialised;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

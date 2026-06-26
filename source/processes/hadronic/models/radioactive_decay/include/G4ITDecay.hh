@@ -35,8 +35,8 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4ITDecay_h
-#define G4ITDecay_h 1
+#ifndef G4ITDECAY_HH
+#define G4ITDECAY_HH
 
 #include "G4NuclearDecay.hh"
 
@@ -44,35 +44,33 @@ class G4PhotonEvaporation;
 
 class G4ITDecay : public G4NuclearDecay
 {
-public:
+  public:
 
-  // constructor for sampling of radiaoctive decay in a thread 
-  G4ITDecay(G4PhotonEvaporation* aPhotonEvap);
+    // constructor for sampling of radiaoctive decay in a thread
+    G4ITDecay(G4PhotonEvaporation* aPhotonEvap);
 
-  // constructor to define decay channels in the shared decay table
-  G4ITDecay(const G4ParticleDefinition* theParentNucleus,
-	    const G4double& theBR, const G4double& Qvalue,
-	    const G4double& excitation);
+    // constructor to define decay channels in the shared decay table
+    G4ITDecay(const G4ParticleDefinition* theParentNucleus, const G4double& theBR,
+              const G4double& Qvalue, const G4double& excitation);
 
-  ~G4ITDecay() override = default;
+    ~G4ITDecay() override = default;
 
-  void SetupDecay(const G4ParticleDefinition*);
+    void SetupDecay(const G4ParticleDefinition*);
 
-  G4DecayProducts* DecayIt(G4double) override;
+    G4DecayProducts* DecayIt(G4double) override;
 
-  void DumpNuclearInfo() override;
+    void DumpNuclearInfo() override;
 
-  void SetARM(G4bool onoff) {applyARM = onoff;}
- 
-private:
+    void SetARM(G4bool onoff) { applyARM = onoff; }
 
-  G4int parentZ{0};
-  G4int parentA{0};
-  G4bool applyARM{true};
+  private:
 
-  G4PhotonEvaporation* photonEvaporation{nullptr};
-  const G4ParticleDefinition* theParent{nullptr};
+    G4int parentZ{0};
+    G4int parentA{0};
+    G4bool applyARM{true};
+
+    G4PhotonEvaporation* photonEvaporation{nullptr};
+    const G4ParticleDefinition* theParent{nullptr};
 };
 
 #endif
-

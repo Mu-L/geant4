@@ -36,29 +36,30 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4PionBuilder_h
-#define G4PionBuilder_h 1
+#ifndef G4PIONBUILDER_HH
+#define G4PIONBUILDER_HH
 
 #include "G4PhysicsBuilderInterface.hh"
+#include "G4VPionBuilder.hh"
 #include "globals.hh"
 
-#include "G4VPionBuilder.hh"
 #include <vector>
 
 class G4PionBuilder : public G4PhysicsBuilderInterface
 {
-  public: 
+  public:
+
     G4PionBuilder();
     virtual ~G4PionBuilder() {}
 
     virtual void Build() final override;
-    virtual void RegisterMe(G4PhysicsBuilderInterface * aB) final override;
+    virtual void RegisterMe(G4PhysicsBuilderInterface* aB) final override;
 
   private:
+
     G4HadronInelasticProcess* thePionPlusInelastic;
     G4HadronInelasticProcess* thePionMinusInelastic;
-    std::vector<G4VPionBuilder *> theModelCollections;
+    std::vector<G4VPionBuilder*> theModelCollections;
 };
 
 #endif
-

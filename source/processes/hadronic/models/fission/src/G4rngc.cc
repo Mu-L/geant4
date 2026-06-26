@@ -61,7 +61,8 @@
 G4double (*G4fissionEvent::rngdptr)(void) = 0;
 G4float (*G4fissionEvent::rngfptr)(void) = 0;
 
-G4double G4fissionEvent::fisslibrng(void) {
+G4double G4fissionEvent::fisslibrng(void)
+{
   //   if (rngdptr == 0) {
   //      return drand48();
   //   } else {
@@ -71,6 +72,7 @@ G4double G4fissionEvent::fisslibrng(void) {
   return G4UniformRand();
 }
 
-G4double G4fissionEvent::rngf2d() {
-   return (G4double) rngfptr();
+G4double G4fissionEvent::rngf2d()
+{
+  return (G4double)rngfptr();
 }

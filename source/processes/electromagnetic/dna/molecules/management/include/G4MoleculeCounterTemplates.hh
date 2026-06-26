@@ -23,10 +23,10 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// Author: Christian Velten (2025)
+// Author: Christian Velten (2025~26)
 
 #ifndef G4MOLECULECOUNTERTEMPLATES_HH
-#define G4MOLECULECOUNTERTEMPLATES_HH 1
+#define G4MOLECULECOUNTERTEMPLATES_HH
 
 #include "G4Types.hh"
 #include "G4VMoleculeCounter.hh"
@@ -72,8 +72,8 @@ G4bool ContainsKey(const std::map<T, U>& _map, const T& _key)
 
 //------------------------------------------------------------------------------
 
-template<typename T, typename U>
-const std::vector<T> GetMapIndices(const std::map<T, U>& _map)
+template<typename T, typename U, typename V>
+const std::vector<T> GetMapIndices(const std::map<T, U, V>& _map)
 {
   std::vector<T> output;
   for (auto const& it : _map)
@@ -86,9 +86,16 @@ const std::vector<T> GetMapIndices(const std::map<T, U>& _map)
 template<typename T>
 void DumpCounterMapIndices(const std::map<T, InnerCounterMapType>& map, G4bool includeEmpty = false)
 {
+  static_assert(
+    std::is_base_of<G4VMoleculeCounterInternalBase::G4VMoleculeCounterIndexInterface, T>::value,
+    "T must be derived from G4VMoleculeCounter::G4VMoleculeCounterIndex or "
+    "from G4VMoleculeReactionCounter::G4VMoleculeReactionCounterIndex! "
+    "No forward declaration is allowed.");
+
   G4cout << "--- BEGIN COUNTER MAP INDEX DUMP ---" << G4endl;
   auto i = 0;
-  for (auto const& it : map) {
+  for (auto const& it : map)
+  {
     if (!includeEmpty && it.second.size() == 0) continue;
     G4cout << i++ << ": " << it.first.GetInfo() << G4endl;
   }
@@ -101,16 +108,99 @@ template<typename T>
 void DumpCounterMapContents(const std::map<T, InnerCounterMapType>& map,
                             G4bool includeEmpty = false)
 {
+  static_assert(
+    std::is_base_of<G4VMoleculeCounterInternalBase::G4VMoleculeCounterIndexInterface, T>::value,
+    "T must be derived from G4VMoleculeCounter::G4VMoleculeCounterIndex or "
+    "from G4VMoleculeReactionCounter::G4VMoleculeReactionCounterIndex! "
+    "No forward declaration is allowed.");
+
   G4cout << "--- BEGIN COUNTER MAP DUMP ---" << G4endl;
-  for (auto const& it : map) {
+  for (auto const& it : map)
+  {
     if (!includeEmpty && it.second.size() == 0) continue;
     G4cout << " :: " << it.first.GetInfo() << G4endl;
-    for (auto const& it2 : it.second) {
+    for (auto const& it2 : it.second)
+    {
       G4cout << std::setw(3) << std::setprecision(3) << " " << G4BestUnit(it2.first, "Time")
              << "    " << std::setw(5) << it2.second << G4endl;
     }
+    G4cout << G4endl;
   }
   G4cout << "---  END  COUNTER MAP DUMP ---" << G4endl;
+}
+
+//------------------------------------------------------------------------------
+
+template<typename... V>
+void DumpCounterMapIndices(const std::map<std::tuple<V...>, InnerCounterMapType>& map,
+                           G4bool includeEmpty = false)
+{
+  G4cout << "--- BEGIN COUNTER MAP INDEX(TUPLE) DUMP ---" << G4endl;
+  auto i = 0;
+  for (auto const& it : map)
+  {
+    if (!includeEmpty && it.second.size() == 0) continue;
+    G4cout << i++ << ": ";
+    std::apply([](auto&&... args) { ((G4cout << args << " "), ...); }, it.first);
+    G4cout << G4endl;
+  }
+  G4cout << "---  END  COUNTER MAP INDEX(TUPLE) DUMP ---" << G4endl;
+}
+
+//------------------------------------------------------------------------------
+
+template<typename... V>
+void DumpCounterMapContents(const std::map<std::tuple<V...>, InnerCounterMapType>& map,
+                            G4bool includeEmpty = false)
+{
+  G4cout << "--- BEGIN COUNTER MAP DUMP ---" << G4endl;
+  for (auto const& it : map)
+  {
+    if (!includeEmpty && it.second.size() == 0) continue;
+    G4cout << " :: ";
+    std::apply([](auto&&... args) { ((G4cout << args << " "), ...); }, it.first);
+    G4cout << G4endl;
+    for (auto const& it2 : it.second)
+    {
+      G4cout << std::setw(3) << std::setprecision(3) << " " << G4BestUnit(it2.first, "Time")
+             << "    " << std::setw(5) << it2.second << G4endl;
+    }
+    G4cout << G4endl;
+  }
+  G4cout << "---  END  COUNTER MAP DUMP ---" << G4endl;
+}
+
+//------------------------------------------------------------------------------
+
+template<typename... V>
+void DumpCounterMapContentsPretty(const std::map<std::tuple<V...>, InnerCounterMapType>& data,
+                                  const std::vector<std::string>& keyHeaders = {},
+                                  std::ostream& out = G4cout, G4bool flush = true)
+{
+  constexpr std::size_t N = sizeof...(V);
+  constexpr int colW = 14;
+
+  // --- Header row ---
+  for (std::size_t i = 0; i < N; ++i)
+  {
+    std::string h = (i < keyHeaders.size()) ? keyHeaders[i] : ("Key" + std::to_string(i + 1));
+    out << std::setw(colW) << h;
+  }
+  out << std::setw(colW) << "Time" << std::setw(colW) << "Count" << "\n";
+
+  // --- Separator ---
+  out << std::string(colW * (N + 2), '-') << "\n";
+
+  // --- Data rows ---
+  for (const auto& [outerKey, innerMap] : data)
+  {
+    for (const auto& [time, count] : innerMap)
+    {
+      std::apply([&](const auto&... args) { ((out << std::setw(colW) << args), ...); }, outerKey);
+      out << std::setw(colW) << time << std::setw(colW) << count << "\n";
+    }
+  }
+  if (flush) out << G4endl;
 }
 
 //------------------------------------------------------------------------------
@@ -119,9 +209,11 @@ template<typename T>
 std::set<G4double> GetRecordedTimes(const std::map<T, InnerCounterMapType>& map)
 {
   std::set<G4double> output{};
-  for (const auto& it : map) {
+  for (const auto& it : map)
+  {
     G4cerr << it.second.size() << G4endl;
-    for (const auto& it2 : it.second) {
+    for (const auto& it2 : it.second)
+    {
       output.insert(it2.first);
     }
   }

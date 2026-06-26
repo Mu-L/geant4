@@ -33,12 +33,12 @@
 #include "G4VParticleChange.hh"
 
 ///////////////////////////////////////////////////////
-G4AdjointAlongStepWeightCorrection::G4AdjointAlongStepWeightCorrection(
-  const G4String& name, G4ProcessType type)
+G4AdjointAlongStepWeightCorrection::G4AdjointAlongStepWeightCorrection(const G4String& name,
+                                                                       G4ProcessType type)
   : G4VContinuousProcess(name, type)
 {
   fParticleChange = new G4ParticleChange();
-  fCSManager      = G4AdjointCSManager::GetAdjointCSManager();
+  fCSManager = G4AdjointCSManager::GetAdjointCSManager();
 }
 
 ///////////////////////////////////////////////////////
@@ -48,25 +48,23 @@ G4AdjointAlongStepWeightCorrection::~G4AdjointAlongStepWeightCorrection()
 }
 
 ///////////////////////////////////////////////////////
-void G4AdjointAlongStepWeightCorrection::ProcessDescription(
-  std::ostream& out) const
+void G4AdjointAlongStepWeightCorrection::ProcessDescription(std::ostream& out) const
 {
-  out <<
-  "Continuous processes act on adjoint particles to continuously correct their "
-  "weight during the adjoint reverse tracking. This process is needed when "
-  "the adjoint cross sections are not scaled such that the total adjoint cross "
-  "section matches the total forward cross section. By default the mode where "
-  "the total adjoint cross section is equal to the total forward cross section "
-  "is used and therefore this along step weightcorrection factor is 1. However "
-  "in some cases (some energy ranges) the total forward cross section or the "
-  "total adjoint cross section can be zero. In this case the along step weight "
-  "correction is needed and is given by exp(-(Sigma_tot_adj-Sigma_tot_fwd).dx)"
-  "\n";
+  out << "Continuous processes act on adjoint particles to continuously correct their "
+         "weight during the adjoint reverse tracking. This process is needed when "
+         "the adjoint cross sections are not scaled such that the total adjoint cross "
+         "section matches the total forward cross section. By default the mode where "
+         "the total adjoint cross section is equal to the total forward cross section "
+         "is used and therefore this along step weightcorrection factor is 1. However "
+         "in some cases (some energy ranges) the total forward cross section or the "
+         "total adjoint cross section can be zero. In this case the along step weight "
+         "correction is needed and is given by exp(-(Sigma_tot_adj-Sigma_tot_fwd).dx)"
+         "\n";
 }
 
 ///////////////////////////////////////////////////////
-G4VParticleChange* G4AdjointAlongStepWeightCorrection::AlongStepDoIt(
-  const G4Track& track, const G4Step& step)
+G4VParticleChange* G4AdjointAlongStepWeightCorrection::AlongStepDoIt(const G4Track& track,
+                                                                     const G4Step& step)
 {
   fParticleChange->Initialize(track);
 
@@ -74,8 +72,8 @@ G4VParticleChange* G4AdjointAlongStepWeightCorrection::AlongStepDoIt(
   G4double length = step.GetStepLength();
 
   G4double Tkin = step.GetPostStepPoint()->GetKineticEnergy();
-  G4ParticleDefinition* thePartDef = const_cast<G4ParticleDefinition*>(
-    track.GetDynamicParticle()->GetDefinition());
+  G4ParticleDefinition* thePartDef =
+    const_cast<G4ParticleDefinition*>(track.GetDynamicParticle()->GetDefinition());
   G4double weight_correction = fCSManager->GetContinuousWeightCorrection(
     thePartDef, fPreStepKinEnergy, Tkin, fCurrentCouple, length);
 
@@ -83,8 +81,7 @@ G4VParticleChange* G4AdjointAlongStepWeightCorrection::AlongStepDoIt(
   // It is important to select the weight of the post_step_point as the current
   // weight and not the weight of the track, as the weight of the track is
   // changed after having applied all the along_step_do_it.
-  G4double new_weight =
-    weight_correction * step.GetPostStepPoint()->GetWeight();
+  G4double new_weight = weight_correction * step.GetPostStepPoint()->GetWeight();
 
   // The following test check for zero weight.
   // This happens after weight correction of gamma for photo electric effect.
@@ -100,8 +97,8 @@ G4VParticleChange* G4AdjointAlongStepWeightCorrection::AlongStepDoIt(
 }
 
 ///////////////////////////////////////////////////////
-G4double G4AdjointAlongStepWeightCorrection::GetContinuousStepLimit(
-  const G4Track& track, G4double, G4double, G4double&)
+G4double G4AdjointAlongStepWeightCorrection::GetContinuousStepLimit(const G4Track& track, G4double,
+                                                                    G4double, G4double&)
 {
   DefineMaterial(track.GetMaterialCutsCouple());
   fPreStepKinEnergy = track.GetKineticEnergy();

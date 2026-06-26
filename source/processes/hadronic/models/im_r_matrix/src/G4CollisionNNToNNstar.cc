@@ -25,16 +25,17 @@
 //
 //
 
-#include "globals.hh"
 #include "G4CollisionNNToNNstar.hh"
+
 #include "G4ConcreteNNToNNStar.hh"
 #include "G4HadParticleCodes.hh"
 #include "G4Pair.hh"
+#include "globals.hh"
 
 typedef G4ConcreteNNToNNStar channelType;
 
 G4CollisionNNToNNstar::G4CollisionNNToNNstar()
-{ 
+{
   MakeNNToNNStar<N1400pPC, N1400nPC, channelType>::Make(this);
   MakeNNToNNStar<N1520pPC, N1520nPC, channelType>::Make(this);
   MakeNNToNNStar<N1535pPC, N1535nPC, channelType>::Make(this);

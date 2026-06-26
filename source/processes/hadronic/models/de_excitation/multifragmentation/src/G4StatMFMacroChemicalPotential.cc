@@ -29,10 +29,11 @@
 // Modification: 13.08.2025 V.Ivanchenko rewrite
 
 #include "G4StatMFMacroChemicalPotential.hh"
-#include "G4StatMFParameters.hh"
-#include "G4StatMFMacroMultiplicity.hh"
+
 #include "G4PhysicalConstants.hh"
 #include "G4Pow.hh"
+#include "G4StatMFMacroMultiplicity.hh"
+#include "G4StatMFParameters.hh"
 
 G4StatMFMacroChemicalPotential::G4StatMFMacroChemicalPotential()
 {
@@ -40,18 +41,15 @@ G4StatMFMacroChemicalPotential::G4StatMFMacroChemicalPotential()
   fSolver = new G4FunctionSolver<G4StatMFMacroChemicalPotential>(this, 100, 5.e-4);
 }
 
-
 G4StatMFMacroChemicalPotential::~G4StatMFMacroChemicalPotential()
 {
   delete fSolver;
   delete theMultip;
 }
 
-void G4StatMFMacroChemicalPotential::Initialise(
-				     const G4int anA, const G4int aZ,
-				     const G4double kappa,
-				     const G4double temp, 
-				     std::vector<G4VStatMFMacroCluster*>* v)
+void G4StatMFMacroChemicalPotential::Initialise(const G4int anA, const G4int aZ,
+                                                const G4double kappa, const G4double temp,
+                                                std::vector<G4VStatMFMacroCluster*>* v)
 {
   theA = anA;
   theZ = aZ;
@@ -66,12 +64,12 @@ G4double G4StatMFMacroChemicalPotential::CalcChemicalPotentialNu()
   G4Pow* g4calc = G4Pow::GetInstance();
   G4double CP = G4StatMFParameters::GetCoulomb();
 
-  // Initial value for fChemPotentialNu	
-  fChemPotentialNu = (theZ/(G4double)theA)*
-    (8.0*G4StatMFParameters::GetGamma0() + 2.0*CP*g4calc->Z23(theA))
-    - 4.0*G4StatMFParameters::GetGamma0();
-		
-  fSolver->SetIntervalLimits(0.5*fChemPotentialNu, 2*fChemPotentialNu);
+  // Initial value for fChemPotentialNu
+  fChemPotentialNu =
+    (theZ / (G4double)theA) * (8.0 * G4StatMFParameters::GetGamma0() + 2.0 * CP * g4calc->Z23(theA))
+    - 4.0 * G4StatMFParameters::GetGamma0();
+
+  fSolver->SetIntervalLimits(0.5 * fChemPotentialNu, 2 * fChemPotentialNu);
   fSolver->FindRoot(fChemPotentialNu);
   return fChemPotentialNu;
 }
@@ -79,17 +77,18 @@ G4double G4StatMFMacroChemicalPotential::CalcChemicalPotentialNu()
 G4double G4StatMFMacroChemicalPotential::CalcMeanZ(const G4double nu)
 {
   CalcChemicalPotentialMu(nu);
-  // This is important, the Z over A ratio for proton and neutron depends on the 
-  // chemical potential Mu, while for the first guess for Chemical potential mu 
+  // This is important, the Z over A ratio for proton and neutron depends on the
+  // chemical potential Mu, while for the first guess for Chemical potential mu
   // some values of Z over A ratio. This is the reason for that.
-  
+
   G4double MeanZ = 0.0;
   G4int n = 0;
   G4int nn = (G4int)fClusters->size();
   nn = std::min(nn, theA);
-  for (G4int i = 0; i < nn; ++i) {
+  for (G4int i = 0; i < nn; ++i)
+  {
     G4double x = (*fClusters)[i]->CalcZARatio(nu);
-    MeanZ += (n++) * x * (*fClusters)[i]->GetMeanMultiplicity(); 
+    MeanZ += (n++) * x * (*fClusters)[i]->GetMeanMultiplicity();
   }
   return MeanZ;
 }

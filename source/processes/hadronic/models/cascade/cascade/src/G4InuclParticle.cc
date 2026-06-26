@@ -33,25 +33,27 @@
 //		address thread-collision problem.
 // 20140310  M. Kelsey -- Fix constness in G4PD* passing
 
+#include "G4InuclParticle.hh"
+
+#include "G4SystemOfUnits.hh"
+#include "G4ios.hh"
+
 #include <cmath>
 
-#include "G4InuclParticle.hh"
-#include "G4ios.hh"
-#include "G4SystemOfUnits.hh"
-
 // Internal constructor only usable by subclasses
-G4InuclParticle::G4InuclParticle(const G4ParticleDefinition* pd,
-				 const G4LorentzVector& mom,
-				 G4InuclParticle::Model model)
-  : modelId(model) {
+G4InuclParticle::G4InuclParticle(const G4ParticleDefinition* pd, const G4LorentzVector& mom,
+                                 G4InuclParticle::Model model)
+  : modelId(model)
+{
   setDefinition(pd);
   setMomentum(mom);
 }
 
-
 // Assignment operator for use with std::sort()
-G4InuclParticle& G4InuclParticle::operator=(const G4InuclParticle& right) {
-  if (this != &right) {
+G4InuclParticle& G4InuclParticle::operator=(const G4InuclParticle& right)
+{
+  if (this != &right)
+  {
     pDP = right.pDP;
     modelId = right.modelId;
   }
@@ -59,40 +61,42 @@ G4InuclParticle& G4InuclParticle::operator=(const G4InuclParticle& right) {
   return *this;
 }
 
-
 // Set particle definition allowing for null pointer to erase DynPart content
 
-namespace {
-  static const G4DynamicParticle empty;		// To zero out everything
+namespace
+{
+static const G4DynamicParticle empty;  // To zero out everything
 }
 
-void G4InuclParticle::setDefinition(const G4ParticleDefinition* pd) {
-  if (pd) pDP.SetDefinition(pd);
-  else pDP = empty;
+void G4InuclParticle::setDefinition(const G4ParticleDefinition* pd)
+{
+  if (pd)
+    pDP.SetDefinition(pd);
+  else
+    pDP = empty;
 }
-
 
 // WARNING!  Bertini code doesn't do four-vectors; repair mass before use!
-void G4InuclParticle::setMomentum(const G4LorentzVector& mom) {
+void G4InuclParticle::setMomentum(const G4LorentzVector& mom)
+{
   G4double mass = getMass();
-  if (std::fabs(mass-mom.m()) <= 1e-5) 
-    pDP.Set4Momentum(mom*GeV/MeV);		// From Bertini to G4 units
+  if (std::fabs(mass - mom.m()) <= 1e-5)
+    pDP.Set4Momentum(mom * GeV / MeV);  // From Bertini to G4 units
   else
-    pDP.SetMomentum(mom.vect()*GeV/MeV);	// Don't change current mass!
+    pDP.SetMomentum(mom.vect() * GeV / MeV);  // Don't change current mass!
 }
-
 
 // Proper stream output (just calls print())
 
-std::ostream& operator<<(std::ostream& os, const G4InuclParticle& part) {
+std::ostream& operator<<(std::ostream& os, const G4InuclParticle& part)
+{
   part.print(os);
   return os;
 }
 
-void G4InuclParticle::print(std::ostream& os) const {
+void G4InuclParticle::print(std::ostream& os) const
+{
   G4LorentzVector mom = getMomentum();
-  os << " px " << mom.px() << " py " << mom.py() << " pz " << mom.pz()
-     << " pmod " << mom.rho() << " E " << mom.e()
-     << " creator model " << modelId;
+  os << " px " << mom.px() << " py " << mom.py() << " pz " << mom.pz() << " pmod " << mom.rho()
+     << " E " << mom.e() << " creator model " << modelId;
 }
-

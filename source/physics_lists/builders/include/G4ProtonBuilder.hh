@@ -32,25 +32,26 @@
 //
 // Modified:
 // 16.11.2005 G.Folger: don't  keep processes as data members, but new these
-// 13.06.2006 G.Folger: (re)move elastic scatterring 
+// 13.06.2006 G.Folger: (re)move elastic scatterring
 // 09.04.2017 A.Dotti: adding inheritance
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4ProtonBuilder_h
-#define G4ProtonBuilder_h 1
-
-#include "G4PhysicsBuilderInterface.hh"
-#include "globals.hh"
+#ifndef G4PROTONBUILDER_HH
+#define G4PROTONBUILDER_HH
 
 #include "G4HadronInelasticProcess.hh"
+#include "G4PhysicsBuilderInterface.hh"
 #include "G4VProtonBuilder.hh"
-#include <vector>
+#include "globals.hh"
+
 #include <type_traits>
+#include <vector>
 
 class G4ProtonBuilder : public G4PhysicsBuilderInterface
 {
-  public: 
+  public:
+
     G4ProtonBuilder();
     virtual ~G4ProtonBuilder() {}
 
@@ -58,11 +59,10 @@ class G4ProtonBuilder : public G4PhysicsBuilderInterface
     virtual void RegisterMe(G4PhysicsBuilderInterface* aB) final override;
 
   private:
-    G4HadronInelasticProcess * theProtonInelastic;
-    
-    std::vector<G4VProtonBuilder *> theModelCollections;
 
+    G4HadronInelasticProcess* theProtonInelastic;
+
+    std::vector<G4VProtonBuilder*> theModelCollections;
 };
 
 #endif
-

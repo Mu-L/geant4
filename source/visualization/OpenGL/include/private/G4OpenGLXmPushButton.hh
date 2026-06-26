@@ -25,8 +25,8 @@
 //
 //
 //
-// 
-//Push button class. Inherits from G4OpenGLXmVWidgetComponent
+//
+// Push button class. Inherits from G4OpenGLXmVWidgetComponent
 
 #ifndef G4OPENGLXMPUSHBUTTON_HH
 #define G4OPENGLXMPUSHBUTTON_HH
@@ -35,27 +35,28 @@
 
 class G4OpenGLXmPushButton : public G4OpenGLXmVWidgetComponent
 {
+  public:
 
-public:
-  G4OpenGLXmPushButton (const char* = NULL,
-			XtCallbackRec* = NULL); //constructor
-  virtual ~G4OpenGLXmPushButton ();             //destructor
+    G4OpenGLXmPushButton(const char* = NULL,
+                         XtCallbackRec* = NULL);  // constructor
+    virtual ~G4OpenGLXmPushButton();  // destructor
 
-  void SetName (const char*);
-  const char* GetName ();
+    void SetName(const char*);
+    const char* GetName();
 
-  void AddYourselfTo (G4OpenGLXmVWidgetContainer*);
+    void AddYourselfTo(G4OpenGLXmVWidgetContainer*);
 
-  Widget* GetPointerToParent ();
-  Widget* GetPointerToWidget ();
+    Widget* GetPointerToParent();
+    Widget* GetPointerToWidget();
 
-private:
-  G4OpenGLXmPushButton (const G4OpenGLXmPushButton&);
-  G4OpenGLXmPushButton& operator = (const G4OpenGLXmPushButton&);
-  const char* name;
-  XtCallbackRec* callback;
-  Widget button;
-  Widget* parent;
+  private:
+
+    G4OpenGLXmPushButton(const G4OpenGLXmPushButton&);
+    G4OpenGLXmPushButton& operator=(const G4OpenGLXmPushButton&);
+    const char* name;
+    XtCallbackRec* callback;
+    Widget button;
+    Widget* parent;
 };
 
 #endif

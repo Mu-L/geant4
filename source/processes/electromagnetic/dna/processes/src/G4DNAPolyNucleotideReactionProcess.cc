@@ -37,27 +37,25 @@
 #include <memory>
 
 #ifndef PrepareState
-#  define PrepareState()                                                       \
-    G4PolyNucleotideReactionState* _state =                                    \
-      this->GetState<G4PolyNucleotideReactionState>()
+#  define PrepareState() \
+    G4PolyNucleotideReactionState* _state = this->GetState<G4PolyNucleotideReactionState>()
 #endif
 
 #ifndef State
 #  define State(theXInfo) (_state->theXInfo)
 #endif
 
-G4DNAPolyNucleotideReactionProcess::G4DNAPolyNucleotideReactionProcess(
-  const G4String& aName, G4int verbosityLevel)
-  : G4VITDiscreteProcess(aName, fUserDefined)
-  , 
-   fVerbose(verbosityLevel)
-  , fRCutOff(G4IRTUtils::GetDNADistanceCutOff())
+G4DNAPolyNucleotideReactionProcess::G4DNAPolyNucleotideReactionProcess(const G4String& aName,
+                                                                       G4int verbosityLevel)
+  : G4VITDiscreteProcess(aName, fUserDefined),
+    fVerbose(verbosityLevel),
+    fRCutOff(G4IRTUtils::GetDNADistanceCutOff())
 {
-  pParticleChange     = &fParticleChange;
-  enableAtRestDoIt    = false;
+  pParticleChange = &fParticleChange;
+  enableAtRestDoIt = false;
   enableAlongStepDoIt = false;
-  enablePostStepDoIt  = true;
-  fProposesTimeStep   = true;
+  enablePostStepDoIt = true;
+  fProposesTimeStep = true;
   SetProcessSubType(fLowEnergyStaticMol);
   G4VITProcess::SetInstantiateProcessState(false);
 }
@@ -67,54 +65,49 @@ G4DNAPolyNucleotideReactionProcess::~G4DNAPolyNucleotideReactionProcess()
   delete fpDamageModel;  // for now, this process handls only one model
 }
 
-G4DNAPolyNucleotideReactionProcess::G4PolyNucleotideReactionState::
-G4PolyNucleotideReactionState()
+G4DNAPolyNucleotideReactionProcess::G4PolyNucleotideReactionState::G4PolyNucleotideReactionState()
 {
-  fSampledMinTimeStep         = 0;
+  fSampledMinTimeStep = 0;
   fPreviousTimeAtPreStepPoint = -1;
 }
 
-G4double G4DNAPolyNucleotideReactionProcess::CalculateTimeStep(
-  const G4Track& trackA, const G4double& /*userTimeStep*/)
+G4double G4DNAPolyNucleotideReactionProcess::CalculateTimeStep(const G4Track& trackA,
+                                                               const G4double& /*userTimeStep*/)
 {
   PrepareState();
-  fHasAlreadyReachedNullTime      = false;
-  State(fSampledMinTimeStep)      = DBL_MAX;
-  State(theInteractionTimeLeft)   = DBL_MAX;
+  fHasAlreadyReachedNullTime = false;
+  State(fSampledMinTimeStep) = DBL_MAX;
+  State(theInteractionTimeLeft) = DBL_MAX;
   State(currentInteractionLength) = -1;
 #ifdef G4VERBOSE
-  if(fVerbose > 1)
+  if (fVerbose > 1)
   {
     auto pMoleculeA = GetMolecule(trackA);
     G4cout << "________________________________________________________________"
               "_______"
            << G4endl;
-    G4cout << "G4DNAPolyNucleotideReactionProcess::CalculateTimleStep"
-           << G4endl;
-    G4cout << "Check done for molecule : " << pMoleculeA->GetName() << " ("
-           << trackA.GetTrackID() << ") " << G4endl;
+    G4cout << "G4DNAPolyNucleotideReactionProcess::CalculateTimleStep" << G4endl;
+    G4cout << "Check done for molecule : " << pMoleculeA->GetName() << " (" << trackA.GetTrackID()
+           << ") " << G4endl;
   }
 #endif
   //__________________________________________________________________
   // Retrieve general informations for making reactions
-  G4double reactionTime =
-    fpDamageModel->CalculateReactionTime(trackA, State(fNodeReactant));
+  G4double reactionTime = fpDamageModel->CalculateReactionTime(trackA, State(fNodeReactant));
 
-  if(reactionTime < 0)
+  if (reactionTime < 0)
   {
     return DBL_MAX;
   }
-  State(fSampledMinTimeStep)      = reactionTime;
-  State(theInteractionTimeLeft)   = State(fSampledMinTimeStep);
+  State(fSampledMinTimeStep) = reactionTime;
+  State(theInteractionTimeLeft) = State(fSampledMinTimeStep);
   State(currentInteractionLength) = State(theInteractionTimeLeft);
 
 #ifdef G4VERBOSE
-  if(fVerbose > 1)
+  if (fVerbose > 1)
   {
-    G4cout << " theInteractionTimeLeft : " << State(theInteractionTimeLeft)
-           << G4endl;
-    G4cout << " State(fNodeReactant) : " << State(fNodeReactant).index()
-           << G4endl;
+    G4cout << " theInteractionTimeLeft : " << State(theInteractionTimeLeft) << G4endl;
+    G4cout << " State(fNodeReactant) : " << State(fNodeReactant).index() << G4endl;
 
     G4cout << "________________________________________________________________"
               "_______"
@@ -125,8 +118,7 @@ G4double G4DNAPolyNucleotideReactionProcess::CalculateTimeStep(
   return State(fSampledMinTimeStep);
 }
 
-G4double
-G4DNAPolyNucleotideReactionProcess::PostStepGetPhysicalInteractionLength(
+G4double G4DNAPolyNucleotideReactionProcess::PostStepGetPhysicalInteractionLength(
   const G4Track& track,
   G4double,  // previousStepSize
   G4ForceCondition* pForceCond)
@@ -137,23 +129,21 @@ G4DNAPolyNucleotideReactionProcess::PostStepGetPhysicalInteractionLength(
 
   G4double previousTimeStep(-1.);
 
-  if(State(fPreviousTimeAtPreStepPoint) != -1)
+  if (State(fPreviousTimeAtPreStepPoint) != -1)
   {
-    previousTimeStep =
-      track.GetGlobalTime() - State(fPreviousTimeAtPreStepPoint);
+    previousTimeStep = track.GetGlobalTime() - State(fPreviousTimeAtPreStepPoint);
   }
 
   State(fPreviousTimeAtPreStepPoint) = track.GetGlobalTime();
 
-  if((fpState->currentInteractionLength <= 0) || (previousTimeStep < 0.0) ||
-     (fpState->theNumberOfInteractionLengthLeft <= 0.0))
+  if ((fpState->currentInteractionLength <= 0) || (previousTimeStep < 0.0)
+      || (fpState->theNumberOfInteractionLengthLeft <= 0.0))
   {
     ResetNumberOfInteractionLengthLeft();
   }
-  else if(previousTimeStep > 0.0)
+  else if (previousTimeStep > 0.0)
   {
-    SubtractNumberOfInteractionLengthLeft(
-      previousTimeStep);  // TODO need to check this
+    SubtractNumberOfInteractionLengthLeft(previousTimeStep);  // TODO need to check this
   }
   return State(theInteractionTimeLeft) * -1;
   // return value * -1;//should regard this !
@@ -161,13 +151,13 @@ G4DNAPolyNucleotideReactionProcess::PostStepGetPhysicalInteractionLength(
 
 ///////////////////////////////////////////////////////////////////////////////
 
-G4VParticleChange* G4DNAPolyNucleotideReactionProcess::PostStepDoIt(
-  const G4Track& track, const G4Step&)
+G4VParticleChange* G4DNAPolyNucleotideReactionProcess::PostStepDoIt(const G4Track& track,
+                                                                    const G4Step&)
 {
   PrepareState();
-  auto isReacted = fpDamageModel->DoReaction(
-    track, State(theInteractionTimeLeft), State(fNodeReactant));
-  if(!isReacted)
+  auto isReacted =
+    fpDamageModel->DoReaction(track, State(theInteractionTimeLeft), State(fNodeReactant));
+  if (!isReacted)
   {
     // no reaction even this process is called
     fParticleChange.Initialize(track);

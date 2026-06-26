@@ -52,50 +52,52 @@ class G4PhysicsVector;
 
 class G4VIonDEDXTable
 {
- public:
-  explicit G4VIonDEDXTable() = default;
-  virtual ~G4VIonDEDXTable() = default;
-  G4VIonDEDXTable(G4VIonDEDXTable&) = delete;
-  const G4VIonDEDXTable& operator=(const G4VIonDEDXTable&) = delete;
+  public:
 
-  // Function for building a stopping power table for a material consisting of
-  // a single element only.
-  virtual G4bool BuildPhysicsVector(G4int,  // Atomic number of ion
-    G4int  // Atomic number of elemental material
-    ) = 0;
+    explicit G4VIonDEDXTable() = default;
+    virtual ~G4VIonDEDXTable() = default;
+    G4VIonDEDXTable(G4VIonDEDXTable&) = delete;
+    const G4VIonDEDXTable& operator=(const G4VIonDEDXTable&) = delete;
 
-  // Function building stopping power table for a given ion-material pair.
-  virtual G4bool BuildPhysicsVector(G4int,  // Atomic number of ion
-    const G4String&  // Name or chemical formula of material
-    ) = 0;
+    // Function for building a stopping power table for a material consisting of
+    // a single element only.
+    virtual G4bool BuildPhysicsVector(G4int,  // Atomic number of ion
+                                      G4int  // Atomic number of elemental material
+                                      ) = 0;
 
-  // Function for checking the availability of stopping power tables
-  // for a given ion-material pair, where the material consists of
-  // a single element only.
-  virtual G4bool IsApplicable(G4int,  // Atomic number of ion
-    G4int  // Atomic number of elemental material
-    ) = 0;
+    // Function building stopping power table for a given ion-material pair.
+    virtual G4bool BuildPhysicsVector(G4int,  // Atomic number of ion
+                                      const G4String&  // Name or chemical formula of material
+                                      ) = 0;
 
-  // Function for checking the availability of stopping power tables
-  // for a given ion-material pair.
-  virtual G4bool IsApplicable(G4int,  // Atomic number of ion
-    const G4String&  // Name or chemical formula of material
-    ) = 0;
+    // Function for checking the availability of stopping power tables
+    // for a given ion-material pair, where the material consists of
+    // a single element only.
+    virtual G4bool IsApplicable(G4int,  // Atomic number of ion
+                                G4int  // Atomic number of elemental material
+                                ) = 0;
 
-  // Function returning the stopping power vector for a given ion-material
-  // pair, where the material consists of a single element only (the
-  // physics vector returned by this function must contain the kinetic
-  // energy per nucleon vs the mass stopping power of the elemental material).
-  virtual G4PhysicsVector* GetPhysicsVector(G4int,  // Atomic number of ion
-    G4int  // Atomic number of elemental material
-    ) = 0;
+    // Function for checking the availability of stopping power tables
+    // for a given ion-material pair.
+    virtual G4bool IsApplicable(G4int,  // Atomic number of ion
+                                const G4String&  // Name or chemical formula of material
+                                ) = 0;
 
-  // Function returning the stopping power vector for given ion-material
-  // pair (the physics vector returned by this function must contain the
-  // kinetic energy per nucleon vs the mass stopping power of the material).
-  virtual G4PhysicsVector* GetPhysicsVector(G4int,  // Atomic number of ion
-    const G4String&  // Name or chemical formula of material
-    ) = 0;
+    // Function returning the stopping power vector for a given ion-material
+    // pair, where the material consists of a single element only (the
+    // physics vector returned by this function must contain the kinetic
+    // energy per nucleon vs the mass stopping power of the elemental material).
+    virtual G4PhysicsVector* GetPhysicsVector(G4int,  // Atomic number of ion
+                                              G4int  // Atomic number of elemental material
+                                              ) = 0;
+
+    // Function returning the stopping power vector for given ion-material
+    // pair (the physics vector returned by this function must contain the
+    // kinetic energy per nucleon vs the mass stopping power of the material).
+    virtual G4PhysicsVector*
+    GetPhysicsVector(G4int,  // Atomic number of ion
+                     const G4String&  // Name or chemical formula of material
+                     ) = 0;
 };
 
 #endif  // G4VIONDEDXTABLE_HH

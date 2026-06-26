@@ -42,8 +42,8 @@
 
 #include "DetectorConstruction.hh"
 
-#include "ScoreBasicMoleculeCounts.hh"
-#include "ScoreBasicReactionCounts.hh"
+#include "G4MoleculeCounterScorer.hh"
+#include "G4MoleculeReactionCounterScorer.hh"
 
 #include "G4Box.hh"
 #include "G4Ellipsoid.hh"
@@ -147,14 +147,14 @@ void DetectorConstruction::ConstructSDandField()
   auto mfDetector = new G4MultiFunctionalDetector("mfDetector");
 
   G4VPrimitiveScorer* primitivSpecies =
-    new ScoreBasicMoleculeCounts("BasicMoleculeCounts", 1, "BasicCounter");
+    new G4MoleculeCounterScorer("BasicMoleculeCounts", "BasicCounter");
   mfDetector->RegisterPrimitive(primitivSpecies);
   primitivSpecies =
-    new ScoreBasicMoleculeCounts("BasicCounter_VariablePrecision", 1,
+    new G4MoleculeCounterScorer("BasicCounter_VariablePrecision",
                                  "BasicCounter_VariablePrecision");
   mfDetector->RegisterPrimitive(primitivSpecies);
   primitivSpecies =
-    new ScoreBasicReactionCounts("BasicReactionCounts", 1, "Reactions");
+    new G4MoleculeReactionCounterScorer("BasicReactionCounts", "Reactions");
   mfDetector->RegisterPrimitive(primitivSpecies);
 
   G4SDManager::GetSDMpointer()->AddNewDetector(mfDetector);

@@ -33,33 +33,29 @@
 // The result matrix may be a matrix that does not
 // represent a rotation transformation (!) as
 // G3 "rotation" matrices can be a composition of
-// rotation and reflection.  
+// rotation and reflection.
 
 // ----------------------
 
 #ifndef G3TOG4ROTATION_HH
-#define G3TOG4ROTATION_HH 1
+#define G3TOG4ROTATION_HH
 
 #include "G4RotationMatrix.hh"
 #include "globals.hh"
 
-class G3toG4RotationMatrix : public G4RotationMatrix 
+class G3toG4RotationMatrix : public G4RotationMatrix
 {
+  public:  // with description
 
-public:  // with description
+    G3toG4RotationMatrix();
 
-  G3toG4RotationMatrix();
+    void SetRotationMatrixByCol(const G4ThreeVector& Col1, const G4ThreeVector& Col2,
+                                const G4ThreeVector& Col3);
 
-  void SetRotationMatrixByCol(const G4ThreeVector& Col1,
-                              const G4ThreeVector& Col2,
-                              const G4ThreeVector& Col3);
-    
-  void SetRotationMatrixByRow(const G4ThreeVector& Row1,
-                              const G4ThreeVector& Row2,
-                              const G4ThreeVector& Row3);
-    
-  ~G3toG4RotationMatrix();
+    void SetRotationMatrixByRow(const G4ThreeVector& Row1, const G4ThreeVector& Row2,
+                                const G4ThreeVector& Row3);
 
+    ~G3toG4RotationMatrix();
 };
 
-#endif    
+#endif

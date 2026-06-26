@@ -29,12 +29,12 @@
 
 #include "G4KaonSampler.hh"
 
-namespace {
-  static const G4double bins[30] = 
-    { 0.0,  0.01, 0.02, 0.04, 0.06, 0.08, 0.11, 0.14, 0.21, 0.28,
-      0.36, 0.45, 0.53, 0.67, 0.80, 0.90, 0.99, 1.23, 1.47, 1.9,
-      2.4,  3.2,  4.2,  5.6,  7.5,  10.0, 13.0, 18.0, 24.0, 32.0 };
+namespace
+{
+static const G4double bins[30] = {0.0,  0.01, 0.02, 0.04, 0.06, 0.08, 0.11, 0.14, 0.21, 0.28,
+                                  0.36, 0.45, 0.53, 0.67, 0.80, 0.90, 0.99, 1.23, 1.47, 1.9,
+                                  2.4,  3.2,  4.2,  5.6,  7.5,  10.0, 13.0, 18.0, 24.0, 32.0};
 }
 
 // Define constructor for initialization
-G4KaonSampler::G4KaonSampler() : G4CascadeSampler<30,8>(bins) {}
+G4KaonSampler::G4KaonSampler() : G4CascadeSampler<30, 8>(bins) {}

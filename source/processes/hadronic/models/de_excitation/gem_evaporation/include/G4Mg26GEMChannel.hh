@@ -28,29 +28,29 @@
 // Hadronic Process: Nuclear De-excitations
 // by V. Lara (Sept. 2001)
 //
-#ifndef G4Mg26GEMChannel_h
-#define G4Mg26GEMChannel_h 1
+#ifndef G4MG26GEMCHANNEL_HH
+#define G4MG26GEMCHANNEL_HH
 
 #include "G4GEMChannel.hh"
 #include "G4Mg26GEMProbability.hh"
 
 class G4Mg26GEMChannel : public G4GEMChannel
 {
-public:
-  // only available constructor
-  explicit G4Mg26GEMChannel() 
-    : G4GEMChannel(26,12,"Mg26",&theEvaporationProbability) {}
-  
-  // destructor
-  ~G4Mg26GEMChannel() {};
-  
-private:
-  const G4Mg26GEMChannel & operator=(const G4Mg26GEMChannel & right) = delete;  
-  G4Mg26GEMChannel(const G4Mg26GEMChannel & right) = delete;
-  G4bool operator==(const G4Mg26GEMChannel & right) const = delete;
-  G4bool operator!=(const G4Mg26GEMChannel & right) const = delete;
-    
-  G4Mg26GEMProbability theEvaporationProbability;
-  
+  public:
+
+    // only available constructor
+    explicit G4Mg26GEMChannel() : G4GEMChannel(26, 12, "Mg26", &theEvaporationProbability) {}
+
+    // destructor
+    ~G4Mg26GEMChannel() {};
+
+  private:
+
+    const G4Mg26GEMChannel& operator=(const G4Mg26GEMChannel& right) = delete;
+    G4Mg26GEMChannel(const G4Mg26GEMChannel& right) = delete;
+    G4bool operator==(const G4Mg26GEMChannel& right) const = delete;
+    G4bool operator!=(const G4Mg26GEMChannel& right) const = delete;
+
+    G4Mg26GEMProbability theEvaporationProbability;
 };
 #endif

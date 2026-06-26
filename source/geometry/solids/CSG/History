@@ -6,6 +6,10 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-06-01 Evgueni Tcherniaev (geom-csg-V11-04-00)
+- G4Tubs, G4CutTubs, G4Cons, G4Torus: fixed defects (DIVIDE_BY_ZERO) reported by
+  Coverity in ApproxSurfaceNormal().
+
 ## 2025-11-12 Gabriele Cosmo (geom-csg-V11-03-08)
 - Fixed potential thread-safety issue in GetCubicVolume() and GetSurfaceArea()
   on all solids in case those functions are called from worker threads.

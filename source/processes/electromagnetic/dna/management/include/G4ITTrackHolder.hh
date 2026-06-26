@@ -35,227 +35,202 @@
 
 #include "G4TrackList.hh"
 #include "G4VITTrackHolder.hh"
+
 #include <iostream>
 
 class PriorityList : public G4TrackList::Watcher
 {
-public:
-  enum Type
-  {
-    MainList = 0,
-    SecondariesList = 1,
-    WaitingList = 2,
-    Undefined = -1
-  };
+  public:
 
-  PriorityList();
-  PriorityList(G4TrackManyList& allMainList);
-  PriorityList(const PriorityList& right);
-  ~PriorityList() override;
-
-  virtual void NotifyDeletingList(G4TrackList* __list);
-
-  void NewMainList(G4TrackList* __list, G4TrackManyList& allMainList);
-
-  G4TrackList* NewMainList(G4TrackManyList& allMainList);
-
-  void PushToMainList(G4Track* __track, G4TrackManyList& allMainList);
-
-  void TransferToMainList(G4TrackList*& __list, G4TrackManyList& allMainList);
-
-  void PushToListOfSecondaries(G4Track* __track,
-                               G4TrackManyList& listOfAllSecondaries);
-
-  void PushToWaitingList(G4Track* __track);
-
-  void TransferSecondariesToMainList();
-
-  void PushToMainList(G4Track* track);
-
-  void MergeWithMainList(G4TrackList* trackList);
-
-  inline G4TrackList* GetMainList()
-  {
-    return fpMainList;
-  }
-
-  inline G4TrackList* GetSecondariesList()
-  {
-    return &fSecondaries;
-  }
-
-  inline void SetWaitingList(G4TrackList* __list)
-  {
-    fpWaitingList = __list;
-  }
-
-  inline G4TrackList* Get(Type type)
-  {
-    switch (type)
+    enum Type
     {
-      case MainList:
-        return fpMainList;
-        break;
-      case SecondariesList:
-        return &fSecondaries;
-        break;
-      case WaitingList:
-        return fpWaitingList;
-        break;
-      case Undefined:
-        return nullptr;
+      MainList = 0,
+      SecondariesList = 1,
+      WaitingList = 2,
+      Undefined = -1
+    };
+
+    PriorityList();
+    PriorityList(G4TrackManyList& allMainList);
+    PriorityList(const PriorityList& right);
+    ~PriorityList() override;
+
+    virtual void NotifyDeletingList(G4TrackList* __list);
+
+    void NewMainList(G4TrackList* __list, G4TrackManyList& allMainList);
+
+    G4TrackList* NewMainList(G4TrackManyList& allMainList);
+
+    void PushToMainList(G4Track* __track, G4TrackManyList& allMainList);
+
+    void TransferToMainList(G4TrackList*& __list, G4TrackManyList& allMainList);
+
+    void PushToListOfSecondaries(G4Track* __track, G4TrackManyList& listOfAllSecondaries);
+
+    void PushToWaitingList(G4Track* __track);
+
+    void TransferSecondariesToMainList();
+
+    void PushToMainList(G4Track* track);
+
+    void MergeWithMainList(G4TrackList* trackList);
+
+    inline G4TrackList* GetMainList() { return fpMainList; }
+
+    inline G4TrackList* GetSecondariesList() { return &fSecondaries; }
+
+    inline void SetWaitingList(G4TrackList* __list) { fpWaitingList = __list; }
+
+    inline G4TrackList* Get(Type type)
+    {
+      switch (type)
+      {
+        case MainList:
+          return fpMainList;
+          break;
+        case SecondariesList:
+          return &fSecondaries;
+          break;
+        case WaitingList:
+          return fpWaitingList;
+          break;
+        case Undefined:
+          return nullptr;
+      }
+      return nullptr;
     }
-    return nullptr;
-  }
 
-  int GetNTracks();
+    int GetNTracks();
 
-private:
-  G4TrackList* fpMainList;
-  G4TrackList fSecondaries;
-  // to merge with fpMainList
-  G4TrackList* fpWaitingList;
-  // Waiting queue of currentList
+  private:
+
+    G4TrackList* fpMainList;
+    G4TrackList fSecondaries;
+    // to merge with fpMainList
+    G4TrackList* fpWaitingList;
+    // Waiting queue of currentList
 };
 
 class G4ITTrackHolder : public G4VITTrackHolder
 {
-  /* UR:
-   * Push on time
-   * Push delayed
-   * Exception when going back
-   * Get all tracks
-   */
+    /* UR:
+     * Push on time
+     * Push delayed
+     * Exception when going back
+     * Get all tracks
+     */
 
-  static G4ThreadLocal G4ITTrackHolder* fgInstance;
-  static G4ITTrackHolder* fgMasterInstance;
-  friend class G4Scheduler;
-  friend class G4ITStepProcessor;
-  friend class G4ITModelProcessor;
+    static G4ThreadLocal G4ITTrackHolder* fgInstance;
+    static G4ITTrackHolder* fgMasterInstance;
+    friend class G4Scheduler;
+    friend class G4ITStepProcessor;
+    friend class G4ITModelProcessor;
 
-public:
-  //----- typedefs -----
-  using Key = int; //TODO
-  using MapOfPriorityLists = std::map<Key, PriorityList*>;
-  using MapOfDelayedLists = std::map<double, std::map<Key, G4TrackList*> >;
+  public:
 
-  //----- Access singletons + constructors/destructors-----
+    //----- typedefs -----
+    using Key = int;  // TODO
+    using MapOfPriorityLists = std::map<Key, PriorityList*>;
+    using MapOfDelayedLists = std::map<double, std::map<Key, G4TrackList*>>;
 
-  static G4ITTrackHolder* Instance();
-  static G4ITTrackHolder* MasterInstance();
+    //----- Access singletons + constructors/destructors-----
 
-  G4ITTrackHolder();
-  
-  ~G4ITTrackHolder() override;
+    static G4ITTrackHolder* Instance();
+    static G4ITTrackHolder* MasterInstance();
 
-  //----- Time of the next set of tracks -----
-  inline double GetNextTime()
-  {
-    if (fDelayedList.empty()) return DBL_MAX;
-    return fDelayedList.begin()->first;
-  }
+    G4ITTrackHolder();
 
-  //----- Add new tracks to the list -----
-  void Push(G4Track*) override;
-  static void PushToMaster(G4Track*);
+    ~G4ITTrackHolder() override;
 
-  //----- Operations between lists -----
-
-  inline void PushToKill(G4Track* track)
-  {
-    G4TrackList::Pop(track);
-    fToBeKilledList.push_back(track);
-    
-    if(track->GetTrackStatus() != fKillTrackAndSecondaries){
-      track->SetTrackStatus(fStopAndKill);
+    //----- Time of the next set of tracks -----
+    inline double GetNextTime()
+    {
+      if (fDelayedList.empty()) return DBL_MAX;
+      return fDelayedList.begin()->first;
     }
-  }
 
-  bool MergeNextTimeToMainList(double& time);
-  void MergeSecondariesWithMainList();
-  void MoveMainToWaitingList();
+    //----- Add new tracks to the list -----
+    void Push(G4Track*) override;
+    static void PushToMaster(G4Track*);
 
-  // ----- To call at the end of the step -----
-  void KillTracks();
-  void Clear();
+    //----- Operations between lists -----
 
-  // ----- Add a watcher to a specific track list -----
-  // comment: to stop watching, just call StopWatching from your watcher class
-  bool AddWatcher(int,
-      G4TrackList::Watcher*,
-      PriorityList::Type = PriorityList::MainList);
+    inline void PushToKill(G4Track* track)
+    {
+      G4TrackList::Pop(track);
+      fToBeKilledList.push_back(track);
 
-  void AddWatcherForMainList(G4TrackList::Watcher*);
-  void AddWatcherForKillList(G4TrackList::Watcher*);
+      if (track->GetTrackStatus() != fKillTrackAndSecondaries)
+      {
+        track->SetTrackStatus(fStopAndKill);
+      }
+    }
 
-  // ----- Access track lists -----
-  inline MapOfPriorityLists& GetLists()
-  { return fLists;}
-  PriorityList* GetPriorityList(Key);
-  G4TrackList* GetMainList(Key);
-  inline G4TrackManyList* GetMainList()
-  {
-    return &fAllMainList;
-  }
+    bool MergeNextTimeToMainList(double& time);
+    void MergeSecondariesWithMainList();
+    void MoveMainToWaitingList();
 
-  inline G4TrackManyList* GetSecondariesList()
-  {
-    return &fAllSecondariesList;
-  }
+    // ----- To call at the end of the step -----
+    void KillTracks();
+    void Clear();
 
-  inline MapOfDelayedLists& GetDelayedLists()
-  {
-    return fDelayedList;
-  }
+    // ----- Add a watcher to a specific track list -----
+    // comment: to stop watching, just call StopWatching from your watcher class
+    bool AddWatcher(int, G4TrackList::Watcher*, PriorityList::Type = PriorityList::MainList);
 
-  size_t GetNTracks() override;
+    void AddWatcherForMainList(G4TrackList::Watcher*);
+    void AddWatcherForKillList(G4TrackList::Watcher*);
 
-  // ----- Check track lists are NOT empty -----
-  // comment: checking NOT empty faster than checking IS empty
-  inline bool MainListsNOTEmpty()
-  {
-    return CheckMapIsNOTEmpty(fLists, PriorityList::MainList);
-  }
+    // ----- Access track lists -----
+    inline MapOfPriorityLists& GetLists() { return fLists; }
+    PriorityList* GetPriorityList(Key);
+    G4TrackList* GetMainList(Key);
+    inline G4TrackManyList* GetMainList() { return &fAllMainList; }
 
-  inline bool SecondaryListsNOTEmpty()
-  {
-    return CheckMapIsNOTEmpty(fLists, PriorityList::SecondariesList);
-  }
+    inline G4TrackManyList* GetSecondariesList() { return &fAllSecondariesList; }
 
-  bool DelayListsNOTEmpty();
+    inline MapOfDelayedLists& GetDelayedLists() { return fDelayedList; }
 
-  bool CheckMapIsNOTEmpty(MapOfPriorityLists& mapOfLists,
-      PriorityList::Type type);
+    size_t GetNTracks() override;
 
-  inline void SetVerbose(int verbose)
-  {
-    fVerbose = verbose;
-  }
+    // ----- Check track lists are NOT empty -----
+    // comment: checking NOT empty faster than checking IS empty
+    inline bool MainListsNOTEmpty() { return CheckMapIsNOTEmpty(fLists, PriorityList::MainList); }
 
-  inline G4TrackList* GetKillList()
-  {
-    return &fToBeKilledList;
-  }
+    inline bool SecondaryListsNOTEmpty()
+    {
+      return CheckMapIsNOTEmpty(fLists, PriorityList::SecondariesList);
+    }
 
-protected:
-  void AddTrackID(G4Track* track);
-  void _PushTrack(G4Track* track);
-  void PushTo(G4Track*, PriorityList::Type);
-  void PushDelayed(G4Track* track);
+    bool DelayListsNOTEmpty();
 
-protected:
-  std::map<Key, PriorityList*> fLists;
-  MapOfDelayedLists fDelayedList;
-  G4TrackList fToBeKilledList;
-  bool fMainListHaveBeenSet;
-  int fVerbose;
-  int fNbTracks;
+    bool CheckMapIsNOTEmpty(MapOfPriorityLists& mapOfLists, PriorityList::Type type);
 
-  double fPostActivityGlobalTime;
-  //  double fPreActivityGlobalTime ;
+    inline void SetVerbose(int verbose) { fVerbose = verbose; }
 
-  G4TrackManyList fAllMainList;
-  G4TrackManyList fAllSecondariesList;
+    inline G4TrackList* GetKillList() { return &fToBeKilledList; }
+
+  protected:
+
+    void AddTrackID(G4Track* track);
+    void _PushTrack(G4Track* track);
+    void PushTo(G4Track*, PriorityList::Type);
+    void PushDelayed(G4Track* track);
+
+  protected:
+
+    std::map<Key, PriorityList*> fLists;
+    MapOfDelayedLists fDelayedList;
+    G4TrackList fToBeKilledList;
+    bool fMainListHaveBeenSet;
+    int fVerbose;
+    int fNbTracks;
+
+    double fPostActivityGlobalTime;
+    //  double fPreActivityGlobalTime ;
+
+    G4TrackManyList fAllMainList;
+    G4TrackManyList fAllSecondariesList;
 };
 
 #endif /* G4MIMOLECULARTRACKS_HH_ */

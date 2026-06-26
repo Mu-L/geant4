@@ -31,7 +31,6 @@
 
 #include "G4Timer.hh"
 #include "G4UserEventAction.hh"
-#include "globals.hh"
 
 class ExGflashEventAction : public G4UserEventAction
 {

@@ -31,11 +31,11 @@
 //  Class for the forced interaction of reverse gamma
 /////////////////////////////////////////////////////////////////////////////////
 
-#ifndef G4AdjointForcedInteractionForGamma_h
-#define G4AdjointForcedInteractionForGamma_h 1
+#ifndef G4ADJOINTFORCEDINTERACTIONFORGAMMA_HH
+#define G4ADJOINTFORCEDINTERACTIONFORGAMMA_HH
 
-#include "globals.hh"
 #include "G4VContinuousDiscreteProcess.hh"
+#include "globals.hh"
 
 class G4VParticleChange;
 class G4ParticleChange;
@@ -46,68 +46,66 @@ class G4AdjointCSManager;
 
 class G4AdjointForcedInteractionForGamma : public G4VContinuousDiscreteProcess
 {
- public:
-  explicit G4AdjointForcedInteractionForGamma(const G4String& process_name);
+  public:
 
-  ~G4AdjointForcedInteractionForGamma() override;
+    explicit G4AdjointForcedInteractionForGamma(const G4String& process_name);
 
-  void BuildPhysicsTable(const G4ParticleDefinition&) override;
+    ~G4AdjointForcedInteractionForGamma() override;
 
-  G4double PostStepGetPhysicalInteractionLength(
-    const G4Track& track, G4double previousStepSize,
-    G4ForceCondition* condition) override;
+    void BuildPhysicsTable(const G4ParticleDefinition&) override;
 
-  G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&) override;
+    G4double PostStepGetPhysicalInteractionLength(const G4Track& track, G4double previousStepSize,
+                                                  G4ForceCondition* condition) override;
 
-  G4VParticleChange* AlongStepDoIt(const G4Track& track,
-                                   const G4Step& step) override;
+    G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&) override;
 
-  inline void RegisterAdjointComptonModel(G4VEmAdjointModel* adjModel)
-  {
-    fAdjointComptonModel = adjModel;
-  }
+    G4VParticleChange* AlongStepDoIt(const G4Track& track, const G4Step& step) override;
 
-  inline void RegisterAdjointBremModel(G4VEmAdjointModel* adjModel)
-  {
-    fAdjointBremModel = adjModel;
-  }
+    inline void RegisterAdjointComptonModel(G4VEmAdjointModel* adjModel)
+    {
+      fAdjointComptonModel = adjModel;
+    }
 
-  void ProcessDescription(std::ostream&) const override;
-  void DumpInfo() const override { ProcessDescription(G4cout); };
+    inline void RegisterAdjointBremModel(G4VEmAdjointModel* adjModel)
+    {
+      fAdjointBremModel = adjModel;
+    }
 
-  G4AdjointForcedInteractionForGamma(G4AdjointForcedInteractionForGamma&) =
-    delete;
-  G4AdjointForcedInteractionForGamma& operator=(
-    const G4AdjointForcedInteractionForGamma& right) = delete;
+    void ProcessDescription(std::ostream&) const override;
+    void DumpInfo() const override { ProcessDescription(G4cout); };
 
- protected:
-  G4double GetMeanFreePath(const G4Track& track, G4double previousStepSize,
-                           G4ForceCondition* condition) override;
+    G4AdjointForcedInteractionForGamma(G4AdjointForcedInteractionForGamma&) = delete;
+    G4AdjointForcedInteractionForGamma&
+    operator=(const G4AdjointForcedInteractionForGamma& right) = delete;
 
-  G4double GetContinuousStepLimit(const G4Track& aTrack,
-                                  G4double previousStepSize,
-                                  G4double currentMinimumStep,
-                                  G4double& currentSafety) override;
+  protected:
 
- private:
-  G4VEmAdjointModel* fAdjointComptonModel;
-  G4VEmAdjointModel* fAdjointBremModel;
+    G4double GetMeanFreePath(const G4Track& track, G4double previousStepSize,
+                             G4ForceCondition* condition) override;
 
-  G4ParticleChange* fParticleChange;
-  G4AdjointCSManager* fCSManager;
+    G4double GetContinuousStepLimit(const G4Track& aTrack, G4double previousStepSize,
+                                    G4double currentMinimumStep, G4double& currentSafety) override;
 
-  G4double fLastAdjCS = 0.;
-  G4double fCSBias = 1.;
-  G4double fAccTrackLength    = 0.;
-  G4double fTotNbAdjIntLength = 0.;
+  private:
 
-  G4double fNbAdjIntLength = 0.;
-  
-  G4int fLastFreeFlightTrackId = 1000;
+    G4VEmAdjointModel* fAdjointComptonModel;
+    G4VEmAdjointModel* fAdjointBremModel;
 
-  G4bool fContinueGammaAsNewFreeFlight = false;
-  G4bool fFreeFlightGamma              = false;
-  G4bool fCopyGammaForForced           = false;
+    G4ParticleChange* fParticleChange;
+    G4AdjointCSManager* fCSManager;
+
+    G4double fLastAdjCS = 0.;
+    G4double fCSBias = 1.;
+    G4double fAccTrackLength = 0.;
+    G4double fTotNbAdjIntLength = 0.;
+
+    G4double fNbAdjIntLength = 0.;
+
+    G4int fLastFreeFlightTrackId = 1000;
+
+    G4bool fContinueGammaAsNewFreeFlight = false;
+    G4bool fFreeFlightGamma = false;
+    G4bool fCopyGammaForForced = false;
 };
 
 #endif

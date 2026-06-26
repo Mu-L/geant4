@@ -50,35 +50,38 @@ class G4VSensitiveDetector;
 
 class G4HCtable
 {
- public:
-  G4HCtable() = default;
-  ~G4HCtable() = default;
+  public:
 
- public:
-  G4int Registor(const G4String& SDname, const G4String& HCname);
-  G4int GetCollectionID(const G4String& HCname) const;
-  G4int GetCollectionID(G4VSensitiveDetector* aSD) const;
-  // Return ID number given subdetector and name
-  // equivelant to GetCollectionID(detSubName+'/'+colSubName)
-  G4int GetCollectionID(const G4String& detSubName, const G4String& collSubName) const;
+    G4HCtable() = default;
+    ~G4HCtable() = default;
 
-  inline G4int entries() const { return G4int(HClist.size()); }
+  public:
 
-  inline G4String GetSDname(G4int i) const
-  {
-    if (i < 0 || i > entries()) return "***Not Defined***";
-    return SDlist[i];
-  }
+    G4int Registor(const G4String& SDname, const G4String& HCname);
+    G4int GetCollectionID(const G4String& HCname) const;
+    G4int GetCollectionID(G4VSensitiveDetector* aSD) const;
+    // Return ID number given subdetector and name
+    // equivelant to GetCollectionID(detSubName+'/'+colSubName)
+    G4int GetCollectionID(const G4String& detSubName, const G4String& collSubName) const;
 
-  inline G4String GetHCname(G4int i) const
-  {
-    if (i < 0 || i > entries()) return "***Not Defined***";
-    return HClist[i];
-  }
+    inline G4int entries() const { return G4int(HClist.size()); }
 
- private:
-  std::vector<G4String> SDlist;
-  std::vector<G4String> HClist;
+    inline G4String GetSDname(G4int i) const
+    {
+      if (i < 0 || i > entries()) return "***Not Defined***";
+      return SDlist[i];
+    }
+
+    inline G4String GetHCname(G4int i) const
+    {
+      if (i < 0 || i > entries()) return "***Not Defined***";
+      return HClist[i];
+    }
+
+  private:
+
+    std::vector<G4String> SDlist;
+    std::vector<G4String> HClist;
 };
 
 #endif

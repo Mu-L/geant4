@@ -30,7 +30,7 @@
 // - 1996 to present - G.Cosmo
 // --------------------------------------------------------------------
 #ifndef GLOBALS_HH
-#define GLOBALS_HH 1
+#define GLOBALS_HH
 
 #include "G4ios.hh"
 

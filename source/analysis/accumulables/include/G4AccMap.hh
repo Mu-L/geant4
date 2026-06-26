@@ -28,23 +28,21 @@
 //
 // Author: Ivana Hrivnacova, IJCLab IN2P3/CNRS, 19/07/2024
 
-#ifndef G4AccMap_h
-#define G4AccMap_h 1
+#ifndef G4ACCMAP_HH
+#define G4ACCMAP_HH
 
-#include "G4VAccumulable.hh"
 #include "G4MergeMode.hh"
-
+#include "G4VAccumulable.hh"
 #include "globals.hh"
 
 #include <map>
 
-template <class Key,
-          class T,
-          class Compare = std::less<Key>,
-          class Allocator = std::allocator<std::pair<const Key, T>>>
+template<class Key, class T, class Compare = std::less<Key>,
+         class Allocator = std::allocator<std::pair<const Key, T>>>
 class G4AccMap : public G4VAccumulable
 {
   public:
+
     // ctors to be supported
     // (https://en.cppreference.com/w/cpp/container/map/map)
     //
@@ -94,46 +92,37 @@ class G4AccMap : public G4VAccumulable
 
     // Default constructor (1)
     // Constructs an empty container with all defaults.
-    G4AccMap(const G4String& name = "",
-             G4MergeMode mergeMode = G4MergeMode::kAddition);
+    G4AccMap(const G4String& name = "", G4MergeMode mergeMode = G4MergeMode::kAddition);
 
     // Constructor (2)
     // Constructs an empty container with the given compare.
-    G4AccMap(const Compare& comp,
-             G4MergeMode mergeMode = G4MergeMode::kAddition,
+    G4AccMap(const Compare& comp, G4MergeMode mergeMode = G4MergeMode::kAddition,
              const Allocator& alloc = Allocator());
 
     // Constructor (2) with name
     // Constructs an empty container with the given compare with name
-    G4AccMap(const G4String& name,
-             const Compare& comp,
-             G4MergeMode mergeMode = G4MergeMode::kAddition,
-             const Allocator& alloc = Allocator());
+    G4AccMap(const G4String& name, const Compare& comp,
+             G4MergeMode mergeMode = G4MergeMode::kAddition, const Allocator& alloc = Allocator());
 
     // Constructor (3)
     // Constructs an empty container with the given allocator alloc.
-    G4AccMap(const Allocator& alloc,
-             G4MergeMode mergeMode = G4MergeMode::kAddition);
+    G4AccMap(const Allocator& alloc, G4MergeMode mergeMode = G4MergeMode::kAddition);
 
     // Constructor (3) with name
     // Constructs an empty container with the given allocator alloc and name
-    G4AccMap(const G4String& name,
-             const Allocator& alloc,
+    G4AccMap(const G4String& name, const Allocator& alloc,
              G4MergeMode mergeMode = G4MergeMode::kAddition);
 
     // Constructor (10)
     // Constructs the container with the contents of the initializer list init.
-    G4AccMap(std::initializer_list<std::pair<const Key,T>> init,
-             G4MergeMode mergeMode = G4MergeMode::kAddition,
-             const Compare& comp = Compare(),
+    G4AccMap(std::initializer_list<std::pair<const Key, T>> init,
+             G4MergeMode mergeMode = G4MergeMode::kAddition, const Compare& comp = Compare(),
              const Allocator& alloc = Allocator());
 
     // Constructor (10) with name
     // Constructs the container with the contents of the initializer list init.
-    G4AccMap(const G4String& name,
-             std::initializer_list<std::pair<const Key,T>> init,
-             G4MergeMode mergeMode = G4MergeMode::kAddition,
-             const Compare& comp = Compare(),
+    G4AccMap(const G4String& name, std::initializer_list<std::pair<const Key, T>> init,
+             G4MergeMode mergeMode = G4MergeMode::kAddition, const Compare& comp = Compare(),
              const Allocator& alloc = Allocator());
 
     // Copy constructor
@@ -152,27 +141,60 @@ class G4AccMap : public G4VAccumulable
     inline T& operator[](Key&& key) { return fMap[std::move(key)]; }
     // at
     inline T& at(const Key& key) { return fMap[key]; }
-    inline const T& at(const Key& key ) const { return fMap[key]; }
+    inline const T& at(const Key& key) const { return fMap[key]; }
     // size
-    inline typename std::map<Key, T, Compare, Allocator>::size_type size() const { return fMap.size(); }
+    inline typename std::map<Key, T, Compare, Allocator>::size_type size() const
+    {
+      return fMap.size();
+    }
     // begin, cbegin
     inline typename std::map<Key, T, Compare, Allocator>::iterator begin() { return fMap.begin(); }
-    inline typename std::map<Key, T, Compare, Allocator>::const_iterator begin() const { return fMap.begin(); }
-    inline typename std::map<Key, T, Compare, Allocator>::const_iterator cbegin() const { return fMap.cbegin(); }
+    inline typename std::map<Key, T, Compare, Allocator>::const_iterator begin() const
+    {
+      return fMap.begin();
+    }
+    inline typename std::map<Key, T, Compare, Allocator>::const_iterator cbegin() const
+    {
+      return fMap.cbegin();
+    }
     // end, cend
     inline typename std::map<Key, T, Compare, Allocator>::iterator end() { return fMap.end(); }
-    inline typename std::map<Key, T, Compare, Allocator>::const_iterator end() const { return fMap.end(); }
-    inline typename std::map<Key, T, Compare, Allocator>::const_iterator cend() const { return fMap.cend(); }
+    inline typename std::map<Key, T, Compare, Allocator>::const_iterator end() const
+    {
+      return fMap.end();
+    }
+    inline typename std::map<Key, T, Compare, Allocator>::const_iterator cend() const
+    {
+      return fMap.cend();
+    }
     // clear
     inline void clear() { fMap.clear(); }
     // insert
-    inline std::pair<typename std::map<Key, T, Compare, Allocator>::iterator, bool> insert(const T& value) { return fMap.insert(value); }
-    template< class P >
-    inline std::pair<typename std::map<Key, T, Compare, Allocator>::iterator, bool> insert( P&& value ) { return fMap.insert(std::move(value)); }
-    inline std::pair<typename std::map<Key, T, Compare, Allocator>::iterator, bool> insert( T&& value ) { return fMap.insert(std::move(value)); }   
+    inline std::pair<typename std::map<Key, T, Compare, Allocator>::iterator, bool>
+    insert(const T& value)
+    {
+      return fMap.insert(value);
+    }
+    template<class P>
+    inline std::pair<typename std::map<Key, T, Compare, Allocator>::iterator, bool>
+    insert(P&& value)
+    {
+      return fMap.insert(std::move(value));
+    }
+    inline std::pair<typename std::map<Key, T, Compare, Allocator>::iterator, bool>
+    insert(T&& value)
+    {
+      return fMap.insert(std::move(value));
+    }
     // find
-    inline typename std::map<Key, T, Compare, Allocator>::iterator find( const Key& key ) { return fMap.find(key); }
-    inline typename std::map<Key, T, Compare, Allocator>::const_iterator find( const Key& key ) const { return fMap.find(key); }
+    inline typename std::map<Key, T, Compare, Allocator>::iterator find(const Key& key)
+    {
+      return fMap.find(key);
+    }
+    inline typename std::map<Key, T, Compare, Allocator>::const_iterator find(const Key& key) const
+    {
+      return fMap.find(key);
+    }
 
     // Methods
     void Merge(const G4VAccumulable& other) final;
@@ -187,11 +209,12 @@ class G4AccMap : public G4VAccumulable
     const std::map<Key, T, Compare, Allocator>& GetMap() const { return fMap; }
 
   private:
+
     // Data members
-    std::map<Key, T, Compare, Allocator> fMap {};
+    std::map<Key, T, Compare, Allocator> fMap{};
     T fInitValue = 0;
     G4MergeFunction<T> fMergeFunction;
- };
+};
 
 // inline functions
 

@@ -49,7 +49,8 @@ void G4FermiUnstableFragment::AppendDecayFragments(const G4LorentzVector& moment
 
   const auto boostVector = momentum.boostVector();
 
-  for (std::size_t i = 0; i < decayData_.size(); ++i) {
+  for (std::size_t i = 0; i < decayData_.size(); ++i)
+  {
     fragments.emplace_back(decayData_[i].atomicMass, decayData_[i].chargeNumber,
                            fragmentsMomentum[i].boost(boostVector));
   }
@@ -59,7 +60,8 @@ void G4FermiUnstableFragment::DoInitialize()
 {
   masses_.clear();
   masses_.reserve(decayData_.size());
-  for (const auto& decayFragment : decayData_) {
+  for (const auto& decayFragment : decayData_)
+  {
     masses_.emplace_back(G4FermiNucleiProperties::GetNuclearMass(decayFragment.atomicMass,
                                                                  decayFragment.chargeNumber));
   }

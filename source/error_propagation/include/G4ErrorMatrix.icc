@@ -28,18 +28,22 @@
 //      GEANT 4 class inline implementation
 // ------------------------------------------------------------
 
-inline G4ErrorMatrix::G4ErrorMatrix()
-  : m(0)
-  , nrow(0)
-  , ncol(0)
-  , size(0)
-{}
+inline G4ErrorMatrix::G4ErrorMatrix() : m(0), nrow(0), ncol(0), size(0) {}
 
-inline G4int G4ErrorMatrix::num_row() const { return nrow; }
+inline G4int G4ErrorMatrix::num_row() const
+{
+  return nrow;
+}
 
-inline G4int G4ErrorMatrix::num_col() const { return ncol; }
+inline G4int G4ErrorMatrix::num_col() const
+{
+  return ncol;
+}
 
-inline G4int G4ErrorMatrix::num_size() const { return size; }
+inline G4int G4ErrorMatrix::num_size() const
+{
+  return size;
+}
 
 inline G4double& G4ErrorMatrix::operator()(G4int row, G4int col)
 {
@@ -57,8 +61,7 @@ inline G4ErrorMatrix::G4ErrorMatrix_row G4ErrorMatrix::operator[](G4int r)
   return b;
 }
 
-inline const G4ErrorMatrix::G4ErrorMatrix_row_const G4ErrorMatrix::operator[](
-  G4int r) const
+inline const G4ErrorMatrix::G4ErrorMatrix_row_const G4ErrorMatrix::operator[](G4int r) const
 {
   G4ErrorMatrix_row_const b(*this, r);
   return b;
@@ -69,21 +72,18 @@ inline G4double& G4ErrorMatrix::G4ErrorMatrix_row::operator[](G4int c)
   return *(_a.m.begin() + _r * _a.ncol + c);
 }
 
-inline const G4double& G4ErrorMatrix::G4ErrorMatrix_row_const::operator[](
-  G4int c) const
+inline const G4double& G4ErrorMatrix::G4ErrorMatrix_row_const::operator[](G4int c) const
 {
   return *(_a.m.begin() + _r * _a.ncol + c);
 }
 
-inline G4ErrorMatrix::G4ErrorMatrix_row::G4ErrorMatrix_row(G4ErrorMatrix& a,
-                                                           G4int r)
-  : _a(a)
+inline G4ErrorMatrix::G4ErrorMatrix_row::G4ErrorMatrix_row(G4ErrorMatrix& a, G4int r) : _a(a)
 {
   _r = r;
 }
 
-inline G4ErrorMatrix::G4ErrorMatrix_row_const::G4ErrorMatrix_row_const(
-  const G4ErrorMatrix& a, G4int r)
+inline G4ErrorMatrix::G4ErrorMatrix_row_const::G4ErrorMatrix_row_const(const G4ErrorMatrix& a,
+                                                                       G4int r)
   : _a(a)
 {
   _r = r;

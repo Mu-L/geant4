@@ -30,8 +30,8 @@
 //      This class is used for multi-threaded Geant4.
 //      It encapsulates the mechanism of starting/stopping threads.
 
-#ifndef G4UserSubEvtThreadInitialization_hh
-#define G4UserSubEvtThreadInitialization_hh
+#ifndef G4USERSUBEVTTHREADINITIALIZATION_HH
+#define G4USERSUBEVTTHREADINITIALIZATION_HH
 
 #include "G4Threading.hh"
 #include "G4UserTaskThreadInitialization.hh"
@@ -39,6 +39,7 @@
 class G4UserSubEvtThreadInitialization : public G4UserTaskThreadInitialization
 {
   public:  // with description
+
     G4UserSubEvtThreadInitialization() = default;
     ~G4UserSubEvtThreadInitialization() override = default;
 

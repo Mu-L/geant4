@@ -30,17 +30,18 @@
 // Keeps statistics of the number of trials, including the Maximum
 // and how many times it was reached.
 
-// Author: John Apostolakis (CERN), 08.12.2006   
+// Author: John Apostolakis (CERN), 08.12.2006
 // -------------------------------------------------------------------
 #ifndef G4TRIALS_COUNTER_HH
 #define G4TRIALS_COUNTER_HH
 
-#include "G4Types.hh"
 #include "G4String.hh"
+#include "G4Types.hh"
 
 /**
  * @brief G4TrialsCounter is a class to keep statistics of the number of
  * trials, including the maximum and how many times it was reached.
+ * @ingroup geometry_magneticfield
  */
 
 class G4TrialsCounter
@@ -53,9 +54,8 @@ class G4TrialsCounter
      *  @param[in] description Description text.
      *  @param[in] printOnExit Flag for enabling additional verbosity on exit.
      */
-    G4TrialsCounter( const G4String& nameStats,
-                     const G4String& description,
-                     G4bool printOnExit = false ); 
+    G4TrialsCounter(const G4String& nameStats, const G4String& description,
+                    G4bool printOnExit = false);
 
     /**
      * Destructor.
@@ -65,22 +65,22 @@ class G4TrialsCounter
     /**
      * Adds this number to stats.
      */
-    inline void AccumulateCounts( G4int noTrials ); 
+    inline void AccumulateCounts(G4int noTrials);
 
     /**
      * Resets all counts.
      */
-    void ClearCounts(); 
+    void ClearCounts();
 
     /**
      * Returns number of count/trials, calls, max & no-max.
      */
-    G4int ReturnTotals( G4int& calls, G4int& maxTrials, G4int& numMaxT ) ; 
+    G4int ReturnTotals(G4int& calls, G4int& maxTrials, G4int& numMaxT);
 
     /**
      * Prints out statistics.
      */
-    void PrintStatistics(); 
+    void PrintStatistics();
 
   private:
 
@@ -107,7 +107,7 @@ class G4TrialsCounter
 
     /** Flag, to avoid reprinting on destruction. */
     G4bool fPrinted = false;
-}; 
+};
 
 #include "G4TrialsCounter.icc"
 

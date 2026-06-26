@@ -24,13 +24,13 @@
 // ********************************************************************
 //
 
-#ifndef G4IonsShenCrossSection_h
-#define G4IonsShenCrossSection_h
+#ifndef G4IONSSHENCROSSSECTION_HH
+#define G4IONSSHENCROSSSECTION_HH
 //
 // Class Description
-// Implementation of formulas 
-// Shen et al. Nuc. Phys. A 491 130 (1989); 
-// Total Reaction Cross Section for Heavy-Ion Collisions 
+// Implementation of formulas
+// Shen et al. Nuc. Phys. A 491 130 (1989);
+// Total Reaction Cross Section for Heavy-Ion Collisions
 //
 // Class Description - End
 // 18-Sep-2003 First version is written by T. Koi
@@ -43,42 +43,36 @@
 // 19-Aug-2011 V.Ivanchenko move to new design and make x-section per element
 //
 
-#include "globals.hh"
 #include "G4Proton.hh"
-
 #include "G4VCrossSectionDataSet.hh"
+#include "globals.hh"
 
 class G4IonsShenCrossSection : public G4VCrossSectionDataSet
 {
-public:
+  public:
 
-  G4IonsShenCrossSection();
+    G4IonsShenCrossSection();
 
-  virtual ~G4IonsShenCrossSection();
-   
-  virtual
-  G4bool IsElementApplicable(const G4DynamicParticle* aDP, 
-			     G4int Z, const G4Material*);
+    virtual ~G4IonsShenCrossSection();
 
-  virtual
-  G4double GetElementCrossSection(const G4DynamicParticle*, 
-			     G4int Z, const G4Material*);
+    virtual G4bool IsElementApplicable(const G4DynamicParticle* aDP, G4int Z, const G4Material*);
 
-  virtual
-  G4double GetIsoCrossSection(const G4DynamicParticle*, G4int Z, G4int A,  
-			      const G4Isotope* iso = 0,
-			      const G4Element* elm = 0,
-			      const G4Material* mat = 0);
+    virtual G4double GetElementCrossSection(const G4DynamicParticle*, G4int Z, const G4Material*);
 
-  virtual void CrossSectionDescription(std::ostream&) const;
+    virtual G4double GetIsoCrossSection(const G4DynamicParticle*, G4int Z, G4int A,
+                                        const G4Isotope* iso = 0, const G4Element* elm = 0,
+                                        const G4Material* mat = 0);
 
-private:
-  const G4double upperLimit;
-//  const G4double lowerLimit; 
-  const G4double r0;
+    virtual void CrossSectionDescription(std::ostream&) const;
 
-  G4double calEcmValue(const G4double, const G4double, const G4double); 
-  G4double calCeValue(const G4double); 
+  private:
+
+    const G4double upperLimit;
+    //  const G4double lowerLimit;
+    const G4double r0;
+
+    G4double calEcmValue(const G4double, const G4double, const G4double);
+    G4double calCeValue(const G4double);
 };
 
 #endif

@@ -27,13 +27,14 @@
 // Author: Ivana Hrivnacova, 20/07/2017 (ivana@ipno.in2p3.fr)
 
 #include "G4Hdf5RNtupleManager.hh"
+
 #include "G4Hdf5RFileManager.hh"
 
 using namespace G4Analysis;
 
 //_____________________________________________________________________________
 G4Hdf5RNtupleManager::G4Hdf5RNtupleManager(const G4AnalysisManagerState& state)
- : G4TRNtupleManager<toolx::hdf5::ntuple>(state)
+  : G4TRNtupleManager<toolx::hdf5::ntuple>(state)
 {}
 
 //
@@ -41,23 +42,22 @@ G4Hdf5RNtupleManager::G4Hdf5RNtupleManager(const G4AnalysisManagerState& state)
 //
 
 //_____________________________________________________________________________
-G4int G4Hdf5RNtupleManager::ReadNtupleImpl(const G4String& ntupleName,
-                                           const G4String& fileName,
-                                           const G4String& dirName,
-                                           G4bool isUserFileName)
+G4int G4Hdf5RNtupleManager::ReadNtupleImpl(const G4String& ntupleName, const G4String& fileName,
+                                           const G4String& dirName, G4bool isUserFileName)
 {
   Message(kVL4, "read", "ntuple", ntupleName);
 
   // Ntuples are saved in files per thread
   // but apply thethe thread suffix only if fileName is not provided explicitly
   G4String fullFileName = fileName;
-  if ( ! isUserFileName ) {
+  if (!isUserFileName)
+  {
     fullFileName = fFileManager->GetFullFileName();
   }
 
   // Get directory
   auto directory = fFileManager->GetNtupleRDirectory(fullFileName, dirName, false);
-  if ( directory < 0 ) return kInvalidId;
+  if (directory < 0) return kInvalidId;
 
   // Create ntuple
   auto rntuple = new toolx::hdf5::ntuple(G4cout, directory, ntupleName);
@@ -70,23 +70,26 @@ G4int G4Hdf5RNtupleManager::ReadNtupleImpl(const G4String& ntupleName,
 }
 
 //_____________________________________________________________________________
-G4bool G4Hdf5RNtupleManager::GetTNtupleRow(
-  G4TRNtupleDescription<toolx::hdf5::ntuple>* ntupleDescription)
+G4bool
+G4Hdf5RNtupleManager::GetTNtupleRow(G4TRNtupleDescription<toolx::hdf5::ntuple>* ntupleDescription)
 {
   auto ntuple = ntupleDescription->fNtuple;
 
   auto isInitialized = ntupleDescription->fIsInitialized;
-  if ( ! isInitialized ) {
+  if (!isInitialized)
+  {
     auto ntupleBinding = ntupleDescription->fNtupleBinding;
-    if ( ! ntuple->initialize(G4cout, *ntupleBinding) ) {
+    if (!ntuple->initialize(G4cout, *ntupleBinding))
+    {
       Warn("Ntuple initialization failed !!", fkClass, "GetTNtupleRow");
       return false;
     }
     ntupleDescription->fIsInitialized = true;
   }
 
-  if ( ! ntuple->get_row() ) {
-    Warn( "Ntuple get_row() failed !!", fkClass, "GetTNtupleRow");
+  if (!ntuple->get_row())
+  {
+    Warn("Ntuple get_row() failed !!", fkClass, "GetTNtupleRow");
     return false;
   }
 

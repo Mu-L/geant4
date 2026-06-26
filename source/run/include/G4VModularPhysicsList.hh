@@ -38,8 +38,8 @@
 
 // Original author: H.Kurashige (Kobe University), 12 November 2000
 // --------------------------------------------------------------------
-#ifndef G4VModularPhysicsList_hh
-#define G4VModularPhysicsList_hh 1
+#ifndef G4VMODULARPHYSICSLIST_HH
+#define G4VMODULARPHYSICSLIST_HH
 
 #include "G4VPhysicsConstructor.hh"
 #include "G4VUPLSplitter.hh"
@@ -57,6 +57,7 @@ class G4VMPLData
     // that are per-thread.
 
   public:
+
     void initialize();
     using G4PhysConstVectorData = std::vector<G4VPhysicsConstructor*>;
     // See: https://jira-geant4.kek.jp/browse/DEV-284
@@ -85,6 +86,7 @@ using G4VModularPhysicsListSubInstanceManager = G4VMPLManager;
 class G4VModularPhysicsList : public virtual G4VUserPhysicsList
 {
   public:
+
     G4VModularPhysicsList();
     ~G4VModularPhysicsList() override;
 
@@ -129,6 +131,7 @@ class G4VModularPhysicsList : public virtual G4VUserPhysicsList
     G4int GetVerboseLevel() const;
 
   protected:
+
     // Protected copy constructor and assignment operator.
     G4VModularPhysicsList(const G4VModularPhysicsList&);
     G4VModularPhysicsList& operator=(const G4VModularPhysicsList&);

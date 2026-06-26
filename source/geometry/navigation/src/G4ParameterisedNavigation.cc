@@ -30,22 +30,22 @@
 // Revisions:
 // - J. Apostolakis  5 Mar 1998, Enabled parameterisation of mat & solid type
 // - G. Cosmo       15 May 2002, Extended to 3-d voxelisation, made subclass
-// - G. Cosmo       11 Mar 2004, Added Check mode 
+// - G. Cosmo       11 Mar 2004, Added Check mode
 // - J. Apostolakis 24 Nov 2005, Revised/fixed treatment of nested params
 // --------------------------------------------------------------------
 
 // Note: We cannot make the solid, dimensions and transformation dependent on
-//       parent because the voxelisation will not have access to this. 
+//       parent because the voxelisation will not have access to this.
 // So the following can NOT be done:
 //   sampleSolid = curParam->ComputeSolid(num, curPhysical, pParentTouch);
 //   sampleSolid->ComputeDimensions(curParam, num, curPhysical, pParentTouch);
 //   curParam->ComputeTransformation(num, curPhysical, pParentTouch);
 
 #include "G4ParameterisedNavigation.hh"
-#include "G4TouchableHistory.hh"
-#include "G4VNestedParameterisation.hh"
 
 #include "G4AuxiliaryNavServices.hh"
+#include "G4TouchableHistory.hh"
+#include "G4VNestedParameterisation.hh"
 
 // #include <cassert>
 
@@ -65,33 +65,26 @@ G4ParameterisedNavigation::~G4ParameterisedNavigation() = default;
 // ComputeStep
 // ***************************************************************************
 //
-G4double G4ParameterisedNavigation::
-                    ComputeStep(const G4ThreeVector& localPoint,
-                                const G4ThreeVector& localDirection,
-                                const G4double currentProposedStepLength,
-                                      G4double& newSafety,
-                                      G4NavigationHistory& history,
-                                      G4bool& validExitNormal,
-                                      G4ThreeVector& exitNormal,
-                                      G4bool& exiting,
-                                      G4bool& entering,
-                                      G4VPhysicalVolume *(*pBlockedPhysical),
-                                      G4int& blockedReplicaNo)
+G4double G4ParameterisedNavigation::ComputeStep(
+  const G4ThreeVector& localPoint, const G4ThreeVector& localDirection,
+  const G4double currentProposedStepLength, G4double& newSafety, G4NavigationHistory& history,
+  G4bool& validExitNormal, G4ThreeVector& exitNormal, G4bool& exiting, G4bool& entering,
+  G4VPhysicalVolume*(*pBlockedPhysical), G4int& blockedReplicaNo)
 {
   G4VPhysicalVolume *motherPhysical, *samplePhysical;
-  G4VPVParameterisation *sampleParam;
-  G4LogicalVolume *motherLogical;
+  G4VPVParameterisation* sampleParam;
+  G4LogicalVolume* motherLogical;
   G4VSolid *motherSolid, *sampleSolid;
   G4ThreeVector sampleDirection;
-  G4double ourStep=currentProposedStepLength, ourSafety;
+  G4double ourStep = currentProposedStepLength, ourSafety;
   G4double motherSafety, motherStep = DBL_MAX;
   G4bool motherValidExitNormal = false;
   G4ThreeVector motherExitNormal;
-  
+
   G4int sampleNo;
 
   G4bool initialNode, noStep;
-  G4SmartVoxelNode *curVoxelNode;
+  G4SmartVoxelNode* curVoxelNode;
   G4long curNoVolumes, contentNo;
   G4double voxelSafety;
 
@@ -111,43 +104,37 @@ G4double G4ParameterisedNavigation::
   //
 
   motherSafety = motherSolid->DistanceToOut(localPoint);
-  ourSafety = motherSafety;              // Working isotropic safety
+  ourSafety = motherSafety;  // Working isotropic safety
 
 #ifdef G4VERBOSE
-  if ( fCheck )
+  if (fCheck)
   {
-    if( motherSafety < 0.0 )
+    if (motherSafety < 0.0)
     {
       motherSolid->DumpInfo();
       std::ostringstream message;
-      message << "Negative Safety In Voxel Navigation !" << G4endl
-              << "        Current solid " << motherSolid->GetName()
-              << " gave negative safety: " << motherSafety << G4endl
+      message << "Negative Safety In Voxel Navigation !" << G4endl << "        Current solid "
+              << motherSolid->GetName() << " gave negative safety: " << motherSafety << G4endl
               << "        for the current (local) point " << localPoint;
-      G4Exception("G4ParameterisedNavigation::ComputeStep()",
-                  "GeomNav0003", FatalException, message); 
+      G4Exception("G4ParameterisedNavigation::ComputeStep()", "GeomNav0003", FatalException,
+                  message);
     }
-    if( motherSolid->Inside(localPoint) == kOutside )
-    { 
+    if (motherSolid->Inside(localPoint) == kOutside)
+    {
       std::ostringstream message;
-      message << "Point is outside Current Volume !" << G4endl
-              << "          Point " << localPoint
-              << " is outside current volume " << motherPhysical->GetName()
-              << G4endl;
-      G4double estDistToSolid = motherSolid->DistanceToIn(localPoint); 
-      G4cout << "          Estimated isotropic distance to solid (distToIn)= " 
-             << estDistToSolid;
-      if( estDistToSolid > 100.0 * motherSolid->GetTolerance() )
+      message << "Point is outside Current Volume !" << G4endl << "          Point " << localPoint
+              << " is outside current volume " << motherPhysical->GetName() << G4endl;
+      G4double estDistToSolid = motherSolid->DistanceToIn(localPoint);
+      G4cout << "          Estimated isotropic distance to solid (distToIn)= " << estDistToSolid;
+      if (estDistToSolid > 100.0 * motherSolid->GetTolerance())
       {
         motherSolid->DumpInfo();
-        G4Exception("G4ParameterisedNavigation::ComputeStep()",
-                    "GeomNav0003", FatalException, message,
-                    "Point is far outside Current Volume !"); 
+        G4Exception("G4ParameterisedNavigation::ComputeStep()", "GeomNav0003", FatalException,
+                    message, "Point is far outside Current Volume !");
       }
       else
       {
-        G4Exception("G4ParameterisedNavigation::ComputeStep()",
-                    "GeomNav1002", JustWarning, message,
+        G4Exception("G4ParameterisedNavigation::ComputeStep()", "GeomNav1002", JustWarning, message,
                     "Point is a little outside Current Volume.");
       }
     }
@@ -157,13 +144,10 @@ G4double G4ParameterisedNavigation::
     //               (signaled if step < 0 or step == kInfinity )
     //  b) to check value against answer of daughters!
     //
-    motherStep = motherSolid->DistanceToOut(localPoint,
-                                            localDirection,
-                                            true,
-                                           &motherValidExitNormal,
-                                           &motherExitNormal);
-  
-    if( (motherStep >= kInfinity) || (motherStep < 0.0) )
+    motherStep = motherSolid->DistanceToOut(localPoint, localDirection, true,
+                                            &motherValidExitNormal, &motherExitNormal);
+
+    if ((motherStep >= kInfinity) || (motherStep < 0.0))
     {
       // Error - indication of being outside solid !!
       //
@@ -172,14 +156,14 @@ G4double G4ParameterisedNavigation::
       ourStep = motherStep = 0.0;
       exiting = true;
       entering = false;
-    
+
       // If we are outside the solid does the normal make sense?
       validExitNormal = motherValidExitNormal;
       exitNormal = motherExitNormal;
-    
-      *pBlockedPhysical = nullptr; // or motherPhysical ?
+
+      *pBlockedPhysical = nullptr;  // or motherPhysical ?
       blockedReplicaNo = 0;  // or motherReplicaNumber ?
-    
+
       newSafety = 0.0;
       return ourStep;
     }
@@ -193,15 +177,15 @@ G4double G4ParameterisedNavigation::
   // (and only) daughter of the mother volume
   //
   samplePhysical = motherLogical->GetDaughter(0);
-  samplePhysical->GetReplicationData(axis,nReplicas,width,offset,consuming);
+  samplePhysical->GetReplicationData(axis, nReplicas, width, offset, consuming);
   fBList.Enlarge(nReplicas);
   fBList.Reset();
 
   // Exiting normal optimisation
   //
-  if (exiting && (*pBlockedPhysical==samplePhysical) && validExitNormal)
+  if (exiting && (*pBlockedPhysical == samplePhysical) && validExitNormal)
   {
-    if (localDirection.dot(exitNormal)>=kMinExitingNormalCosine)
+    if (localDirection.dot(exitNormal) >= kMinExitingNormalCosine)
     {
       // Block exited daughter replica; Must be on boundary => zero safety
       //
@@ -221,33 +205,30 @@ G4double G4ParameterisedNavigation::
     curVoxelNode = fVoxelNode;
     curNoVolumes = curVoxelNode->GetNoContained();
 
-    for ( contentNo=curNoVolumes-1; contentNo>=0; contentNo-- )
+    for (contentNo = curNoVolumes - 1; contentNo >= 0; contentNo--)
     {
       sampleNo = curVoxelNode->GetVolume((G4int)contentNo);
-      if ( !fBList.IsBlocked(sampleNo) )
+      if (!fBList.IsBlocked(sampleNo))
       {
         fBList.BlockVolume(sampleNo);
 
         // Call virtual methods, and copy information if needed
         //
-        sampleSolid = IdentifyAndPlaceSolid( sampleNo, samplePhysical,
-                                             sampleParam ); 
+        sampleSolid = IdentifyAndPlaceSolid(sampleNo, samplePhysical, sampleParam);
 
-        G4AffineTransform sampleTf(samplePhysical->GetRotation(),
-                                   samplePhysical->GetTranslation());
+        G4AffineTransform sampleTf(samplePhysical->GetRotation(), samplePhysical->GetTranslation());
         sampleTf.Invert();
         const G4ThreeVector samplePoint = sampleTf.TransformPoint(localPoint);
         const G4double sampleSafety = sampleSolid->DistanceToIn(samplePoint);
-        if ( sampleSafety<ourSafety )
+        if (sampleSafety < ourSafety)
         {
           ourSafety = sampleSafety;
         }
-        if ( sampleSafety<=ourStep )
+        if (sampleSafety <= ourStep)
         {
           sampleDirection = sampleTf.TransformAxis(localDirection);
-          G4double sampleStep =
-                   sampleSolid->DistanceToIn(samplePoint, sampleDirection);
-          if ( sampleStep<=ourStep )
+          G4double sampleStep = sampleSolid->DistanceToIn(samplePoint, sampleDirection);
+          if (sampleStep <= ourStep)
           {
             ourStep = sampleStep;
             entering = true;
@@ -255,73 +236,70 @@ G4double G4ParameterisedNavigation::
             *pBlockedPhysical = samplePhysical;
             blockedReplicaNo = sampleNo;
 #ifdef G4VERBOSE
-              // Check to see that the resulting point is indeed in/on volume.
-              // This check could eventually be made only for successful
-              // candidate.
+            // Check to see that the resulting point is indeed in/on volume.
+            // This check could eventually be made only for successful
+            // candidate.
 
-              if ( ( fCheck ) && ( sampleStep < kInfinity ) )
+            if ((fCheck) && (sampleStep < kInfinity))
+            {
+              G4ThreeVector intersectionPoint;
+              intersectionPoint = samplePoint + sampleStep * sampleDirection;
+              EInside insideIntPt = sampleSolid->Inside(intersectionPoint);
+              if (insideIntPt != kSurface)
               {
-                G4ThreeVector intersectionPoint;
-                intersectionPoint = samplePoint + sampleStep * sampleDirection;
-                EInside insideIntPt = sampleSolid->Inside(intersectionPoint); 
-                if( insideIntPt != kSurface )
+                G4long oldcoutPrec = G4cout.precision(16);
+                std::ostringstream message;
+                message << "Navigator gets conflicting response from Solid." << G4endl
+                        << "          Inaccurate solid DistanceToIn"
+                        << " for solid " << sampleSolid->GetName() << G4endl
+                        << "          Solid gave DistanceToIn = " << sampleStep << " yet returns ";
+                if (insideIntPt == kInside)
                 {
-                  G4long oldcoutPrec = G4cout.precision(16); 
-                  std::ostringstream message;
-                  message << "Navigator gets conflicting response from Solid."
-                          << G4endl
-                          << "          Inaccurate solid DistanceToIn"
-                          << " for solid " << sampleSolid->GetName() << G4endl
-                          << "          Solid gave DistanceToIn = "
-                          << sampleStep << " yet returns " ;
-                  if( insideIntPt == kInside )
-                  {
-                    message << "-kInside-"; 
-                  }
-                  else if( insideIntPt == kOutside )
-                  {
-                    message << "-kOutside-";
-                  }
-                  else
-                  {
-                    message << "-kSurface-"; 
-                  }
-                  message << " for this point !" << G4endl
-                          << "          Point = " << intersectionPoint
-                          << G4endl;
-                  if ( insideIntPt != kInside )
-                  {
-                    message << "        DistanceToIn(p) = " 
-                            << sampleSolid->DistanceToIn(intersectionPoint);
-                  }
-                  if ( insideIntPt != kOutside )
-                  { 
-                    message << "        DistanceToOut(p) = " 
-                            << sampleSolid->DistanceToOut(intersectionPoint);
-                  }
-                  G4Exception("G4ParameterisedNavigation::ComputeStep()", 
-                              "GeomNav1002", JustWarning, message);
-                  G4cout.precision(oldcoutPrec);
+                  message << "-kInside-";
                 }
+                else if (insideIntPt == kOutside)
+                {
+                  message << "-kOutside-";
+                }
+                else
+                {
+                  message << "-kSurface-";
+                }
+                message << " for this point !" << G4endl
+                        << "          Point = " << intersectionPoint << G4endl;
+                if (insideIntPt != kInside)
+                {
+                  message << "        DistanceToIn(p) = "
+                          << sampleSolid->DistanceToIn(intersectionPoint);
+                }
+                if (insideIntPt != kOutside)
+                {
+                  message << "        DistanceToOut(p) = "
+                          << sampleSolid->DistanceToOut(intersectionPoint);
+                }
+                G4Exception("G4ParameterisedNavigation::ComputeStep()", "GeomNav1002", JustWarning,
+                            message);
+                G4cout.precision(oldcoutPrec);
               }
+            }
 #endif
           }
         }
       }
     }
 
-    if ( initialNode )
+    if (initialNode)
     {
       initialNode = false;
-      voxelSafety = ComputeVoxelSafety(localPoint,axis);
-      if ( voxelSafety<ourSafety )
+      voxelSafety = ComputeVoxelSafety(localPoint, axis);
+      if (voxelSafety < ourSafety)
       {
         ourSafety = voxelSafety;
       }
-      if ( currentProposedStepLength<ourSafety )
+      if (currentProposedStepLength < ourSafety)
       {
         // Guaranteed physics limited
-        //      
+        //
         noStep = false;
         entering = false;
         exiting = false;
@@ -332,22 +310,18 @@ G4double G4ParameterisedNavigation::
       {
         // Consider intersection with mother solid
         //
-        if ( motherSafety<=ourStep )
+        if (motherSafety <= ourStep)
         {
-          if ( !fCheck )           
+          if (!fCheck)
           {
-            motherStep = motherSolid->DistanceToOut(localPoint,
-                                                   localDirection,
-                                                   true,
-                                                   &motherValidExitNormal,
-                                                   &motherExitNormal);
+            motherStep = motherSolid->DistanceToOut(localPoint, localDirection, true,
+                                                    &motherValidExitNormal, &motherExitNormal);
           }
 
-          if( ( motherStep < 0.0 ) || ( motherStep >= kInfinity) )
+          if ((motherStep < 0.0) || (motherStep >= kInfinity))
           {
 #ifdef G4VERBOSE
-            fLogger->ReportOutsideMother(localPoint, localDirection,
-                                         motherPhysical);
+            fLogger->ReportOutsideMother(localPoint, localDirection, motherPhysical);
 #endif
             ourStep = motherStep = 0.0;
             // Rely on the code below to set the remaining state, i.e.
@@ -355,20 +329,19 @@ G4double G4ParameterisedNavigation::
             // pBlockedPhysical etc.
           }
 #ifdef G4VERBOSE
-          if( motherValidExitNormal && ( fCheck || (motherStep<=ourStep)) )
+          if (motherValidExitNormal && (fCheck || (motherStep <= ourStep)))
           {
-            fLogger->CheckAndReportBadNormal(motherExitNormal,
-                                             localPoint, localDirection,
+            fLogger->CheckAndReportBadNormal(motherExitNormal, localPoint, localDirection,
                                              motherStep, motherSolid,
                                              "From motherSolid::DistanceToOut");
           }
 #endif
-          if ( motherStep<=ourStep )
+          if (motherStep <= ourStep)
           {
             ourStep = motherStep;
             exiting = true;
             entering = false;
-            if ( validExitNormal )
+            if (validExitNormal)
             {
               const G4RotationMatrix* rot = motherPhysical->GetRotation();
               if (rot != nullptr)
@@ -398,19 +371,18 @@ G4double G4ParameterisedNavigation::
 // ComputeSafety
 // ***************************************************************************
 //
-G4double
-G4ParameterisedNavigation::ComputeSafety(const G4ThreeVector& localPoint,
-                                         const G4NavigationHistory& history,
-                                         const G4double )
+G4double G4ParameterisedNavigation::ComputeSafety(const G4ThreeVector& localPoint,
+                                                  const G4NavigationHistory& history,
+                                                  const G4double)
 {
   G4VPhysicalVolume *motherPhysical, *samplePhysical;
-  G4VPVParameterisation *sampleParam;
-  G4LogicalVolume *motherLogical;
+  G4VPVParameterisation* sampleParam;
+  G4LogicalVolume* motherLogical;
   G4VSolid *motherSolid, *sampleSolid;
   G4double motherSafety, ourSafety;
   G4int sampleNo, curVoxelNodeNo, curVoxelNoSlices;
 
-  G4SmartVoxelNode *curVoxelNode;
+  G4SmartVoxelNode* curVoxelNode;
   G4long curNoVolumes, contentNo;
   G4double voxelSafety;
 
@@ -430,7 +402,7 @@ G4ParameterisedNavigation::ComputeSafety(const G4ThreeVector& localPoint,
   //
 
   motherSafety = motherSolid->DistanceToOut(localPoint);
-  ourSafety = motherSafety;                     // Working isotropic safety
+  ourSafety = motherSafety;  // Working isotropic safety
 
   //
   // Compute daughter safeties
@@ -440,31 +412,30 @@ G4ParameterisedNavigation::ComputeSafety(const G4ThreeVector& localPoint,
   // daughter of the mother volume
   //
   samplePhysical = motherLogical->GetDaughter(0);
-  samplePhysical->GetReplicationData(axis, nReplicas,
-                                     width, offset, consuming);
+  samplePhysical->GetReplicationData(axis, nReplicas, width, offset, consuming);
   sampleParam = samplePhysical->GetParameterisation();
 
   // Look inside the current Voxel only at the current point
   //
-  if ( axis==kUndefined )      // 3D case: current voxel node is retrieved
-  {                            //          from G4VoxelNavigation.
+  if (axis == kUndefined)  // 3D case: current voxel node is retrieved
+  {  //          from G4VoxelNavigation.
     curVoxelNode = fVoxelNode;
   }
-  else                         // 1D case: current voxel node is computed here.
+  else  // 1D case: current voxel node is computed here.
   {
-    curVoxelNodeNo = G4int((localPoint(fVoxelAxis)
-                           -fVoxelHeader->GetMinExtent()) / fVoxelSliceWidth );
+    curVoxelNodeNo =
+      G4int((localPoint(fVoxelAxis) - fVoxelHeader->GetMinExtent()) / fVoxelSliceWidth);
     curVoxelNoSlices = G4int(fVoxelHeader->GetNoSlices());
 
     // Rounding protection
     //
-    if ( curVoxelNodeNo<0 )
+    if (curVoxelNodeNo < 0)
     {
       curVoxelNodeNo = 0;
     }
-    else if ( curVoxelNodeNo>=curVoxelNoSlices )
+    else if (curVoxelNodeNo >= curVoxelNoSlices)
     {
-      curVoxelNodeNo = curVoxelNoSlices-1;
+      curVoxelNodeNo = curVoxelNoSlices - 1;
     }
     curVoxelNode = fVoxelHeader->GetSlice(curVoxelNodeNo)->GetNode();
     fVoxelNodeNo = curVoxelNodeNo;
@@ -472,29 +443,28 @@ G4ParameterisedNavigation::ComputeSafety(const G4ThreeVector& localPoint,
   }
   curNoVolumes = curVoxelNode->GetNoContained();
 
-  for ( contentNo=curNoVolumes-1; contentNo>=0; contentNo-- )
+  for (contentNo = curNoVolumes - 1; contentNo >= 0; contentNo--)
   {
     sampleNo = curVoxelNode->GetVolume((G4int)contentNo);
-    
+
     // Call virtual methods, and copy information if needed
     //
-    sampleSolid= IdentifyAndPlaceSolid( sampleNo,samplePhysical,sampleParam ); 
+    sampleSolid = IdentifyAndPlaceSolid(sampleNo, samplePhysical, sampleParam);
 
-    G4AffineTransform sampleTf(samplePhysical->GetRotation(),
-                               samplePhysical->GetTranslation());
+    G4AffineTransform sampleTf(samplePhysical->GetRotation(), samplePhysical->GetTranslation());
     sampleTf.Invert();
     const G4ThreeVector samplePoint = sampleTf.TransformPoint(localPoint);
     G4double sampleSafety = sampleSolid->DistanceToIn(samplePoint);
-    if ( sampleSafety<ourSafety )
+    if (sampleSafety < ourSafety)
     {
       ourSafety = sampleSafety;
     }
   }
 
-  voxelSafety = ComputeVoxelSafety(localPoint,axis);
-  if ( voxelSafety<ourSafety )
+  voxelSafety = ComputeVoxelSafety(localPoint, axis);
+  if (voxelSafety < ourSafety)
   {
-    ourSafety=voxelSafety;
+    ourSafety = voxelSafety;
   }
 
   return ourSafety;
@@ -507,14 +477,13 @@ G4ParameterisedNavigation::ComputeSafety(const G4ThreeVector& localPoint,
 // using already located point.
 // ********************************************************************
 //
-G4double G4ParameterisedNavigation::
-ComputeVoxelSafety(const G4ThreeVector& localPoint,
-                   const EAxis pAxis) const
+G4double G4ParameterisedNavigation::ComputeVoxelSafety(const G4ThreeVector& localPoint,
+                                                       const EAxis pAxis) const
 {
   // If no best axis is specified, adopt default
   // strategy as for placements
-  //  
-  if ( pAxis==kUndefined )
+  //
+  if (pAxis == kUndefined)
   {
     return G4VoxelNavigation::ComputeVoxelSafety(localPoint);
   }
@@ -522,21 +491,20 @@ ComputeVoxelSafety(const G4ThreeVector& localPoint,
   G4double voxelSafety, plusVoxelSafety, minusVoxelSafety;
   G4double curNodeOffset, minCurCommonDelta, maxCurCommonDelta;
   G4long minCurNodeNoDelta, maxCurNodeNoDelta;
-  
+
   // Compute linear intersection distance to boundaries of max/min
   // to collected nodes at current level
   //
-  curNodeOffset = fVoxelNodeNo*fVoxelSliceWidth;
-  minCurCommonDelta = localPoint(fVoxelAxis)
-                    - fVoxelHeader->GetMinExtent()-curNodeOffset;
-  maxCurNodeNoDelta = fVoxelNode->GetMaxEquivalentSliceNo()-fVoxelNodeNo;
-  minCurNodeNoDelta = fVoxelNodeNo-fVoxelNode->GetMinEquivalentSliceNo();
-  maxCurCommonDelta = fVoxelSliceWidth-minCurCommonDelta;
-  plusVoxelSafety   = minCurNodeNoDelta*fVoxelSliceWidth+minCurCommonDelta;
-  minusVoxelSafety  = maxCurNodeNoDelta*fVoxelSliceWidth+maxCurCommonDelta;
-  voxelSafety = std::min(plusVoxelSafety,minusVoxelSafety);
+  curNodeOffset = fVoxelNodeNo * fVoxelSliceWidth;
+  minCurCommonDelta = localPoint(fVoxelAxis) - fVoxelHeader->GetMinExtent() - curNodeOffset;
+  maxCurNodeNoDelta = fVoxelNode->GetMaxEquivalentSliceNo() - fVoxelNodeNo;
+  minCurNodeNoDelta = fVoxelNodeNo - fVoxelNode->GetMinEquivalentSliceNo();
+  maxCurCommonDelta = fVoxelSliceWidth - minCurCommonDelta;
+  plusVoxelSafety = minCurNodeNoDelta * fVoxelSliceWidth + minCurCommonDelta;
+  minusVoxelSafety = maxCurNodeNoDelta * fVoxelSliceWidth + maxCurCommonDelta;
+  voxelSafety = std::min(plusVoxelSafety, minusVoxelSafety);
 
-  if ( voxelSafety<0 )
+  if (voxelSafety < 0)
   {
     voxelSafety = 0;
   }
@@ -555,20 +523,16 @@ ComputeVoxelSafety(const G4ThreeVector& localPoint,
 // [current Step ends inside same voxel or leaves all voxels]
 // ********************************************************************
 //
-G4bool G4ParameterisedNavigation::
-LocateNextVoxel( const G4ThreeVector& localPoint,
-                 const G4ThreeVector& localDirection,
-                 const G4double currentStep,
-                 const EAxis pAxis)
+G4bool G4ParameterisedNavigation::LocateNextVoxel(const G4ThreeVector& localPoint,
+                                                  const G4ThreeVector& localDirection,
+                                                  const G4double currentStep, const EAxis pAxis)
 {
   // If no best axis is specified, adopt default
   // location strategy as for placements
-  //  
-  if ( pAxis==kUndefined )
+  //
+  if (pAxis == kUndefined)
   {
-    return G4VoxelNavigation::LocateNextVoxel(localPoint,
-                                              localDirection,
-                                              currentStep);
+    return G4VoxelNavigation::LocateNextVoxel(localPoint, localDirection, currentStep);
   }
 
   G4bool isNewVoxel;
@@ -576,18 +540,17 @@ LocateNextVoxel( const G4ThreeVector& localPoint,
   G4double minVal, maxVal, curMinExtent, curCoord;
 
   curMinExtent = fVoxelHeader->GetMinExtent();
-  curCoord = localPoint(fVoxelAxis)+currentStep*localDirection(fVoxelAxis);
-  minVal = curMinExtent+fVoxelNode->GetMinEquivalentSliceNo()*fVoxelSliceWidth;
+  curCoord = localPoint(fVoxelAxis) + currentStep * localDirection(fVoxelAxis);
+  minVal = curMinExtent + fVoxelNode->GetMinEquivalentSliceNo() * fVoxelSliceWidth;
   isNewVoxel = false;
 
-  if ( minVal<=curCoord )
+  if (minVal <= curCoord)
   {
-    maxVal = curMinExtent
-           + (fVoxelNode->GetMaxEquivalentSliceNo()+1)*fVoxelSliceWidth;
-    if ( maxVal<curCoord )
+    maxVal = curMinExtent + (fVoxelNode->GetMaxEquivalentSliceNo() + 1) * fVoxelSliceWidth;
+    if (maxVal < curCoord)
     {
-      newNodeNo = fVoxelNode->GetMaxEquivalentSliceNo()+1;
-      if ( newNodeNo<G4int(fVoxelHeader->GetNoSlices()) )
+      newNodeNo = fVoxelNode->GetMaxEquivalentSliceNo() + 1;
+      if (newNodeNo < G4int(fVoxelHeader->GetNoSlices()))
       {
         fVoxelNodeNo = newNodeNo;
         fVoxelNode = fVoxelHeader->GetSlice(newNodeNo)->GetNode();
@@ -597,12 +560,12 @@ LocateNextVoxel( const G4ThreeVector& localPoint,
   }
   else
   {
-    newNodeNo = fVoxelNode->GetMinEquivalentSliceNo()-1;
+    newNodeNo = fVoxelNode->GetMinEquivalentSliceNo() - 1;
 
     // Must locate from newNodeNo no and down to setup stack and fVoxelNode
     // Repeat or earlier code...
     //
-    if ( newNodeNo>=0 )
+    if (newNodeNo >= 0)
     {
       fVoxelNodeNo = newNodeNo;
       fVoxelNode = fVoxelHeader->GetSlice(newNodeNo)->GetNode();
@@ -616,79 +579,77 @@ LocateNextVoxel( const G4ThreeVector& localPoint,
 // LevelLocate
 // ********************************************************************
 //
-G4bool
-G4ParameterisedNavigation::LevelLocate( G4NavigationHistory& history,
-                                  const G4VPhysicalVolume* blockedVol,
-                                  const G4int blockedNum,
-                                  const G4ThreeVector& globalPoint,
-                                  const G4ThreeVector* globalDirection,
-                                  const G4bool pLocatedOnEdge, 
-                                        G4ThreeVector& localPoint )
+G4bool G4ParameterisedNavigation::LevelLocate(
+  G4NavigationHistory& history, const G4VPhysicalVolume* blockedVol, const G4int blockedNum,
+  const G4ThreeVector& globalPoint, const G4ThreeVector* globalDirection,
+  const G4bool pLocatedOnEdge, G4ThreeVector& localPoint)
 {
-  G4SmartVoxelHeader *motherVoxelHeader;
-  G4SmartVoxelNode *motherVoxelNode;
+  G4SmartVoxelHeader* motherVoxelHeader;
+  G4SmartVoxelNode* motherVoxelNode;
   G4VPhysicalVolume *motherPhysical, *pPhysical;
-  G4VPVParameterisation *pParam;
-  G4LogicalVolume *motherLogical;
-  G4VSolid *pSolid;
+  G4VPVParameterisation* pParam;
+  G4LogicalVolume* motherLogical;
+  G4VSolid* pSolid;
   G4ThreeVector samplePoint;
   G4int voxelNoDaughters, replicaNo;
-  
+
   motherPhysical = history.GetTopVolume();
   motherLogical = motherPhysical->GetLogicalVolume();
   motherVoxelHeader = motherLogical->GetVoxelHeader();
 
   // Find the voxel containing the point
   //
-  motherVoxelNode = ParamVoxelLocate(motherVoxelHeader,localPoint);
-  
+  motherVoxelNode = ParamVoxelLocate(motherVoxelHeader, localPoint);
+
   voxelNoDaughters = (G4int)motherVoxelNode->GetNoContained();
-  if ( voxelNoDaughters==0 )  { return false; }
-  
+  if (voxelNoDaughters == 0)
+  {
+    return false;
+  }
+
   pPhysical = motherLogical->GetDaughter(0);
   pParam = pPhysical->GetParameterisation();
 
   // Save parent history in touchable history
   //   ... for use as parent t-h in ComputeMaterial method of param
   //
-  G4TouchableHistory parentTouchable( history ); 
+  G4TouchableHistory parentTouchable(history);
 
   // Search replicated daughter volume
   //
-  for ( auto sampleNo=voxelNoDaughters-1; sampleNo>=0; sampleNo-- )
+  for (auto sampleNo = voxelNoDaughters - 1; sampleNo >= 0; sampleNo--)
   {
     replicaNo = motherVoxelNode->GetVolume(sampleNo);
-    if ( (replicaNo!=blockedNum) || (pPhysical!=blockedVol) )
+    if ((replicaNo != blockedNum) || (pPhysical != blockedVol))
     {
       // Obtain solid (as it can vary) and obtain its parameters
       //
-      pSolid = IdentifyAndPlaceSolid( replicaNo, pPhysical, pParam ); 
+      pSolid = IdentifyAndPlaceSolid(replicaNo, pPhysical, pParam);
 
       // Setup history
       //
       history.NewLevel(pPhysical, kParameterised, replicaNo);
       samplePoint = history.GetTopTransform().TransformPoint(globalPoint);
-      if ( !G4AuxiliaryNavServices::CheckPointOnSurface( pSolid, samplePoint,
-            globalDirection, history.GetTopTransform(), pLocatedOnEdge) )
+      if (!G4AuxiliaryNavServices::CheckPointOnSurface(pSolid, samplePoint, globalDirection,
+                                                       history.GetTopTransform(), pLocatedOnEdge))
       {
         history.BackLevel();
       }
       else
-      { 
+      {
         // Enter this daughter
         //
         localPoint = samplePoint;
-        
+
         // Set the correct copy number in physical
         //
         pPhysical->SetCopyNo(replicaNo);
-        
+
         // Set the correct solid and material in Logical Volume
         //
-        G4LogicalVolume *pLogical = pPhysical->GetLogicalVolume();
+        G4LogicalVolume* pLogical = pPhysical->GetLogicalVolume();
         pLogical->SetSolid(pSolid);
-        pLogical->UpdateMaterial(pParam->ComputeMaterial(replicaNo,
-                                 pPhysical, &parentTouchable)  );
+        pLogical->UpdateMaterial(pParam->ComputeMaterial(replicaNo, pPhysical, &parentTouchable));
         return true;
       }
     }
@@ -696,8 +657,8 @@ G4ParameterisedNavigation::LevelLocate( G4NavigationHistory& history,
   return false;
 }
 
-void G4ParameterisedNavigation::RelocateWithinVolume( G4VPhysicalVolume*  motherPhysical,
-                                                      const G4ThreeVector& localPoint )
+void G4ParameterisedNavigation::RelocateWithinVolume(G4VPhysicalVolume* motherPhysical,
+                                                     const G4ThreeVector& localPoint)
 {
   auto motherLogical = motherPhysical->GetLogicalVolume();
 
@@ -706,8 +667,8 @@ void G4ParameterisedNavigation::RelocateWithinVolume( G4VPhysicalVolume*  mother
   // assert(motherPhysical->GetRegularStructureId() != 1);
   // assert(motherLogical->GetNoDaughters() == 1);
 
-  if ( auto pVoxelHeader = motherLogical->GetVoxelHeader() )
+  if (auto pVoxelHeader = motherLogical->GetVoxelHeader())
   {
-    ParamVoxelLocate( pVoxelHeader, localPoint );
+    ParamVoxelLocate(pVoxelHeader, localPoint);
   }
 }

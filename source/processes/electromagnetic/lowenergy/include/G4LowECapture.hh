@@ -36,21 +36,21 @@
 //
 // Class description:
 //
-// G4LowECapture allows to remove unwanted particles from simulation in 
+// G4LowECapture allows to remove unwanted particles from simulation in
 // order to improve CPU performance. There are two parameters:
-//                 
+//
 // 1) low energy threshold for kinetic energy (default 0)
 // 2) the vector of names of G4Region where process is active
-// 
 //
-// If a track is killed then energy deposition is added to the step 
+//
+// If a track is killed then energy deposition is added to the step
 //
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef LowECapture_h
-#define LowECapture_h 1
+#ifndef G4LOWECAPTURE_HH
+#define G4LOWECAPTURE_HH
 
 #include "G4VDiscreteProcess.hh"
 #include "globals.hh"
@@ -61,34 +61,36 @@ class G4Region;
 
 class G4LowECapture : public G4VDiscreteProcess
 {
-public:
-  explicit G4LowECapture(G4double ekinlimit = 0.0);
-  virtual ~G4LowECapture();
+  public:
 
-  void SetKinEnergyLimit(G4double);
-  void AddRegion(const G4String&);
+    explicit G4LowECapture(G4double ekinlimit = 0.0);
+    virtual ~G4LowECapture();
 
-  void BuildPhysicsTable(const G4ParticleDefinition&) override;
+    void SetKinEnergyLimit(G4double);
+    void AddRegion(const G4String&);
 
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
+    void BuildPhysicsTable(const G4ParticleDefinition&) override;
 
-  G4double PostStepGetPhysicalInteractionLength(const G4Track& track,
-						G4double,
-						G4ForceCondition*) override;
-  G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&) override;
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
 
-  G4LowECapture(const G4LowECapture&) = delete;
-  G4LowECapture& operator = (const G4LowECapture &right) = delete;
+    G4double PostStepGetPhysicalInteractionLength(const G4Track& track, G4double,
+                                                  G4ForceCondition*) override;
+    G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&) override;
 
-protected:
-  G4double GetMeanFreePath(const G4Track&, G4double,G4ForceCondition*) override;
+    G4LowECapture(const G4LowECapture&) = delete;
+    G4LowECapture& operator=(const G4LowECapture& right) = delete;
 
-private:
-  std::vector<G4String> regionName;
-  std::vector<const G4Region*> region;
-  G4double kinEnergyThreshold;
-  G4int    nRegions;
-  G4bool   isIon;
+  protected:
+
+    G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*) override;
+
+  private:
+
+    std::vector<G4String> regionName;
+    std::vector<const G4Region*> region;
+    G4double kinEnergyThreshold;
+    G4int nRegions;
+    G4bool isIon;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

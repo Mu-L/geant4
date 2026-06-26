@@ -27,38 +27,38 @@
 //
 // Author: Makoto Asai
 // --------------------------------------------------------------------
-#ifndef G4ScoringRealWorld_h
-#define G4ScoringRealWorld_h 1
+#ifndef G4SCORINGREALWORLD_HH
+#define G4SCORINGREALWORLD_HH
 
-#include "globals.hh"
 #include "G4VScoringMesh.hh"
+#include "globals.hh"
 
 class G4VPhysicalVolume;
 class G4LogicalVolume;
 
 class G4ScoringRealWorld : public G4VScoringMesh
 {
- public:
+  public:
 
-  G4ScoringRealWorld(const G4String& lvName);
-  ~G4ScoringRealWorld() override = default;
+    G4ScoringRealWorld(const G4String& lvName);
+    ~G4ScoringRealWorld() override = default;
 
-  void List() const override;
+    void List() const override;
 
-  //++++++++++ visualization method not yet implemented
-  void Draw(RunScore* /*map*/, G4VScoreColorMap* /*colorMap*/,
-            G4int /*axflg=111*/) override {}
-  void DrawColumn(RunScore* /*map*/, G4VScoreColorMap* /*colorMap*/,
-                  G4int /*idxProj*/, G4int /*idxColumn*/) override {}
+    //++++++++++ visualization method not yet implemented
+    void Draw(RunScore* /*map*/, G4VScoreColorMap* /*colorMap*/, G4int /*axflg=111*/) override {}
+    void DrawColumn(RunScore* /*map*/, G4VScoreColorMap* /*colorMap*/, G4int /*idxProj*/,
+                    G4int /*idxColumn*/) override
+    {}
 
- protected:
+  protected:
 
-  // construct this mesh
-  void SetupGeometry(G4VPhysicalVolume*) override;
+    // construct this mesh
+    void SetupGeometry(G4VPhysicalVolume*) override;
 
- protected:
+  protected:
 
-  G4String logVolName;
+    G4String logVolName;
 };
 
 #endif

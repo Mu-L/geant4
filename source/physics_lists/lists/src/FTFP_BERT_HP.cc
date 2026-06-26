@@ -29,66 +29,65 @@
 //
 //------------------------------------------------------------------------
 //
-#include <iomanip>   
-
-#include "globals.hh"
-#include "G4ios.hh"
+#include "FTFP_BERT_HP.hh"
 
 #include "G4DecayPhysics.hh"
-#include "G4RadioactiveDecayPhysics.hh"
-#include "G4EmStandardPhysics.hh"
 #include "G4EmExtraPhysics.hh"
-#include "G4IonPhysics.hh"
-#include "G4StoppingPhysics.hh"
+#include "G4EmStandardPhysics.hh"
 #include "G4HadronElasticPhysicsHP.hh"
-
-#include "FTFP_BERT_HP.hh"
 #include "G4HadronPhysicsFTFP_BERT_HP.hh"
+#include "G4IonPhysics.hh"
+#include "G4RadioactiveDecayPhysics.hh"
+#include "G4StoppingPhysics.hh"
+#include "G4ios.hh"
+#include "globals.hh"
+
+#include <iomanip>
 
 FTFP_BERT_HP::FTFP_BERT_HP(G4int ver)
 {
-  if(ver > 0) {
-    G4cout << "<<< Geant4 Physics List simulation engine: FTFP_BERT_HP"<<G4endl;
-    G4cout <<G4endl;
+  if (ver > 0)
+  {
+    G4cout << "<<< Geant4 Physics List simulation engine: FTFP_BERT_HP" << G4endl;
+    G4cout << G4endl;
   }
-  defaultCutValue = 0.7*CLHEP::mm;  
+  defaultCutValue = 0.7 * CLHEP::mm;
   SetVerboseLevel(ver);
 
- // EM Physics
-  RegisterPhysics( new G4EmStandardPhysics(ver) );
+  // EM Physics
+  RegisterPhysics(new G4EmStandardPhysics(ver));
 
   // Synchroton Radiation & GN Physics
-  RegisterPhysics( new G4EmExtraPhysics(ver) );
+  RegisterPhysics(new G4EmExtraPhysics(ver));
 
-  // Decays 
-  RegisterPhysics( new G4DecayPhysics(ver) );
-  RegisterPhysics( new G4RadioactiveDecayPhysics(ver) );
+  // Decays
+  RegisterPhysics(new G4DecayPhysics(ver));
+  RegisterPhysics(new G4RadioactiveDecayPhysics(ver));
 
-   // Hadron Elastic scattering
-  RegisterPhysics( new G4HadronElasticPhysicsHP(ver) );
+  // Hadron Elastic scattering
+  RegisterPhysics(new G4HadronElasticPhysicsHP(ver));
 
-   // Hadron Physics
-  RegisterPhysics( new G4HadronPhysicsFTFP_BERT_HP(ver) );
+  // Hadron Physics
+  RegisterPhysics(new G4HadronPhysicsFTFP_BERT_HP(ver));
 
   // Stopping Physics
-  RegisterPhysics( new G4StoppingPhysics(ver) );
+  RegisterPhysics(new G4StoppingPhysics(ver));
 
   // Ion Physics
-  RegisterPhysics( new G4IonPhysics(ver) );
-  
+  RegisterPhysics(new G4IonPhysics(ver));
 }
 
 void FTFP_BERT_HP::SetCuts()
 {
-  if (verboseLevel >1){
+  if (verboseLevel > 1)
+  {
     G4cout << "FTFP_BERT_HP::SetCuts:";
-  }  
-  //  " G4VUserPhysicsList::SetCutsWithDefault" method sets 
-  //   the default cut value for all particle types 
+  }
+  //  " G4VUserPhysicsList::SetCutsWithDefault" method sets
+  //   the default cut value for all particle types
 
-  SetCutsWithDefault();   
+  SetCutsWithDefault();
 
-  //Set proton cut value to 0 for producing low energy recoil nucleus 
-  SetCutValue(0.0, "proton");   
- 
+  // Set proton cut value to 0 for producing low energy recoil nucleus
+  SetCutValue(0.0, "proton");
 }

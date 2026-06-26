@@ -32,152 +32,144 @@
 
 // Author: M.Asai, SLAC
 // --------------------------------------------------------------------
-#ifndef G4EventManager_hh
-#define G4EventManager_hh 1
+#ifndef G4EVENTMANAGER_HH
+#define G4EVENTMANAGER_HH
 
+#include "G4Event.hh"
+#include "G4PrimaryTransformer.hh"
 #include "G4StackManager.hh"
 #include "G4TrajectoryContainer.hh"
-#include "G4PrimaryTransformer.hh"
-#include "G4Event.hh"
 class G4UserEventAction;
 class G4UserStackingAction;
 class G4UserTrackingAction;
 class G4UserSteppingAction;
 class G4EvManMessenger;
-#include "G4TrackingManager.hh"
 #include "G4Track.hh"
-#include "G4VTrajectory.hh"
 #include "G4TrackStatus.hh"
+#include "G4TrackingManager.hh"
+#include "G4VTrajectory.hh"
 class G4SDManager;
 class G4StateManager;
 #include "globals.hh"
 class G4VUserEventInformation;
 
-class G4EventManager 
+class G4EventManager
 {
- public:
+  public:
+
     static G4EventManager* GetEventManager();
-      // This method returns the singleton pointer of G4EventManager.
+    // This method returns the singleton pointer of G4EventManager.
 
     G4EventManager();
-   ~G4EventManager();
+    ~G4EventManager();
 
-    G4EventManager(const G4EventManager &right) = delete;
+    G4EventManager(const G4EventManager& right) = delete;
     G4EventManager& operator=(const G4EventManager& right) = delete;
 
     void ProcessOneEvent(G4Event* anEvent);
-      // This method is the main entry to this class for simulating an event.
+    // This method is the main entry to this class for simulating an event.
 
-    void ProcessOneEvent(G4TrackVector* trackVector, G4Event* anEvent= nullptr);
-      // This is an alternative entry for HEP experiments which create G4Track
-      // objects by themselves directly without using G4VPrimaryGenerator or a
-      // user-primary-generator action. Dummy G4Event object will be created if
-      // "anEvent" is null for internal use, but this dummy object will be
-      // deleted at the end of this method and will never be available for use
-      // after the processing.
-      // Note that in this case of null G4Event pointer, no output of the
-      // simulated event is returned by this method; the user must implement
-      // some mechanism of storing the output, e.g. in the UserEventAction
-      // and/or in sensitive detectors.
-      // If a valid G4Event object is given, this object will not be deleted
-      // by this method, and output objects such as hits collections and
-      // trajectories will be associated to the event object. If the event
-      // object has valid primary vertices/particles, they will be added to
-      // the given "trackvector" input.
+    void ProcessOneEvent(G4TrackVector* trackVector, G4Event* anEvent = nullptr);
+    // This is an alternative entry for HEP experiments which create G4Track
+    // objects by themselves directly without using G4VPrimaryGenerator or a
+    // user-primary-generator action. Dummy G4Event object will be created if
+    // "anEvent" is null for internal use, but this dummy object will be
+    // deleted at the end of this method and will never be available for use
+    // after the processing.
+    // Note that in this case of null G4Event pointer, no output of the
+    // simulated event is returned by this method; the user must implement
+    // some mechanism of storing the output, e.g. in the UserEventAction
+    // and/or in sensitive detectors.
+    // If a valid G4Event object is given, this object will not be deleted
+    // by this method, and output objects such as hits collections and
+    // trajectories will be associated to the event object. If the event
+    // object has valid primary vertices/particles, they will be added to
+    // the given "trackvector" input.
 
-    void StackTracks(G4TrackVector* trackVector, G4bool IDhasAlreadySet= false);
-      // Helper function to stack a vector of tracks for processing in the
-      // current event.
+    void StackTracks(G4TrackVector* trackVector, G4bool IDhasAlreadySet = false);
+    // Helper function to stack a vector of tracks for processing in the
+    // current event.
 
-    inline const G4Event* GetConstCurrentEvent()
-      { return currentEvent; }
-    inline G4Event* GetNonconstCurrentEvent()
-      { return currentEvent; }
-      // These methods returns the pointers of const G4Event*
-      // and G4Event*, respectively. Null will be returned when
-      // an event is not processing.
+    inline const G4Event* GetConstCurrentEvent() { return currentEvent; }
+    inline G4Event* GetNonconstCurrentEvent() { return currentEvent; }
+    // These methods returns the pointers of const G4Event*
+    // and G4Event*, respectively. Null will be returned when
+    // an event is not processing.
 
     void AbortCurrentEvent();
-      // This method aborts the processing of the current event. All stacked
-      // tracks are deleted. The contents of G4Event object is not completed,
-      // but trajectories, hits, and/or digits which are created before the
-      // moment of abortion can be used.
+    // This method aborts the processing of the current event. All stacked
+    // tracks are deleted. The contents of G4Event object is not completed,
+    // but trajectories, hits, and/or digits which are created before the
+    // moment of abortion can be used.
 
     void SetUserAction(G4UserEventAction* userAction);
     void SetUserAction(G4UserStackingAction* userAction);
     void SetUserAction(G4UserTrackingAction* userAction);
     void SetUserAction(G4UserSteppingAction* userAction);
-    inline G4UserEventAction* GetUserEventAction()
-      { return userEventAction; }
-    inline G4UserStackingAction* GetUserStackingAction()
-      { return userStackingAction; }
-    inline G4UserTrackingAction* GetUserTrackingAction()
-      { return userTrackingAction; }
-    inline G4UserSteppingAction* GetUserSteppingAction()
-      { return userSteppingAction; }
-      // Set and get methods for user action classes. User action classes
-      // which should belong to the other managers will be sent to the 
-      // corresponding managers.
+    inline G4UserEventAction* GetUserEventAction() { return userEventAction; }
+    inline G4UserStackingAction* GetUserStackingAction() { return userStackingAction; }
+    inline G4UserTrackingAction* GetUserTrackingAction() { return userTrackingAction; }
+    inline G4UserSteppingAction* GetUserSteppingAction() { return userSteppingAction; }
+    // Set and get methods for user action classes. User action classes
+    // which should belong to the other managers will be sent to the
+    // corresponding managers.
 
     void KeepTheCurrentEvent();
-      // If the current event exists, it is kept undeleted until
-      // the end of the current run
+    // If the current event exists, it is kept undeleted until
+    // the end of the current run
 
-    inline G4StackManager* GetStackManager() const
-      { return trackContainer; }
-    inline G4TrackingManager* GetTrackingManager() const
-      { return trackManager; }
+    inline G4StackManager* GetStackManager() const { return trackContainer; }
+    inline G4TrackingManager* GetTrackingManager() const { return trackManager; }
 
-    inline G4int GetVerboseLevel()
-      { return verboseLevel; }
-    inline void SetVerboseLevel( G4int value )
-      {
-        verboseLevel = value;
-        trackContainer->SetVerboseLevel( value );
-        transformer->SetVerboseLevel( value );
-      }
-      // Set and get method of the verbose level
+    inline G4int GetVerboseLevel() { return verboseLevel; }
+    inline void SetVerboseLevel(G4int value)
+    {
+      verboseLevel = value;
+      trackContainer->SetVerboseLevel(value);
+      transformer->SetVerboseLevel(value);
+    }
+    // Set and get method of the verbose level
 
     void SetUserInformation(G4VUserEventInformation* anInfo);
     G4VUserEventInformation* GetUserInformation();
-      // Set and get method of G4VUserEventInformation object associating with
-      // the current event. Both methods are valid only for G4State_EventProc
-      // application state.
+    // Set and get method of G4VUserEventInformation object associating with
+    // the current event. Both methods are valid only for G4State_EventProc
+    // application state.
 
-    inline G4PrimaryTransformer* GetPrimaryTransformer() const
-      { return transformer; }
-    inline void SetPrimaryTransformer(G4PrimaryTransformer* tf)
-      { transformer = tf; }
+    inline G4PrimaryTransformer* GetPrimaryTransformer() const { return transformer; }
+    inline void SetPrimaryTransformer(G4PrimaryTransformer* tf) { transformer = tf; }
     inline void StoreRandomNumberStatusToG4Event(G4int vl)
-      { storetRandomNumberStatusToG4Event = vl; }
+    {
+      storetRandomNumberStatusToG4Event = vl;
+    }
 
     inline void UseSubEventParallelism(G4bool worker = false)
-      {
-        subEventPara = true; 
-        subEventParaWorker = worker;
-      }
+    {
+      subEventPara = true;
+      subEventParaWorker = worker;
+    }
 
     G4SubEvent* PopSubEvent(G4int ty);
-      // If this method is invoked by the G4RunManager while an event is still 
-      // in process. Null is returned if the sub-event does not have enough tracks.
-      // This method is Mutex-protected.
+    // If this method is invoked by the G4RunManager while an event is still
+    // in process. Null is returned if the sub-event does not have enough tracks.
+    // This method is Mutex-protected.
 
-    void TerminateSubEvent(const G4SubEvent* se,const G4Event* evt);
-      // G4Event "evt" contains the results made by the worker thread.
-      // The ownership of "evt" remains to the worker thread and it will be
-      // deleted after this method. All necessary information in "evt" must
-      // be copied into the corresponding master G4Event object.
+    void TerminateSubEvent(const G4SubEvent* se, const G4Event* evt);
+    // G4Event "evt" contains the results made by the worker thread.
+    // The ownership of "evt" remains to the worker thread and it will be
+    // deleted after this method. All necessary information in "evt" must
+    // be copied into the corresponding master G4Event object.
 
     G4int StoreSubEvent(G4Event*, G4int&, G4SubEvent*);
-      // This method is exclusively used by G4SubEventTrackStack class to 
-      // store a new G4SubEevnt into the current G4Event, with Mutex lock
-      // shared with above two methods.
+    // This method is exclusively used by G4SubEventTrackStack class to
+    // store a new G4SubEevnt into the current G4Event, with Mutex lock
+    // shared with above two methods.
 
   private:
 
-    void DoProcessing(G4Event* anEvent,
-           G4TrackVector* trackVector = nullptr, G4bool IDhasAlreadySet= false);
-  
+    void DoProcessing(G4Event* anEvent, G4TrackVector* trackVector = nullptr,
+                      G4bool IDhasAlreadySet = false);
+
   private:
 
     static G4ThreadLocal G4EventManager* fpEventManager;
@@ -199,7 +191,7 @@ class G4EventManager
 
     G4EvManMessenger* theMessenger = nullptr;
 
-    G4UserEventAction*    userEventAction = nullptr;
+    G4UserEventAction* userEventAction = nullptr;
     G4UserStackingAction* userStackingAction = nullptr;
     G4UserTrackingAction* userTrackingAction = nullptr;
     G4UserSteppingAction* userSteppingAction = nullptr;
@@ -209,25 +201,26 @@ class G4EventManager
 
     G4StateManager* stateManager = nullptr;
 
-  //---------------------------------------------------------------
-  // Following methods and data members are used only by the G4EventManager
-  // used in the worker thread in Sub-event parallel mode
+    //---------------------------------------------------------------
+    // Following methods and data members are used only by the G4EventManager
+    // used in the worker thread in Sub-event parallel mode
 
   public:
+
     inline G4Event* RetrieveCompletedSubEvent()
     {
       G4Event* evt = nullptr;
-      if(!completedEvents.empty())
+      if (!completedEvents.empty())
       {
         evt = completedEvents.back();
         completedEvents.pop_back();
       }
       return evt;
     }
-    inline G4int GetNumberOfRemainingSubEvents()
-    { return (G4int)processingEvents.size(); }
+    inline G4int GetNumberOfRemainingSubEvents() { return (G4int)processingEvents.size(); }
 
   private:
+
     std::vector<G4Event*> completedEvents;
     std::vector<G4Event*> processingEvents;
 };

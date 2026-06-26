@@ -29,72 +29,72 @@
 //
 //
 // ****************************************************************************************
-// Short description: Cross-sections extracted (by W.Pokorski) from the CHIPS package for 
+// Short description: Cross-sections extracted (by W.Pokorski) from the CHIPS package for
 // Hyperon-nuclear  interactions. Original author: M. Kossov
 // -------------------------------------------------------------------------------------
 //
 
-#ifndef G4ChipsHyperonInelasticXS_h
-#define G4ChipsHyperonInelasticXS_h 1
+#ifndef G4CHIPSHYPERONINELASTICXS_HH
+#define G4CHIPSHYPERONINELASTICXS_HH
 
-#include "G4ParticleTable.hh"
 #include "G4NucleiProperties.hh"
-#include <vector>
+#include "G4ParticleTable.hh"
 #include "G4VCrossSectionDataSet.hh"
+
+#include <vector>
 
 class G4ChipsHyperonInelasticXS : public G4VCrossSectionDataSet
 {
+  public:
 
-public:
+    G4ChipsHyperonInelasticXS();
 
-  G4ChipsHyperonInelasticXS();
+    ~G4ChipsHyperonInelasticXS();
 
-  ~G4ChipsHyperonInelasticXS();
+    static const char* Default_Name() { return "ChipsHyperonInelasticXS"; }
 
-  static const char* Default_Name() {return "ChipsHyperonInelasticXS";}
+    virtual void CrossSectionDescription(std::ostream&) const;
 
-  virtual void CrossSectionDescription(std::ostream&) const;
+    virtual G4bool IsIsoApplicable(const G4DynamicParticle* Pt, G4int Z, G4int A,
+                                   const G4Element* elm, const G4Material* mat);
 
-  virtual G4bool IsIsoApplicable(const G4DynamicParticle* Pt, G4int Z, G4int A,    
-				 const G4Element* elm,
-				 const G4Material* mat );
+    // At present momentum (pMom) in MeV/c, CS in mb (@@ Units)
+    virtual G4double GetIsoCrossSection(const G4DynamicParticle*, G4int tgZ, G4int A,
+                                        const G4Isotope* iso = 0, const G4Element* elm = 0,
+                                        const G4Material* mat = 0);
 
-  // At present momentum (pMom) in MeV/c, CS in mb (@@ Units)
-  virtual G4double GetIsoCrossSection(const G4DynamicParticle*, G4int tgZ, G4int A,  
-				      const G4Isotope* iso = 0,
-				      const G4Element* elm = 0,
-				      const G4Material* mat = 0);
+    virtual G4double GetChipsCrossSection(G4double momentum, G4int Z, G4int N, G4int pdg);
 
-  virtual G4double GetChipsCrossSection(G4double momentum, G4int Z, G4int N, G4int pdg);
+  private:
 
-private:
-  G4double CalculateCrossSection(G4int F, G4int I, G4int PDG, G4int Z,
-                                 G4int N, G4double Momentum);
+    G4double CalculateCrossSection(G4int F, G4int I, G4int PDG, G4int Z, G4int N,
+                                   G4double Momentum);
 
-  G4double CrossSectionLin(G4int targZ, G4int targN, G4double P);
-  G4double CrossSectionLog(G4int targZ, G4int targN, G4double lP);
-  G4double CrossSectionFormula(G4int targZ, G4int targN, G4double P, G4double lP);
-  G4double EquLinearFit(G4double X, G4int N, G4double X0, G4double DX, G4double* Y);
-// Body
-private:
-  G4double* lastLEN; // Pointer to the last array of LowEnergy cross sections
-  G4double* lastHEN; // Pointer to the last array of HighEnergy cross sections
-  G4int     lastN;   // The last N of calculated nucleus
-  G4int     lastZ;   // The last Z of calculated nucleus
-  G4double  lastP;   // Last used in the cross section Momentum
-  G4double  lastTH;  // Last value of the Momentum Threshold
-  G4double  lastCS;  // Last value of the Cross Section
-  G4int     lastI;   // The last position in the DAMDB
-  std::vector<G4double*>* LEN;  // Vector of pointers to LowEnProtonCrossSection
-  std::vector<G4double*>* HEN;  // Vector of pointers to HighEnProtonCrossSection
-    
-  G4int j=0;                    // A#0f Z/N-records already tested in AMDB
-  std::vector <G4int> colN;  // Vector of N for calculated nuclei (isotops)
-  std::vector <G4int> colZ;  // Vector of Z for calculated nuclei (isotops)
-  std::vector <G4double> colP;  // Vector of last momenta for the reaction
-  std::vector <G4double> colTH; // Vector of energy thresholds for the reaction
-  std::vector <G4double> colCS; // Vector of last cross sections for the reaction
-    
+    G4double CrossSectionLin(G4int targZ, G4int targN, G4double P);
+    G4double CrossSectionLog(G4int targZ, G4int targN, G4double lP);
+    G4double CrossSectionFormula(G4int targZ, G4int targN, G4double P, G4double lP);
+    G4double EquLinearFit(G4double X, G4int N, G4double X0, G4double DX, G4double* Y);
+    // Body
+
+  private:
+
+    G4double* lastLEN;  // Pointer to the last array of LowEnergy cross sections
+    G4double* lastHEN;  // Pointer to the last array of HighEnergy cross sections
+    G4int lastN;  // The last N of calculated nucleus
+    G4int lastZ;  // The last Z of calculated nucleus
+    G4double lastP;  // Last used in the cross section Momentum
+    G4double lastTH;  // Last value of the Momentum Threshold
+    G4double lastCS;  // Last value of the Cross Section
+    G4int lastI;  // The last position in the DAMDB
+    std::vector<G4double*>* LEN;  // Vector of pointers to LowEnProtonCrossSection
+    std::vector<G4double*>* HEN;  // Vector of pointers to HighEnProtonCrossSection
+
+    G4int j = 0;  // A#0f Z/N-records already tested in AMDB
+    std::vector<G4int> colN;  // Vector of N for calculated nuclei (isotops)
+    std::vector<G4int> colZ;  // Vector of Z for calculated nuclei (isotops)
+    std::vector<G4double> colP;  // Vector of last momenta for the reaction
+    std::vector<G4double> colTH;  // Vector of energy thresholds for the reaction
+    std::vector<G4double> colCS;  // Vector of last cross sections for the reaction
 };
 
 #endif

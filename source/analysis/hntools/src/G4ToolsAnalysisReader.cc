@@ -29,8 +29,7 @@
 #include "G4ToolsAnalysisReader.hh"
 
 //_____________________________________________________________________________
-G4ToolsAnalysisReader::G4ToolsAnalysisReader(const G4String& type)
- : G4VAnalysisReader(type)
+G4ToolsAnalysisReader::G4ToolsAnalysisReader(const G4String& type) : G4VAnalysisReader(type)
 {
   // Create managers
   fH1Manager = new G4THnToolsManager<kDim1, tools::histo::h1d>(fState);
@@ -38,7 +37,7 @@ G4ToolsAnalysisReader::G4ToolsAnalysisReader(const G4String& type)
   fH3Manager = new G4THnToolsManager<kDim3, tools::histo::h3d>(fState);
   fP1Manager = new G4THnToolsManager<kDim2, tools::histo::p1d>(fState);
   fP2Manager = new G4THnToolsManager<kDim3, tools::histo::p2d>(fState);
-      // The managers will be deleted by the base class
+  // The managers will be deleted by the base class
 
   // Set managers to base class which takes then their ownership
   SetH1Manager(fH1Manager);
@@ -53,59 +52,44 @@ G4ToolsAnalysisReader::G4ToolsAnalysisReader(const G4String& type)
 //
 
 //_____________________________________________________________________________
-G4int G4ToolsAnalysisReader::ReadH1Impl(const G4String& h1Name,
-                                       const G4String& fileName,
-                                       const G4String& dirName,
-                                       G4bool isUserFileName)
+G4int G4ToolsAnalysisReader::ReadH1Impl(const G4String& h1Name, const G4String& fileName,
+                                        const G4String& dirName, G4bool isUserFileName)
 {
-  return ReadTImpl<tools::histo::h1d>(
-           h1Name, fileName, dirName, isUserFileName, fH1Manager);
+  return ReadTImpl<tools::histo::h1d>(h1Name, fileName, dirName, isUserFileName, fH1Manager);
 }
 
 //_____________________________________________________________________________
-G4int G4ToolsAnalysisReader::ReadH2Impl(const G4String& h2Name,
-                                       const G4String& fileName,
-                                       const G4String& dirName,
-                                       G4bool isUserFileName)
+G4int G4ToolsAnalysisReader::ReadH2Impl(const G4String& h2Name, const G4String& fileName,
+                                        const G4String& dirName, G4bool isUserFileName)
 {
-  return ReadTImpl<tools::histo::h2d>(
-           h2Name, fileName, dirName, isUserFileName, fH2Manager);
+  return ReadTImpl<tools::histo::h2d>(h2Name, fileName, dirName, isUserFileName, fH2Manager);
 }
 
 //_____________________________________________________________________________
-G4int G4ToolsAnalysisReader::ReadH3Impl(const G4String& h3Name,
-                                       const G4String& fileName,
-                                       const G4String& dirName,
-                                       G4bool isUserFileName)
+G4int G4ToolsAnalysisReader::ReadH3Impl(const G4String& h3Name, const G4String& fileName,
+                                        const G4String& dirName, G4bool isUserFileName)
 {
-  return ReadTImpl<tools::histo::h3d>(
-           h3Name, fileName, dirName, isUserFileName, fH3Manager);
+  return ReadTImpl<tools::histo::h3d>(h3Name, fileName, dirName, isUserFileName, fH3Manager);
 }
 
 //_____________________________________________________________________________
-G4int G4ToolsAnalysisReader::ReadP1Impl(const G4String& p1Name,
-                                       const G4String& fileName,
-                                       const G4String& dirName,
-                                       G4bool isUserFileName)
+G4int G4ToolsAnalysisReader::ReadP1Impl(const G4String& p1Name, const G4String& fileName,
+                                        const G4String& dirName, G4bool isUserFileName)
 {
-  return ReadTImpl<tools::histo::p1d>(
-           p1Name, fileName, dirName, isUserFileName, fP1Manager);
+  return ReadTImpl<tools::histo::p1d>(p1Name, fileName, dirName, isUserFileName, fP1Manager);
 }
 
 //_____________________________________________________________________________
-G4int G4ToolsAnalysisReader::ReadP2Impl(const G4String& p2Name,
-                                       const G4String& fileName,
-                                       const G4String& dirName,
-                                       G4bool isUserFileName)
+G4int G4ToolsAnalysisReader::ReadP2Impl(const G4String& p2Name, const G4String& fileName,
+                                        const G4String& dirName, G4bool isUserFileName)
 {
-  return ReadTImpl<tools::histo::p2d>(
-           p2Name, fileName, dirName, isUserFileName, fP2Manager);
+  return ReadTImpl<tools::histo::p2d>(p2Name, fileName, dirName, isUserFileName, fP2Manager);
 }
 
 //_____________________________________________________________________________
 G4bool G4ToolsAnalysisReader::Reset()
 {
-// Reset histograms and profiles
+  // Reset histograms and profiles
 
   auto result = true;
 

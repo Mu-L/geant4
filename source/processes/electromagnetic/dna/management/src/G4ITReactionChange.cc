@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr) 
+// Author: Mathieu Karamitros (kara (AT) cenbg . in2p3 . fr)
 //
 // History:
 // -----------
@@ -34,31 +34,27 @@
 
 #include "G4ITReactionChange.hh"
 
-G4ITReactionChange::G4ITReactionChange()
-= default;
+G4ITReactionChange::G4ITReactionChange() = default;
 
 G4ITReactionChange::~G4ITReactionChange()
 {
-  //dtor
+  // dtor
   delete fSecondaries;
   fSecondaries = nullptr;
 }
 
 // Should not be used
-G4ITReactionChange::G4ITReactionChange(const G4ITReactionChange& /*other*/)
-{
-}
+G4ITReactionChange::G4ITReactionChange(const G4ITReactionChange& /*other*/) {}
 
 // should not be used
 G4ITReactionChange& G4ITReactionChange::operator=(const G4ITReactionChange& rhs)
 {
-  if (this == &rhs) return *this; // handle self assignment
-  //assignment operator
+  if (this == &rhs) return *this;  // handle self assignment
+  // assignment operator
   return *this;
 }
 
-void G4ITReactionChange::Initialize(const G4Track& trackA,
-                                    const G4Track& trackB,
+void G4ITReactionChange::Initialize(const G4Track& trackA, const G4Track& trackB,
                                     G4VParticleChange* particleChangeA,
                                     G4VParticleChange* particleChangeB)
 {
@@ -74,11 +70,10 @@ void G4ITReactionChange::Initialize(const G4Track& trackA,
     {
       G4ExceptionDescription exceptionDescription;
       exceptionDescription << "If you give for one track a particleChange, ";
-      exceptionDescription
-          << "G4ITReactionChange is expecting that you give for both ";
+      exceptionDescription << "G4ITReactionChange is expecting that you give for both ";
       exceptionDescription << "reacting tracks a particleChange.";
-      G4Exception("G4ITReactionChange::Initialize", "ITReactionChange001",
-                  FatalErrorInArgument, exceptionDescription);
+      G4Exception("G4ITReactionChange::Initialize", "ITReactionChange001", FatalErrorInArgument,
+                  exceptionDescription);
     }
 
     fParticleChangeIsSet = true;
@@ -86,7 +81,6 @@ void G4ITReactionChange::Initialize(const G4Track& trackA,
     fParticleChange[&trackA]->Initialize(trackA);
     fParticleChange[&trackB]->Initialize(trackB);
     ;
-
   }
 
   fSecondaries = nullptr;
@@ -109,8 +103,7 @@ void G4ITReactionChange::UpdateStepInfo(G4Step* stepA, G4Step* stepB)
 
 G4VParticleChange* G4ITReactionChange::GetParticleChange(const G4Track* track)
 {
-  auto it = fParticleChange
-      .find(track);
+  auto it = fParticleChange.find(track);
 
   if (it == fParticleChange.end()) return nullptr;
   return it->second;
@@ -125,10 +118,9 @@ const G4Track* G4ITReactionChange::GetTrackA()
   }
 
   G4ExceptionDescription exceptionDescription;
-  exceptionDescription
-      << "No track A found ! Have you initialized the ReactionChange ?";
-  G4Exception("G4ITReactionChange::GetTrackA", "ITReactionChange001",
-              FatalErrorInArgument, exceptionDescription);
+  exceptionDescription << "No track A found ! Have you initialized the ReactionChange ?";
+  G4Exception("G4ITReactionChange::GetTrackA", "ITReactionChange001", FatalErrorInArgument,
+              exceptionDescription);
   return nullptr;
 }
 
@@ -139,10 +131,9 @@ const G4Track* G4ITReactionChange::GetTrackB()
   if (next == fParticleChange.end())
   {
     G4ExceptionDescription exceptionDescription;
-    exceptionDescription
-        << "No track B found ! Have you initialized the ReactionChange ?";
-    G4Exception("G4ITReactionChange::GetTrackB", "ITReactionChange002",
-                FatalErrorInArgument, exceptionDescription);
+    exceptionDescription << "No track B found ! Have you initialized the ReactionChange ?";
+    G4Exception("G4ITReactionChange::GetTrackB", "ITReactionChange002", FatalErrorInArgument,
+                exceptionDescription);
   }
 
   return it->first;

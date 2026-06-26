@@ -29,22 +29,22 @@
 // Geant4 Header : G4NeutrinoNucleusModel
 //
 // Author : V.Grichine 12.2.19
-//  
+//
 // Modified:
 //
 // Class Description
-// Default model for muon neutrino-nucleus charge current scattering; 
+// Default model for muon neutrino-nucleus charge current scattering;
 // Class Description - End
 
-#ifndef G4NeutrinoNucleusModel_h
-#define G4NeutrinoNucleusModel_h 1
- 
-#include "globals.hh"
-#include "G4HadronicInteraction.hh"
+#ifndef G4NEUTRINONUCLEUSMODEL_HH
+#define G4NEUTRINONUCLEUSMODEL_HH
+
 #include "G4HadProjectile.hh"
-#include "G4Nucleus.hh"
-#include "G4NucleiProperties.hh"
+#include "G4HadronicInteraction.hh"
 #include "G4LorentzVector.hh"
+#include "G4NucleiProperties.hh"
+#include "G4Nucleus.hh"
+#include "globals.hh"
 
 class G4ParticleDefinition;
 class G4PreCompoundModel;
@@ -61,165 +61,162 @@ class G4ExcitationHandler;
 
 class G4NeutrinoNucleusModel : public G4HadronicInteraction
 {
-public:
+  public:
 
-  G4NeutrinoNucleusModel(const G4String& name = "neutrino-nucleus");
+    G4NeutrinoNucleusModel(const G4String& name = "neutrino-nucleus");
 
-  virtual ~G4NeutrinoNucleusModel();
+    virtual ~G4NeutrinoNucleusModel();
 
-  virtual G4bool IsApplicable(const G4HadProjectile & aTrack, 
-  			      G4Nucleus & targetNucleus);
+    virtual G4bool IsApplicable(const G4HadProjectile& aTrack, G4Nucleus& targetNucleus);
 
-  G4double SampleXkr(G4double energy);
-  G4double GetXkr(G4int iEnergy, G4double prob);
-  G4double SampleQkr(G4double energy, G4double xx);
-  G4double GetQkr(G4int iE, G4int jX, G4double prob);
+    G4double SampleXkr(G4double energy);
+    G4double GetXkr(G4int iEnergy, G4double prob);
+    G4double SampleQkr(G4double energy, G4double xx);
+    G4double GetQkr(G4int iE, G4int jX, G4double prob);
 
-  virtual G4HadFinalState * ApplyYourself(const G4HadProjectile & aTrack, 
-					  G4Nucleus & targetNucleus)=0;
+    virtual G4HadFinalState* ApplyYourself(const G4HadProjectile& aTrack,
+                                           G4Nucleus& targetNucleus) = 0;
 
- //////// fragmentation functions /////////////////////////
+    //////// fragmentation functions /////////////////////////
 
-  void ClusterDecay( G4LorentzVector & lvX, G4int qX);
+    void ClusterDecay(G4LorentzVector& lvX, G4int qX);
 
-  void MesonDecay( G4LorentzVector & lvX, G4int qX);
+    void MesonDecay(G4LorentzVector& lvX, G4int qX);
 
-  void FinalBarion( G4LorentzVector & lvB, G4int qB, G4int pdgB);
+    void FinalBarion(G4LorentzVector& lvB, G4int qB, G4int pdgB);
 
-  void RecoilDeexcitation( G4Fragment& fragment);
+    void RecoilDeexcitation(G4Fragment& fragment);
 
-  void FinalMeson( G4LorentzVector & lvM, G4int qM, G4int pdgM);
+    void FinalMeson(G4LorentzVector& lvM, G4int qM, G4int pdgM);
 
-  void CoherentPion( G4LorentzVector & lvP, G4int pdgP, G4Nucleus & targetNucleus);
+    void CoherentPion(G4LorentzVector& lvP, G4int pdgP, G4Nucleus& targetNucleus);
 
+    // set/get class fields
 
-  // set/get class fields
+    void SetCutEnergy(G4double ec) { fCutEnergy = ec; };
+    G4double GetCutEnergy() { return fCutEnergy; };
 
-  void SetCutEnergy(G4double ec){fCutEnergy=ec;};
-  G4double GetCutEnergy(){return fCutEnergy;};
+    G4double GetNuEnergy() { return fNuEnergy; };
+    G4double GetQtransfer() { return fQtransfer; };
+    G4double GetQ2() { return fQ2; };
+    G4double GetXsample() { return fXsample; };
 
-  G4double GetNuEnergy(){return fNuEnergy;};
-  G4double GetQtransfer(){return fQtransfer;};
-  G4double GetQ2(){return fQ2;};
-  G4double GetXsample(){return fXsample;};
+    G4int GetPDGencoding() { return fPDGencoding; };
+    G4bool GetCascade() { return fCascade; };
+    G4bool GetString() { return fString; };
 
-  G4int    GetPDGencoding(){return fPDGencoding;};
-  G4bool   GetCascade(){return fCascade;};
-  G4bool   GetString(){return fString;};
+    G4double GetCosTheta() { return fCosTheta; };
+    G4double GetEmu() { return fEmu; };
+    G4double GetEx() { return fEx; };
+    G4double GetMuMass() { return fMu; };
+    G4double GetW2() { return fW2; };
+    G4double GetM1() { return fM1; };
+    G4double GetMr() { return fMr; };
+    G4double GetTr() { return fTr; };
+    G4double GetDp() { return fDp; };
 
-  G4double GetCosTheta(){return fCosTheta;};
-  G4double GetEmu(){return fEmu;};
-  G4double GetEx(){return fEx;};
-  G4double GetMuMass(){return fMu;};
-  G4double GetW2(){return fW2;};
-  G4double GetM1(){return fM1;};
-  G4double GetMr(){return fMr;};
-  G4double GetTr(){return fTr;};
-  G4double GetDp(){return fDp;};
+    G4bool GetfBreak() { return fBreak; };
+    G4bool GetfCascade() { return fCascade; };
+    G4bool GetfString() { return fString; };
 
-  G4bool GetfBreak()  {return fBreak;};
-  G4bool GetfCascade(){return fCascade;};
-  G4bool GetfString() {return fString;};
+    G4LorentzVector GetLVl() { return fLVl; };
+    G4LorentzVector GetLVh() { return fLVh; };
+    G4LorentzVector GetLVt() { return fLVt; };
+    G4LorentzVector GetLVcpi() { return fLVcpi; };
 
-  G4LorentzVector GetLVl(){return fLVl;};
-  G4LorentzVector GetLVh(){return fLVh;};
-  G4LorentzVector GetLVt(){return fLVt;};
-  G4LorentzVector GetLVcpi(){return fLVcpi;};
+    G4double GetMinNuMuEnergy()
+    {
+      return fMu + 0.5 * fMu * fMu / fM1 + 4. * CLHEP::MeV;
+    };  // kinematics + accuracy for sqrts
 
-  G4double GetMinNuMuEnergy(){ return fMu + 0.5*fMu*fMu/fM1 + 4.*CLHEP::MeV; }; // kinematics + accuracy for sqrts
+    G4double ThresholdEnergy(G4double mI, G4double mF, G4double mP)  // for cluster decay
+    {
+      G4double w = std::sqrt(fW2);
+      return w + 0.5 * ((mP + mF) * (mP + mF) - (w + mI) * (w + mI)) / mI;
+    };
+    G4double GetQEratioA() { return fQEratioA; };
+    void SetQEratioA(G4double qea) { fQEratioA = qea; };
 
-  G4double ThresholdEnergy(G4double mI, G4double mF, G4double mP) // for cluster decay
-  { 
-    G4double w = std::sqrt(fW2);
-    return w + 0.5*( (mP+mF)*(mP+mF)-(w+mI)*(w+mI) )/mI;
-  };
-  G4double GetQEratioA(){ return fQEratioA; };
-  void     SetQEratioA( G4double qea ){ fQEratioA = qea; };
+    G4double FinalMomentum(G4double mI, G4double mF, G4double mP,
+                           G4LorentzVector lvX);  // for cluster decay
 
+    // nucleon binding
 
-  G4double FinalMomentum(G4double mI, G4double mF, G4double mP, G4LorentzVector lvX); // for cluster decay
+    G4double FermiMomentum(G4Nucleus& targetNucleus);
+    G4double NucleonMomentum(G4Nucleus& targetNucleus);
 
-  // nucleon binding
+    G4double GetEx(G4int A, G4bool fP);
+    G4double GgSampleNM(G4Nucleus& nucl);
 
-  G4double FermiMomentum( G4Nucleus & targetNucleus);
-  G4double NucleonMomentum( G4Nucleus & targetNucleus);
-  
-  G4double GetEx( G4int A, G4bool fP );
-  G4double GgSampleNM(G4Nucleus & nucl);
-  
-  G4int    GetEnergyIndex(G4double energy);
-  G4double GetNuMuQeTotRat(G4int index, G4double energy);
+    G4int GetEnergyIndex(G4double energy);
+    G4double GetNuMuQeTotRat(G4int index, G4double energy);
 
-  G4int    GetOnePionIndex(G4double energy);
-  G4double GetNuMuOnePionProb(G4int index, G4double energy);
+    G4int GetOnePionIndex(G4double energy);
+    G4double GetNuMuOnePionProb(G4int index, G4double energy);
 
-  G4double CalculateQEratioA( G4int Z, G4int A, G4double energy, G4int nepdg);
-  
-  virtual void ModelDescription(std::ostream&) const;
+    G4double CalculateQEratioA(G4int Z, G4int A, G4double energy, G4int nepdg);
 
-protected:
+    virtual void ModelDescription(std::ostream&) const;
 
-  G4ParticleDefinition* theMuonMinus;
-  G4ParticleDefinition* theMuonPlus;
- 
-  G4double fSin2tW;    // sin^2theta_Weinberg
-  G4double fCutEnergy; // minimal recoil electron energy detected
+  protected:
 
-  G4int fNbin, fIndex, fEindex, fXindex, fQindex, fOnePionIndex, fPDGencoding;
-  G4bool fCascade, fString, fProton, f2p2h, fBreak;
+    G4ParticleDefinition* theMuonMinus;
+    G4ParticleDefinition* theMuonPlus;
 
-  G4double fNuEnergy, fQ2, fQtransfer, fXsample;
+    G4double fSin2tW;  // sin^2theta_Weinberg
+    G4double fCutEnergy;  // minimal recoil electron energy detected
 
-  G4double fM1, fM2, fMt, fMu, fW2,  fMpi, fW2pi, fMinNuEnergy, fDp, fTr;
+    G4int fNbin, fIndex, fEindex, fXindex, fQindex, fOnePionIndex, fPDGencoding;
+    G4bool fCascade, fString, fProton, f2p2h, fBreak;
 
-  G4double fEmu, fEmuPi, fEx, fMr, fCosTheta, fCosThetaPi, fQEratioA; 
+    G4double fNuEnergy, fQ2, fQtransfer, fXsample;
 
-  G4LorentzVector fLVh, fLVl, fLVt, fLVcpi;
+    G4double fM1, fM2, fMt, fMu, fW2, fMpi, fW2pi, fMinNuEnergy, fDp, fTr;
 
-  G4GeneratorPrecompoundInterface* fPrecoInterface;
-  G4PreCompoundModel*              fPreCompound;
-  G4ExcitationHandler*             fDeExcitation;
+    G4double fEmu, fEmuPi, fEx, fMr, fCosTheta, fCosThetaPi, fQEratioA;
 
-  G4Nucleus* fRecoil;
+    G4LorentzVector fLVh, fLVl, fLVt, fLVcpi;
 
-  G4int fSecID;  // Creator model ID for the secondaries created by this model  
-  
-  static const G4int fResNumber;
-  static const G4double fResMass[6]; // [fResNumber];
+    G4GeneratorPrecompoundInterface* fPrecoInterface;
+    G4PreCompoundModel* fPreCompound;
+    G4ExcitationHandler* fDeExcitation;
 
-  static const G4int fClustNumber;
+    G4Nucleus* fRecoil;
 
-  static const G4double fMesMass[4];
-  static const G4int    fMesPDG[4];
+    G4int fSecID;  // Creator model ID for the secondaries created by this model
 
-  static const G4double fBarMass[4];
-  static const G4int    fBarPDG[4];
+    static const G4int fResNumber;
+    static const G4double fResMass[6];  // [fResNumber];
 
-  static const G4double fNuMuResQ[50][50];
-  
+    static const G4int fClustNumber;
 
-  static const G4double fNuMuEnergy[50];
-  static const G4double fNuMuQeTotRat[50];
-  static const G4double fOnePionEnergy[58];
-  static const G4double fOnePionProb[58];
- 
-  static const G4double fNuMuEnergyLogVector[50];
+    static const G4double fMesMass[4];
+    static const G4int fMesPDG[4];
 
-  // KR sample distributions, X at E_nu and Q2 at E_nu and X
+    static const G4double fBarMass[4];
+    static const G4int fBarPDG[4];
 
-  static G4double fNuMuXarrayKR[50][51];
-  static G4double fNuMuXdistrKR[50][50];
-  static G4double fNuMuQarrayKR[50][51][51];
-  static G4double fNuMuQdistrKR[50][51][50];
+    static const G4double fNuMuResQ[50][50];
 
-  // QEratio(Z,A,Enu)
+    static const G4double fNuMuEnergy[50];
+    static const G4double fNuMuQeTotRat[50];
+    static const G4double fOnePionEnergy[58];
+    static const G4double fOnePionProb[58];
 
-  static const G4double fQEnergy[50];
-  static const G4double fANeMuQEratio[50];
-  static const G4double fNeMuQEratio[50];
- 
+    static const G4double fNuMuEnergyLogVector[50];
+
+    // KR sample distributions, X at E_nu and Q2 at E_nu and X
+
+    static G4double fNuMuXarrayKR[50][51];
+    static G4double fNuMuXdistrKR[50][50];
+    static G4double fNuMuQarrayKR[50][51][51];
+    static G4double fNuMuQdistrKR[50][51][50];
+
+    // QEratio(Z,A,Enu)
+
+    static const G4double fQEnergy[50];
+    static const G4double fANeMuQEratio[50];
+    static const G4double fNeMuQEratio[50];
 };
-
-
 
 #endif

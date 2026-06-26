@@ -22,7 +22,7 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // History:
 // -----------
 // 10  Nov 2021   S. Guatelli & S. Bakr - 1st implementation
@@ -32,15 +32,17 @@
 //  Computation of K, L & M shell ECPSSR ionisation cross sections for protons and alphas
 //  Based on the work of
 //  - S. Bakr et al. (2021) NIM B, 507:11-19.
-//  - S. Bakr et al (2018), NIMB B, 436: 285-291. 
+//  - S. Bakr et al (2018), NIMB B, 436: 285-291.
 // ---------------------------------------------------------------------------------------
 
-#ifndef G4ANSTOecpssrMixsModel_HH
-#define G4ANSTOecpssrMixsModel_HH 1
+#ifndef G4ANSTOECPSSRMIXSMODEL_HH
+#define G4ANSTOECPSSRMIXSMODEL_HH
 
 #include "G4VecpssrMiModel.hh"
 #include "globals.hh"
+
 #include <map>
+#include <vector>
 
 class G4VDataSetAlgorithm;
 class G4VEMDataSet;
@@ -48,47 +50,49 @@ class G4VEMDataSet;
 class G4ANSTOecpssrMixsModel : public G4VecpssrMiModel
 
 {
-public:
+  public:
 
-  G4ANSTOecpssrMixsModel();
+    G4ANSTOecpssrMixsModel();
 
-  virtual ~G4ANSTOecpssrMixsModel();
-			     
-  G4double CalculateM1CrossSection (G4int zTarget, G4double massIncident, G4double energyIncident);
-  G4double CalculateM2CrossSection (G4int zTarget, G4double massIncident, G4double energyIncident);
-  G4double CalculateM3CrossSection (G4int zTarget, G4double massIncident, G4double energyIncident);				     
-  G4double CalculateM4CrossSection (G4int zTarget, G4double massIncident, G4double energyIncident);				     
-  G4double CalculateM5CrossSection (G4int zTarget, G4double massIncident, G4double energyIncident);				     
-private:
+    virtual ~G4ANSTOecpssrMixsModel();
 
-  G4double CalculateMiCrossSection (G4int zTarget, G4double massIncident, G4double energyIncident, G4int mShellId);
+    G4double CalculateM1CrossSection(G4int zTarget, G4double massIncident, G4double energyIncident);
+    G4double CalculateM2CrossSection(G4int zTarget, G4double massIncident, G4double energyIncident);
+    G4double CalculateM3CrossSection(G4int zTarget, G4double massIncident, G4double energyIncident);
+    G4double CalculateM4CrossSection(G4int zTarget, G4double massIncident, G4double energyIncident);
+    G4double CalculateM5CrossSection(G4int zTarget, G4double massIncident, G4double energyIncident);
 
-  G4ANSTOecpssrMixsModel(const G4ANSTOecpssrMixsModel&);
-  G4ANSTOecpssrMixsModel & operator = (const G4ANSTOecpssrMixsModel &right);
+  private:
 
-  G4VDataSetAlgorithm* interpolation;
+    G4double CalculateMiCrossSection(G4int zTarget, G4double massIncident, G4double energyIncident,
+                                     G4int mShellId);
 
-  std::vector< std::map<G4int,G4VEMDataSet*> > protonMiXsVector;
-  std::vector< std::map<G4int,G4VEMDataSet*> > alphaMiXsVector;
-  std::vector< std::map<G4int,G4VEMDataSet*> > carbonMiXsVector;
+    G4ANSTOecpssrMixsModel(const G4ANSTOecpssrMixsModel&);
+    G4ANSTOecpssrMixsModel& operator=(const G4ANSTOecpssrMixsModel& right);
 
-  std::map< G4int , G4VEMDataSet* > protonM1DataSetMap;
-  std::map< G4int , G4VEMDataSet* > protonM2DataSetMap;
-  std::map< G4int , G4VEMDataSet* > protonM3DataSetMap;
-  std::map< G4int , G4VEMDataSet* > protonM4DataSetMap;
-  std::map< G4int , G4VEMDataSet* > protonM5DataSetMap;
+    G4VDataSetAlgorithm* interpolation;
 
-  std::map< G4int , G4VEMDataSet* > alphaM1DataSetMap;
-  std::map< G4int , G4VEMDataSet* > alphaM2DataSetMap;
-  std::map< G4int , G4VEMDataSet* > alphaM3DataSetMap;
-  std::map< G4int , G4VEMDataSet* > alphaM4DataSetMap;
-  std::map< G4int , G4VEMDataSet* > alphaM5DataSetMap;
+    std::vector<std::map<G4int, G4VEMDataSet*>> protonMiXsVector;
+    std::vector<std::map<G4int, G4VEMDataSet*>> alphaMiXsVector;
+    std::vector<std::map<G4int, G4VEMDataSet*>> carbonMiXsVector;
 
-  std::map< G4int , G4VEMDataSet* > carbonM1DataSetMap;
-  std::map< G4int , G4VEMDataSet* > carbonM2DataSetMap;
-  std::map< G4int , G4VEMDataSet* > carbonM3DataSetMap;
-  std::map< G4int , G4VEMDataSet* > carbonM4DataSetMap;
-  std::map< G4int , G4VEMDataSet* > carbonM5DataSetMap;
+    std::map<G4int, G4VEMDataSet*> protonM1DataSetMap;
+    std::map<G4int, G4VEMDataSet*> protonM2DataSetMap;
+    std::map<G4int, G4VEMDataSet*> protonM3DataSetMap;
+    std::map<G4int, G4VEMDataSet*> protonM4DataSetMap;
+    std::map<G4int, G4VEMDataSet*> protonM5DataSetMap;
+
+    std::map<G4int, G4VEMDataSet*> alphaM1DataSetMap;
+    std::map<G4int, G4VEMDataSet*> alphaM2DataSetMap;
+    std::map<G4int, G4VEMDataSet*> alphaM3DataSetMap;
+    std::map<G4int, G4VEMDataSet*> alphaM4DataSetMap;
+    std::map<G4int, G4VEMDataSet*> alphaM5DataSetMap;
+
+    std::map<G4int, G4VEMDataSet*> carbonM1DataSetMap;
+    std::map<G4int, G4VEMDataSet*> carbonM2DataSetMap;
+    std::map<G4int, G4VEMDataSet*> carbonM3DataSetMap;
+    std::map<G4int, G4VEMDataSet*> carbonM4DataSetMap;
+    std::map<G4int, G4VEMDataSet*> carbonM5DataSetMap;
 };
 
 #endif

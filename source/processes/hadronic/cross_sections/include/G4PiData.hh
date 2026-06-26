@@ -34,18 +34,20 @@
 // the cross sections at 14 MeV is used, above maximum energy a cross section
 // at 1 TeV is given.
 
-#ifndef G4PiData_h
-#define G4PiData_h
+#ifndef G4PIDATA_HH
+#define G4PIDATA_HH
 
-#include <vector>
-#include <algorithm>
 #include "globals.hh"
 
-class G4PiData : public std::vector<std::pair<G4double, std::pair<G4double, G4double > > > 
+#include <algorithm>
+#include <vector>
+
+class G4PiData : public std::vector<std::pair<G4double, std::pair<G4double, G4double>>>
 {
   public:
-    explicit G4PiData(const G4double * aTotal, const G4double * aInelastic, 
-                      const G4double * anEnergy, G4int nPoints);
+
+    explicit G4PiData(const G4double* aTotal, const G4double* aInelastic, const G4double* anEnergy,
+                      G4int nPoints);
 
     ~G4PiData() = default;
 
@@ -53,10 +55,11 @@ class G4PiData : public std::vector<std::pair<G4double, std::pair<G4double, G4do
     G4double ElasticXSection(G4double kineticEnergy);
     G4double TotalXSection(G4double kineticEnergy);
 
-    G4PiData& operator = (const G4PiData &right) = delete;
+    G4PiData& operator=(const G4PiData& right) = delete;
     G4PiData(const G4PiData&) = delete;
-  
+
   private:
+
     G4double fMinE{0.0};
     G4double fTot0{0.0};
     G4double fInel0{0.0};

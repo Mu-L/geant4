@@ -23,53 +23,54 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4FieldPropagation_h
-#define G4FieldPropagation_h 1
+#ifndef G4FIELDPROPAGATION_HH
+#define G4FIELDPROPAGATION_HH
 
 #include "G4KineticTrackVector.hh"
 
-class G4FieldPropagation 
+class G4FieldPropagation
 {
-public:
-   G4FieldPropagation() {}
-   G4FieldPropagation(const G4FieldPropagation &) {}
+  public:
 
-   virtual ~G4FieldPropagation();
+    G4FieldPropagation() {}
+    G4FieldPropagation(const G4FieldPropagation&) {}
 
-private:   // Operators
-   const G4FieldPropagation & operator=(const G4FieldPropagation &right);
+    virtual ~G4FieldPropagation();
 
-   G4bool operator==(const G4FieldPropagation &right) const;
-   G4bool operator!=(const G4FieldPropagation &right) const;
+  private:  // Operators
 
-public:    // Methods
+    const G4FieldPropagation& operator=(const G4FieldPropagation& right);
 
-   // only theActive are propagated, nothing else
-   // only theSpectators define the field, nothing else
-   virtual void Transport(G4KineticTrackVector &theActive, const G4KineticTrackVector &theSpectators, G4double theTimeStep) = 0;
+    G4bool operator==(const G4FieldPropagation& right) const;
+    G4bool operator!=(const G4FieldPropagation& right) const;
 
-   virtual G4double GetExcitationEnergy(G4int nHit, const G4KineticTrackVector &theParticles) = 0;
-   
-   // methods for calculating potentials for different types of particles
-   virtual void Init(G4int z, G4int a) = 0; // prepare potentials' functions
-   
-   // aPosition is relative to the nucleus center
-   virtual G4double GetNeutronPotential(G4double radius) = 0;
-   virtual G4double GetNeutronPotential(G4ThreeVector &aPosition) = 0;
-   
-   virtual G4double GetProtonPotential(G4double radius) = 0;
-   virtual G4double GetProtonPotential(G4ThreeVector &aPosition) = 0;
-    
-   virtual G4double GetAntiprotonPotential(G4double radius) = 0;
-   virtual G4double GetAntiprotonPotential(G4ThreeVector &aPosition) = 0;
+  public:  // Methods
 
-   virtual G4double GetKaonPotential(G4double radius) = 0;
-   virtual G4double GetKaonPotential(G4ThreeVector &aPosition) = 0;
-   
-   virtual G4double GetPionPotential(G4double radius) = 0;
-   virtual G4double GetPionPotential(G4ThreeVector &aPosition) = 0;
+    // only theActive are propagated, nothing else
+    // only theSpectators define the field, nothing else
+    virtual void Transport(G4KineticTrackVector& theActive,
+                           const G4KineticTrackVector& theSpectators, G4double theTimeStep) = 0;
+
+    virtual G4double GetExcitationEnergy(G4int nHit, const G4KineticTrackVector& theParticles) = 0;
+
+    // methods for calculating potentials for different types of particles
+    virtual void Init(G4int z, G4int a) = 0;  // prepare potentials' functions
+
+    // aPosition is relative to the nucleus center
+    virtual G4double GetNeutronPotential(G4double radius) = 0;
+    virtual G4double GetNeutronPotential(G4ThreeVector& aPosition) = 0;
+
+    virtual G4double GetProtonPotential(G4double radius) = 0;
+    virtual G4double GetProtonPotential(G4ThreeVector& aPosition) = 0;
+
+    virtual G4double GetAntiprotonPotential(G4double radius) = 0;
+    virtual G4double GetAntiprotonPotential(G4ThreeVector& aPosition) = 0;
+
+    virtual G4double GetKaonPotential(G4double radius) = 0;
+    virtual G4double GetKaonPotential(G4ThreeVector& aPosition) = 0;
+
+    virtual G4double GetPionPotential(G4double radius) = 0;
+    virtual G4double GetPionPotential(G4ThreeVector& aPosition) = 0;
 };
 
-#endif // G4FieldPropagation_h
-
-
+#endif  // G4FieldPropagation_h

@@ -81,7 +81,8 @@ G4LivermoreComptonModel::G4LivermoreComptonModel(const G4ParticleDefinition*, co
   // 3 = calculation of cross sections, file openings, sampling of atoms
   // 4 = entering in methods
 
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "Livermore Compton model is constructed " << G4endl;
   }
 
@@ -96,13 +97,16 @@ G4LivermoreComptonModel::G4LivermoreComptonModel(const G4ParticleDefinition*, co
 
 G4LivermoreComptonModel::~G4LivermoreComptonModel()
 {
-  if (IsMaster()) {
+  if (IsMaster())
+  {
     delete shellData;
     shellData = nullptr;
     delete profileData;
     profileData = nullptr;
-    for (G4int i = 0; i <= maxZ; ++i) {
-      if (data[i]) {
+    for (G4int i = 0; i <= maxZ; ++i)
+    {
+      if (data[i])
+      {
         delete data[i];
         data[i] = nullptr;
       }
@@ -115,49 +119,58 @@ G4LivermoreComptonModel::~G4LivermoreComptonModel()
 void G4LivermoreComptonModel::Initialise(const G4ParticleDefinition* particle,
                                          const G4DataVector& cuts)
 {
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "Calling G4LivermoreComptonModel::Initialise()" << G4endl;
   }
 
   // Initialise element selector
-  if (IsMaster()) {
+  if (IsMaster())
+  {
     // Initialise element selector
     InitialiseElementSelectors(particle, cuts);
 
     // Access to elements
     const G4ElementTable* elemTable = G4Element::GetElementTable();
     size_t numElems = (*elemTable).size();
-    for (size_t ie = 0; ie < numElems; ++ie) {
+    for (size_t ie = 0; ie < numElems; ++ie)
+    {
       const G4Element* elem = (*elemTable)[ie];
       const G4int Z = std::min(maxZ, elem->GetZasInt());
-      if (data[Z] == nullptr) {
+      if (data[Z] == nullptr)
+      {
         ReadData(Z);
       }
     }
 
     // For Doppler broadening
-    if (shellData == nullptr) {
+    if (shellData == nullptr)
+    {
       shellData = new G4ShellData();
       shellData->SetOccupancyData();
       G4String file = "/doppler/shell-doppler";
       shellData->LoadData(file);
     }
-    if (profileData == nullptr) {
+    if (profileData == nullptr)
+    {
       profileData = new G4DopplerProfile();
     }
   }
 
-  if (verboseLevel > 2) {
+  if (verboseLevel > 2)
+  {
     G4cout << "Loaded cross section files" << G4endl;
   }
 
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "G4LivermoreComptonModel is initialized " << G4endl
            << "Energy range: " << LowEnergyLimit() / eV << " eV - " << HighEnergyLimit() / GeV
            << " GeV" << G4endl;
   }
   //
-  if (isInitialised) {
+  if (isInitialised)
+  {
     return;
   }
 
@@ -178,13 +191,16 @@ void G4LivermoreComptonModel::InitialiseLocal(const G4ParticleDefinition*, G4VEm
 const G4String& G4LivermoreComptonModel::FindDirectoryPath()
 {
   // no check in this method - environment variable is check by utility
-  if (gDataDirectory.empty()) {
+  if (gDataDirectory.empty())
+  {
     auto param = G4EmParameters::Instance();
     std::ostringstream ost;
-    if (param->LivermoreDataDir() == "livermore") {
+    if (param->LivermoreDataDir() == "livermore")
+    {
       ost << param->GetDirLEDATA() << "/livermore/comp/";
     }
-    else {
+    else
+    {
       ost << param->GetDirLEDATA() << "/epics2017/comp/";
     }
     gDataDirectory = ost.str();
@@ -196,12 +212,14 @@ const G4String& G4LivermoreComptonModel::FindDirectoryPath()
 
 void G4LivermoreComptonModel::ReadData(const G4int ZZ)
 {
-  if (verboseLevel > 1) {
+  if (verboseLevel > 1)
+  {
     G4cout << "G4LivermoreComptonModel::ReadData()" << G4endl;
   }
   const G4int Z = std::min(ZZ, maxZ);
 
-  if (data[Z] != nullptr) {
+  if (data[Z] != nullptr)
+  {
     return;
   }
 
@@ -212,7 +230,8 @@ void G4LivermoreComptonModel::ReadData(const G4int ZZ)
 
   std::ifstream fin(ost.str().c_str());
 
-  if (!fin.is_open()) {
+  if (!fin.is_open())
+  {
     G4ExceptionDescription ed;
     ed << "G4LivermoreComptonModel data file <" << ost.str().c_str() << "> is not opened!"
        << G4endl;
@@ -220,8 +239,10 @@ void G4LivermoreComptonModel::ReadData(const G4int ZZ)
                 "G4LEDATA version should be G4EMLOW8.0 or later");
     return;
   }
-  else {
-    if (verboseLevel > 3) {
+  else
+  {
+    if (verboseLevel > 3)
+    {
       G4cout << "File " << ost.str() << " is opened by G4LivermoreComptonModel" << G4endl;
     }
     data[Z]->Retrieve(fin, true);
@@ -236,17 +257,20 @@ G4double G4LivermoreComptonModel::ComputeCrossSectionPerAtom(const G4ParticleDef
                                                              G4double GammaEnergy, G4double Z,
                                                              G4double, G4double, G4double)
 {
-  if (verboseLevel > 3) {
+  if (verboseLevel > 3)
+  {
     G4cout << "G4LivermoreComptonModel::ComputeCrossSectionPerAtom()" << G4endl;
   }
   G4double cs = 0.0;
 
-  if (GammaEnergy < LowEnergyLimit()) {
+  if (GammaEnergy < LowEnergyLimit())
+  {
     return 0.0;
   }
 
   G4int intZ = G4lrint(Z);
-  if (intZ < 1 || intZ > maxZ) {
+  if (intZ < 1 || intZ > maxZ)
+  {
     return cs;
   }
 
@@ -254,10 +278,12 @@ G4double G4LivermoreComptonModel::ComputeCrossSectionPerAtom(const G4ParticleDef
 
   // if element was not initialised
   // do initialisation safely for MT mode
-  if (pv == nullptr) {
+  if (pv == nullptr)
+  {
     InitialiseForElement(nullptr, intZ);
     pv = data[intZ];
-    if (pv == nullptr) {
+    if (pv == nullptr)
+    {
       return cs;
     }
   }
@@ -266,13 +292,16 @@ G4double G4LivermoreComptonModel::ComputeCrossSectionPerAtom(const G4ParticleDef
   G4double e1 = pv->Energy(0);
   G4double e2 = pv->Energy(n);
 
-  if (GammaEnergy <= e1) {
+  if (GammaEnergy <= e1)
+  {
     cs = GammaEnergy / (e1 * e1) * pv->Value(e1);
   }
-  else if (GammaEnergy <= e2) {
+  else if (GammaEnergy <= e2)
+  {
     cs = pv->Value(GammaEnergy) / GammaEnergy;
   }
-  else if (GammaEnergy > e2) {
+  else if (GammaEnergy > e2)
+  {
     cs = pv->Value(e2) / GammaEnergy;
   }
 
@@ -302,7 +331,8 @@ void G4LivermoreComptonModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
 
   G4double photonEnergy0 = aDynamicGamma->GetKineticEnergy();
 
-  if (verboseLevel > 3) {
+  if (verboseLevel > 3)
+  {
     G4cout << "G4LivermoreComptonModel::SampleSecondaries() E(MeV)= " << photonEnergy0 / MeV
            << " in " << couple->GetMaterial()->GetName() << G4endl;
   }
@@ -334,16 +364,20 @@ void G4LivermoreComptonModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
   G4double sinT2;
   G4double gReject;
 
-  if (verboseLevel > 3) {
+  if (verboseLevel > 3)
+  {
     G4cout << "Started loop to sample gamma energy" << G4endl;
   }
 
-  do {
-    if (alpha1 / (alpha1 + alpha2) > G4UniformRand()) {
+  do
+  {
+    if (alpha1 / (alpha1 + alpha2) > G4UniformRand())
+    {
       epsilon = G4Exp(-alpha1 * G4UniformRand());
       epsilonSq = epsilon * epsilon;
     }
-    else {
+    else
+    {
       epsilonSq = epsilon0Sq + (1. - epsilon0Sq) * G4UniformRand();
       epsilon = std::sqrt(epsilonSq);
     }
@@ -378,17 +412,20 @@ void G4LivermoreComptonModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
 
   G4int shellIdx = 0;
 
-  if (verboseLevel > 3) {
+  if (verboseLevel > 3)
+  {
     G4cout << "Started loop to sample broading" << G4endl;
   }
 
-  do {
+  do
+  {
     ++iteration;
     // Select shell based on shell occupancy
     shellIdx = shellData->SelectRandomShell(Z);
     bindingE = shellData->BindingEnergy(Z, shellIdx);
 
-    if (verboseLevel > 3) {
+    if (verboseLevel > 3)
+    {
       G4cout << "Shell ID= " << shellIdx << " Ebind(keV)= " << bindingE / keV << G4endl;
     }
 
@@ -397,7 +434,8 @@ void G4LivermoreComptonModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
     // Randomly sample bound electron momentum
     // (memento: the data set is in Atomic Units)
     G4double pSample = profileData->RandomSelectMomentum(Z, shellIdx);
-    if (verboseLevel > 3) {
+    if (verboseLevel > 3)
+    {
       G4cout << "pSample= " << pSample << G4endl;
     }
     // Rescale from atomic units
@@ -407,18 +445,22 @@ void G4LivermoreComptonModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
     G4double var3 = var2 * var2 - pDoppler2;
     G4double var4 = var2 - pDoppler2 * cosTheta;
     G4double var = var4 * var4 - var3 + pDoppler2 * var3;
-    if (var > 0.) {
+    if (var > 0.)
+    {
       G4double varSqrt = std::sqrt(var);
       G4double scale = photonEnergy0 / var3;
       // Random select either root
-      if (G4UniformRand() < 0.5) {
+      if (G4UniformRand() < 0.5)
+      {
         photonE = (var4 - varSqrt) * scale;
       }
-      else {
+      else
+      {
         photonE = (var4 + varSqrt) * scale;
       }
     }
-    else {
+    else
+    {
       photonE = -1.;
     }
   } while (iteration <= maxDopplerIterations && photonE > eMax);
@@ -426,7 +468,8 @@ void G4LivermoreComptonModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
   // End of recalculation of photon energy with Doppler broadening
   // Revert to original if maximum number of iterations threshold
   // has been reached
-  if (iteration >= maxDopplerIterations) {
+  if (iteration >= maxDopplerIterations)
+  {
     photonE = photonEoriginal;
     bindingE = 0.;
   }
@@ -438,10 +481,12 @@ void G4LivermoreComptonModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
 
   G4double photonEnergy1 = photonE;
 
-  if (photonEnergy1 > 0.) {
+  if (photonEnergy1 > 0.)
+  {
     fParticleChange->SetProposedKineticEnergy(photonEnergy1);
   }
-  else {
+  else
+  {
     // photon absorbed
     photonEnergy1 = 0.;
     fParticleChange->SetProposedKineticEnergy(0.);
@@ -454,7 +499,8 @@ void G4LivermoreComptonModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
   G4double eKineticEnergy = photonEnergy0 - photonEnergy1 - bindingE;
 
   // protection against negative final energy: no e- is created
-  if (eKineticEnergy < 0.0) {
+  if (eKineticEnergy < 0.0)
+  {
     fParticleChange->ProposeLocalEnergyDeposit(photonEnergy0 - photonEnergy1);
     return;
   }
@@ -465,7 +511,8 @@ void G4LivermoreComptonModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
   G4double electronP2 = electronE * electronE - electron_mass_c2 * electron_mass_c2;
   G4double sinThetaE = -1.;
   G4double cosThetaE = 0.;
-  if (electronP2 > 0.) {
+  if (electronP2 > 0.)
+  {
     cosThetaE = (eTotalEnergy + photonEnergy1) * (1. - epsilon) / std::sqrt(electronP2);
     sinThetaE = -1. * sqrt(1. - cosThetaE * cosThetaE);
   }
@@ -480,26 +527,33 @@ void G4LivermoreComptonModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
   fvect->push_back(dp);
 
   // sample deexcitation
-  if (verboseLevel > 3) {
+  if (verboseLevel > 3)
+  {
     G4cout << "Started atomic de-excitation " << fAtomDeexcitation << G4endl;
   }
 
-  if (nullptr != fAtomDeexcitation && iteration < maxDopplerIterations) {
+  if (nullptr != fAtomDeexcitation && iteration < maxDopplerIterations)
+  {
     G4int index = couple->GetIndex();
-    if (fAtomDeexcitation->CheckDeexcitationActiveRegion(index)) {
+    if (fAtomDeexcitation->CheckDeexcitationActiveRegion(index))
+    {
       size_t nbefore = fvect->size();
       auto as = G4AtomicShellEnumerator(shellIdx);
       const G4AtomicShell* shell = fAtomDeexcitation->GetAtomicShell(Z, as);
       fAtomDeexcitation->GenerateParticles(fvect, shell, Z, index);
       size_t nafter = fvect->size();
-      if (nafter > nbefore) {
-        for (size_t i = nbefore; i < nafter; ++i) {
+      if (nafter > nbefore)
+      {
+        for (size_t i = nbefore; i < nafter; ++i)
+        {
           // Check if there is enough residual energy
-          if (bindingE >= ((*fvect)[i])->GetKineticEnergy()) {
+          if (bindingE >= ((*fvect)[i])->GetKineticEnergy())
+          {
             // Ok, this is a valid secondary: keep it
             bindingE -= ((*fvect)[i])->GetKineticEnergy();
           }
-          else {
+          else
+          {
             // Invalid secondary: not enough energy to create it!
             // Keep its energy in the local deposit
             delete (*fvect)[i];
@@ -518,13 +572,16 @@ void G4LivermoreComptonModel::SampleSecondaries(std::vector<G4DynamicParticle*>*
 G4double G4LivermoreComptonModel::ComputeScatteringFunction(G4double x, G4int Z)
 {
   G4double value = Z;
-  if (x <= ScatFuncFitParam[Z][3]) {
+  if (x <= ScatFuncFitParam[Z][3])
+  {
     G4double lgq = G4Log(x) / ln10;
 
-    if (lgq < ScatFuncFitParam[Z][1]) {
+    if (lgq < ScatFuncFitParam[Z][1])
+    {
       value = ScatFuncFitParam[Z][4] + lgq * ScatFuncFitParam[Z][5];
     }
-    else if (lgq >= ScatFuncFitParam[Z][1] && lgq < ScatFuncFitParam[Z][2]) {
+    else if (lgq >= ScatFuncFitParam[Z][1] && lgq < ScatFuncFitParam[Z][2])
+    {
       value = ScatFuncFitParam[Z][6]
               + lgq
                   * (ScatFuncFitParam[Z][7]
@@ -532,7 +589,8 @@ G4double G4LivermoreComptonModel::ComputeScatteringFunction(G4double x, G4int Z)
                          * (ScatFuncFitParam[Z][8]
                             + lgq * (ScatFuncFitParam[Z][9] + lgq * ScatFuncFitParam[Z][10])));
     }
-    else {
+    else
+    {
       value = ScatFuncFitParam[Z][11]
               + lgq
                   * (ScatFuncFitParam[Z][12]
@@ -551,7 +609,8 @@ G4double G4LivermoreComptonModel::ComputeScatteringFunction(G4double x, G4int Z)
 void G4LivermoreComptonModel::InitialiseForElement(const G4ParticleDefinition*, G4int Z)
 {
   G4AutoLock l(&LivermoreComptonModelMutex);
-  if (data[Z] == nullptr) {
+  if (data[Z] == nullptr)
+  {
     ReadData(Z);
   }
   l.unlock();

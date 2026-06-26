@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // --------------------------------------------------------------
 //      GEANT 4 class implementation file
 //
@@ -34,44 +34,41 @@
 
 #include "G4UnknownDecay.hh"
 
-#include "G4PhysicalConstants.hh"
-#include "G4SystemOfUnits.hh"
-#include "G4DynamicParticle.hh"
-#include "G4DecayProducts.hh"
-#include "G4PhysicsLogVector.hh"
-#include "G4ParticleChangeForDecay.hh"
 #include "G4DecayProcessType.hh"
+#include "G4DecayProducts.hh"
+#include "G4DynamicParticle.hh"
+#include "G4ParticleChangeForDecay.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4PhysicsLogVector.hh"
+#include "G4SystemOfUnits.hh"
 
 // constructor
 G4UnknownDecay::G4UnknownDecay(const G4String& processName)
-                               :G4VDiscreteProcess(processName, fDecay),
-				verboseLevel(1),
-                                HighestValue(20.0)
+  : G4VDiscreteProcess(processName, fDecay), verboseLevel(1), HighestValue(20.0)
 {
   // set Process Sub Type
   SetProcessSubType(static_cast<int>(DECAY_Unknown));
 
 #ifdef G4VERBOSE
-  if (GetVerboseLevel()>1) {
+  if (GetVerboseLevel() > 1)
+  {
     G4cout << "G4UnknownDecay  constructor " << "  Name:" << processName << G4endl;
   }
 #endif
   pParticleChange = &fParticleChangeForDecay;
 }
 
-G4UnknownDecay::~G4UnknownDecay()
-{
-}
+G4UnknownDecay::~G4UnknownDecay() {}
 
 G4bool G4UnknownDecay::IsApplicable(const G4ParticleDefinition& aParticleType)
 {
-  if(aParticleType.GetParticleName()=="unknown") return true;
+  if (aParticleType.GetParticleName() == "unknown") return true;
   return false;
 }
 
-G4double G4UnknownDecay::GetMeanFreePath(const G4Track& /*aTrack*/,G4double, G4ForceCondition*)
+G4double G4UnknownDecay::GetMeanFreePath(const G4Track& /*aTrack*/, G4double, G4ForceCondition*)
 {
-   return 0.0;
+  return 0.0;
 }
 
 void G4UnknownDecay::BuildPhysicsTable(const G4ParticleDefinition&)
@@ -79,48 +76,51 @@ void G4UnknownDecay::BuildPhysicsTable(const G4ParticleDefinition&)
   return;
 }
 
-G4VParticleChange* G4UnknownDecay::DecayIt(const G4Track& aTrack, const G4Step& )
+G4VParticleChange* G4UnknownDecay::DecayIt(const G4Track& aTrack, const G4Step&)
 {
   // The DecayIt() method returns by pointer a particle-change object.
   // Units are expressed in GEANT4 internal units.
 
   //   Initialize ParticleChange
-  //     all members of G4VParticleChange are set to equal to 
+  //     all members of G4VParticleChange are set to equal to
   //     corresponding member in G4Track
   fParticleChangeForDecay.Initialize(aTrack);
 
-  // get particle 
+  // get particle
   const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
 
-  //check if thePreAssignedDecayProducts exists
+  // check if thePreAssignedDecayProducts exists
   const G4DecayProducts* o_products = (aParticle->GetPreAssignedDecayProducts());
-  G4bool isPreAssigned = (o_products != nullptr);   
+  G4bool isPreAssigned = (o_products != nullptr);
   G4DecayProducts* products = nullptr;
 
-  if (!isPreAssigned ){
+  if (!isPreAssigned)
+  {
     fParticleChangeForDecay.SetNumberOfSecondaries(0);
     // Kill the parent particle
-    fParticleChangeForDecay.ProposeTrackStatus( fStopAndKill ) ;
-    fParticleChangeForDecay.ProposeLocalEnergyDeposit(0.0); 
-    
+    fParticleChangeForDecay.ProposeTrackStatus(fStopAndKill);
+    fParticleChangeForDecay.ProposeLocalEnergyDeposit(0.0);
+
     ClearNumberOfInteractionLengthLeft();
-    return &fParticleChangeForDecay ;
+    return &fParticleChangeForDecay;
   }
 
-  // copy decay products 
-  products = new G4DecayProducts(*o_products); 
-  
+  // copy decay products
+  products = new G4DecayProducts(*o_products);
+
   // get parent particle information ...................................
-  G4double   ParentEnergy  = aParticle->GetTotalEnergy();
-  G4double   ParentMass    = aParticle->GetMass();
-  if (ParentEnergy < ParentMass) {
+  G4double ParentEnergy = aParticle->GetTotalEnergy();
+  G4double ParentMass = aParticle->GetMass();
+  if (ParentEnergy < ParentMass)
+  {
     ParentEnergy = ParentMass;
 #ifdef G4VERBOSE
-    if (GetVerboseLevel()>1) {
+    if (GetVerboseLevel() > 1)
+    {
       G4cout << "G4UnknownDecay::DoIt  : Total Energy is less than its mass" << G4endl;
       G4cout << " Particle: " << aParticle->GetDefinition()->GetParticleName();
-      G4cout << " Energy:"    << ParentEnergy/MeV << "[MeV]";
-      G4cout << " Mass:"    << ParentMass/MeV << "[MeV]";
+      G4cout << " Energy:" << ParentEnergy / MeV << "[MeV]";
+      G4cout << " Mass:" << ParentMass / MeV << "[MeV]";
       G4cout << G4endl;
     }
 #endif
@@ -129,22 +129,24 @@ G4VParticleChange* G4UnknownDecay::DecayIt(const G4Track& aTrack, const G4Step& 
 
   G4double energyDeposit = 0.0;
   G4double finalGlobalTime = aTrack.GetGlobalTime();
-  //boost all decay products to laboratory frame
-  //if the particle has traveled 
-  if(aParticle->GetPreAssignedDecayProperTime()>=0.) {
-    products->Boost( ParentEnergy, ParentDirection);
+  // boost all decay products to laboratory frame
+  // if the particle has traveled
+  if (aParticle->GetPreAssignedDecayProperTime() >= 0.)
+  {
+    products->Boost(ParentEnergy, ParentDirection);
   }
 
-  //add products in fParticleChangeForDecay
+  // add products in fParticleChangeForDecay
   G4int numberOfSecondaries = products->entries();
   fParticleChangeForDecay.SetNumberOfSecondaries(numberOfSecondaries);
 #ifdef G4VERBOSE
-  if (GetVerboseLevel()>1) {
+  if (GetVerboseLevel() > 1)
+  {
     G4cout << "G4UnknownDecay::DoIt  : Decay vertex :";
-    G4cout << " Time: " << finalGlobalTime/ns << "[ns]";
-    G4cout << " X:" << (aTrack.GetPosition()).x() /cm << "[cm]";
-    G4cout << " Y:" << (aTrack.GetPosition()).y() /cm << "[cm]";
-    G4cout << " Z:" << (aTrack.GetPosition()).z() /cm << "[cm]";
+    G4cout << " Time: " << finalGlobalTime / ns << "[ns]";
+    G4cout << " X:" << (aTrack.GetPosition()).x() / cm << "[cm]";
+    G4cout << " Y:" << (aTrack.GetPosition()).y() / cm << "[cm]";
+    G4cout << " Z:" << (aTrack.GetPosition()).z() / cm << "[cm]";
     G4cout << G4endl;
     G4cout << "G4UnknownDecay::DoIt  : decay products in Lab. Frame" << G4endl;
     products->DumpInfo();
@@ -153,13 +155,12 @@ G4VParticleChange* G4UnknownDecay::DecayIt(const G4Track& aTrack, const G4Step& 
   G4int index;
   G4ThreeVector currentPosition;
   const G4TouchableHandle thand = aTrack.GetTouchableHandle();
-  for (index=0; index < numberOfSecondaries; index++){
+  for (index = 0; index < numberOfSecondaries; index++)
+  {
     // get current position of the track
     currentPosition = aTrack.GetPosition();
     // create a new track object
-    G4Track* secondary = new G4Track( products->PopProducts(),
-				      finalGlobalTime ,
-				      currentPosition );
+    G4Track* secondary = new G4Track(products->PopProducts(), finalGlobalTime, currentPosition);
     // switch on good for tracking flag
     secondary->SetGoodForTrackingFlag();
     secondary->SetTouchableHandle(thand);
@@ -167,26 +168,20 @@ G4VParticleChange* G4UnknownDecay::DecayIt(const G4Track& aTrack, const G4Step& 
     fParticleChangeForDecay.AddSecondary(secondary);
   }
   delete products;
-  
+
   // Kill the parent particle
-  fParticleChangeForDecay.ProposeTrackStatus( fStopAndKill ) ;
-  fParticleChangeForDecay.ProposeLocalEnergyDeposit(energyDeposit); 
-  fParticleChangeForDecay.ProposeGlobalTime( finalGlobalTime );
+  fParticleChangeForDecay.ProposeTrackStatus(fStopAndKill);
+  fParticleChangeForDecay.ProposeLocalEnergyDeposit(energyDeposit);
+  fParticleChangeForDecay.ProposeGlobalTime(finalGlobalTime);
   // reset NumberOfInteractionLengthLeft
   ClearNumberOfInteractionLengthLeft();
 
-  return &fParticleChangeForDecay ;
-} 
+  return &fParticleChangeForDecay;
+}
 
 void G4UnknownDecay::ProcessDescription(std::ostream& outFile) const
 {
-  outFile << GetProcessName()
-	  << ": Decay of 'unknown' particles. \n"
-	  << "kinematics of daughters are dertermined "
-	  << "by PreAssignedDecayProducts. \n";
+  outFile << GetProcessName() << ": Decay of 'unknown' particles. \n"
+          << "kinematics of daughters are dertermined "
+          << "by PreAssignedDecayProducts. \n";
 }
-
-
-
-
-

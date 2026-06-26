@@ -33,8 +33,8 @@
 #include "G4VtkOffscreen.hh"
 
 #include "G4VtkMessenger.hh"
-#include "G4VtkSceneHandler.hh"
 #include "G4VtkOffscreenViewer.hh"
+#include "G4VtkSceneHandler.hh"
 
 G4VtkOffscreen::G4VtkOffscreen()
   : G4VGraphicsSystem("VtkOffscreen", "VTK_OFFSCREEN", "Vtk with offscreen rendering",
@@ -51,7 +51,8 @@ G4VSceneHandler* G4VtkOffscreen::CreateSceneHandler(const G4String& name)
 G4VViewer* G4VtkOffscreen::CreateViewer(G4VSceneHandler& scene, const G4String& name)
 {
   G4VViewer* pView = new G4VtkOffscreenViewer((G4VtkSceneHandler&)scene, name);
-  if (pView->GetViewId() < 0) {
+  if (pView->GetViewId() < 0)
+  {
     G4cerr << "G4Vtk::CreateViewer: ERROR flagged by negative"
               " view id in G4VtkViewer creation."
               "\n Destroying view and returning null pointer."

@@ -28,56 +28,47 @@
 // Author: Pedro Arce (CIEMAT), 09.05.2001 - Initial version
 // --------------------------------------------------------------------
 
-inline
-const G4String& G4VDivisionParameterisation::GetType() const
+inline const G4String& G4VDivisionParameterisation::GetType() const
 {
   return ftype;
 }
 
-inline
-EAxis G4VDivisionParameterisation::GetAxis() const
+inline EAxis G4VDivisionParameterisation::GetAxis() const
 {
   return faxis;
 }
 
-inline
-G4int G4VDivisionParameterisation::GetNoDiv() const
+inline G4int G4VDivisionParameterisation::GetNoDiv() const
 {
   return fnDiv;
 }
 
-inline
-G4double G4VDivisionParameterisation::GetWidth() const
+inline G4double G4VDivisionParameterisation::GetWidth() const
 {
   return fwidth;
 }
 
-inline
-G4double G4VDivisionParameterisation::GetOffset() const
+inline G4double G4VDivisionParameterisation::GetOffset() const
 {
   return foffset;
 }
 
-inline
-G4VSolid* G4VDivisionParameterisation::GetMotherSolid() const
+inline G4VSolid* G4VDivisionParameterisation::GetMotherSolid() const
 {
   return fmotherSolid;
 }
 
-inline
-void G4VDivisionParameterisation::SetType( const G4String& type )
+inline void G4VDivisionParameterisation::SetType(const G4String& type)
 {
   ftype = type;
 }
 
-inline
-void G4VDivisionParameterisation::SetHalfGap(G4double hg)
+inline void G4VDivisionParameterisation::SetHalfGap(G4double hg)
 {
   fhgap = hg;
 }
 
-inline
-G4double G4VDivisionParameterisation::GetHalfGap() const
+inline G4double G4VDivisionParameterisation::GetHalfGap() const
 {
   return fhgap;
 }

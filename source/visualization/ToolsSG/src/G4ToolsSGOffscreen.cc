@@ -31,24 +31,26 @@
 
 #include <tools/offscreen/sg_viewer>
 
-G4ToolsSGOffscreen::G4ToolsSGOffscreen():
-parent
-("TOOLSSG_OFFSCREEN",
- "TSG_OFFSCREEN",
- "TOOLSSG_OFFSCREEN is a graphics driver based on the g4tools tools/sg scene graph logic where\n\
+G4ToolsSGOffscreen::G4ToolsSGOffscreen()
+  : parent(
+      "TOOLSSG_OFFSCREEN", "TSG_OFFSCREEN",
+      "TOOLSSG_OFFSCREEN is a graphics driver based on the g4tools tools/sg scene graph logic where\n\
  the rendering is done by using various offscreen library as tools/sg/zb, gl2ps, png, jpeg.",
- parent::threeDInteractive)
-,fSGSession(nullptr)
+      parent::threeDInteractive),
+    fSGSession(nullptr)
 {}
 
-G4ToolsSGOffscreen::~G4ToolsSGOffscreen() {
+G4ToolsSGOffscreen::~G4ToolsSGOffscreen()
+{
   delete fSGSession;
 }
 
-void G4ToolsSGOffscreen::Initialise() {
-  if(fSGSession) return; //done.
+void G4ToolsSGOffscreen::Initialise()
+{
+  if (fSGSession) return;  // done.
   fSGSession = new tools::offscreen::session(G4cout);
-  if(!fSGSession->is_valid()) {
+  if (!fSGSession->is_valid())
+  {
     G4cerr << "G4ToolsSGOffscreen::Initialise : session::is_valid() failed." << G4endl;
     delete fSGSession;
     fSGSession = nullptr;
@@ -56,30 +58,34 @@ void G4ToolsSGOffscreen::Initialise() {
   }
 }
 
-G4VSceneHandler* G4ToolsSGOffscreen::CreateSceneHandler(const G4String& a_name) {
-  G4VSceneHandler* pScene = new G4ToolsSGSceneHandler(*this,a_name);
+G4VSceneHandler* G4ToolsSGOffscreen::CreateSceneHandler(const G4String& a_name)
+{
+  G4VSceneHandler* pScene = new G4ToolsSGSceneHandler(*this, a_name);
   return pScene;
 }
 
-G4VViewer* G4ToolsSGOffscreen::CreateViewer(G4VSceneHandler& a_scene,const G4String& a_name) {
-  if(!fSGSession) Initialise();
-  if(!fSGSession) return nullptr;
-  G4VViewer* pView = new G4ToolsSGOffscreenViewer(*fSGSession,(G4ToolsSGSceneHandler&)a_scene,a_name);
-  if (pView) {
-    if (pView->GetViewId() < 0) {
-      G4cerr <<
-      "G4ToolsSGOffscreen::CreateViewer: ERROR flagged by negative"
-      " view id in G4ToolsSGViewer creation."
-      "\n Destroying view and returning null pointer."
-      << G4endl;
+G4VViewer* G4ToolsSGOffscreen::CreateViewer(G4VSceneHandler& a_scene, const G4String& a_name)
+{
+  if (!fSGSession) Initialise();
+  if (!fSGSession) return nullptr;
+  G4VViewer* pView =
+    new G4ToolsSGOffscreenViewer(*fSGSession, (G4ToolsSGSceneHandler&)a_scene, a_name);
+  if (pView)
+  {
+    if (pView->GetViewId() < 0)
+    {
+      G4cerr << "G4ToolsSGOffscreen::CreateViewer: ERROR flagged by negative"
+                " view id in G4ToolsSGViewer creation."
+                "\n Destroying view and returning null pointer."
+             << G4endl;
       delete pView;
       pView = nullptr;
     }
   }
-  if (!pView) {
-    G4cerr <<
-    "G4ToolsSGOffscreen::CreateViewer: ERROR: null pointer on new G4ToolsSGViewer."
-    << G4endl;
+  if (!pView)
+  {
+    G4cerr << "G4ToolsSGOffscreen::CreateViewer: ERROR: null pointer on new G4ToolsSGViewer."
+           << G4endl;
   }
   return pView;
 }

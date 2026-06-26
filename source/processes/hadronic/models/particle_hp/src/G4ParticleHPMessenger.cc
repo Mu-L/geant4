@@ -167,43 +167,53 @@ void G4ParticleHPMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   G4bool bValue = false;
   if (newValue == "true") bValue = true;
 
-  if (command == PhotoEvaCmd) {
-    if (manager->GetUseOnlyPhotoEvaporation() != bValue) {
+  if (command == PhotoEvaCmd)
+  {
+    if (manager->GetUseOnlyPhotoEvaporation() != bValue)
+    {
       manager->SetUseOnlyPhotoEvaporation(bValue);
 #ifdef G4VERBOSE
-      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0) {
+      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0)
+      {
         G4cout << G4endl
                << "=== G4ParticleHPMessenger CHANGED PARAMETER UseOnlyPhotoEvaporation TO "
                << bValue << " ===" << G4endl;
       }
-      if (bValue) {
+      if (bValue)
+      {
         G4cout << "    -> Forced the use of the Photon Evaporation model (instead of the neutron "
                   "capture final state data)"
                << G4endl;
       }
-      else {
+      else
+      {
         G4cout << "    -> Go back to use the default neutron capture final state data !" << G4endl;
       }
 #endif
     }
   }
 
-  if (command == SkipMissingCmd) {
-    if (manager->GetSkipMissingIsotopes() != bValue) {
+  if (command == SkipMissingCmd)
+  {
+    if (manager->GetSkipMissingIsotopes() != bValue)
+    {
       manager->SetSkipMissingIsotopes(bValue);
 #ifdef G4VERBOSE
-      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0) {
+      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0)
+      {
         G4cout << G4endl << "=== G4ParticleHPMessenger CHANGED PARAMETER SkipMissingIsotopes TO "
                << bValue << " ===" << G4endl;
       }
-      if (bValue) {
+      if (bValue)
+      {
         G4cout
           << "    -> Use only exact isotope data files, instead of allowing nearby isotope files "
              "to be used: \n"
           << "       if the exact file is not available, the cross section will be set to zero !"
           << G4endl;
       }
-      else {
+      else
+      {
         G4cout << "    -> Go back to the default, i.e. use nearby isotope files when the exact "
                   "isotope data files are not found !"
                << G4endl;
@@ -212,15 +222,19 @@ void G4ParticleHPMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     }
   }
 
-  if (command == NeglectDopplerCmd) {
-    if (manager->GetNeglectDoppler() != bValue) {
+  if (command == NeglectDopplerCmd)
+  {
+    if (manager->GetNeglectDoppler() != bValue)
+    {
       manager->SetNeglectDoppler(bValue);
 #ifdef G4VERBOSE
-      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0) {
+      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0)
+      {
         G4cout << G4endl << "=== G4ParticleHPMessenger CHANGED PARAMETER NeglectDoppler TO "
                << bValue << " ===" << G4endl;
       }
-      if (bValue) {
+      if (bValue)
+      {
         G4cout << "    -> Switched off the Doppler broadening due to the thermal motion of the "
                   "target nucleus: \n"
                << "       on-the-fly Doppler broadening will be neglected in the cross section "
@@ -229,7 +243,8 @@ void G4ParticleHPMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
                   "neutrons below 20 MeV.\n"
                << "       This option provides a significant CPU performance advantage !" << G4endl;
       }
-      else {
+      else
+      {
         G4cout
           << "    -> Go back to the default, i.e. switch on the Doppler broadening on-the-fly !"
           << G4endl;
@@ -238,20 +253,25 @@ void G4ParticleHPMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     }
   }
 
-  if (command == DoNotAdjustFSCmd) {
-    if (manager->GetDoNotAdjustFinalState() != bValue) {
+  if (command == DoNotAdjustFSCmd)
+  {
+    if (manager->GetDoNotAdjustFinalState() != bValue)
+    {
       manager->SetDoNotAdjustFinalState(bValue);
 #ifdef G4VERBOSE
-      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0) {
+      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0)
+      {
         G4cout << G4endl << "=== G4ParticleHPMessenger CHANGED PARAMETER DoNotAdjustFinalState TO "
                << bValue << " ===" << G4endl;
       }
-      if (bValue) {
+      if (bValue)
+      {
         G4cout
           << "    -> Disabled the adjustment of the final state for getting better conservation !"
           << G4endl;
       }
-      else {
+      else
+      {
         G4cout << "    -> Go back to the default, i.e. adjust the final state to get better "
                   "conservation !"
                << G4endl;
@@ -260,19 +280,24 @@ void G4ParticleHPMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     }
   }
 
-  if (command == ProduceFissionFragementCmd) {
-    if (manager->GetProduceFissionFragments() != bValue) {
+  if (command == ProduceFissionFragementCmd)
+  {
+    if (manager->GetProduceFissionFragments() != bValue)
+    {
       manager->SetProduceFissionFragments(bValue);
 #ifdef G4VERBOSE
-      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0) {
+      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0)
+      {
         G4cout << G4endl
                << "=== G4ParticleHPMessenger CHANGED PARAMETER ProduceFissionFragments TO "
                << bValue << " ===" << G4endl;
       }
-      if (bValue) {
+      if (bValue)
+      {
         G4cout << "    -> Enabled the generation of fission fragments !" << G4endl;
       }
-      else {
+      else
+      {
         G4cout << "    -> Go back to the default, i.e. do not generate fission fragments !"
                << G4endl;
       }
@@ -280,20 +305,25 @@ void G4ParticleHPMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     }
   }
 
-  if (command == WendtFissionModelCmd) {
-    if (manager->GetUseWendtFissionModel() != bValue) {
+  if (command == WendtFissionModelCmd)
+  {
+    if (manager->GetUseWendtFissionModel() != bValue)
+    {
       manager->SetUseWendtFissionModel(bValue);
       // Make sure both fission fragment models are not active at same time
       if (bValue) manager->SetProduceFissionFragments(false);
 #ifdef G4VERBOSE
-      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0) {
+      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0)
+      {
         G4cout << G4endl << "=== G4ParticleHPMessenger CHANGED PARAMETER UseWendtFissionModel TO "
                << bValue << " ===" << G4endl;
       }
-      if (bValue) {
+      if (bValue)
+      {
         G4cout << "    -> Enabled the use of Wendt fission model !" << G4endl;
       }
-      else {
+      else
+      {
         G4cout << "    -> Go back to the default, i.e. do not use the Wendt fission model !"
                << G4endl;
       }
@@ -301,30 +331,38 @@ void G4ParticleHPMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     }
   }
 
-  if (command == NRESP71Cmd) {
-    if (manager->GetUseNRESP71Model() != bValue) {
+  if (command == NRESP71Cmd)
+  {
+    if (manager->GetUseNRESP71Model() != bValue)
+    {
       manager->SetUseNRESP71Model(bValue);
 #ifdef G4VERBOSE
-      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0) {
+      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0)
+      {
         G4cout << G4endl << "=== G4ParticleHPMessenger CHANGED PARAMETER UseNRESP71Model TO "
                << bValue << " ===" << G4endl;
       }
-      if (bValue) {
+      if (bValue)
+      {
         G4cout << "    -> Enabled the use of NRESP71 model for n on C reaction !" << G4endl;
       }
-      else {
+      else
+      {
         G4cout << "    -> Go back to the default, i.e. do not use the NRESP71 model !" << G4endl;
       }
 #endif
     }
   }
 
-  if (command == VerboseCmd) {
+  if (command == VerboseCmd)
+  {
     G4int verboseLevel = VerboseCmd->ConvertToInt(newValue);
-    if (manager->GetVerboseLevel() != verboseLevel) {
+    if (manager->GetVerboseLevel() != verboseLevel)
+    {
       manager->SetVerboseLevel(verboseLevel);
 #ifdef G4VERBOSE
-      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0) {
+      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0)
+      {
         G4cout << G4endl << "=== G4ParticleHPMessenger CHANGED PARAMETER VerboseLevel TO "
                << verboseLevel << " ===" << G4endl;
       }
@@ -332,31 +370,39 @@ void G4ParticleHPMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     }
   }
 
-  if (command == UseDBRCCmd) {
+  if (command == UseDBRCCmd)
+  {
     bValue = UseDBRCCmd->GetNewBoolValue(newValue);
-    if (manager->GetUseDBRC() != bValue) {
+    if (manager->GetUseDBRC() != bValue)
+    {
       manager->SetUseDBRC(bValue);
 #ifdef G4VERBOSE
-      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0) {
+      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0)
+      {
         G4cout << G4endl << "=== G4ParticleHPMessenger CHANGED PARAMETER UseDBRC TO " << bValue
                << " ===" << G4endl;
       }
-      if (bValue) {
+      if (bValue)
+      {
         G4cout << "    -> Using the DBRC algorithm!" << G4endl;
       }
-      else {
+      else
+      {
         G4cout << "    -> Do not use the DBRC algorithm!" << G4endl;
       }
 #endif
     }
   }
 
-  if (command == MaxEnergySVTCmd) {
+  if (command == MaxEnergySVTCmd)
+  {
     G4double energymax = MaxEnergySVTCmd->GetNewDoubleValue(newValue);
-    if (G4HadronicParameters::Instance()->GetNeutronKineticEnergyThresholdForSVT() != energymax) {
+    if (G4HadronicParameters::Instance()->GetNeutronKineticEnergyThresholdForSVT() != energymax)
+    {
       G4HadronicParameters::Instance()->SetNeutronKineticEnergyThresholdForSVT(energymax);
 #ifdef G4VERBOSE
-      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0) {
+      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0)
+      {
         G4cout << G4endl
                << "=== G4ParticleHPMessenger CHANGED PARAMETER for SVT algorithm ===" << G4endl;
         G4cout << "max energy: " << G4BestUnit(energymax, "Energy") << G4endl;
@@ -365,12 +411,15 @@ void G4ParticleHPMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     }
   }
 
-  if (command == MinADBRCCmd) {
+  if (command == MinADBRCCmd)
+  {
     G4double Amin = MinADBRCCmd->GetNewDoubleValue(newValue);
-    if (manager->GetMinADBRC() != Amin) {
+    if (manager->GetMinADBRC() != Amin)
+    {
       manager->SetMinADBRC(Amin);
 #ifdef G4VERBOSE
-      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0) {
+      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0)
+      {
         G4cout << G4endl
                << "=== G4ParticleHPMessenger CHANGED PARAMETER for DBRC algorithm ===" << G4endl;
         G4cout << "min A: " << Amin << G4endl;
@@ -379,12 +428,15 @@ void G4ParticleHPMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     }
   }
 
-  if (command == MinEnergyDBRCCmd) {
+  if (command == MinEnergyDBRCCmd)
+  {
     G4double energymin = MinEnergyDBRCCmd->GetNewDoubleValue(newValue);
-    if (manager->GetMinEnergyDBRC() != energymin) {
+    if (manager->GetMinEnergyDBRC() != energymin)
+    {
       manager->SetMinEnergyDBRC(energymin);
 #ifdef G4VERBOSE
-      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0) {
+      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0)
+      {
         G4cout << G4endl
                << "=== G4ParticleHPMessenger CHANGED PARAMETER for DBRC algorithm ===" << G4endl;
         G4cout << "min energy: " << G4BestUnit(energymin, "Energy") << G4endl;
@@ -393,12 +445,15 @@ void G4ParticleHPMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     }
   }
 
-  if (command == MaxEnergyDBRCCmd) {
+  if (command == MaxEnergyDBRCCmd)
+  {
     G4double energymax = MaxEnergyDBRCCmd->GetNewDoubleValue(newValue);
-    if (manager->GetMaxEnergyDBRC() != energymax) {
+    if (manager->GetMaxEnergyDBRC() != energymax)
+    {
       manager->SetMaxEnergyDBRC(energymax);
 #ifdef G4VERBOSE
-      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0) {
+      if (G4HadronicParameters::Instance()->GetVerboseLevel() > 0)
+      {
         G4cout << G4endl
                << "=== G4ParticleHPMessenger CHANGED PARAMETER for SVT algorithm ===" << G4endl;
         G4cout << "max energy: " << G4BestUnit(energymax, "Energy") << G4endl;
@@ -406,5 +461,4 @@ void G4ParticleHPMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 #endif
     }
   }
-
 }

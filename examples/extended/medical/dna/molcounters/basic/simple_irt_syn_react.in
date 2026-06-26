@@ -4,6 +4,9 @@
 
 /run/initialize
 
+# for visualization uncomment the following line and ensure to run with -ui or -gui flag
+# /control/execute vis.mac
+
 /chem/PrintSpeciesTable
 
 # set all reaction rates to zero (only diffusion)

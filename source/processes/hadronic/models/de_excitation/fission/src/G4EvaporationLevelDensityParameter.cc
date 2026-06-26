@@ -31,18 +31,18 @@
 // 21.03.2013 V.Ivanchenko redesigned and comment out unused part
 
 #include "G4EvaporationLevelDensityParameter.hh"
+
 #include "G4NuclearLevelData.hh"
 
-G4EvaporationLevelDensityParameter::G4EvaporationLevelDensityParameter() 
+G4EvaporationLevelDensityParameter::G4EvaporationLevelDensityParameter()
 {
   fNucData = G4NuclearLevelData::GetInstance();
 }
 
-G4EvaporationLevelDensityParameter::~G4EvaporationLevelDensityParameter() 
-{}
+G4EvaporationLevelDensityParameter::~G4EvaporationLevelDensityParameter() {}
 
-G4double 
-G4EvaporationLevelDensityParameter::LevelDensityParameter(G4int A, G4int Z, G4double U) const 
+G4double G4EvaporationLevelDensityParameter::LevelDensityParameter(G4int A, G4int Z,
+                                                                   G4double U) const
 {
   return fNucData->GetLevelDensity(Z, A, U);
 }
@@ -51,15 +51,15 @@ G4EvaporationLevelDensityParameter::LevelDensityParameter(G4int A, G4int Z, G4do
 #include "G4ShellCorrections.hh"
 #include "G4SystemOfUnits.hh"
 
-// Those values are from table 3 in 
+// Those values are from table 3 in
 // A.S. Iljinov et al. Nucl Phys A543 (1992) 517-557
 // Table 3. alpha, beta and gamma for Cameron Shell corrections
 // whithout collective effects. f-factor = 2.31.
 
-//JMQ 17-04-08 these are not used at present in G4Evaporation 
-const G4double 
+//JMQ 17-04-08 these are not used at present in G4Evaporation
+const G4double
 G4EvaporationLevelDensityParameter::ConstEvapLevelDensityParameter = 0.125/MeV;
-const G4double 
+const G4double
 G4EvaporationLevelDensityParameter::ConstEvapLevelDensityParameter= 0.0769231/MeV;
 const G4double G4EvaporationLevelDensityParameter::alpha = 0.072/MeV;
 const G4double G4EvaporationLevelDensityParameter::beta = 0.257/MeV;
@@ -68,7 +68,7 @@ const G4double G4EvaporationLevelDensityParameter::Bs = 1.0;
 
 // Asymptotic Level Density Parameter
 //G4double AsymptoticLDP = (alpha*A + beta*g4pow-Z23(A)*Bs)/MeV;
-	
+
 // Shape of the LDP U dependence
 G4double exponent = -gamma*U;
 G4double f = 1.;

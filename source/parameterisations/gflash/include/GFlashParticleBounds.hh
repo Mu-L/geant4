@@ -46,6 +46,7 @@
 class GFlashParticleBounds
 {
   public:  // with description
+
     GFlashParticleBounds();
     ~GFlashParticleBounds();
 
@@ -60,6 +61,7 @@ class GFlashParticleBounds
     void SetEneToKill(G4ParticleDefinition& particleType, G4double enekill);
 
   private:
+
     // electron and positron
     G4double EMinEneToParametrise;
     G4double EMaxEneToParametrise;

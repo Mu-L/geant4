@@ -32,21 +32,22 @@
 //
 
 #include "G4FermiFragmentPoolAN.hh"
+
 #include "G4FermiDataTypes.hh"
-#include "G4VFermiFragmentAN.hh"
 #include "G4FermiStableFragment.hh"
 #include "G4FermiUnstableFragment.hh"
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4VFermiFragmentAN.hh"
 
 namespace
 {
-  std::size_t GetSlot(G4FermiAtomicMass atomicMass, G4FermiChargeNumber chargeNumber)
-  {
-    const auto mass = static_cast<std::uint32_t>(atomicMass);
-    const auto charge = static_cast<std::uint32_t>(chargeNumber);
-    return (mass * (mass + 1)) / 2 + charge;
-  }
+std::size_t GetSlot(G4FermiAtomicMass atomicMass, G4FermiChargeNumber chargeNumber)
+{
+  const auto mass = static_cast<std::uint32_t>(atomicMass);
+  const auto charge = static_cast<std::uint32_t>(chargeNumber);
+  return (mass * (mass + 1)) / 2 + charge;
+}
 }  // namespace
 
 G4FermiFragmentPoolAN::G4FermiFragmentPoolAN()
@@ -59,14 +60,17 @@ G4FermiFragmentPoolAN::G4FermiFragmentPoolAN()
 std::size_t G4FermiFragmentPoolAN::Count(G4FermiAtomicMass atomicMass,
                                          G4FermiChargeNumber chargeNumber) const
 {
-  //  if (unlikely(static_cast<std::uint32_t>(atomicMass) < static_cast<std::uint32_t>(chargeNumber)))
-  if (static_cast<std::uint32_t>(atomicMass) < static_cast<std::uint32_t>(chargeNumber)) {
+  //  if (unlikely(static_cast<std::uint32_t>(atomicMass) <
+  //  static_cast<std::uint32_t>(chargeNumber)))
+  if (static_cast<std::uint32_t>(atomicMass) < static_cast<std::uint32_t>(chargeNumber))
+  {
     return 0;
   }
 
   const auto slot = GetSlot(atomicMass, chargeNumber);
   //  if (unlikely(slot >= fragments_.size())) {
-  if (slot >= fragments_.size()) {
+  if (slot >= fragments_.size())
+  {
     return 0;
   }
 
@@ -77,13 +81,16 @@ G4FermiFragmentPoolAN::IteratorRange
 G4FermiFragmentPoolAN::GetFragments(G4FermiAtomicMass atomicMass,
                                     G4FermiChargeNumber chargeNumber) const
 {
-  //  if (unlikely(static_cast<std::uint32_t>(atomicMass) < static_cast<std::uint32_t>(chargeNumber)))
-  if (static_cast<std::uint32_t>(atomicMass) < static_cast<std::uint32_t>(chargeNumber)) {
+  //  if (unlikely(static_cast<std::uint32_t>(atomicMass) <
+  //  static_cast<std::uint32_t>(chargeNumber)))
+  if (static_cast<std::uint32_t>(atomicMass) < static_cast<std::uint32_t>(chargeNumber))
+  {
     return {EmptyContainer_.begin(), EmptyContainer_.end()};
   }
 
   const auto slot = GetSlot(atomicMass, chargeNumber);
-  if (slot >= fragments_.size()) {
+  if (slot >= fragments_.size())
+  {
     return {EmptyContainer_.begin(), EmptyContainer_.end()};
   }
 
@@ -93,7 +100,8 @@ G4FermiFragmentPoolAN::GetFragments(G4FermiAtomicMass atomicMass,
 void G4FermiFragmentPoolAN::AddFragment(const G4VFermiFragmentAN& fragment)
 {
   const auto slot = GetSlot(fragment.GetAtomicMass(), fragment.GetChargeNumber());
-  if (slot >= fragments_.size()) {
+  if (slot >= fragments_.size())
+  {
     fragments_.resize(slot + static_cast<std::uint32_t>(fragment.GetAtomicMass()));
   }
   fragments_[slot].push_back(&fragment);
@@ -230,7 +238,8 @@ G4FermiFragmentPoolAN::DefaultPoolANSource::DefaultPoolANSource()
 
 void G4FermiFragmentPoolAN::DefaultPoolANSource::Initialize()
 {
-  for (auto & fragmentPtr : *this) {
+  for (auto& fragmentPtr : *this)
+  {
     fragmentPtr->Initialize();
   }
 }

@@ -34,8 +34,8 @@
 // 20130619  Change singleton instance to be thread-local, to avoid collisions.
 // 20130620  Address Coverity warnings about missing copy actions
 
-#ifndef G4TwoBodyAngularDist_h
-#define G4TwoBodyAngularDist_h 1
+#ifndef G4TWOBODYANGULARDIST_HH
+#define G4TWOBODYANGULARDIST_HH
 
 #include "globals.hh"
 
@@ -54,61 +54,63 @@ class G4HadNElastic1AngDst;
 class G4HadNElastic2AngDst;
 class G4GammaNuclAngDst;
 
-class G4HadNucl3BodyAngDst;	// TEMPORARY, until migration to GENBOD
+class G4HadNucl3BodyAngDst;  // TEMPORARY, until migration to GENBOD
 class G4NuclNucl3BodyAngDst;
 
+class G4TwoBodyAngularDist
+{
+  public:
 
-class G4TwoBodyAngularDist {
-public:
-  ~G4TwoBodyAngularDist();
+    ~G4TwoBodyAngularDist();
 
-  static const G4TwoBodyAngularDist* GetInstance();
+    static const G4TwoBodyAngularDist* GetInstance();
 
-  // Return appropriate generator for initial, final state, and kw flag
-  static const G4VTwoBodyAngDst* GetDist(G4int is, G4int fs, G4int kw) {
-    return GetInstance()->ChooseDist(is,fs,kw);
-  }
+    // Return appropriate generator for initial, final state, and kw flag
+    static const G4VTwoBodyAngDst* GetDist(G4int is, G4int fs, G4int kw)
+    {
+      return GetInstance()->ChooseDist(is, fs, kw);
+    }
 
-  static const G4VTwoBodyAngDst* GetDist(G4int is) {
-    return GetInstance()->ChooseDist(is,0,0);
-  }
+    static const G4VTwoBodyAngDst* GetDist(G4int is) { return GetInstance()->ChooseDist(is, 0, 0); }
 
-  // Pass verbosity through to owned objects
-  static void setVerboseLevel(G4int vb=0);
+    // Pass verbosity through to owned objects
+    static void setVerboseLevel(G4int vb = 0);
 
-private:
-  // Constructor is private for singleton
-  G4TwoBodyAngularDist();
-  const G4VTwoBodyAngDst* ChooseDist(G4int is, G4int fs, G4int kw) const;
+  private:
 
-  void passVerbose(G4int verbose);
+    // Constructor is private for singleton
+    G4TwoBodyAngularDist();
+    const G4VTwoBodyAngDst* ChooseDist(G4int is, G4int fs, G4int kw) const;
 
-  static G4ThreadLocal G4TwoBodyAngularDist* theInstance;	// Per thread
+    void passVerbose(G4int verbose);
 
-  // Generators for various initial/final state combinations
-  G4GamP2NPipAngDst* gp_npip;		// gamma p -> n pi+
-  G4GamP2PPi0AngDst* gp_ppi0;		// gamma p -> p pi0
-  G4PP2PPAngDst* ppAngDst;              // pp, nn elastic
-  G4NP2NPAngDst* npAngDst;              // np and pn elastic
-  G4NuclNuclAngDst* nnAngDst;		// Y N elastic and inelastic
-  G4Pi0P2Pi0PAngDst* pi0pAngDst;        // pi0 p, pi0 n elastic
-  G4PimP2Pi0NAngDst* pipCXAngDst;       // pi- p, pi+ n, pi0 p, pi0 n charge exchange
-  G4PimP2PimPAngDst* pimpAngDst;        // pi- p, pi+ n elastic
-  G4PipP2PipPAngDst* pippAngDst;        // pi+ p, pi- n elastic
+    static G4ThreadLocal G4TwoBodyAngularDist* theInstance;  // Per thread
 
-  G4PiNInelasticAngDst* qxAngDst;	// pi N charge/strangeness exchange
-  G4HadNElastic1AngDst* hn1AngDst;	// pi+p and related elastic scattering
-  G4HadNElastic2AngDst* hn2AngDst;	// pi-p and related elastic scattering
-  G4GammaNuclAngDst* gnAngDst;		// gamma N inelastic
+    // Generators for various initial/final state combinations
+    G4GamP2NPipAngDst* gp_npip;  // gamma p -> n pi+
+    G4GamP2PPi0AngDst* gp_ppi0;  // gamma p -> p pi0
+    G4PP2PPAngDst* ppAngDst;  // pp, nn elastic
+    G4NP2NPAngDst* npAngDst;  // np and pn elastic
+    G4NuclNuclAngDst* nnAngDst;  // Y N elastic and inelastic
+    G4Pi0P2Pi0PAngDst* pi0pAngDst;  // pi0 p, pi0 n elastic
+    G4PimP2Pi0NAngDst* pipCXAngDst;  // pi- p, pi+ n, pi0 p, pi0 n charge exchange
+    G4PimP2PimPAngDst* pimpAngDst;  // pi- p, pi+ n elastic
+    G4PipP2PipPAngDst* pippAngDst;  // pi+ p, pi- n elastic
 
-  // TEMPORARY generators for three-body final states
-  G4HadNucl3BodyAngDst* hn3BodyDst;	// (pi,K,Y,g) N -> XYZ scattering
-  G4NuclNucl3BodyAngDst* nn3BodyDst;	// N N -> XYZ scattering
+    G4PiNInelasticAngDst* qxAngDst;  // pi N charge/strangeness exchange
+    G4HadNElastic1AngDst* hn1AngDst;  // pi+p and related elastic scattering
+    G4HadNElastic2AngDst* hn2AngDst;  // pi-p and related elastic scattering
+    G4GammaNuclAngDst* gnAngDst;  // gamma N inelastic
 
-private:
-  // Copying of modules is forbidden
-  G4TwoBodyAngularDist(const G4TwoBodyAngularDist&);
-  G4TwoBodyAngularDist& operator=(const G4TwoBodyAngularDist&);
+    // TEMPORARY generators for three-body final states
+    G4HadNucl3BodyAngDst* hn3BodyDst;  // (pi,K,Y,g) N -> XYZ scattering
+    G4NuclNucl3BodyAngDst* nn3BodyDst;  // N N -> XYZ scattering
+
+  private:
+
+    // Copying of modules is forbidden
+    G4TwoBodyAngularDist(const G4TwoBodyAngularDist&);
+    G4TwoBodyAngularDist& operator=(const G4TwoBodyAngularDist&);
 };
 
-#endif	/* G4TwoBodyAngularDist_h */
+#endif /* G4TwoBodyAngularDist_h */

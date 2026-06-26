@@ -30,14 +30,14 @@
 // Class managing the per-thread state of the geometry, spanning those
 // which have a per-thread state and their dependents.
 // In particular it:
-//       - owns the arrays that implement 'split' classes 
+//       - owns the arrays that implement 'split' classes
 //       - owns classes/objects which are owned by the split classes.
 // The classes/objects affected are:
 //       - 'split' classes part of its state is per-thread,
-//       - per-thread objects, in particular those which are owned 
+//       - per-thread objects, in particular those which are owned
 //         by the split classes.
-// Goal: Take ownership and control of per-thread state of 
-//       classes to work with multi-threading. 
+// Goal: Take ownership and control of per-thread state of
+//       classes to work with multi-threading.
 
 // Authors: John Apostolakis (CERN), Andrea Dotti (SLAC), July 2013
 // --------------------------------------------------------------------
@@ -48,14 +48,16 @@
 
 // Headers defining MT "manager" types
 //
-#include "G4PVReplica.hh"
-#include "G4VSolid.hh"
 #include "G4LogicalVolume.hh"
+#include "G4PVReplica.hh"
 #include "G4Region.hh"
+#include "G4VSolid.hh"
 
 /**
  * @brief G4GeometryWorkspace is a class managing the per-thread state of the
  * geometry, spanning those which have a per-thread state and their dependents.
+ * @ingroup geometry_volumes
+ *
  * In particular, it owns the arrays that implement 'split' classes and owns
  * classes/objects which are owned by the split classes.
  */
@@ -63,22 +65,22 @@
 class G4GeometryWorkspace
 {
   public:
- 
+
     using pool_type = G4TWorkspacePool<G4GeometryWorkspace>;
 
     /**
      * Constructor and default Destructor.
      */
     G4GeometryWorkspace();
-   ~G4GeometryWorkspace() = default;
+    ~G4GeometryWorkspace() = default;
 
     /**
      * Methods for the handling of the workspace.
      * To take/release ownership and destroy.
      */
-    void UseWorkspace();     // Take ownership
-    void ReleaseWorkspace(); // Release ownership
-    void DestroyWorkspace(); // Release ownership and destroy
+    void UseWorkspace();  // Take ownership
+    void ReleaseWorkspace();  // Release ownership
+    void DestroyWorkspace();  // Release ownership and destroy
 
     /**
      * Initialisation of the workspace.
@@ -90,7 +92,7 @@ class G4GeometryWorkspace
      * Static accessor returning the global geometry pool.
      */
     static pool_type* GetPool();
-  
+
   protected:  // Implementation methods
 
     /**
@@ -101,23 +103,23 @@ class G4GeometryWorkspace
     /**
      * Creates a clone of the solid for the given replica in this thread.
      */
-    G4bool CloneReplicaSolid( G4PVReplica* );
-  
-  private:    // Helper pointers - can be per instance or shared
+    G4bool CloneReplicaSolid(G4PVReplica*);
 
-    G4LVManager*     fpLogicalVolumeSIM;
-    G4PVManager*     fpPhysicalVolumeSIM;
-    G4PVRManager*    fpReplicaSIM;
+  private:  // Helper pointers - can be per instance or shared
+
+    G4LVManager* fpLogicalVolumeSIM;
+    G4PVManager* fpPhysicalVolumeSIM;
+    G4PVRManager* fpReplicaSIM;
     G4RegionManager* fpRegionSIM;
-  
+
     // Per Instance variables
     // NOTE: the ownership of the Data Arrays is IN this object
     // Store SubInstanceManager object pointers (SIM pointers)
 
-    G4LVData*      fLogicalVolumeOffset;
-    G4PVData*      fPhysicalVolumeOffset;
-    G4ReplicaData* fReplicaOffset;       
-    G4RegionData*  fRegionOffset;        
+    G4LVData* fLogicalVolumeOffset;
+    G4PVData* fPhysicalVolumeOffset;
+    G4ReplicaData* fReplicaOffset;
+    G4RegionData* fRegionOffset;
 };
 
 #endif

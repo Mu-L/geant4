@@ -34,59 +34,53 @@
 // Modified:
 // 01.06.2010 V.Ivanchenko moved constructor and destructor to the source
 // 14.02.2013 V.Ivanchenko remove all static declarations
-// 
+//
 
-#ifndef G4LowEIonFragmentation_h
-#define G4LowEIonFragmentation_h 1
+#ifndef G4LOWEIONFRAGMENTATION_HH
+#define G4LOWEIONFRAGMENTATION_HH
 
-
-#include "G4PreCompoundModel.hh"
-#include "G4HadronicInteraction.hh"
 #include "G4ExcitationHandler.hh"
+#include "G4HadronicInteraction.hh"
+#include "G4PreCompoundModel.hh"
 
 class G4ParticleDefinition;
 
 class G4LowEIonFragmentation : public G4HadronicInteraction
 {
-public:
-  
-  G4LowEIonFragmentation(G4ExcitationHandler * const value = nullptr);
+  public:
 
-  virtual ~G4LowEIonFragmentation();
+    G4LowEIonFragmentation(G4ExcitationHandler* const value = nullptr);
 
-  G4HadFinalState * ApplyYourself(const G4HadProjectile & thePrimary, 
-				  G4Nucleus & theNucleus) override;
+    virtual ~G4LowEIonFragmentation();
 
-  inline G4double GetCrossSection() 
-  {
-    //    G4cout << "area/millibarn = "<<area/millibarn<<G4endl;
-    //    G4cout << "hits = "<<hits<<G4endl;
-    //    G4cout << "totalTries = "<<totalTries<<G4endl;
-    return area*hits/(static_cast<G4double>(totalTries)*CLHEP::millibarn);
-  }
+    G4HadFinalState* ApplyYourself(const G4HadProjectile& thePrimary,
+                                   G4Nucleus& theNucleus) override;
 
-  G4LowEIonFragmentation(const G4LowEIonFragmentation &) = delete;
-  const G4LowEIonFragmentation& operator=
-  (const G4LowEIonFragmentation &right) = delete;
-  G4bool operator==(const G4LowEIonFragmentation &right) const = delete;
-  G4bool operator!=(const G4LowEIonFragmentation &right) const = delete;
+    inline G4double GetCrossSection()
+    {
+      //    G4cout << "area/millibarn = "<<area/millibarn<<G4endl;
+      //    G4cout << "hits = "<<hits<<G4endl;
+      //    G4cout << "totalTries = "<<totalTries<<G4endl;
+      return area * hits / (static_cast<G4double>(totalTries) * CLHEP::millibarn);
+    }
 
-private:  
-  
-  G4HadFinalState theResult;
-  const G4ParticleDefinition* proton;
-   
-  G4PreCompoundModel * theModel = nullptr;
-  G4ExcitationHandler * theHandler = nullptr;
-  
-  G4int hits = 0;
-  G4int totalTries = 1;
-  G4int secID = -1;  // ID for the secondaries created by this model
-  G4double area = 0.0;
+    G4LowEIonFragmentation(const G4LowEIonFragmentation&) = delete;
+    const G4LowEIonFragmentation& operator=(const G4LowEIonFragmentation& right) = delete;
+    G4bool operator==(const G4LowEIonFragmentation& right) const = delete;
+    G4bool operator!=(const G4LowEIonFragmentation& right) const = delete;
 
+  private:
+
+    G4HadFinalState theResult;
+    const G4ParticleDefinition* proton;
+
+    G4PreCompoundModel* theModel = nullptr;
+    G4ExcitationHandler* theHandler = nullptr;
+
+    G4int hits = 0;
+    G4int totalTries = 1;
+    G4int secID = -1;  // ID for the secondaries created by this model
+    G4double area = 0.0;
 };
 
-
 #endif
-
-

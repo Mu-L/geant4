@@ -26,8 +26,8 @@
 
 // Author: Ivana Hrivnacova, IJCLab IN2P3/CNRS, 06/08/2024
 
-#ifndef G4Accumulable_h
-#define G4Accumulable_h 1
+#ifndef G4ACCUMULABLE_HH
+#define G4ACCUMULABLE_HH
 
 #include "G4AccValue.hh"
 

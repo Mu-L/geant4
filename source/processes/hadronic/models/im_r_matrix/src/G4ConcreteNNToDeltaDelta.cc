@@ -25,28 +25,29 @@
 //
 //
 
-#include "globals.hh"
-#include "G4KineticTrack.hh"
-#include "G4VCrossSectionSource.hh"
-#include "G4Proton.hh"
-#include "G4Neutron.hh"
-#include "G4XAqmElastic.hh"
-#include "G4AngularDistribution.hh"
-#include "G4ThreeVector.hh"
-#include "G4LorentzVector.hh"
-#include "G4ParticleDefinition.hh"
 #include "G4ConcreteNNToDeltaDelta.hh"
 
-G4ThreadLocal G4XDeltaDeltaTable *G4ConcreteNNToDeltaDelta::theSigmaTable_G4MT_TLS_ = 0;
+#include "G4AngularDistribution.hh"
+#include "G4KineticTrack.hh"
+#include "G4LorentzVector.hh"
+#include "G4Neutron.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4Proton.hh"
+#include "G4ThreeVector.hh"
+#include "G4VCrossSectionSource.hh"
+#include "G4XAqmElastic.hh"
+#include "globals.hh"
+
+G4ThreadLocal G4XDeltaDeltaTable* G4ConcreteNNToDeltaDelta::theSigmaTable_G4MT_TLS_ = 0;
 
 G4ConcreteNNToDeltaDelta::G4ConcreteNNToDeltaDelta(const G4ParticleDefinition* aPrimary,
-					   const G4ParticleDefinition* bPrimary,
-					   const G4ParticleDefinition* aSecondary,
-					   const G4ParticleDefinition* bSecondary)  :
-	G4ConcreteNNTwoBodyResonance(NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+                                                   const G4ParticleDefinition* bPrimary,
+                                                   const G4ParticleDefinition* aSecondary,
+                                                   const G4ParticleDefinition* bSecondary)
+  : G4ConcreteNNTwoBodyResonance(NULL, NULL, NULL, NULL, NULL, NULL, NULL)
 {
-   if (!theSigmaTable_G4MT_TLS_) theSigmaTable_G4MT_TLS_ = new G4XDeltaDeltaTable;
-   G4XDeltaDeltaTable &theSigmaTable = *theSigmaTable_G4MT_TLS_;
-   establish_G4MT_TLS_G4ConcreteNNTwoBodyResonance(aPrimary,bPrimary,aSecondary,bSecondary,theSigmaTable);
+  if (!theSigmaTable_G4MT_TLS_) theSigmaTable_G4MT_TLS_ = new G4XDeltaDeltaTable;
+  G4XDeltaDeltaTable& theSigmaTable = *theSigmaTable_G4MT_TLS_;
+  establish_G4MT_TLS_G4ConcreteNNTwoBodyResonance(aPrimary, bPrimary, aSecondary, bSecondary,
+                                                  theSigmaTable);
 }
-

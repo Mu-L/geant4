@@ -32,43 +32,40 @@
 // File name:     G4DNARuddAngle
 //
 // Author:        Vladimir Ivantcheko
-// 
+//
 // Creation date: 23 August 2013
 //
-// Modifications: 
+// Modifications:
 //
-// Class Description: 
+// Class Description:
 //
-// Delta-electron Angular Distribution Generation 
+// Delta-electron Angular Distribution Generation
 //
-// Class Description: End 
+// Class Description: End
 //
 // -------------------------------------------------------------------
 //
 
 #include "G4DNARuddAngle.hh"
-#include "G4PhysicalConstants.hh"
-#include "Randomize.hh"
-#include "G4ParticleDefinition.hh"
+
 #include "G4Electron.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
+#include "Randomize.hh"
 
 using namespace std;
 
-G4DNARuddAngle::G4DNARuddAngle(const G4String&)
-  : G4VEmAngularDistribution("deltaRudd")
+G4DNARuddAngle::G4DNARuddAngle(const G4String&) : G4VEmAngularDistribution("deltaRudd")
 {
   fElectron = G4Electron::Electron();
-}    
+}
 
-G4DNARuddAngle::~G4DNARuddAngle() 
-= default;
+G4DNARuddAngle::~G4DNARuddAngle() = default;
 
-G4ThreeVector& 
-G4DNARuddAngle::SampleDirectionForShell(const G4DynamicParticle* dp,
-					G4double secKinetic, G4int, 
-					G4int, 
-					const G4Material*)
+G4ThreeVector& G4DNARuddAngle::SampleDirectionForShell(const G4DynamicParticle* dp,
+                                                       G4double secKinetic, G4int, G4int,
+                                                       const G4Material*)
 {
   G4double k = dp->GetKineticEnergy();
   G4double cosTheta = 1.0;
@@ -77,37 +74,40 @@ G4DNARuddAngle::SampleDirectionForShell(const G4DynamicParticle* dp,
   G4double mass = particle->GetPDGMass();
 
   G4double maximumEnergyTransfer = k;
-  if(particle == fElectron) { maximumEnergyTransfer *= 0.5; }
-  else if(mass > MeV) {
-    G4double ratio = electron_mass_c2/mass;
-    G4double tau  = k/mass;
-    maximumEnergyTransfer = 2.0*electron_mass_c2*tau*(tau + 2.) /
-      (1. + 2.0*(tau + 1.)*ratio + ratio*ratio);
-    
+  if (particle == fElectron)
+  {
+    maximumEnergyTransfer *= 0.5;
+  }
+  else if (mass > MeV)
+  {
+    G4double ratio = electron_mass_c2 / mass;
+    G4double tau = k / mass;
+    maximumEnergyTransfer =
+      2.0 * electron_mass_c2 * tau * (tau + 2.) / (1. + 2.0 * (tau + 1.) * ratio + ratio * ratio);
   }
 
-  if (secKinetic>100*eV && secKinetic <= maximumEnergyTransfer) {
+  if (secKinetic > 100 * eV && secKinetic <= maximumEnergyTransfer)
+  {
     cosTheta = std::sqrt(secKinetic / maximumEnergyTransfer);
-  } else {
-    cosTheta = (2.*G4UniformRand())-1.;
+  }
+  else
+  {
+    cosTheta = (2. * G4UniformRand()) - 1.;
   }
 
-  G4double sint = sqrt((1.0 - cosTheta)*(1.0 + cosTheta));
-  G4double phi  = twopi*G4UniformRand(); 
+  G4double sint = sqrt((1.0 - cosTheta) * (1.0 + cosTheta));
+  G4double phi = twopi * G4UniformRand();
 
-  fLocalDirection.set(sint*cos(phi), sint*sin(phi), cosTheta);
+  fLocalDirection.set(sint * cos(phi), sint * sin(phi), cosTheta);
   fLocalDirection.rotateUz(dp->GetMomentumDirection());
 
   return fLocalDirection;
 }
 
-G4ThreeVector& 
-G4DNARuddAngle::SampleDirection(const G4DynamicParticle* dp,
-				G4double secEkin, G4int Z, 
-				const G4Material* mat)
+G4ThreeVector& G4DNARuddAngle::SampleDirection(const G4DynamicParticle* dp, G4double secEkin,
+                                               G4int Z, const G4Material* mat)
 {
   return SampleDirectionForShell(dp, secEkin, Z, 0, mat);
 }
 
-void G4DNARuddAngle::PrintGeneratorInformation() const
-{} 
+void G4DNARuddAngle::PrintGeneratorInformation() const {}

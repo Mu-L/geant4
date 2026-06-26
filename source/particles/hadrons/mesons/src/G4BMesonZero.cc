@@ -46,7 +46,8 @@ G4BMesonZero* G4BMesonZero::Definition()
   // search in particle table]
   G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
   G4ParticleDefinition* anInstance = pTable->FindParticle(name);
-  if (anInstance == nullptr) {
+  if (anInstance == nullptr)
+  {
     // create particle
     //
     //    Arguments for constructor are as follows

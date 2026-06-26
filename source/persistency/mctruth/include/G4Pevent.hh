@@ -42,7 +42,7 @@
 // Author: Youhei Morita, 18.11.2001
 // --------------------------------------------------------------------
 #ifndef G4PEVENT_HH
-#define G4PEVENT_HH 1
+#define G4PEVENT_HH
 
 #include "G4Event.hh"
 #include "G4MCTEvent.hh"
@@ -52,25 +52,25 @@ class G4Pevent
   public:
 
     G4Pevent(G4MCTEvent* mctevt, G4Event* g4evt);
-      // Constructor
+    // Constructor
 
     ~G4Pevent();
-      // Destructor
+    // Destructor
 
     G4int GetEventID() { return m_id; }
-      // Returns the event ID
+    // Returns the event ID
 
     G4Event* GetEvent() { return f_g4evt; }
-      // Returns the G4Event
+    // Returns the G4Event
 
     G4MCTEvent* GetMCTEvent() { return f_mctevt; }
-      // Returns the MCTruth event
+    // Returns the MCTruth event
 
     G4int GetGenEventID() const { return genEventID; }
-      // Returns the GenEvent ID
+    // Returns the GenEvent ID
 
     void SetGenEventID(G4int id) { genEventID = id; }
-      // Sets the GenEvent ID
+    // Sets the GenEvent ID
 
   private:
 

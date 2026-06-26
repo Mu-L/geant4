@@ -55,18 +55,18 @@
 #include "G4GeomTypes.hh"
 
 #if defined(G4GEOM_USE_USOLIDS)
-#define G4GEOM_USE_UPOLYCONE 1
+#  define G4GEOM_USE_UPOLYCONE 1
 #endif
 
 #if defined(G4GEOM_USE_UPOLYCONE)
-  #define G4UPolycone G4Polycone
-  #include "G4UPolycone.hh"
+#  define G4UPolycone G4Polycone
+#  include "G4UPolycone.hh"
 #else
 
-#include "G4VCSGfaceted.hh"
-#include "G4PolyconeSide.hh"
-#include "G4PolyconeHistorical.hh"
-#include "G4Polyhedron.hh"
+#  include "G4PolyconeHistorical.hh"
+#  include "G4PolyconeSide.hh"
+#  include "G4Polyhedron.hh"
+#  include "G4VCSGfaceted.hh"
 
 class G4EnclosingCylinder;
 class G4ReduciblePolygon;
@@ -76,6 +76,7 @@ class G4VCSGface;
  * @brief G4Polycone represents a composed closed shape (PCON) made of
  * cones and cylinders, along the Z axis with increasing Z, with or without
  * cut in Phi.
+ * @ingroup geometry_solids_specific
  */
 
 class G4Polycone : public G4VCSGfaceted
@@ -92,13 +93,13 @@ class G4Polycone : public G4VCSGfaceted
      *  @param[in] rInner Tangent distance to inner surface.
      *  @param[in] rOuter Tangent distance to outer surface.
      */
-    G4Polycone( const G4String& name,
-                      G4double phiStart,    // initial phi starting angle
-                      G4double phiTotal,    // total phi angle
-                      G4int numZPlanes,     // number of z planes
-                const G4double zPlane[],    // position of z planes
-                const G4double rInner[],    // tangent distance to inner surface
-                const G4double rOuter[]  ); // tangent distance to outer surface
+    G4Polycone(const G4String& name,
+               G4double phiStart,  // initial phi starting angle
+               G4double phiTotal,  // total phi angle
+               G4int numZPlanes,  // number of z planes
+               const G4double zPlane[],  // position of z planes
+               const G4double rInner[],  // tangent distance to inner surface
+               const G4double rOuter[]);  // tangent distance to outer surface
 
     /**
      * Alternative constructor of a polycone shape, given corners coordinates.
@@ -109,12 +110,12 @@ class G4Polycone : public G4VCSGfaceted
      *  @param[in] r r coordinates of corners.
      *  @param[in] z Z coordinates of corners.
      */
-    G4Polycone( const G4String& name,
-                      G4double phiStart,    // initial phi starting angle
-                      G4double phiTotal,    // total phi angle
-                      G4int numRZ,          // number corners in r,z space
-                const G4double r[],         // r coordinates of these corners
-                const G4double z[]       ); // z coordinates of these corners
+    G4Polycone(const G4String& name,
+               G4double phiStart,  // initial phi starting angle
+               G4double phiTotal,  // total phi angle
+               G4int numRZ,  // number corners in r,z space
+               const G4double r[],  // r coordinates of these corners
+               const G4double z[]);  // z coordinates of these corners
 
     /**
      * Destructor.
@@ -124,14 +125,14 @@ class G4Polycone : public G4VCSGfaceted
     /**
      * Accessors.
      */
-    inline G4double GetStartPhi()    const;
-    inline G4double GetEndPhi()      const;
+    inline G4double GetStartPhi() const;
+    inline G4double GetEndPhi() const;
     inline G4double GetSinStartPhi() const;
     inline G4double GetCosStartPhi() const;
-    inline G4double GetSinEndPhi()   const;
-    inline G4double GetCosEndPhi()   const;
-    inline G4bool IsOpen()           const;
-    inline G4int GetNumRZCorner()    const;
+    inline G4double GetSinEndPhi() const;
+    inline G4double GetCosEndPhi() const;
+    inline G4bool IsOpen() const;
+    inline G4int GetNumRZCorner() const;
     inline G4PolyconeSideRZ GetCorner(G4int index) const;
 
     /**
@@ -145,10 +146,9 @@ class G4Polycone : public G4VCSGfaceted
      * solids, as defined in G4VSolid. Remaining functions are concretely
      * defined in the base class G4VCSGfaceted.
      */
-    EInside Inside( const G4ThreeVector& p ) const override;
-    G4double DistanceToIn( const G4ThreeVector& p,
-                           const G4ThreeVector& v ) const override;
-    G4double DistanceToIn( const G4ThreeVector& p ) const override;
+    EInside Inside(const G4ThreeVector& p) const override;
+    G4double DistanceToIn(const G4ThreeVector& p, const G4ThreeVector& v) const override;
+    G4double DistanceToIn(const G4ThreeVector& p) const override;
 
     /**
      * Computes the bounding limits of the solid.
@@ -167,10 +167,9 @@ class G4Polycone : public G4VCSGfaceted
      *  @param[out] pMax The maximum extent value.
      *  @returns True if the solid is intersected by the extent region.
      */
-    G4bool CalculateExtent(const EAxis pAxis,
-                           const G4VoxelLimits& pVoxelLimit,
-                           const G4AffineTransform& pTransform,
-                                 G4double& pmin, G4double& pmax) const override;
+    G4bool CalculateExtent(const EAxis pAxis, const G4VoxelLimits& pVoxelLimit,
+                           const G4AffineTransform& pTransform, G4double& pmin,
+                           G4double& pmax) const override;
 
     /**
      * Returning an estimation of the solid volume (capacity) and
@@ -189,9 +188,8 @@ class G4Polycone : public G4VCSGfaceted
      * Dispatch method for parameterisation replication mechanism and
      * dimension computation.
      */
-    void ComputeDimensions( G4VPVParameterisation* p,
-                            const G4int n,
-                            const G4VPhysicalVolume* pRep ) override;
+    void ComputeDimensions(G4VPVParameterisation* p, const G4int n,
+                           const G4VPhysicalVolume* pRep) override;
 
     /**
      * Returns the type ID, "G4Polycone" of the solid.
@@ -229,8 +227,8 @@ class G4Polycone : public G4VCSGfaceted
     /**
      * Copy constructor and assignment operator.
      */
-    G4Polycone( const G4Polycone& source );
-    G4Polycone& operator=( const G4Polycone& source );
+    G4Polycone(const G4Polycone& source);
+    G4Polycone& operator=(const G4Polycone& source);
 
   private:
 
@@ -239,15 +237,15 @@ class G4Polycone : public G4VCSGfaceted
      */
     G4bool SetOriginalParameters(G4ReduciblePolygon* rz);
 
-    void Create( G4double phiStart,        // initial phi starting angle
-                 G4double phiTotal,        // total phi angle
-                 G4ReduciblePolygon* rz ); // r/z coordinate of these corners
+    void Create(G4double phiStart,  // initial phi starting angle
+                G4double phiTotal,  // total phi angle
+                G4ReduciblePolygon* rz);  // r/z coordinate of these corners
 
     /**
      * Copy parameters from other solid; used in copy constructor and
      * assignment operator.
      */
-    void CopyStuff( const G4Polycone& source );
+    void CopyStuff(const G4Polycone& source);
 
     /**
      * Sets the vector of surface elements. Auxiliary method used for
@@ -258,20 +256,24 @@ class G4Polycone : public G4VCSGfaceted
   private:
 
     /** The original parameters. */
-    G4double startPhi;        // Starting phi value (0 < phiStart < 2pi)
-    G4double endPhi;          // End phi value (0 < endPhi-phiStart < 2pi)
-    G4bool phiIsOpen = false; // True if there is a phi segment
-    G4int numCorner;          // Number RZ points
-    G4PolyconeSideRZ* corners = nullptr; // Corner r,z points
-    G4PolyconeHistorical* original_parameters = nullptr; // Original input pars
+    G4double startPhi;  // Starting phi value (0 < phiStart < 2pi)
+    G4double endPhi;  // End phi value (0 < endPhi-phiStart < 2pi)
+    G4bool phiIsOpen = false;  // True if there is a phi segment
+    G4int numCorner;  // Number RZ points
+    G4PolyconeSideRZ* corners = nullptr;  // Corner r,z points
+    G4PolyconeHistorical* original_parameters = nullptr;  // Original input pars
 
-    G4EnclosingCylinder* enclosingCylinder = nullptr; // Our quick test
+    G4EnclosingCylinder* enclosingCylinder = nullptr;  // Our quick test
 
-    struct surface_element { G4double area = 0.; G4int i0 = 0, i1 = 0, i2 = 0; };
+    struct surface_element
+    {
+        G4double area = 0.;
+        G4int i0 = 0, i1 = 0, i2 = 0;
+    };
     mutable std::vector<surface_element>* fElements = nullptr;
 };
 
-#include "G4Polycone.icc"
+#  include "G4Polycone.icc"
 
 #endif
 

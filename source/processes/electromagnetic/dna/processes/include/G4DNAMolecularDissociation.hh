@@ -31,8 +31,8 @@
 // We would be very happy hearing from you, send us your feedback! :)
 //
 // In order for Geant4-DNA to be maintained and still open-source,
-// article citations are crucial. 
-// If you use Geant4-DNA chemistry and you publish papers about your software, 
+// article citations are crucial.
+// If you use Geant4-DNA chemistry and you publish papers about your software,
 // in addition to the general paper on Geant4-DNA:
 //
 // Int. J. Model. Simul. Sci. Comput. 1 (2010) 157–178
@@ -41,12 +41,13 @@
 // reference papers on chemistry:
 //
 // J. Comput. Phys. 274 (2014) 841-882
-// Prog. Nucl. Sci. Tec. 2 (2011) 503-508 
+// Prog. Nucl. Sci. Tec. 2 (2011) 503-508
 
-
-#pragma once
+#ifndef G4DNAMOLECULARDISSOCIATION_HH
+#define G4DNAMOLECULARDISSOCIATION_HH
 
 #include "G4VITRestDiscreteProcess.hh"
+
 #include <map>
 
 class G4ParticleChange;
@@ -54,15 +55,16 @@ class G4VMolecularDissociationDisplacer;
 class G4MoleculeDefinition;
 class G4VUserBrownianAction;
 /**
-  * G4DNAMolecularDissociation should be called only for molecules.
-  * It will dissociate the molecules using the decay associated to
-  * this molecule and if a displacement scheme has been registered,
-  * it will place the products to the expected position.
-  */
+ * G4DNAMolecularDissociation should be called only for molecules.
+ * It will dissociate the molecules using the decay associated to
+ * this molecule and if a displacement scheme has been registered,
+ * it will place the products to the expected position.
+ */
 
 class G4DNAMolecularDissociation : public G4VITRestDiscreteProcess
 {
-public:
+  public:
+
     G4DNAMolecularDissociation(const G4String& processName = "DNAMolecularDecay",
                                G4ProcessType type = fDecay);
     G4DNAMolecularDissociation() = delete;
@@ -75,8 +77,7 @@ public:
 
     G4bool IsApplicable(const G4ParticleDefinition&) override;
 
-    G4double PostStepGetPhysicalInteractionLength(const G4Track& track,
-                                                  G4double previousStepSize,
+    G4double PostStepGetPhysicalInteractionLength(const G4Track& track, G4double previousStepSize,
                                                   G4ForceCondition* condition) override;
 
     G4double AtRestGetPhysicalInteractionLength(const G4Track& track,
@@ -96,16 +97,16 @@ public:
     void SetDisplacer(Species*, Displacer*);
     Displacer* GetDisplacer(Species*);
 
-protected:
+  protected:
+
     virtual G4VParticleChange* DecayIt(const G4Track&, const G4Step&);
 
     G4double GetMeanLifeTime(const G4Track&, G4ForceCondition*) override;
 
-    G4double GetMeanFreePath(const G4Track&,
-                             G4double,
-                             G4ForceCondition*) override;
+    G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*) override;
 
-private:
+  private:
+
     using DisplacementMap = std::map<Species*, std::unique_ptr<Displacer>>;
     G4VUserBrownianAction* fpBrownianAction = nullptr;
     G4bool fDecayAtFixedTime;
@@ -113,3 +114,4 @@ private:
     G4int fVerbose;
 };
 
+#endif

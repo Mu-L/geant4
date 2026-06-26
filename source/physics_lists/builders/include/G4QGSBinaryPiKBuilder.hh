@@ -36,41 +36,39 @@
 //
 //----------------------------------------------------------------------------
 //
-#ifndef G4QGSBinaryPiKBuilder_h
-#define G4QGSBinaryPiKBuilder_h 1
+#ifndef G4QGSBINARYPIKBUILDER_HH
+#define G4QGSBINARYPIKBUILDER_HH
 
-#include "globals.hh"
-
+#include "G4BinaryCascade.hh"
+#include "G4ExcitedStringDecay.hh"
 #include "G4HadronElasticProcess.hh"
 #include "G4HadronInelasticProcess.hh"
-#include "G4VPiKBuilder.hh"
-
-#include "G4TheoFSGenerator.hh"
-#include "G4BinaryCascade.hh"
+#include "G4QGSMFragmentation.hh"
 #include "G4QGSModel.hh"
 #include "G4QGSParticipants.hh"
-#include "G4QGSMFragmentation.hh"
-#include "G4ExcitedStringDecay.hh"
 #include "G4QuasiElasticChannel.hh"
-
+#include "G4TheoFSGenerator.hh"
+#include "G4VPiKBuilder.hh"
+#include "globals.hh"
 
 class G4QGSBinaryPiKBuilder : public G4VPiKBuilder
 {
-  public: 
-    G4QGSBinaryPiKBuilder(G4bool quasiElastic=false);
+  public:
+
+    G4QGSBinaryPiKBuilder(G4bool quasiElastic = false);
     virtual ~G4QGSBinaryPiKBuilder();
 
-    virtual void Build(G4HadronElasticProcess *) final override {}
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
-    
-    virtual void SetMinEnergy(G4double aM) final override {theMin = aM;}
+    virtual void Build(G4HadronElasticProcess*) final override {}
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
-    using G4VPiKBuilder::Build; //Prevent compiler warning
+    virtual void SetMinEnergy(G4double aM) final override { theMin = aM; }
+
+    using G4VPiKBuilder::Build;  // Prevent compiler warning
 
   private:
-    G4TheoFSGenerator * theModel;
+
+    G4TheoFSGenerator* theModel;
     G4double theMin;
 };
 
 #endif
-

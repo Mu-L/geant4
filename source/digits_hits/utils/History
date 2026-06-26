@@ -6,6 +6,17 @@ It must **not** be used as a substitute for writing good git commit messages!
 
 -------------------------------------------------------------------------------
 
+## 2026-04-29 Makoto Asai (detutil-V11-04-01)
+- Polish drawing methods of scorers
+ - Add options to refresh or overlay new scoring mesh
+ - Add options to write more than one color charts
+ - Optimize the background black painting behind the texts in color chart
+ - Add/modify drawing and related UI commands based on above changes
+ - Clean up the implementation of log-scale color map 
+
+## 2026-04-21 Akinori Kimura (detutil-V11-04-00)
+- Added draw method for Probe
+
 ## 2024-07-15 Gabriele Cosmo (detutil-V11-02-01)
 - Fixed additional Coverity defect in G4VScoringMesh.
 

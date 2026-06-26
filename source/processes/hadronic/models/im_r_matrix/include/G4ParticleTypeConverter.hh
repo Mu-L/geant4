@@ -34,37 +34,88 @@
 
 class G4ParticleTypeConverter
 {
-public:
+  public:
 
-  enum GenericType { NUCLEON, 
-		     N1440, N1520, N1535, N1650, N1675, N1680, N1700, N1710, N1720, N1900, N1990, N2090, N2190, N2220, N2250,
-		     D1232, D1600, D1620, D1700, D1900, D1905, D1910, D1920, D1930, D1950,
-		     L1405, L1520, L1600, L1670, L1690, L1800, L1810, L1820, L1830, L1890, L2100, L2110,
-		     Sigma, S1385, S1660, S1670, S1750, S1775, S1915, S1940, S2030,
-		     X1530, X1690, X1820, X1950, X2030,
-		     GAMMA, PION, KAON, ETA, RHO, omega, Lambda, UNKNOWN };
+    enum GenericType
+    {
+      NUCLEON,
+      N1440,
+      N1520,
+      N1535,
+      N1650,
+      N1675,
+      N1680,
+      N1700,
+      N1710,
+      N1720,
+      N1900,
+      N1990,
+      N2090,
+      N2190,
+      N2220,
+      N2250,
+      D1232,
+      D1600,
+      D1620,
+      D1700,
+      D1900,
+      D1905,
+      D1910,
+      D1920,
+      D1930,
+      D1950,
+      L1405,
+      L1520,
+      L1600,
+      L1670,
+      L1690,
+      L1800,
+      L1810,
+      L1820,
+      L1830,
+      L1890,
+      L2100,
+      L2110,
+      Sigma,
+      S1385,
+      S1660,
+      S1670,
+      S1750,
+      S1775,
+      S1915,
+      S1940,
+      S2030,
+      X1530,
+      X1690,
+      X1820,
+      X1950,
+      X2030,
+      GAMMA,
+      PION,
+      KAON,
+      ETA,
+      RHO,
+      omega,
+      Lambda,
+      UNKNOWN
+    };
 
-  G4ParticleTypeConverter();
+    G4ParticleTypeConverter();
 
-  GenericType GetGenericType(const G4ParticleDefinition* const aParticleDef) const;
-  GenericType GetGenericType(const G4KineticTrack& aTrack) const;
-  GenericType GetGenericType(const G4String& aParticleName) const;
+    GenericType GetGenericType(const G4ParticleDefinition* const aParticleDef) const;
+    GenericType GetGenericType(const G4KineticTrack& aTrack) const;
+    GenericType GetGenericType(const G4String& aParticleName) const;
 
-  G4int GetUrqmdItyp(GenericType gType) const;
-  G4int GetUrqmdItyp(const G4ParticleDefinition* aParticleDef) const;
+    G4int GetUrqmdItyp(GenericType gType) const;
+    G4int GetUrqmdItyp(const G4ParticleDefinition* aParticleDef) const;
 
-  const G4ParticleDefinition* FindIso3State(const GenericType gType, const G4int isospin3) const;
+    const G4ParticleDefinition* FindIso3State(const GenericType gType, const G4int isospin3) const;
 
-private:
+  private:
 
-  typedef std::vector<std::pair<const G4ParticleDefinition*, GenericType> >::const_iterator MapIterator; 
-  std::vector<std::pair<const G4ParticleDefinition*, GenericType> > defMap;
-
+    typedef std::vector<std::pair<const G4ParticleDefinition*, GenericType>>::const_iterator
+      MapIterator;
+    std::vector<std::pair<const G4ParticleDefinition*, GenericType>> defMap;
 };
 
-
 #endif
-
-
-
-

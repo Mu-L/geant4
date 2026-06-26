@@ -32,19 +32,21 @@
 //  New impelemenataion as an utility class  H.Kurashige, 14 July 2004
 // ----------------------------------------------------------------
 
-#ifndef G4Gamma_h
-#define G4Gamma_h 1
+#ifndef G4GAMMA_HH
+#define G4GAMMA_HH
 
 #include "G4ParticleDefinition.hh"
 
 class G4Gamma : public G4ParticleDefinition
 {
   public:
+
     static G4Gamma* Definition();
     static G4Gamma* GammaDefinition();
     static G4Gamma* Gamma();
 
   private:  // hide constructor as private
+
     G4Gamma() {}
     ~G4Gamma() override = default;
 

@@ -41,6 +41,7 @@
 /**
  * @brief G4DoLoMcPriRK34 implements the Dormand-Lockyer-McGorrigan-Prince-6-3-4
  * non-FSAL method ( 6 stage, 3rd & 4th order embedded Runge-Kutta method ).
+ * @ingroup geometry_magneticfield
  */
 
 class G4DoLoMcPriRK34 : public G4MagIntegratorStepper
@@ -53,9 +54,7 @@ class G4DoLoMcPriRK34 : public G4MagIntegratorStepper
      *  @param[in] numberOfVariables The number of integration variables.
      *  @param[in] primary Flag for initialisation of the auxiliary stepper.
      */
-    G4DoLoMcPriRK34( G4EquationOfMotion* EqRhs,
-                     G4int numberOfVariables = 6,
-                     G4bool primary = true );
+    G4DoLoMcPriRK34(G4EquationOfMotion* EqRhs, G4int numberOfVariables = 6, G4bool primary = true);
 
     /**
      * Destructor.
@@ -66,7 +65,7 @@ class G4DoLoMcPriRK34 : public G4MagIntegratorStepper
      * Copy constructor and assignment operator not allowed.
      */
     G4DoLoMcPriRK34(const G4DoLoMcPriRK34&) = delete;
-    G4DoLoMcPriRK34& operator=(const G4DoLoMcPriRK34&) = delete; 
+    G4DoLoMcPriRK34& operator=(const G4DoLoMcPriRK34&) = delete;
 
     /**
      * The stepper for the Runge Kutta integration.
@@ -79,12 +78,9 @@ class G4DoLoMcPriRK34 : public G4MagIntegratorStepper
      *  @param[out] yout Integration output.
      *  @param[out] yerr The estimated error.
      */
-    void Stepper( const G4double y[],
-                  const G4double dydx[],
-                        G4double h,
-                        G4double yout[],
-                        G4double yerr[] ) override ;
-    
+    void Stepper(const G4double y[], const G4double dydx[], G4double h, G4double yout[],
+                 G4double yerr[]) override;
+
     /**
      * Interface method for interpolation setup. Does nothing here.
      */
@@ -98,14 +94,10 @@ class G4DoLoMcPriRK34 : public G4MagIntegratorStepper
      *  @param[out] yOut Interpolation output.
      *  @param[out] tau Fraction of step.
      */
-    void Interpolate( const G4double yInput[],
-                      const G4double dydx[],
-                      const G4double Step,
-                            G4double yOut[],
-                            G4double tau );
-    void Interpolate( G4double tau,
-                      G4double yOut[]);
-    
+    void Interpolate(const G4double yInput[], const G4double dydx[], const G4double Step,
+                     G4double yOut[], G4double tau);
+    void Interpolate(G4double tau, G4double yOut[]);
+
     /**
      * Returns the distance from chord line.
      */
@@ -116,22 +108,20 @@ class G4DoLoMcPriRK34 : public G4MagIntegratorStepper
      */
     inline G4int IntegratorOrder() const override { return 3; }
 
-
     /**
      * Returns the stepper type-ID, "kDoLoMcPriRK34".
      */
     inline G4StepperType StepperType() const override { return kDoLoMcPriRK34; }
-    
-  private :
-    
+
+  private:
+
     G4double *ak2, *ak3, *ak4, *ak5, *ak6, *yTemp, *yIn;
-    
+
     G4double fLastStepLength = -1.0;
 
     /** For DistChord calculations. */
-    G4double *fLastInitialVector, *fLastFinalVector,
-             *fLastDyDx, *fMidVector, *fMidError;
-    
+    G4double *fLastInitialVector, *fLastFinalVector, *fLastDyDx, *fMidVector, *fMidError;
+
     G4DoLoMcPriRK34* fAuxStepper = nullptr;
 };
 

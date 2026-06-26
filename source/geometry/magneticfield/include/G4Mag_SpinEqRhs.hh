@@ -36,15 +36,18 @@
 #ifndef G4MAG_SPIN_EQRHS_HH
 #define G4MAG_SPIN_EQRHS_HH
 
-#include "G4Types.hh"
-#include "G4Mag_EqRhs.hh"
 #include "G4ChargeState.hh"
+#include "G4Mag_EqRhs.hh"
+#include "G4Types.hh"
 
 class G4MagneticField;
 
 /**
  * @brief G4Mag_SpinEqRhs defines the equation of motion for a particle with
- * spin in a pure magnetic field. The three components of the particle's spin
+ * spin in a pure magnetic field.
+ * @ingroup geometry_magneticfield
+ *
+ * The three components of the particle's spin
  * are treated utilising BMT equation.
  */
 
@@ -56,7 +59,7 @@ class G4Mag_SpinEqRhs : public G4Mag_EqRhs
      * Constructor for G4Mag_SpinEqRhs.
      *  @param[in] MagField Pointer to the associated magnetic field.
      */
-    G4Mag_SpinEqRhs( G4MagneticField* MagField );
+    G4Mag_SpinEqRhs(G4MagneticField* MagField);
 
     /**
      * Default Destructor.
@@ -66,9 +69,8 @@ class G4Mag_SpinEqRhs : public G4Mag_EqRhs
     /**
      * Sets the charge momentum mass value.
      */
-    void SetChargeMomentumMass(G4ChargeState particleCharge,
-                               G4double MomentumXc,
-                               G4double mass) override; 
+    void SetChargeMomentumMass(G4ChargeState particleCharge, G4double MomentumXc,
+                               G4double mass) override;
 
     /**
      * Calculates the value of the derivative, given the value of the field.
@@ -76,9 +78,7 @@ class G4Mag_SpinEqRhs : public G4Mag_EqRhs
      *  @param[in] B Field value.
      *  @param[out] dydx Derivatives array.
      */
-    void EvaluateRhsGivenB( const G4double y[],
-                            const G4double B[3],
-                                  G4double dydx[] ) const override;
+    void EvaluateRhsGivenB(const G4double y[], const G4double B[3], G4double dydx[]) const override;
 
     /**
      * Setter and getter for the magnetic anomaly.
@@ -93,9 +93,9 @@ class G4Mag_SpinEqRhs : public G4Mag_EqRhs
 
   private:
 
-    G4double charge=0.0, mass=0.0, magMoment=0.0, spin=0.0;
-    G4double omegac=0.0, anomaly=0.0011659208;
-    G4double beta=0.0, gamma=0.0;
+    G4double charge = 0.0, mass = 0.0, magMoment = 0.0, spin = 0.0;
+    G4double omegac = 0.0, anomaly = 0.0011659208;
+    G4double beta = 0.0, gamma = 0.0;
 };
 
 #endif

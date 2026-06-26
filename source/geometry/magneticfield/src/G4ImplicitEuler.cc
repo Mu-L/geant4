@@ -38,21 +38,20 @@
 // --------------------------------------------------------------------
 
 #include "G4ImplicitEuler.hh"
+
 #include "G4ThreeVector.hh"
 
 /////////////////////////////////////////////////////////////////////////
 //
 // Constructor
 
-G4ImplicitEuler::G4ImplicitEuler(G4EquationOfMotion* EqRhs, 
-                                 G4int numberOfVariables)
+G4ImplicitEuler::G4ImplicitEuler(G4EquationOfMotion* EqRhs, G4int numberOfVariables)
   : G4MagErrorStepper(EqRhs, numberOfVariables)
 {
-  unsigned int noVariables = std::max(numberOfVariables,8); // For Time .. 7+1
-  dydxTemp = new G4double[noVariables] ;
-  yTemp    = new G4double[noVariables] ;
+  unsigned int noVariables = std::max(numberOfVariables, 8);  // For Time .. 7+1
+  dydxTemp = new G4double[noVariables];
+  yTemp = new G4double[noVariables];
 }
-
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -60,37 +59,34 @@ G4ImplicitEuler::G4ImplicitEuler(G4EquationOfMotion* EqRhs,
 //
 G4ImplicitEuler::~G4ImplicitEuler()
 {
-  delete [] dydxTemp;
-  delete [] yTemp;
+  delete[] dydxTemp;
+  delete[] yTemp;
 }
 
 //////////////////////////////////////////////////////////////////////
 //
 // DumbStepper
 //
-void
-G4ImplicitEuler::DumbStepper( const G4double yIn[],
-                              const G4double dydx[],
-                                    G4double h,
-                                    G4double yOut[] )
+void G4ImplicitEuler::DumbStepper(const G4double yIn[], const G4double dydx[], G4double h,
+                                  G4double yOut[])
 {
   const G4int numberOfVariables = GetNumberOfVariables();
 
   // Initialise time to t0, needed when it is not updated by the integration.
   //
-  yTemp[7] = yOut[7] = yIn[7];   //  Better to set it to NaN;  // TODO
+  yTemp[7] = yOut[7] = yIn[7];  //  Better to set it to NaN;  // TODO
 
-  for( G4int i = 0; i < numberOfVariables; ++i ) 
+  for (G4int i = 0; i < numberOfVariables; ++i)
   {
-    yTemp[i] = yIn[i] + h*dydx[i] ;          
+    yTemp[i] = yIn[i] + h * dydx[i];
   }
-  
-  RightHandSide(yTemp,dydxTemp);
-  
-  for( G4int i = 0; i < numberOfVariables; ++i ) 
+
+  RightHandSide(yTemp, dydxTemp);
+
+  for (G4int i = 0; i < numberOfVariables; ++i)
   {
-    yOut[i] = yIn[i] + 0.5 * h * ( dydx[i] + dydxTemp[i] );
+    yOut[i] = yIn[i] + 0.5 * h * (dydx[i] + dydxTemp[i]);
   }
 
   return;
-}  
+}

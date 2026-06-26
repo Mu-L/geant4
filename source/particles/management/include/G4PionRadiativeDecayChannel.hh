@@ -35,8 +35,8 @@
 // Reference: M. Blecher, TRIUMF/PIENU Technote
 //            "Inclusion of pi->enug in the Monte Carlo"
 // --------------------------------------------------------------------
-#ifndef G4PionRadiativeDecayChannel_hh
-#define G4PionRadiativeDecayChannel_hh 1
+#ifndef G4PIONRADIATIVEDECAYCHANNEL_HH
+#define G4PIONRADIATIVEDECAYCHANNEL_HH
 
 #include "G4ThreeVector.hh"
 #include "G4VDecayChannel.hh"
@@ -46,12 +46,14 @@
 class G4PionRadiativeDecayChannel : public G4VDecayChannel
 {
   public:
+
     G4PionRadiativeDecayChannel(const G4String& theParentName, G4double theBR);
     ~G4PionRadiativeDecayChannel() override = default;
 
     G4DecayProducts* DecayIt(G4double) override;
 
   protected:
+
     G4PionRadiativeDecayChannel() = default;
 
     // Copy constructor and assignment operator

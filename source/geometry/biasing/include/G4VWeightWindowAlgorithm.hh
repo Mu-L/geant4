@@ -26,7 +26,7 @@
 // G4VWeightWindowAlgorithm
 //
 // Class description:
-// 
+//
 // Interface class for a weight window algorithm. It calculates
 // the number of tracks and their weight according to the inital
 // track weight and the lower energy bound in the energy-space
@@ -41,7 +41,10 @@
 
 /**
  * @brief G4VWeightWindowAlgorithm is an interface class for a weight window
- * algorithm. It calculates the number of tracks and their weight according to
+ * algorithm.
+ * @ingroup geometry_biasing
+ *
+ * It calculates the number of tracks and their weight according to
  * the inital track weight and the lower energy bound in the energy-space cell.
  */
 
@@ -59,8 +62,7 @@ class G4VWeightWindowAlgorithm
      * Calculates the number of tracks and their weight according
      * to the initial track weight and the lower energy bound.
      */
-    virtual G4Nsplit_Weight Calculate(G4double init_w,
-                                      G4double lowerWeightBound) const = 0;
+    virtual G4Nsplit_Weight Calculate(G4double init_w, G4double lowerWeightBound) const = 0;
 };
 
 #endif

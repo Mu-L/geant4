@@ -48,30 +48,28 @@
 // specific to this type of entanglement can be posted here.  See
 // G4VEntanglementClipBoard.hh for more detail on how to use this class.
 
-#ifndef G4eplusAnnihilationEntanglementClipBoard_hh
-#define G4eplusAnnihilationEntanglementClipBoard_hh
+#ifndef G4EPLUSANNIHILATIONENTANGLEMENTCLIPBOARD_HH
+#define G4EPLUSANNIHILATIONENTANGLEMENTCLIPBOARD_HH
 
 #include "G4VEntanglementClipBoard.hh"
 
-class G4eplusAnnihilationEntanglementClipBoard
-: public G4VEntanglementClipBoard
+class G4eplusAnnihilationEntanglementClipBoard : public G4VEntanglementClipBoard
 {
-public:
-  G4eplusAnnihilationEntanglementClipBoard()
-  : fComptonCosTheta1(0.)
-  , fComptonPhi1(0.)
-  {}
-  ~G4eplusAnnihilationEntanglementClipBoard() {}
+  public:
 
-  // Cos(theta) and phi of the first Compton scattering of the first photon
-  void SetComptonCosTheta1(G4double cosTheta1) {fComptonCosTheta1 = cosTheta1;}
-  void SetComptonPhi1(G4double phi1) {fComptonPhi1 = phi1;}
-  G4double GetComptonCosTheta1() const {return fComptonCosTheta1;}
-  G4double GetComptonPhi1() const {return fComptonPhi1;}
+    G4eplusAnnihilationEntanglementClipBoard() : fComptonCosTheta1(0.), fComptonPhi1(0.) {}
+    ~G4eplusAnnihilationEntanglementClipBoard() {}
 
-protected:
-  // Cos(theta) and phi of the first Compton scattering of the first photon
-  G4double fComptonCosTheta1, fComptonPhi1;
+    // Cos(theta) and phi of the first Compton scattering of the first photon
+    void SetComptonCosTheta1(G4double cosTheta1) { fComptonCosTheta1 = cosTheta1; }
+    void SetComptonPhi1(G4double phi1) { fComptonPhi1 = phi1; }
+    G4double GetComptonCosTheta1() const { return fComptonCosTheta1; }
+    G4double GetComptonPhi1() const { return fComptonPhi1; }
+
+  protected:
+
+    // Cos(theta) and phi of the first Compton scattering of the first photon
+    G4double fComptonCosTheta1, fComptonPhi1;
 };
 
 #endif

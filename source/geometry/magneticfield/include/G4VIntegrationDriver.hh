@@ -36,7 +36,7 @@
 // methods), enhanced RK methods and alternatives such as the
 // Bulirsch-Stoer and multi-step methods.
 //
-// The drivers' key mission is to insure that the error is below set values. 
+// The drivers' key mission is to insure that the error is below set values.
 
 // Author: Dmitry Sorokin (CERN, Google Summer of Code 2017), 20.10.2017
 // Supervision: John Apostolakis (CERN)
@@ -44,9 +44,9 @@
 #ifndef G4VINTEGRATION_DRIVER_HH
 #define G4VINTEGRATION_DRIVER_HH
 
-#include "G4Types.hh"
-#include "G4FieldTrack.hh"
 #include "G4EquationOfMotion.hh"
+#include "G4FieldTrack.hh"
+#include "G4Types.hh"
 
 class G4MagIntegratorStepper;
 
@@ -67,9 +67,7 @@ class G4VIntegrationDriver
      *  @param[in] chordDistance Maximum sagitta distance.
      *  @returns The length of step taken.
      */
-    virtual G4double AdvanceChordLimited(G4FieldTrack& track,
-                                         G4double hstep,
-                                         G4double eps,
+    virtual G4double AdvanceChordLimited(G4FieldTrack& track, G4double hstep, G4double eps,
                                          G4double chordDistance) = 0;
 
     /**
@@ -81,10 +79,9 @@ class G4VIntegrationDriver
      *  @param[in] hinitial Initial minimum integration step.
      *  @returns true if integration succeeds.
      */
-    virtual G4bool AccurateAdvance(G4FieldTrack& track,
-                                   G4double hstep,
-                                   G4double eps, // Requested y_err/hstep
-                                   G4double hinitial = 0 ) = 0;
+    virtual G4bool AccurateAdvance(G4FieldTrack& track, G4double hstep,
+                                   G4double eps,  // Requested y_err/hstep
+                                   G4double hinitial = 0) = 0;
 
     /**
      * Setter and getter for the equation of motion.
@@ -96,7 +93,7 @@ class G4VIntegrationDriver
      * Method for compatibility -- relevant only for G4MagIntegratorDriver.
      */
     virtual void RenewStepperAndAdjust(G4MagIntegratorStepper* pItsStepper);
-   
+
     /**
      * Setter and getter for verbosity.
      */
@@ -122,29 +119,28 @@ class G4VIntegrationDriver
     /**
      * Writes out to stream the parameters/state of the driver.
      */
-    virtual void StreamInfo( std::ostream& os ) const = 0;
+    virtual void StreamInfo(std::ostream& os) const = 0;
 
     /**
      * Streaming operator.
      */
-    friend std::ostream& operator<<( std::ostream& os, const G4VIntegrationDriver& id);
+    friend std::ostream& operator<<(std::ostream& os, const G4VIntegrationDriver& id);
 
     // ------------------------------------------------------------------------
 
     //[[deprecated("will be removed")]]
-    virtual G4bool QuickAdvance(G4FieldTrack& /*track*/,   // INOUT
-                                const G4double /*dydx*/[],
-                                G4double /*hstep*/,
-                                G4double& /*dchord_step*/,
-                                G4double& /*dyerr*/) { return false; }
+    virtual G4bool QuickAdvance(G4FieldTrack& /*track*/,  // INOUT
+                                const G4double /*dydx*/[], G4double /*hstep*/,
+                                G4double& /*dchord_step*/, G4double& /*dyerr*/)
+    {
+      return false;
+    }
 
     //[[deprecated("will be removed")]]
-    virtual void GetDerivatives(const G4FieldTrack& track,
-                                G4double dydx[]) const = 0;
+    virtual void GetDerivatives(const G4FieldTrack& track, G4double dydx[]) const = 0;
 
     //[[deprecated("will be removed")]]
-    virtual void GetDerivatives(const G4FieldTrack& track,
-                                G4double dydx[],
+    virtual void GetDerivatives(const G4FieldTrack& track, G4double dydx[],
                                 G4double field[]) const = 0;
 
     //[[deprecated("use GetEquationOfMotion() instead of GetStepper()->GetEquationOfMotion()")]]
@@ -152,12 +148,12 @@ class G4VIntegrationDriver
     virtual G4MagIntegratorStepper* GetStepper() = 0;
 
     //[[deprecated("will be removed")]]
-    virtual G4double ComputeNewStepSize(G4double errMaxNorm, // normalised error
+    virtual G4double ComputeNewStepSize(G4double errMaxNorm,  // normalised error
                                         G4double hstepCurrent) = 0;
-      // Taking the last step's normalised error, calculate
-      // a step size for the next step.
-      // - Can limit the next step's size within a factor of the current one.
-   
+    // Taking the last step's normalised error, calculate
+    // a step size for the next step.
+    // - Can limit the next step's size within a factor of the current one.
+
   protected:
 
     static constexpr G4double max_stepping_increase = 5;

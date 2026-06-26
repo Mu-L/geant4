@@ -28,8 +28,9 @@
 // Authors: G.Cosmo, H.Kurashige - 1998
 // --------------------------------------------------------------------
 
-#include "G4VProcess.hh"
 #include "G4ProcessVector.hh"
+
+#include "G4VProcess.hh"
 
 // --------------------------------------------------------------------
 /////// Constructors
@@ -44,14 +45,13 @@ G4ProcessVector::G4ProcessVector(std::size_t siz)
   pProcVector = new G4ProcVector(siz);
 }
 
-G4ProcessVector::G4ProcessVector(const G4ProcessVector& right)
-  : pProcVector(nullptr)
+G4ProcessVector::G4ProcessVector(const G4ProcessVector& right) : pProcVector(nullptr)
 {
   pProcVector = new G4ProcVector();
-  
+
   // copy all contents in  pProcVector
   //
-  for (auto i=right.pProcVector->cbegin(); i!=right.pProcVector->cend(); ++i)
+  for (auto i = right.pProcVector->cbegin(); i != right.pProcVector->cend(); ++i)
   {
     pProcVector->push_back(*i);
   }
@@ -64,7 +64,7 @@ G4ProcessVector::~G4ProcessVector()
 {
   // delete pProcVector
   //
-  if (pProcVector != nullptr )
+  if (pProcVector != nullptr)
   {
     pProcVector->clear();
     delete pProcVector;
@@ -79,17 +79,17 @@ G4ProcessVector& G4ProcessVector::operator=(const G4ProcessVector& right)
   if (this != &right)
   {
     // delete pProcVector
-    if (pProcVector != nullptr )
+    if (pProcVector != nullptr)
     {
       pProcVector->clear();
       delete pProcVector;
     }
-    
+
     pProcVector = new G4ProcVector();
-    
+
     // copy all contents in  pProcVector
     //
-    for (auto i=right.pProcVector->cbegin(); i!=right.pProcVector->cend(); ++i)
+    for (auto i = right.pProcVector->cbegin(); i != right.pProcVector->cend(); ++i)
     {
       pProcVector->push_back(*i);
     }
@@ -101,21 +101,21 @@ G4ProcessVector& G4ProcessVector::operator=(const G4ProcessVector& right)
 //
 std::size_t G4ProcessVector::index(G4VProcess* aProcess) const
 {
-  std::size_t j=0;
-  for (auto it=pProcVector->cbegin();it!=pProcVector->cend(); ++j, ++it)
+  std::size_t j = 0;
+  for (auto it = pProcVector->cbegin(); it != pProcVector->cend(); ++j, ++it)
   {
-    if (*(*it)==*aProcess) return j;
+    if (*(*it) == *aProcess) return j;
   }
   return -1;
 }
- 
+
 // --------------------------------------------------------------------
 //
 G4bool G4ProcessVector::contains(G4VProcess* aProcess) const
 {
-  for (auto it=pProcVector->cbegin();it!=pProcVector->cend(); ++it)
+  for (auto it = pProcVector->cbegin(); it != pProcVector->cend(); ++it)
   {
-    if (*(*it)==*aProcess) return true;
+    if (*(*it) == *aProcess) return true;
   }
   return false;
 }
@@ -124,15 +124,16 @@ G4bool G4ProcessVector::contains(G4VProcess* aProcess) const
 //
 G4bool G4ProcessVector::insertAt(G4int i, G4VProcess* aProcess)
 {
-  if ( (i<0) || (i>G4int(pProcVector->size())) ) return false;
-  if (i==G4int(pProcVector->size()))
+  if ((i < 0) || (i > G4int(pProcVector->size()))) return false;
+  if (i == G4int(pProcVector->size()))
   {
     pProcVector->push_back(aProcess);
   }
   else
   {
-    auto it=pProcVector->cbegin();
-    for(G4int j=0; j!=i; ++j) ++it;
+    auto it = pProcVector->cbegin();
+    for (G4int j = 0; j != i; ++j)
+      ++it;
     pProcVector->insert(it, aProcess);
   }
   return true;
@@ -142,8 +143,9 @@ G4bool G4ProcessVector::insertAt(G4int i, G4VProcess* aProcess)
 //
 G4VProcess* G4ProcessVector::removeAt(G4int i)
 {
-  auto it=pProcVector->cbegin();
-  for(std::size_t j=0; j<pProcVector->size() && G4int(j)<i; ++j) ++it;
+  auto it = pProcVector->cbegin();
+  for (std::size_t j = 0; j < pProcVector->size() && G4int(j) < i; ++j)
+    ++it;
   G4VProcess* rValue = *it;
   pProcVector->erase(it);
   return rValue;

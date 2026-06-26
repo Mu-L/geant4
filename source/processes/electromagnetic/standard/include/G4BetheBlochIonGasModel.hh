@@ -31,7 +31,7 @@
 //
 // File name:     G4BetheBlochIonGasModel
 //
-// Author:        Vladimir Ivanchenko 
+// Author:        Vladimir Ivanchenko
 //
 // Creation date: 20.05.2010
 //
@@ -46,42 +46,38 @@
 // -------------------------------------------------------------------
 //
 
-#ifndef G4BetheBlochIonGasModel_h
-#define G4BetheBlochIonGasModel_h 1
+#ifndef G4BETHEBLOCHIONGASMODEL_HH
+#define G4BETHEBLOCHIONGASMODEL_HH
 
 #include "G4BetheBlochModel.hh"
 
 class G4BetheBlochIonGasModel : public G4BetheBlochModel
 {
+  public:
 
-public:
+    explicit G4BetheBlochIonGasModel(const G4ParticleDefinition* p = nullptr,
+                                     const G4String& nam = "BetheBlochGasIon");
 
-  explicit G4BetheBlochIonGasModel(const G4ParticleDefinition* p = nullptr,
-				   const G4String& nam = "BetheBlochGasIon");
+    ~G4BetheBlochIonGasModel() override = default;
 
-  ~G4BetheBlochIonGasModel() override = default;
+    // access dynamic charge
+    G4double ChargeSquareRatio(const G4Track& track) final;
 
-  // access dynamic charge
-  G4double ChargeSquareRatio(const G4Track& track) final;
+    // access current dynamic charge
+    G4double GetChargeSquareRatio(const G4ParticleDefinition* p, const G4Material* mat,
+                                  G4double kineticEnergy) final;
 
-  // access current dynamic charge
-  G4double GetChargeSquareRatio(const G4ParticleDefinition* p,
-				const G4Material* mat,
-                                G4double kineticEnergy) final;
+    // return dynamic charge
+    G4double GetParticleCharge(const G4ParticleDefinition* p, const G4Material* mat,
+                               G4double kineticEnergy) final;
 
-  // return dynamic charge
-  G4double GetParticleCharge(const G4ParticleDefinition* p,
-			     const G4Material* mat,
-			     G4double kineticEnergy) final;
+    // hide assignment operator
+    G4BetheBlochIonGasModel& operator=(const G4BetheBlochIonGasModel& right) = delete;
+    G4BetheBlochIonGasModel(const G4BetheBlochIonGasModel&) = delete;
 
-  // hide assignment operator
-  G4BetheBlochIonGasModel & operator=
-  (const  G4BetheBlochIonGasModel &right) = delete;
-  G4BetheBlochIonGasModel(const  G4BetheBlochIonGasModel&) = delete;
+  private:
 
-private:
-
-  G4double currentCharge;
+    G4double currentCharge;
 };
 
 #endif

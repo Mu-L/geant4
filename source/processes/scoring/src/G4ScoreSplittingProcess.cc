@@ -54,7 +54,8 @@ G4ScoreSplittingProcess::G4ScoreSplittingProcess(const G4String& processName, G4
   fSplitPreStepPoint = fSplitStep->GetPreStepPoint();
   fSplitPostStepPoint = fSplitStep->GetPostStepPoint();
 
-  if (verboseLevel > 0) {
+  if (verboseLevel > 0)
+  {
     G4cout << GetProcessName() << " is created " << G4endl;
   }
   fpEnergySplitter = new G4EnergySplitter();
@@ -131,7 +132,8 @@ G4VParticleChange* G4ScoreSplittingProcess::PostStepDoIt(const G4Track& track, c
     // Set the flag to make sure that Stepping Manager does the scoring
     pParticleChange->ProposeSteppingControl(NormalCondition);
   }
-  else {
+  else
+  {
     G4ThreeVector preStepPosition, postStepPosition, direction, finalPostStepPosition;
     pParticleChange->ProposeSteppingControl(AvoidHitInvocation);
 
@@ -157,7 +159,8 @@ G4VParticleChange* G4ScoreSplittingProcess::PostStepDoIt(const G4Track& track, c
     postStepPosition = preStepPosition;
     // Loop over the sub-parts of this step
     G4int iStep;
-    for (iStep = 0; iStep < numberVoxelsInStep; iStep++) {
+    for (iStep = 0; iStep < numberVoxelsInStep; iStep++)
+    {
       G4int idVoxel = -1;  // Voxel ID
       G4double stepLength = 0.0, energyLoss = 0.0;
 
@@ -179,7 +182,8 @@ G4VParticleChange* G4ScoreSplittingProcess::PostStepDoIt(const G4Track& track, c
       // Load the Step with the new values
       fSplitStep->SetStepLength(stepLength);
       fSplitStep->SetTotalEnergyDeposit(energyLoss);
-      if (iStep < numberVoxelsInStep - 1) {
+      if (iStep < numberVoxelsInStep - 1)
+      {
         fSplitStep->GetPostStepPoint()->SetStepStatus(fGeomBoundary);
         G4int nextVoxelId = -1;
         fpEnergySplitter->GetVoxelID(iStep + 1, nextVoxelId);
@@ -189,7 +193,8 @@ G4VParticleChange* G4ScoreSplittingProcess::PostStepDoIt(const G4Track& track, c
         fNewTouchableH = G4TouchableHandle(fNewTouchablePtr);
         fSplitPostStepPoint->SetTouchableHandle(fNewTouchableH);
       }
-      else {
+      else
+      {
         fSplitStep->GetPostStepPoint()->SetStepStatus(fullStepStatus);
         fSplitPostStepPoint->SetTouchableHandle(fFinalTouchableH);
       }
@@ -226,7 +231,8 @@ G4TouchableHistory* G4ScoreSplittingProcess::CreateTouchableForSubStep(G4int new
   G4VPhysicalVolume* curPhysicalVol = ptrNavHistory->GetTopVolume();
 
   EVolume curVolumeType = ptrNavHistory->GetTopVolumeType();
-  if (curVolumeType == kParameterised) {
+  if (curVolumeType == kParameterised)
+  {
     ptrNavHistory->BackLevel();
     // G4VPVParameterised parameterisedPV= pNewMother
     G4VPVParameterisation* curParamstn = curPhysicalVol->GetParameterisation();
@@ -238,7 +244,8 @@ G4TouchableHistory* G4ScoreSplittingProcess::CreateTouchableForSubStep(G4int new
 
     ptrNavHistory->NewLevel(curPhysicalVol, kParameterised, newVoxelNum);
   }
-  else {
+  else
+  {
     G4cout << " Current volume type is not Parameterised. " << G4endl;
     G4Exception(
       "G4ScoreSplittingProcess::CreateTouchableForSubStep", "ErrorRegularParamaterisation",
@@ -268,26 +275,32 @@ void G4ScoreSplittingProcess::Verbose(const G4Step& step) const
   G4cout << " StepLength : " << step.GetStepLength() / mm
          << "      TotalEnergyDeposit : " << step.GetTotalEnergyDeposit() / MeV << G4endl;
   G4cout << " PreStepPoint : " << step.GetPreStepPoint()->GetPhysicalVolume()->GetName() << " - ";
-  if (step.GetPreStepPoint()->GetProcessDefinedStep() != nullptr) {
+  if (step.GetPreStepPoint()->GetProcessDefinedStep() != nullptr)
+  {
     G4cout << step.GetPreStepPoint()->GetProcessDefinedStep()->GetProcessName();
   }
-  else {
+  else
+  {
     G4cout << "NoProcessAssigned";
   }
   G4cout << G4endl;
   G4cout << "                " << step.GetPreStepPoint()->GetPosition() << G4endl;
   G4cout << " PostStepPoint : ";
-  if (step.GetPostStepPoint()->GetPhysicalVolume() != nullptr) {
+  if (step.GetPostStepPoint()->GetPhysicalVolume() != nullptr)
+  {
     G4cout << step.GetPostStepPoint()->GetPhysicalVolume()->GetName();
   }
-  else {
+  else
+  {
     G4cout << "OutOfWorld";
   }
   G4cout << " - ";
-  if (step.GetPostStepPoint()->GetProcessDefinedStep() != nullptr) {
+  if (step.GetPostStepPoint()->GetProcessDefinedStep() != nullptr)
+  {
     G4cout << step.GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
   }
-  else {
+  else
+  {
     G4cout << "NoProcessAssigned";
   }
   G4cout << G4endl;
@@ -299,27 +312,33 @@ void G4ScoreSplittingProcess::Verbose(const G4Step& step) const
   G4cout << " PreStepPoint : " << fSplitStep->GetPreStepPoint()->GetPhysicalVolume()->GetName()
          << " [" << fSplitStep->GetPreStepPoint()->GetTouchable()->GetReplicaNumber() << " ]"
          << " - ";
-  if (fSplitStep->GetPreStepPoint()->GetProcessDefinedStep() != nullptr) {
+  if (fSplitStep->GetPreStepPoint()->GetProcessDefinedStep() != nullptr)
+  {
     G4cout << fSplitStep->GetPreStepPoint()->GetProcessDefinedStep()->GetProcessName();
   }
-  else {
+  else
+  {
     G4cout << "NoProcessAssigned";
   }
   G4cout << G4endl;
   G4cout << "                " << fSplitStep->GetPreStepPoint()->GetPosition() << G4endl;
   G4cout << " PostStepPoint : ";
-  if (fSplitStep->GetPostStepPoint()->GetPhysicalVolume() != nullptr) {
+  if (fSplitStep->GetPostStepPoint()->GetPhysicalVolume() != nullptr)
+  {
     G4cout << fSplitStep->GetPostStepPoint()->GetPhysicalVolume()->GetName() << " ["
            << fSplitStep->GetPostStepPoint()->GetTouchable()->GetReplicaNumber() << " ]";
   }
-  else {
+  else
+  {
     G4cout << "OutOfWorld";
   }
   G4cout << " - ";
-  if (fSplitStep->GetPostStepPoint()->GetProcessDefinedStep() != nullptr) {
+  if (fSplitStep->GetPostStepPoint()->GetProcessDefinedStep() != nullptr)
+  {
     G4cout << fSplitStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
   }
-  else {
+  else
+  {
     G4cout << "NoProcessAssigned";
   }
   G4cout << G4endl;

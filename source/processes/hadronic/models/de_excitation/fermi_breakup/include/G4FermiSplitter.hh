@@ -38,6 +38,7 @@
 class G4FermiSplitter
 {
   public:
+
     static G4double DecayWeight(const G4FermiFragmentVector& split, G4FermiAtomicMass atomicMass,
                                 G4double totalEnergy);
 

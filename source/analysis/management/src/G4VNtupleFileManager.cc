@@ -35,41 +35,39 @@
 
 using namespace G4Analysis;
 
-namespace {
+namespace
+{
 
 //_____________________________________________________________________________
-void NtupleMergingWarning(std::string_view className,
-                          std::string_view functionName,
+void NtupleMergingWarning(std::string_view className, std::string_view functionName,
                           const G4String& outputType)
 {
-  Warn("Ntuple merging is not available with " + outputType + " output.\n" +
-       "Setting is ignored.", className, functionName);
+  Warn("Ntuple merging is not available with " + outputType + " output.\n" + "Setting is ignored.",
+       className, functionName);
 }
 
-}
+}  // namespace
 
 //_____________________________________________________________________________
 G4VNtupleFileManager::G4VNtupleFileManager(const G4AnalysisManagerState& state, G4String fileType)
-  : fState(state),
-    fFileType(std::move(fileType))
+  : fState(state), fFileType(std::move(fileType))
 {}
 
 ///_____________________________________________________________________________
 void G4VNtupleFileManager::SetNtupleMerging(G4bool /*mergeNtuples*/,
-                   G4int /*nofReducedNtupleFiles*/)
+                                            G4int /*nofReducedNtupleFiles*/)
 {
-// The function is overridden in the managers which supports ntuple merging
-// Here we give just a warning that the feature is not available.
+  // The function is overridden in the managers which supports ntuple merging
+  // Here we give just a warning that the feature is not available.
 
   NtupleMergingWarning(fkClass, "SetNtupleMerging", fFileType);
 }
 
 //_____________________________________________________________________________
-void G4VNtupleFileManager::SetNtupleRowWise(G4bool /*rowWise*/,
-                                          G4bool /*rowMode*/)
+void G4VNtupleFileManager::SetNtupleRowWise(G4bool /*rowWise*/, G4bool /*rowMode*/)
 {
-// The function is overridden in the managers which supports ntuple merging
-// Here we give just a warning that the feature is not available.
+  // The function is overridden in the managers which supports ntuple merging
+  // Here we give just a warning that the feature is not available.
 
   NtupleMergingWarning(fkClass, "SetNtupleRowWise", fFileType);
 }
@@ -77,8 +75,8 @@ void G4VNtupleFileManager::SetNtupleRowWise(G4bool /*rowWise*/,
 //_____________________________________________________________________________
 void G4VNtupleFileManager::SetBasketSize(unsigned int /*basketSize*/)
 {
-// The function is overridden in the managers which supports ntuple merging
-// Here we give just a warning that the feature is not available.
+  // The function is overridden in the managers which supports ntuple merging
+  // Here we give just a warning that the feature is not available.
 
   NtupleMergingWarning(fkClass, "SetBasketSize", fFileType);
 }
@@ -86,8 +84,8 @@ void G4VNtupleFileManager::SetBasketSize(unsigned int /*basketSize*/)
 //_____________________________________________________________________________
 void G4VNtupleFileManager::SetBasketEntries(unsigned int /*basketEntries*/)
 {
-// The function is overridden in the managers which supports ntuple merging
-// Here we give just a warning that the feature is not available.
+  // The function is overridden in the managers which supports ntuple merging
+  // Here we give just a warning that the feature is not available.
 
   NtupleMergingWarning(fkClass, "SetBasketEntries", fFileType);
 }

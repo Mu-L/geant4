@@ -39,46 +39,39 @@
 //----------------------------------------------------------------------------
 //
 #include "G4QGSPProtonBuilder.hh"
-#include "G4SystemOfUnits.hh"
+
+#include "G4BGGNucleonInelasticXS.hh"
+#include "G4HadronicParameters.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 #include "G4ProcessManager.hh"
-#include "G4BGGNucleonInelasticXS.hh"
-#include "G4HadronicParameters.hh"
+#include "G4SystemOfUnits.hh"
 
-G4QGSPProtonBuilder::
-G4QGSPProtonBuilder(G4bool quasiElastic) 
- {
-   theMin = G4HadronicParameters::Instance()->GetMinEnergyTransitionQGS_FTF();
-   theModel = new G4TheoFSGenerator("QGSP");
+G4QGSPProtonBuilder::G4QGSPProtonBuilder(G4bool quasiElastic)
+{
+  theMin = G4HadronicParameters::Instance()->GetMinEnergyTransitionQGS_FTF();
+  theModel = new G4TheoFSGenerator("QGSP");
 
-   G4QGSModel< G4QGSParticipants >* theStringModel = 
-     new G4QGSModel< G4QGSParticipants >;
-   G4ExcitedStringDecay* theStringDecay = 
-     new G4ExcitedStringDecay(new G4QGSMFragmentation);
-   theStringModel->SetFragmentationModel(theStringDecay);
+  G4QGSModel<G4QGSParticipants>* theStringModel = new G4QGSModel<G4QGSParticipants>;
+  G4ExcitedStringDecay* theStringDecay = new G4ExcitedStringDecay(new G4QGSMFragmentation);
+  theStringModel->SetFragmentationModel(theStringDecay);
 
-   G4GeneratorPrecompoundInterface* theCascade = 
-     new G4GeneratorPrecompoundInterface();
+  G4GeneratorPrecompoundInterface* theCascade = new G4GeneratorPrecompoundInterface();
 
-   theModel->SetTransport(theCascade);
-   theModel->SetHighEnergyGenerator(theStringModel);
-   if (quasiElastic)
-   {
-     theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
-   } 
- }
+  theModel->SetTransport(theCascade);
+  theModel->SetHighEnergyGenerator(theStringModel);
+  if (quasiElastic)
+  {
+    theModel->SetQuasiElasticChannel(new G4QuasiElasticChannel());
+  }
+}
 
-void G4QGSPProtonBuilder::
-Build(G4HadronInelasticProcess * aP)
- {
-   aP->AddDataSet(new G4BGGNucleonInelasticXS(G4Proton::Proton()));
-   theModel->SetMinEnergy(theMin);
-   theModel->SetMaxEnergy( G4HadronicParameters::Instance()->GetMaxEnergy() );
-   aP->RegisterMe(theModel);
- }
+void G4QGSPProtonBuilder::Build(G4HadronInelasticProcess* aP)
+{
+  aP->AddDataSet(new G4BGGNucleonInelasticXS(G4Proton::Proton()));
+  theModel->SetMinEnergy(theMin);
+  theModel->SetMaxEnergy(G4HadronicParameters::Instance()->GetMaxEnergy());
+  aP->RegisterMe(theModel);
+}
 
-G4QGSPProtonBuilder::~G4QGSPProtonBuilder() 
- {
- }
-
+G4QGSPProtonBuilder::~G4QGSPProtonBuilder() {}

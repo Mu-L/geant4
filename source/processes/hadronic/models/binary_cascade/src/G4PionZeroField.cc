@@ -25,53 +25,51 @@
 //
 //
 // -------------------------------------------------------------------
-//      GEANT 4 class implementation file 
+//      GEANT 4 class implementation file
 //
 //      CERN, Geneva, Switzerland
 //
 //      File name:     G4PionZeroField.cc
 //
 //      Author:        Alessandro Brunengo (Alessandro.Brunengo@ge.infn.it)
-// 
+//
 //      Creation date: 5 June 2000
 // -------------------------------------------------------------------
 
 #include "G4PionZeroField.hh"
-#include "G4PhysicalConstants.hh"
-#include "G4NucleiProperties.hh"
-#include "G4VNuclearDensity.hh"
-#include "G4FermiMomentum.hh"
-#include "G4PionZero.hh"
-#include "G4HadTmpUtil.hh"
 
-G4PionZeroField::G4PionZeroField(G4V3DNucleus * nucleus, G4double coeff)
-  : G4VNuclearField(nucleus)
+#include "G4FermiMomentum.hh"
+#include "G4HadTmpUtil.hh"
+#include "G4NucleiProperties.hh"
+#include "G4PhysicalConstants.hh"
+#include "G4PionZero.hh"
+#include "G4VNuclearDensity.hh"
+
+G4PionZeroField::G4PionZeroField(G4V3DNucleus* nucleus, G4double coeff) : G4VNuclearField(nucleus)
 {
   theCoeff = coeff;
 }
 
+G4PionZeroField::~G4PionZeroField() {}
 
-G4PionZeroField::~G4PionZeroField()
-{ }
-
-G4double G4PionZeroField::GetField(const G4ThreeVector & aPosition)
+G4double G4PionZeroField::GetField(const G4ThreeVector& aPosition)
 {
-// Field is 0 out of the nucleus!
-  if(aPosition.mag() >= radius) return 0.0;
+  // Field is 0 out of the nucleus!
+  if (aPosition.mag() >= radius) return 0.0;
 
   G4double pionZeroMass = G4PionZero::PionZero()->GetPDGMass();
   G4int A = theNucleus->GetMassNumber();
   G4int Z = theNucleus->GetCharge();
 
   G4double bindingEnergy = G4NucleiProperties::GetBindingEnergy(A, Z);
-  G4double nucleusMass = Z*proton_mass_c2+(A-Z)*neutron_mass_c2+bindingEnergy;
-  G4double reducedMass = pionZeroMass*nucleusMass/(pionZeroMass+nucleusMass);
+  G4double nucleusMass = Z * proton_mass_c2 + (A - Z) * neutron_mass_c2 + bindingEnergy;
+  G4double reducedMass = pionZeroMass * nucleusMass / (pionZeroMass + nucleusMass);
 
+  G4double density = A * theNucleus->GetNuclearDensity()->GetDensity(aPosition);
+  G4double nucleonMass = (proton_mass_c2 + neutron_mass_c2) / 2;
 
-  G4double density = A*theNucleus->GetNuclearDensity()->GetDensity(aPosition);
-  G4double nucleonMass = (proton_mass_c2+neutron_mass_c2)/2;
-
-  return 2.*pi*hbarc*hbarc/reducedMass*(1+pionZeroMass/nucleonMass)*theCoeff*density;
+  return 2. * pi * hbarc * hbarc / reducedMass * (1 + pionZeroMass / nucleonMass) * theCoeff
+         * density;
 }
 
 G4double G4PionZeroField::GetBarrier()

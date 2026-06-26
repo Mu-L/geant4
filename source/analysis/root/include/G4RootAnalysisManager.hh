@@ -29,8 +29,8 @@
 
 // Author: Ivana Hrivnacova, 18/06/2013  (ivana@ipno.in2p3.fr)
 
-#ifndef G4RootAnalysisManager_h
-#define G4RootAnalysisManager_h 1
+#ifndef G4ROOTANALYSISMANAGER_HH
+#define G4ROOTANALYSISMANAGER_HH
 
 #include "G4ToolsAnalysisManager.hh"
 #include "globals.hh"
@@ -43,21 +43,24 @@
 class G4RootAnalysisManager;
 class G4RootFileManager;
 class G4RootNtupleFileManager;
-template <class T>
+template<class T>
 class G4ThreadLocalSingleton;
 
-namespace tools {
-namespace wroot {
+namespace tools
+{
+namespace wroot
+{
 class directory;
 }
-}
+}  // namespace tools
 
-class G4RootAnalysisManager : public  G4ToolsAnalysisManager
+class G4RootAnalysisManager : public G4ToolsAnalysisManager
 {
-  friend class G4RootMpiAnalysisManager;
-  friend class G4ThreadLocalSingleton<G4RootAnalysisManager>;
+    friend class G4RootMpiAnalysisManager;
+    friend class G4ThreadLocalSingleton<G4RootAnalysisManager>;
 
   public:
+
     ~G4RootAnalysisManager() override;
 
     // Static methods
@@ -81,15 +84,16 @@ class G4RootAnalysisManager : public  G4ToolsAnalysisManager
     void SetBasketEntries(unsigned int basketEntries) override;
 
   private:
+
     G4RootAnalysisManager();
 
     // Static data members
-    inline static G4ThreadLocal G4bool fgIsInstance { false };
-    static constexpr std::string_view fkClass { "G4RootAnalysisManager" };
+    inline static G4ThreadLocal G4bool fgIsInstance{false};
+    static constexpr std::string_view fkClass{"G4RootAnalysisManager"};
 
     // Data members
-    std::shared_ptr<G4RootFileManager> fFileManager { nullptr };
-    std::shared_ptr<G4RootNtupleFileManager> fNtupleFileManager { nullptr };
+    std::shared_ptr<G4RootFileManager> fFileManager{nullptr};
+    std::shared_ptr<G4RootNtupleFileManager> fNtupleFileManager{nullptr};
 };
 
 #include "G4RootAnalysisManager.icc"

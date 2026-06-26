@@ -27,17 +27,18 @@
 // 20/2/2019
 // Author: HoangTRAN
 
-#ifndef G4DNAIndependentReactionTimeStepper_hh
-#define G4DNAIndependentReactionTimeStepper_hh 1
+#ifndef G4DNAINDEPENDENTREACTIONTIMESTEPPER_HH
+#define G4DNAINDEPENDENTREACTIONTIMESTEPPER_HH
 
-#include "G4VITTimeStepComputer.hh"
-#include "G4KDTreeResult.hh"
 #include "G4IRTUtils.hh"
+#include "G4ITReaction.hh"
+#include "G4ITTrackHolder.hh"
+#include "G4KDTreeResult.hh"
+#include "G4ReferenceCast.hh"
+#include "G4VITTimeStepComputer.hh"
+
 #include <memory>
 #include <set>
-#include "G4ITTrackHolder.hh"
-#include "G4ITReaction.hh"
-#include "G4ReferenceCast.hh"
 #include <unordered_map>
 
 class G4VDNAReactionModel;
@@ -51,61 +52,62 @@ class G4ITTrackHolder;
 
 class G4DNAIndependentReactionTimeStepper : public G4VITTimeStepComputer
 {
- public:
-  G4DNAIndependentReactionTimeStepper();
-  ~G4DNAIndependentReactionTimeStepper() override = default;
-  G4DNAIndependentReactionTimeStepper(
-    const G4DNAIndependentReactionTimeStepper&) = delete;
-  G4DNAIndependentReactionTimeStepper& operator =(
-    const G4DNAIndependentReactionTimeStepper&) = delete;
+  public:
 
-  void Prepare() override;
-  G4double CalculateStep(const G4Track&, const G4double&) override;
-  G4double CalculateMinTimeStep(G4double, G4double) override;
+    G4DNAIndependentReactionTimeStepper();
+    ~G4DNAIndependentReactionTimeStepper() override = default;
+    G4DNAIndependentReactionTimeStepper(const G4DNAIndependentReactionTimeStepper&) = delete;
+    G4DNAIndependentReactionTimeStepper&
+    operator=(const G4DNAIndependentReactionTimeStepper&) = delete;
 
-  void SetReactionModel(G4VDNAReactionModel*);
-  G4VDNAReactionModel* GetReactionModel();
+    void Prepare() override;
+    G4double CalculateStep(const G4Track&, const G4double&) override;
+    G4double CalculateMinTimeStep(G4double, G4double) override;
 
-  std::unique_ptr<G4ITReactionChange> FindReaction(
-    G4ITReactionSet* pReactionSet,
-    G4double& currentStepTime,
-    const G4double globalTime);
-  void SetReactionProcess(G4VITReactionProcess* pReactionProcess);
-  void SetVerbose(G4int);
+    void SetReactionModel(G4VDNAReactionModel*);
+    G4VDNAReactionModel* GetReactionModel();
 
- private:
-  void InitializeForNewTrack();
-  class Utils;
-  void CheckAndRecordResults(G4double reactionTime, const Utils& utils);
+    std::unique_ptr<G4ITReactionChange> FindReaction(G4ITReactionSet* pReactionSet,
+                                                     G4double& currentStepTime,
+                                                     const G4double globalTime);
+    void SetReactionProcess(G4VITReactionProcess* pReactionProcess);
+    void SetVerbose(G4int);
 
-  G4double GetTimeToEncounter(const G4Track& trackA, const G4Track& trackB);
+  private:
 
-  const G4DNAMolecularReactionTable*& fMolecularReactionTable =
-    reference_cast<const G4DNAMolecularReactionTable*>(fpReactionTable);
-  G4VDNAReactionModel* fReactionModel     = nullptr;
-  G4ITTrackHolder* fpTrackContainer       = G4ITTrackHolder::Instance();
-  G4ITReactionSet* fReactionSet           = G4ITReactionSet::Instance();
-  G4int fVerbose                          = 0;
-  G4double fRCutOff                       = G4IRTUtils::GetRCutOff();
-  G4VITReactionProcess* fpReactionProcess = nullptr;
-  std::vector<const G4Track *> fSecondaries;
-  std::unordered_map<G4int, G4ThreeVector> fSampledPositions;
-  std::set<G4int> fCheckedTracks;
-  void InitializeReactions(G4double currentGlobalTime);
-  G4bool fIsInitialized = false;
-  G4double GetNextReactionTime();
-  const G4ITReaction* GetNextReaction();
+    void InitializeForNewTrack();
+    class Utils;
+    void CheckAndRecordResults(G4double reactionTime, const Utils& utils);
 
-  class Utils
-  {
-   public:
-    Utils(const G4Track& tA, const G4Track& tB);
-    ~Utils() = default;
+    G4double GetTimeToEncounter(const G4Track& trackA, const G4Track& trackB);
 
-    G4Track* fpTrackA{nullptr};
-    G4Track* fpTrackB{nullptr};
-    const G4Molecule* fpMoleculeA{nullptr};
-    const G4Molecule* fpMoleculeB{nullptr};
-  };
+    const G4DNAMolecularReactionTable*& fMolecularReactionTable =
+      reference_cast<const G4DNAMolecularReactionTable*>(fpReactionTable);
+    G4VDNAReactionModel* fReactionModel = nullptr;
+    G4ITTrackHolder* fpTrackContainer = G4ITTrackHolder::Instance();
+    G4ITReactionSet* fReactionSet = G4ITReactionSet::Instance();
+    G4int fVerbose = 0;
+    G4double fRCutOff = G4IRTUtils::GetRCutOff();
+    G4VITReactionProcess* fpReactionProcess = nullptr;
+    std::vector<const G4Track*> fSecondaries;
+    std::unordered_map<G4int, G4ThreeVector> fSampledPositions;
+    std::set<G4int> fCheckedTracks;
+    void InitializeReactions(G4double currentGlobalTime);
+    G4bool fIsInitialized = false;
+    G4double GetNextReactionTime();
+    const G4ITReaction* GetNextReaction();
+
+    class Utils
+    {
+      public:
+
+        Utils(const G4Track& tA, const G4Track& tB);
+        ~Utils() = default;
+
+        G4Track* fpTrackA{nullptr};
+        G4Track* fpTrackB{nullptr};
+        const G4Molecule* fpMoleculeA{nullptr};
+        const G4Molecule* fpMoleculeB{nullptr};
+    };
 };
 #endif

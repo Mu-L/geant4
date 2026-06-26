@@ -25,16 +25,17 @@
 //
 // 20121017  M. Kelsey -- Add local cache of Bertini pointer
 
-#ifndef G4HadronicAbsorptionBertini_h
-#define G4HadronicAbsorptionBertini_h 1
+#ifndef G4HADRONICABSORPTIONBERTINI_HH
+#define G4HADRONICABSORPTIONBERTINI_HH
 
 // Class Description:
 //
-// Intermediate base (or concrete) class for hadronic absorption at rest. 
+// Intermediate base (or concrete) class for hadronic absorption at rest.
 // Physics lists should reference the concrete subclasses for pi-, K-, Sigma-
 
-#include "globals.hh"
 #include "G4HadronStoppingProcess.hh"
+#include "globals.hh"
+
 #include <iosfwd>
 
 class G4VParticleChange;
@@ -42,26 +43,28 @@ class G4ParticleDefinition;
 class G4CascadeInterface;
 class G4Track;
 
+class G4HadronicAbsorptionBertini : public G4HadronStoppingProcess
+{
+  public:
 
-class G4HadronicAbsorptionBertini : public G4HadronStoppingProcess { 
-public:
-  // May instantiate this class directly for all three pi-, K-, Sigma-
-  G4HadronicAbsorptionBertini(G4ParticleDefinition* pdef=0);
-  virtual ~G4HadronicAbsorptionBertini() {;}
-  
-  G4bool IsApplicable(const G4ParticleDefinition&);
+    // May instantiate this class directly for all three pi-, K-, Sigma-
+    G4HadronicAbsorptionBertini(G4ParticleDefinition* pdef = 0);
+    virtual ~G4HadronicAbsorptionBertini() { ; }
 
-  void ProcessDescription(std::ostream& outFile) const;
+    G4bool IsApplicable(const G4ParticleDefinition&);
 
-private:
-  // hide assignment operator as private 
-  G4HadronicAbsorptionBertini& operator=(const G4HadronicAbsorptionBertini&);
-  G4HadronicAbsorptionBertini(const G4HadronicAbsorptionBertini&);
-  
-private:
-  G4ParticleDefinition* pdefApplicable;
-  G4CascadeInterface* theCascade;
+    void ProcessDescription(std::ostream& outFile) const;
+
+  private:
+
+    // hide assignment operator as private
+    G4HadronicAbsorptionBertini& operator=(const G4HadronicAbsorptionBertini&);
+    G4HadronicAbsorptionBertini(const G4HadronicAbsorptionBertini&);
+
+  private:
+
+    G4ParticleDefinition* pdefApplicable;
+    G4CascadeInterface* theCascade;
 };
 
 #endif
-

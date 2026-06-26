@@ -23,57 +23,50 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4NeutronLENDBuilder_h
-#define G4NeutronLENDBuilder_h 1
-
-#include "globals.hh"
+#ifndef G4NEUTRONLENDBUILDER_HH
+#define G4NEUTRONLENDBUILDER_HH
 
 #include "G4HadronElasticProcess.hh"
-#include "G4NeutronFissionProcess.hh"
-#include "G4NeutronCaptureProcess.hh"
 #include "G4HadronInelasticProcess.hh"
-#include "G4VNeutronBuilder.hh"
-
-#include "G4LENDElasticCrossSection.hh"
-#include "G4LENDElastic.hh"
-#include "G4LENDInelastic.hh"
-#include "G4LENDInelasticCrossSection.hh"
-#include "G4LENDFission.hh"
-#include "G4LENDFissionCrossSection.hh"
 #include "G4LENDCapture.hh"
 #include "G4LENDCaptureCrossSection.hh"
+#include "G4LENDElastic.hh"
+#include "G4LENDElasticCrossSection.hh"
+#include "G4LENDFission.hh"
+#include "G4LENDFissionCrossSection.hh"
+#include "G4LENDInelastic.hh"
+#include "G4LENDInelasticCrossSection.hh"
+#include "G4NeutronCaptureProcess.hh"
+#include "G4NeutronFissionProcess.hh"
+#include "G4VNeutronBuilder.hh"
+#include "globals.hh"
 
 class G4NeutronLENDBuilder : public G4VNeutronBuilder
 {
-  public: 
-    G4NeutronLENDBuilder(const G4String& eva="");
+  public:
+
+    G4NeutronLENDBuilder(const G4String& eva = "");
     virtual ~G4NeutronLENDBuilder() {}
 
-    virtual void Build(G4HadronElasticProcess * aP) final override;
-    virtual void Build(G4NeutronFissionProcess * aP) final override;
-    virtual void Build(G4NeutronCaptureProcess * aP) final override;
-    virtual void Build(G4HadronInelasticProcess * aP) final override;
+    virtual void Build(G4HadronElasticProcess* aP) final override;
+    virtual void Build(G4NeutronFissionProcess* aP) final override;
+    virtual void Build(G4NeutronCaptureProcess* aP) final override;
+    virtual void Build(G4HadronInelasticProcess* aP) final override;
 
     virtual void SetMinEnergy(G4double aM) final override
     {
-      theMin=aM;
+      theMin = aM;
       theIMin = theMin;
     }
-    void SetMinInelasticEnergy(G4double aM)
-    {
-      theIMin=aM;
-    }
+    void SetMinInelasticEnergy(G4double aM) { theIMin = aM; }
     virtual void SetMaxEnergy(G4double aM) final override
     {
       theIMax = aM;
-      theMax=aM;
+      theMax = aM;
     }
-    void SetMaxInelasticEnergy(G4double aM)
-    {
-      theIMax = aM;
-    }
+    void SetMaxInelasticEnergy(G4double aM) { theIMax = aM; }
 
-    using G4VNeutronBuilder::Build; //Prevent compiler warning
+    using G4VNeutronBuilder::Build;  // Prevent compiler warning
 
   private:
 
@@ -82,17 +75,16 @@ class G4NeutronLENDBuilder : public G4VNeutronBuilder
     G4double theMax;
     G4double theIMax;
 
-    G4LENDElastic * theLENDElastic;
-    G4LENDElasticCrossSection * theLENDElasticCrossSection;
-    G4LENDInelastic * theLENDInelastic;
-    G4LENDInelasticCrossSection * theLENDInelasticCrossSection;
-    G4LENDFission * theLENDFission;
-    G4LENDFissionCrossSection * theLENDFissionCrossSection;
-    G4LENDCapture * theLENDCapture;
-    G4LENDCaptureCrossSection * theLENDCaptureCrossSection;
+    G4LENDElastic* theLENDElastic;
+    G4LENDElasticCrossSection* theLENDElasticCrossSection;
+    G4LENDInelastic* theLENDInelastic;
+    G4LENDInelasticCrossSection* theLENDInelasticCrossSection;
+    G4LENDFission* theLENDFission;
+    G4LENDFissionCrossSection* theLENDFissionCrossSection;
+    G4LENDCapture* theLENDCapture;
+    G4LENDCaptureCrossSection* theLENDCaptureCrossSection;
 
     G4String evaluation;
 };
 
 #endif
-

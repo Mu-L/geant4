@@ -23,25 +23,25 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-#ifndef G4DNADissociation_h
-#define G4DNADissociation_h 1
+#ifndef G4DNADISSOCIATION_HH
+#define G4DNADISSOCIATION_HH
 
 #include "G4VEmProcess.hh"
 
 class G4DNADissociation : public G4VEmProcess
-{ 
-public:
-  G4DNADissociation(const G4String& processName ="G4DNADissociation");
-  ~G4DNADissociation() override;
+{
+  public:
 
-  G4bool IsApplicable(const G4ParticleDefinition&) override;
-  void InitialiseProcess(const G4ParticleDefinition*) override;
-  virtual void PrintInfo();
-  
-private:
-  G4bool       isInitialised{false};
+    G4DNADissociation(const G4String& processName = "G4DNADissociation");
+    ~G4DNADissociation() override;
 
+    G4bool IsApplicable(const G4ParticleDefinition&) override;
+    void InitialiseProcess(const G4ParticleDefinition*) override;
+    virtual void PrintInfo();
+
+  private:
+
+    G4bool isInitialised{false};
 };
-
 
 #endif

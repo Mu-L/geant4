@@ -58,8 +58,8 @@
 //
 //---------------------------------------------------------------
 
-#ifndef G4FastStep_h
-#define G4FastStep_h
+#ifndef G4FASTSTEP_HH
+#define G4FASTSTEP_HH
 
 #include "G4ParticleMomentum.hh"
 #include "G4ThreeVector.hh"
@@ -89,6 +89,7 @@ class G4DynamicParticle;
 class G4FastStep : public G4VParticleChange
 {
   public:  // Without description
+
     //------------------------
     // Constructor/Destructor
     //------------------------
@@ -290,6 +291,7 @@ class G4FastStep : public G4VParticleChange
     G4bool CheckIt(const G4Track&) override;
 
   private:
+
     //===================================================
     // Private Internal methods (implementation).
     //===================================================

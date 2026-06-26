@@ -34,22 +34,24 @@
 // 20141121  Use G4AutoDelete to avoid end-of-thread memory leaks
 
 #include "G4MultiBodyMomentumDist.hh"
+
 #include "G4AutoDelete.hh"
 #include "G4CascadeParameters.hh"
-#include "G4NuclNucl3BodyMomDst.hh"
-#include "G4NuclNucl4BodyMomDst.hh"
 #include "G4HadNucl3BodyMomDst.hh"
 #include "G4HadNucl4BodyMomDst.hh"
 #include "G4InuclParticleNames.hh"
+#include "G4NuclNucl3BodyMomDst.hh"
+#include "G4NuclNucl4BodyMomDst.hh"
 using namespace G4InuclParticleNames;
-
 
 // Singleton is created at first invocation
 
 G4ThreadLocal G4MultiBodyMomentumDist* G4MultiBodyMomentumDist::theInstance = 0;
 
-const G4MultiBodyMomentumDist* G4MultiBodyMomentumDist::GetInstance() {
-  if (!theInstance) {
+const G4MultiBodyMomentumDist* G4MultiBodyMomentumDist::GetInstance()
+{
+  if (!theInstance)
+  {
     theInstance = new G4MultiBodyMomentumDist;
     G4AutoDelete::Register(theInstance);
   }
@@ -63,43 +65,49 @@ G4MultiBodyMomentumDist::G4MultiBodyMomentumDist()
   : nn3BodyDst(new G4NuclNucl3BodyMomDst),
     nn4BodyDst(new G4NuclNucl4BodyMomDst),
     hn3BodyDst(new G4HadNucl3BodyMomDst),
-    hn4BodyDst(new G4HadNucl4BodyMomDst) {;}
+    hn4BodyDst(new G4HadNucl4BodyMomDst)
+{
+  ;
+}
 
-G4MultiBodyMomentumDist::~G4MultiBodyMomentumDist() {
+G4MultiBodyMomentumDist::~G4MultiBodyMomentumDist()
+{
   delete nn3BodyDst;
   delete nn4BodyDst;
   delete hn3BodyDst;
   delete hn4BodyDst;
 }
 
-
 // Set verbosity for all generators (const-cast required)
 
-void G4MultiBodyMomentumDist::setVerboseLevel(G4int verbose) {
+void G4MultiBodyMomentumDist::setVerboseLevel(G4int verbose)
+{
   const_cast<G4MultiBodyMomentumDist*>(GetInstance())->passVerbose(verbose);
 }
 
-void G4MultiBodyMomentumDist::passVerbose(G4int verbose) {
+void G4MultiBodyMomentumDist::passVerbose(G4int verbose)
+{
   if (nn3BodyDst) nn3BodyDst->setVerboseLevel(verbose);
   if (nn4BodyDst) nn4BodyDst->setVerboseLevel(verbose);
   if (hn3BodyDst) hn3BodyDst->setVerboseLevel(verbose);
   if (hn4BodyDst) hn4BodyDst->setVerboseLevel(verbose);
 }
 
-
 // Return appropriate distribution generator for specified interaction
 
-const G4VMultiBodyMomDst* 
-G4MultiBodyMomentumDist::ChooseDist(G4int is, G4int mult) const {
-  if (is == pro*pro || is == pro*neu || is == neu*neu) {
+const G4VMultiBodyMomDst* G4MultiBodyMomentumDist::ChooseDist(G4int is, G4int mult) const
+{
+  if (is == pro * pro || is == pro * neu || is == neu * neu)
+  {
     //***** REMOVED BY VLADIMIR UZHINSKY 18 JULY 2011
-    if (G4CascadeParameters::use3BodyMom() && mult==3) return nn3BodyDst;
+    if (G4CascadeParameters::use3BodyMom() && mult == 3) return nn3BodyDst;
     return nn4BodyDst;
   }
 
-  else {	// FIXME:  All other initial states use pi-N scattering
+  else
+  {  // FIXME:  All other initial states use pi-N scattering
     //***** REMOVED BY VLADIMIR UZHINSKY 18 JULY 2011
-    if (G4CascadeParameters::use3BodyMom() && mult==3) return hn3BodyDst;
+    if (G4CascadeParameters::use3BodyMom() && mult == 3) return hn3BodyDst;
     return hn4BodyDst;
   }
 

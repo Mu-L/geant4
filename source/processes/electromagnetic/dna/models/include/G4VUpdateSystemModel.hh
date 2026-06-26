@@ -28,9 +28,10 @@
 #define G4VUPDATESYSTEMMODEL_HH
 class G4VUpdateSystemModel
 {
- public:
-  G4VUpdateSystemModel()          = default;
-  virtual ~G4VUpdateSystemModel() = default;
-  // virtual UpdateSystem() = 0;
+  public:
+
+    G4VUpdateSystemModel() = default;
+    virtual ~G4VUpdateSystemModel() = default;
+    // virtual UpdateSystem() = 0;
 };
 #endif  // G4VUPDATESYSTEMMODEL_HH

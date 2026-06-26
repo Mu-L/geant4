@@ -29,13 +29,13 @@
 #ifndef g4root_defs_h
 #define g4root_defs_h
 
-#include "tools/wroot/ntuple"
-#include "tools/rroot/ntuple"
 #include "g4hntools_defs.hh"
+
+#include "tools/rroot/ntuple"
+#include "tools/wroot/ntuple"
 
 // Root output specific types
 using G4RootNtuple = tools::wroot::ntuple;
 using G4RootRNtuple = tools::rroot::ntuple;
 
 #endif
-

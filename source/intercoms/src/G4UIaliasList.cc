@@ -35,7 +35,8 @@
 // --------------------------------------------------------------------
 void G4UIaliasList::AddNewAlias(const char* aliasName, const char* aliasValue)
 {
-  if (FindAlias(aliasName) != nullptr) {
+  if (FindAlias(aliasName) != nullptr)
+  {
     G4cerr << "Alias <" << aliasName << "> already exists. Command ignored." << G4endl;
     return;
   }
@@ -45,7 +46,8 @@ void G4UIaliasList::AddNewAlias(const char* aliasName, const char* aliasValue)
 // --------------------------------------------------------------------
 void G4UIaliasList::RemoveAlias(const char* aliasName)
 {
-  if (FindAlias(aliasName) == nullptr) {
+  if (FindAlias(aliasName) == nullptr)
+  {
     G4cerr << "Alias <" << aliasName << "> does not exist. Command ignored." << G4endl;
     return;
   }
@@ -55,7 +57,8 @@ void G4UIaliasList::RemoveAlias(const char* aliasName)
 // --------------------------------------------------------------------
 void G4UIaliasList::ChangeAlias(const char* aliasName, const char* aliasValue)
 {
-  if (FindAlias(aliasName) == nullptr) {
+  if (FindAlias(aliasName) == nullptr)
+  {
     AddNewAlias(aliasName, aliasValue);
     return;
   }
@@ -73,7 +76,8 @@ const G4String* G4UIaliasList::FindAlias(const char* aliasName) const
 void G4UIaliasList::List() const
 {
   // Aliases are already sorted by std::less<G4String>
-  for (const auto& [a, v] : aliases) {
+  for (const auto& [a, v] : aliases)
+  {
     G4cout << "  " << a << " : " << v << G4endl;
   }
 }

@@ -32,6 +32,7 @@
 // --------------------------------------------------------------------
 
 #include "G4SmartVoxelStat.hh"
+
 #include "G4SmartVoxelHeader.hh"
 #include "G4SmartVoxelNode.hh"
 #include "G4SmartVoxelProxy.hh"
@@ -39,16 +40,12 @@
 //
 // Constructor
 //
-G4SmartVoxelStat::G4SmartVoxelStat( const G4LogicalVolume* theVolume,
-                                    const G4SmartVoxelHeader* theVoxel,
-                                          G4double theSysTime,
-                                          G4double theUserTime )
-    : volume(theVolume),
-      voxel(theVoxel),
-      sysTime(theSysTime),
-      userTime(theUserTime)
+G4SmartVoxelStat::G4SmartVoxelStat(const G4LogicalVolume* theVolume,
+                                   const G4SmartVoxelHeader* theVoxel, G4double theSysTime,
+                                   G4double theUserTime)
+  : volume(theVolume), voxel(theVoxel), sysTime(theSysTime), userTime(theUserTime)
 {
-  CountHeadsAndNodes( voxel );
+  CountHeadsAndNodes(voxel);
 }
 
 //
@@ -99,15 +96,13 @@ G4long G4SmartVoxelStat::GetNumberPointers() const
 //
 G4long G4SmartVoxelStat::GetMemoryUse() const
 {
-  static const G4long headSize = sizeof(G4SmartVoxelHeader)
-                               + sizeof(G4SmartVoxelProxy);
+  static const G4long headSize = sizeof(G4SmartVoxelHeader) + sizeof(G4SmartVoxelProxy);
 
-  static const G4long nodeSize = sizeof(G4SmartVoxelNode)
-                               + sizeof(G4SmartVoxelProxy);
+  static const G4long nodeSize = sizeof(G4SmartVoxelNode) + sizeof(G4SmartVoxelProxy);
 
   static const G4long pointerSize = sizeof(G4SmartVoxelProxy*);
-  
-  return nodes*nodeSize + heads*headSize + pointers*pointerSize;
+
+  return nodes * nodeSize + heads * headSize + pointers * pointerSize;
 }
 
 //
@@ -116,21 +111,24 @@ G4long G4SmartVoxelStat::GetMemoryUse() const
 // Recursively count the number of voxel headers and nodes,
 // updating class member variables heads and nodes on the way.
 //
-void G4SmartVoxelStat::CountHeadsAndNodes( const G4SmartVoxelHeader* head ) 
+void G4SmartVoxelStat::CountHeadsAndNodes(const G4SmartVoxelHeader* head)
 {
   std::size_t numSlices = head->GetNoSlices();
-  
+
   pointers += numSlices;
-  
+
   const G4SmartVoxelProxy* lastProxy = nullptr;
-  
-  for(std::size_t i=0; i<numSlices; ++i)
+
+  for (std::size_t i = 0; i < numSlices; ++i)
   {
-    const G4SmartVoxelProxy *proxy = head->GetSlice(i);
-    if (proxy == lastProxy) { continue; }
-    
+    const G4SmartVoxelProxy* proxy = head->GetSlice(i);
+    if (proxy == lastProxy)
+    {
+      continue;
+    }
+
     lastProxy = proxy;
-    
+
     if (proxy->IsNode())
     {
       ++nodes;

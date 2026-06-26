@@ -31,10 +31,11 @@
 // EM physics for HEP hadrons and light ions
 //
 
-#ifndef G4EmBuilder_h
-#define G4EmBuilder_h 1
+#ifndef G4EMBUILDER_HH
+#define G4EMBUILDER_HH
 
 #include "globals.hh"
+
 #include <vector>
 
 class G4hMultipleScattering;
@@ -45,46 +46,39 @@ class G4VMscModel;
 
 class G4EmBuilder
 {
-public:
+  public:
 
-  static void ConstructBasicEmPhysics(G4hMultipleScattering* hmsc, 
-                                      const std::vector<G4int>& listHadrons);
+    static void ConstructBasicEmPhysics(G4hMultipleScattering* hmsc,
+                                        const std::vector<G4int>& listHadrons);
 
-  static void ConstructLightHadrons(G4ParticleDefinition* part1, 
-                                    G4ParticleDefinition* part2,
-                                    G4bool isHEP, G4bool isProton,
-                                    G4bool isWVI);
+    static void ConstructLightHadrons(G4ParticleDefinition* part1, G4ParticleDefinition* part2,
+                                      G4bool isHEP, G4bool isProton, G4bool isWVI);
 
-  static void ConstructLightHadronsSS(G4ParticleDefinition* part1, 
-                                      G4ParticleDefinition* part2,
-				      G4bool isHEP);
+    static void ConstructLightHadronsSS(G4ParticleDefinition* part1, G4ParticleDefinition* part2,
+                                        G4bool isHEP);
 
-  static void ConstructIonEmPhysics(G4hMultipleScattering* hmsc, 
-                                    G4NuclearStopping* nucStopping); 
+    static void ConstructIonEmPhysics(G4hMultipleScattering* hmsc, G4NuclearStopping* nucStopping);
 
-  static void ConstructIonEmPhysicsSS(); 
+    static void ConstructIonEmPhysicsSS();
 
-  // main method to be called from EM constructors to construct
-  // EM physics for the list of leptons and hadrons common for
-  // EM constructors
-  static void ConstructCharged(G4hMultipleScattering* hmsc, 
-                               G4NuclearStopping* nucStopping,
-                               G4bool isWVI = true);
+    // main method to be called from EM constructors to construct
+    // EM physics for the list of leptons and hadrons common for
+    // EM constructors
+    static void ConstructCharged(G4hMultipleScattering* hmsc, G4NuclearStopping* nucStopping,
+                                 G4bool isWVI = true);
 
-  static void ConstructChargedSS(G4hMultipleScattering* hmsc); 
+    static void ConstructChargedSS(G4hMultipleScattering* hmsc);
 
-  // minimal set of particles for EM physics
-  static void ConstructMinimalEmSet();
+    // minimal set of particles for EM physics
+    static void ConstructMinimalEmSet();
 
-  // prepare EM physics for construction
-  static void PrepareEMPhysics();
+    // prepare EM physics for construction
+    static void PrepareEMPhysics();
 
-  static void ConstructElectronMscProcess(G4VMscModel* msc1, G4VMscModel* msc2,
-                                          G4ParticleDefinition* particle);
+    static void ConstructElectronMscProcess(G4VMscModel* msc1, G4VMscModel* msc2,
+                                            G4ParticleDefinition* particle);
 
-  static void ConstructElectronSSProcess(G4VEmModel* ss, G4ParticleDefinition* particle);
+    static void ConstructElectronSSProcess(G4VEmModel* ss, G4ParticleDefinition* particle);
 };
 
 #endif
-
-

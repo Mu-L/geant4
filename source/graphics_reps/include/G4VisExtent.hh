@@ -25,7 +25,7 @@
 //
 //
 //
-// 
+//
 // A.Walkden 28/11/95
 
 // Class Description:
@@ -47,77 +47,120 @@
 #ifndef G4VISEXTENT_HH
 #define G4VISEXTENT_HH
 
-#include "globals.hh"
 #include "G4Point3D.hh"
 #include "G4Transform3D.hh"
+#include "globals.hh"
 
 class G4VisExtent
 {
-public: // With description
+  public:  // With description
 
-  G4VisExtent (G4double xmin = 0., G4double xmax = 0., 
-               G4double ymin = 0., G4double ymax = 0., 
-               G4double zmin = 0., G4double zmax = 0.);
-  G4VisExtent (const G4Point3D& centre, G4double radius);
-  ~G4VisExtent ();
-  static const G4VisExtent& GetNullExtent ();
-  G4bool operator != (const G4VisExtent& e) const;
-  G4bool operator == (const G4VisExtent& e) const {return !operator!=(e);}
+    G4VisExtent(G4double xmin = 0., G4double xmax = 0., G4double ymin = 0., G4double ymax = 0.,
+                G4double zmin = 0., G4double zmax = 0.);
+    G4VisExtent(const G4Point3D& centre, G4double radius);
+    ~G4VisExtent();
+    static const G4VisExtent& GetNullExtent();
+    G4bool operator!=(const G4VisExtent& e) const;
+    G4bool operator==(const G4VisExtent& e) const { return !operator!=(e); }
 
-  G4VisExtent& Transform (const G4Transform3D&);
-  // The above transforms the box defined by the 6 limits fXmin, fXmax,
-  // etc., and produces a new box that encloses the transformed box. If the
-  // transform includes a rotation the new box will likely be a good deal larger
-  // than the old one, but hey-ho, the concept of G4VisExtent requires the
-  // limits to be along the major axes and thus defines a box whose edges are
-  // parallel to the major axes. So use the above with care.
+    G4VisExtent& Transform(const G4Transform3D&);
+    // The above transforms the box defined by the 6 limits fXmin, fXmax,
+    // etc., and produces a new box that encloses the transformed box. If the
+    // transform includes a rotation the new box will likely be a good deal larger
+    // than the old one, but hey-ho, the concept of G4VisExtent requires the
+    // limits to be along the major axes and thus defines a box whose edges are
+    // parallel to the major axes. So use the above with care.
 
-  G4double  GetXmin         () const;
-  G4double  GetXmax         () const;
-  G4double  GetYmin         () const;
-  G4double  GetYmax         () const;
-  G4double  GetZmin         () const;
-  G4double  GetZmax         () const;
-  const G4Point3D& GetExtentCentre () const;
-  const G4Point3D& GetExtentCenter () const;
-  G4double  GetExtentRadius () const;
-  void SetXmin (G4double xmin);
-  void SetXmax (G4double xmax);
-  void SetYmin (G4double ymin);
-  void SetYmax (G4double ymax);
-  void SetZmin (G4double zmin);
-  void SetZmax (G4double zmax);
-  friend std::ostream& operator << (std::ostream& os, const G4VisExtent& e);
+    G4double GetXmin() const;
+    G4double GetXmax() const;
+    G4double GetYmin() const;
+    G4double GetYmax() const;
+    G4double GetZmin() const;
+    G4double GetZmax() const;
+    const G4Point3D& GetExtentCentre() const;
+    const G4Point3D& GetExtentCenter() const;
+    G4double GetExtentRadius() const;
+    void SetXmin(G4double xmin);
+    void SetXmax(G4double xmax);
+    void SetYmin(G4double ymin);
+    void SetYmax(G4double ymax);
+    void SetZmin(G4double zmin);
+    void SetZmax(G4double zmax);
+    friend std::ostream& operator<<(std::ostream& os, const G4VisExtent& e);
 
-private:
-  G4double fXmin, fXmax, fYmin, fYmax, fZmin, fZmax;
-  mutable G4bool fRadiusCached, fCentreCached;
-  mutable G4double fRadius;
-  mutable G4Point3D fCentre;
+  private:
+
+    G4double fXmin, fXmax, fYmin, fYmax, fZmin, fZmax;
+    mutable G4bool fRadiusCached, fCentreCached;
+    mutable G4double fRadius;
+    mutable G4Point3D fCentre;
 };
 
-inline G4double G4VisExtent::GetXmin () const { return fXmin; }
-inline G4double G4VisExtent::GetXmax () const { return fXmax; }
-inline G4double G4VisExtent::GetYmin () const { return fYmin; }
-inline G4double G4VisExtent::GetYmax () const { return fYmax; }
-inline G4double G4VisExtent::GetZmin () const { return fZmin; }
-inline G4double G4VisExtent::GetZmax () const { return fZmax; }
-
-inline const G4Point3D& G4VisExtent::GetExtentCenter () const {
-  return GetExtentCentre ();
+inline G4double G4VisExtent::GetXmin() const
+{
+  return fXmin;
+}
+inline G4double G4VisExtent::GetXmax() const
+{
+  return fXmax;
+}
+inline G4double G4VisExtent::GetYmin() const
+{
+  return fYmin;
+}
+inline G4double G4VisExtent::GetYmax() const
+{
+  return fYmax;
+}
+inline G4double G4VisExtent::GetZmin() const
+{
+  return fZmin;
+}
+inline G4double G4VisExtent::GetZmax() const
+{
+  return fZmax;
 }
 
-inline void G4VisExtent::SetXmin (G4double xmin)
-{fXmin = xmin; fRadiusCached = false; fCentreCached = false;}
-inline void G4VisExtent::SetXmax (G4double xmax)
-{fXmax = xmax; fRadiusCached = false; fCentreCached = false;}
-inline void G4VisExtent::SetYmin (G4double ymin)
-{fYmin = ymin; fRadiusCached = false; fCentreCached = false;}
-inline void G4VisExtent::SetYmax (G4double ymax)
-{fYmax = ymax; fRadiusCached = false; fCentreCached = false;}
-inline void G4VisExtent::SetZmin (G4double zmin)
-{fZmin = zmin; fRadiusCached = false; fCentreCached = false;}
-inline void G4VisExtent::SetZmax (G4double zmax)
-{fZmax = zmax; fRadiusCached = false; fCentreCached = false;}
+inline const G4Point3D& G4VisExtent::GetExtentCenter() const
+{
+  return GetExtentCentre();
+}
+
+inline void G4VisExtent::SetXmin(G4double xmin)
+{
+  fXmin = xmin;
+  fRadiusCached = false;
+  fCentreCached = false;
+}
+inline void G4VisExtent::SetXmax(G4double xmax)
+{
+  fXmax = xmax;
+  fRadiusCached = false;
+  fCentreCached = false;
+}
+inline void G4VisExtent::SetYmin(G4double ymin)
+{
+  fYmin = ymin;
+  fRadiusCached = false;
+  fCentreCached = false;
+}
+inline void G4VisExtent::SetYmax(G4double ymax)
+{
+  fYmax = ymax;
+  fRadiusCached = false;
+  fCentreCached = false;
+}
+inline void G4VisExtent::SetZmin(G4double zmin)
+{
+  fZmin = zmin;
+  fRadiusCached = false;
+  fCentreCached = false;
+}
+inline void G4VisExtent::SetZmax(G4double zmax)
+{
+  fZmax = zmax;
+  fRadiusCached = false;
+  fCentreCached = false;
+}
 
 #endif

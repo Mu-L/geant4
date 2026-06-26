@@ -31,20 +31,22 @@
 // Modified:
 //---------------------------------------------------------------------------
 
-#ifndef G4VHyperonBuilder_h
-#define G4VHyperonBuilder_h
+#ifndef G4VHYPERONBUILDER_HH
+#define G4VHYPERONBUILDER_HH
 
 #include "G4PhysicsBuilderInterface.hh"
 
 class G4HadronElasticProcess;
 class G4HadronInelasticProcess;
 
-class G4VHyperonBuilder : public G4PhysicsBuilderInterface {
+class G4VHyperonBuilder : public G4PhysicsBuilderInterface
+{
   public:
+
     G4VHyperonBuilder() = default;
-    virtual ~G4VHyperonBuilder() {} 
-    virtual void Build( G4HadronElasticProcess*   aP ) = 0;
-    virtual void Build( G4HadronInelasticProcess* aP ) = 0;
+    virtual ~G4VHyperonBuilder() {}
+    virtual void Build(G4HadronElasticProcess* aP) = 0;
+    virtual void Build(G4HadronInelasticProcess* aP) = 0;
     using G4PhysicsBuilderInterface::Build;  // Prevent compiler warning
 };
 

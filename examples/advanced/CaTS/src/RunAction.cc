@@ -33,7 +33,7 @@
 //
 // History
 //   October 18th, 2021 : first implementation
-//
+//   March 28th, 2026: Modified by Ilker Parmaksiz for latest Opticks
 // ********************************************************************
 //
 /// \file RunAction.cc
@@ -43,7 +43,7 @@
 #include "G4Run.hh"
 #ifdef WITH_G4OPTICKS
 #include "G4TransportationManager.hh"
-#include "G4Opticks.hh"
+#include "G4CXOpticks.hh"
 #endif
 #ifdef WITH_ROOT
 #include "G4AnalysisManager.hh"
@@ -83,31 +83,17 @@ void RunAction::BeginOfRunAction(const G4Run*) {
 #ifdef WITH_G4OPTICKS
     if (ConfigurationManager::getInstance()->isEnable_opticks()) {
         if (!geo_initialized) {
-            G4cout << "\n\n###[ RunAction::BeginOfRunAction G4Opticks.setGeometry\n\n"
+            G4cout << "\n\n###[ RunAction::BeginOfRunAction G4CXOpticks.setGeometry\n\n"
                     << G4endl;
             G4VPhysicalVolume* world =
                     G4TransportationManager::GetTransportationManager()
                     ->GetNavigatorForTracking()
                     ->GetWorldVolume();
             assert(world);
-            bool standardize_geant4_materials = false; // required for alignment
-            G4Opticks* g4ok = G4Opticks::Get();
-            g4ok->setGeometry(world, standardize_geant4_materials);
-            const std::vector<G4PVPlacement*>& sensor_placements =
-                    g4ok->getSensorPlacements();
-            G4cout << "sensor_placements.size():  " << sensor_placements.size()
-                    << G4endl;
-            for (unsigned i = 0; i < sensor_placements.size(); i++) {
-                float efficiency_1 = 0.5f;
-                float efficiency_2 = 1.0f;
-                int sensor_cat = -1; // -1:means no angular info
-                int sensor_identifier =
-                        0xc0ffee + i; // mockup a detector specific identifier
-                unsigned sensorIndex = 1 + i; // 1-based
-                g4ok->setSensorData(sensorIndex, efficiency_1, efficiency_2, sensor_cat,
-                        sensor_identifier);
-            }
-            G4cout << "\n\n###] RunAction::BeginOfRunAction G4Opticks.setGeometry\n\n"
+            G4CXOpticks* g4cx = G4CXOpticks::Get();
+            g4cx->SetGeometry(world);
+
+            G4cout << "\n\n###] RunAction::BeginOfRunAction G4CXOpticks.setGeometry\n\n"
                     << G4endl;
             geo_initialized = true;
         }
@@ -119,12 +105,12 @@ void RunAction::EndOfRunAction(const G4Run*) {
 #ifdef WITH_G4OPTICKS
     if (ConfigurationManager::getInstance()->isEnable_opticks()) {
         if (ConfigurationManager::getInstance()->isEnable_verbose()) {
-            G4cout << "\n\n###[ RunAction::EndOfRunAction G4Opticks.Finalize\n\n"
+            G4cout << "\n\n###[ RunAction::EndOfRunAction G4CXOpticks.Finalize\n\n"
                     << G4endl;
         }
-        G4Opticks::Finalize();
+        G4CXOpticks::Finalize();
         if (ConfigurationManager::getInstance()->isEnable_verbose()) {
-            G4cout << "\n\n###] RunAction::EndOfRunAction G4Opticks.Finalize\n\n"
+            G4cout << "\n\n###] RunAction::EndOfRunAction G4CXOpticks.Finalize\n\n"
                     << G4endl;
         }
     }

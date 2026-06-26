@@ -25,29 +25,27 @@
 //
 //
 //
-// 
+//
 // Class G4OpenGLStoredWin32Viewer : a class derived from
 //   G4OpenGLWin32Viewer and G4OpenGLStoredViewer.
 
 #ifndef G4OPENGLSTOREDWIN32VIEWER_HH
 #define G4OPENGLSTOREDWIN32VIEWER_HH
 
-#include "G4VViewer.hh"
 #include "G4OpenGLStoredViewer.hh"
 #include "G4OpenGLWin32Viewer.hh"
+#include "G4VViewer.hh"
 
 class G4OpenGLStoredSceneHandler;
 
-class G4OpenGLStoredWin32Viewer:
-public G4OpenGLWin32Viewer, public G4OpenGLStoredViewer{
-  
-public:
-  G4OpenGLStoredWin32Viewer (G4OpenGLStoredSceneHandler& scene,
-			     const G4String& name = "");
-  void Initialise ();
-  void DrawView ();
-  void FinishView ();
+class G4OpenGLStoredWin32Viewer : public G4OpenGLWin32Viewer, public G4OpenGLStoredViewer
+{
+  public:
+
+    G4OpenGLStoredWin32Viewer(G4OpenGLStoredSceneHandler& scene, const G4String& name = "");
+    void Initialise();
+    void DrawView();
+    void FinishView();
 };
 
 #endif
-

@@ -22,76 +22,65 @@
 // * use  in  resulting  scientific  publications,  and indicate your *
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
-// 
+//
 // Class G4AssemblyVolume - inline implementation
 //
 // Authors: R.Chytracek, J.Apostolakis, G.Cosmo (CERN), November 2000
 // ----------------------------------------------------------------------
 
-inline 
-unsigned int G4AssemblyVolume::GetImprintsCount() const
+inline unsigned int G4AssemblyVolume::GetImprintsCount() const
 {
   return fImprintsCounter;
 }
 
-inline 
-void G4AssemblyVolume::SetImprintsCount( unsigned int value )
+inline void G4AssemblyVolume::SetImprintsCount(unsigned int value)
 {
   fImprintsCounter = value;
 }
 
-inline 
-void G4AssemblyVolume::ImprintsCountPlus()
+inline void G4AssemblyVolume::ImprintsCountPlus()
 {
   ++fImprintsCounter;
 }
 
-inline 
-void G4AssemblyVolume::ImprintsCountMinus()
+inline void G4AssemblyVolume::ImprintsCountMinus()
 {
   --fImprintsCounter;
 }
 
-inline 
-unsigned int G4AssemblyVolume::GetAssemblyID() const
+inline unsigned int G4AssemblyVolume::GetAssemblyID() const
 {
   return fAssemblyID;
 }
 
-inline 
-void G4AssemblyVolume::SetAssemblyID( unsigned int value )
+inline void G4AssemblyVolume::SetAssemblyID(unsigned int value)
 {
   fAssemblyID = value;
 }
 
-inline std::vector<G4VPhysicalVolume*>::iterator
-G4AssemblyVolume::GetVolumesIterator()
+inline std::vector<G4VPhysicalVolume*>::iterator G4AssemblyVolume::GetVolumesIterator()
 {
   auto iterator = fPVStore.begin();
   return iterator;
 }
 
-inline 
-std::size_t G4AssemblyVolume::TotalImprintedVolumes() const
+inline std::size_t G4AssemblyVolume::TotalImprintedVolumes() const
 {
   return fPVStore.size();
 }
 
-inline G4Transform3D&
-G4AssemblyVolume::GetImprintTransformation(unsigned int imprintID)
+inline G4Transform3D& G4AssemblyVolume::GetImprintTransformation(unsigned int imprintID)
 {
   return fImprintsTransf[imprintID];
 }
 
-inline std::vector<G4AssemblyTriplet>::iterator
-G4AssemblyVolume::GetTripletsIterator()
+inline std::vector<G4AssemblyTriplet>::iterator G4AssemblyVolume::GetTripletsIterator()
 {
   auto iterator = fTriplets.begin();
   return iterator;
 }
 
-inline 
-std::size_t G4AssemblyVolume::TotalTriplets() const
+inline std::size_t G4AssemblyVolume::TotalTriplets() const
 {
   return fTriplets.size();
 }

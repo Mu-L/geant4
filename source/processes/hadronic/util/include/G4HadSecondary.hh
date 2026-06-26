@@ -25,8 +25,8 @@
 //
 // 20110907  M. Kelsey -- Fix constness for accessors
 
-#ifndef G4HadSecondary_hh
-#define G4HadSecondary_hh
+#ifndef G4HADSECONDARY_HH
+#define G4HADSECONDARY_HH
 
 #include "globals.hh"
 
@@ -35,34 +35,40 @@ class G4ParticleDefinition;
 
 class G4HadSecondary
 {
-public:
+  public:
 
-  G4HadSecondary(G4DynamicParticle * aT, G4double aWeight = 1, G4int mod=-1);
-  ~G4HadSecondary();
+    G4HadSecondary(G4DynamicParticle* aT, G4double aWeight = 1, G4int mod = -1);
+    ~G4HadSecondary();
 
-  inline G4DynamicParticle * GetParticle()   {return theP;}
-  inline const G4DynamicParticle* GetParticle() const {return theP;}
-  inline G4double GetWeight() const          {return theWeight;}
-  inline void SetWeight(G4double aW)         {theWeight= aW;}
-  inline void SetTime(G4double aT)           {theTime = aT;}
-  inline G4double GetTime() const            {return theTime;}
-  inline void SetCreatorModelID(G4int id)    {theCreatorModel = id;}
-  inline G4int GetCreatorModelID() const     {return theCreatorModel;}
-  inline const G4ParticleDefinition* GetParentResonanceDef() const {return theParentResonanceDef;}
-  inline void SetParentResonanceDef(const G4ParticleDefinition* parentDef) {theParentResonanceDef = parentDef;}
-  inline G4int GetParentResonanceID() const {return theParentResonanceID;}
-  inline void SetParentResonanceID(const G4int parentID) {theParentResonanceID = parentID;}
-   
-private:
-  
-   G4HadSecondary(){};
-   
-   G4DynamicParticle * theP; 
-   G4double theWeight;
-   G4double theTime;
-   G4int theCreatorModel;
-   const G4ParticleDefinition* theParentResonanceDef = nullptr;
-   G4int theParentResonanceID;
+    inline G4DynamicParticle* GetParticle() { return theP; }
+    inline const G4DynamicParticle* GetParticle() const { return theP; }
+    inline G4double GetWeight() const { return theWeight; }
+    inline void SetWeight(G4double aW) { theWeight = aW; }
+    inline void SetTime(G4double aT) { theTime = aT; }
+    inline G4double GetTime() const { return theTime; }
+    inline void SetCreatorModelID(G4int id) { theCreatorModel = id; }
+    inline G4int GetCreatorModelID() const { return theCreatorModel; }
+    inline const G4ParticleDefinition* GetParentResonanceDef() const
+    {
+      return theParentResonanceDef;
+    }
+    inline void SetParentResonanceDef(const G4ParticleDefinition* parentDef)
+    {
+      theParentResonanceDef = parentDef;
+    }
+    inline G4int GetParentResonanceID() const { return theParentResonanceID; }
+    inline void SetParentResonanceID(const G4int parentID) { theParentResonanceID = parentID; }
+
+  private:
+
+    G4HadSecondary() {};
+
+    G4DynamicParticle* theP;
+    G4double theWeight;
+    G4double theTime;
+    G4int theCreatorModel;
+    const G4ParticleDefinition* theParentResonanceDef = nullptr;
+    G4int theParentResonanceID;
 };
 
 #endif
